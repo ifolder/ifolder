@@ -297,7 +297,10 @@ namespace Novell.iFolder.FormsTrayApp
 			subscriber.NodeDeleted += new NodeEventHandler(subscriber_NodeDeleted);
 
 			// Clear the hashtable.
-			ht.Clear();
+			lock (ht)
+			{
+				ht.Clear();
+			}
 
 			// Clear the listview.
 			messages.Items.Clear();
@@ -322,7 +325,10 @@ namespace Novell.iFolder.FormsTrayApp
 						messages.Items.Add(lvi);
 
 						// Add the listviewitem to the hashtable so we can quickly find it.
-						ht.Add(sub.ID, lvi);
+						lock (ht)
+						{
+							ht.Add(sub.ID, lvi);
+						}
 					}
 				}
 			}
@@ -464,7 +470,11 @@ namespace Novell.iFolder.FormsTrayApp
 					logger.Debug(ex, "Removing subscription");
 				}
 
-				ht.Remove(nodeID);
+				lock(ht)
+				{
+					ht.Remove(nodeID);
+				}
+
 				lvi.Remove();
 			}
 		}
@@ -478,17 +488,20 @@ namespace Novell.iFolder.FormsTrayApp
 				{
 					Subscription sub = new Subscription(node);
 
-					// If the subscription state is "Ready" and the collection exists locally or if the item is already in the list,
-					// don't add it to the listview.
-					if (((sub.SubscriptionState != SubscriptionStates.Ready) 
-						|| (store.GetCollectionByID(sub.SubscriptionCollectionID) == null))
-						&& (ht[args.ID] == null))
+					lock(ht)
 					{
-						string[] items = new string[]{sub.Name, sub.SubscriptionState.ToString()};
-						ListViewItem lvi = new ListViewItem(items, 0);
-						lvi.Tag = sub;
-						messages.Items.Add(lvi);
-						ht.Add(sub.ID, lvi);
+						// If the subscription state is "Ready" and the collection exists locally or if the item is already in the list,
+						// don't add it to the listview.
+						if (((sub.SubscriptionState != SubscriptionStates.Ready) 
+							|| (store.GetCollectionByID(sub.SubscriptionCollectionID) == null))
+							&& (ht[args.ID] == null))
+						{
+							string[] items = new string[]{sub.Name, sub.SubscriptionState.ToString()};
+							ListViewItem lvi = new ListViewItem(items, 0);
+							lvi.Tag = sub;
+							messages.Items.Add(lvi);
+							ht.Add(sub.ID, lvi);
+						}
 					}
 				}
 			}
@@ -504,49 +517,55 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void subscriber_NodeDeleted(NodeEventArgs args)
 		{
-			ListViewItem lvi = (ListViewItem)ht[args.Node];
-			if (lvi != null)
+			lock (ht)
 			{
-				lvi.Remove();
-				ht.Remove(args.Node);
+				ListViewItem lvi = (ListViewItem)ht[args.Node];
+				if (lvi != null)
+				{
+					lvi.Remove();
+					ht.Remove(args.Node);
+				}
 			}
 		}
 
 		private void subscriber_NodeChanged(NodeEventArgs args)
 		{
-			// Get the existing item.
-			ListViewItem lvi = (ListViewItem)ht[args.Node];
-			if (lvi != null)
+			lock (ht)
 			{
-				try
+				// Get the existing item.
+				ListViewItem lvi = (ListViewItem)ht[args.Node];
+				if (lvi != null)
 				{
-					// Get the node that changed.
-					Node node = poBox.GetNodeByID(args.ID);
-					if (node != null)
+					try
 					{
-						// New up a Subscription object based on the node.
-						Subscription sub = new Subscription(node);
+						// Get the node that changed.
+						Node node = poBox.GetNodeByID(args.ID);
+						if (node != null)
+						{
+							// New up a Subscription object based on the node.
+							Subscription sub = new Subscription(node);
 
-						// If the subscription state is "Ready" and the collection exists locally, remove the listview item; 
-						// otherwise, update the status text.
-						if ((sub.SubscriptionState != SubscriptionStates.Ready) || (store.GetCollectionByID(sub.SubscriptionCollectionID) == null))
-						{
-							lvi.SubItems[1].Text = sub.SubscriptionState.ToString();
-							lvi.Tag = sub;
-						}
-						else
-						{
-							lvi.Remove();
+							// If the subscription state is "Ready" and the collection exists locally, remove the listview item; 
+							// otherwise, update the status text.
+							if ((sub.SubscriptionState != SubscriptionStates.Ready) || (store.GetCollectionByID(sub.SubscriptionCollectionID) == null))
+							{
+								lvi.SubItems[1].Text = sub.SubscriptionState.ToString();
+								lvi.Tag = sub;
+							}
+							else
+							{
+								lvi.Remove();
+							}
 						}
 					}
-				}
-				catch (SimiasException ex)
-				{
-					ex.LogError();
-				}
-				catch (Exception ex)
-				{
-					logger.Debug(ex, "OnNodeChanged");
+					catch (SimiasException ex)
+					{
+						ex.LogError();
+					}
+					catch (Exception ex)
+					{
+						logger.Debug(ex, "OnNodeChanged");
+					}
 				}
 			}
 		}

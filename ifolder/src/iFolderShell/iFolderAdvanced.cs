@@ -651,7 +651,10 @@ namespace Novell.iFolder.iFolderCom
 					slMember.Subscription.FromAddress = sendersEmail;
 
 					// Add the listviewitem to the hashtable so we can quickly find it.
-					subscrHT.Add(slMember.Subscription.ID, lvitem);
+					lock (subscrHT)
+					{
+						subscrHT.Add(slMember.Subscription.ID, lvitem);
+					}
 
 					// TODO: change this to use an array and add them all at once.
 					// Put the subscription in the POBox.
@@ -1004,7 +1007,10 @@ namespace Novell.iFolder.iFolderCom
 						shareWith.Items.Add(lvi);
 
 						// Add the listviewitem to the hashtable so we can quickly find it.
-						subscrHT.Add(shareMember.Subscription.ID, lvi);
+						lock (subscrHT)
+						{
+							subscrHT.Add(shareMember.Subscription.ID, lvi);
+						}
 					}
 				}
 			}
@@ -1268,7 +1274,10 @@ namespace Novell.iFolder.iFolderCom
 						lvi.Remove();
 
 						// Remove this from the hashtable.
-						subscrHT.Remove(slMember.Subscription.ID);
+						lock (subscrHT)
+						{
+							subscrHT.Remove(slMember.Subscription.ID);
+						}
 
 						// Enable the apply button.
 						this.apply.Enabled = true;
@@ -1309,7 +1318,10 @@ namespace Novell.iFolder.iFolderCom
 			}
 
 			// This is item is now a member so remove it from the subscription list.
-			subscrHT.Remove(slMember.Subscription.ID);
+			lock (subscrHT)
+			{
+				subscrHT.Remove(slMember.Subscription.ID);
+			}
 
 			poBox.Commit(slMember.Subscription);
 			
@@ -1397,26 +1409,29 @@ namespace Novell.iFolder.iFolderCom
 					ShareListMember slMember = new ShareListMember();
 					slMember.Subscription = new Subscription(node);
 
-					// If the subscription state is "Ready" and the collection exists locally or if the item is already in the list
-					// or if the subscription is not for this ifolder, don't add it to the listview.
-					if (((slMember.Subscription.SubscriptionState != SubscriptionStates.Ready) 
-						|| (poBox.StoreReference.GetCollectionByID(slMember.Subscription.SubscriptionCollectionID) == null))
-						&& (subscrHT[args.ID] == null)
-						&& (slMember.Subscription.SubscriptionCollectionID.Equals(ifolder.ID)))
+					lock (subscrHT)
 					{
-						string[] items = new string[3];
-						items[0] = slMember.Subscription.ToName;
-						items[1] = slMember.Subscription.SubscriptionState.ToString();
-						int imageIndex;
-						items[2] = rightsToString(slMember.Rights, out imageIndex);
+						// If the subscription state is "Ready" and the collection exists locally or if the item is already in the list
+						// or if the subscription is not for this ifolder, don't add it to the listview.
+						if (((slMember.Subscription.SubscriptionState != SubscriptionStates.Ready) 
+							|| (poBox.StoreReference.GetCollectionByID(slMember.Subscription.SubscriptionCollectionID) == null))
+							&& (subscrHT[args.ID] == null)
+							&& (slMember.Subscription.SubscriptionCollectionID.Equals(ifolder.ID)))
+						{
+							string[] items = new string[3];
+							items[0] = slMember.Subscription.ToName;
+							items[1] = slMember.Subscription.SubscriptionState.ToString();
+							int imageIndex;
+							items[2] = rightsToString(slMember.Rights, out imageIndex);
 					
-						ListViewItem lvi = new ListViewItem(items, 5);
-						lvi.Tag = slMember;
+							ListViewItem lvi = new ListViewItem(items, 5);
+							lvi.Tag = slMember;
 
-						shareWith.Items.Add(lvi);
+							shareWith.Items.Add(lvi);
 
-						// Add the listviewitem to the hashtable so we can quickly find it.
-						subscrHT.Add(slMember.Subscription.ID, lvi);
+							// Add the listviewitem to the hashtable so we can quickly find it.
+							subscrHT.Add(slMember.Subscription.ID, lvi);
+						}
 					}
 				}
 			}
@@ -1432,60 +1447,66 @@ namespace Novell.iFolder.iFolderCom
 
 		private void subscriber_NodeDeleted(NodeEventArgs args)
 		{
-			ListViewItem lvi = (ListViewItem)subscrHT[args.Node];
-			if (lvi != null)
+			lock (subscrHT)
 			{
-				lvi.Remove();
-				subscrHT.Remove(args.Node);
+				ListViewItem lvi = (ListViewItem)subscrHT[args.Node];
+				if (lvi != null)
+				{
+					lvi.Remove();
+					subscrHT.Remove(args.Node);
+				}
 			}
 		}
 
 		private void subscriber_NodeChanged(NodeEventArgs args)
 		{
 			// Get the existing item.
-			ListViewItem lvi = (ListViewItem)subscrHT[args.Node];
-			if (lvi != null)
+			lock (subscrHT)
 			{
-				try
+				ListViewItem lvi = (ListViewItem)subscrHT[args.Node];
+				if (lvi != null)
 				{
-					// Get the node that changed.
-					Node node = poBox.GetNodeByID(args.ID);
-					if (node != null)
+					try
 					{
-						ShareListMember slMember = (ShareListMember)lvi.Tag;
-
-						// New up a Subscription object based on the node.
-						slMember.Subscription = new Subscription(node);
-
-						// If the subscription state is "Ready" and the collection exists locally, remove the listview item; 
-						// otherwise, update the status text.
-						if ((slMember.Subscription.SubscriptionState != SubscriptionStates.Ready) || 
-							(poBox.StoreReference.GetCollectionByID(slMember.Subscription.SubscriptionCollectionID) == null))
+						// Get the node that changed.
+						Node node = poBox.GetNodeByID(args.ID);
+						if (node != null)
 						{
-							lvi.SubItems[1].Text = slMember.Subscription.SubscriptionState.ToString();
-							lvi.Tag = slMember;
-							if ((shareWith.SelectedItems.Count == 1) &&
-								lvi.Equals(shareWith.SelectedItems[0]) &&
-								(slMember.Subscription.SubscriptionState == Simias.POBox.SubscriptionStates.Pending))
-								//(((ShareListMember)shareWith.SelectedItems[0].Tag).Subscription != null) &&
-								//(((ShareListMember)shareWith.SelectedItems[0].Tag).Subscription.ID.Equals(slMember.Subscription.ID)) &&
+							ShareListMember slMember = (ShareListMember)lvi.Tag;
+
+							// New up a Subscription object based on the node.
+							slMember.Subscription = new Subscription(node);
+
+							// If the subscription state is "Ready" and the collection exists locally, remove the listview item; 
+							// otherwise, update the status text.
+							if ((slMember.Subscription.SubscriptionState != SubscriptionStates.Ready) || 
+								(poBox.StoreReference.GetCollectionByID(slMember.Subscription.SubscriptionCollectionID) == null))
 							{
-								accept.Enabled = decline.Enabled = true;
+								lvi.SubItems[1].Text = slMember.Subscription.SubscriptionState.ToString();
+								lvi.Tag = slMember;
+								if ((shareWith.SelectedItems.Count == 1) &&
+									lvi.Equals(shareWith.SelectedItems[0]) &&
+									(slMember.Subscription.SubscriptionState == Simias.POBox.SubscriptionStates.Pending))
+									//(((ShareListMember)shareWith.SelectedItems[0].Tag).Subscription != null) &&
+									//(((ShareListMember)shareWith.SelectedItems[0].Tag).Subscription.ID.Equals(slMember.Subscription.ID)) &&
+								{
+									accept.Enabled = decline.Enabled = true;
+								}
+							}
+							else
+							{
+								lvi.Remove();
 							}
 						}
-						else
-						{
-							lvi.Remove();
-						}
 					}
-				}
-				catch (SimiasException ex)
-				{
-					ex.LogError();
-				}
-				catch (Exception ex)
-				{
-					logger.Debug(ex, "OnNodeChanged");
+					catch (SimiasException ex)
+					{
+						ex.LogError();
+					}
+					catch (Exception ex)
+					{
+						logger.Debug(ex, "OnNodeChanged");
+					}
 				}
 			}
 		}
