@@ -36,6 +36,11 @@
 
 #include <libgnomevfs/gnome-vfs-utils.h>
 
+#include <libxml/tree.h>
+#include <libxml/parser.h>
+#include <libxml/xpath.h>
+#include <libxml/xpathInternals.h>
+
 #include <simias/simias-event-client.h>
 
 #include "iFolderClientStub.h"
@@ -135,6 +140,15 @@ gboolean ht_remove_ifolder (gpointer key, gpointer value, gpointer user_data);
 /* Functions used to work on GSList of iFolder local paths */
 void slist_invalidate_local_path (gpointer data, gpointer user_data);
 void slist_free_local_path_str (gpointer data, gpointer user_data);
+
+/* Functions and defines used to read user config files */
+#define XPATH_SHOW_CREATION_DIALOG	"//setting[name='ShowCreationDialog']/@value"
+
+static char * get_user_profile_dir_path (char *dest_path);
+static char * get_ifolder_config_file_path (char *dest_path);
+static int ifolder_get_config_setting (char *xml_file_path,
+									   char *setting_xpath,
+									   char *setting_value_return);
 
 /**
  * This function is intended to be called using g_idle_add by the event system
@@ -909,6 +923,126 @@ slist_free_local_path_str (gpointer data, gpointer user_data)
 	free (local_path);
 }
 
+static char *
+get_user_profile_dir_path (char *dest_path)
+{
+	char *home_dir;
+	char dot_local_path [512];
+	char dot_local_share_path [512];
+	
+	home_dir = getenv ("HOME");
+	if (home_dir == NULL || strlen (home_dir) <= 0) {
+		DEBUG_IFOLDER (("Could not get the HOME directory\n"));
+		return NULL;
+	}
+	
+	/**
+	 * Create the directories if they don't already exist.  Ignore any errors if
+	 * they already do exist.
+	 */
+	sprintf (dot_local_path, "%s%s", home_dir, "/.local");
+	sprintf (dot_local_share_path, "%s%s", home_dir, "/.local/share");
+	if (((mkdir(dot_local_path, 0777) == -1) && (errno != EEXIST)) ||
+		 ((mkdir(dot_local_share_path, 0777) == -1) && (errno != EEXIST )))
+	{
+		perror ("Cannot create '~/.local/share' directory");
+		return NULL;
+	}
+	
+	sprintf (dest_path, dot_local_share_path);
+
+	return dest_path;
+}
+
+static char *
+get_ifolder_config_file_path (char *dest_path)
+{
+	char user_profile_dir [1024];
+	if (get_user_profile_dir_path (user_profile_dir) == NULL) {
+		DEBUG_IFOLDER (("Could not get base dir for config file\n"));
+		return NULL;
+	}
+
+	sprintf (dest_path, "%s/ifolder/ifolder3.config", user_profile_dir);
+
+	return dest_path;
+}
+
+static int
+ifolder_get_config_setting (char *xml_file_path,
+							char *setting_xpath,
+							char *setting_value_return)
+{
+	char config_file [1024];
+	xmlDoc *doc;
+	xmlXPathContext *xpath_ctx;
+	xmlXPathObject *xpath_obj;
+	xmlNodeSet *node_set;
+	xmlChar *setting_value;
+	xmlNode *cur_node;
+	xmlChar *cur_node_val;
+	gboolean b_value_found;
+	
+	b_value_found = FALSE;
+	
+	if (get_ifolder_config_file_path (config_file) == NULL) {
+		DEBUG_IFOLDER (("Could not get path to ifolder3.config\n"));
+		return -1;
+	}
+	
+	xmlInitParser ();
+	doc = xmlReadFile (config_file, NULL, 0);
+	if (doc == NULL) {
+		DEBUG_IFOLDER (("Failed to open/parse %s\n", config_file));
+		return -1;
+	}
+	
+	/* Create xpath evaluation context */
+	xpath_ctx = xmlXPathNewContext (doc);
+	if (xpath_ctx == NULL) {
+		DEBUG_IFOLDER (("Unable to create a new XPath context for %s\n", config_file));
+		return -1;
+	}
+	
+	/* Evaluate the XPath expression */
+	xpath_obj = xmlXPathEvalExpression (setting_xpath, xpath_ctx);
+	if (xpath_obj != NULL) {
+		node_set = xpath_obj->nodesetval;
+		if (node_set && node_set->nodeNr > 0) {
+			cur_node = node_set->nodeTab [0];
+			
+			if (cur_node->type == XML_ATTRIBUTE_NODE) {
+				cur_node_val = xmlNodeGetContent (cur_node);
+				if (cur_node_val != NULL) {
+					strcpy (setting_value_return, cur_node_val);
+					b_value_found = TRUE;
+					xmlFree (cur_node_val);
+				} else {
+					DEBUG_IFOLDER (("xmlNodeGetContent returned NULL\n"));
+				}
+			} else {
+				DEBUG_IFOLDER (("XPath expression didn't return an attribute node: %s\n", setting_xpath));
+			}
+		} else {
+			DEBUG_IFOLDER (("Nothing returned from XPath expression: %s\n", setting_xpath));
+		}
+		
+		xmlFree (xpath_obj);
+	} else {
+		DEBUG_IFOLDER (("Unable to evaluate XPath expression: %s\n", setting_xpath));
+	}
+	
+	xmlXPathFreeContext (xpath_ctx);
+	xmlFreeDoc (doc);
+	xmlCleanupParser ();
+	
+	if (b_value_found) {
+		return 0;
+	} else {
+		return -1;
+	}
+}
+
 /**
  * Nautilus Menu Provider Implementation
  */
@@ -929,6 +1063,32 @@ show_ifolder_error_message (void *user_data)
 	gtk_object_destroy (GTK_OBJECT (message_dialog));
 	
 	free (errMsg);
+	
+	return FALSE;
+}
+
+gboolean
+show_ifolder_creation_dialog (void *user_data)
+{
+	DEBUG_IFOLDER (("*** show_ifolder_creation_dialog () called\n"));
+	GtkDialog *creation_dialog;
+	GtkWindow *parent_window;
+	gint response;
+	
+	parent_window = GTK_WINDOW (user_data);
+
+	creation_dialog = gtk_dialog_new_with_buttons (
+						_("iFolder Introduction"),
+						parent_window,
+						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+						GTK_STOCK_CLOSE,	/* Close button */
+						GTK_RESPONSE_CLOSE,
+						GTK_STOCK_HELP,		/* Help button */
+						GTK_RESPONSE_HELP,
+						NULL);
+	response = gtk_dialog_run (creation_dialog);
+	
+	gtk_widget_destroy (creation_dialog);
 	
 	return FALSE;
 }
@@ -998,6 +1158,9 @@ create_ifolder_thread (gpointer user_data)
 		errMsg->message	= _("The folder could not be converted.");
 		errMsg->detail	= _("Sorry, unable to convert the specified folder into an iFolder.");
 		g_idle_add (show_ifolder_error_message, errMsg);
+	} else {
+		g_idle_add (show_ifolder_creation_dialog,
+					g_object_get_data (G_OBJECT (item), "parent_window"));
 	}
 }
 

@@ -121,6 +121,19 @@ INSTALL_BIN_OPTS='--mode=755'
 AC_SUBST(INSTALL_BIN_OPTS)
 
 #
+# Configure XML2_CONFIG
+#
+AC_PATH_PROG(XML2_CONFIG, xml2-config, no)
+if test "x$XML2_CONFIG" = "xno"; then
+    AC_MSG_ERROR([You need to install libxml2 and libxml2-devel])
+fi
+
+XML2_CFLAGS='`xml2-config --cflags`'
+XML2_LIBS='`xml2-config --libs`'
+AC_SUBST(XML2_CFLAGS)
+AC_SUBST(XML2_LIBS)
+
+#
 # Configure C# compiler settings
 #
 CSC_EXEFLAG=/target:exe
