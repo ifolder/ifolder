@@ -24,10 +24,17 @@
  ***********************************************************************/
 
 
+using System;
 using Gtk;
+
+namespace Novell.iFolder
+{
 
 public class iFolderMsgDialog : Dialog
 {
+	private Button showDetailsButton;
+	private ScrolledWindow showDetailsScrolledWindow;
+
 	public enum DialogType : int
 	{
 		Error = 1,
@@ -49,8 +56,36 @@ public class iFolderMsgDialog : Dialog
 								ButtonSet buttonSet,
 								string title, 
 								string statement, 
+								string secondaryStatement)
+		: base()
+	{
+		Init(parent, type, buttonSet, title, statement, secondaryStatement, null);
+	}
+
+	///
+	/// This dialog adds on the "details" parameter.  This will add on
+	/// a "Show Details" button that will show the extended details in a text
+	/// area.
+	///
+	public iFolderMsgDialog(	Gtk.Window parent,
+								DialogType type,
+								ButtonSet buttonSet,
+								string title, 
+								string statement, 
+								string secondaryStatement,
 								string details)
 		: base()
+	{
+		Init(parent, type, buttonSet, title, statement, secondaryStatement, details);
+	}
+	
+	internal void Init(Gtk.Window parent,
+					   DialogType type,
+					   ButtonSet buttonSet,
+					   string title,
+					   string statement,
+					   string secondaryStatement,
+					   string details)
 	{
 		this.Title = title;
 		this.HasSeparator = false;
@@ -93,16 +128,42 @@ public class iFolderMsgDialog : Dialog
 		l.Xalign = 0; l.Yalign = 0;
 		v.PackStart(l);
 
-		l = new Label(details);
+		l = new Label(secondaryStatement);
 		l.LineWrap = true;
 		l.Selectable = true;
 		l.Xalign = 0; l.Yalign = 0;
-		v.PackEnd(l);
+		v.PackStart(l);
+		
+		if (details != null)
+		{
+			showDetailsButton = new Button(Util.GS("Show _Details"));
+			showDetailsButton.Clicked += new EventHandler(ShowDetailsButtonPressed);
+			
+			HBox detailsButtonBox = new HBox();
+			detailsButtonBox.PackEnd(showDetailsButton, false, false, 0);
+
+			v.PackStart(detailsButtonBox, false, false, 4);
+
+			TextView textView = new TextView();
+			textView.Editable = false;
+			textView.WrapMode = WrapMode.Char;
+			TextBuffer textBuffer = textView.Buffer;
+			
+			textBuffer.Text = details;
+			
+			showDetailsScrolledWindow = new ScrolledWindow();
+			showDetailsScrolledWindow.AddWithViewport(textView);
+			
+			showDetailsScrolledWindow.Visible = false;
+			
+			v.PackEnd(showDetailsScrolledWindow, false, false, 4);
+		}
 
 		h.PackEnd(v);
 		h.ShowAll();
+		showDetailsScrolledWindow.Visible = false;
 		this.VBox.Add(h);
-
+		
 		switch(buttonSet)
 		{
 			default:
@@ -119,4 +180,20 @@ public class iFolderMsgDialog : Dialog
 				break;
 		}
 	}
+	
+	private void ShowDetailsButtonPressed(object o, EventArgs args)
+	{
+		if (showDetailsButton.Label == Util.GS("Show _Details"))
+		{
+			showDetailsButton.Label = Util.GS("Hide _Details");
+			showDetailsScrolledWindow.Visible = true;
+		}
+		else
+		{
+			showDetailsButton.Label = Util.GS("Show _Details");
+			showDetailsScrolledWindow.Visible = false;
+		}
+	}
+}
+
 }

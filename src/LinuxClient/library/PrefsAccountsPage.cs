@@ -661,7 +661,8 @@ namespace Novell.iFolder
 								iFolderMsgDialog.DialogType.Question,
 								iFolderMsgDialog.ButtonSet.YesNo,
 								Util.GS("Unable to Verify Identity"),
-								string.Format(Util.GS("Unable to verify the identity of {0} as a trusted site.  Before accepting this certificate, you should examine the details of the certificate.  Do you want to accept this certificate?"), serverEntry.Text),
+								Util.GS("Unable to Verify Identity"),
+								string.Format(Util.GS("Unable to verify the identity of {0} as a trusted site.  Before accepting this certificate, you should examine the certificate by clicking Show Details.  Do you want to accept this certificate?"), serverEntry.Text),
 								cert.ToString(true));
 							int rc = dialog.Run();
 							dialog.Hide();
