@@ -161,6 +161,15 @@ namespace Simias.POBox
 		}
 
 		/// <summary>
+		/// The collection name
+		/// </summary>
+		public string SubscriptionCollectionName
+		{
+			get { return fields[Subscription.SubscriptionCollectionNameProperty]; }
+			set { fields[Subscription.SubscriptionCollectionNameProperty] = value; }
+		}
+
+		/// <summary>
 		/// The post office service URL
 		/// </summary>
 		public Uri POServiceUrl

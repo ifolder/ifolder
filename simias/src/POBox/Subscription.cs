@@ -216,6 +216,7 @@ namespace Simias.POBox
 			DomainID = subscriptionInfo.DomainID;
 			DomainName = subscriptionInfo.DomainName;
 			SubscriptionCollectionID = subscriptionInfo.SubscriptionCollectionID;
+			SubscriptionCollectionName = subscriptionInfo.SubscriptionCollectionName;
 			POServiceURL = subscriptionInfo.POServiceUrl;
 			Properties.AddNodeProperty(PropertyTags.Types, typeof(Subscription).Name);
 		}
@@ -564,6 +565,7 @@ namespace Simias.POBox
 			si.POServiceUrl = PostOffice.DefaultServiceUrl;
 			
 			si.SubscriptionCollectionID = SubscriptionCollectionID;
+			si.SubscriptionCollectionName = SubscriptionCollectionName;
 			si.SubscriptionID = ID;
 
 			return si;
@@ -581,6 +583,20 @@ namespace Simias.POBox
 			status.Disposition = this.SubscriptionDisposition;
 
 			return status;
+		}
+
+		/// <summary>
+		/// Add the details to the subscription
+		/// </summary>
+		/// <param name="details">The details object</param>
+		public void AddDetails(SubscriptionDetails details)
+		{
+			if (details != null)
+			{
+				this.DirNodeID = details.DirNodeID;
+				this.DirNodeName = details.DirNodeName;
+				this.SubscriptionCollectionURL = details.CollectionUrl;
+			}
 		}
 
 		/// <summary>

@@ -238,6 +238,12 @@ namespace Simias.POBox
 				{
 					log.Debug("Creating collection...");
 
+					// get and save details
+					subscription.AddDetails(po.GetSubscriptionDetails(subscription.DomainID,
+						subscription.FromIdentity, subscription.SubscriptionCollectionID));
+					poBox.Commit(subscription);
+
+					// create slave stub
 					subscription.CreateSlaveCollection(poBox.StoreReference);
 				}
 

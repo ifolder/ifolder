@@ -23,7 +23,9 @@
 
 using System;
 
+using Simias;
 using Simias.Storage;
+using Simias.Sync;
 
 namespace Simias.POBox
 {
@@ -161,6 +163,13 @@ namespace Simias.POBox
 			// check the collection
 			if (c == null)
 				throw new ApplicationException("Collection not found.");
+
+			SyncCollection sc = new SyncCollection(c);
+
+			// details
+			details.DirNodeID = sc.GetRootDirectory().ID;
+			details.DirNodeName = sc.GetRootDirectory().Name;
+			details.CollectionUrl = sc.MasterUrl.ToString();
 
 			return details;
 		}
