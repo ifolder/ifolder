@@ -272,6 +272,14 @@ namespace Simias.Agent
 			get { return defaultRootPath; }
 		}
 
+		/// <summary>
+		/// The server's public key
+		/// </summary>
+		public string PublicKey
+		{
+			get { return fields["PublicKey"]; }
+			set { fields["PublicKey"] = value; }
+		}
 		#endregion Properties
 	}
 
