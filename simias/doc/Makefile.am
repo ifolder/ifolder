@@ -7,7 +7,7 @@ clean-local: ndoc-clean
 simias-install:
 	$(MAKE) -C .. install
 
-ASSEMBLIES = Common Storage StoreProvider StoreWatcher CollectionEvents CollectionStore CollectionWatcher AddressBook Invitation Location Smtp SyncCommon Sync SyncLogicLite SyncManager UserService
+ASSEMBLIES = Common Storage StoreProvider CollectionEvents CollectionStore AddressBook Invitation Location Smtp SyncCommon Sync SyncLogicLite SyncManager
 
 if NDOC
 
