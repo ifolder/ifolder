@@ -24,6 +24,8 @@
 using System;
 using System.Collections;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 
@@ -105,10 +107,15 @@ namespace Simias
 			//{
 				foreach( Member member in RUsers.memberList )
 				{
-					if ( member.ID == memberID )
+					if ( member.UserID == memberID )
 					{
 						Property propHost =
 							member.Properties.GetSingleProperty( RUsers.HostProperty );
+
+						if ( propHost == null )
+						{
+							break;
+						}
 
 						IPHostEntry host = Dns.GetHostByName( propHost.Value as string );
 						if ( host != null )
@@ -131,8 +138,8 @@ namespace Simias
 								"http://" + 
 								ipAddr + 
 								":" + 
-								System.Convert.ToString( (ushort) port.Value ) +
-								path.Value;
+								port.Value.ToString() +
+								path.Value.ToString();
 
 							log.Debug( "fullPath: " + fullPath );
 							locationUri = new Uri( fullPath );
@@ -176,8 +183,10 @@ namespace Simias
 			string mdnsSessionTag = "mdns";
 
 			Simias.Storage.Member member = null;
+
+			// Assume failure
 			Simias.Authentication.Status status = 
-				new Simias.Authentication.Status( SCodes.Unknown );
+				new Simias.Authentication.Status( SCodes.InvalidCredentials );
 
 			// Rendezvous domain requires session support
 			if ( ctx.Session != null )
@@ -188,14 +197,12 @@ namespace Simias
 				string memberID = ctx.Request.Headers[ "mdns-member" ];
 				if ( memberID == null || memberID == "" )
 				{
-					status.statusCode = SCodes.InvalidCredentials;
 					return status;
 				}
 
 				member = domain.GetMemberByID( memberID );
 				if ( member == null )
 				{
-					status.statusCode = SCodes.InvalidCredentials;
 					return status;
 				}
 
@@ -211,45 +218,76 @@ namespace Simias
 
 					// Fixme
 					mdnsSession.OneTimePassword = DateTime.Now.ToString();
+					mdnsSession.OneTimePassword = "jared";
 
-					// Set the one time password in the response
-					ctx.Response.AddHeader(
-						"mdns-secret",
-						mdnsSession.OneTimePassword);
+					string publicKey = RUsers.GetMembersPublicKey( member.UserID );
+					if ( publicKey != null )
+					{
+						RSACryptoServiceProvider credential = new RSACryptoServiceProvider();
+						credential.FromXmlString( publicKey );
 
-					ctx.Session[ mdnsSessionTag ] = mdnsSession;
-					status.statusCode = SCodes.InvalidCredentials;
+						UTF8Encoding utf8 = new UTF8Encoding();
+						byte[] oneTime = utf8.GetBytes( mdnsSession.OneTimePassword );
+
+						byte[] clearText =
+							credential.Encrypt( oneTime, false );
+
+						// Set the encrypted one time password in the response
+						ctx.Response.AddHeader(
+							"mdns-secret",
+							Convert.ToBase64String( clearText ) );
+							
+						ctx.Session[ mdnsSessionTag ] = mdnsSession;
+					}
+
 				}
 				else
 				if ( status.UserID == mdnsSession.MemberID )
 				{
 					// State should be 1
-					string oneTime = ctx.Request.Headers[ "mdns-secret" ];
-					if ( oneTime != null && oneTime != "" )
+					string encodedSecret = ctx.Request.Headers[ "mdns-secret" ];
+					if ( encodedSecret != null && encodedSecret != "" )
 					{
-						// decrypt with user's public key
-						if ( oneTime.Equals( mdnsSession.OneTimePassword ) == true )
+						UTF8Encoding utf8 = new UTF8Encoding();
+						string decodedString = 
+							utf8.GetString( Convert.FromBase64String( encodedSecret ) );
+
+						// Check it...
+						if ( decodedString.Equals( mdnsSession.OneTimePassword ) == true )
 						{
 							status.statusCode = SCodes.Success;
 							mdnsSession.State = 2;
 						}
-						else
-						{
-							status.statusCode = SCodes.InvalidCredentials;
-						}				
 					}
 					else
 					{
 						// Fixme
-						mdnsSession.OneTimePassword = DateTime.Now.ToString();
+						mdnsSession.OneTimePassword = "jared";
 						mdnsSession.State = 1;
 
-						// Set the one time password in the response
-						ctx.Response.AddHeader(
-							"mdns-secret",
-							mdnsSession.OneTimePassword);
+						string publicKey = RUsers.GetMembersPublicKey( member.UserID );
+						if ( publicKey != null )
+						{
+							try
+							{
+								RSACryptoServiceProvider credential = new RSACryptoServiceProvider();
+								credential.FromXmlString( publicKey );
 
-						status.statusCode = SCodes.InvalidCredentials;
+								UTF8Encoding utf8 = new UTF8Encoding();
+								byte[] oneTime = utf8.GetBytes( mdnsSession.OneTimePassword );
+								byte[] clearText = credential.Encrypt( oneTime, false );
+
+								// Set the encrypted one time password in the response
+								ctx.Response.AddHeader(
+									"mdns-secret",
+									Convert.ToBase64String( clearText ) );
+							}
+							catch( Exception encr )
+							{
+								log.Debug( encr.Message );
+								log.Debug( encr.StackTrace );
+							}
+						}
 					}
 				}
 			}
@@ -343,7 +381,7 @@ namespace Simias
 
 			if ( searchCtx.memberList.Count > 0 )
 			{
-				searchCtx.memberList.Sort();
+				//searchCtx.memberList.Sort();
 
 				int arraySize = ( total < count ) ? total : count;
 				memberList = new Member[ arraySize ] as Member[];

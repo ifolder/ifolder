@@ -25,9 +25,8 @@ using System;
 using System.Collections;
 using System.Net;
 using System.Runtime.InteropServices;
-//using System.Runtime.Remoting;
-//using System.Runtime.Remoting.Channels;
-//using System.Runtime.Remoting.Channels.Tcp;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Xml;
 
@@ -94,7 +93,7 @@ namespace Simias.mDns
 				{
 					foreach( Member cMember in RendezvousUsers.memberList )
 					{
-						if ( cMember.ID == nMember.ID )
+						if ( cMember.UserID == nMember.UserID )
 						{
 							duplicate = true;
 							break;
@@ -121,7 +120,7 @@ namespace Simias.mDns
 			//{
 				foreach( Member cMember in RendezvousUsers.stagedList )
 				{
-					if ( cMember.ID == nMember.ID )
+					if ( cMember.UserID == nMember.UserID )
 					{
 						return false;
 					}
@@ -133,23 +132,64 @@ namespace Simias.mDns
 			return true;
 		}
 
+		static public Member GetMember( string memberID )
+		{
+			Member cMember = null;
+
+			foreach( Member rMember in RendezvousUsers.memberList )
+			{
+				if ( rMember.UserID == memberID )
+				{
+					cMember = rMember;
+					break;
+				}
+			}
+
+			return cMember;
+		}
+
+		static public string GetMembersPublicKey( string memberID )
+		{
+			string publicKey = null;
+			foreach( Member rMember in RendezvousUsers.memberList )
+			{
+				if ( rMember.UserID == memberID )
+				{
+					Property p = rMember.Properties.GetSingleProperty( RendezvousUsers.KeyProperty );
+					if ( p != null )
+					{
+						publicKey = p.Value.ToString();
+					}
+					break;
+				}
+			}
+
+			return publicKey;
+		}
 
 		static public bool UpdateMember( Member member )
 		{
-			//lock( typeof( Simias.mDns.RendezvousUsers ) )
-			//{
-			//}
+			foreach( Member cMember in RendezvousUsers.memberList )
+			{
+				if ( cMember.UserID == member.UserID )
+				{
+					// Out with the old in with the new
+					RendezvousUsers.memberList.Remove( cMember );
+					RendezvousUsers.memberList.Add( member );
+					return true;
+				}
+			}
 
-			return true;
+			return false;
 		}
 
-		static public bool RemoveMember( Member member )
+		static public bool RemoveMember( string memberID )
 		{
 			//lock( typeof( Simias.mDns.RendezvousUsers ) )
 			//{
 				foreach( Member cMember in RendezvousUsers.memberList )
 				{
-					if ( cMember.ID == member.ID )
+					if ( cMember.UserID == memberID )
 					{
 						RendezvousUsers.memberList.Remove( cMember );
 						return true;
@@ -161,13 +201,13 @@ namespace Simias.mDns
 			return false;
 		}
 
-		static public bool RemoveStagedMember( Member nMember )
+		static public bool RemoveStagedMember( string memberID )
 		{
 			//lock( typeof( Simias.mDns.RendezvousUsers ) )
 			//{
 				foreach( Member cMember in RendezvousUsers.stagedList )
 				{
-					if ( cMember.ID == nMember.ID )
+					if ( memberID == cMember.UserID )
 					{
 						RendezvousUsers.stagedList.Remove( cMember );
 						return true;
@@ -198,7 +238,6 @@ namespace Simias.mDns
 			string		Name,
 			short		Port,
 			string		ServicePath,
-			int			PublicKeyLength,
 			string		PublicKey,
 			ref IntPtr	Cookie);
 
@@ -309,6 +348,70 @@ namespace Simias.mDns
 			kDNSServiceErr_BadTime             = -65559
 			/* mDNS Error codes are in the range
 				 * FFFE FF00 (-65792) to FFFE FFFF (-65537) */
+		};
+
+		/* General flags used in functions defined below */
+		public enum kDNSServiceFlags : int
+		{
+			kDNSServiceFlagsMoreComing          = 0x1,
+			/* MoreComing indicates to a callback that at least one more result is
+			 * queued and will be delivered following immediately after this one.
+			 * Applications should not update their UI to display browse
+			 * results when the MoreComing flag is set, because this would
+			 * result in a great deal of ugly flickering on the screen.
+			 * Applications should instead wait until until MoreComing is not set,
+			 * and then update their UI.
+			 * When MoreComing is not set, that doesn't mean there will be no more
+			 * answers EVER, just that there are no more answers immediately
+			 * available right now at this instant. If more answers become available
+			 * in the future they will be delivered as usual.
+			 */
+
+			kDNSServiceFlagsAdd                 = 0x2,
+			kDNSServiceFlagsDefault             = 0x4,
+			/* Flags for domain enumeration and browse/query reply callbacks.
+			 * "Default" applies only to enumeration and is only valid in
+			 * conjuction with "Add".  An enumeration callback with the "Add"
+			 * flag NOT set indicates a "Remove", i.e. the domain is no longer
+			 * valid.
+			 */
+
+			kDNSServiceFlagsNoAutoRename        = 0x8,
+			/* Flag for specifying renaming behavior on name conflict when registering
+			 * non-shared records. By default, name conflicts are automatically handled
+			 * by renaming the service.  NoAutoRename overrides this behavior - with this
+			 * flag set, name conflicts will result in a callback.  The NoAutorename flag
+			 * is only valid if a name is explicitly specified when registering a service
+			 * (i.e. the default name is not used.)
+			 */
+
+			kDNSServiceFlagsShared              = 0x10,
+			kDNSServiceFlagsUnique              = 0x20,
+			/* Flag for registering individual records on a connected
+			 * DNSServiceRef.  Shared indicates that there may be multiple records
+			 * with this name on the network (e.g. PTR records).  Unique indicates that the
+			 * record's name is to be unique on the network (e.g. SRV records).
+			 */
+
+			kDNSServiceFlagsBrowseDomains       = 0x40,
+			kDNSServiceFlagsRegistrationDomains = 0x80,
+			/* Flags for specifying domain enumeration type in DNSServiceEnumerateDomains.
+			 * BrowseDomains enumerates domains recommended for browsing, RegistrationDomains
+			 * enumerates domains recommended for registration.
+			 */
+
+			kDNSServiceFlagsLongLivedQuery      = 0x100,
+			/* Flag for creating a long-lived unicast query for the DNSServiceQueryRecord call. */
+
+			kDNSServiceFlagsAllowRemoteQuery    = 0x200,
+			/* Flag for creating a record for which we will answer remote queries
+			 * (queries from hosts more than one hop away; hosts not directly connected to the local link).
+			 */
+
+			kDNSServiceFlagsForceMulticast      = 0x400
+			/* Flag for signifying that a query or registration should be performed exclusively via multicast DNS,
+			 * even for a name in a domain (e.g. foo.apple.com.) that would normally imply unicast DNS.
+			 */
 		};
 
 		#endregion
@@ -422,8 +525,8 @@ namespace Simias.mDns
 			//
 			try
 			{
-				// Temp
-				string	key = "1234567890";
+				RSACryptoServiceProvider publicKey = Store.GetStore().CurrentUser.PublicKey;
+				//RSACryptoServiceProvider credential = Store.GetStore().CurrentUser.Credential;
 				short sport = (short) webServiceUri.Port;
 
 				kErrorType status =
@@ -432,8 +535,7 @@ namespace Simias.mDns
 						User.mDnsUserName,
 						IPAddress.HostToNetworkOrder( sport ),
 						webServiceUri.AbsolutePath,
-						key.Length, 
-						key, 
+						publicKey.ToXmlString( false ),
 						ref userHandle );
 
 				if ( status != kErrorType.kDNSServiceErr_NoError )
@@ -517,19 +619,31 @@ namespace Simias.mDns
 				// FIXME:: Need to handle the case where flags isn't set
 				// to add so I can remove users as well
 
+
 				log.Debug( "MemberCallback for: " + serviceName );
 
-				Member rMember = 
-					new Member( 
+				if ( ( flags & (int) kDNSServiceFlags.kDNSServiceFlagsAdd ) == (int) kDNSServiceFlags.kDNSServiceFlagsAdd )
+				{
+					Member rMember = 
+						new Member( 
 							RendezvousUsers.StagedName,
 							serviceName,
 							Simias.Storage.Access.Rights.ReadWrite );
 
-				bool added = RendezvousUsers.AddStagedMember( rMember );
-				if ( added == true )
+					bool added = RendezvousUsers.AddStagedMember( rMember );
+					if ( added == true )
+					{
+						// Force a meta-data sync
+						Simias.mDns.Sync.SyncNow("");
+					}
+				}
+				else
 				{
-					// Force a meta-data sync
-					Simias.mDns.Sync.SyncNow("");
+					log.Debug( "Removing member: " + serviceName );
+					if ( RendezvousUsers.RemoveStagedMember( serviceName ) == false )
+					{
+						RendezvousUsers.RemoveMember( serviceName );
+					}
 				}
 			}
 			else
@@ -555,27 +669,29 @@ namespace Simias.mDns
 			char[] infoHost = new char[ 64 ];
 			char[]	infoName = new char[ 128 ];
 			char[]	infoServicePath = new char[ 128 ];
-			byte[]	infoPublicKey = new byte[ 128 ];
-			//int		infoPort = 0;
+			byte[]	infoPublicKey = new byte[ 512 ];
 
 			log.Debug( "Syncing mDns members" );
-			//Simias.Storage.Member mdnsMember = null;
-			//Simias.Storage.Domain mdnsDomain = Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
+			//Thread.Sleep( 30000 );
 
+			Simias.Storage.Member rMember;
 			lock( typeof( Simias.mDns.RendezvousUsers ) )
 			{
-				foreach( Simias.Storage.Member rMember in RendezvousUsers.stagedList )
+				IEnumerator memberEnum = RendezvousUsers.stagedList.GetEnumerator();
+				while( memberEnum.MoveNext() )
 				{
+					rMember = memberEnum.Current as Simias.Storage.Member;
+
 					// Go get the rest of the meta-data for this user
 					User.kErrorType status;
 
 					try
 					{
 						int	port = 0;
-						log.Debug( "Calling GetMemberInfo for: " + rMember.ID );
+						log.Debug( "Calling GetMemberInfo for: " + rMember.UserID );
 						status = 
 							GetMemberInfo( 
-								rMember.ID,
+								rMember.UserID,
 								infoName,
 								infoServicePath,
 								infoPublicKey,
@@ -585,6 +701,7 @@ namespace Simias.mDns
 						if ( status == kErrorType.kDNSServiceErr_NoError )
 						{
 							rMember.Name = (new string( infoName )).TrimEnd( trimNull );
+							rMember.FN = rMember.Name;
 
 							Property host = 
 								new Property( 
@@ -603,19 +720,39 @@ namespace Simias.mDns
 							Property rport = new Property( RendezvousUsers.PortProperty, port );
 							rMember.Properties.AddProperty( rport );
 
+							UTF8Encoding utf8 = new UTF8Encoding();
+							string pubKey = utf8.GetString( infoPublicKey );
+
+							Property key = 
+								new Property( 
+									RendezvousUsers.KeyProperty, 
+									pubKey.TrimEnd( trimNull ) );
+
+							rMember.Properties.AddProperty( key );
+
 							//rUser.PublicKey = (new string( infoPublicKey )).TrimEnd( trimNull );
 							log.Debug( "Adding meta-data for: " + rMember.Name );
-							RendezvousUsers.RemoveStagedMember( rMember );
-							RendezvousUsers.AddMember( rMember, true );
+							RendezvousUsers.stagedList.Remove( rMember );
+							if ( RendezvousUsers.AddMember( rMember, true ) == false )
+							{
+								RendezvousUsers.UpdateMember( rMember );
+							}
+
+							// The collection was changed so reset up a new enumerator
+							memberEnum = RendezvousUsers.stagedList.GetEnumerator();
 						}
 					}
 					catch ( Exception e2 )
 					{
 						log.Debug( e2.Message );
 						log.Debug( e2.StackTrace );
+
+						break;
 					}
 				}
 			}
+
+			log.Debug( "Syncing mDns exit" );
 		}
 
 		public 

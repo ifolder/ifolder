@@ -23,12 +23,13 @@
 using System;
 using System.Collections;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Services;
 using System.Web.Services.Protocols;
-using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -84,6 +85,7 @@ namespace Simias.mDns
 			Uri remoteUri = mdnsProv.ResolveLocation( Simias.mDns.Domain.ID, collectionID );
 			if ( remoteUri == null )
 			{
+				status.statusCode = SCodes.UnknownDomain;
 				return status;
 			}
 
@@ -99,7 +101,6 @@ namespace Simias.mDns
 				Simias.mDns.Domain.ID );
 
 			request.Headers.Add( "mdns-member", member.UserID );
-			
 			request.Method = "POST";
 			request.ContentLength = 0;
 
@@ -126,13 +127,27 @@ namespace Simias.mDns
 							HttpWebRequest request2 = WebRequest.Create( loginUri ) as HttpWebRequest;
 							WebState webState2 = new WebState();
 							webState2.InitializeWebRequest( request2 );
-							//request.Credentials = networkCredential;
-			
+
 							request2.Headers.Add( 
 								Simias.Security.Web.AuthenticationService.Login.DomainIDHeader,
 								Simias.mDns.Domain.ID );
 							request2.Headers.Add( "mdns-member", member.UserID );
-							request2.Headers.Add( "mdns-secret", oneTimeChallenge );
+
+							try
+							{
+								RSACryptoServiceProvider credential = 
+									Store.GetStore().CurrentUser.Credential;
+
+								// Decrypt the data with the member's private key
+								byte[] oneTime = Convert.FromBase64String( oneTimeChallenge );
+								byte[] decryptedOneTime = credential.Decrypt( oneTime, false );
+								request2.Headers.Add( "mdns-secret", Convert.ToBase64String( decryptedOneTime) );
+							}
+							catch( Exception enc )
+							{
+								log.Debug( enc.Message );
+								log.Debug( enc.StackTrace );
+							}
 			
 							request2.Method = "POST";
 							request2.ContentLength = 0;
