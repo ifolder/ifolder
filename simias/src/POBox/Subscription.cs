@@ -708,7 +708,7 @@ namespace Simias.POBox
 			c.Properties.AddProperty(pu);
 
 			// commit
-			c.IsStub = true;
+			c.Proxy = true;
 			c.Commit();
 
 			// check for a dir node

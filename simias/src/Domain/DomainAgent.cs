@@ -132,7 +132,7 @@ namespace Simias.Domain
 
 			// commit
 			c.Sealed = true;
-			c.IsStub = true;
+			c.Proxy = true;
 			c.Commit();
 			return c;
 		}

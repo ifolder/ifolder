@@ -598,19 +598,17 @@ namespace Simias.Storage
 							XmlNode xmlNode = commitDocument.ImportNode( mergeNode.Properties.PropertyRoot, true );
 							commitDocument.DocumentElement.AppendChild( xmlNode );
 						}
-						else
-						{
-							// This code path is used to commit an enterprise stub node object.
-							if ( node.IsStub )
-							{
-								// Validate this Collection object.
-								ValidateNodeForCommit( node );
+						break;
+					}
 
-								// Copy the XML node over to the modify document.
-								XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
-								commitDocument.DocumentElement.AppendChild( xmlNode );
-							}
-						}
+					case PropertyList.PropertyListState.Proxy:
+					{
+						// Validate this Collection object.
+						ValidateNodeForCommit( node );
+
+						// Copy the XML node over to the modify document.
+						XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
+						commitDocument.DocumentElement.AppendChild( xmlNode );
 						break;
 					}
 				}
@@ -654,6 +652,7 @@ namespace Simias.Storage
 					switch ( node.Properties.State )
 					{
 						case PropertyList.PropertyListState.Add:
+						case PropertyList.PropertyListState.Proxy:
 							store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0 ) );
 							node.Properties.State = PropertyList.PropertyListState.Update;
 							break;
@@ -920,7 +919,7 @@ namespace Simias.Storage
 					else if ( createCollection )
 					{
 						// If there is no collection owner specified, then one needs to be created.
-						if ( ( collectionOwner == null ) && !IsStub )
+						if ( collectionOwner == null )
 						{
 							// If a collection is being created, then a Member object containing the owner of the
 							// collection needs to be created also.

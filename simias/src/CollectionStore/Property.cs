@@ -833,7 +833,8 @@ namespace Simias.Storage
 			return ( ( state != PropertyList.PropertyListState.Add ) &&
 					 ( state != PropertyList.PropertyListState.Abort ) &&
 					 ( state != PropertyList.PropertyListState.Import)  &&
-					 ( state != PropertyList.PropertyListState.Disposed ) ) ? true : false;
+					 ( state != PropertyList.PropertyListState.Disposed ) &&
+					 ( state != PropertyList.PropertyListState.Proxy ) ) ? true : false;
 		}
 		#endregion
 

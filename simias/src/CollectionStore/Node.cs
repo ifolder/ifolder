@@ -86,13 +86,6 @@ namespace Simias.Storage
 		/// </summary>
 		[ NonSerialized() ]
 		protected bool mergeCollisions = true;
-
-		/// <summary>
-		/// Used to indicate that the collection is a place-holder until the real collection is
-		/// sync'ed down.
-		/// </summary>
-		[ NonSerialized() ]
-		protected bool stub = false;
 		#endregion
 
 		#region Properties
@@ -162,16 +155,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Used to indicate if this collection is a place-holder for the real collection which will
-		/// be sync'ed down later.
-		/// </summary>
-		internal bool IsStub
-		{
-			get { return stub; }
-			set { stub = value; }
-		}
-
-		/// <summary>
 		/// Gets the globally unique identifier for this object.
 		/// </summary>
 		public string ID
@@ -219,6 +202,15 @@ namespace Simias.Storage
 		public ulong LocalIncarnation
 		{
 			get { return ( ulong )properties.FindSingleValue( PropertyTags.LocalIncarnation ).Value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the Node object to be a proxy that is to be overwritten by the next sync cycle.
+		/// </summary>
+		public bool Proxy
+		{
+			get { return ( properties.State == PropertyList.PropertyListState.Proxy ) ? true : false; }
+			set { properties.State = value ? PropertyList.PropertyListState.Proxy : PropertyList.PropertyListState.Add; }
 		}
 
 		/// <summary>
@@ -498,15 +490,6 @@ namespace Simias.Storage
 		static public Node NodeFactory( Collection collection, Node node )
 		{
 			return NodeFactory( collection.StoreReference, node.Properties.PropertyDocument );
-		}
-
-		/// <summary>
-		/// Sets the Node object to be a proxy that is to be overwritten by the next sync cycle.
-		/// </summary>
-		public void SetProxy()
-		{
-			IsStub = true;
-			properties.State = PropertyList.PropertyListState.Internal;
 		}
 		#endregion
 	}
