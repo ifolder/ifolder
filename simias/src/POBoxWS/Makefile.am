@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-POBoxWS_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/Global.asax.cs $(srcdir)/POBoxService.asmx.cs $(srcdir)/SubscriptionDetails.cs
+POBoxWS_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/Global.asax.cs $(srcdir)/POBoxService.asmx.cs 
 POBoxWS_CSFILES := $(subst /,$(SEP),$(POBoxWS_CSFILES1))
 POBoxWS_INCLUDES =
 POBoxWS_RESOURCES =
