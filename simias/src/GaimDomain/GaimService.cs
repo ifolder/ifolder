@@ -268,6 +268,14 @@ namespace Simias.Gaim
 			log.Debug("SyncNow finished");
 			return(0);
 		}
+		
+		public static void UpdateSyncInterval(int newSyncInterval)
+		{
+			if (newSyncInterval != syncInterval)
+			{
+				syncInterval = newSyncInterval;
+			}
+		}
 
 		internal static void SyncThread()
 		{
