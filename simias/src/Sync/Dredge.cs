@@ -212,16 +212,19 @@ public class Dredger
 					{
 						foreach (ShallowNode sn in store)
 						{
-							Collection col = new Collection(store, sn);
-							SyncCollection sCol = new SyncCollection(col);
-							switch (sCol.Role)
+							if (!shuttingDown)
 							{
-								case SyncCollectionRoles.Master:
-									new Dredger(col, true);
-									break;
-								case SyncCollectionRoles.Local:
-									new Dredger(col, false);
-									break;
+								Collection col = new Collection(store, sn);
+								SyncCollection sCol = new SyncCollection(col);
+								switch (sCol.Role)
+								{
+									case SyncCollectionRoles.Master:
+										new Dredger(col, true);
+										break;
+									case SyncCollectionRoles.Local:
+										new Dredger(col, false);
+										break;
+								}
 							}
 						}
 					}
