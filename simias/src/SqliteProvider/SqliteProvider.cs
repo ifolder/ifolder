@@ -76,6 +76,10 @@ namespace Simias.Storage.Provider.Sqlite
 			TableName,
 			Type);
 
+		/// <summary>
+		/// Creates a Record Table.
+		/// </summary>
+		/// <param name="command">The command object to control sqlite.</param>
 		public static void Create(IDbCommand command)
 		{
 			try
@@ -100,6 +104,12 @@ namespace Simias.Storage.Provider.Sqlite
 			}
 		}
 
+		/// <summary>
+		/// Insert a record into the Record table.
+		/// </summary>
+		/// <param name="record">The record to insert.</param>
+		/// <param name="collectionId">The collection the record belongs to.</param>
+		/// <param name="command">The command object to control sqlite.</param>
 		public static void Insert(Record record, string collectionId, IDbCommand command)
 		{
 			try
@@ -120,6 +130,11 @@ namespace Simias.Storage.Provider.Sqlite
 			}
 		}
 
+		/// <summary>
+		/// Delete a record from the Record Table.
+		/// </summary>
+		/// <param name="recordId">The record to delete.</param>
+		/// <param name="command">The command object to control sqlite.</param>
 		public static void Delete(string recordId, IDbCommand command)
 		{
 			command.CommandText = string.Format(
@@ -130,6 +145,11 @@ namespace Simias.Storage.Provider.Sqlite
 			command.ExecuteNonQuery();
 		}
 
+		/// <summary>
+		/// Remove a collection from the Record Table.
+		/// </summary>
+		/// <param name="collectionId">The collection to remove.</param>
+		/// <param name="command">The command object to control sqlite.</param>
 		public static void RemoveCollection(string collectionId, IDbCommand command)
 		{
 			command.CommandText = string.Format(
@@ -141,6 +161,14 @@ namespace Simias.Storage.Provider.Sqlite
 		}
 
 
+		/// <summary>
+		/// Find a the specified record in the Record Table.
+		/// </summary>
+		/// <param name="recordId">The record to find.</param>
+		/// <param name="command">The command object to control sqlite.</param>
+		/// <param name="sName">The name of the record</param>
+		/// <param name="sType">The type of the record.</param>
+		/// <returns>True if found.</returns>
 		public static bool Select(string recordId, IDbCommand command, out string sName, out string sType)
 		{
 			bool found = false;
@@ -191,6 +219,10 @@ namespace Simias.Storage.Provider.Sqlite
 			Name,
 			Type);
 
+		/// <summary>
+		/// Create the Schema Table.
+		/// </summary>
+		/// <param name="command">The command object to control sqlite.</param>
 		public static void Create(IDbCommand command)
 		{
 			command.CommandText = createString;
@@ -288,9 +320,8 @@ namespace Simias.Storage.Provider.Sqlite
 		/// for each collection plus one table for all collections.
 		/// A transaction must be held when calling.
 		/// </summary>
-		/// <param name="tableName">Name of the table to create.</param>
 		/// <param name="command">The command object used to issue the query.</param>
-		public static void Create(string tableName, IDbCommand command)
+		public static void Create(IDbCommand command)
 		{
 			//string safeTableName = tableName.Replace("'", "''");
 			string safeTableName = vTableName;
@@ -308,14 +339,23 @@ namespace Simias.Storage.Provider.Sqlite
 			command.ExecuteNonQuery();
 		}
 
-		public static void Drop(string table, IDbCommand command)
+		/// <summary>
+		/// Delete the Value table.
+		/// </summary>
+		/// <param name="command">The command object to control sqlite.</param>
+		public static void Drop(IDbCommand command)
 		{
-			command.CommandText = string.Format("DROP TABLE '{0}'", table.Replace("'", "''"));
+			command.CommandText = string.Format("DROP TABLE '{0}'", vTableName);
 			command.ExecuteNonQuery();
 		}
 
 
-		public static void Insert(string table, Record record, IDbCommand command)
+		/// <summary>
+		/// Insert a record into the value table.
+		/// </summary>
+		/// <param name="record">The record to insert.</param>
+		/// <param name="command">The command object to control sqlite.</param>
+		public static void Insert(Record record, IDbCommand command)
 		{
 			string safeTable = vTableName;
 
@@ -339,7 +379,12 @@ namespace Simias.Storage.Provider.Sqlite
 			command.ExecuteNonQuery();
 		}
 
-		public static void Delete(string table, string recordId, IDbCommand command)
+		/// <summary>
+		/// Delete a record from the value table.
+		/// </summary>
+		/// <param name="recordId">The record to delete.</param>
+		/// <param name="command">The command object to control sqlite.</param>
+		public static void Delete(string recordId, IDbCommand command)
 		{
 			//string safeTable = table.Replace("'", "''");
 			string safeTable = vTableName;
@@ -353,7 +398,13 @@ namespace Simias.Storage.Provider.Sqlite
 			command.ExecuteNonQuery();
 		}
 
-		public static IDataReader Select(string table, string recordId, IDbCommand command)
+		/// <summary>
+		/// Find the record in the value table.
+		/// </summary>
+		/// <param name="recordId">The record to find.</param>
+		/// <param name="command">The command object to control sqlite.</param>
+		/// <returns>Data reader for the record.</returns>
+		public static IDataReader Select(string recordId, IDbCommand command)
 		{
 			//string safeTable = table.Replace("'", "''");
 			string safeTable = vTableName;
@@ -370,6 +421,15 @@ namespace Simias.Storage.Provider.Sqlite
 			return command.ExecuteReader();
 		}
 
+		/// <summary>
+		/// Read the next property from the supplied datareader.
+		/// </summary>
+		/// <param name="reader">The reader to read from</param>
+		/// <param name="sName">The property name.</param>
+		/// <param name="sType">The property type.</param>
+		/// <param name="sFlags">The property flags</param>
+		/// <param name="sValue">The value.</param>
+		/// <returns>True if property read.</returns>
 		public static bool Read(IDataReader reader, out string sName, out string sType, out string sFlags, out string sValue)
 		{
 			bool propertyFound = false;
@@ -394,6 +454,8 @@ namespace Simias.Storage.Provider.Sqlite
 	};
 	#endregion
 
+	#region InternalConnection class
+
 	/// <summary>
 	/// SQLITE needs to use a 
 	/// Class used to keep a connection per thread.
@@ -402,22 +464,348 @@ namespace Simias.Storage.Provider.Sqlite
 	{
 		internal SqliteConnection		sqliteDb;
 		internal IDbCommand				command;
+		ProviderConfig					conf;
+		Thread							thread;
+		bool							AlreadyDisposed;
 
 		/// <summary>
 		/// Called to initialize the DataBase.
 		/// </summary>
-		internal InternalConnection()
+		internal InternalConnection(ProviderConfig conf, string DbPath)
 		{
-			sqliteDb = new SqliteConnection();
+			this.conf = conf;
+			sqliteDb = new SqliteConnection("URI=file:" + DbPath);
+			thread = Thread.CurrentThread;
+			AlreadyDisposed = false;
 		}
 
-		internal void Dispose()
+		/// <summary>
+		/// 
+		/// </summary>
+		~InternalConnection()
 		{
-			if (command != null)
-				command.Dispose();
-			sqliteDb.Close();
+			Dispose(true);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public void Dispose()
+		{
+			Dispose(false);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="inFinalize"></param>
+		internal void Dispose(bool inFinalize)
+		{
+			if (!AlreadyDisposed)
+			{
+				if (!inFinalize)
+				{
+					GC.SuppressFinalize(this);
+				}
+
+				if (command != null)
+					command.Dispose();
+				sqliteDb.Close();
+				AlreadyDisposed = true;
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		internal bool IsAlive
+		{
+			get
+			{
+				return thread.IsAlive;
+			}
+		}
+
+		/// <summary>
+		/// Called to initialize the DataBase.
+		/// </summary>
+		private void Init()
+		{
+			command = sqliteDb.CreateCommand();
+
+			// Turn of synchronous access.
+			command.CommandText = "PRAGMA cache_size = " + conf.Get("CacheSize", "10000");
+			command.ExecuteNonQuery();
+
+			command.CommandText = "PRAGMA synchronous = " + conf.Get("Synchronous", "OFF");
+			command.ExecuteNonQuery();
+		}
+
+		/// <summary>
+		/// Called to Open an existing Collection store at the specified location.
+		/// </summary>
+		/// <param name="DbPath"></param>
+		internal void OpenStore(string DbPath)
+		{
+			try
+			{
+				if (File.Exists(DbPath))
+				{
+					sqliteDb.Open();
+					Init();
+				}
+				else
+				{
+					throw new System.IO.FileNotFoundException("DataBase Not found.");
+				}
+			}
+			catch
+			{
+				throw new OpenException(DbPath);
+			}
+		}
+
+		/// <summary>
+		/// Called to Create a new Collection Store at the specified location.
+		/// </summary>
+		/// <param name="DbPath"></param>
+		internal void CreateStore(string DbPath)
+		{
+			try
+			{
+				lock (sqliteDb)
+				{
+					// Make sure the Data Base does not exist.
+					if (!File.Exists(DbPath))
+					{
+						// Create the store
+						sqliteDb.ConnectionString = "URI=file:" + DbPath;
+						sqliteDb.Open();
+						
+						IDbTransaction trans = sqliteDb.BeginTransaction();
+						try
+						{
+							// Create the Record Table.
+							Init();
+							RecordTable.Create(command);
+							SchemaTable.Create(command);
+							ValueTable.Create(command);
+						}
+						catch (Exception ex)
+						{
+							trans.Rollback();
+							File.Delete(DbPath);
+							throw ex;
+						}
+						trans.Commit();
+					}
+					else
+					{
+						throw new ExistsException(DbPath);
+					}
+				}
+				AlreadyDisposed = false;
+			}
+			catch (Exception ex)
+			{
+				throw new CreateException(DbPath, ex);
+			}
 		}
 	}
+
+	#endregion
+
+	#region DbManager class
+
+	internal class DbManager
+	{
+        static Hashtable	dbTable = new Hashtable(5);
+		ProviderConfig		conf;
+		internal Hashtable	connTable;
+		internal bool		opened;
+		int					threadCount = 0;
+		int					count = 0;
+		string				storePath;
+		string				DbPath;
+		const string		Name = "ColSqlite.db";
+
+		DbManager(ProviderConfig conf)
+		{
+			this.conf = conf;
+			connTable = new Hashtable();
+			opened = false;
+			storePath = Path.GetFullPath(conf.Path);
+			DbPath = System.IO.Path.Combine(storePath, Name);
+		}
+
+		~DbManager()
+		{
+			Dispose(true);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		internal InternalConnection GetConn()
+		{
+			InternalConnection instance;
+			bool newConnection = false;
+			object threadId = Thread.CurrentThread.GetHashCode();
+			lock (connTable)
+			{
+				// See if we need to cleanup handles
+				if (threadCount == 0)
+				{
+					threadCount = System.Diagnostics.Process.GetCurrentProcess().Threads.Count;
+				}
+				if (connTable.Count > threadCount)
+				{
+					threadCount = System.Diagnostics.Process.GetCurrentProcess().Threads.Count;
+					// If we are still greater cleanup dead connections.
+					if (connTable.Count > threadCount)
+					{
+						ArrayList badConns = new ArrayList();
+						foreach (DictionaryEntry item in connTable)
+						{
+							InternalConnection conn = (InternalConnection)item.Value;
+							if (!conn.IsAlive)
+							{
+								badConns.Add(item.Key);
+							}
+						}
+						foreach (object key in badConns)
+						{
+							connTable.Remove(key);
+						}
+					}
+				}
+				if (connTable.Contains(threadId))
+				{
+					instance = (InternalConnection)connTable[threadId];	
+				}
+				else
+				{
+					instance = new InternalConnection(conf, DbPath);
+					connTable.Add(threadId, instance);
+					newConnection = true;
+				}
+			}
+			if (newConnection && opened)
+			{
+				instance.OpenStore(DbPath);
+			}
+			return instance;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="conf"></param>
+		/// <returns></returns>
+		internal static DbManager GetManager(ProviderConfig	 conf)
+		{
+			DbManager dbM = null;
+			// Get the Hastable for this Store.
+			lock (dbTable)
+			{
+				if (dbTable.Contains(conf.Path))
+				{
+					dbM = (DbManager)dbTable[conf.Path];
+				}
+				else
+				{
+					dbM = new DbManager(conf);
+					dbTable.Add(conf.Path, dbM);
+				}
+				dbM.count++;
+			}
+
+			return dbM;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="inFinalize"></param>
+		internal void Dispose(bool inFinalize)
+		{
+			try
+			{
+				lock (connTable)
+				{
+					if (--count == 0 || inFinalize)
+					{
+						foreach (DictionaryEntry item in connTable)
+						{
+							InternalConnection conn = (InternalConnection)item.Value;
+							conn.Dispose();
+						}
+						connTable.Clear();
+						count = 0;
+					}
+				}
+			}
+			catch
+			{
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public void Dispose()
+		{
+			Dispose(false);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		internal void OpenStore()
+		{
+			GetConn().OpenStore(DbPath);
+			opened = true;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		internal void CreateStore()
+		{
+			GetConn().CreateStore(DbPath);
+			opened = true;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		internal void Delete()
+		{
+			try
+			{
+				lock (connTable)
+				{
+					foreach (DictionaryEntry item in connTable)
+					{
+						InternalConnection conn = (InternalConnection)item.Value;
+						conn.Dispose();
+					}
+					connTable.Clear();
+					count = 0;
+					File.Delete(DbPath);
+					Provider.Delete(storePath);
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new DeleteException(DbPath, ex);
+			}
+		}
+	}
+
+	#endregion
+
 
 	#region SqliteProvider class
 
@@ -443,55 +831,14 @@ namespace Simias.Storage.Provider.Sqlite
 		#region Varibles
 
 		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(SqliteProvider));
-		Hashtable				connectionTable = new Hashtable();
 		ProviderConfig			conf;
-
-		/// <summary>
-		/// Collection Table. Holds all collection nodes.
-		/// </summary>
-		const string			CollectionTable = "T_Collection";
-		
-		/// <summary>
-		/// All tables are prefixed with this string.
-		/// </summary>
-		const string			TablePrefix = "T_";
+		DbManager				manager;
 		bool					AlreadyDisposed;
-		string					DbPath;
-		const string			Name = "ColSqlite.db";
 		const string 			version = "0.2";
-		string					storePath;
-		bool					opened = false;
+		
 		#endregion
 
-		InternalConnection sqliteConn
-		{
-			get
-			{
-				InternalConnection instance;
-				bool newConnection = false;
-				object threadId = Thread.CurrentThread.GetHashCode();
-				lock (connectionTable)
-				{
-					if (connectionTable.Contains(threadId))
-					{
-						instance = (InternalConnection)connectionTable[threadId];	
-					}
-					else
-					{
-						instance = new InternalConnection();
-						connectionTable.Add(threadId, instance);
-						newConnection = true;
-					}
-				}
-				if (newConnection && opened)
-				{
-					OpenStore();
-				}
-
-				return instance;
-			}
-		}
-
+		
 		#region Constructor/Finalizer
 		/// <summary>
 		/// 
@@ -500,8 +847,8 @@ namespace Simias.Storage.Provider.Sqlite
 		public SqliteProvider(ProviderConfig conf)
 		{
 			this.conf = conf;
-			storePath = Path.GetFullPath(conf.Path);
-			DbPath = System.IO.Path.Combine(storePath, Name);
+			manager = DbManager.GetManager(conf);
+			AlreadyDisposed = false;
 		}
 
 		/// <summary>
@@ -521,11 +868,10 @@ namespace Simias.Storage.Provider.Sqlite
 		/// Called to create a record in the specified table.
 		/// A transaction must be held when called.
 		/// </summary>
-		/// <param name="table">Table to create the record in.</param>
 		/// <param name="collectionId">The collection that this node belongs to.</param>
 		/// <param name="recordXml">Xml that represents the record.</param>
 		/// <param name="command">Command object used to control database.</param>
-		private void CreateRecord(string table, string collectionId, XmlElement recordXml, IDbCommand command)
+		private void CreateRecord(string collectionId, XmlElement recordXml, IDbCommand command)
 		{
 			Record record = new Record(recordXml);
 			
@@ -539,7 +885,7 @@ namespace Simias.Storage.Provider.Sqlite
 			RecordTable.Insert(record, collectionId, command);
 		
 			// Now add to the value table.
-			ValueTable.Insert(table, record, command);
+			ValueTable.Insert(record, command);
 		}
 
 		/// <summary>
@@ -550,8 +896,8 @@ namespace Simias.Storage.Provider.Sqlite
 		/// <param name="command">Command object used to control database.</param>
 		private void RemoveCollection(string collectionId, IDbCommand command)
 		{
-			// Now remove from the Collection Table.
-			ValueTable.Delete(CollectionTable, collectionId, command);
+			// Now remove from the collection node.
+			ValueTable.Delete(collectionId, command);
 
 			// Now remove all nodes from the Record table that belong to the collection.
 			RecordTable.RemoveCollection(collectionId, command);
@@ -566,13 +912,12 @@ namespace Simias.Storage.Provider.Sqlite
 		/// <param name="command">Command object used to control database.</param>
 		private void CreateRecords(XmlDocument doc, string collectionId, IDbCommand command)
 		{
-			string table = TablePrefix + collectionId;
 			XmlElement root = doc.DocumentElement;
 			XmlNodeList recordList = root.SelectNodes(XmlTags.ObjectTag);
 
 			foreach (XmlElement recordEl in recordList)
 			{
-				CreateRecord(table, collectionId, recordEl, command);
+				CreateRecord(collectionId, recordEl, command);
 			}
 		}
 
@@ -617,7 +962,7 @@ namespace Simias.Storage.Provider.Sqlite
 			RecordTable.Delete(recordId, command);
 			
 			// Delete the Values.
-			ValueTable.Delete(TablePrefix+collectionId, recordId, command);
+			ValueTable.Delete(recordId, command);
 		}
 
 		/// <summary>
@@ -633,35 +978,9 @@ namespace Simias.Storage.Provider.Sqlite
 					GC.SuppressFinalize(this);
 				}
 
-				lock (connectionTable)
-				{
-					if (connectionTable.Count > 0)
-					{
-						foreach (DictionaryEntry entry in connectionTable)
-						{
-							InternalConnection conn = (InternalConnection)entry.Value;
-							conn.Dispose();
-						}
-						connectionTable.Clear();
-					}
-				}
+				manager.Dispose();
 				AlreadyDisposed = true;
 			}
-		}
-
-		/// <summary>
-		/// Called to initialize the DataBase.
-		/// </summary>
-		private void Init(InternalConnection conn)
-		{
-			IDbCommand command = conn.command = conn.sqliteDb.CreateCommand();
-			
-			// Turn of synchronous access.
-			command.CommandText = "PRAGMA cache_size = " + conf.Get("CacheSize", "10000");
-			command.ExecuteNonQuery();
-
-			command.CommandText = "PRAGMA synchronous = " + conf.Get("Synchronous", "OFF");
-			command.ExecuteNonQuery();
 		}
 
 		#endregion
@@ -675,51 +994,9 @@ namespace Simias.Storage.Provider.Sqlite
 		/// </summary>
 		public void CreateStore()
 		{
-			try
-			{
-				InternalConnection conn = sqliteConn;
-				SqliteConnection sqliteDb = conn.sqliteDb;
-				lock (sqliteDb)
-				{
-					// Make sure the Data Base does not exist.
-					if (!File.Exists(DbPath))
-					{
-						// Create the store
-						sqliteDb.ConnectionString = "URI=file:" + DbPath;
-						sqliteDb.Open();
-						opened = true;
-
-						// Set the version.
-						conf.Version = version;
-					
-						IDbTransaction trans = sqliteDb.BeginTransaction();
-						try
-						{
-							// Create the Record Table.
-							Init(conn);
-							IDbCommand command = conn.command;
-							RecordTable.Create(command);
-							SchemaTable.Create(command);
-							ValueTable.Create(CollectionTable, command);
-						}
-						catch (Exception ex)
-						{
-							trans.Rollback();
-							throw ex;
-						}
-						trans.Commit();
-					}
-					else
-					{
-						throw new ExistsException(DbPath);
-					}
-				}
-				AlreadyDisposed = false;
-			}
-			catch (Exception ex)
-			{
-				throw new CreateException(DbPath, ex);
-			}
+			manager.CreateStore();
+			// Set the version.
+			conf.Version = version;
 		}
 
 
@@ -728,16 +1005,8 @@ namespace Simias.Storage.Provider.Sqlite
 		/// </summary>
 		public void DeleteStore()
 		{
-			try
-			{
-				Dispose(false);
-				File.Delete(DbPath);
-				Provider.Delete(storePath);
-			}
-			catch (Exception ex)
-			{
-				throw new DeleteException(DbPath, ex);
-			}
+			Dispose();
+			manager.Delete();
 		}
 
 
@@ -746,32 +1015,12 @@ namespace Simias.Storage.Provider.Sqlite
 		/// </summary>
 		public void OpenStore()
 		{
-			try
+			// Make sure the version is correct.
+			if (conf.Version != version)
 			{
-				InternalConnection conn = sqliteConn;
-				SqliteConnection sqliteDb = conn.sqliteDb;
-				if (File.Exists(DbPath))
-				{
-					// Make sure the version is correct.
-					if (conf.Version != version)
-					{
-						throw new VersionException(DbPath, conf.Version, version);
-					}
-					sqliteDb.ConnectionString = "URI=file:" + DbPath;
-					sqliteDb.Open();
-					opened = true;
-					Init(conn);
-					AlreadyDisposed = false;
-				}
-				else
-				{
-					throw new System.IO.FileNotFoundException("DataBase Not found.");
-				}
+				throw new VersionException(conf.Path, conf.Version, version);
 			}
-			catch
-			{
-				throw new OpenException(DbPath);
-			}
+			manager.OpenStore();
 		}
 
 		
@@ -798,7 +1047,7 @@ namespace Simias.Storage.Provider.Sqlite
 		{
 			try
 			{
-				InternalConnection conn = sqliteConn;
+				InternalConnection conn = manager.GetConn();
 				IDbTransaction trans = conn.sqliteDb.BeginTransaction();
 				try
 				{
@@ -831,7 +1080,7 @@ namespace Simias.Storage.Provider.Sqlite
 		{
 			try
 			{
-				InternalConnection conn = sqliteConn;
+				InternalConnection conn = manager.GetConn();
 				IDbTransaction trans = conn.sqliteDb.BeginTransaction();
 				try
 				{
@@ -869,8 +1118,9 @@ namespace Simias.Storage.Provider.Sqlite
 			
 			string Name;
 			string Type;
-			SqliteConnection sqliteDb = sqliteConn.sqliteDb;
-			IDbCommand command = sqliteConn.command;
+			InternalConnection conn = manager.GetConn();
+			SqliteConnection sqliteDb = conn.sqliteDb;
+			IDbCommand command = conn.command;
 			if (RecordTable.Select(recordId, command, out Name, out Type))
 			{
 				doc = new XmlDocument();
@@ -881,7 +1131,7 @@ namespace Simias.Storage.Provider.Sqlite
 				root.AppendChild(node);
 				
 				// Now get the properties.
-				IDataReader reader = ValueTable.Select(TablePrefix+collectionId, recordId, command);
+				IDataReader reader = ValueTable.Select(recordId, command);
 				if (reader != null)
 				{
 					string Flags;
@@ -1031,7 +1281,8 @@ namespace Simias.Storage.Provider.Sqlite
 							op);
 					}
 				}
-				IDbCommand command = sqliteConn.command;
+				InternalConnection conn = manager.GetConn();
+				IDbCommand command = conn.command;
 				command.CommandText = selectNodes;
 				IDataReader reader = command.ExecuteReader();
 				resultSet = new SqliteResultSet(reader);
@@ -1049,7 +1300,7 @@ namespace Simias.Storage.Provider.Sqlite
 		/// </summary>
 		public Uri StoreDirectory
 		{
-			get {return new Uri(storePath);}
+			get {return new Uri(conf.Path);}
 		}
 		
 		#endregion
