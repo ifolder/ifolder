@@ -12,8 +12,8 @@ SimiasClient_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Security.dll
 SimiasClient_LIBPATH = $(NOVELL_SECURITY_DIR)
 
 EXTRA_DIST = $(SimiasClient_CSFILES1) $(srcdir)/SimiasSetup.cs.in
-SIMIAS_SETUP_CS_IN = SimiasSetup.cs.in
-simias_setup_cs: $(SIMIAS_SETUP_CS_IN)
+
+SimiasSetup.cs: SimiasSetup.cs.in
 	sed -e 's,@_prefix_@,@prefix@,g' -e 's,@_bindir_@,@bindir@,g' -e 's,@_datadir_@,@datadir@,g' -e 's,@_includedir_@,@includedir@,g' -e 's,@_infodir_@,@infodir@,g' -e 's,@_libexecdir_@,@libexecdir@,g' -e 's,@_libdir_@,@libdir@,g' -e 's,@_localstatedir_@,@localstatedir@,g' -e 's,@_mandir_@,@mandir@,g' -e 's,@_sbindir_@,@sbindir@,g' -e 's,@_sharedstatedir_@,@sharedstatedir@,g' -e 's,@_sysconfdir_@,@sysconfdir@,g' -e 's,@_webdir_@,@webdir@,g' -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_targetdir_@,@targetdir@,g' $< > $@
 	chmod +x $@
 

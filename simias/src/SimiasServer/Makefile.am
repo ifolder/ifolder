@@ -13,9 +13,7 @@ PROJECT_FILES = $(srcdir)/SimiasServer.csproj
 
 EXTRA_DIST = $(SimiasServer_CSFILES) $(PROJECT_FILES) App.ico simias.in simias.cmd SimiasServer.exe.config
 
-SIMIAS_IN = simias.in
-
-simias: $(SIMIAS_IN)
+simias: $(simias.in)
 	sed -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_bindir_@,@bindir@,g' $< > $@
 	chmod +x $@
 
