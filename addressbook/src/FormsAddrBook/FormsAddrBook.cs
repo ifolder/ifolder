@@ -486,23 +486,31 @@ namespace Novell.iFolder.FormsAddrBook
 			saveFileDialog.Filter = "vcf files (*.vcf)|*.vcf";
 			saveFileDialog.RestoreDirectory = true;
 
-			if (saveFileDialog.ShowDialog() == DialogResult.OK)
+			foreach (ListViewItem lvi in booksContacts.SelectedContacts)
 			{
-				try
+				Contact c = (Contact)lvi.Tag;
+				saveFileDialog.Title = "Export vCard for " + c.FN;
+				Name name = c.GetPreferredName();
+				saveFileDialog.FileName = name.Given + name.Family;
+
+				if (saveFileDialog.ShowDialog() == DialogResult.OK)
 				{
-					Cursor.Current = Cursors.WaitCursor;
-					contact.ExportVCard(saveFileDialog.FileName);
-					Cursor.Current = Cursors.Default;
-				}
-				catch (SimiasException e)
-				{
-					e.LogError();
-					MessageBox.Show("An error occurred while exporting the vCard.  Please see the log file for additional information", "vCard Export Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-				}
-				catch (Exception e)
-				{
-					logger.Debug(e, "Exporting vCard");
-					MessageBox.Show("An error occurred while exporting the vCard.  Please see the log file for additional information", "vCard Export Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					try
+					{
+						Cursor.Current = Cursors.WaitCursor;
+						c.ExportVCard(saveFileDialog.FileName);
+						Cursor.Current = Cursors.Default;
+					}
+					catch (SimiasException e)
+					{
+						e.LogError();
+						MessageBox.Show("An error occurred while exporting the vCard.  Please see the log file for additional information", "vCard Export Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					}
+					catch (Exception e)
+					{
+						logger.Debug(e, "Exporting vCard");
+						MessageBox.Show("An error occurred while exporting the vCard.  Please see the log file for additional information", "vCard Export Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					}
 				}
 			}
 		}
@@ -577,6 +585,13 @@ namespace Novell.iFolder.FormsAddrBook
 			if (e.SingleSelected)
 			{
 				contact = (Contact)((ListViewItem)booksContacts.SelectedContacts[0]).Tag;
+
+				// Enable the vCard export button.
+				toolBar1.Buttons[4].Enabled = true;
+			}
+			else if (e.ItemSelected)
+			{
+				contact = null;
 
 				// Enable the vCard export button.
 				toolBar1.Buttons[4].Enabled = true;

@@ -630,6 +630,9 @@ namespace Novell.iFolder.FormsBookLib
 			// Is a single item selected?
 			bool singleSelected = this.contacts.SelectedItems.Count == 1;
 
+			// Is an item selected?
+			bool itemSelected = this.contacts.SelectedItems.Count > 0;
+
 			// Walk the selected items collection to see if valid items were selected.
 			foreach (ListViewItem item in this.contacts.SelectedItems)
 			{
@@ -642,7 +645,7 @@ namespace Novell.iFolder.FormsBookLib
 			}
 
 			// Fire the event that contacts have been selected.
-			ContactSelectedEventArgs args = new ContactSelectedEventArgs(validSelected, singleSelected);
+			ContactSelectedEventArgs args = new ContactSelectedEventArgs(validSelected, itemSelected, singleSelected);
 			if (ContactSelected != null)
 			{
 				ContactSelected(this, args);
@@ -863,15 +866,18 @@ namespace Novell.iFolder.FormsBookLib
 	{
 		private bool validSelected;
 		private bool singleSelected;
+		private bool itemSelected;
 
 		/// <summary>
 		/// Initializes a new instance of the ContactSelectedEventArgs class.
 		/// </summary>
 		/// <param name="validSelected">Indicates if the selected contact can be placed in the picked list.</param>
+		/// <param name="itemSelected">Indicates if one or more contacts are selected.</param>
 		/// <param name="singleSelected">Indicates if there is only a single contact selected.</param>
-		public ContactSelectedEventArgs(bool validSelected, bool singleSelected)
+		public ContactSelectedEventArgs(bool validSelected, bool itemSelected, bool singleSelected)
 		{
 			this.validSelected = validSelected;
+			this.itemSelected = itemSelected;
 			this.singleSelected = singleSelected;
 		}
 
@@ -895,6 +901,17 @@ namespace Novell.iFolder.FormsBookLib
 			get
 			{
 				return singleSelected;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating if a contact is selected.
+		/// </summary>
+		public bool ItemSelected
+		{
+			get
+			{
+				return itemSelected;
 			}
 		}
 		#endregion
