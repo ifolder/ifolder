@@ -6,7 +6,9 @@ export MONO_PATH := $(MONO_PATH)
 dist-hook:
 	rm -rf `find $(distdir) -name CVS`
 
-EXTRA_DIST = $(srcdir)/English.lproj $(srcdir)/Info.plist $(srcdir)/iFolder.xcode $(srcdir)/iFolder_Prefix.pch $(srcdir)/ifolder.icns $(srcdir)/main.m $(srcdir)/version.plist $(srcdir)/src $(srcdir)/webservice $(srcdir)/notify
+LPROJDIRS = $(srcdir)/Japanese.lproj
+
+EXTRA_DIST = $(LPROJDIRS) $(srcdir)/English.lproj $(srcdir)/Info.plist $(srcdir)/iFolder.xcode $(srcdir)/iFolder_Prefix.pch $(srcdir)/ifolder.icns $(srcdir)/main.m $(srcdir)/version.plist $(srcdir)/src $(srcdir)/webservice $(srcdir)/notify
 
 
 if DEBUG
@@ -42,4 +44,30 @@ distclean-local:
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
+
+update-strings:
+	genstrings -o $(srcdir)/English.lproj `cat intlsrcfiles`
+
+update-nibstrings:
+	nibfiles=`cat intlnibfiles`; \
+	for nibfile in $$nibfiles; do \
+		nibtool -L $$nibfile > $$nibfile.strings; \
+	done
+
+clean-nibstrings:
+	nibfiles=`cat intlnibfiles`; \
+	for nibfile in $$nibfiles; do \
+		rm $$nibfile.strings; \
+	done
+
+update-nibfiles:
+	lprojdirs='$(LPROJDIRS)'; \
+	echo $$lprojdirs; \
+	for lprojdir in $$lprojdirs; do \
+		nibfiles=`cat intlnibfiles`; \
+		for nibfile in $$nibfiles; do \
+			nibfile=$$lprojdir/`basename $$nibfile`; \
+			nibtool -v -d $$nibfile.strings -I $$nibfile -W $$nibfile $$nibfile; \
+		done; \
+	done
 

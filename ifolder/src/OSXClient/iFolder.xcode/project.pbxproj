@@ -114,6 +114,13 @@
 			);
 			hasScannedForEncodings = 1;
 			isa = PBXProject;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				"",
+			);
 			mainGroup = 29B97314FDCFA39411CA2CEA;
 			projectDirPath = "";
 			targets = (
@@ -163,7 +170,8 @@
 		};
 		29B97317FDCFA39411CA2CEA = {
 			children = (
-				3E6F7B0D07B3EC5000F46F36,
+				3EF97A7B07DF77E100BA8880,
+				3E9D3F2307DFA79C00AA93D6,
 				8D1107310486CEB800E47090,
 				089C165CFE840E0CC02AAC07,
 				29B97318FDCFA39411CA2CEA,
@@ -1014,16 +1022,6 @@
 			settings = {
 			};
 		};
-		3E6F7B0D07B3EC5000F46F36 = {
-			children = (
-				3E6F7B0E07B3EC5000F46F36,
-			);
-			isa = PBXVariantGroup;
-			name = Credits.rtf;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		3E6F7B0E07B3EC5000F46F36 = {
 			isa = PBXFileReference;
 			lastKnownFileType = text.rtf;
@@ -1031,12 +1029,6 @@
 			path = English.lproj/Credits.rtf;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		3E6F7B0F07B3EC5000F46F36 = {
-			fileRef = 3E6F7B0D07B3EC5000F46F36;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		3E70A407078DFB8A0075681D = {
 			children = (
@@ -1293,6 +1285,30 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		3E9D3F2307DFA79C00AA93D6 = {
+			children = (
+				3E6F7B0E07B3EC5000F46F36,
+				3E9D3F2507DFA7A700AA93D6,
+			);
+			isa = PBXVariantGroup;
+			name = Credits.rtf;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E9D3F2407DFA79C00AA93D6 = {
+			fileRef = 3E9D3F2307DFA79C00AA93D6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E9D3F2507DFA7A700AA93D6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.rtf;
+			name = Japanese;
+			path = Japanese.lproj/Credits.rtf;
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		3EA94F5F07B823CA0088FD0F = {
 			fileEncoding = 30;
@@ -1976,6 +1992,31 @@
 			settings = {
 			};
 		};
+		3EF97A7B07DF77E100BA8880 = {
+			children = (
+				3EF97A7C07DF77E100BA8880,
+			);
+			isa = PBXVariantGroup;
+			name = Localizable.strings;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EF97A7C07DF77E100BA8880 = {
+			fileEncoding = 10;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = English;
+			path = English.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EF97A7D07DF77E100BA8880 = {
+			fileRef = 3EF97A7B07DF77E100BA8880;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //3E0
 //3E1
 //3E2
@@ -2085,7 +2126,7 @@
 				3EEA9A6A07B1DC4F0015FCF4,
 				3E6F7ACB07B3E4DB00F46F36,
 				3E6F7ACF07B3E55A00F46F36,
-				3E6F7B0F07B3EC5000F46F36,
+				3E9D3F2407DFA79C00AA93D6,
 				3E66705407B7D3CC0047E683,
 				3EA94F6007B823CA0088FD0F,
 				3EE886EC07B92E8B00484B9F,
@@ -2121,6 +2162,7 @@
 				3EA98AA107C7A4520078451D,
 				3E0E6CBE07C7D41B0057D505,
 				3E0E6D0107C7E7290057D505,
+				3EF97A7D07DF77E100BA8880,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

@@ -35,6 +35,7 @@
 #define STATE_SHOWMAINWINDOW	@"state.showmainwindow"
 #define STATE_SHOWLOGWINDOW		@"state.showlogwindow"
 
+
 @class LoginWindowController;
 @class iFolder;
 @class iFolderData;

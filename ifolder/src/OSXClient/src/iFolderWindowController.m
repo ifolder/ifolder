@@ -161,7 +161,7 @@ static iFolderWindowController *sharedInstance = nil;
 
 - (IBAction)refreshWindow:(id)sender
 {
-	[[NSApp delegate] addLog:@"Refreshing iFolder view"];
+	[[NSApp delegate] addLog:NSLocalizedString(@"Refreshing iFolder view", nil)];
 
 	if([[NSApp delegate] simiasIsRunning])
 		[[iFolderData sharedInstance] refresh:NO];
@@ -221,9 +221,9 @@ static iFolderWindowController *sharedInstance = nil;
 {
 	if([[iFolderData sharedInstance] getDomainCount] < 1)
 	{
-		NSBeginAlertSheet(@"No iFolder Domains", @"OK", nil, nil,
+		NSBeginAlertSheet(NSLocalizedString(@"No iFolder Domains", nil), NSLocalizedString(@"OK", nil), nil, nil,
 			[self window], self, nil, nil, NULL, 
-			@"A new iFolder cannot be created because you have not attached to any iFolder Servers.");
+			NSLocalizedString(@"A new iFolder cannot be created because you have not attached to any iFolder Servers.", nil));
 	}
 	else
 	{
@@ -248,9 +248,9 @@ static iFolderWindowController *sharedInstance = nil;
 - (IBAction)revertiFolder:(id)sender
 {
 	int selIndex = [ifoldersController selectionIndex];
-	NSBeginAlertSheet(@"Revert iFolder", @"Yes", @"Cancel", nil,
+	NSBeginAlertSheet(NSLocalizedString(@"Revert iFolder", nil), NSLocalizedString(@"Yes", nil), NSLocalizedString(@"Cancel", nil), nil,
 		[self window], self, @selector(revertiFolderResponse:returnCode:contextInfo:), nil, (void *)selIndex, 
-		@"Are you sure you want to revert the selected iFolder and make it a normal folder?");
+		NSLocalizedString(@"Are you sure you want to revert the selected iFolder and make it a normal folder?", nil));
 }
 
 
@@ -262,9 +262,9 @@ static iFolderWindowController *sharedInstance = nil;
 		{
 			iFolder *ifolder = [[ifoldersController arrangedObjects] objectAtIndex:(int)contextInfo];
 
-			NSLog(@"Reverting iFolder %@", [ifolder Name]);
+			NSLog(NSLocalizedString(@"Reverting iFolder %@", nil), [ifolder Name]);
 
-			[[NSApp delegate] addLog:[NSString stringWithFormat:@"Reverting iFolder %@", [ifolder Name]]];
+			[[NSApp delegate] addLog:[NSString stringWithFormat:NSLocalizedString(@"Reverting iFolder %@", nil), [ifolder Name]]];
 
 			@try
 			{
@@ -272,7 +272,7 @@ static iFolderWindowController *sharedInstance = nil;
 			}
 			@catch (NSException *e)
 			{
-				NSRunAlertPanel(@"Error reverting iFolder", [e name], @"OK",nil, nil);
+				NSRunAlertPanel(NSLocalizedString(@"Error reverting iFolder", nil), [e name], NSLocalizedString(@"OK", nil),nil, nil);
 			}
 			break;
 		}
@@ -299,9 +299,10 @@ static iFolderWindowController *sharedInstance = nil;
 - (IBAction)deleteiFolder:(id)sender
 {
 	int selIndex = [ifoldersController selectionIndex];
-	NSBeginAlertSheet(@"Delete iFolder", @"Yes", @"Cancel", nil,
+	NSBeginAlertSheet(NSLocalizedString(@"Delete iFolder", nil), NSLocalizedString(@"Yes", nil), 
+		NSLocalizedString(@"Cancel", nil), nil,
 		[self window], self, @selector(deleteiFolderResponse:returnCode:contextInfo:), nil, (void *)selIndex, 
-		@"Are you sure you want to delete the selected iFolder?");
+		NSLocalizedString(@"Are you sure you want to delete the selected iFolder?", nil));
 }
 
 
@@ -323,8 +324,6 @@ static iFolderWindowController *sharedInstance = nil;
 
 			NSLog(@"Deleting iFolder at index %@", [ifolder Name]);
 
-			[[NSApp delegate] addLog:[NSString stringWithFormat:@"Deleting iFolder at index %@", [ifolder Name]]];
-
 			@try
 			{
 				[[iFolderData sharedInstance] deleteiFolder:[ifolder ID]];
@@ -333,7 +332,7 @@ static iFolderWindowController *sharedInstance = nil;
 			}
 			@catch (NSException *e)
 			{
-				NSRunAlertPanel(@"Error deleting iFolder", [e name], @"OK",nil, nil);
+				NSRunAlertPanel(NSLocalizedString(@"Error deleting iFolder", nil), [e name], NSLocalizedString(@"OK", nil),nil, nil);
 			}
 			break;
 		}
@@ -404,7 +403,7 @@ static iFolderWindowController *sharedInstance = nil;
 	@catch (NSException *e)
 	{
 		NSString *error = [e name];
-		NSRunAlertPanel(@"Error creating iFolder", [e name], @"OK",nil, nil);
+		NSRunAlertPanel(NSLocalizedString(@"Error creating iFolder", nil), [e name], NSLocalizedString(@"OK", nil),nil, nil);
 	}
 }
 
@@ -424,7 +423,7 @@ static iFolderWindowController *sharedInstance = nil;
 	@catch (NSException *e)
 	{
 		NSString *error = [e name];
-		NSRunAlertPanel(@"Error connecting to Server", [e name], @"OK",nil, nil);
+		NSRunAlertPanel(NSLocalizedString(@"Error connecting to Server", nil), [e name], NSLocalizedString(@"OK", nil),nil, nil);
 	}
 }
 
@@ -567,9 +566,9 @@ static iFolderWindowController *sharedInstance = nil;
 
 	// New iFolder ToolbarItem
 	NSToolbarItem *item=[[NSToolbarItem alloc] initWithItemIdentifier:@"NewiFolder"];
-	[item setPaletteLabel:@"Create a new iFolder"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"New"]; // name for the item in the toolbar
-	[item setToolTip:@"Create a new iFolder"]; // tooltip
+	[item setPaletteLabel:NSLocalizedString(@"Create a new iFolder", nil)]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"New", nil)]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"Create a new iFolder", nil)]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(newiFolder:)];
 	[item setImage:[NSImage imageNamed:@"newifolder32"]];
@@ -578,9 +577,9 @@ static iFolderWindowController *sharedInstance = nil;
 	[item release];
 
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"SetupiFolder"];
-	[item setPaletteLabel:@"Setup iFolder"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"Setup"]; // name for the item in the toolbar
-	[item setToolTip:@"Setup a shared iFolder"]; // tooltip
+	[item setPaletteLabel:NSLocalizedString(@"Setup iFolder", nil)]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"Setup", nil)]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"Setup a shared iFolder", nil)]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(setupiFolder:)];
 	[item setImage:[NSImage imageNamed:@"setup32"]];
@@ -594,9 +593,9 @@ static iFolderWindowController *sharedInstance = nil;
 	[item release];
 
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"SynciFolder"];
-	[item setPaletteLabel:@"Sync iFolder"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"Sync"]; // name for the item in the toolbar
-	[item setToolTip:@"Sync selected iFolder now"]; // tooltip
+	[item setPaletteLabel:NSLocalizedString(@"Sync iFolder", nil)]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"Sync", nil)]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"Sync selected iFolder now", nil)]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(synciFolder:)];
 	[item setImage:[NSImage imageNamed:@"sync32"]];
@@ -606,9 +605,9 @@ static iFolderWindowController *sharedInstance = nil;
 	
 
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"ShareiFolder"];
-	[item setPaletteLabel:@"Share an iFolder"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"Share"]; // name for the item in the toolbar
-	[item setToolTip:@"Share an iFolder"]; // tooltip
+	[item setPaletteLabel:NSLocalizedString(@"Share an iFolder", nil)]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"Share", nil)]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"Share an iFolder", nil)]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(shareiFolder:)];
 	[item setImage:[NSImage imageNamed:@"share32"]];
@@ -617,9 +616,9 @@ static iFolderWindowController *sharedInstance = nil;
 	[item release];
 
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"ResolveConflicts"];
-	[item setPaletteLabel:@"Resolve Conflicts"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"Resolve"]; // name for the item in the toolbar
-	[item setToolTip:@"Resolve file conflicts"]; // tooltip
+	[item setPaletteLabel:NSLocalizedString(@"Resolve Conflicts", nil)]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"Resolve", nil)]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"Resolve file conflicts", nil)]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(resolveConflicts:)];
 	[item setImage:[NSImage imageNamed:@"conflict32"]];
