@@ -9,7 +9,7 @@ iFolderWebService_FLAGS = $(CSC_LIBFLAG)
 iFolderWebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll
 iFolderWebService_LIBPATH = $(LOG4NET_DIR)
 
-EXTRA_DIST = iFolder.asmx $(iFolderWebService_CSFILES)
+EXTRA_DIST = iFolder.asmx $(iFolderWebService_CSFILES) $(srcdir)/iFolderWebService.wsdl
 
 all: Novell.iFolder.Web.dll
 

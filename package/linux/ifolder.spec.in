@@ -21,7 +21,7 @@
 #
 #######################################################################
 
-%define prefix /usr
+%define prefix /opt/novell/ifolder3
 
 Summary      : iFolder 3
 Name         : @PACKAGE@
@@ -36,11 +36,8 @@ Vendor       : <unknown>
 Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
-Requires     : addressbook >= 1.0
 Requires     : simias >= 1.0
-Requires     : mono-core >= 1.0
-Requires     : mono-data >= 1.0
-Requires     : mono-remoting >= 1.0
+Requires     : gtk-sharp >= 1.0
 #Requires     : mono-nunit >= 1.0
 Obsoletes    : %{name} <= %{version}
 
@@ -49,29 +46,6 @@ Obsoletes    : %{name} <= %{version}
 iFolder 3 supports file sharing and collaboration within a workgroup or
 across an enterprise.
 
-#=============================================================================
-%Package ui
-Summary      : iFolder 3 UI
-Group        : Applications/Productivity
-Requires     : %{name} = %{version}
-Requires     : addressbook-ui >= 1.0
-Requires     : simias-ui >= 1.0
-Requires     : gtk-sharp >= 1.0
-%Description ui
-User interface components of iFolder 3.
-
-#=============================================================================
-%Package client
-Summary      : iFolder 3 Client
-Group        : Applications/Productivity
-Requires     : ifolder3-ui = %{version}
-Requires     : ifolder3 = %{version}
-Requires     : addressbook-ui >= 1.0
-Requires     : addressbook >= 1.0
-Requires     : simias-ui >= 1.0
-Requires     : simias >= 1.0
-%Description client
-This package contains all iFolder 3 Client runtime packages.
 
 #=============================================================================
 %ChangeLog
@@ -96,7 +70,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %{__rm} -rf $RPM_BUILD_ROOT
 
 #=============================================================================
-%Post ui
+%Post
 INSTANCES_AFTER_INSTALL=$1
 if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
     #
@@ -143,7 +117,7 @@ if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
 fi
 
 #=============================================================================
-%Preun ui
+%Preun
 INSTANCES_AFTER_UNINSTALL=$1
 if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
     #
@@ -171,7 +145,7 @@ if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
 fi
     
 #=============================================================================
-%Postun ui
+%Postun
 #INSTANCES_AFTER_UNINSTALL=$1
 #if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
     #
@@ -183,40 +157,5 @@ fi
 #=============================================================================
 %Files
 %defattr(-,root,root)
-%dir %{prefix}/lib
-%{prefix}/lib/Novell.iFolder.dll
-%dir %{prefix}/bin
-%{prefix}/bin/iFolderCmd.exe
-%{prefix}/bin/iFolderCmd
-%dir %{prefix}/lib/pkgconfig
-%{prefix}/lib/pkgconfig/ifolder3.pc
-%{prefix}/bin/bin/Novell.iFolder.Web.dll
-%{prefix}/bin/iFolder.asmx
+%{prefix}/*
 
-#=============================================================================
-%Files ui
-%defattr(-,root,root)
-%dir %{prefix}/lib
-%{prefix}/lib/libtrayicon.so.0.0.0
-%{prefix}/lib/libtrayicon.so.0
-%{prefix}/lib/libtrayicon.so
-%{prefix}/lib/libtrayicon.la
-%{prefix}/lib/libtrayicon.a
-%{prefix}/lib/TrayIcon.dll
-%{prefix}/lib/Novell.iFolder.UI.gtk.dll
-%{prefix}/lib/setup-autostart
-%dir %{prefix}/lib/pkgconfig
-%{prefix}/lib/pkgconfig/ifolder3-ui.pc
-%dir %{prefix}/bin
-%{prefix}/bin/iFolderGtkApp.exe
-%{prefix}/bin/CollectionBrowser.exe
-%{prefix}/bin/ReunionBrowser.exe
-%{prefix}/bin/collectionbrowser
-%{prefix}/bin/ifolder
-%{prefix}/bin/install-ifolder-to-gac
-%{prefix}/share
-
-#=============================================================================
-%Files client
-%defattr(-,root,root)
-# DO NOT ADD FILES TO THE client SUBPACKAGE
