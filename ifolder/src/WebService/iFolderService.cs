@@ -272,37 +272,6 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
-		/// WebMethod that adds a member to an ifolder granting the Rights
-		/// specified.  Note:  This is not inviting a member, rather it is
-		/// adding them and placing a subscription in the "ready" state in
-		/// their POBox.
-		/// </summary>
-		/// <param name = "iFolderID">
-		/// The ID of the collection representing the iFolder to which
-		/// the member is to be added
-		/// </param>
-		/// <param name = "UserID">
-		/// The ID of the member to be added
-		/// </param>
-		/// <param name = "Rights">
-		/// The Rights to be given to the newly added member
-		/// </param>
-		/// <returns>
-		/// True if the member was successfully added
-		/// </returns>
-		[WebMethod(Description="Add a single member to an iFolder")]
-		[SoapRpcMethod]
-		public void AddMember(	string iFolderID, 
-								string UserID,
-								string Rights)
-		{
-			SharedCollection.AddMember(iFolderID, UserID, Rights);
-		}
-
-
-
-
-		/// <summary>
 		/// WebMethod that removes a member from an ifolder.  The subscription
 		/// is also removed from the member's POBox.
 		/// </summary>
