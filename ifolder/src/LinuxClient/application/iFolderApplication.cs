@@ -636,6 +636,14 @@ namespace Novell.iFolder
 			iFolders_item.Activated += 
 					new EventHandler(showiFolderWindow);
 
+
+			MenuItem accounts_item = 
+					new MenuItem (Util.GS("Accounts"));
+			trayMenu.Append (accounts_item);
+			accounts_item.Activated += 
+					new EventHandler(show_accounts);
+
+
 			MenuItem logview_item = 
 					new MenuItem (Util.GS("Synchronization Log"));
 			trayMenu.Append (logview_item);
@@ -769,19 +777,41 @@ namespace Novell.iFolder
 
 		private void show_preferences(object o, EventArgs args)
 		{
+			showPrefsPage(0);
+		}
+
+
+
+
+		private void show_accounts(object o, EventArgs args)
+		{
+			showPrefsPage(1);
+		}
+
+
+
+
+		private void showPrefsPage(int page)
+		{
 			if(CheckWebService())
 			{
 				if(prefswin == null)
 				{
 					prefswin = new PreferencesWindow(ifws);
+					
 					prefswin.Destroyed +=
 							new EventHandler(PrefsWinDestroyedHandler);
 					prefswin.ShowAll();
+					prefswin.CurrentPage = page;
 				}
 				else
+				{
 					prefswin.Present();
+					prefswin.CurrentPage = page;
+				}
 			}
 		}
+
 
 
 
