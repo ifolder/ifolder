@@ -2,6 +2,10 @@ if LINUX
 SUBDIRS = iFolder TrayIcon GtkTrayApp
 endif
 
+if DARWIN
+SUBDIRS = iFolder
+endif
+
 if WINDOWS
 SUBDIRS = iFolder iFolderShell FormsTrayApp FormsInvitationWizard
 endif
