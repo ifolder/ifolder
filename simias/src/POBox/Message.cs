@@ -465,6 +465,15 @@ namespace Simias.POBox
 			ToIdentity = toIdentity;
 		}
 
+		/// <summary>
+		/// Clone the message with a new ID.
+		/// </summary>
+		/// <param name="ID">The new node ID.</param>
+		/// <param name="message">The message to clone.</param>
+		public Message(string ID, Message message) : base(ID, message)
+		{
+		}
+
 		#endregion
 
 		#region Public Methods

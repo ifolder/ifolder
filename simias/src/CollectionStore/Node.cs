@@ -274,6 +274,26 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Copy constructor for a Node object.
+		/// </summary>
+		/// <param name="ID">New identifier for Node object.</param>
+		/// <param name="node">Node object to create new Node object from.</param>
+		public Node( string ID, Node node )
+		{
+			name = node.name;
+			id = ID;
+			type = node.type;
+			properties = new PropertyList( node.properties );
+
+			// If the collection ID exists on the Node, remove it.
+			Property p = properties.GetSingleProperty( BaseSchema.CollectionId );
+			if ( p != null )
+			{
+				p.DeleteProperty();
+			}
+		}
+
+		/// <summary>
 		/// Constructor for create an existing Node object from a ShallowNode object.
 		/// </summary>
 		/// <param name="collection">Collection that the ShallowNode belongs to.</param>
