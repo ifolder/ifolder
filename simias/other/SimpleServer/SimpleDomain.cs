@@ -279,7 +279,7 @@ namespace Simias.SimpleServer
 				if ( ssDomain == null && create == true )
 				{
 					this.id = Guid.NewGuid().ToString();
-					Uri localUri = new Uri("http://" + MyDns.GetHostName() + "/simias10");
+					//Uri localUri = new Uri("http://" + MyDns.GetHostName() + "/simias10");
 
 					// Create the simple server domain.
 					ssDomain = 
@@ -289,7 +289,8 @@ namespace Simias.SimpleServer
 							this.id,
 							this.description, 
 							Simias.Sync.SyncRoles.Master, 
-							localUri );
+                                          Simias.Storage.Domain.ConfigurationType.ClientServer );
+
 
 					// This needs to be added to allow the enterprise location provider
 					// to be able to resolve this domain.
