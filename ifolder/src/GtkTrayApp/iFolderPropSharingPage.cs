@@ -37,7 +37,8 @@ namespace Novell.iFolder
 
 		private Gtk.TreeView		UserTreeView;
 		private ListStore			UserTreeStore;
-		private Gdk.Pixbuf			ContactPixBuf;
+		private Gdk.Pixbuf			UserPixBuf;
+		private Gdk.Pixbuf			InvitedPixBuf;
 		private Gtk.Window			topLevelWindow;
 
 		private Button 				AddButton;
@@ -106,12 +107,13 @@ namespace Novell.iFolder
 //			UserTreeView.Selection.Changed +=
 //				new EventHandler(OnUserSelectionChanged);
 
-			ContactPixBuf = 
-					new Gdk.Pixbuf(Util.ImagesPath("contact.png"));
+			UserPixBuf = 
+					new Gdk.Pixbuf(Util.ImagesPath("ifolderuser.png"));
+			InvitedPixBuf = 
+					new Gdk.Pixbuf(Util.ImagesPath("inviteduser.png"));
+
 //			CurContactPixBuf = 
 //					new Gdk.Pixbuf(Util.ImagesPath("contact_me.png"));
-//			InvContactPixBuf = 
-//					new Gdk.Pixbuf(Util.ImagesPath("invited-contact.png"));
 
 
 			// Setup buttons for add/remove/accept/decline
@@ -171,8 +173,11 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-//			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
-			((CellRendererPixbuf) cell).Pixbuf = ContactPixBuf;
+			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
+			if(user.IsSubscription)
+				((CellRendererPixbuf) cell).Pixbuf = InvitedPixBuf;
+			else
+				((CellRendererPixbuf) cell).Pixbuf = UserPixBuf;
 		}
 
 
@@ -182,8 +187,11 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-//			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
-			((CellRendererText) cell).Text = "Dude";
+			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
+			if(user.IsSubscription)
+				((CellRendererText) cell).Text = "Invited User";
+			else
+				((CellRendererText) cell).Text = "iFolder User";
 		}
 
 
@@ -191,8 +199,8 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-//			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
-			((CellRendererText) cell).Text = "No Access";
+			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
+			((CellRendererText) cell).Text = user.Rights;
 		}
 
 		private void OnAddUser(object o, EventArgs args)
@@ -207,9 +215,36 @@ namespace Novell.iFolder
 
 		private void OnUserSelectorResponse(object o, ResponseArgs args)
 		{
-	//		if(args.ResponseId
 			if(UserSelector != null)
 			{
+				if(args.ResponseId == Gtk.ResponseType.Ok)
+				{
+					foreach(iFolderUser user in UserSelector.SelectedUsers)
+					{
+						Console.WriteLine("User: {0}", user.Name);
+						try
+						{
+    						iFolderUser newUser = ifws.InviteUser(
+													ifolder.ID,
+													user.UserID,
+													"ReadWrite");
+
+							UserTreeStore.AppendValues(newUser);
+						}
+						catch(Exception e)
+						{
+							iFolderExceptionDialog ied = 
+									new iFolderExceptionDialog(
+											topLevelWindow, e);
+							ied.Run();
+							ied.Hide();
+							ied.Destroy();
+							ied = null;
+							break;
+						}
+					}
+				}
+
 				UserSelector.Hide();
 				UserSelector.Destroy();
 				UserSelector = null;

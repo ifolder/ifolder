@@ -284,16 +284,18 @@ namespace Novell.iFolder.Web
 				{
 					Subscription sub = new Subscription(pobox, sNode);
 
-					// Filter out subscription that are in the Ready
-					// state AND are already on our box
-					if (sub.SubscriptionState == SubscriptionStates.Ready)
-					{
-						if (store.GetCollectionByID(
+					// Filter out all subscriptions that match
+					// iFolders that are already local on our machine
+					if (store.GetCollectionByID(
 								sub.SubscriptionCollectionID) != null)
-						{
-							continue;
-						}
+					{
+						continue;
 					}
+					// CRG: this used to check for ready but the subscriptions
+					// for other users were showing up
+//					if (sub.SubscriptionState == SubscriptionStates.Ready)
+//					{
+//					}
 					list.Add(new iFolder(sub));
 				}
 			}
@@ -499,6 +501,35 @@ namespace Novell.iFolder.Web
 				list.Add(user);
 			}
 
+			Simias.POBox.POBox pobox = Simias.POBox.POBox.GetPOBox(
+											store,
+											store.DefaultDomain);
+
+			ICSList poList = pobox.Search(
+					Subscription.SubscriptionCollectionIDProperty,
+					col.ID,
+					SearchOp.Equal);
+
+			foreach(ShallowNode sNode in poList)
+			{
+				Subscription sub = new Subscription(pobox, sNode);
+
+				// Filter out subscriptions that are on this box
+				// already
+				if (sub.SubscriptionState == SubscriptionStates.Ready)
+				{
+					if (pobox.StoreReference.GetCollectionByID(
+							sub.SubscriptionCollectionID) != null)
+					{
+						continue;
+					}
+				}
+
+				iFolderUser user = new iFolderUser(sub);
+				list.Add(user);
+			}
+
+
 			return (iFolderUser[]) (list.ToArray(typeof(iFolderUser)));
 		}
 
@@ -600,6 +631,136 @@ namespace Novell.iFolder.Web
 				throw new Exception("Invalid UserID");
 
 			return new iFolderUser(simMem);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that invites a user to an iFolder.
+		/// This method only runs on an Enterprise iFolder
+		/// </summary>
+		/// <param name = "iFolderID">
+		/// The ID of the collection representing the Collection to which
+		/// the member is to be invited
+		/// </param>
+		/// <param name = "UserID">
+		/// The ID of the member to be invited
+		/// </param>
+		/// <param name = "Rights">
+		/// The Rights to be given to the newly invited member
+		/// </param>
+		/// <returns>
+		/// iFolderUser that was invited
+		/// </returns>
+		[WebMethod(Description="Invite a user to an iFolder.  This call will only work with Enterprise iFolders")]
+		[SoapRpcMethod]
+		public iFolderUser InviteUser(	string iFolderID,
+										string UserID,
+										string Rights)
+		{
+			Store store = Store.GetStore();
+
+			// Check to be sure we are not in Workgroup Mode
+			if(store.DefaultDomain == Simias.Storage.Domain.WorkGroupDomainID)
+				throw new Exception("The client default is set to Workgroup Mode.  Invitations only work in the enterprise version of ifolder.");
+
+			Collection col = store.GetCollectionByID(iFolderID);
+			if(col == null)
+				throw new Exception("Invalid iFolderID");
+
+			if(col.Domain == Simias.Storage.Domain.WorkGroupDomainID)
+				throw new Exception("This iFolder is a Workgroup iFolder.  InviteUser will only work for an Enterprise iFolder.");
+
+			Roster roster = 
+				store.GetDomain(store.DefaultDomain).GetRoster(store);
+
+			if(roster == null)
+				throw new Exception("Unable to access ifolder users");
+
+			Simias.Storage.Member member = roster.GetMemberByID(UserID);
+			if(member == null)
+				throw new Exception("Invalid UserID");
+
+			Access.Rights newRights;
+
+			if(Rights == "Admin")
+				newRights = Access.Rights.Admin;
+			else if(Rights == "ReadOnly")
+				newRights = Access.Rights.ReadOnly;
+			else if(Rights == "ReadWrite")
+				newRights = Access.Rights.ReadWrite;
+			else
+				throw new Exception("Invalid Rights Specified");
+
+
+			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(
+											store, 
+											store.DefaultDomain);
+
+			Subscription sub = poBox.CreateSubscription(col,
+										col.GetCurrentMember(),
+										"iFolder");
+
+			sub.SubscriptionRights = newRights;
+			sub.ToName = member.Name;
+			sub.ToIdentity = UserID;
+
+			poBox.AddMessage(sub);
+
+			iFolderUser user = new iFolderUser(sub);
+			return user;
+		}
+
+
+
+		/// <summary>
+		/// Accpets and Enterprise Subscription
+		/// </summary>
+		/// <param name = "iFolderID">
+		/// The ID of the iFolder to accept the invitation for
+		/// </param>
+		/// <param name = "LocalPath">
+		/// The LocalPath to to store the iFolder
+		/// </param>
+		[WebMethod(Description="Accept an invitation fo an iFolder.  The iFolder ID represents a Subscription object")]
+		[SoapRpcMethod]
+		public iFolder AcceptiFolderInvitation( string iFolderID, 
+												string LocalPath)
+		{
+			Store store = Store.GetStore();
+
+			// Check to be sure we are not in Workgroup Mode
+			if(store.DefaultDomain == Simias.Storage.Domain.WorkGroupDomainID)
+				throw new Exception("The client default is set to Workgroup Mode.  Invitations only work in the enterprise version of ifolder.");
+
+			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(
+											store, 
+											store.DefaultDomain);
+
+			// iFolders returned in the Web service are also
+			// Subscriptions and it ID will be the subscription ID
+			Node node = poBox.GetNodeByID(iFolderID);
+			if(node == null)
+				throw new Exception("Invalid iFolderID");
+
+			Subscription sub = new Subscription(node);
+
+
+			sub.CollectionRoot = Path.GetFullPath(LocalPath);
+			if(sub.SubscriptionState == SubscriptionStates.Ready)
+			{
+				poBox.Commit(sub);
+				sub.CreateSlave(store);
+			}
+			else
+			{
+				sub.Accept(store, SubscriptionDispositions.Accepted);
+				poBox.Commit(sub);
+			}
+
+			iFolder ifolder = new iFolder(sub);
+			return ifolder;
 		}
 
 

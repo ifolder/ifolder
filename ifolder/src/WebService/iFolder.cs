@@ -54,6 +54,7 @@ namespace Novell.iFolder.Web
 		public string Description;
 		public bool IsLocal;
 		public bool IsAccepted;
+		public bool IsSubscription;
 
 		public iFolder()
 		{
@@ -81,19 +82,21 @@ namespace Novell.iFolder.Web
 			this.Description = "";
 			this.IsLocal = true;
 			this.IsAccepted = true;
+			this.IsSubscription = false;
 		}
 
 
 		public iFolder(Subscription subscription)
 		{
 			this.Name = subscription.SubscriptionCollectionName;
-			this.ID = subscription.SubscriptionCollectionID;
+			this.ID = subscription.ID;
 			this.Description = subscription.CollectionDescription;
 			this.IsLocal = false;
 			if (subscription.SubscriptionState == SubscriptionStates.Ready)
 				this.IsAccepted = true;
 			else
 				this.IsAccepted = false;
+			this.IsSubscription = true;
 		}
 	}
 }

@@ -36,6 +36,8 @@ namespace Novell.iFolder.Web
 		public string UserID;
 		public string Rights;
 		public bool IsOwner;
+		public string ID;
+		public bool IsSubscription;
 
 		public iFolderUser()
 		{
@@ -47,6 +49,19 @@ namespace Novell.iFolder.Web
 			this.UserID = member.UserID;
 			this.Rights = member.Rights.ToString();
 			this.IsOwner = member.IsOwner;
+			this.ID = member.ID;
+			this.IsSubscription = false;
+		}
+
+
+		public iFolderUser(Simias.POBox.Subscription sub)
+		{
+			this.Name = sub.ToName;
+			this.UserID = sub.ToIdentity;
+			this.Rights = sub.SubscriptionRights.ToString();
+			this.IsOwner = false;
+			this.ID = sub.ID;
+			this.IsSubscription = true;
 		}
 	}
 }

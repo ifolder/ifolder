@@ -397,6 +397,52 @@ public class iFolderWebService : System.Web.Services.Protocols.SoapHttpClientPro
     }
 
     /// <remarks>
+    ///Invite a user to an iFolder.  This call will only work with Enterprise iFolders
+    ///</remarks>
+    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/InviteUser",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
+    public virtual iFolderUser InviteUser(string iFolderID, string UserID, string Rights) {
+        System.Object[] results = this.Invoke("InviteUser", new object[] {
+            iFolderID,
+            UserID,
+            Rights});
+        return ((iFolderUser)(results[0]));
+    }
+
+    public virtual System.IAsyncResult BeginInviteUser(string iFolderID, string UserID, string Rights, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("InviteUser", new object[] {
+            iFolderID,
+            UserID,
+            Rights}, callback, asyncState);
+    }
+
+    public virtual iFolderUser EndInviteUser(System.IAsyncResult asyncResult) {
+        System.Object[] results = this.EndInvoke(asyncResult);
+        return ((iFolderUser)(results[0]));
+    }
+
+    /// <remarks>
+    ///Accept an invitation fo an iFolder.  The iFolder ID represents a Subscription object
+    ///</remarks>
+    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/AcceptiFolderInvitation",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
+    public virtual iFolder AcceptiFolderInvitation(string iFolderID, string LocalPath) {
+        System.Object[] results = this.Invoke("AcceptiFolderInvitation", new object[] {
+            iFolderID,
+            LocalPath});
+        return ((iFolder)(results[0]));
+    }
+
+    public virtual System.IAsyncResult BeginAcceptiFolderInvitation(string iFolderID, string LocalPath, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("AcceptiFolderInvitation", new object[] {
+            iFolderID,
+            LocalPath}, callback, asyncState);
+    }
+
+    public virtual iFolder EndAcceptiFolderInvitation(System.IAsyncResult asyncResult) {
+        System.Object[] results = this.EndInvoke(asyncResult);
+        return ((iFolder)(results[0]));
+    }
+
+    /// <remarks>
     ///Gets the DiskSpaceQuota for a member
     ///</remarks>
     [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/GetUserDiskSpace",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
@@ -596,6 +642,9 @@ public class iFolder {
 
     /// <remarks/>
     public bool IsAccepted;
+
+    /// <remarks/>
+    public bool IsSubscription;
 }
 
 /// <remarks/>
@@ -613,6 +662,12 @@ public class iFolderUser {
 
     /// <remarks/>
     public bool IsOwner;
+
+    /// <remarks/>
+    public string ID;
+
+    /// <remarks/>
+    public bool IsSubscription;
 }
 
 /// <remarks/>

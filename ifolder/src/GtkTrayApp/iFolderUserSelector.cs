@@ -24,6 +24,7 @@
 
 using System;
 using Gtk;
+using System.Collections;
 
 namespace Novell.iFolder
 {
@@ -31,27 +32,51 @@ namespace Novell.iFolder
 	/// <summary>
 	/// This is the properties dialog for an iFolder.
 	/// </summary>
-	public class iFolderMemberSelector : Dialog
+	public class iFolderUserSelector : Dialog
 	{
 		private iFolderWebService	ifws;
-		private iFolder				ifolder;
-		private Gtk.TreeView		MemberTreeView;
-		private Gtk.ListStore		MemberTreeStore;
-		private Gdk.Pixbuf			MemberPixBuf;
+		private Gtk.TreeView		UserTreeView;
+		private Gtk.ListStore		UserTreeStore;
+		private Gdk.Pixbuf			UserPixBuf;
+
+		public iFolderUser[] SelectedUsers
+		{
+			get
+			{
+				ArrayList list = new ArrayList();
+				TreeModel tModel;
+
+				TreeSelection tSelect = UserTreeView.Selection;
+				Array treePaths = tSelect.GetSelectedRows(out tModel);
+
+				foreach(TreePath tPath in treePaths)
+				{
+					TreeIter iter;
+
+					if(tModel.GetIter(out iter, tPath))
+					{
+						iFolderUser user = (iFolderUser) 
+											tModel.GetValue(iter,0);
+						list.Add(user);
+					}
+				}
+				return (iFolderUser[]) (list.ToArray(typeof(iFolderUser)));
+			}
+		}
+
+
 
 		/// <summary>
 		/// Default constructor for iFolderPropertiesDialog
 		/// </summary>
-		public iFolderMemberSelector(	Gtk.Window parent,
-										iFolder ifolder, 
+		public iFolderUserSelector(	Gtk.Window parent,
 										iFolderWebService iFolderWS)
 			: base()
 		{
-			this.Title = "iFolder Member Selector";
+			this.Title = "iFolder User Selector";
 			if(iFolderWS == null)
 				throw new ApplicationException("iFolderWebServices was null");
 			this.ifws = iFolderWS;
-			this.ifolder = ifolder;
 			this.HasSeparator = false;
 			this.BorderWidth = 6;
 			this.Resizable = true;
@@ -70,87 +95,89 @@ namespace Novell.iFolder
 		/// </summary>
 		private void InitializeWidgets()
 		{
-			this.SetDefaultSize (200, 400);
+			this.SetDefaultSize (300, 400);
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("contact.png"));
 
 
 			// Create the main TreeView and add it to a scrolled
 			// window, then add it to the main vbox widget
-			MemberTreeView = new TreeView();
+			UserTreeView = new TreeView();
 			ScrolledWindow sw = new ScrolledWindow();
-			sw.Add(MemberTreeView);
+			sw.Add(UserTreeView);
 			this.VBox.PackStart(sw, true, true, 0);
 
 
 			// Setup the iFolder TreeView
-			MemberTreeStore = new ListStore(typeof(Member));
-			MemberTreeView.Model = MemberTreeStore;
+			UserTreeStore = new ListStore(typeof(iFolderUser));
+			UserTreeView.Model = UserTreeStore;
 
-			// Setup Pixbuf and Text Rendering for "iFolders" column
+			// Setup Pixbuf and Text Rendering for "iFolder Users" column
 			CellRendererPixbuf mcrp = new CellRendererPixbuf();
 			TreeViewColumn memberColumn = new TreeViewColumn();
 			memberColumn.PackStart(mcrp, false);
 			memberColumn.SetCellDataFunc(mcrp, new TreeCellDataFunc(
-						MemberCellPixbufDataFunc));
+						UserCellPixbufDataFunc));
 			CellRendererText mcrt = new CellRendererText();
 			memberColumn.PackStart(mcrt, false);
 			memberColumn.SetCellDataFunc(mcrt, new TreeCellDataFunc(
-						MemberCellTextDataFunc));
+						UserCellTextDataFunc));
 			memberColumn.Title = "iFolder Users";
 			memberColumn.Resizable = true;
-			MemberTreeView.AppendColumn(memberColumn);
+			UserTreeView.AppendColumn(memberColumn);
+			UserTreeView.Selection.Mode = SelectionMode.Multiple;
 
 
-//			MemberTreeView.Selection.Changed += new EventHandler(
-//						OnMemberSelectionChanged);
+//			UserTreeView.Selection.Changed += new EventHandler(
+//						OnUserSelectionChanged);
 
-//			MemberTreeView.ButtonPressEvent += new ButtonPressEventHandler(
-//						OnMemberButtonPressed);
+//			UserTreeView.ButtonPressEvent += new ButtonPressEventHandler(
+//						OnUserButtonPressed);
 
-//			MemberTreeView.RowActivated += new RowActivatedHandler(
-//						OnMemberRowActivated);
+//			UserTreeView.RowActivated += new RowActivatedHandler(
+//						OnUserRowActivated);
 
-			MemberPixBuf = 
-				new Gdk.Pixbuf(Util.ImagesPath("contact.png"));
+			UserPixBuf = 
+				new Gdk.Pixbuf(Util.ImagesPath("ifolderuser.png"));
 
-			this.AddButton(Stock.Close, ResponseType.Ok);
+			this.AddButton(Stock.Cancel, ResponseType.Cancel);
+			this.AddButton(Stock.Ok, ResponseType.Ok);
 			this.AddButton(Stock.Help, ResponseType.Help);
 
-			RefreshMemberList();
+			RefreshUserList();
 		}
 
 
 
 
-		private void RefreshMemberList()
+		private void RefreshUserList()
 		{
-			Member[] memlist = ifws.GetAllMembers();
-			foreach(Member mem in memlist)
+			iFolderUser[] userlist = ifws.GetAlliFolderUsers();
+			foreach(iFolderUser user in userlist)
 			{
-				MemberTreeStore.AppendValues(mem);
+				UserTreeStore.AppendValues(user);
 			}
 		}
 
 
 
 
-		private void MemberCellTextDataFunc (Gtk.TreeViewColumn tree_column,
+		private void UserCellTextDataFunc (Gtk.TreeViewColumn tree_column,
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			Member member = (Member) tree_model.GetValue(iter,0);
-			((CellRendererText) cell).Text = member.Name;
+			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
+			((CellRendererText) cell).Text = user.Name;
 		}
 
 
 
 
-		private void MemberCellPixbufDataFunc (Gtk.TreeViewColumn tree_column,
+		private void UserCellPixbufDataFunc (Gtk.TreeViewColumn tree_column,
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			Member member = (Member) tree_model.GetValue(iter,0);
-			((CellRendererPixbuf) cell).Pixbuf = MemberPixBuf;
+//			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
+			((CellRendererPixbuf) cell).Pixbuf = UserPixBuf;
 		}
 
 
