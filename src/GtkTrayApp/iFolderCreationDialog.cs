@@ -44,15 +44,17 @@ namespace Novell.iFolder
 //			this.ifolder = ifolder;
 			this.Title = "iFolder Introduction";
 			this.HasSeparator = false;
-			this.BorderWidth = 10;
+//			this.BorderWidth = 10;
 			this.Resizable = false;
 
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
-			Image folderImage = new Image(this.Icon);
+			Gdk.Pixbuf bigiFolder = 
+				new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
+			Image folderImage = new Image(bigiFolder);
 
 			VBox vbox = new VBox();
 			vbox.BorderWidth = 10;
-			vbox.Spacing = 20;
+			vbox.Spacing = 10;
 
 			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
 						"Congratulations! A new iFolder was created</span>");
@@ -73,17 +75,27 @@ namespace Novell.iFolder
 			VBox vbox2 = new VBox();
 			vbox2.Spacing = 10;
 
-			l = new Label("To share your iFolder and it's contents with others, right-click the iFolder and select \"Share with...\", or click here now.");
-
-			l.LineWrap = true;
+			l = new Label("The new iFolder has been added to your list of iFolders.");
+			l.LineWrap = false;
+			l.Xalign = 0;
 			vbox2.PackStart(l, true, true, 0);
 
 			h.PackEnd(vbox2, true, true, 0);
 
 			vbox.PackStart(h);
 
+			l = new Label("To share your iFolder and it's contents with others, right-click the iFolder and select \"Share with...\".");
+			l.LineWrap = true;
+			l.Xalign = 0;
+//			l.Ypad = 0;
+//			l.Justify = Gtk.Justification.Fill;
+			vbox.PackStart(l, false, true, 0);
+
+			Alignment cbAlignment = new Alignment(1, 1, 1, 0);
+			vbox.PackStart(cbAlignment, true, true, 0);
+
 			cbutton = new CheckButton("Do not show this message again.");
-			vbox.PackStart(cbutton, false, false, 0);
+			cbAlignment.Add(cbutton);
 		
 			vbox.ShowAll();
 			this.VBox.Add(vbox);
