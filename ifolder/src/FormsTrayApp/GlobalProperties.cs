@@ -1205,6 +1205,21 @@ namespace Novell.FormsTrayApp
 			iFolderView.Items.Clear();
 			iFolderView.SelectedItems.Clear();
 
+
+			menuShare.Visible = menuActionShare.Enabled = toolBarShare.Enabled =
+				menuProperties.Visible = menuActionProperties.Enabled = /*toolBarProperties.Enabled =*/
+				menuRevert.Visible = menuActionRevert.Enabled = /*toolBarRevert.Enabled =*/
+				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled =
+				menuOpen.Visible = menuActionOpen.Enabled = /*toolBarOpen.Enabled =*/
+				menuSeparator1.Visible = menuSeparator2.Visible =
+				menuResolve.Visible = menuActionResolve.Visible = 
+				menuAccept.Visible = menuActionAccept.Visible = toolBarSetup.Enabled =
+				menuActionSeparator2.Visible =
+				menuRemove.Visible = menuActionRemove.Visible = /*toolBarRemove.Enabled =*/
+				menuActionSeparator2.Visible = false;
+
+			menuRefresh.Visible = menuCreate.Visible = true;
+
 			lock(ht)
 			{
 				ht.Clear();
@@ -1591,7 +1606,7 @@ namespace Novell.FormsTrayApp
 				(iFolderView.SelectedItems.Count == 1) && 
 				(!((iFolderWeb)iFolderView.SelectedItems[0].Tag).IsSubscription ||
 				((iFolderWeb)iFolderView.SelectedItems[0].Tag).State.Equals("Available"));
-			
+
 			if (menuRemove.Visible)
 			{
 				if (IsCurrentUser(((iFolderWeb)iFolderView.SelectedItems[0].Tag).OwnerID))

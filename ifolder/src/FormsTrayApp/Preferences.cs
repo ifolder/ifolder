@@ -2002,6 +2002,7 @@ namespace Novell.FormsTrayApp
 							}
 							catch (Exception ex)
 							{
+								// TODO: message
 								MessageBox.Show(ex.Message);
 							}
 
