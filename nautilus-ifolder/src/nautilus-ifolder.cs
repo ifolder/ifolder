@@ -77,6 +77,8 @@ namespace Novell.iFolder.Nautilus
 			propsDialog = new iFolderPropertiesDialog (args [1]);
 			propsDialog.CurrentPage = 1;
 			propsDialog.Run ();
+			propsDialog.Hide ();
+			propsDialog.Destroy ();
 			return 0;
 		}
 		
@@ -91,6 +93,8 @@ namespace Novell.iFolder.Nautilus
 			propsDialog = new iFolderPropertiesDialog (args [1]);
 			propsDialog.CurrentPage = 0;
 			propsDialog.Run ();
+			propsDialog.Hide ();
+			propsDialog.Destroy ();
 			return 0;
 		}
 		
@@ -101,6 +105,27 @@ namespace Novell.iFolder.Nautilus
 		
 		private static int confirmRevertiFolder (string[] args)
 		{
+			if (args.Length < 2) {
+				System.Console.Write ("ERROR: iFolder ID not specified\n");
+				return -1;
+			}
+			
+			iFolderMsgDialog msgDialog;
+			msgDialog = new iFolderMsgDialog (
+							null,
+							iFolderMsgDialog.DialogType.Question,
+							iFolderMsgDialog.ButtonSet.YesNo,
+							"iFolder Confirmation",
+							"Revert this iFolder?",
+							"This will revert this iFolder back to a normal folder and leave the files intact.  The iFolder will then be available from the server and will need to be setup in a different location in order to sync.");
+			int rc = msgDialog.Run ();
+			msgDialog.Hide ();
+			msgDialog.Destroy ();
+			if (rc == -8) {
+				System.Console.Write ("yes");
+			} else {
+				System.Console.Write ("no");
+			}
 			return 0;
 		}
 	}
