@@ -374,6 +374,10 @@ namespace Simias.POBox
 		#endregion
 
 		#region Constructors
+
+		public Message() : base()
+		{
+		}
 		
 		/// <summary>
 		/// Constructor for creating a Message object from a Node object.
