@@ -358,10 +358,7 @@ sec_thread (void *user_data)
 	
 printf ("SEC: sec_thread () called\n");	
 	
-	if (gethostname (my_host_name, sizeof (my_host_name)) != 0) {
-		perror ("simias-event-client (server): gethostname");
-		sprintf (my_host_name, "127.0.0.1");
-	}
+	sprintf (my_host_name, "127.0.0.1");
 	
 	hp = gethostbyname (my_host_name);
 	if (!hp) {
