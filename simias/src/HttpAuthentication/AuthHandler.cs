@@ -286,18 +286,18 @@ namespace Simias.Security.Web
 				if (credentials.Length == 2)
 				{
 					// Check if this is a Rendezvous client attempting to authenticate
-					if ( credentials[0].StartsWith( "@ppk@" ) )
+					if ( credentials[1].StartsWith( "@ppk@" ) )
 					{
 						this.authType = "ppk";
-						this.username = credentials[0].Remove(0, 5);
+						this.password = credentials[1].Remove(0, 5);
 					}
 					else
 					{
 						this.authType = "basic";
-						this.username = credentials[0];
+						this.password = credentials[1];
 					}
 
-					this.password = credentials[1];
+					this.username = credentials[0];
 					returnStatus = true;
 				}
 
@@ -485,8 +485,6 @@ namespace Simias.Security.Web
 						success = creds.AuthorizationHeaderToCredentials( encodedCredentials[0] );
 						if ( success == true )
 						{
-
-
 							Simias.Authentication.Status authStatus;
 							authStatus = creds.Authenticate( this.iAuthService );
 
