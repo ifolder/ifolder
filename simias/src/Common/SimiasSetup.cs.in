@@ -67,6 +67,8 @@ namespace Simias
 				{
 					// location of the entry assembly as the prefix
 					newprefix = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+					newprefix = Path.Combine(newprefix, "../..");
+					newprefix = Path.GetFullPath(newprefix);
 				}
 				catch
 				{
@@ -77,6 +79,9 @@ namespace Simias
 				{
 					newprefix = Environment.CurrentDirectory;
 				}
+
+				// assign
+				prefix = newprefix;
 			}
 		}
 
@@ -97,22 +102,22 @@ namespace Simias
 			set
 			{
 				// replace the old prefix
-				_bindir = _bindir.Replace(_prefix, value);
-				_datadir = _datadir.Replace(_prefix, value);
-				_includedir = _includedir.Replace(_prefix, value);
-				_infodir = _infodir.Replace(_prefix, value);
-				_libexecdir = _libexecdir.Replace(_prefix, value);
-				_libdir = _libdir.Replace(_prefix, value);
-				_localstatedir = _localstatedir.Replace(_prefix, value);
-				_mandir = _mandir.Replace(_prefix, value);
-				_sbindir = _sbindir.Replace(_prefix, value);
-				_sharedstatedir = _sharedstatedir.Replace(_prefix, value);
-				_sysconfdir = _sysconfdir.Replace(_prefix, value);
-				_webdir = _webdir.Replace(_prefix, value);
-				_webbindir = _webbindir.Replace(_prefix, value);
+				_bindir = Path.GetFullPath(_bindir.Replace(_prefix, value));
+				_datadir = Path.GetFullPath(_datadir.Replace(_prefix, value));
+				_includedir = Path.GetFullPath(_includedir.Replace(_prefix, value));
+				_infodir = Path.GetFullPath(_infodir.Replace(_prefix, value));
+				_libexecdir = Path.GetFullPath(_libexecdir.Replace(_prefix, value));
+				_libdir = Path.GetFullPath(_libdir.Replace(_prefix, value));
+				_localstatedir = Path.GetFullPath(_localstatedir.Replace(_prefix, value));
+				_mandir = Path.GetFullPath(_mandir.Replace(_prefix, value));
+				_sbindir = Path.GetFullPath(_sbindir.Replace(_prefix, value));
+				_sharedstatedir = Path.GetFullPath(_sharedstatedir.Replace(_prefix, value));
+				_sysconfdir = Path.GetFullPath(_sysconfdir.Replace(_prefix, value));
+				_webdir = Path.GetFullPath(_webdir.Replace(_prefix, value));
+				_webbindir = Path.GetFullPath(_webbindir.Replace(_prefix, value));
 				
 				// update prefix
-				_prefix = value;
+				_prefix = Path.GetFullPath(value);
 			}
 		}
 		

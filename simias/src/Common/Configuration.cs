@@ -80,13 +80,28 @@ namespace Simias
 		#endregion
 		
 		#region Constructor
+		
 		/// <summary>
 		/// Constructor.
 		/// </summary>
 		/// <param name="path">The path to the configuration file.</param>
-		private Configuration(string path)
+		private Configuration(string path) : this(path, true)
 		{
-			this.storePath = (path == null) ? DefaultPath : fixupPath(path);
+		}
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="path">The path to the configuration file.</param>
+		/// <param name="fixPath">Fix up the path to the configuration file.</param>
+		private Configuration(string path, bool fixPath)
+		{
+			this.storePath = (path == null) ? DefaultPath : path;
+
+			if (fixPath) this.storePath = fixupPath(this.storePath);
+
+			// clean-up path
+			this.storePath = Path.GetFullPath(this.storePath);
 
 			// If the file does not exist look for defaults.
 			string configFilePath = ConfigFilePath;
@@ -119,7 +134,8 @@ namespace Simias
 		}
 		#endregion
 
-		#region Factory  Methods
+		#region Factory Methods
+		
 		/// <summary>
 		/// Gets the instance of the configuration object for this process.
 		/// </summary>
@@ -152,6 +168,15 @@ namespace Simias
 				instance = new Configuration(path);
 				return instance;
 			}
+		}
+
+		/// <summary>
+		/// Get the boot strap version of the configuration file.
+		/// </summary>
+		/// <returns>A Configuration Object</returns>
+		public static Configuration GetBootStrapConfig()
+		{
+			return new Configuration(SimiasSetup.sysconfdir, false);
 		}
 
 		/// <summary>
