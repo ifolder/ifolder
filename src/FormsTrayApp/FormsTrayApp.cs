@@ -34,9 +34,7 @@ using Novell.iFolderCom;
 using Novell.Win32Util;
 using CustomUIControls;
 using Simias.Client;
-using Simias.Event;
-using Simias.Storage;
-using Simias.Sync;
+using Simias.Client.Event;
 
 namespace Novell.FormsTrayApp
 {
