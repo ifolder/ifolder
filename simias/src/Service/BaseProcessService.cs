@@ -57,6 +57,9 @@ namespace Simias.Service
 			}
 			
 			conf = new Configuration(confPath);
+            
+            // configure logging
+            SimiasLogManager.Configure(conf);
 		}
 
 		#endregion

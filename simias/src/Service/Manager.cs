@@ -66,7 +66,10 @@ namespace Simias.Service
 		/// <param name="conf">The Configuration location to manage.</param>
 		public Manager(Configuration conf)
 		{
-			lock (this)
+            // configure logging
+            SimiasLogManager.Configure(conf);
+
+            lock (this)
 			{
 				string mutexName = mutexBaseName + conf.StorePath.GetHashCode().ToString();
 				Mutex mutex = new Mutex(false, mutexName);

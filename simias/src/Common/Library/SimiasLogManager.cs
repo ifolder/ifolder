@@ -42,11 +42,10 @@ namespace Simias
 		private static readonly string SimiasLogFile = "simias.log";
 		private static readonly string SimiasPatternLayout = "%d [%t] %-5p %c - %m%n";
 		
+        private static bool configured = false;
+
 		static SimiasLogManager()
 		{
-			// TODO: temp
-			BasicConfigurator.Configure(new ConsoleAppender(new PatternLayout(SimiasPatternLayout), true));
-			BasicConfigurator.Configure(new TraceAppender(new PatternLayout(SimiasPatternLayout)));
 		}
 
 		/// <summary>
@@ -81,24 +80,35 @@ namespace Simias
 		/// <param name="storePath">The full path to the store directory.</param>
 		public static void Configure(String storePath)
 		{
-			// TODO: temp
-			string[] args = Environment.GetCommandLineArgs();
+			lock(typeof(SimiasLogManager))
+            {
+                // only configure once
+                if (!configured)
+                {
+                    // TODO: temp code for log file name
+        			string[] args = Environment.GetCommandLineArgs();
+        
+        			string file = SimiasLogFile;
+        
+        			if ((args.Length > 0) && (args[0] != null) && (args[0].Length > 0) && !args[0].StartsWith("mono"))
+        			{
+        				file = Path.GetFileName(args[0]) + ".log";
+        			}
+        			else if ((args.Length > 1) && (args[1] != null) && (args[1].Length > 0))
+        			{
+        				file = Path.GetFileName(args[1]) + ".log";
+        			}
+        
+        			// log file path
+                    string filePath = Path.Combine(storePath, file);
+        
+                    // default appender
+        			BasicConfigurator.Configure(new FileAppender(new PatternLayout(SimiasPatternLayout),
+        				filePath));
 
-			string file = SimiasLogFile;
-
-			if ((args.Length > 0) && (args[0] != null) && (args[0].Length > 0) && !args[0].StartsWith("mono"))
-			{
-				file = Path.GetFileName(args[0]) + ".log";
-			}
-			else if ((args.Length > 1) && (args[1] != null) && (args[1].Length > 0))
-			{
-				file = Path.GetFileName(args[1]) + ".log";
-			}
-
-			string filePath = Path.Combine(storePath, file);
-
-			BasicConfigurator.Configure(new FileAppender(new PatternLayout(SimiasPatternLayout),
-				filePath));
+                    configured = true;
+                }
+            }
 		}
 	}
 }
