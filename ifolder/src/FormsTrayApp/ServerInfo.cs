@@ -43,7 +43,6 @@ namespace Novell.FormsTrayApp
 	{
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(ServerInfo));
 		string domainID;
-		bool first = true;
 		bool cancelled = false;
 		bool updateStarted = false;
 		private System.Windows.Forms.Button ok;
@@ -603,10 +602,7 @@ namespace Novell.FormsTrayApp
 
 		private void ServerInfo_Activated(object sender, System.EventArgs e)
 		{
-			if (first)
-			{
-				first = !password.Focus();
-			}
+			password.Focus();
 		}
 		#endregion
 	}
