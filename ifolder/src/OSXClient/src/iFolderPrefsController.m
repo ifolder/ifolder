@@ -103,6 +103,36 @@
 
 
 
+
+- (void)syncPreferences:(NSToolbarItem *)item
+{
+	if([[self window] contentView] != syncView)
+	{
+		NSLog(@"Switching view to Synchronization Page");
+		[[self window] setContentView: blankView];
+		[self updateSize:[syncView frame].size];
+		[[self window] setContentView: syncView];
+		[[self window] setTitle:@"iFolder Preferences: Synchronization"];	
+	}
+}
+
+
+
+
+- (void)notifyPreferences:(NSToolbarItem *)item
+{
+	if([[self window] contentView] != notifyView)
+	{
+		NSLog(@"Switching view to notify Page");
+		[[self window] setContentView: blankView];
+		[self updateSize:[notifyView frame].size];
+		[[self window] setContentView: notifyView];
+		[[self window] setTitle:@"iFolder Preferences: Notification"];	
+	}
+}
+
+
+
 - (void)setupToolbar
 {
 	toolbarItemDict = [[NSMutableDictionary alloc] init];
@@ -130,7 +160,31 @@
     [toolbarItemDict setObject:item forKey:@"Accounts"]; // add to toolbar list
 	[toolbarItemArray addObject:@"Accounts"];
 	[item release];
+
+
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Synchronization"];
+	[item setPaletteLabel:@"Synchronization"]; // name for the "Customize Toolbar" sheet
+	[item setLabel:@"Synchronization"]; // name for the item in the toolbar
+	[item setToolTip:@"Synchronization"]; // tooltip
+    [item setTarget:self]; // what should happen when it's clicked
+    [item setAction:@selector(syncPreferences:)];
+	[item setImage:[NSImage imageNamed:@"prefs-sync"]];
+    [toolbarItemDict setObject:item forKey:@"Synchronization"]; // add to toolbar list
+	[toolbarItemArray addObject:@"Synchronization"];
+	[item release];
 	
+	
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Notification"];
+	[item setPaletteLabel:@"Notification"]; // name for the "Customize Toolbar" sheet
+	[item setLabel:@"Notification"]; // name for the item in the toolbar
+	[item setToolTip:@"Notification"]; // tooltip
+    [item setTarget:self]; // what should happen when it's clicked
+    [item setAction:@selector(notifyPreferences:)];
+	[item setImage:[NSImage imageNamed:@"prefs-notification"]];
+    [toolbarItemDict setObject:item forKey:@"Notification"]; // add to toolbar list
+	[toolbarItemArray addObject:@"Notification"];
+	[item release];	
+
 
 	toolbar = [[NSToolbar alloc] initWithIdentifier:@"iFolderPrefsToolbar"];
 	[toolbar setDelegate:self];

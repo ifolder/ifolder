@@ -132,7 +132,6 @@
 		};
 		29B97314FDCFA39411CA2CEA = {
 			children = (
-				3EC39527078C5B3500FABAF9,
 				3E255FFC077235290062AB7A,
 				080E96DDFE201D6D7F000001,
 				29B97315FDCFA39411CA2CEA,
@@ -180,6 +179,8 @@
 				3EC397C0078CDD8A00FABAF9,
 				3E8ACEF7078E4CFC0036C050,
 				3E8ACF02078E4D040036C050,
+				3EEAA53B078F167000EE44EE,
+				3EEAA53D078F167B00EE44EE,
 			);
 			isa = PBXGroup;
 			name = Resources;
@@ -619,8 +620,8 @@
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
 			path = "prefs-accounts.png";
-			refType = 4;
-			sourceTree = "<group>";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		3E8ACEF8078E4CFC0036C050 = {
 			fileRef = 3E8ACEF7078E4CFC0036C050;
@@ -632,8 +633,8 @@
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
 			path = "prefs-general.png";
-			refType = 4;
-			sourceTree = "<group>";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		3E8ACF03078E4D040036C050 = {
 			fileRef = 3E8ACF02078E4D040036C050;
@@ -737,26 +738,12 @@
 			settings = {
 			};
 		};
-		3EC39527078C5B3500FABAF9 = {
-			isa = PBXFileReference;
-			lastKnownFileType = folder;
-			name = "libsimias-event";
-			path = "/Users/calvin/code/ifolder/simias/src/SimiasClient/libsimias-event";
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
-		3EC3953E078C5B3500FABAF9 = {
-			fileRef = 3EC39527078C5B3500FABAF9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3EC397C0078CDD8A00FABAF9 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
 			path = "ifolder-new.png";
-			refType = 4;
-			sourceTree = "<group>";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		3EC397C1078CDD8A00FABAF9 = {
 			fileRef = 3EC397C0078CDD8A00FABAF9;
@@ -773,6 +760,32 @@
 		};
 		3ECCEE2A078B050C0011719F = {
 			fileRef = 3ECCEE29078B050C0011719F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EEAA53B078F167000EE44EE = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			path = "prefs-notification.png";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		3EEAA53C078F167000EE44EE = {
+			fileRef = 3EEAA53B078F167000EE44EE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EEAA53D078F167B00EE44EE = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			path = "prefs-sync.png";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		3EEAA53E078F167B00EE44EE = {
+			fileRef = 3EEAA53D078F167B00EE44EE;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -899,12 +912,13 @@
 				3EC2B462077A903E00F736C1,
 				3E3405A7078B40EF00630436,
 				3E4F5739078C30DA00313076,
-				3EC3953E078C5B3500FABAF9,
 				3EC397C1078CDD8A00FABAF9,
 				3E70A409078DFB8A0075681D,
 				3E70A40C078DFCD80075681D,
 				3E8ACEF8078E4CFC0036C050,
 				3E8ACF03078E4D040036C050,
+				3EEAA53C078F167000EE44EE,
+				3EEAA53E078F167B00EE44EE,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

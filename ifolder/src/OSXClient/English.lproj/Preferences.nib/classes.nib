@@ -4,7 +4,13 @@
         {
             CLASS = iFolderPrefsController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {accountsView = NSView; blankView = NSView; generalView = NSView; }; 
+            OUTLETS = {
+                accountsView = NSView; 
+                blankView = NSView; 
+                generalView = NSView; 
+                notifyView = NSView; 
+                syncView = NSView; 
+            }; 
             SUPERCLASS = NSWindowController; 
         }
     ); 
