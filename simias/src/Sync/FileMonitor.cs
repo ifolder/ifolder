@@ -68,13 +68,13 @@ namespace Simias.Sync
 		bool onServer = false;
 		const string lastDredgeProp = "LastDredgeTime";
 		DateTime dredgeTimeStamp;
-		bool needToDredge = false;
+		bool needToDredge = true;
 		DateTime lastDredgeTime = DateTime.MinValue;
 		bool foundChange;
 		string rootPath;
 
 		bool						disposed;
-		string						collectionId;
+//		string						collectionId;
 		internal FileSystemWatcher	watcher;
 		Hashtable					changes = new Hashtable();
 
@@ -106,12 +106,12 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="collection"></param>
 		/// <param name="onServer"></param>
-		public FileWatcher(Collection collection, bool onServer)
+		public FileWatcher(SyncCollection collection, bool onServer)
 		{
 			// TODO: Syncronize the dredger with the sync engine.
 			this.collection = new SyncCollection(collection);
 			this.onServer = onServer;
-			this.collectionId = collection.ID;
+//			this.collectionId = collection.ID;
 			
 			if (!MyEnvironment.Mono)
 			{
@@ -129,7 +129,6 @@ namespace Simias.Sync
 					watcher.IncludeSubdirectories = true;
 					watcher.EnableRaisingEvents = true;
 					// Now dredge to find any files that were changed while we were down.
-					Dredge();
 				}
 			}
 			disposed = false;
@@ -155,7 +154,8 @@ namespace Simias.Sync
 		/// <returns>The new FileNode.</returns>
 		FileNode CreateFileNode(string path, DirNode parentNode)
 		{
-			FileInfo fi = new FileInfo(path);
+			if (isSyncFile(path))
+				return null;
 			FileNode fnode = new FileNode(collection, parentNode, Path.GetFileName(path));
 			log.Debug("Adding file node for {0} {1}", path, fnode.ID);
 			collection.Commit(fnode);
@@ -173,15 +173,10 @@ namespace Simias.Sync
 		{
 			// here we are just checking for modified files
 			FileInfo fi = new FileInfo(path);
-			DateTime fsLastWrite = fi.LastWriteTime;
-			TimeSpan ts = fsLastWrite - fn.LastWriteTime;
+			TimeSpan ts = fi.LastWriteTime - fn.LastWriteTime;
 			
-			if (ts.TotalSeconds != 0)
+			if (((uint)ts.TotalSeconds != 0) && (fn.UpdateFileInfo(collection, path)))
 			{
-				// Don't reset the Createion time.
-				fn.LastWriteTime = fsLastWrite;
-				fn.LastAccessTime = fi.LastAccessTime;
-				fn.Length = fi.Length;
 				hasChanges = true;
 				log.Debug("Updating file node for {0} {1}", path, fn.ID);
 			}
@@ -200,7 +195,9 @@ namespace Simias.Sync
 		/// <returns>The new DirNode.</returns>
 		DirNode CreateDirNode(string path, DirNode parentNode)
 		{
-			DirectoryInfo di = new DirectoryInfo(path);
+			if (isSyncFile(path))
+				return null;
+
 			DirNode dnode = new DirNode(collection, parentNode, Path.GetFileName(path));
 			log.Debug("Adding dir node for {0} {1}", path, dnode.ID);
 			collection.Commit(dnode);
@@ -471,7 +468,7 @@ namespace Simias.Sync
 		/// <param name="path"></param>
 		void DoManagedPath(string path)
 		{
-			DirectoryInfo tmpDi = new DirectoryInfo(path);
+//			DirectoryInfo tmpDi = new DirectoryInfo(path);
 		
 			// merge files from file system to store
 			foreach (string file in Directory.GetFiles(path))
@@ -502,6 +499,7 @@ namespace Simias.Sync
 		/// </summary>
 		public void CheckForFileChanges()
 		{
+			collection.Refresh();
 			if (watcher == null)
 			{
 				Dredge();
@@ -640,14 +638,40 @@ namespace Simias.Sync
 												}
 											}
 											node.Name = Path.GetFileName(fullName);
-											node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, GetNormalizedRelativePath(fullName)));
+											string relativePath = GetNormalizedRelativePath(fullName);
+											string oldRelativePath = node.Properties.GetSingleProperty(PropertyTags.FileSystemPath).ValueString;
+											node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
 											if (!isDir)
 											{
 												ModifyFileNode(fullName, node as BaseFileNode, true);
 											}
 											else
 											{
+												// Commit the directory.
 												collection.Commit(node);
+												// We need to rename all of the children nodes.
+												ArrayList nodeList = new ArrayList();
+												ICSList csnList = collection.Search(PropertyTags.FileSystemPath, oldRelativePath, SearchOp.Begins);
+												foreach (ShallowNode csn in csnList)
+												{
+													// Skip the collection.
+													if (csn.ID == node.ID)
+														continue;
+
+													Node childNode = collection.GetNodeByID(csn.ID);
+													if (childNode != null)
+													{
+														Property childRP = childNode.Properties.GetSingleProperty(PropertyTags.FileSystemPath);
+														if (childRP != null)
+														{
+															string newRP = childRP.ValueString;
+															childRP.SetPropertyValue(newRP.Replace(oldRelativePath, relativePath));
+															childNode.Properties.ModifyNodeProperty(childRP);
+															nodeList.Add(childNode);
+														}
+													}
+												}
+												collection.Commit((Node[])nodeList.ToArray(typeof(Node)));
 											}
 										}
 										else
@@ -718,7 +742,7 @@ namespace Simias.Sync
 			DirNode dn = collection.GetRootDirectory();
 			if (dn != null)
 			{
-				rootPath = ((Uri)(dn.Properties.GetSingleProperty(PropertyTags.Root).Value)).LocalPath;
+				rootPath = dn.Properties.GetSingleProperty(PropertyTags.Root).Value as string;
 				string path = dn.GetFullPath(collection);
 				if (onServer || Directory.Exists(path))
 				{

@@ -46,6 +46,9 @@ public class Conflict
 	/// </summary>
 	static string			ConflictFilePrefix = ".simias.cf.";
 
+	static string			ConflictBinDir = "Conflicts";
+	static string			conflictBin;
+
 	//---------------------------------------------------------------------------
 	/// <summary>
 	/// constructor -- Conflict looks a lot like a Node.
@@ -129,6 +132,23 @@ public class Conflict
 	}
 
 	/// <summary>
+	/// Gets the ConflictBin path.
+	/// </summary>
+	private static string ConflictBin
+	{
+		get
+		{
+			if (conflictBin == null)
+			{
+				conflictBin = Path.Combine(Configuration.GetConfiguration().StorePath, ConflictBinDir);
+				if (!Directory.Exists(conflictBin))
+					Directory.CreateDirectory(conflictBin);
+			}
+			return conflictBin;
+		}
+	}
+
+	/// <summary>
 	/// Gets the file name for an update conflict.
 	/// </summary>
 	/// <param name="collection">The collection the node belongs to.</param>
@@ -136,8 +156,7 @@ public class Conflict
 	/// <returns>The path for the conflict file.</returns>
 	public static string GetUpdateConflictPath(Collection collection, BaseFileNode bfn)
 	{
-		string path = bfn.GetFullPath(collection);
-		return (Path.Combine(Path.GetDirectoryName(path), ConflictUpdatePrefix + bfn.ID + Path.GetExtension(path)));
+		return (Path.Combine(ConflictBin, ConflictUpdatePrefix + bfn.ID + Path.GetExtension(bfn.Name)));
 	}
 
 	/// <summary>
@@ -148,7 +167,7 @@ public class Conflict
 	/// <returns>The path for the conflict file.</returns>
 	public static string GetFileConflictPath(Collection collection, BaseFileNode bfn)
 	{
-		return (Path.Combine(Path.GetDirectoryName(bfn.GetFullPath(collection)), ConflictFilePrefix + bfn.ID));
+		return (Path.Combine(ConflictBin, ConflictFilePrefix + bfn.ID));
 	}
 
 	

@@ -31,9 +31,11 @@ using System.Diagnostics;
 using System.Threading;
 using System.Net;
 using Simias;
+using Simias.Authentication;
 using Simias.Storage;
 using Simias.Service;
 using Simias.Event;
+using Simias.Client;
 using Simias.Client.Event;
 
 
@@ -45,8 +47,12 @@ namespace Simias.Sync.Client
 	/// struct to represent the minimal information that the sync code would need
 	/// to know about a node to determine if it needs to be synced.
 	/// </summary>
-	public class NodeStamp: SyncNodeStamp, IComparable
+	internal class NodeStamp: SyncNodeStamp, IComparable
 	{
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="node"></param>
 		internal NodeStamp(Node node)
 		{
 			this.ID = node.ID;
@@ -103,7 +109,7 @@ namespace Simias.Sync.Client
 		#region Fields
 
 		internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncClient));
-		Configuration		conf;
+//		Configuration		conf;
 		Store				store;
 		static Hashtable	collections;
 		EventSubscriber		storeEvents;
@@ -138,11 +144,7 @@ namespace Simias.Sync.Client
 		/// <param name="fileCount">Returns the number of nodes to sync to the server.</param>
 		public static void GetCountToSync(string collectionID, out uint fileCount)
 		{
-			CollectionSyncClient sc;
-			lock (collections)
-			{
-				sc = (CollectionSyncClient)collections[collectionID];
-			}
+			CollectionSyncClient sc = GetCollectionSyncClient(collectionID);
 			if (sc != null)
 				sc.GetSyncCount(out fileCount);
 			else
@@ -151,9 +153,59 @@ namespace Simias.Sync.Client
 			}
 		}
 
+		/// <summary>
+		/// Call to schedule the collection to sync.
+		/// </summary>
+		/// <param name="collectionID">The collection to sync.</param>
+		public static void ScheduleSync(string collectionID)
+		{
+			CollectionSyncClient sc = GetCollectionSyncClient(collectionID);
+			if (sc != null)
+				sc.Reschedule(true);
+		}
+
+		/// <summary>
+		/// Get the last time the Collection was in sync.
+		/// </summary>
+		/// <param name="collectionID">The collection to query.</param>
+		/// <returns>The last time the collection was in sync.</returns>
+		public static DateTime GetLastSyncTime(string collectionID)
+		{
+			CollectionSyncClient sc = GetCollectionSyncClient(collectionID);
+			if (sc != null)
+				return sc.GetLastSyncTime();
+			return DateTime.MinValue;
+		}
+
+		/// <summary>
+		/// Stop the 
+		/// </summary>
+		/// <param name="collectionID"></param>
+		public static void Stop(string collectionID)
+		{
+			CollectionSyncClient sc = GetCollectionSyncClient(collectionID);
+			if (sc != null)
+				sc.Stop();
+		}
+
 		#endregion
 
 		#region private methods.
+
+		/// <summary>
+		/// Gets the CollectionSyncClient object for the specified collection.
+		/// </summary>
+		/// <param name="collectionID"></param>
+		/// <returns></returns>
+		private static CollectionSyncClient GetCollectionSyncClient(string collectionID)
+		{
+			CollectionSyncClient sc;
+			lock (collections)
+			{
+				sc = (CollectionSyncClient)collections[collectionID];
+			}
+			return sc;
+		}
 
 		/// <summary>
 		/// The main synchronization thread.
@@ -194,7 +246,7 @@ namespace Simias.Sync.Client
 						}
 						try
 						{
-							cClient.Reschedule();
+							cClient.Reschedule(false);
 						}
 						catch { /* If we could not reschedule this collection will no longer sync. */};
 					}
@@ -257,7 +309,7 @@ namespace Simias.Sync.Client
 		{
 			shuttingDown = false;
 			paused = false;
-			this.conf = conf;
+//			this.conf = conf;
 			store = Store.GetStore();
 
 			// Subscribe for node events so that we can add new CollectionSyncClients.
@@ -288,9 +340,9 @@ namespace Simias.Sync.Client
 		/// </summary>
 		public void Resume()
 		{
-			foreach(CollectionSyncClient cClient in collections)
+			foreach(CollectionSyncClient cClient in collections.Values)
 			{
-				cClient.Reschedule();
+				cClient.Reschedule(true);
 			}
 		}
 
@@ -300,6 +352,10 @@ namespace Simias.Sync.Client
 		public void Pause()
 		{
 			paused = true;
+			foreach(CollectionSyncClient cClient in collections.Values)
+			{
+				cClient.Stop();
+			}
 		}
 
 		/// <summary>
@@ -318,6 +374,10 @@ namespace Simias.Sync.Client
 		public void Stop()
 		{
 			shuttingDown = true;
+			foreach(CollectionSyncClient cClient in collections.Values)
+			{
+				cClient.Stop();
+			}
 			lock (syncQueue)
 			{
 				queueEvent.Set();
@@ -343,30 +403,42 @@ namespace Simias.Sync.Client
 		internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(CollectionSyncClient));
 		EventPublisher	eventPublisher = new EventPublisher();
 		SimiasSyncService	service;
+		SyncWorkArray	workArray;
 		Store			store;
 		SyncCollection	collection;
 		bool			queuedChanges;
+		bool			serverAlive;
 		SyncColStatus	serverStatus;
-		byte[]			buffer;
 		Timer			timer;
 		TimerCallback	callback;
-		Hashtable		DeleteOnClient;
-		Hashtable		nodesFromServer;
-		Hashtable		dirsFromServer;
-		Hashtable		filesFromServer;
-		Hashtable		DeleteOnServer;
-		Hashtable		nodesToServer;
-		Hashtable		dirsToServer;
-		Hashtable		filesToServer;
 		FileWatcher		fileMonitor;
 		bool			stopping;
 		Rights			rights;
 		string			serverContext;
 		string			clientContext;
-		int				MAX_XFER_SIZE = 1024 * 64;
 		static int		BATCH_SIZE = 50;
 		private const string	ServerCLContextProp = "ServerCLContext";
 		private const string	ClientCLContextProp = "ClientCLContext";
+		int				nodesToSync;
+		static int		initialSyncDelay = 10 * 1000; // 10 seconds.
+		DateTime		syncStartTime; // Time stamp when sync was called.
+		const int		timeSlice = 3; //Timeslice in minutes.
+
+		/// <summary>
+		/// Returns true if we should yield our timeslice.
+		/// </summary>
+		bool Yield
+		{
+			get 
+			{	
+				if (stopping)
+					return true;
+				TimeSpan ts = DateTime.Now - syncStartTime;
+				if (ts.Minutes > timeSlice)
+					return true;
+				return false;
+			}
+		}
 
 		#endregion
 	
@@ -382,23 +454,7 @@ namespace Simias.Sync.Client
 			collection = new SyncCollection(store.GetCollectionByID(nid));
 			this.callback = callback;
 			stopping = false;
-
-			switch(collection.Role)
-			{
-				case SyncCollectionRoles.Master:
-				case SyncCollectionRoles.Local:
-				default:
-					timer = new Timer(callback, this, Timeout.Infinite, Timeout.Infinite);				
-					break;
-
-				case SyncCollectionRoles.Slave:
-					Initialize();
-					int delay;
-					if (collection.MasterIncarnation == 0) delay = 0;
-					else delay = collection.Interval == Timeout.Infinite ? Timeout.Infinite : 0;
-					timer = new Timer(callback, this, delay, Timeout.Infinite);
-					break;
-			}
+			Initialize();
 		}
 
 		/// <summary>
@@ -437,18 +493,59 @@ namespace Simias.Sync.Client
 		/// <summary>
 		/// Called to schedule a sync operation a the set sync Interval.
 		/// </summary>
-		internal void Reschedule()
+		/// <param name="SyncNow">If true schedule now.</param>
+		internal void Reschedule(bool SyncNow)
 		{
+			if (collection.Role != SyncCollectionRoles.Slave)
+			{
+				timer.Change(Timeout.Infinite, Timeout.Infinite);
+				return;
+			}
 			if (!stopping)
 			{
-				int seconds = collection.Interval;
-				if (serverStatus == SyncColStatus.Busy)
+                int seconds;
+				if (SyncNow)
 				{
-					// Reschedule to sync within 1/12 of the scheduled sync time, but no less than 2 seconds.
-					seconds = new Random().Next(seconds / 12) + 2;
+					seconds = 0;
+				}
+				else if (!serverAlive)
+				{
+					seconds = 10;
+				}
+				else 
+				{
+					int nodesLeft = workArray.Count;
+					if (nodesToSync != 0 && nodesLeft < nodesToSync)
+					{
+						seconds = 0;
+					}
+					else
+					{
+						seconds = collection.Interval;
+						if (serverStatus == SyncColStatus.Busy)
+						{
+							// Reschedule to sync within 1/12 of the scheduled sync time, but no less than 2 seconds.
+							seconds = new Random().Next(seconds / 12) + 2;
+							seconds = seconds > 30 ? 30 : seconds;
+						}
+					}
 				}
 				timer.Change(seconds * 1000, Timeout.Infinite);
 			}
+		}
+
+		/// <summary>
+		/// Get the last time the collection was in sync.
+		/// </summary>
+		/// <returns></returns>
+		internal DateTime GetLastSyncTime()
+		{
+			Property cc = collection.Properties.GetSingleProperty(ClientCLContextProp);
+			if (cc != null)
+			{
+				return (new EventContext(cc.Value.ToString()).TimeStamp);
+			}
+			return DateTime.MinValue;
 		}
 
 		/// <summary>
@@ -456,8 +553,11 @@ namespace Simias.Sync.Client
 		/// </summary>
 		internal void Stop()
 		{
-			timer.Dispose();
-			stopping = true;
+			timer.Change(Timeout.Infinite, Timeout.Infinite);
+			lock (this)
+			{
+				stopping = true;
+			}
 		}
 
 		/// <summary>
@@ -466,9 +566,7 @@ namespace Simias.Sync.Client
 		/// <param name="fileCount">Returns the number of files to be synced.</param>
 		internal void GetSyncCount(out uint fileCount)
 		{
-			fileCount = (uint)nodesToServer.Count;
-			fileCount += (uint)dirsToServer.Count;
-			fileCount += (uint)filesToServer.Count;
+			fileCount = (uint)workArray.Count;
 		}
 
 		/// <summary>
@@ -478,96 +576,129 @@ namespace Simias.Sync.Client
 		{
 			lock (this)
 			{
-				queuedChanges = false;
-				serverStatus = SyncColStatus.Success;
-				// Refresh the collection.
-				collection.Refresh();
+				stopping = false;
+				syncStartTime = DateTime.Now;
+			}
+			queuedChanges = false;
+			serverAlive = false;
+			serverStatus = SyncColStatus.Success;
+			// Refresh the collection.
+			collection.Refresh();
+
+			// Make sure the master exists.
+			if (collection.CreateMaster)
+			{
+				new Simias.Domain.DomainAgent(Configuration.GetConfiguration()).CreateMaster(collection);
+			}
 			
-				// Sync the file system with the local store.
-				fileMonitor.CheckForFileChanges();
+			// Sync the file system with the local store.
+			fileMonitor.CheckForFileChanges();
+			if (collection.Role != SyncCollectionRoles.Slave)
+				return;
 
-				// We may have just created or deleted nodes wait for the events to settle.
-				Thread.Sleep(500);
+			// We may have just created or deleted nodes wait for the events to settle.
+			Thread.Sleep(500);
 
-				// Setup the url to the server.
-				service = new SimiasSyncService();
-				service.Url = collection.MasterUrl.ToString().TrimEnd('/') + service.Url.Substring(service.Url.LastIndexOf('/'));
-				service.CookieContainer = new CookieContainer();
+			// Setup the url to the server.
+			service = new SimiasSyncService();
+			service.Url = collection.MasterUrl.ToString().TrimEnd('/') + service.Url.Substring(service.Url.LastIndexOf('/'));
+			service.CookieContainer = new CookieContainer();
+			service.PreAuthenticate = true;
+
+			// credentials
+			Credentials cSimiasCreds = new Credentials(collection.ID);
+			service.Credentials = cSimiasCreds.GetCredentials();
+			if (service.Credentials == null)
+			{
+				log.Debug("credentials don't exist - back to the sync queue");
+				return;
+			}
+
+			SyncNodeStamp[] sstamps;
+			NodeStamp[]		cstamps;
+			
+			// Get the current sync state.
+			GetChangeLogContext(out serverContext, out clientContext);
+			bool gotClientChanges = GetChangedNodeStamps(out cstamps, ref clientContext);
+
+			// Setup the SyncStartInfo.
+			SyncStartInfo si = new SyncStartInfo();
+			si.CollectionID = collection.ID;
+			si.Context = serverContext;
+			si.ChangesOnly = gotClientChanges | !workArray.Complete;
+			si.ClientHasChanges = si.ChangesOnly;
+			
+			// BUGBUG
+			int oldTimeout = service.Timeout;
+			service.Timeout = 5 * 60000;
+			// Start the Sync pass and save the rights.
+			sstamps = service.Start(si, store.GetUserIDFromDomainID(collection.Domain), out si);
+			// BUGBUG
+			service.Timeout = oldTimeout;
+			serverAlive = true;
+
+			eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartSync, true));
+
+			serverContext = si.Context;
+			workArray.SetAccess = rights = si.Access;
 				
-				SyncNodeStamp[] sstamps;
-				NodeStamp[]		cstamps;
-			
-				// Get the current sync state.
-				GetChangeLogContext(out serverContext, out clientContext);
-				bool gotClientChanges = GetChangedNodeStamps(out cstamps, ref clientContext);
-
-				// Setup the SyncStartInfo.
-				SyncStartInfo si = new SyncStartInfo();
-				si.CollectionID = collection.ID;
-				si.Context = serverContext;
-				si.ChangesOnly = gotClientChanges | !SyncComplete;
-				si.ClientHasChanges = si.ChangesOnly;
-			
-				// Start the Sync pass and save the rights.
-				sstamps = service.Start(ref si, store.GetUserIDFromDomainID(collection.Domain));
-
-				eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartSync, true));
-
-				serverContext = si.Context;
-				rights = si.Access;
-				
-				serverStatus = si.Status;
-				switch (si.Status)
+			serverStatus = si.Status;
+			switch (si.Status)
+			{
+				case SyncColStatus.AccessDenied:
+					log.Info("Failed authentication");
+					break;
+				case SyncColStatus.Busy:
+					log.Info("The server is busy");
+					break;
+				case SyncColStatus.NotFound:
+					log.Info("The collection no longer exists");
+					// The collection does not exist or we do not have rights.
+					collection.Commit(collection.Delete());
+					break;
+				case SyncColStatus.NoWork:
+					log.Debug("No work to do");
+					break;
+				case SyncColStatus.Success:
+				switch (rights)
 				{
-					case SyncColStatus.Busy:
+					case Rights.Deny:
 						break;
-					case SyncColStatus.NotFound:
-						// The collection does not exist or we do not have rights.
-						collection.Commit(collection.Delete());
-						break;
-					case SyncColStatus.NoWork:
-						break;
-					case SyncColStatus.Success:
-					switch (rights)
-					{
-						case Rights.Deny:
-							break;
-						case Rights.Admin:
-						case Rights.ReadOnly:
-						case Rights.ReadWrite:
-							try
+					case Rights.Admin:
+					case Rights.ReadOnly:
+					case Rights.ReadWrite:
+						try
+						{
+							// Now lets determine the files that need to be synced.
+							if (si.ChangesOnly)
 							{
-								// Now lets determine the files that need to be synced.
-								if (si.ChangesOnly)
-								{
-									// We only need to look at the changed nodes.
-									ProcessChangedNodeStamps(sstamps, cstamps);
-								}
-								else
-								{
-									// We don't have any state. So do a full sync.
-									cstamps =  GetNodeStamps();
-									ReconcileAllNodeStamps(sstamps, cstamps);
-								}
-								queuedChanges = true;
-								ExecuteSync();
+								// We only need to look at the changed nodes.
+								ProcessChangedNodeStamps(sstamps, cstamps);
 							}
-							finally
+							else
 							{
-								bool status = SyncComplete;
-								if (queuedChanges)
-								{
-									// Save the sync state.
-									SetChangeLogContext(serverContext, clientContext, status);
-								}
-								// End the sync.
-								eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StopSync, status));
-								service.Stop();
+								// We don't have any state. So do a full sync.
+								cstamps =  GetNodeStamps();
+								ReconcileAllNodeStamps(sstamps, cstamps);
 							}
-							break;
-					}
+							queuedChanges = true;
+							ExecuteSync();
+						}
+						finally
+						{
+							bool status = workArray.Complete;
+							if (queuedChanges)
+							{
+								// Save the sync state.
+								SetChangeLogContext(serverContext, clientContext, status);
+							}
+							// End the sync.
+							eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StopSync, status));
+							service.Stop();
+						}
 						break;
 				}
+					break;
 			}
 		}
 
@@ -598,49 +729,49 @@ namespace Simias.Sync.Client
 		}
 
 		/// <summary>
+		/// Called to reinitilize if we failed.
+		/// This will happen when we are disconected.
+		/// </summary>
+		/// <param name="collectionClient"></param>
+		private void InitializeSlave(object collectionClient)
+		{
+			int delay;
+			if (collection.MasterIncarnation == 0) delay = initialSyncDelay;
+			else delay = collection.Interval == Timeout.Infinite ? Timeout.Infinite : initialSyncDelay;
+			
+			// If the master has not been created. Do it now.
+			try
+			{
+				workArray = new SyncWorkArray(collection);
+				serverContext = null;
+				clientContext = null;
+				timer = new Timer(callback, this, delay, Timeout.Infinite);
+			}
+			catch
+			{
+				timer = new Timer(new TimerCallback(InitializeSlave), this, delay, Timeout.Infinite);
+			}
+		}
+
+		/// <summary>
 		/// Initializes the instance.
 		/// </summary>
 		private void Initialize()
 		{
-			// If the master has not been created. Do it now.
-			if (collection.CreateMaster)
-			{
-				new Simias.Domain.DomainAgent(Configuration.GetConfiguration()).CreateMaster(collection);
-			}
-
 			fileMonitor = new FileWatcher(collection, false);
-			DeleteOnClient = new Hashtable();
-			nodesFromServer = new Hashtable();
-			dirsFromServer = new Hashtable();
-			filesFromServer = new Hashtable();
-			DeleteOnServer = new Hashtable();
-			nodesToServer = new Hashtable();
-			dirsToServer = new Hashtable();
-			filesToServer = new Hashtable();
-			serverContext = null;
-			clientContext = null;
-			buffer = new byte[MAX_XFER_SIZE];
-		}
-
-		private bool SyncComplete
-		{
-			get
+			switch(collection.Role)
 			{
-				int count = 0;
-				count += DeleteOnClient.Count;
-				count += nodesFromServer.Count;
-				count += dirsFromServer.Count;
-				count += filesFromServer.Count;
-				count += DeleteOnServer.Count;
-				count += nodesToServer.Count;
-				count += dirsToServer.Count;
-				count += filesToServer.Count;
-			
-				return count == 0 ? true : false;
+				case SyncCollectionRoles.Master:
+				case SyncCollectionRoles.Local:
+				default:
+					timer = new Timer(callback, this, initialSyncDelay, Timeout.Infinite);				
+					break;
+
+				case SyncCollectionRoles.Slave:
+					InitializeSlave(this);
+					break;
 			}
 		}
-
-		
 
 		/// <summary>
 		/// Set the new context strings that are used by ChangeLog.
@@ -788,91 +919,16 @@ namespace Simias.Sync.Client
 		{
 			for (int i = 0; i < sstamps.Length; ++i)
 			{
-				GetNodeFromServer(sstamps[i]);
+				workArray.AddNodeFromServer(sstamps[i]);
 			}
 
 			for (int i = 0; i < cstamps.Length; ++i)
 			{
-				PutNodeToServer(cstamps[i]);
+				workArray.AddNodeToServer(cstamps[i]);
 			}
 		}
 
-		/// <summary>
-		/// Determins how this node should be retrieved from the server.
-		/// </summary>
-		/// <param name="stamp">The SyncNodeStamp describing this node.</param>
-		private void GetNodeFromServer(SyncNodeStamp stamp)
-		{
-			if (stamp.Operation == SyncOperation.Delete)
-			{
-				DeleteOnClient[stamp.ID] = stamp.BaseType;
-			}
-			else
-			{
-				// If it is scheduled to be deleted remove from delete list.
-				if (DeleteOnClient.Contains(stamp.ID))
-					DeleteOnClient.Remove(stamp.ID);
-
-				// Make sure the node has been changed.
-				Node oldNode = collection.GetNodeByID(stamp.ID);
-				if (oldNode == null || oldNode.MasterIncarnation != stamp.LocalIncarnation)
-				{
-					if (stamp.BaseType == NodeTypes.FileNodeType || stamp.BaseType == NodeTypes.StoreFileNodeType)
-					{
-						// This is a file.
-						filesFromServer[stamp.ID] = stamp.BaseType;
-					}
-					else if (stamp.BaseType == NodeTypes.DirNodeType)
-					{
-						// This node represents a directory.
-						dirsFromServer[stamp.ID] = stamp.BaseType;
-					}
-					else
-					{
-						// This is a generic node.
-						nodesFromServer[stamp.ID] = stamp.BaseType;
-					}
-				}
-			}
-		}
-
-		/// <summary>
-		/// Determins how this node should be sent to the server.
-		/// </summary>
-		/// <param name="stamp">The SyncNodeStamp describing this node.</param>
-		private void PutNodeToServer(NodeStamp stamp)
-		{
-			if (stamp.BaseType == NodeTypes.TombstoneType || stamp.Operation == SyncOperation.Delete)
-			{
-				DeleteOnServer[stamp.ID] = stamp.BaseType;
-			}
-			else
-			{
-				// Remove from the delete list if it exists.
-				if (DeleteOnServer.Contains(stamp.ID))
-					DeleteOnServer.Remove(stamp.ID);
-
-				if (stamp.MasterIncarnation != stamp.LocalIncarnation)
-				{
-					if (stamp.BaseType == NodeTypes.FileNodeType || stamp.BaseType == NodeTypes.StoreFileNodeType)
-					{
-						// This node is a file.
-						filesToServer[stamp.ID] = stamp.BaseType;
-					}
-					else if (stamp.BaseType == NodeTypes.DirNodeType)
-					{
-						// This node is a directory.
-						dirsToServer[stamp.ID] = stamp.BaseType;
-					}
-					else
-					{
-						// This is a generic node.
-						nodesToServer[stamp.ID] = stamp.BaseType;
-					}
-				}
-			}
-		}
-
+		
 		/// <summary>
 		/// Determines which nodes need to by synced.
 		/// This is done by comparing all nodes on the server with all nodes on the client.
@@ -881,16 +937,9 @@ namespace Simias.Sync.Client
 		/// <param name="cstamps">The client nodes.</param>
 		private void ReconcileAllNodeStamps(SyncNodeStamp[] sstamps, NodeStamp[] cstamps)
 		{
-			// Clear all the tables because we are doing a full sync.
-			DeleteOnClient.Clear();
-			nodesFromServer.Clear();
-			dirsFromServer.Clear();
-			filesFromServer.Clear();
-			DeleteOnServer.Clear();
-			nodesToServer.Clear();
-			dirsToServer.Clear();
-			filesToServer.Clear();
-		
+			// Clear the current work because we are doing a full sync.
+			workArray.Clear();
+			
 			int sCount = sstamps.Length, cCount = cstamps.Length;
 			Hashtable tempTable = new Hashtable();
 
@@ -911,12 +960,14 @@ namespace Simias.Sync.Client
 					// If the Master Incarnation is not 0 then this node has been deleted on the server.
 					if (cStamp.MasterIncarnation != 0)
 					{
-						DeleteOnClient[cStamp.ID] = cStamp.BaseType;
+						cStamp.Operation = SyncOperation.Delete;
+						cStamp.MasterIncarnation = 0;
+						workArray.AddNodeFromServer(cStamp);
 					}
 					else
 					{
 						// The node is on the client but not the server send it to the server.
-						PutNodeToServer(cStamp);
+						workArray.AddNodeToServer(cStamp);
 					}
 				}
 				else
@@ -926,19 +977,19 @@ namespace Simias.Sync.Client
 					if (cStamp.BaseType == NodeTypes.TombstoneType)
 					{
 						// This node has been deleted on the client.
-						DeleteOnServer[cStamp.ID] = cStamp.BaseType;
+						workArray.AddNodeToServer(cStamp);
 					}
 					else if (cStamp.LocalIncarnation != cStamp.MasterIncarnation)
 					{
 						// The file has been changed locally if the master is correct, push this file.
 						if (cStamp.MasterIncarnation == sStamp.LocalIncarnation)
 						{
-							PutNodeToServer(cStamp);
+							workArray.AddNodeToServer(cStamp);
 						}
 						else
 						{
 							// This will be a conflict get the servers latest revision.
-							GetNodeFromServer(sStamp);
+							workArray.AddNodeFromServer(sStamp);
 						}
 					}
 					else
@@ -946,7 +997,7 @@ namespace Simias.Sync.Client
 						// The node has not been changed locally see if we need to get the node.
 						if (cStamp.MasterIncarnation != sStamp.LocalIncarnation)
 						{
-							GetNodeFromServer(sStamp);
+							workArray.AddNodeFromServer(sStamp);
 						}
 					}
 					tempTable.Remove(cStamp.ID);
@@ -956,7 +1007,7 @@ namespace Simias.Sync.Client
 			// Now Get any nodes left, that are on the server but not on the client.
 			foreach(SyncNodeStamp sStamp in tempTable.Values)
 			{
-				GetNodeFromServer(sStamp);
+				workArray.AddNodeFromServer(sStamp);
 			}
 		}
 
@@ -965,6 +1016,7 @@ namespace Simias.Sync.Client
 		/// </summary>
 		private void ExecuteSync()
 		{
+			nodesToSync = workArray.Count;
 			// Get the updates from the server.
 			ProcessDeleteOnClient();
 			ProcessNodesFromServer();
@@ -982,16 +1034,15 @@ namespace Simias.Sync.Client
 		/// </summary>
 		private void ProcessDeleteOnClient()
 		{
-			if (DeleteOnClient.Count == 0)
-				return;
 			
 			// remove deleted nodes from client
-			log.Info("Deleting {0} nodes on client", DeleteOnClient.Count);
-			string[] idList = new string[DeleteOnClient.Count];
-			DeleteOnClient.Keys.CopyTo(idList, 0);
+			string[] idList = workArray.DeletesFromServer();
+			if (idList.Length == 0)
+				return;
+			log.Info("Deleting {0} nodes on client", idList.Length);
 			foreach (string id in idList)
 			{
-				if (stopping)
+				if (Yield)
 				{
 					return;
 				}
@@ -1001,7 +1052,7 @@ namespace Simias.Sync.Client
 					if (node == null)
 					{
 						log.Debug("Ignoring attempt to delete non-existent node {0}", id);
-						DeleteOnClient.Remove(id);
+						workArray.RemoveNodeFromServer(id);
 						continue;
 					}
 
@@ -1027,6 +1078,7 @@ namespace Simias.Sync.Client
 					if (dn != null)
 					{
 						Directory.Delete(dn.GetFullPath(collection), true);
+						eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.Directory, true, node.Name, 0, 0, 0, Direction.Downloading));
 						Node[] deleted = collection.Delete(node, PropertyTags.Parent);
 						collection.Commit(deleted);
 						collection.Commit(deleted);
@@ -1035,12 +1087,22 @@ namespace Simias.Sync.Client
 					{
 						BaseFileNode bfn = node as BaseFileNode;
 						if (bfn != null)
-							File.Delete(bfn.GetFullPath(collection));
+						{
+							eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, true, node.Name, 0, 0, 0, Direction.Downloading));
+							FileInfo fi = new FileInfo(bfn.GetFullPath(collection));
+							if (rights == Rights.ReadOnly)
+								fi.Attributes = fi.Attributes & ~FileAttributes.ReadOnly;
+							fi.Delete();
+						}
+						else
+						{
+							eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.Unknown, true, node.Name, 0, 0, 0, Direction.Downloading));
+						}
 						collection.Delete(node);
 						collection.Commit(node);
 						collection.Commit(node);
 					}
-					DeleteOnClient.Remove(id);
+					workArray.RemoveNodeFromServer(id);
 				}
 				catch
 				{
@@ -1054,21 +1116,19 @@ namespace Simias.Sync.Client
 		/// </summary>
 		private void ProcessNodesFromServer()
 		{
-			if (nodesFromServer.Count == 0)
-				return;
-
 			SyncNode[] updates = null;
 
 			// get small nodes and files from server
-			log.Info("Downloading {0} Nodes from server", nodesFromServer.Count);
-			string[] nodeIDs = new string[nodesFromServer.Count];
-			nodesFromServer.Keys.CopyTo(nodeIDs, 0);
+			string[] nodeIDs = workArray.GenericsFromServer();
+			if (nodeIDs.Length == 0)
+				return;
+			log.Info("Downloading {0} Nodes from server", nodeIDs.Length);
 				
 			// Now get the nodes in groups of BATCH_SIZE.
 			int offset = 0;
 			while (offset < nodeIDs.Length)
 			{
-				if (stopping)
+				if (Yield)
 				{
 					return;
 				}
@@ -1108,7 +1168,7 @@ namespace Simias.Sync.Client
 				}
 				else
 				{
-					nodesFromServer.Remove(sn.nodeID);
+					workArray.RemoveNodeFromServer(sn.nodeID);
 				}
 			}
 			try
@@ -1118,7 +1178,7 @@ namespace Simias.Sync.Client
 				foreach ( Node node in commitList)
 				{
 					if (node != null)
-						nodesFromServer.Remove(node.ID);
+						workArray.RemoveNodeFromServer(node.ID);
 				}
 			}
 			catch
@@ -1132,7 +1192,7 @@ namespace Simias.Sync.Client
 						{
 							collection.Commit(node);
 						}
-						nodesFromServer.Remove(node.ID);
+						workArray.RemoveNodeFromServer(node.ID);
 					}
 					catch (CollisionException)
 					{
@@ -1141,7 +1201,7 @@ namespace Simias.Sync.Client
 							// The current node failed because of a collision.
 							Node cNode = collection.CreateCollision(node, false);
 							collection.Commit(cNode);
-							nodesFromServer.Remove(cNode.ID);
+							workArray.RemoveNodeFromServer(cNode.ID);
 						}
 						catch
 						{
@@ -1160,21 +1220,20 @@ namespace Simias.Sync.Client
 		/// </summary>
 		private void ProcessDirsFromServer()
 		{
-			if (dirsFromServer.Count == 0)
-				return;
-
+			
 			SyncNode[] updates = null;
 
 			// get small nodes and files from server
-			log.Info("Downloading {0} Directories from server", dirsFromServer.Count);
-			string[] nodeIDs = new string[dirsFromServer.Count];
-			dirsFromServer.Keys.CopyTo(nodeIDs, 0);
+			string[] nodeIDs = workArray.DirsFromServer();
+			if (nodeIDs.Length == 0)
+				return;
+			log.Info("Downloading {0} Directories from server", nodeIDs.Length);
 				
 			// Now get the nodes in groups of BATCH_SIZE.
 			int offset = 0;
 			while (offset < nodeIDs.Length)
 			{
-				if (stopping)
+				if (Yield)
 				{
 					return;
 				}
@@ -1251,8 +1310,9 @@ namespace Simias.Sync.Client
 						Directory.CreateDirectory(path);
 					}
 					collection.Commit(node);
+					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.Directory, false, node.Name, 0, 0, 0, Direction.Downloading));
 				}
-				dirsFromServer.Remove(snode.nodeID);
+				workArray.RemoveNodeFromServer(snode.nodeID);
 			}
 			catch 
 			{
@@ -1264,45 +1324,56 @@ namespace Simias.Sync.Client
 		/// </summary>
 		private void ProcessFilesFromServer()
 		{
-			if (filesFromServer.Count == 0)
+			
+			string[] nodeIDs = workArray.FilesFromServer();
+			if (nodeIDs.Length == 0)
 				return;
-
-			log.Info("Downloading {0} Files from server", filesFromServer.Count);
-			string[] nodeIDs = new string[filesFromServer.Count];
-			filesFromServer.Keys.CopyTo(nodeIDs, 0);
-
+			log.Info("Downloading {0} Files from server", nodeIDs.Length);
+			
 			foreach (string nodeID in nodeIDs)
 			{
 				try
 				{
-					if (stopping)
+					if (Yield)
 					{
 						return;
 					}
 
-					ClientInFile file = new ClientInFile(collection, nodeID, new WsServerReadFile(service));
-					file.Open();
-					bool success = false;
-					try
+					HttpClientInFile file = new HttpClientInFile(collection, nodeID, service);
+					if (file.Open(rights == Rights.ReadOnly ? true : false))
 					{
-						log.Info("Downloading File {0} from server", file.Name);
-						success = file.DownLoadFile();
+						bool success = false;
+						try
+						{
+							log.Info("Downloading File {0} from server", file.Name);
+							success = file.DownLoadFile();
+						}
+						catch (Exception ex)
+						{
+							Log.log.Debug(ex, "Failed Download before close");
+						}
+						finally
+						{
+							success = file.Close(success);
+							if (success)
+							{
+								workArray.RemoveNodeFromServer(nodeID);
+							}
+							else
+							{
+								log.Info("Failed Downloading File {0}", file.Name);
+							}
+						}
 					}
-					finally
+					else
 					{
-						success = file.Close(success);
-						if (success)
-						{
-							filesFromServer.Remove(nodeID);
-						}
-						else
-						{
-							log.Info("Failed Downloading File {0}", file.Name);
-						}
+						// There is no file to pull down.
+						workArray.RemoveNodeFromServer(nodeID);
 					}
 				}
-				catch 
+				catch (Exception ex)
 				{
+					Log.log.Debug(ex, "Failed Downloading File during close");
 				}
 			}
 		}
@@ -1313,14 +1384,13 @@ namespace Simias.Sync.Client
 		private void ProcessDeleteOnServer()
 		{
 			// remove deleted nodes from server
-			if (DeleteOnServer.Count == 0)
-				return;
-		
 			try
 			{
-				log.Info("Deleting {0} Nodes on server", DeleteOnServer.Count);
-				string[] idList = new string[DeleteOnServer.Count];
-				DeleteOnServer.Keys.CopyTo(idList, 0);
+				string[] idList = workArray.DeletesToServer();
+				if (idList.Length == 0)
+					return;
+				log.Info("Deleting {0} Nodes on server", idList.Length);
+				
 				SyncNodeStatus[] nodeStatus = service.DeleteNodes(idList);
 				foreach (SyncNodeStatus status in nodeStatus)
 				{
@@ -1331,11 +1401,12 @@ namespace Simias.Sync.Client
 							Node node = collection.GetNodeByID(status.nodeID);
 							if (node != null)
 							{
+								eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.Unknown, true, node.Name, 0, 0, 0, Direction.Uploading));
 								log.Info("Deleting {0} from server", node.Name);
 								// Delete the tombstone.
 								collection.Commit(collection.Delete(node));
 							}
-							DeleteOnServer.Remove(status.nodeID);
+							workArray.RemoveNodeToServer(status.nodeID);
 						}
 					}
 					catch 
@@ -1354,18 +1425,16 @@ namespace Simias.Sync.Client
 		private void ProcessNodesToServer()
 		{
 			// get small nodes and files from server
-			if (nodesToServer.Count == 0)
+			string[] nodeIDs = workArray.GenericsToServer();
+			if (nodeIDs.Length == 0)
 				return;
-
-			log.Info("Uploading {0} Nodes To server", nodesToServer.Count);
-			string[] nodeIDs = new string[nodesToServer.Count];
-			nodesToServer.Keys.CopyTo(nodeIDs, 0);
+			log.Info("Uploading {0} Nodes To server", nodeIDs.Length);
 				
 			// Now get the nodes in groups of BATCH_SIZE.
 			int offset = 0;
 			while (offset < nodeIDs.Length)
 			{
-				if (stopping)
+				if (Yield)
 				{
 					return;
 				}
@@ -1389,7 +1458,7 @@ namespace Simias.Sync.Client
 						}
 						else
 						{
-							nodesToServer.Remove(nodeIDs[i]);
+							workArray.RemoveNodeToServer(nodeIDs[i]);
 						}
 					}
 
@@ -1406,7 +1475,7 @@ namespace Simias.Sync.Client
 							case SyncStatus.Success:
 								node.SetMasterIncarnation(node.LocalIncarnation);
 								collection.Commit(node);
-								nodesToServer.Remove(node.ID);
+								workArray.RemoveNodeToServer(node.ID);
 								break;
 							case SyncStatus.UpdateConflict:
 							case SyncStatus.FileNameConflict:
@@ -1414,8 +1483,10 @@ namespace Simias.Sync.Client
 								log.Debug("Skipping update of node {0} due to {1} on server",
 									status.nodeID, status.status);
 									
-								nodesFromServer.Add(node.ID, node.Type);
-								nodesToServer.Remove(node.ID);
+								NodeStamp ns = new NodeStamp(node);
+								ns.MasterIncarnation++;
+								workArray.AddNodeFromServer(ns);
+								workArray.RemoveNodeToServer(node.ID);
 								break;
 							default:
 								log.Debug("Skipping update of node {0} due to {1} on server",
@@ -1434,18 +1505,16 @@ namespace Simias.Sync.Client
 		private void ProcessDirsToServer()
 		{
 			// get small nodes and files from server
-			if (dirsToServer.Count == 0)
+			string[] nodeIDs = workArray.DirsToServer();
+			if (nodeIDs.Length == 0)
 				return;
-			
-			log.Info("Uploading {0} Directories To server", dirsToServer.Count);
-			string[] nodeIDs = new string[dirsToServer.Count];
-			dirsToServer.Keys.CopyTo(nodeIDs, 0);
+			log.Info("Uploading {0} Directories To server", nodeIDs.Length);
 				
 			// Now get the nodes in groups of BATCH_SIZE.
 			int offset = 0;
 			while (offset < nodeIDs.Length)
 			{
-				if (stopping)
+				if (Yield)
 				{
 					return;
 				}
@@ -1470,7 +1539,7 @@ namespace Simias.Sync.Client
 						}
 						else
 						{
-							dirsToServer.Remove(nodeIDs[i]);
+							workArray.RemoveNodeToServer(nodeIDs[i]);
 						}
 					}
 
@@ -1485,7 +1554,8 @@ namespace Simias.Sync.Client
 							case SyncStatus.Success:
 								node.SetMasterIncarnation(node.LocalIncarnation);
 								collection.Commit(node);
-								dirsToServer.Remove(node.ID);
+								eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.Directory, false, node.Name, 0, 0, 0, Direction.Uploading));
+								workArray.RemoveNodeToServer(node.ID);
 								break;
 							case SyncStatus.UpdateConflict:
 							case SyncStatus.FileNameConflict:
@@ -1493,8 +1563,10 @@ namespace Simias.Sync.Client
 								log.Debug("Failed update of node {0} due to {1} on server",
 									status.nodeID, status.status);
 									
-								nodesFromServer.Add(node.ID, node.Type);
-								nodesToServer.Remove(node.ID);
+								NodeStamp ns = new NodeStamp(node);
+								ns.MasterIncarnation++;
+								workArray.AddNodeFromServer(ns);
+								workArray.RemoveNodeToServer(node.ID);
 								break;
 							default:
 								log.Debug("Failed update of node {0} due to {1} on server",
@@ -1512,18 +1584,17 @@ namespace Simias.Sync.Client
 
 		private void ProcessFilesToServer()
 		{
-			if (filesToServer.Count == 0)
+			string[] nodeIDs = workArray.FilesToServer();
+			if (nodeIDs.Length == 0)
 				return;
 
-			log.Info("Uploading {0} Files To server", filesToServer.Count);
-			string[] nodeIDs = new string[filesToServer.Count];
-			filesToServer.Keys.CopyTo(nodeIDs, 0);
-
+			log.Info("Uploading {0} Files To server", nodeIDs.Length);
+			
 			foreach (string nodeID in nodeIDs)
 			{
 				try
 				{
-					if (stopping)
+					if (Yield)
 					{
 						return;
 					}
@@ -1531,40 +1602,50 @@ namespace Simias.Sync.Client
 					BaseFileNode node = collection.GetNodeByID(nodeID) as BaseFileNode;
 					if (node != null)
 					{
-						ClientOutFile file = new ClientOutFile(collection, node, new WsServerWriteFile(service));
-						file.Open();
-						bool success = false;
-						try
+						HttpClientOutFile file = new HttpClientOutFile(collection, node, service);
+						SyncStatus status = file.Open();
+						if (status == SyncStatus.Success)
 						{
-							log.Info("Uploading File {0} to server", file.Name);
-							success = file.UploadFile();
-						}
-						finally
-						{
-							SyncNodeStatus syncStatus = file.Close(success);
-							switch (syncStatus.status)
+							bool success = false;
+							try
 							{
-								case SyncStatus.Success:
-									filesToServer.Remove(nodeID);
-									break;
-								case SyncStatus.InProgess:
-								case SyncStatus.InUse:
-								case SyncStatus.ServerFailure:
-									log.Info("Failed Uploading File {0}", file.Name);
-									break;
-								case SyncStatus.FileNameConflict:
-								case SyncStatus.UpdateConflict:
-									// Since we had a conflict we need to get the conflict node down.
-									filesFromServer[nodeID] = node.Type;
-
-									log.Info("Failed Uploading File {0}", file.Name);
-									break;
+								log.Info("Uploading File {0} to server", file.Name);
+								success = file.UploadFile();
 							}
+							finally
+							{
+								SyncNodeStatus syncStatus = file.Close(success);
+								switch (syncStatus.status)
+								{
+									case SyncStatus.Success:
+										workArray.RemoveNodeToServer(nodeID);
+										break;
+									case SyncStatus.InProgess:
+									case SyncStatus.InUse:
+									case SyncStatus.ServerFailure:
+										log.Info("Failed Uploading File {0} : reason {1}", file.Name, syncStatus.status.ToString());
+										break;
+									case SyncStatus.FileNameConflict:
+									case SyncStatus.UpdateConflict:
+										// Since we had a conflict we need to get the conflict node down.
+										workArray.RemoveNodeToServer(nodeID);
+										NodeStamp ns = new NodeStamp(node);
+										ns.MasterIncarnation++;
+										workArray.AddNodeFromServer(ns);
+										log.Info("Failed Uploading File {0} : reason {1}", file.Name, syncStatus.status.ToString());
+										break;
+								}
+							}
+						}
+						else
+						{
+							log.Info("Failed Uploading File {0} : reason {1}", file.Name, status.ToString());
 						}
 					}
 				}
-				catch 
+				catch (Exception ex)
 				{
+					Log.log.Debug(ex, "Failed Uploading File");
 				}
 			}
 		}
@@ -1572,48 +1653,328 @@ namespace Simias.Sync.Client
 		#endregion
 	}
 
-	/*
-	internal class SyncWork
+	internal class SyncWorkArray
 	{
-		internal class WorkNode
+		Collection		collection;
+		Hashtable		nodesFromServer;
+		Hashtable		nodesToServer;
+		Rights			rights;
+		
+		/// <summary>
+		/// Node type enum.
+		/// </summary>
+		enum ObjectType
 		{
-			bool	ToServer;
-			string	type;
+			Generic = 0,
+			Directory,
+			File,
+			Tombstone,
 		}
 
-		SyncCollection	collection;
-		Hashtable		nodesToServer = new Hashtable();
-		Hashtable		nodesFromServer = new Hashtable();
-
-		public SyncWork(SyncCollection collection)
+		/// <summary>
+		/// Array of items to sync.
+		/// </summary>
+		/// <param name="collection">The collection.</param>
+		internal SyncWorkArray(SyncCollection collection)
 		{
 			this.collection = collection;
+			nodesFromServer = new Hashtable();
+			nodesToServer = new Hashtable();
 		}
-	
-		void AddNodeToServer(string nodeID, string type)
+
+		/// <summary>
+		/// Clear all of the current work to do.
+		/// </summary>
+		internal void Clear()
 		{
-			// Make sure we are not getting this node from the server.
-			if (!nodesFromServer.Contains(nodeID))
+			nodesFromServer.Clear();
+			nodesToServer.Clear();
+		}
+
+		/// <summary>
+		/// Determins how this node should be retrieved from the server.
+		/// </summary>
+		/// <param name="stamp">The SyncNodeStamp describing this node.</param>
+		internal void AddNodeFromServer(SyncNodeStamp stamp)
+		{
+			// Make sure the node does not exist in the nodesToServer table.
+			if (NodeHasChanged(stamp.ID, stamp.LocalIncarnation) || stamp.Operation == SyncOperation.Delete)
 			{
-				nodesToServer[nodeID] = type;
+				if (nodesToServer.Contains(stamp.ID))
+				{
+					nodesToServer.Remove(stamp.ID);
+				}
+				else
+				{
+					if (stamp.Operation == SyncOperation.Delete)
+					{
+						nodesFromServer[stamp.ID] = ObjectType.Tombstone;
+					}
+					else if (stamp.BaseType == NodeTypes.FileNodeType || stamp.BaseType == NodeTypes.StoreFileNodeType)
+					{
+						// This is a file.
+						nodesFromServer[stamp.ID] = ObjectType.File;
+					}
+					else if (stamp.BaseType == NodeTypes.DirNodeType)
+					{
+						// This node represents a directory.
+						nodesFromServer[stamp.ID] = ObjectType.Directory;
+					}
+					else
+					{
+						// This is a generic node.
+						nodesFromServer[stamp.ID] = ObjectType.Generic;
+					}
+				}
 			}
 		}
 
-		void AddNodeFromServer(string nodeID, string type)
+		/// <summary>
+		/// Determins how this node should be sent to the server.
+		/// </summary>
+		/// <param name="stamp">The SyncNodeStamp describing this node.</param>
+		internal void AddNodeToServer(NodeStamp stamp)
 		{
-			if (nodesToServer.Contains(nodeID))
+			if (stamp.MasterIncarnation != stamp.LocalIncarnation)
 			{
-				nodesToServer.Remove(nodeID);
+				if (nodesFromServer.Contains(stamp.ID))
+				{
+					// This node has changed on the server we have a collision that we need to get.
+					// Unless this is a delete.
+					if (stamp.Operation == SyncOperation.Delete)
+					{
+						RemoveNodeFromServer(stamp.ID);
+						nodesToServer[stamp.ID] = ObjectType.Tombstone;
+					}
+				}
+				else if (rights == Rights.ReadOnly)
+				{
+					// We need to get this node from the server.
+					stamp.Operation = SyncOperation.Change;
+					stamp.LocalIncarnation = stamp.MasterIncarnation + 1;
+					AddNodeFromServer(stamp);
+				}
+				else
+				{
+					if (stamp.BaseType == NodeTypes.TombstoneType || stamp.Operation == SyncOperation.Delete)
+					{
+						nodesToServer[stamp.ID] = ObjectType.Tombstone;
+					}
+					else if (stamp.BaseType == NodeTypes.FileNodeType || stamp.BaseType == NodeTypes.StoreFileNodeType)
+					{
+						// This node is a file.
+						nodesToServer[stamp.ID] = ObjectType.File;
+					}
+					else if (stamp.BaseType == NodeTypes.DirNodeType)
+					{
+						// This node is a directory.
+						nodesToServer[stamp.ID] = ObjectType.Directory;
+					}
+					else
+					{
+						// This is a generic node.
+						nodesToServer[stamp.ID] = ObjectType.Generic;
+					}
+				}
 			}
-			nodesFromServer[nodeID] = type;
 		}
 
-		bool HasNodeChanged(string nodeID)
+		/// <summary>
+		/// Remove the node from the work table.
+		/// </summary>
+		/// <param name="nodeID">The node to remove.</param>
+		internal void RemoveNodeFromServer(string nodeID)
 		{
-			Node node = collection.GetNodeByID(nodeID);
-			if (node
+			nodesFromServer.Remove(nodeID);
+		}
+
+		/// <summary>
+		/// Remove the node from the work table.
+		/// </summary>
+		/// <param name="nodeID">The node to remove.</param>
+		internal void RemoveNodeToServer(string nodeID)
+		{
+			nodesToServer.Remove(nodeID);
+		}
+
+		/// <summary>
+		/// Get an array of the IDs of the Nodes to retrieve from the server.
+		/// </summary>
+		/// <param name="oType">The Type of objects to return.</param>
+		/// <returns></returns>
+		private string[] FromServer(ObjectType oType)
+		{
+			ArrayList na = new ArrayList();
+			foreach (DictionaryEntry de in nodesFromServer)
+			{
+				if ((ObjectType)de.Value == oType)
+					na.Add(de.Key);
+			}
+
+			return (string[])na.ToArray(typeof(string));
+		}
+
+		/// <summary>
+		/// Get an array of the IDs to delete on the client.
+		/// </summary>
+		/// <returns></returns>
+		internal string[] DeletesFromServer()
+		{
+			return FromServer(ObjectType.Tombstone);
+		}
+
+		/// <summary>
+		/// Get an array of the IDs of the Nodes to retrieve from the server.
+		/// </summary>
+		/// <returns></returns>
+		internal string[] GenericsFromServer()
+		{
+			return FromServer(ObjectType.Generic);
+		}
+
+		/// <summary>
+		/// Get an array of the IDs of the Directory Nodes to retrieve from the server.
+		/// </summary>
+		/// <returns></returns>
+		internal string[] DirsFromServer()
+		{
+			return FromServer(ObjectType.Directory);
+		}
+
+		/// <summary>
+		/// Get an array of the IDs of the File Nodes to retrieve from the server.
+		/// </summary>
+		/// <returns></returns>
+		internal string[] FilesFromServer()
+		{
+			return FromServer(ObjectType.File);
+		}
+
+		/// <summary>
+		/// Get an array of the IDs of the Nodes to push up to the server.
+		/// </summary>
+		/// <param name="oType">The Type of objects to return.</param>
+		/// <returns></returns>
+		private string[] ToServer(ObjectType oType)
+		{
+			ArrayList na = new ArrayList();
+			foreach (DictionaryEntry de in nodesToServer)
+			{
+				if ((ObjectType)de.Value == oType)
+					na.Add(de.Key);
+			}
+
+			return (string[])na.ToArray(typeof(string));
+		}
+
+		/// <summary>
+		/// Get an array of the IDs to delete on the server.
+		/// </summary>
+		/// <returns></returns>
+		internal string[] DeletesToServer()
+		{
+			return ToServer(ObjectType.Tombstone);
+		}
+
+		/// <summary>
+		/// Get an array of the IDs of the Nodes to push up to the server.
+		/// </summary>
+		/// <returns></returns>
+		internal string[] GenericsToServer()
+		{
+			return ToServer(ObjectType.Generic);
+		}
+
+		/// <summary>
+		/// Get an array of the IDs of the Directory Nodes to push up to the server.
+		/// </summary>
+		/// <returns></returns>
+		internal string[] DirsToServer()
+		{
+			return ToServer(ObjectType.Directory);
+		}
+
+		/// <summary>
+		/// Get an array of the IDs of the File Nodes to push up to the server.
+		/// </summary>
+		/// <returns></returns>
+		internal string[] FilesToServer()
+		{
+			return ToServer(ObjectType.File);
+		}
+
+		/// <summary>
+		/// Checks to see if the node needs updating.
+		/// </summary>
+		/// <param name="nodeID"></param>
+		/// <param name="MasterIncarnation"></param>
+		/// <returns></returns>
+		bool NodeHasChanged(string nodeID, ulong MasterIncarnation)
+		{
+			Node oldNode = collection.GetNodeByID(nodeID);
+			if (oldNode == null || oldNode.MasterIncarnation != MasterIncarnation)
+				return true;
+			return false;
+		}
+
+		/// <summary>
+		/// Gets if the work is complete.
+		/// </summary>
+		internal bool Complete
+		{
+			get
+			{
+				int count = 0;
+				count += nodesFromServer.Count;
+				count += nodesToServer.Count;
+				
+				return count == 0 ? true : false;
+			}
+		}
+
+		/// <summary>
+		/// Set the Access that is allowed to the collection.
+		/// </summary>
+		internal Rights SetAccess
+		{
+			set
+			{
+				rights = value;
+			}
+		}
+
+		/// <summary>
+		/// Get the number of nodes that need to be synced.
+		/// </summary>
+		internal int Count
+		{
+			get
+			{
+				return nodesToServer.Count + nodesFromServer.Count;
+			}
+		}
+
+		/// <summary>
+		/// Get the number of node to sync up to the server.
+		/// </summary>
+		internal int UpCount
+		{
+			get
+			{
+				return nodesToServer.Count;
+			}
+		}
+
+		/// <summary>
+		/// Get the number of node to sync down from the server.
+		/// </summary>
+		internal int DownCount
+		{
+			get
+			{
+				return nodesFromServer.Count;
+			}
 		}
 	}
-	*/
 	#endregion
 }

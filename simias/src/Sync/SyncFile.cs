@@ -22,6 +22,7 @@
  ***********************************************************************/
 using System;
 using System.IO;
+using System.Threading;
 using System.Collections;
 using System.Security.Cryptography;
 using Simias.Storage;
@@ -41,6 +42,14 @@ namespace Simias.Sync
 
 		FileStream	workStream;
 
+		/// <summary>
+		/// Gets the output stream.
+		/// </summary>
+		protected FileStream OutStream
+		{
+			get { return workStream; }
+		}
+
 		#endregion
 		
 		#region Constructor / Finalizer
@@ -49,7 +58,7 @@ namespace Simias.Sync
 		/// Constructs an OutFile object.
 		/// </summary>
 		/// <param name="collection">The collection that the node belongs to.</param>
-		protected OutFile(Collection collection) :
+		protected OutFile(SyncCollection collection) :
 			base(collection)
 		{
 		}
@@ -75,8 +84,26 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public int Read(byte[] buffer, int offset, int count)
 		{
-			return workStream.Read(buffer, offset, count);
+			try
+			{
+				//Log.log.Debug("Reading File {0} : offset = {1}", file, ReadPosition);
+				return workStream.Read(buffer, offset, count);
+			}
+			catch (Exception ex)
+			{
+				Log.log.Debug(ex, "Failed Reading {0}", file);
+				throw ex;
+			}
 		}
+
+		/// <summary>
+		/// Get the platform file handle.
+		/// </summary>
+		public IntPtr Handle
+		{
+			get {return workStream.Handle;}
+		}
+
 
 		/// <summary>
 		/// Gets or Sets the file position.
@@ -103,13 +130,22 @@ namespace Simias.Sync
 		/// Called to open the file.
 		/// </summary>
 		/// <param name="node">The node that represents the file.</param>
-		protected void Open(BaseFileNode node)
+		/// <param name="sessionID">The unique session ID.</param>
+		protected void Open(BaseFileNode node, string sessionID)
 		{
-			SetupFileNames(node);
-			// This file is being pushed make a copy to work from.
-			File.Copy(file, workFile, true);
-			workStream = File.Open(workFile, FileMode.Open, FileAccess.Read);
-			File.SetAttributes(workFile, File.GetAttributes(workFile) | FileAttributes.Hidden);
+			SetupFileNames(node, sessionID);
+			Log.log.Debug("Opening File {0}", file);
+			if (Store.GetStore().IsEnterpriseServer)
+			{
+				workStream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read);
+				workFile = null;
+			}
+			else
+			{
+				// This file is being pushed make a copy to work from.
+				File.Copy(file, workFile, true);
+				workStream = File.Open(workFile, FileMode.Open, FileAccess.Read);
+			}
 		}
 
 		/// <summary>
@@ -117,6 +153,7 @@ namespace Simias.Sync
 		/// </summary>
 		protected void Close()
 		{
+			Log.log.Debug("Closing File {0}", file);
 			Close (false);
 		}
 		
@@ -161,9 +198,14 @@ namespace Simias.Sync
 		FileStream	workStream;
 		/// <summary>Stream to the Original file.</summary>
 		FileStream	stream;
+		/// <summary>The partially downloaded file.</summary>
+		string		partialFile;
 		/// <summary>The Old Node if it exists.</summary>
-		BaseFileNode	oldNode;
-
+		protected BaseFileNode	oldNode;
+		Exception				exception;
+		ManualResetEvent		asyncEvent = new ManualResetEvent(true);
+		
+		
 		#endregion
 		
 		#region Constructor / Finalizer.
@@ -172,7 +214,7 @@ namespace Simias.Sync
 		/// Constructs an InFile object.
 		/// </summary>
 		/// <param name="collection">The collection that the node belongs to.</param>
-		protected InFile(Collection collection) :
+		protected InFile(SyncCollection collection) :
 			base(collection)
 		{
 		}
@@ -210,7 +252,19 @@ namespace Simias.Sync
 		/// <param name="count">The number of bytes to write.</param>
 		public void Write(byte[] buffer, int offset, int count)
 		{
-			workStream.Write(buffer, offset, count);
+			asyncEvent.WaitOne();
+			if (exception == null)
+			{
+				//Log.log.Debug("Writing File {0} : offset = {1}", file, WritePosition);
+				asyncEvent.Reset();
+				workStream.BeginWrite(buffer, offset, count, new AsyncCallback(WriteCallback), null);
+			}
+			else
+			{
+				Log.log.Debug(exception, "Failed writing {0}", file);
+				throw(exception);
+			}
+			//workStream.Write(buffer, offset, count);
 		}
 
 		/// <summary>
@@ -239,6 +293,13 @@ namespace Simias.Sync
 			}
 		}
 		
+		/// <summary>
+		/// Get the platform file handle.
+		/// </summary>
+		public IntPtr Handle
+		{
+			get {return workStream.Handle;}
+		}
 
 		/// <summary>
 		/// Gets or Sets the file position.
@@ -276,16 +337,25 @@ namespace Simias.Sync
 		/// <param name="node">The node that represents the file.</param>
 		protected void Open(BaseFileNode node)
 		{
-			this.SetupFileNames(node);
+			this.SetupFileNames(node, "");
+			Log.log.Debug("Opening File {0}", file);
 			// Open the file so that it cannot be modified.
 			oldNode = collection.GetNodeByID(node.ID) as BaseFileNode;
 			try
 			{
 				stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.None);
 			}
-			catch (FileNotFoundException){}
+			catch (FileNotFoundException)
+			{
+				// Check to see if we have a partially downloaded file to delta sync with.
+				if (File.Exists(workFile))
+				{
+					partialFile = workFile + ".part";
+					File.Move(workFile, partialFile);
+					stream = File.Open(partialFile, FileMode.Open, FileAccess.Read, FileShare.None);
+				}
+			}
 			workStream = File.Open(workFile, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None);
-			File.SetAttributes(workFile, File.GetAttributes(workFile) | FileAttributes.Hidden);
 		}
 
 		/// <summary>
@@ -293,12 +363,32 @@ namespace Simias.Sync
 		/// </summary>
 		protected void Close(bool commit)
 		{
+			Log.log.Debug("Closing File {0}", file);
 			Close (false, commit);
 		}
 
 		#endregion
 
 		#region private methods.
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="result"></param>
+		private void WriteCallback(IAsyncResult result)
+		{
+			try
+			{
+				workStream.EndWrite(result);
+			}
+			catch (Exception ex)
+			{
+				Log.log.Debug(ex, "WriteCallBack");
+				exception = ex;
+			}
+			asyncEvent.Set();
+		}
+
 
 		/// <summary>
 		/// Called to cleanup any resources and close the file.
@@ -308,8 +398,10 @@ namespace Simias.Sync
 		private void Close(bool InFinalizer, bool commit)
 		{
 			if (!InFinalizer)
+			{
 				GC.SuppressFinalize(this);
-
+				asyncEvent.WaitOne();
+			}
 			if (stream != null)
 			{
 				stream.Close();
@@ -320,23 +412,57 @@ namespace Simias.Sync
 				workStream.Close();
 				workStream = null;
 			}
-			if (commit)
+			if (exception == null && commit)
 			{
-				File.Copy(workFile, file, true);
+				if (File.Exists(file))
+				{
+					string tmpFile = file + ".~stmp";
+					File.Move(file, tmpFile);
+					try
+					{
+						File.Move(workFile, file);
+						File.Delete(tmpFile);
+						workFile = null;	
+					}
+					catch
+					{
+						File.Move(tmpFile, file);
+					}
+				}
+				else
+				{
+					File.Move(workFile, file);
+					workFile = null;
+				}
 				FileInfo fi = new FileInfo(file);
-				fi.Attributes = fi.Attributes & ~FileAttributes.Hidden;
 				fi.LastWriteTime = node.LastWriteTime;
 				fi.CreationTime = node.CreationTime;
 				if (oldNode != null)
 				{
 					// Check if this was a rename.
 					string oldPath = oldNode.GetFullPath(collection);
-					if (oldPath != file)
-						File.Delete(oldPath);
+					try
+					{
+						if (oldPath != file)
+							File.Delete(oldPath);
+					}
+					catch {};
 				}
 			}
-			// We need to delete the temp file.
-			File.Delete(workFile);
+
+			// We need to delete the temp file if we are the master.
+			// On the client leave for a delta sync.
+			if (workFile != null && !(collection.Role == SyncCollectionRoles.Slave))
+				File.Delete(workFile);
+
+			if (partialFile != null)
+				File.Delete(partialFile);
+
+			if (exception != null)
+			{
+				Log.log.Debug(exception, "Failed reading file");
+				throw (exception);
+			}
 		}
 
 		#endregion
@@ -355,7 +481,7 @@ namespace Simias.Sync
 		#region fields
 
 		/// <summary>The Collection the file belongs to.</summary>
-		protected Collection	collection;
+		protected SyncCollection	collection;
 		/// <summary> The node that represents the file.</summary>
 		protected BaseFileNode	node;
 		/// <summary>The ID of the node.</summary>
@@ -370,6 +496,8 @@ namespace Simias.Sync
 		protected string		workFile;
 		/// <summary>The Prefix of the working file.</summary>
 		const string			WorkFilePrefix = ".simias.wf.";
+		static string			workBinDir = "WorkArea";
+		static string			workBin;
 		/// <summary>Used to publish Sync events.</summary>
 		static protected EventPublisher	eventPublisher = new EventPublisher();
 
@@ -381,7 +509,7 @@ namespace Simias.Sync
 		/// 
 		/// </summary>
 		/// <param name="collection">The collection that the node belongs to.</param>
-		protected SyncFile(Collection collection)
+		protected SyncFile(SyncCollection collection)
 		{
 			this.collection = collection;
 		}
@@ -390,12 +518,19 @@ namespace Simias.Sync
 		/// Called to get the name of the file and workFile;
 		/// </summary>
 		/// <param name="node">The node that represents the file.</param>
-		protected void SetupFileNames(BaseFileNode node)
+		/// <param name="sessionID">The unique session ID.</param>
+		protected void SetupFileNames(BaseFileNode node, string sessionID)
 		{
 			this.node = node;
 			this.nodeID = node.ID;
 			this.file = node.GetFullPath(collection);
-			this.workFile = Path.Combine(Path.GetDirectoryName(file), WorkFilePrefix + node.ID);
+			if (workBin == null)
+			{
+				workBin = Path.Combine(Configuration.GetConfiguration().StorePath, workBinDir);
+				if (!Directory.Exists(workBin))
+					Directory.CreateDirectory(workBin);
+			}
+			this.workFile = Path.Combine(workBin, WorkFilePrefix + node.ID + sessionID);
 		}
 
 		#endregion
@@ -443,4 +578,50 @@ namespace Simias.Sync
 	}
 
 	#endregion
+
+	/// <summary>
+	/// Definitions for the http handler.
+	/// </summary>
+	public class SyncHttp
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public static string	CopyOffset = "CopyOffset";
+		/// <summary>
+		/// 
+		/// </summary>
+		public static string	SyncRange = "SyncRange";
+		/// <summary>
+		/// 
+		/// </summary>
+		public static string	SyncOperation = "SyncOperation";
+		/// <summary>
+		/// 
+		/// </summary>
+		public static string	SyncBlocks = "SyncBlocks";
+		/// <summary>
+		/// 
+		/// </summary>
+		public static string	BlockSize = "SyncBlockSize";
+		/// <summary>
+		/// 
+		/// </summary>
+		public enum Operation
+		{
+			/// <summary>
+			/// 
+			/// </summary>
+			Read = 1,
+			/// <summary>
+			/// 
+			/// </summary>
+			Write,
+			/// <summary>
+			/// 
+			/// </summary>
+			Copy,
+		}
+	}
+	
 }
