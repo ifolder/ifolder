@@ -1697,7 +1697,11 @@ namespace Simias.Storage.Tests
 			ICSList aliasList = identity.GetAliases();
 			foreach( Alias alias in aliasList )
 			{
-				++count;
+				// This check is make only to remove unused variable compiler warning.
+				if ( alias != null )
+				{
+					++count;
+				}
 			}
 
 			if ( count != 2 )
