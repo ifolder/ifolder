@@ -160,15 +160,15 @@ namespace Simias.POBoxService.Web
 			Simias.POBox.POBox	poBox;
 			Store				store = Store.GetStore();
 
-			log.Info("POBoxService::AcceptedSubscription - called");
-			log.Info("  subscription: " + subscriptionID);
+			log.Debug("AcceptedSubscription - called");
+			log.Debug("  subscription: " + subscriptionID);
 
 			// Verify the caller
-			log.Info("  current Principal: " + Thread.CurrentPrincipal.Identity.Name);
+			log.Debug("  current Principal: " + Thread.CurrentPrincipal.Identity.Name);
 			/* FIXME:: uncomment when everybody is running with authentication
 			if (toIdentity != Thread.CurrentPrincipal.Identity.Name)
 			{
-				log.Debug("Specified \"toIdentity\" is not the caller");
+				log.Error("Specified \"toIdentity\" is not the caller");
 				return(POBoxStatus.UnknownIdentity);
 			}
 			*/
@@ -181,7 +181,7 @@ namespace Simias.POBoxService.Web
 			// check the post office box
 			if (poBox == null)
 			{
-				log.Debug("POBoxService::AcceptedSubscription - PO Box not found");
+				log.Debug("AcceptedSubscription - PO Box not found");
 				return(POBoxStatus.UnknownPOBox);
 			}
 
@@ -199,7 +199,7 @@ namespace Simias.POBoxService.Web
 
 			if (sn == null)
 			{
-				log.Debug("POBoxService::AcceptedSubscription - Subscription does not exist");
+				log.Debug("AcceptedSubscription - Subscription does not exist");
 				return(POBoxStatus.UnknownSubscription);
 			}
 
@@ -209,19 +209,19 @@ namespace Simias.POBoxService.Web
 			// Identities need to match up
 			if (fromIdentity != cSub.FromIdentity)
 			{
-				log.Debug("POBoxService::AcceptedSubscription - Identity does not match");
+				log.Debug("AcceptedSubscription - Identity does not match");
 				return(POBoxStatus.UnknownIdentity);
 			}
 
 			if (toIdentity != cSub.ToIdentity)
 			{
-				log.Debug("POBoxService::AcceptedSubscription - Identity does not match");
+				log.Debug("AcceptedSubscription - Identity does not match");
 				return(POBoxStatus.UnknownIdentity);
 			}
 
 			cSub.Accept(store, cSub.SubscriptionRights);
 			poBox.Commit(cSub);
-			log.Info("POBoxService::AcceptedSubscription - exit");
+			log.Debug("AcceptedSubscription - exit");
 			return(POBoxStatus.Success);
 		}
 
@@ -244,15 +244,15 @@ namespace Simias.POBoxService.Web
 			Simias.POBox.POBox	toPOBox;
 			Store				store = Store.GetStore();
 			
-			log.Info("POBoxService::DeclinedSubscription - called");
-			log.Info("  subscription: " + subscriptionID);
+			log.Debug("DeclinedSubscription - called");
+			log.Debug("  subscription: " + subscriptionID);
 
 			// Verify the caller
-			log.Info("  current Principal: " + Thread.CurrentPrincipal.Identity.Name);
+			log.Debug("  current Principal: " + Thread.CurrentPrincipal.Identity.Name);
 			/* FIXME:: uncomment when everybody is running with authentication
 			if (toIdentity != Thread.CurrentPrincipal.Identity.Name)
 			{
-				log.Debug("Specified \"toIdentity\" is not the caller");
+				log.Error("Specified \"toIdentity\" is not the caller");
 				return(POBoxStatus.UnknownIdentity);
 			}
 			*/
@@ -265,7 +265,7 @@ namespace Simias.POBoxService.Web
 			// check the post office box
 			if (toPOBox == null)
 			{
-				log.Debug("POBoxService::DeclinedSubscription - PO Box not found");
+				log.Debug("DeclinedSubscription - PO Box not found");
 				return(POBoxStatus.UnknownPOBox);
 			}
 
@@ -284,7 +284,7 @@ namespace Simias.POBoxService.Web
 			if (sn == null)
 			{
 				log.Debug(
-					"POBoxService::DeclinedSubscription - Subscription: " +
+					"DeclinedSubscription - Subscription: " +
 					subscriptionID +
 					" does not exist");
 				return(POBoxStatus.UnknownSubscription);
@@ -296,13 +296,13 @@ namespace Simias.POBoxService.Web
 			// Identities need to match up
 			if (fromIdentity != cSub.FromIdentity)
 			{
-				log.Debug("POBoxService::DeclinedSubscription - Identity does not match");
+				log.Debug("DeclinedSubscription - Identity does not match");
 				return(POBoxStatus.UnknownIdentity);
 			}
 
 			if (toIdentity != cSub.ToIdentity)
 			{
-				log.Debug("POBoxService::DeclinedSubscription - Identity does not match");
+				log.Debug("DeclinedSubscription - Identity does not match");
 				return(POBoxStatus.UnknownIdentity);
 			}
 
@@ -311,7 +311,7 @@ namespace Simias.POBoxService.Web
 			if (cCol == null)
 			{
 				// FIXEME:: Do we want to still try and cleanup the subscriptions?
-				log.Debug("POBoxService::DeclinedSubscription - Collection not found");
+				log.Debug("DeclinedSubscription - Collection not found");
 				return(POBoxStatus.UnknownCollection);
 			}
 
@@ -340,7 +340,7 @@ namespace Simias.POBoxService.Web
 			Simias.Storage.Member toMember = cCol.GetMemberByID(toIdentity);
 			if (toMember == null)
 			{
-				log.Info("  handling case where identity is declining a subscription");
+				log.Debug("  handling case where identity is declining a subscription");
 				// I am not a member of this shared collection and want to
 				// decline the subscription.
 
@@ -368,7 +368,7 @@ namespace Simias.POBoxService.Web
 			if (toMember.IsOwner == true)
 			{
 				// Am I the owner of the shared collection?
-				log.Info("  handling case where identity is owner of collection");
+				log.Debug("  handling case where identity is owner of collection");
 
 				ICSList memberlist = cCol.GetMemberList();
 				foreach(ShallowNode sNode in memberlist)
@@ -419,7 +419,7 @@ namespace Simias.POBoxService.Web
 			else
 			{
 				// Am I a member of the shared collection?
-				log.Info("  handling case where identity is a member of the collection");
+				log.Debug("  handling case where identity is a member of the collection");
 
 				cCol.Delete(toMember);
 				cCol.Commit(toMember);
@@ -454,7 +454,7 @@ namespace Simias.POBoxService.Web
 				}
 			}
 
-			log.Info("POBoxService::DeclinedSubscription - exit");
+			log.Debug("DeclinedSubscription - exit");
 			return(POBoxStatus.Success);
 		}
 
@@ -477,15 +477,15 @@ namespace Simias.POBoxService.Web
 			Simias.POBox.POBox	poBox;
 			Store				store = Store.GetStore();
 			
-			log.Info("POBoxService::Acksubscription - called");
-			log.Info("  subscription: " + messageID);
+			log.Debug("Acksubscription - called");
+			log.Debug("  subscription: " + messageID);
 
 			// Verify the caller
-			log.Info("  current Principal: " + Thread.CurrentPrincipal.Identity.Name);
+			log.Debug("  current Principal: " + Thread.CurrentPrincipal.Identity.Name);
 			/*
 			if (toIdentity != Thread.CurrentPrincipal.Identity.Name)
 			{
-				log.Debug("Specified \"toIdentity\" is not the caller");
+				log.Error("specified \"toIdentity\" is not the caller");
 				return(POBoxStatus.UnknownIdentity);
 			}
 			*/
@@ -498,7 +498,7 @@ namespace Simias.POBoxService.Web
 			// check the post office box
 			if (poBox == null)
 			{
-				log.Debug("POBoxService::AckSubscription - PO Box not found");
+				log.Debug("AckSubscription - PO Box not found");
 				return(POBoxStatus.UnknownPOBox);
 			}
 
@@ -516,7 +516,7 @@ namespace Simias.POBoxService.Web
 
 			if (sn == null)
 			{
-				log.Debug("POBoxService::AckSubscription - Subscription does not exist.");
+				log.Debug("AckSubscription - Subscription does not exist.");
 				return(POBoxStatus.UnknownSubscription);
 			}
 
@@ -526,13 +526,13 @@ namespace Simias.POBoxService.Web
 			// Identities need to match up
 			if (fromIdentity != cSub.FromIdentity)
 			{
-				log.Debug("POBoxService::AckSubscription - Identity does not match");
+				log.Debug("AckSubscription - Identity does not match");
 				return(POBoxStatus.UnknownIdentity);
 			}
 
 			if (toIdentity != cSub.ToIdentity)
 			{
-				log.Debug("POBoxService::AckSubscription - Identity does not match");
+				log.Debug("AckSubscription - Identity does not match");
 				return(POBoxStatus.UnknownIdentity);
 			}
 
@@ -540,7 +540,7 @@ namespace Simias.POBoxService.Web
 			poBox.Commit(cSub);
 			poBox.Commit(poBox.Delete(cSub));
 
-			log.Info("POBoxService::Acksubscription - exit");
+			log.Debug("Acksubscription - exit");
 			return(POBoxStatus.Success);
 		}
 
@@ -560,8 +560,8 @@ namespace Simias.POBoxService.Web
 			Simias.POBox.POBox	poBox;
 			Store store = Store.GetStore();
 
-			log.Info("POBoxService::GetSubscriptionInfo - called");
-			log.Info("  for subscription: " + messageID);
+			log.Debug("GetSubscriptionInfo - called");
+			log.Debug("  for subscription: " + messageID);
 
 			// open the post office box
 			poBox =
@@ -572,7 +572,7 @@ namespace Simias.POBoxService.Web
 			// check the post office box
 			if (poBox == null)
 			{
-				log.Debug("POBoxService::GetSubscriptionInfo - PO Box not found");
+				log.Debug("GetSubscriptionInfo - PO Box not found");
 				return(null);
 			}
 
@@ -589,7 +589,7 @@ namespace Simias.POBoxService.Web
 
 			if (sn == null)
 			{
-				log.Debug("POBoxService::GetSubscriptionInfo - Subscription does not exist");
+				log.Debug("GetSubscriptionInfo - Subscription does not exist");
 				return(null);
 			}
 
@@ -600,7 +600,7 @@ namespace Simias.POBoxService.Web
 			Collection cSharedCollection = store.GetCollectionByID(cSub.SubscriptionCollectionID);
 			if (cSharedCollection == null)
 			{
-				log.Debug("POBoxService::GetSubscriptionInfo - Collection not found");
+				log.Debug("GetSubscriptionInfo - Collection not found");
 				return(null);
 			}
 
@@ -611,11 +611,11 @@ namespace Simias.POBoxService.Web
 					this.Context.Request.Url.Port,
 					this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ));
 
-			log.Info("URI: " + colUri.ToString());
+			log.Debug("  URI: " + colUri.ToString());
 			SubscriptionInformation subInfo = new SubscriptionInformation(colUri.ToString());
 			subInfo.GenerateFromSubscription(cSub);
 
-			log.Info("POBoxService::GetSubscriptionInfo - exit");
+			log.Debug("GetSubscriptionInfo - exit");
 			return subInfo;
 		}
 
@@ -634,8 +634,8 @@ namespace Simias.POBoxService.Web
 		{
 			Store store = Store.GetStore();
 
-			log.Info("POBoxService::VerifyCollection - called");
-			log.Info("  for collection: " + collectionID);
+			log.Debug("VerifyCollection - called");
+			log.Debug("  for collection: " + collectionID);
 
 			POBoxStatus	wsStatus = POBoxStatus.UnknownCollection;
 
@@ -650,15 +650,15 @@ namespace Simias.POBoxService.Web
 				}
 				else
 				{
-					log.Info("POBoxService::VerifyCollection - Collection is in the proxy state");
+					log.Debug("  collection is in the proxy state");
 				}
 			}
 			else
 			{
-				log.Info("POBoxService::VerifyCollection - Collection not found");
+				log.Debug("  collection not found");
 			}
 
-			log.Info("POBoxService::VerifyCollection - exit");
+			log.Debug("VerifyCollection - exit");
 			return(wsStatus);
 		}
 
@@ -686,12 +686,13 @@ namespace Simias.POBoxService.Web
 			Collection			sharedCollection;
 			Simias.POBox.POBox	poBox = null;
 			Store				store = Store.GetStore();
+			string				msgID = "";
 			Subscription		cSub = null;
 
-			log.Debug("POBoxService::Invite");
+			log.Debug("Invite - called");
 
 			// Verify the fromMember is the caller
-			log.Info("  current Principal: " + Thread.CurrentPrincipal.Identity.Name);
+			log.Debug("  current Principal: " + Thread.CurrentPrincipal.Identity.Name);
 			/*
 			if (fromUserID != Thread.CurrentPrincipal.Identity.Name)
 			{
@@ -761,7 +762,7 @@ namespace Simias.POBoxService.Web
 				string appPath = this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} );
 				appPath += "/POBoxService.asmx";
 
-				log.Info(  "application path: " + appPath);
+				log.Debug("  application path: " + appPath);
 
 				UriBuilder poUri = 
 					new UriBuilder(
@@ -787,7 +788,7 @@ namespace Simias.POBoxService.Web
 						this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ));
 
 				cSub.SubscriptionCollectionURL = coUri.ToString();
-				log.Info("SubscriptionCollectionURL: " + cSub.SubscriptionCollectionURL);
+				log.Debug("  SubscriptionCollectionURL: " + cSub.SubscriptionCollectionURL);
  
 				DirNode dirNode = sharedCollection.GetRootDirectory();
 				if(dirNode != null)
@@ -797,15 +798,17 @@ namespace Simias.POBoxService.Web
 				}
 
 				poBox.Commit(cSub);
-				return(cSub.MessageID);
+				msgID = cSub.MessageID;
 			}
 			catch(Exception e)
 			{
-				log.Debug("  failed creating subscription");
-				log.Debug(e.Message);
-				log.Debug(e.StackTrace);
+				log.Error("  failed creating subscription");
+				log.Error(e.Message);
+				log.Error(e.StackTrace);
 			}
-			return("");
+
+			log.Debug("Invite - exit");
+			return(msgID);
 		}
 
 		/// <summary>
@@ -870,7 +873,6 @@ namespace Simias.POBoxService.Web
 			this.CollectionID = cSub.SubscriptionCollectionID;
 			this.CollectionName = cSub.SubscriptionCollectionName;
 			this.CollectionType = cSub.SubscriptionCollectionType;
-
 
 			//this.CollectionUrl = cSub.SubscriptionCollectionURL;
 
