@@ -1074,7 +1074,7 @@ namespace Simias.Storage
 		{
 			// If there is no PropertyList object associated with this property or it is a new object, or
 			// if it is currently being aborted, we don't need to track it.
-			if ( ( IsAssociatedProperty && ValidSaveMergeInfoState( propertyList.State ) ) || ( op == Operation.NameChange ) )
+			if ( IsAssociatedProperty && ValidSaveMergeInfoState( propertyList.State ) )
 			{
 				// Operation is the current state of the property.
 				switch ( operation )

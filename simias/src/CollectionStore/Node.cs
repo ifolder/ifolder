@@ -155,8 +155,10 @@ namespace Simias.Storage
 
 			set 
 			{ 
-				// Create a property that will be used at merge time.
+				// Create a property that will be used at merge time. The Property member XmlPropertyList
+				// must be set to the current property list or the property object will not be considered
 				Property p = new Property( BaseSchema.ObjectName, value );
+				p.XmlPropertyList = properties;
 				p.SaveMergeInformation( properties, Property.Operation.NameChange, name, false, 0 );
 				BaseName = value;
 			}

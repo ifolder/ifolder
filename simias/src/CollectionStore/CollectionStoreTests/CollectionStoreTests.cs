@@ -1496,6 +1496,13 @@ namespace Simias.Storage.Tests
 				{
 					throw new ApplicationException( "Invalid name." );
 				}
+
+				collection.Name = "Another new name";
+				collection.Abort( collection );
+				if ( collection.Name == "Another new name" )
+				{
+					throw new ApplicationException( "Name change was not aborted." );
+				}
 			}
 			finally
 			{
