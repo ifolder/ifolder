@@ -408,6 +408,14 @@ namespace Novell.iFolder
 								dg.Destroy();
 							}
 						}
+						
+						// Update the domains so that the Accounts Page in the
+						// Preferences window will be up-to-date.
+						ifdata.RefreshDomains();
+						if (prefswin != null)
+						{
+							prefswin.UpdateDomainStatus(LoginDialog.Domain);
+						}
 
 						LoginDialog.Hide();
 						LoginDialog.Destroy();

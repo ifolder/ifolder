@@ -1636,6 +1636,10 @@ namespace Novell.iFolder
 				MainStatusBar.PackEnd(SyncBar, false, true, 0);
 			}
 
+// FIXME: Russ informed me that we just need to decrement our count instead of
+// call the ifws.CalculateSyncSize() so many times.  This will increase our
+// performance in Linux.  Reference the Windows client to see how this is done
+// and look for a bug to be filed by Russ on this.
 			if(args.SizeRemaining == args.SizeToSync)
 			{
 				if(args.SizeToSync > 0)

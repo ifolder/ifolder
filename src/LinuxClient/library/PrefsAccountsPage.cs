@@ -67,6 +67,8 @@ namespace Novell.iFolder
 		private string				curDomainPassword;
 		private DomainInformation	curDomain;
 
+		private Hashtable			curDomains;
+
 		/// <summary>
 		/// Default constructor for iFolderAccountsPage
 		/// </summary>
@@ -79,6 +81,8 @@ namespace Novell.iFolder
 					"/Simias.asmx";
 
 			ifdata = iFolderData.GetData();
+			
+			curDomains = new Hashtable();
 
 			InitializeWidgets();
 			this.Realized += new EventHandler(OnRealizeWidget);
@@ -273,9 +277,9 @@ namespace Novell.iFolder
 			loginBox.Layout = ButtonBoxStyle.End;
 
 			loginButton =
-				new Button(Util.GS("_Activate"));
+				new Button(Util.GS("_Login"));
 			loginBox.PackStart(loginButton, false, false, 0);
-			loginButton.Clicked += new EventHandler(OnLoginAccount);
+			loginButton.Clicked += new EventHandler(OnLoginButtonPressed);
 			loginButton.CanDefault = true;
 
 
@@ -296,21 +300,7 @@ namespace Novell.iFolder
 		/// </summary>
 		private void PopulateWidgets()
 		{
-			// Read all current domains before letting them create
-			// a new ifolder
-
-			isFirstDomain = true;
-			DomainInformation[] domains = ifdata.GetDomains();
-
-			foreach(DomainInformation dom in domains)
-			{
-				// only show Domains that are slaves (not on this machine)
-				if(dom.IsSlave)
-				{
-					isFirstDomain = false;
-					AccTreeStore.AppendValues(dom);
-				}
-			}
+			PopulateDomains();
 
  			detailsFrame.Sensitive = false;
 			nameEntry.Sensitive = false;
@@ -328,6 +318,26 @@ namespace Novell.iFolder
 
 			RemoveButton.Sensitive = false;
 			DetailsButton.Sensitive = false;
+		}
+
+
+
+
+		private void PopulateDomains()
+		{
+			isFirstDomain = true;
+			DomainInformation[] domains = ifdata.GetDomains();
+
+			foreach(DomainInformation dom in domains)
+			{
+				// only show Domains that are slaves (not on this machine)
+				if(dom.IsSlave)
+				{
+					isFirstDomain = false;
+					TreeIter iter = AccTreeStore.AppendValues(dom);
+					curDomains[dom.ID] = iter;
+				}
+			}
 		}
 
 
@@ -488,6 +498,7 @@ namespace Novell.iFolder
 					ifdata.RemoveDomain(dom.ID);
 
 					AccTreeStore.Remove(ref iter);
+					curDomains.Remove(dom.ID);
 					curDomain = null;
 					detailsFrame.Sensitive = false;
 					nameEntry.Sensitive = false;
@@ -636,7 +647,6 @@ namespace Novell.iFolder
 				autoLoginButton.Sensitive = true;
 
 //				proxyButton.Sensitive = false;
-				loginButton.Sensitive = false;
 
 
 				// set the control values
@@ -677,65 +687,159 @@ namespace Novell.iFolder
 					serverEntry.Text = dom.Host;
 				else
 					serverEntry.Text = "";
+				
+				if (dom.Active)
+				{
+					if (dom.Authenticated)
+					{
+						loginButton.Label = Util.GS("_Logout");
+						loginButton.Sensitive = true;
+					}
+					else
+					{
+						loginButton.Label = Util.GS("_Login");
+
+						if (passEntry.Text.Length > 0)
+							loginButton.Sensitive = true;
+						else
+							loginButton.Sensitive = false;
+					}
+				}
+				else
+				{
+					loginButton.Sensitive = false;
+					loginButton.Label = Util.GS("_Login");
+				}
 			}
+		}
+
+		private void OnLoginButtonPressed(object o, EventArgs args)
+		{
+			TreeSelection tSelect = AccTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				if (loginButton.Label == Util.GS("_Login"))
+					OnLoginAccount(o, args);
+				else
+					OnLogoutAccount(o, args);
+			}
+			else
+			{
+				// This must be a new account attempting to login for the first time
+				OnLoginAccount(o, args);
+			}
+		}
+		
+		private void OnLogoutAccount(object o, EventArgs args)
+		{
+			TreeSelection tSelect = AccTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				DomainInformation dom = 
+						(DomainInformation) tModel.GetValue(iter, 0);
+				try
+				{
+					simws.LogoutFromRemoteDomain(dom.ID);
+
+					dom.Authenticated = false;
+					UpdateDomainStatus(dom.ID);
+
+					// Update the login button
+					AccSelectionChangedHandler(null, null);
+				}
+				catch (Exception ex)
+				{
+					iFolderMsgDialog dg = new iFolderMsgDialog(
+						topLevelWindow,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.Ok,
+						Util.GS("iFolder Error"),
+						Util.GS("Unable to logout of iFolder Server"),
+						Util.GS("An error was encountered while logging out of the iFolder server.  If the problem persists, please contact your network administrator."));
+					dg.Run();
+					dg.Hide();
+					dg.Destroy();
+				}
+			}				
 		}
 
 		private void OnLoginAccount(object o, EventArgs args)
 		{
 			iFolderMsgDialog dg;
 			
-			if (NewAccountMode)
+			try
 			{
-				try
+				DomainInformation domainInfo;
+				if (NewAccountMode)
 				{
-					DomainInformation domainInfo = simws.ConnectToDomain(nameEntry.Text, passEntry.Text, serverEntry.Text);
-					switch (domainInfo.StatusCode)
+					domainInfo = simws.ConnectToDomain(nameEntry.Text, passEntry.Text, serverEntry.Text);
+				}
+				else
+				{
+					domainInfo = curDomain;
+					domainInfo.StatusCode = StatusCodes.Success;
+				}
+				
+				// Just in case...
+				if (domainInfo == null) return;
+				
+				switch (domainInfo.StatusCode)
+				{
+					case StatusCodes.InvalidCertificate:
 					{
-						case StatusCodes.InvalidCertificate:
-						{
-							byte[] byteArray = simws.GetCertificate(serverEntry.Text);
-							System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
+						byte[] byteArray = simws.GetCertificate(serverEntry.Text);
+						System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
 
-							iFolderMsgDialog dialog = new iFolderMsgDialog(
-								topLevelWindow,
-								iFolderMsgDialog.DialogType.Question,
-								iFolderMsgDialog.ButtonSet.YesNo,
-								Util.GS("Unable to Verify Identity"),
-								Util.GS("Unable to Verify Identity"),
-								string.Format(Util.GS("Unable to verify the identity of {0} as a trusted site.  Before accepting this certificate, you should examine the certificate by clicking Show Details.  Do you want to accept this certificate?"), serverEntry.Text),
-								cert.ToString(true));
-							int rc = dialog.Run();
-							dialog.Hide();
-							dialog.Destroy();
-							if(rc == -8) // User clicked the Yes button
-							{
-								simws.StoreCertificate(byteArray, serverEntry.Text);
-								OnLoginAccount(o, args);
-							}
-							break;
+						iFolderMsgDialog dialog = new iFolderMsgDialog(
+							topLevelWindow,
+							iFolderMsgDialog.DialogType.Question,
+							iFolderMsgDialog.ButtonSet.YesNo,
+							Util.GS("Unable to Verify Identity"),
+							Util.GS("Unable to Verify Identity"),
+							string.Format(Util.GS("Unable to verify the identity of {0} as a trusted site.  Before accepting this certificate, you should examine the certificate by clicking Show Details.  Do you want to accept this certificate?"), serverEntry.Text),
+							cert.ToString(true));
+						int rc = dialog.Run();
+						dialog.Hide();
+						dialog.Destroy();
+						if(rc == -8) // User clicked the Yes button
+						{
+							simws.StoreCertificate(byteArray, serverEntry.Text);
+							OnLoginAccount(o, args);
 						}
-						case StatusCodes.Success:
-						case StatusCodes.SuccessInGrace:
-							// Set the credentials in the current process.
-							DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, passEntry.Text);
-							Status authStatus = domainAuth.Authenticate();
+						break;
+					}
+					case StatusCodes.Success:
+					case StatusCodes.SuccessInGrace:
+						// Set the credentials in the current process.
+						DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, passEntry.Text);
+						Status authStatus = domainAuth.Authenticate();
 		
-							switch (authStatus.statusCode)
-							{
-								case StatusCodes.Success:
-								case StatusCodes.SuccessInGrace:
+						switch (authStatus.statusCode)
+						{
+							case StatusCodes.Success:
+							case StatusCodes.SuccessInGrace:
+								TreeSelection sel = AccTreeView.Selection;
+
+								if (NewAccountMode)
+								{
 									ifdata.RefreshDomains();
 									//	AddDomain(domainInfo);
 									NewAccountMode = false;
+									// Store the updated DomainInformation
+									domainInfo = ifdata.GetDomain(domainInfo.ID);
 									TreeIter iter = AccTreeStore.AppendValues(domainInfo);
-									TreeSelection sel = AccTreeView.Selection;
+									curDomains[domainInfo.ID] = iter;
 									curDomain = domainInfo;
 									
 									if (savePasswordButton.Active)
 									{
 										SavePasswordNow();
 									}
-									
+										
 									if (defaultAccButton.Active)
 									{
 										if (ifdata.SetDefaultDomain(curDomain))
@@ -743,140 +847,150 @@ namespace Novell.iFolder
 											defaultAccButton.Sensitive = false;
 										}
 									}
-									
+										
 									sel.SelectIter(iter);
-									
-									if (authStatus.RemainingGraceLogins < authStatus.TotalGraceLogins)
-									{
-										dg = new iFolderMsgDialog(
-											topLevelWindow,
-											iFolderMsgDialog.DialogType.Error,
-											iFolderMsgDialog.ButtonSet.Ok,
-											Util.GS("iFolder Error"),
-											Util.GS("Expired Password"),
-											string.Format(Util.GS("Your password has expired.  You have {0} grace logins remaining."), authStatus.RemainingGraceLogins));
-										dg.Run();
-										dg.Hide();
-										dg.Destroy();
-									}
+								}
+								else
+								{
+									ifdata.RefreshDomains();
+									UpdateDomainStatus(domainInfo.ID);
+									TreeIter iter = (TreeIter)curDomains[domainInfo.ID];
+									sel.SelectIter(iter);
+
+									// Update the login button
+									AccSelectionChangedHandler(null, null);
+								}
+
+								if (authStatus.RemainingGraceLogins < authStatus.TotalGraceLogins)
+								{
+									dg = new iFolderMsgDialog(
+										topLevelWindow,
+										iFolderMsgDialog.DialogType.Error,
+										iFolderMsgDialog.ButtonSet.Ok,
+										Util.GS("iFolder Error"),
+										Util.GS("Expired Password"),
+										string.Format(Util.GS("Your password has expired.  You have {0} grace logins remaining."), authStatus.RemainingGraceLogins));
+									dg.Run();
+									dg.Hide();
+									dg.Destroy();
+								}
 								
-									break;
-								case StatusCodes.InvalidCredentials:
-								case StatusCodes.InvalidPassword:
-									dg = new iFolderMsgDialog(
-										topLevelWindow,
-										iFolderMsgDialog.DialogType.Error,
-										iFolderMsgDialog.ButtonSet.Ok,
-										Util.GS("iFolder Error"),
-										Util.GS("Unable to Connect to iFolder Server"),
-										Util.GS("The user name or password is invalid.  Please try again."));
-									dg.Run();
-									dg.Hide();
-									dg.Destroy();
-									break;
-								case StatusCodes.AccountDisabled:
-									dg = new iFolderMsgDialog(
-										topLevelWindow,
-										iFolderMsgDialog.DialogType.Error,
-										iFolderMsgDialog.ButtonSet.Ok,
-										Util.GS("iFolder Error"),
-										Util.GS("Unable to Connect to iFolder Server"),
-										Util.GS("The user account is disabled.  Please contact your network administrator for assistance."));
-									dg.Run();
-									dg.Hide();
-									dg.Destroy();
-									break;
-								case StatusCodes.AccountLockout:
-									dg = new iFolderMsgDialog(
-										topLevelWindow,
-										iFolderMsgDialog.DialogType.Error,
-										iFolderMsgDialog.ButtonSet.Ok,
-										Util.GS("iFolder Error"),
-										Util.GS("Unable to Connect to iFolder Server"),
-										Util.GS("The user account has been locked out.  Please contact your network administrator for assistance."));
-									dg.Run();
-									dg.Hide();
-									dg.Destroy();
-									break;
-								default:
-									dg = new iFolderMsgDialog(
-										topLevelWindow,
-										iFolderMsgDialog.DialogType.Error,
-										iFolderMsgDialog.ButtonSet.Ok,
-										Util.GS("iFolder Error"),
-										Util.GS("Unable to Connect to iFolder Server"),
-										Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."));
-									dg.Run();
-									dg.Hide();
-									dg.Destroy();
-									break;
-							}
-							break;
-						case StatusCodes.InvalidCredentials:
-						case StatusCodes.InvalidPassword:
-						case StatusCodes.UnknownUser:
-							dg = new iFolderMsgDialog(
-								topLevelWindow,
-								iFolderMsgDialog.DialogType.Error,
-								iFolderMsgDialog.ButtonSet.Ok,
-								Util.GS("iFolder Error"),
-								Util.GS("Unable to Connect to iFolder Server"),
-								Util.GS("The user name or password is invalid.  Please try again."));
-							dg.Run();
-							dg.Hide();
-							dg.Destroy();
-							break;
-						case StatusCodes.AccountDisabled:
-							dg = new iFolderMsgDialog(
-								topLevelWindow,
-								iFolderMsgDialog.DialogType.Error,
-								iFolderMsgDialog.ButtonSet.Ok,
-								Util.GS("iFolder Error"),
-								Util.GS("Unable to Connect to iFolder Server"),
-								Util.GS("The user account is disabled.  Please contact your network administrator for assistance."));
-							dg.Run();
-							dg.Hide();
-							dg.Destroy();
-							break;
-						case StatusCodes.AccountLockout:
-							dg = new iFolderMsgDialog(
-								topLevelWindow,
-								iFolderMsgDialog.DialogType.Error,
-								iFolderMsgDialog.ButtonSet.Ok,
-								Util.GS("iFolder Error"),
-								Util.GS("Unable to Connect to iFolder Server"),
-								Util.GS("The user account has been locked out.  Please contact your network administrator for assistance."));
-							dg.Run();
-							dg.Hide();
-							dg.Destroy();
-							break;
-						default:
-							dg = new iFolderMsgDialog(
-								topLevelWindow,
-								iFolderMsgDialog.DialogType.Error,
-								iFolderMsgDialog.ButtonSet.Ok,
-								Util.GS("iFolder Error"),
-								Util.GS("Unable to Connect to iFolder Server"),
-								Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."));
-							dg.Run();
-							dg.Hide();
-							dg.Destroy();
-							break;
-					}
+								break;
+							case StatusCodes.InvalidCredentials:
+							case StatusCodes.InvalidPassword:
+								dg = new iFolderMsgDialog(
+									topLevelWindow,
+									iFolderMsgDialog.DialogType.Error,
+									iFolderMsgDialog.ButtonSet.Ok,
+									Util.GS("iFolder Error"),
+									Util.GS("Unable to Connect to iFolder Server"),
+									Util.GS("The user name or password is invalid.  Please try again."));
+								dg.Run();
+								dg.Hide();
+								dg.Destroy();
+								break;
+							case StatusCodes.AccountDisabled:
+								dg = new iFolderMsgDialog(
+									topLevelWindow,
+									iFolderMsgDialog.DialogType.Error,
+									iFolderMsgDialog.ButtonSet.Ok,
+									Util.GS("iFolder Error"),
+									Util.GS("Unable to Connect to iFolder Server"),
+									Util.GS("The user account is disabled.  Please contact your network administrator for assistance."));
+								dg.Run();
+								dg.Hide();
+								dg.Destroy();
+								break;
+							case StatusCodes.AccountLockout:
+								dg = new iFolderMsgDialog(
+									topLevelWindow,
+									iFolderMsgDialog.DialogType.Error,
+									iFolderMsgDialog.ButtonSet.Ok,
+									Util.GS("iFolder Error"),
+									Util.GS("Unable to Connect to iFolder Server"),
+									Util.GS("The user account has been locked out.  Please contact your network administrator for assistance."));
+								dg.Run();
+								dg.Hide();
+								dg.Destroy();
+								break;
+							default:
+								dg = new iFolderMsgDialog(
+									topLevelWindow,
+									iFolderMsgDialog.DialogType.Error,
+									iFolderMsgDialog.ButtonSet.Ok,
+									Util.GS("iFolder Error"),
+									Util.GS("Unable to Connect to iFolder Server"),
+									Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."));
+								dg.Run();
+								dg.Hide();
+								dg.Destroy();
+								break;
+						}
+						break;
+					case StatusCodes.InvalidCredentials:
+					case StatusCodes.InvalidPassword:
+					case StatusCodes.UnknownUser:
+						dg = new iFolderMsgDialog(
+							topLevelWindow,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							Util.GS("iFolder Error"),
+							Util.GS("Unable to Connect to iFolder Server"),
+							Util.GS("The user name or password is invalid.  Please try again."));
+						dg.Run();
+						dg.Hide();
+						dg.Destroy();
+						break;
+					case StatusCodes.AccountDisabled:
+						dg = new iFolderMsgDialog(
+							topLevelWindow,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							Util.GS("iFolder Error"),
+							Util.GS("Unable to Connect to iFolder Server"),
+							Util.GS("The user account is disabled.  Please contact your network administrator for assistance."));
+						dg.Run();
+						dg.Hide();
+						dg.Destroy();
+						break;
+					case StatusCodes.AccountLockout:
+						dg = new iFolderMsgDialog(
+							topLevelWindow,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							Util.GS("iFolder Error"),
+							Util.GS("Unable to Connect to iFolder Server"),
+							Util.GS("The user account has been locked out.  Please contact your network administrator for assistance."));
+						dg.Run();
+						dg.Hide();
+						dg.Destroy();
+						break;
+					default:
+						dg = new iFolderMsgDialog(
+							topLevelWindow,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							Util.GS("iFolder Error"),
+							Util.GS("Unable to Connect to iFolder Server"),
+							Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."));
+						dg.Run();
+						dg.Hide();
+						dg.Destroy();
+						break;
 				}
-				catch (Exception ex)
-				{
-					dg = new iFolderMsgDialog(
-						topLevelWindow,
-						iFolderMsgDialog.DialogType.Error,
-						iFolderMsgDialog.ButtonSet.Ok,
-						Util.GS("iFolder Error"),
-						Util.GS("Unable to Connect to iFolder Server"),
-						Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."));
-					dg.Run();
-					dg.Hide();
-					dg.Destroy();
-				}
+			}
+			catch (Exception ex)
+			{
+				dg = new iFolderMsgDialog(
+					topLevelWindow,
+					iFolderMsgDialog.DialogType.Error,
+					iFolderMsgDialog.ButtonSet.Ok,
+					Util.GS("iFolder Error"),
+					Util.GS("Unable to Connect to iFolder Server"),
+					Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."));
+				dg.Run();
+				dg.Hide();
+				dg.Destroy();
 			}
 		}
 
@@ -891,6 +1005,13 @@ namespace Novell.iFolder
 				{
 					loginButton.Sensitive = true;
 				}
+				else
+					loginButton.Sensitive = false;
+			}
+			else
+			{
+				if (passEntry.Text.Length > 0)
+					loginButton.Sensitive = true;
 				else
 					loginButton.Sensitive = false;
 			}
@@ -966,11 +1087,19 @@ namespace Novell.iFolder
 						{
 							simws.SetDomainActive(curDomain.ID);
 							curDomain.Active = true;
+							
+							if (passEntry.Text.Length > 0)
+								loginButton.Sensitive = true;
+							
+							UpdateDomainStatus(curDomain.ID);
 						}
 						else
 						{
 							simws.SetDomainInactive(curDomain.ID);
 							curDomain.Active = false;
+							loginButton.Sensitive = false;
+							
+							UpdateDomainStatus(curDomain.ID);
 						}
 					}
 					catch (Exception ex)
@@ -998,6 +1127,47 @@ namespace Novell.iFolder
 
 
 
+		/// <summary>
+		/// This should be called anytime the authentication status of a domain
+		/// changes because of events external to this page.
+		/// </summary>
+		public void UpdateDomainStatus(string domainID)
+		{
+			if (curDomains.Contains(domainID))
+			{
+				TreeIter iter = (TreeIter)curDomains[domainID];
+				DomainInformation dom = ifdata.GetDomain(domainID);
+				if (dom != null)
+				{
+					AccTreeStore.SetValue(iter, 0, dom);
 
+					// Use AccSelectionChangedHandler() to update the
+					// status and login button based on the state of the domain.
+					AccSelectionChangedHandler(null, null);
+					// 
+//					if (dom.Active)
+//					{
+//						if (dom.Authenticated)
+//						{
+//							loginButton.Label = Util.GS("_Logout");
+//							loginButton.Sensitive = true;
+//					}
+				}
+				else
+				{
+					// Remove the domain from the list
+					AccTreeStore.Remove(ref iter);
+					curDomains.Remove(domainID);
+				}
+			}
+			else
+			{
+				// Rebuild the entire list
+				curDomains.Clear();
+				AccTreeStore.Clear();
+	
+				PopulateDomains();
+			}
+		}
 	}
 }

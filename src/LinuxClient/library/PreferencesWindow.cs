@@ -150,5 +150,14 @@ namespace Novell.iFolder
 			this.Destroy();
 		}
 
+		/// <summary>
+		/// This should be called anytime the authentication status of a domain
+		/// changes.  This will allow the domain status on the Accounts tab to
+		/// be updated.
+		/// </summary>
+		public void UpdateDomainStatus(string domainID)
+		{
+			accountsPage.UpdateDomainStatus(domainID);
+		}
 	}
 }
