@@ -224,6 +224,12 @@ namespace Simias.IProcEvent
 		{
 			IPEndPoint ep = null;
 
+			// See if the local application data directory has been created.
+			if ( !Directory.Exists( Path.GetDirectoryName( configFileName ) ) )
+			{
+				Directory.CreateDirectory( Path.GetDirectoryName( configFileName ) );
+			}
+
 			// Wait until the service is listening. Then get the contents of the configuration file. 
 			// If the server happens to be writing to the file while this process is reading an 
 			// exception will occur and this process will try again after a short wait interval.

@@ -164,6 +164,12 @@ namespace Simias.Event
 			portElement.InnerText = ( regSocket.LocalEndPoint as IPEndPoint ).Port.ToString();
 			document.DocumentElement.AppendChild( portElement );
 
+			// See if the local application data directory has been created.
+			if ( !Directory.Exists( Path.GetDirectoryName( configFileName ) ) )
+			{
+				Directory.CreateDirectory( Path.GetDirectoryName( configFileName ) );
+			}
+
 			// Write the port number to the configuration file.
 			using( FileStream fs = File.Open( configFileName, FileMode.Create, FileAccess.ReadWrite, FileShare.None ) )
 			{
