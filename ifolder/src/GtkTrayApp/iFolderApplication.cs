@@ -307,38 +307,38 @@ namespace Novell.iFolder
 		// ThreadNotify Method that will react to a fired event
 		private void OnSimiasEventFired()
 		{
+			iFolderEvent iEvent;
 			// at this point, we are running in the same thread
 			// so we can safely show events
 			lock(EventQueue)
 			{
-				iFolderEvent iEvent = (iFolderEvent)EventQueue.Dequeue();
+				iEvent = (iFolderEvent)EventQueue.Dequeue();
+			}
 			
-				switch(iEvent.EventType)
+			switch(iEvent.EventType)
+			{
+				case iFolderEventTypes.Exception:
 				{
-					case iFolderEventTypes.Exception:
-					{
-						// TODO: Not sure what to do here
-						break;
-					}
+					// TODO: Not sure what to do here
+					break;
+				}
 
-					case iFolderEventTypes.NodeCreated:
-					{
-						HandleNodeCreatedEvent(iEvent);
-						break;
-					}
+				case iFolderEventTypes.NodeCreated:
+				{
+					HandleNodeCreatedEvent(iEvent);
+					break;
+				}
 
-					case iFolderEventTypes.NodeChanged:
-					{
-						HandleNodeChangedEvent(iEvent);
-						break;
-					}
+				case iFolderEventTypes.NodeChanged:
+				{
+					HandleNodeChangedEvent(iEvent);
+					break;
+				}
 
-					case iFolderEventTypes.NodeDeleted:
-					{
-						// TODO: Handle this if needed later
-						// Would we get this if we delete an iFolder?
-						break;
-					}
+				case iFolderEventTypes.NodeDeleted:
+				{
+					HandleNodeDeletedEvent(iEvent);
+					break;
 				}
 			}
 		}
@@ -380,6 +380,18 @@ namespace Novell.iFolder
 
 					break;
 				}
+
+				case "Node":
+				{
+					// Check to see if the Node that changed is part of
+					// the POBox
+					if(iEvent.CollectionID == ifSettings.DefaultPOBoxID)
+					{
+						if(ifwin != null)
+							ifwin.iFolderChanged(iEvent.NodeID);
+					}
+					break;
+				}					
 			}
 		}
 
@@ -390,43 +402,45 @@ namespace Novell.iFolder
 		{
 			switch(iEvent.NodeType)
 			{
-				// TODO:  This is going to kill performance
-				// We need to verify that the collectionID is
-				// the POBox or something
 				case "Node":
 				{
-					try
+					// Check to see if the Node that changed is part of
+					// the POBox
+					if(iEvent.CollectionID == ifSettings.DefaultPOBoxID)
 					{
-						iFolder ifolder = 
-								ifws.GetiFolder(iEvent.NodeID);
-						if(	(ifolder != null) &&
-							(ifolder.State == "Available") )
+						try
 						{
-							// show a popup letting everyone know
-							// a new iFolder was added
-							NotifyWindow notifyWin = new NotifyWindow(
-									tIcon, 
-									string.Format("New iFolder \"{0}\"", 
-														ifolder.Name),
-									string.Format("This iFolder is owned by {0} and is available to sync on this computer", ifolder.Owner),
-									Gtk.MessageType.Info, 5000);
-							notifyWin.ShowAll();
-
-							if(ifwin != null)
-								ifwin.NewiFolderAvailable(ifolder);
+							iFolder ifolder = 
+									ifws.GetiFolder(iEvent.NodeID);
+							if(	(ifolder != null) &&
+								(ifolder.State == "Available") )
+							{
+								// show a popup letting everyone know
+								// a new iFolder was added
+								NotifyWindow notifyWin = new NotifyWindow(
+										tIcon, 
+										string.Format("New iFolder \"{0}\"", 
+															ifolder.Name),
+										string.Format("This iFolder is owned by {0} and is available to sync on this computer", ifolder.Owner),
+										Gtk.MessageType.Info, 5000);
+									notifyWin.ShowAll();
+	
+								if(ifwin != null)
+									ifwin.iFolderCreated(ifolder);
+							}
+						}
+						catch(Exception e)
+						{
+							iFolderExceptionDialog ied = 
+									new iFolderExceptionDialog(null, e);
+							ied.Run();
+							ied.Hide();
+							ied.Destroy();
+							ied = null;
 						}
 					}
-					catch(Exception e)
-					{
-						iFolderExceptionDialog ied = 
-							new iFolderExceptionDialog(null, e);
-						ied.Run();
-						ied.Hide();
-						ied.Destroy();
-						ied = null;
-					}
 					break;
-				}
+				}					
 
 				case "Member":
 				{
@@ -447,8 +461,9 @@ namespace Novell.iFolder
 
 							notifyWin.ShowAll();
 							
-							if(ifwin != null)
-								ifwin.NewiFolderMember(ifolder, newuser);
+							// TODO: update any open windows?
+//							if(ifwin != null)
+//								ifwin.NewiFolderUser(ifolder, newuser);
 						}
 					}
 					catch(Exception e)
@@ -462,7 +477,29 @@ namespace Novell.iFolder
 					}
 					break;
 				}
-						
+			}
+		}
+
+
+		private void HandleNodeDeletedEvent(iFolderEvent iEvent)
+		{
+			switch(iEvent.NodeType)
+			{
+				case "Node":
+				{
+					if(iEvent.CollectionID == ifSettings.DefaultPOBoxID)
+					{
+						if(ifwin != null)
+							ifwin.iFolderDeleted(iEvent.NodeID);
+					}
+					break;
+				}
+				case "Collection":
+				{
+					if(ifwin != null)
+						ifwin.iFolderDeleted(iEvent.NodeID);
+					break;
+				}
 			}
 		}
 

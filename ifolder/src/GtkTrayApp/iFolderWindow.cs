@@ -1872,8 +1872,45 @@ namespace Novell.iFolder
 
 
 
+		public void iFolderChanged(string iFolderID)
+		{
+			if(curiFolders.ContainsKey(iFolderID))
+			{
+				TreeIter iter = (TreeIter)curiFolders[iFolderID];
+				iFolder ifolder;
 
-		public void NewiFolderAvailable(iFolder ifolder)
+				try
+				{
+					ifolder = iFolderWS.GetiFolder(iFolderID);
+					if(ifolder != null)
+						iFolderTreeStore.SetValue(iter, 0, ifolder);
+				}
+				catch(Exception e)
+				{
+					iFolderExceptionDialog ied = new iFolderExceptionDialog(
+													null, e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+				}
+			}
+		}
+
+
+
+		public void iFolderDeleted(string iFolderID)
+		{
+			if(!curiFolders.ContainsKey(iFolderID))
+			{
+				TreeIter iter = (TreeIter)curiFolders[iFolderID];
+				iFolderTreeStore.Remove(ref iter);
+				curiFolders.Remove(iter);
+			}
+		}
+
+
+
+		public void iFolderCreated(iFolder ifolder)
 		{
 			if(!curiFolders.ContainsKey(ifolder.ID))
 			{
@@ -1882,13 +1919,6 @@ namespace Novell.iFolder
 			}
 		}
 
-
-
-
-		public void NewiFolderMember(iFolder ifolder, iFolderUser newuser)
-		{
-		
-		}
 
 	}
 }
