@@ -168,9 +168,7 @@ namespace Simias.Sync.Http
 		string						userName;
 		string						userID;
 		WebState					webState;
-		static CookieContainer		cookies = new CookieContainer();
-		NetworkCredential			credentials;
-
+		
 
 		/// <summary>
 		/// 
@@ -250,7 +248,7 @@ namespace Simias.Sync.Http
 			{
 				if (response.StatusCode != HttpStatusCode.OK)
 				{
-					CookieCollection cc = cookies.GetCookies(new Uri(url));
+					CookieCollection cc = request.CookieContainer.GetCookies(new Uri(url));
 					foreach (Cookie cookie in cc)
 					{
 						cookie.Expired = true;
@@ -260,7 +258,7 @@ namespace Simias.Sync.Http
 				// Now get the StartSyncInfo back;
 				BinaryReader reader = new BinaryReader(response.GetResponseStream());
 				si = new StartSyncInfo(reader);
-				cookies.Add(response.Cookies);
+				request.CookieContainer.Add(response.Cookies);
 			}
 			finally
 			{
