@@ -1108,7 +1108,7 @@ namespace Simias.Web
 			sub.ToPublicKey = newMember.PublicKey;
 			sub.SubscriptionRights = newMember.Rights;
 			sub.SubscriptionState = state;
-			sub.SubscriptionCollectionURL = collection.MasterUrl.ToString();
+			//sub.SubscriptionCollectionURL = collection.MasterUrl.ToString();
 
 			DirNode dirNode = collection.GetRootDirectory();
 			if(dirNode != null)

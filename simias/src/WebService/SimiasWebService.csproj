@@ -90,11 +90,6 @@
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "Simias"
-                    Project = "{7839E703-0177-4162-B083-BCFD4ED1CC1B}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
                     Name = "Novell.Security.ClientPasswordManager.NetCredential"
                     AssemblyName = "Novell.Security.ClientPasswordManager.NetCredential"
                     HintPath = "..\..\external\Novell.Security\net\bin\Novell.Security.ClientPasswordManager.NetCredential.dll"
@@ -103,6 +98,11 @@
                     Name = "SimiasClient"
                     AssemblyName = "SimiasClient"
                     HintPath = "..\SimiasClient\bin\Debug\SimiasClient.dll"
+                />
+                <Reference
+                    Name = "Simias"
+                    AssemblyName = "Simias"
+                    HintPath = "..\..\stage\web\bin\Simias.dll"
                 />
             </References>
         </Build>

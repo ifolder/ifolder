@@ -80,8 +80,8 @@ namespace Simias.Web
 	{
 		int IComparer.Compare( Object x, Object y )  
 		{
-			Simias.Web.MemberInfo memberX = x as Simias.Web.Member;
-			Simias.Web.MemberInfo memberY = y as Simias.Web.Member;
+			Simias.Web.MemberInfo memberX = x as Simias.Web.MemberInfo;
+			Simias.Web.MemberInfo memberY = y as Simias.Web.MemberInfo;
 
 			if ( memberX.FullName != null )
 			{
@@ -212,7 +212,7 @@ namespace Simias.Web
 				{
 					if ( sNode.Type.Equals( "Member" ) )
 					{
-						Simias.Storage.Member member = new Simias.Storage.MemberInfo( domain, sNode );
+						Simias.Storage.Member member = new Simias.Storage.Member( domain, sNode );
 						matches.Add( sNode.ID, member );
 						Simias.Web.MemberInfo webMember = new Simias.Web.MemberInfo( member );
 						members.Add( webMember );

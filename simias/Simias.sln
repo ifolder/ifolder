@@ -36,6 +36,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimiasServer", "src\SimiasS
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mDnsDomain", "src\mDnsDomain\mDnsDomain.csproj", "{57E807CE-9430-4759-B174-CEC7BCBB38CB}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -78,6 +82,10 @@ Global
 		{CCA97DC4-AA28-4A9B-9C90-1E4F5D98B0CA}.Debug.Build.0 = Debug|.NET
 		{CCA97DC4-AA28-4A9B-9C90-1E4F5D98B0CA}.Release.ActiveCfg = Release|.NET
 		{CCA97DC4-AA28-4A9B-9C90-1E4F5D98B0CA}.Release.Build.0 = Release|.NET
+		{57E807CE-9430-4759-B174-CEC7BCBB38CB}.Debug.ActiveCfg = Debug|.NET
+		{57E807CE-9430-4759-B174-CEC7BCBB38CB}.Debug.Build.0 = Debug|.NET
+		{57E807CE-9430-4759-B174-CEC7BCBB38CB}.Release.ActiveCfg = Release|.NET
+		{57E807CE-9430-4759-B174-CEC7BCBB38CB}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

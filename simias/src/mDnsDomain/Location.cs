@@ -229,6 +229,39 @@ namespace Simias.Location
 		/// </summary>
 		/// <param name="domainID">Identifier for the domain that the
 		/// collection belongs to.</param>
+		/// <returns>A Uri object that contains the network location.
+		/// </returns>
+		public Uri ResolveLocation( string domainID )
+		{
+			log.Debug( "ResolveLocation called" );
+
+			Uri locationUri = null;
+			if( domainID.ToLower() == Simias.mDns.Domain.ID )
+			{
+				/*
+				try
+				{
+					Collection collection = Store.GetStore().GetCollectionByID( collectionID );
+					locationUri = MemberIDToUri( collection.Owner.UserID );
+				}
+				catch ( Exception e )
+				{
+					log.Debug( e.Message );
+					log.Debug( e.StackTrace );
+				}
+				*/
+			}
+
+			return locationUri;
+		}
+
+
+		/// <summary>
+		/// Returns the network location for the the specified
+		/// collection.
+		/// </summary>
+		/// <param name="domainID">Identifier for the domain that the
+		/// collection belongs to.</param>
 		/// <param name="collectionID">Identifier of the collection to
 		/// find the network location for.</param>
 		/// <returns>A Uri object that contains the network location.

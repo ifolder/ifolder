@@ -191,8 +191,8 @@ namespace Simias.mDns
 							this.mDnsDomainName,
 							Simias.mDns.Domain.ID,
 							this.description, 
-							Simias.Sync.SyncRoles.Master, 
-							localUri );
+							Simias.Sync.SyncRoles.Master,
+							Simias.Storage.Domain.ConfigurationType.Workgroup );
 
 					rDomain.SetType( rDomain, "Rendezvous" );
 

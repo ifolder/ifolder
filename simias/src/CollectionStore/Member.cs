@@ -129,6 +129,7 @@ namespace Simias.Storage
 
 		/// <summary>
 		/// Gets and sets the member's given (first) name
+		/// returns null if the property does not exist
 		/// </summary>
 		public string Given
 		{
@@ -158,6 +159,7 @@ namespace Simias.Storage
 
 		/// <summary>
 		/// Gets and sets the member's family (last) name
+		/// returns null if the property does not exist
 		/// </summary>
 		public string Family
 		{
@@ -187,6 +189,7 @@ namespace Simias.Storage
 
 		/// <summary>
 		/// Gets and sets the member's full name
+		/// returns null if the property does not exist
 		/// </summary>
 		public string FN
 		{

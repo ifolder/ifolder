@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\ifolder-0216\simias\stage\web\bin\;C:\ifolder-0214\simias\external\Novell.Security\net\bin\;C:\ifolder-0214\simias\src\Simias.dll\;C:\ifolder-current\simias\stage\web\bin\;C:\ifolder-workgroup\simias\bin\Debug\;C:\ifolder-client\simias\bin\Debug\;C:\ifolder-client\simias\src\Simias.dll\;C:\ifolder-client\simias\src\SimiasClient\;C:\ifolder-client\simias\external\mDnsResponder\net\bin\;C:\ifolder-0216\simias\external\mDnsResponder\net\bin\" >
+            <Settings ReferencePath = "C:\ifolder-0219\simias\stage\web\bin\;C:\ifolder-0216\simias\stage\web\bin\;C:\ifolder-0214\simias\external\Novell.Security\net\bin\;C:\ifolder-0214\simias\src\Simias.dll\;C:\ifolder-current\simias\stage\web\bin\;C:\ifolder-workgroup\simias\bin\Debug\;C:\ifolder-client\simias\bin\Debug\;C:\ifolder-client\simias\src\Simias.dll\;C:\ifolder-client\simias\src\SimiasClient\;C:\ifolder-client\simias\external\mDnsResponder\net\bin\;C:\ifolder-0216\simias\external\mDnsResponder\net\bin\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"
