@@ -29,6 +29,7 @@ using System.Diagnostics;
 using Simias.Storage;
 using Simias;
 using Simias.Service;
+using Simias.Event;
 
 namespace Simias.Sync
 {
@@ -176,26 +177,35 @@ public class Dredger
 			return;
 		}
 
+		
 		string path = dnode.GetFullPath(collection);
 		//Log.Spew("Dredger processing subtree of path {0}", path);
 
-		// remove all nodes from store that no longer exist in the file system
-		foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
+		DirectoryInfo tmpDi = new DirectoryInfo(path);
+		if (dnode.LastWriteTime != tmpDi.LastWriteTime)
 		{
-			Node kid = new Node(collection, sn);
-			if (collection.IsType(kid, typeof(DirNode).Name) && !DirThere(path, kid.Name)
+			// remove all nodes from store that no longer exist in the file system
+			foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
+			{
+				Node kid = new Node(collection, sn);
+				if (collection.IsType(kid, typeof(DirNode).Name) && !DirThere(path, kid.Name)
 					|| collection.IsType(kid, typeof(FileNode).Name) && !FileThere(path, kid.Name))
-				DeleteNode(kid);
-			// else Log.Spew("Dredger leaving node {0}", kid.Name);
-		}
+					DeleteNode(kid);
+				// else Log.Spew("Dredger leaving node {0}", kid.Name);
+			}
 
-		// merge files from file system to store
-		foreach (string file in Directory.GetFiles(path))
-			DoNode(dnode, file, typeof(FileNode).Name);
+			// merge files from file system to store
+			foreach (string file in Directory.GetFiles(path))
+				DoNode(dnode, file, typeof(FileNode).Name);
+
+		}
 
 		// merge subdirs and recurse.
 		foreach (string dir in Directory.GetDirectories(path))
+		{
 			DoNode(dnode, dir, typeof(DirNode).Name);
+			Thread.Sleep(0);
+		}
 	}
 
 	//--------------------------------------------------------------------
@@ -218,6 +228,7 @@ public class Dredger
 		Thread  thread = null;
 		bool	shuttingDown;
 		bool	paused;
+		bool	needToDredge = true;
 		
 		private void DoDredge()
 		{
@@ -225,7 +236,7 @@ public class Dredger
 			{
 				try
 				{
-					if (!paused)
+					if (!paused ) //& needToDredge)
 					{
 						foreach (ShallowNode sn in store)
 						{
@@ -245,13 +256,15 @@ public class Dredger
 										break;
 								}
 							}
+							Thread.Sleep(0);
 						}
+						needToDredge = false;
 					}
-					Thread.Sleep(1000 * 60);
 				}
 				catch
 				{
 				}
+				Thread.Sleep(1000 * 60);
 			}
 		}
 
@@ -261,6 +274,12 @@ public class Dredger
 		{
 			store = new Store(conf);
 			paused = shuttingDown = false;
+			// Start listening to file change events.
+			EventSubscriber es = new EventSubscriber(conf);
+			es.FileChanged += new FileEventHandler(es_FileChanged);
+			es.FileCreated += new FileEventHandler(es_FileCreated);
+			es.FileDeleted += new FileEventHandler(es_FileDeleted);
+			es.FileRenamed += new FileRenameEventHandler(es_FileRenamed);
 			thread = new Thread(new ThreadStart(DoDredge));
 			thread.IsBackground = true;
 			thread.Priority = ThreadPriority.BelowNormal;
@@ -289,5 +308,285 @@ public class Dredger
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Gets the node represented by the file.
+		/// </summary>
+		/// <param name="args"></param>
+		/// <returns></returns>
+		private Node GetNodeFromFileName(Collection collection, string fullPath, out bool isFile)
+		{
+			isFile = false;
+			string name = Path.GetFileName(fullPath);
+			Node node = null;
+			// don't let temp files from sync into the collection as regular nodes
+			if (!name.StartsWith(".simias."))
+			{
+				// find if node for this file or dir already exists
+				// delete nodes that are wrong type
+				foreach (ShallowNode sn in collection.GetNodesByName(name))
+				{
+					Node n = new Node(collection, sn);
+					string npath = null;
+					DirNode dn;
+					BaseFileNode fn;
+
+					if (collection.IsType(n, typeof(DirNode).Name))
+					{
+						dn = new DirNode(n);
+						npath = dn.GetFullPath(collection);
+						n = dn;
+					}
+					else if (collection.IsType(n, typeof(FileNode).Name))
+					{
+						isFile = true;
+						fn = new FileNode(n);
+						npath = fn.GetFullPath(collection);
+						n = fn;
+					}
+					else if (collection.IsType(n, typeof(StoreFileNode).Name))
+					{
+						isFile = true;
+						fn = new StoreFileNode(n);
+						npath = fn.GetFullPath(collection);
+						n = fn;
+					}
+
+					if (npath != null && npath == fullPath)
+					{
+						node = n;
+						break;
+					}
+				}
+			}
+
+			return node;
+		}
+
+		private void es_FileChanged(FileEventArgs args)
+		{
+			string path = args.FullPath;
+			bool isFile;
+			Collection collection = store.GetCollectionByID(args.Collection);
+			Node n = GetNodeFromFileName(collection, path, out isFile);
+			if (n != null)
+			{
+				if (isFile)
+				{
+					ModifyFileNode(collection, (BaseFileNode)n, args);
+				}
+				else
+				{
+					ModifyDirNode(collection, (DirNode)n, args);
+				}
+			}
+			else
+			{
+				needToDredge = true;
+			}
+		}
+
+		private void es_FileCreated(FileEventArgs args)
+		{
+			bool isFile;
+			Collection collection = store.GetCollectionByID(args.Collection);
+			Node n = GetNodeFromFileName(collection, args.FullPath, out isFile);
+
+			if (n != null)
+			{
+				// Delete the old node.
+				DeleteNode(collection, n);
+			}
+			FileInfo tmpFi = new FileInfo(args.FullPath);
+            if ((tmpFi.Attributes & FileAttributes.Directory) == 0)
+			{
+				AddFileNode(collection, args);
+			}
+			else
+			{
+				AddDirNode(collection, args);
+			}
+		}
+
+		private void es_FileDeleted(FileEventArgs args)
+		{
+			bool isFile;
+			Collection collection = store.GetCollectionByID(args.Collection);
+			Node n = GetNodeFromFileName(collection, args.FullPath, out isFile);
+
+			if (n != null)
+			{
+				// Delete the old node.
+				DeleteNode(collection, n);
+			}
+			else
+			{
+				needToDredge = true;
+			}
+		}
+
+		private void es_FileRenamed(FileRenameEventArgs args)
+		{
+			bool isFile;
+			Collection collection = store.GetCollectionByID(args.Collection);
+			Node n = GetNodeFromFileName(collection, args.OldPath, out isFile);
+
+			if (n != null)
+			{
+				if (isFile)
+				{
+					RenameFileNode(collection, (FileNode)n, args);
+				}
+				else
+				{
+					RenameDirNode(collection, (DirNode)n, args);
+				}
+			}
+			else
+			{
+				needToDredge = true;
+			}
+		}
+
+		void AddFileNode(Collection collection, FileEventArgs args)
+		{
+			// We have a new file create a node for it.
+			string path = args.FullPath;
+			bool isFile;
+			Node n = GetNodeFromFileName(collection, Path.GetDirectoryName(path), out isFile);
+			DirNode parentNode = (DirNode)n;
+			if (parentNode != null)
+			{
+				FileNode fnode = new FileNode(collection, parentNode, args.Name);
+				fnode.LastWriteTime = File.GetLastWriteTime(path);
+				fnode.CreationTime = File.GetCreationTime(path);
+				Log.Spew("Adding file node for {0} {1} from event.", path, fnode.ID);
+				collection.Commit(fnode);
+			}
+		}
+
+		void AddDirNode(Collection collection, FileEventArgs args)
+		{
+			// We have a new file create a node for it.
+			string path = args.FullPath;
+			bool isFile;
+			Node n = GetNodeFromFileName(collection, Path.GetDirectoryName(path), out isFile);
+			DirNode parentNode = (DirNode)n;
+			if (parentNode != null)
+			{
+				DirNode dnode = new DirNode(collection, parentNode, args.Name);
+				dnode.LastWriteTime = Directory.GetLastWriteTime(path);
+				dnode.CreationTime = Directory.GetCreationTime(path);
+				Log.Spew("Adding dir node for {0} {1} from event.", path, dnode.ID);
+				collection.Commit(dnode);
+			}
+		}
+
+		void DeleteNode(Collection collection, Node node)
+		{
+			Log.Spew("Deleting node {0}, {1} from event.", node.Name, node.ID);
+			Node[] deleted = collection.Delete(node, PropertyTags.Parent);
+			collection.Commit(deleted);
+
+			SyncCollection sCol = new SyncCollection(collection);
+			if (sCol.Role == SyncCollectionRoles.Master)
+			{
+				// if we are the master do not leave the tombstone.
+				collection.Commit(deleted);
+			}
+		}
+
+		void ModifyFileNode(Collection collection, BaseFileNode node, FileEventArgs args)
+		{
+			// here we are just checking for modified files
+			DateTime lastWrote = File.GetLastWriteTime(args.FullPath);
+			if (node.LastWriteTime != lastWrote)
+			{
+				node.LastWriteTime = lastWrote;
+				Log.Spew("Updating file node for {0} {1} from event.", args.FullPath, node.ID);
+				collection.Commit(node);
+			}
+		}
+
+		void ModifyDirNode(Collection collection, DirNode node, FileEventArgs args)
+		{
+			// here we are just checking for modified files
+			DateTime lastWrote = Directory.GetLastWriteTime(args.FullPath);
+			if (node.LastWriteTime != lastWrote)
+			{
+				node.LastWriteTime = lastWrote;
+				Log.Spew("Updating Dir node for {0} {1} from event.", args.FullPath, node.ID);
+				collection.Commit(node);
+			}
+		}
+
+		void RenameFileNode(Collection collection, FileNode node, FileRenameEventArgs args)
+		{
+			// Make sure the node is still in the collection.
+			if (!(Path.GetDirectoryName(args.OldPath).Equals(Path.GetDirectoryName(args.FullPath))))
+			{
+				// We have a new parent find the parent node.
+				bool isFile;
+				Node parent = GetNodeFromFileName(collection, Path.GetDirectoryName(args.FullPath), out isFile);
+				if (parent != null && !isFile)
+				{
+					// We have a parent reset the parent node.
+					node.Properties.ModifyNodeProperty(PropertyTags.Parent, new Relationship(collection.ID, parent.ID));
+				}
+				else
+				{
+					// The node is no longer in the collection.
+					// Delete the node.
+					DeleteNode(collection, node);
+					return;
+				}
+			}
+			// Set the new name.
+			node.Name = args.Name;
+			// Set the last access time.
+			DateTime lastWrote = File.GetLastWriteTime(args.FullPath);
+			if (node.LastWriteTime != lastWrote)
+			{
+				node.LastWriteTime = lastWrote;
+				Log.Spew("Updating file node for {0} {1} from event.", args.FullPath, node.ID);
+			}
+			collection.Commit(node);
+			return;
+		}
+
+		void RenameDirNode(Collection collection, DirNode node, FileRenameEventArgs args)
+		{
+			// Make sure the node is still in the collection.
+			if (!(Path.GetDirectoryName(args.OldPath).Equals(Path.GetDirectoryName(args.FullPath))))
+			{
+				// We have a new parent find the parent node.
+				bool isFile;
+				Node parent = GetNodeFromFileName(collection, Path.GetDirectoryName(args.FullPath), out isFile);
+				if (parent != null && !isFile)
+				{
+					// We have a parent reset the parent node.
+					node.Properties.ModifyNodeProperty(PropertyTags.Parent, new Relationship(collection.ID, parent.ID));
+				}
+				else
+				{
+					// The node is no longer in the collection.
+					// Delete the node.
+					DeleteNode(collection, node);
+					return;
+				}
+			}
+			// Set the new name.
+			node.Name = args.Name;
+			// Set the last access time.
+			DateTime lastWrote = File.GetLastWriteTime(args.FullPath);
+			if (node.LastWriteTime != lastWrote)
+			{
+				node.LastWriteTime = lastWrote;
+				Log.Spew("Updating file node for {0} {1} from event.", args.FullPath, node.ID);
+			}
+			collection.Commit(node);
+			return;
+		}
+
 	}
 }
