@@ -42,6 +42,8 @@ namespace Simias.Service
 
 		static private ISimiasLog logger = Simias.SimiasLogManager.GetLogger(typeof(Manager));
 
+		Thread startThread = null;
+		Thread stopThread = null;
 		private Configuration conf;
 		XmlElement servicesElement;
 		ArrayList serviceList = new ArrayList();
@@ -80,10 +82,10 @@ namespace Simias.Service
 			subscriber = DefaultSubscriber.GetDefaultSubscriber(conf);
 			subscriber.CollectionEvent +=new CollectionEventHandler(OnCollectionEvent);
 
-            // configure logging
-            SimiasLogManager.Configure(conf);
+			// configure logging
+			SimiasLogManager.Configure(conf);
 
-            lock (this)
+			lock (this)
 			{
 				string mutexName = mutexBaseName + conf.StorePath.GetHashCode().ToString();
 				Mutex mutex = new Mutex(false, mutexName);
@@ -154,7 +156,7 @@ namespace Simias.Service
 		
 		private void postMessage(Message msg)
 		{
-			ServiceDelegate.BeginInvoke(msg, null, null);
+			ServiceDelegate(msg);
 		}
 
 		private void messageDispatcher(Message msg)
@@ -343,17 +345,24 @@ namespace Simias.Service
 		{
 			lock (this)
 			{
-				foreach (ServiceCtl svc in this)
-				{
-					if (svc.State == State.Stopped)
-					{
-						postMessage(new StartMessage(svc));
-					}
-				}
-				postMessage(new StartComplete());
+				startThread = new Thread(new ThreadStart(StartServicesThread));
+				startThread.Start();
 			}
 		}
 
+		private void StartServicesThread()
+		{
+			foreach (ServiceCtl svc in this)
+			{
+				if (svc.State == State.Stopped)
+				{
+					postMessage(new StartMessage(svc));
+				}
+			}
+			postMessage(new StartComplete());
+			startThread = null;
+		}
+	
 		/// <summary>
 		/// Stop the installed services.
 		/// This call is asynchronous. Use ServicesStarted to now when this call has finished.
@@ -362,14 +371,22 @@ namespace Simias.Service
 		{
 			lock (this)
 			{
-				for (int i = serviceList.Count; i > 0; --i)
-				{
-					ServiceCtl svc = (ServiceCtl)serviceList[i-1];
-					postMessage(new StopMessage(svc));
-				}
-				postMessage(new StopComplete());
+				stopThread = new Thread(new ThreadStart(StopServicesThread));
+				stopThread.Start();
 			}
 		}
+
+		private void StopServicesThread()
+		{
+			for (int i = serviceList.Count; i > 0; --i)
+			{
+				ServiceCtl svc = (ServiceCtl)serviceList[i-1];
+				postMessage(new StopMessage(svc));
+			}
+			postMessage(new StopComplete());
+			stopThread = null;
+		}
+		
 
 		/// <summary>
 		/// Block until services are started.

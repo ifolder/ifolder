@@ -47,6 +47,8 @@ public class SynkerWorkerA: SyncCollectionWorker
 	ArrayList largeToServer, smallToServer, nonFileToServer;
 	ArrayList killOnClient;
 
+	bool stopping;
+
 	/// <summary>
 	/// public constructor which accepts real or proxy objects specifying master and collection
 	/// </summary>
@@ -61,6 +63,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 	/// </summary>
 	public override void DoSyncWork()
 	{
+		stopping = false;
 		Log.Spew("-------- starting sync pass for collection {0}", collection.Name);
 		try
 		{
@@ -73,6 +76,11 @@ public class SynkerWorkerA: SyncCollectionWorker
 		}
 		catch { Log.Spew("Uncaught foreign exception in DoSyncWork"); }
 		Log.Spew("-------- end of sync pass for collection {0}", collection.Name);
+	}
+
+	public override void StopSyncWork()
+	{
+		stopping = true;
 	}
 
 	void PutNodeToServer(ref NodeStamp stamp, string message)
@@ -155,7 +163,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 
 		Log.Spew("Got {0} nodes in chunk from server, {1} from client", sCount, cCount);
 
-		while (si < sCount || ci < cCount)
+		while (si < sCount || ci < cCount && !stopping)
 		{
 			Log.Assert(si <= sCount && ci <= cCount);
 			if (si == sCount || ci < cCount && cstamps[ci].CompareTo(sstamps[si]) < 0)
@@ -219,13 +227,16 @@ public class SynkerWorkerA: SyncCollectionWorker
 			}
 		}
 
+		if (stopping)
+			return;
+
 		// remove deleted nodes from client
 		foreach (Nid nid in killOnClient)
 			ops.DeleteNode(nid, true);
 
 		// get nonFiles and small files from server
 		NodeChunk[] updates = null;
-		if (nonFileFromServer.Count > 0 || smallFromServer.Count > 0)
+		if (nonFileFromServer.Count > 0 || smallFromServer.Count > 0 && !stopping)
 		{
 			int i = 0;
 			Nid[] ids = new Nid[nonFileFromServer.Count + smallFromServer.Count];
@@ -255,6 +266,8 @@ public class SynkerWorkerA: SyncCollectionWorker
 			RejectedNode[] rejects = ss.PutSmallNodes(updates);
 			foreach (NodeChunk nc in updates)
 			{
+				if (stopping)
+					return;
 				bool updateIncarn = true;
 				if (rejects != null)
 					foreach (RejectedNode reject in rejects)
@@ -280,6 +293,8 @@ public class SynkerWorkerA: SyncCollectionWorker
 		// push up large files
 		foreach (NodeStamp stamp in largeToServer)
 		{
+			if (stopping)
+				return;
 			Node node;
 			if ((node = outNode.Start(stamp.id)) == null)
 				continue;
@@ -311,6 +326,8 @@ public class SynkerWorkerA: SyncCollectionWorker
 		// get large files from server
 		foreach (NodeStamp stamp in largeFromServer)
 		{
+			if (stopping)
+				return;
 			NodeChunk nc = ss.ReadLargeNode(stamp.id, NodeChunk.MaxSize);
 			inNode.Start(nc.node, null);
 			inNode.BlowChunks(nc.forkChunks);
