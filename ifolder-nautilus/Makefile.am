@@ -7,7 +7,14 @@ EXTRA_DIST =
 installcheck-summary:
 	$(MAKE) -C src $@
 
+clean-local:
+	rm -rf $(COMMON_CLEAN_FILES)
+
+distclean-local:
+	rm -rf $(COMMON_DISTCLEAN_FILES)
+
 maintainer-clean-local:
+	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
 	rm -f configure ifolder-*.tar.gz config.cache
 	rm -f aclocal.m4 conf*.sh configure.lineno config.log
 	rm -f config.guess config.sub config.status config.h.in
