@@ -152,7 +152,7 @@
 - (void)addLog:(NSString *)entry
 {
 	[logController addObject:[NSString stringWithFormat:@"%@ %@", 
-			[[NSDate date] descriptionWithCalendarFormat:@"%m/%d/%Y %H:%M:%S" timeZone:nil locale:nil], 
+			[[NSDate date] descriptionWithCalendarFormat:@"%Y-%m-%d %H:%M:%S" timeZone:nil locale:nil], 
 			entry]];
 
 	if([[logController arrangedObjects] count] > 500)
@@ -278,7 +278,7 @@
 	else
 		[self showiFolderWindow:self];
 
-	[iFolderWindowController updateStatusTS:@"Loading synchronization process..."];
+	[iFolderWindowController updateStatusTS:NSLocalizedString(@"Loading synchronization process...", nil)];
 }
 
 
@@ -338,7 +338,7 @@
     [NSThread detachNewThreadSelector:@selector(simiasEventThread:)
         toTarget:self withObject:nil];
 
-	[iFolderWindowController updateStatusTS:@"Idle..."];
+	[iFolderWindowController updateStatusTS:NSLocalizedString(@"Idle...", nil)];
 }
 
 
@@ -366,11 +366,10 @@
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
 	runThreads = NO;
-	[self addLog:@"Shutting down Simias..."];
+	[self addLog:NSLocalizedString(@"Shutting down Simias...", nil)];
 	[ [Simias getInstance] stop];
-	[self addLog:@"Simias is shut down"];
+	[self addLog:NSLocalizedString(@"Simias is shut down", nil)];
 
-	[self addLog:@"Unregistering events..."];
 	SimiasEventDisconnect();
 }
 
@@ -717,12 +716,10 @@
 		}
 		case NODE_DELETED:
 		{
-			NSLog(@"Member deleted?");
 			break;
 		}
 		case NODE_CHANGED:
 		{
-			NSLog(@"Member changed?");
 			break;
 		}
 	}
@@ -805,7 +802,7 @@
 		case SYNC_ACTION_START:
 		{
 			NSString *syncMessage = [NSString
-							stringWithFormat:@"Synchronizing: %@", 
+							stringWithFormat:NSLocalizedString(@"Synchronizing: %@", nil), 
 							[cse name]];
 			[iFolderWindowController updateStatusTS:syncMessage];
 			[self addLogTS:syncMessage];
@@ -816,14 +813,14 @@
 			NSString *syncMessage;
 			if([cse isDone])
 				syncMessage = [NSString
-							stringWithFormat:@"Done synchronizing: %@", 
+							stringWithFormat:NSLocalizedString(@"Done synchronizing: %@", nil), 
 							[cse name]];
 			else
 				syncMessage = [NSString
-							stringWithFormat:@"Paused synchronizing: %@", 
+							stringWithFormat:NSLocalizedString(@"Paused synchronizing: %@", nil), 
 							[cse name]];
 
-			[iFolderWindowController updateStatusTS:@"Idle..."];
+			[iFolderWindowController updateStatusTS:NSLocalizedString(@"Idle...", nil)];
 			[self addLogTS:syncMessage];
 
 			// sending current value of -1 hides the control
@@ -910,7 +907,7 @@
 					if([fse objectType] == FILE_SYNC_FILE)
 					{
 						syncMessage = [NSString
-							stringWithFormat:@"Removing file from server: %@", 
+							stringWithFormat:NSLocalizedString(@"Removing file from server: %@", nil), 
 							[fse name]];
 						[iFolderWindowController updateStatusTS:syncMessage];
 						if(updateLog)
@@ -919,7 +916,7 @@
 					else
 					{
 						syncMessage = [NSString
-							stringWithFormat:@"Removing directory from server: %@", 
+							stringWithFormat:NSLocalizedString(@"Removing directory from server: %@", nil), 
 							[fse name]];
 						[iFolderWindowController updateStatusTS:syncMessage];
 						if(updateLog)
@@ -931,7 +928,7 @@
 					if([fse objectType]  == FILE_SYNC_FILE)
 					{
 						syncMessage = [NSString
-							stringWithFormat:@"Uploading file: %@", 
+							stringWithFormat:NSLocalizedString(@"Uploading file: %@", nil), 
 							[fse name]];
 						[iFolderWindowController updateStatusTS:syncMessage];
 						if(updateLog)
@@ -940,7 +937,7 @@
 					else
 					{
 						syncMessage = [NSString
-							stringWithFormat:@"Creating directory on server: %@", 
+							stringWithFormat:NSLocalizedString(@"Creating directory on server: %@", nil), 
 							[fse name]];
 						[iFolderWindowController updateStatusTS:syncMessage];
 						if(updateLog)
@@ -956,7 +953,7 @@
 					if([fse objectType] == FILE_SYNC_FILE)
 					{
 						syncMessage = [NSString
-							stringWithFormat:@"Deleting file: %@", 
+							stringWithFormat:NSLocalizedString(@"Deleting file: %@", nil), 
 							[fse name]];
 						[iFolderWindowController updateStatusTS:syncMessage];
 						if(updateLog)
@@ -965,7 +962,7 @@
 					else
 					{
 						syncMessage = [NSString
-							stringWithFormat:@"Removing directory: %@", 
+							stringWithFormat:NSLocalizedString(@"Removing directory: %@", nil), 
 							[fse name]];
 						[iFolderWindowController updateStatusTS:syncMessage];
 						if(updateLog)
@@ -977,7 +974,7 @@
 					if([fse objectType] == FILE_SYNC_FILE)
 					{
 						syncMessage = [NSString
-							stringWithFormat:@"Downloading file: %@", 
+							stringWithFormat:NSLocalizedString(@"Downloading file: %@", nil), 
 							[fse name]];
 						[iFolderWindowController updateStatusTS:syncMessage];
 						if(updateLog)
@@ -986,7 +983,7 @@
 					else
 					{
 						syncMessage = [NSString
-							stringWithFormat:@"Creating directory: %@", 
+							stringWithFormat:NSLocalizedString(@"Creating directory: %@", nil), 
 							[fse name]];
 						[iFolderWindowController updateStatusTS:syncMessage];
 						if(updateLog)

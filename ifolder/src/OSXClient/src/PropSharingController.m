@@ -64,7 +64,7 @@
 	}
 	@catch (NSException *e)
 	{
-		[[NSApp delegate] addLog:@"Reading iFolder Users failed with an exception"];
+		NSLog(@"Reading iFolder Users failed with an exception");
 	}
 	[self searchUsers:self];
 }
@@ -121,7 +121,7 @@
 			}
 			@catch (NSException *e)
 			{
-				[[NSApp delegate] addLog:@"Adding iFolder User failed"];
+				NSLog(@"Adding iFolder User failed");
 			}
 		}
 	}
@@ -144,11 +144,12 @@
 	NSArray *selectedUsers = [usersController selectedObjects];
 	if([selectedUsers count] > 0)
 	{
-		NSBeginAlertSheet(@"Remove selected users?", @"Yes", @"Cancel", nil,
-			propertiesWindow, self, 
+		NSBeginAlertSheet(NSLocalizedString(@"Remove selected users?", nil), 
+			NSLocalizedString(@"Yes", nil), NSLocalizedString(@"Cancel", nil),
+			nil, propertiesWindow, self, 
 			@selector(removeSelectedUsersResponse:returnCode:contextInfo:), 
 			nil, nil, 
-			@"Are you sure you want to remove the selected users?");
+			NSLocalizedString(@"Are you sure you want to remove the selected users?", nil));
 	}
 }
 
@@ -180,7 +181,7 @@
 					}
 					@catch (NSException *e)
 					{
-						[[NSApp delegate] addLog:@"Adding iFolder User failed"];
+						NSLog(@"Adding iFolder User failed");
 					}
 				}
 			}
@@ -212,7 +213,7 @@
 		}
 		@catch (NSException *e)
 		{
-			[[NSApp delegate] addLog:@"Searching iFolder Users failed with an exception"];
+			NSLog(@"Searching iFolder Users failed with an exception");
 		}
 	}
 	else
@@ -233,7 +234,7 @@
 		}
 		@catch (NSException *e)
 		{
-			[[NSApp delegate] addLog:@"Searching iFolder Users failed with an exception"];
+			NSLog(@"Searching iFolder Users failed with an exception");
 		}
 	}
 }
@@ -290,7 +291,7 @@
 		}
 		@catch (NSException *e)
 		{
-			[[NSApp delegate] addLog:@"Adding iFolder User failed"];
+			NSLog(@"Adding iFolder User failed");
 		}
 	}
 }
@@ -317,7 +318,7 @@
 			}
 			@catch (NSException *e)
 			{
-				[[NSApp delegate] addLog:@"Adding iFolder User failed"];
+				NSLog(@"Setting user Rights failed");
 			}
 		}
 	}

@@ -113,16 +113,16 @@
 -(void) updateDisplayInformation
 {
 	if([self isOwner])
-		[properties setObject:@"Owner" forKey:@"Status"];
+		[properties setObject:NSLocalizedString(@"Owner", nil) forKey:@"Status"];
 	else
 	{
 		NSString *state = [properties objectForKey:@"State"];
 		if(state != nil)
 		{
 			if([state compare:@"Member"] != 0)
-				[properties setObject:@"Invited User" forKey:@"Status"];
+				[properties setObject:NSLocalizedString(@"Invited User", nil) forKey:@"Status"];
 			else
-				[properties setObject:@"Member" forKey:@"Status"];
+				[properties setObject:NSLocalizedString(@"Member", nil) forKey:@"Status"];
 		}
 	}
 
@@ -130,13 +130,13 @@
 	if(rights != nil)
 	{
 		if([rights compare:@"Admin"] == 0)
-			[properties setObject:@"Full Control" forKey:@"Access"];
+			[properties setObject:NSLocalizedString(@"Full Control", nil) forKey:@"Access"];
 		else if([rights compare:@"ReadWrite"] == 0)
-			[properties setObject:@"Read Write" forKey:@"Access"];
+			[properties setObject:NSLocalizedString(@"Read Write", nil) forKey:@"Access"];
 		else if([rights compare:@"ReadOnly"] == 0)
-			[properties setObject:@"Read Only" forKey:@"Access"];
+			[properties setObject:NSLocalizedString(@"Read Only", nil) forKey:@"Access"];
 		else
-			[properties setObject:@"Unknown" forKey:@"Access"];
+			[properties setObject:NSLocalizedString(@"Unknown", nil) forKey:@"Access"];
 	}
 
 }

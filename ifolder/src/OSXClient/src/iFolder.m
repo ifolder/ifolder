@@ -180,13 +180,13 @@
 	if([self IsSubscription])
 	{
 		if([ [properties objectForKey:@"State"] isEqualToString:@"Available"])
-			[properties setObject:@"Available" forKey:@"Status"];
+			[properties setObject:NSLocalizedString(@"Available", nil) forKey:@"Status"];
 		else if([ [properties objectForKey:@"State"] isEqualToString:@"WaitConnect"])
-			[properties setObject:@"Waiting to Connect" forKey:@"Status"];
+			[properties setObject:NSLocalizedString(@"Waiting to Connect", nil) forKey:@"Status"];
 		else if([ [properties objectForKey:@"State"] isEqualToString:@"WaitSync"])
-			[properties setObject:@"Waiting to Sync" forKey:@"Status"];
+			[properties setObject:NSLocalizedString(@"Waiting to Sync", nil) forKey:@"Status"];
 		else
-			[properties setObject:@"Unknown" forKey:@"Status"];
+			[properties setObject:NSLocalizedString(@"Unknown", nil) forKey:@"Status"];
 
 		if([ [properties objectForKey:@"State"] isEqualToString:@"Available"])
 		{
@@ -201,15 +201,15 @@
 	else
 	{
 		if(synchronizing)
-			[properties setObject:@"Synchronizing" forKey:@"Status"];
+			[properties setObject:NSLocalizedString(@"Synchronizing", nil) forKey:@"Status"];
 		else if([ [properties objectForKey:@"State"] isEqualToString:@"WaitSync"])
-			[properties setObject:@"Waiting to Sync" forKey:@"Status"];
+			[properties setObject:NSLocalizedString(@"Waiting to Sync", nil) forKey:@"Status"];
 		else if([ [properties objectForKey:@"State"] isEqualToString:@"Local"])
 		{
 			if([ [properties objectForKey:@"HasConflicts"] boolValue])
-				[properties setObject:@"Has Conflicts" forKey:@"Status"];
+				[properties setObject:NSLocalizedString(@"Has Conflicts", nil) forKey:@"Status"];
 			else
-				[properties setObject:@"OK" forKey:@"Status"];
+				[properties setObject:NSLocalizedString(@"OK", nil) forKey:@"Status"];
 		}
 
 		// update the location

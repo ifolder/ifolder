@@ -181,9 +181,9 @@ static SyncLogWindowController *syncLogInstance = nil;
 
 	// New iFolder ToolbarItem
 	NSToolbarItem *item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Save"];
-	[item setPaletteLabel:@"Save Log"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"Save"]; // name for the item in the toolbar
-	[item setToolTip:@"Save Log"]; // tooltip
+	[item setPaletteLabel:NSLocalizedString(@"Save Log", nil)]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"Save", nil)]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"Save Log", nil)]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(saveLog:)];
 	[item setImage:[NSImage imageNamed:@"save32"]];
@@ -192,9 +192,9 @@ static SyncLogWindowController *syncLogInstance = nil;
 	[item release];
 
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Clear"];
-	[item setPaletteLabel:@"Clear Log"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"Clear"]; // name for the item in the toolbar
-	[item setToolTip:@"Clear Log"]; // tooltip
+	[item setPaletteLabel:NSLocalizedString(@"Clear Log", nil)]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"Clear", nil)]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"Clear Log", nil)]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(clearLog:)];
 	[item setImage:[NSImage imageNamed:@"clear32"]];

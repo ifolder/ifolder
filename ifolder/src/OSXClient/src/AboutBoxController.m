@@ -79,11 +79,11 @@ static AboutBoxController *aboutSharedInstance = nil;
         appName = [localInfoDict objectForKey:@"CFBundleName"];
         
         // Set the about box window title
-        [theWindow setTitle:[NSString stringWithFormat:@"About %@", appName]];
+        [theWindow setTitle:[NSString stringWithFormat:NSLocalizedString(@"About %@", nil), appName]];
         
         // Setup the version field
         versionString = [infoDictionary objectForKey:@"CFBundleVersion"];
-        [versionField setStringValue:[NSString stringWithFormat:@"Version %@", 
+        [versionField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Version %@", nil), 
                                                           versionString]];
 
         // Setup our credits

@@ -55,30 +55,30 @@
 		(seconds % SECONDS_IN_DAY) == 0)
 	{
 		if(seconds/SECONDS_IN_DAY == 1)
-			return @"day";
+			return NSLocalizedString(@"day", nil);
 		else
-			return @"days";
+			return NSLocalizedString(@"days", nil);
 	}
 	if( (seconds > SECONDS_IN_HOUR) &&
 		(seconds % SECONDS_IN_HOUR) == 0)
 	{
 		if(seconds/SECONDS_IN_HOUR == 1)
-			return @"hour";
+			return NSLocalizedString(@"hour", nil);
 		else
-			return @"hours";
+			return NSLocalizedString(@"hours", nil);
 	}
 	if( (seconds > SECONDS_IN_MINUTE) &&
 		(seconds % SECONDS_IN_MINUTE) == 0)
 	{
 		if(seconds/SECONDS_IN_MINUTE == 1)
-			return @"minute";
+			return NSLocalizedString(@"minute", nil);
 		else
-			return @"minutes";
+			return NSLocalizedString(@"minutes", nil);
 	}
 	if(seconds == 1)
-		return @"second";
+		return NSLocalizedString(@"second", nil);
 	else
-		return @"seconds";
+		return NSLocalizedString(@"seconds", nil);
 }
 
 

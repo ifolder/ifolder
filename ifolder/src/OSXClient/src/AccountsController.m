@@ -83,7 +83,6 @@
 	}
 	@catch(NSException ex)
 	{
-		[[NSApp delegate] addLog:@"Reading domains failed with exception"];
 		NSLog(@"Exception in GetDomains: %@ - %@", [ex name], [ex reason]);
 	}
 }
@@ -145,9 +144,10 @@
 		}
 		@catch (NSException *e)
 		{
-			NSBeginAlertSheet(@"Activation failed", @"OK", nil, nil, 
+			NSBeginAlertSheet(NSLocalizedString(@"Activation failed", nil), 
+				NSLocalizedString(@"OK", nil), nil, nil, 
 				parentWindow, nil, nil, nil, nil, 
-				[NSString stringWithFormat:@"Activation failed with the error: %@", [e name]]);
+				[NSString stringWithFormat:NSLocalizedString(@"Activation failed with the error: %@", nil), [e name]]);
 		}
 	}
 }
@@ -160,7 +160,7 @@
 	createMode = YES;
 	[accounts deselectAll:self];
 
-	[name setStringValue:@"<new account>"];
+	[name setStringValue:NSLocalizedString(@"<new account>", nil)];
 	[name setEnabled:YES];
 	[host setStringValue:@""];
 	[host setEnabled:YES];
