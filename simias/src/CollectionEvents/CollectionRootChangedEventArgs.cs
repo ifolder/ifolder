@@ -69,8 +69,11 @@ namespace Simias.Event
 			this.newRoot = newRoot;
 		}
 
-		internal CollectionRootChangedEventArgs()
+		internal CollectionRootChangedEventArgs(string args)
 		{
+			int index = 0;
+			string [] aArgs = args.Split(seperatorChar);
+			MarshallFromString(aArgs, ref index);
 		}
 
 		internal override string MarshallToString()

@@ -49,8 +49,11 @@ namespace Simias.Event
 			this.oldPath = oldPath;
 		}
 
-		internal FileRenameEventArgs()
+		internal FileRenameEventArgs(string args)
 		{
+			int index = 0;
+			string [] aArgs = args.Split(seperatorChar);
+			MarshallFromString(aArgs, ref index);
 		}
 	
 		internal override string MarshallToString()

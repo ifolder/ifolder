@@ -78,6 +78,13 @@ namespace Simias.Event
 			this.eventId = eventId;
 		}
 
+		internal NodeEventArgs(string args)
+		{
+			int index = 0;
+			string [] aArgs = args.Split(seperatorChar);
+			MarshallFromString(aArgs, ref index);
+		}
+
 		internal NodeEventArgs()
 		{
 		}
@@ -93,7 +100,7 @@ namespace Simias.Event
 			sb.Append(id + seperatorChar);
 			sb.Append(collection + seperatorChar);
 			sb.Append(type + seperatorChar);
-			sb.Append(eventId + seperatorChar);
+			sb.Append(eventId.ToString() + seperatorChar);
 			return sb.ToString();
 		}
 

@@ -45,6 +45,13 @@ namespace Simias.Event
 		{
 		}
 
+		internal FileEventArgs(string args)
+		{
+			int index = 0;
+			string [] aArgs = args.Split(seperatorChar);
+			MarshallFromString(aArgs, ref index);
+		}
+
 		internal FileEventArgs()
 		{
 		}

@@ -102,7 +102,7 @@ namespace Simias.Event
 		{
 			//int i = 0;
 			//string [] sArg = sArgs.Split(seperatorChar);
-			changeType = (EventType)Enum.Parse(typeof(EventType), args[index], false);
+			changeType = (EventType)Enum.Parse(typeof(EventType), args[index++], false);
 		}
 
 		#region Properties

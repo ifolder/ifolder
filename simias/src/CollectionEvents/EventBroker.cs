@@ -41,6 +41,12 @@ namespace Simias.Event
 	/// Delegate definition for handling collection events.
 	/// </summary>
 	public delegate void CollectionEventHandler(CollectionEventArgs args);
+
+	/// <summary>
+	/// This delegate is used temporarily until I figure out why explorer
+	/// fails with the other handler.
+	/// </summary>
+	public delegate void CollectionEventHandlerS(EventType changeType, string args);
 	
 	#endregion
 
@@ -65,7 +71,7 @@ namespace Simias.Event
 		/// <summary>
 		/// 
 		/// </summary>
-		public event CollectionEventHandler CollectionEvent;
+		public event CollectionEventHandlerS CollectionEvent;
 
 		/// <summary>
 		/// 
@@ -113,11 +119,11 @@ namespace Simias.Event
 					if (CollectionEvent != null && args.ChangeType != EventType.ServiceControl)
 					{
 						Delegate[] cbList = CollectionEvent.GetInvocationList();
-						foreach (CollectionEventHandler cb in cbList)
+						foreach (CollectionEventHandlerS cb in cbList)
 						{
 							try 
 							{ 
-								cb(args);
+								cb(args.ChangeType, args.MarshallToString());
 							}
 							catch 
 							{
@@ -430,7 +436,7 @@ namespace Simias.Event
 			EventBroker.RegisterClientChannel(conf);
 			broker = new EventBroker();
 
-			broker.CollectionEvent += new CollectionEventHandler(OnCollectionEvent);
+			broker.CollectionEvent += new CollectionEventHandlerS(OnCollectionEventS);
 			// Start a thread to handle events.
 			eventQueue = new Queue();
 			queued = new ManualResetEvent(false);
@@ -468,6 +474,37 @@ namespace Simias.Event
 		public void OnCollectionEvent(CollectionEventArgs args)
 		{
 			queueEvent(args);
+		}
+
+		/// <summary>
+		/// Callback used by the EventBroker for Collection events.
+		/// </summary>
+		/// <param name="changeType">The type of event.</param>
+		/// <param name="args">Arguments for the event.</param>
+		public void OnCollectionEventS(EventType changeType, string args)
+		{
+			CollectionEventArgs eArgs = null;
+			switch (changeType)
+			{
+				case EventType.CollectionRootChanged:
+					eArgs = new CollectionRootChangedEventArgs(args);
+					break;
+				case EventType.FileChanged:
+				case EventType.FileCreated:
+				case EventType.FileDeleted:
+					eArgs = new FileEventArgs(args);
+					break;
+				case EventType.FileRenamed:
+					eArgs = new FileRenameEventArgs(args);
+					break;
+				case EventType.NodeChanged:
+				case EventType.NodeCreated:
+				case EventType.NodeDeleted:
+					eArgs = new NodeEventArgs(args);
+					break;
+			}
+			if (eArgs != null)
+				queueEvent(eArgs);
 		}
 
 		#endregion
@@ -663,7 +700,7 @@ namespace Simias.Event
 						{
 							instanceTable.Remove(conf);
 							alreadyDisposed = true;
-							broker.CollectionEvent -= new CollectionEventHandler(OnCollectionEvent);
+							broker.CollectionEvent -= new CollectionEventHandlerS(OnCollectionEventS);
 							
 							// Signal thread so it can exit.
 							queued.Set();
