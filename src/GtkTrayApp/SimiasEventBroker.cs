@@ -25,13 +25,8 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Threading;
-
 using Gtk;
-using Gdk;
-using Gnome;
-//using Glade;
-using GtkSharp;
-using GLib;
+
 using Simias.Event;
 using Simias;
 using Simias.Storage;
@@ -57,14 +52,16 @@ namespace Novell.iFolder
 		private iFolder				ifolder;
 		private iFolderUser			ifUser;
 		private string				ifolderID;
+		private string				userID;
 		private SimiasEventType		type;
 	
 		public SimiasEvent(iFolder ifldr, iFolderUser ifldrUser, 
-					string ifldrID, SimiasEventType type)
+					string iFolderID, string UserID, SimiasEventType type)
 		{
 			this.ifolder = ifldr;
 			this.ifUser = ifldrUser;
-			this.ifolderID = ifldrID;
+			this.ifolderID = iFolderID;
+			this.userID = UserID;
 			this.type = type;
 		}
 
@@ -81,6 +78,11 @@ namespace Novell.iFolder
 		public string iFolderID
 		{
 			get{return this.ifolderID;}
+		}
+
+		public string UserID
+		{
+			get{return this.userID;}
 		}
 
 		public SimiasEventType EventType
@@ -144,6 +146,81 @@ namespace Novell.iFolder
 							iFolderDeletedEventArgs args);
 
 
+	public class iFolderUserAddedEventArgs : EventArgs
+	{
+		private iFolderUser user;
+		private string ifolderID;
+
+		public iFolderUserAddedEventArgs(iFolderUser ifUser, string iFolderID)
+		{
+			this.user = ifUser;
+			this.ifolderID = iFolderID;
+		}
+
+		public iFolderUser iFolderUser
+		{
+			get{ return this.user; }
+		}
+
+		public string iFolderID
+		{
+			get{ return this.ifolderID; }
+		}
+	}
+	public delegate void iFolderUserAddedEventHandler(object sender,
+							iFolderUserAddedEventArgs args);
+
+
+	public class iFolderUserChangedEventArgs : EventArgs
+	{
+		private iFolderUser user;
+		private string ifolderID;
+
+		public iFolderUserChangedEventArgs(iFolderUser ifUser, string iFolderID)
+		{
+			this.user = ifUser;
+			this.ifolderID = iFolderID;
+		}
+
+		public iFolderUser iFolderUser
+		{
+			get{ return this.user; }
+		}
+
+		public string iFolderID
+		{
+			get{ return this.ifolderID; }
+		}
+	}
+	public delegate void iFolderUserChangedEventHandler(object sender,
+							iFolderUserChangedEventArgs args);
+
+
+	public class iFolderUserDeletedEventArgs : EventArgs
+	{
+		private string userID;
+		private string ifolderID;
+
+		public iFolderUserDeletedEventArgs(string ifUserID, string iFolderID)
+		{
+			this.userID = ifUserID;
+			this.ifolderID = iFolderID;
+		}
+
+		public string UserID
+		{
+			get{ return this.userID; }
+		}
+
+		public string iFolderID
+		{
+			get{ return this.ifolderID; }
+		}
+	}
+	public delegate void iFolderUserDeletedEventHandler(object sender,
+							iFolderUserDeletedEventArgs args);
+
+
 	public class SimiasEventBroker
 	{
 		private iFolderWebService	ifws;
@@ -156,6 +233,9 @@ namespace Novell.iFolder
 		public event iFolderAddedEventHandler iFolderAdded;
 		public event iFolderChangedEventHandler iFolderChanged;
 		public event iFolderDeletedEventHandler iFolderDeleted;
+		public event iFolderUserAddedEventHandler iFolderUserAdded;
+		public event iFolderUserChangedEventHandler iFolderUserChanged;
+		public event iFolderUserDeletedEventHandler iFolderUserDeleted;
 
 		public SimiasEventBroker()
 		{
@@ -196,16 +276,16 @@ namespace Novell.iFolder
 				try
 				{
 					ifws = new iFolderWebService();
-//					ifws.Url = 
-//						Simias.ServiceManager.LocalServiceUrl.ToString() +
-//							"/iFolder.asmx";
-					ifws.Ping();
+					ifws.Url = 
+						Simias.Client.Manager.LocalServiceUrl.ToString() +
+							"/iFolder.asmx";
+//					ifws.Ping();
 	
 					ifSettings = ifws.GetSettings();
 				}
 				catch(Exception e)
 				{
-					ifws = null;
+//					ifws = null;
 					ifSettings = null;
 				}
 			}
@@ -237,7 +317,6 @@ namespace Novell.iFolder
 			catch(Exception e)
 			{
 				// ignore
-				Console.WriteLine(e);
 			}
 		}
 
@@ -309,7 +388,7 @@ namespace Novell.iFolder
 								lock(EventQueue)
 								{
 									EventQueue.Enqueue(new SimiasEvent(
-										ifolder, null, ifolder.ID,
+										ifolder, null, ifolder.ID, null,
 										SimiasEventType.NewiFolder));
 									SimiasEventFired.WakeupMain();
 								}
@@ -325,24 +404,30 @@ namespace Novell.iFolder
 					{
 						try
 						{
-							iFolderUser newuser = ifws.GetiFolderUserFromNodeID(
-								nargs.Collection, nargs.ID);
-
-							if( (newuser != null) &&
-								(newuser.UserID != 
-										ifSettings.CurrentUserID) )
+							// first test to see if this is an
+							// ifolder.  We don't care if it is
+							// not an iFolder
+							iFolder localiFolder = ifws.GetiFolder(
+											nargs.Collection);
+							if(localiFolder != null)
 							{
-/*
-								// Turned off iFolderUser events until
-								// we are ready to handle them
-								iFolder ifolder = 
-									ifws.GetiFolder(nargs.Collection);
-								
-								EventQueue.Enqueue(new SimiasEvent(
-									ifolder, newuser, ifolder.ID,
-									SimiasEventType.NewUser));
-								SimiasEventFired.WakeupMain();
-*/
+								iFolderUser newuser = 
+									ifws.GetiFolderUserFromNodeID(
+										nargs.Collection, nargs.ID);
+
+								if( (newuser != null) &&
+									(newuser.UserID != 
+											ifSettings.CurrentUserID) )
+								{
+									lock(EventQueue)
+									{
+										EventQueue.Enqueue(new SimiasEvent(
+											null, newuser, nargs.Collection,
+											newuser.UserID,
+											SimiasEventType.NewUser));
+										SimiasEventFired.WakeupMain();
+									}
+								}
 							}
 						}
 						catch(Exception e)
@@ -365,7 +450,7 @@ namespace Novell.iFolder
 								lock(EventQueue)
 								{
 									EventQueue.Enqueue(new SimiasEvent(
-										ifolder, null, ifolder.ID,
+										ifolder, null, ifolder.ID, null,
 										SimiasEventType.NewiFolder));
 									SimiasEventFired.WakeupMain();
 								}
@@ -402,7 +487,7 @@ namespace Novell.iFolder
 								lock(EventQueue)
 								{
 									EventQueue.Enqueue(new SimiasEvent(
-										ifolder, null, ifolder.ID,
+										ifolder, null, ifolder.ID, null,
 										SimiasEventType.ChangediFolder));
 									SimiasEventFired.WakeupMain();
 								}
@@ -414,6 +499,37 @@ namespace Novell.iFolder
 					}
 					break;
 				}
+
+				case "Member":
+				{
+					lock(ifws)
+					{
+						try
+						{
+							iFolderUser newuser = ifws.GetiFolderUserFromNodeID(
+								nargs.Collection, nargs.ID);
+
+							if( (newuser != null) &&
+								(newuser.UserID != 
+										ifSettings.CurrentUserID) )
+							{
+								lock(EventQueue)
+								{
+									EventQueue.Enqueue(new SimiasEvent(
+										null, newuser, nargs.Collection,
+										newuser.UserID,
+										SimiasEventType.ChangedUser));
+									SimiasEventFired.WakeupMain();
+								}
+							}
+						}
+						catch(Exception e)
+						{
+						}
+					}
+					break;
+				}
+
 
 				case "Node":
 				{
@@ -433,7 +549,7 @@ namespace Novell.iFolder
 									lock(EventQueue)
 									{
 										EventQueue.Enqueue(new SimiasEvent(
-											ifolder, null, ifolder.ID,
+											ifolder, null, ifolder.ID, null,
 											SimiasEventType.ChangediFolder));
 										SimiasEventFired.WakeupMain();
 									}
@@ -467,7 +583,7 @@ namespace Novell.iFolder
 							lock(EventQueue)
 							{
 								EventQueue.Enqueue(new SimiasEvent(
-									null, null, nargs.ID,
+									null, null, nargs.ID, null,
 									SimiasEventType.DeliFolder));
 								SimiasEventFired.WakeupMain();
 							}
@@ -480,12 +596,40 @@ namespace Novell.iFolder
 					lock(EventQueue)
 					{
 						EventQueue.Enqueue(new SimiasEvent(
-							null, null, nargs.Collection,
+							null, null, nargs.Collection, null,
 							SimiasEventType.DeliFolder));
 						SimiasEventFired.WakeupMain();
 					}
 					break;
 				}
+				case "Member":
+				{
+					lock(ifws)
+					{
+
+						try
+						{
+							iFolder ifolder = 
+								ifws.GetiFolder(nargs.Collection);
+
+							if(ifolder != null)
+							{
+								lock(EventQueue)
+								{
+									EventQueue.Enqueue(new SimiasEvent(
+										null, null, nargs.Collection, nargs.ID,
+										SimiasEventType.DelUser));
+									SimiasEventFired.WakeupMain();
+								}
+							}
+						}
+						catch(Exception e)
+						{
+						}
+					}
+					break;
+				}
+
 			}
 		}
 
@@ -512,6 +656,11 @@ namespace Novell.iFolder
 				switch(sEvent.EventType)
 				{
 					case SimiasEventType.NewUser:
+						if(iFolderUserAdded != null)
+							iFolderUserAdded(this,
+								new iFolderUserAddedEventArgs(
+										sEvent.iFolderUser,
+										sEvent.iFolderID));
 						break;
 					case SimiasEventType.NewiFolder:
 						if(iFolderAdded != null)
@@ -519,6 +668,11 @@ namespace Novell.iFolder
 								new iFolderAddedEventArgs(sEvent.iFolder));
 						break;
 					case SimiasEventType.ChangedUser:
+						if(iFolderUserChanged != null)
+							iFolderUserChanged(this,
+								new iFolderUserChangedEventArgs(
+										sEvent.iFolderUser,
+										sEvent.iFolderID));
 						break;
 					case SimiasEventType.ChangediFolder:
 						if(iFolderChanged != null)
@@ -526,6 +680,11 @@ namespace Novell.iFolder
 								new iFolderChangedEventArgs(sEvent.iFolder));
 						break;
 					case SimiasEventType.DelUser:
+						if(iFolderUserDeleted != null)
+							iFolderUserDeleted(this,
+								new iFolderUserDeletedEventArgs(
+										sEvent.UserID,
+										sEvent.iFolderID));
 						break;
 					case SimiasEventType.DeliFolder:
 						if(iFolderDeleted != null)
