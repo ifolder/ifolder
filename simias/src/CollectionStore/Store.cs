@@ -68,6 +68,11 @@ namespace Simias.Storage
 		static private string KeyFile = ".if.pri";
 
 		/// <summary>
+		/// Name of the local domain.
+		/// </summary>
+		static public string LocalDomainName = "Local";
+
+		/// <summary>
 		/// Default sync interval for the machine. Synchronizes every 5 minutes.
 		/// </summary>
 		static private int DefaultMachineSyncInterval = 300;
@@ -336,7 +341,7 @@ namespace Simias.Storage
 					ldb.Commit( new Node[] { ldb, member, owner } );
 
 					// Create the local domain.
-					Domain domain = new Domain( this, "Local", localDomainID, "Local Machine Domain", SyncRoles.Local, Domain.ConfigurationType.None );
+					Domain domain = new Domain( this, LocalDomainName, localDomainID, "Local Machine Domain", SyncRoles.Local, Domain.ConfigurationType.None );
 					Member domainOwner = new Member( owner.Name, owner.ID, Access.Rights.Admin, owner.PublicKey );
 					domainOwner.IsOwner = true;
 					domain.Commit( new Node[] { domain, domainOwner } );

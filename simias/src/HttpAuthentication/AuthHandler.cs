@@ -252,7 +252,7 @@ namespace Simias.Security.Web
 					// If this is an enterprise server use the default domain.
 					domainID = store.DefaultDomain;
 				}
-				else if ( context.Request.Url.IsLoopback )
+				else if ( context.Request.Url.IsLoopback && ( domainID == Store.LocalDomainName ) )
 				{
 					// If this address is loopback, set the local domain in the HTTP context.
 					domainID = store.LocalDomain;
@@ -265,7 +265,7 @@ namespace Simias.Security.Web
 				if ( Http.GetMember( domainID, context ) != null )
 				{
 					// Set the session to never expire on the local web service.
-					if ( context.Request.Url.IsLoopback )
+					if ( domainID == store.LocalDomain )
 					{
 						context.Session.Timeout = Int32.MaxValue;
 					}
