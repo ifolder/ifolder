@@ -109,29 +109,43 @@ namespace Novell.iFolder
 			AccTreeStore = new ListStore(typeof(DomainInformation));
 			AccTreeView.Model = AccTreeStore;
 
-			TreeViewColumn NameColumn = new TreeViewColumn();
-			CellRendererText ncrt = new CellRendererText();
-			NameColumn.PackStart(ncrt, false);
-			NameColumn.SetCellDataFunc(ncrt,
-					new TreeCellDataFunc(NameCellTextDataFunc));
-
-			NameColumn.Title = Util.GS("User Name");
-			AccTreeView.AppendColumn(NameColumn);
-			NameColumn.Resizable = true;
-
+			// Server Column
+			TreeViewColumn serverColumn = new TreeViewColumn();
+			serverColumn.Title = Util.GS("Server");
 			CellRendererText servercr = new CellRendererText();
 			servercr.Xpad = 5;
-			TreeViewColumn serverColumn = 
-			AccTreeView.AppendColumn(Util.GS("Server"),
-					servercr,
-					new TreeCellDataFunc(ServerCellTextDataFunc));
+			serverColumn.PackStart(servercr, false);
+			serverColumn.SetCellDataFunc(servercr,
+										 new TreeCellDataFunc(ServerCellTextDataFunc));
 			serverColumn.Resizable = true;
 			serverColumn.MinWidth = 150;
+			AccTreeView.AppendColumn(serverColumn);
+
+			// User Name Column
+			TreeViewColumn nameColumn = new TreeViewColumn();
+			nameColumn.Title = Util.GS("User Name");
+			CellRendererText ncrt = new CellRendererText();
+			nameColumn.PackStart(ncrt, false);
+			nameColumn.SetCellDataFunc(ncrt,
+									   new TreeCellDataFunc(NameCellTextDataFunc));
+			nameColumn.Resizable = true;
+			AccTreeView.AppendColumn(nameColumn);
+
+			// Status Column
+			TreeViewColumn statusColumn = new TreeViewColumn();
+			statusColumn.Title = Util.GS("Status");
+			CellRendererText statusCellRendererText = new CellRendererText();
+			statusColumn.PackStart(statusCellRendererText, false);
+			statusColumn.SetCellDataFunc(statusCellRendererText,
+										 new TreeCellDataFunc(StatusCellTextDataFunc));
+			statusColumn.Resizable = true;
+			AccTreeView.AppendColumn(statusColumn);
+			
 
 			AccTreeView.Selection.Mode = SelectionMode.Single;
 			AccTreeView.Selection.Changed +=
 				new EventHandler(AccSelectionChangedHandler);
-
+			
 			// Setup buttons for add/remove/accept/decline
 			HButtonBox buttonBox = new HButtonBox();
 			buttonBox.Spacing = 10;
@@ -333,6 +347,17 @@ namespace Novell.iFolder
 
 
 
+		private void ServerCellTextDataFunc (Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
+		{
+			DomainInformation dom = (DomainInformation) tree_model.GetValue(iter,0);
+			((CellRendererText) cell).Text = dom.Name;
+		}
+
+
+
+
 		private void NameCellTextDataFunc (Gtk.TreeViewColumn tree_column,
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
@@ -344,12 +369,27 @@ namespace Novell.iFolder
 
 
 
-		private void ServerCellTextDataFunc (Gtk.TreeViewColumn tree_column,
+		private void StatusCellTextDataFunc (Gtk.TreeViewColumn tree_column,
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
 			DomainInformation dom = (DomainInformation) tree_model.GetValue(iter,0);
-			((CellRendererText) cell).Text = dom.Name;
+			
+			if (dom.Active)
+			{
+				if (dom.Authenticated)
+				{
+					((CellRendererText) cell).Text = Util.GS("Logged in");
+				}
+				else
+				{
+					((CellRendererText) cell).Text = Util.GS("Logged out");
+				}
+			}
+			else
+			{
+				((CellRendererText) cell).Text = Util.GS("Disabled");
+			}
 		}
 
 
