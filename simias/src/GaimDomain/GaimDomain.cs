@@ -298,14 +298,14 @@ namespace Simias.Gaim
 					p.LocalProperty = true;
 					gaimDomain.Properties.AddProperty( p );
 
-					gaimDomain.Commit(new Node[] {gaimDomain, domainOwner});
-
-					store.AddDomainIdentity(this.id, ownerID);
-
 					//
 					// Make sure this is an Address Book
 					//
 					gaimDomain.SetType(gaimDomain, "AB:AddressBook");
+
+					gaimDomain.Commit(new Node[] {gaimDomain, domainOwner});
+
+					store.AddDomainIdentity(this.id, ownerID);
 
 					this.id = gaimDomain.ID;
 				}
