@@ -59,6 +59,7 @@ namespace Novell.iFolder
 		private iFolderWebService	ifws;
 		private iFolderWindow 		ifwin;
 		private LogWindow			logwin;
+		private PreferencesDialog	prefsdialog;
 
 		private iFolderState 		CurrentState;
 		private Gtk.ThreadNotify	iFolderStateChanged;
@@ -601,7 +602,7 @@ namespace Novell.iFolder
 
 		private void show_tray_menu()
 		{
-			AccelGroup agrp = new AccelGroup();
+//			AccelGroup agrp = new AccelGroup();
 			Menu trayMenu = new Menu();
 
 
@@ -616,6 +617,35 @@ namespace Novell.iFolder
 			trayMenu.Append (logview_item);
 			logview_item.Activated += 
 					new EventHandler(showLogWindow);
+
+			trayMenu.Append(new SeparatorMenuItem());
+
+
+
+			ImageMenuItem prefs_item = new ImageMenuItem (
+											Util.GS("Preferences"));
+			prefs_item.Image = new Gtk.Image(Gtk.Stock.Preferences,
+											Gtk.IconSize.Menu);
+			trayMenu.Append(prefs_item);
+			prefs_item.Activated += 
+					new EventHandler(show_preferences);
+
+
+			ImageMenuItem help_item = new ImageMenuItem (
+											Util.GS("Help"));
+			help_item.Image = new Gtk.Image(Gtk.Stock.Help,
+											Gtk.IconSize.Menu);
+			trayMenu.Append(help_item);
+			help_item.Activated += 
+					new EventHandler(show_help);
+
+
+			ImageMenuItem about_item = new ImageMenuItem (
+											Util.GS("About"));
+			about_item.Image = new Gtk.Image(Gnome.Stock.About,
+											Gtk.IconSize.Menu);
+			trayMenu.Append(about_item);
+
 			
 /*			if( (ifSettings != null) && (!ifSettings.HaveEnterprise) )
 			{
@@ -634,17 +664,16 @@ namespace Novell.iFolder
 			}
 */
 
-			ImageMenuItem help_item = new ImageMenuItem (Gtk.Stock.Help, agrp);
-			trayMenu.Append (help_item);
-			help_item.Activated += 
-					new EventHandler(show_help);
-
 			trayMenu.Append(new SeparatorMenuItem());
 
+			ImageMenuItem quit_item = new ImageMenuItem (
+											Util.GS("Quit"));
+			quit_item.Image = new Gtk.Image(Gtk.Stock.Quit,
+											Gtk.IconSize.Menu);
+			trayMenu.Append(quit_item);
+			quit_item.Activated += 
+					new EventHandler(quit_ifolder);
 
-			ImageMenuItem quit_item = new ImageMenuItem (Gtk.Stock.Quit, agrp);
-			quit_item.Activated += new EventHandler(quit_ifolder);
-			trayMenu.Append (quit_item);
 
 			trayMenu.ShowAll();
 
@@ -674,6 +703,15 @@ namespace Novell.iFolder
 				logwin = null;
 			}
 
+			if(prefsdialog != null)
+			{
+				prefsdialog.Destroyed -=
+					new EventHandler(PrefsDialogDestroyedHandler);
+				prefsdialog.Hide();
+				prefsdialog.Destroy();
+				prefsdialog = null;
+			}
+
 			if(CurrentState == iFolderState.Stopping)
 			{
 				System.Environment.Exit(1);
@@ -694,6 +732,23 @@ namespace Novell.iFolder
 			Util.ShowHelp("front.html", null);
 		}
 
+
+
+		private void show_preferences(object o, EventArgs args)
+		{
+			if(CheckWebService())
+			{
+				if(prefsdialog == null)
+				{
+					prefsdialog = new PreferencesDialog(ifws);
+					prefsdialog.Destroyed +=
+							new EventHandler(PrefsDialogDestroyedHandler);
+					prefsdialog.ShowAll();
+				}
+				else
+					prefsdialog.Present();
+			}
+		}
 
 
 
@@ -756,6 +811,10 @@ namespace Novell.iFolder
 		}
 
 
+		private void PrefsDialogDestroyedHandler(object o, EventArgs args)
+		{
+			prefsdialog = null;
+		}
 
 
 		public static void Main (string[] args)
