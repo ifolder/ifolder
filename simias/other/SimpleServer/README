@@ -5,7 +5,7 @@ run side by side with the iFolder client under the same local user
 account.  You must dedicate a separate machine or run Simple
 Server in a separate user session.
 
-The SimpleServer assembly is an add on thead service to Simias
+The SimpleServer assembly is an add on thread service to Simias
 which enables it to become a simple iFolder server.  The
 member list (users) is created from a simple xml file -
 SimpleServer.xml which is located in the (simias-target-directory)/etc.
