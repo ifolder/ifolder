@@ -44,8 +44,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Simias.dll")]
 [assembly: AssemblyDescription("Simias.dll")]
 [assembly: AssemblyConfiguration("Development version")]
-[assembly: AssemblyCompany("iFolder development team")]
-[assembly: AssemblyProduct("iFolder")]
+[assembly: AssemblyCompany("Simias development team")]
+[assembly: AssemblyProduct("Simias")]
 [assembly: AssemblyCopyright("(c) 2004 Novell, Inc.")]
 [assembly: AssemblyTrademark("")]
 
