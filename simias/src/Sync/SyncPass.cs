@@ -54,23 +54,6 @@ public class SynkerA: SyncLogicFactory
 	{
 		return new SynkerWorkerA((SynkerServiceA)master, slave);
 	}
-
-	/// <summary>
-	/// SynkerA does not need another process to watch the file system yet, always return false
-	/// </summary>
-	public override bool WatchFileSystem()
-	{
-		return false;
-	}
-
-	/// <summary>
-	/// query the sync collection service class type.
-	/// </summary>
-	/// <returns>The type object of the sync collection service class.</returns>
-	public override Type GetCollectionServiceType()
-	{
-		return typeof(SynkerServiceA);
-	}
 }
 
 //---------------------------------------------------------------------------
@@ -79,7 +62,7 @@ public class SynkerA: SyncLogicFactory
 /// </summary>
 public class SynkerServiceA: SyncCollectionService
 {
-	Collection collection;
+	SyncCollection collection;
 	SyncOps ops;
 	SyncIncomingNode inNode;
 	SyncOutgoingNode outNode;
@@ -90,7 +73,7 @@ public class SynkerServiceA: SyncCollectionService
 	/// </summary>
 	public SynkerServiceA(SyncCollection collection): base(collection)
 	{
-		this.collection = collection.BaseCollection;
+		this.collection = collection;
 	}
 
 	/// <summary>
@@ -98,7 +81,7 @@ public class SynkerServiceA: SyncCollectionService
 	/// </summary>
 	public SynkerServiceA(SyncCollection collection, bool ignoreRights): base(collection)
 	{
-		this.collection = collection.BaseCollection;
+		this.collection = collection;
 		this.ignoreRights = ignoreRights;
 	}
 
@@ -108,38 +91,41 @@ public class SynkerServiceA: SyncCollectionService
 	public Access.Rights Start()
 	{
 		Access.Rights rights = Access.Rights.Deny;
-        
-        string userId = null;
-
-        try
-        {
-            userId = Thread.CurrentPrincipal.Identity.Name;
-			Log.Spew("Sync session starting for {0}", userId);
-        }
-        catch (Exception e)
-        {
-            // kludge
-			Log.Spew("could not get identity in sync start, error {0}", e.Message);
-            ignoreRights = true;
-        }
-        
-        if (ignoreRights || userId == String.Empty)
-            userId = Access.SyncOperatorRole;
-        collection.LocalStore.ImpersonateUser(userId);
-        if (collection.IsAccessAllowed(Access.Rights.ReadOnly))
-        {
-            collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole);
-            Log.Spew("dredging server at docRoot '{0}'", collection.DocumentRoot.LocalPath);
-            new Dredger(collection, true);
-            Log.Spew("done dredging server at docRoot '{0}'", collection.DocumentRoot.LocalPath);
-            inNode = new SyncIncomingNode(collection, true);
-            outNode = new SyncOutgoingNode(collection);
-            ops = new SyncOps(collection, true);
-            collection.LocalStore.Revert();
-            rights = collection.GetUserAccess(userId);
-        }
 		
-        return rights;
+		string userID = null;
+
+		try
+		{
+			userID = Thread.CurrentPrincipal.Identity.Name;
+			Log.Spew("Sync session starting for {0}", userID);
+		}
+		catch (Exception e)
+		{
+			// kludge
+			Log.Spew("could not get identity in sync start, error {0}", e.Message);
+			ignoreRights = true;
+		}
+
+		//TODO: where did SyncOperatorRole go?
+		if (ignoreRights || userID == String.Empty)
+			userID = "unknown-user";
+		//	userID = Access.SyncOperatorRole;
+		collection.StoreReference.ImpersonateUser(userID);
+		if (collection.IsAccessAllowed(Access.Rights.ReadOnly))
+		{
+			//TODO: where did SyncOperatorRole go?
+			//collection.StoreReference.ImpersonateUser(Access.SyncOperatorRole);
+			Log.Spew("dredging server for collection '{0}'", collection.Name);
+			new Dredger(collection, true);
+			Log.Spew("done dredging server for collection '{0}'", collection.Name);
+			inNode = new SyncIncomingNode(collection, true);
+			outNode = new SyncOutgoingNode(collection);
+			ops = new SyncOps(collection, true);
+			collection.StoreReference.Revert();
+			rights = collection.GetUserAccess(userID);
+		}
+		
+		return rights;
 	}
 
 	/// <summary>
@@ -168,17 +154,16 @@ public class SynkerServiceA: SyncCollectionService
 	/// <summary>
 	/// deletes specified nodes
 	/// </summary>
-	// TODO: better handle exceptions, return array of failed deletes?
-	public bool DeleteNodes(Nid[] nodes)
+	public bool DeleteNodes(Nid[] nids)
 	{
 		try
 		{
-			Log.Spew("SyncSession.DeleteNodes() Count {0}", nodes.Length);
+			Log.Spew("SyncSession.DeleteNodes() Count {0}", nids.Length);
 
 			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 		
-			ops.DeleteNodes(nodes);
+			ops.DeleteNodes(nids);
 			return true;
 		}
 		catch (Exception e) { Log.Uncaught(e); }
@@ -222,15 +207,15 @@ public class SynkerServiceA: SyncCollectionService
 	/// <summary>
 	/// takes metadata and first chunk of data for a large node
 	/// </summary>
-	public bool WriteLargeNode(NodeStamp stamp, FseChunk[] fseChunks)
+	public bool WriteLargeNode(Node node, ForkChunk[] forkChunks)
 	{
 		try
 		{
 			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
-			inNode.Start(stamp);
-			inNode.WriteChunks(fseChunks);
+			inNode.Start(node);
+			inNode.BlowChunks(forkChunks);
 			return true;
 		}
 		catch (Exception e) { Log.Uncaught(e); }
@@ -238,17 +223,17 @@ public class SynkerServiceA: SyncCollectionService
 	}
 
 	/// <summary>
-	/// takes next chunk of data for a large node, completes node if metadata is given
+	/// takes next chunk of data for a large node, completes node if done
 	/// </summary>
-	public NodeStatus WriteLargeNode(FseChunk[] fseChunks, string metaData)
+	public NodeStatus WriteLargeNode(ForkChunk[] forkChunks, ulong expectedIncarn, bool done)
 	{
 		try
 		{
 			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
-			inNode.WriteChunks(fseChunks);
-			return metaData == null? NodeStatus.InProgess: inNode.Complete(metaData);
+			inNode.BlowChunks(forkChunks);
+			return done? inNode.Complete(expectedIncarn): NodeStatus.InProgess;
 		}
 		catch (Exception e) { Log.Uncaught(e); }
 		return NodeStatus.ServerFailure;
@@ -261,11 +246,11 @@ public class SynkerServiceA: SyncCollectionService
 	{
 		try
 		{
-			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
-				throw new UnauthorizedAccessException("Current user cannot modify this collection");
+			if (!collection.IsAccessAllowed(Access.Rights.ReadOnly))
+				throw new UnauthorizedAccessException("Current user cannot read this collection");
 
 			NodeChunk nc = new NodeChunk();
-			nc.fseChunks = outNode.Start(nid, out nc.stamp, out nc.metaData)? outNode.ReadChunks(maxSize, out nc.totalSize): null;
+			nc.forkChunks = (nc.node = outNode.Start(nid)) != null? outNode.ReadChunks(maxSize, out nc.totalSize): null;
 			return nc;
 		}
 		catch (Exception e) { Log.Uncaught(e); }
@@ -275,12 +260,12 @@ public class SynkerServiceA: SyncCollectionService
 	/// <summary>
 	/// gets next chunks of data for a large node
 	/// </summary>
-	public FseChunk[] ReadLargeNode(int maxSize)
+	public ForkChunk[] ReadLargeNode(int maxSize)
 	{
 		try
 		{
-			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
-				throw new UnauthorizedAccessException("Current user cannot modify this collection");
+			if (!collection.IsAccessAllowed(Access.Rights.ReadOnly))
+				throw new UnauthorizedAccessException("Current user cannot read this collection");
 
 			int unused;
 			return outNode.ReadChunks(maxSize, out unused);
@@ -298,7 +283,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 {
 	//TODO: why is the base master and slave not protected instead of private?
 	SynkerServiceA ss;
-	Collection collection;
+	SyncCollection collection;
 
 	/// <summary>
 	/// public constructor which accepts real or proxy objects specifying master and collection
@@ -306,7 +291,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 	public SynkerWorkerA(SynkerServiceA master, SyncCollection slave): base(master, slave)
 	{
 		ss = master;
-		collection = slave.BaseCollection;
+		collection = slave;
 	}
 
 	static void AddToUpdateList(NodeStamp stamp, ArrayList small, ArrayList large)
@@ -344,7 +329,8 @@ public class SynkerWorkerA: SyncCollectionWorker
 		}
 
 		Log.Spew("-------- starting dredge for collection {0}", collection.Name);
-		collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole);
+		//TODO: what happened to SyncOperatorRole?
+		//collection.StoreReference.ImpersonateUser(Access.SyncOperatorRole);
 		new Dredger(collection, false);
 
 		Log.Spew("-------- completed dredge for collection {0}", collection.Name);
@@ -385,7 +371,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 			Log.Assert(si <= sCount && ci <= cCount);
 			if (si == sCount || ci < cCount && cstamps[ci].CompareTo(sstamps[si]) < 0)
 			{
-				// file ci exists on client but not server
+				// node ci exists on client but not server
 				if (cstamps[ci].masterIncarn == 0
 						&& cstamps[ci].localIncarn != UInt64.MaxValue
 						&& rights != Access.Rights.ReadOnly)
@@ -403,6 +389,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 			}
 			else if (ci == cCount || cstamps[ci].CompareTo(sstamps[si]) > 0)
 			{
+				// node si exists on server but not client
 				Log.Spew("{1} '{0}' exists on server but not client, get it", sstamps[si].name, sstamps[si].id);
 				AddToUpdateList(sstamps[si], smallFromServer, largeFromServer);
 				si++;
@@ -449,12 +436,12 @@ public class SynkerWorkerA: SyncCollectionWorker
 			}
 		}
 
-		// remove files from client
+		// remove deleted nodes from client
 		Nid[] ids = MoveIdsToArray(killOnClient);
 		if (ids != null && ids.Length > 0)
 			ops.DeleteNodes(ids);
 
-		// remove files on server
+		// remove deleted nodes from server
 		ids = MoveIdsToArray(killOnServer);
 		if (ids != null && ids.Length > 0)
 		{
@@ -462,8 +449,17 @@ public class SynkerWorkerA: SyncCollectionWorker
 			ops.DeleteNodes(ids); // remove tombstones from client
 		}
 
-		// push up small files
+		// get small files from server
 		NodeChunk[] updates = null;
+		ids = MoveIdsToArray(smallFromServer);
+		if (ids != null && ids.Length > 0)
+			updates = ss.GetSmallNodes(ids);
+		if (updates != null && updates.Length > 0)
+			ops.PutSmallNodes(updates);
+		updates = null;
+
+		// push up small files
+		updates = null;
 		ids = MoveIdsToArray(smallToServer);
 		if (ids != null && ids.Length > 0)
 			updates = ops.GetSmallNodes(ids);
@@ -479,11 +475,11 @@ public class SynkerWorkerA: SyncCollectionWorker
 					bool updateIncarn = true;
 					foreach (RejectedNode reject in rejects)
 					{
-						if (reject.nid == nc.stamp.id)
+						if (reject.nid == nc.node.ID)
 						{
-							if (reject.status == NodeStatus.FileSystemEntryCollision)
-								ops.DeleteSpuriousNode(reject.nid);
-							else
+							//if (reject.status == NodeStatus.FileSystemEntryCollision)
+							//	ops.DeleteSpuriousNode(reject.nid);
+							//else
 								Log.Spew("skipping update of incarnation for small node {0} due to {1} on server",
 										reject.nid, reject.status);
 							updateIncarn = false;
@@ -491,33 +487,23 @@ public class SynkerWorkerA: SyncCollectionWorker
 						}
 					}
 					if (updateIncarn == true)
-						ops.UpdateIncarn(nc.stamp);
+						ops.UpdateIncarn((Nid)nc.node.ID);
 				}
 			}
 		}
 
-		// get small files from server
-		updates = null;
-		ids = MoveIdsToArray(smallFromServer);
-		if (ids != null && ids.Length > 0)
-			updates = ss.GetSmallNodes(ids);
-		if (updates != null && updates.Length > 0)
-			ops.PutSmallNodes(updates);
-		updates = null;
-
 		// push up large files
 		foreach (Nid nid in largeToServer)
 		{
-			NodeStamp stamp;
-			string metaData;
-			if (!outNode.Start(nid, out stamp, out metaData))
+			Node node;
+			if ((node = outNode.Start(nid)) == null)
 				continue;
 
 			int totalSize;
-			FseChunk[] chunks = outNode.ReadChunks(NodeChunk.MaxSize, out totalSize);
-			if (!ss.WriteLargeNode(stamp, chunks))
+			ForkChunk[] chunks = outNode.ReadChunks(NodeChunk.MaxSize, out totalSize);
+			if (!ss.WriteLargeNode(node, chunks))
 			{
-				Log.Spew("Could not write large node {0}", stamp.name);
+				Log.Spew("Could not write large node {0}", node.Name);
 				continue;
 			}
 			if (chunks == null || totalSize < NodeChunk.MaxSize)
@@ -528,14 +514,15 @@ public class SynkerWorkerA: SyncCollectionWorker
 					chunks = outNode.ReadChunks(NodeChunk.MaxSize, out totalSize);
 					if (chunks == null || totalSize < NodeChunk.MaxSize)
 						break;
-					ss.WriteLargeNode(chunks, null);
+					ss.WriteLargeNode(chunks, 0, false);
 				}
-			NodeStatus status = ss.WriteLargeNode(chunks, metaData);
+			//TODO: fill in expectedIncarn here
+			NodeStatus status = ss.WriteLargeNode(chunks, 0, true);
 			switch (status)
 			{
-				case NodeStatus.Complete: ops.UpdateIncarn(stamp); break;
-				case NodeStatus.FileSystemEntryCollision: ops.DeleteSpuriousNode(nid); break;
-				default: Log.Spew("skipping update of incarnation for large node {0} due to {1}", stamp.name, status); break;
+				case NodeStatus.Complete: ops.UpdateIncarn(nid); break;
+				//case NodeStatus.FileSystemEntryCollision: ops.DeleteSpuriousNode(nid); break;
+				default: Log.Spew("skipping update of incarnation for large node {0} due to {1}", node.Name, status); break;
 			}
 		}
 		largeToServer.Clear();
@@ -544,17 +531,18 @@ public class SynkerWorkerA: SyncCollectionWorker
 		foreach (Nid nid in largeFromServer)
 		{
 			NodeChunk nc = ss.ReadLargeNode(nid, NodeChunk.MaxSize);
-			inNode.Start(nc.stamp);
-			inNode.WriteChunks(nc.fseChunks);
+			inNode.Start(nc.node);
+			inNode.BlowChunks(nc.forkChunks);
 			while (nc.totalSize >= NodeChunk.MaxSize)
 			{
-				nc.fseChunks = ss.ReadLargeNode(NodeChunk.MaxSize);
-				inNode.WriteChunks(nc.fseChunks);
+				nc.forkChunks = ss.ReadLargeNode(NodeChunk.MaxSize);
+				inNode.BlowChunks(nc.forkChunks);
 				nc.totalSize = 0;
-				foreach (FseChunk chunk in nc.fseChunks)
+				foreach (ForkChunk chunk in nc.forkChunks)
 					nc.totalSize += chunk.data.Length;
 			}
-			NodeStatus status = inNode.Complete(nc.metaData);
+			//TODO: fill in expectedIncarn here
+			NodeStatus status = inNode.Complete(0);
 			switch (status)
 			{
 				case NodeStatus.Complete: break;

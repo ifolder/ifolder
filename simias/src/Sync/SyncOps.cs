@@ -32,9 +32,11 @@ using Simias;
 namespace Simias.Sync
 {
 
+//---------------------------------------------------------------------------
 /// <summary>
 /// valid states of a node update attempt
 /// TODO: requiring a comment on every enum member is counter-productive. How to fix?
+///       Do we even still need this enum?
 /// </summary>
 [Serializable]
 public enum NodeStatus
@@ -46,7 +48,7 @@ public enum NodeStatus
 	UpdateCollision,
 
 	/// <summary> node update was aborted due to other node referencing same file </summary>
-	FileSystemEntryCollision,
+	//FileSystemEntryCollision,
 
 	/// <summary> node update was probably unsuccessful, unhandled exception on the server </summary>
 	ServerFailure,
@@ -76,6 +78,9 @@ public struct Nid
 
 	/// <summary> implement some convenient operator overloads </summary>
 	public static explicit operator Nid(string s) { return new Nid(s); }
+
+	/// <summary> implement some convenient operator overloads </summary>
+	public static implicit operator string(Nid n) { return n.g; }
 
 	/// <summary> implement some convenient operator overloads </summary>
 	public override bool Equals(object o) { return CompareTo(o) == 0; }
@@ -124,16 +129,14 @@ public struct NodeStamp: IComparable
 	internal ulong localIncarn, masterIncarn;
 
 	// total size of all streams
-	internal ulong streamsSize;
+	internal long streamsSize;
 
 	internal string name; //just for debug
 
 	/// <summary> implement some convenient operator overloads </summary>
 	public int CompareTo(object obj)
 	{
-		if (obj == null)
-			Log.Spew("obj is null");
-		if (!(obj is NodeStamp))
+		if (obj == null || !(obj is NodeStamp))
 			throw new ArgumentException("object is not NodeStamp");
 		return id.CompareTo(((NodeStamp)obj).id);
 	}
@@ -141,13 +144,14 @@ public struct NodeStamp: IComparable
 
 //---------------------------------------------------------------------------
 /// <summary>
-/// a chunk of data that is part of a node data stream property
+/// a chunk of data from a particular data stream (fork) of a node
 /// </summary>
 [Serializable]
-public class FseChunk
+public struct ForkChunk
 {
-	internal string relativePath = null;
-	internal byte[] data = null; // if null, IsDirectory
+	internal const string DataForkName = "data";
+	internal string name;
+	internal byte[] data;
 }
 
 //---------------------------------------------------------------------------
@@ -158,10 +162,10 @@ public class FseChunk
 public struct NodeChunk
 {
 	internal const int MaxSize = 128 * 1024;
-	internal NodeStamp stamp;
-	internal string metaData;
+	internal Node node;
+	internal ulong expectedIncarn;
 	internal int totalSize;
-	internal FseChunk[] fseChunks;
+	internal ForkChunk[] forkChunks;
 }
 
 
@@ -187,80 +191,79 @@ public struct RejectedNode
 /// </summary>
 internal class SyncOutgoingNode
 {
+	//internal string[] forkNameList;
 	Collection collection;
-
-	class fseOut { public string relativePath = null; public Stream stream = null; }
-	ArrayList fseList = null;
+	class Fork { public string name; public Stream stream; };
+	ArrayList forkList;
 
 	public SyncOutgoingNode(Collection collection)
 	{
 		this.collection = collection;
 	}
 
-	public bool Start(Nid nid, out NodeStamp stamp, out string metaData)
+	public Node Start(Nid nid)
 	{
 		nid.Validate();
-		fseList = new ArrayList();
-		stamp = new NodeStamp();
-		metaData = null;
-		Node node = collection.GetNodeById(nid.ToString());
+		Node node = collection.GetNodeByID(nid);
+		forkList = null;
 		if (node == null)
 		{
 			Log.Spew("ignoring attempt to start outgoing sync for non-existent node {0}", nid);
-			return false;
+			return null;
 		}
 
-		metaData = collection.LocalStore.ExportSingleNodeToXml(collection, nid.ToString()).OuterXml;
-		stamp.id = nid;
-		stamp.localIncarn = node.LocalIncarnation;
-		stamp.masterIncarn = node.MasterIncarnation;
-		stamp.name = node.Name;
-		foreach (FileSystemEntry fse in node.GetFileSystemEntryList())
+		BaseFileNode bfn = node as BaseFileNode;
+		if (bfn != null)
 		{
-			fseOut fseo = new fseOut();
-			fseo.relativePath = fse.RelativePath;
-			fseo.stream = fse.IsFile? ((FileEntry)fse).Open(FileMode.Open, FileAccess.Read, FileShare.Read): null;
-			fseList.Add(fseo);
+			/* TODO: handle multiple forks (streams), EAs, etc. For right now
+			 * this is just a guess at how to do it. The idea is that we loop
+			 * though all known streams, read them from the local file system
+			 * or from those stored in the collection store area
+			 * (similar to StoreFiles) if not supported by the local file system.
+			 */
+			forkList = new ArrayList();
+			string forkName = ForkChunk.DataForkName;
+			//foreach (string forkName in forkNameList)
+			{
+				Fork fork = new Fork();
+				fork.name = forkName;
+				fork.stream = File.Open(bfn.GetFullPath(collection), FileMode.Open, FileAccess.Read, FileShare.Read);
+				forkList.Add(fork);
+			}
 		}
-		return true;
+		return node;
 	}
 
-	public FseChunk[] ReadChunks(int maxSize, out int totalSize)
+	public ForkChunk[] ReadChunks(int maxSize, out int totalSize)
 	{
 		if (maxSize < 4096)
 			maxSize = 4096;
 		ArrayList chunks = new ArrayList();
 		totalSize = 0;
-		foreach (fseOut fseo in fseList)
+		foreach (Fork fork in forkList)
 		{
-			if (fseo.relativePath == null)
+			if (fork.name == null)
 				continue;
 
-			FseChunk chunk = new FseChunk();
-			chunk.relativePath = fseo.relativePath;
-			if (fseo.stream == null)
-				fseo.relativePath = null;
-			else
+			ForkChunk chunk = new ForkChunk();
+			chunk.name = fork.name;
+			long remaining = fork.stream.Length - fork.stream.Position;
+			int chunkSize = remaining < maxSize? (int)remaining: maxSize;
+			chunk.data = new byte[chunkSize];
+			int bytesRead = fork.stream.Read(chunk.data, 0, chunkSize);
+			Log.Assert(bytesRead == chunkSize);
+			if (chunkSize < maxSize)
 			{
-				long remaining = fseo.stream.Length - fseo.stream.Position;
-				int chunkSize = remaining < maxSize? (int)remaining: maxSize;
-				byte[] buffer = new byte[chunkSize];
-				int bytesRead = fseo.stream.Read(buffer, 0, buffer.Length);
-				Log.Assert(bytesRead == buffer.Length);
-				if (chunkSize < maxSize)
-				{
-					fseo.stream.Close();
-					fseo.stream = null;
-					fseo.relativePath = null;
-				}
-				chunk.data = buffer;
-				totalSize += chunkSize;
+				fork.stream.Close();
+				fork.stream = null;
+				fork.name = null;
 			}
+			totalSize += chunkSize;
 			chunks.Add(chunk);
 			if (totalSize >= maxSize)
 				break;
 		}
-		return (FseChunk[])chunks.ToArray(typeof(FseChunk));
+		return (ForkChunk[])chunks.ToArray(typeof(ForkChunk));
 	}
 }
 
@@ -274,12 +277,11 @@ internal class SyncIncomingNode
 {
 	Collection collection;
 	bool onServer;
-
-	int streamCount = 0;
-	NodeStamp stamp;
-
-	class FseIn { public string name = null, relName = null; public Stream stream = null; public FileInfo info = null; }
-	ArrayList fseList = null;
+	Node node;
+	FileInfo fileInfo;
+	class Fork { public string name; public Stream stream; };
+	ArrayList forkList = null;
+	string parentPath = null;
 
 	public SyncIncomingNode(Collection collection, bool onServer)
 	{
@@ -289,122 +291,124 @@ internal class SyncIncomingNode
 
 	void CleanUp()
 	{
-		if (fseList != null)
-			foreach (FseIn fsei in fseList)
-			{
-				if (fsei.stream != null)
-					fsei.stream.Close();
-				if (fsei.info != null)
-					fsei.info.Delete();
-			}
-		fseList = null;
+		if (forkList != null)
+			foreach (Fork fork in forkList)
+				if (fork.stream != null)
+					fork.stream.Close();
+		forkList = null;
+		if (fileInfo != null)
+			fileInfo.Delete();
+		fileInfo = null;
+		parentPath = null;
 	}
 
 	~SyncIncomingNode() { CleanUp(); }
 
-	public void Start(NodeStamp stamp)
+	public void Start(Node node)
 	{
 		CleanUp();
-		this.stamp = stamp;
-		streamCount = 0;
-		fseList = new ArrayList();
+		this.node = node;
+		if (collection.IsType(node, typeof(DirNode).Name) && !((DirNode)node).IsRoot
+				|| collection.IsType(node, typeof(FileNode).Name))
+		{
+			Property p = node.Properties.GetSingleProperty(PropertyTags.Parent);
+			Relationship rship = p == null? null: (p.Value as Relationship);
+			if (rship == null)
+				throw new ApplicationException("file or dir node has no parent");
+			DirNode pn = collection.GetNodeByID(rship.NodeID) as DirNode;
+			if (pn == null)
+				throw new ApplicationException("parent is not DirNode");
+			parentPath = pn.GetFullPath(collection);
+		}
+		else
+			parentPath = collection.ManagedPath;
 	}
 
-	public void WriteChunks(FseChunk[] chunks)
+	public void BlowChunks(ForkChunk[] chunks)
 	{
-		foreach (FseChunk chunk in chunks)
+		foreach (ForkChunk chunk in chunks)
 		{
-			string name = Path.Combine(collection.DocumentRoot.LocalPath, chunk.relativePath);
 			bool done = false;
 
-			foreach (FseIn fsei in fseList)
-				if (name == fsei.name)
-				{
-					if (fsei.stream != null)
-						fsei.stream.Write(chunk.data, 0, chunk.data.Length);
-					else
-						Log.Assert(fsei.stream != null);
-					done = true;
-					break;
-				}
+			if (forkList == null)
+				forkList = new ArrayList();
+			else
+				foreach (Fork fork in forkList)
+					if (chunk.name == fork.name)
+					{
+						fork.stream.Write(chunk.data, 0, chunk.data.Length);
+						done = true;
+						break;
+					}
+
 			if (!done)
 			{
-				FseIn fsei = new FseIn();
-				fsei.name = name;
-				fsei.relName = chunk.relativePath;
-				if (chunk.data != null)
-				{
-					string dirName = Path.GetDirectoryName(name);
-					if (dirName.Length > 1)
-						Directory.CreateDirectory(dirName);
-					fsei.info = new FileInfo(Path.Combine(dirName, String.Format(".simias.{0}.{1}", stamp.id, ++streamCount)));
-					fsei.stream = fsei.info.Open(FileMode.CreateNew, FileAccess.Write, FileShare.None);
-					fsei.stream.Write(chunk.data, 0, chunk.data.Length);
-				}
-				fseList.Add(fsei);
+				/* TODO: handle multiple forks (streams), EAs, etc. For right now
+				 * this is just a guess at how to do it, stubbed to support
+				 * SyncOutgoingNode.
+				 */
+				Log.Assert(chunk.name == ForkChunk.DataForkName);
+
+				if (fileInfo == null)
+					fileInfo = new FileInfo(Path.Combine(parentPath, String.Format(".simias.{0}", node.ID)));
+				Fork fork = new Fork();
+				fork.name = chunk.name;
+				fork.stream = fileInfo.Open(FileMode.CreateNew, FileAccess.Write, FileShare.None);
+				fork.stream.Write(chunk.data, 0, chunk.data.Length);
+				forkList.Add(fork);
 			}
 		}
 	}
 
-
-	public NodeStatus Complete(string metaData)
+	public NodeStatus Complete(ulong expectedIncarn)
 	{
-		XmlDocument doc = new XmlDocument();
-		doc.LoadXml(metaData);
-		Log.Spew("importing {0} {1} to collection {2}", stamp.name, stamp.id, collection.Name);
-		Node node = collection.LocalStore.ImportSingleNodeFromXml(collection, doc);
-		Log.Assert(node.Id == stamp.id.ToString());
-		if (onServer)
+		Log.Spew("importing {0} {1} to collection {2}", node.Name, node.ID, collection.Name);
+
+		/* TODO: this is a problem because we cannot lock curNode until commit
+		 *       could ImportNode do this for us?
+		 */
+		Node curNode = collection.GetNodeByID(node.ID);
+		if (curNode != null && curNode.LocalIncarnation != expectedIncarn)
 		{
-			if (node.LocalIncarnation != stamp.masterIncarn)
+			if (onServer)
 			{
 				Log.Spew("Rejecting update for node {0} due to update collision on server", node.Name);
 				CleanUp();
 				return NodeStatus.UpdateCollision;
 			}
-		}
-		else if (node.LocalIncarnation != node.MasterIncarnation)
+			//TODO: handle collision here
 			Log.Spew("Collision: overwriting local node {0} with node from server", node.Name);
-
-		foreach (FseIn fsei in fseList)
-			foreach (Node n in collection.LocalStore.GetNodesAssociatedWithPath(collection.Id, fsei.relName))
-				if ((Nid)n.Id != (Nid)node.Id)
-				{
-					Log.Spew("Rejecting update for node {0} due to FileSystemEntry collision on server", node.Name);
-					CleanUp();
-					return NodeStatus.FileSystemEntryCollision;
-				}
-
-		foreach (FseIn fsei in fseList)
-		{
-			if (fsei.stream == null)
-			{
-				Log.Spew("creating directory {0}", fsei.name);
-				Directory.CreateDirectory(fsei.name);
-			}
-			else
-			{
-				fsei.stream.Close();
-				fsei.stream = null;
-				Log.Spew("placing file {0}", fsei.name);
-				File.Delete(fsei.name);
-				fsei.info.MoveTo(fsei.name);
-				fsei.info = null;
-			}
 		}
 
-		foreach (FileSystemEntry fse in node.GetFileSystemEntryList())
+		//TODO: check here for whether the proposed file name is available, i.e. make current and proposed LocalFileName
+		string path = Path.Combine(parentPath, node.Name);
+		if (collection.IsType(node, typeof(DirNode).Name))
+			Directory.CreateDirectory(path);
+		else if (!collection.IsType(node, typeof(BaseFileNode).Name))
+			Log.Assert(forkList == null);
+		else
 		{
-			if (fse.IsFile)
+			foreach (Fork fork in forkList)
 			{
-				File.SetLastWriteTime(fse.FullName, fse.LastWriteTime);
-				File.SetCreationTime(fse.FullName, fse.CreationTime);
-				//File.SetLastAccessTime(fse.FullName, fse.LastAccessTime);
+				fork.stream.Close();
+				fork.stream = null;
 			}
+			Log.Spew("placing file {0}", path);
+			File.Delete(path); //TODO: delete current LocalFileName
+			fileInfo.MoveTo(path); //TODO: moved to proposed LocalFileName
+			FileNode fnode = (FileNode)node;
+			fileInfo.LastWriteTime = fnode.LastWriteTime;
+			fileInfo.CreationTime = fnode.CreationTime;
+			fileInfo = null;
 		}
 
-		Log.Assert(stamp.localIncarn > node.MasterIncarnation);
-		return node.UpdateIncarnation(stamp.localIncarn)? NodeStatus.Complete: NodeStatus.UpdateCollision;
+		/* TODO: here is where we should commit or abort,
+		 *     returning NodeStatus.Complete or NodeStatus.UpdateCollision
+		 */
+		collection.ImportNode(node);
+		node.IncarnationUpdate = node.LocalIncarnation;
+		collection.Commit(node);
+		return NodeStatus.Complete;
 	}
 }
 
@@ -429,18 +433,24 @@ internal class SyncOps
 
 		foreach (Node node in collection)
 		{
-			bool tombstone = node.IsTombstone;
+			bool tombstone = collection.IsTombstone(node);
 			if (onServer && tombstone)
 				continue;
 			NodeStamp stamp = new NodeStamp();
 			stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
 			stamp.masterIncarn = node.MasterIncarnation;
-			stamp.id = new Nid(node.Id);
+			stamp.id = new Nid(node.ID);
 			stamp.streamsSize = 0;
 			stamp.name = node.Name;
-			foreach (FileSystemEntry fse in node.GetFileSystemEntryList())
-				if (fse.IsFile)
-					stamp.streamsSize += (ulong)((FileEntry)fse).Length;
+			BaseFileNode bfn = node as BaseFileNode;
+
+			//TODO: another place to handle multiple forks
+			if (bfn != null)
+			{
+				FileInfo fi = new FileInfo(bfn.GetFullPath(collection));
+				stamp.streamsSize += fi.Length;
+			}
+			
 			stampList.Add(stamp);
 		}
 
@@ -449,21 +459,37 @@ internal class SyncOps
 		return (NodeStamp[])stampList.ToArray(typeof(NodeStamp));
 	}
 
+
+	void DeleteNode(Node node)
+	{
+		Node[] deleted = collection.Delete(node, PropertyTags.Parent);
+		collection.Commit(deleted);
+		if (onServer)
+		{
+			foreach (Node del in deleted)
+				collection.Delete(del); // don't leave a tombstone on the server
+			collection.Commit(deleted);
+		}
+	}
+
 	/// <summary>
 	/// deletes a list of nodes from a collection and removes the tombstones
 	/// </summary>
-	public void DeleteNodes(Nid[] nodes)
+	public void DeleteNodes(Nid[] nids)
 	{
-		foreach (Nid nid in nodes)
+		foreach (Nid nid in nids)
 		{
-			Node node = collection.GetNodeById(nid.ToString());
+			Node node = collection.GetNodeByID(nid);
 			if (node == null)
 				Log.Spew("ignoring attempt to delete non-existent node {0}", nid);
 			else
 			{
-				foreach(FileSystemEntry fse in node.GetFileSystemEntryList())
-					fse.Delete(true);
-				node.Delete(true).Delete(); // delete node and tombstone
+				//TODO: another place to handle multiple forks
+				BaseFileNode bfn = node as BaseFileNode;
+				if (bfn != null)
+					File.Delete(bfn.GetFullPath(collection));
+
+				DeleteNode(node);
 			}
 		}
 	}
@@ -473,13 +499,13 @@ internal class SyncOps
 	/// </summary>
 	public void DeleteSpuriousNode(Nid nid)
 	{
-		Node node = collection.GetNodeById(nid.ToString());
+		Node node = collection.GetNodeByID(nid);
 		if (node == null)
 			Log.Spew("ignoring attempt to delete non-existent spurious node {0}", nid);
 		else
 		{
 			Log.Spew("deleting spurious node {0}", node.Name);
-			node.Delete(true).Delete(); // delete node and tombstone
+			DeleteNode(node);
 		}
 	}
 
@@ -488,31 +514,31 @@ internal class SyncOps
 	/// </summary>
 	public NodeChunk[] GetSmallNodes(Nid[] nids)
 	{
+		SyncOutgoingNode ogn = new SyncOutgoingNode(collection);
+		NodeChunk[] chunks = new NodeChunk[nids.Length];
 		uint i = 0;
-		SyncOutgoingNode outNode = new SyncOutgoingNode(collection);
-		NodeChunk[] nodes = new NodeChunk[nids.Length];
 		foreach (Nid nid in nids)
 		{
-			if (outNode.Start(nid, out nodes[i].stamp, out nodes[i].metaData))
+			if ((chunks[i].node = ogn.Start(nid)) != null)
 			{
-				nodes[i].fseChunks = outNode.ReadChunks(NodeChunk.MaxSize, out nodes[i].totalSize);
-				if (nodes[i].fseChunks == null)
-					Log.Assert(nodes[i].stamp.streamsSize == 0);
-				else if (nodes[i].totalSize >= NodeChunk.MaxSize)
+				chunks[i].forkChunks = ogn.ReadChunks(NodeChunk.MaxSize, out chunks[i].totalSize);
+				if (chunks[i].forkChunks == null)
+					Log.Assert(chunks[i].totalSize == 0);
+				else if (chunks[i].totalSize >= NodeChunk.MaxSize)
 				{
 					/* the file grew larger than a SmallNode should handle,
 					 * tell client to add this to large node list
 					 */
-					nodes[i].fseChunks = null;
+					chunks[i].forkChunks = null;
 				}
 			}
 			++i;
 		}
-		return nodes;
+		return chunks;
 	}
 
 	/// <summary>
-	/// returns nodes were not updated due to collisions
+	/// returns nodes were not updated
 	/// </summary>
     public RejectedNode[] PutSmallNodes(NodeChunk[] nodeChunks)
 	{
@@ -521,36 +547,44 @@ internal class SyncOps
 		Log.Spew("PutSmallNodes() {0}", nodeChunks.Length);
 		foreach (NodeChunk nc in nodeChunks)
 		{
-			if (!onServer && nc.fseChunks == null && nc.totalSize >= NodeChunk.MaxSize)
+			if (nc.forkChunks == null && nc.totalSize >= NodeChunk.MaxSize)
 			{
-				Log.Spew("skipping update of node {0} because server requests retry", nc.stamp.name);
+				Log.Spew("skipping update of node {0}, retry next sync", nc.node.Name);
 				continue;
 			}
-			inNode.Start(nc.stamp);
-			inNode.WriteChunks(nc.fseChunks);
-			NodeStatus status = inNode.Complete(nc.metaData);
+			inNode.Start(nc.node);
+			inNode.BlowChunks(nc.forkChunks);
+			NodeStatus status = inNode.Complete(nc.expectedIncarn);
 			if (status != NodeStatus.Complete)
-				rejects.Add(new RejectedNode(nc.stamp.id, status));
+				rejects.Add(new RejectedNode((Nid)nc.node.ID, status));
 		}
 		return (RejectedNode[])rejects.ToArray(typeof(RejectedNode));
 	}
 
 	/// <summary>
 	/// only called on the client after the node has been updated on the
-	/// server. Just sets the MasterIncarnation
+	/// server. Just sets the MasterIncarnation to the LocalIncarnation
 	/// </summary>
-	public void UpdateIncarn(NodeStamp stamp)
+	public void UpdateIncarn(Nid nid)
 	{
 		Log.Assert(!onServer);
 		for (bool done = false; !done;)
 		{
-			Node node = collection.GetNodeById(stamp.id.ToString());
-			Log.Assert(node.MasterIncarnation == stamp.masterIncarn);
-			bool wasUpdatedAgain = stamp.localIncarn != node.LocalIncarnation;
-			if (!(done = node.UpdateIncarnation(stamp.localIncarn)))
-				node.Rollback();
-			else if (wasUpdatedAgain)
-				node.Commit(); // increment LocalIncarnation
+			Node node = collection.GetNodeByID(nid);
+
+			//TODO: review this
+
+			//NOTE: caller already has node, why not use it?
+			
+			//Log.Assert(node.MasterIncarnation == stamp.masterIncarn);
+			//bool wasUpdatedAgain = stamp.localIncarn != node.LocalIncarnation;
+			//if (!(done = node.UpdateIncarnation(stamp.localIncarn)))
+			//	node.Rollback();
+			//else if (wasUpdatedAgain)
+			//	node.Commit(); // increment LocalIncarnation
+
+			node.IncarnationUpdate = node.LocalIncarnation;
+			collection.Commit(node);
 		}
 	}
 }

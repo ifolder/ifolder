@@ -59,8 +59,9 @@ public class FileInviter
 	// TODO: is the following path comparison correct? should it be case insensitive?
 	internal static Collection FindCollection(Store store, Uri docRoot)
 	{
-		foreach (Collection c in store.GetCollectionsByType(Dredger.NodeTypeDir))
-			if (c.DocumentRoot != null && c.DocumentRoot.LocalPath == docRoot.LocalPath)
+		DirNode dn;
+		foreach (Collection c in store)
+			if ((dn = c.GetRootDirectory()) != null && dn.GetFullPath(c) == docRoot.LocalPath)
 				return c;
 		return null;
 	}
@@ -77,37 +78,31 @@ public class FileInviter
 		Invitation invitation = new Invitation(fileName);
 		invitation.RootPath = docRootParent;
 
-		if (invitation.CollectionType != Dredger.NodeTypeDir)
-		{
-			Log.Error("This utility only handles invitations to collections of type {0}", Dredger.NodeTypeDir);
-			Log.Error("This invitation is of type {0}", invitation.CollectionType);
-			return false;
-		}
-
 		Uri docRoot = new Uri(Path.Combine(Path.GetFullPath(docRootParent), invitation.CollectionName));
 		Collection c = FindCollection(store, docRoot);
 		if (c != null)
 		{
-			if ((Nid)c.Id == (Nid)invitation.CollectionId)
+			if ((Nid)c.ID == (Nid)invitation.CollectionId)
 				Log.Info("ignoring duplicate invitation for folder {0}", docRoot.LocalPath);
 			else
 				Log.Error("ignoring invitation, folder {0} already linked to a different collection", docRoot.LocalPath);
 			return false;
 		}
 
-		if ((c = store.GetCollectionById(invitation.CollectionId)) != null)
+		if ((c = store.GetCollectionByID(invitation.CollectionId)) != null)
 		{
-			Log.Warn("Collection already exists rooted in different local folder", c.DocumentRoot.LocalPath);
+			Log.Warn("Collection already exists rooted in different local folder");
 			return false;
 		}
 
+		//TODO: what happened to this commit() method? Does SyncCollection do this now?
 		// add the secret to the current identity chain
-		store.CurrentIdentity.CreateAlias(invitation.Domain, invitation.Identity, invitation.PublicKey);
-		store.CurrentIdentity.Commit();
+		//store.CurrentIdentity.CreateAlias(invitation.Domain, invitation.Identity, invitation.PublicKey);
+		//store.CurrentIdentity.Commit();
 
 		// add the invitation information to the store collection
 		
-		SyncCollection sc = syncStore.CreateCollection(invitation);
+		SyncCollection sc = new SyncCollection(store, invitation);
 		sc.Commit();
 		Log.Spew("Created new client collection for {0}, id {1}", docRoot.LocalPath, sc.ID);
 		return true;
@@ -126,16 +121,19 @@ public class FileInviter
 		{
 			DirectoryInfo di = new DirectoryInfo(docRoot.LocalPath);
 			di.Create();
-			c = store.CreateCollection(di.Name, Dredger.NodeTypeDir, docRoot);
+			c = new Collection(store, di.Name);
+			DirNode dn = new DirNode(c, (DirNode)null, di.Name);
+			c.Commit(c);
+			c.Commit(dn);
 			sc = new SyncCollection(c);
 			UriBuilder builder = new UriBuilder("http", host, port);
 			sc.MasterUri = builder.Uri;
 			sc.Commit();
-			Log.Assert(c.Id == c.CollectionNode.Id && c.Id == sc.ID);
-			Log.Spew("Created new master collection for {0}, id {1}, {2}:{3}", docRoot.LocalPath, c.Id, sc.MasterUri.Host, sc.MasterUri.Port);
+			Log.Spew("Created new master collection for {0}, id {1}, {2}:{3}",
+					docRoot.LocalPath, c.ID, sc.MasterUri.Host, sc.MasterUri.Port);
 		}
-		Invitation invitation = sc.CreateInvitation(user == null? store.CurrentUser: user);
-		invitation.Domain = store.DomainName;
+		Invitation invitation = sc.CreateInvitation(user == null? store.CurrentUserGuid: user);
+		invitation.Domain = store.LocalDomain;
 		invitation.Save(fileName);
 		return true;
 	}
@@ -161,9 +159,9 @@ public class CmdService: MarshalByRefObject
 	{
 		try
 		{
-			SyncStore store = new SyncStore(storeLocation.LocalPath);
-			SyncCollection c = store.OpenCollection(collectionId);
-			return c == null? null: new SynkerServiceA(c, true);
+			Store store = new Store(new Configuration(storeLocation.LocalPath));
+			Collection c = new Collection(store, collectionId);
+			return c == null? null: new SynkerServiceA(new SyncCollection(c), true);
 		}
 		catch (Exception e) { Log.Uncaught(e); }
 		return null;
@@ -272,8 +270,7 @@ public class CmdClient
 	/// </summary>
 	public static bool RunOnce(Uri storeLocation, Uri docRoot, string serverStoreLocation, bool useTCP)
 	{
-		Store store = Store.Connect(new Configuration(
-				storeLocation == null? null: storeLocation.LocalPath));
+		Store store = new Store(new Configuration(storeLocation == null? null: storeLocation.LocalPath));
 		Collection c = FileInviter.FindCollection(store, docRoot);
 		if (c == null)
 			return false;
@@ -281,10 +278,10 @@ public class CmdClient
 		SyncCollection csc = new SyncCollection(c);
 		if (serverStoreLocation != null)
 		{
-			SyncStore servStore = new SyncStore(serverStoreLocation);
-			SyncCollection servCollection = servStore.OpenCollection(csc.ID);
+			Store servStore = new Store(new Configuration(serverStoreLocation));
+			Collection servCollection = new Collection(servStore, csc.ID);
 			Log.Spew("server collection {0}", servCollection == null? "null": servCollection.ID);
-			SynkerServiceA ssa = new SynkerServiceA(servCollection);
+			SynkerServiceA ssa = new SynkerServiceA(new SyncCollection(servCollection));
 			new SynkerWorkerA(ssa, csc).DoSyncWork();
 		}
 		else

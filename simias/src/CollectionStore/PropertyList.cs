@@ -189,7 +189,7 @@ namespace Simias.Storage
 			AddNodeProperty( mvProp );
 
 			Property lvProp = new Property( PropertyTags.LocalIncarnation, ( ulong )0 );
-			lvProp.LocalProperty = true;
+			//lvProp.LocalProperty = true;
 			AddNodeProperty( lvProp );
 		}
 
