@@ -40,29 +40,20 @@ namespace Simias.Event
 		/// </summary>
 		static void Main(string[] args)
 		{
-			string mutexName;
 			string confPath;
-			if (args.Length != 2)
+			if (args.Length != 1)
 			{
 				return;
 			}
 			else
 			{
 				confPath = args[0];
-				mutexName = args[1];
 			}
 
 			ManualResetEvent shutdownEvent = new ManualResetEvent(false);
 			EventBroker.RegisterService(shutdownEvent, new Configuration(args[0]));
-			bool createdMutex;
-			Mutex mutex = new Mutex(true, mutexName, out createdMutex);
-			if (!createdMutex)
-			{
-				mutex.WaitOne();
-			}
 			// Wait (forever) until we are killed.
 			shutdownEvent.WaitOne();
-			mutex.Close();
 		}
 	}
 }

@@ -59,7 +59,8 @@ namespace Simias.Event
 		[TestFixtureSetUp]
 		public void Init()
 		{
-			EventBroker.overrideConfig = true;
+			EventBroker.StartService(conf);
+			Thread.Sleep(500);
 			publish();
 			subscribe();
 		}
@@ -97,7 +98,6 @@ namespace Simias.Event
 			if (publisher != null)
 			{
 				publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceControl.Shutdown));
-				//publisher.Dipose();
 			}
 		}
 
@@ -442,7 +442,7 @@ namespace Simias.Event
 		public void ServiceControlTest()
 		{
 			publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceControl.Reconfigure));
-			publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceControl.Shutdown));
+			//publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceControl.Shutdown));
 		}
 
 		#endregion
@@ -483,7 +483,6 @@ namespace Simias.Event
 			}
 
 			EventsTests t = new EventsTests();
-			EventBroker.overrideConfig = true;
 			switch (args[0])
 			{
 				case "P":

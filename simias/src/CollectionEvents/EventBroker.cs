@@ -63,7 +63,9 @@ namespace Simias.Event
 		Queue eventQueue;
 		ManualResetEvent queued;
 		static ManualResetEvent shutdown;
+		static ArrayList mutexList = new ArrayList();
 		static bool serviceRegistered = false;
+		static bool clientRegistered = false;
 
 		#endregion
 
@@ -199,69 +201,65 @@ namespace Simias.Event
 		private const string CFG_AssemblyKey = "Assembly";
 		private const string CFG_Assembly = "CsEventBroker";
 		private const string CFG_UriKey = "Uri";
-#if DynamicPort
 		private const string CFG_Uri = "tcp://localhost/EventBroker";
-#else
-		private const string CFG_Uri = "tcp://localhost:7782/EventBroker";
-#endif
 
-		public static bool overrideConfig = false;
-
-		static bool RunInProcess()
-		{
-			if (overrideConfig == true)
-				return false;
-			else
-				return true;
-		}
-		
 		/// <summary>
 		/// Method to register a client channel.
 		/// </summary>
-		public static void RegisterClientChannel(Configuration conf)
+		public static bool RegisterClientChannel(Configuration conf)
 		{
 			lock (typeof( EventBroker))
 			{
-				// Check if we should run in process.
-				if (!RunInProcess())
+				if (!clientRegistered)
 				{
-					startService(conf);
-					string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
-					bool registered = false;
-
-					WellKnownClientTypeEntry [] cta = RemotingConfiguration.GetRegisteredWellKnownClientTypes();
-					foreach (WellKnownClientTypeEntry ct in cta)
+					// Check to see if the service has started.
+					string s = serviceMutexName(conf);
+					Mutex mutex = new Mutex(false, s);
+					if (!mutex.WaitOne(0, false))
 					{
-						Type t = typeof(EventBroker);
-						Type t1 = ct.ObjectType;
-						if (Type.Equals(t, t1))
+						string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
+						bool registered = false;
+
+						WellKnownClientTypeEntry [] cta = RemotingConfiguration.GetRegisteredWellKnownClientTypes();
+						foreach (WellKnownClientTypeEntry ct in cta)
 						{
-							registered = true;
-							break;
+							Type t = typeof(EventBroker);
+							Type t1 = ct.ObjectType;
+							if (Type.Equals(t, t1))
+							{
+								registered = true;
+								break;
+							}
+						}
+						if (!registered)
+						{
+							Hashtable props = new Hashtable();
+							props["port"] = 0;
+
+							BinaryServerFormatterSinkProvider
+								serverProvider = new BinaryServerFormatterSinkProvider();
+							BinaryClientFormatterSinkProvider
+								clientProvider = new BinaryClientFormatterSinkProvider();
+#if !MONO
+							serverProvider.TypeFilterLevel =
+								System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
+#endif
+							TcpChannel chan = new
+								TcpChannel(props,clientProvider,serverProvider);
+							ChannelServices.RegisterChannel(chan);
+
+							//ChannelServices.RegisterChannel(new TcpChannel());
+							RemotingConfiguration.RegisterWellKnownClientType(typeof(EventBroker), serviceUri);
+							clientRegistered = true;
 						}
 					}
-					if (!registered)
+					else
 					{
-						Hashtable props = new Hashtable();
-						props["port"] = 0;
-
-						BinaryServerFormatterSinkProvider
-							serverProvider = new BinaryServerFormatterSinkProvider();
-						BinaryClientFormatterSinkProvider
-							clientProvider = new BinaryClientFormatterSinkProvider();
-#if !MONO
-						serverProvider.TypeFilterLevel =
-							System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
-#endif
-						TcpChannel chan = new
-							TcpChannel(props,clientProvider,serverProvider);
-						ChannelServices.RegisterChannel(chan);
-
-						//ChannelServices.RegisterChannel(new TcpChannel());
-						RemotingConfiguration.RegisterWellKnownClientType(typeof(EventBroker), serviceUri);
+						mutex.ReleaseMutex();
 					}
 				}
 			}
+			return clientRegistered;
 		}
 
 		/// <summary>
@@ -274,11 +272,7 @@ namespace Simias.Event
 			Uri serviceUri = new Uri (serviceString);
 			
 			Hashtable props = new Hashtable();
-#if DynamicPort
 			props["port"] = 0; //serviceUri.Port;
-#else		
-			props["port"] = serviceUri.Port;
-#endif
 			props["rejectRemoteRequests"] = true;
 
 			BinaryServerFormatterSinkProvider
@@ -296,56 +290,51 @@ namespace Simias.Event
 			RemotingConfiguration.RegisterWellKnownServiceType(
 				typeof(EventBroker), serviceUri.AbsolutePath.TrimStart('/'), WellKnownObjectMode.Singleton);
 
-			string [] s;
-#if DynamicPort
-			s = chan.GetUrlsForUri(serviceUri.AbsolutePath.TrimStart('/'));
-			if (s.Length == 1)
+			string [] uriList = chan.GetUrlsForUri(serviceUri.AbsolutePath.TrimStart('/'));
+			if (uriList.Length == 1)
 			{
-				conf.Set(CFG_Section, CFG_UriKey, s[0]);
+				conf.Set(CFG_Section, CFG_UriKey, uriList[0]);
 			}
-#else
-			conf.Set(CFG_Section, CFG_UriKey, serviceUri.ToString());
-			Console.WriteLine(serviceUri.AbsolutePath);
-#endif
-			serviceRegistered = true;
+			
+			string s = serviceMutexName(conf);
+			Mutex mutex = new Mutex(false, s);
+			if (mutex.WaitOne(3000, false))
+			{
+				serviceRegistered = true;
+				//mutexList.Add(mutex);
+			}
 		}
 	
-		private static void startService(Configuration conf)
+		public static void StartService(Configuration conf)
 		{
-			bool createdMutex;
-			string mutexName = "EventBrokerMutex___" + conf.BasePath.GetHashCode().ToString();
-			Mutex mutex = new Mutex(true, mutexName, out createdMutex);
-			if (createdMutex)
-			{
-				Uri assemblyPath = new Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase));
-				string serviceName = conf.Get(CFG_Section, CFG_AssemblyKey, CFG_Assembly) + ".exe";
-				serviceName = Path.Combine(assemblyPath.LocalPath, serviceName);
+			Uri assemblyPath = new Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase));
+			string serviceName = conf.Get(CFG_Section, CFG_AssemblyKey, CFG_Assembly) + ".exe";
+			serviceName = Path.Combine(assemblyPath.LocalPath, serviceName);
 			
-				// The service is not running start it.
-				System.Diagnostics.Process service = new Process();
-				service.StartInfo.CreateNoWindow = true;
-				service.StartInfo.UseShellExecute = false;
-				if (MyEnvironment.Mono)
-				{
-					service.StartInfo.FileName = "mono";
-					service.StartInfo.Arguments = serviceName + " ";
-				}
-				else
-				{
-					service.StartInfo.FileName = serviceName;
-					service.StartInfo.Arguments = null;
-				}
-				service.StartInfo.Arguments += Path.GetDirectoryName(conf.BasePath) + " " + mutexName;
-				service.Start();
-                mutex.ReleaseMutex();
-				Thread.Sleep(100);
-				while (mutex.WaitOne(0, false))
-				{
-					mutex.ReleaseMutex();
-					Thread.Sleep(100);
-					//Console.WriteLine("After Release = {0}", DateTime.Now.Ticks);
-				}
+			// The service is not running start it.
+			System.Diagnostics.Process service = new Process();
+			service.StartInfo.CreateNoWindow = true;
+			service.StartInfo.UseShellExecute = false;
+			if (MyEnvironment.Mono)
+			{
+				service.StartInfo.FileName = "mono";
+				service.StartInfo.Arguments = serviceName + " ";
 			}
+			else
+			{
+				service.StartInfo.FileName = serviceName;
+				service.StartInfo.Arguments = null;
+			}
+			service.StartInfo.Arguments += Path.GetDirectoryName(conf.BasePath);
+			service.Start();
+			Thread.Sleep(200);
+			
+		}
+
+		private static string serviceMutexName(Configuration conf)
+		{
+			string s = ("EventBrokerMutex____" + conf.BasePath.GetHashCode());
+			return s;
 		}
 
 		#endregion
@@ -378,7 +367,7 @@ namespace Simias.Event
 		Configuration		conf;
 		Queue				eventQueue;
 		ManualResetEvent	queued;
-		EventBroker			broker;
+		EventBroker			broker = null;
 		bool				alreadyDisposed;
 
 		#endregion
@@ -458,10 +447,8 @@ namespace Simias.Event
 			alreadyDisposed = false;
 			this.conf = conf;
 			count = 0;
-			EventBroker.RegisterClientChannel(conf);
-			broker = new EventBroker();
-
-			broker.CollectionEvent += new CollectionEventHandlerS(OnCollectionEventS);
+			if (EventBroker.RegisterClientChannel(conf))
+				setupBroker();
 			// Start a thread to handle events.
 			eventQueue = new Queue();
 			queued = new ManualResetEvent(false);
@@ -473,6 +460,12 @@ namespace Simias.Event
 		~InProcessEventBroker()
 		{
 			Dispose(true);
+		}
+
+		void setupBroker()
+		{
+			broker = new EventBroker();
+			broker.CollectionEvent += new CollectionEventHandlerS(OnCollectionEventS);
 		}
 
 		#endregion
@@ -548,6 +541,15 @@ namespace Simias.Event
 
 		private void EventThread()
 		{
+			while (!alreadyDisposed && broker == null)
+			{
+				if (EventBroker.RegisterClientChannel(conf))
+				{
+					setupBroker();
+					break;
+				}
+				Thread.Sleep(100);
+			}
 			while (!alreadyDisposed)
 			{
 				try

@@ -36,7 +36,7 @@ namespace Simias.Event
 	{
 		#region Fields
 
-		EventBroker broker;
+		EventBroker broker = null;
 		Configuration	conf;
 
 		#endregion
@@ -50,8 +50,8 @@ namespace Simias.Event
 		public EventPublisher(Configuration conf)
 		{
 			this.conf = conf;
-			EventBroker.RegisterClientChannel(conf);
-			broker = new EventBroker();
+			if (EventBroker.RegisterClientChannel(conf))
+				broker = new EventBroker();
 		}
 
 		#endregion
@@ -64,8 +64,18 @@ namespace Simias.Event
 		/// <param name="args"></param>
 		public void RaiseEvent(CollectionEventArgs args)
 		{
-			if (broker != null)
+			if (broker == null)
+			{
+				if (EventBroker.RegisterClientChannel(conf))
+				{
+					broker = new EventBroker();
+					broker.RaiseEvent(args);
+				}
+			}
+			else
+			{
 				broker.RaiseEvent(args);
+			}
 		}
 
 		#endregion

@@ -15,7 +15,7 @@ namespace Simias.Event
 		#endregion
 
 		#region Private Fields
-		EventBroker broker;
+		EventBroker broker = null;
 		string		userName;
 		bool		enabled;
 		bool		alreadyDisposed;
@@ -33,9 +33,11 @@ namespace Simias.Event
 			userName = System.Environment.UserName;
 			enabled = true;
 			alreadyDisposed = false;
-			EventBroker.RegisterClientChannel(conf);
-			broker = new EventBroker();
-			broker.ServiceEvent += new ServiceEventHandler(OnServiceControl);
+			if (EventBroker.RegisterClientChannel(conf))
+			{
+				broker = new EventBroker();
+				broker.ServiceEvent += new ServiceEventHandler(OnServiceControl);
+			}
 		}
 
 		
