@@ -66,7 +66,7 @@ namespace Simias.POBox
 
 			// events
 			subscriber = new EventSubscriber();
-			subscriber.Enabled = false;
+			subscriber.Enabled = true;
 			subscriber.NodeTypeFilter = NodeTypes.CollectionType;
 			subscriber.NodeCreated += new NodeEventHandler(OnPOBoxCreated);
 			subscriber.NodeDeleted += new NodeEventHandler(OnPOBoxDeleted);
@@ -92,7 +92,6 @@ namespace Simias.POBox
 						if (domain.Role == SyncRoles.Slave)
 						{
 							// start collection managers
-							subscriber.Enabled = true;
 							AddPOBoxManager(poBox.ID);
 						}
 					}
