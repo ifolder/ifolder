@@ -35,6 +35,7 @@ using Simias.Event;
 using Simias.Location;
 using Simias.POBox;
 using Simias.Policy;
+using Simias.Storage.Provider;
 using Simias.Sync;
 using Persist = Simias.Storage.Provider;
 
@@ -2591,11 +2592,6 @@ namespace Simias.Storage
 			/// Array where the query results are stored.
 			/// </summary>
 			private char[] results = new char[ 4096 ];
-
-			/// <summary>
-			/// Hashtable used to filter out duplicate nodes returned by the chunkIterator.
-			/// </summary>
-			private Hashtable filterNodes;
 			#endregion
 
 			#region Constructor
@@ -2624,24 +2620,6 @@ namespace Simias.Storage
 			}
 			#endregion
 
-			#region Private Methods
-			/// <summary>
-			/// Determines if the specified ID already has been returned to the user during enumeration.
-			/// </summary>
-			/// <param name="nodeID">Node identifier to check for duplicity.</param>
-			/// <returns>True if the ID is a duplicate, otherwise false.</returns>
-			private bool IsDuplicate( string nodeID )
-			{
-				bool keyExists = filterNodes.ContainsKey( nodeID );
-				if ( !keyExists )
-				{
-					filterNodes.Add( nodeID, null );
-				}
-
-				return keyExists;
-			}
-			#endregion
-
 			#region IEnumerator Members
 			/// <summary>
 			/// Sets the enumerator to its initial position, which is before
@@ -2653,9 +2631,6 @@ namespace Simias.Storage
 				{
 					throw new DisposedException( this );
 				}
-
-				// Create a new hashtable instance.
-				filterNodes = new Hashtable();
 
 				// Release previously allocated chunkIterator.
 				if ( chunkIterator != null )
@@ -2718,7 +2693,7 @@ namespace Simias.Storage
 			/// </returns>
 			public bool MoveNext()
 			{
-				bool moreData;
+				bool moreData = false;
 
 				if ( disposed )
 				{
@@ -2728,61 +2703,67 @@ namespace Simias.Storage
 				// Make sure that there is data in the list.
 				if ( nodeListEnumerator != null )
 				{
-					// Prime the loop.
-					bool duplicate = true;
-
-					// There is a valid enumerator, assume there is more data.
-					moreData = true;
-
-					// Look for the next unique node in the enumeration list.
-					while ( moreData && duplicate )
+					// See if there is anymore data left in this result set.
+					moreData = nodeListEnumerator.MoveNext();
+					if ( !moreData )
 					{
-						// See if there is anymore data left in this result set.
-						moreData = nodeListEnumerator.MoveNext();
-						if ( !moreData )
+						// Get the next page of the results set.
+						int length = chunkIterator.GetNext( ref results );
+						if ( length > 0 )
 						{
-							// Get the next page of the results set.
-							int length = chunkIterator.GetNext( ref results );
-							if ( length > 0 )
-							{
-								// Set up the XML document that we will use as the granular query to the client.
-								XmlDocument nodeList = new XmlDocument();
-								nodeList.LoadXml( new string( results, 0, length ) );
-								nodeListEnumerator = nodeList.DocumentElement.GetEnumerator();
+							// Set up the XML document that we will use as the granular query to the client.
+							XmlDocument nodeList = new XmlDocument();
+							nodeList.LoadXml( new string( results, 0, length ) );
+							nodeListEnumerator = nodeList.DocumentElement.GetEnumerator();
 
-								// Move to the first entry in the document.
-								moreData = nodeListEnumerator.MoveNext();
-								if ( moreData )
-								{
-									// Filter out nodes that are duplicates.
-									duplicate = IsDuplicate( new ShallowNode( ( XmlElement )nodeListEnumerator.Current, collection.id ).ID );
-								}
-								else
-								{
-									// Out of data.
-									nodeListEnumerator = null;
-								}
-							}
-							else
+							// Move to the first entry in the document.
+							moreData = nodeListEnumerator.MoveNext();
+							if ( moreData == false )
 							{
 								// Out of data.
 								nodeListEnumerator = null;
-								moreData = false;
 							}
 						}
 						else
 						{
-							// Filter out nodes that are duplicates.
-							duplicate = IsDuplicate( new ShallowNode( ( XmlElement )nodeListEnumerator.Current, collection.id ).ID );
+							// Out of data.
+							nodeListEnumerator = null;
 						}
 					}
 				}
-				else
-				{
-					moreData = false;
-				}
 
 				return moreData;
+			}
+
+			/// <summary>
+			/// Set the cursor for the current search to the specified index.
+			/// </summary>
+			/// <param name="origin">The origin to move from.</param>
+			/// <param name="offset">The offset to move the index by.</param>
+			/// <returns>True if successful, otherwise false is returned.</returns>
+			public bool SetCursor( IndexOrigin origin, int offset )
+			{
+				// Set the new index for the cursor.
+				bool cursorSet = chunkIterator.SetIndex( origin, offset );
+				if ( cursorSet )
+				{
+					// Get the next page of the results set.
+					int length = chunkIterator.GetNext( ref results );
+					if ( length > 0 )
+					{
+						// Set up the XML document that we will use as the granular query to the client.
+						XmlDocument nodeList = new XmlDocument();
+						nodeList.LoadXml( new string( results, 0, length ) );
+						nodeListEnumerator = nodeList.DocumentElement.GetEnumerator();
+					}
+					else
+					{
+						// Out of data.
+						nodeListEnumerator = null;
+					}
+				}
+
+				return cursorSet;
 			}
 			#endregion
 

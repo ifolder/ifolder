@@ -27,6 +27,8 @@ using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Xml;
 
+using Simias.Storage.Provider;
+
 namespace Simias.Storage
 {
 	/// <summary>
@@ -1346,19 +1348,19 @@ namespace Simias.Storage
 		{
 			#region Class Members
 			/// <summary>
-			/// The enumerator that we will use to enumerate the DOM tree.
+			/// List of Xml property nodes.
 			/// </summary>
-			private IEnumerator propertyEnumerator;
+			private XmlNodeList nodeList;
+
+			/// <summary>
+			/// Enumerator for the document.
+			/// </summary>
+			private int index = -1;
 
 			/// <summary>
 			/// The property list where the enumeration is being performed.
 			/// </summary>
 			private PropertyList propertyList;
-
-			/// <summary>
-			/// The total number of objects contained in the search.
-			/// </summary>
-			private int count;
 			#endregion
 
 			#region Constructor
@@ -1370,8 +1372,7 @@ namespace Simias.Storage
 			public PropertyEnumerator( PropertyList propertyList, XmlElement xmlProperties )
 			{
 				this.propertyList = propertyList;
-				this.count = xmlProperties.ChildNodes.Count;
-				propertyEnumerator = xmlProperties.GetEnumerator();
+				this.nodeList = xmlProperties.ChildNodes;
 			}
 			#endregion
 
@@ -1381,7 +1382,7 @@ namespace Simias.Storage
 			/// </summary>
 			public int Count
 			{
-				get { return count; }
+				get { return nodeList.Count; }
 			}
 			#endregion
 
@@ -1392,7 +1393,7 @@ namespace Simias.Storage
 			/// </summary>
 			public void Reset()
 			{
-				propertyEnumerator.Reset();
+				index = -1;
 			}
 
 			/// <summary>
@@ -1400,7 +1401,15 @@ namespace Simias.Storage
 			/// </summary>
 			public object Current
 			{
-				get { return new Property( propertyList, ( XmlElement )propertyEnumerator.Current ); }
+				get 
+				{ 
+					if ( ( index == -1 ) || ( index == Count ) )
+					{
+						throw new InvalidOperationException( "The enumerator is positioned before the first element of the collection or after the last element." );
+					}
+
+					return new Property( propertyList, nodeList[ index ] as XmlElement ); 
+				}
 			}
 
 			/// <summary>
@@ -1412,21 +1421,71 @@ namespace Simias.Storage
 			/// </returns>
 			public bool MoveNext()
 			{
-				bool moreData = propertyEnumerator.MoveNext();
-				while ( moreData )
+				if ( index == Count )
 				{
-					// See if this is a property that is not supposed to be returned.
-					if ( ( ( Property )Current ).HiddenProperty )
+					return false;
+				}
+				else
+				{
+					while ( ++index < Count )
 					{
-						moreData = propertyEnumerator.MoveNext();
+						// See if this is a property that is not supposed to be returned.
+						if ( !( ( Property )Current ).HiddenProperty )
+						{
+							return true;
+						}
 					}
-					else
+
+					return false;
+				}
+			}
+
+			/// <summary>
+			/// Set the cursor for the current search to the specified index.
+			/// </summary>
+			/// <param name="origin">The origin to move from.</param>
+			/// <param name="offset">The offset to move the index by.</param>
+			/// <returns>True if successful, otherwise false is returned.</returns>
+			public bool SetCursor( IndexOrigin origin, int offset )
+			{
+				bool cursorSet = false;
+
+				switch ( origin )
+				{
+					case IndexOrigin.CUR:
 					{
+						int newIndex = ( ( index == -1 ) ? 0 : index ) + offset;
+						if ( ( newIndex >= 0 ) && ( newIndex < Count ) )
+						{
+							index = newIndex;
+							cursorSet = true;
+						}
+						break;
+					}
+
+					case IndexOrigin.END:
+					{
+						int newIndex = Count + offset;
+						if ( ( newIndex >= 0 ) && ( newIndex < Count ) )
+						{
+							index = newIndex;
+							cursorSet = true;
+						}
+						break;
+					}
+
+					case IndexOrigin.SET:
+					{
+						if ( ( offset >= 0 ) && ( offset < Count ) )
+						{
+							index = offset;
+							cursorSet = true;
+						}
 						break;
 					}
 				}
 
-				return moreData;
+				return cursorSet;
 			}
 			#endregion
 

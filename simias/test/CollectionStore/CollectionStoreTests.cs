@@ -37,6 +37,7 @@ using Simias.Policy;
 using Simias.POBox;
 using Simias.Service;
 using Simias.Storage;
+using Simias.Storage.Provider;
 using Simias.Sync;
 
 
@@ -2631,7 +2632,7 @@ namespace Simias.Storage.Tests
 			{
 				foreach( Member member in memberList )
 				{
-					Console.WriteLine( "Found member: {0}", member.Name );
+					Console.WriteLine( "Found member: {0}", member.FN );
 					++count;
 				}
 
@@ -2653,7 +2654,7 @@ namespace Simias.Storage.Tests
 			{
 				foreach( Member member in memberList )
 				{
-					Console.WriteLine( "Found member: {0}", member.Name );
+					Console.WriteLine( "Found member: {0}", member.FN );
 					++count;
 				}
 
@@ -2666,6 +2667,77 @@ namespace Simias.Storage.Tests
 			if ( count != 4 )
 			{
 				throw new ApplicationException( "Didn't get all of the members." );
+			}
+
+			// Try to back up during the search.
+			moreEntries = DomainProvider.FindFirstDomainMembers( enterpriseDomain.ID, out searchContext, out memberList, out total, 5 );
+			if ( moreEntries == true )
+			{
+				moreEntries = DomainProvider.FindPreviousDomainMembers( enterpriseDomain.ID, ref searchContext, out memberList, 5 );
+				if ( ( memberList == null ) || ( memberList.Length != 5 ) || ( moreEntries == false ) )
+				{
+					throw new ApplicationException( "Find previous results failed." );
+				}
+			}
+			else
+			{
+				throw new ApplicationException( "Members disappeared." );
+			}
+
+			DomainProvider.FindCloseDomainMembers( enterpriseDomain.ID, searchContext );
+		}
+
+		/// <summary>
+		/// Tests the SetCursor function on the ICSEnumerator.
+		/// </summary>
+		[Test]
+		public void ICSEnumeratorTest()
+		{
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
+			collection.Commit();
+
+			try
+			{
+				// Add a bunch of nodes.
+				for ( int i = 0; i < 30; ++i )
+				{
+					Node n = new Node( "Test Node " + i.ToString() );
+					collection.Commit( n );
+				}
+
+				// Search for all of the nodes by name.
+				ICSList list = collection.Search( BaseSchema.ObjectName, "Test", SearchOp.Begins );
+				if ( list.Count != 30 )
+				{
+					throw new ApplicationException( "Cannot find all of the nodes1." );
+				}
+
+				// Search forward getting each node.
+				ICSEnumerator e = list.GetEnumerator() as ICSEnumerator;
+				int count = 0;
+				while ( e.MoveNext() ) ++count;
+				if ( count != list.Count )
+				{
+					throw new ApplicationException( "Cannot find all of the nodes2." );
+				}
+
+				// Set the cursor back 10 nodes.
+				if ( !e.SetCursor( IndexOrigin.END, -10 ) )
+				{
+					throw new ApplicationException( "Cannot set cursor from end." );
+				}
+
+				// There should be only 10 nodes left.
+				count = 0;
+				while ( e.MoveNext() ) ++count;
+				if ( count != 10 )
+				{
+					throw new ApplicationException( "No data after set cursor." );
+				}
+			}
+			finally
+			{
+				collection.Commit( collection.Delete() );
 			}
 		}
 		#endregion

@@ -40,11 +40,6 @@ namespace Simias
 	{
 		#region Class Members
 		/// <summary>
-		/// The default timeout for the search context.
-		/// </summary>
-		static private int defaultTimeout = 60 * 1000;
-
-		/// <summary>
 		/// Table used to keep track of outstanding search entries.
 		/// </summary>
 		static private Hashtable searchTable = new Hashtable();
@@ -70,14 +65,14 @@ namespace Simias
 		private ICSEnumerator enumerator;
 
 		/// <summary>
-		/// Timer that will be used to clean up the entry if it is orphaned.
+		/// Total number of records contained in the search.
 		/// </summary>
-		private Timer timer;
+		private int totalRecords;
 
 		/// <summary>
-		/// Time out value for outstanding searches.
+		/// The cursor for the caller.
 		/// </summary>
-		private int searchTimeout;
+		private int currentRecord = 0;
 		#endregion
 
 		#region Properties
@@ -98,6 +93,15 @@ namespace Simias
 		}
 
 		/// <summary>
+		/// Gets or sets the current record.
+		/// </summary>
+		public int CurrentRecord
+		{
+			get { return currentRecord; }
+			set { currentRecord = value; }
+		}
+
+		/// <summary>
 		/// Gets the domain ID for the domain that is being searched.
 		/// </summary>
 		public string DomainID
@@ -112,6 +116,14 @@ namespace Simias
 		{
 			get { return enumerator; }
 		}
+
+		/// <summary>
+		/// Gets the total number of records contained by this search.
+		/// </summary>
+		public int TotalRecords
+		{
+			get { return totalRecords; }
+		}
 		#endregion
 
 		#region Constructor
@@ -120,23 +132,12 @@ namespace Simias
 		/// </summary>
 		/// <param name="domainID">Identifier for the domain that is being searched.</param>
 		/// <param name="enumerator">Search iterator.</param>
-		public SearchState( string domainID, ICSEnumerator enumerator ) :
-			this( domainID, enumerator, SearchState.defaultTimeout )
-		{
-		}
-
-		/// <summary>
-		/// Initializes an instance of an object.
-		/// </summary>
-		/// <param name="domainID">Identifier for the domain that is being searched.</param>
-		/// <param name="enumerator">Search iterator.</param>
-		/// <param name="searchTimeout">Amount of time in milliseconds that the search context remains valid.</param>
-		public SearchState( string domainID, ICSEnumerator enumerator, int searchTimeout )
+		/// <param name="totalRecords">The total number of records contained in the search.</param>
+		public SearchState( string domainID, ICSEnumerator enumerator, int totalRecords )
 		{
 			this.domainID = domainID;
 			this.enumerator = enumerator;
-			this.searchTimeout = searchTimeout;
-			this.timer = new Timer( new TimerCallback( SearchOrphaned ), this, searchTimeout, Timeout.Infinite );
+			this.totalRecords = totalRecords;
 
 			lock ( searchTable )
 			{
@@ -147,26 +148,15 @@ namespace Simias
 
 		#region Private Methods
 		/// <summary>
-		/// Resets the timer to the the specified timeout interval.
+		/// Removes this SearchState object from the search table.
 		/// </summary>
-		private void Reset()
+		private void RemoveSearchState()
 		{
-			if ( disposed )
+			lock ( searchTable )
 			{
-				throw new DisposedException( this );
+				// Remove the search context from the table and dispose it.
+				searchTable.Remove( contextHandle );
 			}
-
-			timer.Change( searchTimeout, Timeout.Infinite );
-		}
-
-		/// <summary>
-		/// Timer routine used to clean up orphaned searches.
-		/// </summary>
-		/// <param name="timerState">State that indicates which context has timed out.</param>
-		private void SearchOrphaned( Object timerState )
-		{
-			SearchState searchState = timerState as SearchState;
-			searchState.Dispose();
 		}
 		#endregion
 
@@ -178,20 +168,10 @@ namespace Simias
 		/// <returns>A SearchState object if a valid one exists, otherwise a null is returned.</returns>
 		static public SearchState GetSearchState( string contextHandle )
 		{
-			SearchState searchState = null;
-
 			lock ( searchTable )
 			{
-				searchState = searchTable[ contextHandle ] as SearchState;
+				return searchTable[ contextHandle ] as SearchState;
 			}
-
-			if ( searchState != null )
-			{
-				// Reset the timer.
-				searchState.Reset();
-			}
-
-			return searchState;
 		}
 		#endregion
 
@@ -202,12 +182,7 @@ namespace Simias
 		/// </summary>
 		public void Dispose()
 		{
-			lock ( searchTable )
-			{
-				// Remove the search context from the table and dispose it.
-				searchTable.Remove( contextHandle );
-			}
-
+			RemoveSearchState();
 			Dispose( true );
 			GC.SuppressFinalize( this );
 		}
@@ -235,7 +210,6 @@ namespace Simias
 				{
 					// Dispose managed resources.
 					enumerator.Dispose();
-					timer.Dispose();
 				}
 			}
 		}
@@ -369,7 +343,7 @@ namespace Simias
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
 		public bool FindFirstDomainMembers( string domainID, out Object searchContext, out Member[] memberList, out int total, int count )
 		{
-			return FindFirstDomainMembers( domainID, PropertyTags.FullName, "*", SearchOp.Begins, out searchContext, out memberList, out total, count );
+			return FindFirstDomainMembers( domainID, PropertyTags.FullName, String.Empty, SearchOp.Exists, out searchContext, out memberList, out total, count );
 		}
 
 		/// <summary>
@@ -398,7 +372,7 @@ namespace Simias
 			if ( domain != null )
 			{
 				ICSList list = domain.Search( attributeName, searchString, operation );
-				SearchState searchState = new SearchState( domainID, list.GetEnumerator() as ICSEnumerator );
+				SearchState searchState = new SearchState( domainID, list.GetEnumerator() as ICSEnumerator, list.Count );
 				searchContext = searchState.ContextHandle;
 				total = list.Count;
 				moreEntries = FindNextDomainMembers( ref searchContext, out memberList, count );
@@ -446,8 +420,42 @@ namespace Simias
 					if ( tempList.Count > 0 )
 					{
 						memberList = tempList.ToArray( typeof ( Member ) ) as Member[];
+						searchState.CurrentRecord += memberList.Length;
 						moreEntries = ( count == 0 ) ? true : false;
 					}
+				}
+			}
+
+			return moreEntries;
+		}
+
+		/// <summary>
+		/// Continues the search for domain members from a previous cursor.
+		/// </summary>
+		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers method.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
+		public bool FindPreviousDomainMembers( ref Object searchContext, out Member[] memberList, int count )
+		{
+			bool moreEntries = false;
+
+			// Initialize the outputs.
+			memberList = null;
+
+			// See if there is a valid search context.
+			SearchState searchState = SearchState.GetSearchState( searchContext as String );
+			if ( searchState != null )
+			{
+				// Backup the current cursor, but don't go passed the first record.
+				int cursorIndex = ( searchState.CurrentRecord > count ) ? searchState.CurrentRecord - count : 0;
+				if ( searchState.Enumerator.SetCursor( Simias.Storage.Provider.IndexOrigin.SET, cursorIndex ) )
+				{
+					// Reset the current record.
+					searchState.CurrentRecord = cursorIndex;
+
+					// Complete the search.
+					moreEntries = FindNextDomainMembers( ref searchContext, out memberList, count );
 				}
 			}
 
@@ -465,6 +473,17 @@ namespace Simias
 		{
 			Domain domain = store.GetDomain( domainID );
 			return ( ( domain != null ) && domain.IsType( domain, "Enterprise" ) ) ? true : false;
+		}
+
+		/// <summary>
+		/// Informs the domain provider that the specified member object is about to be
+		/// committed to the domain's member list. This allows an opportunity for the 
+		/// domain provider to add any domain specific attributes to the member object.
+		/// </summary>
+		/// <param name="domainID">Identifier of a domain.</param>
+		/// <param name="member">Member object that is about to be committed to the domain's member list.</param>
+		public void PreCommit( string domainID, Member member )
+		{
 		}
 
 		/// <summary>

@@ -211,6 +211,7 @@ namespace Simias
 		/// <summary>
 		/// Continues the search for all domain members started by calling the FindFirstDomainMembers method.
 		/// </summary>
+		/// <param name="domainID">The identifier of the domain to search for members in.</param>
 		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers method.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
@@ -229,6 +230,46 @@ namespace Simias
 			}
 
 			return moreEntries;
+		}
+
+		/// <summary>
+		/// Continues the search for domain members from a previous cursor.
+		/// </summary>
+		/// <param name="domainID">The identifier of the domain to search for members in.</param>
+		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers method.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
+		static public bool FindPreviousDomainMembers( string domainID, ref Object searchContext, out Member[] memberList, int count )
+		{
+			bool moreEntries = false;
+
+			// Initialize the outputs.
+			memberList = null;
+
+			IDomainProvider idp = GetDomainProvider( domainID );
+			if ( idp != null )
+			{
+				moreEntries = idp.FindPreviousDomainMembers( ref searchContext, out memberList, count );
+			}
+
+			return moreEntries;
+		}
+
+		/// <summary>
+		/// Informs the domain provider that the specified member object is about to be
+		/// committed to the domain's member list. This allows an opportunity for the 
+		/// domain provider to add any domain specific attributes to the member object.
+		/// </summary>
+		/// <param name="domainID">Identifier of a domain.</param>
+		/// <param name="member">Member object that is about to be committed to the domain's member list.</param>
+		static public void PreCommit( string domainID, Member member )
+		{
+			IDomainProvider idp = GetDomainProvider( domainID );
+			if ( idp != null )
+			{
+				idp.PreCommit( domainID, member );
+			}
 		}
 
 		/// <summary>

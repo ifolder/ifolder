@@ -33,6 +33,7 @@ using Simias;
 using Simias.Client;
 using Simias.Event;
 using Simias.Policy;
+using Simias.Storage.Provider;
 using Simias.Sync;
 using Persist = Simias.Storage.Provider;
 
@@ -1341,6 +1342,37 @@ namespace Simias.Storage
 				}
 
 				return moreData;
+			}
+
+			/// <summary>
+			/// Set the cursor for the current search to the specified index.
+			/// </summary>
+			/// <param name="origin">The origin to move from.</param>
+			/// <param name="offset">The offset to move the index by.</param>
+			/// <returns>True if successful, otherwise false is returned.</returns>
+			public bool SetCursor( IndexOrigin origin, int offset )
+			{
+				// Set the new index for the cursor.
+				bool cursorSet = chunkIterator.SetIndex( origin, offset );
+				if ( cursorSet )
+				{
+					// Get the next page of the results set.
+					int length = chunkIterator.GetNext( ref results );
+					if ( length > 0 )
+					{
+						// Set up the XML document that we will use as the granular query to the client.
+						collectionList = new XmlDocument();
+						collectionList.LoadXml( new string( results, 0, length ) );
+						collectionEnumerator = collectionList.DocumentElement.GetEnumerator();
+					}
+					else
+					{
+						// Out of data.
+						collectionEnumerator = null;
+					}
+				}
+
+				return cursorSet;
 			}
 			#endregion
 

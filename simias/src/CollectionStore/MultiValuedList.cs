@@ -26,6 +26,8 @@ using System.Collections;
 using System.Text.RegularExpressions;
 using System.Xml;
 
+using Simias.Storage.Provider;
+
 namespace Simias.Storage
 {
 	/// <summary>
@@ -170,19 +172,19 @@ namespace Simias.Storage
 		{
 			#region Class Members
 			/// <summary>
-			/// The enumerator that we will use to enumerate the DOM tree.
+			/// The list that contains the property values.
 			/// </summary>
-			private IEnumerator multiValuedEnumerator;
+			private ArrayList list;
+
+			/// <summary>
+			/// Enumerator for the list.
+			/// </summary>
+			private int index = -1;
 
 			/// <summary>
 			/// The property list where this multivalued property is stored.
 			/// </summary>
 			private PropertyList propertyList;
-
-			/// <summary>
-			/// The total number of objects contained in the search.
-			/// </summary>
-			private int count;
 			#endregion
 
 			#region Constructor
@@ -194,8 +196,7 @@ namespace Simias.Storage
 			internal MultiValuedEnumerator( PropertyList propertyList, ArrayList valueList )
 			{
 				this.propertyList = propertyList;
-				this.count = valueList.Count;
-				multiValuedEnumerator = valueList.GetEnumerator();
+				this.list = valueList;
 			}
 			#endregion
 
@@ -205,7 +206,7 @@ namespace Simias.Storage
 			/// </summary>
 			public int Count
 			{
-				get { return count; }
+				get { return list.Count; }
 			}
 			#endregion
 
@@ -216,7 +217,7 @@ namespace Simias.Storage
 			/// </summary>
 			public void Reset()
 			{
-				multiValuedEnumerator.Reset();
+				index = -1;
 			}
 
 			/// <summary>
@@ -224,7 +225,15 @@ namespace Simias.Storage
 			/// </summary>
 			public object Current
 			{
-				get	{ return new Property( propertyList, ( XmlElement )multiValuedEnumerator.Current ); }
+				get	
+				{ 
+					if ( ( index == -1 ) || ( index == Count ) )
+					{
+						throw new InvalidOperationException( "The enumerator is positioned before the first element of the collection or after the last element." );
+					}
+
+					return new Property( propertyList, list[ index ] as XmlElement ); 
+				}
 			}
 
 			/// <summary>
@@ -236,7 +245,62 @@ namespace Simias.Storage
 			/// </returns>
 			public bool MoveNext()
 			{
-				return multiValuedEnumerator.MoveNext();
+				if ( index == Count )
+				{
+					return false;
+				}
+				else
+				{
+					return ( ++index < Count ) ? true : false;
+				}
+			}
+
+			/// <summary>
+			/// Set the cursor for the current search to the specified index.
+			/// </summary>
+			/// <param name="origin">The origin to move from.</param>
+			/// <param name="offset">The offset to move the index by.</param>
+			/// <returns>True if successful, otherwise false is returned.</returns>
+			public bool SetCursor( IndexOrigin origin, int offset )
+			{
+				bool cursorSet = false;
+
+				switch ( origin )
+				{
+					case IndexOrigin.CUR:
+					{
+						int newIndex = ( ( index == -1 ) ? 0 : index ) + offset;
+						if ( ( newIndex >= 0 ) && ( newIndex < Count ) )
+						{
+							index = newIndex;
+							cursorSet = true;
+						}
+						break;
+					}
+
+					case IndexOrigin.END:
+					{
+						int newIndex = Count + offset;
+						if ( ( newIndex >= 0 ) && ( newIndex < Count ) )
+						{
+							index = newIndex;
+							cursorSet = true;
+						}
+						break;
+					}
+
+					case IndexOrigin.SET:
+					{
+						if ( ( offset >= 0 ) && ( offset < Count ) )
+						{
+							index = offset;
+							cursorSet = true;
+						}
+						break;
+					}
+				}
+
+				return cursorSet;
 			}
 			#endregion
 

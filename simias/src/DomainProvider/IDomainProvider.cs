@@ -111,6 +111,15 @@ namespace Simias
 		bool FindNextDomainMembers( ref Object searchContext, out Member[] memberList, int count );
 
 		/// <summary>
+		/// Continues the search for domain members from a previous cursor.
+		/// </summary>
+		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers method.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
+		bool FindPreviousDomainMembers( ref Object searchContext, out Member[] memberList, int count );
+
+		/// <summary>
 		/// Determines if the provider claims ownership for the 
 		/// specified domain.
 		/// </summary>
@@ -118,6 +127,15 @@ namespace Simias
 		/// <returns>True if the provider claims ownership for the 
 		/// specified domain. Otherwise, False is returned.</returns>
 		bool OwnsDomain( string domainID );
+
+		/// <summary>
+		/// Informs the domain provider that the specified member object is about to be
+		/// committed to the domain's member list. This allows an opportunity for the 
+		/// domain provider to add any domain specific attributes to the member object.
+		/// </summary>
+		/// <param name="domainID">Identifier of a domain.</param>
+		/// <param name="member">Member object that is about to be committed to the domain's member list.</param>
+		void PreCommit( string domainID, Member member );
 
 		/// <summary>
 		/// Returns the network location for the the specified

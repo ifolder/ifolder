@@ -24,6 +24,8 @@
 using System;
 using System.Collections;
 
+using Simias.Storage.Provider;
+
 namespace Simias.Storage
 {
 	/// <summary>
@@ -35,10 +37,22 @@ namespace Simias.Storage
 	/// </remarks>
 	public interface ICSEnumerator : IEnumerator, IDisposable
 	{
+		#region Properties
 		/// <summary>
 		/// Gets the total number of objects contained in the search.
 		/// </summary>
 		int Count { get; }
+		#endregion
+
+		#region Public Methods
+		/// <summary>
+		/// Set the cursor for the current search to the specified index.
+		/// </summary>
+		/// <param name="origin">The origin to move from.</param>
+		/// <param name="offset">The offset to move the index by.</param>
+		/// <returns>True if successful, otherwise false is returned.</returns>
+		bool SetCursor( IndexOrigin origin, int offset );
+		#endregion
 	}
 
 	/// <summary>
@@ -116,7 +130,7 @@ namespace Simias.Storage
 		{
 			if ( valueList != null )
 			{
-				return new ICSListEnumerator( valueList.GetEnumerator(), valueList.Count );
+				return new ICSListEnumerator( valueList );
 			}
 			else
 			{
@@ -132,14 +146,14 @@ namespace Simias.Storage
 		{
 			#region Class Members
 			/// <summary>
-			/// Enumerator used to enumerate list items.
+			/// List of items.
 			/// </summary>
-			private IEnumerator iEnumerator;
+			private ArrayList list;
 
 			/// <summary>
-			/// Number of objects contained in the enumerator.
+			/// Enumerator for the list.
 			/// </summary>
-			private int count;
+			private int index = -1;
 			#endregion
 
 			#region Constructor
@@ -148,10 +162,9 @@ namespace Simias.Storage
 			/// </summary>
 			/// <param name="iEnumerator">Enumerator from the ICSList object.</param>
 			/// <param name="count">Number of objects contained in the enumerator.</param>
-			public ICSListEnumerator( IEnumerator iEnumerator, int count )
+			public ICSListEnumerator( ArrayList list )
 			{
-				this.iEnumerator = iEnumerator;
-				this.count = count;
+				this.list = list;
 			}
 			#endregion
 
@@ -161,7 +174,7 @@ namespace Simias.Storage
 			/// </summary>
 			public int Count
 			{
-				get { return count; }
+				get { return list.Count; }
 			}
 			#endregion
 
@@ -172,7 +185,7 @@ namespace Simias.Storage
 			/// </summary>
 			public void Reset()
 			{
-				iEnumerator.Reset();
+				index = -1;
 			}
 
 			/// <summary>
@@ -180,7 +193,15 @@ namespace Simias.Storage
 			/// </summary>
 			public object Current
 			{
-				get { return iEnumerator.Current; }
+				get 
+				{ 
+					if ( ( index == -1 ) || ( index == Count ) )
+					{
+						throw new InvalidOperationException( "The enumerator is positioned before the first element of the collection or after the last element." );
+					}
+
+					return list[ index ];
+				}
 			}
 
 			/// <summary>
@@ -192,7 +213,62 @@ namespace Simias.Storage
 			/// </returns>
 			public bool MoveNext()
 			{
-				return iEnumerator.MoveNext();
+				if ( index == Count )
+				{
+					return false;
+				}
+				else
+				{
+					return ( ++index < Count ) ? true : false;
+				}
+			}
+
+			/// <summary>
+			/// Set the cursor for the current search to the specified index.
+			/// </summary>
+			/// <param name="origin">The origin to move from.</param>
+			/// <param name="offset">The offset to move the index by.</param>
+			/// <returns>True if successful, otherwise false is returned.</returns>
+			public bool SetCursor( IndexOrigin origin, int offset )
+			{
+				bool cursorSet = false;
+
+				switch ( origin )
+				{
+					case IndexOrigin.CUR:
+					{
+						int newIndex = ( ( index == -1 ) ? 0 : index ) + offset;
+						if ( ( newIndex >= 0 ) && ( newIndex < Count ) )
+						{
+							index = newIndex;
+							cursorSet = true;
+						}
+						break;
+					}
+
+					case IndexOrigin.END:
+					{
+						int newIndex = Count + offset;
+						if ( ( newIndex >= 0 ) && ( newIndex < Count ) )
+						{
+							index = newIndex;
+							cursorSet = true;
+						}
+						break;
+					}
+
+					case IndexOrigin.SET:
+					{
+						if ( ( offset >= 0 ) && ( offset < Count ) )
+						{
+							index = offset;
+							cursorSet = true;
+						}
+						break;
+					}
+				}
+
+				return cursorSet;
 			}
 			#endregion
 

@@ -26,6 +26,7 @@ using System.Collections;
 using System.Xml;
 
 using Simias;
+using Simias.Storage.Provider;
 
 namespace Simias.Storage
 {
@@ -267,19 +268,14 @@ namespace Simias.Storage
 		{
 			#region Class Members
 			/// <summary>
-			/// Indicates whether this object has been disposed.
+			/// List where the nodes are
 			/// </summary>
-			private bool disposed = false;
+			private XmlNodeList collisionList;
 
 			/// <summary>
 			/// Enumerator for the document.
 			/// </summary>
-			private IEnumerator documentEnumerator;
-
-			/// <summary>
-			/// The number of items in the collision list.
-			/// </summary>
-			private int count;
+			private int index = -1;
 			#endregion
 
 			#region Constructor
@@ -289,8 +285,7 @@ namespace Simias.Storage
 			/// <param name="document">Xml document containing the collision list.</param>
 			public CollisionEnumerator( XmlDocument document )
 			{
-				documentEnumerator = document.DocumentElement.GetEnumerator();
-				count = document.DocumentElement.ChildNodes.Count;
+				collisionList = document.DocumentElement.ChildNodes;
 			}
 			#endregion
 
@@ -300,7 +295,7 @@ namespace Simias.Storage
 			/// </summary>
 			public int Count
 			{
-				get { return count; }
+				get { return collisionList.Count; }
 			}
 			#endregion
 
@@ -311,12 +306,7 @@ namespace Simias.Storage
 			/// </summary>
 			public void Reset()
 			{
-				if ( disposed )
-				{
-					throw new DisposedException( this );
-				}
-
-				documentEnumerator.Reset();
+				index = -1;
 			}
 
 			/// <summary>
@@ -326,13 +316,12 @@ namespace Simias.Storage
 			{
 				get
 				{
-					if ( disposed )
+					if ( ( index == -1 ) || ( index == Count ) )
 					{
-						throw new DisposedException( this );
+						throw new InvalidOperationException( "The enumerator is positioned before the first element of the collection or after the last element." );
 					}
 
-					XmlElement element = documentEnumerator.Current as XmlElement;
-					return new Collision( element );
+					return new Collision( collisionList[ index ] as XmlElement );
 				}
 			}
 
@@ -345,12 +334,62 @@ namespace Simias.Storage
 			/// </returns>
 			public bool MoveNext()
 			{
-				if ( disposed )
+				if ( index == Count )
 				{
-					throw new DisposedException( this );
+					return false;
+				}
+				else
+				{
+					return ( ++index < Count ) ? true : false;
+				}
+			}
+
+			/// <summary>
+			/// Set the cursor for the current search to the specified index.
+			/// </summary>
+			/// <param name="origin">The origin to move from.</param>
+			/// <param name="offset">The offset to move the index by.</param>
+			/// <returns>True if successful, otherwise false is returned.</returns>
+			public bool SetCursor( IndexOrigin origin, int offset )
+			{
+				bool cursorSet = false;
+
+				switch ( origin )
+				{
+					case IndexOrigin.CUR:
+					{
+						int newIndex = ( ( index == -1 ) ? 0 : index ) + offset;
+						if ( ( newIndex >= 0 ) && ( newIndex < Count ) )
+						{
+							index = newIndex;
+							cursorSet = true;
+						}
+						break;
+					}
+
+					case IndexOrigin.END:
+					{
+						int newIndex = Count + offset;
+						if ( ( newIndex >= 0 ) && ( newIndex < Count ) )
+						{
+							index = newIndex;
+							cursorSet = true;
+						}
+						break;
+					}
+
+					case IndexOrigin.SET:
+					{
+						if ( ( offset >= 0 ) && ( offset < Count ) )
+						{
+							index = offset;
+							cursorSet = true;
+						}
+						break;
+					}
 				}
 
-				return documentEnumerator.MoveNext();
+				return cursorSet;
 			}
 			#endregion
 

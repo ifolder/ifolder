@@ -86,12 +86,27 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public readonly string Family = "Family";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
+		static public readonly string FullName = "FN";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string FileLength = "Length";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
 		static public string FileSystemPath = "FsPath";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
+		static public readonly string Given = "Given";
 
 		/// <summary>
 		/// Well known property name.
@@ -204,21 +219,6 @@ namespace Simias.Storage
 		static public string Types = "Types";
 
 		/// <summary>
-		/// Well known property name.
-		/// </summary>
-		static public readonly string Given = "Given";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-		static public readonly string Family = "Family";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-		static public readonly string FullName = "FN";
-
-		/// <summary>
 		/// Hashtable providing quick lookup to well-known system properties.
 		/// </summary>
 		private static Hashtable systemPropertyTable;
@@ -250,6 +250,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( DomainType, null );
 			systemPropertyTable.Add( FileLength, null );
 			systemPropertyTable.Add( FileSystemPath, null );
+			systemPropertyTable.Add( FullName, null );
 			systemPropertyTable.Add( HostAddress, null );
 			systemPropertyTable.Add( LastAccessTime, null );
 			systemPropertyTable.Add( LastWriteTime, null );
