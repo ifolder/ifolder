@@ -81,7 +81,7 @@ static Simias *sharedInstance = nil;
 
 		if([simiasTask isRunning])
 		{
-			int termcount = 10;
+			int termcount = 15;
 
 			NSLog(@"Sending a signal to Simias to terminate");
 						

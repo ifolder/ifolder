@@ -155,7 +155,8 @@ static iFolderWindowController *sharedInstance = nil;
 {
 	[[NSApp delegate] addLog:@"Refreshing iFolder view"];
 
-	[[iFolderData sharedInstance] refresh:NO];
+	if([[NSApp delegate] simiasIsRunning])
+		[[iFolderData sharedInstance] refresh:NO];
 
 	// calling refresh on iFolderData calls refreshDomains
 //	[self refreshDomains];
@@ -419,7 +420,10 @@ static iFolderWindowController *sharedInstance = nil;
 {
 	SEL action = [anItem action];
 	int selIndex = [ifoldersController selectionIndex];
-	
+
+	if([[NSApp delegate] simiasIsRunning] == NO)
+			return NO;
+			
 	if(action == @selector(newiFolder:))
 	{
 		return YES;
