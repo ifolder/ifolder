@@ -41,29 +41,145 @@ namespace Simias.mDns
 {
 	// Quick and dirty - I need to clean this up and
 	// put some thought into it
-	public class RendezvousUser
+	public class RendezvousUsers
 	{
-		public string ID;
-		public string FriendlyName;
-		public string Host;
-		public int	  Port;
-		public string ServicePath;
-		public string PublicKey;
-		public bool	  SimiasUser;
+		static public string StagedName = "StagedMember";
+		static public string HostProperty = "RHost";
+		static public string PathProperty = "RPath";
+		static public string PortProperty = "RPort";
+		static public string KeyProperty = "RPublicKey";
 
-		public RendezvousUser()
+		static internal ArrayList memberList = new ArrayList();
+		static internal ArrayList stagedList = new ArrayList();
+
+		//static internal	UserLock memberListLock = new UserLock();
+
+		public RendezvousUsers()
 		{
+		}
 
+		static public bool LoadMembersFromDomain( bool verifyUniqueness )
+		{
+			lock( typeof( Simias.mDns.RendezvousUsers ) )
+			{
+				// Add the members in the store
+				Simias.Storage.Domain domain = Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
+				ICSList memberlist = domain.GetMemberList();
+				foreach(ShallowNode sNode in memberlist)
+				{
+					// Get the member from the list
+					Simias.Storage.Member member =
+						new Simias.Storage.Member( domain, sNode);
+
+					if ( verifyUniqueness == true )
+					{
+						// FIXME::
+					}
+
+					Property p = new Property( "InStore", true );
+					member.Properties.AddProperty( p );
+					RendezvousUsers.memberList.Add( member );
+				}
+			}
+
+			return true;
+		}
+
+		static public bool AddMember( Member nMember, bool verifyUniqueness )
+		{
+			bool duplicate = false;
+			//lock( typeof( Simias.mDns.RendezvousUsers ) )
+			//{
+				if ( verifyUniqueness == true )
+				{
+					foreach( Member cMember in RendezvousUsers.memberList )
+					{
+						if ( cMember.ID == nMember.ID )
+						{
+							duplicate = true;
+							break;
+						}
+					}
+				}
+
+				if ( duplicate == false )
+				{
+					RendezvousUsers.memberList.Add( nMember );
+				}
+			//}
+
+			if ( duplicate == true )
+			{
+				return false;
+			}
+			return true;
+		}
+
+		static public bool AddStagedMember( Member nMember )
+		{
+			//lock( typeof( Simias.mDns.RendezvousUsers ) )
+			//{
+				foreach( Member cMember in RendezvousUsers.stagedList )
+				{
+					if ( cMember.ID == nMember.ID )
+					{
+						return false;
+					}
+				}
+
+				RendezvousUsers.stagedList.Add( nMember );
+			//}
+
+			return true;
+		}
+
+
+		static public bool UpdateMember( Member member )
+		{
+			//lock( typeof( Simias.mDns.RendezvousUsers ) )
+			//{
+			//}
+
+			return true;
+		}
+
+		static public bool RemoveMember( Member member )
+		{
+			//lock( typeof( Simias.mDns.RendezvousUsers ) )
+			//{
+				foreach( Member cMember in RendezvousUsers.memberList )
+				{
+					if ( cMember.ID == member.ID )
+					{
+						RendezvousUsers.memberList.Remove( cMember );
+						return true;
+					}
+				}
+
+			//}
+
+			return false;
+		}
+
+		static public bool RemoveStagedMember( Member nMember )
+		{
+			//lock( typeof( Simias.mDns.RendezvousUsers ) )
+			//{
+				foreach( Member cMember in RendezvousUsers.stagedList )
+				{
+					if ( cMember.ID == nMember.ID )
+					{
+						RendezvousUsers.stagedList.Remove( cMember );
+						return true;
+					}
+				}
+
+			//}
+
+			return false;
 		}
 	}
 
-	public class UserLock
-	{
-		private int	lockIt;
-		public UserLock()
-		{
-		}
-	}
 
 	/// <summary>
 	/// Class used to broadcast the current user
@@ -142,7 +258,6 @@ namespace Simias.mDns
 		private static bool registered = false;
 		private static string  mDnsUserName;
 		private static string  mDnsUserID = "";
-		//private readonly string memberTag = "_ifolder_member._tcp.local";
 		private static readonly string configSection = "ServiceManager";
 		private static readonly string configServices = "WebServiceUri";
 		private static Uri webServiceUri = null;
@@ -154,9 +269,11 @@ namespace Simias.mDns
 
 		// State for maintaining the Rendezvous user list
 
+		/*
 		// TEMP need to fix protection level here
 		internal static UserLock	memberListLock;
 		internal static ArrayList	memberList;
+		*/
 
 		/// <summary>
 		/// Used to log messages.
@@ -232,8 +349,10 @@ namespace Simias.mDns
 				log.Debug( "Absolute Path: " + webServiceUri.AbsolutePath );
 			}
 
+			/*
 			User.memberListLock = new UserLock();
 			User.memberList = new ArrayList();
+			*/
 
 			userHandle = new IntPtr(0);
 
@@ -400,31 +519,15 @@ namespace Simias.mDns
 
 				log.Debug( "MemberCallback for: " + serviceName );
 
-				RendezvousUser user = new RendezvousUser();
-				user.ID = serviceName;
+				Member rMember = 
+					new Member( 
+							RendezvousUsers.StagedName,
+							serviceName,
+							Simias.Storage.Access.Rights.ReadWrite );
 
-				bool found = false;
-				foreach( RendezvousUser rUser in User.memberList )
+				bool added = RendezvousUsers.AddStagedMember( rMember );
+				if ( added == true )
 				{
-					if ( rUser.ID == user.ID )
-					{
-						found = true;
-						break;
-					}
-				}
-
-				if ( found == false )
-				{
-					// Since we're in an mDns callback just set the ID
-					// and we'll pick up the rest of the meta-data in our
-					// context
-
-					log.Debug( "Adding: " + user.ID + " as a staged entry" );
-					lock( User.memberListLock )
-					{
-						User.memberList.Add( user );
-					}
-
 					// Force a meta-data sync
 					Simias.mDns.Sync.SyncNow("");
 				}
@@ -456,64 +559,60 @@ namespace Simias.mDns
 			//int		infoPort = 0;
 
 			log.Debug( "Syncing mDns members" );
-			Simias.Storage.Member mdnsMember = null;
-			Simias.Storage.Domain mdnsDomain = Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
+			//Simias.Storage.Member mdnsMember = null;
+			//Simias.Storage.Domain mdnsDomain = Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
 
-			lock( User.memberListLock )
+			lock( typeof( Simias.mDns.RendezvousUsers ) )
 			{
-				foreach( RendezvousUser rUser in User.memberList )
+				foreach( Simias.Storage.Member rMember in RendezvousUsers.stagedList )
 				{
-					// Check for a staged user
-					if ( rUser.FriendlyName == null || rUser.FriendlyName == "" )
-					{
-						// Go get the rest of the meta-data for this user
-						User.kErrorType status;
+					// Go get the rest of the meta-data for this user
+					User.kErrorType status;
 
-						try
+					try
+					{
+						int	port = 0;
+						log.Debug( "Calling GetMemberInfo for: " + rMember.ID );
+						status = 
+							GetMemberInfo( 
+								rMember.ID,
+								infoName,
+								infoServicePath,
+								infoPublicKey,
+								infoHost,
+								ref port );
+
+						if ( status == kErrorType.kDNSServiceErr_NoError )
 						{
-							log.Debug( "Calling GetMemberInfo for: " + rUser.ID );
-							status = 
-								GetMemberInfo( 
-									rUser.ID, 
-									infoName,
-									infoServicePath,
-									infoPublicKey,
-									infoHost,
-									ref rUser.Port );
-							if ( status == kErrorType.kDNSServiceErr_NoError )
-							{
-								rUser.FriendlyName = (new string( infoName )).TrimEnd( trimNull );
-								rUser.Host = (new string( infoHost )).TrimEnd( trimNull );
-								rUser.ServicePath = (new string( infoServicePath )).TrimEnd( trimNull );
-								//rUser.PublicKey = (new string( infoPublicKey )).TrimEnd( trimNull );
-								log.Debug( "Adding meta-data for: " + rUser.FriendlyName );
-							}
-						}
-						catch ( Exception e2 )
-						{
-							log.Debug( e2.Message );
-							log.Debug( e2.StackTrace );
+							rMember.Name = (new string( infoName )).TrimEnd( trimNull );
+
+							Property host = 
+								new Property( 
+										RendezvousUsers.HostProperty, 
+										(new string( infoHost )).TrimEnd( trimNull ) );
+							host.LocalProperty = true;
+							rMember.Properties.AddProperty( host );
+
+							Property path = 
+								new Property( 
+								RendezvousUsers.PathProperty,
+								(new string( infoServicePath )).TrimEnd( trimNull ) );
+							path.LocalProperty = true;
+							rMember.Properties.AddProperty( path );
+
+							Property rport = new Property( RendezvousUsers.PortProperty, port );
+							rMember.Properties.AddProperty( rport );
+
+							//rUser.PublicKey = (new string( infoPublicKey )).TrimEnd( trimNull );
+							log.Debug( "Adding meta-data for: " + rMember.Name );
+							RendezvousUsers.RemoveStagedMember( rMember );
+							RendezvousUsers.AddMember( rMember, true );
 						}
 					}
-
-					// If we have all the meta-data for this user
-					// see if he exists in the store.
-					if ( rUser.FriendlyName != null )
+					catch ( Exception e2 )
 					{
-						mdnsMember = mdnsDomain.GetMemberByName( rUser.FriendlyName );
-						if ( mdnsMember == null )
-						{
-							mdnsMember = 
-								new Member( rUser.FriendlyName, rUser.ID, Access.Rights.ReadOnly );
-
-							if ( rUser.PublicKey != null && rUser.PublicKey != "" )
-							{
-								mdnsMember.Properties.AddProperty( "PublicKey", rUser.PublicKey );
-							}
-
-							mdnsDomain.Commit( new Node[] { mdnsMember } );
-						}
-
+						log.Debug( e2.Message );
+						log.Debug( e2.StackTrace );
 					}
 				}
 			}

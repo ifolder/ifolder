@@ -35,6 +35,7 @@ using Simias.POBox;
 
 // shorty
 using SCodes = Simias.Authentication.StatusCodes;
+using RUsers = Simias.mDns.RendezvousUsers;
 
 namespace Simias
 {
@@ -85,7 +86,9 @@ namespace Simias
 		{
 			public ArrayList memberList = new ArrayList();
 			public string id = Guid.NewGuid().ToString();
+			public string searchString;
 			public int index = 0;
+			public int lastCount = 0;
 		}
 
 		private class mDnsProviderLock
@@ -98,19 +101,24 @@ namespace Simias
 			Uri locationUri = null;
 
 			// Have we seen this member??
-			lock( Simias.mDns.User.memberListLock )
-			{
-				foreach( Simias.mDns.RendezvousUser rUser in Simias.mDns.User.memberList )
+			//lock( Simias.mDns.User.memberListLock )
+			//{
+				foreach( Member member in RUsers.memberList )
 				{
-					if ( rUser.ID == memberID && rUser.Host != null )
+					if ( member.ID == memberID )
 					{
-						// Resolve the address
-						//Simias.mDns.User.kErrorType err;
-						//char[] textualIP = new char[ 64 ];
+						Property propHost =
+							member.Properties.GetSingleProperty( RUsers.HostProperty );
 
-						IPHostEntry host = Dns.GetHostByName( rUser.Host );
+						IPHostEntry host = Dns.GetHostByName( propHost.Value as string );
 						if ( host != null )
 						{
+							Property port =
+								member.Properties.GetSingleProperty( RUsers.PortProperty );
+
+							Property path =
+								member.Properties.GetSingleProperty( RUsers.PathProperty );
+
 							long addr = host.AddressList[0].Address;
 							string ipAddr = 
 								String.Format( "{0}.{1}.{2}.{3}", 
@@ -123,26 +131,17 @@ namespace Simias
 								"http://" + 
 								ipAddr + 
 								":" + 
-								System.Convert.ToString( (ushort) rUser.Port ) +
-								rUser.ServicePath;
+								System.Convert.ToString( (ushort) port.Value ) +
+								path.Value;
 
 							log.Debug( "fullPath: " + fullPath );
 							locationUri = new Uri( fullPath );
 						}
 
-						/*
-						err = 
-							Simias.mDns.User.ResolveAddress( rUser.Host, textualIP.Length, textualIP ); 
-						if ( err == Simias.mDns.User.kErrorType.kDNSServiceErr_NoError )
-						{
-							string addr = new string( textualIP );
-						}
-						*/
-
 						break;
 					}
 				}
-			}
+			//}
 
 			return locationUri;
 		}
@@ -302,78 +301,67 @@ namespace Simias
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
 		public bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, int count, out string searchContext, out Member[] memberList, out int total )
 		{
+			bool searchAll = true;
 			bool moreMembers = false;
-			int	 allMembers = 0;
 			searchContext = null;
 			memberList = null;
+			Regex ss = null;
 			total = 0;
 
 			log.Debug( "FindFirstDomainMembers (with search op) called" );
-
-			mDnsSearchCtx searchCtx = new mDnsSearchCtx();
-
-			// Add the members in the store
-			Simias.Storage.Domain domain = Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
-			ICSList memberlist = domain.GetMemberList();
-			foreach(ShallowNode sNode in memberlist)
+			if ( searchString != null && searchString != "" && searchString != "*" )
 			{
-				// Get the member from the list
-				Simias.Storage.Member member =
-					new Simias.Storage.Member( domain, sNode);
-
-				if ( searchCtx.index < count )
-				{
-					total++;
-					searchCtx.memberList.Add( member );
-					searchCtx.index++;
-				}
+				ss = new Regex( searchString );
+				searchAll = false;
 			}
 
+			mDnsSearchCtx searchCtx = new mDnsSearchCtx();
+			searchCtx.searchString = searchString;
 
-			allMembers = Simias.mDns.User.memberList.Count;
-			if ( searchCtx.index < count )
+			// First go through and build the full list for members
+			// that match the search criteria
+			foreach( Member rMember in RUsers.memberList )
 			{
-				// Now add the members in Rendezvous list - some will be duplicates
-				lock( Simias.mDns.User.memberListLock )
+				if ( searchAll == true )
 				{
-					bool foundIt;
-					foreach( Simias.mDns.RendezvousUser rUser in Simias.mDns.User.memberList )
+					searchCtx.memberList.Add( rMember );
+				}
+				else
+				{
+					Match m = ss.Match( rMember.Name );
+					if ( m.Success == true )
 					{
-						foundIt = false;
-						foreach( Member member in searchCtx.memberList )
-						{
-							if ( rUser.ID == member.UserID )
-							{
-								foundIt = true;
-								break;
-							}
-						}
-
-						if ( foundIt == false )
-						{
-							if ( searchCtx.index < count )
-							{
-								Member nMember = 
-									new Member( rUser.FriendlyName, rUser.ID, Access.Rights.ReadWrite );
-								searchCtx.memberList.Add( nMember );
-								searchCtx.index++;
-								total++;
-							}
-							else
-							{
-								break;
-							}
-						}
+						searchCtx.memberList.Add( rMember );
 					}
 				}
 			}
 
-			if ( total < allMembers )
+			// OK - we've got all the hits in our member list
+			// contained in the search context now satisfy
+			// the # results for this request
+			total = searchCtx.memberList.Count;
+
+			if ( searchCtx.memberList.Count > 0 )
 			{
-				moreMembers = true;
+				searchCtx.memberList.Sort();
+
+				int arraySize = ( total < count ) ? total : count;
+				memberList = new Member[ arraySize ] as Member[];
+				foreach( Member rMember in searchCtx.memberList )
+				{
+					if ( searchCtx.index < count )
+					{
+						memberList[ searchCtx.index++ ] = rMember;
+					}
+				}
+
+				if ( searchCtx.index < total )
+				{
+					moreMembers = true;
+				}
 			}
 
-			memberList = searchCtx.memberList.ToArray( typeof( Member ) ) as Member[];
+			searchCtx.lastCount = searchCtx.index;
 			searchContext = searchCtx.id;
 			lock( this.mdnsLock )
 			{
@@ -394,24 +382,15 @@ namespace Simias
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
 		public bool FindFirstDomainMembers( string domainID, int count, out string searchContext, out Member[] memberList, out int total )
 		{
-			return FindFirstDomainMembers(domainID, PropertyTags.FullName, String.Empty, SearchOp.Contains, count, out searchContext, out memberList, out total);
-		}
-
-
-		/// <summary>
-		/// Continues the search for domain members previous to the current record location.
-		/// </summary>
-		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers method.</param>
-		/// <param name="count">Maximum number of member objects to return.</param>
-		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
-		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindPreviousDomainMembers( ref string searchContext, int count, out Member[] memberList )
-		{
-			memberList = null;
-
-			log.Debug( "FindPreviousDomainMembers (with search op) called" );
-
-			return false;
+			return FindFirstDomainMembers(
+						domainID,
+						PropertyTags.FullName, 
+						null, 
+						SearchOp.Contains, 
+						count, 
+						out searchContext, 
+						out memberList, 
+						out total);
 		}
 
 
@@ -428,28 +407,95 @@ namespace Simias
 			mDnsSearchCtx searchCtx = null;
 			log.Debug( "FindNextDomainMembers called" );
 
+			ArrayList results = new ArrayList();
+
 			memberList = null;
 			lock( this.mdnsLock )
 			{
 				if ( searchContexts.Contains( searchContext ) )
 				{
 					searchCtx = ( mDnsSearchCtx ) searchContexts[searchContext];
+					if ( searchCtx == null )
+					{
+						return moreMembers;
+					}
 				}
 			}
 
-			if ( searchCtx == null )
+			for ( ; searchCtx.index < searchCtx.memberList.Count && searchCtx.index < count; searchCtx.index++ )
 			{
-				return moreMembers;
+				Member rMember = searchCtx.memberList[ searchCtx.index ] as Member;
+				if ( rMember != null )
+				{
+					results.Add( rMember );
+				}
 			}
 
-			// More to get
-			if ( searchCtx.index <= searchCtx.memberList.Count )
+			if ( searchCtx.index < searchCtx.memberList.Count )
 			{
-
+				moreMembers = true;
 			}
 
+			searchCtx.lastCount = results.Count;
+			memberList = results.ToArray( typeof( Member ) ) as Member[];
 			return moreMembers;
 		}
+
+		/// <summary>
+		/// Continues the search for domain members previous to the current record location.
+		/// </summary>
+		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers method.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
+		public bool FindPreviousDomainMembers( ref string searchContext, int count, out Member[] memberList )
+		{
+			bool moreMembers = false;
+			mDnsSearchCtx searchCtx = null;
+			memberList = null;
+			ArrayList results = new ArrayList();
+
+			log.Debug( "FindPreviousDomainMembers called" );
+
+			lock( this.mdnsLock )
+			{
+				if ( searchContexts.Contains( searchContext ) )
+				{
+					searchCtx = ( mDnsSearchCtx ) searchContexts[searchContext];
+					if ( searchCtx != null )
+					{
+						searchCtx.index -= ( searchCtx.lastCount + count );
+						if ( searchCtx.index < 0 )
+						{
+							searchCtx.index = 0;
+						}
+					}
+					else
+					{
+						return moreMembers;
+					}
+				}
+			}
+
+			for ( ; searchCtx.index < searchCtx.memberList.Count && searchCtx.index < count; searchCtx.index++ )
+			{
+				Member rMember = searchCtx.memberList[ searchCtx.index ] as Member;
+				if ( rMember != null )
+				{
+					results.Add( rMember );
+				}
+			}
+
+			if ( searchCtx.index < searchCtx.memberList.Count )
+			{
+				moreMembers = true;
+			}
+
+			searchCtx.lastCount = results.Count;
+			memberList = results.ToArray( typeof( Member ) ) as Member[];
+			return moreMembers;
+		}
+
 
 		/// <summary>
 		/// Continues the search for domain members from the specified record location.
@@ -461,11 +507,46 @@ namespace Simias
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
 		public bool FindSeekDomainMembers( ref string searchContext, int offset, int count, out Member[] memberList )
 		{
+			bool moreMembers = false;
+			mDnsSearchCtx searchCtx = null;
 			memberList = null;
+			ArrayList results = new ArrayList();
 
 			log.Debug( "FindSeekDomainMembers called" );
 
-			return false;
+			lock( this.mdnsLock )
+			{
+				if ( searchContexts.Contains( searchContext ) )
+				{
+					searchCtx = ( mDnsSearchCtx ) searchContexts[searchContext];
+					if ( searchCtx != null )
+					{
+						searchCtx.index = offset;
+					}
+					else
+					{
+						return moreMembers;
+					}
+				}
+			}
+
+			for ( ; searchCtx.index < searchCtx.memberList.Count && searchCtx.index < count; searchCtx.index++ )
+			{
+				Member rMember = searchCtx.memberList[ searchCtx.index ] as Member;
+				if ( rMember != null )
+				{
+					results.Add( rMember );
+				}
+			}
+
+			if ( searchCtx.index < searchCtx.memberList.Count )
+			{
+				moreMembers = true;
+			}
+
+			searchCtx.lastCount = results.Count;
+			memberList = results.ToArray( typeof( Member ) ) as Member[];
+			return moreMembers;
 		}
 
 		/// <summary>

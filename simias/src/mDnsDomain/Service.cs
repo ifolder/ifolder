@@ -118,25 +118,44 @@ namespace Simias.mDns
 				mdnsDomain = new Simias.mDns.Domain( true );
 				this.mDnsUser = new Simias.mDns.User();
 
+				// Registers our iFolder member with the Rendezvous
+				// service daemon.
 				Simias.mDns.User.RegisterUser();
+
+				// Load the members in the Rendezvous domain into
+				// our current list which is kept in memory
+				bool loadStatus = RendezvousUsers.LoadMembersFromDomain( false );
+				if ( loadStatus == false )
+				{
+					log.Error( "Failed loading the members from the Rendezvous domain" );
+				}
+
+				// Start up an mDns browse session which watches
+				// for the coming and going of iFolder Rendezvous users.
 				Simias.mDns.User.StartMemberBrowsing();
 
-				// Temp
+				// Might not be needed in the future but today
+				// the sync thread collects all the Member meta
+				// from the Rendezous daemon when a new member
+				// is added to the list.
 				Simias.mDns.Sync.StartSyncThread();
 
 				// Register with the DomainProvider service
+				// Provides location resolution, member searching
+				// and authentication to the Rendezvous domain
 				this.mDnsProvider = new Simias.mDnsProvider();
 				Simias.DomainProvider.RegisterProvider( this.mDnsProvider );
 
+				// The Simias architecture perfroms all client authentication
+				// out of band which means when a client service requests remote 
+				// objects and fails because of authentication errors or because
+				// credentials don't exist a "Need Credentials" event is generated
+				// The mDnsDomain service watches for these events and performs
+				// authentication when an event signals authentication is needed
+				// to a remote Rendezvous domain.
 				this.needsCreds = new NeedCredentialsEventSubscriber();
 				this.needsCreds.NeedCredentials += 
 					new Simias.Authentication.NeedCredentialsEventHandler( OnCredentialsEventHandler );
-
-				// Last add some fake credentials for the mDns domain
-				/*
-				string mDnsTagAndPassword = "@ppk@" + "blah";
-				new NetCredential( "iFolder", Simias.mDns.Domain.ID, true, mDnsUser.ID, mDnsTagAndPassword );
-				*/
 			}
 			catch(Exception e)
 			{
