@@ -938,13 +938,20 @@ namespace Novell.iFolder.FormsTrayApp
 		#region Private Methods
 		private void AddiFolderToListView(iFolder ifolder)
 		{
-			string status = ifolder.HasCollisions() ? "Conflicts exist" : "OK";
-			ListViewItem lvi = new ListViewItem(new string[] {ifolder.Name, ifolder.LocalPath, status}, 0);
-			lvi.Tag = ifolder.ID;
-			iFolderView.Items.Add(lvi);
+			lock (ht)
+			{
+				// Add only if it isn't already in the list.
+				if (ht[ifolder.ID] == null)
+				{
+					string status = ifolder.HasCollisions() ? "Conflicts exist" : "OK";
+					ListViewItem lvi = new ListViewItem(new string[] {ifolder.Name, ifolder.LocalPath, status}, 0);
+					lvi.Tag = ifolder.ID;
+					iFolderView.Items.Add(lvi);
 
-			// Add the listviewitem to the hashtable.
-			ht.Add(ifolder.ID, lvi);
+					// Add the listviewitem to the hashtable.
+					ht.Add(ifolder.ID, lvi);
+				}
+			}
 		}
 
 		private bool IsRunEnabled()
@@ -970,7 +977,11 @@ namespace Novell.iFolder.FormsTrayApp
 
 			iFolderView.Items.Clear();
 			iFolderView.SelectedItems.Clear();
-			ht.Clear();
+
+			lock(ht)
+			{
+				ht.Clear();
+			}
 
 			iFolderView.BeginUpdate();
 
@@ -1303,6 +1314,9 @@ namespace Novell.iFolder.FormsTrayApp
 
 							// Add the iFolder to the listview.
 							AddiFolderToListView(ifolder);
+
+							// Display the new iFolder intro dialog.
+							new iFolderComponent().NewiFolderWizard(Application.StartupPath, folderBrowserDialog.SelectedPath);
 							break;
 						}
 						else
@@ -1521,7 +1535,10 @@ namespace Novell.iFolder.FormsTrayApp
 			if (lvi != null)
 			{
 				lvi.Remove();
-				ht.Remove(args.Node);
+				lock (ht)
+				{
+					ht.Remove(args.Node);
+				}
 			}
 		}
 
