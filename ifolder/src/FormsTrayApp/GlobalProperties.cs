@@ -3479,14 +3479,25 @@ namespace Novell.FormsTrayApp
 			{
 				// Get the disk space.
 				DiskSpace diskSpace = ifWebService.GetUserDiskSpace(selectedDomain.DomainWeb.UserID);
+				double used = 0;
+				if (diskSpace.UsedSpace != 0)
+				{
+					usedSpaceUnits.Text = resourceManager.GetString("freeSpaceUnits.Text");
+					used = Math.Round(diskSpace.UsedSpace/megaByte, 2);
+					usedSpace.Text = used.ToString();
+				}
+				else
+				{
+					usedSpaceUnits.Text = resourceManager.GetString("notApplicable");
+					usedSpace.Text = "";
+				}
+
 				if (diskSpace.Limit != 0)
 				{
 					usedSpaceUnits.Text = freeSpaceUnits.Text = totalSpaceUnits.Text = 
 						resourceManager.GetString("freeSpaceUnits.Text");
 					totalSpace.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
 
-					double used = Math.Round(diskSpace.UsedSpace/megaByte, 2);
-					usedSpace.Text = used.ToString();
 					freeSpace.Text = ((double)Math.Round(diskSpace.AvailableSpace/megaByte, 2)).ToString();
 
 					// Set up the gauge chart.
@@ -3496,9 +3507,9 @@ namespace Novell.FormsTrayApp
 				}
 				else
 				{
-					usedSpaceUnits.Text = freeSpaceUnits.Text = totalSpaceUnits.Text =
+					freeSpaceUnits.Text = totalSpaceUnits.Text =
 						resourceManager.GetString("notApplicable");
-					usedSpace.Text = freeSpace.Text = totalSpace.Text = "";
+					freeSpace.Text = totalSpace.Text = "";
 					gaugeChart1.Used = 0;
 				}
 			}
