@@ -4,12 +4,12 @@ DIST_SUBDIRS = $(SUBDIRS)
 endif
 
 if DARWIN
-SUBDIRS = Simias.dll SimiasApp mDnsService AddressBook WebService SyncService
+SUBDIRS = Simias.dll mDnsService AddressBook WebService SyncService SimiasApp
 DIST_SUBDIRS = $(SUBDIRS)
 endif
 
 if WINDOWS
-SUBDIRS = Simias.dll FlaimProvider SimiasApp mDnsService AddressBook WebService SyncService
+SUBDIRS = Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService SimiasApp
 DIST_SUBDIRS = $(SUBDIRS)
 endif
 
