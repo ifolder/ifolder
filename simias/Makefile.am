@@ -1,27 +1,15 @@
 SUBDIRS = src package
 
+DIST_SUBDIRS = $(SUBDIRS) doc
+
 EXTRA_DIST = tools external
 
-.PHONY: doc doc-nodeps doc-clean ndoc ndoc-nodeps
-
-if WINDOWS
-if NDOC
-NDOC_TARGET := ndoc
-
-ndoc: install ndoc-nodeps
-
-ndoc-nodeps: simias.ndoc
-	"$(NDOC)" -project=simias.ndoc -ReferencesPath=`cygpath --windows $(bindir)`
-
-endif
-endif
-
-DOC_TARGETS := $(NDOC_TARGET)
-
+.PHONY: doc doc-clean
 doc: $(DOC_TARGETS)
+	$(MAKE) -C doc all
 
 doc-clean:
-	rm -rf $(DOCDIR)
+	$(MAKE) -C doc clean
 
 .PHONY: package package-clean package-install package-uninstall
 package package-clean package-install package-uninstall:
