@@ -43,17 +43,13 @@ namespace Novell.iFolder
 		static Gtk.Image gAppIcon;
 		static Gdk.PixbufAnimation gSyncAnimation;
 		static Gdk.Pixbuf gNifPixbuf;
-//		static bool gIsSyncing;
 		static Gtk.EventBox eBox;
 		static TrayIcon tIcon;
 		static GtkTraceWindow twin;
 
 		public static void Main (string[] args)
 		{
-//			gIsSyncing = false;
-//			GLib.Thread.Init();
 			Gdk.Threads.Init();
-			Console.WriteLine("Initing application...");
 
 			Application.Init();
 
@@ -61,7 +57,8 @@ namespace Novell.iFolder
 
 			eBox = new EventBox();
 
-			eBox.ButtonPressEvent += new ButtonPressEventHandler(trayapp_clicked);
+			eBox.ButtonPressEvent += 
+					new ButtonPressEventHandler(trayapp_clicked);
 			gNifPixbuf = new Pixbuf("ifolder.png");
 
 			gAppIcon = new Gtk.Image(gNifPixbuf);
@@ -74,10 +71,11 @@ namespace Novell.iFolder
 
 			tIcon.ShowAll();
 
-			Console.WriteLine("Creating sync object");
+			Console.WriteLine("Creating sync object...");
 
 			SyncProperties props = new SyncProperties();
-            props.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
+            props.DefaultChannelSinks = 
+					SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
 
 			string logicFactory = new Configuration().Get("iFolderApp", 
 				"SyncLogic", "SynkerA");
@@ -97,8 +95,8 @@ namespace Novell.iFolder
 
 
 			syncManager = new SyncManager(props);
-//			syncManager.ChangedState += 
-//					new ChangedSyncStateEventHandler(syncManager_ChangedState);
+			syncManager.ChangedState += 
+					new ChangedSyncStateEventHandler(syncManager_ChangedState);
 
 			// Trace levels.
 			MyTrace.Switch.Level = TraceLevel.Verbose;
@@ -110,28 +108,28 @@ namespace Novell.iFolder
 
 			Simias.Sync.Log.SetLevel("verbose");
 
-			Console.WriteLine("Starting sync object");
+			Console.WriteLine("Starting sync object...");
 			syncManager.Start();
 
-			Console.WriteLine("About to loop main thread...");
 			Gdk.Threads.Enter();
-			Console.WriteLine("Inside Threads loop main thread...");
 			Application.Run();
 			Gdk.Threads.Leave();
 		}
 
 		private static void syncManager_ChangedState(SyncManagerStates state)
 		{
+			Gdk.Threads.Enter();
 			if(state == SyncManagerStates.Active)
 			{
-				start_sync(null, null);
+				gAppIcon.FromAnimation = gSyncAnimation;
 				Console.WriteLine("The Synker is running");
 			}
 			else
 			{
-				stop_sync(null, null);
+				gAppIcon.Pixbuf = gNifPixbuf;
 				Console.WriteLine("The Synker is stopping");
 			}
+			Gdk.Threads.Leave();
 		}
 
 		static void trayapp_clicked(object obj, ButtonPressEventArgs args)
@@ -188,30 +186,13 @@ namespace Novell.iFolder
 
 			trayMenu.ShowAll();
 
-			trayMenu.Popup(null, null, null, IntPtr.Zero, 3, Gtk.Global.CurrentEventTime);
+			trayMenu.Popup(null, null, null, IntPtr.Zero, 3, 
+					Gtk.Global.CurrentEventTime);
 		}
 
 		static void show_tracewin(object o, EventArgs args)
 		{
 			twin.ShowAll();
-		}
-
-		static void start_sync(object o, EventArgs args)
-		{
-			lock(gAppIcon);
-			{
-				gAppIcon.FromAnimation = gSyncAnimation;
-			}
-//			gIsSyncing = true;
-		}
-
-		static void stop_sync(object o, EventArgs args)
-		{
-			lock(gAppIcon);
-			{
-				gAppIcon.Pixbuf = gNifPixbuf;
-			}
-//			gIsSyncing = false;
 		}
 
 		static void quit_ifolder(object o, EventArgs args)
