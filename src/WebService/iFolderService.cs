@@ -961,6 +961,208 @@ namespace Novell.iFolder.Web
 
 
 
+		/// <summary>
+		/// End the search for domain members.
+		/// </summary>
+		/// <param name="domainID">The identifier of the domain.</param>
+		/// <param name="searchContext">Domain provider specific search context returned by FindFirstMembers
+		/// or FindFirstSpecificMembers methods.</param>
+		[WebMethod(Description="Ends the search for the members in a specified domain.")]
+		[SoapDocumentMethod]
+		public void FindCloseMembers( string domainID, object searchContext )
+		{
+			DomainProvider.FindCloseDomainMembers( domainID, searchContext );
+		}
+
+
+
+		/// Starts a search for all domain members.
+		/// </summary>
+		/// <param name="domainID">The identifier of the domain to search for members in.</param>
+		/// <param name="searchContext">Receives a provider specific search context object.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <param name="totalMembers">Receives the total number of objects found in the search.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
+		[WebMethod(Description="Start the search for all of the members in a specified domain.")]
+		[SoapDocumentMethod]
+		public bool FindFirstMembers( 
+			string domainID, 
+			out object searchContext, 
+			out iFolderUser[] memberList, 
+			out int totalMembers, 
+			int count )
+		{
+			Member[] tempList;
+
+			bool moreEntries = 
+				DomainProvider.FindFirstDomainMembers(
+					domainID, 
+					out searchContext, 
+					out tempList, 
+					out totalMembers, 
+					count );
+
+			if ( ( tempList != null ) && ( tempList.Length > 0 ) )
+			{
+				Domain domain = Store.GetStore().GetDomain( domainID );
+
+				memberList = new iFolderUser[ tempList.Length ];
+				for ( int i = 0; i < tempList.Length; ++i )
+				{
+					memberList[ i ] = new iFolderUser( domain, tempList[ i ] );
+				}
+			}
+			else
+			{
+				memberList = null;
+			}
+
+			return moreEntries;
+		}
+
+
+
+		/// <summary>
+		/// Starts a search for a specific set of domain members.
+		/// </summary>
+		/// <param name="domainID">The identifier of the domain to search for members in.</param>
+		/// <param name="attributeName">Attribute name to search.</param>
+		/// <param name="searchString">String that contains a pattern to search for.</param>
+		/// <param name="operation">Type of search operation to perform.</param>
+		/// <param name="searchContext">Receives a provider specific search context object.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <param name="totalMembers">Receives the total number of objects found in the search.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
+		[WebMethod(Description="Start the search for specific members in a specified domain.")]
+		[SoapDocumentMethod]
+		public bool FindFirstSpecificMembers(
+			string domainID, 
+			string attributeName, 
+			string searchString, 
+			SearchType operation, 
+			out object searchContext, 
+			out iFolderUser[] memberList, 
+			out int totalMembers, 
+			int count )
+		{
+			Member[] tempList;
+
+			bool moreEntries = 
+				DomainProvider.FindFirstDomainMembers(
+					domainID,
+					attributeName,
+					searchString,
+					( Simias.Storage.SearchOp )Enum.ToObject( typeof( Simias.Storage.SearchOp ), operation ),
+					out searchContext, 
+					out tempList, 
+					out totalMembers, 
+					count );
+
+			if ( ( tempList != null ) && ( tempList.Length > 0 ) )
+			{
+				Domain domain = Store.GetStore().GetDomain( domainID );
+
+				memberList = new iFolderUser[ tempList.Length ];
+				for ( int i = 0; i < tempList.Length; ++i )
+				{
+					memberList[ i ] = new iFolderUser( domain, tempList[ i ] );
+				}
+			}
+			else
+			{
+				memberList = null;
+			}
+
+			return moreEntries;
+		}
+
+
+
+		/// <summary>
+		/// Continues the search for the next domain members started by calling the FindFirstMembers or
+		/// FindFirstSpecificMembers methods.
+		/// </summary>
+		/// <param name="domainID">The identifier of the domain to search for members in.</param>
+		/// <param name="searchContext">Domain provider specific search context returned by FindFirstMembers 
+		/// FindFirstSpecificMembers methods.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
+		[WebMethod(Description="Continues the search for the next members in a specified domain.")]
+		[SoapDocumentMethod]
+		public bool FindNextMembers( 
+			string domainID, 
+			ref object searchContext, 
+			out iFolderUser[] memberList, 
+			int count )
+		{
+			Member[] tempList;
+
+			bool moreEntries = DomainProvider.FindNextDomainMembers( domainID, ref searchContext, out tempList, count );
+
+			if ( ( tempList != null ) && ( tempList.Length > 0 ) )
+			{
+				Domain domain = Store.GetStore().GetDomain( domainID );
+
+				memberList = new iFolderUser[ tempList.Length ];
+				for ( int i = 0; i < tempList.Length; ++i )
+				{
+					memberList[ i ] = new iFolderUser( domain, tempList[ i ] );
+				}
+			}
+			else
+			{
+				memberList = null;
+			}
+
+			return moreEntries;
+		}
+
+
+
+		/// <summary>
+		/// Continues the search for the previous domain members started by calling the FindFirstMembers method or
+		/// FindFirstSpecificMembers methods.
+		/// </summary>
+		/// <param name="domainID">The identifier of the domain to search for members in.</param>
+		/// <param name="searchContext">Domain provider specific search context returned by FindFirstMembers or
+		/// FindFirstSpecificMembers methods.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
+		[WebMethod(Description="Continues the search for the previous members in a specified domain.")]
+		[SoapDocumentMethod]
+		public bool FindPreviousMembers( 
+			string domainID, 
+			ref Object searchContext, 
+			out iFolderUser[] memberList, 
+			int count )
+		{
+			Member[] tempList;
+
+			bool moreEntries = DomainProvider.FindPreviousDomainMembers( domainID, ref searchContext, out tempList, count );
+
+			if ( ( tempList != null ) && ( tempList.Length > 0 ) )
+			{
+				Domain domain = Store.GetStore().GetDomain( domainID );
+
+				memberList = new iFolderUser[ tempList.Length ];
+				for ( int i = 0; i < tempList.Length; ++i )
+				{
+					memberList[ i ] = new iFolderUser( domain, tempList[ i ] );
+				}
+			}
+			else
+			{
+				memberList = null;
+			}
+
+			return moreEntries;
+		}
+
+
 
 		/// <summary>
 		/// WebMethod that gets a member from the default domain
