@@ -21,7 +21,7 @@
 #
 #######################################################################
 
-%define prefix /usr
+%define prefix /opt/novell/ifolder3
 
 Summary      : Simias
 Name         : @PACKAGE@
@@ -36,9 +36,9 @@ Vendor       : <unknown>
 Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
-Requires     : mono-core >= 1.0
-Requires     : mono-data >= 1.0
-Requires     : mono-remoting >= 1.0
+Requires     : mono-core >= 1.0.1
+Requires     : mono-data >= 1.0.1
+Requires     : mono-remoting >= 1.0.1
 #Requires     : mono-nunit >= 1.0
 Obsoletes    : %{name} <= %{version}
 
@@ -48,13 +48,6 @@ Simias is a technology that allows various types of data to be stored and
 related in what is known as a collection.  Initially, Simias is the underlying
 data store for the iFolder project, although it has potiential to do much more.
 
-#=============================================================================
-%Package ui
-Summary      : Simias UI
-Group        : Applications/Productivity
-Requires     : %{name} = %{version}
-%Description ui
-User interface components of Simias.
 
 #=============================================================================
 %ChangeLog
@@ -129,44 +122,6 @@ make DESTDIR=$RPM_BUILD_ROOT install
 #=============================================================================
 %Files
 %defattr(-,root,root)
-%dir %{prefix}/lib
-%{prefix}/lib/Simias.dll
-%{prefix}/lib/mDnsResponderCmd.exe
-%{prefix}/lib/mDnsResponderExe.exe
-%{prefix}/lib/mDnsResponderApi.dll
-%{prefix}/lib/mDnsResponder.dll
-%{prefix}/lib/log4net.dll
-%{prefix}/lib/Novell.Security.SecureSink.dll
-%{prefix}/lib/Novell.Security.SecureSink.SecurityProvider.dll
-%{prefix}/lib/Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll
-%{prefix}/lib/Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll
-%{prefix}/lib/Novell.Security.SecureSink.Utilities.dll
-%{prefix}/lib/libsqlite.so
-%{prefix}/lib/Novell.AddressBook.dll
-%dir %{prefix}/lib/pkgconfig
-%{prefix}/lib/pkgconfig/simias.pc
-%dir %{prefix}/bin
-%{prefix}/bin/ifdata
-%{prefix}/bin/libsqlite.so
-%{prefix}/bin/SimiasApp.exe
-%{prefix}/bin/simias
-%{prefix}/bin/mDnsService.exe
-%{prefix}/bin/install-simias-to-gac
-%{prefix}/bin/Simias.asmx
-%{prefix}/bin/web.config
-%{prefix}/bin/Global.asax
-%{prefix}/bin/bin/Simias.Web.dll
-%{prefix}/etc/Simias.config
-%{prefix}/etc/Simias.remoting
-%{prefix}/etc/Simias.log4net
-%dir %{prefix}/share
-%dir %{prefix}/share/simias
-%{prefix}/share/simias/log4net.LICENSE.txt
-%{prefix}/share/simias/COPYING
+%{prefix}/*
 
-#=============================================================================
-%Files ui
-%defattr(-,root,root)
-%dir %{prefix}/lib/pkgconfig
-%{prefix}/lib/pkgconfig/simias-ui.pc
 
