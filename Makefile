@@ -37,19 +37,19 @@ ag autogen:
 	@echo PREFIX=$(PREFIX)
 	cd simias;      $(AUTOGEN_CMD); make install
 	cd addressbook; $(AUTOGEN_CMD); make install
-	cd ifolder;     $(AUTOGEN_CMD)
+	cd ifolder;     $(AUTOGEN_CMD); make install
 
 agd autogen-debug:
 	rm -f */config.cache
 	@echo PREFIX=$(PREFIX)
 	cd simias;      $(AUTOGEN_DEBUG_CMD); make install
 	cd addressbook; $(AUTOGEN_DEBUG_CMD); make install
-	cd ifolder;     $(AUTOGEN_DEBUG_CMD)
+	cd ifolder;     $(AUTOGEN_DEBUG_CMD); make install
 
 agsdk autogen-sdk:
 	rm -f */config.cache
 	@echo PREFIX=$(PREFIX)
 	cd simias;      $(AUTOGEN_SDK_CMD); make install
 	cd addressbook; $(AUTOGEN_SDK_CMD); make install
-	cd ifolder;     $(AUTOGEN_SDK_CMD)
+	cd ifolder;     $(AUTOGEN_SDK_CMD); make install
 
