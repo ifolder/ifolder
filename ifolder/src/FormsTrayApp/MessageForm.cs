@@ -308,6 +308,7 @@ namespace Novell.iFolder.FormsTrayApp
 			switch (sub.SubscriptionState)
 			{
 				case SubscriptionStates.Received:
+				case SubscriptionStates.Ready:
 					Process.Start(Path.Combine(Application.StartupPath, "InvitationWizard.exe"), "/ID=" + sub.ID + ":" + sub.DomainID);
 					break;
 				case SubscriptionStates.Pending:
@@ -344,15 +345,6 @@ namespace Novell.iFolder.FormsTrayApp
 					catch (Exception ex)
 					{
 						logger.Debug(ex, "Accepting");
-					}
-					break;
-				case SubscriptionStates.Ready:
-					FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-					if(folderBrowserDialog.ShowDialog() == DialogResult.OK)
-					{
-						sub.CollectionRoot = folderBrowserDialog.SelectedPath;
-						this.poBox.Commit(sub);
-						sub.CreateSlave(store);
 					}
 					break;
 					
