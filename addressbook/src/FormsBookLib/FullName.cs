@@ -36,17 +36,18 @@ namespace Novell.iFolder.FormsBookLib
 	{
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
-		private System.Windows.Forms.TextBox title;
 		private System.Windows.Forms.TextBox firstName;
 		private System.Windows.Forms.TextBox middleName;
 		private System.Windows.Forms.TextBox lastName;
-		private System.Windows.Forms.TextBox suffix;
-		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.ComboBox title;
+		private System.Windows.Forms.ComboBox suffix;
+		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.CheckBox show;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -88,48 +89,41 @@ namespace Novell.iFolder.FormsBookLib
 		{
 			this.ok = new System.Windows.Forms.Button();
 			this.cancel = new System.Windows.Forms.Button();
-			this.title = new System.Windows.Forms.TextBox();
 			this.firstName = new System.Windows.Forms.TextBox();
 			this.middleName = new System.Windows.Forms.TextBox();
 			this.lastName = new System.Windows.Forms.TextBox();
-			this.suffix = new System.Windows.Forms.TextBox();
-			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
+			this.title = new System.Windows.Forms.ComboBox();
+			this.suffix = new System.Windows.Forms.ComboBox();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.show = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// ok
 			// 
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.ok.Location = new System.Drawing.Point(56, 192);
+			this.ok.Location = new System.Drawing.Point(264, 16);
 			this.ok.Name = "ok";
-			this.ok.TabIndex = 5;
+			this.ok.TabIndex = 6;
 			this.ok.Text = "OK";
 			// 
 			// cancel
 			// 
 			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.cancel.Location = new System.Drawing.Point(136, 192);
+			this.cancel.Location = new System.Drawing.Point(264, 48);
 			this.cancel.Name = "cancel";
-			this.cancel.TabIndex = 6;
+			this.cancel.TabIndex = 7;
 			this.cancel.Text = "Cancel";
-			// 
-			// title
-			// 
-			this.title.Location = new System.Drawing.Point(48, 16);
-			this.title.Name = "title";
-			this.title.Size = new System.Drawing.Size(160, 20);
-			this.title.TabIndex = 0;
-			this.title.Text = "";
 			// 
 			// firstName
 			// 
-			this.firstName.Location = new System.Drawing.Point(48, 48);
+			this.firstName.Location = new System.Drawing.Point(80, 64);
 			this.firstName.Name = "firstName";
 			this.firstName.Size = new System.Drawing.Size(160, 20);
 			this.firstName.TabIndex = 1;
@@ -137,7 +131,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// middleName
 			// 
-			this.middleName.Location = new System.Drawing.Point(48, 80);
+			this.middleName.Location = new System.Drawing.Point(80, 96);
 			this.middleName.Name = "middleName";
 			this.middleName.Size = new System.Drawing.Size(160, 20);
 			this.middleName.TabIndex = 2;
@@ -145,32 +139,15 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// lastName
 			// 
-			this.lastName.Location = new System.Drawing.Point(48, 112);
+			this.lastName.Location = new System.Drawing.Point(80, 128);
 			this.lastName.Name = "lastName";
 			this.lastName.Size = new System.Drawing.Size(160, 20);
 			this.lastName.TabIndex = 3;
 			this.lastName.Text = "";
 			// 
-			// suffix
-			// 
-			this.suffix.Location = new System.Drawing.Point(48, 144);
-			this.suffix.Name = "suffix";
-			this.suffix.Size = new System.Drawing.Size(160, 20);
-			this.suffix.TabIndex = 4;
-			this.suffix.Text = "";
-			// 
-			// groupBox1
-			// 
-			this.groupBox1.Location = new System.Drawing.Point(6, 176);
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(208, 4);
-			this.groupBox1.TabIndex = 7;
-			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "groupBox1";
-			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(19, 18);
+			this.label1.Location = new System.Drawing.Point(24, 32);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(40, 16);
 			this.label1.TabIndex = 8;
@@ -178,7 +155,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(20, 50);
+			this.label2.Location = new System.Drawing.Point(24, 64);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(40, 16);
 			this.label2.TabIndex = 9;
@@ -186,7 +163,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// label3
 			// 
-			this.label3.Location = new System.Drawing.Point(8, 82);
+			this.label3.Location = new System.Drawing.Point(24, 96);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(56, 16);
 			this.label3.TabIndex = 10;
@@ -194,7 +171,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// label4
 			// 
-			this.label4.Location = new System.Drawing.Point(18, 114);
+			this.label4.Location = new System.Drawing.Point(24, 128);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(40, 16);
 			this.label4.TabIndex = 11;
@@ -202,27 +179,74 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// label5
 			// 
-			this.label5.Location = new System.Drawing.Point(12, 146);
+			this.label5.Location = new System.Drawing.Point(24, 160);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(48, 16);
 			this.label5.TabIndex = 12;
 			this.label5.Text = "Suffix:";
+			// 
+			// title
+			// 
+			this.title.Items.AddRange(new object[] {
+													   "Dr.",
+													   "Miss",
+													   "Mr.",
+													   "Mrs.",
+													   "Ms.",
+													   "Prof."});
+			this.title.Location = new System.Drawing.Point(80, 32);
+			this.title.Name = "title";
+			this.title.Size = new System.Drawing.Size(88, 21);
+			this.title.TabIndex = 0;
+			// 
+			// suffix
+			// 
+			this.suffix.Items.AddRange(new object[] {
+														"I",
+														"II",
+														"III",
+														"Jr.",
+														"Sr."});
+			this.suffix.Location = new System.Drawing.Point(80, 160);
+			this.suffix.Name = "suffix";
+			this.suffix.Size = new System.Drawing.Size(88, 21);
+			this.suffix.TabIndex = 4;
+			// 
+			// groupBox1
+			// 
+			this.groupBox1.Location = new System.Drawing.Point(16, 8);
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.Size = new System.Drawing.Size(240, 184);
+			this.groupBox1.TabIndex = 15;
+			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = "Name details";
+			// 
+			// show
+			// 
+			this.show.Checked = true;
+			this.show.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.show.Location = new System.Drawing.Point(16, 200);
+			this.show.Name = "show";
+			this.show.Size = new System.Drawing.Size(296, 24);
+			this.show.TabIndex = 5;
+			this.show.Text = "Show this again when name is incomplete or unclear.";
 			// 
 			// FullName
 			// 
 			this.AcceptButton = this.ok;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.CancelButton = this.cancel;
-			this.ClientSize = new System.Drawing.Size(218, 224);
-			this.Controls.Add(this.suffix);
+			this.ClientSize = new System.Drawing.Size(354, 232);
+			this.Controls.Add(this.show);
 			this.Controls.Add(this.lastName);
 			this.Controls.Add(this.middleName);
 			this.Controls.Add(this.firstName);
-			this.Controls.Add(this.title);
+			this.Controls.Add(this.suffix);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
+			this.Controls.Add(this.title);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.cancel);

@@ -27,6 +27,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
+using System.Text.RegularExpressions;
 using Simias.Storage;
 using Novell.AddressBook;
 
@@ -132,6 +133,7 @@ namespace Novell.iFolder.FormsBookLib
 		{
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.pictureContact = new System.Windows.Forms.PictureBox();
 			this.changePicture = new System.Windows.Forms.Button();
 			this.fullNameButton = new System.Windows.Forms.Button();
 			this.emailSelect = new System.Windows.Forms.ComboBox();
@@ -162,7 +164,6 @@ namespace Novell.iFolder.FormsBookLib
 			this.pictureMail = new System.Windows.Forms.PictureBox();
 			this.eMail = new System.Windows.Forms.TextBox();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.pictureContact = new System.Windows.Forms.PictureBox();
 			this.organization = new System.Windows.Forms.TextBox();
 			this.jobTitle = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
@@ -185,6 +186,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// tabPage1
 			// 
+			this.tabPage1.Controls.Add(this.pictureContact);
 			this.tabPage1.Controls.Add(this.changePicture);
 			this.tabPage1.Controls.Add(this.fullNameButton);
 			this.tabPage1.Controls.Add(this.emailSelect);
@@ -215,7 +217,6 @@ namespace Novell.iFolder.FormsBookLib
 			this.tabPage1.Controls.Add(this.pictureMail);
 			this.tabPage1.Controls.Add(this.eMail);
 			this.tabPage1.Controls.Add(this.groupBox1);
-			this.tabPage1.Controls.Add(this.pictureContact);
 			this.tabPage1.Controls.Add(this.organization);
 			this.tabPage1.Controls.Add(this.jobTitle);
 			this.tabPage1.Controls.Add(this.label3);
@@ -227,13 +228,23 @@ namespace Novell.iFolder.FormsBookLib
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "General";
 			// 
+			// pictureContact
+			// 
+			this.pictureContact.Location = new System.Drawing.Point(16, 8);
+			this.pictureContact.Name = "pictureContact";
+			this.pictureContact.Size = new System.Drawing.Size(60, 75);
+			this.pictureContact.TabIndex = 17;
+			this.pictureContact.TabStop = false;
+			this.pictureContact.DoubleClick += new System.EventHandler(this.pictureContact_DoubleClick);
+			// 
 			// changePicture
 			// 
 			this.changePicture.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.changePicture.Location = new System.Drawing.Point(8, 88);
+			this.changePicture.Location = new System.Drawing.Point(12, 4);
 			this.changePicture.Name = "changePicture";
-			this.changePicture.TabIndex = 4;
-			this.changePicture.Text = "Change...";
+			this.changePicture.Size = new System.Drawing.Size(68, 83);
+			this.changePicture.TabIndex = 5;
+			this.changePicture.Text = "Photo...";
 			this.changePicture.Click += new System.EventHandler(this.changePicture_Click);
 			// 
 			// fullNameButton
@@ -264,7 +275,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.blogAddress.Location = new System.Drawing.Point(176, 256);
 			this.blogAddress.Name = "blogAddress";
 			this.blogAddress.Size = new System.Drawing.Size(192, 20);
-			this.blogAddress.TabIndex = 11;
+			this.blogAddress.TabIndex = 10;
 			this.blogAddress.Text = "";
 			// 
 			// label5
@@ -281,7 +292,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.addr.Location = new System.Drawing.Point(424, 192);
 			this.addr.Name = "addr";
 			this.addr.Size = new System.Drawing.Size(96, 23);
-			this.addr.TabIndex = 22;
+			this.addr.TabIndex = 20;
 			this.addr.Text = "Address...";
 			this.addr.Click += new System.EventHandler(this.addr_Click);
 			// 
@@ -333,7 +344,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.mailAddress.Location = new System.Drawing.Point(528, 264);
 			this.mailAddress.Name = "mailAddress";
 			this.mailAddress.Size = new System.Drawing.Size(160, 16);
-			this.mailAddress.TabIndex = 24;
+			this.mailAddress.TabIndex = 22;
 			this.mailAddress.Text = "This is the mailing address";
 			// 
 			// addressSelect
@@ -345,7 +356,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.addressSelect.Location = new System.Drawing.Point(424, 160);
 			this.addressSelect.Name = "addressSelect";
 			this.addressSelect.Size = new System.Drawing.Size(96, 21);
-			this.addressSelect.TabIndex = 21;
+			this.addressSelect.TabIndex = 19;
 			this.addressSelect.Text = "Business:";
 			this.addressSelect.SelectedIndexChanged += new System.EventHandler(this.addressSelect_SelectedIndexChanged);
 			// 
@@ -363,7 +374,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.addressView.Name = "addressView";
 			this.addressView.SelectionMode = System.Windows.Forms.SelectionMode.None;
 			this.addressView.Size = new System.Drawing.Size(192, 95);
-			this.addressView.TabIndex = 23;
+			this.addressView.TabIndex = 21;
 			// 
 			// preferredEmail
 			// 
@@ -387,7 +398,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.phoneSelect3.Location = new System.Drawing.Point(424, 80);
 			this.phoneSelect3.Name = "phoneSelect3";
 			this.phoneSelect3.Size = new System.Drawing.Size(96, 21);
-			this.phoneSelect3.TabIndex = 17;
+			this.phoneSelect3.TabIndex = 15;
 			this.phoneSelect3.Text = "Home:";
 			this.phoneSelect3.SelectedIndexChanged += new System.EventHandler(this.phoneSelect3_SelectedIndexChanged);
 			// 
@@ -403,7 +414,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.phoneSelect4.Location = new System.Drawing.Point(424, 112);
 			this.phoneSelect4.Name = "phoneSelect4";
 			this.phoneSelect4.Size = new System.Drawing.Size(96, 21);
-			this.phoneSelect4.TabIndex = 19;
+			this.phoneSelect4.TabIndex = 17;
 			this.phoneSelect4.Text = "Mobile:";
 			this.phoneSelect4.SelectedIndexChanged += new System.EventHandler(this.phoneSelect4_SelectedIndexChanged);
 			// 
@@ -427,7 +438,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.phoneSelect1.Location = new System.Drawing.Point(424, 16);
 			this.phoneSelect1.Name = "phoneSelect1";
 			this.phoneSelect1.Size = new System.Drawing.Size(96, 21);
-			this.phoneSelect1.TabIndex = 13;
+			this.phoneSelect1.TabIndex = 11;
 			this.phoneSelect1.Text = "Business:";
 			this.phoneSelect1.SelectedIndexChanged += new System.EventHandler(this.phoneSelect1_SelectedIndexChanged);
 			// 
@@ -443,7 +454,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.phoneSelect2.Location = new System.Drawing.Point(424, 48);
 			this.phoneSelect2.Name = "phoneSelect2";
 			this.phoneSelect2.Size = new System.Drawing.Size(96, 21);
-			this.phoneSelect2.TabIndex = 15;
+			this.phoneSelect2.TabIndex = 13;
 			this.phoneSelect2.Text = "Business fax:";
 			this.phoneSelect2.SelectedIndexChanged += new System.EventHandler(this.phoneSelect2_SelectedIndexChanged);
 			// 
@@ -452,7 +463,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.userId.Location = new System.Drawing.Point(176, 112);
 			this.userId.Name = "userId";
 			this.userId.Size = new System.Drawing.Size(192, 20);
-			this.userId.TabIndex = 5;
+			this.userId.TabIndex = 4;
 			this.userId.Text = "";
 			// 
 			// label7
@@ -468,7 +479,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.phone4.Location = new System.Drawing.Point(528, 112);
 			this.phone4.Name = "phone4";
 			this.phone4.Size = new System.Drawing.Size(192, 20);
-			this.phone4.TabIndex = 20;
+			this.phone4.TabIndex = 18;
 			this.phone4.Text = "";
 			this.phone4.TextChanged += new System.EventHandler(this.phone4_TextChanged);
 			this.phone4.Leave += new System.EventHandler(this.phone4_Leave);
@@ -478,7 +489,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.phone3.Location = new System.Drawing.Point(528, 80);
 			this.phone3.Name = "phone3";
 			this.phone3.Size = new System.Drawing.Size(192, 20);
-			this.phone3.TabIndex = 18;
+			this.phone3.TabIndex = 16;
 			this.phone3.Text = "";
 			this.phone3.TextChanged += new System.EventHandler(this.phone3_TextChanged);
 			this.phone3.Leave += new System.EventHandler(this.phone3_Leave);
@@ -488,7 +499,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.phone2.Location = new System.Drawing.Point(528, 48);
 			this.phone2.Name = "phone2";
 			this.phone2.Size = new System.Drawing.Size(192, 20);
-			this.phone2.TabIndex = 16;
+			this.phone2.TabIndex = 14;
 			this.phone2.Text = "";
 			this.phone2.TextChanged += new System.EventHandler(this.phone2_TextChanged);
 			this.phone2.Leave += new System.EventHandler(this.phone2_Leave);
@@ -498,7 +509,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.phone1.Location = new System.Drawing.Point(528, 16);
 			this.phone1.Name = "phone1";
 			this.phone1.Size = new System.Drawing.Size(192, 20);
-			this.phone1.TabIndex = 14;
+			this.phone1.TabIndex = 12;
 			this.phone1.Text = "";
 			this.phone1.TextChanged += new System.EventHandler(this.phone1_TextChanged);
 			this.phone1.Leave += new System.EventHandler(this.phone1_Leave);
@@ -529,14 +540,6 @@ namespace Novell.iFolder.FormsBookLib
 			this.groupBox1.TabIndex = 18;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "groupBox1";
-			// 
-			// pictureContact
-			// 
-			this.pictureContact.Location = new System.Drawing.Point(16, 8);
-			this.pictureContact.Name = "pictureContact";
-			this.pictureContact.Size = new System.Drawing.Size(60, 75);
-			this.pictureContact.TabIndex = 17;
-			this.pictureContact.TabStop = false;
 			// 
 			// organization
 			// 
@@ -574,10 +577,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.fullName.Location = new System.Drawing.Point(176, 16);
 			this.fullName.Name = "fullName";
-			this.fullName.ReadOnly = true;
 			this.fullName.Size = new System.Drawing.Size(192, 20);
 			this.fullName.TabIndex = 1;
 			this.fullName.Text = "";
+			this.fullName.Leave += new System.EventHandler(this.fullName_Leave);
 			// 
 			// ok
 			// 
@@ -870,14 +873,14 @@ namespace Novell.iFolder.FormsBookLib
 		#region Event Handlers
 		private void ContactEditor_Load(object sender, EventArgs e)
 		{
+			// Get the base path.
+			string basePath = Path.Combine(loadPath != null ? loadPath : Application.StartupPath, "res");
+
 			try
 			{
 				// Load the images.
-				// Get the base path.
-				string basePath = Path.Combine(loadPath != null ? loadPath : Application.StartupPath, "res");
-
-				pictureContact.SizeMode = PictureBoxSizeMode.StretchImage;
-				pictureContact.Image = Image.FromFile(Path.Combine(basePath, "blankhead.png"));
+//				pictureContact.SizeMode = PictureBoxSizeMode.StretchImage;
+//				pictureContact.Image = Image.FromFile(Path.Combine(basePath, "blankhead.png"));
 				picturePhone.Image = Image.FromFile(Path.Combine(basePath, "cellphone.png"));
 				pictureMail.Image = Image.FromFile(Path.Combine(basePath, "ico-mail.png"));
 				pictureAddress.Image = Image.FromFile(Path.Combine(basePath, "house.png"));
@@ -907,9 +910,14 @@ namespace Novell.iFolder.FormsBookLib
 
 				try
 				{
+					pictureContact.SizeMode = PictureBoxSizeMode.StretchImage;
 					pictureContact.Image = Image.FromStream(contact.ExportPhoto());
+					changePicture.Hide();
 				}
-				catch{}
+				catch
+				{
+					pictureContact.Hide();
+				}
 
 				bool results = LoadAddresses();
 			}
@@ -1094,8 +1102,7 @@ namespace Novell.iFolder.FormsBookLib
 				else if (name == null ||
 					(name != null) && ((name.Given == null || name.Given == "") || (name.Family == null || name.Family == "")))
 				{
-					// TODO - hmmm ...
-					fullNameButton_Click(this, null);
+					this.fullName.Focus();
 				}
 				else
 				{
@@ -1110,7 +1117,7 @@ namespace Novell.iFolder.FormsBookLib
 		private void ContactEditor_Activated(object sender, EventArgs e)
 		{
 			// Set focus to the first edit box on the form.
-			this.fullNameButton.Focus();
+			this.fullName.Focus();
 		}
 
 		private void phone1_Leave(object sender, System.EventArgs e)
@@ -1338,6 +1345,7 @@ namespace Novell.iFolder.FormsBookLib
 
 			fullNameDlg.Title = name.Prefix;
 			fullNameDlg.FirstName = name.Given;
+			fullNameDlg.MiddleName = name.Other;
 			fullNameDlg.LastName = name.Family;
 			fullNameDlg.Suffix = name.Suffix;
 
@@ -1350,6 +1358,8 @@ namespace Novell.iFolder.FormsBookLib
 				// BUGBUG - Given name changes aren't sticking
 				if (name.Given != fullNameDlg.FirstName)
 					name.Given = fullNameDlg.FirstName;
+				if (name.Other != fullNameDlg.MiddleName)
+					name.Other = fullNameDlg.MiddleName;
 				if (name.Family != fullNameDlg.LastName)
 					name.Family = fullNameDlg.LastName;
 				if (name.Suffix != fullNameDlg.Suffix)
@@ -1529,6 +1539,7 @@ namespace Novell.iFolder.FormsBookLib
 		{
 			// BUGBUG - need to newup a contact on create so that the photo can be imported.
 			OpenFileDialog openFileDialog = new OpenFileDialog();
+			openFileDialog.Title = "Add Contact Picture";
 			openFileDialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF";
 
 			if(openFileDialog.ShowDialog() == DialogResult.OK)
@@ -1537,15 +1548,85 @@ namespace Novell.iFolder.FormsBookLib
 				{
 					contact.ImportPhoto(openFileDialog.OpenFile());
 					pictureContact.Image = Image.FromStream(contact.ExportPhoto());
+					pictureContact.Show();
+					changePicture.Hide();
 				}
-				catch{}
+				catch
+				{
+					pictureContact.Hide();
+				}
 			}
 		}
-		#endregion
+
+		private void fullName_Leave(object sender, System.EventArgs e)
+		{
+			// Parse name...
+			// TODO - much more to be done here ... this is just a starting point.
+
+			// Make sure some text has been entered.
+			string tmpName = fullName.Text.Trim();
+			if (tmpName.Length > 0)
+			{
+//				bool newName = false;
+
+				// Initialize.
+				if (name == null)
+				{
+					name = new Name();
+//					newName = true;
+				}
+
+				Regex o = new Regex("[ ]+");
+				string[] s = o.Split(tmpName);
+				int length = s.Length;
+//				if (newName)
+				{
+					name.Given = s[0];
+
+					if (length != 2)
+					{
+						if (length > 1)
+						{
+							for (int n = 1; n < length - 1; n++)
+							{
+								name.Other += s[n] + " ";
+							}
+
+							name.Other = name.Other.Trim();
+							name.Family = s[length - 1];
+						}
+
+						fullNameButton_Click(this, null);
+					}
+					else
+					{
+						name.Family = s[length - 1];
+					}
+				}
+//				else
+//				{
+//					name.Given = s[0];
+//				}
+			}
+			else if (name != null)
+			{
+				name.Given = "";
+				name.Other = "";
+				name.Family = "";
+				name.Prefix = "";
+				name.Suffix = "";
+			}
+		}
+
+		private void pictureContact_DoubleClick(object sender, System.EventArgs e)
+		{
+			changePicture_Click(sender, e);
+		}
 
 		private void cancel_Click(object sender, System.EventArgs e)
 		{
 //			contact.Rollback();
 		}
+		#endregion
 	}
 }
