@@ -206,7 +206,7 @@ namespace Novell.iFolder.iFolderCom
 			// Invoke the iFolder properties dialog.
 //			Win32Window.ShObjectProperties(IntPtr.Zero, SHOP_FILEPATH, FolderName, "iFolder");
 			iFolderComponent ifCom = new iFolderComponent();
-			ifCom.InvokeAdvancedDlg(LoadPath, FolderName, false);
+			ifCom.InvokeAdvancedDlg(LoadPath, FolderName, "share", false);
 		}
 
 		private void close_Click(object sender, System.EventArgs e)

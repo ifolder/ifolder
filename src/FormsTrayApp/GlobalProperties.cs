@@ -33,6 +33,8 @@ using Simias;
 using Simias.Sync;
 using Simias.Service;
 using Novell.iFolder;
+using Novell.iFolder.iFolderCom;
+using Novell.iFolder.Win32Util;
 
 namespace Novell.iFolder.FormsTrayApp
 {
@@ -88,6 +90,12 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuPause;
 		private System.Windows.Forms.MenuItem menuStop;
 		private System.Windows.Forms.MenuItem menuRestart;
+		private System.Windows.Forms.MenuItem menuShare;
+		private System.Windows.Forms.MenuItem menuRevert;
+		private System.Windows.Forms.MenuItem menuProperties;
+		private System.Windows.Forms.MenuItem menuRefresh;
+		private System.Windows.Forms.MenuItem menuSeparator1;
+		private System.Windows.Forms.MenuItem menuSeparator2;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -158,6 +166,12 @@ namespace Novell.iFolder.FormsTrayApp
 			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
 			this.menuOpen = new System.Windows.Forms.MenuItem();
 			this.menuCreate = new System.Windows.Forms.MenuItem();
+			this.menuRefresh = new System.Windows.Forms.MenuItem();
+			this.menuSeparator1 = new System.Windows.Forms.MenuItem();
+			this.menuRevert = new System.Windows.Forms.MenuItem();
+			this.menuShare = new System.Windows.Forms.MenuItem();
+			this.menuSeparator2 = new System.Windows.Forms.MenuItem();
+			this.menuProperties = new System.Windows.Forms.MenuItem();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -349,20 +363,66 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																						 this.menuOpen,
-																						 this.menuCreate});
+																						 this.menuCreate,
+																						 this.menuRefresh,
+																						 this.menuSeparator1,
+																						 this.menuRevert,
+																						 this.menuShare,
+																						 this.menuSeparator2,
+																						 this.menuProperties});
+			this.contextMenu1.Popup += new System.EventHandler(this.contextMenu1_Popup);
 			// 
 			// menuOpen
 			// 
 			this.menuOpen.Index = 0;
-			this.menuOpen.Text = "&Open";
+			this.menuOpen.Text = "&Open...";
 			this.menuOpen.Visible = false;
 			this.menuOpen.Click += new System.EventHandler(this.menuOpen_Click);
 			// 
 			// menuCreate
 			// 
 			this.menuCreate.Index = 1;
-			this.menuCreate.Text = "&Create";
+			this.menuCreate.Text = "&Create iFolder";
 			this.menuCreate.Click += new System.EventHandler(this.menuCreate_Click);
+			// 
+			// menuRefresh
+			// 
+			this.menuRefresh.Index = 2;
+			this.menuRefresh.Text = "&Refresh list";
+			this.menuRefresh.Click += new System.EventHandler(this.menuRefresh_Click);
+			// 
+			// menuSeparator1
+			// 
+			this.menuSeparator1.Index = 3;
+			this.menuSeparator1.Text = "-";
+			this.menuSeparator1.Visible = false;
+			// 
+			// menuRevert
+			// 
+			this.menuRevert.Index = 4;
+			this.menuRevert.Text = "Revert to a normal folder";
+			this.menuRevert.Visible = false;
+			this.menuRevert.Click += new System.EventHandler(this.menuRevert_Click);
+			// 
+			// menuShare
+			// 
+			this.menuShare.Index = 5;
+			this.menuShare.Text = "&Share with...";
+			this.menuShare.Visible = false;
+			this.menuShare.Click += new System.EventHandler(this.menuShare_Click);
+			// 
+			// menuSeparator2
+			// 
+			this.menuSeparator2.Index = 6;
+			this.menuSeparator2.Text = "-";
+			this.menuSeparator2.Visible = false;
+			// 
+			// menuProperties
+			// 
+			this.menuProperties.Index = 7;
+			this.menuProperties.Text = "Properties...";
+			this.menuProperties.Visible = false;
+			this.menuProperties.Click += new System.EventHandler(this.menuProperties_Click);
 			// 
 			// tabPage2
 			// 
@@ -637,6 +697,56 @@ namespace Novell.iFolder.FormsTrayApp
 				runKey.DeleteValue(iFolderRun, false);
 			}
 		}
+
+		private void refreshiFolders()
+		{
+			iFolderView.Items.Clear();
+			iFolderView.SelectedItems.Clear();
+
+			foreach (iFolder ifolder in manager)
+			{
+				ListViewItem lvi = new ListViewItem(ifolder.Name, 0);
+				lvi.Tag = ifolder.ID;
+				iFolderView.Items.Add(lvi);
+			}
+		}
+
+		private void invokeiFolderProperties(ListViewItem lvi, string activeTab)
+		{
+			iFolder ifolder = null;
+
+			try
+			{
+				ifolder = manager.GetiFolderById((string)lvi.Tag);
+
+				string windowName = "Advanced iFolder Properties for " + Path.GetFileName(ifolder.LocalPath);
+
+				// Search for existing window and bring it to foreground ...
+				Win32Window win32Window = Win32Util.Win32Window.FindWindow(null, windowName);
+				if (win32Window != null)
+				{
+					win32Window.BringWindowToTop();
+				}
+				else
+				{
+					iFolderAdvanced ifolderAdvanced = new iFolderAdvanced();
+					ifolderAdvanced.Name = ifolder.LocalPath;
+					ifolderAdvanced.Text = windowName;
+					ifolderAdvanced.CurrentiFolder = ifolder;
+					ifolderAdvanced.ActiveTab = activeTab;
+
+					ifolderAdvanced.ShowDialog();
+				}
+			}
+			catch (SimiasException ex)
+			{
+				ex.LogError();
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "Sharing");
+			}
+		}
 		#endregion
 
 		#region Event Handlers
@@ -667,12 +777,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 				autoStart.Checked = IsRunEnabled();
 
-				foreach (iFolder ifolder in manager)
-				{
-					ListViewItem lvi = new ListViewItem(ifolder.Name, 0);
-					lvi.Tag = ifolder.ID;
-					iFolderView.Items.Add(lvi);
-				}
+				refreshiFolders();
 
 				foreach (ServiceCtl svc in serviceManager)
 				{
@@ -734,9 +839,6 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void iFolderView_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
-			menuOpen.Visible = iFolderView.SelectedItems.Count == 1;
-			menuCreate.Visible = iFolderView.SelectedItems.Count == 0;
-
 			if (iFolderView.SelectedItems.Count == 1)
 			{
 				Cursor.Current = Cursors.WaitCursor;
@@ -769,6 +871,14 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 		}
 
+		private void contextMenu1_Popup(object sender, System.EventArgs e)
+		{
+			menuShare.Visible = menuProperties.Visible = menuRevert.Visible = 
+				menuSeparator1.Visible = menuSeparator2.Visible = 
+				menuOpen.Visible = iFolderView.SelectedItems.Count == 1;
+			menuRefresh.Visible = menuCreate.Visible = iFolderView.SelectedItems.Count == 0;
+		}
+
 		private void menuOpen_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = iFolderView.SelectedItems[0];
@@ -794,6 +904,47 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 		}
 
+		private void menuRevert_Click(object sender, System.EventArgs e)
+		{
+			ListViewItem lvi = iFolderView.SelectedItems[0];
+
+			Cursor.Current = Cursors.WaitCursor;
+
+			try
+			{
+				iFolder ifolder = manager.GetiFolderById((string)lvi.Tag);
+				string path = ifolder.LocalPath;
+
+				// Delete the iFolder.
+				manager.DeleteiFolderById((string)lvi.Tag);
+
+				// Notify the shell.
+				Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, path, IntPtr.Zero);
+
+				lvi.Remove();
+			}
+			catch (SimiasException ex)
+			{
+				ex.LogError();
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "Reverting");
+			}
+
+			Cursor.Current = Cursors.Default;
+		}
+
+		private void menuShare_Click(object sender, System.EventArgs e)
+		{
+			invokeiFolderProperties(iFolderView.SelectedItems[0], "share");
+		}
+
+		private void menuProperties_Click(object sender, System.EventArgs e)
+		{
+			invokeiFolderProperties(iFolderView.SelectedItems[0], null);
+		}
+
 		private void menuCreate_Click(object sender, System.EventArgs e)
 		{
 			FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
@@ -806,7 +957,13 @@ namespace Novell.iFolder.FormsTrayApp
 					{
 						if (manager.CanBeiFolder(folderBrowserDialog.SelectedPath))
 						{
+							// Create the iFolder.
 							iFolder ifolder = manager.CreateiFolder(folderBrowserDialog.SelectedPath);
+
+							// Notify the shell.
+							Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, folderBrowserDialog.SelectedPath, IntPtr.Zero);
+
+							// Add the iFolder to the listview.
 							ListViewItem lvi = new ListViewItem(ifolder.Name, 0);
 							lvi.Tag = ifolder.ID;
 							iFolderView.Items.Add(lvi);
@@ -831,6 +988,11 @@ namespace Novell.iFolder.FormsTrayApp
 					break;
 				}
 			}
+		}
+
+		private void menuRefresh_Click(object sender, System.EventArgs e)
+		{
+			refreshiFolders();
 		}
 
 		private void contextMenu2_Popup(object sender, System.EventArgs e)

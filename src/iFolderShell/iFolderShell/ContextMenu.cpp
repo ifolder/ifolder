@@ -316,7 +316,7 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 				try
 				{
 					// Invoke the iFolder Advanced properties dialog.
-					m_spiFolder->InvokeAdvancedDlg(m_szShellPath, m_szFileUserClickedOn, false);
+					m_spiFolder->InvokeAdvancedDlg(m_szShellPath, m_szFileUserClickedOn, TEXT("share"), false);
 				}
 				catch (...)
 				{
