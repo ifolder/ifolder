@@ -31,6 +31,7 @@
     IBOutlet NSSecureTextField *passwordField;
     IBOutlet NSTextField *serverField;
     IBOutlet NSTextField *userNameField;
+
 	
 	NSString *authDomainID;
 }

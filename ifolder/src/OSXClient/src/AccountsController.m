@@ -26,6 +26,7 @@
 #import "SimiasService.h"
 #import "iFolderDomain.h"
 #import "LeaveDomainSheetController.h"
+#import "iFolderData.h"
 
 
 @implementation AccountsController
@@ -58,6 +59,7 @@
 
 	domains = [[NSMutableArray alloc] init];	
 	simiasService = [[SimiasService alloc] init];
+	isFirstDomain = YES;
 
 	@try
 	{
@@ -67,6 +69,7 @@
 		for(x=0; x < [newDomains count]; x++)
 		{
 			iFolderDomain *dom = [newDomains objectAtIndex:x];
+			isFirstDomain = NO;
 
 			NSLog(@"Adding domain %@", [dom name]);
 			[domains addObject:dom];
@@ -95,17 +98,46 @@
 			iFolderDomain *newDomain = [simiasService ConnectToDomain:[userName stringValue] 
 				usingPassword:[password stringValue] andHost:[host stringValue]];
 
+
+			// Setup the Default Domain
+			if([defaultAccount state] == YES)
+			{
+				@try
+				{
+					[simiasService SetDefaultDomain:[newDomain ID]];	
+					if(defaultDomain != nil)
+						[defaultDomain setValue:NO forKeyPath:@"properties.isDefault"];
+								
+					defaultDomain = newDomain;
+				}
+				@catch(NSException ex)
+				{
+					NSLog(@"SetDefaultDomain Failed with an exception.");
+				}
+			}
+
+			if([rememberPassword state] == YES)
+			{
+				@try
+				{
+					[simiasService SetDomainPassword:[newDomain ID] password:[password stringValue]];	
+					NSLog(@"Saving password succeeded.");
+				}
+				@catch(NSException ex)
+				{
+					NSLog(@"Saving domain password Failed with an exception.");
+				}			
+			}
+
 			createMode = NO;			
 			[domains addObject:newDomain];
 			[accounts reloadData];
-			if(defaultDomain != nil)
-				[defaultDomain setValue:NO forKeyPath:@"properties.isDefault"];
-				
-			defaultDomain = newDomain;
 
 			NSMutableIndexSet    *childRows = [NSMutableIndexSet indexSet];
 			[childRows addIndex:([domains count] - 1)];
-			[accounts selectRowIndexes:childRows byExtendingSelection:NO];			
+			[accounts selectRowIndexes:childRows byExtendingSelection:NO];
+			
+			[[iFolderData sharedInstance] refresh:YES];
 		}
 		@catch (NSException *e)
 		{
@@ -137,8 +169,16 @@
 	[rememberPassword setEnabled:YES];
 	[enableAccount setState:YES];
 	[enableAccount setEnabled:NO];
-	[defaultAccount setState:YES];
-	[defaultAccount setEnabled:NO];
+	if(isFirstDomain)
+	{
+		[defaultAccount setState:YES];
+		[defaultAccount setEnabled:NO];
+	}
+	else
+	{
+		[defaultAccount setState:NO];
+		[defaultAccount setEnabled:YES];
+	}
 
 	[removeAccount setEnabled:NO];	
 
@@ -165,11 +205,12 @@
 		[domains removeObject:selectedDomain];
 		[accounts reloadData];
 		[accounts deselectAll:self];
-		NSLog(@"SetDomainActive Succeded.");
+		[[iFolderData sharedInstance] refresh:NO];
+		NSLog(@"LeaveDomain Succeded.");
 	}
 	@catch(NSException ex)
 	{
-		NSLog(@"SetDomainActive Failed with an exception.");
+		NSLog(@"LeaveDomain Failed with an exception.");
 	}
 }
 
@@ -208,20 +249,23 @@
 
 - (IBAction)toggleDefault:(id)sender
 {
-	if([defaultAccount state] == YES)
+	if(!createMode)
 	{
-		@try
+		if([defaultAccount state] == YES)
 		{
-			[simiasService SetDefaultDomain:[selectedDomain ID]];	
-			if(defaultDomain != nil)
-				[defaultDomain setValue:NO forKeyPath:@"properties.isDefault"];
-						
-			defaultDomain = selectedDomain;
-			NSLog(@"SetDefaultDomain Succeded.");
-		}
-		@catch(NSException ex)
-		{
-			NSLog(@"SetDefaultDomain Failed with an exception.");
+			@try
+			{
+				[simiasService SetDefaultDomain:[selectedDomain ID]];	
+				if(defaultDomain != nil)
+					[defaultDomain setValue:NO forKeyPath:@"properties.isDefault"];
+							
+				defaultDomain = selectedDomain;
+				NSLog(@"SetDefaultDomain Succeded.");
+			}
+			@catch(NSException ex)
+			{
+				NSLog(@"SetDefaultDomain Failed with an exception.");
+			}
 		}
 	}
 }
@@ -231,30 +275,33 @@
 
 - (IBAction)toggleSavePassword:(id)sender
 {
-	NSString *newPassword = nil;
-
-	if([rememberPassword state] != NO)
+	if(!createMode)
 	{
-		if([[password stringValue] length] > 0)
+		NSString *newPassword = nil;
+
+		if([rememberPassword state] != NO)
 		{
-			NSLog(@"Saving password...");
-			newPassword = [password stringValue];
+			if([[password stringValue] length] > 0)
+			{
+				NSLog(@"Saving password...");
+				newPassword = [password stringValue];
+			}
+			else
+				NSLog(@"Saved password was nil, removing saved password...");
 		}
 		else
-			NSLog(@"Saved password was nil, removing saved password...");
-	}
-	else
-	{
-		NSLog(@"Removing saved password...");
-	}
+		{
+			NSLog(@"Removing saved password...");
+		}
 
-	@try
-	{
-		[simiasService SetDomainPassword:[selectedDomain ID] password:newPassword];	
-		NSLog(@"Saving password succeeded.");
-	}
-	@catch(NSException ex)
-	{
+		@try
+		{
+			[simiasService SetDomainPassword:[selectedDomain ID] password:newPassword];	
+			NSLog(@"Saving password succeeded.");
+		}
+		@catch(NSException ex)
+		{
+		}
 	}
 }
 

@@ -92,39 +92,6 @@ static iFolderWindowController *sharedInstance = nil;
 
 
 
-+(void)addiFolderTS:(iFolder *)newiFolder
-{
-	if(sharedInstance != nil)
-	{
-		[sharedInstance performSelectorOnMainThread:@selector(addiFolder:) 
-					withObject:newiFolder waitUntilDone:YES ];		
-	}
-}
--(void)addiFolder:(iFolder *)newiFolder
-{
-	[ifoldersController addObject:newiFolder];
-}
-
-
-
-
-+(void)removeiFolderTS:(iFolder *)ifolder
-{
-	if(sharedInstance != nil)
-	{
-		[sharedInstance performSelectorOnMainThread:@selector(removeiFolder:) 
-					withObject:ifolder waitUntilDone:YES ];		
-	}
-}
--(void)removeiFolder:(iFolder *)ifolder
-{
-	NSLog(@"remove the iFolder %@", [ifolder Name]);
-	[ifoldersController removeObject:ifolder];
-}
-
-
-
-
 
 - (void)windowWillClose:(NSNotification *)aNotification
 {
@@ -159,21 +126,23 @@ static iFolderWindowController *sharedInstance = nil;
 	ifolderService = [[iFolderService alloc] init];
 	simiasService = [[SimiasService alloc] init];
 
-	keyedDomains = [[NSMutableDictionary alloc] init];
-	keyediFolders = [[NSMutableDictionary alloc] init];
-	
-	[[NSApp delegate] addLog:@"iFolder reading all domains"];
+	ifoldersController = [[iFolderData sharedInstance] ifolderArrayController];
 
-	NSArray *newDomains = [[iFolderData sharedInstance] getDomains];
-	if(newDomains != nil)
-	{
-		[domainsController addObjects:newDomains];
-	}
-	NSArray *newiFolders = [[iFolderData sharedInstance] getiFolders];
-	if(newiFolders != nil)
-	{
-		[ifoldersController addObjects:newiFolders];
-	}
+    NSMutableDictionary *bindingOptions = [NSMutableDictionary dictionary];
+    	
+	// binding options for "name"
+	[bindingOptions setObject:@"No Name" forKey:@"NSNullPlaceholder"];
+
+	// bind the table column to the log to display it's contents
+
+	[iconColumn bind:@"value" toObject:ifoldersController
+					withKeyPath:@"arrangedObjects.properties.Image" options:bindingOptions];
+	[nameColumn bind:@"value" toObject:ifoldersController
+					withKeyPath:@"arrangedObjects.properties.Name" options:bindingOptions];	
+	[locationColumn bind:@"value" toObject:ifoldersController
+					withKeyPath:@"arrangedObjects.properties.Location" options:bindingOptions];	
+	[statusColumn bind:@"value" toObject:ifoldersController
+					withKeyPath:@"arrangedObjects.properties.Status" options:bindingOptions];	
 
 	// Setup the double click black magic
 	[iFolderTable setDoubleAction:@selector(doubleClickedTable:)];
@@ -186,19 +155,37 @@ static iFolderWindowController *sharedInstance = nil;
 {
 	[[NSApp delegate] addLog:@"Refreshing iFolder view"];
 
-	[[iFolderData sharedInstance] refresh];
+	[[iFolderData sharedInstance] refresh:NO];
 
+	// calling refresh on iFolderData calls refreshDomains
+//	[self refreshDomains];
+
+//	NSArray *newiFolders = [[iFolderData sharedInstance] getiFolders];
+//	if(newiFolders != nil)
+//	{
+//		[ifoldersController setContent:newiFolders];
+//	}
+}
+
+
+
++(void)refreshDomainsTS
+{
+	if(sharedInstance != nil)
+	{
+		[sharedInstance performSelectorOnMainThread:@selector(refreshDomains:) 
+					withObject:self waitUntilDone:YES ];
+	}
+}
+-(void)refreshDomains:(id)args
+{
+/*
 	NSArray *newDomains = [[iFolderData sharedInstance] getDomains];
 	if(newDomains != nil)
 	{
 		[domainsController setContent:newDomains];
 	}
-
-	NSArray *newiFolders = [[iFolderData sharedInstance] getiFolders];
-	if(newiFolders != nil)
-	{
-		[ifoldersController setContent:newiFolders];
-	}
+*/
 }
 
 
@@ -231,7 +218,7 @@ static iFolderWindowController *sharedInstance = nil;
 	}
 	else
 	{
-		[createSheetController setSelectedDomain:[[iFolderData sharedInstance] getDefaultDomain]];
+		[[iFolderData sharedInstance] selectDefaultDomain];
 		[createSheetController showWindow:self];
 	}
 }
@@ -326,7 +313,7 @@ static iFolderWindowController *sharedInstance = nil;
 			{
 				[[iFolderData sharedInstance] deleteiFolder:[ifolder ID]];
 //				[ifolderService DeleteiFolder:[ifolder ID]];
-				[ifoldersController removeObjectAtArrangedObjectIndex:(int)contextInfo];
+//				[ifoldersController removeObject:ifolder];
 			}
 			@catch (NSException *e)
 			{
@@ -387,10 +374,7 @@ static iFolderWindowController *sharedInstance = nil;
 {
 	@try
 	{
-		iFolder *newiFolder = [[iFolderData sharedInstance] createiFolder:path inDomain:domainID];
-//		-(iFolder *)createiFolder:(NSString *)path inDomain:(NSString *)domainID;	
-//		iFolder *newiFolder = [ifolderService CreateiFolder:path InDomain:domainID];
-		[ifoldersController addObject:newiFolder];
+		[[iFolderData sharedInstance] createiFolder:path inDomain:domainID];
 	}
 	@catch (NSException *e)
 	{
@@ -407,14 +391,10 @@ static iFolderWindowController *sharedInstance = nil;
 {
 	@try
 	{
-		// just call accept, it will update the data
 		[[iFolderData sharedInstance] 
 				acceptiFolderInvitation:iFolderID
 				InDomain:domainID
 				toPath:localPath];
-//		iFolder *newiFolder = [ifolderService AcceptiFolderInvitation:iFolderID InDomain:domainID toPath:localPath];
-//		iFolder *oldiFolder = [self selectediFolder];
-//		[oldiFolder setProperties:[newiFolder properties]];
 	}
 	@catch (NSException *e)
 	{
@@ -428,8 +408,8 @@ static iFolderWindowController *sharedInstance = nil;
 
 - (void)addDomain:(iFolderDomain *)newDomain
 {
-	[domainsController addObject:newDomain];
-	[keyedDomains setObject:newDomain forKey:[newDomain ID] ];
+//	[domainsController addObject:newDomain];
+//	[keyedDomains setObject:newDomain forKey:[newDomain ID] ];
 }
 
 
@@ -493,7 +473,7 @@ static iFolderWindowController *sharedInstance = nil;
 
 - (NSArrayController *)DomainsController
 {
-	return domainsController;
+	return nil;//domainsController;
 }
 
 -(iFolder *)selectediFolder

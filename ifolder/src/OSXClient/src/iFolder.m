@@ -165,7 +165,7 @@
 	else
 	{
 		if(synchronizing)
-			[properties setObject:@"Syncrhonizing" forKey:@"Status"];
+			[properties setObject:@"Synchronizing" forKey:@"Status"];
 		else if([ [properties objectForKey:@"State"] isEqualToString:@"WaitSync"])
 			[properties setObject:@"Waiting to Sync" forKey:@"Status"];
 		else if([ [properties objectForKey:@"State"] isEqualToString:@"Local"])

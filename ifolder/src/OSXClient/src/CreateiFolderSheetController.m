@@ -23,9 +23,26 @@
 
 #import "CreateiFolderSheetController.h"
 #import "iFolderWindowController.h"
-
+#import "iFolderData.h"
 
 @implementation CreateiFolderSheetController
+
+
+-(void)awakeFromNib
+{
+	// bind the fields up to our data
+	[domainIDField bind:@"value" toObject:[[iFolderData sharedInstance] domainArrayController]
+				withKeyPath:@"selection.properties.ID" options:nil];
+
+	[domainSelector bind:@"contentValues" toObject:[[iFolderData sharedInstance] domainArrayController]
+				withKeyPath:@"arrangedObjects.properties.name" options:nil];
+
+	[domainSelector bind:@"selectedIndex" toObject:[[iFolderData sharedInstance] domainArrayController]
+				withKeyPath:@"selectionIndex" options:nil];
+
+
+}
+
 
 
 - (IBAction) showWindow:(id)sender
@@ -51,7 +68,7 @@
 
 - (IBAction) createiFolder:(id)sender
 {
-	if( ( selectedDomain != nil ) &&
+	if(	( [ [domainIDField stringValue] length] > 0 ) &&
 		( [ [pathField stringValue] length] > 0 ) )
 	{
 		[ifolderWindowController createiFolder:[pathField stringValue] inDomain:[domainIDField stringValue] ];
@@ -84,13 +101,5 @@
 	}
 }
 
-- (iFolderDomain *)selectedDomain { return selectedDomain; }
-- (void)setSelectedDomain:(iFolderDomain *)aSelectedDomain
-{
-    if (selectedDomain != aSelectedDomain) {
-        [selectedDomain autorelease];
-        selectedDomain = [aSelectedDomain retain];
-    }
-}
 
 @end

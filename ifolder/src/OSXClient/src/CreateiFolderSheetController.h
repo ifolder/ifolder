@@ -34,8 +34,6 @@
 	IBOutlet NSTextField *pathField;
 	IBOutlet NSTextField *domainIDField;
 	IBOutlet iFolderWindowController *ifolderWindowController;
-	
-	iFolderDomain *selectedDomain;
 }
 
 - (IBAction) showWindow:(id)sender;
@@ -43,7 +41,5 @@
 - (IBAction) createiFolder:(id)sender;
 - (IBAction) browseForPath:(id)sender;
 
-- (iFolderDomain *)selectedDomain;
-- (void)setSelectedDomain:(iFolderDomain *)aSelectedDomain;
 
 @end

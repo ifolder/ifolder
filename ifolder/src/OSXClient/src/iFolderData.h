@@ -38,32 +38,55 @@
 	NSMutableDictionary				*keyediFolders;		
 	NSMutableDictionary				*keyedSubscriptions;
 
+	NSMutableArray					*ifolderdomains;
+	NSMutableArray					*ifolders;
+	NSArrayController				*domainsController;
+	NSArrayController				*ifoldersController;
+	
+	NSObjectController				*ifolderDataAlias;
+
 	NSRecursiveLock					*instanceLock;
 	iFolderDomain					*defaultDomain;
 }
 
 + (iFolderData *)sharedInstance;
 
-- (void)refresh;
+-(NSArrayController *)domainArrayController;
+-(NSArrayController *)ifolderArrayController;
+
+- (void)refresh:(BOOL)onlyDomains;
+
+-(void)_addiFolder:(iFolder *)ifolder;
+-(void)_deliFolder:(NSString *)ifolderID;
+-(NSString *)getiFolderID:(NSString *)subscriptionID;
+-(void)_addDomain:(iFolderDomain *)domain;
 
 -(BOOL)isDomain:(NSString *)domainID;
 -(BOOL)isiFolder:(NSString *)ifolderID;
 -(BOOL)isPOBox:(NSString *)nodeID;
+
+
+-(iFolder *)getiFolder:(NSString *)ifolderID;
+-(iFolder *)readiFolder:(NSString *)ifolderID;
+
+-(iFolder *)getAvailableiFolder:(NSString *)ifolderID;
+-(iFolder *)readAvailableiFolder:(NSString *)ifolderID 
+									inCollection:(NSString *)collectionID;
+
 -(iFolderDomain *)getDomain:(NSString *)domainID;
 -(NSArray *)getDomains;
 -(NSArray *)getiFolders;
 -(iFolderDomain *)getDefaultDomain;
 -(int)getDomainCount;
--(iFolder *)getiFolder:(NSString *)iFolderID updateData:(BOOL)shouldUpdate;
--(iFolder *)getAvailableiFolder:(NSString *)iFolderID 
-									inCollection:(NSString *)collectionID
-									updateData:(BOOL)shouldUpdate;
--(NSString *)getiFolderID:(NSString *)subscriptionID;
--(void)removeiFolder:(NSString *)iFolderID;
--(iFolder *)createiFolder:(NSString *)path inDomain:(NSString *)domainID;
--(void)deleteiFolder:(NSString *)ifolderID;
--(void)acceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)domainID toPath:(NSString *)localPath;
--(void)revertiFolder:(NSString *)iFolderID;
+-(void)selectDefaultDomain;
 
+
+
+-(void)createiFolder:(NSString *)path inDomain:(NSString *)domainID;
+-(void)deleteiFolder:(NSString *)ifolderID;
+-(void)acceptiFolderInvitation:(NSString *)iFolderID 
+									InDomain:(NSString *)domainID 
+									toPath:(NSString *)localPath;
+- (void)revertiFolder:(NSString *)iFolderID;
 
 @end

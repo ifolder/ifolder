@@ -24,8 +24,26 @@
  
 #import "SetupiFolderSheetController.h"
 #import "iFolderWindowController.h"
+#import "iFolderData.h"
 
 @implementation SetupiFolderSheetController
+
+
+-(void)awakeFromNib
+{
+	// bind the fields up to our data
+	[domainID bind:@"value" toObject:[[iFolderData sharedInstance] ifolderArrayController]
+				withKeyPath:@"selection.properties.DomainID" options:nil];
+	[iFolderID bind:@"value" toObject:[[iFolderData sharedInstance] ifolderArrayController]
+				withKeyPath:@"selection.properties.ID" options:nil];
+	[iFolderName bind:@"value" toObject:[[iFolderData sharedInstance] ifolderArrayController]
+				withKeyPath:@"selection.properties.Name" options:nil];
+	[SharedBy bind:@"value" toObject:[[iFolderData sharedInstance] ifolderArrayController]
+				withKeyPath:@"selection.properties.Owner" options:nil];
+	[Rights bind:@"value" toObject:[[iFolderData sharedInstance] ifolderArrayController]
+				withKeyPath:@"selection.properties.CurrentUserRights" options:nil];
+}
+
 
 - (IBAction) showWindow:(id)sender
 {

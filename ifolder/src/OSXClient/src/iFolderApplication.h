@@ -93,7 +93,6 @@
 - (void)handleCollectionSyncEvent:(SMCollectionSyncEvent *)colSyncEvent;
 - (void)processNodeEvents;
 - (void)processNodeNodeEvent:(SMNodeEvent *)nodeNodeEvent;
-- (void)handleUpdateiFolder:(NSString *)ifolderID;
 - (void)processCollectionNodeEvent:(SMNodeEvent *)nodeNodeEvent;
 
 
