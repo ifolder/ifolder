@@ -31,41 +31,52 @@ namespace Simias.Sync
 	/// <summary>
 	/// Sync Manager Service
 	/// </summary>
-	public class SyncManagerService : IThreadService
+	public class SyncManagerService : BaseProcessService
 	{
+		private static SyncManagerService process;
+		
 		private Configuration config;
 		private SyncManager manager;
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public SyncManagerService()
+		public SyncManagerService() : base()
 		{
-			config = null;
-			manager = null;
+			this.config = GetConfiguration();
+			this.manager = new SyncManager(config);
 		}
 
-		#region IThreadService Members
+		static void Main(string[] args)
+		{
+			process = new SyncManagerService();
+			process.Run();
+		}
+
+		#region BaseProcessService Members
 
 		/// <summary>
 		/// Start the sync manager service.
 		/// </summary>
-		/// <param name="config"></param>
-		public void Start(Configuration config)
+		protected override void Start()
 		{
-			Debug.Assert(config != null);
-
-			this.config = config;
-
-			manager = new SyncManager(config);
-
 			manager.Start();
+		}
+
+		/// <summary>
+		/// Stop the sync manager service.
+		/// </summary>
+		protected override void Stop()
+		{
+			Debug.Assert(manager != null);
+
+			manager.Stop();
 		}
 
 		/// <summary>
 		/// Resume the sync manager service.
 		/// </summary>
-		public void Resume()
+		protected override void Resume()
 		{
 			Debug.Assert(manager != null);
 
@@ -75,7 +86,7 @@ namespace Simias.Sync
 		/// <summary>
 		/// Pause the sync manager service.
 		/// </summary>
-		public void Pause()
+		protected override void Pause()
 		{
 			Debug.Assert(manager != null);
 
@@ -87,18 +98,8 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="data"></param>
-		public void Custom(int message, string data)
+		protected override void Custom(int message, string data)
 		{
-		}
-
-		/// <summary>
-		/// Stop the sync manager service.
-		/// </summary>
-		public void Stop()
-		{
-			Debug.Assert(manager != null);
-
-			manager.Stop();
 		}
 
 		#endregion

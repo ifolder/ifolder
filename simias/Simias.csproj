@@ -900,11 +900,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncManager\Library\SyncManagerService.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\SyncManager\Library\SyncPing.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

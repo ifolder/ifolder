@@ -1,3 +1,4 @@
+AssemblyInfo.cs
 ../AcceptanceTests/SyncTests.cs
 ../AddressBook/AddressBook.cs
 ../AddressBook/AddressBookTests/AddressBookTests.cs
@@ -10,7 +11,6 @@
 ../AddressBook/Manager.cs
 ../AddressBook/Name.cs
 ../AddressBook/Phone.cs
-AssemblyInfo.cs
 ../CollectionEvents/CollectionEventArgs.cs
 ../CollectionEvents/CollectionEventsTests/CollectionEventsTests.cs
 ../CollectionEvents/CollectionRootChangedEventArgs.cs
@@ -144,7 +144,6 @@ AssemblyInfo.cs
 ../SyncManager/Library/SyncCollectionManager.cs
 ../SyncManager/Library/SyncCredentialCache.cs
 ../SyncManager/Library/SyncManager.cs
-../SyncManager/Library/SyncManagerService.cs
 ../SyncManager/Library/SyncPing.cs
 ../SyncManager/Library/SyncStoreManager.cs
 ../SyncManager/Library/SyncStoreService.cs

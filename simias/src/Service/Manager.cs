@@ -195,8 +195,8 @@ namespace Simias.Service
 			Install(new ProcessServiceCtl(conf, "Simias Event Service", "EventService.exe"), 0);
 			Install(new ThreadServiceCtl(conf, "Simias File Monitor Service", "Simias", "Simias.Event.FsWatcher"), 1);
 			Install(new ThreadServiceCtl(conf, "Simias Dredge Service", "Simias", "Simias.Sync.DredgeService"), 2);
-			Install(new ProcessServiceCtl(conf, "multi-cast DNS Service", "Simias.Service.mDnsService.exe"), 3);
-			Install(new ThreadServiceCtl(conf, "Simias Sync Service", "Simias", "Simias.Sync.SyncManagerService"));
+			Install(new ProcessServiceCtl(conf, "Simias Multi-Cast DNS Service", "Simias.Service.mDnsService.exe"), 3);
+			Install(new ProcessServiceCtl(conf, "Simias Sync Service", "SyncService.exe"));
 		}
 
 		/// <summary>

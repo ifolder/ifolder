@@ -347,6 +347,7 @@ src/install-simias-to-gac
 src/Simias.dll/Makefile
 src/CollectionEvents/Makefile
 src/mDnsService/Makefile
+src/SyncManager/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile

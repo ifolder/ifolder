@@ -2,8 +2,6 @@ Microsoft Visual Studio Solution File, Format Version 8.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simias", "Simias.csproj", "{7839E703-0177-4162-B083-BCFD4ED1CC1B}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventService", "src\CollectionEvents\EventService\EventService.csproj", "{66557955-5474-4E02-B14E-8DA278BAC6EB}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -14,6 +12,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mDnsService", "src\mDnsServ
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CollectionStoreTests", "src\CollectionStore\CollectionStoreTests\CollectionStoreTests.csproj", "{C1E83DD0-5457-4D79-8335-E28D3C8758F9}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncService", "src\SyncManager\SyncService.csproj", "{B73D723A-44A5-4844-82CD-C6BB126A75AD}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -39,6 +41,10 @@ Global
 		{C1E83DD0-5457-4D79-8335-E28D3C8758F9}.Debug.Build.0 = Debug|.NET
 		{C1E83DD0-5457-4D79-8335-E28D3C8758F9}.Release.ActiveCfg = Release|.NET
 		{C1E83DD0-5457-4D79-8335-E28D3C8758F9}.Release.Build.0 = Release|.NET
+		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Debug.ActiveCfg = Debug|.NET
+		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Debug.Build.0 = Debug|.NET
+		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Release.ActiveCfg = Release|.NET
+		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
