@@ -380,7 +380,8 @@ namespace Simias.POBox
 							subscription.DomainID,
 							subscription.FromIdentity,
 							subscription.ToIdentity,
-							subscription.MessageID);
+							subscription.MessageID,
+							subscription.SubscriptionCollectionID);
 
 					// update local subscription
 					if (wsStatus == POBoxStatus.Success)
@@ -417,7 +418,8 @@ namespace Simias.POBox
 							subscription.DomainID,
 							subscription.FromIdentity,
 							subscription.ToIdentity,
-							subscription.MessageID);
+							subscription.MessageID,
+							subscription.SubscriptionCollectionID);
 
 					if (wsStatus == POBoxStatus.Success)
 					{
@@ -523,7 +525,8 @@ namespace Simias.POBox
 								subscription.DomainID,
 								subscription.FromIdentity, 
 								subscription.ToIdentity,
-								subscription.MessageID);
+								subscription.MessageID,
+								subscription.SubscriptionCollectionID);
 
 						if (wsStatus == POBoxStatus.Success)
 						{

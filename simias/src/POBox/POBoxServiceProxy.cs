@@ -27,7 +27,7 @@ public class POBoxService : System.Web.Services.Protocols.SoapHttpClientProtocol
     
     /// <remarks/>
     public POBoxService() {
-        this.Url = "http://localhost:3678/simias10/mlasky/POService.asmx";
+        this.Url = "http://127.0.0.1:1252/simias10/banderso/POService.asmx";
     }
     
     /// <remarks/>
@@ -52,22 +52,24 @@ public class POBoxService : System.Web.Services.Protocols.SoapHttpClientProtocol
     
     /// <remarks/>
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/pobox/AcceptedSubscription", RequestNamespace="http://novell.com/simias/pobox/", ResponseNamespace="http://novell.com/simias/pobox/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public POBoxStatus AcceptedSubscription(string domainID, string fromIdentity, string toIdentity, string subscriptionID) {
+    public POBoxStatus AcceptedSubscription(string domainID, string fromIdentity, string toIdentity, string subscriptionID, string sharedCollectionID) {
         object[] results = this.Invoke("AcceptedSubscription", new object[] {
                     domainID,
                     fromIdentity,
                     toIdentity,
-                    subscriptionID});
+                    subscriptionID,
+                    sharedCollectionID});
         return ((POBoxStatus)(results[0]));
     }
     
     /// <remarks/>
-    public System.IAsyncResult BeginAcceptedSubscription(string domainID, string fromIdentity, string toIdentity, string subscriptionID, System.AsyncCallback callback, object asyncState) {
+    public System.IAsyncResult BeginAcceptedSubscription(string domainID, string fromIdentity, string toIdentity, string subscriptionID, string sharedCollectionID, System.AsyncCallback callback, object asyncState) {
         return this.BeginInvoke("AcceptedSubscription", new object[] {
                     domainID,
                     fromIdentity,
                     toIdentity,
-                    subscriptionID}, callback, asyncState);
+                    subscriptionID,
+                    sharedCollectionID}, callback, asyncState);
     }
     
     /// <remarks/>
@@ -78,22 +80,24 @@ public class POBoxService : System.Web.Services.Protocols.SoapHttpClientProtocol
     
     /// <remarks/>
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/pobox/DeclinedSubscription", RequestNamespace="http://novell.com/simias/pobox/", ResponseNamespace="http://novell.com/simias/pobox/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public POBoxStatus DeclinedSubscription(string domainID, string fromIdentity, string toIdentity, string subscriptionID) {
+    public POBoxStatus DeclinedSubscription(string domainID, string fromIdentity, string toIdentity, string subscriptionID, string sharedCollectionID) {
         object[] results = this.Invoke("DeclinedSubscription", new object[] {
                     domainID,
                     fromIdentity,
                     toIdentity,
-                    subscriptionID});
+                    subscriptionID,
+                    sharedCollectionID});
         return ((POBoxStatus)(results[0]));
     }
     
     /// <remarks/>
-    public System.IAsyncResult BeginDeclinedSubscription(string domainID, string fromIdentity, string toIdentity, string subscriptionID, System.AsyncCallback callback, object asyncState) {
+    public System.IAsyncResult BeginDeclinedSubscription(string domainID, string fromIdentity, string toIdentity, string subscriptionID, string sharedCollectionID, System.AsyncCallback callback, object asyncState) {
         return this.BeginInvoke("DeclinedSubscription", new object[] {
                     domainID,
                     fromIdentity,
                     toIdentity,
-                    subscriptionID}, callback, asyncState);
+                    subscriptionID,
+                    sharedCollectionID}, callback, asyncState);
     }
     
     /// <remarks/>
@@ -104,22 +108,24 @@ public class POBoxService : System.Web.Services.Protocols.SoapHttpClientProtocol
     
     /// <remarks/>
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/pobox/AckSubscription", RequestNamespace="http://novell.com/simias/pobox/", ResponseNamespace="http://novell.com/simias/pobox/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public POBoxStatus AckSubscription(string domainID, string fromIdentity, string toIdentity, string messageID) {
+    public POBoxStatus AckSubscription(string domainID, string fromIdentity, string toIdentity, string subscriptionID, string sharedCollectionID) {
         object[] results = this.Invoke("AckSubscription", new object[] {
                     domainID,
                     fromIdentity,
                     toIdentity,
-                    messageID});
+                    subscriptionID,
+                    sharedCollectionID});
         return ((POBoxStatus)(results[0]));
     }
     
     /// <remarks/>
-    public System.IAsyncResult BeginAckSubscription(string domainID, string fromIdentity, string toIdentity, string messageID, System.AsyncCallback callback, object asyncState) {
+    public System.IAsyncResult BeginAckSubscription(string domainID, string fromIdentity, string toIdentity, string subscriptionID, string sharedCollectionID, System.AsyncCallback callback, object asyncState) {
         return this.BeginInvoke("AckSubscription", new object[] {
                     domainID,
                     fromIdentity,
                     toIdentity,
-                    messageID}, callback, asyncState);
+                    subscriptionID,
+                    sharedCollectionID}, callback, asyncState);
     }
     
     /// <remarks/>
@@ -130,20 +136,20 @@ public class POBoxService : System.Web.Services.Protocols.SoapHttpClientProtocol
     
     /// <remarks/>
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/pobox/GetSubscriptionInfo", RequestNamespace="http://novell.com/simias/pobox/", ResponseNamespace="http://novell.com/simias/pobox/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public SubscriptionInformation GetSubscriptionInfo(string domainID, string identityID, string messageID) {
+    public SubscriptionInformation GetSubscriptionInfo(string domainID, string identityID, string subscriptionID) {
         object[] results = this.Invoke("GetSubscriptionInfo", new object[] {
                     domainID,
                     identityID,
-                    messageID});
+                    subscriptionID});
         return ((SubscriptionInformation)(results[0]));
     }
     
     /// <remarks/>
-    public System.IAsyncResult BeginGetSubscriptionInfo(string domainID, string identityID, string messageID, System.AsyncCallback callback, object asyncState) {
+    public System.IAsyncResult BeginGetSubscriptionInfo(string domainID, string identityID, string subscriptionID, System.AsyncCallback callback, object asyncState) {
         return this.BeginInvoke("GetSubscriptionInfo", new object[] {
                     domainID,
                     identityID,
-                    messageID}, callback, asyncState);
+                    subscriptionID}, callback, asyncState);
     }
     
     /// <remarks/>
