@@ -62,6 +62,7 @@ namespace Novell.iFolder
 		private CheckButton	defaultAccButton;
 //		private Button		proxyButton;
 		private Button		loginButton;
+		private bool		isFirstDomain;
 
 		private string				curDomainPassword;
 		private DomainInformation	curDomain;
@@ -284,13 +285,17 @@ namespace Novell.iFolder
 			// Read all current domains before letting them create
 			// a new ifolder
 
+			isFirstDomain = true;
 			DomainInformation[] domains = ifdata.GetDomains();
 
 			foreach(DomainInformation dom in domains)
 			{
 				// only show Domains that are slaves (not on this machine)
 				if(dom.IsSlave)
+				{
+					isFirstDomain = false;
 					AccTreeStore.AppendValues(dom);
+				}
 			}
 
  			detailsFrame.Sensitive = false;
@@ -374,7 +379,10 @@ namespace Novell.iFolder
 
 			savePasswordButton.Sensitive = true;
 			autoLoginButton.Sensitive = false;
-			defaultAccButton.Sensitive = false;
+			if(isFirstDomain)
+				defaultAccButton.Sensitive = false;
+			else
+				defaultAccButton.Sensitive = true;
 
 //			proxyButton.Sensitive = false;
 			loginButton.Sensitive = false; 
@@ -383,7 +391,10 @@ namespace Novell.iFolder
 			// set the control values
 			savePasswordButton.Active = false;
 			autoLoginButton.Active = true;
-			defaultAccButton.Active = true;
+			if(isFirstDomain)
+				defaultAccButton.Active = true;
+			else
+				defaultAccButton.Active = false;
 
 			nameEntry.Text = "";
 			serverEntry.Text = "";
@@ -644,6 +655,12 @@ namespace Novell.iFolder
 
 					if(savePasswordButton.Active == true)
 						SavePasswordNow();
+
+					if(defaultAccButton.Active == true)
+					{
+						if(ifdata.SetDefaultDomain(curDomain))
+							defaultAccButton.Sensitive = false;
+					}
 
 					sel.SelectIter(iter);
 					try
