@@ -362,7 +362,7 @@ namespace Novell.iFolder
 				ICollection icol = curDomains.Values;
 				foreach(DomainInformation domain in icol)
 				{
-					if(domain.MemberID.Equals(UserID))
+					if(domain.MemberUserID.Equals(UserID))
 						return true;
 				}
 				return false;

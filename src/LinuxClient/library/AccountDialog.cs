@@ -243,7 +243,7 @@ namespace Novell.iFolder
 			graphLabelBox.PackStart(emptyLabel, true, true, 0);
 
 
-			DiskSpace ds = ifdata.GetUserDiskSpace(domain.MemberID);
+			DiskSpace ds = ifdata.GetUserDiskSpace(domain.MemberUserID);
 
 			if(ds == null)
 			{
