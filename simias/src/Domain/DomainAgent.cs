@@ -391,7 +391,7 @@ namespace Simias.DomainServices
 			status = 
 				this.Login( 
 					new Uri( domainServiceUrl.Scheme + Uri.SchemeDelimiter + host ), 
-					null,
+					domainID,
 					ref cookie, 
 					myCred );
 			if ( ( status.statusCode != SCodes.Success ) && ( status.statusCode != SCodes.SuccessInGrace ) )
@@ -413,7 +413,7 @@ namespace Simias.DomainServices
 			myCache.Add(new Uri(domainService.Url), "Basic", myCred);
 			domainService.Credentials = myCache;
 			domainService.Timeout = 30000;
-			
+
 			log.Debug("Calling " + domainService.Url + " to provision the user");
 
 			// provision user
