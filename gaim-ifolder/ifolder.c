@@ -262,6 +262,8 @@ static void load_invitations_from_file(GtkListStore *store, const char *name);
 static void init_invitation_stores();
 static void add_new_trusted_buddy(GtkListStore *store, GaimBuddy *buddy,
 									char *ip_address, char *ip_port);
+static gboolean write_trusted_buddies_file(FILE *file, GtkListStore *store);
+static void save_trusted_buddies(GtkListStore *store);
 static gboolean trusted_buddies_read(GtkListStore *store, const char *filename);
 static void load_trusted_buddies_from_file(GtkListStore *store, const char *name);
 static void init_trusted_buddies_store();
@@ -699,6 +701,9 @@ in_inv_accept_button_cb(GtkWidget *w, GtkTreeView *tree)
 							TRUSTED_BUDDY_IP_ADDR_COL, invitation->ip_addr,
 							TRUSTED_BUDDY_IP_PORT_COL, invitation->ip_port,
 							-1);
+
+		/* Update the trusted buddies file */
+		save_trusted_buddies(trusted_buddies_store);
 	} else {
 		/* Add a new trusted buddy */
 		add_new_trusted_buddy(trusted_buddies_store, buddy, 
@@ -1670,6 +1675,22 @@ g_print("add_new_trusted_buddy() called: %s (%s:%s)\n", buddy->name, ip_address,
 
 	if (buddy_icon)
 		g_object_unref(buddy_icon);
+
+	/* Update the trusted buddies file */
+	save_trusted_buddies(trusted_buddies_store);
+}
+
+static gboolean
+write_trusted_buddies_file(FILE *file, GtkListStore *store)
+{
+	/* FIXME: Implement write_trusted_buddies_file() */
+	return FALSE;
+}
+
+static void
+save_trusted_buddies(GtkListStore *store)
+{
+	/* FIXME: Implement save_trusted_buddies() */
 }
 
 static gboolean
@@ -2789,6 +2810,9 @@ g_print("about_to_write 9\n");
 							TRUSTED_BUDDY_IP_ADDR_COL, ip_address,
 							TRUSTED_BUDDY_IP_PORT_COL, ip_port,
 							-1);
+
+		/* Update the trusted buddies file */
+		save_trusted_buddies(trusted_buddies_store);
 	} else {
 		/* Add a new trusted buddy */
 		add_new_trusted_buddy(trusted_buddies_store, buddy, ip_address, ip_port);
@@ -2871,6 +2895,9 @@ g_print("handle_ping_request() %s -> %s entered\n",
 						TRUSTED_BUDDY_IP_PORT_COL, ip_port,
 						-1);
 
+	/* Update the trusted buddies file */
+	save_trusted_buddies(trusted_buddies_store);
+
 	/* Send a ping-response message */
 	send_result = send_ping_response_msg(gaim_find_buddy(account, sender));
 	if (send_result <= 0) {
@@ -2943,6 +2970,9 @@ g_print("handle_ping_response() %s -> %s) entered\n",
 						TRUSTED_BUDDY_IP_ADDR_COL, ip_address,
 						TRUSTED_BUDDY_IP_PORT_COL, ip_port,
 						-1);
+
+	/* Update the trusted buddies file */
+	save_trusted_buddies(trusted_buddies_store);
 
 	return TRUE;
 }
