@@ -30,6 +30,6 @@ namespace Simias.Domain
 	/// </summary>
 	public interface IDomainService
 	{
-		Uri CreateMaster(string id, string name, string owner);
+		Uri CreateMaster(string id, string name, string owner, string nodeID, string nodeName);
 	}
 }
