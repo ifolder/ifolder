@@ -49,6 +49,7 @@ namespace Novell.iFolder.Web
         public string Name;
 		public string Owner;
 		public string OwnerID;
+		public int EffectiveSyncInterval;
 		public int SyncInterval;
 		public bool Synchronizable;
 		public string Type;
@@ -107,6 +108,9 @@ namespace Novell.iFolder.Web
 			Member tmpMember = collection.GetCurrentMember();
 			this.CurrentUserID = tmpMember.UserID;
 			this.CurrentUserRights = tmpMember.Rights.ToString();
+
+			Simias.Policy.SyncInterval si = Simias.Policy.SyncInterval.Get(tmpMember, collection);
+			this.EffectiveSyncInterval = si.Interval;
 		}
 
 
