@@ -698,6 +698,7 @@ namespace Simias.POBox
 			SubscriptionMsg subMsg = new SubscriptionMsg();
 			subMsg.DomainID = this.DomainID;
 			subMsg.FromID = this.FromIdentity;
+			subMsg.FromName = this.FromName;
 			subMsg.ToID = this.ToIdentity;
 			subMsg.SharedCollectionID = this.SubscriptionCollectionID;
 			subMsg.SharedCollectionType = this.SubscriptionCollectionType;

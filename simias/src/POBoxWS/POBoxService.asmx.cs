@@ -111,6 +111,11 @@ namespace Simias.POBoxService.Web
 		public string FromID;
 
 		/// <summary>
+		/// The name of the user who sent the subscription
+		/// </summary>
+		public string FromName;
+
+		/// <summary>
 		/// The ID of the user who received the subscription
 		/// </summary>
 		public string ToID;
@@ -819,173 +824,180 @@ namespace Simias.POBoxService.Web
 		POBoxStatus
 		Invite( SubscriptionMsg subMsg )
 		{
-			POBoxStatus				status = POBoxStatus.UnknownError;
+			POBoxStatus			status = POBoxStatus.UnknownError;
+			Store				store = Store.GetStore();
+			Collection			sharedCollection = null;
+			Simias.POBox.POBox	poBox = null;
+			Subscription		cSub = null;
 
-			if ( Simias.Authentication.Http.GetMember( Context ) != null )
+			// Verify domain
+			Domain cDomain = store.GetDomain( subMsg.DomainID );
+			if ( cDomain == null )
 			{
-				Collection			sharedCollection = null;
-				Simias.POBox.POBox	poBox = null;
-				Store				store = Store.GetStore();
-				Subscription		cSub = null;
+				log.Debug( "  invalid Domain ID!" );
+				return POBoxStatus.UnknownDomain;
+			}
 
-				log.Debug( "Invite - called" );
-				log.Debug( "  DomainID: " + subMsg.DomainID );
-				log.Debug( "  FromUserID: " + subMsg.FromID );
-				log.Debug( "  ToUserID: " + subMsg.ToID );
+			if ( ( cDomain.ConfigType == Domain.ConfigurationType.ClientServer ) && 
+				 ( Simias.Authentication.Http.GetMember( Context ) == null ) )
+			{
+				return status;
+			}
 
-				// Verify the fromMember is the caller
-				log.Debug( "  current Principal: " + Thread.CurrentPrincipal.Identity.Name );
-				/*
-				if ( subMsg.FromID != Thread.CurrentPrincipal.Identity.Name )
-				{
-					return POBoxStatus.UnknownIdentity;
-				}
-				*/
+			log.Debug( "Invite - called" );
+			log.Debug( "  DomainID: " + subMsg.DomainID );
+			log.Debug( "  FromUserID: " + subMsg.FromID );
+			log.Debug( "  ToUserID: " + subMsg.ToID );
 
-				/*  FIXME::don't think we need this check anymore
-				if (domainID == null || domainID == "")
-				{
-					domainID = store.DefaultDomain;
-				}
-				*/
+			// Verify the fromMember is the caller
+			log.Debug( "  current Principal: " + Thread.CurrentPrincipal.Identity.Name );
+			/*
+			if ( subMsg.FromID != Thread.CurrentPrincipal.Identity.Name )
+			{
+				return POBoxStatus.UnknownIdentity;
+			}
+			*/
 
-				// Verify domain
-				Simias.Storage.Domain cDomain = store.GetDomain( subMsg.DomainID );
-				if ( cDomain == null )
-				{
-					log.Debug( "  invalid Domain ID!" );
-					return POBoxStatus.UnknownDomain;
-				}
+			/*  FIXME::don't think we need this check anymore
+			if (domainID == null || domainID == "")
+			{
+				domainID = store.DefaultDomain;
+			}
+			*/
 
-				// Verify and get additional information about the "To" user
-				Member toMember = cDomain.GetMemberByID( subMsg.ToID );
-				if ( toMember == null )
-				{
-					log.Debug( "  specified \"toUserID\" does not exist in the domain!" );
-					return POBoxStatus.UnknownIdentity;
-				}
 
+			// Verify and get additional information about the "To" user
+			Member toMember = cDomain.GetMemberByID( subMsg.ToID );
+			if ( toMember == null )
+			{
+				log.Debug( "  specified \"toUserID\" does not exist in the domain!" );
+				return POBoxStatus.UnknownIdentity;
+			}
+
+			// Don't check for the fromMember in the domain if this is workgroup.
+			if ( cDomain.ConfigType != Domain.ConfigurationType.Workgroup )
+			{
 				Member fromMember = cDomain.GetMemberByID( subMsg.FromID );
 				if ( fromMember == null )
 				{
 					log.Debug( "  specified \"fromUserID\" does not exist in the domain!" );
 					return POBoxStatus.UnknownIdentity;
 				}
+			}
 
-				// In peer-to-peer the collection won't exist 
-				sharedCollection = store.GetCollectionByID( subMsg.SharedCollectionID ); 
-				if ( sharedCollection == null )
-				{
-					log.Debug( "  shared collection does not exist" );
-				}
+			// In peer-to-peer the collection won't exist 
+			sharedCollection = store.GetCollectionByID( subMsg.SharedCollectionID ); 
+			if ( sharedCollection == null )
+			{
+				log.Debug( "  shared collection does not exist" );
+			}
 
-				if ( subMsg.AccessRights > (int) Simias.Storage.Access.Rights.Admin)
-				{
-					return POBoxStatus.InvalidAccessRights;
-				}
+			if ( subMsg.AccessRights > (int) Simias.Storage.Access.Rights.Admin)
+			{
+				return POBoxStatus.InvalidAccessRights;
+			}
 
+			try
+			{
+				log.Debug( "  looking up POBox for: " + subMsg.ToID );
+				poBox = POBox.POBox.GetPOBox( store, subMsg.DomainID, subMsg.ToID );
+
+				cSub = 
+					new Subscription( 
+					subMsg.SharedCollectionName + " subscription", 
+					"Subscription", 
+					subMsg.FromID );
+
+				cSub.SubscriptionState = Simias.POBox.SubscriptionStates.Received;
+				cSub.ToName = toMember.Name;
+				cSub.ToIdentity = subMsg.ToID;
+				cSub.FromName = subMsg.FromName;
+				cSub.FromIdentity = subMsg.FromID;
+				cSub.SubscriptionRights = (Simias.Storage.Access.Rights) subMsg.AccessRights;
+				cSub.MessageID = subMsg.SubscriptionID;
+
+				string appPath = this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} );
+				appPath += "/POBoxService.asmx";
+
+				log.Debug("  application path: " + appPath);
+
+				/*
+				// TODO: Need to fix how we detect SSL. Waiting for a fix in mod_mono.
 				try
 				{
-					log.Debug( "  looking up POBox for: " + subMsg.ToID );
-					poBox = POBox.POBox.GetPOBox( store, subMsg.DomainID, subMsg.ToID );
+					UriBuilder poUri = 
+						new UriBuilder(
+						(this.Context.Request.Url.Port == 443) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp ,
+						this.Context.Request.Url.Host,
+						this.Context.Request.Url.Port,
+						appPath);
 
-					cSub = 
-						new Subscription( 
-						subMsg.SharedCollectionName + " subscription", 
-						"Subscription", 
-						subMsg.FromID );
-
-					cSub.SubscriptionState = Simias.POBox.SubscriptionStates.Received;
-					cSub.ToName = toMember.Name;
-					cSub.ToIdentity = subMsg.ToID;
-					cSub.FromName = fromMember.Name;
-					cSub.FromIdentity = subMsg.FromID;
-					cSub.SubscriptionRights = (Simias.Storage.Access.Rights) subMsg.AccessRights;
-					cSub.MessageID = subMsg.SubscriptionID;
-
-					string appPath = this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} );
-					appPath += "/POBoxService.asmx";
-
-					log.Debug("  application path: " + appPath);
-
-					/*
-					// TODO: Need to fix how we detect SSL. Waiting for a fix in mod_mono.
-					try
-					{
-						UriBuilder poUri = 
-							new UriBuilder(
-							(this.Context.Request.Url.Port == 443) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp ,
-							this.Context.Request.Url.Host,
-							this.Context.Request.Url.Port,
-							appPath);
-
-						cSub.POServiceURL = poUri.Uri;
-					}
-					catch( Exception e1 )
-					{
-						log.Debug( "Failed creating POBox Uri" );
-						log.Debug( e1.Message );
-						log.Debug( e1.StackTrace );
-
-						// For now we won't error out cause I don't think we need
-						// URLs in the subscription itself
-					}
-					*/
-
-					cSub.SubscriptionCollectionID = subMsg.SharedCollectionID;
-					cSub.SubscriptionCollectionType = subMsg.SharedCollectionType;
-					cSub.SubscriptionCollectionName = subMsg.SharedCollectionName;
-					cSub.DomainID = cDomain.ID;
-					cSub.DomainName = cDomain.Name;
-					cSub.SubscriptionKey = Guid.NewGuid().ToString();
-					cSub.MessageType = "Outbound";  // ????
-
-					/*
-					try
-					{
-						// TODO: Need to fix how we detect SSL. Waiting for a fix in mod_mono.
-						UriBuilder coUri = 
-							new UriBuilder(
-							(this.Context.Request.Url.Port == 443) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp ,
-							this.Context.Request.Url.Host,
-							this.Context.Request.Url.Port,
-							this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ));
-
-						cSub.SubscriptionCollectionURL = coUri.Uri.ToString();
-						log.Debug( "  SubscriptionCollectionURL: " + cSub.SubscriptionCollectionURL );
-					}
-					catch( Exception e2 )
-					{
-						log.Debug( "Failed creating Collection Uri" );
-						log.Debug( e2.Message );
-						log.Debug( e2.StackTrace );
-					}
-					*/
- 
-					if ( sharedCollection != null )
-					{
-						DirNode dirNode = sharedCollection.GetRootDirectory();
-						if( dirNode != null )
-						{
-							cSub.DirNodeID = dirNode.ID;
-							cSub.DirNodeName = dirNode.Name;
-						}
-					}
-					else
-					{
-						cSub.DirNodeID = subMsg.DirNodeID;
-						cSub.DirNodeName = subMsg.DirNodeName;
-					}
-
-					poBox.Commit( cSub );
-					status = POBoxStatus.Success;
+					cSub.POServiceURL = poUri.Uri;
 				}
-				catch(Exception e)
+				catch( Exception e1 )
 				{
-					log.Error("  failed creating subscription");
-					log.Error(e.Message);
-					log.Error(e.StackTrace);
+					log.Debug( "Failed creating POBox Uri" );
+					log.Debug( e1.Message );
+					log.Debug( e1.StackTrace );
+
+					// For now we won't error out cause I don't think we need
+					// URLs in the subscription itself
 				}
+				*/
+
+				cSub.SubscriptionCollectionID = subMsg.SharedCollectionID;
+				cSub.SubscriptionCollectionType = subMsg.SharedCollectionType;
+				cSub.SubscriptionCollectionName = subMsg.SharedCollectionName;
+				cSub.DomainID = cDomain.ID;
+				cSub.DomainName = cDomain.Name;
+				cSub.SubscriptionKey = Guid.NewGuid().ToString();
+				cSub.MessageType = "Outbound";  // ????
+
+				/*
+				try
+				{
+					// TODO: Need to fix how we detect SSL. Waiting for a fix in mod_mono.
+					UriBuilder coUri = 
+						new UriBuilder(
+						(this.Context.Request.Url.Port == 443) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp ,
+						this.Context.Request.Url.Host,
+						this.Context.Request.Url.Port,
+						this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ));
+
+					cSub.SubscriptionCollectionURL = coUri.Uri.ToString();
+					log.Debug( "  SubscriptionCollectionURL: " + cSub.SubscriptionCollectionURL );
+				}
+				catch( Exception e2 )
+				{
+					log.Debug( "Failed creating Collection Uri" );
+					log.Debug( e2.Message );
+					log.Debug( e2.StackTrace );
+				}
+				*/
+
+				if ( sharedCollection != null )
+				{
+					DirNode dirNode = sharedCollection.GetRootDirectory();
+					if( dirNode != null )
+					{
+						cSub.DirNodeID = dirNode.ID;
+						cSub.DirNodeName = dirNode.Name;
+					}
+				}
+				else
+				{
+					cSub.DirNodeID = subMsg.DirNodeID;
+					cSub.DirNodeName = subMsg.DirNodeName;
+				}
+
+				poBox.Commit( cSub );
+				status = POBoxStatus.Success;
+			}
+			catch(Exception e)
+			{
+				log.Error("  failed creating subscription");
+				log.Error(e.Message);
+				log.Error(e.StackTrace);
 			}
 
 			log.Debug( "Invite - exit" );
