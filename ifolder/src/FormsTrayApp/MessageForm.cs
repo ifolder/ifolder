@@ -55,6 +55,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.Button remove;
 		private Hashtable ht;
 		private System.Windows.Forms.ComboBox domains;
+		private System.Windows.Forms.Button generateCsiFile;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -114,6 +115,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.accept = new System.Windows.Forms.Button();
 			this.decline = new System.Windows.Forms.Button();
 			this.remove = new System.Windows.Forms.Button();
+			this.generateCsiFile = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// messages
@@ -124,9 +126,9 @@ namespace Novell.iFolder.FormsTrayApp
 			this.messages.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
 																					   this.columnHeader1,
 																					   this.columnHeader2});
-			this.messages.Location = new System.Drawing.Point(16, 112);
+			this.messages.Location = new System.Drawing.Point(16, 64);
 			this.messages.Name = "messages";
-			this.messages.Size = new System.Drawing.Size(424, 280);
+			this.messages.Size = new System.Drawing.Size(424, 328);
 			this.messages.TabIndex = 0;
 			this.messages.View = System.Windows.Forms.View.Details;
 			this.messages.SelectedIndexChanged += new System.EventHandler(this.messages_SelectedIndexChanged);
@@ -143,15 +145,15 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			// domains
 			// 
-			this.domains.Location = new System.Drawing.Point(72, 56);
+			this.domains.Location = new System.Drawing.Point(72, 32);
 			this.domains.Name = "domains";
-			this.domains.Size = new System.Drawing.Size(176, 21);
+			this.domains.Size = new System.Drawing.Size(192, 21);
 			this.domains.TabIndex = 2;
 			this.domains.SelectedIndexChanged += new System.EventHandler(this.domains_SelectedIndexChanged);
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(16, 56);
+			this.label1.Location = new System.Drawing.Point(16, 32);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(100, 16);
 			this.label1.TabIndex = 3;
@@ -190,10 +192,22 @@ namespace Novell.iFolder.FormsTrayApp
 			this.remove.Text = "Remove";
 			this.remove.Click += new System.EventHandler(this.remove_Click);
 			// 
+			// generateCsiFile
+			// 
+			this.generateCsiFile.Enabled = false;
+			this.generateCsiFile.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.generateCsiFile.Location = new System.Drawing.Point(192, 400);
+			this.generateCsiFile.Name = "generateCsiFile";
+			this.generateCsiFile.Size = new System.Drawing.Size(120, 23);
+			this.generateCsiFile.TabIndex = 7;
+			this.generateCsiFile.Text = "Generate CSI File";
+			this.generateCsiFile.Click += new System.EventHandler(this.generateCsiFile_Click);
+			// 
 			// MessageForm
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(456, 430);
+			this.Controls.Add(this.generateCsiFile);
 			this.Controls.Add(this.remove);
 			this.Controls.Add(this.decline);
 			this.Controls.Add(this.accept);
@@ -253,6 +267,8 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void domains_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
+			generateCsiFile.Enabled = false;
+
 			// Get the selected domain
 			Domain domain = (Domain)domains.Items[domains.SelectedIndex];
 
@@ -324,9 +340,12 @@ namespace Novell.iFolder.FormsTrayApp
 					{
 						accept.Enabled = true;
 					}
+
+					generateCsiFile.Enabled = ((Domain)domains.Items[domains.SelectedIndex]).ID.Equals(Domain.WorkGroupDomainID);
 				}
 				else
 				{
+					generateCsiFile.Enabled = false;
 					accept.Enabled = false;
 				}
 			}
@@ -390,6 +409,22 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void decline_Click(object sender, System.EventArgs e)
 		{
+		}
+
+		private void generateCsiFile_Click(object sender, System.EventArgs e)
+		{
+			ListViewItem lvi = messages.SelectedItems[0];
+			Subscription sub = (Subscription)lvi.Tag;
+
+			SaveFileDialog saveFileDialog = new SaveFileDialog();
+			saveFileDialog.Filter = "csi files (*.csi)|*.csi" ;
+			saveFileDialog.DefaultExt = "csi";
+			saveFileDialog.RestoreDirectory = true;
+			if (saveFileDialog.ShowDialog() == DialogResult.OK)
+			{
+				SubscriptionInfo info = sub.GenerateInfo(poBox.StoreReference);
+				info.Save(saveFileDialog.FileName);
+			}
 		}
 
 		private void remove_Click(object sender, System.EventArgs e)
