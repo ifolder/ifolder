@@ -50,8 +50,10 @@ namespace Novell.FormsTrayApp
 		private SyncCollectionDelegate syncCollectionDelegate;
 		private delegate void SyncFileDelegate(FileSyncEventArgs syncEventArgs);
 		private SyncFileDelegate syncFileDelegate;
-		private delegate void NodeDelegate(NodeEventArgs nodeEventArgs);
-		private NodeDelegate nodeDelegate;
+		public delegate void CreateChangeEventDelegate(iFolder ifolder, string eventData);
+		public CreateChangeEventDelegate createChangeEventDelegate;
+		public delegate void DeleteEventDelegate(string ID);
+		public DeleteEventDelegate deleteEventDelegate;
 
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(GlobalProperties));
 		private const string iFolderRun = "DisableAutoStart";
@@ -162,7 +164,8 @@ namespace Novell.FormsTrayApp
 		{
 			syncCollectionDelegate = new SyncCollectionDelegate(syncCollection);
 			syncFileDelegate = new SyncFileDelegate(syncFile);
-			nodeDelegate = new NodeDelegate(nodeEvent);
+			createChangeEventDelegate = new CreateChangeEventDelegate(createChangeEvent);
+			deleteEventDelegate = new DeleteEventDelegate(deleteEvent);
 
 			//
 			// Required for Windows Form Designer support
@@ -2065,88 +2068,49 @@ namespace Novell.FormsTrayApp
 			catch {}
 		}
 
-		private void nodeEvent(NodeEventArgs eventArgs)
+		private void deleteEvent(string ID)
 		{
-			try
+			lock (ht)
 			{
-				switch (eventArgs.EventData)
+				ListViewItem lvi = (ListViewItem)ht[ID];
+				if (lvi != null)
 				{
-					case "NodeChanged":
-					{
-						iFolder ifolder = null;
-						if (eventArgs.Type.Equals("Collection"))
-						{
-							ifolder = ifWebService.GetiFolder(eventArgs.Collection);
-						}
-						else if (eventArgs.Type.Equals("Node") && eventArgs.Collection.Equals(currentPOBoxID))
-						{
-							ifolder = ifWebService.GetiFolder(eventArgs.Node);
-						}
-
-						if (ifolder != null)
-						{
-							ListViewItem lvi;
-							lock (ht)
-							{
-								// Get the corresponding listview item.
-								lvi = (ListViewItem)ht[eventArgs.Node];
-							}
-
-							if (lvi != null)
-							{
-								// Update the tag data.
-								lvi.Tag = ifolder;
-								updateListViewItem(lvi);
-							}
-						}
-						break;
-					}
-					case "NodeCreated":
-					{
-						iFolder ifolder = null;
-						if (eventArgs.Type.Equals("Collection"))
-						{
-							// TODO: for some reason this iFolder is not coming back with the UnManagedPath set ...
-							// need to put some extra code in to handle this.
-							ifolder = ifWebService.GetiFolder(eventArgs.Collection);
-
-							if (ifolder != null)
-							{
-								// Notify the shell.
-								Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
-							}
-						}
-						else if (eventArgs.Type.Equals("Node") && eventArgs.Collection.Equals(currentPOBoxID))
-						{
-							ifolder = ifWebService.GetiFolder(eventArgs.Node);
-						}
-
-						if ((ifolder != null) &&
-							((!ifolder.State.Equals("Local") && (ifWebService.GetiFolder(ifolder.CollectionID) == null)) ||
-							ifolder.State.Equals("Local")))
-						{
-							addiFolderToListView(ifolder);
-						}
-						break;
-					}
-					case "NodeDeleted":
-					{
-						lock (ht)
-						{
-							ListViewItem lvi = (ListViewItem)ht[eventArgs.Node];
-							if (lvi != null)
-							{
-								lvi.Remove();
-								ht.Remove(eventArgs.Node);
-							}
-						}
-						break;
-					}
+					lvi.Remove();
+					ht.Remove(ID);
 				}
 			}
-			catch
+		}
+
+		private void createChangeEvent(iFolder ifolder, string eventData)
+		{
+			if (ifolder != null)
 			{
-				// Ignore.
+				if (eventData.Equals("NodeCreated"))
+				{
+					addiFolderToListView(ifolder);
+
+					if (ifolder.State.Equals("Local"))
+					{
+						// Notify the shell.
+						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
+					}
+				}
+				else
+				{
+					ListViewItem lvi;
+					lock (ht)
+					{
+						// Get the corresponding listview item.
+						lvi = (ListViewItem)ht[ifolder.ID];
+					}
+
+					if (lvi != null)
+					{
+						// Update the tag data.
+						lvi.Tag = ifolder;
+						updateListViewItem(lvi);
+					}
+				}
 			}
 		}
 
@@ -2392,6 +2356,9 @@ namespace Novell.FormsTrayApp
 				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolderconflict.ico")));
 			}
 			catch {} // Non-fatal ... just missing some graphics.
+
+			// Update the iFolders listview.
+			refreshiFolders();
 		}
 
 		private void GlobalProperties_VisibleChanged(object sender, System.EventArgs e)
@@ -2402,15 +2369,11 @@ namespace Novell.FormsTrayApp
 
 				try
 				{
-					// Set up the event handlers to watch for iFolder creates/deletes ... these only need to be active
-					// while the form is displayed.
-					eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(global_nodeEventHandler));
-					eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(global_nodeEventHandler));
-					eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(global_nodeEventHandler));
-
 					iFolderSettings ifSettings = ifWebService.GetSettings();
 					currentUserID = ifSettings.CurrentUserID;
 					currentPOBoxID = ifSettings.DefaultPOBoxID;
+
+					// Update the display confirmation setting.
 					displayConfirmation.Checked = ifSettings.DisplayConfirmation;
 					if (ifSettings.HaveEnterprise)
 					{
@@ -2418,14 +2381,14 @@ namespace Novell.FormsTrayApp
 						updateEnterpriseData(ifSettings);
 					}
 
-					// Display the default sync interval.
+					// Update the default sync interval setting.
 					defaultInterval.Value = (decimal)ifWebService.GetDefaultSyncInterval();
 					autoSync.Checked = defaultInterval.Value != System.Threading.Timeout.Infinite;
 
+					// Update the auto start setting.
 					autoStart.Checked = IsRunEnabled();
 
-					refreshiFolders();
-
+					// Update the proxy settings.
 					useProxy.Checked = ifSettings.UseProxy;
 					proxy.Text = ifSettings.ProxyHost;
 					port.Value = (decimal)ifSettings.ProxyPort;
@@ -2444,11 +2407,6 @@ namespace Novell.FormsTrayApp
 
 		private void GlobalProperties_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			// Remove event handlers for this object.
-			eventClient.SetEvent(IProcEventAction.RemoveNodeChanged, new IProcEventHandler(global_nodeEventHandler));
-			eventClient.SetEvent(IProcEventAction.RemoveNodeCreated, new IProcEventHandler(global_nodeEventHandler));
-			eventClient.SetEvent(IProcEventAction.RemoveNodeDeleted, new IProcEventHandler(global_nodeEventHandler));
-
 			// Hide the dialog.
 			e.Cancel = true;
 			Hide();
@@ -2937,13 +2895,7 @@ namespace Novell.FormsTrayApp
 		}
 		#endregion
 
-		#region Node and Sync Event Handlers
-		private void global_nodeEventHandler(SimiasEventArgs args)
-		{
-			NodeEventArgs eventArgs = args as NodeEventArgs;
-			BeginInvoke(nodeDelegate, new object[] {eventArgs});
-		}
-
+		#region Sync Event Handlers
 		private void global_collectionSyncHandler(SimiasEventArgs args)
 		{
 			try
