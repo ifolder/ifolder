@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SimiasWebService_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/Global.asmx.cs $(srcdir)/Simias.asmx.cs $(srcdir)/SimiasBrowser.asmx.cs
+SimiasWebService_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/Global.asax.cs $(srcdir)/Simias.asmx.cs $(srcdir)/SimiasBrowser.asmx.cs
 SimiasWebService_CSFILES := $(subst /,$(SEP),$(SimiasWebService_CSFILES1))
 SimiasWebService_INCLUDES =
 SimiasWebService_RESOURCES =
