@@ -45,6 +45,7 @@ namespace Simias.Service
 		/// </summary>
 		static public ISimiasLog logger = Simias.SimiasLogManager.GetLogger(typeof(Manager));
 
+		private static Manager instance;
 		static private Configuration conf;
 
 		static internal string XmlTypeAttr = "type";
@@ -84,6 +85,14 @@ namespace Simias.Service
 		/// <param name="config">The Configuration location to manage.</param>
 		public Manager(Configuration config)
 		{
+			lock(typeof(Manager))
+			{
+				if (instance != null)
+					throw new SimiasException("Only one instance of Manager is allowed.");
+
+				instance = this;
+			}
+
 			// configure
 			SimiasLogManager.Configure(config);
 
@@ -424,11 +433,11 @@ namespace Simias.Service
 		/// </summary>
 		/// <param name="name">The name of the service to get.</param>
 		/// <returns>The ServiceCtl for the service.</returns>
-		public ServiceCtl GetService(string name)
+		public static ServiceCtl GetService(string name)
 		{
-			lock (this)
+			lock (instance)
 			{
-				foreach (ServiceCtl svc in this)
+				foreach (ServiceCtl svc in instance)
 				{
 					if (svc.Name.Equals(name))
 						return svc;
