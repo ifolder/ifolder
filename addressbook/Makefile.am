@@ -1,6 +1,6 @@
 SUBDIRS = src
 
-DIST_SUBDIRS = $(SUBDIRS) package doc
+DIST_SUBDIRS = $(SUBDIRS) doc package test
 
 EXTRA_DIST = tools $(srcdir)/addressbook.pc.in
 
@@ -34,6 +34,13 @@ maintainer-clean-local:
 	rm -f missing missing.lnk mkinstalldirs mkinstalldir.lnk
 	rm -rf autom4te.cache
 
+.PHONY: test
+test: install
+	$(MAKE) -C test test
+		
+test-clean:
+	$(MAKE) -C test clean
+		
 .PHONY: doc doc-clean
 doc:
 	$(MAKE) -C doc all

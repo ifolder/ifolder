@@ -154,7 +154,7 @@ case $ADDRESSBOOK_OS in
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         INSTALL_EXE_OPTS='--mode=644'
-        NUNIT="$TOOLDIR/NUnit/mono/bin/nunit-console.exe"
+        NUNIT="mono nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/mono/bin"
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
@@ -183,12 +183,12 @@ case $ADDRESSBOOK_OS in
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
         INSTALL_EXE_OPTS=''
-        NUNIT="$TOOLDIR/NUnit/net/bin/nunit-console.exe"
+        NUNIT="nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/net/bin"
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
         NUNITFLAGS_OPTIMIZE=''
-    	REPORT_DIR='$(shell cygpath --windows $(DESTDIR)$(bindir) | sed ''s,\\\\,/,g'')'
+        REPORT_DIR='$(shell cygpath --windows $(DESTDIR)$(bindir) | sed ''s,\\\\,/,g'')'
         REPORT_EXE='$(top_srcdir)/tools/Report/Report.exe'
         SEP='$(EMPTY)\\$(EMPTY)'
         #
@@ -366,6 +366,8 @@ src/GtkAddrBook/Makefile
 src/GtkAddrBook/contactbrowser
 src/GtkAddrBook/invitationassistant
 src/GtkAddrBook/Util.cs
+test/Makefile
+test/AddressBook/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile
