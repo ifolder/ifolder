@@ -63,8 +63,8 @@ namespace Simias.Storage
 		/// <summary>
 		/// XML configuration tags used to get the enterprise user name.
 		/// </summary>
-		static private string LdapAuthenticationTag = "LdapAuthentication";
-		static private string ProxyDNTag = "ProxyDN";
+		static private string DomainTag = "Domain";
+		static private string AdminDNTag = "AdminDN";
 
 		/// <summary>
 		/// Default sync interval for the enterprise domain. Only synchronizes once a day.
@@ -293,7 +293,7 @@ namespace Simias.Storage
 					if ( enterpriseServer )
 					{
 						// Get the name of the user to create as the identity.
-						string proxyName = config.Get( LdapAuthenticationTag, ProxyDNTag, null );
+						string proxyName = config.Get( DomainTag, AdminDNTag, null );
 						if ( proxyName != null )
 						{
 							userName = ParseUserName( proxyName );
