@@ -2,8 +2,8 @@
     IBClasses = (
         {
             ACTIONS = {
-                activateAccount = id; 
                 addAccount = id; 
+                loginoutClicked = id; 
                 removeAccount = id; 
                 toggleActive = id; 
                 toggleDefault = id; 
@@ -13,7 +13,6 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 accounts = NSTableView; 
-                activate = NSButton; 
                 addAccount = NSButton; 
                 defaultAccount = NSButton; 
                 domainDescription = NSTextView; 
@@ -21,11 +20,13 @@
                 freeSpace = NSTextField; 
                 host = NSTextField; 
                 leaveDomainController = LeaveDomainSheetController; 
+                loginout = NSButton; 
                 name = NSTextField; 
                 parentWindow = NSWindow; 
                 password = NSSecureTextField; 
                 rememberPassword = NSButton; 
                 removeAccount = NSButton; 
+                state = NSTextField; 
                 totalSpace = NSTextField; 
                 usedSpace = NSTextField; 
                 userName = NSTextField; 

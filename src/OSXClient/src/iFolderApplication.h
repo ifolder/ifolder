@@ -74,7 +74,6 @@
 - (void)showLoginWindow:(NSString *)domainID;
 - (void)addLog:(NSString *)entry;
 - (void)initializeSimiasEvents;
-- (AuthStatus *)authenticateToDomain:(NSString *)domainID withPassword:(NSString *)password;
 - (NSArrayController *)logArrayController;
 - (BOOL)simiasIsRunning;
 - (void)clearLog;

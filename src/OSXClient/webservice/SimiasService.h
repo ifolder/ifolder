@@ -47,12 +47,13 @@
 -(void) SetDomainInactive:(NSString *)domainID;
 -(void) SetDefaultDomain:(NSString *)domainID;
 
-
 -(SecCertificateRef) GetCertificate:(NSString *)host;
 -(void) StoreCertificate:(SecCertificateRef)cert forHost:(NSString *)host;
 
 
+-(void) DisableDomainAutoLogin:(NSString *)domainID;
 -(AuthStatus *) LoginToRemoteDomain:(NSString *)domainID usingPassword:(NSString *)password;
+-(AuthStatus *) LogoutFromRemoteDomain:(NSString *)domainID;
 
 
 @end
