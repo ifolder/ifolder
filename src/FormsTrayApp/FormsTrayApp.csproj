@@ -105,11 +105,6 @@
                     HintPath = "..\..\..\simias\src\CommonFormWindows\CommonFormWindows.dll"
                 />
                 <Reference
-                    Name = "Configuration"
-                    AssemblyName = "Configuration"
-                    HintPath = "..\..\..\simias\src\Configuration\Configuration.dll"
-                />
-                <Reference
                     Name = "Sync"
                     AssemblyName = "Sync"
                     HintPath = "..\..\..\simias\src\Sync\Sync.dll"

@@ -6,7 +6,7 @@ iFolder_CSFILES_CSC := $(subst /,$(SEP),$(iFolder_CSFILES))
 iFolder_INCLUDES =
 iFolder_RESOURCES =
 iFolder_FLAGS = $(CSC_LIBFLAG)
-iFolder_LIBS = System.dll $(SYSTEM_XML) Configuration.dll CollectionStore.dll Agent.dll AddressBook.dll
+iFolder_LIBS = System.dll $(SYSTEM_XML) Common.dll CollectionStore.dll Agent.dll AddressBook.dll
 iFolder_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin
 
 iFolderCmd_CSFILES = $(srcdir)/iFolderCmd.cs
@@ -14,7 +14,7 @@ iFolderCmd_CSFILES_CSC := $(subst /,$(SEP),$(iFolderCmd_CSFILES))
 iFolderCmd_INCLUDES =
 iFolderCmd_RESOURCES =
 iFolderCmd_FLAGS = $(CSC_EXEFLAG)
-iFolderCmd_LIBS = System.dll $(SYSTEM_XML) Configuration.dll CollectionStore.dll Agent.dll iFolder.dll AddressBook.dll
+iFolderCmd_LIBS = System.dll $(SYSTEM_XML) Common.dll CollectionStore.dll Agent.dll iFolder.dll AddressBook.dll
 iFolderCmd_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin
 
 NUNIT_TESTS := iFolderTests.exe
@@ -24,7 +24,7 @@ iFolderTests_CSFILES_CSC := $(subst /,$(SEP),$(iFolderTests_CSFILES))
 iFolderTests_INCLUDES =
 iFolderTests_RESOURCES =
 iFolderTests_FLAGS = $(CSC_EXEFLAG)
-iFolderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Agent.dll iFolder.dll Configuration.dll CollectionStore.dll  AddressBook.dll
+iFolderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Agent.dll iFolder.dll Common.dll CollectionStore.dll AddressBook.dll
 iFolderTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin $(SIMIAS_INSTALL_PATH)/bin
 
 EXTRA_DIST = $(iFolder_CSFILES) $(iFolderCmd_CSFILES) $(iFolderTests_CSFILES)

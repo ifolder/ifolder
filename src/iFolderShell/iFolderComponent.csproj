@@ -110,9 +110,9 @@
                     HintPath = "..\iFolder\iFolder.dll"
                 />
                 <Reference
-                    Name = "Configuration"
-                    AssemblyName = "Configuration"
-                    HintPath = "..\..\..\simias\src\Configuration\Configuration.dll"
+                    Name = "Common"
+                    AssemblyName = "Common"
+                    HintPath = "..\..\..\simias\src\Common\Configuration.dll"
                 />
             </References>
         </Build>
