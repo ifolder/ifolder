@@ -616,7 +616,7 @@ namespace Novell.iFolder.iFolderCom
 			defaultAddressBook = abManager.OpenDefaultAddressBook();
 
 			// Enable/disable the Add button.
-			this.add.Enabled = ifolder.IsShareable();
+			this.add.Enabled = ifolder.Shareable;
 
 			// Get the access control list for the collection.
 			IFAccessControlList aclList = ifolder.GetAccessControlList();
@@ -707,18 +707,18 @@ namespace Novell.iFolder.iFolderCom
 			}
 			else if (shareWith.SelectedItems.Count > 1)
 			{
-				this.accessControlButtons.Enabled = ifolder.IsShareable();
+				this.accessControlButtons.Enabled = ifolder.Shareable;
 				this.accessReadOnly.Checked = false;
 				this.accessReadWrite.Checked = false;
 				this.accessFullControl.Checked = false;
 			}
 			else
 			{
-				this.reinvite.Enabled = ifolder.IsShareable();
+				this.reinvite.Enabled = ifolder.Shareable;
 
 				ListViewItem item = shareWith.SelectedItems[0];
 
-				if (ifolder.IsShareable())
+				if (ifolder.Shareable)
 				{
 					try
 					{
