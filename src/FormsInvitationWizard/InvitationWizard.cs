@@ -327,6 +327,8 @@ namespace Novell.iFolder.InvitationWizard
 			{
 				if (this.acceptDeclinePage.Accept)
 				{
+					Cursor.Current = Cursors.WaitCursor;
+
 					// Accept the invitation
 					try
 					{
@@ -343,6 +345,8 @@ namespace Novell.iFolder.InvitationWizard
 						logger.Fatal(ex, "Accepting invitation");
 						MessageBox.Show("An exception occurred while accepting the iFolder invitation.  Please view the log file for additional information.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
 					}
+
+					Cursor.Current = Cursors.Default;
 				}
 
 				// Exit
