@@ -49,7 +49,6 @@ namespace Novell.iFolder
 		int							curIndex;
 		bool						enableDblClick;
 		Pixbuf						CollectionPixBuf;
-		Pixbuf						NodePixBuf;
 		ArrayList					nodeArray;
 		ShallowNode					curSNode = null;
 		Collection					curCol = null;
@@ -142,7 +141,6 @@ namespace Novell.iFolder
 			}
 		
 			CollectionPixBuf = new Pixbuf("collection.png");
-			NodePixBuf = new Pixbuf("unknown-node.png");
 
 			nodeArray = new ArrayList();
 
