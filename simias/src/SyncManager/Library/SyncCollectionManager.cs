@@ -224,8 +224,8 @@ namespace Simias.Sync
 					Debug.Assert(service != null);
 
 					// debug
-					log.Debug("Pinging the Sync Collection Service...");
-					log.Debug(service.Ping().ToString());
+					// log.Debug("Pinging the Sync Collection Service...");
+					// log.Debug(service.Ping().ToString());
 
 					// get the collection worker
 					log.Debug("Creating a Sync Worker Object...");
