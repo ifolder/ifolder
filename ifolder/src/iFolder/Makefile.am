@@ -17,6 +17,14 @@ iFolderCmd_FLAGS = $(CSC_EXEFLAG)
 iFolderCmd_LIBS = System.dll $(SYSTEM_XML) Novell.iFolder.dll
 iFolderCmd_LIBPATH =
 
+iFolderd_CSFILES = $(srcdir)/iFolderDaemon.cs
+iFolderd_CSFILES_CSC := $(subst /,$(SEP),$(iFolderd_CSFILES))
+iFolderd_INCLUDES =
+iFolderd_RESOURCES =
+iFolderd_FLAGS = $(CSC_EXEFLAG)
+iFolderd_LIBS = System.dll $(SYSTEM_XML) Novell.iFolder.dll
+iFolderd_LIBPATH =
+
 NUNIT_TESTS := iFolderTests.exe
 
 iFolderTests_CSFILES = $(srcdir)/iFolderTests.cs
@@ -27,11 +35,11 @@ iFolderTests_FLAGS = $(CSC_EXEFLAG)
 iFolderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Novell.iFolder.dll
 iFolderTests_LIBPATH = $(NUNIT_LIBPATH)
 
-EXTRA_DIST = $(srcdir)/iFolderCmd $(iFolder_CSFILES) $(iFolderCmd_CSFILES) $(iFolderTests_CSFILES)
+EXTRA_DIST = $(srcdir)/iFolderCmd $(iFolder_CSFILES) $(iFolderCmd_CSFILES) $(iFolderd_CSFILES) $(iFolderTests_CSFILES)
 
 CUR_DIR := $(shell pwd)
 
-all: Novell.iFolder.dll iFolderCmd.exe
+all: Novell.iFolder.dll iFolderCmd.exe iFolderd.exe
 
 Novell.iFolder.dll: $(iFolder_CSFILES) $(iFolder_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolder_FLAGS) $(SIMIAS_LIBS) $(iFolder_LIBS:%=/r:%) $(iFolder_LIBPATH:%=/lib:%) $(iFolder_CSFILES_CSC) /doc:Novell.iFolder.doc.xml
@@ -39,31 +47,34 @@ Novell.iFolder.dll: $(iFolder_CSFILES) $(iFolder_RESOURCES)
 iFolderCmd.exe: $(iFolderCmd_CSFILES) $(iFolderCmd_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderCmd_FLAGS) $(SIMIAS_LIBS) $(iFolderCmd_LIBS:%=/r:%) $(iFolderCmd_LIBPATH:%=/lib:%) $(iFolderCmd_CSFILES_CSC) /doc:iFolderCmd.doc.xml
 
+iFolderd.exe: $(iFolderd_CSFILES) $(iFolderd_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderd_FLAGS) $(SIMIAS_LIBS) $(iFolderd_LIBS:%=/r:%) $(iFolderd_LIBPATH:%=/lib:%) $(iFolderd_CSFILES_CSC) /doc:iFolderd.doc.xml
+
 iFolderTests.exe: $(iFolderTests_CSFILES) $(iFolderTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderTests_FLAGS) $(SIMIAS_LIBS) $(iFolderTests_LIBS:%=/r:%) $(iFolderTests_LIBPATH:%=/lib:%) $(iFolderTests_CSFILES_CSC)
 	
 if DEBUG
 if WINDOWS
-DEBUG_FILES = Novell.iFolder.pdb iFolderCmd.pdb
+DEBUG_FILES = Novell.iFolder.pdb iFolderCmd.pdb iFolderd.pdb
 DEBUG_CHECK_FILES = iFolderTests.pdb
 endif
 endif
 
-install-exec-local: Novell.iFolder.dll iFolderCmd.exe
+install-exec-local: Novell.iFolder.dll iFolderCmd.exe iFolderd.exe
 	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) Novell.iFolder.dll $(DEBUG_FILES) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) iFolderCmd.exe iFolderCmd $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) iFolderCmd.exe iFolderCmd iFolderd.exe ifolderd $(DESTDIR)$(bindir)
 
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f Novell.iFolder.dll iFolderTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
-	cd $(DESTDIR)$(bindir); rm -f iFolderCmd.exe iFolderCmd
+	cd $(DESTDIR)$(bindir); rm -f iFolderCmd.exe iFolderCmd iFolderd.exe ifolderd
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(libdir)
 	cd $(DESTDIR)$(libdir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:iFolderTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = Novell.iFolder.dll iFolderCmd.exe $(NUNIT_TESTS) Novell.iFolder.doc.xml iFolderTests.test.xml iFolderCmd.doc.xml
+CLEAN_FILES = Novell.iFolder.dll iFolderCmd.exe iFolderd.exe $(NUNIT_TESTS) Novell.iFolder.doc.xml iFolderTests.test.xml iFolderCmd.doc.xml
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
