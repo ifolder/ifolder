@@ -60,7 +60,7 @@ namespace Simias.Sync.Tests
 			if (Directory.Exists(path)) Directory.Delete(path, true);
 			
 			// configuration
-			Configuration config = new Configuration(path);
+			Configuration config = Configuration.CreateDefaultConfig(path);
 
 			SyncProperties properties = new SyncProperties(config);
 
@@ -89,10 +89,10 @@ namespace Simias.Sync.Tests
 			if (Directory.Exists(path)) Directory.Delete(path, true);
 			
 			// configuration
-			Configuration config = new Configuration(path);
+			Configuration config = Configuration.CreateDefaultConfig(path);
 
 			// store
-			Store store = new Store(config);
+			Store store = Store.GetStore();
 			
 			// note: we need to revert any internal impersonations
 			store.Revert();

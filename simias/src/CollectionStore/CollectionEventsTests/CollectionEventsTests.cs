@@ -50,7 +50,7 @@ namespace Simias.Storage
 		DateTime			lastEvent = DateTime.MinValue;
 		int					eventCount = 0;
 		bool				performanceTest = false;
-		static Configuration conf = new Configuration(Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath));
+		static Configuration conf = Configuration.CreateDefaultConfig(Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath));
 
 		#endregion
 
@@ -506,7 +506,7 @@ namespace Simias.Storage
 					break;
 
 				case "SD":
-					conf = new Configuration();
+					conf = Configuration.GetConfiguration();
 					t.subscribe();
 					Console.WriteLine("Press Enter to exit");
 					Console.ReadLine();
@@ -525,7 +525,7 @@ namespace Simias.Storage
 
 				case "LD":
 				{
-					conf = new Configuration();
+					conf = Configuration.GetConfiguration();
 					Manager manager = new Manager(conf);
 					manager.StartServices();
 					Console.WriteLine("Press Enter to exit");

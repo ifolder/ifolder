@@ -46,6 +46,7 @@ namespace Novell.AddressBook.Tests
 			Console.WriteLine("Init called");
 
 			Console.WriteLine("Connecting to the AddressBook manager");
+			Configuration config = Configuration.CreateDefaultConfig(basePath);
 			abManager = ABManager.Connect( new Configuration( basePath ) );
 			//abManager = ABManager.Connect( new Configuration ("C:\\"));
 			//abManager = ABManager.Connect();

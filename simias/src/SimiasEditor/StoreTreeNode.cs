@@ -44,8 +44,8 @@ namespace Simias.Editor
 
 		public StoreTreeNode(string path)
 		{
-			config = new Configuration(path);
-			store = new Store(config);
+			config = Configuration.CreateDefaultConfig(path);
+			store = Store.GetStore();
 
 			this.Text = config.StorePath;
 			

@@ -71,9 +71,9 @@ namespace Simias.Sync.Tests
 			if (Directory.Exists(path)) Directory.Delete(path, true);
 			
 			// configuration
-			Configuration config = new Configuration(path);
+			Configuration config = Configuration.CreateDefaultConfig(path);
 
-			Store store = new Store(config);
+			Store store = Store.GetStore();
 
 			Console.WriteLine("Path: {0}", path);
 			Console.WriteLine("Store Path: {0}", store.StorePath);
@@ -94,9 +94,9 @@ namespace Simias.Sync.Tests
 			if (Directory.Exists(path)) Directory.Delete(path, true);
 			
 			// configuration
-			Configuration config = new Configuration(path);
+			Configuration config = Configuration.CreateDefaultConfig(path);
 
-			Store store = new Store(config);
+			Store store = Store.GetStore();
 			
 			Collection collection = new Collection(store, "synccollection2");
 

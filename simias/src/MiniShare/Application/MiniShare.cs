@@ -69,7 +69,7 @@ namespace Simias.Mini
 			}
 
 			// properties
-			Configuration config = new Configuration(path);
+			Configuration config = Configuration.CreateDefaultConfig(path);
 			SyncProperties properties = new SyncProperties(config);
 
 			// logic factory
@@ -92,7 +92,7 @@ namespace Simias.Mini
 				if (Directory.Exists(path)) Directory.Delete(path, true);
 
 				// create store
-				store = new Store(config);
+				store = Store.GetStore();
 
 				// note: we need to revert any internal impersonations
 				store.Revert();
@@ -122,7 +122,7 @@ namespace Simias.Mini
 				if (Directory.Exists(path)) Directory.Delete(path, true);
 
 				// create store
-				store = new Store(config);
+				store = Store.GetStore();
 
 				// note: we need to revert any internal impersonations
 				store.Revert();

@@ -31,13 +31,13 @@ namespace ChangeLogTest
 		[TestFixtureSetUp]
 		public void Init()
 		{
-			Configuration config = new Configuration( Directory.GetCurrentDirectory() );
+			Configuration config = Configuration.CreateDefaultConfig( Directory.GetCurrentDirectory() );
 
 			manager = new Manager( config );
 			manager.StartServices();
 			manager.WaitForServicesStarted();
 
-			store = new Store( config );
+			store = Store.GetStore();
 		}
 		#endregion
 

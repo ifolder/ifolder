@@ -38,7 +38,7 @@ namespace Simias.Service
 	{
 		#region Fields
 		Simias.Service.Manager serviceManager;
-		Configuration conf = new Configuration(Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath));
+        Configuration conf = Configuration.CreateDefaultConfig(Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath));
 		const string threadServiceName = "My Thread Service";
 		const string processServiceName = "My Process Service";
 		#endregion

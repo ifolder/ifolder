@@ -61,10 +61,10 @@ namespace Simias.Location.Tests
 			if (Directory.Exists(path)) Directory.Delete(path, true);
 			
 			// configuration
-			Configuration config = new Configuration(path);
+			Configuration config = Configuration.CreateDefaultConfig(path);
 
 			// create collection
-			Store store = new Store(config);
+			Store store = Store.GetStore();
 			Collection collection = new Collection(store, "Location 1");
 			collection.Commit();
 
@@ -91,10 +91,10 @@ namespace Simias.Location.Tests
 			if (Directory.Exists(path)) Directory.Delete(path, true);
 			
 			// configuration
-			Configuration config = new Configuration(path);
+			Configuration config = Configuration.CreateDefaultConfig(path);
 
 			// create collection
-			Store store = new Store(config);
+			Store store = Store.GetStore();
 			Collection collection = new Collection(store, "Location 2");
 			collection.Commit();
 

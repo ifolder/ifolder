@@ -74,7 +74,7 @@ namespace Novell.Collaboration
 		public static SlogManager Connect(Configuration cConfig)
 		{
 			SlogManager	mgr = null;
-			Store store = new Store( cConfig );
+			Store store = Store.GetStore();
 
 			if(store != null)
 			{

@@ -33,14 +33,14 @@ namespace Simias.Storage.Tests
 		[TestFixtureSetUp]
 		public void Init()
 		{
-			Configuration config = new Configuration( basePath );
+			Configuration config = Configuration.CreateDefaultConfig( basePath );
 
 			manager = new Manager( config );
 			manager.StartServices();
 			manager.WaitForServicesStarted();
 
 			// Connect to the store.
-			store = new Store( config );
+			store = Store.GetStore();
 		}
 		#endregion
 

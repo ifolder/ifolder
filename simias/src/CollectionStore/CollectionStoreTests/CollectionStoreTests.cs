@@ -62,7 +62,8 @@ namespace Simias.Storage.Tests
 		public void Init()
 		{
 			// Connect to the store.
-			store = new Store( new Configuration( basePath ) );
+			Configuration.CreateDefaultConfig(basePath);
+			store = Store.GetStore();
 		}
 		#endregion
 
@@ -1309,7 +1310,7 @@ namespace Simias.Storage.Tests
 		public void MergeNodeTest()
 		{
 			// Get a second handle to the current store.
-			Store mergeStore = new Store( new Configuration( basePath ) );
+			Store mergeStore = Store.GetStore();
 
 			// Create a collection using the primary store handle.
 			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
