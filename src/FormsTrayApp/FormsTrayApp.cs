@@ -70,8 +70,8 @@ namespace Novell.iFolder.FormsTrayApp
 		private AnimateDelegate animateDelegate;
 
 		private	EventPublisher publisher;
-		System.Diagnostics.Process monitor;
-		private const int waitTime = 3000;
+		//System.Diagnostics.Process monitor;
+		//private const int waitTime = 3000;
 		#endregion
 
 		[STAThread]
@@ -209,12 +209,14 @@ namespace Novell.iFolder.FormsTrayApp
 				publisher.RaiseServiceEvent(args);
 			}
 
+			/*
 			if (monitor != null)
 			{
 				// Give the broker a chance to send the shutdown event.
 				Thread.Sleep(waitTime);
 				monitor.Kill();
 			}
+			*/
 
 			Cursor.Current = Cursors.Default;
 			//			traceForm.Close();
@@ -268,12 +270,14 @@ namespace Novell.iFolder.FormsTrayApp
 				publisher.RaiseServiceEvent(args);
 			}
 
+			/*
 			if (monitor != null)
 			{
 				// Give the broker a chance to send the shutdown event.
 				Thread.Sleep(waitTime);
 				monitor.Kill();
 			}
+			*/
 
 			Cursor.Current = Cursors.Default;
 			Application.Exit();
@@ -302,6 +306,7 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			// Start the event broker.
 			// TODO - check for currently running broker.
+			/*
 			monitor = new Process();
 			monitor.StartInfo.RedirectStandardInput = true;
 			monitor.StartInfo.RedirectStandardInput = true;
@@ -309,6 +314,7 @@ namespace Novell.iFolder.FormsTrayApp
 			monitor.StartInfo.UseShellExecute = false;
 			monitor.StartInfo.FileName = "CsEventBroker.exe";
 			monitor.Start();
+			*/
 			this.publisher = new EventPublisher();
 
 			synkEvent = new AutoResetEvent(false);
