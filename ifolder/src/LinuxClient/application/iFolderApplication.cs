@@ -58,6 +58,7 @@ namespace Novell.iFolder
 		private Gtk.EventBox		eBox;
 		private TrayIcon			tIcon;
 		private iFolderWebService	ifws;
+		private SimiasWebService	simws;
 		private iFolderData			ifdata;
 		private iFolderWindow 		ifwin;
 		private LogWindow			logwin;
@@ -133,10 +134,13 @@ namespace Novell.iFolder
 			{
 				Simias.Client.Manager.Start();
 
+				string localServiceUrl =
+					Simias.Client.Manager.LocalServiceUrl.ToString();
 				ifws = new iFolderWebService();
-				ifws.Url = 
-					Simias.Client.Manager.LocalServiceUrl.ToString() +
-						"/iFolder.asmx";
+				ifws.Url = localServiceUrl + "/iFolder.asmx";
+				
+				simws = new SimiasWebService();
+				simws.Url = localServiceUrl + "/Simias.asmx";
 
 				// wait for simias to start up
 				while(!simiasRunning)
@@ -903,7 +907,7 @@ namespace Novell.iFolder
 			{
 				if(ifwin == null)
 				{
-					ifwin = new iFolderWindow(ifws);
+					ifwin = new iFolderWindow(ifws, simws);
 					ifwin.Destroyed += 
 							new EventHandler(OniFolderWindowDestroyed);
 					ifwin.ShowAll();

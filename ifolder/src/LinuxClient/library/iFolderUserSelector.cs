@@ -17,7 +17,9 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Author: Calvin Gaisford <cgaisford@novell.com>
+ *  Authors:
+ *		Calvin Gaisford <cgaisford@novell.com>
+ *		Boyd Timothy <btimothy@novell.com>
  * 
  ***********************************************************************/
 
@@ -26,30 +28,36 @@ using System;
 using Gtk;
 using System.Collections;
 
+using Simias.Client;
+
 namespace Novell.iFolder
 {
-
 	/// <summary>
 	/// This is the properties dialog for an iFolder.
 	/// </summary>
 	public class iFolderUserSelector : Dialog
 	{
 		private iFolderWebService	ifws;
+		private SimiasWebService 	simws;
 		private string				domainID;
-		private Gtk.TreeView		UserTreeView;
-		private Gtk.ListStore		UserTreeStore;
 		private Gdk.Pixbuf			UserPixBuf;
 
 		private Gtk.TreeView		SelTreeView;
 		private Gtk.ListStore		SelTreeStore;
+		private BigList				memberList;
+		private MemberListModel		memberListModel;
+		
+		private Gtk.OptionMenu		SearchAttribOptionMenu;
 
 		private Gtk.Entry			SearchEntry;
 		private Gtk.Button			UserAddButton;
 		private Gtk.Button			UserDelButton;
 		private uint				searchTimeoutID;
 		private Hashtable			selectedUsers;
-
-		public iFolderUser[] SelectedUsers
+		
+		public const int			NumOfMembersToReturnDefault = 25;
+		
+		public MemberInfo[] SelectedUsers
 		{
 			get
 			{
@@ -60,14 +68,14 @@ namespace Novell.iFolder
 				{
 					do
 					{
-						iFolderUser user = (iFolderUser) 
+						MemberInfo member = (MemberInfo)
 											SelTreeStore.GetValue(iter,0);
-						list.Add(user);
+						list.Add(member);
 					}
 					while(SelTreeStore.IterNext(ref iter));
 				}
 
-				return (iFolderUser[]) (list.ToArray(typeof(iFolderUser)));
+				return (MemberInfo[]) (list.ToArray(typeof(MemberInfo)));
 			}
 		}
 
@@ -78,13 +86,17 @@ namespace Novell.iFolder
 		/// </summary>
 		public iFolderUserSelector(	Gtk.Window parent,
 									iFolderWebService iFolderWS,
+									SimiasWebService SimiasWS,
 									string domainID)
 			: base()
 		{
 			this.Title = Util.GS("iFolder User Selector");
 			if(iFolderWS == null)
-				throw new ApplicationException("iFolderWebServices was null");
+				throw new ApplicationException("iFolderWebService was null");
 			this.ifws = iFolderWS;
+			if (SimiasWS == null)
+				throw new ApplicationException("SimiasWebService was null");
+			this.simws = SimiasWS;
 			this.domainID = domainID;
 			this.HasSeparator = false;
 //			this.BorderWidth = 10;
@@ -97,6 +109,18 @@ namespace Novell.iFolder
 
 			searchTimeoutID = 0;
 			selectedUsers = new Hashtable();
+		}
+
+
+
+
+		/// <summary>
+		/// Default destructor
+		/// </summary>
+		~iFolderUserSelector()
+		{
+			// Close any searches we haven't already closed
+			memberListModel.CloseSearch();
 		}
 
 
@@ -119,7 +143,7 @@ namespace Novell.iFolder
 			//------------------------------
 			// Find Entry
 			//------------------------------
-			Table findTable = new Table(2, 2, false);
+			Table findTable = new Table(2, 3, false);
 			dialogBox.PackStart(findTable, false, false, 0);
 			findTable.ColumnSpacing = 20;
 			findTable.RowSpacing = 5;
@@ -129,17 +153,28 @@ namespace Novell.iFolder
 			findTable.Attach(findLabel, 0, 1, 0, 1,
 				AttachOptions.Shrink, 0, 0, 0);
 
+			SearchAttribOptionMenu = new OptionMenu();
+			Menu m = new Menu();
+			m.Append(new MenuItem(Util.GS("First Name")));
+			m.Append(new MenuItem(Util.GS("Last Name")));
+			m.Append(new MenuItem(Util.GS("Full Name")));
+			SearchAttribOptionMenu.Menu = m;
+			SearchAttribOptionMenu.ShowAll();
+			SearchAttribOptionMenu.Changed += new EventHandler(OnSearchAttribOptionMenuChanged);
+			findTable.Attach(SearchAttribOptionMenu, 1, 2, 0, 1,
+				AttachOptions.Shrink, 0, 0, 0);
+
 			SearchEntry = new Gtk.Entry(Util.GS("<Enter text to find a user>"));
 			SearchEntry.SelectRegion(0, -1);
 			SearchEntry.CanFocus = true;
 			SearchEntry.GrabFocus();
 			SearchEntry.Changed += new EventHandler(OnSearchEntryChanged);
-			findTable.Attach(SearchEntry, 1, 2, 0, 1,
+			findTable.Attach(SearchEntry, 2, 3, 0, 1,
 				AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
 				
 			Label findHelpTextLabel = new Label(Util.GS("(i.e. Full or partial name, or user ID)"));
 			findHelpTextLabel.Xalign = 0;
-			findTable.Attach(findHelpTextLabel, 1,2,1,2,
+			findTable.Attach(findHelpTextLabel, 2,3,1,2,
 				AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
 			
 
@@ -155,44 +190,17 @@ namespace Novell.iFolder
 			//------------------------------
 			// All Users tree
 			//------------------------------
-			// Create the main TreeView and add it to a scrolled
-			// window, then add it to the main vbox widget
-			UserTreeView = new TreeView();
-			ScrolledWindow sw = new ScrolledWindow();
+			memberListModel = new MemberListModel(domainID, simws);
+			
+			memberList = new BigList(memberListModel);
+//			memberList.SetSizeRequest(100, 400);
+			// FIXME: Fix up the BigList class to support both horizontal and vertical scrolling and then use the scroll adjustments to construct the ScrolledWindow
+			ScrolledWindow sw = new ScrolledWindow(null, memberList.Adjustment);
 			sw.ShadowType = Gtk.ShadowType.EtchedIn;
-			sw.Add(UserTreeView);
+			sw.Add(memberList);
 			selBox.PackStart(sw, true, true, 0);
-
-			// Setup the iFolder TreeView
-			UserTreeStore = new ListStore(typeof(iFolderUser));
-			UserTreeView.Model = UserTreeStore;
-			UserTreeStore.SetSortColumnId(0, SortType.Ascending);
-			UserTreeStore.SetSortFunc(0, 
-					new TreeIterCompareFunc(TreeSortFunc), (System.IntPtr)0, 
-					new DestroyNotify(TreeDestroyFunc));
-
-
-			// Setup Pixbuf and Text Rendering for "iFolder Users" column
-			CellRendererPixbuf mcrp = new CellRendererPixbuf();
-			TreeViewColumn memberColumn = new TreeViewColumn();
-			memberColumn.SortOrder = SortType.Ascending;
-			memberColumn.PackStart(mcrp, false);
-			memberColumn.SetCellDataFunc(mcrp, new TreeCellDataFunc(
-						UserCellPixbufDataFunc));
-			CellRendererText mcrt = new CellRendererText();
-			memberColumn.PackStart(mcrt, false);
-			memberColumn.SetCellDataFunc(mcrt, new TreeCellDataFunc(
-						UserCellTextDataFunc));
-			memberColumn.Title = Util.GS("iFolder Users");
-			memberColumn.Resizable = true;
-			UserTreeView.AppendColumn(memberColumn);
-			UserTreeView.Selection.Mode = SelectionMode.Multiple;
-
-			UserTreeView.Selection.Changed += new EventHandler(
-						OnUserSelectionChanged);
-
-			UserTreeView.RowActivated += new RowActivatedHandler(
-						OnUserRowActivated);
+			memberList.ItemSelected += new ItemSelected(OnMemberIndexSelected);
+			memberList.ItemActivated += new ItemActivated(OnMemberIndexActivated);
 
 
 			//------------------------------
@@ -221,7 +229,7 @@ namespace Novell.iFolder
 			selBox.PackStart(ssw, true, true, 0);
 
 			// Setup the iFolder TreeView
-			SelTreeStore = new ListStore(typeof(iFolderUser));
+			SelTreeStore = new ListStore(typeof(MemberInfo));
 			SelTreeView.Model = SelTreeStore;
 
 			// Setup Pixbuf and Text Rendering for "iFolder Users" column
@@ -242,13 +250,6 @@ namespace Novell.iFolder
 			SelTreeView.Selection.Changed += new EventHandler(
 						OnSelUserSelectionChanged);
 
-//			UserTreeView.ButtonPressEvent += new ButtonPressEventHandler(
-//						OnUserButtonPressed);
-
-//			UserTreeView.RowActivated += new RowActivatedHandler(
-//						OnUserRowActivated);
-
-
 			UserPixBuf = 
 				new Gdk.Pixbuf(Util.ImagesPath("ifolderuser.png"));
 
@@ -266,11 +267,11 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
-			if( (user.FN != null) && (user.FN.Length > 0) )
-				((CellRendererText) cell).Text = user.FN;
+			MemberInfo member = (MemberInfo) tree_model.GetValue(iter,0);
+			if( (member.FullName != null) && (member.FullName.Length > 0) )
+				((CellRendererText) cell).Text = member.FullName;
 			else
-				((CellRendererText) cell).Text = user.Name;
+				((CellRendererText) cell).Text = member.Name;
 		}
 
 
@@ -287,11 +288,9 @@ namespace Novell.iFolder
 
 
 
-		public void OnUserSelectionChanged(object o, EventArgs args)
+		public void OnMemberIndexSelected(int index)
 		{
-			TreeSelection tSelect = UserTreeView.Selection;
-
-			if(tSelect.CountSelectedRows() > 0)
+			if (index >= 0)
 			{
 				UserAddButton.Sensitive = true;
 			}
@@ -299,6 +298,14 @@ namespace Novell.iFolder
 			{
 				UserAddButton.Sensitive = false;
 			}
+		}
+
+
+
+
+		private void OnMemberIndexActivated(int index)
+		{
+			OnAddButtonClicked(null, null);
 		}
 
 
@@ -315,6 +322,28 @@ namespace Novell.iFolder
 			else
 			{
 				UserDelButton.Sensitive = false;
+			}
+		}
+
+
+
+
+		public void OnSearchAttribOptionMenuChanged(object o, EventArgs args)
+		{
+			// Prevent a call to SearchCallback if a timeout call has been added
+			if (searchTimeoutID != 0)
+			{
+				Gtk.Timeout.Remove(searchTimeoutID);
+				searchTimeoutID = 0;
+			}
+				
+			// If there's existing text in the search entry, restart
+			// the search with the new search type.
+			if (SearchEntry.Text.Length > 0 && SearchEntry.Text != Util.GS("<Enter text to find a user>"))
+			{
+				// No need to wait for the user to type anything else.
+				// Perform the search right now.
+				SearchiFolderUsers();
 			}
 		}
 
@@ -352,29 +381,30 @@ namespace Novell.iFolder
 				this.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
 			}
 
-			UserTreeStore.Clear();
-
 			if(SearchEntry.Text.Length > 0 && SearchEntry.Text != Util.GS("<Enter text to find a user>"))
 			{
-				iFolderUser[] userlist = 
-						ifws.SearchForDomainUsers(domainID, SearchEntry.Text);
-				foreach(iFolderUser user in userlist)
+				int searchAttribIndex = SearchAttribOptionMenu.History;
+				string searchAttribute;
+				switch(searchAttribIndex)
 				{
-					if(user != null)
-					{
-						UserTreeStore.AppendValues(user);
-					}
+					case 1:
+						searchAttribute = "Family";
+						break;
+					case 2:
+						searchAttribute = "FN";
+						break;
+					case 0:
+					default:
+						searchAttribute = "Given";
+						break;
 				}
+				
+				PerformInitialSearch(searchAttribute, SearchEntry.Text);
 			}
 			else
 			{
-				// Get the first 25 users, this should return none if
-				// there are more than 25
-				iFolderUser[] userlist = ifws.GetDomainUsers(domainID, 25);
-				foreach(iFolderUser user in userlist)
-				{
-					UserTreeStore.AppendValues(user);
-				}
+				// Populate the UserTreeStore with the first 25 domain users
+				PerformInitialSearch(null, null);
 			}
 
 			UserAddButton.Sensitive = false;
@@ -388,36 +418,60 @@ namespace Novell.iFolder
 
 
 
-		private void OnUserRowActivated(object o, RowActivatedArgs args)
+		/// <summary>
+		/// Performs the specified search and populates the UserTreeStore
+		/// <returns>true if any users were found by this search, false otherwise</returns>
+		/// </summary>
+		private void PerformInitialSearch(string searchAttribute, string searchString)
 		{
-			OnAddButtonClicked(o, args);
+			string searchContext;
+			MemberInfo[] memberInfoA;
+			int totalMembers;
+			bool bPartialListReceived;
+			
+			if (searchString == null)
+			{
+				bPartialListReceived =
+					simws.FindFirstMembers(
+						domainID,
+						NumOfMembersToReturnDefault,
+						out searchContext,
+						out memberInfoA,
+						out totalMembers);
+			}
+			else
+			{
+				bPartialListReceived =
+					simws.FindFirstSpecificMembers(
+						domainID,
+						searchAttribute,
+						SearchEntry.Text,
+						SearchType.Begins,
+						NumOfMembersToReturnDefault,
+						out searchContext,
+						out memberInfoA,
+						out totalMembers);
+			}
+			
+			memberListModel.Reinitialize(searchContext, memberInfoA, totalMembers);
+			memberList.Reload();
+			memberList.Refresh();
 		}
 
 
 
-		public void OnAddButtonClicked(object o, EventArgs args)
+		private void OnAddButtonClicked(object o, EventArgs args)
 		{
-			TreeModel tModel;
-
-			TreeSelection tSelect = UserTreeView.Selection;
-			Array treePaths = tSelect.GetSelectedRows(out tModel);
-			// remove compiler warning
-			if(tModel != null)
-				tModel = null;
-
-			foreach(TreePath tPath in treePaths)
+			int selectedIndex = memberList.Selected;
+			if (selectedIndex >= 0)
 			{
-				TreeIter iter;
-
-				if(UserTreeStore.GetIter(out iter, tPath))
+				MemberInfo memberInfo = memberListModel.GetMemberInfo(selectedIndex);
+				if (memberInfo != null)
 				{
-					iFolderUser user = 
-							(iFolderUser) UserTreeStore.GetValue(iter,0);
-
-					if(!selectedUsers.ContainsKey(user.UserID))
+					if (!selectedUsers.ContainsKey(memberInfo.UserID))
 					{
-						selectedUsers.Add(user.UserID, user);
-						SelTreeStore.AppendValues(user);
+						selectedUsers.Add(memberInfo.UserID, memberInfo);
+						SelTreeStore.AppendValues(memberInfo);
 					}
 				}
 			}
@@ -454,38 +508,176 @@ namespace Novell.iFolder
 			while(iterQueue.Count > 0)
 			{
 				TreeIter iter = (TreeIter) iterQueue.Dequeue();
-				iFolderUser user = 
-						(iFolderUser) SelTreeStore.GetValue(iter,0);
-				selectedUsers.Remove(user.UserID);
+				MemberInfo member = 
+						(MemberInfo) SelTreeStore.GetValue(iter,0);
+				selectedUsers.Remove(member.UserID);
 				SelTreeStore.Remove(ref iter);
 			}
 		}
-
-		private int TreeSortFunc(TreeModel model, TreeIter a, TreeIter b)
-		{
-			iFolderUser userA = 
-					(iFolderUser) model.GetValue(a,0);
-			iFolderUser userB = 
-					(iFolderUser) model.GetValue(b,0);
+	}
 	
-			string stringA, stringB;
-
-			if(userA.Surname != null)
-				stringA = userA.Surname;
-			else
-				stringA = userA.Name;
-
-			if(userB.Surname != null)
-				stringB = userB.Surname;
-			else
-				stringB = userB.Name;
-				
-			return string.Compare(stringA, stringB);
-		}
-
-		private void TreeDestroyFunc()
+	internal class MemberListModel : IListModel
+	{
+		private string domainID;
+		private string searchContext;
+		private int total = 0;
+		private Hashtable memberInfos;
+		private SimiasWebService simws;
+		
+		#region Constructors
+		
+		public MemberListModel(String DomainID, SimiasWebService SimiasWS)
 		{
+			domainID = DomainID;
+			simws = SimiasWS;
+
+			searchContext = null;
+			total = 0;
+			memberInfos = new Hashtable();
 		}
 		
+		#endregion
+		
+		#region Properties
+		
+		public string SearchContext
+		{
+			get
+			{
+				return searchContext;
+			}
+		}
+		
+		#endregion
+		
+		#region Public Methods
+		
+		public void Reinitialize(string SearchContext, MemberInfo[] MemberList, int Total)
+		{
+			CloseSearch();	// Close an existing search if present
+			memberInfos.Clear();
+
+			searchContext = SearchContext;
+
+			if (MemberList != null)
+			{
+				for (int i = 0; i < MemberList.Length; i++)
+				{
+					MemberInfo memberInfo = MemberList[i];
+					
+					memberInfos.Add(i, memberInfo);
+				}
+			
+				if (MemberList.Length >= Total)
+				{
+					// We have all the results and can close the search
+					CloseSearch();
+				}
+			}
+			
+			total = Total;
+		}
+		
+		public void CloseSearch()
+		{
+			if (searchContext != null)
+			{
+				try
+				{
+					simws.FindCloseMembers(domainID, searchContext);
+					searchContext = null;
+				}
+				catch(Exception e)
+				{
+				}
+			}
+		}
+		
+		public MemberInfo GetMemberInfo(int index)
+		{
+			if (index < 0 || index > total || (total == 0))
+			{
+				// FIXME: Figure out the right exception to throw here
+				throw new Exception("GetValue called when no items are present");
+			}
+			
+			MemberInfo memberInfoReturn;
+			
+			if (memberInfos.Contains(index))
+			{
+				memberInfoReturn = (MemberInfo)memberInfos[index];
+			}
+			else
+			{
+				if (searchContext == null)
+				{
+					// Somehow the searchContext was closed out prematurely
+					// FIXME: Figure out a better exception for when a searchContext is nulled out prematurely
+					throw new Exception("searchContext was closed too soon");
+				}
+				
+				// Here's where the good stuff comes.  If we don't have it in our
+				// hash table (and we didn't fail with a bad index earlier, that means
+				// we need to go search for more data from the Domain Provider, store
+				// the results into memberInfos and return the MemberInfo being asked
+				// for.
+				try
+				{
+					MemberInfo[] newMemberList;
+					// FIXME: Replace this to start searching at the specified index
+					bool bMoreMembers =
+						simws.FindNextMembers(domainID, ref searchContext,
+											  iFolderUserSelector.NumOfMembersToReturnDefault,
+											  out newMemberList);
+					int currentIndex = index;
+					foreach(MemberInfo memberInfo in newMemberList)
+					{
+						memberInfos.Add(currentIndex, memberInfo);
+						currentIndex++;
+					}
+				}
+				catch
+				{
+				}
+				
+				memberInfoReturn = (MemberInfo)memberInfos[index];
+			}
+			
+			if (memberInfoReturn == null)
+				throw new Exception("Could not find the specified member");
+			
+			return memberInfoReturn;
+		}
+		
+		#endregion
+		
+		#region IListModel Interface Implementation
+		
+		public int Rows
+		{
+			get
+			{
+				return total;
+			}
+		}
+		
+		public string GetValue(int row)
+		{
+			MemberInfo memberInfo = GetMemberInfo(row);
+			
+			if (memberInfo.FullName != null)
+			{
+				return memberInfo.FullName;
+			}
+
+			return memberInfo.Name;
+		}
+		
+		public string GetDescription(int row)
+		{
+			return GetValue(row);
+		}
+		
+		#endregion
 	}
 }

@@ -26,6 +26,8 @@ using System;
 using System.Collections;
 using Gtk;
 
+using Simias.Client;
+
 namespace Novell.iFolder
 {
 
@@ -35,6 +37,7 @@ namespace Novell.iFolder
 	public class iFolderPropertiesDialog : Dialog
 	{
 		private iFolderWebService	ifws;
+		private SimiasWebService	simws;
 		private iFolderWeb				ifolder;
 		private Gtk.Notebook		propNoteBook;
 //		private Hashtable			ifHash;
@@ -65,12 +68,16 @@ namespace Novell.iFolder
 		public iFolderPropertiesDialog(	Gtk.Window parent,
 										iFolderWeb ifolder, 
 										iFolderWeb[] ifolders,
-										iFolderWebService iFolderWS)
+										iFolderWebService iFolderWS,
+										SimiasWebService SimiasWS)
 			: base()
 		{
 			if(iFolderWS == null)
-				throw new ApplicationException("iFolderWebServices was null");
+				throw new ApplicationException("iFolderWebService was null");
 			this.ifws = iFolderWS;
+			if(SimiasWS == null)
+				throw new ApplicationException("SimiasWebService was null");
+			this.simws = SimiasWS;
 			this.ifolder = ifolder;
 			this.HasSeparator = false;
 			this.Modal = true;
@@ -94,14 +101,21 @@ namespace Novell.iFolder
 			: base()
 		{
 			iFolderWeb[]	ifolders;
+			
+			String localServiceUrl =
+				Simias.Client.Manager.LocalServiceUrl.ToString();
 
 			this.ifws = new iFolderWebService();
 			if(this.ifws == null)
 				throw new ApplicationException(
 							"Unable to obtain iFolderWebService");
-			this.ifws.Url = 
-				Simias.Client.Manager.LocalServiceUrl.ToString() +
-					"/iFolder.asmx";
+			this.ifws.Url = localServiceUrl + "/iFolder.asmx";
+			
+			this.simws = new SimiasWebService();
+			if (this.simws == null)
+				throw new ApplicationException(
+							"Unable to obtain SimiasWebService");
+			this.simws.Url = localServiceUrl + "/Simias.asmx";
 
 			try
 			{
@@ -164,7 +178,7 @@ namespace Novell.iFolder
 			propNoteBook.AppendPage(SettingsPage, 
 								new Label(Util.GS("_General")));
 
-			SharingPage = new iFolderPropSharingPage(this, ifws);
+			SharingPage = new iFolderPropSharingPage(this, ifws, simws);
 
 			propNoteBook.AppendPage(SharingPage, 
 								new Label(Util.GS("_Sharing")));
