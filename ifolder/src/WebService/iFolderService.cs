@@ -249,6 +249,7 @@ namespace Novell.iFolder.Web
 
 			Store store = Store.GetStore();
 			Collection col = store.GetCollectionByID(iFolderID);
+			if (col != null)
 			{
 				// CRG: Removed the code that checked for a Subscription
 				// USE: GetiFolderInvitation to be safe in multi-domain
