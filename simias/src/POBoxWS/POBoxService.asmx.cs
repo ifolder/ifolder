@@ -546,7 +546,7 @@ namespace Simias.POBoxService.Web
 			string				domainID, 
 			string				identityID, 
 			string				messageID,
-			SubscriptionStates	state)
+			Simias.POBox.SubscriptionStates	state)
 		{
 			Simias.POBox.POBox	poBox;
 			Store				store = Store.GetStore();
