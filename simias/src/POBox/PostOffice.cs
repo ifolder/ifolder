@@ -70,65 +70,96 @@ namespace Simias.POBox
 		/// </summary>
 		/// <param name="message">A message object</param>
 		/// <returns>true if the message was posted</returns>
-		public bool Post(string userID, Message message)
+		public bool Post(string user, Message message)
 		{
 			bool result = false;
-			POBox box;
-			if (message.DomainID == Simias.Storage.Domain.WorkGroupDomainID)
+			bool workgroup = (message.DomainID == Simias.Storage.Domain.WorkGroupDomainID);
+
+			string userID = System.Threading.Thread.CurrentPrincipal.Identity.Name;
+			
+			if ((userID == null) || (userID.Length == 0))
 			{
-				box = POBox.GetPOBox(store, message.DomainID);
+				// Kludge: for now trust the client.  this need to be removed before shipping.
+				userID = user;
 			}
-			else
+
+			POBox box = null;
+			
+			// temporary, in memory only, subscription object
+			Subscription temp = new Subscription(message);
+				
+			// new subscription
+			Subscription subscription = null;
+
+			// create a new subscription object with some of the information from temp
+			switch (temp.SubscriptionState)
 			{
-				// open the post office box
-				box = POBox.GetPOBox(store, message.DomainID, userID);
+				case SubscriptionStates.Received:
+					// Make sure the from field matches the authenticated userid.
+					if (!workgroup && userID == temp.FromIdentity)
+					{
+						box = POBox.GetPOBox(store, message.DomainID, temp.ToIdentity);
+						if (box != null)
+						{
+							subscription = new Subscription(message.Name, message.ID);
+							subscription.SubscriptionState =  SubscriptionStates.Received;
+							subscription.SubscriptionCollectionID = temp.SubscriptionCollectionID;
+							subscription.FromName = temp.FromName;
+							subscription.FromIdentity = temp.FromIdentity;
+							subscription.ToName = temp.ToName;
+							subscription.ToIdentity = temp.ToIdentity;
+							result = true;
+						}
+					}
+					break;
+				case SubscriptionStates.Pending:
+					if (workgroup)
+					{
+                        box = POBox.GetPOBox(store, message.DomainID);
+					}
+					else
+					{
+						box = POBox.GetPOBox(store, message.DomainID, temp.FromIdentity);
+					}
+					if (box != null)
+					{
+						Node node = box.GetNodeByID(message.ID);
+						if (node != null)
+						{
+							subscription = new Subscription(node);
+							string ToID;
+							if (workgroup)
+							{
+								ToID = temp.ToIdentity;
+							}
+							else
+							{
+								ToID = subscription.ToIdentity;
+							}
+					
+							// Make sure the to field matches the authenticated user.
+							if (userID == ToID /* TODO: Also check world for a published collection.*/)
+							{
+								subscription.SubscriptionState =  SubscriptionStates.Pending;
+								subscription.ToName = temp.ToName;
+								subscription.ToIdentity = temp.ToIdentity;
+								if (workgroup)
+								{
+									subscription.ToPublicKey = temp.ToPublicKey;
+								}
+								result = true;
+							}
+						}
+					}
+					break;
 			}
-
-			// check the post office box
-			if (box == null)
-				throw new ApplicationException("PO Box not found.");
-
-			// subscription
-			if (box.IsType(message, typeof(Subscription).Name))
+				
+			// commit
+			if (result && box != null)
 			{
-				// temporary, in memory only, subscription object
-				Subscription temp = new Subscription(message);
-				
-				// new subscription
-				Subscription subscription = null;
-
-				Node node = box.GetNodeByID(message.ID);
-
-				if (node == null)
-				{
-					subscription = new Subscription(message.Name, message.ID);
-				}
-				else
-				{
-					subscription = new Subscription(node);
-				}
-
-				// create a new subscription object with some of the information from temp
-				subscription.SubscriptionState =  temp.SubscriptionState;
-				subscription.FromPublicKey = temp.FromPublicKey;
-				subscription.FromName = temp.FromName;
-				subscription.FromAddress = temp.FromAddress;
-				subscription.FromIdentity = temp.FromIdentity;
-				subscription.ToName = temp.ToName;
-				subscription.ToIdentity = temp.ToIdentity;
-				subscription.SubscriptionCollectionID = temp.SubscriptionCollectionID;
-				
-				// commit
 				box.Commit(subscription);
-
-				// done
-				result = true;
 			}
-			else
-			{
-				// ignore for now (we only have subscriptions)
-			}
-
+			
 			return result;
 		}
 

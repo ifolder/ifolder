@@ -197,7 +197,7 @@ namespace Simias.POBox
 				subscription.FromIdentity = me.UserID;
 				subscription.FromName = me.Name;
 				subscription.SubscriptionState = SubscriptionStates.Received;
-				po.Post(subscription.ToIdentity, subscription);
+				po.Post(subscription.FromIdentity, subscription);
 
 				subscription.SubscriptionState = SubscriptionStates.Posted;
 				poBox.Commit(subscription);
@@ -224,7 +224,7 @@ namespace Simias.POBox
 
 			// post subscription
 			subscription.SubscriptionState = SubscriptionStates.Pending;
-			po.Post(subscription.FromIdentity, subscription);
+			po.Post(subscription.ToIdentity, subscription);
 
 			// update subscription
 			subscription.SubscriptionState = SubscriptionStates.Delivered;
