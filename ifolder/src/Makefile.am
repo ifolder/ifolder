@@ -1,9 +1,9 @@
 if LINUX
-SUBDIRS = iFolder TrayIcon GtkTrayApp WebService
+SUBDIRS = WebService iFolder TrayIcon GtkTrayApp WebService
 endif
 
 if DARWIN
-SUBDIRS = iFolder WebService
+SUBDIRS = WebService iFolder
 endif
 
 if WINDOWS

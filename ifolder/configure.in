@@ -431,9 +431,6 @@ fi
 PKG_CHECK_MODULES(SIMIAS, simias >= 1.0)
 AC_SUBST(SIMIAS_LIBS)
 
-PKG_CHECK_MODULES(SIMIAS_UI, simias-ui >= 1.0)
-AC_SUBST(SIMIAS_UI_LIBS)
-
 PKG_CHECK_MODULES(ADDRESSBOOK, addressbook >= 1.0)
 AC_SUBST(ADDRESSBOOK_LIBS)
 
@@ -488,7 +485,6 @@ ifolder3-ui.pc
 src/Makefile
 src/install-ifolder-to-gac
 src/iFolder/Makefile
-src/iFolder/iFolderCmd
 src/iFolderGtkUI/Makefile
 src/iFolderGtkUI/Util.cs
 src/iFolderGtkUI/collectionbrowser
