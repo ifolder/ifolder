@@ -40,7 +40,7 @@ namespace Simias
 	/// </summary>
 	public class SimiasLogManager
 	{
-		private static readonly string DefaultConfigFile = "Simias.log4net";
+		private static readonly string DefaultConfigFile = "Simias";
 		private static readonly string ConfigFileExtension = ".log4net";
 
 		private static bool configured = false;
@@ -92,9 +92,21 @@ namespace Simias
 					// bootstrap config
 					if (!File.Exists(configFile))
 					{
-						string bootStrapFile = Path.Combine(SimiasSetup.sysconfdir, DefaultConfigFile);
+						// look for an exact match for the template or use the default template
+						string bootStrapFile = null;
+						string bootStrapFile1 = Path.Combine(SimiasSetup.sysconfdir, name + ConfigFileExtension);
+						string bootStrapFile2 = Path.Combine(SimiasSetup.sysconfdir, DefaultConfigFile + ConfigFileExtension);
+						
+						if (File.Exists(bootStrapFile1))
+						{
+							bootStrapFile = bootStrapFile1;
+						}
+						else if  (File.Exists(bootStrapFile2))
+						{
+							bootStrapFile = bootStrapFile2;
+						}
 
-						if (File.Exists(bootStrapFile))
+						if (bootStrapFile != null)
 						{
 							File.Copy(bootStrapFile, configFile);
 
