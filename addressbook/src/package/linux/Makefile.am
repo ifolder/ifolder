@@ -25,7 +25,7 @@ $(top_srcdir)/$(PACKAGE)-$(VERSION).tar.gz:
 	cd $(top_srcdir); make dist
 
 install: $(RPM_FILE)
-	su -c "rpm -Uvh --force $(RPM_FILE)"
+	su -c "rpm -Uvh $(RPM_FILE)"
 	
 uninstall:
 	su -c "rpm -e $(PACKAGE)"
