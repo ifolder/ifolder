@@ -2,26 +2,39 @@ SUBDIRS = src help
 
 DIST_SUBDIRS = $(SUBDIRS) doc package test
 
-EXTRA_DIST = tools $(srcdir)/ifolder.pc.in
+MSVCR_DEBUG_DLL_PATH = $(shell cygpath --unix "$(FRAMEWORKDIR)/v1.1*")
+MSVCR_DEBUG_DLL = $(shell find $(MSVCR_DEBUG_DLL_PATH) -name msvcr71d.dll )
+																   
+EXTRA_DIST = tools $(srcdir)/$(PACKAGE).pc.in msvcr71d.dll
 
 export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
-install-exec-local:
-	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig $(DESTDIR)$(datadir)/ifolder
-	$(INSTALL_PROGRAM) COPYING $(DESTDIR)$(datadir)/ifolder
-	$(INSTALL_PROGRAM) $(srcdir)/ifolder.pc $(DESTDIR)$(libdir)/pkgconfig
+msvcr71d.dll:	$(MSVCR_DEBUG_DLL)
+	cp -f $< $@
+
+install-exec-local: msvcr71d.dll
+	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig $(DESTDIR)$(datadir)/$(PACKAGE)
+	$(INSTALL_PROGRAM) $(srcdir)/COPYING $(DESTDIR)$(datadir)/$(PACKAGE)
+	$(INSTALL_PROGRAM) $(PACKAGE).pc $(DESTDIR)$(libdir)/pkgconfig
+if WINDOWS
+if DEBUG	
+	$(INSTALL_PROGRAM) msvcr71d.dll $(DESTDIR)$(libdir)
+endif
+endif
 
 register unregister:
 if WINDOWS
 	$(MAKE) -C src $@
 endif
 
-installcheck-summary:
-	$(MAKE) -C src $@
-
 uninstall-local:
-	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f ifolder.pc
-	cd $(DESTDIR)$(datadir)/ifolder; rm -f COPYING
+	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f $(PACKAGE).pc
+	cd $(DESTDIR)$(datadir)/$(PACKAGE); rm -f COPYING
+if WINDOWS
+if DEBUG	
+	cd $(DESTDIR)$(libdir); rm -f msvcr71d.dll
+endif
+endif
 
 clean-local:
 	rm -rf $(COMMON_CLEAN_FILES)
@@ -31,7 +44,7 @@ distclean-local:
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
-	rm -f configure ifolder-*.tar.gz config.cache
+	rm -f configure $(PACKAGE)-*.tar.gz config.cache
 	rm -f aclocal.m4 conf*.sh configure.lineno config.log
 	rm -f config.guess config.sub config.status config.h.in
 	rm -f ltmain.sh libtool
