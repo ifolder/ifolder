@@ -248,14 +248,36 @@ namespace Novell.iFolder
 			}
 		}
 
-		public void on_refreshCollections(object o, EventArgs args)
+		public void on_refresh(object o, EventArgs args)
 		{
 			RefreshCollections();
 		}
 
-		public void on_refreshNodes(object o, EventArgs args)
+		public void on_create(object o, EventArgs args)
 		{
-			RefreshNodes();
+		}
+
+		public void on_delete(object o, EventArgs args)
+		{
+		}
+
+		public void on_properties(object o, EventArgs args)
+		{
+		}
+		
+		public void on_quit(object o, EventArgs args)
+		{
+			if(ColWindow != null)
+			{
+				ColWindow.Hide();
+				ColWindow.Destroy();
+			}
+
+			if(BrowserClosed != null)
+			{
+				EventArgs e = new EventArgs();
+				BrowserClosed(this, e);
+			}
 		}
 
 		public void on_collection_selection_changed(object o, EventArgs args)
