@@ -202,8 +202,6 @@ namespace Simias.Sync
 		{
 			baseStore.ImpersonateUser(Access.StoreAdminRole);
 			baseStore.Delete();
-			baseStore.Revert();
-			baseStore.Dispose();
 			
 			this.Dispose();
 		}
