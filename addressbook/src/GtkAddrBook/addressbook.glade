@@ -433,10 +433,8 @@
 		  <property name="text" translatable="yes"></property>
 		  <property name="has_frame">True</property>
 		  <property name="invisible_char" translatable="yes">*</property>
-		  <property name="activates_default">False</property>
-		  <signal name="key_press_event" handler="on_search_key_press" last_modification_time="Fri, 23 Jan 2004 15:53:16 GMT"/>
+		  <property name="activates_default">True</property>
 		  <signal name="changed" handler="on_search_changed" last_modification_time="Wed, 03 Mar 2004 21:18:03 GMT"/>
-		  <signal name="editing_done" handler="on_search_editing_done" last_modification_time="Wed, 03 Mar 2004 21:24:37 GMT"/>
 		</widget>
 		<packing>
 		  <property name="padding">0</property>
@@ -455,6 +453,8 @@
 		  <child>
 		    <widget class="GtkImage" id="image13">
 		      <property name="visible">True</property>
+		      <property name="can_default">True</property>
+		      <property name="has_default">True</property>
 		      <property name="stock">gtk-find</property>
 		      <property name="icon_size">4</property>
 		      <property name="xalign">0.5</property>
