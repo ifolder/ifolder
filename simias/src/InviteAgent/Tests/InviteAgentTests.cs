@@ -71,7 +71,7 @@ namespace Simias.Agent.Tests
 			}
 
 			// store
-			store = Store.Connect(testStoreUri);
+			store = Store.Connect(testStoreUri, null);
 
 			// create collection
 			collection = store.CreateCollection("Agent Collection");
@@ -93,7 +93,7 @@ namespace Simias.Agent.Tests
 			GC.Collect();
 
 			// remove store
-			store.ImpersonateUser(Access.StoreAdminRole, null);
+			store.ImpersonateUser(Access.StoreAdminRole);
 			store.Delete();
 			store = null;
 		}

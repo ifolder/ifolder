@@ -161,7 +161,7 @@ namespace Simias.Sync
 				if (masterIncarnation != 0)
 				{
 					// sync role
-					collection.BaseCollection.LocalStore.ImpersonateUser(Access.SyncOperatorRole, null);
+					collection.BaseCollection.LocalStore.ImpersonateUser(Access.SyncOperatorRole);
 				
 					// this command does an implicit commit
 					node.BaseNode.UpdateIncarnation(masterIncarnation);

@@ -103,11 +103,8 @@ namespace Simias.Sync
 			// connect
 			Uri uri = null;
 			if (path != null) uri = new Uri(path);
-			store = Store.Connect(uri);
+			store = Store.Connect(uri, null);
 			Trace.Assert(store != null);
-			
-			// TODO: remove
-			//store.ImpersonateUser(Access.StoreAdminRole, null);
 		}
 
 		/// <summary>
@@ -157,7 +154,7 @@ namespace Simias.Sync
 				{
 					MyTrace.WriteLine("Scanning the Store...");
 
-					Hashtable oldCollections = (Hashtable)collections.Clone();
+					Hashtable staleCollections = (Hashtable)collections.Clone();
 
 					// find created collections
 					foreach(Collection c in store)
@@ -178,16 +175,18 @@ namespace Simias.Sync
 							}
 						}
 
-						oldCollections.Remove(id);
+						staleCollections.Remove(id);
 					}
 
 					// drop deleted collections
-					foreach(string id in oldCollections.Keys)
+					foreach(string id in staleCollections.Keys)
 					{
 						string name = (string)collections[id];
 
 						MyTrace.WriteLine("Deleted Collection: {0} [{1}]",
 							name, id);
+
+						collections.Remove(id);
 
 						if (Deleted != null)
 						{

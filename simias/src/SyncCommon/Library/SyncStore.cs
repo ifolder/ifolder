@@ -57,7 +57,7 @@ namespace Simias.Sync
 			}
 			
 			// base store
-			baseStore = Store.Connect(storeUri);
+			baseStore = Store.Connect(storeUri, null);
 		}
 
 		public SyncCollection OpenCollection(string id)
@@ -132,7 +132,7 @@ namespace Simias.Sync
 
 		public void Delete()
 		{
-			baseStore.ImpersonateUser(Access.StoreAdminRole, null);
+			baseStore.ImpersonateUser(Access.StoreAdminRole);
 			baseStore.Delete();
 			baseStore.Revert();
 			baseStore.Dispose();

@@ -83,7 +83,7 @@ namespace Simias.Sync
 		public void UpdateIncarnation(ulong incarnation)
 		{
 			// sync role
-			baseNode.CollectionNode.LocalStore.ImpersonateUser(Access.SyncOperatorRole, null);
+			baseNode.CollectionNode.LocalStore.ImpersonateUser(Access.SyncOperatorRole);
 
 			baseNode.UpdateIncarnation(incarnation);
 

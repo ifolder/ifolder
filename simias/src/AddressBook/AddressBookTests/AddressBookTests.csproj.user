@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\dev\simias\tools\NUnit\bin\" >
+            <Settings ReferencePath = "C:\dev\simias\tools\NUnit\bin\;C:\wa\ifolder\simias\tools\NUnit\bin\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"

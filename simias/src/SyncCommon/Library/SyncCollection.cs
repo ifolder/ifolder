@@ -177,11 +177,6 @@ namespace Simias.Sync
 			get { return baseCollection; }
 		}
 
-		public string Name
-		{
-			get { return baseCollection.Name; }
-		}
-
 		public SyncCollectionRoles Role
 		{
 			get

@@ -76,7 +76,7 @@ namespace Simias.Sync.Tests
 
 			Directory.CreateDirectory(collectionPath);
 
-			store = Store.Connect(new Uri(path));
+			store = Store.Connect(new Uri(path), null);
 			Trace.Assert(store != null);
 			collection = store.CreateCollection(name, new Uri(collectionPath));
 			Trace.Assert(collection != null);
@@ -109,7 +109,7 @@ namespace Simias.Sync.Tests
 			GC.Collect();
 
 			// remove store
-			store.ImpersonateUser(Access.StoreAdminRole, null);
+			store.ImpersonateUser(Access.StoreAdminRole);
 			store.Delete();
 		}
 

@@ -67,7 +67,7 @@ namespace Simias.Sync.Tests
 				Directory.Delete(path, true);
 			}
 
-			store = Store.Connect(new Uri(path));
+			store = Store.Connect(new Uri(path), null);
 
 			watcher = new StoreWatcher(path);
 
@@ -92,7 +92,7 @@ namespace Simias.Sync.Tests
 			GC.Collect();
 
 			// remove store
-			store.ImpersonateUser(Access.StoreAdminRole, null);
+			store.ImpersonateUser(Access.StoreAdminRole);
 			store.Delete();
 			store = null;
 		}
@@ -120,23 +120,29 @@ namespace Simias.Sync.Tests
 		/// </summary>
 		public void TestStoreWatcher()
 		{
-			Assert(count == 1);
+			Assert(count == 2);
 
 			Collection c = store.CreateCollection("Test Collection 1");
 			c.Commit(true);
 
 			Thread.Sleep(TimeSpan.FromSeconds(watcher.Interval + 1));
 
-			Assert(count == 2);
+			Assert(count == 3);
 
 			c.Delete();
 			
 			// kludge
 			GC.Collect();
 
+			// check delete
 			Thread.Sleep(TimeSpan.FromSeconds(watcher.Interval + 1));
 			
-			Assert(count == 1);
+			Assert(count == 2);
+
+			// check maintained delete
+			Thread.Sleep(TimeSpan.FromSeconds(watcher.Interval + 1));
+			
+			Assert(count == 2);
 		}
 	}
 }
