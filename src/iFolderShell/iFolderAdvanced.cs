@@ -1006,23 +1006,40 @@ namespace Novell.iFolder.iFolderCom
 
 			if (shareWith.SelectedItems.Count == 1)
 			{
+				// Only one item is selected ... get the ListViewItem for the selected item.
 				lvi = shareWith.SelectedItems[0];
+
+				// Enable the accept and decline buttons if the subscription state is "Pending".
 				accept.Enabled = decline.Enabled = lvi.SubItems[1].Text.Equals(SubscriptionStates.Pending.ToString());
 			}
 			else
 			{
+				// Multiple items are selected ... uncheck all the access buttons and disable
+				// the accept and decline buttons.
 				this.accessReadOnly.Checked = false;
 				this.accessReadWrite.Checked = false;
 				this.accessFullControl.Checked = false;
 				accept.Enabled = decline.Enabled = false;
 			}
 
-			if (ifolder.GetCurrentMember().Rights == Access.Rights.Admin)
+			// Check the rights of the current user.
+			Member member = ifolder.GetCurrentMember();
+			if (member.Rights == Access.Rights.Admin)
 			{
-				accessControlButtons.Enabled = shareWith.SelectedItems.Count != 0;
-
-				remove.Enabled = true;
-
+				if ((shareWith.SelectedItems.Count == 1) && 
+					(((ShareListMember)shareWith.SelectedItems[0].Tag).Member != null) &&
+					((ShareListMember)shareWith.SelectedItems[0].Tag).Member.ID.Equals(member.ID))
+				{
+					// The current member is the only one selected, disable the access control
+					// buttons and the remove button.
+					accessControlButtons.Enabled = remove.Enabled = false;
+				}
+				else
+				{
+					// Enable the access control buttons and the remove button if one or more
+					// items is selected.
+					accessControlButtons.Enabled = remove.Enabled = shareWith.SelectedItems.Count != 0;
+				}
 			}
 			else
 			{
@@ -1031,6 +1048,7 @@ namespace Novell.iFolder.iFolderCom
 
 			if (lvi != null)
 			{
+				// Only one item is selected ... set the state of the access control buttons.
 				switch (lvi.SubItems[2].Text)
 				{
 					case "Full Control":
@@ -1206,7 +1224,8 @@ namespace Novell.iFolder.iFolderCom
 				try
 				{
 					// Don't allow the current user to be removed.
-					if ((slMember.Member != null) && !currentUser.Equals(slMember.Member.UserID))
+					if (((slMember.Member != null) && !currentUser.Equals(slMember.Member.UserID)) ||
+						(slMember.Member == null))
 					{
 						// If this item is not newly added, we need to add it to the removedList.
 						if (!slMember.Added)
