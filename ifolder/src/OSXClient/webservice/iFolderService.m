@@ -44,9 +44,9 @@ void cleanup_gsoap(struct soap *pSoap);
 
 
 
--(NSMutableDictionary *) GetDomains
+-(NSArray *) GetDomains
 {
-	NSMutableDictionary *domains = nil;
+	NSMutableArray *domains = nil;
 	
     struct soap soap;
     int err_code;
@@ -64,7 +64,7 @@ void cleanup_gsoap(struct soap *pSoap);
 
     if (err_code == SOAP_OK)
     {
-		domains = [[NSMutableDictionary alloc]
+		domains = [[NSMutableArray alloc]
 				initWithCapacity:getDomainsResponse.GetDomainsResult->__sizeDomainWeb];
 		int counter;
 		for(counter=0;counter<getDomainsResponse.GetDomainsResult->__sizeDomainWeb;counter++)
@@ -72,11 +72,11 @@ void cleanup_gsoap(struct soap *pSoap);
 			struct ns1__DomainWeb *curDomain;
 			
 			curDomain = getDomainsResponse.GetDomainsResult->DomainWeb[counter];
-			IFDomain *newDomain = [[IFDomain alloc] init];
+			iFolderDomain *newDomain = [[iFolderDomain alloc] init];
 			
-			[newDomain from_gsoap:curDomain];
+			[newDomain setgSOAPProperties:curDomain];
 			
-			[domains setObject:newDomain forKey:newDomain->ID];
+			[domains addObject:newDomain];
 		}
     }
 	else
@@ -90,22 +90,24 @@ void cleanup_gsoap(struct soap *pSoap);
 }
 
 
--(IFDomain *) ConnectToDomain:(NSString *)username usingPassword:(NSString *)password andHost:(NSString *)host
+
+
+-(iFolderDomain *) ConnectToDomain:(NSString *)UserName usingPassword:(NSString *)Password andHost:(NSString *)Host
 {
-	IFDomain *domain = nil;
+	iFolderDomain *domain = nil;
     struct soap soap;
     int err_code;
 
-	NSAssert( (username != nil), @"username was nil");
-	NSAssert( (password != nil), @"password was nil");
-	NSAssert( (host != nil), @"host was nil");
+	NSAssert( (UserName != nil), @"UserName was nil");
+	NSAssert( (Password != nil), @"Password was nil");
+	NSAssert( (Host != nil), @"Host was nil");
 
 	struct _ns1__ConnectToDomain connectToDomainMessage;
 	struct _ns1__ConnectToDomainResponse connectToDomainResponse;
 	
-	connectToDomainMessage.UserName = (char *)[username cString];
-	connectToDomainMessage.Password = (char *)[password cString];
-	connectToDomainMessage.Host = (char *)[host cString];
+	connectToDomainMessage.UserName = (char *)[UserName cString];
+	connectToDomainMessage.Password = (char *)[Password cString];
+	connectToDomainMessage.Host = (char *)[Host cString];
 
     init_gsoap (&soap);
     err_code = soap_call___ns1__ConnectToDomain(
@@ -117,12 +119,12 @@ void cleanup_gsoap(struct soap *pSoap);
 
     if (err_code == SOAP_OK)
     {
-		domain = [ [IFDomain alloc] init];
+		domain = [ [iFolderDomain alloc] init];
 		
 		struct ns1__DomainWeb *curDomain;
 			
 		curDomain = connectToDomainResponse.ConnectToDomainResult;
-		[domain from_gsoap:curDomain];
+		[domain setgSOAPProperties:curDomain];
     }
 	else
 	{
@@ -135,6 +137,101 @@ void cleanup_gsoap(struct soap *pSoap);
 }
 
 
+
+
+-(NSArray *) GetiFolders
+{
+	NSMutableArray *ifolders = nil;
+	
+    struct soap soap;
+    int err_code;
+
+	struct _ns1__GetAlliFolders getiFoldersMessage;
+	struct _ns1__GetAlliFoldersResponse getiFoldersResponse;
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__GetAlliFolders(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &getiFoldersMessage,
+            &getiFoldersResponse);
+
+    if (err_code == SOAP_OK)
+    {
+		int iFolderCount = getiFoldersResponse.GetAlliFoldersResult->__sizeiFolderWeb;
+		if(iFolderCount > 0)
+		{
+			ifolders = [[NSMutableArray alloc] initWithCapacity:iFolderCount];
+			
+			int counter;
+			for( counter = 0; counter < iFolderCount; counter++ )
+			{
+				struct ns1__iFolderWeb *curiFolder;
+			
+				curiFolder = getiFoldersResponse.GetAlliFoldersResult->iFolderWeb[counter];
+				iFolder *newiFolder = [[iFolder alloc] init];
+			
+				[newiFolder setgSOAPProperties:curiFolder];
+				
+				[ifolders addObject:newiFolder];
+			}
+		}
+    }
+	else
+	{
+		[NSException raise:@"GetAlliFoldersException" format:@"An error happened when calling GetAlliFolders"];
+	}
+
+    cleanup_gsoap(&soap);
+
+	return ifolders;
+}
+
+
+
+
+-(iFolder *) CreateiFolder:(NSString *)Path InDomain:(NSString *)DomainID
+{
+	iFolder *ifolder = nil;
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (Path != nil), @"Path was nil");
+	NSAssert( (DomainID != nil), @"DomainID was nil");
+
+	struct _ns1__CreateiFolderInDomain createiFolderMessage;
+	struct _ns1__CreateiFolderInDomainResponse createiFolderResponse;
+	
+	createiFolderMessage.Path = (char *)[Path cString];
+	createiFolderMessage.DomainID = (char *)[DomainID cString];
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__CreateiFolderInDomain(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &createiFolderMessage,
+            &createiFolderResponse);
+
+    if (err_code == SOAP_OK)
+    {
+		ifolder = [ [iFolder alloc] init];
+		
+		struct ns1__iFolderWeb *curiFolder;
+			
+		curiFolder = createiFolderResponse.CreateiFolderInDomainResult;
+		[ifolder setgSOAPProperties:curiFolder];
+    }
+	else
+	{
+		[NSException raise:@"CreateiFolder:inDomain" format:@"An error happened when calling CreateiFolder:inDomain"];
+	}
+
+    cleanup_gsoap(&soap);
+
+	return ifolder;
+}
 
 
 

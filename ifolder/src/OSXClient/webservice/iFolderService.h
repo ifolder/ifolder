@@ -11,7 +11,8 @@
 
 #import <Cocoa/Cocoa.h>
 #include <Carbon/Carbon.h>
-#import "IFDomain.h"
+#import "iFolderDomain.h"
+#import "iFolder.h"
 
 
 @interface iFolderService : NSObject
@@ -19,8 +20,10 @@
 }
 
 -(bool) Ping;
--(NSMutableDictionary *) GetDomains;
--(IFDomain *) ConnectToDomain:(NSString *)username usingPassword:(NSString *)password andHost:(NSString *)host;
+-(NSArray *) GetDomains;
+-(iFolderDomain *) ConnectToDomain:(NSString *)UserName usingPassword:(NSString *)Password andHost:(NSString *)Host;
+-(NSArray *) GetiFolders;
+-(iFolder *) CreateiFolder:(NSString *)Path InDomain:(NSString *)DomainID;
 
 @end
 

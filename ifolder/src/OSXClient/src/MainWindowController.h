@@ -2,38 +2,30 @@
 
 #import <Cocoa/Cocoa.h>
 #import <iFolderService.h>
-#import "iFoldersView.h"
 
-@class LoginWindowController;  // Forward declaration
+
+// Forward Declarations
+@class LoginWindowController;
 
 @interface MainWindowController : NSWindowController
 {
-    IBOutlet NSTabView		*ifolderTabView;
-	iFoldersView			*ifoldersView;
-
-
-	LoginWindowController	*_loginController;
-	iFolderService			*webService;
-	NSMutableDictionary		*domains;
-
+	LoginWindowController			*loginController;
+	iFolderService					*webService;
+	NSMutableArray					*domains;
+	NSMutableArray					*ifolders;	
+    IBOutlet NSArrayController		*ifoldersController;
+    IBOutlet NSArrayController		*domainsController;
 }
 
--(void)login:(NSString *)username withPassword:(NSString *)password toServer:(NSString *)server;
+- (IBAction)showLoginWindow:(id)sender;
 
-- (void)showLoginWindow;
+- (void)login:(NSString *)username withPassword:(NSString *)password toServer:(NSString *)server;
+- (void)createiFolder:(NSString *)path inDomain:(NSString *)domainID;
 
-- (IBAction)login:(id)sender;
-
-// This is called whent he nib is done loading.
 - (void)awakeFromNib;
 
-// This delegate method is called when a tab is selected.  This allows us to insert our own views
-// for each tab.
-- (void)tabView:(NSTabView*)tabView didSelectTabViewItem:(NSTabViewItem*)tabViewItem;
-
-// This method returns the view from the nib specified.
--(NSView*)loadViewFromNib:(NSString*)nibName;
-
+- (void)addDomain:(iFolderDomain *)newDomain;
+- (void)addiFolder:(iFolder *)newiFolder;
 
 
 @end

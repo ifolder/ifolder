@@ -9,8 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #include "iFolderStub.h"
 
-@interface IFDomain : NSObject
-{
+/*
 	@public
 		NSString	*ID;
 		NSString	*POBoxID;
@@ -19,9 +18,17 @@
 		NSString	*Host;
 		NSString	*UserID;
 		NSString	*UserName;
+*/
+
+@interface iFolderDomain : NSObject
+{
+	NSMutableDictionary		*properties;
 }
 
--(void) from_gsoap:(struct ns1__DomainWeb *)domainWeb;
 
+- (NSMutableDictionary *) properties;
+- (void) setProperties: (NSDictionary *)newProperties;
+
+-(void) setgSOAPProperties:(struct ns1__DomainWeb *)domainWeb;
 
 @end
