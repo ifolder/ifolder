@@ -11,10 +11,35 @@ APIDOCDIR="$SRCDIR/api-doc"
 
 COMMON_SUBDIRS="MiniFolder iFolder"
 LINUX_SUBDIRS="GtkTrayApp"
-WINDOWS_SUBDIRS="FormsTrayApp FormsInvitationWizard"
+WINDOWS_SUBDIRS="FormsTrayApp FormsInvitationWizard iFolderShell"
 
+#
+# Check for a valid operating system
+#
 case $host_os in
     linux*)
+        IFOLDER_OS='linux'
+    ;;
+    cygwin*)
+        IFOLDER_OS='windows'
+    ;;
+    *)
+        AC_MSG_ERROR([Unknown host_os: $host_os])
+    ;;
+esac
+AC_SUBST(IFOLDER_OS)
+        
+#
+# Set platform-specific variables
+#
+case $IFOLDER_OS in
+    #
+    # Linux-specific configuration
+    #
+    linux)
+        #
+        # Check for valid compilers
+        #
         AC_CHECK_PROG(CSC, mcs, mcs)
         test -z "$CSC" && AC_MSG_ERROR([no acceptable C Sharp compiler found in \$PATH])
         AC_CHECK_PROG(CC, cc, cc)
@@ -23,50 +48,61 @@ case $host_os in
         test -z "$CXX" && AC_MSG_ERROR([no acceptable C++ compiler found in \$PATH])
         AC_CHECK_PROG(LD, c++, c++)
         test -z "$LD" && AC_MSG_ERROR([no acceptable linker found in \$PATH])
+        #
+        # Set variables
+        #
         CC='cc -c'
-        CXX='c++ -c'
         CDEF='-D'
-        COUT='-o'
-        CINC='-I'
-        LIBS=''
-        CSCFLAGS='/d:MONO /warn:4 /d:TRACE'
-        DEBUG_CSCFLAGS="/debug+ /d:DEBUG"
-        OPTIMIZE_CSCFLAGS="/optimize+"
         CFLAGS="-pipe -Wall -W -DLINUX -DPRODUCT_NAME=@PRODUCT_NAME@ -DPRODUCT_VERSION=@PRODUCT_VERSION@"
-        DEBUG_CFLAGS="-g -DDEBUG"
-        OPTIMIZE_CFLAGS="-O2 -DNDEBUG"
-        CXXFLAGS="-pipe -Wall -W -DLINUX -DPRODUCT_NAME=@PRODUCT_NAME@ -DPRODUCT_VERSION=@PRODUCT_VERSION@";
-        DEBUG_CXXFLAGS="-g -DDEBUG"
-        OPTIMIZE_CXXFLAGS="-O2 -DNDEBUG"
-        LDFLAGS=''
-        DEBUG_LDFLAGS="-g"
-        OPTIMIZE_LDFLAGS=""
-        LDOUT='-o '
-        LDINC='-L'
+        CINC='-I'
+        COUT='-o'
         CSC_EXEFLAG=/target:exe
         CSC_LIBFLAG=/target:library
-        LIBFLAG='-l'
-        LIB_EXT=''
+        CSCFLAGS='/d:MONO /warn:4 /d:TRACE'
+        CXX='c++ -c'
+        CXXFLAGS="-pipe -Wall -W -DLINUX -DPACKAGE=@PACKAGE@ -DVERSION=@VERSION@";
+        DEBUG_CFLAGS="-g -DDEBUG"
+        DEBUG_CSCFLAGS="/debug+ /d:DEBUG"
+        DEBUG_CXXFLAGS="-g -DDEBUG"
+        DEBUG_LDFLAGS="-g"
+        DEBUG_NUNIT_FLAGS='--debug'
+        EMPTY=
         EXE_EXT=''
-        OBJ_EXT='.o'
-        SHARED_LIB_EXT='.so'
+        ICON_EXT='.ico'
+        ICON_FLAG='/resource:'
+        LDFLAGS=''
+        LDINC='-L'
+        LDOUT='-o '
+        LIB_EXT=''
         LIB_PRE='lib'
-        SHARED_LIB_FLAG='-shared'
-        SYSTEM_XML='System.Xml.dll'
+        LIBFLAG='-l'
+        LIBS=''
         MONO=mono
+        NON_PLATFORM_SUBDIRS="$WINDOWS_SUBDIRS package/windows"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_FLAGS='/nologo'
-        DEBUG_NUNIT_FLAGS='--debug'
-        OPTIMIZE_NUNIT_FLAGS=''
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
-        EMPTY=
-        SEP='/'
+        OBJ_EXT='.o'
+        OPTIMIZE_CFLAGS="-O2 -DNDEBUG"
+        OPTIMIZE_CSCFLAGS="/optimize+"
+        OPTIMIZE_CXXFLAGS="-O2 -DNDEBUG"
+        OPTIMIZE_LDFLAGS=""
+        OPTIMIZE_NUNIT_FLAGS=''
         PLATFORM_SUBDIRS=$LINUX_SUBDIRS
-        NON_PLATFORM_SUBDIRS=$WINDOWS_SUBDIRS
-        ICON_FLAG='/resource:'
-        ICON_EXT='.ico'
+        SEP='/'
+        SHARED_LIB_EXT='.so'
+        SHARED_LIB_FLAG='-shared'
+        SQLITELIB_PATH="../../external/sqlite/linux"
+        SQLITELIB="libsqlite.so"
+        SYSTEM_XML='System.Xml.dll'
     ;;
-    cygwin*)
+    #
+    # Windows-specific configuration
+    #
+    windows)
+        #
+        # Check for valid compilers
+        #
         AC_CHECK_PROG(CSC, csc, csc)
         test -z "$CSC" && AC_MSG_ERROR([no acceptable C Sharp compiler found in \$PATH])
         AC_CHECK_PROG(CC, cl, cl)
@@ -75,59 +111,103 @@ case $host_os in
         test -z "$CXX" && AC_MSG_ERROR([no acceptable C++ compiler found in \$PATH])
         AC_CHECK_PROG(LD, link, link)
         test -z "$LD" && AC_MSG_ERROR([no acceptable linker found in \$PATH])
+        #
+        # Set variables
+        #
         CC='cl -c'
         CXX='cl -c'
         CDEF='-D'
-        COUT='-Fo'
-        CINC='-I'
-        LIBS='kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib rpcrt4.lib ws2_32.lib imagehlp.lib'
-        CSCFLAGS='/d:DOTNET /warn:4 /d:TRACE'
-        DEBUG_CSCFLAGS="/debug+ /d:DEBUG"
-        OPTIMIZE_CSCFLAGS="/optimize+"
         CFLAGS="-nologo -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPRODUCT_NAME=@PRODUCT_NAME@ -DPRODUCT_VERSION=@PRODUCT_VERSION@";
-        DEBUG_CFLAGS="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
-        OPTIMIZE_CFLAGS="-MD -O2 -DNDEBUG"
-        CXXFLAGS="-nologo -GX -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPRODUCT_NAME=@PRODUCT_NAME@ -DPRODUCT_VERSION=@PRODUCT_VERSION@";
-        DEBUG_CXXFLAGS="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
-        OPTIMIZE_CXXFLAGS="-MD -O2 -DNDEBUG"
-        LDFLAGS='-nologo -machine:X86'
-        DEBUG_LDFLAGS="-DEBUG"
-        LDOUT='-out:'
-        LDINC='-libpath:'
+        CINC='-I'
+        COUT='-Fo'
         CSC_EXEFLAG=/target:exe
         CSC_LIBFLAG=/target:library
-        LIBFLAG=''
-        LIB_EXT='.lib'
-        EXE_EXT='.exe'
-        OBJ_EXT='.obj'
-        SHARED_LIB_EXT='.dll'
-        LIB_PRE=''
-        SHARED_LIB_FLAG='-dll'
-        TLBX='tlbexp'
-        TYPE_LIB_EXT='.tlb'
-        RES_EXT='.res'
-        RC='rc'
-        RC_FLAGS='-r'
+        CSCFLAGS='/d:DOTNET /warn:4 /d:TRACE'
+        CXXFLAGS="-nologo -GX -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPACKAGE=@PACKAGE@ -DVERSION=@VERSION@";
+        DEBUG_CFLAGS="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
+        DEBUG_CSCFLAGS="/debug+ /d:DEBUG"
+        DEBUG_CXXFLAGS="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
+        DEBUG_LDFLAGS="-DEBUG"
+        DEBUG_NUNIT_FLAGS=''
         DEF='-def:'
-        SYSTEM_XML='System.XML.dll'
+        EMPTY=
+        EXE_EXT='.exe'
+        ICON_EXT='.ico'
+        ICON_FLAG='/win32icon:'
+        LDFLAGS='-nologo -machine:X86'
+        LDINC='-libpath:'
+        LDOUT='-out:'
+        LIB_EXT='.lib'
+        LIB_PRE=''
+        LIBFLAG=''
+        LIBS='kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib rpcrt4.lib ws2_32.lib imagehlp.lib'
         MONO=
+        NON_PLATFORM_SUBDIRS="$LINUX_SUBDIRS package/linux"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_FLAGS='/nologo'
-        DEBUG_NUNIT_FLAGS=''
-        OPTIMIZE_NUNIT_FLAGS=''
         NUNIT_LIBPATH=`echo "$TOOLDIR/NUnit/bin" | sed 's,/cygdrive/\(.\)/,\1:/,'`
-        EMPTY=
-        SEP='$(EMPTY)\\$(EMPTY)'
+        OBJ_EXT='.obj'
+        OPTIMIZE_CFLAGS="-MD -O2 -DNDEBUG"
+        OPTIMIZE_CSCFLAGS="/optimize+"
+        OPTIMIZE_CXXFLAGS="-MD -O2 -DNDEBUG"
+        OPTIMIZE_NUNIT_FLAGS=''
         PLATFORM_SUBDIRS=$WINDOWS_SUBDIRS
-        NON_PLATFORM_SUBDIRS=$LINUX_SUBDIRS
-        ICON_FLAG='/win32icon:'
-        ICON_EXT='.ico'
-    ;;
-    *)
-        AC_MSG_ERROR([Unknown host_os: $host_os])
+        RC='rc'
+        RC_FLAGS='-r'
+        RES_EXT='.res'
+        SEP='$(EMPTY)\\$(EMPTY)'
+        SHARED_LIB_EXT='.dll'
+        SHARED_LIB_FLAG='-dll'
+        SQLITELIB="sqlite.dll"
+        SQLITELIB_PATH="../../external/sqlite/w32"
+        SYSTEM_XML='System.XML.dll'
+        TLBX='tlbexp'
+        TYPE_LIB_EXT='.tlb'
     ;;
 esac
+AC_SUBST(APIDOCDIR)
+AC_SUBST(CDEF)
+AC_SUBST(CINC)
+AC_SUBST(COMMON_SUBDIRS)
+AC_SUBST(COUT)
+AC_SUBST(CSC)
+AC_SUBST(CSCFLAGS)
+AC_SUBST(CSC_EXEFLAG)
+AC_SUBST(CSC_LIBFLAG)
+AC_SUBST(CXX)
+AC_SUBST(CXXFLAGS)
+AC_SUBST(DEF)
+AC_SUBST(DOCDIR)
+AC_SUBST(EMPTY)
+AC_SUBST(ICON_EXT)
+AC_SUBST(ICON_FLAG)
+AC_SUBST(LDFLAGS)
+AC_SUBST(LDINC)
+AC_SUBST(LDOUT)
+AC_SUBST(LIBS)
+AC_SUBST(LINUX_SUBDIRS)
+AC_SUBST(MONO)
+AC_SUBST(NON_PLATFORM_SUBDIRS)
+AC_SUBST(NUNIT)
+AC_SUBST(NUNIT_FLAGS)
+AC_SUBST(NUNIT_LIBPATH)
+AC_SUBST(OBJ_EXT)
+AC_SUBST(PLATFORM_SUBDIRS)
+AC_SUBST(RC)
+AC_SUBST(RCFLAGS)
+AC_SUBST(RES_EXT)
+AC_SUBST(ROOTDIR)
+AC_SUBST(SEP)
+AC_SUBST(SHARED_LIB_FLAG)
+AC_SUBST(SRCDIR)
+AC_SUBST(SYSTEM_XML)
+AC_SUBST(TLBX)
+AC_SUBST(TOOLDIR)
+AC_SUBST(WINDOWS_SUBDIRS)
 
+#
+# Run standard macros
+#
 AM_PROG_CC_STDC
 AC_PROG_INSTALL
 AC_HEADER_STDC
@@ -147,7 +227,7 @@ AC_SUBST(CYGWIN_PATH)
 # Handle --with-simias-path
 #
 AC_ARG_WITH(simias-path,
-    [  --with-simias-path=PATH full path to installed Simias assemblies (default is \${prefix}],
+    [  --with-simias-path=PATH full path to installed Simias assemblies (default is $ac_default_prefix)],
     [ SIMIAS_INSTALL_PATH=$withval ],
     [ SIMIAS_INSTALL_PATH=$prefix ]
     )
@@ -163,7 +243,27 @@ case $host_os in
 esac
 AC_SUBST(SIMIAS_INSTALL_PATH)
 
-DISTCHECK_CONFIGURE_FLAGS="--with-simias-path=$SIMIAS_INSTALL_PATH"
+#
+# Handle --with-addressbook-path
+#
+AC_ARG_WITH(addressbook-path,
+    [  --with-addressbook-path=PATH full path to installed AddressBook assemblies (default is $ac_default_prefix)],
+    [ SIMIAS_ADDRESSSBOOK_PATH=$withval ],
+    [ SIMIAS_ADDRESSSBOOK_PATH=$prefix ]
+    )
+test "x$SIMIAS_ADDRESSSBOOK_PATH" = xNONE && SIMIAS_ADDRESSSBOOK_PATH=$ac_default_prefix
+case $host_os in
+    cygwin*)
+        if ( expr "$SIMIAS_ADDRESSSBOOK_PATH" : ".*cygdrive.*" > /dev/null ); then
+            SIMIAS_ADDRESSSBOOK_PATH=`echo "$SIMIAS_ADDRESSSBOOK_PATH" | sed 's,/cygdrive/\(.\)/,\1:/,'`
+        else
+            SIMIAS_ADDRESSSBOOK_PATH="\$(CYGWIN_PATH)$SIMIAS_ADDRESSSBOOK_PATH"
+        fi
+    ;;
+esac
+AC_SUBST(SIMIAS_ADDRESSSBOOK_PATH)
+
+DISTCHECK_CONFIGURE_FLAGS="--with-simias-path=$SIMIAS_INSTALL_PATH --with-addressbook-path=$SIMIAS_ADDRESSBOOK_PATH"
 AC_SUBST(DISTCHECK_CONFIGURE_FLAGS)
 
 
@@ -204,30 +304,6 @@ case $host_os in
     ;;
 esac
 
-AC_SUBST(EMPTY)
-AC_SUBST(SEP)
-AC_SUBST(ROOTDIR)
-AC_SUBST(SRCDIR)
-AC_SUBST(TOOLDIR)
-AC_SUBST(DOCDIR)
-AC_SUBST(APIDOCDIR)
-AC_SUBST(CSC)
-AC_SUBST(CSCFLAGS)
-AC_SUBST(CSC_EXEFLAG)
-AC_SUBST(CSC_LIBFLAG)
-AC_SUBST(SYSTEM_XML)
-AC_SUBST(MONO)
-AC_SUBST(NUNIT)
-AC_SUBST(NUNIT_FLAGS)
-AC_SUBST(NUNIT_LIBPATH)
-AC_SUBST(COMMON_SUBDIRS)
-AC_SUBST(LINUX_SUBDIRS)
-AC_SUBST(WINDOWS_SUBDIRS)
-AC_SUBST(PLATFORM_SUBDIRS)
-AC_SUBST(NON_PLATFORM_SUBDIRS)
-AC_SUBST(ICON_FLAG)
-AC_SUBST(ICON_EXT)
-
 AC_OUTPUT([
 Makefile
 src/Makefile
@@ -236,4 +312,5 @@ src/iFolder/Makefile
 src/GtkTrayApp/Makefile
 src/FormsTrayApp/Makefile
 src/FormsInvitationWizard/Makefile
+src/iFolderShell/Makefile
 ])
