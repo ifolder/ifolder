@@ -825,6 +825,58 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="DeleteiFolderFileSizeLimit">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="DeleteiFolderFileSizeLimitResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetMemberiFolderFileSizeLimit">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetMemberiFolderFileSizeLimitResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="GetMemberiFolderFileSizeLimitResult"
+                  type="xs:long"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetiFolderFileSizeLimit">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetiFolderFileSizeLimitResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="GetiFolderFileSizeLimitResult"
+                  type="xs:long"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetiFolderFileSizeLimit">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string"/>
+            <xs:element minOccurs="1" maxOccurs="1" name="Limit" type="xs:long"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetiFolderFileSizeLimitResponse">
+        <xs:complexType/>
+      </xs:element>
       <xs:element name="iFolderSettings" type="s0:iFolderSettings"/>
       <xs:element name="boolean" type="xs:boolean"/>
       <xs:element name="iFolderWeb" type="s0:iFolderWeb"/>
@@ -838,6 +890,7 @@
       <xs:element name="ArrayOfConflict" type="s0:ArrayOfConflict"/>
       <xs:element name="SyncSize" type="s0:SyncSize"/>
       <xs:element name="string" type="xs:string"/>
+      <xs:element name="long" type="xs:long"/>
     </xs:schema>
   </types>
   <message name="PingSoapIn">
@@ -1152,6 +1205,30 @@
   <message name="GetDefaultDomainIDSoapOut">
     <part name="parameters" element="s0:GetDefaultDomainIDResponse"/>
   </message>
+  <message name="DeleteiFolderFileSizeLimitSoapIn">
+    <part name="parameters" element="s0:DeleteiFolderFileSizeLimit"/>
+  </message>
+  <message name="DeleteiFolderFileSizeLimitSoapOut">
+    <part name="parameters" element="s0:DeleteiFolderFileSizeLimitResponse"/>
+  </message>
+  <message name="GetMemberiFolderFileSizeLimitSoapIn">
+    <part name="parameters" element="s0:GetMemberiFolderFileSizeLimit"/>
+  </message>
+  <message name="GetMemberiFolderFileSizeLimitSoapOut">
+    <part name="parameters" element="s0:GetMemberiFolderFileSizeLimitResponse"/>
+  </message>
+  <message name="GetiFolderFileSizeLimitSoapIn">
+    <part name="parameters" element="s0:GetiFolderFileSizeLimit"/>
+  </message>
+  <message name="GetiFolderFileSizeLimitSoapOut">
+    <part name="parameters" element="s0:GetiFolderFileSizeLimitResponse"/>
+  </message>
+  <message name="SetiFolderFileSizeLimitSoapIn">
+    <part name="parameters" element="s0:SetiFolderFileSizeLimit"/>
+  </message>
+  <message name="SetiFolderFileSizeLimitSoapOut">
+    <part name="parameters" element="s0:SetiFolderFileSizeLimitResponse"/>
+  </message>
   <message name="PingHttpGetIn"/>
   <message name="PingHttpGetOut"/>
   <message name="GetSettingsHttpGetIn"/>
@@ -1443,6 +1520,28 @@
   <message name="GetDefaultDomainIDHttpGetOut">
     <part name="Body" element="s0:string"/>
   </message>
+  <message name="DeleteiFolderFileSizeLimitHttpGetIn">
+    <part name="iFolderID" type="s:string"/>
+  </message>
+  <message name="DeleteiFolderFileSizeLimitHttpGetOut"/>
+  <message name="GetMemberiFolderFileSizeLimitHttpGetIn">
+    <part name="UserID" type="s:string"/>
+    <part name="iFolderID" type="s:string"/>
+  </message>
+  <message name="GetMemberiFolderFileSizeLimitHttpGetOut">
+    <part name="Body" element="s0:long"/>
+  </message>
+  <message name="GetiFolderFileSizeLimitHttpGetIn">
+    <part name="iFolderID" type="s:string"/>
+  </message>
+  <message name="GetiFolderFileSizeLimitHttpGetOut">
+    <part name="Body" element="s0:long"/>
+  </message>
+  <message name="SetiFolderFileSizeLimitHttpGetIn">
+    <part name="iFolderID" type="s:string"/>
+    <part name="Limit" type="s:long"/>
+  </message>
+  <message name="SetiFolderFileSizeLimitHttpGetOut"/>
   <message name="PingHttpPostIn"/>
   <message name="PingHttpPostOut"/>
   <message name="GetSettingsHttpPostIn"/>
@@ -1734,6 +1833,28 @@
   <message name="GetDefaultDomainIDHttpPostOut">
     <part name="Body" element="s0:string"/>
   </message>
+  <message name="DeleteiFolderFileSizeLimitHttpPostIn">
+    <part name="iFolderID" type="s:string"/>
+  </message>
+  <message name="DeleteiFolderFileSizeLimitHttpPostOut"/>
+  <message name="GetMemberiFolderFileSizeLimitHttpPostIn">
+    <part name="UserID" type="s:string"/>
+    <part name="iFolderID" type="s:string"/>
+  </message>
+  <message name="GetMemberiFolderFileSizeLimitHttpPostOut">
+    <part name="Body" element="s0:long"/>
+  </message>
+  <message name="GetiFolderFileSizeLimitHttpPostIn">
+    <part name="iFolderID" type="s:string"/>
+  </message>
+  <message name="GetiFolderFileSizeLimitHttpPostOut">
+    <part name="Body" element="s0:long"/>
+  </message>
+  <message name="SetiFolderFileSizeLimitHttpPostIn">
+    <part name="iFolderID" type="s:string"/>
+    <part name="Limit" type="s:long"/>
+  </message>
+  <message name="SetiFolderFileSizeLimitHttpPostOut"/>
   <portType name="iFolderWebServiceSoap">
     <operation name="Ping">
       <input message="s0:PingSoapIn"/>
@@ -2005,6 +2126,26 @@
       <input message="s0:GetDefaultDomainIDSoapIn"/>
       <output message="s0:GetDefaultDomainIDSoapOut"/>
       <documentation>Get the ID of the default domain</documentation>
+    </operation>
+    <operation name="DeleteiFolderFileSizeLimit">
+      <input message="s0:DeleteiFolderFileSizeLimitSoapIn"/>
+      <output message="s0:DeleteiFolderFileSizeLimitSoapOut"/>
+      <documentation>Delete a file size limit policy from an iFolder</documentation>
+    </operation>
+    <operation name="GetMemberiFolderFileSizeLimit">
+      <input message="s0:GetMemberiFolderFileSizeLimitSoapIn"/>
+      <output message="s0:GetMemberiFolderFileSizeLimitSoapOut"/>
+      <documentation>Get a users file size limit on an iFolder</documentation>
+    </operation>
+    <operation name="GetiFolderFileSizeLimit">
+      <input message="s0:GetiFolderFileSizeLimitSoapIn"/>
+      <output message="s0:GetiFolderFileSizeLimitSoapOut"/>
+      <documentation>Get the file size limit of an iFolder</documentation>
+    </operation>
+    <operation name="SetiFolderFileSizeLimit">
+      <input message="s0:SetiFolderFileSizeLimitSoapIn"/>
+      <output message="s0:SetiFolderFileSizeLimitSoapOut"/>
+      <documentation>Set the file size limit of an iFolder</documentation>
     </operation>
   </portType>
   <portType name="iFolderWebServiceHttpGet">
@@ -2279,6 +2420,26 @@
       <output message="s0:GetDefaultDomainIDHttpGetOut"/>
       <documentation>Get the ID of the default domain</documentation>
     </operation>
+    <operation name="DeleteiFolderFileSizeLimit">
+      <input message="s0:DeleteiFolderFileSizeLimitHttpGetIn"/>
+      <output message="s0:DeleteiFolderFileSizeLimitHttpGetOut"/>
+      <documentation>Delete a file size limit policy from an iFolder</documentation>
+    </operation>
+    <operation name="GetMemberiFolderFileSizeLimit">
+      <input message="s0:GetMemberiFolderFileSizeLimitHttpGetIn"/>
+      <output message="s0:GetMemberiFolderFileSizeLimitHttpGetOut"/>
+      <documentation>Get a users file size limit on an iFolder</documentation>
+    </operation>
+    <operation name="GetiFolderFileSizeLimit">
+      <input message="s0:GetiFolderFileSizeLimitHttpGetIn"/>
+      <output message="s0:GetiFolderFileSizeLimitHttpGetOut"/>
+      <documentation>Get the file size limit of an iFolder</documentation>
+    </operation>
+    <operation name="SetiFolderFileSizeLimit">
+      <input message="s0:SetiFolderFileSizeLimitHttpGetIn"/>
+      <output message="s0:SetiFolderFileSizeLimitHttpGetOut"/>
+      <documentation>Set the file size limit of an iFolder</documentation>
+    </operation>
   </portType>
   <portType name="iFolderWebServiceHttpPost">
     <operation name="Ping">
@@ -2551,6 +2712,26 @@
       <input message="s0:GetDefaultDomainIDHttpPostIn"/>
       <output message="s0:GetDefaultDomainIDHttpPostOut"/>
       <documentation>Get the ID of the default domain</documentation>
+    </operation>
+    <operation name="DeleteiFolderFileSizeLimit">
+      <input message="s0:DeleteiFolderFileSizeLimitHttpPostIn"/>
+      <output message="s0:DeleteiFolderFileSizeLimitHttpPostOut"/>
+      <documentation>Delete a file size limit policy from an iFolder</documentation>
+    </operation>
+    <operation name="GetMemberiFolderFileSizeLimit">
+      <input message="s0:GetMemberiFolderFileSizeLimitHttpPostIn"/>
+      <output message="s0:GetMemberiFolderFileSizeLimitHttpPostOut"/>
+      <documentation>Get a users file size limit on an iFolder</documentation>
+    </operation>
+    <operation name="GetiFolderFileSizeLimit">
+      <input message="s0:GetiFolderFileSizeLimitHttpPostIn"/>
+      <output message="s0:GetiFolderFileSizeLimitHttpPostOut"/>
+      <documentation>Get the file size limit of an iFolder</documentation>
+    </operation>
+    <operation name="SetiFolderFileSizeLimit">
+      <input message="s0:SetiFolderFileSizeLimitHttpPostIn"/>
+      <output message="s0:SetiFolderFileSizeLimitHttpPostOut"/>
+      <documentation>Set the file size limit of an iFolder</documentation>
     </operation>
   </portType>
   <binding name="iFolderWebServiceSoap" type="s0:iFolderWebServiceSoap">
@@ -3062,6 +3243,46 @@
         <soap:body use="literal"/>
       </output>
     </operation>
+    <operation name="DeleteiFolderFileSizeLimit">
+      <soap:operation soapAction="http://novell.com/ifolder/web/DeleteiFolderFileSizeLimit"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetMemberiFolderFileSizeLimit">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetMemberiFolderFileSizeLimit"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetiFolderFileSizeLimit">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderFileSizeLimit"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="SetiFolderFileSizeLimit">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetiFolderFileSizeLimit"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
   </binding>
   <binding name="iFolderWebServiceHttpGet" type="s0:iFolderWebServiceHttpGet">
     <http:binding verb="GET"/>
@@ -3497,6 +3718,38 @@
         <mime:mimeXml part="Body"/>
       </output>
     </operation>
+    <operation name="DeleteiFolderFileSizeLimit">
+      <http:operation location="/DeleteiFolderFileSizeLimit"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="GetMemberiFolderFileSizeLimit">
+      <http:operation location="/GetMemberiFolderFileSizeLimit"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="GetiFolderFileSizeLimit">
+      <http:operation location="/GetiFolderFileSizeLimit"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="SetiFolderFileSizeLimit">
+      <http:operation location="/SetiFolderFileSizeLimit"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output/>
+    </operation>
   </binding>
   <binding name="iFolderWebServiceHttpPost" type="s0:iFolderWebServiceHttpPost">
     <http:binding verb="POST"/>
@@ -3931,6 +4184,38 @@
       <output>
         <mime:mimeXml part="Body"/>
       </output>
+    </operation>
+    <operation name="DeleteiFolderFileSizeLimit">
+      <http:operation location="/DeleteiFolderFileSizeLimit"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="GetMemberiFolderFileSizeLimit">
+      <http:operation location="/GetMemberiFolderFileSizeLimit"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="GetiFolderFileSizeLimit">
+      <http:operation location="/GetiFolderFileSizeLimit"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="SetiFolderFileSizeLimit">
+      <http:operation location="/SetiFolderFileSizeLimit"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output/>
     </operation>
   </binding>
   <service name="iFolderWebService">
