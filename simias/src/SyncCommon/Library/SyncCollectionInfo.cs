@@ -57,11 +57,6 @@ namespace Simias.Sync
 		protected string url;
 
 		/// <summary>
-		/// The sync logic type of the collection.
-		/// </summary>
-		protected string logicType;
-
-		/// <summary>
 		/// The sync role of the collection.
 		/// </summary>
 		protected SyncCollectionRoles role;
@@ -76,7 +71,6 @@ namespace Simias.Sync
 			this.masterIncarnation = collection.MasterIncarnation;
 			this.localIncarnation = collection.LocalIncarnation;
 			this.url = collection.ServiceUrl;
-			this.logicType = collection.LogicType;
 			this.role = collection.Role;
 		}
 		
@@ -131,14 +125,6 @@ namespace Simias.Sync
 			get { return url; }
 		}
 		
-		/// <summary>
-		/// The sync logic type of the collection.
-		/// </summary>
-		public string LogicType
-		{
-			get { return logicType; }
-		}
-
 		/// <summary>
 		/// The sync role of the collection.
 		/// </summary>

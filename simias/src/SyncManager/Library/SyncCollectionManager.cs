@@ -59,14 +59,11 @@ namespace Simias.Sync
 			// open store and collection
 			// note: the store provider requires that we open a new store for each thread
 			store = new Store(syncManager.Config);
-			
+			collection = new SyncCollection(store.GetCollectionByID(id));
+			Debug.Assert(collection != null);
+
 			// note: we need to revert any internal impersonations
 			store.Revert();
-
-
-			collection = new SyncCollection(store.GetCollectionByID(id));
-
-			Debug.Assert(collection != null);
 		}
 
 		public void Start()
@@ -202,16 +199,14 @@ namespace Simias.Sync
 				// once we have more confidence in remoting the connection should be created less often
 				try
 				{
-					// find the URL with the location service
-					Uri locationUri = syncManager.Location.Locate(collection.ID);
-
-					// update the URL
-					if (locationUri != null) collection.MasterUri = locationUri;
-
 					// get the service URL
 					string serviceUrl = collection.ServiceUrl;
 
 					log.Debug("Sync Store Service URL: {0}", serviceUrl);
+
+					// debug
+					// log.Debug("Pinging the Sync Collection Service...");
+					// log.Debug(service.Ping().ToString());
 
 					// get a proxy to the store service object
 					log.Debug("Connecting to the Sync Store Service...");
@@ -222,10 +217,6 @@ namespace Simias.Sync
 					log.Debug("Connecting to the Sync Collection Service...");
 					service = storeService.GetCollectionService(collection.ID);
 					Debug.Assert(service != null);
-
-					// debug
-					// log.Debug("Pinging the Sync Collection Service...");
-					// log.Debug(service.Ping().ToString());
 
 					// get the collection worker
 					log.Debug("Creating a Sync Worker Object...");
@@ -239,6 +230,22 @@ namespace Simias.Sync
 				catch(Exception e)
 				{
 					log.Debug(e, "Ignored");
+
+					try
+					{
+						// try the location service on an exception
+						log.Debug("Querying the Location Service...");
+
+						// find the URL with the location service
+						Uri locationUri = syncManager.Location.Locate(collection.ID);
+
+						// update the URL
+						if (locationUri != null) collection.MasterUri = locationUri;
+					}
+					catch(Exception e2)
+					{
+						log.Debug(e2, "Ignored");
+					}
 				}
 				finally
 				{

@@ -46,6 +46,9 @@ namespace Simias.Sync
 		private Hashtable collectionManagers;
 		private EventSubscriber subscriber;
 
+		private Thread worker;
+		private bool working;
+
 		public SyncStoreManager(SyncManager syncManager)
 		{
 			// save manager
@@ -66,6 +69,9 @@ namespace Simias.Sync
 			subscriber.NodeTypeFilter = NodeTypes.CollectionType;
 			subscriber.NodeCreated += new NodeEventHandler(OnCollectionCreated);
 			subscriber.NodeDeleted += new NodeEventHandler(OnCollectionDeleted);
+
+			// kludge thread
+			worker = new Thread(new ThreadStart(this.DoWork));
 		}
 
 		public void Start()
@@ -94,6 +100,10 @@ namespace Simias.Sync
 					{
 						AddCollectionManager(n.ID);
 					}
+
+					// start kludge thread
+					working = true;
+					worker.Start();
 				}
 			}
 			catch(Exception e)
@@ -116,6 +126,18 @@ namespace Simias.Sync
                     {
                         log.Debug("Stopping Store Service: {0}", service.ServiceUrl);
                     }
+
+					// stop kludge thread
+					working = false;
+
+					try
+					{
+						worker.Join();
+					}
+					catch
+					{
+						// ignore
+					}
 
 					// stop collection managers
 					subscriber.Enabled = false;
@@ -228,6 +250,32 @@ namespace Simias.Sync
 		private void OnCollectionDeleted(NodeEventArgs args)
 		{
 			RemoveCollectionManager(args.ID);
+		}
+
+		/// <summary>
+		/// Kludge Thread Method
+		/// </summary>
+		private void DoWork()
+		{
+			while(working)
+			{
+				try
+				{
+					log.Debug("Looking for New Collections...");
+
+					foreach(ShallowNode n in store)
+					{
+						AddCollectionManager(n.ID);
+					}
+				}
+				catch(Exception e)
+				{
+					log.Debug(e, "Ignored");
+				}
+
+				// sleep
+				if (working) Thread.Sleep(TimeSpan.FromSeconds(5));
+			}
 		}
 
 		#region IDisposable Members

@@ -60,13 +60,15 @@ namespace Simias.Sync
 		/// </summary>
 		public static readonly string LogicTypePropertyName = "Sync Logic";
 
+		private SyncProperties props;
+
 		/// <summary>
 		/// Copy Constructor
 		/// </summary>
 		/// <param name="collection">The collection object.</param>
 		public SyncCollection(Collection collection) : base	(collection)
 		{
-
+			props = new SyncProperties(this.StoreReference.Config);
 		}
 
 		/// <summary>
@@ -106,6 +108,8 @@ namespace Simias.Sync
 
 				Commit(dn);
 			}
+
+			props = new SyncProperties(this.StoreReference.Config);
 		}
 
 		/// <summary>
@@ -219,16 +223,15 @@ namespace Simias.Sync
 				{
 					// note: slave collections are always marked by the invitation
 					role = Synchronizable ? SyncCollectionRoles.Master : SyncCollectionRoles.Local;
+
+					// save
+					Role = role;
 				}
 
 				return role;
 			}
 
-
-			set
-			{
-				SetProperty(RolePropertyName, value, true);
-			}
+			set	{ SetProperty(RolePropertyName, value, true); }
 		}
 
 		/// <summary>
@@ -242,11 +245,8 @@ namespace Simias.Sync
 
 				if (result == null)
 				{
-					// create a default
-					SyncProperties props = new SyncProperties(this.StoreReference.Config);
-
+					// default
 					UriBuilder ub = new UriBuilder("http", props.Host, props.Port);
-
 					result = ub.Uri;
 				}
 
@@ -261,17 +261,20 @@ namespace Simias.Sync
 		/// </summary>
 		public int Interval
 		{
-			get { return (int)GetProperty(IntervalPropertyName, 5); }
-			set { SetProperty(IntervalPropertyName, value, true); }
-		}
+			get
+			{
+				int result = (int)GetProperty(IntervalPropertyName, 0);
 
-		/// <summary>
-		/// The syncing logic of the base collection.
-		/// </summary>
-		public string LogicType
-		{
-			get { return (string)GetProperty(LogicTypePropertyName); }
-			set { SetProperty(LogicTypePropertyName, value, true); }
+				if (result < 1)
+				{
+					// default
+					result = props.Interval;
+				}
+
+				return result;
+			}
+
+			set { SetProperty(IntervalPropertyName, value, true); }
 		}
 
 		/// <summary>

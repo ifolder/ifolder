@@ -7,14 +7,7 @@ Service_INCLUDES =
 Service_RESOURCES =
 Service_FLAGS = $(CSC_LIBFLAG)
 Service_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll Simias.Service.dll mDnsResponder.dll
-
-if WINDOWS
-Service_LIBPATH = /opt/gnome2/lib /usr/lib ../Common ../CollectionEvents ../Service ../../external/mDnsResponder/net/bin
-endif
-
-if MONO
-Service_LIBPATH = /opt/gnome2/lib /usr/lib ../Common ../CollectionEvents ../Service ../../external/mDnsResponder/mono/bin
-endif
+Service_LIBPATH = /opt/gnome2/lib /usr/lib ../Common ../CollectionEvents ../Service $(MDNSRESPONDER_DIR)
 
 CUR_DIR := $(shell pwd)
 
