@@ -247,7 +247,7 @@ internal class IncomingNode
 		BaseFileNode bfn = SyncOps.CastToBaseFileNode(collection, node);
 		if (bfn == null)
 		{
-			Log.log.Debug("commiting nonFile, nonDir {0}", node.GetFileName());
+			Log.log.Debug("commiting nonFile, nonDir {0}", node.Name);
 			Log.Assert(forkList == null);
 			ClearTemp();
 			return status;
