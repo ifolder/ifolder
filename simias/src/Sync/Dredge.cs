@@ -63,8 +63,7 @@ public class Dredger
 	DateTime dredgeTimeStamp = DateTime.Now;
 	DateTime lastDredgeTime = DateTime.MinValue;
 	bool foundChange;
-	bool lookForFiles = false;		
-
+	
 	//--------------------------------------------------------------------
 	// only returns true if file exists and name matches case exactly
 	bool FileThere(string path, string name)
@@ -99,7 +98,7 @@ public class Dredger
 	//--------------------------------------------------------------------
 	// TODO: what about file permissions and symlinks?
 
-	void DoNode(DirNode parentNode, string path, string type)
+	void DoNode(DirNode parentNode, string path, string type, bool subTreeHasChanged)
 	{
 		Node node = null;
 		string name = Path.GetFileName(path);
@@ -132,7 +131,7 @@ public class Dredger
 				else
 				{
 					if (dn != null)
-						DoSubtree(dn);
+						DoSubtree(dn, subTreeHasChanged);
 					if (node == null)
 						node = n;
 				}
@@ -159,7 +158,7 @@ public class Dredger
 				Log.Spew("Dredger adding dir node for {0} {1}", path, dnode.ID);
 				collection.Commit(dnode);
 				foundChange = true;
-				DoSubtree(dnode);
+				DoSubtree(dnode, subTreeHasChanged);
 			}
 		}
 		else if (type == typeof(FileNode).Name)
@@ -180,7 +179,7 @@ public class Dredger
 	}
 
 	//--------------------------------------------------------------------
-	void DoSubtree(DirNode dnode)
+	void DoSubtree(DirNode dnode, bool subTreeHasChanged)
 	{
 		if (dnode == null)
 		{
@@ -196,10 +195,10 @@ public class Dredger
 		
 		if (tmpDi.LastWriteTime > lastDredgeTime)
 		{
-			lookForFiles = true;
+			subTreeHasChanged = true;
 		}
 		
-		if (lookForFiles)
+		if (subTreeHasChanged)
 		{
 			// remove all nodes from store that no longer exist in the file system
 			foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
@@ -218,8 +217,8 @@ public class Dredger
 		// merge files from file system to store
 		foreach (string file in Directory.GetFiles(path))
 		{
-			if (File.GetLastWriteTime(file) > lastDredgeTime || lookForFiles)
-				DoNode(dnode, file, typeof(FileNode).Name);
+			if (File.GetLastWriteTime(file) > lastDredgeTime || subTreeHasChanged)
+				DoNode(dnode, file, typeof(FileNode).Name, subTreeHasChanged);
 		}
 		
 		
@@ -227,7 +226,7 @@ public class Dredger
 		// merge subdirs and recurse.
 		foreach (string dir in Directory.GetDirectories(path))
 		{
-			DoNode(dnode, dir, typeof(DirNode).Name);
+			DoNode(dnode, dir, typeof(DirNode).Name, subTreeHasChanged);
 		}
 	}
 
@@ -284,8 +283,7 @@ public class Dredger
 		{
 		}
 		foundChange = false;
-		lookForFiles = false;
-		DoSubtree(collection.GetRootDirectory());
+		DoSubtree(collection.GetRootDirectory(), false);
 		DoManagedPath(collection.ManagedPath);
 		if (foundChange)
 		{
