@@ -193,7 +193,7 @@ namespace Simias.Storage
 			int delimiter = acs.IndexOf( ':' );
 			if ( delimiter == 0 )
 			{
-				throw new ApplicationException( "Invalid access control format" );
+				throw new CollectionStoreException( String.Format( "Invalid access control format: {0}.", acs ) );
 			}
 
 			// Get the id out of the string.
@@ -362,7 +362,7 @@ namespace Simias.Storage
 			AccessControlEntry oldOwnerAce = FindAce( collection.Owner );
 			if ( oldOwnerAce == null )
 			{
-				throw new ApplicationException( "Existing collection does not have an owner ace" );
+				throw new DoesNotExistException( String.Format( "The collection: {0} - ID: {1} does not have an owner.", collection.Name, collection.ID ) );
 			}
 
 			// Reset the old ace.
@@ -430,7 +430,7 @@ namespace Simias.Storage
 			// Only the current owner can change ownership rights.
 			if ( !IsOwnerAccessAllowed() )
 			{
-				throw new UnauthorizedAccessException( "Current user cannot modify collection owner's right." );
+				throw new AccessException( collection, "Current user cannot modify collection owner's right." );
 			}
 
 			ChangeCollectionOwner( userID, oldOwnerRight );
@@ -509,13 +509,13 @@ namespace Simias.Storage
 		{
 			if ( !IsAccessAllowed( Access.Rights.Admin ) )
 			{
-				throw new UnauthorizedAccessException( "Current user does not have collection access modify right." );
+				throw new AccessException( collection, Access.Rights.Admin );
 			}
 
 			// Don't allow the owner's access to be removed.
 			if ( IsOwner( userID ) )
 			{
-				throw new UnauthorizedAccessException( "Cannot remove owner access rights" );
+				throw new AccessException( collection, "Cannot remove owner access rights" );
 			}
 
 			// Find the user's ace and remove it.
@@ -536,13 +536,13 @@ namespace Simias.Storage
 			// See if current user has rights to change access control list.
 			if ( !IsAccessAllowed( Access.Rights.Admin ) )
 			{
-				throw new UnauthorizedAccessException( "Current user does not have collection access modify right." );
+				throw new AccessException( collection, Access.Rights.Admin );
 			}
 
 			// Don't allow the collection owner's rights to be modified.
 			if ( IsOwner( userID ) )
 			{
-				throw new UnauthorizedAccessException( "Current user cannot modify collection owner's right." );
+				throw new AccessException( collection, "Current user cannot modify collection owner's right." );
 			}
 
 			// Normalize the user ID

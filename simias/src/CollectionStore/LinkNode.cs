@@ -64,7 +64,7 @@ namespace Simias.Storage
 		{
 			if ( type != NodeTypes.LinkNodeType )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.LinkNodeType, type ) );
 			}
 		}
 
@@ -78,7 +78,7 @@ namespace Simias.Storage
 		{
 			if ( type != NodeTypes.LinkNodeType )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.LinkNodeType, type ) );
 			}
 		}
 
@@ -91,7 +91,7 @@ namespace Simias.Storage
 		{
 			if ( type != NodeTypes.LinkNodeType )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.LinkNodeType, type ) );
 			}
 		}
 		#endregion

@@ -769,7 +769,7 @@ namespace Simias.Storage
 			}
 			else
 			{
-				throw new ApplicationException( "Cannot set reserved property" );
+				throw new InvalidOperationException( "Cannot set system property" );
 			}
 		}
 
@@ -1033,7 +1033,7 @@ namespace Simias.Storage
 			}
 			else
 			{
-				throw new ApplicationException( "Cannot modify a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 		}
 

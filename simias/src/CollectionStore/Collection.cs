@@ -171,7 +171,7 @@ namespace Simias.Storage
 			// Don't allow this collection to be created, if one already exist by the same id.
 			if ( store.GetCollectionByID( id ) != null )
 			{
-				throw new ApplicationException( "Collection already exists with specified ID." );
+				throw new AlreadyExistsException( String.Format( "The collection: {0} - ID: {1} already exists.", collectionName, collectionID ) );
 			}
 
 			// If the managed directory does not exist, create it.
@@ -214,7 +214,7 @@ namespace Simias.Storage
 		{
 			if ( type != NodeTypes.CollectionType )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.CollectionType, type ) );
 			}
 
 			store = storeObject;
@@ -230,7 +230,7 @@ namespace Simias.Storage
 		{
 			if ( type != NodeTypes.CollectionType )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.CollectionType, type ) );
 			}
 
 			store = collection.store;
@@ -317,7 +317,7 @@ namespace Simias.Storage
 				else
 				{
 					// There was a collision.
-					throw new Collision( node.ID, checkNode.LocalIncarnation );
+					throw new CollisionException( node.ID, checkNode.LocalIncarnation );
 				}
 			}
 			else
@@ -650,7 +650,7 @@ namespace Simias.Storage
 				// Verify that this object belongs to this collection.
 				if ( property.Value as string != id )
 				{
-					throw new ApplicationException( "Object cannot be committed to a different collection." );
+					throw new CollectionStoreException( String.Format( "Node object: {0} - ID: {1} does not belong to collection: {2} - ID: {3}.", node.Name, node.ID, name, id ) );
 				}
 			}
 			else
@@ -820,7 +820,7 @@ namespace Simias.Storage
 						// Make sure that current user has write rights to this collection.
 						if ( !IsAccessAllowed( Access.Rights.ReadWrite ) )
 						{
-							throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
+							throw new AccessException( this, Access.Rights.ReadWrite );
 						}
 					}
 
@@ -1146,7 +1146,7 @@ namespace Simias.Storage
 		{
 			if ( NodeTypes.IsNodeType( type ) )
 			{
-				throw new ApplicationException( "Cannot remove base type." );
+				throw new InvalidOperationException( "Cannot remove base type of Node object." );
 			}
 
 			// Get the multi-valued property and search for the specific value.
@@ -1447,7 +1447,7 @@ namespace Simias.Storage
 		{
 			if ( NodeTypes.IsNodeType( type ) )
 			{
-				throw new ApplicationException( "Cannot set a base type." );
+				throw new InvalidOperationException( "Cannot set a base type of a Node object." );
 			}
 
 			// Set the new type.
@@ -1566,7 +1566,7 @@ namespace Simias.Storage
 			{
 				if ( disposed )
 				{
-					throw new ObjectDisposedException( this.ToString() );
+					throw new DisposedException( this );
 				}
 
 				// Create a new hashtable instance.
@@ -1612,7 +1612,7 @@ namespace Simias.Storage
 				{
 					if ( disposed )
 					{
-						throw new ObjectDisposedException( this.ToString() );
+						throw new DisposedException( this );
 					}
 
 					if ( nodeListEnumerator == null )
@@ -1637,7 +1637,7 @@ namespace Simias.Storage
 
 				if ( disposed )
 				{
-					throw new ObjectDisposedException( this.ToString() );
+					throw new DisposedException( this );
 				}
 
 				// Make sure that there is data in the list.

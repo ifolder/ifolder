@@ -106,7 +106,7 @@ namespace Simias.Storage
 			int index = relationString.IndexOf( ':' );
 			if ( index == -1 )
 			{
-				throw new ApplicationException( "Invalid relationship string." );
+				throw new CollectionStoreException( String.Format( "Invalid relationship format: {0}.", relationString ) );
 			}
 
 			nodeID = relationString.Substring( 0, index );
@@ -715,7 +715,7 @@ namespace Simias.Storage
 					break;
 
 				default:
-					throw new ArgumentException( "Invalid syntax type specified" );
+					throw new SyntaxException( Type );
 			}
 
 			return propertyValue;
@@ -810,7 +810,7 @@ namespace Simias.Storage
 					}
 					else
 					{
-						throw new ArgumentException( "An invalid syntax type was specified", "propertyValue" );
+						throw new SyntaxException( syntax );
 					}
 					break;
 			}
@@ -1259,7 +1259,7 @@ namespace Simias.Storage
 					break;
 
 				default:
-					throw new ArgumentException( "Invalid object type" );
+					throw new CollectionStoreException( new ArgumentException( "Invalid object", "propertyValue" ) );
 			}
 		}
 
@@ -1271,7 +1271,7 @@ namespace Simias.Storage
 		{
 			if ( Type != propertyValue.Type )
 			{
-				throw new ApplicationException( "Cannot mix property types" );
+				throw new SyntaxException( propertyValue.Type );
 			}
 
 			// Remember the old value before overwriting it with the new value.
@@ -1289,7 +1289,7 @@ namespace Simias.Storage
 		{
 			if ( Type != Syntax.String )
 			{
-				throw new ApplicationException( "Cannot mix property types" );
+				throw new SyntaxException( Type );
 			}
 
 			// Remember the old value before overwriting it with the new value.
@@ -1307,7 +1307,7 @@ namespace Simias.Storage
 		{
 			if ( Type != Syntax.SByte )
 			{
-				throw new ApplicationException( "Cannot mix property types" );
+				throw new SyntaxException( Type );
 			}
 
 			// Remember the old value before overwriting it with the new value.
@@ -1325,7 +1325,7 @@ namespace Simias.Storage
 		{
 			if ( Type != Syntax.Byte )
 			{
-				throw new ApplicationException( "Cannot mix property types" );
+				throw new SyntaxException( Type );
 			}
 
 			// Remember the old value before overwriting it with the new value.
@@ -1343,7 +1343,7 @@ namespace Simias.Storage
 		{
 			if ( Type != Syntax.Int16 )
 			{
-				throw new ApplicationException( "Cannot mix property types" );
+				throw new SyntaxException( Type );
 			}
 
 			// Remember the old value before overwriting it with the new value.
@@ -1361,7 +1361,7 @@ namespace Simias.Storage
 		{
 			if ( Type != Syntax.UInt16 )
 			{
-				throw new ApplicationException( "Cannot mix property types" );
+				throw new SyntaxException( Type );
 			}
 
 			// Remember the old value before overwriting it with the new value.
@@ -1379,7 +1379,7 @@ namespace Simias.Storage
 		{
 			if ( Type != Syntax.Int32 )
 			{
-				throw new ApplicationException( "Cannot mix property types" );
+				throw new SyntaxException( Type );
 			}
 
 			// Remember the old value before overwriting it with the new value.
@@ -1397,7 +1397,7 @@ namespace Simias.Storage
 		{
 			if ( Type != Syntax.UInt32 )
 			{
-				throw new ApplicationException( "Cannot mix property types" );
+				throw new SyntaxException( Type );
 			}
 
 			// Remember the old value before overwriting it with the new value.
@@ -1415,7 +1415,7 @@ namespace Simias.Storage
 		{
 			if ( Type != Syntax.Int64 )
 			{
-				throw new ApplicationException( "Cannot mix property types" );
+				throw new SyntaxException( Type );
 			}
 
 			// Remember the old value before overwriting it with the new value.
@@ -1433,7 +1433,7 @@ namespace Simias.Storage
 		{
 			if ( Type != Syntax.UInt64 )
 			{
-				throw new ApplicationException( "Cannot mix property types" );
+				throw new SyntaxException( Type );
 			}
 
 			// Remember the old value before overwriting it with the new value.
@@ -1451,7 +1451,7 @@ namespace Simias.Storage
 		{
 			if ( Type != Syntax.Char )
 			{
-				throw new ApplicationException( "Cannot mix property types" );
+				throw new SyntaxException( Type );
 			}
 
 			// Remember the old value before overwriting it with the new value.
@@ -1469,7 +1469,7 @@ namespace Simias.Storage
 		{
 			if ( Type != Syntax.Single )
 			{
-				throw new ApplicationException( "Cannot mix property types" );
+				throw new SyntaxException( Type );
 			}
 
 			// Remember the old value before overwriting it with the new value.
@@ -1487,7 +1487,7 @@ namespace Simias.Storage
 		{
 			if ( Type != Syntax.Boolean )
 			{
-				throw new ApplicationException( "Cannot mix property types" );
+				throw new SyntaxException( Type );
 			}
 
 			// Remember the old value before overwriting it with the new value.
@@ -1505,7 +1505,7 @@ namespace Simias.Storage
 		{
 			if ( Type != Syntax.DateTime )
 			{
-				throw new ApplicationException( "Cannot mix property types" );
+				throw new SyntaxException( Type );
 			}
 
 			// Remember the old value before overwriting it with the new value.
@@ -1523,7 +1523,7 @@ namespace Simias.Storage
 		{
 			if ( Type != Syntax.Uri )
 			{
-				throw new ApplicationException( "Cannot mix property types" );
+				throw new SyntaxException( Type );
 			}
 
 			// Remember the old value before overwriting it with the new value.
@@ -1541,7 +1541,7 @@ namespace Simias.Storage
 		{
 			if ( Type != Syntax.XmlDocument )
 			{
-				throw new ApplicationException( "Cannot mix property types" );
+				throw new SyntaxException( Type );
 			}
 
 			// Remember the old value before overwriting it with the new value.
@@ -1559,7 +1559,7 @@ namespace Simias.Storage
 		{
 			if ( Type != Syntax.TimeSpan )
 			{
-				throw new ApplicationException( "Cannot mix property types" );
+				throw new SyntaxException( Type );
 			}
 
 			// Remember the old value before overwriting it with the new value.
@@ -1577,7 +1577,7 @@ namespace Simias.Storage
 		{
 			if ( Type != Syntax.Relationship )
 			{
-				throw new ApplicationException( "Cannot mix property types" );
+				throw new SyntaxException( Type );
 			}
 
 			// Remember the old value before overwriting it with the new value.
@@ -1597,7 +1597,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			DeleteProperty();
@@ -1621,7 +1621,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1636,7 +1636,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1651,7 +1651,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1666,7 +1666,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1681,7 +1681,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1696,7 +1696,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1711,7 +1711,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1726,7 +1726,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1741,7 +1741,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1756,7 +1756,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1771,7 +1771,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1786,7 +1786,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1801,7 +1801,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1816,7 +1816,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1831,7 +1831,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1846,7 +1846,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1861,7 +1861,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1876,7 +1876,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1891,7 +1891,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new ApplicationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot delete a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -2044,7 +2044,7 @@ namespace Simias.Storage
 					break;
 
 				default:
-					throw new ArgumentException( "Objects of type " + Type.ToString() + " do not take formatters" );
+					throw new CollectionStoreException( new ArgumentException( "Objects of type " + Type.ToString() + " do not take formatters" ) );
 			}
 
 			return output;
@@ -2102,7 +2102,7 @@ namespace Simias.Storage
 					break;
 
 				default:
-					throw new ArgumentException( "Objects of type " + Type.ToString() + " do not take formatters" );
+					throw new CollectionStoreException( new ArgumentException( "Objects of type " + Type.ToString() + " do not take formatters" ) );
 			}
 
 			return output;
@@ -2162,7 +2162,7 @@ namespace Simias.Storage
 					break;
 
 				default:
-					throw new ArgumentException( "Objects of type " + Type.ToString() + " do not take formatters" );
+					throw new CollectionStoreException( new ArgumentException( "Objects of type " + Type.ToString() + " do not take formatters" ) );
 			}
 
 			return output;

@@ -138,7 +138,7 @@ namespace Simias.Storage
 			{ 
 				if ( disposed )
 				{
-					throw new ObjectDisposedException( this.ToString() );
+					throw new DisposedException( this );
 				}
 
 				return config; 
@@ -154,7 +154,7 @@ namespace Simias.Storage
 			{ 
 				if ( disposed )
 				{
-					throw new ObjectDisposedException( this.ToString() );
+					throw new DisposedException( this );
 				}
 
 				return identityManager.CurrentIdentity; 
@@ -170,7 +170,7 @@ namespace Simias.Storage
 			{ 
 				if ( disposed )
 				{
-					throw new ObjectDisposedException( this.ToString() );
+					throw new DisposedException( this );
 				}
 
 				return identityManager.CurrentUserGuid; 
@@ -186,7 +186,7 @@ namespace Simias.Storage
 			{ 
 				if ( disposed )
 				{
-					throw new ObjectDisposedException( this.ToString() );
+					throw new DisposedException( this );
 				}
 
 				return identityManager.DomainName; 
@@ -210,7 +210,7 @@ namespace Simias.Storage
 			{ 
 				if ( disposed )
 				{
-					throw new ObjectDisposedException( this.ToString() );
+					throw new DisposedException( this );
 				}
 
 				return identityManager; 
@@ -235,7 +235,7 @@ namespace Simias.Storage
 			{ 
 				if ( disposed )
 				{
-					throw new ObjectDisposedException( this.ToString() );
+					throw new DisposedException( this );
 				}
 
 				return identityManager.PublicKey; 
@@ -251,7 +251,7 @@ namespace Simias.Storage
 			{ 
 				if ( disposed )
 				{
-					throw new ObjectDisposedException( this.ToString() );
+					throw new DisposedException( this );
 				}
 
 				return storageProvider.StoreDirectory.LocalPath; 
@@ -325,8 +325,8 @@ namespace Simias.Storage
 					}
 					catch ( Exception e )
 					{
-						// TODO: Log this error.
-						Console.WriteLine( "Could not initialize Collection Store. Caught exception: " + e.Message );
+						// Log this error.
+						log.Fatal( e, "Could not initialize Collection Store." );
 
 						// The store didn't initialize delete it and rethrow the exception.
 						storageProvider.DeleteStore();
@@ -340,14 +340,14 @@ namespace Simias.Storage
 					LocalAddressBook localAb = GetLocalAddressBook();
 					if ( localAb == null )
 					{
-						throw new ApplicationException( "Local address book does not exist." );
+						throw new DoesNotExistException( "Local address book does not exist." );
 					}
 
 					// Look up to see if the current user has an identity.
 					BaseContact identity = localAb.GetSingleNodeByName( Environment.UserName ) as BaseContact;
 					if ( identity == null )
 					{
-						throw new ApplicationException( "User does not exist in local address book." );
+						throw new DoesNotExistException( String.Format( "User: {0} does not exist in local address book.", Environment.UserName ) );
 					}
 
 					// Create a identity manager object that will be used by the store object from here on out.
@@ -376,7 +376,7 @@ namespace Simias.Storage
 		{
 			if ( disposed )
 			{
-				throw new ObjectDisposedException( this.ToString() );
+				throw new DisposedException( this );
 			}
 
 			return Path.Combine( storeManagedPath, collectionID.ToLower() );
@@ -389,7 +389,7 @@ namespace Simias.Storage
 		{
 			if ( disposed )
 			{
-				throw new ObjectDisposedException( this.ToString() );
+				throw new DisposedException( this );
 			}
 
 			storeMutex.WaitOne();
@@ -402,7 +402,7 @@ namespace Simias.Storage
 		{
 			if ( disposed )
 			{
-				throw new ObjectDisposedException( this.ToString() );
+				throw new DisposedException( this );
 			}
 
 			storeMutex.ReleaseMutex();
@@ -417,7 +417,7 @@ namespace Simias.Storage
 		{
 			if ( disposed )
 			{
-				throw new ObjectDisposedException( this.ToString() );
+				throw new DisposedException( this );
 			}
 
 			// Check if the store managed path still exists. If it does, delete it.
@@ -441,7 +441,7 @@ namespace Simias.Storage
 		{
 			if ( disposed )
 			{
-				throw new ObjectDisposedException( this.ToString() );
+				throw new DisposedException( this );
 			}
 
 			Collection collection = null;
@@ -475,7 +475,7 @@ namespace Simias.Storage
 		{
 			if ( disposed )
 			{
-				throw new ObjectDisposedException( this.ToString() );
+				throw new DisposedException( this );
 			}
 
 			// Create a container object to hold all collections that match the specified name.
@@ -507,7 +507,7 @@ namespace Simias.Storage
 		{
 			if ( disposed )
 			{
-				throw new ObjectDisposedException( this.ToString() );
+				throw new DisposedException( this );
 			}
 
 			// Create a container object to hold all collections that match the specified name.
@@ -543,7 +543,7 @@ namespace Simias.Storage
 		{
 			if ( disposed )
 			{
-				throw new ObjectDisposedException( this.ToString() );
+				throw new DisposedException( this );
 			}
 
 			Collection localDb = null;
@@ -578,7 +578,7 @@ namespace Simias.Storage
 		{
 			if ( disposed )
 			{
-				throw new ObjectDisposedException( this.ToString() );
+				throw new DisposedException( this );
 			}
 
 			LocalAddressBook localAb = null;
@@ -616,7 +616,7 @@ namespace Simias.Storage
 		{
 			if ( disposed )
 			{
-				throw new ObjectDisposedException( this.ToString() );
+				throw new DisposedException( this );
 			}
 
 			Collection collection = null;
@@ -641,7 +641,7 @@ namespace Simias.Storage
 		{
 			if ( disposed )
 			{
-				throw new ObjectDisposedException( this.ToString() );
+				throw new DisposedException( this );
 			}
 
 			Collection collection = null;
@@ -663,7 +663,7 @@ namespace Simias.Storage
 		{
 			if ( disposed )
 			{
-				throw new ObjectDisposedException( this.ToString() );
+				throw new DisposedException( this );
 			}
 
 			identityManager.Impersonate( userGuid.ToLower() );
@@ -676,7 +676,7 @@ namespace Simias.Storage
 		{
 			if ( disposed )
 			{
-				throw new ObjectDisposedException( this.ToString() );
+				throw new DisposedException( this );
 			}
 
 			identityManager.Revert();
@@ -693,7 +693,7 @@ namespace Simias.Storage
 		{
 			if ( disposed )
 			{
-				throw new ObjectDisposedException( this.ToString() );
+				throw new DisposedException( this );
 			}
 
 			return new StoreEnumerator( this );
@@ -801,7 +801,7 @@ namespace Simias.Storage
 			{
 				if ( disposed )
 				{
-					throw new ObjectDisposedException( this.ToString() );
+					throw new DisposedException( this );
 				}
 
 				// Release previously allocated chunkIterator.
@@ -831,7 +831,7 @@ namespace Simias.Storage
 				{
 					if ( disposed )
 					{
-						throw new ObjectDisposedException( this.ToString() );
+						throw new DisposedException( this );
 					}
 
 					if ( collectionEnumerator == null )
@@ -856,7 +856,7 @@ namespace Simias.Storage
 
 				if ( disposed )
 				{
-					throw new ObjectDisposedException( this.ToString() );
+					throw new DisposedException( this );
 				}
 
 				// Make sure that there is data in the list.

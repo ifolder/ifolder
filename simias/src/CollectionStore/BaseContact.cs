@@ -148,7 +148,7 @@ namespace Simias.Storage
 				}
 				else
 				{
-					throw new ApplicationException( "Server credential not set on identity." );
+					throw new DoesNotExistException( String.Format( "The server credential does not exist for identity: {0} - ID: {1}.", name, id ) );
 				}
 			}
 		}
@@ -184,7 +184,7 @@ namespace Simias.Storage
 		{
 			if ( type != NodeTypes.BaseContactType )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.BaseContactType, type ) );
 			}
 		}
 
@@ -198,7 +198,7 @@ namespace Simias.Storage
 		{
 			if ( type != NodeTypes.BaseContactType )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.BaseContactType, type ) );
 			}
 		}
 
@@ -211,7 +211,7 @@ namespace Simias.Storage
 		{
 			if ( type != NodeTypes.BaseContactType )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.BaseContactType, type ) );
 			}
 		}
 		#endregion

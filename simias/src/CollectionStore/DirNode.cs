@@ -49,7 +49,7 @@ namespace Simias.Storage
 				}
 				else
 				{
-					throw new ApplicationException( "Property not found" );
+					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.DirCreationTime, name, id ) );
 				}
 			}
 
@@ -82,7 +82,7 @@ namespace Simias.Storage
 				}
 				else
 				{
-					throw new ApplicationException( "Property not found." );
+					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.DirLastAccessTime, name, id ) );
 				}
 			}
 
@@ -103,7 +103,7 @@ namespace Simias.Storage
 				}
 				else
 				{
-					throw new ApplicationException( "Property not found." );
+					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.DirLastWriteTime, name, id ) );
 				}
 			}
 
@@ -185,7 +185,7 @@ namespace Simias.Storage
 		{
 			if ( type != NodeTypes.DirNodeType )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.DirNodeType, type ) );
 			}
 		}
 
@@ -198,7 +198,7 @@ namespace Simias.Storage
 		{
 			if ( type != NodeTypes.DirNodeType )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.DirNodeType, type ) );
 			}
 		}
 
@@ -211,7 +211,7 @@ namespace Simias.Storage
 		{
 			if ( type != NodeTypes.DirNodeType )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.DirNodeType, type ) );
 			}
 		}
 		#endregion
@@ -240,7 +240,7 @@ namespace Simias.Storage
 				}
 				else
 				{
-					throw new ApplicationException( "Missing root path." );
+					throw new DoesNotExistException( String.Format( "The {0} property does not exist.", PropertyTags.Root ) );
 				}
 			}
 
@@ -268,7 +268,7 @@ namespace Simias.Storage
 			}
 			else
 			{
-				throw new ApplicationException( "DirNode does not contain mandatory parent relationship." );
+				throw new DoesNotExistException( String.Format( "Parent relationship property for Node object: {0} - ID: {1} does not exist.", name, id ) );
 			}
 
 			return parent;

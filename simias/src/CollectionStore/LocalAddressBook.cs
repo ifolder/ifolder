@@ -62,7 +62,7 @@ namespace Simias.Storage
 		{
 			if ( !IsType( this, NodeTypes.LocalAddressBookType ) )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.LocalAddressBookType, type ) );
 			}
 		}
 
@@ -76,7 +76,7 @@ namespace Simias.Storage
 		{
 			if ( !IsType( this, NodeTypes.CollectionType ) )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.LocalAddressBookType, type ) );
 			}
 		}
 
@@ -90,7 +90,7 @@ namespace Simias.Storage
 		{
 			if ( !IsType( this, NodeTypes.LocalAddressBookType ) )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.LocalAddressBookType, type ) );
 			}
 		}
 		#endregion

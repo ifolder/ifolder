@@ -70,7 +70,7 @@ namespace Simias.Storage
 				}
 				else
 				{
-					throw new ApplicationException( "Property not found" );
+					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.FileCreationTime, name, id ) );
 				}
 			}
 
@@ -91,7 +91,7 @@ namespace Simias.Storage
 				}
 				else
 				{
-					throw new ApplicationException( "Property not found." );
+					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.FileLastAccessTime, name, id ) );
 				}
 			}
 
@@ -112,7 +112,7 @@ namespace Simias.Storage
 				}
 				else
 				{
-					throw new ApplicationException( "Property not found." );
+					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.FileLastWriteTime, name, id ) );
 				}
 			}
 
@@ -133,7 +133,7 @@ namespace Simias.Storage
 				}
 				else
 				{
-					throw new ApplicationException( "Property not found." );
+					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.FileLength, name, id ) );
 				}
 			}
 

@@ -82,7 +82,7 @@ namespace Simias.Storage
 		{
 			if ( type != NodeTypes.StoreFileNodeType )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.StoreFileNodeType, type ) );
 			}
 		}
 
@@ -96,7 +96,7 @@ namespace Simias.Storage
 		{
 			if ( type != NodeTypes.StoreFileNodeType )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.StoreFileNodeType, type ) );
 			}
 		}
 
@@ -109,7 +109,7 @@ namespace Simias.Storage
 		{
 			if ( type != NodeTypes.StoreFileNodeType )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.StoreFileNodeType, type ) );
 			}
 		}
 		#endregion

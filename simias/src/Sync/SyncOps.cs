@@ -476,7 +476,7 @@ internal class SyncIncomingNode
 				{
 					collection.Commit(node);
 				}
-				catch (Collision c)
+				catch (CollisionException c)
 				{
 					Log.Spew("Node {0} has lost an update collision", node.Name);
 					//TODO move file and data out of the way here to collision bin here.
@@ -503,7 +503,7 @@ internal class SyncIncomingNode
 		{
 			collection.Commit(node);
 		}
-		catch (Collision)
+		catch (CollisionException)
 		{
 			Log.Spew("Rejecting update for node {0} due to update collision on server", node.Name);
 			CleanUp();

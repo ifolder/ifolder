@@ -68,7 +68,7 @@ namespace Simias.Storage
 		{
 			if ( type != NodeTypes.FileNodeType )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.FileNodeType, type ) );
 			}
 		}
 
@@ -82,7 +82,7 @@ namespace Simias.Storage
 		{
 			if ( type != NodeTypes.FileNodeType )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.FileNodeType, type ) );
 			}
 		}
 
@@ -95,7 +95,7 @@ namespace Simias.Storage
 		{
 			if ( type != NodeTypes.FileNodeType )
 			{
-				throw new ApplicationException( "Cannot construct object from specified type." );
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.FileNodeType, type ) );
 			}
 		}
 		#endregion
@@ -120,7 +120,7 @@ namespace Simias.Storage
 			DirNode dirNode = GetParent( collection );
 			if ( dirNode == null )
 			{
-				throw new ApplicationException( "FileNode does not contain mandatory parent relationship." );
+				throw new DoesNotExistException( String.Format( "Parent relationship property for Node object: {0} - ID: {1} does not exist.", name, id ) );
 			}
 
 			return Path.Combine( dirNode.GetFullPath( collection ), name );
@@ -136,14 +136,14 @@ namespace Simias.Storage
 			Property property = properties.FindSingleValue( PropertyTags.Parent );
 			if ( property == null )
 			{
-				throw new ApplicationException( "FileNode does not contain mandatory parent relationship." );
+				throw new DoesNotExistException( String.Format( "Parent relationship property for Node object: {0} - ID: {1} does not exist.", name, id ) );
 			}
 
 			Relationship parent = property.Value as Relationship;
 			DirNode dirNode = collection.GetNodeByID( parent.NodeID ) as DirNode;
 			if ( dirNode == null )
 			{
-				throw new ApplicationException( "FileNode's parent directory does not exist." );
+				throw new DoesNotExistException( String.Format( "Property {0} does not exist for Node object: {1} - ID: {2}.", PropertyTags.Parent, name, id ) );
 			}
 
 			return dirNode;
@@ -159,7 +159,7 @@ namespace Simias.Storage
 			DirNode dirNode = GetParent( collection );
 			if ( dirNode == null )
 			{
-				throw new ApplicationException( "FileNode does not contain mandatory parent relationship." );
+				throw new DoesNotExistException( String.Format( "Parent relationship property for Node object: {0} - ID: {1} does not exist.", name, id ) );
 			}
 
 			return Path.Combine( dirNode.GetRelativePath( collection ), name );

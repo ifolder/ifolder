@@ -88,7 +88,7 @@ namespace Simias.Storage
 			}
 			else
 			{
-				throw new ApplicationException( "Cannot add to this type of enumerator" );
+				throw new InvalidOperationException( "Cannot add to this type of enumerator" );
 			}
 		}
 		#endregion

@@ -868,7 +868,7 @@ namespace Simias.Storage.Tests
 		/// Tries to add a reserved system property.
 		/// </summary>
 		[Test]
-		[ExpectedException( typeof( ApplicationException ) )]
+		[ExpectedException( typeof( InvalidOperationException ) )]
 		public void AddSystemPropertyTest()
 		{
 			Collection collection = new Collection( store, "CS_TestCollection" );
@@ -964,7 +964,7 @@ namespace Simias.Storage.Tests
 						collection3.ChangeOwner( user.ID, Access.Rights.ReadOnly );
 						throw new ApplicationException( "Change ownership access control check on impersonation failed" );
 					}
-					catch ( UnauthorizedAccessException )
+					catch ( AccessException )
 					{
 						// This is expected.
 					}
@@ -981,7 +981,7 @@ namespace Simias.Storage.Tests
 					collection1.SetUserAccess( collection1.Owner, Access.Rights.ReadWrite );
 					throw new ApplicationException( "Block owner rights change failed" );
 				}
-				catch ( UnauthorizedAccessException )
+				catch ( AccessException )
 				{
 					// This is expected.
 				}

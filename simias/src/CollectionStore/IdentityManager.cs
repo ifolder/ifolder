@@ -168,7 +168,7 @@ namespace Simias.Storage
 		/// <param name="rsaKeys">RSA algorithm with the server principal's public key</param>
 		public override void AcceptServerPrincipalCredentials(string realm, string principalName, RSACryptoServiceProvider rsaKeys)
 		{
-			throw new ApplicationException( "Credentials not accepted." );
+			throw new InvalidOperationException( "Credentials not accepted." );
 		}
 
 		/// <summary>
@@ -188,7 +188,7 @@ namespace Simias.Storage
 			BaseContact tempIdentity = localAb.GetNodeByID( principalName ) as BaseContact;
 			if ( tempIdentity == null )
 			{
-				throw new ApplicationException( "No such identity." );
+				throw new DoesNotExistException( String.Format( "The specified identity: {0} does not exist.", principalName ) ); 
 			}
 
 			// Add the public key to this identity.
@@ -248,7 +248,7 @@ namespace Simias.Storage
 				Alias alias = identity.GetAliasFromDomain( serverRealm );
 				if ( alias == null )
 				{
-					throw new ApplicationException( "No identity exists for specified domain." );
+					throw new DoesNotExistException( String.Format( "An identity does not exist for the domain: {0}.", serverRealm ) );
 				}
 
 				principalName = alias.ID;
@@ -318,7 +318,7 @@ namespace Simias.Storage
 			BaseContact impersonator = localAb.GetNodeByID( userGuid ) as BaseContact;
 			if ( impersonator == null )
 			{
-				throw new ApplicationException( "No such user." );
+				throw new DoesNotExistException( String.Format( "The specified identity: {0} does not exist.", userGuid ) );
 			}
 
 			// Push the user onto the impersonation stack.

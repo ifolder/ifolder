@@ -31,7 +31,7 @@ namespace Simias.Storage
 	/// <summary>
 	/// Collection Store exceptions.
 	/// </summary>
-	public class CollectionStoreException : Exception
+	public class CollectionStoreException : SimiasException
 	{
 		#region Constructors
 		/// <summary>
@@ -51,14 +51,14 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the object class with serialized data.
+		/// Initializes a new instance of the Exception class with a reference to the inner 
+		/// exception that is the cause of this exception.
 		/// </summary>
-		/// <param name="info">The SerializationInfo that holds the serialized object 
-		/// data about the exception being thrown.</param>
-		/// <param name="context">The StreamingContext that contains contextual information 
-		/// about the source or destination.</param>
-		public CollectionStoreException( SerializationInfo info, StreamingContext context ) :
-			base ( info, context )
+		/// <param name="innerException">The exception that is the cause of the current exception. If 
+		/// the innerException parameter is not a null reference, the current exception is raised in 
+		/// a catch block that handles the inner exception.</param>
+		public CollectionStoreException( Exception innerException ) :
+			this ( innerException.Message, innerException )
 		{
 		}
 
@@ -78,10 +78,114 @@ namespace Simias.Storage
 	}
 
 	/// <summary>
-	/// Exception that indicates a Node object collision when writing to the
-	/// local database.
+	/// Exception that indicates that a Collection access violation has occurred.
 	/// </summary>
-	public class Collision : CollectionStoreException
+	public class AccessException : CollectionStoreException
+	{
+		#region Class Members
+		private Collection collection;
+		private Access.Rights desiredRights;
+		private string currentUserGuid;
+		private bool ownerAccess;
+		#endregion
+
+		#region Properties
+		/// <summary>
+		/// Gets the collection where access was denied.
+		/// </summary>
+		public Collection Collection
+		{
+			get { return collection; }
+		}
+
+		/// <summary>
+		/// Gets the requested access rights.
+		/// </summary>
+		public Access.Rights DesiredRights
+		{
+			get { return desiredRights; }
+		}
+
+		/// <summary>
+		/// Gets the user that is requesting the access to the collection.
+		/// </summary>
+		public string CurrentUserGuid
+		{
+			get { return currentUserGuid; }
+		}
+
+		/// <summary>
+		/// Gets whether the user is requesting owner access to the collection.
+		/// </summary>
+		public bool DesiredOwnerAccess
+		{
+			get { return ownerAccess; }
+		}
+		#endregion
+
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the object class where access is being requested.
+		/// </summary>
+		/// <param name="collection">Collection where access violation occurred.</param>
+		/// <param name="desiredRights">Requested access rights.</param>
+		public AccessException( Collection collection, Access.Rights desiredRights ) :
+			this ( collection, desiredRights, "Current user does not have collection modify rights." )
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the object class where access is being requested.
+		/// </summary>
+		/// <param name="collection">Collection where access violation occurred.</param>
+		/// <param name="desiredRights">Requested access rights.</param>
+		/// <param name="message">Message to pass to exception.</param>
+		public AccessException( Collection collection, Access.Rights desiredRights, string message ) :
+			base ( message )
+		{
+			this.collection = collection;
+			this.desiredRights = desiredRights;
+			this.currentUserGuid = collection.DomainIdentity;
+			this.ownerAccess = false;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the object class where owner access is being requested.
+		/// </summary>
+		/// <param name="collection">Collection where access violation occurred.</param>
+		/// <param name="message">Message to pass to exception.</param>
+		public AccessException( Collection collection, string message ) :
+			base( message )
+		{
+			this.collection = collection;
+			this.desiredRights = Access.Rights.Admin;
+			this.currentUserGuid = collection.DomainIdentity;
+			this.ownerAccess = true;
+		}
+		#endregion
+	}
+
+	/// <summary>
+	/// Exception that indicates that an object already exists.
+	/// </summary>
+	public class AlreadyExistsException : CollectionStoreException
+	{
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the object class.
+		/// </summary>
+		/// <param name="message">Message to pass to the exception.</param>
+		public AlreadyExistsException( string message ) :
+			base ( message )
+		{
+		}
+		#endregion
+	}
+
+	/// <summary>
+	/// Exception that indicates a Node object collision when writing to the local database.
+	/// </summary>
+	public class CollisionException : CollectionStoreException
 	{
 		#region Class Members
 		/// <summary>
@@ -102,7 +206,7 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="ID">The globally unique identifier of the Node objects that have a conflict.</param>
 		/// <param name="expectedIncarnation">The incarnation value that was expected during the commit.</param>
-		public Collision( string ID, ulong expectedIncarnation ) :
+		public CollisionException( string ID, ulong expectedIncarnation ) :
 			base ( "There was a collision during the update of a Node object." )
 		{
 			this.id = ID;
@@ -125,6 +229,74 @@ namespace Simias.Storage
 		public ulong ExpectedIncarnation
 		{
 			get { return expectedIncarnation; }
+		}
+		#endregion
+	}
+
+	/// <summary>
+	/// Exception that indicates an object has been disposed.
+	/// </summary>
+	public class DisposedException : CollectionStoreException
+	{
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the object class.
+		/// </summary>
+		/// <param name="csObject">The Collection Store object that has been disposed.</param>
+		public DisposedException( object csObject) :
+			base ( String.Format( "The object {0} has been disposed.", csObject.ToString() ) )
+		{
+		}
+		#endregion
+	}
+
+	/// <summary>
+	/// Exception that indicates that the specified object does not exist.
+	/// </summary>
+	public class DoesNotExistException : CollectionStoreException
+	{
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the object class.
+		/// </summary>
+		/// <param name="message">Message to pass to exception.</param>
+		public DoesNotExistException( string message ) :
+			base ( message )
+		{
+		}
+		#endregion
+	}
+
+	/// <summary>
+	/// Exception that indicates that an invalid operation was attempted.
+	/// </summary>
+	public class InvalidOperationException : CollectionStoreException
+	{
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the object class.
+		/// </summary>
+		/// <param name="message">A string containing the type of invalid access operation.</param>
+		public InvalidOperationException( string message ) :
+			base ( message )
+		{
+		}
+		#endregion
+	}
+
+	/// <summary>
+	/// Exception that indicates an invalid syntax type was specified.
+	/// </summary>
+	public class SyntaxException : CollectionStoreException
+	{
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the object class.
+		/// </summary>
+		/// <param name="syntax">Invalid syntax type.</param>
+		public SyntaxException( Syntax syntax ) :
+			base ( String.Format( "Invalid syntax type was specified: {0}.", syntax.ToString() ) )
+		{
 		}
 		#endregion
 	}
