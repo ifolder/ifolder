@@ -6,8 +6,8 @@ AddressBookTests_CSFILES_CSC := $(subst /,$(SEP),$(AddressBookTests_CSFILES))
 AddressBookTests_INCLUDES =
 AddressBookTests_RESOURCES =
 AddressBookTests_FLAGS = $(CSC_EXEFLAG)
-AddressBookTests_LIBS = $(SYSTEM_XML) Novell.AddressBook.dll
-AddressBookTests_LIBPATH = ../../src/AddressBook
+iFolderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Novell.AddressBook.dll
+iFolderTests_LIBPATH = $(NUNIT_LIBPATH)
 
 EXTRA_DIST = $(AddressBookTests_CSFILES) $(AddressBookTests_RESOURCES)
 
@@ -18,7 +18,7 @@ CUR_DIR := $(shell pwd)
 all: $(NUNIT_TESTS)
 
 ABTests.exe: $(AddressBookTests_CSFILES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_LIBS) $(AddressBookTests_FLAGS) $(AddressBookTests_LIBS:%=/r:%) $(AddressBookTests_LIBPATH:%=/lib:%) $(AddressBookTests_CSFILES_CSC)
+	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_LIBS) $(ADDRESSBOOK_LIBS) $(AddressBookTests_FLAGS) $(AddressBookTests_LIBS:%=/r:%) $(AddressBookTests_LIBPATH:%=/lib:%) $(AddressBookTests_CSFILES_CSC)
 	
 if DEBUG
 if WINDOWS
