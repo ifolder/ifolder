@@ -329,7 +329,7 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="FindCloseMembers">
+      <s:element name="FindCloseiFolderMembers">
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
@@ -337,10 +337,10 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="FindCloseMembersResponse">
+      <s:element name="FindCloseiFolderMembersResponse">
         <s:complexType />
       </s:element>
-      <s:element name="FindFirstMembers">
+      <s:element name="FindFirstiFolderMembers">
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
@@ -348,17 +348,17 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="FindFirstMembersResponse">
+      <s:element name="FindFirstiFolderMembersResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="FindFirstMembersResult" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="FindFirstiFolderMembersResult" type="s:boolean" />
             <s:element minOccurs="0" maxOccurs="1" name="searchContext" />
             <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfIFolderUser" />
             <s:element minOccurs="1" maxOccurs="1" name="totalMembers" type="s:int" />
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="FindFirstSpecificMembers">
+      <s:element name="FindFirstSpecificiFolderMembers">
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
@@ -384,17 +384,17 @@
           <s:enumeration value="CaseEqual" />
         </s:restriction>
       </s:simpleType>
-      <s:element name="FindFirstSpecificMembersResponse">
+      <s:element name="FindFirstSpecificiFolderMembersResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="FindFirstSpecificMembersResult" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="FindFirstSpecificiFolderMembersResult" type="s:boolean" />
             <s:element minOccurs="0" maxOccurs="1" name="searchContext" />
             <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfIFolderUser" />
             <s:element minOccurs="1" maxOccurs="1" name="totalMembers" type="s:int" />
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="FindNextMembers">
+      <s:element name="FindNextiFolderMembers">
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
@@ -403,16 +403,16 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="FindNextMembersResponse">
+      <s:element name="FindNextiFolderMembersResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="FindNextMembersResult" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="FindNextiFolderMembersResult" type="s:boolean" />
             <s:element minOccurs="0" maxOccurs="1" name="searchContext" />
             <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfIFolderUser" />
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="FindPreviousMembers">
+      <s:element name="FindPreviousiFolderMembers">
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
@@ -421,10 +421,10 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="FindPreviousMembersResponse">
+      <s:element name="FindPreviousiFolderMembersResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="FindPreviousMembersResult" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="FindPreviousiFolderMembersResult" type="s:boolean" />
             <s:element minOccurs="0" maxOccurs="1" name="searchContext" />
             <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfIFolderUser" />
           </s:sequence>
@@ -888,35 +888,35 @@
   <wsdl:message name="SearchForDomainUsersSoapOut">
     <wsdl:part name="parameters" element="tns:SearchForDomainUsersResponse" />
   </wsdl:message>
-  <wsdl:message name="FindCloseMembersSoapIn">
-    <wsdl:part name="parameters" element="tns:FindCloseMembers" />
+  <wsdl:message name="FindCloseiFolderMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:FindCloseiFolderMembers" />
   </wsdl:message>
-  <wsdl:message name="FindCloseMembersSoapOut">
-    <wsdl:part name="parameters" element="tns:FindCloseMembersResponse" />
+  <wsdl:message name="FindCloseiFolderMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:FindCloseiFolderMembersResponse" />
   </wsdl:message>
-  <wsdl:message name="FindFirstMembersSoapIn">
-    <wsdl:part name="parameters" element="tns:FindFirstMembers" />
+  <wsdl:message name="FindFirstiFolderMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:FindFirstiFolderMembers" />
   </wsdl:message>
-  <wsdl:message name="FindFirstMembersSoapOut">
-    <wsdl:part name="parameters" element="tns:FindFirstMembersResponse" />
+  <wsdl:message name="FindFirstiFolderMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:FindFirstiFolderMembersResponse" />
   </wsdl:message>
-  <wsdl:message name="FindFirstSpecificMembersSoapIn">
-    <wsdl:part name="parameters" element="tns:FindFirstSpecificMembers" />
+  <wsdl:message name="FindFirstSpecificiFolderMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:FindFirstSpecificiFolderMembers" />
   </wsdl:message>
-  <wsdl:message name="FindFirstSpecificMembersSoapOut">
-    <wsdl:part name="parameters" element="tns:FindFirstSpecificMembersResponse" />
+  <wsdl:message name="FindFirstSpecificiFolderMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:FindFirstSpecificiFolderMembersResponse" />
   </wsdl:message>
-  <wsdl:message name="FindNextMembersSoapIn">
-    <wsdl:part name="parameters" element="tns:FindNextMembers" />
+  <wsdl:message name="FindNextiFolderMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:FindNextiFolderMembers" />
   </wsdl:message>
-  <wsdl:message name="FindNextMembersSoapOut">
-    <wsdl:part name="parameters" element="tns:FindNextMembersResponse" />
+  <wsdl:message name="FindNextiFolderMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:FindNextiFolderMembersResponse" />
   </wsdl:message>
-  <wsdl:message name="FindPreviousMembersSoapIn">
-    <wsdl:part name="parameters" element="tns:FindPreviousMembers" />
+  <wsdl:message name="FindPreviousiFolderMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:FindPreviousiFolderMembers" />
   </wsdl:message>
-  <wsdl:message name="FindPreviousMembersSoapOut">
-    <wsdl:part name="parameters" element="tns:FindPreviousMembersResponse" />
+  <wsdl:message name="FindPreviousiFolderMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:FindPreviousiFolderMembersResponse" />
   </wsdl:message>
   <wsdl:message name="GetiFolderUserSoapIn">
     <wsdl:part name="parameters" element="tns:GetiFolderUser" />
@@ -1168,30 +1168,30 @@
       <wsdl:input message="tns:SearchForDomainUsersSoapIn" />
       <wsdl:output message="tns:SearchForDomainUsersSoapOut" />
     </wsdl:operation>
-    <wsdl:operation name="FindCloseMembers">
+    <wsdl:operation name="FindCloseiFolderMembers">
       <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Ends the search for the members in a specified domain.</documentation>
-      <wsdl:input message="tns:FindCloseMembersSoapIn" />
-      <wsdl:output message="tns:FindCloseMembersSoapOut" />
+      <wsdl:input message="tns:FindCloseiFolderMembersSoapIn" />
+      <wsdl:output message="tns:FindCloseiFolderMembersSoapOut" />
     </wsdl:operation>
-    <wsdl:operation name="FindFirstMembers">
+    <wsdl:operation name="FindFirstiFolderMembers">
       <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Start the search for all of the members in a specified domain.</documentation>
-      <wsdl:input message="tns:FindFirstMembersSoapIn" />
-      <wsdl:output message="tns:FindFirstMembersSoapOut" />
+      <wsdl:input message="tns:FindFirstiFolderMembersSoapIn" />
+      <wsdl:output message="tns:FindFirstiFolderMembersSoapOut" />
     </wsdl:operation>
-    <wsdl:operation name="FindFirstSpecificMembers">
+    <wsdl:operation name="FindFirstSpecificiFolderMembers">
       <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Start the search for specific members in a specified domain.</documentation>
-      <wsdl:input message="tns:FindFirstSpecificMembersSoapIn" />
-      <wsdl:output message="tns:FindFirstSpecificMembersSoapOut" />
+      <wsdl:input message="tns:FindFirstSpecificiFolderMembersSoapIn" />
+      <wsdl:output message="tns:FindFirstSpecificiFolderMembersSoapOut" />
     </wsdl:operation>
-    <wsdl:operation name="FindNextMembers">
+    <wsdl:operation name="FindNextiFolderMembers">
       <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Continues the search for the next members in a specified domain.</documentation>
-      <wsdl:input message="tns:FindNextMembersSoapIn" />
-      <wsdl:output message="tns:FindNextMembersSoapOut" />
+      <wsdl:input message="tns:FindNextiFolderMembersSoapIn" />
+      <wsdl:output message="tns:FindNextiFolderMembersSoapOut" />
     </wsdl:operation>
-    <wsdl:operation name="FindPreviousMembers">
+    <wsdl:operation name="FindPreviousiFolderMembers">
       <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Continues the search for the previous members in a specified domain.</documentation>
-      <wsdl:input message="tns:FindPreviousMembersSoapIn" />
-      <wsdl:output message="tns:FindPreviousMembersSoapOut" />
+      <wsdl:input message="tns:FindPreviousiFolderMembersSoapIn" />
+      <wsdl:output message="tns:FindPreviousiFolderMembersSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetiFolderUser">
       <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Lookup a single member to a collection</documentation>
@@ -1505,8 +1505,8 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="FindCloseMembers">
-      <soap:operation soapAction="http://novell.com/ifolder/web/FindCloseMembers" style="document" />
+    <wsdl:operation name="FindCloseiFolderMembers">
+      <soap:operation soapAction="http://novell.com/ifolder/web/FindCloseiFolderMembers" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1514,8 +1514,8 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="FindFirstMembers">
-      <soap:operation soapAction="http://novell.com/ifolder/web/FindFirstMembers" style="document" />
+    <wsdl:operation name="FindFirstiFolderMembers">
+      <soap:operation soapAction="http://novell.com/ifolder/web/FindFirstiFolderMembers" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1523,8 +1523,8 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="FindFirstSpecificMembers">
-      <soap:operation soapAction="http://novell.com/ifolder/web/FindFirstSpecificMembers" style="document" />
+    <wsdl:operation name="FindFirstSpecificiFolderMembers">
+      <soap:operation soapAction="http://novell.com/ifolder/web/FindFirstSpecificiFolderMembers" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1532,8 +1532,8 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="FindNextMembers">
-      <soap:operation soapAction="http://novell.com/ifolder/web/FindNextMembers" style="document" />
+    <wsdl:operation name="FindNextiFolderMembers">
+      <soap:operation soapAction="http://novell.com/ifolder/web/FindNextiFolderMembers" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1541,8 +1541,8 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="FindPreviousMembers">
-      <soap:operation soapAction="http://novell.com/ifolder/web/FindPreviousMembers" style="document" />
+    <wsdl:operation name="FindPreviousiFolderMembers">
+      <soap:operation soapAction="http://novell.com/ifolder/web/FindPreviousiFolderMembers" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
