@@ -267,7 +267,7 @@ namespace Novell.FormsTrayApp
 		private void About_Load(object sender, System.EventArgs e)
 		{
 			pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-			pictureBox1.Image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder4832.ico"));
+			pictureBox1.Image = Image.FromFile(Path.Combine(Application.StartupPath, @"ifolder_app.ico"));
 		}
 	}
 }
