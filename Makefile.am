@@ -2,23 +2,32 @@ SUBDIRS = src help
 
 DIST_SUBDIRS = $(SUBDIRS) doc package test
 
+if WINDOWS
+if DEBUG	
+ADDITIONAL_LIB_FILES = msvcr71d.dll
 MSVCR_DEBUG_DLL_PATH = $(shell cygpath --unix "$(FRAMEWORKDIR)/v1.1*")
-MSVCR_DEBUG_DLL = $(shell find $(MSVCR_DEBUG_DLL_PATH) -name msvcr71d.dll )
-																   
-EXTRA_DIST = tools $(srcdir)/$(PACKAGE).pc.in msvcr71d.dll
+MSVCR_DEBUG_DLL = $(shell find $(MSVCR_DEBUG_DLL_PATH) -name msvcr71d.dll)
+endif
+endif
+
+EXTRA_DIST = tools $(srcdir)/$(PACKAGE).pc.in $(ADDITIONAL_LIB_FILES)
 
 export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
+if WINDOWS
+if DEBUG	
 msvcr71d.dll:	$(MSVCR_DEBUG_DLL)
 	cp -f $< $@
+endif
+endif
 
-install-exec-local: msvcr71d.dll
+install-exec-local: $(ADDITIONAL_LIB_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig $(DESTDIR)$(datadir)/$(PACKAGE)
 	$(INSTALL_PROGRAM) $(srcdir)/COPYING $(DESTDIR)$(datadir)/$(PACKAGE)
 	$(INSTALL_PROGRAM) $(PACKAGE).pc $(DESTDIR)$(libdir)/pkgconfig
 if WINDOWS
 if DEBUG	
-	$(INSTALL_PROGRAM) msvcr71d.dll $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) $(ADDITIONAL_LIB_FILES) $(DESTDIR)$(libdir)
 endif
 endif
 
@@ -32,7 +41,7 @@ uninstall-local:
 	cd $(DESTDIR)$(datadir)/$(PACKAGE); rm -f COPYING
 if WINDOWS
 if DEBUG	
-	cd $(DESTDIR)$(libdir); rm -f msvcr71d.dll
+	cd $(DESTDIR)$(libdir); rm -f $(ADDITIONAL_LIB_FILES)
 endif
 endif
 
