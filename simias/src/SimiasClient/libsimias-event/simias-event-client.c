@@ -107,6 +107,13 @@ static char * sec_server_config_elements [] = {
 #define ACTION_REMOVE_FILE_SYNC			"RemoveFileSync"
 #define ACTION_REMOVE_NOTIFY_MESSAGE	"RemoveNotifyMessage"
 
+/* Tags used for (un)setting event filters */
+#define EVENT_FILTER_NAME			"Filter"
+#define EVENT_FILTER_TYPE_ATTR_NAME	"type"
+#define EVENT_FILTER_COLLECTION_STR	"Collection"
+#define EVENT_FILTER_NODE_ID_STR	"NodeID"
+#define EVENT_FILTER_NODE_TYPE_STR	"NodeType"
+
 /* File name of the IProcEvent configuration file */
 #define CONFIG_FILE_NAME "IProcEvent.cfg"
 
@@ -212,7 +219,6 @@ typedef struct
 #define EVENT_ELEMENT_NAME				"Event"
 #define EVENT_ACTION_ATTR_NAME			"action"
 
-
 #define SEC_EVENT_TYPE_XPATH "//Event/@type"
 
 static char * sec_node_event_elements [] = {
@@ -297,9 +303,11 @@ static int sec_notify_event_handlers (RealSimiasEventClient *ec,
 									  void *event);
 static int sec_remove_all_event_handlers (RealSimiasEventClient *ec,
 										  IPROC_EVENT_ACTION action);
+const char * sec_get_node_type_str (SIMIAS_NODE_TYPE type);
 
 /* Anytime an event struct is returned, it must be freed using this function. */
 static void sec_free_event_struct (void *event_struct);
+
 /* #endregion */
 
 /* #region Public Functions */
@@ -472,7 +480,7 @@ sec_deregister (SimiasEventClient sec)
 		/* Send de-registration message */
 		if (sec_send_message (ec, reg_msg, strlen (reg_msg)) <= 0) {
 			/* FIXME: Handle error...no data sent */
-			perror ("simias-event-client send de-registration message");
+			perror ("sec: send de-registration message");
 		}
 	}
 	
@@ -533,7 +541,7 @@ sec_set_event (SimiasEventClient sec,
 	/* Send set_event message */
 	if (sec_send_message (ec, msg, strlen (msg)) <= 0) {
 		/* FIXME: Handle error...no data sent */
-		perror ("simias-event-client send set_event message");
+		perror ("sec: send set_event message");
 	} else {
 		if (subscribe) {
 			/* Store the event handler function */
@@ -548,6 +556,67 @@ sec_set_event (SimiasEventClient sec,
 				return -1;
 			}
 		}
+	}
+	
+	return 0;
+}
+
+int
+sec_set_filter (SimiasEventClient sec, SimiasEventFilter *filter)
+{
+	RealSimiasEventClient *ec;
+	char msg [1024];
+	char filter_type_str [256];
+	const char *filter_data;
+	DEBUG_SEC (("sec_set_filter () entered\n"));
+	
+	ec = (RealSimiasEventClient *)sec;
+	
+	switch (filter->type) {
+		case EVENT_FILTER_COLLECTION:
+			sprintf (filter_type_str, EVENT_FILTER_COLLECTION_STR);
+			filter_data = (char *)filter->data;
+			break;
+		case EVENT_FILTER_NODE_ID:
+			sprintf (filter_type_str, EVENT_FILTER_NODE_ID_STR);
+			filter_data = (char *)filter->data;
+			break;
+		case EVENT_FILTER_NODE_TYPE:
+			sprintf (filter_type_str, EVENT_FILTER_NODE_TYPE_STR);
+			filter_data = 
+				sec_get_node_type_str (*((SIMIAS_NODE_TYPE *)filter->data));
+			break;
+		default:
+			/* Don't know what the user is talking about */
+			return -1;
+	}
+	
+	if (filter->data) {
+		/* Set the filter */
+		sprintf (msg,
+				 "<%s><%s %s=\"%s\">%s</%s></%s>",
+				 EVENT_LISTENER_ELEMENT_NAME,
+				 EVENT_FILTER_NAME,
+				 EVENT_FILTER_TYPE_ATTR_NAME,
+				 filter_type_str,
+				 filter_data,
+				 EVENT_FILTER_NAME,
+				 EVENT_LISTENER_ELEMENT_NAME);
+	} else {
+		/* Unset the filter */
+		sprintf (msg,
+				 "<%s><%s %s=\"%s\" /></%s>",
+				 EVENT_LISTENER_ELEMENT_NAME,
+				 EVENT_FILTER_NAME,
+				 EVENT_FILTER_TYPE_ATTR_NAME,
+				 filter_type_str,
+				 EVENT_LISTENER_ELEMENT_NAME);
+	}
+
+	/* Send set_event message */
+	if (sec_send_message (ec, msg, strlen (msg)) <= 0) {
+		/* FIXME: Handle error...no data sent */
+		perror ("sec: send set_filter message");
 	}
 	
 	return 0;
@@ -815,7 +884,7 @@ sec_reg_thread (void *user_data)
 			/* Send registration message */
 			if (sec_send_message (ec, reg_msg, strlen (reg_msg)) <= 0) {
 				/* FIXME: Handle error...no data sent */
-				perror ("simias-event-client send registration message");
+				perror ("sec: send registration message");
 			} else {
 				ec->state = CLIENT_STATE_RUNNING;
 				b_connected = true;
@@ -832,7 +901,7 @@ sec_reg_thread (void *user_data)
 			}
 		} else {
 			/* FIXME: Handle the error here */
-			perror ("simias-event-client connect");
+			perror ("sec: connect");
 			
 			/**
 			 * See if this is a case of the server not listening on the socket
@@ -970,7 +1039,7 @@ sec_reconnect (RealSimiasEventClient *ec)
 	/* Start the event thread waiting for event messages. */
 	if ((pthread_create (&(ec->event_thread), NULL, 
 						 sec_thread, ec)) != 0) {
-		perror ("simias-event-client reconnect: could not start event thread");
+		perror ("sec: reconnect: could not start event thread");
 		return -1;
 	}
 
@@ -1621,6 +1690,43 @@ sec_remove_all_event_handlers (RealSimiasEventClient *ec,
 
 	return 0;
 }
+
+const char *
+sec_get_node_type_str (SIMIAS_NODE_TYPE type)
+{
+	switch (type) {
+		case NODE_TYPE_BASE_FILE:
+			return "BaseFileNode";
+		case NODE_TYPE_COLLECTION:
+			return "Collection";
+		case NODE_TYPE_DIR:
+			return "DirNode";
+		case NODE_TYPE_DOMAIN:
+			return "Domain";
+		case NODE_TYPE_FILE:
+			return "FileNode";
+		case NODE_TYPE_IDENTITY:
+			return "Identity";
+		case NODE_TYPE_LINK:
+			return "LinkNode";
+		case NODE_TYPE_LOCAL_DATABASE:
+			return "LocalDatabase";
+		case NODE_TYPE_MEMBER:
+			return "Member";
+		case NODE_TYPE_NODE:
+			return "Node";
+		case NODE_TYPE_POLICY:
+			return "Policy";
+		case NODE_TYPE_ROSTER:
+			return "Roster";
+		case NODE_TYPE_STORE_FILE:
+			return "StoreFileNode";
+		case NODE_TYPE_TOMBSTONE:
+			return "Tombstone";
+		default:
+			return "UnknownNode";
+	}
+}
 /* #endregion */
 
 /* #region Testing */
@@ -1690,6 +1796,8 @@ int
 sec_state_event_callback (SEC_STATE_EVENT state_event, const char *message, void *data)
 {
 	SimiasEventClient *ec = (SimiasEventClient *)data;
+	SIMIAS_NODE_TYPE node_type;
+	SimiasEventFilter event_filter;
 	
 	switch (state_event) {
 		case SEC_STATE_EVENT_CONNECTED:
@@ -1702,6 +1810,12 @@ sec_state_event_callback (SEC_STATE_EVENT state_event, const char *message, void
 			sec_set_event (*ec, ACTION_COLLECTION_SYNC, true, (SimiasEventFunc)simias_collection_sync_event_callback, NULL);
 			sec_set_event (*ec, ACTION_FILE_SYNC, true, (SimiasEventFunc)simias_file_sync_event_callback, NULL);
 			sec_set_event (*ec, ACTION_NOTIFY_MESSAGE, true, (SimiasEventFunc)simias_notify_event_callback, NULL);
+			
+			/* Setup a filter to only get Collections back when it's a NodeEvent */
+			node_type = NODE_TYPE_COLLECTION;
+			event_filter.type = EVENT_FILTER_NODE_TYPE;
+			event_filter.data = &node_type;
+			sec_set_filter (*ec, &event_filter);
 
 			break;
 		case SEC_STATE_EVENT_DISCONNECTED:

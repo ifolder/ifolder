@@ -54,6 +54,62 @@ typedef enum
 } IPROC_EVENT_ACTION;
 
 /**
+ * Used to specify only certain types of events should be sent to the client.
+ * These filters only apply to Simias "node" events.  Sync events cannot be
+ * filtered.
+ */
+typedef enum
+{
+	/* Subscribe to all changes in the specified collection */
+	EVENT_FILTER_COLLECTION,
+	
+	/* Subscribe to all changes to the specified node */
+	EVENT_FILTER_NODE_ID,
+	
+	/* Subscribe to all changes to nodes of the specified type */
+	EVENT_FILTER_NODE_TYPE
+} IPROC_EVENT_FILTER_TYPE;
+
+/**
+ * This enum is for convenience when calling sec_set_filter
+ * when the type of filter is set to EVENT_FILTER_NODE_TYPE.
+ */
+typedef enum
+{
+	NODE_TYPE_BASE_FILE,
+	NODE_TYPE_COLLECTION,
+	NODE_TYPE_DIR,
+	NODE_TYPE_DOMAIN,
+	NODE_TYPE_FILE,
+	NODE_TYPE_IDENTITY,
+	NODE_TYPE_LINK,
+	NODE_TYPE_LOCAL_DATABASE,
+	NODE_TYPE_MEMBER,
+	NODE_TYPE_NODE,
+	NODE_TYPE_POLICY,
+	NODE_TYPE_ROSTER,
+	NODE_TYPE_STORE_FILE,
+	NODE_TYPE_TOMBSTONE
+} SIMIAS_NODE_TYPE;
+
+typedef struct
+{
+	/* Type of event filter */
+	IPROC_EVENT_FILTER_TYPE type;
+	
+	/**
+	 * Data that is used to filter the events.
+	 * 
+	 * Valid values for data (based on value of type):
+	 * 
+	 * EVENT_FILTER_COLLECTION: data should be a char * set to the Collection ID
+	 * EVENT_FILTER_NODE_ID: data should be a char * set to the Node ID
+	 * EVENT_FILTER_NODE_TYPE: data should be a SIMAS_NODE_TYPE *
+	 */
+	void *data;
+} SimiasEventFilter;
+
+/**
  * Event Structures
  */
  
@@ -180,19 +236,31 @@ int sec_deregister (SimiasEventClient sec);
  * This function should only be called once a SEC_STATE_EVENT_CONNECTED
  * has been received by the SECStateEventFunc registered during sec_init.
  *
- * sec:			the SimiasEventClient.
- * action:		the action that should be listened for.
+ * sec:			The Simias Event Client.
+ * action:		The action that should be listened for.
  * subscribe:	true to subscribe, false to unsubscribe
- * function:	the callback function that should be called when the event
+ * function:	The callback function that should be called when the event
  * 				action is received.  If function is NULL when subscribe is false
  * 				all functions associated with the specified action will be
  * 				removed.
- * data:		custom data that will be passed to the callback function.
+ * data:		Custom data that will be passed to the callback function.
  */
 int sec_set_event (SimiasEventClient sec,
 				   IPROC_EVENT_ACTION action,
 				   bool subscribe,
 				   SimiasEventFunc function,
 				   void *data);
+
+/**
+ * Set or unset the specified filter for the subscriber.
+ * 
+ * sec:		The Simias Event Client.
+ * filter:	A filter which limits the type of filters that should be sent back
+ * 			back to the client from the event server.  If the filter should be
+ * 			cleared, filter->data should be set to NULL.
+ * 
+ * Returns -1 if there was an error, otherwise 0.
+ */
+int sec_set_filter (SimiasEventClient sec, SimiasEventFilter *filter);
 
 #endif /* SIMIAS_EVENT_CLIENT_H */
