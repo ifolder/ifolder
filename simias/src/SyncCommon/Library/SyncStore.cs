@@ -170,6 +170,14 @@ namespace Simias.Sync
 		/// <returns>The collection object of the created collection.</returns>
 		public SyncCollection CreateCollection(Invitation invitation)
 		{
+			// add any secret to the current identity chain
+			if ((invitation.PublicKey != null) && (invitation.PublicKey.Length > 0))
+			{
+				Identity identity = baseStore.CurrentIdentity;
+				identity.CreateAlias(invitation.Domain, invitation.Identity, invitation.PublicKey);
+				identity.Commit();
+			}
+	
 			return CreateCollection(invitation.CollectionId, invitation.CollectionName,
 				invitation.CollectionType, Path.Combine(invitation.RootPath, invitation.CollectionName),
 				SyncCollectionRoles.Slave, invitation.MasterHost, int.Parse(invitation.MasterPort));

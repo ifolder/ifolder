@@ -30,22 +30,18 @@ using System.Collections.Specialized;
 using Simias;
 using Simias.Sync;
 using Simias.Storage;
+using Simias.Agent;
 
 namespace Simias.Mini
 {
 	/// <summary>
-	/// Mini Share
+	/// Simias Mini Share
 	/// </summary>
 	class MiniShare
 	{
-		private static readonly string collectionId =
-			"a10db843-6048-4343-bedd-d2d807dfa358";
-
-		private static readonly string collectionName = "minishare";
-		private static readonly string collectionType = "minishare";
-
-		private static readonly string masterPath = Path.GetFullPath("./minimaster");
-		private static readonly string slavePath = Path.GetFullPath("./minislave");
+		private static readonly string collectionName = "Share";
+		private static readonly string masterDirectory = "MiniMaster";
+		private static readonly string slaveDirectory = "MiniSlave";
 
 		/// <summary>
 		/// The main entry point for the application.
@@ -57,106 +53,101 @@ namespace Simias.Mini
 			MyTrace.SendToConsole();
 			MyTrace.Switch.Level = TraceLevel.Verbose;
 
-			// title
-			Console.WriteLine();
-			Console.WriteLine("MiniShare");
-			Console.WriteLine();
-
 			// check arguments
 			if (args.Length > 1)
 			{
-				Console.WriteLine("USAGE: MiniShare.exe [MasterHost]");
+				Console.WriteLine("USAGE: MiniShare.exe [Master Invitation File]");
 				return -1;
 			}
 
-			// exit message
-			Console.WriteLine("Press [Enter] to exit...");
-			Console.WriteLine();
-
 			// properties
 			SyncProperties properties = new SyncProperties();
-
-			// sinks
-			properties.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
-
-			// role
-			SyncCollectionRoles role;
-			
-			if (args.Length == 1)
-			{
-				role = SyncCollectionRoles.Slave;
-				properties.StorePath = slavePath;
-
-				// master host
-				properties.DefaultHost = args[0];
-
-				// put the slave on a different port
-				properties.DefaultPort = SyncProperties.SuggestedPort + 1;
-			}
-			else
-			{
-				role = SyncCollectionRoles.Master;
-				properties.StorePath = masterPath;
-			}
-			
-			MyTrace.WriteLine("Sync Role: {0}", role);
-
-			// clean up directory
-			if (Directory.Exists(properties.StorePath)) Directory.Delete(properties.StorePath, true);
-
-			// host
-			if (role == SyncCollectionRoles.Slave)
-			{
-			}
-			
-			MyTrace.WriteLine("Master Host: {0}:{1}", properties.DefaultHost, SyncProperties.SuggestedPort);
 
 			// logic factory
 			//properties.DefaultLogicFactory = typeof(SyncLogicFactoryLite);
 			properties.DefaultLogicFactory = typeof(SynkerA);
 
+			// sinks
+			properties.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
+
+			if (args.Length == 0)
+			{
+				// header
+				Console.WriteLine();
+				Console.WriteLine("MiniShare Master");
+				Console.WriteLine();
+
+				// master path
+				string path = Path.GetFullPath(Path.Combine(".", masterDirectory));
+
+				// clean up directory
+				if (Directory.Exists(path)) Directory.Delete(path, true);
+
+				// create store
+				SyncStore store = new SyncStore(path);
+
+				// create the master collection
+				SyncCollection collection = store.CreateCollection(
+					collectionName, Path.Combine(path, collectionName));
+				collection.Host = properties.DefaultHost;
+				collection.Port = 7464;
+				collection.Commit();
+
+				// create invitation
+				Invitation invitation = 
+					collection.CreateInvitation(store.BaseStore.CurrentUser);
+
+				// save invitation
+				invitation.Save(Path.Combine(path, "invitation.ifi"));
+
+				// sync properties
+				properties.StorePath = path;
+				properties.DefaultPort = collection.Port;
+			}
+			else
+            {
+				// header
+				Console.WriteLine();
+				Console.WriteLine("MiniShare Slave");
+				Console.WriteLine();
+
+				// master path
+				string path = Path.GetFullPath(Path.Combine(".", slaveDirectory));
+
+				// clean up directory
+				if (Directory.Exists(path)) Directory.Delete(path, true);
+
+				// create store
+				SyncStore store = new SyncStore(path);
+
+				// import invitation
+				Invitation invitation = new Invitation(args[0]);
+				invitation.RootPath = path;
+
+				// accept invitation
+				SyncCollection collection = store.CreateCollection(invitation);
+				collection.Commit();
+
+				// sync properties
+				properties.StorePath = path;
+				properties.DefaultPort = 7465;
+			}
+			
+			// start sync manager
 			SyncManager manager = new SyncManager(properties);
-			
 			manager.ChangedState += new ChangedSyncStateEventHandler(OnChangedSyncState);
-			
 			manager.Start();
 
-			MyTrace.WriteLine("Store Path: {0}", manager.StorePath);
-			
-			MyTrace.WriteLine("Creating Shared Collection...");
+			MyTrace.WriteLine("Running...");
 
-			SyncStore store = new SyncStore(manager.StorePath);
-			
-			SyncCollection collection = null;
+			// exit message
+			Console.WriteLine("Press [Enter] to exit...");
+			Console.WriteLine();
 
-			// set the role
-			if (role == SyncCollectionRoles.Master)
-			{
-				// create the master collection
-				// for testing purposes let the role, host, and port default
-				collection = store.CreateCollection(collectionId,
-					collectionName, collectionType,
-					Path.Combine(properties.StorePath, collectionName));
-			}
-			else if (role == SyncCollectionRoles.Slave)
-			{
-				// create the slave collection
-				collection = store.CreateCollection(collectionId,
-					collectionName, collectionType,
-					Path.Combine(properties.StorePath, collectionName),
-					role, properties.DefaultHost, SyncProperties.SuggestedPort);
-			}
-
-			MyTrace.WriteLine("Committing Collection...");
-
-			// save the new collection
-			collection.Commit();
-
-			MyTrace.WriteLine("Working...");
-
-			// end
+			// wait on input
 			Console.ReadLine();
 
+			// clean-up
 			manager.Dispose();
 
 			MyTrace.WriteLine("Done.");
@@ -169,7 +160,7 @@ namespace Simias.Mini
 
 		private static void OnChangedSyncState(SyncManagerStates state)
 		{
-			MyTrace.WriteLine("Sync Manager State: {0}", state);
+			MyTrace.WriteLine("Sync State Changed: {0}", state);
 		}
 	}
 }

@@ -81,14 +81,6 @@ namespace Simias.Agent
 			// add the invitation information to the store collection
 			SyncStore sstore = new SyncStore(store);
 
-			// add the secret to the current identity chain
-			if ((invitation.PublicKey != null) && (invitation.PublicKey.Length > 0))
-			{
-				Identity identity = sstore.BaseStore.CurrentIdentity;
-				identity.CreateAlias(invitation.Domain, invitation.Identity, invitation.PublicKey);
-				identity.Commit();
-			}
-	
 			// create the slave collection with the invitation
 			SyncCollection collection = sstore.CreateCollection(invitation);
 
