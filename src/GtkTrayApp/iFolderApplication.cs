@@ -36,20 +36,78 @@ using Gnome;
 using GtkSharp;
 using GLib;
 using Egg;
+using Simias.Event;
+using Simias;
+using Simias.Storage;
 
 namespace Novell.iFolder
 {
-	public enum iFolderEvent : uint
+	public enum iFolderState : uint
 	{
 		Starting		= 0x0001,
 		Stopping		= 0x0002,
 		Running			= 0x0003,
-		Stopped			= 0x0004,
-		Syncing			= 0x0005,
-		NewFolder		= 0x0006,
-		NewMember		= 0x0007,
-		NewConflict		= 0x0008
+		Stopped			= 0x0004
 	}
+
+
+	public enum iFolderEventTypes : uint
+	{
+		NodeCreated		= 0x0001,
+		NodeChanged		= 0x0002,
+		NodeDeleted		= 0x0003,
+		Exception		= 0x0004
+	}
+
+	public class iFolderEvent
+	{
+		private NodeEventArgs		eventArgs;
+		private iFolderEventTypes	eventType;
+		private string				exceptionMessage;
+	
+		public iFolderEvent(SimiasEventArgs args, iFolderEventTypes type)
+		{
+			this.eventArgs = args as NodeEventArgs;
+			this.eventType = type;
+		}
+
+		public iFolderEvent(string exceptionMessage)
+		{
+			this.exceptionMessage = exceptionMessage;
+			this.eventType = iFolderEventTypes.Exception;
+		}
+
+		public string Message
+		{
+			get{ return exceptionMessage; }
+		}
+
+		public iFolderEventTypes EventType
+		{
+			get{ return eventType; }
+		}
+
+		public string NodeID
+		{
+			get{return eventArgs.Node;}
+		}
+
+		public string CollectionID
+		{
+			get{return eventArgs.Collection;}
+		}
+
+		public string NodeType
+		{
+			get{return eventArgs.Type;}
+		}
+
+		public bool LocalOnly
+		{
+			get{ return eventArgs.LocalOnly; }
+		}
+	}
+	
 
 	public class iFolderApplication : Gnome.Program
 	{
@@ -64,10 +122,12 @@ namespace Novell.iFolder
 		private iFolderWebService	ifws;
 		private iFolderWindow 		ifwin;
 		private iFolderSettings		ifSettings;
+		private IProcEventClient	simiasEventClient;
 
-		private iFolderEvent 			CurrentEvent;
-		private Gtk.ThreadNotify		iFolderEventNotify;
-//		private System.Diagnostics.Process SimiasProcess = null;
+		private iFolderState 		CurrentState;
+		private Gtk.ThreadNotify	iFolderStateChanged;
+		private Gtk.ThreadNotify	SimiasEventFired;
+		private Queue				EventQueue;
 
 
 		public iFolderApplication(string[] args)
@@ -93,8 +153,12 @@ namespace Novell.iFolder
 			tIcon.Add(eBox);
 			tIcon.ShowAll();	
 
-			iFolderEventNotify = new Gtk.ThreadNotify(
-							new Gtk.ReadyEvent(OniFolderEventFired));
+			EventQueue = new Queue();
+
+			iFolderStateChanged = new Gtk.ThreadNotify(
+							new Gtk.ReadyEvent(OniFolderStateChanged));
+			SimiasEventFired = new Gtk.ThreadNotify(
+							new Gtk.ReadyEvent(OnSimiasEventFired) );
 		}
 
 
@@ -106,15 +170,67 @@ namespace Novell.iFolder
 					new System.Threading.Thread(new ThreadStart(StartiFolder));
 			startupThread.Start();
 
+			simiasEventClient = new IProcEventClient( 
+					new IProcEventError( ErrorHandler), null);
+
+			simiasEventClient.Register();
+
+			simiasEventClient.SetEvent( IProcEventAction.AddNodeCreated,
+				new IProcEventHandler( SimiasEventNodeCreatedHandler ) );
+
+			simiasEventClient.SetEvent( IProcEventAction.AddNodeChanged,
+				new IProcEventHandler( SimiasEventNodeChangedHandler ) );
+
+			simiasEventClient.SetEvent( IProcEventAction.AddNodeDeleted,
+				new IProcEventHandler( SimiasEventNodeDeletedHandler ) );
+
 			base.Run();
 		}
 
+		private void ErrorHandler( SimiasException e, object context )
+		{
+			lock(EventQueue)
+			{
+				EventQueue.Enqueue(new iFolderEvent(e.Message));
+				SimiasEventFired.WakeupMain();
+			}
+		}
+
+		private void SimiasEventNodeCreatedHandler(SimiasEventArgs args)
+		{
+			lock(EventQueue)
+			{
+				EventQueue.Enqueue(new iFolderEvent(args, 
+						iFolderEventTypes.NodeCreated));
+				SimiasEventFired.WakeupMain();
+			}
+		}
+
+		private void SimiasEventNodeChangedHandler(SimiasEventArgs args)
+		{
+			lock(EventQueue)
+			{
+				EventQueue.Enqueue(new iFolderEvent(args, 
+						iFolderEventTypes.NodeChanged));
+				SimiasEventFired.WakeupMain();
+			}
+		}
+
+		private void SimiasEventNodeDeletedHandler(SimiasEventArgs args)
+		{
+			lock(EventQueue)
+			{
+				EventQueue.Enqueue(new iFolderEvent(args, 
+						iFolderEventTypes.NodeDeleted));
+				SimiasEventFired.WakeupMain();
+			}
+		}
 
 
 		private void StartiFolder()
 		{
-			CurrentEvent = iFolderEvent.Starting;
-			iFolderEventNotify.WakeupMain();
+			CurrentState = iFolderState.Starting;
+			iFolderStateChanged.WakeupMain();
 
 /*			Process[] processes = 
 				System.Diagnostics.Process.GetProcessesByName("SimiasApp");
@@ -152,8 +268,8 @@ namespace Novell.iFolder
 				}
 			}
 
-			CurrentEvent = iFolderEvent.Running;
-			iFolderEventNotify.WakeupMain();
+			CurrentState = iFolderState.Running;
+			iFolderStateChanged.WakeupMain();
 		}
 
 
@@ -161,8 +277,10 @@ namespace Novell.iFolder
 
 		private void StopiFolder()
 		{
-			CurrentEvent = iFolderEvent.Stopping;
-			iFolderEventNotify.WakeupMain();
+			CurrentState = iFolderState.Stopping;
+			iFolderStateChanged.WakeupMain();
+
+			simiasEventClient.Deregister();
 
 /*			if(SimiasProcess != null)
 			{
@@ -178,33 +296,110 @@ namespace Novell.iFolder
 			}
 */
 
-			CurrentEvent = iFolderEvent.Stopped;
-			iFolderEventNotify.WakeupMain();
+			CurrentState = iFolderState.Stopped;
+			iFolderStateChanged.WakeupMain();
 		}
 
 
 
 
 		// ThreadNotify Method that will react to a fired event
-		private void OniFolderEventFired()
+		private void OnSimiasEventFired()
 		{
-			switch(CurrentEvent)
+			// at this point, we are running in the same thread
+			// so we can safely show events
+			lock(EventQueue)
 			{
-				case iFolderEvent.Starting:
+				iFolderEvent iEvent = (iFolderEvent)EventQueue.Dequeue();
+			
+				switch(iEvent.EventType)
+				{
+					case iFolderEventTypes.Exception:
+					{
+						NotifyWindow notifyWin = new NotifyWindow(tIcon,
+							"iFolder Event Error!",
+							"Something very baaaad happened", 
+							Gtk.MessageType.Error,
+							10000);
+						notifyWin.ShowAll();
+						break;
+					}
+
+					case iFolderEventTypes.NodeCreated:
+					{
+						NotifyWindow notifyWin = new NotifyWindow(tIcon,
+							"Node was created!",
+							string.Format("A node with the id {0} was created.", iEvent.NodeID), 
+							Gtk.MessageType.Info, 5000);
+						notifyWin.ShowAll();
+						break;
+					}
+
+					case iFolderEventTypes.NodeChanged:
+					{
+						NotifyWindow notifyWin = new NotifyWindow(tIcon,
+							"Node was Changed!",
+							string.Format("A node with the id {0} was changed.", iEvent.NodeID),
+							Gtk.MessageType.Info, 5000);
+						notifyWin.ShowAll();
+						break;
+					}
+
+					case iFolderEventTypes.NodeDeleted:
+					{
+						NotifyWindow notifyWin = new NotifyWindow(tIcon,
+							"Node was Deleted!",
+							string.Format("A node with the id {0} was deleted.", iEvent.NodeID),
+							Gtk.MessageType.Info, 5000);
+						notifyWin.ShowAll();
+						break;
+					}
+				}
+			}
+		}
+
+
+
+
+		// ThreadNotify Method that will react to a fired event
+		private void OniFolderStateChanged()
+		{
+			switch(CurrentState)
+			{
+				case iFolderState.Starting:
 					gAppIcon.Pixbuf = StartingPixbuf;
 					break;
 
-				case iFolderEvent.Running:
+				case iFolderState.Running:
 					gAppIcon.Pixbuf = RunningPixbuf;
 					break;
 
-				case iFolderEvent.Stopping:
+				case iFolderState.Stopping:
 					gAppIcon.Pixbuf = StoppingPixbuf;
 					break;
 
-				case iFolderEvent.Stopped:
+				case iFolderState.Stopped:
 					Application.Quit();
 					break;
+/*				case iFolderState.NewFolder:
+				{
+					NotifyWindow notifyWin = new NotifyWindow(tIcon,
+									"Node Created!",
+									"Simias Reports a new node!", 4000);
+					notifyWin.ShowAll();
+					break;
+				}
+				case iFolderState.NewMember:
+				case iFolderEvent.NewConflict:
+				case iFolderEvent.NewERROR:
+				{
+					NotifyWindow notifyWin = new NotifyWindow(tIcon,
+									"Simias Error Occurred!",
+									"Something very baaaad happened", 4000);
+					notifyWin.ShowAll();
+					break;
+				}
+*/
 			}
 		}
 
@@ -291,10 +486,6 @@ namespace Novell.iFolder
 			AccelGroup agrp = new AccelGroup();
 			Menu trayMenu = new Menu();
 
-			MenuItem Notify_item = new MenuItem ("Notify Me");
-			trayMenu.Append (Notify_item);
-			Notify_item.Activated += 
-					new EventHandler(show_notify);
 			MenuItem iFolders_item = new MenuItem ("My iFolders...");
 			trayMenu.Append (iFolders_item);
 			iFolders_item.Activated += 
@@ -330,7 +521,7 @@ namespace Novell.iFolder
 
 		private void quit_ifolder(object o, EventArgs args)
 		{
-			if(CurrentEvent == iFolderEvent.Stopping)
+			if(CurrentState == iFolderState.Stopping)
 			{
 				System.Environment.Exit(1);
 			}
@@ -396,15 +587,6 @@ namespace Novell.iFolder
 			Util.ShowAbout();
 		}
 
-
-
-		private void show_notify(object o, EventArgs args)
-		{
-			NotifyWindow notifyWin = new NotifyWindow(tIcon,
-									"New Notification!",
-									"You are looking at a spiffy new notification");
-			notifyWin.ShowAll();
-		}
 
 
 
