@@ -82,4 +82,46 @@
 }
 
 
+
++(int)getTimeIndex:(long)seconds
+{
+	if( (seconds > SECONDS_IN_DAY) &&
+		(seconds % SECONDS_IN_DAY) == 0)
+	{
+		return 0;
+	}
+	if( (seconds > SECONDS_IN_HOUR) &&
+		(seconds % SECONDS_IN_HOUR) == 0)
+	{
+		return 1;
+	}
+	if( (seconds > SECONDS_IN_MINUTE) &&
+		(seconds % SECONDS_IN_MINUTE) == 0)
+	{
+		return 2;
+	}
+	return 3;
+}
+
+
++(long)getSeconds:(long)value withIndex:(int)index
+{
+	long seconds = value;
+	switch(index)
+	{
+		case 0:
+			seconds = value * SECONDS_IN_DAY;
+			break;
+		case 1:
+			seconds = value * SECONDS_IN_HOUR;
+			break;
+		case 2:
+			seconds = value * SECONDS_IN_MINUTE;
+			break;
+	}
+	return seconds;
+}
+
+
+
 @end

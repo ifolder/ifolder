@@ -16,7 +16,9 @@
                 activate = NSButton; 
                 addAccount = NSButton; 
                 defaultAccount = NSButton; 
+                domainDescription = NSTextView; 
                 enableAccount = NSButton; 
+                freeSpace = NSTextField; 
                 host = NSTextField; 
                 leaveDomainController = LeaveDomainSheetController; 
                 name = NSTextField; 
@@ -24,7 +26,10 @@
                 password = NSSecureTextField; 
                 rememberPassword = NSButton; 
                 removeAccount = NSButton; 
+                totalSpace = NSTextField; 
+                usedSpace = NSTextField; 
                 userName = NSTextField; 
+                vertBar = VerticalBarView; 
                 view = NSView; 
             }; 
             SUPERCLASS = NSObject; 
@@ -42,15 +47,21 @@
             }; 
             SUPERCLASS = NSWindowController; 
         }, 
+        {CLASS = VerticalBarView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {
+            ACTIONS = {changeSyncUnits = id; toggleSyncEnabled = id; updateSyncValue = id; }; 
             CLASS = iFolderPrefsController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 accountsController = AccountsController; 
                 accountsView = NSView; 
                 blankView = NSView; 
+                enableSync = NSButton; 
                 generalView = NSView; 
                 notifyView = NSView; 
+                syncLabel = NSTextField; 
+                syncUnits = NSPopUpButton; 
+                syncValue = NSTextField; 
                 syncView = NSView; 
             }; 
             SUPERCLASS = NSWindowController; 

@@ -23,6 +23,8 @@
  
 #import "iFolderPrefsController.h"
 #import "AccountsController.h"
+#import "TimeSpan.h"
+#import "iFolderService.h"
 
 @implementation iFolderPrefsController
 
@@ -69,7 +71,97 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 
 	modalReturnCode = 0;
 
-	// Setup the controls
+	ifolderService = [[iFolderService alloc] init];
+
+	int syncInterval = -1;
+
+	@try
+	{
+		syncInterval = [ifolderService GetDefaultSyncInterval];
+	}
+	@catch(NSException *x)
+	{
+		syncInterval = -1;
+	}
+
+	if(syncInterval == -1)
+	{
+		[enableSync setState:NO];
+		[syncUnits selectItemAtIndex:2];
+		[syncUnits setEnabled:NO];
+		[syncValue setIntValue:0];
+		[syncValue setEnabled:NO];
+		[syncLabel setEnabled:NO];
+	}
+	else
+	{
+		[enableSync setState:YES];
+		[syncUnits setEnabled:YES];
+		[syncValue setEnabled:YES];
+		[syncLabel setEnabled:YES];
+
+		int value = [TimeSpan getTimeSpanValue:syncInterval];
+		[syncValue setStringValue:[NSString stringWithFormat:@"%d", value]];
+		[syncUnits selectItemAtIndex:[TimeSpan getTimeIndex:syncInterval] ];
+	}
+
+}
+
+-(void)saveCurrentSyncInterval
+{
+	int seconds;
+	if([enableSync state])
+		seconds = [TimeSpan getSeconds:[syncValue intValue]
+						withIndex:[syncUnits indexOfSelectedItem]];
+	else
+		seconds = -1;
+		
+	@try
+	{
+		NSLog(@"Saving default sync interval %d", seconds);
+
+		[ifolderService SetDefaultSyncInterval:seconds];
+	}
+	@catch(NSException *x)
+	{
+	}
+}
+
+
+
+- (IBAction)toggleSyncEnabled:(id)sender
+{
+	if([enableSync state])
+	{
+		[syncUnits selectItemAtIndex:2];
+		[syncValue setIntValue:5];
+		[syncValue setEnabled:YES];	
+		[syncLabel setEnabled:YES];
+		[syncUnits setEnabled:YES];
+	}
+	else
+	{
+		[syncValue setIntValue:0];
+		[syncValue setEnabled:NO];
+		[syncLabel setEnabled:NO];
+		[syncUnits selectItemAtIndex:2];
+		[syncUnits setEnabled:NO];
+	}
+	[self saveCurrentSyncInterval];
+}
+
+
+
+
+- (IBAction)updateSyncValue:(id)sender
+{
+	[self saveCurrentSyncInterval];
+}
+
+
+- (IBAction)changeSyncUnits:(id)sender
+{
+	[self saveCurrentSyncInterval];
 }
 
 

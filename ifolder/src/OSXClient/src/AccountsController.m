@@ -24,10 +24,12 @@
 #import "AccountsController.h"
 #import "iFolderApplication.h"
 #import "SimiasService.h"
+#import "iFolderService.h"
 #import "iFolderDomain.h"
 #import "LeaveDomainSheetController.h"
 #import "iFolderData.h"
-
+#import "VerticalBarView.h"
+#import "DiskSpace.h"
 
 @implementation AccountsController
 
@@ -59,6 +61,8 @@
 
 	domains = [[NSMutableArray alloc] init];	
 	simiasService = [[SimiasService alloc] init];
+	ifolderService = [[iFolderService alloc] init];
+	
 	isFirstDomain = YES;
 
 	@try
@@ -314,6 +318,9 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
 	NSLog(@"The selection changed");
+
+	DiskSpace *ds = nil;	
+
 	if([accounts selectedRow] == -1)
 		selectedDomain = nil;
 	else
@@ -360,6 +367,18 @@
 		
 		[activate setEnabled:NO];
 		[removeAccount setEnabled:YES];
+		
+		// Also update the details page
+		[domainDescription setString:[selectedDomain description] ];
+
+		@try
+		{
+			ds = [ifolderService GetUserDiskSpace:[selectedDomain userID]];
+		}
+		@catch(NSException ex)
+		{
+			ds = nil;
+		}
 	}
 	else
 	{
@@ -383,6 +402,28 @@
 		[activate setEnabled:NO];
 		[removeAccount setEnabled:NO];		
 	}
+	
+	if(ds != nil)
+	{
+		[usedSpace setStringValue:[NSString stringWithFormat:@"%qi", 
+										[ds UsedSpace]/(1024 * 1024)]];
+
+		[totalSpace setStringValue:[NSString stringWithFormat:@"%qi", 
+										([ds Limit]/(1024 * 1024))]];
+
+		[freeSpace setStringValue:[NSString stringWithFormat:@"%qi", 
+										([ds AvailableSpace]/(1024 * 1024))]];
+
+		[vertBar setBarSize:[ds Limit] withFill:[ds UsedSpace]];
+	}
+	else
+	{
+		[usedSpace setStringValue:@""];
+		[totalSpace setStringValue:@""];
+		[freeSpace setStringValue:@"0"];
+		[vertBar setBarSize:0 withFill:0];
+	}	
+	
 }
 
 

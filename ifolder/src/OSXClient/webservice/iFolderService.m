@@ -831,6 +831,57 @@ NSDictionary *getSyncSizeProperties(struct ns1__SyncSize *ss);
 
 
 
+
+-(DiskSpace *)GetUserDiskSpace:(NSString *)userID
+{
+	DiskSpace *ds = nil;
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (userID != nil), @"userID was nil");
+
+	struct _ns1__GetUserDiskSpace			getDSMessage;
+	struct _ns1__GetUserDiskSpaceResponse	getDSResponse;
+
+	getDSMessage.UserID = (char *)[userID cString];
+
+    init_gsoap (&soap);
+
+    err_code = soap_call___ns1__GetUserDiskSpace(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &getDSMessage,
+            &getDSResponse);
+
+ 	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in GetUserDiskSpace"];
+	}
+	else
+	{
+		struct ns1__DiskSpace *curDS;
+		curDS = getDSResponse.GetUserDiskSpaceResult;
+
+		if(curDS == NULL)
+		{
+		    cleanup_gsoap(&soap);
+			[NSException raise:@"Invalid userID" format:@"Error in GetUserDiskSpace"];
+		}
+	
+		ds = [[DiskSpace alloc] init];
+		[ds setProperties:getDiskSpaceProperties(curDS)];			
+    }
+
+    cleanup_gsoap(&soap);
+
+	return ds;
+}
+
+
+
+
 -(void)SetiFolderDiskSpace:(long long)limit oniFolder:(NSString *)ifolderID
 {
     struct soap soap;
@@ -910,6 +961,73 @@ NSDictionary *getSyncSizeProperties(struct ns1__SyncSize *ss);
 
 	return ss;
 }
+
+
+-(int)GetDefaultSyncInterval
+{
+    struct soap soap;
+    int err_code;
+
+	struct _ns1__GetDefaultSyncInterval			getIntervalMessage;
+	struct _ns1__GetDefaultSyncIntervalResponse getIntervalResponse;
+	
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__GetDefaultSyncInterval(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &getIntervalMessage,
+            &getIntervalResponse);
+
+	if(soap.error)
+	{
+	    cleanup_gsoap(&soap);
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in DeleteiFolder"];
+	}
+	
+	int interval = getIntervalResponse.GetDefaultSyncIntervalResult;
+
+    cleanup_gsoap(&soap);
+
+	return interval;
+}
+
+
+
+
+-(void)SetDefaultSyncInterval:(int)syncInterval
+{
+    struct soap soap;
+    int err_code;
+
+	struct _ns1__SetDefaultSyncInterval			setIntervalMessage;
+	struct _ns1__SetDefaultSyncIntervalResponse setIntervalResponse;
+	
+	setIntervalMessage.Interval = syncInterval;
+	
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__SetDefaultSyncInterval(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &setIntervalMessage,
+            &setIntervalResponse);
+
+	if(soap.error)
+	{
+	    cleanup_gsoap(&soap);
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in DeleteiFolder"];
+	}
+
+    cleanup_gsoap(&soap);
+}
+
+
+
+
+
 
 
 

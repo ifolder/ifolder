@@ -24,6 +24,16 @@
 #import <Cocoa/Cocoa.h>
 
 
+#define PREFKEY_STARTUP			@"general.startup"
+#define PREFKEY_WINPOS			@"general.winposition"
+#define PREFKEY_RESTOREWIN		@"general.restorewin"
+#define PREFKEY_CLICKIFOLDER	@"general.clickifolder"
+#define PREFKEY_NOTIFYIFOLDERS	@"notify.ifolders"
+#define PREFKEY_NOTIFYCOLL		@"notify.collisions"
+#define PREFKEY_NOTIFYUSER		@"notify.users"
+#define PREFKEY_NOTIFYBYINDEX	@"notify.byindex"
+
+
 @class LoginWindowController;
 @class iFolder;
 @class iFolderData;
@@ -62,6 +72,7 @@
 - (NSArrayController *)logArrayController;
 - (BOOL)simiasIsRunning;
 - (void)clearLog;
+- (void)setupApplicationDefaults;
 
 
 //==========================================

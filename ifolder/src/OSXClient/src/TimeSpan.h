@@ -29,5 +29,7 @@
 
 +(long)getTimeSpanValue:(long)seconds;
 +(NSString *)getTimeSpanUnits:(long)seconds;
++(int)getTimeIndex:(long)seconds;
++(long)getSeconds:(long)value withIndex:(int)index;
 
 @end

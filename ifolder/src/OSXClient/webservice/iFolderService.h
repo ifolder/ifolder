@@ -58,8 +58,13 @@
 -(void) RemoveUser:(NSString *)userID fromiFolder:(NSString *)ifolderID;
 
 -(DiskSpace *)GetiFolderDiskSpace:(NSString *)ifolderID;
+-(DiskSpace *)GetUserDiskSpace:(NSString *)userID;
 -(void)SetiFolderDiskSpace:(long long)limit oniFolder:(NSString *)ifolderID;
 -(SyncSize *)CalculateSyncSize:(NSString *)ifolderID;
+
+
+-(int)GetDefaultSyncInterval;
+-(void)SetDefaultSyncInterval:(int)syncInterval;
 
 
 
