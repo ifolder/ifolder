@@ -47,12 +47,11 @@ namespace Novell.FormsTrayApp
 		private bool shutdown = false;
 		private bool initialPositionSet = false;
 		private System.Windows.Forms.ListBox log;
-		private System.Windows.Forms.ToolBar toolBar1;
+		private Novell.FormsTrayApp.ToolBarEx toolBar1;
 		private System.Windows.Forms.ToolBarButton toolBarSave;
 		private System.Windows.Forms.ToolBarButton toolBarClear;
-		#endregion
-		private System.Windows.Forms.ImageList imageList1;
 		private System.ComponentModel.IContainer components;
+		#endregion
 
 		/// <summary>
 		/// Constructs a SyncLog object.
@@ -63,6 +62,28 @@ namespace Novell.FormsTrayApp
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
+
+			// Load the application icon.
+			try
+			{
+				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
+
+				toolBar1.ImageList = new ImageList();
+				toolBar1.ImageList.ImageSize = new Size(24, 24);
+				toolBar1.ImageList.TransparentColor = Color.White;
+				toolBar1.ImageList.Images.AddStrip(Image.FromFile(Path.Combine(Application.StartupPath, @"res\ltoolbar_nor.bmp")));
+
+				toolBar1.DisabledImageList = new ImageList();
+				toolBar1.DisabledImageList.ImageSize = new Size(24, 24);
+				toolBar1.DisabledImageList.TransparentColor = Color.White;
+				toolBar1.DisabledImageList.Images.AddStrip(Image.FromFile(Path.Combine(Application.StartupPath, @"res\ltoolbar_dis.bmp")));
+
+				toolBar1.HotImageList = new ImageList();
+				toolBar1.HotImageList.ImageSize = new Size(24, 24);
+				toolBar1.HotImageList.TransparentColor = Color.White;
+				toolBar1.HotImageList.Images.AddStrip(Image.FromFile(Path.Combine(Application.StartupPath, @"res\ltoolbar_hot.bmp")));
+			}
+			catch {} // Non-fatal ...
 		}
 
 		/// <summary>
@@ -87,13 +108,10 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(SyncLog));
 			this.log = new System.Windows.Forms.ListBox();
-			this.toolBar1 = new System.Windows.Forms.ToolBar();
 			this.toolBarSave = new System.Windows.Forms.ToolBarButton();
 			this.toolBarClear = new System.Windows.Forms.ToolBarButton();
-			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
 			this.SuspendLayout();
 			// 
 			// log
@@ -119,35 +137,6 @@ namespace Novell.FormsTrayApp
 			this.log.TabIndex = ((int)(resources.GetObject("log.TabIndex")));
 			this.log.Visible = ((bool)(resources.GetObject("log.Visible")));
 			// 
-			// toolBar1
-			// 
-			this.toolBar1.AccessibleDescription = resources.GetString("toolBar1.AccessibleDescription");
-			this.toolBar1.AccessibleName = resources.GetString("toolBar1.AccessibleName");
-			this.toolBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("toolBar1.Anchor")));
-			this.toolBar1.Appearance = ((System.Windows.Forms.ToolBarAppearance)(resources.GetObject("toolBar1.Appearance")));
-			this.toolBar1.AutoSize = ((bool)(resources.GetObject("toolBar1.AutoSize")));
-			this.toolBar1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("toolBar1.BackgroundImage")));
-			this.toolBar1.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
-																						this.toolBarSave,
-																						this.toolBarClear});
-			this.toolBar1.ButtonSize = ((System.Drawing.Size)(resources.GetObject("toolBar1.ButtonSize")));
-			this.toolBar1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("toolBar1.Dock")));
-			this.toolBar1.DropDownArrows = ((bool)(resources.GetObject("toolBar1.DropDownArrows")));
-			this.toolBar1.Enabled = ((bool)(resources.GetObject("toolBar1.Enabled")));
-			this.toolBar1.Font = ((System.Drawing.Font)(resources.GetObject("toolBar1.Font")));
-			this.toolBar1.ImageList = this.imageList1;
-			this.toolBar1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("toolBar1.ImeMode")));
-			this.toolBar1.Location = ((System.Drawing.Point)(resources.GetObject("toolBar1.Location")));
-			this.toolBar1.Name = "toolBar1";
-			this.toolBar1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("toolBar1.RightToLeft")));
-			this.toolBar1.ShowToolTips = ((bool)(resources.GetObject("toolBar1.ShowToolTips")));
-			this.toolBar1.Size = ((System.Drawing.Size)(resources.GetObject("toolBar1.Size")));
-			this.toolBar1.TabIndex = ((int)(resources.GetObject("toolBar1.TabIndex")));
-			this.toolBar1.TextAlign = ((System.Windows.Forms.ToolBarTextAlign)(resources.GetObject("toolBar1.TextAlign")));
-			this.toolBar1.Visible = ((bool)(resources.GetObject("toolBar1.Visible")));
-			this.toolBar1.Wrappable = ((bool)(resources.GetObject("toolBar1.Wrappable")));
-			this.toolBar1.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.toolBar1_ButtonClick);
-			// 
 			// toolBarSave
 			// 
 			this.toolBarSave.Enabled = ((bool)(resources.GetObject("toolBarSave.Enabled")));
@@ -164,12 +153,6 @@ namespace Novell.FormsTrayApp
 			this.toolBarClear.ToolTipText = resources.GetString("toolBarClear.ToolTipText");
 			this.toolBarClear.Visible = ((bool)(resources.GetObject("toolBarClear.Visible")));
 			// 
-			// imageList1
-			// 
-			this.imageList1.ImageSize = ((System.Drawing.Size)(resources.GetObject("imageList1.ImageSize")));
-			this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-			this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-			// 
 			// SyncLog
 			// 
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
@@ -180,7 +163,6 @@ namespace Novell.FormsTrayApp
 			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
-			this.Controls.Add(this.toolBar1);
 			this.Controls.Add(this.log);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
@@ -194,7 +176,6 @@ namespace Novell.FormsTrayApp
 			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
 			this.Text = resources.GetString("$this.Text");
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.SyncLog_Closing);
-			this.Load += new System.EventHandler(this.SyncLog_Load);
 			this.Move += new System.EventHandler(this.SyncLog_Move);
 			this.ResumeLayout(false);
 
@@ -247,17 +228,6 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Event Handlers
-		private void SyncLog_Load(object sender, System.EventArgs e)
-		{
-			// Load the application icon.
-			try
-			{
-				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
-			}
-			catch {} // Non-fatal ...
-
-		}
-
 		private void SyncLog_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			// If we haven't received a shutdown event, hide this dialog and cancel the event.
