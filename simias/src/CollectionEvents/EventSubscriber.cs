@@ -276,7 +276,6 @@ namespace Simias.Event
 
 		private void OnCollectionEvent(CollectionEventArgs args)
 		{
-			EventBroker.logger.Debug("Default Subscriber Recieved Callback");
 			try
 			{
 				switch (args.GetType().ToString())

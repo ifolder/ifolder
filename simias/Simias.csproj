@@ -346,6 +346,7 @@
                 />
                 <File
                     RelPath = "src\CollectionStore\CollectionStoreTests\CollectionStoreTests.cs"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
