@@ -12,12 +12,20 @@ install-exec-local:
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig $(DESTDIR)$(datadir)/simias
 	$(INSTALL_PROGRAM) $(srcdir)/COPYING $(DESTDIR)$(datadir)/simias
 	$(INSTALL_PROGRAM) simias.pc $(DESTDIR)$(libdir)/pkgconfig
+if WINDOWS
+if DEBUG	
 	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(libdir)
+endif
+endif
 
 uninstall-local:
-	cd $(DESTDIR)$(libdir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)
 	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f simias.pc
 	cd $(DESTDIR)$(datadir)/simias; rm -f COPYING
+if WINDOWS
+if DEBUG	
+	cd $(DESTDIR)$(libdir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)
+endif
+endif
 
 clean-local:
 	rm -rf $(COMMON_CLEAN_FILES)
