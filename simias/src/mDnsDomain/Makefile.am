@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-mDnsDomain_CSFILES1 = $(srcdir)/Service.cs $(srcdir)/Domain.cs $(srcdir)/User.cs 
+mDnsDomain_CSFILES1 = $(srcdir)/Service.cs $(srcdir)/Domain.cs $(srcdir)/User.cs $(srcdir)/Channel.cs $(srcdir)/Location.cs 
 mDnsDomain_CSFILES := $(subst /,$(SEP),$(mDnsDomain_CSFILES1))
 mDnsDomain_INCLUDES =
 mDnsDomain_RESOURCES =
