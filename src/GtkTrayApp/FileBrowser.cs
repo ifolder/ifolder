@@ -339,6 +339,7 @@ namespace Novell.iFolder
 					{
 						IntroDialog iDialog = new IntroDialog();
 						iDialog.iFolderPath = de.FullName;
+						iDialog.TransientFor = nifWindow;
 						iDialog.Run();
 					}
 				}
