@@ -48,6 +48,16 @@ void simias_update_member(const char *account_name, const char *account_prpl_id,
 int simias_get_user_info(char **machineName, char **userID, char **simiasURL);
 
 /**
+ * Gets the machineName.
+ *
+ * This method returns 0 on success.  If success is returned, the machineName
+ * will contain the machineName in a newly allocated char * and will need to be
+ * freed.  If there is an error machineName will be invalid and does not need
+ * to be freed.
+ */
+int simias_get_machine_name(char **machineName);
+
+/**
  * Gets the user public key that should be used.  This function first checks
  * the custom plugin setting to see if we already have a public/private key
  * stored in the Gaim configuration.  If so, it just returns the public key

@@ -578,6 +578,48 @@ soap_print_fault(&soap, stderr);
 }
 
 /**
+ * Gets the machineName.
+ *
+ * This method returns 0 on success.  If success is returned, the machineName
+ * will contain the machineName in a newly allocated char * and will need to be
+ * freed.  If there is an error machineName will be invalid and does not need
+ * to be freed.
+ */
+int
+simias_get_machine_name(char **machineName)
+{
+	char *soap_url;
+	struct soap soap;
+	struct _ns1__GetMachineName req;
+	struct _ns1__GetMachineNameResponse resp;
+	
+	soap_url = get_soap_url(TRUE);
+	if (!soap_url) {
+		return -1;
+	}
+	
+	init_gsoap(&soap);
+	soap_call___ns1__GetMachineName(&soap, soap_url, NULL, &req, &resp);
+	if (soap.error) {
+soap_print_fault(&soap, stderr);
+		cleanup_gsoap(&soap);
+		return -2;
+	}
+
+	if (!resp.GetMachineNameResult)
+	{
+		fprintf("soap_call___ns1__GetMachineName() returned NULL\n");
+		return -3;
+	}
+	
+	*machineName = strdup(resp.GetMachineNameResult);
+	
+	cleanup_gsoap(&soap);
+
+	return 0;
+}
+
+/**
  * Utility functions for gSOAP
  */
 static char *

@@ -51,6 +51,16 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetMachineName">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetMachineNameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMachineNameResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="GetRSACredential">
         <s:complexType />
       </s:element>
@@ -159,6 +169,12 @@
   <wsdl:message name="GetUserInfoSoapOut">
     <wsdl:part name="parameters" element="tns:GetUserInfoResponse" />
   </wsdl:message>
+  <wsdl:message name="GetMachineNameSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMachineName" />
+  </wsdl:message>
+  <wsdl:message name="GetMachineNameSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMachineNameResponse" />
+  </wsdl:message>
   <wsdl:message name="GetRSACredentialSoapIn">
     <wsdl:part name="parameters" element="tns:GetRSACredential" />
   </wsdl:message>
@@ -214,6 +230,11 @@
       <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">GetUserInfo</documentation>
       <wsdl:input message="tns:GetUserInfoSoapIn" />
       <wsdl:output message="tns:GetUserInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMachineName">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">GetMachineName returns the machine name of the computer we're running on.</documentation>
+      <wsdl:input message="tns:GetMachineNameSoapIn" />
+      <wsdl:output message="tns:GetMachineNameSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetRSACredential">
       <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">GetRSACredential</documentation>
@@ -277,6 +298,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetUserInfo">
       <soap:operation soapAction="http://novell.com/simias/domain/GetUserInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMachineName">
+      <soap:operation soapAction="http://novell.com/simias/domain/GetMachineName" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

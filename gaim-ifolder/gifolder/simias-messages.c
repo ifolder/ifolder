@@ -92,7 +92,7 @@ fprintf(stderr, "Sending message: %s\n", msg);
 /**
  * This function sends a message with the following format:
  *
- * [simias:invitation-request:<Base64Encoded Public Key>]
+ * [simias:invitation-request:<Base64Encoded Public Key>:<Base64Encoded Machine Name>]
  */
 int
 simias_send_invitation_request(GaimBuddy *recipient)
@@ -100,20 +100,38 @@ simias_send_invitation_request(GaimBuddy *recipient)
 	char *public_key;
 	char msg[4096];
 	char *base64Key;
-	
-	if (simias_get_public_key(&public_key) != 0)
+	int err;
+
+	char *machineName;
+	char *base64MachineName;
+
+	err = simias_get_public_key(&public_key);
+	if (err != 0)
 	{
 		/* FIXME: Prompt the user to make sure iFolder is up and running...or kick Simias to start before continuing. */
-		fprintf(stderr, "Error getting public key.  Maybe iFolder is not running?\n");
+		fprintf(stderr, "Error getting public key (%d).  Maybe iFolder is not running?\n", err);
 		return -1;
 	}
 	
 	/* Base64Encode the public key so it gets sent nicely (not in XML) */
 	base64Key = gaim_base64_encode(publicKey, strlen(publicKey));
 	free(public_key);
+
+	err = simias_get_machine_name(&machineName);
+	if (err != 0)
+	{
+		free(base64Key);
+		fprintf(stderr, "Error (%d) calling simias_get_machine_name() in simias_send_invitation_request.  Perhaps iFolder/Simias is not running?\n", err);
+		return -2;
+	}
+
+	/* Base64Encode the machine name so it gets sent nicely */
+	base64MachineName = gaim_base64_encode(machineName, strlen(machineName));
+	free(machineName);
 	
-	sprintf(msg, "%s%s]", INVITATION_REQUEST_MSG, base64Key);
+	sprintf(msg, "%s%s:%s]", INVITATION_REQUEST_MSG, base64Key, base64MachineName);
 	free(base64Key);
+	free(base64MachineName);
 	
 	return simias_send_msg(recipient, msg);
 }
@@ -133,6 +151,7 @@ simias_send_invitation_deny(GaimBuddy *recipient)
  * This function sends a message with the following format:
  *
  * [simias:invitation-accept:<Base64Encoded Public Key>:<Base64Encoded DES key encrypted with the recipient's public key>]
+ * [simias:invitation-accept:<Base64Encoded Public Key>:<Base64Encoded Machine Name>:<Base64Encoded DES key encrypted with the recipient's public key>]
  */
 int
 simias_send_invitation_accept(GaimBuddy *recipient, char *recipientBase64PublicKey)
