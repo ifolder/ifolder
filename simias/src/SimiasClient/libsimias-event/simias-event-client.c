@@ -216,11 +216,6 @@ typedef enum
 	SIMIAS_OBJECT_NOTIFY_EVENT
 } SimiasObjectType;
 
-/* FIXME: Temporary #defines */
-#define SIMIAS_EVENT_SERVER_CONFIG_PATH "/home/boyd/.local/share/IProcEvent.cfg"
-#define SIMIAS_EVENT_SERVER_HOST "127.0.0.1"
-#define SIMIAS_EVENT_SERVER_PORT 5432
-
 /* #region Forward declarations for private functions */
 static void * sec_thread (void *user_data);
 static void * sec_reg_thread (void *user_data);
@@ -799,8 +794,46 @@ sec_get_server_host_address (RealSimiasEventClient *ec,
 static char *
 sec_get_config_file_path (char *dest_path)
 {
-	/* FIXME: Implement sec_get_config_file_path */
-	return strcpy (dest_path, SIMIAS_EVENT_SERVER_CONFIG_PATH);
+#if defined(WIN32)
+	char *user_profile;
+	/* Build the configuration file path. */
+	user_profile = getenv("USERPROFILE");
+	if (user_profile == NULL || strlen (user_profile) <= 0) {
+		fprintf (stderr, "Could not get the USERPROFILE directory\n");
+		return NULL;
+	}
+
+	sprintf (dest_path,
+			 "%s\\Local Settings\\Application Data\\IProcEvent.cfg",
+			 user_profile);
+#else
+	char *home_dir;
+	char dot_local_path [512];
+	char dot_local_share_path [512];
+	
+	home_dir = getenv ("HOME");
+	if (home_dir == NULL || strlen (home_dir) <= 0) {
+		fprintf (stderr, "Could not get the HOME directory\n");
+		return NULL;
+	}
+	
+	/**
+	 * Create the directories if they don't already exist.  Ignore any errors if
+	 * they already do exist.
+	 */
+	sprintf (dot_local_path, "%s%s", home_dir, "/.local");
+	sprintf (dot_local_share_path, "%s%s", home_dir, "/.local/share");
+	if (((mkdir(dot_local_path, 0777) == -1) && (errno != EEXIST)) ||
+		 ((mkdir(dot_local_share_path, 0777) == -1) && (errno != EEXIST )))
+	{
+		perror ("Cannot create '~/.local/share' directory");
+		return NULL;
+	}
+
+	sprintf (dest_path, "%s/IProcEvent.cfg", dot_local_share_path);
+#endif	/* WIN32 */
+
+	return dest_path;
 }
 
 static int
