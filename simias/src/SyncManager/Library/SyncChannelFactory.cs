@@ -162,14 +162,14 @@ namespace Simias.Sync
 					debugProvider.Next = serverProvider;
 					serverProvider = debugProvider;
 #endif
-					// The server chain order should be as follows: 
-					// SecureServerProvider->DebugProvider->ServerProvider.
+					// the server chain order should be as follows 
+					// security sink -> monitor sink -> formatter sink
 					ISecurityServerFactory securityServerFactory = (ISecurityServerFactory) new RsaSecurityServerFactory(store.BaseStore.KeyStore);
 					IServerChannelSinkProvider secureServerProvider = (IServerChannelSinkProvider) new SecureServerSinkProvider(securityServerFactory, SecureServerSinkProvider.MsgSecurityLevel.privacy);
 					secureServerProvider.Next = serverProvider;
 
 					// The client chain order should be as follows:
-					// ClientProvider->ClientSecureProvider.
+					// formatter sink -> monitor sink -> security sink
 					ISecurityClientFactory[] secClientFactories = new ISecurityClientFactory[1];
 					secClientFactories[0] = (ISecurityClientFactory) new RsaSecurityClientFactory(store.BaseStore.KeyStore);
 					IClientChannelSinkProvider clientSecureProvider = (IClientChannelSinkProvider) new SecureClientSinkProvider(secClientFactories);

@@ -42,17 +42,21 @@ namespace Simias.Sync
 		public SyncStoreManager(SyncManager syncManager)
 		{
 			// TODO: remove or update
-			try
 			{
-				string path = "remoting.config";
-				RemotingConfiguration.Configure(path);
-				MyTrace.WriteLine("Using remoting configuration file: {0}", path);
-			}
-			catch
-			{
-				MyTrace.WriteLine("No remoting configuration file found.");
-			}
+				string config = "remoting.config";
 
+				try
+				{
+					RemotingConfiguration.Configure(config);
+				}
+				catch
+				{
+					config = "Not Found";
+				}
+
+				MyTrace.WriteLine("Configuration File: {0}", config);
+			}
+			
 			// save manager
 			this.syncManager = syncManager;
 
