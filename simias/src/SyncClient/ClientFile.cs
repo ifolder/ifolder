@@ -298,11 +298,32 @@ namespace Simias.Sync.Client
 		/// <returns></returns>
 		private ArrayList GetUploadFileMap()
 		{
-			table.Clear();
-			HashData[] serverHashMap = service.GetHashMap(BlockSize);
-			table.Add(serverHashMap);
 			ArrayList fileMap = new ArrayList();
 
+			// Get the hash map from the server.
+			HashData[] serverHashMap = service.GetHashMap(BlockSize);
+			
+			if (serverHashMap == null)
+			{
+				// Send the whole file.
+				long offset = 0;
+				long fileSize = Length;
+				while (offset < fileSize)
+				{
+					OffsetSegment seg = new OffsetSegment();
+					long bytesLeft = fileSize - offset;
+					int size = (int)((bytesLeft > MaxXFerSize) ? MaxXFerSize : bytesLeft);
+					seg.Length = size;
+					seg.Offset = 0;
+					fileMap.Add(seg);
+					offset += size;
+				}
+				return fileMap;
+			}
+
+			table.Clear();
+			table.Add(serverHashMap);
+			
 			int				bytesRead = BlockSize * 16;
 			byte[]			buffer = new byte[BlockSize * 16];
 			int				readOffset = 0;

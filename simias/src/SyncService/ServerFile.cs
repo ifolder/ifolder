@@ -113,7 +113,7 @@ namespace Simias.Sync
 				{
 					collection.Commit(node);
 				}
-				catch (CollisionException c)
+				catch (CollisionException)
 				{
 					commit = false;
 					status.status = SyncNodeStatus.SyncStatus.UpdateConflict;
@@ -135,6 +135,11 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public HashData[] GetHashMap()
 		{
+			if (Length <= BlockSize)
+			{
+				return null;
+			}
+
 			int				blockCount = (int)(Length / BlockSize) + 1;
 			HashData[]		list = new HashData[blockCount];
 			byte[]			buffer = new byte[BlockSize];

@@ -37,20 +37,29 @@ namespace Simias.Sync
 		protected Collection	collection;
 		protected BaseFileNode	node;
 		protected string		nodeID;
-		protected string		file;
-		protected string		workFile;
-		private	FileStream		workStream;
-		private FileStream		stream;
 		protected SyncDirection	direction;
 		protected const int		BlockSize = 4096;
 		protected const int		MaxXFerSize = 1024 * 64;
-		protected const string ConflictUpdatePrefix = ".simias.cu.";
-		protected const string ConflictFilePrefix = ".simias.cf.";
-		protected const string WorkFilePrefix = ".simias.wf.";
+		string					file;
+		string					workFile;
+		FileStream				workStream;
+		FileStream				stream;
+		const string			ConflictUpdatePrefix = ".simias.cu.";
+		const string			ConflictFilePrefix = ".simias.cf.";
+		const string			WorkFilePrefix = ".simias.wf.";
 
+		/// <summary>
+		/// Used to determine if the file is syncing in or out.
+		/// </summary>
 		protected enum SyncDirection
 		{
+			/// <summary>
+			/// The file is syncing in.
+			/// </summary>
 			IN,
+			/// <summary>
+			/// The file is syncing out.
+			/// </summary>
 			OUT
 		}
 	

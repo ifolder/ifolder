@@ -1365,6 +1365,7 @@ namespace Simias.Sync.Client
 						}
 						finally
 						{
+							file.Close(success);
 						}
 					}
 				}
