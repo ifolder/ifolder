@@ -146,9 +146,9 @@ public struct NodeChunk
 {
 	internal const int MaxSize = 128 * 1024;
 	internal Node node;
-	internal string relativePath;
 	internal ulong expectedIncarn;
 	internal int totalSize;
+	internal string relativePath;
 	internal ForkChunk[] forkChunks;
 }
 

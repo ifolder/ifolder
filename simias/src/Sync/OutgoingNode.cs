@@ -51,7 +51,12 @@ internal class OutgoingNode
 	{
 		nid.Validate();
 		forkList = null;
-		Node node = collection.GetNodeByID(nid);
+
+		/* always construct a plain node instead of the one returned by
+		 * GetNodeByID in case it is a Collection node which is not
+		 * serializable (but a raw node is).
+		 */
+		Node node = new Node(collection.GetNodeByID(nid));
 		if (node == null)
 		{
 			Log.Spew("ignoring attempt to start outgoing sync for non-existent node {0}", nid);
