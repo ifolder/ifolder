@@ -30,7 +30,7 @@ CollectionStoreTests.dll: $(CollectionStoreTests_CSFILES) $(CollectionStoreTests
 	
 install-exec-local: CollectionStore.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) CollectionStore.dll $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) CollectionStore.dll ../../external/SecureChannelSinks/*.dll $(DESTDIR)$(bindir)
 
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f CollectionStore.dll CollectionStoreTests.xml $(NUNIT_TESTS); rm -rf CollectionStoreTestDir .cstore
