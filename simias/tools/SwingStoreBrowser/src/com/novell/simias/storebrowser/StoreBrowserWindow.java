@@ -47,7 +47,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.ExpandVetoException;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -77,7 +76,7 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 	private JTree jTree = null;
 	private JTable jTable = null;
 	private JScrollPane jScrollPane1 = null;
-	private TreeModel treeModel = null;
+	private DefaultTreeModel treeModel = null;
 	
 	private String[] columnNames = {"Name", "Value", "Type", "Flags"};
 	
@@ -200,7 +199,6 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 		addNodes(tree_top);
 
 		treeModel = new DefaultTreeModel(tree_top);
-		treeModel.addTreeModelListener(new StoreTreeModelListener());
 		
 		jTree.setModel(treeModel);
 	}
@@ -433,6 +431,7 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 		if (service == null)
 		{
 			// TODO: Tell the user that the service is null
+			System.out.println("SERVICE IS NULL!");
 			return;
 		}
 
@@ -445,8 +444,9 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 
 		if (node == tree_top)
 		{
-			addNodes(node);
-			return;	// Do nothing for now.  TODO: Re-read the top-level items
+			addNodes(node); // Re-read the top-level items
+			treeModel.reload(node);
+			return;
 		}
 		
 		// Clear any existing children and re-read from server
@@ -469,6 +469,7 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 			if (childNodes != null)
 			{
 				addChildNodes(node, childNodes.getBrowserNode());
+				treeModel.reload(node);
 			}
 		}
 	}
