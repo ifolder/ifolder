@@ -4,7 +4,7 @@
 <glade-interface>
 
 <widget class="GtkWindow" id="RBWindow">
-  <property name="width_request">275</property>
+  <property name="width_request">300</property>
   <property name="height_request">325</property>
   <property name="title" translatable="yes">Discovered iFolders</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
@@ -18,6 +18,7 @@
   <property name="skip_pager_hint">False</property>
   <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
+  <signal name="delete_event" handler="on_RBWindow_delete_event" last_modification_time="Wed, 26 May 2004 07:16:29 GMT"/>
 
   <child>
     <widget class="GtkVBox" id="vbox1">
@@ -65,6 +66,7 @@
 		      <property name="visible">True</property>
 		      <property name="label">gtk-close</property>
 		      <property name="use_stock">True</property>
+		      <signal name="activate" handler="on_close" last_modification_time="Wed, 26 May 2004 07:32:00 GMT"/>
 		    </widget>
 		  </child>
 		</widget>
@@ -106,34 +108,26 @@
 	  <property name="orientation">GTK_ORIENTATION_HORIZONTAL</property>
 	  <property name="toolbar_style">GTK_TOOLBAR_BOTH</property>
 	  <property name="tooltips">True</property>
-	  <property name="show_arrow">True</property>
+	  <property name="show_arrow">False</property>
 
 	  <child>
-	    <widget class="GtkToolButton" id="toolbutton3">
+	    <widget class="button" id="button2">
 	      <property name="visible">True</property>
-	      <property name="stock_id">gtk-refresh</property>
-	      <property name="visible_horizontal">True</property>
-	      <property name="visible_vertical">True</property>
-	      <property name="is_important">True</property>
+	      <property name="tooltip" translatable="yes">Refresh iFolders</property>
+	      <property name="label" translatable="yes">iFolders</property>
+	      <property name="use_underline">True</property>
+	      <property name="stock_pixmap">gtk-refresh</property>
+	      <signal name="clicked" handler="on_refresh" last_modification_time="Fri, 14 May 2004 18:36:20 GMT"/>
 	    </widget>
-	    <packing>
-	      <property name="expand">False</property>
-	      <property name="homogeneous">True</property>
-	    </packing>
 	  </child>
 
 	  <child>
-	    <widget class="GtkToolButton" id="toolbutton2">
-	      <property name="visible">True</property>
-	      <property name="stock_id">gtk-properties</property>
-	      <property name="visible_horizontal">True</property>
-	      <property name="visible_vertical">True</property>
-	      <property name="is_important">False</property>
-	    </widget>
-	    <packing>
-	      <property name="expand">False</property>
-	      <property name="homogeneous">True</property>
-	    </packing>
+		<widget class="button" id="button3">
+		  <property name="visible">True</property>
+		  <property name="label">gtk-properties</property>
+		  <property name="use_stock">True</property>
+		  <signal name="clicked" handler="on_properties" last_modification_time="Wed, 26 May 2004 07:48:42 GMT"/>
+		</widget>
 	  </child>
 
 	  <child>
@@ -150,17 +144,12 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkToolButton" id="toolbutton4">
-	      <property name="visible">True</property>
-	      <property name="stock_id">gtk-close</property>
-	      <property name="visible_horizontal">True</property>
-	      <property name="visible_vertical">True</property>
-	      <property name="is_important">False</property>
-	    </widget>
-	    <packing>
-	      <property name="expand">False</property>
-	      <property name="homogeneous">True</property>
-	    </packing>
+		<widget class="button" id="button1">
+		  <property name="visible">True</property>
+		  <property name="label">gtk-close</property>
+		  <property name="use_stock">True</property>
+		  <signal name="clicked" handler="on_close" last_modification_time="Wed, 26 May 2004 07:39:19 GMT"/>
+		</widget>
 	  </child>
 	</widget>
 	<packing>

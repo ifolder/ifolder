@@ -2,9 +2,9 @@
 <!DOCTYPE glade-project SYSTEM "http://glade.gnome.org/glade-project-2.0.dtd">
 
 <glade-project>
-  <name>GtkTrayApp</name>
-  <program_name>gtktrayapp</program_name>
+  <name>iFolderBrowser</name>
+  <program_name>ifolder-browser</program_name>
   <source_directory></source_directory>
   <pixmaps_directory></pixmaps_directory>
-  <gnome_support>TRUE</gnome_support>
+  <gnome_support>FALSE</gnome_support>
 </glade-project>

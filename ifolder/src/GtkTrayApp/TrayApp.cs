@@ -169,7 +169,7 @@ namespace Novell.iFolder
 				case 1: // first mouse button
 					if(args.Event.Type == Gdk.EventType.TwoButtonPress)
 					{
-						show_browser(obj, args);
+						show_ifolder_browser(obj, args);
 					}
 					break;
 				case 2: // second mouse button
@@ -187,17 +187,25 @@ namespace Novell.iFolder
 		{
 			Menu trayMenu = new Menu();
 
+			MenuItem ifolder_browser_item = 
+					new MenuItem ("iFolder Browser");
+			trayMenu.Append (ifolder_browser_item);
+			ifolder_browser_item.Activated += 
+					new EventHandler(show_ifolder_browser);
+
 			MenuItem browser_item = new MenuItem ("File Browser");
 			trayMenu.Append (browser_item);
 			browser_item.Activated += new EventHandler(show_browser);
-			MenuItem colBrowser_item = new MenuItem ("Collection Browser");
+			MenuItem colBrowser_item = 
+					new MenuItem ("Collection Browser");
 			trayMenu.Append (colBrowser_item);
-			colBrowser_item.Activated += new EventHandler(show_colbrowser);
+			colBrowser_item.Activated += 
+					new EventHandler(show_colbrowser);
 			MenuItem rbBrowser_item = new MenuItem ("Reunion Browser");
 			trayMenu.Append (rbBrowser_item);
 			rbBrowser_item.Activated += new EventHandler(show_rbbrowser);
 
-			//			trayMenu.Append(new SeparatorMenuItem());
+			trayMenu.Append(new SeparatorMenuItem());
 
 			MenuItem InvWizard_item = new MenuItem ("Invitation Wizard");
 			trayMenu.Append (InvWizard_item);
@@ -213,9 +221,10 @@ namespace Novell.iFolder
 
 			MenuItem properties_item = new MenuItem ("Properties");
 			trayMenu.Append (properties_item);
-			properties_item.Activated += new EventHandler(show_properties);
-
+			properties_item.Activated += 
+					new EventHandler(show_properties);
 			trayMenu.Append(new SeparatorMenuItem());
+
 			MenuItem quit_item = new MenuItem ("Exit");
 			quit_item.Activated += new EventHandler(quit_ifolder);
 			trayMenu.Append (quit_item);
@@ -241,6 +250,14 @@ namespace Novell.iFolder
 		static void show_properties(object o, EventArgs args)
 		{
 			Console.WriteLine("Show the Properties");
+		}
+
+		static void show_ifolder_browser(object o, EventArgs args)
+		{
+			iFolderBrowser browser;
+
+			browser = new iFolderBrowser();
+			browser.ShowAll();
 		}
 
 		static void show_browser(object o, EventArgs args)
