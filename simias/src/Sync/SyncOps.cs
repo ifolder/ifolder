@@ -564,11 +564,19 @@ internal class SyncOps
 	{
 		if (this.serverCookie == null)
 		{
-			this.serverCookie = collection.Properties.GetSingleProperty(ServerChangeLogCookieProp).Value.ToString();
+			Property sc = collection.Properties.GetSingleProperty(ServerChangeLogCookieProp);
+			if (sc != null)
+			{
+				this.serverCookie = sc.Value.ToString();
+			}
 		}
 		if (this.clientCookie == null)
 		{
-			this.clientCookie = collection.Properties.GetSingleProperty(ClientChangeLogCookieProp).Value.ToString();
+			Property cc = collection.Properties.GetSingleProperty(ClientChangeLogCookieProp);
+			if (cc != null)
+			{
+				this.clientCookie = cc.Value.ToString();
+			}
 		}
 		serverCookie = this.serverCookie;
 		clientCookie = this.clientCookie;
