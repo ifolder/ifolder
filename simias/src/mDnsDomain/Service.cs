@@ -99,6 +99,7 @@ namespace Simias.mDns
 				mdnsDomain = new Simias.mDns.Domain( true );
 				this.mDnsUser = new Simias.mDns.User();
 				this.mDnsUser.BroadcastUp();
+				Simias.mDns.Sync.StartSyncThread();
 			}
 			catch(Exception e)
 			{
@@ -141,6 +142,8 @@ namespace Simias.mDns
 			{
 				this.mDnsUser.BroadcastDown();
 			}
+
+			Simias.mDns.Sync.StopSyncThread();
 		}
 
 		#endregion
@@ -148,4 +151,92 @@ namespace Simias.mDns
 		#region Private Methods
 		#endregion
 	}
+
+	/// <summary>
+	/// Temporary
+	/// Class for controlling the synchronization thread
+	/// </summary>
+	public class Sync
+	{
+		private static readonly ISimiasLog log = 
+			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		static AutoResetEvent syncEvent = null;
+		static bool exiting;
+		static bool syncOnStart = true;
+		static int syncInterval = 30 * 1000;
+		static Thread syncThread = null;
+
+		internal static Simias.mDns.User mdnsUser = null;
+
+		internal static int StartSyncThread()
+		{
+			int status = 0;
+
+			try
+			{
+				mdnsUser = new Simias.mDns.User();
+				exiting = false;
+				syncEvent = new AutoResetEvent(false);
+				syncThread = new Thread( new ThreadStart( Sync.SyncThread ) );
+				syncThread.IsBackground = true;
+				syncThread.Start();
+			}
+			catch( SimiasException e )
+			{
+				log.Debug( e.Message );
+				log.Debug( e.StackTrace );
+				status = -1;
+			}
+
+			return status;
+		}
+
+		internal static int StopSyncThread()
+		{
+			int status = 0;
+			exiting = true;
+			try
+			{
+				syncEvent.Set();
+				Thread.Sleep(32);
+				syncEvent.Close();
+				Thread.Sleep(0);
+				mdnsUser = null;
+				log.Debug("StopSyncThread finished");
+			}
+			catch( SimiasException e )
+			{
+				log.Debug("StopSyncThread failed with an exception");
+				log.Debug(e.Message);
+				status = -1;
+			}
+
+			return status;
+		}
+
+		public static int SyncNow(string data)
+		{
+			log.Debug( "SyncNow called" );
+			syncEvent.Set();
+			log.Debug( "SyncNow finished" );
+			return 0;
+		}
+
+		internal static void SyncThread()
+		{
+			while (!exiting)
+			{
+				if (syncOnStart == false)
+				{
+					syncEvent.WaitOne(syncInterval, false);
+				}
+
+				// Always wait after the first iteration
+				syncOnStart = false;
+				mdnsUser.SynchronizeMembers();
+			}
+		}
+	}
+
 }

@@ -46,10 +46,10 @@ namespace Simias.mDns
 	{
 		#region Class Members
 
-		private bool	mDnsChannelUp = false;
+		private static bool	mDnsChannelUp = false;
 		private string  mDnsUserName;
 		private string  mDnsUserID = "";
-		private IResourceRegistration rr = null;
+		private static IResourceRegistration rr = null;
 		private static IResourceQuery query = null;
 		private readonly string memberTag = "_ifolder_member._tcp.local";
 		private	IMDnsEvent cEvent = null;
@@ -94,43 +94,48 @@ namespace Simias.mDns
 
 			//
 			// Setup the remoting channel to the mDnsResponder
+			// this isn't thread safe but I know it won't be
+			// re-entered
 			//
 
-			try
+			if ( rr == null )
 			{
-				Hashtable propsTcp = new Hashtable();
-				propsTcp[ "port" ] = 0;
-				propsTcp[ "rejectRemoteRequests" ] = true;
+				try
+				{
+					Hashtable propsTcp = new Hashtable();
+					propsTcp[ "port" ] = 0;
+					propsTcp[ "rejectRemoteRequests" ] = true;
 
-				BinaryServerFormatterSinkProvider
-					serverBinaryProvider = new BinaryServerFormatterSinkProvider();
+					BinaryServerFormatterSinkProvider
+						serverBinaryProvider = new BinaryServerFormatterSinkProvider();
 
-				BinaryClientFormatterSinkProvider
-					clientBinaryProvider = new BinaryClientFormatterSinkProvider();
+					BinaryClientFormatterSinkProvider
+						clientBinaryProvider = new BinaryClientFormatterSinkProvider();
 #if !MONO
-				serverBinaryProvider.TypeFilterLevel =
-					System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
+					serverBinaryProvider.TypeFilterLevel =
+						System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
 #endif
-				TcpChannel tcpChnl = 
-					new TcpChannel( propsTcp, clientBinaryProvider, serverBinaryProvider );
-				ChannelServices.RegisterChannel( tcpChnl );
+					TcpChannel tcpChnl = 
+						new TcpChannel( propsTcp, clientBinaryProvider, serverBinaryProvider );
+					ChannelServices.RegisterChannel( tcpChnl );
 
-				IRemoteFactory factory = 
-					(IRemoteFactory) Activator.GetObject(
-					typeof(IRemoteFactory),
-					"tcp://localhost:8091/mDnsRemoteFactory.tcp");
+					IRemoteFactory factory = 
+						(IRemoteFactory) Activator.GetObject(
+						typeof(IRemoteFactory),
+						"tcp://localhost:8091/mDnsRemoteFactory.tcp");
 					
-				this.rr = factory.GetRegistrationInstance();
-				query = factory.GetQueryInstance();
+					Simias.mDns.User.rr = factory.GetRegistrationInstance();
+					Simias.mDns.User.query = factory.GetQueryInstance();
 
-				mDnsChannelUp = true;
-			}
-			catch( Exception e )
-			{
-				log.Error( e.Message );
-				log.Error( e.StackTrace );
+					mDnsChannelUp = true;
+				}
+				catch( Exception e )
+				{
+					log.Error( e.Message );
+					log.Error( e.StackTrace );
 
-				throw e;
+					throw e;
+				}
 			}
 		}
 		#endregion
@@ -201,7 +206,7 @@ namespace Simias.mDns
 				throw new SimiasException( "Remoting channel not setup" );
 			}
 
-			if ( this.rr != null )
+			if ( Simias.mDns.User.rr != null )
 			{
 				Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain( false );
 				rr.DeregisterPointer( memberTag, this.mDnsUserName );
@@ -346,6 +351,68 @@ namespace Simias.mDns
 		}
 
 		/// <summary>
+		/// FIXME::Temporary method to automatically synchronize all mDns users
+		/// </summary>
+		/// <returns>n/a</returns>
+		public void SynchronizeMembers()
+		{
+			//
+			// Get the mDns roster
+			//
+
+			Simias.Storage.Member mdnsMember = null;
+			Store store = Store.GetStore();
+			Simias.Storage.Domain rDomain = store.GetDomain( Simias.mDns.Domain.ID );
+			Simias.Storage.Roster mdnsRoster = rDomain.Roster;
+
+			Char[] sepChar = new Char [] {'='};
+
+			//
+			// next get all the ifolder-members from mDnsResponder
+			//
+
+			Mono.P2p.mDnsResponderApi.Ptr[] ifolderMembers;
+			if ( query.GetPtrResourcesByName( memberTag, out ifolderMembers ) == 0 )
+			{
+				foreach( Mono.P2p.mDnsResponderApi.Ptr member in ifolderMembers )
+				{
+					Mono.P2p.mDnsResponderApi.TextStrings txtStrings = null;
+					string memberID = null;
+
+					if ( query.GetTextStringsByName( member.Target, ref txtStrings ) == 0 )
+					{
+						foreach( string s in txtStrings.GetTextStrings() )
+						{
+							string[] nameValues = s.Split( sepChar );
+							if ( nameValues[0] == "MemberID" )
+							{
+								memberID = nameValues[1];
+								break;
+							}
+
+						}
+
+						if ( memberID != null )
+						{
+							mdnsMember = mdnsRoster.GetMemberByID( memberID );
+							if ( mdnsMember == null )
+							{
+								mdnsMember = 
+									new Member( member.Target, memberID, Access.Rights.ReadOnly );
+
+								mdnsRoster.Commit( new Node[] { mdnsMember } );
+							}
+							else
+							{
+								// Update other info
+							}
+						}
+					}
+				}
+			}
+		}
+
+		/// <summary>
 		/// Obtains the string representation of this instance.
 		/// </summary>
 		/// <returns>The friendly name of the domain.</returns>
@@ -372,4 +439,6 @@ namespace Simias.mDns
 		}
 		#endregion
 	}
+
+
 }
