@@ -1,8 +1,9 @@
 AC_INIT(src/iFolder/iFolder.cs)
+AC_CANONICAL_SYSTEM
+AM_CONFIG_HEADER(config.h)
 
 PASSALONG_CONFIG_OPTIONS=$*
 
-AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE(ifolder, 0.8)
 VERSION=$VERSION.`date +%Y%m%d`
 AM_MAINTAINER_MODE
@@ -108,42 +109,13 @@ case $IFOLDER_OS in
     #
     linux)
         #
-        # Check for valid compilers
-        #
-        AC_CHECK_PROG(CC, cc, cc)
-        test -z "$CC" && AC_MSG_ERROR([no acceptable C compiler found in \$PATH])
-        AC_CHECK_PROG(CXX, c++, c++)
-        test -z "$CXX" && AC_MSG_ERROR([no acceptable C++ compiler found in \$PATH])
-        AC_CHECK_PROG(LD, c++, c++)
-        test -z "$LD" && AC_MSG_ERROR([no acceptable linker found in \$PATH])
-        #
         # Set variables
         #
-        CC='cc -c'
-        CDEF='-D'
-        CFLAGS="-pipe -Wall -W -DLINUX -DPACKAGE=\$(PACKAGE) -DVERSION=\$(VERSION)"
-        CFLAGS_DEBUG="-g -DDEBUG"
-        CFLAGS_OPTIMIZE="-O2 -DNDEBUG"
-        CINC='-I'
         COMMON_CLEAN_FILES='.cstore .simias'
-        COUT='-o'
-        CXX='c++ -c'
-        CXXFLAGS="-pipe -Wall -W -DLINUX -DPACKAGE=\$(PACKAGE) -DVERSION=\$(VERSION)";
-        CXXFLAGS_DEBUG="-g -DDEBUG"
-        CXXFLAGS_OPTIMIZE="-O2 -DNDEBUG"
         EMPTY=
         EXE_EXT=''
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
-        LDFLAGS=''
-        LDFLAGS_DEBUG="-g"
-        LDFLAGS_OPTIMIZE=""
-        LDINC='-L'
-        LDOUT='-o '
-        LIB_EXT=''
-        LIB_PRE='lib'
-        LIBFLAG='-l'
-        LIBS=''
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
         NUNIT_FLAGS='/nologo'
@@ -159,6 +131,23 @@ case $IFOLDER_OS in
         SQLITELIB_PATH="../../external/sqlite/linux"
         SQLITELIB="libsqlite.so"
         SYSTEM_XML='System.Xml.dll'
+        #
+        # Set pkg-config variables
+        #
+        MONO_MINIMUM_VERSION=0.91
+        AC_SUBST(MONO_MINIMUM_VERSION)
+        
+        GTK_SHARP_MINIMUM_VERSION=0.17
+        AC_SUBST(GTK_SHARP_MINIMUM_VERSION)
+	
+	GDK20_MINIMUM_VERSION=2.2.4
+	ATK_MINIMUM_VERSION=1.2.4
+        
+        PKG_CONFIG_REQUIRES="mono-core >= $MONO_MINIMUM_VERSION, gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION, gdk-2.0 >= $GDK20_MINIMUM_VERSION, atk >= $ATK_MINIMUM_VERSION"
+        AC_SUBST(PKG_CONFIG_REQUIRES)
+        
+        PKG_CONFIG_CONFLICTS=""
+        AC_SUBST(PKG_CONFIG_CONFLICTS)
     ;;
     #
     # Windows-specific configuration
@@ -258,7 +247,7 @@ AC_SUBST(TLBX)
 AM_PROG_CC_STDC
 AC_PROG_INSTALL
 AC_HEADER_STDC
-#AM_PROG_LIBTOOL
+AM_PROG_LIBTOOL
 
 #
 # Handle --with-simias-install-path
@@ -416,8 +405,14 @@ if test "x$PKG_CONFIG" = "xno"; then
 fi
 case $IFOLDER_OS in
     linux)
-        GTK_SHARP_REQUIRED_VERSION=0.10
-        PKG_CHECK_MODULES(BASE_DEPENDENCIES, gtk-sharp >= $GTK_SHARP_REQUIRED_VERSION)
+        PKG_CHECK_MODULES(BASE_DEPENDENCIES, gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION)
+	GTK_SHARP_PREFIX=`pkg-config --variable=prefix gtk-sharp`
+	GTK_SHARP_VERSION=`pkg-config --modversion gtk-sharp`
+	test -x "$GTK_SHARP_PREFIX/bin/gapi-codegen" || AC_MSG_ERROR([You need to install gtk-sharp-gapi $GTK_SHARP_VERSION])
+	AC_SUBST(GTK_SHARP_PREFIX)
+	
+        PKG_CHECK_MODULES(GDK20, gdk-2.0 >= $GDK20_MINIMUM_VERSION)
+        PKG_CHECK_MODULES(ATK, atk >= $ATK_MINIMUM_VERSION)
     ;;
 esac
 
@@ -514,6 +509,8 @@ src/iFolderNautilus/Makefile
 src/FormsTrayApp/Makefile
 src/FormsInvitationWizard/Makefile
 src/iFolderShell/Makefile
+src/TrayIcon/Makefile
+src/TrayIcon/libtrayicon/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile

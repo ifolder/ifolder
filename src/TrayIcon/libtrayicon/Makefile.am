@@ -1,6 +1,8 @@
+TRAY_ICON_CFLAGS = $(GDK20_CFLAGS) $(ATK_CFLAGS)
+TRAY_ICON_LIBS = $(GDK20_LIBS) $(ATK_LIBS)
 
 INCLUDES = \
-  $(EGG_TRAY_CFLAGS) \
+  $(TRAY_ICON_CFLAGS) \
   -I$(top_srcdir)/libegg/util \
   -DEGG_COMPILATION \
   -DGTK_DISABLE_DEPRECATED \
@@ -8,10 +10,10 @@ INCLUDES = \
   -DG_DISABLE_DEPRECATED
 
 
-inst_LTLIBRARIES = libtrayicon.la
+noinst_LTLIBRARIES = libtrayicon.la
 
 libtrayicon_la_LIBADD = \
-	$(EGG_TRAY_LIBS) \
+	$(TRAY_ICON_LIBS) \
 	$(top_builddir)/libegg/util/libeggutil.la
 
 libtrayicon_la_SOURCES = \
