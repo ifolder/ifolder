@@ -403,6 +403,22 @@ namespace Novell.iFolder
 		}
 
 		/// <summary>
+		/// Gets/sets the refresh interval for the iFolder.
+		/// </summary>
+		public int RefreshInterval
+		{
+			get
+			{
+				return new SyncCollection(this.collection).Interval;
+			}
+
+			set
+			{
+				new SyncCollection(this.collection).Interval = value;
+			}
+		}
+
+		/// <summary>
 		/// Gets/sets the current node in the iFolder.
 		/// </summary>
 //		internal Collection Collection
