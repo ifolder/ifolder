@@ -170,10 +170,37 @@ namespace Simias.Event
 				Directory.CreateDirectory( Path.GetDirectoryName( configFileName ) );
 			}
 
-			// Write the port number to the configuration file.
-			using( FileStream fs = File.Open( configFileName, FileMode.Create, FileAccess.ReadWrite, FileShare.None ) )
+			// Write the port number to the configuration file. The creation of the configuration file is put into
+			// a loop in order to close a very small window where the server went down hard and the configuration
+			// file did not get deleted. An exception can occur if the client does its single read of the file while
+			// the server is trying to rewrite the file. If the exception occurs, this thread will sleep a moment
+			// and try it again. It should always succeed on the next try.
+			bool fileWritten = false;
+			for ( int i = 0; ( i < 10 ) && ( fileWritten == false ); ++i )
 			{
-				document.Save( fs );
+				try
+				{
+					using( FileStream fs = File.Open( configFileName, FileMode.Create, FileAccess.ReadWrite, FileShare.None ) )
+					{
+						document.Save( fs );
+						fileWritten = true;
+					}
+				}
+				catch ( IOException e )
+				{
+					// Sleep and try again.
+					log.Debug( e, "Error opening configuration file." );
+					Thread.Sleep( 100 );
+				}
+			}
+
+			if ( fileWritten == false )
+			{
+				throw new SimiasException( "Cannot write to configuration file." );
+			}
+			else
+			{
+				log.Info( "Configuration written to file. Service is up and running." );
 			}
 		}
 
