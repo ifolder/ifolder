@@ -218,6 +218,12 @@ namespace Simias.Gaim
 
 					member.IsOwner = true;
 
+					// Add on the SimiasURL so that the Location Provider can determine the
+					// POBoxUrl for the Gaim Domain
+					Simias.Storage.Property p = new Property("Gaim:SimiasURL", localUri.ToString());
+					p.LocalProperty = true;
+					member.Properties.AddProperty(p);
+
 					rDomain.Commit( new Node[] { rDomain, member } );
 
 					// Create the name mapping.
