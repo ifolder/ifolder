@@ -26,7 +26,7 @@ public class Report
 	{
 		if (Directory.Exists(dir))
 		{
-			String[] files = Directory.GetFiles(dir, "*.Test.xml");
+			String[] files = Directory.GetFiles(dir, "*.test.xml");
 
 			foreach(string file in files)
 			{

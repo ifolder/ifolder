@@ -9,6 +9,9 @@ package package-clean package-install package-uninstall:
 uninstall-local:
 	rm -rf $(DESTDIR)$(bindir)/.cstore
 
+installcheck-summary:
+	$(MAKE) -C src $@
+
 clean-local:
 	rm -rf stage *.suo
 

@@ -6,6 +6,9 @@ EXTRA_DIST = tools external
 package package-clean package-install package-uninstall:
 	$(MAKE) -C package $@
 
+installcheck-summary:
+	$(MAKE) -C src $@
+
 clean-local:
 	rm -rf stage *.suo
 
