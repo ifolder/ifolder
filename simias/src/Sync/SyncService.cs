@@ -128,6 +128,7 @@ namespace Simias.Sync
 		string			sessionID;
 		IEnumerator		nodeContainer;
 		bool			getAllNodes;
+		const int		MaxBuffSize = 1024 * 64;
         
 		/// <summary>
 		/// Finalizer.
@@ -776,12 +777,12 @@ namespace Simias.Sync
 		/// <param name="count">The number of bytes to write.</param>
 		public void Write(Stream inStream, long offset, int count)
 		{
-			byte []buffer = new byte[4096];
+			byte []buffer = new byte[MaxBuffSize];
 			inFile.WritePosition = offset;
 			int bytesWritten = 0;
 			while(bytesWritten < count)
 			{
-				int bytesRead = inStream.Read(buffer, 0, Math.Min(buffer.Length, (int)(count - bytesWritten)));
+				int bytesRead = inStream.Read(buffer, 0, Math.Min(MaxBuffSize, (int)(count - bytesWritten)));
 				if (bytesRead == 0)
 					throw new SimiasException("Missing Data");
 				inFile.Write(buffer, 0, bytesRead);

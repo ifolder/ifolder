@@ -1049,7 +1049,7 @@ namespace Simias.Sync.Http
 			for (int i = 0; i < count; ++i)
 			{	
 				BlockSegment bSeg = new BlockSegment(reader);
-				service.Copy(bSeg.Block * blockSize, bSeg.Offset, blockSize);
+				service.Copy(bSeg.StartBlock * blockSize, bSeg.Offset, blockSize * (bSeg.EndBlock - bSeg.StartBlock + 1));
 			}
 		}
 

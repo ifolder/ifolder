@@ -61,11 +61,15 @@ namespace Simias.Sync
 	class BlockSegment : FileSegment
 	{
 		/// <summary>
-		/// This is the server block for the unchanged segment of data.
+		/// This is the start block for the unchanged segment of data.
 		/// </summary>
-		public int				Block;
+		public int				StartBlock;
+		/// <summary>
+		/// The ending block in the range of contiguous blocks.
+		/// </summary>
+		public int				EndBlock;
 		
-		public static int		InstanceSize = (8 + 4);
+		public static int		InstanceSize = (8 + 4 + 4);
 		/// <summary>
 		/// Initialize a new Offset Segment.
 		/// </summary>
@@ -74,7 +78,8 @@ namespace Simias.Sync
 		public BlockSegment(long offset, int block)
 		{
 			this.Offset = offset;
-			this.Block = block;
+			this.StartBlock = block;
+			this.EndBlock = block;
 		}
 
 		/// <summary>
@@ -84,7 +89,31 @@ namespace Simias.Sync
 		public BlockSegment(BinaryReader reader)
 		{
 			Offset = reader.ReadInt64();
-			Block = reader.ReadInt32();
+			StartBlock = reader.ReadInt32();
+			EndBlock = reader.ReadInt32();
+		}
+
+		/// <summary>
+		/// Adds the segment to the array.  If this segment is contiguous with the last segment
+		/// combine them.
+		/// </summary>
+		/// <param name="segArray">The array to add the segment to.</param>
+		/// <param name="seg">The new segment to add.</param>
+		public static void AddToArray(ArrayList segArray, BlockSegment seg)
+		{
+			BlockSegment lastSeg;
+			if (segArray.Count > 0)
+			{
+				lastSeg = segArray[segArray.Count -1] as BlockSegment;
+				// Make sure the source and destination are contiguous.
+				if ((lastSeg.EndBlock + 1 == seg.StartBlock) 
+					&& ((lastSeg.Offset + (HashData.BlockSize * (lastSeg.EndBlock - lastSeg.StartBlock))) == seg.Offset))
+				{
+					lastSeg.EndBlock = seg.StartBlock;
+					return;
+				}
+			}
+			segArray.Add(seg);
 		}
 
 		/// <summary>
@@ -94,7 +123,8 @@ namespace Simias.Sync
 		public void Serialize(BinaryWriter writer)
 		{
 			writer.Write(Offset);
-			writer.Write(Block);
+			writer.Write(StartBlock);
+			writer.Write(EndBlock);
 		}
 	}
 
@@ -139,16 +169,10 @@ namespace Simias.Sync
 				if (seg.Offset - lastSeg.Length == lastSeg.Offset)
 				{
 					lastSeg.Length += seg.Length;
-				}
-				else
-				{
-					segArray.Add(seg);
+					return;
 				}
 			}
-			else
-			{
-				segArray.Add(seg);
-			}
+			segArray.Add(seg);
 		}
 	}
 
@@ -668,7 +692,7 @@ namespace Simias.Sync
 								}
 								// Save the matched block.
 								long blockOffset = ReadPosition - bytesRead + startByte;
-								copyArray.Add(new BlockSegment(blockOffset, match.BlockNumber));
+								BlockSegment.AddToArray(copyArray, new BlockSegment(blockOffset, match.BlockNumber));
 								
 								startByte = endByte + 1;
 								endByte = startByte + HashData.BlockSize - 1;
@@ -748,7 +772,7 @@ namespace Simias.Sync
 				if (segment is BlockSegment)
 				{
 					BlockSegment bs = (BlockSegment)segment;
-					sw.WriteLine("Found Match Offset = {0} Block = {1}", bs.Offset, bs.Block);
+					sw.WriteLine("Found Match Offset = {0} Block {1} - {2}", bs.Offset, bs.StartBlock, bs.EndBlock);
 				}
 				else
 				{
