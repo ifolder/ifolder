@@ -2588,7 +2588,7 @@ namespace Novell.FormsTrayApp
 				// Save the proxy settings.
 				ifWebService.SetupProxy(proxy.Text, (int)port.Value);
 			}
-			catch
+			catch (Exception ex)
 			{
 				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
 				mmb.Message = resourceManager.GetString("saveProxyError");
