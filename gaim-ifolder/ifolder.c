@@ -1319,6 +1319,8 @@ add_invitation_to_store(GtkListStore *store, Invitation *invitation)
 	GdkPixbuf *scale;
 	int scalesize = 15;
 	char *icon_path = NULL;
+	char *buddy_name = NULL;
+	GaimBuddy *buddy;
 
 g_print("add_invitation_to_store() entered\n");
 	if (!strcmp(invitation->collection_type, COLLECTION_TYPE_IFOLDER)) {
@@ -1355,11 +1357,20 @@ g_print("add_invitation_to_store() entered\n");
 	 * must be filled in with gtk_list_store_set() or gtk_list_store_set_value().
 	 */
 	gtk_list_store_append(store, &iter);
+	
+	/**
+	 * Try to get an Alias Name for the buddy before reverting to the sceenname.
+	 */
+	buddy = gaim_find_buddy(invitation->gaim_account, invitation->buddy_name);
+	buddy_name = (char *)gaim_buddy_get_alias(buddy);
+	if (!buddy_name || !strlen(buddy_name)) {
+		buddy_name = invitation->buddy_name;
+	}
 
 	/* Set the new row information with the invitation */
 	gtk_list_store_set(store, &iter,
 		INVITATION_TYPE_ICON_COL,	invitation_icon,
-		BUDDY_NAME_COL,			invitation->buddy_name,
+		BUDDY_NAME_COL,			buddy_name,
 		TIME_COL,				time_str,
 		COLLECTION_NAME_COL,	invitation->collection_name,
 		STATE_COL,				state_str,
