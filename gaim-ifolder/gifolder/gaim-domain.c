@@ -88,7 +88,7 @@ simias_sync_member_list()
 
 void
 simias_update_member(const char *account_name, const char *account_prpl_id,
-					 const char *buddy_name)
+					 const char *buddy_name, const char *machine_name)
 {
 	char *soap_url;
 	struct soap soap;
@@ -104,6 +104,7 @@ simias_update_member(const char *account_name, const char *account_prpl_id,
 	req.AccountName = (char *)account_name;
 	req.AccountProtocolID = (char *)account_prpl_id;
 	req.BuddyName = (char *)buddy_name;
+	req.MachineName = (char *)machine_name;
 	
 	init_gsoap(&soap);
 	soap_call___ns1__UpdateMember(&soap, soap_url, NULL, &req, &resp);
@@ -115,35 +116,48 @@ simias_update_member(const char *account_name, const char *account_prpl_id,
 	cleanup_gsoap(&soap);
 }
 
-char * simias_get_domain_user_id()
+/**
+ * Gets the machineName, userID, and simiasURL for the current Gaim Domain Owner.
+ *
+ * This method returns 0 on success.  If success is returned, the machineName,
+ * userID, and simiasURL parameters will have had new strings allocated to them
+ * and need to be freed.  If there is an error, the output parameters are
+ * invalid and do not need to be freed.
+ */
+int
+simias_get_user_info(char **machineName, char **userID, char **simiasURL)
 {
-	char *user_id = NULL;
 	char *soap_url;
 	struct soap soap;
-	struct _ns1__GetDomainUserID req;
-	struct _ns1__GetDomainUserIDResponse resp;
+	struct _ns1__GetUserInfo req;
+	struct _ns1__GetUserInfoResponse resp;
 	
 	soap_url = get_soap_url(FALSE);
 	if (!soap_url) {
-		return NULL;
+		return -1;
 	}
 	
 	init_gsoap(&soap);
-	soap_call___ns1__GetDomainUserID(&soap, soap_url, NULL, &req, &resp);
+	soap_call___ns1__GetUserInfo(&soap, soap_url, NULL, &req, &resp);
 	if (soap.error) {
 		cleanup_gsoap(&soap);
-		return NULL;
+		return -2;
 	}
 
-	if (resp.GetDomainUserIDResult)
+	if (resp.GetUserInfoResult != true_)
 	{
-		user_id = strdup(resp.GetDomainUserIDResult);
+		return -3;
 	}
+	
+	*machineName = strdup(resp.MachineName);
+	*userID = strdup(resp.UserID);
+	*simiasURL = strdup(resp.SimiasURL);
 	
 	cleanup_gsoap(&soap);
 
-	return user_id;
+	return 0;
 }
+
 
 /**
  * Utility functions for gSOAP

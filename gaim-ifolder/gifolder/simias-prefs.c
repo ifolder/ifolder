@@ -25,10 +25,17 @@
  *  distributed under the GPL.
  ***********************************************************************/
 
+#include "internal.h"
+
 #include "simias-prefs.h"
 
 /* Gaim Includes */
 #include "prefs.h"
+
+/**
+ * Forward Declarations
+ */
+static char * parse_host_name(char *localhost);
 
 /**
  * If the given preferences don't exist, create them with a default value.
@@ -36,21 +43,26 @@
 void
 simias_init_default_prefs()
 {
+	char localhost[129];
+	char * machine_name;
+
 	gaim_prefs_add_none(SIMIAS_PREF_PATH);
 
-	if (!gaim_prefs_exists(SIMIAS_PREF_SYNC_METHOD)) {
-		gaim_prefs_add_string(SIMIAS_PREF_SYNC_METHOD,
-				      SIMIAS_PREF_SYNC_METHOD_DEF);
+	if (!gaim_prefs_exists(SIMIAS_PREF_MACHINE_NAME)) {
+		/* Determine the machine's host name right here */
+		if (gethostname(localhost, 128) < 0)
+			sprintf(localhost, "UNKNOWN");
+			
+		machine_name = parse_host_name(localhost);
+	
+		gaim_prefs_add_string(SIMIAS_PREF_MACHINE_NAME,
+							 machine_name);
+		free(machine_name);
 	}
 
 	if (!gaim_prefs_exists(SIMIAS_PREF_SYNC_INTERVAL)) {
 		gaim_prefs_add_int(SIMIAS_PREF_SYNC_INTERVAL,
 				      SIMIAS_PREF_SYNC_INTERVAL_DEF);
-	}
-
-	if (!gaim_prefs_exists(SIMIAS_PREF_SYNC_PRUNE_MEMBERS)) {
-		gaim_prefs_add_bool(SIMIAS_PREF_SYNC_PRUNE_MEMBERS,
-							SIMIAS_PREF_SYNC_PRUNE_MEMBERS_DEF);
 	}
 
 	if (!gaim_prefs_exists(SIMIAS_PREF_PING_REPLY_TYPE)) {
@@ -69,3 +81,14 @@ simias_init_default_prefs()
 	}
 }
 
+static char *
+parse_host_name(char *localhost)
+{
+	char * host_name;
+	
+	host_name = strtok(localhost, ".");
+	if (host_name)
+		return strdup(host_name);
+	else
+		return strdup(localhost);
+}

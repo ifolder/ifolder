@@ -41,6 +41,8 @@
 /**
  * Non-public Functions
  */
+static int send_ping(GaimBuddy *recipient, const char *ping_type);
+static gboolean parse_simias_info(char *buffer, char **machineName, char **userID, char **simiasURL);
 static SIMIAS_MSG_TYPE get_possible_simias_msg_type(const char *buffer);
 
 static gboolean handle_ping_request(GaimAccount *account,
@@ -49,7 +51,6 @@ static gboolean handle_ping_request(GaimAccount *account,
 static gboolean handle_ping_response(GaimAccount *account,
 									 const char *sender,
 									 const char *buffer);
-static char * get_gaim_domain_user_id();
 
 /**
  * This function takes a generic message and sends it to the specified recipient
@@ -116,39 +117,35 @@ convert_url_to_public(const char *start_url)
 }
 
 /**
- * This function will send a message with the following format:
- * 
- * [simias:ping-request:<sender-user-id>:<simias-url>]
+ * This will either send a ping request or a ping response based
+ * on the ping_type parameter.
  */
-int
-simias_send_ping_req(GaimBuddy *recipient)
+static int
+send_ping(GaimBuddy *recipient, const char *ping_type)
 {
 	char msg[2048];
+	char *machineName;
+	char *userID;
 	char *simias_service_url;
 	char *public_url;
-	char *userID;
 
-	/* Get the Gaim Domain UserID */
-	userID = get_gaim_domain_user_id();
-	if (!userID)
+	/* Get the Gaim Domain User Info */
+	if (simias_get_user_info(&machineName, &userID, &simias_service_url) != 0)
 	{
-		/* FIXME: Simias must not be up!  Figure out what to do! */
-fprintf(stderr, "Simias is not running...could not get the Gaim Domain's UserID\n");
+		/* There was an error and none of the returns are valid */
 		return -23432;
 	}
-	
-	if (simias_get_local_service_url(&simias_service_url)) {
-		/* There was an error! */
-		return -1;
-	}
-	
+
 	public_url = convert_url_to_public(simias_service_url);
 	if (public_url) {
-		sprintf(msg, "%s%s:%s]", PING_REQUEST_MSG, userID, public_url);
+		sprintf(msg, "%s%s:%s:%s]", ping_type, machineName, userID, public_url);
 		free(public_url);
 	} else {
-		sprintf(msg, "%s%s:%s]", PING_REQUEST_MSG, userID, simias_service_url);
+		sprintf(msg, "%s%s:%s:%s]", ping_type, machineName, userID, simias_service_url);
 	}
+	
+	free(machineName);
+	free(userID);
 	free(simias_service_url);
 
 	return simias_send_msg(recipient, msg);
@@ -157,40 +154,23 @@ fprintf(stderr, "Simias is not running...could not get the Gaim Domain's UserID\
 /**
  * This function will send a message with the following format:
  * 
- * [simias:ping-response:<sender-user-id>:<simias-url>]
+ * [simias:ping-request:<sender-machine-name>:<sender-user-id>:<simias-url>]
+ */
+int
+simias_send_ping_req(GaimBuddy *recipient)
+{
+	return send_ping(recipient, PING_REQUEST_MSG);
+}
+
+/**
+ * This function will send a message with the following format:
+ * 
+ * [simias:ping-response:<sender-machine-name>:<sender-user-id>:<simias-url>]
  */
 int
 simias_send_ping_resp(GaimBuddy *recipient)
 {
-	char msg[2048];
-	char *simias_service_url;
-	char *public_url;
-	char *userID;
-
-	/* Get the Gaim Domain UserID */
-	userID = get_gaim_domain_user_id();
-	if (!userID)
-	{
-		/* FIXME: Simias must not be up!  Figure out what to do! */
-fprintf(stderr, "Simias is not running...could not get the Gaim Domain's UserID\n");
-		return -23432;
-	}
-	
-	if (simias_get_local_service_url(&simias_service_url)) {
-		/* There was an error! */
-		return -1;
-	}
-
-	public_url = convert_url_to_public(simias_service_url);
-	if (public_url) {
-		sprintf(msg, "%s%s:%s]", PING_RESPONSE_MSG, userID, public_url);
-		free(public_url);
-	} else {
-		sprintf(msg, "%s%s:%s]", PING_RESPONSE_MSG, userID, simias_service_url);
-	}
-	free(simias_service_url);
-
-	return simias_send_msg(recipient, msg);
+	return send_ping(recipient, PING_RESPONSE_MSG);
 }
 
 /**
@@ -277,6 +257,45 @@ get_possible_simias_msg_type(const char *buffer)
 }
 
 /**
+ * This function will parse the machineName,
+ * userID, and simiasURL from a ping message.
+ *
+ * The buffer should contain the part of the simias message
+ * AFTER the ping type, as shown here:
+ *
+ *     [simias:<ping-type>:<sender-machine-name>:<sender-user-id>:<simias-url>]
+ *                         ^
+ *
+ * Returns TRUE if all the fields could be parsed correctly, otherwise FALSE
+ * is returned.
+ */
+static gboolean
+parse_simias_info(char *buffer, char **machineName, char **userID, char **simiasURL)
+{
+	*machineName = strtok(buffer, ":");
+	if (!*machineName) {
+		fprintf(stderr, "parse_simias_info() couldn't parse the machine name\n");
+		return FALSE;
+	}
+
+	*userID = strtok(NULL, ":");
+	if (!*userID)
+	{
+		fprintf(stderr, "parse_simias_info() couldn't parse the user id\n");
+		return FALSE;
+	}
+
+	*simiasURL = strtok(NULL, "]");
+	if (!*simiasURL)
+	{
+		fprintf(stderr, "parse_simias_info() couldn't parse the simias url\n");
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+/**
  * This function checks to see if this is a valid ping request and then handles
  * it.  If we can tell that we've never established any type of connection with
  * the sender before, don't send a reply.  Otherwise, reply with our IP Address.
@@ -286,6 +305,7 @@ handle_ping_request(GaimAccount *account, const char *sender,
 					const char *buffer)
 {
 	GaimBuddy *buddy;
+	char *machine_name;
 	char *user_id;
 	char *simias_url;
 	int send_result;
@@ -304,18 +324,12 @@ fprintf(stderr, "handle_ping_request() %s -> %s entered\n",
 	/**
 	 * Start parsing the message at this point:
 	 * 
-	 * 	[simias:ping-request:<sender-user-id>:<simias-url>]
+	 * 	[simias:ping-request:<sender-machine-name>:<sender-user-id>:<simias-url>]
 	 *                       ^
 	 */
-	user_id = strtok((char *) buffer + strlen(PING_REQUEST_MSG), ":");
-	if (!user_id) {
-		fprintf(stderr, "handle_ping_request() couldn't parse the user id\n");
-		return FALSE;
-	}
-
-	simias_url = strtok(NULL, "]");
-	if (!simias_url) {
-		fprintf(stderr, "handle_ping_request() couldn't parse the simias-url\n");
+	if (!parse_simias_info((char *) buffer + strlen(PING_REQUEST_MSG),
+						  &machine_name, &user_id, &simias_url))
+	{
 		return FALSE;
 	}
 	
@@ -357,8 +371,12 @@ handle_ping_response(GaimAccount *account, const char *sender,
 					 const char *buffer)
 {
 	GaimBuddy *buddy;
+	char *machine_name;
 	char *user_id;
 	char *simias_url;
+	
+	char user_id_setting[512];
+	char simias_url_setting[512];
 	
 fprintf(stderr, "handle_ping_response() %s -> %s entered\n",
 		sender, gaim_account_get_username(account));
@@ -373,25 +391,21 @@ fprintf(stderr, "handle_ping_response() %s -> %s entered\n",
 	/**
 	 * Start parsing the message at this point:
 	 * 
-	 * 	[simias:ping-response:<sender-user-id>:<simias-url>]
+	 * 	[simias:ping-response:<sender-machine-name>:<sender-user-id>:<simias-url>]
 	 *                        ^
 	 */
-	user_id = strtok((char *) buffer + strlen(PING_RESPONSE_MSG), ":");
-	if (!user_id) {
-		fprintf(stderr, "handle_ping_response() couldn't parse the user-id\n");
+	if (!parse_simias_info((char *) buffer + strlen(PING_RESPONSE_MSG),
+						  &machine_name, &user_id, &simias_url))
+	{
 		return FALSE;
 	}
-
-	simias_url = strtok(NULL, "]");
-	if (!simias_url) {
-		fprintf(stderr, "handle_ping_response() couldn't parse the simias-url\n");
-		return FALSE;
-	}
-
+	
 	/* Update the buddy's simias-url in blist.xml */
-	buddy = gaim_find_buddy(account, sender);	
-	gaim_blist_node_set_string(&(buddy->node), "simias-user-id", user_id);
-	gaim_blist_node_set_string(&(buddy->node), "simias-url", simias_url);
+	buddy = gaim_find_buddy(account, sender);
+	sprintf(user_id_setting, "simias-user-id:%s", machine_name);
+	sprintf(simias_url_setting, "simias-url:%s", machine_name);
+	gaim_blist_node_set_string(&(buddy->node), user_id_setting, user_id);
+	gaim_blist_node_set_string(&(buddy->node), simias_url_setting, simias_url);
 
 	/**
 	 * Tell the Gaim Domain Sync Thread to go re-read the updated
@@ -399,13 +413,7 @@ fprintf(stderr, "handle_ping_response() %s -> %s entered\n",
 	 */
 	simias_update_member(gaim_account_get_username(account),
 						 gaim_account_get_protocol_id(account),
-						 sender);
+						 sender, machine_name);
 
 	return TRUE;
-}
-
-static char *
-get_gaim_domain_user_id()
-{
-	return simias_get_domain_user_id();
 }
