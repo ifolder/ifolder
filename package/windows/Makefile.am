@@ -25,7 +25,8 @@ ShutdowniFolder_CSFILES = $(srcdir)/ShutdowniFolder/ShutdowniFolder.cs $(srcdir)
 EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/ifolder-install.sln $(srcdir)/ifolder-msi/ifolder-msi.vdproj $(srcdir)/ShutdowniFolder/ShutdowniFolder.csproj $(ShutdowniFolder_CSFILES) $(srcdir)/ShutdowniFolder/App.ico
 
 RELEASE = 1
-MSI_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).msi
+CURDATE = $(shell date '+%Y%m%d')
+MSI_FILE = $(PACKAGE)-$(VERSION).$(CURDATE)-$(RELEASE).msi
 MSI_LOG_FILE = devenv-ifolder-msi.log
 
 .PHONY: package package-clean package-install package-uninstall ifolder
