@@ -1728,6 +1728,9 @@ namespace Novell.iFolder
 
 		private void CreateNewiFolder()
 		{
+			// Re-read the data in case a new domain has been created
+			ifdata.RefreshDomains();
+
 			if(ifdata.GetDomainCount() < 1)
 			{
 				iFolderMsgDialog dg = new iFolderMsgDialog(

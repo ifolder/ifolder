@@ -172,6 +172,18 @@ namespace Novell.iFolder
 
 
 				// Refresh the Domains
+				RefreshDomains();
+			}
+		}
+
+
+
+
+		public void RefreshDomains()
+		{
+			lock (typeof(iFolderData) )
+			{
+				// Refresh the Domains
 				curDomains.Clear();
 				DomainInformation[] domains = null;
 				try
@@ -195,7 +207,6 @@ namespace Novell.iFolder
 				}
 			}
 		}
-
 
 
 
