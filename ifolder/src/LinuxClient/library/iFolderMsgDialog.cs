@@ -158,10 +158,18 @@ public class iFolderMsgDialog : Dialog
 			
 			v.PackEnd(showDetailsScrolledWindow, false, false, 4);
 		}
+		else
+		{
+			showDetailsButton = null;
+			showDetailsScrolledWindow = null;
+		}
 
 		h.PackEnd(v);
 		h.ShowAll();
-		showDetailsScrolledWindow.Visible = false;
+		
+		if (details != null)
+			showDetailsScrolledWindow.Visible = false;
+
 		this.VBox.Add(h);
 		
 		switch(buttonSet)
