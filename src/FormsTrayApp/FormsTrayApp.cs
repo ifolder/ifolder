@@ -43,7 +43,7 @@ namespace Novell.iFolder.FormsTrayApp
 	/// </summary>
 	public class FormsTrayApp : Form
 	{
-		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(FormsTrayApp));
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(FormsTrayApp));
 		
         #region Class Members
 		private NotifyIcon notifyIcon1;
@@ -55,7 +55,6 @@ namespace Novell.iFolder.FormsTrayApp
 		private MenuItem menuItemBrowser;
 		private System.ComponentModel.IContainer components;
 
-		private SyncManager syncManager = null;
 		private Thread workerThread = null;
 
 		private Icon trayIcon;
@@ -72,10 +71,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private delegate void AnimateDelegate(int index);
 		private AnimateDelegate animateDelegate;
 
-//		private	EventPublisher publisher;
 		private Manager serviceManager;
-//		private SystemManager sysManager;
-		//System.Diagnostics.Process monitor;
 		//private const int waitTime = 3000;
 		#endregion
 
@@ -157,7 +153,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine("Exception caught: " + e.ToString());
+				logger.Debug(e, "Loading icons");
 				noTray = true;
 			}		
 
@@ -204,49 +200,10 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void menuItemExit_Click(object Sender, System.EventArgs e)
 		{
-			// Close the form, which closes the application.
-			//this.Close();
-
-			// Disable the exit menu item.
+			// Disable the exit menu item so it cannot be clicked again.
 			this.menuItemExit.Enabled = false;
 
-			Cursor.Current = Cursors.WaitCursor;
-			if ((workerThread != null) && workerThread.IsAlive)
-			{
-				workerThread.Abort();
-			}
-
-			if (syncManager != null)
-			{
-				syncManager.Stop();
-			}
-
-			serviceManager.StopServices();
-
-			// Wait for the services to stop.
-			while (!serviceManager.ServicesStopped)
-			{
-				Application.DoEvents();
-				Thread.Sleep(100);
-			}
-
-//			if (sysManager != null)
-//			{
-//				sysManager.StopServices();
-//			}
-
-			/*
-			if (monitor != null)
-			{
-				// Give the broker a chance to send the shutdown event.
-				Thread.Sleep(waitTime);
-				monitor.Kill();
-			}
-			*/
-
-			Cursor.Current = Cursors.Default;
-			//			traceForm.Close();
-			Application.Exit();
+			ShutdownTrayApp();
 		}
 
 		private void menuItemInviteWizard_Click(object Sender, System.EventArgs e)
@@ -279,42 +236,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void FormsTrayApp_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			Cursor.Current = Cursors.WaitCursor;
-			if ((workerThread != null) && workerThread.IsAlive)
-			{
-				workerThread.Abort();
-			}
-
-			if (syncManager != null)
-			{
-				syncManager.Stop();
-			}
-
-			serviceManager.StopServices();
-
-			// Wait for the services to stop.
-			while (!serviceManager.ServicesStopped)
-			{
-				Application.DoEvents();
-				Thread.Sleep(100);
-			}
-
-//			if (sysManager != null)
-//			{
-//				sysManager.StopServices();
-//			}
-
-			/*
-			if (monitor != null)
-			{
-				// Give the broker a chance to send the shutdown event.
-				Thread.Sleep(waitTime);
-				monitor.Kill();
-			}
-			*/
-
-			Cursor.Current = Cursors.Default;
-			Application.Exit();
+			ShutdownTrayApp();
 		}
 
 		private void traceForm_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -351,61 +273,67 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void FormsTrayApp_Load(object sender, System.EventArgs e)
 		{
-			// Start the event broker.
-			// TODO - check for currently running broker.
-			/*
-			monitor = new Process();
-			monitor.StartInfo.RedirectStandardInput = true;
-			monitor.StartInfo.RedirectStandardInput = true;
-			monitor.StartInfo.CreateNoWindow = true;
-			monitor.StartInfo.UseShellExecute = false;
-			monitor.StartInfo.FileName = "CsEventBroker.exe";
-			monitor.Start();
-			*/
-			Configuration conf = new Configuration();
-//			sysManager = new SystemManager(conf);
-//			sysManager.StartServices();
-
-            SimiasLogManager.Configure(conf);
-			
-			SyncProperties props = new SyncProperties(conf);
-			props.LogicFactory = typeof(SynkerA);
-			
-			serviceManager = new Manager(conf);
-			serviceManager.StartServices();
-			serviceManager.WaitForServicesStarted();
-
-			// Now that the services are started, enable the trace and exit menu items.
-			this.menuItemTracer.Enabled = true;
-			this.menuItemExit.Enabled = true;
-
-//			publisher = new EventPublisher(conf);
-
-			synkEvent = new AutoResetEvent(false);
-
-			animateDelegate = new AnimateDelegate(AnimateIcon);
-
-			// Start the icon animation worker thread.
-			if (workerThread == null)
+			try
 			{
-				Console.WriteLine("Creating worker thread");
-				workerThread = new Thread(new ThreadStart(AnimateWorker));
-				Console.WriteLine("Starting worker thread");
-				workerThread.Start();
-			}
+				Configuration conf = new Configuration();
 
-			// Create the trace window ... initially hidden.
-			traceForm = new MyTraceForm();
-			traceForm.Closing += new System.ComponentModel.CancelEventHandler(traceForm_Closing);
-
-			// Trace messages will immediately be written, so we need the window handle to be created.
-			traceForm.CreateControl();
+				SimiasLogManager.Configure(conf);
 			
-			// sync logging
-			Log.SetLevel("verbose");
+				SyncProperties props = new SyncProperties(conf);
+				props.LogicFactory = typeof(SynkerA);
+			
+				serviceManager = new Manager(conf);
+				serviceManager.StartServices();
 
-			// For some reason the handle isn't really created until it is referenced.
-			IntPtr handle = traceForm.Handle;
+				// Wait for the services to start.
+				while (!serviceManager.ServiceStarted)
+				{
+					Application.DoEvents();
+					Thread.Sleep(100);
+				}
+
+				// Now that the services are started, enable the exit menu item.
+				this.menuItemExit.Enabled = true;
+
+				synkEvent = new AutoResetEvent(false);
+
+				animateDelegate = new AnimateDelegate(AnimateIcon);
+
+				// Start the icon animation worker thread.
+				if (workerThread == null)
+				{
+					Console.WriteLine("Creating worker thread");
+					workerThread = new Thread(new ThreadStart(AnimateWorker));
+					Console.WriteLine("Starting worker thread");
+					workerThread.Start();
+				}
+
+				// Create the trace window ... initially hidden.
+				traceForm = new MyTraceForm();
+				traceForm.Closing += new System.ComponentModel.CancelEventHandler(traceForm_Closing);
+
+				// Trace messages will immediately be written, so we need the window handle to be created.
+				traceForm.CreateControl();
+
+				// For some reason the handle isn't really created until it is referenced.
+				IntPtr handle = traceForm.Handle;
+
+				// Enable the tracer menu item.
+				this.menuItemTracer.Enabled = true;
+
+				// sync logging
+				Log.SetLevel("verbose");
+			}
+			catch (SimiasException ex)
+			{
+				ex.LogFatal();
+				CleanupTrayApp();
+			}
+			catch (Exception ex)
+			{
+				logger.Fatal(ex, "Initializing tray app");
+				CleanupTrayApp();
+			}
 		}
 
 		private void syncManager_ChangedState(SyncManagerStates state)
@@ -434,6 +362,7 @@ namespace Novell.iFolder.FormsTrayApp
 		}
 		#endregion
 
+		#region Private Methods
 		private void InitializeComponent()
 		{
 			//System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(FormsTrayApp));
@@ -464,6 +393,56 @@ namespace Novell.iFolder.FormsTrayApp
 			Console.WriteLine("Leaving AnimateWorker");
 		}
 
+		private void ShutdownTrayApp()
+		{
+			Cursor.Current = Cursors.WaitCursor;
+
+			try
+			{
+				if ((workerThread != null) && workerThread.IsAlive)
+				{
+					workerThread.Abort();
+				}
+
+				// Stop the services.
+				serviceManager.StopServices();
+
+				// Wait for the services to stop.
+				while (!serviceManager.ServicesStopped)
+				{
+					Application.DoEvents();
+					Thread.Sleep(100);
+				}
+			}
+			catch (SimiasException e)
+			{
+				e.LogError();
+			}
+			catch (Exception e)
+			{
+				logger.Debug(e, "Shutting down");
+			}
+
+			Cursor.Current = Cursors.Default;
+			Application.Exit();
+		}
+
+		private void CleanupTrayApp()
+		{
+			MessageBox.Show("A fatal error was encountered during iFolder initialization.  Please see the log file for additional information", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+			if (serviceManager != null)
+			{
+				serviceManager.StopServices();
+				while (!serviceManager.ServicesStopped)
+				{
+					Application.DoEvents();
+					Thread.Sleep(100);
+				}
+			}
+		}
+		#endregion
+
+		#region Public Methods
 		public void AnimateWorker()
 		{
 			int i = 0;
@@ -486,5 +465,6 @@ namespace Novell.iFolder.FormsTrayApp
 				}
 			}
 		}
+		#endregion
 	}
 }
