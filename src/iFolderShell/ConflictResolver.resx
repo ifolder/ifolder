@@ -826,11 +826,11 @@
 	<data name="&gt;&gt;saveLocal.ZOrder">
 		<value>0</value>
 	</data>
-	<data name="localSize.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-		<value>False</value>
-	</data>
 	<data name="localSize.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
+	</data>
+	<data name="localSize.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
 	</data>
 	<data name="localSize.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
@@ -2284,9 +2284,6 @@
 	<data name="&gt;&gt;versionsPanel.ZOrder">
 		<value>0</value>
 	</data>
-	<data name="serverPanel.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-		<value>False</value>
-	</data>
 	<data name="serverPanel.SnapToGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>True</value>
 	</data>
@@ -2295,6 +2292,9 @@
 	</data>
 	<data name="serverPanel.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
+	</data>
+	<data name="serverPanel.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
 	</data>
 	<data name="serverPanel.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
@@ -2503,6 +2503,9 @@
 	<data name="$this.GridSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 		<value>8, 8</value>
 	</data>
+	<data name="$this.Name">
+		<value>ConflictResolver</value>
+	</data>
 	<data name="$this.DrawGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>True</value>
 	</data>
@@ -2514,9 +2517,6 @@
 	</data>
 	<data name="$this.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
-	</data>
-	<data name="$this.Name">
-		<value>ConflictResolver</value>
 	</data>
 	<data name="$this.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value />
@@ -2561,7 +2561,7 @@
 		<value />
 	</data>
 	<data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-		<value>Inherit</value>
+		<value>NoControl</value>
 	</data>
 	<data name="$this.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 		<value>0, 0</value>
@@ -2579,7 +2579,7 @@
 		<value>False</value>
 	</data>
 	<data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-		<value>WindowsDefaultLocation</value>
+		<value>CenterParent</value>
 	</data>
 	<data name="$this.Text">
 		<value>iFolder Conflict Resolver</value>
