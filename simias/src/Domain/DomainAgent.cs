@@ -252,11 +252,9 @@ namespace Simias.Domain
 	public class DomainAgent
 	{
 		#region Class Members
-		private static string defaultScheme = "http";
-
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(DomainAgent));
 		private Store store = Store.GetStore();
-		private string domainName;
+		private DomainConfig domainConfiguration;
 		#endregion
 
 		#region Constructors
@@ -265,7 +263,7 @@ namespace Simias.Domain
 		/// </summary>
 		public DomainAgent()
 		{
-			this.domainName = store.GetDomain(store.DefaultDomain).Name;
+			domainConfiguration = new DomainConfig(store.GetDomain(store.DefaultDomain).Name);
 		}
 
 		/// <summary>
@@ -283,16 +281,16 @@ namespace Simias.Domain
 		/// <param name="domainName"></param>
 		public DomainAgent(string domainName)
 		{
-			this.domainName = domainName;
+			domainConfiguration = new DomainConfig(domainName);
 		}
 		#endregion
 
 		/// <summary>
 		/// Attach to an enterprise system.
 		/// </summary>
-		/// <param name="host"></param>
-		/// <param name="user"></param>
-		/// <param name="password"></param>
+		/// <param name="host">Url of the enterprise server.</param>
+		/// <param name="user">User to provision on the server.</param>
+		/// <param name="password">Password to validate user.</param>
 		public void Attach(string host, string user, string password)
 		{
 			// Set the url to where the enterprise server is.
@@ -304,7 +302,6 @@ namespace Simias.Domain
 
 			// get domain info
 			DomainInfo domainInfo = domainService.GetDomainInfo();
-			domainName = domainInfo.Name;
 
 			// provision user
 			ProvisionInfo provisionInfo = domainService.ProvisionUser(user, password);
@@ -339,8 +336,8 @@ namespace Simias.Domain
 				}
 
 				// Set the host and port number in the configuration file.
-				DomainConfig dConf = new DomainConfig(domainInfo.Name);
-				dConf.SetAttributes(domain.ID, domain.Description, uhost, true);
+				domainConfiguration = new DomainConfig(domainInfo.Name);
+				domainConfiguration.SetAttributes(domain.ID, domain.Description, uhost, true);
 			}
 			catch(Exception e)
 			{
@@ -386,15 +383,12 @@ namespace Simias.Domain
 		/// <summary>
 		/// Create the master on the server.
 		/// </summary>
-		/// <param name="collection"></param>
+		/// <param name="collection">Collection to create on the enterprise server.</param>
 		public void CreateMaster(SyncCollection collection)
 		{
-			// Get the configuration information for this domain.
-			DomainConfig dConf = new DomainConfig(domainName);
-
 			// Construct the web client.
 			DomainService domainService = new DomainService();
-			domainService.Url = dConf.ServiceUrl.ToString() + "/DomainService.asmx";
+			domainService.Url = domainConfiguration.ServiceUrl.ToString() + "/DomainService.asmx";
 
 			string rootID = null;
 			string rootName = null;
@@ -417,19 +411,30 @@ namespace Simias.Domain
 			collection.Commit();
 		}
 
+		/// <summary>
+		/// Deletes the specified collection off of the enterprise server.
+		/// </summary>
+		/// <param name="collection">Collection to delete from the server.</param>
+		public void DeleteMaster(SyncCollection collection)
+		{
+			// Construct the web client.
+			DomainService domainService = new DomainService();
+			domainService.Url = domainConfiguration.ServiceUrl.ToString() + "/DomainService.asmx";
+			domainService.DeleteMaster(collection.ID);
+		}
+
 		#region Properties
 		/// <summary>
 		/// Domain service URL
 		/// </summary>
 		public Uri ServiceUrl
 		{
-			get { return new DomainConfig(domainName).ServiceUrl; }
+			get { return domainConfiguration.ServiceUrl; }
 			set 
 			{ 
-				DomainConfig dConf = new DomainConfig(domainName);
-				dConf.Scheme = value.Scheme;
-				dConf.Host = value.Host;
-				dConf.Port = value.Port;
+				domainConfiguration.Scheme = value.Scheme;
+				domainConfiguration.Host = value.Host;
+				domainConfiguration.Port = value.Port;
 			}
 		}
 
@@ -438,8 +443,8 @@ namespace Simias.Domain
 		/// </summary>
 		public bool Enabled
 		{
-			get { return new DomainConfig(domainName).Enabled; }
-			set { new DomainConfig(domainName).Enabled = value; }
+			get { return domainConfiguration.Enabled; }
+			set { domainConfiguration.Enabled = value; }
 		}
 		#endregion
 	}

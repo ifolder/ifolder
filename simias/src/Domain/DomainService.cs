@@ -97,6 +97,24 @@ public class DomainService : System.Web.Services.Protocols.SoapHttpClientProtoco
         object[] results = this.EndInvoke(asyncResult);
         return ((string)(results[0]));
     }
+    
+    /// <remarks/>
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/ifolder/domain/DeleteMaster", RequestNamespace="http://novell.com/ifolder/domain", ResponseNamespace="http://novell.com/ifolder/domain", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public void DeleteMaster(string id) {
+        this.Invoke("DeleteMaster", new object[] {
+                    id});
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginDeleteMaster(string id, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("DeleteMaster", new object[] {
+                    id}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public void EndDeleteMaster(System.IAsyncResult asyncResult) {
+        this.EndInvoke(asyncResult);
+    }
 }
 
 /// <remarks/>
