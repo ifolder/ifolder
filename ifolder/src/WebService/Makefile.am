@@ -3,10 +3,10 @@ export MONO_PATH := $(MONO_PATH)
 
 iFolderWebService_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolderService.cs $(srcdir)/iFolder.cs $(srcdir)/DiskSpace.cs $(srcdir)/iFolderUser.cs $(srcdir)/iFolderSettings.cs $(srcdir)/Conflict.cs $(srcdir)/SyncSize.cs
 iFolderWebService_CSFILES := $(subst /,$(SEP),$(iFolderWebService_CSFILES1))
-iFolderWebService_INCLUDES = 
-iFolderWebService_RESOURCES =  
+iFolderWebService_INCLUDES =
+iFolderWebService_RESOURCES =
 iFolderWebService_FLAGS = $(CSC_LIBFLAG)
-iFolderWebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll
+iFolderWebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasClient.dll
 iFolderWebService_LIBPATH = $(LOG4NET_DIR)
 
 EXTRA_DIST = iFolder.asmx $(iFolderWebService_CSFILES) $(srcdir)/iFolderWebService.wsdl
@@ -14,7 +14,7 @@ EXTRA_DIST = iFolder.asmx $(iFolderWebService_CSFILES) $(srcdir)/iFolderWebServi
 all: Novell.iFolder.Web.dll
 
 Novell.iFolder.Web.dll: $(iFolderWebService_CSFILES) $(iFolderWebService_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderWebService_FLAGS) $(SIMIAS_LIBS) $(iFolderWebService_LIBS:%=/r:%) $(iFolderWebService_LIBPATH:%=/lib:%) $(iFolderWebService_RESOURCES:%=$(ICON_FLAG)%) $(iFolderWebService_CSFILES) /doc:iFolderWebService.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderWebService_FLAGS) $(SIMIAS_LIBS) $(SIMIAS_CLIENT_LIBS) $(iFolderWebService_LIBS:%=/r:%) $(iFolderWebService_LIBPATH:%=/lib:%) $(iFolderWebService_RESOURCES:%=$(ICON_FLAG)%) $(iFolderWebService_CSFILES) /doc:iFolderWebService.doc.xml
 
 if DEBUG
 if WINDOWS
@@ -31,14 +31,14 @@ install-exec-local: Novell.iFolder.Web.dll $(DATA_FILES)
 uninstall-local:
 	cd $(DESTDIR)$(webdir); rm -f iFolder.asmx $(DEBUG_FILES)
 	cd $(DESTDIR)$(webbindir); rm -f Novell.iFolder.Web.dll $(DEBUG_FILES)
-    
+
 installcheck-local: install
 	
 CLEAN_FILES = Novell.iFolder.Web.dll Novell.iFolder.Web.doc.xml
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 
