@@ -10,7 +10,8 @@ all clean:
 
 package: $(RPM_FILE) $(SRPM_FILE)
  
-$(RPM_FILE) $(SRPM_FILE): addressbook.spec $(top_srcdir)/$(PACKAGE)-$(VERSION).tar.gz
+$(RPM_FILE) $(SRPM_FILE): addressbook.spec
+	cd $(top_srcdir); make dist
 	rm -rf RPM
 	mkdir RPM
 	echo %_topdir `pwd`/RPM > $(HOME)/.rpmmacros
@@ -24,9 +25,6 @@ $(RPM_FILE) $(SRPM_FILE): addressbook.spec $(top_srcdir)/$(PACKAGE)-$(VERSION).t
 	rpmbuild -ba --target=$(target_triplet) RPM/SPECS/addressbook.spec
 	cp RPM/RPMS/*/$(RPM_FILE) .
 	cp RPM/SRPMS/$(SRPM_FILE) .
-
-$(top_srcdir)/$(PACKAGE)-$(VERSION).tar.gz:
-	cd $(top_srcdir); make dist
 
 package-install: $(RPM_FILE)
 	su -c "rpm -Uvh $(RPM_FILE)"
