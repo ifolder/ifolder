@@ -518,15 +518,27 @@ namespace Novell.iFolderCom
 		/// <param name="path">The path of the iFolder.</param>
 		public void NewiFolderWizard([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
-			Configuration config = Configuration.GetConfiguration();
-			string showWizard = config.Get("iFolderShell", "Show wizard", "true");
-			if (showWizard == "true")
+			connectToWebService();
+			try
 			{
-				NewiFolder newiFolder = new NewiFolder();
-				newiFolder.FolderName = path;
-				newiFolder.LoadPath = dllPath;
-				newiFolder.Show();
+				iFolderSettings ifSettings = ifWebService.GetSettings();
+				if (ifSettings.DisplayConfirmation)
+				{
+					NewiFolder newiFolder = new NewiFolder();
+					newiFolder.FolderName = path;
+					newiFolder.LoadPath = dllPath;
+					newiFolder.iFolderWebService = ifWebService;
+					newiFolder.Show();
+				}
 			}
+			catch (WebException e)
+			{
+				if (e.Status == WebExceptionStatus.ConnectFailure)
+				{
+					ifWebService = null;
+				}
+			}
+			catch {}
 		}
 
 		/// <summary>

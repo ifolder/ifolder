@@ -1537,13 +1537,14 @@ namespace Novell.FormsTrayApp
 
 				noProxy.Checked = !useProxy.Checked;*/
 			}
-			catch (SimiasException ex)
+			catch (WebException ex)
 			{
-				ex.LogError();
+				// TODO: display message
+				//MessageBox.Show(ex.Message);
 			}
 			catch (Exception ex)
 			{
-				//logger.Debug(ex, "Initializing");
+				// TODO: display message.
 			}
 		}
 

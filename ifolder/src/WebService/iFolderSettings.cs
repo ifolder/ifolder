@@ -67,13 +67,13 @@ namespace Novell.iFolder.Web
 			
 			Configuration config = Configuration.GetConfiguration();
 			bool defaultValue = true;
-			DisplayConfirmation = config.Get("iFolderUI", "Display confirmation", defaultValue.ToString()) == defaultValue.ToString();
+			DisplayConfirmation = config.Get("iFolderUI", "Display Confirmation", defaultValue.ToString()) == defaultValue.ToString();
 		}
 
 		public static void SetDisplayConfirmation(bool displayConfirmation)
 		{
 			Configuration config = Configuration.GetConfiguration();
-			config.Set("iFolderUI", "Display confirmation", displayConfirmation.ToString());
+			config.Set("iFolderUI", "Display Confirmation", displayConfirmation.ToString());
 		}
 	}
 }
