@@ -35,6 +35,8 @@
 #include "connection.h"
 #include "network.h"
 #include <time.h>
+#include "gtkprefs.h"
+#include "gtkutils.h"
 
 #include "debug.h"
 #include "prefs.h"
@@ -58,6 +60,24 @@
 #define INVITATION_REQUEST_ACCEPT_MSG	"[simias:invitation-request-accept:"
 #define PING_REQUEST_MSG		"[simias:ping-request:"
 #define PING_RESPONSE_MSG		"[simias:ping-response:"
+
+#define SIMIAS_PREF_PATH "/plugins/gtk/simias"
+
+#define SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS "/plugins/gtk/simias/notify_receive_new_invitations"
+#define SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS_DEF TRUE
+
+#define SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS "/plugins/gtk/simias/notify_buddies_accept_invitations"
+#define SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS_DEF TRUE
+
+#define SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS "/plugins/gtk/simias/notify_buddies_reject_invitations"
+#define SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS_DEF TRUE
+
+#define SIMIAS_PREF_NOTIFY_ERRORS "/plugins/gtk/simias/notify_on_errors"
+#define SIMIAS_PREF_NOTIFY_ERRORS_DEF FALSE
+
+#define SIMIAS_PREF_SIMIAS_AUTO_START "/plugins/gtk/simias/auto_start_simias"
+#define SIMIAS_PREF_SIMIAS_AUTO_START_DEF FALSE
+
 
 /****************************************************
  * Type Definitions                                 *
@@ -85,6 +105,10 @@ typedef enum
  *
  * STATE_SENT: The invitation has been sent to the buddy but they haven't
  * replied yet.
+ * 
+ * STATE_REJECTED_PENDING: The user rejected an incoming invitation, but the
+ * buddy wasn't online to actually send the reply message so it's pending and
+ * will be sent as soon as the buddy is online.
  *
  * STATE_REJECTED: The buddy replied and rejected the invitation.  This
  * information should be kept around so we don't automatically resend the
@@ -215,6 +239,7 @@ static char * fill_state_str(char *state_str, INVITATION_STATE state);
 
 static void add_invitation_to_store(GtkListStore *store,
 									Invitation *invitation);
+static void init_default_prefs();
 static void init_invitation_stores();
 static void add_new_trusted_buddy(GtkListStore *store, GaimBuddy *buddy,
 									char *ip_address, char *ip_port);
@@ -1158,6 +1183,51 @@ g_print("add_invitation_to_store() entered\n");
 }
 
 /**
+ * If the given preferences don't exist, create them with a default value.
+ */
+static void
+init_default_prefs()
+{
+/*
+	gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS,
+						SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS_DEF);
+	gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS,
+						SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS_DEF);
+	gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS,
+						SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS_DEF);
+	gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_ERRORS,
+						SIMIAS_PREF_NOTIFY_ERRORS_DEF);
+	gaim_prefs_add_bool(SIMIAS_PREF_SIMIAS_AUTO_START,
+						SIMIAS_PREF_SIMIAS_AUTO_START_DEF);
+*/
+	gaim_prefs_add_none(SIMIAS_PREF_PATH);
+	if (!gaim_prefs_exists(SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS)) {
+		gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS,
+							SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS_DEF);
+	}
+
+	if (!gaim_prefs_exists(SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS)) {
+		gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS,
+							SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS_DEF);
+	}
+
+	if (!gaim_prefs_exists(SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS)) {
+		gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS,
+							SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS_DEF);
+	}
+
+	if (!gaim_prefs_exists(SIMIAS_PREF_NOTIFY_ERRORS)) {
+		gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_ERRORS,
+							SIMIAS_PREF_NOTIFY_ERRORS_DEF);
+	}
+
+	if (!gaim_prefs_exists(SIMIAS_PREF_SIMIAS_AUTO_START)) {
+		gaim_prefs_add_bool(SIMIAS_PREF_SIMIAS_AUTO_START,
+							SIMIAS_PREF_SIMIAS_AUTO_START_DEF);
+	}
+}
+
+/**
  * When Gaim first starts up, load the invitation information from a data file
  * and populate the in_inv_store and out_inv_store.
  */
@@ -1935,7 +2005,10 @@ g_print("handle_invitation_request() entered\n");
 	}
 	
 	/* FIXME: Change this to a tiny bubble notification instead of popping up the big Invitations Dialog */
-	show_invitations_window();
+	/* Check the notify preference */
+	if (gaim_prefs_get_bool(SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS)) {
+		show_invitations_window();
+	}
 	
 	return TRUE;	/* Message was handled correctly */
 }
@@ -2047,7 +2120,9 @@ handle_invitation_request_deny(GaimAccount *account,
 	/* FIXME: Add more interaction with Simias as described in the notes of the function */
 
 	/* FIXME: Change this to a tiny bubble notification instead of popping up the big Invitations Dialog */
-	show_invitations_window();
+	if (gaim_prefs_get_bool(SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS)) {
+		show_invitations_window();
+	}
 	
 	return TRUE;	/* Message was handled correctly */
 }
@@ -2190,7 +2265,9 @@ handle_invitation_request_accept(GaimAccount *account,
 	/* FIXME: Add more interaction with Simias as described in the notes of the function */
 
 	/* FIXME: Change this to a tiny bubble notification instead of popping up the big Invitations Dialog */
-	show_invitations_window();
+	if (gaim_prefs_get_bool(SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS)) {
+		show_invitations_window();
+	}
 	
 	return TRUE;	/* Message was handled correctly */
 }
@@ -2524,6 +2601,9 @@ plugin_load(GaimPlugin *plugin)
 	 * and implement the callback function.
 	 */
 
+	/* Make sure the preferences are created if they don't exist */
+	init_default_prefs();
+
 	/* FIXME: Load up the GtkListStore's for incoming and outgoing invitations */
 	init_invitation_stores();
 	
@@ -2541,7 +2621,7 @@ plugin_load(GaimPlugin *plugin)
  * 
  * [ ] Notify me when:
  *     [ ] I receive a new invitation
- *     [ ] Buddies accepts my invitations
+ *     [ ] Buddies accept my invitations
  *     [ ] Buddies reject my invitations
  *     [ ] An error occurs
  * 
@@ -2550,21 +2630,40 @@ plugin_load(GaimPlugin *plugin)
 static GtkWidget *
 get_config_frame(GaimPlugin *plugin)
 {
-	GtkWidget *main_vbox;
+	GtkWidget *ret;
+	GtkWidget *vbox;
+	GtkWidget *label;
 	GtkWidget *show_invitations_button;
+	ret = gtk_vbox_new(FALSE, 18);
+	gtk_container_set_border_width (GTK_CONTAINER (ret), 12);
 
-	main_vbox = gtk_vbox_new(FALSE, 10);
-	gtk_container_set_border_width(GTK_CONTAINER(main_vbox), 12);
-
+	vbox = gaim_gtk_make_frame(ret, _("Notify me when:"));
+	gaim_gtk_prefs_checkbox(_("I receive a new invitation"),
+	                SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS, vbox);
+	gaim_gtk_prefs_checkbox(_("Buddies accept my invitations"),
+	                SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS, vbox);
+	gaim_gtk_prefs_checkbox(_("Buddies reject my invitations"),
+	                SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS, vbox);
+	gaim_gtk_prefs_checkbox(_("An error occurs"),
+	                SIMIAS_PREF_NOTIFY_ERRORS, vbox);
+	label = gtk_label_new("(Not implemented yet)");
+	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
+	
+	vbox = gaim_gtk_make_frame (ret, _("Simias"));
+	gaim_gtk_prefs_checkbox(_("_Automatically start Simias if needed"),
+	                SIMIAS_PREF_SIMIAS_AUTO_START, vbox);
+	label = gtk_label_new("(Not implemented yet)");
+	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
+	
 	show_invitations_button =
 		gtk_button_new_with_mnemonic(_("Show _Invitations"));
-	gtk_box_pack_end(GTK_BOX(main_vbox),
+	gtk_box_pack_end(GTK_BOX(ret),
 			show_invitations_button, FALSE, FALSE, 0);
 	g_signal_connect(G_OBJECT(show_invitations_button), "clicked",
 		G_CALLBACK(show_invitations_window), NULL);
 
-	gtk_widget_show_all(main_vbox);
-	return main_vbox;
+	gtk_widget_show_all(ret);
+	return ret;
 }
 
 
