@@ -358,6 +358,7 @@ namespace Novell.AddressBook.UI.gtk
 				Member member = pobox.GetCurrentMember();
 				subscription.FromName = member.Name;
 				subscription.FromIdentity = member.UserID;
+				subscription.CollectionRoot = CollectionPathEntry.Text;
 				pobox.Commit(subscription);
 			}
 			catch(SimiasException ex)

@@ -45,6 +45,8 @@ namespace Novell.AddressBook.UI.gtk
 		[Glade.Widget] private TreeView		ContactTreeView = null;
 		[Glade.Widget] private Button		addSharingButton = null;
 		[Glade.Widget] private Button		removeSharingButton = null;
+		[Glade.Widget] private Button		AcceptButton = null;
+		[Glade.Widget] private Button		DeclineButton = null;
 		[Glade.Widget] private RadioButton	FullControlRB = null;
 		[Glade.Widget] private RadioButton	ReadWriteRB = null;
 		[Glade.Widget] private RadioButton	ReadOnlyRB = null;
@@ -191,6 +193,8 @@ namespace Novell.AddressBook.UI.gtk
 			}
 			// Always set remove to false until someone is selected
 			removeSharingButton.Sensitive = false;
+			AcceptButton.Sensitive = false;
+			DeclineButton.Sensitive = false;
 		}
 
 		private void ContactCellTextDataFunc (Gtk.TreeViewColumn tree_column,
@@ -286,6 +290,9 @@ namespace Novell.AddressBook.UI.gtk
 
 		private void on_selection_changed(object o, EventArgs args)
 		{
+			AcceptButton.Sensitive = false;
+			DeclineButton.Sensitive = false;
+
 			TreeSelection tSelect = ContactTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
 			{
@@ -303,9 +310,19 @@ namespace Novell.AddressBook.UI.gtk
 				Member curMember = collection.GetCurrentMember();
 				Access.Rights curRights = 0;
 				if(slh.Member != null)
+				{
 					curRights = slh.Member.Rights;
+				}
 				else if(slh.Subscription != null)
+				{
 					curRights = slh.Subscription.SubscriptionRights;
+					if(slh.Subscription.SubscriptionState == 
+							SubscriptionStates.Pending)
+					{
+						AcceptButton.Sensitive = true;
+						DeclineButton.Sensitive = true;
+					}
+				}
 
 				if( (collection.IsShareable(curMember) != true) ||
 					( (slh.Member != null) && 
@@ -343,67 +360,16 @@ namespace Novell.AddressBook.UI.gtk
 
 		private void on_add_sharing(object o, EventArgs args) 
 		{
-/*
-			try
+			ContactPicker cp = new ContactPicker();
+			cp.TransientFor = (Gtk.Window) SharingVBox.Toplevel;
+			cp.AddrBookManager = abMan;
+			if(cp.Run() == -5)
 			{
-				owner = dAddrBook.GetContact(ifolder.OwnerIdentity);
-				if(owner.GetPreferredName() == null)
-					editContact = true;
-				if(owner.EMail == null)
-					editContact = true;
-			}
-			catch(Exception e)
-			{
-				editContact = true;
-			}
-
-			if(editContact)
-			{
-				MessageDialog md = new MessageDialog(null,
-						DialogFlags.DestroyWithParent | DialogFlags.Modal,
-						MessageType.Error,
-						ButtonsType.YesNo,
-						"Your contact information does not contain your preferred name and email address.  You will not be able to invite others to your iFolder without this information.  Would you like to edit that information now?");
-				int result = md.Run();
-				md.Hide();
-
-				if(result == -8)
+				foreach(Contact c in cp.Contacts)
 				{
-					if(owner == null)
-					{
-						MessageDialog med = new MessageDialog(null,
-								DialogFlags.DestroyWithParent | DialogFlags.Modal,
-								MessageType.Error,
-								ButtonsType.Close,
-								"Your identity in iFolder is corrupt and you will not be able to share with other people.  Please contact Brady Anderson (banderson@novell.com) for assistance.");
-						med.Run();
-						med.Hide();
-						return;
-					}
-					else
-					{
-						ContactEditor ce = new ContactEditor();
-						ce.TransientFor = PropDialog;
-						ce.Contact = owner;
-						ce.Run();
-						owner.Commit();
-					}
+					ShareWithContact(c);
 				}
 			}
-			else
-			{
-*/
-				ContactPicker cp = new ContactPicker();
-				cp.TransientFor = (Gtk.Window) SharingVBox.Toplevel;
-				cp.AddrBookManager = abMan;
-				if(cp.Run() == -5)
-				{
-					foreach(Contact c in cp.Contacts)
-					{
-						ShareWithContact(c);
-					}
-				}
-//			}
 		}
 
 		public void ShareWithContact(Contact c)
@@ -488,6 +454,55 @@ namespace Novell.AddressBook.UI.gtk
 		private void on_fullcontrol_clicked(object o, EventArgs args)
 		{
 			SetCurrentAccessRights(Access.Rights.Admin);
+		}
+
+		private void on_decline_clicked(object o, EventArgs args)
+		{
+			TreeSelection tSelect = ContactTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				if(tModel != null)
+					tModel = null;
+				SharingListHolder slh = (SharingListHolder) 
+					ContactTreeStore.GetValue(iter,0);
+
+				if(slh.Subscription != null)
+				{
+					slh.Subscription.Decline();
+					pobox.Commit(slh.Subscription);
+				}
+			}
+			AcceptButton.Sensitive = false;
+			DeclineButton.Sensitive = false;
+		}
+
+		private void on_accept_clicked(object o, EventArgs args)
+		{
+			TreeSelection tSelect = ContactTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				if(tModel != null)
+					tModel = null;
+				SharingListHolder slh = (SharingListHolder) 
+					ContactTreeStore.GetValue(iter,0);
+
+				if(slh.Subscription != null)
+				{
+					slh.Subscription.Accept(collection.StoreReference,
+							slh.Subscription.SubscriptionRights);
+					pobox.Commit(slh.Subscription);
+				}
+			}
+			AcceptButton.Sensitive = false;
+			DeclineButton.Sensitive = false;
 		}
 	}
 
