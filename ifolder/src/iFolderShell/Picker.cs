@@ -243,7 +243,7 @@ namespace Novell.iFolderCom
 			this.Controls.Add(this.rosterLV);
 			this.MinimumSize = new System.Drawing.Size(512, 424);
 			this.Name = "Picker";
-			this.Text = "Picker";
+			this.Text = "iFolder User Selector";
 			this.SizeChanged += new System.EventHandler(this.Picker_SizeChanged);
 			this.Load += new System.EventHandler(this.Picker_Load);
 			this.ResumeLayout(false);

@@ -26,7 +26,6 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
-//using Simias.Storage;
 
 namespace Novell.iFolderCom
 {
@@ -58,10 +57,6 @@ namespace Novell.iFolderCom
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
 		}
 
 		/// <summary>
@@ -111,6 +106,7 @@ namespace Novell.iFolderCom
 			// 
 			// readOnly
 			// 
+			this.readOnly.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.readOnly.Location = new System.Drawing.Point(16, 72);
 			this.readOnly.Name = "readOnly";
 			this.readOnly.Size = new System.Drawing.Size(232, 16);
@@ -119,6 +115,7 @@ namespace Novell.iFolderCom
 			// 
 			// readWrite
 			// 
+			this.readWrite.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.readWrite.Location = new System.Drawing.Point(16, 48);
 			this.readWrite.Name = "readWrite";
 			this.readWrite.Size = new System.Drawing.Size(232, 16);
@@ -127,6 +124,7 @@ namespace Novell.iFolderCom
 			// 
 			// fullControl
 			// 
+			this.fullControl.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.fullControl.Location = new System.Drawing.Point(16, 24);
 			this.fullControl.Name = "fullControl";
 			this.fullControl.Size = new System.Drawing.Size(232, 16);
@@ -135,6 +133,7 @@ namespace Novell.iFolderCom
 			// 
 			// owner
 			// 
+			this.owner.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.owner.Location = new System.Drawing.Point(14, 152);
 			this.owner.Name = "owner";
 			this.owner.Size = new System.Drawing.Size(264, 16);
@@ -145,6 +144,7 @@ namespace Novell.iFolderCom
 			// ok
 			// 
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.ok.Location = new System.Drawing.Point(128, 184);
 			this.ok.Name = "ok";
 			this.ok.TabIndex = 4;
@@ -153,6 +153,7 @@ namespace Novell.iFolderCom
 			// cancel
 			// 
 			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.cancel.Location = new System.Drawing.Point(208, 184);
 			this.cancel.Name = "cancel";
 			this.cancel.TabIndex = 5;
@@ -160,12 +161,15 @@ namespace Novell.iFolderCom
 			// 
 			// UserProperties
 			// 
+			this.AcceptButton = this.ok;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.CancelButton = this.cancel;
 			this.ClientSize = new System.Drawing.Size(292, 214);
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.accessButtons);
 			this.Controls.Add(this.owner);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Name = "UserProperties";
 			this.Text = "TestForm";
 			this.Load += new System.EventHandler(this.TestForm_Load);
@@ -175,6 +179,7 @@ namespace Novell.iFolderCom
 		}
 		#endregion
 
+		#region Event Handlers
 		private void TestForm_Load(object sender, System.EventArgs e)
 		{
 			owner.Enabled = canBeOwner && ownerCanBeSet && !owner.Checked;
@@ -189,6 +194,7 @@ namespace Novell.iFolderCom
 				fullControl.Checked = true;
 			}
 		}
+		#endregion
 
 		#region Properties
 		/// <summary>

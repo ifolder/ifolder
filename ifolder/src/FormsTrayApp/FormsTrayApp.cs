@@ -56,23 +56,17 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		protected AutoResetEvent synkEvent = null;
 
-//		private MyTraceForm traceForm;
-
 //		private bool noTray = false;
 
 		private delegate void AnimateDelegate(int index);
 		private AnimateDelegate animateDelegate;
-		private System.Windows.Forms.MenuItem menuItem7;
 		private System.Windows.Forms.MenuItem menuItem10;
 		private System.Windows.Forms.MenuItem menuSeparator1;
-		private System.Windows.Forms.MenuItem menuInvitationWizard;
-		private System.Windows.Forms.MenuItem menuTraceWindow;
 		private System.Windows.Forms.MenuItem menuProperties;
 		private System.Windows.Forms.MenuItem menuHelp;
 		private System.Windows.Forms.MenuItem menuExit;
 		private System.Windows.Forms.NotifyIcon notifyIcon1;
 		private System.Windows.Forms.ContextMenu contextMenu1;
-		private System.Windows.Forms.MenuItem menuConflictResolver;
 		private System.Windows.Forms.MenuItem menuEventLogReader;
 		//private Configuration config;
 		private iFolderWebService ifWebService;
@@ -217,49 +211,6 @@ namespace Novell.FormsTrayApp
 //			messages.ShowDialog();
 		}
 
-		private void menuInvitationWizard_Click(object sender, System.EventArgs e)
-		{
-// Check for currently running instance and switch to it.
-//			Win32Window win32Window = Win32Window.FindWindow(null, "InvitationWizard");
-//			if (win32Window != null)
-//			{
-//				win32Window.BringWindowToTop();
-//			}
-//			else
-			{
-				Process.Start(Path.Combine(Application.StartupPath, "InvitationWizard.exe"));
-			}
-		}
-
-		private void menuConflictResolver_Click(object sender, System.EventArgs e)
-		{
-			Win32Window win32Window = Win32Window.FindWindow(null, "Conflict Resolver");
-			if (win32Window != null)
-			{
-				win32Window.BringWindowToTop();
-			}
-			else
-			{
-//				ConflictResolver conflictResolver = new ConflictResolver();
-//				conflictResolver.ConflictsResolved += new Novell.iFolder.iFolderCom.ConflictResolver.ConflictsResolvedDelegate(conflictResolver_ConflictsResolved);
-//				conflictResolver.Show();
-			}
-		}
-
-		private void menuTraceWindow_Click(object sender, System.EventArgs e)
-		{
-/*			menuTraceWindow.Checked = !menuTraceWindow.Checked;
-			if (menuTraceWindow.Checked)
-			{
-				// Display the trace window.
-				this.traceForm.Show();
-			}
-			else
-			{
-				this.traceForm.Hide();
-			}*/
-		}
-
 		private void menuProperties_Click(object sender, System.EventArgs e)
 		{
 			GlobalProperties globalProperties = new GlobalProperties(ifWebService);
@@ -289,12 +240,6 @@ namespace Novell.FormsTrayApp
 			menuExit.Enabled = false;
 
 			ShutdownTrayApp();
-		}
-
-		private void conflictResolver_ConflictsResolved(object sender, EventArgs e)
-		{
-			// TODO: we may need to check the state of messages before we stop animating the icon.
-			this.animateIcon = false;
 		}
 
 		private void messages_MessagesServiced(object sender, EventArgs e)
@@ -336,19 +281,6 @@ namespace Novell.FormsTrayApp
 			ShutdownTrayApp();
 		}
 
-/*		private void traceForm_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			if (!this.traceForm.Shutdown)
-			{
-				// If the form didn't receive a shutdown notification,
-				// cancel the Closing event.
-				e.Cancel = true;
-
-				// Hide the trace window.
-				this.traceForm.Hide();
-			}
-		}*/
-
 		private void FormsTrayApp_Load(object sender, System.EventArgs e)
 		{
 			try
@@ -375,19 +307,6 @@ namespace Novell.FormsTrayApp
 				subscriber.NodeChanged += new NodeEventHandler(subscriber_NodeChanged);
 				subscriber.NodeCreated += new NodeEventHandler(subscriber_NodeCreated);
 				subscriber.NodeDeleted += new NodeEventHandler(subscriber_NodeDeleted);
-
-				// Create the trace window ... initially hidden.
-				traceForm = new MyTraceForm();
-				traceForm.Closing += new System.ComponentModel.CancelEventHandler(traceForm_Closing);
-
-				// Trace messages will immediately be written, so we need the window handle to be created.
-				traceForm.CreateControl();
-
-				// For some reason the handle isn't really created until it is referenced.
-				IntPtr handle = traceForm.Handle;
-
-				// Enable the tracer menu item.
-				this.menuItemTracer.Enabled = true;
 */			}
 			catch (WebException ex)
 			{
@@ -513,12 +432,8 @@ namespace Novell.FormsTrayApp
 			this.menuStoreBrowser = new System.Windows.Forms.MenuItem();
 			this.menuEventLogReader = new System.Windows.Forms.MenuItem();
 			this.menuSeparator1 = new System.Windows.Forms.MenuItem();
-			this.menuJoin = new System.Windows.Forms.MenuItem();
-			this.menuInvitationWizard = new System.Windows.Forms.MenuItem();
-			this.menuConflictResolver = new System.Windows.Forms.MenuItem();
-			this.menuTraceWindow = new System.Windows.Forms.MenuItem();
-			this.menuItem7 = new System.Windows.Forms.MenuItem();
 			this.menuProperties = new System.Windows.Forms.MenuItem();
+			this.menuJoin = new System.Windows.Forms.MenuItem();
 			this.menuHelp = new System.Windows.Forms.MenuItem();
 			this.menuItem10 = new System.Windows.Forms.MenuItem();
 			this.menuExit = new System.Windows.Forms.MenuItem();
@@ -535,12 +450,8 @@ namespace Novell.FormsTrayApp
 			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																						 this.menuTools,
 																						 this.menuSeparator1,
-																						 this.menuJoin,
-																						 this.menuInvitationWizard,
-																						 this.menuConflictResolver,
-																						 this.menuTraceWindow,
-																						 this.menuItem7,
 																						 this.menuProperties,
+																						 this.menuJoin,
 																						 this.menuHelp,
 																						 this.menuItem10,
 																						 this.menuExit});
@@ -575,57 +486,33 @@ namespace Novell.FormsTrayApp
 			this.menuSeparator1.Text = "-";
 			this.menuSeparator1.Visible = false;
 			// 
-			// menuJoin
-			// 
-			this.menuJoin.Index = 2;
-			this.menuJoin.Text = "Join Enterprise...";
-			this.menuJoin.Click += new System.EventHandler(this.menuJoin_Click);
-			// 
-			// menuInvitationWizard
-			// 
-			this.menuInvitationWizard.Index = 3;
-			this.menuInvitationWizard.Text = "Invitation Wizard...";
-			this.menuInvitationWizard.Click += new System.EventHandler(this.menuInvitationWizard_Click);
-			// 
-			// menuConflictResolver
-			// 
-			this.menuConflictResolver.Index = 4;
-			this.menuConflictResolver.Text = "Conflict Resolver...";
-			this.menuConflictResolver.Click += new System.EventHandler(this.menuConflictResolver_Click);
-			// 
-			// menuTraceWindow
-			// 
-			this.menuTraceWindow.Index = 5;
-			this.menuTraceWindow.Text = "Trace Window";
-			this.menuTraceWindow.Visible = false;
-			this.menuTraceWindow.Click += new System.EventHandler(this.menuTraceWindow_Click);
-			// 
-			// menuItem7
-			// 
-			this.menuItem7.Index = 6;
-			this.menuItem7.Text = "-";
-			// 
 			// menuProperties
 			// 
 			this.menuProperties.DefaultItem = true;
-			this.menuProperties.Index = 7;
+			this.menuProperties.Index = 2;
 			this.menuProperties.Text = "My iFolders...";
 			this.menuProperties.Click += new System.EventHandler(this.menuProperties_Click);
 			// 
+			// menuJoin
+			// 
+			this.menuJoin.Index = 3;
+			this.menuJoin.Text = "Join Enterprise Server";
+			this.menuJoin.Click += new System.EventHandler(this.menuJoin_Click);
+			// 
 			// menuHelp
 			// 
-			this.menuHelp.Index = 8;
+			this.menuHelp.Index = 4;
 			this.menuHelp.Text = "Help...";
 			this.menuHelp.Click += new System.EventHandler(this.menuHelp_Click);
 			// 
 			// menuItem10
 			// 
-			this.menuItem10.Index = 9;
+			this.menuItem10.Index = 5;
 			this.menuItem10.Text = "-";
 			// 
 			// menuExit
 			// 
-			this.menuExit.Index = 10;
+			this.menuExit.Index = 6;
 			this.menuExit.Text = "Exit";
 			this.menuExit.Click += new System.EventHandler(this.menuExit_Click);
 			// 
