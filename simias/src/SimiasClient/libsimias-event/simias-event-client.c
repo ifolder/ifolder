@@ -148,10 +148,10 @@ static int sec_get_server_host_address (SimiasEventClient *ec,
 static char * sec_get_config_file_path (char *dest_path);
 
 static void * sec_parse_struct_from_doc (xmlDoc *doc);
-static char * sec_create_xml_from_struct (const char *top_level_element_name, 
-										  char **struct_ptr,
-										  char **node_names);
 static void * sec_create_struct_from_xpath (xmlXPathContext *xpath_ctx);
+static int sec_process_message (SimiasEventClient *ec, 
+								char *message, 
+								int length);
 /* #endregion */
 
 /* #region Public Functions */
@@ -368,6 +368,8 @@ printf ("SEC: sec_thread: recv () called\n");
 				real_message [real_length] = '\0';
 				
 				printf ("Message received:\n\n%s\n\n", real_message);
+				
+				sec_process_message (ec, real_message, real_length);
 				
 				free (real_message);
 			}
@@ -653,6 +655,42 @@ sec_get_config_file_path (char *dest_path)
 	return strcpy (dest_path, SIMIAS_EVENT_SERVER_CONFIG_PATH);
 }
 
+static int
+sec_process_message (SimiasEventClient *ec, char *message, int length)
+{
+	xmlDoc *doc;
+	void *message_struct;
+
+	/* Construct an xmlDoc from the message */	
+	doc = xmlReadMemory (message, length, "message.xml", NULL, XML_PARSE_RECOVER | XML_PARSE_NOERROR | XML_PARSE_NOWARNING);
+	if (doc != NULL) {
+		message_struct = sec_parse_struct_from_doc (doc);
+		if (message_struct == NULL) {
+			fprintf (stderr, "SEC: Struct couldn't be parsed from message\n");
+			return -1;
+		}
+		
+		/* Call the right handler based on the type of message received */
+		if (strcmp ("NodeEventArgs", (char *)message_struct) == 0) {
+			printf ("NodeEventArgs message received\n");
+		} else if (strcmp ("CollectionSyncEventArgs", (char *)message_struct) == 0) {
+			printf ("CollectionSyncEventArgs message received\n");
+		} else if (strcmp ("FileSyncEventArgs", (char *)message_struct) == 0) {
+			printf ("FileSyncEventArgs message received\n");
+		} else if (strcmp ("NotifyEventArgs", (char *)message_struct) == 0) {
+			printf ("NotifyEventArgs message received\n");
+		}
+		
+		free (message_struct);
+		xmlFreeDoc (doc);
+	} else {
+		fprintf (stderr, "SEC: Invalid XML received from event server\n");
+		return -1;
+	}
+	
+	return 0;
+}
+
 static void *
 sec_parse_struct_from_doc (xmlDoc *doc)
 {
@@ -816,39 +854,6 @@ sec_create_struct_from_xpath (xmlXPathContext *xpath_ctx)
 	}
 	
 	return data_struct;
-}
-
-/**
- * The returned char * must be freed by the caller.
- */
-static char *
-sec_create_xml_from_struct (const char *top_level_element_name,
-							char **struct_ptr, 
-							char **node_names)
-{
-	/* FIXME: Find a better way to create the XML than just a very large char buffer */
-	char xml_buf [4096];
-	char element_tag [128];
-	int i;
-	
-	/* Start the top-level element */
-	sprintf (element_tag, "<%s>", top_level_element_name);
-	strcpy (xml_buf, element_tag);
-	
-	/* Add the child elements */
-	for (i = 0; node_names [i]; i++) {
-		sprintf (element_tag, "<%s>", node_names [i]);
-		
-		strcat (xml_buf, struct_ptr [i]);
-		
-		sprintf (element_tag, "</%s>", node_names [i]);
-	}
-	
-	/* Close the top-level element */
-	sprintf (element_tag, "</%s>", top_level_element_name);
-	strcat (xml_buf, element_tag);
-	
-	return strdup (xml_buf);
 }
 /* #endregion */
 
