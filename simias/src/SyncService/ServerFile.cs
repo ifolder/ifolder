@@ -78,7 +78,7 @@ namespace Simias.Sync
 			XmlDocument xNode = new XmlDocument();
 			xNode.LoadXml(snode.node);
 			node = (BaseFileNode)Node.NodeFactory(collection.StoreReference, xNode);
-			collection.ImportNode(node, false, 0);
+			collection.ImportNode(node, true, 0);
 			node.IncarnationUpdate = node.LocalIncarnation;
 			base.Open(node);
 		}
