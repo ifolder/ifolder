@@ -141,6 +141,25 @@ namespace Novell.AddressBook.UI.gtk
 		}
 
 
+
+
+		/// <summary>
+		/// Constructor for creating a new InvitationAssistant.
+		/// In this mode, the Load page will not be shown.
+		/// </summary>
+		/// <param name="sub">An instance of a subscription.</param>
+		public InvitationAssistant(SubscriptionInfo subInfo)
+		{
+			if(store == null)
+				store = Store.GetStore();
+
+			subscription = Subscription.GetSubscriptionFromSubscriptionInfo(store, subInfo);
+			Init_Glade();
+		}
+
+
+
+
 		/// <summary>
 		/// Constructor for creating a new InvitationAssistant.
 		/// In this mode, the Load page will not be shown.
