@@ -492,7 +492,7 @@ namespace Simias.Location
 				case "Given":
 					return "ScreenName";
 				case "Family":
-				case "FullName":
+				case "FN":
 				default:
 					return "Alias";
 			}
