@@ -113,7 +113,9 @@ int SimiasEventSyncFile(SimiasFileSyncEvent *fileEvent, void *data)
 
 int SimiasEventNotifyMessage(SimiasNotifyEvent *notifyEvent, void *data)
 {
-	[[NSApp delegate] addLog:[NSString stringWithFormat:@"Notify Message: %s", notifyEvent->message]];
+	[[NSApp delegate] addLog:[NSString stringWithFormat:@"Authentication requested for: %s", notifyEvent->message]];
+
+	[[NSApp delegate] showLoginWindow:[NSString stringWithCString:notifyEvent->message]];
 
     return 0;
 }

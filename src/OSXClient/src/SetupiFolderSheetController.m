@@ -23,6 +23,7 @@
  
  
 #import "SetupiFolderSheetController.h"
+#import "MainWindowController.h"
 
 @implementation SetupiFolderSheetController
 
@@ -70,7 +71,7 @@
 	if( ( [ [iFolderID stringValue] length] > 0) &&
 		( [ [pathField stringValue] length] > 0 ) )
 	{
-		[[NSApp delegate] AcceptiFolderInvitation:[iFolderID stringValue]
+		[[NSApp delegate] acceptiFolderInvitation:[iFolderID stringValue]
 							InDomain:[domainID stringValue]
 							toPath:[pathField stringValue] ];
 

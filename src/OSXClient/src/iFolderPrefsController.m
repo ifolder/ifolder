@@ -1,6 +1,7 @@
 #import "iFolderPrefsController.h"
 #import "iFolderDomain.h"
 #import "iFolderService.h"
+#import "MainWindowController.h"
 
 @implementation iFolderPrefsController
 
@@ -17,14 +18,6 @@
 
 	[toolbar setSelectedItemIdentifier:@"General"];
 
-//	NSTableColumn *tableColumn;
-	
-	// binding for "name" column
-//    tableColumn = [accounts tableColumnWithIdentifier:@"Accounts"];
-	
-//	[tableColumn bind:@"value" toObject: [[NSApp delegate] DomainsController]
-//	  withKeyPath:@"arrangedObjects.properties.Name" options:nil];
-
 
 	webService = [[iFolderService alloc] init];
 
@@ -38,9 +31,9 @@
 		for(x=0; x < [newDomains count]; x++)
 		{
 			iFolderDomain *dom = [newDomains objectAtIndex:x];
-			NSString *dname = [[dom properties] valueForKey:@"ID"];
+			NSString *domainID = [[dom properties] valueForKey:@"ID"];
 			
-			if([dname compare:WORKGROUP_DOMAIN] != 0)
+			if([domainID compare:WORKGROUP_DOMAIN] != 0)
 			{
 				[domainsController addObject:dom];
 			}
@@ -79,13 +72,6 @@
 {
 	return[toolbarItemDict objectForKey:itemIdentifier];
 }
-
-
-- (int)count
-{
-	return [toolbarItemArray count];
-}
-
 
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar
@@ -266,7 +252,26 @@
 
 - (IBAction)loginToDomain:(id)sender
 {
-
+	int selIndex = [domainsController selectionIndex];
+	iFolderDomain *dom = [[domainsController arrangedObjects] objectAtIndex:selIndex];
+	if([[dom properties] objectForKey:@"Authenticated"] != nil)
+	{
+		if( ([[dom UserName] length] > 0) &&
+			([[dom Host] length] > 0) &&
+			([[dom Password] length] > 0) )
+		{
+			if([[NSApp delegate] connectToDomain:dom] == YES)
+			{
+				// we logged in, the domain object should be updated
+			}
+			else
+			{
+				NSBeginAlertSheet(@"Login Failed", @"OK", nil, nil, 
+					[self window], nil, nil, nil, nil, 
+					@"Login failed, please try again.");
+			}
+		}
+	}
 }
 
 

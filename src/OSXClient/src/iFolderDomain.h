@@ -49,4 +49,11 @@
 
 -(void) setgSOAPProperties:(struct ns1__DomainWeb *)domainWeb;
 
+-(NSString *)ID;
+-(NSString *)Name;
+-(NSString *)UserName;
+-(NSString *)Host;
+-(NSString *)Password;
+
+
 @end

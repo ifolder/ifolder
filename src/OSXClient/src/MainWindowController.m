@@ -64,6 +64,9 @@
 	[super setWindowFrameAutosaveName:@"iFolderWindow"];
 
 	webService = [[iFolderService alloc] init];
+	keyedDomains = [[NSMutableDictionary alloc] init];
+	keyediFolders = [[NSMutableDictionary alloc] init];
+	
 
 	[self addLog:@"initializing Simias Events"];
 
@@ -73,9 +76,14 @@
 
 	@try
 	{
+		int domainCount;
 		NSArray *newDomains = [webService GetDomains];
 
-		[domainsController addObjects:newDomains];
+		for(domainCount = 0; domainCount < [newDomains count]; domainCount++)
+		{
+			[self addDomain:[newDomains objectAtIndex:domainCount]];
+		}
+//		[domainsController addObjects:newDomains];
 		
 		NSArray *newiFolders = [webService GetiFolders];
 		if(newiFolders != nil)
@@ -116,21 +124,6 @@
 		[self addLog:@"Refreshing failed with exception"];
 	}
 }
-
-
-
-
-- (IBAction)showLoginWindow:(id)sender
-{
-	if(loginController == nil)
-	{
-		loginController = [[LoginWindowController alloc] initWithWindowNibName:@"LoginWindow"];
-	}
-	
-	[[loginController window] center];
-	[loginController showWindow:self];
-}
-
 
 
 
@@ -281,6 +274,23 @@
 
 
 
+- (void)showLoginWindow:(NSString *)domainID
+{
+	if(loginController == nil)
+	{
+		loginController = [[LoginWindowController alloc] initWithWindowNibName:@"LoginWindow"];
+	}
+
+	iFolderDomain *dom = [keyedDomains objectForKey:domainID];
+	
+	[[loginController window] center];
+	[loginController showLoginWindow:self withHost:[dom Host] withDomain:domainID];
+}
+
+
+
+
+
 - (IBAction)shareiFolder:(id)sender
 {
 }
@@ -296,22 +306,44 @@
 
 
 
--(void)login:(NSString *)username withPassword:(NSString *)password toServer:(NSString *)server
+- (BOOL)connectToDomain:(iFolderDomain *)domain
 {
 	@try
 	{
-		iFolderDomain *domain = [webService ConnectToDomain:username usingPassword:password andHost:server];
-		[domainsController addObject:domain];
-		[self refreshWindow:self];
-		[self showWindow:self];
+		iFolderDomain *newDomain = [webService ConnectToDomain:[domain UserName] 
+			usingPassword:[domain Password] andHost:[domain Host]];
 
+		[self addDomain:newDomain];
+		[self refreshWindow:self];
+
+		NSDictionary *newProps = [newDomain properties];		
+
+		[domain setProperties:newProps];
+		return YES;
 	}
 	@catch (NSException *e)
 	{
 		NSString *error = [e name];
 		NSRunAlertPanel(@"Login Error", [e name], @"OK",nil, nil);
+		return NO;
 	}
+}
 
+
+
+- (BOOL)authenticateToDomain:(NSString *)domainID withPassword:(NSString *)password
+{
+	@try
+	{
+		[webService AuthenticateToDomain:domainID usingPassword:password];
+		return YES;
+	}
+	@catch (NSException *e)
+	{
+		NSString *error = [e name];
+		NSRunAlertPanel(@"Login Error", [e name], @"OK",nil, nil);
+		return NO;
+	}
 }
 
 
@@ -334,7 +366,7 @@
 
 
 
-- (void)AcceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)domainID toPath:(NSString *)localPath
+- (void)acceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)domainID toPath:(NSString *)localPath
 {
 	@try
 	{
@@ -354,6 +386,7 @@
 - (void)addDomain:(iFolderDomain *)newDomain
 {
 	[domainsController addObject:newDomain];
+	[keyedDomains setObject:newDomain forKey:[newDomain ID] ];
 }
 
 

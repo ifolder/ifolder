@@ -126,13 +126,13 @@ void cleanup_gsoap(struct soap *pSoap);
 	connectToDomainMessage.Host = (char *)[Host cString];
 
     init_gsoap (&soap);
+
     err_code = soap_call___ns1__ConnectToDomain(
 			&soap,
             NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
             NULL,
             &connectToDomainMessage,
             &connectToDomainResponse);
-
  	if(soap.error)
 	{
 		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
@@ -151,6 +151,40 @@ void cleanup_gsoap(struct soap *pSoap);
     cleanup_gsoap(&soap);
 
 	return domain;
+}
+
+
+
+
+-(void) AuthenticateToDomain:(NSString *)DomainID usingPassword:(NSString *)Password
+{
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (DomainID != nil), @"DomainID was nil");
+	NSAssert( (Password != nil), @"Password was nil");
+
+	struct _ns1__AuthenticateToDomain authenticateToDomainMessage;
+	struct _ns1__AuthenticateToDomainResponse authenticateToDomainResponse;
+	
+	authenticateToDomainMessage.DomainID = (char *)[DomainID cString];
+	authenticateToDomainMessage.Password = (char *)[Password cString];
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__AuthenticateToDomain(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &authenticateToDomainMessage,
+            &authenticateToDomainResponse);
+
+ 	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in AuthenticateToDomain"];
+	}
+
+    cleanup_gsoap(&soap);
 }
 
 

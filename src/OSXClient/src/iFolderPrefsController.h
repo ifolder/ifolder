@@ -38,7 +38,7 @@
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar;
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar;
 - (NSArray *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar;
-- (int)count;
+
 
 // user actions
 - (void)generalPreferences:(NSToolbarItem *)item;

@@ -28,8 +28,14 @@
 {
     IBOutlet NSTextField *passwordField;
     IBOutlet NSTextField *serverField;
-    IBOutlet NSTextField *userNameField;
+	
+	NSString *authDomainID;
 }
+
+
 - (IBAction)cancel:(id)sender;
-- (IBAction)login:(id)sender;
+- (IBAction)authenticate:(id)sender;
+
+- (void)showLoginWindow:(id)sender withHost:(NSString *)host withDomain:(NSString *)domainID;
+
 @end

@@ -37,6 +37,7 @@
 -(bool) Ping;
 -(NSArray *) GetDomains;
 -(iFolderDomain *) ConnectToDomain:(NSString *)UserName usingPassword:(NSString *)Password andHost:(NSString *)Host;
+-(void) AuthenticateToDomain:(NSString *)DomainID usingPassword:(NSString *)Password;
 -(NSArray *) GetiFolders;
 -(iFolder *) CreateiFolder:(NSString *)Path InDomain:(NSString *)DomainID;
 -(iFolder *) AcceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)DomainID toPath:(NSString *)localPath;

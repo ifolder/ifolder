@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 #import "CreateiFolderSheetController.h"
+#import "MainWindowController.h"
 
 
 @implementation CreateiFolderSheetController

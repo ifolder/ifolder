@@ -20,7 +20,6 @@
  *  Author: Calvin Gaisford <cgaisford@novell.com>
  * 
  ***********************************************************************/
- 
 
 #import <Cocoa/Cocoa.h>
 

@@ -22,6 +22,7 @@
  ***********************************************************************/
  
 #import "LoginWindowController.h"
+#import "MainWindowController.h"
 
 @implementation LoginWindowController
 
@@ -31,16 +32,30 @@
 	[[self window] orderOut:nil];
 }
 
-- (IBAction)login:(id)sender
+
+
+
+- (IBAction)authenticate:(id)sender
 {
-	if( ( [ [userNameField stringValue] length] > 0 ) &&
-		( [ [passwordField stringValue] length] > 0 ) &&
-		( [ [serverField stringValue] length] > 0 ) )
+	NSString *password = [passwordField stringValue];
+	
+	if( ( [authDomainID length] > 0 ) &&
+		( [password length] > 0 ) )
 	{
-		[[NSApp delegate] login:[userNameField stringValue] withPassword:[passwordField stringValue] 
-					toServer:[serverField stringValue] ];
-		[[self window] orderOut:nil];
+		if([[NSApp delegate] authenticateToDomain:authDomainID withPassword:password ] == YES)
+			[[self window] orderOut:nil];
 	}
 }
+
+
+- (void)showLoginWindow:(id)sender withHost:(NSString *)host withDomain:(NSString *)domainID
+{
+	[serverField setStringValue:host];
+	authDomainID = domainID;
+	
+	[self showWindow:sender];
+}
+
+
 
 @end
