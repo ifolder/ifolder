@@ -213,7 +213,7 @@ namespace Simias
 
 		public static string fixupPath(string path)
 		{
-			path = Path.Combine(path, ".cstore");
+			path = Path.Combine(path, ".simias");
 			if (!Directory.Exists(path))
 			{
 				Directory.CreateDirectory(path);
