@@ -225,16 +225,11 @@ namespace Novell.iFolder
 
 		private void OnAddAccount(object o, EventArgs args)
 		{
-			iFolderMsgDialog dialog = new iFolderMsgDialog(
-				topLevelWindow,
-				iFolderMsgDialog.DialogType.Question,
-				iFolderMsgDialog.ButtonSet.YesNo,
-				Util.GS("iFolder Confirmation"),
-				Util.GS("Create Account?"),
-				Util.GS("Would you really like to create an account?"));
-			dialog.Run();
-			dialog.Hide();
-			dialog.Destroy();
+			AccountDialog accDialog = new AccountDialog();
+			accDialog.TransientFor = topLevelWindow;
+			accDialog.Run();
+			accDialog.Hide();
+			accDialog.Destroy();
 		}
 
 
@@ -311,16 +306,23 @@ namespace Novell.iFolder
 
 		private void OnDetailsClicked(object o, EventArgs args)
 		{
-			iFolderMsgDialog dialog = new iFolderMsgDialog(
-				topLevelWindow,
-				iFolderMsgDialog.DialogType.Question,
-				iFolderMsgDialog.ButtonSet.YesNo,
-				Util.GS("iFolder Confirmation"),
-				Util.GS("Show Details?"),
-				Util.GS("Would you really like to see the details?"));
-			dialog.Run();
-			dialog.Hide();
-			dialog.Destroy();
+			TreeSelection tSelect = AccTreeView.Selection;
+
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				DomainWeb dom = 
+						(DomainWeb) tModel.GetValue(iter, 0);
+
+				AccountDialog accDialog = new AccountDialog(dom);
+				accDialog.TransientFor = topLevelWindow;
+				accDialog.Run();
+				accDialog.Hide();
+				accDialog.Destroy();
+			}
 		}
 
 
