@@ -129,11 +129,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Channel.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Domain.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -141,11 +136,6 @@
                 <File
                     RelPath = "DomainProvider.cs"
                     SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "mDnsStub.cs"
-                    SubType = "code"
                     BuildAction = "Compile"
                 />
                 <File

@@ -303,6 +303,7 @@ namespace Simias
 		public bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, int count, out string searchContext, out Member[] memberList, out int total )
 		{
 			bool moreMembers = false;
+			int	 allMembers = 0;
 			searchContext = null;
 			memberList = null;
 			total = 0;
@@ -313,17 +314,23 @@ namespace Simias
 
 			// Add the members in the store
 			Simias.Storage.Domain domain = Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
-			foreach( Member member in domain.GetMemberList() )
+			ICSList memberlist = domain.GetMemberList();
+			foreach(ShallowNode sNode in memberlist)
 			{
-				total++;
+				// Get the member from the list
+				Simias.Storage.Member member =
+					new Simias.Storage.Member( domain, sNode);
+
 				if ( searchCtx.index < count )
 				{
+					total++;
 					searchCtx.memberList.Add( member );
 					searchCtx.index++;
 				}
 			}
 
-			total += Simias.mDns.User.memberList.Count;
+
+			allMembers = Simias.mDns.User.memberList.Count;
 			if ( searchCtx.index < count )
 			{
 				// Now add the members in Rendezvous list - some will be duplicates
@@ -337,6 +344,7 @@ namespace Simias
 						{
 							if ( rUser.ID == member.UserID )
 							{
+								foundIt = true;
 								break;
 							}
 						}
@@ -349,6 +357,7 @@ namespace Simias
 									new Member( rUser.FriendlyName, rUser.ID, Access.Rights.ReadWrite );
 								searchCtx.memberList.Add( nMember );
 								searchCtx.index++;
+								total++;
 							}
 							else
 							{
@@ -359,7 +368,7 @@ namespace Simias
 				}
 			}
 
-			if ( searchCtx.index < total )
+			if ( total < allMembers )
 			{
 				moreMembers = true;
 			}
@@ -415,11 +424,31 @@ namespace Simias
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
 		public bool FindNextDomainMembers( ref string searchContext, int count, out Member[] memberList )
 		{
-			memberList = null;
-
+			bool moreMembers = false;
+			mDnsSearchCtx searchCtx = null;
 			log.Debug( "FindNextDomainMembers called" );
 
-			return false;
+			memberList = null;
+			lock( this.mdnsLock )
+			{
+				if ( searchContexts.Contains( searchContext ) )
+				{
+					searchCtx = ( mDnsSearchCtx ) searchContexts[searchContext];
+				}
+			}
+
+			if ( searchCtx == null )
+			{
+				return moreMembers;
+			}
+
+			// More to get
+			if ( searchCtx.index <= searchCtx.memberList.Count )
+			{
+
+			}
+
+			return moreMembers;
 		}
 
 		/// <summary>

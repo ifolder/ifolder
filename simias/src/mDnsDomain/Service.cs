@@ -65,7 +65,10 @@ namespace Simias.mDns
 		private	Store store = null;
 		private Simias.mDns.User mDnsUser = null;
 		private Simias.mDnsProvider mDnsProvider = null;
-		
+
+		// Register for authentication events
+		private Simias.Authentication.NeedCredentialsEventSubscriber needsCreds;
+
 		/// <summary>
 		/// Configuration object for the Collection Store.
 		/// </summary>
@@ -125,10 +128,8 @@ namespace Simias.mDns
 				this.mDnsProvider = new Simias.mDnsProvider();
 				Simias.DomainProvider.RegisterProvider( this.mDnsProvider );
 
-				// Register for authentication events
-				Simias.Authentication.NeedCredentialsEventSubscriber needCreds =
-					new NeedCredentialsEventSubscriber();
-				needCreds.NeedCredentials += 
+				this.needsCreds = new NeedCredentialsEventSubscriber();
+				this.needsCreds.NeedCredentials += 
 					new Simias.Authentication.NeedCredentialsEventHandler( OnCredentialsEventHandler );
 
 				// Last add some fake credentials for the mDns domain

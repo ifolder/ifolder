@@ -87,12 +87,7 @@ namespace Simias.mDns
 				return status;
 			}
 
-			//SimiasAuthenticationProxy auth = new SimiasAuthenticationProxy();
-
 			Uri loginUri = new Uri( remoteUri.ToString() + "/Login.ashx" );
-			//auth.Url = loginUri.ToString() + "/Login.ashx";
-			//auth.MemberID = domain.GetCurrentMember().UserID;
-		//	auth.DomainID = Simias.mDns.Domain.ID;
 
 			HttpWebRequest request = WebRequest.Create( loginUri ) as HttpWebRequest;
 			WebState webState = new WebState();
