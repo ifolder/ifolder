@@ -334,6 +334,199 @@ NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user);
 
 
 
+-(NSArray *) GetDomainUsers:(NSString *)domainID withLimit:(int)numUsers
+{
+	NSMutableArray *users = nil;
+	
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (domainID != nil), @"domainID was nil");
+
+	struct _ns1__GetDomainUsers			getUsersMessage;
+	struct _ns1__GetDomainUsersResponse getUsersResponse;
+
+	getUsersMessage.DomainID = (char *)[domainID cString];
+	getUsersMessage.numUsers = numUsers;
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__GetDomainUsers(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &getUsersMessage,
+            &getUsersResponse);
+
+ 	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in GetDomainUsers"];
+	}
+	else
+	{
+		int usercount = getUsersResponse.GetDomainUsersResult->__sizeiFolderUser;
+		if(usercount > 0)
+		{
+			users = [[NSMutableArray alloc] initWithCapacity:usercount];
+			
+			int counter;
+			for( counter = 0; counter < usercount; counter++ )
+			{
+				struct ns1__iFolderUser *curUser;
+			
+				curUser = getUsersResponse.GetDomainUsersResult->iFolderUser[counter];
+				User *newUser = [[User alloc] init];
+
+				[newUser setProperties:getiFolderUserProperties(curUser)];
+				
+				[users addObject:newUser];
+			}
+		}
+    }
+
+    cleanup_gsoap(&soap);
+
+	return users;
+}
+
+
+
+
+-(NSArray *) SearchDomainUsers:(NSString *)domainID withString:(NSString *)searchString
+{
+	NSMutableArray *users = nil;
+	
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (domainID != nil), @"domainID was nil");
+
+	struct _ns1__SearchForDomainUsers			searchUsersMessage;
+	struct _ns1__SearchForDomainUsersResponse	searchUsersResponse;
+
+	searchUsersMessage.DomainID = (char *)[domainID cString];
+	searchUsersMessage.SearchString =  (char *)[searchString cString];
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__SearchForDomainUsers(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &searchUsersMessage,
+            &searchUsersResponse);
+
+ 	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in SearchDomainUsers"];
+	}
+	else
+	{
+		int usercount = searchUsersResponse.SearchForDomainUsersResult->__sizeiFolderUser;
+		if(usercount > 0)
+		{
+			users = [[NSMutableArray alloc] initWithCapacity:usercount];
+			
+			int counter;
+			for( counter = 0; counter < usercount; counter++ )
+			{
+				struct ns1__iFolderUser *curUser;
+			
+				curUser = searchUsersResponse.SearchForDomainUsersResult->iFolderUser[counter];
+				User *newUser = [[User alloc] init];
+
+				[newUser setProperties:getiFolderUserProperties(curUser)];
+				
+				[users addObject:newUser];
+			}
+		}
+    }
+
+    cleanup_gsoap(&soap);
+
+	return users;
+}
+
+
+
+-(User *) InviteUser:(NSString *)userID toiFolder:(NSString *)ifolderID withRights:(NSString *)rights
+{
+	User *newUser = nil;
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (userID != nil), @"userID was nil");
+	NSAssert( (ifolderID != nil), @"ifolderID was nil");
+	NSAssert( (rights != nil), @"rights was nil");
+
+	struct _ns1__InviteUser			inviteUserMessage;
+	struct _ns1__InviteUserResponse	inviteUserResponse;
+	
+	inviteUserMessage.iFolderID = (char *)[ifolderID cString];
+	inviteUserMessage.UserID = (char *)[userID cString];
+	inviteUserMessage.Rights = (char *)[rights cString];
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__InviteUser(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &inviteUserMessage,
+            &inviteUserResponse);
+
+	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in InviteUser:toiFolder:withRights:"];
+	}
+	else
+	{
+		newUser = [ [User alloc] init];
+		
+		[newUser setProperties:getiFolderUserProperties(
+							inviteUserResponse.InviteUserResult)];
+    }
+
+    cleanup_gsoap(&soap);
+
+	return newUser;
+}
+
+
+
+
+-(void) RemoveUser:(NSString *)userID fromiFolder:(NSString *)ifolderID
+{
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (userID != nil), @"userID was nil");
+	NSAssert( (ifolderID != nil), @"ifolderID was nil");
+
+	struct _ns1__RemoveiFolderUser			removeUserMessage;
+	struct _ns1__RemoveiFolderUserResponse	removeUserResponse;
+	
+	removeUserMessage.iFolderID = (char *)[ifolderID cString];
+	removeUserMessage.UserID = (char *)[userID cString];
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__RemoveiFolderUser(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &removeUserMessage,
+            &removeUserResponse);
+
+	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in RemoveUser:fromiFolder:"];
+	}
+
+    cleanup_gsoap(&soap);
+}
+
+
 
 
 void init_gsoap(struct soap *pSoap)
@@ -431,8 +624,10 @@ NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user)
 		[newProperties setObject:[NSString stringWithCString:user->FirstName] forKey:@"FirstName"];
 	if(user->Surname != nil)
 		[newProperties setObject:[NSString stringWithCString:user->Surname] forKey:@"Surname"];
-	if(user->FN != nil)
+	if( (user->FN != nil) && (strlen(user->FN) > 0) )
 		[newProperties setObject:[NSString stringWithCString:user->FN] forKey:@"FN"];
+	else
+		[newProperties setObject:[NSString stringWithCString:user->Name] forKey:@"FN"];
 
 	[newProperties setObject:[NSNumber numberWithBool:user->IsOwner] forKey:@"IsOwner"];
 	

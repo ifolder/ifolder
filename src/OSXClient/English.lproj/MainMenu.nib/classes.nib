@@ -18,7 +18,12 @@
             }; 
             SUPERCLASS = NSWindowController; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {refreshWindow = id; }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
         {
             ACTIONS = {
                 customizeToolbar = id; 
@@ -29,12 +34,12 @@
                 refreshWindow = id; 
                 revertiFolder = id; 
                 setupiFolder = id; 
-                shareiFolder = id; 
+                showGeneralProperties = id; 
                 showHideToolbar = id; 
-                showLoginWindow = id; 
                 showPrefs = id; 
-                showProperties = id; 
+                showSharingProperties = id; 
                 showSyncLog = id; 
+                synciFolder = id; 
             }; 
             CLASS = MainWindowController; 
             LANGUAGE = ObjC; 

@@ -29,5 +29,19 @@
 @interface PropertiesWindowController : NSWindowController
 {
 	IBOutlet PropSharingController	*propSharingController;
+	IBOutlet NSDrawer				*searchDrawer;
+	IBOutlet NSTabView				*tabView;
+	IBOutlet NSTabViewItem			*generalItem;
+	IBOutlet NSTabViewItem			*sharingItem;
+
+	int		initalTab;
 }
+
+-(void)awakeFromNib;
+
+- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem;
+- (void)windowWillClose:(NSNotification *)aNotification;
+- (void)setSharingTab;
+- (void)setGeneralTab;
+
 @end

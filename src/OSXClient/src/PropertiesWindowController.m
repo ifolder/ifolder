@@ -22,7 +22,42 @@
  ***********************************************************************/
 
 #import "PropertiesWindowController.h"
+#import "MainWindowController.h"
 
 @implementation PropertiesWindowController
+
+-(void)awakeFromNib
+{
+	[tabView selectTabViewItemAtIndex:initalTab];
+}
+
+
+
+- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
+{
+	if(tabViewItem != sharingItem)
+	{
+		[searchDrawer close];	
+	}
+}
+
+
+- (void)windowWillClose:(NSNotification *)aNotification
+{
+	NSLog(@"Called to close window");
+	[[aNotification object] setDelegate:nil];
+	[[NSApp delegate] propertiesClosed];
+}
+
+- (void)setSharingTab
+{
+	initalTab = 1;
+}
+
+
+- (void)setGeneralTab
+{
+	initalTab = 0;
+}
 
 @end

@@ -109,6 +109,27 @@
 	return [properties objectForKey:@"IsSubscription"];
 }
 
+-(NSString *)DomainID
+{
+	return [properties objectForKey:@"DomainID"];
+}
+
+-(NSString *)OwnerUserID
+{
+	return [properties objectForKey:@"OwnerID"];
+}
+-(NSString *)CurrentUserID
+{
+	return [properties objectForKey:@"CurrentUserID"];
+}
+
+-(NSString *)CurrentUserRights
+{
+	return [properties objectForKey:@"CurrentUserRights"];
+}
+
+
+
 
 -(void) updateDisplayInformation
 {
