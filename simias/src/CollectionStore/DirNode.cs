@@ -309,6 +309,47 @@ namespace Simias.Storage
 			e.Dispose();
 			return hasChildren;
 		}
+
+		/// <summary>
+		/// Move the Root node in the file system.
+		/// </summary>
+		/// <param name="collection">The collection that contains the node.</param>
+		/// <param name="newRoot">The new path to the parent container.</param>
+		public void MoveRoot( Collection collection, string newRoot)
+		{
+			// Make sure that this is the root node.
+			if (this.IsRoot)
+			{
+				// Move the directory.
+				Property rootP = properties.GetSingleProperty(PropertyTags.Root);
+				string oldRoot = rootP.Value.ToString();
+				string name = GetRelativePath();
+				string oldPath = Path.Combine(oldRoot, name);
+				string newPath = Path.Combine(newRoot, name);
+
+				Directory.Move(oldPath, newPath);
+
+				try
+				{
+					// Now Reset the Paths.
+					this.properties.ModifyNodeProperty(PropertyTags.Root, newRoot);
+					collection.Commit(this);
+				}
+				catch (Exception ex)
+				{
+					// We failed to commit the node.
+					// Move the directory back.
+					Directory.Move(newPath, oldPath);
+					this.properties.ModifyNodeProperty(PropertyTags.Root, oldRoot);
+					throw ex;
+				}
+			}
+			else
+			{
+				// This is not the root node this opertation is invalid.
+				throw new InvalidOperationException("Node is not the root node");
+			}
+		}
 		#endregion
 	}
 }

@@ -152,6 +152,8 @@ namespace Simias.Sync
 			}
 		}
 
+		#region static methods
+
 		/// <summary>
 		/// Returns the number of bytes to sync to the server.
 		/// </summary>
@@ -202,7 +204,8 @@ namespace Simias.Sync
 			if (sc != null)
 				sc.Stop();
 		}
-
+	
+		#endregion
 		#endregion
 
 		#region private methods.
@@ -454,7 +457,8 @@ namespace Simias.Sync
 		static int		initialSyncDelay = 10 * 1000; // 10 seconds.
 		DateTime		syncStartTime; // Time stamp when sync was called.
 		const int		timeSlice = 3; //Timeslice in minutes.
-
+		SyncFile		syncFile;
+		
 		/// <summary>
 		/// Returns true if we should yield our timeslice.
 		/// </summary>
@@ -589,6 +593,8 @@ namespace Simias.Sync
 			lock (this)
 			{
 				stopping = true;
+				if (syncFile != null)
+					syncFile.Stop = true;
 			}
 		}
 
@@ -1411,6 +1417,7 @@ namespace Simias.Sync
 						bool success = false;
 						try
 						{
+							lock (this) {syncFile = file;}
 							log.Info("Downloading File {0} from server", file.Name);
 							success = file.DownLoadFile();
 						}
@@ -1421,6 +1428,7 @@ namespace Simias.Sync
 						finally
 						{
 							success = file.Close(success);
+							lock (this) {syncFile = null;}
 							if (success)
 							{
 								workArray.RemoveNodeFromServer(nodeID);
@@ -1699,12 +1707,14 @@ namespace Simias.Sync
 							bool success = false;
 							try
 							{
+								lock (this) {syncFile = file;}
 								log.Info("Uploading File {0} to server", file.Name);
 								success = file.UploadFile();
 							}
 							finally
 							{
 								SyncNodeStatus syncStatus = file.Close(success);
+								lock (this) {syncFile = null;}
 								switch (syncStatus.status)
 								{
 									case SyncStatus.Success:
@@ -1760,7 +1770,8 @@ namespace Simias.Sync
 		Hashtable		nodesFromServer;
 		Hashtable		nodesToServer;
 		Access.Rights	rights;
-
+		bool			sparseReplica = false;
+		
 		internal class nodeTypeEntry : IComparable
 		{
 			static int				counter = 0;
@@ -2050,7 +2061,7 @@ namespace Simias.Sync
 		bool NodeHasChanged(string nodeID, ulong MasterIncarnation)
 		{
 			Node oldNode = collection.GetNodeByID(nodeID);
-			if (oldNode == null || oldNode.MasterIncarnation != MasterIncarnation)
+			if ((oldNode == null && !sparseReplica) || oldNode.MasterIncarnation != MasterIncarnation)
 				return true;
 			return false;
 		}

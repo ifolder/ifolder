@@ -413,6 +413,8 @@ namespace Simias.Sync
 			// Get the file blocks from the server.
 			foreach (DownloadSegment seg in downloadMap)
 			{
+				if (stopping)
+					break;
 				HttpWebResponse response = syncService.ReadFile(seg, HashData.BlockSize);
 				Stream inStream = response.GetResponseStream();
 				try
@@ -689,6 +691,8 @@ namespace Simias.Sync
 			
 			foreach(OffsetSegment seg in writeArray)
 			{
+				if (stopping)
+					break;
 				// Write the bytes to the output stream.
 				if (seg.Length > 0)
 				{

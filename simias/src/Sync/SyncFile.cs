@@ -453,6 +453,8 @@ namespace Simias.Sync
 		#region fields
 
 		bool					nameConflict = false;
+		/// <summary>Used to signal to stop upload or downloading the file.</summary>
+		protected bool			stopping = false;
 		/// <summary>The Collection the file belongs to.</summary>
 		protected Collection	collection;
 		/// <summary> The node that represents the file.</summary>
@@ -583,6 +585,14 @@ namespace Simias.Sync
 		public string Name
 		{
 			get { return Path.GetFileName(file); }
+		}
+
+		/// <summary>
+		/// Tells the file to stop and return.
+		/// </summary>
+		public bool Stop
+		{
+			set { stopping = value; }
 		}
 
 		#endregion
