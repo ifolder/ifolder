@@ -30,6 +30,7 @@
 #import "iFolderData.h"
 #import "VerticalBarView.h"
 #import "DiskSpace.h"
+#import "AuthStatus.h"
 
 @implementation AccountsController
 
@@ -96,58 +97,138 @@
 		([[userName stringValue] length] > 0) &&
 		([[password stringValue] length] > 0) )
 	{
+		unsigned int statusCode;
+		AuthStatus *authStatus = nil;
+
 		@try
 		{
 			iFolderDomain *newDomain = [simiasService ConnectToDomain:[userName stringValue] 
 				usingPassword:[password stringValue] andHost:[host stringValue]];
 
-
-			// Setup the Default Domain
-			if([defaultAccount state] == YES)
-			{
-				@try
-				{
-					[simiasService SetDefaultDomain:[newDomain ID]];	
-					if(defaultDomain != nil)
-						[defaultDomain setValue:NO forKeyPath:@"properties.isDefault"];
-								
-					defaultDomain = newDomain;
-				}
-				@catch(NSException ex)
-				{
-					NSLog(@"SetDefaultDomain Failed with an exception.");
-				}
-			}
-
-			if([rememberPassword state] == YES)
-			{
-				@try
-				{
-					[simiasService SetDomainPassword:[newDomain ID] password:[password stringValue]];	
-					NSLog(@"Saving password succeeded.");
-				}
-				@catch(NSException ex)
-				{
-					NSLog(@"Saving domain password Failed with an exception.");
-				}			
-			}
-
-			createMode = NO;			
-			[domains addObject:newDomain];
-			[accounts reloadData];
-
-			NSMutableIndexSet    *childRows = [NSMutableIndexSet indexSet];
-			[childRows addIndex:([domains count] - 1)];
-			[accounts selectRowIndexes:childRows byExtendingSelection:NO];
+			statusCode = [[newDomain statusCode] unsignedIntValue];
 			
-			[[iFolderData sharedInstance] refresh:YES];
+			// Check to see if we are in grace, if we are, we need to call to get the authStatus so we can
+			// tell the user they are limited by grace logins
+			if(statusCode == 1)
+			{
+				NSLog(@"ConnectToDomain returned status code of in grace");
+				@try
+				{
+					authStatus = [[simiasService LoginToRemoteDomain:[newDomain ID] usingPassword:[password stringValue]] retain];
+					statusCode = [[authStatus statusCode] intValue];
+				}
+				@catch (NSException *e)
+				{
+					NSLog(@"LoginToRemoteDomain Failed");
+					NSLog([e reason]);
+				}
+			}
+			
+			switch(statusCode)
+			{
+				case 0:		// Success
+				case 1:		// SuccessInGrace
+				{
+					if([defaultAccount state] == YES)
+					{
+						@try
+						{
+							[simiasService SetDefaultDomain:[newDomain ID]];	
+							if(defaultDomain != nil)
+								[defaultDomain setValue:[NSNumber numberWithBool:NO] forKeyPath:@"properties.isDefault"];
+										
+							// set the new domain to be the default
+							defaultDomain = newDomain;
+							[defaultDomain setValue:[NSNumber numberWithBool:YES] forKeyPath:@"properties.isDefault"];
+						}
+						@catch(NSException ex)
+						{
+							NSLog(@"SetDefaultDomain Failed with an exception.");
+						}
+					}
+
+					if([rememberPassword state] == YES)
+					{
+						@try
+						{
+							[simiasService SetDomainPassword:[newDomain ID] password:[password stringValue]];	
+							NSLog(@"Saving password succeeded.");
+						}
+						@catch(NSException ex)
+						{
+							NSLog(@"Saving domain password Failed with an exception.");
+						}			
+					}
+
+					createMode = NO;			
+					[domains addObject:newDomain];
+					[accounts reloadData];
+
+					NSMutableIndexSet    *childRows = [NSMutableIndexSet indexSet];
+					[childRows addIndex:([domains count] - 1)];
+					[accounts selectRowIndexes:childRows byExtendingSelection:NO];
+					
+					[[iFolderData sharedInstance] refresh:YES];
+					
+					if( (authStatus != nil) && ([authStatus remainingGraceLogins] < [authStatus totalGraceLogins]) )
+					{
+						NSBeginAlertSheet(NSLocalizedString(@"Expired Password", nil), 
+						NSLocalizedString(@"OK", nil), nil, nil, 
+						parentWindow, nil, nil, nil, nil, 
+						[NSString stringWithFormat:NSLocalizedString(@"Your password has expired.  You have %d grace logins remaining.", 
+									nil), [authStatus remainingGraceLogins]]);
+						[authStatus release];
+						authStatus = nil;
+					}
+					break;
+				}
+				case 2:		// UnknownUser
+				case 4:		// InvalidCredentials
+				case 5:		// InvalidPassword
+				{
+					NSBeginAlertSheet(NSLocalizedString(@"Unable to Connect to iFolder Server", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil, 
+					parentWindow, nil, nil, nil, nil, 
+					NSLocalizedString(@"The user name or password is invalid.  Please try again.", nil));
+					break;
+				}
+				case 6:		// AccountDisabled
+				{
+					NSBeginAlertSheet(NSLocalizedString(@"Unable to Connect to iFolder Server", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil, 
+					parentWindow, nil, nil, nil, nil, 
+					NSLocalizedString(@"The user account is disabled.  Please contact your network administrator for assistance.", nil));
+					break;
+				}
+				case 7:		// AccountLockout
+				{
+					NSBeginAlertSheet(NSLocalizedString(@"Unable to Connect to iFolder Server", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil, 
+					parentWindow, nil, nil, nil, nil, 
+					NSLocalizedString(@"The user account has been locked out.  Please contact your network administrator for assistance.", nil));
+					break;
+				}
+				case 8:		// UnknownDomain
+				case 9:		// InternalException
+				case 10:	// MethodNotSupported
+				case 11:	// Timeout
+				case 3:		// AmbiguousUser
+				case 12:	// Unknown
+				{
+					NSBeginAlertSheet(NSLocalizedString(@"Unable to Connect to iFolder Server", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil, 
+					parentWindow, nil, nil, nil, nil, 
+					NSLocalizedString(@"An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", nil));
+					break;
+				}
+			}
 		}
 		@catch (NSException *e)
 		{
-			NSBeginAlertSheet(NSLocalizedString(@"Activation failed", nil), 
+			NSBeginAlertSheet(NSLocalizedString(@"Unable to Connect to iFolder Server", nil), 
 				NSLocalizedString(@"OK", nil), nil, nil, 
 				parentWindow, nil, nil, nil, nil, 
-				[NSString stringWithFormat:NSLocalizedString(@"Activation failed with the error: %@", nil), [e name]]);
+				NSLocalizedString(@"An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", nil));
 		}
 	}
 }

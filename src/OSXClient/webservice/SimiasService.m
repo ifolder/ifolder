@@ -25,12 +25,14 @@
 #include <simiasStub.h>
 #include <simias.nsmap>
 #import "Simias.h"
+#import "AuthStatus.h"
 
 @implementation SimiasService
 
 void init_simias_gsoap(struct soap *pSoap);
 void cleanup_simias_gsoap(struct soap *pSoap);
 NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
+NSDictionary *getAuthStatus(struct ns1__Status *status);
 
 
 - (id)init 
@@ -444,8 +446,9 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 // LoginToRemoteDomain
 // Provide the credentials to authenticate to a domain
 //----------------------------------------------------------------------------
--(void) LoginToRemoteDomain:(NSString *)domainID usingPassword:(NSString *)password
+-(AuthStatus *) LoginToRemoteDomain:(NSString *)domainID usingPassword:(NSString *)password
 {
+	AuthStatus *authStatus = nil;
     struct soap soap;
     int err_code;
 
@@ -473,10 +476,22 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 	}
 	else
 	{
-		// add some crap here to deal with the results
+		struct ns1__Status *status;
+		status = loginToDomainResponse.LoginToRemoteDomainResult;
+		if(status == NULL)
+		{
+			cleanup_simias_gsoap(&soap);
+			[NSException raise:@"Authentication returned null object"
+							format:@"Error in AuthenticateToDomain"];		
+		}
+
+		authStatus = [[[AuthStatus alloc] init] autorelease];
+		[authStatus setProperties:getAuthStatus(status)];
 	}
 
     cleanup_simias_gsoap(&soap);
+
+	return authStatus;
 }
 
 
@@ -508,6 +523,38 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo)
 	[newProperties setObject:[NSNumber numberWithBool:domainInfo->IsDefault] forKey:@"isDefault"];
 	[newProperties setObject:[NSNumber numberWithBool:domainInfo->IsSlave] forKey:@"isSlave"];
 	[newProperties setObject:[NSNumber numberWithBool:domainInfo->Active] forKey:@"isEnabled"];
+	[newProperties setObject:[NSNumber numberWithBool:domainInfo->Authenticated] forKey:@"authenticated"];
+	[newProperties setObject:[NSNumber numberWithUnsignedInt:domainInfo->StatusCode] forKey:@"statusCode"];
+
+	return newProperties;
+}
+
+
+
+//----------------------------------------------------------------------------
+// getAuthStatus
+// Prepares the properties to be store in the AuthStatus object
+//----------------------------------------------------------------------------
+NSDictionary *getAuthStatus(struct ns1__Status *status)
+{
+	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
+	
+	// Setup properties from the domainWeb object
+	[newProperties setObject:[NSNumber numberWithUnsignedInt:status->statusCode] forKey:@"statusCode"];
+
+	if(status->DomainID != nil)
+		[newProperties setObject:[NSString stringWithCString:status->DomainID] forKey:@"domainID"];
+	if(status->UserID != nil)
+		[newProperties setObject:[NSString stringWithCString:status->UserID] forKey:@"userID"];
+	if(status->UserName != nil)
+		[newProperties setObject:[NSString stringWithCString:status->UserName] forKey:@"userName"];
+	if(status->DistinguishedUserName != nil)
+		[newProperties setObject:[NSString stringWithCString:status->DistinguishedUserName] forKey:@"distinguishedUserName"];
+	if(status->ExceptionMessage != nil)
+		[newProperties setObject:[NSString stringWithCString:status->ExceptionMessage] forKey:@"exceptionMessage"];
+
+	[newProperties setObject:[NSNumber numberWithInt:status->TotalGraceLogins] forKey:@"totalGraceLogins"];
+	[newProperties setObject:[NSNumber numberWithInt:status->RemainingGraceLogins] forKey:@"remainingGraceLogins"];
 
 	return newProperties;
 }

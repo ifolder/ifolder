@@ -33,6 +33,7 @@
 #import "SMEvents.h"
 #import "iFolderNotificationController.h"
 #import "config.h"
+#import "AuthStatus.h"
 
 
 @implementation iFolderApplication
@@ -449,21 +450,21 @@
 // authenticateToDomain
 // This will authenticate using the specified password and domainID
 //===================================================================
-- (BOOL)authenticateToDomain:(NSString *)domainID withPassword:(NSString *)password
+- (AuthStatus *)authenticateToDomain:(NSString *)domainID withPassword:(NSString *)password
 {
+	AuthStatus *authStatus = nil;
 	SimiasService *simiasService;
 	simiasService = [[SimiasService alloc] init];		
 
 	@try
 	{
-		[simiasService LoginToRemoteDomain:domainID usingPassword:password];
-		return YES;
+		authStatus = [simiasService LoginToRemoteDomain:domainID usingPassword:password];
 	}
 	@catch (NSException *e)
 	{
 		NSLog(@"failed to authenticate");
 	}
-	return NO;
+	return authStatus;
 }
 
 

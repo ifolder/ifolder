@@ -21,35 +21,34 @@
  * 
  ***********************************************************************/
 
-#ifndef __SimiasService__
-#define __SimiasService__
-
 #import <Cocoa/Cocoa.h>
-#include <Carbon/Carbon.h>
-#import "iFolderDomain.h"
 
-@class AuthStatus;
+/*
+	enum ns1__StatusCodes {	ns1__StatusCodes__Success = 0, 
+							ns1__StatusCodes__SuccessInGrace = 1, 
+							ns1__StatusCodes__UnknownUser = 2, 
+							ns1__StatusCodes__AmbiguousUser = 3, 
+							ns1__StatusCodes__InvalidCredentials = 4, 
+							ns1__StatusCodes__InvalidPassword = 5, 
+							ns1__StatusCodes__AccountDisabled = 6, 
+							ns1__StatusCodes__AccountLockout = 7, 
+							ns1__StatusCodes__UnknownDomain = 8, 
+							ns1__StatusCodes__InternalException = 9, 
+							ns1__StatusCodes__MethodNotSupported = 10, 
+							ns1__StatusCodes__Timeout = 11, 
+							ns1__StatusCodes__Unknown = 12};
+*/
 
-
-@interface SimiasService : NSObject
+@interface AuthStatus : NSObject
 {
-	NSString	*simiasURL;
+	NSMutableDictionary * properties;
 }
 
--(NSArray *) GetDomains:(BOOL)onlySlaves;
--(iFolderDomain *) ConnectToDomain:(NSString *)UserName usingPassword:(NSString *)Password andHost:(NSString *)Host;
--(void) LeaveDomain:(NSString *)domainID withOption:(BOOL)localOnly;
--(BOOL) ValidCredentials:(NSString *)domainID forUser:(NSString *)userID;
--(void) SetDomainPassword:(NSString *)domainID password:(NSString *)password;
--(NSString *) GetDomainPassword:(NSString *)domainID;
--(void) SetDomainActive:(NSString *)domainID;
--(void) SetDomainInactive:(NSString *)domainID;
--(void) SetDefaultDomain:(NSString *)domainID;
+-(NSMutableDictionary *) properties;
+-(void) setProperties: (NSDictionary *)newProperties;
 
-
--(AuthStatus *) LoginToRemoteDomain:(NSString *)domainID usingPassword:(NSString *)password;
-
+-(NSNumber *)statusCode;
+-(int)totalGraceLogins;
+-(int)remainingGraceLogins;
 
 @end
-
-#endif // __SimiasService__

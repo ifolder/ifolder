@@ -23,21 +23,37 @@
 
 #import <Cocoa/Cocoa.h>
 
+
+
 /*
 	enum ns1__DomainType Type;
 	enum xsd__boolean Active;
-	char *Name;	
-	char *Description;	
-	char *ID;	
-	char *RosterID;	
-	char *RosterName;	
-	char *MemberID;
-	char *MemberName;	
-	char *RemoteUrl;	
+	enum xsd__boolean Authenticated;
+	char *Name;
+	char *Description;
+	char *ID;
+	char *MemberUserID;
+	char *MemberName;
+	char *RemoteUrl;
 	char *POBoxID;
-	char *Host;	
-	enum xsd__boolean IsSlave;	
-	enum xsd__boolean IsDefault;	
+	char *Host;
+	enum xsd__boolean IsSlave;
+	enum xsd__boolean IsDefault;
+	enum ns1__StatusCodes StatusCode;	
+
+	enum ns1__StatusCodes {	ns1__StatusCodes__Success = 0, 
+							ns1__StatusCodes__SuccessInGrace = 1, 
+							ns1__StatusCodes__UnknownUser = 2, 
+							ns1__StatusCodes__AmbiguousUser = 3, 
+							ns1__StatusCodes__InvalidCredentials = 4, 
+							ns1__StatusCodes__InvalidPassword = 5, 
+							ns1__StatusCodes__AccountDisabled = 6, 
+							ns1__StatusCodes__AccountLockout = 7, 
+							ns1__StatusCodes__UnknownDomain = 8, 
+							ns1__StatusCodes__InternalException = 9, 
+							ns1__StatusCodes__MethodNotSupported = 10, 
+							ns1__StatusCodes__Timeout = 11, 
+							ns1__StatusCodes__Unknown = 12};
 */
 
 @interface iFolderDomain : NSObject
@@ -61,6 +77,8 @@
 -(NSNumber *)isDefault;
 -(NSNumber *)isSlave;
 -(NSNumber *)isEnabled;
+-(BOOL)authenticated;
+-(NSNumber *)statusCode;
 
 
 @end
