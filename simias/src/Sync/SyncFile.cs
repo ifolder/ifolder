@@ -493,7 +493,15 @@ namespace Simias.Sync
 		{
 			this.node = node;
 			this.nodeID = node.ID;
-			this.file = node.GetFullPath(collection);
+			try
+			{
+				this.file = node.GetFullPath(collection);
+			}
+			catch
+			{
+				// If this failed the file name has illegal characters.
+				nameConflict = true;
+			}
 			if (workBin == null)
 			{
 				workBin = Path.Combine(Configuration.GetConfiguration().StorePath, workBinDir);
@@ -536,7 +544,17 @@ namespace Simias.Sync
 						nameConflict = true;
 				}
 				// Now make sure we don't have any illegal characters.
-				if (path.IndexOfAny(Path.InvalidPathChars) != -1)
+				// We can do this by creating a FileInfo instance.
+				try
+				{
+					new FileInfo(node.Name);
+				}
+				catch
+				{
+					nameConflict = true;
+				}
+
+				if (path.IndexOf(Path.PathSeparator) != -1)
 					nameConflict = true;
 
 				if (nameConflict)

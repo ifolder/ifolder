@@ -243,6 +243,7 @@ namespace Simias.Sync
 					cLock = CollectionLock.GetLock(collection.ID);
 					if (cLock == null)
 					{
+						nodeContainer = null;
 						si.Status = StartSyncStatus.Busy;
 						return;
 					}
