@@ -244,7 +244,7 @@ namespace Simias.Web
 			c.Commit(nodeList.ToArray( typeof( Node) ) as Node[] );
 
 			AddSubscription( store, c, member, 
-					member, SubscriptionStates.Ready);
+					member, SubscriptionStates.Ready, Type);
 
 			return c;
 		}
@@ -563,7 +563,8 @@ namespace Simias.Web
 		/// </param>
 		public static void AddMember(	string CollectionID, 
 										string UserID,
-										string Rights)
+										string Rights,
+										string collectionType)
 		{
 			Store store = Store.GetStore();
 
@@ -599,136 +600,8 @@ namespace Simias.Web
 			col.Commit(newMember);
 
 			AddSubscription( store, col, 
-					newMember, newMember, SubscriptionStates.Ready);
-		}
-
-
-
-
-		/// <summary>
-		/// WebMethod that invites an Enterprise member to an Enterprise
-		/// Collection granting the Rights specified.  Note:  This will
-		/// not add the as user but place a subscription in their
-		/// POBox
-		/// </summary>
-		/// <param name = "CollectionID">
-		/// The ID of the collection representing the Collection to which
-		/// the member is to be invited
-		/// </param>
-		/// <param name = "UserID">
-		/// The ID of the member to be invited
-		/// </param>
-		/// <param name = "Rights">
-		/// The Rights to be given to the newly invited member
-		/// </param>
-		public static void InviteEnterpriseUser(	string CollectionID, 
-													string UserID,
-													string Rights)
-		{
-			Store store = Store.GetStore();
-
-			// Check to be sure we are not in Workgroup Mode
-			if(store.DefaultDomain == Simias.Storage.Domain.WorkGroupDomainID)
-				throw new Exception("The client default is set to Workgroup Mode.  Invitations only work in the enterprise version of ifolder.");
-
-			Collection col = store.GetCollectionByID(CollectionID);
-			if(col == null)
-				throw new Exception("Invalid CollectionID");
-
-			if(col.Domain == Simias.Storage.Domain.WorkGroupDomainID)
-				throw new Exception("Collection is a Workgroup Collection.  Users cannot be invited to a workgroup Collection.");
-
-			Roster roster = 
-				store.GetDomain(store.DefaultDomain).GetRoster(store);
-
-			if(roster == null)
-				throw new Exception("Unable to access user roster");
-
-			Simias.Storage.Member member = roster.GetMemberByID(UserID);
-			if(member == null)
-				throw new Exception("Invalid UserID");
-
-			Access.Rights newRights;
-
-			if(Rights == "Admin")
-				newRights = Access.Rights.Admin;
-			else if(Rights == "ReadOnly")
-				newRights = Access.Rights.ReadOnly;
-			else if(Rights == "ReadWrite")
-				newRights = Access.Rights.ReadWrite;
-			else
-				throw new Exception("Invalid Rights Specified");
-
-
-			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(
-											store, 
-											store.DefaultDomain);
-
-			// TODO: Fix this, this is LAME!!!!
-			string collectionType;
-			if(col.IsType(col, "iFolder"))
-				collectionType = "iFolder";
-			else
-				collectionType = "Collection";
-
-			Subscription sub = poBox.CreateSubscription(col,
-										col.GetCurrentMember(),
-										collectionType);
-
-			sub.SubscriptionRights = newRights;
-			sub.ToName = member.Name;
-			sub.ToIdentity = UserID;
-
-			poBox.AddMessage(sub);
-		}
-
-
-
-
-		/// <summary>
-		/// Accpets and Enterprise Subscription
-		/// </summary>
-		/// <param name = "CollectionID">
-		/// The ID of the collection representing the Collection to which
-		/// the member is to be invited
-		/// </param>
-		/// <param name = "UserID">
-		/// The ID of the member to be invited
-		/// </param>
-		/// <param name = "Rights">
-		/// The Rights to be given to the newly invited member
-		/// </param>
-		public static void AcceptEnterpriseSubscription(
-													string SubscriptionID, 
-													string LocalPath)
-		{
-			Store store = Store.GetStore();
-
-			// Check to be sure we are not in Workgroup Mode
-			if(store.DefaultDomain == Simias.Storage.Domain.WorkGroupDomainID)
-				throw new Exception("The client default is set to Workgroup Mode.  Invitations only work in the enterprise version of ifolder.");
-
-			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(
-											store, 
-											store.DefaultDomain);
-
-			Node node = poBox.GetNodeByID(SubscriptionID);
-			if(node == null)
-				throw new Exception("Invalid SubscriptionID");
-				
-			Subscription sub = new Subscription(node);
-
-			sub.CollectionRoot = Path.GetFullPath(LocalPath);
-			if(sub.SubscriptionState == SubscriptionStates.Ready)
-			{
-				poBox.Commit(sub);
-				sub.CreateSlave(store);
-			}
-			else
-			{
-				sub.Accept(store, SubscriptionDispositions.Accepted);
-				poBox.Commit(sub);
-			}
+					newMember, newMember, SubscriptionStates.Ready,
+					collectionType);
 		}
 
 
@@ -802,18 +675,12 @@ namespace Simias.Web
 											Collection collection, 
 											Simias.Storage.Member inviteMember,
 											Simias.Storage.Member newMember,
-											SubscriptionStates state )
+											SubscriptionStates state,
+											string collectionType)
 		{
 			Simias.POBox.POBox poBox = 
 				Simias.POBox.POBox.GetPOBox(store, store.DefaultDomain, 
 												newMember.UserID );
-
-			// TODO: Fix this, this is LAME!!!!
-			string collectionType;
-			if(collection.IsType(collection, "iFolder"))
-				collectionType = "iFolder";
-			else
-				collectionType = "Collection";
 
 			Subscription sub = poBox.CreateSubscription(collection,
 														inviteMember,
