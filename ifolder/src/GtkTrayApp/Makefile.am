@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-UILIB_CSFILES = $(srcdir)/iFolderProperties.cs $(srcdir)/ApplicationProperties.cs $(srcdir)/DirectoryEntry.cs $(srcdir)/CollectionBrowser.cs $(srcdir)/iFolderBrowser.cs $(srcdir)/InvitationWizard.cs $(srcdir)/IntroDialog.cs $(srcdir)/SettingsPage.cs $(srcdir)/CrashReport.cs $(srcdir)/ReunionBrowser.cs
+UILIB_CSFILES = $(srcdir)/ConflictResolver.cs $(srcdir)/iFolderProperties.cs $(srcdir)/ApplicationProperties.cs $(srcdir)/DirectoryEntry.cs $(srcdir)/CollectionBrowser.cs $(srcdir)/iFolderBrowser.cs $(srcdir)/InvitationWizard.cs $(srcdir)/IntroDialog.cs $(srcdir)/SettingsPage.cs $(srcdir)/CrashReport.cs $(srcdir)/ReunionBrowser.cs
 UILIB_CSFILES_CSC := $(subst /,$(SEP),$(UILIB_CSFILES))
 UILIB_INCLUDES = 
 UILIB_RESOURCES =
@@ -59,9 +59,9 @@ INSTALL_BIN_FILES = $(srcdir)/invitationwizard $(srcdir)/collectionbrowser $(src
 
 INSTALL_LIB_FILES = $(srcdir)/setup-autostart
 
-GLADE_FILES = ifolder-properties.glade application-properties.glade ifolder-banner.png ifolder.glade collection-browser.glade ifolder-confirmation.glade properties-dialog.glade crash-report.glade reunion-browser.glade ifolder-browser.glade collection.png folder.png ifolder.png ifolderfolder.png invitewiz.png nuke.png
+GLADE_FILES = ifolder-properties.glade conflict-resolver.glade application-properties.glade ifolder-banner.png ifolder.glade collection-browser.glade ifolder-confirmation.glade properties-dialog.glade crash-report.glade reunion-browser.glade ifolder-browser.glade collection.png folder.png ifolder-collision.png ifolder.png ifolderfolder.png invitewiz.png nuke.png
 
-IMAGE_FILES = collection.png Node.png Tombstone.png BaseContact.png folder.png ifolder.png ifolder-shutdown.png ifolder-startup.png ifolderfolder.png file.png ifolder.gif property.png 
+IMAGE_FILES = collection.png Node.png Tombstone.png BaseContact.png folder.png ifolder.png ifolder-collision.png ifolder-shutdown.png ifolder-startup.png ifolderfolder.png file.png ifolder.gif property.png 
 
 EXTRA_DIST = $(UILIB_CSFILES) $(TrayAppGtk_CSFILES) $(InviteAppGtk_CSFILES) $(CollectionBrowserGtk_CSFILES) $(ReunionBrowserGtk_CSFILES) $(iFolderBrowserGtk_CSFILES) $(GLADE_FILES) $(IMAGE_FILES) $(INSTALL_BIN_FILES) $(INSTALL_LIB_FILES)
 
