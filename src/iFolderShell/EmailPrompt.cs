@@ -64,7 +64,7 @@ namespace Novell.iFolder.iFolderCom
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(368, 32);
 			this.label1.TabIndex = 0;
-			this.label1.Text = "Please enter your email address.  (Don\'t worry ... this is only temporary)";
+			this.label1.Text = "Please enter your email address.";
 			// 
 			// email
 			// 

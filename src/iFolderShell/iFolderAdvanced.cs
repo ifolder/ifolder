@@ -639,41 +639,12 @@ namespace Novell.iFolder.iFolderCom
 						}
 					}
 
-					// TODO: change this to use an array and add them all at once.
-					Subscription subscr = poBox.CreateSubscription(ifolder, ifolder.GetCurrentMember(), typeof(iFolder).Name);
-
-					// Add all of the other properties (ToAddress, FromAddress, etc.)
-					subscr.FromAddress = sendersEmail;
-					subscr.SubscriptionRights = slMember.Member.Rights;
-					subscr.ToName = slMember.Member.Name;
-					subscr.SubscriptionCollectionName = ifolder.Name;
-
-					// Take the relationship off the ShareListMember and put it on the Subscription object.  This will
-					// be used to hook up the Member and Contact objects after the subscription has been accepted.
-					if (ifolder.Domain.Equals(Domain.WorkGroupDomainID))
-					{
-						Property property = slMember.Member.Properties.GetSingleProperty("Contact");
-						if (property != null)
-						{
-							property.LocalProperty = true;
-							subscr.Properties.AddProperty(property);
-							Relationship relationship = (Relationship)property.Value;
-
-							// Get the contact so that we can get the e-mail address from it.
-							Novell.AddressBook.AddressBook ab = abManager.GetAddressBook(relationship.CollectionID);
-							Contact contact = ab.GetContact(relationship.NodeID);
-
-							subscr.ToAddress = contact.EMail;
-							subscr.ToIdentity = contact.UserID;
-						}
-					}
-					else
-					{
-						subscr.ToIdentity = slMember.Member.UserID;
-					}
+					// Add the from e-mail address.
+					slMember.Subscription.FromAddress = sendersEmail;
 					
+					// TODO: change this to use an array and add them all at once.
 					// Put the subscription in the POBox.
-					poBox.AddMessage(subscr);
+					poBox.AddMessage(slMember.Subscription);
 
 					// Update the state.
 					slMember.Added = false;
@@ -683,7 +654,6 @@ namespace Novell.iFolder.iFolderCom
 					// TODO: may need to save rights on subscription objects in the future.
 
 					// Get the rights for this contact.
-					slMember.Member.Rights = stringToRights(lvitem.SubItems[2].Text);
 					ifolder.Commit(slMember.Member);
 
 					// Reset the flags.
@@ -698,7 +668,7 @@ namespace Novell.iFolder.iFolderCom
 				{
 					try
 					{
-						if (slMember.IsMember)
+						if (slMember.Member != null)
 						{
 							// Delete the member.
 							ifolder.Commit(ifolder.Delete(slMember.Member));
@@ -787,16 +757,19 @@ namespace Novell.iFolder.iFolderCom
 
 			try
 			{
-				if (ifolder.GetCurrentMember().UserID == slMember.Member.UserID)
+				if ((slMember.Member != null) && ifolder.GetCurrentMember().UserID.Equals(slMember.Member.UserID))
 				{
 					// Don't allow current user to be modified.
 				}
 				else
 				{
-					if (lvi.SubItems[2].Text != access)
+					if (slMember.Rights != rights)
 					{
 						// Mark this item as changed.
 						slMember.Changed = true;
+
+						// Set the rights.
+						slMember.Rights = rights;
 
 						// Change the subitem text.
 						lvi.SubItems[2].Text = access;
@@ -806,7 +779,7 @@ namespace Novell.iFolder.iFolderCom
 					}
 
 					// Don't change the image if this item is not a member.
-					if (slMember.IsMember)
+					if (slMember.Member != null)
 					{
 						lvi.ImageIndex = imageIndex;
 						lvi.SubItems[1].Text = slMember.Member.IsOwner ? "Owner" : "";
@@ -931,14 +904,6 @@ namespace Novell.iFolder.iFolderCom
 				logger.Debug(ex, "Loading images");
 			}
 
-//			defaultAddressBook = abManager.OpenDefaultAddressBook();
-
-			// Enable/disable the Add button.
-//			this.add.Enabled = ifolder.Shareable;
-
-			// Get the access control list for the collection.
-//			IFAccessControlList aclList = ifolder.GetAccessControlList();
-
 			// Change the pointer to an hourglass.
 			Cursor = Cursors.WaitCursor;
 			shareWith.BeginUpdate();
@@ -952,60 +917,59 @@ namespace Novell.iFolder.iFolderCom
 				foreach (ShallowNode shallowNode in memberList)
 				{
 					// TODO: We may want to reconstitute only when necessary ... for example, when the item comes into view
-					Member member = new Member(ifolder, shallowNode);
+					ShareListMember shareMember = new ShareListMember();
+					shareMember.Member = new Member(ifolder, shallowNode);
 
 					string[] items = new string[3];
 
-					Contact contact = abManager.GetContact(member);
+					Contact contact = abManager.GetContact(shareMember.Member);
 					if (contact != null)
 					{
 						items[0] = contact.FN;
 					}
 					else
 					{
-						items[0] = member.Name;
+						items[0] = shareMember.Member.Name;
 					}
 
-					items[1] = member.IsOwner ? "Owner" : "";
+					items[1] = shareMember.Member.IsOwner ? "Owner" : "";
 
 					int imageIndex;
+					// Map the rights to a string.
+					items[2] = rightsToString(shareMember.Rights, out imageIndex);
 
-					// TODO: fix this to use rightsToString ... and maybe change the image index to line up with the rights enum.
-					items[2] = rightsToString(member.Rights, out imageIndex);
-
-					if (ifolder.GetCurrentMember().UserID == member.UserID)
+					if (ifolder.GetCurrentMember().UserID == shareMember.Member.UserID)
 					{
 						imageIndex = 0;
 					}
 
 					ListViewItem lvitem = new ListViewItem(items, imageIndex);
-					ShareListMember shareMember = new ShareListMember();
-					shareMember.Member = member;
-					shareMember.IsMember = true;
 					lvitem.Tag = shareMember;
 
 					shareWith.Items.Add(lvitem);
 				}
 
-				// TODO: Load the stuff from the POBox.
+				// Load the stuff from the POBox.
 				ICSList messageList = poBox.Search(Subscription.SubscriptionCollectionIDProperty, ifolder.ID, SearchOp.Equal);
 				foreach (ShallowNode shallowNode in messageList)
 				{
-					Subscription sub = new Subscription(poBox, shallowNode);
 					ShareListMember shareMember = new ShareListMember();
-					shareMember.Member = new Member(sub.ToName, Guid.NewGuid().ToString(), sub.SubscriptionRights);
-					shareMember.Subscription = sub;
+					shareMember.Subscription = new Subscription(poBox, shallowNode);
 
-					string[] items = new string[3];
-					items[0] = sub.ToName;
-					items[1] = sub.SubscriptionState.ToString();
-					int imageIndex;
-					items[2] = rightsToString(sub.SubscriptionRights, out imageIndex);
+					// Don't add any subscriptions that are in the ready state.
+					if (shareMember.Subscription.SubscriptionState != SubscriptionStates.Ready)
+					{
+						string[] items = new string[3];
+						items[0] = shareMember.Subscription.ToName;
+						items[1] = shareMember.Subscription.SubscriptionState.ToString();
+						int imageIndex;
+						items[2] = rightsToString(shareMember.Rights, out imageIndex);
 					
-					ListViewItem lvi = new ListViewItem(items, 5);
-					lvi.Tag = shareMember;
+						ListViewItem lvi = new ListViewItem(items, 5);
+						lvi.Tag = shareMember;
 
-					shareWith.Items.Add(lvi);
+						shareWith.Items.Add(lvi);
+					}
 				}
 			}
 			catch (SimiasException ex)
@@ -1175,26 +1139,28 @@ namespace Novell.iFolder.iFolderCom
 						{
 							// The contact was not in the removed list, so create a new one.
 							shareMember = new ShareListMember();
+							shareMember.Added = true;
 
-							Member member;
-							
+							shareMember.Subscription = poBox.CreateSubscription(ifolder, ifolder.GetCurrentMember(), typeof(iFolder).Name);
+
+							// Add all of the other properties (ToAddress, FromAddress, etc.)
+							shareMember.Rights = Access.Rights.ReadWrite;
+							shareMember.Subscription.ToName = c.FN;
+							shareMember.Subscription.SubscriptionCollectionName = ifolder.Name;
+
+							// Create a relationship on the Subscription object ... this will be used later to link the member with the contact.
 							if (ifolder.Domain.Equals(Domain.WorkGroupDomainID))
 							{
-								// Create a place-holder member.
-								member = new Member(c.FN, Guid.NewGuid().ToString(), Access.Rights.ReadWrite);
-
-								// Create a relationship on the member ... this will be put on the Subscription object later on.
 								string collectionId = (string)c.Properties.GetSingleProperty(BaseSchema.CollectionId).Value;
-								member.Properties.AddProperty("Contact", new Relationship(collectionId, c.ID));
+								shareMember.Subscription.Properties.AddProperty("Contact", new Relationship(collectionId, c.ID));
+								shareMember.Subscription.ToAddress = c.EMail;
+								shareMember.Subscription.ToIdentity = c.UserID;
 							}
 							else
 							{
 								Novell.AddressBook.AddressBook ab = abManager.GetAddressBook(c.Properties.GetSingleProperty(BaseSchema.CollectionId).ToString());
-								member = ab.GetMemberByID(c.UserID);
+								shareMember.Subscription.ToIdentity = ab.GetMemberByID(c.UserID).UserID;
 							}
-
-							shareMember.Member = member;
-							shareMember.Added = true;
 						}
 					}
 
@@ -1224,7 +1190,7 @@ namespace Novell.iFolder.iFolderCom
 				try
 				{
 					// Don't allow the current user to be removed.
-					if (!currentUser.Equals(slMember.Member.UserID))
+					if ((slMember.Member != null) && !currentUser.Equals(slMember.Member.UserID))
 					{
 						// If this item is not newly added, we need to add it to the removedList.
 						if (!slMember.Added)
@@ -1263,7 +1229,7 @@ namespace Novell.iFolder.iFolderCom
 		{
 			ListViewItem lvi = this.shareWith.SelectedItems[0];
 			ShareListMember slMember = (ShareListMember)lvi.Tag;
-			slMember.Member = slMember.Subscription.Accept(ifolder.StoreReference, this.stringToRights(lvi.SubItems[2].Text));
+			slMember.Member = slMember.Subscription.Accept(ifolder.StoreReference, slMember.Subscription.SubscriptionRights);
 
 			// Take the relationship off the Subscription object
 			Property property = slMember.Subscription.Properties.GetSingleProperty("Contact");
@@ -1282,10 +1248,7 @@ namespace Novell.iFolder.iFolderCom
 
 			poBox.Commit(slMember.Subscription);
 			
-			// This entry is now a member.
-			slMember.IsMember = true;
-
-			updateListViewItem(lvi, slMember.Member.Rights);
+			updateListViewItem(lvi, slMember.Rights);
 		}
 
 		private void decline_Click(object sender, System.EventArgs e)
@@ -1374,7 +1337,6 @@ namespace Novell.iFolder.iFolderCom
 		private Member member;
 		private bool added = false;
 		private bool changed = false;
-		private bool isMember = false;
 
 		#region Constructors
 		public ShareListMember()
@@ -1410,16 +1372,43 @@ namespace Novell.iFolder.iFolderCom
 			set { member = value; }
 		}
 
-		public bool IsMember
-		{
-			get { return isMember; }
-			set { isMember = value; }
-		}
-
+		/// <summary>
+		/// Gets/sets the Subscription object.
+		/// </summary>
 		public Subscription Subscription
 		{
 			get { return subscription; }
 			set { subscription = value; }
+		}
+
+		/// <summary>
+		/// Gets/sets the Rights.
+		/// </summary>
+		public Access.Rights Rights
+		{
+			get
+			{
+				if (Member != null)
+				{
+					return Member.Rights;
+				}
+				else
+				{
+					return Subscription.SubscriptionRights;
+				}
+			}
+
+			set
+			{
+				if (Member != null)
+				{
+					Member.Rights = value;
+				}
+				else
+				{
+					Subscription.SubscriptionRights = value;
+				}
+			}
 		}
 		#endregion
 	}
