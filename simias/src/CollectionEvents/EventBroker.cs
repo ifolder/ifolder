@@ -441,6 +441,7 @@ namespace Simias.Event
 			eventQueue = new Queue();
 			queued = new ManualResetEvent(false);
 			System.Threading.Thread t = new Thread(new ThreadStart(EventThread));
+			t.IsBackground = true;
 			t.Start();
 		}
 
