@@ -73,7 +73,6 @@ namespace Novell.iFolder.InvitationWizard
 		private Subscription subscription;
 		private string invitationFile;
 		private Store store;
-		private POBox poBox = null;
 
 		/// <summary>
 		/// Required designer variable.
@@ -312,25 +311,7 @@ namespace Novell.iFolder.InvitationWizard
 			{
 				try
 				{
-					subInfo = new SubscriptionInfo(invitationFile);
-
-					if (ConvertSubscriptionInfo(subInfo, out subscription))
-					{
-						// Check the state of the subscription.  If it is ready, proceed; otherwise, quit.
-/*						if (subscription.SubscriptionState != SubscriptionStates.Received)
-						{
-							// TODO: change the message text  ... and maybe we should go to a finished page?
-							MessageBox.Show("The invitation is not ready yet.  Please check back later.", "Invitation Not Ready");
-							Application.Exit();
-						}
-					}
-					else
-					{
-						// The Subscription object was just created ... we're done for now.
-						// TODO: change the message text ... and maybe we should go to a finished page?
-						MessageBox.Show("The invitation has been successfully added to your message box.  Once the invitation has synchronized you will be able to accept or decline it.", "Invitation Added");
-						Application.Exit();
-*/					}
+					subscription = Subscription.GetSubscriptionFromSubscriptionInfo(store, invitationFile);
 				}
 				catch (SimiasException ex)
 				{
@@ -359,6 +340,7 @@ namespace Novell.iFolder.InvitationWizard
 				try
 				{
 					subscription.Accept(store, acceptDeclinePage.Accept ? SubscriptionDispositions.Accepted : SubscriptionDispositions.Declined);
+					POBox poBox = POBox.GetPOBox(store, subscription.DomainID);
 					poBox.Commit(subscription);
 				}
 				catch (SimiasException ex)
@@ -488,35 +470,14 @@ namespace Novell.iFolder.InvitationWizard
 				return sb.ToString();				
 			}
 		}
+
+		public Store Store
+		{
+			get { return store; }
+		}
 		#endregion
 
 		#region Public Methods
-		/// <summary>
-		/// Creates a Subscription object from a SubscriptionInfo object or gets the Subscription object from
-		/// the POBox, if one exists.
-		/// </summary>
-		/// <param name="subscriptionInfo">The SubscriptionInfo object used to create/find the Subscription object.</param>
-		/// <param name="subscription">A new or existing Subscription object based on the SubscriptionInfo object.</param>
-		/// <returns>True if an existing Subscription object was found.  False if a new Subscription object was created.</returns>
-		public bool ConvertSubscriptionInfo(SubscriptionInfo subscriptionInfo, out Subscription subscription)
-		{
-			// Check for existing Subscription object in the POBox.
-			poBox = POBox.GetPOBox(store, subscriptionInfo.DomainID);
-			Node node = poBox.GetNodeByID(subscriptionInfo.SubscriptionID);
-			if (node != null)
-			{
-				subscription = new Subscription(node);
-				return true;
-			}
-			else
-			{
-				// TODO: what should we name these?
-				subscription = new Subscription(subscriptionInfo.SubscriptionCollectionName + " subscription", subscriptionInfo);
-				subscription.SubscriptionState = SubscriptionStates.Received;
-				poBox.AddMessage(subscription);
-				return false;
-			}
-		}
 		#endregion
 	}
 }

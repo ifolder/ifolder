@@ -575,6 +575,52 @@ namespace Simias.POBox
 		#region Public Methods
 		
 		/// <summary>
+		/// Gets or creates a Subscription object based on a SubscriptionInfo file.
+		/// </summary>
+		/// <param name="store">The store to use when creating/finding the Subscription object.</param>
+		/// <param name="subscriptionInfoFileName">The file used to create/find the Subscription object.</param>
+		/// <returns>A Subscription object constructed from the SubscriptionInfo file.</returns>
+		public static Subscription GetSubscriptionFromSubscriptionInfo(Store store, string subscriptionInfoFileName)
+		{
+			SubscriptionInfo subscriptionInfo = new SubscriptionInfo(subscriptionInfoFileName);
+
+			return GetSubscriptionFromSubscriptionInfo(store, subscriptionInfo);
+		}
+
+		/// <summary>
+		/// Gets or creates a Subscription object based on a SubscriptionInfo object.
+		/// </summary>
+		/// <param name="store">The store to use when creating/finding the Subscription object.</param>
+		/// <param name="subscriptionInfo">The SubscriptionInfo object used to create/find the Subscription object.</param>
+		/// <returns>A Subscription object constructed from the SubscriptionInfo object.</returns>
+		public static Subscription GetSubscriptionFromSubscriptionInfo(Store store, SubscriptionInfo subscriptionInfo)
+		{
+			Subscription subscription;
+
+			// Check for existing Subscription object in the POBox.
+			POBox poBox = POBox.GetPOBox(store, subscriptionInfo.DomainID);
+			Node node = poBox.GetNodeByID(subscriptionInfo.SubscriptionID);
+			if (node != null)
+			{
+				// New up the subscription from the existing node.
+				subscription = new Subscription(node);
+			}
+			else
+			{
+				// Create a new subscription object.
+				subscription = new Subscription(subscriptionInfo.SubscriptionCollectionName + " subscription", subscriptionInfo);
+
+				// Set the state to received.
+				subscription.SubscriptionState = SubscriptionStates.Received;
+
+				// Add the subscription to the POBox.
+				poBox.AddMessage(subscription);
+			}
+
+			return subscription;
+		}
+
+		/// <summary>
 		/// Generates a SubscriptionInfo object from the Subscription object
 		/// </summary>
 		/// <returns>A SubscriptionInfo object</returns>

@@ -190,31 +190,13 @@ namespace Novell.iFolder.InvitationWizard
 			{
 				try
 				{
-					SubscriptionInfo subInfo = new SubscriptionInfo(invitationFile.Text);
-					Subscription subscription;
-					if(((InvitationWizard)(this.Parent)).ConvertSubscriptionInfo(subInfo, out subscription))
-					{
-						// Check the state of the subscription.  If it is ready, proceed; otherwise, quit.
-/*						if (subscription.SubscriptionState != SubscriptionStates.Received)
-						{
-							// TODO: change the message text.
-							MessageBox.Show("The invitation is not ready yet.  Please check back later.", "Invitation Not Ready");
+					InvitationWizard invitationWizard = (InvitationWizard)this.Parent;
 
-							// TODO: proceed to finish page???
-							Application.Exit();
-						}
-					}
-					else
-					{
-						// The Subscription object was just created ... we're done for now.
-						// TODO: change the message text.
-						MessageBox.Show("The invitation has been successfully added to your message box.  Once the invitation has synchronized you will be able to accept or decline it.", "Invitation Added");
+					// Get the subscription.
+					Subscription subscription  = Subscription.GetSubscriptionFromSubscriptionInfo(invitationWizard.Store, invitationFile.Text);
 
-						// TODO: proceed to finish page???
-						Application.Exit();
-*/					}
-
-					((InvitationWizard)(this.Parent)).Subscription = subscription;
+					// Save the subscription.
+					invitationWizard.Subscription = subscription;
 				}
 				catch (SimiasException e)
 				{
