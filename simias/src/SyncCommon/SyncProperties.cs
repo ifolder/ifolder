@@ -52,12 +52,6 @@ namespace Simias.Sync
 		private static readonly string LogicFactoryPropertyName = "Sync Logic Factory";
 		
 		/// <summary>
-		/// The suggested sync interval in seconds.
-		/// </summary>
-		private static readonly int DefaultInterval = 60;
-		private static readonly string IntervalPropertyName = "Sync Interval";
-
-		/// <summary>
 		/// The suggested channel sinks.
 		/// </summary>
 		private static readonly SimiasChannelSinks DefaultChannelSinks =
@@ -188,15 +182,6 @@ namespace Simias.Sync
 			// TODO: save in the configuration temporarily
 			get { return new Uri(config.Get("Sync", ServiceUrlPropertyName, DefaultServiceUrl.ToString())); }
 			set { config.Set("Sync", ServiceUrlPropertyName, value.ToString()); }
-		}
-
-		/// <summary>
-		/// The sync interval in seconds.
-		/// </summary>
-		public int Interval
-		{
-			get { return (int)GetProperty(IntervalPropertyName, DefaultInterval); }
-			set { SetProperty(IntervalPropertyName, value, true); }
 		}
 
 		/// <summary>

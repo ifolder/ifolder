@@ -30,6 +30,7 @@ using System.Net;
 using Simias;
 using Simias.Storage;
 using Simias.Domain;
+using Simias.Policy;
 
 namespace Simias.Sync
 {
@@ -60,12 +61,6 @@ namespace Simias.Sync
 		public static readonly string CreateMasterPropertyName = "Create Master Collection";
 		
 		/// <summary>
-		/// A collection property name for the sync interval to be used with the collection.
-		/// The interval is specified in seconds.
-		/// </summary>
-		public static readonly string IntervalPropertyName = "Sync Interval";
-		
-		/// <summary>
 		/// A collection property name of the sync logic class and assembly of the collection.
 		/// Only collection using the same sync logic can communicate.
 		/// </summary>
@@ -81,93 +76,6 @@ namespace Simias.Sync
 		{
 			props = new SyncProperties(this.StoreReference.Config);
 		}
-
-/* TODO: remove
-		/// <summary>
-		/// Invitation Constructor
-		/// </summary>
-		/// <param name="store">The store object.</param>
-		/// <param name="invitation">An invitation object.</param>
-		/// <remarks>The collection is originally created with local ownership.</remarks>
-		public SyncCollection(Store store, Invitation invitation)
-			: base(store, invitation.CollectionName, invitation.CollectionID,
-					invitation.Domain)
-		{
-			// TODO: fix
-			this.SetType(this, "iFolder");
-			
-			this.MasterUrl = invitation.MasterUrl;
-			this.Role = SyncCollectionRoles.Slave;
-			
-			// commit
-			Commit();
-
-			// check for a dir node
-			if (((invitation.DirNodeID != null) && (invitation.DirNodeID.Length > 0))
-				&& (invitation.DirNodeName != null) && (invitation.DirNodeName.Length > 0)
-				&& (invitation.RootPath != null) && (invitation.RootPath.Length > 0))
-			{
-				string path = Path.Combine(invitation.RootPath, invitation.DirNodeName);
-
-				DirNode dn = new DirNode(this, path, invitation.DirNodeID);
-
-				if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-
-				Commit(dn);
-			}
-
-			props = new SyncProperties(this.StoreReference.Config);
-		}
-
-		/// <summary>
-		/// Create an invitation object for the given identity.
-		/// </summary>
-		/// <param name="identity">The identity for the invitation.</param>
-		/// <returns>A new invitation object.</returns>
-		public Invitation CreateInvitation(string identity)
-		{
-			return null;
-
-			// create the invitation
-			Invitation invitation = new Invitation();
-
-			invitation.CollectionID = ID;
-			invitation.CollectionName = Name;
-			invitation.Owner = Owner;
-			invitation.Domain = Domain;
-			invitation.MasterUrl = MasterUrl;
-			invitation.Identity = identity;
-			switch (GetUserAccess(identity).ToString())
-			{
-				// TODO: Localize.
-				case "ReadOnly":
-					invitation.CollectionRights = "Read Only";
-					break;
-				case "ReadWrite":
-					invitation.CollectionRights = "Read/Write";
-					break;
-				case "Admin":
-					invitation.CollectionRights = "Full Control";
-					break;
-				default:
-					invitation.CollectionRights = "Unknown";
-					break;
-			}
-			invitation.PublicKey = StoreReference.ServerPublicKey.ToXmlString(false);
-
-			// check for a dir node
-			DirNode dn = this.GetRootDirectory();
-
-			if (dn != null)
-			{
-				invitation.DirNodeID = dn.ID;
-				invitation.DirNodeName = dn.Name;
-			}
-
-			return invitation;
-
-		}
-*/
 
 		/// <summary>
 		/// Get a property value from the base node.
@@ -336,18 +244,17 @@ namespace Simias.Sync
 		{
 			get
 			{
-				int result = (int)GetProperty(IntervalPropertyName, 0);
+				// get a sync interval object.
+				SyncInterval si = SyncInterval.Get(GetCurrentMember(), this);
 
-				if (result < 1)
-				{
-					// default
-					result = props.Interval;
-				}
-
-				return result;
+				return si.Interval;
 			}
 
-			set { SetProperty(IntervalPropertyName, value, true); }
+			// TODO: remove
+			set
+			{
+				SyncInterval.Create(this, value);
+			}
 		}
 
 		/// <summary>

@@ -34,63 +34,17 @@ using Simias.Channels;
 namespace Simias.Sync
 {
 	/// <summary>
-	/// Sync manager states.
-	/// </summary>
-	public enum SyncManagerStates
-	{
-		/// <summary>
-		/// The sync manager is syncing (or transfering) files.
-		/// </summary>
-		Syncing,
-
-		/// <summary>
-		/// The sync manager is active.
-		/// </summary>
-		Active,
-
-		/// <summary>
-		/// They sync manager is idle.
-		/// </summary>
-		Idle,
-	};
-
-	/// <summary>
-	/// The sync manager state has changed event handler.
-	/// </summary>
-	public delegate void ChangedSyncStateEventHandler(SyncManagerStates state);
-	
-	/// <summary>
 	/// Sync Manager
 	/// </summary>
 	public class SyncManager : IDisposable
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncManager));
 
-		/// <summary>
-		/// Occurs when the sync state has changed.
-		/// </summary>
-		public event ChangedSyncStateEventHandler ChangedState;
-
-		private enum RemotingStates
-		{
-			// The sync remoting state is good.
-			Good,
-
-			// The sync remoting state is ok.
-			Ok,
-
-			// The sync remoting state is bad.
-			Bad,
-		};
-
 		private SyncProperties properties;
 		private SyncStoreManager storeManager;
 		private SyncLogicFactory logicFactory;
 		private LocationService locationService;
 		private Configuration config;
-
-		private int active;
-		private object activeLock = new object();
 
 		/// <summary>
 		/// Constructor
@@ -108,9 +62,6 @@ namespace Simias.Sync
 
 			// store
 			storeManager = new SyncStoreManager(this);
-
-			// no one is working
-			active = 0;
 
 			// create the location service
 			locationService = new LocationService(config);
@@ -140,50 +91,21 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// Sync a colleciton now.
+		/// </summary>
+		/// <param name="id">The id of the collection to sync.</param>
 		public void SyncCollectionNow(string id)
 		{
 			storeManager.SyncCollectionNow(id);
 		}
 
+		/// <summary>
+		/// Sync all collections now.
+		/// </summary>
 		public void SyncAllNow()
 		{
 			storeManager.SyncAllNow();
-		}
-
-		/// <summary>
-		/// Collection syncing gate method.
-		/// </summary>
-		internal void ReadyToWork()
-		{
-			log.Debug("Ready Work: {0}", active);
-
-			lock(activeLock)
-			{
-				++active;
-
-				if ((active == 1) && (ChangedState != null))
-				{
-					ChangedState(SyncManagerStates.Active);
-				}
-			}
-		}
-
-		/// <summary>
-		/// Collection syncing gate method.
-		/// </summary>
-		internal void DoneWithWork()
-		{
-			lock(activeLock)
-			{
-				--active;
-				
-				if ((active == 0) && (ChangedState != null))
-				{
-					ChangedState(SyncManagerStates.Idle);
-				}
-			}
-
-			log.Debug("Done Work: {0}", active);
 		}
 
 		#region IDisposable Members
@@ -215,14 +137,6 @@ namespace Simias.Sync
 		public string StorePath
 		{
 			get { return config.StorePath; }
-		}
-
-		/// <summary>
-		/// The default sync interval.
-		/// </summary>
-		public int SyncInterval
-		{
-			get { return properties.Interval; }
 		}
 
 		/// <summary>

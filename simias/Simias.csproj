@@ -824,11 +824,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncManager\SyncCredentialCache.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\SyncManager\SyncManager.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

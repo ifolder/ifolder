@@ -127,7 +127,6 @@ AssemblyInfo.cs
 ../SyncCommon/SyncStoreInfo.cs
 ../SyncCommon/SyncStoreService.cs
 ../SyncManager/SyncCollectionManager.cs
-../SyncManager/SyncCredentialCache.cs
 ../SyncManager/SyncManager.cs
 ../SyncManager/SyncMessages.cs
 ../SyncManager/SyncPing.cs

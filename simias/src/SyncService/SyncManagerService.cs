@@ -65,7 +65,7 @@ namespace Simias.Sync
 			Debug.Assert(manager != null);
 
 			manager.Start();
-			fileMonitor.Start(GetConfiguration());
+			fileMonitor.Start(config);
 		}
 
 		/// <summary>

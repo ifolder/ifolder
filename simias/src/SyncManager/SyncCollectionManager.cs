@@ -55,6 +55,7 @@ namespace Simias.Sync
 		private Thread syncWorkerThread;
 		private bool working;
 		private AutoResetEvent stopSleepEvent = new AutoResetEvent(false);
+		private bool registered = false;
 
         /// <summary>
 		/// Constructor
@@ -87,16 +88,12 @@ namespace Simias.Sync
                 switch(collection.Role)
 				{
 					case SyncCollectionRoles.Master:
-						// check for the server
-						Storage.Domain domain = store.GetDomain(store.DefaultDomain);
-						Roster roster = domain.GetRoster(store);
-						SyncCollection sc = new SyncCollection(roster);
-
 						// only use register on client (workgroup) machines
-						if ((domain.ID == Storage.Domain.WorkGroupDomainID) || (sc.Role == SyncCollectionRoles.Slave))
+						if (!store.IsEnterpriseServer)
 						{
 							// register with the location service
 							syncManager.Location.Register(collection.ID);
+							registered = true;
 						}
 						break;
 
@@ -132,7 +129,11 @@ namespace Simias.Sync
 				{
 					case SyncCollectionRoles.Master:
 						// unregister with the location service
-						syncManager.Location.Unregister(collection.ID);
+						if (registered)
+						{
+							syncManager.Location.Unregister(collection.ID);
+							registered = false;
+						}
 						break;
 
 					case SyncCollectionRoles.Slave:
@@ -154,6 +155,9 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// Sync the collection now
+		/// </summary>
 		internal void SyncNow()
 		{
 			if (collection.Role == SyncCollectionRoles.Slave)
@@ -162,12 +166,19 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// Get the service
+		/// </summary>
+		/// <returns></returns>
 		internal SyncCollectionService GetService()
 		{
-			// service
-			return syncManager.LogicFactory.GetCollectionService(new SyncCollection(store.GetCollectionByID(collection.ID)));
+			return syncManager.LogicFactory.GetCollectionService(
+				new SyncCollection(store.GetCollectionByID(collection.ID)));
 		}
 
+		/// <summary>
+		/// Start the slave
+		/// </summary>
 		private void StartSlave()
 		{
 			lock(this)
@@ -179,13 +190,14 @@ namespace Simias.Sync
 				syncWorkerThread.Start();
 			}
 
-			log.Debug("{0} Url: {1}", collection.Name, collection.MasterUrl);
+			log.Debug("Started {0}: {1}", collection.Name, collection.MasterUrl);
 		}
 
+		/// <summary>
+		/// Stop the slave
+		/// </summary>
 		private void StopSlave()
 		{
-			log.Debug("Stopping {0} - Locking Manager", collection.Name);
-
 			lock(this)
 			{
 				log.Debug("Stopping {0} - Dispose Channel", collection.Name);
@@ -226,6 +238,8 @@ namespace Simias.Sync
 				{
 					// ignore
 				}
+
+				log.Debug("Stopped {0}", collection.Name);
 			}
 		}
 
@@ -238,11 +252,14 @@ namespace Simias.Sync
 
 			while(working)
 			{
-				// huge try/catch for Mono exceptions
+				// monitor try/catch
 				try
 				{
-					// get permission from sync manager
-					syncManager.ReadyToWork();
+					// monitor enter
+					Monitor.Enter(typeof(SyncCollectionManager));
+
+					// check entry after monitor
+					if (working == false) continue;
 
 					log.Debug("Sync Work {0} - Starting", collection.Name);
 
@@ -263,13 +280,9 @@ namespace Simias.Sync
 							string serviceUrl = collection.MasterUrl.ToString();
 							log.Debug("Sync Work {0} - Service URL: {1}", collection.Name, serviceUrl);
 
-							// check the channel
-							if (channel == null)
-							{
-								// create channel
-								channel = SimiasChannelFactory.Create(collection.MasterUrl,
-									syncManager.ChannelSinks);
-							}
+							// create channel
+							if (channel == null) channel = SimiasChannelFactory.Create(collection.MasterUrl,
+													 syncManager.ChannelSinks);
 
 							// get a proxy to the store service object
 							log.Debug("Sync Work {0} - Connecting...", collection.Name);
@@ -289,8 +302,8 @@ namespace Simias.Sync
 							// removed collection?
 							if (collectionService == null)
 							{
-								log.Debug("The collection is no longer on the server.");
-								log.Debug("Removing collection from the client.");
+								log.Debug("The collection ({0}) is no longer on the server.", collection.Name);
+								log.Debug("Removing collection ({0}) from the client.", collection.Name);
 							
 								// delete the colection
 								collection.Commit(collection.Delete());
@@ -301,18 +314,12 @@ namespace Simias.Sync
 							}
 
 							// ping the collection
-//							log.Debug("Collection Service Ping: {0}", collectionService.Ping());
+							log.Debug("Collection Service Ping: {0}", collectionService.Ping());
 
 							// get the collection worker
 							log.Debug("Creating a Sync Worker Object...");
-							if (worker == null)
-							{
-								worker = syncManager.LogicFactory.GetCollectionWorker(collection);
-							}
+							if (worker == null) worker = syncManager.LogicFactory.GetCollectionWorker(collection);
 						
-							// bad worker
-							if (worker == null) throw new ApplicationException("No Sync Collection Worker");
-
 							// do the work
 							log.Debug("Sync Work {0} - Worker Start", collection.Name);
 							worker.DoSyncWork(collectionService);
@@ -339,9 +346,9 @@ namespace Simias.Sync
 								// update the URL
 								if ((locationUrl != null) && (locationUrl != collection.MasterUrl))
 								{
-									log.Debug("Updating Master Service Url...");
-									log.Debug("  Old Master Url: {0}", collection.MasterUrl);
-									log.Debug("  New Master Url: {0}", locationUrl);
+									log.Debug("Updating {0} Master Service Url...", collection.Name);
+									log.Debug("  Old {0} Master Url: {1}", collection.Name, collection.MasterUrl);
+									log.Debug("  New {0} Master Url: {1}", collection.Name, locationUrl);
 
 									collection.MasterUrl = locationUrl;
 
@@ -366,16 +373,28 @@ namespace Simias.Sync
 						if (collectionService != null)
 						{
 							// release the service for Mono
-							try { collectionService.Release(); } catch { /* ignore */ }
+							try { collectionService.Release(); } 
+							catch { /* ignore */ }
+							
 							collectionService = null;
 						}
 					}
 
-					log.Info("Finished Sync Cycle: {0}", collection.Name);
+					log.Debug("Sync Work {0} - Done", collection.Name);
+				}
+				catch(Exception e)
+				{
+					log.Debug(e, "Ignored");
+				}
+				finally
+				{
+					// monitor exit
+					Monitor.Exit(typeof(SyncCollectionManager));
+				}
 
-					// finish with sync manager
-					syncManager.DoneWithWork();
-
+				// sleep try/catch
+				try
+				{
 					log.Debug("Sync Work {0} - Sleeping", collection.Name);
 
 					// sleep
