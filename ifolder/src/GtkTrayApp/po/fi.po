@@ -270,7 +270,7 @@ msgstr ""
 
 #: ../iFolderCreationDialog.cs:99 src/GtkTrayApp/iFolderCreationDialog.cs:99
 msgid "Do not show this message again."
-msgstr "älä näytetä tama viesi uudestaan."
+msgstr "älä näytä tämä viesti uudestaan."
 
 #: ../iFolderExceptionDialog.cs:39 ../iFolderPropertiesDialog.cs:288
 #: ../iFolderWindow.cs:1378 src/GtkTrayApp/iFolderExceptionDialog.cs:39
