@@ -36,10 +36,6 @@ namespace Novell.AddressBook
 	public class Manager : IEnumerable, IEnumerator
 	{
 		#region Class Members
-		/// <summary>
-		/// The user that opened the address manager.
-		/// </summary>
-		private string		storeUserName = null;
 
 		/// <summary>
 		/// Path to the store that this instance represents.
@@ -102,10 +98,6 @@ namespace Novell.AddressBook
 			if(store != null)
 			{
 				addressManager = new Manager(store);
-				if(addressManager != null)
-				{
-					addressManager.storeUserName = Environment.UserName;
-				}
 			}
 
 			return(addressManager);
@@ -123,38 +115,10 @@ namespace Novell.AddressBook
 			if(store != null)
 			{
 				addressManager = new Manager(store);
-				if(addressManager != null)
-				{
-					addressManager.storeUserName = Environment.UserName;
-				}
 			}
 
 			return(addressManager);
 		}
-
-		/*
-		/// <summary>
-		/// Connects to the Address Book Manager using a known database path.
-		/// </summary>
-		/// <param name="dbPath">Path that specifies where to create or open the database.</param>
-		///	<returns>An object that represents a connection to the address book manager.</returns>
-		public static Manager Connect(Uri dbPath )
-		{
-			Manager	addressManager = null;
-
-			Store store = Store.Connect(dbPath);
-			if(store != null)
-			{
-				addressManager = new Manager(store);
-				if(addressManager != null)
-				{
-					addressManager.storeUserName = Environment.UserName;
-				}
-			}
-
-			return(addressManager);
-		}
-		*/
 		#endregion
 
 		#region Public Methods

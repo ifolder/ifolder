@@ -2018,12 +2018,11 @@ namespace Novell.AddressBook
 			// Write out all telephone numbers attached to this contact
 			try
 			{
-				PhoneTypes tmpTypes;
+				//PhoneTypes tmpTypes;
 				IABList phoneEnum = this.GetTelephoneNumbers();
 				foreach(Telephone tmpPhone in phoneEnum)
 				{
-					tmpTypes = tmpPhone.Types;
-
+				//	tmpTypes = tmpPhone.Types;
 					vCard.WriteByte(Convert.ToByte('T'));
 					vCard.WriteByte(Convert.ToByte('E'));
 					vCard.WriteByte(Convert.ToByte('L'));
