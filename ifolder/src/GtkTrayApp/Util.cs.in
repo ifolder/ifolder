@@ -44,6 +44,38 @@ namespace Novell.iFolder
 			return string.Format("file://{0}/en/doc/user/data/{1}", helpdir, helpFile);
 		}
 
+		internal static void OpenInBrowser(string path)
+		{
+			System.Diagnostics.Process process;
+			process = new System.Diagnostics.Process();
+			process.StartInfo.CreateNoWindow = true;
+			process.StartInfo.UseShellExecute = false;
+			process.StartInfo.FileName = "nautilus";
+			process.StartInfo.Arguments = "\"" + path + "\"";
+
+			try
+			{
+				process.Start();
+				return;
+			}
+			catch(Exception e)
+			{
+			}
+
+			process.StartInfo.FileName = "konqueror";
+
+			try
+			{
+				process.Start();
+				return;
+			}
+			catch(Exception e)
+			{
+			}
+
+			throw new Exception("Unable to launch file browser");
+		}
+
 		internal static void ShowHelp(string helpFile, Gtk.Window parent)
 		{
 			try
