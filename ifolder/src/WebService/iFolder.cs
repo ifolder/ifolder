@@ -47,7 +47,7 @@ namespace Novell.iFolder.Web
 		public ulong MasterIncarnation;
         public string Name;
 		public string Owner;
-		public int RefreshInterval;
+		public int SyncInterval;
 		public bool Synchronizable;
 		public string Type;
 		public string Description;
@@ -71,7 +71,8 @@ namespace Novell.iFolder.Web
 			this.MasterIncarnation = collection.MasterIncarnation;
 			this.Name = collection.Name;
 			this.Owner = collection.Owner.Name;
-			this.RefreshInterval = new SyncCollection(collection).Interval;
+			this.SyncInterval = 
+				Simias.Policy.SyncInterval.GetInterval(collection);
 			this.Synchronizable = collection.Synchronizable;
 			this.Type = iFolderType;
 			this.Description = "";
