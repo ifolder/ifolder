@@ -23,5 +23,5 @@ clean-local:
 	rm -rf */Release */Debug *.log *.msi *.msm *.suo
 
 maintainer-clean-local:
-	rm -f Makefile.in
+	rm -f Makefile.in Makefile
 
