@@ -45,7 +45,6 @@ AssemblyInfo.cs
 ../Common/MyRuntimeID.cs
 ../Common/SimiasLog.cs
 ../Common/SimiasLogManager.cs
-../Common/SimiasRemoting.cs
 ../Domain/DomainAgent.cs
 ../Domain/DomainService.cs
 ../FlaimProvider/FlaimError.cs

@@ -702,7 +702,7 @@ namespace Simias.POBox
 			
 			// TODO: where should this be set?
 			// TODO: si.POServiceUrl = POServiceURL;
-			si.POServiceUrl = SimiasRemoting.GetServiceUrl(PostOffice.EndPoint);
+//			si.POServiceUrl = SimiasRemoting.GetServiceUrl(PostOffice.EndPoint);
 			
 			si.SubscriptionCollectionID = SubscriptionCollectionID;
 			si.SubscriptionCollectionName = SubscriptionCollectionName;

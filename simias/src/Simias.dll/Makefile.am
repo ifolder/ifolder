@@ -10,7 +10,7 @@ SIMIAS_FLAGS = $(CSC_LIBFLAG) /unsafe
 SIMIAS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Security.dll System.Runtime.Remoting.dll System.Web.dll System.Web.Services.dll mDnsResponder.dll mDnsResponderApi.dll log4net.dll
 SIMIAS_LIBPATH = $(LOG4NET_DIR) $(MDNSRESPONDER_DIR)
 
-EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/SimiasSetup.cs.in ../Common/Simias.remoting ../Common/Simias.log4net ../Common/simias-client-bootstrap.config ../Common/MyDns.cs.in
+EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/SimiasSetup.cs.in ../Common/Simias.log4net ../Common/simias-client-bootstrap.config ../Common/MyDns.cs.in
 
 CUR_DIR := $(shell pwd)
 
@@ -32,7 +32,6 @@ install-exec-local: Simias.dll
 	$(INSTALL_PROGRAM) $(srcdir)/$(LOG4NET_DIR)/log4net.dll $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(STORELIB_PATH)/$(STORELIB) $(DESTDIR)$(webbindir)
 	cp -f $(srcdir)/$(LOG4NET_DIR)/../../../../LICENSE.txt $(DESTDIR)$(datadir)/simias/log4net.LICENSE.txt
-	$(INSTALL_PROGRAM) ../Common/Simias.remoting $(DESTDIR)$(sysconfdir)
 	$(INSTALL_PROGRAM) ../Common/Simias.log4net $(DESTDIR)$(sysconfdir)
 	$(INSTALL_PROGRAM) ../Common/simias-client-bootstrap.config $(DESTDIR)$(sysconfdir)
 
@@ -42,7 +41,7 @@ uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f log4net.dll
 	cd $(DESTDIR)$(webbindir); rm -f mDnsResponder*
 	cd $(DESTDIR)$(webbindir); rm -f Simias.dll $(DEBUG_FILES)
-	cd $(DESTDIR)$(sysconfdir); rm -f Simias.remoting Simias.log4net simias-client-bootstrap.config
+	cd $(DESTDIR)$(sysconfdir); rm -f Simias.log4net simias-client-bootstrap.config
 	cd $(DESTDIR)$(datadir)/simias; rm -f log4net.LICENSE.txt
 
 CLEAN_FILES = Simias.dll Simias.doc.xml $(DEBUG_FILES)

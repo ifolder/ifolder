@@ -67,6 +67,7 @@ namespace Simias.Service
 		private const string CFG_WebServicePath = "WebServicePath";
 		private const string CFG_ShowOutput = "WebServiceOutput";
 		private const string CFG_WebServiceUri = "WebServiceUri";
+		private const string CFG_WebServicePort = "WebServicePort";
 		private const string XmlServiceTag = "Service";
 
 		private ManualResetEvent servicesStarted = new ManualResetEvent(false);
@@ -93,7 +94,6 @@ namespace Simias.Service
 		{
 			// configure
 			SimiasLogManager.Configure(config);
-			SimiasRemoting.Configure(config);
 
 			// Get an event subscriber to handle shutdown events.
 			subscriber = new DefaultSubscriber();
@@ -369,7 +369,7 @@ namespace Simias.Service
 				{
 					// Set up the process info to start the XSP process.
 					webProcess = new Process();
-					appDomainUnloadEvent = new EventHandler( xspProcessExited );
+					appDomainUnloadEvent = new EventHandler( XspProcessExited );
 					webProcess.Exited += appDomainUnloadEvent;
 
 					// Get the web service path from the configuration file.
@@ -398,7 +398,7 @@ namespace Simias.Service
 					{
 						// Get the dynamic port that xsp should use and write it out to the config file.
 						string virtualRoot = String.Format( "/simias10/{0}", Environment.UserName );
-						uri = new Uri( new UriBuilder( "http", IPAddress.Loopback.ToString(), GetXspPort(), virtualRoot ).ToString() );
+						uri = new Uri( new UriBuilder( "http", IPAddress.Loopback.ToString(), GetXspPort( config ), virtualRoot ).ToString() );
 						config.Set( CFG_Section, CFG_WebServiceUri, uri.ToString() );
 					}
 
@@ -527,7 +527,7 @@ namespace Simias.Service
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		static private void xspProcessExited(object sender, EventArgs e)
+		static private void XspProcessExited(object sender, EventArgs e)
 		{
 			lock( typeof( Manager ) )
 			{
@@ -540,17 +540,26 @@ namespace Simias.Service
 			}
 		}
 
-		static private int GetXspPort()
+		static private int GetXspPort( Configuration config )
 		{
-			Socket s = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
-			try
+			// See if there is a port already configured to be used.
+			string portString = config.Get( CFG_Section, CFG_WebServicePort, null );
+			if ( portString != null )
 			{
-				s.Bind( new IPEndPoint( IPAddress.Loopback, 0 ) );
-				return ( s.LocalEndPoint as IPEndPoint ).Port;
+				return Convert.ToInt32( portString );
 			}
-			finally
+			else
 			{
-				s.Close();
+				Socket s = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
+				try
+				{
+					s.Bind( new IPEndPoint( IPAddress.Loopback, 0 ) );
+					return ( s.LocalEndPoint as IPEndPoint ).Port;
+				}
+				finally
+				{
+					s.Close();
+				}
 			}
 		}
 

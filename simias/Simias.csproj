@@ -294,11 +294,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Common\SimiasRemoting.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\Common\SimiasSetup.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

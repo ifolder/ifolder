@@ -31,6 +31,7 @@ using Simias;
 using Simias.Storage;
 using Simias.Domain;
 using Simias.Policy;
+using Simias.Service;
 
 namespace Simias.Sync
 {
@@ -190,8 +191,12 @@ namespace Simias.Sync
 
 				if (result == null)
 				{
-					// default
-					result = SimiasRemoting.GetServiceUrl(SyncStoreService.EndPoint);
+					// There will only ever be one listener in workgroup. Therefore URL is
+					// the same as the one that gets used by the local web service except
+					// the host name is not loopback.
+					UriBuilder ub = new UriBuilder( Manager.LocalServiceUrl );
+					ub.Host = MyDns.GetHostName();
+					result = ub.Uri;
 				}
 
 				return result;
