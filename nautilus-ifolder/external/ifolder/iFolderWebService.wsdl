@@ -2996,13 +2996,13 @@
   </binding>
   <service name="iFolder Web Service">
     <port name="iFolder Web ServiceSoap" binding="s0:iFolder Web ServiceSoap">
-      <soap:address location="http://bht-netware:33079/simias10/boyd/iFolder.asmx"/>
+      <soap:address location="http://localhost/simias10/username/iFolder.asmx"/>
     </port>
     <port name="iFolder Web ServiceHttpGet" binding="s0:iFolder Web ServiceHttpGet">
-      <http:address location="http://bht-netware:33079/simias10/boyd/iFolder.asmx"/>
+      <http:address location="http://localhost/simias10/username/iFolder.asmx"/>
     </port>
     <port name="iFolder Web ServiceHttpPost" binding="s0:iFolder Web ServiceHttpPost">
-      <http:address location="http://bht-netware:33079/simias10/boyd/iFolder.asmx"/>
+      <http:address location="http://localhost/simias10/username/iFolder.asmx"/>
     </port>
     <documentation>Web Service providing access to iFolder</documentation>
   </service>
