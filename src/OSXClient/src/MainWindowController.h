@@ -57,6 +57,7 @@
 	NSMutableArray			*toolbarItemKeys;
 	NSMutableDictionary		*keyedDomains;
 	NSMutableDictionary		*keyediFolders;
+	iFolderDomain			*defaultDomain;
 }
 
 
