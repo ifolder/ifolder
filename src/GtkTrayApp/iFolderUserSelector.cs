@@ -169,11 +169,8 @@ namespace Novell.iFolder
 			UserTreeView.Selection.Changed += new EventHandler(
 						OnUserSelectionChanged);
 
-//			UserTreeView.ButtonPressEvent += new ButtonPressEventHandler(
-//						OnUserButtonPressed);
-
-//			UserTreeView.RowActivated += new RowActivatedHandler(
-//						OnUserRowActivated);
+			UserTreeView.RowActivated += new RowActivatedHandler(
+						OnUserRowActivated);
 
 
 			//------------------------------
@@ -348,6 +345,14 @@ namespace Novell.iFolder
 			UserAddButton.Sensitive = false;
 			UserDelButton.Sensitive = false;
 		}
+
+
+
+		private void OnUserRowActivated(object o, RowActivatedArgs args)
+		{
+			OnAddButtonClicked(o, args);
+		}
+
 
 
 		public void OnAddButtonClicked(object o, EventArgs args)
