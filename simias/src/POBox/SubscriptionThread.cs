@@ -153,7 +153,8 @@ namespace Simias.POBox
 			
 			// Resolve the PO Box location for the invitee
 			Uri poUri = 
-				Location.Locate.ResolvePOBoxLocation( subscription.DomainID, subscription.ToIdentity );
+				DomainProvider.ResolvePOBoxLocation( subscription.DomainID, subscription.ToIdentity );
+				//Location.Locate.ResolvePOBoxLocation( subscription.DomainID, subscription.ToIdentity );
 			if ( poUri != null )
 			{
 				poService.Url = poUri.ToString() + poServiceLabel;
@@ -249,7 +250,11 @@ namespace Simias.POBox
 
 			bool result = false;
 			POBoxService poService = new POBoxService();
-			WebState webState = new WebState(subscription.DomainID, subscription.ToIdentity);
+			WebState webState = 
+				new WebState(
+					subscription.DomainID, 
+					subscription.SubscriptionCollectionID, 
+					subscription.ToIdentity);
 			try
 			{
 				webState.InitializeWebClient(poService);
@@ -264,7 +269,7 @@ namespace Simias.POBox
 
 			// Resolve the PO Box location for the inviter
 			Uri poUri = 
-				Location.Locate.ResolvePOBoxLocation( subscription.DomainID, subscription.FromIdentity );
+				DomainProvider.ResolvePOBoxLocation( subscription.DomainID, subscription.FromIdentity );
 			if ( poUri != null )
 			{
 				poService.Url = poUri.ToString() + poServiceLabel;
@@ -355,7 +360,11 @@ namespace Simias.POBox
 			log.Debug("  SubID:    " + subscription.MessageID );
 
 			POBoxService poService = new POBoxService();
-			WebState webState = new WebState(subscription.DomainID, subscription.ToIdentity);
+			WebState webState = 
+				new WebState(
+					subscription.DomainID, 
+					subscription.SubscriptionCollectionID, 
+					subscription.ToIdentity);
 			try
 			{
 				webState.InitializeWebClient(poService);
@@ -368,7 +377,7 @@ namespace Simias.POBox
 			
 			// Resolve the PO Box location for the inviter
 			Uri poUri = 
-				Location.Locate.ResolvePOBoxLocation( subscription.DomainID, subscription.FromIdentity );
+				DomainProvider.ResolvePOBoxLocation( subscription.DomainID, subscription.FromIdentity );
 			if ( poUri != null )
 			{
 				poService.Url = poUri.ToString() + poServiceLabel;
