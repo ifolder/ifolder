@@ -37,6 +37,8 @@ using SCodes = Simias.Authentication.StatusCodes;
 
 namespace Simias.SimpleServer
 {
+	/// <summary>
+	/// </summary>
     [IAuthenticationServiceAttribute]
     public class Authentication : IAuthenticationService
     {

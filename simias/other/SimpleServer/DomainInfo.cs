@@ -24,7 +24,7 @@
 using System;
 using System.Text;
 
-namespace Simias.DomainService
+namespace Simias.DomainService.Web
 {
 	/// <summary>
 	/// Domain information

@@ -9,16 +9,20 @@ SimpleServer_FLAGS = $(CSC_LIBFLAG)
 SimpleServer_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll
 SimpleServer_LIBPATH = ../../src/Simias.dll ../../src/SimiasClient $(DESTDIR)$(webbindir)
 
-#EXTRA_DIST = $(SimpleServer_CSFILES)
+EXTRA_DIST = DomainService.asmx $(SimpleServer_CSFILES)
+
+if MAKE_DOC_FILE
+DOC_FILE = $(basename $@).doc.xml
+DOC_FILE_CMD = /doc:$(DOC_FILE)
+DOC_FILE_CLEAN = *.doc.xml
+endif
 
 NUNIT_TESTS := Simias.SimpleServer.dll
 
-CUR_DIR := $(shell pwd)
-
-all: $(NUNIT_TESTS)
+all: $(NUNIT_TESTS) 
 
 Simias.SimpleServer.dll: $(SimpleServer_CSFILES) $(SimpleServer_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SimpleServer_FLAGS) $(SimpleServer_LIBS:%=/r:%) $(SimpleServer_LIBPATH:%=/lib:%) $(SimpleServer_CSFILES_CSC)
+	$(CSC) /out:$@ $(CSCFLAGS) $(SimpleServer_FLAGS) $(SimpleServer_LIBS:%=/r:%) $(SimpleServer_LIBPATH:%=/lib:%) $(SimpleServer_RESOURCES:%=$(ICON_FLAG)%) $(SimpleServer_CSFILES_CSC) $(DOC_FILE_CMD)
 	
 if DEBUG
 if WINDOWS
@@ -44,7 +48,7 @@ installcheck-local: install
 .PHONY: test
 test: installcheck
 
-CLEAN_FILES = $(NUNIT_TESTS) Simias.SimpleServer.doc.xml 
+CLEAN_FILES = $(NUNIT_TESTS) $(DOC_FILE_CLEAN) 
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

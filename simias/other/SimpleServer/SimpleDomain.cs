@@ -117,6 +117,7 @@ namespace Simias.SimpleServer
 		/// <summary>
 		/// Constructor for creating a new mDnsDomain object.
 		/// </summary>
+		/// <param name="init"></param>
 		/// <param name="description">String that describes this domain.</param>
 		internal Domain( bool init, string description ) 
 		{

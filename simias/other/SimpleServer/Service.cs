@@ -181,6 +181,8 @@ namespace Simias.SimpleServer
 			return -1;
 		}
 
+		/// <summary>
+		/// </summary>
 		public static int SyncNow( string data )
 		{
 			log.Debug( "SyncNow called" );

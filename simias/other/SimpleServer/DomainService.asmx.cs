@@ -20,7 +20,10 @@ using Simias.Storage;
 using Simias.Sync;
 using Simias.POBox;
 
-namespace Simias.DomainService
+using Simias.DomainService;
+
+
+namespace Simias.DomainService.Web
 {
 	/// <summary>
 	/// Domain Service
