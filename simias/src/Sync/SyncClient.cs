@@ -31,6 +31,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Net;
 using Simias;
+using Simias.Authentication;
 using Simias.Storage;
 using Simias.Service;
 using Simias.Event;
@@ -517,7 +518,11 @@ namespace Simias.Sync.Client
 				service = new SimiasSyncService();
 				service.Url = collection.MasterUrl.ToString().TrimEnd('/') + service.Url.Substring(service.Url.LastIndexOf('/'));
 				service.CookieContainer = new CookieContainer();
-				
+
+				// credentials
+				Credentials cSimiasCreds = new Credentials(collection.ID);
+				service.Credentials = cSimiasCreds.GetCredentials();
+
 				SyncNodeStamp[] sstamps;
 				NodeStamp[]		cstamps;
 			
