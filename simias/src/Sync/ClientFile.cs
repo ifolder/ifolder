@@ -175,6 +175,7 @@ namespace Simias.Sync.Client
 		/// <returns>true if successful.</returns>
 		public new bool Close(bool commit)
 		{
+			Log.log.Debug("Closing File success = {0}", commit);
 			bool bStatus = commit;
 			// Close the file on the server.
 			serverFile.CloseFileNode();
@@ -219,8 +220,9 @@ namespace Simias.Sync.Client
 				}
 				fi.Attributes = fa;
 			}
-			catch
+			catch (Exception ex)
 			{
+				Log.log.Debug(ex, "Failed Close");
 				string collisionName = Conflict.GetFileConflictPath(collection, node);
 				File.Delete(collisionName);
 				File.Move(workFile, collisionName);
@@ -241,6 +243,7 @@ namespace Simias.Sync.Client
 			sizeRemaining = sizeToSync;
 			WritePosition = 0;
 				
+			Log.log.Debug("Downloading {0} bytes, filesize = {1}", sizeToSync, fileSize); 
 			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
 			for (int i = 0; i < fileMap.Length; ++i)
 			{
@@ -282,6 +285,7 @@ namespace Simias.Sync.Client
 					int bytesRead = serverFile.Read(offset, readBufferSize, out readBuffer);
 					Write(readBuffer, 0, bytesRead);
 					sizeRemaining -= bytesRead;
+					Log.log.Debug("Finished Download bytes remaining = {0}", sizeRemaining);
 					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
 				}
 			}
