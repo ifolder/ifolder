@@ -287,10 +287,10 @@ public class Conflict
 		{
 			//TODO: what if move succeeds but node rename or commit fails?
 			File.Move(FileNameConflictPath, Path.Combine(Path.GetDirectoryName(NonconflictedPath), newNodeName));
-			node.Name = newNodeName;
 			string relativePath = node.Properties.GetSingleProperty(PropertyTags.FileSystemPath).Value.ToString();
 			relativePath = relativePath.Remove(relativePath.Length - node.Name.Length -1, node.Name.Length) + newNodeName;
 			node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
+			node.Name = newNodeName;
 		}
 		Node newNode = collection.DeleteCollision(node);
 		newNode.Properties.DeleteSingleProperty(ConflictNameProperty);
