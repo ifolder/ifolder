@@ -2,19 +2,32 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class iFolderDomain;
+@class iFolderService;
+
 @interface iFolderPrefsController : NSWindowController
 {
-    IBOutlet NSView *generalView;
-    IBOutlet NSView *accountsView;
-    IBOutlet NSView *notifyView;
-    IBOutlet NSView *syncView;
-	IBOutlet NSView *blankView;
+    IBOutlet NSView		*generalView;
+    IBOutlet NSView		*accountsView;
+    IBOutlet NSView		*notifyView;
+    IBOutlet NSView		*syncView;
+	IBOutlet NSView		*blankView;
 
+    IBOutlet NSArrayController		*domainsController;
+	iFolderService					*webService;	
+	
+	NSMutableArray		*domains;
+	iFolderDomain		*selectedDomain;
 	
 	NSToolbar				*toolbar;
 	NSMutableDictionary		*toolbarItemDict;	
-	NSMutableArray			*toolbarItemArray;	
+	NSMutableArray			*toolbarItemArray;
+	int			modalReturnCode;
 }
+
+- (IBAction)addDomain:(id)sender;
+- (IBAction)removeDomain:(id)sender;
+- (IBAction)loginToDomain:(id)sender;
 
 - (void) updateSize:(NSSize)newSize;
 
@@ -35,6 +48,10 @@
 
 - (void)setupToolbar;
 
+// NSTableViewDelegates
+- (BOOL)selectionShouldChangeInTableView:(NSTableView *)aTableView;
 
+// delegate for error sheet
+- (void)changeSelectionResponse:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 
 @end

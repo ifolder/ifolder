@@ -2,11 +2,13 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
+            ACTIONS = {addDomain = id; loginToDomain = id; removeDomain = id; }; 
             CLASS = iFolderPrefsController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 accountsView = NSView; 
                 blankView = NSView; 
+                domainsController = NSArrayController; 
                 generalView = NSView; 
                 notifyView = NSView; 
                 syncView = NSView; 

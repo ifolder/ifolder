@@ -24,6 +24,9 @@
 #import <Cocoa/Cocoa.h>
 #include "iFolderStub.h"
 
+#define WORKGROUP_DOMAIN @"363051d1-8841-4c7b-a1dd-71abbd0f4ada"
+
+
 /*
 	@public
 		NSString	*ID;
