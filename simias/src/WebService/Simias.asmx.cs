@@ -622,12 +622,20 @@ namespace Simias.Web
 		{
 			DomainInformation domainInfo = null;
 			DomainAgent da = new DomainAgent();
-			string domainID = da.Attach(Host, UserName, Password);
-			if (!domainID.Equals(string.Empty))
+			Simias.Authentication.Status status = da.Attach(Host, UserName, Password);
+			if (status.statusCode == Simias.Authentication.StatusCodes.Success ||
+				status.statusCode == Simias.Authentication.StatusCodes.SuccessInGrace)
 			{
-				domainInfo = new DomainInformation(domainID);
+				domainInfo = new DomainInformation(status.DomainID);
 				domainInfo.MemberName = UserName;
 			}
+			else
+			{
+				domainInfo = new DomainInformation();
+			}
+
+			domainInfo.StatusCode = status.statusCode;
+
 			return domainInfo;
 		}
 
@@ -784,6 +792,11 @@ namespace Simias.Web
 		/// <b>True</b> if the local domain is the default domain.
 		/// </summary>
 		public bool IsDefault;
+
+		/// <summary>
+		/// The status of the authentication request.
+		/// </summary>
+		public Simias.Authentication.StatusCodes StatusCode;
 
 		/// <summary>
 		/// Constructor

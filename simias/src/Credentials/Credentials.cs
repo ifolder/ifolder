@@ -130,6 +130,12 @@ namespace Simias.Authentication
 		public StatusCodes		statusCode;
 
 		/// <summary>
+		/// Unique ID of the domain.
+		/// Valid on a successful authentication.
+		/// </summary>
+		public string			DomainID;
+
+		/// <summary>
 		/// Unique ID of the user
 		/// Valid on a successful authentication
 		/// </summary>

@@ -589,7 +589,7 @@ namespace Simias.DomainServices
 		/// <returns>
 		/// The Domain ID of the newly attached Domain
 		/// </returns>
-		public string Attach(string host, string user, string password)
+		public Simias.Authentication.Status Attach(string host, string user, string password)
 		{
 			Store store = Store.GetStore();
 
@@ -613,8 +613,8 @@ namespace Simias.DomainServices
 					myCred );
 			if ( status.statusCode != SCodes.Success && 
 				status.statusCode != SCodes.SuccessInGrace )
-			{	
-				return string.Empty;
+			{
+				return status;
 			}
 
 			// Get just the path portion of the URL.
@@ -666,7 +666,8 @@ namespace Simias.DomainServices
 
 			// Domain is ready to sync
 			this.SetDomainActive( domainInfo.ID );
-			return domainInfo.ID;
+			status.DomainID = domainInfo.ID;
+			return status;
 		}
 
 		/// <summary>

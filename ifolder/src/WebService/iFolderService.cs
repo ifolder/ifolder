@@ -1331,37 +1331,6 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
-		/// WebMethod that connects up an iFolder Enterprise Server
-		/// </summary>
-		/// <param name = "UserName">
-		/// The username to use to connect to the Enterprise server
-		/// </param>
-		/// <param name = "Password">
-		/// The password to use to connect to the Enterprise server
-		/// </param>
-		/// <param name = "Host">
-		/// The host of the enterprise server
-		/// </param>
-		/// <returns>
-		/// The current Settings
-		/// </returns>
-/*		[WebMethod(Description="Connects to an iFolder Enterprise Server")]
-		[SoapDocumentMethod]
-		public iFolderSettings ConnectToEnterpriseServer(	string UserName,
-															string Password,
-															string Host)
-		{
-			Simias.Domain.DomainAgent da = new Simias.Domain.DomainAgent();
-			da.Attach(Host, UserName, Password);
-			iFolderSettings ifSettings = new siFolderSettings();
-			ifSettings.CurrentUserName = UserName;
-			return ifSettings;
-		}*/
-
-
-
-
-		/// <summary>
 		/// WebMethod that will authenticate a domain
 		/// </summary>
 		/// <param name = "UserName">
