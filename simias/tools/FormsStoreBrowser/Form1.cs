@@ -41,6 +41,8 @@ namespace StoreBrowser
 	public class Form1 : System.Windows.Forms.Form
 	{
 		string hostName;
+		string username;
+		string password;
 		IStoreBrowser browser = null;
 		private System.Windows.Forms.MainMenu mainMenu1;
 		private System.Windows.Forms.MenuItem menuItem1;
@@ -86,6 +88,8 @@ namespace StoreBrowser
 			if (hDiag.ShowDialog() == DialogResult.OK)
 			{
 				hostName = hDiag.HostName;
+				username = hDiag.UserName;
+				password = hDiag.Password;
 			}
 
 			AddRecentMI();
@@ -94,7 +98,7 @@ namespace StoreBrowser
 			this.listView1.Hide();
 			tView.ImageList = imageList1;
 			tView.Dock = DockStyle.Fill;
-			browser = new NodeBrowser(tView, listView1, hostName);
+			browser = new NodeBrowser(tView, listView1, hostName, username, password);
 			browser.Show();
 		}
 

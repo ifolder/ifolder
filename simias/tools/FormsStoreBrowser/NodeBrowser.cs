@@ -28,6 +28,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
 using System.IO;
+using System.Net;
 using System.Xml;
 using System.Text.RegularExpressions;
 
@@ -262,6 +263,25 @@ namespace StoreBrowser
 			browser.Url = host + "/SimiasBrowser.asmx";
 			tView.Dock = DockStyle.Left;
 			alreadyDisposed = true;
+		}
+
+		public NodeBrowser(TreeView view, ListView lView, string host, string username, string password)
+		{
+			tView = view;
+			this.lView = lView;
+			lView.BringToFront();
+			lView.Show();
+			browser = new BrowserService();
+			browser.Url = host + "/SimiasBrowser.asmx";
+			tView.Dock = DockStyle.Left;
+			alreadyDisposed = true;
+
+			if (username != null && username != "")
+			{
+				this.browser.Credentials = 
+					new NetworkCredential(username, password, host);
+				this.browser.CookieContainer = new CookieContainer();
+			}
 		}
 
 		~NodeBrowser()
