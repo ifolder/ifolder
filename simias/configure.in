@@ -1,0 +1,56 @@
+AC_INIT(src/Configuration/Configuration.cs)
+AC_CANONICAL_SYSTEM
+AM_INIT_AUTOMAKE(simias, 0.1)
+AM_MAINTAINER_MODE
+
+AC_PROG_CC
+AM_PROG_CC_STDC
+AC_PROG_INSTALL
+AC_HEADER_STDC
+AM_PROG_LIBTOOL
+
+CFLAGS='-ggdb -Wall -Wunused -Wmissing-prototypes -Wmissing-declarations -Wstrict-prototypes -Wmissing-prototypes -Wnested-externs -Wshadow -Wpointer-arith -Wno-cast-qual -Wcast-align -Wwrite-strings'
+
+
+AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+if test "x$PKG_CONFIG" = "xno"; then
+	AC_MSG_ERROR([You need to install pkg-config])
+fi
+
+
+if test "x$MCSTEST" = "xno"; then
+	AC_MSG_ERROR([You need to install mcs (from mono)])
+fi
+
+
+GTK_SHARP_REQUIRED_VERSION=0.10
+PKG_CHECK_MODULES(BASE_DEPENDENCIES, gtk-sharp >= $GTK_SHARP_REQUIRED_VERSION)
+
+AC_SUBST(CFLAGS)
+
+changequote(,)dnl
+if test "x$GCC" = "xyes"; then
+  case " $CFLAGS " in
+  *[\ \	]-Wall[\ \	]*) ;;
+  *) CFLAGS="$CFLAGS -Wall" ;;
+  esac
+
+  if test "x$enable_ansi" = "xyes"; then
+    case " $CFLAGS " in
+    *[\ \	]-ansi[\ \	]*) ;;
+    *) CFLAGS="$CFLAGS -ansi" ;;
+    esac
+
+    case " $CFLAGS " in
+    *[\ \	]-pedantic[\ \	]*) ;;
+    *) CFLAGS="$CFLAGS -pedantic" ;;
+    esac
+  fi
+fi
+changequote([,])dnl
+
+AC_OUTPUT([
+Makefile
+src/Makefile
+src/Configuration/Makefile
+])
