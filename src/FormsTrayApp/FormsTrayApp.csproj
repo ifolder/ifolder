@@ -104,6 +104,16 @@
                     AssemblyName = "Simias"
                     HintPath = "..\..\..\final\web\bin\Simias.dll"
                 />
+                <Reference
+                    Name = "System.Configuration.Install"
+                    AssemblyName = "System.Configuration.Install"
+                    HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Configuration.Install.dll"
+                />
+                <Reference
+                    Name = "System.Web.Services"
+                    AssemblyName = "System.Web.Services"
+                    HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -161,16 +171,6 @@
                     RelPath = "iFolderMigration.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MessageForm.cs"
-                    SubType = "Form"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MessageForm.resx"
-                    DependentUpon = "MessageForm.cs"
-                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "NotifyIconBalloonTip.cs"
