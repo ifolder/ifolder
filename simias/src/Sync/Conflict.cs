@@ -25,6 +25,7 @@ using System.IO;
 using System.Text;
 using Simias.Storage;
 using Simias;
+using Simias.Client;
 
 namespace Simias.Sync
 {
@@ -46,6 +47,7 @@ public class Conflict
 	/// The prefix for a file conflict.
 	/// </summary>
 	static string			ConflictFilePrefix = ".simias.cf.";
+	static string			TempFilePrefix = ".simias.tmp.";
 
 	static string			ConflictBinDir = "Conflicts";
 	static string			conflictBin;
@@ -310,6 +312,52 @@ public class Conflict
 			Conflict cf = new Conflict(collection, new Node(collection, sn));
 			cf.Resolve(localChangesWin);
 		}
+	}
+
+	/// <summary>
+	/// Rename the file that is in the way of the node with the name conflict.
+	/// </summary>
+	/// <param name="newName">The new name of the file.</param>
+	public void RenameConflictingFile(string newName)
+	{
+		DirNode rn = collection.GetRootDirectory();
+		string rootPath = rn.Properties.GetSingleProperty(PropertyTags.Root).Value.ToString();
+		BaseFileNode cfn = node as BaseFileNode;
+		string relPath = Simias.Sync.FileWatcher.GetNormalizedRelativePath(rootPath, cfn.GetFullPath(collection));
+
+		// Now find all nodes with the old name.	
+		ICSList nodeList;
+		if (MyEnvironment.Windows)
+		{
+			nodeList = collection.Search(PropertyTags.FileSystemPath, relPath, SearchOp.Equal);
+		}
+		else
+		{
+			nodeList = collection.Search(PropertyTags.FileSystemPath, relPath, SearchOp.CaseEqual);
+		}
+		
+		BaseFileNode fn = null;
+		foreach (ShallowNode sn in nodeList)
+		{
+			// We don't want the node with the collision.
+			if (sn.ID == node.ID)
+				continue;
+			fn = collection.GetNodeByID(sn.ID) as BaseFileNode;
+		}
+
+		if (fn != null)
+		{
+			// Now rename the file and the node.
+			string tmpName = Path.Combine(rootPath, TempFilePrefix + fn.ID);
+			string newFName = Path.Combine(rootPath, newName);
+			File.Move(fn.GetFullPath(collection), tmpName);
+			File.Move(tmpName, newFName);
+			string relativePath = fn.Properties.GetSingleProperty(PropertyTags.FileSystemPath).Value.ToString();
+			relativePath = relativePath.Remove(relativePath.Length - fn.Name.Length, fn.Name.Length) + newName;
+			node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
+			node.Name = newName;
+		}
+		collection.Commit(fn);
 	}
 }
 

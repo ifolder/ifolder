@@ -238,9 +238,10 @@ namespace Simias.Sync
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="rootPath"></param>
 		/// <param name="path"></param>
 		/// <returns></returns>
-		string GetNormalizedRelativePath(string path)
+		public static string GetNormalizedRelativePath(string rootPath, string path)
 		{
 			string relPath = path.Replace(rootPath, "");
 			relPath = relPath.TrimStart(Path.DirectorySeparatorChar);
@@ -250,13 +251,23 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
+		string GetNormalizedRelativePath(string path)
+		{
+			return GetNormalizedRelativePath(rootPath, path);
+		}
+
+		/// <summary>
 		/// Get a ShallowNode for the named file or directory.
 		/// </summary>
 		/// <param name="path">Path to the file.</param>
 		/// <returns>The ShallowNode for this file.</returns>
 		ShallowNode GetShallowNodeForFile(string path)
 		{
-			string relPath = GetNormalizedRelativePath(path);
+			string relPath = GetNormalizedRelativePath(rootPath, path);
 			
 			ICSList nodeList;
 			if (MyEnvironment.Windows)
