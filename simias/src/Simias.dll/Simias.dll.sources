@@ -50,7 +50,6 @@ AssemblyInfo.cs
 ../POBox/POBoxServiceProxy.cs
 ../POBox/POManager.cs
 ../POBox/POService.cs
-../POBox/PostOffice.cs
 ../POBox/Subscription.cs
 ../POBox/SubscriptionDetails.cs
 ../POBox/SubscriptionInfo.cs
