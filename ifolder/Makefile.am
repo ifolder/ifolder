@@ -5,14 +5,15 @@ DIST_SUBDIRS = $(SUBDIRS) doc
 EXTRA_DIST = tools
 
 .PHONY: doc doc-clean
-doc: $(DOC_TARGETS)
+doc: sub-doc
 	$(MAKE) -C doc all
 
-doc-clean:
+doc-clean: sub-doc-clean
 	$(MAKE) -C doc clean
 
 .PHONY: sub-all sub-clean sub-install sub-uninstall sub-installcheck
 .PHONY: sub-distclean sub-maintainer-clean sub-package sub-installcheck-summary
+.PHONY: sub-package-clean sub-doc sub-doc-clean
 
 clean: sub-clean
 	rm -rf stage *.suo
@@ -60,7 +61,7 @@ sub-all:
 	done
 
 # pass these targets on to subprojects (stripping off sub-)
-sub-clean sub-install sub-installcheck sub-installcheck-summary sub-uninstall sub-distclean sub-maintainer-clean sub-package-clean:
+sub-clean sub-install sub-installcheck sub-installcheck-summary sub-uninstall sub-distclean sub-maintainer-clean sub-package-clean sub-doc sub-doc-clean:
 	@echo SUBPROJECT_BUILD_PATHS=$(SUBPROJECT_BUILD_PATHS)
 	for subproj in $(SUBPROJECT_BUILD_PATHS); do \
 		cd $$subproj; $(MAKE) $(subst sub-,,$@); \
@@ -84,6 +85,8 @@ sub-uninstall:
 sub-maintainer-clean:
 sub-package:
 sub-package-clean:
+sub-doc:
+sub-doc-clean:
 
 endif
 

@@ -5,7 +5,7 @@ DIST_SUBDIRS = $(SUBDIRS) doc
 EXTRA_DIST = tools external
 
 .PHONY: doc doc-clean
-doc: $(DOC_TARGETS)
+doc:
 	$(MAKE) -C doc all
 
 doc-clean:
