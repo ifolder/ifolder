@@ -722,7 +722,113 @@ in_inv_sel_changed_cb(GtkTreeSelection *sel, GtkTreeView *tree)
 static void
 out_inv_resend_button_cb(GtkWindow *w, GtkTreeView *tree)
 {
-	g_print("FIXME: Implement out_inv_resend_button_cb()\n");
+	GtkTreeSelection *sel;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	Invitation *invitation;
+	GaimBuddy *buddy;
+	int send_result;
+	GtkWidget *dialog;
+	char time_str[32];
+	char state_str[32];
+
+	sel = gtk_tree_view_get_selection(tree);
+	if (!gtk_tree_selection_get_selected(sel, &model, &iter)) {
+		/**
+		 * This shouldn't happen since the button should be disabled when no
+		 * items in the list are selected.
+		 */
+		g_print("out_inv_resend_button_cb() called without an active selection\n");
+		return;
+	}
+	
+	/* Extract the Invitation * from the model using iter */
+	gtk_tree_model_get(model, &iter,
+						INVITATION_PTR, &invitation,
+						-1);
+
+	buddy = gaim_find_buddy(invitation->gaim_account, invitation->buddy_name);
+	if (!buddy) {
+		dialog = gtk_message_dialog_new(NULL,
+					GTK_DIALOG_DESTROY_WITH_PARENT,
+					GTK_MESSAGE_ERROR,
+					GTK_BUTTONS_CLOSE,
+					_("This buddy is not in your buddy list.  If you do not wish to accept this invitation, please remove it from your list."));
+		gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+		return;
+	}
+	
+	/**
+	 * Check to see if the buddy is online.  If the buddy is not online, we need
+	 * to mark this invitation as PENDING and when the sign-on event occurs, we
+	 * need to loop through all the PENDING events and send them out.
+	 */
+	if (buddy->present == 0) {
+		/* Mark the invitation as PENDING */
+
+		/* Update the invitation time and resend the invitation */
+		time(&(invitation->time));
+
+		/* Update the invitation state */
+		invitation->state = STATE_PENDING;
+	
+		/* Format the time to a string */
+		fill_time_str(time_str, 32, invitation->time);
+
+		/* Format the state string */
+		fill_state_str(state_str, invitation->state);
+	
+		/* Update the out_inv_store */
+		gtk_list_store_set(GTK_LIST_STORE(model), &iter,
+			/* FIXME: Figure out how to add the correct protocol icon as the first column */
+			TIME_COL,				time_str,
+			STATE_COL,				state_str,
+			-1);
+		
+		return; /* That's about all we can do at this point */
+	}
+
+	send_result =
+		send_invitation_request_msg(buddy, invitation->collection_id,
+									invitation->collection_type,
+									invitation->collection_name);
+		
+	/* FIXME: This test isn't working.  If a buddy just barely signed out, Gaim displays an error message, but we get back a 1 */
+	if (send_result <= 0) {
+		dialog = gtk_message_dialog_new(NULL,
+					GTK_DIALOG_DESTROY_WITH_PARENT,
+					GTK_MESSAGE_ERROR,
+					GTK_BUTTONS_CLOSE,
+					_("There was an error sending this message.  Perhaps the buddy is not online."));
+		gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+		return;
+	}
+
+	/**
+	 * If we make it to this point, we have sent the message and we can now
+	 * update the timestamp and invitation state.
+	 */	
+
+	/* Update the invitation time and resend the invitation */
+	time(&(invitation->time));
+
+	/* Update the invitation state */
+	invitation->state = STATE_SENT;
+	
+	/* Format the time to a string */
+	fill_time_str(time_str, 32, invitation->time);
+
+	/* Format the state string */
+	fill_state_str(state_str, invitation->state);
+
+	/* Update the out_inv_store */
+	gtk_list_store_set(GTK_LIST_STORE(model), &iter,
+		/* FIXME: Figure out how to add the correct protocol icon as the first column */
+		TIME_COL,				time_str,
+		STATE_COL,				state_str,
+		-1);
 }
 
 static void
@@ -1530,12 +1636,7 @@ handle_invitation_request_deny(GaimAccount *account,
 	gtk_tree_model_get(GTK_TREE_MODEL(out_inv_store), &iter,
 						INVITATION_PTR, &invitation,
 						-1);
-						
-if (!invitation) {
-	g_print("This is even worse!\n");
-} else {
-	g_print("invitation is not null\n");
-}
+
 	/**
 	 * Double-check to make sure nothing has changed since returning from the
 	 * lookup call.  If it did, call this function recursively.  If the row
