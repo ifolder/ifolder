@@ -27,10 +27,10 @@ using System.Reflection;
 using System.Xml;
 
 using Simias;
+using Simias.Authentication;
+using Simias.Security.Web.AuthenticationService;
 using Simias.Service;
 using Simias.Storage;
-
-using Novell.Security.Web.AuthenticationService;
 
 
 namespace Simias.SimpleServer
@@ -60,9 +60,11 @@ namespace Simias.SimpleServer
 			this.domain = store.GetDomain( ssDomain.ID );
 			this.roster = this.domain.Roster;
 
+			/*
 			this.simpleServerDoc = new XmlDocument();
 			this.simpleServerDoc.Load("SimpleServer.xml");
 			domainElement = this.simpleServerDoc.DocumentElement;
+			*/
 		}
 		#endregion
 
@@ -87,9 +89,10 @@ namespace Simias.SimpleServer
 		/// Returns an authentication status object
 		/// </returns>
 
-		public AuthenticationStatus AuthenticateByName(string user, string password)
+		public Simias.Authentication.Status AuthenticateByName(string user, string password)
 		{
-			AuthenticationStatus status = new AuthenticationStatus(StatusCode.Unknown);
+			Simias.Authentication.Status status =
+				new Simias.Authentication.Status(Simias.Authentication.StatusCodes.Unknown);
 
 			try
 			{
@@ -107,20 +110,24 @@ namespace Simias.SimpleServer
 						{
 							if (password == (string) pwd.Value)
 							{
-								status.status = StatusCode.Success;
-								status.UserID = member.ID;
+								status.statusCode = Simias.Authentication.StatusCodes.Success;
+								status.UserID = member.UserID;
 								status.UserName = member.Name;
 							}
 							else
 							{
-								status.status = StatusCode.InvalidPassword;
+								status.statusCode = Simias.Authentication.StatusCodes.InvalidPassword;
 							}
 						}
 					}
 					else
 					{
-						status.status = StatusCode.InvalidUser;
+						status.statusCode = Simias.Authentication.StatusCodes.UnknownUser;
 					}
+				}
+				else
+				{
+					log.Debug( "Failed to instantiate the Roster" );
 				}
 			}
 			catch(Exception authEx)
@@ -128,7 +135,7 @@ namespace Simias.SimpleServer
 				log.Debug(authEx.Message);
 				log.Debug(authEx.StackTrace);
 
-				status.status = StatusCode.InternalException;
+				status.statusCode = Simias.Authentication.StatusCodes.InternalException;
 				status.ExceptionMessage = authEx.Message;
 			}
 
@@ -142,10 +149,9 @@ namespace Simias.SimpleServer
 		/// Returns an authentication status object
 		/// </returns>
 
-		public AuthenticationStatus AuthenticateByID(string id, string password)
+		public Simias.Authentication.Status AuthenticateByID(string id, string password)
 		{
-			AuthenticationStatus status = new AuthenticationStatus(StatusCode.MethodNotSupported);
-			return status;
+			return	new Simias.Authentication.Status(Simias.Authentication.StatusCodes.MethodNotSupported);
 		}
     }
 }

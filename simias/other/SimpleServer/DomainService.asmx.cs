@@ -27,9 +27,9 @@ namespace Novell.iFolder.DomainService
 	/// Domain Service
 	/// </summary>
 	[WebService(
-	 Namespace="http://novell.com/ifolder/domain",
-	 Name="Domain Service",
-	 Description="Web Service providing access to domain server functionality.")]
+		Namespace="http://novell.com/ifolder/domain",
+		Name="Domain Service",
+		Description="Web Service providing access to domain server functionality.")]
 	public class DomainService : System.Web.Services.WebService
 	{
 		private static readonly string FilesDirectory = "SimiasFiles";
@@ -51,9 +51,6 @@ namespace Novell.iFolder.DomainService
 		[SoapDocumentMethod]
 		public DomainInfo GetDomainInfo( string userID )
 		{
-			// store
-			Store store = Store.GetStore();
-
 			// domain
 			Simias.SimpleServer.Domain ssDomain = new Simias.SimpleServer.Domain( false );
 			Simias.Storage.Domain domain = ssDomain.GetSimpleServerDomain( false, "" );
@@ -67,19 +64,20 @@ namespace Novell.iFolder.DomainService
 			info.Name = domain.Name;
 			info.Description = domain.Description;
 			
-			// roster
-			Roster roster = domain.Roster;
-			
-			info.RosterID = roster.ID;
-			info.RosterName = roster.Name;
+			info.RosterID = domain.Roster.ID;
+			info.RosterName = domain.Roster.Name;
 
 			// member info
-			Member member = roster.GetMemberByID( userID );
+			Member member = domain.Roster.GetMemberByID( userID );
 			if ( member != null )
 			{
 				info.MemberNodeName = member.Name;
 				info.MemberNodeID = member.ID;
 				info.MemberRights = member.Rights.ToString();
+			}
+			else
+			{
+				throw new SimiasException( "User: " + userID + " does not exist" );
 			}
 
 			return info;
@@ -99,7 +97,6 @@ namespace Novell.iFolder.DomainService
 			ProvisionInfo info = null;
 
 			// store
-			Store store = Store.GetStore();
 			Simias.SimpleServer.Domain ssDomain = new Simias.SimpleServer.Domain( false );
 			Simias.Storage.Domain domain = ssDomain.GetSimpleServerDomain( false, "" );
 			if ( domain == null )
@@ -107,18 +104,15 @@ namespace Novell.iFolder.DomainService
 				throw new SimiasException( "SimpleServer domain does not exist" );
 			}
 
-			// roster
-			Roster roster = domain.Roster;
-
 			// find user
-			Member member = roster.GetMemberByName( user );
+			Member member = domain.Roster.GetMemberByName( user );
 			if (member != null)
 			{
 				info = new ProvisionInfo();
 				info.UserID = member.UserID;
 
 				// post-office box
-				POBox poBox = POBox.GetPOBox( store, domain.ID, info.UserID );
+				POBox poBox = POBox.GetPOBox( Store.GetStore(), domain.ID, info.UserID );
 
 				info.POBoxID = poBox.ID;
 				info.POBoxName = poBox.Name;
@@ -127,6 +121,10 @@ namespace Novell.iFolder.DomainService
 				info.MemberNodeName = poMember.Name;
 				info.MemberNodeID = poMember.ID;
 				info.MemberRights = poMember.Rights.ToString();
+			}
+			else
+			{
+				throw new SimiasException( "User: " + user + " does not exist" );
 			}
 
 			return info;

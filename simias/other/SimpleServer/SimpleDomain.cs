@@ -27,8 +27,8 @@ using System.Threading;
 using System.Xml;
 
 using Simias;
-using Simias.Client;
 using Simias.Storage;
+using Simias.Sync;
 
 using Novell.AddressBook;
 
@@ -202,7 +202,7 @@ namespace Simias.SimpleServer
 
 				if ( ldbMember == null )
 				{
-					// Create a local member which is the owner of the mDnsDomain
+					// Create a local member which is the owner of the Simple Server domain
 					ldbMember = new Member( ownerMember, Guid.NewGuid().ToString(), Access.Rights.Admin );
 					ldbMember.IsOwner = true;
 
@@ -250,8 +250,20 @@ namespace Simias.SimpleServer
 				{
 					ssRoster = new Roster( store, rDomain );
 					rMember = new Member( ldbMember.Name, ldbMember.ID, Access.Rights.Admin );
+
+					ssRoster.Role = SyncRoles.Master;
+					ssRoster.CreateMaster = false;
+
+					// Mark the roster as a master
+					/*
+					Property p = new Property( PropertyTags.SyncRole, SyncRoles.Master );
+					p.LocalProperty = true;
+					ssRoster.Properties.ModifyProperty( p );
+					*/
+
 					rMember.IsOwner = true;
-					changeList.Add(ssRoster);
+					changeList.Add( ssRoster );
+					changeList.Add( rMember );
 				}
 				else
 				{
@@ -261,17 +273,17 @@ namespace Simias.SimpleServer
 					{
 						rMember = new Member( ldbMember.Name, ldbMember.ID, Access.Rights.Admin );
 						rMember.IsOwner = true;
+						changeList.Add(rMember);
 					}
 				}
 
-				//rMember.Properties.ModifyProperty( "POBox", hostAddress );
-				changeList.Add(rMember);
 				ssRoster.Commit( changeList.ToArray( typeof( Node ) ) as Node[] );
 
 				//
 				// Verify the POBox for the local SimpleServer owner
 				//
 			
+				/*
 				Member pMember;
 				Simias.POBox.POBox poBox = null;
 				string poBoxName = "POBox:" + rDomain.ID + ":" + ldbMember.ID;
@@ -284,6 +296,9 @@ namespace Simias.SimpleServer
 				if (poBox == null)
 				{
 					poBox = new Simias.POBox.POBox( store, poBoxName, rDomain.ID );
+					poBox.Role = SyncRoles.Master;
+					poBox.CreateMaster = false;
+
 					pMember = 
 						new Member( ldbMember.Name, ldbMember.ID, Access.Rights.ReadWrite );
 					pMember.IsOwner = true;
@@ -302,6 +317,7 @@ namespace Simias.SimpleServer
 
 					}
 				}
+				*/
 			}
 			catch(Exception e1)
 			{
@@ -337,6 +353,7 @@ namespace Simias.SimpleServer
 					if ( p != null && (bool) p.Value == true )
 					{
 						ssDomain = tmpDomain;
+						this.id = tmpDomain.ID;
 						break;
 					}
 				}
