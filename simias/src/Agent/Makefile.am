@@ -4,7 +4,7 @@ Agent_INCLUDES =
 Agent_RESOURCES =
 Agent_FLAGS = $(CSC_LIBFLAG)
 Agent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll
-Agent_LIBPATH = ../Configuration ../StoreProvider ../Common ../CollectionEvents ../CollectionStore Library
+Agent_LIBPATH = ../Configuration ../StoreProvider ../Common ../CollectionEvents ../CollectionStore  ../../external/SecureChannelSinksLibrary
 
 NUNIT_TESTS := AgentTests.dll
 

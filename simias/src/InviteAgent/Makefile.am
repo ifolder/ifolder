@@ -4,7 +4,7 @@ InviteAgent_INCLUDES =
 InviteAgent_RESOURCES =
 InviteAgent_FLAGS = $(CSC_LIBFLAG)
 InviteAgent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll Configuration.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll Agent.dll AddressBook.dll Common.dll SyncCommon.dll
-InviteAgent_LIBPATH = Library ../CollectionStore ../StoreProvider ../Agent ../AddressBook ../Common ../SyncCommon ../Configuration ../Common ../CollectionEvents
+InviteAgent_LIBPATH = Library ../CollectionStore  ../../external/SecureChannelSinks ../StoreProvider ../Agent ../AddressBook ../Common ../SyncCommon ../Configuration ../Common ../CollectionEvents
 
 InviteAgentConsole_CSFILES = $(srcdir)/ConsoleApp/AssemblyInfo.cs $(srcdir)/ConsoleApp/MainClass.cs
 InviteAgentConsole_CSFILES_CSC := $(subst /,$(SEP),$(InviteAgentConsole_CSFILES))
