@@ -151,7 +151,7 @@ simias_get_user_profile_dir_path(char *dest_path)
 		return NULL;
 	}
 
-	sprintf (dest_path, user_profile);
+	sprintf (dest_path, "%s\\Local Settings\\Application Data\\simias", user_profile);
 #else
 	char *home_dir;
 	char dot_local_share_simias_path[1024];
