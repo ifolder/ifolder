@@ -457,7 +457,7 @@ namespace Novell.iFolderCom
 				if ((currentTime.Ticks - ticks) > delta)
 				{
 					ticks = currentTime.Ticks;
-					Uri uri = Simias.Client.Manager.LocalServiceUrl;
+					Uri uri = Manager.LocalServiceUrl;
 					if (uri != null)
 					{
 						ifWebService = new iFolderWebService();

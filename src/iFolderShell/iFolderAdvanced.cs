@@ -1523,7 +1523,7 @@ namespace Novell.iFolderCom
 		{
 			if (ifWebService == null)
 			{
-				Uri uri = Simias.Client.Manager.LocalServiceUrl;
+				Uri uri = Manager.LocalServiceUrl;
 				if (uri != null)
 				{
 					ifWebService = new iFolderWebService();
