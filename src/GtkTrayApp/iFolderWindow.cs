@@ -981,8 +981,7 @@ namespace Novell.iFolder
 
 		public void RefreshiFolderTreeView(object o, EventArgs args)
 		{
-			iFolder[] iFolderArray;
-
+			iFolder[]	iFolderArray;
 			try
 			{
 				iFolderArray = iFolderWS.GetAlliFolders();
@@ -1254,18 +1253,9 @@ namespace Novell.iFolder
 				tSelect.GetSelected(out tModel, out iter);
 				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
 
-
 				try
 				{
-					System.Diagnostics.Process process;
-
-					process = new System.Diagnostics.Process();
-					process.StartInfo.CreateNoWindow = true;
-					process.StartInfo.UseShellExecute = false;
-					process.StartInfo.FileName = "nautilus";
-					process.StartInfo.Arguments = "\"" + 
-										ifolder.UnManagedPath + "\"";
-					process.Start();
+					Util.OpenInBrowser(ifolder.UnManagedPath);
 				}
 				catch(Exception e)
 				{
@@ -1274,8 +1264,8 @@ namespace Novell.iFolder
 						iFolderMsgDialog.DialogType.Error,
 						iFolderMsgDialog.ButtonSet.Ok,
 						"iFolder Error",
-						"Unable to launch Nautilus",
-						"iFolder attempted to open the Nautilus File Manager and was unable to do so");
+						"Unable to launch File Browser",
+						"iFolder attempted to open the Nautilus File Manager and the Konqueror File Manager and was unable to launch either of them.");
 					dg.Run();
 					dg.Hide();
 					dg.Destroy();
