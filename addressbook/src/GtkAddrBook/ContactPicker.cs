@@ -99,6 +99,21 @@ namespace Novell.iFolder
 
 		public event ContactsPickedEventHandler ContactsPicked;
 
+		public ContactPicker (Manager abMan, Gtk.Window parentWin)
+		{
+			Int32 pX, pY, pdX, pdY;
+
+			parentWin.GetPosition(out pX, out pY);
+			parentWin.GetSize(out pdX, out pdY);
+			if(pdY == 0)
+				pdY = 0;
+
+			this.abMan = abMan;
+
+			InitUI();
+			cpwin.Move(pX + pdX + 10, pY);
+		}
+
 		public ContactPicker (Gtk.Window parentWin) 
 		{
 			Int32 pX, pY, pdX, pdY;
@@ -109,6 +124,12 @@ namespace Novell.iFolder
 				pdY = 0;
 			InitUI();
 			cpwin.Move(pX + pdX + 10, pY);
+		}
+
+		public ContactPicker (Manager abMan) 
+		{
+			this.abMan = abMan;
+			InitUI();
 		}
 
 		public ContactPicker () 
@@ -238,7 +259,7 @@ namespace Novell.iFolder
 				Pixbuf	cPhoto;
 
 				userName = cnt.FN;
-				if(userName == null)
+				if( (userName == null) || (userName.Length == 0) )
 					userName = cnt.UserName;
 
 /*

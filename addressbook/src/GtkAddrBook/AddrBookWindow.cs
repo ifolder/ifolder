@@ -83,6 +83,12 @@ namespace Novell.iFolder
 
 		public event EventHandler AddrBookClosed;
 
+		public AddrBookWindow (Manager abMan) 
+		{
+			this.abMan = abMan;
+			Init();
+		}
+
 		public AddrBookWindow () 
 		{
 			Init();
@@ -219,10 +225,10 @@ namespace Novell.iFolder
 			Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
 			if(cnt != null)
 			{
-				if(cnt.FN == null)
-					((CellRendererText) cell).Text = cnt.UserName;
-				else
+				if( (cnt.FN != null) && (cnt.FN.Length > 0) )
 					((CellRendererText) cell).Text = cnt.FN;
+				else
+					((CellRendererText) cell).Text = cnt.UserName;
 			}
 			else
 			{
@@ -1068,6 +1074,10 @@ namespace Novell.iFolder
 					if((e.Types & EmailTypes.other) == EmailTypes.other)
 					{
 						AddLabeledValue("other", e.Address);
+					}
+					if((e.Types & EmailTypes.preferred) == EmailTypes.preferred)
+					{
+						AddLabeledValue("preferred", e.Address);
 					}
 				}
 
