@@ -585,7 +585,7 @@ namespace Simias.Sync.Http
 		/// <param name="stream">The stream containing the data.</param>
 		/// <param name="offset">The offset to write at.</param>
 		/// <param name="count">The number of bytes to write.</param>
-		public void WriteFile(Stream stream, long offset, int count)
+		public void WriteFile(Stream stream, long offset, long count)
 		{
 			HttpWebRequest request = GetRequest(SyncMethod.WriteFile);
 			WebHeaderCollection headers = request.Headers;
@@ -731,7 +731,7 @@ namespace Simias.Sync.Http
 			BinaryWriter writer = new BinaryWriter(response.OutputStream);
 			si.Serialize(writer);
 			writer.Close();
-			response.StatusCode = (int)HttpStatusCode.OK;
+			response.End();
 		}
 
 		/// <summary>
@@ -754,7 +754,7 @@ namespace Simias.Sync.Http
 				}
 				writer.Close();
 			}
-			response.StatusCode = (int)HttpStatusCode.OK;
+			response.End();
 		}
 		
 		
@@ -789,7 +789,7 @@ namespace Simias.Sync.Http
 				status.Serialize(writer);
 			}
 			writer.Close();
-			response.StatusCode = (int)HttpStatusCode.OK;
+			response.End();
 		}
 		
 		/// <summary>
@@ -823,7 +823,7 @@ namespace Simias.Sync.Http
 				node.Serialize(writer);
 			}
 			writer.Close();
-			response.StatusCode = (int)HttpStatusCode.OK;
+			response.End();
 		}
 
 		/// <summary>
@@ -857,7 +857,7 @@ namespace Simias.Sync.Http
 				status.Serialize(writer);
 			}
 			writer.Close();
-			response.StatusCode = (int)HttpStatusCode.OK;
+			response.End();
 		}
 
 		/// <summary>
@@ -901,7 +901,7 @@ namespace Simias.Sync.Http
 				status.Serialize(writer);
 			}
 			writer.Close();
-			response.StatusCode = (int)HttpStatusCode.OK;
+			response.End();
 		}
 
 		/// <summary>
@@ -918,7 +918,7 @@ namespace Simias.Sync.Http
 			BinaryWriter writer = new BinaryWriter(response.OutputStream);
 			writer.Write((byte)status);
 			writer.Close();
-			response.StatusCode = (int)HttpStatusCode.OK;
+			response.End();
 		}
 
 		/// <summary>
@@ -935,7 +935,7 @@ namespace Simias.Sync.Http
 			BinaryWriter writer = new BinaryWriter(response.OutputStream);
 			node.Serialize(writer);
 			writer.Close();
-			response.StatusCode = (int)HttpStatusCode.OK;
+			response.End();
 		}
 
 		/// <summary>
@@ -957,7 +957,7 @@ namespace Simias.Sync.Http
 				return;
 			}
 			response.AddHeader(SyncHeaders.ObjectCount, "0");
-			response.StatusCode = (int)HttpStatusCode.OK;
+			response.End();
 		}
 
 		public void PutHashMap(HttpRequest request, HttpResponse response)
@@ -1012,6 +1012,7 @@ namespace Simias.Sync.Http
 			{
 				response.StatusCode = (int)HttpStatusCode.BadRequest;
 			}
+			response.End();
 		}
 
 		/// <summary>
@@ -1025,10 +1026,10 @@ namespace Simias.Sync.Http
 			if (GetRange(request, out offset, out size))
 			{
 				service.Write(request.InputStream, offset, (int)size);
-				response.StatusCode = (int)HttpStatusCode.OK;
 			}
 			else
 				response.StatusCode = (int)HttpStatusCode.BadRequest;
+			response.End();
 		}
 
 		/// <summary>
@@ -1042,10 +1043,10 @@ namespace Simias.Sync.Http
 			if (GetRange(request, out oldOffset, out offset, out size))
 			{
 				service.Copy(oldOffset, offset, (int)size);
-				response.StatusCode = (int)HttpStatusCode.OK;
 			}
 			else
 				response.StatusCode = (int)HttpStatusCode.BadRequest;
+			response.End();
 		}
 
 		/// <summary>
@@ -1063,7 +1064,7 @@ namespace Simias.Sync.Http
 			BinaryWriter writer = new BinaryWriter(response.OutputStream);
 			status.Serialize(writer);
 			writer.Close();
-			response.StatusCode = (int)HttpStatusCode.OK;
+			response.End();
 		}
 
 		/// <summary>
@@ -1074,7 +1075,7 @@ namespace Simias.Sync.Http
 		public void EndSync(HttpRequest request, HttpResponse response)
 		{
 			service.Stop();
-			response.StatusCode = (int)HttpStatusCode.OK;
+			response.End();
 		}
 
 		/// <summary>

@@ -254,7 +254,6 @@ namespace Simias.Sync
 		internal SyncNode(Node node) :
 			base(node)
 		{
-			this.MasterIncarnation = node.MasterIncarnation;
 			this.node = node.Properties.ToString(true);
 		}
 

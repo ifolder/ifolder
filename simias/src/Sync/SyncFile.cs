@@ -347,7 +347,7 @@ namespace Simias.Sync
 			catch (FileNotFoundException)
 			{
 				// Check to see if we have a partially downloaded file to delta sync with.
-				if (File.Exists(workFile))
+				if (collection.Role == SyncCollectionRoles.Slave && File.Exists(workFile))
 				{
 					partialFile = workFile + ".part";
 					File.Move(workFile, partialFile);
@@ -497,7 +497,7 @@ namespace Simias.Sync
 		static string			workBinDir = "WorkArea";
 		static string			workBin;
 		/// <summary>Used to publish Sync events.</summary>
-		static protected EventPublisher	eventPublisher = new EventPublisher();
+		static public			EventPublisher	eventPublisher = new EventPublisher();
 		bool					exists = false;
 		
 		#endregion

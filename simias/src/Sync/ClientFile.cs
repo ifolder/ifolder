@@ -91,7 +91,7 @@ namespace Simias.Sync
 		/// <summary>
 		/// The length of the segment.
 		/// </summary>
-		public int		Length;
+		public long		Length;
 		/// <summary>
 		/// The offset in the local file of the segment.
 		/// </summary>
@@ -102,7 +102,7 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="length">The length of the segment.</param>
 		/// <param name="offset">The offset of the segment.</param>
-		public OffsetSegment(int length, long offset)
+		public OffsetSegment(long length, long offset)
 		{
 			this.Length = length;
 			this.Offset = offset;
@@ -525,14 +525,13 @@ namespace Simias.Sync
 				{
 					// Write the bytes to the output stream.
 					OffsetSegment seg = (OffsetSegment)segment;
-					byte[] dataBuffer = new byte[seg.Length];
-					ReadPosition = seg.Offset;
-					//int bytesRead = Read(dataBuffer, 0, seg.Length);
-					httpClient.WriteFile(OutStream, offset, seg.Length);
-					sizeRemaining -= seg.Length;
-					//serverFile.Write(dataBuffer, offset, bytesRead);
-					//sizeRemaining -= bytesRead;
-					offset += seg.Length;
+					if (seg.Length > 0)
+					{
+						ReadPosition = seg.Offset;
+						httpClient.WriteFile(OutStream, offset, seg.Length);
+						sizeRemaining -= seg.Length;
+						offset += seg.Length;
+					}
 					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
 				}
 			}
@@ -562,16 +561,8 @@ namespace Simias.Sync
 			if (serverHashMap.Length == 0)
 			{
 				// Send the whole file.
-				long offset = 0;
-				long fileSize = sizeToSync = Length;
-				while (offset < fileSize)
-				{
-					long bytesLeft = fileSize - offset;
-					int size = (int)((bytesLeft > MaxXFerSize) ? MaxXFerSize : bytesLeft);
-					OffsetSegment seg = new OffsetSegment(size, offset);
-					fileMap.Add(seg);
-					offset += size;
-				}
+				sizeToSync = Length;
+				fileMap.Add(new OffsetSegment(sizeToSync, 0));
 				return fileMap;
 			}
 
@@ -621,9 +612,18 @@ namespace Simias.Sync
 								// We found a match save the data that does not match;
 								if (endOfLastMatch != startByte)
 								{
-									OffsetSegment seg = new OffsetSegment(startByte - endOfLastMatch, ReadPosition - bytesRead + endOfLastMatch);
-									fileMap.Add(seg);
-									sizeToSync += seg.Length;
+									long segLen = startByte - endOfLastMatch;
+									long segOffset = ReadPosition - bytesRead + endOfLastMatch;
+									OffsetSegment seg = fileMap[fileMap.Count] as OffsetSegment;
+									if (seg != null && (seg.Offset + seg.Length) == segOffset)
+									{
+										seg.Length += segLen;
+									}
+									else
+									{
+										fileMap.Add(new OffsetSegment(segLen, segOffset));
+									}
+									sizeToSync += segLen;
 								}
 								startByte = endByte + 1;
 								endByte = startByte + HashData.BlockSize - 1;
