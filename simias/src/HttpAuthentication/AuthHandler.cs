@@ -843,6 +843,15 @@ namespace Simias.Security.Web
 					break;
 				}
 
+				case SCodes.InvalidCredentials:
+				{
+					context.Response.StatusCode = 401;
+					context.Response.AddHeader(
+						Login.SimiasErrorHeader,
+						StatusCodes.InvalidCredentials.ToString() );
+					break;
+				}
+
 				default:
 					context.Response.StatusCode = 401;
 					break;
