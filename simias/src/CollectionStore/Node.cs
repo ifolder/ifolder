@@ -61,19 +61,14 @@ namespace Simias.Storage
 		public const string Generic = "Generic";
 
 		/// <summary>
-		/// Scheme type used to report events.
+		/// Handle to the store object.
 		/// </summary>
-		internal protected const string CsScheme = "nifp";
+		private Store store;
 
 		/// <summary>
 		/// Reference to node data. 
 		/// </summary>
 		internal protected CacheNode cNode = null;
-
-		/// <summary>
-		/// The new cache node object that resulted from a merge in a multi-node commit.
-		/// </summary>
-		internal protected CacheNode mergedCachedNode = null;
 		#endregion
 
 		#region Properties
@@ -296,6 +291,8 @@ namespace Simias.Storage
 		/// <param name="persisted">Set to true if this is a node that already exists in the database, otherwise false.</param>
 		internal Node( Store store, string name, string id, string type, bool persisted )
 		{
+			this.store = store;
+
 			cNode = new CacheNode( store, id );
 			cNode.name = name;
 			cNode.type = type;
@@ -318,7 +315,9 @@ namespace Simias.Storage
 		/// <param name="type">Type of node to create.</param>
 		public Node( Collection collection, string name, string id, string type )
 		{
-			cNode = new CacheNode( collection.LocalStore, id.ToLower() );
+			store = collection.LocalStore;
+
+			cNode = new CacheNode( store, id.ToLower() );
 			cNode.collection = collection;
 			cNode.name = name;
 			cNode.type = NodeType + type;
@@ -351,7 +350,9 @@ namespace Simias.Storage
 		/// <param name="persisted">Set to true if this is a node that already exists in the database, otherwise false.</param>
 		internal Node( Collection collection, string name, string id, string type, bool persisted )
 		{
-			cNode = new CacheNode( collection.LocalStore, id.ToLower() );
+			store = collection.LocalStore;
+
+			cNode = new CacheNode( store, id.ToLower() );
 			cNode.collection = collection;
 			cNode.name = name;
 			cNode.type = type;
@@ -369,6 +370,8 @@ namespace Simias.Storage
 		/// <param name="xmlProperties">List of properties that belong to this node.</param>
 		internal Node( Store store, XmlElement xmlProperties )
 		{
+			this.store = store;
+
 			cNode = new CacheNode( store, xmlProperties.GetAttribute( Property.IDAttr ) );
 			cNode.name = xmlProperties.GetAttribute( Property.NameAttr );
 			cNode.type = xmlProperties.GetAttribute( Property.TypeAttr );
@@ -384,10 +387,12 @@ namespace Simias.Storage
 		/// <param name="xmlProperties">Xml document that describes the node.</param>
 		/// <param name="persisted">Set to true if this is a node that already exists in the database, otherwise false.</param>
 		/// <param name="imported">Set to true if this node is being imported from another location.</param>
-		/// <param name="useCache">Set to true if node cache is to be checked for existing node.</param>
+		/// <param name="useCache">Set to true if the node cache is to be used.</param>
 		internal Node( Collection collection, XmlElement xmlProperties, bool persisted, bool imported, bool useCache )
 		{
-			cNode = new CacheNode( collection.LocalStore, xmlProperties.GetAttribute( Property.IDAttr ) );
+			store = collection.LocalStore;
+
+			cNode = new CacheNode( store, xmlProperties.GetAttribute( Property.IDAttr ) );
 			cNode.collection = collection;
 			cNode.name = xmlProperties.GetAttribute( Property.NameAttr );
 			cNode.type = xmlProperties.GetAttribute( Property.TypeAttr );
@@ -417,23 +422,33 @@ namespace Simias.Storage
 					Properties.AddNodeProperty( lvProp );
 				}
 
-				// See if the cache is to be checked.
-				if ( useCache )
+				// Because this node is being imported, it needs to be the one in the cache node table.
+				// Otherwise all import changes will be lost.
+				CacheNode tempCacheNode = store.GetCacheNode( Id );
+				if ( tempCacheNode != null )
 				{
-					cNode = cNode.AddToCacheTable();
+					// Copy this cache node to the one in the table so that all node will see the import
+					// changes.
+					tempCacheNode.Copy( cNode );
+
+					// GetCacheNode() incremented the reference count.  Need to decrement it.
+					store.RemoveCacheNode( Id, false );
 				}
 
+				// Add the node to the cache table.
+				cNode = cNode.AddToCacheTable();
+
 				// Add this node to the dirty list.
-				CollectionNode.AddDirtyNodeToList( this );
+				collection.AddDirtyNodeToList( this );
 			}
 			else
 			{
 				// Create the property list.
 				cNode.properties = new PropertyList( this, xmlProperties );
 
-				// See if the cache is to be checked.
 				if ( useCache )
 				{
+					// Add the node to the cache table.
 					cNode = cNode.AddToCacheTable();
 				}
 			}
@@ -445,6 +460,7 @@ namespace Simias.Storage
 		/// <param name="cNode">Cache node that contains the node data.</param>
 		internal Node( CacheNode cNode )
 		{
+			this.store = cNode.store;
 			this.cNode = cNode;
 		}
 
@@ -503,7 +519,28 @@ namespace Simias.Storage
 			}
 
 			// Remove this tombstone out of the cache table.
-			CollectionNode.LocalStore.RemoveCacheNode( Id, cNode, true );
+			store.RemoveCacheNode( Id, true );
+		}
+
+		/// <summary>
+		/// Gets a node directly from the database.
+		/// </summary>
+		/// <param name="nodeId">Identifier of node to get.</param>
+		/// <returns>A node that contains the current object from the database.</returns>
+		private Node GetNodeFromDatabase( string nodeId )
+		{
+			Node dbNode = null;
+
+			// Get the current node from the database.
+			string xmlString = store.StorageProvider.GetRecord( nodeId, CollectionNode.Id );
+			if ( xmlString != null )
+			{
+				XmlDocument xmlNode = new XmlDocument();
+				xmlNode.LoadXml( xmlString );
+				dbNode = new Node( CollectionNode, xmlNode.DocumentElement[ Property.ObjectTag ], true, false, false );
+			}
+
+			return dbNode;
 		}
 
 		/// <summary>
@@ -549,7 +586,7 @@ namespace Simias.Storage
 				switch ( prefix )
 				{
 					case CollectionType:
-						return new Collection( collection.LocalStore, xmlNode.Attributes[ Property.NameAttr ].Value, xmlNode.Attributes[ Property.IDAttr ].Value, nodeType );
+						return new Collection( store, xmlNode.Attributes[ Property.NameAttr ].Value, xmlNode.Attributes[ Property.IDAttr ].Value, nodeType );
 
 					case NodeType:
 						return new Node( collection, xmlNode.Attributes[ Property.NameAttr ].Value, xmlNode.Attributes[ Property.IDAttr ].Value, nodeType, true );
@@ -599,25 +636,10 @@ namespace Simias.Storage
 		/// changes of the current node.</returns>
 		internal Node MergeNodeProperties()
 		{
-			Node mergedNode = null;
-
-			// Get the current node from the database.
-			string xmlString = CollectionNode.StorageProvider.GetRecord( Id, CollectionNode.Id );
-			if ( xmlString != null )
+			// Get this node from the database.
+			Node mergedNode = GetNodeFromDatabase( Id );
+			if ( mergedNode != null )
 			{
-				XmlDocument xmlNode = new XmlDocument();
-				xmlNode.LoadXml( xmlString );
-
-				// Build the right kind of node.
-				if ( IsCollection )
-				{
-					mergedNode = new Collection( CollectionNode.LocalStore, xmlNode.DocumentElement[ Property.ObjectTag ], false );
-				}
-				else
-				{
-					mergedNode = new Node( CollectionNode, xmlNode.DocumentElement[ Property.ObjectTag ], true, false, false );
-				}
-
 				// If this node is not a tombstone and the merged node is, then the node has been deleted and delete wins.
 				if ( !IsTombstone && mergedNode.IsTombstone )
 				{
@@ -643,7 +665,6 @@ namespace Simias.Storage
 
 			// Clear the mergeList.
 			cNode.mergeList.Clear();
-
 			return mergedNode;
 		}
 
@@ -734,7 +755,7 @@ namespace Simias.Storage
 		internal void SetNodeProperties()
 		{
 			// Call the provider to get an XML string that represents this node.
-			string xmlNode = CollectionNode.StorageProvider.GetRecord( Id, CollectionNode.Id );
+			string xmlNode = store.StorageProvider.GetRecord( Id, CollectionNode.Id );
 			if ( xmlNode != null )
 			{
 				// Covert the XML string into a DOM that we can then parse.
@@ -847,7 +868,7 @@ namespace Simias.Storage
 			try
 			{
 				// Acquire the store mutex.
-				CollectionNode.LocalStore.LockStore();
+				store.LockStore();
 
 				// If this node has not been persisted, no need to do a merge.
 				commitNode = IsPersisted ? MergeNodeProperties() : this;
@@ -862,28 +883,27 @@ namespace Simias.Storage
 					// If this is a new collection, create it.
 					if ( !commitNode.IsPersisted && commitNode.IsCollection )
 					{
-						CollectionNode.StorageProvider.CreateCollection( Id );
+						store.StorageProvider.CreateCollection( Id );
 					}
 
 					// Call the store provider to update the records.
-					CollectionNode.StorageProvider.CreateRecord( commitNode.Properties.PropertyDocument.OuterXml, CollectionNode.Id );
+					store.StorageProvider.CreateRecord( commitNode.Properties.PropertyDocument.OuterXml, CollectionNode.Id );
 				}
 			}
 			finally
 			{
 				// Release the store mutex.
-				CollectionNode.LocalStore.UnlockStore();
+				store.UnlockStore();
 			}
 
 			// Remove this node from the collection's dirty list.  Don't add any new properties
 			// after this or it will go back onto the dirty list.
-			CollectionNode.RemoveDirtyNodeFromList( this );
+			CollectionNode.RemoveDirtyNodeFromList( Id );
 
 			// Make sure that the node was written to the database.
 			if ( commitNode != null )
 			{
 				// Fire an event for this commit action.
-				Store store = CollectionNode.LocalStore;
 				if ( IsPersisted )
 				{
 					// Update this node to reflect the latest changes.
@@ -953,9 +973,6 @@ namespace Simias.Storage
 		/// <returns>Returns the node as a tombstone object.</returns>
 		public Node Delete( bool deep )
 		{
-			// Get a handle to the store.
-			Store store = CollectionNode.LocalStore;
-
 			// No sense in deleting a node that has not been persisted.
 			if ( IsPersisted )
 			{
@@ -977,7 +994,7 @@ namespace Simias.Storage
 
 						// Just delete the collection, the store provider will remove all of the nodes.
 						ChangeToTombstone( false );
-						CollectionNode.StorageProvider.DeleteCollection( Id );
+						store.StorageProvider.DeleteCollection( Id );
 						CollectionNode.ClearDirtyList();
 					}
 					else
@@ -1007,10 +1024,10 @@ namespace Simias.Storage
 						else
 						{
 							// A Tombstone has no children.  Therefore just delete it from the database.
-							CollectionNode.StorageProvider.DeleteRecord( Id, CollectionNode.Id );
+							store.StorageProvider.DeleteRecord( Id, CollectionNode.Id );
 
 							// Remove this object from the commitList.
-							CollectionNode.RemoveDirtyNodeFromList( this );
+							CollectionNode.RemoveDirtyNodeFromList( Id );
 						}
 					}
 				}
@@ -1030,7 +1047,7 @@ namespace Simias.Storage
 
 							// Find the node object and delete it from the persistent store.
 							ChangeToTombstone( false );
-							CollectionNode.StorageProvider.DeleteRecord( Id, CollectionNode.Id );
+							store.StorageProvider.DeleteRecord( Id, CollectionNode.Id );
 						}
 						else
 						{
@@ -1044,11 +1061,11 @@ namespace Simias.Storage
 					else
 					{
 						// Find the node object and delete it from the persistent store.
-						CollectionNode.StorageProvider.DeleteRecord( Id, CollectionNode.Id );
+						store.StorageProvider.DeleteRecord( Id, CollectionNode.Id );
 					}
 
 					// Remove this object from the commitList.
-					CollectionNode.RemoveDirtyNodeFromList( this );
+					CollectionNode.RemoveDirtyNodeFromList( Id );
 				}
 			}
 			else
@@ -1063,7 +1080,7 @@ namespace Simias.Storage
 				else
 				{
 					// Remove this object from the commitList.
-					CollectionNode.RemoveDirtyNodeFromList( this );
+					CollectionNode.RemoveDirtyNodeFromList( Id );
 				}
 			}
 
@@ -1150,11 +1167,11 @@ namespace Simias.Storage
 			string normalizedId = nodeId.ToLower();
 
 			// See if there is already an instance of this data in the cache table.
-			CacheNode cNode = CollectionNode.LocalStore.GetCacheNode( normalizedId );
+			CacheNode cNode = store.GetCacheNode( normalizedId );
 			if ( cNode == null )
 			{
 				// Call the provider to get an XML string that represents this node.
-				string xmlNode = CollectionNode.StorageProvider.GetRecord( normalizedId, CollectionNode.Id );
+				string xmlNode = store.StorageProvider.GetRecord( normalizedId, CollectionNode.Id );
 				if ( xmlNode != null )
 				{
 					// Covert the XML string into a DOM that we can then parse.
@@ -1176,7 +1193,7 @@ namespace Simias.Storage
 							switch ( prefix )
 							{
 								case CollectionType:
-									node = new Collection( CollectionNode.LocalStore, element, true );
+									node = new Collection( store, element, false );
 									break;
 
 								case NodeType:
@@ -1208,7 +1225,7 @@ namespace Simias.Storage
 				switch ( GetNameSpacePrefix( cNode.type ) )
 				{
 					case CollectionType:
-						node = new Collection( CollectionNode.LocalStore, cNode );
+						node = new Collection( store, cNode );
 						break;
 
 					case NodeType:
@@ -1476,7 +1493,7 @@ namespace Simias.Storage
 		public void Rollback()
 		{
 			RollbackNode();
-			CollectionNode.RemoveDirtyNodeFromList( this );
+			CollectionNode.RemoveDirtyNodeFromList( Id );
 		}
 
 		/// <summary>
@@ -1503,7 +1520,7 @@ namespace Simias.Storage
 			bool updated = false;
 
 			// Only the synker role has rights to make this call.
-			if ( CollectionNode.LocalStore.CurrentUser != Access.SyncOperatorRole )
+			if ( store.CurrentUser != Access.SyncOperatorRole )
 			{
 				throw new UnauthorizedAccessException( "Current user does not have collection synchronization right." );
 			}
@@ -1511,10 +1528,10 @@ namespace Simias.Storage
 			try
 			{
 				// Acquire the store mutex.
-				CollectionNode.LocalStore.LockStore();
+				store.LockStore();
 
 				// See if the node has been updated since the last time we checked.
-				Node currentNode = GetNodeById( Id );
+				Node currentNode = GetNodeFromDatabase( Id );
 				if ( ( currentNode == null ) || ( currentNode.LocalIncarnation == LocalIncarnation ) )
 				{
 					// Update both incarnation values to the specified value.
@@ -1524,11 +1541,11 @@ namespace Simias.Storage
 					// If this is a new collection, create it.
 					if ( !IsPersisted && IsCollection )
 					{
-						CollectionNode.StorageProvider.CreateCollection( Id );
+						store.StorageProvider.CreateCollection( Id );
 					}
 
 					// Call the store provider to update the records.
-					CollectionNode.StorageProvider.CreateRecord( Properties.PropertyDocument.OuterXml, CollectionNode.Id );
+					store.StorageProvider.CreateRecord( Properties.PropertyDocument.OuterXml, CollectionNode.Id );
 
 					// Node has been updated.
 					updated = true;
@@ -1537,7 +1554,7 @@ namespace Simias.Storage
 			finally
 			{
 				// Release the store mutex.
-				CollectionNode.LocalStore.UnlockStore();
+				store.UnlockStore();
 			}
 
 			// If the node has been updated, a little more processing outside of the store lock is needed.
@@ -1545,7 +1562,7 @@ namespace Simias.Storage
 			{
 				// Remove this node from the collection's dirty list.  Don't add any new properties
 				// after this or it will go back onto the dirty list.
-				CollectionNode.RemoveDirtyNodeFromList( this );
+				CollectionNode.RemoveDirtyNodeFromList( Id );
 
 				// This node has been successfully committed to the database.
 				IsPersisted = true;
@@ -1591,7 +1608,7 @@ namespace Simias.Storage
 			/// <summary>
 			/// The initial size of the hash table used to filter duplicate nodes.
 			/// </summary>
-			private const int initialFilterNodesSize = 1024;
+			private const int initialFilterNodesSize = 64;
 
 			/// <summary>
 			/// Indicates whether this object has been disposed.
@@ -1696,7 +1713,7 @@ namespace Simias.Storage
 
 				// Create a query object that will return a result set containing the children of this node.
 				Persist.Query query = new Persist.Query( node.CollectionNode.Id, property.Name, queryOperator, property.ToString(), property.Type );
-				chunkIterator = node.CollectionNode.StorageProvider.Search( query );
+				chunkIterator = node.store.StorageProvider.Search( query );
 				if ( chunkIterator != null )
 				{
 					// Get the first set of results from the query.

@@ -54,7 +54,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Initial size of the cacheNode hash table.
 		/// </summary>
-		private const int cacheNodeTableSize = 100;
+		private const int cacheNodeTableSize = 20;
 
 		/// <summary>
 		/// Directory where store-managed files are kept.
@@ -680,29 +680,34 @@ namespace Simias.Storage
 		/// <returns>A cache node object if one exists, otherwise a null.</returns>
 		internal CacheNode GetCacheNode( string key )
 		{
-			CacheNode cNode = ( CacheNode )cacheNodeTable[ key ];
-			if ( cNode != null )
+			lock ( this )
 			{
-				++cNode.referenceCount;
-			}
+				CacheNode cNode = ( CacheNode )cacheNodeTable[ key ];
+				if ( cNode != null )
+				{
+					++cNode.referenceCount;
+				}
 
-			return cNode;
+				return cNode;
+			}
 		}
 
 		/// <summary>
 		/// Removes the specified entry from the hashtable.
 		/// </summary>
 		/// <param name="key">Unique identifier for the cache node object.</param>
-		/// <param name="cNode">Object to remove from table.</param>
 		/// <param name="force">If true, object is removed from table regardless of the reference count.</param>
-		internal void RemoveCacheNode( string key, CacheNode cNode, bool force )
+		internal void RemoveCacheNode( string key, bool force )
 		{
 			if ( !disposed )
 			{
-				CacheNode cTempNode = ( CacheNode )cacheNodeTable[ key ];
-				if ( ( cTempNode != null ) && cTempNode.Equals( cNode ) && ( force || ( --cTempNode.referenceCount == 0 ) ) )
+				lock ( this )
 				{
-					cacheNodeTable.Remove( key );
+					CacheNode cTempNode = ( CacheNode )cacheNodeTable[ key ];
+					if ( ( cTempNode != null ) && ( force || ( --cTempNode.referenceCount == 0 ) ) )
+					{
+						cacheNodeTable.Remove( key );
+					}
 				}
 			}
 		}
@@ -716,19 +721,22 @@ namespace Simias.Storage
 		/// object is added to the table and returned.</returns>
 		internal CacheNode SetCacheNode( string key, CacheNode cNode )
 		{
-			CacheNode cTempNode = ( CacheNode )cacheNodeTable[ key ];
-			if ( cTempNode == null )
+			lock ( this )
 			{
-				cacheNodeTable.Add( key, cNode );
-			}
-			else
-			{
-				// There is already an entry in the table.
-				cNode = cTempNode;
-			}
+				CacheNode cTempNode = ( CacheNode )cacheNodeTable[ key ];
+				if ( cTempNode == null )
+				{
+					cacheNodeTable.Add( key, cNode );
+				}
+				else
+				{
+					// There is already an entry in the table.
+					cNode = cTempNode;
+				}
 
-			++cNode.referenceCount;
-			return cNode;
+				++cNode.referenceCount;
+				return cNode;
+			}
 		}
 
 		/// <summary>
@@ -1031,7 +1039,7 @@ namespace Simias.Storage
 					collectionDoc.LoadXml( xmlCollection );
 
 					// Create a new collection from the DOM.
-					collection = new Collection( this, collectionDoc.DocumentElement[ Property.ObjectTag ], true );
+					collection = new Collection( this, collectionDoc.DocumentElement[ Property.ObjectTag ], false );
 				}
 			}
 			else

@@ -43,7 +43,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Initial size of the list that keeps track of the dirty nodes.
 		/// </summary>
-		private const int initialDirtyNodeListSize = 100;
+		private const int initialDirtyNodeListSize = 10;
 
 		/// <summary>
 		/// Reference to the virtual store object where this collection object is contained.
@@ -53,7 +53,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Reference to the persistent database object.
 		/// </summary>
-		private Persist.IProvider dataBase;
+		private Persist.IProvider database;
 
 		/// <summary>
 		/// Domain that this collection belongs to.
@@ -62,14 +62,6 @@ namespace Simias.Storage
 		#endregion
 
 		#region Properties
-		/// <summary>
-		/// Gets the storage provider object for this node.
-		/// </summary>
-		internal Persist.IProvider StorageProvider
-		{
-			get { return dataBase; }
-		}
-
 		/// <summary>
 		/// Gets the local store handle.
 		/// </summary>
@@ -235,7 +227,7 @@ namespace Simias.Storage
 
 			// Initialize my class members.
             this.localStore = localStore;
-			this.dataBase = localStore.StorageProvider;
+			this.database = localStore.StorageProvider;
 
 			// Initialize the access control object.
 			cNode.accessControl = new AccessControl( this );
@@ -309,8 +301,8 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="localStore">Virtual store that this collection belongs to.</param>
 		/// <param name="xmlProperties">List of properties that belong to this collection.</param>
-		/// <param name="useCache">Set to true if node cache is to be checked for existing node.</param>
-		internal Collection( Store localStore, XmlElement xmlProperties, bool useCache ) :
+		/// <param name="imported">Set to true if collection is being imported.</param>
+		internal Collection( Store localStore, XmlElement xmlProperties, bool imported ) :
 			base( localStore, xmlProperties )
 		{
 			// Set the collection into the node.  Since node is a sub-class of collection, its 
@@ -322,13 +314,34 @@ namespace Simias.Storage
 
 			// Initialize my class members.
 			this.localStore = localStore;
-			this.dataBase = localStore.StorageProvider;
+			this.database = localStore.StorageProvider;
 
 			// Initialize the access control object.
 			cNode.accessControl = new AccessControl( this );
 			UpdateAccessControl();
 
-			if ( useCache )
+			if ( imported )
+			{
+				// Because this node is being imported, it needs to be the one in the cache node table.
+				// Otherwise all import changes will be lost.
+				CacheNode tempCacheNode = localStore.GetCacheNode( Id );
+				if ( tempCacheNode != null )
+				{
+					// Copy this cache node to the one in the table so that all node will see the import
+					// changes.
+					tempCacheNode.Copy( cNode );
+
+					// GetCacheNode() incremented the reference count.  Need to decrement it.
+					localStore.RemoveCacheNode( Id, false );
+				}
+
+				// Add this node to the cache table.
+				cNode = cNode.AddToCacheTable();
+
+				// Add this object to the dirty list.
+				AddDirtyNodeToList( this );
+			}
+			else
 			{
 				// Add this node to the cache table.
 				cNode = cNode.AddToCacheTable();
@@ -354,7 +367,7 @@ namespace Simias.Storage
 
 			// Initialize my class members.
 			this.localStore = localStore;
-			this.dataBase = localStore.StorageProvider;
+			this.database = localStore.StorageProvider;
 
 			// Initialize the access control object.
 			cNode.accessControl = new AccessControl( this );
@@ -385,7 +398,7 @@ namespace Simias.Storage
 
 			// Initialize my class members.
 			this.localStore = localStore;
-			this.dataBase = localStore.StorageProvider;
+			this.database = localStore.StorageProvider;
 
 			// Initialize the access control object.
 			cNode.accessControl = new AccessControl( this, constructorId );
@@ -404,7 +417,7 @@ namespace Simias.Storage
 		{
 			// Initialize my class members.
 			this.localStore = store;
-			this.dataBase = store.StorageProvider;
+			this.database = store.StorageProvider;
 		}
 		#endregion
 
@@ -459,12 +472,12 @@ namespace Simias.Storage
 		/// <summary>
 		/// Adds nodes to a list that need to be written to the persistent store.
 		/// </summary>
-		/// <param name="dirtyNode">Node to add to the list.</param>
+		/// <param name="dirtyNode">Node object to add to the list.</param>
 		internal void AddDirtyNodeToList( Node dirtyNode )
 		{
 			if ( !cNode.dirtyNodeList.ContainsKey( dirtyNode.Id ) && !dirtyNode.IsTombstone )
 			{
-				cNode.dirtyNodeList.Add( dirtyNode.Id, dirtyNode );
+				cNode.dirtyNodeList.Add( dirtyNode.Id, dirtyNode.cNode );
 			}
 		}
 
@@ -482,26 +495,16 @@ namespace Simias.Storage
 		/// <returns>A Uri object that represents the store managed path.</returns>
 		internal Uri GetStoreManagedPath()
 		{
-			return new Uri( Path.Combine( StorageProvider.StoreDirectory.LocalPath, Path.Combine( localStore.StoreManagedPath.LocalPath, Id ) ) );
-		}
-
-		/// <summary>
-		/// Returns whether the specified node is in the dirty list.
-		/// </summary>
-		/// <param name="node">The node to check in the list for.</param>
-		/// <returns>True if the node is in the list, otherwise false.</returns>
-		internal bool IsNodeInDirtyList( Node node )
-		{
-			return cNode.dirtyNodeList.ContainsKey( node.Id );
+			return new Uri( Path.Combine( database.StoreDirectory.LocalPath, Path.Combine( localStore.StoreManagedPath.LocalPath, Id ) ) );
 		}
 
 		/// <summary>
 		/// Removes the specified node from the list.
 		/// </summary>
-		/// <param name="dirtyNode">Node to remove from the dirtyList.</param>
-		internal void RemoveDirtyNodeFromList( Node dirtyNode )
+		/// <param name="nodeId">Node identifier to remove from the dirtyList.</param>
+		internal void RemoveDirtyNodeFromList( string nodeId )
 		{
-			cNode.dirtyNodeList.Remove( dirtyNode.Id );
+			cNode.dirtyNodeList.Remove( nodeId );
 		}
 
 		// Updates the access control list from the committed properties.
@@ -539,6 +542,9 @@ namespace Simias.Storage
 
 			if ( deep )
 			{
+				// Allocate a queue to hold committed nodes.
+				Queue nodeQ = new Queue( cNode.dirtyNodeList.Count );
+
 				// Create an XML document that will contain all of the changed nodes.
 				XmlDocument commitDoc = new XmlDocument();
 				commitDoc.AppendChild( commitDoc.CreateElement( Property.ObjectListTag ) );
@@ -553,52 +559,52 @@ namespace Simias.Storage
 					IncrementLocalIncarnation();
 
 					// Parse the node into an XML document because that is the format that the provider expects.
-					foreach ( Node tempNode in cNode.dirtyNodeList.Values )
+					foreach ( CacheNode tempCacheNode in cNode.dirtyNodeList.Values )
 					{
-						Node commitNode;
+						// Instantiate a node object from the cache node.
+						Node tempNode = new Node( tempCacheNode );
 
 						// If this node has not been persisted, no need to do a merge.
 						if ( tempNode.IsPersisted )
 						{
 							// Merge this node with the current node in the database.
-							commitNode = tempNode.MergeNodeProperties();
-							if ( commitNode == null )
+							tempNode = tempNode.MergeNodeProperties();
+							if ( tempNode == null )
 							{
-								// The node has been deleted, move to the next one.
+								// The node has been deleted in the database, move to the next one.
 								continue;
 							}
 
-							// Save the newly merged cache node for later processing.
-							tempNode.mergedCachedNode = commitNode.cNode;
-						}
-						else
-						{
-							commitNode = tempNode;
+							// Update this node to reflect the latest changes.
+							tempCacheNode.Copy( tempNode.cNode );
 						}
 
 						// Set the modify time for this node.
-						commitNode.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
+						tempNode.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
 
 						// Don't increment the incarnation number on the collection again.
-						if ( !commitNode.IsCollection )
+						if ( !tempNode.IsCollection )
 						{
 							// Increment the local incarnation number.
-							commitNode.IncrementLocalIncarnation();
+							tempNode.IncrementLocalIncarnation();
 						}
 
 						// Copy the XML node over to the modify document.
-						XmlNode xmlNode = commitDoc.ImportNode( commitNode.Properties.PropertyRoot, true );
+						XmlNode xmlNode = commitDoc.ImportNode( tempNode.Properties.PropertyRoot, true );
 						commitDoc.DocumentElement.AppendChild( xmlNode );
+
+						// Add the cache node to the queue.
+						nodeQ.Enqueue( tempCacheNode );
 					}
 
 					// If this collection is new, call to create it before sending down the nodes.
 					if ( !IsPersisted )
 					{
-						dataBase.CreateCollection( Id );
+						database.CreateCollection( Id );
 					}
 
 					// Call the store provider to create the records.
-					dataBase.CreateRecord( commitDoc.OuterXml, Id );
+					database.CreateRecord( commitDoc.OuterXml, Id );
 				}
 				finally
 				{
@@ -607,31 +613,26 @@ namespace Simias.Storage
 				}
 
 				// Set all of the nodes in the list as committed.
-				foreach ( Node committedNode in cNode.dirtyNodeList.Values )
+				foreach ( CacheNode tempCacheNode in nodeQ )
 				{
 					// Fire an event for this commit action.
-					if ( committedNode.IsPersisted )
+					if ( tempCacheNode.isPersisted )
 					{
-						// Make sure that this node was processed.
-						if ( committedNode.mergedCachedNode != null )
-						{
-							// Update this node to reflect the latest changes.
-							committedNode.cNode.Copy( committedNode.mergedCachedNode );
-							committedNode.mergedCachedNode = null;
-
-							// Fire an event to notify that this node has been changed.
-							localStore.Publisher.RaiseNodeEvent( new NodeEventArgs( localStore.ComponentId, committedNode.Id, Id, committedNode.NameSpaceType, NodeEventArgs.EventType.Changed, localStore.Instance ) );
-						}
+						// Fire an event to notify that this node has been changed.
+						localStore.Publisher.RaiseNodeEvent( new NodeEventArgs( localStore.ComponentId, tempCacheNode.id, Id, tempCacheNode.type, NodeEventArgs.EventType.Changed, localStore.Instance ) );
 					}
 					else
 					{
 						// Fire an event to notify that this node has been created.
-						localStore.Publisher.RaiseNodeEvent( new NodeEventArgs( localStore.ComponentId, committedNode.Id, Id, committedNode.NameSpaceType, NodeEventArgs.EventType.Created, localStore.Instance ) );
+						localStore.Publisher.RaiseNodeEvent( new NodeEventArgs( localStore.ComponentId, tempCacheNode.id, Id, tempCacheNode.type, NodeEventArgs.EventType.Created, localStore.Instance ) );
 
 						// Mark the node as persisted.
-						committedNode.IsPersisted = true;
+						tempCacheNode.isPersisted = true;
 					}
 				}
+
+				// Clear the cached node queue.
+				nodeQ.Clear();
 
 				// Clear the dirty node queue.
 				ClearDirtyList();
@@ -717,9 +718,9 @@ namespace Simias.Storage
 		new public void Rollback()
 		{
 			// Take each node that is currently on the dirty list and roll it back to it's post committed state.
-			foreach ( Node tempNode in cNode.dirtyNodeList.Values )
+			foreach ( CacheNode tempCacheNode in cNode.dirtyNodeList.Values )
 			{
-				tempNode.RollbackNode();
+				new Node( tempCacheNode ).RollbackNode();
 			}
 
 			ClearDirtyList();

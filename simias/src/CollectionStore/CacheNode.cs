@@ -44,7 +44,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// A reference to the local store object.
 		/// </summary>
-		private Store store;
+		internal Store store;
 
 		/// <summary>
 		/// Object that contains a list of properties on the node.
@@ -141,7 +141,7 @@ namespace Simias.Storage
 		public void Dispose()
 		{
 			// Remove this object from the store cache table.
-			store.RemoveCacheNode( id, this, false );
+			store.RemoveCacheNode( id, false );
 		}
 		#endregion
 	}

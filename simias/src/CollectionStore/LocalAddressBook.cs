@@ -41,7 +41,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Initial size of the list that keeps track of the dirty nodes.
 		/// </summary>
-		private const int initialDirtyNodeListSize = 100;
+		private const int initialDirtyNodeListSize = 10;
 		#endregion
 
 		#region Constructor
