@@ -154,8 +154,19 @@ static iFolderData *sharedInstance = nil;
 	@try
 	{
 		int objCount;
+		
 		[keyedDomains removeAllObjects];
-		[ifolderdomains removeAllObjects];
+//		[ifolderdomains removeAllObjects];
+		// this is the clean way to remove all objects and make sure everyone
+		// knows about it
+		if([[domainsController arrangedObjects] count] > 0)
+		{
+			NSIndexSet *allIndexes = [[NSIndexSet alloc]
+									initWithIndexesInRange:
+									NSMakeRange(0,[[domainsController arrangedObjects] count])];
+			[domainsController removeObjectsAtArrangedObjectIndexes:allIndexes];
+		}
+
 		NSArray *newDomains = [simiasService GetDomains:NO];
 		for(objCount = 0; objCount < [newDomains count]; objCount++)
 		{
@@ -169,9 +180,20 @@ static iFolderData *sharedInstance = nil;
 
 		if(!onlyDomains)
 		{
+		
 			[keyediFolders removeAllObjects];
 			[keyedSubscriptions removeAllObjects];
-			[ifolders removeAllObjects];
+//			[ifolders removeAllObjects];
+			// this is the clean way to remove all objects and make sure everyone
+			// knows about it
+			if([[ifoldersController arrangedObjects] count] > 0)
+			{
+				NSIndexSet *allIndexes = [[NSIndexSet alloc]
+										initWithIndexesInRange:
+										NSMakeRange(0,[[ifoldersController arrangedObjects] count])];
+				[ifoldersController removeObjectsAtArrangedObjectIndexes:allIndexes];
+			}
+			
 			NSArray *newiFolders = [ifolderService GetiFolders];
 			for(objCount = 0; objCount < [newiFolders count]; objCount++)
 			{
