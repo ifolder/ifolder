@@ -197,11 +197,13 @@ namespace Simias.DomainWatcher
 							CredentialType credType = 
 								store.GetDomainCredentials( cDomain.ID, out userID, out credentials );
 
+							// Don't set this credential in the cache.
+							credentials = null;
+
 							// Only basic type authentication is supported right now.
 							if ( credType != CredentialType.Basic )
 							{
 								cMember = cDomain.GetCurrentMember();
-								credentials = null;
 							}
 							else
 							{
