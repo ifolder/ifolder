@@ -94,15 +94,12 @@ namespace Simias.Presence
 						{
 							if(recordPtr != null)
 							{
-		log.Debug("--------------- got ptr Record {0}", recordPtr.Name);
-		log.Debug("--------------- got ptr Record {0}", recordPtr.Target);
 								bool isPublic = false;
 								SubscriptionInfo si = new SubscriptionInfo();
 
 								if(query.GetTextStringsByName(recordPtr.Target,
 											ref ts) == 0)
 								{
-		log.Debug("--------------- got TextStrings");
 									// parse out strings and add them
 									// to the subscription info
 									foreach(string strval in ts.GetTextStrings())
@@ -133,25 +130,17 @@ namespace Simias.Presence
 									}
 								}
 
-		log.Debug("--------------- getting service by name");
 								if(query.GetServiceByName(recordPtr.Target,
 											ref sl) == 0)
 								{
-		log.Debug("--------------- getting host by name");
 									if(query.GetHostByName(sl.Target,
 												ref ha) == 0)
 									{
 										string url = "http://" + ha.PrefAddress + ":" + sl.Port + "/PostOffice.rem";
 
-		log.Debug("--------------- Have Hostname, adding if public");
 										si.POServiceUrl = new Uri(url);
 										if(isPublic)
-										{
-		log.Debug("--------------- It's public, adding");
 											subArray.Add(si);
-										}
-										else
-		log.Debug("--------------- It's NOT public");
 									}
 								}
 							}
@@ -204,8 +193,10 @@ namespace Simias.Presence
 				// ptr
 				register.RegisterPointer(NAME, service);
 
-				Roster roster = store.GetDomain(sc.Domain).GetRoster(store);
-				SyncCollection rostersc = new SyncCollection(roster);
+				POBox pobox = Simias.POBox.POBox.GetPOBox(store, 
+										store.DefaultDomain);
+
+				UriBuilder hostUrl = new UriBuilder(pobox.POServiceUrl);
 
 				HostAddress ha = null;
 
@@ -220,7 +211,7 @@ namespace Simias.Presence
 
 					try
 					{
-						register.RegisterHost(host, rostersc.MasterUrl.Host);
+						register.RegisterHost(host, hostUrl.Host);
 					}
 					catch(Exception e)
 					{
@@ -231,7 +222,7 @@ namespace Simias.Presence
 
 				// service location
 				if (register.RegisterServiceLocation(host,
-							service, rostersc.MasterUrl.Port, 0, 0) == 0)
+							service, hostUrl.Port, 0, 0) == 0)
 				{
 					ArrayList list = new ArrayList();
 

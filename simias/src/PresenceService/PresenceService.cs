@@ -89,6 +89,11 @@ namespace Simias.Presence
 					log.Info( "!! Unable to add presence for {0}", sn.ID);
 				}
 			}
+
+
+
+
+
 		}
 
 		/// <summary>
