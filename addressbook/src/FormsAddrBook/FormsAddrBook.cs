@@ -448,6 +448,7 @@ namespace Novell.iFolder.FormsAddrBook
 		{
 			OpenFileDialog openFileDialog = new OpenFileDialog();
 
+			openFileDialog.Multiselect = true;
 			openFileDialog.Filter = "vcf files (*.vcf)|*.vcf";
 			openFileDialog.RestoreDirectory = true ;
 
@@ -456,9 +457,14 @@ namespace Novell.iFolder.FormsAddrBook
 				try
 				{
 					Cursor.Current = Cursors.WaitCursor;
-					Contact contact = selectedBook.ImportVCard(openFileDialog.FileName);
+					booksContacts.ContactsBeginUpdate();
+					foreach (string file in openFileDialog.FileNames)
+					{
+						Contact contact = selectedBook.ImportVCard(file);
+						booksContacts.AddContactToListView(contact, 1, true);
+					}
+					booksContacts.ContactsEndUpdate();
 					Cursor.Current = Cursors.Default;
-					booksContacts.AddContactToListView(contact, 1, true);
 				}
 				catch (SimiasException e)
 				{

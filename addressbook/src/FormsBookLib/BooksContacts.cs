@@ -340,6 +340,22 @@ namespace Novell.iFolder.FormsBookLib
 		}
 
 		/// <summary>
+		/// Prevents the contacts listview from redrawing until the BooksContacts.ContactsEndUpdate method is called.
+		/// </summary>
+		public void ContactsBeginUpdate()
+		{
+			contacts.BeginUpdate();
+		}
+
+		/// <summary>
+		/// Resumes drawing of the contacts listview after drawing is suspended by the BooksContacts.ContactsBeginUpdate method.
+		/// </summary>
+		public void ContactsEndUpdate()
+		{
+			contacts.EndUpdate();
+		}
+
+		/// <summary>
 		/// Invokes the AddBook dialog.
 		/// </summary>
 		public void CreateAddressBook()
