@@ -972,7 +972,7 @@ namespace Simias.Storage.Provider.Sqlite
 					if (query.CollectionId != null)
 					{
 						selectNodes = string.Format(
-							"SELECT {0},{1},{2} FROM {3} WHERE {0} IN (Select {4} from '{5}' WHERE {6} = '{7}' AND {8} {9})",
+							"SELECT {0},{1},{2} FROM {3} WHERE {10} = '{11}' AND {0} IN (Select {4} from '{5}' WHERE {6} = '{7}' AND {8} {9})",
 							RecordTable.Id,
 							RecordTable.Name,
 							RecordTable.Type,
@@ -982,7 +982,9 @@ namespace Simias.Storage.Provider.Sqlite
 							ValueTable.Name,
 							safeProperty,
 							ValueTable.Value,
-							op);
+							op,
+							RecordTable.CollectionId,
+							query.CollectionId);
 					}
 					else
 					{
