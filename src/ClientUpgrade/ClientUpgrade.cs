@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -14,9 +15,20 @@ namespace Novell.iFolder.Install
 	{
 		#region Class Members
 		/// <summary>
+		/// Temporary directory used to copy the ifolder updates to.
+		/// </summary>
+		private static string iFolderUpdateDirectory = "ead51d60-cd98-4d35-8c7c-b43a2ca949c8";
+
+		/// <summary>
 		/// iFolder Client update files.
 		/// </summary>
 		private static string iFolderWindowsApplication = "iFolderApp.exe";
+
+		/// <summary>
+		/// Strings used in the handler query.
+		/// </summary>
+		private static string PlatformQuery = "Platform";
+		private static string FileQuery = "File";
 
 		/// <summary>
 		/// Controls the certificate policy for this process.
@@ -103,8 +115,15 @@ namespace Novell.iFolder.Install
 		/// <returns>The path to the downloaded files.</returns>
 		private string DownloadFiles( string[] fileList )
 		{
-			// Create a temporary directory.
-			string downloadDir = Path.Combine( Path.GetTempPath(), Guid.NewGuid().ToString() );
+			// Create the temporary directory.
+			string downloadDir = Path.Combine( Path.GetTempPath(), iFolderUpdateDirectory );
+			if ( Directory.Exists( downloadDir ) )
+			{
+				// Clean up the old directory.
+				Directory.Delete( downloadDir, true );
+			}
+
+			// Create it new everytime.
 			Directory.CreateDirectory( downloadDir );
 		
 			try
@@ -113,8 +132,12 @@ namespace Novell.iFolder.Install
 				WebClient webClient = new WebClient();
 				foreach ( string file in fileList )
 				{
-					string destFile = Path.Combine( downloadDir, Path.GetFileName( file ) );
-					webClient.DownloadFile( Path.Combine( hostAddress, file ), destFile );
+					// Add the filename as the query string.
+					NameValueCollection nvc = new NameValueCollection();
+					nvc.Add( PlatformQuery, MyEnvironment.Platform.ToString() );
+					nvc.Add( FileQuery, file );
+					webClient.QueryString = nvc;
+					webClient.DownloadFile( hostAddress + "/ClientUpdateHandler.ashx", Path.Combine( downloadDir, file ) );
 				}
 			}
 			catch
