@@ -100,7 +100,7 @@ namespace Simias.Storage
 			// Get the alias parameters out of the property.
 			XmlDocument alias = new XmlDocument();
 			alias.LoadXml( aliasProperty.Value as string );
-			this.domain = alias.DocumentElement.GetAttribute( Property.DomainName );
+			this.domain = alias.DocumentElement.GetAttribute( PropertyTags.DomainName );
 			this.id = alias.DocumentElement.GetAttribute( XmlTags.IdAttr );
 
 			// Don't reconstitute the credentials yet. Wait until they are asked for.
@@ -133,11 +133,11 @@ namespace Simias.Storage
 		{
 			// Create an xml document that will hold the serialized object.
 			XmlDocument alias = new XmlDocument();
-			XmlElement aliasRoot = alias.CreateElement( Property.AliasParameters );
+			XmlElement aliasRoot = alias.CreateElement( "AliasParameters" );
 			alias.AppendChild( aliasRoot );
 
 			// Set the attributes on the object.
-			aliasRoot.SetAttribute( Property.DomainName, domain );
+			aliasRoot.SetAttribute( PropertyTags.DomainName, domain );
 			aliasRoot.SetAttribute( XmlTags.IdAttr, id );
 			aliasRoot.InnerText = credentialString;
 			return alias.OuterXml;

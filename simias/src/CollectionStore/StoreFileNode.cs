@@ -76,10 +76,10 @@ namespace Simias.Storage
 			FileInfo fInfo = new FileInfo( managedFile );
 			if ( fInfo.Exists )
 			{
-				properties.AddNodeProperty( Property.FileCreationTime, fInfo.CreationTime );
-				properties.AddNodeProperty( Property.FileLastAccessTime, fInfo.LastAccessTime );
-				properties.AddNodeProperty( Property.FileLastWriteTime, fInfo.LastWriteTime );
-				properties.AddNodeProperty( Property.FileLength, fInfo.Length );
+				properties.AddNodeProperty( PropertyTags.FileCreationTime, fInfo.CreationTime );
+				properties.AddNodeProperty( PropertyTags.FileLastAccessTime, fInfo.LastAccessTime );
+				properties.AddNodeProperty( PropertyTags.FileLastWriteTime, fInfo.LastWriteTime );
+				properties.AddNodeProperty( PropertyTags.FileLength, fInfo.Length );
 			}
 		}
 

@@ -122,7 +122,7 @@ namespace Simias.Storage
 		/// </summary>
 		public ulong LocalIncarnation
 		{
-			get { return ( ulong )properties.FindSingleValue( Property.LocalIncarnation ).Value; }
+			get { return ( ulong )properties.FindSingleValue( PropertyTags.LocalIncarnation ).Value; }
 		}
 
 		/// <summary>
@@ -130,7 +130,7 @@ namespace Simias.Storage
 		/// </summary>
 		public ulong MasterIncarnation
 		{
-			get { return ( ulong )properties.FindSingleValue( Property.MasterIncarnation ).Value; }
+			get { return ( ulong )properties.FindSingleValue( PropertyTags.MasterIncarnation ).Value; }
 		}
 
 		/// <summary>
@@ -203,7 +203,7 @@ namespace Simias.Storage
 			properties = new PropertyList( name, id, type );
 
 			// Set the object type in the properties.
-			properties.AddNodeProperty( Property.Types, nodeType );
+			properties.AddNodeProperty( PropertyTags.Types, nodeType );
 		}
 
 		/// <summary>

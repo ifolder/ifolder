@@ -62,7 +62,7 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				Property p = properties.FindSingleValue( Property.FileCreationTime );
+				Property p = properties.FindSingleValue( PropertyTags.FileCreationTime );
 				if ( p != null )
 				{
 					return ( DateTime )p.Value;
@@ -73,7 +73,7 @@ namespace Simias.Storage
 				}
 			}
 
-			set	{ properties.ModifyNodeProperty( Property.FileCreationTime, value ); }
+			set	{ properties.ModifyNodeProperty( PropertyTags.FileCreationTime, value ); }
 		}
 
 		/// <summary>
@@ -83,7 +83,7 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				Property p = properties.FindSingleValue( Property.FileLastAccessTime );
+				Property p = properties.FindSingleValue( PropertyTags.FileLastAccessTime );
 				if ( p != null )
 				{
 					return ( DateTime )p.Value;
@@ -94,7 +94,7 @@ namespace Simias.Storage
 				}
 			}
 
-			set { properties.ModifyNodeProperty( Property.FileLastAccessTime, value ); }
+			set { properties.ModifyNodeProperty( PropertyTags.FileLastAccessTime, value ); }
 		}
 
 		/// <summary>
@@ -104,7 +104,7 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				Property p = properties.FindSingleValue( Property.FileLastWriteTime );
+				Property p = properties.FindSingleValue( PropertyTags.FileLastWriteTime );
 				if ( p != null )
 				{
 					return ( DateTime )p.Value;
@@ -115,7 +115,7 @@ namespace Simias.Storage
 				}
 			}
 
-			set { properties.ModifyNodeProperty( Property.FileLastWriteTime, value ); }
+			set { properties.ModifyNodeProperty( PropertyTags.FileLastWriteTime, value ); }
 		}
 
 		/// <summary>
@@ -125,7 +125,7 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				Property p = properties.FindSingleValue( Property.FileLength );
+				Property p = properties.FindSingleValue( PropertyTags.FileLength );
 				if ( p != null )
 				{
 					return ( long )p.Value;
@@ -136,7 +136,7 @@ namespace Simias.Storage
 				}
 			}
 
-			set { properties.ModifyNodeProperty( Property.FileLength, value ); }
+			set { properties.ModifyNodeProperty( PropertyTags.FileLength, value ); }
 		}
 		#endregion
 

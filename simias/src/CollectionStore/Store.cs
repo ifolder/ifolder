@@ -280,7 +280,7 @@ namespace Simias.Storage
 
 						// Create an object that represents the database collection.
 						Collection localDb = new Collection( this, "LocalDatabase" );
-						localDb.Properties.AddNodeProperty( Property.LocalDatabase, true );
+						localDb.Properties.AddNodeProperty( PropertyTags.LocalDatabase, true );
 						localDb.Synchronizable = false;
 						localDb.Commit();
 
@@ -484,7 +484,7 @@ namespace Simias.Storage
 			foreach ( ShallowNode shallowNode in this )
 			{
 				Collection collection = new Collection( this, shallowNode );
-				MultiValuedList mvl = collection.Properties.FindValues( Property.Types );
+				MultiValuedList mvl = collection.Properties.FindValues( PropertyTags.Types );
 				foreach ( Property property in mvl )
 				{
 					if ( searchType.IsMatch( property.ToString() ) )
@@ -512,7 +512,7 @@ namespace Simias.Storage
 
 			Collection localDb = null;
 
-			Persist.Query query = new Persist.Query( Property.LocalDatabase, SearchOp.Equal, "true", Syntax.Boolean );
+			Persist.Query query = new Persist.Query( PropertyTags.LocalDatabase, SearchOp.Equal, "true", Syntax.Boolean );
 			Persist.IResultSet chunkIterator = storageProvider.Search( query );
 			if ( chunkIterator != null )
 			{
@@ -547,7 +547,7 @@ namespace Simias.Storage
 
 			LocalAddressBook localAb = null;
 
-			Persist.Query query = new Persist.Query( Property.LocalAddressBook, SearchOp.Equal, "true", Syntax.Boolean );
+			Persist.Query query = new Persist.Query( PropertyTags.LocalAddressBook, SearchOp.Equal, "true", Syntax.Boolean );
 			Persist.IResultSet chunkIterator = storageProvider.Search( query );
 			if ( chunkIterator != null )
 			{
@@ -729,7 +729,7 @@ namespace Simias.Storage
 			private void CollectionQuery( string currentUserGuid )
 			{
 				// Create the collection query.
-				Persist.Query query = new Persist.Query( Property.Ace, SearchOp.Begins, currentUserGuid, Syntax.String );
+				Persist.Query query = new Persist.Query( PropertyTags.Ace, SearchOp.Begins, currentUserGuid, Syntax.String );
 
 				// Do the search.
 				chunkIterator = store.storageProvider.Search( query );

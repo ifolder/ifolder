@@ -54,7 +54,7 @@ namespace Simias.Storage
 			base ( collection, fileName, fileID, NodeTypes.FileNodeType )
 		{
 			// Set the parent attribute.
-			properties.AddNodeProperty( Property.ParentID, new Relationship( collection.ID, parentNode.ID ) );
+			properties.AddNodeProperty( PropertyTags.Parent, new Relationship( collection.ID, parentNode.ID ) );
 		}
 
 		/// <summary>
@@ -119,7 +119,7 @@ namespace Simias.Storage
 		/// <returns>A DirNode object that represents the parent relationship.</returns>
 		public DirNode GetParent( Collection collection )
 		{
-			Property property = properties.FindSingleValue( Property.ParentID );
+			Property property = properties.FindSingleValue( PropertyTags.Parent );
 			if ( property == null )
 			{
 				throw new ApplicationException( "FileNode does not contain mandatory parent relationship." );

@@ -126,7 +126,7 @@ namespace Simias.Storage.Tests
 
 				// Add a relationship that will reference the parent Node.
 				Relationship parentChild = new Relationship( collection.ID, collection.ID );
-				child.Properties.AddProperty( "Parent", parentChild );
+				child.Properties.AddProperty( "MyParent", parentChild );
 
 				// Commit this collection.
 				Node[] commitList = { collection, child };
@@ -134,7 +134,7 @@ namespace Simias.Storage.Tests
 
 				// Search this collection for this child.
 				bool foundChild = false;
-				ICSList results = collection.Search( "Parent", parentChild );
+				ICSList results = collection.Search( "MyParent", parentChild );
 				foreach ( ShallowNode shallowNode in results )
 				{
 					Node node = new Node( collection, shallowNode );

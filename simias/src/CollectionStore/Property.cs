@@ -133,8 +133,6 @@ namespace Simias.Storage
 	public class Property
 	{
 		#region Class Members
-
-		#region Constant and Static Members
 		/// <summary>
 		/// Property operations that are recorded so properties can be merged at object commit time.
 		/// </summary>
@@ -172,163 +170,6 @@ namespace Simias.Storage
 		///  Mask used to get just the system flags.
 		/// </summary>
 		private const uint SystemFlagMask = 0xFFFF0000;
-
-		#region Well known Property names
-		//
-		// These names are not exported outside of the assembly.
-		//
-	
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string Ace = "Ace";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string MasterIncarnation = "MasterIncarnation";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string LocalIncarnation = "LocalIncarnation";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string Shareable = "Shareable";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string Syncable = "Syncable";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string LocalAddressBook = "AB:Local";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string Alias = "Alias";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string ServerCredential = "ServerCredential";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string ClientCredential = "ClientCredential";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string AliasParameters = "AliasParameters";
-
-		/// <summary>
-		/// Well known XML attribute;
-		/// </summary>
-		internal const string ClientPublicKey = "ClientPublicKey";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string LocalDatabase = "LocalDatabase";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string LinkReference = "LinkReference";
-
-
-		//
-		// These names are made public to the client application.
-		//
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string CreationTime = "CreationTime";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string ModifyTime = "ModifyTime";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string ParentID = "ParentID";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string Owner = "Owner";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string Root = "Root";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string FileCreationTime = "FileCreationTime";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string FileLastAccessTime = "FileLastAccessTime";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string FileLastWriteTime = "FileLastWriteTime";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string FileLength = "FileLength";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string DirCreationTime = "DirCreationTime";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string DirLastAccessTime = "DirLastAccessTime";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string DirLastWriteTime = "DirLastWriteTime";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string DomainName = "DomainName";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string DefaultAddressBook = "AB:Default";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string Types = "Types";
-		#endregion
-
-		/// <summary>
-		/// Hashtable providing quick lookup to well-known system properties.
-		/// </summary>
-		static private Hashtable systemPropertyTable;
-		#endregion
 
 		/// <summary>
 		/// This XmlElement contains all the information about the property.
@@ -542,50 +383,6 @@ namespace Simias.Storage
 
 		#region Constructors
 		/// <summary>
-		/// Static constructor for the object.
-		/// </summary>
-		static Property()
-		{
-			// Allocate the tables to hold the reserved property names.
-			systemPropertyTable = new Hashtable( 30, new CaseInsensitiveHashCodeProvider(), new CaseInsensitiveComparer() );
-
-			// Add the well-known system properties to the hashtable.  Don't need to add values
-			// with them.  Just need to know if they exist.
-			systemPropertyTable.Add( Ace, null );
-			systemPropertyTable.Add( MasterIncarnation, null );
-			systemPropertyTable.Add( LocalIncarnation, null );
-			systemPropertyTable.Add( Shareable, null );
-			systemPropertyTable.Add( Syncable, null );
-			systemPropertyTable.Add( LocalAddressBook, null );
-			systemPropertyTable.Add( Alias, null );
-			systemPropertyTable.Add( ServerCredential, null );
-			systemPropertyTable.Add( ClientCredential, null );
-			systemPropertyTable.Add( AliasParameters, null );
-			systemPropertyTable.Add( ClientPublicKey, null );
-			systemPropertyTable.Add( LinkReference, null );
-
-			systemPropertyTable.Add( BaseSchema.ObjectId, null );
-			systemPropertyTable.Add( BaseSchema.ObjectName, null );
-			systemPropertyTable.Add( BaseSchema.ObjectType, null );
-			systemPropertyTable.Add( BaseSchema.CollectionId, null );
-			systemPropertyTable.Add( CreationTime, null );
-			systemPropertyTable.Add( ModifyTime, null );
-			systemPropertyTable.Add( ParentID, null );
-			systemPropertyTable.Add( Owner, null );
-			systemPropertyTable.Add( Root, null );
-			systemPropertyTable.Add( FileCreationTime, null );
-			systemPropertyTable.Add( FileLastAccessTime, null );
-			systemPropertyTable.Add( FileLastWriteTime, null );
-			systemPropertyTable.Add( FileLength, null );
-			systemPropertyTable.Add( DirCreationTime, null );
-			systemPropertyTable.Add( DirLastAccessTime, null );
-			systemPropertyTable.Add( DirLastWriteTime, null );
-			systemPropertyTable.Add( DomainName, null );
-			systemPropertyTable.Add( DefaultAddressBook, null );
-			systemPropertyTable.Add( Types, null );
-		}
-
-		/// <summary>
 		/// Constructor used by the PropertyList.IEnumerable interface to create property objects.
 		/// </summary>
 		/// <param name="propertyList">The property list where this property is stored.</param>
@@ -615,7 +412,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructs a property.
 		/// </summary>
-		/// <param name="property">Property.</param>
+		/// <param name="property">PropertyTags.</param>
 		public Property( Property property )
 		{
 			XmlDocument propDoc = new XmlDocument();
@@ -1245,15 +1042,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Determines if the propertyName is a system (non-editable) property.
-		/// </summary>
-		/// <returns>True if propertyName specifies a system property, otherwise false is returned.</returns>
-		public bool IsSystemProperty()
-		{
-			return systemPropertyTable.Contains( xmlProperty.GetAttribute( XmlTags.NameAttr ) );
-		}
-
-		/// <summary>
 		/// Saves the old state of the object so it can be merged at object commit time.
 		/// </summary>
 		/// <param name="propertyList">PropertyList object that this property is associated with.</param>
@@ -1813,6 +1601,15 @@ namespace Simias.Storage
 			}
 
 			DeleteProperty();
+		}
+
+		/// <summary>
+		/// Determines if the property is a system (non-editable) property.
+		/// </summary>
+		/// <returns>True if propertyName specifies a system property, otherwise false is returned.</returns>
+		public bool IsSystemProperty()
+		{
+			return PropertyTags.IsSystemProperty( xmlProperty.GetAttribute( XmlTags.NameAttr ) ); 
 		}
 
 		/// <summary>

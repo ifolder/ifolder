@@ -46,8 +46,9 @@ namespace Simias.Storage
 			base ( storeObject, bookName, bookID, ownerGuid, domainName )
 		{
 			// Add the properties that make this an address book.
-			properties.AddNodeProperty( Property.DefaultAddressBook, true );
-			properties.AddNodeProperty( Property.LocalAddressBook, true );
+			properties.AddNodeProperty( PropertyTags.DefaultAddressBook, true );
+			properties.AddNodeProperty( PropertyTags.LocalAddressBook, true );
+			properties.AddNodeProperty( PropertyTags.Types, PropertyTags.AddressBookType );
 			Synchronizable = false;
 		}
 

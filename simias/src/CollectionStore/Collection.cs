@@ -55,7 +55,7 @@ namespace Simias.Storage
 		/// </summary>
 		public string Domain
 		{
-			get { return properties.FindSingleValue( Property.DomainName ).Value as string; }
+			get { return properties.FindSingleValue( PropertyTags.DomainName ).Value as string; }
 		}
 
 		/// <summary>
@@ -79,7 +79,7 @@ namespace Simias.Storage
 		/// </summary>
 		public string Owner
 		{
-			get { return properties.FindSingleValue( Property.Owner ).Value as string; }
+			get { return properties.FindSingleValue( PropertyTags.Owner ).Value as string; }
 		}
 
 		/// <summary>
@@ -92,12 +92,12 @@ namespace Simias.Storage
 		{
 			get
 			{
-				Property p = properties.FindSingleValue( Property.Shareable );
+				Property p = properties.FindSingleValue( PropertyTags.Shareable );
 				bool shareable = ( p != null ) ? ( bool )p.Value : true;
 				return ( IsAccessAllowed( Access.Rights.Admin ) && shareable && Synchronizable ) ? true : false;
 			}
 
-			set { properties.ModifyNodeProperty( Property.Shareable, value ); }
+			set { properties.ModifyNodeProperty( PropertyTags.Shareable, value ); }
 		}
 
 		/// <summary>
@@ -118,11 +118,11 @@ namespace Simias.Storage
 		{
 			get
 			{
-				Property p = properties.FindSingleValue( Property.Syncable );
+				Property p = properties.FindSingleValue( PropertyTags.Syncable );
 				return ( p != null ) ? ( bool )p.Value : true;
 			}
 
-			set { properties.ModifyNodeProperty( Property.Syncable, value ); }
+			set { properties.ModifyNodeProperty( PropertyTags.Syncable, value ); }
 		}
 		#endregion
 
@@ -175,8 +175,8 @@ namespace Simias.Storage
 			}
 
 			// Add the owner identifier and domain name as properties.
-			properties.AddNodeProperty( Property.Owner, ownerGuid.ToLower() );
-			properties.AddNodeProperty( Property.DomainName, domainName );
+			properties.AddNodeProperty( PropertyTags.Owner, ownerGuid.ToLower() );
+			properties.AddNodeProperty( PropertyTags.DomainName, domainName );
 			
 			// Set the owner to have all rights to the collection.
 			AccessControlEntry ace = new AccessControlEntry( ownerGuid, Access.Rights.Admin );
@@ -254,7 +254,7 @@ namespace Simias.Storage
 			node.Name = "Tombstone:" + node.Name;
 			node.BaseType = "Tombstone";
 			node.InternalList = new PropertyList( node.Name, node.ID, node.Type );
-			node.Properties.AddNodeProperty( Property.Types, "Tombstone" );
+			node.Properties.AddNodeProperty( PropertyTags.Types, "Tombstone" );
 			node.IncarnationUpdate = 0;
 		}
 
@@ -294,8 +294,8 @@ namespace Simias.Storage
 				if ( ( checkNode == null ) || ( checkNode.LocalIncarnation == node.LocalIncarnation ) )
 				{
 					// Update both incarnation values to the specified value.
-					node.Properties.ModifyNodeProperty( Property.MasterIncarnation, node.IncarnationUpdate );
-					node.Properties.ModifyNodeProperty( Property.LocalIncarnation, node.IncarnationUpdate );
+					node.Properties.ModifyNodeProperty( PropertyTags.MasterIncarnation, node.IncarnationUpdate );
+					node.Properties.ModifyNodeProperty( PropertyTags.LocalIncarnation, node.IncarnationUpdate );
 					node.IncarnationUpdate = 0;
 				}
 				else
@@ -308,7 +308,7 @@ namespace Simias.Storage
 			{
 				// Increment the property value.
 				ulong incarnationValue = node.LocalIncarnation;
-				node.Properties.ModifyNodeProperty( Property.LocalIncarnation, ++incarnationValue );
+				node.Properties.ModifyNodeProperty( PropertyTags.LocalIncarnation, ++incarnationValue );
 			}
 		}
 
@@ -775,6 +775,16 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Searches all Node objects in the Collection for the specified Types value.
+		/// </summary>
+		/// <param name="type">String object containing class type to find.</param>
+		/// <returns>An ICSList object containing ShallowNode objects that represent the found Node objects.</returns>
+		public ICSList FindType( string type )
+		{
+			return Search( PropertyTags.Types, type, SearchOp.Equal );
+		}
+
+		/// <summary>
 		/// Gets the access control list for this collection object.
 		/// </summary>
 		/// <returns>An ICSEnumerator object that will enumerate the access control list. The ICSList object
@@ -823,7 +833,7 @@ namespace Simias.Storage
 		/// that that have the specified type.</returns>
 		public ICSList GetNodesByType( string typeString )
 		{
-			return Search( Property.Types, typeString , SearchOp.Equal );
+			return Search( PropertyTags.Types, typeString , SearchOp.Equal );
 		}
 
 		/// <summary>
@@ -835,7 +845,7 @@ namespace Simias.Storage
 		{
 			DirNode rootDir = null;
 
-			ICSList results = Search( Property.Root, Syntax.Uri );
+			ICSList results = Search( PropertyTags.Root, Syntax.Uri );
 			foreach ( ShallowNode shallowNode in results )
 			{
 				rootDir = new DirNode( this, shallowNode );
@@ -926,7 +936,7 @@ namespace Simias.Storage
 					}
 
 					// Set the owner.
-					node.Properties.ModifyNodeProperty( Property.Owner, Owner );
+					node.Properties.ModifyNodeProperty( PropertyTags.Owner, Owner );
 				}
 				else
 				{
@@ -976,7 +986,7 @@ namespace Simias.Storage
 		public bool IsType( Node node, string typeString )
 		{
 			bool isType = false;
-			MultiValuedList mvl = node.Properties.FindValues( Property.Types );
+			MultiValuedList mvl = node.Properties.FindValues( PropertyTags.Types );
 			foreach( Property p in mvl )
 			{
 				if ( p.ToString() == typeString )
@@ -1038,7 +1048,7 @@ namespace Simias.Storage
 			}
 
 			// Get the multi-valued property and search for the specific value.
-			MultiValuedList mvl = node.Properties.GetProperties( Property.Types );
+			MultiValuedList mvl = node.Properties.GetProperties( PropertyTags.Types );
 			foreach ( Property p in mvl )
 			{
 				if ( p.ToString() == type )
@@ -1339,7 +1349,7 @@ namespace Simias.Storage
 			}
 
 			// Set the new type.
-			node.Properties.AddNodeProperty( Property.Types, type );
+			node.Properties.AddNodeProperty( PropertyTags.Types, type );
 		}
 
 		/// <summary>

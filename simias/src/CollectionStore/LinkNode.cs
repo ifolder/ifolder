@@ -50,7 +50,7 @@ namespace Simias.Storage
 		public LinkNode( string name, string nodeID, Relationship relationship ) :
 			base( name, nodeID, NodeTypes.LinkNodeType )
 		{
-			properties.AddProperty( Property.LinkReference, relationship );
+			properties.AddProperty( PropertyTags.LinkReference, relationship );
 		}
 
 		/// <summary>
@@ -79,7 +79,7 @@ namespace Simias.Storage
 			Node node = null;
 
 			// Get the pre-defined relationship property.
-			Relationship reference = properties.FindSingleValue( Property.LinkReference ).Value as Relationship;
+			Relationship reference = properties.FindSingleValue( PropertyTags.LinkReference ).Value as Relationship;
         
 			// Get the referenced collection.
 			Collection collection = store.GetCollectionByID( reference.CollectionID );

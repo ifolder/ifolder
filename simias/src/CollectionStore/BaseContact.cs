@@ -97,7 +97,7 @@ namespace Simias.Storage
 			XmlDocument dpkDocument = new XmlDocument();
 			dpkDocument.LoadXml( xmlString );
 
-			domain = dpkDocument.DocumentElement.GetAttribute( Property.DomainName );
+			domain = dpkDocument.DocumentElement.GetAttribute( PropertyTags.DomainName );
 			credential = new RSACryptoServiceProvider( IdentityManager.dummyCsp );
 			credential.FromXmlString( dpkDocument.DocumentElement.InnerText );
 		}
@@ -111,11 +111,11 @@ namespace Simias.Storage
 		{
 			// Create an xml document that will hold the serialized object.
 			XmlDocument dpkDocument = new XmlDocument();
-			XmlElement dpkRoot = dpkDocument.CreateElement( Property.ClientPublicKey );
+			XmlElement dpkRoot = dpkDocument.CreateElement( PropertyTags.ClientPublicKey );
 			dpkDocument.AppendChild( dpkRoot );
 
 			// Set the attributes on the object.
-			dpkRoot.SetAttribute( Property.DomainName, domain );
+			dpkRoot.SetAttribute( PropertyTags.DomainName, domain );
 			dpkRoot.InnerText = credential.ToXmlString( false );
 			return dpkRoot.OuterXml;
 		}
@@ -137,7 +137,7 @@ namespace Simias.Storage
 			get
 			{
 				// Lookup the credential property on the identity.
-				Property p = properties.FindSingleValue( Property.ServerCredential );
+				Property p = properties.FindSingleValue( PropertyTags.ServerCredential );
 				if ( p != null )
 				{
 					RSACryptoServiceProvider credential = new RSACryptoServiceProvider( IdentityManager.dummyCsp );
@@ -170,6 +170,7 @@ namespace Simias.Storage
 		public BaseContact( string userName, string userGuid ) :
 			base ( userName, userGuid, NodeTypes.BaseContactType )
 		{
+			properties.AddNodeProperty( PropertyTags.Types, PropertyTags.ContactType );
 		}
 
 		/// <summary>
@@ -199,7 +200,7 @@ namespace Simias.Storage
 			Property aliasProperty = null;
 
 			// Find if there is an existing alias.  If there is don't add the new one.
-			MultiValuedList mvl = properties.FindValues( Property.Alias );
+			MultiValuedList mvl = properties.FindValues( PropertyTags.Alias );
 			foreach( Property p in mvl )
 			{
 				Alias tempAlias = new Alias( p );
@@ -227,7 +228,7 @@ namespace Simias.Storage
 
 			// Set the property on the identity object.  Don't show this property through normal
 			// enumeration, but let the property replicate.
-			Property clientpkp = new Property( Property.ClientCredential, dpk.ToXmlString() );
+			Property clientpkp = new Property( PropertyTags.ClientCredential, dpk.ToXmlString() );
 			clientpkp.HiddenProperty = true;
 			properties.AddNodeProperty( clientpkp );
 		}
@@ -242,7 +243,7 @@ namespace Simias.Storage
 			RSACryptoServiceProvider credential = RsaKeyStore.CreateRsaKeys();
 			
 			// Create a local, hidden property to store the credential in.
-			Property p = new Property( Property.ServerCredential, credential.ToXmlString( true ) );
+			Property p = new Property( PropertyTags.ServerCredential, credential.ToXmlString( true ) );
 			p.HiddenProperty = true;
 			p.LocalProperty = true;
 			properties.ModifyNodeProperty( p );
@@ -255,7 +256,7 @@ namespace Simias.Storage
 		internal void DeletePublicKey( string domain )
 		{
 			// Look up any client credential properties for this identity.
-			MultiValuedList mvl = properties.FindValues( Property.ClientCredential, true );
+			MultiValuedList mvl = properties.FindValues( PropertyTags.ClientCredential, true );
 			foreach ( Property keyProp in mvl )
 			{
 				// Export the public key from the client credentials.
@@ -279,7 +280,7 @@ namespace Simias.Storage
 			RSACryptoServiceProvider credential = null;
 
 			// Look up any client credential properties for this identity.
-			MultiValuedList mvl = properties.FindValues( Property.ClientCredential, true );
+			MultiValuedList mvl = properties.FindValues( PropertyTags.ClientCredential, true );
 			foreach ( Property keyProp in mvl )
 			{
 				// Export the public key from the client credentials.
@@ -316,7 +317,7 @@ namespace Simias.Storage
 			if (aliasProperty == null )
 			{
 				// Create a property to store the object on.
-				properties.AddNodeProperty( new Property( Property.Alias, alias.ToXmlString() ) );
+				properties.AddNodeProperty( new Property( PropertyTags.Alias, alias.ToXmlString() ) );
 			}
 			else
 			{
@@ -383,7 +384,7 @@ namespace Simias.Storage
 		{
 			ICSList aliasList = new ICSList();
 
-			MultiValuedList mvl = properties.FindValues( Property.Alias );
+			MultiValuedList mvl = properties.FindValues( PropertyTags.Alias );
 			foreach( Property p in mvl )
 			{
 				aliasList.Add( new Alias( p ) );

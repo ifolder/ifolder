@@ -40,7 +40,7 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				Property p = properties.FindSingleValue( Property.DirCreationTime );
+				Property p = properties.FindSingleValue( PropertyTags.DirCreationTime );
 				if ( p != null )
 				{
 					return ( DateTime )p.Value;
@@ -51,7 +51,7 @@ namespace Simias.Storage
 				}
 			}
 
-			set	{ properties.ModifyNodeProperty( Property.DirCreationTime, value ); }
+			set	{ properties.ModifyNodeProperty( PropertyTags.DirCreationTime, value ); }
 		}
 
 		/// <summary>
@@ -61,7 +61,7 @@ namespace Simias.Storage
 		{
 			get
 			{
-				Property p = properties.GetSingleProperty( Property.ParentID );
+				Property p = properties.GetSingleProperty( PropertyTags.Parent );
 				return ( p != null ) ? ( p.Value as Relationship ).IsRoot : false;
 			}
 		}
@@ -73,7 +73,7 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				Property p = properties.FindSingleValue( Property.DirLastAccessTime );
+				Property p = properties.FindSingleValue( PropertyTags.DirLastAccessTime );
 				if ( p != null )
 				{
 					return ( DateTime )p.Value;
@@ -84,7 +84,7 @@ namespace Simias.Storage
 				}
 			}
 
-			set { properties.ModifyNodeProperty( Property.DirLastAccessTime, value ); }
+			set { properties.ModifyNodeProperty( PropertyTags.DirLastAccessTime, value ); }
 		}
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				Property p = properties.FindSingleValue( Property.DirLastWriteTime );
+				Property p = properties.FindSingleValue( PropertyTags.DirLastWriteTime );
 				if ( p != null )
 				{
 					return ( DateTime )p.Value;
@@ -105,7 +105,7 @@ namespace Simias.Storage
 				}
 			}
 
-			set { properties.ModifyNodeProperty( Property.DirLastWriteTime, value ); }
+			set { properties.ModifyNodeProperty( PropertyTags.DirLastWriteTime, value ); }
 		}
 		#endregion
 
@@ -134,7 +134,7 @@ namespace Simias.Storage
 			base ( dirName, dirID, NodeTypes.DirNodeType )
 		{
 			// Set the parent attribute.
-			properties.AddNodeProperty( Property.ParentID, new Relationship( collection.ID, parentNode.ID ) );
+			properties.AddNodeProperty( PropertyTags.Parent, new Relationship( collection.ID, parentNode.ID ) );
 		}
 
 		/// <summary>
@@ -159,7 +159,7 @@ namespace Simias.Storage
 			base ( Path.GetFileName( dirPath ), dirID, NodeTypes.DirNodeType )
 		{
 			// Set the parent attribute.
-			properties.AddNodeProperty( Property.ParentID, new Relationship( collection ) );
+			properties.AddNodeProperty( PropertyTags.Parent, new Relationship( collection ) );
 
 			// Set the root path property.
 			string parentDir = Path.GetDirectoryName( dirPath );
@@ -168,7 +168,7 @@ namespace Simias.Storage
 				parentDir = Convert.ToString( Path.DirectorySeparatorChar );
 			}
 
-			Property p = new Property( Property.Root, new Uri( parentDir ) );
+			Property p = new Property( PropertyTags.Root, new Uri( parentDir ) );
 			p.LocalProperty = true;
 			properties.AddNodeProperty( p );
 		}
@@ -219,7 +219,7 @@ namespace Simias.Storage
 			}
 			else
 			{
-				Property p = properties.GetSingleProperty( Property.Root );
+				Property p = properties.GetSingleProperty( PropertyTags.Root );
 				if ( p != null )
 				{
 					fullPath = Path.Combine( ( p.Value as Uri ).LocalPath, name );
@@ -243,7 +243,7 @@ namespace Simias.Storage
 		{
 			DirNode parent = null;
 
-			Property property = properties.FindSingleValue( Property.ParentID );
+			Property property = properties.FindSingleValue( PropertyTags.Parent );
 			if ( property != null )
 			{
 				Relationship relationship = property.Value as Relationship;
@@ -289,7 +289,7 @@ namespace Simias.Storage
 		/// <returns>True if DirNode object contains children, otherwise false is returned.</returns>
 		public bool HasChildren( Collection collection )
 		{
-			ICSList results = collection.Search( Property.ParentID, new Relationship( collection.ID, id ) );
+			ICSList results = collection.Search( PropertyTags.Parent, new Relationship( collection.ID, id ) );
 			ICSEnumerator e = results.GetEnumerator() as ICSEnumerator;
 			bool hasChildren = e.MoveNext();
 			e.Dispose();

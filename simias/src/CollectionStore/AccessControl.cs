@@ -79,7 +79,7 @@ namespace Simias.Storage
 		/// <param name="collection">Collection to enumerator rights on.</param>
 		internal Access( Collection collection )
 		{
-			MultiValuedList mvl = collection.Properties.FindValues( Property.Ace, true );
+			MultiValuedList mvl = collection.Properties.FindValues( PropertyTags.Ace, true );
 			aclEnumerator = ( ICSEnumerator )mvl.GetEnumerator();
 		}
 		#endregion
@@ -176,7 +176,7 @@ namespace Simias.Storage
 		{
 			id = ID.ToLower();
 			rights = accessRights;
-			aceProperty = new Property( Property.Ace, id + ":" + Enum.GetName( typeof( Access.Rights ), rights ) );
+			aceProperty = new Property( PropertyTags.Ace, id + ":" + Enum.GetName( typeof( Access.Rights ), rights ) );
 			aceProperty.HiddenProperty = true;
 		}
 
@@ -393,7 +393,7 @@ namespace Simias.Storage
 
 			// Set the new collection owner.
 			newOwnerAce.Set( collection );
-			collection.Properties.ModifyNodeProperty( Property.Owner, normUserID );
+			collection.Properties.ModifyNodeProperty( PropertyTags.Owner, normUserID );
 		}
 
 		/// <summary>
