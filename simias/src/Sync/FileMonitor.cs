@@ -523,11 +523,7 @@ namespace Simias.Sync
 		public void CheckForFileChanges()
 		{
 			collection.Refresh();
-			if (watcher == null)
-			{
-				Dredge();
-			}
-			else if (needToDredge == true)
+			if (watcher == null || needToDredge)
 			{
 				Dredge();
 				needToDredge = false;
@@ -721,18 +717,12 @@ namespace Simias.Sync
 						{
 							changes.Remove(fc.eArgs.FullPath);
 						}
-					
-						if (needToDredge)
-							break;
 					}
 
 					if (needToDredge)
 					{
-						lock (changes)
-						{
-							changes.Clear();
-						}
 						Dredge();
+						needToDredge = false;
 					}
 					else
 					{
@@ -741,7 +731,8 @@ namespace Simias.Sync
 				}
 				catch
 				{
-					needToDredge = true;
+					Dredge();
+					needToDredge = false;
 				}
 			}
 		}
