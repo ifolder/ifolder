@@ -297,6 +297,7 @@ namespace Novell.FormsTrayApp
 			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.details = new System.Windows.Forms.Button();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.connect = new System.Windows.Forms.Button();
 			this.password = new System.Windows.Forms.TextBox();
 			this.server = new System.Windows.Forms.TextBox();
 			this.userName = new System.Windows.Forms.TextBox();
@@ -332,7 +333,6 @@ namespace Novell.FormsTrayApp
 			this.menuHelpAbout = new System.Windows.Forms.MenuItem();
 			this.status = new System.Windows.Forms.Label();
 			this.progressBar1 = new System.Windows.Forms.ProgressBar();
-			this.connect = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -1332,6 +1332,7 @@ namespace Novell.FormsTrayApp
 			this.accounts.Text = resources.GetString("accounts.Text");
 			this.accounts.View = System.Windows.Forms.View.Details;
 			this.accounts.Visible = ((bool)(resources.GetObject("accounts.Visible")));
+			this.accounts.DoubleClick += new System.EventHandler(this.details_Click);
 			this.accounts.SelectedIndexChanged += new System.EventHandler(this.accounts_SelectedIndexChanged);
 			// 
 			// columnHeader2
@@ -1400,6 +1401,30 @@ namespace Novell.FormsTrayApp
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = resources.GetString("groupBox2.Text");
 			this.groupBox2.Visible = ((bool)(resources.GetObject("groupBox2.Visible")));
+			// 
+			// connect
+			// 
+			this.connect.AccessibleDescription = resources.GetString("connect.AccessibleDescription");
+			this.connect.AccessibleName = resources.GetString("connect.AccessibleName");
+			this.connect.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("connect.Anchor")));
+			this.connect.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("connect.BackgroundImage")));
+			this.connect.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("connect.Dock")));
+			this.connect.Enabled = ((bool)(resources.GetObject("connect.Enabled")));
+			this.connect.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("connect.FlatStyle")));
+			this.connect.Font = ((System.Drawing.Font)(resources.GetObject("connect.Font")));
+			this.connect.Image = ((System.Drawing.Image)(resources.GetObject("connect.Image")));
+			this.connect.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("connect.ImageAlign")));
+			this.connect.ImageIndex = ((int)(resources.GetObject("connect.ImageIndex")));
+			this.connect.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("connect.ImeMode")));
+			this.connect.Location = ((System.Drawing.Point)(resources.GetObject("connect.Location")));
+			this.connect.Name = "connect";
+			this.connect.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("connect.RightToLeft")));
+			this.connect.Size = ((System.Drawing.Size)(resources.GetObject("connect.Size")));
+			this.connect.TabIndex = ((int)(resources.GetObject("connect.TabIndex")));
+			this.connect.Text = resources.GetString("connect.Text");
+			this.connect.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("connect.TextAlign")));
+			this.connect.Visible = ((bool)(resources.GetObject("connect.Visible")));
+			this.connect.Click += new System.EventHandler(this.connect_Click);
 			// 
 			// password
 			// 
@@ -1967,30 +1992,6 @@ namespace Novell.FormsTrayApp
 			this.progressBar1.TabIndex = ((int)(resources.GetObject("progressBar1.TabIndex")));
 			this.progressBar1.Text = resources.GetString("progressBar1.Text");
 			this.progressBar1.Visible = ((bool)(resources.GetObject("progressBar1.Visible")));
-			// 
-			// connect
-			// 
-			this.connect.AccessibleDescription = resources.GetString("connect.AccessibleDescription");
-			this.connect.AccessibleName = resources.GetString("connect.AccessibleName");
-			this.connect.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("connect.Anchor")));
-			this.connect.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("connect.BackgroundImage")));
-			this.connect.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("connect.Dock")));
-			this.connect.Enabled = ((bool)(resources.GetObject("connect.Enabled")));
-			this.connect.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("connect.FlatStyle")));
-			this.connect.Font = ((System.Drawing.Font)(resources.GetObject("connect.Font")));
-			this.connect.Image = ((System.Drawing.Image)(resources.GetObject("connect.Image")));
-			this.connect.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("connect.ImageAlign")));
-			this.connect.ImageIndex = ((int)(resources.GetObject("connect.ImageIndex")));
-			this.connect.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("connect.ImeMode")));
-			this.connect.Location = ((System.Drawing.Point)(resources.GetObject("connect.Location")));
-			this.connect.Name = "connect";
-			this.connect.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("connect.RightToLeft")));
-			this.connect.Size = ((System.Drawing.Size)(resources.GetObject("connect.Size")));
-			this.connect.TabIndex = ((int)(resources.GetObject("connect.TabIndex")));
-			this.connect.Text = resources.GetString("connect.Text");
-			this.connect.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("connect.TextAlign")));
-			this.connect.Visible = ((bool)(resources.GetObject("connect.Visible")));
-			this.connect.Click += new System.EventHandler(this.connect_Click);
 			// 
 			// GlobalProperties
 			// 
