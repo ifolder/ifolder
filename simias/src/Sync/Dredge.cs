@@ -69,7 +69,7 @@ internal class Dredger
 	 * in a relative path property, which always uses a path seperator of
 	 * '/'.
 	 */
-	string NodeRelPath(string relPath)
+	static string NodeRelPath(string relPath)
 	{
 		relPath = relPath.Replace(Path.DirectorySeparatorChar, '/');
 		return relPath.Replace(Path.AltDirectorySeparatorChar, '/');

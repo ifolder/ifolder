@@ -40,19 +40,24 @@ namespace Simias.Sync.Tests
 [TestFixture]
 public class SyncTests: Assertion
 {
-	private const string host = "127.0.0.1";
-	private const int serverPort = 1100;
-	private const string folderName = "testFolder";
-	private const string invitationFile = "SyncTestInvitation.ifi";
-	private const bool useTCP = true;
-	private static readonly string serverDir = Path.GetFullPath("SyncTestServerData");
-	private static readonly string clientDir = Path.GetFullPath("SyncTestClientData");
-	private static readonly string clientFolder = Path.Combine(clientDir, folderName);
-	private static readonly string serverFolder = Path.Combine(serverDir, folderName);
-	private bool runChildProcess = true;
+	const int serverPort = 1100;
+	const string folderName = "testFolder";
+	const string invitationFile = "SyncTestInvitation.ifi";
+	const string scpCmd = "/usr/bin/scp";
+	const string sshCmd = "/usr/bin/ssh";
+	const string monoCmd = "/usr/bin/mono";
+	const bool useTCP = true;
+	static readonly string serverDir = Path.GetFullPath("SyncTestServerData");
+	static readonly string clientDir = Path.GetFullPath("SyncTestClientData");
+	static readonly string clientFolder = Path.Combine(clientDir, folderName);
+	static readonly string serverFolder = Path.Combine(serverDir, folderName);
+
+	bool runChildProcess = true;
+	string clientAddress = null; // for use in SSH commandlines, can be user@hostname, raw IP, etc.
+	string host = "127.0.0.1"; // must be set to name or external address of this machine if clientAddress is set
 
 	//---------------------------------------------------------------------------
-	public static int Run(string program, string args)
+	static int Run(string program, string args)
 	{
 		ProcessStartInfo psi = new ProcessStartInfo(program, args);
 		psi.UseShellExecute = false;
@@ -64,26 +69,78 @@ public class SyncTests: Assertion
 	}
 
 	//---------------------------------------------------------------------------
-	private bool RunClient()
+	bool RemoteRun(string cmdLine)
 	{
-		if (!runChildProcess)
-			return CmdClient.RunOnce(new Uri(clientDir), new Uri(clientFolder), serverDir, useTCP);
-
-		CmdServer cmdServer = new CmdServer(host, serverPort, new Uri(serverDir), useTCP);
-		string syncCmdLine = String.Format("-s {0} {1} sync {2}", clientDir, useTCP? "": "-h", clientFolder);
-		int err;
-
-		//TODO: very gross, but what to do?
-		if (Path.DirectorySeparatorChar == '/')
-			err = Run("/usr/bin/mono", "--debug SyncCmd.exe " + syncCmdLine);
-		else
-			err = Run("SyncCmd.exe", syncCmdLine);
-		cmdServer.Stop();
+		Assert(clientAddress != null);
+		int err = Run(sshCmd, String.Format("{0} {1}", clientAddress, cmdLine));
+		if (err != 0)
+			Console.WriteLine("remote command execution failed, error {0}", err);
 		return err == 0;
 	}
 
 	//---------------------------------------------------------------------------
-	private void DeleteFileData()
+	static string SSHPath(string localPath)
+	{
+		localPath = localPath.Replace(Path.DirectorySeparatorChar, '/');
+		return localPath.Replace(Path.AltDirectorySeparatorChar, '/');
+	}
+
+	//---------------------------------------------------------------------------
+	bool RemoteCopy(string path, string target, bool toRemoteHost)
+	{
+		Assert(clientAddress != null);
+		int err = Run(scpCmd, String.Format(toRemoteHost?
+				"-p -r {1}/{2} {0}:{1}": "-p -r {0}:{1}/{2} {1}",
+				clientAddress, SSHPath(path), SSHPath(target)));
+		if (err != 0)
+			Console.WriteLine("remote file copy failed, error {0}", err);
+		return err == 0;
+	}
+
+	//---------------------------------------------------------------------------
+	bool RunClient()
+	{
+		// run client code within this process
+		if (!runChildProcess)
+			return CmdClient.RunOnce(new Uri(clientDir), new Uri(clientFolder), serverDir, useTCP);
+
+		// bring up a server object within this process
+		CmdServer cmdServer = new CmdServer(host, serverPort, new Uri(serverDir), useTCP);
+		string syncCmdLine = String.Format("-s {0} {1} sync {2}", clientDir, useTCP? "": "-h", clientFolder);
+		bool ok = false;
+
+		if (clientAddress == null)
+		{
+			// run client code as local child process
+			int err;
+
+			//TODO: very gross check to determine if we are on mono, but what to do?
+			if (Path.DirectorySeparatorChar == '/')
+				err = Run(monoCmd, "--debug SyncCmd.exe " + syncCmdLine);
+			else
+				err = Run("SyncCmd.exe", syncCmdLine);
+			if (err != 0)
+				Console.WriteLine("child process execution failed, error {0}", err);
+			ok = err == 0;
+		}
+		else
+		{
+			/* run client code on remote machine. requires ssh client here and
+			 * ssh server on remote machine -- with authorized keys already set up.
+			 * Since SSH servers don't run on windows, assume the remote client
+			 * will be on mono.
+			 */
+			ok = RemoteCopy(clientDir, folderName, true)
+					&& RemoteRun(String.Format("{0} --debug SyncCmd.exe {1}", monoCmd, syncCmdLine))
+					&& RemoteCopy(clientDir, folderName, false);
+		}
+
+		cmdServer.Stop();
+		return ok;
+	}
+
+	//---------------------------------------------------------------------------
+	void DeleteFileData()
 	{
 		Directory.Delete(serverDir, true);
 		Directory.Delete(clientDir, true);
@@ -142,8 +199,24 @@ public class SyncTests: Assertion
 	public bool Accept()
 	{
 		Log.Spew("accepting collection and invitation");
-		FileInviter fi = new FileInviter(new Uri(clientDir));
-		return fi.Accept(clientDir, invitationFile);
+		if (clientAddress == null)
+		{
+			FileInviter fi = new FileInviter(new Uri(clientDir));
+			return fi.Accept(clientDir, invitationFile);
+		}
+
+		/* run client code on remote machine. requires ssh client here and
+		 * ssh server on remote machine -- with authorized keys already set up.
+		 * Since SSH servers don't run on windows, assume the remote client
+		 * will be on mono.
+		 */
+		if (!RemoteCopy(clientDir, invitationFile, true))
+			return false;
+
+		string cmdLine = String.Format("{0} --debug SyncCmd.exe -s {1} {2} accept {1}/{3} {1}",
+				monoCmd, clientDir, useTCP? "": "-h", clientDir, invitationFile);
+
+		return RemoteRun(cmdLine);
 	}
 
 	//---------------------------------------------------------------------------
@@ -305,10 +378,39 @@ public class SyncTests: Assertion
 	}
 
 	//---------------------------------------------------------------------------
-	static void Main()
+	public static int Main(string[] args)
 	{
-		SyncTests t = new SyncTests();
-		t.Run();
+		int err = 0;
+		try
+		{
+			if (args.Length > 2)
+			{
+				Console.WriteLine("unknown usage, too many command line args");
+				err = 1;
+			}
+			else
+			{
+				SyncTests t = new SyncTests();
+ 				if (args.Length > 0)
+				{
+					t.clientAddress = args[0];
+					t.host = args.Length > 1? args[1]: MyDns.GetHostName();
+				}
+				t.Run();
+			}
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine("Uncaught exception in TestSync.Main: {0}", e.Message);
+			Console.WriteLine(e.StackTrace);
+			err = 99;
+		}
+		catch
+		{
+			Console.WriteLine("Uncaught foreign exception in TestSync.Main");
+			err = 98;
+		}
+		return err;
 	}
 }
 
