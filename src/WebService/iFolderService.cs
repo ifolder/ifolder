@@ -212,9 +212,17 @@ namespace Novell.iFolder.Web
 		[SoapDocumentMethod]
 		public iFolderWeb CreateiFolderInDomain(string Path, string DomainID)
 		{
+			try
+			{
 			Collection col = SharedCollection.CreateLocalSharedCollection(
 								Path, DomainID, iFolderWeb.iFolderType);
 			return new iFolderWeb(col);
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine(e);
+				throw e;
+			}
 		}
 
 
@@ -1586,6 +1594,43 @@ namespace Novell.iFolder.Web
 			domain.UserName = UserName;
 			return domain;
 		}
+
+
+
+
+
+		/// <summary>
+		/// WebMethod that will authenticate a domain
+		/// </summary>
+		/// <param name = "UserName">
+		/// The username to use to connect to the Domain
+		/// </param>
+		/// <param name = "Password">
+		/// The password to use to connect to the Domain
+		/// </param>
+		/// <param name = "Host">
+		/// The host of the enterprise server
+		/// </param>
+		/// <returns>
+		/// The Domain object associated with this Server
+		/// </returns>
+		[WebMethod(Description="Connects to an iFolder Domain")]
+		[SoapDocumentMethod]
+		public int AuthenticateToDomain(	string DomainID,
+											string Password)
+		{
+			AuthenticationStatus status;
+			DomainAuthentication dAuth = new DomainAuthentication(
+					DomainID, Password);
+			status = dAuth.Authenticate();
+			if(status != AuthenticationStatus.Success)
+			{
+				throw new Exception("Invalid Credentials");
+			}
+
+			return 0;
+		}
+
 
 
 
