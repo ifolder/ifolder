@@ -438,13 +438,63 @@ namespace Simias.Web
 		{
 			Store store = Store.GetStore();
 			Collection collection = store.GetCollectionByID(CollectionID);
+			if(collection != null)
+			{
+				// first clean out all subscriptions for this iFolder
+				// if we are the server in a workgroup, then this
+				// will clean out everyone else's subscriptions too
+				RemoveAllSubscriptions(store, collection);
+
+				collection.Delete();
+				collection.Commit();
+				return;
+			}
+			else
+			{
+				// try to find a subscription with this ID
+				Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(                                             store,
+									store.DefaultDomain);
+
+				// SharedCollections returned in the Web service are also
+				// Subscriptions and it ID will be the subscription ID
+				Node node = poBox.GetNodeByID(CollectionID);
+				if(node == null)
+					throw new Exception("Invalid ID");
+
+				Subscription sub = new Subscription(node);
+				if(sub != null)
+				{
+					poBox.Delete(sub);
+					poBox.Commit(sub);
+					return;
+				}
+			}
+
+			throw new Exception("Invalid CollectionID");
+		}
+
+
+
+
+
+		/// <summary>
+		/// WebMethod that removes a SharedCollection from the local store
+		/// but will leave the subscription intact.  It will result in
+		/// removing the SharedCollection from this computer but remain
+		/// a member.
+		/// </summary>
+		/// <param name = "CollectionID">
+		/// The ID of the collection representing this iFolder to delete
+		/// </param>
+		/// <returns>
+		/// true if the iFolder was successfully removed
+		/// </returns>
+		public static void RevertSharedCollection(string CollectionID)
+		{
+			Store store = Store.GetStore();
+			Collection collection = store.GetCollectionByID(CollectionID);
 			if(collection == null)
 				throw new Exception("Invalid CollectionID");
-
-			// If this is not a WorkGroup Collection, remove all subscriptions
-			// for it.
-			if(collection.Domain != Simias.Storage.Domain.WorkGroupDomainID)
-				RemoveAllSubscriptions(store, collection);
 
 			collection.Delete();
 			collection.Commit();
@@ -638,19 +688,51 @@ namespace Simias.Web
 				throw new Exception("Invalid CollectionID");
 
 			Simias.Storage.Member member = col.GetMemberByID(UserID);
-			if(member == null)
-				throw new Exception("UserID is not a member of iFolder");
+			if(member != null)
+			{
+				if(member.IsOwner)
+					throw new Exception("UserID is the iFolder owner");
 
-			if(member.IsOwner)
-				throw new Exception("UserID is the iFolder owner");
-
-			col.Delete(member);
-			col.Commit(member);
+				col.Delete(member);
+				col.Commit(member);
 
 				// even if the member is null, try to clean up the subscription
-			RemoveMemberSubscription(	store, 
-										col,
-										UserID);
+				RemoveMemberSubscription(	store, 
+											col,
+											UserID);
+			}
+			else
+			{
+				// try to find a subscription with this ID
+				Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(                                             store,
+									store.DefaultDomain);
+
+				if(poBox == null)
+				{
+					throw new Exception("Unable to access POBox");
+				}
+
+
+				ICSList poList = poBox.Search(
+						Subscription.ToIdentityProperty,
+						UserID,
+						SearchOp.Equal);
+
+				Subscription sub = null;
+				foreach(ShallowNode sNode in poList)
+				{
+					sub = new Subscription(poBox, sNode);
+					break;
+				}
+
+				if (sub == null)
+				{
+					throw new Exception("Invalid UserID");
+				}
+
+				poBox.Delete(sub);	
+				poBox.Commit(sub);
+			}
 		}
 
 
