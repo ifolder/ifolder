@@ -35,6 +35,7 @@ using Simias.Client;
 using Simias.Policy;
 using Simias.POBox;
 using Simias.Storage;
+using Simias.Sync;
 
 
 namespace Simias.Storage.Tests
@@ -73,7 +74,7 @@ namespace Simias.Storage.Tests
 		public void CreateCollectionTest()
 		{
 			// Create a new collection and remember its ID. Use all the special XML characters in the name.
-			Collection collection = new Collection( store, "&<>\"\'CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "&<>\"\'CS_TestCollection", store.LocalDomain );
 
 			// Remember the id for later.
 			string ID = collection.ID;
@@ -117,7 +118,7 @@ namespace Simias.Storage.Tests
 		public void CreateChildNodeTest()
 		{
 			// Create the collection.
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			try
 			{
 				// Create a node subordinate to this collection.
@@ -173,7 +174,7 @@ namespace Simias.Storage.Tests
 		public void SearchTest()
 		{
 			// Create the collection.
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			try
 			{
 				string s1 = "The quick red fox jumps over the lazy brown dog.";
@@ -497,7 +498,7 @@ namespace Simias.Storage.Tests
 		{
 
 			// Create a collection to add properties to.
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			try
 			{
 				string ID = collection.ID;
@@ -776,7 +777,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void PropertyMethodsTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			try
 			{
 				// First property to add.
@@ -870,7 +871,7 @@ namespace Simias.Storage.Tests
 		[ExpectedException( typeof( InvalidOperationException ) )]
 		public void AddSystemPropertyTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			try
 			{
 				// Shouldn't allow this.
@@ -891,7 +892,7 @@ namespace Simias.Storage.Tests
 			string fileData = "How much wood can a woodchuck chuck if a woodchuck could chuck wood?";
 			string rootDir = Path.Combine( Directory.GetCurrentDirectory(), "CS_TestCollection" );
 
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			try
 			{
 				// Create a node to represent the collection root directory.
@@ -938,8 +939,8 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void AccessControlTest()
 		{
-			Collection collection1 = new Collection( store, "CS_TestCollection1", store.DefaultDomain );
-			Collection collection2 = new Collection( store, "CS_TestCollection2", store.DefaultDomain );
+			Collection collection1 = new Collection( store, "CS_TestCollection1", store.LocalDomain );
+			Collection collection2 = new Collection( store, "CS_TestCollection2", store.LocalDomain );
 			Collection collection3;
 
 			try
@@ -1043,7 +1044,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void SerializeTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			try
 			{
 				// Commit the collection.
@@ -1082,7 +1083,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void GetByNameTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			try
 			{
 				// Commit the collection.
@@ -1125,7 +1126,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void AbortTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			try
 			{
 				// Commit the collection.
@@ -1157,7 +1158,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void TestIncarnationValues()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			try
 			{
 				// Create a node.
@@ -1248,7 +1249,7 @@ namespace Simias.Storage.Tests
 		{
 			string rootDir = Path.Combine( Directory.GetCurrentDirectory(), "CS_TestCollection" );
 
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 
 			try
 			{
@@ -1294,7 +1295,7 @@ namespace Simias.Storage.Tests
 			Store mergeStore = Store.GetStore();
 
 			// Create a collection using the primary store handle.
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 
 			try
 			{
@@ -1417,7 +1418,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void EnumerateNodesTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			try
 			{
 				Node[] commitList = { collection,
@@ -1463,7 +1464,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void StoreFileNodeTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			try
 			{
 				// Create a file in the file system.
@@ -1524,7 +1525,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void CollisionTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			try
 			{
 				// Commit the collection.
@@ -1624,7 +1625,7 @@ namespace Simias.Storage.Tests
 			string domainID = Guid.NewGuid().ToString();
 
 			// Create a new domain.
-			store.AddDomainIdentity( userID, "Oklahoma", domainID, "Test domain", new Uri( "http://localhost" ) ); 
+			store.AddDomainIdentity( userID, "Oklahoma", domainID, "Test domain", new Uri( "http://localhost"), SyncRoles.Master ); 
 
 			// Create a whole bunch of collections.
 			Collection[] c = new Collection[ 10 ];
@@ -1697,7 +1698,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void CollectionStorageTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 
 			string rootDir = Path.Combine( Directory.GetCurrentDirectory(), "CS_TestCollection" );
 			if ( !Directory.Exists( rootDir ) ) Directory.CreateDirectory( rootDir );
@@ -1809,7 +1810,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void DiskQuotaTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			collection.Commit();
 
 			// Create a dir entry.
@@ -1821,10 +1822,10 @@ namespace Simias.Storage.Tests
 				Member member = collection.GetCurrentMember();
 
 				// Create a system-wide disk space policy.
-				DiskSpaceQuota.Create( store.DefaultDomain, 2048 );
+				DiskSpaceQuota.Create( store.LocalDomain, 2048 );
 
 				// Make sure that there is a limit set.
-				if ( DiskSpaceQuota.GetLimit( store.DefaultDomain ) != 2048 )
+				if ( DiskSpaceQuota.GetLimit( store.LocalDomain ) != 2048 )
 				{
 					throw new ApplicationException( "Domain disk quota not set." );
 				}
@@ -1852,7 +1853,7 @@ namespace Simias.Storage.Tests
 
 
 				// Create a PO box for the member.
-				POBox.POBox.GetPOBox( store, store.DefaultDomain, member.UserID );
+				POBox.POBox.GetPOBox( store, store.LocalDomain, member.UserID );
 
 				// Apply a quota on the member.
 				DiskSpaceQuota.Create( member, 1024 );
@@ -1968,18 +1969,17 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void FileTypeFilterTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			collection.Commit();
 
 			try
 			{
 				Member member = collection.GetCurrentMember();
 				FileTypeEntry[] dfte = new FileTypeEntry[] { new FileTypeEntry( ".mP3$", false, true ), 
-															 new FileTypeEntry( ".avi$", false ),
-															 new FileTypeEntry( ".", true ) };
+															 new FileTypeEntry( ".avi$", false ) };
 
 				// Create a system-wide file filter policy.
-				FileTypeFilter.Create( store.DefaultDomain, dfte );
+				FileTypeFilter.Create( store.LocalDomain, dfte );
 
 				// Get a filter object.
 				FileTypeFilter ftf = FileTypeFilter.Get( member );
@@ -2006,7 +2006,7 @@ namespace Simias.Storage.Tests
 				ftf = FileTypeFilter.Get( member );
 				
 				// Check the aggregate list.
-				if ( ftf.FilterList.Length != 4 )
+				if ( ftf.FilterList.Length != 3 )
 				{
 					throw new ApplicationException( "Aggregate member filter not set." );
 				}
@@ -2032,7 +2032,7 @@ namespace Simias.Storage.Tests
 				ftf = FileTypeFilter.Get( member, collection );
 				
 				// Check the aggregate list.
-				if ( ftf.FilterList.Length != 5 )
+				if ( ftf.FilterList.Length != 4 )
 				{
 					throw new ApplicationException( "Aggregate collection filter not set." );
 				}
@@ -2051,7 +2051,7 @@ namespace Simias.Storage.Tests
 
 
 				// Create a POBox for the user.
-				POBox.POBox.GetPOBox( store, store.DefaultDomain, member.UserID );
+				POBox.POBox.GetPOBox( store, store.LocalDomain, member.UserID );
 
 				// Reset the member's filter to allow only .doc files.
 				FileTypeEntry[] mfte = new FileTypeEntry[] { new FileTypeEntry( ".doc$", true, true ) };
@@ -2079,12 +2079,57 @@ namespace Simias.Storage.Tests
 		}
 
 		/// <summary>
+		/// Tests the file type filter functionality.
+		/// </summary>
+		[Test]
+		public void FileTypeFilterTest2()
+		{
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
+			collection.Commit();
+
+			try
+			{
+				Member member = collection.GetCurrentMember();
+				FileTypeEntry[] dfte = new FileTypeEntry[] { new FileTypeEntry( ".bmp$", true ), 
+															 new FileTypeEntry( ".jpg$", true ) };
+
+				// Create a system-wide file filter policy.
+				FileTypeFilter.Create( store.LocalDomain, dfte );
+
+				// Get a filter object.
+				FileTypeFilter ftf = FileTypeFilter.Get( member );
+				
+				// Now apply the filter so that it will pass.
+				if ( ftf.Allowed( "myfile.bmp" ) == false )
+				{
+					throw new ApplicationException( "Domain file type filter failed." );
+				}
+
+				// Now apply the filter so that it will pass.
+				if ( ftf.Allowed( "myfile.jpg" ) == false )
+				{
+					throw new ApplicationException( "Domain file type filter failed." );
+				}
+
+				// Now apply the filter so that it will fail.
+				if ( ftf.Allowed( "myfile.txt" ) == true )
+				{
+					throw new ApplicationException( "Member filter failed." );
+				}
+			}
+			finally
+			{
+				collection.Commit( collection.Delete() );
+			}
+		}
+
+		/// <summary>
 		/// Tests the file size filter functionality.
 		/// </summary>
 		[Test]
 		public void FileSizeFilterTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			collection.Commit();
 
 			try
@@ -2092,10 +2137,10 @@ namespace Simias.Storage.Tests
 				Member member = collection.GetCurrentMember();
 
 				// Create a system-wide file size limit policy.
-				FileSizeFilter.Create( store.DefaultDomain, 2048 );
+				FileSizeFilter.Create( store.LocalDomain, 2048 );
 
 				// Make sure that there is a limit set.
-				if ( FileSizeFilter.GetLimit( store.DefaultDomain ) != 2048 )
+				if ( FileSizeFilter.GetLimit( store.LocalDomain ) != 2048 )
 				{
 					throw new ApplicationException( "File size limit not set." );
 				}
@@ -2123,7 +2168,7 @@ namespace Simias.Storage.Tests
 
 
 				// Create a PO box for the member.
-				POBox.POBox.GetPOBox( store, store.DefaultDomain, member.UserID );
+				POBox.POBox.GetPOBox( store, store.LocalDomain, member.UserID );
 
 				// Apply a file size filter on the member.
 				FileSizeFilter.Create( member, 1024 );
@@ -2216,7 +2261,7 @@ namespace Simias.Storage.Tests
 			// Remove the default workstation sync policy.
 			SyncInterval.Delete();
 
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			collection.Commit();
 
 			try
@@ -2224,10 +2269,10 @@ namespace Simias.Storage.Tests
 				Member member = collection.GetCurrentMember();
 
 				// Create a system-wide sync interval policy.
-				SyncInterval.Create( store.DefaultDomain, 120 );
+				SyncInterval.Create( store.LocalDomain, 120 );
 
 				// Make sure that there is an interval set.
-				if ( SyncInterval.GetInterval( store.DefaultDomain ) != 120 )
+				if ( SyncInterval.GetInterval( store.LocalDomain ) != 120 )
 				{
 					throw new ApplicationException( "Domain sync interval not set." );
 				}
@@ -2242,7 +2287,7 @@ namespace Simias.Storage.Tests
 				}
 
 				// Create a PO box for the member.
-				POBox.POBox.GetPOBox( store, store.DefaultDomain, member.UserID );
+				POBox.POBox.GetPOBox( store, store.LocalDomain, member.UserID );
 
 				// Apply a sync interval on the member.
 				SyncInterval.Create( member, 180 );
@@ -2324,7 +2369,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void BackupRestoreTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			try
 			{
 				// Commit the collection.
@@ -2365,7 +2410,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void CommitDeleteHoleTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			collection.Commit();
 
 			try
@@ -2398,8 +2443,8 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void CollectionLockTest()
 		{
-			Collection collection1 = new Collection( store, "CS_TestCollection1", store.DefaultDomain );
-			Collection collection2 = new Collection( store, "CS_TestCollection2", store.DefaultDomain );
+			Collection collection1 = new Collection( store, "CS_TestCollection1", store.LocalDomain );
+			Collection collection2 = new Collection( store, "CS_TestCollection2", store.LocalDomain );
 			collection1.Commit();
 
 			try
@@ -2475,7 +2520,7 @@ namespace Simias.Storage.Tests
 		//[Test]
 		public void CollectionOwnerTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 
 			try
 			{

@@ -349,40 +349,76 @@ namespace Simias.Policy
 		/// <returns>True if the policy allows the operation, otherwise false is returned.</returns>
 		public Rule.Result Apply( object input )
 		{
-			Rule.Result result = Rule.Result.Allow;
+			bool allowedByAllowRule = false;
+			bool hasAllowRule = false;
+			Rule.Result returnResult = Rule.Result.Allow;
 
 			// Walk through the aggregate policy list in order if it is enabled. 
 			// Otherwise just use the current policy.
 			Policy[] policyArray = IsAggregate ? aggregatePolicy.ToArray( typeof( Policy ) ) as Policy[] : new Policy[] { this };
 
-			try
+			// Check the deny rules first.
+			foreach ( Policy policy in policyArray )
 			{
-				// Check the deny rules first.
-				foreach ( Policy policy in policyArray )
+				// See if there is a time condition as to when this policy is effective.
+				Property p = policy.Properties.GetSingleProperty( TimeCondition );
+				if ( ( p == null ) || ( new PolicyTime( p.Value as string ).Apply() == Rule.Result.Allow ) )
 				{
-					// See if there is a time condition as to when this policy is effective.
-					Property p = policy.Properties.GetSingleProperty( TimeCondition );
-					if ( ( p == null ) || ( new PolicyTime( p.Value as string ).Apply() == Rule.Result.Allow ) )
+					// Get all of the deny rules for this policy.
+					MultiValuedList mvl = policy.Properties.GetProperties( RuleList );
+					foreach ( Property rp in mvl )
 					{
-						// Get all of the deny rules for this policy.
-						MultiValuedList mvl = policy.Properties.GetProperties( RuleList );
-						foreach ( Property rp in mvl )
+						// Apply the rule to see if it passes.
+						Rule rule = new Rule( rp.Value );
+						Rule.Result test = rule.Apply( input );
+
+						// All allow rules are checked unless a deny rule is found and the
+						// result is deny. Otherwise, if a single allow rule result is
+						// found the return result is allowed.
+						if ( rule.RuleResult == Rule.Result.Allow )
 						{
-							// Apply the rule to see if it passes.
-							if ( new Rule( rp.Value ).Apply( input ) == Rule.Result.Deny )
+							// There is at least one allow rule.
+							hasAllowRule = true;
+
+							// An allow rule always needs to continue to check all the rules
+							// unless a deny rule is found.
+							if ( test == Rule.Result.Allow )
 							{
-								throw new PolicyException();
+								// This flag says that there was an allow rule that returned
+								// an allowed status.
+								allowedByAllowRule = true;
+							}
+						}
+						else
+						{
+							// The deny rule overrides all other rules. However, if the
+							// result is allow it does not explicitly allow the operation,
+							// unless there are no other allow rules.
+							if ( test == Rule.Result.Deny )
+							{
+								// A deny result for a Deny Rule always final.
+								returnResult = Rule.Result.Deny;
+								break;
 							}
 						}
 					}
+
+					// Don't continue to check other policies if the previous policy denied the rule.
+					if ( returnResult == Rule.Result.Deny )
+					{
+						break;
+					}
 				}
 			}
-			catch ( PolicyException )
+
+			// The return result is denied if there were no deny results and there was at least
+			// one rule in the policy, but none of the allow rules passed.
+			if ( hasAllowRule && !allowedByAllowRule )
 			{
-				result = Rule.Result.Deny;
+				returnResult = Rule.Result.Deny;
 			}
 
-			return result;
+			return returnResult;
 		}
 
 		/// <summary>

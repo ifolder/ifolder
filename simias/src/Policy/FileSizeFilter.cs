@@ -119,7 +119,7 @@ namespace Simias.Policy
 				}
 
 				// Add the new rule and save the policy.
-				policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
+				policy.AddRule( new Rule( limit, Rule.Operation.Greater, Rule.Result.Deny ) );
 				pm.CommitPolicy( policy, domainID );
 			}
 			else if ( policy != null )
@@ -155,7 +155,7 @@ namespace Simias.Policy
 				}
 
 				// Add the new rule and save the policy.
-				policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
+				policy.AddRule( new Rule( limit, Rule.Operation.Greater, Rule.Result.Deny ) );
 				pm.CommitPolicy( policy, member );
 			}
 			else if ( policy != null )
@@ -191,7 +191,7 @@ namespace Simias.Policy
 				}
 
 				// Add the new rules and save the policy.
-				policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
+				policy.AddRule( new Rule( limit, Rule.Operation.Greater, Rule.Result.Deny ) );
 				pm.CommitPolicy( policy, collection );
 			}
 			else if ( policy != null )
@@ -226,7 +226,7 @@ namespace Simias.Policy
 				}
 
 				// Add the new rules and save the policy.
-				policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
+				policy.AddRule( new Rule( limit, Rule.Operation.Greater, Rule.Result.Deny ) );
 				pm.CommitLocalMachinePolicy( policy );
 			}
 			else if ( policy != null )
