@@ -721,5 +721,27 @@ namespace Novell.iFolder
 				PropMenuItem.Sensitive = false;
 			}
 		}
+
+		private void on_view_addressbook(object o, EventArgs args)
+		{
+			ContactBrowser cb = new ContactBrowser();
+			cb.ShowAll();
+		}
+
+		private void on_view_assistant(object o, EventArgs args)
+		{
+			InvitationAssistant iAss;
+
+			iAss = new InvitationAssistant();
+			iAss.ShowAll();
+		}
+
+		private void on_view_subscriptions(object o, EventArgs args)
+		{
+			POBoxViewer boxViewer;
+			
+			boxViewer = new POBoxViewer();
+			boxViewer.ShowAll();
+		}
 	}
 }
