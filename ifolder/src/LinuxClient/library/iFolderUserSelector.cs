@@ -337,14 +337,14 @@ namespace Novell.iFolder
 				searchTimeoutID = 0;
 			}
 				
-			// If there's existing text in the search entry, restart
-			// the search with the new search type.
-			if (SearchEntry.Text.Length > 0 && SearchEntry.Text != Util.GS("<Enter text to find a user>"))
-			{
+//			// If there's existing text in the search entry, restart
+//			// the search with the new search type.
+//			if (SearchEntry.Text.Length > 0 && SearchEntry.Text != Util.GS("<Enter text to find a user>"))
+//			{
 				// No need to wait for the user to type anything else.
 				// Perform the search right now.
 				SearchiFolderUsers();
-			}
+//			}
 		}
 
 
@@ -664,10 +664,11 @@ namespace Novell.iFolder
 		public string GetValue(int row)
 		{
 			MemberInfo memberInfo = GetMemberInfo(row);
+			string fullName = memberInfo.FullName;
 			
-			if (memberInfo.FullName != null)
+			if (fullName != null && fullName.Length > 0)
 			{
-				return memberInfo.FullName;
+				return fullName;
 			}
 
 			return memberInfo.Name;
