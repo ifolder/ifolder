@@ -70,5 +70,25 @@ namespace Simias.Sync
 		{
 			return manager.GetCollectionService(id);
 		}
+
+		#region Properties
+		
+		public static string EndPoint
+		{
+			get { return "SyncStoreService.rem"; }
+		}
+
+		public Uri ServiceUrl
+		{
+			get
+			{
+				UriBuilder ub = new UriBuilder(manager.Manager.MasterUri);
+				ub.Path = EndPoint;
+
+				return ub.Uri;
+			}
+		}
+
+		#endregion
 	}
 }

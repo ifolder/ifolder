@@ -83,10 +83,6 @@ namespace Simias.Sync
 		private int active;
 		private object activeLock = new object();
 
-		public SyncManager(): this(new SyncProperties())
-		{
-		}
-
 		public SyncManager(SyncProperties properties)
 		{
 			// properties
@@ -104,11 +100,8 @@ namespace Simias.Sync
 			// no one is working
 			active = 0;
 
-			// TODO: fix sync manager to use configuration
 			// create the location service
-			Configuration configuration = new Configuration(properties.StorePath);
-
-			locationService = new LocationService(configuration);
+			locationService = new LocationService(properties.Config);
 		}
 
 		public void Start()
@@ -182,7 +175,7 @@ namespace Simias.Sync
 		
 		public string StorePath
 		{
-			get { return properties.StorePath; }
+			get { return properties.Config.StorePath; }
 		}
 
 		public int SyncInterval
@@ -213,6 +206,11 @@ namespace Simias.Sync
 		public LocationService Location
 		{
 			get { return locationService; }
+		}
+
+		public Configuration Config
+		{
+			get { return properties.Config; }
 		}
 
 		#endregion

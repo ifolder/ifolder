@@ -36,6 +36,9 @@ using Novell.Security.SecureSink;
 using Novell.Security.SecureSink.SecurityProvider;
 using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
 
+using Simias;
+using Simias.Storage;
+
 namespace Simias.Sync
 {
 	/// <summary>
@@ -54,6 +57,19 @@ namespace Simias.Sync
 			// send the errors back on debug
 			RemotingConfiguration.CustomErrorsEnabled(false);
 #endif
+			// TODO: remove or update
+			string config = "remoting.config";
+
+			try
+			{
+				RemotingConfiguration.Configure(config);
+			}
+			catch
+			{
+				config = "Not Found";
+			}
+
+			MyTrace.WriteLine("Configuration File: {0}", config);
 		}
 
 		public static SyncChannelFactory GetInstance()
@@ -78,12 +94,12 @@ namespace Simias.Sync
 			index = 0;
 		}
 		
-		public SyncChannel GetChannel(SyncStore store, SyncChannelSinks sinks)
+		public SyncChannel GetChannel(Store store, SyncChannelSinks sinks)
 		{
 			return GetChannel(store, sinks, 0);
 		}
 			
-		public SyncChannel GetChannel(SyncStore store, SyncChannelSinks sinks, int port)
+		public SyncChannel GetChannel(Store store, SyncChannelSinks sinks, int port)
 		{
 			SyncChannel result = null;
 
@@ -164,13 +180,13 @@ namespace Simias.Sync
 					// setup security providers
 					if ((sinks & SyncChannelSinks.Security) > 0)
 					{
-						ISecurityServerFactory securityServerFactory = (ISecurityServerFactory) new RsaSecurityServerFactory(store.BaseStore.KeyStore);
+						ISecurityServerFactory securityServerFactory = (ISecurityServerFactory) new RsaSecurityServerFactory(store.KeyStore);
 						IServerChannelSinkProvider serverSecurityProvider = (IServerChannelSinkProvider) new SecureServerSinkProvider(securityServerFactory, SecureServerSinkProvider.MsgSecurityLevel.privacy);
 						serverSecurityProvider.Next = serverProvider;
 						serverProvider = serverSecurityProvider;
 
 						ISecurityClientFactory[] secClientFactories = new ISecurityClientFactory[1];
-						secClientFactories[0] = (ISecurityClientFactory) new RsaSecurityClientFactory(store.BaseStore.KeyStore);
+						secClientFactories[0] = (ISecurityClientFactory) new RsaSecurityClientFactory(store.KeyStore);
 						IClientChannelSinkProvider clientSecureProvider = (IClientChannelSinkProvider) new SecureClientSinkProvider(secClientFactories);
 						
 						// TODO: fix with cleaner solution

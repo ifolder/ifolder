@@ -26,6 +26,7 @@ using System.Threading;
 using System.Net;
 
 using Simias;
+using Simias.Storage;
 using Simias.Sync;
 
 namespace Simias.Sync
@@ -48,7 +49,7 @@ namespace Simias.Sync
 		/// <param name="store">The sync store object.</param>
 		/// <param name="host">The sync store server host.</param>
 		/// <returns>A ping object from the server.</returns>
-		public static SyncStoreInfo PingStore(SyncStore store, string host)
+		public static SyncStoreInfo PingStore(Store store, string host)
 		{
 			return PingStore(store, host, SyncProperties.SuggestedPort);
 		}
@@ -60,15 +61,15 @@ namespace Simias.Sync
 		/// <param name="host">The sync store server host.</param>
 		/// <param name="port">The sync store sever port.</param>
 		/// <returns>A ping object from the server.</returns>
-		public static SyncStoreInfo PingStore(SyncStore syncStore, string host, int port)
+		public static SyncStoreInfo PingStore(Store store, string host, int port)
 		{
 			SyncStoreInfo info = null;
 
 			// create channel
-			SyncChannel channel = SyncChannelFactory.GetInstance().GetChannel(syncStore, SyncProperties.SuggestedChannelSinks);
+			SyncChannel channel = SyncChannelFactory.GetInstance().GetChannel(store, SyncProperties.SuggestedChannelSinks);
 
 			// service URL
-			string serviceUrl = new UriBuilder("http", host, port, SyncStore.GetEndPoint(port)).ToString();
+			string serviceUrl = new UriBuilder("http", host, port, SyncStoreService.EndPoint).ToString();
 
 			try
 			{

@@ -27,7 +27,8 @@ using System.Collections;
 using System.Runtime.Remoting;
 
 using Simias;
-using Simais.Storage;
+using Simias.Event;
+using Simias.Storage;
 
 namespace Simias.Sync
 {
@@ -36,44 +37,30 @@ namespace Simias.Sync
 	/// </summary>
 	public class SyncStoreManager : IDisposable
 	{
-		private SyncManager syncManager;
 		private Store store;
 		private SyncStoreService service;
-		private StoreWatcher watcher;
+		private SyncManager syncManager;
 		private SyncChannel channel;
 		private Hashtable collectionManagers;
+		private EventSubscriber subscriber;
 
 		public SyncStoreManager(SyncManager syncManager)
 		{
-			// TODO: remove or update
-			{
-				string config = "remoting.config";
-
-				try
-				{
-					RemotingConfiguration.Configure(config);
-				}
-				catch
-				{
-					config = "Not Found";
-				}
-
-				MyTrace.WriteLine("Configuration File: {0}", config);
-			}
-			
 			// save manager
 			this.syncManager = syncManager;
 
 			// store
 			store = new Store(syncManager.Config);
 
+			// events
+			subscriber = new EventSubscriber(syncManager.Config);
+			subscriber.Enabled = false;
+			subscriber.NodeTypeFilter = "Collection";
+			subscriber.NodeCreated += new NodeEventHandler(OnCollectionCreated);
+			subscriber.NodeDeleted += new NodeEventHandler(OnCollectionDeleted);
+
 			// collection managers
 			collectionManagers = new Hashtable();
-
-			// watcher
-			watcher = new StoreWatcher(syncManager.StorePath);
-			watcher.Created += new CreatedCollectionEventHandler(OnCreatedCollection);
-			watcher.Deleted += new DeletedCollectionEventHandler(OnDeletedCollection);
 		}
 
 		public void Start()
@@ -82,29 +69,32 @@ namespace Simias.Sync
 			{
 				lock(this)
 				{
-					int port = syncManager.MasterUri.Port;
+					// check marshal end point
+					if (RemotingServices.GetServerTypeForUri(SyncStoreService.EndPoint) != null)
+					{
+						throw new ApplicationException("A store service already exists in this process.");
+					}
 
 					// create channel
 					string name = String.Format("Store Service [{0}]", store.ID);
 
-					channel = syncManager.ChannelFactory.GetChannel(store, syncManager.ChannelSinks, port);
+					channel = syncManager.ChannelFactory.GetChannel(store, syncManager.ChannelSinks,
+						syncManager.MasterUri.Port);
 				
-					MyTrace.WriteLine("Starting Store Service: http://0.0.0.0:{0}/{1}", port, SyncStore.GetEndPoint(port));
-
 					// create service
 					service = new SyncStoreService(this);
 
+					MyTrace.WriteLine("Starting Store Service: {0}", service.ServiceUrl);
+
 					// marshal service
-					RemotingServices.Marshal(service, SyncStore.GetEndPoint(port));
+					RemotingServices.Marshal(service, SyncStoreService.EndPoint);
 				
 					// start collection managers
-					foreach(SyncCollectionManager manager in collectionManagers.Values)
+					subscriber.Enabled = true;
+					foreach(ShallowNode n in store)
 					{
-						manager.Start();
+						AddCollectionManager(n.ID);
 					}
-
-					// start the watcher
-					watcher.Start();
 				}
 			}
 			catch(Exception e)
@@ -123,15 +113,13 @@ namespace Simias.Sync
 				{
 					int port = syncManager.MasterUri.Port;
 
-					MyTrace.WriteLine("Stopping Store Service: http://0.0.0.0:{0}/{1}", port, SyncStore.GetEndPoint(port));
+					MyTrace.WriteLine("Stopping Store Service: {0}", service.ServiceUrl);
 
-					// stop watcher
-					watcher.Stop();
-
-					// release collections
-					foreach(SyncCollectionManager manager in collectionManagers.Values)
+					// stop collection managers
+					subscriber.Enabled = false;
+					foreach(string id in collectionManagers.Keys)
 					{
-						manager.Stop();
+						RemoveCollectionManager(id);
 					}
 
 					// release service
@@ -178,51 +166,66 @@ namespace Simias.Sync
 			return service;
 		}
 
-		private void OnCreatedCollection(string id)
+		private void AddCollectionManager(string id)
 		{
 			SyncCollectionManager manager;
 			
-			MyTrace.WriteLine("Creating Collection Manager: {0}", id);
-
-			try
+			lock(this)
 			{
-				manager = new SyncCollectionManager(this, id);
-				
-				manager.Start();
-
-				lock(collectionManagers.SyncRoot)
+				if (!collectionManagers.Contains(id))
 				{
-					collectionManagers.Add(id, manager);
+					MyTrace.WriteLine("Adding Collection Manager: {0}", id);
+
+					try
+					{
+						manager = new SyncCollectionManager(this, id);
+				
+						manager.Start();
+
+						collectionManagers.Add(id, manager);
+					}
+					catch(Exception e)
+					{
+						MyTrace.WriteLine(e);
+					}
 				}
-			}
-			catch(Exception e)
-			{
-				MyTrace.WriteLine(e);
 			}
 		}
 
-		private void OnDeletedCollection(string id)
+		private void RemoveCollectionManager(string id)
 		{
 			SyncCollectionManager manager;
-
-			MyTrace.WriteLine("Deleting Collection Manager: {0}", id);
-
-			try
-			{
-				manager = (SyncCollectionManager)collectionManagers[id];
 			
-				manager.Stop();
-				manager.Dispose();
-
-				lock(collectionManagers.SyncRoot)
+			lock(this)
+			{
+				if (!collectionManagers.Contains(id))
 				{
-					collectionManagers.Remove(id);
+					MyTrace.WriteLine("Removing Collection Manager: {0}", id);
+
+					try
+					{
+						manager = (SyncCollectionManager)collectionManagers[id];
+			
+						manager.Stop();
+
+						collectionManagers.Remove(id);
+					}
+					catch(Exception e)
+					{
+						MyTrace.WriteLine(e);
+					}
 				}
 			}
-			catch(Exception e)
-			{
-				MyTrace.WriteLine(e);
-			}
+		}
+
+		private void OnCollectionCreated(NodeEventArgs args)
+		{
+			AddCollectionManager(args.ID);
+		}
+
+		private void OnCollectionDeleted(NodeEventArgs args)
+		{
+			RemoveCollectionManager(args.ID);
 		}
 
 		#region IDisposable Members
@@ -235,20 +238,7 @@ namespace Simias.Sync
 			// validate a stop
 			Stop();
 
-			lock(collectionManagers.SyncRoot)
-			{
-				// release collections
-				foreach(SyncCollectionManager manager in collectionManagers.Values)
-				{
-					manager.Dispose();
-				}
-
-				collectionManagers.Clear();
-			}
-
-			watcher.Dispose();
-			watcher = null;
-
+			// clean-up store
 			store.Dispose();
 			store = null;
 		}
@@ -262,7 +252,7 @@ namespace Simias.Sync
 			get { return syncManager; }
 		}
 
-		public SyncStore Store
+		public Store Store
 		{
 			get { return store; }
 		}
