@@ -56,6 +56,16 @@ namespace Simias.POBox
 		}
 
 		/// <summary>
+		/// Get a lifetime service object to control the lifetime policy.
+		/// </summary>
+		/// <returns>An ILease object used to control the lifetime policy.</returns>
+		public override object InitializeLifetimeService()
+		{
+			// infinite lease time
+			return null;
+		}
+
+		/// <summary>
 		/// Post a message
 		/// </summary>
 		/// <param name="message">A message object</param>
@@ -65,7 +75,8 @@ namespace Simias.POBox
 			bool result = false;
 			
 			// open the post office box
-			POBox box = POBox.GetPOBox(store, message.DomainID, message.ToIdentity);
+			// TODO: POBox box = POBox.GetPOBox(store, message.DomainID, message.ToIdentity);
+			POBox box = POBox.GetPOBox(store, message.DomainID);
 
 			// check the post office box
 			if (box == null)
@@ -120,7 +131,8 @@ namespace Simias.POBox
 		public void AckSubscription(string domain, string identity, string message)
 		{
 			// open the post office box
-			POBox box = POBox.GetPOBox(store, domain, identity);
+			// TODO: POBox box = POBox.GetPOBox(store, domain, identity);
+			POBox box = POBox.GetPOBox(store, domain);
 
 			// check the post office box
 			if (box == null)
@@ -143,7 +155,8 @@ namespace Simias.POBox
 			SubscriptionStatus status = null;
 
 			// open the post office box
-			POBox box = POBox.GetPOBox(store, domain, identity);
+			// TODO: POBox box = POBox.GetPOBox(store, domain, identity);
+			POBox box = POBox.GetPOBox(store, domain);
 
 			// check the post office box
 			if (box == null)

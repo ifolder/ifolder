@@ -642,7 +642,6 @@ namespace Simias.POBox
 			}
 		}
 
-
 		/// <summary>
 		/// Accept the subscription on the master side
 		/// </summary>
@@ -659,6 +658,20 @@ namespace Simias.POBox
 
 			// commit
 			c.Commit(member);
+
+			// state update
+			this.SubscriptionState = SubscriptionStates.Responded;
+			this.SubscriptionDisposition = SubscriptionDispositions.Accepted;
+		}
+
+		/// <summary>
+		/// Decline the subscription on the master side
+		/// </summary>
+		public void Decline()
+		{
+			// state update
+			this.SubscriptionState = SubscriptionStates.Responded;
+			this.SubscriptionDisposition = SubscriptionDispositions.Declined;
 		}
 
 		#endregion
