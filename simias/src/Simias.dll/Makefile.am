@@ -30,6 +30,8 @@ install-exec-local: Simias.dll
 	$(INSTALL_PROGRAM) Simias.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(MDNSRESPONDER_DIR)/m*.exe $(MDNSRESPONDER_DIR)/m*.dll $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(LOG4NET_DIR)/log4net.dll $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) $(srcdir)/$(NOVELL_SECURITY_DIR)/Novell.Security.ClientPasswordManager.NetCredential.dll $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) $(srcdir)/$(NOVELL_SECURITY_DIR)/Novell.Security.Utilities.dll $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(STORELIB_PATH)/$(STORELIB) $(DESTDIR)$(webbindir)
 	cp -f $(srcdir)/$(LOG4NET_DIR)/../../../../LICENSE.txt $(DESTDIR)$(datadir)/simias/log4net.LICENSE.txt
 	$(INSTALL_PROGRAM) ../Common/Simias.log4net $(DESTDIR)$(sysconfdir)
@@ -39,6 +41,7 @@ uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f $(STORELIB)
 	cd $(DESTDIR)$(webbindir); rm -f Novell.Security.SecureSink*.dll
 	cd $(DESTDIR)$(webbindir); rm -f log4net.dll
+	cd $(DESTDIR)$(webbindir); rm -f Novell.Security*.dll
 	cd $(DESTDIR)$(webbindir); rm -f mDnsResponder*
 	cd $(DESTDIR)$(webbindir); rm -f Simias.dll $(DEBUG_FILES)
 	cd $(DESTDIR)$(sysconfdir); rm -f Simias.log4net simias-client-bootstrap.config
