@@ -673,7 +673,7 @@ namespace Novell.iFolder
 			// Create a new VBox and place 10 pixels between
 			// each item in the vBox
 			VBox vbox = new VBox();
-			vbox.Spacing = 20;
+			vbox.Spacing = 30;
 			vbox.BorderWidth = 10;
 
 
@@ -704,35 +704,37 @@ namespace Novell.iFolder
 
 			// create a table to hold the values
 			Table srvTable = new Table(3,2,false);
-			srvWidgetBox.PackStart(srvTable, true, true, 0);
-			srvTable.ColumnSpacing = 10;
-			srvTable.RowSpacing = 10;
+			srvWidgetBox.PackStart(srvTable, false, true, 0);
+			srvTable.ColumnSpacing = 20;
+			srvTable.RowSpacing = 5;
+
+			Label usrNameLabel = new Label("User name:");
+			usrNameLabel.Xalign = 0;
+			srvTable.Attach(usrNameLabel, 0,1,0,1,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			Label usrNameValue = new Label(ifSettings.CurrentUserID);
+			usrNameValue.Xalign = 0;
+			srvTable.Attach(usrNameValue, 1,2,0,1);
+
 
 			Label srvNameLabel = new Label("iFolder server:");
 			srvNameLabel.Xalign = 0;
-			srvTable.Attach(srvNameLabel, 0,1,0,1,
+			srvTable.Attach(srvNameLabel, 0,1,1,2,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 			Label srvNameValue = new Label(ifSettings.EnterpriseName);
 			srvNameValue.Xalign = 0;
-			srvTable.Attach(srvNameValue, 1,2,0,1);
+			srvTable.Attach(srvNameValue, 1,2,1,2);
 
 			Label srvDescLabel = new Label("Server description:");
 			srvDescLabel.Xalign = 0;
-			srvTable.Attach(srvDescLabel, 0,1,1,2,
+			srvTable.Attach(srvDescLabel, 0,1,2,3,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			Label srvDescValue = new Label(ifSettings.EnterpriseDescription);
 			srvDescValue.Xalign = 0;
 			srvDescValue.LineWrap = true;
-			srvTable.Attach(srvDescValue, 1,2,1,2);
+			srvTable.Attach(srvDescValue, 1,2,2,3);
 
-			Label usrNameLabel = new Label("User name:");
-			usrNameLabel.Xalign = 0;
-			srvTable.Attach(usrNameLabel, 0,1,2,3,
-					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			Label usrNameValue = new Label(ifSettings.CurrentUserID);
-			usrNameValue.Xalign = 0;
-			srvTable.Attach(usrNameValue, 1,2,2,3);
 
 
 
@@ -761,8 +763,8 @@ namespace Novell.iFolder
 			// create a table to hold the values
 			Table diskTable = new Table(3,3,false);
 			diskSpacerBox.PackStart(diskTable, true, true, 0);
-			diskTable.ColumnSpacing = 10;
-			diskTable.RowSpacing = 10;
+			diskTable.ColumnSpacing = 20;
+			diskTable.RowSpacing = 5;
 
 			Label totalLabel = new Label("Free space on server:");
 			totalLabel.Xalign = 0;
@@ -801,11 +803,17 @@ namespace Novell.iFolder
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 
-			VBox diskGraphBox = new VBox();
-			diskSpacerBox.PackStart(diskGraphBox, false, true, 0);
+			Frame graphFrame = new Frame();
+			graphFrame.Shadow = Gtk.ShadowType.EtchedOut;
+			graphFrame.ShadowType = Gtk.ShadowType.EtchedOut;
+			diskSpacerBox.PackStart(graphFrame, false, true, 0);
+			HBox graphBox = new HBox();
+			graphBox.Spacing = 5;
+			graphBox.BorderWidth = 5;
+			graphFrame.Add(graphBox);
 
 			ProgressBar diskGraph = new ProgressBar();
-			diskGraphBox.PackStart(diskGraph, false, true, 0);
+			graphBox.PackStart(diskGraph, false, true, 0);
 
 			diskGraph.Orientation = Gtk.ProgressBarOrientation.BottomToTop;
 			diskGraph.Text = "%3";
@@ -813,7 +821,7 @@ namespace Novell.iFolder
 			diskGraph.Fraction = .30;
 
 			VBox graphLabelBox = new VBox();
-			diskSpacerBox.PackStart(graphLabelBox, false, true, 0);
+			graphBox.PackStart(graphLabelBox, false, true, 0);
 
 			Label fullLabel = new Label("full");
 			fullLabel.Xalign = 0;
