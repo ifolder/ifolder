@@ -164,11 +164,8 @@ namespace Simias.Sync
 
 		internal SyncCollectionService GetService()
 		{
-			// refresh collection
-			collection.Refresh();
-			
 			// service
-			return syncManager.LogicFactory.GetCollectionService(collection);
+			return syncManager.LogicFactory.GetCollectionService(new SyncCollection(store.GetCollectionByID(collection.ID)));
 		}
 
 		private void StartSlave()

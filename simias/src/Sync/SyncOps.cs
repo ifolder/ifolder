@@ -239,11 +239,6 @@ internal class SyncOps
 
 			string path = OutgoingNode.GetOutNode(collection, ref node);
 			bool tombstone = collection.IsType(node, NodeTypes.TombstoneType);
-			if (onServer && tombstone)
-			{
-				collection.Commit(collection.Delete(node));
-				continue;
-			}
 			NodeStamp stamp = new NodeStamp();
 			stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
 			stamp.masterIncarn = node.MasterIncarnation;
@@ -312,13 +307,6 @@ internal class SyncOps
 		// Do a deep delete.
 		Node[] deleted = collection.Delete(node, PropertyTags.Parent);
 		collection.Commit(deleted);
-
-		/* TODO: right now we never leave tombstones on the server. Fix this
-		 * such that we only leave tombstones when this collection has an
-		 * upstream master.
-		 */
-		if (onServer)
-			collection.Commit(collection.Delete(deleted));
 	}
 
 	// make the path use '/' seperators since these are accepted on Create on all current filesystems
@@ -496,10 +484,6 @@ internal class SyncOps
 							{
 								string path = OutgoingNode.GetOutNode(collection, ref node);
 								bool tombstone = collection.IsType(node, NodeTypes.TombstoneType);
-								if (onServer && tombstone)
-								{
-									collection.Commit(collection.Delete(node));
-								}
 								NodeStamp stamp = new NodeStamp();
 								stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
 								stamp.masterIncarn = node.MasterIncarnation;
