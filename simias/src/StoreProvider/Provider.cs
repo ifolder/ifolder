@@ -123,6 +123,11 @@ namespace Simias.Storage.Provider
 		private const string CFG_TypeName = "Type";
 		private const string CFG_Version = "Version";
 		private const string StoreName = ".simias";
+		private string path = null;
+		private string version = null;
+		private string assembly = null;
+		private string typeName = null;
+		private Hashtable settingTable = new Hashtable();
 
 		Simias.Configuration conf;
 
@@ -141,12 +146,23 @@ namespace Simias.Storage.Provider
 		{
 			get
 			{
-				string path = conf.StorePath;
-				return (conf.Get(CFG_Section, CFG_Path, path));
+				lock (this)
+				{
+					if (path == null)
+					{
+						path = conf.StorePath;
+						path = conf.Get(CFG_Section, CFG_Path, path);
+					}
+				}
+				return path;
 			}
 			set
 			{
-				conf.Set(CFG_Section, CFG_Path, value);
+				lock (this)
+				{
+					path = value;
+					conf.Set(CFG_Section, CFG_Path, value);
+				}
 			}
 		}
 
@@ -157,12 +173,23 @@ namespace Simias.Storage.Provider
 		{
 			get
 			{
-				string version = "0";
-				return (conf.Get(CFG_Section, CFG_Version, version));
+				lock(this)
+				{
+					if (version == null)
+					{
+						version = "0";
+						version = conf.Get(CFG_Section, CFG_Version, version);
+					}
+				}
+				return version;
 			}
 			set
 			{
-				conf.Set(CFG_Section, CFG_Version, value);
+				lock (this)
+				{
+					version = value;
+					conf.Set(CFG_Section, CFG_Version, value);
+				}
 			}
 		}
 
@@ -173,12 +200,23 @@ namespace Simias.Storage.Provider
 		{
 			get
 			{
-				string assembly = "Simias.dll";
-				return (conf.Get(CFG_Section, CFG_Assembly, assembly));
+				lock(this)
+				{
+					if (assembly == null)
+					{
+						assembly = "Simias.dll";
+						assembly = conf.Get(CFG_Section, CFG_Assembly, assembly);
+					}
+				}
+				return assembly;
 			}
 			set
 			{
-				conf.Set(CFG_Section, CFG_Assembly, value);
+				lock (this)
+				{
+					assembly = value;
+					conf.Set(CFG_Section, CFG_Assembly, value);
+				}
 			}
 		}
 
@@ -189,12 +227,23 @@ namespace Simias.Storage.Provider
 		{
 			get
 			{
-				string providerType = "Simias.Storage.Provider.Sqlite.SqliteProvider";
-				return (conf.Get(CFG_Section, CFG_TypeName, providerType));
+				lock(this)
+				{
+					if (typeName == null)
+					{
+						typeName = "Simias.Storage.Provider.Sqlite.SqliteProvider";
+						typeName = conf.Get(CFG_Section, CFG_TypeName, typeName);
+					}
+				}
+				return typeName;
 			}
 			set
 			{
-				conf.Set(CFG_Section, CFG_TypeName, value);
+				lock (this)
+				{
+					typeName = value;
+					conf.Set(CFG_Section, CFG_TypeName, value);
+				}
 			}
 		}
 
@@ -206,7 +255,16 @@ namespace Simias.Storage.Provider
 		/// <returns>The stored setting.</returns>
 		public string Get(string key, string defaultValue)
 		{
-			return (conf.Get(CFG_Section, key, defaultValue));
+			string setting;
+			lock (this)
+			{
+				if (!settingTable.Contains(key))
+				{
+					setting = conf.Get(CFG_Section, key, defaultValue);
+					settingTable[key] = setting;
+				}
+			}
+			return (string)settingTable[key];
 		}
 
 		/// <summary>
@@ -216,7 +274,11 @@ namespace Simias.Storage.Provider
 		/// <param name="keyValue"></param>
 		public void Set(string key, string keyValue)
 		{
-			conf.Set(CFG_Section, key, keyValue);
+			lock (this)
+			{
+				settingTable[key] = keyValue;
+				conf.Set(CFG_Section, key, keyValue);
+			}
 		}
 	}
 
