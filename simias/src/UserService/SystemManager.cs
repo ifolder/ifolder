@@ -61,7 +61,7 @@ namespace Simias
 		{
 			configuration = conf;
 			servicesDoc.LoadXml(conf.Get(CFG_Section, CFG_Services, CFG_ServiceDefaults));
-			workersDoc.LoadXml(conf.Get(CFG_Section, CFG_Workers, CFG_WorkerDefaults));
+			//workersDoc.LoadXml(conf.Get(CFG_Section, CFG_Workers, CFG_WorkerDefaults));
 		}
 
 		public void StartServices()
