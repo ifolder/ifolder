@@ -125,6 +125,7 @@
           <s:element minOccurs="0" maxOccurs="1" name="CurrentUserID" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="CurrentUserRights" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="CollectionID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LastSyncTime" type="s:string" />
         </s:sequence>
       </s:complexType>
       <s:element name="GetiFolder">
@@ -1435,7 +1436,7 @@
   <service name="iFolder_x0020_Web_x0020_Service">
     <documentation>Web Service providing access to iFolder</documentation>
     <port name="iFolder_x0020_Web_x0020_ServiceSoap" binding="s0:iFolder_x0020_Web_x0020_ServiceSoap">
-      <soap:address location="http://localhost:2118/simias10/bgetter/ifolder.asmx" />
+      <soap:address location="http://localhost:1300/simias10/bgetter/ifolder.asmx" />
     </port>
   </service>
 </definitions>

@@ -1842,9 +1842,11 @@ namespace Novell.iFolderCom
 
 			updateDiskQuotaDisplay();
 
-			// TODO: Read and display last sync time.
+			// Display last sync time.
+			lastSync.Text = currentiFolder.LastSyncTime;
 
 			// Get the sync interval.
+			// TODO: if the policy doesn't exist a 0 (zero) will be returned.
 			syncInterval.Value = (decimal)currentiFolder.SyncInterval;
 			autoSync.Checked = currentiFolder.SyncInterval != Timeout.Infinite;
 

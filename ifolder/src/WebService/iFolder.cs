@@ -62,6 +62,7 @@ namespace Novell.iFolder.Web
 		public string CurrentUserID;
 		public string CurrentUserRights;
 		public string CollectionID;
+		public string LastSyncTime;
 
 		public iFolderWeb()
 		{
@@ -111,6 +112,8 @@ namespace Novell.iFolder.Web
 
 			Simias.Policy.SyncInterval si = Simias.Policy.SyncInterval.Get(tmpMember, collection);
 			this.EffectiveSyncInterval = si.Interval;
+			DateTime lastSyncTime = Simias.Sync.Client.SyncClient.GetLastSyncTime(collection.ID);
+			this.LastSyncTime = lastSyncTime.Equals(DateTime.MinValue) ? "" : lastSyncTime.ToString();
 		}
 
 
