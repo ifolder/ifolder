@@ -28,6 +28,8 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 
+using Simias.Client;
+
 namespace Simias.Storage
 {
 	/// <summary>

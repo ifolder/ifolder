@@ -24,6 +24,8 @@
 using System;
 using System.Xml;
 
+using Simias.Client;
+
 namespace Simias.Storage
 {
 	/// <summary>

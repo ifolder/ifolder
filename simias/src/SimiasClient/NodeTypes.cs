@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Simias.Storage
+namespace Simias.Client
 {
 	/// <summary>
 	/// Contains class names derived from Node that are used as Node object types.
@@ -234,19 +234,19 @@ namespace Simias.Storage
 		/// </summary>
 		static NodeTypes()
 		{
-			classNames = new string[] {	  typeof( BaseFileNode ).Name,
-										  typeof( Collection ).Name,
-										  typeof( DirNode ).Name,
-										  typeof( Domain ).Name,
-										  typeof( FileNode ).Name,
-										  typeof( Identity ).Name,
-										  typeof( LinkNode ).Name,
-										  typeof( LocalDatabase ).Name,
-										  typeof( Member ).Name,
-										  typeof( Node ).Name,
-										  typeof( Policy.Policy ).Name,
-										  typeof( Roster ).Name,
-										  typeof( StoreFileNode ).Name,
+			classNames = new string[] {	  "BaseFileNode",
+										  "Collection",
+										  "DirNode",
+										  "Domain",
+										  "FileNode",
+										  "Identity",
+										  "LinkNode",
+										  "LocalDatabase",
+										  "Member",
+										  "Node",
+										  "Policy",
+										  "Roster",
+										  "StoreFileNode",
 										  "Tombstone" };
 		}
 		#endregion

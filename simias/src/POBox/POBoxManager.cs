@@ -29,6 +29,7 @@ using System.Runtime.Remoting.Channels;
 using System.Diagnostics;
 
 using Simias;
+using Simias.Client;
 using Simias.Client.Event;
 using Simias.Storage;
 

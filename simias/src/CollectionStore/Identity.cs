@@ -27,6 +27,7 @@ using System.Security.Cryptography;
 using System.Xml;
 using System.IO;
 
+using Simias.Client;
 using Persist = Simias.Storage.Provider;
 
 namespace Simias.Storage

@@ -34,6 +34,7 @@ using Simias;
 using Simias.Storage;
 using Simias.Service;
 using Simias.Event;
+using Simias.Client;
 using Simias.Client.Event;
 
 

@@ -28,6 +28,7 @@ using System.Runtime.Remoting;
 using System.Diagnostics;
 
 using Simias;
+using Simias.Client;
 using Simias.Client.Event;
 using Simias.Storage;
 using Simias.Sync;

@@ -28,6 +28,7 @@ using System.Threading;
 using System.Xml;
 
 using Simias;
+using Simias.Client;
 using Simias.Event;
 using Simias.Policy;
 using Persist = Simias.Storage.Provider;

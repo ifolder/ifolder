@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 
+using Simias.Client;
 using Simias.Storage;
 using Simias.POBox;
 
