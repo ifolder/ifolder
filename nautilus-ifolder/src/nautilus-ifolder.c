@@ -1380,11 +1380,9 @@ nautilus_module_shutdown (void)
 	}
 
 	/* Cleanup the Simias Event Client */	
-	if (sec_get_state (ec) == CLIENT_STATE_RUNNING) {
-		if (sec_deregister (ec) != 0) {
-			DEBUG_IFOLDER (("sec_deregister failed\n"));
-			return;
-		}
+	if (sec_deregister (ec) != 0) {
+		DEBUG_IFOLDER (("sec_deregister failed\n"));
+		return;
 	}
 	
 	/**
