@@ -1537,7 +1537,7 @@ namespace Novell.iFolder
 				fs.Hide();
 				if(rc == -5)
 				{
-					if(ShowBadiFolderPath(fs.Filename))
+					if(ShowBadiFolderPath(fs.Filename, false))
 						continue;
 
 					// break loop
@@ -1620,7 +1620,7 @@ namespace Novell.iFolder
 					// if the user selected OK, check the path they
 					// selectected, if we didn't show there was a bad
 					// path, set rc to 0 to accept the ifolder
-					if(!ShowBadiFolderPath(newPath))
+					if(!ShowBadiFolderPath(newPath, true))
 						rc = 0;
 				}
 				while(rc == -5);
@@ -1652,11 +1652,21 @@ namespace Novell.iFolder
 		}
 
 
-		private bool ShowBadiFolderPath(string path)
+		private bool ShowBadiFolderPath(string path, bool isParentFolder)
 		{
 			try
 			{
-				if(iFolderWS.CanBeiFolder(path) == false)
+				bool isGood = true;
+				if(isParentFolder)
+				{
+					isGood = !iFolderWS.IsPathIniFolder(path);
+				}
+				else
+				{
+					isGood = iFolderWS.CanBeiFolder(path);
+				}
+
+				if(!isGood)
 				{
 					iFolderMsgDialog dg = new iFolderMsgDialog(
 						this,
