@@ -46,7 +46,6 @@ namespace Simias.Gaim
 		private string providerName = "Gaim Domain Provider";
 		private string description = "Simias Domain Provider for the Gaim Workgroup Domain";
 		private Hashtable searchContexts = new Hashtable();
-		private Hashtable nonMembers = new Hashtable();
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
@@ -184,12 +183,6 @@ namespace Simias.Gaim
 							// Use the buddy alias for the member full name
 							member.FN = string.Format("{0} ({1})", buddy.Alias, buddy.Name);
 						}
-						
-						// Store the buddy.MungedID and member.UserID off so PreCommit works.
-						// We use the buddy.MungedID because it doesn't change (this method is
-						// called multiple times and this will prevent multiple instances being
-						// added into the Hashtable).
-						nonMembers[buddy.MungedID] = member.UserID;
 					}
 
 					if (members.Count < count)
@@ -401,37 +394,7 @@ namespace Simias.Gaim
 		{
 			// Ignore domainID...since it's always the same
 
-			string mungedID = null;
-			lock (nonMembers.SyncRoot)
-			{
-				// Member.UserID is the Guid that we returned in the search methods
-				if (!nonMembers.ContainsValue(member.UserID))
-				{
-					log.Debug("PreCommit() called on a member that we don't know about: {0}", member.UserID);
-					return;	// Nothing we can do if we don't know about it
-				}
-				
-				// nonMembers are keyed by GaimBuddy.MungedID so we have to do searching to
-				// find the member.UserID in the values.  This is done searching is likely
-				// to occur much more frequently than PreCommits.
-				string userID = member.UserID;
-				foreach (string aMungedID in nonMembers.Keys)
-				{
-					if (userID.CompareTo(nonMembers[aMungedID]) == 0)
-					{
-						mungedID = aMungedID;
-						break;
-					}
-				}
-			}
-			
-			if (mungedID == null)
-			{
-				log.Debug("PreCommit() couldn't find the GaimBuddy.MungedID in the nonMembers Hashtable");
-				return;
-			}
-
-			GaimBuddy buddy = GaimDomain.GetBuddy(mungedID);
+			GaimBuddy buddy = GaimDomain.GetBuddyByUserID(member.UserID);
 			if (buddy == null)
 			{
 				log.Debug("PreCommit() called on a member that no longer exists in blist.xml");
@@ -495,12 +458,6 @@ namespace Simias.Gaim
 				p = new Property("Gaim:SimiasURL", buddy.SimiasURL);
 				p.LocalProperty = true;
 				member.Properties.AddProperty(p);
-			}
-
-			// The member is going to be created so they're no longer a "nonMember".
-			lock (nonMembers.SyncRoot)
-			{
-				nonMembers.Remove(mungedID);
 			}
 		}
 

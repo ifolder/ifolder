@@ -144,6 +144,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "GaimDomainService.asmx.resx"
+                    DependentUpon = "GaimDomainService.asmx.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "GaimObjects.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

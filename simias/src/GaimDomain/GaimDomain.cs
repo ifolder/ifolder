@@ -596,22 +596,11 @@ namespace Simias.Gaim
 		}
 
 		/// <summary>
-		/// Read the specified GaimBuddy from blist.xml
+		/// Read the specified GaimBuddy from the blist.xml file
 		/// </summary>
-		public static GaimBuddy GetBuddy(string mungedID)
+		public static GaimBuddy GetBuddyByUserID(string simiasUserID)
 		{
 			GaimBuddy buddy = null;
-			string accountName;
-			string accountProtocolID;
-			string buddyName;
-			
-			if (!GaimBuddy.ParseMungedID(mungedID, out accountName,
-										out accountProtocolID,
-										out buddyName))
-			{
-				log.Debug("GaimBuddy.ParseMungedID(\"{0}\") returned null", mungedID);
-				return null;
-			}
 
 			XmlDocument blistDoc = new XmlDocument();
 			try
@@ -628,8 +617,8 @@ namespace Simias.Gaim
 			XmlElement gaimElement = blistDoc.DocumentElement;
 			
 			string xPathQuery =
-				string.Format("//buddy[@account='{0}' and @proto='{1}' and name='{2}']",
-				accountName, accountProtocolID, buddyName);
+				string.Format("//buddy[setting[@name='simias-user-id' and .='{0}']]",
+							  simiasUserID);
 			XmlNode buddyNode = gaimElement.SelectSingleNode(xPathQuery);
 			if (buddyNode != null)
 			{
@@ -646,7 +635,7 @@ namespace Simias.Gaim
 			
 			return buddy;
 		}
-		
+
 		/// <summary>
 		/// Obtains the string representation of this instance.
 		/// </summary>
