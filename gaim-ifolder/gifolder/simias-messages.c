@@ -268,6 +268,7 @@ handle_ping_request(GaimAccount *account, const char *sender,
 	GaimBuddy *buddy;
 	char *simias_url;
 	int send_result;
+	const char *ping_reply_type;
 	
 g_print("handle_ping_request() %s -> %s entered\n",
 		sender, gaim_account_get_username(account));
@@ -289,6 +290,20 @@ g_print("handle_ping_request() %s -> %s entered\n",
 	if (!simias_url) {
 		g_print("handle_ping_request() couldn't parse the simias-url\n");
 		return FALSE;
+	}
+	
+	ping_reply_type = gaim_prefs_get_string(SIMIAS_PREF_PING_REPLY_TYPE);
+	if (ping_reply_type) {
+		/**
+		 * If the ping reply type preference has been set to only reply to
+		 * users who are in the buddy list, return out of this function if the
+		 * sender of the ping is not in the buddy list.
+		 */
+		if (strcmp(ping_reply_type, SIMIAS_PREF_PING_REPLY_TYPE_BLIST) == 0) {
+			/* Check to see if the sender is in the buddy list. */
+			
+			/* FIXME: Not sure that we're even going to get called if the sender isn't in our buddy list.  Need to test this. */
+		}
 	}
 
 	/* Don't do anything with the URL.  If we got to this point, it's a valid message */
