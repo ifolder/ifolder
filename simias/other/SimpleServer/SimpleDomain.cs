@@ -501,10 +501,10 @@ namespace Simias.SimpleServer
 								// This member does not have an associated contact
 
 								// FIXME::Dictionary
-								if (firstName != "" ||
-									lastName != "" ||
-									emailAddress != "" ||
-									im != "")
+								if (firstName != null ||
+									lastName != null ||
+									emailAddress != null ||
+									im != null)
 								{
 									ssContact = new Contact();
 									ssContact.UserID = ssMember.UserID;
