@@ -473,37 +473,24 @@ namespace Novell.iFolder.FormsBookLib
 		private void ContactPicker_SizeChanged(object sender, System.EventArgs e)
 		{
 			// Relocate the divider line when the size is changed.
-			Point point = groupBox1.Location;
-			point.Y = ok.Location.Y - 12;
-			groupBox1.Location = point;
+			groupBox1.Top = ok.Top - 12;
 
 
 			// Resize listviews
-			int x = this.Size.Width - fixedWidth;
-			Size booksContactsSize = booksContacts.Size;
-			Size pickedSize = addedContacts.Size;
+			int x = this.Width - fixedWidth;
 
 			// Calculate the new widths based on the initial ratios.
-			booksContactsSize.Width = (int)(x * booksContactsRatio);
-			pickedSize.Width = (int)(x * (1 - booksContactsRatio));
-
-			booksContacts.Size = booksContactsSize;
-			addedContacts.Size = pickedSize;
+			booksContacts.Width = (int)(x * booksContactsRatio);
+			addedContacts.Width = (int)(x * (1 - booksContactsRatio));
 
 			// Relocate the add button.
-			point = add.Location;
-			point.X = booksContacts.Location.X + booksContacts.Size.Width + 16;
-			add.Location = point;
+			add.Left = booksContacts.Left + booksContacts.Width + 16;
 
 			// Relocate the remove button.
-			point = remove.Location;
-			point.X = add.Location.X;
-			remove.Location = point;
+			remove.Left = add.Left;
 
 			// Relocate the addedContacts listview.
-			point = addedContacts.Location;
-			point.X = this.Size.Width - addedContacts.Size.Width - 16;
-			addedContacts.Location = point;
+			addedContacts.Left = this.Width - addedContacts.Width - 16;
 		}
 		#endregion
 	}
