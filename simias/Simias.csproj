@@ -294,21 +294,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\DomainProvider\DomainProvider.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\DomainProvider\EnterpriseProvider.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\DomainProvider\IDomainProvider.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\DomainWatcher\DomainWatcher.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
