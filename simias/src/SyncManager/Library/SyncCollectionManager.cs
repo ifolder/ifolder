@@ -30,6 +30,7 @@ using System.Diagnostics;
 using Simias;
 using Simias.Storage;
 using Simias.Location;
+using Simias.Domain;
 
 namespace Simias.Sync
 {
@@ -214,6 +215,22 @@ namespace Simias.Sync
 				// once we have more confidence in remoting the connection should be created less often
 				try
 				{
+					// check master
+					if (collection.CreateMaster)
+					{
+						DomainAgent dAgent = new DomainAgent(syncManager.Config);
+
+						IDomainService dService = dAgent.Connect();
+
+						Uri master = dService.CreateMaster(collection.ID, collection.Name, collection.Owner);
+
+						if (master == null)
+							throw new ApplicationException("Unable to create remote master collection.");
+
+						collection.MasterUrl = master;
+						collection.CreateMaster = false;
+					}
+
 					// get the service URL
 					string serviceUrl = collection.ServiceUrl;
 					log.Debug("Sync Store Service URL: {0}", serviceUrl);
@@ -250,7 +267,7 @@ namespace Simias.Sync
 						Uri locationUri = syncManager.Location.Locate(collection.ID);
 
 						// update the URL
-						if (locationUri != null) collection.MasterUri = locationUri;
+						if (locationUri != null) collection.MasterUrl = locationUri;
 					}
 					catch(Exception e2)
 					{

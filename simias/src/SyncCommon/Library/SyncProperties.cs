@@ -32,7 +32,6 @@ namespace Simias.Sync
 	/// <summary>
 	/// Sync Properties
 	/// </summary>
-	[Serializable]
 	public class SyncProperties
 	{
 		/// <summary>

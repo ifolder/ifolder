@@ -7,5 +7,6 @@ namespace Simias.Domain
 	/// </summary>
 	public interface IDomainService
 	{
+		Uri CreateMaster(string id, string name, string owner);
 	}
 }

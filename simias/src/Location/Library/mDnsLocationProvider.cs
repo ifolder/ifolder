@@ -157,7 +157,7 @@ namespace Simias.Location
 			
 				// service
 				string service = String.Format("{0}.{1}", sc.ID, SUFFIX);
-				int port = sc.MasterUri.Port;
+				int port = sc.MasterUrl.Port;
 
 				// ptr
 				register.RegisterPointer(SUFFIX, service);

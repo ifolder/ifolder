@@ -71,7 +71,7 @@ namespace Simias.Location
 			{
 				SyncCollection sc = new SyncCollection(c);
 
-				result = sc.MasterUri;
+				result = sc.MasterUrl;
 			}
 
 			store.Dispose();

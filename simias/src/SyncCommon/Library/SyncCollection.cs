@@ -29,6 +29,7 @@ using System.Net;
 
 using Simias;
 using Simias.Storage;
+using Simias.Domain;
 
 namespace Simias.Sync
 {
@@ -46,7 +47,17 @@ namespace Simias.Sync
 		/// <summary>
 		/// A collection property name for the master URL of the collection.
 		/// </summary>
-		public static readonly string MasterUriPropertyName = "Master Uri";
+		public static readonly string MasterUrlPropertyName = "Master Url";
+		
+		/// <summary>
+		/// A collection property name for the URL of the domain service.
+		/// </summary>
+		public static readonly string DomainUrlPropertyName = "Domain Service URL";
+		
+		/// <summary>
+		/// Does the master collection need to be created?
+		/// </summary>
+		public static readonly string CreateMasterPropertyName = "Create Master Collection";
 		
 		/// <summary>
 		/// A collection property name for the sync interval to be used with the collection.
@@ -89,7 +100,7 @@ namespace Simias.Sync
 				store.GetLocalAddressBook().Commit(identity);
 			}
 
-			this.MasterUri = invitation.MasterUri;
+			this.MasterUrl = invitation.MasterUri;
 			this.Role = SyncCollectionRoles.Slave;
 			
 			// commit
@@ -126,7 +137,7 @@ namespace Simias.Sync
 			invitation.CollectionName = Name;
 			invitation.Owner = Owner;
 			invitation.Domain = Domain;
-			invitation.MasterUri = MasterUri;
+			invitation.MasterUri = MasterUrl;
 			invitation.Identity = identity;
 			invitation.CollectionRights = GetUserAccess(identity).ToString();
 			invitation.PublicKey = StoreReference.ServerPublicKey.ToXmlString(false);
@@ -221,8 +232,19 @@ namespace Simias.Sync
 				
 				if (role == SyncCollectionRoles.None)
 				{
-					// note: slave collections are always marked by the invitation
-					role = Synchronizable ? SyncCollectionRoles.Master : SyncCollectionRoles.Local;
+					DomainAgent agent = new DomainAgent(this.StoreReference.Config);
+
+					if (Synchronizable && (agent.ServiceUrl != null))
+					{
+						role = SyncCollectionRoles.Slave;
+						DomainUrl = agent.ServiceUrl;
+						CreateMaster = true;
+					}
+					else
+					{
+						// note: slave collections are always marked by the invitation
+						role = Synchronizable ? SyncCollectionRoles.Master : SyncCollectionRoles.Local;
+					}
 
 					// save
 					Role = role;
@@ -237,11 +259,11 @@ namespace Simias.Sync
 		/// <summary>
 		/// The syncing URL of the master collection.
 		/// </summary>
-		public Uri MasterUri
+		public Uri MasterUrl
 		{
 			get
 			{
-				Uri result = (Uri)GetProperty(MasterUriPropertyName);
+				Uri result = (Uri)GetProperty(MasterUrlPropertyName);
 
 				if (result == null)
 				{
@@ -253,7 +275,25 @@ namespace Simias.Sync
 				return result;
 			}
 			
-			set { SetProperty(MasterUriPropertyName, value, true); }
+			set { SetProperty(MasterUrlPropertyName, value, true); }
+		}
+
+		/// <summary>
+		/// The URL of the domain service.
+		/// </summary>
+		public Uri DomainUrl
+		{
+			get { return (Uri)GetProperty(DomainUrlPropertyName); }
+			set { SetProperty(DomainUrlPropertyName, value, true); }
+		}
+
+		/// <summary>
+		/// Does the master collection need to be created?
+		/// </summary>
+		public bool CreateMaster
+		{
+			get { return (bool)GetProperty(CreateMasterPropertyName, false); }
+			set { SetProperty(CreateMasterPropertyName, value, true); }
 		}
 
 		/// <summary>
@@ -284,7 +324,7 @@ namespace Simias.Sync
 		{
 			get
 			{
-				UriBuilder uri = new UriBuilder(MasterUri);
+				UriBuilder uri = new UriBuilder(MasterUrl);
 				
 				uri.Path = String.Format("SyncStoreService{0}.rem", uri.Port);
 

@@ -131,10 +131,10 @@ public class FileInviter
 			sc = new SyncCollection(c);
 			//UriBuilder builder = new UriBuilder("http", host, port);
 			UriBuilder builder = new UriBuilder("tcp", host, port);
-			sc.MasterUri = builder.Uri;
+			sc.MasterUrl = builder.Uri;
 			sc.Commit();
 			Log.Spew("Created new master collection for {0}, id {1}, {2}:{3}",
-					docRoot.LocalPath, c.ID, sc.MasterUri.Host, sc.MasterUri.Port);
+					docRoot.LocalPath, c.ID, sc.MasterUrl.Host, sc.MasterUrl.Port);
 		}
 		Invitation invitation = sc.CreateInvitation(user == null? store.CurrentUserGuid: user);
 		invitation.Domain = store.LocalDomain;
@@ -292,7 +292,7 @@ public class CmdClient
 		}
 		else
 		{
-			CmdClient client = new CmdClient(csc.MasterUri.Host, csc.MasterUri.Port, csc.ID);
+			CmdClient client = new CmdClient(csc.MasterUrl.Host, csc.MasterUrl.Port, csc.ID);
 			new SynkerWorkerA(client.session, csc).DoSyncWork();
 			client.Stop();
 		}
