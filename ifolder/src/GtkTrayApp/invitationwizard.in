@@ -23,6 +23,8 @@
 #######################################################################
 
 # Startup InvitationWizard
-cd @prefix@/bin
+export MONO_PATH=@prefix@/lib
+export LD_LIBRARY_PATH=@prefix@/lib
+cd @prefix@/lib
 mono InvitationWizard.exe $1
 

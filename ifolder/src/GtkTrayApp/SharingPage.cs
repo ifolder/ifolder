@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Drawing;
 using Novell.AddressBook;
+using Novell.AddressBook.UI.gtk;
 
 using Gtk;
 using Gdk;
