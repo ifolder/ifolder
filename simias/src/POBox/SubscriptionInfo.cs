@@ -127,37 +127,46 @@ namespace Simias.POBox
 		/// <summary>
 		/// The subscription (node) id (optional)
 		/// </summary>
-		public string ID
+		public string SubscriptionID
 		{
-			get { return fields["ID"]; }
-			set { fields["ID"] = value; }
+			get { return fields["SubscriptionID"]; }
+			set { fields["SubscriptionID"] = value; }
 		}
 
 		/// <summary>
 		/// The authentication domain id
 		/// </summary>
-		public string Domain
+		public string DomainID
 		{
-			get { return fields["Domain"]; }
-			set { fields["Domain"] = value; }
+			get { return fields[Subscription.SubscriptionCollectionDomainIdProperty]; }
+			set { fields[Subscription.SubscriptionCollectionDomainIdProperty] = value; }
+		}
+
+		/// <summary>
+		/// The authentication domain name.
+		/// </summary>
+		public string DomainName
+		{
+			get { return fields[Subscription.SubscriptionCollectionDomainNameProperty]; }
+			set { fields[Subscription.SubscriptionCollectionDomainNameProperty] = value; }
 		}
 
 		/// <summary>
 		/// The collection id
 		/// </summary>
-		public string Collection
+		public string SubscriptionCollectionID
 		{
-			get { return fields["Collection"]; }
-			set { fields["Collection"] = value; }
+			get { return fields[Subscription.SubscriptionCollectionIdProperty]; }
+			set { fields[Subscription.SubscriptionCollectionIdProperty] = value; }
 		}
 
 		/// <summary>
 		/// The post office service URL
 		/// </summary>
-		public Uri Url
+		public Uri POServiceUrl
 		{
-			get { return new Uri(fields["Url"]); }
-			set { fields["Url"] = value.ToString(); }
+			get { return new Uri(fields[Subscription.POServiceURLProperty]); }
+			set { fields[Subscription.POServiceURLProperty] = value.ToString(); }
 		}
 
 		#endregion Properties

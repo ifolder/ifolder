@@ -292,6 +292,17 @@ namespace Simias.POBox
 
 		#region Constructors
 		/// <summary>
+		/// Constructor for creating a new Message object with a specific ID.
+		/// </summary>
+		/// <param name="messageName">The friendly name of the Message object.</param>
+		/// <param name="messageId">The ID of the Message object.</param>
+		public Message(string messageName, string messageId) :
+			base (messageName, messageId)
+		{
+			Properties.AddProperty(PropertyTags.Types, typeof(Message).Name);
+		}
+
+		/// <summary>
 		/// Constructor for creating a new Message object.
 		/// </summary>
 		/// <param name="collection">Collection that the ShallowNode belongs to.</param>
@@ -304,24 +315,15 @@ namespace Simias.POBox
 		/// <summary>
 		/// Constructor for creating a new Message object.
 		/// </summary>
-		/// <param name="messageName">The friendly name that is used by applications to describe the object.</param>
-		/// <param name="messageType">Specifies the type of the message.</param>
-		public Message(string messageName, string messageType) :
-			base (messageName)
-		{
-			State = MessageState.New;
-			MessageType = messageType;
-		}
-
-		/// <summary>
-		/// Constructor for creating a new Message object.
-		/// </summary>
 		/// <param name="messageName">The friendly name of the message.</param>
 		/// <param name="messageType">The type of the message.</param>
 		/// <param name="toIdentity">The identity of the recipient.</param>
 		public Message(string messageName, string messageType, string toIdentity) :
-			this (messageName, messageType)
+			base (messageName)
 		{
+			State = MessageState.New;
+			MessageType = messageType;
+			Properties.AddProperty(PropertyTags.Types, typeof(Message).Name);
 			ToIdentity = toIdentity;
 		}
 

@@ -110,7 +110,17 @@ namespace Simias.POBox
 		/// <summary>
 		/// The name of the property storing the collection ID.
 		/// </summary>
-		public const string SubscriptionCollectionIdProperty = "SubscriptionCollectionId";
+		public static readonly string SubscriptionCollectionIdProperty = "SubscriptionCollectionId";
+
+		/// <summary>
+		/// The name of the property storing the collection domain name.
+		/// </summary>
+		public static readonly string SubscriptionCollectionDomainNameProperty = "SubscriptionCollectionDomainName";
+
+		/// <summary>
+		/// The name of the property storing the collection domain ID.
+		/// </summary>
+		public static readonly string SubscriptionCollectionDomainIdProperty = "SubscriptionCollectionDomainId";
 
 		/// <summary>
 		/// The name of the property storing the collection types.
@@ -121,6 +131,11 @@ namespace Simias.POBox
 		/// The name of the property storing the collection master URL.
 		/// </summary>
 		public const string SubscriptionCollectionURLProperty = "SubscriptionCollectionURL";
+
+		/// <summary>
+		/// The name of the property storing the post office service url.
+		/// </summary>
+		public static readonly string POServiceURLProperty = "POServiceURL";
 
 		/// <summary>
 		/// The name of the property storing the collection description.
@@ -146,24 +161,27 @@ namespace Simias.POBox
 
 		#region Constructors
 		/// <summary>
-		/// Constructor for creating a new Subscription object.
+		/// Constructor for creating a Subscription object from a SubscriptionInfo object.
 		/// </summary>
-		/// <param name="collection">Collection that the ShallowNode belongs to.</param>
-		/// <param name="shallowNode">ShallowNode object to create the Message object from.</param>
-		public Subscription(Collection collection, ShallowNode shallowNode) :
-			base (collection, shallowNode)
+		/// <param name="subscriptionName">The friendly name of the Subscription.</param>
+		/// <param name="subscriptionInfo">The SubscriptionInfo object to create the Subscription object from.</param>
+		public Subscription(string subscriptionName, SubscriptionInfo subscriptionInfo) :
+			base (subscriptionName, subscriptionInfo.SubscriptionID)
 		{
+			SubscriptionCollectionDomainId = subscriptionInfo.DomainID;
+			SubscriptionCollectionDomainName = subscriptionInfo.DomainName;
+			SubscriptionCollectionId = subscriptionInfo.SubscriptionCollectionID;
+			POServiceURL = subscriptionInfo.POServiceUrl;
 		}
 
 		/// <summary>
 		/// Constructor for creating a new Subscription object.
 		/// </summary>
-		/// <param name="SubscriptionName">The friendly name of the Subscription.</param>
-		/// <param name="messageType">The type of the message.</param>
-		public Subscription(string subscriptionName, string messageType) :
-			base (subscriptionName, messageType)
+		/// <param name="collection">Collection that the ShallowNode belongs to.</param>
+		/// <param name="shallowNode">ShallowNode object to create the Subscription object from.</param>
+		public Subscription(Collection collection, ShallowNode shallowNode) :
+			base (collection, shallowNode)
 		{
-			SubscribeState = SubscriptionState.Invited;
 		}
 
 		/// <summary>
@@ -298,6 +316,36 @@ namespace Simias.POBox
 		}
 
 		/// <summary>
+		/// Gets/sets the domain name of the collection to share.
+		/// </summary>
+		public string SubscriptionCollectionDomainName
+		{
+			get
+			{
+				return (string)Properties.GetSingleProperty(SubscriptionCollectionDomainNameProperty).Value;
+			}
+			set
+			{
+				Properties.ModifyProperty(SubscriptionCollectionDomainNameProperty, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets/sets the domain ID of the collection to share.
+		/// </summary>
+		public string SubscriptionCollectionDomainId
+		{
+			get
+			{
+				return (string)Properties.GetSingleProperty(SubscriptionCollectionDomainIdProperty).Value;
+			}
+			set
+			{
+				Properties.ModifyProperty(SubscriptionCollectionDomainIdProperty, value);
+			}
+		}
+
+		/// <summary>
 		/// Gets/sets the types of the collection to share.
 		/// </summary>
 		public MultiValuedList SubscriptionCollectionTypes
@@ -327,6 +375,21 @@ namespace Simias.POBox
 			set
 			{
 				Properties.ModifyProperty(SubscriptionCollectionURLProperty, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets/sets the URL of the post office service.
+		/// </summary>
+		public Uri POServiceURL
+		{
+			get
+			{
+				return (Uri)Properties.GetSingleProperty(POServiceURLProperty).Value;
+			}
+			set
+			{
+				Properties.ModifyProperty(POServiceURLProperty, value);
 			}
 		}
 
@@ -388,6 +451,25 @@ namespace Simias.POBox
 			{
 				Properties.ModifyProperty(SubscriptionRightsProperty, value);
 			}
+		}
+		#endregion
+
+		#region Public Methods
+		/// <summary>
+		/// Generates a SubscriptionInfo object from the Subscription.
+		/// </summary>
+		/// <returns>A SubscriptionInfo object.</returns>
+		public SubscriptionInfo GenerateSubscriptionInfo()
+		{
+			SubscriptionInfo si = new SubscriptionInfo();
+
+			si.DomainID = SubscriptionCollectionDomainId;
+			si.DomainName = SubscriptionCollectionDomainName;
+			si.POServiceUrl = POServiceURL;
+			si.SubscriptionCollectionID = SubscriptionCollectionId;
+			si.SubscriptionID = ID;
+
+			return si;
 		}
 		#endregion
 	}

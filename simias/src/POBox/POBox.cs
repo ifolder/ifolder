@@ -48,6 +48,22 @@ namespace Simias.POBox
 		{
 		}
 
+		/// <summary>
+		/// Constructor to create a POBox object from a ShallowNode object.
+		/// </summary>
+		/// <param name="storeObject">The Store object that this POBox belongs to.</param>
+		/// <param name="shallowNode">The ShallowNode object to contruct the POBox object from.</param>
+		internal POBox(Store storeObject, ShallowNode shallowNode) :
+			base (storeObject, shallowNode)
+		{
+		}
+
+		/// <summary>
+		/// Constructor to create a POBox object.
+		/// </summary>
+		/// <param name="storeObject">The Store object that the POBox will belong to.</param>
+		/// <param name="collectionName">The name of the POBox.</param>
+		/// <param name="domainName">The name of the domain that the POBox belongs to.</param>
 		internal POBox(Store storeObject, string collectionName, string domainName) :
 			base (storeObject, collectionName, domainName)
 		{
@@ -59,27 +75,51 @@ namespace Simias.POBox
 		#endregion
 
 		#region Public Methods
-		public static POBox GetPOBox(Store storeObject, string domainName)
+		/// <summary>
+		/// POBox factory method that constructs a POBox object for the specified domain ID.
+		/// </summary>
+		/// <param name="storeObject">The Store object that the POBox belongs to.</param>
+		/// <param name="domainId">The ID of the domain that the POBox belongs to.</param>
+		/// <returns></returns>
+		public static POBox GetPOBox(Store storeObject, string domainId)
+		{
+			return GetPOBox(storeObject, domainId, storeObject.GetUserIDFromDomainID(domainId));
+		}
+
+		/// <summary>
+		/// POBox factory method that constructs a POBox object for the specified user in the specified domain.
+		/// </summary>
+		/// <param name="storeObject">The Store object that the POBox belongs to.</param>
+		/// <param name="domainId">The ID of the domain that the POBox belongs to.</param>
+		/// <param name="userId">The ID of the user that the POBox belongs to.</param>
+		/// <returns></returns>
+		public static POBox GetPOBox(Store storeObject, string domainId, string userId)
 		{
 			POBox poBox = null;
 
-			// Search for an existing POBox
-			ICSList list = storeObject.GetCollectionsByType(typeof(POBox).Name);
-			foreach (ShallowNode shallowNode in list)
+			// Build the name of the POBox.
+			string name = domainId + ":" + userId;
+
+			// Search for the POBox.
+			ICSEnumerator listEnum = storeObject.GetCollectionsByName(name).GetEnumerator() as ICSEnumerator;
+
+			// There should only be one value returned...
+			if (listEnum.MoveNext())
 			{
-				Collection collection = new Collection(storeObject, shallowNode);
-				if (collection.Domain.Equals(domainName))
+				ShallowNode shallowNode = (ShallowNode)listEnum.Current;
+
+				if (listEnum.MoveNext())
 				{
-					poBox = new POBox(storeObject, collection);
-					break;
+					// TODO: multiple values were returned ... throw an exception.
 				}
+
+				poBox = new POBox(storeObject, shallowNode);
 			}
 
-			// If one cannot be found then create it.
+			// If the POBox cannot be found, create it.
 			if (poBox == null)
 			{
-				poBox = new POBox(storeObject, "POBox", domainName);
-				poBox.Commit();
+				poBox = new POBox(storeObject, name, domainId);
 			}
 
 			return poBox;
