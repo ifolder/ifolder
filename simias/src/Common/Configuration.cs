@@ -49,19 +49,14 @@ namespace Simias
 		private bool modified;
 		private XmlDocument doc;
 		private XmlElement docElement;
-		
-		/// <summary>
-		/// Default Constructor.
-		/// </summary>
-		public Configuration() : this(null)
-		{
-		}
 
+		private static Configuration instance = null;
+		
 		/// <summary>
 		/// Constructor.
 		/// </summary>
 		/// <param name="path">The path to the configuration file.</param>
-		public Configuration(string path)
+		private Configuration(string path)
 		{
 			if (path == null)
 			{
@@ -75,6 +70,45 @@ namespace Simias
 			this.storePath = path;
 			CreateDefaults();
 		}
+
+		#region Factory  Methods
+
+		static public Configuration GetConfiguration()
+		{
+			lock (typeof(Configuration))
+			{
+				if (instance == null)
+					CreateDefaultConfig(null);
+				return instance;
+			}
+		}
+
+		static public Configuration CreateDefaultConfig(string path)
+		{
+			lock (typeof(Configuration))
+			{
+				if (instance != null)
+				{
+					throw(new SimiasException("Configuration already exists."));
+				}
+				instance = new Configuration(path);
+				return instance;
+			}
+		}
+
+		static public void DisposeDefaultConfig()
+		{
+			lock (typeof(Configuration))
+			{
+				if (instance != null)
+				{
+					instance = null;
+				}
+			}
+		}
+
+		#endregion
+
 
 		/// <summary>
 		/// 

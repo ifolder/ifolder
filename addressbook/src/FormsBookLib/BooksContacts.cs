@@ -564,8 +564,7 @@ namespace Novell.iFolder.FormsBookLib
 
 			try
 			{
-				Configuration config = new Configuration();
-				store = new Store(config);
+				store = Store.GetStore();
 
 				// Put all the address books in the books listview.
 				IEnumerator addrBooks= manager.GetAddressBooks().GetEnumerator();

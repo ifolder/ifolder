@@ -82,7 +82,7 @@ namespace Simias.Service
 		public Manager(Configuration conf)
 		{
 			// Get an event subscriber to handle shutdown events.
-			subscriber = DefaultSubscriber.GetDefaultSubscriber(conf);
+			subscriber = DefaultSubscriber.GetDefaultSubscriber();
 			subscriber.CollectionEvent +=new CollectionEventHandler(OnCollectionEvent);
 
 			// configure logging
@@ -97,8 +97,6 @@ namespace Simias.Service
 					// serviceMutex = mutex;
 					this.conf = conf;
 
-					ServiceDelegate += new ServiceEvent(messageDispatcher);
-					
 					// Get the XmlElement for the Services.
 					servicesElement = conf.GetElement(CFG_Section, CFG_Services);
 
@@ -154,14 +152,6 @@ namespace Simias.Service
 
 		#region Message handling
 
-		internal delegate void ServiceEvent(Message msg);
-		internal ServiceEvent ServiceDelegate;
-		
-		private void postMessage(Message msg)
-		{
-			ServiceDelegate(msg);
-		}
-
 		private void messageDispatcher(Message msg)
 		{
 			ServiceCtl	svcCtl = msg.service;
@@ -197,16 +187,6 @@ namespace Simias.Service
 							break;
 						case MessageCode.Custom:
 							svcCtl.Custom(msg.CustomMessage, msg.Data);
-							break;
-						case MessageCode.StartComplete:
-							servicesStopped.Reset();
-							servicesStarted.Set();
-							logger.Info("Services started.");
-							break;
-						case MessageCode.StopComplete:
-							servicesStarted.Reset();
-							servicesStopped.Set();
-							logger.Info("Services stopped.");
 							break;
 					}
 				}
@@ -352,10 +332,12 @@ namespace Simias.Service
 			{
 				if (svc.State == State.Stopped)
 				{
-					postMessage(new StartMessage(svc));
+					messageDispatcher(new StartMessage(svc));
 				}
 			}
-			postMessage(new StartComplete());
+			servicesStopped.Reset();
+			servicesStarted.Set();
+			logger.Info("Services started.");
 			startThread = null;
 		}
 	
@@ -377,9 +359,11 @@ namespace Simias.Service
 			for (int i = serviceList.Count; i > 0; --i)
 			{
 				ServiceCtl svc = (ServiceCtl)serviceList[i-1];
-				postMessage(new StopMessage(svc));
+				messageDispatcher(new StopMessage(svc));
 			}
-			postMessage(new StopComplete());
+			servicesStarted.Reset();
+			servicesStopped.Set();
+			logger.Info("Services stopped.");
 			stopThread = null;
 		}
 		

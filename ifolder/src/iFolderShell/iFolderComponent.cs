@@ -310,7 +310,7 @@ namespace Novell.iFolder.iFolderCom
 
 		public void NewiFolderWizard([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
-			Configuration config = new Configuration();
+			Configuration config = Configuration.GetConfiguration();
 			string showWizard = config.Get("iFolderShell", "Show wizard", "true");
 			if (showWizard == "true")
 			{

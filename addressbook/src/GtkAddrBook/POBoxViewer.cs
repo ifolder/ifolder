@@ -71,7 +71,7 @@ namespace Novell.AddressBook.UI.gtk
 			SubTreeStore.Clear();
 
 			if(store == null)
-				store = new Store( new Configuration(null) );
+				store = Store.GetStore();
 			if(store != null)
 			{
 				pobox = Simias.POBox.POBox.GetPOBox(store, 

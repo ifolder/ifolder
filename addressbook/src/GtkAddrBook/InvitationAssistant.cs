@@ -266,7 +266,7 @@ namespace Novell.AddressBook.UI.gtk
 		private void InitSubscriptionInfo(string filename)
 		{
 			if(store == null)
-				store = new Store(new Configuration());
+				store = Store.GetStore();
 			
 			subscription = Subscription.GetSubscriptionFromSubscriptionInfo(store, filename);
 		}
@@ -279,7 +279,7 @@ namespace Novell.AddressBook.UI.gtk
 			if(SelectorIsFirst)
 			{
 				if(store == null)
-					store = new Store(new Configuration());
+					store = Store.GetStore();
 
 				if(inviteFile != null)
 				{
@@ -377,7 +377,7 @@ namespace Novell.AddressBook.UI.gtk
 			try
 			{
 				if(store == null)
-					store = new Store(new Configuration());
+					store = Store.GetStore();
 
 				subscription.CollectionRoot = Path.GetFullPath(CollectionPathEntry.Text);
 				if(subscription.SubscriptionState == SubscriptionStates.Ready)

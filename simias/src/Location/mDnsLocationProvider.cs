@@ -168,7 +168,7 @@ namespace Simias.Location
 				register.RegisterHost(host, MyDns.GetHostName());
 			}
 
-			Store store = new Store(configuration);
+			Store store = Store.GetStore();
 
 			Collection c = store.GetCollectionByID(collection);
 
@@ -205,7 +205,6 @@ namespace Simias.Location
 				sc.Dispose();
 			}
 
-			store.Dispose();
 		}
 
 		/// <summary>

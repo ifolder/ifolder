@@ -48,7 +48,7 @@ namespace Simias.Mail.Tests
 				{
 					Console.WriteLine("");
 					Console.WriteLine("=== Setting up Smtp Tests ===");
-					Configuration config = new Configuration("./");
+					Configuration config = Configuration.CreateDefaultConfig("./");
 					smtpHost = config.Get("Simias.Mail", "smtpServer", "mail");
 					fromAddr = config.Get("Simias.Mail.Tests", "fromAddr", "Simias.Mail.Tests.SmtpTests@localhost");
 					toAddr = config.Get("Simias.Mail.Tests", "toAddr", "denali@novell.com");

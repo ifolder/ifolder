@@ -26,6 +26,7 @@ using System.IO;
 using System.Threading;
 using System.Collections;
 using System.Diagnostics;
+using Simias.Storage;
 
 namespace Simias.Service
 {
@@ -37,7 +38,6 @@ namespace Simias.Service
 		#region Fields
 
 		State						state = State.Stopped;
-		Configuration				conf;
 
 		#endregion
 
@@ -56,10 +56,10 @@ namespace Simias.Service
 				throw new ApplicationException("Invalid Service Arguments");
 			}
 			
-			conf = new Configuration(confPath);
-            
+			Configuration.CreateDefaultConfig(confPath);
+			
             // configure logging
-            SimiasLogManager.Configure(conf);
+            SimiasLogManager.Configure(GetConfiguration());
 		}
 
 		#endregion
@@ -72,7 +72,7 @@ namespace Simias.Service
 		/// <returns>The configuration for the service.</returns>
 		protected Configuration GetConfiguration()
 		{
-			return conf;
+			return Configuration.GetConfiguration();
 		}
 
 		/// <summary>

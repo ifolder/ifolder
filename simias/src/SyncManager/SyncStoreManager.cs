@@ -57,13 +57,13 @@ namespace Simias.Sync
 			this.syncManager = syncManager;
 
 			// store
-			store = new Store(syncManager.Config);
+			store = Store.GetStore();
 
 			// collection managers
 			collectionManagers = new Hashtable();
 
 			// events
-			subscriber = new EventSubscriber(syncManager.Config);
+			subscriber = new EventSubscriber();
 			subscriber.Enabled = false;
 			subscriber.NodeTypeFilter = NodeTypes.CollectionType;
 			subscriber.NodeCreated += new NodeEventHandler(OnCollectionCreated);
@@ -296,7 +296,6 @@ namespace Simias.Sync
 			Stop();
 
 			// clean-up store
-			store.Dispose();
 			store = null;
 		}
 

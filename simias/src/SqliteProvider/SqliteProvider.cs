@@ -559,9 +559,9 @@ namespace Simias.Storage.Provider.Sqlite
 					throw new System.IO.FileNotFoundException("DataBase Not found.");
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
-				throw new OpenException(DbPath);
+				throw new OpenException(DbPath, ex);
 			}
 		}
 

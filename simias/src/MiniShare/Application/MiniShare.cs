@@ -152,8 +152,7 @@ namespace Simias.Mini
 
 			// clean-up
 			manager.Dispose();
-			store.Dispose();
-
+			
 			Console.WriteLine("Done.");
 
 			// kludge to kill all threads

@@ -49,7 +49,7 @@ namespace Simias.Location
 		/// <param name="configuration">The Simias configuration object.</param>
 		public LocationProviderList(Configuration configuration)
 		{
-			store = new Store(configuration);
+			store = Store.GetStore();
 
 			collection = store.GetDatabaseObject();
 

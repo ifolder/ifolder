@@ -134,7 +134,7 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="conf">Configuration Object.</param>
 		/// <param name="collectionId">The collection to watch for events.</param>
-		public EventSubscriber(Configuration conf, string collectionId)
+		public EventSubscriber(string collectionId)
 		{
 			enabled = true;
 			fileNameFilter = null;
@@ -145,7 +145,7 @@ namespace Simias.Storage
 			this.collectionId = collectionId;
 			alreadyDisposed = false;
 			
-			subscriber = DefaultSubscriber.GetDefaultSubscriber(conf);
+			subscriber = DefaultSubscriber.GetDefaultSubscriber();
 			subscriber.CollectionEvent += new CollectionEventHandler(OnCollectionEvent);
 		}
 
@@ -153,8 +153,8 @@ namespace Simias.Storage
 		/// Create a Subscriber to monitor changes in the complete Collection Store.
 		/// </summary>
 		/// <param name="conf">Configuration object.</param>
-		public EventSubscriber(Configuration conf) :
-			this(conf, (string)null)
+		public EventSubscriber() :
+			this((string)null)
 		{
 		}
 

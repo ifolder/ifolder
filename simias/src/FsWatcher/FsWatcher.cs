@@ -211,8 +211,8 @@ namespace Simias.Event
 				// Create a hash table to store the watchers in.
 				this.conf = conf;
 				watcherTable = new Hashtable();
-				store = new Store(conf);
-				collectionWatcher = new EventSubscriber(conf);
+				store = Store.GetStore();
+				collectionWatcher = new EventSubscriber();
 				collectionWatcher.NodeCreated += new NodeEventHandler(OnNewCollection);
 				collectionWatcher.NodeDeleted += new NodeEventHandler(OnDeleteNode);
 				foreach (ShallowNode sn in store)
@@ -242,7 +242,6 @@ namespace Simias.Event
 				watcherTable = null;
 				collectionWatcher.Dispose();
 				collectionWatcher = null;
-				store.Dispose();
 				store = null;
 			}
 		}

@@ -40,7 +40,7 @@ namespace Simias.Tests
 		{
 			Console.WriteLine("");
 			Console.WriteLine("=== Setting up Configuration Tests ===");
-			config = new Configuration("./");
+			config = Configuration.CreateDefaultConfig("./");
 		}
 
 		[Test]

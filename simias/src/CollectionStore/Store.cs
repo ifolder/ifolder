@@ -41,7 +41,7 @@ namespace Simias.Storage
 	/// This is the top level object for the Collection Store.  The Store object can contain multiple 
 	/// collection objects.
 	/// </summary>
-	public sealed class Store : IEnumerable, IDisposable
+	public sealed class Store : IEnumerable
 	{
 		#region Class Members
 		/// <summary>
@@ -104,6 +104,11 @@ namespace Simias.Storage
 		/// in using this object because it may be stale. 
 		/// </summary>
 		private LocalDatabase localDb = null;
+
+		/// <summary>
+		/// Singleton of the store.
+		/// </summary>
+		private static Store instance = null;
 		#endregion
 
 		#region Properties
@@ -218,7 +223,7 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="config">A Configuration object that contains a path that specifies where to create
 		/// or open the database.</param>
-		public Store( Configuration config )
+		private Store( Configuration config )
 		{
 			lock( ctorLock )
 			{
@@ -231,7 +236,7 @@ namespace Simias.Storage
 				eventPublisher = new EventPublisher( config );
 
 				// Create or open the underlying database.
-				storageProvider = Persist.Provider.Connect( new Persist.ProviderConfig( config ), out created );
+				storageProvider = Persist.Provider.Connect( new Persist.ProviderConfig(), out created );
 
 				// Set the path to the store.
 				storeManagedPath = Path.Combine( storageProvider.StoreDirectory.LocalPath, storeManagedDirectoryName );
@@ -346,6 +351,30 @@ namespace Simias.Storage
 				}
 			}
 		}
+		#endregion
+
+		#region Factory  Methods
+
+		static public Store GetStore()
+		{
+			lock (typeof(Store))
+			{
+				if (instance == null)
+					CreateDefaultStore();
+				return instance;
+			}
+		}
+
+		static private Store CreateDefaultStore()
+		{
+			if (instance != null)
+			{
+				throw(new SimiasException("Default store already exists"));
+			}
+			instance = new Store(Configuration.GetConfiguration());
+			return instance;
+		}
+
 		#endregion
 
 		#region Internal Methods
@@ -1056,7 +1085,7 @@ namespace Simias.Storage
 		/// Allows for quick release of managed and unmanaged resources.
 		/// Called by applications.
 		/// </summary>
-		public void Dispose()
+		private void Dispose()
 		{
 			Dispose( true );
 			GC.SuppressFinalize( this );

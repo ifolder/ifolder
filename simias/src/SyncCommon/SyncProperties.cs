@@ -80,7 +80,7 @@ namespace Simias.Sync
 		{
 			this.config = config;
 
-			store = new Store(config);
+			store = Store.GetStore();
 			localDb = store.GetDatabaseObject();
 		}
 
@@ -91,7 +91,6 @@ namespace Simias.Sync
 			// dispose the store
 			if (store != null)
 			{
-				store.Dispose();
 				store = null;
 			}
 		}

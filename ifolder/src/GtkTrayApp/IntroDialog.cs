@@ -90,13 +90,13 @@ namespace Novell.iFolder
 				if(ShowCheckButton.Active)
 				{
 					Console.WriteLine("Don't show");
-					new Configuration().Set("iFolderTrayApp", 
+					Configuration.GetConfiguration().Set("iFolderTrayApp", 
 							"Show wizard", "false");
 				}
 				else
 				{
 					Console.WriteLine("show");
-					new Configuration().Set("iFolderTrayApp", 
+					Configuration.GetConfiguration().Set("iFolderTrayApp", 
 							"Show wizard", "true");
 				}
 
@@ -145,7 +145,7 @@ namespace Novell.iFolder
 
 		static public bool UseDialog()
 		{
-			Configuration config = new Configuration();
+			Configuration config = Configuration.GetConfiguration();
 			string showWizard = config.Get("iFolderTrayApp", 
 					"Show wizard", "true");
 

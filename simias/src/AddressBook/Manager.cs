@@ -130,7 +130,7 @@ namespace Novell.AddressBook
 		{
 			Manager	addressManager = null;
 
-			Store store = new Store( new Configuration(null) );
+			Store store = Store.GetStore();
 			if(store != null)
 			{
 				addressManager = new Manager(store);
@@ -139,22 +139,6 @@ namespace Novell.AddressBook
 			return(addressManager);
 		}
 
-		/// <summary>
-		/// Connects to the collection store with a caller defined config object.
-		/// </summary>
-		///	<returns>An object that represents a connection to the address manager.</returns>
-		public static Manager Connect(Configuration cConfig)
-		{
-			Manager	addressManager = null;
-			Store store = new Store( cConfig );
-			//Store store = Store.Connect(callerConfig);
-			if(store != null)
-			{
-				addressManager = new Manager(store);
-			}
-
-			return(addressManager);
-		}
 		#endregion
 
 		#region Public Methods

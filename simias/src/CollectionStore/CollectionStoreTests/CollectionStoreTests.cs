@@ -1092,9 +1092,6 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void StoreCreateDeleteTest()
 		{
-			// Dispose the current store object.
-			store.Dispose();
-
 			// Reopen the store which should be existing.
 			Init();
 		}
@@ -1429,9 +1426,6 @@ namespace Simias.Storage.Tests
 			{
 				// Delete the collection.
 				collection.Commit( collection.Delete() );
-
-				// Release the merge store handle.
-				mergeStore.Dispose();
 			}
 		}
 

@@ -56,7 +56,7 @@ namespace Novell.iFolder
 		{
 			InitUI();
 
-			Configuration config = new Configuration();
+			Configuration config = Configuration.GetConfiguration();
 			store = new Store(config);
 
 			RefreshCollections();

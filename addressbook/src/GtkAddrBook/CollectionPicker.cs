@@ -77,9 +77,7 @@ namespace Novell.AddressBook.UI.gtk
 		public CollectionPicker() 
 		{
 			InitUI();
-
-			Configuration config = new Configuration();
-			store = new Store(config);
+			store = Store.GetStore();
 		}
 
 		private void InitUI()

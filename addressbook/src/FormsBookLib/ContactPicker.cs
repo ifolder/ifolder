@@ -464,8 +464,7 @@ namespace Novell.iFolder.FormsBookLib
 			try
 			{
 				this.Icon = new Icon(Path.Combine(LoadPath, applicationIcon));
-				Configuration config = new Configuration();
-				store = new Store(config);
+				store = Store.GetStore();
 			}
 			catch (SimiasException ex)
 			{

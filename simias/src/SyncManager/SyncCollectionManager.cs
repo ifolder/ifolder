@@ -67,7 +67,7 @@ namespace Simias.Sync
 			
             // open store
 			// note: the store provider requires that we open a new store for each thread
-			store = new Store(syncManager.Config);
+			store = Store.GetStore();
 
             // open collection			
 			collection = new SyncCollection(store.GetCollectionByID(id));

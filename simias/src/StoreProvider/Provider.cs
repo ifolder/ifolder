@@ -131,25 +131,7 @@ namespace Simias.Storage.Provider
 		/// </summary>
 		public ProviderConfig()
 		{
-			conf = new Simias.Configuration();
-		}
-
-		/// <summary>
-		/// Constructor that takes a path.
-		/// </summary>
-		/// <param name="path">The path to the Configuration.</param>
-		public ProviderConfig(string path)
-		{
-			conf = new Simias.Configuration(path);
-		}
-
-		/// <summary>
-		/// Constructor that takes a Simias.Configuration object.
-		/// </summary>
-		/// <param name="sConf">The the simias configuration object.</param>
-		public ProviderConfig(Configuration sConf)
-		{
-			conf = sConf;
+			conf = Simias.Configuration.GetConfiguration();
 		}
 
 		/// <summary>

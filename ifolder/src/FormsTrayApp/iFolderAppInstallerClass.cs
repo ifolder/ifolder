@@ -115,7 +115,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 				Process[] ifolderProcesses = Process.GetProcessesByName("iFolderApp");
 
-				Configuration config = new Configuration();
+				Configuration config = Configuration.GetConfiguration();
 				foreach (Process process in ifolderProcesses)
 				{
 					Simias.Event.EventPublisher publisher = new EventPublisher(config);

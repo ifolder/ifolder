@@ -63,7 +63,7 @@ namespace Simias.Location
 		{
 			Uri result = null;
 
-			Store store = new Store(configuration);
+			Store store = Store.GetStore();
 
 			Collection c = store.GetCollectionByID(collection);
 
@@ -75,8 +75,6 @@ namespace Simias.Location
 
 				sc.Dispose();
 			}
-
-			store.Dispose();
 
 			return result;
 		}

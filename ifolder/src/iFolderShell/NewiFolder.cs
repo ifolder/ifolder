@@ -213,7 +213,7 @@ namespace Novell.iFolder.iFolderCom
 		{
 			if (dontAsk.Checked)
 			{
-				new Configuration().Set("iFolderShell", "Show wizard", "false");
+				Configuration.GetConfiguration().Set("iFolderShell", "Show wizard", "false");
 			}
 
 			this.Close();

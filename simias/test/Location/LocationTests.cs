@@ -76,8 +76,6 @@ namespace Simias.Location.Tests
 			Assert("Location Not Found!", location != null);
 
 			Console.WriteLine("Location: {0}", location);
-
-			store.Dispose();
 		}
 		
 		/// <summary>
@@ -117,8 +115,6 @@ namespace Simias.Location.Tests
 			Console.WriteLine("Location: {0}", location);
 
 			service.Unregister(collection.ID);
-
-			store.Dispose();
 
 			manager.StopServices();
 		}

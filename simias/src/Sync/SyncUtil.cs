@@ -49,10 +49,10 @@ public class FileInviter
 	/// <summary>
 	/// public constructor when specifying store location
 	/// </summary>
-	public FileInviter(Uri storeLocation)
+	public FileInviter()
 	{
-		config = new Configuration(storeLocation.LocalPath);
-        store = new Store(config);
+		config = Configuration.GetConfiguration();
+        store = Store.GetStore();
 	}
 
 	// TODO: is the following path comparison correct? should it be case insensitive?
@@ -152,11 +152,8 @@ public class FileInviter
 /// </summary>
 public class CmdService: MarshalByRefObject
 {
-	Uri storeLocation;
-
-	internal CmdService(Uri storeLocation)
+	internal CmdService()
 	{
-		this.storeLocation = storeLocation;
 	}
 
 	/// <summary>
@@ -166,7 +163,7 @@ public class CmdService: MarshalByRefObject
 	{
 		try
 		{
-			Store store = new Store(new Configuration(storeLocation.LocalPath));
+			Store store = Store.GetStore();
 			Collection c = store.GetCollectionByID(collectionId);
 
 			//Log.Spew("Start server dredge");
@@ -203,15 +200,15 @@ public class CmdServer
 	/// Create server on specified port using specified store and remoting channel type.
 	/// host is only used to generate a URI for debug messages.
 	/// </summary>
-	public CmdServer(string host, int port, Uri storeLocation)
+	public CmdServer(string host, int port)
 	{
 		uri = MakeUri(host, port);
-		obj = new CmdService(storeLocation);
+		obj = new CmdService();
 		//channel = new HttpServerChannel(channelName, port, new BinaryServerFormatterSinkProvider());
 		channel = new TcpServerChannel(channelName, port, new BinaryServerFormatterSinkProvider());
 		ChannelServices.RegisterChannel(channel);
 		objRef = RemotingServices.Marshal(obj, serviceTag);
-		Log.Info("CmdServer {0} is up and running from store '{1}'", uri, storeLocation);
+		Log.Info("CmdServer {0} is up and running from store '{1}'", uri, Configuration.GetConfiguration().StorePath);
 	}
 
 	/// <summary>
@@ -275,13 +272,13 @@ public class CmdClient
 	/// <summary>
 	/// instantiates a client and runs one sync pass for the specified collection to the specified server
 	/// </summary>
-	public static bool RunOnce(Uri storeLocation, Uri docRoot, string serverStoreLocation)
+	public static bool RunOnce(Uri docRoot, string serverStoreLocation)
 	{
-		Store store = new Store(new Configuration(storeLocation == null? null: storeLocation.LocalPath));
+		Store store = Store.GetStore();
 		Collection c = FileInviter.FindCollection(store, docRoot);
 		if (c == null)
 		{
-			Log.Error("could not find collection for folder: {0}", storeLocation.LocalPath);
+			Log.Error("could not find collection for folder: {0}", Configuration.GetConfiguration().StorePath);
 			return false;
 		}
 
@@ -291,7 +288,7 @@ public class CmdClient
 		SyncCollection csc = new SyncCollection(c);
 		if (serverStoreLocation != null)
 		{
-			Store servStore = new Store(new Configuration(serverStoreLocation));
+			Store servStore = Store.GetStore();
 			Collection servCollection = servStore.GetCollectionByID(csc.ID);
 			//Log.Spew("server collection {0}", servCollection == null? "null": servCollection.ID);
 			//Log.Spew("Start internal server dredge");
@@ -299,7 +296,6 @@ public class CmdClient
 			//Log.Spew("End internal server dredge");
 			SynkerServiceA ssa = new SynkerServiceA(new SyncCollection(servCollection));
 			new SynkerWorkerA(ssa, csc).DoSyncWork();
-			servStore.Dispose();
 		}
 		else
 		{
@@ -307,7 +303,6 @@ public class CmdClient
 			new SynkerWorkerA(client.session, csc).DoSyncWork();
 			client.Stop();
 		}
-		store.Dispose();
 		return true;
 	}
 }

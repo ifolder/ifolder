@@ -42,7 +42,6 @@ namespace Simias.POBox
 		public static readonly Uri DefaultServiceUrl = (new UriBuilder("http",
 			MyDns.GetHostName(), 6446, EndPoint)).Uri;
 
-		private Configuration config;
 		private Store store;
 
 		/// <summary>
@@ -51,8 +50,7 @@ namespace Simias.POBox
 		/// <param name="config">Simias configuration object</param>
 		public PostOffice(Configuration config)
 		{
-			this.config = config;
-			store = new Store(config);
+			store = Store.GetStore();
 		}
 
 		/// <summary>

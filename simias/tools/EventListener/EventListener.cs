@@ -49,7 +49,7 @@ namespace Simias.Event.Util
 				{
 					if (Directory.Exists(args[0]))
 					{
-						conf = new Configuration(args[0]);
+						conf = Configuration.CreateDefaultConfig(args[0]);
 					}
 				}
 				catch
@@ -63,7 +63,7 @@ namespace Simias.Event.Util
 						Console.WriteLine("Usage: mono EventListener [store path]");
 				}
 			}
-			EventSubscriber subscriber = new EventSubscriber(new Configuration());
+			EventSubscriber subscriber = new EventSubscriber();
 
 			subscriber.CollectionRootChanged += new CollectionRootChangedHandler(subscriber_CollectionRootChanged);
 			subscriber.FileChanged += new FileEventHandler(subscriber_FileChanged);

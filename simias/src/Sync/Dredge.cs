@@ -381,7 +381,7 @@ public class Dredger
 		/// <param name="conf"></param>
 		public void Start(Simias.Configuration conf)
 		{
-			store = new Store(conf);
+			store = Store.GetStore();
 			paused = shuttingDown = false;
 			/*
 			if (!MyEnvironment.Mono)
@@ -435,8 +435,6 @@ public class Dredger
 				thread.Interrupt();
 			if (es != null)
 				es.Dispose();
-			if (store != null)
-				store.Dispose();
 		}
 
 		#endregion

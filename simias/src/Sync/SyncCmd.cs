@@ -33,7 +33,6 @@ namespace Simias.Sync.Cmd
 /// </summary>
 public class SyncCmd
 {
-	Uri storeLocation = null;
 	int port = 8088;
 	string host = null;
 
@@ -41,7 +40,7 @@ public class SyncCmd
 	{
 		if (host == null)
 			host = MyDns.GetHostName();
-		FileInviter fi = new FileInviter(storeLocation);
+		FileInviter fi = new FileInviter();
 		if (!fi.Invite(user, docRoot, host, port, invitationFile))
 		{
 			Console.WriteLine("could not make invitation");
@@ -52,7 +51,7 @@ public class SyncCmd
 
 	int Accept(string invitationFile, string docRootParent)
 	{
-		FileInviter fi = new FileInviter(storeLocation);
+		FileInviter fi = new FileInviter();
 		return fi.Accept(docRootParent, invitationFile)? 0: 30;
 	}
 
@@ -60,7 +59,7 @@ public class SyncCmd
 	{
 		if (host == null)
 			host = MyDns.GetHostName();
-		CmdServer server = new CmdServer(host, port, storeLocation);
+		CmdServer server = new CmdServer(host, port);
 		Console.WriteLine("server {0} started, press enter to exit", port);
 		Console.ReadLine();
 		server.Stop();
@@ -123,7 +122,7 @@ public class SyncCmd
 				if (i == args.Length)
 					return Usage("incomplete option");
 				if (s == "-s")
-					storeLocation = new Uri(Path.GetFullPath(args[i++]));
+					Configuration.CreateDefaultConfig(Path.GetFullPath(args[i++]));
 				else if (s == "-p")
 				{
 					port = Int32.Parse(args[i++]);
@@ -159,11 +158,11 @@ public class SyncCmd
 				case "sync":
 					if (args.Length - i != 1)
 						return Usage("operation 'sync' takes 1 param");
-					return CmdClient.RunOnce(storeLocation, new Uri(Path.GetFullPath(args[i])), null)? 0: 40;
+					return CmdClient.RunOnce(new Uri(Path.GetFullPath(args[i])), null)? 0: 40;
 				case "localsync":
 					if (args.Length - i != 2)
 						return Usage("operation 'localsync' takes 2 params");
-					return CmdClient.RunOnce(storeLocation, new Uri(Path.GetFullPath(args[i])), args[i + 1])? 0: 41;
+					return CmdClient.RunOnce(new Uri(Path.GetFullPath(args[i])), args[i + 1])? 0: 41;
 				case "server":
 					if (args.Length - i != 0)
 						return Usage("operation 'server' takes 0 params");

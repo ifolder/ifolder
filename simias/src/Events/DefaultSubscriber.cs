@@ -55,14 +55,15 @@ namespace Simias.Event
 
 		#region Factory Methods
 
-		internal static DefaultSubscriber GetDefaultSubscriber(Configuration conf)
+		internal static DefaultSubscriber GetDefaultSubscriber()
 		{
 			DefaultSubscriber instance;
 			lock (typeof(DefaultSubscriber))
 			{
+				Configuration conf = Configuration.GetConfiguration();
 				if (!instanceTable.Contains(conf.StorePath))
 				{
-					instance = new DefaultSubscriber(conf);
+					instance = new DefaultSubscriber();
 					instanceTable.Add(conf.StorePath, instance);
 				}
 				else
@@ -79,10 +80,10 @@ namespace Simias.Event
 
 		#region Constructor / Finalizer
 
-		DefaultSubscriber(Configuration conf)
+		DefaultSubscriber()
 		{
 			alreadyDisposed = false;
-			this.conf = conf;
+			this.conf = Configuration.GetConfiguration();
 			count = 0;
 			if (!setupBroker())
 			{

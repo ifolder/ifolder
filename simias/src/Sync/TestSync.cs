@@ -75,7 +75,6 @@ public class SyncTests: Assertion
 		store.Revert();
 		Collection collection = FileInviter.FindCollection(store, new Uri(folderName));
 		Conflict.Resolve(collection, localChangesWin);
-		store.Dispose();
 	}
 
 	//---------------------------------------------------------------------------
@@ -245,8 +244,7 @@ public class SyncTests: Assertion
 		uint nodeCount;
 		ulong maxBytesToSend;
 		SyncSize.CalculateSendSize(collection, out nodeCount, out maxBytesToSend);
-		store.Dispose();
-
+		
 		log.Debug("+++++++++++ syncSize: {0} nodes, {1} totalSize", nodeCount, maxBytesToSend);
 
 		return nodeCount == 8

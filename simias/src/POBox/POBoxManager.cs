@@ -54,7 +54,7 @@ namespace Simias.POBox
 			this.config = poManager.Config;
 
 			// new store
-			store = new Store(config);
+			store = Store.GetStore();
 
 			// open POBox
 			poBox = POBox.GetPOBoxByID(store, id);
@@ -63,7 +63,7 @@ namespace Simias.POBox
 			threads = new Hashtable();
 
 			// events
-			subscriber = new EventSubscriber(config, poBox.ID);
+			subscriber = new EventSubscriber(poBox.ID);
 			subscriber.Enabled = false;
 			subscriber.NodeTypeFilter = NodeTypes.NodeType;
 			subscriber.NodeCreated += new NodeEventHandler(OnMessageChanged);
@@ -149,10 +149,6 @@ namespace Simias.POBox
 
 		public void Dispose()
 		{
-			if (store != null)
-			{
-				store.Dispose();
-			}
 		}
 
 		#endregion

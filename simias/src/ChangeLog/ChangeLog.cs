@@ -632,12 +632,12 @@ namespace Simias.Storage
 			this.config = config;
 
 			// Setup the event listeners.
-			subscriber = new EventSubscriber( config );
+			subscriber = new EventSubscriber(  );
 			subscriber.NodeCreated += new NodeEventHandler( OnCollectionCreate );
 			subscriber.NodeDeleted += new NodeEventHandler( OnCollectionDelete );
 
 			// Get a store object.
-			Store store = new Store( config );
+			Store store = Store.GetStore();
 
 			// Get all of the collection objects and set up listeners for them.
 			foreach (ShallowNode sn in store)
@@ -655,8 +655,6 @@ namespace Simias.Storage
 				}
 			}
 
-			// Done with the store object.
-			store.Dispose();
 			log.Info( "Change Log Service started." );
 		}
 
@@ -808,7 +806,7 @@ namespace Simias.Storage
 			}
 
 			// Setup the event listeners.
-			subscriber = new EventSubscriber( config, collectionID );
+			subscriber = new EventSubscriber(collectionID );
 			subscriber.NodeChanged += new NodeEventHandler( OnNodeChange );
 			subscriber.NodeCreated += new NodeEventHandler( OnNodeCreate );
 			subscriber.NodeDeleted += new NodeEventHandler( OnNodeDelete );

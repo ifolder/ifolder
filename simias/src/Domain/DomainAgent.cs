@@ -88,7 +88,7 @@ namespace Simias.Domain
 				throw new ApplicationException("User does not exist on server.");
 			log.Debug(provisionInfo.ToString());
 
-			Store store = new Store(config);
+			Store store = Store.GetStore();
 
 			// create domain node
 			Storage.Domain domain = store.AddDomainIdentity(provisionInfo.UserID,
@@ -132,7 +132,6 @@ namespace Simias.Domain
 			}
 
 			// clean-up
-			store.Dispose();
 			channel.Dispose();
 			service = null;
 		}
@@ -222,7 +221,7 @@ namespace Simias.Domain
 			// properties
 			SyncProperties props = new SyncProperties(config);
 
-			Store store = new Store(config);
+			Store store = Store.GetStore();
 
 			// create channel
 			channel = SimiasChannelFactory.GetInstance().GetChannel(store,
@@ -234,9 +233,7 @@ namespace Simias.Domain
 			IDomainService service = (IDomainService)Activator.GetObject(
 				typeof(IDomainService), url);
 			
-			// clean-up
-			store.Dispose();
-
+			
 			return service;
 		}
 

@@ -40,7 +40,7 @@ namespace Novell.iFolder
 			try
 			{
 				Console.WriteLine("iFolder is Starting...");
-				conf = new Configuration();
+				conf = Configuration.GetConfiguration();
 
 				SimiasLogManager.Configure(conf);
 
