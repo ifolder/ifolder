@@ -242,15 +242,63 @@ namespace Novell.iFolder
 			if(LoginDialog == null)
 			{
 				DomainInformation di = 
-							GetDomainInformation(domainID);
+					GetDomainInformation(domainID);
 				if(di != null)
 				{
+					bool authenticated = false;
+					string userID;
+					string credentials;
+
 					LoginDialog = new iFolderLoginDialog(
 						di.ID, di.Name, di.MemberName);
 
 					LoginDialog.Response += new ResponseHandler(
-								OnReLoginDialogResponse);
-					LoginDialog.ShowAll();
+						OnReLoginDialogResponse);
+
+					// See if there is a password saved on this domain.
+					SimiasWebService simiasWebService = 
+						new SimiasWebService();
+
+					simiasWebService.Url = 
+						Simias.Client.Manager.LocalServiceUrl.ToString() + 
+						"/Simias.asmx";
+
+					CredentialType credType = 
+						simiasWebService.GetSavedDomainCredentials(
+							domainID, 
+							out userID, 
+							out credentials);
+
+					if ((credType == CredentialType.Basic) && 
+						(credentials != null))
+					{
+						// There are credentials that were saved on the domain.
+						// Use them to authenticate. If the authentication 
+						// fails for any reason, pop up and ask for new 
+						// credentials.
+						DomainAuthentication domainAuth = 
+							new DomainAuthentication(
+								domainID, 
+								credentials);
+
+						AuthenticationStatus authStatus = 
+							domainAuth.Authenticate();
+
+						if (authStatus == AuthenticationStatus.Success)
+						{
+							authenticated = true;
+						}
+						else if (authStatus == AuthenticationStatus.InvalidCredentials)
+						{
+							// There are bad credentials stored. Remove them.
+							simiasWebService.SaveDomainCredentials(domainID, null, CredentialType.None);
+						}
+					}
+
+					if (!authentiated)
+					{
+						LoginDialog.ShowAll();
+					}
 				}
 			}
 			else
