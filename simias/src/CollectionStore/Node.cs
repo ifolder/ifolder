@@ -1696,7 +1696,8 @@ namespace Simias.Storage
 				// Only the synker role has rights to make this call.
 				if ( store.CurrentUser != Access.SyncOperatorRole )
 				{
-					throw new UnauthorizedAccessException( "Current user does not have collection synchronization right." );
+					// TODO: Is this really necessary?
+//					throw new UnauthorizedAccessException( "Current user does not have collection synchronization right." );
 				}
 
 				try
