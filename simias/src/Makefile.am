@@ -1,15 +1,15 @@
 if LINUX
-SUBDIRS = Simias.dll FlaimProvider SimiasApp mDnsService AddressBook WebService
+SUBDIRS = Simias.dll FlaimProvider SimiasApp mDnsService AddressBook POBoxWS WebService
 DIST_SUBDIRS = $(SUBDIRS)
 endif
 
 if DARWIN
-SUBDIRS = Simias.dll SimiasApp mDnsService AddressBook WebService
+SUBDIRS = Simias.dll SimiasApp mDnsService AddressBook POBoxWS  WebService
 DIST_SUBDIRS = $(SUBDIRS)
 endif
 
 if WINDOWS
-SUBDIRS = Simias.dll FlaimProvider SimiasApp mDnsService AddressBook WebService
+SUBDIRS = Simias.dll FlaimProvider SimiasApp mDnsService AddressBook POBoxWS WebService
 DIST_SUBDIRS = $(SUBDIRS)
 endif
 
