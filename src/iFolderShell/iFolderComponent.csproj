@@ -94,17 +94,17 @@
                     AssemblyName = "Novell.iFolder"
                     HintPath = "..\iFolder\Novell.iFolder.dll"
                 />
+                <Reference
+                    Name = "System.Web.Services"
+                    AssemblyName = "System.Web.Services"
+                    HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
+                />
             </References>
         </Build>
         <Files>
             <Include>
                 <File
                     RelPath = "AssemblyInfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "CollisionNode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

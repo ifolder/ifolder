@@ -23,8 +23,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using Simias.Storage;
-using Simias.POBox;
 
 namespace Novell.iFolderCom
 {
