@@ -451,16 +451,11 @@ src/libsimias/Makefile
 src/libsimdezvous/Makefile
 src/mDnsDomain/Makefile
 test/Makefile
-test/ChangeLog/Makefile
 test/Common/Makefile
+test/ChangeLog/Makefile
 test/Configuration/Makefile
 test/CollectionStore/Makefile
 test/Smtp/Makefile
-test/Location/Makefile
-test/SyncCommon/Makefile
-test/SyncManager/Makefile
-test/SyncEndToEnd/Makefile
-test/POBox/Makefile
 test/SimiasTestsWS/Makefile
 test/SimiasTestsCmd/Makefile
 other/Makefile
