@@ -16,14 +16,14 @@ FlaimWrapper_SRCFILES = \
 	CSPStore.cpp \
 	CSPStoreObject.cpp \
 	FlaimWrapper.cpp
-	
+
 FlaimWrapper_OBJFILES = \
 	CSPObjectIterator$(OBJ_EXT) \
 	CSPropertyIterator$(OBJ_EXT) \
 	CSPStore$(OBJ_EXT) \
 	CSPStoreObject$(OBJ_EXT) \
 	FlaimWrapper$(OBJ_EXT)
-	
+
 EXTRA_DIST = $(FlaimWrapper_SRCFILES)
 
 
@@ -36,6 +36,8 @@ all: $(TARGETS)
 
 if DARWIN
 $(FlaimWrapper_Target): $(OBJS)
+	ranlib $(FLAIMLIBDIR)/libflm.a
+	ranlib $(FLAIMLIBDIR)/libsmiflm.a
 	$(CXX) -dynamiclib $^ $(LDOUT)$@ $(MYLDFLAGS)
 else
 $(FlaimWrapper_Target): $(OBJS)
@@ -58,7 +60,7 @@ CLEAN_FILES = $(FlaimWrapper_Target) $(OBJS)
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
-    
+ 
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 
@@ -91,13 +93,13 @@ endif
 
 if DARWIN
 if DEBUG
-build_os = macosx
-platform = unix
+FLAIMLIBDIR="../../../external/flaim/macosx/debug"
 CXX_FLAGS= -I"../../../external/flaim/macosx/include" -fshort-wchar -DDEBUG -DUNIX -D_REENTRANT -DFLAIMWRAPPER_EXPORTS -c
-MYLDFLAGS=-L"../../../external/flaim/macosx/debug" -lflm -lstdc++ -lpthread -shared
+MYLDFLAGS=-L$(FLAIMLIBDIR) -lflm -lstdc++ -lpthread -shared
 else
+FLAIMLIBDIR="../../../external/flaim/macosx/release"
 CXX_FLAGS= -I"../../../external/flaim/macosx/include" -fshort-wchar -DUNIX -D_REENTRANT -DFLAIMWRAPPER_EXPORTS -DOSX -c
-MYLDFLAGS=-dynamiclib -L"../../../external/flaim/macosx/release" -lflm -lstdc++ -lpthread -dylib
+MYLDFLAGS=-dynamiclib -L$(FLAIMLIBDIR) -lflm -lstdc++ -lpthread -dylib
 endif
 endif
 
