@@ -28,13 +28,16 @@ MSM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).msm
 MSI_LOG_FILE = devenv-addressbook-msi.log
 MSM_LOG_FILE = devenv-addressbook-msm.log
 
-.PHONY: package package-clean package-install package-uninstall addressbook
+.PHONY: package package-clean package-install package-uninstall addressbook devenv
 
 all clean:
 
 package: $(MSI_FILE)
 
-$(MSI_FILE): $(MSM_FILE) addressbook-install.sln addressbook-msi/addressbook-msi.vdproj
+devenv:
+	@if ! test -x "$(VSINSTALLDIR)/devenv.exe"; then echo "Error: Microsoft Visual Studio .NET is currently required to build MSI and MSM packages"; exit 1; fi
+
+$(MSI_FILE): devenv $(MSM_FILE) addressbook-install.sln addressbook-msi/addressbook-msi.vdproj
 	@rm -f $(MSI_LOG_FILE) $@
 	@CMD='"$(VSINSTALLDIR)/devenv.exe" addressbook-install.sln /build $(DEVENV_CONFIGURATION) /project addressbook-msi /out $(MSI_LOG_FILE)'; \
 	echo $$CMD; \
@@ -45,7 +48,7 @@ $(MSI_FILE): $(MSM_FILE) addressbook-install.sln addressbook-msi/addressbook-msi
 		grep -a "ERROR:" $(MSI_LOG_FILE); \
 	fi
 
-$(MSM_FILE): addressbook addressbook-install.sln addressbook-msm/addressbook-msm.vdproj
+$(MSM_FILE): devenv addressbook addressbook-install.sln addressbook-msm/addressbook-msm.vdproj
 	@rm -f $(MSM_LOG_FILE) $@
 	@CMD='"$(VSINSTALLDIR)/devenv.exe" addressbook-install.sln /build $(DEVENV_CONFIGURATION) /project addressbook-msm /out $(MSM_LOG_FILE)'; \
 	echo $$CMD; \
