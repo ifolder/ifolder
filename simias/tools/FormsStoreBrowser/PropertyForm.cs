@@ -86,7 +86,9 @@ namespace StoreBrowser
 			// 
 			// propertyEditor
 			// 
+			this.propertyEditor.Local = false;
 			this.propertyEditor.Location = new System.Drawing.Point(8, 24);
+			this.propertyEditor.MultiValued = false;
 			this.propertyEditor.Name = "propertyEditor";
 			this.propertyEditor.Size = new System.Drawing.Size(400, 176);
 			this.propertyEditor.TabIndex = 0;
@@ -95,6 +97,7 @@ namespace StoreBrowser
 			// 
 			// bOK
 			// 
+			this.bOK.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.bOK.Location = new System.Drawing.Point(8, 208);
 			this.bOK.Name = "bOK";
 			this.bOK.TabIndex = 1;
@@ -103,7 +106,7 @@ namespace StoreBrowser
 			// 
 			// bCancel
 			// 
-			this.bCancel.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.bCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.bCancel.Location = new System.Drawing.Point(96, 208);
 			this.bCancel.Name = "bCancel";
 			this.bCancel.TabIndex = 2;
@@ -112,7 +115,9 @@ namespace StoreBrowser
 			// 
 			// PropertyForm
 			// 
+			this.AcceptButton = this.bOK;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.CancelButton = this.bCancel;
 			this.ClientSize = new System.Drawing.Size(416, 246);
 			this.Controls.Add(this.bCancel);
 			this.Controls.Add(this.bOK);

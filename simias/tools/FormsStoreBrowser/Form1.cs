@@ -524,7 +524,7 @@ namespace StoreBrowser
 				col = (Collection)node;
 			else
 				col = (Collection)tView.SelectedNode.Parent.Tag;
-			new PropertyForm(col, node, null).Show();
+			new PropertyForm(col, node, null).ShowDialog();
 			tView.SelectedNode.Tag = col.Refresh(node);
 			listView1.Refresh();
 			browser.ShowNode(tView.SelectedNode);
