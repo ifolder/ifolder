@@ -29,7 +29,7 @@ using Mono.Posix;
 
 namespace Novell.iFolder
 {
-	internal class Util
+	public class Util
 	{
 		internal static string prefix = "@prefix@";
 		internal static string imagesdir = "@prefix@/share/ifolder3/images";
@@ -39,29 +39,29 @@ namespace Novell.iFolder
 		internal static uint DefaultBorderWidth = 10;
 
 
-		internal static void InitCatalog()
+		public static void InitCatalog()
 		{
 			Mono.Posix.Catalog.Init("ifolder3", "@prefix@/share/locale");
 		}
 
 
-		internal static string GS(string msgid)
+		public static string GS(string msgid)
 		{
 			return Mono.Posix.Catalog.GetString(msgid);
 		}
 
 
-		internal static string ImagesPath(string imgStr)
+		public static string ImagesPath(string imgStr)
 		{
 			return string.Format("{0}/{1}", imagesdir, imgStr);
 		}
 
-		internal static string HelpURL(string helpFile)
+		public static string HelpURL(string helpFile)
 		{
 			return string.Format("file://{0}/en/doc/user/data/{1}", helpdir, helpFile);
 		}
 
-		internal static void OpenInBrowser(string path)
+		public static void OpenInBrowser(string path)
 		{
 			System.Diagnostics.Process process;
 			process = new System.Diagnostics.Process();
@@ -93,7 +93,7 @@ namespace Novell.iFolder
 			throw new Exception("Unable to launch file browser");
 		}
 
-		internal static void ShowHelp(string helpFile, Gtk.Window parent)
+		public static void ShowHelp(string helpFile, Gtk.Window parent)
 		{
 			try
 			{
@@ -112,7 +112,7 @@ namespace Novell.iFolder
 			}
 		}
 
-		internal static void ShowAbout()
+		public static void ShowAbout()
 		{
 			try
 			{
