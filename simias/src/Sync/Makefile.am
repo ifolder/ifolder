@@ -55,7 +55,9 @@ install-exec-local: Sync.dll SyncCmd.exe
 	$(INSTALL_PROGRAM) Sync.dll SyncCmd.exe $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Sync.dll SyncCmd.exe TestSync.xml SyncTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); \
+		rm -f Sync.dll SyncCmd.exe TestSync.xml SyncTests.xml $(NUNIT_TESTS); \
+		rm -rf tmpS tmpStoreC tmpStoreS
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
