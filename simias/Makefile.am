@@ -32,6 +32,13 @@ maintainer-clean-local:
 	rm -f missing missing.lnk mkinstalldirs mkinstalldir.lnk
 	rm -rf autom4te.cache
 
+.PHONY: test
+test:
+	$(MAKE) -C test all
+		
+test-clean:
+	$(MAKE) -C test clean
+		
 .PHONY: doc doc-clean
 doc:
 	$(MAKE) -C doc all
