@@ -153,14 +153,14 @@ case $SIMIAS_OS in
         NUNIT_LIBPATH="$TOOLDIR/NUnit/mono/bin"
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
-		MONO=mint
+	MONO=mono
         NUNITFLAGS_OPTIMIZE=''
         PLATFORM_SUBDIRS=$DARWIN_SUBDIRS
         REPORT_DIR='$(DESTDIR)$(bindir)'
         REPORT_EXE='mint $(top_srcdir)/tools/Report/Report.exe'
         SEP='/'
-        SQLITELIB="libsqlite.so"
-        SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/linux"
+        SQLITELIB="sqlite"
+        SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/darwin"
         #
         # Set pkg-config variables
         #
