@@ -299,6 +299,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Events\NotifyEventSubscriber.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\FlaimProvider\FlaimError.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

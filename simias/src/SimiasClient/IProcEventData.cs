@@ -123,6 +123,13 @@ namespace Simias.Client.Event
 		private const string FEA_SizeToSyncTag = "SizeToSync";
 		private const string FEA_SizeRemainingTag = "SizeRemaining";
 		private const string FEA_DirectionTag = "Direction";
+
+		/// <summary>
+		/// Xml tags used to describe an NotifyEventArgs object.
+		/// </summary>
+		private const string NMA_MessageTag = "Message";
+		private const string NMA_TimeTag = "Time";
+		private const string NMA_TypeTag = "Type";
 		
 		/// <summary>
 		/// Xml document used to hold event data.
@@ -181,6 +188,19 @@ namespace Simias.Client.Event
 		}
 
 		/// <summary>
+		/// Initalizes an instance of the object.
+		/// </summary>
+		/// <param name="args">Information regarding the notify event.</param>
+		public IProcEventData( NotifyEventArgs args )
+		{
+			document = new XmlDocument();
+			XmlElement element = document.CreateElement( EventTag );
+			element.SetAttribute( EventTypeTag, typeof( NotifyEventArgs ).Name );
+			document.AppendChild( element );
+			FromNotifyEventArgs( args );
+		}
+
+		/// <summary>
 		/// Initializes an instance of the object.
 		/// </summary>
 		/// <param name="document">Xml document that contains an IProcEventData message.</param>
@@ -236,6 +256,17 @@ namespace Simias.Client.Event
 			AddData( new IProcEventNameValue( FEA_SizeToSyncTag, args.SizeToSync.ToString() ) );
 			AddData( new IProcEventNameValue( FEA_SizeRemainingTag, args.SizeRemaining.ToString() ) );
 			AddData( new IProcEventNameValue( FEA_DirectionTag, args.Direction.ToString() ) );
+		}
+
+		/// <summary>
+		/// Translates the information in the NotifyEventArgs object into the IProcEventData object.
+		/// </summary>
+		/// <param name="args">NotifyEventArgs containing the notify event information.</param>
+		private void FromNotifyEventArgs( NotifyEventArgs args )
+		{
+			AddData( new IProcEventNameValue( NMA_TypeTag, args.EventData ) );
+			AddData( new IProcEventNameValue( NMA_TimeTag, args.TimeStamp.Ticks.ToString() ) );
+			AddData( new IProcEventNameValue( NMA_MessageTag, args.Message ) );
 		}
 		#endregion
 
@@ -491,6 +522,46 @@ namespace Simias.Client.Event
 			NodeEventArgs args = new NodeEventArgs( source, node, collection, type, changeType, eventID, time, masterRev, slaveRev, fileSize );
 			args.Flags = flags;
 			return args;
+		}
+
+		/// <summary>
+		/// Converts the IProcEventData object into a NotifyEventArgs object.
+		/// </summary>
+		/// <returns>A NotifyEventArgs object.</returns>
+		public NotifyEventArgs ToNotifyEventArgs()
+		{
+			// Preinitialize all of the node event arguments.
+			string type = string.Empty;
+			string message = string.Empty;
+			DateTime time = DateTime.MinValue;
+
+			// Walk through each named/value pair and convert the xml data back into NotifyEventArgs data.
+			foreach ( XmlNode xn in document.DocumentElement )
+			{
+				switch ( xn.Name )
+				{
+					case NMA_TypeTag:
+					{
+						type = xn.InnerText;
+						break;
+					}
+
+					case NMA_MessageTag:
+					{
+						message = xn.InnerText;
+						break;
+					}
+
+					case NMA_TimeTag:
+					{
+						time = new DateTime( Convert.ToInt64( xn.InnerText ) );
+						break;
+					}
+				}
+			}
+			
+			// Create the object and set the flags.
+			return new NotifyEventArgs( type, message, time );
 		}
 
 		/// <summary>

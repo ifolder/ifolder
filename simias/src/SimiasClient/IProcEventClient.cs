@@ -155,6 +155,7 @@ namespace Simias.Client.Event
 		private event IProcEventHandler onChangedNodeEvent = null;
 		private event IProcEventHandler onCollectionSyncEvent = null;
 		private event IProcEventHandler onFileSyncEvent = null;
+		private event IProcEventHandler onNotifyEvent = null;
 
 		/// <summary>
 		/// Delegate and context used to indicate an error.
@@ -544,10 +545,10 @@ namespace Simias.Client.Event
 
 				case "CollectionSyncEventArgs":
 				{
-					// Get the collection sync arguments from the document.
-					CollectionSyncEventArgs collectionArgs = eventData.ToCollectionSyncEventArgs();
 					if ( onCollectionSyncEvent != null )
 					{
+						// Get the collection sync arguments from the document.
+						CollectionSyncEventArgs collectionArgs = eventData.ToCollectionSyncEventArgs();
 						Delegate[] cbList = onCollectionSyncEvent.GetInvocationList();
 						foreach ( IProcEventHandler cb in cbList )
 						{
@@ -566,10 +567,10 @@ namespace Simias.Client.Event
 
 				case "FileSyncEventArgs":
 				{
-					// Get the file sync arguments from the document.
-					FileSyncEventArgs fileArgs = eventData.ToFileSyncEventArgs();
 					if ( onFileSyncEvent != null )
 					{
+						// Get the file sync arguments from the document.
+						FileSyncEventArgs fileArgs = eventData.ToFileSyncEventArgs();
 						Delegate[] cbList = onFileSyncEvent.GetInvocationList();
 						foreach ( IProcEventHandler cb in cbList )
 						{
@@ -580,6 +581,28 @@ namespace Simias.Client.Event
 							catch
 							{
 								onFileSyncEvent -= cb;
+							}
+						}
+					}
+					break;
+				}
+
+				case "NotifyEventArgs":
+				{
+					if ( onNotifyEvent != null )
+					{
+						// Get the notify arguments from the document.
+						NotifyEventArgs notifyArgs = eventData.ToNotifyEventArgs();
+						Delegate[] cbList = onNotifyEvent.GetInvocationList();
+						foreach ( IProcEventHandler cb in cbList )
+						{
+							try
+							{
+								cb( notifyArgs );
+							}
+							catch
+							{
+								onNotifyEvent -= cb;
 							}
 						}
 					}
@@ -627,15 +650,8 @@ namespace Simias.Client.Event
 				}
 
 				case "CollectionSyncEventArgs":
-				{
-					lock ( syncEventMessageQueue )
-					{
-						syncEventMessageQueue.Enqueue( ed );
-					}
-					break;
-				}
-
 				case "FileSyncEventArgs":
+				case "NotifyEventArgs":
 				{
 					lock ( syncEventMessageQueue )
 					{
@@ -932,6 +948,13 @@ namespace Simias.Client.Event
 						break;
 					}
 
+					case IProcEventAction.AddNotifyMessage:
+					{
+						duplicateSubscriber = ( onNotifyEvent != null ) ? true : false;
+						onNotifyEvent += handler;
+						break;
+					}
+
 					case IProcEventAction.RemoveNodeCreated:
 					{
 						onCreatedNodeEvent -= handler;
@@ -964,6 +987,13 @@ namespace Simias.Client.Event
 					{
 						onFileSyncEvent -= handler;
 						duplicateSubscriber = ( onFileSyncEvent != null ) ? true : false;
+						break;
+					}
+
+					case IProcEventAction.RemoveNotifyMessage:
+					{
+						onNotifyEvent -= handler;
+						duplicateSubscriber = ( onNotifyEvent != null ) ? true : false;
 						break;
 					}
 				}

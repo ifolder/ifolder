@@ -66,20 +66,17 @@ namespace Simias.Event
 		/// </summary>
 		private EventSubscriber simiasNodeEventSubscriber = null;
 		private SyncEventSubscriber simiasSyncEventSubscriber = null;
+		private NotifyEventSubscriber simiasNotifyEventSubscriber = null;
 
 		/// <summary>
 		/// Event handlers defined for this server.
 		/// </summary>
-		private NodeEventHandler addNodeChanged = null;
-		private NodeEventHandler addNodeCreated = null;
-		private NodeEventHandler addNodeDeleted = null;
-		private NodeEventHandler removeNodeChanged = null;
-		private NodeEventHandler removeNodeCreated = null;
-		private NodeEventHandler removeNodeDeleted = null;
-		private CollectionSyncEventHandler addCollectionSync = null;
-		private CollectionSyncEventHandler removeCollectionSync = null;
-		private FileSyncEventHandler addFileSync = null;
-		private FileSyncEventHandler removeFileSync = null;
+		private NodeEventHandler nodeChangedHandler = null;
+		private NodeEventHandler nodeCreatedHandler = null;
+		private NodeEventHandler nodeDeletedHandler = null;
+		private CollectionSyncEventHandler collectionSyncHandler = null;
+		private FileSyncEventHandler fileSyncHandler = null;
+		private NotifyEventHandler notifyHandler = null;
 		#endregion
 
 		#region Properties
@@ -138,6 +135,12 @@ namespace Simias.Event
 				simiasSyncEventSubscriber.Dispose();
 				simiasSyncEventSubscriber = null;
 			}
+
+			if ( simiasNotifyEventSubscriber != null )
+			{
+				simiasNotifyEventSubscriber.Dispose();
+				simiasNotifyEventSubscriber = null;
+			}
 		}
 
 		/// <summary>
@@ -173,6 +176,24 @@ namespace Simias.Event
 			{
 				DisposeSubscribers();
 				log.Error( e, "Error processing NodeEventCallback event for client." );
+			}
+		}
+
+		/// <summary>
+		/// Callback used to indicate that a notify message has been generated.
+		/// </summary>
+		/// <param name="args">Arguments that give information about the notification.</param>
+		private void NotifyEventCallback( NotifyEventArgs args )
+		{
+			try
+			{
+				// Send the event to the client.
+				eventSocket.Send( new IProcEventData( args ).ToBuffer() );
+			}
+			catch ( Exception e )
+			{
+				DisposeSubscribers();
+				log.Error( e, "Error processing NotifyEventCallback event for client." );
 			}
 		}
 
@@ -217,105 +238,120 @@ namespace Simias.Event
 				{
 					case IProcEventAction.AddNodeChanged:
 					{
-						if ( addNodeChanged == null )
+						if ( nodeChangedHandler == null )
 						{
-							addNodeChanged = new NodeEventHandler( NodeEventCallback );
-							simiasNodeEventSubscriber.NodeChanged += addNodeChanged;
+							nodeChangedHandler = new NodeEventHandler( NodeEventCallback );
+							simiasNodeEventSubscriber.NodeChanged += nodeChangedHandler;
 						}
-
 						break;
 					}
 
 					case IProcEventAction.AddNodeCreated:
 					{
-						if ( addNodeCreated == null )
+						if ( nodeCreatedHandler == null )
 						{
-							addNodeCreated = new NodeEventHandler( NodeEventCallback );
-							simiasNodeEventSubscriber.NodeCreated += addNodeCreated;
+							nodeCreatedHandler = new NodeEventHandler( NodeEventCallback );
+							simiasNodeEventSubscriber.NodeCreated += nodeCreatedHandler;
 						}
-
 						break;
 					}
 
 					case IProcEventAction.AddNodeDeleted:
 					{
-						if ( addNodeDeleted == null )
+						if ( nodeDeletedHandler == null )
 						{
-							addNodeDeleted = new NodeEventHandler( NodeEventCallback );
-							simiasNodeEventSubscriber.NodeDeleted += addNodeDeleted;
+							nodeDeletedHandler = new NodeEventHandler( NodeEventCallback );
+							simiasNodeEventSubscriber.NodeDeleted += nodeDeletedHandler;
 						}
-
 						break;
 					}
 
 					case IProcEventAction.AddCollectionSync:
 					{
-						if ( addCollectionSync == null )
+						if ( collectionSyncHandler == null )
 						{
-							addCollectionSync = new CollectionSyncEventHandler( CollectionSyncEventCallback );
-							simiasSyncEventSubscriber.CollectionSync += addCollectionSync;
+							collectionSyncHandler = new CollectionSyncEventHandler( CollectionSyncEventCallback );
+							simiasSyncEventSubscriber.CollectionSync += collectionSyncHandler;
 						}
-
 						break;
 					}
 
 					case IProcEventAction.AddFileSync:
 					{
-						if ( addFileSync == null )
+						if ( fileSyncHandler == null )
 						{
-							addFileSync = new FileSyncEventHandler( FileSyncEventCallback );
-							simiasSyncEventSubscriber.FileSync += addFileSync;
+							fileSyncHandler = new FileSyncEventHandler( FileSyncEventCallback );
+							simiasSyncEventSubscriber.FileSync += fileSyncHandler;
 						}
+						break;
+					}
 
+					case IProcEventAction.AddNotifyMessage:
+					{
+						if ( notifyHandler == null )
+						{
+							notifyHandler = new NotifyEventHandler( NotifyEventCallback );
+							simiasNotifyEventSubscriber.NotifyEvent += notifyHandler;
+						}
 						break;
 					}
 
 					case IProcEventAction.RemoveNodeChanged:
 					{
-						if ( removeNodeChanged != null )
+						if ( nodeChangedHandler != null )
 						{
-							simiasNodeEventSubscriber.NodeChanged -= removeNodeChanged;
-							removeNodeChanged = null;
+							simiasNodeEventSubscriber.NodeChanged -= nodeChangedHandler;
+							nodeChangedHandler = null;
 						}
 						break;
 					}
 
 					case IProcEventAction.RemoveNodeCreated:
 					{
-						if ( removeNodeCreated != null )
+						if ( nodeCreatedHandler != null )
 						{
-							simiasNodeEventSubscriber.NodeCreated -= removeNodeCreated;
-							removeNodeCreated = null;
+							simiasNodeEventSubscriber.NodeCreated -= nodeCreatedHandler;
+							nodeCreatedHandler = null;
 						}
 						break;
 					}
 
 					case IProcEventAction.RemoveNodeDeleted:
 					{
-						if ( removeNodeDeleted != null )
+						if ( nodeDeletedHandler != null )
 						{
-							simiasNodeEventSubscriber.NodeDeleted -= removeNodeDeleted;
-							removeNodeDeleted = null;
+							simiasNodeEventSubscriber.NodeDeleted -= nodeDeletedHandler;
+							nodeDeletedHandler = null;
 						}
 						break;
 					}
 
 					case IProcEventAction.RemoveCollectionSync:
 					{
-						if ( removeCollectionSync != null )
+						if ( collectionSyncHandler != null )
 						{
-							simiasSyncEventSubscriber.CollectionSync -= removeCollectionSync;
-							removeCollectionSync = null;
+							simiasSyncEventSubscriber.CollectionSync -= collectionSyncHandler;
+							collectionSyncHandler = null;
 						}
 						break;
 					}
 
 					case IProcEventAction.RemoveFileSync:
 					{
-						if ( removeFileSync != null )
+						if ( fileSyncHandler != null )
 						{
-							simiasSyncEventSubscriber.FileSync -= removeFileSync;
-							removeFileSync = null;
+							simiasSyncEventSubscriber.FileSync -= fileSyncHandler;
+							fileSyncHandler = null;
+						}
+						break;
+					}
+
+					case IProcEventAction.RemoveNotifyMessage:
+					{
+						if ( notifyHandler != null )
+						{
+							simiasNotifyEventSubscriber.NotifyEvent -= notifyHandler;
+							notifyHandler = null;
 						}
 						break;
 					}
@@ -352,6 +388,7 @@ namespace Simias.Event
 					// Create the event subscribers.
 					simiasNodeEventSubscriber = new EventSubscriber();
 					simiasSyncEventSubscriber = new SyncEventSubscriber();
+					simiasNotifyEventSubscriber = new NotifyEventSubscriber();
 					log.Debug( "Client {0}:{1} has registered for interprocess events", er.RemoteAddress, er.Port );
 				}
 				else
@@ -363,7 +400,9 @@ namespace Simias.Event
 			else if ( IProcEventListener.IsValidRequest( document ) )
 			{
 				// Make sure that registration has occurred.
-				if ( ( simiasNodeEventSubscriber == null ) || ( simiasSyncEventSubscriber == null ) )
+				if ( ( simiasNodeEventSubscriber == null ) || 
+					 ( simiasSyncEventSubscriber == null ) ||
+					 ( simiasNodeEventSubscriber == null ) )
 				{
 					log.Error( "Client must be registered before subscribing for events." );
 					throw new SimiasException( "Client must be registered before subscribing for events." );

@@ -55,6 +55,11 @@ namespace Simias.Client.Event
 		AddFileSync,
 
 		/// <summary>
+		/// Add Notify message events.
+		/// </summary>
+		AddNotifyMessage,
+
+		/// <summary>
 		/// Remove Node object created event.
 		/// </summary>
 		RemoveNodeCreated,
@@ -77,7 +82,12 @@ namespace Simias.Client.Event
 		/// <summary>
 		/// Remove File synchronization event.
 		/// </summary>
-		RemoveFileSync
+		RemoveFileSync,
+
+		/// <summary>
+		/// Remove Notify message event.
+		/// </summary>
+		RemoveNotifyMessage
 };
 
 	/// <summary>

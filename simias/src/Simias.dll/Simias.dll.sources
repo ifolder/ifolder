@@ -4,6 +4,7 @@ AssemblyInfo.cs
 ../Events/EventPublisher.cs
 ../Events/IProcEventServer.cs
 ../Events/IProcEventSubscriber.cs
+../Events/NotifyEventSubscriber.cs
 ../ChangeLog/ChangeLog.cs
 ../CollectionStore/EventSubscriber.cs
 ../CollectionStore/AccessControl.cs
