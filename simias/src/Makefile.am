@@ -1,6 +1,6 @@
-SUBDIRS = Simias.dll mDnsService
+SUBDIRS = Simias.dll CollectionEvents mDnsService
 
-DIST_SUBDIRS = Simias.dll mDnsService
+DIST_SUBDIRS = Simias.dll CollectionEvents mDnsService
 
 EXTRA_DIST = simias-snakeoil.keys $(srcdir)/install-simias-to-gac.in
 

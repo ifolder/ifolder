@@ -80,19 +80,19 @@
                     HintPath = "..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "UserService"
-                    AssemblyName = "UserService"
-                    HintPath = "..\Service\bin\Debug\UserService.dll"
-                />
-                <Reference
-                    Name = "Common"
-                    AssemblyName = "Common"
-                    HintPath = "..\Common\Library\bin\Debug\Common.dll"
+                    Name = "Simias"
+                    Project = "{7839E703-0177-4162-B083-BCFD4ED1CC1B}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
                     Name = "mDnsResponder"
                     AssemblyName = "mDnsResponder"
                     HintPath = "..\..\external\mDnsResponder\net\bin\mDnsResponder.dll"
+                />
+                <Reference
+                    Name = "mDnsResponderApi"
+                    AssemblyName = "mDnsResponderApi"
+                    HintPath = "..\..\external\mDnsResponder\net\bin\mDnsResponderApi.dll"
                 />
             </References>
         </Build>

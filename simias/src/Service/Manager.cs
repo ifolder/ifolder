@@ -94,10 +94,7 @@ namespace Simias.Service
 								break;
 						}
 					}
-					if (serviceList.Count == 0)
-					{
-						installDefaultServices();
-					}
+					installDefaultServices();
 				}
 				else
 				{
@@ -192,7 +189,7 @@ namespace Simias.Service
 		/// </summary>
 		private void installDefaultServices()
 		{
-			Install(new ThreadServiceCtl(conf, "Simias Event Service", "Simias", "Simias.Event.EventService"));
+			Install(new ProcessServiceCtl(conf, "Simias Event Service", "EventService.exe"));
 			Install(new ThreadServiceCtl(conf, "Simias Sync Service", "Simias", "Simias.Sync.SyncManagerService"));
 			Install(new ThreadServiceCtl(conf, "Simias File Monitor Service", "Simias", "Simias.Event.FsWatcher"));
 			//Install(new ThreadServiceCtl(conf, "multi-cast DNS Service", "mDnsService", "Simias.Service.mDnsService"));
@@ -239,7 +236,19 @@ namespace Simias.Service
 				}
 				else
 				{
-					logger.Warn("{0} service already installed", svc.Name);
+					// Replace the existing service
+					lock (this)
+					{
+						for (int i =0; i < serviceList.Count; ++i)
+						{
+							ServiceCtl oldSvc = (ServiceCtl)serviceList[i];
+							if (oldSvc.Name.Equals(svc.Name))
+							{
+								serviceList[i] = svc;
+								break;
+							}
+						}
+					}
 				}
 			}
 		}

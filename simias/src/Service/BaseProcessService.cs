@@ -97,35 +97,51 @@ namespace Simias.Service
 				{
 					string line;
 					line = Console.ReadLine();
-					msg = new Message(null, line);
-					switch (msg.MajorMessage)
+					if (line != null)
 					{
-						case MessageCode.Start:
-							start();
-							sendComplete(msg);
-							break;
-						case MessageCode.Stop:
+						msg = new Message(null, line);
+						switch (msg.MajorMessage)
+						{
+							case MessageCode.Start:
+								start();
+								sendComplete(msg);
+								break;
+							case MessageCode.Stop:
+								stop();
+								sendComplete(msg);
+								return;
+							case MessageCode.Pause:
+								pause();
+								sendComplete(msg);
+								break;
+							case MessageCode.Resume:
+								resume();
+								sendComplete(msg);
+								break;
+							case MessageCode.Custom:
+								custom(msg.CustomMessage, msg.Data);
+								sendComplete(msg);
+								break;
+						}
+					}
+					else
+					{
+						try
+						{
+							// The controling process has gone away, stop the service.
 							stop();
-							sendComplete(msg);
-							return;
-						case MessageCode.Pause:
-							pause();
-							sendComplete(msg);
-							break;
-						case MessageCode.Resume:
-							resume();
-							sendComplete(msg);
-							break;
-						case MessageCode.Custom:
-							custom(msg.CustomMessage, msg.Data);
-							sendComplete(msg);
-							break;
+						}
+						catch {}
+						return;
 					}
 				}
-				catch 
+				catch
 				{
 					if (msg != null)
+					{
 						sendError(msg);
+						msg = null;
+					}
 				}
 			}
 		}

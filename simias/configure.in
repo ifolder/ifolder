@@ -340,6 +340,7 @@ simias.pc
 src/Makefile
 src/install-simias-to-gac
 src/Simias.dll/Makefile
+src/CollectionEvents/Makefile
 src/mDnsService/Makefile
 package/Makefile
 package/windows/Makefile
