@@ -435,9 +435,9 @@ namespace Novell.iFolder
 					if(defDomain.ID != domain.ID)
 					{
 						defDomain.IsDefault = false;
-						domain.IsDefault = true;
 						defDomain = domain;
 					}
+					domain.IsDefault = true;
 				}
 				catch (Exception ex)
 				{
