@@ -403,7 +403,7 @@ fprintf(stderr, "handle_ping_response() %s -> %s entered\n",
 	/* Update the buddy's simias-url in blist.xml */
 	buddy = gaim_find_buddy(account, sender);
 	sprintf(user_id_setting, "simias-user-id:%s", machine_name);
-	sprintf(simias_url_setting, "simias-url:%s", simias_url);
+	sprintf(simias_url_setting, "simias-url:%s", machine_name);
 	gaim_blist_node_set_string(&(buddy->node), user_id_setting, user_id);
 	gaim_blist_node_set_string(&(buddy->node), simias_url_setting, simias_url);
 
