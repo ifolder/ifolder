@@ -2336,13 +2336,10 @@ namespace Novell.iFolder
 								ifHolder.iFolder = updatediFolder;
 						}
 						iFolderTreeStore.SetValue(iter, 0, ifHolder);
-
-						LogMessage(string.Format(Util.GS(
-							"Started sync of iFolder {0}"), args.Name));
 					}
-					else
-						LogMessage(string.Format(Util.GS(
-							"Started sync of Collection {0}"), args.Name));
+
+					LogMessage(string.Format(Util.GS(
+						"Started sync of: {0}"), args.Name));
 
 					break;
 				}
@@ -2386,27 +2383,15 @@ namespace Novell.iFolder
 					{
 						UpdateStatus(Util.GS("Idle..."));
 
-						if(curiFolders.ContainsKey(args.ID))
-						{
-							LogMessage(string.Format(Util.GS(
-								"Finshed sync of iFolder {0}"), args.Name));
-						}
-						else
-							LogMessage(string.Format(Util.GS(
-								"Finshed sync of Collection {0}"), args.Name));
+						LogMessage(string.Format(Util.GS(
+							"Finished sync of: {0}"), args.Name));
 					}
 					else
 					{
 						UpdateStatus(Util.GS("Failed synchronization"));
 
-						if(curiFolders.ContainsKey(args.ID))
-						{
-							LogMessage(string.Format(Util.GS(
-								"Failed sync of iFolder {0}"), args.Name));
-						}
-						else
-							LogMessage(string.Format(Util.GS(
-								"Failed Syncing Collection {0}"), args.Name));
+						LogMessage(string.Format(Util.GS(
+							"Failed Sync of: {0}"), args.Name));
 					}
 					break;
 				}
@@ -2423,22 +2408,22 @@ namespace Novell.iFolder
 					if(args.Delete)
 					{
 						UpdateStatus(string.Format(Util.GS(
-								"Deleting file from server {0}"), args.Name));
+								"Deleting file from server: {0}"), args.Name));
 						if(SyncFileName != args.Name)
 						{
 							LogMessage(string.Format(Util.GS(
-								"Deleting file from server {0}"), args.Name));
+								"Deleting file from server: {0}"), args.Name));
 							SyncFileName = args.Name;
 						}
 					}
 					else
 					{
 						UpdateStatus(string.Format(Util.GS(
-									"Uploading file {0}"), args.Name));
+									"Uploading file: {0}"), args.Name));
 						if(SyncFileName != args.Name)
 						{
 							LogMessage(string.Format(Util.GS(
-									"Uploading file {0}"), args.Name));
+									"Uploading file: {0}"), args.Name));
 							SyncFileName = args.Name;
 						}
 					}
@@ -2449,22 +2434,22 @@ namespace Novell.iFolder
 					if(args.Delete)
 					{
 						UpdateStatus(string.Format(Util.GS(
-									"Deleting file {0}"), args.Name));
+									"Deleting file: {0}"), args.Name));
 						if(SyncFileName != args.Name)
 						{
 							LogMessage(string.Format(Util.GS(
-									"Deleing file {0}"), args.Name));
+									"Deleing file: {0}"), args.Name));
 							SyncFileName = args.Name;
 						}
 					}
 					else
 					{
 						UpdateStatus(string.Format(Util.GS(
-									"Downloading file {0}"), args.Name));
+									"Downloading file: {0}"), args.Name));
 						if(SyncFileName != args.Name)
 						{
 							LogMessage(string.Format(Util.GS(
-									"Downloading file {0}"), args.Name));
+									"Downloading file: {0}"), args.Name));
 							SyncFileName = args.Name;
 						}
 					}
