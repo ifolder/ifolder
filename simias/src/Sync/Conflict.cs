@@ -53,7 +53,7 @@ public class Conflict
 			//conflictNode.Properties.ModifyNodeProperty(PropertyTags.MasterIncarnation, conflictNode.LocalIncarnation);
 			//Log.Spew("Reconstituted conflict node {2} local {0}, master {1}",
 			//		conflictNode.LocalIncarnation, conflictNode.MasterIncarnation, conflictNode.Name);
-			Log.Assert(conflictNode.LocalIncarnation == conflictNode.MasterIncarnation);
+//			Log.Assert(conflictNode.LocalIncarnation == conflictNode.MasterIncarnation);
 		}
 		else
 		{
