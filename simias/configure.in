@@ -9,7 +9,7 @@ TOOLDIR='$(top_srcdir)/tools'
 DOCDIR="$SRCDIR/doc"
 APIDOCDIR="$SRCDIR/api-doc"
 
-COMMON_SUBDIRS="Configuration Common CollectionEvents UserService StoreProvider FsProvider Identity Smtp"
+COMMON_SUBDIRS="Configuration Common CollectionEvents UserService StoreProvider FsProvider SqliteProvider Identity Smtp"
 LINUX_SUBDIRS="CommonGtkWindows"
 WINDOWS_SUBDIRS="CommonFormWindows"
 
@@ -63,6 +63,8 @@ case $host_os in
         SEP='/'
         PLATFORM_SUBDIRS=$LINUX_SUBDIRS
         NON_PLATFORM_SUBDIRS=$WINDOWS_SUBDIRS
+		SQLITELIB_PATH="../../external/sqlite/linux"
+		SQLITELIB="libsqlite.so"
     ;;
     cygwin)
         AC_CHECK_PROG(CSC, csc, csc)
@@ -118,6 +120,8 @@ case $host_os in
         SEP='$(EMPTY)\\$(EMPTY)'
         PLATFORM_SUBDIRS=$WINDOWS_SUBDIRS
         NON_PLATFORM_SUBDIRS=$LINUX_SUBDIRS
+		SQLITELIB_PATH="../../external/sqlite/w32"
+		SQLITELIB="sqlite.dll"
     ;;
     *)
         AC_MSG_ERROR([Unknown host_os: $host_os])
@@ -187,6 +191,8 @@ AC_SUBST(LINUX_SUBDIRS)
 AC_SUBST(WINDOWS_SUBDIRS)
 AC_SUBST(PLATFORM_SUBDIRS)
 AC_SUBST(NON_PLATFORM_SUBDIRS)
+AC_SUBST(SQLITELIB_PATH)
+AC_SUBST(SQLITELIB)
 
 AC_OUTPUT([
 Makefile
@@ -199,6 +205,7 @@ src/CollectionEvents/Makefile
 src/UserService/Makefile
 src/StoreProvider/Makefile
 src/FsProvider/Makefile
+src/SqliteProvider/Makefile
 src/Identity/Makefile
 src/Smtp/Makefile
 ])
