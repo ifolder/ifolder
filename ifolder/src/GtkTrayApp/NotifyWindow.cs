@@ -472,7 +472,7 @@ namespace Novell.iFolder
 		}
 
 
-		[DllImport("libgtk-x11-2.0.so")]
+		[DllImport("libgtk-x11-2.0.so.0")]
 		static extern IntPtr gdk_pixmap_create_from_xpm(IntPtr drawable, 
 			out IntPtr mask, ref Gdk.Color transparent_color, string filename);
 
@@ -497,7 +497,7 @@ namespace Novell.iFolder
 			return ret;
 		}
 
-		[DllImport("libgtk-x11-2.0.so")]
+		[DllImport("libgtk-x11-2.0.so.0")]
 		static extern void gdk_pixbuf_render_pixmap_and_mask(IntPtr raw, 
 				out IntPtr pixmap_return, out IntPtr mask_return, 
 				int alpha_threshold);
