@@ -1,13 +1,13 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-Simias.Service_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/BaseProcessService.cs $(srcdir)/IThreadService.cs $(srcdir)/Manager.cs $(srcdir)/Message.cs $(srcdir)/ProcessServiceCtl.cs $(srcdir)/ServiceCtl.cs $(srcdir)/ServiceType.cs $(srcdir)/State.cs $(srcdir)/ThreadServiceCtl.cs
-Simias.Service_CSFILES_CSC := $(subst /,$(SEP),$(Simias.Service_CSFILES))
-Simias.Service_INCLUDES = 
-Simias.Service_RESOURCES =
-Simias.Service_FLAGS = $(CSC_LIBFLAG)
-Simias.Service_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll
-Simias.Service_LIBPATH = /opt/gnome2/lib /usr/lib ../Common ../CollectionEvents
+Service_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/BaseProcessService.cs $(srcdir)/IThreadService.cs $(srcdir)/Manager.cs $(srcdir)/Message.cs $(srcdir)/ProcessServiceCtl.cs $(srcdir)/ServiceCtl.cs $(srcdir)/ServiceType.cs $(srcdir)/State.cs $(srcdir)/ThreadServiceCtl.cs
+Service_CSFILES_CSC := $(subst /,$(SEP),$(Service_CSFILES))
+Service_INCLUDES = 
+Service_RESOURCES =
+Service_FLAGS = $(CSC_LIBFLAG)
+Service_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll
+Service_LIBPATH = /opt/gnome2/lib /usr/lib ../Common ../CollectionEvents
 
 NUNIT_TESTS := ServiceTests.exe ThreadServiceTest.dll ProcessServiceTest.exe
 
@@ -35,14 +35,14 @@ ProcessServiceTest_FLAGS = $(CSC_EXEFLAG)
 ProcessServiceTest_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Common.dll Simias.Service.dll
 ProcessServiceTest_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common 
 
-EXTRA_DIST = $(Simias.Service_CSFILES) $(ServiceTests_CSFILES) $(ThreadServiceTest_CSFILES) $(ProcessServiceTest_CSFILES)
+EXTRA_DIST = $(Service_CSFILES) $(ServiceTests_CSFILES) $(ThreadServiceTest_CSFILES) $(ProcessServiceTest_CSFILES)
 
 CUR_DIR := $(shell pwd)
 
 all: Simias.Service.dll
 
-Simias.Service.dll: $(Simias.Service_CSFILES) $(Simias.Service_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(Simias.Service_FLAGS) $(Simias.Service_LIBS:%=/r:%) $(Simias.Service_LIBPATH:%=/lib:%) $(Simias.Service_CSFILES_CSC) /doc:Simias.Service.doc.xml
+Simias.Service.dll: $(Service_CSFILES) $(Service_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(Service_FLAGS) $(Service_LIBS:%=/r:%) $(Service_LIBPATH:%=/lib:%) $(Service_CSFILES_CSC) /doc:Simias.Service.doc.xml
 	
 ServiceTests.exe: $(ServiceTests_CSFILES) $(ServiceTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(ServiceTests_FLAGS) $(ServiceTests_LIBS:%=/r:%) $(ServiceTests_LIBPATH:%=/lib:%) $(ServiceTests_CSFILES_CSC)
