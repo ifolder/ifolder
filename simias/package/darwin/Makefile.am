@@ -20,14 +20,25 @@
 #  Author: Paul Thomas <pthomas@novell.com>
 #
 #######################################################################
-SUBDIRS = $(SIMIAS_OS)
+EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/simias.spec.in
 
-DIST_SUBDIRS = darwin linux windows
+RELEASE = 1
+RPM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).$(target_cpu).rpm
+SRPM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).src.rpm
 
-.PHONY: package package-clean package-install package-uninstall
-package package-clean package-install package-uninstall:
-	$(MAKE) -C $(SIMIAS_OS) $@
+.PHONY: package package-clean package-install package-uninstall ifolder
+
+all clean:
+
+package:
+
+package-install:
+	
+package-uninstall:
+
+package-clean clean-local:
+
+distclean-local:
 
 maintainer-clean-local:
-	rm -f Makefile.in
 

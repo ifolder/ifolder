@@ -71,6 +71,7 @@ AC_SUBST(SPACE)
 COMMON_SUBDIRS="Common Location CollectionEvents UserService Storage StoreProvider FsProvider SqliteProvider CollectionStore FsWatcher Agent RemotingSniffer SyncCommon StoreWatcher CollectionWatcher SyncManager Sync SyncLogicLite SyncTools AddressBook AddressBookCmd Smtp InviteAgent MiniShare AcceptanceTests"
 LINUX_SUBDIRS="CommonGtkWindows"
 WINDOWS_SUBDIRS="CommonFormWindows"
+DARWIN_SUBDIRS=
 
 AC_SUBST(COMMON_SUBDIRS)
 AC_SUBST(LINUX_SUBDIRS)
@@ -83,6 +84,9 @@ case $host_os in
     linux*)
         SIMIAS_OS='linux'
     ;;
+    darwin*)
+        SIMIAS_OS='darwin'
+    ;;
     cygwin*)
         SIMIAS_OS='windows'
     ;;
@@ -93,11 +97,35 @@ esac
 AC_SUBST(SIMIAS_OS)
 AM_CONDITIONAL(LINUX, test "$SIMIAS_OS" = "linux")
 AM_CONDITIONAL(WINDOWS, test "$SIMIAS_OS" = "windows")
+AM_CONDITIONAL(DARWIN, test "$SIMIAS_OS" = "darwin")
 
 #
 # Set platform-specific variables
 #
 case $SIMIAS_OS in
+    #
+    # Darwin-specific configuration
+    #
+    darwin)
+        #
+        # Set variables
+        #
+        COMMON_CLEAN_FILES='.cstore .simias'
+        ICON_EXT='.ico'
+        ICON_FLAG='/resource:'
+        NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
+        NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
+        NUNIT_FLAGS='/nologo'
+        NUNITFLAGS_DEBUG=''
+		MONO=mint
+        NUNITFLAGS_OPTIMIZE=''
+        PLATFORM_SUBDIRS=$DARWIN_SUBDIRS
+        REPORT_DIR='$(DESTDIR)$(bindir)'
+        REPORT_EXE='mint $(top_srcdir)/tools/Report/Report.exe'
+        SEP='/'
+        SQLITELIB="libsqlite.so"
+        SQLITELIB_PATH="../../external/sqlite/linux"
+    ;;
     #
     # Linux-specific configuration
     #
@@ -242,5 +270,6 @@ src/AcceptanceTests/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile
+package/darwin/Makefile
 package/linux/simias.spec
 ])
