@@ -19,7 +19,7 @@ SyncManagerTests_FLAGS = $(CSC_LIBFLAG)
 SyncManagerTests_LIBS = $(SyncManager_LIBS) $(SYSTEM_XML) nunit.framework.dll SyncManager.dll
 SyncManagerTests_LIBPATH = $(SyncManager_LIBPATH) Tests $(srcdir)/../../tools/NUnit/bin
 
-EXTRA_DIST = $(SyncManager_CSFILES) $(SyncManagerTests_CSFILES)
+EXTRA_DIST = $(SyncManager_CSFILES) $(SyncManagerTests_CSFILES) $(srcdir)/remoting.config
 
 CUR_DIR := $(shell pwd)
 
