@@ -1140,7 +1140,7 @@ namespace Novell.iFolder
 			//     http(s)://servername[:optional port]/simias10
 			//               ^^We're after this part^^^
 			
-			if (serverUrl == null) return serverUrl;
+			if (serverUrl == null) return "";
 			int doubleSlashPos = serverUrl.IndexOf("//");
 			int lastSlashPos   = serverUrl.IndexOf('/', doubleSlashPos + 2);
 			
