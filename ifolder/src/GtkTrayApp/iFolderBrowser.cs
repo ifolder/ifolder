@@ -364,6 +364,14 @@ namespace Novell.iFolder
 				{
 					iFolder newiFolder = manager.CreateiFolder(fs.Filename);
 					iFolderTreeStore.AppendValues(newiFolder);
+
+					if(IntroDialog.UseDialog())
+					{
+						IntroDialog iDialog = new IntroDialog();
+						iDialog.iFolderPath = fs.Filename;
+						iDialog.TransientFor = iFolderWindow; 
+						iDialog.Run();
+					}
 				}
 				catch(Exception e)
 				{

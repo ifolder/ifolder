@@ -27,6 +27,7 @@ namespace Novell.iFolder
 	using System.IO;
 	using System.Drawing;
 	using Simias.Storage;
+	using Simias;
 
 	using Gtk;
 	using Gdk;
@@ -51,6 +52,7 @@ namespace Novell.iFolder
 		int activeTag = 0;
 		iFolderManager				manager;
 		Pixbuf						iFolderPixBuf;
+		internal Configuration		config;
 
 		public Gtk.Window TransientFor
 		{
@@ -66,6 +68,19 @@ namespace Novell.iFolder
 			set
 			{
 				activeTag = value;
+			}
+		}
+
+		public Configuration Configuration
+		{
+			get
+			{
+				return config;
+			}
+
+			set
+			{
+				config = value;
 			}
 		}
 
@@ -132,8 +147,20 @@ namespace Novell.iFolder
 				iFolderTreeStore.AppendValues(ifolder);
 			}
 
+			// ----------------------------
+			// Display Creation Dialog
+			// ----------------------------
+			if(config == null)
+				config = new Configuration();
+			string showWizard = config.Get("iFolderTrayApp", 
+					"Show wizard", "true");
+			if (showWizard == "true")
+				DisplayCreationCheckButton.Active = true;
+			else
+				DisplayCreationCheckButton.Active = false;
+
+
 			StartupCheckButton.Active = true;;
-			DisplayCreationCheckButton.Active = true;
 			AutoSyncCheckButton.Active = true;
 			RefreshSpinButton.Value = 47;
 		}
@@ -163,10 +190,13 @@ namespace Novell.iFolder
 		private void on_DisplayCreationCheckButton_toggled(object o, 
 				EventArgs args)
 		{
+			if(config == null)
+				config = new Configuration();
+
 			if(DisplayCreationCheckButton.Active == true)
-				Console.WriteLine("Show Creation == true");
+				config.Set("iFolderTrayApp", "Show wizard", "true");
 			else
-				Console.WriteLine("Show Creation == false");
+				config.Set("iFolderTrayApp", "Show wizard", "false");
 		}
 
 		private void on_AutoSyncCheckButton_toggled(object o, EventArgs args)
