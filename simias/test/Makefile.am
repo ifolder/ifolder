@@ -1,5 +1,8 @@
-SUBDIRS = Simias Storage
-
+SUBDIRS = \
+	Common \
+	Configuration \
+	CollectionStore
+	
 DIST_SUBDIRS = $(SUBDIRS)
 
 EXTRA_DIST =

@@ -349,8 +349,9 @@ src/POBox/Makefile
 src/mDnsService/Makefile
 src/SyncManager/Makefile
 test/Makefile
-test/Simias/Makefile
-test/Storage/Makefile
+test/Common/Makefile
+test/Configuration/Makefile
+test/CollectionStore/Makefile
 test/POBox/Makefile
 package/Makefile
 package/windows/Makefile
