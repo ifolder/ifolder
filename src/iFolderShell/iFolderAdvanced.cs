@@ -83,6 +83,7 @@ namespace Novell.iFolder.iFolderCom
 			this.apply.Enabled = false;
 			this.remove.Enabled = false;
 			this.reinvite.Enabled = false;
+
 		}
 
 		/// <summary>
@@ -271,6 +272,7 @@ namespace Novell.iFolder.iFolderCom
 			this.cancel.Name = "cancel";
 			this.cancel.TabIndex = 2;
 			this.cancel.Text = "Cancel";
+			this.cancel.Click += new System.EventHandler(this.cancel_Click);
 			// 
 			// apply
 			// 
@@ -282,7 +284,9 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			// iFolderAdvanced
 			// 
+			this.AcceptButton = this.ok;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.CancelButton = this.cancel;
 			this.ClientSize = new System.Drawing.Size(360, 462);
 			this.Controls.Add(this.apply);
 			this.Controls.Add(this.cancel);
@@ -705,6 +709,7 @@ namespace Novell.iFolder.iFolderCom
 		private void ok_Click(object sender, System.EventArgs e)
 		{
 			this.ProcessChanges();
+			this.Close();
 		}
 
 		private void reinvite_Click(object sender, System.EventArgs e)
@@ -771,6 +776,11 @@ namespace Novell.iFolder.iFolderCom
 		
 			// Disable the apply button.
 			this.apply.Enabled = false;
+		}
+
+		private void cancel_Click(object sender, System.EventArgs e)
+		{
+			this.Close();	
 		}
 		#endregion
 	}

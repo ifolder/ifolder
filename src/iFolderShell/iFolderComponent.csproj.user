@@ -17,13 +17,7 @@
                     StartURL = ""
                     StartWorkingDirectory = ""
                     StartWithIE = "false"
-                >
-                    <InteropRegistration
-                        RegisteredComClassic = "true"
-                        RegisteredOutput = "iFolderComponent.dll"
-                        RegisteredTypeLib = "iFolderComponent.tlb"
-                    />
-                </Config>
+                />
                 <Config
                     Name = "Release"
                     EnableASPDebugging = "false"

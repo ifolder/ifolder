@@ -318,7 +318,7 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 				hr= NOERROR;
 				try
 				{
-					m_spiFolder->InvokeAdvancedDlg(m_szFileUserClickedOn);
+					m_spiFolder->InvokeAdvancedDlg(m_szFileUserClickedOn, false);
 				}
 				catch (...)
 				{

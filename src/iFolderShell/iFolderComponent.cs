@@ -49,7 +49,7 @@ namespace Novell.iFolder.iFolderCom
 		bool GetiFolderAclInit();
 		bool GetNextiFolderAce(out string guid, out string name, out int rights);
 		void ShareiFolder(string id, int rights, bool invite);
-		void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string path);
+		void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string path, bool modal);
 		bool InvokeContactPickerDlg();
 		bool GetNextAddedItem(out string guid, out string name);
 	}
@@ -323,17 +323,33 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
-		public void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string path)
+		public void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string path, bool modal)
 		{
-			iFolderAdvanced ifolderAdvanced = new iFolderAdvanced();
-			ifolderAdvanced.Name = path;
-			ifolderAdvanced.Text = "Advanced iFolder Properties for " + Path.GetFileName(path);
-			ifolderAdvanced.ABManager = abManager;
-			ifolderAdvanced.CurrentiFolder = manager.GetiFolderByPath(path);
+			string windowName = "Advanced iFolder Properties for " + Path.GetFileName(path);
 
-			// TODO - may be times we want to do Show rather than ShowDialog ... maybe have two different methods.
-//			ifolderAdvanced.Show();
-			ifolderAdvanced.ShowDialog();
+			// Search for existing window and bring it to foreground ...
+			Win32Util.Win32Window win32Window = Win32Util.Win32Window.FindWindow(null, windowName);
+			if (win32Window != null)
+			{
+				win32Window.BringWindowToTop();
+			}
+			else
+			{
+				iFolderAdvanced ifolderAdvanced = new iFolderAdvanced();
+				ifolderAdvanced.Name = path;
+				ifolderAdvanced.Text = windowName;
+				ifolderAdvanced.ABManager = abManager;
+				ifolderAdvanced.CurrentiFolder = manager.GetiFolderByPath(path);
+
+				if (modal)
+				{
+					ifolderAdvanced.ShowDialog();
+				}
+				else
+				{
+					ifolderAdvanced.Show();
+				}
+			}
 		}
 
 		public bool InvokeContactPickerDlg()

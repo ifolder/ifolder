@@ -10,7 +10,7 @@ include ../../config.mk
 #=============================================================================
 # iFolderComponent variables
 #=============================================================================
-iFolderComponent_SOURCES = AssemblyInfo.cs iFolderAdvanced.cs iFolderComponent.cs
+iFolderComponent_SOURCES = AssemblyInfo.cs iFolderAdvanced.cs Win32Window.cs iFolderComponent.cs
 iFolderComponent_INCLUDES = 
 iFolderComponent_FLAGS = /t:library
 iFolderComponent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) iFolder.dll CollectionStore.dll System.Drawing.dll System.Windows.Forms.dll AddressBook.dll FormsBookLib.dll

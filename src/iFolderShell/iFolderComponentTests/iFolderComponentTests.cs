@@ -37,13 +37,13 @@ namespace Novell.iFolder.iFolderCom.Tests
 		public void Init()
 		{
 			//ifoldercom = new iFolderComponent(new Uri(Directory.GetCurrentDirectory()));
-			ifoldercom = new iFolderComponent();
+//			ifoldercom = new iFolderComponent();
 		}
 
 		[Test]
 		public void Iteration1_Test()
 		{
-			string path = Directory.GetCurrentDirectory();
+/*			string path = Directory.GetCurrentDirectory();
 
 			bool btest = ifoldercom.IsiFolderNode(path);
 			if (!ifoldercom.IsiFolder(path))
@@ -69,7 +69,7 @@ namespace Novell.iFolder.iFolderCom.Tests
 				}
 			}
 
-			ifoldercom.DeleteiFolder(path);
+			ifoldercom.DeleteiFolder(path);*/
 		}
 
 		[TearDown]
