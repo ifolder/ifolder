@@ -777,7 +777,7 @@ namespace Novell.iFolderCom
 					}
 					catch (Exception ex)
 					{
-						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("conflictResolveError"), string.Empty, ex.Message);
+						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("conflictResolveError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 					}
 				}
@@ -875,7 +875,7 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception ex)
 			{
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("conflictReadError"), string.Empty, ex.Message);
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("conflictReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 		}

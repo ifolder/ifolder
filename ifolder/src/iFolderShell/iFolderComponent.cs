@@ -320,7 +320,7 @@ namespace Novell.iFolderCom
 				}
 				catch (WebException e)
 				{
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("propertiesDialogError"), string.Empty, e.Message);
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("propertiesDialogError"), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 
 					if (e.Status == WebExceptionStatus.ConnectFailure)
@@ -330,7 +330,7 @@ namespace Novell.iFolderCom
 				}
 				catch (Exception e)
 				{
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("propertiesDialogError"), string.Empty, e.Message);
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("propertiesDialogError"), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
 			}
@@ -354,7 +354,7 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception ex)
 			{
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("conflictDialogError"), string.Empty, ex.Message);
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("conflictDialogError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 		}
@@ -404,7 +404,7 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception e)
 			{
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("helpFileError") + "\n" + helpPath, string.Empty, e.Message);
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("helpFileError") + "\n" + helpPath, string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 		}

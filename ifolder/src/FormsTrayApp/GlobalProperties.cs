@@ -2281,7 +2281,7 @@ namespace Novell.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("syncError"), string.Empty, ex.Message);
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("syncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 		}
@@ -2298,7 +2298,7 @@ namespace Novell.FormsTrayApp
 			}
 			catch (Exception e)
 			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readUserError"), string.Empty, e.Message);
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readUserError"), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 
@@ -2392,7 +2392,7 @@ namespace Novell.FormsTrayApp
 				}
 				catch (Exception ex)
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readConfirmationError"), string.Empty, ex.Message);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readConfirmationError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
 
@@ -2404,7 +2404,7 @@ namespace Novell.FormsTrayApp
 				}
 				catch (Exception ex)
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readSyncError"), string.Empty, ex.Message);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readSyncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
 
@@ -2422,7 +2422,7 @@ namespace Novell.FormsTrayApp
 				}
 				catch (Exception ex)
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readProxyError"), string.Empty, ex.Message);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readProxyError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
 
@@ -2534,7 +2534,7 @@ namespace Novell.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(string.Format(resourceManager.GetString("iFolderOpenError"), ifolder.Name), string.Empty, ex.Message);
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(string.Format(resourceManager.GetString("iFolderOpenError"), ifolder.Name), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 		}
@@ -2577,7 +2577,7 @@ namespace Novell.FormsTrayApp
 			}
 			catch (Exception ex)
 			{		
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderRevertError"), string.Empty, ex.Message);
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderRevertError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 
@@ -2643,7 +2643,7 @@ namespace Novell.FormsTrayApp
 					}
 					catch (Exception ex)
 					{
-						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderCreateError"), string.Empty, ex.Message);
+						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderCreateError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 					}
 				}
@@ -2737,7 +2737,7 @@ namespace Novell.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("declineError"), string.Empty, ex.Message);
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("declineError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 		}
@@ -2810,7 +2810,7 @@ namespace Novell.FormsTrayApp
 				}
 				catch (Exception ex)
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("declineError"), string.Empty, ex.Message);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("declineError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
 			}
@@ -2827,7 +2827,7 @@ namespace Novell.FormsTrayApp
 				}
 				catch (Exception ex)
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("saveSyncError"), string.Empty, ex.Message);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("saveSyncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
 			}
@@ -2850,7 +2850,7 @@ namespace Novell.FormsTrayApp
 				}
 				catch (Exception ex)
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("saveProxyError"), string.Empty, ex.Message);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("saveProxyError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
 			}

@@ -1713,7 +1713,7 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception ex)
 			{
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("diskQuotaReadError"), string.Empty, ex.Message);
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("diskQuotaReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 
 				setLimit.Checked = false;
@@ -1749,7 +1749,7 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception ex)
 			{
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("syncReadError"), string.Empty, ex.Message);
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("syncReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 
@@ -1794,7 +1794,7 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException ex)
 			{
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("memberReadError"), string.Empty, ex.Message);
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("memberReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 
 				if (ex.Status == WebExceptionStatus.ConnectFailure)
@@ -1804,7 +1804,7 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception ex)
 			{
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("memberReadError"), string.Empty, ex.Message);
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("memberReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 
@@ -1886,7 +1886,7 @@ namespace Novell.iFolderCom
 				}
 				catch (WebException e)
 				{
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("changeOwnerError"), string.Empty, e.Message);
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("changeOwnerError"), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 
 					if (e.Status == WebExceptionStatus.ConnectFailure)
@@ -1896,7 +1896,7 @@ namespace Novell.iFolderCom
 				}
 				catch (Exception e)
 				{
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("changeOwnerError"), string.Empty, e.Message);
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("changeOwnerError"), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
 			}
@@ -1960,7 +1960,7 @@ namespace Novell.iFolderCom
 				}
 				catch (WebException e)
 				{
-					MyMessageBox mmb = new MyMessageBox(string.Format(resourceManager.GetString("memberCommitError"), slMember.iFolderUser.Name), string.Empty, e.Message);
+					MyMessageBox mmb = new MyMessageBox(string.Format(resourceManager.GetString("memberCommitError"), slMember.iFolderUser.Name), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 
 					if (e.Status == WebExceptionStatus.ConnectFailure)
@@ -1970,7 +1970,7 @@ namespace Novell.iFolderCom
 				}
 				catch (Exception e)
 				{
-					MyMessageBox mmb = new MyMessageBox(string.Format(resourceManager.GetString("memberCommitError"), slMember.iFolderUser.Name), string.Empty, e.Message);
+					MyMessageBox mmb = new MyMessageBox(string.Format(resourceManager.GetString("memberCommitError"), slMember.iFolderUser.Name), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
 			}
@@ -1989,7 +1989,7 @@ namespace Novell.iFolderCom
 					}
 					catch (WebException e)
 					{
-						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("removeError"), string.Empty, e.Message);
+						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("removeError"), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 
 						if (e.Status == WebExceptionStatus.ConnectFailure)
@@ -1999,7 +1999,7 @@ namespace Novell.iFolderCom
 					}
 					catch (Exception e)
 					{
-						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("removeError"), string.Empty, e.Message);
+						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("removeError"), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 					}
 				}
@@ -2033,7 +2033,7 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException e)
 			{
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("policyCommitError"), string.Empty, e.Message);
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("policyCommitError"), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 
 				if (e.Status == WebExceptionStatus.ConnectFailure)
@@ -2043,7 +2043,7 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception e)
 			{
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("policyCommitError"), string.Empty, e.Message);
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("policyCommitError"), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 
@@ -2368,7 +2368,7 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException ex)
 			{
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderReadError"), string.Empty, ex.Message);
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 
 				if (ex.Status == WebExceptionStatus.ConnectFailure)
@@ -2378,7 +2378,7 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception ex)
 			{
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderReadError"), string.Empty, ex.Message);
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 		}
@@ -2731,7 +2731,7 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception ex)
 			{
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderReadError"), string.Empty, ex.Message);
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 		}
@@ -2867,7 +2867,7 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException ex)
 			{
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderReadError"), string.Empty, ex.Message);
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 
 				if (ex.Status == WebExceptionStatus.ConnectFailure)
@@ -2877,7 +2877,7 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception ex)
 			{
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderReadError"), string.Empty, ex.Message);
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 		}
@@ -2890,7 +2890,7 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception ex)
 			{
-				MyMessageBox mmb = new MyMessageBox(string.Format(resourceManager.GetString("iFolderOpenError"), currentiFolder.Name), string.Empty, ex.Message);
+				MyMessageBox mmb = new MyMessageBox(string.Format(resourceManager.GetString("iFolderOpenError"), currentiFolder.Name), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 		}
