@@ -47,7 +47,6 @@ typedef enum
 
 typedef enum
 {
-	REG_THREAD_STATE_INITAL,
 	REG_THREAD_STATE_INITIALIZING,
 	REG_THREAD_STATE_RUNNING,
 	REG_THREAD_STATE_TERMINATED,
@@ -80,9 +79,6 @@ typedef struct
 	
 	/* Socket used to listen for events from the event server */
 	int event_socket;
-	
-	/* Socket used to send messages to the event server */
-	int message_socket;
 	
 	/* Buffer used to receive the socket messages */
 	char receive_buffer [RECEIVE_BUFFER_SIZE];

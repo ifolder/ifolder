@@ -166,20 +166,13 @@ printf ("SEC: sec_init () called\n");
 	 */
 	LIBXML_TEST_VERSION
 	
-	/* Create a socket to listen for events from the event server. */
+	/* Create a socket to communicate with the event server on */
 	if ((ec->event_socket = socket (PF_INET, SOCK_STREAM, 0)) < 0) {
-		perror ("simias-event-client: listen socket");
+		perror ("simias-event-client: client event socket");
 		return -1;
 	}
 	
-	/* Create a socket to send messages to the event server. */
-	if ((ec->message_socket = socket (PF_INET, SOCK_STREAM, 0)) < 0) {
-		perror ("simias-event-client: send socket");
-		return -1;
-	}
-
 	ec->state = CLIENT_STATE_INITIALIZING;
-	ec->reg_thread_state = REG_THREAD_STATE_INITAL;
 	
 	/* Save the error handling information. */
 	ec->error_handler = error_handler;
@@ -210,8 +203,9 @@ sec_register (SimiasEventClient *ec)
 printf ("SEC: sec_register () called\n");	
 
 	/* Don't let registeration happen multiple times */
-	if (ec->reg_thread_state == REG_THREAD_STATE_INITAL) {
+	if (ec->state == CLIENT_STATE_INITIALIZING) {
 		/* Set the states to registering */
+		ec->state = CLIENT_STATE_REGISTERING;
 		ec->reg_thread_state = REG_THREAD_STATE_INITIALIZING;
 		
 		/* Start a thread which will process the registration request */
@@ -220,14 +214,7 @@ printf ("SEC: sec_register () called\n");
 			perror ("simias-event-client: could not start registration thread");
 			return -1;
 		}
-		
-		if (pthread_join (ec->reg_thread, NULL) != 0) {
-			perror ("simias-event-client: could not call pthread_join on the registration thread");
-			return -1;
-		}
-	} else {
-printf ("SEC: sec_register: could not start thread\n");	
-	}
+	} 
 	
 	return 0;
 }
@@ -357,65 +344,22 @@ sec_thread (void *user_data)
 	char buf [256];
 	
 printf ("SEC: sec_thread () called\n");	
-	
-	sprintf (my_host_name, "127.0.0.1");
-	
-	hp = gethostbyname (my_host_name);
-	if (!hp) {
-		perror ("simias-event-client (server): gethostbyname");
-		sprintf (err_msg, "gethostbyname (\"%s\") failed in sec_thread ()", 
-																my_host_name);
-		sec_shutdown (ec, err_msg);
-		return NULL;
-	}
 
-	ec->local_sin.sin_family = AF_INET;
-	bcopy (hp->h_addr, (char *)&(ec->local_sin.sin_addr), hp->h_length);
-	ec->local_sin.sin_port = 0;	/* Use any unused port at random */
-	
-	if (bind (ec->event_socket,
-			  (struct sockaddr *)&(ec->local_sin),
-			  sizeof (ec->local_sin)) != 0) {
-		perror ("simias-event-client (server): bind");
-		sprintf (err_msg, "bind () failed in sec_thread ()");
-		sec_shutdown (ec, err_msg);
-		return NULL;
-	}
-
-printf ("SEC: sec_thread: bind () complete\n");	
-	
-	if (listen (ec->event_socket, MAX_PENDING_LISTENS) != 0) {
-		perror ("simias-event-client (server): listen");
-		sprintf (err_msg, "listen () failed in sec_thread ()");
-		sec_shutdown (ec, err_msg);
-		return NULL;
-	}
-
-printf ("SEC: sec_thread: listen () called\n");	
-
-	ec->state = CLIENT_STATE_RUNNING;
-	
-	sin_size = sizeof (struct sockaddr_in);
-
-	while (ec->state != CLIENT_STATE_SHUTDOWN)
-	{
-		new_s = accept (ec->event_socket, 
-						(struct sockaddr *)&(ec->local_sin), 
-						&sin_size);
-printf ("SEC: sec_thread: accept () called\n");	
-		if (new_s < 0) {
-			perror ("simias-event-client (server): accept");
-			sprintf (err_msg, "accept () failed in sec_thread ()");
-			sec_shutdown (ec, err_msg);
+	/* Wait until the register thread marks us as registered before continuing */
+	while (ec->state != CLIENT_STATE_RUNNING) {
+		if (ec->state == CLIENT_STATE_SHUTDOWN) {
 			return NULL;
 		}
-		
-		while (len = recv (new_s, buf, sizeof (buf), 0)) {
+		printf ("SEC: sec_thread () waiting for register thread to complete\n");
+		sleep (2);
+	}
+	
+	while (ec->state != CLIENT_STATE_SHUTDOWN)
+	{
+		while (len = recv (ec->event_socket, buf, sizeof (buf), 0)) {
 printf ("SEC: sec_thread: recv () called\n");	
 			fputs (buf, stdout);
 		}
-				
-		close (new_s);
 	}
 }
 
@@ -432,38 +376,10 @@ sec_reg_thread (void *user_data)
 	int b_connected = 0;
 	char addr_str [32];
 	char port_str [32];
+	char config_file_path [1024];
 	
 printf ("SEC: sec_reg_thread () called\n");	
 
-	/**
-	 * Wait until the event client thread is running before continuing.  If we
-	 * don't wait, we will not be able to know what port the client is listening
-	 * on for messages back from the server.
-	 */
-	while (ec->state != CLIENT_STATE_RUNNING) {
-
-printf ("SEC: sec_reg_thread: waiting for client to start\n");	
-
-		if (ec->state == CLIENT_STATE_SHUTDOWN) {
-			return NULL;
-		}
-
-		/* FIXME: Use something else besides a sleep () here */
-		sleep (1);
-	}
-	
-	my_sin_addr_len = sizeof (struct sockaddr_in);
-	if (getsockname (ec->event_socket, 
-					 (struct sockaddr *)&my_sin, 
-					 &my_sin_addr_len) != 0) {
-		perror ("simias-event-client: getsockname");
-		return NULL;
-	}
-	
-	sprintf (addr_str, "%s", inet_ntoa (my_sin.sin_addr));
-	sprintf (port_str, "%d", my_sin.sin_port);
-	fprintf (stderr, "Client listening on %s:%s\n", addr_str, port_str);
-	
 	/* Stay in this loop until we connect */
 	while (!b_connected && (ec->state != CLIENT_STATE_SHUTDOWN)) {
 		if ((sec_get_server_host_address (ec, &sin)) != 0) {
@@ -471,18 +387,28 @@ printf ("SEC: sec_reg_thread: waiting for client to start\n");
 		}
 		
 		if (ec->state == CLIENT_STATE_SHUTDOWN) {
-			/* FIXME: Figure out what to do here */
 			return;
 		}
 		
 		/* Connect to the server */
-		if (connect (ec->message_socket, 
+		if (connect (ec->event_socket, 
 					 (struct sockaddr *)&sin, 
 					 sizeof (sin)) == 0) {
 			b_connected = 1;
 
-			ec->reg_thread_state = REG_THREAD_STATE_RUNNING;
+			/* Determine what port the client is listening on (implicit bind) */
+			my_sin_addr_len = sizeof (struct sockaddr_in);
+			if (getsockname (ec->event_socket, 
+							 (struct sockaddr *)&my_sin, 
+							 &my_sin_addr_len) != 0) {
+				perror ("simias-event-client: getsockname");
+				return NULL;
+			}
 			
+			sprintf (addr_str, "%s", inet_ntoa (my_sin.sin_addr));
+			sprintf (port_str, "%d", my_sin.sin_port);
+			fprintf (stderr, "Client listening on %s:%s\n", addr_str, port_str);
+
 			/* Format the XML for registration message */
 			sprintf (reg_msg, 
 				"<%s %s=\"%s\" %s=\"%s\">%s</%s>",
@@ -499,11 +425,25 @@ printf ("SEC: sec_reg_thread: waiting for client to start\n");
 				/* FIXME: Handle error...no data sent */
 				perror ("simias-event-client send registration message");
 			}
+
+			ec->state = CLIENT_STATE_RUNNING;
 		} else {
 			/* FIXME: Handle the error here */
 			perror ("simias-event-client connect");
 			
-			sleep (2);
+			/**
+			 * See if this is a case of the server not listening on the socket
+			 * anymore.  It may have gone down hard and left the configuration
+			 * file with an invalid socket.  Keep watching the file until the
+			 * socket changes and it can be connected.
+			 */
+			if ((sec_get_config_file_path (config_file_path)) == NULL) {
+				sec_shutdown (ec, "Could not get the config file path");
+				return NULL;
+			}
+
+			/* This is a blocking call */			
+			sec_wait_for_file_change (config_file_path);
 		}
 	}
 	
@@ -537,11 +477,6 @@ sec_shutdown (SimiasEventClient *ec, const char *err_msg)
 		if (ec->event_socket >= 0) {
 			close (ec->event_socket);
 		}
-		
-		/* Close the socket if it is still open */
-		if (ec->message_socket >= 0) {
-			close (ec->message_socket);
-		}
 	}
 	
 	/* Inform the application if an error occurred */
@@ -572,12 +507,6 @@ sec_send_message (SimiasEventClient *ec, char * message, int len)
 	char err_msg [2048];
 	void *real_message;
 	
-	/* Cannot send if we haven't registered */
-	if (ec->reg_thread_state == REG_THREAD_STATE_INITIALIZING) {
-		fprintf (stderr, "Cannot send message to server.  Registration hasn't completed.\n");
-		return 0;
-	}
-	
 	real_message = (void *)malloc (len + 4);
 	if (!real_message) {
 		fprintf (stderr, "Out of memory\n");
@@ -588,7 +517,7 @@ sec_send_message (SimiasEventClient *ec, char * message, int len)
 	sprintf (real_message + 4, "%s", message);
 	printf ("Sending: %s\n", real_message + 4);
 	
-	sent_length = send (ec->message_socket, real_message, len + 4, 0);
+	sent_length = send (ec->event_socket, real_message, len + 4, 0);
 	
 	free (real_message);
 	
@@ -928,6 +857,20 @@ int main (int argc, char *argv[])
 	}
 	
 	printf ("Registration complete\n");
+	
+	/**
+	 * Until the message queue is implemented, we need to wait for the client
+	 * to be running before continuing
+	 */
+	while (ec.state != CLIENT_STATE_RUNNING) {
+		if (ec.state == CLIENT_STATE_SHUTDOWN) {
+			fprintf (stderr, "Shutdown initiated prematurely\n");
+			return -1;
+		}
+		
+		fprintf (stdout, "Test code: Waiting for client to be running\n");
+		sleep (1);
+	}
 	
 	/* Ask to listen to some events by calling sec_set_event () */
 	sec_set_event (&ec, ACTION_ADD_NODE_CREATED, NULL);
