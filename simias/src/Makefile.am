@@ -18,10 +18,12 @@ EXTRA_DIST = ifdata simias-snakeoil.keys $(srcdir)/install-simias-to-gac.in
 
 install-exec-local: install-simias-to-gac
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) ifdata install-simias-to-gac $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) ifdata $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) install-simias-to-gac $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f ifdata install-simias-to-gac
+	cd $(DESTDIR)$(bindir); rm -f install-simias-to-gac
+	cd $(DESTDIR)$(webbindir); rm -f ifdata
 
 installcheck-summary:
 	rm -f $(REPORT_DIR)/*.test.xml
