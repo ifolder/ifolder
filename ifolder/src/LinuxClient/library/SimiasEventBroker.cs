@@ -488,11 +488,16 @@ namespace Novell.iFolder
 						if(	(ifSettings != null) && 
 							(nargs.Collection == ifSettings.DefaultPOBoxID) )
 						{
+							// The Collection is the PO Box so the node
+							// is most likely an invitation
+
 							iFolderWeb ifolder;
 
 							try
 							{
-								ifolder = ifws.GetiFolder(nargs.ID);
+//								ifolder = ifws.GetiFolder(nargs.ID);
+								ifolder = ifws.GetiFolderInvitation(
+									nargs.Collection, nargs.ID);
 							}
 							catch(Exception e)
 							{
@@ -553,7 +558,7 @@ namespace Novell.iFolder
 
 								if( (newuser != null) &&
 									(newuser.UserID != 
-											ifSettings.CurrentUserID) )
+											localiFolder.CurrentUserID) )
 								{
 									lock(NodeEventQueue)
 									{
@@ -640,20 +645,30 @@ namespace Novell.iFolder
 					{
 						try
 						{
-							iFolderUser newuser = ifws.GetiFolderUserFromNodeID(
-								nargs.Collection, nargs.ID);
-
-							if( (newuser != null) &&
-								(newuser.UserID != 
-										ifSettings.CurrentUserID) )
+							// first test to see if this is an
+							// ifolder.  We don't care if it is
+							// not an iFolder
+							iFolderWeb localiFolder = ifws.GetiFolder(
+											nargs.Collection);
+							if(localiFolder != null)
 							{
-								lock(NodeEventQueue)
+
+								iFolderUser newuser = 
+									ifws.GetiFolderUserFromNodeID(
+										nargs.Collection, nargs.ID);
+
+								if( (newuser != null) &&
+										(newuser.UserID != 
+										 localiFolder.CurrentUserID) )
 								{
-									NodeEventQueue.Enqueue(new SimiasEvent(
-										null, newuser, nargs.Collection,
-										newuser.UserID,
-										SimiasEventType.ChangedUser));
-									SimiasEventFired.WakeupMain();
+									lock(NodeEventQueue)
+									{
+										NodeEventQueue.Enqueue(new SimiasEvent(
+											null, newuser, nargs.Collection,
+											newuser.UserID,
+											SimiasEventType.ChangedUser));
+										SimiasEventFired.WakeupMain();
+									}
 								}
 							}
 						}
@@ -675,8 +690,10 @@ namespace Novell.iFolder
 						{
 							try
 							{
-								iFolderWeb ifolder = 
-									ifws.GetiFolder(nargs.ID);
+		//						iFolderWeb ifolder = 
+		//							ifws.GetiFolder(nargs.ID);
+								iFolderWeb ifolder = ifws.GetiFolderInvitation(
+									nargs.Collection, nargs.ID);
 
 								if(ifolder != null)
 								{
