@@ -154,7 +154,7 @@ namespace Novell.iFolder
 				{
 					try
 					{
-						Contact con = dAddrBook.GetContactByIdentity(ace.Id);
+						Contact con = dAddrBook.GetContact(ace.Id);
 						SharingListHolder slh = new SharingListHolder(
 								ace.Rights, ace.Id, con);
 						ContactTreeStore.AppendValues(slh);
@@ -292,8 +292,7 @@ namespace Novell.iFolder
 
 			try
 			{
-				owner = dAddrBook.GetContactByIdentity(
-						ifldr.OwnerIdentity);
+				owner = dAddrBook.GetContact(ifldr.OwnerIdentity);
 				if(owner.GetPreferredName() == null)
 					editContact = true;
 				if(owner.EMail == null)
