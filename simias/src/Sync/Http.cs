@@ -938,9 +938,26 @@ namespace Simias.Sync.Http
 			response.StatusCode = (int)HttpStatusCode.OK;
 		}
 
+		/// <summary>
+		/// Get the hashMap for this file.
+		/// </summary>
+		/// <param name="request"></param>
+		/// <param name="response"></param>
 		public void GetHashMap(HttpRequest request, HttpResponse response)
 		{
-			return;
+			response.ContentType = "application/octet-stream";
+			HashData[] hashMap = service.GetHashMap();
+			if (hashMap != null)
+			{
+				response.AddHeader(SyncHeaders.ObjectCount, hashMap.Length.ToString());
+				response.StatusCode = (int)HttpStatusCode.OK;
+				BinaryWriter writer = new BinaryWriter(response.OutputStream);
+				HashMap.SerializeHashMap(hashMap, writer);
+				writer.Close();
+				return;
+			}
+			response.AddHeader(SyncHeaders.ObjectCount, "0");
+			response.StatusCode = (int)HttpStatusCode.OK;
 		}
 
 		public void PutHashMap(HttpRequest request, HttpResponse response)

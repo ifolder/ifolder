@@ -139,12 +139,11 @@ namespace Simias.Sync.Delta
 		/// Serialized the Hash Created from the input stream to the writer stream.
 		/// </summary>
 		/// <param name="inStream">The stream of raw data to create the HashMap from.</param>
-		/// <param name="writer">The stream to write the HashMap to.</param>
-		public static void SerializeHashMap(Stream inStream, BinaryWriter writer)
+		public static HashData[] GetHashMap(Stream inStream)
 		{
 			if (inStream.Length <= HashData.BlockSize)
 			{
-				return;
+				return null;
 			}
 			int				blockCount = GetBlockCount(inStream.Length);
 			HashData[]		list = new HashData[blockCount];
@@ -157,6 +156,36 @@ namespace Simias.Sync.Delta
 			// Compute the hash codes.
 			inStream.Position = 0;
 			while ((bytesRead = inStream.Read(buffer, 0, HashData.BlockSize)) != 0)
+			{
+				list[currentBlock++] = new HashData(
+					currentBlock,
+					wh.ComputeHash(buffer, 0, (UInt16)bytesRead),
+					sh.ComputeHash(buffer, 0, bytesRead));
+			}
+			return list;
+		}
+
+
+		/// <summary>
+		/// Serialized the Hash Created from the input stream to the writer stream.
+		/// </summary>
+		/// <param name="inStream">The stream of raw data to create the HashMap from.</param>
+		/// <param name="writer">The stream to write the HashMap to.</param>
+		public static void SerializeHashMap(Stream inStream, BinaryWriter writer)
+		{
+			if (inStream.Length <= HashData.BlockSize)
+			{
+				return;
+			}
+			byte[]			buffer = new byte[HashData.BlockSize];
+			StrongHash		sh = new StrongHash();
+			WeakHash		wh = new WeakHash();
+			int				bytesRead;
+			int				currentBlock = 0;
+		
+			// Compute the hash codes.
+			inStream.Position = 0;
+			while ((bytesRead = inStream.Read(buffer, 0, HashData.BlockSize)) == HashData.BlockSize)
 			{
 				new HashData(
 					currentBlock++,

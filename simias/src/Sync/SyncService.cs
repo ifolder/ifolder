@@ -747,18 +747,13 @@ namespace Simias.Sync
 		/// <summary>
 		/// Get a HashMap of the file.
 		/// </summary>
-		/// <param name="blockSize">The block size to be hashed.</param>
 		/// <returns>The HashMap.</returns>
-		public HashData[] GetHashMap(int blockSize)
+		public HashData[] GetHashMap()
 		{
-			return null;
-			// BUGBUG
-			/*
 			if (inFile != null)
-				// BUGBUG return inFile.GetHashMap();
+				return inFile.GetHashMap();
 			else
-				// BUGBUG return outFile.GetHashMap();
-				*/
+				return outFile.GetHashMap();
 		}
 
 		/// <summary>

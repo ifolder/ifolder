@@ -204,8 +204,7 @@ namespace Simias.Sync
 		protected BaseFileNode	oldNode;
 		Exception				exception;
 		ManualResetEvent		asyncEvent = new ManualResetEvent(true);
-		
-		
+				
 		#endregion
 		
 		#region Constructor / Finalizer.
@@ -337,7 +336,7 @@ namespace Simias.Sync
 		/// <param name="node">The node that represents the file.</param>
 		protected void Open(BaseFileNode node)
 		{
-			this.SetupFileNames(node, "");
+			SetupFileNames(node, "");
 			Log.log.Debug("Opening File {0}", file);
 			// Open the file so that it cannot be modified.
 			oldNode = collection.GetNodeByID(node.ID) as BaseFileNode;
@@ -499,7 +498,8 @@ namespace Simias.Sync
 		static string			workBin;
 		/// <summary>Used to publish Sync events.</summary>
 		static protected EventPublisher	eventPublisher = new EventPublisher();
-
+		bool					exists = false;
+		
 		#endregion
 
 		#region protected methods.
@@ -523,6 +523,7 @@ namespace Simias.Sync
 			this.node = node;
 			this.nodeID = node.ID;
 			this.file = node.GetFullPath(collection);
+			exists = File.Exists(this.file);
 			if (workBin == null)
 			{
 				workBin = Path.Combine(Configuration.GetConfiguration().StorePath, workBinDir);
@@ -539,6 +540,14 @@ namespace Simias.Sync
 		protected string GetMapFileName()
 		{
 			return Path.Combine(collection.ManagedPath, MapFilePrefix + node.ID);
+		}
+
+		/// <summary>
+		/// Checks if the file exists.
+		/// </summary>
+		protected bool Exists
+		{
+			get { return exists; }
 		}
 
 		#endregion

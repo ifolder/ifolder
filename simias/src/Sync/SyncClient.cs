@@ -379,9 +379,13 @@ namespace Simias.Sync
 		public void Stop()
 		{
 			shuttingDown = true;
-			foreach(CollectionSyncClient cClient in collections.Values)
+			lock (collections)
 			{
-				cClient.Stop();
+				foreach(CollectionSyncClient cClient in collections.Values)
+				{
+					cClient.Stop();
+				}
+				collections.Clear();
 			}
 			lock (syncQueue)
 			{
@@ -579,11 +583,7 @@ namespace Simias.Sync
 		/// </summary>
 		internal void SyncNow()
 		{
-			lock (this)
-			{
-				stopping = false;
-				syncStartTime = DateTime.Now;
-			}
+			syncStartTime = DateTime.Now;
 			queuedChanges = false;
 			serverAlive = false;
 			serverStatus = StartSyncStatus.Success;

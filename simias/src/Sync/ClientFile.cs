@@ -307,13 +307,20 @@ namespace Simias.Sync
 			// Since we are doing the diffing on the client we will download all blocks that
 			// don't match.
 			table.Clear();
-			HashData[] serverHashMap = httpClient.GetHashMap();
+			HashData[] serverHashMap;
 			long[] fileMap;
-			if (serverHashMap == null)
+			
+			if (this.Exists)
+				serverHashMap = httpClient.GetHashMap();
+			else
+				serverHashMap = new HashData[0];
+
+			if (serverHashMap.Length == 0)
 			{
 				sizeToSync = node.Length;
-				fileMap = new long[1];
-				fileMap[0] = -1;
+				fileMap = new long[HashMap.GetBlockCount(node.Length)];
+				for (int i = 0; i < fileMap.Length; ++i)
+					fileMap[i] = -1;
 				return fileMap;
 			}
 			
@@ -674,6 +681,24 @@ namespace Simias.Sync
 			}
 
 			return fileMap;
+		}
+
+		/// <summary>
+		/// Send the hash map to the server.
+		/// </summary>
+		/// <returns></returns>
+        private SyncStatus UploadHashMap()
+		{
+			return httpClient.PutHashMap(outStream);
+		}
+
+		/// <summary>
+		/// Gets the hash map for the file on the server.
+		/// </summary>
+		/// <returns>The hash map.</returns>
+		private HashData[] DownloadHashMap()
+		{
+			return httpClient.GetHashMap();
 		}
 
 		/// <summary>

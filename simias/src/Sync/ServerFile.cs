@@ -113,6 +113,17 @@ namespace Simias.Sync
 		/// Get a hashed map of the file.  This can then be
 		/// used to create an upload or download filemap.
 		/// </summary>
+		/// <returns></returns>
+		public HashData[] GetHashMap()
+		{
+			return HashMap.GetHashMap(inStream);
+		}
+
+		/// <summary>
+		/// Get a hashed map of the file.  This can then be
+		/// used to create an upload or download filemap.
+		/// </summary>
+		/// <returns></returns>
 		public string GetHashMapFile()
 		{
 			string mapFile = GetMapFileName();
@@ -173,6 +184,17 @@ namespace Simias.Sync
 			base.Close();
 			return status;
 		}
+
+		/// <summary>
+		/// Get a hashed map of the file.  This can then be
+		/// used to create an upload or download filemap.
+		/// </summary>
+		/// <returns></returns>
+		public HashData[] GetHashMap()
+		{
+			return HashMap.GetHashMap(this.outStream);
+		}
+
 
 		/// <summary>
 		/// Get a hashed map of the file.  This can then be
