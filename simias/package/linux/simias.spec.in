@@ -141,6 +141,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %{prefix}/lib/Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll
 %{prefix}/lib/Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll
 %{prefix}/lib/Novell.Security.SecureSink.Utilities.dll
+%{prefix}/lib/SimiasWebService.dll
 %{prefix}/lib/libsqlite.so
 %{prefix}/lib/Novell.AddressBook.dll
 %dir %{prefix}/lib/pkgconfig
