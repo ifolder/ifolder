@@ -17,9 +17,9 @@ endif
 #
 all %:
 	@echo PREFIX=$(PREFIX)
-	cd simias;      make $@
-	cd addressbook; make $@
-	cd ifolder;     make $@
+	$(MAKE) -C simias $@
+	$(MAKE) -C addressbook $@
+	$(MAKE) -C ifolder $@
 
 #
 # Run autogen.sh for all projects, with or without --enable-debug.
@@ -35,21 +35,30 @@ AUTOGEN_SDK_CMD   = ./autogen.sh --prefix=$(PREFIX) --enable-merge-module --with
 ag autogen:
 	rm -f */config.cache
 	@echo PREFIX=$(PREFIX)
-	cd simias;      $(AUTOGEN_CMD); make install
-	cd addressbook; $(AUTOGEN_CMD); make install
-	cd ifolder;     $(AUTOGEN_CMD); make install
+	cd simias; $(AUTOGEN_CMD)
+	$(MAKE) -C simias install
+	cd addressbook; $(AUTOGEN_CMD)
+	$(MAKE) -C addressbook install
+	cd ifolder; $(AUTOGEN_CMD)
+	$(MAKE) -C ifolder install
 
 agd autogen-debug:
 	rm -f */config.cache
 	@echo PREFIX=$(PREFIX)
-	cd simias;      $(AUTOGEN_DEBUG_CMD); make install
-	cd addressbook; $(AUTOGEN_DEBUG_CMD); make install
-	cd ifolder;     $(AUTOGEN_DEBUG_CMD); make install
+	cd simias; $(AUTOGEN_DEBUG_CMD)
+	$(MAKE) -C simias install
+	cd addressbook; $(AUTOGEN_DEBUG_CMD)
+	$(MAKE) -C addressbook install
+	cd ifolder; $(AUTOGEN_DEBUG_CMD)
+	$(MAKE) -C ifolder install
 
 agsdk autogen-sdk:
 	rm -f */config.cache
 	@echo PREFIX=$(PREFIX)
-	cd simias;      $(AUTOGEN_SDK_CMD); make install
-	cd addressbook; $(AUTOGEN_SDK_CMD); make install
-	cd ifolder;     $(AUTOGEN_SDK_CMD); make install
+	cd simias; $(AUTOGEN_SDK_CMD)
+	$(MAKE) -C simias install
+	cd addressbook; $(AUTOGEN_SDK_CMD)
+	$(MAKE) -C addressbook install
+	cd ifolder; $(AUTOGEN_SDK_CMD)
+	$(MAKE) -C ifolder install
 
