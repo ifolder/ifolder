@@ -1563,7 +1563,7 @@ namespace Novell.iFolderCom
 					}
 					case "NodeCreated":
 					{
-						if (ifolder.ID.Equals(eventArgs.Collection) && (eventArgs.Type.Equals(NodeTypes.Member) || eventArgs.Type.Equals(NodeTypes.Node)))
+						if (ifolder.ID.Equals(eventArgs.Collection) && (eventArgs.Type.Equals(NodeTypes.MemberType) || eventArgs.Type.Equals(NodeTypes.NodeType)))
 						{
 							// This is the iFolder currently displayed.
 							// Get a user object.
