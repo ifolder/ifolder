@@ -74,7 +74,7 @@ public class FileInviter
 		scoll.Host = host;
 		scoll.Commit();
 		Log.Assert(c.Id == c.CollectionNode.Id && c.Id == scoll.ID);
-		Log.Spew("Created new master collection for {0}, id {1}", docRoot.LocalPath, c.Id);
+		Log.Spew("Created new master collection for {0}, id {1}, {2}:{3}", docRoot.LocalPath, c.Id, scoll.Host, scoll.Port);
 	}
 
 	/// <summary>
@@ -193,7 +193,7 @@ public class Server
 
 	public void Stop()
 	{
-		Log.Spew("Server {0} stopping {1}", uri, objRef);
+		Log.Spew("Server {0} stopping", uri);
 		if (obj != null)
 			RemotingServices.Disconnect(obj);
 		if (channel != null)
@@ -250,7 +250,7 @@ public class SyncCmd
 
 	int RunSync(Uri docRoot, string serverStoreLocation)
 	{
-		Store store = Store.Connect(storeLocation);
+		Store store = Store.Connect(storeLocation, "SyncCmd");
 		Collection c = FileInviter.FindCollection(store, docRoot);
 		if (c == null)
 		{

@@ -18,9 +18,7 @@ RM := rm -rf
 SQLITE := linux/libsqlite.so
 endif
 
-RLIBS := CollectionStore Identity WorkGroupIdentity StoreProvider \
-		SqliteProvider Common Configuration CollectionEvents \
-		SyncCommon Agent
+RLIBS := CollectionStore StoreProvider SqliteProvider Common Configuration CollectionEvents SyncCommon Agent
 
 SLIBS := System.Runtime.Remoting System.Data System
 

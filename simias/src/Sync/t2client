@@ -3,7 +3,8 @@
 rm -rf tmpRemote
 mkdir tmpRemote
 
-scp mud.provo.novell.com:simias/src/Sync/tmpClientData/invitation tmpRemote
+#scp mud.provo.novell.com:simias/src/Sync/tmpClientData/invitation tmpRemote
+cp ~/invitation tmpRemote
 
 mono --debug SyncCmd.exe -s tmpRemote accept tmpRemote/invitation tmpRemote
 

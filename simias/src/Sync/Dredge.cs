@@ -46,7 +46,7 @@ public class Dredger
 	public const string NodeTypeDir = "IfolderDirectory";
 	
 	//TODO need to get StringBuilder to work for this
-	public static string FullPath(string docRoot, Node node)
+	string FullPath(Node node)
 	{
 		Log.Assert(node != null);
 		if (node.IsCollection)
@@ -63,11 +63,6 @@ public class Dredger
 		if (p == null)
 			Log.Spew("could not find collection root of {0}", node.Name);
 		return Path.Combine(docRoot, fp);
-	}
-
-	string FullPath(Node node)
-	{
-		return FullPath(docRoot, node);
 	}
 
 	void DeleteNode(Node node)
@@ -108,9 +103,14 @@ public class Dredger
 			node = parentNode.CreateChild(nodeName, type);
 			Log.Spew("Dredger adding node for {0} {1}", FullPath(node), node.Id);
 			if (type == NodeTypeFile)
-			{	//TODO: handle multiple streams per file system file (resource forks)
+			{	//TODO: handle multiple streams per file system file (e.g. resource forks)
 				FileEntry fe = node.AddFileEntry(null, nodePath);
 				fe.LastWriteTime = File.GetLastWriteTime(path);
+			}
+			else if (type == NodeTypeDir)
+			{
+				DirectoryEntry de = node.AddDirectoryEntry(null, nodePath);
+				de.LastWriteTime = Directory.GetLastWriteTime(path);
 			}
 			node.Commit();
 			return node;
@@ -128,7 +128,6 @@ public class Dredger
 				fse.LastWriteTime = fsLastWrite;
 				node.Commit();
 			}
-			break; //TODO: handle multiple streams 
 		}
 		return node;
 	}
@@ -138,8 +137,7 @@ public class Dredger
 		Log.Assert(node != null && path != null);
 
 		// remove all nodes from store that no longer exist in the file system
-		foreach (Node kid in collection.Search(Property.ParentID, node.Id,
-				Property.Operator.Equal))
+		foreach (Node kid in collection.Search(Property.ParentID, node.Id, Property.Operator.Equal))
 		{
 			if (kid.Type == NodeTypeFile && !File.Exists(FullPath(kid))
 					|| kid.Type == NodeTypeDir && !Directory.Exists(FullPath(kid)))

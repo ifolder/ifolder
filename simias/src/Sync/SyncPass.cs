@@ -165,9 +165,9 @@ public class SynkerServiceA: SyncCollectionService
 	}
 
 	/// <summary>
-	/// takes an array of small nodes. returns array of Nids that were not updated due to collisions
+	/// takes an array of small nodes. returns rejected nodes
 	/// </summary>
-	public Nid[] PutSmallNodes(NodeChunk[] nodes)
+	public RejectedNodes PutSmallNodes(NodeChunk[] nodes)
 	{
 		try
 		{
@@ -178,7 +178,7 @@ public class SynkerServiceA: SyncCollectionService
 			return ops.PutSmallNodes(nodes);
 		}
 		catch (Exception e) { Log.Uncaught(e); }
-		return null;
+		return new RejectedNodes();
 	}
 
 	/// <summary>
@@ -201,15 +201,15 @@ public class SynkerServiceA: SyncCollectionService
 	/// <summary>
 	/// takes metadata and first chunk of data for a large node
 	/// </summary>
-	public bool WriteLargeNode(NodeStamp stamp, string relativePath, byte[] data)
+	public bool WriteLargeNode(NodeStamp stamp, FseChunk[] fseChunks)
 	{
 		try
 		{
 			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
-			inNode.Start(stamp, relativePath);
-			inNode.Append(data);
+			inNode.Start(stamp);
+			inNode.WriteChunks(fseChunks);
 			return true;
 		}
 		catch (Exception e) { Log.Uncaught(e); }
@@ -219,18 +219,18 @@ public class SynkerServiceA: SyncCollectionService
 	/// <summary>
 	/// takes next chunk of data for a large node, completes node if metadata is given
 	/// </summary>
-	public bool WriteLargeNode(byte[] data, string metaData)
+	public SyncIncomingNode.Status WriteLargeNode(FseChunk[] fseChunks, string metaData)
 	{
 		try
 		{
 			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
-			inNode.Append(data);
-			return metaData == null? true: inNode.Complete(metaData);
+			inNode.WriteChunks(fseChunks);
+			return metaData == null? SyncIncomingNode.Status.InProgess: inNode.Complete(metaData);
 		}
 		catch (Exception e) { Log.Uncaught(e); }
-		return false;
+		return SyncIncomingNode.Status.ServerFailure;
 	}
 
 	/// <summary>
@@ -243,24 +243,26 @@ public class SynkerServiceA: SyncCollectionService
 			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
-			NodeChunk sn;
-			sn.data = outNode.Start(nid, out sn.stamp, out sn.metaData, out sn.relativePath)? outNode.GetChunk(maxSize): null;
-			return sn;
+			NodeChunk nc;
+			nc.fseChunks = outNode.Start(nid, out nc.stamp, out nc.metaData)? outNode.ReadChunks(maxSize, out nc.totalSize): null;
+			return nc;
 		}
 		catch (Exception e) { Log.Uncaught(e); }
 		return new NodeChunk();
 	}
 
 	/// <summary>
-	/// gets next chunk of data for a large node
+	/// gets next chunks of data for a large node
 	/// </summary>
-	public byte[] ReadLargeNode(int maxSize)
+	public FseChunk[] ReadLargeNode(int maxSize)
 	{
 		try
 		{
 			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
-			return outNode.GetChunk(maxSize);
+
+			int unused;
+			return outNode.ReadChunks(maxSize, out unused);
 		}
 		catch (Exception e) { Log.Uncaught(e); }
 		return null;
@@ -319,16 +321,12 @@ public class SynkerWorkerA: SyncCollectionWorker
 		NodeStamp[] sstamps = ss.GetNodeStamps();
 		NodeStamp[] cstamps = ops.GetNodeStamps();
 
-		ArrayList addLargeFromServer = new ArrayList();
-		ArrayList addSmallFromServer = new ArrayList();
-		ArrayList updateLargeFromServer = new ArrayList();
-		ArrayList updateSmallFromServer = new ArrayList();
+		ArrayList largeFromServer = new ArrayList();
+		ArrayList smallFromServer = new ArrayList();
 		ArrayList killOnServer = new ArrayList();
 		ArrayList killOnClient = new ArrayList();
-		ArrayList addSmallToServer = new ArrayList();
-		ArrayList addLargeToServer = new ArrayList();
-		ArrayList updateSmallToServer = new ArrayList();
-		ArrayList updateLargeToServer = new ArrayList();
+		ArrayList smallToServer = new ArrayList();
+		ArrayList largeToServer = new ArrayList();
 		int si = 0, ci = 0;
 		int sCount = sstamps.Length, cCount = cstamps.Length;
 
@@ -352,7 +350,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 				if (cstamps[ci].masterIncarn == 0 && cstamps[ci].localIncarn != UInt64.MaxValue)
 				{
 					Log.Spew("{1} '{0}' is new on the client, send to server", cstamps[ci].name,  cstamps[ci].id);
-					AddToUpdateList(cstamps[ci], addSmallToServer, addLargeToServer);
+					AddToUpdateList(cstamps[ci], smallToServer, largeToServer);
 				}
 				else
 				{
@@ -365,7 +363,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 			else if (ci == cCount || cstamps[ci].CompareTo(sstamps[si]) > 0)
 			{
 				Log.Spew("{1} '{0}' exists on server, but not client (no tombstone either), get it", sstamps[si].name, sstamps[si].id);
-				AddToUpdateList(sstamps[si], addSmallFromServer, addLargeFromServer);
+				AddToUpdateList(sstamps[si], smallFromServer, largeFromServer);
 				si++;
 			}
 			else
@@ -379,13 +377,13 @@ public class SynkerWorkerA: SyncCollectionWorker
 				{
 					Log.Assert(sstamps[si].localIncarn > cstamps[ci].masterIncarn);
 					Log.Spew("{2} '{0}' has changed on server, get incarn {1}", sstamps[si].name, sstamps[si].localIncarn, sstamps[si].id);
-					AddToUpdateList(sstamps[si], updateSmallFromServer, updateLargeFromServer);
+					AddToUpdateList(sstamps[si], smallFromServer, largeFromServer);
 				}
 				else if (cstamps[ci].localIncarn != cstamps[ci].masterIncarn)
 				{
 					Log.Assert(cstamps[ci].localIncarn > cstamps[ci].masterIncarn);
 					Log.Spew("{2} '{0}' has changed, send incarn {1} to server", cstamps[ci].name, cstamps[ci].localIncarn, cstamps[ci].id);
-					AddToUpdateList(cstamps[ci], updateSmallToServer, updateLargeToServer);
+					AddToUpdateList(cstamps[ci], smallToServer, largeToServer);
 				}
 				ci++;
 				si++;
@@ -405,91 +403,99 @@ public class SynkerWorkerA: SyncCollectionWorker
 			ops.DeleteNodes(ids); // remove tombstones from client
 		}
 
-		// push up new small files
+		// push up small files
 		NodeChunk[] updates = null;
-		ids = MoveIdsToArray(addSmallToServer);
+		ids = MoveIdsToArray(smallToServer);
 		if (ids != null && ids.Length > 0)
 			updates = ops.GetSmallNodes(ids);
 		if (updates != null && updates.Length > 0)
 		{
-			Nid[] rejectedUpdates = ss.PutSmallNodes(updates);
-			foreach (NodeChunk sn in updates)
-				if (Array.IndexOf(rejectedUpdates, sn.stamp.id) == -1)
-					ops.UpdateIncarn(sn.stamp);
-				//TODO: else
-				//TODO:	DeleteNode (not stream);
+			RejectedNodes rejects = ss.PutSmallNodes(updates);
+			foreach (NodeChunk nc in updates)
+			{
+				if (Array.IndexOf(rejects.updateCollisions, nc.stamp.id) == -1
+						&& Array.IndexOf(rejects.fileSystemEntryCollisions, nc.stamp.id) == -1)
+					ops.UpdateIncarn(nc.stamp);
+			}
+			foreach (Nid nid in rejects.fileSystemEntryCollisions)
+				ops.DeleteSpuriousNode(nid);
 		}
 
-		// push up modified small files
+		// get small files from server
 		updates = null;
-		ids = MoveIdsToArray(updateSmallToServer);
-		if (ids != null && ids.Length > 0)
-			updates = ops.GetSmallNodes(ids);
-		if (updates != null && updates.Length > 0)
-		{
-			Nid[] rejectedUpdates = ss.PutSmallNodes(updates);
-			foreach (NodeChunk sn in updates)
-				if (Array.IndexOf(rejectedUpdates, sn.stamp.id) == -1)
-					ops.UpdateIncarn(sn.stamp);
-		}
-
-		// get new small files from server
-		updates = null;
-		ids = MoveIdsToArray(addSmallFromServer);
+		ids = MoveIdsToArray(smallFromServer);
 		if (ids != null && ids.Length > 0)
 			updates = ss.GetSmallNodes(ids);
 		if (updates != null && updates.Length > 0)
 			ops.PutSmallNodes(updates);
-
-		// get modified small files from server
 		updates = null;
-		ids = MoveIdsToArray(updateSmallFromServer);
-		if (ids != null && ids.Length > 0)
-			updates = ss.GetSmallNodes(ids);
-		if (updates != null && updates.Length > 0)
-			ops.PutSmallNodes(updates);
 
-		// push up new and modified large files
-		foreach (Nid nid in addLargeToServer)
+		// push up large files
+		foreach (Nid nid in largeToServer)
 		{
 			NodeStamp stamp;
-			string metaData, relativePath;
-			if (!outNode.Start(nid, out stamp, out metaData, out relativePath))
+			string metaData;
+			if (!outNode.Start(nid, out stamp, out metaData))
 				continue;
-			byte[] data = outNode.GetChunk(NodeChunk.MaxSize);
-			ss.WriteLargeNode(stamp, relativePath, data);
-			if (data == null || data.Length < NodeChunk.MaxSize)
-				data = null;
+
+			int totalSize;
+			FseChunk[] chunks = outNode.ReadChunks(NodeChunk.MaxSize, out totalSize);
+			if (!ss.WriteLargeNode(stamp, chunks))
+			{
+				Log.Spew("Could not write large node {0}", stamp.name);
+				continue;
+			}
+			if (chunks == null || totalSize < NodeChunk.MaxSize)
+				chunks = null;
 			else
 				while (true)
 				{
-					data = outNode.GetChunk(NodeChunk.MaxSize);
-					if (data == null || data.Length < NodeChunk.MaxSize)
+					chunks = outNode.ReadChunks(NodeChunk.MaxSize, out totalSize);
+					if (chunks == null || totalSize < NodeChunk.MaxSize)
 						break;
-					ss.WriteLargeNode(data, null);
+					ss.WriteLargeNode(chunks, null);
 				}
-			if (ss.WriteLargeNode(data, metaData))
-				ops.UpdateIncarn(stamp);
-			else
-				Log.Spew("skipping update of incarnation for large node {0} due to collision on server", stamp.name);
+			SyncIncomingNode.Status status = ss.WriteLargeNode(chunks, metaData);
+			switch (status)
+			{
+				case SyncIncomingNode.Status.Complete: ops.UpdateIncarn(stamp); break;
+				case SyncIncomingNode.Status.UpdateCollision:
+					Log.Spew("skipping update of incarnation for large node {0} due to update collision on server", stamp.name);
+					break;
+				case SyncIncomingNode.Status.FileSystemEntryCollision:
+					ops.DeleteSpuriousNode(nid);
+					break;
+				default:
+					Log.Spew("skipping update of incarnation for large node {0} due to update {1}", stamp.name, status.ToString());
+					break;
+			}
 		}
-		addLargeToServer.Clear();
+		largeToServer.Clear();
 
 		// get large files from server
-		foreach (Nid nid in addLargeFromServer)
+		foreach (Nid nid in largeFromServer)
 		{
-			NodeChunk sn = ss.ReadLargeNode(nid, NodeChunk.MaxSize);
-			inNode.Start(sn.stamp, sn.relativePath);
-			inNode.Append(sn.data);
-			while (sn.data.Length == NodeChunk.MaxSize)
+			NodeChunk nc = ss.ReadLargeNode(nid, NodeChunk.MaxSize);
+			inNode.Start(nc.stamp);
+			inNode.WriteChunks(nc.fseChunks);
+			while (nc.totalSize >= NodeChunk.MaxSize)
 			{
-				sn.data = ss.ReadLargeNode(NodeChunk.MaxSize);
-				inNode.Append(sn.data);
+				nc.fseChunks = ss.ReadLargeNode(NodeChunk.MaxSize);
+				inNode.WriteChunks(nc.fseChunks);
+				nc.totalSize = 0;
+				foreach (FseChunk chunk in nc.fseChunks)
+					nc.totalSize += chunk.data.Length;
 			}
-			if (!inNode.Complete(sn.metaData))
-				Log.Spew("skipped update of large node {0} from server due to local collision", sn.stamp.name);
+			SyncIncomingNode.Status status = inNode.Complete(nc.metaData);
+			switch (status)
+			{
+				case SyncIncomingNode.Status.Complete: break;
+				default:
+					Log.Spew("skipping update of incarnation for large node {0} due to update {1}", nid.ToString(), status.ToString());
+					break;
+			}
 		}
-		addLargeFromServer.Clear();
+		largeFromServer.Clear();
 	}
 }
 
