@@ -48,22 +48,89 @@ using Simias.Security.Web.AuthenticationService;
 namespace Simias.Web
 {
 	/// <summary>
+	/// Supported store search operators.
 	/// </summary>
+	public enum SearchType
+	{
+		/// <summary>
+		/// Used to compare if two values are equal.
+		/// </summary>
+		Equal,
+
+		/// <summary>
+		/// Used to compare if two values are not equal.
+		/// </summary>
+		Not_Equal,
+
+		/// <summary>
+		/// Used to compare if a string value begins with a sub-string value.
+		/// </summary>
+		Begins,
+
+		/// <summary>
+		/// Used to compare if a string value ends with a sub-string value.
+		/// </summary>
+		Ends,
+
+		/// <summary>
+		/// Used to compare if a string value contains a sub-string value.
+		/// </summary>
+		Contains,
+
+		/// <summary>
+		/// Used to compare if a value is greater than another value.
+		/// </summary>
+		Greater,
+
+		/// <summary>
+		/// Used to compare if a value is less than another value.
+		/// </summary>
+		Less,
+
+		/// <summary>
+		/// Used to compare if a value is greater than or equal to another value.
+		/// </summary>
+		Greater_Equal,
+
+		/// <summary>
+		/// Used to compare if a value is less than or equal to another value.
+		/// </summary>
+		Less_Equal,
+
+		/// <summary>
+		/// Used to test for existence of a property.
+		/// </summary>
+		Exists,
+
+		/// <summary>
+		/// Used to do a case sensitive compare.
+		/// </summary>
+		CaseEqual
+	};
+
 	[ Serializable ]
 	public class MemberInfo
 	{
 		/// <summary>
 		/// </summary>
-		public string	ID;
+		public string	ObjectID;
+
+		/// <summary>
+		/// </summary>
+		public string 	UserID;
+
 		/// <summary>
 		/// </summary>
 		public string	Name;
+
 		/// <summary>
 		/// </summary>
 		public string	GivenName;
+
 		/// <summary>
 		/// </summary>
 		public string	FamilyName;
+
 		/// <summary>
 		/// </summary>
 		public string	FullName;
@@ -71,6 +138,7 @@ namespace Simias.Web
 		/// <summary>
 		/// </summary>
 		public int		AccessRights;
+
 		/// <summary>
 		/// </summary>
 		public bool		IsOwner;
@@ -84,39 +152,14 @@ namespace Simias.Web
 		//[ NonSerializable ]
 		internal MemberInfo( Simias.Storage.Member member )
 		{
-			this.ID = member.ID;
 			this.Name = member.Name;
+			this.ObjectID = member.ID;
+			this.UserID = member.UserID;
 			this.GivenName = member.Given;
 			this.FamilyName = member.Family;
 			this.FullName = member.FN;
 			this.AccessRights = (int) member.Rights;
 			this.IsOwner = member.IsOwner;
-		}
-	}
-
-	internal class ContactComparer : IComparer  
-	{
-		int IComparer.Compare( Object x, Object y )  
-		{
-			Simias.Web.MemberInfo memberX = x as Simias.Web.MemberInfo;
-			Simias.Web.MemberInfo memberY = y as Simias.Web.MemberInfo;
-
-			if ( memberX.FullName != null )
-			{
-				if (memberY.FullName != null)
-				{
-					return (new CaseInsensitiveComparer()).Compare( memberX.FullName, memberY.FullName );
-				}
-
-				return (new CaseInsensitiveComparer()).Compare( memberX.FullName, memberY.Name );
-			}
-			else
-			if ( memberY.FullName != null )
-			{
-				return ( new CaseInsensitiveComparer()).Compare( memberX.Name, memberY.FullName );
-			}
-
-			return ( new CaseInsensitiveComparer()).Compare( memberX.Name, memberY.Name );
 		}
 	}
 
@@ -191,9 +234,6 @@ namespace Simias.Web
 			catch{}
 		}
 
-
-
-
 		/// <summary>
 		/// Remove a member from a domain
 		/// </summary>
@@ -211,114 +251,203 @@ namespace Simias.Web
 			}
 		}
 
-		/// <summary>
-		/// Search for Members in a domain given a specified search string
-		/// </summary>
-		/// <param name="DomainID">The ID of the domain to search against.</param>
-		/// <param name="SearchString">Search string for finding members</param>
-		[WebMethod(Description="Generic search members in a specified domain.")]
-		[SoapDocumentMethod]
-		public Simias.Web.MemberInfo[] SearchMembers( string DomainID, string SearchString )
-		{
-			ArrayList members = new ArrayList();
-			Hashtable matches = new Hashtable();
-			ICSList searchList;
 
-			Domain domain = Store.GetStore().GetDomain( DomainID );
-			if ( domain != null )
-			{
-				searchList = domain.Search( PropertyTags.FullName, SearchString, SearchOp.Begins );
-				foreach( ShallowNode sNode in searchList )
-				{
-					if ( sNode.Type.Equals( "Member" ) )
-					{
-						Simias.Storage.Member member = new Simias.Storage.Member( domain, sNode );
-						matches.Add( sNode.ID, member );
-						Simias.Web.MemberInfo webMember = new Simias.Web.MemberInfo( member );
-						members.Add( webMember );
-					}
-				}	
-
-				searchList = domain.Search( BaseSchema.ObjectName, SearchString, SearchOp.Begins );
-				foreach( ShallowNode sNode in searchList )
-				{
-					if ( sNode.Type.Equals( "Member" ) )
-					{
-						if ( matches.Contains( sNode.ID ) == false )
-						{
-							Simias.Storage.Member member = new Simias.Storage.Member( domain, sNode );
-							Simias.Web.MemberInfo webMember = new Simias.Web.MemberInfo( member );
-							members.Add( webMember );
-						}
-					}
-				}
-
-				ContactComparer comparer = new ContactComparer();
-				members.Sort( 0, members.Count, comparer );
-			}
-
-			return ( Simias.Web.MemberInfo[] )( members.ToArray( typeof( Simias.Web.MemberInfo ) ) );
-		}
 
 		/// <summary>
-		/// Search Simias members by their friendly member name in the specified domain.
+		/// End the search for domain members.
 		/// </summary>
-		/// <param name="DomainID">The ID of the domain to search against.</param>
-		/// <param name="SearchString">The string to find members against</param>
-		[WebMethod(Description="Search Simias members by their member name in a specified domain.")]
+		/// <param name="domainID">The identifier of the domain.</param>
+		/// <param name="searchContext">Domain provider specific search context returned by FindFirstMembers
+		/// or FindFirstSpecificMembers methods.</param>
+		[WebMethod(Description="Ends the search for the members in a specified domain.")]
 		[SoapDocumentMethod]
-		public Simias.Web.MemberInfo[] SearchMemberName( string DomainID, string SearchString )
+		public void FindCloseMembers( string domainID, object searchContext )
 		{
-			ArrayList matches = new ArrayList();
-			ICSList searchList;
+			DomainProvider.FindCloseDomainMembers( domainID, searchContext );
+		}
 
-			Domain domain = Store.GetStore().GetDomain( DomainID );
-			if ( domain != null )
+
+
+		/// Starts a search for all domain members.
+		/// </summary>
+		/// <param name="domainID">The identifier of the domain to search for members in.</param>
+		/// <param name="searchContext">Receives a provider specific search context object.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <param name="totalMembers">Receives the total number of objects found in the search.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
+		[WebMethod(Description="Start the search for all of the members in a specified domain.")]
+		[SoapDocumentMethod]
+		public bool FindFirstMembers( 
+			string domainID, 
+			out object searchContext, 
+			out MemberInfo[] memberList, 
+			out int totalMembers, 
+			int count )
+		{
+			Member[] tempList;
+
+			bool moreEntries = 
+				DomainProvider.FindFirstDomainMembers(
+					domainID, 
+					out searchContext, 
+					out tempList, 
+					out totalMembers, 
+					count );
+
+			if ( ( tempList != null ) && ( tempList.Length > 0 ) )
 			{
-				searchList = domain.Search( BaseSchema.ObjectName, SearchString, SearchOp.Begins );
-				foreach( ShallowNode sNode in searchList )
+				memberList = new MemberInfo[ tempList.Length ];
+				for ( int i = 0; i < tempList.Length; ++i )
 				{
-					if ( sNode.Type.Equals( "Member" ) )
-					{
-						Simias.Storage.Member member = new Simias.Storage.Member( domain, sNode );
-						Simias.Web.MemberInfo webMember = new Simias.Web.MemberInfo( member );
-						matches.Add( webMember );
-					}
+					memberList[ i ] = new MemberInfo( tempList[ i ] );
 				}
 			}
+			else
+			{
+				memberList = null;
+			}
 
-			return ( Simias.Web.MemberInfo[] )( matches.ToArray( typeof( Simias.Web.MemberInfo ) ) );
+			return moreEntries;
 		}
+
+
 
 		/// <summary>
-		/// Search Simias members by their full name (FN) in the specified domain.
+		/// Starts a search for a specific set of domain members.
 		/// </summary>
-		/// <param name="DomainID">The ID of the domain to search against.</param>
-		/// <param name="SearchString">The string to find members against</param>
-		[WebMethod(Description="Search Simias members by their full name in a specified domain.")]
+		/// <param name="domainID">The identifier of the domain to search for members in.</param>
+		/// <param name="attributeName">Attribute name to search.</param>
+		/// <param name="searchString">String that contains a pattern to search for.</param>
+		/// <param name="operation">Type of search operation to perform.</param>
+		/// <param name="searchContext">Receives a provider specific search context object.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <param name="totalMembers">Receives the total number of objects found in the search.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
+		[WebMethod(Description="Start the search for specific members in a specified domain.")]
 		[SoapDocumentMethod]
-		public Simias.Web.MemberInfo[] SearchFullName( string DomainID, string SearchString )
+		public bool FindFirstSpecificMembers(
+			string domainID, 
+			string attributeName, 
+			string searchString, 
+			SearchType operation, 
+			out object searchContext, 
+			out MemberInfo[] memberList, 
+			out int totalMembers, 
+			int count )
 		{
-			ArrayList matches = new ArrayList();
-			ICSList searchList;
+			Member[] tempList;
 
-			Domain domain = Store.GetStore().GetDomain( DomainID );
-			if ( domain != null )
+			bool moreEntries = 
+				DomainProvider.FindFirstDomainMembers(
+					domainID,
+					attributeName,
+					searchString,
+					( Simias.Storage.SearchOp )Enum.ToObject( typeof( Simias.Storage.SearchOp ), operation ),
+					out searchContext, 
+					out tempList, 
+					out totalMembers, 
+					count );
+
+			if ( ( tempList != null ) && ( tempList.Length > 0 ) )
 			{
-				searchList = domain.Search( PropertyTags.FullName, SearchString, SearchOp.Begins );
-				foreach( ShallowNode sNode in searchList )
+				memberList = new MemberInfo[ tempList.Length ];
+				for ( int i = 0; i < tempList.Length; ++i )
 				{
-					if ( sNode.Type.Equals( "Member" ) )
-					{
-						Simias.Storage.Member member = new Simias.Storage.Member( domain, sNode );
-						Simias.Web.MemberInfo webMember = new Simias.Web.MemberInfo( member );
-						matches.Add( webMember );
-					}
+					memberList[ i ] = new MemberInfo( tempList[ i ] );
 				}
 			}
+			else
+			{
+				memberList = null;
+			}
 
-			return ( Simias.Web.MemberInfo[] )( matches.ToArray( typeof( Simias.Web.MemberInfo ) ) );
+			return moreEntries;
 		}
+
+
+
+		/// <summary>
+		/// Continues the search for the next domain members started by calling the FindFirstMembers or
+		/// FindFirstSpecificMembers methods.
+		/// </summary>
+		/// <param name="domainID">The identifier of the domain to search for members in.</param>
+		/// <param name="searchContext">Domain provider specific search context returned by FindFirstMembers 
+		/// FindFirstSpecificMembers methods.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
+		[WebMethod(Description="Continues the search for the next members in a specified domain.")]
+		[SoapDocumentMethod]
+		public bool FindNextMembers( 
+			string domainID, 
+			ref object searchContext, 
+			out MemberInfo[] memberList, 
+			int count )
+		{
+			Member[] tempList;
+
+			bool moreEntries = DomainProvider.FindNextDomainMembers( domainID, ref searchContext, out tempList, count );
+
+			if ( ( tempList != null ) && ( tempList.Length > 0 ) )
+			{
+				memberList = new MemberInfo[ tempList.Length ];
+				for ( int i = 0; i < tempList.Length; ++i )
+				{
+					memberList[ i ] = new MemberInfo( tempList[ i ] );
+				}
+			}
+			else
+			{
+				memberList = null;
+			}
+
+			return moreEntries;
+		}
+
+
+
+		/// <summary>
+		/// Continues the search for the previous domain members started by calling the FindFirstMembers method or
+		/// FindFirstSpecificMembers methods.
+		/// </summary>
+		/// <param name="domainID">The identifier of the domain to search for members in.</param>
+		/// <param name="searchContext">Domain provider specific search context returned by FindFirstMembers or
+		/// FindFirstSpecificMembers methods.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
+		[WebMethod(Description="Continues the search for the previous members in a specified domain.")]
+		[SoapDocumentMethod]
+		public bool FindPreviousMembers( 
+			string domainID, 
+			ref Object searchContext, 
+			out MemberInfo[] memberList, 
+			int count )
+		{
+			Member[] tempList;
+
+			bool moreEntries = DomainProvider.FindPreviousDomainMembers( domainID, ref searchContext, out tempList, count );
+
+			if ( ( tempList != null ) && ( tempList.Length > 0 ) )
+			{
+				memberList = new MemberInfo[ tempList.Length ];
+				for ( int i = 0; i < tempList.Length; ++i )
+				{
+					memberList[ i ] = new MemberInfo( tempList[ i ] );
+				}
+			}
+			else
+			{
+				memberList = null;
+			}
+
+			return moreEntries;
+		}
+
+
+
 
 		/// <summary>
 		/// WebMethod that returns the Simias information
@@ -332,7 +461,6 @@ namespace Simias.Web
 		{
 			return "TODO: Implement the Simias Web Service";
 		}
-
 
 
 
@@ -363,7 +491,6 @@ namespace Simias.Web
 
 			return(cDomainInfo);
 		}
-
 
 
 
@@ -416,7 +543,6 @@ namespace Simias.Web
 
 
 
-
 		/// <summary>
 		/// WebMethod to login or authenticate against a 
 		/// remote domain.  The user must have previously joined
@@ -450,7 +576,6 @@ namespace Simias.Web
 
 
 
-
 		/// <summary>
 		/// WebMethod to logout from a remote domain.
 		/// The user must have previously joined and 
@@ -470,7 +595,6 @@ namespace Simias.Web
 
 
 
-
 		/// <summary>
 		/// WebMethod to check if a domain is "active"
 		/// </summary>
@@ -486,7 +610,6 @@ namespace Simias.Web
 		{
 			return( new DomainAgent().IsDomainActive( domainID ) );
 		}
-
 
 
 

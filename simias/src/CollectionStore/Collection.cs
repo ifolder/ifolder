@@ -1425,6 +1425,13 @@ namespace Simias.Storage
 							// Administrative access needs to be checked because collection membership has changed.
 							doAdminCheck = true;
 
+							// If this collection is a domain and this member is to be added, call out to the
+							// domain provider for this domain to do a pre-commit operation.
+							if ( IsBaseType( this, NodeTypes.DomainType ) && ( node.Properties.State == PropertyList.PropertyListState.Add ) )
+							{
+								DomainProvider.PreCommit( Domain, node as Member );
+							}
+
 							// Keep track of any ownership changes.
 							if ( node.Properties.HasProperty( PropertyTags.Owner ) )
 							{
