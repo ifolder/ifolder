@@ -25,6 +25,7 @@ using System.Collections;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading;
 using System.Xml;
@@ -200,6 +201,16 @@ namespace Simias.Client.Event
 		#endregion
 
 		#region Private Methods
+		/// <summary>
+		/// Callback used to indicate that an event has been indicated to the delegate.
+		/// </summary>
+		/// <param name="result">Results that contains the delegate.</param>
+		private void EventCompleteCallback( IAsyncResult result )
+		{
+			IProcEventHandler eventDelegate = ( result as AsyncResult ).AsyncDelegate as IProcEventHandler;
+			eventDelegate.EndInvoke( result );
+		}
+
 		/// <summary>
 		/// Callback that gets notified when the configuration file changes.
 		/// </summary>
@@ -415,7 +426,18 @@ namespace Simias.Client.Event
 						{
 							if ( onChangedNodeEvent != null )
 							{
-								onChangedNodeEvent( nodeArgs );
+								Delegate[] cbList = onChangedNodeEvent.GetInvocationList();
+								foreach ( IProcEventHandler cb in cbList )
+								{
+									try 
+									{ 
+										cb.BeginInvoke( nodeArgs, new AsyncCallback( EventCompleteCallback ), null );
+									}
+									catch
+									{
+										onChangedNodeEvent -= cb;
+									}
+								}
 							}
 
 							break;
@@ -425,7 +447,18 @@ namespace Simias.Client.Event
 						{
 							if ( onCreatedNodeEvent != null )
 							{
-								onCreatedNodeEvent( nodeArgs );
+								Delegate[] cbList = onCreatedNodeEvent.GetInvocationList();
+								foreach ( IProcEventHandler cb in cbList )
+								{
+									try 
+									{ 
+										cb.BeginInvoke( nodeArgs, new AsyncCallback( EventCompleteCallback ), null );
+									}
+									catch
+									{
+										onCreatedNodeEvent -= cb;
+									}
+								}
 							}
 
 							break;
@@ -435,7 +468,18 @@ namespace Simias.Client.Event
 						{
 							if ( onDeletedNodeEvent != null )
 							{
-								onDeletedNodeEvent( nodeArgs );
+								Delegate[] cbList = onDeletedNodeEvent.GetInvocationList();
+								foreach ( IProcEventHandler cb in cbList )
+								{
+									try 
+									{ 
+										cb.BeginInvoke( nodeArgs, new AsyncCallback( EventCompleteCallback ), null );
+									}
+									catch
+									{
+										onDeletedNodeEvent -= cb;
+									}
+								}
 							}
 
 							break;
@@ -451,7 +495,18 @@ namespace Simias.Client.Event
 					CollectionSyncEventArgs collectionArgs = ed.ToCollectionSyncEventArgs();
 					if ( onCollectionSyncEvent != null )
 					{
-						onCollectionSyncEvent( collectionArgs );
+						Delegate[] cbList = onCollectionSyncEvent.GetInvocationList();
+						foreach ( IProcEventHandler cb in cbList )
+						{
+							try 
+							{ 
+								cb.BeginInvoke( collectionArgs, new AsyncCallback( EventCompleteCallback ), null );
+							}
+							catch
+							{
+								onCollectionSyncEvent -= cb;
+							}
+						}
 					}
 					break;
 				}
@@ -462,7 +517,18 @@ namespace Simias.Client.Event
 					FileSyncEventArgs fileArgs = ed.ToFileSyncEventArgs();
 					if ( onFileSyncEvent != null )
 					{
-						onFileSyncEvent( fileArgs );
+						Delegate[] cbList = onFileSyncEvent.GetInvocationList();
+						foreach ( IProcEventHandler cb in cbList )
+						{
+							try 
+							{ 
+								cb.BeginInvoke( fileArgs, new AsyncCallback( EventCompleteCallback ), null );
+							}
+							catch
+							{
+								onFileSyncEvent -= cb;
+							}
+						}
 					}
 					break;
 				}
