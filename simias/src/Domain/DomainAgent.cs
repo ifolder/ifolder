@@ -163,19 +163,14 @@ namespace Simias.Domain
 			collection.CreateMaster = false;
 
 			// TODO: bump collection, magic number, etc.
-			ulong magic = 100;
-			collection.Properties.ModifyNodeProperty(PropertyTags.MasterIncarnation,
-				collection.MasterIncarnation + magic);
-			collection.Properties.ModifyNodeProperty(PropertyTags.LocalIncarnation,
-				collection.MasterIncarnation);
+			collection.Properties.ModifyNodeProperty(PropertyTags.MasterIncarnation, 1);
+			collection.Properties.ModifyNodeProperty(PropertyTags.LocalIncarnation, 1);
 			collection.Commit();
 			
 			if (rootNode != null)
 			{
-				rootNode.Properties.ModifyNodeProperty(PropertyTags.MasterIncarnation,
-					rootNode.MasterIncarnation + magic);
-				rootNode.Properties.ModifyNodeProperty(PropertyTags.LocalIncarnation,
-					rootNode.MasterIncarnation);
+				rootNode.Properties.ModifyNodeProperty(PropertyTags.MasterIncarnation, 1);
+				rootNode.Properties.ModifyNodeProperty(PropertyTags.LocalIncarnation, 1);
 				collection.Commit(rootNode);
 			}
 
