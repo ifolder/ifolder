@@ -20,8 +20,8 @@ DIE=0
 	DIE=1
 }
 
-AUTOMAKE=automake-1.4
-ACLOCAL=aclocal-1.4
+AUTOMAKE=automake-1.7
+ACLOCAL=aclocal-1.7
 
 ($AUTOMAKE --version) < /dev/null > /dev/null 2>&1 || {
         AUTOMAKE=automake
@@ -31,28 +31,9 @@ ACLOCAL=aclocal-1.4
 ($AUTOMAKE --version) < /dev/null > /dev/null 2>&1 || {
 	echo
 	echo "You must have automake installed to compile $PROJECT."
-	echo "Get ftp://sourceware.cygnus.com/pub/automake/automake-1.4.tar.gz"
-	echo "(or a newer version if it is available)"
+	echo "Download the appropriate package for your distribution,"
+	echo "or get the source tarball at ftp://ftp.gnu.org/pub/gnu/"
 	DIE=1
-}
-
-(grep "^AM_PROG_LIBTOOL" configure.in >/dev/null) && {
-  (libtool --version) < /dev/null > /dev/null 2>&1 || {
-    echo
-    echo "**Error**: You must have \`libtool' installed to compile $PROJECT."
-    echo "Get ftp://ftp.gnu.org/pub/gnu/libtool-1.2d.tar.gz"
-    echo "(or a newer version if it is available)"
-    DIE=1
-  }
-}
-
-grep "^AM_GLIB_GNU_GETTEXT" configure.in >/dev/null && {
-  grep "sed.*POTFILES" $srcdir/configure.in >/dev/null || \
-  (glib-gettextize --version) < /dev/null > /dev/null 2>&1 || {
-    echo
-    echo "**Error**: You must have \`glib' installed to compile $PROJECT."
-    DIE=1
-  }
 }
 
 if test "$DIE" -eq 1; then
