@@ -56,6 +56,7 @@ namespace Simias.Gaim
 		private string userName;
 		private string userID;
 		private string poBoxID;
+		private static string syncMethodPref = "all";
 
 		/// <summary>
 		/// Used to log messages.
@@ -341,8 +342,6 @@ namespace Simias.Gaim
 		/// </summary>
 		public static void UpdatePreferences()
 		{
-			// The only preference right now (that the GaimDomain service needs
-			// to pay attention to is the Sync Interval.
 			XmlDocument prefsDoc = new XmlDocument();
 			try
 			{
@@ -356,6 +355,9 @@ namespace Simias.Gaim
 			}
 			XmlElement topPrefElement = prefsDoc.DocumentElement;
 
+			//
+			// Sync Interval
+			//
 			XmlNode syncIntervalNode = 
 				topPrefElement.SelectSingleNode("//pref[@name='plugins']/pref[@name='simias']/pref[@name='sync_interval']/@value");
 
@@ -368,7 +370,22 @@ namespace Simias.Gaim
 					
 					Simias.Gaim.Sync.UpdateSyncInterval(syncInterval);
 				}
-			}		
+			}
+			
+			//
+			// Type of member sync
+			//
+			XmlNode syncMethodNode =
+				topPrefElement.SelectSingleNode("//pref[@name='plugins']/pref[@name='simias']/pref[@name='sync_method']/@value");
+
+			if (syncMethodNode != null)
+			{
+				string syncMethod = syncMethodNode.Value;
+				if (syncMethod != null && syncMethod != syncMethodPref)
+				{
+					syncMethodPref = syncMethod;
+				}
+			}
 		}
 		
 		/// <summary>
@@ -613,13 +630,24 @@ namespace Simias.Gaim
 
 		internal static void SyncBuddies(Simias.Storage.Domain domain)
 		{
-			// FIXME: Read the sync method type from Gaim's prefs.xml so we
-			// know whether to sync ALL buddies or just those who have the
-			// plugin installed.
+			GaimBuddy[] buddies;
+			if (syncMethodPref == "plugin-enabled")
+			{
+				log.Debug("Synching only iFolder Plugin-enabled Buddies");
+
+				// Only sync buddies that the Gaim iFolder Plugin has been able
+				// to determine have the Gaim iFolder Plugin enabled
+				buddies = GetBuddies(true);
+			}
+			else
+			{
+				log.Debug("Synching ALL Gaim Buddies");
+
+				// Sync all buddies regardless of whether they have the Gaim
+				// iFolder Plugin installed
+				buddies = GetBuddies(false);
+			}
 			
-			// The Gaim Buddy List wins any conflicts
-			
-			GaimBuddy[] buddies = GetBuddies(false);
 			if (buddies == null) return;
 
 			foreach (GaimBuddy buddy in buddies)
@@ -636,6 +664,8 @@ namespace Simias.Gaim
 					UpdateMember(domain, member, buddy);
 				}
 			}
+
+			RemoveOldMembers(domain, buddies);			
 		}
 		
 		internal static void CreateNewMember(Simias.Storage.Domain domain, GaimBuddy buddy)
@@ -766,6 +796,18 @@ namespace Simias.Gaim
 			
 			// Commit the changes
 			domain.Commit(member);
+		}
+		
+		internal static void RemoveOldMembers(Simias.Storage.Domain domain, GaimBuddy[] buddies)
+		{
+// FIXME: Perhaps add another preference in the Gaim Plugin that allows the users to decide whether to prune old buddies from the memberlist if they remove them from the Gaim Buddy List
+
+			// Remove members from the domain if they are not in the list of buddies
+//			ICSList memberList = domain.GetMemberList();
+//			foreach (Member member in memberList)
+//			{
+//				
+//			}
 		}
 		
 		internal static void RemoveMember(Simias.Storage.Domain domain, Member member)
