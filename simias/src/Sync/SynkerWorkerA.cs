@@ -236,7 +236,8 @@ public class SynkerWorkerA: SyncCollectionWorker
 				{
 					Log.Spew("{1} {0} has been killed or synced before or is RO, but is not on the server, just kill it locally",
 						cstamps[ci].name, cstamps[ci].id);
-					killOnClient.Add(cstamps[ci].id, cstamps[ci].id);
+					if (!killOnClient.Contains(cstamps[ci].id))
+						killOnClient.Add(cstamps[ci].id, cstamps[ci]);
 				}
 				ci++;
 			}
@@ -332,8 +333,11 @@ public class SynkerWorkerA: SyncCollectionWorker
 			return;
 
 		// remove deleted nodes from client
-		foreach (Nid nid in killOnClient)
-			ops.DeleteNode(nid, true);
+		foreach (DictionaryEntry entry in killOnClient)
+		{
+			NodeStamp ns = (NodeStamp)entry.Value;
+			ops.DeleteNode(ns.id, true);
+		}
 
 		// get directories from the server.
 		if (dirsFromServer.Count > 0 && ! stopping)
