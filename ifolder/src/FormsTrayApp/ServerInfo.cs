@@ -57,6 +57,8 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.CheckBox rememberPassword;
 		private System.Windows.Forms.TextBox userName;
 		private System.Windows.Forms.TextBox serverName;
+		private System.Windows.Forms.PictureBox bannerFill;
+		private System.Windows.Forms.Panel panel1;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -109,6 +111,9 @@ namespace Novell.FormsTrayApp
 			this.rememberPassword = new System.Windows.Forms.CheckBox();
 			this.userName = new System.Windows.Forms.TextBox();
 			this.serverName = new System.Windows.Forms.TextBox();
+			this.bannerFill = new System.Windows.Forms.PictureBox();
+			this.panel1 = new System.Windows.Forms.Panel();
+			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// ok
@@ -350,6 +355,50 @@ namespace Novell.FormsTrayApp
 			this.serverName.Visible = ((bool)(resources.GetObject("serverName.Visible")));
 			this.serverName.WordWrap = ((bool)(resources.GetObject("serverName.WordWrap")));
 			// 
+			// bannerFill
+			// 
+			this.bannerFill.AccessibleDescription = resources.GetString("bannerFill.AccessibleDescription");
+			this.bannerFill.AccessibleName = resources.GetString("bannerFill.AccessibleName");
+			this.bannerFill.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("bannerFill.Anchor")));
+			this.bannerFill.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("bannerFill.BackgroundImage")));
+			this.bannerFill.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("bannerFill.Dock")));
+			this.bannerFill.Enabled = ((bool)(resources.GetObject("bannerFill.Enabled")));
+			this.bannerFill.Font = ((System.Drawing.Font)(resources.GetObject("bannerFill.Font")));
+			this.bannerFill.Image = ((System.Drawing.Image)(resources.GetObject("bannerFill.Image")));
+			this.bannerFill.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("bannerFill.ImeMode")));
+			this.bannerFill.Location = ((System.Drawing.Point)(resources.GetObject("bannerFill.Location")));
+			this.bannerFill.Name = "bannerFill";
+			this.bannerFill.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("bannerFill.RightToLeft")));
+			this.bannerFill.Size = ((System.Drawing.Size)(resources.GetObject("bannerFill.Size")));
+			this.bannerFill.SizeMode = ((System.Windows.Forms.PictureBoxSizeMode)(resources.GetObject("bannerFill.SizeMode")));
+			this.bannerFill.TabIndex = ((int)(resources.GetObject("bannerFill.TabIndex")));
+			this.bannerFill.TabStop = false;
+			this.bannerFill.Text = resources.GetString("bannerFill.Text");
+			this.bannerFill.Visible = ((bool)(resources.GetObject("bannerFill.Visible")));
+			// 
+			// panel1
+			// 
+			this.panel1.AccessibleDescription = resources.GetString("panel1.AccessibleDescription");
+			this.panel1.AccessibleName = resources.GetString("panel1.AccessibleName");
+			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("panel1.Anchor")));
+			this.panel1.AutoScroll = ((bool)(resources.GetObject("panel1.AutoScroll")));
+			this.panel1.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("panel1.AutoScrollMargin")));
+			this.panel1.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("panel1.AutoScrollMinSize")));
+			this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
+			this.panel1.Controls.Add(this.banner);
+			this.panel1.Controls.Add(this.bannerFill);
+			this.panel1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("panel1.Dock")));
+			this.panel1.Enabled = ((bool)(resources.GetObject("panel1.Enabled")));
+			this.panel1.Font = ((System.Drawing.Font)(resources.GetObject("panel1.Font")));
+			this.panel1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("panel1.ImeMode")));
+			this.panel1.Location = ((System.Drawing.Point)(resources.GetObject("panel1.Location")));
+			this.panel1.Name = "panel1";
+			this.panel1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("panel1.RightToLeft")));
+			this.panel1.Size = ((System.Drawing.Size)(resources.GetObject("panel1.Size")));
+			this.panel1.TabIndex = ((int)(resources.GetObject("panel1.TabIndex")));
+			this.panel1.Text = resources.GetString("panel1.Text");
+			this.panel1.Visible = ((bool)(resources.GetObject("panel1.Visible")));
+			// 
 			// ServerInfo
 			// 
 			this.AcceptButton = this.ok;
@@ -362,6 +411,7 @@ namespace Novell.FormsTrayApp
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.CancelButton = this.cancel;
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.serverName);
 			this.Controls.Add(this.userName);
 			this.Controls.Add(this.password);
@@ -369,7 +419,6 @@ namespace Novell.FormsTrayApp
 			this.Controls.Add(this.passwordLabel2);
 			this.Controls.Add(this.userLabel2);
 			this.Controls.Add(this.serverLabel2);
-			this.Controls.Add(this.banner);
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
@@ -388,6 +437,7 @@ namespace Novell.FormsTrayApp
 			this.Text = resources.GetString("$this.Text");
 			this.Load += new System.EventHandler(this.ServerInfo_Load);
 			this.Activated += new System.EventHandler(this.ServerInfo_Activated);
+			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -507,7 +557,11 @@ namespace Novell.FormsTrayApp
 			try
 			{
 				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
-				this.banner.Image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
+				banner.Image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
+
+
+				bannerFill.SizeMode = PictureBoxSizeMode.StretchImage;
+				bannerFill.Image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-banner-scaler.png"));
 			}
 			catch
 			{
