@@ -357,7 +357,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			else
 			{
-				accept.Enabled = decline.Enabled = remove.Enabled = false;
+				accept.Enabled = decline.Enabled = remove.Enabled = generateCsiFile.Enabled = false;
 			}
 		}
 
