@@ -30,7 +30,6 @@ using System.Net;
 using Simias;
 using Simias.Storage;
 using Simias.Agent;
-using Simias.Identity;
 
 namespace Simias.Sync
 {

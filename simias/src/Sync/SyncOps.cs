@@ -27,7 +27,6 @@ using System.Xml;
 using System.Diagnostics;
 
 using Simias.Storage;
-using Simias.Identity;
 using Simias;
 
 namespace Simias.Sync

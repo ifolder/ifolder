@@ -27,7 +27,6 @@ using System.IO;
 using NUnit.Framework;
 
 using Simias.Sync;
-using Simias.Identity;
 
 namespace Simias.Sync.Tests
 {
@@ -83,7 +82,7 @@ namespace Simias.Sync.Tests
 			
 			Console.WriteLine("Collection \"{0}\" Access Identity: {1}", sc.Name, sc.AccessIdentity);
 			
-			Console.WriteLine("Current Identity: {0}", IdentityManager.Connect().CurrentId.UserGuid);
+			Console.WriteLine("Current Identity: {0}", store.BaseStore.CurrentUser);
 
 			Assert(sc.AccessIdentity != null);
 
