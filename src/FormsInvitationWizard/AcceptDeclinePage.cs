@@ -162,10 +162,11 @@ namespace Novell.iFolder.InvitationWizard
 		#region Overridden Methods
 		internal override int ValidatePage(int currentIndex)
 		{
-			// TODO - implement this...
-			if (declineInvitation.Checked)
+			InvitationWizard wiz = (InvitationWizard)this.Parent;
+
+			if ((declineInvitation.Checked) || !wiz.Subscription.HasDirNode)
 			{
-				return ((InvitationWizard)(this.Parent)).MaxPages - 1;
+				return wiz.MaxPages - 1;
 			}
 			
 			return base.ValidatePage (currentIndex);
