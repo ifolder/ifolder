@@ -53,10 +53,20 @@ install-exec-local: Novell.iFolder.dll iFolderCmd.exe iFolderd.exe
 	$(INSTALL_PROGRAM) Novell.iFolder.dll $(DEBUG_FILES) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) iFolderCmd.exe iFolderd.exe $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) iFolderCmd ifolders $(DESTDIR)$(bindir)
+if WINDOWS
+if DEBUG	
+	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(bindir)
+endif
+endif
 
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f Novell.iFolder.dll $(DEBUG_FILES)
 	cd $(DESTDIR)$(bindir); rm -f iFolderCmd.exe iFolderCmd iFolderd.exe ifolders
+if WINDOWS
+if DEBUG	
+	cd $(DESTDIR)$(bindir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)
+endif
+endif
 
 CLEAN_FILES = Novell.iFolder.dll iFolderCmd.exe iFolderd.exe Novell.iFolder.doc.xml iFolderCmd.doc.xml
 

@@ -67,12 +67,22 @@ install-exec-local: iFolderComponent.dll iFolderShell.dll $(DATA_FILES)
 	$(INSTALL_PROGRAM) iFolderComponent.dll iFolderShell.dll $(srcdir)/iFolderShell.reg $(DEBUG_FILES) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(DATA_FILES) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(WINDOWS_FILES) $(DESTDIR)$(WINDIR_UNIX)
+if WINDOWS
+if DEBUG	
+	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(libdir)
+endif
+endif
 
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f iFolderComponent.dll iFolderShell.dll iFolderShell.reg $(DEBUG_FILES)
 	cd $(DESTDIR)$(libdir); rm -f $(DATA_FILES:$(srcdir)/iFolderShell/%=%)
 	cd $(DESTDIR)$(libdir); rm -f $(DATA_FILES:$(srcdir)/iFolderShell/%=%)
 	cd $(DESTDIR)$(WINDIR_UNIX); rm -f $(WINDOWS_FILES)
+if WINDOWS
+if DEBUG	
+	cd $(DESTDIR)$(libdir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)
+endif
+endif
 
 register:
 	$(REGEDIT) /s `cygpath --windows $(DESTDIR)$(libdir)/iFolderShell.reg`

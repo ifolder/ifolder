@@ -33,11 +33,21 @@ install-exec-local: InvitationWizard.exe $(DATA_FILES)
 	$(INSTALL_PROGRAM) InvitationWizard.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(DATA_FILES) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(GTK_DATA_FILES) $(DESTDIR)$(bindir)
+if WINDOWS
+if DEBUG	
+	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(bindir)
+endif
+endif
     
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f InvitationWizard.exe $(DEBUG_FILES)
 	cd $(DESTDIR)$(bindir); rm -f $(DATA_FILES:$(srcdir)/%=%)
 	cd $(DESTDIR)$(bindir); rm -f $(GTK_DATA_FILES:$(srcdir)/../GtkTrayApp/%=%)
+if WINDOWS
+if DEBUG	
+	cd $(DESTDIR)$(bindir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)
+endif
+endif
     
 CLEAN_FILES = InvitationWizard.exe InvitationWizard.doc.xml
 
