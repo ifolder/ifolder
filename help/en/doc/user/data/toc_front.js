@@ -10,7 +10,7 @@ function updateMenu_front() {
      level1ID = parent.theMenu.findEntry('data/front.html', 'url', 'right');
      if (level1ID == -1)
       {
-      level1ID = parent.theMenu.addChild(level0ID, "", "iFolder Help for Novell iFolder 3.0 Beta 2", "../doc/user/data/front.html", "zFLDR xB.0000.0000.", "iFolder Help for Novell iFolder 3.0 Beta 2");
+      level1ID = parent.theMenu.addChild(level0ID, "", "iFolder Help for Novell iFolder 3.0 Public Beta", "../doc/user/data/front.html", "zFLDR xB.0000.0000.", "iFolder Help for Novell iFolder 3.0 Public Beta");
       level2ID = parent.theMenu.addChild(level1ID, "Folder", "Overview of iFolder", "../doc/user/data/bq1qyz2.html", "zFLDR xC.0000.0000.0001.", "Overview of iFolder");
       parent.theMenu.entry[level2ID].FirstChild = -2;
       parent.theMenu.entry[level2ID].onToggle = 'parent.theMenu.loadScript("../doc/user/data/bq1qyz2.html","../doc/user/data/toc_bq1qyz2.html", true)';

@@ -42,7 +42,7 @@ C = InvisibleChapter	-  Used by the HLP2MOAB process only as a way to group a bu
 
 	<TOPIC TYPE="ExpandableHeirarchy" ELEMTYPE="BOOK">
 	<FILENAME>data\front.html</FILENAME>
-	<TITLE>iFolder Help for Novell iFolder 3.0 Beta 2</TITLE>
+	<TITLE>iFolder Help for Novell iFolder 3.0 Public Beta</TITLE>
 
 		<TOPIC TYPE="ExpandableHeirarchy" ELEMTYPE="CHAPTER">
 		<FILENAME>data\bq1qyz2.html</FILENAME>
@@ -62,11 +62,6 @@ C = InvisibleChapter	-  Used by the HLP2MOAB process only as a way to group a bu
 			<FILENAME>data\bq1r110.html</FILENAME>
 			<TITLE>Key Features of iFolder</TITLE>
 			</TOPIC>
-
-			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
-			<FILENAME>data\bq1r11b.html</FILENAME>
-			<TITLE>What's Next</TITLE>
-			</TOPIC>
 		</TOPIC>
 
 		<TOPIC TYPE="ExpandableHeirarchy" ELEMTYPE="CHAPTER">
@@ -74,13 +69,28 @@ C = InvisibleChapter	-  Used by the HLP2MOAB process only as a way to group a bu
 		<TITLE>Managing iFolders</TITLE>
 
 			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\demos.html</FILENAME>
+			<TITLE>Viewing Animated Demonstrations of iFolder Tasks</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\login.html</FILENAME>
+			<TITLE>Logging In to the iFolder Client</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
 			<FILENAME>data\accounts.html</FILENAME>
-			<TITLE>Configuring iFolder Accounts</TITLE>
+			<TITLE>Configuring an iFolder Account</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\accountdetails.html</FILENAME>
+			<TITLE>Viewing Account Details</TITLE>
 			</TOPIC>
 
 			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
 			<FILENAME>data\preferences.html</FILENAME>
-			<TITLE>Configuring iFolder Preferences</TITLE>
+			<TITLE>Configuring Preferences for the Client</TITLE>
 			</TOPIC>
 
 			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
@@ -99,8 +109,8 @@ C = InvisibleChapter	-  Used by the HLP2MOAB process only as a way to group a bu
 			</TOPIC>
 
 			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
-			<FILENAME>data\properties.html.html</FILENAME>
-			<TITLE>Viewing Properties of an iFolder</TITLE>
+			<FILENAME>data\propifolders.html</FILENAME>
+			<TITLE>Viewing and Configuring Properties of an iFolder</TITLE>
 			</TOPIC>
 
 			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
@@ -116,6 +126,11 @@ C = InvisibleChapter	-  Used by the HLP2MOAB process only as a way to group a bu
 			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
 			<FILENAME>data\reverting.html</FILENAME>
 			<TITLE>Reverting an iFolder to a Normal Folder</TITLE>
+			</TOPIC>
+
+			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
+			<FILENAME>data\movelocation.html</FILENAME>
+			<TITLE>Moving an iFolder</TITLE>
 			</TOPIC>
 
 			<TOPIC TYPE="File" ELEMTYPE="TOPIC">

@@ -1,12 +1,16 @@
-var key = document.location.pathname.replace(/\\/g,'/');
-if(key.length > 0)
+var hn = document.location.hostname;
+if(hn == "developer.novell.com" || hn == "novell.com")
 {
-	var i; var j = 0;
-	for (i=key.length-1;i>0;i--)	{
-		if(key.charAt(i)=='\\' || key.charAt(i)=='/') {j++;}
-		if(j>3) break;
-	}
-	self.document.writeln('<script language="javascript1.2" type="text/javascript" src="http://localhost/docadd/comments.php?page='+'doc_'+ key.substring(i+1)+'"></script>');
+  var key = document.location.pathname.replace(/\\/g,'/');
+  if(key.length > 0)
+  {
+    var i; var j = 0;
+    for (i=key.length-1;i>0;i--)	{
+      if(key.charAt(i)=='\\' || key.charAt(i)=='/') {j++;}
+      if(j>3) break;
+    }
+    self.document.writeln('<script language="javascript1.2" type="text/javascript" src="http://localhost/docadd/comments.php?page='+'doc_'+ key.substring(i+1)+'"></script>');
+  }
 }
 
 self.document.writeln('<table border="0" align="center" width="90%">\n<tr>\n<td width="33%">&nbsp;</td>\n<td align="center" width="33%">');

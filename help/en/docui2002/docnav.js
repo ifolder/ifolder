@@ -866,7 +866,7 @@ function browserInfo() {
 	var IE4up = (IE && (v >= 4));
 	var NS3up = (NS && (v >= 3));
 	var NS6up = (NS && (v >= 5));
-	this.NWCode = ((xx.indexOf('Netware') >= 0) || (ua.indexOf('ICEBrowser') >= 0));
+	this.NWCode = ((xx.indexOf('NetWare') >= 0) || (ua.indexOf('ICEbrowser') >= 0));
 	this.canCache = NS3up || IE4up || OP32up || WTV;
 	this.canOnMouseOut = this.canCache;
 	this.canOnError = NS3up || IE4up || OP32up;
