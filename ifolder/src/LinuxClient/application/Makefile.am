@@ -9,7 +9,7 @@ iFolderClient_FLAGS = $(CSC_EXEFLAG)
 iFolderClient_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll TrayIcon.dll Novell.iFolder.UI.gtk.dll Mono.Posix.dll
 iFolderClient_LIBPATH = $(srcdir)/../../TrayIcon $(srcdir)/../../iFolder $(srcdir)/../library
 
-EXTRA_DIST = $(iFolderClient_CSFILES)
+EXTRA_DIST = $(iFolderClient_CSFILES) ifolder.in ifolder.desktop.in
 
 ifolder: $(srcdir)/ifolder.in
 	sed -e 's,@_prefix_@,@prefix@,g' -e 's,@_webbindir_@,@webbindir@,g' $< > $@
