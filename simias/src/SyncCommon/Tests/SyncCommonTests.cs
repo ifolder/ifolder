@@ -81,7 +81,6 @@ namespace Simias.Sync.Tests
 			Assert(store.StorePath.StartsWith(path));
 			Assert(store.ID == store.GetDatabaseObject().ID);
 
-			store.Dispose();
 			store.Delete();
 		}
 
@@ -117,7 +116,6 @@ namespace Simias.Sync.Tests
 
 			Assert(sc.DomainIdentity != null);
 
-			store.Dispose();
 			store.Delete();
 		}
 

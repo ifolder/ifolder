@@ -116,7 +116,6 @@ namespace Simias.Sync.Tests
 
 			manager.Dispose();
 
-			store.Dispose();
 			store.Delete();
 		}
 	}
