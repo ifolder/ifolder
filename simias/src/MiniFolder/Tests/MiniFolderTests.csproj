@@ -3,22 +3,22 @@
         ProjectType = "Local"
         ProductVersion = "7.10.3077"
         SchemaVersion = "2.0"
-        ProjectGuid = "{B4195A1D-0450-4DF0-89BE-CA7A2C9D69E9}"
+        ProjectGuid = "{3BFF1544-260B-495B-9EA1-522ED7D71DEC}"
     >
         <Build>
             <Settings
-                ApplicationIcon = "App.ico"
+                ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "MiniFolder"
+                AssemblyName = "MiniFolderTests"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
                 DefaultTargetSchema = "IE50"
                 DelaySign = "false"
-                OutputType = "Exe"
+                OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = "copy $(TargetPath) $(SolutionDir)..\stage"
-                RootNamespace = "Novell.iFolder.Mini"
+                RootNamespace = "Novell.iFolder.Mini.Tests"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -29,7 +29,7 @@
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
                     DefineConstants = "DEBUG;TRACE"
-                    DocumentationFile = "Application.xml"
+                    DocumentationFile = "tests.xml"
                     DebugSymbols = "true"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
@@ -49,7 +49,7 @@
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
                     DefineConstants = "TRACE"
-                    DocumentationFile = "Application.xml"
+                    DocumentationFile = "tests.xml"
                     DebugSymbols = "false"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
@@ -80,55 +80,46 @@
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "SyncManager"
-                    AssemblyName = "SyncManager"
-                    HintPath = "..\..\..\..\stage\bin\SyncManager.dll"
+                    Name = "nunit.framework"
+                    AssemblyName = "nunit.framework"
+                    HintPath = "..\..\..\tools\NUnit\bin\nunit.framework.dll"
+                />
+                <Reference
+                    Name = "Agent"
+                    Project = "{9196E4EC-9EBD-4398-AE6B-B4D98F8502C3}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
                     Name = "CollectionStore"
-                    AssemblyName = "CollectionStore"
-                    HintPath = "..\..\..\..\stage\bin\CollectionStore.dll"
-                />
-                <Reference
-                    Name = "CollectionWatcher"
-                    AssemblyName = "CollectionWatcher"
-                    HintPath = "..\..\..\..\stage\bin\CollectionWatcher.dll"
+                    Project = "{CB7ACE79-DE8D-4A5C-A8EF-4606199B225D}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
                     Name = "Common"
-                    AssemblyName = "Common"
-                    HintPath = "..\..\..\..\stage\bin\Common.dll"
-                />
-                <Reference
-                    Name = "Configuration"
-                    AssemblyName = "Configuration"
-                    HintPath = "..\..\..\..\stage\bin\Configuration.dll"
+                    Project = "{2E918CCD-6919-4453-9BDE-1FF22657CAB5}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
                     Name = "SyncCommon"
-                    AssemblyName = "SyncCommon"
-                    HintPath = "..\..\..\..\stage\bin\SyncCommon.dll"
+                    Project = "{0C57D8FE-56E5-4DBE-92F4-F58D205CAA26}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "SyncLogicLite"
-                    AssemblyName = "SyncLogicLite"
-                    HintPath = "..\..\..\..\stage\bin\SyncLogicLite.dll"
+                    Name = "SyncManager"
+                    Project = "{7C3A9242-E1EF-43F2-8297-4C1C98892946}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
         </Build>
         <Files>
             <Include>
                 <File
-                    RelPath = "App.ico"
-                    BuildAction = "Content"
-                />
-                <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "MiniFolder.cs"
+                    RelPath = "MiniFolderTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -86,53 +86,28 @@
                 />
                 <Reference
                     Name = "Agent"
-                    AssemblyName = "Agent"
-                    HintPath = "..\..\Agent\bin\Debug\Agent.dll"
-                    Private = "True"
-                />
-                <Reference
-                    Name = "StoreProvider"
-                    AssemblyName = "StoreProvider"
-                    HintPath = "..\..\StoreProvider\StoreProvider.dll"
-                    Private = "True"
-                />
-                <Reference
-                    Name = "Identity"
-                    AssemblyName = "Identity"
-                    HintPath = "..\..\Identity\Identity.dll"
-                    Private = "True"
-                />
-                <Reference
-                    Name = "AddressBook"
-                    AssemblyName = "AddressBook"
-                    HintPath = "..\..\AddressBook\AddressBook.dll"
-                    Private = "True"
-                />
-                <Reference
-                    Name = "CollectionStore"
-                    AssemblyName = "CollectionStore"
-                    HintPath = "..\..\CollectionStore\CollectionStore.dll"
-                    Private = "True"
-                />
-                <Reference
-                    Name = "InviteAgent"
-                    AssemblyName = "InviteAgent"
-                    HintPath = "..\Library\bin\Debug\InviteAgent.dll"
+                    Project = "{9196E4EC-9EBD-4398-AE6B-B4D98F8502C3}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
                     Name = "Common"
-                    AssemblyName = "Common"
-                    HintPath = "..\..\Common\Common.dll"
+                    Project = "{2E918CCD-6919-4453-9BDE-1FF22657CAB5}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "Configuration"
-                    AssemblyName = "Configuration"
-                    HintPath = "..\..\Configuration\Configuration.dll"
+                    Name = "InviteAgent"
+                    Project = "{DB2F7899-F3D5-4379-88A1-676F684D7588}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
                     Name = "Smtp"
-                    AssemblyName = "Smtp"
-                    HintPath = "..\..\Smtp\Smtp.dll"
+                    Project = "{7E6DFD17-8603-4B53-B71D-AE15E441DA5E}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "SyncCommon"
+                    Project = "{0C57D8FE-56E5-4DBE-92F4-F58D205CAA26}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
         </Build>

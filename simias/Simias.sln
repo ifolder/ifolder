@@ -189,6 +189,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingSnifferTests", "src
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniFolder", "src\MiniFolder\Application\MiniFolder.csproj", "{B4195A1D-0450-4DF0-89BE-CA7A2C9D69E9}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniFolderTests", "src\MiniFolder\Tests\MiniFolderTests.csproj", "{3BFF1544-260B-495B-9EA1-522ED7D71DEC}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -371,6 +379,14 @@ Global
 		{DD373AFC-9C3E-497E-A307-EE4362D84940}.Debug.Build.0 = Debug|.NET
 		{DD373AFC-9C3E-497E-A307-EE4362D84940}.Release.ActiveCfg = Release|.NET
 		{DD373AFC-9C3E-497E-A307-EE4362D84940}.Release.Build.0 = Release|.NET
+		{B4195A1D-0450-4DF0-89BE-CA7A2C9D69E9}.Debug.ActiveCfg = Debug|.NET
+		{B4195A1D-0450-4DF0-89BE-CA7A2C9D69E9}.Debug.Build.0 = Debug|.NET
+		{B4195A1D-0450-4DF0-89BE-CA7A2C9D69E9}.Release.ActiveCfg = Release|.NET
+		{B4195A1D-0450-4DF0-89BE-CA7A2C9D69E9}.Release.Build.0 = Release|.NET
+		{3BFF1544-260B-495B-9EA1-522ED7D71DEC}.Debug.ActiveCfg = Debug|.NET
+		{3BFF1544-260B-495B-9EA1-522ED7D71DEC}.Debug.Build.0 = Debug|.NET
+		{3BFF1544-260B-495B-9EA1-522ED7D71DEC}.Release.ActiveCfg = Release|.NET
+		{3BFF1544-260B-495B-9EA1-522ED7D71DEC}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
