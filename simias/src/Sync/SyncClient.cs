@@ -748,17 +748,13 @@ namespace Simias.Sync.Client
 						foreach( ChangeLogRecord rec in changeList )
 						{
 							// Make sure the events are not for local only changes.
-							if ((((NodeEventArgs.EventFlags)rec.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0) &&
-								(rec.MasterRev != rec.SlaveRev))
-							{
-								NodeStamp stamp = new NodeStamp();
-								stamp.localIncarn = rec.SlaveRev;
-								stamp.masterIncarn = rec.MasterRev;
-								stamp.id = rec.EventID;
-								stamp.changeType = rec.Operation;
-								stamp.type = rec.Type.ToString();
-								stampList.Add(stamp);
-							}
+							NodeStamp stamp = new NodeStamp();
+							stamp.localIncarn = rec.SlaveRev;
+							stamp.masterIncarn = rec.MasterRev;
+							stamp.id = rec.EventID;
+							stamp.changeType = rec.Operation;
+							stamp.type = rec.Type.ToString();
+							stampList.Add(stamp);
 						}
 					}
 					log.Debug("Found {0} changed nodes.", stampList.Count);
