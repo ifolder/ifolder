@@ -21,9 +21,11 @@
  *
  ***********************************************************************/
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Xml;
 
 using Simias;
 using Simias.Service;
@@ -46,17 +48,18 @@ namespace Simias.Event
 		/// Tags used to set the port number in the Simias configuration file.
 		/// </summary>
 		private static string EventServiceTag = "InterProcessEventService";
+		private static string HostTag = "Host";
 		private static string PortTag = "Port";
+
+		/// <summary>
+		/// File name and path of the IProcEvent configuration file.
+		/// </summary>
+		private static string configFileName = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData ), "IProcEvent.cfg" );
 
 		/// <summary>
 		/// Socket error that indicates the server closed its connection.
 		/// </summary>
 		private const int SocketClosed = 10004;
-
-		/// <summary>
-		/// Holds the simias configuration.
-		/// </summary>
-		private Configuration config;
 
 		/// <summary>
 		/// Socket used to handle registration requests.
@@ -140,9 +143,6 @@ namespace Simias.Event
 		/// <param name="config">Configuration file object that indicates which Collection Store to use.</param>
 		public void Start( Configuration config )
 		{
-			// Save this for the stop.
-			this.config = config;
-
 			// Start the server listening.
 			regSocket.Bind( new IPEndPoint( IPAddress.Loopback, 0 ) );
 			regSocket.Listen( 10 );
@@ -151,9 +151,24 @@ namespace Simias.Event
 			Thread thread = new Thread( new ThreadStart( RegistrationService ) );
 			thread.Start();
 
-			// Get the port that the server is listening on and write to the configuration file.
-			IPEndPoint ep = regSocket.LocalEndPoint as IPEndPoint;
-			config.Set( EventServiceTag, PortTag, ep.Port.ToString() );
+			// Get the host and port that the server is listening on and put it into an XML document.
+			XmlDocument document = new XmlDocument();
+			document.AppendChild( document.CreateElement( EventServiceTag ) );
+
+			// Create the host and port nodes.
+			XmlElement hostElement = document.CreateElement( HostTag );
+			hostElement.InnerText = IPAddress.Loopback.ToString();
+			document.DocumentElement.AppendChild( hostElement );
+
+			XmlElement portElement = document.CreateElement( PortTag );
+			portElement.InnerText = ( regSocket.LocalEndPoint as IPEndPoint ).Port.ToString();
+			document.DocumentElement.AppendChild( portElement );
+
+			// Write the port number to the configuration file.
+			using( FileStream fs = File.Open( configFileName, FileMode.Create, FileAccess.ReadWrite, FileShare.None ) )
+			{
+				document.Save( fs );
+			}
 		}
 
 		/// <summary>
@@ -161,8 +176,13 @@ namespace Simias.Event
 		/// </summary>
 		public void Stop()
 		{
-			// Remove the port from the configuration file so that no new callers can register.
-			config.DeleteKey( EventServiceTag, PortTag );
+			// Remove the configuration file so that no new callers can register.
+			if ( File.Exists( configFileName ) )
+			{
+				File.Delete( configFileName );
+			}
+
+			// Close the listening socket.
 			regSocket.Close();
 		}
 

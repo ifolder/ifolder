@@ -116,7 +116,6 @@ namespace Simias
 			// Load the configuration document from the file.
 			configDoc = new XmlDocument();
 			configDoc.Load(configFilePath);
-			configDoc.PreserveWhitespace = true;
 		}
 		#endregion
 
@@ -227,9 +226,15 @@ namespace Simias
 		private void UpdateConfigFile()
 		{
 			XmlTextWriter xtw = new XmlTextWriter(ConfigFilePath, Encoding.ASCII);
-			xtw.Formatting = Formatting.Indented;
-			configDoc.WriteTo(xtw);
-			xtw.Close();
+			try
+			{
+				xtw.Formatting = Formatting.Indented;
+				configDoc.WriteTo(xtw);
+			}
+			finally
+			{
+				xtw.Close();
+			}
 		}
 		
 		private static string fixupPath(string path)
@@ -345,20 +350,6 @@ namespace Simias
 				}
 
 				return keyValue;
-			}
-		}
-
-		/// <summary>
-		/// Reloads the configuration object data from the configuration file.
-		/// </summary>
-		public void Refresh()
-		{
-			lock(typeof(Configuration))
-			{
-				// Load the configuration document from the file.
-				configDoc = new XmlDocument();
-				configDoc.Load(ConfigFilePath);
-				configDoc.PreserveWhitespace = true;
 			}
 		}
 
