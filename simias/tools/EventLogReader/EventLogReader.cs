@@ -308,7 +308,7 @@ namespace EventLogReaderII
 				sb.Append( s + "\r\n" );
 			}
 
-			Clipboard.SetDataObject( sb.ToString() );
+			Clipboard.SetDataObject( sb.ToString(), true );
 		}
 	}
 }
