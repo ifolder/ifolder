@@ -102,8 +102,8 @@ namespace Novell.iFolder.FormsBookLib
 			try
 			{
 				// Load the images.
-				// TODO - get these from the correct path based on install location.
-				string basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"Novell\Denali Client\res");
+				// Get the base path.
+				string basePath = Path.Combine(Application.StartupPath, "res");
 
 				pictureContact.Image = Image.FromFile(Path.Combine(basePath, "blankhead.png"));
 				picturePhone.Image = Image.FromFile(Path.Combine(basePath, "cellphone.png"));
