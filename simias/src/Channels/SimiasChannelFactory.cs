@@ -118,7 +118,8 @@ namespace Simias.Channels
 			{
 				props.Add("port", uri.Port);
 				props.Add("useIpAddress", true);
-				props.Add("bindTo", "0.0.0.0");
+				
+				// props.Add("bindTo", "0.0.0.0");
 			}
 			
 			// client properties
