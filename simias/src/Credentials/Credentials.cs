@@ -25,6 +25,7 @@ using System.Collections;
 using System.Net;
 using Simias;
 using Simias.Client;
+using Simias.Domain;
 using Simias.Event;
 using Simias.Storage;
 using Simias.Sync;
@@ -82,7 +83,6 @@ namespace Simias.Authentication
 			try
 			{
 				Store	store = Store.GetStore();
-
 				if (this.collectionID != null)
 				{
 					// Validate the shared collection
@@ -112,31 +112,26 @@ namespace Simias.Authentication
 					cMember = cRoster.GetMemberByID(this.memberID);
 				}
 
-				NetCredential cCreds = 
-					new NetCredential(
-						"iFolder", 
-						cDomain.ID, 
-						true, 
-						cMember.Name, 
-						null);
+				//
+				// Verify the domain is not marked "inactive"
+				//
 
-				Uri cUri = new Uri(cDomain.HostAddress.ToString());
-				realCreds = cCreds.GetCredential(cUri, "BASIC");
-				if (realCreds == null)
+				if ( new DomainAgent().IsDomainActive( cDomain.ID ) == true )
 				{
-					log.Info("Credentials::GetCredentials - credentials not found");
+					NetCredential cCreds = 
+						new NetCredential(
+							"iFolder", 
+							cDomain.ID, 
+							true, 
+							cMember.Name, 
+							null);
 
-					// Generate a "needs credentials" event
-					/*
-						EventPublisher cEvent = new EventPublisher();
-						Simias.Client.Event.NotifyEventArgs cArg =
-							new Simias.Client.Event.NotifyEventArgs(
-							"Need-Credentials", 
-							collectionID, 
-							System.DateTime.Now);
-
-						cEvent.RaiseEvent(cArg);
-					*/
+					Uri cUri = new Uri(cDomain.HostAddress.ToString());
+					realCreds = cCreds.GetCredential(cUri, "BASIC");
+					if (realCreds == null)
+					{
+						log.Debug("Credentials::GetCredentials - credentials not found");
+					}
 				}
 			}
 			catch{}
