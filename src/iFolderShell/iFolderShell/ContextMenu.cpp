@@ -95,11 +95,12 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 			wchar_t lpszRoot[MAX_ROOT_PATH + 1];
 			lstrcpyn(lpszRoot, m_szFileUserClickedOn, MAX_ROOT_PATH + 1);
 
+/* This is now handled in the call to CanBeiFolder
 			if ((attrs == INVALID_FILE_ATTRIBUTES) || (GetDriveType(lpszRoot) & DRIVE_REMOTE))
 			{
 				// Error.
 				return 0;
-			}
+			}*/
 
 			if (m_hBmpMenu)
 			{
@@ -226,7 +227,7 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 
 			if (attrs & FILE_ATTRIBUTE_DIRECTORY)
 			{
-				// A directory has been selected ... display the menus.
+				// A directory has been selected ... check to see if it can be an iFolder.
 				bAppendItems= m_spiFolder->CanBeiFolder(m_szFileUserClickedOn);
 			}
 		}

@@ -28,6 +28,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
 using System.Net;
+using System.Runtime.InteropServices;
 
 using Novell.iFolderCom;
 
@@ -388,8 +389,9 @@ namespace Novell.FormsTrayApp
 		{
 			successful = true;
 
-			if ((GlobalProperties.GetDriveType(Path.GetPathRoot(iFolderLocation.Text)) & GlobalProperties.DRIVE_REMOTE) 
-				!= GlobalProperties.DRIVE_REMOTE)
+			uint driveType = GetDriveType(Path.GetPathRoot(iFolderLocation.Text));
+			if ((driveType == DRIVE_FIXED) ||
+				(driveType == DRIVE_REMOVABLE))
 			{
 				if (!Directory.Exists(iFolderLocation.Text))
 				{
@@ -546,5 +548,11 @@ namespace Novell.FormsTrayApp
 			}
 		}
 		#endregion
+
+		private const uint DRIVE_REMOVABLE = 2;
+		private const uint DRIVE_FIXED = 3;
+
+		[DllImport("kernel32.dll")]
+		private static extern uint GetDriveType(string rootPathName);
 	}
 }
