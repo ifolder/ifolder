@@ -380,10 +380,28 @@ namespace Simias.Web
 			}
 
 #if MONO
+			string ifPath = null; 
+	
+			// Sometimes we are asking about a folder that exists and
+			// sometimes we are asking about one that doesn't.  If the
+			// current folder doesn't exist, and the parent doesn't
+			// exist, it ain't valid, return false;
+			if(!System.IO.Directory.Exists(path))
+			{
+				DirectoryInfo di = System.IO.Directory.GetParent(path);
+				if(di.Exists)
+					ifPath = di.FullName;
+				else
+					return false;
+			}
+			else
+				ifPath = path;
 
+			// Check to see if the user has write rights to the
+			// path used as a collection
 			try
 			{
-				if(Mono.Posix.Syscall.access(path, 
+				if(Mono.Posix.Syscall.access(ifPath, 
 							Mono.Posix.AccessMode.W_OK) != 0)
 				{
 					return false;
@@ -404,23 +422,6 @@ namespace Simias.Web
 				if(File.Exists("/proc/mounts"))
 				{
 					bool retval = false;
-					string ifPath = null; 
-	
-					// Sometimes we are asking about a folder that exists and
-					// sometimes we are asking about one that doesn't.  If the
-					// current folder doesn't exist, and the parent doesn't
-					// exist, it ain't valid, return false;
-					if(!System.IO.Directory.Exists(path))
-					{
-						DirectoryInfo di = System.IO.Directory.GetParent(path);
-						if(di.Exists)
-							ifPath = di.FullName;
-						else
-							return false;
-					}
-					else
-						ifPath = path;
-	
 	
 					FileStream fs = File.OpenRead("/proc/mounts");
 					if( (fs != null) && (ifPath != null) )
