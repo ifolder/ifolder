@@ -7,7 +7,7 @@ SUBDIRS = WebService iFolder
 endif
 
 if WINDOWS
-SUBDIRS = iFolder iFolderShell FormsTrayApp FormsInvitationWizard
+SUBDIRS = WebService iFolder iFolderShell FormsTrayApp FormsInvitationWizard
 endif
 
 DIST_SUBDIRS = iFolder TrayIcon GtkTrayApp iFolderShell FormsTrayApp FormsInvitationWizard iFolderGtkUI iFolderGtkApp WebService
