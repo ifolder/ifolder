@@ -1,6 +1,6 @@
-#import "IFSubViewController.h"
+#import "SubViewController.h"
 
-@implementation IFSubViewController
+@implementation SubViewController
 
 // This method initializes a new instance of this class which loads in nibs and facilitates the communcation between the nib and the controller of the main window.
 -(id)initWithNibName:(NSString*)nibName andOwner:(id)owner

@@ -2,7 +2,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface IFSubViewController : NSObject
+@interface SubViewController : NSObject
 {
 @private
     IBOutlet NSView *view;

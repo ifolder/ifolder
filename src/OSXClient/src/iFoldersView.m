@@ -1,6 +1,6 @@
-#import "IFFoldersView.h"
+#import "iFoldersView.h"
 
-@implementation IFFoldersView
+@implementation iFoldersView
 
 - (id)initWithFrame:(NSRect)frameRect
 {

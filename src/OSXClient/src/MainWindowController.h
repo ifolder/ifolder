@@ -2,14 +2,14 @@
 
 #import <Cocoa/Cocoa.h>
 #import <iFolderService.h>
-#import "IFFoldersView.h"
+#import "iFoldersView.h"
 
 @class LoginWindowController;  // Forward declaration
 
 @interface MainWindowController : NSWindowController
 {
     IBOutlet NSTabView		*ifolderTabView;
-	IFFoldersView			*iFolderView;
+	iFoldersView			*ifoldersView;
 
 
 	LoginWindowController	*_loginController;
