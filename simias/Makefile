@@ -17,9 +17,11 @@
 #*  License along with this library; if not, write to the Free
 #*  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #*
+#*  Author: Calvin Gaisford <cgaisford@novell.com>
+#*
 #***********************************************************************/
 
-# This appears to work and is much simpler than what I had
+# This hack appears to work and is much more simple
 
 .PHONY: all
 all:
