@@ -154,7 +154,7 @@ namespace Novell.iFolderCom
 			this.dontAsk.Name = "dontAsk";
 			this.dontAsk.Size = new System.Drawing.Size(304, 16);
 			this.dontAsk.TabIndex = 6;
-			this.dontAsk.Text = "Do not show this message again.";
+			this.dontAsk.Text = "Do not show this message again";
 			// 
 			// iFolderHelp
 			// 

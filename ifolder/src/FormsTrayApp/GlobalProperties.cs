@@ -328,7 +328,7 @@ namespace Novell.FormsTrayApp
 			this.displayConfirmation.Name = "displayConfirmation";
 			this.displayConfirmation.Size = new System.Drawing.Size(368, 24);
 			this.displayConfirmation.TabIndex = 1;
-			this.displayConfirmation.Text = "Show &confirmation dialog when creating iFolders.";
+			this.displayConfirmation.Text = "Show &Confirmation dialog when creating iFolders";
 			this.displayConfirmation.CheckedChanged += new System.EventHandler(this.displayConfirmation_CheckedChanged);
 			// 
 			// label2
@@ -550,8 +550,9 @@ namespace Novell.FormsTrayApp
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(376, 48);
 			this.label3.TabIndex = 0;
-			this.label3.Text = "This will set the default sync setting for all iFolders.  You can change the sync" +
-				" setting for an individual iFolder from the iFolder\'s Property dialog.";
+			this.label3.Text = "Specify the default Sync interval for synchronizing your iFolders with the host. " +
+				"To specify a different Sync interval for an individual iFolder, use the iFolder\'" +
+				"s Property dialog.";
 			// 
 			// groupBox3
 			// 
@@ -572,7 +573,7 @@ namespace Novell.FormsTrayApp
 			this.autoStart.Name = "autoStart";
 			this.autoStart.Size = new System.Drawing.Size(368, 24);
 			this.autoStart.TabIndex = 0;
-			this.autoStart.Text = "&Startup iFolder at login.";
+			this.autoStart.Text = "&Start iFolder when logging in to the desktop";
 			this.autoStart.CheckedChanged += new System.EventHandler(this.autoStart_CheckedChanged);
 			// 
 			// groupBox5
@@ -617,7 +618,7 @@ namespace Novell.FormsTrayApp
 			this.useProxy.Name = "useProxy";
 			this.useProxy.Size = new System.Drawing.Size(360, 16);
 			this.useProxy.TabIndex = 0;
-			this.useProxy.Text = "Use a proxy to sync iFolders.";
+			this.useProxy.Text = "&Use this proxy server to sync iFolders with the host";
 			this.useProxy.CheckedChanged += new System.EventHandler(this.useProxy_CheckedChanged);
 			// 
 			// label7
@@ -626,7 +627,7 @@ namespace Novell.FormsTrayApp
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(56, 16);
 			this.label7.TabIndex = 3;
-			this.label7.Text = "Port:";
+			this.label7.Text = "P&ort:";
 			// 
 			// label4
 			// 
@@ -634,7 +635,7 @@ namespace Novell.FormsTrayApp
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(100, 16);
 			this.label4.TabIndex = 1;
-			this.label4.Text = "Proxy host:";
+			this.label4.Text = "&Proxy host:";
 			// 
 			// tabPage3
 			// 

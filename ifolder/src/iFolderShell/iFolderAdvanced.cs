@@ -321,7 +321,7 @@ namespace Novell.iFolderCom
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(336, 24);
 			this.label5.TabIndex = 0;
-			this.label5.Text = "This will set the sync setting for this iFolder.";
+			this.label5.Text = "Specify the Sync interval for synchronizing this iFolder with the host.";
 			// 
 			// syncInterval
 			// 
