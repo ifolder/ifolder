@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-TrayAppGtk_CSFILES = $(srcdir)/TrayApp.cs $(srcdir)/SharingPage.cs $(srcdir)/FileBrowser.cs $(srcdir)/DirectoryEntry.cs $(srcdir)/PropertiesDialog.cs $(srcdir)/CollectionBrowser.cs $(srcdir)/InvitationWizard.cs $(srcdir)/NodePropertyPage.cs $(srcdir)/IntroDialog.cs
+TrayAppGtk_CSFILES = $(srcdir)/TrayApp.cs $(srcdir)/SharingPage.cs $(srcdir)/FileBrowser.cs $(srcdir)/DirectoryEntry.cs $(srcdir)/PropertiesDialog.cs $(srcdir)/CollectionBrowser.cs $(srcdir)/InvitationWizard.cs $(srcdir)/NodePropertyPage.cs $(srcdir)/IntroDialog.cs $(srcdir)/SettingsPage.cs
 TrayAppGtk_CSFILES_CSC := $(subst /,$(SEP),$(TrayAppGtk_CSFILES))
 TrayAppGtk_INCLUDES = 
 TrayAppGtk_RESOURCES =
@@ -19,7 +19,7 @@ InviteAppGtk_LIBS = System.dll System.Drawing.dll System.Data.dll gtk-sharp.dll 
 InviteAppGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin $(ADDRESSBOOK_INSTALL_PATH)/bin ../iFolder
 
 
-CollectionBrowserGtk_CSFILES = $(srcdir)/CBApp.cs $(srcdir)/CollectionBrowser.cs $(srcdir)/NodePropertyPage.cs $(srcdir)/SharingPage.cs $(srcdir)/PropertiesDialog.cs
+CollectionBrowserGtk_CSFILES = $(srcdir)/CBApp.cs $(srcdir)/CollectionBrowser.cs $(srcdir)/NodePropertyPage.cs $(srcdir)/SharingPage.cs $(srcdir)/PropertiesDialog.cs $(srcdir)/SettingsPage.cs
 CollectionBrowserGtk_CSFILES_CSC := $(subst /,$(SEP),$(CollectionBrowserGtk_CSFILES))
 CollectionBrowserGtk_INCLUDES = 
 CollectionBrowserGtk_RESOURCES =

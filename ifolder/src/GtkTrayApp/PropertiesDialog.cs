@@ -42,6 +42,7 @@ namespace Novell.iFolder
 		Gtk.Dialog dialog; 
 		iFolderManager ifmgr;
 		SharingPage	spage;
+		SettingsPage settingsPage;
 		NodePropertyPage	nppage;
 		Gtk.Widget swidget;
 		Gtk.Widget npwidget;
@@ -120,24 +121,28 @@ namespace Novell.iFolder
 				{
 					ifldr = ifmgr.GetiFolderByPath(path);
 
+					settingsPage = new SettingsPage();
+					settingsPage.iFolder = ifldr;
+					propNoteBook.AppendPage(settingsPage.GetWidget(), 
+							new Label("Settings"));
+
 					spage = new SharingPage(ifldr);
 					swidget = spage.GetWidget();
 					propNoteBook.AppendPage(swidget, 
-							new Label("iFolder Sharing"));
+							new Label("Sharing"));
 
 					nppage = new NodePropertyPage(ifldr.CurrentNode);
 					npwidget = nppage.GetWidget();
-					propNoteBook.AppendPage(npwidget, new Label("iFolder"));
+					propNoteBook.AppendPage(npwidget, new Label("Advanced"));
 	
 					dialog.Icon = new Pixbuf("ifolderfolder.png");
 				}
-
-				if(node != null)
+				else if(node != null)
 				{
 					nppage = new NodePropertyPage(this.node);
 					npwidget = nppage.GetWidget();
 					propNoteBook.AppendPage(npwidget, 
-							new Label("Node Properties"));
+							new Label("Advanced"));
 				}
 
 				if(propNoteBook.NPages >= activeTag)
