@@ -80,7 +80,7 @@ case $SIMIAS_OS in
         LIBFLAG='-l'
         LIBS=''
         MONO=mono
-        NON_PLATFORM_SUBDIRS="$WINDOWS_SUBDIRS package/windows"
+        NON_PLATFORM_SUBDIRS="$WINDOWS_SUBDIRS"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_FLAGS='/nologo'
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
@@ -146,7 +146,7 @@ case $SIMIAS_OS in
         LIBFLAG=''
         LIBS='kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib rpcrt4.lib ws2_32.lib imagehlp.lib'
         MONO=
-        NON_PLATFORM_SUBDIRS="$LINUX_SUBDIRS package/linux"
+        NON_PLATFORM_SUBDIRS="$LINUX_SUBDIRS"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_FLAGS='/nologo'
         NUNIT_LIBPATH=`echo "$TOOLDIR/NUnit/bin" | sed 's,/cygdrive/\(.\)/,\1:/,'`
@@ -303,8 +303,8 @@ src/SyncTools/Makefile
 src/AddressBook/Makefile
 src/Smtp/Makefile
 src/InviteAgent/Makefile
-src/package/Makefile
-src/package/windows/Makefile
-src/package/linux/Makefile
-src/package/linux/simias.spec
+package/Makefile
+package/windows/Makefile
+package/linux/Makefile
+package/linux/simias.spec
 ])

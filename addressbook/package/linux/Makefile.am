@@ -4,7 +4,11 @@ RELEASE = 1
 RPM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).$(target_cpu).rpm
 SRPM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).src.rpm
 
-all: $(RPM_FILE) $(SRPM_FILE)
+.PHONY: package package-clean package-install package-uninstall ifolder
+
+all clean:
+
+package: $(RPM_FILE) $(SRPM_FILE)
  
 $(RPM_FILE) $(SRPM_FILE): addressbook.spec $(top_srcdir)/$(PACKAGE)-$(VERSION).tar.gz
 	rm -rf RPM
@@ -24,15 +28,18 @@ $(RPM_FILE) $(SRPM_FILE): addressbook.spec $(top_srcdir)/$(PACKAGE)-$(VERSION).t
 $(top_srcdir)/$(PACKAGE)-$(VERSION).tar.gz:
 	cd $(top_srcdir); make dist
 
-install: $(RPM_FILE)
+package-install: $(RPM_FILE)
 	su -c "rpm -Uvh $(RPM_FILE)"
 	
-uninstall:
+package-uninstall:
 	su -c "rpm -e $(PACKAGE)"
 
-clean-local:
+package-clean clean-local:
 	rm -rf *.rpm RPM
 
+distclean-local:
+	rm -f ../*/Makefile addressbook.spec
+
 maintainer-clean-local:
-	rm -f Makefile.in
+	rm -f ../*/Makefile.in
 
