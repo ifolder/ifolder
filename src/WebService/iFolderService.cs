@@ -789,9 +789,6 @@ namespace Novell.iFolder.Web
 			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
 						col.Domain, 
 						store.GetUserIDFromDomainID(col.Domain));
-//			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(
-//											store,
-//											col.Domain);
 
 			ICSList poList = poBox.Search(
 					Subscription.SubscriptionCollectionIDProperty,
