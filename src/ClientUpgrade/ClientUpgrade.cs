@@ -76,7 +76,7 @@ namespace Novell.iFolder.Install
 				if ( credential != null )
 				{
 					// Get the address of the host service.
-					hostAddress = domainInfo.RemoteUrl.ToString();
+					hostAddress = domainInfo.Host;
 
 					// Setup the url to the server.
 					service = new ClientUpdate();
