@@ -2414,7 +2414,7 @@ namespace Novell.iFolderCom
 		#region Event Handlers
 		private void iFolderAdvanced_Load(object sender, EventArgs e)
 		{
-			// TODO - use locale-specific path.
+			// TODO: - use locale-specific path.
 //			helpProvider1.HelpNamespace = Path.Combine(loadPath, @"help\en\doc\user\data\front.html");
 
 			// Image list...
@@ -2450,7 +2450,6 @@ namespace Novell.iFolderCom
 			userIDHT = new Hashtable();
 
 			// Set up the event handlers.
-			// TODO: may be able to move this back to the refreshData method if we can get the filtering setup properly.
 			if (eventClient == null)
 			{
 				eventClient = new IProcEventClient(new IProcEventError(errorHandler), null);
@@ -2552,10 +2551,7 @@ namespace Novell.iFolderCom
 						(shareWith.SelectedItems.Count != 0 && currentUser.Rights.Equals("Admin"));
 				}
 			}
-			catch
-			{
-				// TODO: Message?
-			}
+			catch {}
 		}
 
 		private void add_Click(object sender, System.EventArgs e)
@@ -2645,7 +2641,6 @@ namespace Novell.iFolderCom
 /*			if (!IsCurrentUserValid())
 				return;
 
-			// TODO - Initialize the picker with the names that are already in the share list.
 			ContactPicker picker = new ContactPicker();
 			picker.CurrentManager = abManager;
 			picker.LoadPath = loadPath;

@@ -525,7 +525,6 @@ STDMETHODIMP CiFolderShell::Initialize(LPCITEMIDLIST pidlFolder,
 
 
 //	STGMEDIUM medium;
-	// TODO - should we use pidl's instead?
 //	FORMATETC fe= {CF_HDROP, NULL, DVASPECT_CONTENT, -1, TYMED_HGLOBAL};
 //	HRESULT hr= pDataObj->GetData(&fe, &medium);
 //	if (FAILED(hr))

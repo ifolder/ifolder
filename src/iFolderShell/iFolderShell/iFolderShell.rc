@@ -64,6 +64,17 @@ BEGIN
     IDS_PROPERTIES          "Properties"
     IDS_SHARE               "Share with..."
     IDS_HELP                "Help..."
+    IDS_IFOLDER             "iFolder"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_CONVERT_DESC        "Make this folder an iFolder"
+    IDS_REVERT_DESC         "Change this iFolder back to a normal folder"
+    IDS_RESOLVE_DESC        "Resolve the conflicts in this iFolder"
+    IDS_SHARE_DESC          "Share this iFolder with another user"
+    IDS_PROPERTIES_DESC     "Display properties for this iFolder"
+    IDS_HELP_DESC           "Access the iFolder help"
 END
 
 #endif    // English (U.S.) resources

@@ -379,7 +379,7 @@ namespace Novell.iFolderCom
 		/// <param name="dllPath">The path where this assembly was loaded from.</param>
 		public void ShowHelp([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string helpFile)
 		{
-			// TODO - may need to pass in a specific page to load.
+			// TODO: - may need to pass in a specific page to load.
 			string helpPath = helpFile.Equals(string.Empty) ? 
 				Path.Combine(Path.Combine(Path.Combine(dllPath, "help"), GetLanguageDirectory()), @"doc\user\data\front.html") :
 				Path.Combine(Path.Combine(Path.Combine(dllPath, "help"), GetLanguageDirectory()), helpFile);

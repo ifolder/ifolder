@@ -8,6 +8,13 @@
 #define IDS_PROPERTIES                  108
 #define IDS_SHARE                       109
 #define IDS_HELP                        110
+#define IDS_IFOLDER                     111
+#define IDS_CONVERT_DESC                112
+#define IDS_REVERT_DESC                 113
+#define IDS_RESOLVE_DESC                114
+#define IDS_SHARE_DESC                  115
+#define IDS_PROPERTIES_DESC             116
+#define IDS_HELP_DESC                   117
 #define IDC_PROPLIST                    1001
 #define IDC_EDIT1                       1002
 #define IDC_DESCRIPTION                 1002
