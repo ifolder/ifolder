@@ -34,10 +34,10 @@ NSDictionary *getiFolderProperties(struct ns1__iFolderWeb *ifolder);
 NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user);
 
 
--(bool) Ping
+-(BOOL) Ping
 {
     struct soap soap;
-    bool isRunning = false;
+    BOOL isRunning = NO;
     int err_code;
 
     struct _ns1__Ping ns1__Ping;
@@ -52,7 +52,7 @@ NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user);
 
     if (err_code == SOAP_OK)
     {
-        isRunning = true;
+        isRunning = YES;
     }
 
     cleanup_gsoap(&soap);

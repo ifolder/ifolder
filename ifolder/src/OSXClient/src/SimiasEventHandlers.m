@@ -44,8 +44,37 @@ void SimiasEventInitialize(void)
 	[[NSApp delegate] addLog:@"Simias Event Client initialized and registered"];
 }
 
+
+void SimiasEventDisconnect(void)
+{
+	sec_set_event(simiasEventClient, ACTION_NODE_CREATED, false, nil, nil);
+	[[NSApp delegate] addLog:@"De-Registered from Node Created Events"];
+	sec_set_event(simiasEventClient, ACTION_NODE_DELETED, false, nil, nil);
+	[[NSApp delegate] addLog:@"De-Registered from Node Deleted Events"];
+	sec_set_event(simiasEventClient, ACTION_NODE_CHANGED, false, nil, nil);
+	[[NSApp delegate] addLog:@"De-Registered from Node Changed Events"];
+
+	sec_set_event(simiasEventClient, ACTION_COLLECTION_SYNC, false, nil, nil);
+	[[NSApp delegate] addLog:@"De-Registered from Collection Sync Events"];
+	sec_set_event(simiasEventClient, ACTION_FILE_SYNC, false, nil, nil);
+	[[NSApp delegate] addLog:@"De-Registered from File Sync Events"];
+	sec_set_event(simiasEventClient, ACTION_NOTIFY_MESSAGE, false, nil, nil);
+	[[NSApp delegate] addLog:@"De-Registered from Notify Message Events"];
+
+	if(sec_deregister(simiasEventClient) != 0)
+	{
+		[[NSApp delegate] addLog:@"Error deregistering the Simias Event Client"];
+		return;
+	}
+
+	[[NSApp delegate] addLog:@"Simias Event Client de-registered"];
+}
+
+
 int SimiasEventStateCallBack(SEC_STATE_EVENT state_event, const char *message, void *data)
 {
+    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
+	
 	SimiasEventClient *sec = (SimiasEventClient *)data;
 
 	switch(state_event)
@@ -74,49 +103,62 @@ int SimiasEventStateCallBack(SEC_STATE_EVENT state_event, const char *message, v
 			[[NSApp delegate] addLog:@"Simias Event Client Event Error!"];		
 			break;
 	}
+    [pool release];	
 	return 0;
 }
 
 
 int SimiasEventNodeCreated(SimiasNodeEvent *nodeEvent, void *data)
 {
+    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
 	[[NSApp delegate] addLog:[NSString stringWithFormat:@"Node created: %s", nodeEvent->node]];
+    [pool release];	
     return 0;
 }
 
 int SimiasEventNodeDeleted(SimiasNodeEvent *nodeEvent, void *data)
 {
+    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
 	[[NSApp delegate] addLog:[NSString stringWithFormat:@"Node deleted: %s", nodeEvent->node]];
+    [pool release];	
     return 0;
 }
 
 int SimiasEventNodeChanged(SimiasNodeEvent *nodeEvent, void *data)
 {
+    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
 	[[NSApp delegate] addLog:[NSString stringWithFormat:@"Node changed: %s", nodeEvent->node]];
 
+    [pool release];	
     return 0;
 }
 
 int SimiasEventSyncCollection(SimiasCollectionSyncEvent *collectionEvent, void *data)
 {
+    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
 	[[NSApp delegate] addLog:[NSString stringWithFormat:@"Collection sync: %s", collectionEvent->name]];
 
+    [pool release];	
     return 0;
 }
 
 int SimiasEventSyncFile(SimiasFileSyncEvent *fileEvent, void *data)
 {
+    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
 	[[NSApp delegate] addLog:[NSString stringWithFormat:@"File Sync: %s", fileEvent->name]];
 
+    [pool release];	
     return 0;
 }
 
 int SimiasEventNotifyMessage(SimiasNotifyEvent *notifyEvent, void *data)
 {
+    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
 	[[NSApp delegate] addLog:[NSString stringWithFormat:@"Authentication requested for: %s", notifyEvent->message]];
 
-	[[NSApp delegate] showLoginWindow:[NSString stringWithCString:notifyEvent->message]];
+//	[[NSApp delegate] showLoginWindow:[NSString stringWithCString:notifyEvent->message]];
 
+    [pool release];	
     return 0;
 }
 

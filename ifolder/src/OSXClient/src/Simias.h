@@ -22,25 +22,20 @@
  ***********************************************************************/
 
 #import <Cocoa/Cocoa.h>
-#import <iFolderService.h>
-
-#include <Carbon/Carbon.h>
-#include "simias-event-client.h"
 
 
-// Globals
-extern SimiasEventClient simiasEventClient;
+@interface Simias : NSObject
+{
+	NSTask			*simiasTask;
+	NSPipe			*stdInPipe;
+    NSFileHandle	*stdInHandle;
+	
+}
 
++ (Simias *)getInstance;
+-(void)start;
+-(void)stop;
 
-// Functions
-void SimiasEventInitialize(void);
-void SimiasEventDisconnect(void);
-int SimiasEventStateCallBack(SEC_STATE_EVENT state_event, const char *message, void *data);
-int SimiasEventNodeCreated(SimiasNodeEvent *nodeEvent, void *data);
-int SimiasEventNodeDeleted(SimiasNodeEvent *nodeEvent, void *data);
-int SimiasEventNodeChanged(SimiasNodeEvent *nodeEvent, void *data);
+@end
 
-int SimiasEventSyncCollection(SimiasCollectionSyncEvent *collectionEvent, void *data);
-int SimiasEventSyncFile(SimiasFileSyncEvent *fileEvent, void *data);
-int SimiasEventNotifyMessage(SimiasNotifyEvent *notifyEvent, void *data);
 
