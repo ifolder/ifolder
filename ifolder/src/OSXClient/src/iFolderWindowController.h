@@ -52,7 +52,6 @@
 	NSMutableArray			*toolbarItemKeys;
 	NSMutableDictionary		*keyedDomains;
 	NSMutableDictionary		*keyediFolders;
-	iFolderDomain			*defaultDomain;	
 }
 + (iFolderWindowController *)sharedInstance;
 - (void)windowWillClose:(NSNotification *)aNotification;

@@ -5,7 +5,11 @@
             ACTIONS = {authenticate = id; cancel = id; }; 
             CLASS = LoginWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {passwordField = NSTextField; serverField = NSTextField; }; 
+            OUTLETS = {
+                passwordField = NSSecureTextField; 
+                serverField = NSTextField; 
+                userNameField = NSTextField; 
+            }; 
             SUPERCLASS = NSWindowController; 
         }
     ); 

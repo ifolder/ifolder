@@ -26,6 +26,10 @@
 #import "CreateiFolderSheetController.h"
 #import "SetupiFolderSheetController.h"
 #import "PropertiesWindowController.h"
+#import "iFolder.h"
+#import "iFolderDomain.h"
+#import "iFolderData.h"
+
 
 @implementation iFolderWindowController
 
@@ -83,32 +87,18 @@ static iFolderWindowController *sharedInstance = nil;
 	keyediFolders = [[NSMutableDictionary alloc] init];
 	
 	[[NSApp delegate] addLog:@"iFolder reading all domains"];
-	@try
-	{
-		int domainCount;
-		NSArray *newDomains = [simiasService GetDomains:NO];
 
-		for(domainCount = 0; domainCount < [newDomains count]; domainCount++)
-		{
-			iFolderDomain *newDomain = [newDomains objectAtIndex:domainCount];
-			
-			if( [[newDomain isDefault] boolValue] )
-				defaultDomain = newDomain;
-
-			[self addDomain:newDomain];
-		}
-		
-		NSArray *newiFolders = [ifolderService GetiFolders];
-		if(newiFolders != nil)
-		{
-			[ifoldersController addObjects:newiFolders];
-		}
-	}
-	@catch (NSException *e)
+	NSArray *newDomains = [[iFolderData sharedInstance] getDomains];
+	if(newDomains != nil)
 	{
-		[[NSApp delegate] addLog:@"Reading domains failed with exception"];
+		[domainsController addObjects:newDomains];
 	}
-	
+	NSArray *newiFolders = [[iFolderData sharedInstance] getiFolders];
+	if(newiFolders != nil)
+	{
+		[ifoldersController addObjects:newiFolders];
+	}
+
 	// Setup the double click black magic
 	[iFolderTable setDoubleAction:@selector(doubleClickedTable:)];
 }
@@ -120,17 +110,18 @@ static iFolderWindowController *sharedInstance = nil;
 {
 	[[NSApp delegate] addLog:@"Refreshing iFolder view"];
 
-	@try
+	[[iFolderData sharedInstance] refresh];
+
+	NSArray *newDomains = [[iFolderData sharedInstance] getDomains];
+	if(newDomains != nil)
 	{
-		NSArray *newiFolders = [ifolderService GetiFolders];
-		if(newiFolders != nil)
-		{
-			[ifoldersController setContent:newiFolders];
-		}
+		[domainsController setContent:newDomains];
 	}
-	@catch (NSException *e)
+
+	NSArray *newiFolders = [[iFolderData sharedInstance] getiFolders];
+	if(newiFolders != nil)
 	{
-		[[NSApp delegate] addLog:@"Refreshing failed with exception"];
+		[ifoldersController setContent:newiFolders];
 	}
 }
 
@@ -157,7 +148,7 @@ static iFolderWindowController *sharedInstance = nil;
 - (IBAction)newiFolder:(id)sender
 {
 	
-	[createSheetController setSelectedDomain:defaultDomain];
+	[createSheetController setSelectedDomain:[[iFolderData sharedInstance] getDefaultDomain]];
 	[createSheetController showWindow:self];
 }
 
@@ -188,8 +179,25 @@ static iFolderWindowController *sharedInstance = nil;
 	switch(returnCode)
 	{
 		case NSAlertDefaultReturn:		// Revert iFolder
-			NSLog(@"Reverting iFolder at index %d", (int)contextInfo);
+		{
+			iFolder *ifolder = [[ifoldersController arrangedObjects] objectAtIndex:(int)contextInfo];
+			iFolder *revertediFolder;
+
+			NSLog(@"Reverting iFolder %@", [ifolder Name]);
+
+			[[NSApp delegate] addLog:[NSString stringWithFormat:@"Reverting iFolder %@", [ifolder Name]]];
+
+			@try
+			{
+				revertediFolder = [ifolderService RevertiFolder:[ifolder ID]];
+				[ifolder setProperties:[revertediFolder properties]];
+			}
+			@catch (NSException *e)
+			{
+				NSRunAlertPanel(@"Error reverting iFolder", [e name], @"OK",nil, nil);
+			}
 			break;
+		}
 	}
 }
 
@@ -292,24 +300,6 @@ static iFolderWindowController *sharedInstance = nil;
 
 
 
-- (BOOL)authenticateToDomain:(NSString *)domainID withPassword:(NSString *)password
-{
-	@try
-	{
-		[simiasService LoginToRemoteDomain:domainID usingPassword:password];
-		return YES;
-	}
-	@catch (NSException *e)
-	{
-		NSString *error = [e name];
-		NSRunAlertPanel(@"Login Error", [e name], @"OK",nil, nil);
-		return NO;
-	}
-}
-
-
-
-
 - (void)createiFolder:(NSString *)path inDomain:(NSString *)domainID
 {
 	@try
@@ -365,50 +355,53 @@ static iFolderWindowController *sharedInstance = nil;
 - (BOOL)validateUserInterfaceItem:(id)anItem
 {
 	SEL action = [anItem action];
+	int selIndex = [ifoldersController selectionIndex];
 	
-	if(action == @selector(showLoginWindow:))
-	{
-		return YES;
-	}
-	else if(action == @selector(newiFolder:))
+	if(action == @selector(newiFolder:))
 	{
 		return YES;
 	}
 	else if(action == @selector(setupiFolder:))
 	{
-		if ([ifoldersController selectionIndex] != NSNotFound)
+		if (selIndex != NSNotFound)
 		{
-			if([[[ifoldersController selection] 
-				valueForKeyPath:@"properties.IsSubscription"] boolValue] == YES)
+			if([[[[ifoldersController arrangedObjects] objectAtIndex:selIndex]
+						IsSubscription] boolValue] == YES)
 				return YES;
 		}
 		return NO;
 	}
-	else if(	(action == @selector(deleteiFolder:)) ||
-				(action == @selector(openiFolder:)) ||
+	else if(action == @selector(deleteiFolder:))
+	{
+		if (selIndex != NSNotFound)
+		{
+			return YES;
+		}
+		return NO;
+	}
+	else if(	(action == @selector(openiFolder:)) ||
 				(action == @selector(showProperties:)) ||
 				(action == @selector(shareiFolder:)) ||
 				(action == @selector(synciFolder:)) )
 	{
-		if ([ifoldersController selectionIndex] != NSNotFound)
+		if (selIndex != NSNotFound)
 		{
-			if([[[ifoldersController selection] 
-				valueForKeyPath:@"properties.IsSubscription"] boolValue] == NO)
+			if([[[[ifoldersController arrangedObjects] objectAtIndex:selIndex]
+						IsSubscription] boolValue] == NO)
 				return YES;
 		}
 		return NO;
 	}
 	else if(action == @selector(revertiFolder:))
 	{
-		if ([ifoldersController selectionIndex] != NSNotFound)
+		if (selIndex != NSNotFound)
 		{
-			if( ([[[ifoldersController selection] valueForKeyPath:@"properties.IsSubscription"] boolValue] == NO) &&
-				([[[ifoldersController selection] valueForKeyPath:@"properties.IsWorkgroup"] boolValue] == NO) )
+			if( ([[[[ifoldersController arrangedObjects] objectAtIndex:selIndex] IsSubscription] boolValue] == NO) &&
+				([[[[ifoldersController arrangedObjects] objectAtIndex:selIndex] valueForKeyPath:@"properties.IsWorkgroup"] boolValue] == NO) )
 				return YES;
 		}
 		return NO;
 	}
-
 	
 	return YES;
 }

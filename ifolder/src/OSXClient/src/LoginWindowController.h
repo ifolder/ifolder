@@ -24,10 +24,13 @@
 #import <Cocoa/Cocoa.h>
 #import <MainWindowController.h>
 
+@class iFolderDomain;
+
 @interface LoginWindowController : NSWindowController
 {
     IBOutlet NSSecureTextField *passwordField;
     IBOutlet NSTextField *serverField;
+    IBOutlet NSTextField *userNameField;
 	
 	NSString *authDomainID;
 }
@@ -36,6 +39,6 @@
 - (IBAction)cancel:(id)sender;
 - (IBAction)authenticate:(id)sender;
 
-- (void)showLoginWindow:(id)sender withHost:(NSString *)host withDomain:(NSString *)domainID;
+- (void)showLoginWindow:(id)sender withDomain:(iFolderDomain *)domain;
 
 @end

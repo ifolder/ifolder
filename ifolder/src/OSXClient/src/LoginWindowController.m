@@ -23,6 +23,7 @@
  
 #import "LoginWindowController.h"
 #import "MainWindowController.h"
+#import "iFolderDomain.h"
 
 @implementation LoginWindowController
 
@@ -49,12 +50,15 @@
 }
 
 
-- (void)showLoginWindow:(id)sender withHost:(NSString *)host withDomain:(NSString *)domainID
+
+
+- (void)showLoginWindow:(id)sender withDomain:(iFolderDomain *)domain
 {
 	if(authDomainID == nil)
 	{
-		[serverField setStringValue:host];
-		authDomainID = [[NSString stringWithString:domainID] retain];
+		[serverField setStringValue:[domain name]];
+		[userNameField setStringValue:[domain userName]];
+		authDomainID = [[domain ID] retain];
 	}
 	
 	[self showWindow:sender];

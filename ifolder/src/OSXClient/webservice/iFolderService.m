@@ -214,7 +214,6 @@ NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user);
 
 -(void)DeleteiFolder:(NSString *)iFolderID
 {
-	iFolder *ifolder = nil;
     struct soap soap;
     int err_code;
 
@@ -241,6 +240,51 @@ NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user);
 
     cleanup_gsoap(&soap);
 }
+
+
+
+
+-(iFolder *) RevertiFolder:(NSString *)iFolderID
+{
+	iFolder *ifolder = nil;
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (iFolderID != nil), @"iFolderID was nil");
+
+	struct _ns1__RevertiFolder			revertiFolderMessage;
+	struct _ns1__RevertiFolderResponse	revertiFolderResponse;
+	
+	revertiFolderMessage.iFolderID = (char *)[iFolderID cString];
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__RevertiFolder(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &revertiFolderMessage,
+            &revertiFolderResponse);
+
+	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in DeleteiFolder"];
+	}
+	else
+	{
+		ifolder = [ [iFolder alloc] init];
+		
+		struct ns1__iFolderWeb *curiFolder;
+			
+		curiFolder = revertiFolderResponse.RevertiFolderResult;
+		[ifolder setProperties:getiFolderProperties(curiFolder)];
+    }	
+
+    cleanup_gsoap(&soap);
+	
+	return ifolder;	
+}
+
 
 
 

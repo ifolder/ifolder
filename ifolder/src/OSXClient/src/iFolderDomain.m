@@ -106,6 +106,10 @@
 }
 
 
+-(NSString *)poBoxID
+{
+	return [self valueForKeyPath:@"properties.poboxID"]; 
+}
 
 
 -(NSString *)password
