@@ -482,7 +482,7 @@ namespace Novell.iFolder
 						Simias.Storage.Property.Operator.Begins);
 				foreach(Contact c in clist)
 				{
-					idHash.Add(c.Identity, c);
+					idHash.Add(c.ID, c);
 				}
 
 				// Last Name Search
@@ -490,8 +490,8 @@ namespace Novell.iFolder
 						Simias.Storage.Property.Operator.Begins);
 				foreach(Contact c in clist)
 				{
-					if(!idHash.Contains(c.Identity))
-						idHash.Add(c.Identity, c);
+					if(!idHash.Contains(c.ID))
+						idHash.Add(c.ID, c);
 				}
 
 				// UserName Name Search
@@ -499,8 +499,8 @@ namespace Novell.iFolder
 						Simias.Storage.Property.Operator.Begins);
 				foreach(Contact c in clist)
 				{
-					if(!idHash.Contains(c.Identity))
-						idHash.Add(c.Identity, c);
+					if(!idHash.Contains(c.ID))
+						idHash.Add(c.ID, c);
 				}
 
 				// Email Name Search
@@ -508,8 +508,8 @@ namespace Novell.iFolder
 						Simias.Storage.Property.Operator.Begins);
 				foreach(Contact c in clist)
 				{
-					if(!idHash.Contains(c.Identity))
-						idHash.Add(c.Identity, c);
+					if(!idHash.Contains(c.ID))
+						idHash.Add(c.ID, c);
 				}
 
 				foreach(Contact c in idHash.Values)
