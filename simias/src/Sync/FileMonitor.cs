@@ -126,6 +126,7 @@ namespace Simias.Sync
 					watcher.Created += new FileSystemEventHandler(OnCreated);
 					watcher.Deleted += new FileSystemEventHandler(OnDeleted);
 					watcher.Renamed += new RenamedEventHandler(OnRenamed);
+					watcher.Error += new ErrorEventHandler(watcher_Error);
 					watcher.IncludeSubdirectories = true;
 					watcher.EnableRaisingEvents = true;
 					// Now dredge to find any files that were changed while we were down.
@@ -513,6 +514,13 @@ namespace Simias.Sync
 			{
 				try
 				{
+					// Make sure the root directory still exists.
+					if (!Directory.Exists(collection.GetRootDirectory().GetFullPath(collection)))
+					{
+						collection.Commit(collection.Delete());
+						return;
+					}
+					
 					dredgeTimeStamp = DateTime.Now;
 					fileChangeEntry[] fChanges;
 
@@ -876,6 +884,12 @@ namespace Simias.Sync
 			}
 		}
 
+		private void watcher_Error(object sender, ErrorEventArgs e)
+		{
+			// We have lost events. we need to dredge.
+			needToDredge = true;
+		}
+	
 		private void Dispose(bool inFinalize)
 		{
 			lock (this)
@@ -906,5 +920,6 @@ namespace Simias.Sync
 		}
 
 		#endregion
+
 	}
 }
