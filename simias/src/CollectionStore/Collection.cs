@@ -752,16 +752,25 @@ namespace Simias.Storage
 					// indicate an event for a Tombstone operation.
 					if ( IsBaseType( node, NodeTypes.TombstoneType ) )
 					{
-						// Update the cache before indicating the event.
-						store.Cache.Add( node );
-
-						// Indicate the event.
-						if ( node.Properties.State == PropertyList.PropertyListState.Add )
+						// Check to see if this is a tombstone being deleted.
+						if ( node.Properties.State == PropertyList.PropertyListState.Delete )
 						{
-							string oldType = node.Properties.FindSingleValue( PropertyTags.TombstoneType ).ToString();
-							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, oldType, EventType.NodeDeleted, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, 0 );
-							args.LocalOnly = node.LocalChanges;
-							store.EventPublisher.RaiseEvent( args );
+							// Remove the node from the cache.
+							store.Cache.Remove( node.ID );
+						}
+						else
+						{
+							// The tombstone has changed, update the cache.
+							store.Cache.Add( node );
+
+							// Indicate the event.
+							if ( node.Properties.State == PropertyList.PropertyListState.Add )
+							{
+								string oldType = node.Properties.FindSingleValue( PropertyTags.TombstoneType ).ToString();
+								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, oldType, EventType.NodeDeleted, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, 0 );
+								args.LocalOnly = node.LocalChanges;
+								store.EventPublisher.RaiseEvent( args );
+							}
 						}
 
 						node.Properties.State = PropertyList.PropertyListState.Disposed;
