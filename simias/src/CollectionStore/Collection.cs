@@ -777,6 +777,7 @@ namespace Simias.Storage
 			{
 				bool containsCollection = false;
 				bool onlyTombstones = true;
+				bool onlyImports = true;
 				Node deleteNode = null;
 				Node createNode = null;
 
@@ -800,6 +801,13 @@ namespace Simias.Storage
 								createNode = node;
 							}
 						}
+
+						// If only imported nodes are in the list, the collection object does not
+						// need to be included.
+						if ( node.Properties.State != PropertyList.PropertyListState.Import )
+						{
+							onlyImports = false;
+						}
 					}
 				}
 
@@ -819,7 +827,7 @@ namespace Simias.Storage
 					{
 						// Use the node list as is if it already contains a Collection object or if the list
 						// just consists of tombstones.
-						if ( containsCollection || onlyTombstones )
+						if ( containsCollection || onlyTombstones || onlyImports )
 						{
 							// Use the passed in list.
 							commitList = nodeList;
