@@ -244,7 +244,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.changePicture.Location = new System.Drawing.Point(8, 88);
 			this.changePicture.Name = "changePicture";
-			this.changePicture.TabIndex = 56;
+			this.changePicture.TabIndex = 4;
 			this.changePicture.Text = "Change...";
 			// 
 			// fullNameButton
@@ -252,7 +252,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.fullNameButton.Location = new System.Drawing.Point(92, 12);
 			this.fullNameButton.Name = "fullNameButton";
 			this.fullNameButton.Size = new System.Drawing.Size(75, 26);
-			this.fullNameButton.TabIndex = 55;
+			this.fullNameButton.TabIndex = 0;
 			this.fullNameButton.Text = "Full Name...";
 			this.fullNameButton.Click += new System.EventHandler(this.fullNameButton_Click);
 			// 
@@ -261,7 +261,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.blogConnect.Location = new System.Drawing.Point(348, 256);
 			this.blogConnect.Name = "blogConnect";
 			this.blogConnect.Size = new System.Drawing.Size(22, 22);
-			this.blogConnect.TabIndex = 54;
+			this.blogConnect.TabIndex = 12;
 			this.blogConnect.Text = "button2";
 			// 
 			// webConnect
@@ -269,7 +269,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.webConnect.Location = new System.Drawing.Point(348, 224);
 			this.webConnect.Name = "webConnect";
 			this.webConnect.Size = new System.Drawing.Size(22, 22);
-			this.webConnect.TabIndex = 53;
+			this.webConnect.TabIndex = 10;
 			this.webConnect.Text = "button1";
 			// 
 			// comboBox1
@@ -279,7 +279,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.comboBox1.Name = "comboBox1";
 			this.comboBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.comboBox1.Size = new System.Drawing.Size(104, 21);
-			this.comboBox1.TabIndex = 52;
+			this.comboBox1.TabIndex = 6;
 			this.comboBox1.Text = "Primary e-mail:";
 			// 
 			// blogAddress
@@ -287,7 +287,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.blogAddress.Location = new System.Drawing.Point(176, 256);
 			this.blogAddress.Name = "blogAddress";
 			this.blogAddress.Size = new System.Drawing.Size(168, 20);
-			this.blogAddress.TabIndex = 50;
+			this.blogAddress.TabIndex = 11;
 			this.blogAddress.Text = "";
 			// 
 			// label5
@@ -303,7 +303,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.addr.Location = new System.Drawing.Point(472, 192);
 			this.addr.Name = "addr";
 			this.addr.Size = new System.Drawing.Size(96, 23);
-			this.addr.TabIndex = 49;
+			this.addr.TabIndex = 22;
 			this.addr.Text = "Address...";
 			// 
 			// groupBox4
@@ -328,7 +328,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.webAddress.Location = new System.Drawing.Point(176, 224);
 			this.webAddress.Name = "webAddress";
 			this.webAddress.Size = new System.Drawing.Size(168, 20);
-			this.webAddress.TabIndex = 6;
+			this.webAddress.TabIndex = 9;
 			this.webAddress.Text = "";
 			// 
 			// label4
@@ -353,7 +353,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.mailAddress.Location = new System.Drawing.Point(584, 264);
 			this.mailAddress.Name = "mailAddress";
 			this.mailAddress.Size = new System.Drawing.Size(160, 16);
-			this.mailAddress.TabIndex = 19;
+			this.mailAddress.TabIndex = 24;
 			this.mailAddress.Text = "This is the mailing address";
 			// 
 			// addressSelect
@@ -366,7 +366,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.addressSelect.Name = "addressSelect";
 			this.addressSelect.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.addressSelect.Size = new System.Drawing.Size(96, 21);
-			this.addressSelect.TabIndex = 17;
+			this.addressSelect.TabIndex = 21;
 			this.addressSelect.Text = "Business:";
 			// 
 			// pictureAddress
@@ -382,14 +382,14 @@ namespace Novell.iFolder.FormsBookLib
 			this.address.Location = new System.Drawing.Point(576, 160);
 			this.address.Name = "address";
 			this.address.Size = new System.Drawing.Size(192, 95);
-			this.address.TabIndex = 18;
+			this.address.TabIndex = 23;
 			// 
 			// mailHTML
 			// 
 			this.mailHTML.Location = new System.Drawing.Point(176, 184);
 			this.mailHTML.Name = "mailHTML";
 			this.mailHTML.Size = new System.Drawing.Size(168, 16);
-			this.mailHTML.TabIndex = 5;
+			this.mailHTML.TabIndex = 8;
 			this.mailHTML.Text = "Wants to receive HTML mail";
 			// 
 			// phoneSelect3
@@ -405,7 +405,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.phoneSelect3.Name = "phoneSelect3";
 			this.phoneSelect3.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.phoneSelect3.Size = new System.Drawing.Size(96, 21);
-			this.phoneSelect3.TabIndex = 13;
+			this.phoneSelect3.TabIndex = 17;
 			this.phoneSelect3.Text = "Home:";
 			this.phoneSelect3.SelectedIndexChanged += new System.EventHandler(this.phoneSelect3_SelectedIndexChanged);
 			// 
@@ -422,7 +422,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.phoneSelect4.Name = "phoneSelect4";
 			this.phoneSelect4.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.phoneSelect4.Size = new System.Drawing.Size(96, 21);
-			this.phoneSelect4.TabIndex = 15;
+			this.phoneSelect4.TabIndex = 19;
 			this.phoneSelect4.Text = "Mobile:";
 			this.phoneSelect4.SelectedIndexChanged += new System.EventHandler(this.phoneSelect4_SelectedIndexChanged);
 			// 
@@ -447,7 +447,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.phoneSelect1.Name = "phoneSelect1";
 			this.phoneSelect1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.phoneSelect1.Size = new System.Drawing.Size(96, 21);
-			this.phoneSelect1.TabIndex = 9;
+			this.phoneSelect1.TabIndex = 13;
 			this.phoneSelect1.Text = "Business:";
 			this.phoneSelect1.SelectedIndexChanged += new System.EventHandler(this.phoneSelect1_SelectedIndexChanged);
 			// 
@@ -464,7 +464,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.phoneSelect2.Name = "phoneSelect2";
 			this.phoneSelect2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.phoneSelect2.Size = new System.Drawing.Size(96, 21);
-			this.phoneSelect2.TabIndex = 11;
+			this.phoneSelect2.TabIndex = 15;
 			this.phoneSelect2.Text = "Business fax:";
 			this.phoneSelect2.SelectedIndexChanged += new System.EventHandler(this.phoneSelect2_SelectedIndexChanged);
 			// 
@@ -473,7 +473,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.userId.Location = new System.Drawing.Point(176, 112);
 			this.userId.Name = "userId";
 			this.userId.Size = new System.Drawing.Size(192, 20);
-			this.userId.TabIndex = 3;
+			this.userId.TabIndex = 5;
 			this.userId.Text = "";
 			// 
 			// label7
@@ -489,7 +489,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.phone4.Location = new System.Drawing.Point(576, 112);
 			this.phone4.Name = "phone4";
 			this.phone4.Size = new System.Drawing.Size(192, 20);
-			this.phone4.TabIndex = 16;
+			this.phone4.TabIndex = 20;
 			this.phone4.Text = "";
 			this.phone4.TextChanged += new System.EventHandler(this.phone4_TextChanged);
 			this.phone4.Leave += new System.EventHandler(this.phone4_Leave);
@@ -499,7 +499,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.phone3.Location = new System.Drawing.Point(576, 80);
 			this.phone3.Name = "phone3";
 			this.phone3.Size = new System.Drawing.Size(192, 20);
-			this.phone3.TabIndex = 14;
+			this.phone3.TabIndex = 18;
 			this.phone3.Text = "";
 			this.phone3.TextChanged += new System.EventHandler(this.phone3_TextChanged);
 			this.phone3.Leave += new System.EventHandler(this.phone3_Leave);
@@ -509,7 +509,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.phone2.Location = new System.Drawing.Point(576, 48);
 			this.phone2.Name = "phone2";
 			this.phone2.Size = new System.Drawing.Size(192, 20);
-			this.phone2.TabIndex = 12;
+			this.phone2.TabIndex = 16;
 			this.phone2.Text = "";
 			this.phone2.TextChanged += new System.EventHandler(this.phone2_TextChanged);
 			this.phone2.Leave += new System.EventHandler(this.phone2_Leave);
@@ -519,7 +519,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.phone1.Location = new System.Drawing.Point(576, 16);
 			this.phone1.Name = "phone1";
 			this.phone1.Size = new System.Drawing.Size(192, 20);
-			this.phone1.TabIndex = 10;
+			this.phone1.TabIndex = 14;
 			this.phone1.Text = "";
 			this.phone1.TextChanged += new System.EventHandler(this.phone1_TextChanged);
 			this.phone1.Leave += new System.EventHandler(this.phone1_Leave);
@@ -537,7 +537,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.eMail.Location = new System.Drawing.Point(176, 160);
 			this.eMail.Name = "eMail";
 			this.eMail.Size = new System.Drawing.Size(192, 20);
-			this.eMail.TabIndex = 4;
+			this.eMail.TabIndex = 7;
 			this.eMail.Text = "";
 			// 
 			// groupBox1
@@ -562,7 +562,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.organization.Location = new System.Drawing.Point(176, 80);
 			this.organization.Name = "organization";
 			this.organization.Size = new System.Drawing.Size(192, 20);
-			this.organization.TabIndex = 2;
+			this.organization.TabIndex = 3;
 			this.organization.Text = "";
 			// 
 			// jobTitle
@@ -570,7 +570,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.jobTitle.Location = new System.Drawing.Point(176, 48);
 			this.jobTitle.Name = "jobTitle";
 			this.jobTitle.Size = new System.Drawing.Size(192, 20);
-			this.jobTitle.TabIndex = 1;
+			this.jobTitle.TabIndex = 2;
 			this.jobTitle.Text = "";
 			// 
 			// label3
@@ -595,7 +595,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.fullName.Name = "fullName";
 			this.fullName.ReadOnly = true;
 			this.fullName.Size = new System.Drawing.Size(192, 20);
-			this.fullName.TabIndex = 0;
+			this.fullName.TabIndex = 1;
 			this.fullName.Text = "";
 			// 
 			// ok
@@ -850,6 +850,8 @@ namespace Novell.iFolder.FormsBookLib
 
 				jobTitle.Text = contact.Title;
 				organization.Text = contact.Organization;
+				webAddress.Text = contact.Url;
+				blogAddress.Text = contact.Blog;
 
 				bool results = LoadAddresses();
 			}
@@ -915,6 +917,8 @@ namespace Novell.iFolder.FormsBookLib
 
 					contact.Organization = organization.Text.Trim();
 					contact.Title = jobTitle.Text.Trim();
+					contact.Url = webAddress.Text.Trim();
+					contact.Blog = blogAddress.Text.Trim();
 
 					addressBook.AddContact(contact);
 					contact.Commit();
@@ -965,6 +969,8 @@ namespace Novell.iFolder.FormsBookLib
 
 					contact.Title = jobTitle.Text.Trim();
 					contact.Organization = organization.Text.Trim();
+					contact.Url = webAddress.Text.Trim();
+					contact.Blog = blogAddress.Text.Trim();
 
 					contact.Commit();
 				}
@@ -1009,7 +1015,7 @@ namespace Novell.iFolder.FormsBookLib
 		private void ContactEditor_Activated(object sender, EventArgs e)
 		{
 			// Set focus to the first edit box on the form.
-			this.userId.Focus();
+			this.fullNameButton.Focus();
 		}
 
 		private void phone1_Leave(object sender, System.EventArgs e)

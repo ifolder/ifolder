@@ -83,7 +83,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.ok.Location = new System.Drawing.Point(56, 192);
 			this.ok.Name = "ok";
-			this.ok.TabIndex = 0;
+			this.ok.TabIndex = 5;
 			this.ok.Text = "OK";
 			// 
 			// cancel
@@ -91,7 +91,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.cancel.Location = new System.Drawing.Point(136, 192);
 			this.cancel.Name = "cancel";
-			this.cancel.TabIndex = 1;
+			this.cancel.TabIndex = 6;
 			this.cancel.Text = "Cancel";
 			// 
 			// title
@@ -99,7 +99,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.title.Location = new System.Drawing.Point(48, 16);
 			this.title.Name = "title";
 			this.title.Size = new System.Drawing.Size(160, 20);
-			this.title.TabIndex = 2;
+			this.title.TabIndex = 0;
 			this.title.Text = "";
 			// 
 			// firstName
@@ -107,7 +107,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.firstName.Location = new System.Drawing.Point(48, 48);
 			this.firstName.Name = "firstName";
 			this.firstName.Size = new System.Drawing.Size(160, 20);
-			this.firstName.TabIndex = 3;
+			this.firstName.TabIndex = 1;
 			this.firstName.Text = "";
 			// 
 			// middleName
@@ -115,7 +115,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.middleName.Location = new System.Drawing.Point(48, 80);
 			this.middleName.Name = "middleName";
 			this.middleName.Size = new System.Drawing.Size(160, 20);
-			this.middleName.TabIndex = 4;
+			this.middleName.TabIndex = 2;
 			this.middleName.Text = "";
 			// 
 			// lastName
@@ -123,7 +123,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.lastName.Location = new System.Drawing.Point(48, 112);
 			this.lastName.Name = "lastName";
 			this.lastName.Size = new System.Drawing.Size(160, 20);
-			this.lastName.TabIndex = 5;
+			this.lastName.TabIndex = 3;
 			this.lastName.Text = "";
 			// 
 			// suffix
@@ -131,7 +131,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.suffix.Location = new System.Drawing.Point(48, 144);
 			this.suffix.Name = "suffix";
 			this.suffix.Size = new System.Drawing.Size(160, 20);
-			this.suffix.TabIndex = 6;
+			this.suffix.TabIndex = 4;
 			this.suffix.Text = "";
 			// 
 			// groupBox1
