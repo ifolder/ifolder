@@ -46,7 +46,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		static public string CreationTime = "CreationTime";
+		static public string CreationTime = "Create";
 
 		/// <summary>
 		/// Well known property name.
@@ -61,67 +61,42 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		static public string DirCreationTime = "DirCreationTime";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-		static public string DirLastAccessTime = "DirLastAccessTime";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-		static public string DirLastWriteTime = "DirLastWriteTime";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
 		static public string Domain = "Domain";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		static public string DomainName = "DomainName";
+		static public string DomainID = "DomainID";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		static public string FileCreationTime = "FileCreationTime";
+		static public string FileLength = "Length";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		static public string FileLastAccessTime = "FileLastAccessTime";
+		static public string LastAccessTime = "Access";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		static public string FileLastWriteTime = "FileLastWriteTime";
+		static public string LastWriteTime = "Write";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		static public string FileLength = "FileLength";
+		static public string LinkReference = "LinkRef";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		static public string LinkReference = "LinkReference";
+		static public string LocalIncarnation = "ClntRev";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		static public string LocalIncarnation = "LocalIncarnation";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-		static public string MasterIncarnation = "MasterIncarnation";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-		static public string ModifyTime = "ModifyTime";
+		static public string MasterIncarnation = "SrvRev";
 
 		/// <summary>
 		/// Well known property name.
@@ -183,20 +158,15 @@ namespace Simias.Storage
 			systemPropertyTable.Add( Collision, null );
 			systemPropertyTable.Add( CreationTime, null );
 			systemPropertyTable.Add( Credential, null );
-			systemPropertyTable.Add( DirCreationTime, null );
-			systemPropertyTable.Add( DirLastAccessTime, null );
-			systemPropertyTable.Add( DirLastWriteTime, null );
 			systemPropertyTable.Add( DefaultDomain, null );
 			systemPropertyTable.Add( Domain, null );
-			systemPropertyTable.Add( DomainName, null );
-			systemPropertyTable.Add( FileCreationTime, null );
-			systemPropertyTable.Add( FileLastAccessTime, null );
-			systemPropertyTable.Add( FileLastWriteTime, null );
+			systemPropertyTable.Add( DomainID, null );
 			systemPropertyTable.Add( FileLength, null );
+			systemPropertyTable.Add( LastAccessTime, null );
+			systemPropertyTable.Add( LastWriteTime, null );
 			systemPropertyTable.Add( LinkReference, null );
 			systemPropertyTable.Add( LocalIncarnation, null );
 			systemPropertyTable.Add( MasterIncarnation, null );
-			systemPropertyTable.Add( ModifyTime, null );
 			systemPropertyTable.Add( Owner, null );
 			systemPropertyTable.Add( Parent, null );
 			systemPropertyTable.Add( PublicKey, null );
