@@ -29,7 +29,7 @@ namespace Simias.Mail
             {
                 System.IO.File.OpenRead (filename).Close ();
             }
-            catch(Exception e)
+            catch
             {
                 throw new Exception("Cannot find file: '" + 
                         filename + "'." );

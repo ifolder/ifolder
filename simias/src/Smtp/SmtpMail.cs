@@ -48,7 +48,7 @@ namespace Simias.Mail
 
                 smtp.Close ();
             }
-            catch(Exception e)
+            catch
             {
 				return false;
             }

@@ -37,7 +37,6 @@ namespace Simias.Service
 		internal MessageCode	majorMessage = 0;
 		internal int			customMessage;
 		internal string			data;
-		internal bool			status;
 		internal static string  messageSignature = typeof(Message).ToString();
 		
 		#endregion
