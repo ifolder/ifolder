@@ -192,8 +192,9 @@ namespace Simias.POBox
 			SyncCollection sc = new SyncCollection(c);
 
 			// details
-			details.DirNodeID = sc.GetRootDirectory().ID;
-			details.DirNodeName = sc.GetRootDirectory().Name;
+			DirNode dn = sc.GetRootDirectory();
+			details.DirNodeID = ( dn != null ) ? dn.ID : null;
+			details.DirNodeName = ( dn != null ) ? dn.Name : null;
 			details.CollectionUrl = sc.MasterUrl.ToString();
 
 			return details;

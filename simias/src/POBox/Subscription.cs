@@ -671,8 +671,16 @@ namespace Simias.POBox
 		{
 			if (details != null)
 			{
-				this.DirNodeID = details.DirNodeID;
-				this.DirNodeName = details.DirNodeName;
+				if ((details.DirNodeID != null) && (details.DirNodeID.Length > 0))
+				{
+					this.DirNodeID = details.DirNodeID;
+				}
+
+				if ((details.DirNodeName != null) && (details.DirNodeName.Length > 0))
+				{
+					this.DirNodeName = details.DirNodeName;
+				}
+
 				this.SubscriptionCollectionURL = details.CollectionUrl;
 			}
 		}
