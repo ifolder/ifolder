@@ -1617,6 +1617,23 @@ namespace Novell.FormsTrayApp
 			return result;
 		}
 
+		private void displaySyncInterval(int syncInterval)
+		{
+			// Set the state of the checkbox.
+			autoSync.Checked = syncInterval != System.Threading.Timeout.Infinite;
+
+			// Get the value and time units.
+			string units = resourceManager.GetString("seconds");
+			decimal displayValue = autoSync.Checked ? 
+				iFolderAdvanced.ConvertSecondsToTimeUnit(syncInterval, out units) : minimumSeconds;
+
+			// Select the time unit in the dropdown list.
+			timeUnit.SelectedItem = resourceManager.GetString(units);
+
+			// Display the interval.
+			defaultInterval.Value = displayValue;
+		}
+
 		/// <summary>
 		/// Set the auto-run value in the Windows registery.
 		/// </summary>
@@ -1717,6 +1734,12 @@ namespace Novell.FormsTrayApp
 					{
 						// Save the default sync interval.
 						ifWebService.SetDefaultSyncInterval(autoSync.Checked ? (int)syncValueInSeconds : System.Threading.Timeout.Infinite);
+
+						if (autoSync.Checked)
+						{
+							// Update the displayed value.
+							displaySyncInterval((int)syncValueInSeconds);
+						}
 					}
 					catch (Exception ex)
 					{
@@ -1953,13 +1976,7 @@ namespace Novell.FormsTrayApp
 				try
 				{
 					// Update the default sync interval setting.
-					int syncInterval = ifWebService.GetDefaultSyncInterval();
-					autoSync.Checked = syncInterval != System.Threading.Timeout.Infinite;
-					string units = resourceManager.GetString("seconds");
-					decimal displayValue = autoSync.Checked ? 
-						iFolderAdvanced.ConvertSecondsToTimeUnit(syncInterval, out units) : minimumSeconds;
-					timeUnit.SelectedItem = resourceManager.GetString(units);
-					defaultInterval.Value = displayValue;
+					displaySyncInterval(ifWebService.GetDefaultSyncInterval());
 				}
 				catch (Exception ex)
 				{
