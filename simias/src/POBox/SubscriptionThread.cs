@@ -72,6 +72,9 @@ namespace Simias.POBox
 								done = DoInvited();
 								break;
 
+							// TODO: fix and cleanup states
+							case SubscriptionStates.Pending:
+
 							// replied (slave)
 							case SubscriptionStates.Replied:
 								done = DoReplied();
@@ -184,7 +187,7 @@ namespace Simias.POBox
 					subscription.POServiceURL.Scheme, SimiasChannelSinks.Binary,
 					subscription.POServiceURL.Port);
 
-				log.Debug("Connecting to the Post Office Service...");
+				log.Debug("Connecting to the Post Office Service : {0}", subscription.POServiceURL);
 				PostOffice po = (PostOffice)Activator.GetObject(typeof(PostOffice),
 					subscription.POServiceURL.ToString());
 			
@@ -215,7 +218,7 @@ namespace Simias.POBox
 				subscription.POServiceURL.Scheme, SimiasChannelSinks.Binary,
 				subscription.POServiceURL.Port);
 
-			log.Debug("Connecting to the Post Office Service...");
+			log.Debug("Connecting to the Post Office Service : {0}", subscription.POServiceURL);
 			PostOffice po = (PostOffice)Activator.GetObject(typeof(PostOffice),
 				subscription.POServiceURL.ToString());
 			
@@ -245,7 +248,7 @@ namespace Simias.POBox
 				subscription.POServiceURL.Scheme, SimiasChannelSinks.Binary,
 				subscription.POServiceURL.Port);
 
-			log.Debug("Connecting to the Post Office Service...");
+			log.Debug("Connecting to the Post Office Service : {0}", subscription.POServiceURL);
 			PostOffice po = (PostOffice)Activator.GetObject(typeof(PostOffice),
 				subscription.POServiceURL.ToString());
 			

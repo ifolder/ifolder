@@ -66,7 +66,7 @@ namespace Simias
 						fs = new FileStream(muxPath, FileMode.OpenOrCreate,
 										FileAccess.ReadWrite, FileShare.None);
 					}
-					catch(Exception e)
+					catch
 					{
 						Thread.Sleep(100);
 					}
