@@ -61,6 +61,10 @@ namespace Novell.iFolder.FormsTrayApp
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
+		/// <summary>
+		/// Constructs a MessageForm object.
+		/// </summary>
+		/// <param name="config">The Configuration object to use.</param>
 		public MessageForm(Configuration config)
 		{
 			//
@@ -232,6 +236,17 @@ namespace Novell.iFolder.FormsTrayApp
 		#endregion
 
 		#region Private Methods
+		#endregion
+
+		#region Events
+		/// <summary>
+		/// Delegate used when all messages that require an action have been acted upon.
+		/// </summary>
+		public delegate void MessagesServicedDelegate(object sender, EventArgs e);
+		/// <summary>
+		/// Occurs when all messages requiring action have been acted upon.
+		/// </summary>
+		public event MessagesServicedDelegate MessagesServiced;
 		#endregion
 
 		#region Event Handlers
@@ -544,6 +559,34 @@ namespace Novell.iFolder.FormsTrayApp
 						{
 							// New up a Subscription object based on the node.
 							Subscription sub = new Subscription(node);
+
+							if (((((Subscription)lvi.Tag).SubscriptionState == SubscriptionStates.Received) &&
+								(sub.SubscriptionState != SubscriptionStates.Received)) ||
+								((((Subscription)lvi.Tag).SubscriptionState == SubscriptionStates.Pending)) &&
+								(sub.SubscriptionState != SubscriptionStates.Pending))
+							{
+								bool actionRequired = false;
+								foreach (ListViewItem item in this.messages.Items)
+								{
+									if (lvi.Equals(item))
+									{
+										continue;
+									}
+
+									Subscription sub2 = (Subscription)item.Tag;
+									if ((sub2.SubscriptionState == SubscriptionStates.Received) ||
+										(sub2.SubscriptionState == SubscriptionStates.Pending))
+									{
+										actionRequired = true;
+										break;
+									}
+								}
+
+								if (!actionRequired && (MessagesServiced != null))
+								{
+									MessagesServiced(this, new EventArgs());
+								}
+							}
 
 							// If the subscription state is "Ready" and the collection exists locally, remove the listview item; 
 							// otherwise, update the status text.
