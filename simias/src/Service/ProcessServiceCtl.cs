@@ -113,7 +113,6 @@ namespace Simias.Service
 						process.StartInfo.Arguments = null;
 					}
 					process.StartInfo.Arguments += "\"" + conf.StorePath +"\"";
-					Console.WriteLine("Starting: {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
 					process.Start();
 					reader = process.StandardOutput;
 					writer = process.StandardInput;
