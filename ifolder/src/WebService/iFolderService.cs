@@ -445,6 +445,10 @@ namespace Novell.iFolder.Web
 						// care
 						if(sub.ToIdentity != poBox.Owner.UserID)
 							continue;
+
+						// BHT: Filter out subscriptions that are not iFolders
+						if (sub.SubscriptionCollectionType != iFolderWeb.iFolderType)
+							continue;
 	
 						// Filter out all subscriptions that match
 						// iFolders that are already local on our machine
@@ -523,6 +527,10 @@ namespace Novell.iFolder.Web
 					// if the subscription is not for us, we don't
 					// care
 					if(sub.ToIdentity != poBox.Owner.UserID)
+						continue;
+
+					// BHT: Filter out subscriptions that are not iFolders
+					if (sub.SubscriptionCollectionType != iFolderWeb.iFolderType)
 						continue;
 
 					// Filter out all subscriptions that match
