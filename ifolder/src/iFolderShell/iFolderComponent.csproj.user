@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\dev\denali\src\FormsBookLib\;C:\dev\denali\src\iFolder\;C:\dev\denali\src\CollectionStore\;C:\dev\denali\src\AddressBook\;C:\ifolder\denali\src\iFolder\;C:\ifolder\denali\src\CollectionStore\;C:\ifolder\denali\src\AddressBook\;C:\ifolder\denali\src\FormsBookLib\" >
+            <Settings ReferencePath = "C:\dev\ifolder\src\iFolder\;C:\dev\simias\src\CollectionStore\;C:\dev\simias\src\AddressBook\;C:\dev\denali\src\FormsBookLib\;C:\dev\denali\src\iFolder\;C:\dev\denali\src\CollectionStore\;C:\dev\denali\src\AddressBook\;C:\ifolder\denali\src\iFolder\;C:\ifolder\denali\src\CollectionStore\;C:\ifolder\denali\src\AddressBook\;C:\ifolder\denali\src\FormsBookLib\;C:\dev\addressbook\src\FormsBookLib\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"

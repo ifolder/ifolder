@@ -75,7 +75,7 @@ namespace Novell.iFolder
 
 			SyncProperties props = new SyncProperties();
 
-			string logicFactory = Configuration.Get("iFolderApp", 
+			string logicFactory = new Configuration().Get("iFolderApp", 
 				"SyncLogic", "SynkerA");
 
 			switch (logicFactory)

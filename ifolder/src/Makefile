@@ -21,8 +21,7 @@
 #* 
 #***********************************************************************/
 
-# configure makefile
-include config.mk
+include ../config.mk
 
 #=============================================================================
 # os independent component list
@@ -281,15 +280,23 @@ package: all package-nodeps
 
 package-nodeps:
 	$(call HEADER,$@)
-	@$(MAKE) -C install all
+	@$(MAKE) -C package all
+
+package-install: package-nodeps
+	$(call HEADER,$@)
+	@$(MAKE) -C package install
+
+package-uninstall:  package-nodeps
+	$(call HEADER,$@)
+	@$(MAKE) -C package uninstall
 
 package-clean:
 	$(call HEADER,$@)
-	@$(MAKE) -C install clean
+	@$(MAKE) -C package clean
 
 package-test:
 	$(call HEADER,$@)
-	@$(MAKE) -C install test
+	@$(MAKE) -C package test
 
 #=============================================================================
 # install/uninstall
@@ -357,8 +364,14 @@ report:
 # File CVS History:
 #
 # $Log$
-# Revision 1.1  2004/02/21 19:10:26  cgaisford
-# Initial revision
+# Revision 1.3  2004/02/23 23:14:14  pthomas707
+# Renamed install directory to package
+#
+# Revision 1.2  2004/02/22 01:00:14  cgaisford
+# Modified project's build so a configure and make can be done at the top level
+#
+# Revision 1.1.1.1  2004/02/21 19:10:26  cgaisford
+# Initial CVS import
 #
 # Revision 1.2  2004/02/21 18:58:49  cgaisford
 # Updated themakefiles to use the Simias namespace and find simias using the SIMIAS_ROOT variable

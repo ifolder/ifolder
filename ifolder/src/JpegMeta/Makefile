@@ -1,31 +1,31 @@
 #=============================================================================
 # Module:	sln2mk Generated Makefile
 #
-# Source:	MiniFolder.sln
+# Source:	JpegMeta.sln
 #=============================================================================
 
 # configure makefile
 include ../../config.mk
 
 #=============================================================================
-# MiniFolder variables
+# JpegMeta variables
 #=============================================================================
-MiniFolder_SOURCES = Application/AssemblyInfo.cs Application/MiniFolder.cs
-MiniFolder_INCLUDES = 
-MiniFolder_FLAGS = /t:exe $(ICON_FLAG)Application/App$(ICON_EXT)
-MiniFolder_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll CollectionStore.dll StoreProvider.dll Identity.dll SyncManager.dll CollectionWatcher.dll SyncCommon.dll SyncLogicLite.dll Sync.dll
-MiniFolder_LIBPATH = Application $(SIMIAS_ROOT)/src/stage ../stage
-MiniFolder_LDFLAGS = 
+JpegMeta_SOURCES = AssemblyInfo.cs JpegMeta.cs
+JpegMeta_INCLUDES = 
+JpegMeta_FLAGS = /t:library
+JpegMeta_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll
+JpegMeta_LIBPATH = 
+JpegMeta_LDFLAGS = 
 
 #=============================================================================
 # globals
 #=============================================================================
 
-TARGETS = MiniFolder.exe 
-CLEAN_FILES = Check.xml MiniFolder.pdb MiniFolder.Doc.xml  MiniFolder.xml MiniFolder.Doc.xml
-CLEAN_DIRS = Application/bin Application/obj 
+TARGETS = JpegMeta.dll 
+CLEAN_FILES = Check.xml JpegMeta.pdb JpegMeta.Doc.xml  JpegMeta.xml JpegMeta.Doc.xml
+CLEAN_DIRS = bin obj 
 NUNIT_TESTS = 
-STAGE_FILES = $(TARGETS) MiniFolder.Doc.xml MiniFolder.pdb 
+STAGE_FILES = $(TARGETS) JpegMeta.Doc.xml JpegMeta.pdb 
 STAGE_FILES := $(addprefix $(STAGE_DIR)$(SEP), $(STAGE_FILES))
 
 #=============================================================================
@@ -74,18 +74,18 @@ $(EXTRA_STAGE_FILES):
 	$(call CP_IF_EXISTS,$@,$(STAGE_DIR))
 
 #=============================================================================
-# MiniFolder targets
+# JpegMeta targets
 #=============================================================================
 
 # fix path seperator
-MiniFolder_SOURCES := $(subst /,$(SEP), $(MiniFolder_SOURCES))
-MiniFolder_INCLUDES := $(subst /,$(SEP), $(MiniFolder_INCLUDES))
-MiniFolder_DEF := $(subst /,$(SEP), $(MiniFolder_DEF))
-MiniFolder_LIBPATH := $(subst /,$(SEP), $(MiniFolder_LIBPATH))
+JpegMeta_SOURCES := $(subst /,$(SEP), $(JpegMeta_SOURCES))
+JpegMeta_INCLUDES := $(subst /,$(SEP), $(JpegMeta_INCLUDES))
+JpegMeta_DEF := $(subst /,$(SEP), $(JpegMeta_DEF))
+JpegMeta_LIBPATH := $(subst /,$(SEP), $(JpegMeta_LIBPATH))
 
 # update VPATH
-VPATH := $(VPATH) $(MiniFolder_LIBPATH) $(MiniFolder_INCLUDES)
+VPATH := $(VPATH) $(JpegMeta_LIBPATH) $(JpegMeta_INCLUDES)
 
-MiniFolder.exe: $(MiniFolder_SOURCES) $(MiniFolder_LIBS) ../../config.mk
-	$(CSC) /out:$@ /doc:MiniFolder.Doc.xml $(CSCFLAGS) $(MiniFolder_FLAGS) $(MiniFolder_LIBS:%=/r:%) $(MiniFolder_LIBPATH:%=/lib:%) $(MiniFolder_SOURCES)
+JpegMeta.dll: $(JpegMeta_SOURCES) $(JpegMeta_LIBS) ../../config.mk
+	$(CSC) /out:$@ /doc:JpegMeta.Doc.xml $(CSCFLAGS) $(JpegMeta_FLAGS) $(JpegMeta_LIBS:%=/r:%) $(JpegMeta_LIBPATH:%=/lib:%) $(JpegMeta_SOURCES)
 

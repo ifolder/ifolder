@@ -28,6 +28,7 @@ using System.Threading;
 using System.Text;
 using System.Net;
 using System.Diagnostics;
+using System.IO;
 using Simias.Sync;
 using Novell.iFolder;
 using Simias;
@@ -118,12 +119,13 @@ namespace Novell.iFolder.FormsTrayApp
 			// in the systray for this application.
 			try
 			{
-				this.Icon = new Icon(@".\res\ifolder_loaded.ico");
+				string basePath = Path.Combine(Application.StartupPath, "res");
+				this.Icon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
 
-				trayIcon = new Icon(@".\res\ifolder_loaded.ico");
+				trayIcon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
 				for (int i = 0; i < numberOfIcons; i++)
 				{
-					string upIcon = string.Format(@".\res\ifolder_sync{0}.ico", i+1);
+					string upIcon = string.Format(Path.Combine(basePath, "ifolder_sync{0}.ico"), i+1);
 					uploadIcons[i] = new Icon(upIcon);
 				}
 			
@@ -191,9 +193,22 @@ namespace Novell.iFolder.FormsTrayApp
 				workerThread.Abort();
 			}
 
-			syncManager.Stop();
-			publisher.FireServiceControl(0, ServiceEventType.Shutdown);
-			monitor.Kill();
+			if (syncManager != null)
+			{
+				syncManager.Stop();
+			}
+
+			if (publisher != null)
+			{
+				publisher.FireServiceControl(0, ServiceEventType.Shutdown);
+				Thread.Sleep(5000);
+			}
+
+			if (monitor != null)
+			{
+				monitor.Kill();
+			}
+
 			Cursor.Current = Cursors.Default;
 			//			traceForm.Close();
 			Application.Exit();
@@ -219,9 +234,22 @@ namespace Novell.iFolder.FormsTrayApp
 				workerThread.Abort();
 			}
 
-			syncManager.Stop();
-			publisher.FireServiceControl(0, ServiceEventType.Shutdown);
-			monitor.Kill();
+			if (syncManager != null)
+			{
+				syncManager.Stop();
+			}
+
+			if (publisher != null)
+			{
+				publisher.FireServiceControl(0, ServiceEventType.Shutdown);
+				Thread.Sleep(5000);
+			}
+
+			if (monitor != null)
+			{
+				monitor.Kill();
+			}
+
 			Cursor.Current = Cursors.Default;
 			Application.Exit();
 		}
@@ -248,6 +276,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private void FormsTrayApp_Load(object sender, System.EventArgs e)
 		{
 			// Start the event broker.
+			// TODO - check for currently running broker.
 			monitor = new Process();
 			monitor.StartInfo.RedirectStandardInput = true;
 			monitor.StartInfo.RedirectStandardInput = true;
@@ -280,7 +309,8 @@ namespace Novell.iFolder.FormsTrayApp
 			SyncProperties properties = new SyncProperties();
 
 			// Get the logic factory from the config file.
-			string logicFactory = Configuration.Get("iFolderApp", "SyncLogic", "SynkerA");
+			Configuration config = new Configuration();
+			string logicFactory = config.Get("iFolderApp", "SyncLogic", "SynkerA");
 			switch (logicFactory)
 			{
 				case "SynkerA":
@@ -293,15 +323,23 @@ namespace Novell.iFolder.FormsTrayApp
 					break;
 			}
 
-			syncManager = new SyncManager(properties);
-			syncManager.ChangedState += new ChangedSyncStateEventHandler(syncManager_ChangedState);
+			try
+			{
+				syncManager = new SyncManager(properties);
+				syncManager.ChangedState += new ChangedSyncStateEventHandler(syncManager_ChangedState);
 
-			// Trace levels.
-			MyTrace.Switch.Level = TraceLevel.Verbose;
-			Log.SetLevel("verbose");
+				// Trace levels.
+				MyTrace.Switch.Level = TraceLevel.Verbose;
+				Log.SetLevel("verbose");
 
-			Console.WriteLine("Starting sync object");
-			syncManager.Start();
+				Console.WriteLine("Starting sync object");
+				syncManager.Start();
+			}
+			catch(Exception exception)
+			{
+				MessageBox.Show("Exception caught in SyncManager:\n\n" + exception.Message);
+				this.Close();
+			}
 		}
 
 		private void syncManager_ChangedState(SyncManagerStates state)
