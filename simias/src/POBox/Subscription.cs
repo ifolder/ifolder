@@ -669,7 +669,6 @@ namespace Simias.POBox
 
 				if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
-				c.Impersonate(new Member("Root", c.ID, Access.Rights.Admin));
 				c.Commit(dn);
 			}
 		}

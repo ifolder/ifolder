@@ -126,6 +126,25 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets or sets the sealed state of a collection.
+		/// </summary>
+		public bool Sealed
+		{
+			get { return properties.HasProperty( PropertyTags.Sealed ); }
+			set 
+			{
+				if ( value )
+				{
+					properties.ModifyNodeProperty( PropertyTags.Sealed, true ); 
+				}
+				else
+				{
+					properties.DeleteSingleNodeProperty( PropertyTags.Sealed );
+				}
+			}
+		}
+
+		/// <summary>
 		/// Gets the Store reference for this Collection object.
 		/// </summary>
 		public Store StoreReference
@@ -916,12 +935,13 @@ namespace Simias.Storage
 					}
 					else
 					{
-						// Need to get who I am in this collection so that access control can be checked.
-						Member member = accessControl.GetCurrentMember( store, Domain, false );
-
-						// If the collection is being impersonated, allow all access.
-						if ( member.UserID != id )
+						// If there is no user being impersonated on this collection, there is no need to do any
+						// rights checking. Access rights are only checked for impersonated users.
+						if ( accessControl.IsImpersonating )
 						{
+							// Get the impersonating member.
+							Member member = accessControl.ImpersonationMember;
+
 							// If membership is changing on the collection, make sure that the current
 							// user has sufficient rights.
 							if ( hasMembers )

@@ -61,6 +61,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string Description = "Description";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string Domain = "Domain";
 
 		/// <summary>
@@ -117,6 +122,11 @@ namespace Simias.Storage
 		/// Well known property name.
 		/// </summary>
 		static public string Root = "Root";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
+		static public string Sealed = "Sealed";
 
 		/// <summary>
 		/// Well known property name.

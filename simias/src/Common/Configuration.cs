@@ -246,6 +246,27 @@ namespace Simias
 			}
 		}
 
+		/// <summary>
+		/// Checks for existence of a specified key.
+		/// </summary>
+		/// <param name="key">The key to check for existence.</param>
+		/// <returns>True if the key exists, otherwise false is returned.</returns>
+		public bool Exists( string key )
+		{
+			return KeyExists(DefaultSection, key);
+		}
+
+		/// <summary>
+		/// Checks for existence of a specified section and key.
+		/// </summary>
+		/// <param name="section">The section for the tuple</param>
+		/// <param name="key">The key to set.</param>
+		/// <returns>True if the section and key exists, otherwise false is returned.</returns>
+		public bool Exists( string section, string key )
+		{
+			return KeyExists(section, key);
+		}
+
 		// These two methods are going to read the XML document every
 		// time they are called but it's a cheap way to have fresh data
 		// and this is probably not called all the time
@@ -285,6 +306,24 @@ namespace Simias
 			}
 
 			return keyElement;
+		}
+
+		private bool KeyExists(string section, string key)
+		{
+			bool foundKey = false;
+		
+			string xpath = string.Format("//{0}[@{1}='{2}']", SectionTag, NameAttr, section);
+			XmlElement sectionElement = (XmlElement)GetDocElement().SelectSingleNode(xpath);
+			if(sectionElement != null)
+			{
+				xpath = string.Format("//{0}[@{1}='{2}']/{3}[@{1}='{4}']", SectionTag, NameAttr, section, SettingTag, key);
+				if(sectionElement.SelectSingleNode(xpath) != null)
+				{
+					foundKey = true;
+				}
+			}
+
+			return foundKey;
 		}
 
 		private XmlElement GetDocElement()

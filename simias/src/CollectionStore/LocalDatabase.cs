@@ -54,6 +54,7 @@ namespace Simias.Storage
 		{
 			properties.AddNodeProperty( PropertyTags.DefaultDomain, Storage.Domain.WorkGroupDomainID );
 			Synchronizable = false;
+			Sealed = true;
 		}
 
 		/// <summary>

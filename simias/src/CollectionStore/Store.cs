@@ -67,7 +67,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Handle to the local store provider.
 		/// </summary>
-		private Persist.IProvider storageProvider;
+		private Persist.IProvider storageProvider = null;
 
 		/// <summary>
 		/// Path to where store managed files are kept.
@@ -241,23 +241,60 @@ namespace Simias.Storage
 				{
 					try
 					{
+						ArrayList nodeList = new ArrayList();
+
 						// Create an object that represents the database collection.
 						localDb = new LocalDatabase( this );
-
-						// Create the default workgroup domain.
-						Domain wgDomain = new Domain( Domain.WorkGroupDomainName, Domain.WorkGroupDomainID );
+						nodeList.Add( localDb );
 
 						// Create an identity that represents the current user.  This user will become the 
 						// database owner. Add the domain mapping to the identity.
 						identity = new Identity( this, Environment.UserName, Guid.NewGuid().ToString() );
+						nodeList.Add( identity );
+
+						// Create the default workgroup domain.
+						Domain wgDomain = new Domain( Domain.WorkGroupDomainName, Domain.WorkGroupDomainID );
+						nodeList.Add( wgDomain );
+
+						// Create an identity mapping for the workgroup.
 						identity.AddDomainIdentity( identity.ID, wgDomain.ID );
+
+						// See if there is a configuration parameter for an enterprise domain.
+						if ( config.Exists( Domain.SectionName, Domain.EnterpriseName ) )
+						{
+							// Get the name of the enterprise domain.
+							string enterpriseName = config.Get( Domain.SectionName, Domain.EnterpriseName, String.Empty );
+							if ( enterpriseName == String.Empty )
+							{
+								throw new CollectionStoreException( "Enterprise name is empty." );
+							}
+
+							// Check if an enterprise ID was specified or if it needs to be generated.
+							string enterpriseID = config.Get( Domain.SectionName, Domain.EnterpriseID, Guid.NewGuid().ToString().ToLower() );
+
+							// Create the new domain object.
+							Domain eDomain = new Domain( enterpriseName, enterpriseID );
+							nodeList.Add( eDomain );
+
+							// Check if there is a description for this enterprise domain.
+							if ( config.Exists( Domain.SectionName, Domain.EnterpriseDescription ) )
+							{
+								string description = config.Get( Domain.SectionName, Domain.EnterpriseDescription, String.Empty );
+								eDomain.Properties.AddNodeProperty( PropertyTags.Description, description );
+							}
+
+							// Add the domain identity mapping.
+							identity.AddDomainIdentity( identity.ID, eDomain.ID );
+
+							// Add the enterprise domain as the default domain.
+							localDb.DefaultDomain = eDomain.ID;
+						}
 
 						// Create the database lock.
 						storeMutex = new Mutex( false, ID );
 
 						// Save the local database changes.
-						Node[] nodeList = { localDb, identity, wgDomain };
-						localDb.Commit( nodeList );
+						localDb.Commit( nodeList.ToArray( typeof( Node ) ) as Node[] );
 					}
 					catch ( Exception e )
 					{
@@ -265,8 +302,13 @@ namespace Simias.Storage
 						log.Fatal( e, "Could not initialize Collection Store." );
 
 						// The store didn't initialize delete it and rethrow the exception.
-						storageProvider.DeleteStore();
-						storageProvider.Dispose();
+						if ( storageProvider != null )
+						{
+							storageProvider.DeleteStore();
+							storageProvider.Dispose();
+						}
+
+						// Rethrow the exception.
 						throw;
 					}
 				}

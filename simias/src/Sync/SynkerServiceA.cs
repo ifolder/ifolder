@@ -106,7 +106,6 @@ public class SynkerServiceA: SyncCollectionService
 
 		if (ignoreRights || collection.IsAccessAllowed(member, Access.Rights.ReadOnly))
 		{
-			//collection.StoreReference.Revert(); //TODO: what if this is second time for this collection?
 			//Log.Spew("dredging server for collection '{0}'", collection.Name);
 			//new Dredger(collection, true);
 			//Log.Spew("done dredging server for collection '{0}'", collection.Name);

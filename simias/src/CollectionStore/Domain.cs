@@ -33,6 +33,26 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
+		/// Configuration section name where enterprise key value pairs are stored.
+		/// </summary>
+		static internal string SectionName = "Domain";
+
+		/// <summary>
+		/// Configuration key name for an enterprise domain.
+		/// </summary>
+		static internal string EnterpriseName = "EnterpriseName";
+
+		/// <summary>
+		/// Configuration key name for an enterprise domain ID.
+		/// </summary>
+		static internal string EnterpriseID = "EnterpriseID";
+
+		/// <summary>
+		/// Configuration key name for an enterprise description.
+		/// </summary>
+		static internal string EnterpriseDescription = "EnterpriseDescription";
+
+		/// <summary>
 		/// Well known identitifer for workgroup.
 		/// </summary>
 		static public string WorkGroupDomainID = "363051d1-8841-4c7b-a1dd-71abbd0f4ada";

@@ -125,7 +125,6 @@ namespace Simias.Storage
 			id = ID.ToLower();
 			rights = accessRights;
 			aceProperty = new Property( PropertyTags.Ace, id + ":" + Enum.GetName( typeof( Access.Rights ), rights ) );
-			aceProperty.HiddenProperty = true;
 		}
 
 		/// <summary>
@@ -364,7 +363,7 @@ namespace Simias.Storage
 			bool allowed = true;
 
 			// Check if the member has sufficient rights.
-			if ( ( member.UserID != collection.ID ) && ( member.ValidateAce.Rights < desiredRights ) )
+			if ( member.ValidateAce.Rights < desiredRights )
 			{
 				allowed = IsWorldAccessAllowed( desiredRights );
 			}

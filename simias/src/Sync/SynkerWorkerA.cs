@@ -71,19 +71,10 @@ public class SynkerWorkerA: SyncCollectionWorker
 		Log.Spew("-------- starting sync pass for collection {0}", collection.Name);
 		try
 		{
-			// Now impersonate the collection so that we can import the nodes from the server.
-			collection.Impersonate(new Member("Root", collection.ID, Access.Rights.Admin));
-			try
+			moreWork = true;
+			while (moreWork)
 			{
-				moreWork = true;
-				while (moreWork)
-				{
-					DoOneSyncPass();
-				}
-			}
-			finally
-			{
-				collection.Revert();
+				DoOneSyncPass();
 			}
 		}
 		catch (Exception e)

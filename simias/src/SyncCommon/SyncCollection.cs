@@ -231,24 +231,7 @@ namespace Simias.Sync
 				Properties.DeleteSingleProperty(name);
 			}
 
-			// always impersonate on local properties to write
-			if (local)
-			{
-				this.Impersonate(new Member("Root", this.ID, Access.Rights.Admin));
-				
-				try
-				{
-					Commit();
-				}
-				finally
-				{
-					this.Revert();
-				}
-			}
-			else
-			{
-				Commit();
-			}
+			Commit();
 		}
 
 		#region IDisposable Members

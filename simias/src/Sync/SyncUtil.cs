@@ -168,7 +168,7 @@ public class CmdService: MarshalByRefObject
 		{
 			Store store = new Store(new Configuration(storeLocation.LocalPath));
 			Collection c = store.GetCollectionByID(collectionId);
-			c.Impersonate(new Member("Root", c.ID, Access.Rights.Admin));
+
 			//Log.Spew("Start server dredge");
 			new Dredger(c, true);
 			//Log.Spew("End server dredge");
@@ -284,7 +284,6 @@ public class CmdClient
 			Log.Error("could not find collection for folder: {0}", storeLocation.LocalPath);
 			return false;
 		}
-		c.Impersonate(new Member("Root", c.ID, Access.Rights.Admin));
 
 		//Log.Spew("Start client dredge");
 		new Dredger(c, false);
@@ -294,7 +293,6 @@ public class CmdClient
 		{
 			Store servStore = new Store(new Configuration(serverStoreLocation));
 			Collection servCollection = servStore.GetCollectionByID(csc.ID);
-			servCollection.Impersonate(new Member("Root", servCollection.ID, Access.Rights.Admin));
 			//Log.Spew("server collection {0}", servCollection == null? "null": servCollection.ID);
 			//Log.Spew("Start internal server dredge");
 			new Dredger(servCollection, true);
