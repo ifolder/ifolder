@@ -80,12 +80,47 @@ static gboolean b_nautilus_ifolder_running;
 static GHashTable *seen_ifolders_ht;
 
 /**
+ * Use a GHashTable to store a reference to every folder that this extension
+ * provides information about.
+ * 
+ * Here's a scenario that will be broken without this code:
+ * 
+ * 		1. User #1 has Nautilus and iFolder running and creates a new iFolder
+ * 		   named, "Pictures".
+ * 		   (which adds the iFolder emblem onto the folder).
+ * 		2. User #1 now quits iFolder.
+ * 
+ * 		PROBLEM #1: iFolder emblems are still visible on folders which could be
+ * 		confusing to users when the attempt to right-click on the folder and see
+ * 		no iFolder menu options.
+ * 
+ * 		SOLUTION #1: Use seen_nautilus_folders_ht (GHashTable) to go through all
+ * 		of the existing NautilusFileInfo's and invalidate them when a
+ * 		SEC_STATE_EVENT_DISCONNECTED message is received from the Simias Event
+ * 		Client.  This will cause any iFolder emblems to disappear.
+ * 
+ * 		3. From a different computer, User #2 reverts the "Pictures" iFolder
+ * 		   back to a normal folder.
+ * 		4. User #1 starts iFolder up again.
+ * 
+ * 		PROBLEM #2: The "Pictures" directory still has an iFolder emblem when
+ * 		it's not an iFolder anymore.
+ * 
+ * 		SOLUTION #2: Use seen_nautilus_folders_ht (GHashTable) to go through all
+ * 		of the existing NautiluFileInfo's and invalidate them when a
+ * 		SEC_STATE_EVENT_CONNECTED message is received from the Simias Event
+ * 		Client.  This will make sure all existing NautilusFileInfo's either have
+ * 		or don't have an iFolder emblem on them.
+ */
+static GHashTable *seen_nautilus_folders_ht;
+
+/**
  * FIXME: Once nautilus-extension provides nautilus_file_info_get_existing () we
  * can change our implementation to use the functions defined in the internal
  * nautilus API.
  */
-extern NautilusFile *
-nautilus_file_get_existing (const char *uri);
+extern NautilusFile * nautilus_file_get_existing (const char *uri);
+extern NautilusFile * nautilus_file_get (const char *uri);
 
 /**
  * Private function forward declarations
@@ -105,10 +140,15 @@ gchar * get_unmanaged_path (gchar *ifolder_id);
 void seen_ifolders_ht_destroy_key (gpointer key);
 void seen_ifolders_ht_destroy_value (gpointer value);
 
+/* Functions for seen_nautilus_folders_ht (GHashTable) */
+void seen_nautilus_folders_ht_destroy_key (gpointer key);
+void invalidate_seen_nautilus_folder (gpointer key, gpointer value, gpointer user_data);
+
 /**
  * This function is intended to be called using g_idle_add by the event system
  * to let Nautilus invalidate the extension info for the given 
- * NautilusFileInfo *.
+ * NautilusFileInfo *.  It must be run from the main loop (hence being called
+ * with g_idle_add ()).
  */
 gboolean
 invalidate_ifolder_extension_info (void *user_data)
@@ -161,7 +201,7 @@ simias_node_created_cb (SimiasNodeEvent *event, void *data)
 int
 simias_node_deleted_cb (SimiasNodeEvent *event, void *data)
 {
-	gchar *file_uri;
+	char *file_uri;
 	NautilusFile *file;
 	
 	printf ("nautilus-ifolder: simias_node_deleted_cb () entered\n");
@@ -170,7 +210,7 @@ simias_node_deleted_cb (SimiasNodeEvent *event, void *data)
 	 * Look in the seen_ifolders_ht (GHashTable) to see if we've ever added an
 	 * iFolder emblem onto this folder.
 	 */
-	file_uri = (gchar *)g_hash_table_lookup (seen_ifolders_ht, event->node);
+	file_uri = (char *)g_hash_table_lookup (seen_ifolders_ht, event->node);
 	if (file_uri) {
 		/**
 		 * Get an existing (in memory) NautilusFileInfo object associated with
@@ -208,17 +248,25 @@ ec_state_event_cb (SEC_STATE_EVENT state_event, const char *message, void *data)
 			g_printf ("nautilus-ifolder: finished registering for simias events\n");
 			
 			/**
-			 * FIXME: Call and get all iFolders and invalidate the extension info
-			 * so that if nautilus-ifolder is loaded before iFolder is even
-			 * running, nautilus-ifolder will be able to add iFolder emblems on
-			 * any iFolder which we've already provided extension info on.
-			 * 
-			 * invalidate_all_extension_info ()
+			 * Iterate through seen_nautilus_folders_ht to invalidate the
+			 * extension info.  (For more information see comments included with
+			 * the declaration of seen_nautilus_folders_ht)
 			 */
+			g_hash_table_foreach (seen_nautilus_folders_ht,
+								  invalidate_seen_nautilus_folder,
+								  NULL);
 			break;
 		case SEC_STATE_EVENT_DISCONNECTED:
 			g_print ("nautilus-ifolder: Disconnected event received by SEC\n");
 
+			/**
+			 * Iterate through seen_nautilus_folders_ht to invalidate the
+			 * extension info.  (For more information see comments included with
+			 * the declaration of seen_nautilus_folders_ht)
+			 */
+			g_hash_table_foreach (seen_nautilus_folders_ht,
+								  invalidate_seen_nautilus_folder,
+								  NULL);
 			break;
 		case SEC_STATE_EVENT_ERROR:
 			if (message) {
@@ -621,6 +669,8 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 	if (!nautilus_file_info_is_directory (file))
 		return NAUTILUS_OPERATION_COMPLETE;
 	
+	file_uri = nautilus_file_info_get_uri (file);
+
 	if (is_ifolder_running ()) {
 		file_path = get_file_path (file);
 		if (file_path) {
@@ -637,31 +687,35 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 				 * to cause Nautilus to invalidate our information so that the
 				 * iFolder emblem will be removed.
 				 */
-				/* FIXME: Add the file_uri to a hashtable */
-				file_uri = nautilus_file_info_get_uri (file);
-				if (file_uri) {
-					g_printf ("Adding iFolder to Hashtable: %s = %s\n", ifolder_id, file_uri);
-					
-					/**
-					 * The memory for ifolder_id and file_uri are freed when the
-					 * hashtable item is removed from the hashtable.
-					 */
-					g_hash_table_insert (seen_ifolders_ht,
-										 ifolder_id,
-										 file_uri);
-				} else {
-					/**
-					 * ifolder_id is otherwise freed when removed from the
-					 * hashtable.  But, if the code made it here, we need to
-					 * free it.
-					 */
-					g_free (ifolder_id);
-				}
+				g_printf ("Adding iFolder to Hashtable: %s = %s\n", ifolder_id, file_uri);
+				
+				/**
+				 * g_hash_table_insert () does not cleanup memory if a hash
+				 * table entry is replaced by an insertion, so to make sure that
+				 * we don't lose memory, call remove before the insert.
+				 */
+				g_hash_table_remove (seen_ifolders_ht, ifolder_id);
+				
+				/**
+				 * The memory for ifolder_id and file_uri are freed when the
+				 * hashtable item is removed from the hashtable.
+				 */
+				g_hash_table_insert (seen_ifolders_ht,
+									 ifolder_id,			/* key */
+									 strdup (file_uri));	/* value */
 			}
 		}
 	} else {
 		g_print ("*** iFolder is NOT running\n");
 	}
+
+	/**
+	 * Since we've seen this folder, we need to keep a reference to it in the
+	 * case where iFolder is started/stopped/restarted.
+	 */
+	g_hash_table_insert (seen_nautilus_folders_ht,
+						 file_uri,	/* key */
+						 file_uri);	/* value */
 
 	return NAUTILUS_OPERATION_COMPLETE;
 }
@@ -694,9 +748,37 @@ seen_ifolders_ht_destroy_key (gpointer key)
 void
 seen_ifolders_ht_destroy_value (gpointer value)
 {
-	gchar *file_uri = (gchar *)value;
+	char *file_uri = (char *)value;
+	
+	free (file_uri);
+}
+
+/**
+ * Functions for seen_nautilus_folders_ht (GHashTable)
+ */
+void seen_nautilus_folders_ht_destroy_key (gpointer key)
+{
+	g_print ("seen_nautilus_folders_ht_destroy_key (\"%s\") called\n", (gchar *)key);
+	gchar *file_uri = (gchar *)key;
 	
 	g_free (file_uri);
+}
+
+void
+invalidate_seen_nautilus_folder (gpointer key,
+								 gpointer value,
+								 gpointer user_data)
+{
+	gchar *file_uri = (gchar *)key;
+	NautilusFileInfo *file;
+	
+	g_printf ("invalidate_seen_nautilus_folder (\"%s\")\n", file_uri);
+
+	file = nautilus_file_get (file_uri);
+	
+	if (file) {
+		g_idle_add (invalidate_ifolder_extension_info, file);
+	}	
 }
 
 /**
@@ -1225,11 +1307,17 @@ nautilus_module_initialize (GTypeModule *module)
 	
 	soapURL = getLocalServiceUrl ();
 	
-	/* Initialize the GHashTable */
+	/* Initialize the seen_ifolders_ht GHashTable */
 	seen_ifolders_ht = 
 		g_hash_table_new_full (g_str_hash, g_str_equal,
 							   seen_ifolders_ht_destroy_key,
 							   seen_ifolders_ht_destroy_value);
+							   
+	/* Initialize the seen_nautilus_folders_ht GHashTable */
+	seen_nautilus_folders_ht =
+		g_hash_table_new_full (g_str_hash, g_str_equal,
+							   seen_nautilus_folders_ht_destroy_key,
+							   NULL);	/* Don't need to cleanup GObject */
 	
 	/* Start the Simias Event Client */
 	start_simias_event_client ();
@@ -1264,8 +1352,11 @@ nautilus_module_shutdown (void)
 		return;
 	}
 	
-	/* Cleanup the GHashTable */
+	/* Cleanup the seen_ifolders_ht GHashTable */
 	g_hash_table_destroy (seen_ifolders_ht);
+
+	/* Cleanup the seen_nautilus_folders_ht GHashTable */
+	g_hash_table_destroy (seen_nautilus_folders_ht);
 }
 
 void
