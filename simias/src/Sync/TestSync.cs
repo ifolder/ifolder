@@ -49,7 +49,7 @@ public class SyncTests: Assertion
 	private static readonly string clientDir = Path.GetFullPath("SyncTestClientData");
 	private static readonly string clientFolder = Path.Combine(clientDir, folderName);
 	private static readonly string serverFolder = Path.Combine(serverDir, folderName);
-	private bool runChildProcess = true;
+	private bool runChildProcess = false;
 
 	//---------------------------------------------------------------------------
 	public static int Run(string program, string args)
