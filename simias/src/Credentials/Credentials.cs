@@ -24,7 +24,7 @@ using System;
 using System.Collections;
 using System.Net;
 using Simias;
-using Simias.Client;
+//using Simias.Client;
 using Simias.Domain;
 using Simias.Event;
 using Simias.Storage;
@@ -33,6 +33,143 @@ using Novell.Security.ClientPasswordManager;
 
 namespace Simias.Authentication
 {
+	/// <summary>
+	/// status codes returned by remote authentication modules
+	/// </summary>
+	[Serializable]
+	public enum StatusCodes : uint
+	{
+		/// <summary>
+		/// Successful authentication
+		/// </summary>
+		Success = 0x00000000,
+
+		/// <summary>
+		/// Successful authentication but within a grace login period
+		/// </summary>
+		SuccessInGrace = 0x00000001,
+
+		/// <summary>
+		/// Invalid or Unknown user specified
+		/// </summary>
+		UnknownUser = 0x1f000001,
+
+		/// <summary>
+		/// Ambigous user - more than one user exists 
+		/// </summary>
+		AmbiguousUser = 0x1f000002,
+
+		/// <summary>
+		/// The credentials may have invalid characters etc.
+		/// </summary>
+		InvalidCredentials = 0x1f000003,
+
+		/// <summary>
+		/// Invalid password specified
+		/// </summary>
+		InvalidPassword = 0x1f000020,
+
+		/// <summary>
+		/// The account has been disabled by an administrator
+		/// </summary>
+		AccountDisabled = 0x1f000040,
+
+		/// <summary>
+		/// The account has been locked due to excessive login failures
+		/// or possibly the grace logins have all been consumed
+		/// </summary>
+		AccountLockout = 0x1f000041,
+
+		/// <summary>
+		/// The specified domain was unknown
+		/// </summary>
+		UnknownDomain = 0x1f000060,
+
+		/// <summary>
+		/// Authentication failed due to an internal exception
+		/// </summary>
+		InternalException = 0x1f000100,
+
+		/// <summary>
+		/// The authentication provider does not support the method
+		/// </summary>
+		MethodNotSupported = 0x1f000101,
+
+		/// <summary>
+		/// Authentication failed with an unknown reason
+		/// </summary>
+		Unknown = 0x1f001fff
+	}
+
+	/// <summary>
+	/// Defines the Status class which
+	/// is returned on all remote authentication methods.
+	/// </summary>
+	[Serializable]
+	public class Status
+	{
+		public Status()
+		{
+			statusCode = StatusCodes.Unknown;
+		}
+
+		public Status(StatusCodes status)
+		{
+			statusCode = status;
+		}
+
+		/// <summary>
+		/// Status of the authentication.
+		/// Must always be a valid status code
+		/// </summary>
+		public StatusCodes		statusCode;
+
+		/// <summary>
+		/// Unique ID of the user
+		/// Valid on a successful authentication
+		/// </summary>
+		public string			UserID;
+
+		/// <summary>
+		/// UserName 
+		/// 
+		/// Valid if the authentication was successful
+		/// </summary>
+		public string			UserName;
+
+		/// <summary>
+		/// Distinguished or unique user name used for
+		/// the authentication.  This member can be
+		/// the same as the UserName
+		/// 
+		/// Valid if the authentication was successful
+		/// </summary>
+		public string			DistinguishedUserName;
+
+		/// <summary>
+		/// ExceptionMessage returned when an internal
+		/// exception occurred while trying to authenticate
+		/// the user.
+		/// 
+		/// Valid if status == StatusCode.InternalException
+		/// </summary>
+		public string			ExceptionMessage;
+
+		/// <summary>
+		/// TotalGraceLogins the number of allowed on this account by policy
+		/// 
+		/// Valid if status == StatusCode.SuccessInGrace
+		/// </summary>
+		public int				TotalGraceLogins;
+
+		/// <summary>
+		/// RemainingGraceLogins the number of grace logins left on this account
+		/// 
+		/// Valid if status == StatusCode.SuccessInGrace
+		/// </summary>
+		public int				RemainingGraceLogins;
+	}
+
 	/// <summary>
 	/// Summary description for Credentials
 	/// </summary>
