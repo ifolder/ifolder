@@ -81,6 +81,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string FileSystemPath = "FsPath";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string LastAccessTime = "Access";
 
 		/// <summary>
@@ -202,6 +207,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( Domain, null );
 			systemPropertyTable.Add( DomainID, null );
 			systemPropertyTable.Add( FileLength, null );
+			systemPropertyTable.Add( FileSystemPath, null );
 			systemPropertyTable.Add( LastAccessTime, null );
 			systemPropertyTable.Add( LastWriteTime, null );
 			systemPropertyTable.Add( LinkReference, null );

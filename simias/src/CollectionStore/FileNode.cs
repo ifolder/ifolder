@@ -33,6 +33,15 @@ namespace Simias.Storage
 	[ Serializable ]
 	public class FileNode : BaseFileNode
 	{
+		#region Class Members
+		/// <summary>
+		/// This field is only valid when the object is in the PropertyListState.Add. Once it has been committed,
+		/// it may no longer be valid.
+		/// </summary>
+		[ NonSerialized() ]
+		private string path = null;
+		#endregion
+
 		#region Constructor
 		/// <summary>
 		/// Constructor used to create a new FileNode object.
@@ -55,6 +64,12 @@ namespace Simias.Storage
 		public FileNode( Collection collection, DirNode parentNode, string fileName, string fileID ) :
 			base ( collection, parentNode.GetFullPath( collection ), fileName, fileID, NodeTypes.FileNodeType )
 		{
+			// Set the in-memory path that is only valid until this object has been committed.
+			path = Path.Combine( parentNode.GetFullPath( collection ), fileName );
+
+			// Set the relative path for this directory.
+			properties.AddNodeProperty( PropertyTags.FileSystemPath, parentNode.GetRelativePath() + "/" + fileName );
+
 			// Set the parent attribute.
 			properties.AddNodeProperty( PropertyTags.Parent, new Relationship( collection.ID, parentNode.ID ) );
 		}
@@ -117,13 +132,35 @@ namespace Simias.Storage
 		/// <returns>The absolute path to the file.</returns>
 		public override string GetFullPath( Collection collection )
 		{
-			DirNode dirNode = GetParent( collection );
-			if ( dirNode == null )
+			string fullPath = null;
+
+			// If this fileNode has not been committed yet, we can use the cached path.
+			if ( properties.State == PropertyList.PropertyListState.Add )
 			{
-				throw new DoesNotExistException( String.Format( "Parent relationship property for Node object: {0} - ID: {1} does not exist.", name, id ) );
+				fullPath = path;
+			}
+			else
+			{
+				// Find the root DirNode for this collection.
+				DirNode rootNode = collection.GetRootDirectory();
+				if ( rootNode == null )
+				{
+					throw new DoesNotExistException( "The root DirNode does not exist." );
+				}
+
+				// Get the local path from the root dirNode.
+				Property localPath = rootNode.Properties.GetSingleProperty( PropertyTags.Root );
+				if ( localPath == null )
+				{
+					throw new DoesNotExistException( String.Format( "The {0} property does not exist.", PropertyTags.Root ) );
+				}
+
+				// Normalize the returned path for the proper platform.
+				Uri uri = new Uri( Path.Combine( ( localPath.Value as Uri ).LocalPath, GetRelativePath() ) );
+				fullPath = uri.LocalPath;
 			}
 
-			return Path.Combine( dirNode.GetFullPath( collection ), name );
+			return fullPath;
 		}
 
 		/// <summary>
@@ -151,18 +188,27 @@ namespace Simias.Storage
 
 		/// <summary>
 		/// Gets the file path relative to the collection root directory.
+		/// This method will always return relative paths that are normalized using 
+		/// forward slashes as separators.
 		/// </summary>
 		/// <param name="collection">Collection object that this object belongs to.</param>
 		/// <returns>The file path relative to the collection root directory.</returns>
+		[ Obsolete( "This method should no longer be used. Use GetRelativePath() instead." ) ]
 		public string GetRelativePath( Collection collection )
 		{
-			DirNode dirNode = GetParent( collection );
-			if ( dirNode == null )
-			{
-				throw new DoesNotExistException( String.Format( "Parent relationship property for Node object: {0} - ID: {1} does not exist.", name, id ) );
-			}
+			return GetRelativePath();
+		}
 
-			return Path.Combine( dirNode.GetRelativePath( collection ), name );
+		/// <summary>
+		/// Gets the file path relative to the collection root directory.
+		/// This method will always return relative paths that are normalized using 
+		/// forward slashes as separators.
+		/// </summary>
+		/// <returns>The file path relative to the collection root directory.</returns>
+		public string GetRelativePath()
+		{
+			Property p = properties.GetSingleProperty( PropertyTags.FileSystemPath );
+			return ( p != null ) ? p.Value as string : null;
 		}
 		#endregion
 	}
