@@ -354,19 +354,26 @@ namespace Novell.iFolder.InvitationWizard
 				try
 				{
 					subscription = Subscription.GetSubscriptionFromSubscriptionInfo(store, invitationFile);
+
+					if (store.GetCollectionByID(subscription.SubscriptionCollectionID) != null)
+					{
+						MessageBox.Show("The collection for the selected subscription already exists.", "Shared Collection Exists");
+						subscription = null;
+						invitationFile = "";
+					}
 				}
 				catch (SimiasException ex)
 				{
 					ex.LogError();
 					MessageBox.Show("An invalid Collection Subscription Information file was specified on the command-line.  Please see the log file for additional information.\n\n" + this.invitationFile, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-					this.invitationFile = "";
+					invitationFile = "";
 				}
 				catch (Exception ex)
 				{
 					// TODO - resource strings.
 					logger.Debug(ex, "Invalid file");
 					MessageBox.Show("An invalid Collection Subscription Information file was specified on the command-line.  Please see the log file for additional information.\n\n" + this.invitationFile, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-					this.invitationFile = "";
+					invitationFile = "";
 				}
 			}
 		}
