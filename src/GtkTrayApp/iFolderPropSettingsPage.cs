@@ -490,19 +490,23 @@ namespace Novell.iFolder
 
 		private void OnSyncIntervalChanged(object o, EventArgs args)
 		{
-			try
+			if(SyncSpinButton.Value != ifolder.SyncInterval)
 			{
-				ifolder.SyncInterval = (int)SyncSpinButton.Value;
-				ifws.SetiFolderSyncInterval(ifolder.ID, ifolder.SyncInterval);
-			}
-			catch(Exception e)
-			{
-				iFolderExceptionDialog ied = new iFolderExceptionDialog(
-													topLevelWindow, e);
-				ied.Run();
-				ied.Hide();
-				ied.Destroy();
-				return;
+				try
+				{
+					ifolder.SyncInterval = (int)SyncSpinButton.Value;
+					ifws.SetiFolderSyncInterval(ifolder.ID, 
+												ifolder.SyncInterval);
+				}
+				catch(Exception e)
+				{
+					iFolderExceptionDialog ied = new iFolderExceptionDialog(
+														topLevelWindow, e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+					return;
+				}
 			}
 		}
 
