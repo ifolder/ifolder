@@ -465,9 +465,9 @@ simias_des_encrypt_string(const char *desKey, const char *unencrypted_string, ch
 	req.UnencryptedString = (char *)unencrypted_string;
 	
 	init_gsoap(&soap);
-	soap_call___ns1__DESEncryptKey(&soap, soap_url, NULL, &req, &resp);
+	soap_call___ns1__DESEncryptString(&soap, soap_url, NULL, &req, &resp);
 	if (soap.error) {
-		fprintf(stderr, "Error calling soap_call___ns1__DESEncryptKey() in simias_des_encrypt_string()\n");
+		fprintf(stderr, "Error calling soap_call___ns1__DESEncryptString() in simias_des_encrypt_string()\n");
 		soap_print_fault(&soap, stderr);
 		cleanup_gsoap(&soap);
 		return -2;
@@ -475,7 +475,7 @@ simias_des_encrypt_string(const char *desKey, const char *unencrypted_string, ch
 
 	if (!resp.DESEncryptStringResult)
 	{
-		fprintf(stderr, "soap_call___ns1__DESEncryptKey() returned NULL\n");
+		fprintf(stderr, "soap_call___ns1__DESEncryptString() returned NULL\n");
 		return -3;
 	}
 	
@@ -608,7 +608,7 @@ soap_print_fault(&soap, stderr);
 
 	if (!resp.GetMachineNameResult)
 	{
-		fprintf("soap_call___ns1__GetMachineName() returned NULL\n");
+		fprintf(stderr, "soap_call___ns1__GetMachineName() returned NULL\n");
 		return -3;
 	}
 	

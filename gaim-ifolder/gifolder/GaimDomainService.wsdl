@@ -1,378 +1,798 @@
-<?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://novell.com/simias/domain" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://novell.com/simias/domain" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
-  <wsdl:types>
-    <s:schema elementFormDefault="qualified" targetNamespace="http://novell.com/simias/domain">
-      <s:element name="GetGaimDomainInfo">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetGaimDomainInfoResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetGaimDomainInfoResult" type="tns:GaimDomainInfo" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:complexType name="GaimDomainInfo">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="ID" type="s:string" />
-        </s:sequence>
-      </s:complexType>
-      <s:element name="SynchronizeMemberList">
-        <s:complexType />
-      </s:element>
-      <s:element name="SynchronizeMemberListResponse">
-        <s:complexType />
-      </s:element>
-      <s:element name="UpdateMember">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="AccountName" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="AccountProtocolID" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="BuddyName" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="MachineName" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="UpdateMemberResponse">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetUserInfo">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetUserInfoResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="GetUserInfoResult" type="s:boolean" />
-            <s:element minOccurs="0" maxOccurs="1" name="MachineName" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="SimiasURL" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetMachineName">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetMachineNameResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetMachineNameResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetRSACredential">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetRSACredentialResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="GetRSACredentialResult" type="s:boolean" />
-            <s:element minOccurs="0" maxOccurs="1" name="PublicCredential" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="PrivateCredential" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="RSAEncryptString">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="RsaCryptoXml" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="UnencryptedString" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="RSAEncryptStringResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="RSAEncryptStringResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="RSADecryptString">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="RsaCryptoXml" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="EncryptedString" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="RSADecryptStringResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="RSADecryptStringResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GenerateDESKey">
-        <s:complexType />
-      </s:element>
-      <s:element name="GenerateDESKeyResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GenerateDESKeyResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="DESEncryptString">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="DESKey" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="UnencryptedString" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="DESEncryptStringResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="DESEncryptStringResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="DESDecryptString">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="DESKey" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="EncryptedString" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="DESDecryptStringResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="DESDecryptStringResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-    </s:schema>
-  </wsdl:types>
-  <wsdl:message name="GetGaimDomainInfoSoapIn">
-    <wsdl:part name="parameters" element="tns:GetGaimDomainInfo" />
-  </wsdl:message>
-  <wsdl:message name="GetGaimDomainInfoSoapOut">
-    <wsdl:part name="parameters" element="tns:GetGaimDomainInfoResponse" />
-  </wsdl:message>
-  <wsdl:message name="SynchronizeMemberListSoapIn">
-    <wsdl:part name="parameters" element="tns:SynchronizeMemberList" />
-  </wsdl:message>
-  <wsdl:message name="SynchronizeMemberListSoapOut">
-    <wsdl:part name="parameters" element="tns:SynchronizeMemberListResponse" />
-  </wsdl:message>
-  <wsdl:message name="UpdateMemberSoapIn">
-    <wsdl:part name="parameters" element="tns:UpdateMember" />
-  </wsdl:message>
-  <wsdl:message name="UpdateMemberSoapOut">
-    <wsdl:part name="parameters" element="tns:UpdateMemberResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetUserInfoSoapIn">
-    <wsdl:part name="parameters" element="tns:GetUserInfo" />
-  </wsdl:message>
-  <wsdl:message name="GetUserInfoSoapOut">
-    <wsdl:part name="parameters" element="tns:GetUserInfoResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetMachineNameSoapIn">
-    <wsdl:part name="parameters" element="tns:GetMachineName" />
-  </wsdl:message>
-  <wsdl:message name="GetMachineNameSoapOut">
-    <wsdl:part name="parameters" element="tns:GetMachineNameResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetRSACredentialSoapIn">
-    <wsdl:part name="parameters" element="tns:GetRSACredential" />
-  </wsdl:message>
-  <wsdl:message name="GetRSACredentialSoapOut">
-    <wsdl:part name="parameters" element="tns:GetRSACredentialResponse" />
-  </wsdl:message>
-  <wsdl:message name="RSAEncryptStringSoapIn">
-    <wsdl:part name="parameters" element="tns:RSAEncryptString" />
-  </wsdl:message>
-  <wsdl:message name="RSAEncryptStringSoapOut">
-    <wsdl:part name="parameters" element="tns:RSAEncryptStringResponse" />
-  </wsdl:message>
-  <wsdl:message name="RSADecryptStringSoapIn">
-    <wsdl:part name="parameters" element="tns:RSADecryptString" />
-  </wsdl:message>
-  <wsdl:message name="RSADecryptStringSoapOut">
-    <wsdl:part name="parameters" element="tns:RSADecryptStringResponse" />
-  </wsdl:message>
-  <wsdl:message name="GenerateDESKeySoapIn">
-    <wsdl:part name="parameters" element="tns:GenerateDESKey" />
-  </wsdl:message>
-  <wsdl:message name="GenerateDESKeySoapOut">
-    <wsdl:part name="parameters" element="tns:GenerateDESKeyResponse" />
-  </wsdl:message>
-  <wsdl:message name="DESEncryptStringSoapIn">
-    <wsdl:part name="parameters" element="tns:DESEncryptString" />
-  </wsdl:message>
-  <wsdl:message name="DESEncryptStringSoapOut">
-    <wsdl:part name="parameters" element="tns:DESEncryptStringResponse" />
-  </wsdl:message>
-  <wsdl:message name="DESDecryptStringSoapIn">
-    <wsdl:part name="parameters" element="tns:DESDecryptString" />
-  </wsdl:message>
-  <wsdl:message name="DESDecryptStringSoapOut">
-    <wsdl:part name="parameters" element="tns:DESDecryptStringResponse" />
-  </wsdl:message>
-  <wsdl:portType name="Gaim_x0020_Domain_x0020_ServiceSoap">
-    <wsdl:operation name="GetGaimDomainInfo">
-      <wsdl:input message="tns:GetGaimDomainInfoSoapIn" />
-      <wsdl:output message="tns:GetGaimDomainInfoSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="SynchronizeMemberList">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">SynchronizeMemberList</documentation>
-      <wsdl:input message="tns:SynchronizeMemberListSoapIn" />
-      <wsdl:output message="tns:SynchronizeMemberListSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="UpdateMember">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">UpdateMember</documentation>
-      <wsdl:input message="tns:UpdateMemberSoapIn" />
-      <wsdl:output message="tns:UpdateMemberSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetUserInfo">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">GetUserInfo</documentation>
-      <wsdl:input message="tns:GetUserInfoSoapIn" />
-      <wsdl:output message="tns:GetUserInfoSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetMachineName">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">GetMachineName returns the machine name of the computer we're running on.</documentation>
-      <wsdl:input message="tns:GetMachineNameSoapIn" />
-      <wsdl:output message="tns:GetMachineNameSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetRSACredential">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">GetRSACredential</documentation>
-      <wsdl:input message="tns:GetRSACredentialSoapIn" />
-      <wsdl:output message="tns:GetRSACredentialSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="RSAEncryptString">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">RSAEncryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider in XML format representing a public key) to encrypt UnencryptedString.</documentation>
-      <wsdl:input message="tns:RSAEncryptStringSoapIn" />
-      <wsdl:output message="tns:RSAEncryptStringSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="RSADecryptString">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">RSADecryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider in XML format representing a private key) to decrypt EncryptedString.</documentation>
-      <wsdl:input message="tns:RSADecryptStringSoapIn" />
-      <wsdl:output message="tns:RSADecryptStringSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GenerateDESKey">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Generates a Base64 Encoded DES Symmetric Key</documentation>
-      <wsdl:input message="tns:GenerateDESKeySoapIn" />
-      <wsdl:output message="tns:GenerateDESKeySoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="DESEncryptString">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">DESEncryptString() uses DESKey (A Base64 encoded DES key) to encrypt UnencryptedString.</documentation>
-      <wsdl:input message="tns:DESEncryptStringSoapIn" />
-      <wsdl:output message="tns:DESEncryptStringSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="DESDecryptString">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">DESDecryptString() uses DESKey (A Base64 encoded DES key) to decrypt EncryptedString.</documentation>
-      <wsdl:input message="tns:DESDecryptStringSoapIn" />
-      <wsdl:output message="tns:DESDecryptStringSoapOut" />
-    </wsdl:operation>
-  </wsdl:portType>
-  <wsdl:binding name="Gaim_x0020_Domain_x0020_ServiceSoap" type="tns:Gaim_x0020_Domain_x0020_ServiceSoap">
-    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
-    <wsdl:operation name="GetGaimDomainInfo">
-      <soap:operation soapAction="http://novell.com/simias/domain/GetGaimDomainInfo" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SynchronizeMemberList">
-      <soap:operation soapAction="http://novell.com/simias/domain/SynchronizeMemberList" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="UpdateMember">
-      <soap:operation soapAction="http://novell.com/simias/domain/UpdateMember" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetUserInfo">
-      <soap:operation soapAction="http://novell.com/simias/domain/GetUserInfo" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetMachineName">
-      <soap:operation soapAction="http://novell.com/simias/domain/GetMachineName" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetRSACredential">
-      <soap:operation soapAction="http://novell.com/simias/domain/GetRSACredential" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="RSAEncryptString">
-      <soap:operation soapAction="http://novell.com/simias/domain/RSAEncryptString" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="RSADecryptString">
-      <soap:operation soapAction="http://novell.com/simias/domain/RSADecryptString" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GenerateDESKey">
-      <soap:operation soapAction="http://novell.com/simias/domain/GenerateDESKey" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="DESEncryptString">
-      <soap:operation soapAction="http://novell.com/simias/domain/DESEncryptString" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="DESDecryptString">
-      <soap:operation soapAction="http://novell.com/simias/domain/DESDecryptString" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-  </wsdl:binding>
-  <wsdl:service name="Gaim_x0020_Domain_x0020_Service">
-    <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Web Service providing access to Gaim Domain Server functionality.</documentation>
-    <wsdl:port name="Gaim_x0020_Domain_x0020_ServiceSoap" binding="tns:Gaim_x0020_Domain_x0020_ServiceSoap">
-      <soap:address location="http://127.0.0.1:2895/simias10/Administrator/GaimDomainService.asmx" />
-    </wsdl:port>
-  </wsdl:service>
-</wsdl:definitions>
+<?xml version="1.0" encoding="utf-16"?>
+<definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+      xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+      xmlns:s="http://www.w3.org/2001/XMLSchema"
+      xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+      xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+      xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
+      xmlns:s0="http://novell.com/simias/domain" name="Gaim Domain Service"
+      targetNamespace="http://novell.com/simias/domain"
+      xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://novell.com/simias/domain"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="GetGaimDomainInfo">
+        <xs:complexType/>
+      </xs:element>
+      <xs:complexType name="GaimDomainInfo">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="ID" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="GetGaimDomainInfoResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetGaimDomainInfoResult"
+                  type="s0:GaimDomainInfo"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SynchronizeMemberList">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="SynchronizeMemberListResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="UpdateMember">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="AccountName" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="AccountProtocolID" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="BuddyName" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="MachineName" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="UpdateMemberResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetUserInfo">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetUserInfoResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="GetUserInfoResult" type="xs:boolean"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="MachineName" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="SimiasURL" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetMachineName">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetMachineNameResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetMachineNameResult"
+                  type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetRSACredential">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetRSACredentialResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="GetRSACredentialResult"
+                  type="xs:boolean"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="PublicCredential" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="PrivateCredential" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RSAEncryptString">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="RsaCryptoXml" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="UnencryptedString" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RSAEncryptStringResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="RSAEncryptStringResult"
+                  type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RSADecryptString">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="RsaCryptoXml" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="EncryptedString" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RSADecryptStringResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="RSADecryptStringResult"
+                  type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GenerateDESKey">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GenerateDESKeyResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GenerateDESKeyResult"
+                  type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="DESEncryptString">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="DESKey" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="UnencryptedString" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="DESEncryptStringResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="DESEncryptStringResult"
+                  type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="DESDecryptString">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="DESKey" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="EncryptedString" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="DESDecryptStringResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="DESDecryptStringResult"
+                  type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GaimDomainInfo" type="s0:GaimDomainInfo"/>
+      <xs:element name="string" type="xs:string"/>
+    </xs:schema>
+  </types>
+  <message name="GetGaimDomainInfoSoapIn">
+    <part name="parameters" element="s0:GetGaimDomainInfo"/>
+  </message>
+  <message name="GetGaimDomainInfoSoapOut">
+    <part name="parameters" element="s0:GetGaimDomainInfoResponse"/>
+  </message>
+  <message name="SynchronizeMemberListSoapIn">
+    <part name="parameters" element="s0:SynchronizeMemberList"/>
+  </message>
+  <message name="SynchronizeMemberListSoapOut">
+    <part name="parameters" element="s0:SynchronizeMemberListResponse"/>
+  </message>
+  <message name="UpdateMemberSoapIn">
+    <part name="parameters" element="s0:UpdateMember"/>
+  </message>
+  <message name="UpdateMemberSoapOut">
+    <part name="parameters" element="s0:UpdateMemberResponse"/>
+  </message>
+  <message name="GetUserInfoSoapIn">
+    <part name="parameters" element="s0:GetUserInfo"/>
+  </message>
+  <message name="GetUserInfoSoapOut">
+    <part name="parameters" element="s0:GetUserInfoResponse"/>
+  </message>
+  <message name="GetMachineNameSoapIn">
+    <part name="parameters" element="s0:GetMachineName"/>
+  </message>
+  <message name="GetMachineNameSoapOut">
+    <part name="parameters" element="s0:GetMachineNameResponse"/>
+  </message>
+  <message name="GetRSACredentialSoapIn">
+    <part name="parameters" element="s0:GetRSACredential"/>
+  </message>
+  <message name="GetRSACredentialSoapOut">
+    <part name="parameters" element="s0:GetRSACredentialResponse"/>
+  </message>
+  <message name="RSAEncryptStringSoapIn">
+    <part name="parameters" element="s0:RSAEncryptString"/>
+  </message>
+  <message name="RSAEncryptStringSoapOut">
+    <part name="parameters" element="s0:RSAEncryptStringResponse"/>
+  </message>
+  <message name="RSADecryptStringSoapIn">
+    <part name="parameters" element="s0:RSADecryptString"/>
+  </message>
+  <message name="RSADecryptStringSoapOut">
+    <part name="parameters" element="s0:RSADecryptStringResponse"/>
+  </message>
+  <message name="GenerateDESKeySoapIn">
+    <part name="parameters" element="s0:GenerateDESKey"/>
+  </message>
+  <message name="GenerateDESKeySoapOut">
+    <part name="parameters" element="s0:GenerateDESKeyResponse"/>
+  </message>
+  <message name="DESEncryptStringSoapIn">
+    <part name="parameters" element="s0:DESEncryptString"/>
+  </message>
+  <message name="DESEncryptStringSoapOut">
+    <part name="parameters" element="s0:DESEncryptStringResponse"/>
+  </message>
+  <message name="DESDecryptStringSoapIn">
+    <part name="parameters" element="s0:DESDecryptString"/>
+  </message>
+  <message name="DESDecryptStringSoapOut">
+    <part name="parameters" element="s0:DESDecryptStringResponse"/>
+  </message>
+  <message name="GetGaimDomainInfoHttpGetIn"/>
+  <message name="GetGaimDomainInfoHttpGetOut">
+    <part name="Body" element="s0:GaimDomainInfo"/>
+  </message>
+  <message name="SynchronizeMemberListHttpGetIn"/>
+  <message name="SynchronizeMemberListHttpGetOut"/>
+  <message name="UpdateMemberHttpGetIn">
+    <part name="AccountName" type="s:string"/>
+    <part name="AccountProtocolID" type="s:string"/>
+    <part name="BuddyName" type="s:string"/>
+    <part name="MachineName" type="s:string"/>
+  </message>
+  <message name="UpdateMemberHttpGetOut"/>
+  <message name="GetMachineNameHttpGetIn"/>
+  <message name="GetMachineNameHttpGetOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="RSAEncryptStringHttpGetIn">
+    <part name="RsaCryptoXml" type="s:string"/>
+    <part name="UnencryptedString" type="s:string"/>
+  </message>
+  <message name="RSAEncryptStringHttpGetOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="RSADecryptStringHttpGetIn">
+    <part name="RsaCryptoXml" type="s:string"/>
+    <part name="EncryptedString" type="s:string"/>
+  </message>
+  <message name="RSADecryptStringHttpGetOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="GenerateDESKeyHttpGetIn"/>
+  <message name="GenerateDESKeyHttpGetOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="DESEncryptStringHttpGetIn">
+    <part name="DESKey" type="s:string"/>
+    <part name="UnencryptedString" type="s:string"/>
+  </message>
+  <message name="DESEncryptStringHttpGetOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="DESDecryptStringHttpGetIn">
+    <part name="DESKey" type="s:string"/>
+    <part name="EncryptedString" type="s:string"/>
+  </message>
+  <message name="DESDecryptStringHttpGetOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="GetGaimDomainInfoHttpPostIn"/>
+  <message name="GetGaimDomainInfoHttpPostOut">
+    <part name="Body" element="s0:GaimDomainInfo"/>
+  </message>
+  <message name="SynchronizeMemberListHttpPostIn"/>
+  <message name="SynchronizeMemberListHttpPostOut"/>
+  <message name="UpdateMemberHttpPostIn">
+    <part name="AccountName" type="s:string"/>
+    <part name="AccountProtocolID" type="s:string"/>
+    <part name="BuddyName" type="s:string"/>
+    <part name="MachineName" type="s:string"/>
+  </message>
+  <message name="UpdateMemberHttpPostOut"/>
+  <message name="GetMachineNameHttpPostIn"/>
+  <message name="GetMachineNameHttpPostOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="RSAEncryptStringHttpPostIn">
+    <part name="RsaCryptoXml" type="s:string"/>
+    <part name="UnencryptedString" type="s:string"/>
+  </message>
+  <message name="RSAEncryptStringHttpPostOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="RSADecryptStringHttpPostIn">
+    <part name="RsaCryptoXml" type="s:string"/>
+    <part name="EncryptedString" type="s:string"/>
+  </message>
+  <message name="RSADecryptStringHttpPostOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="GenerateDESKeyHttpPostIn"/>
+  <message name="GenerateDESKeyHttpPostOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="DESEncryptStringHttpPostIn">
+    <part name="DESKey" type="s:string"/>
+    <part name="UnencryptedString" type="s:string"/>
+  </message>
+  <message name="DESEncryptStringHttpPostOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="DESDecryptStringHttpPostIn">
+    <part name="DESKey" type="s:string"/>
+    <part name="EncryptedString" type="s:string"/>
+  </message>
+  <message name="DESDecryptStringHttpPostOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <portType name="Gaim Domain ServiceSoap">
+    <operation name="GetGaimDomainInfo">
+      <input message="s0:GetGaimDomainInfoSoapIn"/>
+      <output message="s0:GetGaimDomainInfoSoapOut"/>
+    </operation>
+    <operation name="SynchronizeMemberList">
+      <input message="s0:SynchronizeMemberListSoapIn"/>
+      <output message="s0:SynchronizeMemberListSoapOut"/>
+      <documentation>SynchronizeMemberList</documentation>
+    </operation>
+    <operation name="UpdateMember">
+      <input message="s0:UpdateMemberSoapIn"/>
+      <output message="s0:UpdateMemberSoapOut"/>
+      <documentation>UpdateMember</documentation>
+    </operation>
+    <operation name="GetUserInfo">
+      <input message="s0:GetUserInfoSoapIn"/>
+      <output message="s0:GetUserInfoSoapOut"/>
+      <documentation>GetUserInfo</documentation>
+    </operation>
+    <operation name="GetMachineName">
+      <input message="s0:GetMachineNameSoapIn"/>
+      <output message="s0:GetMachineNameSoapOut"/>
+      <documentation>GetMachineName returns the machine name of the computer we're running
+            on.</documentation>
+    </operation>
+    <operation name="GetRSACredential">
+      <input message="s0:GetRSACredentialSoapIn"/>
+      <output message="s0:GetRSACredentialSoapOut"/>
+      <documentation>GetRSACredential</documentation>
+    </operation>
+    <operation name="RSAEncryptString">
+      <input message="s0:RSAEncryptStringSoapIn"/>
+      <output message="s0:RSAEncryptStringSoapOut"/>
+      <documentation>RSAEncryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider in
+            XML format representing a public key) to encrypt UnencryptedString.</documentation>
+    </operation>
+    <operation name="RSADecryptString">
+      <input message="s0:RSADecryptStringSoapIn"/>
+      <output message="s0:RSADecryptStringSoapOut"/>
+      <documentation>RSADecryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider in
+            XML format representing a private key) to decrypt EncryptedString.</documentation>
+    </operation>
+    <operation name="GenerateDESKey">
+      <input message="s0:GenerateDESKeySoapIn"/>
+      <output message="s0:GenerateDESKeySoapOut"/>
+      <documentation>Generates a Base64 Encoded DES Symmetric Key</documentation>
+    </operation>
+    <operation name="DESEncryptString">
+      <input message="s0:DESEncryptStringSoapIn"/>
+      <output message="s0:DESEncryptStringSoapOut"/>
+      <documentation>DESEncryptString() uses DESKey (A Base64 encoded DES key) to encrypt
+            UnencryptedString.</documentation>
+    </operation>
+    <operation name="DESDecryptString">
+      <input message="s0:DESDecryptStringSoapIn"/>
+      <output message="s0:DESDecryptStringSoapOut"/>
+      <documentation>DESDecryptString() uses DESKey (A Base64 encoded DES key) to decrypt
+            EncryptedString.</documentation>
+    </operation>
+  </portType>
+  <portType name="Gaim Domain ServiceHttpGet">
+    <operation name="GetGaimDomainInfo">
+      <input message="s0:GetGaimDomainInfoHttpGetIn"/>
+      <output message="s0:GetGaimDomainInfoHttpGetOut"/>
+    </operation>
+    <operation name="SynchronizeMemberList">
+      <input message="s0:SynchronizeMemberListHttpGetIn"/>
+      <output message="s0:SynchronizeMemberListHttpGetOut"/>
+      <documentation>SynchronizeMemberList</documentation>
+    </operation>
+    <operation name="UpdateMember">
+      <input message="s0:UpdateMemberHttpGetIn"/>
+      <output message="s0:UpdateMemberHttpGetOut"/>
+      <documentation>UpdateMember</documentation>
+    </operation>
+    <operation name="GetMachineName">
+      <input message="s0:GetMachineNameHttpGetIn"/>
+      <output message="s0:GetMachineNameHttpGetOut"/>
+      <documentation>GetMachineName returns the machine name of the computer we're running
+            on.</documentation>
+    </operation>
+    <operation name="RSAEncryptString">
+      <input message="s0:RSAEncryptStringHttpGetIn"/>
+      <output message="s0:RSAEncryptStringHttpGetOut"/>
+      <documentation>RSAEncryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider in
+            XML format representing a public key) to encrypt UnencryptedString.</documentation>
+    </operation>
+    <operation name="RSADecryptString">
+      <input message="s0:RSADecryptStringHttpGetIn"/>
+      <output message="s0:RSADecryptStringHttpGetOut"/>
+      <documentation>RSADecryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider in
+            XML format representing a private key) to decrypt EncryptedString.</documentation>
+    </operation>
+    <operation name="GenerateDESKey">
+      <input message="s0:GenerateDESKeyHttpGetIn"/>
+      <output message="s0:GenerateDESKeyHttpGetOut"/>
+      <documentation>Generates a Base64 Encoded DES Symmetric Key</documentation>
+    </operation>
+    <operation name="DESEncryptString">
+      <input message="s0:DESEncryptStringHttpGetIn"/>
+      <output message="s0:DESEncryptStringHttpGetOut"/>
+      <documentation>DESEncryptString() uses DESKey (A Base64 encoded DES key) to encrypt
+            UnencryptedString.</documentation>
+    </operation>
+    <operation name="DESDecryptString">
+      <input message="s0:DESDecryptStringHttpGetIn"/>
+      <output message="s0:DESDecryptStringHttpGetOut"/>
+      <documentation>DESDecryptString() uses DESKey (A Base64 encoded DES key) to decrypt
+            EncryptedString.</documentation>
+    </operation>
+  </portType>
+  <portType name="Gaim Domain ServiceHttpPost">
+    <operation name="GetGaimDomainInfo">
+      <input message="s0:GetGaimDomainInfoHttpPostIn"/>
+      <output message="s0:GetGaimDomainInfoHttpPostOut"/>
+    </operation>
+    <operation name="SynchronizeMemberList">
+      <input message="s0:SynchronizeMemberListHttpPostIn"/>
+      <output message="s0:SynchronizeMemberListHttpPostOut"/>
+      <documentation>SynchronizeMemberList</documentation>
+    </operation>
+    <operation name="UpdateMember">
+      <input message="s0:UpdateMemberHttpPostIn"/>
+      <output message="s0:UpdateMemberHttpPostOut"/>
+      <documentation>UpdateMember</documentation>
+    </operation>
+    <operation name="GetMachineName">
+      <input message="s0:GetMachineNameHttpPostIn"/>
+      <output message="s0:GetMachineNameHttpPostOut"/>
+      <documentation>GetMachineName returns the machine name of the computer we're running
+            on.</documentation>
+    </operation>
+    <operation name="RSAEncryptString">
+      <input message="s0:RSAEncryptStringHttpPostIn"/>
+      <output message="s0:RSAEncryptStringHttpPostOut"/>
+      <documentation>RSAEncryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider in
+            XML format representing a public key) to encrypt UnencryptedString.</documentation>
+    </operation>
+    <operation name="RSADecryptString">
+      <input message="s0:RSADecryptStringHttpPostIn"/>
+      <output message="s0:RSADecryptStringHttpPostOut"/>
+      <documentation>RSADecryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider in
+            XML format representing a private key) to decrypt EncryptedString.</documentation>
+    </operation>
+    <operation name="GenerateDESKey">
+      <input message="s0:GenerateDESKeyHttpPostIn"/>
+      <output message="s0:GenerateDESKeyHttpPostOut"/>
+      <documentation>Generates a Base64 Encoded DES Symmetric Key</documentation>
+    </operation>
+    <operation name="DESEncryptString">
+      <input message="s0:DESEncryptStringHttpPostIn"/>
+      <output message="s0:DESEncryptStringHttpPostOut"/>
+      <documentation>DESEncryptString() uses DESKey (A Base64 encoded DES key) to encrypt
+            UnencryptedString.</documentation>
+    </operation>
+    <operation name="DESDecryptString">
+      <input message="s0:DESDecryptStringHttpPostIn"/>
+      <output message="s0:DESDecryptStringHttpPostOut"/>
+      <documentation>DESDecryptString() uses DESKey (A Base64 encoded DES key) to decrypt
+            EncryptedString.</documentation>
+    </operation>
+  </portType>
+  <binding name="Gaim Domain ServiceSoap" type="s0:Gaim Domain ServiceSoap">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="GetGaimDomainInfo">
+      <soap:operation soapAction="http://novell.com/simias/domain/GetGaimDomainInfo"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="SynchronizeMemberList">
+      <soap:operation soapAction="http://novell.com/simias/domain/SynchronizeMemberList"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="UpdateMember">
+      <soap:operation soapAction="http://novell.com/simias/domain/UpdateMember"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetUserInfo">
+      <soap:operation soapAction="http://novell.com/simias/domain/GetUserInfo"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetMachineName">
+      <soap:operation soapAction="http://novell.com/simias/domain/GetMachineName"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetRSACredential">
+      <soap:operation soapAction="http://novell.com/simias/domain/GetRSACredential"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="RSAEncryptString">
+      <soap:operation soapAction="http://novell.com/simias/domain/RSAEncryptString"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="RSADecryptString">
+      <soap:operation soapAction="http://novell.com/simias/domain/RSADecryptString"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GenerateDESKey">
+      <soap:operation soapAction="http://novell.com/simias/domain/GenerateDESKey"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="DESEncryptString">
+      <soap:operation soapAction="http://novell.com/simias/domain/DESEncryptString"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="DESDecryptString">
+      <soap:operation soapAction="http://novell.com/simias/domain/DESDecryptString"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <binding name="Gaim Domain ServiceHttpGet" type="s0:Gaim Domain ServiceHttpGet">
+    <http:binding verb="GET"/>
+    <operation name="GetGaimDomainInfo">
+      <http:operation location="/GetGaimDomainInfo"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="SynchronizeMemberList">
+      <http:operation location="/SynchronizeMemberList"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="UpdateMember">
+      <http:operation location="/UpdateMember"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="GetMachineName">
+      <http:operation location="/GetMachineName"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="RSAEncryptString">
+      <http:operation location="/RSAEncryptString"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="RSADecryptString">
+      <http:operation location="/RSADecryptString"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="GenerateDESKey">
+      <http:operation location="/GenerateDESKey"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="DESEncryptString">
+      <http:operation location="/DESEncryptString"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="DESDecryptString">
+      <http:operation location="/DESDecryptString"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+  </binding>
+  <binding name="Gaim Domain ServiceHttpPost" type="s0:Gaim Domain ServiceHttpPost">
+    <http:binding verb="POST"/>
+    <operation name="GetGaimDomainInfo">
+      <http:operation location="/GetGaimDomainInfo"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="SynchronizeMemberList">
+      <http:operation location="/SynchronizeMemberList"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="UpdateMember">
+      <http:operation location="/UpdateMember"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="GetMachineName">
+      <http:operation location="/GetMachineName"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="RSAEncryptString">
+      <http:operation location="/RSAEncryptString"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="RSADecryptString">
+      <http:operation location="/RSADecryptString"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="GenerateDESKey">
+      <http:operation location="/GenerateDESKey"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="DESEncryptString">
+      <http:operation location="/DESEncryptString"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="DESDecryptString">
+      <http:operation location="/DESDecryptString"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="Gaim Domain Service">
+    <port name="Gaim Domain ServiceSoap" binding="s0:Gaim Domain ServiceSoap">
+      <soap:address
+           
+           
+           
+           
+           
+            location="http://bht-linux.provo.novell.com:38339/simias10/boyd/GaimDomainService.asmx"/>
+    </port>
+    <port name="Gaim Domain ServiceHttpGet" binding="s0:Gaim Domain ServiceHttpGet">
+      <http:address
+           
+           
+           
+           
+           
+            location="http://bht-linux.provo.novell.com:38339/simias10/boyd/GaimDomainService.asmx"/>
+    </port>
+    <port name="Gaim Domain ServiceHttpPost" binding="s0:Gaim Domain ServiceHttpPost">
+      <http:address
+           
+           
+           
+           
+           
+            location="http://bht-linux.provo.novell.com:38339/simias10/boyd/GaimDomainService.asmx"/>
+    </port>
+    <documentation>Web Service providing access to Gaim Domain Server
+          functionality.</documentation>
+  </service>
+</definitions>

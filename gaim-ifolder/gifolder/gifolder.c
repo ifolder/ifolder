@@ -161,8 +161,8 @@ buddylist_cb_enable_ifolder_sharing(GaimBlistNode *node, gpointer user_data)
 									GTK_MESSAGE_ERROR,
 									GTK_BUTTONS_OK,
 									_("There was an error enabling iFolder Sharing with %s.  Perhaps %s is not online or you do not have iFolder/Simias running?"),
-									buddy_alias ? buddy_alias : sender,
-									buddy_alias ? buddy_alias : sender);
+									buddy_alias ? buddy_alias : buddy->name,
+									buddy_alias ? buddy_alias : buddy->name);
 		gtk_dialog_run(GTK_DIALOG(dialog));
 		gtk_widget_destroy(dialog);
 	}

@@ -28,7 +28,9 @@
 #include "buddy-profile.h"
 
 /* Gaim iFolder Includes */
+#include "gaim-domain.h"
 #include "simias-messages.h"
+#include "simias-util.h"
 
 #include <glib.h>
 #include <gtk/gtk.h>
@@ -630,7 +632,7 @@ parse_encoded_profile(GaimBuddy *buddy, const char *profile, char **machineName,
 	char *encryptedString;
 	char *decryptedString;
 	char settingName[1024];
-	char *desKey;
+	const char *desKey;
 	int err;
 	
 	tmp = strstr(profile, SIMIAS_PLUGIN_INSTALLED_ID);
@@ -669,7 +671,7 @@ parse_encoded_profile(GaimBuddy *buddy, const char *profile, char **machineName,
 	free(base64MachineName);
 
 	/* Use the machine name to mark this buddy with "simias-plugin-enabled" */
-	gaim_blist_node_set_string(&(buddy->node), "simias-plugin-enabled", machineName);
+	gaim_blist_node_set_string(&(buddy->node), "simias-plugin-enabled", *machineName);
 
 	sprintf(settingName, "simias-des-key:%s", *machineName);
 	desKey = gaim_blist_node_get_string(&(buddy->node), settingName);

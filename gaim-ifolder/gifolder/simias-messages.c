@@ -42,7 +42,6 @@
 /**
  * Non-public Functions
  */
-static int send_ping(GaimBuddy *recipient, const char *ping_type);
 static SIMIAS_MSG_TYPE get_possible_simias_msg_type(const char *buffer);
 
 static gboolean handle_invitation_request(GaimAccount *account,
@@ -97,7 +96,7 @@ fprintf(stderr, "Sending message: %s\n", msg);
 int
 simias_send_invitation_request(GaimBuddy *recipient)
 {
-	char *public_key;
+	char *publicKey;
 	char msg[4096];
 	char *base64Key;
 	int err;
@@ -105,7 +104,7 @@ simias_send_invitation_request(GaimBuddy *recipient)
 	char *machineName;
 	char *base64MachineName;
 
-	err = simias_get_public_key(&public_key);
+	err = simias_get_public_key(&publicKey);
 	if (err != 0)
 	{
 		/* FIXME: Prompt the user to make sure iFolder is up and running...or kick Simias to start before continuing. */
@@ -115,7 +114,7 @@ simias_send_invitation_request(GaimBuddy *recipient)
 	
 	/* Base64Encode the public key so it gets sent nicely (not in XML) */
 	base64Key = gaim_base64_encode(publicKey, strlen(publicKey));
-	free(public_key);
+	free(publicKey);
 
 	err = simias_get_machine_name(&machineName);
 	if (err != 0)
@@ -153,10 +152,10 @@ simias_send_invitation_deny(GaimBuddy *recipient)
  * [simias:invitation-accept:<Base64Encoded Public Key>:<Base64Encoded Machine Name>:<Base64Encoded DES key encrypted with the recipient's public key>]
  */
 int
-simias_send_invitation_accept(GaimBuddy *recipient, char *recipientMachineName)
+simias_send_invitation_accept(GaimBuddy *recipient, const char *recipientMachineName)
 {
 	char msg[4096];
-	char *public_key;
+	char *publicKey;
 	char *base64PublicKey;
 
 	char *machineName;
@@ -164,14 +163,14 @@ simias_send_invitation_accept(GaimBuddy *recipient, char *recipientMachineName)
 
 	char *desKey;
 
-	char *recipientBase64PublicKey;
+	const char *recipientBase64PublicKey;
 	char *recipientPublicKey;
 	int recipientPublicKeyLen;
 	char settingName[1024];
 	char *encryptedDESKey;
 	int err;
 
-	err = simias_get_public_key(&public_key);
+	err = simias_get_public_key(&publicKey);
 	if (err != 0)
 	{
 		/* FIXME: Prompt the user to make sure iFolder is up and running...or kick Simias to start before continuing. */
@@ -181,7 +180,7 @@ simias_send_invitation_accept(GaimBuddy *recipient, char *recipientMachineName)
 	
 	/* Base64Encode the public key so it gets sent nicely (not in XML) */
 	base64PublicKey = gaim_base64_encode(publicKey, strlen(publicKey));
-	free(public_key);
+	free(publicKey);
 
 	err = simias_get_machine_name(&machineName);
 	if (err != 0)
@@ -245,7 +244,7 @@ simias_send_invitation_accept(GaimBuddy *recipient, char *recipientMachineName)
  * [simias:invitation-complete:<Base64Encoded Machine Name>:<Base64Encoded DES key encrypted with the recipient's public key>]
  */
 int
-simias_send_invitation_complete(GaimBuddy *recipient, char *recipientMachineName);
+simias_send_invitation_complete(GaimBuddy *recipient, const char *recipientMachineName)
 {
 	char msg[4096];
 	char *machineName;
@@ -253,7 +252,7 @@ simias_send_invitation_complete(GaimBuddy *recipient, char *recipientMachineName
 
 	char *desKey;
 
-	char *recipientBase64PublicKey;
+	const char *recipientBase64PublicKey;
 	char *recipientPublicKey;
 	int recipientPublicKeyLen;
 	char settingName[1024];
@@ -464,7 +463,7 @@ handle_invitation_request(GaimAccount *account,
 	
 	/* Parse the machine name */
 	tmp = tmp + colonPos + 1;
-	closeBracketPos = simias_str_index_of(tmp, "]");
+	closeBracketPos = simias_str_index_of(tmp, ']');
 	if (closeBracketPos <= 0)
 	{
 		free(base64Key);
@@ -489,7 +488,7 @@ handle_invitation_request(GaimAccount *account,
 							GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
 							GTK_MESSAGE_QUESTION,
 							GTK_BUTTONS_YES_NO,
-							_("%s (%s) would like to share files with you through iFolder.  Would you like to participate?",
+							_("%s (%s) would like to share files with you through iFolder.  Would you like to participate?"),
 							buddy_alias ? buddy_alias : sender,
 							machineName);
 	response = gtk_dialog_run(GTK_DIALOG(accept_dialog));
@@ -548,7 +547,7 @@ handle_invitation_deny(GaimAccount *account,
 								GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
 								GTK_MESSAGE_INFO,
 								GTK_BUTTONS_OK,
-								_("%s denied your request to enable iFolder file sharing.",
+								_("%s denied your request to enable iFolder file sharing."),
 								buddy_alias ? buddy_alias : sender);
 	gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_widget_destroy(dialog);
@@ -685,7 +684,7 @@ handle_invitation_accept(GaimAccount *account,
 								GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
 								GTK_MESSAGE_INFO,
 								GTK_BUTTONS_OK,
-								_("%s (%s) has accepted your request to enable iFolder file sharing.  To share files through iFolder, use the iFolder Client, create an iFolder in the Gaim Workgroup Domain, and add %s to the iFolder's member list."),
+								_("%s (%s) has accepted your request to enable iFolder file sharing.  To share files through iFolder, use the iFolder Client, create an iFolder in the Gaim Workgroup Domain, and add %s (%s) to the iFolder's member list."),
 								buddy_alias ? buddy_alias : sender,
 								machineName,
 								buddy_alias ? buddy_alias : sender,
@@ -714,8 +713,6 @@ handle_invitation_complete(GaimAccount *account,
 	int closeBracketPos;
 	char *tmp;
 	char settingName[1024];
-	GtkWidget *dialog;
-	const char *buddy_alias = NULL;
 	int err;
 
 	fprintf(stderr, "handle_invitation_complete() %s -> %s entered\n",

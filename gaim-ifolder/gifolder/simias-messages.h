@@ -71,14 +71,14 @@ int simias_send_invitation_deny(GaimBuddy *recipient);
  *
  * [simias:invitation-accept:<Base64Encoded Public Key>:<Base64Encoded Machine Name>:<Base64Encoded DES key encrypted with the recipient's public key>]
  */
-int simias_send_invitation_accept(GaimBuddy *recipient, char *recipientMachineName);
+int simias_send_invitation_accept(GaimBuddy *recipient, const char *recipientMachineName);
 
 /**
  * This function sends a message with the following format:
  *
  * [simias:invitation-complete:<Base64Encoded Machine Name>:<Base64Encoded DES key encrypted with the recipient's public key>]
  */
-int simias_send_invitation_complete(GaimBuddy *recipient, char *recipientMachineName);
+int simias_send_invitation_complete(GaimBuddy *recipient, const char *recipientMachineName);
 
 gboolean simias_receiving_im_msg_cb(GaimAccount *account, char **sender,
 									char **buffer, int *flags, void *data);
