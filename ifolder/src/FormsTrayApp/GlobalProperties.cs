@@ -1196,6 +1196,12 @@ namespace Novell.FormsTrayApp
 					lvi.SubItems[2].Text = status;
 				}
 				lvi.ImageIndex = imageIndex;
+
+				if (lvi.Selected && (iFolderView.SelectedItems.Count == 1) && !ifolder.IsSubscription)
+				{
+					// Enable/disable the resolve menu based on if conflicts exist in the iFolder.
+					menuResolve.Visible = menuActionResolve.Visible = toolBarResolve.Enabled = ifolder.HasConflicts;
+				}
 			}
 		}
 
