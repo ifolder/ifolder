@@ -39,6 +39,7 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.Button yes;
 		private System.Windows.Forms.Button no;
 		private System.Windows.Forms.Label message;
+		private System.Windows.Forms.PictureBox messageIcon;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -81,6 +82,7 @@ namespace Novell.iFolder.iFolderCom
 			this.yes = new System.Windows.Forms.Button();
 			this.no = new System.Windows.Forms.Button();
 			this.message = new System.Windows.Forms.Label();
+			this.messageIcon = new System.Windows.Forms.PictureBox();
 			this.SuspendLayout();
 			// 
 			// yes
@@ -103,10 +105,18 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			// message
 			// 
-			this.message.Location = new System.Drawing.Point(40, 32);
+			this.message.Location = new System.Drawing.Point(64, 32);
 			this.message.Name = "message";
-			this.message.Size = new System.Drawing.Size(480, 40);
+			this.message.Size = new System.Drawing.Size(456, 40);
 			this.message.TabIndex = 2;
+			// 
+			// messageIcon
+			// 
+			this.messageIcon.Location = new System.Drawing.Point(8, 32);
+			this.messageIcon.Name = "messageIcon";
+			this.messageIcon.Size = new System.Drawing.Size(32, 32);
+			this.messageIcon.TabIndex = 3;
+			this.messageIcon.TabStop = false;
 			// 
 			// MyMessageBox
 			// 
@@ -114,6 +124,7 @@ namespace Novell.iFolder.iFolderCom
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.CancelButton = this.no;
 			this.ClientSize = new System.Drawing.Size(552, 136);
+			this.Controls.Add(this.messageIcon);
 			this.Controls.Add(this.message);
 			this.Controls.Add(this.no);
 			this.Controls.Add(this.yes);
@@ -132,6 +143,15 @@ namespace Novell.iFolder.iFolderCom
 			set
 			{
 				this.message.Text = value;
+			}
+		}
+
+		public Bitmap MessageIcon
+		{
+			set
+			{
+				this.messageIcon.SizeMode = PictureBoxSizeMode.StretchImage;
+				this.messageIcon.Image = (Image)value;
 			}
 		}
 	}

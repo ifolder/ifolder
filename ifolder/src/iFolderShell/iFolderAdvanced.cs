@@ -78,6 +78,8 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.TextBox objectCount;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.TextBox byteCount;
+		private System.Windows.Forms.LinkLabel conflicts;
+		private System.Windows.Forms.PictureBox pictureBox1;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -137,6 +139,8 @@ namespace Novell.iFolder.iFolderCom
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
 			this.tabPage3 = new System.Windows.Forms.TabPage();
+			this.conflicts = new System.Windows.Forms.LinkLabel();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.byteCount = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
@@ -339,6 +343,8 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			// tabPage3
 			// 
+			this.tabPage3.Controls.Add(this.conflicts);
+			this.tabPage3.Controls.Add(this.pictureBox1);
 			this.tabPage3.Controls.Add(this.byteCount);
 			this.tabPage3.Controls.Add(this.label4);
 			this.tabPage3.Controls.Add(this.label3);
@@ -348,6 +354,27 @@ namespace Novell.iFolder.iFolderCom
 			this.tabPage3.Size = new System.Drawing.Size(336, 374);
 			this.tabPage3.TabIndex = 2;
 			this.tabPage3.Text = "Sync";
+			// 
+			// conflicts
+			// 
+			this.conflicts.LinkArea = new System.Windows.Forms.LinkArea(44, 10);
+			this.conflicts.Location = new System.Drawing.Point(40, 120);
+			this.conflicts.Name = "conflicts";
+			this.conflicts.Size = new System.Drawing.Size(280, 32);
+			this.conflicts.TabIndex = 4;
+			this.conflicts.TabStop = true;
+			this.conflicts.Text = "This iFolder currently contains conflicts.  Click here to resolve the conflicts.";
+			this.conflicts.Visible = false;
+			this.conflicts.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.conflicts_LinkClicked);
+			// 
+			// pictureBox1
+			// 
+			this.pictureBox1.Location = new System.Drawing.Point(8, 120);
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.Size = new System.Drawing.Size(24, 24);
+			this.pictureBox1.TabIndex = 5;
+			this.pictureBox1.TabStop = false;
+			this.pictureBox1.Visible = false;
 			// 
 			// byteCount
 			// 
@@ -572,6 +599,7 @@ namespace Novell.iFolder.iFolderCom
 						MyMessageBox mmb = new MyMessageBox();
 						mmb.Text = "Incomplete Address Book Entry";
 						mmb.Message = "Before you can share, you must add some data to your address book entry.  Do you want to add this information now?";
+						mmb.MessageIcon = SystemIcons.Question.ToBitmap();
 						DialogResult result = mmb.ShowDialog();
 						//MessageBox.Show(this, , , MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
 						if (result == DialogResult.Yes)
@@ -677,6 +705,9 @@ namespace Novell.iFolder.iFolderCom
 
 				//Assign the ImageList objects to the books ListView.
 				shareWith.SmallImageList = contactsImageList;
+
+				pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+				pictureBox1.Image = (Image)SystemIcons.Information.ToBitmap();
 			}
 			catch (Exception ex)
 			{
@@ -1143,6 +1174,8 @@ namespace Novell.iFolder.iFolderCom
 					SyncSize.CalculateSendSize(ifolder, out nodeCount, out bytesToSend);
 					objectCount.Text = nodeCount.ToString();
 					byteCount.Text = bytesToSend.ToString();
+
+					conflicts.Visible = pictureBox1.Visible = ifolder.HasCollisions();
 				}
 				catch (SimiasException ex)
 				{
@@ -1155,6 +1188,13 @@ namespace Novell.iFolder.iFolderCom
 
 				Cursor.Current = Cursors.Default;
 			}
+		}
+
+		private void conflicts_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+		{
+			ConflictResolver conflictResolver = new ConflictResolver();
+			conflictResolver.IFolder = this.ifolder;
+			conflictResolver.Show();		
 		}
 		#endregion
 
