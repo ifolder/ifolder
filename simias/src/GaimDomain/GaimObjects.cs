@@ -280,7 +280,7 @@ namespace Simias.Gaim
 		
 		public string GetSimiasMemberName(string machineName)
 		{
-			return string.Format("{0} ({1})", name, machineName);
+			return string.Format("{0} ({1})", Name, machineName);
 		}
 
 		public string GetSimiasUserID(string machineName)
