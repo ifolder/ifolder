@@ -199,7 +199,7 @@ namespace Novell.iFolder
 
 
 
-		private void ErrorHandler( SimiasException e, object context )
+		private void ErrorHandler( ApplicationException e, object context )
 		{
 			lock(EventQueue)
 			{
