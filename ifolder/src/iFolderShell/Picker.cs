@@ -29,6 +29,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Novell.iFolderCom
 {
@@ -41,6 +42,22 @@ namespace Novell.iFolderCom
 		#region Class Members
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(Picker));
 		private string searchContext;
+		private string searchText = null;
+		private int itemsViewable;
+		private int index;
+		private bool stopThread = false;
+		private Thread worker = null;
+		/// <summary>
+		/// Event used to signal that there is work to do.
+		/// </summary>
+		protected AutoResetEvent workEvent = null;
+
+		private delegate void AddLVItemEventDelegate(iFolderUser[] ifolderUsers);
+		private AddLVItemEventDelegate addLVItemEventDelegate;
+
+		private delegate void BeginAddLVItemEventDelegate();
+		private BeginAddLVItemEventDelegate beginAddLVItemEventDelegate;
+
 		private System.Windows.Forms.Button add;
 		private System.Windows.Forms.Button remove;
 		private System.Windows.Forms.TextBox search;
@@ -83,7 +100,18 @@ namespace Novell.iFolderCom
 			removedList = new ArrayList();
 			addedHT = new Hashtable();
 
+			addLVItemEventDelegate = new AddLVItemEventDelegate(addLVItemEvent);
+			beginAddLVItemEventDelegate = new BeginAddLVItemEventDelegate(beginAddLVItemEvent);
+
 			this.StartPosition = FormStartPosition.CenterParent;
+
+			workEvent = new AutoResetEvent(false);
+
+			if (worker == null)
+			{
+				worker = new Thread(new ThreadStart(searchThreadProc));
+				worker.Start();
+			}
 		}
 
 		/// <summary>
@@ -158,7 +186,6 @@ namespace Novell.iFolderCom
 			this.rosterLV.View = System.Windows.Forms.View.Details;
 			this.rosterLV.Visible = ((bool)(resources.GetObject("rosterLV.Visible")));
 			this.rosterLV.DoubleClick += new System.EventHandler(this.add_Click);
-			this.rosterLV.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.rosterLV_ColumnClick);
 			this.rosterLV.SelectedIndexChanged += new System.EventHandler(this.rosterLV_SelectedIndexChanged);
 			// 
 			// columnHeader1
@@ -540,6 +567,7 @@ namespace Novell.iFolderCom
 			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
 			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
 			this.Text = resources.GetString("$this.Text");
+			this.Closing += new System.ComponentModel.CancelEventHandler(this.Picker_Closing);
 			this.SizeChanged += new System.EventHandler(this.Picker_SizeChanged);
 			this.Load += new System.EventHandler(this.Picker_Load);
 			this.panel1.ResumeLayout(false);
@@ -619,26 +647,78 @@ namespace Novell.iFolderCom
 		#endregion
 
 		#region Private Methods
+		private void addLVItemEvent(iFolderUser[] ifolderUsers)
+		{
+			rosterLV.BeginUpdate();
+
+			try
+			{
+				if (ifolderUsers != null)
+				{
+					foreach (iFolderUser ifolderUser in ifolderUsers)
+					{
+						int imageIndex = ifolderUser.UserID.Equals(currentUser.UserID) ? 0 : 1;
+						string name = (ifolderUser.FN != null) && !ifolderUser.FN.Equals(string.Empty) ? ifolderUser.FN : ifolderUser.Name;
+						ListViewItem lvi = new ListViewItem(name, imageIndex);
+						//ListViewItem lvi = rosterLV.Items[index++];
+						lvi.Text = name;
+						lvi.ImageIndex = imageIndex;
+						lvi.Tag = ifolderUser;
+						rosterLV.Items.Add(lvi);
+
+						// Find and update items in the added list.
+						ListViewItem item = (ListViewItem)addedHT[ifolderUser.UserID];
+						if (item != null)
+						{
+							item.Tag = lvi;
+							addedHT[ifolderUser.UserID] = item;
+							lvi.ForeColor = Color.Gray;
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				if (ex.Message.IndexOf("The initial synchronization of the roster has not completed.") != -1)
+				{
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("rosterNotSynced"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+					mmb.ShowDialog();
+				}
+				else
+				{
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("memberReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+				}
+			}
+
+			rosterLV.EndUpdate();
+		}
+
+		private void beginAddLVItemEvent()
+		{
+			rosterLV.Items.Clear();
+		}
+
 		private void displayUsers(string search)
 		{
 			Cursor.Current = Cursors.WaitCursor;
 			rosterLV.Items.Clear();
 			rosterLV.BeginUpdate();
-			int totalMembers;
+			int totalMembers = 0;
+			index = 0;
 
 			try
 			{
 				iFolderUser[] ifolderUsers;
 				
+				if (searchContext != null)
+				{
+					ifWebService.FindCloseiFolderMembers(domainID, searchContext);
+					searchContext = null;
+				}
+
 				if ((search != null) && !search.Equals(string.Empty))
 				{
-//					ifolderUsers = ifWebService.SearchForDomainUsers(domainID, search);
-					if (searchContext != null)
-					{
-						ifWebService.FindCloseiFolderMembers(domainID, searchContext);
-						searchContext = null;
-					}
-
 					string attribute;
 					switch (attributeName.SelectedIndex)
 					{
@@ -665,36 +745,48 @@ namespace Novell.iFolderCom
 				}
 				else
 				{
-					if (searchContext != null)
-					{
-						ifWebService.FindCloseiFolderMembers(domainID, searchContext);
-						searchContext = null;
-					}
-
 					ifWebService.FindFirstiFolderMembers(
 						domainID,
 						25,
 						out searchContext,
 						out ifolderUsers,
 						out totalMembers);
-//					ifolderUsers = ifWebService.GetDomainUsers(domainID, 25);
 				}
 
-				foreach (iFolderUser ifolderUser in ifolderUsers)
+/*				if (totalMembers > 0)
 				{
-					int imageIndex = ifolderUser.UserID.Equals(currentUser.UserID) ? 0 : 1;
-					string name = (ifolderUser.FN != null) && !ifolderUser.FN.Equals(string.Empty) ? ifolderUser.FN : ifolderUser.Name;
-					ListViewItem lvi = new ListViewItem(name, imageIndex);
-					lvi.Tag = ifolderUser;
-					rosterLV.Items.Add(lvi);
-
-					// Find and update items in the added list.
-					ListViewItem item = (ListViewItem)addedHT[ifolderUser.UserID];
-					if (item != null)
+					ListViewItem[] lvItems = new ListViewItem[totalMembers];
+					foreach (ListViewItem lvi in lvItems)
 					{
-						item.Tag = lvi;
-						addedHT[ifolderUser.UserID] = item;
-						lvi.ForeColor = Color.Gray;
+						lvItems[index] = new ListViewItem("t" + index.ToString());
+						index++;
+					}
+
+					index = 0;
+					rosterLV.Items.AddRange(lvItems);
+				}*/
+
+				if (ifolderUsers != null)
+				{
+					foreach (iFolderUser ifolderUser in ifolderUsers)
+					{
+						int imageIndex = ifolderUser.UserID.Equals(currentUser.UserID) ? 0 : 1;
+						string name = (ifolderUser.FN != null) && !ifolderUser.FN.Equals(string.Empty) ? ifolderUser.FN : ifolderUser.Name;
+						ListViewItem lvi = new ListViewItem(name, imageIndex);
+//						ListViewItem lvi = rosterLV.Items[index++];
+						lvi.Text = name;
+						lvi.ImageIndex = imageIndex;
+						lvi.Tag = ifolderUser;
+						rosterLV.Items.Add(lvi);
+
+						// Find and update items in the added list.
+						ListViewItem item = (ListViewItem)addedHT[ifolderUser.UserID];
+						if (item != null)
+						{
+							item.Tag = lvi;
+							addedHT[ifolderUser.UserID] = item;
+							lvi.ForeColor = Color.Gray;
+						}
 					}
 				}
 			}
@@ -714,7 +806,125 @@ namespace Novell.iFolderCom
 
 			rosterLV.EndUpdate();
 			Cursor.Current = Cursors.Default;
+
+//			if (totalMembers > 25)
+//			{
+//				stopThread = false;
+//				workEvent.Set();
+//			}
 		}
+		
+		
+		private void searchThreadProc()
+		{
+			while (true)
+			{
+				int totalMembers = 0;
+				int currentIndex = -1;
+
+				try
+				{
+					BeginInvoke(beginAddLVItemEventDelegate);
+
+					while (!stopThread && currentIndex < totalMembers)
+					{
+						iFolderUser[] ifolderUsers;
+				
+						if (searchContext == null)
+						{
+							if ((searchText != null) && !searchText.Equals(string.Empty))
+							{
+								string attribute;
+								switch (attributeName.SelectedIndex)
+								{
+									case 0:
+										attribute = "Given";
+										break;
+									case 1:
+										attribute = "Family";
+										break;
+									default:
+										attribute = "FN";
+										break;
+								}
+
+								ifWebService.FindFirstSpecificiFolderMembers(
+									domainID,
+									attribute,
+									searchText,
+									SearchType.Begins,
+									25,
+									out searchContext,
+									out ifolderUsers,
+									out totalMembers);
+							}
+							else
+							{
+								ifWebService.FindFirstiFolderMembers(
+									domainID,
+									25,
+									out searchContext,
+									out ifolderUsers,
+									out totalMembers);
+							}
+						}
+						else
+						{
+							ifWebService.FindNextiFolderMembers(
+								domainID,
+								ref searchContext,
+								25,
+								out ifolderUsers);
+						}
+
+						if (ifolderUsers != null)
+						{
+							if (currentIndex == -1)
+							{
+								currentIndex = ifolderUsers.Length;
+							}
+							else
+							{
+								currentIndex += ifolderUsers.Length;
+							}
+
+							// BeginInvoke ...
+							BeginInvoke(addLVItemEventDelegate, new object[] {ifolderUsers});
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					if (ex.Message.Equals("Thread was being aborted."))
+					{
+						// Ignore.
+					}
+					else if (ex.Message.IndexOf("The initial synchronization of the roster has not completed.") != -1)
+					{
+						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("rosterNotSynced"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+						mmb.ShowDialog();
+					}
+					else
+					{
+						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("memberReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
+					}
+				}
+
+				if (searchContext != null)
+				{
+					try
+					{
+						ifWebService.FindCloseiFolderMembers(domainID, searchContext);
+						searchContext = null;
+					}
+					catch {}
+				}
+
+				// Go to sleep until there is work to do.
+				workEvent.WaitOne();
+			}
+		}		
 		#endregion
 
 		#region Public Methods
@@ -777,8 +987,16 @@ namespace Novell.iFolderCom
 			// TODO: need to add event handler for selection changed and tie it in with the timer.
 			attributeName.SelectedIndex = 0;
 
+			ListViewItem lvItem = new ListViewItem("Test", 0);
+			rosterLV.Items.Add(lvItem);
+			Rectangle rect = rosterLV.GetItemRect(0);
+			itemsViewable = rosterLV.ClientSize.Height / rect.Height;
+			rosterLV.Items.Clear();
+
+			// TODO: need to set waitcursor.
+
 			// Put the objects in the listview.
-			displayUsers(null);
+//			displayUsers(null);
 		}
 
 		private void Picker_SizeChanged(object sender, System.EventArgs e)
@@ -856,13 +1074,20 @@ namespace Novell.iFolderCom
 			searchTimer.Stop();
 
 			// Filter the user list view.
-			displayUsers(search.Text);
+//			displayUsers(search.Text);
+
+			searchText = search.Text;
+			// Signal that there is work to do.
+			stopThread = false;
+			workEvent.Set();
 		}
 
 		private void search_TextChanged(object sender, System.EventArgs e)
 		{
 			if (search.Focused)
 			{
+				stopThread = true;
+
 				// Reset the timer when search text is entered.
 				searchTimer.Stop();
 				searchTimer.Start();
@@ -907,28 +1132,6 @@ namespace Novell.iFolderCom
 			}
 		}
 
-		private void rosterLV_ColumnClick(object sender, System.Windows.Forms.ColumnClickEventArgs e)
-		{
-			switch (rosterLV.Sorting)
-			{
-				case SortOrder.None:
-				{
-					rosterLV.Sorting = SortOrder.Ascending;
-					break;
-				}
-				case SortOrder.Ascending:
-				{
-					rosterLV.Sorting = SortOrder.Descending;
-					break;
-				}
-				case SortOrder.Descending:
-				{
-					rosterLV.Sorting = SortOrder.Ascending;
-					break;
-				}
-			}
-		}
-
 		private void addedLV_ColumnClick(object sender, System.Windows.Forms.ColumnClickEventArgs e)
 		{
 			switch (addedLV.Sorting)
@@ -948,6 +1151,24 @@ namespace Novell.iFolderCom
 					addedLV.Sorting = SortOrder.Ascending;
 					break;
 				}
+			}
+		}
+
+		private void Picker_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			if ((worker != null) && worker.IsAlive)
+			{
+				worker.Abort();
+			}
+
+			if (searchContext != null)
+			{
+				try
+				{
+					ifWebService.FindCloseiFolderMembers(domainID, searchContext);
+					searchContext = null;
+				}
+				catch {}
 			}
 		}
 		#endregion
