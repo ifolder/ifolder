@@ -347,7 +347,6 @@
 		<row><td>ISRegistryComponent</td><td>{F09F7E00-17CF-425E-8466-D8CEF6DE68C7}</td><td>INSTALLDIR</td><td>0</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>InvitationWizard.exe</td><td>{BC42776A-C049-46C2-9274-5E233E82B853}</td><td>INSTALLDIR</td><td>0</td><td/><td>InvitationWizard.exe</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ResourceFiles</td><td>{F4C858F9-99C7-440D-8933-FD7629AA43F7}</td><td>RES</td><td>0</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ShutdowniFolder.exe</td><td>{6039B70C-6718-445E-BBF3-0F71042079B6}</td><td>INSTALLDIR</td><td>0</td><td/><td>ShutdowniFolder.exe</td><td>17</td><td>This component consists of a Windows executable.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>WindowsFolderFiles</td><td>{CCFB8608-E84D-402C-AD51-BB6CF2069380}</td><td>WindowsFolder</td><td>16</td><td/><td>explorer.exe.manifest</td><td>17</td><td>This component consists of files not belonging to other components.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>iFolderApp.exe</td><td>{EA8A7500-4D83-4A90-8635-F14D590AA839}</td><td>INSTALLDIR</td><td>0</td><td/><td>iFolderApp.exe</td><td>17</td><td>This component consists of a Windows executable.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>iFolderComponent.dll</td><td>{7CFA7C41-C502-4C7E-B1D7-8C0C346E8F28}</td><td>INSTALLDIR</td><td>0</td><td/><td>iFolderComponent.dll</td><td>49</td><td>This component consists of a Windows dynamic link library.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -1301,7 +1300,6 @@
 		<row><td>iFolder_Files</td><td>ISRegistryComponent</td></row>
 		<row><td>iFolder_Files</td><td>InvitationWizard.exe</td></row>
 		<row><td>iFolder_Files</td><td>ResourceFiles</td></row>
-		<row><td>iFolder_Files</td><td>ShutdowniFolder.exe</td></row>
 		<row><td>iFolder_Files</td><td>WindowsFolderFiles</td></row>
 		<row><td>iFolder_Files</td><td>iFolderApp.exe</td></row>
 		<row><td>iFolder_Files</td><td>iFolderComponent.dll</td></row>
@@ -1323,7 +1321,6 @@
 		<row><td>Invitation.ico</td><td>InvitationWizard.exe</td><td>INVITA~1.ICO|Invitation.ico</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\Invitation.ico</td><td>1</td><td/></row>
 		<row><td>InvitationWizard.exe</td><td>InvitationWizard.exe</td><td>INVITA~1.EXE|InvitationWizard.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\InvitationWizard.exe</td><td>1</td><td/></row>
 		<row><td>InvitationWizard.exe.manifes</td><td>InvitationWizard.exe</td><td>INVITA~1.MAN|InvitationWizard.exe.manifest</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\InvitationWizard.exe.manifest</td><td>1</td><td/></row>
-		<row><td>ShutdowniFolder.exe</td><td>ShutdowniFolder.exe</td><td>SHUTDO~1.EXE|ShutdowniFolder.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\shutdownifolder\ShutdowniFolder.exe</td><td>1</td><td/></row>
 		<row><td>explorer.exe.manifest</td><td>WindowsFolderFiles</td><td>EXPLOR~1.MAN|explorer.exe.manifest</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\ifoldershell\explorer.exe.manifest</td><td>1</td><td/></row>
 		<row><td>iFolderApp.exe</td><td>iFolderApp.exe</td><td>IFOLDE~2.EXE|iFolderApp.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderApp.exe</td><td>1</td><td/></row>
 		<row><td>iFolderComponent.dll</td><td>iFolderComponent.dll</td><td>IFOLDE~1.DLL|iFolderComponent.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderComponent.dll</td><td>1</td><td/></row>
@@ -1486,7 +1483,6 @@
 		<row><td>ISRegistryComponent</td><td/><td/><td>_548C54E2_29EE_4627_A6F5_D1A9149465BA_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>InvitationWizard.exe</td><td/><td/><td>_AEE8BD7E_A11C_4049_8D71_F761CAEE5BD0_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ResourceFiles</td><td/><td/><td>_973FE1A6_6311_4C36_8910_2631D644D5B5_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ShutdowniFolder.exe</td><td/><td/><td>_CA3FB7BB_E6C4_4497_A6BD_99B19A6A3AC6_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>WindowsFolderFiles</td><td/><td/><td>_F9B4A7DF_BA82_4B0D_AC30_DD72B949703C_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>iFolderApp.exe</td><td/><td/><td>_33BF21AB_497A_466B_BAD7_5FC39F304AB4_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>iFolderComponent.dll</td><td/><td/><td>_E161F255_4BF7_4D1C_86EF_E443B51549A5_FILTER</td><td/><td/><td/><td/></row>
