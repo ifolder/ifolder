@@ -45,6 +45,10 @@ namespace Simias
 		// Used to hold off multiple waiters during the opening of the configuration file.
 		private static object fileLock = new object();
 		private string storePath;
+		private FileStream fs = null;
+		private bool modified;
+		private XmlDocument doc;
+		private XmlElement docElement;
 		
 		/// <summary>
 		/// Default Constructor.
@@ -128,7 +132,18 @@ namespace Simias
 		/// <returns>The key as an XmlElement.</returns>
 		public XmlElement GetElement(string section, string key)
 		{
-			XmlElement keyElement = GetKey(section, key);
+			XmlElement keyElement;
+			GetDocElement();
+
+			try
+			{
+				keyElement = GetKey(section, key);
+			}
+			finally
+			{
+				ReleaseDocElement();
+			}
+
 			return keyElement;
 		}
 
@@ -136,9 +151,20 @@ namespace Simias
 		/// Sets the modified element.  The element must have been retrieved from GetElement.
 		/// </summary>
 		/// <param name="keyElement">The element to save.</param>
-		public void SetElement(XmlElement keyElement)
+		public void SetElement(string section, string key, XmlElement newElement)
 		{
-			SaveConfigFile( keyElement.OwnerDocument );
+			GetDocElement();
+
+			try
+			{
+				XmlElement keyElement = GetKey(section, key);
+				keyElement.InnerXml = newElement.InnerXml;
+				modified = true;
+			}
+			finally
+			{
+				ReleaseDocElement();
+			}
 		}
 
 		/// <summary>
@@ -162,20 +188,29 @@ namespace Simias
 		public string Get(string section, string key, string defaultValue)
 		{
 			string keyValue = null;
-			XmlElement keyElement = GetKey(section, key);
-			keyValue = keyElement.GetAttribute(ValueAttr);
-			if (keyValue == "")
+			GetDocElement();
+
+			try
 			{
-				if (defaultValue != null )
+				XmlElement keyElement = GetKey(section, key);
+				keyValue = keyElement.GetAttribute(ValueAttr);
+				if (keyValue == "")
 				{
-					keyElement.SetAttribute(ValueAttr, defaultValue);
-					SaveConfigFile( keyElement.OwnerDocument );
-					keyValue = defaultValue;
+					if (defaultValue != null )
+					{
+						keyElement.SetAttribute(ValueAttr, defaultValue);
+						keyValue = defaultValue;
+						modified = true;
+					}
+					else
+					{
+						keyValue = null;
+					}
 				}
-				else
-				{
-					keyValue = null;
-				}
+			}
+			finally
+			{
+				ReleaseDocElement();
 			}
 
 			return keyValue;
@@ -199,9 +234,18 @@ namespace Simias
 		/// <param name="keyValue">The value of the key.</param>
 		public void Set(string section, string key, string keyValue)
 		{
-			XmlElement keyElement = GetKey(section, key);
-			keyElement.SetAttribute(ValueAttr, keyValue);
-			SaveConfigFile( keyElement.OwnerDocument );
+			GetDocElement();
+
+			try
+			{
+				XmlElement keyElement = GetKey(section, key);
+				keyElement.SetAttribute(ValueAttr, keyValue);
+				modified = true;
+			}
+			finally
+			{
+				ReleaseDocElement();
+			}
 		}
 
 		/// <summary>
@@ -222,7 +266,19 @@ namespace Simias
 		/// <returns>True if the section and key exists, otherwise false is returned.</returns>
 		public bool Exists( string section, string key )
 		{
-			return KeyExists(section, key);
+			GetDocElement();
+			bool exists;
+
+			try
+			{
+				exists = KeyExists(section, key);
+			}
+			finally
+			{
+				ReleaseDocElement();
+			}
+
+			return exists;
 		}
 
 		// These two methods are going to read the XML document every
@@ -230,10 +286,7 @@ namespace Simias
 		// and this is probably not called all the time
 		private XmlElement GetSection(string section)
 		{
-			XmlElement docElement;
 			XmlElement sectionElement;
-			
-			docElement = GetDocElement();
 
 			string str = string.Format("//section[@name='{0}']", section);
 			sectionElement = (XmlElement)docElement.SelectSingleNode(str);
@@ -243,7 +296,8 @@ namespace Simias
 				// Create the Section node
 				sectionElement = docElement.OwnerDocument.CreateElement(SectionTag);
 				sectionElement.SetAttribute(NameAttr, section);
-				docElement.AppendChild(sectionElement);				
+				docElement.AppendChild(sectionElement);
+				modified = true;
 			}
 
 			return sectionElement;
@@ -253,6 +307,7 @@ namespace Simias
 		{
 			XmlElement keyElement = null;
 			XmlElement sectionElement = GetSection(section);
+
 			string xpath = string.Format("//{0}[@{1}='{2}']/{3}[@{1}='{4}']", SectionTag, NameAttr, section, SettingTag, key);
 			keyElement = (XmlElement)sectionElement.SelectSingleNode(xpath);
 			if (keyElement == null)
@@ -260,7 +315,7 @@ namespace Simias
 				keyElement = (XmlElement)sectionElement.OwnerDocument.CreateNode(XmlNodeType.Element, SettingTag, "");
 				keyElement.SetAttribute(NameAttr, key);
 				sectionElement.AppendChild(keyElement);
-				SaveConfigFile( keyElement.OwnerDocument );
+				modified = true;
 			}
 
 			return keyElement;
@@ -271,7 +326,7 @@ namespace Simias
 			bool foundKey = false;
 		
 			string xpath = string.Format("//{0}[@{1}='{2}']", SectionTag, NameAttr, section);
-			XmlElement sectionElement = (XmlElement)GetDocElement().SelectSingleNode(xpath);
+			XmlElement sectionElement = (XmlElement)docElement.SelectSingleNode(xpath);
 			if(sectionElement != null)
 			{
 				xpath = string.Format("//{0}[@{1}='{2}']/{3}[@{1}='{4}']", SectionTag, NameAttr, section, SettingTag, key);
@@ -284,48 +339,42 @@ namespace Simias
 			return foundKey;
 		}
 
-		private XmlElement GetDocElement()
+		private void GetDocElement()
 		{
-			XmlDocument doc = new XmlDocument();
+			doc = new XmlDocument();
 
 			try
 			{
-				FileStream fs = OpenConfigFile();
-
-				try
-				{
-					doc.Load(fs);
-				}
-				finally
-				{
-					fs.Close();
-				}
+				OpenConfigFile();
+				modified = false;
+				doc.Load(fs);
 			}
 			catch
 			{
 				doc.AppendChild(doc.CreateElement(RootElementTag));
+				modified = true;
 			}
 
-			return doc.DocumentElement;
+			docElement = doc.DocumentElement;
 		}
 
 		/// <summary>
 		/// Opens the event log file, retrying if the file is currently in use.
 		/// </summary>
 		/// <returns>A FileStream object associated with the event log file.</returns>
-		private FileStream OpenConfigFile()
+		private void OpenConfigFile()
 		{
-			FileStream fs = null;
+			FileStream fsLocal = null;
 
 			lock ( fileLock )
 			{
 				// Stay in the loop until the file is opened.
-				while ( fs == null )
+				while ( fsLocal == null )
 				{
 					try
 					{
 						// Open the log file.
-						fs = new FileStream( ConfigFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None );
+						fsLocal = new FileStream( ConfigFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None );
 					}
 					catch ( IOException )
 					{
@@ -333,27 +382,24 @@ namespace Simias
 						Thread.Sleep( 100 );
 					}
 				}
-			}
 
-			return fs;
+				fs = fsLocal;
+			}
 		}
 
-		/// <summary>
-		/// Save the specified Xml document to the configuration file.
-		/// </summary>
-		/// <param name="document">Xml document to save to the configuration file.</param>
-		private void SaveConfigFile( XmlDocument document )
+		private void ReleaseDocElement()
 		{
-			FileStream fs = OpenConfigFile();
+			if (modified)
+			{
+				fs.Position = fs.Seek(0, SeekOrigin.Begin);
+				doc.Save(fs);
+				modified = false;
+			}
 
-			try
-			{
-				document.Save( fs );
-			}
-			finally
-			{
-				fs.Close();
-			}
+			fs.SetLength(fs.Position);
+			fs.Close();
+			doc = null;
+			docElement = null;
 		}
 
 		#region Static Methods

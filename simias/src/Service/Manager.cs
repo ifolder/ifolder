@@ -270,7 +270,7 @@ namespace Simias.Service
 					{
 						servicesElement.AppendChild(el);
 					}
-					conf.SetElement(servicesElement);
+					conf.SetElement(CFG_Section, CFG_Services, servicesElement);
 					logger.Info("{0} service installed", svc.Name);
 				}
 				else
@@ -319,7 +319,7 @@ namespace Simias.Service
 				if (el != null)
 				{
 					servicesElement.RemoveChild(el);
-					conf.SetElement(servicesElement);
+					conf.SetElement(CFG_Section, CFG_Services, servicesElement);
 					logger.Info("{0} service uninstalled", svcName);
 				}
 				else
