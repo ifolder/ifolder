@@ -76,7 +76,6 @@ namespace Simias
 		public static void WriteLine(Exception e)
 		{
 			log.Debug(e, "");
-			log.Debug(e.StackTrace);
 		}
 		
 		/// <summary>
