@@ -317,7 +317,7 @@ namespace Novell.iFolder.InvitationWizard
 					if (ConvertSubscriptionInfo(subInfo, out subscription))
 					{
 						// Check the state of the subscription.  If it is ready, proceed; otherwise, quit.
-						if (subscription.SubscriptionState != SubscriptionStates.Received)
+/*						if (subscription.SubscriptionState != SubscriptionStates.Received)
 						{
 							// TODO: change the message text  ... and maybe we should go to a finished page?
 							MessageBox.Show("The invitation is not ready yet.  Please check back later.", "Invitation Not Ready");
@@ -330,7 +330,7 @@ namespace Novell.iFolder.InvitationWizard
 						// TODO: change the message text ... and maybe we should go to a finished page?
 						MessageBox.Show("The invitation has been successfully added to your message box.  Once the invitation has synchronized you will be able to accept or decline it.", "Invitation Added");
 						Application.Exit();
-					}
+*/					}
 				}
 				catch (SimiasException ex)
 				{
@@ -513,6 +513,7 @@ namespace Novell.iFolder.InvitationWizard
 			{
 				// TODO: what should we name these?
 				subscription = new Subscription("Subscription Name", subscriptionInfo);
+				subscription.SubscriptionState = SubscriptionStates.Received;
 				poBox.AddMessage(subscription);
 				return false;
 			}

@@ -40,14 +40,11 @@ namespace Novell.iFolder.FormsTrayApp
 	{
 		private POBox poBox = null;
 		private Store store = null;
-		private System.Windows.Forms.ListView inbound;
-		private System.Windows.Forms.ListView outbound;
 		private System.Windows.Forms.ComboBox comboBox1;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ColumnHeader columnHeader1;
+		private System.Windows.Forms.ListView messages;
 		private System.Windows.Forms.ColumnHeader columnHeader2;
-		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Label label3;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -108,45 +105,28 @@ namespace Novell.iFolder.FormsTrayApp
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.inbound = new System.Windows.Forms.ListView();
+			this.messages = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
-			this.outbound = new System.Windows.Forms.ListView();
-			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.comboBox1 = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
+			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.SuspendLayout();
 			// 
-			// inbound
+			// messages
 			// 
-			this.inbound.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-																					  this.columnHeader1});
-			this.inbound.Location = new System.Drawing.Point(16, 112);
-			this.inbound.Name = "inbound";
-			this.inbound.Size = new System.Drawing.Size(480, 144);
-			this.inbound.TabIndex = 0;
-			this.inbound.View = System.Windows.Forms.View.Details;
+			this.messages.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+																					   this.columnHeader1,
+																					   this.columnHeader2});
+			this.messages.Location = new System.Drawing.Point(16, 112);
+			this.messages.Name = "messages";
+			this.messages.Size = new System.Drawing.Size(480, 232);
+			this.messages.TabIndex = 0;
+			this.messages.View = System.Windows.Forms.View.Details;
 			// 
 			// columnHeader1
 			// 
 			this.columnHeader1.Text = "Name";
 			this.columnHeader1.Width = 125;
-			// 
-			// outbound
-			// 
-			this.outbound.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-																					   this.columnHeader2});
-			this.outbound.Location = new System.Drawing.Point(16, 288);
-			this.outbound.Name = "outbound";
-			this.outbound.Size = new System.Drawing.Size(480, 144);
-			this.outbound.TabIndex = 1;
-			this.outbound.View = System.Windows.Forms.View.Details;
-			// 
-			// columnHeader2
-			// 
-			this.columnHeader2.Text = "Name";
-			this.columnHeader2.Width = 125;
 			// 
 			// comboBox1
 			// 
@@ -165,32 +145,18 @@ namespace Novell.iFolder.FormsTrayApp
 			this.label1.TabIndex = 3;
 			this.label1.Text = "Domain:";
 			// 
-			// label2
+			// columnHeader2
 			// 
-			this.label2.Location = new System.Drawing.Point(16, 96);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(100, 16);
-			this.label2.TabIndex = 4;
-			this.label2.Text = "Inbox:";
-			// 
-			// label3
-			// 
-			this.label3.Location = new System.Drawing.Point(16, 272);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(100, 16);
-			this.label3.TabIndex = 5;
-			this.label3.Text = "Outbox:";
+			this.columnHeader2.Text = "State";
+			this.columnHeader2.Width = 92;
 			// 
 			// MessageForm
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(512, 454);
-			this.Controls.Add(this.label3);
-			this.Controls.Add(this.label2);
 			this.Controls.Add(this.comboBox1);
 			this.Controls.Add(this.label1);
-			this.Controls.Add(this.outbound);
-			this.Controls.Add(this.inbound);
+			this.Controls.Add(this.messages);
 			this.Name = "MessageForm";
 			this.Text = "Messages";
 			this.Load += new System.EventHandler(this.MessageForm_Load);
@@ -208,36 +174,26 @@ namespace Novell.iFolder.FormsTrayApp
 			try
 			{
 				string basePath = Path.Combine(Application.StartupPath, "res");
-				outbound.SmallImageList = new ImageList();
-				outbound.SmallImageList.Images.Add(Image.FromFile(Path.Combine(basePath, "mail_closed.ico")));
-				outbound.SmallImageList.Images.Add(Image.FromFile(Path.Combine(basePath, "mail_opened.ico")));
-				inbound.SmallImageList = outbound.SmallImageList;
+				messages.SmallImageList = new ImageList();
+				messages.SmallImageList.Images.Add(Image.FromFile(Path.Combine(basePath, "mail_closed.ico")));
+				messages.SmallImageList.Images.Add(Image.FromFile(Path.Combine(basePath, "mail_opened.ico")));
 			}
 			catch {}
 
-			ICSList msgList = this.poBox.GetMessagesByMessageType(Simias.POBox.Message.OutboundMessage);
+//			ICSList msgList = this.poBox.GetMessagesByMessageType(Simias.POBox.Message.OutboundMessage);
 
-			outbound.BeginUpdate();
+			ICSList msgList = poBox.GetNodesByType(typeof(Subscription).Name);
+
+			messages.BeginUpdate();
 			foreach (ShallowNode sn in msgList)
 			{
-				Simias.POBox.Message message = new Simias.POBox.Message(poBox, sn);
-				ListViewItem lvi = new ListViewItem(message.Name, (int)message.State);
-				lvi.Tag = message;
-				outbound.Items.Add(lvi);
+				Subscription sub = new Subscription(poBox, sn);
+				string[] items = new string[]{sub.Name, sub.SubscriptionState.ToString()};
+				ListViewItem lvi = new ListViewItem(items, (int)sub.State);
+				lvi.Tag = sub;
+				messages.Items.Add(lvi);
 			}
-			outbound.EndUpdate();
-
-			msgList = poBox.GetMessagesByMessageType(Simias.POBox.Message.InboundMessage);
-
-			inbound.BeginUpdate();
-			foreach (ShallowNode sn in msgList)
-			{
-				Simias.POBox.Message message = new Simias.POBox.Message(poBox, sn);
-				ListViewItem lvi = new ListViewItem(message.Name, (int)message.State);
-				lvi.Tag = message;
-				inbound.Items.Add(lvi);
-			}
-			inbound.EndUpdate();
+			messages.EndUpdate();
 		}
 		#endregion
 	}

@@ -195,7 +195,7 @@ namespace Novell.iFolder.InvitationWizard
 					if(((InvitationWizard)(this.Parent)).ConvertSubscriptionInfo(subInfo, out subscription))
 					{
 						// Check the state of the subscription.  If it is ready, proceed; otherwise, quit.
-						if (subscription.SubscriptionState != SubscriptionStates.Received)
+/*						if (subscription.SubscriptionState != SubscriptionStates.Received)
 						{
 							// TODO: change the message text.
 							MessageBox.Show("The invitation is not ready yet.  Please check back later.", "Invitation Not Ready");
@@ -212,7 +212,7 @@ namespace Novell.iFolder.InvitationWizard
 
 						// TODO: proceed to finish page???
 						Application.Exit();
-					}
+*/					}
 
 					((InvitationWizard)(this.Parent)).Subscription = subscription;
 				}
