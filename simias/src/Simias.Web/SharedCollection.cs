@@ -151,6 +151,45 @@ namespace Simias.Web
 
 
 		/// <summary>
+		/// Creates a new collection of the type specified.  It gets the
+		/// current member and makes them the owner
+		/// </summary>
+		/// <param name = "LocalPath">
+		/// The name of the Collection to be created
+		/// </param>
+		/// <param name = "Type">
+		/// A Type value to add to the collection type.  Examples would be
+		/// iFolder, AB:AddressBook, etc. Leave this blank and no type
+		/// will be added.
+		/// </param>
+		/// <returns>
+		/// Collection that was created
+		/// </returns>
+		public static Collection CreateLocalSharedCollection(
+				string LocalPath, string DomainID, string Type)
+		{
+			Store store = Store.GetStore();
+
+			Roster roster = 
+					store.GetDomain(DomainID).GetRoster(store);
+			if(roster == null)
+				throw new Exception("Unable to obtain default Roster");
+
+			Simias.Storage.Member member = roster.GetCurrentMember();
+			if(member == null)
+				throw new Exception("Unable to obtain current member");
+
+
+			String name = Path.GetFileName(LocalPath);
+
+			return CreateSharedCollection(name, DomainID, member.UserID, 
+						Type, true, LocalPath);
+		}
+
+
+
+
+		/// <summary>
 		/// WebMethod that creates and SharedCollection
 		/// </summary>
 		/// <param name = "Name">
@@ -178,6 +217,33 @@ namespace Simias.Web
 				string Name, string UserID, string Type, 
 				bool UnmanagedFiles, string CollectionPath)
 		{
+			return (CreateSharedCollection(Name, Store.GetStore().DefaultDomain,
+										   UserID, Type, UnmanagedFiles, CollectionPath));
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that creates a SharedCollection
+		/// </summary>
+		/// <param name="Name">The name of the SharedCollection to create.  If a Path is
+		/// specified, it must match the name of the last folder in the path.</param>
+		/// <param name="DomainID">The ID of the domain to create the collection in.</param>
+		/// <param name="UserID">The UserID to be made the owner of this SharedCollection. 
+		/// A subscription will be placed in this UserID's POBox.</param>
+		/// <param name="Type">A Type value to add to the collection type.  Examples would be
+		/// iFolder, AB:AddressBook, etc. Leave this blank and no type will be added.</param>
+		/// <param name="UnmanagedFiles">A value indicating if this collection contains files
+		/// that are not store-managed.</param>
+		/// <param name="CollectionPath">The full path to this SharedCollection.  If Path is 
+		/// null or "", it will be ignored. The last folder name in the path should match the 
+		/// name of this SharedCollection</param>
+		/// <returns>The Collection object that was created.</returns>
+		public static Collection CreateSharedCollection(
+			string Name, string DomainID, string UserID, string Type,
+			bool UnmanagedFiles, string CollectionPath)
+		{
 			ArrayList nodeList = new ArrayList();
 
 			// if they are attempting to create a Collection using
@@ -195,7 +261,7 @@ namespace Simias.Web
 
 			// Create the Collection and set it as an iFolder
 			Collection c = 
-					new Collection(store, Name, store.DefaultDomain);
+					new Collection(store, Name, DomainID);
 
 			if( (Type != null) && (Type.Length > 0) )
 				c.SetType(c, Type);
@@ -204,7 +270,7 @@ namespace Simias.Web
 
 			// Create the member and add it as the owner
 			Roster roster = 
-					store.GetDomain(store.DefaultDomain).GetRoster(store);
+					store.GetDomain(DomainID).GetRoster(store);
 			if(roster == null)
 				throw new Exception("Unable to obtain default Roster");
 
