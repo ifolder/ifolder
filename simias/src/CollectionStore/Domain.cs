@@ -63,6 +63,22 @@ namespace Simias.Storage
 		static public string WorkGroupDomainName = "WorkGroup";
 		#endregion
 
+		#region Properties
+		/// <summary>
+		/// Gets or sets the domain description.
+		/// </summary>
+		public string Description
+		{
+			get 
+			{ 
+				Property p = properties.GetSingleProperty( PropertyTags.Description );
+				return ( p != null ) ? p.Value as String : null;
+			}
+
+			set { properties.ModifyNodeProperty( PropertyTags.Description, value ); }
+		}
+		#endregion
+
 		#region Constructors
 		/// <summary>
 		/// Constructor for creating a new Domain object.
