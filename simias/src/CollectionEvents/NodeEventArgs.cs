@@ -42,7 +42,7 @@ namespace Simias.Event
 		/// <param name="type">The Type of the Node.</param>
 		/// <param name="changeType">The type of change that occured.</param>
 		public NodeEventArgs(string source, string node, string collection, string domainName, string type, EventType changeType) :
-			this(source, node, collection, domainName, type, changeType, null)
+			this(source, node, collection, domainName, type, changeType, 0)
 		{
 		}
 
@@ -56,9 +56,9 @@ namespace Simias.Event
 		/// <param name="domainName">The domainName from the store that the collection belongs to.</param>
 		/// <param name="type">The Type of the Node.</param>
 		/// <param name="changeType">The type of change that occured.</param>
-		/// <param name="context">A user defined context only has meaning to a publisher.</param>
-		public NodeEventArgs(string source, string node, string collection, string domainName, string type, EventType changeType, object context) :
-			base(source, node, collection, domainName, type, changeType, context)
+		/// <param name="eventId">A user defined event ID. Only has meaning to a publisher.</param>
+		public NodeEventArgs(string source, string node, string collection, string domainName, string type, EventType changeType, int eventId) :
+			base(source, node, collection, domainName, type, changeType, eventId)
 		{
 		}
 

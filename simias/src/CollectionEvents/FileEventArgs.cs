@@ -42,7 +42,7 @@ namespace Simias.Event
 		/// <param name="domainName">The domainName from the store that the collection belongs to.</param>
 		/// <param name="changeType">The FileChangeType for this event.</param>
 		public FileEventArgs(string source, string fullPath, string collectionId, string domainName, EventType changeType):
-			base(source, fullPath, collectionId, domainName, Path.GetExtension(fullPath), changeType, null)
+			base(source, fullPath, collectionId, domainName, Path.GetExtension(fullPath), changeType, 0)
 		{
 		}
 		

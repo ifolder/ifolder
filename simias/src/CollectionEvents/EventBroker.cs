@@ -124,6 +124,7 @@ namespace Simias.Event
 		[OneWay]
 		public void RaiseCollectionRootChangedEvent(CollectionRootChangedEventArgs args)
 		{
+			MyTrace.WriteLine("Recieved CollectionRootChangedEvent ID = {0}", args.ID);
 			if (CollectionRootChanged != null)
 			{
 				Delegate[] cbList = CollectionRootChanged.GetInvocationList();
@@ -154,12 +155,15 @@ namespace Simias.Event
 			switch (args.ChangeType)
 			{
 				case NodeEventArgs.EventType.Created:
+					MyTrace.WriteLine("Received Node Create Event. ID = {0}", args.ID);
 					eHandler = NodeCreated;
 					break;
 				case NodeEventArgs.EventType.Changed:
+					MyTrace.WriteLine("Received Node Changed Event. ID = {0}", args.ID);
 					eHandler = NodeChanged;
 					break;
 				case NodeEventArgs.EventType.Deleted:
+					MyTrace.WriteLine("Received Node Delete Event. ID = {0}", args.ID);
 					eHandler = NodeDeleted;
 					break;
 				default:
@@ -178,7 +182,7 @@ namespace Simias.Event
 					}
 					catch 
 					{
-						// Remove the offending delegate.
+                        // Remove the offending delegate.
 						switch (args.ChangeType)
 						{
 							case NodeEventArgs.EventType.Created:
@@ -193,7 +197,7 @@ namespace Simias.Event
 							default:
 								break;
 						}
-						System.Diagnostics.Debug.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
+						MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
 					}
 				}
 			}
@@ -212,15 +216,19 @@ namespace Simias.Event
 			switch (args.ChangeType)
 			{
 				case FileEventArgs.EventType.Created:
+					MyTrace.WriteLine("Received File Create Event. Name = {0}", args.Name);
 					eHandler = FileCreated;
 					break;
 				case FileEventArgs.EventType.Changed:
+					MyTrace.WriteLine("Received File Changed Event. Name = {0}", args.Name);
 					eHandler = FileChanged;
 					break;
 				case FileEventArgs.EventType.Deleted:
+					MyTrace.WriteLine("Received File Delete Event. Name = {0}", args.Name);
 					eHandler = FileDeleted;
 					break;
 				case FileEventArgs.EventType.Renamed:
+					MyTrace.WriteLine("Received File Rename Event. OldName = {0} NewName = {1}", ((FileRenameEventArgs)args).OldName, args.Name);
 					eHandler = null;
 					if (FileRenamed != null)
 					{
@@ -269,7 +277,7 @@ namespace Simias.Event
 								FileDeleted -= cb;
 								break;
 						}
-						System.Diagnostics.Debug.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
+						MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
 					}
 				}
 			}

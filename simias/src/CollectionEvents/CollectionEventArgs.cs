@@ -36,7 +36,7 @@ namespace Simias.Event
 		string					collection;
 		string					domainName;
 		string					type;
-		object					context;
+		int						eventId;
 		EventType				changeType;
 
 		/// <summary>
@@ -78,37 +78,15 @@ namespace Simias.Event
 		/// <param name="domainName">The domainName from the store that the collection belongs to.</param>
 		/// <param name="type">The Type of the Node.</param>
 		/// <param name="changeType">The type of change that occured.</param>
-		/*internal CollectionEventArgs(string source, string id, string collection, string domainName, string type, EventType changeType)
+		/// <param name="eventId">A user defined event ID. Only has meaning to a publisher.</param>
+		internal CollectionEventArgs(string source, string id, string collection, string domainName, string type, EventType changeType, int eventId)
 		{
 			this.source = source;
 			this.id = id;
 			this.collection = collection;
 			this.domainName = domainName;
 			this.type = type;
-			context = null;
-			this.changeType = changeType;
-		}
-		*/
-
-		/// <summary>
-		/// Constructs a CollectionEventArgs that will be used by CollectionHandler delegates.
-		/// Descibes the node affected by the event.
-		/// </summary>
-		/// <param name="source">The source of the event.</param>
-		/// <param name="id">The object of the event.</param>
-		/// <param name="collection">The Collection that the node belongs to.</param>
-		/// <param name="domainName">The domainName from the store that the collection belongs to.</param>
-		/// <param name="type">The Type of the Node.</param>
-		/// <param name="changeType">The type of change that occured.</param>
-		/// <param name="context">A user defined context only has meaning to a publisher.</param>
-		internal CollectionEventArgs(string source, string id, string collection, string domainName, string type, EventType changeType, object context)
-		{
-			this.source = source;
-			this.id = id;
-			this.collection = collection;
-			this.domainName = domainName;
-			this.type = type;
-			this.context = context;
+			this.eventId = eventId;
 			this.changeType = changeType;
 		}
 
@@ -163,12 +141,12 @@ namespace Simias.Event
 		}
 
 		/// <summary>
-		/// Gets a Sets a context object.  Usually null. 
+		/// Gets a Sets an event ID.  Usually 0. 
 		/// Used by a publisher. Can be used to detect circular events.
 		/// </summary>
-		public object Context
+		public int EventId
 		{
-			get {return context;}
+			get {return eventId;}
 		}
 	}
 }
