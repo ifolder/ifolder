@@ -101,7 +101,7 @@ public class Dredger
 		//Log.Spew("Dredger processing node of path {0}", path);
 
 		// don't let temp files from sync into the collection as regular nodes
-		if (name.StartsWith(IncomingNode.TempFilePrefix) && type == typeof(FileNode).Name)
+		if (name.StartsWith(".simias.") && type == typeof(FileNode).Name)
 			return;
 
 		// find if node for this file or dir already exists

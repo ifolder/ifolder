@@ -197,8 +197,8 @@ public class SynkerWorkerA: SyncCollectionWorker
 				else if (sstamps[si].localIncarn != cstamps[ci].masterIncarn)
 				{
 					Log.Assert(sstamps[si].localIncarn > cstamps[ci].masterIncarn);
-					Log.Spew("server incarn {0}, client incarn {1}, client thinks server is {2}",
-							sstamps[si].localIncarn, cstamps[ci].localIncarn, cstamps[ci].masterIncarn);
+					//Log.Spew("server incarn {0}, client incarn {1}, client thinks server is {2}",
+					//		sstamps[si].localIncarn, cstamps[ci].localIncarn, cstamps[ci].masterIncarn);
 					GetNodeFromServer(ref sstamps[si], "has changed on server, get it");
 				}
 				else if (cstamps[ci].localIncarn != cstamps[ci].masterIncarn)
@@ -253,10 +253,10 @@ public class SynkerWorkerA: SyncCollectionWorker
 		if ((updates = ops.GetSmallNodes(nonFileToServer, smallToServer)) != null)
 		{
 			RejectedNode[] rejects = ss.PutSmallNodes(updates);
-			if (rejects != null)
-				foreach (NodeChunk nc in updates)
-				{
-					bool updateIncarn = true;
+			foreach (NodeChunk nc in updates)
+			{
+				bool updateIncarn = true;
+				if (rejects != null)
 					foreach (RejectedNode reject in rejects)
 					{
 						if (reject.nid == nc.node.ID)
@@ -267,14 +267,14 @@ public class SynkerWorkerA: SyncCollectionWorker
 							break;
 						}
 					}
-					if (updateIncarn == true)
-					{
-						if (collection.IsType(nc.node, NodeTypes.TombstoneType))
-							ops.DeleteNode((Nid)nc.node.ID, false);
-						else
-							ops.UpdateIncarn((Nid)nc.node.ID, nc.node.LocalIncarnation);
-					}
+				if (updateIncarn == true)
+				{
+					if (collection.IsType(nc.node, NodeTypes.TombstoneType))
+						ops.DeleteNode((Nid)nc.node.ID, false);
+					else
+						ops.UpdateIncarn((Nid)nc.node.ID, nc.node.LocalIncarnation);
 				}
+			}
 		}
 
 		// push up large files

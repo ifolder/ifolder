@@ -393,8 +393,12 @@ internal class SyncOps
 	{
 		Log.Assert(!onServer);
 		Node node = collection.GetNodeByID(nid);
+		collection.ImportNode(node, masterIncarn);
 		node.IncarnationUpdate = masterIncarn;
 		collection.Commit(node);
+		//node = collection.GetNodeByID(nid);
+		//Log.Assert(node.MasterIncarnation == masterIncarn);
+		//Log.Spew("Updated master incarn to {0} on {1}", masterIncarn, node.Name);
 	}
 }
 

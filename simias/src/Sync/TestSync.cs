@@ -255,7 +255,7 @@ public class SyncTests: Assertion
 	}
 
 	//---------------------------------------------------------------------------
-	// test deletes: delete a file from each end, and cause deletion collision
+	// test simple adds
 	// sync and make sure everything got sorted out
 	[Test] public void NUSimpleAdds() { Assert(SimpleAdds()); }
 
@@ -468,7 +468,7 @@ public class SyncTests: Assertion
 		AccountTest("simpleAdds", SimpleAdds());
 		AccountTest("simpleDeletes", SimpleDeletes());
 		AccountTest("FileCreationCollision", FileCreationCollision());
-		//AccountTest("DeepSubDirs", DeepSubDirs());
+		AccountTest("DeepSubDirs", DeepSubDirs());
 		Cleanup();
 		Console.WriteLine("{0} tests succeeded, {1} failed", successCount, failedCount);
 	}

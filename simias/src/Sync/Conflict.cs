@@ -49,10 +49,11 @@ public class Conflict
 		this.node = node;
 		if ((conflictNode = collection.GetNodeFromCollision(node)) != null)
 		{
-			conflictNode.IncarnationUpdate = conflictNode.LocalIncarnation;
-			conflictNode.Properties.ModifyNodeProperty(PropertyTags.MasterIncarnation, conflictNode.LocalIncarnation);
+			//conflictNode.IncarnationUpdate = conflictNode.LocalIncarnation;
+			//conflictNode.Properties.ModifyNodeProperty(PropertyTags.MasterIncarnation, conflictNode.LocalIncarnation);
 			//Log.Spew("Reconstituted conflict node {2} local {0}, master {1}",
 			//		conflictNode.LocalIncarnation, conflictNode.MasterIncarnation, conflictNode.Name);
+			Log.Assert(conflictNode.LocalIncarnation == conflictNode.MasterIncarnation);
 		}
 		else
 		{
@@ -167,12 +168,21 @@ public class Conflict
 
 		// conflict node wins
 		// we may be resolving an update conflict on a node that has a naming conflict
-		string fncpath = FileNameConflictPath;
-		string path = fncpath == null? NonconflictedPath: fncpath;
+		string path = NonconflictedPath, fncpath = null;
 		if (path != null)
 		{
-			File.Delete(path);
-			File.Move(UpdateConflictPath, path);
+			try
+			{
+				File.Delete(path);
+				File.Move(UpdateConflictPath, path);
+			}
+			catch (Exception ne)
+			{
+				Log.Spew("Could not move update conflict file to {0}: {1}", path, ne.Message);
+				fncpath = FileNameConflictPath;
+				File.Delete(fncpath);
+				File.Move(UpdateConflictPath, fncpath);
+			}
 		}
 		collection.ImportNode(conflictNode, node.LocalIncarnation);
 		if (fncpath == null)
