@@ -45,19 +45,19 @@ iFolderClient.pkg: iFolder-dist.tmp
 
 
 $(PACKAGE)-$(VERSION).dmg: iFolderClient.pkg $(SIMIAS_PKG)
-	rm -rf dmg
-	$(mkinstalldirs) dmg/.Packages
-	cp -r iFolderClient.pkg dmg/.Packages
-	cp -r $(SIMIAS_PKG) dmg/.Packages
-	tar -C dmg -xvf iFolder.tar
-	hdiutil create -srcfolder dmg $(PACKAGE)-$(VERSION).dmg
+	rm -rf $(PACKAGE)-$(VERSION)
+	$(mkinstalldirs) $(PACKAGE)-$(VERSION)/.Packages
+	cp -r iFolderClient.pkg $(PACKAGE)-$(VERSION)/.Packages
+	cp -r $(SIMIAS_PKG) $(PACKAGE)-$(VERSION)/.Packages
+	tar -C $(PACKAGE)-$(VERSION) -xvf iFolder.tar
+	hdiutil create -srcfolder $(PACKAGE)-$(VERSION) $(PACKAGE)-$(VERSION).dmg
 
 clean-local:
 	rm -rf *.pkg
 	rm -rf *.dmg
 	rm -rf $(TMPDIR)
 	rm -rf iFolder-dist.tmp
-	rm -rf dmg
+	rm -rf $(PACKAGE)-$(VERSION)
 
 distclean-local:
 
