@@ -208,11 +208,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "NotifyIconBalloonTip.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Preferences.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
@@ -246,6 +241,11 @@
                     RelPath = "ServerInfo.resx"
                     DependentUpon = "ServerInfo.cs"
                     BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "ShellNotifyIcon.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
                 />
                 <File
                     RelPath = "SyncLog.cs"

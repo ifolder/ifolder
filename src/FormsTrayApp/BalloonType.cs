@@ -23,7 +23,7 @@
 
 using System;
 
-namespace CustomUIControls
+namespace Novell.CustomUIControls
 {
 	/// <summary>
 	/// The type of balloon to display.

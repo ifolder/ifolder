@@ -33,7 +33,7 @@ using System.Globalization;
 using System.Collections;
 using Novell.iFolderCom;
 using Novell.Win32Util;
-using CustomUIControls;
+using Novell.CustomUIControls;
 using Simias.Client;
 using Simias.Client.Authentication;
 using Simias.Client.Event;
@@ -41,6 +41,24 @@ using Novell.iFolder.Install;
 
 namespace Novell.FormsTrayApp
 {
+	public enum NotifyType
+	{
+		/// <summary>
+		/// The notification is for a received subscription.
+		/// </summary>
+		Subscription,
+
+		/// <summary>
+		/// The notification is for a new member joining an iFolder.
+		/// </summary>
+		NewMember,
+
+		/// <summary>
+		/// The notification is for a collision in an iFolder.
+		/// </summary>
+		Collision
+	};
+
 	/// <summary>
 	/// Summary description for FormsTrayApp.
 	/// </summary>
@@ -81,12 +99,14 @@ namespace Novell.FormsTrayApp
 
 		private ServerInfo serverInfo = null;
 		private bool loginCancelled = false;
+		private ShellNotifyIcon shellNotifyIcon;
+		private iFolderWeb ifolderFromNotify;
+		private NotifyType notifyType;
 		private System.Windows.Forms.MenuItem menuItem10;
 		private System.Windows.Forms.MenuItem menuSeparator1;
 		private System.Windows.Forms.MenuItem menuProperties;
 		private System.Windows.Forms.MenuItem menuHelp;
 		private System.Windows.Forms.MenuItem menuExit;
-		private System.Windows.Forms.NotifyIcon notifyIcon1;
 		private System.Windows.Forms.ContextMenu contextMenu1;
 		private System.Windows.Forms.MenuItem menuEventLogReader;
 		private iFolderWebService ifWebService = null;
@@ -96,14 +116,12 @@ namespace Novell.FormsTrayApp
 		private Preferences preferences;
 		private SyncLog syncLog;
 		private bool eventError = false;
-		private IntPtr hwnd;
 		private System.Windows.Forms.MenuItem menuStoreBrowser;
 		private System.Windows.Forms.MenuItem menuTools;
 		private System.Windows.Forms.Timer syncAnimateTimer;
 		private System.Windows.Forms.MenuItem menuSyncLog;
 		private System.Windows.Forms.MenuItem menuPreferences;
 		private System.Windows.Forms.MenuItem menuAccounts;
-		private int iconID;
 		#endregion
 
 		[STAThread]
@@ -169,7 +187,6 @@ namespace Novell.FormsTrayApp
 						syncIcons[i] = new Icon(syncIcon);
 					}
 			
-					notifyIcon1.Icon = startupIcon;
 					this.ShowInTaskbar = false;
 					this.WindowState = FormWindowState.Minimized;
 					//this.Hide();
@@ -177,14 +194,18 @@ namespace Novell.FormsTrayApp
 					Win32Window win32Window = new Win32Window();
 					win32Window.Window = this.Handle;
 					win32Window.MakeToolWindow();
+
+					shellNotifyIcon = new ShellNotifyIcon(this.Handle);
+					shellNotifyIcon.Text = resourceManager.GetString("iFolderServicesStarting");
+					shellNotifyIcon.Icon = startupIcon;
+					shellNotifyIcon.ContextMenu = contextMenu1;
+					shellNotifyIcon.DoubleClick += new Novell.CustomUIControls.ShellNotifyIcon.DoubleClickDelegate(shellNotifyIcon_DoubleClick);
+					shellNotifyIcon.BalloonClick += new Novell.CustomUIControls.ShellNotifyIcon.BalloonClickDelegate(shellNotifyIcon_BalloonClick);
+					shellNotifyIcon.ContextMenuPopup += new Novell.CustomUIControls.ShellNotifyIcon.ContextMenuPopupDelegate(shellNotifyIcon_ContextMenuPopup);
 				}
 				catch
 				{
 				}		
-
-				Type t = notifyIcon1.GetType();
-				hwnd = ((NativeWindow)t.GetField("window",System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(notifyIcon1)).Handle;
-				iconID = (int)t.GetField("id",System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(notifyIcon1);
 			}
 
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.FormsTrayApp_Closing);
@@ -337,9 +358,55 @@ namespace Novell.FormsTrayApp
 			menuSeparator1.Visible = menuTools.Visible = menuStoreBrowser.Visible | menuEventLogReader.Visible;
 		}
 
-		private void notifyIcon1_DoubleClick(object sender, System.EventArgs e)
+		private void shellNotifyIcon_DoubleClick(object sender, EventArgs e)
 		{
 			menuProperties_Click(sender, e);
+		}
+
+		private void shellNotifyIcon_BalloonClick(object sender, EventArgs e)
+		{
+			switch (notifyType)
+			{
+				case NotifyType.Collision:
+					ConflictResolver conflictResolver = new ConflictResolver();
+					conflictResolver.StartPosition = FormStartPosition.CenterScreen;
+					conflictResolver.iFolder = ifolderFromNotify;
+					conflictResolver.iFolderWebService = ifWebService;
+					conflictResolver.LoadPath = Application.StartupPath;
+					conflictResolver.CreateControl();
+					ShellNotifyIcon.SetForegroundWindow(conflictResolver.Handle);
+					conflictResolver.Show();
+					break;
+				case NotifyType.NewMember:
+					iFolderAdvanced ifolderAdvanced = new iFolderAdvanced();
+					ifolderAdvanced.StartPosition = FormStartPosition.CenterScreen;
+					ifolderAdvanced.CurrentiFolder = ifolderFromNotify;
+					ifolderAdvanced.LoadPath = Application.StartupPath;
+					ifolderAdvanced.ActiveTab = 1;
+					ifolderAdvanced.EventClient = eventClient;
+					ifolderAdvanced.CreateControl();
+					ShellNotifyIcon.SetForegroundWindow(ifolderAdvanced.Handle);
+					ifolderAdvanced.ShowDialog();
+					ifolderAdvanced.Dispose();
+					break;
+				case NotifyType.Subscription:
+					AcceptInvitation acceptInvitation = new AcceptInvitation(ifWebService, ifolderFromNotify);
+					acceptInvitation.StartPosition = FormStartPosition.CenterScreen;
+					acceptInvitation.Visible = false;
+					acceptInvitation.CreateControl();
+					ShellNotifyIcon.SetForegroundWindow(acceptInvitation.Handle);
+					acceptInvitation.ShowDialog();
+					acceptInvitation.Dispose();
+					break;
+			}
+		}
+
+		private void shellNotifyIcon_ContextMenuPopup(object sender, EventArgs e)
+		{
+			// Show/hide store browser menu item based on whether or not the file is installed.
+			menuStoreBrowser.Visible = File.Exists(Path.Combine(Application.StartupPath, "StoreBrowser.exe"));
+			menuEventLogReader.Visible = File.Exists(Path.Combine(Application.StartupPath, "EventLogReader.exe"));
+			menuSeparator1.Visible = menuTools.Visible = menuStoreBrowser.Visible | menuEventLogReader.Visible;
 		}
 
 		private void FormsTrayApp_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -430,7 +497,8 @@ namespace Novell.FormsTrayApp
 						worker.Start();
 					}
 
-					notifyIcon1.Icon = trayIcon;
+					shellNotifyIcon.Text = resourceManager.GetString("iFolderServices");
+					shellNotifyIcon.Icon = trayIcon;
 				}
 				catch (Exception ex)
 				{
@@ -508,7 +576,7 @@ namespace Novell.FormsTrayApp
 
 		private void syncAnimateTimer_Tick(object sender, System.EventArgs e)
 		{
-			notifyIcon1.Icon = syncIcons[index];
+			shellNotifyIcon.Icon = syncIcons[index];
 
 			if (++index > (numberOfSyncIcons - 1))
 			{
@@ -541,7 +609,6 @@ namespace Novell.FormsTrayApp
 		{
 			this.components = new System.ComponentModel.Container();
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(FormsTrayApp));
-			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
 			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
 			this.menuTools = new System.Windows.Forms.MenuItem();
 			this.menuStoreBrowser = new System.Windows.Forms.MenuItem();
@@ -555,14 +622,6 @@ namespace Novell.FormsTrayApp
 			this.menuItem10 = new System.Windows.Forms.MenuItem();
 			this.menuExit = new System.Windows.Forms.MenuItem();
 			this.syncAnimateTimer = new System.Windows.Forms.Timer(this.components);
-			// 
-			// notifyIcon1
-			// 
-			this.notifyIcon1.ContextMenu = this.contextMenu1;
-			this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-			this.notifyIcon1.Text = resources.GetString("notifyIcon1.Text");
-			this.notifyIcon1.Visible = ((bool)(resources.GetObject("notifyIcon1.Visible")));
-			this.notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
 			// 
 			// contextMenu1
 			// 
@@ -732,8 +791,8 @@ namespace Novell.FormsTrayApp
 				{
 					// Stop the icon animation.
 					syncAnimateTimer.Stop();
-					notifyIcon1.Icon = trayIcon;
-					notifyIcon1.Text = resourceManager.GetString("notifyIcon1.Text");
+					shellNotifyIcon.Icon = trayIcon;
+					shellNotifyIcon.Text = resourceManager.GetString("iFolderServices");
 
 					if (initialSyncCollections.Contains(syncEventArgs.ID) && syncEventArgs.Successful)
 					{
@@ -753,7 +812,7 @@ namespace Novell.FormsTrayApp
 			{
 				if (syncEventArgs.SizeRemaining == syncEventArgs.SizeToSync)
 				{
-					notifyIcon1.Text = resourceManager.GetString("notifyIcon1.Text") + "\n" + 
+					shellNotifyIcon.Text = resourceManager.GetString("iFolderServices") + "\n" + 
 						string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploading" : "downloading") , syncEventArgs.Name);
 				}
 			}
@@ -764,20 +823,16 @@ namespace Novell.FormsTrayApp
 		{
 			try
 			{
+				ifolderFromNotify = ifolder;
+
 				if (ifolder.HasConflicts)
 				{
 					if (preferences.NotifyCollisionEnabled)
 					{
-						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
-
 						string message = string.Format(resourceManager.GetString("collisionMessage"), ifolder.Name);
 
-						balloonTip.ShowBalloon(
-							hwnd,
-							iconID,
-							BalloonType.Info,
-							resourceManager.GetString("actionRequiredTitle"),
-							message);
+						notifyType = NotifyType.Collision;
+						shellNotifyIcon.DisplayBalloonTooltip(resourceManager.GetString("actionRequiredTitle"), message, BalloonType.Info);
 
 						// TODO: Change the icon?
 					}
@@ -786,16 +841,10 @@ namespace Novell.FormsTrayApp
 				{
 					if (preferences.NotifyShareEnabled)
 					{
-						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
-
 						string message = string.Format(resourceManager.GetString("subscriptionMessage"), ifolder.Owner);
 
-						balloonTip.ShowBalloon(
-							hwnd,
-							iconID,
-							BalloonType.Info,
-							resourceManager.GetString("actionRequiredTitle"),
-							message);
+						notifyType = NotifyType.Subscription;
+						shellNotifyIcon.DisplayBalloonTooltip(resourceManager.GetString("actionRequiredTitle"), message, BalloonType.Info);
 
 						// TODO: Change the icon?
 					}
@@ -804,18 +853,12 @@ namespace Novell.FormsTrayApp
 				{
 					if (preferences.NotifyJoinEnabled)
 					{
-						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
-
 						string message = string.Format(resourceManager.GetString("newMemberMessage"), 
 							(ifolderUser.FN != null) && !ifolderUser.FN.Equals(string.Empty) ? ifolderUser.FN : ifolderUser.Name, 
 							ifolder.Name);
-							
-						balloonTip.ShowBalloon(
-							hwnd,
-							iconID,
-							BalloonType.Info,
-							resourceManager.GetString("newMemberTitle"),
-							message);
+
+						notifyType = NotifyType.NewMember;
+						shellNotifyIcon.DisplayBalloonTooltip(resourceManager.GetString("newMemberTitle"), message, BalloonType.Info);
 
 						// TODO: Change the icon?
 					}
@@ -926,6 +969,10 @@ namespace Novell.FormsTrayApp
 		{
 			Cursor.Current = Cursors.WaitCursor;
 
+			shellNotifyIcon.Text = resourceManager.GetString("iFolderServicesStopping");
+			// TODO: uncomment this when the shutdown icon is added.
+			//shellNotifyIcon.Icon = shutdownIcon;
+
 			if (ex != null)
 			{
 				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("fatalErrorMessage"), resourceManager.GetString("fatalErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
@@ -954,9 +1001,10 @@ namespace Novell.FormsTrayApp
 
 			Cursor.Current = Cursors.Default;
 
-			if (notifyIcon1 != null)
+			// TODO: Remove this when the shutdown icon is added.
+			if (shellNotifyIcon != null)
 			{
-				notifyIcon1.Visible = false;
+				shellNotifyIcon.Visible = false;
 			}
 
 			Application.Exit();
@@ -985,7 +1033,7 @@ namespace Novell.FormsTrayApp
 					{
 						case "NodeChanged":
 						{
-							if (eventArgs.Type == "Collection")
+							if (eventArgs.Type.Equals("Collection"))
 							{
 								ifolder = ifWebService.GetiFolder(eventArgs.Collection);
 							}
@@ -1067,21 +1115,5 @@ namespace Novell.FormsTrayApp
 			}
 		}
 		#endregion
-
-/*		private const int WM_MYID = 0xbd1;
-
-		[System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name="FullTrust")]
-		protected override void WndProc(ref System.Windows.Forms.Message m) 
-		{
-			Debug.WriteLine("Message = " + m.Msg.ToString());
-			// Listen for operating system messages.
-			switch (m.Msg)
-			{
-				// TODO: need to get this message to fire from the balloon window.
-				case WM_MYID:
-					break;                
-			}
-			base.WndProc(ref m);
-		}*/
 	}
 }
