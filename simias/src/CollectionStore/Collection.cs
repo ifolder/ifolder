@@ -1394,6 +1394,13 @@ namespace Simias.Storage
 				bool hasFileNode = false;
 				Member collectionOwner = null;
 
+				// See if the database is being shut down.
+				if ( store.ShuttingDown )
+				{
+					// Don't allow any changes - the database is being shut down.
+					throw new SimiasException( "No changes are allowed because the database is being shut down." );
+				}
+
 				// Walk the commit list to see if there are any creation and deletion of the collection states.
 				foreach( Node node in nodeList )
 				{

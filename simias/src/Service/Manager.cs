@@ -494,6 +494,10 @@ namespace Simias.Service
 
 		private void StopServicesThread()
 		{
+			// Set that the database is being shut down so that no more changes can be made.
+			logger.Info("The database is being shut down.");
+			Store.GetStore().ShutDown();
+
 			for (int i = serviceList.Count; i > 0; --i)
 			{
 				ServiceCtl svc = (ServiceCtl)serviceList[i-1];

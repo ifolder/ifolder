@@ -452,11 +452,17 @@ namespace Simias.Storage
 		private const int logFileIDSize = 16;
 		private const int maxLogRecordsSize = 4;
 		private const int maxFlagsSize = 4;
+		private const int lastRecordSize = 8;
+		private const int recordLocationSize = 8;
 
 		/// <summary>
 		/// This is the total encoded record size.
 		/// </summary>
-		private const int encodedRecordSize = logFileIDSize + maxLogRecordsSize + maxFlagsSize;
+		private const int encodedRecordSize = logFileIDSize + 
+											  maxLogRecordsSize + 
+											  maxFlagsSize +
+											  lastRecordSize +
+											  recordLocationSize;
 
 		/// <summary>
 		/// Contains the identifier for this log file.
@@ -472,6 +478,18 @@ namespace Simias.Storage
 		/// Flags
 		/// </summary>
 		private uint flags;
+
+		/// <summary>
+		/// Last record written to the file. This is just a hint and may
+		/// or may not be valid.
+		/// </summary>
+		private ulong lastRecord;
+
+		/// <summary>
+		/// File position of last record written to the file. This is just
+		/// a hint and may or may not be valid.
+		/// </summary>
+		private long recordLocation;
 		#endregion
 
 		#region Properties
@@ -508,6 +526,26 @@ namespace Simias.Storage
 		{
 			get { return encodedRecordSize; }
 		}
+
+		/// <summary>
+		/// Gets or sets the last record written to the file. This is only a
+		/// hint and may or may not be valid.
+		/// </summary>
+		public ulong LastRecord
+		{
+			get { return lastRecord; }
+			set { lastRecord = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the file position of the last record in the file.
+		/// This is just a hint and may or may not be valid.
+		/// </summary>
+		public long RecordLocation
+		{
+			get { return recordLocation; }
+			set { recordLocation = value; }
+		}
 		#endregion
 
 		#region Constructor
@@ -521,6 +559,8 @@ namespace Simias.Storage
 			logFileID = ID;
 			maxLogRecords = maxRecords;
 			flags = 0;
+			lastRecord = 0;
+			recordLocation = 0;
 		}
 
 		/// <summary>
@@ -542,6 +582,12 @@ namespace Simias.Storage
 
 			flags = BitConverter.ToUInt32( encodedRecord, index );
 			index += maxFlagsSize;
+
+			lastRecord = BitConverter.ToUInt64( encodedRecord, index );
+			index += lastRecordSize;
+
+			recordLocation = BitConverter.ToInt64( encodedRecord, index );
+			index += recordLocationSize;
 		}
 		#endregion
 
@@ -560,6 +606,8 @@ namespace Simias.Storage
 			byte[] lfi = guid.ToByteArray();
 			byte[] mlr = BitConverter.GetBytes( maxLogRecords );
 			byte[] flg = BitConverter.GetBytes( flags );
+			byte[] lr = BitConverter.GetBytes( lastRecord );
+			byte[] rl = BitConverter.GetBytes( recordLocation );
 
 			// Copy the converted byte arrays to the resulting array.
 			Array.Copy( lfi, 0, result, index, lfi.Length );
@@ -570,6 +618,12 @@ namespace Simias.Storage
 
 			Array.Copy( flg, 0, result, index, flg.Length );
 			index += flg.Length;
+
+			Array.Copy( lr, 0, result, index, lr.Length );
+			index += lr.Length;
+
+			Array.Copy( rl, 0, result, index, rl.Length );
+			index += rl.Length;
 
 			return result;
 		}
@@ -1215,6 +1269,11 @@ namespace Simias.Storage
 		/// Flag that indicates if a thread is processing work on the queue.
 		/// </summary>
 		private bool threadScheduled = false;
+
+		/// <summary>
+		/// Contains the header to the log file.
+		/// </summary>
+		private LogFileHeader logHeader;
 		#endregion
 
 		#region Constructor
@@ -1249,7 +1308,7 @@ namespace Simias.Storage
 					try
 					{
 						// Create the log file header.
-						CreateLogFileHeader( fs, collectionID );
+						logHeader = CreateLogFileHeader( fs, collectionID );
 					}
 					finally
 					{
@@ -1262,8 +1321,11 @@ namespace Simias.Storage
 					FileStream fs = new FileStream( logFilePath, FileMode.Open, FileAccess.ReadWrite );
 					try
 					{
+						// Get the log header.
+						logHeader = GetLogFileHeader( fs );
+
 						// Check to see if the log file was shutdown gracefully.
-						if ( CheckIntegrity( fs, collectionID ) )
+						if ( CheckIntegrity( fs, logHeader, collectionID ) )
 						{
 							// Setup the current write position.
 							SetCurrentWritePosition( fs );
@@ -1294,20 +1356,20 @@ namespace Simias.Storage
 		/// truncated and reinitialized.
 		/// </summary>
 		/// <param name="fs">File stream that reference the log file.</param>
+		/// <param name="header">The log file header.</param>
 		/// <param name="collectionID">ID of the collection being monitored.</param>
 		/// <returns>True if the file data is good, otherwise false.</returns>
-		private bool CheckIntegrity( FileStream fs, string collectionID )
+		private bool CheckIntegrity( FileStream fs, LogFileHeader header, string collectionID )
 		{
 			bool result = true;
 
-			LogFileHeader logHeader = GetLogFileHeader( fs );
-			if ( logHeader.LogFileID != collectionID )
+			if ( header.LogFileID != collectionID )
 			{
 				log.Error( "Log file corrupted. Reinitializing contents." );
 
 				// Truncate the file data.
 				fs.SetLength( 0 );
-				CreateLogFileHeader( fs, collectionID );
+				logHeader = CreateLogFileHeader( fs, collectionID );
 				result = false;
 			}
 
@@ -1319,7 +1381,8 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="fs">File stream that reference the log file.</param>
 		/// <param name="collectionID">ID of collection being monitored.</param>
-		private void CreateLogFileHeader( FileStream fs, string collectionID )
+		/// <returns>A LogFileHeader object.</returns>
+		private LogFileHeader CreateLogFileHeader( FileStream fs, string collectionID )
 		{
 			// Build the new log file header.
 			LogFileHeader header = new LogFileHeader( collectionID, defaultMaxPersistedRecords );
@@ -1334,6 +1397,106 @@ namespace Simias.Storage
 				log.Error( "Failed to write log header. " + e.Message );
 				throw;
 			}
+
+			return header;
+		}
+
+		/// <summary>
+		/// Looks for the next write position in the log file using the hint saved the last time the file
+		/// was written to. If the hint is invalid, then a brute force method is used.
+		/// </summary>
+		/// <param name="fs">FileStream object that references the log file.</param>
+		private bool FindCurrentWritePosition( FileStream fs )
+		{
+			bool foundPosition = false;
+			bool wrapped = false;
+
+			try
+			{
+				// See if a last position was saved.
+				if ( logHeader.RecordLocation >= ( long )LogFileHeader.RecordSize )
+				{
+					// Make sure that the saved record position in on a ChangeLogRecord boundary.
+					if ( ( ( logHeader.RecordLocation - ( long )LogFileHeader.RecordSize ) % ( long )ChangeLogRecord.RecordSize ) == 0 )
+					{
+						// Using the hint in the log file header, see if the write position still exists in the file.
+						if ( logHeader.RecordLocation == ( long )LogFileHeader.RecordSize )
+						{
+							// There are no records in the log or the log has wrapped back to the beginning.
+							if ( fs.Length >= ( LogFileHeader.RecordSize + ChangeLogRecord.RecordSize ) )
+							{
+								// The file has wrapped, read the entry from the end of the file.
+								fs.Position = fs.Length - ChangeLogRecord.RecordSize;
+								wrapped = true;
+							}
+							else
+							{
+								// There are no entries in the file. No need to do a read.
+								writePosition = logHeader.RecordLocation;
+								recordID = logHeader.LastRecord;
+								foundPosition = true;
+							}
+						}
+						else
+						{
+							// There is at least one ChangeLogRecord and the file hasn't wrapped.
+							fs.Position = logHeader.RecordLocation - ChangeLogRecord.RecordSize;
+						}
+
+						// No need to read if the offset was already found.
+						if ( foundPosition == false )
+						{
+							// Read the last valid change log record that was written. 
+							byte[] buffer = new byte[ ChangeLogRecord.RecordSize ];
+							int bytesRead = fs.Read( buffer, 0, buffer.Length );
+							if ( bytesRead > 0 )
+							{
+								ChangeLogRecord record = new ChangeLogRecord( buffer );
+								ulong lastRecordID = record.RecordID;
+
+								if ( record.RecordID == ( logHeader.LastRecord - 1 ) )
+								{
+									// Position the next for the next read if the event log has rolled over.
+									if ( wrapped )
+									{
+										fs.Position = LogFileHeader.RecordSize;
+									}
+
+									// If there is a next record, then the file has rolled over and we need
+									// to check the record ID to make sure it is less that the value that we
+									// saved. If there is not an other record, then the hint is valid.
+									bytesRead = fs.Read( buffer, 0, buffer.Length );
+									if ( bytesRead > 0 )
+									{
+										record = new ChangeLogRecord( buffer );
+										if ( lastRecordID > record.RecordID )
+										{
+											// This is the rollover point. The saved location is valid.
+											writePosition = logHeader.RecordLocation;
+											recordID = logHeader.LastRecord;
+											foundPosition = true;
+										}
+									}
+									else
+									{
+										// There are no more records and the file hasn't rolled over. The
+										// saved location is valid.
+										writePosition = logHeader.RecordLocation;
+										recordID = logHeader.LastRecord;
+										foundPosition = true;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			catch ( IOException e )
+			{
+				log.Error( "FindCurrentWritePosition():" + e.Message );
+			}
+
+			return foundPosition;
 		}
 
 		/// <summary>
@@ -1344,7 +1507,7 @@ namespace Simias.Storage
 		/// a null is returned.</returns>
 		private LogFileHeader GetLogFileHeader( FileStream fs )
 		{
-			LogFileHeader logHeader = null;
+			LogFileHeader logFileHeader = null;
 
 			try
 			{
@@ -1356,7 +1519,7 @@ namespace Simias.Storage
 				int bytesRead = fs.Read( buffer, 0, buffer.Length );
 				if ( bytesRead == buffer.Length )
 				{
-					logHeader = new LogFileHeader( buffer );
+					logFileHeader = new LogFileHeader( buffer );
 				}
 			}
 			catch ( IOException e )
@@ -1365,7 +1528,7 @@ namespace Simias.Storage
 				throw;
 			}
 
-			return logHeader;
+			return logFileHeader;
 		}
 
 		/// <summary>
@@ -1499,70 +1662,113 @@ namespace Simias.Storage
 		/// <param name="fs">FileStream object that references the log file.</param>
 		private void SetCurrentWritePosition( FileStream fs )
 		{
-			try
+			// See if the hint is valid so we don't have to brute-force the lookup.
+			if ( !FindCurrentWritePosition( fs ) )
 			{
-				// Allocate a buffer to hold the records that are read.
-				byte[] buffer = new byte[ ChangeLogRecord.RecordSize * 1000 ];
-
-				// Skip over the file header.
-				fs.Position = LogFileHeader.RecordSize;
-
-				// Read the first record.
-				int bytesRead = fs.Read( buffer, 0, ChangeLogRecord.RecordSize );
-				if ( bytesRead > 0 )
+				try
 				{
-					// Instanitate the first record to compare.
-					ChangeLogRecord record1 = new ChangeLogRecord( buffer );
-					ChangeLogRecord record2 = null;
+					// Allocate a buffer to hold the records that are read.
+					byte[] buffer = new byte[ ChangeLogRecord.RecordSize * 1000 ];
 
-					// Read the next bunch of records.
-					bytesRead = fs.Read( buffer, 0, buffer.Length );
-					while ( bytesRead > 0 )
+					// Skip over the file header.
+					fs.Position = LogFileHeader.RecordSize;
+
+					// Read the first record.
+					int bytesRead = fs.Read( buffer, 0, ChangeLogRecord.RecordSize );
+					if ( bytesRead > 0 )
 					{
-						int index = 0;
-						while ( ( index + ChangeLogRecord.RecordSize ) <= bytesRead )
-						{
-							// Instantiate the next record so the id's can be compared.
-							record2 = new ChangeLogRecord( buffer, index );
+						// Instanitate the first record to compare.
+						ChangeLogRecord record1 = new ChangeLogRecord( buffer );
+						ChangeLogRecord record2 = null;
 
-							// See if the record id has rolled over.
-							if ( record1.RecordID > record2.RecordID )
+						// Read the next bunch of records.
+						bytesRead = fs.Read( buffer, 0, buffer.Length );
+						while ( bytesRead > 0 )
+						{
+							int index = 0;
+							while ( ( index + ChangeLogRecord.RecordSize ) <= bytesRead )
 							{
-								// Found the roll over point. Calculate the next write position.
-								writePosition = ( fs.Position - bytesRead ) + index;
-								recordID = record1.RecordID + 1;
-								bytesRead = 0;
-								break;
+								// Instantiate the next record so the id's can be compared.
+								record2 = new ChangeLogRecord( buffer, index );
+
+								// See if the record id has rolled over.
+								if ( record1.RecordID > record2.RecordID )
+								{
+									// Found the roll over point. Calculate the next write position.
+									writePosition = ( fs.Position - bytesRead ) + index;
+									recordID = record1.RecordID + 1;
+									bytesRead = 0;
+									break;
+								}
+								else
+								{
+									// Record id's are still increasing.
+									index += ChangeLogRecord.RecordSize;
+									record1 = record2;
+								}
 							}
-							else
+
+							// If we haven't found the roll over point, keep reading.
+							if ( bytesRead > 0 )
 							{
-								// Record id's are still increasing.
-								index += ChangeLogRecord.RecordSize;
-								record1 = record2;
+								// Read the next buffer full.
+								bytesRead = fs.Read( buffer, 0, buffer.Length );
 							}
 						}
 
-						// If we haven't found the roll over point, keep reading.
-						if ( bytesRead > 0 )
+						// There is either only one record in the file or the end of the file has been reached without
+						// detecting the rollover point.
+						if ( ( record2 == null ) || ( record1 == record2 ) )
 						{
-							// Read the next buffer full.
-							bytesRead = fs.Read( buffer, 0, buffer.Length );
+							// Next write position is the current position if it isn't at the size limit.
+							writePosition = ( fs.Position >= maxWritePosition ) ? LogFileHeader.RecordSize : fs.Position;
+							recordID = record1.RecordID + 1;
 						}
-					}
-
-					// There is either only one record in the file or the end of the file has been reached without
-					// detecting the rollover point.
-					if ( ( record2 == null ) || ( record1 == record2 ) )
-					{
-						// Next write position is the current position if it isn't at the size limit.
-						writePosition = ( fs.Position >= maxWritePosition ) ? LogFileHeader.RecordSize : fs.Position;
-						recordID = record1.RecordID + 1;
 					}
 				}
+				catch ( IOException e )
+				{
+					log.Error( e.Message );
+				}
 			}
-			catch ( IOException e )
+		}
+
+		/// <summary>
+		/// Saves the change log header to the file.
+		/// </summary>
+		private void SetLogFileHeader()
+		{
+			// Acquire the mutex protecting the log file.
+			mutex.WaitOne( collectionID );
+			try
 			{
-				log.Error( e.Message );
+				try
+				{
+					// Open the log file.
+					FileStream fs = new FileStream( logFilePath, FileMode.Open, FileAccess.ReadWrite );
+					try
+					{
+						// Initialize the log file header.
+						logHeader.LastRecord = recordID;
+						logHeader.RecordLocation = writePosition;
+
+						// Position the file pointer to the right position within the file.
+						fs.Position = 0;
+						fs.Write( logHeader.ToByteArray(), 0, LogFileHeader.RecordSize );
+					}
+					finally
+					{
+						fs.Close();
+					}
+				}
+				catch( IOException e )
+				{
+					log.Error( "Cannot save log file header - {0}", e.Message );
+				}
+			}
+			finally
+			{
+				mutex.ReleaseMutex( collectionID );
 			}
 		}
 
@@ -1623,6 +1829,11 @@ namespace Simias.Storage
 		{
 			Dispose( true );
 			GC.SuppressFinalize( this );
+
+			// Save the log file header after disposing the object
+			// because we don't want to take anymore events after
+			// the log file header is saved.
+			SetLogFileHeader();
 		}
 
 		/// <summary>

@@ -51,6 +51,9 @@ namespace EventLogReaderII
 				listBox1.Items.Add( String.Format( "\tHeader length = {0}", header.Length ) );
 				listBox1.Items.Add( String.Format( "\tLog File ID = {0}", header.LogFileID ) );
 				listBox1.Items.Add( String.Format( "\tMaximum records = {0}", header.MaxLogRecords ) );
+				listBox1.Items.Add( String.Format( "\tHint next record ID = {0}", header.LastRecord ) );
+				listBox1.Items.Add( String.Format( "\tHint next write location = {0}", header.RecordLocation ) );
+				listBox1.Items.Add( String.Format( "\tChange log record size = {0}", ChangeLogRecord.RecordSize ) );
 				listBox1.Items.Add( "*===== End Log File Header =====*" );
 				listBox1.Items.Add( "" );
 			}

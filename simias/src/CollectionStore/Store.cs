@@ -78,6 +78,12 @@ namespace Simias.Storage
 		static private int DefaultMachineSyncInterval = 300;
 
 		/// <summary>
+		/// Flag that indicates whether the database is shutting down. No changes
+		/// will be allowed in the database if this flags is true.
+		/// </summary>
+		private bool shuttingDown = false;
+
+		/// <summary>
 		/// Handle to the local store provider.
 		/// </summary>
 		private Persist.IProvider storageProvider = null;
@@ -252,6 +258,15 @@ namespace Simias.Storage
 				Property p = LocalDb.Properties.FindSingleValue( PropertyTags.StoreVersion );
 				return ( p != null ) ? p.ToString() : "Unknown version";
 			}
+		}
+
+		/// <summary>
+		/// Gets whether the database is being shut down. No changes to the database
+		/// will be allowed if this property returns true.
+		/// </summary>
+		public bool ShuttingDown
+		{
+			get { return shuttingDown; }
 		}
 		#endregion
 
@@ -568,6 +583,15 @@ namespace Simias.Storage
 		internal void LockStore()
 		{
 			storeMutex.WaitOne();
+		}
+
+		/// <summary>
+		/// Indicates that the database is being shutdown. No more changes will be allowed
+		/// when this method completes.
+		/// </summary>
+		internal void ShutDown()
+		{
+			shuttingDown = true;
 		}
 
 		/// <summary>
