@@ -256,6 +256,7 @@ namespace Simias.POBox
 			subscription.DomainName = collection.StoreReference.GetDomain(collection.Domain).Name;
 			subscription.POServiceURL = new Uri(this.POServiceUrl);
 			subscription.SubscriptionCollectionType = type;
+			subscription.SubscriptionKey = Guid.NewGuid().ToString();
 
 			return subscription;
 		}

@@ -151,7 +151,16 @@ namespace Simias.POBox
 								{
 									subscription.ToPublicKey = temp.ToPublicKey;
 								}
+								
 								result = true;
+
+								// auto-accept if we have a key, it is not workgroup, and we have rights
+								if ((subscription.SubscriptionKey != null)
+									&& !workgroup && (subscription.SubscriptionRights != Access.Rights.Deny))
+								{
+									// accept
+									subscription.Accept(store, subscription.SubscriptionRights);
+								}
 							}
 						}
 					}

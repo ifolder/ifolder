@@ -259,26 +259,31 @@ namespace Simias.POBox
 			// update subscription
 			if (status.State == SubscriptionStates.Responded)
 			{
-				// create stub
+				// create proxy
 				if (status.Disposition == SubscriptionDispositions.Accepted)
 				{
 					log.Debug("Creating collection...");
 
-					// get and save details
-					subscription.AddDetails(po.GetSubscriptionDetails(subscription.DomainID,
-						subscription.FromIdentity, subscription.SubscriptionCollectionID));
-					poBox.Commit(subscription);
-
-					// create slave stub
-					subscription.CreateSlave(poBox.StoreReference);
+					// do not re-create the proxy
+					if (poBox.StoreReference.GetCollectionByID(subscription.SubscriptionCollectionID) == null)
+					{
+						// get and save details
+						subscription.AddDetails(po.GetSubscriptionDetails(subscription.DomainID,
+							subscription.FromIdentity, subscription.SubscriptionCollectionID));
+						poBox.Commit(subscription);
+					
+						// create slave stub
+						subscription.CreateSlave(poBox.StoreReference);
+					}
 				}
 
 				// acknowledge the message
 				po.AckSubscription(subscription.DomainID,
 					subscription.FromIdentity, subscription.MessageID);
 
-				// done with the subscription
-				poBox.Commit(poBox.Delete(subscription));
+				// done with the subscription - move to ready state
+				subscription.SubscriptionState = SubscriptionStates.Ready;
+				poBox.Commit(subscription);
 
 				// done
 				result = true;

@@ -58,7 +58,7 @@ namespace Simias.Service
 		internal static string XmlAssemblyAttr = "assembly";
 		internal static string XmlEnabledAttr = "enabled";
 		internal static string XmlNameAttr = "name";
-		const string mutexBaseName = "ServiceManagerMutex___";
+		public static readonly string MutexBaseName = "ServiceManagerMutex___";
 		ManualResetEvent servicesStarted = new ManualResetEvent(false);
 		ManualResetEvent servicesStopped = new ManualResetEvent(true);
 		DefaultSubscriber	subscriber = null;
@@ -90,7 +90,7 @@ namespace Simias.Service
 
 			lock (this)
 			{
-				string mutexName = mutexBaseName + conf.StorePath.GetHashCode().ToString();
+				string mutexName = MutexBaseName + conf.StorePath.GetHashCode().ToString();
 				Mutex mutex = new Mutex(false, mutexName);
 				if (serviceMutex != null || mutex.WaitOne(200, false))
 				{

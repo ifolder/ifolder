@@ -77,6 +77,11 @@ namespace Simias.POBox
 		Acknowledged,
 
 		/// <summary>
+		/// The Subscription is ready and can be used to start syncing.
+		/// </summary>
+		Ready,
+
+		/// <summary>
 		/// The subscription state is unknown.
 		/// </summary>
 		Unknown
@@ -198,6 +203,11 @@ namespace Simias.POBox
 		/// The name of the property storing the status of the subscription (accepted, declined, etc.).
 		/// </summary>
 		public static readonly string SubscriptionDispositionProperty = "SbDisposition";
+		
+		/// <summary>
+		/// The name of the property storing the subscription key.
+		/// </summary>
+		public static readonly string SubscriptionKeyProperty = "SbKey";
 		
 		#endregion
 
@@ -597,6 +607,24 @@ namespace Simias.POBox
 			set
 			{
 				Properties.ModifyProperty(SubscriptionDispositionProperty, value);
+			}
+		}
+
+
+		/// <summary>
+		/// Gets/sets the subscription key.
+		/// </summary>
+		public string SubscriptionKey
+		{
+			get
+			{
+				Property p = Properties.GetSingleProperty(SubscriptionKeyProperty);
+
+				return (p != null) ? p.ToString() : null;
+			}
+			set
+			{
+				Properties.ModifyProperty(SubscriptionKeyProperty, value);
 			}
 		}
 
