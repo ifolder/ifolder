@@ -1217,14 +1217,19 @@ namespace Simias.Sync.Client
 			headers.Add(SyncHttp.SyncRange, offset.ToString() + '-' + (offset + count).ToString());
 			headers.Add(SyncHttp.SyncOperation, SyncHttp.Operation.Read.ToString());
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-			if (response.StatusCode == HttpStatusCode.OK)
+			try
 			{
-				buffer = new byte[count];
-				int length = response.GetResponseStream().Read(buffer, 0, count);
-				response.Close();
-				return length;
+				if (response.StatusCode == HttpStatusCode.OK)
+				{
+					buffer = new byte[count];
+					int length = response.GetResponseStream().Read(buffer, 0, count);
+					return length;
+				}
 			}
-			response.Close();
+			finally
+			{
+				response.Close();
+			}
 			throw new SimiasException(response.StatusDescription);
 		}
 
@@ -1246,10 +1251,16 @@ namespace Simias.Sync.Client
 			outStream.Write(buffer, 0, count);
 			outStream.Close();
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-			response.Close();
-			if (response.StatusCode != HttpStatusCode.OK)
+			try
 			{
-				throw new SimiasException(response.StatusDescription);
+				if (response.StatusCode != HttpStatusCode.OK)
+				{
+					throw new SimiasException(response.StatusDescription);
+				}
+			}
+			finally
+			{
+				response.Close();
 			}
 		}
 
@@ -1262,6 +1273,7 @@ namespace Simias.Sync.Client
 		public void Write(Stream inStream, long offset, long count)
 		{
 			HttpWebRequest request = GetRequest();
+			HttpWebResponse response = null;
 			WebHeaderCollection headers = request.Headers;
 			request.Method = "POST";
 			request.ContentLength = count;
@@ -1279,11 +1291,17 @@ namespace Simias.Sync.Client
 				bytesSent += bytesRead;
 			}
 			outStream.Close();
-			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-			response.Close();
-			if (response.StatusCode != HttpStatusCode.OK)
+			response = (HttpWebResponse)request.GetResponse();
+			try
 			{
-				throw new SimiasException(response.StatusDescription);
+				if (response.StatusCode != HttpStatusCode.OK)
+				{
+					throw new SimiasException(response.StatusDescription);
+				}
+			}
+			finally
+			{
+				response.Close();
 			}
 		}
 
