@@ -611,6 +611,98 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 
 
 //----------------------------------------------------------------------------
+// DisableDomainAutoLogin
+// Disables Simias from asking for password
+//----------------------------------------------------------------------------
+-(void) DisableDomainAutoLogin:(NSString *)domainID
+{
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (domainID != nil), @"domainID was nil");
+
+	struct _ns1__DisableDomainAutoLogin			disableDomainMessage;
+	struct _ns1__DisableDomainAutoLoginResponse	disableDomainResponse;
+
+	disableDomainMessage.domainID = (char *)[domainID cString];
+
+    init_simias_gsoap (&soap);
+
+    err_code = soap_call___ns1__DisableDomainAutoLogin(
+			&soap,
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            NULL,
+            &disableDomainMessage,
+            &disableDomainResponse);
+
+ 	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in DisableDomainAutoLogin"];
+	}
+
+    cleanup_simias_gsoap(&soap);
+}
+
+
+
+
+//----------------------------------------------------------------------------
+// LogoutFromRemoteDomain
+// Will cause simias to no longer talk to this domain (logout)
+//----------------------------------------------------------------------------
+-(AuthStatus *) LogoutFromRemoteDomain:(NSString *)domainID
+{
+	AuthStatus *authStatus = nil;
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (domainID != nil), @"domainID was nil");
+
+	struct _ns1__LogoutFromRemoteDomain			logoutDomainMessage;
+	struct _ns1__LogoutFromRemoteDomainResponse	logoutDomainResponse;
+
+	logoutDomainMessage.domainID = (char *)[domainID cString];
+
+    init_simias_gsoap (&soap);
+
+    err_code = soap_call___ns1__LogoutFromRemoteDomain(
+			&soap,
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            NULL,
+            &logoutDomainMessage,
+            &logoutDomainResponse);
+
+ 	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in DisableDomainAutoLogin"];
+	}
+	else
+	{
+		struct ns1__Status *status;
+		status = logoutDomainResponse.LogoutFromRemoteDomainResult;
+		if(status == NULL)
+		{
+			cleanup_simias_gsoap(&soap);
+			[NSException raise:@"Authentication returned null object"
+							format:@"Error in AuthenticateToDomain"];		
+		}
+
+		authStatus = [[[AuthStatus alloc] init] autorelease];
+		[authStatus setProperties:getAuthStatus(status)];
+	}
+
+    cleanup_simias_gsoap(&soap);
+
+	return authStatus;
+}
+
+
+
+
+
+//----------------------------------------------------------------------------
 // getDomainProperties
 // Prepares the properties to be store in the Domain object
 //----------------------------------------------------------------------------

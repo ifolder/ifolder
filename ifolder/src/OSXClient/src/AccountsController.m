@@ -46,6 +46,8 @@
 	// Initialized the controls
 	[name setStringValue:@""];
 	[name setEnabled:NO];
+	[state setStringValue:@""];
+	[state setEnabled:NO];
 	[host setStringValue:@""];
 	[host setEnabled:NO];
 	[userName setStringValue:@""];
@@ -60,7 +62,8 @@
 	[enableAccount setEnabled:NO];
 	[defaultAccount setState:0];
 	[defaultAccount setEnabled:NO];
-	[activate setEnabled:NO];
+	[loginout setEnabled:NO];
+	[loginout setTitle:NSLocalizedString(@"Login", nil)];
 	
 	[removeAccount setEnabled:NO];
 
@@ -93,7 +96,187 @@
 }
 
 
-- (IBAction)activateAccount:(id)sender
+
+
+- (IBAction)loginoutClicked:(id)sender
+{
+	if(	createMode )
+	{
+		[self activateAccount];
+	}
+	else
+	{
+		if(selectedDomain != nil)
+		{
+			if([selectedDomain authenticated])
+			{
+				[self logoutAccount];
+			}
+			else
+			{
+				[self loginAccount];
+			}
+		}
+	}
+}
+
+
+
+
+- (void)loginAccount
+{
+	if( (selectedDomain != nil) &&
+		(![selectedDomain authenticated]) &&
+		( [[password stringValue] length] > 0 ) )
+	{
+		@try
+		{
+			AuthStatus *authStatus = [[simiasService LoginToRemoteDomain:[selectedDomain ID]
+										usingPassword:[password stringValue]] retain];
+
+			unsigned int statusCode = [[authStatus statusCode] unsignedIntValue];
+			
+			switch(statusCode)
+			{
+				case ns1__StatusCodes__Success:		// Success
+				case ns1__StatusCodes__SuccessInGrace:		// SuccessInGrace
+				{
+					[loginout setEnabled:YES];
+					[loginout setTitle:NSLocalizedString(@"Logout", nil)];
+					[state setStringValue:NSLocalizedString(@"Logged in", nil)];
+					[selectedDomain setValue:[NSNumber numberWithBool:YES] forKeyPath:@"properties.authenticated"];
+					
+					if( (authStatus != nil) && ([authStatus remainingGraceLogins] < [authStatus totalGraceLogins]) )
+					{
+						NSBeginAlertSheet(NSLocalizedString(@"Expired Password", nil), 
+						NSLocalizedString(@"OK", nil), nil, nil, 
+						parentWindow, nil, nil, nil, nil, 
+						[NSString stringWithFormat:NSLocalizedString(@"Your password has expired.  You have %d grace logins remaining.", 
+									nil), [authStatus remainingGraceLogins]]);
+						[authStatus release];
+						authStatus = nil;
+					}
+					break;
+				}
+				case ns1__StatusCodes__InvalidCertificate:
+				{
+					@try
+					{
+						SecCertificateRef certRef = [simiasService GetCertificate:[host stringValue]];
+
+						AcceptCertSheetController *certSheet = [[AcceptCertSheetController alloc]
+								initWithCert:certRef];
+						
+						[NSApp beginSheet:[certSheet window] modalForWindow:parentWindow
+							modalDelegate:self didEndSelector:@selector(certSheetDidEnd:returnCode:contextInfo:) contextInfo:certRef];
+					}
+					@catch(NSException ex)
+					{
+						NSLog(@"Exception getting cert.");
+					}						
+					break;
+				}
+				case ns1__StatusCodes__UnknownUser:		// UnknownUser
+				case ns1__StatusCodes__InvalidCredentials:		// InvalidCredentials
+				case ns1__StatusCodes__InvalidPassword:		// InvalidPassword
+				{
+					NSBeginAlertSheet(NSLocalizedString(@"Unable to Connect to iFolder Server", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil, 
+					parentWindow, nil, nil, nil, nil, 
+					NSLocalizedString(@"The user name or password is invalid.  Please try again.", nil));
+					break;
+				}
+				case ns1__StatusCodes__AccountDisabled:		// AccountDisabled
+				{
+					NSBeginAlertSheet(NSLocalizedString(@"Unable to Connect to iFolder Server", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil, 
+					parentWindow, nil, nil, nil, nil, 
+					NSLocalizedString(@"The user account is disabled.  Please contact your network administrator for assistance.", nil));
+					break;
+				}
+				case ns1__StatusCodes__AccountLockout:		// AccountLockout
+				{
+					NSBeginAlertSheet(NSLocalizedString(@"Unable to Connect to iFolder Server", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil, 
+					parentWindow, nil, nil, nil, nil, 
+					NSLocalizedString(@"The user account has been locked out.  Please contact your network administrator for assistance.", nil));
+					break;
+				}
+				case ns1__StatusCodes__UnknownDomain:		// UnknownDomain
+				case ns1__StatusCodes__InternalException:		// InternalException
+				case ns1__StatusCodes__MethodNotSupported:	// MethodNotSupported
+				case ns1__StatusCodes__Timeout:	// Timeout
+				case ns1__StatusCodes__AmbiguousUser:		// AmbiguousUser
+				case ns1__StatusCodes__Unknown:	// Unknown
+				{
+					NSBeginAlertSheet(NSLocalizedString(@"Unable to Connect to iFolder Server", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil, 
+					parentWindow, nil, nil, nil, nil, 
+					NSLocalizedString(@"An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", nil));
+					break;
+				}
+			}
+
+			[authStatus release];
+		}
+		@catch (NSException *e)
+		{
+			NSLog(@"Exception thrown calling ConnectToDomain: %@", [e name]);
+			NSBeginAlertSheet(NSLocalizedString(@"iFolder login failed", nil), 
+				NSLocalizedString(@"OK", nil), nil, nil, 
+				parentWindow, nil, nil, nil, nil, 
+				NSLocalizedString(@"An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", nil));
+		}
+	}
+}
+
+
+
+
+- (void)logoutAccount
+{
+	if( (selectedDomain != nil) &&
+		([selectedDomain authenticated]) )
+	{
+		@try
+		{
+			AuthStatus *authStatus = [[simiasService LogoutFromRemoteDomain:[selectedDomain ID]] retain];
+
+			unsigned int statusCode = [[authStatus statusCode] unsignedIntValue];
+
+			if(statusCode == ns1__StatusCodes__Success)
+			{
+				[loginout setEnabled:YES];
+				[loginout setTitle:NSLocalizedString(@"Login", nil)];
+				[state setStringValue:NSLocalizedString(@"Logged out", nil)];
+				[selectedDomain setValue:[NSNumber numberWithBool:NO] forKeyPath:@"properties.authenticated"];
+			}
+			else
+			{
+				NSLog(@"Error returned from LogoutFromRemoteDomain: %d", statusCode);
+				NSBeginAlertSheet(NSLocalizedString(@"Error logging out of Account", nil), 
+				NSLocalizedString(@"OK", nil), nil, nil, 
+				parentWindow, nil, nil, nil, nil, 
+				NSLocalizedString(@"An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", nil));
+			}
+
+			[authStatus release];
+		}
+		@catch (NSException *e)
+		{
+			NSLog(@"Exception thrown calling LogoutFromRemoteDomain: %@", [e name]);
+			NSBeginAlertSheet(NSLocalizedString(@"Error logging out of Account", nil), 
+			NSLocalizedString(@"OK", nil), nil, nil, 
+			parentWindow, nil, nil, nil, nil, 
+			NSLocalizedString(@"An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", nil));
+		}
+	}
+}
+
+
+
+
+- (void)activateAccount
 {
 	NSLog(@"Activate Account clicked");
 
@@ -266,6 +449,8 @@
 
 	[name setStringValue:NSLocalizedString(@"<new account>", nil)];
 	[name setEnabled:YES];
+	[state setStringValue:NSLocalizedString(@"Logged out", nil)];
+	[state setEnabled:YES];
 	[host setStringValue:@""];
 	[host setEnabled:YES];
 	[userName setStringValue:@""];
@@ -290,7 +475,7 @@
 
 	[removeAccount setEnabled:NO];	
 
-	[activate setEnabled:NO];
+	[loginout setEnabled:NO];
 	[parentWindow makeFirstResponder:host];
 }
 
@@ -314,7 +499,7 @@
 		@try
 		{
 			[simiasService StoreCertificate:certRef forHost:[host stringValue]];
-			[self activateAccount:self];
+			[self loginoutClicked:self];
 		}
 		@catch(NSException ex)
 		{
@@ -361,8 +546,22 @@
 	{
 		@try
 		{
-			[simiasService SetDomainActive:[selectedDomain ID]];	
-			NSLog(@"SetDomainActive Succeded.");
+			[simiasService SetDomainActive:[selectedDomain ID]];
+
+			[selectedDomain setValue:[NSNumber numberWithBool:YES] forKeyPath:@"properties.isEnabled"];
+
+			if([selectedDomain authenticated])
+			{
+				[loginout setEnabled:YES];
+				[loginout setTitle:NSLocalizedString(@"Logout", nil)];
+				[state setStringValue:NSLocalizedString(@"Logged in", nil)];
+			}
+			else
+			{
+				[loginout setEnabled:YES];
+				[loginout setTitle:NSLocalizedString(@"Login", nil)];
+				[state setStringValue:NSLocalizedString(@"Logged out", nil)];
+			}
 		}
 		@catch(NSException ex)
 		{
@@ -374,7 +573,12 @@
 		@try
 		{
 			[simiasService SetDomainInactive:[selectedDomain ID]];	
-			NSLog(@"SetDomainInactive Succeded.");
+
+			[selectedDomain setValue:[NSNumber numberWithBool:NO] forKeyPath:@"properties.isEnabled"];
+
+			[loginout setEnabled:NO];
+			[loginout setTitle:NSLocalizedString(@"Login", nil)];
+			[state setStringValue:NSLocalizedString(@"Disabled", nil)];
 		}
 		@catch(NSException ex)
 		{
@@ -396,7 +600,7 @@
 			{
 				[simiasService SetDefaultDomain:[selectedDomain ID]];	
 				if(defaultDomain != nil)
-					[defaultDomain setValue:NO forKeyPath:@"properties.isDefault"];
+					[defaultDomain setValue:[NSNumber numberWithBool:NO] forKeyPath:@"properties.isDefault"];
 							
 				defaultDomain = selectedDomain;
 				NSLog(@"SetDefaultDomain Succeded.");
@@ -466,6 +670,30 @@
 		createMode = NO;
 		[name setStringValue:[selectedDomain name]];
 		[name setEnabled:YES];
+
+		if([[selectedDomain isEnabled] boolValue])
+		{
+			if([selectedDomain authenticated])
+			{
+				[loginout setEnabled:YES];
+				[loginout setTitle:NSLocalizedString(@"Logout", nil)];
+				[state setStringValue:NSLocalizedString(@"Logged in", nil)];
+			}
+			else
+			{
+				[loginout setEnabled:YES];
+				[loginout setTitle:NSLocalizedString(@"Login", nil)];
+				[state setStringValue:NSLocalizedString(@"Logged out", nil)];
+			}
+		}
+		else
+		{
+			[loginout setEnabled:NO];
+			[loginout setTitle:NSLocalizedString(@"Login", nil)];
+			[state setStringValue:NSLocalizedString(@"Disabled", nil)];
+		}
+		
+		[state setEnabled:YES];
 		[host setStringValue:[selectedDomain host]];
 		[host setEnabled:NO];
 		[userName setStringValue:[selectedDomain userName]];
@@ -500,7 +728,6 @@
 		[defaultAccount setState:[[selectedDomain isDefault] boolValue]];
 		[defaultAccount setEnabled:![[selectedDomain isDefault] boolValue]];
 		
-		[activate setEnabled:NO];
 		[removeAccount setEnabled:YES];
 		
 		// Also update the details page
@@ -519,6 +746,8 @@
 	{
 		[name setStringValue:@""];
 		[name setEnabled:NO];
+		[state setStringValue:@""];
+		[state setEnabled:NO];
 		[host setStringValue:@""];
 		[host setEnabled:NO];
 		[userName setStringValue:@""];
@@ -534,7 +763,9 @@
 		[defaultAccount setState:0];
 		[defaultAccount setEnabled:NO];	
 		
-		[activate setEnabled:NO];
+		[loginout setEnabled:NO];
+		[loginout setTitle:NSLocalizedString(@"Login", nil)];
+		
 		[removeAccount setEnabled:NO];		
 	}
 	
@@ -628,9 +859,9 @@
 			([userName stringValue] != nil) && ([[userName stringValue] length] > 0) &&
 			([password stringValue] != nil) && ([[password stringValue] length] > 0) &&
 			(createMode) )
-			[activate setEnabled:YES];
-		else
-			[activate setEnabled:NO];
+			[loginout setEnabled:YES];
+		else if(createMode)
+			[loginout setEnabled:NO];
 	}
 }
 

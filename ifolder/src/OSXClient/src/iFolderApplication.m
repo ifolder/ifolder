@@ -447,24 +447,6 @@
 
 
 //===================================================================
-// authenticateToDomain
-// This will authenticate using the specified password and domainID
-//===================================================================
-- (AuthStatus *)authenticateToDomain:(NSString *)domainID withPassword:(NSString *)password
-{
-	AuthStatus *authStatus = nil;
-	SimiasService *simiasService;
-	simiasService = [[SimiasService alloc] init];		
-
-	authStatus = [simiasService LoginToRemoteDomain:domainID usingPassword:password];
-
-	return authStatus;
-}
-
-
-
-
-//===================================================================
 // enableThreads
 // This method does nothing but is used to set app into
 // multi-threaded mode

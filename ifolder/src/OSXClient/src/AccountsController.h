@@ -32,12 +32,13 @@
 @interface AccountsController : NSObject
 {
     IBOutlet NSTableView *accounts;
-    IBOutlet NSButton *activate;
+    IBOutlet NSButton *loginout;
     IBOutlet NSButton *addAccount;
     IBOutlet NSButton *defaultAccount;
     IBOutlet NSButton *enableAccount;
     IBOutlet NSTextField *host;
     IBOutlet NSTextField *name;
+	IBOutlet NSTextField *state;
     IBOutlet NSSecureTextField *password;
     IBOutlet NSButton *rememberPassword;
     IBOutlet NSButton *removeAccount;
@@ -63,12 +64,16 @@
 	BOOL				isFirstDomain;
 }
 
-- (IBAction)activateAccount:(id)sender;
+- (IBAction)loginoutClicked:(id)sender;
 - (IBAction)addAccount:(id)sender;
 - (IBAction)removeAccount:(id)sender;
 - (IBAction)toggleActive:(id)sender;
 - (IBAction)toggleDefault:(id)sender;
 - (IBAction)toggleSavePassword:(id)sender;
+
+- (void)activateAccount;
+- (void)loginAccount;
+- (void)logoutAccount;
 
 - (void)awakeFromNib;
 

@@ -37,21 +37,46 @@
 
 - (IBAction)cancel:(id)sender
 {
+	SimiasService *simiasService = nil;
+	if([authDomainID length] > 0 )
+	{
+		NSLog(@"Disabling auto login on Domain: %@", authDomainID);
+		
+		simiasService = [[SimiasService alloc] init];
+
+		@try
+		{
+			[simiasService DisableDomainAutoLogin:authDomainID];
+		}
+		@catch (NSException *e)
+		{
+			NSLog(@"Failed to disable auto login on Domain: %@", authDomainID);
+			// not sure what to do here but just ignore it for now I guess
+		}
+	}
+
 	[[self window] orderOut:nil];
 }
 
 
 - (IBAction)authenticate:(id)sender
 {
+	SimiasService *simiasService = nil;
+
 	[passwordField selectText:self];
 	
 	if( ( [authDomainID length] > 0 ) &&
 		( [[passwordField stringValue] length] > 0 ) )
 	{
+		simiasService = [[SimiasService alloc] init];
+
 		@try
 		{
-			AuthStatus *authStatus = [[[NSApp delegate] authenticateToDomain:authDomainID 
-										withPassword:[passwordField stringValue]] retain];
+			AuthStatus *authStatus = [[simiasService LoginToRemoteDomain:authDomainID 
+										usingPassword:[passwordField stringValue]] retain];
+
+//			AuthStatus *authStatus = [[[NSApp delegate] authenticateToDomain:authDomainID 
+//										withPassword:[passwordField stringValue]] retain];
 										
 			unsigned int statusCode = [[authStatus statusCode] unsignedIntValue];
 			
@@ -75,8 +100,6 @@
 				{
 					@try
 					{
-						SimiasService *simiasService = [[SimiasService alloc] init];
-						
 						SecCertificateRef certRef = [simiasService GetCertificate:[serverField stringValue]];
 
 						AcceptCertSheetController *certSheet = [[AcceptCertSheetController alloc]
