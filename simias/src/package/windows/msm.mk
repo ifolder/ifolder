@@ -40,11 +40,14 @@ ifneq ($(TARGET_OS),windows)
 endif
 
 # Check and set required variables
+ifndef SLN_FILE
+  ERROR_MESSAGE += "ERROR: SLN_FILE must be set (ex: installs.sln)\n"
+endif
 ifndef PROJECT
-  ERROR_MESSAGE += "ERROR: PROJECT must be set (ex: client, server)\n"
+  ERROR_MESSAGE += "ERROR: PROJECT must be set (ex: client-msm, server-msm)\n"
 endif
 ifndef PRODUCT_NAME
-  ERROR_MESSAGE += "ERROR: PRODUCT_NAME must be set (ex: denali, ifolder)\n"
+  ERROR_MESSAGE += "ERROR: PRODUCT_NAME must be set (ex: simias)\n"
 endif
 ifndef PRODUCT_VERSION
   ERROR_MESSAGE += "ERROR: PRODUCT_VERSION must be set\n"
@@ -56,28 +59,23 @@ endif
 # If any errors, output message and exit
 ifdef ERROR_MESSAGE
   common:
-	@echo -e $(ERROR_MESSAGE)
+	@echo $(ERROR_MESSAGE)
 	@exit 1
 endif
 
 #=============================================================================
-# Set and export variables
+# Set variables
 #=============================================================================
 RUN_DEVENV = call run_devenv.bat
-SLN_FILE = installs.sln
 
-SIMPLE_MSI_FILENAME = $(PROJECT).msi
-FULL_MSI_FILENAME   = $(PRODUCT_NAME)-$(PROJECT)-$(PRODUCT_VERSION)-$(PACKAGE_RELEASE).msi
+SIMPLE_MSM_FILENAME = $(PROJECT).msm
+FULL_MSM_FILENAME   = $(PRODUCT_NAME)-$(PROJECT)-$(PRODUCT_VERSION)-$(PACKAGE_RELEASE).msm
 
 ifdef DEBUG
   CONFIGURATION = Debug
 else
   CONFIGURATION = Release
 endif
-
-RUN_MSIEXEC   = call run_msiexec.bat
-MSI_INSTALL   = $(RUN_MSIEXEC) install
-MSI_UNINSTALL = $(RUN_MSIEXEC) uninstall
 
 define header
 @echo '' 
@@ -92,7 +90,7 @@ endef
 all:
 	$(header)
 	$(RUN_DEVENV) $(SLN_FILE) $(PROJECT) $(CONFIGURATION)
-	copy /y $(PROJECT)\\$(CONFIGURATION)\\$(SIMPLE_MSI_FILENAME) $(FULL_MSI_FILENAME)
+	copy /y $(PROJECT)\\$(CONFIGURATION)\\$(SIMPLE_MSM_FILENAME) $(FULL_MSM_FILENAME)
 
 # devenv creates both Release and Debug directories when building either one so remove both
 clean:
@@ -102,8 +100,8 @@ clean:
 	-$(RMDIR) server\Release
 	-$(RMDIR) server\Debug
 	-$(RM) *-$(PROJECT).log
-	-$(RM) *-$(PROJECT)-*.msi
-	-$(RM) /ah installs.suo
+	-$(RM) *-$(PROJECT)-*.msm
+	-$(RM) /ah $(subst .sln,.suo,$(SLN_FILE))
 
 test:
 	$(header)
@@ -111,18 +109,18 @@ test:
 
 install:
 	$(header)
-	@$(MSI_INSTALL) $(FULL_MSI_FILENAME)
+	@echo A merge module .msm cannot be installed alone; it must be merged into a .msi file.
 
 uninstall:
 	$(header)
-	@$(MSI_UNINSTALL) $(FULL_MSI_FILENAME)
+	@echo A merge module .msm cannot be uninstalled alone; uninstall the enclosing .msi file.
 
 #=============================================================================
 # File CVS History:
 #
 # $Log$
-# Revision 1.1  2004/02/23 20:28:48  pthomas707
-# Morphed Denali MSI build into Simias MSI build.
+# Revision 1.1  2004/02/23 23:01:00  pthomas707
+# Added logic to build Simias MSM merge module.
 #
 #
 #=============================================================================

@@ -21,14 +21,15 @@
 # 
 #========================================================================
 
-TARGETS        := client
-#TARGETS        := client server
+TARGETS        := client-msm client 
+#TARGETS        := client client-msm server
 TARGET_TYPES   := clean test install uninstall
 
-CLIENT_TARGETS := $(foreach type,$(TARGET_TYPES),$(addsuffix -$(type), client))
-#SERVER_TARGETS := $(foreach type,$(TARGET_TYPES),$(addsuffix -$(type), server))
+CLIENT_TARGETS     := $(foreach type,$(TARGET_TYPES),$(addsuffix -$(type), client))
+CLIENT_MSM_TARGETS := $(foreach type,$(TARGET_TYPES),$(addsuffix -$(type), client-msm))
+#SERVER_TARGETS    := $(foreach type,$(TARGET_TYPES),$(addsuffix -$(type), server))
 
-ALL_TARGETS    := all $(TARGETS) $(TARGET_TYPES) $(CLIENT_TARGETS) $(SERVER_TARGETS)
+ALL_TARGETS    := all $(TARGETS) $(TARGET_TYPES) $(CLIENT_TARGETS) $(CLIENT_MSM_TARGETS)
 
 CLEAN_TARGETS     := $(filter %-clean,    $(ALL_TARGETS))
 TEST_TARGETS      := $(filter %-test,     $(ALL_TARGETS))
@@ -43,36 +44,51 @@ test:      $(TEST_TARGETS)
 install:   $(INSTALL_TARGETS)
 uninstall: $(UNINSTALL_TARGETS)
 
-# Variable used by windows.mk
+# Variables used by windows.mk
 export PROJECT
+client     $(CLIENT_TARGETS):     PROJECT=client
+server     $(SERVER_TARGETS):     PROJECT=server
+client-msm $(CLIENT_MSM_TARGETS): PROJECT=client-msm
 
-client $(CLIENT_TARGETS): PROJECT=client
-server $(SERVER_TARGETS): PROJECT=server
+export SLN_FILE=installs.sln
 
-client server:
-	$(MAKE) -f windows.mk
+client: client-msm
+	$(MAKE) -f msi.mk
+
+client-msm:
+	$(MAKE) -f msm.mk
+
+server:
+	$(MAKE) -f msi.mk
 
 $(CLIENT_TARGETS):
-	$(MAKE) -f windows.mk $(subst client-,,$@)
+	$(MAKE) -f msi.mk $(subst client-,,$@)
 
 $(SERVER_TARGETS):
-	$(MAKE) -f windows.mk $(subst server-,,$@)
+	$(MAKE) -f msi.mk $(subst server-,,$@)
+
+$(CLIENT_MSM_TARGETS):
+	$(MAKE) -f msm.mk $(subst client-msm-,,$@)
 
 dump:
-	@echo TARGETS           = $(TARGETS)
-	@echo TARGET_TYPES      = $(TARGET_TYPES)
-	@echo CLIENT_TARGETS    = $(CLIENT_TARGETS)
-	@echo SERVER_TARGETS    = $(SERVER_TARGETS)
-	@echo ALL_TARGETS       = $(ALL_TARGETS)
-	@echo CLEAN_TARGETS     = $(CLEAN_TARGETS)
-	@echo TEST_TARGETS      = $(TEST_TARGETS)
-	@echo INSTALL_TARGETS   = $(INSTALL_TARGETS)
-	@echo UNINSTALL_TARGETS = $(UNINSTALL_TARGETS)
+	@echo TARGETS            = $(TARGETS)
+	@echo TARGET_TYPES       = $(TARGET_TYPES)
+	@echo CLIENT_TARGETS     = $(CLIENT_TARGETS)
+	@echo CLIENT_MSM_TARGETS = $(CLIENT_MSM_TARGETS)
+	@echo SERVER_TARGETS     = $(SERVER_TARGETS)
+	@echo ALL_TARGETS        = $(ALL_TARGETS)
+	@echo CLEAN_TARGETS      = $(CLEAN_TARGETS)
+	@echo TEST_TARGETS       = $(TEST_TARGETS)
+	@echo INSTALL_TARGETS    = $(INSTALL_TARGETS)
+	@echo UNINSTALL_TARGETS  = $(UNINSTALL_TARGETS)
 
 #=============================================================================
 # File CVS History:
 #
 # $Log$
+# Revision 1.2  2004/02/23 23:01:00  pthomas707
+# Added logic to build Simias MSM merge module.
+#
 # Revision 1.1  2004/02/23 20:28:48  pthomas707
 # Morphed Denali MSI build into Simias MSI build.
 #
