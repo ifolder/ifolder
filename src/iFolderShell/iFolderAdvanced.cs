@@ -27,6 +27,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.IO;
 using System.Net;
 using Simias.Client;
@@ -46,8 +47,12 @@ namespace Novell.iFolderCom
 		private const double megaByte = 1048576;
 
 		// Delegate used to marshal back to the control's creation thread.
-		private delegate void NodeDelegate(NodeEventArgs nodeEventArgs);
+		private delegate void NodeDelegate(iFolder ifolder, iFolderUser ifolderUser, string eventData);
 		private NodeDelegate nodeDelegate;
+
+		private Queue eventQueue;
+		private Thread worker = null;
+		protected AutoResetEvent workEvent = null;
 
 		private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(iFolderAdvanced));
 		private System.Windows.Forms.TabControl tabControl1;
@@ -68,7 +73,7 @@ namespace Novell.iFolderCom
 		private int initTabTop;
 		private int initHeight;
 		private bool accessClick;
-		private iFolder ifolder;
+		private iFolder currentiFolder;
 		private iFolderUser currentUser;
 		private ListViewItem ownerLvi;
 		private ListViewItem newOwnerLvi;
@@ -128,6 +133,14 @@ namespace Novell.iFolderCom
 		public iFolderAdvanced()
 		{
 			nodeDelegate = new NodeDelegate(nodeEvent);
+			
+			eventQueue = new Queue();
+			workEvent = new AutoResetEvent(false);
+			if (worker == null)
+			{
+				worker = new Thread(new ThreadStart(eventThreadProc));
+				worker.Start();
+			}
 
 			//
 			// Required for Windows Form Designer support
@@ -166,6 +179,11 @@ namespace Novell.iFolderCom
 					{
 						eventClient.Deregister();
 					}
+				}
+
+				if ((worker != null) && worker.IsAlive)
+				{
+					worker.Abort();
 				}
 
 				if(components != null)
@@ -1525,11 +1543,50 @@ namespace Novell.iFolderCom
 		#endregion
 
 		#region Private Methods
-		private void nodeEvent(NodeEventArgs eventArgs)
+		private void nodeEvent(iFolder ifolder, iFolderUser ifolderUser, string eventData)
 		{
 			try
 			{
-				switch (eventArgs.EventData)
+				if (ifolder != null)
+				{
+					showConflictMessage(ifolder.HasConflicts);
+				}
+				else if (ifolderUser != null)
+				{
+					ListViewItem lvi;
+					lock (subscrHT)
+					{
+						lvi = (ListViewItem)subscrHT[ifolderUser.ID];
+					}
+
+					if (lvi != null)
+					{
+						ShareListMember slMember = (ShareListMember)lvi.Tag;
+						slMember.iFolderUser = ifolderUser;
+						lvi.Tag = slMember;
+						updateListViewItem(lvi);
+					}
+					else
+					{
+						addiFolderUserToListView(ifolderUser);
+					}
+				}
+				else
+				{
+					lock (subscrHT)
+					{
+						// See if we have a listview item by this ID.
+						ListViewItem lvi = (ListViewItem)subscrHT[eventData];
+						if (lvi != null)
+						{
+							// Remove the listview item.
+							lvi.Remove();
+							subscrHT.Remove(eventData);
+						}
+					}
+				}
+
+/*				switch (eventArgs.EventData)
 				{
 					case "NodeChanged":
 					{
@@ -1590,7 +1647,7 @@ namespace Novell.iFolderCom
 						}
 						break;
 					}
-				}
+				}*/
 			}
 			catch
 			{
@@ -1692,7 +1749,7 @@ namespace Novell.iFolderCom
 			try
 			{
 				connectToWebService();
-				DiskSpace diskSpace = ifWebService.GetiFolderDiskSpace(ifolder.ID);
+				DiskSpace diskSpace = ifWebService.GetiFolderDiskSpace(currentiFolder.ID);
 				double usedSpace = Math.Round(diskSpace.UsedSpace/megaByte, 2);
 				used.Text = usedSpace.ToString();
 				if (diskSpace.Limit != 0)
@@ -1739,16 +1796,16 @@ namespace Novell.iFolderCom
 			updateDiskQuotaDisplay();
 
 			// Get the refresh interval.
-			syncInterval.Value = (decimal)ifolder.SyncInterval;
-			autoSync.Checked = ifolder.SyncInterval != System.Threading.Timeout.Infinite;
+			syncInterval.Value = (decimal)currentiFolder.SyncInterval;
+			autoSync.Checked = currentiFolder.SyncInterval != Timeout.Infinite;
 
 			// Show/hide the collision message.
-			showConflictMessage(ifolder.HasConflicts);
+			showConflictMessage(currentiFolder.HasConflicts);
 
 			try
 			{
 				// Get the sync node and byte counts.
-				SyncSize syncSize = ifWebService.CalculateSyncSize(ifolder.ID);
+				SyncSize syncSize = ifWebService.CalculateSyncSize(currentiFolder.ID);
 				objectCount.Text = syncSize.SyncNodeCount.ToString();
 				byteCount.Text = syncSize.SyncByteCount.ToString();
 			}
@@ -1773,10 +1830,10 @@ namespace Novell.iFolderCom
 
 				// Load the member list.
 				connectToWebService();
-				iFolderUser[] ifolderUsers = ifWebService.GetiFolderUsers(ifolder.ID);
+				iFolderUser[] ifolderUsers = ifWebService.GetiFolderUsers(currentiFolder.ID);
 				foreach (iFolderUser ifolderUser in ifolderUsers)
 				{
-					if (ifolderUser.UserID.Equals(ifolder.CurrentUserID))
+					if (ifolderUser.UserID.Equals(currentiFolder.CurrentUserID))
 					{
 						// Keep track of the current user
 						currentUser = ifolderUser;
@@ -1784,7 +1841,7 @@ namespace Novell.iFolderCom
 
 					ListViewItem lvitem = addiFolderUserToListView(ifolderUser);
 
-					if (ifolderUser.UserID.Equals(ifolder.OwnerID))
+					if (ifolderUser.UserID.Equals(currentiFolder.OwnerID))
 					{
 						// Keep track of the current (or old) owner.
 						ownerLvi = lvitem;
@@ -1819,7 +1876,7 @@ namespace Novell.iFolderCom
 			// Enable/disable the Add button.
 			add.Enabled = currentUser != null ? currentUser.Rights.Equals("Admin") : false;
 
-			setLimit.Visible = limitEdit.Visible = currentUser != null ? currentUser.UserID.Equals(ifolder.OwnerID) : false;
+			setLimit.Visible = limitEdit.Visible = currentUser != null ? currentUser.UserID.Equals(currentiFolder.OwnerID) : false;
 			limitLabel.Visible = limit.Visible = !setLimit.Visible;
 
 			// Restore the cursor.
@@ -1864,7 +1921,7 @@ namespace Novell.iFolderCom
 					stateString = resourceManager.GetString(state);
 					break;
 				case member:
-					stateString = userID.Equals(ifolder.OwnerID) ? resourceManager.GetString("owner") : "";
+					stateString = userID.Equals(currentiFolder.OwnerID) ? resourceManager.GetString("owner") : "";
 					break;
 				default:
 					stateString = resourceManager.GetString("unknown");
@@ -1887,7 +1944,7 @@ namespace Novell.iFolderCom
 					connectToWebService();
 					ShareListMember oldOwner = (ShareListMember)ownerLvi.Tag;
 					ShareListMember newOwner = (ShareListMember)newOwnerLvi.Tag;
-					ifWebService.ChangeOwner(ifolder.ID, newOwner.iFolderUser.UserID, oldOwner.iFolderUser.Rights);
+					ifWebService.ChangeOwner(currentiFolder.ID, newOwner.iFolderUser.UserID, oldOwner.iFolderUser.Rights);
 					oldOwner.Changed = newOwner.Changed = false;
 				}
 				catch (WebException e)
@@ -1924,7 +1981,7 @@ namespace Novell.iFolderCom
 					if (slMember.Added)
 					{
 						// TODO: we'll get the email a different way in the future.
-/*						if (ifolder.Domain.Equals(Domain.WorkGroupDomainID) &&
+/*						if (currentiFolder.Domain.Equals(Domain.WorkGroupDomainID) &&
 							(sendersEmail == null))
 						{
 							// TODO: check for an existing contact for the current user.
@@ -1945,7 +2002,7 @@ namespace Novell.iFolderCom
 						}*/
 
 						// Send the invitation.
-						slMember.iFolderUser = ifWebService.InviteUser(ifolder.ID, slMember.iFolderUser.UserID, slMember.iFolderUser.Rights);
+						slMember.iFolderUser = ifWebService.InviteUser(currentiFolder.ID, slMember.iFolderUser.UserID, slMember.iFolderUser.Rights);
 
 						// Update the listview item with the new object.
 						lvitem.Tag = slMember;
@@ -1962,7 +2019,7 @@ namespace Novell.iFolderCom
 					}
 					else if (slMember.Changed)
 					{
-						ifWebService.SetUserRights(ifolder.ID, slMember.iFolderUser.UserID, slMember.iFolderUser.Rights);
+						ifWebService.SetUserRights(currentiFolder.ID, slMember.iFolderUser.UserID, slMember.iFolderUser.Rights);
 
 						// Reset the flags.
 						slMember.Changed = false;
@@ -1999,7 +2056,7 @@ namespace Novell.iFolderCom
 						connectToWebService();
 
 						// Delete the member.
-						ifWebService.RemoveiFolderUser(ifolder.ID, slMember.iFolderUser.UserID);
+						ifWebService.RemoveiFolderUser(currentiFolder.ID, slMember.iFolderUser.UserID);
 					}
 					catch (WebException e)
 					{
@@ -2031,19 +2088,19 @@ namespace Novell.iFolderCom
 				connectToWebService();
 
 				// Update the sync interval.
-				if (ifolder.SyncInterval != (int)syncInterval.Value)
+				if (currentiFolder.SyncInterval != (int)syncInterval.Value)
 				{
-					ifWebService.SetiFolderSyncInterval(ifolder.ID, (int)syncInterval.Value);
+					ifWebService.SetiFolderSyncInterval(currentiFolder.ID, (int)syncInterval.Value);
 				}
 
 				// Update the disk quota policy.
 				if (setLimit.Checked)
 				{
-					ifWebService.SetiFolderDiskSpaceLimit(ifolder.ID, (long)(long.Parse(limitEdit.Text) * megaByte));
+					ifWebService.SetiFolderDiskSpaceLimit(currentiFolder.ID, (long)(long.Parse(limitEdit.Text) * megaByte));
 				}
 				else
 				{
-					ifWebService.SetiFolderDiskSpaceLimit(ifolder.ID, 0);
+					ifWebService.SetiFolderDiskSpaceLimit(currentiFolder.ID, 0);
 				}
 
 				updateDiskQuotaDisplay();
@@ -2093,7 +2150,7 @@ namespace Novell.iFolderCom
 			try
 			{
 				if (slMember.iFolderUser.UserID.Equals(currentUser.UserID) ||
-					slMember.iFolderUser.UserID.Equals(ifolder.OwnerID) ||
+					slMember.iFolderUser.UserID.Equals(currentiFolder.OwnerID) ||
 					((newOwnerLvi != null) && lvi.Equals(this.newOwnerLvi)))
 				{
 					// Don't allow current user, owner, or new owner to be modified.
@@ -2134,6 +2191,77 @@ namespace Novell.iFolderCom
 			lvi.SubItems[1].Text = stateToString(slMember.iFolderUser.State, slMember.iFolderUser.UserID);
 			lvi.SubItems[2].Text = rightsToString(slMember.iFolderUser.Rights);
 		}
+
+		private void eventThreadProc()
+		{
+			while (true)
+			{
+				NodeEventArgs eventArgs = null;
+				int count;
+				lock (eventQueue.SyncRoot)
+				{
+					count = eventQueue.Count;
+					if (count > 0)
+					{
+						eventArgs = (NodeEventArgs)eventQueue.Dequeue();
+					}
+				}
+
+				iFolder ifolder = null;
+				iFolderUser ifolderUser = null;
+				try
+				{
+					switch (eventArgs.EventData)
+					{
+						case "NodeChanged":
+						{
+							if (eventArgs.Type.Equals(NodeTypes.CollectionType) && currentiFolder.ID.Equals(eventArgs.Collection))
+							{
+								// This is the iFolder currently displayed ... check for conflicts and
+								// update the display.
+								ifolder = ifWebService.GetiFolder(eventArgs.Collection);
+							}
+							else if (eventArgs.Type.Equals(NodeTypes.MemberType) || eventArgs.Type.Equals(NodeTypes.NodeType))
+							{
+								ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
+							}
+
+							break;
+						}
+						case "NodeCreated":
+						{
+							if (currentiFolder.ID.Equals(eventArgs.Collection) && (eventArgs.Type.Equals(NodeTypes.MemberType) || eventArgs.Type.Equals(NodeTypes.NodeType)))
+							{
+								// This is the iFolder currently displayed.
+								// Get a user object.
+								ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
+							}
+							break;
+						}
+						case "NodeDeleted":
+						{
+							BeginInvoke(nodeDelegate, new object[] {null, null, eventArgs.Node});
+							break;
+						}
+					}
+				}
+				catch
+				{
+					// Ignore.
+				}
+						
+				if ((ifolder != null) || (ifolderUser != null))
+				{
+					BeginInvoke(nodeDelegate, new object[] {ifolder, ifolderUser, eventArgs.EventData});
+				}
+
+				if (count <= 1)
+				{
+					// Go to sleep until there are more events in the queue.
+					workEvent.WaitOne();
+				}
+			}
+		}
 		#endregion
 
 		#region Properties
@@ -2160,7 +2288,7 @@ namespace Novell.iFolderCom
 		{
 			set
 			{
-				this.ifolder = value;
+				this.currentiFolder = value;
 			}
 		}
 
@@ -2270,7 +2398,7 @@ namespace Novell.iFolderCom
 						ifolders.Items.Add(ifolderInfo);
 
 						// Set the passed in iFolder as the selected one.
-						if ((ifolder != null) && ifolder.ID.Equals(ifolderInfo.ID))
+						if ((currentiFolder != null) && currentiFolder.ID.Equals(ifolderInfo.ID))
 						{
 							ifolders.SelectedItem = ifolderInfo;
 						}
@@ -2320,7 +2448,7 @@ namespace Novell.iFolderCom
 			{
 				if ((shareWith.SelectedItems.Count == 1) && 
 					(((ShareListMember)shareWith.SelectedItems[0].Tag).iFolderUser.UserID.Equals(currentUser.UserID) ||
-					((ShareListMember)shareWith.SelectedItems[0].Tag).iFolderUser.UserID.Equals(ifolder.OwnerID) ||
+					((ShareListMember)shareWith.SelectedItems[0].Tag).iFolderUser.UserID.Equals(currentiFolder.OwnerID) ||
 					((newOwnerLvi != null) && shareWith.SelectedItems[0].Equals(newOwnerLvi))))
 				{
 					// The current member, owner or new owner is the only one selected, disable the access control
@@ -2375,7 +2503,7 @@ namespace Novell.iFolderCom
 			ContactPicker picker = new ContactPicker();
 			picker.CurrentManager = abManager;
 			picker.LoadPath = loadPath;
-			picker.Collection = ifolder;
+			picker.Collection = currentiFolder;
 			DialogResult result = picker.ShowDialog();
 			if (result == DialogResult.OK)
 			{
@@ -2427,7 +2555,7 @@ namespace Novell.iFolderCom
 /*					if (shareMember == null)
 					{
 						// TODO: this needs to be reworked after BETA1 ... for now we will only allow them to choose a contact that is linked to a member.
-						if ((!ifolder.Domain.Equals(Domain.WorkGroupDomainID)) &&
+						if ((!currentiFolder.Domain.Equals(Domain.WorkGroupDomainID)) &&
 							((c.UserID == null) || (c.UserID.Length == 0)))
 						{
 							MessageBox.Show("Unable to share with the following incomplete user:\n\n" + c.FN, "Share Failure");
@@ -2438,14 +2566,14 @@ namespace Novell.iFolderCom
 							shareMember = new ShareListMember();
 							shareMember.Added = true;
 
-							shareMember.Subscription = poBox.CreateSubscription(ifolder, currentMember, typeof(iFolder).Name);
+							shareMember.Subscription = poBox.CreateSubscription(currentiFolder, currentMember, typeof(iFolder).Name);
 
 							// Add all of the other properties (ToAddress, FromAddress, etc.)
 							shareMember.Rights = Access.Rights.ReadWrite;
 							shareMember.Subscription.ToName = c.FN;
-							shareMember.Subscription.SubscriptionCollectionName = ifolder.Name;
+							shareMember.Subscription.SubscriptionCollectionName = currentiFolder.Name;
 
-							if (ifolder.Domain.Equals(Domain.WorkGroupDomainID))
+							if (currentiFolder.Domain.Equals(Domain.WorkGroupDomainID))
 							{
 								// Check if the contact has already been linked.
 								if (c.UserID.Equals(String.Empty))
@@ -2488,7 +2616,7 @@ namespace Novell.iFolderCom
 				{
 					// Don't allow the current user, current owner, or new owner to be removed.
 					if (!((currentUser.UserID.Equals(slMember.iFolderUser.UserID) ||
-						((newOwnerLvi == null) && slMember.iFolderUser.UserID.Equals(ifolder.OwnerID)) ||
+						((newOwnerLvi == null) && slMember.iFolderUser.UserID.Equals(currentiFolder.OwnerID)) ||
 						((newOwnerLvi != null) && lvi.Equals(newOwnerLvi))) &&
 						slMember.iFolderUser.State.Equals(member)))
 					{
@@ -2534,7 +2662,7 @@ namespace Novell.iFolderCom
 		{
 /*			ListViewItem lvi = this.shareWith.SelectedItems[0];
 			ShareListMember slMember = (ShareListMember)lvi.Tag;
-			slMember.Member = slMember.Subscription.Accept(ifolder.StoreReference, slMember.Subscription.SubscriptionRights);
+			slMember.Member = slMember.Subscription.Accept(currentiFolder.StoreReference, slMember.Subscription.SubscriptionRights);
 
 			// Take the relationship off the Subscription object
 			Property property = slMember.Subscription.Properties.GetSingleProperty("Contact");
@@ -2580,9 +2708,9 @@ namespace Novell.iFolderCom
 				connectToWebService();
 
 				// Reload the collection.
-				string id = ifolder.ID;
-				ifolder = null;
-				ifolder = ifWebService.GetiFolder(id);
+				string id = currentiFolder.ID;
+				currentiFolder = null;
+				currentiFolder = ifWebService.GetiFolder(id);
 			}
 			catch (Exception ex)
 			{
@@ -2603,7 +2731,7 @@ namespace Novell.iFolderCom
 			syncInterval.Enabled = autoSync.Checked;
 			if (!autoSync.Checked)
 			{
-				syncInterval.Value = System.Threading.Timeout.Infinite;
+				syncInterval.Value = Timeout.Infinite;
 			}
 
 			// Enable the apply button if the user checked/unchecked the box.
@@ -2621,7 +2749,7 @@ namespace Novell.iFolderCom
 		private void conflicts_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
 		{
 			ConflictResolver conflictResolver = new ConflictResolver();
-			conflictResolver.iFolder = ifolder;
+			conflictResolver.iFolder = currentiFolder;
 			conflictResolver.iFolderWebService = ifWebService;
 			conflictResolver.LoadPath = loadPath;
 			conflictResolver.ConflictsResolved += new Novell.iFolderCom.ConflictResolver.ConflictsResolvedDelegate(conflictResolver_ConflictsResolved);
@@ -2641,7 +2769,15 @@ namespace Novell.iFolderCom
 		private void nodeEventHandler(SimiasEventArgs args)
 		{
 			NodeEventArgs eventArgs = args as NodeEventArgs;
-			BeginInvoke(nodeDelegate, new object[] {eventArgs});
+
+			lock (eventQueue.SyncRoot)
+			{
+				// Put the event in the queue
+				eventQueue.Enqueue(eventArgs);
+
+				// Signal that there are events in the queue.
+				workEvent.Set();
+			}
 		}
 
 		private void setLimit_CheckedChanged(object sender, System.EventArgs e)
@@ -2689,8 +2825,8 @@ namespace Novell.iFolderCom
 			try
 			{
 				connectToWebService();
-				ifolder = ifWebService.GetiFolder(((iFolderInfo)ifolders.SelectedItem).ID);
-				this.Text = string.Format(resourceManager.GetString("iFolderProperties"), Path.GetFileName(ifolder.UnManagedPath));
+				currentiFolder = ifWebService.GetiFolder(((iFolderInfo)ifolders.SelectedItem).ID);
+				this.Text = string.Format(resourceManager.GetString("iFolderProperties"), Path.GetFileName(currentiFolder.UnManagedPath));
 				refreshData();
 			}
 			catch (WebException ex)
@@ -2723,7 +2859,7 @@ namespace Novell.iFolderCom
 			catch (Exception ex)
 			{
 				MyMessageBox mmb = new MyMessageBox();
-				mmb.Message = string.Format(resourceManager.GetString("iFolderOpenError"), ifolder.Name);
+				mmb.Message = string.Format(resourceManager.GetString("iFolderOpenError"), currentiFolder.Name);
 				mmb.Details = ex.Message;
 				mmb.ShowDialog();
 			}
@@ -2732,7 +2868,7 @@ namespace Novell.iFolderCom
 		private void access_Click(object sender, System.EventArgs e)
 		{
 			UserProperties userProperties = new UserProperties();
-			userProperties.OwnerCanBeSet = (currentUser.UserID.Equals(ifolder.OwnerID) && (shareWith.SelectedItems.Count == 1));
+			userProperties.OwnerCanBeSet = (currentUser.UserID.Equals(currentiFolder.OwnerID) && (shareWith.SelectedItems.Count == 1));
 			if (shareWith.SelectedItems.Count == 1)
 			{
 				ListViewItem lvi = shareWith.SelectedItems[0];

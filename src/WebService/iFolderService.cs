@@ -810,9 +810,13 @@ namespace Novell.iFolder.Web
 					{
 						ifolderUser = new iFolderUser(new Member(node));
 					}
-					catch
+					catch 
 					{
-						ifolderUser = new iFolderUser(new Subscription(node));
+						try
+						{
+							ifolderUser = new iFolderUser(new Subscription(node));
+						}
+						catch {}
 					}
 				}
 			}

@@ -740,7 +740,7 @@ namespace Novell.FormsTrayApp
 									{
 										ifolder = ifWebService.GetiFolder(eventArgs.Node);
 
-										// If the iFolder is available and doesn't exist locally, post a notification.
+										// If the iFolder is not Available or it exists locally, we don't need to process the event.
 										if (!ifolder.State.Equals("Available") || (ifWebService.GetiFolder(ifolder.CollectionID) != null))
 										{
 											ifolder = null;
@@ -767,8 +767,6 @@ namespace Novell.FormsTrayApp
 									}
 									break;
 								}
-								default:
-									break;
 							}
 							break;
 						}
@@ -792,6 +790,7 @@ namespace Novell.FormsTrayApp
 
 				if (count <= 1)
 				{
+					// Go to sleep until there are more events in the queue.
 					workEvent.WaitOne();
 				}
 			}
