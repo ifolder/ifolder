@@ -501,7 +501,6 @@ src/TrayIcon/Makefile
 src/TrayIcon/libtrayicon/Makefile
 package/Makefile
 package/windows/Makefile
-package/windows/ShutdowniFolder/Makefile
 package/linux/Makefile
 package/linux/ifolder.spec
 doc/Makefile
