@@ -623,11 +623,8 @@ in_inv_accept_button_cb(GtkWidget *w, GtkTreeView *tree)
 	 * remove the Invitation from our list.  Don't forget to free the memory
 	 * being used by Invitation *!
 	 */
+	gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
 	free(invitation);
-	
-	if (!gtk_list_store_remove(GTK_LIST_STORE(model), &iter)) {
-		g_print("There was an error with the iterator when trying to remove an invitation after sending an accept message.\n");
-	}
 }
 
 /**
@@ -717,17 +714,33 @@ in_inv_reject_button_cb(GtkWindow *w, GtkTreeView *tree)
 	 * remove the Invitation from our list.  Don't forget to free the memory
 	 * being used by Invitation *!
 	 */
+	gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
 	free(invitation);
-	
-	if (!gtk_list_store_remove(GTK_LIST_STORE(model), &iter)) {
-		g_print("There was an error with the iterator when trying to remove an invitation after sending a reject message.\n");
-	}
 }
 
 static void
 in_inv_sel_changed_cb(GtkTreeSelection *sel, GtkTreeView *tree)
 {
-	g_print("FIXME: Implement in_inv_sel_changed_cb()\n");
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+
+	/**
+	 * If nothing is selected, disable the buttons, otherwise, enable the
+	 * Accept and Reject buttons.
+	 */
+	if (!gtk_tree_selection_get_selected(sel, &model, &iter)) {
+		g_print("in_inv_sel_changed_cb() called and nothing is selected.  Disabling buttons...\n");
+
+		/* Disable the buttons */
+		gtk_widget_set_sensitive(in_inv_accept_button, FALSE);
+		gtk_widget_set_sensitive(in_inv_reject_button, FALSE);
+	} else {
+		g_print("in_inv_sel_changed_cb() called and something is selected.  Enabling buttons...\n");
+
+		/* Enable the buttons */
+		gtk_widget_set_sensitive(in_inv_accept_button, TRUE);
+		gtk_widget_set_sensitive(in_inv_reject_button, TRUE);
+	}
 }
 
 static void
@@ -851,14 +864,102 @@ out_inv_cancel_button_cb(GtkWindow *w, GtkTreeView *tree)
 static void
 out_inv_remove_button_cb(GtkWindow *w, GtkTreeView *tree)
 {
-	/* This button should only be enabled for invitations that are in the Accepted state */
-	g_print("FIXME: Implement out_inv_remove_button_cb()\n");
+	GtkTreeSelection *sel;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	Invitation *invitation;
+
+	sel = gtk_tree_view_get_selection(tree);
+	if (!gtk_tree_selection_get_selected(sel, &model, &iter)) {
+		/**
+		 * This shouldn't happen since the button should be disabled when no
+		 * items in the list are selected.
+		 */
+		g_print("out_inv_remove_button_cb() called without an active selection\n");
+		return;
+	}
+	
+	/* Extract the Invitation * from the model using iter */
+	gtk_tree_model_get(model, &iter,
+						INVITATION_PTR, &invitation,
+						-1);
+
+	/**
+	 * Verify that the state of the selected invitation is STATE_ACCEPTED or
+	 * STATE_REJECTED.
+	 */
+	if (invitation->state == STATE_ACCEPTED
+		|| invitation->state == STATE_REJECTED) {
+		gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
+		free(invitation);
+	} else {
+		g_print("out_inv_remove_button_cb() called on an invitation that is not in the STATE_ACCEPTED or STATE_REJECTED state\n");
+	}
+
 }
 
 static void
 out_inv_sel_changed_cb(GtkTreeSelection *sel, GtkTreeView *tree)
 {
-	g_print("FIXME: Implement out_inv_sel_changed_cb()\n");
+	/**
+	 * Disable the buttons if no invitation is selected.
+	 */
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	Invitation *invitation;
+
+	if (!gtk_tree_selection_get_selected(sel, &model, &iter)) {
+		g_print("out_inv_sel_changed_cb() called and nothing is selected.  Disabling buttons...\n");
+
+		/* Disable the buttons */
+		gtk_widget_set_sensitive(out_inv_resend_button, FALSE);
+		gtk_widget_set_sensitive(out_inv_cancel_button, FALSE);
+		gtk_widget_set_sensitive(out_inv_remove_button, FALSE);
+		return;
+	}
+	
+	/* Extract the Invitation * from the model using iter */
+	gtk_tree_model_get(model, &iter,
+						INVITATION_PTR, &invitation,
+						-1);
+	/**
+	 * The remove button should only be enabled if the selected invitation is in
+	 * the STATE_ACCEPTED or STATE_REJECTED state.
+	 */
+	if (invitation->state == STATE_ACCEPTED
+		|| invitation->state == STATE_REJECTED) {
+		gtk_widget_set_sensitive(out_inv_remove_button, TRUE);
+	} else {
+		gtk_widget_set_sensitive(out_inv_remove_button, FALSE);
+	}
+	 
+	/**
+	 * The cancel button can be enabled for invitations that are in the
+	 * following states: STATE_PENDING, STATE_SENT, or STATE_ACCEPTED_PENDING.
+	 */
+	if (invitation->state == STATE_PENDING || invitation->state == STATE_SENT
+		|| invitation->state == STATE_ACCEPTED_PENDING) {
+		gtk_widget_set_sensitive(out_inv_cancel_button, TRUE);
+	} else {
+		gtk_widget_set_sensitive(out_inv_cancel_button, FALSE);
+	}
+	 
+	/**
+	 * The resend button can be enabled for invitations that are in the
+	 * following states: STATE_PENDING, STATE_SENT, STATE_REJECTED,
+	 * STATE_ACCEPTED_PENDING, or STATE_ACCEPTED.  Basically you'll be able to
+	 * resend an invitation regardless of the invitation state.  This is because
+	 * a buddy could move to a different computer and request that you resend
+	 * the invitation to share the Collection.
+	 */
+	if (invitation->state == STATE_PENDING || invitation->state == STATE_SENT
+		|| invitation->state == STATE_REJECTED
+		|| invitation->state == STATE_ACCEPTED_PENDING
+		|| invitation->state == STATE_ACCEPTED) {
+		gtk_widget_set_sensitive(out_inv_resend_button, TRUE);
+	} else {
+		gtk_widget_set_sensitive(out_inv_resend_button, FALSE);
+	}
 }
 
 static char *
@@ -1050,11 +1151,6 @@ init_invitations_window()
 			   in_inv_scrolled_win, TRUE, TRUE, 0);
 
 	/* Tree View Control Here */
-if (in_inv_store) {
-	g_print("init_wnd: in_inv_store is NOT null\n");
-} else {
-	g_print("init_wnd: in_inv_store IS NULL!\n");
-}
 	in_inv_tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(in_inv_store));
 	
 	/**
@@ -1096,16 +1192,18 @@ if (in_inv_store) {
 			in_inv_buttons_vbox, FALSE, FALSE, 0);
 
 	in_inv_reject_button = gtk_button_new_with_mnemonic(_("_Reject"));
+	gtk_widget_set_sensitive(in_inv_reject_button, FALSE);
 	gtk_box_pack_end(GTK_BOX(in_inv_buttons_vbox),
 			in_inv_reject_button, FALSE, FALSE, 0);
 
 	in_inv_accept_button = gtk_button_new_with_mnemonic(_("_Accept"));
+	gtk_widget_set_sensitive(in_inv_accept_button, FALSE);
+	gtk_box_pack_end(GTK_BOX(in_inv_buttons_vbox),
+			in_inv_accept_button, FALSE, FALSE, 0);
 	
 	in_inv_sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(in_inv_tree));
 	gtk_tree_selection_set_mode(in_inv_sel, GTK_SELECTION_SINGLE);
 	
-	gtk_box_pack_end(GTK_BOX(in_inv_buttons_vbox),
-			in_inv_accept_button, FALSE, FALSE, 0);
 
 	/*****************************
 	 * The Outgoing Messages VBox
@@ -1179,20 +1277,23 @@ if (in_inv_store) {
 			out_inv_buttons_vbox, FALSE, FALSE, 0);
 
 	out_inv_remove_button = gtk_button_new_with_mnemonic(_("Re_move"));
+	gtk_widget_set_sensitive(out_inv_remove_button, FALSE);
 	gtk_box_pack_end(GTK_BOX(out_inv_buttons_vbox),
 			out_inv_remove_button, FALSE, FALSE, 0);
 
 	out_inv_cancel_button = gtk_button_new_with_mnemonic(_("Ca_ncel"));
+	gtk_widget_set_sensitive(out_inv_cancel_button, FALSE);
 	gtk_box_pack_end(GTK_BOX(out_inv_buttons_vbox),
 			out_inv_cancel_button, FALSE, FALSE, 0);
 
 	out_inv_resend_button = gtk_button_new_with_mnemonic(_("Re_send"));
+	gtk_widget_set_sensitive(out_inv_resend_button, FALSE);
+	gtk_box_pack_end(GTK_BOX(out_inv_buttons_vbox),
+			out_inv_resend_button, FALSE, FALSE, 0);
 
 	out_inv_sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(out_inv_tree));
 	gtk_tree_selection_set_mode(out_inv_sel, GTK_SELECTION_SINGLE);
 	
-	gtk_box_pack_end(GTK_BOX(out_inv_buttons_vbox),
-			out_inv_resend_button, FALSE, FALSE, 0);
 
 
 	/*******************
@@ -1542,6 +1643,8 @@ handle_invitation_request(GaimAccount *account, const char *sender,
 		g_print("handle_invitation_request() couldn't parse the collection-name\n");
 		return FALSE;
 	}
+	
+	/* FIXME: Check to see if we already have this invitation in our list (based on the collection-id) and if we do, update the invitation received time and notify the user of an incoming invitation (notify bubble or invitation window show) */
 	
 	/**
 	 * Construct an Invitation, fill it with information, add it to the
