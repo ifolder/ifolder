@@ -14,7 +14,7 @@ CommonFormWindows_SOURCES = Library/AssemblyInfo.cs Library/MyTraceForm.cs Libra
 CommonFormWindows_INCLUDES = 
 CommonFormWindows_FLAGS = /t:library
 CommonFormWindows_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll Common.dll
-CommonFormWindows_LIBPATH = Library Library/../../Common
+CommonFormWindows_LIBPATH = Library ../Common
 CommonFormWindows_LDFLAGS = 
 
 #=============================================================================
@@ -24,7 +24,7 @@ CommonFormWindowsTests_SOURCES = Tests/AssemblyInfo.cs Tests/CommonFormWindowsTe
 CommonFormWindowsTests_INCLUDES = 
 CommonFormWindowsTests_FLAGS = /t:library
 CommonFormWindowsTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll Common.dll CommonFormWindows.dll System.Windows.Forms.dll
-CommonFormWindowsTests_LIBPATH = Tests Tests/../../../tools/NUnit/bin Tests/../../Common Tests/../Library
+CommonFormWindowsTests_LIBPATH = Tests ../../tools/NUnit/bin ../Common Library
 CommonFormWindowsTests_LDFLAGS = 
 
 #=============================================================================
@@ -34,7 +34,7 @@ BIN_FILES =
 LIB_FILES = CommonFormWindows.dll
 DATA_FILES = 
 TEST_BIN_FILES =
-TEST_LIB_FILES = CommonformWindowsTests.dll
+TEST_LIB_FILES = CommonFormWindowsTests.dll
 TEST_DATA_FILES = 
 
 TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
