@@ -35,7 +35,7 @@
 
 - (IBAction) createiFolder:(id)sender
 {
-	if( ( [ [domainIDField stringValue] length] > 0 ) &&
+	if( ( selectedDomain != nil ) &&
 		( [ [pathField stringValue] length] > 0 ) )
 	{
 		[[NSApp delegate] createiFolder:[pathField stringValue] inDomain:[domainIDField stringValue] ];
@@ -68,5 +68,13 @@
 	}
 }
 
+- (iFolderDomain *)selectedDomain { return selectedDomain; }
+- (void)setSelectedDomain:(iFolderDomain *)aSelectedDomain
+{
+    if (selectedDomain != aSelectedDomain) {
+        [selectedDomain autorelease];
+        selectedDomain = [aSelectedDomain retain];
+    }
+}
 
 @end

@@ -7,20 +7,26 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "iFolderDomain.h"
 
 
 @interface CreateiFolderSheetController : NSWindowController 
 {
 	IBOutlet id createSheet;
 	IBOutlet id mainWindow;
-	IBOutlet NSComboBox *domainSelector;
+	IBOutlet NSPopUpButton *domainSelector;
 	IBOutlet NSTextField *pathField;
 	IBOutlet NSTextField *domainIDField;
+	
+	iFolderDomain *selectedDomain;
 }
 
 - (IBAction) showWindow:(id)sender;
 - (IBAction) cancelCreating:(id)sender;
 - (IBAction) createiFolder:(id)sender;
 - (IBAction) browseForPath:(id)sender;
+
+- (iFolderDomain *)selectedDomain;
+- (void)setSelectedDomain:(iFolderDomain *)aSelectedDomain;
 
 @end
