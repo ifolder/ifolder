@@ -101,7 +101,7 @@ namespace Simias.Policy
 		/// </summary>
 		public FileTypeEntry[] FilterList
 		{
-			get { return FileTypeFilter.GetFilterPatterns( policy ); }
+			get { return FileTypeFilter.GetPatterns( policy ); }
 		}
 		#endregion
 
@@ -129,7 +129,7 @@ namespace Simias.Policy
 		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="domainID">Domain that the filter will be associated with.</param>
 		/// <param name="patterns">File type patterns that will be used to filter files.</param>
-		static public void CreateFileTypeFilter( Store store, string domainID, FileTypeEntry[] patterns )
+		static public void Create( Store store, string domainID, FileTypeEntry[] patterns )
 		{
 			// Need a policy manager.
 			PolicyManager pm = new PolicyManager( store );
@@ -165,7 +165,7 @@ namespace Simias.Policy
 		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="member">Member that the filter will be associated with.</param>
 		/// <param name="patterns">File type patterns that will be used to filter files.</param>
-		static public void CreateFileTypeFilter( Store store, Member member, FileTypeEntry[] patterns )
+		static public void Create( Store store, Member member, FileTypeEntry[] patterns )
 		{
 			// Need a policy manager.
 			PolicyManager pm = new PolicyManager( store );
@@ -201,7 +201,7 @@ namespace Simias.Policy
 		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="collection">Collection that the filter will be associated with.</param>
 		/// <param name="patterns">File type patterns that will be used to filter files.</param>
-		static public void CreateFileTypeFilter( Store store, Collection collection, FileTypeEntry[] patterns )
+		static public void Create( Store store, Collection collection, FileTypeEntry[] patterns )
 		{
 			// Need a policy manager.
 			PolicyManager pm = new PolicyManager( store );
@@ -236,7 +236,7 @@ namespace Simias.Policy
 		/// </summary>
 		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="patterns">File type patterns that will be used to filter files.</param>
-		static public void CreateFileTypeFilter( Store store, FileTypeEntry[] patterns )
+		static public void Create( Store store, FileTypeEntry[] patterns )
 		{
 			// Need a policy manager.
 			PolicyManager pm = new PolicyManager( store );
@@ -273,11 +273,11 @@ namespace Simias.Policy
 		/// <param name="domainID">Domain that the filter is associated with.</param>
 		/// <returns>Array of file type filter patterns for this policy if successful. If there are no
 		/// filter patterns then null is returned.</returns>
-		static public FileTypeEntry[] GetFilterPatterns( Store store, string domainID )
+		static public FileTypeEntry[] GetPatterns( Store store, string domainID )
 		{
 			PolicyManager pm = new PolicyManager( store );
 			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID, domainID );
-			return ( policy != null ) ? FileTypeFilter.GetFilterPatterns( policy ) : null;
+			return ( policy != null ) ? FileTypeFilter.GetPatterns( policy ) : null;
 		}
 
 		/// <summary>
@@ -287,11 +287,11 @@ namespace Simias.Policy
 		/// <param name="member">Member that the filter is associated with.</param>
 		/// <returns>Array of file type filter patterns for this policy if successful. If there are no
 		/// filter patterns then null is returned.</returns>
-		static public FileTypeEntry[] GetFilterPatterns( Store store, Member member )
+		static public FileTypeEntry[] GetPatterns( Store store, Member member )
 		{
 			PolicyManager pm = new PolicyManager( store );
 			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID, member );
-			return ( policy != null ) ? FileTypeFilter.GetFilterPatterns( policy ) : null;
+			return ( policy != null ) ? FileTypeFilter.GetPatterns( policy ) : null;
 		}
 
 		/// <summary>
@@ -301,11 +301,11 @@ namespace Simias.Policy
 		/// <param name="collection">Collection that the limit is associated with.</param>
 		/// <returns>Array of file type filter patterns for this policy if successful. If there are no
 		/// filter patterns then null is returned.</returns>
-		static public FileTypeEntry[] GetFilterPatterns( Store store, Collection collection )
+		static public FileTypeEntry[] GetPatterns( Store store, Collection collection )
 		{
 			PolicyManager pm = new PolicyManager( store );
 			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID, collection );
-			return ( policy != null ) ? FileTypeFilter.GetFilterPatterns( policy ) : null;
+			return ( policy != null ) ? FileTypeFilter.GetPatterns( policy ) : null;
 		}
 
 		/// <summary>
@@ -314,11 +314,11 @@ namespace Simias.Policy
 		/// <param name="store">Handle to the collection store.</param>
 		/// <returns>Array of file type filter patterns for this policy if successful. If there are no
 		/// filter patterns then null is returned.</returns>
-		static public FileTypeEntry[] GetFilterPatterns( Store store )
+		static public FileTypeEntry[] GetPatterns( Store store )
 		{
 			PolicyManager pm = new PolicyManager( store );
 			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID );
-			return ( policy != null ) ? FileTypeFilter.GetFilterPatterns( policy ) : null;
+			return ( policy != null ) ? FileTypeFilter.GetPatterns( policy ) : null;
 		}
 
 		/// <summary>
@@ -327,7 +327,7 @@ namespace Simias.Policy
 		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="member">Member that filter is associated with.</param>
 		/// <returns>A FileTypeFilter object that contains the policy for the specified member.</returns>
-		static public FileTypeFilter GetFileTypeFilter( Store store, Member member )
+		static public FileTypeFilter Get( Store store, Member member )
 		{
 			PolicyManager pm = new PolicyManager( store );
 			Policy policy = pm.GetAggregatePolicy( FileTypeFilterPolicyID, member );
@@ -341,7 +341,7 @@ namespace Simias.Policy
 		/// <param name="member">Member that filter is associated with.</param>
 		/// <param name="collection">Collection to add to the aggregate quota policy.</param>
 		/// <returns>A FileTypeFilter object that contains the policy for the specified member.</returns>
-		static public FileTypeFilter GetFileTypeFilter( Store store, Member member, Collection collection )
+		static public FileTypeFilter Get( Store store, Member member, Collection collection )
 		{
 			PolicyManager pm = new PolicyManager( store );
 			Policy policy = pm.GetAggregatePolicy( FileTypeFilterPolicyID, member, collection );
@@ -354,13 +354,13 @@ namespace Simias.Policy
 		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="domainID">Domain that the filter is associated with.</param>
 		/// <param name="patterns">File type patterns that will be used to filter files.</param>
-		static public void SetFileTypeFilter( Store store, string domainID, FileTypeEntry[] patterns )
+		static public void Set( Store store, string domainID, FileTypeEntry[] patterns )
 		{
 			PolicyManager pm = new PolicyManager( store );
 			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID, domainID );
 			if ( policy == null )
 			{
-				FileTypeFilter.CreateFileTypeFilter( store, domainID, patterns );
+				FileTypeFilter.Create( store, domainID, patterns );
 			}
 			else
 			{
@@ -386,13 +386,13 @@ namespace Simias.Policy
 		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="member">Member that the filter is associated with.</param>
 		/// <param name="patterns">File type patterns that will be used to filter files.</param>
-		static public void SetFileTypeFilter( Store store, Member member, FileTypeEntry[] patterns )
+		static public void Set( Store store, Member member, FileTypeEntry[] patterns )
 		{
 			PolicyManager pm = new PolicyManager( store );
 			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID, member );
 			if ( policy == null )
 			{
-				FileTypeFilter.CreateFileTypeFilter( store, member, patterns );
+				FileTypeFilter.Create( store, member, patterns );
 			}
 			else
 			{
@@ -418,13 +418,13 @@ namespace Simias.Policy
 		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="collection">Collection that the filter is associated with.</param>
 		/// <param name="patterns">File type patterns that will be used to filter files.</param>
-		static public void SetFileTypeFilter( Store store, Collection collection, FileTypeEntry[] patterns )
+		static public void Set( Store store, Collection collection, FileTypeEntry[] patterns )
 		{
 			PolicyManager pm = new PolicyManager( store );
 			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID, collection );
 			if ( policy == null )
 			{
-				FileTypeFilter.CreateFileTypeFilter( store, collection, patterns );
+				FileTypeFilter.Create( store, collection, patterns );
 			}
 			else
 			{
@@ -449,13 +449,13 @@ namespace Simias.Policy
 		/// </summary>
 		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="patterns">File type patterns that will be used to filter files.</param>
-		static public void SetFileTypeFilter( Store store, FileTypeEntry[] patterns )
+		static public void Set( Store store, FileTypeEntry[] patterns )
 		{
 			PolicyManager pm = new PolicyManager( store );
 			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID );
 			if ( policy == null )
 			{
-				FileTypeFilter.CreateFileTypeFilter( store, patterns );
+				FileTypeFilter.Create( store, patterns );
 			}
 			else
 			{
@@ -482,7 +482,7 @@ namespace Simias.Policy
 		/// </summary>
 		/// <param name="policy">Policy to retrieve the filter patterns from.</param>
 		/// <returns>An array of file type filter patterns for the given policy.</returns>
-		static private FileTypeEntry[] GetFilterPatterns( Policy policy )
+		static private FileTypeEntry[] GetPatterns( Policy policy )
 		{
 			// List to hold the temporary results.
 			ArrayList tempList = new ArrayList();
