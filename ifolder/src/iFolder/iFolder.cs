@@ -132,6 +132,40 @@ namespace Novell.iFolder
 
 
 
+
+		/// <summary>
+		/// Add a files/directories to an iFolder recursively.
+		/// </summary>
+		/// <param name="path">The path at which to begin the recursive 
+		/// add.</param>
+		/// <param name="count">Holds the number of nodes added.</param>
+		internal void AddiFolderNodes(string path, ref int count)
+		{
+			// Get the files in this directory.
+			string[] dirs = Directory.GetFiles(path);
+			foreach (string file in dirs)
+			{
+				// Create the iFolderFile of type File.
+				AddiFolderNode(file);
+				count++;
+			}
+
+			// Get the sub-directories in this directory.
+			dirs = Directory.GetDirectories(path);
+			foreach (string dir in dirs)
+			{
+				// Create the iFolderFile of type File.
+				AddiFolderNode(dir);
+				count++;
+
+				// Recurse and add files/directories contained in directory.
+				AddiFolderNodes(dir, ref count);
+			}
+		}
+
+
+
+
 		/// <summary>
 		/// Method: Load
 		/// Abstract: iFolders are created only through the manager class.
@@ -384,6 +418,7 @@ namespace Novell.iFolder
 
 
 
+
 		/// <summary>
 		/// Gets/sets the current node in the iFolder.
 		/// </summary>
@@ -416,37 +451,23 @@ namespace Novell.iFolder
 
 
 		/// <summary>
-		/// Recursively add iFolderFile nodes.
+		/// Add a files/directories to an iFolder recursively.
 		/// </summary>
 		/// <param name="path">The path at which to begin the recursive 
 		/// add.</param>
-		/// <param name="count">Holds the number of nodes added.</param>
-		public void AddiFolderNodes(string path)
+		/// <returns>An int with the number of nodes added.</returns>
+		public int AddiFolderNodes(string path)
 		{
-			// Get the files in this directory.
-			string[] dirs = Directory.GetFiles(path);
-			foreach (string file in dirs)
-			{
-				// Create the iFolderFile of type File.
-				AddiFolderNode(file);
-			}
+			int count = 0;
+			AddiFolderNodes(path, ref count);
 
-			// Get the sub-directories in this directory.
-			dirs = Directory.GetDirectories(path);
-			foreach (string dir in dirs)
-			{
-				// Create the iFolderFile of type File.
-				AddiFolderNode(dir);
-
-				// Recurse and add files/directories contained in directory.
-				AddiFolderNodes(dir);
-			}
+			return count;
 		}
 
 
 
 		/// <summary>
-		/// Add a file/directory to an iFolder.
+		/// Add a single file/directory to an iFolder.
 		/// </summary>
 		/// <param name="fileName">The path to the File/directory to 
 		/// add.</param>
@@ -458,8 +479,22 @@ namespace Novell.iFolder
 			string name = Path.GetFileName(path);
 			string type = GetFileType(path);
 
+			if(File.Exists(path))
+			{
+				type = iFolderFileType;
+			}
+			else if(Directory.Exists(path))
+			{
+				type = iFolderDirectoryType;
+			}
+			else
+			{
+				throw new ArgumentException("Path " + path + 
+										" does not exist!");
+			}
+
 			// Make sure the node doesn't already exist.
-			iFolderNode ifNode =  GetiFolderNodeByName(path);
+			iFolderNode ifNode =  GetiFolderNodeByPath(path);
 			if(ifNode == null)
 			{
 				Node parentNode = GetNodeForPath(Path.GetDirectoryName(path));
@@ -493,7 +528,7 @@ namespace Novell.iFolder
 		/// An <see cref="iFolderNode"/> for the file specified by 
 		/// <paramref name="fileID"/>.
 		/// </returns>
-		public iFolderNode GetiFolderNode(string fileID)
+		public iFolderNode GetiFolderNodeByID(string fileID)
 		{
 			Node node = collection.GetNodeById(fileID);
 
@@ -518,7 +553,7 @@ namespace Novell.iFolder
 		/// by <paramref name="path"/>, or <b>null</b> if it does not exist
 		/// in the iFolder.
 		/// </returns>
-		public iFolderNode GetiFolderNodeByName(string path)
+		public iFolderNode GetiFolderNodeByPath(string path)
 		{
 			// Replace slash/backslash with backslash/slash as needed
 			path = path.Replace(Path.AltDirectorySeparatorChar,
