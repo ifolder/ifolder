@@ -18,6 +18,14 @@ endif
 
 EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/Simias.log4net ../Common/simias-client-bootstrap.config.in ../Common/MyDns.cs.in
 
+simias-client-bootstrap.config: ../Common/simias-client-bootstrap.config.in
+	sed -e 's,@_webdir_@,@webdir@,g' -e 's,@_StoreProviderAssembly_@,@StoreProviderAssembly@,g' -e 's,@_StoreProviderType_@,@StoreProviderType@,g' $< > $@
+	chmod +x $@
+	
+MyDns.cs: ../Common/MyDns.cs.in
+	sed -e 's,@_webbindir_@,@webbindir@,g' $< > $@
+	chmod +x $@
+
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
 DOC_FILE_CMD = /doc:$(DOC_FILE)
@@ -26,7 +34,7 @@ endif
 
 CUR_DIR := $(shell pwd)
 
-all: Simias.dll
+all: Simias.dll ../Common/simias-client-bootstrap.config
 
 Simias.dll: $(SIMIAS_CSFILES_SRC) ../Common/MyDns.cs $(SIMIAS_RESOURCES) $(srcdir)/Simias.dll.sources
 	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_FLAGS) $(SIMIAS_LIBS:%=/r:%) $(SIMIAS_LIBPATH:%=/lib:%) $(SIMIAS_CSFILES_CSC) $(subst /,$(SEP),../Common/MyDns.cs) $(DOC_FILE_CMD)

@@ -1,6 +1,6 @@
 <configuration>
   <section name="ServiceManager">
-	<setting name="WebServicePath" value="@webdir@" />
+	<setting name="WebServicePath" value="@_webdir_@" />
     <setting name="Services">
       <Service name="Simias Enterprise Location Provider" assembly="Simias" enabled="True" type="Thread" class="Simias.Location.EnterpriseLocation" />
       <Service name="Simias Domain Watcher" assembly="Simias" enabled="True" type="Thread" class="Simias.DomainWatcher.Service" />
@@ -13,7 +13,7 @@
     </setting>
   </section>
   <section name="StoreProvider">
-    <setting name="Assembly" value="@StoreProviderAssembly@" />
-    <setting name="Type" value="@StoreProviderType@" />
+    <setting name="Assembly" value="@_StoreProviderAssembly_@" />
+    <setting name="Type" value="@_StoreProviderType_@" />
   </section>
 </configuration>
