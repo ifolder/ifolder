@@ -57,10 +57,10 @@ internal class Dredger
 	}
 
 	//--------------------------------------------------------------------
-	DirNode DoNode(DirNode parentNode, string name, string type)
+	DirNode DoNode(DirNode parentNode, string path, string type)
 	{
 		Node node = null;
-		string path = Path.Combine(parentNode.GetFullPath(collection), name);
+		string name = Path.GetFileName(path);
 
 		// delete nodes that are wrong type or dups
 		// TODO: perhaps we should move dups to trash or log as error

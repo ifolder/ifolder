@@ -321,7 +321,7 @@ internal class SyncIncomingNode
 		}
 		else
 			parentPath = collection.ManagedPath;
-		Log.Spew("Starting incoming node, path {0}", parentPath);
+		Log.Spew("Starting incoming node {1}, path {0}", parentPath, node.Name);
 	}
 
 	public void BlowChunks(ForkChunk[] chunks)
@@ -365,8 +365,10 @@ internal class SyncIncomingNode
 		//TODO: check here for whether the proposed file name is available, i.e. make current and proposed LocalFileName
 		if (collection.IsType(node, typeof(DirNode).Name))
 		{
-			Log.Spew("Create directory {0}", Path.Combine(parentPath, node.Name));
-			Directory.CreateDirectory(Path.Combine(parentPath, node.Name));
+			DirNode pn = new DirNode(collection, node);
+			string path = pn.GetFullPath(collection);
+			Log.Spew("Create directory {0}", path);
+			Directory.CreateDirectory(path);
 		}
 		else if (!collection.IsType(node, typeof(FileNode).Name) && !collection.IsType(node, typeof(StoreFileNode).Name))
 		{
@@ -375,12 +377,14 @@ internal class SyncIncomingNode
 		}
 		else
 		{
+			Log.Assert(forkList != null);
 			foreach (Fork fork in forkList)
 			{
 				fork.stream.Close();
 				fork.stream = null;
 			}
-			string path = Path.Combine(parentPath, node.Name);
+			FileNode fn = new FileNode(collection, node);
+			string path = fn.GetFullPath(collection);
 			Log.Spew("placing file {0}", path);
 			File.Delete(path); //TODO: delete current LocalFileName
 			fileInfo.MoveTo(path); //TODO: moved to proposed LocalFileName
@@ -442,6 +446,7 @@ internal class SyncIncomingNode
 						throw e;
 					Log.Spew("Node {0} has lost a collision", node.Name);
 					//TODO move file and data out of the way here to collision bin here.
+					// expectedIncarn = e.LocalIncarnation;
 					curNode = collection.GetNodeByID(node.ID);
 					expectedIncarn = curNode.LocalIncarnation;
 					continue;
