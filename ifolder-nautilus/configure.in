@@ -36,7 +36,7 @@ AC_SUBST(PKG_CONFIG_PATH)
 CSC_EXEFLAG=/target:exe
 CSC_LIBFLAG=/target:library
 CSC_WINEXEFLAG=/target:winexe
-CSCFLAGS='/d:MONO /warn:4 /d:TRACE'
+CSCFLAGS='/d:LINUX /d:MONO /warn:4 /d:TRACE'
 CSCFLAGS_DEBUG="/debug+ /d:DEBUG"
 CSCFLAGS_OPTIMIZE="/optimize+"
 MONO=mono

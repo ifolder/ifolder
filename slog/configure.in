@@ -151,6 +151,7 @@ case $SLOG_OS in
         #
         # Set variables
         #
+        CSCFLAGS="/d:DARWIN $CSCFLAGS"
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         INSTALL_EXE_OPTS='--mode=644'
@@ -176,6 +177,7 @@ case $SLOG_OS in
         #
         # Set variables
         #
+        CSCFLAGS="/d:LINUX $CSCFLAGS"
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         INSTALL_EXE_OPTS='--mode=644'
@@ -198,6 +200,7 @@ case $SLOG_OS in
     # Windows-specific configuration
     #
     windows)
+        CSCFLAGS="/d:WINDOWS $CSCFLAGS"
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
         INSTALL_EXE_OPTS=''

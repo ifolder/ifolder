@@ -171,6 +171,7 @@ case $IFOLDER_OS in
         #
         # Set variables
         #
+        CSCFLAGS="/d:DARWIN $CSCFLAGS"
         EMPTY=
         EXE_EXT=''
         ICON_EXT='.ico'
@@ -202,6 +203,7 @@ case $IFOLDER_OS in
         #
         # Set variables
         #
+        CSCFLAGS="/d:LINUX $CSCFLAGS"
         EMPTY=
         EXE_EXT=''
         ICON_EXT='.ico'
@@ -252,6 +254,7 @@ case $IFOLDER_OS in
         CFLAGS_OPTIMIZE="-MD -O2 -DNDEBUG"
         CINC='-I'
         COUT='-Fo'
+        CSCFLAGS="/d:WINDOWS $CSCFLAGS"
         CXXFLAGS="-nologo -GX -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPACKAGE=\$(PACKAGE) -DVERSION=\$(VERSION)";
         CXXFLAGS_DEBUG="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
         CXXFLAGS_OPTIMIZE="-MD -O2 -DNDEBUG"

@@ -152,6 +152,7 @@ case $SIMIAS_OS in
         #
         # Set variables
         #
+        CSCFLAGS="/d:DARWIN $CSCFLAGS"
         EXE_EXT=''
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
@@ -180,6 +181,7 @@ case $SIMIAS_OS in
         #
         # Set variables
         #
+        CSCFLAGS="/d:LINUX $CSCFLAGS"
         EXE_EXT=''
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
@@ -204,6 +206,7 @@ case $SIMIAS_OS in
     # Windows-specific configuration
     #
     windows)
+        CSCFLAGS="/d:WINDOWS $CSCFLAGS"
         EXE_EXT='.exe'
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
