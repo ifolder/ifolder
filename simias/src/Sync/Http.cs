@@ -161,7 +161,7 @@ namespace Simias.Sync.Http
 	/// </summary>
 	public class HttpSyncProxy
 	{
-		static double				version = 1.0;
+		static string				version = "1.0";
 		Collection					collection;
 		string						url;
 		string						userName;
@@ -205,7 +205,7 @@ namespace Simias.Sync.Http
 			request.Method = "POST";
 			request.PreAuthenticate = true;
 			WebHeaderCollection headers = request.Headers;
-			headers.Add(SyncHeaders.SyncVersion, version.ToString());
+			headers.Add(SyncHeaders.SyncVersion, version);
 			headers.Add(SyncHeaders.Method, method.ToString());
 			headers.Add(SyncHeaders.UserName, userName);
 			headers.Add(SyncHeaders.UserID, userID);
