@@ -160,22 +160,19 @@ namespace Simias.Gaim.DomainService
 		/// Returns the Machine Name.
 		/// </summary>
 		/// <returns>
-		/// Returns true if getting the MachineName was successful.  If false is
-		/// returned there was an error and MachineName will not be valid.
+		/// Returns the MachineName of the computer we're running on.
 		/// </returns>
-		[WebMethod(Description="GetMachineName")]
+		[WebMethod(Description="GetMachineName returns the machine name of the computer we're running on.")]
 		[SoapDocumentMethod]
-		public bool GetMachineName(out string MachineName)
+		public string GetMachineName()
 		{
-			MachineName = null;
-
-			// Machine Name
-			MachineName = GetMachineName();
-
-			if (MachineName != null && MachineName.Length > 0)
-				return true;
-			
-			return false;
+			string machineName = Environment.MachineName.ToLower();
+			// If a machine name with domain is added, remove the domain information
+			int firstDot = machineName.IndexOf('.');
+			if (firstDot > 0)
+				machineName = machineName.Substring(0, firstDot);
+				
+			return machineName;
 		}
 
 		/// <summary>
@@ -304,16 +301,16 @@ namespace Simias.Gaim.DomainService
 			return Crypto.DecryptData(DESKey, EncryptedString);
 		}
 
-		internal string GetMachineName()
-		{
-			string machineName = Environment.MachineName.ToLower();
-			// If a machine name with domain is added, remove the domain information
-			int firstDot = machineName.IndexOf('.');
-			if (firstDot > 0)
-				machineName = machineName.Substring(0, firstDot);
-				
-			return machineName;
-		}
+//		internal string GetMachineName()
+//		{
+//			string machineName = Environment.MachineName.ToLower();
+//			// If a machine name with domain is added, remove the domain information
+//			int firstDot = machineName.IndexOf('.');
+//			if (firstDot > 0)
+//				machineName = machineName.Substring(0, firstDot);
+//				
+//			return machineName;
+//		}
 
 		/// <summary>
 		/// Class for encrypting strings.
