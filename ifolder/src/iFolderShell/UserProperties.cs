@@ -42,7 +42,7 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.CheckBox owner;
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
-		private bool singleSelect;
+		private bool ownerCanBeSet;
 		private bool canBeOwner;
 		/// <summary>
 		/// Required designer variable.
@@ -177,7 +177,7 @@ namespace Novell.iFolder.iFolderCom
 
 		private void TestForm_Load(object sender, System.EventArgs e)
 		{
-			owner.Enabled = canBeOwner && singleSelect && !owner.Checked;
+			owner.Enabled = canBeOwner && ownerCanBeSet && !owner.Checked;
 		}
 
 		private void owner_CheckedChanged(object sender, System.EventArgs e)
@@ -259,9 +259,9 @@ namespace Novell.iFolder.iFolderCom
 		/// <summary>
 		/// Sets a value indicating that a single user is selected.
 		/// </summary>
-		public bool SingleSelect
+		public bool OwnerCanBeSet
 		{
-			set { singleSelect = value; }
+			set { ownerCanBeSet = value; }
 		}
 		#endregion
 	}
