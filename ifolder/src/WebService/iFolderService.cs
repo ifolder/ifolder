@@ -81,12 +81,6 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// Settings
 		/// </returns>
-/*		[SoapDocumentMethod(Action="http://localhost/Sample", 
-							RequestNamespace="http://www.contoso.com/Request",
-		              		RequestElementName="GetUserNameRequest",
-					        ResponseNamespace="http://www.contoso.com/Response",
-						    ResponseElementName="GetUserNameResponse")]
-*/
 		[WebMethod(Description="Gets the current iFolder Settings")]
 		[SoapDocumentMethod]
 		public iFolderSettings GetSettings()
@@ -1077,6 +1071,39 @@ namespace Novell.iFolder.Web
 
 			Conflict.Resolve(col, conflictNode, newLocalName);
 		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that will setup the Proxy
+		/// </summary>
+		/// <param name = "Host">
+		/// The host of the proxy
+		/// </param>
+		/// <param name = "Port">
+		/// The Port on the host to use
+		/// </param>
+		[WebMethod(Description="Sets up a proxy for iFolder to use")]
+		[SoapDocumentMethod]
+		public void SetupProxy(string Host, int Port)
+		{
+			// I'm not sure what to do here
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that will setup the Proxy
+		/// </summary>
+		[WebMethod(Description="Removes proxy settings")]
+		[SoapDocumentMethod]
+		public void RemoveProxy()
+		{
+			// I'm not sure what to do here
+		}
+
 
 
 	}

@@ -18,6 +18,10 @@
           <xs:element minOccurs="1" maxOccurs="1" name="DisplayConfirmation" type="xs:boolean" />
           <xs:element minOccurs="0" maxOccurs="1" name="EnterpriseName" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="EnterpriseDescription" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="DefaultSyncInterval" type="xs:int" />
+          <xs:element minOccurs="1" maxOccurs="1" name="UseProxy" type="xs:boolean" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ProxyHost" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="ProxyPort" type="xs:int" />
         </xs:sequence>
       </xs:complexType>
       <xs:element name="GetSettingsResponse">
@@ -501,6 +505,23 @@
       <xs:element name="ResolveNameConflictResponse">
         <xs:complexType />
       </xs:element>
+      <xs:element name="SetupProxy">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Host" type="xs:string" />
+            <xs:element minOccurs="1" maxOccurs="1" name="Port" type="xs:int" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetupProxyResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="RemoveProxy">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="RemoveProxyResponse">
+        <xs:complexType />
+      </xs:element>
       <xs:element name="iFolderSettings" type="s0:iFolderSettings" />
       <xs:element name="boolean" type="xs:boolean" />
       <xs:element name="iFolder" type="s0:iFolder" />
@@ -716,6 +737,18 @@
   <message name="ResolveNameConflictSoapOut">
     <part name="parameters" element="s0:ResolveNameConflictResponse" />
   </message>
+  <message name="SetupProxySoapIn">
+    <part name="parameters" element="s0:SetupProxy" />
+  </message>
+  <message name="SetupProxySoapOut">
+    <part name="parameters" element="s0:SetupProxyResponse" />
+  </message>
+  <message name="RemoveProxySoapIn">
+    <part name="parameters" element="s0:RemoveProxy" />
+  </message>
+  <message name="RemoveProxySoapOut">
+    <part name="parameters" element="s0:RemoveProxyResponse" />
+  </message>
   <message name="PingHttpGetIn" />
   <message name="PingHttpGetOut" />
   <message name="GetSettingsHttpGetIn" />
@@ -723,7 +756,7 @@
     <part name="Body" element="s0:iFolderSettings" />
   </message>
   <message name="SetDisplayConfirmationHttpGetIn">
-    <part name="Body" element="s:boolean" />
+    <part name="DisplayConfirmation" type="s:boolean" />
   </message>
   <message name="SetDisplayConfirmationHttpGetOut" />
   <message name="IsiFolderHttpGetIn">
@@ -903,6 +936,13 @@
     <part name="newLocalName" type="s:string" />
   </message>
   <message name="ResolveNameConflictHttpGetOut" />
+  <message name="SetupProxyHttpGetIn">
+    <part name="Host" type="s:string" />
+    <part name="Port" type="s:int" />
+  </message>
+  <message name="SetupProxyHttpGetOut" />
+  <message name="RemoveProxyHttpGetIn" />
+  <message name="RemoveProxyHttpGetOut" />
   <message name="PingHttpPostIn" />
   <message name="PingHttpPostOut" />
   <message name="GetSettingsHttpPostIn" />
@@ -910,7 +950,7 @@
     <part name="Body" element="s0:iFolderSettings" />
   </message>
   <message name="SetDisplayConfirmationHttpPostIn">
-    <part name="Body" element="s:boolean" />
+    <part name="DisplayConfirmation" type="s:boolean" />
   </message>
   <message name="SetDisplayConfirmationHttpPostOut" />
   <message name="IsiFolderHttpPostIn">
@@ -1090,6 +1130,13 @@
     <part name="newLocalName" type="s:string" />
   </message>
   <message name="ResolveNameConflictHttpPostOut" />
+  <message name="SetupProxyHttpPostIn">
+    <part name="Host" type="s:string" />
+    <part name="Port" type="s:int" />
+  </message>
+  <message name="SetupProxyHttpPostOut" />
+  <message name="RemoveProxyHttpPostIn" />
+  <message name="RemoveProxyHttpPostOut" />
   <portType name="iFolder Web ServiceSoap">
     <operation name="Ping">
       <input message="s0:PingSoapIn" />
@@ -1260,6 +1307,16 @@
       <input message="s0:ResolveNameConflictSoapIn" />
       <output message="s0:ResolveNameConflictSoapOut" />
       <documentation>Resolves a name conflict</documentation>
+    </operation>
+    <operation name="SetupProxy">
+      <input message="s0:SetupProxySoapIn" />
+      <output message="s0:SetupProxySoapOut" />
+      <documentation>Sets up a proxy for iFolder to use</documentation>
+    </operation>
+    <operation name="RemoveProxy">
+      <input message="s0:RemoveProxySoapIn" />
+      <output message="s0:RemoveProxySoapOut" />
+      <documentation>Removes proxy settings</documentation>
     </operation>
   </portType>
   <portType name="iFolder Web ServiceHttpGet">
@@ -1433,6 +1490,16 @@
       <output message="s0:ResolveNameConflictHttpGetOut" />
       <documentation>Resolves a name conflict</documentation>
     </operation>
+    <operation name="SetupProxy">
+      <input message="s0:SetupProxyHttpGetIn" />
+      <output message="s0:SetupProxyHttpGetOut" />
+      <documentation>Sets up a proxy for iFolder to use</documentation>
+    </operation>
+    <operation name="RemoveProxy">
+      <input message="s0:RemoveProxyHttpGetIn" />
+      <output message="s0:RemoveProxyHttpGetOut" />
+      <documentation>Removes proxy settings</documentation>
+    </operation>
   </portType>
   <portType name="iFolder Web ServiceHttpPost">
     <operation name="Ping">
@@ -1604,6 +1671,16 @@
       <input message="s0:ResolveNameConflictHttpPostIn" />
       <output message="s0:ResolveNameConflictHttpPostOut" />
       <documentation>Resolves a name conflict</documentation>
+    </operation>
+    <operation name="SetupProxy">
+      <input message="s0:SetupProxyHttpPostIn" />
+      <output message="s0:SetupProxyHttpPostOut" />
+      <documentation>Sets up a proxy for iFolder to use</documentation>
+    </operation>
+    <operation name="RemoveProxy">
+      <input message="s0:RemoveProxyHttpPostIn" />
+      <output message="s0:RemoveProxyHttpPostOut" />
+      <documentation>Removes proxy settings</documentation>
     </operation>
   </portType>
   <binding name="iFolder Web ServiceSoap" type="s0:iFolder Web ServiceSoap">
@@ -1914,6 +1991,24 @@
         <soap:body use="literal" />
       </output>
     </operation>
+    <operation name="SetupProxy">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetupProxy" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="RemoveProxy">
+      <soap:operation soapAction="http://novell.com/ifolder/web/RemoveProxy" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
   </binding>
   <binding name="iFolder Web ServiceHttpGet" type="s0:iFolder Web ServiceHttpGet">
     <http:binding verb="GET" />
@@ -1938,9 +2033,7 @@
       <input>
         <http:urlEncoded />
       </input>
-      <output>
-        <mime:mimeXml part="Body" />
-      </output>
+      <output />
     </operation>
     <operation name="IsiFolder">
       <http:operation location="/IsiFolder" />
@@ -2194,6 +2287,20 @@
     </operation>
     <operation name="ResolveNameConflict">
       <http:operation location="/ResolveNameConflict" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output />
+    </operation>
+    <operation name="SetupProxy">
+      <http:operation location="/SetupProxy" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output />
+    </operation>
+    <operation name="RemoveProxy">
+      <http:operation location="/RemoveProxy" />
       <input>
         <http:urlEncoded />
       </input>
@@ -2223,9 +2330,7 @@
       <input>
         <mime:content part="" type="application/x-www-form-urlencoded" />
       </input>
-      <output>
-        <mime:mimeXml part="Body" />
-      </output>
+      <output />
     </operation>
     <operation name="IsiFolder">
       <http:operation location="/IsiFolder" />
@@ -2479,6 +2584,20 @@
     </operation>
     <operation name="ResolveNameConflict">
       <http:operation location="/ResolveNameConflict" />
+      <input>
+        <mime:content part="" type="application/x-www-form-urlencoded" />
+      </input>
+      <output />
+    </operation>
+    <operation name="SetupProxy">
+      <http:operation location="/SetupProxy" />
+      <input>
+        <mime:content part="" type="application/x-www-form-urlencoded" />
+      </input>
+      <output />
+    </operation>
+    <operation name="RemoveProxy">
+      <http:operation location="/RemoveProxy" />
       <input>
         <mime:content part="" type="application/x-www-form-urlencoded" />
       </input>

@@ -48,10 +48,10 @@ namespace Novell.iFolder
 		private Gtk.ListStore		iFolderTreeStore;
 
 		// Preferences widgets
-		private Gtk.Button			AutoSyncCheckButton;
-		private Gtk.Button			StartAtLoginButton;
-		private Gtk.Button			ShowConfirmationButton; 
-		private Gtk.Button			UseProxyButton; 
+		private Gtk.CheckButton			AutoSyncCheckButton;
+		private Gtk.CheckButton			StartAtLoginButton;
+		private Gtk.CheckButton			ShowConfirmationButton; 
+		private Gtk.CheckButton			UseProxyButton; 
 
 		private ImageMenuItem		CreateMenuItem;
 		private Gtk.MenuItem		ShareMenuItem;
@@ -70,14 +70,34 @@ namespace Novell.iFolder
 		private Image				 iFolderScaledBanner;
 		private Gdk.Pixbuf			 ScaledPixbuf;
 
+		private iFolderSettings		ifSettings;
+
+
+		public iFolderSettings GlobalSettings
+		{
+			set
+			{
+				if(value.HaveEnterprise != ifSettings.HaveEnterprise)
+				{
+					// Check to add the enterprise tab
+				}
+				ifSettings = value;
+			}
+		}
+
+
+
+
 		/// <summary>
 		/// Default constructor for iFolderWindow
 		/// </summary>
-		public iFolderWindow(iFolderWebService ifws) : base ("iFolder")
+		public iFolderWindow(iFolderWebService ifws, iFolderSettings settings)
+			: base ("iFolder")
 		{
 			if(ifws == null)
 				throw new ApplicationException("iFolderWebServices was null");
 			iFolderWS = ifws;
+			ifSettings = settings;
 			InitializeWidgets();
 		}
 
@@ -164,18 +184,11 @@ namespace Novell.iFolder
 
 
 
+
 		private void OnBannerExposed(object o, ExposeEventArgs args)
 		{
-//			args.Event.Area (Rectangle (bound box of expose area)
-//			args.Event.Count (number of exposes following this)
-//			args.Event.Region (region that nes to be drawn);
-		//	iFolderScaledBanner = new Image(ScaledPixbuf);
 			if(args.Event.Count > 0)
 				return;
-
-//			Console.WriteLine("Icon-- Width: {0}  Height: {1}", iFolderScaledBanner.Allocation.Width, iFolderScaledBanner.Allocation.Height);
-
-//			Console.WriteLine("args-- W:{0} H: {1} X:{2} Y:{3}", args.Event.Area.Width, args.Event.Area.Height, args.Event.Area.X, args.Event.Area.Y);
 
 			Gdk.Pixbuf spb = 
 				ScaledPixbuf.ScaleSimple(iFolderScaledBanner.Allocation.Width,
@@ -194,6 +207,9 @@ namespace Novell.iFolder
 											Gdk.RgbDither.Normal,
 											0, 0);
 		}
+
+
+
 
 		/// <summary>
 		/// Creates the menubar for the iFolderWindow
@@ -503,6 +519,19 @@ namespace Novell.iFolder
 			pSettingBox.PackStart(portLabel, false, true, 0);
 			SpinButton portSpinButton = new SpinButton(0, 99999, 1);
 			pSettingBox.PackStart(portSpinButton, false, true, 0);
+
+
+			//------------------------------
+			// Setup all of the default values
+			//------------------------------
+			if(ifSettings.DisplayConfirmation)
+				ShowConfirmationButton.Active = true;
+			else
+				ShowConfirmationButton.Active = false;
+
+			AutoSyncCheckButton.Active = true;
+			StartAtLoginButton.Active = true;
+			UseProxyButton.Active = false; 
 
 			return vbox;
 		}

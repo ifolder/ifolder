@@ -279,7 +279,7 @@ namespace Novell.iFolder
 			{
 				if(ifwin == null)
 				{
-					ifwin = new iFolderWindow(ifws);
+					ifwin = new iFolderWindow(ifws, ifSettings);
 					ifwin.ShowAll();
 				}
 				else

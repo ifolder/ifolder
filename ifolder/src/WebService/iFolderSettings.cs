@@ -39,6 +39,10 @@ namespace Novell.iFolder.Web
 		public bool DisplayConfirmation;
 		public string EnterpriseName;
 		public string EnterpriseDescription;
+		public int DefaultSyncInterval;
+		public bool UseProxy;
+		public string ProxyHost;
+		public int ProxyPort;
 
 		public iFolderSettings()
 		{
@@ -68,6 +72,12 @@ namespace Novell.iFolder.Web
 			Configuration config = Configuration.GetConfiguration();
 			bool defaultValue = true;
 			DisplayConfirmation = config.Get("iFolderUI", "Display Confirmation", defaultValue.ToString()) == defaultValue.ToString();
+
+			DefaultSyncInterval = 
+				Simias.Policy.SyncInterval.GetInterval();
+
+			// I don't know how to do this but I know we'll need it
+			UseProxy = false;
 		}
 
 		public static void SetDisplayConfirmation(bool displayConfirmation)
