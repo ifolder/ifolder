@@ -142,7 +142,21 @@ namespace Simias.Sync
 			invitation.Domain = Domain;
 			invitation.MasterUri = MasterUrl;
 			invitation.Identity = identity;
-			invitation.CollectionRights = GetUserAccess(identity).ToString();
+			switch (GetUserAccess(identity).ToString())
+			{
+				case "ReadOnly":
+					invitation.CollectionRights = "Read Only";
+					break;
+				case "ReadWrite":
+					invitation.CollectionRights = "Read/Write";
+					break;
+				case "Admin":
+					invitation.CollectionRights = "Full Control";
+					break;
+				default:
+					invitation.CollectionRights = "Unknown";
+					break;
+			}
 			invitation.PublicKey = StoreReference.ServerPublicKey.ToXmlString(false);
 
 			// check for a dir node
