@@ -1,6 +1,6 @@
 # pkg-config metadata file for simias event client
-Name: SimiasEventClient
-Description: SimiasEventClient components
+Name: SimiasClient-C
+Description: C Libraries for Simias
 Version: @VERSION@
 Requires: @PKG_CONFIG_REQUIRES@
 Conflicts: @PKG_CONFIG_CONFLICTS@
@@ -10,6 +10,6 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@prefix@/include
 
-Libs:-L${libdir} -lsimias-event -lsimias
+Libs:-L${libdir} -lsimias -lsimias-event -lsimiasgaim
 Cflags: -I${includedir}
 
