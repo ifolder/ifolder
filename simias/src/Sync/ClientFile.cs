@@ -476,7 +476,15 @@ namespace Simias.Sync
 			SyncStatus status = httpClient.OpenFilePut(snode);
 			if (status == SyncStatus.Success)
 			{
-				base.Open(node, "");
+				try
+				{
+					base.Open(node, "");
+				}
+				catch (Exception ex)
+				{
+					httpClient.CloseFile();
+					throw ex;
+				}
 			}
 			return status;
 		}
@@ -489,14 +497,20 @@ namespace Simias.Sync
 		public virtual SyncNodeStatus Close(bool commit)
 		{
 			// Close the file on the server.
-			SyncNodeStatus status = httpClient.CloseFile(commit);
-			if (commit && status.status == SyncStatus.Success)
+			try
 			{
-				node.SetMasterIncarnation(node.LocalIncarnation);
-				collection.Commit(node);
+				SyncNodeStatus status = httpClient.CloseFile(commit);
+				if (commit && status.status == SyncStatus.Success)
+				{
+					node.SetMasterIncarnation(node.LocalIncarnation);
+					collection.Commit(node);
+				}
+				return status;
 			}
-			base.Close();
-			return status;
+			finally
+			{
+				base.Close();
+			}
 		}
 		
 		/// <summary>
@@ -528,11 +542,17 @@ namespace Simias.Sync
 					if (seg.Length > 0)
 					{
 						ReadPosition = seg.Offset;
-						httpClient.WriteFile(OutStream, offset, seg.Length);
-						sizeRemaining -= seg.Length;
-						offset += seg.Length;
+						long bytesSent = 0;
+						while (bytesSent != seg.Length)
+						{
+							long sendSize = seg.Length - bytesSent > MaxXFerSize ? MaxXFerSize : seg.Length - bytesSent;
+							httpClient.WriteFile(OutStream, offset, sendSize);
+							bytesSent += sendSize;
+							offset += sendSize;
+							sizeRemaining -= sendSize;
+							eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
+						}
 					}
-					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
 				}
 			}
 			if (sizeRemaining == 0)

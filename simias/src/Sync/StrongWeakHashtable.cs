@@ -50,7 +50,8 @@ namespace Simias.Sync.Delta
 					entryArray = new ArrayList();
 					table.Add(entry.WeakHash, entryArray);
 				}
-				entryArray.Add(entry);
+				if (!entryArray.Contains(entry))
+					entryArray.Add(entry);
 			}
 		}
 
