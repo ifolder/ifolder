@@ -36,10 +36,8 @@ Vendor       : <unknown>
 Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
-Requires     : mono-core >= 1.0.2
-Requires     : mono-data >= 1.0.2
-Requires     : mono-web-services >= 1.0.2
-Requires     : xsp >= 1.0.1
+Requires     : mono-core >= 1.0.4
+Requires     : xsp >= 1.0.4
 Obsoletes    : %{name} <= %{version}
 
 #=============================================================================
@@ -121,6 +119,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 #=============================================================================
 %Files
+%attr(755,root,root) %dir %{prefix}
 %defattr(755,root,root)
 %{prefix}/*
 

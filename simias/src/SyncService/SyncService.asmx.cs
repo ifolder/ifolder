@@ -27,6 +27,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Web;
 using System.Web.Services;
+using System.Web.Services.Protocols;
 using Simias.Storage;
 
 namespace Simias.Sync.Web
@@ -52,13 +53,14 @@ namespace Simias.Sync.Web
 		/// <param name="user">This is temporary.  Needs to be removed when Security is added.</param>
 		/// <returns>The SyncNodeStamps for the sync.</returns>
 		[WebMethod(EnableSession = true)]
-		public SyncNodeStamp[] Start(ref SyncStartInfo si, string user)
+		[SoapRpcMethod]
+		public SyncNodeStamp[] Start(SyncStartInfo si, string user, out SyncStartInfo siout)
 		{
 			SyncService ss = new SyncService();
 			Service = ss;
 			Session.Timeout = 1;
 			SyncNodeStamp[] nodes = ss.Start(ref si, user);
-			
+			siout = si;
 			// TODO:
 			// If we have work we need to get a lock.
 			return nodes;
@@ -69,6 +71,7 @@ namespace Simias.Sync.Web
 		/// This call abandons the session.
 		/// </summary>
 		[WebMethod(EnableSession = true)]
+        [SoapRpcMethod]
 		public void Stop()
 		{
 			Service.Stop();
@@ -80,6 +83,7 @@ namespace Simias.Sync.Web
 		/// </summary>
 		/// <returns></returns>
 		[WebMethod(EnableSession = true)]
+        [SoapRpcMethod]
 		public bool KeepAlive()
 		{
 			if (Service != null)
@@ -91,6 +95,7 @@ namespace Simias.Sync.Web
 		/// simple version string, also useful to check remoting
 		/// </summary>
 		[WebMethod(EnableSession = true)]
+        [SoapRpcMethod]
 		public string Version()
 		{
 			return Service.Version;
@@ -101,6 +106,7 @@ namespace Simias.Sync.Web
 		/// </summary>
 		/// <returns>An array of the failed nodes.</returns>
 		[WebMethod(EnableSession = true)]
+        [SoapRpcMethod]
 		public SyncNodeStatus[] PutNodes(SyncNode[] nodes)
 		{
 			return Service.PutNonFileNodes(nodes);
@@ -111,6 +117,7 @@ namespace Simias.Sync.Web
 		/// </summary>
 		/// <returns>An Array of non-file nodes.</returns>
 		[WebMethod(EnableSession = true)]
+        [SoapRpcMethod]
 		public SyncNode[] GetNodes(string[] nids)
 		{
 			return Service.GetNonFileNodes(nids);
@@ -121,6 +128,7 @@ namespace Simias.Sync.Web
 		/// </summary>
 		/// <returns>An Array of non-file nodes.</returns>
 		[WebMethod(EnableSession = true)]
+        [SoapRpcMethod]
 		public SyncNode[] GetDirs(string[] nids)
 		{
 			return Service.GetNonFileNodes(nids);
@@ -131,6 +139,7 @@ namespace Simias.Sync.Web
 		/// </summary>
 		/// <returns>An array of the failed nodes.</returns>
 		[WebMethod(EnableSession = true)]
+        [SoapRpcMethod]
 		public SyncNodeStatus[] PutDirs(SyncNode[] nodes)
 		{
 			return Service.PutDirs(nodes);
@@ -143,6 +152,7 @@ namespace Simias.Sync.Web
 		/// <param name="node">The node to put to ther server.</param>
 		/// <returns>True if successful.</returns>
 		[WebMethod(EnableSession = true)]
+        [SoapRpcMethod]
 		public bool PutFileNode(SyncNode node)
 		{
 			return Service.PutFileNode(node);
@@ -155,6 +165,7 @@ namespace Simias.Sync.Web
 		/// <param name="nodeID">The node to get.</param>
 		/// <returns>The SyncNode.</returns>
 		[WebMethod(EnableSession = true)]
+        [SoapRpcMethod]
 		public SyncNode GetFileNode(string nodeID)
 		{
 			return Service.GetFileNode(nodeID);
@@ -166,6 +177,7 @@ namespace Simias.Sync.Web
 		/// <param name="nodeIDs">An array of IDs of the nodes to delete.</param>
 		/// <returns>The status of the deletes.</returns>
 		[WebMethod(EnableSession = true)]
+        [SoapRpcMethod]
 		public SyncNodeStatus[] DeleteNodes(string[] nodeIDs)
 		{
 			return Service.DeleteNodes(nodeIDs);
@@ -177,6 +189,7 @@ namespace Simias.Sync.Web
 		/// <param name="blockSize">The block size to be hashed.</param>
 		/// <returns>The HashMap.</returns>
 		[WebMethod(EnableSession = true)]
+        [SoapRpcMethod]
 		public HashData[] GetHashMap(int blockSize)
 		{
 			return Service.GetHashMap(blockSize);
@@ -189,6 +202,7 @@ namespace Simias.Sync.Web
 		/// <param name="offset">The offset in the new file of where to write.</param>
 		/// <param name="count">The number of bytes to write.</param>
 		[WebMethod(EnableSession = true)]
+        [SoapRpcMethod]
 		public void Write(byte[] buffer, long offset, int count)
 		{
 			Service.Write(buffer, offset, count);
@@ -201,6 +215,7 @@ namespace Simias.Sync.Web
 		/// <param name="offset">The offset in the new file.</param>
 		/// <param name="count">The number of bytes to copy.</param>
 		[WebMethod(EnableSession = true)]
+        [SoapRpcMethod]
 		public void Copy(long oldOffset, long offset, int count)
 		{
 			Service.Copy(oldOffset, offset, count);
@@ -214,6 +229,7 @@ namespace Simias.Sync.Web
 		/// <param name="count">The number of bytes to read.</param>
 		/// <returns>The number of bytes read.</returns>
 		[WebMethod(EnableSession = true)]
+        [SoapRpcMethod]
 		public int Read(out byte[] buffer, long offset, int count)
 		{
 			return Service.Read(out buffer, offset, count);
@@ -226,6 +242,7 @@ namespace Simias.Sync.Web
 		/// False: Abort the changes.</param>
 		/// <returns>Returns the status of the sync.</returns>
 		[WebMethod(EnableSession = true)]
+        [SoapRpcMethod]
 		public SyncNodeStatus CloseFileNode(bool commit)
 		{
 			return Service.CloseFileNode(commit);

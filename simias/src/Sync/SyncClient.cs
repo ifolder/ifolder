@@ -514,7 +514,7 @@ namespace Simias.Sync.Client
 				si.ClientHasChanges = si.ChangesOnly;
 			
 				// Start the Sync pass and save the rights.
-				sstamps = service.Start(ref si, store.GetUserIDFromDomainID(collection.Domain));
+				sstamps = service.Start(si, store.GetUserIDFromDomainID(collection.Domain), out si);
 
 				eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartSync, true));
 
