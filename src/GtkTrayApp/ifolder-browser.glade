@@ -14,7 +14,6 @@
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
   <property name="icon">ifolder.png</property>
-  <property name="decorated">True</property>
   <property name="skip_taskbar_hint">False</property>
   <property name="skip_pager_hint">False</property>
   <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
@@ -210,19 +209,6 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkSeparatorToolItem" id="separatortoolitem1">
-	      <property name="visible">True</property>
-	      <property name="draw">True</property>
-	      <property name="visible_horizontal">True</property>
-	      <property name="visible_vertical">True</property>
-	    </widget>
-	    <packing>
-	      <property name="expand">False</property>
-	      <property name="homogeneous">False</property>
-	    </packing>
-	  </child>
-
-	  <child>
 	    <widget class="button" id="UpButton">
 	      <property name="visible">True</property>
 	      <property name="tooltip" translatable="yes">Browse up a directory</property>
@@ -261,19 +247,6 @@
 	    <packing>
 	      <property name="expand">False</property>
 	      <property name="homogeneous">True</property>
-	    </packing>
-	  </child>
-
-	  <child>
-	    <widget class="GtkSeparatorToolItem" id="separatortoolitem2">
-	      <property name="visible">True</property>
-	      <property name="draw">True</property>
-	      <property name="visible_horizontal">True</property>
-	      <property name="visible_vertical">True</property>
-	    </widget>
-	    <packing>
-	      <property name="expand">False</property>
-	      <property name="homogeneous">False</property>
 	    </packing>
 	  </child>
 
