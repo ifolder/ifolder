@@ -291,6 +291,32 @@ namespace Simias.POBox
 			return null;
 		}
 
+		/// <summary>
+		/// Locates a Subscription in the POBox by CollectionID and UserID.
+		/// </summary>
+		/// <param name="collectionID">The ID of the collection.</param>
+		/// <param name="userID">The ID of the user to whom the subscription is addressed.</param>
+		/// <returns>A Subscription object.</returns>
+		public Subscription GetSubscriptionByCollectionID(string collectionID, string userID)
+		{
+			ICSList subList = this.Search(
+				Subscription.SubscriptionCollectionIDProperty,
+				collectionID,
+				SearchOp.Equal);
+
+			foreach (ShallowNode sn in subList)
+			{
+				Subscription sub = new Subscription(this, sn);
+
+				if ((sub != null) && (sub.ToIdentity.Equals(userID)))
+				{
+					return sub;
+				}
+			}
+
+			return null;
+		}
+
 
 		/// <summary>
 		/// Creates a Subscription object for the specified collection.
