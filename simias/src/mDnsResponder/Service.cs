@@ -10,6 +10,7 @@ namespace Mono.P2p.mDnsResponder
 	/// <summary>
 	/// Summary description for mDnsHost
 	/// </summary>
+	[Serializable]
 	class mDnsService
 	{
 		#region Class Members
@@ -29,8 +30,20 @@ namespace Mono.P2p.mDnsResponder
 
 		#region Properties
 
+		public string Name
+		{
+			get
+			{
+				return(this.serviceName);
+			}
+
+			set
+			{
+				this.serviceName = value;
+			}		
+		}
+		
 		/// <summary>
-		/// Local - local to this box
 		/// !NOTE! Doc incomplete
 		/// </summary>
 		public int TTL

@@ -35,30 +35,57 @@ namespace Mono.P2p.mDnsResponder
 {
 	internal class	Resources
 	{
-		private class	MyHostAddress : HostAddress
-		{
-			ArrayList	serviceList = null;
-			ArrayList	ptrList = null;
-
-			public MyHostAddress(string hostName, int ttl, long ipAddress, bool owner) : base(hostName, ttl, ipAddress, owner)
-			{
-				serviceList = new ArrayList();
-				ptrList = new ArrayList();
-			}
-		}
-
-
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		
 		static internal Mutex		resourceMtx = new Mutex(false);
-		static	private ArrayList	hostList = new ArrayList();
+		static	private ArrayList	resourceList = new ArrayList();
+		static	private	ArrayList	serviceList = new ArrayList();
 
+		static public void DumpYourGuts(Question cQuestion)
+		{
+			log.Info("DumpYourGuts called");
+			
+			Resources.resourceMtx.WaitOne();
+			
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				log.Info("  RESOURCE");
+				log.Info("  Name:  " + cResource.Name);
+				log.Info("  Type:  " + cResource.Type);
+				log.Info("  TTL:   " + cResource.Ttl.ToString());
+				log.Info("  Owner: " + cResource.Owner.ToString());
+				
+				if (cResource.Type == mDnsType.hostAddress)
+				{
+					HostAddress	hostAddr = (HostAddress) cResource;
+					
+					try
+					{
+						if (hostAddr.TextualIPAddress != "")
+						{
+							log.Info("  IP:    " + hostAddr.TextualIPAddress);
+						}
+						
+						log.Info("   IPADDR:  " + hostAddr.IPAddress.ToString());
+					}
+					catch{}
+				}
+				log.Info("");
+			}
+			Resources.resourceMtx.ReleaseMutex();
+			log.Info("DumpYourGuts exit");
+		}
+		
 		static public void AddHostAddress(HostAddress hostAddr)
 		{
-			Console.WriteLine("Resources::AddHostAddress called");
+			log.Info("AddHostAddress called");
 			bool	foundOne = false;
+			
 			Resources.resourceMtx.WaitOne();
-			foreach(MyHostAddress myHost in Resources.hostList)
+			foreach(BaseResource cResource in Resources.resourceList)
 			{
-				if (myHost.Name == hostAddr.Name)
+				if (cResource.Name == hostAddr.Name &&
+					cResource.Type == hostAddr.Type)
 				{
 					foundOne = true;
 					break;
@@ -67,36 +94,52 @@ namespace Mono.P2p.mDnsResponder
 
 			if (foundOne == false)
 			{
-				Console.WriteLine("   Adding " + hostAddr.Name);
-				MyHostAddress cHost = new MyHostAddress(hostAddr.Name, hostAddr.Ttl, hostAddr.IPAddress, hostAddr.Owner);
-
-				ArrayList ipList = hostAddr.GetIPAddresses();
-				if (ipList.Count > 1)
-				{
-					foreach(long ipAddr in ipList)
-					{
-						cHost.AddIPAddress(ipAddr);
-					}
-				}
-
-				Resources.hostList.Add(cHost);
+				log.Info("   Adding " + hostAddr.Name);
+				Resources.resourceList.Add(hostAddr);
 			}
 			
 			Resources.resourceMtx.ReleaseMutex();
 		}
+		
+		/*
+		static public void AddService(mDnsService service)
+		{
+			log.Debug("Resources::AddService called");
+			
+			bool	foundOne = false;
+			Resources.resourceMtx.WaitOne();
+			foreach(mDnsService cService in Resources.serviceList)
+			{
+				if (cService.Name == service.Name)
+				{
+					foundOne = true;
+					break;
+				}
+			}
+
+			if (foundOne == false)
+			{
+				log.Info("   Adding " + service.Name);
+				Resources.serviceList.Add(service);
+			}
+			
+			Resources.resourceMtx.ReleaseMutex();
+		}
+		*/
 	}
 
 	/// <summary>
-	/// Summary description for Host Resource
+	/// Summary description for Base Resource
 	/// </summary>
-	class HostAddress
+	class BaseResource
 	{
 		#region Class Members
-		DateTime	update;
+		DateTime			update;
 		protected bool		owner = false;
 		protected string	name = null;
 		protected int		ttl = 0;
-		protected ArrayList	ipAddresses = null;
+		protected mDnsType	dnsType;
+		protected mDnsClass dnsClass;
 		#endregion
 
 		#region Properties
@@ -140,7 +183,59 @@ namespace Mono.P2p.mDnsResponder
 				return(this.ttl);
 			}
 		}
+		
+		public mDnsType Type
+		{
+			get
+			{
+				return(this.dnsType);
+			}
+		}
+		
+		public mDnsClass Class
+		{
+			get
+			{
+				return(this.dnsClass);
+			}
+		}
 
+		#endregion
+
+		#region Constructors
+
+		public BaseResource(string name, int ttl, mDnsType dnsType, mDnsClass dnsClass, bool owner)
+		{
+			this.name = name;
+			this.ttl = ttl;
+			this.dnsType = dnsType;
+			this.dnsClass = dnsClass;
+			this.owner = owner;
+
+			this.update = DateTime.Now;
+		}
+		#endregion
+
+		#region Private Methods
+		#endregion
+
+		#region Static Methods
+		#endregion
+
+		#region Public Methods
+		#endregion
+	}
+
+	/// <summary>
+	/// Summary description for Host Resource
+	/// </summary>
+	class HostAddress : BaseResource
+	{
+		#region Class Members
+		protected ArrayList	ipAddresses = null;
+		#endregion
+
+		#region Properties
 
 		// Returns the preferred address
 		public long IPAddress
@@ -156,16 +251,19 @@ namespace Mono.P2p.mDnsResponder
 			get
 			{
 				string	textualIP = "";
-				long	ip = (long) this.ipAddresses[0];
+				
+				if (this.ipAddresses.Count >= 1)
+				{
+					long	ip = (long) this.ipAddresses[0];
 
-				textualIP += ((long)((ip & 0xFF000000) >> 24)).ToString();
-				textualIP += ".";
-				textualIP += ((long)((ip & 0x00FF0000) >> 16)).ToString();
-				textualIP += ".";
-				textualIP += ((long)((ip & 0x0000FF00) >> 8)).ToString();
-				textualIP += ".";
-				textualIP += ((long)(ip & 0x000000FF)).ToString();
-
+					textualIP += ((long)((ip & 0xFF000000) >> 24)).ToString();
+					textualIP += ".";
+					textualIP += ((long)((ip & 0x00FF0000) >> 16)).ToString();
+					textualIP += ".";
+					textualIP += ((long)((ip & 0x0000FF00) >> 8)).ToString();
+					textualIP += ".";
+					textualIP += ((long)(ip & 0x000000FF)).ToString();
+				}
 				return(textualIP);
 			}
 		}
@@ -180,6 +278,12 @@ namespace Mono.P2p.mDnsResponder
 		}
 		*/
 
+		public HostAddress(string name, int ttl, mDnsType dnsType, mDnsClass dnsClass, bool owner) : base(name, ttl, dnsType, dnsClass, owner)
+		{
+			this.ipAddresses = new ArrayList();
+		}
+
+		/*
 		public HostAddress(string hostName, int ttl, long ipAddress, bool owner)
 		{
 			this.name = hostName;
@@ -190,6 +294,7 @@ namespace Mono.P2p.mDnsResponder
 
 			this.update = DateTime.Now;
 		}
+		*/
 		#endregion
 
 		#region Private Methods
@@ -204,7 +309,7 @@ namespace Mono.P2p.mDnsResponder
 			if (this.ipAddresses.Contains(ipAddress) == false)
 			{
 				this.ipAddresses.Add(ipAddress);
-				this.update = DateTime.Now;
+				//this.update = DateTime.Now;
 			}
 		}
 
@@ -223,13 +328,13 @@ namespace Mono.P2p.mDnsResponder
 		{
 			this.ipAddresses.Remove(ipAddress);
 			this.ipAddresses.Insert(0, ipAddress);
-			this.update = DateTime.Now;
+			//this.update = DateTime.Now;
 		}
 
 		public void	RemoveIPAddress(long ipAddress)
 		{
 			this.ipAddresses.Remove(ipAddress);
-			this.update = DateTime.Now;
+			//this.update = DateTime.Now;
 		}
 
 		#endregion

@@ -27,7 +27,6 @@
 // it to the request handler queue.
 //
 
-
 using System;
 using System.Collections;
 using System.Threading;
@@ -36,15 +35,84 @@ using System.Net.Sockets;
 using System.Text;
 
 using log4net;
-using log4net.Appender;
+//using log4net.Appender;
 using log4net.Config;
-using log4net.Layout;
-using log4net.Repository;
-using log4net.Repository.Hierarchy;
-
+//using log4net.Layout;
+//using log4net.Repository;
+//using log4net.Repository.Hierarchy;
 
 namespace Mono.P2p.mDnsResponder
 {
+	internal class Question
+	{
+		#region Class Members
+		
+		string		domain = "";
+		mDnsClass	rClass;
+		mDnsType	rType;
+
+		#endregion
+
+		#region Properties
+		/// <summary>
+		/// DomainName - Domain Name to query on
+		/// !NOTE! Doc incomplete
+		/// </summary>
+		public string DomainName
+		{
+			get
+			{
+				return(this.domain);
+			}
+
+			set
+			{
+				this.domain = value;
+			}
+		}
+		
+		public mDnsClass RequestClass
+		{
+			get
+			{
+				return(this.rClass);
+			}
+
+			set
+			{
+				this.rClass = value;
+			}
+		}
+		
+		public mDnsType RequestType
+		{
+			get
+			{
+				return(this.rType);
+			}
+
+			set
+			{
+				this.rType = value;
+			}
+		}
+	
+		#endregion
+
+		#region Constructors
+		public Question()
+		{
+		}
+
+		public Question(string domain, mDnsType rType, mDnsClass rClass)
+		{
+			this.domain = domain;
+			this.rType = rType;
+			this.rClass = rClass;
+		}
+		#endregion
+	}
+
 	/// <summary>
 	/// Summary description for DnsRequest
 	/// </summary>
@@ -54,13 +122,6 @@ namespace Mono.P2p.mDnsResponder
 
 		#region Class Members
 
-		/*
-		static private enum DnsFlags : ushort
-		{
-			recursion =		0x0100,
-			response =		0x1000
-		}
-		*/
 
 		static internal Queue		requestsQueue = new Queue();
 		static internal Mutex		requestsMtx = new Mutex(false);
@@ -71,68 +132,25 @@ namespace Mono.P2p.mDnsResponder
 		static private	Thread		dnsReceiveThread = null;
 		static private	Socket		dnsReceiveSocket = null;
 
+		DnsFlags	flags;
+		int			transactionID;
 		int			timeToLive;
+		short		questions;
+		short		answers;
+		short		authorities;
+		short		additionalAnswers;
 		short		requestType;
 		short		requestClass;
 		string		domain;
-		ArrayList	knownAnswers;
+		string		sender;
+		protected ArrayList	questionList;
+		protected ArrayList	answerList;
 		#endregion
 
 		#region Properties
 
 		/// <summary>
-		/// TTL - time to live in seconds
-		/// !NOTE! Doc incomplete
-		/// </summary>
-		public int TTL
-		{
-			get
-			{
-				return(timeToLive);
-			}
-
-			set
-			{
-				this.timeToLive = value;
-			}
-		}
-
-		/// <summary>
-		/// Title -
-		/// !NOTE! Doc incomplete
-		/// </summary>
-		public short Type
-		{
-			get
-			{
-				return(requestType);
-			}
-
-			set
-			{
-				requestType = value;
-			}
-		}
-
-		/// <summary>
-		/// Title -
-		/// !NOTE! Doc incomplete
-		/// </summary>
-		public short Class
-		{
-			get
-			{
-				return(requestClass);
-			}
-
-			set
-			{
-				requestClass = value;
-			}
-		}
-
-		/// <summary>
-		/// Title -
+		/// Domain -
 		/// !NOTE! Doc incomplete
 		/// </summary>
 		public string Domain
@@ -147,16 +165,61 @@ namespace Mono.P2p.mDnsResponder
 				domain = value;
 			}
 		}
+		
+		public ArrayList QuestionList
+		{
+			get
+			{
+				return(this.questionList);
+			}
+		}
+		
+		public ArrayList AnswerList
+		{
+			get
+			{
+				return(this.answerList);
+			}
+		}
+		
+		public DnsFlags Flags
+		{
+			get
+			{
+				return(this.flags);
+			}
+		}
+		
+		public string Sender
+		{
+			get
+			{
+				return(this.sender);
+			}
+		}
+		
+		public int TransactionID
+		{
+			get
+			{
+				return(this.transactionID);
+			}
+		}
+		
 		#endregion
 
 
 		#region Constructors
 		public DnsRequest()
 		{
+			this.questionList = new ArrayList();
+			this.answerList = new ArrayList();
 		}
 
 		public DnsRequest(string domain, short rType, short rClass)
 		{
+			this.questionList = new ArrayList();
+			this.answerList = new ArrayList();
 			this.domain = domain;
 			this.requestType = rType;
 			this.requestClass = rClass;
@@ -165,17 +228,10 @@ namespace Mono.P2p.mDnsResponder
 
 
 		#region Private Methods
-		internal bool	FinalConstructor(short rType)
-		{
-			// Validate
-			this.requestType = rType;
-			return(true);
-		}
-
 		internal static int	StartDnsReceive()
 		{
 			BasicConfigurator.Configure();
-			if (log.IsInfoEnabled) log.Info("StartDnsReceive called");
+			log.Info("StartDnsReceive called");
 
 			IPEndPoint iep = new IPEndPoint(IPAddress.Any, 5353);
 			EndPoint ep = (EndPoint) iep;
@@ -183,6 +239,11 @@ namespace Mono.P2p.mDnsResponder
 			try
 			{
 				dnsReceiveSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+				dnsReceiveSocket.SetSocketOption(
+					SocketOptionLevel.Socket,
+					SocketOptionName.ReuseAddress,
+					true);
+					
 				dnsReceiveSocket.Bind(iep);
 				dnsReceiveSocket.SetSocketOption(
 					SocketOptionLevel.IP, 
@@ -191,27 +252,27 @@ namespace Mono.P2p.mDnsResponder
 			}
 			catch(Exception e)
 			{
-				if (log.IsDebugEnabled) log.Debug(e.Message);
-				if (log.IsDebugEnabled) log.Debug(e.StackTrace);
+				log.Debug(e.Message);
+				log.Debug(e.StackTrace);
 				return(-1);
 			}
 
 			dnsReceiveThread = new Thread(new ThreadStart(DnsReceive));
 			dnsReceiveThread.IsBackground = true;
 			dnsReceiveThread.Start();
-			if (log.IsInfoEnabled) log.Info("StartDnsReceive finished");
+			log.Info("StartDnsReceive finished");
 			return(0);
 		}
 
 		internal static int	StopDnsReceive()
 		{
-			if (log.IsInfoEnabled) log.Info("StopDnsReceive called");
+			log.Info("StopDnsReceive called");
 			stoppingDnsRequests = true;
 			dnsReceiveSocket.Close();
 			Thread.Sleep(0);
 			dnsReceiveThread.Abort();
 			receivingDnsRequests = false;
-			if (log.IsInfoEnabled) log.Info("StopDnsReceive finished");
+			log.Info("StopDnsReceive finished");
 			return(0);
 		}
 
@@ -226,11 +287,6 @@ namespace Mono.P2p.mDnsResponder
 			UInt16		flags;
 			short		dataLength;
 			short		questions;
-			short		answers;
-			short		authorities;
-			short		additional;
-			short		rClass;
-			short		rType;
 			
 			receivingDnsRequests = true;
 
@@ -256,73 +312,80 @@ namespace Mono.P2p.mDnsResponder
 				{
 					Console.WriteLine("");
 
+					DnsRequest	dnsRequest = new DnsRequest();
+					
 					//
 					// Parse the mDNS packet
 					//
 
-					//transactionID = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, 0));
-					transactionID = BitConverter.ToInt16(receiveData, 0);
+					dnsRequest.transactionID = BitConverter.ToInt16(receiveData, 0);
 					flags = BitConverter.ToUInt16(receiveData, 2);
-
-					questions = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, 4));
-					answers = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, 6));
-					authorities = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, 8));
-					additional = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, 10));
-					offset = 12;
-
-					UInt16 queryResponse = 0x0080;
-					if((flags & queryResponse) == queryResponse)
+					
+					//UInt16 queryResponse = 0x0080;
+					if((flags & 0x0080) == 0x0080)
 					{
+						dnsRequest.flags |= DnsFlags.response;
 						Console.WriteLine("Standard Response");
 					}
 					else
 					{
+						dnsRequest.flags |= DnsFlags.request;
 						Console.WriteLine("Standard Query");
 					}
 
-					//Console.WriteLine("Response from : {0}.{1}.{2}.{3}", ep.
-					Console.WriteLine("Transaction ID: {0}", transactionID);
+					dnsRequest.questions = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, 4));
+					dnsRequest.answers = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, 6));
+					dnsRequest.authorities = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, 8));
+					dnsRequest.additionalAnswers = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, 10));
+					offset = 12;
+
+					dnsRequest.sender = ep.ToString();
+					
+					Console.WriteLine("Sender        : {0}", dnsRequest.sender);
+					Console.WriteLine("Transaction ID: {0}", dnsRequest.transactionID);
 					string tmpString = Convert.ToString(flags, 16);
 					Console.WriteLine("Flags         : {0}", tmpString);
-					Console.WriteLine("Questions     : {0}", questions);
-					Console.WriteLine("Answers       : {0}", answers);
-					Console.WriteLine("Authority     : {0}", authorities);
-					Console.WriteLine("Additional    : {0}", additional);
+					Console.WriteLine("Questions     : {0}", dnsRequest.questions);
+					Console.WriteLine("Answers       : {0}", dnsRequest.answers);
+					Console.WriteLine("Authority     : {0}", dnsRequest.authorities);
+					Console.WriteLine("Additional    : {0}", dnsRequest.additionalAnswers);
 
-					//
-					// Print the questions
-					//
-
+					questions = dnsRequest.questions;
 					if (questions > 0 &&
-						((flags & queryResponse) == queryResponse) == false)
+						((flags & 0x0080) == 0x0080) == false)
 					{
 						string	domainName = "";
 
 						while(questions-- > 0)
 						{
+							Question question = new Question();
+							
 							Console.WriteLine("");
 							Console.WriteLine("   Question");
 							Common.BuildDomainName(receiveData, offset, ref offset, ref domainName);
+							question.DomainName = domainName;
 							Console.WriteLine("   Domain Name: " + domainName);
 
 							// Move past the class and type
-							rType = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, offset));
-							rClass = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, offset + 2));
+							question.RequestType = (mDnsType) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, offset));
+							question.RequestClass = (mDnsClass) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, offset + 2));
 
-							Console.WriteLine("   Class: {0}  Type: {1}", rClass, rType);
+							Console.WriteLine("   Class: {0}  Type: {1}", question.RequestClass, question.RequestType);
 							offset += 4;
 
-							DnsRequest rRequest = new DnsRequest(domainName, rType, rClass);
-							rRequest.Queue();
+							dnsRequest.questionList.Add(question);
 						}
 					}
-
+					
 					// Now get the class and type
 
-					if (answers > 0)
+					if (dnsRequest.answers > 0)
 					{
-						string	tmpDomain = "";
-						ushort	recClass;
+						string		tmpDomain = "";
+						ushort		recClass;
+						mDnsClass	rClass;
+						mDnsType	rType;
+						short answers = dnsRequest.answers;
 						while(answers-- > 0)
 						{
 							Console.WriteLine("");
@@ -331,9 +394,9 @@ namespace Mono.P2p.mDnsResponder
 							Console.WriteLine("   Domain Name: " + tmpDomain);
 
 							// Move past the class and type
-							rType = BitConverter.ToInt16(receiveData, offset);
-							rType = IPAddress.NetworkToHostOrder(rType);
-							rClass = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, offset + 2));
+							rType = (mDnsType) BitConverter.ToInt16(receiveData, offset);
+							rType = (mDnsType) IPAddress.NetworkToHostOrder((short) rType);
+							rClass = (mDnsClass) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, offset + 2));
 							offset += 4;
 
 							Console.WriteLine("   Type:        {0}", rType);
@@ -356,7 +419,7 @@ namespace Mono.P2p.mDnsResponder
 									continue;
 								}
 
-								if(rType == mDnsTypes.hostType)
+								if(rType == mDnsType.hostAddress)
 								{
 									long ipAddress = 
 										IPAddress.NetworkToHostOrder(BitConverter.ToUInt32(receiveData, offset));
@@ -372,11 +435,11 @@ namespace Mono.P2p.mDnsResponder
 									offset += 4;
 
 									// Build a host record and add it to the list
-									HostAddress cHostAddr = new HostAddress(tmpDomain, timeToLive, ipAddress, false);
+									HostAddress cHostAddr = new HostAddress(tmpDomain, timeToLive, rType, rClass, false);
 									Resources.AddHostAddress(cHostAddr);
 								}
 								else
-								if(rType == mDnsTypes.ipv6Type)
+								if(rType == mDnsType.ipv6)
 								{
 									long ipAddress = 
 										IPAddress.NetworkToHostOrder(BitConverter.ToUInt32(receiveData, offset));
@@ -393,7 +456,7 @@ namespace Mono.P2p.mDnsResponder
 									offset += dataLength;
 								}
 								else
-								if (rType == mDnsTypes.ptrType)
+								if (rType == mDnsType.ptr)
 								{
 									int		lOffset = offset;
 									string	ptrDomain = "";
@@ -403,7 +466,7 @@ namespace Mono.P2p.mDnsResponder
 									offset += dataLength;
 								}
 								else
-								if (rType == mDnsTypes.textStringsType)
+								if (rType == mDnsType.textStrings)
 								{
 									//Console.WriteLine("Found TXT RR");
 
@@ -429,7 +492,7 @@ namespace Mono.P2p.mDnsResponder
 									offset += dataLength;
 								}
 								else
-									if (rType == mDnsTypes.serviceLocationType)
+								if (rType == mDnsType.serviceLocation)
 								{
 									int		lOffset = offset;
 									short	priority;
@@ -468,6 +531,8 @@ namespace Mono.P2p.mDnsResponder
 							}
 						}
 					}
+					
+					dnsRequest.Queue();
 				}
 			}
 		}
