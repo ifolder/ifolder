@@ -41,7 +41,7 @@ using Novell.Security.ClientPasswordManager;
 namespace Simias.DomainWatcher
 {
 	/// <summary>
-	/// PO Manager
+	/// DomainWatcher Manager
 	/// </summary>
 	public class Manager : IDisposable
 	{
@@ -65,7 +65,6 @@ namespace Simias.DomainWatcher
 			
 			// store
 			store = Store.GetStore();
-
 		}
 
 		/// <summary>
@@ -73,7 +72,7 @@ namespace Simias.DomainWatcher
 		/// </summary>
 		public void Start()
 		{
-			log.Info("DomainWatcher::Start called");
+			log.Debug("Start called");
 
 			try
 			{
@@ -95,6 +94,8 @@ namespace Simias.DomainWatcher
 				log.Error(e, "Unable to start Domain Watcher thread.");
 				throw e;
 			}
+
+			log.Debug("Start exit");
 		}
 
 		/// <summary>
@@ -102,7 +103,7 @@ namespace Simias.DomainWatcher
 		/// </summary>
 		public void Stop()
 		{
-			log.Info("DomainWatcher::Stop called");
+			log.Debug("Stop called");
 			try
 			{
 				lock(this)
@@ -120,6 +121,7 @@ namespace Simias.DomainWatcher
 				log.Error(e, "Unable to stop Domain Watcher.");
 				throw e;
 			}
+			log.Debug("Stop exit");
 		}
 
 		/// <summary>
@@ -127,7 +129,7 @@ namespace Simias.DomainWatcher
 		/// </summary>
 		public void WatcherThread()
 		{
-			log.Debug("DomainWatcher thread started");
+			log.Debug("WatcherThread started");
 			int status;
 			this.started = true;
 			do 
@@ -143,6 +145,7 @@ namespace Simias.DomainWatcher
 					if (cDomain != null &&
 						cDomain.ID != Simias.Storage.Domain.WorkGroupDomainID) 
 					{
+						log.Debug("checking Domain: " + cDomain.Name);
 						Roster cRoster = cDomain.GetRoster(store);
 						Member cMember = cRoster.GetCurrentMember();
 
@@ -208,14 +211,11 @@ namespace Simias.DomainWatcher
 				}
 				catch(Exception e)
 				{
-					log.Error("DomainWatcher::WatcherThread");
 					log.Error(e.Message);
 					log.Error(e.StackTrace);
 				}
 
-                log.Debug("back to sleep");
 				stopEvent.WaitOne((30 * 1000), false);
-                log.Debug("alive");
 			} while(this.stop == false);
 
 			this.started = false;

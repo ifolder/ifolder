@@ -54,7 +54,7 @@ namespace Simias.DomainWatcher
 		}
 
 		/// <summary>
-		/// Stop the PO service.
+		/// Stop the service.
 		/// </summary>
 		public void Stop()
 		{
@@ -66,7 +66,9 @@ namespace Simias.DomainWatcher
 		}
 
 		/// <summary>
-		/// Resume the PO service.
+		/// Resume the service.
+		/// Really don't support resume/pause - just 
+		/// start and stop under the covers
 		/// </summary>
 		public void Resume()
 		{
@@ -78,7 +80,7 @@ namespace Simias.DomainWatcher
 		}
 
 		/// <summary>
-		/// Pause the PO service.
+		/// Pause the service.
 		/// </summary>
 		public void Pause()
 		{
