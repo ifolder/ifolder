@@ -72,7 +72,7 @@ namespace Simias.Security.Web
 		/// <summary>
 		/// Handle to the store.
 		/// </summary>
-		private Store store = Store.GetStore();
+		private Store store = null;
 
 		/// <summary>
 		/// Contains services specified in the web.config that require no
@@ -81,6 +81,31 @@ namespace Simias.Security.Web
 		/// </summary>
 		private Hashtable unauthenticatedServices = new Hashtable();
 
+		#endregion
+
+		#region Properties
+		/// <summary>
+		/// Gets the store handle for the store.
+		/// 
+		/// NOTE: It seems that calling Store.GetStore() statically, in the
+		/// constructor or in the Init() call causes the Mac client to fail
+		/// because it cannot find the Flaim libraries.
+		/// </summary>
+		private Store StoreReference
+		{
+			get 
+			{ 
+				lock ( this )
+				{
+					if ( store == null )
+					{
+						store = Store.GetStore();
+					}
+				}
+
+				return store;
+			}
+		}
 		#endregion
 
 		#region Private Methods
@@ -249,15 +274,15 @@ namespace Simias.Security.Web
 			string domainID = context.Request.Headers.Get( Http.DomainIDHeader );
 			if ( domainID == null )
 			{
-				if ( store.IsEnterpriseServer )				
+				if ( StoreReference.IsEnterpriseServer )				
 				{
 					// If this is an enterprise server use the default domain.
-					domainID = store.DefaultDomain;
+					domainID = StoreReference.DefaultDomain;
 				}
 				else if ( context.Request.Url.IsLoopback )
 				{
 					// If this address is loopback, set the local domain in the HTTP context.
-					domainID = store.LocalDomain;
+					domainID = StoreReference.LocalDomain;
 				}
 			}
 
@@ -267,7 +292,7 @@ namespace Simias.Security.Web
 				if ( Http.GetMember( domainID, context ) != null )
 				{
 					// Set the session to never expire on the local web service.
-					if ( domainID == store.LocalDomain )
+					if ( domainID == StoreReference.LocalDomain )
 					{
 						// Set to a very long time.
 						context.Session.Timeout = 60 * 24 * 365;
@@ -282,8 +307,8 @@ namespace Simias.Security.Web
 			else
 			{
 				string realm = 
-					store.IsEnterpriseServer ? 
-						store.GetDomain( store.DefaultDomain ).Name : 
+					StoreReference.IsEnterpriseServer ? 
+						StoreReference.GetDomain( store.DefaultDomain ).Name : 
 						Environment.MachineName;
 
 				context.Response.StatusCode = 401;
