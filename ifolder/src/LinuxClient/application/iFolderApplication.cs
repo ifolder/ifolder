@@ -256,7 +256,6 @@ namespace Novell.iFolder
 						{
 							prefswin.UpdateDomainStatus(args.Message);
 						}
-						
 					}
 					else
 					{
@@ -355,6 +354,19 @@ namespace Novell.iFolder
 
 					if (!authenticated)
 						LoginDialog.ShowAll();
+					else
+					{
+						LoginDialog.Destroy();
+						LoginDialog = null;
+
+						// Update the domains so that the Accounts Page in the
+						// Preferences window will be up-to-date.
+						ifdata.RefreshDomains();
+						if (prefswin != null)
+						{
+							prefswin.UpdateDomainStatus(domainID);
+						}
+					}
 				}
 			}
 			else
