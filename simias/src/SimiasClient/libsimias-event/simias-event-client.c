@@ -45,8 +45,8 @@
 
 #include "simias-event-client.h"
 
-#define WEB_SERVICE_TRUE_STRING		"true"
-#define WEB_SERVICE_FALSE_STRING	"false"
+#define WEB_SERVICE_TRUE_STRING		"True"
+#define WEB_SERVICE_FALSE_STRING	"False"
 
 #define MAX_PENDING_LISTENS			5
 
