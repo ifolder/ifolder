@@ -20,8 +20,9 @@ diff -r1.271.2.22 configure.ac
 > AM_CONDITIONAL(BUILD_GIFOLDER, test "x$build_gifolder" = "xyes")
 > 
 > dnl #######################################################################
-1173a1190
+1173a1190,1191
 > 		   plugins/gifolder/Makefile
+> 		   plugins/gifolder/pixmaps/Makefile
 Index: plugins/Makefile.am
 ===================================================================
 RCS file: /cvsroot/gaim/gaim/plugins/Makefile.am,v
