@@ -133,6 +133,7 @@ namespace Novell.iFolder
 			nameColumn.SetCellDataFunc(ncrt,
 									   new TreeCellDataFunc(NameCellTextDataFunc));
 			nameColumn.Resizable = true;
+			nameColumn.MinWidth = 150;
 			AccTreeView.AppendColumn(nameColumn);
 
 			// Status Column
