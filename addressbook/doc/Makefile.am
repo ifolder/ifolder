@@ -31,6 +31,10 @@ ndoc-nodeps:
 #		-documenter=MSDN -Title=AddressBook -OutputDirectory=addressbook-ndoc
 #endif # WINDOWS
 	tar -czf $(DOC_TARBALL) $(PACKAGE)-ndoc
+	@test "x" = "x$(DOC_TARBALLS)" || \
+		CMD='cp -f $(DOC_TARBALL) "$(DOC_TARBALLS)"'; \
+		echo $$CMD; \
+		eval $$CMD
 
 else # NDOC
 
