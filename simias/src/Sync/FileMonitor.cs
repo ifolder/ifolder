@@ -541,7 +541,7 @@ namespace Simias.Sync
 			
 					foreach (fileChangeEntry fc in fChanges)
 					{
-						if (((TimeSpan)(dredgeTimeStamp - fc.time)).TotalSeconds > 5)
+						if (((TimeSpan)(dredgeTimeStamp - fc.time)).TotalMilliseconds > 500)
 						{
 							string fullName = GetName(fc.eArgs.FullPath);
 							bool isDir = false;
