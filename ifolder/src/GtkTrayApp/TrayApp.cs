@@ -51,6 +51,9 @@ namespace Novell.iFolder
 		public static void Main (string[] args)
 		{
 //			gIsSyncing = false;
+//			GLib.Thread.Init();
+			Gdk.Threads.Init();
+			Console.WriteLine("Initing application...");
 
 			Application.Init();
 
@@ -74,6 +77,8 @@ namespace Novell.iFolder
 			Console.WriteLine("Creating sync object");
 
 			SyncProperties props = new SyncProperties();
+//			props.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
+//			props.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
 
 			string logicFactory = new Configuration().Get("iFolderApp", 
 				"SyncLogic", "SynkerA");
@@ -91,6 +96,7 @@ namespace Novell.iFolder
 					break;
 			}
 
+
 			syncManager = new SyncManager(props);
 //			syncManager.ChangedState += 
 //					new ChangedSyncStateEventHandler(syncManager_ChangedState);
@@ -99,7 +105,7 @@ namespace Novell.iFolder
 			MyTrace.Switch.Level = TraceLevel.Verbose;
 
 			twin = new GtkTraceWindow();
-			//twin.ShowAll();
+//			twin.ShowAll();
 
 			//MyTrace.SendTraceToStandardOutput();
 
@@ -108,7 +114,11 @@ namespace Novell.iFolder
 			Console.WriteLine("Starting sync object");
 			syncManager.Start();
 
+			Console.WriteLine("About to loop main thread...");
+			Gdk.Threads.Enter();
+			Console.WriteLine("Inside Threads loop main thread...");
 			Application.Run();
+			Gdk.Threads.Leave();
 		}
 
 		private static void syncManager_ChangedState(SyncManagerStates state)
