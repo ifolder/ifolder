@@ -654,6 +654,47 @@ namespace Simias.Web
 
 
 		/// <summary>
+		/// WebMethod that removes a subscription for an iFolder.
+		/// </summary>
+		/// <param name="CollectionID">
+		/// The ID of the collection representing the iFolder for which
+		/// the subscription will be removed.
+		/// </param>
+		/// <param name="UserID">
+		/// The ID of the member to which the subscription was sent.
+		/// </param>
+		public static void RemoveSubscription(string CollectionID,
+											  string UserID)
+		{
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(CollectionID);
+			if (col == null)
+			{
+				throw new Exception("Invalid CollectionID");
+			}
+
+			// Get the current member's POBox
+			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(store,
+																   store.DefaultDomain);
+
+			// Search for the matching subscription
+			Subscription sub = poBox.GetSubscriptionByCollectionID(CollectionID,
+																   UserID);
+			if(sub != null)
+			{
+				poBox.Delete(sub);
+				poBox.Commit(sub);
+			}
+
+			// Remove the subscription from the recipient's POBox
+			RemoveMemberSubscription(store, col, UserID);
+		}
+
+
+
+		
+		/// <summary>
 		/// Utility method that should be moved into the POBox class.
 		/// This will create a subscription and place it in the POBox
 		/// of the invited user.
