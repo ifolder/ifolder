@@ -83,7 +83,7 @@ public class SynkerServiceA: SyncCollectionService
 	SyncOps ops;
 	SyncIncomingNode inNode;
 	SyncOutgoingNode outNode;
-	bool ignoreRights = true;
+	bool ignoreRights = false;
 
 	/// <summary>
 	/// public ctor 
@@ -112,7 +112,7 @@ public class SynkerServiceA: SyncCollectionService
 		{
 			string userId = Thread.CurrentPrincipal.Identity.Name;
 			Log.Spew("session started for user '{0}'{1}", userId, ignoreRights? " without access control": "");
-			if (ignoreRights)
+			if (ignoreRights || userId == String.Empty)
 				userId = Access.SyncOperatorRole;
 			collection.LocalStore.ImpersonateUser(userId);
 			if (collection.IsAccessAllowed(Access.Rights.ReadOnly))
