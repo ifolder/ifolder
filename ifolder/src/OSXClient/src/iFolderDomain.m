@@ -102,4 +102,43 @@
 
 
 
+
+-(NSString *)ID
+{
+	return [properties objectForKey:@"ID"];
+}
+
+
+
+
+-(NSString *)Name
+{
+	return [properties objectForKey:@"Name"];
+}
+
+
+
+
+-(NSString *)UserName
+{
+	return [properties objectForKey:@"UserName"];
+}
+
+
+
+
+-(NSString *)Host
+{
+	return [properties objectForKey:@"Host"];
+}
+
+
+
+
+-(NSString *)Password
+{
+	return [properties objectForKey:@"Password"];
+}
+
+
 @end

@@ -55,10 +55,11 @@
 	NSToolbar				*toolbar;
 	NSMutableDictionary		*toolbarItems;
 	NSMutableArray			*toolbarItemKeys;
+	NSMutableDictionary		*keyedDomains;
+	NSMutableDictionary		*keyediFolders;
 }
 
 
-- (IBAction)showLoginWindow:(id)sender;
 - (IBAction)showSyncLog:(id)sender;
 - (IBAction)refreshWindow:(id)sender;
 - (IBAction)showHideToolbar:(id)sender;
@@ -76,11 +77,12 @@
 
 - (void)doubleClickedTable:(id)sender;
 
-
-- (void)login:(NSString *)username withPassword:(NSString *)password toServer:(NSString *)server;
+- (BOOL)connectToDomain:(iFolderDomain *)domain;
+- (BOOL)authenticateToDomain:(NSString *)domainID withPassword:(NSString *)password;
 - (void)createiFolder:(NSString *)path inDomain:(NSString *)domainID;
-- (void)AcceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)domainID toPath:(NSString *)localPath;
+- (void)acceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)domainID toPath:(NSString *)localPath;
 
+- (void)showLoginWindow:(NSString *)domainID;
 
 - (void)awakeFromNib;
 - (void)dealloc;

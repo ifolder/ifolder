@@ -31,6 +31,7 @@ using System.Web.SessionState;
 using System.Web.Services;
 using System.Web.Services.Protocols;
 using System.IO;
+using System.Net;
 using Simias;
 using Simias.Client;
 using Simias.Storage;
@@ -41,6 +42,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Novell.AddressBook;
 
+using Novell.Security.ClientPasswordManager;
 
 namespace Novell.iFolder.Web
 {
@@ -1619,13 +1621,53 @@ namespace Novell.iFolder.Web
 		public int AuthenticateToDomain(	string DomainID,
 											string Password)
 		{
-			AuthenticationStatus status;
-			DomainAuthentication dAuth = new DomainAuthentication(
-					DomainID, Password);
-			status = dAuth.Authenticate();
-			if(status != AuthenticationStatus.Success)
+			Store store = Store.GetStore();
+			Domain domain = store.GetDomain(DomainID);
+			if(domain == null)
+				throw new Exception("ERROR:Invalid Domain ID");
+
+			Roster roster = domain.GetRoster(store);
+			if(domain == null)
+				throw new Exception("ERROR:Unable to obtain Roster");
+
+			Member member = roster.GetCurrentMember();
+			if(domain == null)
+				throw new Exception("ERROR:Unable locate user");
+
+			DomainService domainSvc = new DomainService();
+
+			domainSvc.Url = 
+				domain.HostAddress.ToString() + "/DomainService.asmx";
+
+			domainSvc.Credentials =
+				new NetworkCredential(member.Name, Password);
+
+			try
 			{
-				throw new Exception("Invalid Credentials");
+				// Call the remote domain service and attempt to
+				// get Domain Information.  This will force an
+				// authentication to occurr
+				domainSvc.GetDomainInfo(member.UserID);
+
+				NetCredential cCreds =
+					new NetCredential("iFolder", DomainID, true, member.Name,
+								Password);
+				if(cCreds == null)
+					throw new Exception("ERROR: Updating NetCredentials");
+			}
+			catch(WebException webEx)
+			{
+				if (webEx.Status == System.Net.WebExceptionStatus.ProtocolError ||
+					webEx.Status == System.Net.WebExceptionStatus.TrustFailure)
+				{
+					throw new Exception("ERROR: Invalid Credentials");
+				}
+				else if (webEx.Status == System.Net.WebExceptionStatus.ConnectFailure)
+				{
+					throw new Exception("ERROR: Domain Connection failed");
+				}
+				else
+					throw webEx;
 			}
 
 			return 0;
