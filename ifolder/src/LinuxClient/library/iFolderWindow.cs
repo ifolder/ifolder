@@ -188,7 +188,7 @@ namespace Novell.iFolder
 		private Gtk.Widget			SyncButton;
 		private Gtk.Widget			ShareButton;
 		private Gtk.Widget			ConflictButton;
-
+		private Gtk.OptionMenu		DomainFilterOptionMenu;
 
 		private ImageMenuItem		NewMenuItem;
 		private Gtk.MenuItem		ShareMenuItem;
@@ -211,6 +211,12 @@ namespace Novell.iFolder
 		private Hashtable			curiFolders;
 		private Hashtable			acceptediFolders;
 
+		// curDomain should be set to the ID of the domain selected in the
+		// Domain Filter or if "all" domains are selected, this should be
+		// set to null.		
+		private string				curDomain;
+		private DomainInformation[] curDomains;
+
 
 		/// <summary>
 		/// Default constructor for iFolderWindow
@@ -225,6 +231,8 @@ namespace Novell.iFolder
 			ifdata = iFolderData.GetData();
 			curiFolders = new Hashtable();
 			acceptediFolders = new Hashtable();
+			curDomain = null;
+			curDomains = null;
 			CreateWidgets();
 		}
 
@@ -336,7 +344,31 @@ namespace Novell.iFolder
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("conflict24.png"))),
 				new SignalFunc(ResolveConflicts));
 
-//			tb.AppendSpace ();
+			tb.AppendSpace();
+
+			HBox domainFilterBox = new HBox();
+			domainFilterBox.Spacing = 5;
+			tb.AppendWidget(domainFilterBox,
+							Util.GS("Filter the list of iFolders by server"),
+							null);
+							
+			Label l = new Label(Util.GS("Server:"));
+			domainFilterBox.PackStart(l, false, false, 0);
+
+			VBox domainFilterSpacerBox = new VBox();
+			domainFilterBox.PackStart(domainFilterSpacerBox, false, false, 0);
+
+			// We have to add a spacer before and after the option menu to get the
+			// OptionMenu to size properly in the Toolbar.
+			Label spacer = new Label("");
+			domainFilterSpacerBox.PackStart(spacer, false, false, 0);
+			
+			DomainFilterOptionMenu = new OptionMenu();
+			DomainFilterOptionMenu.Changed += new EventHandler(DomainFilterChangedHandler);
+			domainFilterSpacerBox.PackStart(DomainFilterOptionMenu, false, false, 0);
+
+			spacer = new Label("");
+			domainFilterSpacerBox.PackEnd(spacer, false, false, 0);
 
 			return tb;
 		}
@@ -563,6 +595,7 @@ namespace Novell.iFolder
 		private void OnRealizeWidget(object o, EventArgs args)
 		{
 			iFolderTreeView.HasFocus = true;
+			RefreshDomains(false);
 			RefreshiFolders(false);
 		}
 
@@ -646,8 +679,17 @@ namespace Novell.iFolder
 			{
 				foreach(iFolderHolder holder in ifolders)
 				{
-					TreeIter iter = iFolderTreeStore.AppendValues(holder);
-					curiFolders.Add(holder.iFolder.ID, iter);
+					if (curDomain == null)
+					{
+						TreeIter iter = iFolderTreeStore.AppendValues(holder);
+						curiFolders.Add(holder.iFolder.ID, iter);
+					}
+					else if (curDomain == holder.iFolder.DomainID)
+					{
+						// Only add in iFolders that match the current domain filter
+						TreeIter iter = iFolderTreeStore.AppendValues(holder);
+						curiFolders.Add(holder.iFolder.ID, iter);
+					}
 				}
 			}
 		}
@@ -1156,8 +1198,8 @@ namespace Novell.iFolder
 
 						// Set the value of the returned value for the one
 						// that was there
-						iFolderTreeStore.SetValue(iter, 0, 
-								new iFolderHolder(newiFolder));
+						iFolderHolder holder = new iFolderHolder(newiFolder);
+						iFolderTreeStore.SetValue(iter, 0, holder);
 						curiFolders.Add(newiFolder.ID, iter);
 					}
 					catch(Exception e)
@@ -1277,8 +1319,8 @@ namespace Novell.iFolder
 
 						// Set the value of the returned value for the one
 						// that was there
-						iFolderTreeStore.SetValue(iter, 0, 
-								new iFolderHolder(remiFolder));
+						iFolderHolder holder = new iFolderHolder(remiFolder);
+						iFolderTreeStore.SetValue(iter, 0, holder);
 
 						curiFolders.Add(remiFolder.ID, iter);
 					}
@@ -1460,20 +1502,35 @@ namespace Novell.iFolder
 				TreeIter iter;
 				iFolderHolder ifHolder = ifdata.GetiFolder(iFolderID, false);
 
-				if(acceptediFolders.ContainsKey(iFolderID))
+				// Don't add the iFolder in the TreeView if the user has
+				// the domain filter set to a different domain.
+				if (curDomain != null)
 				{
-					iter = (TreeIter) acceptediFolders[iFolderID];
-
-					iFolderTreeStore.SetValue(iter, 0, ifHolder);
-
-					acceptediFolders.Remove(iFolderID);
+					if (curDomain != ifHolder.iFolder.DomainID)
+					{
+						if (acceptediFolders.ContainsKey(iFolderID))
+						{
+							acceptediFolders.Remove(iFolderID);
+						}
+					}
 				}
 				else
 				{
-					iter = iFolderTreeStore.AppendValues(ifHolder);
+					if(acceptediFolders.ContainsKey(iFolderID))
+					{
+						iter = (TreeIter) acceptediFolders[iFolderID];
+	
+						iFolderTreeStore.SetValue(iter, 0, ifHolder);
+	
+						acceptediFolders.Remove(iFolderID);
+					}
+					else
+					{
+						iter = iFolderTreeStore.AppendValues(ifHolder);
+					}
+	
+					curiFolders[iFolderID] = iter;
 				}
-
-				curiFolders[iFolderID] = iter;
 			}
 		}
 
@@ -1642,15 +1699,30 @@ namespace Novell.iFolder
 					SyncBar.Fraction = frac;
 				}
 			}
-			
-			// Get the iFolderHolder and set the objectsToSync
-			SyncSize syncSize = ifws.CalculateSyncSize(args.CollectionID);
-			TreeIter iter = (TreeIter)curiFolders[args.CollectionID];
+
+			// Get the iFolderHolder and set the objectsToSync (only if the
+			// domain filter isn't set or is for this iFolder's domain.
 			iFolderHolder ifHolder = ifdata.GetiFolder(args.CollectionID, false);
-			if (ifHolder != null)
+			if (ifHolder != null && (curDomain == null || curDomain == ifHolder.iFolder.DomainID))
 			{
-				ifHolder.ObjectsToSync = syncSize.SyncNodeCount;
-				iFolderTreeStore.SetValue(iter, 0, ifHolder);
+				SyncSize syncSize = null;
+				
+				try
+				{
+					syncSize = ifws.CalculateSyncSize(args.CollectionID);
+				}
+				catch(Exception e)
+				{
+					// The user must have reverted the iFolder during a sync and
+					// so the ID is no longer valid.
+				}
+				
+				if (syncSize != null)
+				{
+					ifHolder.ObjectsToSync = syncSize.SyncNodeCount;
+					TreeIter iter = (TreeIter)curiFolders[args.CollectionID];
+					iFolderTreeStore.SetValue(iter, 0, ifHolder);
+				}
 			}
 		}
 
@@ -1794,8 +1866,6 @@ namespace Novell.iFolder
 			}
 			else
 			{
-				// Read all current domains before letting them create
-				// a new ifolder
 				DomainInformation[] domains = ifdata.GetDomains();
 	
 				CreateDialog cd = new CreateDialog(domains);
@@ -1825,6 +1895,10 @@ namespace Novell.iFolder
 	
 							if(newiFolder == null)
 								throw new Exception("Simias returned null");
+
+							// Reset the domain filter so the new iFolder will show
+							// up in the list regardless of what was selected previously.
+							// DomainFilterOptionMenu.SetHistory(0);
 	
 							TreeIter iter = 
 								iFolderTreeStore.AppendValues(
@@ -1890,6 +1964,52 @@ namespace Novell.iFolder
 			dg.Hide();
 			dg.Destroy();
 		
+		}
+
+		public void DomainFilterChangedHandler(object o, EventArgs args)
+		{
+			// Change the global "domainSelected" (null if "All" is chosen by
+			// the user) and then make the call to refresh the window.
+			if (curDomains != null)
+			{
+				int selectedItem = DomainFilterOptionMenu.History;
+				if (selectedItem == 0)
+				{
+					curDomain = null;
+				}
+				else
+				{
+					// The OptionMenu has 1 extra item in it than the list
+					// of domains in curDomain, so offset the index by 1.
+					selectedItem--;
+					curDomain = curDomains[selectedItem].ID;
+				}
+			
+				RefreshiFolders(false);
+			}
+		}
+
+		public void RefreshDomains(bool readFromSimias)
+		{
+			if(readFromSimias)
+				ifdata.RefreshDomains();
+
+			// Add on "Show All Servers"
+			Menu m = new Menu();
+			m.Title = Util.GS("Server:");
+			m.Append(new MenuItem(Util.GS("Show All")));
+
+			curDomains = ifdata.GetDomains();
+			if (curDomains != null)
+			{
+				foreach(DomainInformation domain in curDomains)
+				{
+					m.Append(new MenuItem(domain.Name));
+				}
+			}
+			
+			DomainFilterOptionMenu.Menu = m;
+			DomainFilterOptionMenu.ShowAll();
 		}
 
 /*
