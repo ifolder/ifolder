@@ -14,7 +14,7 @@ DIST_SUBDIRS = $(SUBDIRS)
 endif
 
 
-EXTRA_DIST = ifdata simias-snakeoil.keys
+EXTRA_DIST = ifdata simias-snakeoil.keys SqliteProvider
 
 install-exec-local:
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
