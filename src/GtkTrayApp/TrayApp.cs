@@ -28,6 +28,7 @@ using System.Collections;
 using Simias;
 using Simias.Sync;
 using System.Diagnostics;
+using System.Threading;
 
 using Gtk;
 using Gdk;
@@ -38,129 +39,159 @@ using Egg;
 
 namespace Novell.iFolder
 {
+	public enum ServiceStates : uint
+	{
+		stopped = 0x0001,
+		started = 0x0002,
+		starting = 0x0003,
+		stopping = 0x0004
+	}
+
+
 	public class TrayApplication 
 	{
 		//private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(TrayApplication));
 		
 		static Gtk.Image gAppIcon;
 		//static Gdk.PixbufAnimation gSyncAnimation;
-		static Gdk.Pixbuf gNifPixbuf;
+		static Gdk.Pixbuf ifNormalPixbuf;
+		static Gdk.Pixbuf ifStartingPixbuf;
+		static Gdk.Pixbuf ifStoppingPixbuf;
 		static Gtk.EventBox eBox;
 		static TrayIcon tIcon;
-//		static GtkTraceWindow twin;
+		static Configuration conf;
 		static Simias.Service.Manager sManager = null;
-//		static Gtk.ThreadNotify mainThreadNotify;
-//		static SyncManagerStates syncState;
+		static Gtk.ThreadNotify ServicesStateNotify;
+		static ServiceStates serviceState;
+		static Mutex TrayMutex;
 
 		public static void Main (string[] args)
 		{
 			Application.Init();
 
+			serviceState = ServiceStates.stopped;
+			TrayMutex = new Mutex();
+
 			// This is my huge try catch block to catch any exceptions
 			// that are not caught
-
 			try
 			{
-			Configuration conf = new Configuration();
 
-            SimiasLogManager.Configure(conf);
+				tIcon = new TrayIcon("iFolder");
 
-			SyncProperties props = new SyncProperties(conf);
-			props.LogicFactory = typeof(SynkerA);
+				eBox = new EventBox();
 
-			tIcon = new TrayIcon("iFolder");
+				eBox.ButtonPressEvent += 
+					new ButtonPressEventHandler(trayapp_clicked);
 
-			eBox = new EventBox();
+				ifNormalPixbuf = new Pixbuf(Util.ImagesPath("ifolder.png"));
+				ifStartingPixbuf = 
+					new Pixbuf(Util.ImagesPath("ifolder-startup.png"));
+				ifStoppingPixbuf = 
+					new Pixbuf(Util.ImagesPath("ifolder-shutdown.png"));
 
-			eBox.ButtonPressEvent += 
-				new ButtonPressEventHandler(trayapp_clicked);
-			gNifPixbuf = new Pixbuf(Util.ImagesPath("ifolder.png"));
+				gAppIcon = new Gtk.Image(ifStartingPixbuf);
+	
+				//gSyncAnimation = new Gdk.PixbufAnimation("ifolder.gif");
 
-			gAppIcon = new Gtk.Image(gNifPixbuf);
+				eBox.Add(gAppIcon);
 
-			//gSyncAnimation = new Gdk.PixbufAnimation("ifolder.gif");
+				tIcon.Add(eBox);
 
-			eBox.Add(gAppIcon);
+				tIcon.ShowAll();	
 
-			tIcon.Add(eBox);
+				conf = new Configuration();
 
-			tIcon.ShowAll();
+				sManager = new Simias.Service.Manager(conf);
 
-			sManager = new Simias.Service.Manager(conf);
-			sManager.StartServices();
-			sManager.WaitForServicesStarted();
+				ServicesStateNotify = 
+				new Gtk.ThreadNotify(new Gtk.ReadyEvent(ServiceStateChange));
 
-			//			syncState = SyncManagerStates.Idle;
+				System.Threading.Thread servicesThread =
+					new System.Threading.Thread(new ThreadStart(StartServices));
 
-			//			mainThreadNotify =
-			//				new Gtk.ThreadNotify(new Gtk.ReadyEvent(ChangeState));
+				servicesThread.Start();
 
-//			twin = new GtkTraceWindow();
-
-			Console.WriteLine("iFolder is now running.");
-			Application.Run();
+				Application.Run();
 			}
 			catch(Exception bigException)
 			{
 				if(sManager != null)
 					sManager.StopServices();
-			//			syncManager.Stop();
 
 				CrashReport cr = new CrashReport();
 				cr.CrashText = bigException.ToString();
-//				cp.TransientFor = (Gtk.Window)GetWidget().Toplevel;
 				cr.Run();
 				sManager.WaitForServicesStopped();
 				Application.Quit();
 			}
 		}
 
+		static private void SetServiceState(ServiceStates state)
+		{
+			lock(TrayMutex)
+			{
+				serviceState = state;
+			}
+		}
 
+		static private ServiceStates GetServiceState()
+		{
+			lock(TrayMutex)
+			{
+				return serviceState;
+			}
+		}
 
+		static private void StartServices()
+		{
+			SetServiceState(ServiceStates.starting);
 
-		/*
-		   static void ChangeState()
-		   {
-		   lock(syncManager)
-		   {
-		   switch(syncState)
-		   {
-		   case SyncManagerStates.Active:
-		   {		
-		   gAppIcon.FromAnimation = gSyncAnimation;
-		   Console.WriteLine("SyncManager is Active");
-		   break;
-		   }
-		   case SyncManagerStates.Syncing:
-		   {
-		   gAppIcon.FromAnimation = gSyncAnimation;
-		   Console.WriteLine("SyncManager is Syncing");
-		   break;
-		   }
-		   default:
-		   {
-		   gAppIcon.Pixbuf = gNifPixbuf;
-		   Console.WriteLine("SyncManager is Idle");
-		   break;
-		   }
-		   }
-		   }
-		   }
+			SimiasLogManager.Configure(conf);
 
+			SyncProperties props = new SyncProperties(conf);
+			props.LogicFactory = typeof(SynkerA);
 
+			sManager.StartServices();
+			sManager.WaitForServicesStarted();
 
+			SetServiceState(ServiceStates.started);
+			ServicesStateNotify.WakeupMain();
+		}
 
-		   private static void syncManager_ChangedState(SyncManagerStates state)
-		   {
-		   lock(syncManager)
-		   {
-		   syncState = state;	
-		   mainThreadNotify.WakeupMain();
-		   }
-		   }
-		 */
+		static private void StopServices()
+		{
+			sManager.WaitForServicesStarted();
 
+			SetServiceState(ServiceStates.stopping);
 
+			sManager.StopServices();
+			sManager.WaitForServicesStopped();
+
+			SetServiceState(ServiceStates.stopped);
+			ServicesStateNotify.WakeupMain();
+		}
+
+		static void ServiceStateChange()
+		{
+			ServiceStates curState = GetServiceState();
+			switch(curState)
+			{
+				case ServiceStates.starting:
+					gAppIcon.Pixbuf = ifStartingPixbuf;
+					break;
+				default:
+				case ServiceStates.started:
+					gAppIcon.Pixbuf = ifNormalPixbuf;
+					break;
+				case ServiceStates.stopping:
+					gAppIcon.Pixbuf = ifStoppingPixbuf;
+					break;
+				case ServiceStates.stopped:
+					Application.Quit();
+					break;
+			}
+		}
 
 		static void trayapp_clicked(object obj, ButtonPressEventArgs args)
 		{
@@ -192,10 +223,6 @@ namespace Novell.iFolder
 			trayMenu.Append (ifolder_browser_item);
 			ifolder_browser_item.Activated += 
 					new EventHandler(show_ifolder_browser);
-
-//			MenuItem browser_item = new MenuItem ("File Browser");
-//			trayMenu.Append (browser_item);
-//			browser_item.Activated += new EventHandler(show_browser);
 
 			MenuItem colBrowser_item = 
 					new MenuItem ("Collection Browser");
@@ -243,14 +270,29 @@ namespace Novell.iFolder
 
 		static void quit_ifolder(object o, EventArgs args)
 		{
-			sManager.StopServices();
-			sManager.WaitForServicesStopped();
-			Application.Quit();
+			ServiceStates curState = GetServiceState();
+			if(curState == ServiceStates.stopping)
+			{
+				System.Environment.Exit(1);
+			}
+			else
+			{
+				SetServiceState(ServiceStates.stopping);
+				ServiceStateChange();
+
+				System.Threading.Thread stopThread =
+					new System.Threading.Thread(new ThreadStart(StopServices));
+
+				stopThread.Start();
+			}
 		}
 
 		static void show_properties(object o, EventArgs args)
 		{
-			Console.WriteLine("Show the Properties");
+			iFolderProperties propDialog;
+
+			propDialog = new iFolderProperties();
+			propDialog.Run();
 		}
 
 		static void show_ifolder_browser(object o, EventArgs args)
@@ -260,14 +302,6 @@ namespace Novell.iFolder
 			browser = new iFolderBrowser();
 			browser.ShowAll();
 		}
-
-//		static void show_browser(object o, EventArgs args)
-//		{
-//			FileBrowser browser;
-
-//			browser = new FileBrowser();
-//			browser.ShowAll();
-//		}
 
 		static void show_rbbrowser(object o, EventArgs args)
 		{
