@@ -664,8 +664,8 @@ namespace Simias.Storage.Provider.Sqlite
 			command.CommandText = "PRAGMA cache_size = 10000";
 			command.ExecuteNonQuery();
 
-			command.CommandText = "PRAGMA synchronous = OFF";
-			command.ExecuteNonQuery();
+			//command.CommandText = "PRAGMA synchronous = OFF";
+			//command.ExecuteNonQuery();
 		}
 
 		#endregion

@@ -125,53 +125,56 @@ namespace Simias.Service
 			ServiceCtl	svcCtl = msg.service;
 			try
 			{
-				switch (msg.MajorMessage)
+				lock (this)
 				{
-					case MessageCode.Start:
-						if (svcCtl.State == State.Stopped && svcCtl.Enabled)
-						{
-							svcCtl.Start();
-							svcCtl.state = State.Running;
-							logger.Info("\"{0}\" service started.", svcCtl.Name);
-						}
-						break;
-					case MessageCode.Stop:
-						if (svcCtl.state == State.Running || svcCtl.state == State.Paused)
-						{
-							svcCtl.Stop();
-							svcCtl.state = State.Stopped;
-							logger.Info("\"{0}\" service stopped.", svcCtl.Name);
-						}
-						break;
-					case MessageCode.Pause:
-						if (svcCtl.state == State.Running)
-						{
-							svcCtl.Pause();
-							svcCtl.state = State.Paused;
-							logger.Info("\"{0}\" service Paused.", svcCtl.Name);
-						}
-						break;
-					case MessageCode.Resume:
-						if (svcCtl.state == State.Paused)
-						{
-							svcCtl.Resume();
-							svcCtl.state = State.Running;
-							logger.Info("\"{0}\" service resumed.", svcCtl.Name);
-						}
-						break;
-					case MessageCode.Custom:
-						svcCtl.Custom(msg.CustomMessage, msg.Data);
-						break;
-					case MessageCode.StartComplete:
-						servicesStarted.Set();
-						servicesStopped.Reset();
-						logger.Info("Services started.");
-						break;
-					case MessageCode.StopComplete:
-						servicesStopped.Set();
-						servicesStarted.Reset();
-						logger.Info("Services stopped.");
-						break;
+					switch (msg.MajorMessage)
+					{
+						case MessageCode.Start:
+							if (svcCtl.State == State.Stopped && svcCtl.Enabled)
+							{
+								svcCtl.Start();
+								svcCtl.state = State.Running;
+								logger.Info("\"{0}\" service started.", svcCtl.Name);
+							}
+							break;
+						case MessageCode.Stop:
+							if (svcCtl.state == State.Running || svcCtl.state == State.Paused)
+							{
+								svcCtl.Stop();
+								svcCtl.state = State.Stopped;
+								logger.Info("\"{0}\" service stopped.", svcCtl.Name);
+							}
+							break;
+						case MessageCode.Pause:
+							if (svcCtl.state == State.Running)
+							{
+								svcCtl.Pause();
+								svcCtl.state = State.Paused;
+								logger.Info("\"{0}\" service Paused.", svcCtl.Name);
+							}
+							break;
+						case MessageCode.Resume:
+							if (svcCtl.state == State.Paused)
+							{
+								svcCtl.Resume();
+								svcCtl.state = State.Running;
+								logger.Info("\"{0}\" service resumed.", svcCtl.Name);
+							}
+							break;
+						case MessageCode.Custom:
+							svcCtl.Custom(msg.CustomMessage, msg.Data);
+							break;
+						case MessageCode.StartComplete:
+							servicesStarted.Set();
+							servicesStopped.Reset();
+							logger.Info("Services started.");
+							break;
+						case MessageCode.StopComplete:
+							servicesStopped.Set();
+							servicesStarted.Reset();
+							logger.Info("Services stopped.");
+							break;
+					}
 				}
 			}
 			catch (Exception ex)
@@ -304,8 +307,9 @@ namespace Simias.Service
 		{
 			lock (this)
 			{
-				foreach (ServiceCtl svc in this)
+				for (int i = serviceList.Count; i > 0; --i)
 				{
+					ServiceCtl svc = (ServiceCtl)serviceList[i-1];
 					postMessage(new StopMessage(svc));
 				}
 				postMessage(new StopComplete());
