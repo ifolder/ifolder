@@ -1,6 +1,8 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH):$(DESTDIR)$(libdir)
 
+SUBDIRS = libsimias-gaim
+
 GaimDomain_CSFILES = $(srcdir)/GaimService.cs $(srcdir)/GaimDomain.cs $(srcdir)/GaimDomainInfo.cs $(srcdir)/GaimDomainService.asmx.cs
 GaimDomain_CSFILES_CSC := $(subst /,$(SEP),$(GaimDomain_CSFILES))
 GaimDomain_INCLUDES =
