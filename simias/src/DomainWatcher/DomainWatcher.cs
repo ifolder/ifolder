@@ -57,6 +57,8 @@ namespace Simias.DomainWatcher
 		private Thread			watcherThread = null;
 		private AutoResetEvent	stopEvent;
 		private Store			store;
+		private int				waitTime = ( 30 * 1000 );
+		private int				initialWait = ( 5 * 1000 );
 
 		/// <summary>
 		/// Constructor
@@ -134,11 +136,13 @@ namespace Simias.DomainWatcher
 		{
 			log.Debug("WatcherThread started");
 			bool firstTime = true;
-			this.started = true;
 			EventPublisher cEvent = new EventPublisher();
 
 			string userID;
 			string credentials;
+
+			// Let the caller know we're good to go
+			this.started = true;
 
 			do 
 			{
@@ -241,8 +245,6 @@ namespace Simias.DomainWatcher
 							}
 						}
 					}
-
-					firstTime = false;
 				}
 				catch(Exception e)
 				{
@@ -250,9 +252,10 @@ namespace Simias.DomainWatcher
 					log.Error(e.StackTrace);
 				}
 
-				stopEvent.WaitOne((30 * 1000), false);
+				stopEvent.WaitOne( ( firstTime == true ) ? initialWait : waitTime, false );
+				firstTime = false;
 
-			} while(this.stop == false);
+			} while( this.stop == false );
 
 			this.started = false;
 		}
