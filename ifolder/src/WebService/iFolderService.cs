@@ -558,63 +558,6 @@ namespace Novell.iFolder.Web
 			return (iFolderWeb[])list.ToArray(typeof(iFolderWeb));
 		}
 
-		/// <summary>
-		/// WebMethod to check if a domain is "active"
-		/// </summary>
-		/// <param name = "domainID">
-		/// The specified domain to check
-		/// </param>
-		/// <returns>
-		/// 0 success, !0 failed
-		/// </returns>
-		[WebMethod(Description="WebMethod to check if a specified domain is active")]
-		[SoapDocumentMethod]
-		public bool IsDomainActive(string domainID)
-		{
-			return( new DomainAgent().IsDomainActive( domainID ) );
-		}
-
-
-		/// <summary>
-		/// WebMethod to set a slave domain "active"
-		/// A Domain marked "active" will synchronize
-		/// ifolders, subscriptions etc. to the remote server
-		/// </summary>
-		/// <param name = "domainID">
-		/// The specified domain to mark active
-		/// </param>
-		/// <returns>
-		/// 0 success, !0 failed
-		/// </returns>
-		[WebMethod(Description="SetDomainActive - enables remote synchronization")]
-		[SoapDocumentMethod]
-		public int SetDomainActive(string domainID)
-		{
-			DomainAgent domainAgent = new DomainAgent();
-			domainAgent.SetDomainActive( domainID );
-			return(0);
-		}
-
-		/// <summary>
-		/// WebMethod to mark a slave domain "inactive"
-		/// Marking a domain inactive disables all synchronization
-		/// to the remote server (master).
-		/// </summary>
-		/// <param name = "domainID">
-		/// The specified domain to mark inactive
-		/// </param>
-		/// <returns>
-		/// 0 success, !0 failed
-		/// </returns>
-		[WebMethod(Description="SetDomainInactive - disables remote synchronization")]
-		[SoapDocumentMethod]
-		public int SetDomainInactive(string domainID)
-		{
-			DomainAgent domainAgent = new DomainAgent();
-			domainAgent.SetDomainInactive( domainID );
-			return(0);
-		}
-
 
 
 		/// <summary>
