@@ -368,7 +368,7 @@ namespace Simias.Sync
 		/// <returns></returns>
 		private IEnumerator BeginListChangedNodes(out bool contextValid)
 		{
-			log.Debug("BeginListChangedNodes Start");
+//			log.Debug("BeginListChangedNodes Start");
 
 			IEnumerator enumerator = null;
 			EventContext eventContext;
@@ -387,7 +387,7 @@ namespace Simias.Sync
 					{
 						enumerator = null;
 					}
-					log.Debug("BeginListChangedNodes End. Found {0} changed nodes.", changeList.Count);
+//					log.Debug("BeginListChangedNodes End. Found {0} changed nodes.", changeList.Count);
 					syncContext = eventContext.ToString();
 					contextValid = true;
 					getAllNodes = false;
@@ -404,7 +404,7 @@ namespace Simias.Sync
 			eventContext = logReader.GetEventContext();
 			if (eventContext != null)
 				syncContext = eventContext.ToString();
-			log.Debug("BeginListChangedNodes End");
+//			log.Debug("BeginListChangedNodes End");
 			logger.LogAccess("GetChanges", "-", collection.ID, "Error");
 			contextValid = false;
 			return null;

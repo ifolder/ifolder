@@ -65,8 +65,6 @@ namespace Simias
 		{
 			IDomainProvider provider = null;
 
-			log.Debug( "Searching for domain provider that claims {0} domain.", domainID );
-
 			lock ( typeof( DomainProvider ) )
 			{
 				// See if there is a provider mapping for this domain.
@@ -75,7 +73,6 @@ namespace Simias
 				{
 					// There is a domain mapping already set.
 					provider = registeredProviders[ idpName ] as IDomainProvider;
-					log.Debug( "Provider {0} is already registered for domain {1}", provider.Name, domainID );
 				}
 				else
 				{
@@ -85,7 +82,6 @@ namespace Simias
 						// See if the provider claims this domain.
 						if ( idp.OwnsDomain( domainID ) )
 						{
-							log.Debug( "Provider {0} claims domain {1}", idp.Name, domainID );
 							domainProviderTable.Add( domainID, idp.Name );
 							provider = idp;
 							break;
@@ -323,8 +319,6 @@ namespace Simias
 		{
 			Uri networkLocation = null;
 
-			log.Debug( "Resolving location for collection {0}.", collection.Name );
-
 			IDomainProvider idp = GetDomainProvider( collection.Domain );
 			if ( idp != null )
 			{
@@ -333,12 +327,10 @@ namespace Simias
 				if ( ( networkLocation == null ) && !collection.IsHosted )
 				{
 					// This is a new collection, resolve the location that it should be created.
-					log.Debug( "Collection {0} is new.", collection.Name );
 					networkLocation = idp.ResolveLocation( collection.Domain, collection.Owner.UserID, collection.ID );
 				}
 			}
 
-			log.Debug( "Location for collection {0} is {1}.", collection.Name, ( networkLocation != null ) ? networkLocation.ToString() : "not found" );
 			return networkLocation;
 		}
 
@@ -353,8 +345,6 @@ namespace Simias
 		{
 			Uri networkLocation = null;
 
-			log.Debug( "Resolving location for domain {0}.", domainID );
-
 			IDomainProvider idp = GetDomainProvider( domainID );
 			if ( idp != null )
 			{
@@ -362,7 +352,6 @@ namespace Simias
 				networkLocation = idp.ResolveLocation( domainID );
 			}
 
-			log.Debug( "Location for domain {0} is {1}.", domainID, ( networkLocation != null ) ? networkLocation.ToString() : "not found" );
 			return networkLocation;
 		}
 
@@ -377,8 +366,6 @@ namespace Simias
 		static public Uri ResolvePOBoxLocation( string domainID, string userID )
 		{
 			Uri networkLocation = null;
-
-			log.Debug( "Resolving location for POBox for user {0}.", userID );
 
 			IDomainProvider idp = GetDomainProvider( domainID );
 			if ( idp != null )
@@ -410,7 +397,6 @@ namespace Simias
 					// Is this mapping for the specified provider?
 					if ( domainProviderTable[ domainID ] as string == provider.Name )
 					{
-						log.Debug( "Removing mapping for domain {0}.", domainID );
 						domainProviderTable.Remove( domainID );
 					}
 				}
