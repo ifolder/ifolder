@@ -395,6 +395,8 @@ get_soap_url(bool reread_config)
 	if (err == SIMIAS_SUCCESS) {
 		sprintf(simias_domain_url, "%s/Simias.asmx", url);
 		free(url);
+		if (the_soap_url)
+			free(the_soap_url);
 		the_soap_url = strdup(simias_domain_url);
 		/* FIXME: Figure out who and when this should ever be freed */
 	} else {
