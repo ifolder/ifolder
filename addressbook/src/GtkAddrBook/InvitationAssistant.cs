@@ -408,9 +408,9 @@ namespace Novell.AddressBook.UI.gtk
 				subscription.SubscriptionState = SubscriptionStates.Replied;
 				subscription.SubscriptionDisposition = 
 						SubscriptionDispositions.Accepted;
-				Member member = pobox.GetCurrentMember();
-				subscription.FromName = member.Name;
-				subscription.FromIdentity = member.UserID;
+//				Member member = pobox.GetCurrentMember();
+//				subscription.FromName = member.Name;
+//				subscription.FromIdentity = member.UserID;
 				subscription.CollectionRoot = CollectionPathEntry.Text;
 				pobox.Commit(subscription);
 			}

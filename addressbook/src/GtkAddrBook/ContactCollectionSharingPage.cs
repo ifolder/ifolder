@@ -387,7 +387,7 @@ namespace Novell.AddressBook.UI.gtk
 				sub.SubscriptionRights = Access.Rights.ReadWrite;
 				sub.ToName = c.FN;
 				sub.ToAddress = c.EMail;
-				sub.FromIdentity = c.UserID;
+//				sub.FromIdentity = c.UserID;
 				pobox.AddMessage(sub);
 
 				SharingListHolder slh = new SharingListHolder(null, sub);
