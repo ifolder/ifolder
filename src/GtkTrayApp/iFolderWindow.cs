@@ -23,6 +23,7 @@
 
 
 using System;
+using System.Collections;
 using Gtk;
 
 namespace Novell.iFolder
@@ -79,6 +80,7 @@ namespace Novell.iFolder
 		private Gdk.Pixbuf			 ScaledPixbuf;
 
 		private iFolderSettings		ifSettings;
+		private Hashtable			curiFolders;
 
 
 		public iFolderSettings GlobalSettings
@@ -112,6 +114,7 @@ namespace Novell.iFolder
 				throw new ApplicationException("iFolderWebServices was null");
 			iFolderWS = ifws;
 			ifSettings = settings;
+			curiFolders = new Hashtable();
 			CreateWidgets();
 			RefreshWidgets();
 		}
@@ -1086,11 +1089,13 @@ namespace Novell.iFolder
 				return;
 			}
 
+			curiFolders.Clear();
 			iFolderTreeStore.Clear();
 
 			foreach(iFolder ifolder in iFolderArray)
 			{
-				iFolderTreeStore.AppendValues(ifolder);
+				TreeIter iter = iFolderTreeStore.AppendValues(ifolder);
+				curiFolders.Add(ifolder.ID, iter);
 			}
 		}
 
@@ -1523,7 +1528,11 @@ namespace Novell.iFolder
 					{
    		 				iFolder newiFolder = 
 							iFolderWS.CreateLocaliFolder(fs.Filename);
-						iFolderTreeStore.AppendValues(newiFolder);
+
+						TreeIter iter = 
+							iFolderTreeStore.AppendValues(newiFolder);
+						curiFolders.Add(newiFolder.ID, iter);
+
 
 
 						if(ifSettings.DisplayConfirmation)
@@ -1842,6 +1851,43 @@ namespace Novell.iFolder
 				RefreshMenuItem.Sensitive = true;
 				OniFolderSelectionChanged(o, args);
 			}
+		}
+
+
+
+
+		// update the data value in the iFolderTreeStore so the ifolder
+		// will switch to one that has conflicts
+		public void iFolderHasConflicts(iFolder ifolder)
+		{
+			if(curiFolders.ContainsKey(ifolder.ID))
+			{
+				TreeIter iter = (TreeIter)curiFolders[ifolder.ID];
+				iFolderTreeStore.SetValue(iter, 0, ifolder);
+			}
+
+			// TODO: let any property dialogs know that this iFolder
+			// has a conflict
+		}
+
+
+
+
+		public void NewiFolderAvailable(iFolder ifolder)
+		{
+			if(!curiFolders.ContainsKey(ifolder.ID))
+			{
+				TreeIter iter = iFolderTreeStore.AppendValues(ifolder);
+				curiFolders.Add(ifolder.ID, iter);
+			}
+		}
+
+
+
+
+		public void NewiFolderMember(iFolder ifolder, iFolderUser newuser)
+		{
+		
 		}
 
 	}
