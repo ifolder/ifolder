@@ -167,10 +167,7 @@ case $SIMIAS_OS in
 		GSOAP_PATH="$TOOLDIR/gsoap/macosx-2.7"
 		#StoreProviderAssembly="SqliteProvider.dll"
 		#StoreProviderType="Simias.Storage.Provider.Sqlite.SqliteProvider"
-    	bindir='${exec_prefix}'
-    	sbindir='${exec_prefix}'
     	libexecdir='${exec_prefix}'
-    	libdir='${exec_prefix}'
     ;;
     #
     # Linux-specific configuration
@@ -207,10 +204,7 @@ case $SIMIAS_OS in
 		StoreProviderAssembly="Simias.dll"
 		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
 		GSOAP_PATH="$TOOLDIR/gsoap/linux-2.7"
-    	bindir='${exec_prefix}'
-    	sbindir='${exec_prefix}'
     	libexecdir='${exec_prefix}'
-    	libdir='${exec_prefix}'
     ;;
     #
     # Windows-specific configuration
@@ -279,10 +273,10 @@ case $SIMIAS_OS in
         #
     	# Override Linux-like directory structure
         #
-    	bindir='$(shell cygpath --mixed ${exec_prefix}'
-    	sbindir='$(shell cygpath --mixed ${exec_prefix}'
-    	libexecdir='$(shell cygpath --mixed ${exec_prefix}'
-    	libdir='$(shell cygpath --mixed ${exec_prefix}'
+    	bindir='$(shell cygpath --mixed ${exec_prefix})'
+    	sbindir='$(shell cygpath --mixed ${exec_prefix})'
+    	libexecdir='$(shell cygpath --mixed ${exec_prefix})'
+    	libdir='$(shell cygpath --mixed ${exec_prefix})'
 		StoreProviderAssembly="Simias.dll"
 		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
     ;;
