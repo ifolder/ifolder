@@ -394,34 +394,14 @@ internal class SyncOps
 						// Make sure the events are not for local only changes.
 						if (((NodeEventArgs.EventFlags)rec.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0)
 						{
-							if (onServer)
-							{
-								NodeStamp stamp = new NodeStamp();
-								stamp.localIncarn = rec.SlaveRev;
-								stamp.masterIncarn = rec.MasterRev;
-								stamp.id = rec.EventID;
-								stamp.changeType = rec.Operation;
-								stamp.streamsSize = rec.FileLength;
-								stampList.Add(stamp);
-							}
-							else
-							{
-								Node node = collection.GetNodeByID(rec.EventID);
-								if (node != null)
-								{
-									NodeStamp stamp = OutgoingNode.GetOutNodeStamp(collection, ref node, rec.Operation);
-									stampList.Add(stamp);
-								}
-								else if (rec.Operation == ChangeLogRecord.ChangeLogOp.Deleted)
-								{
-									NodeStamp stamp = new NodeStamp();
-									stamp.localIncarn = UInt64.MaxValue;
-									stamp.masterIncarn = 0;
-									stamp.id = rec.EventID;
-									stamp.changeType = rec.Operation;
-									stampList.Add(stamp);
-								}
-							}
+							NodeStamp stamp = new NodeStamp();
+							stamp.localIncarn = rec.SlaveRev;
+							stamp.masterIncarn = rec.MasterRev;
+							stamp.id = rec.EventID;
+							stamp.changeType = rec.Operation;
+							stamp.streamsSize = rec.FileLength;
+							stamp.isDir = rec.Type == NodeTypes.NodeTypeEnum.DirNode ? true : false;
+							stampList.Add(stamp);
 						}
 					}
 				}
