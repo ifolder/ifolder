@@ -286,12 +286,6 @@ public class SyncService
 			si.Access = rights;
 			log.Info("Starting Sync of {0} for {1} rights : {2}.", collection, member.Name, rights);
 		}
-		else if (userID == collection.ProxyUserID)
-		{
-			rights = Access.Rights.Admin;
-			si.Access = rights;
-			log.Info("Sync session starting for {0}", userID);
-		}
 
 		switch (rights)
 		{

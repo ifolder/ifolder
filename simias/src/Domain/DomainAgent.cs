@@ -300,17 +300,16 @@ namespace Simias.Domain
 			DomainService domainService = new DomainService();
 			domainService.Url = host + "/DomainService.asmx";
 
-			// get domain info
-			DomainInfo domainInfo = domainService.GetDomainInfo();
-
 			// provision user
 			ProvisionInfo provisionInfo = domainService.ProvisionUser(user, password);
 			if (provisionInfo == null)
 				throw new ApplicationException("User does not exist on server.");
 
-			Store store = Store.GetStore();
+			// get domain info
+			DomainInfo domainInfo = domainService.GetDomainInfo(provisionInfo.UserID);
 
 			// create domain node
+			Store store = Store.GetStore();
 			Storage.Domain domain = store.AddDomainIdentity(provisionInfo.UserID,
 				domainInfo.Name, domainInfo.ID, domainInfo.Description);
 
@@ -324,14 +323,14 @@ namespace Simias.Domain
 				if (store.GetCollectionByID(domainInfo.RosterID) == null)
 				{
 					// create roster proxy
-					CreateRosterProxy(store, domain, domainInfo.RosterID, uhost);
+					CreateRosterProxy(store, domain, provisionInfo.UserID, domainInfo, uhost);
 					log.Debug("Creating Roster Proxy: {0}", domainInfo.RosterName);
 				}
 
 				if (store.GetCollectionByID(provisionInfo.POBoxID) == null)
 				{
 					// create PO Box proxy
-					CreatePOBoxProxy(store, domainInfo.ID, provisionInfo.POBoxID, provisionInfo.POBoxName, uhost);
+					CreatePOBoxProxy(store, domainInfo.ID, provisionInfo, uhost);
 					log.Debug("Creating PO Box Proxy: {0}", provisionInfo.POBoxName);
 				}
 
@@ -347,10 +346,11 @@ namespace Simias.Domain
 			}
 		}
 
-		private void CreateRosterProxy(Store store, Storage.Domain domain, string id, Uri host)
+		private void CreateRosterProxy(Store store, Storage.Domain domain, string userID, DomainInfo info, Uri host)
 		{
 			// Create a new roster
-			Roster roster = new Roster(store, id, domain);
+			Roster roster = new Roster(store, info.RosterID, domain);
+			roster.Proxy = true;
 			
 			// sync information
 			Property p = new Property(SyncCollection.RolePropertyName, SyncCollectionRoles.Slave);
@@ -362,15 +362,20 @@ namespace Simias.Domain
 			p.LocalProperty = true;
 			roster.Properties.AddProperty(p);
 
+			// Create roster member.
+			Access.Rights rights = ( Access.Rights )Enum.Parse( typeof( Access.Rights ), info.MemberRights );
+			Member member = new Member( info.MemberNodeName, info.MemberNodeID, userID, rights, null );
+			member.Proxy = true;
+
 			// commit
-			roster.Proxy = true;
-			roster.Commit();
+			roster.Commit( new Node[] { roster, member } );
 		}
 
-		private void CreatePOBoxProxy(Store store, string domain, string id, string name, Uri host)
+		private void CreatePOBoxProxy(Store store, string domainID, ProvisionInfo info, Uri host)
 		{
 			// Create a new POBox
-			PostOffice.POBox poBox = new PostOffice.POBox(store, name, id, domain);
+			PostOffice.POBox poBox = new PostOffice.POBox(store, info.POBoxName, info.POBoxID, domainID);
+			poBox.Proxy = true;
 			
 			// sync information
 			Property p = new Property(SyncCollection.RolePropertyName, SyncCollectionRoles.Slave);
@@ -381,10 +386,14 @@ namespace Simias.Domain
 			p = new Property(SyncCollection.MasterUrlPropertyName, host);
 			p.LocalProperty = true;
 			poBox.Properties.AddProperty(p);
+
+			// Create member.
+			Access.Rights rights = ( Access.Rights )Enum.Parse( typeof( Access.Rights ), info.MemberRights );
+			Member member = new Member( info.MemberNodeName, info.MemberNodeID, info.UserID, rights, null );
+			member.Proxy = true;
 			
 			// commit
-			poBox.Proxy = true;
-			poBox.Commit();
+			poBox.Commit( new Node[] { poBox, member } );
 		}
 
 		/// <summary>
@@ -407,8 +416,10 @@ namespace Simias.Domain
 				rootName = rootNode.Name;
 			}
 
+			Member member = collection.Owner;
+
 			string uriString = domainService.CreateMaster(collection.ID, collection.Name,
-				rootID, rootName, collection.Owner.UserID);
+				rootID, rootName, member.UserID, member.Name, member.ID, member.Rights.ToString() );
 
 			if (uriString == null)
 				throw new ApplicationException("Unable to create remote master collection.");

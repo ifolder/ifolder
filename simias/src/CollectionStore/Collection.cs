@@ -114,20 +114,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets or sets the user ID for the created proxy.
-		/// </summary>
-		public string ProxyUserID
-		{
-			get 
-			{
-				Property p = properties.GetSingleProperty( PropertyTags.ProxyUserID );
-				return ( p != null ) ? p.Value as String : null;
-			}
-
-			set { properties.ModifyNodeProperty( PropertyTags.ProxyUserID, value ); }
-		}
-
-		/// <summary>
 		/// Gets or sets the sealed state of a collection.
 		/// </summary>
 		public bool Sealed

@@ -206,7 +206,7 @@ namespace Simias.Storage
 		/// </summary>
 		public string StorePath
 		{
-			get { return storageProvider.StoreDirectory.LocalPath; }
+			get { return Config.StorePath; }
 		}
 		#endregion
 
