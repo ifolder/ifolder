@@ -65,7 +65,7 @@ namespace Novell.iFolder.Web
 			Store store = Store.GetStore();
 
 			Roster roster = 
-                store.GetDomainForUser(UserID).GetRoster(store);
+                store.GetDomainForUser(UserID).Roster;
 			if(roster == null)
 				throw new Exception("Unable to access user roster");
 
@@ -126,7 +126,7 @@ namespace Novell.iFolder.Web
 			Store store = Store.GetStore();
 
 			Roster roster = 
-					store.GetDomainForUser(UserID).GetRoster(store);
+					store.GetDomainForUser(UserID).Roster;
 			if(roster == null)
 				throw new Exception("Unable to access user roster");
 

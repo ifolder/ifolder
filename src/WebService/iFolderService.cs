@@ -883,7 +883,7 @@ namespace Novell.iFolder.Web
 			Store store = Store.GetStore();
 
 			Roster roster = 
-				store.GetDomain(DomainID).GetRoster(store);
+				store.GetRoster(DomainID);
 
 			if(roster == null)
 				throw new Exception("Unable to access user roster");
@@ -936,8 +936,7 @@ namespace Novell.iFolder.Web
 
 			Store store = Store.GetStore();
 
-			Roster roster = 
-				store.GetDomain(DomainID).GetRoster(store);
+			Roster roster = store.GetRoster(DomainID);
 
 			if(roster == null)
 				throw new Exception("Unable to access user roster");
@@ -1022,7 +1021,7 @@ namespace Novell.iFolder.Web
 			Store store = Store.GetStore();
 
 			Roster roster = 
-					store.GetDomainForUser(UserID).GetRoster(store);
+					store.GetDomainForUser(UserID).Roster;
 
 			if(roster == null)
 				throw new Exception("Unable to access user roster");
@@ -1126,7 +1125,7 @@ namespace Novell.iFolder.Web
 				throw new Exception("This iFolder is a Workgroup iFolder.  InviteUser will only work for an Enterprise iFolder.");
 
 			Roster roster = 
-				store.GetDomain(col.Domain).GetRoster(store);
+				store.GetRoster(col.Domain);
 
 			if(roster == null)
 				throw new Exception("Unable to access ifolder users");
@@ -1499,12 +1498,12 @@ namespace Novell.iFolder.Web
 			if(domain == null)
 				throw new Exception("ERROR:Invalid Domain ID");
 
-			Roster roster = domain.GetRoster(store);
+			Roster roster = domain.Roster;
 			if(domain == null)
 				throw new Exception("ERROR:Unable to obtain Roster");
 
 			Member member = roster.GetCurrentMember();
-			if(domain == null)
+			if(member == null)
 				throw new Exception("ERROR:Unable locate user");
 
 			DomainService domainSvc = new DomainService();
@@ -1840,7 +1839,7 @@ namespace Novell.iFolder.Web
 			Store store = Store.GetStore();
 
 			Roster roster = 
-                store.GetDomainForUser(UserID).GetRoster(store);
+                store.GetDomainForUser(UserID).Roster;
 			if(roster == null)
 				throw new Exception("Unable to access user roster");
 
