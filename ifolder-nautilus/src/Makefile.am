@@ -6,7 +6,7 @@ iFolderNautilus_CSFILES_CSC := $(subst /,$(SEP),$(iFolderNautilus_CSFILES))
 iFolderNautilus_INCLUDES = 
 iFolderNautilus_RESOURCES =
 iFolderNautilus_FLAGS = $(CSC_LIBFLAG)
-iFolderNautilus_LIBS = System.dll System.Drawing.dll System.Data.dll glib-sharp.dll gtk-sharp.dll gnome-sharp.dll glade-sharp.dll gdk-sharp.dll nautilus-sharp.dll $(SYSTEM_XML) Novell.iFolder.dll Novell.AddressBook.UI.gtk.dll Simias.dll Novell.iFolder.UI.gtk.dll
+iFolderNautilus_LIBS = System.dll System.Drawing.dll System.Data.dll nautilus-sharp.dll $(SYSTEM_XML) Novell.iFolder.dll Novell.AddressBook.UI.gtk.dll Simias.dll Novell.iFolder.UI.gtk.dll
 iFolderNautilus_LIBPATH = 
 
 INSTALL_FILES =
@@ -18,7 +18,7 @@ EXTRA_DIST = $(iFolderNautilus_CSFILES) $(DATA_FILES) $(INSTALL_FILES) emblem-if
 all: iFolderNautilus.dll
 
 iFolderNautilus.dll: $(iFolderNautilus_CSFILES) $(iFolderNautilus_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_LIBS) $(IFOLDER_LIBS) $(NAUTILUS_MONO_LIBS) $(iFolderNautilus_FLAGS) $(iFolderNautilus_LIBS:%=/r:%) $(iFolderNautilus_LIBPATH:%=/lib:%) $(iFolderNautilus_RESOURCES:%=$(ICON_FLAG)%) $(iFolderNautilus_CSFILES_CSC) /doc:iFolderNautilus.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(GTK_SHARP_LIBS) $(SIMIAS_LIBS) $(IFOLDER_LIBS) $(NAUTILUS_MONO_LIBS) $(iFolderNautilus_FLAGS) $(iFolderNautilus_LIBS:%=/r:%) $(iFolderNautilus_LIBPATH:%=/lib:%) $(iFolderNautilus_RESOURCES:%=$(ICON_FLAG)%) $(iFolderNautilus_CSFILES_CSC) /doc:iFolderNautilus.doc.xml
 
 install-exec-local: iFolderNautilus.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/nautilus/extensions-1.0/mono

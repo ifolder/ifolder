@@ -26,7 +26,6 @@ using System.Drawing;
 
 using Gtk;
 using Gdk;
-using Gnome;
 using Glade;
 using GtkSharp;
 using GLib;
