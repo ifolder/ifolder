@@ -34,9 +34,9 @@ using Simias.Storage;
 namespace Simias.Mini
 {
 	/// <summary>
-	/// Mini iFolder
+	/// Mini Share
 	/// </summary>
-	class MiniFolder
+	class MiniShare
 	{
 		private static readonly string collectionId =
 			"a10db843-6048-4343-bedd-d2d807dfa358";
@@ -59,13 +59,13 @@ namespace Simias.Mini
 
 			// title
 			Console.WriteLine();
-			Console.WriteLine("MiniFolder");
+			Console.WriteLine("MiniShare");
 			Console.WriteLine();
 
 			// check arguments
 			if (args.Length > 1)
 			{
-				Console.WriteLine("USAGE: MiniFolder.exe [MasterHost]");
+				Console.WriteLine("USAGE: MiniShare.exe [MasterHost]");
 				return -1;
 			}
 

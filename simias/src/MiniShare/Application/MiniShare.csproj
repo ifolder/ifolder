@@ -9,7 +9,7 @@
             <Settings
                 ApplicationIcon = "App.ico"
                 AssemblyKeyContainerName = ""
-                AssemblyName = "MiniFolder"
+                AssemblyName = "MiniShare"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -18,7 +18,7 @@
                 OutputType = "Exe"
                 PreBuildEvent = ""
                 PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
-                RootNamespace = "Novell.iFolder.Mini"
+                RootNamespace = "Simias.Mini"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -128,7 +128,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "MiniFolder.cs"
+                    RelPath = "MiniShare.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -9,7 +9,7 @@
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "MiniFolderTests"
+                AssemblyName = "MiniShareTests"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -18,7 +18,7 @@
                 OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
-                RootNamespace = "Novell.iFolder.Mini.Tests"
+                RootNamespace = "Simias.Mini.Tests"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -119,7 +119,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "MiniFolderTests.cs"
+                    RelPath = "MiniShareTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -192,20 +192,32 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingSnifferTests", "src
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniFolder", "src\MiniFolder\Application\MiniFolder.csproj", "{B4195A1D-0450-4DF0-89BE-CA7A2C9D69E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniShare", "src\MiniShare\Application\MiniShare.csproj", "{B4195A1D-0450-4DF0-89BE-CA7A2C9D69E9}"
 	ProjectSection(ProjectDependencies) = postProject
+		{537792FC-9007-416C-B6E7-444C1ED783F2} = {537792FC-9007-416C-B6E7-444C1ED783F2}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage", "src\Storage\Storage.csproj", "{1614B641-3E27-43CD-B611-A0EE2B03EDFE}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniFolderTests", "src\MiniFolder\Tests\MiniFolderTests.csproj", "{3BFF1544-260B-495B-9EA1-522ED7D71DEC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniShareTests", "src\MiniShare\Tests\MiniShareTests.csproj", "{3BFF1544-260B-495B-9EA1-522ED7D71DEC}"
 	ProjectSection(ProjectDependencies) = postProject
+		{B4195A1D-0450-4DF0-89BE-CA7A2C9D69E9} = {B4195A1D-0450-4DF0-89BE-CA7A2C9D69E9}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcceptanceTests", "src\AcceptanceTests\AcceptanceTests.csproj", "{7B6A4971-F7AE-4ED6-8925-564AA9E0270E}"
 	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniStore", "src\MiniShare\Service\MiniStore.csproj", "{537792FC-9007-416C-B6E7-444C1ED783F2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9B517041-29A3-4817-BA8E-02ECF03477C4} = {9B517041-29A3-4817-BA8E-02ECF03477C4}
+		{7C3A9242-E1EF-43F2-8297-4C1C98892946} = {7C3A9242-E1EF-43F2-8297-4C1C98892946}
+		{CB7ACE79-DE8D-4A5C-A8EF-4606199B225D} = {CB7ACE79-DE8D-4A5C-A8EF-4606199B225D}
+		{2E918CCD-6919-4453-9BDE-1FF22657CAB5} = {2E918CCD-6919-4453-9BDE-1FF22657CAB5}
+		{9196E4EC-9EBD-4398-AE6B-B4D98F8502C3} = {9196E4EC-9EBD-4398-AE6B-B4D98F8502C3}
+		{0C57D8FE-56E5-4DBE-92F4-F58D205CAA26} = {0C57D8FE-56E5-4DBE-92F4-F58D205CAA26}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceTests", "src\UserService\ServiceTests\ServiceTests.csproj", "{1B08B496-14CB-4361-AE3B-C2384D62B1D0}"
@@ -410,6 +422,10 @@ Global
 		{7B6A4971-F7AE-4ED6-8925-564AA9E0270E}.Debug.Build.0 = Debug|.NET
 		{7B6A4971-F7AE-4ED6-8925-564AA9E0270E}.Release.ActiveCfg = Release|.NET
 		{7B6A4971-F7AE-4ED6-8925-564AA9E0270E}.Release.Build.0 = Release|.NET
+		{537792FC-9007-416C-B6E7-444C1ED783F2}.Debug.ActiveCfg = Debug|.NET
+		{537792FC-9007-416C-B6E7-444C1ED783F2}.Debug.Build.0 = Debug|.NET
+		{537792FC-9007-416C-B6E7-444C1ED783F2}.Release.ActiveCfg = Release|.NET
+		{537792FC-9007-416C-B6E7-444C1ED783F2}.Release.Build.0 = Release|.NET
 		{1B08B496-14CB-4361-AE3B-C2384D62B1D0}.Debug.ActiveCfg = Debug|.NET
 		{1B08B496-14CB-4361-AE3B-C2384D62B1D0}.Debug.Build.0 = Debug|.NET
 		{1B08B496-14CB-4361-AE3B-C2384D62B1D0}.Release.ActiveCfg = Release|.NET

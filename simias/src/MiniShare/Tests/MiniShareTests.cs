@@ -25,19 +25,17 @@ using System;
 
 using NUnit.Framework;
 
-using Novell.iFolder.Mini;
-
-namespace Novell.iFolder.Mini.Tests
+namespace Simias.Mini.Tests
 {
 	/// <summary>
-	/// Mini Folder Tests
+	/// Mini Share Tests
 	/// </summary>
-	public class MiniFolderTests : Assertion
+	public class MiniShareTests : Assertion
 	{
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
-		public MiniFolderTests()
+		public MiniShareTests()
 		{
 		}
 	}

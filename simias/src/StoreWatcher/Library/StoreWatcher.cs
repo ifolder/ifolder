@@ -152,7 +152,7 @@ namespace Simias.Sync
 			{
 				try
 				{
-					MyTrace.WriteLine("Scanning the Store...");
+					MyTrace.WriteLine("Scanning the Store for Collections...");
 
 					Hashtable staleCollections = (Hashtable)collections.Clone();
 
@@ -164,7 +164,7 @@ namespace Simias.Sync
 
 						if (!collections.Contains(id))
 						{
-							MyTrace.WriteLine("Created Collection: {0} [{1}]",
+							MyTrace.WriteLine("Found Collection: {0} [{1}]",
 								name, id);
 
 							collections.Add(id, name);
@@ -183,7 +183,7 @@ namespace Simias.Sync
 					{
 						string name = (string)collections[id];
 
-						MyTrace.WriteLine("Deleted Collection: {0} [{1}]",
+						MyTrace.WriteLine("Lost Collection: {0} [{1}]",
 							name, id);
 
 						collections.Remove(id);
