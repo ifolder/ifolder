@@ -271,7 +271,7 @@ static iFolderData *sharedInstance = nil;
 	if(![self isiFolder:realID])
 	{
 		realID = [self getiFolderID:ifolderID];
-		if(![self isiFolder:realID])
+		if((realID == nil) || (![self isiFolder:realID]) )
 			return;
 		else
 		{
@@ -546,16 +546,31 @@ static iFolderData *sharedInstance = nil;
 {
 	[instanceLock lock];
 
-	iFolder *revertediFolder;
+	iFolder *revertediFolder = nil;
+
 	@try
 	{
-		revertediFolder = [ifolderService RevertiFolder:ifolderID];
-		[self _deliFolder:ifolderID];
+		if([self isiFolder:ifolderID])
+		{
+			// This is a real iFolder so revert it and get the invitaion ifolder
+			revertediFolder = [ifolderService RevertiFolder:ifolderID];
+			[self _deliFolder:ifolderID];
+		}
+		else
+		{
+			// This is not a real iFolder so get the invitation ifolder
+			NSString *realID = [self getiFolderID:ifolderID];
+			if(realID != nil)
+			{
+				revertediFolder = [self getiFolder:realID];
+			}
+		}
 
 		if( (revertediFolder != nil) && ([revertediFolder IsSubscription]) )
 		{
 			[ifolderService DeclineiFolderInvitation:[revertediFolder ID]
 												fromDomain:[revertediFolder DomainID]];
+			[self _deliFolder:[revertediFolder ID]];
 		}
 	}
 	@catch (NSException *e)
