@@ -12,8 +12,10 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 currentUsers = NSTableView; 
+                foundUsersController = NSArrayController; 
                 searchedUsers = NSTableView; 
                 userSearch = NSSearchField; 
+                usersController = NSArrayController; 
             }; 
             SUPERCLASS = NSObject; 
         }, 

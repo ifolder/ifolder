@@ -27,8 +27,8 @@
 				3E6D783207B098E2001DA76A,
 				3EB8C511079393B60082AA86,
 				3EB8C510079393B60082AA86,
-				3EEA9A4907B1D9C30015FCF4,
 				3EEA9A4A07B1D9C30015FCF4,
+				3EEA9A4907B1D9C30015FCF4,
 			);
 			isa = PBXGroup;
 			name = Controllers;
@@ -1028,9 +1028,9 @@
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
 			name = ifolderuser.png;
-			path = /Users/calvin/code/ifolder/ifolder/src/images/ifolderuser.png;
-			refType = 0;
-			sourceTree = "<absolute>";
+			path = ../images/ifolderuser.png;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		3EEA9A3507B1D3580015FCF4 = {
 			fileRef = 3EEA9A3407B1D3580015FCF4;
