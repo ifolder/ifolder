@@ -145,21 +145,6 @@ namespace Simias.Storage
 		}
 		#endregion
 
-		#region Private Methods
-		/// <summary>
-		/// Throws an exception if caller does not have read/write access to the collection.  If the node does not belong
-		/// to a collection, let the write go through.
-		/// </summary>
-		private void CheckForWriteAccess()
-		{
-			// Make sure that current user has write rights to this collection.
-			if ( !node.CollectionNode.IsAccessAllowed( Access.Rights.ReadWrite ) )
-			{
-				throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
-			}
-		}
-		#endregion
-
 		#region Internal Methods
 		/// <summary>
 		/// Adds a property to the existing property list.
@@ -626,7 +611,6 @@ namespace Simias.Storage
 			if ( !property.IsSystemProperty() )
 			{
 				// Make sure that current user has write rights to this collection.
-				CheckForWriteAccess();
 				AddNodeProperty( property );
 			}
 			else
@@ -811,9 +795,6 @@ namespace Simias.Storage
 		/// <param name="name">Name of property to delete.</param>
 		public void DeleteProperties( string name )
 		{
-			// Make sure that current user has write rights to this collection.
-			CheckForWriteAccess();
-
 			// Find all of the existing values.
 			MultiValuedList mvp = FindValues( name );
 			foreach ( Property p in mvp )
@@ -828,9 +809,6 @@ namespace Simias.Storage
 		/// <param name="name">Name of property to delete.</param>
 		public void DeleteSingleProperty( string name )
 		{
-			// Make sure that current user has write rights to this collection.
-			CheckForWriteAccess();
-
 			// Find the first existing value.
 			Property existingProperty = FindSingleValue( name );
 			if ( existingProperty != null )
@@ -887,8 +865,6 @@ namespace Simias.Storage
 		{
 			if ( !property.IsSystemProperty() )
 			{
-				// Make sure that current user has write rights to this collection.
-				CheckForWriteAccess();
 				ModifyNodeProperty( property );
 			}
 			else

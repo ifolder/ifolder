@@ -368,7 +368,6 @@ namespace Simias.Storage
 			set 
 			{ 
 				// Make sure the current user has write access to the collection.
-				CheckAccessControl( false );
 				SetPropertyAttribute( Property.NameAttr, value ); 
 			}
 		}
@@ -382,7 +381,6 @@ namespace Simias.Storage
 			set 
 			{ 
 				// Make sure the current user has write access to the collection.
-				CheckAccessControl( false );
 				SetPropertyAttribute( Property.TypeAttr, value.ToString() ); 
 			}
 		}
@@ -823,29 +821,6 @@ namespace Simias.Storage
 		#endregion
 
 		#region Private Methods
-		/// <summary>
-		/// Checks to make sure the current user has write access before allowing the property to be changed.
-		/// Also checks to make sure that system properties are not being set.
-		/// </summary>
-		/// <param name="validateProperty">If true the property is checked to see if it is a system property.</param>
-		private void CheckAccessControl( bool validateProperty )
-		{
-			if ( validateProperty && IsSystemProperty() )
-			{
-				throw new ApplicationException( "Cannot delete a system property" );
-			}
-
-			// Make sure the current user has write access to the collection.  If there is no collection object
-			// associated with this property, then allow the write.
-			if ( IsAssociatedProperty )
-			{
-				if ( !propertyList.CollectionNode.IsAccessAllowed( Access.Rights.ReadWrite ) )
-				{
-					throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
-				}
-			}
-		}
-
 		/// <summary>
 		/// Returns the syntax type from a C# object.
 		/// </summary>
@@ -1533,8 +1508,12 @@ namespace Simias.Storage
 		/// </summary>
 		public void Delete()
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			DeleteProperty();
 		}
 
@@ -1544,8 +1523,12 @@ namespace Simias.Storage
 		/// <param name="insertProperty">Property to insert.</param>
 		public void InsertAfter( Property insertProperty )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			InsertPropertyAfter( insertProperty );
 		}
 
@@ -1555,8 +1538,12 @@ namespace Simias.Storage
 		/// <param name="insertProperty">Property to insert.</param>
 		public void InsertBefore( Property insertProperty )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			InsertPropertyBefore( insertProperty );
 		}
 
@@ -1566,8 +1553,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">Property value to set.</param>
 		public void SetValue( Property propertyValue )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			SetPropertyValue( propertyValue );
 		}
 
@@ -1577,8 +1568,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">Property value to set.</param>
 		public void SetValue( object propertyValue )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			SetPropertyValue( propertyValue );
 		}
 
@@ -1588,8 +1583,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">string value to set in property.</param>
 		public void SetValue( string propertyValue )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			SetPropertyValue( propertyValue );
 		}
 
@@ -1599,8 +1598,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">sbyte value to set in property.</param>
 		public void SetValue( sbyte propertyValue )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			SetPropertyValue( propertyValue );
 		}
 
@@ -1610,8 +1613,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">byte value to set in property.</param>
 		public void SetValue( byte propertyValue )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			SetPropertyValue( propertyValue );
 		}
 
@@ -1621,8 +1628,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">short value to set in property.</param>
 		public void SetValue( short propertyValue )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			SetPropertyValue( propertyValue );
 		}
 
@@ -1632,8 +1643,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">ushort value to set in property.</param>
 		public void SetValue( ushort propertyValue )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			SetPropertyValue( propertyValue );
 		}
 
@@ -1643,8 +1658,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">int value to set in property.</param>
 		public void SetValue( int propertyValue )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			SetPropertyValue( propertyValue );
 		}
 
@@ -1654,8 +1673,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">uint value to set in property.</param>
 		public void SetValue( uint propertyValue )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			SetPropertyValue( propertyValue );
 		}
 
@@ -1665,8 +1688,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">long value to set in property.</param>
 		public void SetValue( long propertyValue )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			SetPropertyValue( propertyValue );
 		}
 
@@ -1676,8 +1703,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">ulong value to set in property.</param>
 		public void SetValue( ulong propertyValue )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			SetPropertyValue( propertyValue );
 		}
 
@@ -1687,8 +1718,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">char value to set in property.</param>
 		public void SetValue( char propertyValue )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			SetPropertyValue( propertyValue );
 		}
 
@@ -1698,8 +1733,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">float value to set in property.</param>
 		public void SetValue( float propertyValue )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			SetPropertyValue( propertyValue );
 		}
 
@@ -1709,8 +1748,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">bool value to set in property.</param>
 		public void SetValue( bool propertyValue )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			SetPropertyValue( propertyValue );
 		}
 
@@ -1720,8 +1763,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">DateTime value to set in property.</param>
 		public void SetValue( DateTime propertyValue )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			SetPropertyValue( propertyValue );
 		}
 
@@ -1731,8 +1778,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">Uri value to set in property.</param>
 		public void SetValue( Uri propertyValue )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			SetPropertyValue( propertyValue );
 		}
 
@@ -1742,8 +1793,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">Xml value to set in property.</param>
 		public void SetValue( XmlDocument propertyValue )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			SetPropertyValue( propertyValue );
 		}
 
@@ -1753,8 +1808,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">TimeSpan value to set in property.</param>
 		public void SetValue( TimeSpan propertyValue )
 		{
-			// Make sure proper access is obtained.
-			CheckAccessControl( true );
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
 			SetPropertyValue( propertyValue );
 		}
 

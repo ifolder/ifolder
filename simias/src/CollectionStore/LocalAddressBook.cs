@@ -26,6 +26,8 @@
  ***********************************************************************/
 
 using System;
+using System.Collections;
+using System.IO;
 
 namespace Simias.Storage
 {
@@ -35,31 +37,95 @@ namespace Simias.Storage
 	/// </summary>
 	public class LocalAddressBook : Collection
 	{
+		#region Class Members
+		/// <summary>
+		/// Initial size of the list that keeps track of the dirty nodes.
+		/// </summary>
+		private const int initialDirtyNodeListSize = 100;
+		#endregion
+
 		#region Constructor
 		/// <summary>
-		/// Constructor for this object that creates and persists a local address book.
+		/// Constructor for this object that creates and persists the local address book.
 		/// </summary>
 		/// <param name="store">Local store object.</param>
 		/// <param name="bookName">Name of the address book.</param>
-		internal LocalAddressBook( Store store, string bookName ) :
-			base( store, bookName, Property.AddressBookType )
+		/// <param name="owner">Owner guid of this collection.</param>
+		internal LocalAddressBook( Store store, string bookName, string ownerGuid ) :
+			base( store, new CacheNode( store, Guid.NewGuid().ToString().ToLower() ) )
 		{
-			// Add the local address book property.
-			Properties.AddNodeProperty( Property.LocalAddressBook, true );
+			// Fill out the Cache node object.
+			cNode.collection = this;
+			cNode.name = bookName;
+			cNode.type = Node.CollectionType + Property.AddressBookType;
+			cNode.isPersisted = false;
+			cNode.properties = new PropertyList( this );
+			cNode.dirtyNodeList = new Hashtable( initialDirtyNodeListSize );
+
+			// Set the default access control for this collection.
+			cNode.accessControl = new AccessControl( this );
+
+			// Add the owner of this collection.
+			Properties.AddNodeProperty( Property.Owner, ownerGuid );
+			AccessControlEntry ace = new AccessControlEntry( ownerGuid, Access.Rights.Admin );
+			ace.Set( this );
+
+			// Give the backup operator read/write rights.
+			ace = new AccessControlEntry( Access.BackupOperatorRole, Access.Rights.ReadWrite );
+			ace.Set( this );
+
+			// Give the sync operator all access rights.
+			ace = new AccessControlEntry( Access.SyncOperatorRole, Access.Rights.Admin );
+			ace.Set( this );
+
+			// Set an ACL that allows everyone read/write access.
+			ace = new AccessControlEntry( Access.WorldRole, Access.Rights.ReadWrite );
+			ace.Set( this );
+
+			// Update the access control cache on this object.
+			UpdateAccessControl();
+
+			// Use default document root. If the document root directory does not exist, create it.
+			Uri documentRoot = GetStoreManagedPath();
+			if ( !Directory.Exists( documentRoot.LocalPath ) )
+			{
+				Directory.CreateDirectory( documentRoot.LocalPath );
+			}
+
+			// Set the default properties for this node.
+			Properties.AddNodeProperty( Property.CreationTime, DateTime.UtcNow );
+			Properties.AddNodeProperty( Property.ModifyTime, DateTime.UtcNow );
+			Properties.AddNodeProperty( Property.CollectionID, Id );
+			Properties.AddNodeProperty( Property.IDPath, "/" + Id );
+			Properties.AddNodeProperty( Property.DomainName, bookName );
+
+			// Add the document root as a local property.
+			Property docRootProp = new Property( Property.DocumentRoot, documentRoot );
+			docRootProp.LocalProperty = true;
+			Properties.AddNodeProperty( docRootProp );
+
+			// Set the sync versions.
+			Property mvProp = new Property( Property.MasterIncarnation, ( ulong )0 );
+			mvProp.LocalProperty = true;
+			Properties.AddNodeProperty( mvProp );
+
+			Property lvProp = new Property( Property.LocalIncarnation, ( ulong )0 );
+			lvProp.LocalProperty = true;
+			Properties.AddNodeProperty( lvProp );
 
 			// Make this the default address book.
 			Property p = new Property( Property.DefaultAddressBook, true );
 			p.LocalProperty = true;
 			Properties.AddNodeProperty( p );
 
-			// Set an ACL that allows everyone read/write access.
-			SetUserAccess( Access.WorldRole, Access.Rights.ReadWrite );
+			// Add the local address book property.
+			Properties.AddNodeProperty( Property.LocalAddressBook, true );
 
 			// Set that this collection is not synchronizable.
-			Synchronizeable = false;
+			Properties.AddNodeProperty( Property.Syncable, false );
 
-			// Commit the changes.
-			Commit();
+			// Add this node to the cache table.
+			cNode = cNode.AddToCacheTable();
 		}
 
 		/// <summary>

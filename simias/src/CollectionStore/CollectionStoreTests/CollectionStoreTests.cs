@@ -993,54 +993,6 @@ namespace Simias.Storage.Tests
 
 				// Get a user that can be impersonated.
 				Identity user = store.GetLocalAddressBook().GetSingleIdentityByName( "cameron" );
-
-				try
-				{
-					try
-					{
-						// Impersonate the user.
-						store.ImpersonateUser( user.Id );
-						store.GetCollectionById( collection1.Id );
-						throw new ApplicationException( "Access control check on impersonation failed" );
-					}
-					finally
-					{
-						// Always revert back.
-						store.Revert();
-					}
-				}
-				catch ( UnauthorizedAccessException )
-				{
-					// This is expected.
-				}
-
-				// Add the user as having read-only access to the collection.
-				collection1.SetUserAccess( user.Id, Access.Rights.ReadOnly );
-				collection1.Commit();
-
-				try
-				{
-					// Try again to access the collection.
-					store.ImpersonateUser( user.Id );
-					collection3 = store.GetCollectionById( collection1.Id );
-
-					// Try to write to the collection without proper rights.
-					try
-					{
-						collection3.Properties.AddProperty( "DisplayName", "Access Collection" );
-						throw new ApplicationException( "Read only access control check on impersonation failed" );
-					}
-					catch ( UnauthorizedAccessException )
-					{
-						// This is expected.
-					}
-				}
-				finally
-				{
-					store.Revert();
-				}
-
-				// Set read-write access on the collection.
 				collection1.SetUserAccess( user.Id, Access.Rights.ReadWrite );
 				collection1.Commit();
 

@@ -25,7 +25,6 @@
 using System;
 using System.Collections;
 using System.Security.Cryptography;
-using System.Xml;
 using Persist = Simias.Storage.Provider;
 using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
 
@@ -41,9 +40,9 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
-		/// Store object.
+		/// Handle to the local address book.
 		/// </summary>
-		private Store store;
+		private LocalAddressBook localAb;
 
 		/// <summary>
 		/// Name of this domain that the store object belongs in.
@@ -53,7 +52,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Represents the identity of the user that instantiated this object.
 		/// </summary>
-		private string identityGuid;
+		private Identity identity;
 
 		/// <summary>
 		/// Holds the public key for the server.
@@ -72,23 +71,7 @@ namespace Simias.Storage
 		/// </summary>
 		public string CurrentUserGuid
 		{
-			get { return ( impersonationId.Count == 0 ) ? identityGuid : impersonationId.Peek() as string; }
-		}
-
-		/// <summary>
-		/// Gets the identity object for the non-impersonating user.
-		/// </summary>
-		private Identity BaseIdentity
-		{
-			get { return AddressBook.GetIdentityById( identityGuid ); }
-		}
-
-		/// <summary>
-		/// Gets the local address book.
-		/// </summary>
-		private LocalAddressBook AddressBook
-		{
-			get { return GetLocalAddressBook(); }
+			get { return ( impersonationId.Count == 0 ) ? identity.Id : ( impersonationId.Peek() as Identity ).Id; }
 		}
 
 		/// <summary>
@@ -96,14 +79,7 @@ namespace Simias.Storage
 		/// </summary>
 		public Identity CurrentIdentity
 		{
-			get 
-			{ 
-				// Figure out if the current identity is being impersonated.
-				string currentGuid = ( impersonationId.Count == 0 ) ? identityGuid : impersonationId.Peek() as string; 
-
-				// Get this identity from the local address book.
-				return ( AddressBook != null ) ? AddressBook.GetIdentityById( currentGuid ) : null;
-			}
+			get { return ( impersonationId.Count == 0 ) ? identity : impersonationId.Peek() as Identity; }
 		}
 
 		/// <summary>
@@ -129,60 +105,13 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="store">Store object.</param>
 		/// <param name="identity">Object that represents the current identity.</param>
-		public IdentityManager( Store store, Identity identity )
+		public IdentityManager( Identity identity )
 		{
-			this.store = store;
-			this.identityGuid = identity.Id;
-			this.domainName = identity.CollectionNode.DomainName;
+			this.identity = identity;
+			this.localAb = identity.AddressBook;
+			this.domainName = identity.AddressBook.DomainName;
 			this.publicKey = new RSACryptoServiceProvider();
 			this.publicKey.ImportParameters( identity.ServerCredential.ExportParameters( false ) );
-		}
-
-		/// <summary>
-		/// Constructor of the object.
-		/// </summary>
-		/// <param name="store">Store object.</param>
-		/// <param name="domainName">Name of the domain for this identity.</param>
-		/// <param name="identityGuid">Guid to use as the identity.</param>
-		private IdentityManager( Store store, string domainName, string identityGuid )
-		{
-			this.store = store;
-			this.domainName = domainName;
-			this.identityGuid = identityGuid;
-			this.publicKey = null;
-		}
-		#endregion
-
-		#region Private Methods
-		/// <summary>
-		/// Gets the local address book with no special access checks.
-		/// </summary>
-		private LocalAddressBook GetLocalAddressBook()
-		{
-			LocalAddressBook localAb = null;
-
-			// Look for the address book by its name, which is the domain name.
-			Persist.Query query = new Persist.Query( Property.ObjectName, Persist.Query.Operator.Equal, domainName, Syntax.String );
-
-			// Do the search.
-			char[] results = new char[ 4096 ];
-			Persist.IResultSet chunkIterator = store.StorageProvider.Search( query );
-			if ( chunkIterator != null )
-			{
-				// Get the first set of results from the query.
-				int length = chunkIterator.GetNext( ref results );
-				if ( length > 0 )
-				{
-					// Set up the XML document so the data can be easily extracted.
-					XmlDocument abDocument = new XmlDocument();
-					abDocument.LoadXml( new string( results, 0, length ) );
-					localAb = new LocalAddressBook( store, store.GetShallowCollection( abDocument.DocumentElement.FirstChild ) );
-				}
-
-				chunkIterator.Dispose();
-			}
-
-			return localAb;
 		}
 		#endregion
 
@@ -217,7 +146,7 @@ namespace Simias.Storage
 		public override void AcceptClientPrincipalCredentials(string realm, string principalName, RSACryptoServiceProvider rsaKeys)
 		{
 			// Find this contact.
-			Identity tempIdentity = AddressBook.GetIdentityById( principalName );
+			Identity tempIdentity = localAb.GetIdentityById( principalName );
 			if ( tempIdentity == null )
 			{
 				throw new ApplicationException( "No such identity." );
@@ -226,17 +155,6 @@ namespace Simias.Storage
 			// Add the public key to this identity.
 			tempIdentity.AddPublicKey( realm, rsaKeys );
 			tempIdentity.Commit();
-		}
-
-		/// <summary>
-		/// Gets an identity which represents the store administrator.
-		/// </summary>
-		/// <param name="store">Store object.</param>
-		/// <param name="domainName">Name of the domain.</param>
-		static public IdentityManager CreateStoreAdmin( Store store, string domainName )
-		{
-			// Create a temporary identity in the local address book for the admin role.
-			return new IdentityManager( store, domainName, Access.StoreAdminRole );
 		}
 
 		/// <summary>
@@ -257,7 +175,7 @@ namespace Simias.Storage
 			else
 			{
 				// Find the specified contact and return the public key information.
-				Identity tempIdentity = AddressBook.GetIdentityById( principalName );
+				Identity tempIdentity = localAb.GetIdentityById( principalName );
 				if ( tempIdentity != null )
 				{
 					rsaKeys = tempIdentity.GetDomainPublicKey( realm );
@@ -281,12 +199,13 @@ namespace Simias.Storage
 		/// <param name="rsaKeys">RSA algorithm with the client principal's public and private keys</param>
 		public override void GetLocalCredentialsForServer(string serverRealm, string server, out string realm, out string principalName, out RSACryptoServiceProvider rsaKeys)
 		{
-			// Get the base identity for this store.
-			Identity identity = BaseIdentity;
-
 			// If the server realm is the same as the current realm then use the primary credentials.
 			if ( serverRealm != domainName )
 			{
+				// TODO: Take this out when CacheNodes are updated automatically.
+				identity = localAb.GetIdentityById( identity.Id );
+				// End TODO
+
 				// Find the alias that belongs to the specified domain.
 				Alias alias = identity.GetAliasFromDomain( serverRealm );
 				if ( alias == null )
@@ -315,7 +234,6 @@ namespace Simias.Storage
 		/// <param name="rsaKeys">RSA algorithm with the principal's public and private keys</param>
 		public override void GetServerCredentials(out string realm, out string principalName, out RSACryptoServiceProvider rsaKeys)
 		{
-			Identity identity = BaseIdentity;
 			realm = domainName;
 			principalName = identity.Id;
 			rsaKeys = identity.ServerCredential;
@@ -336,8 +254,12 @@ namespace Simias.Storage
 			}
 			else
 			{
+				// TODO: Take this out when CacheNodes are updated automatically.
+				identity = localAb.GetIdentityById( identity.Id );
+				// End TODO
+
 				// Need to look up the alias for the specified domain and return the public key.
-				Alias alias = BaseIdentity.GetAliasFromDomain( realm );
+				Alias alias = identity.GetAliasFromDomain( realm );
 				if ( alias != null )
 				{
 					rsaKeys = alias.PublicKey;
@@ -357,14 +279,14 @@ namespace Simias.Storage
 		public void Impersonate( string userId )
 		{
 			// Look up the specified user in the local address book.
-			Identity identity = AddressBook.GetIdentityById( userId );
-			if ( identity == null )
+			Identity impersonator = localAb.GetIdentityById( userId );
+			if ( impersonator == null )
 			{
 				throw new ApplicationException( "No such user." );
 			}
 
 			// Push the user onto the impersonation stack.
-			impersonationId.Push( userId );
+			impersonationId.Push( impersonator );
 		}
 
 		/// <summary>

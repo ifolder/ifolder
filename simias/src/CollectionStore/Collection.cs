@@ -54,6 +54,11 @@ namespace Simias.Storage
 		/// Reference to the persistent database object.
 		/// </summary>
 		private Persist.IProvider dataBase;
+
+		/// <summary>
+		/// Domain that this collection belongs to.
+		/// </summary>
+		private string domainName = null;
 		#endregion
 
 		#region Properties
@@ -102,7 +107,7 @@ namespace Simias.Storage
 			{
 				Property p = Properties.GetSingleProperty( Property.Shareable );
 				bool shareable = ( p != null ) ? ( bool )p.Value : true;
-				return ( IsAccessAllowed( Access.Rights.Admin ) && shareable && Synchronizeable ) ? true : false;
+				return ( IsAccessAllowed( Access.Rights.Admin ) && shareable && Synchronizable ) ? true : false;
 			}
 
 			set 
@@ -123,7 +128,7 @@ namespace Simias.Storage
 		/// is set not synchronizable.  This property is only meant as a common means to indicate synchronizability and must
 		/// be enforced at a higher layer.
 		/// </summary>
-		public bool Synchronizeable
+		public bool Synchronizable
 		{
 			get 
 			{
@@ -144,14 +149,32 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets or sets whether this collection can be synchronized.  By default, a collection is always synchronizeable.
+		/// The Collection Store cannot prevent an application from synchronizing a collection even though this property
+		/// is set not synchronizable.  This property is only meant as a common means to indicate synchronizability and must
+		/// be enforced at a higher layer.
+		/// </summary>
+		[ Obsolete( "This property is marked for removal.  Use Property 'Synchronizable' instead.", false ) ]
+		public bool Synchronizeable
+		{
+			get { return Synchronizable; }
+			set { Synchronizable = value; }
+		}
+
+		/// <summary>
 		/// Gets the domain name that this collection belongs to.
 		/// </summary>
 		public string DomainName
 		{
 			get 
 			{
-				Property p = Properties.GetSingleProperty( Property.DomainName );
-				return ( p != null ) ? p.ToString() : null;
+				if ( domainName == null )
+				{
+					Property p = Properties.GetSingleProperty( Property.DomainName );
+					domainName = p.ToString();
+				}
+
+				return domainName;
 			}
 		}
 
@@ -175,7 +198,7 @@ namespace Simias.Storage
 		/// </summary>
 		internal string DomainIdentity
 		{
-			get { return ( LocalStore.CurrentIdentity == null ) ? LocalStore.CurrentUser : LocalStore.CurrentIdentity.GetDomainUserGuid( DomainName ); }
+			get { return localStore.CurrentIdentity.GetDomainUserGuid( DomainName ); }
 		}
 		#endregion
 
@@ -238,7 +261,7 @@ namespace Simias.Storage
 			Properties.AddNodeProperty( Property.ModifyTime, DateTime.UtcNow );
 			Properties.AddNodeProperty( Property.CollectionID, Id );
 			Properties.AddNodeProperty( Property.IDPath, "/" + Id );
-			Properties.AddNodeProperty( Property.DomainName, LocalStore.DomainName );
+			Properties.AddNodeProperty( Property.DomainName, localStore.DomainName );
 
 			// Add the document root as a local property.
 			Property docRootProp = new Property( Property.DocumentRoot, documentRoot );
@@ -383,15 +406,6 @@ namespace Simias.Storage
 
 		#region Private Methods
 		/// <summary>
-		/// Gets a path to where the store managed files for this collection should be created.
-		/// </summary>
-		/// <returns>A Uri object that represents the store managed path.</returns>
-		private Uri GetStoreManagedPath()
-		{
-			return new Uri( Path.Combine( StorageProvider.StoreDirectory.LocalPath, Path.Combine( localStore.StoreManagedPath.LocalPath, Id ) ) );
-		}
-
-		/// <summary>
 		/// Moves where the files in the collection are rooted in the filesystem.  This change will automatically commit
 		/// the collection node and cannot be rolled back.
 		/// </summary>
@@ -424,7 +438,7 @@ namespace Simias.Storage
 					Directory.Move( newRoot.LocalPath, sourcePathString );
 
 					// Generate event that document root was changed.
-					LocalStore.Publisher.RaiseCollectionRootChangedEvent( new CollectionRootChangedEventArgs( LocalStore.ComponentId, Id, DomainName, NameSpaceType, sourcePathString, newRoot.LocalPath ) );
+					localStore.Publisher.RaiseCollectionRootChangedEvent( new CollectionRootChangedEventArgs( localStore.ComponentId, Id, DomainName, NameSpaceType, sourcePathString, newRoot.LocalPath ) );
 				}
 				catch
 				{
@@ -456,6 +470,15 @@ namespace Simias.Storage
 		internal void ClearDirtyList()
 		{
 			cNode.dirtyNodeList.Clear();
+		}
+
+		/// <summary>
+		/// Gets a path to where the store managed files for this collection should be created.
+		/// </summary>
+		/// <returns>A Uri object that represents the store managed path.</returns>
+		internal Uri GetStoreManagedPath()
+		{
+			return new Uri( Path.Combine( StorageProvider.StoreDirectory.LocalPath, Path.Combine( localStore.StoreManagedPath.LocalPath, Id ) ) );
 		}
 
 		/// <summary>
@@ -517,7 +540,7 @@ namespace Simias.Storage
 				try
 				{
 					// Acquire the store mutex.
-					LocalStore.LockStore();
+					localStore.LockStore();
 
 					// Increment the collection incarnation number here so it gets added to the dirty list and
 					// processed with the rest of the changed nodes.
@@ -553,7 +576,7 @@ namespace Simias.Storage
 				finally
 				{
 					// Release the store mutex.
-					LocalStore.UnlockStore();
+					localStore.UnlockStore();
 				}
 
 				// Set all of the nodes in the list as committed.
@@ -562,11 +585,11 @@ namespace Simias.Storage
 					// Fire an event for this commit action.
 					if ( committedNode.IsPersisted )
 					{
-						LocalStore.Publisher.RaiseNodeEvent( new NodeEventArgs( LocalStore.ComponentId, committedNode.Id, Id, DomainName, committedNode.NameSpaceType, NodeEventArgs.EventType.Changed, LocalStore.Instance ) );
+						localStore.Publisher.RaiseNodeEvent( new NodeEventArgs( localStore.ComponentId, committedNode.Id, Id, DomainName, committedNode.NameSpaceType, NodeEventArgs.EventType.Changed, localStore.Instance ) );
 					}
 					else
 					{
-						LocalStore.Publisher.RaiseNodeEvent( new NodeEventArgs( LocalStore.ComponentId, committedNode.Id, Id, DomainName, committedNode.NameSpaceType, NodeEventArgs.EventType.Created, LocalStore.Instance ) );
+						localStore.Publisher.RaiseNodeEvent( new NodeEventArgs( localStore.ComponentId, committedNode.Id, Id, DomainName, committedNode.NameSpaceType, NodeEventArgs.EventType.Created, localStore.Instance ) );
 					}
 
 					committedNode.IsPersisted = true;
@@ -904,6 +927,11 @@ namespace Simias.Storage
 		/// <param name="desiredRights">Rights to assign to user.</param>
 		public void SetUserAccess( string userId, Access.Rights desiredRights )
 		{
+			if ( userId == String.Empty )
+			{
+				throw new ApplicationException( "Invalid user guid." );
+			}
+
 			cNode.accessControl.SetUserRights( userId.ToLower(), desiredRights );
 		}
 		#endregion

@@ -263,12 +263,6 @@ namespace Simias.Storage
 		/// <param name="relativePath">Path relative to the collection root where this stream exists.</param>
 		internal FileSystemEntry( Node node, string name, string type, string relativePath )
 		{
-			// Make sure that the user has the rights.
-			if ( !node.CollectionNode.IsAccessAllowed( Access.Rights.ReadWrite ) )
-			{
-				throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
-			}
-
 			// Save the node that this stream will belong to.
 			this.node = node;
 

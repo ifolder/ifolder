@@ -120,12 +120,6 @@ namespace Simias.Storage
 
 			set 
 			{ 
-				// Make sure that current user has write rights to this collection.
-				if ( !CollectionNode.IsAccessAllowed( Access.Rights.ReadWrite ) )
-				{
-					throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
-				}
-
 				cNode.name = value;
 				SetNodeAttribute( Properties.PropertyRoot, Property.NameAttr, cNode.name );
 				CollectionNode.AddDirtyNodeToList( this );
@@ -149,12 +143,6 @@ namespace Simias.Storage
 
 			set 
 			{ 
-				// Make sure that current user has write rights to this collection.
-				if ( !CollectionNode.IsAccessAllowed( Access.Rights.ReadWrite ) )
-				{
-					throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
-				}
-
 				cNode.type = value;
 				SetNodeAttribute( Properties.PropertyRoot, Property.TypeAttr, cNode.type );
 				CollectionNode.AddDirtyNodeToList( this );
@@ -325,12 +313,6 @@ namespace Simias.Storage
 		/// <param name="type">Type of node to create.</param>
 		public Node( Collection collection, string name, string id, string type )
 		{
-			// Make sure that current user has write rights to this collection.
-			if ( !collection.IsAccessAllowed( Access.Rights.ReadWrite ) )
-			{
-				throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
-			}
-
 			cNode = new CacheNode( collection.LocalStore, id.ToLower() );
 			cNode.collection = collection;
 			cNode.name = name;
@@ -1382,12 +1364,6 @@ namespace Simias.Storage
 		/// <param name="newParent">New parent node.</param>
 		public void Move( Node newParent )
 		{
-			// Make sure that current user has write rights to this collection.
-			if ( !CollectionNode.IsAccessAllowed( Access.Rights.ReadWrite ) )
-			{
-				throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
-			}
-
 			// This node cannot be a collection object.
 			if ( IsCollection )
 			{

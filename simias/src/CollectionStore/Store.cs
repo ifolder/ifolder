@@ -41,10 +41,11 @@ using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
 namespace Simias.Storage
 {
 	/// <summary>
-	/// This is the top level object for the Collection Store.  The Store object can contain multiple
-	/// collection objects.  The Store object is not necessarily a one-to-one mapping with a persistent
-	/// store.  Collections within a Store may resided in different persistent stores either locally or
-	/// more likely remotely.
+	/// This is the top level object for the Collection Store.  The Store 
+	/// object can contain multiple collection objects.  The Store object 
+	/// is not necessarily a one-to-one mapping with a persistent store.
+	/// Collections within a Store may resided in different persistent 
+	/// stores either locally or more likely remotely.
 	/// </summary>
 	public sealed class Store : IEnumerable, IDisposable
 	{
@@ -55,29 +56,19 @@ namespace Simias.Storage
 		private const int cacheNodeTableSize = 100;
 
 		/// <summary>
-		/// The allocation size of the results array.
-		/// </summary>
-		internal const int resultsArraySize = 4096;
-
-		/// <summary>
-		/// Type of collection that represents the store database.
-		/// </summary>
-		internal const string DatabaseType = "CsDatabase";
-
-		/// <summary>
 		/// Directory where store-managed files are kept.
 		/// </summary>
-		private const string StoreManagedDirectoryName = "CollectionFiles";
+		private const string storeManagedDirectoryName = "CollectionFiles";
 
 		/// <summary>
 		/// Tag used to sign serialized collection nodes.
 		/// </summary>
-		private const string CollectionSignature = "Novell Serialized Collection";
+		private const string collectionSignature = "Novell Serialized Collection";
 
 		/// <summary>
 		/// Name of the cross process mutex that serializes access at commit time.
 		/// </summary>
-		private const string StoreMutexName = "4bf1ab83-1e06-4c64-8831-5f1b9b53f14f";
+		private const string storeMutexName = "4bf1ab83-1e06-4c64-8831-5f1b9b53f14f";
 
 		/// <summary>
 		/// Specifies whether object is viable.
@@ -122,7 +113,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Mutex used to serialize access to the database during a commit.
 		/// </summary>
-		private Mutex storeMutex = new Mutex( false, StoreMutexName );
+		private Mutex storeMutex = new Mutex( false, storeMutexName );
 
 		/// <summary>
 		/// Table used to lookup nodes as singleton objects.
@@ -134,6 +125,26 @@ namespace Simias.Storage
 		/// to the event system for preventing circular events.
 		/// </summary>
 		private string componentId;
+
+		/// <summary>
+		/// Handle to the local address book.
+		/// </summary>
+		private LocalAddressBook localAb = null;
+
+		/// <summary>
+		/// Handle to the local database object.
+		/// </summary>
+		private Collection localDb = null;
+
+		/// <summary>
+		/// The allocation size of the results array.
+		/// </summary>
+		internal const int resultsArraySize = 4096;
+
+		/// <summary>
+		/// Type of collection that represents the store database.
+		/// </summary>
+		internal const string DatabaseType = "CsDatabase";
 		#endregion
 
 		#region Properties
@@ -143,14 +154,6 @@ namespace Simias.Storage
 		private string StoreAdmin
 		{
 			get { return Access.StoreAdminRole; }
-		}
-
-		/// <summary>
-		/// Gets the current impersonation identity for the store.
-		/// </summary>
-		public string CurrentUser
-		{
-			get { return identityManager.CurrentUserGuid; }
 		}
 
 		/// <summary>
@@ -186,6 +189,38 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets the event publisher for the store.
+		/// </summary>
+		internal EventPublisher Publisher
+		{
+			get { return publisher; }
+		}
+
+		/// <summary>
+		/// Gets the identifier for the component that opened this instance of the store.
+		/// </summary>
+		internal string ComponentId
+		{
+			get { return componentId; }
+		}
+
+		/// <summary>
+		/// Gets a unique value for this instance.
+		/// </summary>
+		internal int Instance
+		{
+			get { return this.GetHashCode(); }
+		}
+
+		/// <summary>
+		/// Gets the current impersonation identity for the store.
+		/// </summary>
+		public string CurrentUser
+		{
+			get { return identityManager.CurrentUserGuid; }
+		}
+
+		/// <summary>
 		/// Gets the domain name for the current user.
 		/// </summary>
 		public string DomainName
@@ -210,22 +245,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets the event publisher for the store.
-		/// </summary>
-		internal EventPublisher Publisher
-		{
-			get { return publisher; }
-		}
-
-		/// <summary>
-		/// Gets the identifier for the component that opened this instance of the store.
-		/// </summary>
-		internal string ComponentId
-		{
-			get { return componentId; }
-		}
-
-		/// <summary>
 		/// Gets the RsaKeyStore object that provides an interface for the secure remote authentication.
 		/// </summary>
 		public RsaKeyStore KeyStore
@@ -240,35 +259,32 @@ namespace Simias.Storage
 		{
 			get { return identityManager.PublicKey; } 
 		}
-
-		/// <summary>
-		/// Gets a unique value for this instance.
-		/// </summary>
-		internal int Instance
-		{
-			get { return this.GetHashCode(); }
-		}
 		#endregion
 
 		#region Constructor
 		/// <summary>
 		/// Constructor for the Store object.
 		/// </summary>
-		/// <param name="databasePath">Path that specifies where to create or open the database. If this parameter
-		/// is null, the default database path is used.</param>
-		/// <param name="componentId">An identifier for the component that is opening this instance of the object.</param>
+		/// <param name="databasePath">Path that specifies where to create
+		/// or open the database. If this parameter is null, the default 
+		/// database path is used.</param>
+		/// <param name="componentId">An identifier for the component that 
+		/// is opening this instance of the object.</param>
 		private Store( Uri databasePath, string componentId )
 		{
-			// Don't let another process authenticate while the database is still being initialized.
+			// Don't let another process authenticate while the database is 
+			// still being initialized.
 			lock( this )
 			{
 				bool created;
 
+				// Store the component that opened this instance.
 				this.componentId = componentId;
 
 				// Get the path where the assembly was loaded from.
 				assemblyPath = new Uri( Path.GetDirectoryName( Assembly.GetExecutingAssembly().CodeBase ) );
 
+				// Create or open the underlying database.
 				if ( databasePath == null )
 				{
 					storageProvider = Persist.Provider.Connect( out created );
@@ -279,20 +295,12 @@ namespace Simias.Storage
 				}
 
 				// Set the path to the store.
-				storeManagedPath = new Uri( Path.Combine( storageProvider.StoreDirectory.LocalPath, StoreManagedDirectoryName ) );
-
-				// Create a domain name for this domain.  If the store is created, this will be the new domain name for
-				// the store.  If the store already exists, it will be discarded.
-				string domainName = Environment.UserDomainName + ":" + Guid.NewGuid().ToString().ToLower();
-
-				// In order to bootstrap the authentication process, create an temporary identity that represents the store
-				// administrator.  It will be replace as soon as the store owner identity is created or is authenticated.
-				identityManager = IdentityManager.CreateStoreAdmin( this, domainName );
+				storeManagedPath = new Uri( Path.Combine( storageProvider.StoreDirectory.LocalPath, storeManagedDirectoryName ) );
 
 				// Either create the store or authenticate to it.
 				if ( created )
 				{
-					if ( !InitializeStore( domainName ) )
+					if ( !InitializeStore() )
 					{
 						// The store didn't initialize delete it.
 						storageProvider.DeleteStore();
@@ -347,7 +355,7 @@ namespace Simias.Storage
 			}
 
 			// Create a identity manager object that will be used by the store object from here on out.
-			identityManager = new IdentityManager( this, identity );
+			identityManager = new IdentityManager( identity );
 		}
 
 		/// <summary>
@@ -362,7 +370,7 @@ namespace Simias.Storage
 			{
 				// Create an object that represents the database.
 				Collection localdb = new Collection( this, "LocalDatabase", DatabaseType );
-				localdb.Synchronizeable = false;
+				localdb.Synchronizable = false;
 				localdb.Commit();
 				isCreated = true;
 			}
@@ -397,7 +405,7 @@ namespace Simias.Storage
 
 				// Create a new document so that the returned document can be modified if necessary.
 				XmlDocument collectionDoc = new XmlDocument();
-				collectionDoc.LoadXml( signedXml.GetIdElement( signedDoc, CollectionSignature ).InnerXml );
+				collectionDoc.LoadXml( signedXml.GetIdElement( signedDoc, collectionSignature ).InnerXml );
 				return collectionDoc;
 			}
 			catch ( CryptographicException e )
@@ -409,15 +417,20 @@ namespace Simias.Storage
 		/// <summary>
 		/// Initializes the Collection Store the first time the persistent database is created.
 		/// </summary>
-		/// <param name="domainName">Name of this store's domain.</param>
 		/// <returns>True if store was successfully initialized, otherwise false is returned.</returns>
-		private bool InitializeStore( string domainName )
+		private bool InitializeStore()
 		{
+			// Create a domain name for this domain.
+			string domainName = Environment.UserDomainName + ":" + Guid.NewGuid().ToString().ToLower();
+
+			// Create a new guid for this local identity.
+			string ownerGuid = Guid.NewGuid().ToString().ToLower();
+
 			// Create the local address book.
-			LocalAddressBook localAb = new LocalAddressBook( this, domainName );
+			LocalAddressBook localAb = new LocalAddressBook( this, domainName, ownerGuid );
 
 			// Create an identity that represents the current user.  This user will become the database owner.
-			Identity identity = new Identity( localAb, Environment.UserName );
+			Identity identity = new Identity( localAb, Environment.UserName, ownerGuid );
 
 			// Add a key pair to this identity to be used as credentials.
 			identity.CreateKeyPair();
@@ -429,14 +442,11 @@ namespace Simias.Storage
 			new Identity( localAb, "BackupIdentityRole", Access.BackupOperatorRole, Property.IdentityRole );
 			new Identity( localAb, "WorldIdentityRole", Access.WorldRole, Property.IdentityRole );
 
-			// Change the local address book to be owned by the current user.
-			localAb.ChangeOwner( identity.Id, Access.Rights.Deny );
+			// Set this new identity in the identity manager.
+			identityManager = new IdentityManager( identity );
 
 			// Save the address book changes.
 			localAb.Commit( true );
-
-			// Set this new identity in the identity manager.
-			identityManager = new IdentityManager( this, identity );
 
 			// Create an object that represents the database.
 			bool created = CreateDatabaseObject();
@@ -606,14 +616,14 @@ namespace Simias.Storage
 				// Create a data object to hold the data to sign.
 				DataObject dataObject = new DataObject();
 				dataObject.Data = collectionStoreDoc.GetElementsByTagName( Property.ObjectListTag );
-				dataObject.Id = CollectionSignature;
+				dataObject.Id = collectionSignature;
 
 				// Add the data object to the signature.
 				signedXml.AddObject(dataObject);
  
 				// Create a reference to be able to package everything into the message.
 				Reference reference = new Reference();
-				reference.Uri = "#" + CollectionSignature;
+				reference.Uri = "#" + collectionSignature;
  
 				// Add the reference to the message.
 				signedXml.AddReference( reference );
@@ -1038,12 +1048,6 @@ namespace Simias.Storage
 				collection = new Collection( this, cNode );
 			}
 
-			// Check if this user has sufficient rights to view this collection.
-			if ( ( collection != null ) && !collection.IsAccessAllowed( Access.Rights.ReadOnly ) )
-			{
-				throw new UnauthorizedAccessException( "Current user does not have rights to the collection." );
-			}
-
 			return collection;
 		}
 
@@ -1120,7 +1124,32 @@ namespace Simias.Storage
 				throw new ObjectDisposedException( this.ToString() );
 			}
 
-			return GetSingleCollectionByType( DatabaseType );
+// TODO: Remove this comment once the cache nodes are automatically updated.
+//			if ( localDb == null )
+//			{
+				// Look for the address book by its name, which is the domain name.
+				Persist.Query query = new Persist.Query( Property.ObjectType, Persist.Query.Operator.Equal, Node.CollectionType + DatabaseType, Property.Syntax.String.ToString() );
+
+				// Do the search.
+				char[] results = new char[ 4096 ];
+				Persist.IResultSet chunkIterator = storageProvider.Search( query );
+				if ( chunkIterator != null )
+				{
+					// Get the first set of results from the query.
+					int length = chunkIterator.GetNext( ref results );
+					if ( length > 0 )
+					{
+						// Set up the XML document so the data can be easily extracted.
+						XmlDocument dbDocument = new XmlDocument();
+						dbDocument.LoadXml( new string( results, 0, length ) );
+						localDb = GetShallowCollection( dbDocument.DocumentElement.FirstChild );
+					}
+
+					chunkIterator.Dispose();
+				}
+//			}
+
+			return localDb;
 		}
 
 		/// <summary>
@@ -1130,20 +1159,35 @@ namespace Simias.Storage
 		/// Otherwise null is returned.</returns>
 		public LocalAddressBook GetLocalAddressBook()
 		{
-			LocalAddressBook localAb = null;
-
-			// See if the local address book already exists.
-			ICSList abList = GetCollectionsByType( Property.AddressBookType );
-			foreach ( Collection abCollection in abList )
+			if ( disposed )
 			{
-				// The address book must have the local property set on it.
-				Property p = abCollection.Properties.GetSingleProperty( Property.LocalAddressBook );
-				if ( ( p != null ) && ( ( bool )p.Value == true ) )
-				{
-					localAb = new LocalAddressBook( this, abCollection );
-					break;
-				}
+				throw new ObjectDisposedException( this.ToString() );
 			}
+
+// TODO: Remove this comment once the cache nodes are automatically updated.
+//			if ( localAb == null )
+//			{
+				// Look for the address book by its name, which is the domain name.
+				Persist.Query query = new Persist.Query( Property.LocalAddressBook, Persist.Query.Operator.Equal, "true", Property.Syntax.Boolean.ToString() );
+
+				// Do the search.
+				char[] results = new char[ 4096 ];
+				Persist.IResultSet chunkIterator = storageProvider.Search( query );
+				if ( chunkIterator != null )
+				{
+					// Get the first set of results from the query.
+					int length = chunkIterator.GetNext( ref results );
+					if ( length > 0 )
+					{
+						// Set up the XML document so the data can be easily extracted.
+						XmlDocument abDocument = new XmlDocument();
+						abDocument.LoadXml( new string( results, 0, length ) );
+						localAb = new LocalAddressBook( this, GetShallowCollection( abDocument.DocumentElement.FirstChild ) );
+					}
+
+					chunkIterator.Dispose();
+				}
+//			}
 
 			return localAb;
 		}
