@@ -494,6 +494,7 @@ init_invitations_window()
 	/* Setup the properties of the window */
 	gtk_dialog_set_has_separator(GTK_DIALOG(invitations_dialog), FALSE);
 	gtk_window_set_resizable(GTK_WINDOW(invitations_dialog), TRUE);
+	gtk_window_set_default_size(GTK_WINDOW(invitations_dialog), 500, 500);
 
 	vbox = gtk_vbox_new(FALSE, 10);
 	gtk_container_border_width(GTK_CONTAINER(vbox), 10);
