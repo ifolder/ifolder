@@ -65,9 +65,24 @@
             </Settings>
             <References>
                 <Reference
-                    Name = "iFolder"
-                    Project = "{7FDE5803-614E-4B16-B4AC-2BA6FD274D98}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                    Name = "Novell.iFolder"
+                    AssemblyName = "Novell.iFolder"
+                    HintPath = "Novell.iFolder.dll"
+                />
+                <Reference
+                    Name = "nunit.framework"
+                    AssemblyName = "nunit.framework"
+                    HintPath = "..\..\..\simias\tools\NUnit\net\bin\nunit.framework.dll"
+                />
+                <Reference
+                    Name = "nunit.core"
+                    AssemblyName = "nunit.core"
+                    HintPath = "..\..\..\simias\tools\NUnit\net\bin\nunit.core.dll"
+                />
+                <Reference
+                    Name = "Simias"
+                    AssemblyName = "Simias"
+                    HintPath = "..\..\..\simias\src\Simias.dll\Simias.dll"
                 />
             </References>
         </Build>
