@@ -335,6 +335,7 @@ namespace Novell.iFolder
 					PropertiesDialog pd = new PropertiesDialog();
 					pd.iFolder = ifolder;
 					pd.TransientFor = iFolderWindow; 
+					pd.ActiveTag = 3;
 					pd.Run();
 				}
 				catch(Exception e)
@@ -381,16 +382,31 @@ namespace Novell.iFolder
 
 				tSelect.GetSelected(out tModel, out iter);
 				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
-				try
+
+				MessageDialog dialog = new MessageDialog(iFolderWindow,
+					DialogFlags.Modal | DialogFlags.DestroyWithParent,
+					MessageType.Question,
+					ButtonsType.YesNo,
+					"Are you sure you want to revert the selected iFolder to a normal folder?");
+				dialog.Title = "Revert iFolder";
+				int rc = dialog.Run();
+				dialog.Hide();
+				dialog.Destroy();
+				if(rc == -8)
 				{
-					ifolder.Delete();
-					ifolder.Commit();
-					iFolderTreeStore.Remove(ref iter);
-					NodeTreeStore.Clear();
-				}
-				catch(Exception e)
-				{
-					Console.WriteLine("Unable to delete iFolder");
+					try
+					{
+						ifolder.Delete();
+						ifolder.Commit();
+						iFolderTreeStore.Remove(ref iter);
+						NodeTreeStore.Clear();
+						curDirEntry = null;
+						CurrentPathEntry.Text = "";
+					}
+					catch(Exception e)
+					{
+						Console.WriteLine("Unable to delete iFolder");
+					}
 				}
 			}
 		}
@@ -418,6 +434,90 @@ namespace Novell.iFolder
 			}
 		}
 
+		[GLib.ConnectBefore]
+		public void on_iFolderTreeView_button_press_event(	object obj, 
+								ButtonPressEventArgs args)
+		{
+			switch(args.Event.Button)
+			{
+				case 1: // first mouse button
+					break;
+				case 2: // second mouse button
+					break;
+				case 3: // third mouse button
+				{
+					Menu ifMenu = new Menu();
+
+					TreePath tPath = null;
+
+					iFolderTreeView.GetPathAtPos((Int32)args.Event.X, 
+								(Int32)args.Event.Y, out tPath);
+
+					if(tPath != null)
+					{
+						MenuItem item_share = 
+							new MenuItem ("Share with...");
+						ifMenu.Append (item_share);
+						item_share.Activated += new EventHandler(
+								on_shareifolder_context_menu);
+
+						MenuItem item_revert = 
+								new MenuItem ("Revert to a Normal Folder");
+						ifMenu.Append (item_revert);
+						item_revert.Activated += new EventHandler(
+								on_deleteiFolder);
+
+
+						ifMenu.Append(new SeparatorMenuItem());
+
+						MenuItem item_properties = 
+							new MenuItem ("Properties");
+						ifMenu.Append (item_properties);
+						item_properties.Activated += 
+							new EventHandler( on_properties_event );
+					}
+					else
+					{
+						MenuItem item_create = 
+							new MenuItem ("Create iFolder");
+						ifMenu.Append (item_create);
+						item_create.Activated += 
+							new EventHandler(on_newiFolder);
+
+						MenuItem item_refresh = 
+							new MenuItem ("Refresh List");
+						ifMenu.Append (item_refresh);
+						item_refresh.Activated += 
+							new EventHandler(on_refreshCollections);
+					}
+		
+					ifMenu.ShowAll();
+
+					ifMenu.Popup(null, null, null, IntPtr.Zero, 3, 
+						Gtk.Global.CurrentEventTime);
+					break;
+				}
+			}
+		}
+
+		public void on_shareifolder_context_menu(object o, EventArgs args)
+		{
+			TreeSelection tSelect = iFolderTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+
+				PropertiesDialog pd = new PropertiesDialog();
+				pd.TransientFor = iFolderWindow;
+				pd.iFolder = ifolder;
+				pd.ActiveTag = 2;
+				pd.Run();
+			}
+		}
 
 	}
 }
