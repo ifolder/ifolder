@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-POBoxWS_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/Global.asax.cs $(srcdir)/POBoxService.asmx.cs 
+POBoxWS_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/POBoxService.asmx.cs 
 POBoxWS_CSFILES := $(subst /,$(SEP),$(POBoxWS_CSFILES1))
 POBoxWS_INCLUDES =
 POBoxWS_RESOURCES =
@@ -9,7 +9,7 @@ POBoxWS_FLAGS = $(CSC_LIBFLAG)
 POBoxWS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll
 POBoxWS_LIBPATH = ../Simias.dll
 
-EXTRA_DIST = web.config Global.asax POBoxService.asmx $(POBoxWS_CSFILES)
+EXTRA_DIST = POBoxService.asmx $(POBoxWS_CSFILES)
 
 all: Simias.POBox.Web.dll
 
