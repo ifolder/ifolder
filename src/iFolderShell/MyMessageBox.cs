@@ -34,6 +34,7 @@ namespace Novell.iFolderCom
 	/// <summary>
 	/// Buttons that can be displayed on MyMessageBox.
 	/// </summary>
+	[ComVisible(false)]
 	public enum MyMessageBoxButtons
 	{
 		/// <summary>
@@ -50,6 +51,7 @@ namespace Novell.iFolderCom
 	/// <summary>
 	/// Which button to make the default button.
 	/// </summary>
+	[ComVisible(false)]
 	public enum MyMessageBoxDefaultButton
 	{
 		/// <summary>
@@ -66,6 +68,7 @@ namespace Novell.iFolderCom
 	/// <summary>
 	/// Icons to display on MyMessageBox.
 	/// </summary>
+	[ComVisible(false)]
 	public enum MyMessageBoxIcon
 	{
 		/// <summary>
@@ -595,6 +598,7 @@ namespace Novell.iFolderCom
 		[DllImport("user32.dll")]
 		static extern bool GetIconInfo(IntPtr hIcon, out ICONINFO piconinfo);
 
+		[ComVisible(false)]
 		public struct ICONINFO
 		{
 			public bool fIcon;
