@@ -2053,7 +2053,7 @@ namespace Novell.iFolder
 				{
 					// remove the current iFolder so events don't replace it
 					curiFolders.Remove(remiFolder.ID);
-   		 			iFolderWS.DeclineiFolderInvitation(remiFolder.ID);
+   		 			iFolderWS.DeclineiFolderInvitation(remiFolder.DomainID, remiFolder.ID);
 					// if no exception, remove it from the list
 					iFolderTreeStore.Remove(ref iter);
 				}

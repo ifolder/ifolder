@@ -695,6 +695,7 @@ namespace Simias.Web
 			}
 			else
 			{
+				// TODO: Need to rework for multi-domain.
 				// try to find a subscription with this ID
 				Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(                                             store,
 									store.DefaultDomain);
@@ -891,6 +892,7 @@ namespace Simias.Web
 			if(col == null)
 				throw new Simias.NotExistException(CollectionID);
 
+			// TODO: Rework for multi-domain ... do we even use this method???
 			Roster roster = 
 				store.GetDomain(store.DefaultDomain).GetRoster(store);
 			if(roster == null)
@@ -1100,7 +1102,7 @@ namespace Simias.Web
 											string collectionType)
 		{
 			Simias.POBox.POBox poBox = 
-				Simias.POBox.POBox.GetPOBox(store, store.DefaultDomain, 
+				Simias.POBox.POBox.GetPOBox(store, collection.Domain, 
 												newMember.UserID );
 
 			Subscription sub = poBox.CreateSubscription(collection,
@@ -1116,7 +1118,7 @@ namespace Simias.Web
 			// copied from the iFolder code, this may need to change
 			// in the future
 			Roster roster = 
-				store.GetDomain(store.DefaultDomain).GetRoster(store);
+				store.GetDomain(collection.Domain).GetRoster(store);
 			SyncCollection sc = new SyncCollection(roster);
 			sub.SubscriptionCollectionURL = sc.MasterUrl.ToString();
 

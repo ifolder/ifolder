@@ -505,6 +505,7 @@
       <xs:element name="DeclineiFolderInvitation">
         <xs:complexType>
           <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="DomainID" type="xs:string"/>
             <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string"/>
           </xs:sequence>
         </xs:complexType>
@@ -1289,6 +1290,7 @@
     <part name="Body" element="s0:iFolderWeb"/>
   </message>
   <message name="DeclineiFolderInvitationHttpGetIn">
+    <part name="DomainID" type="s:string"/>
     <part name="iFolderID" type="s:string"/>
   </message>
   <message name="DeclineiFolderInvitationHttpGetOut"/>
@@ -1570,6 +1572,7 @@
     <part name="Body" element="s0:iFolderWeb"/>
   </message>
   <message name="DeclineiFolderInvitationHttpPostIn">
+    <part name="DomainID" type="s:string"/>
     <part name="iFolderID" type="s:string"/>
   </message>
   <message name="DeclineiFolderInvitationHttpPostOut"/>

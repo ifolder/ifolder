@@ -239,6 +239,7 @@ namespace Novell.iFolder.Web
 			Collection col = store.GetCollectionByID(iFolderID);
 			if(col == null)
 			{
+				// TODO: Rework for multi-domain.
 				// if the iFolderID was not an iFolder, check to see if
 				// there is a subscription with that ID
 				POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
@@ -577,13 +578,12 @@ namespace Novell.iFolder.Web
 			}
 			else
 			{
+				// TODO: Rework for multi-domain
 				// If the user wasn't found, look for the UserID as
 				// a subscription in the default POBox
 				POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
 						store.DefaultDomain, 
 						store.GetUserIDFromDomainID(store.DefaultDomain));
-//				POBox poBox = Simias.POBox.POBox.GetPOBox(store, 
-//													store.DefaultDomain);
 				if(poBox == null)
 				{
 					throw new Exception("Unable to access POBox");
@@ -785,6 +785,7 @@ namespace Novell.iFolder.Web
 
 
 
+		// TODO: Remove this method after multi-domain work is complete.
 		/// <summary>
 		/// WebMethod that returns a list of all members from the default
 		/// domain of the iFolder Enterprise Server.  This list represents
@@ -803,6 +804,7 @@ namespace Novell.iFolder.Web
 
 
 
+		// TODO: Remove this method after multi-domain work is complete.
 		/// <summary>
 		/// WebMethod that returns a limited list of iFolderUsers.  If there
 		/// are more users than specified, the list will return none.
@@ -917,6 +919,7 @@ namespace Novell.iFolder.Web
 
 
 
+		// TODO: Remove this method after multi-domain work is complete.
 		/// <summary>
 		/// Web method that returns a list of users whose name's contain
 		/// the specified string.
@@ -1087,6 +1090,7 @@ namespace Novell.iFolder.Web
 
 
 
+		// TODO: Rework for multi-domain
 		/// <summary>
 		/// WebMethod that gets a member from the default Roster
 		/// </summary>
@@ -1234,19 +1238,16 @@ namespace Novell.iFolder.Web
 		{
 			Store store = Store.GetStore();
 
-			// Check to be sure we are not in Workgroup Mode
-			if(store.DefaultDomain == Simias.Storage.Domain.WorkGroupDomainID)
-				throw new Exception("The client default is set to Workgroup Mode.  Invitations only work in the enterprise version of ifolder.");
-
 			Collection col = store.GetCollectionByID(iFolderID);
 			if(col == null)
 				throw new Exception("Invalid iFolderID");
 
+			// TODO: Rework for workgroup.
 			if(col.Domain == Simias.Storage.Domain.WorkGroupDomainID)
 				throw new Exception("This iFolder is a Workgroup iFolder.  InviteUser will only work for an Enterprise iFolder.");
 
 			Roster roster = 
-				store.GetDomain(store.DefaultDomain).GetRoster(store);
+				store.GetDomain(col.Domain).GetRoster(store);
 
 			if(roster == null)
 				throw new Exception("Unable to access ifolder users");
@@ -1271,9 +1272,6 @@ namespace Novell.iFolder.Web
 			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
 						col.Domain, 
 						store.GetUserIDFromDomainID(col.Domain));
-//			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(
-//											store, 
-//											col.Domain);
 
 			Subscription sub = poBox.CreateSubscription(col,
 										col.GetCurrentMember(),
@@ -1314,7 +1312,7 @@ namespace Novell.iFolder.Web
 			Store store = Store.GetStore();
 
 			// Check to be sure we are not in Workgroup Mode
-			if(store.DefaultDomain == Simias.Storage.Domain.WorkGroupDomainID)
+			if(DomainID == Simias.Storage.Domain.WorkGroupDomainID)
 				throw new Exception("The client default is set to Workgroup Mode.  Invitations only work in the enterprise version of ifolder.");
 
 			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
@@ -1357,21 +1355,23 @@ namespace Novell.iFolder.Web
 		/// <summary>
 		/// Decline an Enterprise subscription
 		/// </summary>
+		/// <param name="DomainID">The ID of the domain that the iFolder belongs to.</param>
 		/// <param name = "iFolderID">
 		/// The ID of the iFolder to decline the invitation for
 		/// </param>
 		[WebMethod(Description="Decline an invitation to an iFolder.  The iFolder ID represents a Subscription object")]
 		[SoapDocumentMethod]
-		public void DeclineiFolderInvitation( string iFolderID )
+		public void DeclineiFolderInvitation( string DomainID, string iFolderID )
 		{
 			Store store = Store.GetStore();
 
+			// TODO: Rework for workgroup
 			// Check to be sure we are not in Workgroup Mode
-			if(store.DefaultDomain == Simias.Storage.Domain.WorkGroupDomainID)
+			if(DomainID == Simias.Storage.Domain.WorkGroupDomainID)
 				throw new Exception("The client default is set to Workgroup Mode.  Invitations only work in the enterprise version of ifolder.");
 
 			Simias.POBox.POBox poBox = 
-				Simias.POBox.POBox.GetPOBox( store, store.DefaultDomain );
+				Simias.POBox.POBox.GetPOBox( store, DomainID );
 
 			// iFolders returned in the Web service are also
 			// Subscriptions and it ID will be the subscription ID
