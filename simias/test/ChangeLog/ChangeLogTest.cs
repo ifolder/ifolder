@@ -3,6 +3,8 @@ using System.Collections;
 using System.IO;
 using System.Threading;
 
+using NUnit.Framework;
+
 using Simias;
 using Simias.Service;
 using Simias.Storage;
@@ -12,16 +14,22 @@ namespace ChangeLogTest
 	/// <summary>
 	/// Summary description for Class1.
 	/// </summary>
-	class ChangeLogTest
+	[TestFixture]
+	public class ChangeLogTest
 	{
 		#region Class Members
 		private Store store;
 		private Manager manager;
 		private string collectionID = Guid.NewGuid().ToString();
+		private EventContext eventCookie;
 		#endregion
 
-		#region Constructor
-		public ChangeLogTest()
+		#region Test Setup
+		/// <summary>
+		/// Performs pre-initialization tasks.
+		/// </summary>
+		[TestFixtureSetUp]
+		public void Init()
 		{
 			Configuration config = new Configuration( Directory.GetCurrentDirectory() );
 
@@ -33,7 +41,11 @@ namespace ChangeLogTest
 		}
 		#endregion
 
-		#region Public Methods
+		#region Iteration Tests
+		/// <summary>
+		/// Test
+		/// </summary>
+		[Test]
 		public void Test1()
 		{
 			// Create a new collection and remember its ID.
@@ -47,7 +59,7 @@ namespace ChangeLogTest
 			ChangeLogReader logReader = new ChangeLogReader( collection );
 		
 			// Get a cookie to track the event changes that we've seen.
-			EventContext eventCookie = logReader.GetEventContext();
+			eventCookie = logReader.GetEventContext();
 
 			// Now start creating a bunch of collection events.
 			Node[] nodeList = new Node[ 200 ];
@@ -58,27 +70,31 @@ namespace ChangeLogTest
 
 			// Commit the changes.
 			collection.Commit( nodeList );
-			Thread.Sleep( 100 );
 
 			// Now get the events that have been generated.
-			ArrayList changeList;
-			bool moreData;
-			
-			try
+			int eventCount = 0;
+			while ( eventCount != 200 )
 			{
-				moreData = logReader.GetEvents( eventCookie, out changeList );
-				Console.WriteLine( "Found {0} change records.", changeList.Count );
-				foreach( ChangeLogRecord rec in changeList )
+				Thread.Sleep( 100 );
+
+				try
 				{
-					Console.WriteLine( "Found change: Record ID: {0}, TimeStamp: {1}, Operation: {2}, Node ID: {3}", rec.RecordID, rec.Epoch, rec.Operation, rec.EventID );
+					ArrayList changeList;
+					logReader.GetEvents( eventCookie, out changeList );
+					eventCount += changeList.Count;
 				}
-			}
-			catch ( CookieExpiredException )
-			{
-				Console.WriteLine( "Cookie expired - Have to dredge." );
+				catch ( CookieExpiredException )
+				{
+					Console.WriteLine( "Cookie expired - Have to dredge." );
+					break;
+				}
 			}
 		}
 
+		/// <summary>
+		/// Test
+		/// </summary>
+		[Test]
 		public void Test2()
 		{
 			// Create a new collection and remember its ID.
@@ -87,9 +103,6 @@ namespace ChangeLogTest
 			// Create a change log reader.
 			ChangeLogReader logReader = new ChangeLogReader( collection );
 			
-			// Get a cookie to track the event changes that we've seen.
-			EventContext eventCookie = logReader.GetEventContext();
-
 			// Build a list of all the node in the collection.
 			ArrayList tempList = new ArrayList( 200 );
 			foreach ( ShallowNode sn in collection )
@@ -103,37 +116,57 @@ namespace ChangeLogTest
 			// Delete all of the node objects.
 			Node[] nodeList = tempList.ToArray( typeof( Node ) ) as Node[];
 			collection.Commit( collection.Delete( nodeList ) );
-			Thread.Sleep( 100 );
-
-			// Now get the events that have been generated.
-			ArrayList changeList;
-			bool moreData;
 
 			// Get the delete events.
-			try
+			int eventCount = 0;
+			while ( eventCount != 200 )
 			{
-				moreData = logReader.GetEvents( eventCookie, out changeList );
-				Console.WriteLine( "Found {0} change records.", changeList.Count );
-				foreach( ChangeLogRecord rec in changeList )
+				Thread.Sleep( 100 );
+
+				try
 				{
-					Console.WriteLine( "Found change: Record ID: {0}, TimeStamp: {1}, Operation: {2}, Node ID: {3}", rec.RecordID, rec.Epoch, rec.Operation, rec.EventID );
+					ArrayList changeList;
+					logReader.GetEvents( eventCookie, out changeList );
+					eventCount += changeList.Count;
 				}
-			}
-			catch ( CookieExpiredException )
-			{
-				Console.WriteLine( "Cookie expired - Have to dredge." );
+				catch ( CookieExpiredException )
+				{
+					Console.WriteLine( "Cookie expired - Have to dredge." );
+					break;
+				}
 			}
 		}
 
+		/// <summary>
+		/// Test
+		/// </summary>
+		[Test]
 		public void Test3()
 		{
 			manager.StopServices();
 			manager.WaitForServicesStopped();
+
+			Collection collection = store.GetCollectionByID( collectionID );
+			ChangeLogReader logReader = new ChangeLogReader( collection );
+
+			ArrayList changeList;
+			logReader.GetEvents( eventCookie, out changeList );
+			if ( changeList.Count > 0 )
+			{
+				throw new ApplicationException( "Still have unconsumed events." );
+			}
+
 			manager.StartServices();
 			manager.WaitForServicesStarted();
 		}
+		#endregion
 
-		public void Stop()
+		#region Test Clean Up
+		/// <summary>
+		/// Clean up for tests.
+		/// </summary>
+		[TestFixtureTearDown]
+		public void Cleanup()
 		{
 			store.Delete();
 
@@ -141,15 +174,5 @@ namespace ChangeLogTest
 			manager.WaitForServicesStopped();
 		}
 		#endregion
-
-		[STAThread]
-		static void Main(string[] args)
-		{
-			ChangeLogTest test = new ChangeLogTest();
-			test.Test1();
-			test.Test2();
-			test.Test3();
-			test.Stop();
-		}
 	}
 }

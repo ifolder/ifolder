@@ -15,7 +15,7 @@
                 DefaultHTMLPageLayout = "Grid"
                 DefaultTargetSchema = "IE50"
                 DelaySign = "false"
-                OutputType = "Exe"
+                OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = "copy $(TargetFileName) $(SolutionDir)..\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)..\stage\"
                 RootNamespace = "ChangeLogTest"
@@ -83,6 +83,11 @@
                     Name = "Simias"
                     AssemblyName = "Simias"
                     HintPath = "..\..\stage\Simias.dll"
+                />
+                <Reference
+                    Name = "nunit.framework"
+                    AssemblyName = "nunit.framework"
+                    HintPath = "..\..\tools\NUnit\net\bin\nunit.framework.dll"
                 />
             </References>
         </Build>
