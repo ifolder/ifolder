@@ -13,9 +13,9 @@
                     StartAction = "Program"
                     StartArguments = "CommonTests.dll"
                     StartPage = ""
-                    StartProgram = "tools\NUnit\bin\nunit-gui.exe"
+                    StartProgram = "C:\wa\ifolder\simias\tools\NUnit\bin\nunit-gui.exe"
                     StartURL = ""
-                    StartWorkingDirectory = "stage"
+                    StartWorkingDirectory = "C:\wa\ifolder\simias\stage"
                     StartWithIE = "true"
                 />
                 <Config
@@ -29,9 +29,9 @@
                     StartAction = "Program"
                     StartArguments = "CommonTests.dll"
                     StartPage = ""
-                    StartProgram = "tools\NUnit\bin\nunit-gui.exe"
+                    StartProgram = "C:\wa\ifolder\simias\tools\NUnit\bin\nunit-gui.exe"
                     StartURL = ""
-                    StartWorkingDirectory = "stage"
+                    StartWorkingDirectory = "C:\wa\ifolder\simias\stage"
                     StartWithIE = "true"
                 />
             </Settings>
