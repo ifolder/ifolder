@@ -20,7 +20,46 @@
 #  Author: Calvin Gaisford <cgaisford@novell.com>
 #
 #######################################################################
-all sdk clean:
+EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/client-pkg
+
+PACKAGE_DIR = `pwd`
+CLIENT_PKG_DIR = $(PACKAGE_DIR)/client-pkg
+IFOLDER_PKG_DIR = $(PACKAGE_DIR)/ifolder-pkg
+TMPDIR = $(PACKAGE_DIR)/temp
+SIMIAS_PKG = ../../../simias/package/darwin/Simias.pkg
+
+all: $(PACKAGE)-$(VERSION).dmg
+
+iFolder-dist.tmp: 
+	cd $(top_srcdir); make dist
+	$(mkinstalldirs) $(TMPDIR)
+	cd $(TMPDIR); rm -rf $(PACKAGE)-$(VERSION); 
+	tar -C $(TMPDIR) -zxvf $(top_srcdir)/$(PACKAGE)-$(VERSION).tar.gz
+	cd $(TMPDIR)/$(PACKAGE)-$(VERSION);./configure --prefix=/opt/novell/ifolder3
+	cd $(TMPDIR)/$(PACKAGE)-$(VERSION);make;rm -rf $(TMPDIR)/iFolder.dst;
+	cd $(TMPDIR)/$(PACKAGE)-$(VERSION);make DESTDIR=$(TMPDIR)/iFolder.dst install
+	touch iFolder-dist.tmp
+
+iFolderClient.pkg: iFolder-dist.tmp
+	/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker -build -p $(PACKAGE_DIR)/iFolderClient.pkg -f $(TMPDIR)/$(PACKAGE)-$(VERSION)/temp/iFolder.dst/opt/novell/ifolder3/ -r $(CLIENT_PKG_DIR)/Install_Resources -i $(CLIENT_PKG_DIR)/Info.plist -d $(CLIENT_PKG_DIR)/Description.plist
+
+
+$(PACKAGE)-$(VERSION).dmg: iFolderClient.pkg $(SIMIAS_PKG)
+	rm -rf dmg
+	$(mkinstalldirs) dmg/.Packages
+	cp -r iFolderClient.pkg dmg/.Packages
+	cp -r $(SIMIAS_PKG) dmg/.Packages
+	tar -C dmg -xvf iFolder.tar
+	hdiutil create -srcfolder dmg $(PACKAGE)-$(VERSION).dmg
+
+clean-local:
+	rm -rf *.pkg
+	rm -rf *.dmg
+	rm -rf $(TMPDIR)
+	rm -rf iFolder-dist.tmp
+	rm -rf dmg
+
+distclean-local:
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
