@@ -225,6 +225,8 @@ static void buddylist_cb_simulate_share_ifolder(GaimBlistNode *node,
 static void invitations_dialog_close_button_cb(GtkWidget *widget,
 					       int response,
 					       gpointer user_data);
+static void invitations_dialog_destroy_cb(GtkWidget *widget, GdkEvent *event,
+										  gpointer user_data);
 static void in_inv_accept_button_cb(GtkWidget *w, GtkTreeView *tree);
 static void in_inv_reject_button_cb(GtkWindow *w, GtkTreeView *tree);
 static void in_inv_sel_changed_cb(GtkTreeSelection *sel, GtkTreeView *tree);
@@ -597,11 +599,21 @@ static void
 invitations_dialog_close_button_cb(GtkWidget *widget, int response,
 				   gpointer user_data)
 {
+g_print("invitations_dialog_close_button_cb() called\n");
 	if (response == GTK_RESPONSE_CLOSE) {
 		/* Hide the Invitations Dialog */
 		gtk_widget_hide_all(invitations_dialog);
 	}
 }
+
+static void
+invitations_dialog_destroy_cb(GtkWidget *widget, GdkEvent *event,
+										  gpointer user_data)
+{
+g_print("invitations_dialog_destroy_cb() called\n");
+	gtk_widget_hide_all(invitations_dialog);
+}
+
 
 static void
 in_inv_accept_button_cb(GtkWidget *w, GtkTreeView *tree)
@@ -1352,7 +1364,6 @@ init_invitations_window()
 	GtkCellRenderer *out_inv_renderer;
 	GtkTreeSelection *out_inv_sel;
 
-	/* FIXME: Figure out how to make the window close action (the one in the title bar) do the same action as the close button.  Right now, it just destroys the window instead of hiding it. */
 	invitations_dialog = gtk_dialog_new_with_buttons(
 				_("Simias Collection Invitations"),
 				GTK_WINDOW(GAIM_GTK_BLIST(gaim_get_blist())),
@@ -1551,6 +1562,13 @@ init_invitations_window()
 	 *******************/
 	g_signal_connect(invitations_dialog, "response",
 		G_CALLBACK(invitations_dialog_close_button_cb),
+		NULL);
+	/* FIXME: Figure out how which one of the following two events is the one that's allowing the dialog to be hidden and remove the other one for cleanliness :). */
+	g_signal_connect(invitations_dialog, "destroy-event",
+		G_CALLBACK(invitations_dialog_destroy_cb),
+		NULL);
+	g_signal_connect(invitations_dialog, "delete-event",
+		G_CALLBACK(invitations_dialog_destroy_cb),
 		NULL);
 
 	g_signal_connect(G_OBJECT(in_inv_accept_button), "clicked",
