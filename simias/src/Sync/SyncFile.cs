@@ -76,8 +76,16 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public int Read(byte[] buffer, int offset, int count)
 		{
-			Log.log.Debug("Reading File {0} : offset = {1}", file, ReadPosition);
-			return workStream.Read(buffer, offset, count);
+			try
+			{
+				Log.log.Debug("Reading File {0} : offset = {1}", file, ReadPosition);
+				return workStream.Read(buffer, offset, count);
+			}
+			catch (Exception ex)
+			{
+				Log.log.Debug(ex, "Failed Reading {0}", file);
+				throw ex;
+			}
 		}
 
 		/// <summary>
@@ -226,6 +234,7 @@ namespace Simias.Sync
 			}
 			else
 			{
+				Log.log.Debug(exception, "Failed writing {0}", file);
 				throw(exception);
 			}
 			//workStream.Write(buffer, offset, count);
