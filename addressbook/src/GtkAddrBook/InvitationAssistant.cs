@@ -26,6 +26,8 @@ using System.IO;
 using System.Drawing;
 using Simias.Sync;
 using Simias.POBox;
+using Simias.Storage;
+using Simias;
 
 using Gtk;
 using Gdk;
@@ -45,7 +47,7 @@ namespace Novell.AddressBook.UI.gtk
 		/// <summary>
 		/// autoloaded widget being the druid
 		/// </summary>
-		[Glade.Widget] private Gnome.Druid	InvitationDruid;
+		[Glade.Widget] private Gnome.Druid	InvitationDruid = null;
 
 		/// <summary>
 		/// autoloaded widget being the druid
@@ -60,67 +62,62 @@ namespace Novell.AddressBook.UI.gtk
 		/// <summary>
 		/// autoloaded widget used to enter invitation path
 		/// </summary>
-		[Glade.Widget] private Gtk.Entry	InvitationEntry;
+		[Glade.Widget] private Gtk.Entry	InvitationEntry = null;
 
 		/// <summary>
 		/// autoloaded widget to browse for invitations
 		/// </summary>
-		[Glade.Widget] private Gtk.Button OpenInvitationButton;
+		[Glade.Widget] private Gtk.Button OpenInvitationButton = null;
 
 		/// <summary>
 		/// autoloaded widget used to enter collection location
 		/// </summary>
-		[Glade.Widget] private Gtk.Entry CollectionPathEntry;
+		[Glade.Widget] private Gtk.Entry CollectionPathEntry = null;
 
 		/// <summary>
 		/// autoloaded widget to browse for collection location
 		/// </summary>
-		[Glade.Widget] private Gtk.Button CollectionBrowseButton;
+		[Glade.Widget] private Gtk.Button CollectionBrowseButton = null;
 
 		/// <summary>
 		/// autoloaded widget Name label
 		/// </summary>
-		[Glade.Widget] private Gtk.Label CollectionNameLabel;
+		[Glade.Widget] private Gtk.Label CollectionNameLabel = null;
 
 		/// <summary>
 		/// autoloaded widget Type label
 		/// </summary>
-		[Glade.Widget] private Gtk.Label CollectionTypeLabel;
+		[Glade.Widget] private Gtk.Label CollectionTypeLabel = null;
 
 		/// <summary>
 		/// autoloaded widget From label
 		/// </summary>
-		[Glade.Widget] private Gtk.Label CollectionFromLabel;
+		[Glade.Widget] private Gtk.Label CollectionFromLabel = null;
 
 		/// <summary>
 		/// autoloaded widget Rights label
 		/// </summary>
-		[Glade.Widget] private Gtk.Label SelectLabel;
+		[Glade.Widget] private Gtk.Label SelectLabel = null;
 
 		/// <summary>
 		/// autoloaded widget Rights label
 		/// </summary>
-		[Glade.Widget] private Gtk.Label SelectPathLabel;
+		[Glade.Widget] private Gtk.Label SelectPathLabel = null;
 
 		/// <summary>
 		/// autoloaded widget Main Window
 		/// </summary>
-		[Glade.Widget] private Gtk.Window InviteWindow;
+		[Glade.Widget] private Gtk.Window InviteWindow = null;
 
 		/// <summary>
 		/// Storage of the invitation file to process
 		/// </summary>
-		private string 	inviteFile;
+		private string 	inviteFile = null;
 
-		/// <summary>
-		/// Flag used to indicate if the Load Wizard page should be shown
-		/// </summary>
-		private bool		showLoadPage;
-
-		/// <summary>
-		/// Flag used to indicate if the Load Wizard page should be shown
-		/// </summary>
-		private SubscriptionInfo subInfo;
+		private SubscriptionInfo	subInfo = null;
+		private Subscription		subscription = null;
+		private Store				store = null;
+		private POBox				pobox = null;
 
 		public event EventHandler AssistantClosed;
 
@@ -133,7 +130,7 @@ namespace Novell.AddressBook.UI.gtk
 		public InvitationAssistant()
 		{
 			inviteFile = "";
-			showLoadPage = true;
+//			showLoadPage = true;
 			Init_Glade();
 		}
 
@@ -145,7 +142,7 @@ namespace Novell.AddressBook.UI.gtk
 		public InvitationAssistant(string inviteFile)
 		{
 			this.inviteFile = inviteFile;
-			showLoadPage = false;
+//			showLoadPage = false;
 			Init_Glade();
 		}
 #endregion
@@ -234,8 +231,7 @@ namespace Novell.AddressBook.UI.gtk
 			{
 				try
 				{
-					subInfo = new SubscriptionInfo(fs.Filename);
-
+					InitSubscriptionInfo(fs.Filename);
 					InvitationEntry.Text = fs.Filename;
 				}
 				catch(Exception e)
@@ -254,19 +250,42 @@ namespace Novell.AddressBook.UI.gtk
 			}
 		}
 
+		private void InitSubscriptionInfo(string filename)
+		{
+			if(store == null)
+				store = new Store(new Configuration());
+			
+			subInfo = new SubscriptionInfo(filename);
+
+			pobox = POBox.GetPOBox(store, subInfo.DomainID);
+			Node node = pobox.GetNodeByID(subInfo.SubscriptionID);
+			if(node != null)
+			{
+				subscription = new Subscription(node);
+			}
+			else
+			{
+				subscription = new Subscription("Subscription Name",
+													subInfo);
+				subscription.SubscriptionState = SubscriptionStates.Received;
+				pobox.AddMessage(subscription);
+			}
+		}
+
 		private void on_select_location_prepare(object o, EventArgs args)
 		{
-			if(subInfo != null)
+			if((subInfo != null) && (subscription != null))
 			{
-				CollectionNameLabel.Text = subInfo.SubscriptionCollectionName;
-				if( (subInfo.SubscriptionCollectionType != null) && 
-						(subInfo.SubscriptionCollectionType.Length > 0) )
+				CollectionNameLabel.Text = 
+						subscription.SubscriptionCollectionName;
+				if( (subscription.SubscriptionCollectionType != null) && 
+						(subscription.SubscriptionCollectionType.Length > 0) )
 					CollectionTypeLabel.Text = 
-							subInfo.SubscriptionCollectionType;
+							subscription.SubscriptionCollectionType;
 				else
 					CollectionTypeLabel.Text = "iFolder";
 
-				CollectionFromLabel.Text = subInfo.DomainName;
+				CollectionFromLabel.Text = subscription.FromName;
 
 				if(!subInfo.SubscriptionCollectionHasDirNode)
 				{
@@ -331,9 +350,20 @@ namespace Novell.AddressBook.UI.gtk
 
 		private void on_druid_finish(object o, EventArgs args)
 		{
-			Subscription sub = new Subscription("New Subscription", 
-													subInfo);
-			sub.SubscriptionState = SubscriptionStates.Received;
+			try
+			{
+				subscription.SubscriptionState = SubscriptionStates.Replied;
+				subscription.SubscriptionDisposition = 
+						SubscriptionDispositions.Accepted;
+				Member member = pobox.GetCurrentMember();
+				subscription.FromName = member.Name;
+				subscription.FromIdentity = member.UserID;
+				pobox.Commit(subscription);
+			}
+			catch(SimiasException ex)
+			{
+				Console.WriteLine(ex);
+			}
 			on_close(o, args);
 		}
 
