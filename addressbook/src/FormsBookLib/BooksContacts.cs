@@ -65,6 +65,7 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.ComboBox queryType;
 		private System.ComponentModel.IContainer components;
 		private string loadPath;
+		private Size createBookSize;
 		#endregion
 
 		public BooksContacts()
@@ -73,7 +74,8 @@ namespace Novell.iFolder.FormsBookLib
 			InitializeComponent();
 
 			// TODO: Add any initialization after the InitializeComponent call
-			this.createContact.Enabled = false;
+			createBookSize = createBook.Size;
+			createContact.Enabled = false;
 
 			// Context menu for contacts list view.
 			editContactMenu = new MenuItem("Edit...");
@@ -144,18 +146,18 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.createBook.Location = new System.Drawing.Point(8, 368);
 			this.createBook.Name = "createBook";
-			this.createBook.Size = new System.Drawing.Size(24, 23);
+			this.createBook.Size = new System.Drawing.Size(80, 23);
 			this.createBook.TabIndex = 4;
-			this.createBook.Text = "+";
+			this.createBook.Text = "New Book...";
 			this.createBook.Click += new System.EventHandler(this.createBook_Click);
 			// 
 			// createContact
 			// 
 			this.createContact.Location = new System.Drawing.Point(128, 368);
 			this.createContact.Name = "createContact";
-			this.createContact.Size = new System.Drawing.Size(24, 23);
+			this.createContact.Size = new System.Drawing.Size(88, 23);
 			this.createContact.TabIndex = 5;
-			this.createContact.Text = "+";
+			this.createContact.Text = "New Contact...";
 			this.createContact.Click += new System.EventHandler(this.createContact_Click);
 			// 
 			// panel1
@@ -570,6 +572,19 @@ namespace Novell.iFolder.FormsBookLib
 			Point point = this.createContact.Location;
 			point.X = this.splitter1.Location.X + 8;
 			this.createContact.Location = point;
+
+			// Change the client size of the createBook button if needed.
+			Size cbClientSize = createBook.ClientSize;
+			Point cbLocation = createBook.Location;
+			if ((cbLocation.X + createBookSize.Width) > splitter1.Location.X)
+			{
+				cbClientSize.Width = splitter1.Location.X - cbLocation.X;
+				createBook.ClientSize = cbClientSize;
+			}
+			else
+			{
+				createBook.ClientSize = createBookSize;
+			}
 
 			// ... and resize the column headers.
 			this.contacts.Columns[0].Width = this.contacts.Size.Width - 4;
