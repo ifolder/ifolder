@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # InvitationWizard variables
@@ -86,6 +86,6 @@ InvitationWizard_LIBPATH := $(subst /,$(SEP), $(InvitationWizard_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(InvitationWizard_LIBPATH) $(InvitationWizard_INCLUDES)
 
-InvitationWizard.exe: $(InvitationWizard_SOURCES) $(InvitationWizard_LIBS) ../config.mk
+InvitationWizard.exe: $(InvitationWizard_SOURCES) $(InvitationWizard_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:InvitationWizard.Doc.xml $(CSCFLAGS) $(InvitationWizard_FLAGS) $(InvitationWizard_LIBS:%=/r:%) $(InvitationWizard_LIBPATH:%=/lib:%) $(InvitationWizard_SOURCES)
 

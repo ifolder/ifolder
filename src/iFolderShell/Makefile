@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # iFolderComponentTests variables
@@ -107,7 +107,7 @@ iFolderComponentTests_LIBPATH := $(subst /,$(SEP), $(iFolderComponentTests_LIBPA
 # update VPATH
 VPATH := $(VPATH) $(iFolderComponentTests_LIBPATH) $(iFolderComponentTests_INCLUDES)
 
-iFolderComponentTests.dll: $(iFolderComponentTests_SOURCES) $(iFolderComponentTests_LIBS) ../config.mk
+iFolderComponentTests.dll: $(iFolderComponentTests_SOURCES) $(iFolderComponentTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:iFolderComponentTests.Doc.xml $(CSCFLAGS) $(iFolderComponentTests_FLAGS) $(iFolderComponentTests_LIBS:%=/r:%) $(iFolderComponentTests_LIBPATH:%=/lib:%) $(iFolderComponentTests_SOURCES)
 
 #=============================================================================
@@ -123,16 +123,16 @@ iFolderShell_LIBPATH := $(subst /,$(SEP), $(iFolderShell_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(iFolderShell_LIBPATH) $(iFolderShell_INCLUDES)
 
-%$(OBJ_EXT) : %.c ../config.mk
+%$(OBJ_EXT) : %.c ../../config.mk
 	$(CC) $(COUT)$@ $(iFolderShell_FLAGS) $(iFolderShell_INCLUDES) $(CFLAGS) $<
 
-%$(OBJ_EXT) : %.cpp ../config.mk
+%$(OBJ_EXT) : %.cpp ../../config.mk
 	$(CXX) $(COUT)$@ $(iFolderShell_FLAGS) $(iFolderShell_INCLUDES) $(CXXFLAGS) $<
 
-%$(RES_EXT) : %.rc ../config.mk
+%$(RES_EXT) : %.rc ../../config.mk
 	$(RC) $(RCFLAGS) $(CHARFLAGS) $(COUT)$@ $<
 
-$(LIB_PRE)iFolderShell$(SHARED_LIB_EXT): $(iFolderShell_SOURCES) ../config.mk
+$(LIB_PRE)iFolderShell$(SHARED_LIB_EXT): $(iFolderShell_SOURCES) ../../config.mk
 	$(LD) $(iFolderShell_LDFLAGS) $(LDFLAGS) $(LDOUT)$@ $(iFolderShell_LIBPATH:%=$(LDINC)%) $(iFolderShell_DEF) $(iFolderShell_SOURCES) $(iFolderShell_LIBS:%=$(LIBFLAG)%) $(LIBS)
 
 #=============================================================================
@@ -148,7 +148,7 @@ iFolderComponent_LIBPATH := $(subst /,$(SEP), $(iFolderComponent_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(iFolderComponent_LIBPATH) $(iFolderComponent_INCLUDES)
 
-iFolderComponent.dll: $(iFolderComponent_SOURCES) $(iFolderComponent_LIBS) ../config.mk
+iFolderComponent.dll: $(iFolderComponent_SOURCES) $(iFolderComponent_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:iFolderComponent.Doc.xml $(CSCFLAGS) $(iFolderComponent_FLAGS) $(iFolderComponent_LIBS:%=/r:%) $(iFolderComponent_LIBPATH:%=/lib:%) $(iFolderComponent_SOURCES)
 
 #=============================================================================

@@ -334,7 +334,7 @@ if ($opt_shell eq 'bash')
 {
     # this needs to be changed but for now, assume the simias
     # diretory is up one directory from our root directory
-    chdir('../..');
+    chdir('..');
     my $cvs_root_dir = `pwd`;
     chomp($cvs_root_dir);
 
@@ -350,7 +350,7 @@ if ($opt_shell eq 'bash')
     $variables{'STAGE_DIR'} = "$variables{'SRCDIR'}/stage";
     $variables{'SIMIAS_ROOT'} = "$cvs_root_dir/simias";
     $variables{'ADDRESSBOOK_ROOT'} = "$cvs_root_dir/addressbook";
-    chdir($variables{'SRCDIR'});
+    chdir($root_dir);
 
     # commands
     $variables{'RM'} = 'rm -f';
@@ -367,7 +367,7 @@ elsif ($opt_shell eq 'cmd')
 {
     # this needs to be changed but for now, assume the simias
     # diretory is up one directory from our root directory
-    chdir('../..');
+    chdir('..');
     my $cvs_root_dir = `cd`;
     chomp($cvs_root_dir);
 
@@ -383,7 +383,7 @@ elsif ($opt_shell eq 'cmd')
     $variables{'STAGE_DIR'} = "$variables{'SRCDIR'}\\stage";
     $variables{'SIMIAS_ROOT'} = "$cvs_root_dir\\simias";
     $variables{'ADDRESSBOOK_ROOT'} = "$cvs_root_dir\\addressbook";
-    chdir($variables{'SRCDIR'});
+    chdir($root_dir);
 
     # commands
     $variables{'RM'} = 'del /f /q';
@@ -775,8 +775,11 @@ close(OUT);
 # File CVS History:
 #
 # $Log$
-# Revision 1.1  2004/02/21 19:10:26  cgaisford
-# Initial revision
+# Revision 1.1  2004/02/22 01:00:13  cgaisford
+# Modified project's build so a configure and make can be done at the top level
+#
+# Revision 1.1.1.1  2004/02/21 19:10:26  cgaisford
+# Initial CVS import
 #
 # Revision 1.2  2004/02/21 18:58:49  cgaisford
 # Updated themakefiles to use the Simias namespace and find simias using the SIMIAS_ROOT variable

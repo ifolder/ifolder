@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # iFolderCmd variables
@@ -104,7 +104,7 @@ iFolderCmd_LIBPATH := $(subst /,$(SEP), $(iFolderCmd_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(iFolderCmd_LIBPATH) $(iFolderCmd_INCLUDES)
 
-iFolderCmd.exe: $(iFolderCmd_SOURCES) $(iFolderCmd_LIBS) ../config.mk
+iFolderCmd.exe: $(iFolderCmd_SOURCES) $(iFolderCmd_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:iFolderCmd.Doc.xml $(CSCFLAGS) $(iFolderCmd_FLAGS) $(iFolderCmd_LIBS:%=/r:%) $(iFolderCmd_LIBPATH:%=/lib:%) $(iFolderCmd_SOURCES)
 
 #=============================================================================
@@ -120,7 +120,7 @@ iFolderTests_LIBPATH := $(subst /,$(SEP), $(iFolderTests_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(iFolderTests_LIBPATH) $(iFolderTests_INCLUDES)
 
-iFolderTests.dll: $(iFolderTests_SOURCES) $(iFolderTests_LIBS) ../config.mk
+iFolderTests.dll: $(iFolderTests_SOURCES) $(iFolderTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:iFolderTests.Doc.xml $(CSCFLAGS) $(iFolderTests_FLAGS) $(iFolderTests_LIBS:%=/r:%) $(iFolderTests_LIBPATH:%=/lib:%) $(iFolderTests_SOURCES)
 
 #=============================================================================
@@ -136,6 +136,6 @@ iFolder_LIBPATH := $(subst /,$(SEP), $(iFolder_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(iFolder_LIBPATH) $(iFolder_INCLUDES)
 
-iFolder.dll: $(iFolder_SOURCES) $(iFolder_LIBS) ../config.mk
+iFolder.dll: $(iFolder_SOURCES) $(iFolder_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:iFolder.Doc.xml $(CSCFLAGS) $(iFolder_FLAGS) $(iFolder_LIBS:%=/r:%) $(iFolder_LIBPATH:%=/lib:%) $(iFolder_SOURCES)
 

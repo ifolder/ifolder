@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # iFolderApp variables
@@ -86,6 +86,6 @@ iFolderApp_LIBPATH := $(subst /,$(SEP), $(iFolderApp_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(iFolderApp_LIBPATH) $(iFolderApp_INCLUDES)
 
-iFolderApp.exe: $(iFolderApp_SOURCES) $(iFolderApp_LIBS) ../config.mk
+iFolderApp.exe: $(iFolderApp_SOURCES) $(iFolderApp_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:iFolderApp.Doc.xml $(CSCFLAGS) $(iFolderApp_FLAGS) $(iFolderApp_LIBS:%=/r:%) $(iFolderApp_LIBPATH:%=/lib:%) $(iFolderApp_SOURCES)
 
