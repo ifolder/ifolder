@@ -35,34 +35,10 @@ namespace Simias.Agent
 		/// <summary>
 		/// Generate a collection share invitation.
 		/// </summary>
-		/// <param name="identity">The user identity.</param>
 		/// <param name="collection">The collection object.</param>
+		/// <param name="identity">The user identity.</param>
 		/// <returns>The generated invitation object.</returns>
-		Invitation Generate(string identity, Collection collection);
-
-		/// <summary>
-		/// Send a collection share invitation.
-		/// </summary>
-		/// <param name="identity">The user identity.</param>
-		/// <param name="collection">The collection object.</param>
-		/// <param name="message">A message describing the collection.</param>
-		/// <returns>The generated invitation object.</returns>
-		Invitation Generate(string identity, Collection collection, string message);
-
-		/// <summary>
-		/// Send a collection share invitation.
-		/// </summary>
-		/// <param name="identity">The user identity.</param>
-		/// <param name="collection">The collection object.</param>
-		void Invite(string identity, Collection collection);
-
-		/// <summary>
-		/// Send a collection share invitation.
-		/// </summary>
-		/// <param name="identity">The user identity.</param>
-		/// <param name="collection">The collection object.</param>
-		/// <param name="message">A message describing the collection.</param>
-		void Invite(string identity, Collection collection, string message);
+		Invitation CreateInvitation(Collection collection, string identity);
 
 		/// <summary>
 		/// Send a collection share invitation.

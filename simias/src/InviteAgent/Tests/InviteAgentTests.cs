@@ -30,7 +30,6 @@ using Simias;
 using Simias.Sync;
 using Simias.Agent;
 using Simias.Storage;
-using Novell.AddressBook;
 
 namespace Simias.Agent.Tests
 {
@@ -105,34 +104,18 @@ namespace Simias.Agent.Tests
 		public void TestInvite()
 		{
 			// user
-			Novell.AddressBook.Manager abManager = Novell.AddressBook.Manager.Connect(testStoreUri);
-			
-			Novell.AddressBook.AddressBook ab = abManager.OpenDefaultAddressBook();
+			AgentFactory factory = new AgentFactory(testStorePath);
+			IInviteAgent agent = factory.GetInviteAgent();
+			Invitation invitation = agent.CreateInvitation(collection, collection.LocalStore.CurrentUser);
 
-			Contact owner = ab.GetContact(collection.Owner);
-			owner.UserName = "JDoe";
-			Name oName = new Name("John", "Doe");
-			oName.Preferred = true;
-			owner.AddName(oName);
-			owner.EMail = "denali@novell.com";
-			owner.Commit();
+			invitation.FromName = "JDoe";
+			invitation.FromEmail = "denali@novell.com";
 
-			Contact guest = new Contact();
-			guest.UserName = "JDoe";
-			ab.AddContact(guest);
-			Name gName = new Name("John", "Doe");
-			gName.Preferred = true;
-			guest.AddName(gName);
-			guest.EMail = "denali@novell.com";
-			guest.Commit();
-
-			// rights
-			collection.SetUserAccess(guest.Identity, Access.Rights.ReadWrite);
-			collection.Commit(true);
+			invitation.ToName = "John Doe";
+			invitation.ToEmail = "denali@novell.com";
 
 			// invite
-			AgentFactory factory = new AgentFactory(testStorePath);
-			factory.GetInviteAgent().Invite(guest.Identity, collection);
+			agent.Invite(invitation);
 		}
 
 		/// <summary>
@@ -169,35 +152,18 @@ namespace Simias.Agent.Tests
 		public void TestBadInvite1()
 		{
 			// user
-			Novell.AddressBook.Manager abManager = Novell.AddressBook.Manager.Connect(testStoreUri);
-			
-			Novell.AddressBook.AddressBook ab = abManager.OpenDefaultAddressBook();
+			AgentFactory factory = new AgentFactory(testStorePath);
+			IInviteAgent agent = factory.GetInviteAgent();
+			Invitation invitation = agent.CreateInvitation(collection, collection.LocalStore.CurrentUser);
 
-			Contact owner = ab.GetContact(collection.Owner);
-			owner.UserName = "JDoe";
-			Name oName = new Name("John", "Doe");
-			oName.Preferred = true;
-			owner.AddName(oName);
-			// MAKE BAD:
-			owner.EMail = "";
-			owner.Commit();
+			invitation.FromName = "JDoe";
+			// BAD: invitation.FromEmail = "denali@novell.com";
 
-			Contact guest = new Contact();
-			guest.UserName = "JDoe";
-			ab.AddContact(guest);
-			Name gName = new Name("John", "Doe");
-			gName.Preferred = true;
-			guest.AddName(gName);
-			guest.EMail = "denali@novell.com";
-			guest.Commit();
-
-			// rights
-			collection.SetUserAccess(guest.Identity, Access.Rights.ReadWrite);
-			collection.Commit(true);
+			invitation.ToName = "John Doe";
+			invitation.ToEmail = "denali@novell.com";
 
 			// invite
-			AgentFactory factory = new AgentFactory(testStorePath);
-			factory.GetInviteAgent().Invite(guest.Identity, collection);
+			agent.Invite(invitation);
 		}
 		
 		/// <summary>
@@ -208,34 +174,18 @@ namespace Simias.Agent.Tests
 		public void TestBadInvite2()
 		{
 			// user
-			Novell.AddressBook.Manager abManager = Novell.AddressBook.Manager.Connect(testStoreUri);
-			
-			Novell.AddressBook.AddressBook ab = abManager.OpenDefaultAddressBook();
+			AgentFactory factory = new AgentFactory(testStorePath);
+			IInviteAgent agent = factory.GetInviteAgent();
+			Invitation invitation = agent.CreateInvitation(collection, collection.LocalStore.CurrentUser);
 
-			Contact owner = ab.GetContact(collection.Owner);
-			owner.UserName = "JDoe";
-			Name oName = new Name("John", "Doe");
-			oName.Preferred = true;
-			owner.AddName(oName);
-			owner.EMail = "denali@novell.com";
-			owner.Commit();
+			invitation.FromName = "JDoe";
+			invitation.FromEmail = "denali@novell.com";
 
-			Contact guest = new Contact();
-			guest.UserName = "JDoe1";
-			ab.AddContact(guest);
-			Name gName = new Name("John", "Doe");
-			gName.Preferred = true;
-			guest.AddName(gName);
-			// MAKE BAD: guest.EMail = "denali@novell.com";
-			guest.Commit();
-
-			// rights
-			collection.SetUserAccess(guest.Identity, Access.Rights.ReadWrite);
-			collection.Commit(true);
+			invitation.ToName = "John Doe";
+			// BAD: invitation.ToEmail = "denali@novell.com";
 
 			// invite
-			AgentFactory factory = new AgentFactory(testStorePath);
-			factory.GetInviteAgent().Invite(guest.Identity, collection);
+			agent.Invite(invitation);
 		}
 	}
 }

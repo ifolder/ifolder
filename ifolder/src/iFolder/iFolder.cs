@@ -1054,8 +1054,27 @@ namespace Novell.iFolder
 
 			if (invite)
 			{
-				// Inform the notification service that we have shared.
-				(new AgentFactory()).GetInviteAgent().Invite(userID, collection);
+				// inform the notification service that we have shared
+				InviteAgent agent = (new AgentFactory()).GetInviteAgent();
+				Invitation invitation = agent.CreateInvitation(collection, userID);
+
+				// TODO: where should we discover the contact information?
+				Novell.AddressBook.Manager abManager =
+					Novell.AddressBook.Manager.Connect(collection.LocalStore.StorePath);
+				Novell.AddressBook.AddressBook ab = abManager.OpenDefaultAddressBook();
+
+				// from
+				Contact from = ab.GetContact(collection.Owner);
+				invitation.FromName = from.FN;
+				invitation.FromEmail = from.EMail;
+
+				// to
+				Contact to = ab.GetContact(userID);
+				invitation.ToName = to.FN;
+				invitation.ToEmail = to.EMail;
+
+				// send the invitation
+				agent.Invite(invitation);
 			}
 		}
 

@@ -31,7 +31,6 @@ using Simias;
 using Simias.Agent;
 using Simias.Storage;
 using Simias.Sync;
-using Novell.AddressBook;
 
 namespace Simias.Agent
 {
@@ -45,22 +44,10 @@ namespace Simias.Agent
 		/// <summary>
 		/// Generate an inviation for a user to a collection
 		/// </summary>
-		/// <param name="identity">The user identity</param>
 		/// <param name="collection">The collection object</param>
-		/// <returns>The generated invitation object</returns>
-		public Invitation Generate(string identity, Collection collection)
-		{
-			return Generate(identity, collection, null);
-		}
-
-		/// <summary>
-		/// Generate an inviation for a user to a collection
-		/// </summary>
 		/// <param name="identity">The user identity</param>
-		/// <param name="collection">The collection object</param>
-		/// <param name="message">An optional message in the invitation</param>
 		/// <returns>The generated invitation object</returns>
-		public Invitation Generate(string identity, Collection collection, string message)
+		public Invitation CreateInvitation(Collection collection, string identity)
 		{
 			// open the store
 			SyncStore syncStore = new SyncStore(storePath);
@@ -71,26 +58,6 @@ namespace Simias.Agent
 			// generate the invitation
 			Invitation invitation = syncCollection.CreateInvitation(identity);
 
-			// optional message
-			invitation.Message = message;
-
-			// contact information
-			Uri uri = null;
-			if (storePath != null) uri = new Uri(storePath);
-			Novell.AddressBook.Manager abManager =
-				Novell.AddressBook.Manager.Connect(uri);
-			Novell.AddressBook.AddressBook ab = abManager.OpenDefaultAddressBook();
-
-			// from
-			Contact from = ab.GetContact(collection.Owner);
-			invitation.FromName = from.FN;
-			invitation.FromEmail = from.EMail;
-
-			// to
-			Contact to = ab.GetContact(identity);
-			invitation.ToName = to.FN;
-			invitation.ToEmail = to.EMail;
-
 			return invitation;
 		}
 
@@ -100,31 +67,6 @@ namespace Simias.Agent
 		/// <param name="invitation">The invitation</param>
 		public abstract void Invite(Invitation invitation);
 		
-		/// <summary>
-		/// Invite a user to a collection
-		/// </summary>
-		/// <param name="identity">The user identity</param>
-		/// <param name="collection">The collection object</param>
-		public void Invite(string identity, Collection collection)
-		{
-			Invite(identity, collection, null);
-		}
-
-		/// <summary>
-		/// Invite a user to a collection
-		/// </summary>
-		/// <param name="identity">The user identity</param>
-		/// <param name="collection">The collection object</param>
-		/// <param name="message">An optional message in the invitation</param>
-		public void Invite(string identity, Collection collection, string message)
-		{
-			// generate the invitation
-			Invitation invitation = Generate(identity, collection, message);
-
-			// send the invitation
-			Invite(invitation);
-		}
-
 		/// <summary>
 		/// Accept a collection on this machine
 		/// </summary>
