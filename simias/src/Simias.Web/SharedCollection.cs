@@ -323,6 +323,7 @@ namespace Simias.Web
 			*/
 
 
+			/*
 			// This will check on Linux to see if a path is on a physical
 			// drive and not mounted off the network
 			if(File.Exists("/proc/mounts"))
@@ -363,6 +364,7 @@ namespace Simias.Web
 				if(!retval)
 					return retval;
 			}
+			*/
 #endif
 
 
