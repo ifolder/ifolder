@@ -83,10 +83,8 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.TabPage tabSharing;
 		private System.Windows.Forms.TabPage tabGeneral;
 		private System.Windows.Forms.CheckBox setLimit;
-		private System.Windows.Forms.TextBox limit;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label used;
-		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label usedUnits;
 		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.Label available;
@@ -104,10 +102,11 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Button access;
 		private Novell.Forms.Controls.GaugeChart gaugeChart;
 		private System.Windows.Forms.Label label7;
-		private System.Windows.Forms.Label total;
-		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.ColumnHeader columnHeader2;
 		private System.Windows.Forms.ColumnHeader columnHeader3;
+		private System.Windows.Forms.TextBox limitEdit;
+		private System.Windows.Forms.Label limitLabel;
+		private System.Windows.Forms.Label limit;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -177,9 +176,7 @@ namespace Novell.iFolderCom
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.gaugeChart = new Novell.Forms.Controls.GaugeChart();
 			this.label7 = new System.Windows.Forms.Label();
-			this.total = new System.Windows.Forms.Label();
-			this.label12 = new System.Windows.Forms.Label();
-			this.limit = new System.Windows.Forms.TextBox();
+			this.limitEdit = new System.Windows.Forms.TextBox();
 			this.setLimit = new System.Windows.Forms.CheckBox();
 			this.label10 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
@@ -189,7 +186,8 @@ namespace Novell.iFolderCom
 			this.usedUnits = new System.Windows.Forms.Label();
 			this.used = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
-			this.label4 = new System.Windows.Forms.Label();
+			this.limitLabel = new System.Windows.Forms.Label();
+			this.limit = new System.Windows.Forms.Label();
 			this.tabSharing = new System.Windows.Forms.TabPage();
 			this.access = new System.Windows.Forms.Button();
 			this.add = new System.Windows.Forms.Button();
@@ -356,9 +354,7 @@ namespace Novell.iFolderCom
 			// 
 			this.groupBox3.Controls.Add(this.gaugeChart);
 			this.groupBox3.Controls.Add(this.label7);
-			this.groupBox3.Controls.Add(this.total);
-			this.groupBox3.Controls.Add(this.label12);
-			this.groupBox3.Controls.Add(this.limit);
+			this.groupBox3.Controls.Add(this.limitEdit);
 			this.groupBox3.Controls.Add(this.setLimit);
 			this.groupBox3.Controls.Add(this.label10);
 			this.groupBox3.Controls.Add(this.label3);
@@ -368,11 +364,12 @@ namespace Novell.iFolderCom
 			this.groupBox3.Controls.Add(this.usedUnits);
 			this.groupBox3.Controls.Add(this.used);
 			this.groupBox3.Controls.Add(this.label1);
-			this.groupBox3.Controls.Add(this.label4);
+			this.groupBox3.Controls.Add(this.limitLabel);
+			this.groupBox3.Controls.Add(this.limit);
 			this.groupBox3.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.groupBox3.Location = new System.Drawing.Point(8, 208);
 			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.Size = new System.Drawing.Size(400, 144);
+			this.groupBox3.Size = new System.Drawing.Size(400, 112);
 			this.groupBox3.TabIndex = 1;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Disk space";
@@ -382,50 +379,34 @@ namespace Novell.iFolderCom
 			this.gaugeChart.Location = new System.Drawing.Point(312, 24);
 			this.gaugeChart.Name = "gaugeChart";
 			this.gaugeChart.Size = new System.Drawing.Size(16, 72);
-			this.gaugeChart.TabIndex = 9;
+			this.gaugeChart.TabIndex = 10;
 			// 
 			// label7
 			// 
 			this.label7.Location = new System.Drawing.Point(264, 80);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(24, 16);
-			this.label7.TabIndex = 8;
+			this.label7.TabIndex = 9;
 			this.label7.Text = "MB";
 			// 
-			// total
+			// limitEdit
 			// 
-			this.total.Location = new System.Drawing.Point(168, 80);
-			this.total.Name = "total";
-			this.total.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.total.Size = new System.Drawing.Size(88, 16);
-			this.total.TabIndex = 7;
-			// 
-			// label12
-			// 
-			this.label12.Location = new System.Drawing.Point(16, 80);
-			this.label12.Name = "label12";
-			this.label12.Size = new System.Drawing.Size(144, 16);
-			this.label12.TabIndex = 6;
-			this.label12.Text = "Total space:";
-			// 
-			// limit
-			// 
-			this.limit.Enabled = false;
-			this.limit.Location = new System.Drawing.Point(160, 112);
-			this.limit.Name = "limit";
-			this.limit.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.limit.Size = new System.Drawing.Size(160, 20);
-			this.limit.TabIndex = 13;
-			this.limit.Text = "";
-			this.limit.TextChanged += new System.EventHandler(this.limit_TextChanged);
+			this.limitEdit.Enabled = false;
+			this.limitEdit.Location = new System.Drawing.Point(160, 50);
+			this.limitEdit.Name = "limitEdit";
+			this.limitEdit.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+			this.limitEdit.Size = new System.Drawing.Size(96, 20);
+			this.limitEdit.TabIndex = 4;
+			this.limitEdit.Text = "";
+			this.limitEdit.TextChanged += new System.EventHandler(this.limitEdit_TextChanged);
 			// 
 			// setLimit
 			// 
 			this.setLimit.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.setLimit.Location = new System.Drawing.Point(48, 114);
+			this.setLimit.Location = new System.Drawing.Point(16, 52);
 			this.setLimit.Name = "setLimit";
 			this.setLimit.Size = new System.Drawing.Size(144, 16);
-			this.setLimit.TabIndex = 12;
+			this.setLimit.TabIndex = 3;
 			this.setLimit.Text = "Limit size to:";
 			this.setLimit.CheckedChanged += new System.EventHandler(this.setLimit_CheckedChanged);
 			// 
@@ -434,7 +415,7 @@ namespace Novell.iFolderCom
 			this.label10.Location = new System.Drawing.Point(336, 80);
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(48, 16);
-			this.label10.TabIndex = 11;
+			this.label10.TabIndex = 12;
 			this.label10.Text = "Empty";
 			// 
 			// label3
@@ -442,12 +423,12 @@ namespace Novell.iFolderCom
 			this.label3.Location = new System.Drawing.Point(336, 24);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(48, 16);
-			this.label3.TabIndex = 10;
+			this.label3.TabIndex = 11;
 			this.label3.Text = "Full";
 			// 
 			// availableUnits
 			// 
-			this.availableUnits.Location = new System.Drawing.Point(264, 32);
+			this.availableUnits.Location = new System.Drawing.Point(264, 24);
 			this.availableUnits.Name = "availableUnits";
 			this.availableUnits.Size = new System.Drawing.Size(24, 16);
 			this.availableUnits.TabIndex = 2;
@@ -455,51 +436,59 @@ namespace Novell.iFolderCom
 			// 
 			// available
 			// 
-			this.available.Location = new System.Drawing.Point(168, 32);
+			this.available.Location = new System.Drawing.Point(168, 80);
 			this.available.Name = "available";
 			this.available.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.available.Size = new System.Drawing.Size(88, 16);
-			this.available.TabIndex = 1;
+			this.available.TabIndex = 8;
 			// 
 			// label9
 			// 
-			this.label9.Location = new System.Drawing.Point(16, 32);
+			this.label9.Location = new System.Drawing.Point(16, 80);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(144, 16);
-			this.label9.TabIndex = 0;
-			this.label9.Text = "Free space:";
+			this.label9.TabIndex = 7;
+			this.label9.Text = "Available space:";
 			// 
 			// usedUnits
 			// 
-			this.usedUnits.Location = new System.Drawing.Point(264, 56);
+			this.usedUnits.Location = new System.Drawing.Point(264, 52);
 			this.usedUnits.Name = "usedUnits";
 			this.usedUnits.Size = new System.Drawing.Size(24, 16);
-			this.usedUnits.TabIndex = 5;
+			this.usedUnits.TabIndex = 6;
 			this.usedUnits.Text = "MB";
 			// 
 			// used
 			// 
-			this.used.Location = new System.Drawing.Point(168, 56);
+			this.used.Location = new System.Drawing.Point(168, 24);
 			this.used.Name = "used";
 			this.used.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.used.Size = new System.Drawing.Size(88, 16);
-			this.used.TabIndex = 4;
+			this.used.TabIndex = 1;
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(16, 56);
+			this.label1.Location = new System.Drawing.Point(16, 24);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(144, 16);
-			this.label1.TabIndex = 3;
-			this.label1.Text = "Used space:";
+			this.label1.TabIndex = 0;
+			this.label1.Text = "iFolder size:";
 			// 
-			// label4
+			// limitLabel
 			// 
-			this.label4.Location = new System.Drawing.Point(328, 114);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(24, 16);
-			this.label4.TabIndex = 14;
-			this.label4.Text = "MB";
+			this.limitLabel.Location = new System.Drawing.Point(16, 52);
+			this.limitLabel.Name = "limitLabel";
+			this.limitLabel.Size = new System.Drawing.Size(100, 16);
+			this.limitLabel.TabIndex = 2;
+			this.limitLabel.Text = "iFolder limit:";
+			// 
+			// limit
+			// 
+			this.limit.Location = new System.Drawing.Point(168, 52);
+			this.limit.Name = "limit";
+			this.limit.Size = new System.Drawing.Size(88, 16);
+			this.limit.TabIndex = 5;
+			this.limit.Text = "label4";
 			// 
 			// tabSharing
 			// 
@@ -747,13 +736,13 @@ namespace Novell.iFolderCom
 			{
 				connectToWebService();
 				DiskSpace diskSpace = ifWebService.GetiFolderDiskSpace(ifolder.ID);
+				double usedSpace = Math.Round(diskSpace.UsedSpace/megaByte, 2);
+				used.Text = usedSpace.ToString();
 				if (diskSpace.Limit != 0)
 				{
-					total.Text = limit.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
+					limitEdit.Text = limit.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
 					setLimit.Checked = true;
 
-					double usedSpace = Math.Round(diskSpace.UsedSpace/megaByte, 2);
-					used.Text = usedSpace.ToString();
 					available.Text = ((double)Math.Round(diskSpace.AvailableSpace/megaByte, 2)).ToString();
 
 					gaugeChart.MaxValue = diskSpace.Limit / megaByte;
@@ -763,7 +752,7 @@ namespace Novell.iFolderCom
 				else
 				{
 					setLimit.Checked = false;
-					total.Text = used.Text = available.Text = limit.Text = "";
+					available.Text = limit.Text = limitEdit.Text = "";
 					gaugeChart.Used = 0;
 				}
 			}
@@ -773,7 +762,7 @@ namespace Novell.iFolderCom
 				MessageBox.Show("An error was encountered while reading disk space restrictions.");
 
 				setLimit.Checked = false;
-				total.Text = used.Text = available.Text = limit.Text = "";
+				used.Text = available.Text = limit.Text = "";
 				gaugeChart.Used = 0;
 			}
 
@@ -863,10 +852,6 @@ namespace Novell.iFolderCom
 					shareWith.Items.Add(lvitem);
 				}
 
-				add.Enabled = remove.Enabled = menuFullControl.Enabled = 
-					menuReadWrite.Enabled = menuReadOnly.Enabled = access.Enabled = 
-					setLimit.Enabled = currentUser != null ? currentUser.Rights.Equals("Admin") : false;
-
 				// Clear the hashtable.
 /*				lock (subscrHT)
 				{
@@ -929,6 +914,13 @@ namespace Novell.iFolderCom
 			}
 
 			shareWith.EndUpdate();
+
+			// Enable/disable the buttons.
+			add.Enabled = remove.Enabled = menuFullControl.Enabled = 
+				menuReadWrite.Enabled = menuReadOnly.Enabled = access.Enabled = 
+				setLimit.Visible = limitEdit.Visible = currentUser != null ? currentUser.Rights.Equals("Admin") : false;
+
+			limitLabel.Visible = limit.Visible = !setLimit.Visible;
 
 			// Restore the cursor.
 			Cursor = Cursors.Default;
@@ -1151,7 +1143,7 @@ namespace Novell.iFolderCom
 				// Update the disk quota policy.
 				if (setLimit.Checked)
 				{
-					ifWebService.SetiFolderDiskSpaceLimit(ifolder.ID, (long)(long.Parse(limit.Text) * megaByte));
+					ifWebService.SetiFolderDiskSpaceLimit(ifolder.ID, (long)(long.Parse(limitEdit.Text) * megaByte));
 				}
 				else
 				{
@@ -1805,16 +1797,16 @@ namespace Novell.iFolderCom
 
 		private void setLimit_CheckedChanged(object sender, System.EventArgs e)
 		{
-			limit.Enabled = setLimit.Checked;
+			limitEdit.Enabled = setLimit.Checked;
 			if (setLimit.Focused)
 			{
 				apply.Enabled = true;
 			}
 		}
 
-		private void limit_TextChanged(object sender, System.EventArgs e)
+		private void limitEdit_TextChanged(object sender, System.EventArgs e)
 		{
-			if (limit.Focused)
+			if (limitEdit.Focused)
 			{
 				apply.Enabled = true;
 			}
