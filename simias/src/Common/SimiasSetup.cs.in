@@ -77,6 +77,9 @@ namespace Simias
 				{
 					newprefix = Environment.CurrentDirectory;
 				}
+
+				// Setup the new prefix.				
+				prefix = newprefix;
 			}
 		}
 
