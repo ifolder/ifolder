@@ -123,6 +123,33 @@ namespace Simias.Sync
 			this.Length = length;
 			this.Offset = offset;
 		}
+
+		/// <summary>
+		/// Adds the segment to the array.  If this segment is contiguous with the last segment
+		/// combine them.
+		/// </summary>
+		/// <param name="segArray">The array to add the segment to.</param>
+		/// <param name="seg">The new segment to add.</param>
+		public static void AddToArray(ArrayList segArray, OffsetSegment seg)
+		{
+			OffsetSegment lastSeg;
+			if (segArray.Count > 0)
+			{
+				lastSeg = segArray[segArray.Count -1] as OffsetSegment;
+				if (seg.Offset - lastSeg.Length == lastSeg.Offset)
+				{
+					lastSeg.Length += seg.Length;
+				}
+				else
+				{
+					segArray.Add(seg);
+				}
+			}
+			else
+			{
+				segArray.Add(seg);
+			}
+		}
 	}
 
 	#endregion
@@ -635,19 +662,8 @@ namespace Simias.Sync
 								{
 									long segLen = startByte - endOfLastMatch;
 									long segOffset = ReadPosition - bytesRead + endOfLastMatch;
-									OffsetSegment seg = null;
-									if (writeArray.Count > 0)
-									{
-										seg = writeArray[writeArray.Count - 1] as OffsetSegment;
-									}
-									if (seg != null && (seg.Offset + seg.Length) == segOffset)
-									{
-										seg.Length += segLen;
-									}
-									else
-									{
-										writeArray.Add(new OffsetSegment(segLen, segOffset));
-									}
+									OffsetSegment seg = new OffsetSegment(segLen, segOffset);
+									OffsetSegment.AddToArray(writeArray, seg);
 									sizeToSync += segLen;
 								}
 								// Save the matched block.
@@ -669,11 +685,12 @@ namespace Simias.Sync
 					// We need to copy any data that has not been saved.
 					if (endOfLastMatch == 0)
 					{
-						// We don't want to send to large of a buffer. Create a DiffRecord
-						// for the data in the buffer.
-						OffsetSegment seg = new OffsetSegment(startByte - endOfLastMatch, ReadPosition - bytesRead + endOfLastMatch);
-						writeArray.Add(seg);
-						sizeToSync += seg.Length;
+						// Add this segment to the array.
+						long segOffset = ReadPosition - bytesRead + endOfLastMatch;
+						long segLen = startByte - endOfLastMatch;
+						OffsetSegment seg = new OffsetSegment(segLen, segOffset);
+						OffsetSegment.AddToArray(writeArray, seg);
+						sizeToSync += segLen;
 						endOfLastMatch = startByte;
 					}
 					readOffset = bytesRead - endOfLastMatch;
@@ -692,10 +709,11 @@ namespace Simias.Sync
 			// Get the remaining changes.
 			if ((endOfLastMatch + 1) != endByte)//== 0 && endByte != 0)
 			{
-				int len = endByte - endOfLastMatch + 1;
-				OffsetSegment seg = new OffsetSegment(len, ReadPosition - len);
-				writeArray.Add(seg);
-				sizeToSync += seg.Length;
+				long segLen = endByte - endOfLastMatch + 1;
+				long segOffset = ReadPosition - segLen;
+				OffsetSegment seg = new OffsetSegment(segLen, segOffset);
+				OffsetSegment.AddToArray(writeArray, seg);
+				sizeToSync += segLen;
 			}
 		}
 
