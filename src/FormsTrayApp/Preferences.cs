@@ -2824,7 +2824,8 @@ namespace Novell.FormsTrayApp
 				Domain domain = (Domain)lvi.Tag;
 				if (domain != null)
 				{
-					simiasWebService.LogoutFromRemoteDomain(domain.ID);
+					DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domain.ID, null);
+					domainAuth.Logout();
 					login.Visible = true;
 					logout.Visible = false;
 					domain.DomainInfo.Authenticated = false;
