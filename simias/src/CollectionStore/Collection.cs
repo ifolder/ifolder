@@ -243,6 +243,16 @@ namespace Simias.Storage
 			// Add the owner identifier and domain name as properties.
 			properties.AddNodeProperty( PropertyTags.Owner, ownerGuid.ToLower() );
 			properties.AddNodeProperty( PropertyTags.DomainName, domainName );
+
+			// TODO: This needs to be worked out better.
+			// Add the workgroup property.
+			LocalDatabase localDb = store.GetDatabaseObject();
+			if ( localDb != null )
+			{
+				WorkGroup wg = store.GetDatabaseObject().DefaultWorkGroup;
+				properties.AddNodeProperty( PropertyTags.WorkGroup, new Relationship( wg ) );
+			}
+			// End TODO
 			
 			// Set the owner to have all rights to the collection.
 			AccessControlEntry ace = new AccessControlEntry( ownerGuid, Access.Rights.Admin );
@@ -547,24 +557,20 @@ namespace Simias.Storage
 					case PropertyList.PropertyListState.Add:
 						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0 ) );
 						node.Properties.State = PropertyList.PropertyListState.Update;
-						log.Info( "Added new node: {0} - ID: {1}", node.Name, node.ID );
 						break;
 
 					case PropertyList.PropertyListState.Delete:
 						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeDeleted, 0 ) );
 						node.Properties.State = PropertyList.PropertyListState.Disposed;
-						log.Info( "Deleted node: {0} - ID: {1}", node.Name, node.ID );
 						break;
 
 					case PropertyList.PropertyListState.Import:
 						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
 						node.Properties.State = PropertyList.PropertyListState.Update;
-						log.Info( "Imported node: {0} - ID: {1}", node.Name, node.ID );
 						break;
 
 					case PropertyList.PropertyListState.Update:
 						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
-						log.Info( "Modified node: {0} - ID: {1}", node.Name, node.ID );
 						break;
 
 				}
@@ -723,6 +729,14 @@ namespace Simias.Storage
 
 				case "Collision":
 					rCollection = new Collision( store, shallowNode );
+					break;
+
+				case "WorkGroup":
+					rCollection = new WorkGroup( store, shallowNode );
+					break;
+
+				case "LocalDatabase":
+					rCollection = new LocalDatabase( store, shallowNode );
 					break;
 
 				default:

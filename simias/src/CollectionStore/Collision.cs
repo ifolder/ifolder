@@ -45,10 +45,8 @@ namespace Simias.Storage
 		/// Constructor for this object that creates a Collision object.
 		/// </summary>
 		/// <param name="storeObject">Store object.</param>
-		/// <param name="ownerGuid">Owner identifier of this object.</param>
-		/// <param name="domainName">Name of the domain that this address book belongs to.</param>
-		internal Collision( Store storeObject, string ownerGuid, string domainName  ) :
-			base ( storeObject, "CollisionContainer", CollisionID, NodeTypes.CollisionType, ownerGuid, domainName )
+		internal Collision( Store storeObject ) :
+			base ( storeObject, "CollisionContainer", CollisionID, NodeTypes.CollisionType, storeObject.CurrentUserGuid, storeObject.LocalDomain )
 		{
 			Synchronizable = false;
 		}

@@ -305,6 +305,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\CollectionStore\LocalDatabase.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\CollectionStore\MultiValuedList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -345,7 +350,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\CollectionStore\CollectionStoreTests\CollectionStoreTests.cs"
+                    RelPath = "src\CollectionStore\WorkGroup.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

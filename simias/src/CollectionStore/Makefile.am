@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-CollectionStore_CSFILES = $(srcdir)/AccessControl.cs $(srcdir)/Alias.cs $(srcdir)/AssemblyInfo.cs $(srcdir)/BaseContact.cs $(srcdir)/BaseFileNode.cs $(srcdir)/Collection.cs $(srcdir)/Collision.cs $(srcdir)/DirNode.cs $(srcdir)/Exception.cs $(srcdir)/FileNode.cs $(srcdir)/ICSEnumerator.cs $(srcdir)/IdentityManager.cs $(srcdir)/LinkNode.cs $(srcdir)/LocalAddressBook.cs $(srcdir)/MultiValuedList.cs $(srcdir)/Node.cs $(srcdir)/NodeTypes.cs $(srcdir)/Property.cs $(srcdir)/PropertyList.cs $(srcdir)/ShallowNode.cs $(srcdir)/Store.cs $(srcdir)/StoreFileNode.cs
+CollectionStore_CSFILES = $(srcdir)/AccessControl.cs $(srcdir)/Alias.cs $(srcdir)/AssemblyInfo.cs $(srcdir)/BaseContact.cs $(srcdir)/BaseFileNode.cs $(srcdir)/Collection.cs $(srcdir)/Collision.cs $(srcdir)/DirNode.cs $(srcdir)/Exception.cs $(srcdir)/FileNode.cs $(srcdir)/ICSEnumerator.cs $(srcdir)/IdentityManager.cs $(srcdir)/LinkNode.cs $(srcdir)/LocalAddressBook.cs $(srcdir)/LocalDatabase.cs $(srcdir)/MultiValuedList.cs $(srcdir)/Node.cs $(srcdir)/NodeTypes.cs $(srcdir)/Property.cs $(srcdir)/PropertyList.cs $(srcdir)/ShallowNode.cs $(srcdir)/Store.cs $(srcdir)/StoreFileNode.cs $(srcdir)/WorkGroup.cs
 CollectionStore_CSFILES_CSC := $(subst /,$(SEP),$(CollectionStore_CSFILES))
 CollectionStore_INCLUDES =
 CollectionStore_RESOURCES =
@@ -54,7 +54,7 @@ CLEAN_FILES = CollectionStore.dll $(NUNIT_TESTS) CollectionStore.doc.xml
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 

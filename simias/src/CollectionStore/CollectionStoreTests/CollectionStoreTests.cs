@@ -890,12 +890,12 @@ namespace Simias.Storage.Tests
 		public void FileTest()
 		{
 			string fileData = "How much wood can a woodchuck chuck if a woodchuck could chuck wood?";
+			string rootDir = Path.Combine( Directory.GetCurrentDirectory(), "CS_TestCollection" );
 
 			Collection collection = new Collection( store, "CS_TestCollection" );
 			try
 			{
 				// Create a node to represent the collection root directory.
-				string rootDir = Path.Combine( Directory.GetCurrentDirectory(), "CS_TestCollection" );
 				Directory.CreateDirectory( rootDir );
 				DirNode rootNode = new DirNode( collection, rootDir );
 
@@ -923,6 +923,11 @@ namespace Simias.Storage.Tests
 			}
 			finally
 			{
+				if ( Directory.Exists( rootDir ) )
+				{
+					Directory.Delete( rootDir, true );
+				}
+
 				// Delete the collection.
 				collection.Commit( collection.Delete() );
 			}
@@ -1020,7 +1025,7 @@ namespace Simias.Storage.Tests
 
 				int count = 0;
 				while ( e2.MoveNext() ) ++count;
-				if ( count != 5 )
+				if ( count != 6 )
 				{
 					e2.Dispose();
 					throw new ApplicationException( "Enumeration access control without impersonation failed" );
@@ -1341,11 +1346,13 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void FileToNodeTest()
 		{
+			string rootDir = Path.Combine( Directory.GetCurrentDirectory(), "CS_TestCollection" );
+
 			Collection collection = new Collection( store, "CS_TestCollection" );
+
 			try
 			{
 				// Add a root directory.
-				string rootDir = Path.Combine( Directory.GetCurrentDirectory(), "CS_TestCollection" );
 				Directory.CreateDirectory( rootDir );
 				DirNode rootNode = new DirNode( collection, rootDir );
 
@@ -1367,6 +1374,11 @@ namespace Simias.Storage.Tests
 			}
 			finally
 			{
+				if ( Directory.Exists( rootDir ) )
+				{
+					Directory.Delete( rootDir, true );
+				}
+
 				// Delete the collection.
 				collection.Commit( collection.Delete() );
 			}

@@ -189,7 +189,7 @@ namespace Simias.Storage
 					throw new DisposedException( this );
 				}
 
-				return identityManager.DomainName; 
+				return identityManager.DomainName;
 			}
 		}
 
@@ -314,17 +314,19 @@ namespace Simias.Storage
 						Node[] identities = { localAb, ownerIdentity, new BaseContact( "World", Access.World ) };
 						localAb.Commit( identities );
 
+						// Create the default local workspace.
+						WorkGroup workGroup = new WorkGroup( this, Environment.UserDomainName, Guid.NewGuid().ToString(), ownerGuid );
+						workGroup.Commit();
+
 						// Create an object that represents the database collection.
-						Collection localDb = new Collection( this, "LocalDatabase" );
-						localDb.Properties.AddNodeProperty( PropertyTags.LocalDatabase, true );
-						localDb.Synchronizable = false;
+						LocalDatabase localDb = new LocalDatabase( this, workGroup, ownerGuid, domainName );
 						localDb.Commit();
 
 						// Set the database ID.
 						databaseID = localDb.ID;
 
 						// Create the collision container.
-						Collision collision = new Collision( this, ownerGuid, domainName );
+						Collision collision = new Collision( this );
 						collision.Commit();
 					}
 					catch ( Exception e )
@@ -556,16 +558,16 @@ namespace Simias.Storage
 		/// <summary>
 		/// Returns the collection that represents the database object.
 		/// </summary>
-		/// <returns>A Collection object that represents the local database. A null is returned if
+		/// <returns>A LocalDatabase object that represents the local store. A null is returned if
 		/// the database object does not exist.</returns>
-		public Collection GetDatabaseObject()
+		public LocalDatabase GetDatabaseObject()
 		{
 			if ( disposed )
 			{
 				throw new DisposedException( this );
 			}
 
-			Collection localDb = null;
+			LocalDatabase localDb = null;
 
 			Persist.Query query = new Persist.Query( PropertyTags.LocalDatabase, SearchOp.Equal, "true", Syntax.Boolean );
 			Persist.IResultSet chunkIterator = storageProvider.Search( query );
@@ -580,7 +582,7 @@ namespace Simias.Storage
 					// Set up the XML document so the data can be easily extracted.
 					XmlDocument document = new XmlDocument();
 					document.LoadXml( new string( results, 0, length ) );
-					localDb = new Collection( this, new ShallowNode( document.DocumentElement[ XmlTags.ObjectTag ] ) );
+					localDb = new LocalDatabase( this, new ShallowNode( document.DocumentElement[ XmlTags.ObjectTag ] ) );
 				}
 
 				chunkIterator.Dispose();

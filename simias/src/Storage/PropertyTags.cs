@@ -86,6 +86,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		public static string DefaultWorkGroup = "DefaultWorkGroup";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		public static string DirCreationTime = "DirCreationTime";
 
 		/// <summary>
@@ -187,6 +192,11 @@ namespace Simias.Storage
 		/// Well known property name.
 		/// </summary>
 		public static string Types = "Types";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
+		public static string WorkGroup = "WorkGroup";
 
 		/// <summary>
 		/// Hashtable providing quick lookup to well-known system properties.

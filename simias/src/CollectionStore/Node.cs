@@ -305,6 +305,14 @@ namespace Simias.Storage
 					rNode = new Collision( store, document );
 					break;
 
+				case "WorkGroup":
+					rNode = new WorkGroup( store, document );
+					break;
+
+				case "LocalDatabase":
+					rNode = new LocalDatabase( store, document );
+					break;
+
 				default:
 					rNode = new Node( document );
 					break;
@@ -365,6 +373,14 @@ namespace Simias.Storage
 
 				case "Collision":
 					rNode = new Collision( collection.StoreReference, shallowNode );
+					break;
+
+				case "WorkGroup":
+					rNode = new WorkGroup( collection.StoreReference, shallowNode );
+					break;
+
+				case "LocalDatabase":
+					rNode = new LocalDatabase( collection.StoreReference, shallowNode );
 					break;
 
 				default:

@@ -127,11 +127,19 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets the Collision class name.
+		/// Gets the WorkGroup class name.
 		/// </summary>
 		public static string WorkGroupType
 		{
 			get { return classNames[ 11 ]; }
+		}
+
+		/// <summary>
+		/// Gets the LocalDatabase class name.
+		/// </summary>
+		public static string LocalDatabaseType
+		{
+			get { return classNames[ 12 ]; }
 		}
 		#endregion
 
@@ -152,7 +160,8 @@ namespace Simias.Storage
 										typeof( StoreFileNode ).Name,
 										"Tombstone",
 										typeof( Collision ).Name,
-										typeof( Collision ).Name };
+										typeof( WorkGroup ).Name,
+										typeof( LocalDatabase ).Name };
 		}
 		#endregion
 
