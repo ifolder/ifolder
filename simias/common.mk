@@ -29,11 +29,11 @@ UNINSTALL_TEST_DATA_FILES := $(addprefix $(DESTDIR)$(datadir)$(SEP), $(TEST_DATA
 
 install: $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) bin_install lib_install data_install
 
-install_test: $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES) test_bin_install test_lib_install test_data_install
+installtest: install $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES) test_bin_install test_lib_install test_data_install
 
 uninstall: bin_uninstall lib_uninstall data_uninstall
 
-uninstall_test: test_bin_uninstall test_lib_uninstall test_data_uninstall
+uninstalltest: test_bin_uninstall test_lib_uninstall test_data_uninstall
 
 
 ifdef BIN_FILES

@@ -286,6 +286,26 @@ $(UNINSTALL_SUBDIRS):
 	$(call HEADER,$@)
 	@$(MAKE) -i -k -C $(subst uninstall.,,$@) uninstall
 
+
+INSTALLTEST_SUBDIRS = $(addprefix installtest., $(SUBDIRS))
+.PHONY: installtest $(INSTALLTEST_SUBDIRS)
+
+installtest: $(INSTALLTEST_SUBDIRS)
+
+$(INSTALLTEST_SUBDIRS):
+	$(call HEADER,$@)
+	@$(MAKE) -i -k -C $(subst installtest.,,$@) installtest
+
+UNINSTALLTEST_SUBDIRS = $(addprefix uninstalltest., $(SUBDIRS))
+.PHONY: uninstalltest $(UNINSTALLTEST_SUBDIRS)
+
+uninstalltest: $(UNINSTALLTEST_SUBDIRS)
+
+$(UNINSTALLTEST_SUBDIRS):
+	$(call HEADER,$@)
+	@$(MAKE) -i -k -C $(subst uninstalltest.,,$@) uninstalltest
+
+
 #=============================================================================
 # doc
 #=============================================================================
@@ -340,6 +360,9 @@ report:
 # File CVS History:
 #
 # $Log$
+# Revision 1.5.2.2  2004/02/24 23:00:23  cgaisford
+# updated common.mk and the Makefile so they both handle installtest and uninstalltest
+#
 # Revision 1.5.2.1  2004/02/24 22:11:56  cgaisford
 # updated the makefile to pass install on down to subprojects
 #
