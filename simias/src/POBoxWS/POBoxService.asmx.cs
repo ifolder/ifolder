@@ -49,6 +49,8 @@ namespace Simias.POBoxService.Web
 	[WebService(Namespace="http://novell.com/simias/pobox/")]
 	public class POBoxService : System.Web.Services.WebService
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(POBoxService));
+
 		public POBoxService()
 		{
 			//CODEGEN: This call is required by the ASP.NET Web Services Designer
@@ -393,11 +395,13 @@ namespace Simias.POBoxService.Web
 			Store				store = Store.GetStore();
 			Subscription		cSub = null;
 
+			log.Debug("POBoxService::Invite");
+
 			if (domainID == null || domainID == "")
 			{
 				domainID = store.DefaultDomain;
 			}
-			
+
 			// Verify domain
 			Simias.Storage.Domain cDomain = store.GetDomain(domainID);
 			if (cDomain == null)
@@ -434,11 +438,14 @@ namespace Simias.POBoxService.Web
 
 			try
 			{
+				log.Debug("  looking up POBox for: " + toUserID);
+			
 				poBox = 
 					(domainID == Simias.Storage.Domain.WorkGroupDomainID)
 						? POBox.POBox.GetPOBox(store, domainID)
 						: POBox.POBox.GetPOBox(store, domainID, toUserID);
 
+				log.Debug("  newup subscription");
 				cSub = new Subscription(sharedCollection.Name + " subscription", "Subscription", fromUserID);
 				cSub.SubscriptionState = Simias.POBox.SubscriptionStates.Received;
 				cSub.ToName = toMember.Name;
@@ -454,11 +461,11 @@ namespace Simias.POBoxService.Web
 						this.Context.Request.Url.Port.ToString() +
 						"/POBoxService.asmx";
 
+				log.Debug("  newup service url");
 				cSub.POServiceURL = new Uri(serviceUrl);
 				cSub.SubscriptionCollectionID = sharedCollection.ID;
 				cSub.SubscriptionCollectionType = sharedCollectionType;
 				cSub.SubscriptionCollectionName = sharedCollection.Name;
-				//cSub.SubscriptionCollectionURL = "http://" + hostAndPort[0] + ":6436/SyncService.rem";
 				cSub.DomainID = domainID;
 				cSub.DomainName = cDomain.Name;
 				cSub.SubscriptionKey = Guid.NewGuid().ToString();
@@ -467,6 +474,7 @@ namespace Simias.POBoxService.Web
 				SyncCollection sc = new SyncCollection(sharedCollection);
 				cSub.SubscriptionCollectionURL = sc.MasterUrl.ToString();
 
+				log.Debug("  getting the dir node"); 
 				DirNode dirNode = sharedCollection.GetRootDirectory();
 				if(dirNode != null)
 				{
@@ -477,7 +485,12 @@ namespace Simias.POBoxService.Web
 				poBox.Commit(cSub);
 				return(cSub.MessageID);
 			}
-			catch{}
+			catch(Exception e)
+			{
+				log.Debug("  failed creating subscription");
+				log.Debug(e.Message);
+				log.Debug(e.StackTrace);
+			}
 			return("");
 		}
 
