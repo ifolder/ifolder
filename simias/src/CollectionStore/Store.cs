@@ -24,7 +24,6 @@
 using System;
 using System.Collections;
 using System.IO;
-//using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
 
@@ -50,6 +49,12 @@ namespace Simias.Storage
 		/// Directory where store-managed files are kept.
 		/// </summary>
 		static private string storeManagedDirectoryName = "CollectionFiles";
+
+		/// <summary>
+		/// XML configuration tags used to get the enterprise user name.
+		/// </summary>
+		static private string LdapAuthenticationTag = "LdapAuthentication";
+		static private string ProxyDNTag = "ProxyDN";
 
 		/// <summary>
 		/// Handle to the local store provider.
@@ -226,6 +231,7 @@ namespace Simias.Storage
 			{
 				try
 				{
+					string userName = Environment.UserName;
 					ArrayList nodeList = new ArrayList();
 
 					// Create an object that represents the database collection.
@@ -233,9 +239,23 @@ namespace Simias.Storage
 					localDb = ldb.ID;
 					nodeList.Add( ldb );
 
+					// Does the configuration indicate that this is an enterprise server?
+					if ( config.Exists( Domain.SectionName, Domain.EnterpriseName ) )
+					{
+						// This instance is running on an enterprise server.
+						enterpriseServer = true;
+
+						// Get the name of the user to create as the identity.
+						string proxyName = config.Get( LdapAuthenticationTag, ProxyDNTag, null );
+						if ( proxyName != null )
+						{
+							userName = ParseUserName( proxyName );
+						}
+					}
+
 					// Create an identity that represents the current user.  This user will become the 
 					// database owner. Add the domain mapping to the identity.
-					Identity owner = new Identity( Environment.UserName, Guid.NewGuid().ToString() );
+					Identity owner = new Identity( userName, Guid.NewGuid().ToString() );
 					identity = owner.ID;
 					nodeList.Add( owner );
 
@@ -258,7 +278,7 @@ namespace Simias.Storage
 					wgRoster.Commit( new Node[] { wgRoster, wgRosterOwner } );
 
 					// See if there is a configuration parameter for an enterprise domain.
-					if ( config.Exists( Domain.SectionName, Domain.EnterpriseName ) )
+					if ( IsEnterpriseServer )
 					{
 						// Get the name of the enterprise domain.
 						string enterpriseName = config.Get( Domain.SectionName, Domain.EnterpriseName, String.Empty );
@@ -288,9 +308,6 @@ namespace Simias.Storage
 						Member entRosterOwner = new Member( owner.Name, owner.ID, Access.Rights.Admin );
 						entRosterOwner.IsOwner = true;
 						entRoster.Commit( new Node[] { entRoster, entRosterOwner } );
-						
-						// This instance is running on an enterprise server.
-						enterpriseServer = true;
 					}
 
 					// Save the local database changes.
@@ -322,20 +339,14 @@ namespace Simias.Storage
 				}
 
 				// Get the identity object that represents this logged on user.
-				ICSList list = ldb.Search( BaseSchema.ObjectType, NodeTypes.IdentityType, SearchOp.Equal );
-				foreach ( ShallowNode sn in list )
+				Identity lid = ldb.GetSingleNodeByType( NodeTypes.IdentityType ) as Identity;
+				if ( lid != null )
 				{
-					if ( sn.Name == Environment.UserName )
-					{
-						identity = sn.ID;
-						break;
-					}
+					identity = lid.ID;
 				}
-
-				// Make sure that the identity was found.
-				if ( identity == null )
+				else
 				{
-					throw new DoesNotExistException( String.Format( "User {0} does not exist in the database.", Environment.UserName ) );
+					throw new DoesNotExistException( "Identity object does not exist." );
 				}
 			}
 		}
@@ -387,6 +398,25 @@ namespace Simias.Storage
 			// Get the specified object from the persistent store.
 			XmlDocument document = storageProvider.GetRecord( nodeID.ToLower(), collectionID.ToLower() );
 			return ( document != null ) ? Node.NodeFactory( this, document ) : null;
+		}
+
+		/// <summary>
+		/// Returns the 'cn' portion of the ldap string.
+		/// </summary>
+		/// <param name="ldapName">LDAP name to parse.</param>
+		/// <returns>The 'cn' portion of the LDAP name.</returns>
+		private string ParseUserName( string ldapName )
+		{
+			if ( ldapName == null )
+			{
+				throw new CollectionStoreException( "LDAP proxy name is null" );
+			}
+
+			// Skip over the 'cn=' if it exists.
+			int startIndex = ldapName.ToLower().StartsWith( "cn=" ) ? 3 : 0;
+			int endIndex = ldapName.IndexOf( ',' );
+			int length = ( endIndex == -1 ) ? ldapName.Length - startIndex : endIndex - startIndex;
+			return ldapName.Substring( startIndex, length );
 		}
 		#endregion
 
