@@ -42,11 +42,21 @@ internal class OutgoingNode
 	class Fork { public string name; public Stream stream; };
 	ArrayList forkList;
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="collection"></param>
 	public OutgoingNode(Collection collection)
 	{
 		this.collection = collection;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="collection"></param>
+	/// <param name="node"></param>
+	/// <returns></returns>
 	public static string GetOutNode(Collection collection, ref Node node)
 	{
 		string path;
@@ -61,6 +71,50 @@ internal class OutgoingNode
 		else
 			path = cf.NonconflictedPath;
 		return path;
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="collection"></param>
+	/// <param name="node"></param>
+	/// <returns></returns>
+	public static NodeStamp GetOutNodeStamp(Collection collection, ref Node node, ChangeLogRecord.ChangeLogOp changeType)
+	{
+		string path;
+		NodeStamp stamp = new NodeStamp();
+				
+		Conflict cf = new Conflict(collection, node);
+		if (cf.IsUpdateConflict)
+		{
+			path = cf.UpdateConflictPath;
+			node = cf.UpdateConflictNode;
+		}
+		else if (cf.IsFileNameConflict)
+			path = cf.FileNameConflictPath;
+		else
+			path = cf.NonconflictedPath;
+		
+		bool tombstone = collection.IsType(node, NodeTypes.TombstoneType);
+		stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
+		stamp.masterIncarn = cf.IsUpdateConflict ? node.LocalIncarnation : node.MasterIncarnation;
+		stamp.id = (Nid)node.ID;
+		stamp.name = node.Name;
+		stamp.isDir = collection.IsType(node, NodeTypes.DirNodeType);
+		stamp.changeType = changeType;
+
+		//TODO: another place to handle multiple forks
+		try
+		{
+			stamp.streamsSize = path == null? -1: new FileInfo(path).Length;
+		}
+		catch (Exception e)
+		{
+			Log.Spew("Could not get file size of {0}: {1}", path, e);
+			stamp.streamsSize = 0;
+		}
+
+		return stamp;
 	}
 
 

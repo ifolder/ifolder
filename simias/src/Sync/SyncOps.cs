@@ -229,6 +229,8 @@ internal class SyncOps
 			try
 			{
 				node = new Node(collection, sn);
+				if (collection.HasCollisions(node))
+					continue;
 			}
 			catch (Storage.DoesNotExistException e)
 			{
@@ -237,26 +239,8 @@ internal class SyncOps
 				continue;
 			}
 
-			string path = OutgoingNode.GetOutNode(collection, ref node);
-			bool tombstone = collection.IsType(node, NodeTypes.TombstoneType);
-			NodeStamp stamp = new NodeStamp();
-			stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
-			stamp.masterIncarn = node.MasterIncarnation;
-			stamp.id = (Nid)node.ID;
-			stamp.name = node.Name;
-			stamp.isDir = collection.IsType(node, NodeTypes.DirNodeType);
-			stamp.changeType = ChangeLogRecord.ChangeLogOp.Unknown;
-
-			//TODO: another place to handle multiple forks
-			try
-			{
-				stamp.streamsSize = path == null? -1: new FileInfo(path).Length;
-			}
-			catch (Exception e)
-			{
-				Log.Spew("Could not get file size of {0}: {1}", path, e);
-				stamp.streamsSize = 0;
-			}
+			NodeStamp stamp = OutgoingNode.GetOutNodeStamp(collection, ref node, ChangeLogRecord.ChangeLogOp.Unknown);
+			
 			stampList.Add(stamp);
 		}
 
@@ -486,26 +470,7 @@ internal class SyncOps
 							Node node = collection.GetNodeByID(rec.EventID);
 							if (node != null)
 							{
-								string path = OutgoingNode.GetOutNode(collection, ref node);
-								bool tombstone = collection.IsType(node, NodeTypes.TombstoneType);
-								NodeStamp stamp = new NodeStamp();
-								stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
-								stamp.masterIncarn = node.MasterIncarnation;
-								stamp.id = new Nid(node.ID);
-								stamp.isDir = collection.IsType(node, NodeTypes.DirNodeType);
-								stamp.name = node.Name;
-								stamp.changeType = rec.Operation;
-
-								//TODO: another place to handle multiple forks
-								try
-								{
-									stamp.streamsSize = path == null? -1: new FileInfo(path).Length;
-								}
-								catch (Exception e)
-								{
-									Log.Spew("Could not get file size of {0}: {1}", path, e);
-									stamp.streamsSize = 0;
-								}
+								NodeStamp stamp = OutgoingNode.GetOutNodeStamp(collection, ref node, rec.Operation);
 								stampList.Add(stamp);
 							}
 							else if (rec.Operation == ChangeLogRecord.ChangeLogOp.Deleted)
