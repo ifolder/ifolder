@@ -1,5 +1,7 @@
 .PHONY: addressbook-install ndoc ndoc-nodeps ndoc-clean
 
+DOC_TARBALL = $(PACKAGE)-doc-$(VERSION).tar.gz
+
 all: ndoc
 
 all-nodeps: ndoc-nodeps
@@ -24,7 +26,7 @@ ndoc-nodeps:
 #else # NOT WINDOWS
 #	"$(NDOC_CMD)" "$(bindir)/Novell.Addressbook.dll","../src/Addressbook/Novell.Addressbook.doc.xml" -documenter=MSDN -Title=AddressBook -OutputDirectory=addressbook-ndoc
 #endif # WINDOWS
-	tar -czf addressbook-ndoc.tar.gz addressbook-ndoc
+	tar -czf $(DOC_TARBALL) addressbook-ndoc
 
 else # NDOC
 
@@ -36,7 +38,7 @@ ndoc ndoc-nodeps:
 endif # NDOC
 
 ndoc-clean:
-	rm -rf addressbook-ndoc addressbook-ndoc.tar.gz
+	rm -rf addressbook-ndoc $(PACKAGE)-doc-*.tar.gz
 
 maintainer-clean-local:
 	rm -f Makefile.in

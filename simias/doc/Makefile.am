@@ -1,5 +1,7 @@
 .PHONY: simias-install ndoc ndoc-nodeps ndoc-clean
 
+DOC_TARBALL = $(PACKAGE)-doc-$(VERSION).tar.gz
+
 all: ndoc
 
 all-nodeps: ndoc-nodeps
@@ -26,7 +28,7 @@ else # NOT WINDOWS
 		"$(bindir)/Novell.AddressBook.dll","../src/AddressBook/AddressBook.doc.xml" \
 		-documenter=MSDN -Title=Simias -OutputDirectory=simias-ndoc
 endif # WINDOWS
-	tar -czf simias-ndoc.tar.gz simias-ndoc
+	tar -czf $(DOC_TARBALL) simias-ndoc
 
 else # NDOC
 
@@ -38,7 +40,7 @@ ndoc ndoc-nodeps:
 endif # NDOC
 
 ndoc-clean:
-	rm -rf simias-ndoc simias-ndoc.tar.gz
+	rm -rf simias-ndoc $(PACKAGE)-doc-*.tar.gz
 
 maintainer-clean-local:
 	rm -f Makefile.in
