@@ -63,8 +63,13 @@ namespace Novell.iFolder.iFolderCom
 		private ArrayList removedList;
 		private System.Windows.Forms.Button reinvite;
 		private string loadPath;
+//		private Control currentControl;
 		private System.Windows.Forms.ToolTip toolTip1;
 		private System.Windows.Forms.HelpProvider helpProvider1;
+		private System.Windows.Forms.TabPage tabPage2;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.TextBox interval;
+		private System.Windows.Forms.Label label2;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -81,6 +86,7 @@ namespace Novell.iFolder.iFolderCom
 			this.apply.Enabled = false;
 			this.remove.Enabled = false;
 			this.reinvite.Enabled = false;
+//			currentControl = this;
 		}
 
 		/// <summary>
@@ -123,14 +129,20 @@ namespace Novell.iFolder.iFolderCom
 			this.apply = new System.Windows.Forms.Button();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
+			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.label1 = new System.Windows.Forms.Label();
+			this.interval = new System.Windows.Forms.TextBox();
+			this.label2 = new System.Windows.Forms.Label();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.accessControlButtons.SuspendLayout();
+			this.tabPage2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tabPage1);
+			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Location = new System.Drawing.Point(8, 16);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
@@ -287,6 +299,42 @@ namespace Novell.iFolder.iFolderCom
 			this.apply.Text = "&Apply";
 			this.apply.Click += new System.EventHandler(this.apply_Click);
 			// 
+			// tabPage2
+			// 
+			this.tabPage2.Controls.Add(this.label2);
+			this.tabPage2.Controls.Add(this.interval);
+			this.tabPage2.Controls.Add(this.label1);
+			this.tabPage2.Location = new System.Drawing.Point(4, 22);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Size = new System.Drawing.Size(336, 374);
+			this.tabPage2.TabIndex = 1;
+			this.tabPage2.Text = "Settings";
+			// 
+			// label1
+			// 
+			this.label1.Location = new System.Drawing.Point(8, 16);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(128, 16);
+			this.label1.TabIndex = 0;
+			this.label1.Text = "iFolder refresh interval:";
+			// 
+			// interval
+			// 
+			this.helpProvider1.SetHelpString(this.interval, "Specifies the number of seconds between updates for this iFolder.");
+			this.interval.Location = new System.Drawing.Point(176, 16);
+			this.interval.Name = "interval";
+			this.helpProvider1.SetShowHelp(this.interval, true);
+			this.interval.TabIndex = 1;
+			this.interval.Text = "";
+			// 
+			// label2
+			// 
+			this.label2.Location = new System.Drawing.Point(280, 16);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(48, 16);
+			this.label2.TabIndex = 2;
+			this.label2.Text = "seconds";
+			// 
 			// iFolderAdvanced
 			// 
 			this.AcceptButton = this.ok;
@@ -307,6 +355,7 @@ namespace Novell.iFolder.iFolderCom
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
 			this.accessControlButtons.ResumeLayout(false);
+			this.tabPage2.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -910,9 +959,10 @@ namespace Novell.iFolder.iFolderCom
 		private void tabControl1_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
 		{
 			// TODO - change focus when dialog is displayed non-modal
-//			if (e.KeyCode == Keys.Tab)
-//    		{
-//				bool focus = add.Focus();
+//			if (!this.Modal && e.KeyCode == Keys.Tab)
+//			{
+//				currentControl = this.GetNextControl(this, true);
+//				bool focus = currentControl.Focus();// add.Focus();
 //				focus = !focus;
 //			}
 		}
