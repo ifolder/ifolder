@@ -73,6 +73,43 @@ namespace Mono.P2p.mDnsResponder
 								Resources.DumpYourGuts(cQuestion);
 							}
 						}
+						
+						if ((dnsRequest.Flags & DnsFlags.request) == DnsFlags.request)
+						{
+							
+						}
+						else
+						{
+							// Handle any responses
+							
+							ArrayList aList = dnsRequest.AnswerList;
+							foreach(BaseResource cResource in aList)
+							{
+								Console.WriteLine("");
+								Console.WriteLine("   Domain: " + cResource.Name);
+								Console.WriteLine("   Type:   {0}", cResource.Type);
+								Console.WriteLine("   Class:  {0}", cResource.Class);
+								Console.WriteLine("   TTL:    {0}", cResource.Ttl.ToString());
+							
+								if (cResource.Type == mDnsType.hostAddress)
+								{
+									HostAddress hostAddr = (HostAddress) cResource;
+									Resources.AddHostAddress(hostAddr);
+								}
+								else
+								if (cResource.Type == mDnsType.serviceLocation)
+								{
+									ServiceLocation sl = (ServiceLocation) cResource;
+									Resources.AddServiceLocation(sl);								
+								}
+								else
+								if (cResource.Type == mDnsType.ptr)
+								{
+									Ptr ptr = (Ptr) cResource;
+									Resources.AddPtr(ptr);
+								}
+							}
+						}
 					}
 				}
 				else

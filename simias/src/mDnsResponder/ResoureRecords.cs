@@ -49,11 +49,12 @@ namespace Mono.P2p.mDnsResponder
 			
 			foreach(BaseResource cResource in Resources.resourceList)
 			{
+				log.Info("");
 				log.Info("  RESOURCE");
-				log.Info("  Name:  " + cResource.Name);
-				log.Info("  Type:  " + cResource.Type);
-				log.Info("  TTL:   " + cResource.Ttl.ToString());
-				log.Info("  Owner: " + cResource.Owner.ToString());
+				log.Info("  Name:      " + cResource.Name);
+				log.Info("  Type:      " + cResource.Type);
+				log.Info("  TTL:       " + cResource.Ttl.ToString());
+				log.Info("  Owner:     " + cResource.Owner.ToString());
 				
 				if (cResource.Type == mDnsType.hostAddress)
 				{
@@ -63,12 +64,28 @@ namespace Mono.P2p.mDnsResponder
 					{
 						if (hostAddr.TextualIPAddress != "")
 						{
-							log.Info("  IP:    " + hostAddr.TextualIPAddress);
+							log.Info("  IP:        " + hostAddr.TextualIPAddress);
 						}
 						
-						log.Info("   IPADDR:  " + hostAddr.IPAddress.ToString());
+						log.Info("  IPADDR:      " + hostAddr.IPAddress.ToString());
 					}
 					catch{}
+				}
+				else
+				if (cResource.Type == mDnsType.serviceLocation)
+				{
+					ServiceLocation svcLoc = (ServiceLocation) cResource;
+					
+					log.Info("  Priority:  " + svcLoc.Priority.ToString());
+					log.Info("  Weight:    " + svcLoc.Weight.ToString());
+					log.Info("  Port:      " + svcLoc.Port.ToString());
+					log.Info("  Target:    " + svcLoc.Target);
+				}
+				else
+				if (cResource.Type == mDnsType.ptr)
+				{
+					Ptr ptr = (Ptr) cResource;
+					log.Info("  Target:    " + ptr.Target);
 				}
 				log.Info("");
 			}
@@ -100,32 +117,76 @@ namespace Mono.P2p.mDnsResponder
 			
 			Resources.resourceMtx.ReleaseMutex();
 		}
-		
-		/*
-		static public void AddService(mDnsService service)
+
+		static public void AddServiceLocation(ServiceLocation serviceLocation)
 		{
-			log.Debug("Resources::AddService called");
-			
+			log.Info("AddServiceLocation called");
 			bool	foundOne = false;
+			
 			Resources.resourceMtx.WaitOne();
-			foreach(mDnsService cService in Resources.serviceList)
+			foreach(BaseResource cResource in Resources.resourceList)
 			{
-				if (cService.Name == service.Name)
+				if (cResource.Name == serviceLocation.Name &&
+					cResource.Type == serviceLocation.Type)
 				{
 					foundOne = true;
+					
+					// Update the record
+					ServiceLocation cLocation = (ServiceLocation) cResource;
+					cLocation.Port = serviceLocation.Port;
+					cLocation.Weight = serviceLocation.Weight;
+					cLocation.Priority = serviceLocation.Priority;
+					cLocation.Target = serviceLocation.Target;
 					break;
 				}
 			}
 
 			if (foundOne == false)
 			{
-				log.Info("   Adding " + service.Name);
-				Resources.serviceList.Add(service);
+				log.Info("   Adding " + serviceLocation.Name);
+				Resources.resourceList.Add(serviceLocation);
 			}
 			
 			Resources.resourceMtx.ReleaseMutex();
 		}
-		*/
+
+		static public void AddPtr(Ptr ptr)
+		{
+			log.Info("AddPtr called");
+			bool	foundOne = false;
+			
+			Resources.resourceMtx.WaitOne();
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.Name == ptr.Name &&
+					cResource.Type == ptr.Type)
+				{
+					Ptr cPtr = (Ptr) cResource;
+					if(cPtr.Target == ptr.Target)
+					{
+						foundOne = true;
+						if (ptr.Ttl == 0)
+						{
+							log.Info("   Removing " + ptr.Name);
+							Resources.resourceList.Remove(cPtr);	
+						}
+							
+						break;
+					}
+				}
+			}
+
+			if (foundOne == false)
+			{
+				if (ptr.Ttl != 0)
+				{
+					log.Info("   Adding " + ptr.Name);
+					Resources.resourceList.Add(ptr);
+				}
+			}
+			
+			Resources.resourceMtx.ReleaseMutex();
+		}
 	}
 
 	/// <summary>
@@ -217,6 +278,10 @@ namespace Mono.P2p.mDnsResponder
 		#endregion
 
 		#region Private Methods
+		internal void	Update()
+		{
+			update = DateTime.Now;
+		}
 		#endregion
 
 		#region Static Methods
@@ -250,6 +315,9 @@ namespace Mono.P2p.mDnsResponder
 		{
 			get
 			{
+			
+				return("192.168.1.102");
+				/*
 				string	textualIP = "";
 				
 				if (this.ipAddresses.Count >= 1)
@@ -265,6 +333,7 @@ namespace Mono.P2p.mDnsResponder
 					textualIP += ((long)(ip & 0x000000FF)).ToString();
 				}
 				return(textualIP);
+				*/
 			}
 		}
 
@@ -309,6 +378,7 @@ namespace Mono.P2p.mDnsResponder
 			if (this.ipAddresses.Contains(ipAddress) == false)
 			{
 				this.ipAddresses.Add(ipAddress);
+				this.Update();
 				//this.update = DateTime.Now;
 			}
 		}
@@ -328,6 +398,7 @@ namespace Mono.P2p.mDnsResponder
 		{
 			this.ipAddresses.Remove(ipAddress);
 			this.ipAddresses.Insert(0, ipAddress);
+			this.Update();
 			//this.update = DateTime.Now;
 		}
 
@@ -343,7 +414,7 @@ namespace Mono.P2p.mDnsResponder
 	/// <summary>
 	/// Summary description for Service Resource
 	/// </summary>
-	class ServiceResource
+	class ServiceLocation : BaseResource
 	{
 		#region Class Members
 
@@ -353,42 +424,25 @@ namespace Mono.P2p.mDnsResponder
 		*/
 
 		ArrayList	nameValues;
-		string		serviceName;
-		int			timeToLive;
 		int			port;
 		int			priority;
 		int			weight;
+		string		target = "";
 		#endregion
 
 		#region Properties
-
-		/// <summary>
-		/// Local - local to this box
-		/// !NOTE! Doc incomplete
-		/// </summary>
-		public int TTL
-		{
-			get
-			{
-				return(timeToLive);
-			}
-
-			set
-			{
-				this.timeToLive = value;
-			}
-		}
 
 		public int	Port
 		{
 			get
 			{
-				return(port);
+				return(this.port);
 			}
 
 			set
 			{
 				this.port = value;
+				this.Update();
 			}
 		}
 
@@ -396,12 +450,13 @@ namespace Mono.P2p.mDnsResponder
 		{
 			get
 			{
-				return(priority);
+				return(this.priority);
 			}
 
 			set
 			{
 				this.priority = value;
+				this.Update();
 			}
 		}
 
@@ -409,22 +464,40 @@ namespace Mono.P2p.mDnsResponder
 		{
 			get
 			{
-				return(weight);
+				return(this.weight);
 			}
 
 			set
 			{
 				this.weight = value;
+				this.Update();
+			}
+		}
+		
+		public string	Target
+		{
+			get
+			{
+				return(this.target);
+			}
+			
+			set
+			{
+				this.target = value;
+				this.Update();
 			}
 		}
 		#endregion
 
 		#region Constructors
-		public ServiceResource()
+		/*
+		public ServiceLocation() : base()
 		{
 			this.nameValues = new ArrayList();
 		}
+		*/
 
+/*
 		public ServiceResource(string service, int port, int priority, int weight)
 		{
 			this.serviceName = service;
@@ -433,6 +506,13 @@ namespace Mono.P2p.mDnsResponder
 			this.weight = weight;
 			this.nameValues = new ArrayList();
 		}
+*/
+		
+		public ServiceLocation(string name, int ttl, mDnsType dnsType, mDnsClass dnsClass, bool owner) : base(name, ttl, dnsType, dnsClass, owner)
+		{
+			this.nameValues = new ArrayList();
+		}
+		
 		#endregion
 
 		#region Private Methods
@@ -481,6 +561,69 @@ namespace Mono.P2p.mDnsResponder
 		{
 			return(this.nameValues);
 		}
+		#endregion
+	}
+
+	/// <summary>
+	/// Summary description for Ptr
+	/// </summary>
+	class Ptr : BaseResource
+	{
+		#region Class Members
+
+		/*
+		static internal ArrayList	hosts = new ArrayList();
+		static internal Mutex		hostsMtx = new Mutex(false);
+		*/
+
+		string		target = "";
+		#endregion
+
+		#region Properties
+
+		public string	Target
+		{
+			get
+			{
+				return(this.target);
+			}
+			
+			set
+			{
+				this.target = value;
+				this.Update();
+			}
+		}
+		#endregion
+
+		#region Constructors
+
+/*
+		public ServiceResource(string service, int port, int priority, int weight)
+		{
+			this.serviceName = service;
+			this.port = port;
+			this.priority = priority;
+			this.weight = weight;
+			this.nameValues = new ArrayList();
+		}
+*/
+		
+		public Ptr(string name, int ttl, mDnsType dnsType, mDnsClass dnsClass, bool owner) : base(name, ttl, dnsType, dnsClass, owner)
+		{
+			
+		}
+		
+		#endregion
+
+		#region Private Methods
+		#endregion
+
+		#region Static Methods
+		#endregion
+
+		#region Public Methods
+
 		#endregion
 	}
 }

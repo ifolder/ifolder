@@ -35,11 +35,6 @@ using System.Net.Sockets;
 using System.Text;
 
 using log4net;
-//using log4net.Appender;
-using log4net.Config;
-//using log4net.Layout;
-//using log4net.Repository;
-//using log4net.Repository.Hierarchy;
 
 namespace Mono.P2p.mDnsResponder
 {
@@ -121,7 +116,6 @@ namespace Mono.P2p.mDnsResponder
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		#region Class Members
-
 
 		static internal Queue		requestsQueue = new Queue();
 		static internal Mutex		requestsMtx = new Mutex(false);
@@ -230,7 +224,6 @@ namespace Mono.P2p.mDnsResponder
 		#region Private Methods
 		internal static int	StartDnsReceive()
 		{
-			BasicConfigurator.Configure();
 			log.Info("StartDnsReceive called");
 
 			IPEndPoint iep = new IPEndPoint(IPAddress.Any, 5353);
@@ -421,9 +414,14 @@ namespace Mono.P2p.mDnsResponder
 
 								if(rType == mDnsType.hostAddress)
 								{
+									HostAddress	hostAddress = new 
+										HostAddress(tmpDomain, timeToLive, rType, rClass, false);
+
 									long ipAddress = 
 										IPAddress.NetworkToHostOrder(BitConverter.ToUInt32(receiveData, offset));
 									//int		ipAddress = BitConverter.ToInt32(receiveData, offset);
+									
+									hostAddress.AddIPAddress(ipAddress);
 
 									Console.WriteLine(
 										"   IP Address:  {0}.{1}.{2}.{3}",
@@ -433,10 +431,8 @@ namespace Mono.P2p.mDnsResponder
 										receiveData[offset + 3]);
 
 									offset += 4;
-
-									// Build a host record and add it to the list
-									HostAddress cHostAddr = new HostAddress(tmpDomain, timeToLive, rType, rClass, false);
-									Resources.AddHostAddress(cHostAddr);
+									
+									dnsRequest.answerList.Add(hostAddress);
 								}
 								else
 								if(rType == mDnsType.ipv6)
@@ -461,7 +457,11 @@ namespace Mono.P2p.mDnsResponder
 									int		lOffset = offset;
 									string	ptrDomain = "";
 									Common.BuildDomainName(receiveData, lOffset, ref lOffset, ref ptrDomain);
-									Console.WriteLine("   PTR Domain:  {0}", ptrDomain);
+									//Console.WriteLine("   PTR Domain:  {0}", ptrDomain);
+
+									Ptr	ptr = new Ptr(tmpDomain, timeToLive, rType, rClass, false);
+									ptr.Target = ptrDomain;
+									dnsRequest.answerList.Add(ptr);
 
 									offset += dataLength;
 								}
@@ -495,25 +495,31 @@ namespace Mono.P2p.mDnsResponder
 								if (rType == mDnsType.serviceLocation)
 								{
 									int		lOffset = offset;
-									short	priority;
-									short	weight;
-									short	port;
 									string	target = "";
+									
+									ServiceLocation	service = new 
+										ServiceLocation(tmpDomain, timeToLive, rType, rClass, false);
 
-									priority = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, lOffset));
-									weight = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, lOffset + 2));
-									port = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, lOffset + 4));
+									service.Priority = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, lOffset));
+									service.Weight = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, lOffset + 2));
+									service.Port = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, lOffset + 4));
 
 									lOffset += 6;
 									Common.BuildDomainName(receiveData, lOffset, ref lOffset, ref target);
-
+									service.Target = target;
+									
 									offset += dataLength;
+									
+									dnsRequest.answerList.Add(service);
+									
+									/*
 
 									//Console.WriteLine("Found a SERVICE LOCATION RR");
 									Console.WriteLine("   Priority:    {0}", priority);
 									Console.WriteLine("   Weight:      {0}", weight);
 									Console.WriteLine("   Port:        {0}", port);
 									Console.WriteLine("   Target:      {0}", target);
+									*/
 								}
 								else
 								{
