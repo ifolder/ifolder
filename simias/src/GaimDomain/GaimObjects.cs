@@ -232,8 +232,8 @@ namespace Simias.Gaim
 						if (colonPos > 0)
 						{
 							machineName = 
-								attribValue.Substring(colonPos, 
-													  attribValue.Length - colonPos);
+								attribValue.Substring(colonPos + 1, 
+													  attribValue.Length - colonPos - 1);
 						}
 					}
 				}
