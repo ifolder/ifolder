@@ -531,6 +531,7 @@ namespace Simias.Storage.Provider.Sqlite
 		/// </summary>
 		private void Init()
 		{
+			sqliteDb.ConnectionTimeout = 1000 * 120;
 			command = sqliteDb.CreateCommand();
 
 			// Turn of synchronous access.
