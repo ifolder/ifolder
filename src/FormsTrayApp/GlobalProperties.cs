@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.IO;
 using Simias;
 using Simias.Sync;
+using Novell.iFolder;
 
 namespace Novell.iFolder.FormsTrayApp
 {
@@ -17,6 +18,7 @@ namespace Novell.iFolder.FormsTrayApp
 		#region Class Members
 		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(FormsTrayApp));
 
+		private iFolderManager iFManager = null;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
@@ -38,6 +40,7 @@ namespace Novell.iFolder.FormsTrayApp
 			//
 			InitializeComponent();
 
+			iFManager = iFolderManager.Connect();
 		}
 
 		/// <summary>
@@ -192,13 +195,11 @@ namespace Novell.iFolder.FormsTrayApp
 
 			try
 			{
-				Configuration config = new Configuration();
-
-				// Initialize defaultInterval.
-				SyncProperties syncProperties = new SyncProperties(config);
-				defaultInterval.Value = (decimal)syncProperties.Interval;
+				// Display the default sync interval.
+				defaultInterval.Value = (decimal)iFManager.DefaultRefreshInterval;
 
 				// Initialize displayConfirmation.
+				Configuration config = new Configuration();
 				string showWizard = config.Get("iFolderShell", "Show wizard", "true");
 				displayConfirmation.Checked = showWizard == "true";
 			}
@@ -215,11 +216,10 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			try
 			{
+				// Save the default sync interval.
+				iFManager.DefaultRefreshInterval = (int)defaultInterval.Value;
+
 				Configuration config = new Configuration();
-
-				SyncProperties syncProperties = new SyncProperties(config);
-				syncProperties.Interval = (int)defaultInterval.Value;
-
 				if (displayConfirmation.Checked)
 				{
 					config.Set("iFolderShell", "Show wizard", "true");

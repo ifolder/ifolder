@@ -62,6 +62,47 @@ namespace Novell.iFolder.Win32Util
 		}
 
 		/// <summary>
+		/// Get a long value for this window. See GetWindowLong()
+		/// </summary>
+		/// <param name="index"></param>
+		/// <returns></returns>
+		public int GetWindowLong(int index)
+		{
+			return GetWindowLong(window, index);
+		}
+
+		/// <summary>
+		/// Set a long value for this window. See SetWindowLong()
+		/// </summary>
+		/// <param name="index"></param>
+		/// <param name="value"></param>
+		/// <returns></returns>
+		public int SetWindowLong(int index, int value)
+		{
+			return SetWindowLong(window, index, value);
+		}
+
+		/// <summary>
+		/// Turn this window into a tool window, so it doesn't show up in the Alt-tab list...
+		/// </summary>
+		/// 
+		const int GWL_EXSTYLE = -20;
+		const int WS_EX_TOOLWINDOW = 0x00000080;
+		const int WS_EX_APPWINDOW = 0x00040000;
+
+		public void MakeToolWindow()
+		{
+			int windowStyle = GetWindowLong(GWL_EXSTYLE);
+			SetWindowLong(GWL_EXSTYLE, windowStyle | WS_EX_TOOLWINDOW);
+		}
+
+		public void MakeNormalWindow()
+		{
+			int windowStyle = GetWindowLong(GWL_EXSTYLE);
+			SetWindowLong(GWL_EXSTYLE, windowStyle & ~WS_EX_TOOLWINDOW);
+		}
+
+		/// <summary>
 		/// Bring a window to the top
 		/// </summary>
 		public void BringWindowToTop()
@@ -109,6 +150,17 @@ namespace Novell.iFolder.Win32Util
 		[DllImport("user32.dll", EntryPoint="FindWindow")]
 		static extern IntPtr FindWindowWin32(string className, string windowName);
 
+		[DllImport("user32.dll")]
+		static extern int SetWindowLong(
+			IntPtr window,
+			int index,
+			int value);
+
+		[DllImport("user32.dll")]
+		static extern int GetWindowLong(
+			IntPtr window,
+			int index);
+		
 		[DllImport("shell32.dll")]
 		static extern bool SHObjectProperties(IntPtr window, int type, [MarshalAs(UnmanagedType.LPWStr)] string lpObject, [MarshalAs(UnmanagedType.LPWStr)] string lpPage);
 
