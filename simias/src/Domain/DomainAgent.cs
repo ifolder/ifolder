@@ -23,6 +23,7 @@
 
 using System;
 using System.Net;
+using System.IO;
 using System.Threading;
 using System.Web;
 using System.Xml;
@@ -390,12 +391,13 @@ namespace Simias.Domain
 					Simias.Security.Web.AuthenticationService.Login.DomainIDHeader,
 					domainID);
 			}
-
+			
 			request.Method = "POST";
 			request.ContentLength = 0;
 
 			try
 			{
+				request.GetRequestStream().Close();
 				response = request.GetResponse() as HttpWebResponse;
 				if ( response != null )
 				{

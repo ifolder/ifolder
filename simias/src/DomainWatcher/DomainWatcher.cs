@@ -134,7 +134,6 @@ namespace Simias.DomainWatcher
 		{
 			log.Debug("WatcherThread started");
 			bool firstTime = true;
-			int status;
 			this.started = true;
 			EventPublisher cEvent = new EventPublisher();
 
