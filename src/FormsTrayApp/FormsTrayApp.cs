@@ -71,6 +71,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private AnimateDelegate animateDelegate;
 
 		private	EventPublisher publisher;
+		private SystemManager sysManager;
 		//System.Diagnostics.Process monitor;
 		//private const int waitTime = 3000;
 		#endregion
@@ -224,6 +225,11 @@ namespace Novell.iFolder.FormsTrayApp
 				publisher.RaiseEvent(args);
 			}
 
+			if (sysManager != null)
+			{
+				sysManager.StopServices();
+			}
+
 			/*
 			if (monitor != null)
 			{
@@ -285,6 +291,11 @@ namespace Novell.iFolder.FormsTrayApp
 				publisher.RaiseEvent(args);
 			}
 
+			if (sysManager != null)
+			{
+				sysManager.StopServices();
+			}
+
 			/*
 			if (monitor != null)
 			{
@@ -343,7 +354,11 @@ namespace Novell.iFolder.FormsTrayApp
 			monitor.StartInfo.FileName = "CsEventBroker.exe";
 			monitor.Start();
 			*/
-			this.publisher = new EventPublisher(new Configuration());
+			Configuration conf = new Configuration();
+			sysManager = new SystemManager(conf);
+			sysManager.StartServices();
+
+			publisher = new EventPublisher(conf);
 
 			synkEvent = new AutoResetEvent(false);
 
