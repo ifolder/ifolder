@@ -1,16 +1,20 @@
 if LINUX
-SUBDIRS = AddressBook AddressBookCmd GtkAddrBook
+#SUBDIRS = AddressBook AddressBookCmd GtkAddrBook
+SUBDIRS = AddressBookCmd GtkAddrBook
 endif
 
 if DARWIN
-SUBDIRS = AddressBook AddressBookCmd GtkAddrBook
+#SUBDIRS = AddressBook AddressBookCmd GtkAddrBook
+SUBDIRS = AddressBookCmd GtkAddrBook
 endif
 
 if WINDOWS
-SUBDIRS = AddressBook FormsBookLib FormsAddrBook
+#SUBDIRS = AddressBook FormsBookLib FormsAddrBook
+SUBDIRS = FormsBookLib FormsAddrBook
 endif
 
-DIST_SUBDIRS = AddressBook AddressBookCmd GtkAddrBook FormsBookLib FormsAddrBook AddressBookTests
+#DIST_SUBDIRS = AddressBook AddressBookCmd GtkAddrBook FormsBookLib FormsAddrBook AddressBookTests
+DIST_SUBDIRS = AddressBookCmd GtkAddrBook FormsBookLib FormsAddrBook AddressBookTests
 
 EXTRA_DIST = $(srcdir)/addressbook-snakeoil.keys $(srcdir)/install-addressbook-to-gac.in
 
