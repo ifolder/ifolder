@@ -41,11 +41,9 @@ installcheck-local: install $(NUNIT_TESTS)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:CommonFormWindowsTests.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = CommonFormWindows.dll $(NUNIT_TESTS) CommonFormWindows.xml CommonFormWindowsTests.xml
-CLEAN_DIRS = .cstore
 
 clean-local:
-	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
-	rm -rf $(CLEAN_DIRS)
+	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
     
 distclean-local: clean
 

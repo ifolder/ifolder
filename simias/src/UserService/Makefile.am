@@ -26,11 +26,9 @@ uninstall-local:
 installcheck-local: install $(NUNIT_TESTS)
 	
 CLEAN_FILES = UserService.dll $(NUNIT_TESTS) UserService.xml
-CLEAN_DIRS = .cstore
 
 clean-local:
-	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
-	rm -rf $(CLEAN_DIRS)
+	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
     
 distclean-local: clean
 

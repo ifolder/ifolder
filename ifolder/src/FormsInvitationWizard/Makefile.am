@@ -27,7 +27,7 @@ installcheck-local: install
 CLEAN_FILES = InvitationWizard.exe InvitationWizard.xml
 
 clean-local:
-	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
+	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
     
 distclean-local: clean
 

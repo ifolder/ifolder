@@ -55,6 +55,7 @@ case $SIMIAS_OS in
         CDEF='-D'
         CFLAGS="-pipe -Wall -W -DLINUX -DPRODUCT_NAME=@PRODUCT_NAME@ -DPRODUCT_VERSION=@PRODUCT_VERSION@"
         CINC='-I'
+        COMMON_CLEAN_FILES='.cstore'
         COUT='-o'
         CSC_EXEFLAG=/target:exe
         CSC_LIBFLAG=/target:library
@@ -120,6 +121,7 @@ case $SIMIAS_OS in
         CDEF='-D'
         CFLAGS="-nologo -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPRODUCT_NAME=@PRODUCT_NAME@ -DPRODUCT_VERSION=@PRODUCT_VERSION@";
         CINC='-I'
+        COMMON_CLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj *.xml */*.xml .cstore'
         COUT='-Fo'
         CSC_EXEFLAG=/target:exe
         CSC_LIBFLAG=/target:library
@@ -170,6 +172,7 @@ esac
 AC_SUBST(APIDOCDIR)
 AC_SUBST(CDEF)
 AC_SUBST(CINC)
+AC_SUBST(COMMON_CLEAN_FILES)
 AC_SUBST(COMMON_SUBDIRS)
 AC_SUBST(COUT)
 AC_SUBST(CSC)

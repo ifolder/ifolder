@@ -41,11 +41,9 @@ installcheck-local: install $(NUNIT_TESTS)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:CommonGtkWinTests.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = CommonGtkWindows.dll $(NUNIT_TESTS) CommonGtkWindows.xml CommonGtkWinTests.xml
-CLEAN_DIRS = .cstore
 
 clean-local:
-	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
-	rm -rf $(CLEAN_DIRS)
+	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
     
 distclean-local: clean
 

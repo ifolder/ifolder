@@ -25,7 +25,7 @@ installcheck-local: install
 CLEAN_FILES = FormsBookLib.dll FormsBookLib.xml
 
 clean-local:
-	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
+	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
     
 distclean-local: clean
 

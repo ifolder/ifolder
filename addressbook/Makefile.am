@@ -18,5 +18,8 @@ maintainer-clean-local:
 	rm -rf autom4te.cache
 	for subdir in $(NON_PLATFORM_SUBDIRS); do rm -rf "src/$$subdir/Makefile" "src/$$subdir/Makefile.in"; done
 	
+clean-local:
+	rm -rf stage *.suo
+
 uninstall-local:
 	rm -rf $(DESTDIR)$(bindir)/.cstore

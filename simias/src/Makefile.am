@@ -9,6 +9,9 @@ package:
 package-clean package-install package-uninstall:
 	$(MAKE) -C package $(subst package-,,$@)
 
+clean-local:
+	rm -rf stage *.suo
+
 maintainer-clean-local:
 	rm -f Makefile.in
 
