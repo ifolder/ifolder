@@ -85,6 +85,7 @@ namespace Novell.FormsTrayApp
 		private string currentPOBoxID;
 		private bool initialConnect = false;
 		private int initialBannerWidth;
+		private bool shutdown = false;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
 		private System.Windows.Forms.Label label2;
@@ -2677,9 +2678,12 @@ namespace Novell.FormsTrayApp
 
 		private void GlobalProperties_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			// Hide the dialog.
-			e.Cancel = true;
-			Hide();
+			// If we haven't received a shutdown event, hide this dialog and cancel the event.
+			if (!shutdown)
+			{
+				e.Cancel = true;
+				Hide();
+			}
 		}
 
 		private void updateEnterpriseTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -3271,5 +3275,20 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#endregion
+
+		private const int WM_QUERYENDSESSION = 0x0011;
+
+		protected override void WndProc(ref Message m)
+		{
+			// Keep track if we receive a shutdown message.
+			switch (m.Msg)
+			{
+				case WM_QUERYENDSESSION:
+					this.shutdown = true;
+					break;
+			}
+
+			base.WndProc (ref m);
+		}
 	}
 }
