@@ -457,7 +457,7 @@ namespace Novell.FormsTrayApp
 					preferences.CreateControl();
 					handle = preferences.Handle;
 
-					syncLog = new SyncLog(eventClient);
+					syncLog = new SyncLog();
 					syncLog.CreateControl();
 					handle = syncLog.Handle;
 
@@ -801,31 +801,46 @@ namespace Novell.FormsTrayApp
 
 		private void syncCollection(CollectionSyncEventArgs syncEventArgs)
 		{
-			switch (syncEventArgs.Action)
+			try
 			{
-				case Action.StartSync:
+				// Only show iFolder sync events.
+				if (ifWebService.GetiFolder(syncEventArgs.ID) != null)
 				{
-					// Animate the icon.
-					syncAnimateTimer.Start();
-					break;
-				}
-				case Action.StopSync:
-				{
-					// Stop the icon animation.
-					syncAnimateTimer.Stop();
-					shellNotifyIcon.Icon = trayIcon;
-					shellNotifyIcon.Text = resourceManager.GetString("iFolderServices");
-
-					if (initialSyncCollections.Contains(syncEventArgs.ID) && syncEventArgs.Successful)
+					string message = null;
+					switch (syncEventArgs.Action)
 					{
-						// If the collection is in the initial sync list and the sync finished successfully,
-						// remove it from the list.
-						initialSyncCollections.Remove(syncEventArgs.ID);
+						case Action.StartSync:
+						{
+							// Animate the icon.
+							syncAnimateTimer.Start();
+
+							message = string.Format(resourceManager.GetString("synciFolder"), syncEventArgs.Name);
+							break;
+						}
+						case Action.StopSync:
+						{
+							// Stop the icon animation.
+							syncAnimateTimer.Stop();
+							shellNotifyIcon.Icon = trayIcon;
+							shellNotifyIcon.Text = resourceManager.GetString("iFolderServices");
+
+							if (initialSyncCollections.Contains(syncEventArgs.ID) && syncEventArgs.Successful)
+							{
+								// If the collection is in the initial sync list and the sync finished successfully,
+								// remove it from the list.
+								initialSyncCollections.Remove(syncEventArgs.ID);
+							}
+
+							message = string.Format(resourceManager.GetString("syncComplete"), syncEventArgs.Name);
+							break;
+						}
 					}
 
-					break;
+					// Add message to log.
+					syncLog.AddMessageToLog(syncEventArgs.TimeStamp, message);
 				}
 			}
+			catch {}
 		}
 
 		private void syncFile(FileSyncEventArgs syncEventArgs)
@@ -836,6 +851,38 @@ namespace Novell.FormsTrayApp
 				{
 					shellNotifyIcon.Text = resourceManager.GetString("iFolderServices") + "\n" + 
 						string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploading" : "downloading") , syncEventArgs.Name);
+
+					string message = null;
+					switch (syncEventArgs.ObjectType)
+					{
+						case ObjectType.File:
+							if (syncEventArgs.Delete)
+							{
+								message = string.Format(resourceManager.GetString("deleteClientFile"), syncEventArgs.Name);
+							}
+							else if (syncEventArgs.SizeToSync < syncEventArgs.Size)
+							{
+								// Delta sync message.
+								int savings = (int)((1 - ((double)syncEventArgs.SizeToSync / (double)syncEventArgs.Size)) * 100);
+								message = string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadDeltaSyncFile" : "downloadDeltaSyncFile"), syncEventArgs.Name, savings);
+							}
+							else
+							{
+								message = string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadFile" : "downloadFile"), syncEventArgs.Name);
+							}								
+							break;
+						case ObjectType.Directory:
+							message = syncEventArgs.Delete ? 
+								string.Format(resourceManager.GetString("deleteClientDir"), syncEventArgs.Name) :
+								string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadDir" : "downloadDir"), syncEventArgs.Name);
+							break;
+						case ObjectType.Unknown:
+							message = string.Format(resourceManager.GetString("deleteUnknown"), syncEventArgs.Name);
+							break;
+					}
+
+					// Add message to log.
+					syncLog.AddMessageToLog(syncEventArgs.TimeStamp, message);
 				}
 			}
 			catch {}
