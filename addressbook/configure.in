@@ -174,7 +174,7 @@ case $ADDRESSBOOK_OS in
         GLADE_SHARP_MINIMUM_VERSION=0.91
         AC_SUBST(GLADE_SHARP_MINIMUM_VERSION)
         PKG_CONFIG_REQUIRES="gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION"
-        PKG_CONFIG_LIBS="/r:Novell.AddressBook.dll /r:Novell.AddressBook.UI.gtk.dll"
+        PKG_CONFIG_LIBS="/r:Novell.AddressBook.dll /r:Novell.AddressBook.UI.gtk.dll /r:Simias.UI.gtk.dll"
     ;;
     #
     # Windows-specific configuration
@@ -362,6 +362,8 @@ src/AddressBookCmd/addressbookcmd
 src/AddressBookTests/Makefile
 src/FormsBookLib/Makefile
 src/FormsAddrBook/Makefile
+src/Simias.UI.gtk.dll/Makefile
+src/Simias.UI.gtk.dll/Util.cs
 src/GtkAddrBook/Makefile
 src/GtkAddrBook/contactbrowser
 src/GtkAddrBook/Util.cs
