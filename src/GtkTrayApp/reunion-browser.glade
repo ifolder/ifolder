@@ -13,11 +13,6 @@
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
   <property name="icon">ifolder.png</property>
-  <property name="decorated">True</property>
-  <property name="skip_taskbar_hint">False</property>
-  <property name="skip_pager_hint">False</property>
-  <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
-  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <signal name="delete_event" handler="on_RBWindow_delete_event" last_modification_time="Wed, 26 May 2004 07:16:29 GMT"/>
 
   <child>
@@ -108,7 +103,6 @@
 	  <property name="orientation">GTK_ORIENTATION_HORIZONTAL</property>
 	  <property name="toolbar_style">GTK_TOOLBAR_BOTH</property>
 	  <property name="tooltips">True</property>
-	  <property name="show_arrow">False</property>
 
 	  <child>
 	    <widget class="button" id="button2">
@@ -122,34 +116,25 @@
 	  </child>
 
 	  <child>
-		<widget class="button" id="button3">
-		  <property name="visible">True</property>
-		  <property name="label">gtk-properties</property>
-		  <property name="use_stock">True</property>
-		  <signal name="clicked" handler="on_properties" last_modification_time="Wed, 26 May 2004 07:48:42 GMT"/>
-		</widget>
+	    <widget class="button" id="button3">
+	      <property name="visible">True</property>
+	      <property name="label">gtk-properties</property>
+	      <property name="use_stock">True</property>
+	      <signal name="clicked" handler="on_properties" last_modification_time="Wed, 26 May 2004 07:48:42 GMT"/>
+	    </widget>
 	  </child>
 
 	  <child>
-	    <widget class="GtkSeparatorToolItem" id="separatortoolitem1">
+	    <widget class="button" id="button1">
 	      <property name="visible">True</property>
-	      <property name="draw">True</property>
-	      <property name="visible_horizontal">True</property>
-	      <property name="visible_vertical">True</property>
+	      <property name="label">gtk-close</property>
+	      <property name="use_stock">True</property>
+	      <property name="new_group">True</property>
+	      <signal name="clicked" handler="on_close" last_modification_time="Wed, 26 May 2004 07:39:19 GMT"/>
 	    </widget>
 	    <packing>
-	      <property name="expand">False</property>
-	      <property name="homogeneous">False</property>
+	      <property name="new_group">True</property>
 	    </packing>
-	  </child>
-
-	  <child>
-		<widget class="button" id="button1">
-		  <property name="visible">True</property>
-		  <property name="label">gtk-close</property>
-		  <property name="use_stock">True</property>
-		  <signal name="clicked" handler="on_close" last_modification_time="Wed, 26 May 2004 07:39:19 GMT"/>
-		</widget>
 	  </child>
 	</widget>
 	<packing>

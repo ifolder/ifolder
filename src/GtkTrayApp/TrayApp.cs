@@ -205,7 +205,7 @@ namespace Novell.iFolder
 				case 1: // first mouse button
 					if(args.Event.Type == Gdk.EventType.TwoButtonPress)
 					{
-						show_ifolder_browser(obj, args);
+						show_properties(obj, args);
 					}
 					break;
 				case 2: // second mouse button
