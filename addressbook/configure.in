@@ -332,6 +332,7 @@ AC_OUTPUT([
 Makefile
 addressbook.pc
 src/Makefile
+src/install-addressbook-to-gac
 src/FormsBookLib/Makefile
 src/FormsAddrBook/Makefile
 src/GtkAddrBook/Makefile
@@ -342,3 +343,6 @@ package/linux/Makefile
 package/linux/addressbook.spec
 doc/Makefile
 ])
+
+chmod +x src/install-addressbook-to-gac
+

@@ -41,6 +41,7 @@ Requires     : mono-core >= 0.91
 Requires     : mono-data >= 0.91
 Requires     : mono-posix >= 0.91
 Requires     : mono-remoting >= 0.91
+Requires     : mono-nunit >= 0.91
 Requires     : gtk-sharp >= 0.91
 Obsoletes    : %{name} <= %{version}
 
@@ -94,8 +95,22 @@ else
     export PKG_CONFIG_PATH="\$PKG_CONFIG_PATH:%{prefix}/lib/pkgconfig"
 fi
 HERE
-
+    #
+    # Install assemblies into the gac
+    #
+    %{prefix}/bin/install-addressbook-to-gac -i
 fi
+
+#=============================================================================
+%Preun
+INSTANCES_AFTER_UNINSTALL=$1
+if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
+    #
+    # Remove assemblies from the gac
+    #
+    %{prefix}/bin/install-addressbook-to-gac -u
+fi
+
 #=============================================================================
 %Postun
 INSTANCES_AFTER_UNINSTALL=$1

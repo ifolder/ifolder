@@ -338,9 +338,9 @@ AC_OUTPUT([
 Makefile
 simias.pc
 src/Makefile
+src/install-simias-to-gac
 src/Simias.dll/Makefile
 src/mDnsService/Makefile
-src/SimiasTests.dll/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile
@@ -348,3 +348,6 @@ package/darwin/Makefile
 package/linux/simias.spec
 doc/Makefile
 ])
+
+chmod +x src/install-simias-to-gac
+
