@@ -131,6 +131,7 @@
 	{
 		@try
 		{
+			NSLog(@"Attempting to login using password %@", [password stringValue]);
 			AuthStatus *authStatus = [[simiasService LoginToRemoteDomain:[selectedDomain ID]
 										usingPassword:[password stringValue]] retain];
 

@@ -26,10 +26,16 @@
 #include "ifolder.nsmap"
 #import "Simias.h"
 
+typedef struct gsoap_creds
+{
+	char *username;
+	char *password;
+} GSOAP_CREDS;
+
 @implementation iFolderService
 
-void init_gsoap(struct soap *pSoap);
-void cleanup_gsoap(struct soap *pSoap);
+void init_gsoap(struct soap *pSoap, GSOAP_CREDS *creds);
+void cleanup_gsoap(struct soap *pSoap, GSOAP_CREDS *creds);
 
 NSDictionary *getiFolderProperties(struct ns1__iFolderWeb *ifolder);
 NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user);
@@ -56,13 +62,14 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 -(BOOL) Ping
 {
     struct soap soap;
+	GSOAP_CREDS creds;
     BOOL isRunning = NO;
     int err_code;
 
     struct _ns1__Ping ns1__Ping;
     struct _ns1__PingResponse ns1__PingResponse;
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__Ping (&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
@@ -77,12 +84,12 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	{
 		NSString *faultString = [NSString stringWithCString:soap.fault->faultstring];
 
-		cleanup_gsoap(&soap);
+		cleanup_gsoap(&soap, &creds);
 
 		[NSException raise:faultString format:@"Error in Ping"];
 	}
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 
     return isRunning;
 }
@@ -95,12 +102,13 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	NSMutableArray *ifolders = nil;
 	
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	struct _ns1__GetAlliFolders getiFoldersMessage;
 	struct _ns1__GetAlliFoldersResponse getiFoldersResponse;
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__GetAlliFolders(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -135,7 +143,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		}
     }
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 
 	return ifolders;
 }
@@ -147,6 +155,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 {
 	iFolder *ifolder = nil;
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (iFolderID != nil), @"iFolderID was nil");
@@ -156,7 +165,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	
 	getiFolderMessage.iFolderID = (char *)[iFolderID cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__GetiFolder(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -166,7 +175,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	if(soap.error)
 	{
-	    cleanup_gsoap(&soap);
+	    cleanup_gsoap(&soap, &creds);
 		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
 					format:@"Error in GetiFolder"];
 	}
@@ -177,7 +186,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		
 		if(curiFolder == NULL)
 		{
-		    cleanup_gsoap(&soap);
+		    cleanup_gsoap(&soap, &creds);
 			[NSException raise:@"Invalid iFolderID" format:@"Error in GetiFolder"];
 		}
 
@@ -186,7 +195,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		[ifolder setProperties:getiFolderProperties(curiFolder)];
     }
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 
 	return [ifolder autorelease];
 }
@@ -199,6 +208,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 {
 	iFolder *ifolder = nil;
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (iFolderID != nil), @"iFolderID was nil");
@@ -210,7 +220,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	getiFolderMessage.iFolderID = (char *)[iFolderID cString];
 	getiFolderMessage.POBoxID = (char *)[collectionID cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__GetiFolderInvitation(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -234,7 +244,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		[ifolder setProperties:getiFolderProperties(curiFolder)];
     }
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 
 	return [ifolder autorelease];
 }
@@ -246,6 +256,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 {
 	iFolder *ifolder = nil;
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (Path != nil), @"Path was nil");
@@ -257,7 +268,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	createiFolderMessage.Path = (char *)[Path cString];
 	createiFolderMessage.DomainID = (char *)[DomainID cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__CreateiFolderInDomain(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -281,7 +292,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		[ifolder setProperties:getiFolderProperties(curiFolder)];
     }
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 
 	return ifolder;
 }
@@ -293,6 +304,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 {
 	iFolder *ifolder = nil;
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (localPath != nil), @"Path was nil");
@@ -306,7 +318,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	acceptiFolderMessage.DomainID = (char *)[DomainID cString];
 	acceptiFolderMessage.LocalPath = (char *)[localPath cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__AcceptiFolderInvitation(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -330,7 +342,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		[ifolder setProperties:getiFolderProperties(curiFolder)];
     }
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 
 	return ifolder;
 }
@@ -341,6 +353,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 -(void) DeclineiFolderInvitation:(NSString *)iFolderID fromDomain:(NSString *)DomainID
 {
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (DomainID != nil), @"DomainID was nil");
@@ -352,7 +365,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	declineiFolderMessage.iFolderID = (char *)[iFolderID cString];
 	declineiFolderMessage.DomainID = (char *)[DomainID cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__DeclineiFolderInvitation(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -362,13 +375,13 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	if(soap.error)
 	{
-		cleanup_gsoap(&soap);
+		cleanup_gsoap(&soap, &creds);
 
 		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
 					format:@"Error in DeclineiFolderInvitation:fromDomain"];
 	}
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 }
 
 
@@ -378,6 +391,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 {
 	iFolder *ifolder = nil;
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (iFolderID != nil), @"iFolderID was nil");
@@ -387,7 +401,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	
 	revertiFolderMessage.iFolderID = (char *)[iFolderID cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__RevertiFolder(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -410,7 +424,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		[ifolder setProperties:getiFolderProperties(curiFolder)];
     }	
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 	
 	return ifolder;	
 }
@@ -422,6 +436,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 {
 	iFolder *ifolder = nil;
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (iFolderID != nil), @"iFolderID was nil");
@@ -431,7 +446,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	
 	syncNowMessage.iFolderID = (char *)[iFolderID cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__SynciFolderNow(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -445,7 +460,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 					format:@"Error in DeleteiFolder"];
 	}
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 }
 
 
@@ -455,6 +470,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 {
 	User *user = nil;
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (userID != nil), @"userID was nil");
@@ -464,7 +480,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	getUserMessage.UserID = (char *)[userID cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__GetiFolderUser(
 			&soap,
@@ -485,7 +501,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 		if(curUser == NULL)
 		{
-		    cleanup_gsoap(&soap);
+		    cleanup_gsoap(&soap, &creds);
 			[NSException raise:@"Invalid User" format:@"Error in GetiFolderUser"];
 		}
 	
@@ -493,7 +509,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		[user setProperties:getiFolderUserProperties(curUser)];			
     }
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 
 	return user;
 }
@@ -505,6 +521,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 {
 	User *user = nil;
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (nodeID != nil), @"nodeID was nil");
@@ -516,7 +533,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	getUserMessage.CollectionID = (char *)[collectionID cString];
 	getUserMessage.NodeID = (char *)[nodeID cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__GetiFolderUserFromNodeID(
 			&soap,
@@ -537,7 +554,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 		if(curUser == NULL)
 		{
-		    cleanup_gsoap(&soap);
+		    cleanup_gsoap(&soap, &creds);
 			[NSException raise:@"Invalid User" format:@"Error in GetiFolderUserFromNodeID"];
 		}
 	
@@ -545,7 +562,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		[user setProperties:getiFolderUserProperties(curUser)];			
     }
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 
 	return user;
 }
@@ -557,6 +574,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	NSMutableArray *users = nil;
 	
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (ifolderID != nil), @"ifolderID was nil");
@@ -566,7 +584,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	getUsersMessage.iFolderID = (char *)[ifolderID cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__GetiFolderUsers(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -601,7 +619,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		}
     }
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 
 	return users;
 }
@@ -614,6 +632,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	NSMutableArray *users = nil;
 	
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (domainID != nil), @"domainID was nil");
@@ -624,7 +643,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	getUsersMessage.DomainID = (char *)[domainID cString];
 	getUsersMessage.numUsers = numUsers;
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__GetDomainUsers(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -659,7 +678,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		}
     }
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 
 	return users;
 }
@@ -672,6 +691,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	NSMutableArray *users = nil;
 	
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (domainID != nil), @"domainID was nil");
@@ -682,7 +702,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	searchUsersMessage.DomainID = (char *)[domainID cString];
 	searchUsersMessage.SearchString =  (char *)[searchString cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__SearchForDomainUsers(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -717,7 +737,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		}
     }
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 
 	return users;
 }
@@ -728,6 +748,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 {
 	User *newUser = nil;
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (userID != nil), @"userID was nil");
@@ -741,7 +762,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	inviteUserMessage.UserID = (char *)[userID cString];
 	inviteUserMessage.Rights = (char *)[rights cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__InviteUser(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -762,7 +783,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 							inviteUserResponse.InviteUserResult)];
     }
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 
 	return newUser;
 }
@@ -773,6 +794,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 -(void) RemoveUser:(NSString *)userID fromiFolder:(NSString *)ifolderID
 {
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (userID != nil), @"userID was nil");
@@ -784,7 +806,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	removeUserMessage.iFolderID = (char *)[ifolderID cString];
 	removeUserMessage.UserID = (char *)[userID cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__RemoveiFolderUser(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -798,7 +820,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 					format:@"Error in RemoveUser:fromiFolder:"];
 	}
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 }
 
 
@@ -807,6 +829,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 {
 	DiskSpace *ds = nil;
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (ifolderID != nil), @"ifolderID was nil");
@@ -816,7 +839,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	getDSMessage.iFolderID = (char *)[ifolderID cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__GetiFolderDiskSpace(
 			&soap,
@@ -837,7 +860,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 		if(curDS == NULL)
 		{
-		    cleanup_gsoap(&soap);
+		    cleanup_gsoap(&soap, &creds);
 			[NSException raise:@"Invalid iFolderID" format:@"Error in GetiFolderDiskSpace"];
 		}
 	
@@ -845,7 +868,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		[ds setProperties:getDiskSpaceProperties(curDS)];			
     }
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 
 	return ds;
 }
@@ -857,6 +880,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 {
 	DiskSpace *ds = nil;
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (userID != nil), @"userID was nil");
@@ -866,7 +890,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	getDSMessage.UserID = (char *)[userID cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__GetUserDiskSpace(
 			&soap,
@@ -887,7 +911,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 		if(curDS == NULL)
 		{
-		    cleanup_gsoap(&soap);
+		    cleanup_gsoap(&soap, &creds);
 			[NSException raise:@"Invalid userID" format:@"Error in GetUserDiskSpace"];
 		}
 	
@@ -895,7 +919,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		[ds setProperties:getDiskSpaceProperties(curDS)];			
     }
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 
 	return ds;
 }
@@ -906,6 +930,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 -(void)SetiFolderDiskSpace:(long long)limit oniFolder:(NSString *)ifolderID
 {
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (ifolderID != nil), @"ifolderID was nil");
@@ -916,7 +941,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	setDSMessage.Limit = limit;
 	setDSMessage.iFolderID = (char *)[ifolderID cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__SetiFolderDiskSpaceLimit(
 			&soap,
@@ -931,7 +956,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 					format:@"Error in SetiFolderDiskSpace"];
 	}
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 }
 
 
@@ -940,6 +965,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 {
 	SyncSize *ss = nil;
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (ifolderID != nil), @"ifolderID was nil");
@@ -949,7 +975,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	getSSMessage.iFolderID = (char *)[ifolderID cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__CalculateSyncSize(
 			&soap,
@@ -970,7 +996,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 		if(curSS == NULL)
 		{
-		    cleanup_gsoap(&soap);
+		    cleanup_gsoap(&soap, &creds);
 			[NSException raise:@"Invalid iFolderID" format:@"Error in CalculateSyncSize"];
 		}
 	
@@ -978,7 +1004,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		[ss setProperties:getSyncSizeProperties(curSS)];			
     }
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 
 	return ss;
 }
@@ -987,12 +1013,13 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 -(int)GetDefaultSyncInterval
 {
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	struct _ns1__GetDefaultSyncInterval			getIntervalMessage;
 	struct _ns1__GetDefaultSyncIntervalResponse getIntervalResponse;
 	
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__GetDefaultSyncInterval(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -1002,14 +1029,14 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	if(soap.error)
 	{
-	    cleanup_gsoap(&soap);
+	    cleanup_gsoap(&soap, &creds);
 		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
 					format:@"Error in DeleteiFolder"];
 	}
 	
 	int interval = getIntervalResponse.GetDefaultSyncIntervalResult;
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 
 	return interval;
 }
@@ -1020,6 +1047,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 -(void)SetDefaultSyncInterval:(int)syncInterval
 {
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	struct _ns1__SetDefaultSyncInterval			setIntervalMessage;
@@ -1027,7 +1055,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	
 	setIntervalMessage.Interval = syncInterval;
 	
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__SetDefaultSyncInterval(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -1037,12 +1065,12 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	if(soap.error)
 	{
-	    cleanup_gsoap(&soap);
+	    cleanup_gsoap(&soap, &creds);
 		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
 					format:@"Error in DeleteiFolder"];
 	}
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 }
 
 
@@ -1053,6 +1081,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	NSMutableArray *conflicts = nil;
 	
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (ifolderID != nil), @"ifolderID was nil");
@@ -1062,7 +1091,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	getConflictsMessage.iFolderID = (char *)[ifolderID cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__GetiFolderConflicts(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -1097,7 +1126,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		}
     }
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 
 	return conflicts;
 }
@@ -1108,6 +1137,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 -(void) ResolveFileConflict:(NSString *)ifolderID withID:(NSString *)conflictID localChanges:(bool)saveLocal
 {
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (ifolderID != nil), @"ifolderID was nil");
@@ -1120,7 +1150,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	resolveMessage.conflictID = (char *)[conflictID cString];
 	resolveMessage.localChangesWin = saveLocal;
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__ResolveFileConflict(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -1130,12 +1160,12 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-	    cleanup_gsoap(&soap);
+	    cleanup_gsoap(&soap, &creds);
 		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
 					format:@"Error in ResolveFileConflict"];
 	}
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 }
 
 
@@ -1144,6 +1174,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 -(void) ResolveNameConflict:(NSString *)ifolderID withID:(NSString *)conflictID usingName:(NSString *)newName
 {
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (ifolderID != nil), @"ifolderID was nil");
@@ -1157,7 +1188,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	resolveMessage.conflictID = (char *)[conflictID cString];
 	resolveMessage.newLocalName = (char *)[newName cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__ResolveNameConflict(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -1167,12 +1198,12 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-	    cleanup_gsoap(&soap);
+	    cleanup_gsoap(&soap, &creds);
 		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
 					format:@"Error in ResolveNameConflict"];
 	}
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 }
 
 
@@ -1181,6 +1212,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 -(void)SetUserRights:(NSString *)ifolderID forUser:(NSString *)userID withRights:(NSString *)rights
 {
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (ifolderID != nil), @"ifolderID was nil");
@@ -1194,7 +1226,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	setRightsMessage.UserID = (char *)[userID cString];
 	setRightsMessage.Rights = (char *)[rights cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__SetUserRights(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -1204,12 +1236,12 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-	    cleanup_gsoap(&soap);
+	    cleanup_gsoap(&soap, &creds);
 		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
 					format:@"Error in SetUserRights"];
 	}
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 }
 
 
@@ -1218,6 +1250,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 -(void)ChanageOwner:(NSString *)ifolderID toUser:(NSString *)userID oldOwnerRights:(NSString *)rights
 {
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (ifolderID != nil), @"ifolderID was nil");
@@ -1231,7 +1264,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	changeOwnerMessage.NewOwnerUserID = (char *)[userID cString];
 	changeOwnerMessage.OldOwnerRights = (char *)[rights cString];
 
-    init_gsoap (&soap);
+    init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__ChangeOwner(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -1241,30 +1274,15 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-	    cleanup_gsoap(&soap);
+	    cleanup_gsoap(&soap, &creds);
 		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
 					format:@"Error in ChanageOwner"];
 	}
 
-    cleanup_gsoap(&soap);
+    cleanup_gsoap(&soap, &creds);
 }
 
 
-
-
-void init_gsoap(struct soap *pSoap)
-{
-	soap_init(pSoap);
-	soap_set_namespaces(pSoap, iFolder_namespaces);
-}
-
-
-
-
-void cleanup_gsoap(struct soap *pSoap)
-{
-	soap_end(pSoap);
-}
 
 
 NSDictionary *getiFolderProperties(struct ns1__iFolderWeb *ifolder)
@@ -1443,6 +1461,52 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict)
 	[newProperties setObject:[NSNumber numberWithBool:conflict->IsNameConflict] forKey:@"IsNameConflict"];
 
 	return newProperties;
+}
+
+
+
+void init_gsoap(struct soap *pSoap, GSOAP_CREDS *creds)
+{
+	soap_init(pSoap);
+	soap_set_namespaces(pSoap, iFolder_namespaces);
+	
+	creds->username = malloc(1024);
+	if(creds->username != NULL)
+	{
+		memset(creds->username, 0, 1024);
+	}
+	creds->password = malloc(1024);
+	if(creds->password != NULL)
+	{
+		memset(creds->password, 0, 1024);
+	}
+
+	if( (creds->username != NULL) && (creds->password != NULL) )
+	{
+		if(simias_get_web_service_credential(creds->username, creds->password) == 0)
+		{
+			pSoap->userid = creds->username;
+			pSoap->passwd = creds->password;
+		}
+	}	
+}
+
+
+
+void cleanup_gsoap(struct soap *pSoap, GSOAP_CREDS *creds)
+{
+	if(creds->username != NULL)
+	{
+		free(creds->username);
+		creds->username = NULL;
+	}
+	if(creds->password != NULL)
+	{
+		free(creds->password);
+		creds->password = NULL;
+	}
+	
+	soap_end(pSoap);
 }
 
 
