@@ -28,6 +28,7 @@ using Simias.Storage;
 using Simias.POBox;
 using Simias;
 using Simias.Sync;
+using Simias.Policy;
 
 using Gtk;
 using Gdk;
@@ -104,8 +105,7 @@ namespace Novell.AddressBook.UI.gtk
 
 		private void on_RefreshSpinButton_changed(object o, EventArgs args)
 		{
-			new SyncCollection(collection).Interval = 
-					(int)RefreshSpinButton.Value;
+			SyncInterval.Set(collection, (int)RefreshSpinButton.Value);
 		}
 	}
 }
