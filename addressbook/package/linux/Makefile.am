@@ -43,7 +43,7 @@ all: addressbook.spec addressbook-dist
 	cp RPM/RPMS/*/$(RPM_FILE) .
 	cp RPM/SRPMS/$(SRPM_FILE) .
 	@test "x" = "x$(INSTALL_PKGS)" || \
-		CMD='cp -f $(RPM_FILE) "$(INSTALL_PKGS)"'; \
+		CMD='cp -f $(RPM_FILE) $(SRPM_FILE) "$(INSTALL_PKGS)"'; \
 		echo $$CMD; \
 		eval $$CMD
 	
