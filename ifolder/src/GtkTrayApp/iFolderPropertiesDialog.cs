@@ -92,6 +92,54 @@ namespace Novell.iFolder
 
 
 		/// <summary>
+		/// Default constructor for iFolderPropertiesDialog
+		/// </summary>
+		public iFolderPropertiesDialog(	string ifolderID )
+			: base()
+		{
+			iFolderWeb[]	ifolders;
+
+			this.ifws = new iFolderWebService();
+			if(this.ifws == null)
+				throw new ApplicationException(
+							"Unable to obtain iFolderWebService");
+			this.ifws.Url = 
+				Simias.Client.Manager.LocalServiceUrl.ToString() +
+					"/iFolder.asmx";
+
+			try
+			{
+				ifolders = this.ifws.GetAlliFolders();
+			}
+			catch(Exception e)
+			{
+				throw new ApplicationException(
+						"Unable to read iFolders");
+			}
+
+			foreach(iFolderWeb ifw in ifolders)
+			{
+				if(ifw.ID == ifolderID)
+				{
+					this.ifolder = ifw;
+					break;
+				}
+			}
+
+			this.HasSeparator = false;
+			this.Modal = true;
+			this.Title = Util.GS("iFolder Properties");
+
+			ifHash = new Hashtable();
+
+			InitializeWidgets(ifolders);
+			iFolderPickCombo.Entry.Text = this.ifolder.UnManagedPath;
+		}
+
+
+
+
+		/// <summary>
 		/// Setup the UI inside the Window
 		/// </summary>
 		private void InitializeWidgets(iFolderWeb[] ifolders)
