@@ -69,28 +69,24 @@ namespace Simias.Event
 		{
 			// Specify what is done when a file is changed, created, or deleted.
 			publish.RaiseEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, EventType.FileChanged));
-			logger.Debug("Changed File: {0} {1}", e.FullPath, e.ChangeType);
 		}
 
 		private void OnRenamed(object source, RenamedEventArgs e)
 		{
 			// Specify what is done when a file is renamed.
 			publish.RaiseEvent(new FileRenameEventArgs(source.ToString(), e.FullPath, collectionId, e.OldFullPath));
-			logger.Debug("Renamed File: {0} renamed to {1}", e.OldFullPath, e.FullPath);
 		}
 
 		private void OnDeleted(object source, FileSystemEventArgs e)
 		{
 			// Specify what is done when a file is changed, created, or deleted.
 			publish.RaiseEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, EventType.FileDeleted));
-			logger.Debug("Deleted File: {0} {1}",  e.FullPath, e.ChangeType);
 		}
 
 		private void OnCreated(object source, FileSystemEventArgs e)
 		{
 			// Specify what is done when a file is renamed.
 			publish.RaiseEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, EventType.FileCreated));
-			logger.Debug("Created File: {0}", e.FullPath);
 		}
 
 		private void Dispose(bool inFinalize)
