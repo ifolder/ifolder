@@ -133,6 +133,7 @@ namespace Simias.Domain
 
 			// clean-up
 			channel.Dispose();
+			channel = null;
 			service = null;
 		}
 
@@ -209,6 +210,7 @@ namespace Simias.Domain
 			
 			// clean-up
 			channel.Dispose();
+			channel = null;
 			service = null;
 		}
 
@@ -232,7 +234,6 @@ namespace Simias.Domain
 
 			IDomainService service = (IDomainService)Activator.GetObject(
 				typeof(IDomainService), url);
-			
 			
 			return service;
 		}

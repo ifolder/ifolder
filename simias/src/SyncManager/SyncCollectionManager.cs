@@ -360,10 +360,6 @@ namespace Simias.Sync
 							}
 						}
 					}
-					catch
-					{
-						log.Debug("Caught unknown exception!");
-					}
 					finally
 					{
 						storeService = null;
@@ -384,15 +380,7 @@ namespace Simias.Sync
 				}
 				catch(Exception e)
 				{
-					// TODO: clean-up
-					try
-					{
-						log.Debug(e, "Ignored");
-					}
-					catch
-					{
-						File.CreateText(Path.Combine(Configuration.GetConfiguration().StorePath, "double.exception")).Close();
-					}
+					log.Debug(e, "Ignored");
 				}
 			}
 		}
