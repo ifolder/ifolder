@@ -267,7 +267,7 @@ namespace Simias.Security.Web
 					// Set the session to never expire on the local web service.
 					if ( context.Request.Url.IsLoopback )
 					{
-						context.Session.Timeout = Timeout.Infinite;
+						context.Session.Timeout = Int32.MaxValue;
 					}
 					else
 					{
