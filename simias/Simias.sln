@@ -192,6 +192,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncLogicLiteTests", "src\S
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimiasEditor", "src\SimiasEditor\SimiasEditor.csproj", "{F1E56EA8-4935-447D-8554-CA024ABB13BD}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -374,6 +378,10 @@ Global
 		{B09EB2F9-1809-4777-8E7E-17E74FBDA908}.Debug.Build.0 = Debug|.NET
 		{B09EB2F9-1809-4777-8E7E-17E74FBDA908}.Release.ActiveCfg = Release|.NET
 		{B09EB2F9-1809-4777-8E7E-17E74FBDA908}.Release.Build.0 = Release|.NET
+		{F1E56EA8-4935-447D-8554-CA024ABB13BD}.Debug.ActiveCfg = Debug|.NET
+		{F1E56EA8-4935-447D-8554-CA024ABB13BD}.Debug.Build.0 = Debug|.NET
+		{F1E56EA8-4935-447D-8554-CA024ABB13BD}.Release.ActiveCfg = Release|.NET
+		{F1E56EA8-4935-447D-8554-CA024ABB13BD}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
