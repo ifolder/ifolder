@@ -67,17 +67,17 @@ namespace Simias.POBox
 					{
 						switch(subscription.SubscriptionState)
 						{
-								// invited (master)
+							// invited (master)
 							case SubscriptionStates.Invited:
 								done = DoInvited();
 								break;
 
-								// replied (slave)
+							// replied (slave)
 							case SubscriptionStates.Replied:
 								done = DoReplied();
 								break;
 
-								// delivered (slave)
+							// delivered (slave)
 							case SubscriptionStates.Delivered:
 								done = DoDelivered();
 								break;

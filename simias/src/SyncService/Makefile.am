@@ -9,7 +9,7 @@ SyncService_FLAGS = $(CSC_EXEFLAG)
 SyncService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Simias.dll
 SyncService_LIBPATH = ../Simias.dll
 
-EXTRA_DIST = $(SyncService_CSFILES)
+EXTRA_DIST = $(SyncService_CSFILES) $(srcdir)/remoting.config
 
 all: SyncService.exe
 
@@ -25,10 +25,10 @@ endif
 
 install-exec-local: SyncService.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) SyncService.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) SyncService.exe $(DEBUG_FILES) $(srcdir)/remoting.config $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f SyncService.exe $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
+	cd $(DESTDIR)$(bindir); rm -f SyncService.exe remoting.config $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
     
 CLEAN_FILES = SyncService.exe SyncService.doc.xml
 
