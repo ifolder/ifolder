@@ -7,6 +7,7 @@ using System.Data;
 using System.IO;
 using System.Text;
 
+using Simias.Client;
 using Simias.Storage;
 
 
@@ -50,7 +51,6 @@ namespace EventLogReaderII
 				listBox1.Items.Add( String.Format( "\tHeader length = {0}", header.Length ) );
 				listBox1.Items.Add( String.Format( "\tLog File ID = {0}", header.LogFileID ) );
 				listBox1.Items.Add( String.Format( "\tMaximum records = {0}", header.MaxLogRecords ) );
-				listBox1.Items.Add( String.Format( "\tLog File State = {0}", Enum.GetName( typeof( LogFileHeader.LogState ), header.State ) ) );
 				listBox1.Items.Add( "*===== End Log File Header =====*" );
 				listBox1.Items.Add( "" );
 			}
