@@ -36,11 +36,16 @@ nautilus_extension_LTLIBRARIES=libnautilus-ifolder.la
 libnautilus_ifolder_la_SOURCES =     \
 	envC.c iFolderClientClientLib.c stdsoap2.c nautilus-ifolder.c
 
-libnautilus_ifolder_la_LDFLAGS = -module -export-dynamic -avoid-version
-libnautilus_ifolder_la_LIBADD  = $(NAUTILUS_LIBS) $(SIMIAS_EVENT_CLIENT_LIBS)
+# Statically link libsimias-event.a
+SIMIAS_EVENT_CLIENT_STATIC_LIB = $(libdir)/libsimias-event.a
+
+libnautilus_ifolder_la_LDFLAGS = -module -export-dynamic -avoid-version $(SIMIAS_EVENT_CLIENT_STATIC_LIB)
+libnautilus_ifolder_la_LIBADD  = $(NAUTILUS_LIBS)
+
+libnautilus_ifolder_la_DEPENDENCIES = nautilus-ifolder.exe
 
 # FIXME: Figure out a better way to force nautilus-ifolder.exe to be built
-iFolderClient.h:	$(IFOLDER_CLIENT_WSDL) nautilus-ifolder.exe
+iFolderClient.h:	$(IFOLDER_CLIENT_WSDL)
 	$(GSOAP)/wsdl2h -c -o $@ $(IFOLDER_CLIENT_WSDL)
 	
 envC.c:
@@ -70,6 +75,7 @@ uninstall-local:
 
 clean-local:
 	rm -f iFolderClient* env* iFolder_* soap*
+	rm -f nautilus-ifolder.exe
 	rm -rf $(COMMON_CLEAN_FILES)
 	
 distclean-local:
