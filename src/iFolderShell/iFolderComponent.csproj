@@ -97,22 +97,22 @@
                 <Reference
                     Name = "CollectionStore"
                     AssemblyName = "CollectionStore"
-                    HintPath = "..\..\..\simias\src\CollectionStore\CollectionStore.dll"
+                    HintPath = "..\..\..\bin\CollectionStore.dll"
+                />
+                <Reference
+                    Name = "Common"
+                    AssemblyName = "Common"
+                    HintPath = "..\..\..\bin\Common.dll"
                 />
                 <Reference
                     Name = "FormsBookLib"
                     AssemblyName = "FormsBookLib"
-                    HintPath = "..\..\..\addressbook\src\FormsBookLib\FormsBookLib.dll"
+                    HintPath = "..\..\..\bin\FormsBookLib.dll"
                 />
                 <Reference
                     Name = "iFolder"
                     AssemblyName = "iFolder"
                     HintPath = "..\iFolder\iFolder.dll"
-                />
-                <Reference
-                    Name = "Common"
-                    AssemblyName = "Common"
-                    HintPath = "..\..\..\simias\src\Common\Configuration.dll"
                 />
             </References>
         </Build>
