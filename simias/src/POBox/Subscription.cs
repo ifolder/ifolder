@@ -73,7 +73,12 @@ namespace Simias.POBox
 		/// <summary>
 		/// The Subscription acceptance/denial has been acknowledged.
 		/// </summary>
-		Acknowledged
+		Acknowledged,
+
+		/// <summary>
+		/// The subscription state is unknown.
+		/// </summary>
+		Unknown
 	};
 
 	/// <summary>
@@ -94,7 +99,12 @@ namespace Simias.POBox
 		/// <summary>
 		/// The subscription was rejected.
 		/// </summary>
-		Rejected
+		Rejected,
+
+		/// <summary>
+		/// The disposition is unknown.
+		/// </summary>
+		Unknown
 	};
 
 	/// <summary>
@@ -300,7 +310,9 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (SubscriptionStates)Properties.GetSingleProperty(SubscriptionStateProperty).Value;
+				Property p = Properties.GetSingleProperty(SubscriptionStateProperty);
+
+				return (p != null) ? (SubscriptionStates)p.Value : SubscriptionStates.Unknown;
 			}
 			set
 			{
@@ -315,7 +327,9 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(ToPublicKeyProperty).Value;
+				Property p = Properties.GetSingleProperty(ToPublicKeyProperty);
+
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -330,7 +344,9 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(FromPublicKeyProperty).Value;
+				Property p = Properties.GetSingleProperty(FromPublicKeyProperty);
+
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -345,7 +361,9 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(SubscriptionCollectionNameProperty).Value;
+				Property p = Properties.GetSingleProperty(SubscriptionCollectionNameProperty);
+
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -360,7 +378,9 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(SubscriptionCollectionIDProperty).Value;
+				Property p = Properties.GetSingleProperty(SubscriptionCollectionIDProperty);
+
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -393,7 +413,9 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(SubscriptionCollectionURLProperty).Value;
+				Property p = Properties.GetSingleProperty(SubscriptionCollectionURLProperty);
+
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -408,7 +430,9 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (Uri)Properties.GetSingleProperty(POServiceURLProperty).Value;
+				Property p = Properties.GetSingleProperty(POServiceURLProperty);
+
+				return (p != null) ? (Uri)p.Value : null;
 			}
 			set
 			{
@@ -440,7 +464,9 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(CollectionRootProperty).Value;
+				Property p = Properties.GetSingleProperty(CollectionRootProperty);
+
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -457,7 +483,9 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(DirNodeIDProperty).Value;
+				Property p = Properties.GetSingleProperty(DirNodeIDProperty);
+
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -472,7 +500,9 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(DirNodeNameProperty).Value;
+				Property p = Properties.GetSingleProperty(DirNodeNameProperty);
+
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -487,7 +517,9 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (Access.Rights)Properties.GetSingleProperty(SubscriptionRightsProperty).Value;
+				Property p = Properties.GetSingleProperty(SubscriptionRightsProperty);
+
+				return (p != null) ? (Access.Rights)p.Value : Access.Rights.Deny;
 			}
 			set
 			{
@@ -502,7 +534,9 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (SubscriptionDispositions)Properties.GetSingleProperty(SubscriptionDispositionProperty).Value;
+				Property p = Properties.GetSingleProperty(SubscriptionDispositionProperty);
+
+				return (p != null) ? (SubscriptionDispositions)p.Value : SubscriptionDispositions.Unknown;
 			}
 			set
 			{

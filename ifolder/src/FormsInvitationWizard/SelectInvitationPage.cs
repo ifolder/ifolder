@@ -194,15 +194,6 @@ namespace Novell.iFolder.InvitationWizard
 					Subscription subscription;
 					if(((InvitationWizard)(this.Parent)).ConvertSubscriptionInfo(subInfo, out subscription))
 					{
-						// The Subscription object was just created ... we're done for now.
-						// TODO: change the message text.
-						MessageBox.Show("The invitation has been successfully added to your message box.  Once the invitation has synchronized you will be able to accept or decline it.", "Invitation Added");
-
-						// TODO: proceed to finish page???
-						Application.Exit();
-					}
-					else
-					{
 						// Check the state of the subscription.  If it is ready, proceed; otherwise, quit.
 						if (subscription.SubscriptionState != SubscriptionStates.Received)
 						{
@@ -212,6 +203,15 @@ namespace Novell.iFolder.InvitationWizard
 							// TODO: proceed to finish page???
 							Application.Exit();
 						}
+					}
+					else
+					{
+						// The Subscription object was just created ... we're done for now.
+						// TODO: change the message text.
+						MessageBox.Show("The invitation has been successfully added to your message box.  Once the invitation has synchronized you will be able to accept or decline it.", "Invitation Added");
+
+						// TODO: proceed to finish page???
+						Application.Exit();
 					}
 
 					((InvitationWizard)(this.Parent)).Subscription = subscription;

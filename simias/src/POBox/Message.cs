@@ -48,7 +48,12 @@ namespace Simias.POBox
 		/// <summary>
 		/// The message has been deleted (but not purged yet).
 		/// </summary>
-		Deleted
+		Deleted,
+
+		/// <summary>
+		/// The message state is unknown.
+		/// </summary>
+		Unknown
 	};
 
 	/// <summary>
@@ -143,7 +148,8 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(MessageTypeProperty).Value;
+				Property p = Properties.GetSingleProperty(MessageTypeProperty);
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -158,7 +164,8 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (MessageState)Properties.GetSingleProperty(MessageStateProperty).Value;
+				Property p = Properties.GetSingleProperty(MessageStateProperty);
+				return (p != null) ? (MessageState)p.Value : MessageState.Unknown;
 			}
 			set
 			{
@@ -173,7 +180,8 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(SubjectProperty).Value;
+				Property p = Properties.GetSingleProperty(SubjectProperty);
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -188,7 +196,8 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(BodyProperty).Value;
+				Property p = Properties.GetSingleProperty(BodyProperty);
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -203,7 +212,8 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(ToNameProperty).Value;
+				Property p = Properties.GetSingleProperty(ToNameProperty);
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -218,7 +228,8 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(ToAddressProperty).Value;
+				Property p = Properties.GetSingleProperty(ToAddressProperty);
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -233,7 +244,8 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(ToIdentityProperty).Value;
+				Property p = Properties.GetSingleProperty(ToIdentityProperty);
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -248,7 +260,8 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(FromNameProperty).Value;
+				Property p = Properties.GetSingleProperty(FromNameProperty);
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -263,7 +276,8 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(FromAddressProperty).Value;
+				Property p = Properties.GetSingleProperty(FromAddressProperty);
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -278,7 +292,8 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(FromIdentityProperty).Value;
+				Property p = Properties.GetSingleProperty(FromIdentityProperty);
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -293,7 +308,8 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (Uri)Properties.GetSingleProperty(MasterURLProperty).Value;
+				Property p = Properties.GetSingleProperty(MasterURLProperty);
+				return (p != null) ? (Uri)p.Value : null;
 			}
 			set
 			{
@@ -308,7 +324,8 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(DomainIDProperty).Value;
+				Property p = Properties.GetSingleProperty(DomainIDProperty);
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -323,7 +340,8 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(DomainNameProperty).Value;
+				Property p = Properties.GetSingleProperty(DomainNameProperty);
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{

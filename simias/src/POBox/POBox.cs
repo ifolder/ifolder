@@ -152,7 +152,6 @@ namespace Simias.POBox
 		/// <param name="message">The message to add to the collection.</param>
 		public void AddMessage(Message message)
 		{
-			this.SetType(message, typeof(Message).Name);
 			Commit(message);
 		}
 
@@ -162,11 +161,6 @@ namespace Simias.POBox
 		/// <param name="messageList">An array of Message objects to add to the POBox object.</param>
 		public void AddMessage(Message[] messageList)
 		{
-			foreach (Message message in messageList)
-			{
-				this.SetType(message, typeof(Message).Name);
-			}
-
 			Commit(messageList);
 		}
 
