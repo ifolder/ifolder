@@ -87,7 +87,7 @@ static char * sec_server_config_elements [] = {
 /* File name of the IProcEvent configuration file */
 #define CONFIG_FILE_NAME "IProcEvent.cfg"
 
-#define RECEIVE_BUFFER_SIZE 2048
+#define RECEIVE_BUFFER_SIZE 512
 
 #define NUM_OF_ACTION_TYPES 6
 
@@ -118,9 +118,6 @@ typedef struct
 	
 	/* Socket used to listen for events from the event server */
 	int event_socket;
-	
-	/* Buffer used to receive the socket messages */
-	char receive_buffer [RECEIVE_BUFFER_SIZE];
 	
 	/* Indicates the current amount of data in the buffer to be processed */
 	int buffer_length;
@@ -482,7 +479,7 @@ static void *
 sec_thread (void *user_data)
 {
 	RealSimiasEventClient *ec = (RealSimiasEventClient *)user_data;
-	char recv_buf [512];
+	char recv_buf [RECEIVE_BUFFER_SIZE];
 	char *buffer;
 	char *temp_buffer;
 	char *message;
@@ -508,7 +505,7 @@ printf ("SEC: sec_thread () called\n");
 	buffer_length = 0;
 
 	while ((bytes_received = recv (ec->event_socket, 
-								   recv_buf, sizeof (recv_buf), 0)) > 0) {
+								   recv_buf, RECEIVE_BUFFER_SIZE, 0)) > 0) {
 
 //printf ("\n=====Dumping %d bytes received:=====\n", bytes_received);
 //int i;
