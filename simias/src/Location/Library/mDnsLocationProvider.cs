@@ -41,7 +41,7 @@ namespace Simias.Location
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(MDnsLocationProvider));
 
-		private static readonly string SUFFIX = "_collection._tcp._local";
+		public static readonly string SUFFIX = "_collection._tcp._local";
 
 		private string host;
 
@@ -55,7 +55,8 @@ namespace Simias.Location
 		static MDnsLocationProvider()
 		{
 			// channel
-			TcpChannel channel = new TcpChannel();
+			TcpClientChannel channel = new TcpClientChannel("MDnsClient",
+				new BinaryClientFormatterSinkProvider());
 			ChannelServices.RegisterChannel(channel);
 		}
 
@@ -158,6 +159,10 @@ namespace Simias.Location
 				string service = String.Format("{0}.{1}", sc.ID, SUFFIX);
 				int port = sc.MasterUri.Port;
 
+				// ptr
+				register.RegisterPointer(SUFFIX, service);
+				
+				// service location
 				if (register.RegisterServiceLocation(host, service, port, 0, 0) == 0)
 				{
 					log.Debug("Registered {0} with Reunion.", service);
@@ -191,6 +196,7 @@ namespace Simias.Location
 
 			register.DeregisterTextStrings(service);
 			register.DeregisterServiceLocation(host, service);
+			register.DeregisterPointer(SUFFIX, service);
 
 			log.Debug("Unregistered {0} with Reunion.", service);
 		}
