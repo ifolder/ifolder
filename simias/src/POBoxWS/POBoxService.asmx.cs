@@ -525,6 +525,13 @@ namespace Simias.POBoxService.Web
 				cSub.DomainName = cDomain.Name;
 				cSub.SubscriptionKey = Guid.NewGuid().ToString();
 
+				DirNode dirNode = sharedCollection.GetRootDirectory();
+				if(dirNode != null)
+				{
+					cSub.DirNodeID = dirNode.ID;
+					cSub.DirNodeName = dirNode.Name;
+				}
+
 				poBox.Commit(cSub);
 				return(cSub.MessageID);
 			}
