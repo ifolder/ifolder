@@ -177,8 +177,12 @@ case $SIMIAS_OS in
         SHARED_LIB_FLAG='-shared'
         STORELIB="sqlite"
         STORELIB_PATH="$EXTERNAL_DIR/sqlite/darwin"
-		StoreProviderAssembly="SqliteProvider.dll"
-		StoreProviderType="Simias.Storage.Provider.Sqlite.SqliteProvider"
+		LDOUT='-o '
+		LD='$(CXX) -dynamiclib '
+		StoreProviderAssembly="Simias.dll"
+		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
+		#StoreProviderAssembly="SqliteProvider.dll"
+		#StoreProviderType="Simias.Storage.Provider.Sqlite.SqliteProvider"
     ;;
     #
     # Linux-specific configuration

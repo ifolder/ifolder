@@ -1,22 +1,8 @@
-if LINUX
 SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer
+
 DIST_SUBDIRS = $(SUBDIRS)
+
 EXTRA_DIST = ifdata simias-snakeoil.keys SqliteProvider
-endif
-
-if DARWIN
-SUBDIRS = SimiasClient Simias.dll mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer SqliteProvider
-DIST_SUBDIRS = $(SUBDIRS)
-EXTRA_DIST = ifdata simias-snakeoil.keys
-endif
-
-if WINDOWS
-SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer
-DIST_SUBDIRS = $(SUBDIRS)
-EXTRA_DIST = ifdata simias-snakeoil.keys SqliteProvider
-endif
-
-
 
 install-exec-local:
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
