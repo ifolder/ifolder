@@ -219,7 +219,7 @@
 	runThreads = YES;
 
 	NSLog(@"Creating and loading iFolderData");
-	[ifolderdata refresh];
+	[ifolderdata refresh:NO];
 		
 	// Startup the event processing thread
     [NSThread detachNewThreadSelector:@selector(simiasEventThread:)
@@ -348,6 +348,7 @@
 
 
 
+
 //===================================================================
 // simiasEventThread
 // This method contains the code to deal with all simias events
@@ -359,7 +360,7 @@
 	while(runThreads)
 	{
 		SimiasEventData *sed = [SimiasEventData sharedInstance];
-		NSLog(@"simiasEventThread about to block");
+		NSLog(@"simiasEventThread going to sleep...");
 //		[iFolderWindowController updateStatusTS:@"Idle..."];
 //		[iFolderWindowController updateProgress:-1 withMin:0 withMax:0];
 		[sed blockUntilEvents];
@@ -422,6 +423,7 @@
 		{
 			// First check to see if this is a POBox 'cause we
 			// don't care much about it if'n it aint.
+			NSLog(@"processingNodeEvents checking for valid POBox");
 			if([[iFolderData sharedInstance] isPOBox:[ne collectionID]])
 			{
 				[self processNodeNodeEvent:ne];
@@ -450,44 +452,25 @@
 		case NODE_CREATED:
 		{
 			NSLog(@"processCollectionNodeEvent NODE_CREATED");
-			BOOL haveiFolder =
-				[[iFolderData sharedInstance] 
-						isiFolder:[nodeNodeEvent collectionID]];
-			
-			iFolder *ifolder = [[iFolderData sharedInstance] 
-						getiFolder:[nodeNodeEvent collectionID]
-						updateData:YES];
 
-			// If the iFolder is not nil and we didn't already have
-			// call to add it instead of just updating the data
-			if( (ifolder != nil) &&
-				(!haveiFolder) )
-			{
-				[iFolderWindowController addiFolderTS:ifolder];
-			}
+			// not sure if we should read on every one but I think we
+ 			// need to in case of a new iFolder
+			[[iFolderData sharedInstance] 
+								readiFolder:[nodeNodeEvent collectionID]];
 			break;
 		}
 		case NODE_DELETED:
 		{
 			NSLog(@"processCollectionNodeEvent NODE_DELETED");
 
-			BOOL haveiFolder =
-				[[iFolderData sharedInstance] 
-						isiFolder:[nodeNodeEvent collectionID]];
-
-			if(haveiFolder)
+			iFolder *ifolder = [[iFolderData sharedInstance]
+									getiFolder:[nodeNodeEvent collectionID]];
+			if( (ifolder != nil) &&
+				(![ifolder IsSubscription]) )
 			{
-				iFolder *ifolder = [[iFolderData sharedInstance] 
-						getiFolder:[nodeNodeEvent collectionID]
-						updateData:NO];
-
-				if(ifolder != nil)
-				{
-					[iFolderWindowController removeiFolderTS:ifolder];			
-				}
-
+				// remove it from the list if it's not a subscription
 				[[iFolderData sharedInstance] 
-						removeiFolder:[nodeNodeEvent collectionID]];
+								_deliFolder:[nodeNodeEvent collectionID]];
 			}
 			break;
 		}
@@ -495,15 +478,13 @@
 		{
 			NSLog(@"processCollectionNodeEvent NODE_CHANGED");
 
-			BOOL haveiFolder =
-				[[iFolderData sharedInstance] 
-						isiFolder:[nodeNodeEvent collectionID]];
+			BOOL isiFolder = [[iFolderData sharedInstance] 
+									isiFolder:[nodeNodeEvent collectionID]];
 
-			if(haveiFolder)
+			if(isiFolder)
 			{
-				iFolder *ifolder = [[iFolderData sharedInstance] 
-						getiFolder:[nodeNodeEvent collectionID]
-						updateData:YES];
+				[[iFolderData sharedInstance] 
+								readiFolder:[nodeNodeEvent collectionID]];
 			}
 			break;
 		}
@@ -524,16 +505,10 @@
 		case NODE_CREATED:
 		{
 			NSLog(@"processNodeNodeEvent NODE_CREATED");
-			iFolder *ifolder = [[[iFolderData sharedInstance] 
-								getAvailableiFolder:[nodeNodeEvent nodeID]
-								inCollection:[nodeNodeEvent collectionID]
-								updateData:NO] retain];
-			if( (ifolder != nil) &&
-				(![[iFolderData sharedInstance] isiFolder:[ifolder ID]]) )
-			{
-				[iFolderWindowController addiFolderTS:ifolder];
-			}
-			[ifolder release];
+			iFolder *ifolder = [[iFolderData sharedInstance] 
+									readAvailableiFolder:[nodeNodeEvent nodeID]
+									inCollection:[nodeNodeEvent collectionID]];
+//			if(ifolder != nil) trigger some event
 			break;
 		}
 		case NODE_DELETED:
@@ -547,18 +522,11 @@
 			if(ifolderID == nil)
 				return;
 				
-			iFolder *ifolder = [[iFolderData sharedInstance] getiFolder:ifolderID
-												updateData:NO];
-			
-			if(ifolder != nil)
+			if([[iFolderData sharedInstance] isiFolder:ifolderID])
 			{
-				[iFolderWindowController removeiFolderTS:ifolder];			
+				[[iFolderData sharedInstance] 
+								_deliFolder:ifolderID];
 			}
-
-			// Use the nodeID to remove the iFolder so it clears out both
-			// the iFolder AND and subscription
-			[[iFolderData sharedInstance] removeiFolder:[nodeNodeEvent nodeID]];
-
 			break;
 		}
 		case NODE_CHANGED:
@@ -571,28 +539,12 @@
 										getiFolderID:[nodeNodeEvent nodeID]];
 			if(ifolderID == nil)
 				return;
-				
-			[self performSelectorOnMainThread:@selector(handleUpdateiFolder:) 
-				withObject:ifolderID waitUntilDone:YES ];				
-
+			
+			[[iFolderData sharedInstance] readAvailableiFolder:[nodeNodeEvent nodeID]
+												inCollection:[nodeNodeEvent collectionID]];
 			break;
 		}
 	}
-}
-
-
-
-
-//===================================================================
-// handleUpdateiFolder
-// this method does the work of updating status for the node
-// event and MUST run on the main thread
-//===================================================================
-- (void)handleUpdateiFolder:(NSString *)ifolderID
-{
-	NSLog(@"iFolderApplication:handleUpdateiFolder called");
-	// Refresh the iFolder instance data, this will update the UI
-	[[iFolderData sharedInstance] getiFolder:ifolderID updateData:YES];				
 }
 
 
@@ -628,18 +580,19 @@
 {
 	SMCollectionSyncEvent *cse = [colSyncEvent retain];
 
-	if([ [iFolderData sharedInstance] isiFolder:[cse ID] ])
-	{
-		BOOL updateData = NO;
+	BOOL updateData = NO;
 		
-		iFolder *ifolder = [[[iFolderData sharedInstance] 
-								getiFolder:[cse ID] updateData:NO] retain];
+	iFolder *ifolder = [[iFolderData sharedInstance] 
+							getiFolder:[cse ID]];
 
+	if(ifolder != nil)
+	{
 		if([cse syncAction] == SYNC_ACTION_START)
 			[ifolder setIsSynchronizing:YES];
 		else
 		{
 			[ifolder setIsSynchronizing:NO];
+
 			if( [ [ifolder State] isEqualToString:@"WaitSync"])
 			{
 				NSLog(@"handleCollectionSyncEvent: iFolder stat is WaitSync");
@@ -656,11 +609,8 @@
 		if(updateData)
 		{
 			NSLog(@"handleCollectionSyncEvent calling getiFolder with updateData");
-			[[iFolderData sharedInstance]
-						getiFolder:[cse ID] updateData:YES];
+			[[iFolderData sharedInstance] readiFolder:[cse ID]];
 		}
-
-		[ifolder release];
 	}
 
 	switch([cse syncAction])

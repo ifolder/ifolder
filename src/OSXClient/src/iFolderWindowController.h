@@ -35,25 +35,25 @@
 
 @interface iFolderWindowController : NSWindowController
 {
-    IBOutlet SetupiFolderSheetController *setupSheetController;
-    IBOutlet CreateiFolderSheetController *createSheetController;
-    IBOutlet NSArrayController *domainsController;
-    IBOutlet NSArrayController *ifoldersController;
-    IBOutlet NSTableView *iFolderTable;
-	IBOutlet NSTextField			*statusText;
-	IBOutlet NSProgressIndicator	*statusProgress;
+    IBOutlet SetupiFolderSheetController	*setupSheetController;
+    IBOutlet CreateiFolderSheetController	*createSheetController;
+    IBOutlet NSTableView					*iFolderTable;
+	IBOutlet NSTextField					*statusText;
+	IBOutlet NSProgressIndicator			*statusProgress;
+	IBOutlet NSTableColumn					*iconColumn;
+	IBOutlet NSTableColumn					*nameColumn;
+	IBOutlet NSTableColumn					*locationColumn;
+	IBOutlet NSTableColumn					*statusColumn;
+
+    NSArrayController						*ifoldersController;
 	
 	PropertiesWindowController				*propertiesController;
 	iFolderService							*ifolderService;
 	SimiasService							*simiasService;
-	NSMutableArray							*domains;
-	NSMutableArray							*ifolders;
-
-	NSToolbar				*toolbar;
-	NSMutableDictionary		*toolbarItems;
-	NSMutableArray			*toolbarItemKeys;
-	NSMutableDictionary		*keyedDomains;
-	NSMutableDictionary		*keyediFolders;
+	
+	NSToolbar								*toolbar;
+	NSMutableDictionary						*toolbarItems;
+	NSMutableArray							*toolbarItemKeys;
 }
 
 + (iFolderWindowController *)sharedInstance;
@@ -112,10 +112,8 @@
 - (void)createiFolder:(NSString *)path inDomain:(NSString *)domainID;
 - (void)acceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)domainID toPath:(NSString *)localPath;
 
-+(void)removeiFolderTS:(iFolder *)ifolder;
--(void)removeiFolder:(iFolder *)ifolder;
-+(void)addiFolderTS:(iFolder *)newiFolder;
--(void)addiFolder:(iFolder *)newiFolder;
++(void)refreshDomainsTS;
+-(void)refreshDomains:(id)args;
 
 
 

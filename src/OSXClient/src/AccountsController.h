@@ -50,6 +50,7 @@
 	iFolderDomain		*defaultDomain;
 
 	BOOL				createMode;
+	BOOL				isFirstDomain;
 }
 
 - (IBAction)activateAccount:(id)sender;

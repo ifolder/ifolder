@@ -144,11 +144,13 @@ NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user);
 	}
 	else
 	{
-		ifolder = [[[iFolder alloc] init] retain];
-		
 		struct ns1__iFolderWeb *curiFolder;
-			
 		curiFolder = getiFolderResponse.GetiFolderResult;
+		
+		if(curiFolder == NULL)
+			[NSException raise:@"Invalid iFolderID" format:@"Error in GetiFolder"];
+
+		ifolder = [[[iFolder alloc] init] retain];
 
 		[ifolder setProperties:getiFolderProperties(curiFolder)];
     }

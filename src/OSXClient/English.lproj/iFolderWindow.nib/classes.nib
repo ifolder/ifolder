@@ -70,10 +70,12 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 createSheetController = CreateiFolderSheetController; 
-                domainsController = NSArrayController; 
                 iFolderTable = NSTableView; 
-                ifoldersController = NSArrayController; 
+                iconColumn = NSTableColumn; 
+                locationColumn = NSTableColumn; 
+                nameColumn = NSTableColumn; 
                 setupSheetController = SetupiFolderSheetController; 
+                statusColumn = NSTableColumn; 
                 statusProgress = NSProgressIndicator; 
                 statusText = NSTextField; 
             }; 

@@ -27,6 +27,7 @@
 #import "iFolderDomain.h"
 #import "iFolderService.h"
 #import "SimiasService.h"
+#import "iFolderWindowController.h"
 
 
 static iFolderData *sharedInstance = nil;
@@ -56,6 +57,25 @@ static iFolderData *sharedInstance = nil;
 			keyedDomains = [[NSMutableDictionary alloc] init];
 			keyediFolders = [[NSMutableDictionary alloc] init];
 			keyedSubscriptions = [[NSMutableDictionary alloc] init];
+			
+			ifolderdomains = [[NSMutableArray alloc] init];
+			ifolders = [[NSMutableArray alloc] init];
+			
+			ifolderDataAlias = [[NSObjectController alloc] initWithContent:self];
+
+			ifoldersController = [[NSArrayController alloc] init];
+			[ifoldersController setObjectClass:[iFolder class]];
+			
+			domainsController = [[NSArrayController alloc] init];
+			[domainsController setObjectClass:[iFolderDomain class]];
+
+			[domainsController bind:@"contentArray" toObject:ifolderDataAlias
+					withKeyPath:@"selection.ifolderdomains" options:nil];	
+					
+			[ifoldersController bind:@"contentArray" toObject:ifolderDataAlias
+					withKeyPath:@"selection.ifolders" options:nil];	
+
+
 		}
 		return sharedInstance;
 	}
@@ -76,6 +96,11 @@ static iFolderData *sharedInstance = nil;
 	[keyediFolders release];
 	[keyedDomains release];
 	[keyedSubscriptions release];
+	[ifolderdomains release];
+	[ifolders release];
+	[ifolderDataAlias release];
+	[ifoldersController release];
+	[domainsController release];
 	
 	[super dealloc];
 }
@@ -94,12 +119,33 @@ static iFolderData *sharedInstance = nil;
 
 
 
+//===================================================================
+// domainArrayController
+// returns the domain NSArrayController for the GUI to bind to
+//===================================================================
+-(NSArrayController *)domainArrayController
+{
+	return domainsController;
+}
+
+
+//===================================================================
+// ifolderArrayController
+// returns the iFolder NSArrayController for the GUI to bind to
+//===================================================================
+-(NSArrayController *)ifolderArrayController
+{
+	return ifoldersController;
+}
+
+
+
 
 //===================================================================
 // refresh
 // reads the current domains and ifolders
 //===================================================================
--(void)refresh
+- (void)refresh:(BOOL)onlyDomains
 {
 	[instanceLock lock];
 
@@ -107,9 +153,9 @@ static iFolderData *sharedInstance = nil;
 
 	@try
 	{
-		[keyedDomains removeAllObjects];
 		int objCount;
-
+		[keyedDomains removeAllObjects];
+		[ifolderdomains removeAllObjects];
 		NSArray *newDomains = [simiasService GetDomains:NO];
 		for(objCount = 0; objCount < [newDomains count]; objCount++)
 		{
@@ -118,24 +164,21 @@ static iFolderData *sharedInstance = nil;
 			if( [[newDomain isDefault] boolValue] )
 				defaultDomain = newDomain;
 
-			[keyedDomains setObject:newDomain forKey:[newDomain ID] ];			
+			[self _addDomain:newDomain];
 		}
 
-		
-		[keyediFolders removeAllObjects];
-		[keyedSubscriptions removeAllObjects];
-		NSArray *newiFolders = [ifolderService GetiFolders];
-		for(objCount = 0; objCount < [newiFolders count]; objCount++)
+		if(!onlyDomains)
 		{
-			iFolder *newiFolder = [newiFolders objectAtIndex:objCount];
-			
-			if([newiFolder IsSubscription])
+			[keyediFolders removeAllObjects];
+			[keyedSubscriptions removeAllObjects];
+			[ifolders removeAllObjects];
+			NSArray *newiFolders = [ifolderService GetiFolders];
+			for(objCount = 0; objCount < [newiFolders count]; objCount++)
 			{
-				[keyediFolders setObject:newiFolder forKey:[newiFolder CollectionID]];
-				[keyedSubscriptions setObject:[newiFolder CollectionID] forKey:[newiFolder ID]];
+				iFolder *newiFolder = [newiFolders objectAtIndex:objCount];
+
+				[self _addiFolder:newiFolder];
 			}
-			else
-				[keyediFolders setObject:newiFolder forKey:[newiFolder ID] ];			
 		}
 	}
 	@catch (NSException *e)
@@ -144,7 +187,83 @@ static iFolderData *sharedInstance = nil;
 		NSLog(@"%@ :: %@", [e name], [e reason]);
 	}
 
+	NSLog(@"Done Refreshing iFolderData");	
+
 	[instanceLock unlock];
+}
+
+
+
+//===================================================================
+// _addDomain
+// adds the Domain to the iFolderData structures
+//===================================================================
+-(void)_addDomain:(iFolderDomain *)domain
+{
+	[instanceLock lock];
+	NSLog(@"Addding domain: %@", [domain name]);
+	[domainsController addObject:domain];
+	[keyedDomains setObject:domain forKey:[domain ID]];
+
+	[instanceLock unlock];	
+}
+
+
+
+
+//===================================================================
+// _addiFolder
+// adds the iFolder to the iFolderData structures
+//===================================================================
+-(void)_addiFolder:(iFolder *)ifolder
+{
+	[instanceLock lock];
+	if([ifolder IsSubscription])
+	{
+		[ifoldersController addObject:ifolder];
+		[keyediFolders setObject:ifolder forKey:[ifolder CollectionID]];
+		[keyedSubscriptions setObject:[ifolder CollectionID] forKey:[ifolder ID]];
+	}
+	else
+	{
+		[ifoldersController addObject:ifolder];
+		[keyediFolders setObject:ifolder forKey:[ifolder ID]];
+	}
+	[instanceLock unlock];	
+}
+
+
+
+
+//===================================================================
+// _deliFolder
+// deletes the iFolder to the iFolderData structures
+//===================================================================
+-(void)_deliFolder:(NSString *)ifolderID
+{
+	[instanceLock lock];
+	NSString *realID = ifolderID;
+	
+	if(![self isiFolder:realID])
+	{
+		realID = [self getiFolderID:ifolderID];
+		if(![self isiFolder:realID])
+			return;
+		else
+		{
+			// remove this key since we found it
+			[keyedSubscriptions removeObjectForKey:ifolderID];
+		}
+	}
+
+	iFolder *ifolder = [keyediFolders objectForKey:realID];
+	if(ifolder == nil)
+		return;
+	
+	[keyediFolders removeObjectForKey:realID];
+	[ifoldersController removeObject:ifolder];
+
+	[instanceLock unlock];	
 }
 
 
@@ -210,110 +329,82 @@ static iFolderData *sharedInstance = nil;
 
 //===================================================================
 // getiFolder
-// returns the iFolder for the specified iFolderID
+// gets the iFolder from the iFolderData structures
 //===================================================================
--(iFolder *)getiFolder:(NSString *)iFolderID updateData:(BOOL)shouldUpdate
+-(iFolder *)getiFolder:(NSString *)ifolderID
 {
 	iFolder *ifolder = nil;
 	[instanceLock lock];
-	NSLog(@"iFolderData getiFolder called for iFolder %@", iFolderID);
-
-	ifolder = [[keyediFolders objectForKey:iFolderID] retain];
-	if( (ifolder == nil) || (shouldUpdate) )
-	{
-		@try
-		{
-			iFolder *newiFolder = [[ifolderService GetiFolder:iFolderID] retain];
-			if(ifolder != nil)
-			{
-				[ifolder setProperties:[newiFolder properties]];
-			}
-			else
-			{
-				ifolder = [newiFolder retain];
-
-				if([newiFolder IsSubscription])
-				{
-					[keyediFolders setObject:newiFolder forKey:[newiFolder CollectionID] ];
-					[keyedSubscriptions setObject:[newiFolder CollectionID] forKey:[newiFolder ID]];
-				}
-				else
-					[keyediFolders setObject:newiFolder forKey:[newiFolder ID] ];
-			}
-
-			[newiFolder release];
-		}
-		@catch (NSException *e)
-		{
-			NSLog(@"*********Exception getting iFolder");
-			NSLog(@"%@ :: %@", [e name], [e reason]);
-		}
-	}
-
-	[instanceLock unlock];
-
-	return [ifolder autorelease];
+	ifolder = [keyediFolders objectForKey:ifolderID];
+	[instanceLock unlock];	
+	return ifolder;
 }
 
 
 
 
 //===================================================================
-// removeiFolder
-// removes an iFolder that was previously here
+// readiFolder
+// reads and returns the ifolder for the specified ifolderID
 //===================================================================
--(void)removeiFolder:(NSString *)iFolderID
+-(iFolder *)readiFolder:(NSString *)ifolderID
 {
+	iFolder *ifolder = nil;
 	[instanceLock lock];
-	NSString *realID = iFolderID;
-	
-	iFolder *ifolder = [keyediFolders objectForKey:realID];
-	if(ifolder == nil)
+	NSLog(@"iFolderData readiFolder called for iFolder %@", ifolderID);
+
+	ifolder = [self getiFolder:ifolderID];
+
+	@try
 	{
-		realID = [keyedSubscriptions objectForKey:iFolderID];
-		if(realID != nil)
+		iFolder *newiFolder = [[ifolderService GetiFolder:ifolderID] retain];
+
+		if(ifolder != nil)
 		{
-			ifolder = [keyediFolders objectForKey:realID];
-			// remove the subscription because we are about to
-			// remove the iFolder
-			[keyedSubscriptions removeObjectForKey:iFolderID];
+			[ifolder setProperties:[newiFolder properties]];
 		}
+		else
+		{
+			ifolder = newiFolder;
+			[self _addiFolder:ifolder];
+		}
+		[newiFolder release];
 	}
-	if(ifolder != nil)
+	@catch (NSException *e)
 	{
-		[keyediFolders removeObjectForKey:realID];
+		NSLog(@"*********Exception getting iFolder");
+		NSLog(@"%@ :: %@", [e name], [e reason]);
 	}
 
 	[instanceLock unlock];
+
+	return ifolder;
 }
 
 
 
 
 //===================================================================
-// addiFolder
+// createiFolder
 // adds an iFolder
 //===================================================================
--(iFolder *)createiFolder:(NSString *)path inDomain:(NSString *)domainID
+-(void)createiFolder:(NSString *)path inDomain:(NSString *)domainID
 {
-	iFolder *newiFolder = nil;
-
 	[instanceLock lock];
 
 	@try
 	{
 		iFolder *newiFolder = [[ifolderService CreateiFolder:path InDomain:domainID] retain];
-		[keyediFolders setObject:newiFolder forKey:[newiFolder ID] ];
+		[self _addiFolder:newiFolder];		
 	}
 	@catch(NSException *ex)
 	{
+		NSLog(@"iFolderData:createiFolder exception: %@", [ex name]);
 		[instanceLock unlock];
 		[ex raise];
 	}
-	
-	[instanceLock unlock];
 
-	return newiFolder;
+	[instanceLock unlock];
 }
 
 
@@ -330,24 +421,27 @@ static iFolderData *sharedInstance = nil;
 	@try
 	{
 		[ifolderService DeleteiFolder:ifolderID];
-		[self removeiFolder:ifolderID];
+		[self _deliFolder:ifolderID];
 	}
 	@catch(NSException *ex)
 	{
 		[instanceLock unlock];
 		[ex raise];
 	}
-	
+
 	[instanceLock unlock];
 }
 
 
 
+
 //===================================================================
-// deleteiFolder
-// deletes the specified iFolder
+// acceptiFolderInvitation
+// accepts an iFolder Invitation and updates the iFolder Information
 //===================================================================
-- (void)acceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)domainID toPath:(NSString *)localPath
+- (void)acceptiFolderInvitation:(NSString *)iFolderID 
+									InDomain:(NSString *)domainID 
+									toPath:(NSString *)localPath
 {
 	[instanceLock lock];
 	
@@ -356,7 +450,9 @@ static iFolderData *sharedInstance = nil;
 	
 	@try
 	{
-		iFolder *newiFolder = [ifolderService AcceptiFolderInvitation:iFolderID InDomain:domainID toPath:localPath];
+		iFolder *newiFolder = [ifolderService AcceptiFolderInvitation:iFolderID 
+													InDomain:domainID
+													toPath:localPath];
 		if([[newiFolder ID] compare:iFolderID] != 0)
 		{
 			[keyedSubscriptions removeObjectForKey:iFolderID];
@@ -379,8 +475,8 @@ static iFolderData *sharedInstance = nil;
 
 
 //===================================================================
-// deleteiFolder
-// deletes the specified iFolder
+// revertiFolder
+// reverts an iFolder to an invitation
 //===================================================================
 - (void)revertiFolder:(NSString *)iFolderID
 {
@@ -411,51 +507,66 @@ static iFolderData *sharedInstance = nil;
 
 
 
+
 //===================================================================
 // getAvailableiFolder
-// returns the iFolder (invitation) for the specified ID
+// gets the available iFolder from the iFolderData structures
 //===================================================================
--(iFolder *)getAvailableiFolder:(NSString *)iFolderID 
-									inCollection:(NSString *)collectionID
-									updateData:(BOOL)shouldUpdate
+-(iFolder *)getAvailableiFolder:(NSString *)ifolderID
 {
 	iFolder *ifolder = nil;
 	[instanceLock lock];
 
-	ifolder = [[keyediFolders objectForKey:iFolderID] retain];
-	if( (ifolder == nil) || (shouldUpdate) )
+	NSString *realID = [self getiFolderID:ifolderID];
+	if(realID != nil)
+		ifolder = [keyediFolders objectForKey:realID];
+
+	[instanceLock unlock];	
+	return ifolder;
+}
+
+
+
+
+//===================================================================
+// readAvailableiFolder
+// returns the iFolder (invitation) for the specified ID
+//===================================================================
+-(iFolder *)readAvailableiFolder:(NSString *)ifolderID 
+									inCollection:(NSString *)collectionID
+{
+	iFolder *ifolder = nil;
+	[instanceLock lock];
+
+	ifolder = [self getAvailableiFolder:ifolderID];
+
+	@try
 	{
-		@try
-		{
-			iFolder *newiFolder = [[ifolderService GetAvailableiFolder:iFolderID
+		iFolder *newiFolder = [[ifolderService GetAvailableiFolder:ifolderID
 													inCollection:collectionID] retain];
-			if(ifolder != nil)
-				[ifolder setProperties:[newiFolder properties]];
-			else
-			{
-				ifolder = [newiFolder retain];
-
-				if([newiFolder IsSubscription])
-				{
-					[keyediFolders setObject:newiFolder forKey:[newiFolder CollectionID] ];
-					[keyedSubscriptions setObject:[newiFolder CollectionID] forKey:[newiFolder ID]];
-				}
-				else
-					[keyediFolders setObject:newiFolder forKey:[newiFolder ID] ];
-			}
-
-			[newiFolder release];
-		}
-		@catch (NSException *e)
+		if(ifolder != nil)
+			[ifolder setProperties:[newiFolder properties]];
+		else
 		{
-			NSLog(@"*********Exception getting iFolder");
-			NSLog(@"%@ :: %@", [e name], [e reason]);
+			// If there isn't an iFolder already there with this collectionID
+			// the addit, otherwise don't
+			if([self getiFolder:[newiFolder CollectionID]] == nil)
+			{
+				ifolder = newiFolder;
+				[self _addiFolder:ifolder];
+			}
 		}
+		[newiFolder release];
+	}
+	@catch (NSException *e)
+	{
+		NSLog(@"*********Exception getting iFolder");
+		NSLog(@"%@ :: %@", [e name], [e reason]);
 	}
 
 	[instanceLock unlock];
 
-	return [ifolder autorelease];
+	return ifolder;
 }
 
 
@@ -515,11 +626,11 @@ static iFolderData *sharedInstance = nil;
 //===================================================================
 -(NSArray *)getDomains
 {
-	NSArray *domains;
+	NSArray *alldomains;
 	[instanceLock lock];
-	domains = [keyedDomains allValues];
+	alldomains = [keyedDomains allValues];
 	[instanceLock unlock];	
-	return domains;
+	return alldomains;
 }
 
 
@@ -531,11 +642,11 @@ static iFolderData *sharedInstance = nil;
 //===================================================================
 -(NSArray *)getiFolders
 {
-	NSArray *ifolders;
+	NSArray *allifolders;
 	[instanceLock lock];
-	ifolders = [keyediFolders allValues];
+	allifolders = [keyediFolders allValues];
 	[instanceLock unlock];	
-	return ifolders;
+	return allifolders;
 }
 
 
@@ -569,6 +680,28 @@ static iFolderData *sharedInstance = nil;
 	[instanceLock unlock];	
 	return count;	
 }
+
+
+
+//===================================================================
+// selectDefaultDomain
+// This will select the default domain if there is one and select
+// the first one if not
+//===================================================================
+-(void)selectDefaultDomain
+{
+	if(defaultDomain != nil)
+	{
+		int index = [ifolderdomains indexOfObject:defaultDomain];
+		if(index != NSNotFound)
+			[domainsController setSelectionIndex:index];
+		else
+			[domainsController setSelectionIndex:0];
+	}
+	else
+		[domainsController setSelectionIndex:0];
+}
+
 
 
 @end

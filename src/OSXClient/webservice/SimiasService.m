@@ -97,19 +97,23 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 	}
 	else
 	{
-		domains = [[[NSMutableArray alloc]
-				initWithCapacity:getDomainsResponse.GetDomainsResult->__sizeDomainInformation] autorelease];
-		int counter;
-		for(counter=0;counter<getDomainsResponse.GetDomainsResult->__sizeDomainInformation;counter++)
-		{
-			struct ns1__DomainInformation *curDomain;
-			
-			curDomain = getDomainsResponse.GetDomainsResult->DomainInformation[counter];
-			iFolderDomain *newDomain = [[[iFolderDomain alloc] init] autorelease];
+		int domainCount = getDomainsResponse.GetDomainsResult->__sizeDomainInformation;
+		if(domainCount > 0)
+		{	
+			domains = [[NSMutableArray alloc] initWithCapacity:domainCount];
 
-			[newDomain setProperties:getDomainProperties(curDomain)];
-			
-			[domains addObject:newDomain];
+			int counter;
+			for(counter=0;counter<domainCount;counter++)
+			{
+				struct ns1__DomainInformation *curDomain;
+				
+				curDomain = getDomainsResponse.GetDomainsResult->DomainInformation[counter];
+				iFolderDomain *newDomain = [[iFolderDomain alloc] init];
+
+				[newDomain setProperties:getDomainProperties(curDomain)];
+				
+				[domains addObject:newDomain];
+			}
 		}
     }
 
