@@ -989,7 +989,7 @@ namespace Novell.FormsTrayApp
 							{
 								ifolder = ifWebService.GetiFolder(eventArgs.Collection);
 							}
-							else if (eventArgs.Type.Equals("Node") && preferences.IsPOBox(eventArgs.Collection))
+							else if (eventArgs.Type.Equals("Subscription"))
 							{
 								ifolder = ifWebService.GetiFolderInvitation(eventArgs.Collection, eventArgs.Node);
 							}
@@ -1014,17 +1014,14 @@ namespace Novell.FormsTrayApp
 									}
 									break;
 								}
-								case "Node":
+								case "Subscription":
 								{
-									if (preferences.IsPOBox(eventArgs.Collection))
-									{
-										ifolder = ifWebService.GetiFolderInvitation(eventArgs.Collection, eventArgs.Node);
+									ifolder = ifWebService.GetiFolderInvitation(eventArgs.Collection, eventArgs.Node);
 
-										// If the iFolder is not Available or it exists locally, we don't need to process the event.
-										if (!ifolder.State.Equals("Available") || (ifWebService.GetiFolder(ifolder.CollectionID) != null))
-										{
-											ifolder = null;
-										}
+									// If the iFolder is not Available or it exists locally, we don't need to process the event.
+									if (!ifolder.State.Equals("Available") || (ifWebService.GetiFolder(ifolder.CollectionID) != null))
+									{
+										ifolder = null;
 									}
 									break;
 								}
