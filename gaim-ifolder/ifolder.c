@@ -2366,9 +2366,17 @@ buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
 		gtk_tree_model_get(GTK_TREE_MODEL(out_inv_store), &iter,
 					INVITATION_PTR, &invitation,
 					-1);
-							
-		/* Check to see if this invitation is a STATE_PENDING */
+					
+		/**
+		 * Make sure all the following conditions exist before sending the
+		 * message:
+		 * 	- The invitation state is STATE_PENDING 
+		 * 	- The current invitation is intended for this buddy
+		 * 	- The buddy is not signing or signed off
+		 */
 		if (invitation->state == STATE_PENDING
+			&& buddy->account == invitation->gaim_account
+			&& strcmp(buddy->name, invitation->buddy_name) == 0
 			&& buddy->present != GAIM_BUDDY_SIGNING_OFF
 			&& buddy->present != GAIM_BUDDY_OFFLINE) {
 			send_result = send_invitation_request_msg(
@@ -2377,11 +2385,6 @@ buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
 					invitation->collection_type,
 					invitation->collection_name);
 		
-			/**
-			 * FIXME: This test isn't working.  If a buddy just
-			 * barely signed out, Gaim displays an error message,
-			 * but we get back a 1
-			 */
 			if (send_result > 0) {
 				/* Update the invitation time and resend the invitation */
 				time(&(invitation->time));
@@ -2423,7 +2426,15 @@ buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
 					INVITATION_PTR, &invitation,
 					-1);
 
-		if (buddy->present != GAIM_BUDDY_SIGNING_OFF
+		/**
+		 * Make sure all the following conditions exist before sending the
+		 * message:
+		 * 	- The current invitation is intended for this buddy
+		 * 	- The buddy is not signing or signed off
+		 */
+		if (buddy->account == invitation->gaim_account
+			&& strcmp(buddy->name, invitation->buddy_name) == 0
+			&& buddy->present != GAIM_BUDDY_SIGNING_OFF
 			&& buddy->present != GAIM_BUDDY_OFFLINE) {
 			/* Use send_result = 1 to know if a send failed */
 			send_result = 1;
