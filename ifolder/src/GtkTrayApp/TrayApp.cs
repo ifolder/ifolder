@@ -223,22 +223,11 @@ namespace Novell.iFolder
 		{
 			Menu trayMenu = new Menu();
 
-			MenuItem ifolder_browser_item = 
-					new MenuItem ("iFolder Browser");
-			trayMenu.Append (ifolder_browser_item);
-			ifolder_browser_item.Activated += 
-					new EventHandler(show_ifolder_browser);
-
-			MenuItem colBrowser_item = 
-					new MenuItem ("Collection Browser");
-			trayMenu.Append (colBrowser_item);
-			colBrowser_item.Activated += 
-					new EventHandler(show_colbrowser);
-			MenuItem rbBrowser_item = new MenuItem ("Reunion Browser");
-			trayMenu.Append (rbBrowser_item);
-			rbBrowser_item.Activated += new EventHandler(show_rbbrowser);
-
-			trayMenu.Append(new SeparatorMenuItem());
+//			MenuItem ifolder_browser_item = 
+//					new MenuItem ("iFolder Browser");
+//			trayMenu.Append (ifolder_browser_item);
+//			ifolder_browser_item.Activated += 
+//					new EventHandler(show_ifolder_browser);
 
 			MenuItem InvWizard_item = new MenuItem ("Invitation Wizard");
 			trayMenu.Append (InvWizard_item);
@@ -258,11 +247,21 @@ namespace Novell.iFolder
 			trayMenu.Append (about_item);
 			about_item.Activated += 
 					new EventHandler(show_about);
-
 			MenuItem help_item = new MenuItem ("Help");
 			trayMenu.Append (help_item);
 			help_item.Activated += 
 					new EventHandler(show_help);
+
+			trayMenu.Append(new SeparatorMenuItem());
+
+			MenuItem colBrowser_item = 
+					new MenuItem ("Collection Browser");
+			trayMenu.Append (colBrowser_item);
+			colBrowser_item.Activated += 
+					new EventHandler(show_colbrowser);
+			MenuItem rbBrowser_item = new MenuItem ("Reunion Browser");
+			trayMenu.Append (rbBrowser_item);
+			rbBrowser_item.Activated += new EventHandler(show_rbbrowser);
 
 			trayMenu.Append(new SeparatorMenuItem());
 

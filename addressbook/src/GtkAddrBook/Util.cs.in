@@ -33,7 +33,7 @@ namespace Novell.AddressBook.UI.gtk
 		internal static string prefix = "@prefix@";
 		internal static string gladedir = "@prefix@/share/ifolder/glade";
 		internal static string imagesdir = "@prefix@/share/ifolder/images";
-		internal static string helpdir = "@prefix@/help";
+		internal static string helpdir = "@prefix@/share/ifolder/help";
 
 		internal static string GladePath(string gladeStr)
 		{
