@@ -64,11 +64,14 @@ internal class Dredger
 
 		// delete nodes that are wrong type or dups
 		// TODO: perhaps we should move dups to trash or log as error
-		foreach (Node n in collection.GetNodesByName(name))
+		//TODO: handle issues of file name chars and case here?
+		foreach (ShallowNode sn in collection.GetNodesByName(name))
 		{
+			Node n = new Node(collection, sn);
 			Property p = n.Properties.GetSingleProperty(PropertyTags.Parent);
-			string parentID = p == null? null: (string)p.Value;
-			if (p != null && parentID == parentNode.ID
+			Relationship parent = p == null? null: p.Value as Relationship;
+
+			if (p != null && parent.NodeID == parentNode.ID && n.Name == name
 					&& (collection.IsType(n, typeof(DirNode).Name)
 							|| collection.IsType(n, typeof(FileNode).Name)))
 			{
@@ -99,10 +102,10 @@ internal class Dredger
 			return dnode;
 		}
 		if (type != typeof(FileNode).Name)
-			return (DirNode)node;
+			return new DirNode(collection, node);
 
 		// from here we are just checking for modified files
-		FileNode unode = (FileNode)node;
+		FileNode unode = new FileNode(collection, node);
 		DateTime lastWrote = File.GetLastWriteTime(path);
 		DateTime created = File.GetCreationTime(path);
 		if (unode.LastWriteTime != lastWrote || unode.CreationTime != created)
@@ -121,8 +124,9 @@ internal class Dredger
 		string path = dnode.GetFullPath(collection);
 
 		// remove all nodes from store that no longer exist in the file system
-		foreach (Node kid in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
+		foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
 		{
+			Node kid = new Node(collection, sn);
 			if (collection.IsType(kid, typeof(DirNode).Name)
 					&& !Directory.Exists(Path.Combine(path, kid.Name))
 					|| collection.IsType(kid, typeof(FileNode).Name)

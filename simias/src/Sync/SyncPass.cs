@@ -322,11 +322,11 @@ public class SynkerWorkerA: SyncCollectionWorker
 		Log.Spew("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
 		Log.Assert(stamp.streamsSize >= -1);
 		if (stamp.streamsSize == -1)
-			nonFileFromServer.Add(stamp.id);
+			nonFileFromServer.Add(stamp);
 		else if (stamp.streamsSize >= NodeChunk.MaxSize || smallFromServer.Count > 100)
-			largeFromServer.Add(stamp.id);
+			largeFromServer.Add(stamp);
 		else
-			smallFromServer.Add(stamp.id);
+			smallFromServer.Add(stamp);
 	}
 
 	static Nid[] MoveIdsToArray(ArrayList idList)
@@ -444,11 +444,22 @@ public class SynkerWorkerA: SyncCollectionWorker
 		{
 			int i = 0;
 			Nid[] ids = new Nid[nonFileFromServer.Count + smallFromServer.Count];
-			foreach (Nid nid in nonFileFromServer)
-				ids[i++] = nid;
-			foreach (Nid nid in smallFromServer)
-				ids[i++] = nid;
+			foreach (NodeStamp stamp in nonFileFromServer)
+				ids[i++] = stamp.id;
+			foreach (NodeStamp stamp in smallFromServer)
+				ids[i++] = stamp.id;
 			updates = ss.GetSmallNodes(ids);
+			i = 0;
+			foreach (NodeStamp stamp in nonFileFromServer)
+			{
+				Log.Assert(updates[i].node.ID == stamp.id);
+				updates[i++].expectedIncarn = stamp.masterIncarn;
+			}
+			foreach (NodeStamp stamp in smallFromServer)
+			{
+				Log.Assert(updates[i].node.ID == stamp.id);
+				updates[i++].expectedIncarn = stamp.masterIncarn;
+			}
 		}
 		if (updates != null && updates.Length > 0)
 			ops.PutSmallNodes(updates);
@@ -517,9 +528,9 @@ public class SynkerWorkerA: SyncCollectionWorker
 		}
 
 		// get large files from server
-		foreach (Nid nid in largeFromServer)
+		foreach (NodeStamp stamp in largeFromServer)
 		{
-			NodeChunk nc = ss.ReadLargeNode(nid, NodeChunk.MaxSize);
+			NodeChunk nc = ss.ReadLargeNode(stamp.id, NodeChunk.MaxSize);
 			inNode.Start(nc.node);
 			inNode.BlowChunks(nc.forkChunks);
 			while (nc.totalSize >= NodeChunk.MaxSize)
@@ -530,9 +541,9 @@ public class SynkerWorkerA: SyncCollectionWorker
 				foreach (ForkChunk chunk in nc.forkChunks)
 					nc.totalSize += chunk.data.Length;
 			}
-			NodeStatus status = inNode.Complete(0);
+			NodeStatus status = inNode.Complete(stamp.masterIncarn);
 			if (status != NodeStatus.Complete)
-				Log.Spew("skipping update of incarnation for large node {0} due to update {1}", nid, status);
+				Log.Spew("failed to update large node {0} from master, status {1}", stamp.name, status);
 		}
 	}
 }

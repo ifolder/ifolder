@@ -55,7 +55,7 @@ public class SyncTests: Assertion
 	static readonly string clientFolder = Path.Combine(clientDir, folderName);
 	static readonly string serverFolder = Path.Combine(serverDir, folderName);
 
-	bool runChildProcess = false;
+	bool runChildProcess = true;
 	string clientAddress = null; // for use in SSH commandlines, can be user@hostname, raw IP, etc.
 	string host = "127.0.0.1"; // must be set to name or external address of this machine if clientAddress is set
 
@@ -380,9 +380,9 @@ public class SyncTests: Assertion
 		Console.WriteLine("invite: {0}", Invite());
 		Console.WriteLine("accept: {0}", Accept());
 		Console.WriteLine("firstSync: {0}", FirstSync());
-		//Console.WriteLine("simpleAdds: {0}", SimpleAdds());
-		//Console.WriteLine("simpleDeletes: {0}", SimpleDeletes());
-		//Console.WriteLine("FileCreationCollision: {0}", FileCreationCollision());
+		Console.WriteLine("simpleAdds: {0}", SimpleAdds());
+		Console.WriteLine("simpleDeletes: {0}", SimpleDeletes());
+		Console.WriteLine("FileCreationCollision: {0}", FileCreationCollision());
 		Cleanup();
 	}
 

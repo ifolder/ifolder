@@ -138,6 +138,22 @@ public struct NodeStamp: IComparable
 			throw new ArgumentException("object is not NodeStamp");
 		return id.CompareTo(((NodeStamp)obj).id);
 	}
+
+	internal static BaseFileNode CastToBaseFileNode(Collection collection, Node node)
+	{
+		if (collection.IsType(node, typeof(FileNode).Name))
+			return new FileNode(collection, node);
+		if (collection.IsType(node, typeof(StoreFileNode).Name))
+			return new StoreFileNode(collection, node);
+		return null;
+	}
+
+	internal static DirNode CastToDirNode(Collection collection, Node node)
+	{
+		if (collection.IsType(node, typeof(DirNode).Name))
+			return new DirNode(collection, node);
+		return null;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -210,7 +226,7 @@ internal class SyncOutgoingNode
 			return null;
 		}
 
-		BaseFileNode bfn = node as BaseFileNode;
+		BaseFileNode bfn = NodeStamp.CastToBaseFileNode(collection, node);
 		if (bfn != null)
 		{
 			/* TODO: handle multiple forks (streams), EAs, etc. For right now
@@ -306,18 +322,27 @@ internal class SyncIncomingNode
 	{
 		CleanUp();
 		this.node = node;
-		if (collection.IsType(node, typeof(DirNode).Name) && !new DirNode(collection, node).IsRoot
-				|| collection.IsType(node, typeof(FileNode).Name))
+		DirNode dnode = NodeStamp.CastToDirNode(collection, node);
+		if (dnode != null && !dnode.IsRoot || collection.IsType(node, typeof(FileNode).Name))
 		{
 			Property p = node.Properties.GetSingleProperty(PropertyTags.Parent);
 			Relationship rship = p == null? null: (p.Value as Relationship);
 			if (rship == null)
 				throw new ApplicationException("file or dir node has no parent");
 			Node n = collection.GetNodeByID(rship.NodeID);
-			DirNode pn = n == null? null: new DirNode(collection, collection.GetNodeByID(rship.NodeID));
-			if (pn == null)
-				throw new ApplicationException("parent is not DirNode");
-			parentPath = pn.GetFullPath(collection);
+			if (n == null)
+			{
+				parentPath = null;
+				Log.Spew("cound not get parent {1} of {0}, not here yet?", node.Name, rship.NodeID);
+			}
+			else
+			{
+				DirNode pn = NodeStamp.CastToDirNode(collection, n);
+				if (pn == null)
+					throw new ApplicationException("parent is not DirNode");
+				parentPath = pn.GetFullPath(collection);
+				Directory.CreateDirectory(parentPath); //TODO: deal with dir sync order properly
+			}
 		}
 		else
 			parentPath = collection.ManagedPath;
@@ -388,9 +413,8 @@ internal class SyncIncomingNode
 			Log.Spew("placing file {0}", path);
 			File.Delete(path); //TODO: delete current LocalFileName
 			fileInfo.MoveTo(path); //TODO: moved to proposed LocalFileName
-			FileNode fnode = (FileNode)node;
-			fileInfo.LastWriteTime = fnode.LastWriteTime;
-			fileInfo.CreationTime = fnode.CreationTime;
+			fileInfo.LastWriteTime = fn.LastWriteTime;
+			fileInfo.CreationTime = fn.CreationTime;
 			fileInfo = null;
 		}
 	}
@@ -440,13 +464,11 @@ internal class SyncIncomingNode
 				{
 					collection.Commit(node);
 				}
-				catch (ApplicationException e)
+				catch (Collision c)
 				{
-					if (!e.Message.StartsWith("Collision"))
-						throw e;
 					Log.Spew("Node {0} has lost a collision", node.Name);
 					//TODO move file and data out of the way here to collision bin here.
-					// expectedIncarn = e.LocalIncarnation;
+					expectedIncarn = c.ExpectedIncarnation;
 					curNode = collection.GetNodeByID(node.ID);
 					expectedIncarn = curNode.LocalIncarnation;
 					continue;
@@ -488,24 +510,14 @@ internal class SyncIncomingNode
 		 *  what are the rules for dredger, file change events, applications 
 		 *  and concurrent clients accessing this collection on the server?
 		 */
-		curNode = collection.GetNodeByID(node.ID);
-		if (curNode != null && curNode.LocalIncarnation != expectedIncarn)
-		{
-			Log.Spew("Rejecting update for node {0} due to update collision on server", node.Name);
-			CleanUp();
-			return NodeStatus.UpdateCollision;
-		}
-		CommitFile();
 		collection.ImportNode(node, expectedIncarn);
 		node.Properties.ModifyProperty("TemporaryFileComplete", true);
 		try
 		{
 			collection.Commit(node);
 		}
-		catch (ApplicationException e)
+		catch (Collision)
 		{
-			if (!e.Message.StartsWith("Collision"))
-				throw e;
 			Log.Spew("Rejecting update for node {0} due to update collision on server", node.Name);
 			CleanUp();
 			return NodeStatus.UpdateCollision;
@@ -549,7 +561,7 @@ internal class SyncOps
 			stamp.name = node.Name;
 
 			//TODO: another place to handle multiple forks
-			BaseFileNode bfn = node as BaseFileNode;
+			BaseFileNode bfn = NodeStamp.CastToBaseFileNode(collection, node);
 			if (bfn == null)
 				stamp.streamsSize = -1;
 			else
@@ -579,14 +591,14 @@ internal class SyncOps
 		if (whackFile)
 		{
 			//TODO: another place to handle multiple forks
-			BaseFileNode bfn = node as BaseFileNode;
+			BaseFileNode bfn = NodeStamp.CastToBaseFileNode(collection, node);
 			if (bfn != null)
 				File.Delete(bfn.GetFullPath(collection));
 			else
 			{
-				DirNode dn = node as DirNode;
+				DirNode dn = NodeStamp.CastToDirNode(collection, node);
 				if (dn != null)
-					Directory.Delete(dn.GetFullPath(collection));
+					Directory.Delete(dn.GetFullPath(collection), true);
 			}
 		}
 
