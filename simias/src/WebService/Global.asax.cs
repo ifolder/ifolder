@@ -125,15 +125,6 @@ namespace Simias.Web
 		/// <param name="e"></param>
 		protected void Application_End(Object sender, EventArgs e)
 		{
-		}
-
-		/// <summary>
-		/// Hack that allows XSP to shutdown the Simias web services. When the Application_End
-		/// method gets called when the application domain exits, this code will need to be
-		/// moved into the Application_End method.
-		/// </summary>
-		static public void Shutdown()
-		{
 			Console.WriteLine("Starting Simias Process Shutdown");
 			serviceManager.StopServices();
 			serviceManager.WaitForServicesStopped();

@@ -1,11 +1,30 @@
 //
-// Web Server that uses ASP.NET hosting
+// server.cs: Web Server that uses ASP.NET hosting
 //
 // Authors:
 //	Gonzalo Paniagua Javier (gonzalo@ximian.com)
 //
 // (C) 2002,2003 Ximian, Inc (http://www.ximian.com)
-// (c) Copyright 2004 Novell, Inc. (http://www.novell.com)
+// (C) Copyright 2004 Novell, Inc. (http://www.novell.com)
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
 using System;
@@ -110,6 +129,11 @@ namespace Mono.ASPNET
 			Console.WriteLine ("                    Default value: /:.");
 			Console.WriteLine ("                    AppSettings key name: MonoApplications");
 			Console.WriteLine ();
+#if MODMONO_SERVER
+			Console.WriteLine ("    --terminate: gracefully terminates a running mod-mono-server instance.");
+			Console.WriteLine ("                 All other options but --filename or --address and --port");
+			Console.WriteLine ("                 are ignored if this option is provided.");
+#endif
 			Console.WriteLine ("    --nonstop: don't stop the server by pressing enter. Must be used");
 			Console.WriteLine ("               when the server has no controlling terminal.");
 			Console.WriteLine ();
@@ -129,7 +153,8 @@ namespace Mono.ASPNET
 			Root = 1 << 5,
 			FileName = 1 << 6,
 			Address = 1 << 7,
-			Port = 1 << 8
+			Port = 1 << 8,
+			Terminate = 1 << 9,
 		}
 
 		static void CheckAndSetOptions (string name, Options value, ref Options options)
@@ -176,7 +201,7 @@ namespace Mono.ASPNET
 			}
 
 			bool nonstop = false;
-			bool verbose = true;
+			bool verbose = false;
 			Trace.Listeners.Add (new TextWriterTraceListener (Console.Out));
 			string apps = ConfigurationSettings.AppSettings ["MonoApplications"];
 			string appConfigDir = ConfigurationSettings.AppSettings ["MonoApplicationsConfigDir"];
@@ -203,6 +228,9 @@ namespace Mono.ASPNET
 				case "--filename":
 					CheckAndSetOptions (a, Options.FileName, ref options);
 					filename = args [++i];
+					break;
+				case "--terminate":
+					CheckAndSetOptions (a, Options.Terminate, ref options);
 					break;
 #endif
 				case "--port":
@@ -297,6 +325,17 @@ namespace Mono.ASPNET
 				webSource = new ModMonoWebSource (filename);
 			}
 
+			if ((options & Options.Terminate) != 0) {
+				if (verbose)
+					Console.WriteLine ("Shutting down running mod-mono-server...");
+				
+				bool res = ((ModMonoWebSource) webSource).GracefulShutdown ();
+				if (verbose)
+					Console.WriteLine (res ? "Done." : "Failed");
+
+				return (res) ? 0 : 1;
+			}
+
 			ApplicationServer server = new ApplicationServer (webSource);
 #else
 			webSource = new XSPWebSource (ipaddr, port);
@@ -336,8 +375,6 @@ namespace Mono.ASPNET
 					Console.WriteLine ("Hit Return to stop the server.");
 					Console.ReadLine ();
 					server.Stop ();
-					// workaround for 65533
-					Environment.Exit (0);
 				}
 			} catch (Exception e) {
 				Console.WriteLine ("Error: {0}", e.Message);

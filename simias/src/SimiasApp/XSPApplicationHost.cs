@@ -5,7 +5,26 @@
 //	Gonzalo Paniagua Javier (gonzalo@ximian.com)
 //	Lluis Sanchez Gual (lluis@ximian.com)
 //
-// (C) Copyright 2004 Novell, Inc
+// (C) Copyright 2004 Novell, Inc. (http://www.novell.com)
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
 using System;
@@ -80,6 +99,19 @@ namespace Mono.ASPNET
 		public bool IsConnected (int requestId)
 		{
 			return ((XSPWorker)GetWorker (requestId)).IsConnected ();
+		}
+
+		public int GetReuseCount (int requestId)
+		{
+			XSPWorker worker = (XSPWorker) GetWorker (requestId);
+			return worker.GetReuseCount ();
+		}
+
+		public void Close (int requestId, bool keepAlive)
+		{
+			XSPWorker worker = (XSPWorker) GetWorker (requestId);
+			if (worker != null)
+				worker.Close (keepAlive);
 		}
 	}
 	
@@ -167,16 +199,23 @@ namespace Mono.ASPNET
 		LingeringNetworkStream stream;
 		IPEndPoint remoteEP;
 		IPEndPoint localEP;
+		Socket sock;
 
 		public XSPWorker (Socket client, EndPoint localEP, ApplicationServer server)
 		{
-			stream = new LingeringNetworkStream (client, true);
+			stream = new LingeringNetworkStream (client, false);
+			sock = client;
 			this.server = server;
 
 			try {
 				remoteEP = (IPEndPoint) client.RemoteEndPoint;
 			} catch { }
 			this.localEP = (IPEndPoint) localEP;
+		}
+
+		public int GetReuseCount ()
+		{
+			return server.GetAvailableReuses (sock);
 		}
 
 		public void Run (object state)
@@ -201,8 +240,8 @@ namespace Mono.ASPNET
 
 				if (host == null) {
 					byte [] nf = HttpErrors.NotFound (rdata.Path);
-					stream.Write (nf, 0, nf.Length);
-					stream.Close ();
+					Write (nf, 0, nf.Length);
+					Close ();
 					return;
 				}
 				
@@ -216,13 +255,17 @@ namespace Mono.ASPNET
 						rdata.Path, rdata.PathInfo, rdata.QueryString,
 						rdata.Protocol, rdata.InputBuffer, redirect);
 			} catch (Exception e) {
-				Console.WriteLine (e);
+				if (!(e is RequestLineException))
+					Console.WriteLine (e);
+
 				try {
 					if (!(e is IOException)) {
 						byte [] error = HttpErrors.ServerError ();
-						stream.Write (error, 0, error.Length);
+						Write (error, 0, error.Length);
 					}
-					stream.Close ();
+				} catch {}
+				try {
+					Close ();
 				} catch {}
 
 				if (broker != null && requestId != -1)
@@ -242,9 +285,23 @@ namespace Mono.ASPNET
 		
 		public void Close ()
 		{
-			stream.Close ();
+			Close (false);
 		}
-		
+
+		public void Close (bool keepAlive)
+		{
+			if (!keepAlive) {
+				stream.Close ();
+				sock.Close ();
+				server.RemoveSocket (sock);
+				return;
+			}
+
+			stream.EnableLingering = false;
+			stream.Close ();
+			server.ReuseSocket (sock);
+		}
+
 		public bool IsConnected ()
 		{
 			return stream.Connected;

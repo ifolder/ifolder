@@ -6,7 +6,28 @@
 //	Simon Waite (simon@psionics.demon.co.uk)
 //
 // (C) 2002,2003 Ximian, Inc (http://www.ximian.com)
+// (C) Copyright 2004 Novell, Inc. (http://www.novell.com)
 //
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+
 using System;
 using System.Collections;
 using System.Configuration;
@@ -44,6 +65,7 @@ namespace Mono.ASPNET
 		string localAddress;
 		int requestId;
 		XSPRequestBroker requestBroker;
+		bool keepAlive;
 		
 		static string serverHeader;
 
@@ -131,8 +153,10 @@ namespace Mono.ASPNET
 			this.path = path;
 			this.pathInfo = pathInfo;
 			this.protocol = protocol;
-			if (protocol == "HTTP/1.1")
-				protocol = "HTTP/1.0";	// Only 1.0 supported by xsp standalone.
+			if (protocol == "HTTP/1.1") {
+				this.protocol = "HTTP/1.0";	// Only 1.0 supported by xsp standalone.
+				keepAlive = true;
+			}
 
 			this.queryString = queryString;
 			this.inputBuffer = inputBuffer;
@@ -140,7 +164,18 @@ namespace Mono.ASPNET
 			position = 0;
 
 			GetRequestHeaders ();
+			string cncHeader = (string) headers ["Connection"];
+			if (cncHeader != null) {
+				cncHeader = cncHeader.ToLower ();
+				if (cncHeader.IndexOf ("keep-alive") != -1)
+					keepAlive = true;
+
+				if (cncHeader.IndexOf ("close") != -1)
+					keepAlive = false;
+			}
+
 			responseHeaders = new StringBuilder ();
+			responseHeaders.Append (serverHeader);
 			response = AllocateMemoryStream ();
 			status = "HTTP/1.0 200 OK\r\n";
 			
@@ -200,6 +235,8 @@ namespace Mono.ASPNET
 					
 
 				text.Append ((char) c);
+				if (text.Length > 8192)
+					throw new InvalidOperationException ("Line too long.");
 			}
 
 			return text.ToString ();
@@ -230,24 +267,57 @@ namespace Mono.ASPNET
 		{
 			WebTrace.WriteLine ("CloseConnection()");
 			if (requestBroker != null) {
-				requestBroker.Close (requestId);
+				requestBroker.Close (requestId, keepAlive);
 				requestBroker = null;
 				FreeMemoryStream (response);
 				response = null;
 			}
 		}
 
+		void AddConnectionHeader ()
+		{
+			if (!keepAlive) {
+				responseHeaders.Append ("Connection: close\r\n");
+				return;
+			}
+
+			int allowed = requestBroker.GetReuseCount (requestId);
+			if (allowed <= 0) {
+				keepAlive = false;
+				responseHeaders.Append ("Connection: close\r\n");
+				return;
+			}
+
+			responseHeaders.Append ("Keep-Alive: timeout=15, max=");
+			responseHeaders.Append (allowed.ToString ());
+			responseHeaders.Append ("\r\n");
+			responseHeaders.Append ("Connection: Keep-Alive\r\n");
+		}
+
 		public override void FlushResponse (bool finalFlush)
 		{
 			try {
 				if (!headersSent) {
-					responseHeaders.Insert (0, serverHeader);
 					responseHeaders.Insert (0, status);
 					if (!sentConnection)
-						responseHeaders.Append ("Connection: close\r\n");
+						AddConnectionHeader ();
 
 					responseHeaders.Append ("\r\n");
-					WriteString (responseHeaders.ToString ());
+					byte [] headerBytes = Encoding.GetBytes (responseHeaders.ToString ());
+					int oldLength = (int) response.Length;
+					if (oldLength == 0 || oldLength >= 32768) {
+						requestBroker.Write (requestId, headerBytes, 0, headerBytes.Length);
+					} else {
+						// Attempt not to send a minimum of 2 packets
+						int newLength = oldLength + headerBytes.Length;
+						response.SetLength (newLength);
+						byte [] buf = response.GetBuffer ();
+						Buffer.BlockCopy (buf, 0, buf, headerBytes.Length, oldLength);
+						Buffer.BlockCopy (headerBytes, 0, buf, 0, headerBytes.Length);
+						requestBroker.Write (requestId, buf, 0, newLength);
+						response.SetLength (0);
+					}
+
 					headersSent = true;
 				}
 
@@ -475,13 +545,6 @@ namespace Mono.ASPNET
 			return true;
 		}
 
-		void WriteString (string s)
-		{
-			byte [] b = Encoding.GetBytes (s);
-			requestBroker.Write (requestId, b, 0, b.Length);
-
-		}
-
 		protected override bool GetRequestData ()
 		{
 			return TryDirectory ();
@@ -543,8 +606,12 @@ namespace Mono.ASPNET
 		public override void SendUnknownResponseHeader (string name, string value)
 		{
 			WebTrace.WriteLine ("SendUnknownResponseHeader (" + name + ", " + value + ")");
-			if (String.Compare (name, "connection", true) == 0)
+			if (String.Compare (name, "connection", true) == 0) {
 				sentConnection = true;
+				if (value.ToLower ().IndexOf ("keep-alive") == -1) {
+					keepAlive = false;
+				}
+			}
 
 			if (!headersSent) {
 				responseHeaders.Append (name);

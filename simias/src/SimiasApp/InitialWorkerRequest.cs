@@ -5,6 +5,26 @@
 //	Gonzalo Paniagua Javier (gonzalo@ximian.com)
 //
 // (C) 2003 Ximian, Inc (http://www.ximian.com)
+// (C) Copyright 2004 Novell, Inc
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
 using System.Collections;
@@ -17,7 +37,6 @@ using System.Web;
 
 namespace Mono.ASPNET
 {
-	[Serializable]
 	public class RequestData
 	{
 		public string Verb;
@@ -45,7 +64,13 @@ namespace Mono.ASPNET
 			return sb.ToString ();
 		}
 	}
-	
+
+	class RequestLineException : ApplicationException {
+		public RequestLineException () : base ("Error reading request line")
+		{
+		}
+	}
+
 	public class InitialWorkerRequest
 	{
 		string verb;
@@ -90,6 +115,8 @@ namespace Mono.ASPNET
 		{
 			inputBuffer = AllocateBuffer ();
 			inputLength = stream.Read (inputBuffer, 0, BSize);
+			if (inputLength == 0) // Socket closed
+				throw new IOException ("socket closed");
 			position = 0;
 		}
 
@@ -138,6 +165,8 @@ namespace Mono.ASPNET
 					
 
 				text.Append ((char) c);
+				if (text.Length > 8192)
+					throw new InvalidOperationException ("Input line too long.");
 			}
 
 			return text.ToString ();
@@ -145,7 +174,12 @@ namespace Mono.ASPNET
 
 		bool GetRequestLine ()
 		{
-			string req = ReadLine ();
+			string req = null;
+			try {
+				req = ReadLine ();
+			} catch {
+			}
+
 			if (req == null)
 				return false;
 
@@ -233,7 +267,7 @@ namespace Mono.ASPNET
 		public void ReadRequestData ()
 		{
 			if (!GetRequestLine ())
-				throw new Exception ("Error reading request line");
+				throw new RequestLineException ();
 
 			if (protocol == null) {
 				protocol = "HTTP/1.0";

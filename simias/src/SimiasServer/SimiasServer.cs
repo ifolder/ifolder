@@ -105,8 +105,11 @@ namespace Simias.Server
             }
             catch(Exception e)
             {
-                Console.WriteLine(e);
-                Console.WriteLine(e.StackTrace);
+				if (!p.HasExited)
+				{
+					Console.WriteLine(e);
+					Console.WriteLine(e.StackTrace);
+				}
             }
 
 			if (!p.HasExited)
