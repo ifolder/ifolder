@@ -27,10 +27,15 @@
 
 #include "simias-util.h"
 
+#include <stdio.h>
 #include <string.h>
 
 /* Gaim Includes */
 #include "internal.h"
+#include "network.h"
+
+/* Static global variables */
+static char the_public_ip[32];
 
 /**
  * The behavior of this function is like String.IndexOf();
@@ -179,4 +184,54 @@ fprintf(stderr, "Couldn't parse the port in simias_url_parse()\n");
 
 	free(tmp_save);
 	return TRUE;
+}
+
+/**
+ * This calls /sbin/ifconfig and returns the first address
+ * that is NOT 127.0.0.*.  The returned string is statically
+ * allocated, so if it is needed elsewhere, you should create
+ * a copy of it before calling simias_get_public_ip again.  If
+ * no public IP address can be determined, NULL will be returned.
+ */
+const char * simias_get_public_ip()
+{
+#ifdef _WIN32
+	return gaim_network_get_my_ip(-1);
+#else
+	FILE *output;
+	char line[32];
+	int i;
+	char *public_ip = NULL;
+
+	output = popen("/sbin/ifconfig |grep 'inet ' |cut -f2 -d':' |cut -f1 -d' '", "r");
+	if (!output)
+	{
+		fprintf(stderr, "popen() returned NULL\n");
+		return NULL;
+	}
+
+	while (fgets(line, sizeof(line), output))
+	{
+		/* Remove any newline chars */
+		for (i = strlen(line) - 1; i > 0; i--)
+		{
+			if (line[i] == '\n' || line[i] == '\r')
+				line[i] = '\0';
+			else
+				break;
+		}
+
+		if (strncmp(line, "127.0.0.", 8) == 0)
+			continue;
+		else
+		{
+			sprintf(the_public_ip, line);
+			public_ip = the_public_ip;
+		}
+	}
+
+	pclose(output);
+
+	return public_ip;
+#endif
 }
