@@ -222,8 +222,14 @@ namespace Simias.Gaim
 					rMember = new Member(ldbMember.Name, ldbMember.ID,
 										 Access.Rights.Admin);
 					rMember.IsOwner = true;
-					changeList.Add(gaimDomainRoster);
 					changeList.Add(rMember);
+					
+					//
+					// Make sure this is an Address Book
+					//
+					gaimDomainRoster.SetType(gaimDomainRoster, "AB:AddressBook");
+
+					changeList.Add(gaimDomainRoster);
 				}
 				else
 				{
