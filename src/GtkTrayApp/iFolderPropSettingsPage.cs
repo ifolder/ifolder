@@ -32,21 +32,46 @@ namespace Novell.iFolder
 	/// </summary>
 	public class iFolderPropSettingsPage : VBox
 	{
+		private Gtk.Window			topLevelWindow;
 		private iFolderWebService	ifws;
 		private iFolder				ifolder;
+		private iFolderUser			ifolderUser;
+		private DiskSpace			ds;
 		private	CheckButton 		AutoSyncCheckButton;
 		private SpinButton			SyncSpinButton;
 		private Label				SyncUnitsLabel;
 
+		private	Label				UploadValue;
+		private Label				FFSyncValue;
 
+		private Label				UsedValue;
+
+		private Table				diskTable;
+		private Label				LimitLabel;
+		private CheckButton			LimitCheckButton;
+		private Label				LimitValue;
+		private Entry				LimitEntry;
+		private Label				LimitUnit;
+
+		private Label				AvailLabel;
+		private Label				AvailValue;
+		private Label				AvailUnit;
+
+
+		private ProgressBar			DiskUsageBar;
+		private Frame				DiskUsageFrame;
+		private Label				DiskUsageFullLabel;
+		private Label				DiskUsageEmptyLabel;
 
 
 		/// <summary>
 		/// Default constructor for iFolderPropSharingPage
 		/// </summary>
-		public iFolderPropSettingsPage(iFolderWebService iFolderWS)
+		public iFolderPropSettingsPage(	Gtk.Window topWindow,
+										iFolderWebService iFolderWS)
 			: base()
 		{
+			this.topLevelWindow = topWindow;
 			this.ifws = iFolderWS;
 			InitializeWidgets();
 		}
@@ -56,6 +81,181 @@ namespace Novell.iFolder
 		public void UpdateiFolder(iFolder ifolder)
 		{
 			this.ifolder = ifolder;
+
+			if(ifolder.Synchronizable)
+			{
+				AutoSyncCheckButton.Active = true;
+				AutoSyncCheckButton.Sensitive = true;
+				SyncSpinButton.Sensitive = true;
+				SyncUnitsLabel.Sensitive = true;
+				SyncSpinButton.Value = ifolder.SyncInterval;
+			}
+			else
+			{
+				AutoSyncCheckButton.Active = false;
+				AutoSyncCheckButton.Sensitive = false;
+				SyncSpinButton.Sensitive = false;
+				SyncUnitsLabel.Sensitive = false;
+				SyncSpinButton.Value = ifolder.SyncInterval;
+			}
+
+			SyncSize ss = ifws.CalculateSyncSize(ifolder.ID);
+			UploadValue.Text = string.Format("{0}", ss.SyncByteCount);
+			FFSyncValue.Text = string.Format("{0}", ss.SyncNodeCount);
+
+
+			try
+			{
+				ifolderUser = ifws.GetiFolderUserFromiFolder(
+									ifolder.CurrentUserID, ifolder.ID);
+				ds = ifws.GetiFolderDiskSpace(ifolder.ID);
+			}
+			catch(Exception e)
+			{
+				ifolderUser = null;
+				ds = null;
+				iFolderExceptionDialog ied = new iFolderExceptionDialog(
+													topLevelWindow, e);
+				ied.Run();
+				ied.Hide();
+				ied.Destroy();
+			}
+
+			// check for Admin rights
+			if( (ifolderUser != null) && (ifolderUser.Rights == "Admin") )
+			{
+				if(LimitCheckButton == null)
+				{
+					LimitCheckButton = 
+						new CheckButton("Limit size to:");
+					LimitCheckButton.Toggled += 
+								new EventHandler(OnLimitSizeButton);
+					diskTable.Attach(LimitCheckButton, 0,1,1,2,
+						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+					LimitEntry = new Entry();
+					LimitEntry.Changed +=
+						new EventHandler(OnLimitChanged);
+					LimitEntry.Activated += 
+						new EventHandler(OnLimitEdited);
+					LimitEntry.FocusOutEvent +=
+						new FocusOutEventHandler(OnLimitFocusLost);
+					LimitEntry.WidthChars = 6;
+					LimitEntry.MaxLength = 10;
+					LimitEntry.Layout.Alignment = Pango.Alignment.Left;
+					diskTable.Attach(LimitEntry, 1,2,1,2,
+						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+					LimitCheckButton.ShowAll();
+					LimitEntry.ShowAll();
+				}
+				else
+				{
+					LimitCheckButton.Visible = true;
+					LimitEntry.Visible = true;
+				}
+
+				if(LimitLabel != null)
+				{
+					LimitLabel.Visible = false;
+					LimitValue.Visible = false;
+				}
+			}
+			else
+			{
+				if(LimitLabel == null)
+				{
+					LimitLabel = new Label("iFolder limit:");
+					LimitLabel.Xalign = 0;
+					diskTable.Attach(LimitLabel, 0,1,1,2,
+						AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
+				
+					LimitValue = new Label("0");
+					LimitValue.Xalign = 1;
+					diskTable.Attach(LimitValue, 1,2,1,2,
+						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+					LimitLabel.ShowAll();
+					LimitValue.ShowAll();
+				}
+				else
+				{
+					LimitLabel.Visible = true;
+					LimitValue.Visible = true;
+				}
+
+				if(LimitCheckButton != null)
+				{
+					LimitCheckButton.Visible = false;
+					LimitEntry.Visible = false;
+				}
+			}
+
+			if(ds != null)
+			{
+				int tmpValue;
+
+				// there is no limit set, disable controls
+				if(ds.Limit == 0)
+				{
+					LimitUnit.Sensitive = false;
+					AvailLabel.Sensitive = false;
+					AvailValue.Sensitive = false;
+					AvailUnit.Sensitive = false;
+					DiskUsageBar.Sensitive = false;
+					DiskUsageFrame.Sensitive = false;
+					DiskUsageFullLabel.Sensitive = false;
+					DiskUsageEmptyLabel.Sensitive = false;
+
+					if(LimitCheckButton != null)
+					{
+						LimitCheckButton.Active = false; 
+						LimitEntry.Sensitive = false;
+						LimitEntry.Text = "0";
+					}
+					if(LimitLabel != null)
+					{
+						LimitLabel.Sensitive = false;
+						LimitValue.Sensitive = false;
+						LimitValue.Text = "0";
+					}
+					AvailValue.Text = "0";
+				}
+				else
+				{
+					LimitUnit.Sensitive = true;
+					AvailLabel.Sensitive = true;
+					AvailValue.Sensitive = true;
+					AvailUnit.Sensitive = true;
+					DiskUsageBar.Sensitive = true;
+					DiskUsageFrame.Sensitive = true;
+					DiskUsageFullLabel.Sensitive = true;
+					DiskUsageEmptyLabel.Sensitive = true;
+
+					if(LimitCheckButton != null)
+					{
+						LimitCheckButton.Active = true; 
+						LimitEntry.Sensitive = true;
+						tmpValue = (int)(ds.Limit / (1024 * 1024));
+						LimitEntry.Text = string.Format("{0}", tmpValue);
+					}
+					if(LimitLabel != null)
+					{
+						LimitLabel.Sensitive = true;
+						LimitValue.Sensitive = true;
+						tmpValue = (int)(ds.Limit / (1024 * 1024));
+						LimitValue.Text = string.Format("{0}", tmpValue);
+					}
+
+					tmpValue = (int)(ds.AvailableSpace / (1024 * 1024));
+					AvailValue.Text = string.Format("{0}",tmpValue);
+				}
+
+				SetGraph(ds.UsedSpace, ds.Limit);
+
+				// Add one because there is no iFolder that is zero
+				tmpValue = (int)(ds.UsedSpace / (1024 * 1024)) + 1;
+				UsedValue.Text = string.Format("{0}", tmpValue);
+			}
+
 		}
 
 
@@ -85,8 +285,9 @@ namespace Novell.iFolder
 
 			// create a hbox to provide spacing
 			HBox syncSpacerBox = new HBox();
+			syncSpacerBox.Spacing = 10;
 			syncSectionBox.PackStart(syncSpacerBox, false, true, 0);
-			Label syncSpaceLabel = new Label("    "); // four spaces
+			Label syncSpaceLabel = new Label("");
 			syncSpacerBox.PackStart(syncSpaceLabel, false, true, 0);
 
 			// create a vbox to actually place the widgets in for section
@@ -95,7 +296,7 @@ namespace Novell.iFolder
 			syncWidgetBox.Spacing = 10;
 
 
-			Label syncHelpLabel = new Label("This will set the sync interval for the current iFolder.  You can change the default sync setting for all iFolders on the Preferences page of the main window");
+			Label syncHelpLabel = new Label("This will set the sync setting for this iFolder.");
 			syncHelpLabel.LineWrap = true;
 			syncHelpLabel.Xalign = 0;
 			syncWidgetBox.PackStart(syncHelpLabel, false, true, 0);
@@ -105,11 +306,11 @@ namespace Novell.iFolder
 			syncHBox.Spacing = 10;
 			AutoSyncCheckButton = 
 					new CheckButton("Sync to host every:");
-//			AutoSyncCheckButton.Toggled += new EventHandler(OnAutoSyncButton);
+			AutoSyncCheckButton.Toggled += new EventHandler(OnAutoSyncButton);
 			syncHBox.PackStart(AutoSyncCheckButton, false, false, 0);
 			SyncSpinButton = new SpinButton(0, 99999, 1);
-//			SyncSpinButton.ValueChanged += 
-//					new EventHandler(OnSyncIntervalChanged);
+			SyncSpinButton.ValueChanged += 
+					new EventHandler(OnSyncIntervalChanged);
 			syncHBox.PackStart(SyncSpinButton, false, false, 0);
 			SyncUnitsLabel = new Label("seconds");
 			SyncUnitsLabel.Xalign = 0;
@@ -133,8 +334,9 @@ namespace Novell.iFolder
 
 			// create a hbox to provide spacing
 			HBox srvSpacerBox = new HBox();
+			srvSpacerBox.Spacing = 10;
 			srvSectionBox.PackStart(srvSpacerBox, true, true, 0);
-			Label srvSpaceLabel = new Label("    "); // four spaces
+			Label srvSpaceLabel = new Label("");
 			srvSpacerBox.PackStart(srvSpaceLabel, false, true, 0);
 
 			// create a vbox to actually place the widgets in for section
@@ -146,20 +348,20 @@ namespace Novell.iFolder
 			srvWidgetBox.PackStart(srvTable, true, true, 0);
 			srvTable.Homogeneous = false;
 			srvTable.ColumnSpacing = 20;
-			Label srvNameLabel = new Label("Amount to upload:");
-			srvNameLabel.Xalign = 0;
-			srvTable.Attach(srvNameLabel, 0,1,0,1,
+			Label uploadLabel = new Label("Amount to upload:");
+			uploadLabel.Xalign = 0;
+			srvTable.Attach(uploadLabel, 0,1,0,1,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			Label srvNameValue = new Label("0");
-			srvNameValue.Xalign = 0;
-			srvTable.Attach(srvNameValue, 1,2,0,1);
-			Label usrNameLabel = new Label("Files/Folders to synchronize:");
-			usrNameLabel.Xalign = 0;
-			srvTable.Attach(usrNameLabel, 0,1,1,2,
+			UploadValue = new Label("0");
+			UploadValue.Xalign = 0;
+			srvTable.Attach(UploadValue, 1,2,0,1);
+			Label FFSyncLabel = new Label("Files/Folders to synchronize:");
+			FFSyncLabel.Xalign = 0;
+			srvTable.Attach(FFSyncLabel, 0,1,1,2,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			Label usrNameValue = new Label("0");
-			usrNameValue.Xalign = 0;
-			srvTable.Attach(usrNameValue, 1,2,1,2);
+			FFSyncValue = new Label("0");
+			FFSyncValue.Xalign = 0;
+			srvTable.Attach(FFSyncValue, 1,2,1,2);
 
 
 
@@ -186,97 +388,258 @@ namespace Novell.iFolder
 
 
 			// create a table to hold the values
-			Table diskTable = new Table(4,3,false);
+			diskTable = new Table(3,3,false);
 			diskSpacerBox.PackStart(diskTable, true, true, 0);
 			diskTable.ColumnSpacing = 20;
 			diskTable.RowSpacing = 5;
 
-			Label totalLabel = new Label("Free space:");
-			totalLabel.Xalign = 0;
-			diskTable.Attach(totalLabel, 0,1,0,1,
-					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
-			Label totalValue = new Label("8000");
-			totalValue.Xalign = 1;
-			diskTable.Attach(totalValue, 1,2,0,1,
-					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			Label totalUnit = new Label("MB");
-			diskTable.Attach(totalUnit, 2,3,0,1,
-					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
-			Label usedLabel = new Label("Used space:");
+
+			Label usedLabel = new Label("iFolder size:");
 			usedLabel.Xalign = 0;
-			diskTable.Attach(usedLabel, 0,1,1,2,
+			diskTable.Attach(usedLabel, 0,1,0,1,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
-			Label usedValue = new Label("500");
-			usedValue.Xalign = 1;
-			diskTable.Attach(usedValue, 1,2,1,2,
+			UsedValue = new Label("0");
+			UsedValue.Xalign = 1;
+			diskTable.Attach(UsedValue, 1,2,0,1,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			Label usedUnit = new Label("MB");
-			diskTable.Attach(usedUnit, 2,3,1,2,
+			diskTable.Attach(usedUnit, 2,3,0,1,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
-			Label availLabel = new Label("Total space:");
-			availLabel.Xalign = 0;
-			diskTable.Attach(availLabel, 0,1,2,3,
+
+			LimitUnit = new Label("MB");
+			diskTable.Attach(LimitUnit, 2,3,1,2,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+
+			AvailLabel = new Label("Available space:");
+			AvailLabel.Xalign = 0;
+			diskTable.Attach(AvailLabel, 0,1,2,3,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
-			Label availValue = new Label("7500");
-			availValue.Xalign = 1;
-			diskTable.Attach(availValue, 1,2,2,3,
+			AvailValue = new Label("0");
+			AvailValue.Xalign = 1;
+			diskTable.Attach(AvailValue, 1,2,2,3,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			Label availUnit = new Label("MB");
-			diskTable.Attach(availUnit, 2,3,2,3,
-					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-
-			CheckButton LimitCheckButton = 
-					new CheckButton("Limit size to:");
-			diskTable.Attach(LimitCheckButton, 0,1,3,4,
-					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-//			LimitCheckButton.Toggled += new EventHandler(OnAutoSyncButton);
-
-			Entry limitEntry = new Entry();
-			diskTable.Attach(limitEntry, 1,2,3,4,
-					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-//			SyncSpinButton.ValueChanged += 
-//					new EventHandler(OnSyncIntervalChanged);
-
-			Label limitUnitsLabel = new Label("MB");
-			limitUnitsLabel.Xalign = 0;
-			diskTable.Attach(limitUnitsLabel, 2,3,3,4,
+			AvailUnit = new Label("MB");
+			diskTable.Attach(AvailUnit, 2,3,2,3,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 
-
-			Frame graphFrame = new Frame();
-			graphFrame.Shadow = Gtk.ShadowType.EtchedOut;
-			graphFrame.ShadowType = Gtk.ShadowType.EtchedOut;
-			diskSpacerBox.PackStart(graphFrame, false, true, 0);
+			DiskUsageFrame = new Frame();
+			diskSpacerBox.PackStart(DiskUsageFrame, false, true, 0);
 			HBox graphBox = new HBox();
 			graphBox.Spacing = 5;
 			graphBox.BorderWidth = 5;
-			graphFrame.Add(graphBox);
+			DiskUsageFrame.Add(graphBox);
 
-			ProgressBar diskGraph = new ProgressBar();
-			graphBox.PackStart(diskGraph, false, true, 0);
+			DiskUsageBar = new ProgressBar();
+			graphBox.PackStart(DiskUsageBar, false, true, 0);
 
-			diskGraph.Orientation = Gtk.ProgressBarOrientation.BottomToTop;
-//			diskGraph.Text = "%3";
-			diskGraph.PulseStep = .10;
-			diskGraph.Fraction = .30;
+			DiskUsageBar.Orientation = Gtk.ProgressBarOrientation.BottomToTop;
+			DiskUsageBar.Fraction = 0;
 
 			VBox graphLabelBox = new VBox();
 			graphBox.PackStart(graphLabelBox, false, true, 0);
 
-			Label fullLabel = new Label("full");
-			fullLabel.Xalign = 0;
-			fullLabel.Yalign = 0;
-			graphLabelBox.PackStart(fullLabel, true, true, 0);
+			DiskUsageFullLabel = new Label("full");
+			DiskUsageFullLabel.Xalign = 0;
+			DiskUsageFullLabel.Yalign = 0;
+			graphLabelBox.PackStart(DiskUsageFullLabel, true, true, 0);
 
-			Label emptyLabel = new Label("empty");
-			emptyLabel.Xalign = 0;
-			emptyLabel.Yalign = 1;
-			graphLabelBox.PackStart(emptyLabel, true, true, 0);
-
-
+			DiskUsageEmptyLabel = new Label("empty");
+			DiskUsageEmptyLabel.Xalign = 0;
+			DiskUsageEmptyLabel.Yalign = 1;
+			graphLabelBox.PackStart(DiskUsageEmptyLabel, true, true, 0);
 		}
+
+
+
+
+		private void OnSyncIntervalChanged(object o, EventArgs args)
+		{
+			try
+			{
+				ifolder.SyncInterval = (int)SyncSpinButton.Value;
+				ifws.SetiFolderSyncInterval(ifolder.ID, ifolder.SyncInterval);
+			}
+			catch(Exception e)
+			{
+				iFolderExceptionDialog ied = new iFolderExceptionDialog(
+													topLevelWindow, e);
+				ied.Run();
+				ied.Hide();
+				ied.Destroy();
+				return;
+			}
+		}
+
+
+
+
+		private void OnAutoSyncButton(object o, EventArgs args)
+		{
+			if(AutoSyncCheckButton.Active == true)
+			{
+				SyncSpinButton.Sensitive = true;
+				SyncUnitsLabel.Sensitive = true;
+			}
+			else
+			{
+				SyncSpinButton.Sensitive = false;
+				SyncUnitsLabel.Sensitive = false;
+			}
+		}
+
+
+
+
+		private void OnLimitSizeButton(object o, EventArgs args)
+		{
+			if(LimitCheckButton.Active == true)
+			{
+				LimitUnit.Sensitive = true;
+				AvailLabel.Sensitive = true;
+				AvailValue.Sensitive = true;
+				AvailUnit.Sensitive = true;
+				LimitEntry.Sensitive = true;
+				DiskUsageBar.Sensitive = true;
+				DiskUsageFrame.Sensitive = true;
+				DiskUsageFullLabel.Sensitive = true;
+				DiskUsageEmptyLabel.Sensitive = true;
+			}
+			else
+			{
+				LimitUnit.Sensitive = false;
+				AvailLabel.Sensitive = false;
+				AvailValue.Sensitive = false;
+				AvailUnit.Sensitive = false;
+				DiskUsageBar.Sensitive = false;
+				DiskUsageFrame.Sensitive = false;
+				DiskUsageFullLabel.Sensitive = false;
+				DiskUsageEmptyLabel.Sensitive = false;
+
+				LimitEntry.Sensitive = false;
+				LimitEntry.Text = "0";
+
+				// if the currrent value is not the same as the 
+				// read value, we need to save the currrent value
+				if(GetCurrentLimit() != ds.Limit)
+				{
+					SaveLimit();
+				}
+			}
+		}
+
+
+
+
+		private void OnLimitChanged(object o, EventArgs args)
+		{
+			int tmpValue;
+
+			long sizeLimit = GetCurrentLimit();
+
+			if(sizeLimit == 0)
+			{
+				AvailValue.Text = "0";
+			}
+			else
+			{
+				long result = sizeLimit - ds.UsedSpace;
+				if(result < 0)
+					tmpValue = 0;
+				else
+				{
+					tmpValue = (int)(result / (1024 * 1024));
+				}
+
+				AvailValue.Text = string.Format("{0}",tmpValue);
+			}
+
+			SetGraph(ds.UsedSpace, sizeLimit);
+		}
+
+
+
+
+		private void OnLimitEdited(object o, EventArgs args)
+		{
+			SaveLimit();
+		}
+
+
+
+
+		private void OnLimitFocusLost(object o, FocusOutEventArgs args)
+		{
+			SaveLimit();
+		}
+
+
+
+
+		private void SaveLimit()
+		{
+			long sizeLimit = GetCurrentLimit();
+
+	 		try
+			{
+				ifws.SetiFolderDiskSpaceLimit(ifolder.ID, sizeLimit);
+			}
+			catch(Exception e)
+			{
+				iFolderExceptionDialog ied = new iFolderExceptionDialog(
+												topLevelWindow, e);
+				ied.Run();
+				ied.Hide();
+				ied.Destroy();
+				return;
+			}
+		}
+
+
+
+
+		private long GetCurrentLimit()
+		{
+			long sizeLimit;
+
+			if(LimitEntry.Text.Length == 0)
+				sizeLimit = 0;
+			else
+			{
+				try
+				{
+					sizeLimit = (long)System.UInt64.Parse(LimitEntry.Text);
+				}
+				catch(Exception e)
+				{
+					sizeLimit = 0;
+				}
+			}
+
+			sizeLimit = sizeLimit * 1024 * 1024;
+			return sizeLimit;
+		}
+
+
+
+
+		private void SetGraph(long usedSpace, long limit)
+		{
+			if(limit == 0)
+			{
+				DiskUsageBar.Fraction = 0;
+				return;
+			}
+
+			if(limit < usedSpace)
+				DiskUsageBar.Fraction = 1;
+			else
+				DiskUsageBar.Fraction = ((double)usedSpace) / 
+										((double)limit);
+		}
+
 	}
 }
