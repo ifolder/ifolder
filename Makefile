@@ -30,6 +30,7 @@ all %:
 #
 AUTOGEN_CMD       = ./autogen.sh --prefix=$(PREFIX)
 AUTOGEN_DEBUG_CMD = ./autogen.sh --prefix=$(PREFIX) --enable-debug
+AUTOGEN_SDK_CMD   = ./autogen.sh --prefix=$(PREFIX) --enable-merge-module --with-ndoc-path='c:/Program Files/NDoc/bin/.net-1.1'
 
 ag autogen:
 	rm -f */config.cache
@@ -44,4 +45,11 @@ agd autogen-debug:
 	cd simias;      $(AUTOGEN_DEBUG_CMD); make install
 	cd addressbook; $(AUTOGEN_DEBUG_CMD); make install
 	cd ifolder;     $(AUTOGEN_DEBUG_CMD)
+
+agsdk autogen-sdk:
+	rm -f */config.cache
+	@echo PREFIX=$(PREFIX)
+	cd simias;      $(AUTOGEN_SDK_CMD); make install
+	cd addressbook; $(AUTOGEN_SDK_CMD); make install
+	cd ifolder;     $(AUTOGEN_SDK_CMD)
 
