@@ -99,7 +99,6 @@ namespace Novell.iFolder.Web
 			this.Synchronizable = collection.Synchronizable;
 			this.Type = iFolderType;
 			this.Description = "";
-			this.State = collection.IsProxy ? "WaitSync" : "Local";
 			this.IsSubscription = false;
 			this.EnumeratedState = -1;
 			this.IsWorkgroup = 
@@ -113,7 +112,16 @@ namespace Novell.iFolder.Web
 			Simias.Policy.SyncInterval si = Simias.Policy.SyncInterval.Get(tmpMember, collection);
 			this.EffectiveSyncInterval = si.Interval;
 			DateTime lastSyncTime = Simias.Sync.Client.SyncClient.GetLastSyncTime(collection.ID);
-			this.LastSyncTime = lastSyncTime.Equals(DateTime.MinValue) ? "" : lastSyncTime.ToString();
+			if (lastSyncTime.Equals(DateTime.MinValue))
+			{
+				this.LastSyncTime = "";
+				this.State = "WaitSync";
+			}
+			else
+			{
+				this.LastSyncTime = lastSyncTime.ToString();
+				this.State = collection.IsProxy ? "WaitSync" : "Local";
+			}
 		}
 
 
