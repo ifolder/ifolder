@@ -150,6 +150,8 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Label status;
 		private System.Windows.Forms.TextBox enterpriseDescription;
 		private System.Windows.Forms.ProgressBar progressBar1;
+		private System.Windows.Forms.Button apply;
+		private System.Windows.Forms.Button cancel;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -243,6 +245,8 @@ namespace Novell.FormsTrayApp
 			this.menuSeparator2 = new System.Windows.Forms.MenuItem();
 			this.menuProperties = new System.Windows.Forms.MenuItem();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.cancel = new System.Windows.Forms.Button();
+			this.apply = new System.Windows.Forms.Button();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.autoSync = new System.Windows.Forms.CheckBox();
 			this.label3 = new System.Windows.Forms.Label();
@@ -349,7 +353,7 @@ namespace Novell.FormsTrayApp
 			this.defaultInterval.ThousandsSeparator = ((bool)(resources.GetObject("defaultInterval.ThousandsSeparator")));
 			this.defaultInterval.UpDownAlign = ((System.Windows.Forms.LeftRightAlignment)(resources.GetObject("defaultInterval.UpDownAlign")));
 			this.defaultInterval.Visible = ((bool)(resources.GetObject("defaultInterval.Visible")));
-			this.defaultInterval.Leave += new System.EventHandler(this.defaultInterval_Leave);
+			this.defaultInterval.ValueChanged += new System.EventHandler(this.defaultInterval_ValueChanged);
 			// 
 			// displayConfirmation
 			// 
@@ -504,7 +508,7 @@ namespace Novell.FormsTrayApp
 			this.iFolderView.Text = resources.GetString("iFolderView.Text");
 			this.iFolderView.View = System.Windows.Forms.View.Details;
 			this.iFolderView.Visible = ((bool)(resources.GetObject("iFolderView.Visible")));
-			this.iFolderView.DoubleClick += new System.EventHandler(this.menuOpen_Click);
+			this.iFolderView.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
 			// 
 			// columnHeader1
 			// 
@@ -680,6 +684,8 @@ namespace Novell.FormsTrayApp
 			this.tabPage2.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("tabPage2.AutoScrollMargin")));
 			this.tabPage2.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("tabPage2.AutoScrollMinSize")));
 			this.tabPage2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabPage2.BackgroundImage")));
+			this.tabPage2.Controls.Add(this.cancel);
+			this.tabPage2.Controls.Add(this.apply);
 			this.tabPage2.Controls.Add(this.groupBox1);
 			this.tabPage2.Controls.Add(this.groupBox3);
 			this.tabPage2.Controls.Add(this.groupBox5);
@@ -696,6 +702,54 @@ namespace Novell.FormsTrayApp
 			this.tabPage2.Text = resources.GetString("tabPage2.Text");
 			this.tabPage2.ToolTipText = resources.GetString("tabPage2.ToolTipText");
 			this.tabPage2.Visible = ((bool)(resources.GetObject("tabPage2.Visible")));
+			// 
+			// cancel
+			// 
+			this.cancel.AccessibleDescription = resources.GetString("cancel.AccessibleDescription");
+			this.cancel.AccessibleName = resources.GetString("cancel.AccessibleName");
+			this.cancel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("cancel.Anchor")));
+			this.cancel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("cancel.BackgroundImage")));
+			this.cancel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("cancel.Dock")));
+			this.cancel.Enabled = ((bool)(resources.GetObject("cancel.Enabled")));
+			this.cancel.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("cancel.FlatStyle")));
+			this.cancel.Font = ((System.Drawing.Font)(resources.GetObject("cancel.Font")));
+			this.cancel.Image = ((System.Drawing.Image)(resources.GetObject("cancel.Image")));
+			this.cancel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.ImageAlign")));
+			this.cancel.ImageIndex = ((int)(resources.GetObject("cancel.ImageIndex")));
+			this.cancel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("cancel.ImeMode")));
+			this.cancel.Location = ((System.Drawing.Point)(resources.GetObject("cancel.Location")));
+			this.cancel.Name = "cancel";
+			this.cancel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("cancel.RightToLeft")));
+			this.cancel.Size = ((System.Drawing.Size)(resources.GetObject("cancel.Size")));
+			this.cancel.TabIndex = ((int)(resources.GetObject("cancel.TabIndex")));
+			this.cancel.Text = resources.GetString("cancel.Text");
+			this.cancel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.TextAlign")));
+			this.cancel.Visible = ((bool)(resources.GetObject("cancel.Visible")));
+			this.cancel.Click += new System.EventHandler(this.cancel_Click);
+			// 
+			// apply
+			// 
+			this.apply.AccessibleDescription = resources.GetString("apply.AccessibleDescription");
+			this.apply.AccessibleName = resources.GetString("apply.AccessibleName");
+			this.apply.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("apply.Anchor")));
+			this.apply.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("apply.BackgroundImage")));
+			this.apply.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("apply.Dock")));
+			this.apply.Enabled = ((bool)(resources.GetObject("apply.Enabled")));
+			this.apply.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("apply.FlatStyle")));
+			this.apply.Font = ((System.Drawing.Font)(resources.GetObject("apply.Font")));
+			this.apply.Image = ((System.Drawing.Image)(resources.GetObject("apply.Image")));
+			this.apply.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("apply.ImageAlign")));
+			this.apply.ImageIndex = ((int)(resources.GetObject("apply.ImageIndex")));
+			this.apply.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("apply.ImeMode")));
+			this.apply.Location = ((System.Drawing.Point)(resources.GetObject("apply.Location")));
+			this.apply.Name = "apply";
+			this.apply.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("apply.RightToLeft")));
+			this.apply.Size = ((System.Drawing.Size)(resources.GetObject("apply.Size")));
+			this.apply.TabIndex = ((int)(resources.GetObject("apply.TabIndex")));
+			this.apply.Text = resources.GetString("apply.Text");
+			this.apply.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("apply.TextAlign")));
+			this.apply.Visible = ((bool)(resources.GetObject("apply.Visible")));
+			this.apply.Click += new System.EventHandler(this.apply_Click);
 			// 
 			// groupBox1
 			// 
@@ -868,7 +922,7 @@ namespace Novell.FormsTrayApp
 			this.proxy.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("proxy.TextAlign")));
 			this.proxy.Visible = ((bool)(resources.GetObject("proxy.Visible")));
 			this.proxy.WordWrap = ((bool)(resources.GetObject("proxy.WordWrap")));
-			this.proxy.Leave += new System.EventHandler(this.proxy_Leave);
+			this.proxy.TextChanged += new System.EventHandler(this.proxy_TextChanged);
 			// 
 			// port
 			// 
@@ -888,7 +942,7 @@ namespace Novell.FormsTrayApp
 			this.port.ThousandsSeparator = ((bool)(resources.GetObject("port.ThousandsSeparator")));
 			this.port.UpDownAlign = ((System.Windows.Forms.LeftRightAlignment)(resources.GetObject("port.UpDownAlign")));
 			this.port.Visible = ((bool)(resources.GetObject("port.Visible")));
-			this.port.Leave += new System.EventHandler(this.port_Leave);
+			this.port.ValueChanged += new System.EventHandler(this.port_ValueChanged);
 			// 
 			// useProxy
 			// 
@@ -2344,6 +2398,8 @@ namespace Novell.FormsTrayApp
 		{
 			if (this.Visible)
 			{
+				apply.Enabled = cancel.Enabled = false;
+
 				try
 				{
 					// Set up the event handlers to watch for iFolder creates/deletes ... these only need to be active
@@ -2381,6 +2437,8 @@ namespace Novell.FormsTrayApp
 					mmb.Details = ex.Message;
 					mmb.ShowDialog();
 				}
+
+				Activate();
 			}
 		}
 
@@ -2391,36 +2449,7 @@ namespace Novell.FormsTrayApp
 			eventClient.SetEvent(IProcEventAction.RemoveNodeCreated, new IProcEventHandler(global_nodeEventHandler));
 			eventClient.SetEvent(IProcEventAction.RemoveNodeDeleted, new IProcEventHandler(global_nodeEventHandler));
 
-			if (defaultInterval.Focused)
-			{
-				try
-				{
-					ifWebService.SetDefaultSyncInterval((int)defaultInterval.Value);
-				}
-				catch (Exception ex)
-				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
-					mmb.Message = resourceManager.GetString("saveSyncError");
-					mmb.Details = ex.Message;
-					mmb.ShowDialog();
-				}
-			}
-			else if (proxy.Focused || port.Focused)
-			{
-				try
-				{
-					// Save the proxy settings.
-					ifWebService.SetupProxy(proxy.Text, (int)port.Value);
-				}
-				catch (Exception ex)
-				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
-					mmb.Message = resourceManager.GetString("saveProxyError");
-					mmb.Details = ex.Message;
-					mmb.ShowDialog();
-				}
-			}
-
+			// Hide the dialog.
 			e.Cancel = true;
 			Hide();
 		}
@@ -2690,6 +2719,23 @@ namespace Novell.FormsTrayApp
 				mmb.ShowDialog();
 			}
 		}
+
+		private void iFolderView_DoubleClick(object sender, System.EventArgs e)
+		{
+			if (iFolderView.SelectedItems.Count == 1)
+			{
+				ListViewItem lvi = iFolderView.SelectedItems[0];
+				iFolder ifolder = (iFolder)lvi.Tag;
+				if (ifolder.IsSubscription)
+				{
+					menuAccept_Click(sender, e);
+				}
+				else
+				{
+					menuOpen_Click(sender, e);
+				}
+			}
+		}
 		#endregion
 
 		#region Log Tab
@@ -2720,79 +2766,76 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Preferences Tab
-		private void autoStart_CheckedChanged(object sender, System.EventArgs e)
+		private void apply_Click(object sender, System.EventArgs e)
 		{
-			// Save the auto start value.
-			setAutoRunValue(!autoStart.Checked);
-		}
+			Cursor.Current = Cursors.WaitCursor;
 
-		private void displayConfirmation_CheckedChanged(object sender, System.EventArgs e)
-		{
-			try
+			// Check and update auto start setting.
+			if (autoStart.Checked != IsRunEnabled())
 			{
-				// Save the display confirmation setting.
-				ifWebService.SetDisplayConfirmation(displayConfirmation.Checked);
+				setAutoRunValue(!autoStart.Checked);
 			}
-			catch (Exception ex)
-			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
-				mmb.Message = resourceManager.GetString("saveConfirmationError");
-				mmb.Details = ex.Message;
-				mmb.ShowDialog();
-			}
-		}
 
-		private void autoSync_CheckedChanged(object sender, System.EventArgs e)
-		{
-			try
-			{
-				defaultInterval.Enabled = autoSync.Checked;
-				if (!autoSync.Checked)
-				{
-					//defaultInterval.Value = System.Threading.Timeout.Infinite;
-				
-					// Save the default sync interval.
-					ifWebService.SetDefaultSyncInterval(System.Threading.Timeout.Infinite);
-				}
-				else
-				{
-					ifWebService.SetDefaultSyncInterval((int)defaultInterval.Value);
-				}
-			}
-			catch (Exception ex)
-			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
-				mmb.Message = resourceManager.GetString("saveSyncError");
-				mmb.Details = ex.Message;
-				mmb.ShowDialog();
-			}
-		}
+			iFolderSettings ifSettings = ifWebService.GetSettings();
 
-		private void defaultInterval_Leave(object sender, System.EventArgs e)
-		{
-			try
-			{
-				ifWebService.SetDefaultSyncInterval((int)defaultInterval.Value);
-			}
-			catch (Exception ex)
-			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
-				mmb.Message = resourceManager.GetString("saveSyncError");
-				mmb.Details = ex.Message;
-				mmb.ShowDialog();
-			}
-		}
-
-		private void useProxy_CheckedChanged(object sender, System.EventArgs e)
-		{
-			proxy.Enabled = port.Enabled = useProxy.Checked;
-
-			// Save the proxy settings.
-			if (!useProxy.Checked)
+			// Check and update display confirmation setting.
+			if (displayConfirmation.Checked != ifSettings.DisplayConfirmation)
 			{
 				try
 				{
-					ifWebService.RemoveProxy();
+					// Save the display confirmation setting.
+					ifWebService.SetDisplayConfirmation(displayConfirmation.Checked);
+				}
+				catch (Exception ex)
+				{
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+					mmb.Message = resourceManager.GetString("saveConfirmationError");
+					mmb.Details = ex.Message;
+					mmb.ShowDialog();
+				}
+			}
+
+			// Check and update default sync interval.
+			int currentInterval = ifWebService.GetDefaultSyncInterval();
+			if ((defaultInterval.Value != (decimal)currentInterval) ||
+				(autoSync.Checked != (currentInterval != System.Threading.Timeout.Infinite)))
+			{
+				try
+				{
+					if (!autoSync.Checked)
+					{
+						// Save the default sync interval.
+						ifWebService.SetDefaultSyncInterval(System.Threading.Timeout.Infinite);
+					}
+					else
+					{
+						ifWebService.SetDefaultSyncInterval((int)defaultInterval.Value);
+					}
+				}
+				catch (Exception ex)
+				{
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+					mmb.Message = resourceManager.GetString("saveSyncError");
+					mmb.Details = ex.Message;
+					mmb.ShowDialog();
+				}
+			}
+
+			// Check and update proxy settings.
+			if ((useProxy.Checked != ifSettings.UseProxy) ||
+				!proxy.Text.Equals(ifSettings.ProxyHost) ||
+				(port.Value != (decimal)ifSettings.ProxyPort))
+			{
+				try
+				{
+					if (useProxy.Checked)
+					{
+						ifWebService.SetupProxy(proxy.Text, (int)port.Value);
+					}
+					else
+					{
+						ifWebService.RemoveProxy();
+					}
 				}
 				catch (Exception ex)
 				{
@@ -2802,37 +2845,93 @@ namespace Novell.FormsTrayApp
 					mmb.ShowDialog();
 				}
 			}
+
+			Cursor.Current = Cursors.Default;
+			apply.Enabled = cancel.Enabled = false;
 		}
 
-		private void proxy_Leave(object sender, System.EventArgs e)
+		private void cancel_Click(object sender, System.EventArgs e)
 		{
-			try
+			Cursor.Current = Cursors.WaitCursor;
+
+			iFolderSettings ifSettings = ifWebService.GetSettings();
+
+			// Reset the auto start setting.
+			autoStart.Checked = IsRunEnabled();
+
+			// Reset the display confirmation setting.
+			displayConfirmation.Checked = ifSettings.DisplayConfirmation;
+
+			// Reset the default sync interval.
+			defaultInterval.Value = (decimal)ifWebService.GetDefaultSyncInterval();
+			autoSync.Checked = defaultInterval.Value != System.Threading.Timeout.Infinite;
+
+			// Reset the proxy settings.
+			useProxy.Checked = ifSettings.UseProxy;
+			proxy.Text = ifSettings.ProxyHost;
+			port.Value = (decimal)ifSettings.ProxyPort;
+
+			Cursor.Current = Cursors.Default;
+			apply.Enabled = cancel.Enabled = false;
+		}
+
+		private void autoStart_CheckedChanged(object sender, System.EventArgs e)
+		{
+			if (autoStart.Focused)
 			{
-				// Save the proxy settings.
-				ifWebService.SetupProxy(proxy.Text, (int)port.Value);
-			}
-			catch (Exception ex)
-			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
-				mmb.Message = resourceManager.GetString("saveProxyError");
-				mmb.Details = ex.Message;
-				mmb.ShowDialog();
+				apply.Enabled = cancel.Enabled = true;
 			}
 		}
 
-		private void port_Leave(object sender, System.EventArgs e)
+		private void displayConfirmation_CheckedChanged(object sender, System.EventArgs e)
 		{
-			try
+			if (displayConfirmation.Focused)
 			{
-				// Save the proxy settings.
-				ifWebService.SetupProxy(proxy.Text, (int)port.Value);
+				apply.Enabled = cancel.Enabled = true;
 			}
-			catch (Exception ex)
+		}
+
+		private void autoSync_CheckedChanged(object sender, System.EventArgs e)
+		{
+			if (autoSync.Focused)
 			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
-				mmb.Message = resourceManager.GetString("saveProxyError");
-				mmb.Details = ex.Message;
-				mmb.ShowDialog();
+				apply.Enabled = cancel.Enabled = true;
+			}
+
+			defaultInterval.Enabled = autoSync.Checked;
+		}
+
+		private void defaultInterval_ValueChanged(object sender, System.EventArgs e)
+		{
+			if (defaultInterval.Focused)
+			{
+				apply.Enabled = cancel.Enabled = true;
+			}
+		}
+
+		private void useProxy_CheckedChanged(object sender, System.EventArgs e)
+		{
+			if (useProxy.Focused)
+			{
+				apply.Enabled = cancel.Enabled = true;
+			}
+
+			proxy.Enabled = port.Enabled = useProxy.Checked;
+		}
+
+		private void proxy_TextChanged(object sender, System.EventArgs e)
+		{
+			if (proxy.Focused)
+			{
+				apply.Enabled = cancel.Enabled = true;
+			}
+		}
+
+		private void port_ValueChanged(object sender, System.EventArgs e)
+		{
+			if (port.Focused)
+			{
+				apply.Enabled = cancel.Enabled = true;
 			}
 		}
 		#endregion
