@@ -217,6 +217,16 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Copy constructor for Collection object.
+		/// </summary>
+		/// <param name="storeObject">Store object that this collection belongs to.</param>
+		/// <param name="collection">Collection object to construct new Collection object from.</param>
+		public Collection( Store storeObject, Collection collection ) :
+			this( storeObject, collection as Node )
+		{
+		}
+
+		/// <summary>
 		/// Constructor for creating an existing Collection object.
 		/// </summary>
 		/// <param name="storeObject">Store object that this collection belongs to.</param>
@@ -966,6 +976,32 @@ namespace Simias.Storage
 			}
 
 			return isType;
+		}
+
+		/// <summary>
+		/// Gets a new copy of the Node object data from the database. All changed Node object data
+		/// will be lost.
+		/// </summary>
+		/// <param name="node">Node object to refresh.</param>
+		public void Refresh( Node node )
+		{
+			// Call the provider to get an XML string that represents this node.
+			XmlDocument document = store.StorageProvider.GetRecord( node.ID, id );
+			if ( document != null )
+			{
+				XmlElement element = document.DocumentElement[ XmlTags.ObjectTag ];
+
+				node.Name = element.GetAttribute( XmlTags.NameAttr );
+				node.BaseType = element.GetAttribute( XmlTags.TypeAttr );
+				node.InternalList = new PropertyList( document );
+				node.IncarnationUpdate = 0;
+
+				// If this is a collection, refresh the access control.
+				if ( IsCollection( node ) )
+				{
+					( node as Collection ).accessControl.GetAccessInfo();
+				}
+			}
 		}
 
 		/// <summary>

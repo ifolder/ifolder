@@ -163,31 +163,6 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known XML attribute.
 		/// </summary>
-		internal const string NodeFileSystemEntry = "NodeFileSystemEntry";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string FileSystemEntryTag = "FsEntry";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string EntryType = "EntryType";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string FileType = "File";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string DirectoryType = "Directory";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
 		internal const string MasterIncarnation = "MasterIncarnation";
 
 		/// <summary>
@@ -213,22 +188,17 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known XML attribute.
 		/// </summary>
-		internal const string AddressBookType = "AB:AddressBook";
+		internal const string Alias = "Alias";
 
 		/// <summary>
 		/// Well known XML attribute.
 		/// </summary>
-		internal const string Alias = "AB:Alias";
+		internal const string ServerCredential = "ServerCredential";
 
 		/// <summary>
 		/// Well known XML attribute.
 		/// </summary>
-		internal const string ServerCredential = "AB:ServerCredential";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string ClientCredential = "AB:ClientCredential";
+		internal const string ClientCredential = "ClientCredential";
 
 		/// <summary>
 		/// Well known XML attribute.
@@ -236,24 +206,9 @@ namespace Simias.Storage
 		internal const string AliasParameters = "AliasParameters";
 
 		/// <summary>
-		///  Well known XML attribute.
-		/// </summary>
-		internal const string IdentityRole = "AB:Role";
-
-		/// <summary>
 		/// Well known XML attribute;
 		/// </summary>
 		internal const string ClientPublicKey = "ClientPublicKey";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string TrueStr = "1";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string FalseStr = "0";
 
 		/// <summary>
 		/// Well known XML attribute.
@@ -298,16 +253,6 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known XML attribute.
 		/// </summary>
-		public const string DocumentPath = "DocumentPath";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string IDPath = "IdPath";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
 		public const string FileCreationTime = "FileCreationTime";
 
 		/// <summary>
@@ -344,11 +289,6 @@ namespace Simias.Storage
 		/// Well known XML attribute.
 		/// </summary>
 		public const string DomainName = "DomainName";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string IdentityType = "AB:Contact";
 
 		/// <summary>
 		/// Well known XML attribute.
@@ -584,34 +524,20 @@ namespace Simias.Storage
 		static Property()
 		{
 			// Allocate the tables to hold the reserved property names.
-			systemPropertyTable = new Hashtable( 50, new CaseInsensitiveHashCodeProvider(), new CaseInsensitiveComparer() );
+			systemPropertyTable = new Hashtable( 30, new CaseInsensitiveHashCodeProvider(), new CaseInsensitiveComparer() );
 
 			// Add the well-known system properties to the hashtable.  Don't need to add values
 			// with them.  Just need to know if they exist.
-			systemPropertyTable.Add( XmlTags.IdAttr, null );
-			systemPropertyTable.Add( XmlTags.NameAttr, null );
-			systemPropertyTable.Add( XmlTags.PropertyTag, null );
-			systemPropertyTable.Add( XmlTags.ObjectListTag, null );
-			systemPropertyTable.Add( XmlTags.ObjectTag, null );
-			systemPropertyTable.Add( XmlTags.TypeAttr, null );
-			systemPropertyTable.Add( XmlTags.FlagsAttr, null );
 			systemPropertyTable.Add( Ace, null );
-			systemPropertyTable.Add( FileSystemEntryTag, null );
-			systemPropertyTable.Add( EntryType, null );
-			systemPropertyTable.Add( FileType, null );
-			systemPropertyTable.Add( DirectoryType, null );
 			systemPropertyTable.Add( MasterIncarnation, null );
 			systemPropertyTable.Add( LocalIncarnation, null );
 			systemPropertyTable.Add( Shareable, null );
 			systemPropertyTable.Add( Syncable, null );
-			systemPropertyTable.Add( NodeFileSystemEntry, null );
 			systemPropertyTable.Add( LocalAddressBook, null );
 			systemPropertyTable.Add( Alias, null );
 			systemPropertyTable.Add( ServerCredential, null );
 			systemPropertyTable.Add( ClientCredential, null );
 			systemPropertyTable.Add( AliasParameters, null );
-			systemPropertyTable.Add( AddressBookType, null );
-			systemPropertyTable.Add( IdentityRole, null );
 			systemPropertyTable.Add( ClientPublicKey, null );
 			systemPropertyTable.Add( LinkReference, null );
 
@@ -624,8 +550,6 @@ namespace Simias.Storage
 			systemPropertyTable.Add( ParentID, null );
 			systemPropertyTable.Add( Owner, null );
 			systemPropertyTable.Add( Root, null );
-			systemPropertyTable.Add( DocumentPath, null );
-			systemPropertyTable.Add( IDPath, null );
 			systemPropertyTable.Add( FileCreationTime, null );
 			systemPropertyTable.Add( FileLastAccessTime, null );
 			systemPropertyTable.Add( FileLastWriteTime, null );
@@ -634,7 +558,6 @@ namespace Simias.Storage
 			systemPropertyTable.Add( DirLastAccessTime, null );
 			systemPropertyTable.Add( DirLastWriteTime, null );
 			systemPropertyTable.Add( DomainName, null );
-			systemPropertyTable.Add( IdentityType, null );
 			systemPropertyTable.Add( DefaultAddressBook, null );
 		}
 

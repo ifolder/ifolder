@@ -531,7 +531,7 @@ namespace Simias.Storage.Tests
 				collection.Commit();
 
 				// Force the object to be retreived from the data base.
-				collection = store.GetCollectionByID( ID );
+				collection.Refresh( collection );
 
 				// Get each property individually and make sure that the values are valid.
 				Property p = collection.Properties.GetSingleProperty( "CS_String" );
@@ -661,7 +661,7 @@ namespace Simias.Storage.Tests
 				collection.Commit();
 
 				// Force the object to be retreived from the data base.
-				collection = store.GetCollectionByID( ID );
+				collection.Refresh( collection );
 
 				// Get each property individually and make sure that the values are valid.
 				p = collection.Properties.GetSingleProperty( "CS_String" );
@@ -1035,16 +1035,6 @@ namespace Simias.Storage.Tests
 				// Set world rights on collection2.
 				collection2.SetUserAccess( Access.World, Access.Rights.ReadWrite );
 				collection2.Commit();
-
-				try
-				{
-					store.ImpersonateUser( user.ID );
-					collection3 = store.GetCollectionByID( collection2.ID );
-				}
-				finally
-				{
-					store.Revert();
-				}
 			}
 			finally
 			{
@@ -1196,7 +1186,7 @@ namespace Simias.Storage.Tests
 				collection.Commit( collection.Delete( node ) );
 
 				// Node should have turned into a tombstone.
-				node = collection.GetNodeByID( node.ID );
+				collection.Refresh( node );
 				if ( !collection.IsType( node, "Tombstone" ) )
 				{
 					throw new ApplicationException( "Deleted node did not turn into a tombstone." );
@@ -1410,7 +1400,7 @@ namespace Simias.Storage.Tests
 				mergeCollection.Commit();
 
 				// Should be able to see both properties now through the merge handle.
-				mergeCollection = mergeStore.GetCollectionByID( mergeCollection.ID );
+				mergeCollection.Refresh( mergeCollection );
 				p = mergeCollection.Properties.GetSingleProperty( "CS_TestMergeProperty" );
 				if ( p == null )
 				{
@@ -1427,7 +1417,7 @@ namespace Simias.Storage.Tests
 				collection.Properties.AddProperty( "CS_TestModifyProperty", ( int )1 );
 				collection.Commit();
 
-				mergeCollection = mergeStore.GetCollectionByID( mergeCollection.ID );
+				mergeCollection.Refresh( mergeCollection );
 
 				collection.Properties.ModifyProperty( "CS_TestModifyProperty", ( int ) 4 );
 				collection.Commit();
@@ -1446,7 +1436,7 @@ namespace Simias.Storage.Tests
 				}
 
 				// Refresh the collection and the value should change to 2.
-				collection = store.GetCollectionByID( collection.ID );
+				collection.Refresh( collection );
 				if ( ( int )collection.Properties.GetSingleProperty( "CS_TestModifyProperty" ).Value != 2 )
 				{
 					throw new ApplicationException( "Value unexpectedly modified." );
@@ -1459,7 +1449,7 @@ namespace Simias.Storage.Tests
 				collection.Commit();
 
 				// Update to the latest.
-				mergeCollection = mergeStore.GetCollectionByID( mergeCollection.ID );
+				mergeCollection.Refresh( mergeCollection );
 
 				// Modify after the commit.
 				collection.Properties.ModifyProperty( "CS_TestModifyProperty", ( int ) 6 );
@@ -1469,7 +1459,7 @@ namespace Simias.Storage.Tests
 				mergeCollection.Commit();
 
 				// Should have two properties.
-				collection = store.GetCollectionByID( collection.ID );
+				collection.Refresh( collection );
 				MultiValuedList mvl = collection.Properties.GetProperties( "CS_TestModifyProperty" );
 				if ( mvl.Count != 2 )
 				{

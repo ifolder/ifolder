@@ -91,7 +91,7 @@ namespace Simias.Storage
 				// Refresh the identity object before returning it.
 				if ( impersonationID.Count == 0 )
 				{
-					identity = new BaseContact( localAb, localAb.GetNodeByID( identity.ID ) );
+					localAb.Refresh( identity );
 					return identity;
 				}
 				else
@@ -242,7 +242,7 @@ namespace Simias.Storage
 			if ( serverRealm != domainName )
 			{
 				// Refresh the identity object.
-				identity = new BaseContact( localAb, localAb.GetNodeByID( identity.ID ) );
+				localAb.Refresh( identity );
 
 				// Find the alias that belongs to the specified domain.
 				Alias alias = identity.GetAliasFromDomain( serverRealm );
@@ -293,7 +293,7 @@ namespace Simias.Storage
 			else
 			{
 				// Refresh the identity object first.
-				identity = new BaseContact( localAb, localAb.GetNodeByID( identity.ID ) );
+				localAb.Refresh( identity );
 
 				// Need to look up the alias for the specified domain and return the public key.
 				Alias alias = identity.GetAliasFromDomain( realm );

@@ -109,6 +109,11 @@
                     AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
                     HintPath = "..\..\external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll"
                 />
+                <Reference
+                    Name = "Configuration"
+                    Project = "{9B517041-29A3-4817-BA8E-02ECF03477C4}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>

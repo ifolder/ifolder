@@ -68,6 +68,11 @@ namespace Simias.Storage
 		private string storeManagedPath;
 
 		/// <summary>
+		/// Uniquely defines this database.
+		/// </summary>
+		private string databaseID;
+
+		/// <summary>
 		/// Object that identifies the current owner or impersonator.
 		/// </summary>
 		private IdentityManager identityManager;
@@ -162,6 +167,14 @@ namespace Simias.Storage
 
 				return identityManager.DomainName; 
 			}
+		}
+
+		/// <summary>
+		/// Gets the identifier for this Collection Store.
+		/// </summary>
+		public string ID
+		{
+			get { return databaseID; }
 		}
 
 		/// <summary>
@@ -270,6 +283,9 @@ namespace Simias.Storage
 						localDb.Properties.AddNodeProperty( Property.LocalDatabase, true );
 						localDb.Synchronizable = false;
 						localDb.Commit();
+
+						// Set the database ID.
+						databaseID = localDb.ID;
 					}
 					catch ( Exception e )
 					{
@@ -300,6 +316,9 @@ namespace Simias.Storage
 
 					// Create a identity manager object that will be used by the store object from here on out.
 					identityManager = new IdentityManager( localAb.Name, localAb, identity );
+
+					// Set the database ID.
+					databaseID = GetDatabaseObject().ID;
 
 					// Create the database lock.
 					storeMutex = new Mutex( false, identityManager.DomainName );
