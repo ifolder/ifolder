@@ -712,6 +712,13 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 	if (!nautilus_file_info_is_directory (file))
 		return NULL;
 		
+	/**
+	 * Don't show any iFolder context menus if the iFolder client is not
+	 * running
+	 */
+	if (!is_ifolder_running ())
+		return NULL;
+		
 	items = NULL;
 	
 	if (is_ifolder (file)) {
