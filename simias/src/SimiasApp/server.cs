@@ -368,7 +368,7 @@ namespace Mono.ASPNET
 			try {
 				if (server.Start (!nonstop) == false)
 					return 2;
-
+/*
 				//
 				// Temp kludge for FCS so we can run workgroup
 				// this needs to be re-evaluated when Simias can
@@ -386,7 +386,7 @@ namespace Mono.ASPNET
 					Simias.Client.Manager.SetWebServiceUri( new Simias.Client.Configuration(), uri );
 				}
 #endif
-
+*/
 				if (!nonstop) 
 				{
 					Console.WriteLine ("Hit Return to stop the server.");
