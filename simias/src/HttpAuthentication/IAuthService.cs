@@ -49,7 +49,7 @@ namespace Simias.Security.Web.AuthenticationService
 	/// </summary>
 	public class Login
 	{
-		public static string Path = "/simias10/login";
+		public static string Path = "/simias10/Login.ashx";
 
 		// Response headers set by the Http Authentication Module
 		public readonly static string GraceTotalHeader = "Simias-Grace-Total";

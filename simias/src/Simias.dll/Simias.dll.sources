@@ -51,6 +51,7 @@ AssemblyInfo.cs
 ../Location/Locate.cs
 ../Location/ILocationProvider.cs
 ../Location/EnterpriseLocation.cs
+../Login/Login.ashx.cs
 ../HttpAuthentication/AuthHandler.cs
 ../HttpAuthentication/IAuthService.cs
 ../HttpAuthentication/HttpAuth.cs

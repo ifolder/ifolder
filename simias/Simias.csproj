@@ -404,6 +404,15 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Login\Login.ashx"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "src\Login\Login.ashx.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\POBox\Message.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

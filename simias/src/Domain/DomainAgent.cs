@@ -156,7 +156,7 @@ namespace Simias.DomainServices
 				new Simias.Authentication.Status( SCodes.Unknown );
 
 			Uri loginUri = 
-				new Uri( host, Simias.Security.Web.AuthenticationService.Login.Path.ToLower() );
+				new Uri( host, Simias.Security.Web.AuthenticationService.Login.Path );
 			HttpWebRequest request = WebRequest.Create( loginUri ) as HttpWebRequest;
 			WebState webState = new WebState();
 			webState.InitializeWebRequest(request);

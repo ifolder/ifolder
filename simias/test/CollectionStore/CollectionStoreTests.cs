@@ -2405,6 +2405,7 @@ namespace Simias.Storage.Tests
 
 				// Delete the collection and restore it again.
 				collection.Commit( collection.Delete() );
+				Thread.Sleep( 5000 );
 
 				// Restore the collection back over the top of the existing one.
 				doc.LoadXml( nodeString );
@@ -2413,6 +2414,7 @@ namespace Simias.Storage.Tests
 				// Set the node's state to restore.
 				collection.RestoreNode( collection );
 				collection.Commit();
+				Thread.Sleep( 5000 );
 			}
 			finally
 			{

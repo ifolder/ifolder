@@ -16,7 +16,7 @@ else
 	SIMIAS_LIBS = $(SIMIAS_LIBS1)
 endif
 
-EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/Simias.log4net ../Common/simias-client-bootstrap.config.in ../Common/MyDns.cs.in
+EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/Simias.log4net ../Common/simias-client-bootstrap.config.in ../Common/MyDns.cs.in ../Login/Login.ashx
 
 if WINDOWS
 	FIXED_WEBDIR := $(shell cygpath --mixed $(webdir))
@@ -61,6 +61,7 @@ install-exec-local: all
 	cp -f $(srcdir)/$(LOG4NET_DIR)/../../../../LICENSE.txt $(DESTDIR)$(datadir)/simias/log4net.LICENSE.txt
 	$(INSTALL_PROGRAM) ../Common/Simias.log4net $(DESTDIR)$(sysconfdir)
 	$(INSTALL_PROGRAM) ../Common/simias-client-bootstrap.config $(DESTDIR)$(sysconfdir)
+	$(INSTALL_PROGRAM) ../Login/Login.ashx $(DESTDIR)$(webdir)
 
 uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f Novell.Security.SecureSink*.dll

@@ -67,7 +67,7 @@ namespace Simias.Authentication
 		public readonly static string GraceTotalHeader = "Simias-Grace-Total";
 		public readonly static string GraceRemainingHeader = "Simias-Grace-Remaining";
 		public readonly static string SimiasErrorHeader = "Simias-Error";
-		//public readonly static string DomainIDHeader = "Domain-ID";
+		public readonly static string DomainIDHeader = "Domain-ID";
 
 		private static readonly string sessionTag = "simias";
 		private static readonly string[] rolesArray = { "users" };
@@ -193,7 +193,7 @@ namespace Simias.Authentication
 			// header doesn't exist use the default domain
 			//
 
-			string domainID = ctx.Request.Headers[ "DomainID" ];
+			string domainID = ctx.Request.Headers[ DomainIDHeader ];
 			if ( domainID != null && domainID != "" )
 			{
 				domain = store.GetDomain( domainID );
@@ -215,10 +215,7 @@ namespace Simias.Authentication
 			{
 				if ( ctx.User.Identity.IsAuthenticated == false )
 				{
-					// Temporary hard coded for mDns
-
-					// Temporary
-					status = Simias.Authentication.Http.Authenticate( domain, ctx );
+					status = DomainProvider.Authenticate( domain, ctx );
 					if ( status.statusCode != StatusCodes.Success &&
 						status.statusCode != StatusCodes.SuccessInGrace )
 					{
@@ -273,6 +270,7 @@ namespace Simias.Authentication
 				{
 					simiasSession = ctx.Session[ sessionTag ] as Simias.Authentication.Session;
 					simiasSession.Requests++;
+					Thread.CurrentPrincipal = ctx.User;
 					member = domain.GetMemberByID( simiasSession.MemberID );
 				}
 			}

@@ -342,6 +342,14 @@ namespace Simias.Security.Web
 		private	Assembly authAssembly;
 		private Type iAuthService;
 
+//		public static string Path = "/simias10/login";
+
+		// Response headers set by the Http Authentication Module
+		public readonly static string GraceTotalHeader = "Simias-Grace-Total";
+		public readonly static string GraceRemainingHeader = "Simias-Grace-Remaining";
+		public readonly static string SimiasErrorHeader = "Simias-Error";
+		public readonly static string DomainIDHeader = "Domain-ID";
+
 		public void Init(System.Web.HttpApplication app) 
 		{
 			NameValueCollection AppSettings = System.Configuration.ConfigurationSettings.AppSettings;
@@ -771,11 +779,11 @@ namespace Simias.Security.Web
 				{
 					context.Response.StatusCode = 200;
 					context.Response.AppendHeader(
-						Login.GraceTotalHeader,
+						GraceTotalHeader,
 						authStatus.TotalGraceLogins.ToString() );
 
 					context.Response.AppendHeader(
-						Login.GraceRemainingHeader,
+						GraceRemainingHeader,
 						authStatus.RemainingGraceLogins.ToString() );
 					break;
 				}
@@ -784,7 +792,7 @@ namespace Simias.Security.Web
 				{
 					context.Response.StatusCode = 500;
 					context.Response.AddHeader(
-						Login.SimiasErrorHeader,
+						SimiasErrorHeader,
 						StatusCodes.AccountDisabled.ToString() );
 					break;
 				}
@@ -793,7 +801,7 @@ namespace Simias.Security.Web
 				{
 					context.Response.StatusCode = 500;
 					context.Response.AddHeader(
-						Login.SimiasErrorHeader,
+						SimiasErrorHeader,
 						StatusCodes.AccountLockout.ToString() );
 					break;
 				}
@@ -802,7 +810,7 @@ namespace Simias.Security.Web
 				{
 					context.Response.StatusCode = 500;
 					context.Response.AddHeader(
-						Login.SimiasErrorHeader,
+						SimiasErrorHeader,
 						StatusCodes.AmbiguousUser.ToString() );
 					break;
 				}
@@ -811,7 +819,7 @@ namespace Simias.Security.Web
 				{
 					context.Response.StatusCode = 500;
 					context.Response.AddHeader(
-						Login.SimiasErrorHeader,
+						SimiasErrorHeader,
 						StatusCodes.UnknownUser.ToString() );
 					break;
 				}
@@ -820,7 +828,7 @@ namespace Simias.Security.Web
 				{
 					context.Response.StatusCode = 500;
 					context.Response.AddHeader(
-						Login.SimiasErrorHeader,
+						SimiasErrorHeader,
 						StatusCodes.Unknown.ToString() );
 					break;
 				}
@@ -829,7 +837,7 @@ namespace Simias.Security.Web
 				{
 					context.Response.StatusCode = 500;
 					context.Response.AppendHeader(
-						Login.SimiasErrorHeader,
+						SimiasErrorHeader,
 						StatusCodes.InvalidPassword.ToString() );
 					break;
 				}
@@ -838,7 +846,7 @@ namespace Simias.Security.Web
 				{
 					context.Response.StatusCode = 500;
 					context.Response.AddHeader(
-						Login.SimiasErrorHeader,
+						SimiasErrorHeader,
 						StatusCodes.InternalException.ToString() );
 					break;
 				}
@@ -847,7 +855,7 @@ namespace Simias.Security.Web
 				{
 					context.Response.StatusCode = 401;
 					context.Response.AddHeader(
-						Login.SimiasErrorHeader,
+						SimiasErrorHeader,
 						StatusCodes.InvalidCredentials.ToString() );
 					break;
 				}
