@@ -192,36 +192,20 @@ public class SynkerServiceA: SyncCollectionService
 		return false;
 	}
 
-	public byte[] ReadLargeNode(Nid nid, int maxSize, out NodeStamp stamp, out string metaData, out string relativePath)
-	{
-		try
-		{
-			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
-				throw new UnauthorizedAccessException("Current user cannot modify this collection");
-
-			return outNode.Start(nid, out stamp, out metaData, out relativePath)? outNode.GetChunk(maxSize): null;
-		}
-		catch (Exception e) { Log.Uncaught(e); }
-		stamp = new NodeStamp();
-		metaData = null;
-		relativePath = null;
-		return null;
-	}
-
 	// right now reusing small node struct for first chunk of large node
-	public SmallNode[] ReadLargeNode(Nid nid, int maxSize)
+	public SmallNode ReadLargeNode(Nid nid, int maxSize)
 	{
 		try
 		{
 			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
-			SmallNode[] sn = new SmallNode[1];
-			sn[0].data = outNode.Start(nid, out sn[0].stamp, out sn[0].metaData, out sn[0].relativePath)? outNode.GetChunk(maxSize): null;
+			SmallNode sn;
+			sn.data = outNode.Start(nid, out sn.stamp, out sn.metaData, out sn.relativePath)? outNode.GetChunk(maxSize): null;
 			return sn;
 		}
 		catch (Exception e) { Log.Uncaught(e); }
-		return null;
+		return new SmallNode();
 	}
 
 	public byte[] ReadLargeNode(int maxSize)
@@ -448,13 +432,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 		// get large files from server
 		foreach (Nid nid in addLargeFromServer)
 		{
-			SmallNode[] sna = ss.ReadLargeNode(nid, SmallNode.MaxSize);
-			if (sna == null)
-			{
-				Log.Here();
-				continue;
-			}
-			SmallNode sn = sna[0];
+			SmallNode sn = ss.ReadLargeNode(nid, SmallNode.MaxSize);
 			inNode.Start(sn.stamp, sn.relativePath);
 			inNode.Append(sn.data);
 			while (sn.data.Length == SmallNode.MaxSize)
