@@ -34,6 +34,9 @@
                 makeOwner = id; 
                 refreshWindow = id; 
                 removeSelectedUsers = id; 
+                searchFirstName = id; 
+                searchFullName = id; 
+                searchLastName = id; 
                 searchUsers = id; 
             }; 
             CLASS = PropSharingController; 
@@ -41,10 +44,14 @@
             OUTLETS = {
                 currentUsers = NSTableView; 
                 defaultAccess = NSPopUpButton; 
-                foundUsersController = NSArrayController; 
+                firstItem = NSMenuItem; 
+                fullItem = NSMenuItem; 
+                lastItem = NSMenuItem; 
                 ownerName = NSTextField; 
                 propertiesWindow = NSWindow; 
+                searchedColumn = NSTableColumn; 
                 searchedUsers = NSTableView; 
+                templateMenu = NSMenu; 
                 userSearch = NSSearchField; 
                 usersController = NSArrayController; 
             }; 

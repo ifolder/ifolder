@@ -27,6 +27,7 @@
 #import "iFolderWindowController.h"
 #import "iFolder.h"
 #import "User.h"
+#import "MemberSearchResults.h"
 
 @implementation PropSharingController
 
@@ -36,7 +37,13 @@
 	ifolderService = [[iFolderService alloc] init];
 
 	keyedUsers = [[NSMutableDictionary alloc] init];
+	
+	searchResults = nil;
 
+	[[userSearch cell] setSearchMenuTemplate:templateMenu];
+	// valid search attributes: "Given" "Family" "FN"
+	searchAttribute = @"FN";
+	
 	NSLog(@"Reading all iFolder Users");
 
 	@try
@@ -70,6 +77,21 @@
 }
 
 
+-(void)dealloc
+{
+	if(searchResults != nil)
+	{
+		[searchResults release];
+		searchResults = nil;
+	}
+
+	[curiFolder release];
+	[ifolderService release];
+	[keyedUsers release];
+}
+
+
+
 -(void) addUser:(User *)newUser
 {
 	if([keyedUsers objectForKey:[newUser UserID]] == nil)
@@ -84,8 +106,40 @@
 
 - (IBAction)addSelectedUsers:(id)sender
 {
+	if([searchedUsers numberOfSelectedRows] > 20)
+	{
+		NSBeginAlertSheet(NSLocalizedString(@"A large number of users is selected", nil), 
+			NSLocalizedString(@"Yes", nil), NSLocalizedString(@"Cancel", nil),
+			nil, propertiesWindow, self, 
+			@selector(addSelectedUsersResponse:returnCode:contextInfo:), 
+			nil, nil, 
+			[NSString stringWithFormat:NSLocalizedString(@"Do you want to share with all %d selected users?", nil), [searchedUsers numberOfSelectedRows]]);
+	}
+	else
+	{
+		[self addAllSelectedUsers];
+	}
+}
+
+
+- (void)addSelectedUsersResponse:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	switch(returnCode)
+	{
+		case NSAlertDefaultReturn:
+		{
+			[self addAllSelectedUsers];
+			break;
+		}
+	}
+}
+
+
+- (void)addAllSelectedUsers
+{
 	NSLog(@"Adding selected users");
-	NSArray *selectedUsers = [foundUsersController selectedObjects];
+
+	NSIndexSet *idxset = [searchedUsers selectedRowIndexes];
 
 	NSString *rights;
 	switch([defaultAccess indexOfSelectedItem])
@@ -103,9 +157,11 @@
 	}
 
 	int i;
-	for(i=0; i < [selectedUsers count]; i++)
+	unsigned int curindex = [idxset firstIndex];
+	
+	for(i=0; i < [idxset count]; i++)
 	{
-		User *selUser = [selectedUsers objectAtIndex:i];
+		User *selUser = [searchResults objectAtIndex:curindex];
 
 		// Don't try to add them if they are already in the list
 		if([keyedUsers objectForKey:[selUser UserID]] == nil)
@@ -124,6 +180,8 @@
 				NSLog(@"Adding iFolder User failed");
 			}
 		}
+		
+		curindex = [idxset indexGreaterThanIndex:curindex];
 	}
 }
 
@@ -197,47 +255,35 @@
 	NSLog(@"Searching for users");
 	if([[userSearch stringValue] length] > 0)
 	{
-		@try
+		if(searchResults != nil)
 		{
-			if(curiFolder != nil)
-			{
-				NSArray *newUsers = [ifolderService 
-										SearchDomainUsers:[curiFolder DomainID]
-										withString:[userSearch stringValue] ];
-
-				if(newUsers != nil)
-					[foundUsersController setContent:newUsers];
-				else
-					[foundUsersController setContent: nil];
-			}
+			[searchResults release];
+			searchResults = nil;
 		}
-		@catch (NSException *e)
-		{
-			NSLog(@"Searching iFolder Users failed with an exception");
-		}
+		// valid search attributes: "Given" "Family" "FN"
+		searchResults = [[MemberSearchResults alloc] init];
+		[searchResults searchMembers:[curiFolder DomainID] onAttribute:searchAttribute usingValue:[userSearch stringValue]];
 	}
 	else
 	{
-		@try
+		if(searchResults != nil)
 		{
-			if(curiFolder != nil)
-			{
-				NSArray *newUsers = [ifolderService 
-										GetDomainUsers:[curiFolder DomainID]
-										withLimit:25];
-
-				if(newUsers != nil)
-					[foundUsersController setContent:newUsers];
-				else
-					[foundUsersController setContent: nil];
-			}
+			[searchResults release];
+			searchResults = nil;
 		}
-		@catch (NSException *e)
-		{
-			NSLog(@"Searching iFolder Users failed with an exception");
-		}
+		searchResults = [[MemberSearchResults alloc] init];
+		[searchResults getAllMembers:[curiFolder DomainID]];
 	}
+
+	if(searchResults != nil)
+	{
+		[[searchedColumn headerCell] 
+			setStringValue:[NSString stringWithFormat:NSLocalizedString(@"User count: %d", nil),[searchResults count] ]];
+	}
+
+	[searchedUsers reloadData];
 }
+
 
 
 - (IBAction)grantFullControl:(id)sender
@@ -297,6 +343,8 @@
 }
 
 
+
+
 -(void)setSelectedUserRights:(NSString *)rights
 {
 	NSArray *selectedUsers = [usersController selectedObjects];
@@ -323,6 +371,7 @@
 		}
 	}
 }
+
 
 
 
@@ -376,6 +425,7 @@
 
 
 
+
 - (BOOL)selectionContainsOwnerorCurrent
 {
 	NSArray *selectedUsers = [usersController selectedObjects];
@@ -394,6 +444,72 @@
 
 
 
+
+
+// Delegates for TableView
+-(int)numberOfRowsInTableView:(NSTableView *)aTableView
+{
+	if(searchResults != nil)
+		return [searchResults count];
+	else
+		return 0;
+}
+
+
+
+
+-(id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+{
+	NSString *value = nil;
+	if(searchResults != nil)
+	{
+		value = [[searchResults objectAtIndex:rowIndex] FN];
+	}
+	
+	return value;
+}
+
+
+
+
+- (IBAction)searchFullName:(id)sender
+{
+	NSLog(@"Dude, search da' full name");
+	[fullItem setState:NSOnState];
+	[firstItem setState:NSOffState];
+	[lastItem setState:NSOffState];
+	[[userSearch cell] setSearchMenuTemplate:templateMenu];
+	searchAttribute = @"FN";
+	[self searchUsers:self];
+}
+
+
+
+
+- (IBAction)searchFirstName:(id)sender
+{
+	NSLog(@"Dude, search da' first name");
+	[fullItem setState:NSOffState];
+	[firstItem setState:NSOnState];
+	[lastItem setState:NSOffState];
+	[[userSearch cell] setSearchMenuTemplate:templateMenu];
+	searchAttribute = @"Given";
+	[self searchUsers:self];
+}
+
+
+
+
+- (IBAction)searchLastName:(id)sender
+{
+	NSLog(@"Dude, search da' last name");
+	[fullItem setState:NSOffState];
+	[firstItem setState:NSOffState];
+	[lastItem setState:NSOnState];
+	[[userSearch cell] setSearchMenuTemplate:templateMenu];
+	searchAttribute = @"Family";
+	[self searchUsers:self];
+}
 
 
 @end
