@@ -272,32 +272,26 @@ get_possible_simias_msg_type(const char *buffer)
 static gboolean
 parse_simias_info(char *buffer, char **machineName, char **userID, char **simiasURL)
 {
-	char *ptrptr = malloc(sizeof(char) * (strlen(buffer) + 1));
-	*machineName = strtok_r(buffer, ":", &ptrptr);
+	*machineName = strtok(buffer, ":");
 	if (!*machineName) {
-		free(ptrptr);
 		fprintf(stderr, "parse_simias_info() couldn't parse the machine name\n");
 		return FALSE;
 	}
 
-	*userID = strtok_r(NULL, ":", &ptrptr);
+	*userID = strtok(NULL, ":");
 	if (!*userID)
 	{
-		free(ptrptr);
 		fprintf(stderr, "parse_simias_info() couldn't parse the user id\n");
 		return FALSE;
 	}
 
-	*simiasURL = strtok_r(NULL, "]", &ptrptr);
+	*simiasURL = strtok(NULL, "]");
 	if (!*simiasURL)
 	{
-		free(ptrptr);
 		fprintf(stderr, "parse_simias_info() couldn't parse the simias url\n");
 		return FALSE;
 	}
 
-	free(ptrptr);
-	
 	return TRUE;
 }
 
@@ -333,7 +327,7 @@ fprintf(stderr, "handle_ping_request() %s -> %s entered\n",
 	 * 	[simias:ping-request:<sender-machine-name>:<sender-user-id>:<simias-url>]
 	 *                       ^
 	 */
-	if (parse_simias_info((char *) buffer + strlen(PING_REQUEST_MSG),
+	if (!parse_simias_info((char *) buffer + strlen(PING_REQUEST_MSG),
 						  &machine_name, &user_id, &simias_url))
 	{
 		return FALSE;
@@ -400,7 +394,7 @@ fprintf(stderr, "handle_ping_response() %s -> %s entered\n",
 	 * 	[simias:ping-response:<sender-machine-name>:<sender-user-id>:<simias-url>]
 	 *                        ^
 	 */
-	if (parse_simias_info((char *) buffer + strlen(PING_RESPONSE_MSG),
+	if (!parse_simias_info((char *) buffer + strlen(PING_RESPONSE_MSG),
 						  &machine_name, &user_id, &simias_url))
 	{
 		return FALSE;
