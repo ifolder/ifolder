@@ -23,6 +23,7 @@
 EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/Description.plist $(srcdir)/Info.plist $(srcdir)/Install_Resources
 
 PACKAGE_DIR = `pwd`
+TMPDIR = $(PACKAGE_DIR)/temp
 
 .PHONY: simias-dist simias-pkg
 
@@ -30,19 +31,21 @@ all: simias-dist simias-pkg
 
 simias-dist:
 	cd $(top_srcdir); make dist
-	cd /tmp; rm -rf $(PACKAGE)-$(VERSION); 
-	tar -C /tmp -zxvf $(top_srcdir)/$(PACKAGE)-$(VERSION).tar.gz
-	cd /tmp/$(PACKAGE)-$(VERSION);./configure --prefix=/opt/novell/ifolder3
-	cd /tmp/$(PACKAGE)-$(VERSION);make;rm -rf /tmp/Simias.dst;
-	cd /tmp/$(PACKAGE)-$(VERSION);make DESTDIR=/tmp/Simias.dst install
+	$(mkinstalldirs) $(TMPDIR)
+	cd $(TMPDIR); rm -rf $(PACKAGE)-$(VERSION); 
+	tar -C $(TMPDIR) -zxvf $(top_srcdir)/$(PACKAGE)-$(VERSION).tar.gz
+	cd $(TMPDIR)/$(PACKAGE)-$(VERSION);./configure --prefix=/opt/novell/ifolder3
+	cd $(TMPDIR)/$(PACKAGE)-$(VERSION);make;rm -rf $(TMPDIR)/Simias.dst;
+	cd $(TMPDIR)/$(PACKAGE)-$(VERSION);make DESTDIR=$(TMPDIR)/Simias.dst install
 
 simias-pkg:
-	/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker -build -p $(PACKAGE_DIR)/Simias.pkg -f /tmp/Simias.dst/opt/novell/ifolder3/ -r $(PACKAGE_DIR)/Install_Resources -i $(PACKAGE_DIR)/Info.plist -d $(PACKAGE_DIR)/Description.plist
+	/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker -build -p $(PACKAGE_DIR)/Simias.pkg -f $(TMPDIR)/$(PACKAGE)-$(VERSION)/temp/Simias.dst/opt/novell/ifolder3/ -r $(PACKAGE_DIR)/Install_Resources -i $(PACKAGE_DIR)/Info.plist -d $(PACKAGE_DIR)/Description.plist
 	hdiutil create -srcfolder Simias.pkg $(PACKAGE)-$(VERSION).dmg
 
 clean-local:
 	rm -rf *.pkg
 	rm -rf *.dmg
+	rm -rf $(TMPDIR)
 
 distclean-local:
 
