@@ -1,0 +1,540 @@
+#***********************************************************************
+#*  $RCSfile$
+#*
+#*  Copyright (C) 2004 Novell, Inc.
+#*
+#*  This program is free software; you can redistribute it and/or
+#*  modify it under the terms of the GNU General Public
+#*  License as published by the Free Software Foundation; either
+#*  version 2 of the License, or (at your option) any later version.
+#*
+#*  This program is distributed in the hope that it will be useful,
+#*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#*  General Public License for more details.
+#*
+#*  You should have received a copy of the GNU General Public
+#*  License along with this program; if not, write to the Free
+#*  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#*
+#*  Author: Calvin Gaisford <cgaisford@novell.com>
+#*
+#***********************************************************************
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-10-21 11:39-0600\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+#: ../iFolderAcceptDialog.cs:44
+#, csharp-format
+msgid "Setup iFolder \"{0}\""
+msgstr "[Setup iFolder \"{0}\ &#1045;&#1097;&#1077; xxxx 2xxxx 1xxxx]"
+#: ../iFolderAcceptDialog.cs:58
+msgid "Setup iFolder: "
+msgstr "[Setup iFolder:  &#1045;&#1097;&#1077; xx 2xxxx 1xxxx]"
+#: ../iFolderAcceptDialog.cs:70
+msgid "iFolder Details:"
+msgstr "[iFolder Details: &#1045;&#1097;&#1077; xx 2xxxx 1xxxx]"
+#: ../iFolderAcceptDialog.cs:80
+#, csharp-format
+msgid ""
+"iFolder name: {0}\n"
+"iFolder Owner:{1}\n"
+"\n"
+"iFolder Description: {2}"
+msgstr "[iFolder name: {0}\niFolder Owner:{1}\n\niFolder Description: {2} &#1045;&#1097;&#1077; xxx 1xxxx]"
+#: ../iFolderAcceptDialog.cs:88
+msgid "Choose a location for the iFolder to be created on this computer."
+msgstr "[Choose a location for the iFolder to be created on this computer. &#1045;&#1097;&#1077; xxx 1xxxx]"
+#: ../iFolderAcceptDialog.cs:99
+msgid "iFolder Location:"
+msgstr "Местоположение iFolder:"
+#: ../iFolderAcceptDialog.cs:128 ../iFolderWindow.cs:1532
+msgid "Choose a folder..."
+msgstr "[Choose a folder... &#1045;&#1097;&#1077; xxxx 2xxxx 1xxxx]"
+#: ../iFolderAccessDialog.cs:75
+msgid "Properties for multiple users"
+msgstr "[Properties for multiple users &#1045;&#1097;&#1077; x 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderAccessDialog.cs:77
+#, csharp-format
+msgid "Properties for {0}"
+msgstr "Свойства для:"
+#: ../iFolderAccessDialog.cs:93 ../iFolderPropSharingPage.cs:124
+msgid "Access"
+msgstr "ДОСТУП"
+#: ../iFolderAccessDialog.cs:111 ../iFolderPropSharingPage.cs:533
+#: ../iFolderPropSharingPage.cs:604
+msgid "Full Control"
+msgstr "Полный контроль"
+#: ../iFolderAccessDialog.cs:114 ../iFolderPropSharingPage.cs:609
+#: ../iFolderPropSharingPage.cs:531
+msgid "Read/Write"
+msgstr "Чтение/запись"
+#: ../iFolderAccessDialog.cs:117 ../iFolderPropSharingPage.cs:535
+#: ../iFolderPropSharingPage.cs:614
+msgid "Read Only"
+msgstr "Только чтение"
+#: ../iFolderAccessDialog.cs:124
+msgid "Make this user the owner of the collection."
+msgstr "[Make this user the owner of the collection. &#1045;&#1097;&#1077; xxx 2xxxx 1xxxx]"
+#: ../iFolderApplication.cs:134 ../iFolderApplication.cs:139
+#: ../iFolderWindow.cs:112 ../Util.cs:143
+msgid "iFolder"
+msgstr "<iFolder>"
+#: ../iFolderApplication.cs:401
+msgid "Action Required"
+msgstr "Необходимое действие:"
+#: ../iFolderApplication.cs:402
+#, csharp-format
+msgid "A collision has been detected in iFolder \"{0}\""
+msgstr "[A collision has been detected in iFolder \"{0}\ &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderApplication.cs:462 ../iFolderWindow.cs:1028
+#: ../iFolderWindow.cs:1049 ../iFolderWindow.cs:1050 ../iFolderWindow.cs:1279
+#: ../iFolderWindow.cs:1922
+msgid "Available"
+msgstr "Доступен"
+#: ../iFolderApplication.cs:484
+#, csharp-format
+msgid "New iFolder \"{0}\""
+msgstr "[New iFolder \"{0}\ &#1045;&#1097;&#1077; xxxx 2xxxx 1xxxx]"
+#: ../iFolderApplication.cs:486
+#, csharp-format
+msgid "This iFolder is owned by {0} and is available to sync on this computer"
+msgstr "[This iFolder is owned by {0} and is available to sync on this computer &#1045;&#1097;&#1077; xxxx 1xxxx]"
+#: ../iFolderApplication.cs:510
+msgid "New iFolder User"
+msgstr "[New iFolder User &#1045;&#1097;&#1077; xx 2xxxx 1xxxx]"
+#: ../iFolderApplication.cs:511
+#, csharp-format
+msgid "{0} has just joined iFolder {1}"
+msgstr "[{0} has just joined iFolder {1} &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderApplication.cs:654
+msgid "iFolder Connect Error"
+msgstr "[iFolder Connect Error &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderApplication.cs:655
+msgid "Unable to locate Simias Process"
+msgstr "[Unable to locate Simias Process &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderApplication.cs:656
+msgid ""
+"The Simias process must be running in order for iFolder to run.  Start the "
+"Simias process and try again"
+msgstr "[The Simias process must be running in order for iFolder to run.  Start the Simias process and try again &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderApplication.cs:711
+msgid "My iFolders..."
+msgstr "[My iFolders... &#1045;&#1097;&#1077; xx 2xxxx 1xxxx]"
+#: ../iFolderApplication.cs:719
+msgid "Join Enterprise Server"
+msgstr "[Join Enterprise Server &#1045;&#1097;&#1077; xxxx 2xxxx 1xxxx]"
+#: ../iFolderApplication.cs:853
+msgid "iFolder is already running!"
+msgstr "[iFolder is already running! &#1045;&#1097;&#1077; xx 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderConflictDialog.cs:70
+msgid "iFolder Conflict Resolver"
+msgstr "[iFolder Conflict Resolver &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderConflictDialog.cs:72 ../iFolderPropertiesDialog.cs:75
+#: ../iFolderUserSelector.cs:84 ../iFolderWindow.cs:115
+msgid "iFolderWebServices was null"
+msgstr "[iFolderWebServices was null &#1045;&#1097;&#1077; xx 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderConflictDialog.cs:107
+msgid ""
+"Select a conflict from the list below.  To resolve the conflict, save the "
+"local version or the server version.  The version you save will be synced to "
+"this iFolder. "
+msgstr "[Select a conflict from the list below.  To resolve the conflict, save the local version or the server version.  The version you save will be synced to this iFolder.  &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderConflictDialog.cs:116
+msgid "iFolder Name:"
+msgstr "Имя iFolder: {0}"
+#: ../iFolderConflictDialog.cs:125
+msgid "iFolder Path:"
+msgstr "[iFolder Path: &#1045;&#1097;&#1077; x 2xxxx 1xxxx]"
+#: ../iFolderConflictDialog.cs:152
+msgid "Local Version"
+msgstr "Локальная версия"
+#: ../iFolderConflictDialog.cs:159 ../iFolderConflictDialog.cs:201
+msgid "Name:"
+msgstr "Имя"
+#: ../iFolderConflictDialog.cs:168 ../iFolderConflictDialog.cs:210
+msgid "Date:"
+msgstr "Дата"
+#: ../iFolderConflictDialog.cs:177 ../iFolderConflictDialog.cs:219
+msgid "Size:"
+msgstr "Размер"
+#: ../iFolderConflictDialog.cs:194
+msgid "Server Version"
+msgstr "Версия сервера:"
+#: ../iFolderConflictDialog.cs:252
+msgid "iFolder Conflicts"
+msgstr "[iFolder Conflicts &#1045;&#1097;&#1077; xxx 2xxxx 1xxxx]"
+#: ../iFolderCrashDialog.cs:34
+msgid "iFolder Unhandled Exception"
+msgstr "[iFolder Unhandled Exception &#1045;&#1097;&#1077; xx 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderCrashDialog.cs:50
+msgid "iFolder crashed because of an unhandled exception"
+msgstr "[iFolder crashed because of an unhandled exception &#1045;&#1097;&#1077; x 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderCreationDialog.cs:45
+msgid "iFolder Introduction"
+msgstr "[iFolder Introduction &#1045;&#1097;&#1077; xxxx 2xxxx 1xxxx]"
+#: ../iFolderCreationDialog.cs:60
+msgid "Congratulations! A new iFolder was created"
+msgstr "[Congratulations! A new iFolder was created &#1045;&#1097;&#1077; xxx 2xxxx 1xxxx]"
+#: ../iFolderCreationDialog.cs:79
+msgid "The new iFolder has been added to your list of iFolders."
+msgstr "[The new iFolder has been added to your list of iFolders. &#1045;&#1097;&#1077; xx 2xxxx 1xxxx]"
+#: ../iFolderCreationDialog.cs:88
+msgid ""
+"To share your iFolder and it's contents with others, right-click the iFolder "
+"and select \"Share with...\"."
+msgstr "[To share your iFolder and it's contents with others, right-click the iFolder and select \"Share with...\". &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderCreationDialog.cs:99
+msgid "Do not show this message again."
+msgstr "Не выводить больше это сообщение"
+#: ../iFolderExceptionDialog.cs:39 ../iFolderPropertiesDialog.cs:288
+#: ../iFolderWindow.cs:1378
+msgid "iFolder Error"
+msgstr "[iFolder Error &#1045;&#1097;&#1077; x 2xxxx 1xxxx]"
+#: ../iFolderExceptionDialog.cs:69 ../iFolderExceptionDialog.cs:90
+#: ../iFolderExceptionDialog.cs:98
+msgid "Show Details"
+msgstr "Показать сведения"
+#: ../iFolderExceptionDialog.cs:75 ../iFolderExceptionDialog.cs:97
+msgid ""
+"Click \"Show Details\" below to get the full message returned with this error"
+msgstr "[Click \"Show Details\" below to get the full message returned with this error &#1045;&#1097;&#1077; 2xxxx 1xxxx]"
+#: ../iFolderExceptionDialog.cs:93
+msgid "Hide Details"
+msgstr "(Скрыть информацию)"
+#: ../iFolderLoginDialog.cs:64
+msgid "iFolder Login"
+msgstr "[iFolder Login &#1045;&#1097;&#1077; x 2xxxx 1xxxx]"
+#: ../iFolderLoginDialog.cs:82
+msgid "User Name:"
+msgstr "Имя пользователя:"
+#: ../iFolderLoginDialog.cs:93
+msgid "Password:"
+msgstr "Пароль:"
+#: ../iFolderLoginDialog.cs:105
+msgid "Server Host:"
+msgstr "Хост-сервер"
+#: ../iFolderLoginDialog.cs:120
+msgid "_Login"
+msgstr "Регистрация"
+#: ../iFolderPropertiesDialog.cs:82
+msgid "iFolder Properties"
+msgstr "[iFolder Properties &#1045;&#1097;&#1077; xxxx 2xxxx 1xxxx]"
+#: ../iFolderPropertiesDialog.cs:112
+msgid "iFolder:"
+msgstr "<iFolder>"
+#: ../iFolderPropertiesDialog.cs:169
+msgid "General"
+msgstr "Общие"
+#: ../iFolderPropertiesDialog.cs:173
+msgid "Sharing"
+msgstr "Совместное использование"
+#: ../iFolderPropertiesDialog.cs:189
+#, csharp-format
+msgid "iFolder Properties for \"{0}\""
+msgstr "[iFolder Properties for \"{0}\ &#1045;&#1097;&#1077; x 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderPropertiesDialog.cs:212
+msgid "This iFolder contains conflicts."
+msgstr "[This iFolder contains conflicts. &#1045;&#1097;&#1077; x 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderPropertiesDialog.cs:219
+msgid "_Resolve conflicts"
+msgstr "[_Resolve conflicts &#1045;&#1097;&#1077; xxxx 2xxxx 1xxxx]"
+#: ../iFolderPropertiesDialog.cs:289 ../iFolderWindow.cs:1379
+msgid "Unable to launch File Browser"
+msgstr "[Unable to launch File Browser &#1045;&#1097;&#1077; x 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderPropertiesDialog.cs:290 ../iFolderWindow.cs:1380
+msgid ""
+"iFolder attempted to open the Nautilus File Manager and the Konqueror File "
+"Manager and was unable to launch either of them."
+msgstr "[iFolder attempted to open the Nautilus File Manager and the Konqueror File Manager and was unable to launch either of them. &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderPropSettingsPage.cs:119 ../iFolderPropSettingsPage.cs:120
+#: ../iFolderWindow.cs:882 ../iFolderWindow.cs:884 ../iFolderWindow.cs:886
+#: ../iFolderWindow.cs:896 ../iFolderWindow.cs:908 ../iFolderWindow.cs:920
+msgid "N/A"
+msgstr "Н/Д"
+#: ../iFolderPropSettingsPage.cs:151
+msgid "Limit size to:"
+msgstr "[Limit size to: &#1045;&#1097;&#1077; xx 2xxxx 1xxxx]"
+#: ../iFolderPropSettingsPage.cs:188
+msgid "iFolder limit:"
+msgstr "[iFolder limit: &#1045;&#1097;&#1077; xx 2xxxx 1xxxx]"
+#: ../iFolderPropSettingsPage.cs:308 ../iFolderWindow.cs:578
+msgid "Synchronization"
+msgstr "Синхронизация"
+#: ../iFolderPropSettingsPage.cs:327
+msgid "This will set the sync setting for this iFolder."
+msgstr "[This will set the sync setting for this iFolder. &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderPropSettingsPage.cs:336 ../iFolderWindow.cs:605
+msgid "Sync to host every:"
+msgstr "[Sync to host every: &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderPropSettingsPage.cs:343 ../iFolderWindow.cs:612
+msgid "seconds"
+msgstr "сек."
+#: ../iFolderPropSettingsPage.cs:357
+msgid "Statistics"
+msgstr "Статистика"
+#: ../iFolderPropSettingsPage.cs:379
+msgid "Amount to upload:"
+msgstr "Объем загружаемой информации:"
+#: ../iFolderPropSettingsPage.cs:387
+msgid "Files/Folders to synchronize:"
+msgstr "Файлов/папок для синхронизации:"
+#: ../iFolderPropSettingsPage.cs:405 ../iFolderWindow.cs:777
+msgid "Disk Space"
+msgstr "Дисковое пространство"
+#: ../iFolderPropSettingsPage.cs:427
+msgid "iFolder size:"
+msgstr "[iFolder size: &#1045;&#1097;&#1077; x 2xxxx 1xxxx]"
+#: ../iFolderPropSettingsPage.cs:435 ../iFolderPropSettingsPage.cs:440
+#: ../iFolderPropSettingsPage.cs:453 ../iFolderWindow.cs:805
+#: ../iFolderWindow.cs:817 ../iFolderWindow.cs:829 ../iFolderWindow.cs:903
+#: ../iFolderWindow.cs:915 ../iFolderWindow.cs:927
+msgid "MB"
+msgstr "Мб"
+#: ../iFolderPropSettingsPage.cs:445
+msgid "Available space:"
+msgstr "Доступное пространство: "
+#: ../iFolderPropSettingsPage.cs:474 ../iFolderWindow.cs:854
+msgid "full"
+msgstr "Полный"
+#: ../iFolderPropSettingsPage.cs:479 ../iFolderWindow.cs:859
+msgid "empty"
+msgstr "Пусто"
+#: ../iFolderPropSharingPage.cs:108
+msgid "Users"
+msgstr "Пользователи"
+#: ../iFolderPropSharingPage.cs:115
+msgid "State"
+msgstr "Состояние"
+#: ../iFolderPropSharingPage.cs:166
+msgid "Set Access"
+msgstr "Установить доступ"
+#: ../iFolderPropSharingPage.cs:228
+msgid "Owner"
+msgstr "Владелец"
+#: ../iFolderPropSharingPage.cs:230
+msgid "Invited User"
+msgstr "[Invited User &#1045;&#1097;&#1077; x 2xxxx 1xxxx]"
+#: ../iFolderPropSharingPage.cs:232
+msgid "iFolder User"
+msgstr "[iFolder User &#1045;&#1097;&#1077; x 2xxxx 1xxxx]"
+#: ../iFolderPropSharingPage.cs:273 ../iFolderWindow.cs:1488
+#: ../iFolderWindow.cs:1707
+msgid "iFolder Confirmation"
+msgstr "[iFolder Confirmation &#1045;&#1097;&#1077; xxxx 2xxxx 1xxxx]"
+#: ../iFolderPropSharingPage.cs:274
+msgid "Remove Selected Users?"
+msgstr "[Remove Selected Users? &#1045;&#1097;&#1077; xxxx 2xxxx 1xxxx]"
+#: ../iFolderPropSharingPage.cs:275
+msgid ""
+"This will remove the selected users from this iFolder.  They will no longer "
+"be able to sync file to this iFolder."
+msgstr "[This will remove the selected users from this iFolder.  They will no longer be able to sync file to this iFolder. &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderPropSharingPage.cs:537 ../iFolderWindow.cs:1056
+msgid "Unknown"
+msgstr "Неизвестно"
+#: ../iFolderUserSelector.cs:82
+msgid "iFolder User Selector"
+msgstr "[iFolder User Selector &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderUserSelector.cs:121
+msgid "Search:"
+msgstr "Поиск"
+#: ../iFolderUserSelector.cs:164
+msgid "iFolder Users"
+msgstr "[iFolder Users &#1045;&#1097;&#1077; x 2xxxx 1xxxx]"
+#: ../iFolderUserSelector.cs:186
+msgid "Add ->"
+msgstr "Добавить"
+#: ../iFolderUserSelector.cs:190
+msgid "Remove"
+msgstr "Удалить"
+#: ../iFolderUserSelector.cs:218
+msgid "Selected Users"
+msgstr "Выбранные пользователи"
+#: ../iFolderWindow.cs:96 ../iFolderWindow.cs:248
+msgid "Server"
+msgstr "Сервер"
+#: ../iFolderWindow.cs:240 ../ReunionBrowser.cs:79
+msgid "iFolders"
+msgstr "[iFolders &#1045;&#1097;&#1077; xxx 1xxxx]"
+#: ../iFolderWindow.cs:242
+msgid "Preferences"
+msgstr "Настройки"
+#: ../iFolderWindow.cs:244
+msgid "Activity Log"
+msgstr "Протокол действий"
+#: ../iFolderWindow.cs:260
+msgid "Idle..."
+msgstr "Свободно"
+#: ../iFolderWindow.cs:326 ../iFolderWindow.cs:506
+msgid "_Create"
+msgstr "Создать"
+#: ../iFolderWindow.cs:340
+msgid "Share _with..."
+msgstr "[Share _with... &#1045;&#1097;&#1077; xx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:344
+msgid "Re_solve conflicts"
+msgstr "[Re_solve conflicts &#1045;&#1097;&#1077; xxxx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:348
+msgid "Sync _now"
+msgstr "Синхронизировать сейчас"
+#: ../iFolderWindow.cs:353
+msgid "Re_vert to a normal folder"
+msgstr "[Re_vert to a normal folder &#1045;&#1097;&#1077; xx 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:367
+msgid "i_Folder"
+msgstr "[i_Folder &#1045;&#1097;&#1077; xxx 1xxxx]"
+#: ../iFolderWindow.cs:383
+msgid "_View"
+msgstr "Вид"
+#: ../iFolderWindow.cs:398
+msgid "A_bout"
+msgstr "[A_bout &#1045;&#1097;&#1077; x 1xxxx]"
+#: ../iFolderWindow.cs:404
+msgid "_Help"
+msgstr "Справка"
+#: ../iFolderWindow.cs:451
+msgid "Name"
+msgstr "Имя"
+#: ../iFolderWindow.cs:463
+msgid "Location"
+msgstr "Местоположение:"
+#: ../iFolderWindow.cs:476
+msgid "Status"
+msgstr "Статус"
+#: ../iFolderWindow.cs:542
+msgid "Application"
+msgstr "Приложение"
+#: ../iFolderWindow.cs:559
+msgid "Startup iFolder at Login"
+msgstr "[Startup iFolder at Login &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:563
+msgid "Show confirmation dialog when creating iFolders"
+msgstr "[Show confirmation dialog when creating iFolders &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:596
+msgid ""
+"This will set the default Sync Settings for all iFolders.  You can change "
+"the sync setting for an individual iFolder on an iFolder's property pages"
+msgstr "[This will set the default Sync Settings for all iFolders.  You can change the sync setting for an individual iFolder on an iFolder's property pages &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:626
+msgid "Proxy"
+msgstr "Доверенные лица"
+#: ../iFolderWindow.cs:645
+msgid "Use a proxy to sync iFolders"
+msgstr "[Use a proxy to sync iFolders &#1045;&#1097;&#1077; x 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:654
+msgid "Proxy Host:"
+msgstr "Прокси-хост:"
+#: ../iFolderWindow.cs:660
+msgid "Port:"
+msgstr "Порт"
+#: ../iFolderWindow.cs:706
+msgid "Server Information"
+msgstr "Информация о сервере"
+#: ../iFolderWindow.cs:729
+msgid "User name:"
+msgstr "Имя пользователя:"
+#: ../iFolderWindow.cs:738
+msgid "iFolder server:"
+msgstr "[iFolder server: &#1045;&#1097;&#1077; xx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:747
+msgid "Server description:"
+msgstr "Описание сервера:"
+#: ../iFolderWindow.cs:797
+msgid "Free space on server:"
+msgstr "Свободно:"
+#: ../iFolderWindow.cs:809
+msgid "Used space on server:"
+msgstr "Используется:"
+#: ../iFolderWindow.cs:821
+msgid "Total space on server:"
+msgstr "Всего:"
+#: ../iFolderWindow.cs:964
+msgid "This log shows current ifolder activity"
+msgstr "[This log shows current ifolder activity &#1045;&#1097;&#1077; x 4xxxx 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:981
+msgid "Log"
+msgstr "LOG"
+#: ../iFolderWindow.cs:1045
+msgid "Has File Conflicts"
+msgstr "[Has File Conflicts &#1045;&#1097;&#1077; xxxx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:1047
+msgid "OK"
+msgstr "ОК"
+#: ../iFolderWindow.cs:1052
+msgid "Waiting to Connect"
+msgstr "[Waiting to Connect &#1045;&#1097;&#1077; xxxx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:1054
+msgid "Waiting to Sync"
+msgstr "[Waiting to Sync &#1045;&#1097;&#1077; xx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:1234
+msgid "Open"
+msgstr "Открыть"
+#: ../iFolderWindow.cs:1242
+msgid "Share with..."
+msgstr "[Share with... &#1045;&#1097;&#1077; x 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:1251
+msgid "Resolve conflicts"
+msgstr "[Resolve conflicts &#1045;&#1097;&#1077; xxx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:1260
+msgid "Sync now"
+msgstr "Синхронизировать сейчас"
+#: ../iFolderWindow.cs:1266
+msgid "Revert to a normal folder"
+msgstr "[Revert to a normal folder &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:1274
+msgid "Properties"
+msgstr "Свойства..."
+#: ../iFolderWindow.cs:1282
+msgid "Setup iFolder"
+msgstr "[Setup iFolder &#1045;&#1097;&#1077; x 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:1288 ../iFolderWindow.cs:1300
+msgid "Remove iFolder"
+msgstr "Удалить iFolder"
+#: ../iFolderWindow.cs:1296
+msgid "Connect now..."
+msgstr "Соединиться сейчас"
+#: ../iFolderWindow.cs:1308
+msgid "Create iFolder"
+msgstr "Создание iFolder"
+#: ../iFolderWindow.cs:1314
+msgid "Refresh list"
+msgstr "Обновить список"
+#: ../iFolderWindow.cs:1489
+msgid "Revert this iFolder?"
+msgstr "[Revert this iFolder? &#1045;&#1097;&#1077; xxxx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:1490
+msgid ""
+"This will revert this iFolder back to a normal folder and leave the files "
+"intact.  The iFolder will then be available from the server and will need to "
+"be setup in a different location in order to sync."
+msgstr "[This will revert this iFolder back to a normal folder and leave the files intact.  The iFolder will then be available from the server and will need to be setup in a different location in order to sync. &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:1677
+msgid "Invalid iFolder Path"
+msgstr "[Invalid iFolder Path &#1045;&#1097;&#1077; xxxx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:1678
+msgid "Invalid iFolder path selected"
+msgstr "[Invalid iFolder path selected &#1045;&#1097;&#1077; x 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:1679
+msgid ""
+"iFolders cannot contain other iFolders.  The folder you selected is either "
+"inside an iFolder or has an iFolder in it.  Please select an alternate "
+"folder."
+msgstr "[iFolders cannot contain other iFolders.  The folder you selected is either inside an iFolder or has an iFolder in it.  Please select an alternate folder. &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:1708
+msgid "Decline shared iFolder?"
+msgstr "[Decline shared iFolder? &#1045;&#1097;&#1077; x 3xxxx 2xxxx 1xxxx]"
+#: ../iFolderWindow.cs:1709
+msgid ""
+"This will remove your invitation and you will not be able to get it back "
+"unless the owner of this iFolder re-shares the iFolder with you."
+msgstr "[This will remove your invitation and you will not be able to get it back unless the owner of this iFolder re-shares the iFolder with you. &#1045;&#1097;&#1077; 3xxxx 2xxxx 1xxxx]"
