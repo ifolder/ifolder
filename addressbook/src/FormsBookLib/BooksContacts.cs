@@ -40,6 +40,7 @@ namespace Novell.iFolder.FormsBookLib
 	public class BooksContacts : System.Windows.Forms.UserControl
 	{
 		#region Class Members
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(BooksContacts));
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.ListView books;
 		private System.Windows.Forms.Splitter splitter1;
@@ -451,7 +452,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception e)
 				{
-					new SimiasException("Searching.", e);
+					logger.Debug(e, "Searching - filter = {0}", filter);
 					MessageBox.Show("An error was encountered while searching.  Please see the log file for additional information.", "Search Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -532,7 +533,10 @@ namespace Novell.iFolder.FormsBookLib
 				//Assign the ImageList objects to the books ListView.
 				contacts.SmallImageList = contactsImageList;
 			}
-			catch{}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "Loading images");
+			}
 
 			// Set properties for the listviews
 			this.books.MultiSelect = false;
@@ -576,7 +580,7 @@ namespace Novell.iFolder.FormsBookLib
 			}
 			catch (Exception ex)
 			{
-				new SimiasException("Initialization.", ex);
+				logger.Fatal(ex, "Initializing");
 				MessageBox.Show("A fatal error occurred during initialization.  Please see the log file for additional information.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
 			}
 		}
@@ -697,7 +701,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Creating address book.", ex);
+					logger.Debug(ex, "Creating address book");
 					MessageBox.Show("An error occurred while creating the address book.  Please see the log file for additional information.", "Create Address Book Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -745,7 +749,7 @@ namespace Novell.iFolder.FormsBookLib
 					}
 					catch (Exception ex)
 					{
-						new SimiasException("Deleting contact.", ex);
+						logger.Debug(ex, "Deleting contact");
 						MessageBox.Show("An error occurred while deleting the contact.  Please see the log file for additional information.", "Delete Contact Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 					}
 				}
@@ -800,7 +804,7 @@ namespace Novell.iFolder.FormsBookLib
 						}
 						catch (Exception ex)
 						{
-							new SimiasException("Deleting address book.", ex);
+							logger.Debug(ex, "Deleting address book");
 							MessageBox.Show("An error occurred while deleting the address book.  Please see the log file for additional information.", "Delete Address Book Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 						}
 					}

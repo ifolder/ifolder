@@ -41,6 +41,7 @@ namespace Novell.iFolder.FormsAddrBook
 	{
 		#region Class Members
 
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(FormsAddrBook));
 		private Novell.AddressBook.Manager manager = null;
 		private Novell.AddressBook.AddressBook selectedBook;
 		private System.Windows.Forms.MainMenu mainMenu1;
@@ -104,7 +105,7 @@ namespace Novell.iFolder.FormsAddrBook
 			}
 			catch (Exception e)
 			{
-				new SimiasException("Loading icon", e);
+				logger.Debug(e, "Loading icon");
 			}
 
 			this.booksContacts.ContactSelected += new Novell.iFolder.FormsBookLib.BooksContacts.ContactSelectedDelegate(booksContacts_ContactSelected);
@@ -466,7 +467,7 @@ namespace Novell.iFolder.FormsAddrBook
 				}
 				catch (Exception e)
 				{
-					new SimiasException("Importing vCard", e);
+					logger.Debug(e, "Importing vCard");
 					MessageBox.Show("An error occurred while importing the vCard.  Please see the log file for additional information", "vCard Import Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -494,7 +495,7 @@ namespace Novell.iFolder.FormsAddrBook
 				}
 				catch (Exception e)
 				{
-					new SimiasException("Exporting vCard", e);
+					logger.Debug(e, "Exporting vCard");
 					MessageBox.Show("An error occurred while exporting the vCard.  Please see the log file for additional information", "vCard Export Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -558,8 +559,9 @@ namespace Novell.iFolder.FormsAddrBook
 			{
 				Process.Start(helpPath);
 			}
-			catch
+			catch (Exception ex)
 			{
+				logger.Debug(ex, "Loading help file");
 				MessageBox.Show("Unable to open help file: \n" + helpPath, "Help File Not Found");
 			}
 		}
@@ -611,8 +613,10 @@ namespace Novell.iFolder.FormsAddrBook
 					image = Image.FromStream(contact.ExportPhoto());
 					e.Graphics.DrawImage(image, rect);
 				}
-				catch
+				catch (Exception ex)
 				{
+					logger.Debug(ex, "Loading photo");
+
 					try
 					{
 						// There was a problem loading the image ... use the default image.
@@ -622,7 +626,10 @@ namespace Novell.iFolder.FormsAddrBook
 						image = Image.FromFile(Path.Combine(basePath, "blankhead.png"));
 						e.Graphics.DrawImage(image, rect);
 					}
-					catch{}
+					catch (Exception ex2)
+					{
+						logger.Debug(ex2, "Loading default image");
+					}
 				}
 
 				// Display the full name.
@@ -837,7 +844,7 @@ namespace Novell.iFolder.FormsAddrBook
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Displaying contact", ex);
+					logger.Debug(ex, "Displaying contact");
 					MessageBox.Show("An error occurred while displaying contact data.  Please see the log file for additional information", "Display Contact Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}

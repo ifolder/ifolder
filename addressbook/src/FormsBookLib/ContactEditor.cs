@@ -38,6 +38,7 @@ namespace Novell.iFolder.FormsBookLib
 	public class ContactEditor : System.Windows.Forms.Form
 	{
 		#region Class Members
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(ContactEditor));
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage tabPage1;
 		private System.Windows.Forms.Button cancel;
@@ -1735,7 +1736,7 @@ namespace Novell.iFolder.FormsBookLib
 			}
 			catch (Exception e)
 			{
-				new SimiasException("Reading email addresses.", e);
+				logger.Debug(e, "Reading email addresses");
 				MessageBox.Show("An error occurred while reading email addresses.  Please see the log file for additional information.", "Email Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 			}
 
@@ -1808,7 +1809,7 @@ namespace Novell.iFolder.FormsBookLib
 			}
 			catch (Exception e)
 			{
-				new SimiasException("Reading telephone numbers.", e);
+				logger.Debug(e, "Reading telephone numbers");
 				MessageBox.Show("An error occurred while reading telephone numbers.  Please see the log file for additional information.", "Telephone Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 			}
 
@@ -1869,7 +1870,7 @@ namespace Novell.iFolder.FormsBookLib
 			}
 			catch (Exception e)
 			{
-				new SimiasException("Reading IM addresses.", e);
+				logger.Debug(e, "Reading IM addresses");
 				MessageBox.Show("An error occurred while reading IM addresses.  Please see the log file for additional information.", "IM Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 			}
 
@@ -1926,7 +1927,7 @@ namespace Novell.iFolder.FormsBookLib
 			}
 			catch (Exception e)
 			{
-				new SimiasException("Reading addresses.", e);
+				logger.Debug(e, "Reading addresses");
 				MessageBox.Show("An error occurred while reading addresses.  Please see the log file for additional information.", "Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 			}
 
@@ -1954,7 +1955,7 @@ namespace Novell.iFolder.FormsBookLib
 			}
 			catch (Exception e)
 			{
-				new SimiasException("Adding email address.", e);
+				logger.Debug(e, "Adding email address");
 				MessageBox.Show("An error occurred while adding the email addresses.  Please see the log file for additional information.", "Add Email Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 			}
 		}
@@ -1994,7 +1995,7 @@ namespace Novell.iFolder.FormsBookLib
 			}
 			catch (Exception e)
 			{
-				new SimiasException("Adding telephone number.", e);
+				logger.Debug(e, "Adding telephone number");
 				MessageBox.Show("An error occurred while adding the telephone number.  Please see the log file for additional information.", "Add Telephone Number Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 			}
 		}
@@ -2041,7 +2042,7 @@ namespace Novell.iFolder.FormsBookLib
 			}
 			catch (Exception e)
 			{
-				new SimiasException("Adding IM address.", e);
+				logger.Debug(e, "Adding IM address");
 				MessageBox.Show("An error occurred while adding the IM address.  Please see the log file for additional information.", "Add IM Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 			}
 		}
@@ -2157,8 +2158,9 @@ namespace Novell.iFolder.FormsBookLib
 					fullName.Text = name.FN;
 					nameValidated = true;
 				}
-				catch
+				catch (Exception ex)
 				{
+					logger.Info(ex, "Full name not found");
 					fullName.Text = "";
 				}
 
@@ -2176,8 +2178,9 @@ namespace Novell.iFolder.FormsBookLib
 					pictureContact.SizeMode = PictureBoxSizeMode.StretchImage;
 					pictureContact.Image = Image.FromStream(contact.ExportPhoto());
 				}
-				catch
+				catch (Exception ex)
 				{
+					logger.Debug(ex, "Loading photo");
 					pictureContact.Image = Image.FromFile(Path.Combine(basePath, "blankhead.png"));
 				}
 
@@ -2213,7 +2216,7 @@ namespace Novell.iFolder.FormsBookLib
 			}
 			catch (Exception ex)
 			{
-				new SimiasException("Adding contact.", ex);
+				logger.Debug(ex, "Adding contact");
 				MessageBox.Show("An error occurred while adding the contact.  Please see the log file for additional information.", "Add Contact Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 			}
 		}
@@ -2238,7 +2241,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding photo.", ex);
+					logger.Debug(ex, "Adding photo");
 					MessageBox.Show("An error occurred while adding the contact photo.  Please see the log file for additional information.", "Add Contact Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -2292,7 +2295,7 @@ namespace Novell.iFolder.FormsBookLib
 					}
 					catch (Exception ex)
 					{
-						new SimiasException("Adding name.", ex);
+						logger.Debug(ex, "Adding name");
 						MessageBox.Show("An error occurred while adding the name.  Please see the log file for additional information.", "Add Name Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 					}
 				}
@@ -2696,7 +2699,10 @@ namespace Novell.iFolder.FormsBookLib
 				// Update the picker with text entered.
 				birthdayPicker.Text = birthday.Text;
 			}
-			catch{}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "Get birthday");
+			}
 		}
 
 		#region Address Fields
@@ -2718,7 +2724,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding work address.", ex);
+					logger.Debug(ex, "Adding work address");
 					MessageBox.Show("An error occurred while adding the work address.  Please see the log file for additional information", "Add Work Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -2742,7 +2748,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding work address.", ex);
+					logger.Debug(ex, "Adding work address");
 					MessageBox.Show("An error occurred while adding the work address.  Please see the log file for additional information", "Add Work Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -2766,7 +2772,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding work address.", ex);
+					logger.Debug(ex, "Adding work address");
 					MessageBox.Show("An error occurred while adding the work address.  Please see the log file for additional information", "Add Work Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -2790,7 +2796,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding work address.", ex);
+					logger.Debug(ex, "Adding work address");
 					MessageBox.Show("An error occurred while adding the work address.  Please see the log file for additional information", "Add Work Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -2814,7 +2820,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding work address.", ex);
+					logger.Debug(ex, "Adding work address");
 					MessageBox.Show("An error occurred while adding the work address.  Please see the log file for additional information", "Add Work Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -2838,7 +2844,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding work address.", ex);
+					logger.Debug(ex, "Adding work address");
 					MessageBox.Show("An error occurred while adding the work address.  Please see the log file for additional information", "Add Work Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -2862,7 +2868,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding home address.", ex);
+					logger.Debug(ex, "Adding home address");
 					MessageBox.Show("An error occurred while adding the home address.  Please see the log file for additional information", "Add Home Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -2886,7 +2892,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding home address.", ex);
+					logger.Debug(ex, "Adding home address");
 					MessageBox.Show("An error occurred while adding the home address.  Please see the log file for additional information", "Add Home Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -2910,7 +2916,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding home address.", ex);
+					logger.Debug(ex, "Adding home address");
 					MessageBox.Show("An error occurred while adding the home address.  Please see the log file for additional information", "Add Home Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -2934,7 +2940,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding home address.", ex);
+					logger.Debug(ex, "Adding home address");
 					MessageBox.Show("An error occurred while adding the home address.  Please see the log file for additional information", "Add Home Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -2958,7 +2964,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding home address.", ex);
+					logger.Debug(ex, "Adding home address");
 					MessageBox.Show("An error occurred while adding the home address.  Please see the log file for additional information", "Add Home Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -2982,7 +2988,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding home address.", ex);
+					logger.Debug(ex, "Adding home address");
 					MessageBox.Show("An error occurred while adding the home address.  Please see the log file for additional information", "Add Home Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -3006,7 +3012,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding other address.", ex);
+					logger.Debug(ex, "Adding other address");
 					MessageBox.Show("An error occurred while adding the other address.  Please see the log file for additional information", "Add Other Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -3030,7 +3036,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding other address.", ex);
+					logger.Debug(ex, "Adding other address");
 					MessageBox.Show("An error occurred while adding the other address.  Please see the log file for additional information", "Add Other Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -3054,7 +3060,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding other address.", ex);
+					logger.Debug(ex, "Adding other address");
 					MessageBox.Show("An error occurred while adding the other address.  Please see the log file for additional information", "Add Other Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -3078,7 +3084,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding other address.", ex);
+					logger.Debug(ex, "Adding other address");
 					MessageBox.Show("An error occurred while adding the other address.  Please see the log file for additional information", "Add Other Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -3102,7 +3108,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding other address.", ex);
+					logger.Debug(ex, "Adding other address");
 					MessageBox.Show("An error occurred while adding the other address.  Please see the log file for additional information", "Add Other Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -3126,7 +3132,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				catch (Exception ex)
 				{
-					new SimiasException("Adding other address.", ex);
+					logger.Debug(ex, "Adding other address");
 					MessageBox.Show("An error occurred while adding the other address.  Please see the log file for additional information", "Add Other Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}

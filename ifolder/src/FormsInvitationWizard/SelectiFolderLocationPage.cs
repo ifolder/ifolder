@@ -36,6 +36,7 @@ namespace Novell.iFolder.InvitationWizard
 	public class SelectiFolderLocationPage : Novell.iFolder.InvitationWizard.InteriorPageTemplate
 	{
 		#region Class Members
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(SelectiFolderLocationPage));
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button folderBrowser;
 		private System.Windows.Forms.TextBox iFolderLocation;
@@ -225,7 +226,8 @@ namespace Novell.iFolder.InvitationWizard
 				}
 				catch (Exception e)
 				{
-					MessageBox.Show("An exception occurred while validating the path.\n" + e.Message + "\n" + e.StackTrace, "Path Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					logger.Debug(e, "Validating path");
+					MessageBox.Show("An exception occurred while validating the path.  Please view the log file for additional information.", "Path Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 
 				// Restore the cursor.

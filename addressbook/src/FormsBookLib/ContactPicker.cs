@@ -37,6 +37,7 @@ namespace Novell.iFolder.FormsBookLib
 	public class ContactPicker : System.Windows.Forms.Form
 	{
 		#region Class Members
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(ContactPicker));
 		private System.Windows.Forms.Button add;
 		private System.Windows.Forms.ListView addedContacts;
 		private System.Windows.Forms.Button ok;
@@ -411,6 +412,10 @@ namespace Novell.iFolder.FormsBookLib
 					{
 						ex.LogError();
 						item.Text = editor.CurrentContact.UserName;
+					}
+					catch (Exception ex)
+					{
+						logger.Debug(ex, "Get Contact.FN");
 					}
 				}
 			}
