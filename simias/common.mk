@@ -132,5 +132,5 @@ test: installtest $(TEST_RUN_MAKEFILE)
 endif
 
 $(TEST_RUN_MAKEFILE):
-	$(CP) $(ROOTDIR)$(SEP)test.mk $(TEST_RUN_MAKEFILE)
+	$(CP) $(ROOTDIR)$(SEP)test.mk $(DESTDIR)$(bindir)
 
