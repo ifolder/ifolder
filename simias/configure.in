@@ -353,6 +353,7 @@ src/CollectionEvents/Makefile
 src/mDnsService/Makefile
 src/SyncManager/Makefile
 src/AddressBookCmd/Makefile
+src/AddressBookCmd/AddressBookCmd
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile

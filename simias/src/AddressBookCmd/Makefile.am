@@ -19,7 +19,7 @@ AddressBookCmdTests_FLAGS =
 AddressBookCmdTests_LIBS =
 AddressBookCmdTests_LIBPATH = $(NUNIT_LIBPATH)
 
-EXTRA_DIST = $(AddressBookCmd_CSFILES) $(AddressBookCmdTests_CSFILES) App$(ICON_EXT)
+EXTRA_DIST = $(srcdir)/AddressBookCmd $(AddressBookCmd_CSFILES) $(AddressBookCmdTests_CSFILES) App$(ICON_EXT)
 
 CUR_DIR := $(shell pwd)
 
@@ -39,10 +39,11 @@ endif
 
 install-exec-local: AddressBookCmd.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) AddressBookCmd.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) AddressBookCmd.exe $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) AddressBookCmd $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f AddressBookCmd.exe AddressBookCmdTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES)
+	cd $(DESTDIR)$(bindir); rm -f AddressBookCmd AddressBookCmd.exe AddressBookCmdTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES)
 
 installcheck-local: install $(NUNIT_TESTS)
 #	$(mkinstalldirs) $(DESTDIR)$(bindir)
