@@ -151,9 +151,13 @@ AssemblyInfo.cs
 ../Sync/Conflict.cs
 ../Sync/Differ.cs
 ../Sync/Dredge.cs
+../Sync/IncomingNode.cs
+../Sync/OutgoingNode.cs
+../Sync/SyncCmd.cs
 ../Sync/SyncLog.cs
 ../Sync/SyncOps.cs
-../Sync/SyncPass.cs
 ../Sync/SyncSize.cs
 ../Sync/SyncUtil.cs
+../Sync/SynkerServiceA.cs
+../Sync/SynkerWorkerA.cs
 ../Sync/TestSync.cs

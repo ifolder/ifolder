@@ -49,50 +49,126 @@ public class Conflict
 
 	//---------------------------------------------------------------------------
 	/// <summary>
-	/// gets the file name of the temporary file that conflicts with local file for this node
+	/// determines if this Node has an Update conflict
 	/// </summary>
-	public string ConflictFileName
+	public bool IsUpdateConflict
 	{
-		get { return "conflict full name here"; }
+		get
+		{
+			return collection.HasCollisions(node);
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	/// <summary>
+	/// constructor, looks a lot like a Node
+	/// </summary>
+	public bool IsFileNameConflict
+	{
+		get
+		{
+			string n = FileNameConflictPath;
+			return n != null && File.Exists(n);
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	/// <summary>
+	/// gets the file name of the non-conflicted file for the node
+	/// </summary>
+	public string NonconflictedPath
+	{
+		get
+		{
+			BaseFileNode bfn = SyncOps.CastToBaseFileNode(collection, node);
+			return bfn == null? null: bfn.GetFullPath(collection);
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	/// <summary>
+	/// gets the file name of the temporary file for a node whose name conflicts
+	/// with something in the local file system.
+	/// </summary>
+	public string FileNameConflictPath
+	{
+		get
+		{
+			if (!collection.IsType(node, typeof(BaseFileNode).Name))
+				return null;
+			string path = IncomingNode.ParentPath(collection, node);
+			return path == null? null: Path.Combine(path, IncomingNode.ConflictFilePrefix + node.ID);
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	/// <summary>
+	/// gets the full path of the file contents of the update that conflict with
+	/// the local file for this node
+	/// </summary>
+	public string UpdateConflictPath
+	{
+		get
+		{
+			if (!collection.IsType(node, typeof(BaseFileNode).Name))
+				return null;
+			string path = IncomingNode.ParentPath(collection, node);
+			return path == null? null: Path.Combine(path, IncomingNode.ConflictUpdatePrefix + node.ID);
+		}
 	}
 
 	//---------------------------------------------------------------------------
 	/// <summary>
 	/// gets the contents of the node that conflicts with this node
 	/// </summary>
-	public Node ConflictingNode
+	public Node UpdateConflictNode
 	{
-		get { return null; }
+		get
+		{
+			return collection.GetNodeFromCollision(node);
+		}
 	}
 
 	//---------------------------------------------------------------------------
 	/// <summary>
-	/// resolve conflict and commit 
+	/// resolve update conflict and commit 
 	/// </summary>
 	public void Resolve(bool localChangesWin)
 	{
+		Node cn = UpdateConflictNode;
 		if (localChangesWin)
 		{
-			// remove temp file and node property
-			// update incarnation to conflict incarn + 1
+			File.Delete(UpdateConflictPath);
+			node = collection.DeleteCollision(node);
+
+			//TODO: need a method to set node.LocalIncarnation to cn.LocalIncarnation + 1
+			collection.Commit(node);
+			while (node.LocalIncarnation < cn.LocalIncarnation + 1)
+				collection.Commit(node);
+			return;
 		}
-		else
-		{
-			// move temp file over visible one
-			// move node over this one
-		}
-		collection.Commit(node);
+
+		// collision node wins
+		// we may be resolving an update conflict on a node that has a naming conflict
+		string path = FileNameConflictPath;
+		if (path == null)
+			path = NonconflictedPath;
+		File.Delete(path);
+		File.Move(UpdateConflictPath, path);
+		collection.ImportNode(cn, node.LocalIncarnation);
+		cn = collection.DeleteCollision(cn);
+		collection.Commit(cn);
 	}
 
 	//---------------------------------------------------------------------------
 	/// <summary>
-	/// resolve conflict and commit 
+	/// resolve file name conflict and commit 
 	/// </summary>
 	public void Resolve(string newNodeName)
 	{
-		// rename node
-		// move temp file over visible one
-		// move node over this one
+		//TODO: what if move succeeds but node rename or commit fails?
+		File.Move(FileNameConflictPath, Path.Combine(IncomingNode.ParentPath(collection, node), newNodeName));
+		node.Name = newNodeName;
 		collection.Commit(node);
 	}
 }

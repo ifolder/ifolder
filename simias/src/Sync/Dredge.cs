@@ -81,12 +81,14 @@ public class Dredger
 		string name = Path.GetFileName(path);
 
 		// don't let temp files from sync into the collection as regular nodes
-		if (name.StartsWith(SyncIncomingNode.TempFilePrefix) && type == typeof(FileNode).Name)
+		if (name.StartsWith(IncomingNode.TempFilePrefix) && type == typeof(FileNode).Name)
 			return null;
 
 		// delete nodes that are wrong type or dups
 		// TODO: perhaps we should move dups to trash or log as error
-		// TODO: handle issues of file name chars and case here?
+		// TODO: what about file permissions and symlinks?
+		// TODO: if it is a duplicate DirNode, its children should be moved to the winning node
+
 		foreach (ShallowNode sn in collection.GetNodesByName(name))
 		{
 			Node n = new Node(collection, sn);

@@ -166,6 +166,7 @@ public class CmdService: MarshalByRefObject
 			Store store = new Store(new Configuration(storeLocation.LocalPath));
 			store.Revert();
 			Collection c = store.GetCollectionByID(collectionId);
+			new Dredger(c, true);
 			return c == null? null: new SynkerServiceA(new SyncCollection(c), true);
 		}
 		catch (Exception e) { Log.Uncaught(e); }
@@ -280,6 +281,7 @@ public class CmdClient
 			return false;
 		}
 
+		new Dredger(c, false);
 		SyncCollection csc = new SyncCollection(c);
 		if (serverStoreLocation != null)
 		{
@@ -287,6 +289,7 @@ public class CmdClient
 			servStore.Revert();
 			Collection servCollection = servStore.GetCollectionByID(csc.ID);
 			Log.Spew("server collection {0}", servCollection == null? "null": servCollection.ID);
+			new Dredger(servCollection, true);
 			SynkerServiceA ssa = new SynkerServiceA(new SyncCollection(servCollection));
 			new SynkerWorkerA(ssa, csc).DoSyncWork();
 		}

@@ -23,39 +23,19 @@
 using System;
 using System.Collections;
 using System.IO;
-using System.Xml;
-using System.Diagnostics;
+//using System.Xml;
+//using System.Diagnostics;
 
 using Simias.Storage;
 using Simias;
 
+/* delta sync thought: it would be easy to store the overall md5 of the file
+ * as a property for other uses, perhaps even some security use.
+ */
+ 
+
 namespace Simias.Sync
 {
-
-//---------------------------------------------------------------------------
-/// <summary>
-/// valid states of a node update attempt
-/// TODO: requiring a comment on every enum member is counter-productive. How to fix?
-///       Do we even still need this enum?
-/// </summary>
-[Serializable]
-public enum NodeStatus
-{
-	/// <summary> node update was successful </summary>
-	Complete,
-
-	/// <summary> node update was aborted due to update from other client </summary>
-	UpdateCollision,
-
-	/// <summary> node update was aborted due to update from other client </summary>
-	NameCollision,
-
-	/// <summary> node update was probably unsuccessful, unhandled exception on the server </summary>
-	ServerFailure,
-
-	/// <summary> node update is in progress </summary>
-	InProgess
-};
 
 //---------------------------------------------------------------------------
 /// <summary>
@@ -142,23 +122,6 @@ public struct NodeStamp: IComparable
 		return id.CompareTo(((NodeStamp)obj).id);
 	}
 
-	//TODO: remove after verifying that 'node as BaseFileNode' works for this
-	internal static BaseFileNode CastToBaseFileNode(Collection collection, Node node)
-	{
-		if (collection.IsType(node, typeof(FileNode).Name))
-			return new FileNode(node);
-		if (collection.IsType(node, typeof(StoreFileNode).Name))
-			return new StoreFileNode(node);
-		return null;
-	}
-
-	//TODO: remove after verifying that 'node as DirNode' works for this
-	internal static DirNode CastToDirNode(Collection collection, Node node)
-	{
-		if (collection.IsType(node, typeof(DirNode).Name))
-			return new DirNode(node);
-		return null;
-	}
 }
 
 //---------------------------------------------------------------------------
@@ -183,11 +146,11 @@ public struct NodeChunk
 {
 	internal const int MaxSize = 128 * 1024;
 	internal Node node;
+	internal string relativePath;
 	internal ulong expectedIncarn;
 	internal int totalSize;
 	internal ForkChunk[] forkChunks;
 }
-
 
 //---------------------------------------------------------------------------
 /// <summary>
@@ -206,380 +169,29 @@ public struct RejectedNode
 }
 
 //---------------------------------------------------------------------------
-/// <summary>
-/// class to dish out Node information in pieces.
-/// </summary>
-internal class SyncOutgoingNode
-{
-	//internal string[] forkNameList;
-	Collection collection;
-	class Fork { public string name; public Stream stream; };
-	ArrayList forkList;
-
-	public SyncOutgoingNode(Collection collection)
-	{
-		this.collection = collection;
-	}
-
-	public Node Start(Nid nid)
-	{
-		nid.Validate();
-		Node node = new Node(collection.GetNodeByID(nid));
-		forkList = null;
-		if (node == null)
-		{
-			Log.Spew("ignoring attempt to start outgoing sync for non-existent node {0}", nid);
-			return null;
-		}
-
-		BaseFileNode bfn = NodeStamp.CastToBaseFileNode(collection, node);
-		if (bfn != null)
-		{
-			/* TODO: handle multiple forks (streams), EAs, etc. For right now
-			 * this is just a guess at how to do it. The idea is that we loop
-			 * though all known streams, read them from the local file system
-			 * or from those stored in the collection store area
-			 * (similar to StoreFiles) if not supported by the local file system.
-			 */
-			forkList = new ArrayList();
-			string forkName = ForkChunk.DataForkName;
-			//foreach (string forkName in forkNameList)
-			{
-				Fork fork = new Fork();
-				fork.name = forkName;
-				fork.stream = File.Open(bfn.GetFullPath(collection), FileMode.Open, FileAccess.Read, FileShare.Read);
-				forkList.Add(fork);
-			}
-		}
-		return node;
-	}
-
-	public ForkChunk[] ReadChunks(int maxSize, out int totalSize)
-	{
-		if (maxSize < 4096)
-			maxSize = 4096;
-		ArrayList chunks = new ArrayList();
-		totalSize = 0;
-		if (forkList != null) foreach (Fork fork in forkList)
-		{
-			if (fork.name == null)
-				continue;
-
-			ForkChunk chunk = new ForkChunk();
-			chunk.name = fork.name;
-			long remaining = fork.stream.Length - fork.stream.Position;
-			int chunkSize = remaining < maxSize? (int)remaining: maxSize;
-			chunk.data = new byte[chunkSize];
-			int bytesRead = fork.stream.Read(chunk.data, 0, chunkSize);
-			Log.Assert(bytesRead == chunkSize);
-			if (chunkSize < maxSize)
-			{
-				fork.stream.Close();
-				fork.stream = null;
-				fork.name = null;
-			}
-			totalSize += chunkSize;
-			chunks.Add(chunk);
-			if (totalSize >= maxSize)
-				break;
-		}
-		return chunks.Count == 0? null: (ForkChunk[])chunks.ToArray(typeof(ForkChunk));
-	}
-}
-
-//---------------------------------------------------------------------------
-/// <summary>
-/// class to receive Node information in pieces and commit it when done.
-/// Complete() must be called to complete the file or the partial
-/// file will be deleted by the destructor.
-/// </summary>
-internal class SyncIncomingNode
-{
-	public const string TempFilePrefix = ".simias.";
-
-	Collection collection;
-	bool onServer;
-	Node node;
-	FileInfo fileInfo;
-	class Fork { public string name; public Stream stream; };
-	ArrayList forkList = null;
-	string parentPath = null;
-
-	public SyncIncomingNode(Collection collection, bool onServer)
-	{
-		this.collection = collection;
-		this.onServer = onServer;
-	}
-
-	void CleanUp()
-	{
-		if (forkList != null)
-			foreach (Fork fork in forkList)
-				if (fork.stream != null)
-					fork.stream.Close();
-		forkList = null;
-		if (fileInfo != null)
-			fileInfo.Delete();
-		fileInfo = null;
-		parentPath = null;
-	}
-
-	~SyncIncomingNode() { CleanUp(); }
-
-	static string ParentID(Node node)
-	{
-		Property p = node.Properties.GetSingleProperty(PropertyTags.Parent);
-		Relationship rship = p == null? null: (p.Value as Relationship);
-		return rship == null? null: rship.NodeID;
-	}
-
-	public void Start(Node node)
-	{
-		CleanUp();
-		this.node = node;
-		DirNode dnode = NodeStamp.CastToDirNode(collection, node);
-		if (dnode != null && !dnode.IsRoot || collection.IsType(node, typeof(FileNode).Name))
-		{
-			string parentID = ParentID(node);
-			if (parentID == null)
-				throw new ApplicationException("file or dir node has no parent");
-			Node n = collection.GetNodeByID(parentID);
-			if (n == null)
-			{
-				parentPath = null;
-				Log.Spew("could not get parent {1} of {0}, not here yet?", node.Name, parentID);
-			}
-			else
-			{
-				DirNode pn = NodeStamp.CastToDirNode(collection, n);
-				if (pn == null)
-					throw new ApplicationException("parent is not DirNode");
-
-				parentPath = null;
-				try
-				{
-					parentPath = pn.GetFullPath(collection);
-					Directory.CreateDirectory(parentPath);
-				}
-				catch (DoesNotExistException)
-				{
-					Log.Spew("could not get parent path of {0}, not here yet?", pn.Name);
-					parentPath = "<no parent>";
-				}
-			}
-		}
-		else
-			parentPath = collection.ManagedPath;
-		//Log.Spew("Starting incoming node {1}, path {0}", parentPath, node.Name);
-	}
-
-	public void BlowChunks(ForkChunk[] chunks)
-	{
-		if (chunks != null) foreach (ForkChunk chunk in chunks)
-		{
-			bool done = false;
-
-			if (forkList == null)
-				forkList = new ArrayList();
-			else
-				foreach (Fork fork in forkList)
-					if (chunk.name == fork.name)
-					{
-						fork.stream.Write(chunk.data, 0, chunk.data.Length);
-						done = true;
-						break;
-					}
-
-			if (!done)
-			{
-				/* TODO: handle multiple forks (streams), EAs, etc. For right now
-				 * this is just a guess at how to do it, stubbed to support
-				 * SyncOutgoingNode.
-				 */
-				Log.Assert(chunk.name == ForkChunk.DataForkName);
-
-				if (fileInfo == null)
-					fileInfo = new FileInfo(Path.Combine(parentPath, TempFilePrefix + node.ID));
-				Fork fork = new Fork();
-				fork.name = chunk.name;
-				fork.stream = fileInfo.Open(FileMode.Create, FileAccess.Write, FileShare.None);
-				fork.stream.Write(chunk.data, 0, chunk.data.Length);
-				forkList.Add(fork);
-			}
-		}
-	}
-
-	void CommitFile()
-	{
-		//TODO: check here for whether the proposed file name is available, i.e. make current and proposed LocalFileName
-		if (collection.IsType(node, typeof(DirNode).Name))
-		{
-			DirNode pn = new DirNode(node);
-			string path = "<bad>";
-			try
-			{
-				path = pn.GetFullPath(collection);
-				Directory.CreateDirectory(path);
-			}
-			catch (DoesNotExistException)
-			{
-				path = "<no parent>";
-			}
-
-			Log.Spew("Create directory {0}", path);
-		}
-		//TODO: verify this can be a check for collection.IsType(node, typeof(BaseFileNode).Name)
-		else if (!collection.IsType(node, typeof(FileNode).Name) && !collection.IsType(node, typeof(StoreFileNode).Name))
-		{
-			Log.Spew("commiting nonFile, nonDir {0}", node.Name);
-			Log.Assert(forkList == null);
-		}
-		else
-		{
-			Log.Assert(forkList != null);
-			foreach (Fork fork in forkList)
-			{
-				fork.stream.Close();
-				fork.stream = null;
-			}
-			FileNode fn = new FileNode(node);
-			string path = fn.GetFullPath(collection);
-			Log.Spew("placing file {0}", path);
-			File.Delete(path); //TODO: delete current LocalFileName
-			fileInfo.MoveTo(path); //TODO: moved to proposed LocalFileName
-			fileInfo.LastWriteTime = fn.LastWriteTime;
-			fileInfo.CreationTime = fn.CreationTime;
-			fileInfo = null;
-		}
-	}
-
-	Node IllegalDuplicateName()
-	{
-		string parentID = ParentID(node);
-
-		//TODO: what should happen here for StoreFileNodes?
-		if (parentID == null
-				|| !collection.IsType(node, typeof(FileNode).Name)
-				&& !collection.IsType(node, typeof(DirNode).Name))
-			return null;
-
-		foreach (ShallowNode sn in collection.GetNodesByName(node.Name))
-			if (sn.ID != node.ID)
-			{
-				Node n = new Node(collection, sn);
-				string npid = ParentID(n);
-				if (npid != null && npid == parentID && n.Name == node.Name
-						&& (collection.IsType(n, typeof(FileNode).Name) || collection.IsType(n, typeof(DirNode).Name)))
-					return n;
-			}
-		return null;
-	}
-
-
-	/* TODO: This code handles naming and update collisions, renames the completed file
-	 * according to local file system rules, etc. This may involve a number of steps
-	 * with partial completion possible due to power failures, disk crashes and the like.
-	 * The Dredger should be run at each startup to collect changes that may have
-	 * been missed by the event system when it was not operational. Therefore, the dredger
-	 * should also be able to handle any incomplete incoming nodes.
-	 */
-
-
-	/*
-	ideas:
-		stream identity = lwt, size, csname
-		commit operation (preconditions) { atomic commit, check later and back off }
-		stored md4 (5)? fingerprint of node could be useful, and would be side effect of rsync algorithm
-		what about permissions and symlinks?
-
-	Scenarios:
-		non dredged file local, name collision from server
-		dredged file local,  name collision from server
-		multiple files from server, differ only by case
-
-	onserver:
-		have node and temp file
-		import and commit (localFileName)
-		if updateCollision
-			return
-		make proposed localFileName
-		does it match previous localFileName?
-		yes, commit file, remove temp flag and commit
-			if commit fails???
-			commit by double rename, after commit check out status before delete?
-		no, ...
-
-	*/
-		
-	public NodeStatus Complete(ulong expectedIncarn)
-	{
-		Log.Spew("importing {0} {1} to collection {2}", node.Name, node.ID, collection.Name);
-
-		if (!onServer)
-		{
-			Node dupe = IllegalDuplicateName();
-			if (dupe != null)
-			{
-				Log.Spew("Node {0} has lost a name collision", node.Name);
-				//TODO move dupe node (subtree) data out of the way here to collision bin here.
-				Node[] deleted = collection.Delete(dupe, PropertyTags.Parent);
-				collection.Commit(deleted);
-			}
-			for (;;)
-			{
-				collection.ImportNode(node, expectedIncarn);
-				node.IncarnationUpdate = node.LocalIncarnation;
-				node.Properties.ModifyProperty("TemporaryFileComplete", true);
-				try
-				{
-					collection.Commit(node);
-				}
-				catch (CollisionException c)
-				{
-					Log.Spew("Node {0} has lost an update collision", node.Name);
-					//TODO move file and data out of the way here to collision bin here.
-					expectedIncarn = c.ExpectedIncarnation;
-					continue;
-				}
-				CommitFile();
-				collection.ImportNode(node, node.LocalIncarnation);
-				node.IncarnationUpdate = node.LocalIncarnation;
-				node.Properties.DeleteSingleProperty("TemporaryFileComplete");
-				collection.Commit(node); //TODO: what if incarn doesn't match?
-				return NodeStatus.Complete;
-			}
-		}
-
-		if (IllegalDuplicateName() != null)
-		{
-			Log.Spew("Rejecting Node {0} due to name collision on server", node.Name);
-			return NodeStatus.NameCollision;
-		}
-		collection.ImportNode(node, expectedIncarn);
-		node.Properties.ModifyProperty("TemporaryFileComplete", true);
-		try
-		{
-			collection.Commit(node);
-		}
-		catch (CollisionException)
-		{
-			Log.Spew("Rejecting update for node {0} due to update collision on server", node.Name);
-			CleanUp();
-			return NodeStatus.UpdateCollision;
-		}
-		CommitFile();
-		collection.ImportNode(node, node.LocalIncarnation);
-		node.Properties.DeleteSingleProperty("TemporaryFileComplete");
-		collection.Commit(node); //TODO: what if incarn doesn't match?
-		return NodeStatus.Complete;
-	}
-}
-
-//---------------------------------------------------------------------------
+// various useful Sync operations that are called by client and server
 internal class SyncOps
 {
 	Collection collection;
 	bool onServer;
+
+	//TODO: remove after verifying that 'node as BaseFileNode' works for this
+	internal static BaseFileNode CastToBaseFileNode(Collection collection, Node node)
+	{
+		if (collection.IsType(node, typeof(FileNode).Name))
+			return new FileNode(node);
+		if (collection.IsType(node, typeof(StoreFileNode).Name))
+			return new StoreFileNode(node);
+		return null;
+	}
+
+	//TODO: remove after verifying that 'node as DirNode' works for this
+	internal static DirNode CastToDirNode(Collection collection, Node node)
+	{
+		if (collection.IsType(node, typeof(DirNode).Name))
+			return new DirNode(node);
+		return null;
+	}
 
 	public SyncOps(Collection collection, bool onServer)
 	{
@@ -617,7 +229,7 @@ internal class SyncOps
 			stamp.name = node.Name;
 
 			//TODO: another place to handle multiple forks
-			BaseFileNode bfn = NodeStamp.CastToBaseFileNode(collection, node);
+			BaseFileNode bfn = CastToBaseFileNode(collection, node);
 			if (bfn == null)
 				stamp.streamsSize = -1;
 			else
@@ -647,12 +259,12 @@ internal class SyncOps
 		if (whackFile)
 		{
 			//TODO: another place to handle multiple forks
-			BaseFileNode bfn = NodeStamp.CastToBaseFileNode(collection, node);
+			BaseFileNode bfn = CastToBaseFileNode(collection, node);
 			if (bfn != null)
 				File.Delete(bfn.GetFullPath(collection));
 			else
 			{
-				DirNode dn = NodeStamp.CastToDirNode(collection, node);
+				DirNode dn = CastToDirNode(collection, node);
 				if (dn != null)
 					Directory.Delete(dn.GetFullPath(collection), true);
 			}
@@ -669,18 +281,31 @@ internal class SyncOps
 			collection.Commit(collection.Delete(deleted));
 	}
 
+	// make the path use '/' seperators since these are accepted on Create on all current filesystems
+	string GetDirNodePath(Node node)
+	{
+		DirNode dn = CastToDirNode(collection, node);
+		if (dn == null)
+			return null;
+		for (string path = dn.Name;; path = dn.Name + '/' + path)
+			if ((dn = dn.GetParent(collection)) == null)
+				return path;
+	}
+
 	/// <summary>
 	/// returns a node chunk
 	/// </summary>
 	public NodeChunk GetSmallNode(Nid nid)
 	{
-		SyncOutgoingNode ogn = new SyncOutgoingNode(collection);
+		OutgoingNode ogn = new OutgoingNode(collection);
 		NodeChunk chunk;
 		chunk.totalSize = 0;
 		chunk.forkChunks = null;
 		chunk.expectedIncarn = 0;
+		chunk.relativePath = null;
 		if ((chunk.node = ogn.Start(nid)) != null)
 		{
+			chunk.relativePath = GetDirNodePath(chunk.node);
 			if ((chunk.forkChunks = ogn.ReadChunks(NodeChunk.MaxSize, out chunk.totalSize)) == null)
 				Log.Assert(chunk.totalSize == 0);
 			else if (chunk.totalSize >= NodeChunk.MaxSize)
@@ -690,9 +315,9 @@ internal class SyncOps
 				chunk.forkChunks = null;
 		}
 
-		//Log.Spew("chunk: {0}, expIncarn {1}, totalSize {2}, forkCount {3}",
-		//		chunk.node.Name, chunk.expectedIncarn, chunk.totalSize,
-		//		chunk.forkChunks == null? -1: chunk.forkChunks.Length);
+		Log.Spew("chunk: {0}, expIncarn {1}, totalSize {2}, forkCount {3}, relPath {4}",
+				chunk.node.Name, chunk.expectedIncarn, chunk.totalSize,
+				chunk.forkChunks == null? -1: chunk.forkChunks.Length, chunk.relativePath);
 		return chunk;
 	}
 
@@ -707,6 +332,7 @@ internal class SyncOps
 		uint i = 0;
 		foreach (Nid nid in nids)
 			chunks[i++] = GetSmallNode(nid);
+		
 		return chunks;
 	}
 
@@ -740,7 +366,7 @@ internal class SyncOps
 	/// </summary>
     public RejectedNode[] PutSmallNodes(NodeChunk[] nodeChunks)
 	{
-		SyncIncomingNode inNode = new SyncIncomingNode(collection, onServer);
+		IncomingNode inNode = new IncomingNode(collection, onServer);
 		ArrayList rejects = new ArrayList();
 		Log.Spew("PutSmallNodes() {0}", nodeChunks.Length);
 		foreach (NodeChunk nc in nodeChunks)
@@ -756,7 +382,7 @@ internal class SyncOps
 				DeleteNode((Nid)nc.node.ID, true);
 				continue;
 			}
-			inNode.Start(nc.node);
+			inNode.Start(nc.node, nc.relativePath);
 			inNode.BlowChunks(nc.forkChunks);
 			NodeStatus status = inNode.Complete(nc.expectedIncarn);
 			if (status != NodeStatus.Complete)
