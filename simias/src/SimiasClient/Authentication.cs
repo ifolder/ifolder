@@ -25,11 +25,10 @@ using System.Collections;
 using System.Net;
 
 using Simias;
-using Simias.Client;
 
 using Novell.Security.ClientPasswordManager;
 
-namespace Simias.Client
+namespace Simias.Client.Authentication
 {
 	/// <summary>
 	/// Defines the credential types stored on a domain.
@@ -59,46 +58,6 @@ namespace Simias.Client
 	}
 
 	/// <summary>
-	/// Status codes returned from Autheticate methods
-	/// </summary>
-	[Serializable]
-	public enum AuthenticationStatus
-	{
-		/// <summary>
-		/// The method was successful.
-		/// </summary>
-		Success,
-
-		/// <summary>
-		/// The username or password was invalid
-		/// </summary>
-		InvalidCredentials,
-
-		/// <summary>
-		/// The domain ID does not exist in the Simias store
-		/// </summary>
-		InvalidDomain,
-
-		/// <summary>
-		/// The authentication service was unable to connect
-		/// to the domain
-		/// </summary>
-		ConnectDomainFailure,
-
-		/// <summary>
-		/// The authentication service was able to authenticate
-		/// to the remote service but failed to apply the 
-		/// credentials to the local credential wallet
-		/// </summary>
-		CredentialCacheFailure,
-
-		/// <summary>
-		/// An unknown error was realized.
-		/// </summary>
-		UnknownError
-	};
-
-	/// <summary>
 	/// Summary description for Credentials
 	/// </summary>
 	public class DomainAuthentication
@@ -107,21 +66,7 @@ namespace Simias.Client
 		private string domainID;
 		private string password;
 		private static CertPolicy certPolicy;
-//		private string dialogTitle;
-//		private System.Object owner;
 
-		/// <summary>
-		/// Static constructor to authenticate using the popup dialog
-		/// </summary>
-		// CRG: took this constructor out because we can't do this
-		// it creates a dependency we can't have
-/*		public DomainAuthentication(string domainID, string title, System.Object o)
-		{
-			this.domainID = domainID;
-			this.dialogTitle = title;
-			this.owner = o;
-		}
-*/
 		/// <summary>
 		/// Static constructor for the object.
 		/// </summary>
@@ -144,10 +89,10 @@ namespace Simias.Client
 		/// <summary>
 		/// Authenticate to a remote Simias server
 		/// </summary>
-		/// <returns>AuthenticationStatus object - AuthenticationStatus.Success if successful.</returns>
-		public AuthenticationStatus Authenticate()
+		/// <returns>Simias.Client.Authentication.Status object</returns>
+		public Status Authenticate()
 		{
-			AuthenticationStatus status = AuthenticationStatus.UnknownError;
+			Status status = null;
 
 			try
 			{
@@ -156,12 +101,12 @@ namespace Simias.Client
 					Simias.Client.Manager.LocalServiceUrl.ToString() +
 					"/Simias.asmx";
 
-				DomainInformation cInfo = simiasSvc.GetDomainInformation(this.domainID);
-				if (cInfo != null)
+				DomainInformation cInfo = simiasSvc.GetDomainInformation( this.domainID );
+				if ( cInfo != null )
 				{
 					// If the password is null, then check and see if credentials have
 					// been set on this process previously.
-					if (this.password == null)
+					if ( this.password == null )
 					{
 						// DEBUG
 						if (MyEnvironment.Mono)
@@ -189,100 +134,45 @@ namespace Simias.Client
 						}
 						else
 						{
-							if (MyEnvironment.Mono)
-								Console.WriteLine("Failed to get credentials.");
-
-//							PasswordDialog pwdDlg = 
-//								new PasswordDialog(this.dialogTitle, cInfo.Name);
-//							pwdDlg.Invoke(this.owner);
-//							this.password = pwdDlg.password;
+							this.password = "";
 						}
 					}
 
-					// Remote domain
-					DomainService domainSvc = new DomainService();
-					DomainInfo cDomainInfo = null;
+					// Call Simias for a remote domain authentication
+					status =
+						simiasSvc.LoginToRemoteDomain( 
+							this.domainID, 
+							cInfo.MemberName, 
+							this.password );
 
-					domainSvc.Url = cInfo.RemoteUrl;
-					domainSvc.Credentials = 
-						new NetworkCredential(cInfo.MemberName, this.password);
-
-					try
+					if (status.statusCode == StatusCodes.Success ||
+						status.statusCode == StatusCodes.SuccessInGrace )
 					{
-						// Call the remote domain service and attempt to
-						// get Domain Information.  This will force an
-						// authentication to occurr
-						cDomainInfo = domainSvc.GetDomainInfo(cInfo.MemberUserID);
-					}
-					catch(WebException webEx)
-					{
-						if (webEx.Status == System.Net.WebExceptionStatus.ProtocolError ||
-							webEx.Status == System.Net.WebExceptionStatus.TrustFailure)
-						{
-							// DEBUg
-							if (MyEnvironment.Mono)
-								Console.WriteLine("Invalid credentials");
-
-							status = AuthenticationStatus.InvalidCredentials;
-						}
-						else
-							if (webEx.Status == System.Net.WebExceptionStatus.ConnectFailure)
-						{
-							// DEBUG
-							if (MyEnvironment.Mono)
-								Console.WriteLine("ConnectDomainFailure");
-
-							status = AuthenticationStatus.ConnectDomainFailure;
-						}
-						// DEBUG
-						else
-						{
-							if (MyEnvironment.Mono)
-								Console.WriteLine("Caught web exception: {0}", webEx.Message);
-						}
-					}
-
-					if (cDomainInfo != null)
-					{
-						// TODO DomainCredentials need to support an empty string.
-						// Change "Not Needed" to empty when fixed.
-						if (this.password == null)
-							password = "Not Needed";
-
-						int lStatus = 
-							simiasSvc.SetDomainCredentials(
-								cInfo.ID, cInfo.MemberUserID, this.password);
-						if (lStatus == 0)
-						{
-							// Set the credentials in this process.
-							new NetCredential(
-								this.serviceName, 
-								this.domainID, 
-								true, 
-								cInfo.MemberName, 
-								this.password);
-
-							status = AuthenticationStatus.Success;
-						}
-						else
-						{
-							status = AuthenticationStatus.CredentialCacheFailure;
-						}
+						// Set the credentials in this process.
+						new NetCredential(
+							this.serviceName, 
+							this.domainID, 
+							true, 
+							cInfo.MemberName, 
+							this.password);
 					}
 				}
 				else
 				{
-					status = AuthenticationStatus.InvalidDomain;
+					//status = new Status( StatusCodes.UnknownDomain );
 				}
 			}
 			catch(Exception ex)
 			{
 				// DEBUG
 				if (MyEnvironment.Mono)
-					Console.WriteLine("Authentication - caught exception: {0}", ex.Message);
+					Console.WriteLine( "Authentication - caught exception: {0}", ex.Message );
+
+				//status = new Status( StatusCodes.InternalException );
+				//status.ExceptionMessage = ex.Message;
 			}
 
-			return(status);
+			return status;
 		}
 	}
 }
