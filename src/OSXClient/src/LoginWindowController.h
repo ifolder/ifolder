@@ -31,7 +31,6 @@
     IBOutlet NSTextField *serverField;
     IBOutlet NSTextField *userNameField;
 
-	
 	NSString *authDomainID;
 }
 
@@ -40,5 +39,6 @@
 - (IBAction)authenticate:(id)sender;
 
 - (void)showLoginWindow:(id)sender withDomain:(iFolderDomain *)domain;
+- (void)certSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 
 @end
