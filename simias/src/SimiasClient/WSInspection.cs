@@ -46,6 +46,12 @@ namespace Simias.Client
 		private static string WSIL_NameTag = "wsil:name";
 		private static string WSIL_DescriptionTag = "description";
 		private static string WSIL_LocationAttrTag = "location";
+
+		/// <summary>
+		/// Default ports used by http and https.
+		/// </summary>
+		private const int DefaultPort = 80;
+		private const int SSLDefaultPort = 443;
 		#endregion
 
 		#region Public Methods
@@ -64,10 +70,11 @@ namespace Simias.Client
 			Uri parseUri = new Uri( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host );
 
 			// Try 'https' first.
-			UriBuilder wsUri = new UriBuilder( Uri.UriSchemeHttps, parseUri.Host, parseUri.Port, WSInspectionDocument );
+			int port = ( host.IndexOf( ':' ) != -1 ) ? parseUri.Port : SSLDefaultPort;
+			UriBuilder wsUri = new UriBuilder( Uri.UriSchemeHttps, parseUri.Host, port, WSInspectionDocument );
 
 			// Create the web request.
-			HttpWebRequest request = WebRequest.Create( wsUri.Uri ) as HttpWebRequest;
+			WebRequest request = WebRequest.Create( wsUri.Uri );
 
 			try
 			{
@@ -78,7 +85,8 @@ namespace Simias.Client
 			{
 				// Try 'http' next.
 				wsUri.Scheme = Uri.UriSchemeHttp;
-				request = WebRequest.Create( wsUri.Uri ) as HttpWebRequest;
+				wsUri.Port = ( host.IndexOf( ':' ) != -1 ) ? parseUri.Port : DefaultPort;
+				request = WebRequest.Create( wsUri.Uri );
 
 				try
 				{

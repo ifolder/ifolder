@@ -99,6 +99,11 @@
                     AssemblyName = "Novell.Security.ClientPasswordManager.NetCredential"
                     HintPath = "..\..\external\Novell.Security\net\bin\Novell.Security.ClientPasswordManager.NetCredential.dll"
                 />
+                <Reference
+                    Name = "System.Security"
+                    AssemblyName = "System.Security"
+                    HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Security.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -110,6 +115,11 @@
                 />
                 <File
                     RelPath = "Authentication.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "CertPolicy.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -78,6 +78,7 @@ namespace Simias.Client
 	{
 		private string domainID;
 		private string password;
+		private static CertPolicy certPolicy;
 //		private string dialogTitle;
 //		private System.Object owner;
 
@@ -93,6 +94,15 @@ namespace Simias.Client
 			this.owner = o;
 		}
 */
+		/// <summary>
+		/// Static constructor for the object.
+		/// </summary>
+		static DomainAuthentication()
+		{
+			// Set the credential policy for this process.
+			certPolicy = new CertPolicy();
+		}
+
 		/// <summary>
 		/// Static constructor to authenticate straight-away
 		/// </summary>

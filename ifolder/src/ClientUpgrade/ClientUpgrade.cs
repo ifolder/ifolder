@@ -19,6 +19,11 @@ namespace Novell.iFolder.Install
 		private static string iFolderWindowsApplication = "iFolderApp.exe";
 
 		/// <summary>
+		/// Controls the certificate policy for this process.
+		/// </summary>
+		private static CertPolicy certPolicy;
+
+		/// <summary>
 		/// Web service object to use for checking for client updates.
 		/// </summary>
 		private ClientUpdate service;
@@ -30,6 +35,14 @@ namespace Novell.iFolder.Install
 		#endregion
 
 		#region Constructor
+		/// <summary>
+		/// Static constructor for the object.
+		/// </summary>
+		static ClientUpgrade()
+		{
+			certPolicy = new CertPolicy();
+		}
+
 		/// <summary>
 		/// Initializes a new instance of the object.
 		/// </summary>

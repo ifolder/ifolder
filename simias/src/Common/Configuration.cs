@@ -54,6 +54,14 @@ namespace Simias
 		private const string storeProvider = "StoreProvider";
 		private const string storeProviderPath = "Path";
 
+		/// <summary>
+		/// Certificate policy for the simias process.
+		/// </summary>
+		private static CertPolicy certPolicy;
+
+		/// <summary>
+		/// Only a single instance of this class in the process.
+		/// </summary>
 		private static Configuration instance = null;
 
 		private string configFilePath;
@@ -110,6 +118,16 @@ namespace Simias
 		#endregion
 		
 		#region Constructor
+		/// <summary>
+		/// Static constructor for the configuration object.
+		/// </summary>
+		static Configuration()
+		{
+			// Certificate policy for the simias process. This is put here because this
+			// class is guaranteed to run before any network access can be made.
+			certPolicy = new CertPolicy();
+		}
+
 		/// <summary>
 		/// Constructor
 		/// </summary>

@@ -116,7 +116,7 @@ namespace Simias.Storage
 					lock ( typeof( NodeCache ) )
 					{
 						// TODO: Remove
-						log.Debug( "Cache efficency = {0}%, Current count = {1}, Access Count = {2}, Hit Count = {3}", ( ( accessCount > 0 ) ? ( hitCount / accessCount ) * 100 : 0 ), cacheTable.Count, accessCount, hitCount );
+//						log.Debug( "Cache efficency = {0}%, Current count = {1}, Access Count = {2}, Hit Count = {3}", ( ( accessCount > 0 ) ? ( hitCount / accessCount ) * 100 : 0 ), cacheTable.Count, accessCount, hitCount );
 
 						ArrayList keyList = new ArrayList( cacheTable.Keys );
 						foreach( string key in keyList )
