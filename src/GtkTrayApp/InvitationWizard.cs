@@ -480,7 +480,7 @@ namespace Novell.iFolder
 			ButtonHBox.Remove(CancelButton);
 			Button OKButton = new Button(Gtk.Stock.Ok);
 			OKButton.Clicked += new EventHandler(on_cancel_clicked);
-			ButtonHBox.PackEnd(OKButton, true, true, 10);
+			ButtonHBox.PackEnd(OKButton, true, true, 0);
 			ButtonHBox.ShowAll();
 			page = IW_FINAL_PAGE;
 

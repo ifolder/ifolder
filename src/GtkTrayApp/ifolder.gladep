@@ -6,5 +6,4 @@
   <program_name>gtktrayapp</program_name>
   <source_directory></source_directory>
   <pixmaps_directory></pixmaps_directory>
-  <gnome_support>TRUE</gnome_support>
 </glade-project>
