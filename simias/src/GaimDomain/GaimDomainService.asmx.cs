@@ -32,6 +32,7 @@ using System.Web.Services;
 using System.Web.Services.Protocols;
 
 using Simias;
+using Simias.Client;
 using Simias.Domain;
 using Simias.Storage;
 using Simias.Sync;
@@ -109,91 +110,59 @@ namespace Simias.Gaim.DomainService
 		/// </summary>
 		[WebMethod(Description="UpdateMember")]
 		[SoapDocumentMethod]
-		public void UpdateMember(string AccountName, string AccountProtocolID, string BuddyName)
+		public void UpdateMember(string AccountName, string AccountProtocolID, string BuddyName, string MachineName)
 		{
 			log.Debug("GaimDomainService.UpdateMember() entered");
-			GaimDomain.UpdateMember(AccountName, AccountProtocolID, BuddyName);
+			GaimDomain.UpdateMember(AccountName, AccountProtocolID, BuddyName, MachineName);
 		}
 
 		/// <summary>
-		/// Returns the Local GaimDomain's UserID (ACE)
+		/// Returns the Machine Name (Host Name less the domain), User ID (The Gaim
+		/// Domain Owner's UserID/ACE), Simias URL (Local Service URL).
 		/// </summary>
-		[WebMethod(Description="GetDomainUserID")]
+		/// <returns>
+		/// Returns true if all the "out" parameters were set correctly.  Otherwise, the
+		/// function returns false, which signals there was an error and the out parameters
+		/// are incomplete.
+		/// </returns>
+		[WebMethod(Description="GetUserInfo")]
 		[SoapDocumentMethod]
-		public string GetDomainUserID()
+		public bool GetUserInfo(out string MachineName, out string UserID, out string SimiasURL)
 		{
-			log.Debug("GaimDomainService.GetDomainUserID() entered");
+			MachineName = null;
+			UserID = null;
+			SimiasURL = null;
+
+			// Machine Name
+			MachineName = GetMachineName();
+
+			// UserID
 			Simias.Storage.Domain domain = GaimDomain.GetDomain();
 			if (domain != null)
 			{
-				return Store.GetStore().GetUserIDFromDomainID(domain.ID);
+				UserID = Store.GetStore().GetUserIDFromDomainID(domain.ID);
 			}
-
-			return null;
+			
+			// SimiasURL
+			SimiasURL = Manager.LocalServiceUrl.ToString();
+			
+			if (MachineName != null && MachineName.Length > 0
+				&& UserID != null && UserID.Length > 0
+				&& SimiasURL != null && SimiasURL.Length > 0)
+				return true;
+			
+			return false;
 		}
-	}
-
-	/// <summary>
-	/// This class exists only to represent a Member and should only be
-	/// used in association with the GaimDomainService class.
-	/// </summary>
-	[Serializable]
-	public class GaimBuddy
-	{
-		public string Name;
-		public string UserID;
-		public string Rights;
-		public string ID;
-		public bool IsOwner;
-
-		public string GaimAccountName;
-		public string GaimAccountProto;
-		public string GaimAlias;
-		public string IPAddress;
-		public string IPPort;
-
-		public GaimBuddy()
+		
+		internal string GetMachineName()
 		{
-		}
-
-		public GaimBuddy(Simias.Storage.Member member)
-		{
-			this.Name = member.Name;
-			this.UserID = member.UserID;
-			this.Rights = member.Rights.ToString();
-			this.ID = member.ID;
-			this.IsOwner = member.IsOwner;
-
-			Simias.Storage.PropertyList pList = member.Properties;
-			Simias.Storage.Property prop = pList.GetSingleProperty("Gaim:AccountName");
-			if (prop != null)
-				this.GaimAccountName = (string) prop.Value;
-			else
-				this.GaimAccountName = "";
+			string machineName = Environment.MachineName;
+			// If a machine name with domain is added, remove the domain information
+			int firstDot = machineName.IndexOf('.');
+			if (firstDot > 0)
+				machineName = machineName.Substring(0, firstDot);
 				
-			prop = pList.GetSingleProperty("Gaim:AccountProto");
-			if (prop != null)
-				this.GaimAccountProto = (string) prop.Value;
-			else
-				this.GaimAccountProto = "";
-				
-			prop = pList.GetSingleProperty("Gaim:Alias");
-			if (prop != null)
-				this.GaimAlias = (string) prop.Value;
-			else
-				this.GaimAlias = "";
-				
-			prop = pList.GetSingleProperty("Gaim:IPAddress");
-			if (prop != null)
-				this.IPAddress = (string) prop.Value;
-			else
-				this.IPAddress = "";
-				
-			prop = pList.GetSingleProperty("Gaim:IPPort");
-			if (prop != null)
-				this.IPPort = (string) prop.Value;
-			else
-				this.IPPort = "";
+			return machineName;
 		}
 	}
 }

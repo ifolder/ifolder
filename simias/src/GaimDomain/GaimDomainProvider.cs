@@ -252,33 +252,28 @@ namespace Simias.Gaim
 				total = buddies.Length;
 				foreach (GaimBuddy buddy in buddies)
 				{
-					Member member = GaimDomain.FindBuddyInDomain(buddy);
-					if (member == null)
+					string[] machineNames = buddy.MachineNames;
+					for (int i = 0; i < machineNames.Length; i++)
 					{
-						string givenName;
-						string familyName;
-						GaimDomain.ParseGaimBuddyAlias(buddy.Alias, out givenName, out familyName);
-	
-						member = new Member(buddy.Name, buddy.SimiasUserID,
-											Simias.Storage.Access.Rights.ReadWrite,
-											givenName, familyName);
-
-						if (buddy.Alias != null && buddy.Alias.Length > 0)
+						Member member = GaimDomain.FindBuddyInDomain(buddy, machineNames[i]);
+						if (member == null)
 						{
-							// Use the buddy alias for the member full name
-							member.FN = string.Format("{0} ({1})", buddy.Alias, buddy.Name);
+							member = new Member(buddy.GetSimiasMemberName(machineNames[i]),
+												buddy.GetSimiasUserID(machineNames[i]),
+												Simias.Storage.Access.Rights.ReadWrite,
+												null, null);
 						}
+	
+						if (members.Count < count)
+						{
+							// We haven't exceeded the requested search size
+	
+							members.Add(member);
+						}
+	
+						// Save all the buddies for later
+						allMembers.Add(member);
 					}
-
-					if (members.Count < count)
-					{
-						// We haven't exceeded the requested search size
-
-						members.Add(member);
-					}
-
-					// Save all the buddies for later
-					allMembers.Add(member);
 				}
 			}
 
@@ -486,14 +481,14 @@ namespace Simias.Gaim
 				return;
 			}
 			
-			// If we make it this far, we've got everything we need to add onto the member object.
-			Simias.Storage.Property p =
-				new Property("Gaim:MungedID", buddy.MungedID);
-			p.LocalProperty = true;
-			member.Properties.AddProperty(p);
+//			// If we make it this far, we've got everything we need to add onto the member object.
+//			Simias.Storage.Property p =
+//				new Property("Gaim:MungedID", buddy.MungedID);
+//			p.LocalProperty = true;
+//			member.Properties.AddProperty(p);
 			
 			// Gaim Account Name
-			p = new Property("Gaim:AccountName", buddy.AccountName);
+			Simias.Storage.Property p = new Property("Gaim:AccountName", buddy.AccountName);
 			p.LocalProperty = true;
 			member.Properties.AddProperty(p);
 			
@@ -501,48 +496,31 @@ namespace Simias.Gaim
 			p = new Property("Gaim:AccountProto", buddy.AccountProtocolID);
 			p.LocalProperty = true;
 			member.Properties.AddProperty(p);
-
-			if (buddy.Alias != null)
-			{
-				p = new Property("Gaim:Alias", buddy.Alias);
-				p.LocalProperty = true;
-				member.Properties.AddProperty(p);
-				
-				// Use the buddy alias for the member full name
-				member.FN = string.Format("{0} ({1})", buddy.Alias, buddy.Name);
-
-				string familyName = null;
-				string givenName = null;
-				int lastSpacePos = buddy.Alias.LastIndexOf(' ');
-				if (lastSpacePos > 0)
-				{
-					familyName = buddy.Alias.Substring(lastSpacePos + 1);
-					member.Family = familyName;
-
-					givenName = buddy.Alias.Substring(0, lastSpacePos);
-				}
-				else
-				{
-					givenName = buddy.Alias;
-				}
-					
-				member.Given = givenName;
-			}
 			
-			// Buddy Simias UserID
-			if (buddy.SimiasUserID != null)
-			{
-				p = new Property("Gaim:SimiasUserID", buddy.SimiasUserID);
-				p.LocalProperty = true;
-				member.Properties.AddProperty(p);
-			}
+			// Gaim Screenname
+			p = new Property("Gaim:Screenname", buddy.Name);
+			p.LocalProperty = true;
+			member.Properties.AddProperty(p);
 
-			// Buddy Simias URL
-			if (buddy.SimiasURL != null)
+			// Buddy Simias UserID
+//			if (buddy.SimiasUserID != null)
+//			{
+//				p = new Property("Gaim:SimiasUserID", buddy.SimiasUserID);
+//				p.LocalProperty = true;
+//				member.Properties.AddProperty(p);
+//			}
+
+			string machineName = GaimBuddy.ParseMachineName(member.Name);
+			if (machineName != null)
 			{
-				p = new Property("Gaim:SimiasURL", buddy.SimiasURL);
-				p.LocalProperty = true;
-				member.Properties.AddProperty(p);
+				// Buddy Simias URL
+				string simiasURL = buddy.GetSimiasURL(machineName);
+				if (simiasURL != null)
+				{
+					p = new Property("Gaim:SimiasURL", simiasURL);
+					p.LocalProperty = true;
+					member.Properties.AddProperty(p);
+				}
 			}
 		}
 
@@ -714,9 +692,10 @@ namespace Simias.Gaim
 			GaimBuddy buddy = GaimDomain.GetBuddyByUserID(fromID);
 			if (buddy != null)
 			{
-				if (buddy.SimiasURL != null)
+				string simiasURL = buddy.GetSimiasURLByUserID(fromID);
+				if (simiasURL != null)
 				{
-					locationUri = new Uri(buddy.SimiasURL);
+					locationUri = new Uri(simiasURL);
 				}
 			}
 
@@ -725,15 +704,15 @@ namespace Simias.Gaim
 
 		private string mapSimiasAttribToGaim(string attributeName)
 		{
-			switch(attributeName)
-			{
-				case "Given":
+//			switch(attributeName)
+//			{
+//				case "Given":
 					return "ScreenName";
-				case "Family":
-				case "FN":
-				default:
-					return "Alias";
-			}
+//				case "Family":
+//				case "FN":
+//				default:
+//					return "Alias";
+//			}
 		}
 		#endregion
 
