@@ -1138,47 +1138,6 @@ namespace Simias.Storage.Tests
 		}
 
 		/// <summary>
-		/// Tests the dropping of tombstones and dirty nodes.
-		/// </summary>
-		[Test]
-		public void TombstoneTest()
-		{
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
-			try
-			{
-				// Create a node.
-				Node node = new Node( "CS_Node" );
-				Node[] nodeList = { collection, node };
-				collection.Commit( nodeList);
-
-				// Delete the node.
-				collection.Commit( collection.Delete( node ) );
-
-				// Node should have turned into a tombstone.
-				collection.Refresh( node );
-				if ( !collection.IsType( node, "Tombstone" ) )
-				{
-					throw new ApplicationException( "Deleted node did not turn into a tombstone." );
-				}
-
-				// Now delete the tombstone.
-				collection.Commit( collection.Delete( node ) );
-
-				// It should be really gone now.
-				// Node should have turned into a tombstone.
-				if ( collection.GetNodeByID( node.ID ) != null )
-				{
-					throw new ApplicationException( "Tombstone cannot be deleted." );
-				}
-			}
-			finally
-			{
-				// Delete the collection.
-				collection.Commit( collection.Delete() );
-			}
-		}
-
-		/// <summary>
 		/// Tests the incarnation values that they get updated correctly.
 		/// </summary>
 		[Test]

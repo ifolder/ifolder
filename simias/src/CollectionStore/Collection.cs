@@ -59,6 +59,14 @@ namespace Simias.Storage
 
 		#region Properties
 		/// <summary>
+		/// Gets whether this machine is the client or the master.
+		/// </summary>
+		private bool OnMaster
+		{
+			get { return ( MasterIncarnation == 0 ) ? true : false; }
+		}
+
+		/// <summary>
 		/// Gets the name of the domain that this collection belongs to.
 		/// </summary>
 		public string Domain
@@ -539,31 +547,26 @@ namespace Simias.Storage
 						}
 						else
 						{
-							// If this Node object is already a Tombstone, delete it.
-							if ( IsTombstone( node ) )
+							// If this is a StoreFileNode object, delete the store managed file.
+							if ( IsType( node, NodeTypes.StoreFileNodeType ) )
 							{
-								// Copy the XML node over to the delete document.
-								XmlNode xmlNode = deleteDocument.ImportNode( node.Properties.PropertyRoot, true );
-								deleteDocument.DocumentElement.AppendChild( xmlNode );
-							}
-							else
-							{
-								// If this is a StoreFileNode object, delete the store managed file.
-								if ( IsType( node, NodeTypes.StoreFileNodeType ) )
+								try
 								{
-									try
-									{
-										// Delete the file.
-										StoreFileNode sfn = new StoreFileNode( node );
-										File.Delete( sfn.GetFullPath( this ) );
-									}
-									catch {}
+									// Delete the file.
+									StoreFileNode sfn = new StoreFileNode( node );
+									File.Delete( sfn.GetFullPath( this ) );
 								}
+								catch {}
+							}
 
+							// Never create Tombstones on the master or if this Node object is already a 
+							// Tombstone, delete it.
+							if ( !OnMaster && !IsTombstone( node ) )
+							{
 								// Convert this Node object to a Tombstone.
 								ChangeToTombstone( node );
 
-								// Validate this Collection object.
+								// Validate this object.
 								ValidateNodeForCommit( node );
 
 								// Increment the local incarnation number for the object.
@@ -572,6 +575,12 @@ namespace Simias.Storage
 								// Copy the XML node over to the modify document.
 								XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
 								commitDocument.DocumentElement.AppendChild( xmlNode );
+							}
+							else
+							{
+								// Never create tombstones on the server. Copy the XML node over to the delete document.
+								XmlNode xmlNode = deleteDocument.ImportNode( node.Properties.PropertyRoot, true );
+								deleteDocument.DocumentElement.AppendChild( xmlNode );
 							}
 						}
 						break;
