@@ -41,6 +41,44 @@ using System.Xml.Serialization;
 
 namespace Simias.POBoxService.Web
 {
+
+	/// <summary>
+	/// Status codes returned from POBoxService methods
+	/// </summary>
+	[Serializable]
+	public enum POBoxStatus
+	{
+		/// <summary>
+		/// The method was successful.
+		/// </summary>
+		Success,
+
+		/// <summary>
+		/// The specified PO Box was not found.
+		/// </summary>
+		UnknownPOBox,
+
+		/// <summary>
+		/// The specified identity was not found in the roster.
+		/// </summary>
+		UnknownIdentity,
+
+		/// <summary>
+		/// The specified subscription was not found.
+		/// </summary>
+		UnknownSubscription,
+
+		/// <summary>
+		/// The suscription was in an invalid state for the method
+		/// </summary>
+		InvalidState,
+
+		/// <summary>
+		/// An unknown error was realized.
+		/// </summary>
+		UnknownError
+	};
+
 	/// <summary>
 	/// Summary description for Service1.
 	/// </summary>
@@ -107,7 +145,7 @@ namespace Simias.POBoxService.Web
 		[WebMethod]
 		[SoapDocumentMethod]
 		public
-		void
+		POBoxStatus
 		AcceptedSubscription(
 			string				domainID, 
 			string				fromIdentity, 
@@ -128,7 +166,8 @@ namespace Simias.POBoxService.Web
 			// check the post office box
 			if (poBox == null)
 			{
-				throw new ApplicationException("PO Box not found.");
+				log.Debug("POBoxService::AcceptedSubscription - PO Box not found");
+				return(POBoxStatus.UnknownPOBox);
 			}
 
 			// check that the message has already not been posted
@@ -145,7 +184,8 @@ namespace Simias.POBoxService.Web
 
 			if (sn == null)
 			{
-				throw new ApplicationException("Subscription does not exist.");
+				log.Debug("POBoxService::AcceptedSubscription - Subscription does not exist");
+				return(POBoxStatus.UnknownSubscription);
 			}
 
 			// get the subscription object
@@ -154,12 +194,14 @@ namespace Simias.POBoxService.Web
 			// Identities need to match up
 			if (fromIdentity != cSub.FromIdentity)
 			{
-				throw new ApplicationException("Identity does not match.");
+				log.Debug("POBoxService::AcceptedSubscription - Identity does not match");
+				return(POBoxStatus.UnknownIdentity);
 			}
 
 			if (toIdentity != cSub.ToIdentity)
 			{
-				throw new ApplicationException("Identity does not match.");
+				log.Debug("POBoxService::AcceptedSubscription - Identity does not match");
+				return(POBoxStatus.UnknownIdentity);
 			}
 
 			// FIXME: need to match the caller's ID against the toIdentity
@@ -167,6 +209,7 @@ namespace Simias.POBoxService.Web
 			cSub.Accept(store, cSub.SubscriptionRights);
 			poBox.Commit(cSub);
 			log.Info("POBoxService::AcceptedSubscription - exit");
+			return(POBoxStatus.Success);
 		}
 
 		/// <summary>
@@ -178,7 +221,7 @@ namespace Simias.POBoxService.Web
 		[WebMethod]
 		[SoapDocumentMethod]
 		public
-		void
+		POBoxStatus
 		DeclinedSubscription(
 			string			domainID, 
 			string			fromIdentity, 
@@ -199,7 +242,8 @@ namespace Simias.POBoxService.Web
 			// check the post office box
 			if (poBox == null)
 			{
-				throw new ApplicationException("PO Box not found.");
+				log.Debug("POBoxService::DeclinedSubscription - PO Box not found");
+				return(POBoxStatus.UnknownPOBox);
 			}
 
 			// check that the message has already not been posted
@@ -216,7 +260,8 @@ namespace Simias.POBoxService.Web
 
 			if (sn == null)
 			{
-				throw new ApplicationException("Subscription does not exist.");
+				log.Debug("POBoxService::DeclinedSubscription - Subscription does not exist");
+				return(POBoxStatus.UnknownSubscription);
 			}
 
 			// get the subscription object
@@ -225,17 +270,20 @@ namespace Simias.POBoxService.Web
 			// Identities need to match up
 			if (fromIdentity != cSub.FromIdentity)
 			{
-				throw new ApplicationException("Identity does not match.");
+				log.Debug("POBoxService::DeclinedSubscription - Identity does not match");
+				return(POBoxStatus.UnknownIdentity);
 			}
 
 			if (toIdentity != cSub.ToIdentity)
 			{
-				throw new ApplicationException("Identity does not match.");
+				log.Debug("POBoxService::DeclinedSubscription - Identity does not match");
+				return(POBoxStatus.UnknownIdentity);
 			}
 
 			cSub.Decline();
 			poBox.Commit(cSub);
 			log.Info("POBoxService::DeclinedSubscription - exit");
+			return(POBoxStatus.Success);
 		}
 
 		/// <summary>
@@ -247,7 +295,7 @@ namespace Simias.POBoxService.Web
 		[WebMethod]
 		[SoapDocumentMethod]
 		public
-		void
+		POBoxStatus
 		AckSubscription(
 			string			domainID, 
 			string			fromIdentity, 
@@ -268,7 +316,8 @@ namespace Simias.POBoxService.Web
 			// check the post office box
 			if (poBox == null)
 			{
-				throw new ApplicationException("PO Box not found.");
+				log.Debug("POBoxService::AckSubscription - PO Box not found");
+				return(POBoxStatus.UnknownPOBox);
 			}
 
 			// check that the message has already not been posted
@@ -285,7 +334,8 @@ namespace Simias.POBoxService.Web
 
 			if (sn == null)
 			{
-				throw new ApplicationException("Subscription does not exist.");
+				log.Debug("POBoxService::AckSubscription - Subscription does not exist.");
+				return(POBoxStatus.UnknownSubscription);
 			}
 
 			// get the subscription object
@@ -294,12 +344,14 @@ namespace Simias.POBoxService.Web
 			// Identities need to match up
 			if (fromIdentity != cSub.FromIdentity)
 			{
-				throw new ApplicationException("Identity does not match.");
+				log.Debug("POBoxService::AckSubscription - Identity does not match");
+				return(POBoxStatus.UnknownIdentity);
 			}
 
 			if (toIdentity != cSub.ToIdentity)
 			{
-				throw new ApplicationException("Identity does not match.");
+				log.Debug("POBoxService::AckSubscription - Identity does not match");
+				return(POBoxStatus.UnknownIdentity);
 			}
 
 			// FIXME: need to match the caller's ID against the toIdentity
@@ -309,6 +361,7 @@ namespace Simias.POBoxService.Web
 			poBox.Commit(poBox.Delete(cSub));
 
 			log.Info("POBoxService::Acksubscription - exit");
+			return(POBoxStatus.Success);
 		}
 
 		/// <summary>
@@ -317,7 +370,7 @@ namespace Simias.POBoxService.Web
 		/// <param name="domainID"></param>
 		/// <param name="identityID"></param>
 		/// <param name="messageID"></param>
-		/// <returns></returns>
+		/// <returns>success:subinfo  failure:null</returns>
 		[WebMethod]
 		[SoapDocumentMethod]
 		public
@@ -339,7 +392,8 @@ namespace Simias.POBoxService.Web
 			// check the post office box
 			if (poBox == null)
 			{
-				throw new ApplicationException("PO Box not found.");
+				log.Debug("POBoxService::GetSubscriptionInfo - PO Box not found");
+				return(null);
 			}
 
 			// check that the message has already not been posted
@@ -355,7 +409,8 @@ namespace Simias.POBoxService.Web
 
 			if (sn == null)
 			{
-				throw new ApplicationException("Subscription does not exists.");
+				log.Debug("POBoxService::GetSubscriptionInfo - Subscription does not exist");
+				return(null);
 			}
 
 			// generate the subscription info object and return it
@@ -365,7 +420,8 @@ namespace Simias.POBoxService.Web
 			Collection cSharedCollection = store.GetCollectionByID(cSub.SubscriptionCollectionID);
 			if (cSharedCollection == null)
 			{
-				throw new ApplicationException("Collection not found.");
+				log.Debug("POBoxService::GetSubscriptionInfo - Collection not found");
+				return(null);
 			}
 
 			// FIXME: got to be a better way
@@ -396,7 +452,9 @@ namespace Simias.POBoxService.Web
 		/// <returns>success subscription ID - failure empty string</returns>
 		[WebMethod]
 		[SoapDocumentMethod]
-		public string Invite(
+		public
+		string 
+		Invite(
 			string			domainID, 
 			string			fromUserID,
 			string			toUserID,

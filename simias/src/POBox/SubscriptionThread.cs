@@ -250,34 +250,53 @@ namespace Simias.POBox
 		private bool DoReplied()
 		{
 			log.Info("DoReplied - Connecting to the Post Office Service : {0}", subscription.POServiceURL);
+			bool status = false;
 			POBoxService poService = new POBoxService();
 			poService.Url = this.poServiceUrl;
+			POBoxStatus	wsStatus = POBoxStatus.UnknownError;
 
 			try
 			{
 				if (subscription.SubscriptionDisposition == SubscriptionDispositions.Accepted)
 				{
 					log.Info("  subscription accepted!");
-					poService.AcceptedSubscription(
-						subscription.DomainID,
-						subscription.FromIdentity,
-						subscription.ToIdentity,
-						subscription.MessageID);
+					wsStatus =
+						poService.AcceptedSubscription(
+							subscription.DomainID,
+							subscription.FromIdentity,
+							subscription.ToIdentity,
+							subscription.MessageID);
 				}
 				else
 				if (subscription.SubscriptionDisposition == SubscriptionDispositions.Declined)
 				{
 					log.Info("  subscription declined");
-					poService.DeclinedSubscription(
-						subscription.DomainID,
-						subscription.FromIdentity,
-						subscription.ToIdentity,
-						subscription.MessageID);
+					wsStatus =
+						poService.DeclinedSubscription(
+							subscription.DomainID,
+							subscription.FromIdentity,
+							subscription.ToIdentity,
+							subscription.MessageID);
 				}
 
 				// update local subscription
-				subscription.SubscriptionState = SubscriptionStates.Delivered;
-				poBox.Commit(subscription);
+				if (wsStatus == POBoxStatus.Success)
+				{
+					subscription.SubscriptionState = SubscriptionStates.Delivered;
+					poBox.Commit(subscription);
+				}
+				else
+				{
+					poBox.Commit(poBox.Delete(subscription));
+
+					log.Debug(
+						"Failed Accepting/Declining a subscription.  Status: " + 
+						wsStatus.ToString());
+
+					// return true so the thread controlling the
+					// subscription will die off
+					status = true;
+				}
 			}
 			catch(Exception e)
 			{
@@ -288,7 +307,7 @@ namespace Simias.POBox
 			poService = null;
 
 			// always return false to drop to the next state
-			return false;
+			return status;
 		}
 
 		private bool DoDelivered()
@@ -349,15 +368,27 @@ namespace Simias.POBox
 
 						// acknowledge the message
 						// which removes the originator's 
-						poService.AckSubscription(
-							subscription.DomainID,
-							subscription.FromIdentity, 
-							subscription.ToIdentity,
-							subscription.MessageID);
+						POBoxStatus wsStatus =
+							poService.AckSubscription(
+								subscription.DomainID,
+								subscription.FromIdentity, 
+								subscription.ToIdentity,
+								subscription.MessageID);
 
-						// done with the subscription - move to local subscription to the ready state
-						subscription.SubscriptionState = SubscriptionStates.Ready;
-						poBox.Commit(subscription);
+						if (wsStatus == POBoxStatus.Success)
+						{
+							// done with the subscription - move to local subscription to the ready state
+							subscription.SubscriptionState = SubscriptionStates.Ready;
+							poBox.Commit(subscription);
+						}
+						else
+						{
+							log.Debug(
+								"Failed Acking a subscription.  Status: " + 
+								wsStatus.ToString());
+
+							poBox.Commit(poBox.Delete(subscription));
+						}
 					}
 					else
 					{
