@@ -158,7 +158,7 @@ namespace Simias.Storage
 				}
 
 				// Normalize the returned path for the proper platform.
-				Uri uri = new Uri( Path.Combine( ( localPath.Value as Uri ).LocalPath, GetRelativePath() ) );
+				Uri uri = new Uri( Path.Combine( localPath.Value as string, GetRelativePath() ) );
 				fullPath = uri.LocalPath;
 			}
 

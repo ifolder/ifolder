@@ -142,16 +142,21 @@ namespace Simias.Storage
 
 			// Set the root path property.
 			string parentDir = Path.GetDirectoryName( dirPath );
-			if ( parentDir == String.Empty )
+			if ( ( parentDir == null ) || ( parentDir == String.Empty ) )
 			{
 				parentDir = Convert.ToString( Path.DirectorySeparatorChar );
+			}
+			else if ( parentDir != Convert.ToString( Path.DirectorySeparatorChar ) )
+			{
+				// Normalize the path.
+				parentDir = new Uri( parentDir ).LocalPath;
 			}
 
 			// Set the file system path so that lookup of path to node is easier.
 			properties.AddNodeProperty( PropertyTags.FileSystemPath, name );
 
 			// Add the root path.
-			Property p = new Property( PropertyTags.Root, new Uri( parentDir ) );
+			Property p = new Property( PropertyTags.Root, parentDir );
 			p.LocalProperty = true;
 			properties.AddNodeProperty( p );
 
@@ -235,7 +240,7 @@ namespace Simias.Storage
 				}
 
 				// Normalize the returned path for the proper platform.
-				Uri uri = new Uri( Path.Combine( ( localPath.Value as Uri ).LocalPath, GetRelativePath() ) );
+				Uri uri = new Uri( Path.Combine( localPath.Value as string, GetRelativePath() ) );
 				fullPath = uri.LocalPath;
 			}
 

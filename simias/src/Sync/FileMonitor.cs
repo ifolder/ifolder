@@ -719,7 +719,7 @@ namespace Simias.Sync
 			DirNode dn = collection.GetRootDirectory();
 			if (dn != null)
 			{
-				rootPath = ((Uri)(dn.Properties.GetSingleProperty(PropertyTags.Root).Value)).LocalPath;
+				rootPath = dn.Properties.GetSingleProperty(PropertyTags.Root).Value as string;
 				string path = dn.GetFullPath(collection);
 				if (onServer || Directory.Exists(path))
 				{

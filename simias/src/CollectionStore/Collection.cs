@@ -1612,7 +1612,7 @@ namespace Simias.Storage
 		{
 			DirNode rootDir = null;
 
-			ICSList results = Search( PropertyTags.Root, Syntax.Uri );
+			ICSList results = Search( PropertyTags.Root, Syntax.String );
 			foreach ( ShallowNode shallowNode in results )
 			{
 				rootDir = new DirNode( this, shallowNode );
