@@ -1365,7 +1365,7 @@ namespace Novell.iFolder
 									new MenuItem (Util.GS("Remove iFolder"));
 								ifMenu.Append (item_decline);
 								item_decline.Activated += new EventHandler(
-										OnDeclineiFolder);
+										OnRemoveiFolder);
 							}
 							else
 							{
@@ -1376,6 +1376,8 @@ namespace Novell.iFolder
 								MenuItem item_decline = 
 									new MenuItem (Util.GS("Remove iFolder"));
 								ifMenu.Append (item_decline);
+								item_decline.Activated += new EventHandler(
+										OnRemoveiFolder);
 							}
 						}
 					}
@@ -1806,21 +1808,74 @@ namespace Novell.iFolder
 
 
 
-		private void OnDeclineiFolder(object o, EventArgs args)
+		private void OnRemoveiFolder(object o, EventArgs args)
 		{
-			iFolderMsgDialog dialog = new iFolderMsgDialog(
-				this,
-				iFolderMsgDialog.DialogType.Question,
-				iFolderMsgDialog.ButtonSet.YesNo,
-				Util.GS("iFolder Confirmation"),
-				Util.GS("Decline shared iFolder?"),
-				Util.GS("This will remove your invitation and you will not be able to get it back unless the owner of this iFolder re-shares the iFolder with you."));
-			int rc = dialog.Run();
-			dialog.Hide();
-			dialog.Destroy();
-			if(rc == -8)
+			iFolderHolder ifHolder = null;
+			TreeModel tModel;
+			TreeIter iter;
+
+			TreeSelection tSelect = iFolderTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
 			{
-				Console.WriteLine("Reverting Share iFolder");
+				tSelect.GetSelected(out tModel, out iter);
+				ifHolder = (iFolderHolder) tModel.GetValue(iter, 0);
+				if(ifHolder.iFolder == null)
+					return;
+				int rc = 0;
+
+				if(ifHolder.iFolder.OwnerID == ifSettings.CurrentUserID)
+				{
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+						this,
+						iFolderMsgDialog.DialogType.Question,
+						iFolderMsgDialog.ButtonSet.YesNo,
+						Util.GS("Remove iFolder Confirmation"),
+						string.Format(Util.GS("Remove iFolder {0}?"),
+												ifHolder.iFolder.Name),
+						Util.GS("This will remove this iFolder from your local machine.  Because you are the owner of this iFolder, the iFolder will also be removed from the iFolder server and all users you have shared with.  The iFolder cannot be recovered or re-shared on another machine.  The files will not be deleted from your local hard drive."));
+					rc = dialog.Run();
+					dialog.Hide();
+					dialog.Destroy();
+				}
+				else
+				{
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+						this,
+						iFolderMsgDialog.DialogType.Question,
+						iFolderMsgDialog.ButtonSet.YesNo,
+						Util.GS("Remove iFolder Confirmation"),
+						string.Format(Util.GS("Remove iFolder {0}?"),
+												ifHolder.iFolder.Name),
+						Util.GS("This will remove you as a member of this iFolder.  You will not be able to access this iFolder unless the owner re-invites you to this iFolder.  The files will not be deleted from your local hard drive."));
+					rc = dialog.Run();
+					dialog.Hide();
+					dialog.Destroy();
+				}
+
+				// User pressed OK?
+				if(rc != -8)
+					return;
+
+				try
+				{
+					// remove the current iFolder so events don't replace it
+					curiFolders.Remove(ifHolder.iFolder.ID);
+   		 			iFolderWS.DeclineiFolderInvitation(ifHolder.iFolder.ID);
+					// if no exception, remove it from the list
+					iFolderTreeStore.Remove(ref iter);
+				}
+				catch(Exception e)
+				{
+					// if we threw an exceptoin, add the old ifolder back
+					curiFolders.Add(ifHolder.iFolder.ID, iter);
+
+					iFolderExceptionDialog ied = new iFolderExceptionDialog(
+														this, e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+					return;
+				}
 			}
 		}
 
