@@ -1046,11 +1046,100 @@ ifolder_get_config_setting (char *setting_xpath, char *setting_value_return)
 	}
 }
 
+/**
+ * update_xpath_nodes:
+ * @nodes: the nodes set.
+ * @value: the new value for the node(s)
+ * 
+ * Updates the @nodes content in document.
+ */
+static void
+update_xpath_nodes (xmlNodeSetPtr nodes, char *value)
+{
+	int size;
+	int i;
+	
+	size = (nodes) ? nodes->nodeNr : 0;
+	
+	for (i = size -1; i >= 0; i--) {
+		xmlNodeSetContent (nodes->nodeTab [i], BAD_CAST value);
+		if (nodes->nodeTab [i]->type != XML_NAMESPACE_DECL)
+			nodes->nodeTab [i] = NULL;
+	}
+}
+
 static int
 ifolder_set_config_setting (char *setting_xpath,
 							char *setting_value)
 {
-	return 0;
+	char config_file [1024];
+	xmlDoc *doc;
+	xmlXPathContext *xpath_ctx;
+	xmlXPathObject *xpath_obj;
+	xmlNodeSet *node_set;
+	xmlNode *cur_node;
+	gboolean b_setting_written;
+	FILE *cfg_file;
+	
+	b_setting_written = FALSE;
+	if (get_ifolder_config_file_path (config_file) == NULL) {
+		DEBUG_IFOLDER (("Could not get path to ifolder3.config\n"));
+		return -1;
+	}
+	
+	xmlInitParser ();
+	doc = xmlReadFile (config_file, NULL, 0);
+	if (doc == NULL) {
+		DEBUG_IFOLDER (("Failed to open/parse %s\n", config_file));
+		return -1;
+	}
+	
+	/* Create xpath evaluation context */
+	xpath_ctx = xmlXPathNewContext (doc);
+	if (xpath_ctx == NULL) {
+		DEBUG_IFOLDER (("Unable to create a new XPath context for %s\n", config_file));
+		return -1;
+	}
+	
+	/* Evaluate the XPath expression */
+	xpath_obj = xmlXPathEvalExpression (setting_xpath, xpath_ctx);
+	if (xpath_obj != NULL) {
+		node_set = xpath_obj->nodesetval;
+		if (node_set && node_set->nodeNr > 0) {
+			cur_node = node_set->nodeTab [0];
+			
+			if (cur_node->type == XML_ATTRIBUTE_NODE) {
+				update_xpath_nodes (xpath_obj->nodesetval, setting_value);
+				
+				/* Save the resulting document */
+				if ((cfg_file = fopen (config_file, "w")) != NULL) {
+					xmlDocDump (cfg_file, doc);
+					b_setting_written = TRUE;
+					fclose (cfg_file);
+				} else {
+					perror ("Could not open ifolder3.config to write ShowCreationDialog setting.");
+				}
+			} else {
+				DEBUG_IFOLDER (("XPath expression didn't return an attribute node: %s\n", setting_xpath));
+			}
+		} else {
+			DEBUG_IFOLDER (("Nothing returned from XPath expression: %s\n", setting_xpath));
+		}
+		
+		xmlFree (xpath_obj);
+	} else {
+		DEBUG_IFOLDER (("Unable to evaluate XPath expression: %s\n", setting_xpath));
+	}
+	
+	xmlXPathFreeContext (xpath_ctx);
+	xmlFreeDoc (doc);
+	xmlCleanupParser ();
+	
+	if (b_setting_written) {
+		return 0;
+	} else {
+		return -1;
+	}
 }
 
 static
@@ -1112,8 +1201,11 @@ creation_dialog_button_callback (GtkDialog *dialog,
 			break;
 		case GTK_RESPONSE_CLOSE:
 			if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data))) {
-				/* FIXME: Save off the setting to NOT show this dialog again */
-				g_printf ("Check button is checked\n");
+				/* Save off the setting to NOT show this dialog again */
+				if (ifolder_set_config_setting (XPATH_SHOW_CREATION_DIALOG,
+												"false") != 0) {
+					DEBUG_IFOLDER (("Error saving show creation dialog setting\n"));
+				}
 			}
 			
 			gtk_widget_destroy (GTK_WIDGET (dialog));
