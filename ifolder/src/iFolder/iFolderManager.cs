@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Xml;
 
 using Simias;
 using Simias.Storage;
@@ -59,6 +60,52 @@ namespace Novell.iFolder
         internal Store						store;
         private Configuration config;
 
+		/// <summary>
+		/// The section in the configuration file dealing with iFolder specific information.
+		/// </summary>
+		public static readonly string CFG_Section = "iFolder";
+
+		/// <summary>
+		/// The section that lists paths that are not allowed to become an iFolder.
+		/// </summary>
+		public static readonly string CFG_ExcludedPaths = "Excluded Paths";
+
+		/// <summary>
+		/// The tag used for an individual excluded path entry.
+		/// </summary>
+		public static readonly string XmlPathTag = "Path";
+
+		/// <summary>
+		/// The attribute holding the name of the path or environment variable.
+		/// </summary>
+		public static readonly string XmlNameAttr = "name";
+
+		/// <summary>
+		/// The attribute holding a value indicating if subdirectories of the path are also not
+		/// allowed to become iFolders.
+		/// </summary>
+		public static readonly string XmlDeepAttr = "deep";
+
+		/// <summary>
+		/// The attribute holding a value indicating if this element represents an environment 
+		/// variable.
+		/// </summary>
+		public static readonly string XmlEnvironmentAttr = "environment";
+
+		private static ExcludeDirectory[] linuxExcludeList = {
+			new ExcludeDirectory("/bin", false, true),
+			new ExcludeDirectory("/sbin", false, true),
+			new ExcludeDirectory("/opt", false, true),
+			new ExcludeDirectory("/etc", false, true),
+			new ExcludeDirectory("/lib", false, true),
+			new ExcludeDirectory("/sys", false, true)
+		};
+
+		private static ExcludeDirectory[] windowsExcludeList = {
+			new ExcludeDirectory("SystemDrive", true, false),
+			new ExcludeDirectory("windir", true, true)
+		};
+
         #endregion
 
 		#region Constructors
@@ -85,6 +132,44 @@ namespace Novell.iFolder
 			// TODO: Hook up with Copernicus here!
 			//
 			return new iFolderManager(Configuration.GetConfiguration());
+		}
+		
+		/// <summary>
+		/// Creates a section in the configuration file that lists directories to exclude 
+		/// from becoming iFolders.
+		/// </summary>
+		/// <param name="config">The configuration file to modify.</param>
+		public static void CreateDefaultExclusions(Configuration config)
+		{
+			// Get the XML element from the config file.
+			XmlElement pathsElement = config.GetElement(CFG_Section, CFG_ExcludedPaths);
+
+			// Only set the defaults if the section is empty.
+			if (pathsElement.IsEmpty)
+			{
+				ExcludeDirectory[] excludeList;
+
+				// Use the exclude list for the correct OS.
+				if (MyEnvironment.Unix)
+				{
+					excludeList = linuxExcludeList;
+				}
+				else
+				{
+					excludeList = windowsExcludeList;
+				}
+
+				// Walk the exclude list and add entries to the section.
+				foreach (ExcludeDirectory exDir in excludeList)
+				{
+					XmlElement xmlElement = pathsElement.OwnerDocument.CreateElement(XmlPathTag);
+					xmlElement.SetAttribute(XmlNameAttr, exDir.Name);
+					xmlElement.SetAttribute(XmlEnvironmentAttr, exDir.Environment.ToString());
+					xmlElement.SetAttribute(XmlDeepAttr, exDir.Deep.ToString());
+					pathsElement.AppendChild(xmlElement);
+					config.SetElement(CFG_Section, CFG_ExcludedPaths, pathsElement);
+				}
+			}
 		}
 		#endregion
 
@@ -269,18 +354,27 @@ namespace Novell.iFolder
 								path :
 								path + Path.DirectorySeparatorChar.ToString());
 
-			foreach ( iFolder ifolder in this )
+			// TODO: Call to Policy engine to check for directory/drive exclusions ... 
+			// the Policy overrides the config file settings.
+			if (folderAllowed(nPath))
 			{
-				Uri iPath = new Uri( ifolder.LocalPath.EndsWith(Path.DirectorySeparatorChar.ToString()) ?
-									ifolder.LocalPath :
-									ifolder.LocalPath + Path.DirectorySeparatorChar.ToString());
-
-				// Check if the specified path is subordinate to or a parent of the iFolder root path.
-				if ( nPath.LocalPath.StartsWith( iPath.LocalPath ) || iPath.LocalPath.StartsWith( nPath.LocalPath ) )
+				foreach ( iFolder ifolder in this )
 				{
-					isiFolder = false;
-					break;
+					Uri iPath = new Uri( ifolder.LocalPath.EndsWith(Path.DirectorySeparatorChar.ToString()) ?
+										ifolder.LocalPath :
+										ifolder.LocalPath + Path.DirectorySeparatorChar.ToString());
+
+					// Check if the specified path is subordinate to or a parent of the iFolder root path.
+					if ( nPath.LocalPath.StartsWith( iPath.LocalPath ) || iPath.LocalPath.StartsWith( nPath.LocalPath ) )
+					{
+						isiFolder = false;
+						break;
+					}
 				}
+			}
+			else
+			{
+				isiFolder = false;
 			}
 
 			return isiFolder;
@@ -341,6 +435,49 @@ namespace Novell.iFolder
 			invitation.RootPath = path;
 			InvitationService.Accept( store, invitation );
 		}*/
+		#endregion
+		
+		#region Private Methods
+		private bool folderAllowed( Uri nPath)
+		{
+			bool folderAllowed = true;
+
+			XmlElement pathsElement = config.GetElement(CFG_Section, CFG_ExcludedPaths);
+			XmlNodeList pathNodes = pathsElement.SelectNodes(XmlPathTag);
+			foreach (XmlElement pathNode in pathNodes)
+			{
+				try
+				{
+					string path = pathNode.GetAttribute(XmlNameAttr);
+					string s = pathNode.GetAttribute(XmlDeepAttr);
+					bool deep = s != String.Empty ? bool.Parse(s) : false;
+
+					s = pathNode.GetAttribute(XmlEnvironmentAttr);
+					bool environment = s != String.Empty ? bool.Parse(s) : false;
+
+					if (environment)
+					{
+						path = Environment.GetEnvironmentVariable(path);
+					}
+
+					Uri excludePath = new Uri(path.EndsWith(Path.DirectorySeparatorChar.ToString()) ?
+										path :
+										path + Path.DirectorySeparatorChar.ToString());
+
+					string nPath2 = deep ? nPath.LocalPath.Substring(0, excludePath.LocalPath.Length) : nPath.LocalPath;
+					if (String.Compare(nPath2, excludePath.LocalPath, !MyEnvironment.Unix) == 0)
+					{
+						folderAllowed = false;
+						break;
+					}
+				}
+				catch 
+				{
+				}
+			}
+
+			return folderAllowed;
+		}
 		#endregion
 
 		#region IEnumerable
