@@ -30,8 +30,15 @@ CommonFormWindowsTests_LDFLAGS =
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES =
+LIB_FILES = CommonFormWindows.dll
+DATA_FILES = 
+TEST_BIN_FILES =
+TEST_LIB_FILES = CommonformWindowsTests.dll
+TEST_DATA_FILES = 
 
-TARGETS = CommonFormWindows.dll CommonFormWindowsTests.dll 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS = CommonFormWindows.dll CommonFormWindowsTests.dll 
 CLEAN_FILES = Check.xml CommonFormWindows.pdb CommonFormWindows.Doc.xml Check.xml CommonFormWindowsTests.pdb CommonFormWindowsTests.Doc.xml  CommonFormWindows.xml CommonFormWindows.Doc.xml
 CLEAN_DIRS = Library/bin Library/obj Tests/bin Tests/obj 
 NUNIT_TESTS = CommonFormWindowsTests.dll 
@@ -62,7 +69,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -115,3 +123,4 @@ VPATH := $(VPATH) $(CommonFormWindowsTests_LIBPATH) $(CommonFormWindowsTests_INC
 CommonFormWindowsTests.dll: $(CommonFormWindowsTests_SOURCES) $(CommonFormWindowsTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:CommonFormWindowsTests.Doc.xml $(CSCFLAGS) $(CommonFormWindowsTests_FLAGS) $(CommonFormWindowsTests_LIBS:%=/r:%) $(CommonFormWindowsTests_LIBPATH:%=/lib:%) $(CommonFormWindowsTests_SOURCES)
 
+include ../../common.mk
