@@ -30,6 +30,7 @@ using System.Runtime.InteropServices;
 
 // General Information about the system assembly
 
+#if MONO
 #if (NET_1_0)
 	[assembly: AssemblyVersion("1.0.0.0")]
 	[assembly: SatelliteContractVersion("1.0.0.0")]
@@ -40,6 +41,20 @@ using System.Runtime.InteropServices;
 	[assembly: ComCompatibleVersion(1, 0, 0, 0)]
 	[assembly: TypeLibVersion(1, 10)]
 #endif
+#else
+//
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version 
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Revision and Build Numbers 
+// by using the '*' as shown below:
+
+[assembly: AssemblyVersion("1.0.*")]
+#endif
 
 [assembly: AssemblyTitle("Simias.dll")]
 [assembly: AssemblyDescription("Simias.dll")]
@@ -48,6 +63,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("Simias")]
 [assembly: AssemblyCopyright("(c) 2004 Novell, Inc.")]
 [assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]		
 
 [assembly: CLSCompliant(false)]
 [assembly: AssemblyDefaultAlias("Simias.dll")]

@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
+                PostBuildEvent = "copy $(TargetFileName) $(SolutionDir)stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)stage\&#xd;&#xa;"
                 RootNamespace = "Simias.Event"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -85,18 +85,8 @@
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Remoting.dll"
                 />
                 <Reference
-                    Name = "CollectionEvents"
-                    Project = "{680C2A55-3F33-45EA-AA67-5652592D93FE}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "Common"
-                    Project = "{2E918CCD-6919-4453-9BDE-1FF22657CAB5}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "Service"
-                    Project = "{CD27F275-744D-482D-A4C6-CCDCC64E2A83}"
+                    Name = "Simias"
+                    Project = "{7839E703-0177-4162-B083-BCFD4ED1CC1B}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
