@@ -868,6 +868,12 @@ namespace Simias.Client.Event
 				// Set the event to not signaled.
 				regServiceEvent.Reset();
 
+				// Wait for the configuration directory to be created.
+				while ( !Directory.Exists( Path.GetDirectoryName( configFileName ) ) )
+				{
+					Thread.Sleep( 1000 );
+				}
+
 				// Watcher on the configuration file to monitor it when it changes.
 				fsw = new FileSystemWatcher( Path.GetDirectoryName( configFileName ) );
 				fsw.Filter = Path.GetFileName( configFileName );
