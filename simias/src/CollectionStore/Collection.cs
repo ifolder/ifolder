@@ -2652,7 +2652,7 @@ namespace Simias.Storage
 						throw new InvalidOperationException( "Empty enumeration" );
 					}
 
-					return new ShallowNode( ( XmlElement )nodeListEnumerator.Current );
+					return new ShallowNode( ( XmlElement )nodeListEnumerator.Current, collection.id );
 				}
 			}
 
@@ -2702,7 +2702,7 @@ namespace Simias.Storage
 								if ( moreData )
 								{
 									// Filter out nodes that are duplicates.
-									duplicate = IsDuplicate( new ShallowNode( ( XmlElement )nodeListEnumerator.Current ).ID );
+									duplicate = IsDuplicate( new ShallowNode( ( XmlElement )nodeListEnumerator.Current, collection.id ).ID );
 								}
 								else
 								{
@@ -2720,7 +2720,7 @@ namespace Simias.Storage
 						else
 						{
 							// Filter out nodes that are duplicates.
-							duplicate = IsDuplicate( new ShallowNode( ( XmlElement )nodeListEnumerator.Current ).ID );
+							duplicate = IsDuplicate( new ShallowNode( ( XmlElement )nodeListEnumerator.Current, collection.id ).ID );
 						}
 					}
 				}

@@ -808,6 +808,52 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets all collections that contain node objects with the specified property.
+		/// </summary>
+		/// <param name="property">Property to search for contained in node objects.</param>
+		/// <param name="op">Type of search operation.</param>
+		/// <returns>An ICSList object containing ShallowNode objects that represent the
+		/// found Collection objects.</returns>
+		public ICSList GetCollectionsByProperty( Property property, SearchOp op )
+		{
+			// Create a container object to hold all collections that match the specified user.
+			ICSList collectionList = new ICSList();
+
+			Persist.Query query = new Persist.Query( property.Name, op, property.ToString(), property.Type );
+			Persist.IResultSet chunkIterator = storageProvider.Search( query );
+			if ( chunkIterator != null )
+			{
+				char[] results = new char[ 4096 ];
+
+				// Get the first set of results from the query.
+				int length = chunkIterator.GetNext( ref results );
+				while ( length > 0 )
+				{
+					// Set up the XML document so the data can be easily extracted.
+					XmlDocument document = new XmlDocument();
+					document.LoadXml( new string( results, 0, length ) );
+
+					foreach ( XmlElement xe in document.DocumentElement )
+					{
+						// Get the collection that this Member object belongs to.
+						string collectionID = xe.GetAttribute( XmlTags.CIdAttr );
+						
+						// Get the collection object.
+						XmlDocument cDoc = storageProvider.GetShallowRecord( collectionID );
+						collectionList.Add( new ShallowNode( cDoc.DocumentElement[ XmlTags.ObjectTag ] ) );
+					}
+
+					// Get the next set of results from the query.
+					length = chunkIterator.GetNext( ref results );
+				}
+
+				chunkIterator.Dispose();
+			}
+
+			return collectionList;
+		}
+
+		/// <summary>
 		///  Gets all collections that have the specified type.
 		/// </summary>
 		/// <param name="type">String that contains the type of the collection(s) to search for.</param>
@@ -883,7 +929,7 @@ namespace Simias.Storage
 						
 						// Get the collection object.
 						XmlDocument cDoc = storageProvider.GetShallowRecord( collectionID );
-						collectionList.Add( new ShallowNode( cDoc.DocumentElement[ XmlTags.ObjectTag ] ) );
+						collectionList.Add( new ShallowNode( cDoc.DocumentElement[ XmlTags.ObjectTag ], collectionID ) );
 					}
 
 					// Get the next set of results from the query.
@@ -1002,6 +1048,47 @@ namespace Simias.Storage
 		public ICSList GetLockedCollections( Collection.LockType lockType )
 		{
 			return GetLockedList( Enum.Format( typeof( Collection.LockType ), lockType, "d" ) );
+		}
+
+		/// <summary>
+		/// Gets all Node objects that contain the specified property.
+		/// </summary>
+		/// <param name="property">Property to search for contained in Node objects.</param>
+		/// <param name="op">Type of search operation.</param>
+		/// <returns>An ICSList object containing ShallowNode objects that represent the
+		/// found Node objects.</returns>
+		public ICSList GetNodesByProperty( Property property, SearchOp op )
+		{
+			// Create a container object to hold all nodes that match the specified user.
+			ICSList nodeList = new ICSList();
+
+			Persist.Query query = new Persist.Query( property.Name, op, property.ToString(), property.Type );
+			Persist.IResultSet chunkIterator = storageProvider.Search( query );
+			if ( chunkIterator != null )
+			{
+				char[] results = new char[ 4096 ];
+
+				// Get the first set of results from the query.
+				int length = chunkIterator.GetNext( ref results );
+				while ( length > 0 )
+				{
+					// Set up the XML document so the data can be easily extracted.
+					XmlDocument document = new XmlDocument();
+					document.LoadXml( new string( results, 0, length ) );
+
+					foreach ( XmlElement xe in document.DocumentElement )
+					{
+						nodeList.Add( new ShallowNode( xe ) );
+					}
+
+					// Get the next set of results from the query.
+					length = chunkIterator.GetNext( ref results );
+				}
+
+				chunkIterator.Dispose();
+			}
+
+			return nodeList;
 		}
 
 		/// <summary>

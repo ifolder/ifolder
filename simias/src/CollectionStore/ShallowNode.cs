@@ -48,6 +48,11 @@ namespace Simias.Storage
 		/// The object type.
 		/// </summary>
 		private readonly string type;
+
+		/// <summary>
+		/// The collection identifier.
+		/// </summary>
+		private readonly string cid;
 		#endregion
 
 		#region Properties
@@ -74,6 +79,14 @@ namespace Simias.Storage
 		{
 			get { return type; }
 		}
+
+		/// <summary>
+		/// Gets the collection identifier for this object.
+		/// </summary>
+		public string CollectionID
+		{
+			get { return cid; }
+		}
 		#endregion
 
 		#region Constructor
@@ -86,6 +99,25 @@ namespace Simias.Storage
 			name = xmlElement.GetAttribute( XmlTags.NameAttr );
 			id = xmlElement.GetAttribute( XmlTags.IdAttr );
 			type = xmlElement.GetAttribute( XmlTags.TypeAttr );
+			cid = xmlElement.GetAttribute( XmlTags.CIdAttr );
+		}
+
+		/// <summary>
+		/// Constructor for creating a ShallowNode object.
+		/// </summary>
+		/// <param name="xmlElement">Xml element that describes a Node object.</param>
+		/// <param name="collectionID">The collection that this node belongs to.</param>
+		internal ShallowNode( XmlElement xmlElement, string collectionID )
+		{
+			name = xmlElement.GetAttribute( XmlTags.NameAttr );
+			id = xmlElement.GetAttribute( XmlTags.IdAttr );
+			type = xmlElement.GetAttribute( XmlTags.TypeAttr );
+			cid = collectionID;
+
+			// TODO: Debug remove
+			if ( ( cid == null ) || ( cid == String.Empty ) )
+				throw new CollectionStoreException( "Shallow node has null collection id." );
+			// TODO End Debug
 		}
 		#endregion
 	}

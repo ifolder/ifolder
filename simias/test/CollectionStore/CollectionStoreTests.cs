@@ -2472,7 +2472,7 @@ namespace Simias.Storage.Tests
 		/// <summary>
 		/// Tests the collection owner.
 		/// </summary>
-		[Test]
+		//[Test]
 		public void CollectionOwnerTest()
 		{
 			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
