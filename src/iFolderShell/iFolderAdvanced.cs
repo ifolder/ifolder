@@ -1293,7 +1293,8 @@ namespace Novell.iFolderCom
 				iFolder[] ifolderArray = ifWebService.GetAlliFolders();
 				foreach (iFolder i in ifolderArray)
 				{
-					if (i.Type.Equals("iFolder") && i.State.Equals("Local"))
+					if ((i.Type != null) && i.Type.Equals("iFolder") && 
+						(i.State != null) && i.State.Equals("Local"))
 					{
 						iFolderInfo ifolderInfo = new iFolderInfo();
 						ifolderInfo.LocalPath = i.UnManagedPath;

@@ -622,6 +622,47 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
+		/// Web method that returns a list of users whose name's contain
+		/// the specified string.
+		/// </summary>
+		/// <param name="SearchString">The string to search for.</param>
+		/// <returns>An array of users.</returns>
+		[WebMethod(Description="Search for a Member of a specified name.")]
+		[SoapDocumentMethod]
+		public iFolderUser[] SearchForiFolderUsers(string SearchString)
+		{
+			ArrayList list = new ArrayList();
+
+			Store store = Store.GetStore();
+
+			Roster roster = 
+				store.GetDomain(store.DefaultDomain).GetRoster(store);
+
+			if(roster == null)
+				throw new Exception("Unable to access user roster");
+
+
+			ICSList searchList = roster.Search(BaseSchema.ObjectName, SearchString, SearchOp.Contains);
+			foreach(ShallowNode sNode in searchList)
+			{
+				if (sNode.Type.Equals("Member"))
+				{
+					Simias.Storage.Member simMem =
+						new Simias.Storage.Member(roster, sNode);
+
+					iFolderUser user = new iFolderUser(simMem);
+					list.Add(user);
+				}
+			}
+
+			return (iFolderUser[])(list.ToArray(typeof(iFolderUser)));
+		}
+
+
+
+
+
+		/// <summary>
 		/// WebMethod that gets a member from the default Roster
 		/// </summary>
 		/// <param name = "UserID">

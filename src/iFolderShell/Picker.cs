@@ -55,10 +55,8 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.ListView addedLV;
 		private System.Windows.Forms.ColumnHeader columnHeader1;
 		private System.Windows.Forms.ColumnHeader columnHeader2;
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.Container components = null;
+		private System.Windows.Forms.Timer searchTimer;
+		private System.ComponentModel.IContainer components;
 		#endregion
 
 		/// <summary>
@@ -114,8 +112,8 @@ namespace Novell.iFolderCom
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.rosterLV = new System.Windows.Forms.ListView();
-			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.addedLV = new System.Windows.Forms.ListView();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.add = new System.Windows.Forms.Button();
@@ -125,6 +123,8 @@ namespace Novell.iFolderCom
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.ok = new System.Windows.Forms.Button();
 			this.cancel = new System.Windows.Forms.Button();
+			this.searchTimer = new System.Windows.Forms.Timer(this.components);
+			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.SuspendLayout();
 			// 
 			// rosterLV
@@ -139,11 +139,6 @@ namespace Novell.iFolderCom
 			this.rosterLV.TabIndex = 0;
 			this.rosterLV.View = System.Windows.Forms.View.Details;
 			this.rosterLV.DoubleClick += new System.EventHandler(this.add_Click);
-			// 
-			// columnHeader1
-			// 
-			this.columnHeader1.Text = "Name";
-			this.columnHeader1.Width = 196;
 			// 
 			// addedLV
 			// 
@@ -188,6 +183,7 @@ namespace Novell.iFolderCom
 			this.search.Size = new System.Drawing.Size(152, 20);
 			this.search.TabIndex = 4;
 			this.search.Text = "";
+			this.search.TextChanged += new System.EventHandler(this.search_TextChanged);
 			// 
 			// label1
 			// 
@@ -226,6 +222,16 @@ namespace Novell.iFolderCom
 			this.cancel.Name = "cancel";
 			this.cancel.TabIndex = 8;
 			this.cancel.Text = "Cancel";
+			// 
+			// searchTimer
+			// 
+			this.searchTimer.Interval = 500;
+			this.searchTimer.Tick += new System.EventHandler(this.searchTimer_Tick);
+			// 
+			// columnHeader1
+			// 
+			this.columnHeader1.Text = "Name";
+			this.columnHeader1.Width = 196;
 			// 
 			// Picker
 			// 
@@ -279,6 +285,49 @@ namespace Novell.iFolderCom
 		}
 		#endregion
 
+		#region Private Methods
+		private void displayUsers(string search)
+		{
+			Cursor.Current = Cursors.WaitCursor;
+			rosterLV.Items.Clear();
+			rosterLV.BeginUpdate();
+
+			try
+			{
+				iFolderUser[] ifolderUsers;
+				
+				if (search != null)
+				{
+					ifolderUsers = ifWebService.SearchForiFolderUsers(search);
+				}
+				else
+				{
+					ifolderUsers = ifWebService.GetAlliFolderUsers();
+				}
+
+				foreach (iFolderUser ifolderUser in ifolderUsers)
+				{
+					ListViewItem lvi = new ListViewItem(ifolderUser.Name, 1);
+					lvi.Tag = ifolderUser;
+					rosterLV.Items.Add(lvi);
+				}
+			}
+			catch (WebException ex)
+			{
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while reading the member list.");
+			}
+			catch (Exception ex)
+			{
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while reading the member list.");
+			}
+
+			rosterLV.EndUpdate();
+			Cursor.Current = Cursors.Default;
+		}
+		#endregion
+
 		#region Event Handlers
 		private void Picker_Load(object sender, System.EventArgs e)
 		{
@@ -298,27 +347,7 @@ namespace Novell.iFolderCom
 			catch {}
 
 			// Put the objects in the listview.
-			try
-			{
-				iFolderUser[] ifolderUsers = ifWebService.GetAlliFolderUsers();
-
-				foreach (iFolderUser ifolderUser in ifolderUsers)
-				{
-					ListViewItem lvi = new ListViewItem(ifolderUser.Name, 1);
-					lvi.Tag = ifolderUser;
-					rosterLV.Items.Add(lvi);
-				}
-			}
-			catch (WebException ex)
-			{
-				// TODO: Localize
-				MessageBox.Show("An error was encountered while reading the member list.");
-			}
-			catch (Exception ex)
-			{
-				// TODO: Localize
-				MessageBox.Show("An error was encountered while reading the member list.");
-			}
+			displayUsers(null);
 		}
 
 		private void Picker_SizeChanged(object sender, System.EventArgs e)
@@ -367,6 +396,23 @@ namespace Novell.iFolderCom
 				((ListViewItem)lvi.Tag).ForeColor = Color.Black;
 				lvi.Remove();
 			}
+		}
+
+		private void searchTimer_Tick(object sender, System.EventArgs e)
+		{
+			// The timer event has been fired...
+			// Stop the timer.
+			searchTimer.Stop();
+
+			// Filter the user list view.
+			displayUsers(search.Text);
+		}
+
+		private void search_TextChanged(object sender, System.EventArgs e)
+		{
+			// Reset the timer when search text is entered.
+			searchTimer.Stop();
+			searchTimer.Start();
 		}
 		#endregion
 	}

@@ -287,6 +287,20 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="SearchForiFolderUsers">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="SearchString" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SearchForiFolderUsersResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="SearchForiFolderUsersResult" type="s0:ArrayOfIFolderUser" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="GetiFolderUser">
         <xs:complexType>
           <xs:sequence>
@@ -679,6 +693,12 @@
   <message name="GetAlliFolderUsersSoapOut">
     <part name="parameters" element="s0:GetAlliFolderUsersResponse" />
   </message>
+  <message name="SearchForiFolderUsersSoapIn">
+    <part name="parameters" element="s0:SearchForiFolderUsers" />
+  </message>
+  <message name="SearchForiFolderUsersSoapOut">
+    <part name="parameters" element="s0:SearchForiFolderUsersResponse" />
+  </message>
   <message name="GetiFolderUserSoapIn">
     <part name="parameters" element="s0:GetiFolderUser" />
   </message>
@@ -892,6 +912,12 @@
   <message name="GetAlliFolderUsersHttpGetOut">
     <part name="Body" element="s0:ArrayOfIFolderUser" />
   </message>
+  <message name="SearchForiFolderUsersHttpGetIn" >
+    <part name="SearchString" type="s:string" />
+  </message>
+  <message name="SearchForiFolderUsersHttpGetOut">
+    <part name="Body" element="s0:ArrayOfIFolderUser" />
+  </message>
   <message name="GetiFolderUserHttpGetIn">
     <part name="UserID" type="s:string" />
   </message>
@@ -1097,6 +1123,12 @@
   <message name="GetAlliFolderUsersHttpPostOut">
     <part name="Body" element="s0:ArrayOfIFolderUser" />
   </message>
+  <message name="SearchForiFolderUsersHttpPostIn" >
+    <part name="SearchString" type="s:string" />
+  </message>
+  <message name="SearchForiFolderUsersHttpPostOut">
+    <part name="Body" element="s0:ArrayOfIFolderUser" />
+  </message>
   <message name="GetiFolderUserHttpPostIn">
     <part name="UserID" type="s:string" />
   </message>
@@ -1299,6 +1331,11 @@
       <output message="s0:GetAlliFolderUsersSoapOut" />
       <documentation>Get the list of All Members</documentation>
     </operation>
+    <operation name="SearchForiFolderUsers">
+      <input message="s0:SearchForiFolderUsersSoapIn" />
+      <output message="s0:SearchForiFolderUsersSoapOut" />
+      <documentation>Search for a Member of a specified name.</documentation>
+    </operation>
     <operation name="GetiFolderUser">
       <input message="s0:GetiFolderUserSoapIn" />
       <output message="s0:GetiFolderUserSoapOut" />
@@ -1491,6 +1528,11 @@
       <output message="s0:GetAlliFolderUsersHttpGetOut" />
       <documentation>Get the list of All Members</documentation>
     </operation>
+    <operation name="SearchForiFolderUsers">
+      <input message="s0:SearchForiFolderUsersHttpGetIn" />
+      <output message="s0:SearchForiFolderUsersHttpGetOut" />
+      <documentation>Search for a Member of a specified name.</documentation>
+    </operation>
     <operation name="GetiFolderUser">
       <input message="s0:GetiFolderUserHttpGetIn" />
       <output message="s0:GetiFolderUserHttpGetOut" />
@@ -1682,6 +1724,11 @@
       <input message="s0:GetAlliFolderUsersHttpPostIn" />
       <output message="s0:GetAlliFolderUsersHttpPostOut" />
       <documentation>Get the list of All Members</documentation>
+    </operation>
+    <operation name="SearchForiFolderUsers">
+      <input message="s0:SearchForiFolderUsersHttpPostIn" />
+      <output message="s0:SearchForiFolderUsersHttpPostOut" />
+      <documentation>Search for a Member of a specified name.</documentation>
     </operation>
     <operation name="GetiFolderUser">
       <input message="s0:GetiFolderUserHttpPostIn" />
@@ -1945,6 +1992,15 @@
     </operation>
     <operation name="GetAlliFolderUsers">
       <soap:operation soapAction="http://novell.com/ifolder/web/GetAlliFolderUsers" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="SearchForiFolderUsers">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SearchForiFolderUsers" style="document" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -2283,6 +2339,15 @@
         <mime:mimeXml part="Body" />
       </output>
     </operation>
+    <operation name="SearchForiFolderUsers">
+      <http:operation location="/SearchForiFolderUsers" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
     <operation name="GetiFolderUser">
       <http:operation location="/GetiFolderUser" />
       <input>
@@ -2587,6 +2652,15 @@
     </operation>
     <operation name="GetAlliFolderUsers">
       <http:operation location="/GetAlliFolderUsers" />
+      <input>
+        <mime:content part="" type="application/x-www-form-urlencoded" />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+    <operation name="SearchForiFolderUsers">
+      <http:operation location="/SearchForiFolderUsers" />
       <input>
         <mime:content part="" type="application/x-www-form-urlencoded" />
       </input>
