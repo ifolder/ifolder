@@ -45,7 +45,7 @@ namespace StoreBrowser
 		ListView lView;
 		bool alreadyDisposed;
 
-		public NodeBrowser(TreeView view, ListView lView, string dbPath)
+		public NodeBrowser(TreeView view, ListView lView )
 		{
 			tView = view;
 			this.lView = lView;
@@ -111,21 +111,16 @@ namespace StoreBrowser
 
 					if (p.Type == Syntax.Relationship)
 					{
-						Node rNode = null;
-						Collection rCol = store.GetCollectionByID((p.Value as Relationship).CollectionID);
-						if (rCol != null )
+						string valueStr = p.ToString();
+						Relationship r = p.Value as Relationship;
+						Collection rCol = store.GetCollectionByID( r.CollectionID );
+						if ( rCol != null )
 						{
-							rNode = rCol.GetNodeByID((p.Value as Relationship).NodeID);
+							Node rNode = !r.IsRoot ? rCol.GetNodeByID( r.NodeID ) : null;
+							valueStr = String.Format("{0}{1}", rCol.Name, (rNode != null) ? ":" + rNode.Name : null);
 						}
 
-						if (rCol == null || rNode == null)
-						{
-							item.SubItems.Add(p.ToString());
-						}
-						else
-						{
-							item.SubItems.Add(rCol.Name + ":" + rNode.Name);
-						}
+						item.SubItems.Add(valueStr);
 					}
 					else
 					{
@@ -152,18 +147,27 @@ namespace StoreBrowser
 			Color c = Color.LightBlue;
 			foreach (Property p in node.Properties)
 			{
-//				if (p.Type == Syntax.Relationship)
-//				{
-//				}
-//				else
-//				{
-					TreeNode pNode = new TreeNode(string.Format("{0,-20} : {1,40}", p.Name, p.Value.ToString()), 1, 1);
-					c = pNode.BackColor = (c == Color.LightBlue) ? Color.White : Color.LightBlue;
-					pNode.Nodes.Add(new TreeNode("Value: " + p.Value.ToString(), 1, 1));
-					pNode.Nodes.Add(new TreeNode("Type : " + p.Type.ToString(), 1, 1));
-					pNode.Nodes.Add(new TreeNode("Flags: " + p.Flags.ToString(), 1, 1));
-					tNode.Nodes.Add(pNode);
-//				}
+				TreeNode pNode = new TreeNode(string.Format("{0,-20} : {1,40}", p.Name, p.Value.ToString()), 1, 1);
+				c = pNode.BackColor = (c == Color.LightBlue) ? Color.White : Color.LightBlue;
+
+				// Default value.
+				string valueStr = p.Value.ToString();
+
+				if (p.Type == Syntax.Relationship)
+				{
+					Relationship r = p.Value as Relationship;
+					Collection col = store.GetCollectionByID( r.CollectionID );
+					if ( col != null )
+					{
+						Node n = !r.IsRoot ? col.GetNodeByID( r.NodeID ) : null;
+						valueStr = String.Format("{0}{1}", col.Name, (n != null) ? ":" + n.Name : null);
+					}
+				}
+
+				pNode.Nodes.Add(new TreeNode("Value: " + valueStr, 1, 1));
+				pNode.Nodes.Add(new TreeNode("Type : " + p.Type.ToString(), 1, 1));
+				pNode.Nodes.Add(new TreeNode("Flags: " + p.Flags.ToString(), 1, 1));
+				tNode.Nodes.Add(pNode);
 			}
 		}
 

@@ -31,6 +31,8 @@ using System.Xml;
 using NUnit.Framework;
 
 using Simias;
+using Simias.Policy;
+using Simias.POBox;
 using Simias.Storage;
 using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
 
@@ -1785,6 +1787,144 @@ namespace Simias.Storage.Tests
 			finally
 			{
 				if ( Directory.Exists( rootDir ) ) Directory.Delete( rootDir, true );
+				collection.Commit( collection.Delete() );
+			}
+		}
+
+		/// <summary>
+		/// Tests the disk space quota functionality.
+		/// </summary>
+		[Test]
+		public void DiskQuotaTest()
+		{
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			collection.Commit();
+
+			try
+			{
+				Member member = collection.GetCurrentMember();
+
+				// Create a system-wide disk space policy.
+				DiskSpaceQuota.CreateDiskSpaceQuota( store, store.DefaultDomain, 2048 );
+
+				// Make sure that there is a limit set.
+				if ( DiskSpaceQuota.GetDiskSpaceLimit( store, store.DefaultDomain ) != 2048 )
+				{
+					throw new ApplicationException( "Domain disk quota not set." );
+				}
+
+				// Get a quota object.
+				DiskSpaceQuota dsq = DiskSpaceQuota.GetDiskSpaceQuota( store, member );
+				
+				// Check the aggregate limit.
+				if ( dsq.Limit != 2048 )
+				{
+					throw new ApplicationException( "Aggregate domain disk quota not set." );
+				}
+
+				// Now apply the quota so that it will pass.
+				if ( dsq.HasAvailableDiskSpace( 1024 ) == false )
+				{
+					throw new ApplicationException( "Domain disk quota failed." );
+				}
+
+				// Now apply the quota so that it will fail.
+				if ( dsq.HasAvailableDiskSpace( 2049 ) == true )
+				{
+					throw new ApplicationException( "Domain disk quota failed." );
+				}
+
+
+				// Create a PO box for the member.
+				POBox.POBox.GetPOBox( store, store.DefaultDomain, member.UserID );
+
+				// Apply a quota on the member.
+				DiskSpaceQuota.CreateDiskSpaceQuota( store, member, 1024 );
+
+				// Make sure that there is a limit set.
+				if ( DiskSpaceQuota.GetDiskSpaceLimit( store, member ) != 1024 )
+				{
+					throw new ApplicationException( "Member disk quota not set." );
+				}
+
+				// Get a quota object.
+				dsq = DiskSpaceQuota.GetDiskSpaceQuota( store, member );
+				
+				// Check the aggregate limit.
+				if ( dsq.Limit != 1024 )
+				{
+					throw new ApplicationException( "Aggregate member disk quota not set." );
+				}
+
+				// Now apply the quota so that it will pass.
+				if ( dsq.HasAvailableDiskSpace( 512 ) == false )
+				{
+					throw new ApplicationException( "Member disk quota failed." );
+				}
+
+				// Now apply the quota so that it will fail.
+				if ( dsq.HasAvailableDiskSpace( 513 ) == true )
+				{
+					throw new ApplicationException( "Member disk quota failed." );
+				}
+
+
+				// Apply a quota on the collection.
+				DiskSpaceQuota.CreateDiskSpaceQuota( store, collection, 512 );
+
+				// Make sure that there is a limit set.
+				if ( DiskSpaceQuota.GetDiskSpaceLimit( store, collection ) != 512 )
+				{
+					throw new ApplicationException( "Collection disk quota not set." );
+				}
+
+				// Get a quota object.
+				dsq = DiskSpaceQuota.GetDiskSpaceQuota( store, member, collection );
+				
+				// Check the aggregate limit.
+				if ( dsq.Limit != 512 )
+				{
+					throw new ApplicationException( "Aggregate collection disk quota not set." );
+				}
+
+				// Now apply the quota so that it will pass.
+				if ( dsq.HasAvailableDiskSpace( 256 ) == false )
+				{
+					throw new ApplicationException( "Collection disk quota failed." );
+				}
+
+				// Now apply the quota so that it will fail.
+				if ( dsq.HasAvailableDiskSpace( 257 ) == true )
+				{
+					throw new ApplicationException( "Collection disk quota failed." );
+				}
+
+				// Reset the member's quota lower.
+				DiskSpaceQuota.CreateDiskSpaceQuota( store, member, 128 );
+
+				// Get a quota object.
+				dsq = DiskSpaceQuota.GetDiskSpaceQuota( store, member, collection );
+				
+				// Check the aggregate limit.
+				if ( dsq.Limit != 128 )
+				{
+					throw new ApplicationException( "Aggregate member disk quota not set." );
+				}
+
+				// Now apply the quota so that it will pass.
+				if ( dsq.HasAvailableDiskSpace( 128 ) == false )
+				{
+					throw new ApplicationException( "Member disk quota failed." );
+				}
+
+				// Now apply the quota so that it will fail.
+				if ( dsq.HasAvailableDiskSpace( 1 ) == true )
+				{
+					throw new ApplicationException( "Member disk quota failed." );
+				}
+			}
+			finally
+			{
 				collection.Commit( collection.Delete() );
 			}
 		}

@@ -45,12 +45,12 @@ namespace StoreBrowser
 		IProvider provider;
 		bool alreadyDisposed;
 
-		public ProviderBrowser(TreeView view, RichTextBox box, string dbPath)
+		public ProviderBrowser(TreeView view, RichTextBox box)
 		{
 			tView = view;
 			rBox = box;
 			bool created;
-			provider = Provider.Connect(out created); //new ProviderConfig()); //Path.GetDirectoryName(dbPath)), out created);
+			provider = Provider.Connect(out created);
 			rBox.Show();
 			tView.Dock = DockStyle.Left;
 			alreadyDisposed = false;

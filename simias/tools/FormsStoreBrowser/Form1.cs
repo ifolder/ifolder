@@ -78,7 +78,8 @@ namespace StoreBrowser
 			this.listView1.Hide();
 			tView.ImageList = imageList1;
 			tView.Dock = DockStyle.Fill;
-			browser = new NodeBrowser(tView, listView1, Configuration.GetConfiguration().StorePath);
+			Configuration.GetConfiguration();
+			browser = new NodeBrowser(tView, listView1);
 			browser.Show();
 		}
 
@@ -351,13 +352,19 @@ namespace StoreBrowser
 			FolderBrowserDialog fb = new FolderBrowserDialog();
 			if (path == null)
 				path = Configuration.GetConfiguration().StorePath;
+
+			// Reset the configuration and store instances.
+			Store.DeleteInstance();
+			Configuration.DisposeDefaultConfig();
+
 			fb.SelectedPath = path;
 			if (fb.ShowDialog() == DialogResult.OK)
 			{
                 path = fb.SelectedPath;
-				if (Path.GetFileName(path) == ".simias")
+				if (Path.GetFileName(path) == "simias")
 				{
-					browser = new NodeBrowser(tView, listView1, path);
+					Configuration.CreateDefaultConfig( path );
+					browser = new NodeBrowser(tView, listView1);
 					browser.Show();
 				}
 			}
@@ -368,15 +375,19 @@ namespace StoreBrowser
 			tView.Nodes.Clear();
 			richTextBox1.Clear();
 			FolderBrowserDialog fb = new FolderBrowserDialog();
-			if (path == null)
-				path = Configuration.GetConfiguration().StorePath;
+
+			// Reset the configuration and store instances.
+			Store.DeleteInstance();
+			Configuration.DisposeDefaultConfig();
+
 			fb.SelectedPath = path;
 			if (fb.ShowDialog() == DialogResult.OK)
 			{
 				path = fb.SelectedPath;
-				if (Path.GetFileName(path) == ".simias")
+				if (Path.GetFileName(path) == "simias")
 				{
-					browser = new ProviderBrowser(tView, richTextBox1, path);
+					Configuration.CreateDefaultConfig( path );
+					browser = new ProviderBrowser(tView, richTextBox1);
 					browser.Show();
 				}
 			}
@@ -389,11 +400,8 @@ namespace StoreBrowser
 
 		private void tView_BeforeExpand(object sender, System.Windows.Forms.TreeViewCancelEventArgs e)
 		{
-			//if (e.Node.Tag != null)
-			{
-				e.Node.Nodes.Clear();
-				browser.AddChildren(e.Node);	
-			}
+			e.Node.Nodes.Clear();
+			browser.AddChildren(e.Node);	
 		}
 
 		private void tView_AfterCollapse(object sender, System.Windows.Forms.TreeViewEventArgs e)

@@ -163,14 +163,14 @@ namespace Simias.Policy
 						MultiValuedList mvl = policy.properties.GetProperties( DenyRule );
 						foreach( Property p in mvl )
 						{
-							ruleList.Add( new Rule( p.Value as string ) );
+							ruleList.Add( new Rule( p.Value ) );
 						}
 
 						// Get the allow rule list.
 						mvl = policy.properties.GetProperties( AllowRule );
 						foreach( Property p in mvl )
 						{
-							ruleList.Add( new Rule( p.Value as string ) );
+							ruleList.Add( new Rule( p.Value ) );
 						}
 					}
 				}
@@ -260,7 +260,7 @@ namespace Simias.Policy
 		/// <param name="rule">Object that is used to match against the input in the policy.</param>
 		public void AddRule( Rule rule )
 		{
-			properties.ModifyProperty( ( rule.RuleResult == Rule.Result.Allow ) ? AllowRule : DenyRule, rule.ToString() );
+			properties.ModifyProperty( ( rule.RuleResult == Rule.Result.Allow ) ? AllowRule : DenyRule, rule.ToXml() );
 		}
 
 		/// <summary>
@@ -299,7 +299,7 @@ namespace Simias.Policy
 						foreach ( Property p in mvl )
 						{
 							// Apply the rule to see if it passes.
-							Rule rule = new Rule( p.Value as string );
+							Rule rule = new Rule( p.Value );
 							result = rule.Apply( input );
 							if ( result == Rule.Result.Deny )
 							{
@@ -320,7 +320,7 @@ namespace Simias.Policy
 						foreach( Property p in mvl )
 						{
 							// Apply the rule to see if it passes.
-							Rule rule = new Rule( p.Value as string );
+							Rule rule = new Rule( p.Value );
 							result = rule.Apply( input );
 							if ( result == Rule.Result.Deny )
 							{
@@ -366,7 +366,7 @@ namespace Simias.Policy
 			MultiValuedList mvl = properties.GetProperties( ( rule.RuleResult == Rule.Result.Allow ) ? AllowRule : DenyRule );
 			foreach( Property p in mvl )
 			{
-				Rule r = new Rule( p.Value as string );
+				Rule r = new Rule( p.Value );
 				if ( r == rule )
 				{
 					p.Delete();
@@ -420,7 +420,7 @@ namespace Simias.Policy
 		{
 			// Add a relationship property to the LocalDatabase object.
 			LocalDatabase localDb = store.GetDatabaseObject();
-			policy.Properties.ModifyNodeProperty( PropertyTags.PolicyAssociation, new Relationship( localDb.ID ) );
+			policy.Properties.ModifyNodeProperty( PropertyTags.PolicyAssociation, new Relationship( localDb ) );
 			localDb.Commit( policy );
 		}
 
@@ -462,7 +462,7 @@ namespace Simias.Policy
 				throw new CollectionStoreException( String.Format( "Roster does not exist for domain {0}.", domainID ) );
 			}
 
-			policy.Properties.ModifyNodeProperty( PropertyTags.PolicyAssociation, new Relationship( roster.ID ) );
+			policy.Properties.ModifyNodeProperty( PropertyTags.PolicyAssociation, new Relationship( roster ) );
 			roster.Commit( policy );
 		}
 
@@ -488,7 +488,7 @@ namespace Simias.Policy
 				throw new CollectionStoreException( String.Format( "POBox does not exist for member {0}", member.UserID ) );
 			}
 
-			policy.Properties.ModifyNodeProperty( PropertyTags.PolicyAssociation, new Relationship( poBox.ID ) );
+			policy.Properties.ModifyNodeProperty( PropertyTags.PolicyAssociation, new Relationship( poBox ) );
 			poBox.Commit( policy );
 		}
 
@@ -501,7 +501,7 @@ namespace Simias.Policy
 		public void CommitPolicy( Policy policy, Collection collection )
 		{
 			// Add a relationship property to the Collection object.
-			policy.Properties.ModifyNodeProperty( PropertyTags.PolicyAssociation, new Relationship( collection.ID ) );
+			policy.Properties.ModifyNodeProperty( PropertyTags.PolicyAssociation, new Relationship( collection ) );
 			collection.Commit( policy );
 		}
 
@@ -974,15 +974,21 @@ namespace Simias.Policy
 		}
 
 		/// <summary>
-		/// Initializes the object with the specified rule string.
+		/// Initializes the object with the specified rule document.
 		/// </summary>
-		/// <param name="ruleString">String that contains a rule representation.</param>
-		public Rule( string ruleString )
+		/// <param name="rule">Xml document that contains a rule representation.</param>
+		internal Rule( object rule ) :
+			this( rule as XmlDocument )
 		{
-			// The rule string should be a valid XML document.
-			XmlDocument document = new XmlDocument();
-			document.LoadXml( ruleString );
-			XmlElement element = document.DocumentElement;
+		}
+
+		/// <summary>
+		/// Initializes the object with the specified rule document.
+		/// </summary>
+		/// <param name="ruleDocument">Xml document that contains a rule representation.</param>
+		internal Rule( XmlDocument ruleDocument )
+		{
+			XmlElement element = ruleDocument.DocumentElement;
 
 			operation = ( Operation )Enum.Parse( typeof( Operation ), element.GetAttribute( RuleOperationTag ) );
 			result = ( Result )Enum.Parse( typeof( Result ), element.GetAttribute( RuleResultTag ) );
@@ -997,9 +1003,32 @@ namespace Simias.Policy
 		/// </summary>
 		/// <param name="info">The SerializationInfo populated with the data.</param>
 		/// <param name="context">The source (see StreamingContext) for this serialization.</param>
-		protected Rule( SerializationInfo info, StreamingContext context ) :
-			this( info.GetString( "RuleData" ) )
+		protected Rule( SerializationInfo info, StreamingContext context )
 		{
+			// Get the string that represents the serialized rule.
+			XmlDocument ruleDocument = new XmlDocument();
+			ruleDocument.LoadXml( info.GetString( "RuleData" ) );
+			XmlElement element = ruleDocument.DocumentElement;
+
+			operation = ( Operation )Enum.Parse( typeof( Operation ), element.GetAttribute( RuleOperationTag ) );
+			result = ( Result )Enum.Parse( typeof( Result ), element.GetAttribute( RuleResultTag ) );
+
+			syntax = ( Syntax )Enum.Parse( typeof( Syntax ), element.GetAttribute( RuleSyntaxTag ) );
+			Property p = new Property( String.Empty, syntax, element.InnerText );
+			operand = p.Value;
+		}
+		#endregion
+
+		#region ISerializable Members
+		/// <summary>
+		/// Called by the ISerializable interface to serialize a Rule object.
+		/// </summary>
+		/// <param name="info">The SerializationInfo to populate with data.</param>
+		/// <param name="context">The destination (see StreamingContext) for this serialization.</param>
+		public virtual void GetObjectData( SerializationInfo info, StreamingContext context )
+		{
+			// Turn this instance into a string.
+			info.AddValue( "RuleData", ToString() );
 		}
 		#endregion
 
@@ -1118,16 +1147,28 @@ namespace Simias.Policy
 		}
 		#endregion
 
-		#region ISerializable Members
+		#region Internal Methods
 		/// <summary>
-		/// Called by the ISerializable interface to serialize a Rule object.
+		/// Converts the value of this instance to an XML document.
 		/// </summary>
-		/// <param name="info">The SerializationInfo to populate with data.</param>
-		/// <param name="context">The destination (see StreamingContext) for this serialization.</param>
-		public virtual void GetObjectData( SerializationInfo info, StreamingContext context )
+		/// <returns>The value of this instance.</returns>
+		internal XmlDocument ToXml()
 		{
-			// Turn this instance into a string.
-			info.AddValue( "RuleData", ToString() );
+			// Create an XML document to hold the data.
+			XmlDocument document = new XmlDocument();
+
+			// Create the root and only element.
+			XmlElement element = document.CreateElement( RuleNameTag );
+			element.SetAttribute( RuleOperationTag, Enum.GetName( typeof( Operation ), operation ) );
+			element.SetAttribute( RuleResultTag, result.ToString() );
+			element.SetAttribute( RuleSyntaxTag, syntax.ToString() );
+
+			// Convert the rule into a property with no name.
+			Property p = new Property( String.Empty, operand );
+			element.InnerText = p.ValueString;
+
+			document.AppendChild( element );
+			return document;
 		}
 		#endregion
 
@@ -1172,7 +1213,7 @@ namespace Simias.Policy
 			Result ruleResult = Result.Deny;
 
 			// Make sure that the object is of the correct type for the rule.
-			if ( !input.GetType().Equals( operand ) )
+			if ( !input.GetType().Equals( operand.GetType() ) )
 			{
 				throw new CollectionStoreException( "The object type is incorrect for this rule." );
 			}
@@ -1310,21 +1351,7 @@ namespace Simias.Policy
 		/// <returns>The value of this instance.</returns>
 		public override string ToString()
 		{
-			// Convert the rule into a property with no name.
-			Property p = new Property( String.Empty, operand );
-
-			// Create an XML document to hold the data.
-			XmlDocument document = new XmlDocument();
-
-			// Create the root and only element.
-			XmlElement element = document.CreateElement( RuleNameTag );
-			element.SetAttribute( RuleOperationTag, Enum.GetName( typeof( Operation ), operation ) );
-			element.SetAttribute( RuleResultTag, result.ToString() );
-			element.SetAttribute( RuleSyntaxTag, syntax.ToString() );
-			element.InnerText = p.ValueString;
-			document.AppendChild( element );
-
-			return document.InnerXml;
+			return ToXml().InnerXml;
 		}
 		#endregion
 	}

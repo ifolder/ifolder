@@ -99,6 +99,11 @@ namespace Simias.Storage
 		/// Singleton of the store.
 		/// </summary>
 		private static Store instance = null;
+
+		/// <summary>
+		/// Used to indicate whether this instance is running on an enterprise server.
+		/// </summary>
+		private bool enterpriseServer = false;
 		#endregion
 
 		#region Properties
@@ -172,6 +177,14 @@ namespace Simias.Storage
 		public string ID
 		{
 			get { return localDb.ID; }
+		}
+
+		/// <summary>
+		/// Gets whether this instance is running on a enterprise server.
+		/// </summary>
+		public bool IsEnterpriseServer
+		{
+			get { return enterpriseServer; }
 		}
 
 		/// <summary>
@@ -264,6 +277,9 @@ namespace Simias.Storage
 						// Create a domain roster that will contain the member of the domain.
 						Roster roster = new Roster( this, eDomain );
 						roster.Commit();
+						
+						// This instance is running on an enterprise server.
+						enterpriseServer = true;
 					}
 
 					// Save the local database changes.
@@ -331,6 +347,20 @@ namespace Simias.Storage
 				}
 
 				return instance;
+			}
+		}
+
+		/// <summary>
+		/// Deletes the singleton instance of the store object.
+		/// NOTE: This call is for utility programs that need to browse to the store.
+		/// Don't call this unless you understand the consequences of closing
+		/// the process's only store instance.
+		/// </summary>
+		static public void DeleteInstance()
+		{
+			lock ( typeof( Store ) )
+			{
+				instance = null;
 			}
 		}
 		#endregion
