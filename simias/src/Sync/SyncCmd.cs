@@ -1,6 +1,6 @@
 /***********************************************************************
  *  $RCSfile$
- *
+ * 
  *  Copyright (C) 2004 Novell, Inc.
  *
  *  This library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  *  Author: Dale Olds <olds@novell.com>
- *
+ * 
  ***********************************************************************/
 using System;
 using System.IO;
@@ -108,8 +108,8 @@ public class FileInviter
 		}
 
 		// add the secret to the current identity chain
-		store.CurrentIdentity.CreateAlias(invitation.Domain, invitation.Identity);
-		store.CurrentIdentity.Commit();
+		IIdentity identity = IdentityManager.Connect().CurrentId;
+		identity.SetKeyChainItem(invitation.Domain, invitation.Identity, "novell");
 
 		// add the invitation information to the store collection
 		SyncCollection sc = syncStore.CreateCollection(invitation);
@@ -127,8 +127,9 @@ public class FileInviter
 		if (c == null)
 			return false;
 		SyncCollection sc = new SyncCollection(c);
-		Invitation invitation = sc.CreateInvitation(store.CurrentUser);
-		invitation.Domain = store.DomainName;
+		IIdentity ident = IdentityManager.Connect().CurrentId;
+		Invitation invitation = sc.CreateInvitation(ident.UserGuid);
+		invitation.Domain = ident.DomainName;
 		invitation.Save(fileName);
 		return true;
 	}
@@ -245,7 +246,7 @@ public class SyncCmd
 	int RunSync(Uri docRoot, string serverStoreLocation)
 	{
 		Store store = Store.Connect(storeLocation);
-		Collection c = FileInviter.FindCollection(store, docRoot);
+		Collection c = FileInviter.FindCollection(store, docRoot); 
 		if (c == null)
 		{
 			Log.Error("Could not find collection {0}", docRoot);
