@@ -15,14 +15,14 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_B43CA3856F88437DBF5984A27A6FA1A7"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_CC719ADA2AFC47459B0977D6D968261B"
+        "OwnerKey" = "8:_FB024D33286245C79156F008241C02F7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_BE259A4904B247F68BD9D14159D0AD1A"
-        "OwnerKey" = "8:_B43CA3856F88437DBF5984A27A6FA1A7"
+        "MsmKey" = "8:_FB024D33286245C79156F008241C02F7"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -74,20 +74,20 @@
         }
         "File"
         {
-            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_B43CA3856F88437DBF5984A27A6FA1A7"
+            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_FB024D33286245C79156F008241C02F7"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:iFolder, Version=0.0.0.0, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:Novell.iFolder, Version=0.0.0.0, Culture=neutral"
                 "ScatterAssemblies"
                 {
-                    "_B43CA3856F88437DBF5984A27A6FA1A7"
+                    "_FB024D33286245C79156F008241C02F7"
                     {
-                    "Name" = "8:iFolder.dll"
+                    "Name" = "8:Novell.iFolder.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:..\\..\\..\\src\\iFolder\\iFolder.dll"
+            "SourcePath" = "8:..\\..\\..\\src\\iFolder\\Novell.iFolder.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_48489943556B4E72B947B1A4F3B2FFF4"
@@ -142,7 +142,7 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_BE259A4904B247F68BD9D14159D0AD1A"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_CC719ADA2AFC47459B0977D6D968261B"
             {
             "UseDynamicProperties" = "11:FALSE"
             "IsDependency" = "11:TRUE"
