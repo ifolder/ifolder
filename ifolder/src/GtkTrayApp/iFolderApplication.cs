@@ -40,6 +40,8 @@ using Simias.Event;
 using Simias;
 using Simias.Storage;
 
+
+
 namespace Novell.iFolder
 {
 	public enum iFolderState : uint
@@ -131,6 +133,9 @@ namespace Novell.iFolder
 		public iFolderApplication(string[] args)
 			: base("iFolder", "1.0", Modules.UI, args)
 		{
+
+			Util.InitCatalog();
+
 			tIcon = new TrayIcon("iFolder");
 
 			eBox = new EventBox();
@@ -209,7 +214,7 @@ namespace Novell.iFolder
 		private void SimiasEventNodeCreatedHandler(SimiasEventArgs args)
 		{
 			NodeEventArgs nargs = args as NodeEventArgs;
-			Console.WriteLine("Received a Node Created Event");
+//			Console.WriteLine("Received a Node Created Event");
 			lock(EventQueue)
 			{
 				EventQueue.Enqueue(new iFolderEvent(nargs, 
@@ -224,7 +229,7 @@ namespace Novell.iFolder
 		private void SimiasEventNodeChangedHandler(SimiasEventArgs args)
 		{
 			NodeEventArgs nargs = args as NodeEventArgs;
-			Console.WriteLine("Received a Node Changed Event");
+//			Console.WriteLine("Received a Node Changed Event");
 			lock(EventQueue)
 			{
 				EventQueue.Enqueue(new iFolderEvent(nargs, 
@@ -239,7 +244,7 @@ namespace Novell.iFolder
 		private void SimiasEventNodeDeletedHandler(SimiasEventArgs args)
 		{
 			NodeEventArgs nargs = args as NodeEventArgs;
-			Console.WriteLine("Received a Node Deleted Event");
+//			Console.WriteLine("Received a Node Deleted Event");
 			lock(EventQueue)
 			{
 				EventQueue.Enqueue(new iFolderEvent(nargs, 
@@ -393,8 +398,8 @@ namespace Novell.iFolder
 						if( (ifolder != null) && (ifolder.HasConflicts) )
 						{
 							NotifyWindow notifyWin = new NotifyWindow(
-									tIcon, "Action Required",
-									string.Format("A collision has been detected in iFolder \"{0}\"", ifolder.Name),
+									tIcon, Util.GS("Action Required"),
+									string.Format(Util.GS("A collision has been detected in iFolder \"{0}\""), ifolder.Name),
 									Gtk.MessageType.Info, 5000);
 							notifyWin.ShowAll();
 
@@ -438,7 +443,7 @@ namespace Novell.iFolder
 			{
 				case "Node":
 				{
-					Console.WriteLine("Handling a node CreatedEvent");
+//					Console.WriteLine("Handling a node CreatedEvent");
 					// Check to see if the Node that changed is part of
 					// the POBox
 					if((ifSettings != null) && (iEvent.CollectionID == ifSettings.DefaultPOBoxID) )
@@ -475,10 +480,10 @@ namespace Novell.iFolder
 								return;
 								
 							NotifyWindow notifyWin = new NotifyWindow(
-									tIcon, 
-									string.Format("New iFolder \"{0}\"", 
-														ifolder.Name),
-									string.Format("This iFolder is owned by {0} and is available to sync on this computer", ifolder.Owner),
+								tIcon, 
+								string.Format(Util.GS("New iFolder \"{0}\""), 
+													ifolder.Name),
+								string.Format(Util.GS("This iFolder is owned by {0} and is available to sync on this computer"), ifolder.Owner),
 									Gtk.MessageType.Info, 5000);
 								notifyWin.ShowAll();
 	
@@ -502,8 +507,8 @@ namespace Novell.iFolder
 									ifws.GetiFolder(iEvent.CollectionID);
 						
 							NotifyWindow notifyWin = new NotifyWindow(
-									tIcon, "New iFolder User", 
-									string.Format("{0} has just joined iFolder {1}", newuser.Name, ifolder.Name),
+									tIcon, Util.GS("New iFolder User"), 
+									string.Format(Util.GS("{0} has just joined iFolder {1}"), newuser.Name, ifolder.Name),
 									Gtk.MessageType.Info, 5000);
 
 							notifyWin.ShowAll();
@@ -646,9 +651,9 @@ namespace Novell.iFolder
 							null,
 							iFolderMsgDialog.DialogType.Error,
 							iFolderMsgDialog.ButtonSet.Ok,
-							"iFolder Connect Error",
-							"Unable to locate Simias Process",
-							"The Simias process must be running in order for iFolder to run.  Start the Simias process and try again");
+							Util.GS("iFolder Connect Error"),
+							Util.GS("Unable to locate Simias Process"),
+							Util.GS("The Simias process must be running in order for iFolder to run.  Start the Simias process and try again"));
 						mDialog.Run();
 						mDialog.Hide();
 						mDialog.Destroy();
@@ -703,14 +708,15 @@ namespace Novell.iFolder
 			AccelGroup agrp = new AccelGroup();
 			Menu trayMenu = new Menu();
 
-			MenuItem iFolders_item = new MenuItem ("My iFolders...");
+			MenuItem iFolders_item = new MenuItem (Util.GS("My iFolders..."));
 			trayMenu.Append (iFolders_item);
 			iFolders_item.Activated += 
 					new EventHandler(show_properties);
 			
 			if( (ifSettings != null) && (!ifSettings.HaveEnterprise) )
 			{
-				MenuItem connect_item = new MenuItem ("Join Enterprise Server");
+				MenuItem connect_item = 
+						new MenuItem (Util.GS("Join Enterprise Server"));
 				trayMenu.Append (connect_item);
 				connect_item.Activated += new EventHandler(OnJoinEnterprise);
 			}

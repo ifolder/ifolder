@@ -6,7 +6,7 @@ UILIB_CSFILES_CSC := $(subst /,$(SEP),$(UILIB_CSFILES))
 UILIB_INCLUDES = 
 UILIB_RESOURCES =
 UILIB_FLAGS = $(CSC_LIBFLAG)
-UILIB_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll
+UILIB_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll Mono.Posix.dll
 UILIB_LIBPATH = $(srcdir)/../iFolder
 
 
@@ -15,7 +15,7 @@ TrayAppGtk_CSFILES_CSC := $(subst /,$(SEP),$(TrayAppGtk_CSFILES))
 TrayAppGtk_INCLUDES = 
 TrayAppGtk_RESOURCES =
 TrayAppGtk_FLAGS = $(CSC_EXEFLAG)
-TrayAppGtk_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll TrayIcon.dll Novell.iFolder.UI.gtk.dll
+TrayAppGtk_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll TrayIcon.dll Novell.iFolder.UI.gtk.dll Mono.Posix.dll
 TrayAppGtk_LIBPATH = $(srcdir)/../TrayIcon ../iFolder ../TrayIcon
 
 
@@ -40,7 +40,7 @@ iFolderGtkApp.exe: $(TrayAppGtk_CSFILES) $(TrayAppGtk_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_LIBS) $(TrayAppGtk_FLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(TrayAppGtk_LIBS:%=/r:%) $(TrayAppGtk_LIBPATH:%=/lib:%) $(TrayAppGtk_RESOURCES:%=$(ICON_FLAG)%) $(TrayAppGtk_CSFILES_CSC) Util.cs /doc:iFolderGtkApp.doc.xml
 
 
-install-exec-local: all $(IMAGE_FILES)
+install-exec-local: all $(IMAGE_FILES) 
 	$(mkinstalldirs) $(DESTDIR)$(bindir) $(DESTDIR)$(libdir) $(DESTDIR)$(datadir)/ifolder3/images $(DESTDIR)$(datadir)/applications $(DESTDIR)$(datadir)/pixmaps $(DESTDIR)$(datadir)/mime-info $(DESTDIR)$(datadir)/application-registry
 	$(INSTALL_PROGRAM) Novell.iFolder.UI.gtk.dll $(INSTALL_LIB_FILES) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(IMAGE_FILES) $(DESTDIR)$(datadir)/ifolder3/images

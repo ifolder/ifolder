@@ -18,8 +18,6 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Author: Calvin Gaisford <cgaisford@novell.com>
- *			Code based on examples from the book "Mono A Develper's Notebook"
- 				by Edd Dumbill and Niel M. Bornstein
  * 
  ***********************************************************************/
 
@@ -63,7 +61,7 @@ namespace Novell.iFolder
 
 		public iFolderLoginDialog() : base()
  		{
-			this.Title = "iFolder Login";
+			this.Title = Util.GS("iFolder Login");
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 			this.HasSeparator = false;
 //			this.BorderWidth = 10;
@@ -81,7 +79,7 @@ namespace Novell.iFolder
 			loginTable.ColumnSpacing = 10;
 			loginTable.Homogeneous = false;
 	
-			Label nameLabel = new Label("User Name:");
+			Label nameLabel = new Label(Util.GS("User Name:"));
 			nameLabel.Xalign = 0;
 			loginTable.Attach(nameLabel, 0,1,0,1,
 					AttachOptions.Shrink, 0,0,0);
@@ -92,7 +90,7 @@ namespace Novell.iFolder
 			loginTable.Attach(nameEntry, 1,2,0,1, 
 					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 	
-			Label passLabel = new Label("Password:");
+			Label passLabel = new Label(Util.GS("Password:"));
 			passLabel.Xalign = 0;
 			loginTable.Attach(passLabel, 0,1,1,2,
 					AttachOptions.Shrink, 0,0,0);
@@ -104,7 +102,7 @@ namespace Novell.iFolder
 			loginTable.Attach(passEntry, 1,2,1,2,
 					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 	
-			Label serverLabel = new Label("Server Host:");
+			Label serverLabel = new Label(Util.GS("Server Host:"));
 			serverLabel.Xalign = 0;
 			loginTable.Attach(serverLabel, 0,1,2,3,
 					AttachOptions.Shrink, 0,0,0);
@@ -119,7 +117,7 @@ namespace Novell.iFolder
 			this.VBox.ShowAll();
 
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
-			this.AddButton("_Login", ResponseType.Ok);
+			this.AddButton(Util.GS("_Login"), ResponseType.Ok);
 			this.SetResponseSensitive(ResponseType.Ok, false);
 		}
 

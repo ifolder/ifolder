@@ -79,7 +79,7 @@ namespace Novell.iFolder
 			this.Modal = true;
 			if(parent != null)
 				this.TransientFor = parent;
-			this.Title = "iFolder Properties";
+			this.Title = Util.GS("iFolder Properties");
 
 			ifHash = new Hashtable();
 
@@ -109,7 +109,7 @@ namespace Novell.iFolder
 			HBox pickBox = new HBox();
 			dialogBox.PackStart(pickBox, false, true, 0);
 			pickBox.Spacing = 10;
-			Label pickLabel = new Label("iFolder:");
+			Label pickLabel = new Label(Util.GS("iFolder:"));
 			pickLabel.Xalign = 0;
 			pickBox.PackStart(pickLabel, false, false, 0);
 
@@ -166,11 +166,11 @@ namespace Novell.iFolder
 
 			SettingsPage = new iFolderPropSettingsPage(this, ifws);
 
-			propNoteBook.AppendPage(SettingsPage, new Label("General"));
+			propNoteBook.AppendPage(SettingsPage, new Label(Util.GS("General")));
 
 			SharingPage = new iFolderPropSharingPage(this, ifws);
 
-			propNoteBook.AppendPage(SharingPage, new Label("Sharing"));
+			propNoteBook.AppendPage(SharingPage, new Label(Util.GS("Sharing")));
 
 			dialogBox.PackStart(propNoteBook);
 
@@ -186,7 +186,7 @@ namespace Novell.iFolder
 		private void SetValues()
 		{
 			string name = ifolder.Name;
-			this.Title = string.Format("iFolder Properties for \"{0}\"",name);
+			this.Title = string.Format(Util.GS("iFolder Properties for \"{0}\""),name);
 
 			if(!ifolder.HasConflicts)
 			{
@@ -209,14 +209,14 @@ namespace Novell.iFolder
 					ConflictBox.PackStart(conImage, false, false, 0);
 
 					Gtk.Label l = new Label("<span weight=\"bold\">" +
-								"This iFolder contains conflicts." +
+								Util.GS("This iFolder contains conflicts.") +
 								"</span>");
 					l.LineWrap = true;
 					l.Xalign = 0;
 					l.UseMarkup = true;
 					ConflictBox.PackStart(l, true, true, 0);
 
-					Button resButton = new Button("_Resolve conflicts");
+					Button resButton = new Button(Util.GS("_Resolve conflicts"));
 					ConflictBox.PackStart(resButton, false, false, 0);
 					resButton.Clicked += new EventHandler(OnResolveConflicts);
 
@@ -285,9 +285,9 @@ namespace Novell.iFolder
 						this,
 						iFolderMsgDialog.DialogType.Error,
 						iFolderMsgDialog.ButtonSet.Ok,
-						"iFolder Error",
-						"Unable to launch File Browser",
-						"iFolder attempted to open the Nautilus File Manager and the Konqueror File Manager and was unable to launch either of them.");
+						Util.GS("iFolder Error"),
+						Util.GS("Unable to launch File Browser"),
+						Util.GS("iFolder attempted to open the Nautilus File Manager and the Konqueror File Manager and was unable to launch either of them."));
 					dg.Run();
 					dg.Hide();
 					dg.Destroy();

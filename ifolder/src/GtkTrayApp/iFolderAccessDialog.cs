@@ -18,8 +18,6 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Author: Calvin Gaisford <cgaisford@novell.com>
- *			Code based on examples from the book "Mono A Develper's Notebook"
- 				by Edd Dumbill and Niel M. Bornstein
  * 
  ***********************************************************************/
 
@@ -74,9 +72,9 @@ namespace Novell.iFolder
 				this.TransientFor = parent;
 
 			if(userName == null)
-				this.Title = "Properties for multiple users";
+				this.Title = Util.GS("Properties for multiple users");
 			else
-				this.Title = "Properties for " + userName;
+				this.Title = string.Format(Util.GS("Properties for {0}"), userName);
 			this.HasSeparator = false;
 			this.Resizable = false;
 			this.Modal = true;
@@ -92,7 +90,7 @@ namespace Novell.iFolder
 			this.VBox.PackStart(accSectionBox, false, true, 0);
 			accSectionBox.BorderWidth = 10;
 			Label accSectionLabel = new Label("<span weight=\"bold\">" +
-												"Access" +
+												Util.GS("Access") +
 												"</span>");
 			accSectionLabel.UseMarkup = true;
 			accSectionLabel.Xalign = 0;
@@ -110,20 +108,20 @@ namespace Novell.iFolder
 			accSpacerBox.PackStart(accWidgetBox, false, true, 0);
 
 
-			FCButton = new RadioButton("Full Control");
+			FCButton = new RadioButton(Util.GS("Full Control"));
 			accWidgetBox.PackStart(FCButton, false, true, 0);
 
-			RWButton = new RadioButton(FCButton, "Read/Write");
+			RWButton = new RadioButton(FCButton, Util.GS("Read/Write"));
 			accWidgetBox.PackStart(RWButton, false, true, 0);
 
-			ROButton = new RadioButton(FCButton, "Read Only");
+			ROButton = new RadioButton(FCButton, Util.GS("Read Only"));
 			accWidgetBox.PackStart(ROButton, false, true, 0);
 
 			VBox ownerSectionBox = new VBox();
 			this.VBox.PackStart(ownerSectionBox, false, true, 0);
 			ownerSectionBox.BorderWidth = 10;
 
-			OwnerButton = new CheckButton("Make this user the owner of the collection.");
+			OwnerButton = new CheckButton(Util.GS("Make this user the owner of the collection."));
 			ownerSectionBox.PackStart(OwnerButton, false, true, 0);
 			if(!enableOwner)
 				OwnerButton.Sensitive = false;
