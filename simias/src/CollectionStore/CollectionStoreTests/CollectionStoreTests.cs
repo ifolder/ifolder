@@ -1237,14 +1237,22 @@ namespace Simias.Storage.Tests
 				nodeA.Properties.AddProperty( "Test Property", "This is a test." );
 				collection.Commit( nodeA );
 
+				collection.Refresh( nodeA );
+				collection.Refresh();
+
 				// The incarnation number on the collection and child node should be two.
 				if ( ( collection.LocalIncarnation != 2 ) || ( nodeA.LocalIncarnation != 2 ) )
 				{
+					Console.WriteLine( "collection incarnation = {0}", collection.LocalIncarnation );
+					Console.WriteLine( "nodeA incarnation = {0}", nodeA.LocalIncarnation );
 					throw new ApplicationException( "Local incarnation value is not two." );
 				}
 
 				// Commit just the collection with no changes to it.
 				collection.Commit();
+
+				collection.Refresh( nodeA );
+				collection.Refresh();
 
 				// The incarnation number on the collection should be 3 and the node should be two.
 				if ( ( collection.LocalIncarnation != 3 ) || ( nodeA.LocalIncarnation != 2 ) )
@@ -1256,6 +1264,10 @@ namespace Simias.Storage.Tests
 				Node nodeB = new Node( "CS_NodeB" );
 				collection.Commit( nodeB );
 
+				collection.Refresh( nodeA );
+				collection.Refresh( nodeB );
+				collection.Refresh();
+
 				// The incarnation number on the collection should be 4 and nodeA should be two
 				// and nodeB should be one.
 				if ( ( collection.LocalIncarnation != 4 ) || ( nodeA.LocalIncarnation != 2 ) || ( nodeB.LocalIncarnation != 1 ) )
@@ -1264,8 +1276,10 @@ namespace Simias.Storage.Tests
 				}
 
 				// Finally, set the master version of the collection.
+				collection.ImportNode( collection );
 				collection.IncarnationUpdate = 1;
 				collection.Commit();
+				collection.Refresh();
 
 				// The incarnation number on the collection should be 1.1
 				if ( ( collection.LocalIncarnation != 1 ) && ( collection.MasterIncarnation != 1 ) )
