@@ -43,11 +43,11 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.TextBox serverIP;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.TextBox password;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.TextBox userName;
 		private Configuration config;
+		private System.Windows.Forms.PictureBox banner;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -94,16 +94,16 @@ namespace Novell.iFolder.FormsTrayApp
 			this.serverIP = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
 			this.password = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
+			this.banner = new System.Windows.Forms.PictureBox();
 			this.SuspendLayout();
 			// 
 			// ok
 			// 
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.ok.Location = new System.Drawing.Point(224, 160);
+			this.ok.Location = new System.Drawing.Point(278, 184);
 			this.ok.Name = "ok";
 			this.ok.TabIndex = 7;
 			this.ok.Text = "OK";
@@ -113,30 +113,30 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.cancel.Location = new System.Drawing.Point(304, 160);
+			this.cancel.Location = new System.Drawing.Point(357, 184);
 			this.cancel.Name = "cancel";
 			this.cancel.TabIndex = 8;
 			this.cancel.Text = "Cancel";
 			// 
 			// userName
 			// 
-			this.userName.Location = new System.Drawing.Point(120, 64);
+			this.userName.Location = new System.Drawing.Point(112, 88);
 			this.userName.Name = "userName";
-			this.userName.Size = new System.Drawing.Size(240, 20);
+			this.userName.Size = new System.Drawing.Size(320, 20);
 			this.userName.TabIndex = 2;
 			this.userName.Text = "";
 			// 
 			// serverIP
 			// 
-			this.serverIP.Location = new System.Drawing.Point(120, 128);
+			this.serverIP.Location = new System.Drawing.Point(112, 152);
 			this.serverIP.Name = "serverIP";
-			this.serverIP.Size = new System.Drawing.Size(240, 20);
+			this.serverIP.Size = new System.Drawing.Size(320, 20);
 			this.serverIP.TabIndex = 6;
 			this.serverIP.Text = "";
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(24, 64);
+			this.label1.Location = new System.Drawing.Point(16, 88);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(100, 16);
 			this.label1.TabIndex = 1;
@@ -144,46 +144,46 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(24, 128);
+			this.label2.Location = new System.Drawing.Point(16, 152);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(100, 16);
 			this.label2.TabIndex = 5;
 			this.label2.Text = "Server IP address:";
 			// 
-			// label3
-			// 
-			this.label3.Location = new System.Drawing.Point(8, 16);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(360, 32);
-			this.label3.TabIndex = 0;
-			this.label3.Text = "Please enter your credentials and the enterprise server\'s IP address.";
-			// 
 			// password
 			// 
-			this.password.Location = new System.Drawing.Point(120, 96);
+			this.password.Location = new System.Drawing.Point(112, 120);
 			this.password.Name = "password";
 			this.password.PasswordChar = '*';
-			this.password.Size = new System.Drawing.Size(240, 20);
+			this.password.Size = new System.Drawing.Size(320, 20);
 			this.password.TabIndex = 4;
 			this.password.Text = "";
 			// 
 			// label4
 			// 
-			this.label4.Location = new System.Drawing.Point(24, 96);
+			this.label4.Location = new System.Drawing.Point(16, 120);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(100, 16);
 			this.label4.TabIndex = 3;
 			this.label4.Text = "Password:";
+			// 
+			// banner
+			// 
+			this.banner.Location = new System.Drawing.Point(0, 0);
+			this.banner.Name = "banner";
+			this.banner.Size = new System.Drawing.Size(450, 65);
+			this.banner.TabIndex = 9;
+			this.banner.TabStop = false;
 			// 
 			// ServerInfo
 			// 
 			this.AcceptButton = this.ok;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.CancelButton = this.cancel;
-			this.ClientSize = new System.Drawing.Size(386, 192);
+			this.ClientSize = new System.Drawing.Size(450, 224);
+			this.Controls.Add(this.banner);
 			this.Controls.Add(this.password);
 			this.Controls.Add(this.label4);
-			this.Controls.Add(this.label3);
 			this.Controls.Add(this.serverIP);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.userName);
@@ -221,6 +221,7 @@ namespace Novell.iFolder.FormsTrayApp
 			try
 			{
 				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
+				this.banner.Image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
 			}
 			catch (Exception ex)
 			{

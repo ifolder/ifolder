@@ -45,6 +45,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private Store store = null;
 		private Configuration config;
 		private Manager abManager;
+		private EventSubscriber subscriber;
 		private System.Windows.Forms.ComboBox comboBox1;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ColumnHeader columnHeader1;
@@ -53,6 +54,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.Button accept;
 		private System.Windows.Forms.Button decline;
 		private System.Windows.Forms.Button remove;
+		private Hashtable ht;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -65,32 +67,26 @@ namespace Novell.iFolder.FormsTrayApp
 			//
 			InitializeComponent();
 
-			Configuration config = new Configuration();
-			abManager = Manager.Connect(config);
-
-			store = new Store(config);
-
-			// TODO: pass in correct domain ... for now just use the default.
-			poBox = POBox.GetPOBox(store, store.DefaultDomain);
-
-			// Temporary code to populate the POBox.
-/*			int n = 100;
-			Simias.POBox.Message[] messages = new Simias.POBox.Message[100];
-
-			while (--n >= 0)
+			try
 			{
-				string name = "MessageTest" + n.ToString();
-				string type = n % 2 == 0 ? Simias.POBox.Message.InboundMessage : Simias.POBox.Message.OutboundMessage;
-				Simias.POBox.Message msg = new Simias.POBox.Message(name, type);
-				msg.ToIdentity = "IdentityTo" + n.ToString();
-				msg.FromIdentity = "IdentityFrom" + n.ToString();
-				msg.ToAddress = "AddressTo" + n.ToString();
-				msg.FromAddress = "AddressFrom" + n.ToString();
-				messages[n] = msg;
+				config = new Configuration();
+				abManager = Manager.Connect(config);
+
+				store = new Store(config);
+
+				// TODO: pass in correct domain ... for now just use the default.
+				poBox = POBox.GetPOBox(store, store.DefaultDomain);
+			}
+			catch (SimiasException e)
+			{
+				e.LogFatal();
+			}
+			catch (Exception e)
+			{
+				logger.Fatal(e, "Initializing");
 			}
 
-			poBox.AddMessage(messages);
-*/			// End - Temporary code.
+			ht = new Hashtable();
 		}
 
 		/// <summary>
@@ -238,28 +234,49 @@ namespace Novell.iFolder.FormsTrayApp
 				logger.Debug(ex, "Loading graphics");
 			}
 
-			config = new Configuration();
-//			ICSList msgList = this.poBox.GetMessagesByMessageType(Simias.POBox.Message.OutboundMessage);
+			subscriber = new EventSubscriber(config);
 
-			ICSList msgList = poBox.GetNodesByType(typeof(Subscription).Name);
+			// TODO: Will need to change this when a different POBox is selectable.
+			subscriber.CollectionId = poBox.ID;
+			subscriber.NodeChanged += new NodeEventHandler(subscriber_NodeChanged);
+			subscriber.NodeCreated += new NodeEventHandler(subscriber_NodeCreated);
+			subscriber.NodeDeleted += new NodeEventHandler(subscriber_NodeDeleted);
 
 			messages.BeginUpdate();
-			foreach (ShallowNode sn in msgList)
+
+			try
 			{
-				Subscription sub = new Subscription(poBox, sn);
-				string[] items = new string[]{sub.Name, sub.SubscriptionState.ToString()};
-				ListViewItem lvi = new ListViewItem(items, 0);
-				lvi.Tag = sub;
-				messages.Items.Add(lvi);
+				ICSList msgList = poBox.GetNodesByType(typeof(Subscription).Name);
+
+				foreach (ShallowNode sn in msgList)
+				{
+					Subscription sub = new Subscription(poBox, sn);
+					string[] items = new string[]{sub.Name, sub.SubscriptionState.ToString()};
+					ListViewItem lvi = new ListViewItem(items, 0);
+					lvi.Tag = sub;
+					messages.Items.Add(lvi);
+					ht.Add(sub.ID, lvi);
+				}
 			}
+			catch (SimiasException ex)
+			{
+				ex.LogError();
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "In Load");
+			}
+
 			messages.EndUpdate();
 		}
 
 		private void messages_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
-			// TODO: for now, we only care about the accept button.
+			// TODO: for now, we only care about the accept and remove buttons.
 			if (messages.SelectedItems.Count > 0)
 			{
+				remove.Enabled = true;
+
 				if (messages.SelectedItems.Count == 1)
 				{
 					Subscription sub = (Subscription)messages.SelectedItems[0].Tag;
@@ -290,29 +307,40 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			else
 			{
-				Member member = sub.Accept(store, sub.SubscriptionRights);
-
-				if (sub.DomainID == Domain.WorkGroupDomainID)
+				try
 				{
-					// Take the relationship off the Subsription object
-					Property property = sub.Properties.GetSingleProperty("Contact");
-					if (property != null)
+					Member member = sub.Accept(store, sub.SubscriptionRights);
+
+					if (sub.DomainID == Domain.WorkGroupDomainID)
 					{
-						Relationship relationship = (Relationship)property.Value;
+						// Take the relationship off the Subsription object
+						Property property = sub.Properties.GetSingleProperty("Contact");
+						if (property != null)
+						{
+							Relationship relationship = (Relationship)property.Value;
 
-						// Get the contact from the relationship.
-						Novell.AddressBook.AddressBook ab = this.abManager.GetAddressBook(relationship.CollectionID);
-						Contact contact = ab.GetContact(relationship.NodeID);
+							// Get the contact from the relationship.
+							Novell.AddressBook.AddressBook ab = this.abManager.GetAddressBook(relationship.CollectionID);
+							Contact contact = ab.GetContact(relationship.NodeID);
 
-						// Put the Member userID into the Contact userID.
-						contact.UserID = member.UserID;
-						ab.Commit(contact);
+							// Put the Member userID into the Contact userID.
+							contact.UserID = member.UserID;
+							ab.Commit(contact);
+						}
 					}
+
+					poBox.Commit(sub);
+
+					lvi.SubItems[1].Text = sub.SubscriptionState.ToString();
 				}
-
-				poBox.Commit(sub);
-
-				lvi.SubItems[1].Text = sub.SubscriptionState.ToString();
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+				}
+				catch (Exception ex)
+				{
+					logger.Debug(ex, "Accepting");
+				}
 			}
 
 			accept.Enabled = false;
@@ -324,6 +352,88 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void remove_Click(object sender, System.EventArgs e)
 		{
+			foreach (ListViewItem lvi in messages.SelectedItems)
+			{
+				Subscription sub = (Subscription)lvi.Tag;
+				string nodeID = sub.ID;
+
+				try
+				{
+					poBox.Commit(poBox.Delete(sub));
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+				}
+				catch (Exception ex)
+				{
+					logger.Debug(ex, "Removing subscription");
+				}
+
+				ht.Remove(nodeID);
+				lvi.Remove();
+			}
+		}
+
+		private void subscriber_NodeCreated(NodeEventArgs args)
+		{
+			try
+			{
+				Node node = poBox.GetNodeByID(args.ID);
+				if (node != null)
+				{
+					Subscription sub = new Subscription(node);
+
+					string[] items = new string[]{sub.Name, sub.SubscriptionState.ToString()};
+					ListViewItem lvi = new ListViewItem(items, 0);
+					lvi.Tag = sub;
+					messages.Items.Add(lvi);
+					ht.Add(sub.ID, lvi);
+				}
+			}
+			catch (SimiasException ex)
+			{
+				ex.LogError();
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "OnNodeCreated");
+			}
+		}
+
+		private void subscriber_NodeDeleted(NodeEventArgs args)
+		{
+			ListViewItem lvi = (ListViewItem)ht[args.Node];
+			if (lvi != null)
+			{
+				lvi.Remove();
+				ht.Remove(args.Node);
+			}
+		}
+
+		private void subscriber_NodeChanged(NodeEventArgs args)
+		{
+			ListViewItem lvi = (ListViewItem)ht[args.Node];
+			if (lvi != null)
+			{
+				try
+				{
+					Node node = poBox.GetNodeByID(args.ID);
+					if (node != null)
+					{
+						Subscription sub = new Subscription(node);
+						lvi.SubItems[1].Text = sub.SubscriptionState.ToString();
+					}
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+				}
+				catch (Exception ex)
+				{
+					logger.Debug(ex, "OnNodeChanged");
+				}
+			}
 		}
 		#endregion
 	}
