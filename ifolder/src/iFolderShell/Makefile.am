@@ -33,7 +33,7 @@ iFolderShellRes_SRCFILES = $(srcdir)/iFolderShell/iFolderShellRes.cpp $(srcdir)/
 iFolderShellRes_OBJFILES = iFolderShell/iFolderShellRes.obj iFolderShell/iFolderShell$(RES_EXT)
 
 DATA_FILES = $(srcdir)/iFolderShell/ifolder_emblem.ico $(srcdir)/iFolderShell/ifolder_conflict_emb.ico
-RESX_FILES = $(srcdir)/ConflictResolver.resx $(srcdir)/MyMessageBox.resx $(srcdir)/NewiFolder.resx $(srcdir)/iFolderAdvanced.resx $(srcdir)/UserProperties.resx
+RESX_FILES = $(srcdir)/ConflictResolver.resx $(srcdir)/iFolderAdvanced.resx $(srcdir)/MyMessageBox.resx $(srcdir)/NewiFolder.resx $(srcdir)/Picker.resx $(srcdir)/UserProperties.resx $(srcdir)/GaugeChart.resx
 WINDOWS_FILES = $(srcdir)/explorer.exe.manifest $(srcdir)/explorer.exe.config
 
 PROJECT_FILES = $(srcdir)/iFolderComponent.csproj $(srcdir)/iFolderComponent.sln
