@@ -99,6 +99,8 @@ namespace Simias.POBoxService.Web
 		
 		//Required by the Web Services Designer 
 		private IContainer components = null;
+
+		private string versionEndpoint = "/simias10";
 				
 		/// <summary>
 		/// Required method for Designer support - do not modify
@@ -540,6 +542,7 @@ namespace Simias.POBoxService.Web
 						this.Context.Request.Url.Host +
 						":" +
 						this.Context.Request.Url.Port.ToString() +
+						versionEndpoint +
 						"/POBoxService.asmx";
 
 				log.Debug("  newup service url: " + serviceUrl);
@@ -565,7 +568,8 @@ namespace Simias.POBoxService.Web
 				cSub.SubscriptionCollectionURL +=
 					this.Context.Request.Url.Host +
 					":" +
-					this.Context.Request.Url.Port.ToString();
+					this.Context.Request.Url.Port.ToString() +
+					this.versionEndpoint;
 
 				log.Debug("SubscriptionCollectionURL: " + cSub.SubscriptionCollectionURL);
 				log.Debug("  getting the dir node"); 
