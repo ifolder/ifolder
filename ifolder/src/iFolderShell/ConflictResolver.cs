@@ -11,6 +11,7 @@ using Simias;
 using Simias.Storage;
 using Simias.Sync;
 using Novell.iFolder;
+using Novell.iFolder.Win32Util;
 
 namespace Novell.iFolder.iFolderCom
 {
@@ -469,6 +470,12 @@ namespace Novell.iFolder.iFolderCom
 				{
 					// This is an update conflict and the local changes win ... throw away the conflict file.
 					conflict.Resolve(true);
+				}
+
+				if (!ifolder.HasCollisions())
+				{
+					// This iFolder no longer has conflicts, notify the shell so the overlay icon can be updated.
+					Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.LocalPath, IntPtr.Zero);
 				}
 			}
 			catch (SimiasException e)
