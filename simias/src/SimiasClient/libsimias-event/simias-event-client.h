@@ -24,6 +24,8 @@
 #ifndef SIMIAS_EVENT_CLIENT_H
 #define SIMIAS_EVENT_CLIENT_H
 
+#include <stdbool.h>
+
 /**
  * SimiasEventClient is the main structure that is used to make the calls to the
  * Event Server.  In the sec_init function, memory is allocated for the
@@ -105,13 +107,27 @@ typedef struct
 } SimiasNotifyEvent;
 
 /**
- * Callback function prototypes
+ * Callback function prototypes.
+ * 
+ * These prototypes specify the type of functions that should be passed to
+ * sec_set_event () function when registering for event actions.
+ * 
+ * ACTION_*_NODE_* actions should use SimiasNodeEventFunc
+ * ACTION_*_COLLECTION_SYNC actions should use SimiasCollectionSyncEventFunc
+ * ACTION_*_FILE_SYNC actions should use SimiasFileSyncEventFunc
+ * ACTION_*_NODE_* actions should use SimiasNotifyEventFunc
+ * 
+ * event:	the SimiasNodeEvent received from the server.
+ * data:	data passed to the function, set when calling sec_set_event ().
+ * Returns:	these functions should return 0 if successful, otherwise, -1.
  */
-void (*simias_node_event_callback) (SimiasNodeEvent *);
-void (*simias_collection_sync_event_callback) (SimiasCollectionSyncEvent *);
-void (*simias_file_sync_event_callback) (SimiasFileSyncEvent *);
-void (*simias_notify_event_callback) (SimiasNotifyEvent *);
+typedef int (*SimiasNodeEventFunc) (SimiasNodeEvent *event, void *data);
+typedef int (*SimiasCollectionSyncEventFunc) (SimiasCollectionSyncEvent *, void *data);
+typedef int (*SimiasFileSyncEventFunc) (SimiasFileSyncEvent *, void *data);
+typedef int (*SimiasNotifyEventFunc) (SimiasNotifyEvent *, void *data);
 
+/* Prototype for convenience */
+typedef int (*SimiasEventFunc) (void *, void *);
 /**
  * Public Functions
  */
@@ -124,8 +140,7 @@ void (*simias_notify_event_callback) (SimiasNotifyEvent *);
  * 
  * Returns 0 if successful or -1 if there was an error.
  */
-int sec_init (SimiasEventClient *sec,
-									 void *error_handler);
+int sec_init (SimiasEventClient *sec, void *error_handler);
 
 /**
  * Cleans up the Simias Event Client
@@ -150,14 +165,21 @@ int sec_register (SimiasEventClient sec);
 int sec_deregister (SimiasEventClient sec);
 
 /**
- * Start subscribing to or unsubscribing from the specified event.
+ * Subscribe or unsubscribe to the specified event.
  *
- * param action: Action to take regarding the event.
- * param handler: Callback function that gets called when the specified event
- * happens or is to be removed.
+ * sec:			the SimiasEventClient.
+ * action:		the action that should be listened for.
+ * subscribe:	true to subscribe, false to unsubscribe
+ * function:	the callback function that should be called when the event
+ * 				action is received.  If function is NULL when subscribe is false
+ * 				all functions associated with the specified action will be
+ * 				removed.
+ * data:		custom data that will be passed to the callback function.
  */
-int sec_set_event (SimiasEventClient sec, 
-						  IPROC_EVENT_ACTION action,
-						  void (*handler)(void *));
+int sec_set_event (SimiasEventClient sec,
+				   IPROC_EVENT_ACTION action,
+				   bool subscribe,
+				   SimiasEventFunc function,
+				   void *data);
 
 #endif /* SIMIAS_EVENT_CLIENT_H */

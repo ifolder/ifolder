@@ -201,9 +201,9 @@ typedef enum
 #define SIMIAS_EVENT_SERVER_PORT 5432
 
 /* FIXME: Move this into the RealSimiasEventClient structure somehow */
-void (*simias_node_created_function) (SimiasNodeEvent *);
-void (*simias_node_changed_function) (SimiasNodeEvent *);
-void (*simias_node_deleted_function) (SimiasNodeEvent *);
+SimiasNodeEventFunc simias_node_created_function;
+SimiasNodeEventFunc simias_node_changed_function;
+SimiasNodeEventFunc simias_node_deleted_function;
 
 /* #region Forward declarations for private functions */
 static void * sec_thread (void *user_data);
@@ -346,7 +346,11 @@ sec_deregister (SimiasEventClient sec)
 }
 
 int
-sec_set_event (SimiasEventClient sec, IPROC_EVENT_ACTION action, void (*handler)(void *))
+sec_set_event (SimiasEventClient sec, 
+			   IPROC_EVENT_ACTION action,
+			   bool subscribe,
+			   SimiasEventFunc function,
+			   void *data)
 {
 	RealSimiasEventClient *ec = (RealSimiasEventClient *)sec;
 	char msg [4096];
@@ -355,15 +359,15 @@ sec_set_event (SimiasEventClient sec, IPROC_EVENT_ACTION action, void (*handler)
 	switch (action) {
 		case ACTION_ADD_NODE_CREATED:
 			sprintf (action_str, "AddNodeCreated");
-			simias_node_created_function = handler;
+			simias_node_created_function = (SimiasNodeEventFunc)function;
 			break;
 		case ACTION_ADD_NODE_CHANGED:
 			sprintf (action_str, "AddNodeChanged");
-			simias_node_changed_function = handler;
+			simias_node_changed_function = (SimiasNodeEventFunc)function;
 			break;
 		case ACTION_ADD_NODE_DELETED:
 			sprintf (action_str, "AddNodeDeleted");
-			simias_node_deleted_function = handler;
+			simias_node_deleted_function = (SimiasNodeEventFunc)function;
 			break;
 		case ACTION_ADD_COLLECTION_SYNC:
 			sprintf (action_str, "AddCollectionSync");
@@ -765,15 +769,16 @@ sec_process_message (RealSimiasEventClient *ec, char *message, int length)
 			SimiasNodeEvent *event = (SimiasNodeEvent *)message_struct;
 			printf ("NodeEventArgs received\n");
 
+			/* FIXME: Lookup and call the funciton handlers correctly */
 			if (strcmp ("NodeCreated", event->action) == 0) {
 				if (simias_node_created_function != NULL)
-					simias_node_created_function (event);
+					simias_node_created_function (event, NULL);
 			} else if (strcmp ("NodeChanged", event->action) == 0) {
 				if (simias_node_changed_function != NULL)
-					simias_node_changed_function (event);
+					simias_node_changed_function (event, NULL);
 			} else if (strcmp ("NodeDeleted", event->action) == 0) {
 				if (simias_node_deleted_function != NULL)
-					simias_node_deleted_function (event);
+					simias_node_deleted_function (event, NULL);
 			}
 		} else if (strcmp ("CollectionSyncEventArgs", struct_ptr [0]) == 0) {
 			printf ("CollectionSyncEventArgs message received\n");
@@ -1018,24 +1023,24 @@ print_simias_node_event (SimiasNodeEvent *event)
 	printf ("\t%s: %s\n", "file_size", event->file_size);
 }
 
-void 
-simias_node_created_callback (SimiasNodeEvent *event)
+int
+simias_node_created_callback (SimiasNodeEvent *event, void *data)
 {
 	printf ("simias_node_created_callback () entered\n");
 	
 	print_simias_node_event (event);
 }
 
-void
-simias_node_changed_callback (SimiasNodeEvent *event)
+int
+simias_node_changed_callback (SimiasNodeEvent *event, void *data)
 {
 	printf ("simias_node_changed_callback () entered\n");
 	
 	print_simias_node_event (event);
 }
 
-void
-simias_node_deleted_callback (SimiasNodeEvent *event)
+int
+simias_node_deleted_callback (SimiasNodeEvent *event, void *data)
 {
 	printf ("simias_node_deleted_callback () entered\n");
 	
@@ -1075,12 +1080,9 @@ main (int argc, char *argv[])
 	}
 	
 	/* Ask to listen to some events by calling sec_set_event () */
-	sec_set_event (ec, ACTION_ADD_NODE_CREATED, (void *)&simias_node_created_callback);
-	sec_set_event (ec, ACTION_ADD_NODE_CHANGED, (void *)&simias_node_changed_callback);
-	sec_set_event (ec, ACTION_ADD_NODE_DELETED, (void *)&simias_node_deleted_callback);
-	sec_set_event (ec, ACTION_ADD_COLLECTION_SYNC, NULL);
-	sec_set_event (ec, ACTION_ADD_FILE_SYNC, NULL);
-	sec_set_event (ec, ACTION_ADD_NOTIFY_MESSAGE, NULL);
+	sec_set_event (ec, ACTION_ADD_NODE_CREATED, true, (SimiasEventFunc)simias_node_created_callback, NULL);
+	sec_set_event (ec, ACTION_ADD_NODE_CHANGED, true, (SimiasEventFunc)simias_node_changed_callback, NULL);
+	sec_set_event (ec, ACTION_ADD_NODE_DELETED, true, (SimiasEventFunc)simias_node_deleted_callback, NULL);
 	
 	fprintf (stdout, "Press <Enter> to stop the client...");
 	fgets (buf, sizeof (buf), stdin);
