@@ -62,6 +62,18 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets whether this object is the root directory in the collection.
+		/// </summary>
+		public bool IsRoot
+		{
+			get 
+			{
+				Relationship r = properties.GetSingleProperty( Property.ParentID ).Value as Relationship;
+				return ( r.NodeID == DirNode.RootID ) ? true : false;
+			}
+		}
+
+		/// <summary>
 		/// Gets the directory last access time.
 		/// </summary>
 		public DateTime LastAccessTime
