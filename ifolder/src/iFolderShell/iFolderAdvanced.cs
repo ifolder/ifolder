@@ -1161,9 +1161,11 @@ namespace Novell.iFolderCom
 			{
 				connectToWebService();
 
-				// Update the refresh interval.
+				// Update the sync interval.
 				if (ifolder.SyncInterval != (int)syncInterval.Value)
-					ifolder.SyncInterval = (int)syncInterval.Value;
+				{
+					ifWebService.SetiFolderSyncInterval(ifolder.ID, (int)syncInterval.Value);
+				}
 
 				// Update the disk quota policy.
 				if (setLimit.Checked)
@@ -1701,13 +1703,22 @@ namespace Novell.iFolderCom
 
 		private void apply_Click(object sender, System.EventArgs e)
 		{
-/*			this.processChanges();
-		
-			// Reload the collection.
-			string id = ifolder.ID;
-			ifolder = null;
-			ifolder = iFolderManager.Connect().GetiFolderById(id);
-*/		}
+			this.processChanges();
+
+			try
+			{
+				connectToWebService();
+
+				// Reload the collection.
+				string id = ifolder.ID;
+				ifolder = null;
+				ifolder = ifWebService.GetiFolder(id);
+			}
+			catch (WebException ex)
+			{
+				// TODO: Post message.
+			}
+		}
 
 		private void cancel_Click(object sender, System.EventArgs e)
 		{
