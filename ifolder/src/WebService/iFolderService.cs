@@ -49,6 +49,67 @@ using Novell.Security.ClientPasswordManager;
 namespace Novell.iFolder.Web
 {
 	/// <summary>
+	/// Supported store search operators.
+	/// </summary>
+	public enum SearchType
+	{
+		/// <summary>
+		/// Used to compare if two values are equal.
+		/// </summary>
+		Equal,
+
+		/// <summary>
+		/// Used to compare if two values are not equal.
+		/// </summary>
+		Not_Equal,
+
+		/// <summary>
+		/// Used to compare if a string value begins with a sub-string value.
+		/// </summary>
+		Begins,
+
+		/// <summary>
+		/// Used to compare if a string value ends with a sub-string value.
+		/// </summary>
+		Ends,
+
+		/// <summary>
+		/// Used to compare if a string value contains a sub-string value.
+		/// </summary>
+		Contains,
+
+		/// <summary>
+		/// Used to compare if a value is greater than another value.
+		/// </summary>
+		Greater,
+
+		/// <summary>
+		/// Used to compare if a value is less than another value.
+		/// </summary>
+		Less,
+
+		/// <summary>
+		/// Used to compare if a value is greater than or equal to another value.
+		/// </summary>
+		Greater_Equal,
+
+		/// <summary>
+		/// Used to compare if a value is less than or equal to another value.
+		/// </summary>
+		Less_Equal,
+
+		/// <summary>
+		/// Used to test for existence of a property.
+		/// </summary>
+		Exists,
+
+		/// <summary>
+		/// Used to do a case sensitive compare.
+		/// </summary>
+		CaseEqual
+	};
+
+	/// <summary>
 	/// This is the core of the iFolderServce.  All of the methods in the
 	/// web service are implemented here.
 	/// </summary>

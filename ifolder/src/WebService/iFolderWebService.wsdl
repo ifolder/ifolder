@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:s1="http://novell.com/simias/web/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://novell.com/ifolder/web/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://novell.com/ifolder/web/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://novell.com/ifolder/web/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://novell.com/ifolder/web/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://novell.com/ifolder/web/">
-      <s:import namespace="http://novell.com/simias/web/" />
       <s:element name="Ping">
         <s:complexType />
       </s:element>
@@ -365,11 +364,26 @@
             <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="attributeName" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="searchString" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="operation" type="s1:SearchType" />
+            <s:element minOccurs="1" maxOccurs="1" name="operation" type="tns:SearchType" />
             <s:element minOccurs="1" maxOccurs="1" name="count" type="s:int" />
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:simpleType name="SearchType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Equal" />
+          <s:enumeration value="Not_Equal" />
+          <s:enumeration value="Begins" />
+          <s:enumeration value="Ends" />
+          <s:enumeration value="Contains" />
+          <s:enumeration value="Greater" />
+          <s:enumeration value="Less" />
+          <s:enumeration value="Greater_Equal" />
+          <s:enumeration value="Less_Equal" />
+          <s:enumeration value="Exists" />
+          <s:enumeration value="CaseEqual" />
+        </s:restriction>
+      </s:simpleType>
       <s:element name="FindFirstSpecificMembersResponse">
         <s:complexType>
           <s:sequence>
@@ -746,23 +760,6 @@
       <s:element name="SetiFolderFileSizeLimitResponse">
         <s:complexType />
       </s:element>
-    </s:schema>
-    <s:schema elementFormDefault="qualified" targetNamespace="http://novell.com/simias/web/">
-      <s:simpleType name="SearchType">
-        <s:restriction base="s:string">
-          <s:enumeration value="Equal" />
-          <s:enumeration value="Not_Equal" />
-          <s:enumeration value="Begins" />
-          <s:enumeration value="Ends" />
-          <s:enumeration value="Contains" />
-          <s:enumeration value="Greater" />
-          <s:enumeration value="Less" />
-          <s:enumeration value="Greater_Equal" />
-          <s:enumeration value="Less_Equal" />
-          <s:enumeration value="Exists" />
-          <s:enumeration value="CaseEqual" />
-        </s:restriction>
-      </s:simpleType>
     </s:schema>
   </wsdl:types>
   <wsdl:message name="PingSoapIn">
