@@ -41,7 +41,8 @@ public class SwingStoreBrowser {
 
 	public static void main(String[] args) {
 		StoreBrowserWindow sbWin = new StoreBrowserWindow();
-		sbWin.pack();
+		sbWin.setSize(800,600);
+		//sbWin.pack();
 		sbWin.setVisible(true);
 	}
 
