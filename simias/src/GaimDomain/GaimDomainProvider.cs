@@ -33,8 +33,7 @@ using Simias.Authentication;
 using Simias.Security.Web;
 using Simias.Storage;
 using Simias.Sync;
-
-using Simias.Gaim;
+using Simias.POBox;
 
 // shorty
 using SCodes = Simias.Authentication.StatusCodes;
@@ -586,12 +585,23 @@ namespace Simias.Gaim
 			{
 				try
 				{
-					Simias.Storage.Domain domain = GaimDomain.GetDomain();
-					Collection collection = Store.GetStore().GetCollectionByID( collectionID );
-					Member member = collection.GetMemberByID(collection.Owner.UserID);
-					if ( member != null )
+					Store store = Store.GetStore();
+					Simias.Storage.Domain domain = store.GetDomain(domainID.ToLower());
+
+					Simias.POBox.POBox poBox =
+						Simias.POBox.POBox.FindPOBox(store, domainID, domain.GetCurrentMember().UserID);
+
+					Subscription sub = poBox.GetSubscriptionByCollectionID(collectionID);
+					locationUri = SubscriptionFromIDToUri(sub.FromIdentity);
+
+					if (locationUri == null)
 					{
-						locationUri = MemberToUri(domain, member);
+						Collection collection = Store.GetStore().GetCollectionByID( collectionID );
+						Member member = collection.GetMemberByID(collection.Owner.UserID);
+						if ( member != null )
+						{
+							locationUri = MemberToUri(domain, member);
+						}
 					}
 				}
 				catch ( Exception e )
@@ -692,6 +702,22 @@ namespace Simias.Gaim
 			if (p == null) return null;
 			
 			locationUri = new Uri((string) p.Value);
+
+			return locationUri;
+		}
+
+		private Uri SubscriptionFromIDToUri(string fromID)
+		{
+			Uri locationUri = null;
+
+			GaimBuddy buddy = GaimDomain.GetBuddyByUserID(fromID);
+			if (buddy != null)
+			{
+				if (buddy.SimiasURL != null)
+				{
+					locationUri = new Uri(buddy.SimiasURL);
+				}
+			}
 
 			return locationUri;
 		}
