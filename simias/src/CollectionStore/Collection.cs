@@ -422,6 +422,9 @@ namespace Simias.Storage
 				{
 					// Attempt to move the files back.
 					Directory.Move( newRoot.LocalPath, sourcePathString );
+
+					// Generate event that document root was changed.
+					LocalStore.Publisher.RaiseCollectionRootChangedEvent( new CollectionRootChangedEventArgs( LocalStore.ComponentId, Id, NameSpaceType, sourcePathString, newRoot.LocalPath ) );
 				}
 				catch
 				{
@@ -559,11 +562,11 @@ namespace Simias.Storage
 					// Fire an event for this commit action.
 					if ( committedNode.IsPersisted )
 					{
-						LocalStore.Publisher.RaiseNodeEvent( new NodeEventArgs( CsScheme, committedNode.Id, Id, committedNode.NameSpaceType, NodeEventArgs.EventType.Changed) );
+						LocalStore.Publisher.RaiseNodeEvent( new NodeEventArgs( LocalStore.ComponentId, committedNode.Id, Id, committedNode.NameSpaceType, NodeEventArgs.EventType.Changed) );
 					}
 					else
 					{
-						LocalStore.Publisher.RaiseNodeEvent( new NodeEventArgs( CsScheme, committedNode.Id, Id, committedNode.NameSpaceType, NodeEventArgs.EventType.Created ) );
+						LocalStore.Publisher.RaiseNodeEvent( new NodeEventArgs( LocalStore.ComponentId, committedNode.Id, Id, committedNode.NameSpaceType, NodeEventArgs.EventType.Created ) );
 					}
 
 					committedNode.IsPersisted = true;

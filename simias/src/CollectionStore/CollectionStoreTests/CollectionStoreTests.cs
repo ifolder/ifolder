@@ -56,7 +56,7 @@ namespace Simias.Storage.Tests
 		public void Init()
 		{
 			// Connect to the store.
-			store = Store.Connect( new Uri( Path.Combine( Directory.GetCurrentDirectory(), "CollectionStoreTestDir" ) ) );
+			store = Store.Connect( new Uri( Path.Combine( Directory.GetCurrentDirectory(), "CollectionStoreTestDir" ) ), "Simias.Storage.Tests" );
 
 			// Add another identity to the database.
 			LocalAddressBook localAb = store.GetLocalAddressBook();
@@ -1730,7 +1730,7 @@ namespace Simias.Storage.Tests
 				collection.Commit();
 
 				// See if the collection can be located.
-				ICSList list = store.GetNodesAssociatedWithPath( collection.DocumentRoot, "Test.txt" );
+				ICSList list = store.GetNodesAssociatedWithPath( collection.Id, "Test.txt" );
 				IEnumerator e = list.GetEnumerator();
 				if ( !e.MoveNext() )
 				{

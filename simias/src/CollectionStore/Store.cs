@@ -121,6 +121,12 @@ namespace Simias.Storage
 		/// Table used to lookup nodes as singleton objects.
 		/// </summary>
 		private Hashtable cacheNodeTable = new Hashtable( cacheNodeTableSize );
+
+		/// <summary>
+		/// Identifier of the component that opened this instance of the object.  This is helpful information
+		/// to the event system for preventing circular events.
+		/// </summary>
+		private string componentId;
 		#endregion
 
 		#region Properties
@@ -203,6 +209,14 @@ namespace Simias.Storage
 		{
 			get { return publisher; }
 		}
+
+		/// <summary>
+		/// Gets the identifier for the component that opened this instance of the store.
+		/// </summary>
+		internal string ComponentId
+		{
+			get { return componentId; }
+		}
 		#endregion
 
 		#region Constructor
@@ -211,12 +225,15 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="databasePath">Path that specifies where to create or open the database. If this parameter
 		/// is null, the default database path is used.</param>
-		private Store( Uri databasePath )
+		/// <param name="componentId">An identifier for the component that is opening this instance of the object.</param>
+		private Store( Uri databasePath, string componentId )
 		{
 			// Don't let another process authenticate while the database is still being initialized.
 			lock( this )
 			{
 				bool created;
+
+				this.componentId = componentId;
 
 				// Get the path where the assembly was loaded from.
 				assemblyPath = new Uri( Path.GetDirectoryName( Assembly.GetExecutingAssembly().CodeBase ) );
@@ -658,9 +675,10 @@ namespace Simias.Storage
 		/// where to create or open the database.
 		/// </summary>
 		///	<returns>An object that represents a connection to the store.</returns>
+		[ Obsolete( "This method is marked for removal. Use other method overload instead.", false ) ]
 		public static Store Connect()
 		{
-			return Connect( null );
+			return Connect( null as Uri );
 		}
 
 		/// <summary>
@@ -669,9 +687,32 @@ namespace Simias.Storage
 		/// <param name="databasePath">Path that specifies where to create or open the database. If this parameter
 		/// is null, the default database path is used.</param>
 		///	<returns>An object that represents a connection to the store.</returns>
+		[ Obsolete( "This method is marked for removal. Use other method overload instead.", false ) ]
 		public static Store Connect( Uri databasePath )
 		{
-			return new Store( databasePath );
+			return Connect( databasePath, "No event component" );
+		}
+
+		/// <summary>
+		/// Connects to the persistent store server.
+		/// </summary>
+		/// <param name="componentId">An identifier for the component that is opening this instance of the object.</param>
+		///	<returns>An object that represents a connection to the store.</returns>
+		public static Store Connect( string componentId )
+		{
+			return Connect( null, componentId );
+		}
+
+		/// <summary>
+		/// Connects to the persistent store server.
+		/// </summary>
+		/// <param name="databasePath">Path that specifies where to create or open the database. If this parameter
+		/// is null, the default database path is used.</param>
+		/// <param name="componentId">An identifier for the component that is opening this instance of the object.</param>
+		///	<returns>An object that represents a connection to the store.</returns>
+		public static Store Connect( Uri databasePath, string componentId )
+		{
+			return new Store( databasePath, componentId );
 		}
 
 		/// <summary>
@@ -801,6 +842,7 @@ namespace Simias.Storage
 		/// <param name="documentRoot">Uri object that contains the root path for the file system entry.</param>
 		/// <param name="relativePath">String containing a path relative to documentRoot that specifies a file or directory entry.</param>
 		/// <returns>An ICSList object containg nodes that reference the specified file system entry.</returns>
+		[ Obsolete( "This method is marked for removal. Use other overloaded method instead.", false ) ]
 		public ICSList GetNodesAssociatedWithPath( Uri documentRoot, string relativePath )
 		{
 			// Create an empty list.
@@ -825,25 +867,11 @@ namespace Simias.Storage
 					// Enumerate through the results.
 					foreach ( XmlElement element in xmlNodeList.DocumentElement )
 					{
-						// Get the collection that contains this node.
-						Collection collection = GetCollectionById( element.GetAttribute( Property.IDAttr ) );
-						if ( collection != null )
+						ICSList pathList = GetNodesAssociatedWithPath( element.GetAttribute( Property.IDAttr ), relativePath );
+						foreach ( Node node in pathList )
 						{
-							// Search in this collection for the relative path.
-							ICSList pathList = collection.Search( Property.NodeFileSystemEntry, relativePath, Property.Operator.Contains );
-							foreach ( Node node in pathList )
-							{
-								// See if this node contains the proper path.
-								foreach ( FileSystemEntry fse in node.GetFileSystemEntryList() )
-								{
-									if ( fse.RelativePath == relativePath )
-									{
-										// This is a node that we are looking for.
-										nodeList.Add( node );
-										break;
-									}
-								}
-							}
+							// Insert this list into the outer list.
+							nodeList.Add( node );
 						}
 					}
 				}
@@ -851,6 +879,43 @@ namespace Simias.Storage
 				{
 					chunkIterator.Dispose();
 					chunkIterator = null;
+				}
+			}
+
+			return nodeList;
+		}
+
+		/// <summary>
+		/// Gets all nodes that are associated with a file system entry.
+		/// </summary>
+		/// <param name="collectionId">Identifier for the collection that this relative path is associated with.</param>
+		/// <param name="relativePath">String containing a path relative to collection documentRoot that specifies a file or directory entry.</param>
+		/// <returns>An ICSList object containg nodes that reference the specified file system entry.</returns>
+		public ICSList GetNodesAssociatedWithPath( string collectionId, string relativePath )
+		{
+			// Create an empty list.
+			ICSList nodeList = new ICSList();
+
+			// Instantiate the specified collection object.
+			Collection collection = GetCollectionById( collectionId );
+			if ( collection == null )
+			{
+				throw new ApplicationException( "Collection does not exist." );
+			}
+
+			// Search in this collection for the relative path.
+			ICSList pathList = collection.Search( Property.NodeFileSystemEntry, relativePath, Property.Operator.Contains );
+			foreach ( Node node in pathList )
+			{
+				// See if this node contains the proper path.
+				foreach ( FileSystemEntry fse in node.GetFileSystemEntryList() )
+				{
+					if ( fse.RelativePath == relativePath )
+					{
+						// This is a node that we are looking for.
+						nodeList.Add( node );
+						break;
+					}
 				}
 			}
 
