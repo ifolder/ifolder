@@ -298,18 +298,9 @@ namespace Simias.Client
 				{
 					service.GetSimiasInformation();
 					serviceStarted = true;
-					// TODO: DEBUG
-					Console.WriteLine( "Services restarted." );
-					// TODO: END DEBUG
 				}
 				catch
 				{
-					// TODO: DEBUG
-					if ( ( count++ % 100 ) == 0 )
-					{
-						Console.WriteLine( "Waiting for services to restart." );
-					}
-					// TODO: END DEBUG
 					Thread.Sleep( 100 );
 				}
 			}

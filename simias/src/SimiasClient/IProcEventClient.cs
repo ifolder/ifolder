@@ -708,10 +708,6 @@ namespace Simias.Client.Event
 
 								// Set the state as running.
 								state = ClientState.Running;
-
-								// Send out a running message to the listener.
-								IProcEventData runningMsg = new IProcEventData( new NotifyEventArgs( "EventService-Up", "The event service is running.", DateTime.Now ) );
-								ProcessEventData( runningMsg );
 							}
 						}
 						catch ( SocketException e )
@@ -767,10 +763,6 @@ namespace Simias.Client.Event
 			// Reset the class variables.
 			bufferLength = 0;
 			localEndPoint = null;
-
-			// Send out a shutdown message to the listener.
-			IProcEventData shutdownMsg = new IProcEventData( new NotifyEventArgs( "EventService-Down", "The event service has terminated.", DateTime.Now ) );
-			ProcessEventData( shutdownMsg );
 
 			// All events will be reset.
 			onCreatedNodeEvent = null;
@@ -1005,10 +997,6 @@ namespace Simias.Client.Event
 			Shutdown();
 			errorCallback = null;
 			localEndPoint = null;
-
-			// Send out a shutdown message to the listener.
-			IProcEventData shutdownMsg = new IProcEventData( new NotifyEventArgs( "EventService-Down", "The event service has terminated.", DateTime.Now ) );
-			ProcessEventData( shutdownMsg );
 		}
 
 		/// <summary>

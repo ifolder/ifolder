@@ -66,8 +66,6 @@ namespace Novell.iFolder
 		private SimiasEventBroker	EventBroker;
 		private	iFolderLoginDialog	LoginDialog;
 		private bool				logwinShown;
-		private string				redomainID;
-		private bool				simiasRestarted = false;
 
 		public iFolderApplication(string[] args)
 			: base("ifolder", "1.0", Modules.UI, args)
@@ -221,61 +219,38 @@ namespace Novell.iFolder
 			{
 				case "Domain-Up":
 				{
-					if ( !simiasRestarted )
+					// See if credentials have already been set in
+					// this process before showing the user the
+					// login dialog.
+					DomainAuthentication domainAuth =
+						new DomainAuthentication(
+							"iFolder",
+							args.Message,
+							null);
+
+					if (domainAuth.Authenticate() != 
+						AuthenticationStatus.Success)
 					{
-						redomainID = args.Message;
+						// DEBUG
+						Console.WriteLine("Domain-Up: Need credentials.");
 						ReLogin(args.Message);
 					}
 					else
 					{
-						simiasRestarted = false;
-					}
-					break;
-				}
-
-				case "Simias-Restart":
-				{
-					// DEBUG
-					Console.WriteLine("Received the Simias-Restart event.");
-					simiasRestarted = true;
-					break;
-				}
-
-				case "EventService-Up":
-				{
-					// DEBUG
-					Console.WriteLine("Received the EventService-Up event.");
-
-					// See if simias was restarted and credentials need
-					// to be reset.
-					if (simiasRestarted)
-					{
-						DomainAuthentication domainAuth =
-							new DomainAuthentication(
-									"iFolder",
-									redomainID,
-									null);
-
-						AuthenticationStatus authStatus =
-							domainAuth.Authenticate();
-
 						// DEBUG
-						Console.WriteLine("Authentication status = {0}", authStatus.ToString());
-
-						if (authStatus != AuthenticationStatus.Success)
-							ReLogin(redomainID);
+						Console.WriteLine("Domain-Up: Credentials valid.");
 					}
+
 					break;
 				}
-
 			}
 		}
 
-		private void OnShowReLogin(object o, EventArgs args)
+/*		private void OnShowReLogin(object o, EventArgs args)
 		{
 			ReLogin(redomainID);
 		}
-
+*/
 		private void ReLogin(string domainID)
 		{
 			if(LoginDialog == null)
