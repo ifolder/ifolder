@@ -6,31 +6,42 @@ namespace Simias.Service.mDnsService
 	/// <summary>
 	/// Summary description for mDnsService.
 	/// </summary>
-	public class mDnsService : IThreadService
+	public class mDnsService : BaseProcessService
 	{
-		public void Start(Simias.Configuration conf)
+		static mDnsService service;
+
+		/// <summary>
+		/// The main entry point for the application.
+		/// </summary>
+		static void Main(string[] args)
+		{
+			service = new mDnsService();
+			service.Run();
+		}
+
+		protected override void Start()
 		{
 			// TODO: Need to issue a ping call to see if the mDnsResponder
 			// is already running
 			Responder.Startup("");
 		}
 
-		public void Resume()
+		protected override void Resume()
 		{
 			// Don't support Resume
 		}
 
-		public void Pause()
+		protected override void Pause()
 		{
 			// Don't support Pause
 		}
 
-		public void Custom(int message, string data)
+		protected override void Custom(int message, string data)
 		{
 			// Don't support Custom
 		}
 
-		public void Stop()
+		protected override void Stop()
 		{
 			Responder.Shutdown();
 		}
