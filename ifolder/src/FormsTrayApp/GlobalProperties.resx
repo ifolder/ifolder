@@ -1718,7 +1718,7 @@
 		<value>An error was encountered while reading the iFolders.</value>
 	</data>
 	<data name="iFolderErrorTitle">
-		<value>iFolder Error</value>
+		<value>Unable to Read iFolders</value>
 	</data>
 	<data name="syncError">
 		<value>An error was encountered while sending the sync command.</value>
