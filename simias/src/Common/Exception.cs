@@ -171,6 +171,11 @@ namespace Simias
 			base(string.Format("Failed to open {0}.", obj))
 		{
 		}
+
+		public OpenException(string obj, Exception ex) :
+			base(string.Format("Failed to open {0}.", obj), ex)
+		{
+		}
 	}
 
 	/// <summary>

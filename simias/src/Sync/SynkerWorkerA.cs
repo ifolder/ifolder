@@ -173,7 +173,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 	/// </summary>
 	void DoOneSyncPass()
 	{
-		Access.Rights rights = ss.Start();
+		Access.Rights rights = ss.Start(collection.GetCurrentMember().UserID);
 		if (rights == Access.Rights.Deny)
 		{
 			Log.Error("Sync with collection {0} denied", collection.Name);

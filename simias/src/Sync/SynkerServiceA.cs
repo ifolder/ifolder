@@ -88,30 +88,21 @@ public class SynkerServiceA: SyncCollectionService
 	/// <summary>
 	/// start sync of this collection -- perform basic role checks and dredge server file system
 	/// </summary>
-	public Access.Rights Start()
+	public Access.Rights Start(string user)
 	{
 		Access.Rights rights = Access.Rights.Deny;
 	
 		string userID = Thread.CurrentPrincipal.Identity.Name;
 			
-		if ((userID != null) && (userID.Length > 0))
+		if ((userID == null) || (userID.Length == 0))
 		{
-			member = collection.GetMember(userID);
-			collection.Impersonate(member);
-			Log.Info("Sync session starting for {0}", userID);
+			// Kludge: for now trust the client.  this need to be removed before shipping.
+			userID = user;
 		}
-		else
-		{
-			// kludge
-			Log.Spew("could not get identity in sync start");
-			ignoreRights = true;
-			member = new Member("Root", collection.ID, Access.Rights.Admin);
-			collection.Impersonate(member);
-		}
-
-		// further kludge
-		if (ignoreRights || userID == String.Empty)
-			ignoreRights = true;
+		
+		member = collection.GetMember(userID);
+		collection.Impersonate(member);
+		Log.Info("Sync session starting for {0}", member.Name);
 
 		if (ignoreRights || collection.IsAccessAllowed(member, Access.Rights.ReadOnly))
 		{
