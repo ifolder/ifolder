@@ -1,19 +1,22 @@
+DIST_SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer mDnsDomain libsimias GaimDomain
+
+if BUILD_GAIM_DOMAIN
+GAIM_DOMAIN_DIR = GaimDomain
+endif
+
 if DARWIN
 SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer mDnsDomain libsimias
 
-DIST_SUBDIRS = $(SUBDIRS)
 endif
 
 if LINUX
-SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer mDnsDomain libsimias
+SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer mDnsDomain libsimias $(GAIM_DOMAIN_DIR)
 
-DIST_SUBDIRS = $(SUBDIRS)
 endif
 
 if WINDOWS
 SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer mDnsDomain
 
-DIST_SUBDIRS = $(SUBDIRS) libsimias
 endif
 
 EXTRA_DIST = ifdata simias-snakeoil.keys SqliteProvider
