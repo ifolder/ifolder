@@ -47,6 +47,7 @@ namespace Novell.FormsTrayApp
 		private bool successful;
 		private iFolderWebService ifWebService;
 		private iFolder ifolder;
+		private System.Windows.Forms.Label label3;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -95,6 +96,7 @@ namespace Novell.FormsTrayApp
 			this.iFolderLocation = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.browse = new System.Windows.Forms.Button();
+			this.label3 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// groupBox1
@@ -127,51 +129,61 @@ namespace Novell.FormsTrayApp
 			// 
 			// iFolderDetails
 			// 
-			this.iFolderDetails.Location = new System.Drawing.Point(24, 24);
+			this.iFolderDetails.Location = new System.Drawing.Point(16, 32);
 			this.iFolderDetails.Name = "iFolderDetails";
-			this.iFolderDetails.Size = new System.Drawing.Size(440, 95);
+			this.iFolderDetails.Size = new System.Drawing.Size(456, 95);
 			this.iFolderDetails.TabIndex = 3;
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(24, 8);
+			this.label1.Location = new System.Drawing.Point(16, 16);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(100, 16);
 			this.label1.TabIndex = 4;
-			this.label1.Text = "Shared iFolder:";
+			this.label1.Text = "iFolder Details:";
 			// 
 			// iFolderLocation
 			// 
-			this.iFolderLocation.Location = new System.Drawing.Point(24, 192);
+			this.iFolderLocation.Location = new System.Drawing.Point(16, 208);
 			this.iFolderLocation.Name = "iFolderLocation";
-			this.iFolderLocation.Size = new System.Drawing.Size(368, 20);
+			this.iFolderLocation.Size = new System.Drawing.Size(376, 20);
 			this.iFolderLocation.TabIndex = 5;
 			this.iFolderLocation.Text = "";
 			this.iFolderLocation.TextChanged += new System.EventHandler(this.iFolderLocation_TextChanged);
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(24, 176);
+			this.label2.Location = new System.Drawing.Point(16, 192);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(128, 16);
 			this.label2.TabIndex = 6;
-			this.label2.Text = "Shared iFolder Location:";
+			this.label2.Text = "iFolder Location:";
 			// 
 			// browse
 			// 
 			this.browse.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.browse.Location = new System.Drawing.Point(400, 191);
+			this.browse.Location = new System.Drawing.Point(400, 207);
 			this.browse.Name = "browse";
+			this.browse.Size = new System.Drawing.Size(72, 23);
 			this.browse.TabIndex = 7;
 			this.browse.Text = "Browse...";
 			this.browse.Click += new System.EventHandler(this.browse_Click);
+			// 
+			// label3
+			// 
+			this.label3.Location = new System.Drawing.Point(32, 168);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(352, 16);
+			this.label3.TabIndex = 8;
+			this.label3.Text = "Choose a location for the iFolder to be created on this computer.";
 			// 
 			// AcceptInvitation
 			// 
 			this.AcceptButton = this.ok;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.CancelButton = this.cancel;
-			this.ClientSize = new System.Drawing.Size(492, 310);
+			this.ClientSize = new System.Drawing.Size(490, 310);
+			this.Controls.Add(this.label3);
 			this.Controls.Add(this.browse);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.iFolderLocation);
@@ -184,7 +196,7 @@ namespace Novell.FormsTrayApp
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "AcceptInvitation";
-			this.Text = "AcceptInvitation";
+			this.Text = "Setup iFolder";
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.AcceptInvitation_Closing);
 			this.Load += new System.EventHandler(this.AcceptInvitation_Load);
 			this.ResumeLayout(false);

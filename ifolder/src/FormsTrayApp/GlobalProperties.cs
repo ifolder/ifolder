@@ -126,7 +126,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuActionDecline;
 		private System.Windows.Forms.MenuItem menuActionDelete;
 		private System.Windows.Forms.MenuItem menuActionSeparator2;
-		private System.Windows.Forms.MenuItem menuSeparator3;
 		private System.Windows.Forms.Label label10;
 		private System.Windows.Forms.MenuItem menuExit;
 		private System.Windows.Forms.MenuItem menuItem4;
@@ -226,7 +225,6 @@ namespace Novell.FormsTrayApp
 			this.menuRefresh = new System.Windows.Forms.MenuItem();
 			this.menuAccept = new System.Windows.Forms.MenuItem();
 			this.menuDecline = new System.Windows.Forms.MenuItem();
-			this.menuSeparator3 = new System.Windows.Forms.MenuItem();
 			this.menuDelete = new System.Windows.Forms.MenuItem();
 			this.menuSeparator1 = new System.Windows.Forms.MenuItem();
 			this.menuShare = new System.Windows.Forms.MenuItem();
@@ -237,13 +235,16 @@ namespace Novell.FormsTrayApp
 			this.menuProperties = new System.Windows.Forms.MenuItem();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.label3 = new System.Windows.Forms.Label();
 			this.autoSync = new System.Windows.Forms.CheckBox();
+			this.label3 = new System.Windows.Forms.Label();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.autoStart = new System.Windows.Forms.CheckBox();
 			this.groupBox5 = new System.Windows.Forms.GroupBox();
-			this.label7 = new System.Windows.Forms.Label();
 			this.proxy = new System.Windows.Forms.TextBox();
+			this.port = new System.Windows.Forms.NumericUpDown();
+			this.useProxy = new System.Windows.Forms.CheckBox();
+			this.label7 = new System.Windows.Forms.Label();
+			this.label4 = new System.Windows.Forms.Label();
 			this.tabPage3 = new System.Windows.Forms.TabPage();
 			this.clearLog = new System.Windows.Forms.Button();
 			this.saveLog = new System.Windows.Forms.Button();
@@ -291,9 +292,6 @@ namespace Novell.FormsTrayApp
 			this.menuHelp = new System.Windows.Forms.MenuItem();
 			this.menuHelpHelp = new System.Windows.Forms.MenuItem();
 			this.menuHelpAbout = new System.Windows.Forms.MenuItem();
-			this.useProxy = new System.Windows.Forms.CheckBox();
-			this.port = new System.Windows.Forms.NumericUpDown();
-			this.label4 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -301,10 +299,10 @@ namespace Novell.FormsTrayApp
 			this.groupBox1.SuspendLayout();
 			this.groupBox3.SuspendLayout();
 			this.groupBox5.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.port)).BeginInit();
 			this.tabPage3.SuspendLayout();
 			this.tabPage5.SuspendLayout();
 			this.groupBox6.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.port)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// defaultInterval
@@ -437,7 +435,6 @@ namespace Novell.FormsTrayApp
 																						 this.menuRefresh,
 																						 this.menuAccept,
 																						 this.menuDecline,
-																						 this.menuSeparator3,
 																						 this.menuDelete,
 																						 this.menuSeparator1,
 																						 this.menuShare,
@@ -470,7 +467,7 @@ namespace Novell.FormsTrayApp
 			// menuAccept
 			// 
 			this.menuAccept.Index = 3;
-			this.menuAccept.Text = "Accept";
+			this.menuAccept.Text = "Setup iFolder";
 			this.menuAccept.Visible = false;
 			this.menuAccept.Click += new System.EventHandler(this.menuAccept_Click);
 			// 
@@ -481,62 +478,56 @@ namespace Novell.FormsTrayApp
 			this.menuDecline.Visible = false;
 			this.menuDecline.Click += new System.EventHandler(this.menuDecline_Click);
 			// 
-			// menuSeparator3
-			// 
-			this.menuSeparator3.Index = 5;
-			this.menuSeparator3.Text = "-";
-			this.menuSeparator3.Visible = false;
-			// 
 			// menuDelete
 			// 
-			this.menuDelete.Index = 6;
-			this.menuDelete.Text = "Delete";
+			this.menuDelete.Index = 5;
+			this.menuDelete.Text = "Remove iFolder";
 			this.menuDelete.Visible = false;
 			this.menuDelete.Click += new System.EventHandler(this.menuDelete_Click);
 			// 
 			// menuSeparator1
 			// 
-			this.menuSeparator1.Index = 7;
+			this.menuSeparator1.Index = 6;
 			this.menuSeparator1.Text = "-";
 			this.menuSeparator1.Visible = false;
 			// 
 			// menuShare
 			// 
-			this.menuShare.Index = 8;
+			this.menuShare.Index = 7;
 			this.menuShare.Text = "&Share with...";
 			this.menuShare.Visible = false;
 			this.menuShare.Click += new System.EventHandler(this.menuShare_Click);
 			// 
 			// menuResolve
 			// 
-			this.menuResolve.Index = 9;
+			this.menuResolve.Index = 8;
 			this.menuResolve.Text = "Resolve conflicts";
 			this.menuResolve.Visible = false;
 			this.menuResolve.Click += new System.EventHandler(this.menuResolve_Click);
 			// 
 			// menuSyncNow
 			// 
-			this.menuSyncNow.Index = 10;
+			this.menuSyncNow.Index = 9;
 			this.menuSyncNow.Text = "Sync now";
 			this.menuSyncNow.Visible = false;
 			this.menuSyncNow.Click += new System.EventHandler(this.menuSyncNow_Click);
 			// 
 			// menuRevert
 			// 
-			this.menuRevert.Index = 11;
+			this.menuRevert.Index = 10;
 			this.menuRevert.Text = "Revert to a normal folder";
 			this.menuRevert.Visible = false;
 			this.menuRevert.Click += new System.EventHandler(this.menuRevert_Click);
 			// 
 			// menuSeparator2
 			// 
-			this.menuSeparator2.Index = 12;
+			this.menuSeparator2.Index = 11;
 			this.menuSeparator2.Text = "-";
 			this.menuSeparator2.Visible = false;
 			// 
 			// menuProperties
 			// 
-			this.menuProperties.Index = 13;
+			this.menuProperties.Index = 12;
 			this.menuProperties.Text = "Properties";
 			this.menuProperties.Visible = false;
 			this.menuProperties.Click += new System.EventHandler(this.menuProperties_Click);
@@ -566,15 +557,6 @@ namespace Novell.FormsTrayApp
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Synchronization";
 			// 
-			// label3
-			// 
-			this.label3.Location = new System.Drawing.Point(16, 24);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(376, 48);
-			this.label3.TabIndex = 0;
-			this.label3.Text = "This will set the default sync setting for all iFolders.  You can change the sync" +
-				" setting for an individual iFolder from the iFolder\'s Property dialog.";
-			// 
 			// autoSync
 			// 
 			this.autoSync.Checked = true;
@@ -587,6 +569,15 @@ namespace Novell.FormsTrayApp
 			this.autoSync.TabIndex = 1;
 			this.autoSync.Text = "S&ync to host every:";
 			this.autoSync.CheckedChanged += new System.EventHandler(this.autoSync_CheckedChanged);
+			// 
+			// label3
+			// 
+			this.label3.Location = new System.Drawing.Point(16, 24);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(376, 48);
+			this.label3.TabIndex = 0;
+			this.label3.Text = "This will set the default sync setting for all iFolders.  You can change the sync" +
+				" setting for an individual iFolder from the iFolder\'s Property dialog.";
 			// 
 			// groupBox3
 			// 
@@ -624,14 +615,6 @@ namespace Novell.FormsTrayApp
 			this.groupBox5.TabStop = false;
 			this.groupBox5.Text = "Proxy";
 			// 
-			// label7
-			// 
-			this.label7.Location = new System.Drawing.Point(280, 58);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(56, 16);
-			this.label7.TabIndex = 3;
-			this.label7.Text = "Port:";
-			// 
 			// proxy
 			// 
 			this.proxy.Enabled = false;
@@ -640,6 +623,40 @@ namespace Novell.FormsTrayApp
 			this.proxy.Size = new System.Drawing.Size(168, 20);
 			this.proxy.TabIndex = 2;
 			this.proxy.Text = "";
+			// 
+			// port
+			// 
+			this.port.Enabled = false;
+			this.port.Location = new System.Drawing.Point(312, 56);
+			this.port.Name = "port";
+			this.port.Size = new System.Drawing.Size(72, 20);
+			this.port.TabIndex = 4;
+			// 
+			// useProxy
+			// 
+			this.useProxy.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.useProxy.Location = new System.Drawing.Point(16, 24);
+			this.useProxy.Name = "useProxy";
+			this.useProxy.Size = new System.Drawing.Size(360, 16);
+			this.useProxy.TabIndex = 0;
+			this.useProxy.Text = "Use a proxy to sync iFolders.";
+			this.useProxy.CheckedChanged += new System.EventHandler(this.useProxy_CheckedChanged);
+			// 
+			// label7
+			// 
+			this.label7.Location = new System.Drawing.Point(280, 58);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(56, 16);
+			this.label7.TabIndex = 3;
+			this.label7.Text = "Port:";
+			// 
+			// label4
+			// 
+			this.label4.Location = new System.Drawing.Point(16, 58);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(100, 16);
+			this.label4.TabIndex = 1;
+			this.label4.Text = "Proxy host:";
 			// 
 			// tabPage3
 			// 
@@ -1028,32 +1045,6 @@ namespace Novell.FormsTrayApp
 			this.menuHelpAbout.Text = "About";
 			this.menuHelpAbout.Click += new System.EventHandler(this.menuHelpAbout_Click);
 			// 
-			// useProxy
-			// 
-			this.useProxy.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.useProxy.Location = new System.Drawing.Point(16, 24);
-			this.useProxy.Name = "useProxy";
-			this.useProxy.Size = new System.Drawing.Size(360, 16);
-			this.useProxy.TabIndex = 0;
-			this.useProxy.Text = "Use a proxy to sync iFolders.";
-			this.useProxy.CheckedChanged += new System.EventHandler(this.useProxy_CheckedChanged);
-			// 
-			// port
-			// 
-			this.port.Enabled = false;
-			this.port.Location = new System.Drawing.Point(312, 56);
-			this.port.Name = "port";
-			this.port.Size = new System.Drawing.Size(72, 20);
-			this.port.TabIndex = 4;
-			// 
-			// label4
-			// 
-			this.label4.Location = new System.Drawing.Point(16, 58);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(100, 16);
-			this.label4.TabIndex = 1;
-			this.label4.Text = "Proxy host:";
-			// 
 			// GlobalProperties
 			// 
 			this.AcceptButton = this.ok;
@@ -1076,10 +1067,10 @@ namespace Novell.FormsTrayApp
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox3.ResumeLayout(false);
 			this.groupBox5.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.port)).EndInit();
 			this.tabPage3.ResumeLayout(false);
 			this.tabPage5.ResumeLayout(false);
 			this.groupBox6.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.port)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -1284,7 +1275,7 @@ namespace Novell.FormsTrayApp
 				//	- iFolder that has been invited. (Invitation.ico?)
 				this.iFolderView.SmallImageList = new ImageList();
 				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico")));
-				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, "Invitation.ico")));
+				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"Invitation.ico")));
 			}
 			catch {} // Non-fatal ... just missing some graphics.
 
@@ -1403,8 +1394,8 @@ namespace Novell.FormsTrayApp
 			// Enable/disable resolve menu item.
 			menuActionResolve.Visible = (iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).HasConflicts;
 
-			menuActionAccept.Visible = menuActionDecline.Visible = menuActionDelete.Visible = menuActionSeparator2.Visible = 
-				(iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription;
+			/*menuActionAccept.Visible = menuActionDecline.Visible = menuActionDelete.Visible = menuActionSeparator2.Visible = 
+				(iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription;*/
 		}
 
 		private void menuView_Popup(object sender, System.EventArgs e)
@@ -1449,7 +1440,7 @@ namespace Novell.FormsTrayApp
 			menuResolve.Visible = (iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).HasConflicts;
 			menuRefresh.Visible = menuCreate.Visible = iFolderView.SelectedItems.Count == 0;
 
-			menuAccept.Visible = menuDecline.Visible = menuDelete.Visible = menuSeparator3.Visible = 
+			menuAccept.Visible = /*menuDecline.Visible =*/ menuDelete.Visible = 
 				(iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription;
 		}
 

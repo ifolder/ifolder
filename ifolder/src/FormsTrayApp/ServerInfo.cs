@@ -119,23 +119,23 @@ namespace Novell.FormsTrayApp
 			// 
 			// userName
 			// 
-			this.userName.Location = new System.Drawing.Point(112, 88);
+			this.userName.Location = new System.Drawing.Point(96, 88);
 			this.userName.Name = "userName";
-			this.userName.Size = new System.Drawing.Size(320, 20);
+			this.userName.Size = new System.Drawing.Size(336, 20);
 			this.userName.TabIndex = 2;
 			this.userName.Text = "";
 			// 
 			// serverIP
 			// 
-			this.serverIP.Location = new System.Drawing.Point(112, 152);
+			this.serverIP.Location = new System.Drawing.Point(96, 152);
 			this.serverIP.Name = "serverIP";
-			this.serverIP.Size = new System.Drawing.Size(320, 20);
+			this.serverIP.Size = new System.Drawing.Size(336, 20);
 			this.serverIP.TabIndex = 6;
 			this.serverIP.Text = "";
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(16, 88);
+			this.label1.Location = new System.Drawing.Point(16, 90);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(100, 16);
 			this.label1.TabIndex = 1;
@@ -143,24 +143,24 @@ namespace Novell.FormsTrayApp
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(16, 152);
+			this.label2.Location = new System.Drawing.Point(16, 154);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(100, 16);
 			this.label2.TabIndex = 5;
-			this.label2.Text = "Server IP address:";
+			this.label2.Text = "Server host:";
 			// 
 			// password
 			// 
-			this.password.Location = new System.Drawing.Point(112, 120);
+			this.password.Location = new System.Drawing.Point(96, 120);
 			this.password.Name = "password";
 			this.password.PasswordChar = '*';
-			this.password.Size = new System.Drawing.Size(320, 20);
+			this.password.Size = new System.Drawing.Size(336, 20);
 			this.password.TabIndex = 4;
 			this.password.Text = "";
 			// 
 			// label4
 			// 
-			this.label4.Location = new System.Drawing.Point(16, 120);
+			this.label4.Location = new System.Drawing.Point(16, 122);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(100, 16);
 			this.label4.TabIndex = 3;
@@ -194,7 +194,7 @@ namespace Novell.FormsTrayApp
 			this.MinimizeBox = false;
 			this.Name = "ServerInfo";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "Enterprise Server Information";
+			this.Text = "iFolder Login";
 			this.Load += new System.EventHandler(this.ServerInfo_Load);
 			this.Activated += new System.EventHandler(this.ServerInfo_Activated);
 			this.ResumeLayout(false);
