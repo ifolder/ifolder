@@ -69,8 +69,7 @@ namespace Simias.Web
 		[SoapRpcMethod]
 		public string GetSimiasInformation()
 		{
-			return "This is some simias information";
+			return "TODO: Implement the Simias Web Service";
 		}
-
 	}
 }

@@ -94,16 +94,16 @@ namespace Simias.Web
 
 				if (server.Start (false) == false)
 				{
-					log.Error("The Web Service failed to start");
+					log.Error("Simias ASP.Net Service failed to start");
 				}
 				else
 				{
-					log.Error("The Web Service started");
+					log.Debug("Simias ASP.Net Service started");
 				}
 			}
 			catch (Exception e) 
 			{
-				log.Error("There was a problem with the web server: {0}", 
+				log.Error("Error starting Simias ASP.Net Service: {0}", 
 						e.Message);
 			}
 		}
@@ -141,16 +141,16 @@ namespace Simias.Web
 				if(server != null)
 				{
 					server.Stop();
-					log.Debug("The Web Service stopped");
+					log.Debug("Simias ASP.Net Service stopped");
 				}
 				else
 				{
-					log.Error("Stop was called when the Web Server object was null");
+					log.Error("Stop was called in Simias ASP.Net when the server object was null");
 				}
 			}
 			catch (Exception e) 
 			{
-				log.Error("Stopping the Web Service resulted in: {0}", 
+				log.Error("Error Stopping Simias ASP.Net Service: {0}", 
 						e.Message);
 			}
 		}
