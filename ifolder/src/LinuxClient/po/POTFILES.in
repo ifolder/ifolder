@@ -1,5 +1,7 @@
 src/LinuxClient/application/iFolderApplication.cs
+src/LinuxClient/library/AccountDialog.cs
 src/LinuxClient/library/CreateDialog.cs
+src/LinuxClient/library/FileRenameDialog.cs
 src/LinuxClient/library/iFolderAcceptDialog.cs
 src/LinuxClient/library/iFolderAccessDialog.cs
 src/LinuxClient/library/iFolderConflictDialog.cs
@@ -17,6 +19,7 @@ src/LinuxClient/library/iFolderWindow.cs
 src/LinuxClient/library/LogWindow.cs
 src/LinuxClient/library/NotifyWindow.cs
 src/LinuxClient/library/PreferencesWindow.cs
-src/LinuxClient/library/PrefsAccountsPages.cs
+src/LinuxClient/library/PrefsAccountsPage.cs
 src/LinuxClient/library/PrefsGeneralPage.cs
+src/LinuxClient/library/RemoveAccountDialog.cs
 src/LinuxClient/library/Util.cs
