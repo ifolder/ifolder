@@ -44,7 +44,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private POBox poBox = null;
 		private Store store = null;
 		private Configuration config;
-		private Manager abManager;
+		private Novell.AddressBook.Manager abManager;
 		private EventSubscriber subscriber;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ColumnHeader columnHeader1;
@@ -71,7 +71,7 @@ namespace Novell.iFolder.FormsTrayApp
 			try
 			{
 				this.config = config;
-				abManager = Manager.Connect();
+				abManager = Novell.AddressBook.Manager.Connect();
 			}
 			catch (SimiasException e)
 			{

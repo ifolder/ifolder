@@ -77,7 +77,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.ContextMenu contextMenu1;
 		private System.Windows.Forms.MenuItem menuConflictResolver;
 
-		private Manager serviceManager;
+		private Simias.Service.Manager serviceManager;
 		private System.Windows.Forms.MenuItem menuMyiFolders;
 		private System.Windows.Forms.MenuItem menuPOBox;
 		private System.Windows.Forms.MenuItem menuConnect;
@@ -321,7 +321,7 @@ namespace Novell.iFolder.FormsTrayApp
 				SyncProperties props = new SyncProperties(config);
 				props.LogicFactory = typeof(SynkerA);
 			
-				serviceManager = new Manager(config);
+				serviceManager = new Simias.Service.Manager(config);
 				serviceManager.StartServices();
 
 				// Wait for the services to start.
