@@ -17,13 +17,13 @@ iFolderCmd_FLAGS = $(CSC_EXEFLAG)
 iFolderCmd_LIBS = System.dll $(SYSTEM_XML) Configuration.dll CollectionStore.dll Agent.dll iFolder.dll AddressBook.dll
 iFolderCmd_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin
 
-NUNIT_TESTS := iFolderTests.dll
+NUNIT_TESTS := iFolderTests.exe
 
 iFolderTests_CSFILES = $(srcdir)/iFolderTests.cs
 iFolderTests_CSFILES_CSC := $(subst /,$(SEP),$(iFolderTests_CSFILES))
 iFolderTests_INCLUDES =
 iFolderTests_RESOURCES =
-iFolderTests_FLAGS = $(CSC_LIBFLAG)
+iFolderTests_FLAGS = $(CSC_EXEFLAG)
 iFolderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Agent.dll iFolder.dll Configuration.dll CollectionStore.dll  AddressBook.dll
 iFolderTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin $(SIMIAS_INSTALL_PATH)/bin
 
@@ -39,7 +39,7 @@ iFolder.dll: $(iFolder_CSFILES) $(iFolder_RESOURCES)
 iFolderCmd.exe: $(iFolderCmd_CSFILES) $(iFolderCmd_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderCmd_FLAGS) $(iFolderCmd_LIBS:%=/r:%) $(iFolderCmd_LIBPATH:%=/lib:%) $(iFolderCmd_CSFILES_CSC) /doc:iFolderCmd.doc.xml
 
-iFolderTests.dll: $(iFolderTests_CSFILES) $(iFolderTests_RESOURCES)
+iFolderTests.exe: $(iFolderTests_CSFILES) $(iFolderTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderTests_FLAGS) $(iFolderTests_LIBS:%=/r:%) $(iFolderTests_LIBPATH:%=/lib:%) $(iFolderTests_CSFILES_CSC)
 	
 install-exec-local: iFolder.dll iFolderCmd.exe
@@ -52,7 +52,7 @@ uninstall-local:
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-#	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:iFolderTests.test.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:iFolderTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = iFolder.dll iFolderCmd.exe $(NUNIT_TESTS) iFolder.doc.xml iFolderTests.test.xml iFolderCmd.doc.xml
 
