@@ -257,7 +257,7 @@ namespace Simias.Gaim
 			if (openingParen <= 0)
 				throw new ArgumentException("The specified simiasMemberName doesn't contain an opening parenthesis or it starts the string");
 			
-			return simiasMemberName.Substring(openingParen + 1, length - openingParen - 1);
+			return simiasMemberName.Substring(openingParen + 1, length - openingParen - 2);
 		}
 		
 		public string GetSimiasMemberName(string machineName)
