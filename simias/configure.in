@@ -473,8 +473,6 @@ src/Makefile
 src/SimiasClient/SimiasSetup.cs
 src/Common/MyDns.cs
 src/Common/simias-client-bootstrap.config
-src/GaimDomain/Makefile
-src/GaimDomain/libsimias-gaim/Makefile
 src/SimiasClient/Makefile
 src/SimiasClient/libsimias-event/Makefile
 src/Simias.dll/Makefile
