@@ -27,12 +27,14 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace Novell.Forms.Controls
 {
 	/// <summary>
 	/// Summary description for GaugeChart.
 	/// </summary>
+	[ComVisible(false)]
 	public class GaugeChart : System.Windows.Forms.UserControl
 	{
 		#region Class Members

@@ -28,12 +28,14 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Net;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Novell.iFolderCom
 {
 	/// <summary>
 	/// Summary description for ConflictResolver.
 	/// </summary>
+	[ComVisible(false)]
 	public class ConflictResolver : System.Windows.Forms.Form
 	{
 		#region Class Members

@@ -28,12 +28,14 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Net;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Novell.iFolderCom
 {
 	/// <summary>
 	/// Summary description for Picker.
 	/// </summary>
+	[ComVisible(false)]
 	public class Picker : System.Windows.Forms.Form
 	{
 		#region Class Members

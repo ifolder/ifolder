@@ -26,12 +26,14 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace Novell.iFolderCom
 {
 	/// <summary>
 	/// Summary description for TestForm.
 	/// </summary>
+	[ComVisible(false)]
 	public class UserProperties : System.Windows.Forms.Form
 	{
 		private System.Windows.Forms.GroupBox accessButtons;
