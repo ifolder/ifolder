@@ -260,6 +260,12 @@ namespace Novell.iFolder
 					new EventHandler(show_help);
 
 			trayMenu.Append(new SeparatorMenuItem());
+			
+			MenuItem messages_item = 
+					new MenuItem ("Messages...");
+			trayMenu.Append (messages_item);
+			messages_item.Activated +=
+					new EventHandler(show_messages);
 
 			MenuItem colBrowser_item = 
 					new MenuItem ("Collection Browser");
@@ -350,6 +356,14 @@ namespace Novell.iFolder
 
 			browser = new ReunionBrowser();
 			browser.ShowAll();
+		}
+		
+		static void show_messages(object o, EventArgs args)
+		{
+			POBoxViewer boxViewer;
+			
+			boxViewer = new POBoxViewer();
+			boxViewer.ShowAll();
 		}
 
 		static void show_colbrowser(object o, EventArgs args)
