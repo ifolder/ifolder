@@ -106,6 +106,16 @@ if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
     # Install assemblies into the gac
     #
 #    %{prefix}/bin/install-ifolder-to-gac -i
+
+    #
+    # Set up iFolder file associations for Gnome
+    #
+    if test -d "$GNOMEDIR" -a \( "%{prefix}" != "$GNOMEDIR" \); then
+        cp -f %{prefix}/share/mime-info/ifolder.mime $GNOMEDIR/share/mime-info
+        cp -f %{prefix}/share/mime-info/ifolder.keys $GNOMEDIR/share/mime-info
+        cp -f %{prefix}/share/application-registry/ifolder.applications $GNOMEDIR/share/application-registry
+    fi
+
 fi
 
 #=============================================================================
@@ -124,6 +134,16 @@ if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
     # Remove assemblies from the gac
     #
 #    %{prefix}/bin/install-ifolder-to-gac -u
+
+    #
+    # Remove iFolder file associations for Gnome
+    #
+    if test -d "$GNOMEDIR" -a \( "%{prefix}" != "$GNOMEDIR" \); then
+        rm -f $GNOMEDIR/share/mime-info/ifolder.mime
+        rm -f $GNOMEDIR/share/mime-info/ifolder.keys
+        rm -f $GNOMEDIR/share/application-registry/ifolder.applications
+    fi
+
 fi
     
 #=============================================================================
