@@ -330,6 +330,7 @@ namespace Simias.Sync.Client
 				timer.Dispose();
 				timer = null;
 			}
+			fileMonitor.Dispose();
 		}
 
 		/// <summary>
@@ -402,14 +403,9 @@ namespace Simias.Sync.Client
 
 			// Setup the url to the server.
 			service = new SimiasSyncService();
+			service.Url = collection.MasterUrl.ToString().TrimEnd('/') + service.Url.Substring(service.Url.LastIndexOf('/'));
 			service.CookieContainer = new CookieContainer();
-			UriBuilder hostUrl = new UriBuilder(service.Url);
-			hostUrl.Host = collection.MasterUrl.Host;
-			// BUGBUG this need to be put back 
-			if (collection.MasterUrl.Port != 0 && collection.MasterUrl.Port != 6436)
-				hostUrl.Port = collection.MasterUrl.Port;
-			service.Url = hostUrl.ToString();
-
+			
 			SyncNodeStamp[] sstamps;
 			NodeStamp[]		cstamps;
 			
@@ -734,7 +730,7 @@ namespace Simias.Sync.Client
 		/// <param name="cstamps">The client nodes.</param>
 		void ReconcileAllNodeStamps(SyncNodeStamp[] sstamps, NodeStamp[] cstamps)
 		{
-			// Clear all the table because we are doing a full sync.
+			// Clear all the tables because we are doing a full sync.
 			killOnClient.Clear();
 			nodesFromServer.Clear();
 			dirsFromServer.Clear();
@@ -864,23 +860,25 @@ namespace Simias.Sync.Client
 						{
 							// BUGBUG what about an update conflict.
 							Conflict conflict = new Conflict(collection, node);
+							string conflictPath;
 							if (conflict.IsFileNameConflict)
 							{
-								File.Delete(conflict.FileNameConflictPath);
+								conflictPath = conflict.FileNameConflictPath;
 							}
-						}
-						else
-						{
-							BaseFileNode bfn = node as BaseFileNode;
-							if (bfn != null)
-								File.Delete(bfn.GetFullPath(collection));
-							else
+							else 
 							{
-								DirNode dn = node as DirNode;
-								if (dn != null)
-									Directory.Delete(dn.GetFullPath(collection), true);
+								conflictPath = conflict.UpdateConflictPath;
 							}
+							if (conflictPath != null)
+								File.Delete(conflictPath);
 						}
+						
+						BaseFileNode bfn = node as BaseFileNode;
+						if (bfn != null)
+							File.Delete(bfn.GetFullPath(collection));
+						DirNode dn = node as DirNode;
+						if (dn != null)
+							Directory.Delete(dn.GetFullPath(collection), true);
 						
 						// Do a deep delete.
 						Node[] deleted = collection.Delete(node, PropertyTags.Parent);
@@ -1151,7 +1149,10 @@ namespace Simias.Sync.Client
 						}
 					}
 				}
-				catch {}
+				catch 
+				{
+					SyncComplete = false;
+				}
 			}
 		}
 
@@ -1161,40 +1162,41 @@ namespace Simias.Sync.Client
 		void ProcessKillOnServer()
 		{
 			// remove deleted nodes from server
-			if (killOnServer.Count > 0 && ! stopping)
+			if (killOnServer.Count == 0)
 			{
-				try
+				return;
+			}
+			try
+			{
+				log.Info("Deleting {0} Nodes on server", killOnServer.Count);
+				string[] idList = new string[killOnServer.Count];
+				killOnServer.Keys.CopyTo(idList, 0);
+				SyncNodeStatus[] nodeStatus = service.DeleteNodes(idList);
+				foreach (SyncNodeStatus status in nodeStatus)
 				{
-					log.Info("Deleting {0} Nodes on server", killOnServer.Count);
-					string[] idList = new string[killOnServer.Count];
-					killOnServer.Keys.CopyTo(idList, 0);
-					SyncNodeStatus[] nodeStatus = service.DeleteNodes(idList);
-					foreach (SyncNodeStatus status in nodeStatus)
+					try
 					{
-						try
+						if (status.status == SyncStatus.Success)
 						{
-							if (status.status == SyncStatus.Success)
+							Node node = collection.GetNodeByID(status.nodeID);
+							if (node != null)
 							{
-								Node node = collection.GetNodeByID(status.nodeID);
-								if (node != null)
-								{
-									log.Info("Deleting {0} from server", node.Name);
-									// Delete the tombstone.
-									collection.Commit(collection.Delete(node));
-								}
-								killOnServer.Remove(status.nodeID);
+								log.Info("Deleting {0} from server", node.Name);
+								// Delete the tombstone.
+								collection.Commit(collection.Delete(node));
 							}
-						}
-						catch 
-						{
-							SyncComplete = false;
+							killOnServer.Remove(status.nodeID);
 						}
 					}
+					catch 
+					{
+						SyncComplete = false;
+					}
 				}
-				catch
-				{
-					SyncComplete = false;
-				}
+			}
+			catch
+			{
+				SyncComplete = false;
 			}
 		}
 
@@ -1223,51 +1225,57 @@ namespace Simias.Sync.Client
 				int batchCount = nodeIDs.Length - offset < BATCH_SIZE ? nodeIDs.Length - offset : BATCH_SIZE;
 				SyncNode[] updates = new SyncNode[batchCount];
 				Node[] nodes = new Node[batchCount];
-				for (int i = offset; i < offset + batchCount; ++ i)
+				try
 				{
-					Node node = collection.GetNodeByID(nodeIDs[i]);
-					if (node != null)
+					for (int i = offset; i < offset + batchCount; ++ i)
 					{
-						log.Info("Uploading {0} {1} to server", node.Type, node.Name);
-						nodes[i - offset] = node;
-						SyncNode snode = new SyncNode();
-						snode.node = node.Properties.ToString(true);
-						snode.expectedIncarn = node.MasterIncarnation;
-						updates[i - offset] = snode;
+						Node node = collection.GetNodeByID(nodeIDs[i]);
+						if (node != null)
+						{
+							log.Info("Uploading {0} {1} to server", node.Type, node.Name);
+							nodes[i - offset] = node;
+							SyncNode snode = new SyncNode();
+							snode.node = node.Properties.ToString(true);
+							snode.expectedIncarn = node.MasterIncarnation;
+							updates[i - offset] = snode;
+						}
 					}
-				}
 
-				offset += batchCount;
-
-				SyncNodeStatus[] nodeStatus = service.PutNodes(updates);
+					SyncNodeStatus[] nodeStatus = service.PutNodes(updates);
 					
-				for (int i = 0; i < nodes.Length; ++ i)
-				{
-					Node node = nodes[i];
-					SyncNodeStatus status = nodeStatus[i];
-					switch (status.status)
+					for (int i = 0; i < nodes.Length; ++ i)
 					{
-						case SyncStatus.Success:
-							node.SetMasterIncarnation(node.LocalIncarnation);
-							collection.Commit(node);
-							nodesToServer.Remove(node.ID);
-							break;
-						case SyncStatus.UpdateConflict:
-						case SyncStatus.FileNameConflict:
-							// The file has been changed on the server lets get it next pass.
-							log.Debug("Skipping update of node {0} due to {1} on server",
-								status.nodeID, status.status);
+						Node node = nodes[i];
+						SyncNodeStatus status = nodeStatus[i];
+						switch (status.status)
+						{
+							case SyncStatus.Success:
+								node.SetMasterIncarnation(node.LocalIncarnation);
+								collection.Commit(node);
+								nodesToServer.Remove(node.ID);
+								break;
+							case SyncStatus.UpdateConflict:
+							case SyncStatus.FileNameConflict:
+								// The file has been changed on the server lets get it next pass.
+								log.Debug("Skipping update of node {0} due to {1} on server",
+									status.nodeID, status.status);
 									
-							nodesFromServer.Add(node.ID, node.Type);
-							nodesToServer.Remove(node.ID);
-							break;
-						default:
-							log.Debug("Skipping update of node {0} due to {1} on server",
-								status.nodeID, status.status);
-							SyncComplete = false;
-							break;
+								nodesFromServer.Add(node.ID, node.Type);
+								nodesToServer.Remove(node.ID);
+								break;
+							default:
+								log.Debug("Skipping update of node {0} due to {1} on server",
+									status.nodeID, status.status);
+								SyncComplete = false;
+								break;
+						}
 					}
 				}
+				catch
+				{
+					SyncComplete = false;
+				}
+				offset += batchCount;
 			}
 		}
 
@@ -1283,56 +1291,68 @@ namespace Simias.Sync.Client
 				
 			// Now get the nodes in groups of BATCH_SIZE.
 			int offset = 0;
-			while (offset < nodeIDs.Length && !stopping)
+			while (offset < nodeIDs.Length)
 			{
+				if (stopping)
+				{
+					SyncComplete = false;
+					return;
+				}
+
 				int batchCount = nodeIDs.Length - offset < BATCH_SIZE ? nodeIDs.Length - offset : BATCH_SIZE;
 				SyncNode[] updates = new SyncNode[batchCount];
 				Node[] nodes = new Node[batchCount];
-				for (int i = offset; i < offset + batchCount; ++ i)
+				try
 				{
-					Node node = collection.GetNodeByID(nodeIDs[i]);
-					if (node != null)
+					for (int i = offset; i < offset + batchCount; ++ i)
 					{
-						log.Info("Uploading Directory {1} to server", node.Name);
-						nodes[i - offset] = node;
-						SyncNode snode = new SyncNode();
-						snode.node = node.Properties.ToString(true);
-						snode.expectedIncarn = node.MasterIncarnation;
-						updates[i - offset] = snode;
+						Node node = collection.GetNodeByID(nodeIDs[i]);
+						if (node != null)
+						{
+							log.Info("Uploading Directory {1} to server", node.Name);
+							nodes[i - offset] = node;
+							SyncNode snode = new SyncNode();
+							snode.node = node.Properties.ToString(true);
+							snode.expectedIncarn = node.MasterIncarnation;
+							updates[i - offset] = snode;
+						}
 					}
-				}
 
-				offset += batchCount;
-
-				SyncNodeStatus[] nodeStatus = service.PutDirs(updates);
+					SyncNodeStatus[] nodeStatus = service.PutDirs(updates);
 					
-				for (int i = 0; i < nodes.Length; ++ i)
-				{
-					Node node = nodes[i];
-					SyncNodeStatus status = nodeStatus[i];
-					switch (status.status)
+					for (int i = 0; i < nodes.Length; ++ i)
 					{
-						case SyncStatus.Success:
-							node.SetMasterIncarnation(node.LocalIncarnation);
-							collection.Commit(node);
-							dirsToServer.Remove(node.ID);
-							break;
-						case SyncStatus.UpdateConflict:
-						case SyncStatus.FileNameConflict:
-							// The file has been changed on the server lets get it next pass.
-							log.Debug("Failed update of node {0} due to {1} on server",
-								status.nodeID, status.status);
+						Node node = nodes[i];
+						SyncNodeStatus status = nodeStatus[i];
+						switch (status.status)
+						{
+							case SyncStatus.Success:
+								node.SetMasterIncarnation(node.LocalIncarnation);
+								collection.Commit(node);
+								dirsToServer.Remove(node.ID);
+								break;
+							case SyncStatus.UpdateConflict:
+							case SyncStatus.FileNameConflict:
+								// The file has been changed on the server lets get it next pass.
+								log.Debug("Failed update of node {0} due to {1} on server",
+									status.nodeID, status.status);
 									
-							nodesFromServer.Add(node.ID, node.Type);
-							nodesToServer.Remove(node.ID);
-							break;
-						default:
-							log.Debug("Failed update of node {0} due to {1} on server",
-								status.nodeID, status.status);
-							SyncComplete = false;
-							break;
+								nodesFromServer.Add(node.ID, node.Type);
+								nodesToServer.Remove(node.ID);
+								break;
+							default:
+								log.Debug("Failed update of node {0} due to {1} on server",
+									status.nodeID, status.status);
+								SyncComplete = false;
+								break;
+						}
 					}
 				}
+				catch
+				{
+					SyncComplete = false;
+				}
+				offset += batchCount;
 			}
 		}
 
@@ -1383,6 +1403,7 @@ namespace Simias.Sync.Client
 				}
 				catch 
 				{
+					SyncComplete = false;
 				}
 			}
 		}
