@@ -40,12 +40,6 @@
 #include "connection.h"
 
 /**
- * Oscar Protocol Includes (needed to get the socket file descriptor to
- * determine the correct IP address).
- */
-//#include "aim.h"
-
-/**
  * Non-public Functions
  */
 static int send_ping(GaimBuddy *recipient, const char *ping_type);
@@ -96,18 +90,13 @@ fprintf(stderr, "Sending message: %s\n", msg);
  */
 static char *
 convert_url_to_public(const char *start_url)
-//convert_url_to_public(const char *start_url, GaimConnection *gc)
 {
 	char new_url[1024];
-//	const char *possible_public_ip = NULL;
 	char *public_ip = NULL;
 	char *proto = NULL;
 	char *host = NULL;
 	char *port = NULL;
 	char *path = NULL;
-//	void **od_pointer; /* Oscar Data Struct isn't in aim.h */
-//	void *od_struct;
-//	aim_conn_t *aim_conn;
 	char localhost[129];
 	struct hostent *myhost;
 	char **addr_list;
@@ -116,55 +105,39 @@ convert_url_to_public(const char *start_url)
 
 	if (simias_url_parse(start_url, &proto, &host, &port, &path)) {
 	
-		// The second item in the OscarData struct is the aim_conn_t;
-//		od_pointer = (void **)gc->proto_data;
-//		od_struct = (void *)*od_pointer;
-//		od_struct++;
-		
-//		aim_conn = (aim_conn_t *)od_struct;
-		
-//		possible_public_ip = gaim_network_get_my_ip(aim_conn ? aim_conn->fd : -1);
-		
-//		if (!possible_public_ip || strncmp(possible_public_ip, "127.0.0.", 8) == 0)
-//		{ 
-			if (gethostname(localhost, 128) < 0)
-				sprintf(localhost, "localhost");
+		if (gethostname(localhost, 128) < 0)
+			sprintf(localhost, "localhost");
 
-			myhost = gethostbyname(localhost);
-			if (myhost)
-			{	
-				addr_list = myhost->h_addr_list;
-				while (*addr_list)
+		myhost = gethostbyname(localhost);
+		if (myhost)
+		{	
+			addr_list = myhost->h_addr_list;
+			while (*addr_list)
+			{
+				/* Get the IP address string */
+				memcpy(&sAddr.sin_addr.s_addr, *addr_list, myhost->h_length);
+				
+				temp_ip = inet_ntoa(sAddr.sin_addr);
+				if (!temp_ip || strncmp(temp_ip, "127.0.0.", 8) == 0)
 				{
-					// Get the IP address string
-					memcpy(&sAddr.sin_addr.s_addr, *addr_list, myhost->h_length);
-					
-					temp_ip = inet_ntoa(sAddr.sin_addr);
-					if (!temp_ip || strncmp(temp_ip, "127.0.0.", 8) == 0)
-					{
-						fprintf(stderr, "Skipping localhost\n");
-					}
-					else
-					{
-						fprintf(stderr, "Using IP: %s\n", temp_ip);
-						public_ip = strdup(temp_ip);
-						break;
-					}
-
-					addr_list++;
+					fprintf(stderr, "Skipping localhost\n");
+				}
+				else
+				{
+					fprintf(stderr, "Using IP: %s\n", temp_ip);
+					public_ip = strdup(temp_ip);
+					break;
 				}
 
-				if (!public_ip)
-				{
-					fprintf(stderr, "Couldn't determine IP address\n");
-					public_ip = strdup(localhost);
-				}
+				addr_list++;
 			}
-//		}
-//		else
-//		{
-//			public_ip = strdup(possible_public_ip);
-//		}
+
+			if (!public_ip)
+			{
+				fprintf(stderr, "Couldn't determine IP address\n");
+				public_ip = strdup(localhost);
+			}
+		}
 
 		if (path) {
 			sprintf(new_url, "%s://%s:%s/%s", proto, public_ip, port, path);
@@ -197,7 +170,6 @@ send_ping(GaimBuddy *recipient, const char *ping_type)
 	char *simias_service_url;
 	char *escaped_url;
 	char *public_url;
-//	GaimConnection *gc;
 	int err;
 
 	/* Get the PublicKey for the user */
@@ -226,10 +198,7 @@ fprintf(stderr, "simias_get_user_info() returned: %d\n", err);
 	escaped_url = simias_escape_spaces(simias_service_url);
 	free(simias_service_url);
 	
-//	gc = gaim_account_get_connection(recipient->account);
-
 	public_url = convert_url_to_public(escaped_url);
-//	public_url = convert_url_to_public(escaped_url, gc);
 	if (public_url) {
 		sprintf(msg, "%s%s:%s:%s:%s]", ping_type, base64Key, machineName, userID, public_url);
 		free(public_url);
