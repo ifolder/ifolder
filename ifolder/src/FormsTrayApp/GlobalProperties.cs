@@ -150,6 +150,8 @@ namespace Novell.iFolder.FormsTrayApp
 			//
 			InitializeComponent();
 
+			AddServicesTab();
+
 			this.config = config;
 
 			// Set up the event handlers to watch for iFolder creates/deletes.
@@ -192,6 +194,168 @@ namespace Novell.iFolder.FormsTrayApp
 				}
 			}
 			base.Dispose( disposing );
+		}
+
+		[Conditional("DEBUG")]
+		private void AddServicesTab()
+		{
+			this.tabPage4 = new System.Windows.Forms.TabPage();
+			this.services = new System.Windows.Forms.ListView();
+			this.contextMenu2 = new System.Windows.Forms.ContextMenu();
+			this.menuEnabled = new System.Windows.Forms.MenuItem();
+			this.menuStart = new System.Windows.Forms.MenuItem();
+			this.menuPause = new System.Windows.Forms.MenuItem();
+			this.menuStop = new System.Windows.Forms.MenuItem();
+			this.menuRestart = new System.Windows.Forms.MenuItem();
+			this.tabPage4.SuspendLayout();
+			this.tabControl1.Controls.Add(this.tabPage4);
+			// 
+			// tabPage4
+			// 
+			this.tabPage4.Controls.Add(this.services);
+			this.tabPage4.Location = new System.Drawing.Point(4, 22);
+			this.tabPage4.Name = "tabPage4";
+			this.tabPage4.Size = new System.Drawing.Size(426, 390);
+			this.tabPage4.TabIndex = 3;
+			this.tabPage4.Text = "Services";
+			// 
+			// services
+			// 
+			this.services.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+																					   this.columnHeader2,
+																					   this.columnHeader3});
+			this.services.ContextMenu = this.contextMenu2;
+			this.services.FullRowSelect = true;
+			this.services.Location = new System.Drawing.Point(8, 16);
+			this.services.MultiSelect = false;
+			this.services.Name = "services";
+			this.services.Size = new System.Drawing.Size(408, 208);
+			this.services.TabIndex = 0;
+			this.services.View = System.Windows.Forms.View.Details;
+			// 
+			// contextMenu2
+			// 
+			this.contextMenu2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																						 this.menuEnabled,
+																						 this.menuStart,
+																						 this.menuPause,
+																						 this.menuStop,
+																						 this.menuRestart});
+			this.contextMenu2.Popup += new System.EventHandler(this.contextMenu2_Popup);
+			// 
+			// menuEnabled
+			// 
+			this.menuEnabled.Index = 0;
+			this.menuEnabled.Text = "Enabled";
+			this.menuEnabled.Click += new System.EventHandler(this.menuEnabled_Click);
+			// 
+			// menuStart
+			// 
+			this.menuStart.Enabled = false;
+			this.menuStart.Index = 1;
+			this.menuStart.Text = "Start";
+			this.menuStart.Click += new System.EventHandler(this.menuStart_Click);
+			// 
+			// menuPause
+			// 
+			this.menuPause.Enabled = false;
+			this.menuPause.Index = 2;
+			this.menuPause.Text = "Pause";
+			this.menuPause.Click += new System.EventHandler(this.menuPause_Click);
+			// 
+			// menuStop
+			// 
+			this.menuStop.Enabled = false;
+			this.menuStop.Index = 3;
+			this.menuStop.Text = "Stop";
+			this.menuStop.Click += new System.EventHandler(this.menuStop_Click);
+			// 
+			// menuRestart
+			// 
+			this.menuRestart.Enabled = false;
+			this.menuRestart.Index = 4;
+			this.menuRestart.Text = "Restart";
+			this.menuRestart.Click += new System.EventHandler(this.menuRestart_Click);
+
+			this.tabPage4.ResumeLayout(false);
+		}
+
+		[Conditional("DEBUG")]
+		private void AddServicesToListView()
+		{
+			foreach (ServiceCtl svc in serviceManager)
+			{
+				ListViewItem lvi = new ListViewItem(new string[] {
+																	 svc.Name,
+																	 svc.State.ToString()}, 0);
+				lvi.Tag = new ServiceWithState(svc);
+				services.Items.Add(lvi);
+			}
+		}
+
+		[Conditional("DEBUG")]
+		private void UpdateServices()
+		{
+			foreach (ListViewItem lvi in services.Items)
+			{
+				ServiceWithState service = (ServiceWithState)lvi.Tag;
+				if (service.Changed)
+				{
+					this.serviceManager.Install(service.Svc);
+				}
+			}
+		}
+
+		[Conditional("DEBUG")]
+		private void SetupServicesMenu()
+		{
+			if (services.SelectedItems.Count == 1)
+			{
+				ServiceWithState service = (ServiceWithState)services.SelectedItems[0].Tag;
+
+				menuActionEnable.Text = service.Svc.Enabled ? "Disable" : "Enable";
+				menuActionEnable.Enabled = true;
+
+				// Set the state of the menu item.
+				menuEnabled.Checked = service.Svc.Enabled;
+
+				// Show the menu items.
+				menuEnabled.Visible = menuStart.Visible = menuPause.Visible = menuStop.Visible = menuRestart.Visible = true;
+
+				ListViewItem lvi = services.SelectedItems[0];
+				switch (lvi.SubItems[1].Text)
+				{
+					case "Stopped":
+						menuStart.Text = menuActionStart.Text = "Start";
+						menuStart.Enabled = menuActionStart.Enabled = true;
+						menuStop.Enabled = menuRestart.Enabled = 
+							menuActionStop.Enabled = menuActionRestart.Enabled =
+							menuPause.Enabled = menuActionPause.Enabled = false;
+						break;
+					case "Running":
+						menuStart.Text = menuActionStart.Text = "Start";
+						menuStart.Enabled = menuActionStart.Enabled = false;
+						menuStop.Enabled = menuRestart.Enabled = 
+							menuActionStop.Enabled = menuActionRestart.Enabled = 
+							menuPause.Enabled = menuActionPause.Enabled = true;
+						break;
+					case "Paused":
+						menuStart.Text = menuActionStart.Text = "Resume";
+						menuStart.Enabled = menuActionStart.Enabled = 
+							menuStop.Enabled = menuActionStop.Enabled = 
+							menuRestart.Enabled = menuActionRestart.Enabled = true;
+						menuPause.Enabled = menuActionPause.Enabled = false;
+						break;
+				}
+
+				menuStart.Enabled = menuActionStart.Enabled = menuStart.Enabled && menuEnabled.Checked;
+			}
+			else
+			{
+				// Nothing is selected ... hide the menu items.
+				menuEnabled.Enabled = menuStart.Enabled = menuPause.Enabled = menuStop.Enabled = menuRestart.Enabled = false;
+				menuActionEnable.Enabled = menuActionStart.Enabled = menuActionPause.Enabled = menuActionStop.Enabled = menuActionRestart.Enabled = false;
+			}
 		}
 
 		#region Windows Form Designer generated code
@@ -241,16 +405,8 @@ namespace Novell.iFolder.FormsTrayApp
 			this.log = new System.Windows.Forms.ListBox();
 			this.syncNow = new System.Windows.Forms.Button();
 			this.label6 = new System.Windows.Forms.Label();
-			this.tabPage4 = new System.Windows.Forms.TabPage();
-			this.services = new System.Windows.Forms.ListView();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
-			this.contextMenu2 = new System.Windows.Forms.ContextMenu();
-			this.menuEnabled = new System.Windows.Forms.MenuItem();
-			this.menuStart = new System.Windows.Forms.MenuItem();
-			this.menuPause = new System.Windows.Forms.MenuItem();
-			this.menuStop = new System.Windows.Forms.MenuItem();
-			this.menuRestart = new System.Windows.Forms.MenuItem();
 			this.groupBox5 = new System.Windows.Forms.GroupBox();
 			this.port = new System.Windows.Forms.TextBox();
 			this.label7 = new System.Windows.Forms.Label();
@@ -285,7 +441,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.groupBox2.SuspendLayout();
 			this.groupBox3.SuspendLayout();
 			this.tabPage3.SuspendLayout();
-			this.tabPage4.SuspendLayout();
 			this.groupBox5.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -361,7 +516,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Controls.Add(this.tabPage3);
-			this.tabControl1.Controls.Add(this.tabPage4);
 			this.tabControl1.Location = new System.Drawing.Point(8, 72);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
@@ -667,29 +821,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.label6.TabIndex = 0;
 			this.label6.Text = "This log shows current iFolder activity.";
 			// 
-			// tabPage4
-			// 
-			this.tabPage4.Controls.Add(this.services);
-			this.tabPage4.Location = new System.Drawing.Point(4, 22);
-			this.tabPage4.Name = "tabPage4";
-			this.tabPage4.Size = new System.Drawing.Size(426, 390);
-			this.tabPage4.TabIndex = 3;
-			this.tabPage4.Text = "Services";
-			// 
-			// services
-			// 
-			this.services.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-																					   this.columnHeader2,
-																					   this.columnHeader3});
-			this.services.ContextMenu = this.contextMenu2;
-			this.services.FullRowSelect = true;
-			this.services.Location = new System.Drawing.Point(8, 16);
-			this.services.MultiSelect = false;
-			this.services.Name = "services";
-			this.services.Size = new System.Drawing.Size(408, 208);
-			this.services.TabIndex = 0;
-			this.services.View = System.Windows.Forms.View.Details;
-			// 
 			// columnHeader2
 			// 
 			this.columnHeader2.Text = "Service";
@@ -699,50 +830,6 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			this.columnHeader3.Text = "Status";
 			this.columnHeader3.Width = 195;
-			// 
-			// contextMenu2
-			// 
-			this.contextMenu2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																						 this.menuEnabled,
-																						 this.menuStart,
-																						 this.menuPause,
-																						 this.menuStop,
-																						 this.menuRestart});
-			this.contextMenu2.Popup += new System.EventHandler(this.contextMenu2_Popup);
-			// 
-			// menuEnabled
-			// 
-			this.menuEnabled.Index = 0;
-			this.menuEnabled.Text = "Enabled";
-			this.menuEnabled.Click += new System.EventHandler(this.menuEnabled_Click);
-			// 
-			// menuStart
-			// 
-			this.menuStart.Enabled = false;
-			this.menuStart.Index = 1;
-			this.menuStart.Text = "Start";
-			this.menuStart.Click += new System.EventHandler(this.menuStart_Click);
-			// 
-			// menuPause
-			// 
-			this.menuPause.Enabled = false;
-			this.menuPause.Index = 2;
-			this.menuPause.Text = "Pause";
-			this.menuPause.Click += new System.EventHandler(this.menuPause_Click);
-			// 
-			// menuStop
-			// 
-			this.menuStop.Enabled = false;
-			this.menuStop.Index = 3;
-			this.menuStop.Text = "Stop";
-			this.menuStop.Click += new System.EventHandler(this.menuStop_Click);
-			// 
-			// menuRestart
-			// 
-			this.menuRestart.Enabled = false;
-			this.menuRestart.Index = 4;
-			this.menuRestart.Text = "Restart";
-			this.menuRestart.Click += new System.EventHandler(this.menuRestart_Click);
 			// 
 			// groupBox5
 			// 
@@ -973,7 +1060,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox3.ResumeLayout(false);
 			this.tabPage3.ResumeLayout(false);
-			this.tabPage4.ResumeLayout(false);
 			this.groupBox5.ResumeLayout(false);
 			this.ResumeLayout(false);
 
@@ -1173,14 +1259,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 				refreshiFolders();
 
-				foreach (ServiceCtl svc in serviceManager)
-				{
-					ListViewItem lvi = new ListViewItem(new string[] {
-                                                                         svc.Name,
-																		 svc.State.ToString()}, 0);
-					lvi.Tag = new ServiceWithState(svc);
-					services.Items.Add(lvi);
-				}
+				AddServicesToListView();
 
 				string proxyValue = null;
 				string portValue = null;
@@ -1225,24 +1304,19 @@ namespace Novell.iFolder.FormsTrayApp
 				}
 
 				// Update any services that have been changed.
-				foreach (ListViewItem lvi in services.Items)
-				{
-					ServiceWithState service = (ServiceWithState)lvi.Tag;
-					if (service.Changed)
-					{
-						this.serviceManager.Install(service.Svc);
-					}
-				}
+				UpdateServices();
 
 				// Save the proxy settings.
 				Simias.Channels.SimiasChannelFactory.SetProxy(useProxy.Checked, proxy.Text, port.Text);
 			}
 			catch (SimiasException ex)
 			{
+				MessageBox.Show(ex.Message);
 				ex.LogError();
 			}
 			catch (Exception ex)
 			{
+				MessageBox.Show(ex.Message);
 				logger.Debug(ex, "Saving settings");
 			}
 
@@ -1269,7 +1343,7 @@ namespace Novell.iFolder.FormsTrayApp
 			menuActionShare.Enabled = menuActionProperties.Enabled = menuActionRevert.Enabled = 
 				menuActionSync.Enabled = menuActionOpen.Enabled = iFolderView.SelectedItems.Count == 1;
 
-			contextMenu2_Popup(this, e);
+			SetupServicesMenu();
 		}
 
 		private void menuView_Popup(object sender, System.EventArgs e)
@@ -1464,53 +1538,7 @@ namespace Novell.iFolder.FormsTrayApp
 		#region Services Tab
 		private void contextMenu2_Popup(object sender, System.EventArgs e)
 		{
-			if (services.SelectedItems.Count == 1)
-			{
-				ServiceWithState service = (ServiceWithState)services.SelectedItems[0].Tag;
-
-				menuActionEnable.Text = service.Svc.Enabled ? "Disable" : "Enable";
-				menuActionEnable.Enabled = true;
-
-				// Set the state of the menu item.
-				menuEnabled.Checked = service.Svc.Enabled;
-
-				// Show the menu items.
-				menuEnabled.Visible = menuStart.Visible = menuPause.Visible = menuStop.Visible = menuRestart.Visible = true;
-
-				ListViewItem lvi = services.SelectedItems[0];
-				switch (lvi.SubItems[1].Text)
-				{
-					case "Stopped":
-						menuStart.Text = menuActionStart.Text = "Start";
-						menuStart.Enabled = menuActionStart.Enabled = true;
-						menuStop.Enabled = menuRestart.Enabled = 
-							menuActionStop.Enabled = menuActionRestart.Enabled =
-							menuPause.Enabled = menuActionPause.Enabled = false;
-						break;
-					case "Running":
-						menuStart.Text = menuActionStart.Text = "Start";
-						menuStart.Enabled = menuActionStart.Enabled = false;
-						menuStop.Enabled = menuRestart.Enabled = 
-							menuActionStop.Enabled = menuActionRestart.Enabled = 
-							menuPause.Enabled = menuActionPause.Enabled = true;
-						break;
-					case "Paused":
-						menuStart.Text = menuActionStart.Text = "Resume";
-						menuStart.Enabled = menuActionStart.Enabled = 
-							menuStop.Enabled = menuActionStop.Enabled = 
-							menuRestart.Enabled = menuActionRestart.Enabled = true;
-						menuPause.Enabled = menuActionPause.Enabled = false;
-						break;
-				}
-
-				menuStart.Enabled = menuActionStart.Enabled = menuStart.Enabled && menuEnabled.Checked;
-			}
-			else
-			{
-				// Nothing is selected ... hide the menu items.
-				menuEnabled.Enabled = menuStart.Enabled = menuPause.Enabled = menuStop.Enabled = menuRestart.Enabled = false;
-				menuActionEnable.Enabled = menuActionStart.Enabled = menuActionPause.Enabled = menuActionStop.Enabled = menuActionRestart.Enabled = false;
-			}
+			SetupServicesMenu();
 		}
 
 		private void menuEnabled_Click(object sender, System.EventArgs e)
