@@ -29,7 +29,7 @@ using System.Windows.Forms;
 using System.IO;
 using Simias;
 using Simias.Sync;
-using Simias.Invite;
+using Simias.POBox;
 
 namespace Novell.iFolder.InvitationWizard
 {
@@ -50,7 +50,6 @@ namespace Novell.iFolder.InvitationWizard
 			// This call is required by the Windows Form Designer.
 			InitializeComponent();
 
-			// TODO: Add any initialization after the InitializeComponent call
 		}
 
 		/// <summary>
@@ -152,7 +151,7 @@ namespace Novell.iFolder.InvitationWizard
 			OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
 //			openFileDialog1.InitialDirectory = "c:\\" ;
-			openFileDialog1.Filter = "ifi files (*.ifi)|*.ifi" ;
+			openFileDialog1.Filter = "csi files (*.csi)|*.csi" ;
 			openFileDialog1.RestoreDirectory = true ;
 
 			if(openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -189,12 +188,33 @@ namespace Novell.iFolder.InvitationWizard
 			}
 			else
 			{
-				Invitation invitation = new Invitation();
-
 				try
 				{
-					invitation.Load(invitationFile.Text);
-					((InvitationWizard)(this.Parent)).Invitation = invitation;
+					SubscriptionInfo subInfo = new SubscriptionInfo(invitationFile.Text);
+					Subscription subscription;
+					if(((InvitationWizard)(this.Parent)).ConvertSubscriptionInfo(subInfo, out subscription))
+					{
+						// The Subscription object was just created ... we're done for now.
+						// TODO: change the message text.
+						MessageBox.Show("The invitation has been successfully added to your message box.  Once the invitation has synchronized you will be able to accept or decline it.", "Invitation Added");
+
+						// TODO: proceed to finish page???
+						Application.Exit();
+					}
+					else
+					{
+						// Check the state of the subscription.  If it is ready, proceed; otherwise, quit.
+						if (subscription.SubscriptionState != SubscriptionStates.Received)
+						{
+							// TODO: change the message text.
+							MessageBox.Show("The invitation is not ready yet.  Please check back later.", "Invitation Not Ready");
+
+							// TODO: proceed to finish page???
+							Application.Exit();
+						}
+					}
+
+					((InvitationWizard)(this.Parent)).Subscription = subscription;
 				}
 				catch (SimiasException e)
 				{

@@ -33,6 +33,7 @@ using Novell.AddressBook;
 using Simias;
 using Simias.Storage;
 using Simias.Sync;
+using Simias.POBox;
 using Novell.iFolder.FormsBookLib;
 
 namespace Novell.iFolder.iFolderCom
@@ -84,6 +85,7 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.PictureBox pictureBox1;
 		private System.Windows.Forms.TabPage tabSharing;
 		private System.Windows.Forms.TabPage tabGeneral;
+		private System.Windows.Forms.ColumnHeader columnHeader3;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -163,6 +165,7 @@ namespace Novell.iFolder.iFolderCom
 			this.apply = new System.Windows.Forms.Button();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
+			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.tabControl1.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -448,6 +451,7 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			this.shareWith.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
 																						this.columnHeader1,
+																						this.columnHeader3,
 																						this.columnHeader2});
 			this.helpProvider1.SetHelpString(this.shareWith, "Lists the contacts that this iFolder is currently being shared with.");
 			this.shareWith.HideSelection = false;
@@ -462,12 +466,12 @@ namespace Novell.iFolder.iFolderCom
 			// columnHeader1
 			// 
 			this.columnHeader1.Text = "Share with";
-			this.columnHeader1.Width = 172;
+			this.columnHeader1.Width = 75;
 			// 
 			// columnHeader2
 			// 
 			this.columnHeader2.Text = "Access";
-			this.columnHeader2.Width = 144;
+			this.columnHeader2.Width = 70;
 			// 
 			// ok
 			// 
@@ -497,6 +501,11 @@ namespace Novell.iFolder.iFolderCom
 			this.apply.TabIndex = 3;
 			this.apply.Text = "&Apply";
 			this.apply.Click += new System.EventHandler(this.apply_Click);
+			// 
+			// columnHeader3
+			// 
+			this.columnHeader3.Text = "Status";
+			this.columnHeader3.Width = 171;
 			// 
 			// iFolderAdvanced
 			// 
@@ -529,91 +538,125 @@ namespace Novell.iFolder.iFolderCom
 		#endregion
 
 		#region Private Methods
+		private string rightsToString(Access.Rights rights)
+		{
+			string rightsString = null;
+
+			switch (rights)
+			{
+				case Access.Rights.Admin:
+				{
+					rightsString = "Full Control";
+					break;
+				}
+				case Access.Rights.ReadWrite:
+				{
+					rightsString = "Read/Write";
+					break;
+				}
+				case Access.Rights.ReadOnly:
+				{
+					rightsString = "Read Only";
+					break;
+				}
+				default:
+				{
+					rightsString = "Unknown";
+					break;
+				}
+			}
+
+			return rightsString;
+		}
+
+		private Access.Rights stringToRights(string rightsString)
+		{
+			Access.Rights rights = Access.Rights.Deny;
+
+			switch (rightsString)
+			{
+				case "Full Control":
+				{
+					rights = Access.Rights.Admin;
+					break;
+				}
+				case "Read/Write":
+				{
+					rights = Access.Rights.ReadWrite;
+					break;
+				}
+				case "Read Only":
+				{
+					rights = Access.Rights.ReadOnly;
+					break;
+				}
+			}
+
+			return rights;
+		}
+
 		private void ProcessChanges()
 		{
 			// Change the pointer to an hourglass.
 			Cursor = Cursors.WaitCursor;
 
+			string sendersEmail = null;
+
+			// Get the poBox for the current user.
+			POBox poBox = POBox.GetPOBox(ifolder.StoreReference, ifolder.StoreReference.DefaultDomain);
+
 			foreach (ListViewItem lvitem in this.shareWith.Items)
 			{
-				ShareListContact slContact = (ShareListContact)lvitem.Tag;
+				ShareListMember slMember = (ShareListMember)lvitem.Tag;
 
-				// If the item is newly added or changed, then process it.
-				if (slContact.Added || slContact.Changed)
+				// If the item is changed, process it.
+				if (slMember.Changed)
 				{
 					// Get the rights for this contact.
-					iFolder.Rights rights;
-					switch (lvitem.SubItems[1].Text)
+					slMember.Member.Rights = stringToRights(lvitem.SubItems[2].Text);
+
+					// Reset the flags.
+					slMember.Changed = false;
+				}
+				else if (slMember.Added)
+				{
+					// TODO: we'll get the email a different way in the future.
+					if (sendersEmail == null)
 					{
-						case "Full Control":
+						EmailPrompt emailPrompt = new EmailPrompt();
+						if (DialogResult.OK == emailPrompt.ShowDialog())
 						{
-							rights = iFolder.Rights.Admin;
-							break;
-						}
-						case "Read/Write":
-						{
-							rights = iFolder.Rights.ReadWrite;
-							break;
-						}
-						case "Read Only":
-						{
-							rights = iFolder.Rights.ReadOnly;
-							break;
-						}
-						default:
-						{
-							rights = iFolder.Rights.Deny;
-							break;
+							sendersEmail = emailPrompt.Email;
 						}
 					}
 
-					bool accessSet = false;
-					try
-					{
-						// Set the ACE.
-						ifolder.SetRights(slContact.CurrentContact, rights);
-						accessSet = true;
+					// TODO: change this to use an array and add them all at once.
+					Subscription subscr = poBox.CreateSubscription(ifolder, ifolder.GetCurrentMember());
 
-						// Reset the flags.
-						slContact.Added = false;
-						slContact.Changed = false;
-					}
-					catch (SimiasException e)
-					{
-						e.LogError();
-						MessageBox.Show(slContact.CurrentContact.FN + "\nSetting access rights failed with the following exception: \n\n" + e.Message, "Set Rights Failure");
-					}
-					catch (Exception e)
-					{
-						// TODO
-						logger.Debug(e, "Adding ACE");
-						MessageBox.Show(slContact.CurrentContact.FN + "\nSetting access rights failed with the following exception: \n\n" + e.Message, "Set Rights Failure");
-					}
+					// TODO: need to add all of the other properties (ToAddress, FromAddress, etc.)
+					subscr.FromAddress = sendersEmail;
+					subscr.SubscriptionRights = slMember.Member.Rights;
+					subscr.ToName = slMember.Member.Name;
+					Relationship relationship = (Relationship)slMember.Member.Properties.GetSingleProperty("Contact").Value;
+					Property property = new Property("Contact", relationship);
+					property.LocalProperty = true;
+					subscr.Properties.AddProperty(property);
 
-					if (accessSet)
-					{
-						try
-						{
-							// Send the invitation.
-							ifolder.Invite(slContact.CurrentContact);
-						}
-						catch (SimiasException e)
-						{
-							e.LogError();
-							MessageBox.Show(slContact.CurrentContact.FN + "\nSending invitation failed with the following exception: \n\n" + e.Message, "Send Invitation Failure");
-						}
-						catch(Exception e)
-						{
-							// TODO
-							logger.Debug(e, "Sending invitation");
-							MessageBox.Show(slContact.CurrentContact.FN + "\nSending invitation failed with the following exception: \n\n" + e.Message, "Send Invitation Failure");
-						}
-					}
+					Novell.AddressBook.AddressBook ab = this.abManager.GetAddressBook(relationship.CollectionID);
+					Contact contact = ab.GetContact(relationship.NodeID);
+					subscr.ToAddress = contact.EMail;
+					
+					poBox.AddMessage(subscr);
 				}
 			}
 
+			// Commit the changes.
+			// TODO: should we do this with a node list?
+			ifolder.Commit();
+
+
 			// process the removedList
-			if (this.removedList != null)
+/*			if (this.removedList != null)
 			{
 				foreach (ShareListContact slContact in this.removedList)
 				{
@@ -638,7 +681,7 @@ namespace Novell.iFolder.iFolderCom
 				// Clear the list.
 				removedList.Clear();
 			}
-
+*/
 			// Update the refresh interval.
 			ifolder.RefreshInterval = (int)syncInterval.Value;
 
@@ -649,7 +692,7 @@ namespace Novell.iFolder.iFolderCom
 		private bool IsCurrentUserValid()
 		{
 			// TODO - may need to actually check the current user.
-			if (this.shareWith.Items.Count == 1)
+/*			if (this.shareWith.Items.Count == 1)
 			{
 				try
 				{
@@ -687,7 +730,7 @@ namespace Novell.iFolder.iFolderCom
 					return false;
 				}
 			}
-
+*/
 			return true;
 		}
 		#endregion
@@ -791,6 +834,10 @@ namespace Novell.iFolder.iFolderCom
 				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_full.ico")));
 				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_card.ico")));
 
+				// TODO: These are icons are temporary...
+				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "mail_closed.ico")));
+				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "mail_opened.ico")));
+
 				//Assign the ImageList objects to the books ListView.
 				shareWith.SmallImageList = contactsImageList;
 
@@ -802,85 +849,107 @@ namespace Novell.iFolder.iFolderCom
 				logger.Debug(ex, "Loading images");
 			}
 
-			defaultAddressBook = abManager.OpenDefaultAddressBook();
+//			defaultAddressBook = abManager.OpenDefaultAddressBook();
 
 			// Enable/disable the Add button.
-			this.add.Enabled = ifolder.Shareable;
+//			this.add.Enabled = ifolder.Shareable;
 
 			// Get the access control list for the collection.
-			IFAccessControlList aclList = ifolder.GetAccessControlList();
-			Contact contact = null;
+//			IFAccessControlList aclList = ifolder.GetAccessControlList();
 
 			// Change the pointer to an hourglass.
 			Cursor = Cursors.WaitCursor;
+			shareWith.BeginUpdate();
 
-			foreach (IFAccessControlEntry ace in aclList)
+			try
 			{
-				string[] items = new string[2];
-				try
-				{
-					if (ace.Contact.FN != null && ace.Contact.FN != String.Empty)
-					{
-						items[0] = ace.Contact.FN;
-					}
-					else
-					{
-						items[0] = ace.Contact.UserName;
-					}
-				}
-				catch (Exception ex)
-				{
-                    logger.Debug(ex, "Unknown user");
-					items[0] = "Unknown User";
-				}
+				POBox poBox = POBox.GetPOBox(ifolder.StoreReference, ifolder.StoreReference.DefaultDomain);
+				ICSList memberList = ifolder.GetMemberList();
 
-				int imageIndex;
-				switch (ace.Rights)
+				foreach (ShallowNode shallowNode in memberList)
 				{
-					case iFolder.Rights.Admin:
-					{
-						items[1] = "Full Control";
-						imageIndex = 3;
-						break;
-					}
-					case iFolder.Rights.ReadWrite:
-					{
-						items[1] = "Read/Write";
-						imageIndex = 2;
-						break;
-					}
-					case iFolder.Rights.ReadOnly:
-					{
-						items[1] = "Read Only";
-						imageIndex = 1;
-						break;
-					}
-					default:
-					{
-						items[1] = "Unknown";
-						imageIndex = 4;
-						break;
-					}
-				}
+					// TODO: We may want to reconstitute only when necessary ... for example, when the item comes into view
+					Member member = new Member(ifolder, shallowNode);
 
-				try
-				{
-					if (ace.Contact.IsCurrentUser)
+					string[] items = new string[3];
+					items[0] = member.Name;
+					items[1] = member.IsOwner ? "Owner" : "";
+
+					int imageIndex;
+
+					// TODO: fix this to use rightsToString ... and maybe change the image index to line up with the rights enum.
+					switch (member.Rights)
+					{
+						case Access.Rights.Admin:
+						{
+							items[2] = "Full Control";
+							imageIndex = 3;
+							break;
+						}
+						case Access.Rights.ReadWrite:
+						{
+							items[2] = "Read/Write";
+							imageIndex = 2;
+							break;
+						}
+						case Access.Rights.ReadOnly:
+						{
+							items[2] = "Read Only";
+							imageIndex = 1;
+							break;
+						}
+						default:
+						{
+							items[2] = "Unknown";
+							imageIndex = 4;
+							break;
+						}
+					}
+
+					if (ifolder.GetCurrentMember().UserID == member.UserID)
 					{
 						imageIndex = 0;
 					}
-				}
-				catch{}
 
-				ListViewItem lvitem = new ListViewItem(items, imageIndex);
-				ShareListContact shareContact = new ShareListContact();
-				shareContact.CurrentContact = ace.Contact;
-				lvitem.Tag = shareContact;
-				shareWith.Items.Add(lvitem);
+					ListViewItem lvitem = new ListViewItem(items, imageIndex);
+					ShareListMember shareMember = new ShareListMember();
+					shareMember.Member = member;
+					shareMember.IsMember = true;
+					lvitem.Tag = shareMember;
+
+					shareWith.Items.Add(lvitem);
+				}
+
+				// TODO: Load the stuff from the POBox.
+				ICSList messageList = poBox.Search(Subscription.SubscriptionCollectionIDProperty, ifolder.ID, SearchOp.Equal);
+				foreach (ShallowNode shallowNode in messageList)
+				{
+					Subscription sub = new Subscription(poBox, shallowNode);
+					ShareListMember shareMember = new ShareListMember();
+					shareMember.Member = new Member(sub.ToName, Guid.NewGuid().ToString(), sub.SubscriptionRights);
+
+					string[] items = new string[3];
+					items[0] = sub.ToName;
+					items[1] = sub.SubscriptionState.ToString();
+					items[2] = rightsToString(sub.SubscriptionRights);
+					
+					ListViewItem lvi = new ListViewItem(items, 5);
+					lvi.Tag = shareMember;
+
+					shareWith.Items.Add(lvi);
+				}
+			}
+			catch (SimiasException ex)
+			{
+			}
+			catch (Exception ex)
+			{
 			}
 
 			// Select the first item in the list.
 			shareWith.Items[0].Selected = true;
+
+			shareWith.EndUpdate();
 
 			// Restore the cursor.
 			Cursor = Cursors.Default;
@@ -896,18 +965,18 @@ namespace Novell.iFolder.iFolderCom
 			}
 			else if (shareWith.SelectedItems.Count > 1)
 			{
-				this.accessControlButtons.Enabled = ifolder.Shareable;
+//				this.accessControlButtons.Enabled = ifolder.Shareable;
 				this.accessReadOnly.Checked = false;
 				this.accessReadWrite.Checked = false;
 				this.accessFullControl.Checked = false;
 			}
 			else
 			{
-				this.reinvite.Enabled = ifolder.Shareable;
+//				this.reinvite.Enabled = ifolder.Shareable;
 
 				ListViewItem item = shareWith.SelectedItems[0];
 
-				if (ifolder.Shareable)
+/*				if (ifolder.Shareable)
 				{
 					try
 					{
@@ -929,8 +998,8 @@ namespace Novell.iFolder.iFolderCom
 				{
 					this.accessControlButtons.Enabled = false;
 				}
-
-				switch (item.SubItems[1].Text)
+*/
+				switch (item.SubItems[2].Text)
 				{
 					case "Full Control":
 					{
@@ -979,7 +1048,7 @@ namespace Novell.iFolder.iFolderCom
 				imageIndex = 1;
 			}
 
-			foreach (ListViewItem item in this.shareWith.SelectedItems)
+/*			foreach (ListViewItem item in this.shareWith.SelectedItems)
 			{
 				try
 				{
@@ -1002,7 +1071,7 @@ namespace Novell.iFolder.iFolderCom
 				}
 				catch{}
 			}
-		}
+*/		}
 
 		private void add_Click(object sender, System.EventArgs e)
 		{
@@ -1021,21 +1090,23 @@ namespace Novell.iFolder.iFolderCom
 
 				// Get the list of added items from the picker.
 				ArrayList contactList = picker.GetContactList;
-				foreach (Contact c in contactList)
-				{
-					// Enable the apply button.
+				// Enable the apply button.
+				if (contactList.Count > 0)
 					this.apply.Enabled = true;
 
+				foreach (Contact c in contactList)
+				{
 					// Initialize a listview item.
-					string[] items = new string[2];
+					string[] items = new string[3];
 					items[0] = c.FN;
-					items[1] = "Read/Write";
-					ListViewItem lvitem = new ListViewItem(items, 2);
+					items[1] = "Inviting";
+					items[2] = "Read/Write";
+					ListViewItem lvitem = new ListViewItem(items, 5);
 
-					ShareListContact shareContact = null;
+					ShareListMember shareMember = null;
 
 					// Check to see if this contact was originally in the list.
-					if (this.removedList != null)
+/*					if (this.removedList != null)
 					{
 						ShareListContact slContactToRemove = null;
 
@@ -1057,16 +1128,19 @@ namespace Novell.iFolder.iFolderCom
 						if (slContactToRemove != null)
 							removedList.Remove(slContactToRemove);
 					}
-
-					if (shareContact == null)
+*/
+					if (shareMember == null)
 					{
 						// The contact was not in the removed list, so create a new one.
-						shareContact = new ShareListContact();//(c, true);
-						shareContact.CurrentContact = c;
-						shareContact.Added = true;
+						shareMember = new ShareListMember();
+						Member member = new Member(c.FN, Guid.NewGuid().ToString(), Access.Rights.ReadWrite);
+						string collectionId = (string)c.Properties.GetSingleProperty(BaseSchema.CollectionId).Value;
+						member.Properties.AddProperty("Contact", new Relationship(collectionId, c.ID));
+						shareMember.Member = member;
+						shareMember.Added = true;
 					}
 
-					lvitem.Tag = shareContact;
+					lvitem.Tag = shareMember;
 
 					// Select the contacts that were just added.
 					lvitem.Selected = true;
@@ -1078,7 +1152,7 @@ namespace Novell.iFolder.iFolderCom
 
 		private void remove_Click(object sender, System.EventArgs e)
 		{
-			foreach (ListViewItem lvitem in this.shareWith.SelectedItems)
+/*			foreach (ListViewItem lvitem in this.shareWith.SelectedItems)
 			{
 				try
 				{
@@ -1107,8 +1181,8 @@ namespace Novell.iFolder.iFolderCom
 				{
 					logger.Debug(ex, "Removing contacts");
 				}
-			}		
-		}
+			}
+*/		}
 
 		private void ok_Click(object sender, System.EventArgs e)
 		{
@@ -1124,7 +1198,7 @@ namespace Novell.iFolder.iFolderCom
 			// Change the pointer to an hourglass.
 			Cursor = Cursors.WaitCursor;
 			
-			foreach (ListViewItem lvitem in shareWith.SelectedItems)
+/*			foreach (ListViewItem lvitem in shareWith.SelectedItems)
 			{
 				ShareListContact slContact = (ShareListContact)lvitem.Tag;
 
@@ -1224,7 +1298,7 @@ namespace Novell.iFolder.iFolderCom
 
 			// Disable the apply button.
 			this.apply.Enabled = false;
-
+*/
 			// Restore the cursor.
 			Cursor = Cursors.Default;
 		}
@@ -1300,34 +1374,17 @@ namespace Novell.iFolder.iFolderCom
 	}
 
 	[ComVisible(false)]
-	public class ShareListContact
+	public class ShareListMember
 	{
-		private Contact contact;
+		private Member member;
 		private bool added = false;
 		private bool changed = false;
+		private bool isMember = false;
 
 		#region Constructors
-		public ShareListContact()
+		public ShareListMember()
 		{
 		}
-
-/*		public ShareListContact(Contact contact)
-		{
-			this.contact = contact;
-		}
-
-		public ShareListContact(Contact contact, bool added)
-		{
-			this.contact = contact;
-			this.added = added;
-		}
-
-		public ShareListContact(Contact contact, bool added, bool changed)
-		{
-			this.contact = contact;
-			this.added = added;
-			this.changed = changed;
-		}*/
 		#endregion
 
 		#region Properties
@@ -1336,14 +1393,8 @@ namespace Novell.iFolder.iFolderCom
 		/// </summary>
 		public bool Added
 		{
-			get
-			{
-				return this.added;
-			}
-			set
-			{
-				this.added = value;
-			}
+			get { return added; }
+			set { added = value; }
 		}
 
 		/// <summary>
@@ -1351,29 +1402,23 @@ namespace Novell.iFolder.iFolderCom
 		/// </summary>
 		public bool Changed
 		{
-			get
-			{
-				return this.changed;
-			}
-			set
-			{
-				this.changed = value;
-			}
+			get { return changed; }
+			set { changed = value; }
 		}
 
 		/// <summary>
 		/// Gets and Sets the current contact.
 		/// </summary>
-		public Contact CurrentContact
+		public Member Member
 		{
-			get
-			{
-				return this.contact;
-			}
-			set
-			{
-				this.contact = value;
-			}
+			get { return member; }
+			set { member = value; }
+		}
+
+		public bool IsMember
+		{
+			get { return isMember; }
+			set { isMember = value; }
 		}
 		#endregion
 	}

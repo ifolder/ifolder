@@ -30,8 +30,6 @@ using System.Collections;
 using System.Diagnostics;
 using Novell.iFolder;
 using Simias.Storage;
-using Novell.AddressBook;
-using Novell.iFolder.FormsBookLib;
 using Novell.iFolder.Win32Util;
 using Simias;
 
@@ -42,7 +40,7 @@ namespace Novell.iFolder.iFolderCom
 		String Description{get; set;}
 		bool CanBeiFolder([MarshalAs(UnmanagedType.LPWStr)] string path);
 		bool IsiFolder([MarshalAs(UnmanagedType.LPWStr)] string path, out bool hasConflicts);
-		bool IsShareable([MarshalAs(UnmanagedType.LPWStr)] string path);
+//		bool IsShareable([MarshalAs(UnmanagedType.LPWStr)] string path);
 		bool CreateiFolder([MarshalAs(UnmanagedType.LPWStr)] string path);
 		void DeleteiFolder([MarshalAs(UnmanagedType.LPWStr)] string path);
 		bool GetiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path);
@@ -156,7 +154,7 @@ namespace Novell.iFolder.iFolderCom
 			return ifolder != null;
 		}
 
-		public bool IsShareable([MarshalAs(UnmanagedType.LPWStr)] string path)
+/*		public bool IsShareable([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
 			try
 			{
@@ -176,7 +174,7 @@ namespace Novell.iFolder.iFolderCom
 			}
 
 			return false;
-		}
+		}*/
 
 		public bool CreateiFolder([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{

@@ -28,6 +28,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
+using System.Xml;
 using Microsoft.Win32;
 using Simias;
 using Simias.Sync;
@@ -47,8 +48,13 @@ namespace Novell.iFolder.FormsTrayApp
 		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(FormsTrayApp));
 		private const string iFolderRun = "iFolder";
 
+		const string CFG_Section = "ServiceManager";
+		const string CFG_Services = "Services";
+		const string XmlServiceTag = "Service";
+
 		private Manager serviceManager = null;
 		private iFolderManager manager = null;
+		private Configuration config;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
@@ -99,6 +105,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.ColumnHeader columnHeader4;
 		private System.Windows.Forms.ColumnHeader columnHeader5;
 		private System.Windows.Forms.MenuItem menuSyncNow;
+		private System.Windows.Forms.MenuItem menuEnabled;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -115,7 +122,7 @@ namespace Novell.iFolder.FormsTrayApp
 			//
 			InitializeComponent();
 
-			try
+/*			try
 			{
 				manager = iFolderManager.Connect();
 			}
@@ -126,7 +133,7 @@ namespace Novell.iFolder.FormsTrayApp
 			catch (Exception e)
 			{
 				logger.Fatal(e, "Fatal error initializing");
-			}
+			}*/
 		}
 
 		/// <summary>
@@ -175,6 +182,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuSeparator1 = new System.Windows.Forms.MenuItem();
 			this.menuRevert = new System.Windows.Forms.MenuItem();
 			this.menuShare = new System.Windows.Forms.MenuItem();
+			this.menuSyncNow = new System.Windows.Forms.MenuItem();
 			this.menuSeparator2 = new System.Windows.Forms.MenuItem();
 			this.menuProperties = new System.Windows.Forms.MenuItem();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -195,12 +203,12 @@ namespace Novell.iFolder.FormsTrayApp
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.contextMenu2 = new System.Windows.Forms.ContextMenu();
+			this.menuEnabled = new System.Windows.Forms.MenuItem();
 			this.menuStart = new System.Windows.Forms.MenuItem();
 			this.menuPause = new System.Windows.Forms.MenuItem();
 			this.menuStop = new System.Windows.Forms.MenuItem();
 			this.menuRestart = new System.Windows.Forms.MenuItem();
 			this.banner = new System.Windows.Forms.PictureBox();
-			this.menuSyncNow = new System.Windows.Forms.MenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -431,6 +439,13 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuShare.Visible = false;
 			this.menuShare.Click += new System.EventHandler(this.menuShare_Click);
 			// 
+			// menuSyncNow
+			// 
+			this.menuSyncNow.Index = 6;
+			this.menuSyncNow.Text = "Sync now";
+			this.menuSyncNow.Visible = false;
+			this.menuSyncNow.Click += new System.EventHandler(this.menuSyncNow_Click);
+			// 
 			// menuSeparator2
 			// 
 			this.menuSeparator2.Index = 7;
@@ -616,36 +631,43 @@ namespace Novell.iFolder.FormsTrayApp
 			// contextMenu2
 			// 
 			this.contextMenu2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																						 this.menuEnabled,
 																						 this.menuStart,
 																						 this.menuPause,
 																						 this.menuStop,
 																						 this.menuRestart});
 			this.contextMenu2.Popup += new System.EventHandler(this.contextMenu2_Popup);
 			// 
+			// menuEnabled
+			// 
+			this.menuEnabled.Index = 0;
+			this.menuEnabled.Text = "Enabled";
+			this.menuEnabled.Click += new System.EventHandler(this.menuEnabled_Click);
+			// 
 			// menuStart
 			// 
 			this.menuStart.Enabled = false;
-			this.menuStart.Index = 0;
+			this.menuStart.Index = 1;
 			this.menuStart.Text = "Start";
 			this.menuStart.Click += new System.EventHandler(this.menuStart_Click);
 			// 
 			// menuPause
 			// 
 			this.menuPause.Enabled = false;
-			this.menuPause.Index = 1;
+			this.menuPause.Index = 2;
 			this.menuPause.Text = "Pause";
 			// 
 			// menuStop
 			// 
 			this.menuStop.Enabled = false;
-			this.menuStop.Index = 2;
+			this.menuStop.Index = 3;
 			this.menuStop.Text = "Stop";
 			this.menuStop.Click += new System.EventHandler(this.menuStop_Click);
 			// 
 			// menuRestart
 			// 
 			this.menuRestart.Enabled = false;
-			this.menuRestart.Index = 3;
+			this.menuRestart.Index = 4;
 			this.menuRestart.Text = "Restart";
 			this.menuRestart.Click += new System.EventHandler(this.menuRestart_Click);
 			// 
@@ -656,13 +678,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.banner.Size = new System.Drawing.Size(450, 65);
 			this.banner.TabIndex = 9;
 			this.banner.TabStop = false;
-			// 
-			// menuSyncNow
-			// 
-			this.menuSyncNow.Index = 6;
-			this.menuSyncNow.Text = "Sync now";
-			this.menuSyncNow.Visible = false;
-			this.menuSyncNow.Click += new System.EventHandler(this.menuSyncNow_Click);
 			// 
 			// GlobalProperties
 			// 
@@ -701,6 +716,30 @@ namespace Novell.iFolder.FormsTrayApp
 				serviceManager = value;
 			}
 		}
+
+		public iFolderManager IFManager
+		{
+			set
+			{
+				manager = value;
+			}
+		}
+		#endregion
+
+		#region Public Methods
+		static public void SetRunValue(bool enable)
+		{
+			RegistryKey runKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+
+			if (enable)
+			{
+				runKey.SetValue(iFolderRun, Path.Combine(Application.StartupPath, "iFolderApp.exe"));
+			}
+			else
+			{
+				runKey.DeleteValue(iFolderRun, false);
+			}
+		}
 		#endregion
 
 		#region Private Methods
@@ -714,23 +753,19 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private bool IsRunEnabled()
 		{
-			RegistryKey runKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
-			string run = (string)runKey.GetValue(iFolderRun);
+			string run = null;
+
+			try
+			{
+				RegistryKey runKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+				run = (string)runKey.GetValue(iFolderRun);
+			}
+			catch
+			{
+				return false;
+			}
+
 			return (run != null);
-		}
-
-		static public void SetRunValue(bool enable)
-		{
-			RegistryKey runKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
-
-			if (enable)
-			{
-				runKey.SetValue(iFolderRun, Path.Combine(Application.StartupPath, "iFolderApp.exe"));
-			}
-			else
-			{
-				runKey.DeleteValue(iFolderRun, false);
-			}
 		}
 
 		private void refreshiFolders()
@@ -825,7 +860,7 @@ namespace Novell.iFolder.FormsTrayApp
 				defaultInterval.Value = (decimal)manager.DefaultRefreshInterval;
 
 				// Initialize displayConfirmation.
-				Configuration config = new Configuration();
+				config = new Configuration();
 				string showWizard = config.Get("iFolderShell", "Show wizard", "true");
 				displayConfirmation.Checked = showWizard == "true";
 
@@ -838,7 +873,7 @@ namespace Novell.iFolder.FormsTrayApp
 					ListViewItem lvi = new ListViewItem(new string[] {
                                                                          svc.Name,
 																		 svc.State.ToString()}, 0);
-					lvi.Tag = svc;
+					lvi.Tag = new ServiceWithState(svc);
 					services.Items.Add(lvi);
 				}
 			}
@@ -864,7 +899,6 @@ namespace Novell.iFolder.FormsTrayApp
 				// Save the auto start value.
 				SetRunValue(autoStart.Checked);
 
-				Configuration config = new Configuration();
 				if (displayConfirmation.Checked)
 				{
 					config.Set("iFolderShell", "Show wizard", "true");
@@ -872,6 +906,16 @@ namespace Novell.iFolder.FormsTrayApp
 				else
 				{
 					config.Set("iFolderShell", "Show wizard", "false");
+				}
+
+				// Update any services that have been changed.
+				foreach (ListViewItem lvi in services.Items)
+				{
+					ServiceWithState service = (ServiceWithState)lvi.Tag;
+					if (service.Changed)
+					{
+						this.serviceManager.Install(service.Svc);
+					}
 				}
 			}
 			catch (SimiasException ex)
@@ -1066,7 +1110,14 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			if (services.SelectedItems.Count == 1)
 			{
-				menuStart.Visible = menuPause.Visible = menuStop.Visible = menuRestart.Visible = true;
+				ServiceWithState service = (ServiceWithState)services.SelectedItems[0].Tag;
+
+				// Set the state of the menu item.
+				menuEnabled.Checked = service.Svc.Enabled;
+
+				// Show the menu items.
+				menuEnabled.Visible = menuStart.Visible = menuPause.Visible = menuStop.Visible = menuRestart.Visible = true;
+
 				ListViewItem lvi = services.SelectedItems[0];
 				switch (lvi.SubItems[1].Text)
 				{
@@ -1079,27 +1130,55 @@ namespace Novell.iFolder.FormsTrayApp
 						menuStop.Enabled = menuRestart.Enabled = true;
 						break;
 				}
+
+				menuStart.Enabled = menuStart.Enabled && menuEnabled.Checked;
 			}
 			else
 			{
-				menuStart.Visible = menuPause.Visible = menuStop.Visible = menuRestart.Visible = false;
+				// Nothing is selected ... hide the menu items.
+				menuEnabled.Visible = menuStart.Visible = menuPause.Visible = menuStop.Visible = menuRestart.Visible = false;
+			}
+		}
+
+		private void menuEnabled_Click(object sender, System.EventArgs e)
+		{
+			try
+			{
+				ServiceWithState service = (ServiceWithState)services.SelectedItems[0].Tag;
+
+				// Toggle the enabled state.
+				service.Svc.Enabled = !menuEnabled.Checked;
+
+				// Set that the service has been changed.
+				service.Changed = true;
+
+				// Toggle the state of the menu item.
+				menuEnabled.Checked = service.Svc.Enabled;
+			}
+			catch (SimiasException ex)
+			{
+				ex.LogError();
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "Enabling/disabling service");
 			}
 		}
 
 		private void menuStart_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = services.SelectedItems[0];
-			ServiceCtl svc = (ServiceCtl)lvi.Tag;
+			ServiceWithState service = (ServiceWithState)lvi.Tag;
 
 			Cursor.Current = Cursors.WaitCursor;
 
 			try
 			{
-				svc.Start();
+				service.Svc.Start();
 			}
 			catch{}
 
-			lvi.SubItems[1].Text = svc.State.ToString();
+			lvi.SubItems[1].Text = service.Svc.State.ToString();
 
 			Cursor.Current = Cursors.Default;
 		}
@@ -1107,19 +1186,19 @@ namespace Novell.iFolder.FormsTrayApp
 		private void menuRestart_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = services.SelectedItems[0];
-			ServiceCtl svc = (ServiceCtl)lvi.Tag;
+			ServiceWithState service = (ServiceWithState)lvi.Tag;
 
 			Cursor.Current = Cursors.WaitCursor;
 
 			try
 			{
-				svc.Stop();
-				lvi.SubItems[1].Text = svc.State.ToString();
-				svc.Start();
+				service.Svc.Stop();
+				lvi.SubItems[1].Text = service.Svc.State.ToString();
+				service.Svc.Start();
 			}
 			catch{}
 
-			lvi.SubItems[1].Text = svc.State.ToString();
+			lvi.SubItems[1].Text = service.Svc.State.ToString();
 
 			Cursor.Current = Cursors.Default;
 		}
@@ -1127,21 +1206,52 @@ namespace Novell.iFolder.FormsTrayApp
 		private void menuStop_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = services.SelectedItems[0];
-			ServiceCtl svc = (ServiceCtl)lvi.Tag;
+			ServiceWithState service = (ServiceWithState)lvi.Tag;
 
 			Cursor.Current = Cursors.WaitCursor;
 
 			try
 			{
-				svc.Stop();
+				service.Svc.Stop();
 			}
 			catch{}
 
-			lvi.SubItems[1].Text = svc.State.ToString();
+			lvi.SubItems[1].Text = service.Svc.State.ToString();
 
 			Cursor.Current = Cursors.Default;
 		}
 		#endregion
 		#endregion
+	}
+
+	internal class ServiceWithState
+	{
+		private bool changed = false;
+		private ServiceCtl svc;
+
+		public ServiceWithState(ServiceCtl svc)
+		{
+			this.svc = svc;
+		}
+
+		public bool Changed
+		{
+			get
+			{
+				return changed;
+			}
+			set
+			{
+				changed = value;
+			}
+		}
+
+		public ServiceCtl Svc
+		{
+			get
+			{
+				return svc;
+			}
+		}
 	}
 }

@@ -78,6 +78,9 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuConflictResolver;
 
 		private Manager serviceManager;
+		private System.Windows.Forms.MenuItem menuMyiFolders;
+		private System.Windows.Forms.MenuItem menuPOBox;
+		private iFolderManager ifManager;
 		//private const int waitTime = 3000;
 		#endregion
 
@@ -119,7 +122,7 @@ namespace Novell.iFolder.FormsTrayApp
 			try
 			{
 				string basePath = Path.Combine(Application.StartupPath, "res");
-				this.Icon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
+				this.Icon = new Icon(Path.Combine(Application.StartupPath, "ifolder_app.ico"));
 
 				trayIcon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
 				for (int i = 0; i < numberOfIcons; i++)
@@ -161,6 +164,12 @@ namespace Novell.iFolder.FormsTrayApp
 		private void menuStoreBrowser_Click(object sender, System.EventArgs e)
 		{
 			Process.Start(Path.Combine(Application.StartupPath, "StoreBrowser.exe"));
+		}
+
+		private void menuPOBox_Click(object sender, System.EventArgs e)
+		{
+			MessageForm messages = new MessageForm();
+			messages.ShowDialog();
 		}
 
 		private void menuInvitationWizard_Click(object sender, System.EventArgs e)
@@ -223,6 +232,7 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			GlobalProperties globalProperties = new GlobalProperties();
 			globalProperties.ServiceManager = this.serviceManager;
+			globalProperties.IFManager = this.ifManager;
 			globalProperties.ShowDialog();
 		}
 
@@ -305,6 +315,8 @@ namespace Novell.iFolder.FormsTrayApp
 				// Now that the services are started, enable the exit menu item.
 				menuExit.Enabled = true;
 
+				ifManager = iFolderManager.Connect();
+
 				synkEvent = new AutoResetEvent(false);
 
 //				animateDelegate = new AnimateDelegate(AnimateIcon);
@@ -367,15 +379,17 @@ namespace Novell.iFolder.FormsTrayApp
 			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
 			this.menuStoreBrowser = new System.Windows.Forms.MenuItem();
 			this.menuSeparator1 = new System.Windows.Forms.MenuItem();
+			this.menuMyiFolders = new System.Windows.Forms.MenuItem();
 			this.menuInvitationWizard = new System.Windows.Forms.MenuItem();
 			this.menuAddressBook = new System.Windows.Forms.MenuItem();
+			this.menuConflictResolver = new System.Windows.Forms.MenuItem();
 			this.menuTraceWindow = new System.Windows.Forms.MenuItem();
 			this.menuItem7 = new System.Windows.Forms.MenuItem();
 			this.menuProperties = new System.Windows.Forms.MenuItem();
 			this.menuHelp = new System.Windows.Forms.MenuItem();
 			this.menuItem10 = new System.Windows.Forms.MenuItem();
 			this.menuExit = new System.Windows.Forms.MenuItem();
-			this.menuConflictResolver = new System.Windows.Forms.MenuItem();
+			this.menuPOBox = new System.Windows.Forms.MenuItem();
 			// 
 			// notifyIcon1
 			// 
@@ -389,6 +403,8 @@ namespace Novell.iFolder.FormsTrayApp
 			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																						 this.menuStoreBrowser,
 																						 this.menuSeparator1,
+																						 this.menuMyiFolders,
+																						 this.menuPOBox,
 																						 this.menuInvitationWizard,
 																						 this.menuAddressBook,
 																						 this.menuConflictResolver,
@@ -413,60 +429,72 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuSeparator1.Text = "-";
 			this.menuSeparator1.Visible = false;
 			// 
+			// menuMyiFolders
+			// 
+			this.menuMyiFolders.Index = 2;
+			this.menuMyiFolders.Text = "My iFolders";
+			this.menuMyiFolders.Visible = false;
+			// 
 			// menuInvitationWizard
 			// 
-			this.menuInvitationWizard.Index = 2;
+			this.menuInvitationWizard.Index = 4;
 			this.menuInvitationWizard.Text = "Invitation Wizard...";
 			this.menuInvitationWizard.Click += new System.EventHandler(this.menuInvitationWizard_Click);
 			// 
 			// menuAddressBook
 			// 
-			this.menuAddressBook.Index = 3;
+			this.menuAddressBook.Index = 5;
 			this.menuAddressBook.Text = "Address Book...";
 			this.menuAddressBook.Click += new System.EventHandler(this.menuAddressBook_Click);
+			// 
+			// menuConflictResolver
+			// 
+			this.menuConflictResolver.Index = 6;
+			this.menuConflictResolver.Text = "Conflict Resolver...";
+			this.menuConflictResolver.Click += new System.EventHandler(this.menuConflictResolver_Click);
 			// 
 			// menuTraceWindow
 			// 
 			this.menuTraceWindow.Enabled = false;
-			this.menuTraceWindow.Index = 5;
+			this.menuTraceWindow.Index = 7;
 			this.menuTraceWindow.Text = "Trace Window";
 			this.menuTraceWindow.Click += new System.EventHandler(this.menuTraceWindow_Click);
 			// 
 			// menuItem7
 			// 
-			this.menuItem7.Index = 6;
+			this.menuItem7.Index = 8;
 			this.menuItem7.Text = "-";
 			// 
 			// menuProperties
 			// 
 			this.menuProperties.DefaultItem = true;
-			this.menuProperties.Index = 7;
+			this.menuProperties.Index = 9;
 			this.menuProperties.Text = "Properties...";
 			this.menuProperties.Click += new System.EventHandler(this.menuProperties_Click);
 			// 
 			// menuHelp
 			// 
-			this.menuHelp.Index = 8;
+			this.menuHelp.Index = 10;
 			this.menuHelp.Text = "Help...";
 			this.menuHelp.Click += new System.EventHandler(this.menuHelp_Click);
 			// 
 			// menuItem10
 			// 
-			this.menuItem10.Index = 9;
+			this.menuItem10.Index = 11;
 			this.menuItem10.Text = "-";
 			// 
 			// menuExit
 			// 
 			this.menuExit.Enabled = false;
-			this.menuExit.Index = 10;
+			this.menuExit.Index = 12;
 			this.menuExit.Text = "Exit";
 			this.menuExit.Click += new System.EventHandler(this.menuExit_Click);
 			// 
-			// menuConflictResolver
+			// menuPOBox
 			// 
-			this.menuConflictResolver.Index = 4;
-			this.menuConflictResolver.Text = "Conflict Resolver...";
-			this.menuConflictResolver.Click += new System.EventHandler(this.menuConflictResolver_Click);
+			this.menuPOBox.Index = 3;
+			this.menuPOBox.Text = "Messages...";
+			this.menuPOBox.Click += new System.EventHandler(this.menuPOBox_Click);
 			// 
 			// FormsTrayApp
 			// 

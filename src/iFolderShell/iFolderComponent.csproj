@@ -104,6 +104,11 @@
                     AssemblyName = "FormsBookLib"
                     HintPath = "..\..\..\addressbook\src\FormsBookLib\FormsBookLib.dll"
                 />
+                <Reference
+                    Name = "Novell.AddressBook"
+                    AssemblyName = "Novell.AddressBook"
+                    HintPath = "..\..\..\addressbook\src\AddressBook\Novell.AddressBook.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -126,6 +131,16 @@
                 <File
                     RelPath = "ConflictResolver.resx"
                     DependentUpon = "ConflictResolver.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "EmailPrompt.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "EmailPrompt.resx"
+                    DependentUpon = "EmailPrompt.cs"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

@@ -23,10 +23,9 @@
 
 using System;
 
-using Simias.Invite;
+using Simias.Storage;
 using Simias.Sync;
 using Novell.iFolder;
-using Novell.AddressBook;
 
 /// <summary>
 /// Provides a command-line interface into the iFolder APIs.
@@ -119,8 +118,45 @@ public class iFolderCmd
 
 
 
+	static bool MemberList(string [] args)
+	{
+		if(args[0] != "memberlist")
+			return false;
 
-	static bool SetRights(string [] args)
+		if(args.Length != 2)
+		{
+			DisplayUsage();
+			return true;
+		}
+
+		try
+		{
+			iFolderManager manager = iFolderManager.Connect();
+			if(manager.IsiFolder(args[1]) == false)
+			{
+				Console.WriteLine("Not an iFolder: {0}", args[1]);
+				return true;
+			}
+
+			iFolder ifolder = manager.GetiFolderByPath(args[1]);
+
+			ICSList memList = ifolder.GetMemberList();
+			foreach(ShallowNode sNode in memList)
+			{
+				Member m = new Member(ifolder, sNode);
+				Console.WriteLine("{0} {1}", m.Name, m.UserID);
+			}
+		}
+		catch(Exception e)
+		{
+			Console.WriteLine("Unable to list members.");
+			Console.WriteLine(e);
+		}
+		return true;
+	}
+
+
+/*	static bool SetRights(string [] args)
 	{
 		if(args[0] != "setrights")
 			return false;
@@ -143,6 +179,11 @@ public class iFolderCmd
 				return true;
 			}
 
+			iFolder ifolder = manager.GetiFolderByPath(args[1]);
+
+
+
+
 			Contact contact = GetContact(manager, args[2]);
 			if(contact == null)
 			{
@@ -150,7 +191,6 @@ public class iFolderCmd
 				return true;
 			}
 
-			iFolder ifolder = manager.GetiFolderByPath(args[1]);
 
 			if(args[3] == "full")
 				ifolder.SetRights(contact, iFolder.Rights.Admin);
@@ -344,7 +384,7 @@ public class iFolderCmd
 		return true;
 	}
 
-
+*/
 
 
 	static void DisplayUsage()
@@ -353,11 +393,12 @@ public class iFolderCmd
 		Console.WriteLine("  list");
 		Console.WriteLine("  create <folder path>");
 		Console.WriteLine("  revert <folder path>");
-		Console.WriteLine("  setrights <ifolder path> <contact name> <full|rw|ro>");
-		Console.WriteLine("  removerights <ifolder path> <contact name>");
-		Console.WriteLine("  createinvitefile <ifolder path> <contact name> <filename>");
-		Console.WriteLine("  viewinvitefile <filename>");
-		Console.WriteLine("  acceptinvitefile <filename> <new ifolder parent path>");
+		Console.WriteLine("  memberlist <folder path>");
+//		Console.WriteLine("  setrights <ifolder path> <contact name> <full|rw|ro>");
+//		Console.WriteLine("  removerights <ifolder path> <contact name>");
+//		Console.WriteLine("  createinvitefile <ifolder path> <contact name> <filename>");
+//		Console.WriteLine("  viewinvitefile <filename>");
+//		Console.WriteLine("  acceptinvitefile <filename> <new ifolder parent path>");
 		return;
 	}
 
@@ -379,6 +420,9 @@ public class iFolderCmd
 				return;
 			if(RevertiFolder(args) == true)
 				return;
+			if(MemberList(args) == true)
+				return;
+/*
 			if(SetRights(args) == true)
 				return;
 			if(RemoveRights(args) == true)
@@ -389,6 +433,7 @@ public class iFolderCmd
 				return;
 			if(AcceptInviteFile(args) == true)
 				return;
+*/
 
 			Console.WriteLine("Unknown command: " + args[0]);
 		}
