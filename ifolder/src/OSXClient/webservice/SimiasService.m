@@ -24,13 +24,28 @@
 #import "SimiasService.h"
 #include <simiasStub.h>
 #include <simias.nsmap>
+#import "Simias.h"
 
 @implementation SimiasService
-
 
 void init_simias_gsoap(struct soap *pSoap);
 void cleanup_simias_gsoap(struct soap *pSoap);
 NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
+
+
+- (id)init 
+{
+	[super init];
+	simiasURL = [[NSString stringWithFormat:@"%@/simias10/Simias.asmx", [[Simias getInstance] simiasURL]] retain];
+	NSLog(@"Initialized SimiasService on URL: %@", simiasURL);
+    return self;
+}
+-(void)dealloc
+{
+	[simiasURL release];
+    [super dealloc];
+}
+
 
 
 //----------------------------------------------------------------------------
@@ -48,7 +63,7 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 
     init_simias_gsoap (&soap);
     err_code = soap_call___ns1__ValidCredentials (&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &ns1__validCreds,
             &ns1__validCredsResponse);
@@ -85,7 +100,7 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
     init_simias_gsoap (&soap);
     err_code = soap_call___ns1__GetDomains(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getDomainsMessage,
             &getDomainsResponse);
@@ -93,7 +108,7 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
  	if(soap.error)
 	{
 		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
-					format:@"iFolderService.GetDomains"];
+					format:@"SimiasService.GetDomains"];
 	}
 	else
 	{
@@ -150,7 +165,7 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 
     err_code = soap_call___ns1__ConnectToDomain(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &connectToDomainMessage,
             &connectToDomainResponse);
@@ -202,7 +217,7 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 
     err_code = soap_call___ns1__LeaveDomain(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &leaveDomainMessage,
             &leaveDomainResponse);
@@ -250,7 +265,7 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 
     err_code = soap_call___ns1__SetDomainCredentials(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &saveDomainCredsMessage,
             &saveDomainCredsResponse);
@@ -288,7 +303,7 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 
     err_code = soap_call___ns1__GetDomainCredentials(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getDomainCredsMessage,
             &getDomainCredsResponse);
@@ -334,7 +349,7 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 
     err_code = soap_call___ns1__SetDomainActive(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &setDomainActiveMessage,
             &setDomainActiveResponse);
@@ -371,7 +386,7 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 
     err_code = soap_call___ns1__SetDomainInactive(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &setDomainInactiveMessage,
             &setDomainInactiveResponse);
@@ -408,7 +423,7 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 
     err_code = soap_call___ns1__SetDefaultDomain(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &setDefaultDomainMessage,
             &setDefaultDomainResponse);
@@ -446,7 +461,7 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
     init_simias_gsoap (&soap);
     err_code = soap_call___ns1__LoginToRemoteDomain(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &loginToDomainMessage,
             &loginToDomainResponse);

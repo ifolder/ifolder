@@ -31,6 +31,7 @@
 
 @interface SimiasService : NSObject
 {
+	NSString	*simiasURL;
 }
 
 -(NSArray *) GetDomains:(BOOL)onlySlaves;

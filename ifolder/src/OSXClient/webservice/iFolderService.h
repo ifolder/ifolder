@@ -35,6 +35,7 @@
 
 @interface iFolderService : NSObject
 {
+	NSString	*simiasURL;
 }
 
 -(BOOL) Ping;
