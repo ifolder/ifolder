@@ -461,7 +461,7 @@ namespace Simias.POBoxService.Web
 						this.Context.Request.Url.Port.ToString() +
 						"/POBoxService.asmx";
 
-				log.Debug("  newup service url");
+				log.Debug("  newup service url: " + serviceUrl);
 				cSub.POServiceURL = new Uri(serviceUrl);
 				cSub.SubscriptionCollectionID = sharedCollection.ID;
 				cSub.SubscriptionCollectionType = sharedCollectionType;
