@@ -16,7 +16,7 @@ SUFFIXES = .c .o .po .pox .gmo .mo
 	file=$(srcdir)/`echo $* | sed 's,.*/,,'`.gmo \
 	  && rm -f $$file && $(GMSGFMT) --statistics -o $$file $<
 
-POFILES = $(srcdir)/pt_BR.po
+POFILES = $(srcdir)/pt_BR.po $(srcdir)/fi.po
 
 CATALOGS := $(subst .po,.mo,$(POFILES))
 
