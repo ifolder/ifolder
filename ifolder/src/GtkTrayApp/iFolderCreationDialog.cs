@@ -52,7 +52,7 @@ namespace Novell.iFolder
 
 			VBox vbox = new VBox();
 			vbox.BorderWidth = 10;
-			vbox.Spacing = 10;
+			vbox.Spacing = 20;
 
 			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
 						"Congratulations! A new iFolder was created</span>");
@@ -73,17 +73,17 @@ namespace Novell.iFolder
 			VBox vbox2 = new VBox();
 			vbox2.Spacing = 10;
 
-			l = new Label("The files in your new iFolder are being prepared to be shared with others.  We need more text here to describe what just happened and perhaps what they might do.  I'm not sure what to add here other than a bunch of text though.");
+			l = new Label("To share your iFolder and it's contents with others, right-click the iFolder and select \"Share with...\", or click here now.");
 
 			l.LineWrap = true;
 			vbox2.PackStart(l, true, true, 0);
 
-			cbutton = new CheckButton("Please don't show me this again.");
-			vbox2.PackEnd(cbutton, false, false, 0);
-
 			h.PackEnd(vbox2, true, true, 0);
 
-			vbox.PackEnd(h);
+			vbox.PackStart(h);
+
+			cbutton = new CheckButton("Do not show this message again.");
+			vbox.PackStart(cbutton, false, false, 0);
 		
 			vbox.ShowAll();
 			this.VBox.Add(vbox);

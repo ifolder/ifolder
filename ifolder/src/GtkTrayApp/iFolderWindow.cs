@@ -1144,7 +1144,7 @@ namespace Novell.iFolder
 										OnSyncNow);
 
 								MenuItem item_revert = 
-									new MenuItem ("Revert to a Normal Folder");
+									new MenuItem ("Revert to a normal folder");
 								ifMenu.Append (item_revert);
 								item_revert.Activated += new EventHandler(
 										OnRevertiFolder);
