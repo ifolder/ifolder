@@ -3,7 +3,7 @@ FormsBookLib_CSFILES_CSC := $(subst /,$(SEP),$(FormsBookLib_CSFILES))
 FormsBookLib_INCLUDES = 
 FormsBookLib_RESOURCES =
 FormsBookLib_FLAGS = $(CSC_LIBFLAG)
-FormsBookLib_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll Configuration.dll StoreProvider.dll Identity.dll CollectionEvents.dll CollectionStore.dll AddressBook.dll
+FormsBookLib_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll Configuration.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll AddressBook.dll
 FormsBookLib_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin
 
 EXTRA_DIST = $(FormsBookLib_CSFILES)
