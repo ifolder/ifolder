@@ -384,7 +384,7 @@ static char *
 get_soap_url(bool reread_config)
 {
 	char *url;
-	char gaim_domain_url[512];
+	char simias_domain_url[512];
 	int err;
 	
 	if (!reread_config && the_soap_url) {
@@ -393,9 +393,9 @@ get_soap_url(bool reread_config)
 
 	err = simias_get_local_service_url(&url);
 	if (err == SIMIAS_SUCCESS) {
-		sprintf(gaim_domain_url, "%s/Simias.asmx", url);
+		sprintf(simias_domain_url, "%s/Simias.asmx", url);
 		free(url);
-		the_soap_url = strdup(gaim_domain_url);
+		the_soap_url = strdup(simias_domain_url);
 		/* FIXME: Figure out who and when this should ever be freed */
 	} else {
 		printf("simias_get_local_service_url() returned: %d\n", err);
