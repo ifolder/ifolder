@@ -52,6 +52,7 @@ namespace Simias.Sync
 
 		private string name;
 		private string id;
+		private bool successful;
 		private Action action;
 
 		#endregion
@@ -64,12 +65,14 @@ namespace Simias.Sync
 		/// <param name="name">The name of the collection that the event belongs to.</param>
 		/// <param name="id">The id of the collection that the event belongs to.</param>
 		/// <param name="action">The sync action for the event.</param>
-		public CollectionSyncEventArgs(string name, string id, Action action) :
+		/// <param name="successful">A value indicating if the sync was successful or not.</param>
+		public CollectionSyncEventArgs(string name, string id, Action action, bool successful) :
 			base()
 		{
 			this.name = name;
 			this.id = id;
 			this.action = action;
+			this.successful = successful;
 		}
 
 		#endregion
@@ -98,6 +101,14 @@ namespace Simias.Sync
 		public Action Action
 		{
 			get { return action; }
+		}
+
+		/// <summary>
+		/// Gets a value indicating if the sync was successful or not.
+		/// </summary>
+		public bool Successful
+		{
+			get { return successful; }
 		}
 		#endregion
 	}
