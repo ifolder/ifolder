@@ -2,21 +2,18 @@ SUBDIRS = src
 
 DIST_SUBDIRS = $(SUBDIRS) doc package test
 
-EXTRA_DIST = tools $(srcdir)/addressbook.pc.in
+EXTRA_DIST = tools $(srcdir)/$(PACKAGE).pc.in
 
 export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
 install-exec-local:
-	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig $(DESTDIR)$(datadir)/addressbook
-	$(INSTALL_PROGRAM) $(srcdir)/COPYING $(DESTDIR)$(datadir)/addressbook
-	$(INSTALL_PROGRAM) addressbook.pc $(DESTDIR)$(libdir)/pkgconfig
-
-installcheck-summary:
-	$(MAKE) -C src $@
+	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig $(DESTDIR)$(datadir)/$(PACKAGE)
+	$(INSTALL_PROGRAM) $(srcdir)/COPYING $(DESTDIR)$(datadir)/$(PACKAGE)
+	$(INSTALL_PROGRAM) $(PACKAGE).pc $(DESTDIR)$(libdir)/pkgconfig
 
 uninstall-local:
-	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f addressbook.pc
-	cd $(DESTDIR)$(datadir)/addressbook; rm -f COPYING
+	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f $(PACKAGE).pc
+	cd $(DESTDIR)$(datadir)/$(PACKAGE); rm -f COPYING
 
 clean-local:
 	rm -rf $(COMMON_CLEAN_FILES)
@@ -26,7 +23,7 @@ distclean-local:
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
-	rm -f configure addressbook-*.tar.gz config.cache
+	rm -f configure $(PACKAGE)-*.tar.gz config.cache
 	rm -f aclocal.m4 conf*.sh configure.lineno config.log
 	rm -f config.guess config.sub config.status
 	rm -f ltmain.sh libtool

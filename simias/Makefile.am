@@ -3,15 +3,15 @@ SUBDIRS = src
 DIST_SUBDIRS = $(SUBDIRS) doc package test
 
 PROJECT_FILES = $(srcdir)/Simias.sln $(srcdir)/Simias.csproj
-																   
-EXTRA_DIST = tools external $(srcdir)/simias.pc.in $(PROJECT_FILES)
+
+EXTRA_DIST = tools external $(srcdir)/$(PACKAGE).pc.in $(PROJECT_FILES)
 
 export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
 install-exec-local:
-	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig $(DESTDIR)$(datadir)/simias
-	$(INSTALL_PROGRAM) $(srcdir)/COPYING $(DESTDIR)$(datadir)/simias
-	$(INSTALL_PROGRAM) simias.pc $(DESTDIR)$(libdir)/pkgconfig
+	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig $(DESTDIR)$(datadir)/$(PACKAGE)
+	$(INSTALL_PROGRAM) $(srcdir)/COPYING $(DESTDIR)$(datadir)/$(PACKAGE)
+	$(INSTALL_PROGRAM) $(PACKAGE).pc $(DESTDIR)$(libdir)/pkgconfig
 if WINDOWS
 if DEBUG	
 	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(libdir)
@@ -19,8 +19,8 @@ endif
 endif
 
 uninstall-local:
-	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f simias.pc
-	cd $(DESTDIR)$(datadir)/simias; rm -f COPYING
+	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f $(PACKAGE).pc
+	cd $(DESTDIR)$(datadir)/$(PACKAGE); rm -f COPYING
 if WINDOWS
 if DEBUG	
 	cd $(DESTDIR)$(libdir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)
@@ -35,7 +35,7 @@ distclean-local:
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
-	rm -f configure simias-*.tar.gz config.cache
+	rm -f configure $(PACKAGE)-*.tar.gz config.cache
 	rm -f aclocal.m4 conf*.sh configure.lineno config.log
 	rm -f config.guess config.sub config.status
 	rm -f ltmain.sh libtool
