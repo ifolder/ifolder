@@ -6,13 +6,15 @@ EXTRA_DIST = tools external $(srcdir)/simias.pc.in
 
 install-exec-local:
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig
+	$(INSTALL_PROGRAM) COPYING $(DESTDIR)$(prefix)
 	$(INSTALL_PROGRAM) $(srcdir)/simias.pc $(DESTDIR)$(libdir)/pkgconfig
 
 installcheck-summary:
 	$(MAKE) -C src $@
-	
+
 uninstall-local:
 	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f simias.pc
+	cd $(DESTDIR)$(prefix); rm -f COPYING
 
 clean-local:
 	rm -rf $(COMMON_CLEAN_FILES)

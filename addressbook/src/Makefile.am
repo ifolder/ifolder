@@ -1,6 +1,12 @@
-SUBDIRS = $(COMMON_SUBDIRS) $(PLATFORM_SUBDIRS)
+if LINUX
+SUBDIRS = GtkAddrBook
+endif
 
-DIST_SUBDIRS = $(COMMON_SUBDIRS) $(LINUX_SUBDIRS) $(WINDOWS_SUBDIRS)
+if WINDOWS
+SUBDIRS = FormsBookLib FormsAddrBook
+endif
+
+DIST_SUBDIRS = GtkAddrBook FormsBookLib FormsAddrBook
 
 EXTRA_DIST = $(srcdir)/addressbook-snakeoil.keys $(srcdir)/install-addressbook-to-gac.in
 

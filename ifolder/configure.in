@@ -97,7 +97,7 @@ case $CSC in
         CSCFLAGS_OPTIMIZE="/optimize+"
         MONO=mono
         MONO_DEBUG='mono --debug'
-        MONO_PATH="\$(subst \$(SPACE),:,\$(addprefix \$(SRCDIR)\$(SEP),\$(COMMON_SUBDIRS))):`pkg-config --variable=libdir addressbook`:`pkg-config --variable=libdir simias`"
+        MONO_PATH="\$(subst \$(SPACE),:,\$(addprefix \$(SRCDIR)\$(SEP),iFolder)):`pkg-config --variable=libdir addressbook`:`pkg-config --variable=libdir simias`"
         SYSTEM_XML='System.Xml.dll'
     ;;
     #
@@ -139,18 +139,6 @@ SPACE='$(EMPTY) $(EMPTY)'
 AC_SUBST(EMPTY)
 AC_SUBST(SPACE)
 
-COMMON_SUBDIRS="iFolder"
-LINUX_SUBDIRS="TrayIcon GtkTrayApp"
-WINDOWS_SUBDIRS="iFolderShell FormsTrayApp FormsInvitationWizard"
-NOBUILD_SUBDIRS="iFolderNautilus"
-
-AC_SUBST(COMMON_SUBDIRS)
-AC_SUBST(LINUX_SUBDIRS)
-AC_SUBST(WINDOWS_SUBDIRS)
-AC_SUBST(NOBUILD_SUBDIRS)
-
-COMMON_LIBS="/r:Novell.iFolder.dll"
-
 COMMON_CLEAN_FILES='*.dbg *.exe *.dll *.pdb */*.pdb *.doc.xml */*.doc.xml *.test.xml */*.test.xml'
 COMMON_DISTCLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj'
 COMMON_MAINTAINER_CLEAN_FILES='Makefile.in'
@@ -180,7 +168,6 @@ case $IFOLDER_OS in
         NUNITFLAGS_DEBUG=''
         NUNITFLAGS_OPTIMIZE=''
         OBJ_EXT='.o'
-        PLATFORM_SUBDIRS=$DARWIN_SUBDIRS
         REPORT_DIR='$(DESTDIR)$(bindir)'
         REPORT_EXE='mono $(top_srcdir)/tools/Report/Report.exe'
         SEP='/'
@@ -194,8 +181,6 @@ case $IFOLDER_OS in
         #
         MONO_MINIMUM_VERSION=0.95
         AC_SUBST(MONO_MINIMUM_VERSION)
-
-        SIMIAS_INSTALL_PATH=`pkg-config --variable=prefix simias`
     ;;
     #
     # Linux-specific configuration
@@ -215,7 +200,6 @@ case $IFOLDER_OS in
         NUNITFLAGS_DEBUG=''
         NUNITFLAGS_OPTIMIZE=''
         OBJ_EXT='.o'
-        PLATFORM_SUBDIRS=$LINUX_SUBDIRS
         REPORT_DIR='$(DESTDIR)$(bindir)'
         REPORT_EXE='mono $(top_srcdir)/tools/Report/Report.exe'
         SEP='/'
@@ -244,13 +228,7 @@ case $IFOLDER_OS in
         
         PKG_CONFIG_REQUIRES="gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION"
         PKG_CONFIG_CONFLICTS=""
-        PKG_CONFIG_LIBS="$COMMON_LIBS /r:TrayIcon.dll"
-        
-        #
-        # Remove this when Makefile.am files are modified to SIMIAS_LIBS and ADDRESSBOOK_LIBS
-        #
-        SIMIAS_INSTALL_PATH=`pkg-config --variable=prefix simias`
-        ADDRESSBOOK_INSTALL_PATH=`pkg-config --variable=prefix addressbook`
+        PKG_CONFIG_LIBS="/r:Novell.iFolder.dll /r:TrayIcon.dll"
     ;;
     #
     # Windows-specific configuration
@@ -299,7 +277,6 @@ case $IFOLDER_OS in
         NUNITFLAGS_DEBUG=''
         NUNITFLAGS_OPTIMIZE=''
         OBJ_EXT='.obj'
-        PLATFORM_SUBDIRS=$WINDOWS_SUBDIRS
         RC='rc'
         RC_FLAGS='-r'
         REPORT_DIR='$(shell cygpath --windows $(DESTDIR)$(bindir) | sed ''s,\\\\,/,g'')'
@@ -318,27 +295,16 @@ case $IFOLDER_OS in
         #
         PKG_CONFIG_REQUIRES=""
         PKG_CONFIG_CONFLICTS=""
-        PKG_CONFIG_LIBS="$COMMON_LIBS /r:iFolderComponent.dll"
-        
+        PKG_CONFIG_LIBS="/r:Novell.iFolder.dll /r:iFolderComponent.dll"
         #
-        # Remove this when Makefile.am files are modified to SIMIAS_LIBS and ADDRESSBOOK_LIBS
+    	# Override Linux-like directory structure
         #
-        SIMIAS_INSTALL_PATH=`pkg-config --variable=prefix simias`
-        SIMIAS_INSTALL_PATH=`cygpath --windows $SIMIAS_INSTALL_PATH | sed 's,\\\\,/,g'`
-        
-        ADDRESSBOOK_INSTALL_PATH=`pkg-config --variable=prefix addressbook`
-        ADDRESSBOOK_INSTALL_PATH=`cygpath --windows $ADDRESSBOOK_INSTALL_PATH | sed 's,\\\\,/,g'`
-
-	# override Linux-like directory structure
-	bindir="${exec_prefix}"
-	sbindir="${exec_prefix}"
-	libexecdir="${exec_prefix}"
-	libdir="${exec_prefix}"
+    	bindir="${exec_prefix}"
+    	sbindir="${exec_prefix}"
+    	libexecdir="${exec_prefix}"
+    	libdir="${exec_prefix}"
     ;;
 esac
-AC_SUBST(SIMIAS_INSTALL_PATH)
-AC_SUBST(ADDRESSBOOK_INSTALL_PATH)
-
 AC_SUBST(CDEF)
 AC_SUBST(CINC)
 AC_SUBST(COUT)
@@ -360,7 +326,6 @@ AC_SUBST(OBJ_EXT)
 AC_SUBST(PKG_CONFIG_REQUIRES)
 AC_SUBST(PKG_CONFIG_CONFLICTS)
 AC_SUBST(PKG_CONFIG_LIBS)
-AC_SUBST(PLATFORM_SUBDIRS)
 AC_SUBST(RC)
 AC_SUBST(RCFLAGS)
 AC_SUBST(REPORT_DIR)
@@ -378,7 +343,6 @@ AM_PROG_CC_STDC
 AC_PROG_INSTALL
 AC_HEADER_STDC
 AM_PROG_LIBTOOL
-
 
 #
 # Handle --with-ndoc-path
@@ -536,6 +500,7 @@ src/TrayIcon/Makefile
 src/TrayIcon/libtrayicon/Makefile
 package/Makefile
 package/windows/Makefile
+package/windows/ShutdowniFolder/Makefile
 package/linux/Makefile
 package/linux/ifolder.spec
 doc/Makefile

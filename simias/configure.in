@@ -12,20 +12,20 @@ case $host_os in
         SIMIAS_OS='linux'
         AC_CHECK_PROG(CSC, mcs, mcs)
         test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
-	PKG_CONFIG_DIR='lib'
+	    PKG_CONFIG_DIR='lib'
     ;;
     darwin*)
         SIMIAS_OS='darwin'
         AC_CHECK_PROG(CSC, mcs, mcs)
         test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
-	PKG_CONFIG_DIR='lib'
+	    PKG_CONFIG_DIR='lib'
     ;;
     cygwin*)
         SIMIAS_OS='windows'
         AC_CHECK_PROG(CSC, csc, csc)
         test -z "$CSC" && AC_CHECK_PROG(CSC, mcs, mcs)
         test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: neither csc nor mcs found in \$PATH])
-	PKG_CONFIG_DIR='.'
+    	PKG_CONFIG_DIR='.'
     ;;
     *)
         AC_MSG_ERROR([Unknown host_os: $host_os])
@@ -134,17 +134,6 @@ SPACE='$(EMPTY) $(EMPTY)'
 AC_SUBST(EMPTY)
 AC_SUBST(SPACE)
 
-COMMON_SUBDIRS="Common Service Events Storage StoreProvider FsProvider SqliteProvider CollectionStore FsWatcher RemotingSniffer SyncCommon Location Agent SyncManager SyncLogicLite SyncTools Sync AddressBook AddressBookCmd Smtp Invitation MiniShare AcceptanceTests"
-LINUX_SUBDIRS="CommonGtkWindows"
-WINDOWS_SUBDIRS="CommonFormWindows"
-DARWIN_SUBDIRS=
-
-AC_SUBST(COMMON_SUBDIRS)
-AC_SUBST(LINUX_SUBDIRS)
-AC_SUBST(WINDOWS_SUBDIRS)
-
-COMMON_LIBS="/r:Simias.dll"
-
 COMMON_CLEAN_FILES='*.dbg *.pdb */*.pdb *.doc.xml */*.doc.xml *.test.xml */*.test.xml'
 COMMON_DISTCLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj'
 COMMON_MAINTAINER_CLEAN_FILES='Makefile.in'
@@ -174,18 +163,11 @@ case $SIMIAS_OS in
         NUNITFLAGS_DEBUG=''
 	MONO=mono
         NUNITFLAGS_OPTIMIZE=''
-        PLATFORM_SUBDIRS=$DARWIN_SUBDIRS
         REPORT_DIR='$(DESTDIR)$(bindir)'
         REPORT_EXE='mint $(top_srcdir)/tools/Report/Report.exe'
         SEP='/'
         SQLITELIB="sqlite"
         SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/darwin"
-        #
-        # Set pkg-config variables
-        #
-        PKG_CONFIG_REQUIRES=""
-        PKG_CONFIG_CONFLICTS=""
-        PKG_CONFIG_LIBS="$COMMON_LIBS"
     ;;
     #
     # Linux-specific configuration
@@ -204,18 +186,11 @@ case $SIMIAS_OS in
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
         NUNITFLAGS_OPTIMIZE=''
-        PLATFORM_SUBDIRS=$LINUX_SUBDIRS
         REPORT_DIR='$(DESTDIR)$(bindir)'
         REPORT_EXE='mono $(top_srcdir)/tools/Report/Report.exe'
         SEP='/'
         SQLITELIB="libsqlite.so"
         SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/linux"
-        #
-        # Set pkg-config variables
-        #
-        PKG_CONFIG_REQUIRES=""
-        PKG_CONFIG_CONFLICTS=""
-        PKG_CONFIG_LIBS="$COMMON_LIBS"
     ;;
     #
     # Windows-specific configuration
@@ -231,24 +206,18 @@ case $SIMIAS_OS in
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
         NUNITFLAGS_OPTIMIZE=''
-        PLATFORM_SUBDIRS=$WINDOWS_SUBDIRS
         REPORT_DIR='$(shell cygpath --windows $(DESTDIR)$(bindir) | sed ''s,\\\\,/,g'')'
         REPORT_EXE='$(top_srcdir)/tools/Report/Report.exe'
         SEP='$(EMPTY)\\$(EMPTY)'
         SQLITELIB="sqlite.dll"
         SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/w32"
         #
-        # Set pkg-config variables
+    	# Override Linux-like directory structure
         #
-        PKG_CONFIG_REQUIRES=""
-        PKG_CONFIG_CONFLICTS=""
-        PKG_CONFIG_LIBS="$COMMON_LIBS"
-
-	# override Linux-like directory structure
-	bindir="${exec_prefix}"
-	sbindir="${exec_prefix}"
-	libexecdir="${exec_prefix}"
-	libdir="${exec_prefix}"
+    	bindir="${exec_prefix}"
+    	sbindir="${exec_prefix}"
+    	libexecdir="${exec_prefix}"
+    	libdir="${exec_prefix}"
     ;;
 esac
 AC_SUBST(ICON_EXT)
@@ -259,15 +228,21 @@ AC_SUBST(MDNSRESPONDER_DIR)
 AC_SUBST(NUNIT)
 AC_SUBST(NUNIT_FLAGS)
 AC_SUBST(NUNIT_LIBPATH)
-AC_SUBST(PKG_CONFIG_REQUIRES)
-AC_SUBST(PKG_CONFIG_CONFLICTS)
-AC_SUBST(PKG_CONFIG_LIBS)
-AC_SUBST(PLATFORM_SUBDIRS)
 AC_SUBST(REPORT_DIR)
 AC_SUBST(REPORT_EXE)
 AC_SUBST(SEP)
 AC_SUBST(SQLITELIB)
 AC_SUBST(SQLITELIB_PATH)
+
+#
+# Set pkg-config variables
+#
+PKG_CONFIG_REQUIRES=""
+PKG_CONFIG_CONFLICTS=""
+PKG_CONFIG_LIBS="/r:Simias.dll"
+AC_SUBST(PKG_CONFIG_REQUIRES)
+AC_SUBST(PKG_CONFIG_CONFLICTS)
+AC_SUBST(PKG_CONFIG_LIBS)
 
 #
 # Run standard macros

@@ -9,7 +9,7 @@ FormsBookLib_FLAGS = $(CSC_LIBFLAG)
 FormsBookLib_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll Simias.dll
 FormsBookLib_LIBPATH =
 
-DATA_FILES = ifolder_add_bk.ico ifolder_contact_card.ico ifolder_me_card.ico
+DATA_FILES = $(srcdir)/ifolder_add_bk.ico $(srcdir)/ifolder_contact_card.ico $(srcdir)/ifolder_contact_full.ico $(srcdir)/ifolder_contact_read.ico $(srcdir)/ifolder_contact_read_write.ico $(srcdir)/ifolder_me_card.ico
 
 EXTRA_DIST = $(FormsBookLib_CSFILES) $(DATA_FILES)
 
@@ -25,11 +25,13 @@ endif
 endif
 
 install-exec-local: FormsBookLib.dll $(DATA_FILES)
-	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) FormsBookLib.dll $(DATA_FILES) $(DEBUG_FILES) $(DESTDIR)$(libdir)
+	$(mkinstalldirs) $(DESTDIR)$(libdir)/res
+	$(INSTALL_PROGRAM) FormsBookLib.dll $(DEBUG_FILES) $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) $(DATA_FILES) $(DESTDIR)$(libdir)/res
     
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f FormsBookLib.dll $(DATA_FILES) $(DEBUG_FILES)
+	cd $(DESTDIR)$(libdir)/res; rm -f $(DATA_FILES:$(srcdir)/%=%)
     
 installcheck-local: install
 	

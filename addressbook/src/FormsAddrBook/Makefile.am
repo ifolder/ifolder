@@ -2,16 +2,17 @@
 export MONO_PATH := $(MONO_PATH)
 
 Book_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/FormsAddrBook.cs
-Book_CSFILES_CSC := $(subst /,$(SEP),$(Book_CSFILES))
+Book_CSFILES_CSC = $(subst /,$(SEP),$(Book_CSFILES))
 Book_INCLUDES = 
 Book_RESOURCES = $(srcdir)/App$(ICON_EXT)
 Book_FLAGS = $(CSC_WINEXEFLAG)
 Book_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) FormsBookLib.dll  Simias.dll
 Book_LIBPATH = ../FormsBookLib
 
-DATA_FILES = address_app.ico
+DATA_FILES = $(srcdir)/address_app.ico $(srcdir)/App.ico
+PNG_FILES = $(srcdir)/../GtkAddrBook/blankhead.png $(srcdir)/../GtkAddrBook/book.png $(srcdir)/../GtkAddrBook/contact.png $(srcdir)/../GtkAddrBook/contact_me.png $(srcdir)/../GtkAddrBook/vcardexport.png $(srcdir)/../GtkAddrBook/vcardimport.png
 
-EXTRA_DIST = $(Book_CSFILES) $(DATA_FILES)
+EXTRA_DIST = $(Book_CSFILES) $(srcdir)/ContactBrowser.exe.manifest $(DATA_FILES) $(PNG_FILES)
 
 all: ContactBrowser.exe
 
@@ -24,12 +25,14 @@ DEBUG_FILES = ContactBrowser.pdb
 endif
 endif
 
-install-exec-local: ContactBrowser.exe $(DATA_FILES)
+install-exec-local: ContactBrowser.exe $(DATA_FILES) $(PNG_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) ContactBrowser.exe $(DATA_FILES) $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) ContactBrowser.exe ContactBrowser.exe.manifest $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(DATA_FILES) $(PNG_FILES) $(DESTDIR)$(bindir)/res
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f ContactBrowser.exe $(DATA_FILES) $(DEBUG_FILES)
+	cd $(DESTDIR)$(bindir); rm -f ContactBrowser.exe ContactBrowser.exe.manifest $(DEBUG_FILES)
+	cd $(DESTDIR)$(bindir)/res; rm -f $(DATA_FILES:$(srcdir)/%=%) $(PNG_FILES:$(srcdir)/../GtkAddrBook/%=%)
     
 installcheck-local: install
 	

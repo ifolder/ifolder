@@ -1,9 +1,9 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SIMIAS_CSFILES1 := $(shell cat Simias.dll.sources)
-SIMIAS_CSFILES2 := $(SIMIAS_CSFILES1:%=$(srcdir)/%)
-SIMIAS_CSFILES := $(subst /,$(SEP),$(SIMIAS_CSFILES2))
+SIMIAS_CSFILES     := $(shell cat Simias.dll.sources)
+SIMIAS_CSFILES_SRC := $(SIMIAS_CSFILES:%=$(srcdir)/%)
+SIMIAS_CSFILES_CSC := $(subst /,$(SEP),$(SIMIAS_CSFILES_SRC))
 SIMIAS_INCLUDES =
 SIMIAS_RESOURCES =
 SIMIAS_FLAGS = $(CSC_LIBFLAG) /unsafe
@@ -16,8 +16,8 @@ CUR_DIR := $(shell pwd)
 
 all: Simias.dll
 
-Simias.dll: $(SIMIAS_CSFILES) $(SIMIAS_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_FLAGS) $(SIMIAS_LIBS:%=/r:%) $(SIMIAS_LIBPATH:%=/lib:%) $(SIMIAS_CSFILES) /doc:Simias.doc.xml
+Simias.dll: $(SIMIAS_CSFILES_SRC) $(SIMIAS_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_FLAGS) $(SIMIAS_LIBS:%=/r:%) $(SIMIAS_LIBPATH:%=/lib:%) $(SIMIAS_CSFILES_CSC) /doc:Simias.doc.xml
 
 if DEBUG
 if WINDOWS
@@ -27,15 +27,34 @@ endif
 
 install-exec-local: Simias.dll
 	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) Simias.dll ../../external/SecureChannelSinks/*.dll $(LOG4NET_DIR)/log4net.dll $(MDNSRESPONDER_DIR)/m*.exe $(MDNSRESPONDER_DIR)/m*.dll $(DEBUG_FILES) $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) Simias.dll $(DEBUG_FILES) $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) $(srcdir)/$(MDNSRESPONDER_DIR)/m*.exe $(MDNSRESPONDER_DIR)/m*.dll $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) $(srcdir)/$(LOG4NET_DIR)/log4net.dll $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) $(srcdir)/../../external/SecureChannelSinks/*.dll $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DESTDIR)$(bindir)
+	cp -f $(srcdir)/$(LOG4NET_DIR)/../../../../LICENSE.txt $(DESTDIR)$(prefix)/log4net.LICENSE.txt
+if DOTNET
+	$(INSTALL_PROGRAM) $(srcdir)/$(NUNIT_LIBPATH)/nunit.core.dll $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) $(srcdir)/$(NUNIT_LIBPATH)/nunit.framework.dll $(DESTDIR)$(libdir)
+	cp -f $(srcdir)/$(NUNIT_LIBPATH)/../license.rtf $(DESTDIR)$(prefix)/nunit.LICENSE.rtf
+endif
 
 installcheck-local: install
 	cd $(DESTDIR)$(libdir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:Simias.test.xml Simias.dll
 
 uninstall-local:
-	cd $(DESTDIR)$(libdir); rm -f Simias.dll Novell.Security.SecureSink*.dll log4net.dll mDnsResponder* $(SQLITELIB) $(NUNIT_TESTS); rm -rf .cstore $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
+	cd $(DESTDIR)$(libdir); rm -f $(SQLITELIB)
+	cd $(DESTDIR)$(libdir); rm -f Novell.Security.SecureSink*.dll
+	cd $(DESTDIR)$(libdir); rm -f log4net.dll
+	cd $(DESTDIR)$(libdir); rm -f mDnsResponder*
+	cd $(DESTDIR)$(libdir); rm -f Simias.dll $(DEBUG_FILES)
 	cd $(DESTDIR)$(bindir); rm -f $(SQLITELIB)
+	cd $(DESTDIR)$(prefix); rm -f log4net.LICENSE.txt
+if DOTNET
+	cd $(DESTDIR)$(libdir); rm -f nunit.core.dll nunit.framework.dll
+	cd $(DESTDIR)$(prefix); rm -f nunit.LICENSE.rtf
+endif
 
 CLEAN_FILES = Simias.dll $(NUNIT_TESTS) Simias.doc.xml
 

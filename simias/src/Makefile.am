@@ -1,6 +1,6 @@
 SUBDIRS = Simias.dll Events mDnsService SyncManager AddressBookCmd
 
-DIST_SUBDIRS = Simias.dll Events mDnsService SyncManager AddressBookCmd
+DIST_SUBDIRS = $(SUBDIRS)
 
 EXTRA_DIST = simias-snakeoil.keys $(srcdir)/install-simias-to-gac.in
 

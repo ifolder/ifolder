@@ -9,9 +9,11 @@ InvitationWizard_FLAGS = $(CSC_WINEXEFLAG)
 InvitationWizard_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Novell.iFolder.dll
 InvitationWizard_LIBPATH = ../iFolder
 
-DATA_FILES = App.ico Invitation.ico
+DATA_FILES = $(srcdir)/App.ico $(srcdir)/Invitation.ico $(srcdir)/InvitationWizard.exe.manifest
+GTK_DATA_FILES = $(srcdir)/../GtkTrayApp/invitewiz.png
+RESX_FILES = $(srcdir)/AcceptDeclinePage.resx $(srcdir)/BaseWizardPage.resx $(srcdir)/CompletionPage.resx $(srcdir)/InteriorPageTemplate.resx $(srcdir)/InvitationWizard.resx $(srcdir)/SelectInvitationPage.resx $(srcdir)/SelectiFolderLocationPage.resx $(srcdir)/WelcomePage.resx $(srcdir)/WelcomePageTemplate.resx
 
-EXTRA_DIST = $(InvitationWizard_CSFILES) $(DATA_FILES)
+EXTRA_DIST = $(InvitationWizard_CSFILES) $(DATA_FILES) $(RESX_FILES)
 
 all: InvitationWizard.exe
 
@@ -26,10 +28,14 @@ endif
 
 install-exec-local: InvitationWizard.exe $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) InvitationWizard.exe $(DATA_FILES) $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) InvitationWizard.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(DATA_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(GTK_DATA_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f InvitationWizard.exe $(DATA_FILES) $(DEBUG_FILES)
+	cd $(DESTDIR)$(bindir); rm -f InvitationWizard.exe $(DEBUG_FILES)
+	cd $(DESTDIR)$(bindir); rm -f $(DATA_FILES:$(srcdir)/%=%)
+	cd $(DESTDIR)$(bindir); rm -f $(GTK_DATA_FILES:$(srcdir)/../GtkTrayApp/%=%)
     
 installcheck-local: install
 	

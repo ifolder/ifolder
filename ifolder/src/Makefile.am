@@ -1,6 +1,12 @@
-SUBDIRS = $(COMMON_SUBDIRS) $(PLATFORM_SUBDIRS)
+if LINUX
+SUBDIRS = iFolder TrayIcon GtkTrayApp
+endif
 
-DIST_SUBDIRS = $(COMMON_SUBDIRS) $(LINUX_SUBDIRS) $(WINDOWS_SUBDIRS) $(NOBUILD_SUBDIRS)
+if WINDOWS
+SUBDIRS = iFolder iFolderShell FormsTrayApp FormsInvitationWizard
+endif
+
+DIST_SUBDIRS = iFolder TrayIcon GtkTrayApp iFolderShell FormsTrayApp FormsInvitationWizard iFolderNautilus
 
 EXTRA_DIST = $(srcdir)/ifolder-snakeoil.keys $(srcdir)/install-ifolder-to-gac.in
 

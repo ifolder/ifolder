@@ -6,6 +6,7 @@ EXTRA_DIST = tools $(srcdir)/addressbook.pc.in
 
 install-exec-local:
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig
+	$(INSTALL_PROGRAM) COPYING $(DESTDIR)$(prefix)
 	$(INSTALL_PROGRAM) $(srcdir)/addressbook.pc $(DESTDIR)$(libdir)/pkgconfig
 
 installcheck-summary:
@@ -13,10 +14,11 @@ installcheck-summary:
 
 uninstall-local:
 	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f addressbook.pc
+	cd $(DESTDIR)$(prefix); rm -f COPYING
 
 clean-local:
 	rm -rf $(COMMON_CLEAN_FILES)
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 

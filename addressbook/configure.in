@@ -91,7 +91,7 @@ case $CSC in
         CSCFLAGS_OPTIMIZE="/optimize+"
         MONO=mono
         MONO_DEBUG='mono --debug'
-        MONO_PATH="\$(subst \$(SPACE),:,\$(addprefix \$(SRCDIR)\$(SEP),\$(COMMON_SUBDIRS))):`pkg-config --variable=libdir simias`"
+        MONO_PATH="`pkg-config --variable=libdir simias`"
         SYSTEM_XML='System.Xml.dll'
     ;;
     #
@@ -133,15 +133,7 @@ SPACE='$(EMPTY) $(EMPTY)'
 AC_SUBST(EMPTY)
 AC_SUBST(SPACE)
 
-COMMON_SUBDIRS=
-LINUX_SUBDIRS="GtkAddrBook"
-WINDOWS_SUBDIRS="FormsBookLib FormsAddrBook"
-
-AC_SUBST(COMMON_SUBDIRS)
-AC_SUBST(LINUX_SUBDIRS)
-AC_SUBST(WINDOWS_SUBDIRS)
-
-COMMON_CLEAN_FILES='*.dbg *.exe *.dll *.pdb */*.pdb *.doc.xml */*.doc.xml *.test.xml */*.test.xml'
+COMMON_CLEAN_FILES='*.dbg *.pdb */*.pdb *.doc.xml */*.doc.xml *.test.xml */*.test.xml'
 COMMON_DISTCLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj'
 COMMON_MAINTAINER_CLEAN_FILES='Makefile.in'
 AC_SUBST(COMMON_CLEAN_FILES)
@@ -167,18 +159,12 @@ case $ADDRESSBOOK_OS in
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
         NUNITFLAGS_OPTIMIZE=''
-        PLATFORM_SUBDIRS=$LINUX_SUBDIRS
         REPORT_DIR='$(DESTDIR)$(bindir)'
         REPORT_EXE='mono $(top_srcdir)/tools/Report/Report.exe'
         SEP='/'
-        SQLITELIB="libsqlite.so"
-        SQLITELIB_PATH="../../external/sqlite/linux"
         #
         # Set pkg-config variables
         #
-        MONO_MINIMUM_VERSION=0.91
-        AC_SUBST(MONO_MINIMUM_VERSION)
-        
         GTK_SHARP_MINIMUM_VERSION=0.91
         AC_SUBST(GTK_SHARP_MINIMUM_VERSION)
 
@@ -187,15 +173,8 @@ case $ADDRESSBOOK_OS in
 
         GLADE_SHARP_MINIMUM_VERSION=0.91
         AC_SUBST(GLADE_SHARP_MINIMUM_VERSION)
-	
         PKG_CONFIG_REQUIRES="gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION"
-        PKG_CONFIG_CONFLICTS=""
         PKG_CONFIG_LIBS="/r:Novell.AddressBook.UI.gtk.dll"
-        
-        #
-        # Remove this when Makefile.am files are modified to use SIMIAS_LIBS
-        #
-        SIMIAS_INSTALL_PATH=`pkg-config --variable=prefix simias`
     ;;
     #
     # Windows-specific configuration
@@ -209,58 +188,48 @@ case $ADDRESSBOOK_OS in
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
         NUNITFLAGS_OPTIMIZE=''
-        PLATFORM_SUBDIRS=$WINDOWS_SUBDIRS
-	REPORT_DIR='$(shell cygpath --windows $(DESTDIR)$(bindir) | sed ''s,\\\\,/,g'')'
+    	REPORT_DIR='$(shell cygpath --windows $(DESTDIR)$(bindir) | sed ''s,\\\\,/,g'')'
         REPORT_EXE='$(top_srcdir)/tools/Report/Report.exe'
         SEP='$(EMPTY)\\$(EMPTY)'
-        SQLITELIB="sqlite.dll"
-        SQLITELIB_PATH="../../external/sqlite/w32"
         #
         # Set pkg-config variables
         #
         PKG_CONFIG_REQUIRES=""
-        PKG_CONFIG_CONFLICTS=""
         PKG_CONFIG_LIBS="/r:FormsBookLib.dll"
-        
         #
-        # Remove this when Makefile.am files are modified to use SIMIAS_LIBS
+    	# Override Linux-like directory structure
         #
-        SIMIAS_INSTALL_PATH=`pkg-config --variable=prefix simias`
-	SIMIAS_INSTALL_PATH=`cygpath --windows $SIMIAS_INSTALL_PATH | sed 's,\\\\,/,g'`
-
-	# override Linux-like directory structure
-	bindir="${exec_prefix}"
-	sbindir="${exec_prefix}"
-	libexecdir="${exec_prefix}"
-	libdir="${exec_prefix}"
+    	bindir="${exec_prefix}"
+    	sbindir="${exec_prefix}"
+    	libexecdir="${exec_prefix}"
+    	libdir="${exec_prefix}"
     ;;
 esac
-AC_SUBST(SIMIAS_INSTALL_PATH)
-
 AC_SUBST(ICON_EXT)
 AC_SUBST(ICON_FLAG)
 AC_SUBST(INSTALL_EXE_OPTS)
 AC_SUBST(NUNIT)
 AC_SUBST(NUNIT_FLAGS)
 AC_SUBST(NUNIT_LIBPATH)
-AC_SUBST(PKG_CONFIG_REQUIRES)
-AC_SUBST(PKG_CONFIG_CONFLICTS)
-AC_SUBST(PKG_CONFIG_LIBS)
-AC_SUBST(PLATFORM_SUBDIRS)
 AC_SUBST(REPORT_DIR)
 AC_SUBST(REPORT_EXE)
 AC_SUBST(SEP)
-AC_SUBST(SQLITELIB)
-AC_SUBST(SQLITELIB_PATH)
+
+#
+# Set pkg-config variables
+#
+PKG_CONFIG_CONFLICTS=""
+AC_SUBST(PKG_CONFIG_REQUIRES)
+AC_SUBST(PKG_CONFIG_CONFLICTS)
+AC_SUBST(PKG_CONFIG_LIBS)
 
 #
 # Run standard macros
 #
-AM_PROG_CC_STDC
-AC_PROG_INSTALL
-AC_HEADER_STDC
+#AM_PROG_CC_STDC
+#AC_PROG_INSTALL
+#AC_HEADER_STDC
 #AM_PROG_LIBTOOL
-
 
 #
 # Handle --with-ndoc-path
