@@ -770,6 +770,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Sync\SyncSize.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Sync\SyncUtil.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

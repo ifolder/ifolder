@@ -50,6 +50,7 @@ namespace Simias.Sync
 		private SyncCollectionWorker worker;
 		private Thread syncWorkerThread;
 		private bool working;
+		private ManualResetEvent stopWorkingEvent = new ManualResetEvent(true);
 
 		/// <summary>
 		/// Constructor
@@ -157,6 +158,7 @@ namespace Simias.Sync
 				syncWorkerThread = new Thread(new ThreadStart(this.DoSyncWork));
 				syncWorkerThread.Priority = ThreadPriority.BelowNormal;
 				working = true;
+				stopWorkingEvent.Reset();
 				syncWorkerThread.Start();
 			}
 
@@ -175,8 +177,9 @@ namespace Simias.Sync
 				}
 				
 				// stop worker
+				stopWorkingEvent.Set();
 				working = false;
-				
+	
 				// send a stop message
 				try
 				{
@@ -213,27 +216,22 @@ namespace Simias.Sync
 				{
 					// get the service URL
 					string serviceUrl = collection.ServiceUrl;
-
 					log.Debug("Sync Store Service URL: {0}", serviceUrl);
-
-					// debug
-					// log.Debug("Pinging the Sync Collection Service...");
-					// log.Debug(service.Ping().ToString());
 
 					// get a proxy to the store service object
 					log.Debug("Connecting to the Sync Store Service...");
 					storeService = (SyncStoreService)Activator.GetObject(typeof(SyncStoreService), collection.ServiceUrl);
-					Debug.Assert(storeService != null);
+					if (storeService == null) throw new ApplicationException("No Sync Store Service");
 
 					// get a proxy to the collection service object
 					log.Debug("Connecting to the Sync Collection Service...");
 					service = storeService.GetCollectionService(collection.ID);
-					Debug.Assert(service != null);
+					if (service == null) throw new ApplicationException("No Sync Collection Service");
 
 					// get the collection worker
 					log.Debug("Creating a Sync Worker Object...");
 					worker = syncManager.LogicFactory.GetCollectionWorker(service, collection);
-					Debug.Assert(worker != null);
+					if (worker == null) throw new ApplicationException("No Sync Collection Worker");
 
 					// do the work
 					log.Debug("Starting the Sync Worker...");
@@ -272,7 +270,7 @@ namespace Simias.Sync
 				syncManager.DoneWithWork();
 
 				// sleep
-				if (working) Thread.Sleep(TimeSpan.FromSeconds(collection.Interval));
+				stopWorkingEvent.WaitOne(TimeSpan.FromSeconds(collection.Interval), true);
 			}
 		}
 	}
