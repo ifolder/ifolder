@@ -53,7 +53,7 @@ namespace Novell.iFolder.FormsTrayApp
 		const string CFG_Services = "Services";
 		const string XmlServiceTag = "Service";
 
-		private Manager serviceManager = null;
+		private Simias.Service.Manager serviceManager = null;
 		private iFolderManager manager = null;
 		private Configuration config;
 		private System.Windows.Forms.Label label1;
@@ -712,7 +712,7 @@ namespace Novell.iFolder.FormsTrayApp
 		#endregion
 
 		#region Properties
-		public Manager ServiceManager
+		public Simias.Service.Manager ServiceManager
 		{
 			set
 			{
