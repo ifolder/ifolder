@@ -733,7 +733,7 @@ namespace Simias.Gaim
 			}
 			XmlElement gaimElement = blistDoc.DocumentElement;
 			
-			XmlNodeList buddyNodes = gaimElement.SelectNodes("//buddy[setting[@name='simias-url:']]");
+			XmlNodeList buddyNodes = gaimElement.SelectNodes("//buddy[setting[starts-with(name, 'simias-url:')]]");
 			if (buddyNodes == null)
 				return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
 			
