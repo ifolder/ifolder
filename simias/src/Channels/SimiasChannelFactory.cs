@@ -54,7 +54,7 @@ namespace Simias.Channels
 
 		static SimiasChannelFactory()
 		{
-#if DEBUG && !MONO
+#if DEBUG
 			// send the errors back on debug
 			RemotingConfiguration.CustomErrorsEnabled(false);
 #endif
@@ -154,17 +154,13 @@ namespace Simias.Channels
 				{
 					// soap
 					serverProvider = new SoapServerFormatterSinkProvider();
-#if !MONO
 					(serverProvider as SoapServerFormatterSinkProvider).TypeFilterLevel = TypeFilterLevel.Full;
-#endif
 				}
 				else
 				{
 					// binary
 					serverProvider = new BinaryServerFormatterSinkProvider();
-#if !MONO
 					(serverProvider as BinaryServerFormatterSinkProvider).TypeFilterLevel = TypeFilterLevel.Full;
-#endif
 				}
 
 				// setup monitor provider
