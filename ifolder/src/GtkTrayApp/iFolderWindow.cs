@@ -1337,14 +1337,24 @@ namespace Novell.iFolder
 
 		private void OnPropertiesDialogResponse(object o, ResponseArgs args)
 		{
-	//		if(args.ResponseId
-			if(PropertiesDialog != null)
+			switch(args.ResponseId)
 			{
-				PropertiesDialog.Hide();
-				PropertiesDialog.Destroy();
-				PropertiesDialog = null;
+				case Gtk.ResponseType.Help:
+					break;
+				default:
+				{
+					if(PropertiesDialog != null)
+					{
+						PropertiesDialog.Hide();
+						PropertiesDialog.Destroy();
+						PropertiesDialog = null;
+					}
+					break;
+				}
 			}
 		}
+
+
 
 		public void	OnSyncNow(object o, EventArgs args)
 		{

@@ -67,6 +67,7 @@ namespace Novell.iFolder
 			this.ifolder = ifolder;
 
 			RefreshUserList();
+			UpdateWidgets();
 		}
 
 
@@ -128,8 +129,9 @@ namespace Novell.iFolder
 //			accessColumn.Alignment = 1;
 			accessColumn.Resizable = true;
 
-//			UserTreeView.Selection.Changed +=
-//				new EventHandler(OnUserSelectionChanged);
+			UserTreeView.Selection.Mode = SelectionMode.Multiple;
+			UserTreeView.Selection.Changed +=
+				new EventHandler(OnUserSelectionChanged);
 
 			UserPixBuf = 
 					new Gdk.Pixbuf(Util.ImagesPath("ifolderuser.png"));
@@ -163,7 +165,6 @@ namespace Novell.iFolder
 			AccessButton = new Button("Set Access");
 			leftBox.PackStart(AccessButton);
 			AccessButton.Clicked += new EventHandler(OnAccessClicked);
-
 		}
 
 
@@ -178,6 +179,13 @@ namespace Novell.iFolder
 			{
 				UserTreeStore.AppendValues(user);
 			}
+		}
+		
+
+
+		private void UpdateWidgets()
+		{
+			OnUserSelectionChanged(null, null);
 		}
 
 
@@ -268,6 +276,41 @@ namespace Novell.iFolder
 
 
 
+		private void OnUserSelectionChanged(object o, EventArgs args)
+		{
+			if(ifolder.CurrentUserRights != "Admin")
+			{
+				AddButton.Sensitive = false;
+				RemoveButton.Sensitive = false;
+				AccessButton.Sensitive = false;
+			}
+			else
+			{
+				if(!ifolder.IsWorkgroup)
+				{
+					AddButton.Sensitive = true;
+				}
+				else
+				{
+					AddButton.Sensitive = false;
+					TreeSelection tSelect = UserTreeView.Selection;
+					if((tSelect.CountSelectedRows() < 1) || SelectionHasOwner())
+					{
+						RemoveButton.Sensitive = false;
+						AccessButton.Sensitive = false;
+					}
+					else
+					{
+						RemoveButton.Sensitive = true;
+						AccessButton.Sensitive = true;
+					}
+				}
+			}
+		}
+
+
+
+
 		private void OnUserSelectorResponse(object o, ResponseArgs args)
 		{
 			if(UserSelector != null)
@@ -319,6 +362,34 @@ namespace Novell.iFolder
 				return "Read Only";
 			else
 				return "Unknown";
+		}
+
+
+
+
+		public bool SelectionHasOwner()
+		{
+			TreeModel tModel;
+
+			TreeSelection tSelect = UserTreeView.Selection;
+			Array treePaths = tSelect.GetSelectedRows(out tModel);
+			// remove compiler warning
+			if(tModel != null)
+				tModel = null;
+
+			foreach(TreePath tPath in treePaths)
+			{
+				TreeIter iter;
+
+				if(UserTreeStore.GetIter(out iter, tPath))
+				{
+					iFolderUser user = 
+							(iFolderUser) UserTreeStore.GetValue(iter,0);
+					if(user.UserID == ifolder.OwnerID)
+						return true;
+				}
+			}
+			return false;
 		}
 
 
