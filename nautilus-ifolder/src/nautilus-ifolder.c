@@ -50,8 +50,11 @@
 #define DEBUG_IFOLDER
 #endif
 
+#ifdef _
+#undef _
+
 #ifndef _
-#define _(STRING) gettext(STRING)
+#define _(STRING) dgettext(GETTEXT_PACKAGE, STRING)
 #endif
 
 #define IFOLDER_FIFO_NAME ".nautilus-ifolder-fifo"
@@ -1368,7 +1371,6 @@ nautilus_module_initialize (GTypeModule *module)
 	ifolder_extension_register_type (module);
 	bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-	textdomain (GETTEXT_PACKAGE);
 
 	provider_types[0] = ifolder_nautilus_get_type ();
 	
