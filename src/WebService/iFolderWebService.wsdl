@@ -517,6 +517,27 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="AddAndInviteUser">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="MemberName" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="GivenName" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="FamilyName" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="MemberID" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="PublicKey" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="Rights" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AddAndInviteUserResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="AddAndInviteUserResult"
+                  type="s0:iFolderUser"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="InviteUser">
         <xs:complexType>
           <xs:sequence>
@@ -1015,6 +1036,12 @@
   <message name="GetiFolderUserFromNodeIDSoapOut">
     <part name="parameters" element="s0:GetiFolderUserFromNodeIDResponse"/>
   </message>
+  <message name="AddAndInviteUserSoapIn">
+    <part name="parameters" element="s0:AddAndInviteUser"/>
+  </message>
+  <message name="AddAndInviteUserSoapOut">
+    <part name="parameters" element="s0:AddAndInviteUserResponse"/>
+  </message>
   <message name="InviteUserSoapIn">
     <part name="parameters" element="s0:InviteUser"/>
   </message>
@@ -1286,6 +1313,18 @@
   <message name="GetiFolderUserFromNodeIDHttpGetOut">
     <part name="Body" element="s0:iFolderUser"/>
   </message>
+  <message name="AddAndInviteUserHttpGetIn">
+    <part name="iFolderID" type="s:string"/>
+    <part name="MemberName" type="s:string"/>
+    <part name="GivenName" type="s:string"/>
+    <part name="FamilyName" type="s:string"/>
+    <part name="MemberID" type="s:string"/>
+    <part name="PublicKey" type="s:string"/>
+    <part name="Rights" type="s:string"/>
+  </message>
+  <message name="AddAndInviteUserHttpGetOut">
+    <part name="Body" element="s0:iFolderUser"/>
+  </message>
   <message name="InviteUserHttpGetIn">
     <part name="iFolderID" type="s:string"/>
     <part name="UserID" type="s:string"/>
@@ -1543,6 +1582,18 @@
     <part name="NodeID" type="s:string"/>
   </message>
   <message name="GetiFolderUserFromNodeIDHttpPostOut">
+    <part name="Body" element="s0:iFolderUser"/>
+  </message>
+  <message name="AddAndInviteUserHttpPostIn">
+    <part name="iFolderID" type="s:string"/>
+    <part name="MemberName" type="s:string"/>
+    <part name="GivenName" type="s:string"/>
+    <part name="FamilyName" type="s:string"/>
+    <part name="MemberID" type="s:string"/>
+    <part name="PublicKey" type="s:string"/>
+    <part name="Rights" type="s:string"/>
+  </message>
+  <message name="AddAndInviteUserHttpPostOut">
     <part name="Body" element="s0:iFolderUser"/>
   </message>
   <message name="InviteUserHttpPostIn">
@@ -1820,6 +1871,12 @@
       <output message="s0:GetiFolderUserFromNodeIDSoapOut"/>
       <documentation>Lookup a user in a collection based on node ID.</documentation>
     </operation>
+    <operation name="AddAndInviteUser">
+      <input message="s0:AddAndInviteUserSoapIn"/>
+      <output message="s0:AddAndInviteUserSoapOut"/>
+      <documentation>Invite a user to an iFolder.  This call will only work with Enterprise
+            iFolders</documentation>
+    </operation>
     <operation name="InviteUser">
       <input message="s0:InviteUserSoapIn"/>
       <output message="s0:InviteUserSoapOut"/>
@@ -2063,6 +2120,12 @@
       <output message="s0:GetiFolderUserFromNodeIDHttpGetOut"/>
       <documentation>Lookup a user in a collection based on node ID.</documentation>
     </operation>
+    <operation name="AddAndInviteUser">
+      <input message="s0:AddAndInviteUserHttpGetIn"/>
+      <output message="s0:AddAndInviteUserHttpGetOut"/>
+      <documentation>Invite a user to an iFolder.  This call will only work with Enterprise
+            iFolders</documentation>
+    </operation>
     <operation name="InviteUser">
       <input message="s0:InviteUserHttpGetIn"/>
       <output message="s0:InviteUserHttpGetOut"/>
@@ -2305,6 +2368,12 @@
       <input message="s0:GetiFolderUserFromNodeIDHttpPostIn"/>
       <output message="s0:GetiFolderUserFromNodeIDHttpPostOut"/>
       <documentation>Lookup a user in a collection based on node ID.</documentation>
+    </operation>
+    <operation name="AddAndInviteUser">
+      <input message="s0:AddAndInviteUserHttpPostIn"/>
+      <output message="s0:AddAndInviteUserHttpPostOut"/>
+      <documentation>Invite a user to an iFolder.  This call will only work with Enterprise
+            iFolders</documentation>
     </operation>
     <operation name="InviteUser">
       <input message="s0:InviteUserHttpPostIn"/>
@@ -2700,6 +2769,16 @@
     </operation>
     <operation name="GetiFolderUserFromNodeID">
       <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderUserFromNodeID"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="AddAndInviteUser">
+      <soap:operation soapAction="http://novell.com/ifolder/web/AddAndInviteUser"
             style="document"/>
       <input>
         <soap:body use="literal"/>
@@ -3132,6 +3211,15 @@
         <mime:mimeXml part="Body"/>
       </output>
     </operation>
+    <operation name="AddAndInviteUser">
+      <http:operation location="/AddAndInviteUser"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
     <operation name="InviteUser">
       <http:operation location="/InviteUser"/>
       <input>
@@ -3506,6 +3594,15 @@
     </operation>
     <operation name="GetiFolderUserFromNodeID">
       <http:operation location="/GetiFolderUserFromNodeID"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="AddAndInviteUser">
+      <http:operation location="/AddAndInviteUser"/>
       <input>
         <mime:content type="application/x-www-form-urlencoded"/>
       </input>

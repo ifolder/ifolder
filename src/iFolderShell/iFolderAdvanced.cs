@@ -2163,7 +2163,14 @@ namespace Novell.iFolderCom
 					if (slMember.Added)
 					{
 						// Send the invitation.
-						slMember.iFolderUser = ifWebService.InviteUser(currentiFolder.ID, slMember.iFolderUser.UserID, slMember.iFolderUser.Rights);
+						slMember.iFolderUser = ifWebService.AddAndInviteUser(
+							currentiFolder.ID,
+							slMember.iFolderUser.Name,
+							slMember.iFolderUser.FirstName,
+							slMember.iFolderUser.Surname,
+							slMember.iFolderUser.UserID,
+							null,
+							slMember.iFolderUser.Rights);
 
 						// Update the listview item with the new object.
 						lvitem.Tag = slMember;

@@ -1346,6 +1346,105 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
+		/// WebMethod that adds a user to the domain and invites the user 
+		/// to an iFolder.
+		/// </summary>
+		/// <param name = "iFolderID">The ID of the collection representing 
+		/// the Collection to which the member is to be invited</param>
+		/// <param name="MemberName">The name of the user.</param>
+		/// <param name="GivenName">The first name of the user.</param>
+		/// <param name="FamilyName">The last name of the user.</param>
+		/// <param name = "MemberID">The ID of the member to be invited</param>
+		/// <param name="PublicKey">The users public key.</param>
+		/// <param name = "Rights">The Rights to be given to the newly invited member</param>
+		/// <returns>iFolderUser that was invited</returns>
+		[WebMethod(Description="Invite a user to an iFolder.  This call will only work with Enterprise iFolders")]
+		[SoapDocumentMethod]
+		public iFolderUser AddAndInviteUser(string iFolderID,
+											string MemberName,
+											string GivenName,
+											string FamilyName,
+											string MemberID,
+											string PublicKey,
+											string Rights)
+		{
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(iFolderID);
+			if(col == null)
+				throw new Exception("Invalid iFolderID");
+
+			Domain domain = store.GetDomain(col.Domain);
+			if(domain == null)
+				throw new Exception("Unable to access domain");
+
+			Simias.Storage.Member member = domain.GetMemberByID(MemberID);
+			if(member == null)
+			{
+				bool given;
+				member = new Simias.Storage.Member( MemberName, MemberID, Access.Rights.ReadOnly );
+
+				if ( PublicKey != null )
+				{
+					member.Properties.AddProperty( "PublicKey", PublicKey );
+				}
+
+				if ( GivenName != null && GivenName != "" )
+				{
+					member.Given = GivenName;
+					given = true;
+				}
+				else
+				{
+					given = false;
+				}
+
+				if ( FamilyName != null && FamilyName != "" )
+				{
+					member.Family = FamilyName;
+					if ( given == true )
+					{
+						member.FN = GivenName + " " + FamilyName;
+					}
+				}
+
+				domain.Commit( member );
+			}
+
+			Access.Rights newRights;
+
+			if(Rights == "Admin")
+				newRights = Access.Rights.Admin;
+			else if(Rights == "ReadOnly")
+				newRights = Access.Rights.ReadOnly;
+			else if(Rights == "ReadWrite")
+				newRights = Access.Rights.ReadWrite;
+			else
+				throw new Exception("Invalid Rights Specified");
+
+
+			// Use the POBox for the domain that this iFolder belongs to.
+			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
+						domain.ID, 
+						store.GetUserIDFromDomainID(domain.ID));
+
+			Subscription sub = poBox.CreateSubscription(col,
+										col.GetCurrentMember(),
+										"iFolder");
+
+			sub.SubscriptionRights = newRights;
+			sub.ToName = member.Name;
+			sub.ToIdentity = MemberID;
+
+			poBox.AddMessage(sub);
+
+			iFolderUser user = new iFolderUser( sub );
+			return user;
+		}
+
+
+
+		/// <summary>
 		/// WebMethod that invites a user to an iFolder.
 		/// This method only runs on an Enterprise iFolder
 		/// </summary>
