@@ -45,9 +45,14 @@ namespace Simias.Event
 		AddNodeDeleted,
 
 		/// <summary>
-		/// Add Synchronization events.
+		/// Add Collection synchronization events.
 		/// </summary>
-		AddSync,
+		AddCollectionSync,
+
+		/// <summary>
+		/// Add File synchronization events.
+		/// </summary>
+		AddFileSync,
 
 		/// <summary>
 		/// Remove Node object created event.
@@ -65,10 +70,15 @@ namespace Simias.Event
 		RemoveNodeDeleted,
 
 		/// <summary>
-		/// Remove Synchronization event.
+		/// Remove Collection synchronization event.
 		/// </summary>
-		RemoveSync
-	};
+		RemoveCollectionSync,
+
+		/// <summary>
+		/// Remove File synchronization event.
+		/// </summary>
+		RemoveFileSync
+};
 
 	/// <summary>
 	/// Used to specify to indicate only certain types of events. These filters

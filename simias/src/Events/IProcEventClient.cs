@@ -154,7 +154,8 @@ namespace Simias.Event
 		private event IProcEventHandler onCreatedNodeEvent = null;
 		private event IProcEventHandler onDeletedNodeEvent = null;
 		private event IProcEventHandler onChangedNodeEvent = null;
-		private event IProcEventHandler onSyncEvent = null;
+		private event IProcEventHandler onCollectionSyncEvent = null;
+		private event IProcEventHandler onFileSyncEvent = null;
 
 		/// <summary>
 		/// Delegate and context used to indicate an error.
@@ -725,10 +726,17 @@ namespace Simias.Event
 						break;
 					}
 
-					case IProcEventAction.AddSync:
+					case IProcEventAction.AddCollectionSync:
 					{
-						duplicateSubscriber = ( onSyncEvent != null ) ? true : false;
-						onSyncEvent += handler;
+						duplicateSubscriber = ( onCollectionSyncEvent != null ) ? true : false;
+						onCollectionSyncEvent += handler;
+						break;
+					}
+
+					case IProcEventAction.AddFileSync:
+					{
+						duplicateSubscriber = ( onFileSyncEvent != null ) ? true : false;
+						onFileSyncEvent += handler;
 						break;
 					}
 
@@ -753,10 +761,17 @@ namespace Simias.Event
 						break;
 					}
 
-					case IProcEventAction.RemoveSync:
+					case IProcEventAction.RemoveCollectionSync:
 					{
-						onSyncEvent -= handler;
-						duplicateSubscriber = ( onSyncEvent != null ) ? true : false;
+						onCollectionSyncEvent -= handler;
+						duplicateSubscriber = ( onCollectionSyncEvent != null ) ? true : false;
+						break;
+					}
+
+					case IProcEventAction.RemoveFileSync:
+					{
+						onFileSyncEvent -= handler;
+						duplicateSubscriber = ( onFileSyncEvent != null ) ? true : false;
 						break;
 					}
 				}

@@ -160,7 +160,12 @@ namespace Simias.Event
 						break;
 					}
 
-					case IProcEventAction.AddSync:
+					case IProcEventAction.AddCollectionSync:
+					{
+						break;
+					}
+
+					case IProcEventAction.AddFileSync:
 					{
 						break;
 					}
@@ -183,7 +188,12 @@ namespace Simias.Event
 						break;
 					}
 
-					case IProcEventAction.RemoveSync:
+					case IProcEventAction.RemoveCollectionSync:
+					{
+						break;
+					}
+
+					case IProcEventAction.RemoveFileSync:
 					{
 						break;
 					}
