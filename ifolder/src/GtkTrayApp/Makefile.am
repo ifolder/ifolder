@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-UILIB_CSFILES = $(srcdir)/ConflictResolver.cs $(srcdir)/ApplicationProperties.cs $(srcdir)/DirectoryEntry.cs $(srcdir)/CollectionBrowser.cs $(srcdir)/IntroDialog.cs $(srcdir)/SettingsPage.cs $(srcdir)/CrashReport.cs $(srcdir)/ReunionBrowser.cs
+UILIB_CSFILES = $(srcdir)/ServerInfoDialog.cs $(srcdir)/ConflictResolver.cs $(srcdir)/ApplicationProperties.cs $(srcdir)/DirectoryEntry.cs $(srcdir)/CollectionBrowser.cs $(srcdir)/IntroDialog.cs $(srcdir)/SettingsPage.cs $(srcdir)/CrashReport.cs $(srcdir)/ReunionBrowser.cs
 UILIB_CSFILES_CSC := $(subst /,$(SEP),$(UILIB_CSFILES))
 UILIB_INCLUDES = 
 UILIB_RESOURCES =
@@ -50,7 +50,7 @@ INSTALL_BIN_FILES = $(srcdir)/collectionbrowser $(srcdir)/ifolder
 
 INSTALL_LIB_FILES = $(srcdir)/setup-autostart
 
-GLADE_FILES = conflict-resolver.glade application-properties.glade ifolder-banner.png ifolder.glade collection-browser.glade ifolder-confirmation.glade crash-report.glade reunion-browser.glade collection.png folder.png ifolder-collision.png ifolder.png ifolderfolder.png invitewiz.png nuke.png
+GLADE_FILES = server-info.glade conflict-resolver.glade application-properties.glade ifolder-banner.png ifolder.glade collection-browser.glade ifolder-confirmation.glade crash-report.glade reunion-browser.glade collection.png folder.png ifolder-collision.png ifolder.png ifolderfolder.png invitewiz.png nuke.png
 
 IMAGE_FILES = collection.png Node.png Tombstone.png BaseContact.png folder.png ifolder.png ifolder-collision.png ifolder-shutdown.png ifolder-startup.png ifolderfolder.png file.png ifolder.gif property.png 
 

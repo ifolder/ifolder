@@ -27,6 +27,7 @@ using Novell.AddressBook.UI.gtk;
 using System.Collections;
 using Simias;
 using Simias.Sync;
+using Simias.Domain;
 using System.Diagnostics;
 using System.Threading;
 
@@ -229,6 +230,10 @@ namespace Novell.iFolder
 //			ifolder_browser_item.Activated += 
 //					new EventHandler(show_ifolder_browser);
 
+			MenuItem connect_item = new MenuItem ("Connect to Server...");
+			trayMenu.Append (connect_item);
+			connect_item.Activated += new EventHandler(show_server_info);
+
 			MenuItem InvWizard_item = new MenuItem ("Invitation Assistant");
 			trayMenu.Append (InvWizard_item);
 			InvWizard_item.Activated += new EventHandler(show_invwizard);
@@ -306,6 +311,18 @@ namespace Novell.iFolder
 			}
 		}
 
+		static void show_server_info(object o, EventArgs args)
+		{
+			SimiasLogManager.Configure(conf);
+			ServerInfoDialog sid = new ServerInfoDialog();
+			int rc = sid.Run();
+			if(rc == -5)
+			{
+				Console.WriteLine("Connecting to server...");
+				DomainAgent da = new DomainAgent(conf);
+				da.Attach(sid.Address, sid.Name, sid.Password);
+			}
+		}
 
 		static void show_help(object o, EventArgs args)
 		{
