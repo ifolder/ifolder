@@ -664,6 +664,17 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="LeaveDomain">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="DomainID" type="xs:string"/>
+            <xs:element minOccurs="1" maxOccurs="1" name="LocalOnly" type="xs:boolean"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="LeaveDomainResponse">
+        <xs:complexType/>
+      </xs:element>
       <xs:element name="GetDomains">
         <xs:complexType/>
       </xs:element>
@@ -1057,6 +1068,12 @@
   <message name="AuthenticateToDomainSoapOut">
     <part name="parameters" element="s0:AuthenticateToDomainResponse"/>
   </message>
+  <message name="LeaveDomainSoapIn">
+    <part name="parameters" element="s0:LeaveDomain"/>
+  </message>
+  <message name="LeaveDomainSoapOut">
+    <part name="parameters" element="s0:LeaveDomainResponse"/>
+  </message>
   <message name="GetDomainsSoapIn">
     <part name="parameters" element="s0:GetDomains"/>
   </message>
@@ -1348,6 +1365,11 @@
   <message name="AuthenticateToDomainHttpGetOut">
     <part name="Body" element="s0:int"/>
   </message>
+  <message name="LeaveDomainHttpGetIn">
+    <part name="DomainID" type="s:string"/>
+    <part name="LocalOnly" type="s:boolean"/>
+  </message>
+  <message name="LeaveDomainHttpGetOut"/>
   <message name="GetDomainsHttpGetIn"/>
   <message name="GetDomainsHttpGetOut">
     <part name="Body" element="s0:ArrayOfDomainWeb"/>
@@ -1628,6 +1650,11 @@
   <message name="AuthenticateToDomainHttpPostOut">
     <part name="Body" element="s0:int"/>
   </message>
+  <message name="LeaveDomainHttpPostIn">
+    <part name="DomainID" type="s:string"/>
+    <part name="LocalOnly" type="s:boolean"/>
+  </message>
+  <message name="LeaveDomainHttpPostOut"/>
   <message name="GetDomainsHttpPostIn"/>
   <message name="GetDomainsHttpPostOut">
     <part name="Body" element="s0:ArrayOfDomainWeb"/>
@@ -1885,6 +1912,11 @@
       <input message="s0:AuthenticateToDomainSoapIn"/>
       <output message="s0:AuthenticateToDomainSoapOut"/>
       <documentation>Connects to an iFolder Domain</documentation>
+    </operation>
+    <operation name="LeaveDomain">
+      <input message="s0:LeaveDomainSoapIn"/>
+      <output message="s0:LeaveDomainSoapOut"/>
+      <documentation>Removes a domain account from the workstation</documentation>
     </operation>
     <operation name="GetDomains">
       <input message="s0:GetDomainsSoapIn"/>
@@ -2149,6 +2181,11 @@
       <output message="s0:AuthenticateToDomainHttpGetOut"/>
       <documentation>Connects to an iFolder Domain</documentation>
     </operation>
+    <operation name="LeaveDomain">
+      <input message="s0:LeaveDomainHttpGetIn"/>
+      <output message="s0:LeaveDomainHttpGetOut"/>
+      <documentation>Removes a domain account from the workstation</documentation>
+    </operation>
     <operation name="GetDomains">
       <input message="s0:GetDomainsHttpGetIn"/>
       <output message="s0:GetDomainsHttpGetOut"/>
@@ -2411,6 +2448,11 @@
       <input message="s0:AuthenticateToDomainHttpPostIn"/>
       <output message="s0:AuthenticateToDomainHttpPostOut"/>
       <documentation>Connects to an iFolder Domain</documentation>
+    </operation>
+    <operation name="LeaveDomain">
+      <input message="s0:LeaveDomainHttpPostIn"/>
+      <output message="s0:LeaveDomainHttpPostOut"/>
+      <documentation>Removes a domain account from the workstation</documentation>
     </operation>
     <operation name="GetDomains">
       <input message="s0:GetDomainsHttpPostIn"/>
@@ -2863,6 +2905,15 @@
         <soap:body use="literal"/>
       </output>
     </operation>
+    <operation name="LeaveDomain">
+      <soap:operation soapAction="http://novell.com/ifolder/web/LeaveDomain" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
     <operation name="GetDomains">
       <soap:operation soapAction="http://novell.com/ifolder/web/GetDomains" style="document"/>
       <input>
@@ -3300,6 +3351,13 @@
         <mime:mimeXml part="Body"/>
       </output>
     </operation>
+    <operation name="LeaveDomain">
+      <http:operation location="/LeaveDomain"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output/>
+    </operation>
     <operation name="GetDomains">
       <http:operation location="/GetDomains"/>
       <input>
@@ -3718,6 +3776,13 @@
       <output>
         <mime:mimeXml part="Body"/>
       </output>
+    </operation>
+    <operation name="LeaveDomain">
+      <http:operation location="/LeaveDomain"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output/>
     </operation>
     <operation name="GetDomains">
       <http:operation location="/GetDomains"/>

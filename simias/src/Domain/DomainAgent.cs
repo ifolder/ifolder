@@ -311,16 +311,6 @@ namespace Simias.Domain
 		public DomainAgent()
 		{
 		}
-
-		/// <summary>
-		/// TODO: Remove this constructor once the iFolderService.cs file has been updated.
-		/// </summary>
-		/// <param name="config"></param>
-		[ Obsolete( "This call has been deprecated. Use different constructor instead.", false ) ]
-		public DomainAgent(Configuration config) :
-			this()
-		{
-		}
 		#endregion
 
 		#region Private Methods
