@@ -1,6 +1,8 @@
 // project created on 4/15/04 at 9:12 a
 using System;
 using System.Collections;
+using System.Net;
+using System.Net.Sockets;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels.Http;
 using System.Runtime.Remoting.Channels;
@@ -547,7 +549,11 @@ class mDnsCmd
 									log.Info("");
 									log.Info("ID:      " + rha.ID);
 									log.Info("Host:    " + rha.Name);
-									log.Info("Address: " + rha.PrefAddress);
+
+									foreach(IPAddress ipAddr in rha.GetIPAddresses())
+									{
+										log.Info("Address: " + ipAddr.ToString());
+									}
 								}
 							}
 
