@@ -345,6 +345,7 @@ src/install-simias-to-gac
 src/Common/Library/SimiasSetup.cs
 src/Simias.dll/Makefile
 src/Events/Makefile
+src/POBox/Makefile
 src/mDnsService/Makefile
 src/SyncManager/Makefile
 package/Makefile

@@ -19,6 +19,10 @@ Project("{8BC9CEB9-8B4A-11D0-8D11-00A0C91BC942}") = "EventService.exe", "src\Eve
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POService", "src\POBox\POService.csproj", "{B73D723A-44A5-4844-82CD-C6BB126A75AD}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -43,6 +47,10 @@ Global
 		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Release.Build.0 = Release|.NET
 		{9AE39681-152A-4B55-A25F-A5F05690200A}.Debug.ActiveCfg = Debug
 		{9AE39681-152A-4B55-A25F-A5F05690200A}.Release.ActiveCfg = Debug
+		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Debug.ActiveCfg = Debug|.NET
+		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Debug.Build.0 = Debug|.NET
+		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Release.ActiveCfg = Release|.NET
+		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
