@@ -116,7 +116,7 @@ namespace Simias.Invite.Tests
 			invitation.Identity = store.CurrentUserGuid;
 			invitation.Owner = store.CurrentUserGuid;
 			invitation.Domain = "test";
-			invitation.MasterUri = new Uri("http://192.168.2.1:6437");
+			invitation.MasterUrl = new Uri("http://192.168.2.1:6437");
 			invitation.CollectionRights = Access.Rights.ReadWrite.ToString();
 			invitation.Message = "Our Team's New Collection";
 
