@@ -25,6 +25,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "CSPStore.h"
+#include <stdio.h>
 
 FLMUINT	CSPTypeToFlaimTypeArray[] =
 {	
@@ -133,6 +134,8 @@ FLMUNICODE* flmstrstr(FLMUNICODE* s1, FLMUNICODE* s2)
 } // flmstrstr()
 
 
+wchar_t	CSPDB::nameSuffex[] = L"_index";
+
 CSPDB::CSPDB() :
 	m_flaimInitialized(false)
 {
@@ -178,6 +181,12 @@ void CSPDB::SetupNameTable(HFDB hFlaim)
 	}
 
 	nameTable.clearTable();
+
+	pIndexIDTable = new FLMUINT[indexTSize];
+	for (int i = 0; i < indexTSize; ++i)
+	{
+		pIndexIDTable[i] = 0;
+	}
 }
 
 RCODE CSPDB::initializeDB(HFDB hFlaim, FLMBOOL created)
@@ -319,18 +328,19 @@ RCODE CSPDB::AddIndex(HFDB hFlaim, FLMUNICODE *pFieldName, FLMUINT fieldId)
 {
 	RCODE			rc = FERR_OK;
 	FlmRecord		*pRec = NULL;
+	void			*pvIndex;
 	void			*pvField = 0;
+	void			*pvKey = 0;
 	FLMUNICODE*		pIndexName;
 	int				nameLen;
 	int				buffLen;
 	FLMUINT			indexId = 0;
-	wchar_t			nameSuffex[] = L"_index";
-
+	
  	pRec = new FlmDefaultRec();
  	if (pRec != NULL)
  	{
  		// Add the index.
- 		rc = pRec->insertLast(0, FLM_INDEX_TAG, FLM_TEXT_TYPE, &pvField);
+ 		rc = pRec->insertLast(0, FLM_INDEX_TAG, FLM_TEXT_TYPE, &pvIndex);
  		if (RC_OK(rc))
  		{
 			// Create the index name.
@@ -341,21 +351,31 @@ RCODE CSPDB::AddIndex(HFDB hFlaim, FLMUNICODE *pFieldName, FLMUINT fieldId)
 			{
 				f_unicpy(pIndexName, pFieldName);
 				f_unicpy(pIndexName + nameLen, (FLMUNICODE*)nameSuffex);
-				rc = pRec->setUnicode(pvField, (FLMUNICODE*)pIndexName);
+				rc = pRec->setUnicode(pvIndex, (FLMUNICODE*)pIndexName);
 				if (RC_OK(rc))
 				{
 					// Add the key.
-					rc = pRec->insert(pvField, INSERT_LAST_CHILD, FLM_KEY_TAG, FLM_TEXT_TYPE, &pvField);
+					rc = pRec->insert(pvIndex, INSERT_LAST_CHILD, FLM_KEY_TAG, FLM_TEXT_TYPE, &pvKey);
 					if (RC_OK(rc))
 					{
+						// Add the collection
+						rc = pRec->insert(pvKey, INSERT_LAST_CHILD, FLM_FIELD_TAG, FLM_NUMBER_TYPE, &pvField);
+						if (RC_OK(rc))
+						{
+							rc = pRec->setINT(pvField, CS_Id_CollectionId);
+						}
 						// Add the field.
-						rc = pRec->insert(pvField, INSERT_LAST_CHILD, FLM_FIELD_TAG, FLM_NUMBER_TYPE, &pvField);
+						rc = pRec->insert(pvKey, INSERT_FIRST_CHILD, FLM_FIELD_TAG, FLM_NUMBER_TYPE, &pvField);
 						if (RC_OK(rc))
 						{
 							rc = pRec->setINT(pvField, fieldId);
 							if (RC_OK(rc))
 							{
 								rc = FlmRecordAdd(hFlaim, FLM_DICT_CONTAINER, &indexId, pRec, 0);
+								if (RC_OK(rc))
+								{
+									rc = m_NameTable.addTag((FLMUNICODE*)pIndexName, 0, indexId, 0, 0, TRUE);
+								}
 							}
 						}
 						else
@@ -376,6 +396,38 @@ RCODE CSPDB::AddIndex(HFDB hFlaim, FLMUNICODE *pFieldName, FLMUINT fieldId)
 
 	return (rc);
 } // CSPDB::AddIndex()
+
+
+RCODE CSPDB::GetIndexId(FLMUNICODE *pFieldName, FLMUINT fieldID, FLMUINT *pId)
+{
+	RCODE rc = FERR_OK;
+
+	*pId = 0;
+
+	if (fieldID < indexTSize)
+		*pId = pIndexIDTable[fieldID];
+	
+	if (*pId == 0)
+	{
+		// Create the index name.
+		int nameLen = f_unilen(pFieldName);
+		int buffLen = nameLen + sizeof(nameSuffex) + 1;
+		FLMUNICODE *pIndexName = new FLMUNICODE[buffLen];
+		if (pIndexName)
+		{
+			f_unicpy(pIndexName, pFieldName);
+			f_unicpy(pIndexName + nameLen, (FLMUNICODE*)nameSuffex);
+			if (!m_NameTable.getFromTagName(pIndexName, 0, pId, 0, 0))
+			{
+				rc = FERR_BAD_FIELD_NUM;
+			}
+			if (fieldID < indexTSize)
+				pIndexIDTable[fieldID] = *pId;
+			delete [] pIndexName;
+		}
+	}
+	return rc;
+} // CSPDB::GetIndexId()
 
 
 
@@ -988,6 +1040,13 @@ RCODE CSPStore::Search(FLMUNICODE *pCollectionId, FLMUNICODE *pProperty, FLMINT 
 			rc = FlmCursorInit(m_hFlaim, FLM_DATA_CONTAINER, &cursor);
 			if (RC_OK(rc))
 			{
+				FLMUINT indexId;
+				// Setup the index to use
+				if (RC_OK(m_pDB->GetIndexId(pProperty, fieldId, &indexId)))
+				{
+					FlmCursorConfig(cursor, FCURSOR_SET_FLM_IX, (void *)indexId, NULL);
+				}
+
 				if (caseSensitive)
 				{
 					rc = FlmCursorSetMode(cursor, FLM_CASE | FLM_WILD);

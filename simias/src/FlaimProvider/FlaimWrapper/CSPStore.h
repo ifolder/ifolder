@@ -213,6 +213,7 @@ public:
 	RCODE initializeDB(HFDB hFlaim, FLMBOOL created);
 	RCODE RegisterField(HFDB hFlaim, FLMUNICODE *pFieldName, FLMUINT type, FLMUINT* pFieldId);
 	RCODE AddIndex(HFDB hFlaim, FLMUNICODE *pFieldName, FLMUINT fieldId);
+	RCODE CSPDB::GetIndexId(FLMUNICODE *pFieldName, FLMUINT fieldID, FLMUINT *pId);
 
 private:
 	RCODE registerFieldArray(HFDB hFlaim, CS_FIELD_DEF *fieldTable, FLMINT count);
@@ -223,6 +224,9 @@ public:
 	F_NameTable		m_NameTable;
 	FLMINT			m_RefCount;
 	FLMBOOL			m_flaimInitialized;
+	static wchar_t	nameSuffex[];
+	const static int indexTSize = 1024;
+	FLMUINT			*pIndexIDTable;
 };
 
 class CSPStore  
