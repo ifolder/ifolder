@@ -30,6 +30,10 @@
 #include <gtk/gtk.h>
 #include <glib/gi18n-lib.h>
 #include <string.h>
+#include <stdio.h>
+
+#include "iFolderClientStub.h"
+#include "iFolderClient.nsmap"
 
 typedef struct {
 	GObject parent_slot;
@@ -46,6 +50,11 @@ static void ifolder_nautilus_instance_init (iFolderNautilus *ifn);
 
 static GObjectClass * parent_class = NULL;
 static GType ifolder_nautilus_type;
+
+/**
+ * gSOAP variables
+ */
+struct soap soap;
 
 /**
  * Utility functions
@@ -86,17 +95,26 @@ is_ifolder (NautilusFileInfo *file)
 
 	folder_path = get_file_path (file);
 	if (folder_path != NULL) {
-		/* FIXME: Call the IsiFolder(folder_path) in iFolder.asmx */
-		if (
-				(!strcmp (folder_path, "/home/boyd"))
-				|| (!strcmp (folder_path, "/home/boyd/ifolder"))
-				|| (!strcmp (folder_path, "/tmp"))
-				|| (!strcmp (folder_path, "/home/boyd/download"))
-			)
-		{
-			b_is_ifolder = TRUE;
+		g_print ("****About to call IsiFolder (");
+		g_print (folder_path);
+		g_print (")...\n");
+		struct _ns1__IsiFolder ns1__IsiFolder;
+		struct _ns1__IsiFolderResponse ns1__IsiFolderResponse;
+		ns1__IsiFolder.LocalPath = folder_path;
+		soap_call___ns1__IsiFolder (&soap, 
+									NULL, 
+									NULL, 
+									&ns1__IsiFolder, 
+									&ns1__IsiFolderResponse);
+		if (soap.error) {
+			g_print ("****error calling IsiFolder***\n");
+			soap_print_fault (&soap, stderr);
+		} else {
+			g_print ("***calling IsiFolder succeeded***\n");
+			if (ns1__IsiFolderResponse.IsiFolderResult)
+				b_is_ifolder = TRUE;
 		}
-		
+
 		g_free (folder_path);
 	}
 
@@ -114,13 +132,27 @@ can_be_ifolder (NautilusFileInfo *file)
 		
 	folder_path = get_file_path (file);
 	if (folder_path != NULL) {
-		/* FIXME: Call CanBeiFolder in iFolder.asmx instead of this hard-coding */
-		if ((!strcmp (folder_path, "/"))
-			|| (!strcmp (folder_path, "/usr"))
-			|| (!strcmp (folder_path, "/bin"))
-			|| (!strcmp (folder_path, "/opt"))) {
-			b_can_be_ifolder = FALSE;
+		g_print ("****About to call CanBeiFolder (");
+		g_print (folder_path);
+		g_print (")...\n");
+		struct _ns1__CanBeiFolder ns1__CanBeiFolder;
+		struct _ns1__CanBeiFolderResponse ns1__CanBeiFolderResponse;
+		ns1__CanBeiFolder.LocalPath = folder_path;
+		soap_call___ns1__CanBeiFolder (&soap,
+									   NULL, 
+									   NULL, 
+									   &ns1__CanBeiFolder, 
+									   &ns1__CanBeiFolderResponse);
+		if (soap.error) {
+			g_print ("****error calling CanBeiFolder***\n");
+			soap_print_fault (&soap, stderr);
+		} else {
+			g_print ("***calling CanBeiFolder succeeded***\n");
+			if (!ns1__CanBeiFolderResponse.CanBeiFolderResult)
+				b_can_be_ifolder = FALSE;
 		}
+		
+		g_free (folder_path);
 	}
 	
 	return b_can_be_ifolder;
@@ -133,9 +165,35 @@ create_local_ifolder (NautilusFileInfo *file)
 	
 	folder_path = get_file_path (file);
 	if (folder_path != NULL) {
-		/* FIXME: Call CreateLocaliFolder (folder_path) in iFolder.asmx */
-		
+		g_print ("****About to call CreateLocaliFolder (");
+		g_print (folder_path);
+		g_print (")...\n");
+		struct _ns1__CreateLocaliFolder ns1__CreateLocaliFolder;
+		struct _ns1__CreateLocaliFolderResponse ns1__CreateLocaliFolderResponse;
+		ns1__CreateLocaliFolder.Path = folder_path;
+		soap_call___ns1__CreateLocaliFolder (&soap, 
+											 NULL, 
+											 NULL, 
+											 &ns1__CreateLocaliFolder, 
+											 &ns1__CreateLocaliFolderResponse);
 		g_free (folder_path);
+		if (soap.error) {
+			g_print ("****error calling CreateLocaliFolder***\n");
+			soap_print_fault (&soap, stderr);
+			return -1;
+		} else {
+			g_print ("***calling CreateLocaliFolder succeeded***\n");
+			struct ns1__iFolderWeb *ifolder = 
+				ns1__CreateLocaliFolderResponse.CreateLocaliFolderResult;
+			if (ifolder == NULL) {
+				g_print ("***The created iFolder is NULL\n");
+				return -1;
+			} else {
+				g_print ("***The created iFolder's ID is: ");
+				g_print (ifolder->ID);
+				g_print ("\n");
+			}
+		}
 	} else {
 		/* Error getting the folder path */
 		return -1;
@@ -152,8 +210,35 @@ get_ifolder_id_by_local_path (gchar *path)
 	ifolder_id = NULL;
 
 	if (path != NULL) {
-		/* FIXME: Call GetiFolderByLocalPath and do a strdup () on the ID */
-		ifolder_id = strdup ("FIXME: iFolder ID goes here");
+		g_print ("****About to call GetiFolderByLocalPath (");
+		g_print (path);
+		g_print (")...\n");
+		struct _ns1__GetiFolderByLocalPath ns1__GetiFolderByLocalPath;
+		struct _ns1__GetiFolderByLocalPathResponse ns1__GetiFolderByLocalPathResponse;
+		ns1__GetiFolderByLocalPath.LocalPath = path;
+		soap_call___ns1__GetiFolderByLocalPath (&soap, 
+										NULL, 
+										NULL, 
+										&ns1__GetiFolderByLocalPath, 
+										&ns1__GetiFolderByLocalPathResponse);
+		if (soap.error) {
+			g_print ("****error calling GetiFolderByLocalPath***\n");
+			soap_print_fault (&soap, stderr);
+			return -1;
+		} else {
+			g_print ("***calling GetiFolderByLocalPath succeeded***\n");
+			struct ns1__iFolderWeb *ifolder = 
+				ns1__GetiFolderByLocalPathResponse.GetiFolderByLocalPathResult;
+			if (ifolder == NULL) {
+				g_print ("***GetiFolderByLocalPath returned NULL\n");
+				return -1;
+			} else {
+				g_print ("***The iFolder's ID is: ");
+				g_print (ifolder->ID);
+				g_print ("\n");
+				ifolder_id = strdup (ifolder->ID);
+			}
+		}
 	}
 
 	return ifolder_id;
@@ -168,13 +253,36 @@ revert_ifolder (NautilusFileInfo *file)
 	folder_path = get_file_path (file);
 	if (folder_path != NULL) {
 		ifolder_id = get_ifolder_id_by_local_path (folder_path);
-		if (ifolder_id != NULL) {
-			/* FIXME: Call RevertiFolder (ifolder_id) in iFolder.asmx */
-			
-			g_free (ifolder_id);
-		}
-		
 		g_free (folder_path);
+		if (ifolder_id != NULL) {
+			g_print ("****About to call RevertiFolder ()\n");
+			struct _ns1__RevertiFolder ns1__RevertiFolder;
+			struct _ns1__RevertiFolderResponse ns1__RevertiFolderResponse;
+			ns1__RevertiFolder.iFolderID = ifolder_id;
+			soap_call___ns1__RevertiFolder (&soap, 
+												 NULL, 
+												 NULL, 
+												 &ns1__RevertiFolder, 
+												 &ns1__RevertiFolderResponse);
+			g_free (ifolder_id);
+			if (soap.error) {
+				g_print ("****error calling RevertiFolder***\n");
+				soap_print_fault (&soap, stderr);
+				return -1;
+			} else {
+				g_print ("***calling RevertiFolder succeeded***\n");
+				struct ns1__iFolderWeb *ifolder = 
+					ns1__RevertiFolderResponse.RevertiFolderResult;
+				if (ifolder == NULL) {
+					g_print ("***The reverted iFolder is NULL\n");
+					return -1;
+				} else {
+					g_print ("***The reverted iFolder's ID was: ");
+					g_print (ifolder->ID);
+					g_print ("\n");
+				}
+			}
+		}
 	} else {
 		/* Error getting the folder path */
 		return -1;
@@ -231,7 +339,7 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 
 	files = g_object_get_data (G_OBJECT (item), "files");
 	file = NAUTILUS_FILE_INFO (files->data);
-	g_object_unref (G_OBJECT (files->data));
+//	g_object_unref (G_OBJECT (files->data));
 	if (file == NULL)
 		return;
 
@@ -239,6 +347,8 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	if (error) {
 		/* FIXME: Figure out how to let the user know an error happened */
 		g_print ("An error occurred creating an iFolder\n");
+	} else {
+		nautilus_file_info_invalidate_extension_info (file);
 	}
 }
 
@@ -253,7 +363,7 @@ revert_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 
 	files = g_object_get_data (G_OBJECT (item), "files");
 	file = NAUTILUS_FILE_INFO (files->data);
-	g_object_unref (G_OBJECT (files->data));
+//	g_object_unref (G_OBJECT (files->data));
 	if (file == NULL)
 		return;
 
@@ -261,6 +371,8 @@ revert_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	if (error) {
 		/* FIXME: Figure out how to let the user know an error happened */
 		g_print ("An error occurred reverting an iFolder\n");
+	} else {
+		nautilus_file_info_invalidate_extension_info (file);
 	}
 }
 
@@ -311,13 +423,6 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 	if (!nautilus_file_info_is_directory (file))
 		return NULL;
 		
-	/**
-	 * If the iFolder API says that the current file cannot be an iFolder, don't
-	 * add any iFolder context menus.
-	 */
-	if (!can_be_ifolder (file))
-		return NULL;
-
 	items = NULL;
 
 	if (is_ifolder (file)) {
@@ -373,6 +478,13 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 					nautilus_file_info_list_copy (files));
 		items = g_list_append (items, item);
 	} else {
+		/**
+		 * If the iFolder API says that the current file cannot be an iFolder,
+		 * don't add any iFolder context menus.
+		 */
+		if (!can_be_ifolder (file))
+			return NULL;
+
 		/* Menu item: Convert to an iFolder */
 		item = nautilus_menu_item_new ("NautilusiFolder::create_ifolder",
 					_("Convert to an iFolder"),
@@ -467,12 +579,19 @@ nautilus_module_initialize (GTypeModule *module)
 	g_print ("Initializing nautilus-ifolder extension\n");
 	ifolder_extension_register_type (module);
 	provider_types[0] = ifolder_nautilus_get_type ();
+	
+	/* Initialize gSOAP */
+	soap_init (&soap);
+	soap_set_namespaces (&soap, iFolderClient_namespaces);
 }
 
 void
 nautilus_module_shutdown (void)
 {
 	g_print ("Shutting down nautilus-ifolder extension\n");
+	
+	/* Cleanup gSOAP */
+	soap_end (&soap);
 }
 
 void
