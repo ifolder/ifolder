@@ -5,7 +5,7 @@ DIST_SUBDIRS = $(SUBDIRS)
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-UILIB_CSFILES = $(srcdir)/iFolderConflictDialog.cs $(srcdir)/iFolderAcceptDialog.cs $(srcdir)/iFolderUserSelector.cs $(srcdir)/iFolderLoginDialog.cs $(srcdir)/iFolderPropSettingsPage.cs $(srcdir)/iFolderPropSharingPage.cs $(srcdir)/iFolderPropertiesDialog.cs $(srcdir)/iFolderCrashDialog.cs $(srcdir)/iFolderMsgDialog.cs $(srcdir)/iFolderWindow.cs $(srcdir)/iFolderCreationDialog.cs $(srcdir)/iFolderExceptionDialog.cs $(srcdir)/iFolderAccessDialog.cs $(srcdir)/iFolderTreeView.cs $(srcdir)/NotifyWindow.cs $(srcdir)/CompatFileChooserDialog.cs
+UILIB_CSFILES = $(srcdir)/iFolderConflictDialog.cs $(srcdir)/iFolderAcceptDialog.cs $(srcdir)/iFolderUserSelector.cs $(srcdir)/iFolderLoginDialog.cs $(srcdir)/iFolderPropSettingsPage.cs $(srcdir)/iFolderPropSharingPage.cs $(srcdir)/iFolderPropertiesDialog.cs $(srcdir)/iFolderCrashDialog.cs $(srcdir)/iFolderMsgDialog.cs $(srcdir)/iFolderWindow.cs $(srcdir)/iFolderCreationDialog.cs $(srcdir)/iFolderExceptionDialog.cs $(srcdir)/iFolderAccessDialog.cs $(srcdir)/iFolderTreeView.cs $(srcdir)/NotifyWindow.cs $(srcdir)/CompatFileChooserDialog.cs $(srcdir)/ClientConfig.cs
 UILIB_CSFILES_CSC := $(subst /,$(SEP),$(UILIB_CSFILES))
 UILIB_INCLUDES = 
 UILIB_RESOURCES =

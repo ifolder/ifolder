@@ -230,7 +230,9 @@ namespace Novell.iFolder
 
 		private void OniFolderAddedEvent(object o, iFolderAddedEventArgs args)
 		{
-			if(args.iFolder.IsSubscription)
+			if(args.iFolder.IsSubscription &&
+				(ClientConfig.Get(ClientConfig.KEY_NOTIFY_IFOLDERS, "true") 
+							== "true"))
 			{
 				NotifyWindow notifyWin = new NotifyWindow(
 						tIcon, 
@@ -258,14 +260,19 @@ namespace Novell.iFolder
 			}
 			else
 			{
-				NotifyWindow notifyWin = new NotifyWindow(
+				if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_COLLISIONS, 
+						"true") == "true")
+				{
+					NotifyWindow notifyWin = new NotifyWindow(
 						tIcon, Util.GS("Action Required"),
 						string.Format(Util.GS("A collision has been detected in iFolder \"{0}\""), args.iFolder.Name),
 						Gtk.MessageType.Info, 10000);
-				notifyWin.ShowAll();
+					notifyWin.ShowAll();
+				}
 
 				if(ifwin != null)
 					ifwin.iFolderHasConflicts(args.iFolder);
+
 			}
 		}
 
@@ -280,17 +287,19 @@ namespace Novell.iFolder
 		}
 
 
-
-
 		private void OniFolderUserAddedEvent(object o,
 									iFolderUserAddedEventArgs args)
 		{
-			NotifyWindow notifyWin = new NotifyWindow(
-				tIcon, Util.GS("New iFolder User"), 
-				string.Format(Util.GS("{0} has joined an iFolder"), args.iFolderUser.Name),
-				Gtk.MessageType.Info, 10000);
+			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_USERS, "true") 
+							== "true")
+			{
+				NotifyWindow notifyWin = new NotifyWindow(
+					tIcon, Util.GS("New iFolder User"), 
+					string.Format(Util.GS("{0} has joined an iFolder"), args.iFolderUser.Name),
+					Gtk.MessageType.Info, 10000);
 
-			notifyWin.ShowAll();
+				notifyWin.ShowAll();
+			}
 							
 			// TODO: update any open windows?
 //			if(ifwin != null)
