@@ -30,6 +30,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.IO;
 using System.Net;
+using System.Globalization;
 using Simias.Client;
 using Simias.Client.Event;
 
@@ -1582,6 +1583,39 @@ namespace Novell.iFolderCom
 		}
 		#endregion
 
+		#region Public Methods
+		/// <summary>
+		/// Gets the name of the language directory where resource files are installed.
+		/// </summary>
+		/// <returns>The name of the language directory.</returns>
+		static public string GetLanguageDirectory()
+		{
+			string languageDirectory;
+
+			switch (CultureInfo.CurrentCulture.Name)
+			{
+				case "pt-BR":
+				case "fr-FR":
+				case "de":
+				case "it-IT":
+				case "ja-JP":
+				case "ru-RU":
+				case "es":
+				{
+					languageDirectory = CultureInfo.CurrentCulture.Name;
+					break;
+				}
+				default:
+				{
+					languageDirectory = "en";
+					break;
+				}
+			}
+
+			return languageDirectory;
+		}
+		#endregion
+
 		#region Private Methods
 		private void nodeEvent(iFolderWeb ifolder, iFolderUser ifolderUser, string eventData)
 		{
@@ -1939,6 +1973,20 @@ namespace Novell.iFolderCom
 				mmb.ShowDialog();
 			}
 
+/*			long sizeLimit;
+
+			try
+			{
+				sizeLimit = ifWebService.GetiFolderFileSizeLimit(currentiFolder.ID);
+				sizeLimit = ifWebService.GetMemberiFolderFileSizeLimit(currentUser.UserID, currentiFolder.ID);
+
+				long newLimit = 50;
+				ifWebService.SetiFolderFileSizeLimit(currentiFolder.ID, newLimit);
+			}
+			catch (Exception ex)
+			{
+			}
+*/
 			shareWith.EndUpdate();
 
 			// Enable/disable the Add button.
@@ -2414,8 +2462,8 @@ namespace Novell.iFolderCom
 		#region Event Handlers
 		private void iFolderAdvanced_Load(object sender, EventArgs e)
 		{
-			// TODO: - use locale-specific path.
-//			helpProvider1.HelpNamespace = Path.Combine(loadPath, @"help\en\doc\user\data\front.html");
+			// Reference the help using locale-specific path.
+			helpProvider1.HelpNamespace = Path.Combine(Path.Combine(Path.Combine(loadPath, "help"), GetLanguageDirectory()), @"doc\user\data\bq6lwlu.html");
 
 			// Image list...
 			try

@@ -97,6 +97,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.ColumnHeader columnHeader1;
 		private System.Windows.Forms.CheckBox enableAccount;
 		private System.Windows.Forms.Button activate;
+		private System.Windows.Forms.HelpProvider helpProvider1;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -180,6 +181,7 @@ namespace Novell.FormsTrayApp
 			this.apply = new System.Windows.Forms.Button();
 			this.ok = new System.Windows.Forms.Button();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
+			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
@@ -198,6 +200,9 @@ namespace Novell.FormsTrayApp
 			this.defaultInterval.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("defaultInterval.Dock")));
 			this.defaultInterval.Enabled = ((bool)(resources.GetObject("defaultInterval.Enabled")));
 			this.defaultInterval.Font = ((System.Drawing.Font)(resources.GetObject("defaultInterval.Font")));
+			this.helpProvider1.SetHelpKeyword(this.defaultInterval, resources.GetString("defaultInterval.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.defaultInterval, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("defaultInterval.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.defaultInterval, resources.GetString("defaultInterval.HelpString"));
 			this.defaultInterval.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("defaultInterval.ImeMode")));
 			this.defaultInterval.Increment = new System.Decimal(new int[] {
 																			  5,
@@ -217,6 +222,7 @@ namespace Novell.FormsTrayApp
 																			-2147483648});
 			this.defaultInterval.Name = "defaultInterval";
 			this.defaultInterval.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("defaultInterval.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.defaultInterval, ((bool)(resources.GetObject("defaultInterval.ShowHelp"))));
 			this.defaultInterval.Size = ((System.Drawing.Size)(resources.GetObject("defaultInterval.Size")));
 			this.defaultInterval.TabIndex = ((int)(resources.GetObject("defaultInterval.TabIndex")));
 			this.defaultInterval.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("defaultInterval.TextAlign")));
@@ -236,6 +242,9 @@ namespace Novell.FormsTrayApp
 			this.displayConfirmation.Enabled = ((bool)(resources.GetObject("displayConfirmation.Enabled")));
 			this.displayConfirmation.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("displayConfirmation.FlatStyle")));
 			this.displayConfirmation.Font = ((System.Drawing.Font)(resources.GetObject("displayConfirmation.Font")));
+			this.helpProvider1.SetHelpKeyword(this.displayConfirmation, resources.GetString("displayConfirmation.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.displayConfirmation, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("displayConfirmation.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.displayConfirmation, resources.GetString("displayConfirmation.HelpString"));
 			this.displayConfirmation.Image = ((System.Drawing.Image)(resources.GetObject("displayConfirmation.Image")));
 			this.displayConfirmation.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("displayConfirmation.ImageAlign")));
 			this.displayConfirmation.ImageIndex = ((int)(resources.GetObject("displayConfirmation.ImageIndex")));
@@ -243,6 +252,7 @@ namespace Novell.FormsTrayApp
 			this.displayConfirmation.Location = ((System.Drawing.Point)(resources.GetObject("displayConfirmation.Location")));
 			this.displayConfirmation.Name = "displayConfirmation";
 			this.displayConfirmation.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("displayConfirmation.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.displayConfirmation, ((bool)(resources.GetObject("displayConfirmation.ShowHelp"))));
 			this.displayConfirmation.Size = ((System.Drawing.Size)(resources.GetObject("displayConfirmation.Size")));
 			this.displayConfirmation.TabIndex = ((int)(resources.GetObject("displayConfirmation.TabIndex")));
 			this.displayConfirmation.Text = resources.GetString("displayConfirmation.Text");
@@ -259,6 +269,9 @@ namespace Novell.FormsTrayApp
 			this.label2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label2.Dock")));
 			this.label2.Enabled = ((bool)(resources.GetObject("label2.Enabled")));
 			this.label2.Font = ((System.Drawing.Font)(resources.GetObject("label2.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label2, resources.GetString("label2.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label2, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label2.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label2, resources.GetString("label2.HelpString"));
 			this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
 			this.label2.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.ImageAlign")));
 			this.label2.ImageIndex = ((int)(resources.GetObject("label2.ImageIndex")));
@@ -266,6 +279,7 @@ namespace Novell.FormsTrayApp
 			this.label2.Location = ((System.Drawing.Point)(resources.GetObject("label2.Location")));
 			this.label2.Name = "label2";
 			this.label2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label2.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label2, ((bool)(resources.GetObject("label2.ShowHelp"))));
 			this.label2.Size = ((System.Drawing.Size)(resources.GetObject("label2.Size")));
 			this.label2.TabIndex = ((int)(resources.GetObject("label2.TabIndex")));
 			this.label2.Text = resources.GetString("label2.Text");
@@ -285,6 +299,9 @@ namespace Novell.FormsTrayApp
 			this.tabControl1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabControl1.Dock")));
 			this.tabControl1.Enabled = ((bool)(resources.GetObject("tabControl1.Enabled")));
 			this.tabControl1.Font = ((System.Drawing.Font)(resources.GetObject("tabControl1.Font")));
+			this.helpProvider1.SetHelpKeyword(this.tabControl1, resources.GetString("tabControl1.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.tabControl1, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("tabControl1.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.tabControl1, resources.GetString("tabControl1.HelpString"));
 			this.tabControl1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tabControl1.ImeMode")));
 			this.tabControl1.ItemSize = ((System.Drawing.Size)(resources.GetObject("tabControl1.ItemSize")));
 			this.tabControl1.Location = ((System.Drawing.Point)(resources.GetObject("tabControl1.Location")));
@@ -292,6 +309,7 @@ namespace Novell.FormsTrayApp
 			this.tabControl1.Padding = ((System.Drawing.Point)(resources.GetObject("tabControl1.Padding")));
 			this.tabControl1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("tabControl1.RightToLeft")));
 			this.tabControl1.SelectedIndex = 0;
+			this.helpProvider1.SetShowHelp(this.tabControl1, ((bool)(resources.GetObject("tabControl1.ShowHelp"))));
 			this.tabControl1.ShowToolTips = ((bool)(resources.GetObject("tabControl1.ShowToolTips")));
 			this.tabControl1.Size = ((System.Drawing.Size)(resources.GetObject("tabControl1.Size")));
 			this.tabControl1.TabIndex = ((int)(resources.GetObject("tabControl1.TabIndex")));
@@ -313,11 +331,15 @@ namespace Novell.FormsTrayApp
 			this.tabGeneral.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabGeneral.Dock")));
 			this.tabGeneral.Enabled = ((bool)(resources.GetObject("tabGeneral.Enabled")));
 			this.tabGeneral.Font = ((System.Drawing.Font)(resources.GetObject("tabGeneral.Font")));
+			this.helpProvider1.SetHelpKeyword(this.tabGeneral, resources.GetString("tabGeneral.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.tabGeneral, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("tabGeneral.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.tabGeneral, resources.GetString("tabGeneral.HelpString"));
 			this.tabGeneral.ImageIndex = ((int)(resources.GetObject("tabGeneral.ImageIndex")));
 			this.tabGeneral.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tabGeneral.ImeMode")));
 			this.tabGeneral.Location = ((System.Drawing.Point)(resources.GetObject("tabGeneral.Location")));
 			this.tabGeneral.Name = "tabGeneral";
 			this.tabGeneral.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("tabGeneral.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.tabGeneral, ((bool)(resources.GetObject("tabGeneral.ShowHelp"))));
 			this.tabGeneral.Size = ((System.Drawing.Size)(resources.GetObject("tabGeneral.Size")));
 			this.tabGeneral.TabIndex = ((int)(resources.GetObject("tabGeneral.TabIndex")));
 			this.tabGeneral.Text = resources.GetString("tabGeneral.Text");
@@ -337,10 +359,14 @@ namespace Novell.FormsTrayApp
 			this.groupBox4.Enabled = ((bool)(resources.GetObject("groupBox4.Enabled")));
 			this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.groupBox4.Font = ((System.Drawing.Font)(resources.GetObject("groupBox4.Font")));
+			this.helpProvider1.SetHelpKeyword(this.groupBox4, resources.GetString("groupBox4.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.groupBox4, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("groupBox4.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.groupBox4, resources.GetString("groupBox4.HelpString"));
 			this.groupBox4.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox4.ImeMode")));
 			this.groupBox4.Location = ((System.Drawing.Point)(resources.GetObject("groupBox4.Location")));
 			this.groupBox4.Name = "groupBox4";
 			this.groupBox4.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox4.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.groupBox4, ((bool)(resources.GetObject("groupBox4.ShowHelp"))));
 			this.groupBox4.Size = ((System.Drawing.Size)(resources.GetObject("groupBox4.Size")));
 			this.groupBox4.TabIndex = ((int)(resources.GetObject("groupBox4.TabIndex")));
 			this.groupBox4.TabStop = false;
@@ -359,6 +385,9 @@ namespace Novell.FormsTrayApp
 			this.notifyCollisions.Enabled = ((bool)(resources.GetObject("notifyCollisions.Enabled")));
 			this.notifyCollisions.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("notifyCollisions.FlatStyle")));
 			this.notifyCollisions.Font = ((System.Drawing.Font)(resources.GetObject("notifyCollisions.Font")));
+			this.helpProvider1.SetHelpKeyword(this.notifyCollisions, resources.GetString("notifyCollisions.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.notifyCollisions, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("notifyCollisions.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.notifyCollisions, resources.GetString("notifyCollisions.HelpString"));
 			this.notifyCollisions.Image = ((System.Drawing.Image)(resources.GetObject("notifyCollisions.Image")));
 			this.notifyCollisions.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyCollisions.ImageAlign")));
 			this.notifyCollisions.ImageIndex = ((int)(resources.GetObject("notifyCollisions.ImageIndex")));
@@ -366,6 +395,7 @@ namespace Novell.FormsTrayApp
 			this.notifyCollisions.Location = ((System.Drawing.Point)(resources.GetObject("notifyCollisions.Location")));
 			this.notifyCollisions.Name = "notifyCollisions";
 			this.notifyCollisions.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("notifyCollisions.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.notifyCollisions, ((bool)(resources.GetObject("notifyCollisions.ShowHelp"))));
 			this.notifyCollisions.Size = ((System.Drawing.Size)(resources.GetObject("notifyCollisions.Size")));
 			this.notifyCollisions.TabIndex = ((int)(resources.GetObject("notifyCollisions.TabIndex")));
 			this.notifyCollisions.Text = resources.GetString("notifyCollisions.Text");
@@ -385,6 +415,9 @@ namespace Novell.FormsTrayApp
 			this.notifyShared.Enabled = ((bool)(resources.GetObject("notifyShared.Enabled")));
 			this.notifyShared.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("notifyShared.FlatStyle")));
 			this.notifyShared.Font = ((System.Drawing.Font)(resources.GetObject("notifyShared.Font")));
+			this.helpProvider1.SetHelpKeyword(this.notifyShared, resources.GetString("notifyShared.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.notifyShared, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("notifyShared.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.notifyShared, resources.GetString("notifyShared.HelpString"));
 			this.notifyShared.Image = ((System.Drawing.Image)(resources.GetObject("notifyShared.Image")));
 			this.notifyShared.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyShared.ImageAlign")));
 			this.notifyShared.ImageIndex = ((int)(resources.GetObject("notifyShared.ImageIndex")));
@@ -392,6 +425,7 @@ namespace Novell.FormsTrayApp
 			this.notifyShared.Location = ((System.Drawing.Point)(resources.GetObject("notifyShared.Location")));
 			this.notifyShared.Name = "notifyShared";
 			this.notifyShared.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("notifyShared.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.notifyShared, ((bool)(resources.GetObject("notifyShared.ShowHelp"))));
 			this.notifyShared.Size = ((System.Drawing.Size)(resources.GetObject("notifyShared.Size")));
 			this.notifyShared.TabIndex = ((int)(resources.GetObject("notifyShared.TabIndex")));
 			this.notifyShared.Text = resources.GetString("notifyShared.Text");
@@ -411,6 +445,9 @@ namespace Novell.FormsTrayApp
 			this.notifyJoins.Enabled = ((bool)(resources.GetObject("notifyJoins.Enabled")));
 			this.notifyJoins.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("notifyJoins.FlatStyle")));
 			this.notifyJoins.Font = ((System.Drawing.Font)(resources.GetObject("notifyJoins.Font")));
+			this.helpProvider1.SetHelpKeyword(this.notifyJoins, resources.GetString("notifyJoins.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.notifyJoins, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("notifyJoins.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.notifyJoins, resources.GetString("notifyJoins.HelpString"));
 			this.notifyJoins.Image = ((System.Drawing.Image)(resources.GetObject("notifyJoins.Image")));
 			this.notifyJoins.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyJoins.ImageAlign")));
 			this.notifyJoins.ImageIndex = ((int)(resources.GetObject("notifyJoins.ImageIndex")));
@@ -418,6 +455,7 @@ namespace Novell.FormsTrayApp
 			this.notifyJoins.Location = ((System.Drawing.Point)(resources.GetObject("notifyJoins.Location")));
 			this.notifyJoins.Name = "notifyJoins";
 			this.notifyJoins.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("notifyJoins.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.notifyJoins, ((bool)(resources.GetObject("notifyJoins.ShowHelp"))));
 			this.notifyJoins.Size = ((System.Drawing.Size)(resources.GetObject("notifyJoins.Size")));
 			this.notifyJoins.TabIndex = ((int)(resources.GetObject("notifyJoins.TabIndex")));
 			this.notifyJoins.Text = resources.GetString("notifyJoins.Text");
@@ -438,10 +476,14 @@ namespace Novell.FormsTrayApp
 			this.groupBox1.Enabled = ((bool)(resources.GetObject("groupBox1.Enabled")));
 			this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.groupBox1.Font = ((System.Drawing.Font)(resources.GetObject("groupBox1.Font")));
+			this.helpProvider1.SetHelpKeyword(this.groupBox1, resources.GetString("groupBox1.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.groupBox1, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("groupBox1.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.groupBox1, resources.GetString("groupBox1.HelpString"));
 			this.groupBox1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox1.ImeMode")));
 			this.groupBox1.Location = ((System.Drawing.Point)(resources.GetObject("groupBox1.Location")));
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox1.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.groupBox1, ((bool)(resources.GetObject("groupBox1.ShowHelp"))));
 			this.groupBox1.Size = ((System.Drawing.Size)(resources.GetObject("groupBox1.Size")));
 			this.groupBox1.TabIndex = ((int)(resources.GetObject("groupBox1.TabIndex")));
 			this.groupBox1.TabStop = false;
@@ -462,6 +504,9 @@ namespace Novell.FormsTrayApp
 			this.autoSync.Enabled = ((bool)(resources.GetObject("autoSync.Enabled")));
 			this.autoSync.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("autoSync.FlatStyle")));
 			this.autoSync.Font = ((System.Drawing.Font)(resources.GetObject("autoSync.Font")));
+			this.helpProvider1.SetHelpKeyword(this.autoSync, resources.GetString("autoSync.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.autoSync, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("autoSync.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.autoSync, resources.GetString("autoSync.HelpString"));
 			this.autoSync.Image = ((System.Drawing.Image)(resources.GetObject("autoSync.Image")));
 			this.autoSync.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("autoSync.ImageAlign")));
 			this.autoSync.ImageIndex = ((int)(resources.GetObject("autoSync.ImageIndex")));
@@ -469,6 +514,7 @@ namespace Novell.FormsTrayApp
 			this.autoSync.Location = ((System.Drawing.Point)(resources.GetObject("autoSync.Location")));
 			this.autoSync.Name = "autoSync";
 			this.autoSync.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("autoSync.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.autoSync, ((bool)(resources.GetObject("autoSync.ShowHelp"))));
 			this.autoSync.Size = ((System.Drawing.Size)(resources.GetObject("autoSync.Size")));
 			this.autoSync.TabIndex = ((int)(resources.GetObject("autoSync.TabIndex")));
 			this.autoSync.Text = resources.GetString("autoSync.Text");
@@ -488,10 +534,14 @@ namespace Novell.FormsTrayApp
 			this.groupBox3.Enabled = ((bool)(resources.GetObject("groupBox3.Enabled")));
 			this.groupBox3.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.groupBox3.Font = ((System.Drawing.Font)(resources.GetObject("groupBox3.Font")));
+			this.helpProvider1.SetHelpKeyword(this.groupBox3, resources.GetString("groupBox3.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.groupBox3, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("groupBox3.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.groupBox3, resources.GetString("groupBox3.HelpString"));
 			this.groupBox3.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox3.ImeMode")));
 			this.groupBox3.Location = ((System.Drawing.Point)(resources.GetObject("groupBox3.Location")));
 			this.groupBox3.Name = "groupBox3";
 			this.groupBox3.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox3.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.groupBox3, ((bool)(resources.GetObject("groupBox3.ShowHelp"))));
 			this.groupBox3.Size = ((System.Drawing.Size)(resources.GetObject("groupBox3.Size")));
 			this.groupBox3.TabIndex = ((int)(resources.GetObject("groupBox3.TabIndex")));
 			this.groupBox3.TabStop = false;
@@ -510,6 +560,9 @@ namespace Novell.FormsTrayApp
 			this.autoStart.Enabled = ((bool)(resources.GetObject("autoStart.Enabled")));
 			this.autoStart.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("autoStart.FlatStyle")));
 			this.autoStart.Font = ((System.Drawing.Font)(resources.GetObject("autoStart.Font")));
+			this.helpProvider1.SetHelpKeyword(this.autoStart, resources.GetString("autoStart.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.autoStart, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("autoStart.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.autoStart, resources.GetString("autoStart.HelpString"));
 			this.autoStart.Image = ((System.Drawing.Image)(resources.GetObject("autoStart.Image")));
 			this.autoStart.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("autoStart.ImageAlign")));
 			this.autoStart.ImageIndex = ((int)(resources.GetObject("autoStart.ImageIndex")));
@@ -517,6 +570,7 @@ namespace Novell.FormsTrayApp
 			this.autoStart.Location = ((System.Drawing.Point)(resources.GetObject("autoStart.Location")));
 			this.autoStart.Name = "autoStart";
 			this.autoStart.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("autoStart.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.autoStart, ((bool)(resources.GetObject("autoStart.ShowHelp"))));
 			this.autoStart.Size = ((System.Drawing.Size)(resources.GetObject("autoStart.Size")));
 			this.autoStart.TabIndex = ((int)(resources.GetObject("autoStart.TabIndex")));
 			this.autoStart.Text = resources.GetString("autoStart.Text");
@@ -541,11 +595,15 @@ namespace Novell.FormsTrayApp
 			this.tabAccounts.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabAccounts.Dock")));
 			this.tabAccounts.Enabled = ((bool)(resources.GetObject("tabAccounts.Enabled")));
 			this.tabAccounts.Font = ((System.Drawing.Font)(resources.GetObject("tabAccounts.Font")));
+			this.helpProvider1.SetHelpKeyword(this.tabAccounts, resources.GetString("tabAccounts.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.tabAccounts, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("tabAccounts.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.tabAccounts, resources.GetString("tabAccounts.HelpString"));
 			this.tabAccounts.ImageIndex = ((int)(resources.GetObject("tabAccounts.ImageIndex")));
 			this.tabAccounts.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tabAccounts.ImeMode")));
 			this.tabAccounts.Location = ((System.Drawing.Point)(resources.GetObject("tabAccounts.Location")));
 			this.tabAccounts.Name = "tabAccounts";
 			this.tabAccounts.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("tabAccounts.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.tabAccounts, ((bool)(resources.GetObject("tabAccounts.ShowHelp"))));
 			this.tabAccounts.Size = ((System.Drawing.Size)(resources.GetObject("tabAccounts.Size")));
 			this.tabAccounts.TabIndex = ((int)(resources.GetObject("tabAccounts.TabIndex")));
 			this.tabAccounts.Text = resources.GetString("tabAccounts.Text");
@@ -567,6 +625,9 @@ namespace Novell.FormsTrayApp
 			this.accounts.Enabled = ((bool)(resources.GetObject("accounts.Enabled")));
 			this.accounts.Font = ((System.Drawing.Font)(resources.GetObject("accounts.Font")));
 			this.accounts.FullRowSelect = true;
+			this.helpProvider1.SetHelpKeyword(this.accounts, resources.GetString("accounts.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.accounts, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("accounts.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.accounts, resources.GetString("accounts.HelpString"));
 			this.accounts.HideSelection = false;
 			this.accounts.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("accounts.ImeMode")));
 			this.accounts.LabelWrap = ((bool)(resources.GetObject("accounts.LabelWrap")));
@@ -574,6 +635,7 @@ namespace Novell.FormsTrayApp
 			this.accounts.MultiSelect = false;
 			this.accounts.Name = "accounts";
 			this.accounts.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("accounts.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.accounts, ((bool)(resources.GetObject("accounts.ShowHelp"))));
 			this.accounts.Size = ((System.Drawing.Size)(resources.GetObject("accounts.Size")));
 			this.accounts.TabIndex = ((int)(resources.GetObject("accounts.TabIndex")));
 			this.accounts.Text = resources.GetString("accounts.Text");
@@ -610,6 +672,9 @@ namespace Novell.FormsTrayApp
 			this.details.Enabled = ((bool)(resources.GetObject("details.Enabled")));
 			this.details.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("details.FlatStyle")));
 			this.details.Font = ((System.Drawing.Font)(resources.GetObject("details.Font")));
+			this.helpProvider1.SetHelpKeyword(this.details, resources.GetString("details.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.details, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("details.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.details, resources.GetString("details.HelpString"));
 			this.details.Image = ((System.Drawing.Image)(resources.GetObject("details.Image")));
 			this.details.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("details.ImageAlign")));
 			this.details.ImageIndex = ((int)(resources.GetObject("details.ImageIndex")));
@@ -617,6 +682,7 @@ namespace Novell.FormsTrayApp
 			this.details.Location = ((System.Drawing.Point)(resources.GetObject("details.Location")));
 			this.details.Name = "details";
 			this.details.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("details.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.details, ((bool)(resources.GetObject("details.ShowHelp"))));
 			this.details.Size = ((System.Drawing.Size)(resources.GetObject("details.Size")));
 			this.details.TabIndex = ((int)(resources.GetObject("details.TabIndex")));
 			this.details.Text = resources.GetString("details.Text");
@@ -645,10 +711,14 @@ namespace Novell.FormsTrayApp
 			this.groupBox2.Enabled = ((bool)(resources.GetObject("groupBox2.Enabled")));
 			this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.groupBox2.Font = ((System.Drawing.Font)(resources.GetObject("groupBox2.Font")));
+			this.helpProvider1.SetHelpKeyword(this.groupBox2, resources.GetString("groupBox2.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.groupBox2, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("groupBox2.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.groupBox2, resources.GetString("groupBox2.HelpString"));
 			this.groupBox2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox2.ImeMode")));
 			this.groupBox2.Location = ((System.Drawing.Point)(resources.GetObject("groupBox2.Location")));
 			this.groupBox2.Name = "groupBox2";
 			this.groupBox2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox2.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.groupBox2, ((bool)(resources.GetObject("groupBox2.ShowHelp"))));
 			this.groupBox2.Size = ((System.Drawing.Size)(resources.GetObject("groupBox2.Size")));
 			this.groupBox2.TabIndex = ((int)(resources.GetObject("groupBox2.TabIndex")));
 			this.groupBox2.TabStop = false;
@@ -665,6 +735,9 @@ namespace Novell.FormsTrayApp
 			this.activate.Enabled = ((bool)(resources.GetObject("activate.Enabled")));
 			this.activate.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("activate.FlatStyle")));
 			this.activate.Font = ((System.Drawing.Font)(resources.GetObject("activate.Font")));
+			this.helpProvider1.SetHelpKeyword(this.activate, resources.GetString("activate.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.activate, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("activate.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.activate, resources.GetString("activate.HelpString"));
 			this.activate.Image = ((System.Drawing.Image)(resources.GetObject("activate.Image")));
 			this.activate.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("activate.ImageAlign")));
 			this.activate.ImageIndex = ((int)(resources.GetObject("activate.ImageIndex")));
@@ -672,6 +745,7 @@ namespace Novell.FormsTrayApp
 			this.activate.Location = ((System.Drawing.Point)(resources.GetObject("activate.Location")));
 			this.activate.Name = "activate";
 			this.activate.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("activate.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.activate, ((bool)(resources.GetObject("activate.ShowHelp"))));
 			this.activate.Size = ((System.Drawing.Size)(resources.GetObject("activate.Size")));
 			this.activate.TabIndex = ((int)(resources.GetObject("activate.TabIndex")));
 			this.activate.Text = resources.GetString("activate.Text");
@@ -689,6 +763,9 @@ namespace Novell.FormsTrayApp
 			this.password.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("password.Dock")));
 			this.password.Enabled = ((bool)(resources.GetObject("password.Enabled")));
 			this.password.Font = ((System.Drawing.Font)(resources.GetObject("password.Font")));
+			this.helpProvider1.SetHelpKeyword(this.password, resources.GetString("password.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.password, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("password.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.password, resources.GetString("password.HelpString"));
 			this.password.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("password.ImeMode")));
 			this.password.Location = ((System.Drawing.Point)(resources.GetObject("password.Location")));
 			this.password.MaxLength = ((int)(resources.GetObject("password.MaxLength")));
@@ -697,6 +774,7 @@ namespace Novell.FormsTrayApp
 			this.password.PasswordChar = ((char)(resources.GetObject("password.PasswordChar")));
 			this.password.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("password.RightToLeft")));
 			this.password.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("password.ScrollBars")));
+			this.helpProvider1.SetShowHelp(this.password, ((bool)(resources.GetObject("password.ShowHelp"))));
 			this.password.Size = ((System.Drawing.Size)(resources.GetObject("password.Size")));
 			this.password.TabIndex = ((int)(resources.GetObject("password.TabIndex")));
 			this.password.Text = resources.GetString("password.Text");
@@ -715,6 +793,9 @@ namespace Novell.FormsTrayApp
 			this.server.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("server.Dock")));
 			this.server.Enabled = ((bool)(resources.GetObject("server.Enabled")));
 			this.server.Font = ((System.Drawing.Font)(resources.GetObject("server.Font")));
+			this.helpProvider1.SetHelpKeyword(this.server, resources.GetString("server.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.server, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("server.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.server, resources.GetString("server.HelpString"));
 			this.server.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("server.ImeMode")));
 			this.server.Location = ((System.Drawing.Point)(resources.GetObject("server.Location")));
 			this.server.MaxLength = ((int)(resources.GetObject("server.MaxLength")));
@@ -723,6 +804,7 @@ namespace Novell.FormsTrayApp
 			this.server.PasswordChar = ((char)(resources.GetObject("server.PasswordChar")));
 			this.server.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("server.RightToLeft")));
 			this.server.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("server.ScrollBars")));
+			this.helpProvider1.SetShowHelp(this.server, ((bool)(resources.GetObject("server.ShowHelp"))));
 			this.server.Size = ((System.Drawing.Size)(resources.GetObject("server.Size")));
 			this.server.TabIndex = ((int)(resources.GetObject("server.TabIndex")));
 			this.server.Text = resources.GetString("server.Text");
@@ -741,6 +823,9 @@ namespace Novell.FormsTrayApp
 			this.userName.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("userName.Dock")));
 			this.userName.Enabled = ((bool)(resources.GetObject("userName.Enabled")));
 			this.userName.Font = ((System.Drawing.Font)(resources.GetObject("userName.Font")));
+			this.helpProvider1.SetHelpKeyword(this.userName, resources.GetString("userName.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.userName, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("userName.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.userName, resources.GetString("userName.HelpString"));
 			this.userName.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("userName.ImeMode")));
 			this.userName.Location = ((System.Drawing.Point)(resources.GetObject("userName.Location")));
 			this.userName.MaxLength = ((int)(resources.GetObject("userName.MaxLength")));
@@ -749,6 +834,7 @@ namespace Novell.FormsTrayApp
 			this.userName.PasswordChar = ((char)(resources.GetObject("userName.PasswordChar")));
 			this.userName.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("userName.RightToLeft")));
 			this.userName.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("userName.ScrollBars")));
+			this.helpProvider1.SetShowHelp(this.userName, ((bool)(resources.GetObject("userName.ShowHelp"))));
 			this.userName.Size = ((System.Drawing.Size)(resources.GetObject("userName.Size")));
 			this.userName.TabIndex = ((int)(resources.GetObject("userName.TabIndex")));
 			this.userName.Text = resources.GetString("userName.Text");
@@ -766,6 +852,9 @@ namespace Novell.FormsTrayApp
 			this.label9.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label9.Dock")));
 			this.label9.Enabled = ((bool)(resources.GetObject("label9.Enabled")));
 			this.label9.Font = ((System.Drawing.Font)(resources.GetObject("label9.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label9, resources.GetString("label9.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label9, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label9.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label9, resources.GetString("label9.HelpString"));
 			this.label9.Image = ((System.Drawing.Image)(resources.GetObject("label9.Image")));
 			this.label9.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label9.ImageAlign")));
 			this.label9.ImageIndex = ((int)(resources.GetObject("label9.ImageIndex")));
@@ -773,6 +862,7 @@ namespace Novell.FormsTrayApp
 			this.label9.Location = ((System.Drawing.Point)(resources.GetObject("label9.Location")));
 			this.label9.Name = "label9";
 			this.label9.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label9.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label9, ((bool)(resources.GetObject("label9.ShowHelp"))));
 			this.label9.Size = ((System.Drawing.Size)(resources.GetObject("label9.Size")));
 			this.label9.TabIndex = ((int)(resources.GetObject("label9.TabIndex")));
 			this.label9.Text = resources.GetString("label9.Text");
@@ -788,6 +878,9 @@ namespace Novell.FormsTrayApp
 			this.label5.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label5.Dock")));
 			this.label5.Enabled = ((bool)(resources.GetObject("label5.Enabled")));
 			this.label5.Font = ((System.Drawing.Font)(resources.GetObject("label5.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label5, resources.GetString("label5.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label5, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label5.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label5, resources.GetString("label5.HelpString"));
 			this.label5.Image = ((System.Drawing.Image)(resources.GetObject("label5.Image")));
 			this.label5.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label5.ImageAlign")));
 			this.label5.ImageIndex = ((int)(resources.GetObject("label5.ImageIndex")));
@@ -795,6 +888,7 @@ namespace Novell.FormsTrayApp
 			this.label5.Location = ((System.Drawing.Point)(resources.GetObject("label5.Location")));
 			this.label5.Name = "label5";
 			this.label5.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label5.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label5, ((bool)(resources.GetObject("label5.ShowHelp"))));
 			this.label5.Size = ((System.Drawing.Size)(resources.GetObject("label5.Size")));
 			this.label5.TabIndex = ((int)(resources.GetObject("label5.TabIndex")));
 			this.label5.Text = resources.GetString("label5.Text");
@@ -811,6 +905,9 @@ namespace Novell.FormsTrayApp
 			this.proxy.Enabled = ((bool)(resources.GetObject("proxy.Enabled")));
 			this.proxy.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("proxy.FlatStyle")));
 			this.proxy.Font = ((System.Drawing.Font)(resources.GetObject("proxy.Font")));
+			this.helpProvider1.SetHelpKeyword(this.proxy, resources.GetString("proxy.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.proxy, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("proxy.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.proxy, resources.GetString("proxy.HelpString"));
 			this.proxy.Image = ((System.Drawing.Image)(resources.GetObject("proxy.Image")));
 			this.proxy.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("proxy.ImageAlign")));
 			this.proxy.ImageIndex = ((int)(resources.GetObject("proxy.ImageIndex")));
@@ -818,6 +915,7 @@ namespace Novell.FormsTrayApp
 			this.proxy.Location = ((System.Drawing.Point)(resources.GetObject("proxy.Location")));
 			this.proxy.Name = "proxy";
 			this.proxy.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("proxy.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.proxy, ((bool)(resources.GetObject("proxy.ShowHelp"))));
 			this.proxy.Size = ((System.Drawing.Size)(resources.GetObject("proxy.Size")));
 			this.proxy.TabIndex = ((int)(resources.GetObject("proxy.TabIndex")));
 			this.proxy.Text = resources.GetString("proxy.Text");
@@ -837,6 +935,9 @@ namespace Novell.FormsTrayApp
 			this.enableAccount.Enabled = ((bool)(resources.GetObject("enableAccount.Enabled")));
 			this.enableAccount.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("enableAccount.FlatStyle")));
 			this.enableAccount.Font = ((System.Drawing.Font)(resources.GetObject("enableAccount.Font")));
+			this.helpProvider1.SetHelpKeyword(this.enableAccount, resources.GetString("enableAccount.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.enableAccount, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("enableAccount.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.enableAccount, resources.GetString("enableAccount.HelpString"));
 			this.enableAccount.Image = ((System.Drawing.Image)(resources.GetObject("enableAccount.Image")));
 			this.enableAccount.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("enableAccount.ImageAlign")));
 			this.enableAccount.ImageIndex = ((int)(resources.GetObject("enableAccount.ImageIndex")));
@@ -844,6 +945,7 @@ namespace Novell.FormsTrayApp
 			this.enableAccount.Location = ((System.Drawing.Point)(resources.GetObject("enableAccount.Location")));
 			this.enableAccount.Name = "enableAccount";
 			this.enableAccount.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("enableAccount.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.enableAccount, ((bool)(resources.GetObject("enableAccount.ShowHelp"))));
 			this.enableAccount.Size = ((System.Drawing.Size)(resources.GetObject("enableAccount.Size")));
 			this.enableAccount.TabIndex = ((int)(resources.GetObject("enableAccount.TabIndex")));
 			this.enableAccount.Text = resources.GetString("enableAccount.Text");
@@ -863,6 +965,9 @@ namespace Novell.FormsTrayApp
 			this.rememberPassword.Enabled = ((bool)(resources.GetObject("rememberPassword.Enabled")));
 			this.rememberPassword.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("rememberPassword.FlatStyle")));
 			this.rememberPassword.Font = ((System.Drawing.Font)(resources.GetObject("rememberPassword.Font")));
+			this.helpProvider1.SetHelpKeyword(this.rememberPassword, resources.GetString("rememberPassword.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.rememberPassword, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("rememberPassword.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.rememberPassword, resources.GetString("rememberPassword.HelpString"));
 			this.rememberPassword.Image = ((System.Drawing.Image)(resources.GetObject("rememberPassword.Image")));
 			this.rememberPassword.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("rememberPassword.ImageAlign")));
 			this.rememberPassword.ImageIndex = ((int)(resources.GetObject("rememberPassword.ImageIndex")));
@@ -870,6 +975,7 @@ namespace Novell.FormsTrayApp
 			this.rememberPassword.Location = ((System.Drawing.Point)(resources.GetObject("rememberPassword.Location")));
 			this.rememberPassword.Name = "rememberPassword";
 			this.rememberPassword.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("rememberPassword.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.rememberPassword, ((bool)(resources.GetObject("rememberPassword.ShowHelp"))));
 			this.rememberPassword.Size = ((System.Drawing.Size)(resources.GetObject("rememberPassword.Size")));
 			this.rememberPassword.TabIndex = ((int)(resources.GetObject("rememberPassword.TabIndex")));
 			this.rememberPassword.Text = resources.GetString("rememberPassword.Text");
@@ -886,6 +992,9 @@ namespace Novell.FormsTrayApp
 			this.label10.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label10.Dock")));
 			this.label10.Enabled = ((bool)(resources.GetObject("label10.Enabled")));
 			this.label10.Font = ((System.Drawing.Font)(resources.GetObject("label10.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label10, resources.GetString("label10.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label10, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label10.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label10, resources.GetString("label10.HelpString"));
 			this.label10.Image = ((System.Drawing.Image)(resources.GetObject("label10.Image")));
 			this.label10.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label10.ImageAlign")));
 			this.label10.ImageIndex = ((int)(resources.GetObject("label10.ImageIndex")));
@@ -893,6 +1002,7 @@ namespace Novell.FormsTrayApp
 			this.label10.Location = ((System.Drawing.Point)(resources.GetObject("label10.Location")));
 			this.label10.Name = "label10";
 			this.label10.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label10.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label10, ((bool)(resources.GetObject("label10.ShowHelp"))));
 			this.label10.Size = ((System.Drawing.Size)(resources.GetObject("label10.Size")));
 			this.label10.TabIndex = ((int)(resources.GetObject("label10.TabIndex")));
 			this.label10.Text = resources.GetString("label10.Text");
@@ -911,6 +1021,9 @@ namespace Novell.FormsTrayApp
 			this.defaultServer.Enabled = ((bool)(resources.GetObject("defaultServer.Enabled")));
 			this.defaultServer.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("defaultServer.FlatStyle")));
 			this.defaultServer.Font = ((System.Drawing.Font)(resources.GetObject("defaultServer.Font")));
+			this.helpProvider1.SetHelpKeyword(this.defaultServer, resources.GetString("defaultServer.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.defaultServer, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("defaultServer.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.defaultServer, resources.GetString("defaultServer.HelpString"));
 			this.defaultServer.Image = ((System.Drawing.Image)(resources.GetObject("defaultServer.Image")));
 			this.defaultServer.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("defaultServer.ImageAlign")));
 			this.defaultServer.ImageIndex = ((int)(resources.GetObject("defaultServer.ImageIndex")));
@@ -918,6 +1031,7 @@ namespace Novell.FormsTrayApp
 			this.defaultServer.Location = ((System.Drawing.Point)(resources.GetObject("defaultServer.Location")));
 			this.defaultServer.Name = "defaultServer";
 			this.defaultServer.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("defaultServer.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.defaultServer, ((bool)(resources.GetObject("defaultServer.ShowHelp"))));
 			this.defaultServer.Size = ((System.Drawing.Size)(resources.GetObject("defaultServer.Size")));
 			this.defaultServer.TabIndex = ((int)(resources.GetObject("defaultServer.TabIndex")));
 			this.defaultServer.Text = resources.GetString("defaultServer.Text");
@@ -935,6 +1049,9 @@ namespace Novell.FormsTrayApp
 			this.removeAccount.Enabled = ((bool)(resources.GetObject("removeAccount.Enabled")));
 			this.removeAccount.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("removeAccount.FlatStyle")));
 			this.removeAccount.Font = ((System.Drawing.Font)(resources.GetObject("removeAccount.Font")));
+			this.helpProvider1.SetHelpKeyword(this.removeAccount, resources.GetString("removeAccount.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.removeAccount, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("removeAccount.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.removeAccount, resources.GetString("removeAccount.HelpString"));
 			this.removeAccount.Image = ((System.Drawing.Image)(resources.GetObject("removeAccount.Image")));
 			this.removeAccount.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("removeAccount.ImageAlign")));
 			this.removeAccount.ImageIndex = ((int)(resources.GetObject("removeAccount.ImageIndex")));
@@ -942,6 +1059,7 @@ namespace Novell.FormsTrayApp
 			this.removeAccount.Location = ((System.Drawing.Point)(resources.GetObject("removeAccount.Location")));
 			this.removeAccount.Name = "removeAccount";
 			this.removeAccount.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("removeAccount.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.removeAccount, ((bool)(resources.GetObject("removeAccount.ShowHelp"))));
 			this.removeAccount.Size = ((System.Drawing.Size)(resources.GetObject("removeAccount.Size")));
 			this.removeAccount.TabIndex = ((int)(resources.GetObject("removeAccount.TabIndex")));
 			this.removeAccount.Text = resources.GetString("removeAccount.Text");
@@ -959,6 +1077,9 @@ namespace Novell.FormsTrayApp
 			this.addAccount.Enabled = ((bool)(resources.GetObject("addAccount.Enabled")));
 			this.addAccount.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("addAccount.FlatStyle")));
 			this.addAccount.Font = ((System.Drawing.Font)(resources.GetObject("addAccount.Font")));
+			this.helpProvider1.SetHelpKeyword(this.addAccount, resources.GetString("addAccount.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.addAccount, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("addAccount.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.addAccount, resources.GetString("addAccount.HelpString"));
 			this.addAccount.Image = ((System.Drawing.Image)(resources.GetObject("addAccount.Image")));
 			this.addAccount.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("addAccount.ImageAlign")));
 			this.addAccount.ImageIndex = ((int)(resources.GetObject("addAccount.ImageIndex")));
@@ -966,6 +1087,7 @@ namespace Novell.FormsTrayApp
 			this.addAccount.Location = ((System.Drawing.Point)(resources.GetObject("addAccount.Location")));
 			this.addAccount.Name = "addAccount";
 			this.addAccount.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("addAccount.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.addAccount, ((bool)(resources.GetObject("addAccount.ShowHelp"))));
 			this.addAccount.Size = ((System.Drawing.Size)(resources.GetObject("addAccount.Size")));
 			this.addAccount.TabIndex = ((int)(resources.GetObject("addAccount.TabIndex")));
 			this.addAccount.Text = resources.GetString("addAccount.Text");
@@ -984,6 +1106,9 @@ namespace Novell.FormsTrayApp
 			this.cancel.Enabled = ((bool)(resources.GetObject("cancel.Enabled")));
 			this.cancel.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("cancel.FlatStyle")));
 			this.cancel.Font = ((System.Drawing.Font)(resources.GetObject("cancel.Font")));
+			this.helpProvider1.SetHelpKeyword(this.cancel, resources.GetString("cancel.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.cancel, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("cancel.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.cancel, resources.GetString("cancel.HelpString"));
 			this.cancel.Image = ((System.Drawing.Image)(resources.GetObject("cancel.Image")));
 			this.cancel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.ImageAlign")));
 			this.cancel.ImageIndex = ((int)(resources.GetObject("cancel.ImageIndex")));
@@ -991,6 +1116,7 @@ namespace Novell.FormsTrayApp
 			this.cancel.Location = ((System.Drawing.Point)(resources.GetObject("cancel.Location")));
 			this.cancel.Name = "cancel";
 			this.cancel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("cancel.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.cancel, ((bool)(resources.GetObject("cancel.ShowHelp"))));
 			this.cancel.Size = ((System.Drawing.Size)(resources.GetObject("cancel.Size")));
 			this.cancel.TabIndex = ((int)(resources.GetObject("cancel.TabIndex")));
 			this.cancel.Text = resources.GetString("cancel.Text");
@@ -1008,6 +1134,9 @@ namespace Novell.FormsTrayApp
 			this.apply.Enabled = ((bool)(resources.GetObject("apply.Enabled")));
 			this.apply.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("apply.FlatStyle")));
 			this.apply.Font = ((System.Drawing.Font)(resources.GetObject("apply.Font")));
+			this.helpProvider1.SetHelpKeyword(this.apply, resources.GetString("apply.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.apply, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("apply.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.apply, resources.GetString("apply.HelpString"));
 			this.apply.Image = ((System.Drawing.Image)(resources.GetObject("apply.Image")));
 			this.apply.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("apply.ImageAlign")));
 			this.apply.ImageIndex = ((int)(resources.GetObject("apply.ImageIndex")));
@@ -1015,6 +1144,7 @@ namespace Novell.FormsTrayApp
 			this.apply.Location = ((System.Drawing.Point)(resources.GetObject("apply.Location")));
 			this.apply.Name = "apply";
 			this.apply.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("apply.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.apply, ((bool)(resources.GetObject("apply.ShowHelp"))));
 			this.apply.Size = ((System.Drawing.Size)(resources.GetObject("apply.Size")));
 			this.apply.TabIndex = ((int)(resources.GetObject("apply.TabIndex")));
 			this.apply.Text = resources.GetString("apply.Text");
@@ -1033,6 +1163,9 @@ namespace Novell.FormsTrayApp
 			this.ok.Enabled = ((bool)(resources.GetObject("ok.Enabled")));
 			this.ok.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("ok.FlatStyle")));
 			this.ok.Font = ((System.Drawing.Font)(resources.GetObject("ok.Font")));
+			this.helpProvider1.SetHelpKeyword(this.ok, resources.GetString("ok.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.ok, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("ok.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.ok, resources.GetString("ok.HelpString"));
 			this.ok.Image = ((System.Drawing.Image)(resources.GetObject("ok.Image")));
 			this.ok.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("ok.ImageAlign")));
 			this.ok.ImageIndex = ((int)(resources.GetObject("ok.ImageIndex")));
@@ -1040,6 +1173,7 @@ namespace Novell.FormsTrayApp
 			this.ok.Location = ((System.Drawing.Point)(resources.GetObject("ok.Location")));
 			this.ok.Name = "ok";
 			this.ok.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("ok.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.ok, ((bool)(resources.GetObject("ok.ShowHelp"))));
 			this.ok.Size = ((System.Drawing.Size)(resources.GetObject("ok.Size")));
 			this.ok.TabIndex = ((int)(resources.GetObject("ok.TabIndex")));
 			this.ok.Text = resources.GetString("ok.Text");
@@ -1051,6 +1185,10 @@ namespace Novell.FormsTrayApp
 			// 
 			this.timer1.Interval = 10;
 			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+			// 
+			// helpProvider1
+			// 
+			this.helpProvider1.HelpNamespace = resources.GetString("helpProvider1.HelpNamespace");
 			// 
 			// Preferences
 			// 
@@ -1070,14 +1208,21 @@ namespace Novell.FormsTrayApp
 			this.Controls.Add(this.cancel);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
+			this.HelpButton = true;
+			this.helpProvider1.SetHelpKeyword(this, resources.GetString("$this.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("$this.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this, resources.GetString("$this.HelpString"));
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
 			this.KeyPreview = true;
 			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
+			this.MaximizeBox = false;
 			this.MaximumSize = ((System.Drawing.Size)(resources.GetObject("$this.MaximumSize")));
+			this.MinimizeBox = false;
 			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
 			this.Name = "Preferences";
 			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this, ((bool)(resources.GetObject("$this.ShowHelp"))));
 			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
 			this.Text = resources.GetString("$this.Text");
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.Preferences_Closing);
@@ -1717,6 +1862,10 @@ namespace Novell.FormsTrayApp
 		#region Event Handlers
 		private void Preferences_Load(object sender, System.EventArgs e)
 		{
+			// TODO: Load the correct page when it becomes available.
+			// Reference the help using locale-specific path.
+			helpProvider1.HelpNamespace = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\front.html");
+
 			// Load the application icon and banner image.
 			try
 			{
