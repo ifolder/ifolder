@@ -46,6 +46,8 @@ namespace Novell.FormsTrayApp
 	{
         #region Class Members
 		private System.ComponentModel.IContainer components;
+		private System.Resources.ResourceManager resourceManager;
+		private bool shutdown = false;
 
 		private Thread workerThread = null;
 
@@ -60,8 +62,6 @@ namespace Novell.FormsTrayApp
 		/// Event used to animate the notify icon.
 		/// </summary>
 		protected AutoResetEvent synkEvent = null;
-
-//		private bool noTray = false;
 
 		private delegate void AnimateDelegate(int index);
 		private AnimateDelegate animateDelegate;
@@ -101,17 +101,7 @@ namespace Novell.FormsTrayApp
 				}
 			}
 
-			// Check for currently running instance.
-			Process[] iFolderProcess = Process.GetProcessesByName("iFolderApp");
-			if (iFolderProcess.Length == 1)
-			{
-				Application.Run(new FormsTrayApp());
-			}
-			else
-			{
-				// TODO: Localize
-				MessageBox.Show("There is already an instance of iFolder running.");
-			}
+			Application.Run(new FormsTrayApp());
 		}
 
 		/// <summary>
@@ -119,47 +109,58 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		public FormsTrayApp()
 		{
-			InitializeComponent();
+			resourceManager = new System.Resources.ResourceManager(typeof(FormsTrayApp));
 
-			this.components = new System.ComponentModel.Container();
-
-			// Set up how the form should be displayed.
-			this.ClientSize = new System.Drawing.Size(292, 266);
-
-			// The Icon property sets the icon that will appear
-			// in the systray for this application.
-			try
+			// Check for currently running instance.
+			Process[] iFolderProcess = Process.GetProcessesByName("iFolderApp");
+			if (iFolderProcess.Length != 1)
 			{
-				string basePath = Path.Combine(Application.StartupPath, "res");
-				this.Icon = new Icon(Path.Combine(Application.StartupPath, "ifolder_app.ico"));
-
-				trayIcon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
-				startupIcon = new Icon(Path.Combine(basePath, "ifolder-startup.ico"));
-				uploadIcons[0] = new Icon(trayIcon, trayIcon.Size);
-				uploadIcons[1] = new Icon(Path.Combine(basePath, "ifolder_message.ico"));
-//				for (int i = 0; i < numberOfIcons; i++)
-//				{
-//					string upIcon = string.Format(Path.Combine(basePath, "ifolder_sync{0}.ico"), i+1);
-//					uploadIcons[i] = new Icon(upIcon);
-//				}
-			
-				notifyIcon1.Icon = startupIcon;
-				this.ShowInTaskbar = false;
-				this.WindowState = FormWindowState.Minimized;
-				//this.Hide();
-
-				Win32Window win32Window = new Win32Window();
-				win32Window.Window = this.Handle;
-				win32Window.MakeToolWindow();
+				MessageBox.Show(resourceManager.GetString("iFolderRunning"));
+				shutdown = true;
 			}
-			catch (Exception e)
+			else
 			{
-//				noTray = true;
-			}		
+				InitializeComponent();
 
-			Type t = notifyIcon1.GetType();
-			hwnd = ((NativeWindow)t.GetField("window",System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(notifyIcon1)).Handle;
-			iconID = (int)t.GetField("id",System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(notifyIcon1);
+				this.components = new System.ComponentModel.Container();
+
+				// Set up how the form should be displayed.
+				this.ClientSize = new System.Drawing.Size(292, 266);
+
+				// The Icon property sets the icon that will appear
+				// in the systray for this application.
+				try
+				{
+					string basePath = Path.Combine(Application.StartupPath, "res");
+					this.Icon = new Icon(Path.Combine(Application.StartupPath, "ifolder_app.ico"));
+
+					trayIcon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
+					startupIcon = new Icon(Path.Combine(basePath, "ifolder-startup.ico"));
+					uploadIcons[0] = new Icon(trayIcon, trayIcon.Size);
+					uploadIcons[1] = new Icon(Path.Combine(basePath, "ifolder_message.ico"));
+	//				for (int i = 0; i < numberOfIcons; i++)
+	//				{
+	//					string upIcon = string.Format(Path.Combine(basePath, "ifolder_sync{0}.ico"), i+1);
+	//					uploadIcons[i] = new Icon(upIcon);
+	//				}
+			
+					notifyIcon1.Icon = startupIcon;
+					this.ShowInTaskbar = false;
+					this.WindowState = FormWindowState.Minimized;
+					//this.Hide();
+
+					Win32Window win32Window = new Win32Window();
+					win32Window.Window = this.Handle;
+					win32Window.MakeToolWindow();
+				}
+				catch
+				{
+				}		
+
+				Type t = notifyIcon1.GetType();
+				hwnd = ((NativeWindow)t.GetField("window",System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(notifyIcon1)).Handle;
+				iconID = (int)t.GetField("id",System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(notifyIcon1);
+			}
 
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.FormsTrayApp_Closing);
 			this.Load += new System.EventHandler(FormsTrayApp_Load);
@@ -230,10 +231,9 @@ namespace Novell.FormsTrayApp
 			{
 				Process.Start(helpPath);
 			}
-			catch (Exception ex)
+			catch
 			{
-				// TODO: Localize
-				MessageBox.Show("Unable to open help file: \n" + helpPath, "Help File Not Found");
+				MessageBox.Show(resourceManager.GetString("helpFileError") + "\n" + helpPath);
 			}
 		}
 
@@ -286,53 +286,60 @@ namespace Novell.FormsTrayApp
 
 		private void FormsTrayApp_Load(object sender, System.EventArgs e)
 		{
-			try
+			if (shutdown)
 			{
-				simiasProc = new Process();
-				ProcessStartInfo simiasStartInfo = new ProcessStartInfo(Path.Combine(Application.StartupPath, "simias.cmd"));
-				simiasStartInfo.CreateNoWindow = true;
-				simiasStartInfo.UseShellExecute = false;
-				simiasStartInfo.RedirectStandardInput = true;
-				simiasProc.StartInfo = simiasStartInfo;
-				simiasProc.Start();
-
-				ifWebService = new iFolderWebService();
-				ifWebService.Ping();
-				//iFolderManager.CreateDefaultExclusions(config);
-
-				synkEvent = new AutoResetEvent(false);
-
-				animateDelegate = new AnimateDelegate(AnimateIcon);
-
-				// Start the icon animation worker thread.
-				if (workerThread == null)
-				{
-					workerThread = new Thread(new ThreadStart(AnimateWorker));
-					workerThread.Start();
-				}
-
-				notifyIcon1.Icon = trayIcon;
-
-				// Set up the event handlers to watch for create, delete, and change events.
-				eventClient = new IProcEventClient(new IProcEventError(errorHandler), null);
-				eventClient.Register();
-				if (!eventError)
-				{
-					eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(trayApp_nodeChangeHandler));
-					eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(trayApp_nodeCreateHandler));
-					eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(trayApp_nodeDeleteHandler));
-					eventClient.SetEvent(IProcEventAction.AddCollectionSync, new IProcEventHandler(trayApp_collectionSyncHandler));
-				}
-
-				globalProperties = new GlobalProperties(ifWebService, eventClient);
+				this.Close();
 			}
-			catch (WebException ex)
+			else
 			{
-				ShutdownTrayApp(ex);
-			}
-			catch (Exception ex)
-			{
-				ShutdownTrayApp(ex);
+				try
+				{
+					simiasProc = new Process();
+					ProcessStartInfo simiasStartInfo = new ProcessStartInfo(Path.Combine(Application.StartupPath, "simias.cmd"));
+					simiasStartInfo.CreateNoWindow = true;
+					simiasStartInfo.UseShellExecute = false;
+					simiasStartInfo.RedirectStandardInput = true;
+					simiasProc.StartInfo = simiasStartInfo;
+					simiasProc.Start();
+
+					ifWebService = new iFolderWebService();
+					ifWebService.Ping();
+					//iFolderManager.CreateDefaultExclusions(config);
+
+					synkEvent = new AutoResetEvent(false);
+
+					animateDelegate = new AnimateDelegate(AnimateIcon);
+
+					// Start the icon animation worker thread.
+					if (workerThread == null)
+					{
+						workerThread = new Thread(new ThreadStart(AnimateWorker));
+						workerThread.Start();
+					}
+
+					notifyIcon1.Icon = trayIcon;
+
+					// Set up the event handlers to watch for create, delete, and change events.
+					eventClient = new IProcEventClient(new IProcEventError(errorHandler), null);
+					eventClient.Register();
+					if (!eventError)
+					{
+						eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(trayApp_nodeChangeHandler));
+						eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(trayApp_nodeCreateHandler));
+						eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(trayApp_nodeDeleteHandler));
+						eventClient.SetEvent(IProcEventAction.AddCollectionSync, new IProcEventHandler(trayApp_collectionSyncHandler));
+					}
+
+					globalProperties = new GlobalProperties(ifWebService, eventClient);
+				}
+				catch (WebException ex)
+				{
+					ShutdownTrayApp(ex);
+				}
+				catch (Exception ex)
+				{
+					ShutdownTrayApp(ex);
+				}
 			}
 		}
 
@@ -359,13 +366,14 @@ namespace Novell.FormsTrayApp
 					{
 						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
 
-						// TODO: Localize
+						string message = string.Format(resourceManager.GetString("collisionMessage"), ifolder.Name);
+
 						balloonTip.ShowBalloon(
 							hwnd,
 							iconID,
 							BalloonType.Info,
-							"Action Required",
-							"A collision has been detected in iFolder:\n" + ifolder.Name);
+							resourceManager.GetString("actionRequiredTitle"),
+							message);
 
 						// TODO: Change the icon?
 					}
@@ -393,13 +401,14 @@ namespace Novell.FormsTrayApp
 
 							NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
 
-							// TODO: Localize
+							string message = string.Format(resourceManager.GetString("subscriptionMessage"), ifolder.Owner);
+
 							balloonTip.ShowBalloon(
 								hwnd,
 								iconID,
 								BalloonType.Info,
-								"Action Required",
-								"A subscription has just been received from " + ifolder.Owner);
+								resourceManager.GetString("actionRequiredTitle"),
+								message);
 
 							// TODO: Change the icon?
 						}
@@ -424,13 +433,14 @@ namespace Novell.FormsTrayApp
 
 							NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
 
-							// TODO: Localize
+							string message = string.Format(resourceManager.GetString("newMemberMessage"), ifolderUser.Name, ifolder.Name);
+							
 							balloonTip.ShowBalloon(
 								hwnd,
 								iconID,
 								BalloonType.Info,
-								"New Membership",
-								ifolderUser.Name + " has just joined iFolder " + ifolder.Name);
+								resourceManager.GetString("newMemberTitle"),
+								message);
 
 							// TODO: Change the icon?
 						}
@@ -632,8 +642,7 @@ namespace Novell.FormsTrayApp
 
 			if (ex != null)
 			{
-				// TODO: Localize.
-				MessageBox.Show("A fatal error was encountered during iFolder initialization.\n\n" + ex.Message, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+				MessageBox.Show(resourceManager.GetString("fatalErrorMessage") + "\n\n" + ex.Message, resourceManager.GetString("fatalErrorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Stop);
 			}
 
 			try
@@ -651,7 +660,7 @@ namespace Novell.FormsTrayApp
 
 				// TODO: shutdown gracefully
 				Process[] simiasAppProcess = Process.GetProcessesByName("SimiasApp");
-				if (simiasAppProcess.Length == 1)
+				if (!shutdown && (simiasAppProcess.Length == 1))
 				{
 					simiasAppProcess[0].Kill();
 				}
@@ -667,7 +676,12 @@ namespace Novell.FormsTrayApp
 			}
 
 			Cursor.Current = Cursors.Default;
-			notifyIcon1.Visible = false;
+
+			if (notifyIcon1 != null)
+			{
+				notifyIcon1.Visible = false;
+			}
+
 			Application.Exit();
 		}
 

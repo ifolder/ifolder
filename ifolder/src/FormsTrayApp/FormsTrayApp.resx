@@ -472,4 +472,31 @@
 	<data name="&gt;&gt;$this.Type">
 		<value>System.Windows.Forms.Form, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</data>
+	<data name="helpFileError">
+		<value>Error opening help file:</value>
+	</data>
+	<data name="collisionMessage">
+		<value>A collision has been detected in iFolder {0}.</value>
+	</data>
+	<data name="actionRequiredTitle">
+		<value>Action Required</value>
+	</data>
+	<data name="subscriptionMessage">
+		<value>A subscription has just been received from {0}.</value>
+	</data>
+	<data name="newMemberTitle">
+		<value>New Membership</value>
+	</data>
+	<data name="newMemberMessage">
+		<value>{0} has just joined iFolder {1}.</value>
+	</data>
+	<data name="fatalErrorMessage">
+		<value>A fatal error was encountered during iFolder initialization.</value>
+	</data>
+	<data name="fatalErrorTitle">
+		<value>Fatal Error</value>
+	</data>
+	<data name="iFolderRunning">
+		<value>There is already an instance of iFolder running.</value>
+	</data>
 </root>
