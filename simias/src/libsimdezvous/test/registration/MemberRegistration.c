@@ -14,8 +14,10 @@ int main( int argc, char **argv )
 
 
 
+/*
 	char str1[10];
 	sprintf(str1, "hi%c", (unsigned char) 222 );
+	*/
 
 
 	strcpy( pid, "97231a84-c0e8-46ee-a6ca-a2d29fc8589e" );
@@ -33,7 +35,8 @@ int main( int argc, char **argv )
 			&bHandle);
 	if ( status == 0 )
 	{
-		Sleep(30000);
+		getchar();
+		//Sleep(30000);
 		status = DeregisterLocalMember( pid, bHandle );
 	}
 }

@@ -98,26 +98,16 @@ typedef struct tagMemberInfo
 	char				ServicePath[kDNSMaxServicePath];
 	unsigned char		PublicKey[kDNSMaxPublicKey];
 	char				HostName[kDNSMaxDomainName];
-	int			Port;
+	int			        Port;
 
 } MemberInfo, *PMemberInfo;
 
+extern
+DNSServiceErrorType
+DNSSD_API 
+GetMemberInfo(char *pID, PMemberInfo pInfo);
+
 /*
-extern
-DNSServiceErrorType
-DNSSD_API 
-GetMembers(
-	int					timeout,
-	int					bufferLength,
-	PMembers			pMembers,
-	int					*pMembersAdded);
-*/
-
-extern
-DNSServiceErrorType
-DNSSD_API 
-GetMemberInfo2(char *pID, PMemberInfo pInfo);
-
 DNSServiceErrorType
 DNSSD_API 
 GetMemberInfo(
@@ -127,6 +117,7 @@ GetMemberInfo(
 	unsigned char		*pPublicKey,
 	char				*pHost,
 	int					*pPort);
+*/
 
 extern
 DNSServiceErrorType
