@@ -239,18 +239,8 @@ namespace Simias.Location
 			Uri locationUri = null;
 			if( domainID.ToLower() == Simias.mDns.Domain.ID )
 			{
-				/*
-				try
-				{
-					Collection collection = Store.GetStore().GetCollectionByID( collectionID );
-					locationUri = MemberIDToUri( collection.Owner.UserID );
-				}
-				catch ( Exception e )
-				{
-					log.Debug( e.Message );
-					log.Debug( e.StackTrace );
-				}
-				*/
+				Member member = Store.GetStore().GetDomain( domainID ).GetCurrentMember();
+				locationUri = MemberIDToUri( member.UserID );
 			}
 
 			return locationUri;
