@@ -65,6 +65,20 @@ namespace Simias.Policy
 		}
 
 		/// <summary>
+		/// Gets or sets whether this is a system policy.
+		/// </summary>
+		public bool IsSystemPolicy
+		{
+			get
+			{
+				Property p = properties.GetSingleProperty( PropertyTags.SystemPolicy );
+				return ( p != null ) ? ( bool )p.Value : false;
+			}
+
+			set { properties.ModifyNodeProperty( PropertyTags.SystemPolicy, value ); }
+		}
+
+		/// <summary>
 		/// Returns the PolicyTime object for this policy. If there is no time condition,
 		/// null is returned. 
 		/// </summary>
@@ -431,6 +445,7 @@ namespace Simias.Policy
 		{
 			// Add a relationship property to the LocalDatabase object.
 			LocalDatabase localDb = store.GetDatabaseObject();
+			policy.IsSystemPolicy = false;
 			policy.Properties.ModifyNodeProperty( PropertyTags.PolicyAssociation, new Relationship( localDb ) );
 			localDb.Commit( policy );
 		}
@@ -473,6 +488,7 @@ namespace Simias.Policy
 				throw new CollectionStoreException( String.Format( "Roster does not exist for domain {0}.", domainID ) );
 			}
 
+			policy.IsSystemPolicy = true;
 			policy.Properties.ModifyNodeProperty( PropertyTags.PolicyAssociation, new Relationship( roster ) );
 			roster.Commit( policy );
 		}
@@ -499,6 +515,7 @@ namespace Simias.Policy
 				throw new CollectionStoreException( String.Format( "POBox does not exist for member {0}", member.UserID ) );
 			}
 
+			policy.IsSystemPolicy = true;
 			policy.Properties.ModifyNodeProperty( PropertyTags.PolicyAssociation, new Relationship( poBox ) );
 			poBox.Commit( policy );
 		}
@@ -512,6 +529,7 @@ namespace Simias.Policy
 		public void CommitPolicy( Policy policy, Collection collection )
 		{
 			// Add a relationship property to the Collection object.
+			policy.IsSystemPolicy = false;
 			policy.Properties.ModifyNodeProperty( PropertyTags.PolicyAssociation, new Relationship( collection ) );
 			collection.Commit( policy );
 		}
@@ -631,8 +649,12 @@ namespace Simias.Policy
 			ICSList list = localDb.Search( PropertyTags.PolicyID, policyID, SearchOp.Equal );
 			foreach ( ShallowNode sn in list )
 			{
-				policy = new Policy( localDb, sn );
-				break;
+				Policy tempPolicy = new Policy( localDb, sn );
+				if ( !tempPolicy.IsSystemPolicy )
+				{
+					policy = tempPolicy;
+					break;
+				}
 			}
 
 			return policy;
@@ -656,8 +678,12 @@ namespace Simias.Policy
 				ICSList list = roster.Search( PropertyTags.PolicyID, policyID, SearchOp.Equal );
 				foreach ( ShallowNode sn in list )
 				{
-					policy = new Policy( roster, sn );
-					break;
+					Policy tempPolicy = new Policy( roster, sn );
+					if ( tempPolicy.IsSystemPolicy )
+					{
+						policy = tempPolicy;
+						break;
+					}
 				}
 			}
 
@@ -686,8 +712,12 @@ namespace Simias.Policy
 					ICSList list = poBox.Search( PropertyTags.PolicyID, policyID, SearchOp.Equal );
 					foreach ( ShallowNode sn in list )
 					{
-						policy = new Policy( poBox, sn );
-						break;
+						Policy tempPolicy = new Policy( poBox, sn );
+						if ( tempPolicy.IsSystemPolicy )
+						{
+							policy = tempPolicy;
+							break;
+						}
 					}
 				}
 			}
@@ -710,8 +740,12 @@ namespace Simias.Policy
 			ICSList list = collection.Search( PropertyTags.PolicyID, policyID, SearchOp.Equal );
 			foreach ( ShallowNode sn in list )
 			{
-				policy = new Policy( collection, sn );
-				break;
+				Policy tempPolicy = new Policy( collection, sn );
+				if ( !tempPolicy.IsSystemPolicy )
+				{
+					policy = tempPolicy;
+					break;
+				}
 			}
 
 			return policy;
@@ -740,7 +774,10 @@ namespace Simias.Policy
 				foreach( ShallowNode sn in tempList )
 				{
 					Policy p = new Policy( localDb, sn );
-					policyHash[ p.StrongName ] = p;
+					if ( !p.IsSystemPolicy )
+					{
+						policyHash[ p.StrongName ] = p;
+					}
 				}
 
 				// Get a list of all the policies contained in the domain replacing any overridden
@@ -759,7 +796,10 @@ namespace Simias.Policy
 					foreach( ShallowNode sn in tempList )
 					{
 						Policy p = new Policy( poBox, sn );
-						policyHash[ p.StrongName ] = p;
+						if ( p.IsSystemPolicy )
+						{
+							policyHash[ p.StrongName ] = p;
+						}
 					}
 				}
 
@@ -791,7 +831,10 @@ namespace Simias.Policy
 			foreach( ShallowNode sn in tempList )
 			{
 				Policy p = new Policy( collection, sn );
-				policyHash[ p.StrongName ] = p;
+				if ( !p.IsSystemPolicy )
+				{
+					policyHash[ p.StrongName ] = p;
+				}
 			}
 
 			// Get the policy list for the member.
@@ -826,7 +869,11 @@ namespace Simias.Policy
 				ICSList tempList = roster.Search( BaseSchema.ObjectType, NodeTypes.PolicyType, SearchOp.Equal );
 				foreach ( ShallowNode sn in tempList )
 				{
-					policyList.Add( new Policy( roster, sn ) );
+					Policy p = new Policy( roster, sn );
+					if ( p.IsSystemPolicy )
+					{
+						policyList.Add( p );
+					}
 				}
 			}
 

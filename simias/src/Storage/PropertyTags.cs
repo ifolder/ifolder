@@ -161,6 +161,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string SystemPolicy = "SystemPolicy";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string TombstoneType = "TombstoneType";
 
 		/// <summary>
@@ -210,8 +215,9 @@ namespace Simias.Storage
 			systemPropertyTable.Add( PolicyAssociation, null );
 			systemPropertyTable.Add( PublicKey, null );
 			systemPropertyTable.Add( Root, null );
-			systemPropertyTable.Add( Syncable, null );
 			systemPropertyTable.Add( StorageSize, null );
+			systemPropertyTable.Add( Syncable, null );
+			systemPropertyTable.Add( SystemPolicy, null );
 			systemPropertyTable.Add( TombstoneType, null );
 			systemPropertyTable.Add( Types, null );
 		}
