@@ -133,7 +133,15 @@ namespace Simias.Storage
 		/// 100 nanoseconds. Both the specification of a number of ticks and the value of a TimeSpan can 
 		/// be positive or negative.
 		/// </summary>
-		TimeSpan
+		TimeSpan,
+
+		/// <summary>
+		/// Represents a relationship to another object. The value of a relationship contains a Node object.
+		/// This syntax type operates much like a soft link in a file system. The relationship
+		/// might be broken if the Node object is deleted or cannot be referenced for any other reasons and
+		/// will remain that way until fixed.
+		/// </summary>
+		Relationship
 	};
 
 	/// <summary>
