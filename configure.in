@@ -493,6 +493,7 @@ src/iFolderShell/Makefile
 src/TrayIcon/Makefile
 src/TrayIcon/libtrayicon/Makefile
 src/WebService/Makefile
+src/iFolderCocoa/Makefile
 src/ClientUpgrade/Makefile
 test/Makefile
 test/iFolder/Makefile
