@@ -355,8 +355,8 @@ namespace Novell.iFolder.FormsTrayApp
 			monitor.Start();
 			*/
 			Configuration conf = new Configuration();
-			sysManager = new SystemManager(conf);
-			sysManager.StartServices();
+//			sysManager = new SystemManager(conf);
+//			sysManager.StartServices();
 
 			publisher = new EventPublisher(conf);
 
