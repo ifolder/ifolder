@@ -34,6 +34,10 @@ using System.Net;
 using Microsoft.Win32;
 using Novell.iFolderCom;
 using Novell.Win32Util;
+using Simias;
+using Simias.Event;
+using Simias.Storage;
+using Simias.Sync;
 
 namespace Novell.FormsTrayApp
 {
@@ -46,15 +50,14 @@ namespace Novell.FormsTrayApp
 		private const string iFolderRun = "iFolder";
 
 		private const double megaByte = 1048576;
-		//private Hashtable ht;
-		//private EventSubscriber subscriber;
+		private const int maxMessages = 500;
+		private Hashtable ht;
 		private iFolderWebService ifWebService;
+		private IProcEventClient eventClient;
 		private string currentUserID;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
-		private System.Windows.Forms.Button ok;
-		private System.Windows.Forms.Button cancel;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage tabPage1;
@@ -137,6 +140,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.CheckBox useProxy;
 		private System.Windows.Forms.NumericUpDown port;
 		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.Label status;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -146,7 +150,7 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Instantiates a GlobalProperties object.
 		/// </summary>
-		public GlobalProperties(iFolderWebService ifolderWebService)
+		public GlobalProperties(iFolderWebService ifolderWebService, IProcEventClient eventClient)
 		{
 			//
 			// Required for Windows Form Designer support
@@ -159,31 +163,20 @@ namespace Novell.FormsTrayApp
 			tabControl1.SelectedTab = tabPage1;
 
 			ifWebService = ifolderWebService;
+			this.eventClient = eventClient;
+
+			// Set up the event handlers for sync events ... these need to be active here so that sync events can
+			// be written to the log listbox.
+			eventClient.SetEvent(IProcEventAction.AddCollectionSync, new IProcEventHandler(global_collectionSyncHandler));
+			eventClient.SetEvent(IProcEventAction.AddFileSync, new IProcEventHandler(global_fileSyncHandler));
+
+			ht = new Hashtable();
 
 			// Set the min/max values for port.
 			port.Minimum = IPEndPoint.MinPort;
 			port.Maximum = IPEndPoint.MaxPort;
 
-			// Set up the event handlers to watch for iFolder creates/deletes.
-/*			subscriber = new EventSubscriber();
-			subscriber.NodeChanged += new NodeEventHandler(subscriber_NodeChanged);
-			subscriber.NodeCreated += new NodeEventHandler(subscriber_NodeCreated);
-			subscriber.NodeDeleted += new NodeEventHandler(subscriber_NodeDeleted);
-
-			ht = new Hashtable();
-
-			try
-			{
-				manager = iFolderManager.Connect();
-			}
-			catch (SimiasException e)
-			{
-				e.LogFatal();
-			}
-			catch (Exception e)
-			{
-				logger.Fatal(e, "Fatal error initializing");
-			}*/
+			this.StartPosition = FormStartPosition.CenterScreen;
 		}
 
 		/// <summary>
@@ -210,8 +203,6 @@ namespace Novell.FormsTrayApp
 		{
 			this.defaultInterval = new System.Windows.Forms.NumericUpDown();
 			this.displayConfirmation = new System.Windows.Forms.CheckBox();
-			this.ok = new System.Windows.Forms.Button();
-			this.cancel = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -293,6 +284,7 @@ namespace Novell.FormsTrayApp
 			this.menuHelp = new System.Windows.Forms.MenuItem();
 			this.menuHelpHelp = new System.Windows.Forms.MenuItem();
 			this.menuHelpAbout = new System.Windows.Forms.MenuItem();
+			this.status = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -327,6 +319,7 @@ namespace Novell.FormsTrayApp
 			this.defaultInterval.Name = "defaultInterval";
 			this.defaultInterval.Size = new System.Drawing.Size(64, 20);
 			this.defaultInterval.TabIndex = 2;
+			this.defaultInterval.Leave += new System.EventHandler(this.defaultInterval_Leave);
 			// 
 			// displayConfirmation
 			// 
@@ -335,27 +328,8 @@ namespace Novell.FormsTrayApp
 			this.displayConfirmation.Name = "displayConfirmation";
 			this.displayConfirmation.Size = new System.Drawing.Size(368, 24);
 			this.displayConfirmation.TabIndex = 1;
-			this.displayConfirmation.Text = "Show &confirmation dialog when creating iFolders.";
-			// 
-			// ok
-			// 
-			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.ok.Location = new System.Drawing.Point(288, 496);
-			this.ok.Name = "ok";
-			this.ok.TabIndex = 5;
-			this.ok.Text = "OK";
-			this.ok.Click += new System.EventHandler(this.ok_Click);
-			// 
-			// cancel
-			// 
-			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.cancel.Location = new System.Drawing.Point(368, 496);
-			this.cancel.Name = "cancel";
-			this.cancel.TabIndex = 6;
-			this.cancel.Text = "Cancel";
-			this.cancel.Click += new System.EventHandler(this.cancel_Click);
+			this.displayConfirmation.Text = "Show &Confirmation dialog when creating iFolders";
+			this.displayConfirmation.CheckedChanged += new System.EventHandler(this.displayConfirmation_CheckedChanged);
 			// 
 			// label2
 			// 
@@ -562,7 +536,6 @@ namespace Novell.FormsTrayApp
 			// 
 			this.autoSync.Checked = true;
 			this.autoSync.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.autoSync.Enabled = false;
 			this.autoSync.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.autoSync.Location = new System.Drawing.Point(16, 80);
 			this.autoSync.Name = "autoSync";
@@ -577,8 +550,9 @@ namespace Novell.FormsTrayApp
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(376, 48);
 			this.label3.TabIndex = 0;
-			this.label3.Text = "This will set the default sync setting for all iFolders.  You can change the sync" +
-				" setting for an individual iFolder from the iFolder\'s Property dialog.";
+			this.label3.Text = "Specify the default Sync interval for synchronizing your iFolders with the host. " +
+				"To specify a different Sync interval for an individual iFolder, use the iFolder\'" +
+				"s Properties dialog.";
 			// 
 			// groupBox3
 			// 
@@ -599,7 +573,8 @@ namespace Novell.FormsTrayApp
 			this.autoStart.Name = "autoStart";
 			this.autoStart.Size = new System.Drawing.Size(368, 24);
 			this.autoStart.TabIndex = 0;
-			this.autoStart.Text = "&Startup iFolder at login.";
+			this.autoStart.Text = "&Start iFolder when logging in to the desktop";
+			this.autoStart.CheckedChanged += new System.EventHandler(this.autoStart_CheckedChanged);
 			// 
 			// groupBox5
 			// 
@@ -624,6 +599,7 @@ namespace Novell.FormsTrayApp
 			this.proxy.Size = new System.Drawing.Size(168, 20);
 			this.proxy.TabIndex = 2;
 			this.proxy.Text = "";
+			this.proxy.Leave += new System.EventHandler(this.proxy_Leave);
 			// 
 			// port
 			// 
@@ -632,15 +608,17 @@ namespace Novell.FormsTrayApp
 			this.port.Name = "port";
 			this.port.Size = new System.Drawing.Size(72, 20);
 			this.port.TabIndex = 4;
+			this.port.Leave += new System.EventHandler(this.port_Leave);
 			// 
 			// useProxy
 			// 
+			this.useProxy.Enabled = false;
 			this.useProxy.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.useProxy.Location = new System.Drawing.Point(16, 24);
 			this.useProxy.Name = "useProxy";
 			this.useProxy.Size = new System.Drawing.Size(360, 16);
 			this.useProxy.TabIndex = 0;
-			this.useProxy.Text = "Use a proxy to sync iFolders.";
+			this.useProxy.Text = "&Use this proxy server to sync iFolders with the host";
 			this.useProxy.CheckedChanged += new System.EventHandler(this.useProxy_CheckedChanged);
 			// 
 			// label7
@@ -649,7 +627,7 @@ namespace Novell.FormsTrayApp
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(56, 16);
 			this.label7.TabIndex = 3;
-			this.label7.Text = "Port:";
+			this.label7.Text = "P&ort:";
 			// 
 			// label4
 			// 
@@ -657,7 +635,7 @@ namespace Novell.FormsTrayApp
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(100, 16);
 			this.label4.TabIndex = 1;
-			this.label4.Text = "Proxy host:";
+			this.label4.Text = "&Proxy host:";
 			// 
 			// tabPage3
 			// 
@@ -679,6 +657,7 @@ namespace Novell.FormsTrayApp
 			this.clearLog.Name = "clearLog";
 			this.clearLog.TabIndex = 3;
 			this.clearLog.Text = "&Clear";
+			this.clearLog.Click += new System.EventHandler(this.clearLog_Click);
 			// 
 			// saveLog
 			// 
@@ -688,13 +667,13 @@ namespace Novell.FormsTrayApp
 			this.saveLog.Name = "saveLog";
 			this.saveLog.TabIndex = 2;
 			this.saveLog.Text = "&Save";
+			this.saveLog.Click += new System.EventHandler(this.saveLog_Click);
 			// 
 			// log
 			// 
 			this.log.HorizontalScrollbar = true;
 			this.log.Location = new System.Drawing.Point(8, 48);
 			this.log.Name = "log";
-			this.log.ScrollAlwaysVisible = true;
 			this.log.Size = new System.Drawing.Size(408, 290);
 			this.log.TabIndex = 1;
 			// 
@@ -1046,16 +1025,21 @@ namespace Novell.FormsTrayApp
 			this.menuHelpAbout.Text = "About";
 			this.menuHelpAbout.Click += new System.EventHandler(this.menuHelpAbout_Click);
 			// 
+			// status
+			// 
+			this.status.Location = new System.Drawing.Point(8, 490);
+			this.status.Name = "status";
+			this.status.Size = new System.Drawing.Size(432, 16);
+			this.status.TabIndex = 10;
+			this.status.Text = "Idle...";
+			// 
 			// GlobalProperties
 			// 
-			this.AcceptButton = this.ok;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.CancelButton = this.cancel;
-			this.ClientSize = new System.Drawing.Size(450, 523);
+			this.ClientSize = new System.Drawing.Size(450, 507);
+			this.Controls.Add(this.status);
 			this.Controls.Add(this.banner);
 			this.Controls.Add(this.tabControl1);
-			this.Controls.Add(this.cancel);
-			this.Controls.Add(this.ok);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.KeyPreview = true;
 			this.MaximizeBox = false;
@@ -1064,6 +1048,7 @@ namespace Novell.FormsTrayApp
 			this.Name = "GlobalProperties";
 			this.Text = "iFolder";
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlobalProperties_KeyDown);
+			this.Closing += new System.ComponentModel.CancelEventHandler(this.GlobalProperties_Closing);
 			this.Load += new System.EventHandler(this.GlobalProperties_Load);
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).EndInit();
 			this.tabControl1.ResumeLayout(false);
@@ -1130,16 +1115,16 @@ namespace Novell.FormsTrayApp
 		#region Private Methods
 		private void addiFolderToListView(iFolder ifolder)
 		{
-			//lock (ht)
+			lock (ht)
 			{
 				// Add only if it isn't already in the list.
-				//if (ht[ifolder.ID] == null)
+				if (ht[ifolder.ID] == null)
 				{
 					string[] items = new string[3];
 					int imageIndex;
 
 					items[0] = ifolder.Name;
-					items[1] = ifolder.IsSubscription ? "" : ifolder.UnManagedPath;
+					items[1] = ifolder.IsSubscription ? ifolder.Owner : ifolder.UnManagedPath;
 					items[2] = stateToString(ifolder.State, ifolder.HasConflicts, out imageIndex);
 
 					ListViewItem lvi = new ListViewItem(items, imageIndex);
@@ -1147,8 +1132,48 @@ namespace Novell.FormsTrayApp
 					iFolderView.Items.Add(lvi);
 
 					// Add the listviewitem to the hashtable.
-					//ht.Add(ifolder.ID, lvi);
+					ht.Add(ifolder.ID, lvi);
 				}
+			}
+		}
+
+		private void addMessageToLog(DateTime dateTime, string message)
+		{
+			if (message != null)
+			{
+				log.Items.Add(dateTime.ToString() + " " + message);
+				log.SelectedIndex = log.Items.Count - 1;
+				saveLog.Enabled = clearLog.Enabled = true;
+
+				// This should only have to execute once.
+				while (log.Items.Count > maxMessages)
+				{
+					log.Items.RemoveAt(0);
+				}
+			}
+		}
+
+		private void updateListViewItem(ListViewItem lvi)
+		{
+			iFolder ifolder = (iFolder)lvi.Tag;
+
+			if (ifolder.State.Equals("Available") && (ifWebService.GetiFolder(ifolder.CollectionID) != null))
+			{
+				// The iFolder already exists locally ... remove it from the list.
+				lock (ht)
+				{
+					ht.Remove(((iFolder)lvi.Tag).ID);
+				}
+
+				lvi.Remove();
+			}
+			else
+			{
+				int imageIndex;
+				lvi.SubItems[0].Text = ifolder.Name;
+				lvi.SubItems[1].Text = ifolder.IsSubscription ? "" : ifolder.UnManagedPath;
+				lvi.SubItems[2].Text = stateToString(ifolder.State, ifolder.HasConflicts, out imageIndex);
+				lvi.ImageIndex = imageIndex;
 			}
 		}
 
@@ -1217,10 +1242,10 @@ namespace Novell.FormsTrayApp
 			iFolderView.Items.Clear();
 			iFolderView.SelectedItems.Clear();
 
-/*			lock(ht)
+			lock(ht)
 			{
 				ht.Clear();
-			}*/
+			}
 
 			iFolderView.BeginUpdate();
 
@@ -1244,7 +1269,13 @@ namespace Novell.FormsTrayApp
 
 		private void invokeiFolderProperties(ListViewItem lvi, int activeTab)
 		{
-			new iFolderComponent().InvokeAdvancedDlg(Application.StartupPath, lvi.SubItems[1].Text, activeTab, true);
+			iFolderAdvanced ifolderAdvanced = new iFolderAdvanced();
+			ifolderAdvanced.CurrentiFolder = (iFolder)lvi.Tag;
+			ifolderAdvanced.LoadPath = Application.StartupPath;
+			ifolderAdvanced.ActiveTab = activeTab;
+			ifolderAdvanced.EventClient = eventClient;
+			ifolderAdvanced.ShowDialog();
+			ifolderAdvanced.Dispose();
 		}
 
 		private void synciFolder(string iFolderID)
@@ -1284,6 +1315,12 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
+				// Set up the event handlers to watch for iFolder creates/deletes ... these only need to be active
+				// while the form is displayed.
+				eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(global_nodeChangeHandler));
+				eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(global_nodeCreateHandler));
+				eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(global_nodeDeleteHandler));
+
 				iFolderSettings ifSettings = ifWebService.GetSettings();
 				currentUserID = ifSettings.CurrentUserID;
 				displayConfirmation.Checked = ifSettings.DisplayConfirmation;
@@ -1322,6 +1359,7 @@ namespace Novell.FormsTrayApp
 
 				// Display the default sync interval.
 				defaultInterval.Value = (decimal)ifWebService.GetDefaultSyncInterval();
+				autoSync.Checked = defaultInterval.Value != System.Threading.Timeout.Infinite;
 
 				autoStart.Checked = isRunEnabled();
 
@@ -1343,49 +1381,44 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private void ok_Click(object sender, System.EventArgs e)
+		private void GlobalProperties_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			Cursor.Current = Cursors.WaitCursor;
+			// Remove event handlers for this object.
+			eventClient.SetEvent(IProcEventAction.RemoveNodeChanged, new IProcEventHandler(global_nodeChangeHandler));
+			eventClient.SetEvent(IProcEventAction.RemoveNodeCreated, new IProcEventHandler(global_nodeCreateHandler));
+			eventClient.SetEvent(IProcEventAction.RemoveNodeDeleted, new IProcEventHandler(global_nodeDeleteHandler));
+			eventClient.SetEvent(IProcEventAction.RemoveCollectionSync, new IProcEventHandler(global_collectionSyncHandler));
+			eventClient.SetEvent(IProcEventAction.RemoveFileSync, new IProcEventHandler(global_fileSyncHandler));
 
-			try
+			if (defaultInterval.Focused)
 			{
-				// Save the default sync interval.
-				ifWebService.SetDefaultSyncInterval((int)defaultInterval.Value);
-
-				// Save the auto start value.
-				SetRunValue(autoStart.Checked);
-
-				// Save the display confirmation setting.
-				ifWebService.SetDisplayConfirmation(displayConfirmation.Checked);
-
-				// Save the proxy settings.
-				if (useProxy.Checked)
+				try
 				{
+					ifWebService.SetDefaultSyncInterval((int)defaultInterval.Value);
+				}
+				catch
+				{
+					// TODO: Localize.
+					MessageBox.Show("An error was encountered while saving the default sync interval.");
+				}
+			}
+			else if (proxy.Focused || port.Focused)
+			{
+				try
+				{
+					// Save the proxy settings.
 					ifWebService.SetupProxy(proxy.Text, (int)port.Value);
 				}
-				else
+				catch
 				{
-					ifWebService.RemoveProxy();
+					// TODO: Localize
+					MessageBox.Show("An error was encountered while saving the proxy settings.");
 				}
 			}
-			catch (WebException ex)
-			{
-				// TODO: change message displayed
-				MessageBox.Show(ex.Message);
-			}
-			catch (Exception ex)
-			{
-				// TODO: change message displayed
-				MessageBox.Show(ex.Message);
-			}
-
-			Cursor.Current = Cursors.Default;
 		}
 
 		private void menuFileExit_Click(object sender, System.EventArgs e)
 		{
-			this.ok_Click(this, e);
-
 			this.Close();
 		}
 
@@ -1448,8 +1481,11 @@ namespace Novell.FormsTrayApp
 			menuResolve.Visible = (iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).HasConflicts;
 			menuRefresh.Visible = menuCreate.Visible = iFolderView.SelectedItems.Count == 0;
 
+			// Display the accept and delete menu items if the selected item is a subscription with state "Available"
 			menuAccept.Visible = /*menuDecline.Visible =*/ menuDelete.Visible = 
-				(iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription;
+				(iFolderView.SelectedItems.Count == 1) && 
+				((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription &&
+				((iFolder)iFolderView.SelectedItems[0].Tag).State.Equals("Available");
 		}
 
 		private void menuOpen_Click(object sender, System.EventArgs e)
@@ -1479,17 +1515,20 @@ namespace Novell.FormsTrayApp
 				iFolder ifolder = (iFolder)lvi.Tag;
 
 				// Delete the iFolder.
-				ifWebService.DeleteiFolder(ifolder.ID);
+				iFolder newiFolder = ifWebService.RevertiFolder(ifolder.ID);
 
 				// Notify the shell.
 				Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
 
-/*				lock (ht)
-				{
-					ht.Remove((string)lvi.Tag);
-				}*/
+				lvi.Tag = newiFolder;
 
-				lvi.Remove();
+				lock (ht)
+				{
+					ht.Remove(ifolder.ID);
+					ht.Add(newiFolder.ID, lvi);
+				}
+
+				updateListViewItem(lvi);
 			}
 			catch (WebException ex)
 			{
@@ -1507,7 +1546,11 @@ namespace Novell.FormsTrayApp
 
 		private void menuResolve_Click(object sender, System.EventArgs e)
 		{
-			new iFolderComponent().InvokeConflictResolverDlg(Application.StartupPath, iFolderView.SelectedItems[0].SubItems[1].Text);
+			ConflictResolver conflictResolver = new ConflictResolver();
+			conflictResolver.iFolder = (iFolder)iFolderView.SelectedItems[0].Tag;
+			conflictResolver.iFolderWebService = ifWebService;
+			conflictResolver.LoadPath = Application.StartupPath;
+			conflictResolver.Show();		
 		}
 
 		private void menuShare_Click(object sender, System.EventArgs e)
@@ -1584,9 +1627,11 @@ namespace Novell.FormsTrayApp
 
 		private void menuAccept_Click(object sender, System.EventArgs e)
 		{
-			iFolder ifolder = (iFolder)iFolderView.SelectedItems[0].Tag;
+			ListViewItem lvi = iFolderView.SelectedItems[0];
+			iFolder ifolder = (iFolder)lvi.Tag;
 
 			AcceptInvitation acceptInvitation = new AcceptInvitation(ifWebService, ifolder);
+			// TODO: get iFolder from acceptInvitation and update the listviewitem with it.
 			acceptInvitation.ShowDialog();
 		}
 
@@ -1603,7 +1648,8 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				ifWebService.RemoveSubscription(ifolder.Domain, ifolder.ID, currentUserID);
+				//ifWebService.RemoveSubscription(ifolder.Domain, ifolder.ID, currentUserID);
+				ifWebService.DeleteiFolder(ifolder.ID);
 				lvi.Remove();
 			}
 			catch (WebException ex)
@@ -1620,58 +1666,265 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Log Tab
+		private void saveLog_Click(object sender, System.EventArgs e)
+		{
+			SaveFileDialog saveFileDialog = new SaveFileDialog();
+			if (saveFileDialog.ShowDialog() == DialogResult.OK)
+			{
+				StreamWriter streamWriter = File.CreateText(saveFileDialog.FileName);
+				foreach (string s in log.Items)
+				{
+					streamWriter.WriteLine(s);
+				}
+
+				streamWriter.Flush();
+				streamWriter.Close();
+			}
+		}
+
+		private void clearLog_Click(object sender, System.EventArgs e)
+		{
+			log.Items.Clear();
+
+			// TODO: Localize
+			log.Items.Add(DateTime.Now.ToString() + " Log entries cleared.");
+
+			saveLog.Enabled = clearLog.Enabled = false;
+		}
 		#endregion
 
 		#region Preferences Tab
-		private void useProxy_CheckedChanged(object sender, System.EventArgs e)
+		private void autoStart_CheckedChanged(object sender, System.EventArgs e)
 		{
-			proxy.Enabled = port.Enabled = useProxy.Checked;
+			// Save the auto start value.
+			SetRunValue(autoStart.Checked);
+		}
+
+		private void displayConfirmation_CheckedChanged(object sender, System.EventArgs e)
+		{
+			try
+			{
+				// Save the display confirmation setting.
+				ifWebService.SetDisplayConfirmation(displayConfirmation.Checked);
+			}
+			catch
+			{
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while saving the display confirmation setting.");
+			}
 		}
 
 		private void autoSync_CheckedChanged(object sender, System.EventArgs e)
 		{
-			defaultInterval.Enabled = autoSync.Checked;
+			try
+			{
+				defaultInterval.Enabled = autoSync.Checked;
+				if (!autoSync.Checked)
+				{
+					//defaultInterval.Value = System.Threading.Timeout.Infinite;
+				
+					// Save the default sync interval.
+					ifWebService.SetDefaultSyncInterval(System.Threading.Timeout.Infinite);
+				}
+				else
+				{
+					ifWebService.SetDefaultSyncInterval((int)defaultInterval.Value);
+				}
+			}
+			catch
+			{
+				// TODO: Localize.
+				MessageBox.Show("An error was encountered while saving the default sync interval.");
+			}
 		}
-		#endregion
 
-		#region Subscriber Handlers
-/*		private void subscriber_NodeCreated(NodeEventArgs args)
+		private void defaultInterval_Leave(object sender, System.EventArgs e)
 		{
 			try
 			{
-				iFolder ifolder = manager.GetiFolderById(args.ID);
+				ifWebService.SetDefaultSyncInterval((int)defaultInterval.Value);
+			}
+			catch
+			{
+				// TODO: Localize.
+				MessageBox.Show("An error was encountered while saving the default sync interval.");
+			}
+		}
+
+		private void useProxy_CheckedChanged(object sender, System.EventArgs e)
+		{
+			proxy.Enabled = port.Enabled = useProxy.Checked;
+
+			// Save the proxy settings.
+			if (!useProxy.Checked)
+			{
+				try
+				{
+					ifWebService.RemoveProxy();
+				}
+				catch
+				{
+					// TODO: Localize
+					MessageBox.Show("An error was encountered while saving the proxy settings.");
+				}
+			}
+		}
+
+		private void proxy_Leave(object sender, System.EventArgs e)
+		{
+			try
+			{
+				// Save the proxy settings.
+				ifWebService.SetupProxy(proxy.Text, (int)port.Value);
+			}
+			catch
+			{
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while saving the proxy settings.");
+			}
+		}
+
+		private void port_Leave(object sender, System.EventArgs e)
+		{
+			try
+			{
+				// Save the proxy settings.
+				ifWebService.SetupProxy(proxy.Text, (int)port.Value);
+			}
+			catch
+			{
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while saving the proxy settings.");
+			}
+		}
+		#endregion
+
+		#region Node Event Handlers
+		private void global_nodeChangeHandler(SimiasEventArgs args)
+		{
+			NodeEventArgs eventArgs = args as NodeEventArgs;
+
+			try
+			{
+				iFolder ifolder = null;
+				if (eventArgs.Type.Equals("Collection"))
+				{
+					ifolder = ifWebService.GetiFolder(eventArgs.Collection);
+				}
+				else if (eventArgs.Type.Equals("Node"))
+				{
+					ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
+				}
+
 				if (ifolder != null)
+				{
+					ListViewItem lvi;
+					lock (ht)
+					{
+						// Get the corresponding listview item.
+						lvi = (ListViewItem)ht[eventArgs.Node];
+					}
+
+					if (lvi != null)
+					{
+						// Update the tag data.
+						lvi.Tag = ifolder;
+						updateListViewItem(lvi);
+					}
+				}
+			}
+			catch
+			{
+				// Ignore.
+			}
+		}
+
+		private void global_nodeCreateHandler(SimiasEventArgs args)
+		{
+			NodeEventArgs eventArgs = args as NodeEventArgs;
+
+			try
+			{
+				iFolder ifolder = null;
+				if (eventArgs.Type.Equals("Collection"))
+				{
+					// TODO: for some reason this iFolder is not coming back with the UnManagedPath set ...
+					// need to put some extra code in to handle this.
+					ifolder = ifWebService.GetiFolder(eventArgs.Collection);
+				}
+				else if (eventArgs.Type.Equals("Node"))
+				{
+					ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
+				}
+
+				if ((ifolder != null) &&
+					((ifolder.State.Equals("Available") && (ifWebService.GetiFolder(ifolder.CollectionID) == null)) ||
+					ifolder.State.Equals("Local")))
 				{
 					addiFolderToListView(ifolder);
 				}
 			}
-			catch (SimiasException ex)
+			catch
 			{
-				ex.LogError();
-			}
-			catch (Exception ex)
-			{
-				//logger.Debug(ex, "OnNodeCreated");
+				// Ignore.
 			}
 		}
 
-		private void subscriber_NodeDeleted(NodeEventArgs args)
+		private void global_nodeDeleteHandler(SimiasEventArgs args)
 		{
+			NodeEventArgs eventArgs = args as NodeEventArgs;
 			lock (ht)
 			{
-				ListViewItem lvi = (ListViewItem)ht[args.Node];
+				ListViewItem lvi = (ListViewItem)ht[eventArgs.Node];
 				if (lvi != null)
 				{
 					lvi.Remove();
-					ht.Remove(args.Node);
+					ht.Remove(eventArgs.Node);
 				}
 			}
 		}
 
-		private void subscriber_NodeChanged(NodeEventArgs args)
+		private void global_collectionSyncHandler(SimiasEventArgs args)
 		{
-			// TODO: implement this if needed.
-		}*/
+			CollectionSyncEventArgs syncEventArgs = args as CollectionSyncEventArgs;
+
+			// TODO: Localize
+			string message = null;
+			switch (syncEventArgs.Action)
+			{
+				case Action.StartSync:
+				{
+					message = "Synchronizing " + syncEventArgs.Name;
+					status.Text = message;
+					break;
+				}
+				case Action.StopSync:
+				{
+					message = syncEventArgs.Name + (syncEventArgs.Successful ? " synchronization succeeded." : " synchronization failed.");
+					status.Text = "Idle...";
+					break;
+				}
+			}
+
+			// Add message to log.
+			addMessageToLog(syncEventArgs.TimeStamp, message);
+		}
+
+		private void global_fileSyncHandler(SimiasEventArgs args)
+		{
+			FileSyncEventArgs syncEventArgs = args as FileSyncEventArgs;
+
+			// TODO: Localize
+			string message = "Synchronizing file " + syncEventArgs.Name;
+			status.Text = message;
+
+			// TODO: may want to include the direction as part of the message.
+
+			// Add message to log.
+			// TODO: Localize
+			message += " size = " + syncEventArgs.Size.ToString() + " total size to sync = " + syncEventArgs.SizeToSync.ToString() + " remaining size to sync = " + syncEventArgs.SizeRemaining.ToString();
+			addMessageToLog(syncEventArgs.TimeStamp, message);
+		}
 		#endregion
 
 		#endregion
@@ -1680,10 +1933,5 @@ namespace Novell.FormsTrayApp
 
 		[DllImport("kernel32.dll")]
 		internal static extern uint GetDriveType(string rootPathName);
-
-		private void cancel_Click(object sender, System.EventArgs e)
-		{
-		
-		}
 	}
 }

@@ -36,10 +36,12 @@ namespace Novell.iFolderCom
 	[ComVisible(false)]
 	public class MyMessageBox : System.Windows.Forms.Form
 	{
+		private const float maxWidth = 400;
 		private System.Windows.Forms.Button yes;
 		private System.Windows.Forms.Button no;
 		private System.Windows.Forms.Label message;
 		private System.Windows.Forms.PictureBox messageIcon;
+		private System.Windows.Forms.Button ok;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -54,6 +56,8 @@ namespace Novell.iFolderCom
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
+
+			this.StartPosition = FormStartPosition.CenterParent;
 		}
 
 		/// <summary>
@@ -82,47 +86,60 @@ namespace Novell.iFolderCom
 			this.no = new System.Windows.Forms.Button();
 			this.message = new System.Windows.Forms.Label();
 			this.messageIcon = new System.Windows.Forms.PictureBox();
+			this.ok = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// yes
 			// 
 			this.yes.DialogResult = System.Windows.Forms.DialogResult.Yes;
 			this.yes.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.yes.Location = new System.Drawing.Point(200, 104);
+			this.yes.Location = new System.Drawing.Point(176, 64);
 			this.yes.Name = "yes";
+			this.yes.Size = new System.Drawing.Size(77, 23);
 			this.yes.TabIndex = 0;
 			this.yes.Text = "Yes";
+			this.yes.Visible = false;
 			// 
 			// no
 			// 
 			this.no.DialogResult = System.Windows.Forms.DialogResult.No;
 			this.no.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.no.Location = new System.Drawing.Point(280, 104);
+			this.no.Location = new System.Drawing.Point(256, 64);
 			this.no.Name = "no";
 			this.no.TabIndex = 1;
 			this.no.Text = "No";
+			this.no.Visible = false;
 			// 
 			// message
 			// 
-			this.message.Location = new System.Drawing.Point(64, 32);
+			this.message.Location = new System.Drawing.Point(64, 24);
 			this.message.Name = "message";
-			this.message.Size = new System.Drawing.Size(456, 40);
+			this.message.Size = new System.Drawing.Size(400, 16);
 			this.message.TabIndex = 2;
 			// 
 			// messageIcon
 			// 
-			this.messageIcon.Location = new System.Drawing.Point(8, 32);
+			this.messageIcon.Location = new System.Drawing.Point(16, 24);
 			this.messageIcon.Name = "messageIcon";
 			this.messageIcon.Size = new System.Drawing.Size(32, 32);
 			this.messageIcon.TabIndex = 3;
 			this.messageIcon.TabStop = false;
+			// 
+			// ok
+			// 
+			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.ok.Location = new System.Drawing.Point(96, 64);
+			this.ok.Name = "ok";
+			this.ok.TabIndex = 4;
+			this.ok.Text = "OK";
 			// 
 			// MyMessageBox
 			// 
 			this.AcceptButton = this.yes;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.CancelButton = this.no;
-			this.ClientSize = new System.Drawing.Size(552, 136);
+			this.ClientSize = new System.Drawing.Size(490, 96);
+			this.Controls.Add(this.ok);
 			this.Controls.Add(this.messageIcon);
 			this.Controls.Add(this.message);
 			this.Controls.Add(this.no);
@@ -132,10 +149,28 @@ namespace Novell.iFolderCom
 			this.MinimizeBox = false;
 			this.Name = "MyMessageBox";
 			this.ShowInTaskbar = false;
+			this.Paint += new System.Windows.Forms.PaintEventHandler(this.MyMessageBox_Paint);
 			this.ResumeLayout(false);
 
 		}
 		#endregion
+
+		private void MyMessageBox_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+		{
+			SizeF size = e.Graphics.MeasureString(message.Text, message.Font);
+			float width = (size.Width / maxWidth) > 1 ? maxWidth : size.Width;
+			float height = (float)Math.Ceiling(size.Width / width) * size.Height + 2;
+			message.Size = new Size((int)Math.Ceiling(width), (int)Math.Ceiling(height));
+			this.Width = message.Right + message.Left + 4;
+
+			ok.Left = (ClientRectangle.Width - ok.Width) / 2;
+			ok.Top = message.Bottom + 12;
+
+			yes.Left = (ClientRectangle.Width / 2) - (yes.Width + 4);
+			no.Left = yes.Right + 4;
+			yes.Top = no.Top = ok.Top;
+			this.Height = ok.Bottom + (this.Height - ClientRectangle.Height) + 12;
+		}
 
 		/// <summary>
 		/// Sets the string to display in the message box.
@@ -167,6 +202,18 @@ namespace Novell.iFolderCom
 			set
 			{
 				this.messageIcon.Image = (Image)value.ToBitmap();
+			}
+		}
+
+		/// <summary>
+		/// Set to display Yes/No buttons instead of OK button.
+		/// </summary>
+		public bool YesNo
+		{
+			set
+			{
+				yes.Visible = no.Visible = value;
+				ok.Visible = !value;
 			}
 		}
 	}

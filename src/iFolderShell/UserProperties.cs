@@ -142,7 +142,7 @@ namespace Novell.iFolderCom
 			this.owner.Name = "owner";
 			this.owner.Size = new System.Drawing.Size(264, 16);
 			this.owner.TabIndex = 3;
-			this.owner.Text = "Make this user the owner of the collection.";
+			this.owner.Text = "Make this user the owner of the collection";
 			this.owner.CheckedChanged += new System.EventHandler(this.owner_CheckedChanged);
 			// 
 			// ok

@@ -32,6 +32,10 @@ using System.IO;
 using Novell.iFolderCom;
 using Novell.Win32Util;
 using CustomUIControls;
+using Simias;
+using Simias.Event;
+using Simias.Storage;
+using Simias.Sync;
 
 namespace Novell.FormsTrayApp
 {
@@ -73,6 +77,10 @@ namespace Novell.FormsTrayApp
 		private Process simiasProc;
 		private iFolderWebService ifWebService;
 		//private EventSubscriber subscriber;
+		private iFolderSettings ifolderSettings = null;
+		private IProcEventClient eventClient;
+		private GlobalProperties globalProperties;
+		private bool eventError = false;
 		private IntPtr hwnd;
 		private System.Windows.Forms.MenuItem menuJoin;
 		private System.Windows.Forms.MenuItem menuStoreBrowser;
@@ -207,8 +215,10 @@ namespace Novell.FormsTrayApp
 
 		private void menuProperties_Click(object sender, System.EventArgs e)
 		{
-			GlobalProperties globalProperties = new GlobalProperties(ifWebService);
-			globalProperties.ShowDialog();
+			if (!globalProperties.Visible)
+			{
+				globalProperties.ShowDialog();
+			}
 		}
 
 		private void menuHelp_Click(object sender, System.EventArgs e)
@@ -232,7 +242,7 @@ namespace Novell.FormsTrayApp
 			// Disable the exit menu item so it cannot be clicked again.
 			menuExit.Enabled = false;
 
-			ShutdownTrayApp();
+			ShutdownTrayApp(null);
 		}
 
 		private void messages_MessagesServiced(object sender, EventArgs e)
@@ -251,8 +261,12 @@ namespace Novell.FormsTrayApp
 			// Check to see if we have already connected to an enterprise server.
 			try
 			{
-				iFolderSettings ifolderSettings = ifWebService.GetSettings();
-				menuJoin.Visible = !ifolderSettings.HaveEnterprise;
+				// If the join menu is already hidden, we don't need to check.
+				if (menuJoin.Visible)
+				{
+					ifolderSettings = ifWebService.GetSettings();
+					menuJoin.Visible = !ifolderSettings.HaveEnterprise;
+				}
 			}
 			catch
 			{
@@ -267,7 +281,7 @@ namespace Novell.FormsTrayApp
 
 		private void FormsTrayApp_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			ShutdownTrayApp();
+			ShutdownTrayApp(null);
 		}
 
 		private void FormsTrayApp_Load(object sender, System.EventArgs e)
@@ -302,6 +316,18 @@ namespace Novell.FormsTrayApp
 				notifyIcon1.Icon = trayIcon;
 
 				// Set up the event handlers to watch for create, delete, and change events.
+				eventClient = new IProcEventClient(new IProcEventError(errorHandler), null);
+				eventClient.Register();
+				if (!eventError)
+				{
+					eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(trayApp_nodeChangeHandler));
+					eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(trayApp_nodeCreateHandler));
+					eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(trayApp_nodeDeleteHandler));
+					eventClient.SetEvent(IProcEventAction.AddCollectionSync, new IProcEventHandler(trayApp_collectionSyncHandler));
+				}
+
+				globalProperties = new GlobalProperties(ifWebService, eventClient);
+
 /*				subscriber = new EventSubscriber();
 				subscriber.NodeChanged += new NodeEventHandler(subscriber_NodeChanged);
 				subscriber.NodeCreated += new NodeEventHandler(subscriber_NodeCreated);
@@ -309,11 +335,11 @@ namespace Novell.FormsTrayApp
 */			}
 			catch (WebException ex)
 			{
-				CleanupTrayApp(ex);
+				ShutdownTrayApp(ex);
 			}
 			catch (Exception ex)
 			{
-				CleanupTrayApp(ex);
+				ShutdownTrayApp(ex);
 			}
 		}
 
@@ -321,6 +347,137 @@ namespace Novell.FormsTrayApp
 //		{
 //			ShutdownTrayApp();
 //		}
+
+		private void errorHandler(SimiasException e, object context)
+		{
+			eventError = true;
+		}
+
+		private void trayApp_nodeChangeHandler(SimiasEventArgs args)
+		{
+			NodeEventArgs eventArgs = args as NodeEventArgs;
+
+			if (eventArgs.Type == "Collection")
+			{
+				iFolder ifolder = ifWebService.GetiFolder(eventArgs.Collection);
+				if (ifolder != null)
+				{
+					if (ifolder.HasConflicts)
+					{
+						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
+
+						// TODO: Localize
+						balloonTip.ShowBalloon(
+							hwnd,
+							iconID,
+							BalloonType.Info,
+							"Action Required",
+							"A collision has been detected in iFolder:\n" + ifolder.Name);
+
+						// TODO: Change the icon?
+					}
+				}
+			}
+		}
+
+		private void trayApp_nodeCreateHandler(SimiasEventArgs args)
+		{
+			NodeEventArgs eventArgs = args as NodeEventArgs;
+
+			try
+			{
+				switch (eventArgs.Type)
+				{
+					case "Node":
+					{
+						iFolder ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
+
+						// If the iFolder is available and doesn't exist locally, post a notification.
+						if ((ifolder != null) && ifolder.State.Equals("Available") && (ifWebService.GetiFolder(ifolder.CollectionID) == null))
+						{
+							// TODO: check this...
+							//this.Text = "A message needs your attention";
+
+							NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
+
+							// TODO: Localize
+							balloonTip.ShowBalloon(
+								hwnd,
+								iconID,
+								BalloonType.Info,
+								"Action Required",
+								"A subscription has just been received from " + ifolder.Owner);
+
+							// TODO: Change the icon?
+						}
+						break;
+					}
+					case "Member":
+					{
+						if (ifolderSettings == null)
+						{
+							ifolderSettings = ifWebService.GetSettings();
+						}
+
+						// TODO: This currently displays a notification for each member added to an iFolder ...
+						// so when an iFolder is accepted and synced down the first time, a notification occurs for each
+						// member of the iFolder.  A couple of ways to solve this:
+						// 1. Keep track of the first sync and don't display any notifications until the initial sync has successfully completed.
+						// 2. Queue up the added members and only display a single notification ... some sort of time interval would need to be used.
+						iFolderUser ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
+						if ((ifolderUser != null) && (!ifolderUser.UserID.Equals(ifolderSettings.CurrentUserID)))
+						{
+							iFolder ifolder = ifWebService.GetiFolder(eventArgs.Collection);
+
+							NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
+
+							// TODO: Localize
+							balloonTip.ShowBalloon(
+								hwnd,
+								iconID,
+								BalloonType.Info,
+								"New Membership",
+								ifolderUser.Name + " has just joined iFolder " + ifolder.Name);
+
+							// TODO: Change the icon?
+						}
+						break;
+					}
+					default:
+						break;
+				}
+			}
+			catch
+			{
+				// Ignore.
+			}
+		}
+
+		private void trayApp_nodeDeleteHandler(SimiasEventArgs args)
+		{
+			NodeEventArgs eventArgs = args as NodeEventArgs;
+
+			// TODO: implement if needed.
+		}
+
+		private void trayApp_collectionSyncHandler(SimiasEventArgs args)
+		{
+			CollectionSyncEventArgs syncEventArgs = args as CollectionSyncEventArgs;
+
+			switch (syncEventArgs.Action)
+			{
+				case Action.StartSync:
+				{
+					// TODO: start icon animation.
+					break;
+				}
+				case Action.StopSync:
+				{
+					// TODO: stop icon animation
+					break;
+				}
+			}
+		}
 
 /*		private void subscriber_NodeCreated(NodeEventArgs args)
 		{
@@ -523,12 +680,23 @@ namespace Novell.FormsTrayApp
 
 		}
 
-		private void ShutdownTrayApp()
+		private void ShutdownTrayApp(Exception ex)
 		{
 			Cursor.Current = Cursors.WaitCursor;
 
+			if (ex != null)
+			{
+				// TODO: Localize.
+				MessageBox.Show("A fatal error was encountered during iFolder initialization.\n\n" + ex.Message, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+			}
+
 			try
 			{
+				if (eventClient != null)
+				{
+					eventClient.Deregister();
+				}
+
 				if ((simiasProc != null) && !simiasProc.HasExited)
 				{
 					StreamWriter simiasStdIn = simiasProc.StandardInput;
@@ -611,7 +779,7 @@ namespace Novell.FormsTrayApp
 		/// Process messages in the Windows message loop.
 		/// </summary>
 		/// <param name="m"></param>
-		[System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name="FullTrust")]
+		/*[System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name="FullTrust")]
 		protected override void WndProc(ref System.Windows.Forms.Message m) 
 		{
 //			Debug.WriteLine("Message = " + m.Msg.ToString());
@@ -623,6 +791,6 @@ namespace Novell.FormsTrayApp
 					break;                
 			}
 			base.WndProc(ref m);
-		}
+		}*/
 	}
 }

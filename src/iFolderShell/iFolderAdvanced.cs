@@ -29,6 +29,9 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Net;
+using Simias;
+using Simias.Event;
+using Simias.Storage;
 
 namespace Novell.iFolderCom
 {
@@ -50,8 +53,11 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Button remove;
 		private System.Windows.Forms.Button add;
 
-		//private Hashtable subscrHT;
-		//private EventSubscriber subscriber;
+		private string longName = String.Empty;
+		private Hashtable subscrHT;
+		private IProcEventClient eventClient;
+		private bool existingEventClient = true;
+		private bool eventError = false;
 		private int okDelta;
 		private int initTabTop;
 		private int initHeight;
@@ -120,7 +126,7 @@ namespace Novell.iFolderCom
 			//
 			InitializeComponent();
 
-			apply.Enabled = remove.Enabled = /*accept.Enabled = decline.Enabled =*/ false;
+			apply.Enabled = remove.Enabled = access.Enabled = /*accept.Enabled = decline.Enabled =*/ false;
 
 			syncInterval.TextChanged += new EventHandler(syncInterval_ValueChanged);
 			okDelta = ok.Top - tabControl1.Bottom;
@@ -140,10 +146,19 @@ namespace Novell.iFolderCom
 		{
 			if( disposing )
 			{
-/*				if (subscriber != null)
+				if (eventClient != null)
 				{
-					subscriber.Dispose();
-				}*/
+					if (existingEventClient)
+					{
+						eventClient.SetEvent(IProcEventAction.RemoveNodeChanged, new IProcEventHandler(nodeChangeHandler));
+						eventClient.SetEvent(IProcEventAction.RemoveNodeCreated, new IProcEventHandler(nodeCreateHandler));
+						eventClient.SetEvent(IProcEventAction.RemoveNodeDeleted, new IProcEventHandler(nodeDeleteHandler));
+					}
+					else
+					{
+						eventClient.Deregister();
+					}
+				}
 
 				if(components != null)
 				{
@@ -306,7 +321,7 @@ namespace Novell.iFolderCom
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(336, 24);
 			this.label5.TabIndex = 0;
-			this.label5.Text = "This will set the sync setting for this iFolder.";
+			this.label5.Text = "Specify the Sync interval for synchronizing this iFolder with the host.";
 			// 
 			// syncInterval
 			// 
@@ -315,7 +330,7 @@ namespace Novell.iFolderCom
 																		   0,
 																		   0,
 																		   0});
-			this.syncInterval.Location = new System.Drawing.Point(144, 56);
+			this.syncInterval.Location = new System.Drawing.Point(144, 54);
 			this.syncInterval.Maximum = new System.Decimal(new int[] {
 																		 86400,
 																		 0,
@@ -342,13 +357,13 @@ namespace Novell.iFolderCom
 			// 
 			this.autoSync.Checked = true;
 			this.autoSync.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.autoSync.Enabled = false;
 			this.autoSync.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.autoSync.Location = new System.Drawing.Point(16, 56);
 			this.autoSync.Name = "autoSync";
 			this.autoSync.Size = new System.Drawing.Size(160, 16);
 			this.autoSync.TabIndex = 1;
 			this.autoSync.Text = "Sync to host every:";
+			this.autoSync.CheckedChanged += new System.EventHandler(this.autoSync_CheckedChanged);
 			// 
 			// groupBox3
 			// 
@@ -486,6 +501,7 @@ namespace Novell.iFolderCom
 			// 
 			this.limit.Location = new System.Drawing.Point(168, 52);
 			this.limit.Name = "limit";
+			this.limit.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.limit.Size = new System.Drawing.Size(88, 16);
 			this.limit.TabIndex = 5;
 			this.limit.Text = "label4";
@@ -646,6 +662,7 @@ namespace Novell.iFolderCom
 			// 
 			// ifolders
 			// 
+			this.ifolders.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.ifolders.Location = new System.Drawing.Point(64, 16);
 			this.ifolders.Name = "ifolders";
 			this.ifolders.Size = new System.Drawing.Size(336, 21);
@@ -692,6 +709,7 @@ namespace Novell.iFolderCom
 			this.ShowInTaskbar = false;
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tabControl1_KeyDown);
 			this.Load += new System.EventHandler(this.iFolderAdvanced_Load);
+			this.Paint += new System.Windows.Forms.PaintEventHandler(this.iFolderAdvanced_Paint);
 			this.tabControl1.ResumeLayout(false);
 			this.tabGeneral.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
@@ -705,6 +723,65 @@ namespace Novell.iFolderCom
 		#endregion
 
 		#region Private Methods
+		private void connectToWebService()
+		{
+			if (ifWebService == null)
+			{
+				ifWebService = new iFolderWebService();
+			}
+		}
+
+		private ListViewItem addiFolderUserToListView(iFolderUser ifolderUser)
+		{
+			ListViewItem lvitem;
+
+			lock (subscrHT)
+			{
+				// Add only if it isn't already in the list.
+				lvitem = (ListViewItem)subscrHT[ifolderUser.ID];
+				if (lvitem == null)
+				{
+					ShareListMember slMember = new ShareListMember();
+					slMember.iFolderUser = ifolderUser;
+
+					string[] items = new string[3];
+
+					items[0] = ifolderUser.Name;
+					items[1] = stateToString(ifolderUser.State, ifolderUser.UserID);
+					int imageIndex = 1;
+					items[2] = rightsToString(ifolderUser.Rights/*, out imageIndex*/);
+
+					if ((currentUser != null) && currentUser.UserID.Equals(ifolderUser.UserID))
+					{
+						imageIndex = 0;
+					}
+					else if ((ifolderUser.State != null) && !ifolderUser.State.Equals(member))
+					{
+						imageIndex = 2;
+					}
+
+					lvitem = new ListViewItem(items, imageIndex);
+
+					if (ifolderUser.State.Equals("Inviting"))
+					{
+						// This is a newly added user.
+						slMember.Added = true;
+					}
+					else
+					{
+						// Add the listviewitem to the hashtable so we can quickly find it.
+						// Only add it if it's not a newly added user.
+						subscrHT.Add(slMember.iFolderUser.ID, lvitem);
+					}
+
+					lvitem.Tag = slMember;
+					shareWith.Items.Add(lvitem);
+				}
+			}
+
+			return lvitem;
+		}
+
 		private void showConflictMessage(bool show)
 		{
 			if (show)
@@ -758,8 +835,10 @@ namespace Novell.iFolderCom
 			}
 			catch
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered while reading disk space restrictions.");
+				mmb.Message = "An error was encountered while reading disk space restrictions.";
+				mmb.ShowDialog();
 
 				setLimit.Checked = false;
 				used.Text = available.Text = limit.Text = "";
@@ -781,6 +860,7 @@ namespace Novell.iFolderCom
 
 			// Get the refresh interval.
 			syncInterval.Value = (decimal)ifolder.SyncInterval;
+			autoSync.Checked = ifolder.SyncInterval != System.Threading.Timeout.Infinite;
 
 			// Show/hide the collision message.
 			showConflictMessage(ifolder.HasConflicts);
@@ -794,13 +874,17 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException ex)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered while querying for sync statistics.");
+				mmb.Message = "An error was encountered while querying for sync statistics.";
+				mmb.ShowDialog();
 			}
 			catch (Exception ex)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered while querying for sync statistics.");
+				mmb.Message = "An error was encountered while querying for sync statistics.";
+				mmb.ShowDialog();
 			}
 
 			shareWith.Items.Clear();
@@ -808,6 +892,12 @@ namespace Novell.iFolderCom
 
 			try
 			{
+				// Clear the hashtable.
+				lock (subscrHT)
+				{
+					subscrHT.Clear();
+				}
+
 				// Load the member list.
 				connectToWebService();
 				iFolderUser[] ifolderUsers = ifWebService.GetiFolderUsers(ifolder.ID);
@@ -819,88 +909,24 @@ namespace Novell.iFolderCom
 						currentUser = ifolderUser;
 					}
 
-					ShareListMember slMember = new ShareListMember();
-					slMember.iFolderUser = ifolderUser;
-
-					string[] items = new string[3];
-
-					items[0] = ifolderUser.Name;
-					items[1] = stateToString(ifolderUser.State, ifolderUser.UserID);
-					int imageIndex = 1;
-					items[2] = rightsToString(ifolderUser.Rights/*, out imageIndex*/);
-
-					if ((currentUser != null) && currentUser.UserID.Equals(ifolderUser.UserID))
-					{
-						imageIndex = 0;
-					}
-					else if ((ifolderUser.State != null) && !ifolderUser.State.Equals(member))
-					{
-						imageIndex = 2;
-					}
-
-					ListViewItem lvitem = new ListViewItem(items, imageIndex);
-					lvitem.Tag = slMember;
+					ListViewItem lvitem = addiFolderUserToListView(ifolderUser);
 
 					if (ifolderUser.UserID.Equals(ifolder.OwnerID))
 					{
 						// Keep track of the current (or old) owner.
 						ownerLvi = lvitem;
 					}
-
-					// TODO: track events for subscriptions.
-
-					shareWith.Items.Add(lvitem);
 				}
 
-				// Clear the hashtable.
-/*				lock (subscrHT)
-				{
-					subscrHT.Clear();
-				}*/
-
-				// Set up the event handlers for the POBox.
-				// TODO: we still can't get events into explorer ... this may work once we are in the GAC.
-/*				subscriber = new EventSubscriber(poBox.ID);
-				subscriber.NodeChanged += new NodeEventHandler(subscriber_NodeChanged);
-				subscriber.NodeCreated += new NodeEventHandler(subscriber_NodeCreated);
-				subscriber.NodeDeleted += new NodeEventHandler(subscriber_NodeDeleted);
-
-				// Load the stuff from the POBox.
-				ICSList messageList = poBox.Search(Subscription.SubscriptionCollectionIDProperty, ifolder.ID, SearchOp.Equal);
-				foreach (ShallowNode shallowNode in messageList)
-				{
-					ShareListMember shareMember = new ShareListMember();
-					shareMember.Subscription = new Subscription(poBox, shallowNode);
-
-					// Don't add any subscriptions that are in the ready state.
-					if (shareMember.Subscription.SubscriptionState != SubscriptionStates.Ready)
-					{
-						string[] items = new string[3];
-						items[0] = shareMember.Subscription.ToName;
-						items[1] = shareMember.Subscription.SubscriptionState.ToString();
-						int imageIndex;
-						items[2] = rightsToString(shareMember.Rights, out imageIndex);
-					
-						ListViewItem lvi = new ListViewItem(items, 5);
-						lvi.Tag = shareMember;
-
-						shareWith.Items.Add(lvi);
-
-						// Add the listviewitem to the hashtable so we can quickly find it.
-						lock (subscrHT)
-						{
-							subscrHT.Add(shareMember.Subscription.ID, lvi);
-						}
-					}
-				}
-*/
 				// Select the first item in the list.
 				shareWith.Items[0].Selected = true;
 			}
 			catch (WebException ex)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered while reading iFolder members.");
+				mmb.Message = "An error was encountered while reading iFolder members.";
+				mmb.ShowDialog();
 
 				if (ex.Status == WebExceptionStatus.ConnectFailure)
 				{
@@ -909,17 +935,18 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception ex)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered while reading iFolder members.");
+				mmb.Message = "An error was encountered while reading iFolder members.";
+				mmb.ShowDialog();
 			}
 
 			shareWith.EndUpdate();
 
-			// Enable/disable the buttons.
-			add.Enabled = remove.Enabled = menuFullControl.Enabled = 
-				menuReadWrite.Enabled = menuReadOnly.Enabled = access.Enabled = 
-				setLimit.Visible = limitEdit.Visible = currentUser != null ? currentUser.Rights.Equals("Admin") : false;
+			// Enable/disable the Add button.
+			add.Enabled = currentUser != null ? currentUser.Rights.Equals("Admin") : false;
 
+			setLimit.Visible = limitEdit.Visible = currentUser != null ? currentUser.UserID.Equals(ifolder.OwnerID) : false;
 			limitLabel.Visible = limit.Visible = !setLimit.Visible;
 
 			// Restore the cursor.
@@ -984,6 +1011,9 @@ namespace Novell.iFolderCom
 				case "Member":
 					stateString = userID.Equals(ifolder.OwnerID) ? "Owner" : "";
 					break;
+				case "Inviting":
+					stateString = "Ready to invite";
+					break;
 				default:
 					stateString = "Unknown";
 					break;
@@ -1010,8 +1040,10 @@ namespace Novell.iFolderCom
 				}
 				catch (WebException e)
 				{
+					MyMessageBox mmb = new MyMessageBox();
 					// TODO: Localize
-					MessageBox.Show("An error was encountered while attempting to change the owner of this iFolder.");
+					mmb.Message = "An error was encountered while attempting to change the owner of this iFolder.";
+					mmb.ShowDialog();
 
 					if (e.Status == WebExceptionStatus.ConnectFailure)
 					{
@@ -1020,8 +1052,10 @@ namespace Novell.iFolderCom
 				}
 				catch (Exception e)
 				{
+					MyMessageBox mmb = new MyMessageBox();
 					// TODO: Localize
-					MessageBox.Show("An error was encountered while attempting to change the owner of this iFolder.");
+					mmb.Message = "An error was encountered while attempting to change the owner of this iFolder.";
+					mmb.ShowDialog();
 				}
 			}
 
@@ -1063,7 +1097,13 @@ namespace Novell.iFolderCom
 
 						// Update the listview item with the new object.
 						lvitem.Tag = slMember;
-						updateListViewItem(lvitem, slMember.iFolderUser.Rights);
+						updateListViewItem(lvitem);
+
+						// Add the listviewitem to the hashtable so we can quickly find it.
+						lock (subscrHT)
+						{
+							subscrHT.Add(slMember.iFolderUser.ID, lvitem);
+						}
 
 						// Update the state.
 						slMember.Added = false;
@@ -1078,8 +1118,11 @@ namespace Novell.iFolderCom
 				}
 				catch (WebException e)
 				{
+					MyMessageBox mmb = new MyMessageBox();
 					// TODO: Localize
-					MessageBox.Show("An error was encountered while trying to commit changes for: " + slMember.iFolderUser.Name);
+					mmb.Message = "An error was encountered while trying to commit changes for: " + slMember.iFolderUser.Name;
+					mmb.ShowDialog();
+
 					if (e.Status == WebExceptionStatus.ConnectFailure)
 					{
 						ifWebService = null;
@@ -1087,8 +1130,10 @@ namespace Novell.iFolderCom
 				}
 				catch (Exception e)
 				{
+					MyMessageBox mmb = new MyMessageBox();
 					// TODO: Localize
-					MessageBox.Show("An error was encountered while trying to commit changes for: " + slMember.iFolderUser.Name);
+					mmb.Message = "An error was encountered while trying to commit changes for: " + slMember.iFolderUser.Name;
+					mmb.ShowDialog();
 				}
 			}
 
@@ -1100,21 +1145,17 @@ namespace Novell.iFolderCom
 					connectToWebService();
 					try
 					{
-						if (slMember.iFolderUser.State.Equals("Member"))
-						{
-							// Delete the member.
-							ifWebService.RemoveiFolderUser(ifolder.ID, slMember.iFolderUser.UserID);
-						}
-						else
-						{
-							// Delete the subscription.
-							ifWebService.RemoveSubscription(ifolder.Domain, slMember.iFolderUser.ID, ifolder.CurrentUserID);
-						}
+						// Delete the member.
+						ifWebService.RemoveiFolderUser(ifolder.ID, slMember.iFolderUser.UserID);
 					}
 					catch (WebException e)
 					{
+						MyMessageBox mmb = new MyMessageBox();
 						// TODO: Localize
-						MessageBox.Show("Remove failed with the following exception: \n\n" + e.Message, "Remove Failure");
+						mmb.Message = "Remove failed with the following exception: \n\n" + e.Message;
+						mmb.Caption = "Remove Failure";
+						mmb.ShowDialog();
+
 						if (e.Status == WebExceptionStatus.ConnectFailure)
 						{
 							ifWebService = null;
@@ -1122,8 +1163,11 @@ namespace Novell.iFolderCom
 					}
 					catch (Exception e)
 					{
-						//TODO: Localize
-						MessageBox.Show("Remove failed with the following exception: \n\n" + e.Message, "Remove Failure");
+						MyMessageBox mmb = new MyMessageBox();
+						// TODO: Localize
+						mmb.Message = "Remove failed with the following exception: \n\n" + e.Message;
+						mmb.Caption = "Remove Failure";
+						mmb.ShowDialog();
 					}
 				}
 
@@ -1155,8 +1199,11 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException e)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered while committing policy changes.");
+				mmb.Message = "An error was encountered while committing policy changes.";
+				mmb.ShowDialog();
+
 				if (e.Status == WebExceptionStatus.ConnectFailure)
 				{
 					ifWebService = null;
@@ -1164,8 +1211,10 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception e)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered while committing policy changes.");
+				mmb.Message = "An error was encountered while committing policy changes.";
+				mmb.ShowDialog();
 			}
 
 			// Disable the apply button.
@@ -1225,9 +1274,29 @@ namespace Novell.iFolderCom
 			}
 			catch{}
 		}
+
+		private void updateListViewItem(ListViewItem lvi)
+		{
+			ShareListMember slMember = (ShareListMember)lvi.Tag;
+			lvi.ImageIndex = slMember.iFolderUser.State.Equals("Member") ? 1 : 2;
+			lvi.SubItems[0].Text = slMember.iFolderUser.Name;
+			lvi.SubItems[1].Text = stateToString(slMember.iFolderUser.State, slMember.iFolderUser.UserID);
+			lvi.SubItems[2].Text = rightsToString(slMember.iFolderUser.Rights);
+		}
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// Sets the IProcEventClient to use.
+		/// </summary>
+		public IProcEventClient EventClient
+		{
+			set { this.eventClient = value; }
+		}
+
+		/// <summary>
+		/// Sets the iFolderWebService to use.
+		/// </summary>
 		public iFolderWebService iFolderWebService
 		{
 			set { ifWebService = value; }
@@ -1310,7 +1379,23 @@ namespace Novell.iFolderCom
 			catch {} // non-fatal ... just missing some graphics.
 
 			// Hashtable used to store subscriptions in.
-			//subscrHT = new Hashtable();
+			subscrHT = new Hashtable();
+
+			// Set up the event handlers.
+			// TODO: may be able to move this back to the refreshData method if we can get the filtering setup properly.
+			if (eventClient == null)
+			{
+				eventClient = new IProcEventClient(new IProcEventError(errorHandler), null);
+				existingEventClient = false;
+				eventClient.Register();
+			}
+
+			if (!eventError)
+			{
+				eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(nodeChangeHandler));
+				eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(nodeCreateHandler));
+				eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(nodeDeleteHandler));
+			}
 
 			try
 			{
@@ -1323,6 +1408,11 @@ namespace Novell.iFolderCom
 					if ((i.Type != null) && i.Type.Equals("iFolder") && 
 						(i.State != null) && i.State.Equals("Local"))
 					{
+						if (longName.Length < i.UnManagedPath.Length)
+						{
+							longName = i.UnManagedPath;
+						}
+
 						iFolderInfo ifolderInfo = new iFolderInfo();
 						ifolderInfo.LocalPath = i.UnManagedPath;
 						ifolderInfo.ID = i.ID;
@@ -1338,8 +1428,11 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException ex)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered reading iFolder data.");
+				mmb.Message = "An error was encountered reading iFolder data.";
+				mmb.ShowDialog();
+
 				if (ex.Status == WebExceptionStatus.ConnectFailure)
 				{
 					ifWebService = null;
@@ -1347,8 +1440,10 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception ex)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered reading iFolder data.");
+				mmb.Message = "An error was encountered reading iFolder data.";
+				mmb.ShowDialog();
 			}
 		}
 
@@ -1370,23 +1465,30 @@ namespace Novell.iFolderCom
 				//accept.Enabled = decline.Enabled = false;
 			}
 
-			if ((shareWith.SelectedItems.Count == 1) && 
-				(((ShareListMember)shareWith.SelectedItems[0].Tag).iFolderUser.UserID.Equals(currentUser.UserID) ||
-				((ShareListMember)shareWith.SelectedItems[0].Tag).iFolderUser.UserID.Equals(ifolder.OwnerID) ||
-				((newOwnerLvi != null) && shareWith.SelectedItems[0].Equals(newOwnerLvi))))
+			try
 			{
-				// The current member, owner or new owner is the only one selected, disable the access control
-				// menus and the remove button.
-				remove.Enabled = access.Enabled = menuFullControl.Enabled = 
-					menuReadWrite.Enabled = menuReadOnly.Enabled = false;
+				if ((shareWith.SelectedItems.Count == 1) && 
+					(((ShareListMember)shareWith.SelectedItems[0].Tag).iFolderUser.UserID.Equals(currentUser.UserID) ||
+					((ShareListMember)shareWith.SelectedItems[0].Tag).iFolderUser.UserID.Equals(ifolder.OwnerID) ||
+					((newOwnerLvi != null) && shareWith.SelectedItems[0].Equals(newOwnerLvi))))
+				{
+					// The current member, owner or new owner is the only one selected, disable the access control
+					// menus and the remove button.
+					remove.Enabled = access.Enabled = menuFullControl.Enabled = 
+						menuReadWrite.Enabled = menuReadOnly.Enabled = false;
+				}
+				else
+				{
+					// Enable the access control menus and the remove button if one or more
+					// items is selected and the current user has admin rights.
+					remove.Enabled = access.Enabled = menuFullControl.Enabled = 
+						menuReadWrite.Enabled = menuReadOnly.Enabled = 
+						(shareWith.SelectedItems.Count != 0 && currentUser.Rights.Equals("Admin"));
+				}
 			}
-			else
+			catch
 			{
-				// Enable the access control menus and the remove button if one or more
-				// items is selected and the current user has admin rights.
-				remove.Enabled = access.Enabled = menuFullControl.Enabled = 
-					menuReadWrite.Enabled = menuReadOnly.Enabled = 
-					(shareWith.SelectedItems.Count != 0 && currentUser.Rights.Equals("Admin"));
+				// TODO: Message?
 			}
 		}
 
@@ -1408,23 +1510,10 @@ namespace Novell.iFolderCom
 				foreach (ListViewItem lvi in picker.AddedUsers)
 				{
 					iFolderUser user = (iFolderUser)((ListViewItem)lvi.Tag).Tag;
-					ShareListMember slMember = new ShareListMember();
-					slMember.Added = true;
-					slMember.iFolderUser = new iFolderUser();
-					slMember.iFolderUser.Name = user.Name;
-					slMember.iFolderUser.UserID = user.UserID;
-					slMember.iFolderUser.Rights = "ReadWrite";
-					slMember.iFolderUser.State = "Inviting";
 
-					string[] items = new string[3];
-					items[0] = user.Name;
-					// TODO: Localize
-					items[1] = "Ready to invite";
-					items[2] = rightsToString(slMember.iFolderUser.Rights);
-					ListViewItem lvitem = new ListViewItem(items, 2);
-					lvitem.Tag = slMember;
-					lvitem.Selected = true;
-					shareWith.Items.Add(lvitem);
+					user.Rights = "ReadWrite";
+					user.State = "Inviting";
+					addiFolderUserToListView(user);
 				}
 			}
 
@@ -1546,9 +1635,11 @@ namespace Novell.iFolderCom
 
 				try
 				{
-					// Don't allow the current user to be removed.
-					if (!currentUser.UserID.Equals(slMember.iFolderUser.UserID) ||
-						!slMember.iFolderUser.State.Equals("Member"))
+					// Don't allow the current user, current owner, or new owner to be removed.
+					if (!((currentUser.UserID.Equals(slMember.iFolderUser.UserID) ||
+						((newOwnerLvi == null) && slMember.iFolderUser.UserID.Equals(ifolder.OwnerID)) ||
+						((newOwnerLvi != null) && lvi.Equals(newOwnerLvi))) &&
+						slMember.iFolderUser.State.Equals("Member")))
 					{
 						// If this item is not newly added, we need to add it to the removedList.
 						if (!slMember.Added)
@@ -1566,20 +1657,17 @@ namespace Novell.iFolderCom
 						// Remove the item from the listview.
 						lvi.Remove();
 
-						// If this is a subscription, remove it from the hashtable.
-/*						if (slMember.Subscription != null)
+						// Remove the item from the hashtable.
+						lock (subscrHT)
 						{
-							lock (subscrHT)
-							{
-								subscrHT.Remove(slMember.Subscription.ID);
-							}
-						}*/
+							subscrHT.Remove(slMember.iFolderUser.ID);
+						}
 
 						// Enable the apply button.
 						apply.Enabled = true;
 					}
 				}
-				catch (Exception ex)
+				catch
 				{
 				}
 			}
@@ -1647,19 +1735,36 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException ex)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered while reading iFolder data.");
+				mmb.Message = "An error was encountered while reading iFolder data.";
+				mmb.ShowDialog();
 			}
 			catch (Exception ex)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered while reading iFolder data.");
+				mmb.Message = "An error was encountered while reading iFolder data.";
+				mmb.ShowDialog();
 			}
 		}
 
 		private void cancel_Click(object sender, System.EventArgs e)
 		{
 			this.Close();	
+		}
+
+		private void autoSync_CheckedChanged(object sender, System.EventArgs e)
+		{
+			syncInterval.Enabled = autoSync.Checked;
+			if (!autoSync.Checked)
+			{
+				syncInterval.Value = System.Threading.Timeout.Infinite;
+			}
+
+			// Enable the apply button if the user checked/unchecked the box.
+			if (autoSync.Focused)
+				apply.Enabled = true;
 		}
 
 		private void syncInterval_ValueChanged(object sender, System.EventArgs e)
@@ -1684,117 +1789,94 @@ namespace Novell.iFolderCom
 			showConflictMessage(false);
 		}
 
-/*		private void subscriber_NodeCreated(NodeEventArgs args)
+		private void errorHandler( SimiasException e, object context )
 		{
-			try
+			eventError = true;
+		}
+
+		private void nodeChangeHandler(SimiasEventArgs args)
+		{
+			NodeEventArgs eventArgs = args as NodeEventArgs;
+
+			if (eventArgs.Type == "Collection")
 			{
-				Node node = poBox.GetNodeByID(args.ID);
-				if (node != null)
+				if (ifolder.ID.Equals(eventArgs.Collection))
 				{
-					ShareListMember slMember = new ShareListMember();
-					slMember.Subscription = new Subscription(node);
-
-					lock (subscrHT)
+					try
 					{
-						// If the subscription state is "Ready" and the collection exists locally or if the item is already in the list
-						// or if the subscription is not for this ifolder, don't add it to the listview.
-						if (((slMember.Subscription.SubscriptionState != SubscriptionStates.Ready) 
-							|| (poBox.StoreReference.GetCollectionByID(slMember.Subscription.SubscriptionCollectionID) == null))
-							&& (subscrHT[args.ID] == null)
-							&& (slMember.Subscription.SubscriptionCollectionID.Equals(ifolder.ID)))
-						{
-							string[] items = new string[3];
-							items[0] = slMember.Subscription.ToName;
-							items[1] = slMember.Subscription.SubscriptionState.ToString();
-							int imageIndex;
-							items[2] = rightsToString(slMember.Rights, out imageIndex);
-					
-							ListViewItem lvi = new ListViewItem(items, 5);
-							lvi.Tag = slMember;
-
-							shareWith.Items.Add(lvi);
-
-							// Add the listviewitem to the hashtable so we can quickly find it.
-							subscrHT.Add(slMember.Subscription.ID, lvi);
-						}
+						// This is the iFolder currently displayed ... check for conflicts and
+						// update the display.
+						iFolder ifolderTmp = ifWebService.GetiFolder(eventArgs.Collection);
+						showConflictMessage(ifolderTmp.HasConflicts);
+					}
+					catch 
+					{
+						// Ignore.
 					}
 				}
 			}
-			catch (SimiasException ex)
+			else
 			{
-				ex.LogError();
-			}
-			catch (Exception ex)
-			{
-				//logger.Debug(ex, "OnNodeCreated");
-			}
-		}*/
-
-/*		private void subscriber_NodeDeleted(NodeEventArgs args)
-		{
-			lock (subscrHT)
-			{
-				ListViewItem lvi = (ListViewItem)subscrHT[args.Node];
-				if (lvi != null)
+				ListViewItem lvi;
+				lock (subscrHT)
 				{
-					lvi.Remove();
-					subscrHT.Remove(args.Node);
+					lvi = (ListViewItem)subscrHT[eventArgs.Node];
 				}
-			}
-		}*/
 
-/*		private void subscriber_NodeChanged(NodeEventArgs args)
-		{
-			// Get the existing item.
-			lock (subscrHT)
-			{
-				ListViewItem lvi = (ListViewItem)subscrHT[args.Node];
 				if (lvi != null)
 				{
 					try
 					{
-						// Get the node that changed.
-						Node node = poBox.GetNodeByID(args.ID);
-						if (node != null)
-						{
-							ShareListMember slMember = (ShareListMember)lvi.Tag;
-
-							// New up a Subscription object based on the node.
-							slMember.Subscription = new Subscription(node);
-
-							// If the subscription state is "Ready" and the collection exists locally, remove the listview item; 
-							// otherwise, update the status text.
-							if ((slMember.Subscription.SubscriptionState != SubscriptionStates.Ready) || 
-								(poBox.StoreReference.GetCollectionByID(slMember.Subscription.SubscriptionCollectionID) == null))
-							{
-								lvi.SubItems[1].Text = slMember.Subscription.SubscriptionState.ToString();
-								lvi.Tag = slMember;
-								if ((shareWith.SelectedItems.Count == 1) &&
-									lvi.Equals(shareWith.SelectedItems[0]) &&
-									(slMember.Subscription.SubscriptionState == Simias.POBox.SubscriptionStates.Pending))
-									//(((ShareListMember)shareWith.SelectedItems[0].Tag).Subscription != null) &&
-									//(((ShareListMember)shareWith.SelectedItems[0].Tag).Subscription.ID.Equals(slMember.Subscription.ID)) &&
-								{
-									accept.Enabled = decline.Enabled = true;
-								}
-							}
-							else
-							{
-								lvi.Remove();
-							}
-						}
+						ShareListMember slMember = (ShareListMember)lvi.Tag;
+						slMember.iFolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
+						lvi.Tag = slMember;
+						updateListViewItem(lvi);
 					}
-					catch (SimiasException ex)
+					catch
 					{
-						ex.LogError();
-					}
-					catch (Exception ex)
-					{
-						//logger.Debug(ex, "OnNodeChanged");
+						// Ignore.
 					}
 				}
 			}
-		}*/
+		}
+
+		private void nodeCreateHandler(SimiasEventArgs args)
+		{
+			NodeEventArgs eventArgs = args as NodeEventArgs;
+			if (ifolder.ID.Equals(eventArgs.Collection))
+			{
+				// This is the iFolder currently displayed.
+				try
+				{
+					// Get a user object.
+					iFolderUser ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
+					if (ifolderUser != null)
+					{
+						addiFolderUserToListView(ifolderUser);
+					}
+				}
+				catch
+				{
+					// Ignore.
+				}
+			}
+		}
+
+		private void nodeDeleteHandler(SimiasEventArgs args)
+		{
+			NodeEventArgs eventArgs = args as NodeEventArgs;
+			lock (subscrHT)
+			{
+				// See if we have a listview item by this ID.
+				ListViewItem lvi = (ListViewItem)subscrHT[eventArgs.Node];
+				if (lvi != null)
+				{
+					// Remove the listview item.
+					lvi.Remove();
+					subscrHT.Remove(eventArgs.Node);
+				}
+			}
+		}
 
 		private void setLimit_CheckedChanged(object sender, System.EventArgs e)
 		{
@@ -1822,6 +1904,7 @@ namespace Novell.iFolderCom
 				mmb.Message = "Do you want to save the changes you have made to this iFolder?";
 				mmb.Caption = "Save Changes";
 				mmb.MessageIcon = SystemIcons.Question;
+				mmb.YesNo = true;
 				if (DialogResult.Yes == mmb.ShowDialog())
 				{
 					processChanges();
@@ -1848,8 +1931,11 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException ex)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered while reading iFolder data.");
+				mmb.Message = "An error was encountered while reading iFolder data.";
+				mmb.ShowDialog();
+
 				if (ex.Status == WebExceptionStatus.ConnectFailure)
 				{
 					ifWebService = null;
@@ -1857,8 +1943,10 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception ex)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered while reading iFolder data.");
+				mmb.Message = "An error was encountered while reading iFolder data.";
+				mmb.ShowDialog();
 			}
 		}
 
@@ -1870,8 +1958,10 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception ex)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("Unable to open iFolder: " + ifolder.Name);
+				mmb.Message = "Unable to open iFolder: " + ifolder.Name;
+				mmb.ShowDialog();
 			}
 		}
 
@@ -2043,19 +2133,14 @@ namespace Novell.iFolderCom
 				}
 			}
 		}
-		#endregion
 
-		private void connectToWebService()
+		private void iFolderAdvanced_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
-			if (ifWebService == null)
-			{
-//				DateTime currentTime = DateTime.Now;
-//				if ((currentTime.Ticks - ticks) > delta)
-				{
-//					ticks = currentTime.Ticks;
-					ifWebService = new iFolderWebService();
-				}
-			}
+			// Change the width of the dropdown list to accommodate long names.
+			SizeF size = e.Graphics.MeasureString(longName, ifolders.Font);
+			int maxWidth = ifolders.Width * 2;
+			ifolders.DropDownWidth = (int)size.Width > maxWidth ? maxWidth : (int)size.Width;
 		}
+		#endregion
 	}
 }

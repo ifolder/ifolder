@@ -42,6 +42,7 @@ namespace Novell.iFolderCom
 		private iFolderWebService ifWebService;
 		private iFolder ifolder;
 		private string loadPath;
+		private bool initial = true;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
@@ -67,11 +68,9 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Button close;
 		private System.Windows.Forms.Button help;
 		private System.Windows.Forms.ListView conflictsView;
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.Container components = null;
 		#endregion
+		private System.Windows.Forms.ToolTip toolTip1;
+		private System.ComponentModel.IContainer components;
 
 		public ConflictResolver()
 		{
@@ -105,6 +104,7 @@ namespace Novell.iFolderCom
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
@@ -130,6 +130,7 @@ namespace Novell.iFolderCom
 			this.label12 = new System.Windows.Forms.Label();
 			this.close = new System.Windows.Forms.Button();
 			this.help = new System.Windows.Forms.Button();
+			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.SuspendLayout();
@@ -369,6 +370,9 @@ namespace Novell.iFolderCom
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "ConflictResolver";
 			this.Text = "iFolder Conflict Resolver";
 			this.Load += new System.EventHandler(this.ConflictResolver_Load);
@@ -394,13 +398,17 @@ namespace Novell.iFolderCom
 					}
 					catch (WebException ex)
 					{
+						MyMessageBox mmb = new MyMessageBox();
 						// TODO: Localize
-						MessageBox.Show("An error was encountered while attempting to resolve the conflict.");
+						mmb.Message = "An error was encountered while attempting to resolve the conflict.";
+						mmb.ShowDialog();
 					}
 					catch (Exception ex)
 					{
+						MyMessageBox mmb = new MyMessageBox();
 						// TODO: Localize
-						MessageBox.Show("An error was encountered while attempting to resolve the conflict.");
+						mmb.Message = "An error was encountered while attempting to resolve the conflict.";
+						mmb.ShowDialog();
 					}
 				}
 				else if (!localWins)
@@ -484,8 +492,6 @@ namespace Novell.iFolderCom
 			{
 				// Display the iFolder info.
 				ifolderName.Text = ifolder.Name;
-				// TODO: this string may get clipped ... provide a tooltip popup for displaying the complete string.
-				ifolderPath.Text = ifolder.UnManagedPath;
 
 				// Put the conflicts in the listview.
 				Conflict[] conflicts = ifWebService.GetiFolderConflicts(ifolder.ID);
@@ -499,13 +505,17 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException ex)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered while reading the conflicts.");
+				mmb.Message = "An error was encountered while reading the conflicts.";
+				mmb.ShowDialog();
 			}
 			catch (Exception ex)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered while reading the conflicts.");
+				mmb.Message = "An error was encountered while reading the conflicts.";
+				mmb.ShowDialog();
 			}
 		}
 
@@ -564,11 +574,44 @@ namespace Novell.iFolderCom
 		{
 			this.Close();
 		}
-		#endregion
 
 		private void ifolderPath_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
-			SizeF stringSize = e.Graphics.MeasureString(ifolderPath.Text, ifolderPath.Font);
+			// Only do this one time.
+			if (initial)
+			{
+				initial = false;
+
+				// Measure the string.
+				SizeF stringSize = e.Graphics.MeasureString(ifolder.UnManagedPath, ifolderPath.Font);
+				if (stringSize.Width > ifolderPath.Width)
+				{
+					// Calculate the length of the string that can be displayed ... this will get us in the
+					// ballpark.
+					int length = (int)(ifolderPath.Width * ifolder.UnManagedPath.Length / stringSize.Width);
+					string tmp = String.Empty;
+
+					// Remove one character at a time until we fit in the box.  This should only loop 3 or 4 times at most.
+					while (stringSize.Width > ifolderPath.Width)
+					{
+						tmp = ifolder.UnManagedPath.Substring(0, length) + "...";
+						stringSize = e.Graphics.MeasureString(tmp, ifolderPath.Font);
+						length -= 1;
+					}
+
+					// Set the truncated string in the display.
+					ifolderPath.Text = tmp;
+
+					// Set up a tooltip to display the complete path.
+					toolTip1.SetToolTip(ifolderPath, ifolder.UnManagedPath);
+				}
+				else
+				{
+					// The path fits ... no truncation needed.
+					ifolderPath.Text = ifolder.UnManagedPath;
+				}
+			}
 		}
+		#endregion
 	}
 }
