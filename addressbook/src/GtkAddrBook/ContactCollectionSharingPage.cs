@@ -242,7 +242,7 @@ namespace Novell.AddressBook.UI.gtk
 					(SharingListHolder) ContactTreeStore.GetValue(iter,0);
 			if( (slh != null) && (slh.Member != null) )
 			{
-				if(collection.GetCurrentMember().UserID == slh.Member.UserID)
+				if(collection.Owner.UserID == slh.Member.UserID)
 					((CellRendererText) cell).Text = "Owner";
 				else
 					((CellRendererText) cell).Text = "Member";
