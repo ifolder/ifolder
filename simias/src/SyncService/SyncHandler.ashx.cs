@@ -84,6 +84,7 @@ namespace Simias.Sync.Web
 								service.Write(Request.InputStream, offset, (int)size);
 								Response.StatusCode = (int)HttpStatusCode.OK;
 							}
+							Response.End();
 							break;
 						}
 						case SyncHttp.Operation.Copy:
@@ -94,6 +95,7 @@ namespace Simias.Sync.Web
 								service.Copy(oldOffset, offset, (int)size);
 								Response.StatusCode = (int)HttpStatusCode.OK;
 							}
+							Response.End();
 							break;
 						}
 						case SyncHttp.Operation.Read:
@@ -128,7 +130,7 @@ namespace Simias.Sync.Web
 											Array.Copy(outBuffer, tempArray, bytesRead);
 											Response.BinaryWrite(tempArray);
 										}
-										else
+										else if (bytesRead != 0)
 										{
 											Response.BinaryWrite(outBuffer);
 										}

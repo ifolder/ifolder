@@ -542,7 +542,7 @@ namespace Simias.Sync.Client
 		/// <param name="fileCount">Returns the number of files to be synced.</param>
 		internal void GetSyncCount(out uint fileCount)
 		{
-			fileCount = (uint)workArray.UpCount;
+			fileCount = (uint)workArray.Count;
 		}
 
 		/// <summary>

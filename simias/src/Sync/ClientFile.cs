@@ -246,53 +246,62 @@ namespace Simias.Sync.Client
 				
 			Log.log.Debug("Downloading {0} bytes, filesize = {1}", sizeToSync, fileSize); 
 			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
-			for (int i = 0; i < fileMap.Length; ++i)
+			try
 			{
-				if (fileMap[i] != -1)
+				for (int i = 0; i < fileMap.Length; ++i)
 				{
-					Copy(fileMap[i], WritePosition, BlockSize);
-				}
-				else
-				{
-					// We need to get this block from the server.
-					// Check if we have more consecutive blocks to get from the server.
-					int readBufferSize = BlockSize;
-					int offset = i * BlockSize;
-					for (int j = i + 1; j < fileMap.Length; ++j)
+					if (fileMap[i] != -1)
 					{
-						if (fileMap[j] == -1)
+						Copy(fileMap[i], WritePosition, BlockSize);
+					}
+					else
+					{
+						// We need to get this block from the server.
+						// Check if we have more consecutive blocks to get from the server.
+						int readBufferSize = BlockSize;
+						int offset = i * BlockSize;
+						for (int j = i + 1; j < fileMap.Length; ++j)
 						{
-							// We need to get the next segment.
-							// Add the segment size to this read and skip over the segment.
-							if ((readBufferSize + BlockSize) >= MaxXFerSize)
+							if (fileMap[j] == -1)
 							{
-								// We don't allow bigger XFers than this get out.
-								break;
+								// We need to get the next segment.
+								// Add the segment size to this read and skip over the segment.
+								if ((readBufferSize + BlockSize) >= MaxXFerSize)
+								{
+									// We don't allow bigger XFers than this get out.
+									break;
+								}
+								else
+								{
+									readBufferSize += BlockSize;
+									i++;
+								}
 							}
 							else
 							{
-								readBufferSize += BlockSize;
-								i++;
+								// The next segment is already local.
+								break;
 							}
 						}
-						else
-						{
-							// The next segment is already local.
-							break;
-						}
-					}
 
-					byte[] readBuffer;
-					readBufferSize = (readBufferSize > sizeRemaining) ? (int)sizeRemaining : readBufferSize;
-					int bytesRead = serverFile.Read(offset, readBufferSize, out readBuffer);
-					if (bytesRead != readBufferSize)
-						return false;
-					Write(readBuffer, 0, bytesRead);
-					sizeRemaining -= bytesRead;
-					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
+						byte[] readBuffer;
+						readBufferSize = (readBufferSize > sizeRemaining) ? (int)sizeRemaining : readBufferSize;
+						int bytesRead = serverFile.Read(offset, readBufferSize, out readBuffer);
+						if (bytesRead == 0)
+							break;
+						Write(readBuffer, 0, bytesRead);
+						sizeRemaining -= bytesRead;
+						eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
+					}
 				}
 			}
-			Log.log.Debug("Finished Download bytes remaining = {0}", sizeRemaining);
+			finally
+			{
+				eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, 0, Direction.Downloading));
+				Log.log.Debug("Finished Download bytes remaining = {0}", sizeRemaining);
+			}
+			if (sizeRemaining != 0)
+				return false;
 			return true;
 		}
 
@@ -312,11 +321,11 @@ namespace Simias.Sync.Client
 			// Since we are doing the diffing on the client we will download all blocks that
 			// don't match.
 			table.Clear();
-			sizeToSync = 0;
 			HashData[] serverHashMap = serverFile.GetHashMap(BlockSize);
 			long[] fileMap;
 			if (serverHashMap == null)
 			{
+				sizeToSync = node.Length;
 				fileMap = new long[1];
 				fileMap[0] = -1;
 				return fileMap;
@@ -784,10 +793,9 @@ namespace Simias.Sync.Client
 			{
 				inStream.Close();
 				response.Close();
+				eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, 0, Direction.Downloading));
+				Log.log.Debug("Finished Download bytes remaining = {0}", sizeRemaining);
 			}
-
-			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, 0, Direction.Downloading));
-			Log.log.Debug("Finished Download bytes remaining = {0}", sizeRemaining);
 			if (sizeRemaining != 0)
 				return false;
 			return true;
