@@ -69,6 +69,7 @@ namespace Novell.iFolderCom
 		private string currentSyncingID = String.Empty;
 		private string longName = String.Empty;
 		private Hashtable subscrHT;
+		private Hashtable userIDHT;
 		private IProcEventClient eventClient;
 		private bool existingEventClient = true;
 		private bool eventError = false;
@@ -1531,69 +1532,6 @@ namespace Novell.iFolderCom
 						}
 					}
 				}
-
-/*				switch (eventArgs.EventData)
-				{
-					case "NodeChanged":
-					{
-						if (eventArgs.Type == "Collection")
-						{
-							if (ifolder.ID.Equals(eventArgs.Collection))
-							{
-								// This is the iFolder currently displayed ... check for conflicts and
-								// update the display.
-								iFolder ifolderTmp = ifWebService.GetiFolder(eventArgs.Collection);
-								showConflictMessage(ifolderTmp.HasConflicts);
-							}
-						}
-						else
-						{
-							ListViewItem lvi;
-							lock (subscrHT)
-							{
-								lvi = (ListViewItem)subscrHT[eventArgs.Node];
-							}
-
-							if (lvi != null)
-							{
-								ShareListMember slMember = (ShareListMember)lvi.Tag;
-								slMember.iFolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
-								lvi.Tag = slMember;
-								updateListViewItem(lvi);
-							}
-						}
-						break;
-					}
-					case "NodeCreated":
-					{
-						if (ifolder.ID.Equals(eventArgs.Collection) && (eventArgs.Type.Equals(NodeTypes.MemberType) || eventArgs.Type.Equals(NodeTypes.NodeType)))
-						{
-							// This is the iFolder currently displayed.
-							// Get a user object.
-							iFolderUser ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
-							if (ifolderUser != null)
-							{
-								addiFolderUserToListView(ifolderUser);
-							}
-						}
-						break;
-					}
-					case "NodeDeleted":
-					{
-						lock (subscrHT)
-						{
-							// See if we have a listview item by this ID.
-							ListViewItem lvi = (ListViewItem)subscrHT[eventArgs.Node];
-							if (lvi != null)
-							{
-								// Remove the listview item.
-								lvi.Remove();
-								subscrHT.Remove(eventArgs.Node);
-							}
-						}
-						break;
-					}
-				}*/
 			}
 			catch
 			{
@@ -1664,6 +1602,9 @@ namespace Novell.iFolderCom
 
 					lvitem.Tag = slMember;
 					shareWith.Items.Add(lvitem);
+
+					// Add the user to the UserID hashtable.
+					userIDHT.Add(slMember.iFolderUser.UserID, lvitem);
 				}
 			}
 
@@ -1772,11 +1713,13 @@ namespace Novell.iFolderCom
 
 			try
 			{
-				// Clear the hashtable.
+				// Clear the hashtables.
 				lock (subscrHT)
 				{
 					subscrHT.Clear();
 				}
+
+				userIDHT.Clear();
 
 				// Load the member list.
 				connectToWebService();
@@ -2311,8 +2254,11 @@ namespace Novell.iFolderCom
 			}
 			catch {} // non-fatal ... just missing some graphics.
 
-			// Hashtable used to store subscriptions in.
+			// Hashtable used to store subscriptions and members in.
 			subscrHT = new Hashtable();
+
+			// Hashtable used to store items based on UserID.
+			userIDHT = new Hashtable();
 
 			// Set up the event handlers.
 			// TODO: may be able to move this back to the refreshData method if we can get the filtering setup properly.
@@ -2432,24 +2378,67 @@ namespace Novell.iFolderCom
 			Picker picker = new Picker();
 			picker.LoadPath = loadPath;
 			picker.iFolderWebService = ifWebService;
+			picker.Ht = userIDHT;
+			picker.CurrentUser = currentUser;
+			picker.CurrentOwner = newOwnerLvi == null ? ((ShareListMember)ownerLvi.Tag).iFolderUser : ((ShareListMember)newOwnerLvi.Tag).iFolderUser;
 			DialogResult result = picker.ShowDialog();
 			if (result == DialogResult.OK)
 			{
+				Cursor.Current = Cursors.WaitCursor;
+
 				// Unselect all items.
 				shareWith.SelectedItems.Clear();
 
 				// Enable the apply button.
-				if (picker.AddedUsers.Count > 0)
-					apply.Enabled = true;
+				apply.Enabled = true;
 
+				// Add the added users if they are not already in the list.
 				foreach (ListViewItem lvi in picker.AddedUsers)
 				{
 					iFolderUser user = (iFolderUser)((ListViewItem)lvi.Tag).Tag;
 
-					user.Rights = "ReadWrite";
-					user.State = inviting;
-					addiFolderUserToListView(user);
+					if (userIDHT[user.UserID] == null)
+					{
+						user.Rights = "ReadWrite";
+						user.State = inviting;
+						addiFolderUserToListView(user);
+					}
 				}
+
+				// Remove the removed users.
+				foreach (iFolderUser ifUser in picker.RemovedList)
+				{
+					lock (subscrHT)
+					{
+						ListViewItem lvi = (ListViewItem)subscrHT[ifUser.ID];
+						if (lvi != null)
+						{
+							// Make sure the removed list is valid.
+							if (removedList == null)
+							{
+								removedList = new ArrayList();
+							}
+
+							// Add this to the removed list.
+							removedList.Add(lvi.Tag);
+
+							lvi.Remove();
+							subscrHT.Remove(ifUser.ID);
+						}
+						else
+						{
+							lvi = (ListViewItem)userIDHT[ifUser.UserID];
+							if (lvi != null)
+							{
+								lvi.Remove();
+							}
+						}
+					}
+
+					userIDHT.Remove(ifUser.UserID);
+				}
+
+				Cursor.Current = Cursors.Default;
 			}
 
 /*			if (!IsCurrentUserValid())
@@ -2597,6 +2586,8 @@ namespace Novell.iFolderCom
 						{
 							subscrHT.Remove(slMember.iFolderUser.ID);
 						}
+
+						userIDHT.Remove(slMember.iFolderUser.UserID);
 
 						// Enable the apply button.
 						apply.Enabled = true;

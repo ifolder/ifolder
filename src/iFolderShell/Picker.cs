@@ -46,6 +46,12 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
+		private ArrayList removedList;
+		private iFolderUser currentUser;
+		private iFolderUser currentOwner;
+		private bool first = true;
+		private Hashtable ht = null;
+		private Hashtable addedHT = null;
 		private int fixedWidth;
 		private int addOffset;
 		private int addedLVOffset;
@@ -70,6 +76,9 @@ namespace Novell.iFolderCom
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
+
+			removedList = new ArrayList();
+			addedHT = new Hashtable();
 
 			// Calculate the distance between the add button and the right side of the roster listview.
 			addOffset = add.Left - rosterLV.Right;
@@ -156,6 +165,7 @@ namespace Novell.iFolderCom
 			this.rosterLV.View = System.Windows.Forms.View.Details;
 			this.rosterLV.Visible = ((bool)(resources.GetObject("rosterLV.Visible")));
 			this.rosterLV.DoubleClick += new System.EventHandler(this.add_Click);
+			this.rosterLV.SelectedIndexChanged += new System.EventHandler(this.rosterLV_SelectedIndexChanged);
 			// 
 			// columnHeader1
 			// 
@@ -185,6 +195,8 @@ namespace Novell.iFolderCom
 			this.addedLV.Text = resources.GetString("addedLV.Text");
 			this.addedLV.View = System.Windows.Forms.View.Details;
 			this.addedLV.Visible = ((bool)(resources.GetObject("addedLV.Visible")));
+			this.addedLV.DoubleClick += new System.EventHandler(this.remove_Click);
+			this.addedLV.SelectedIndexChanged += new System.EventHandler(this.addedLV_SelectedIndexChanged);
 			// 
 			// columnHeader2
 			// 
@@ -427,6 +439,38 @@ namespace Novell.iFolderCom
 				return addedLV.Items;
 			}
 		}
+
+		/// <summary>
+		/// Sets the hashtable containing existing (already added) users.
+		/// </summary>
+		public Hashtable Ht
+		{
+			set { ht = value; }
+		}
+
+		/// <summary>
+		/// Sets the current user for this iFolder.
+		/// </summary>
+		public iFolderUser CurrentUser
+		{
+			set { currentUser = value; }
+		}
+
+		/// <summary>
+		/// Sets the current owner for this iFolder.
+		/// </summary>
+		public iFolderUser CurrentOwner
+		{
+			set { currentOwner = value; }
+		}
+
+		/// <summary>
+		/// Gets an array of removed users.
+		/// </summary>
+		public ArrayList RemovedList
+		{
+			get { return removedList; }
+		}
 		#endregion
 
 		#region Private Methods
@@ -451,9 +495,41 @@ namespace Novell.iFolderCom
 
 				foreach (iFolderUser ifolderUser in ifolderUsers)
 				{
-					ListViewItem lvi = new ListViewItem(ifolderUser.Name, 1);
+					int imageIndex = ifolderUser.UserID.Equals(currentUser.UserID) ? 0 : 1;
+					ListViewItem lvi = new ListViewItem(ifolderUser.Name, imageIndex);
 					lvi.Tag = ifolderUser;
 					rosterLV.Items.Add(lvi);
+
+					if (ht != null)
+					{
+						ListViewItem item = (ListViewItem)ht[ifolderUser.UserID];
+						if (item != null)
+						{
+							// Use the existing iFolderUser
+							lvi.Tag = ((ShareListMember)item.Tag).iFolderUser;
+						}
+
+						if (first && (item != null))
+						{
+							// Only create added items on first pass.
+							item = new ListViewItem(lvi.Text, lvi.ImageIndex);
+							addedLV.Items.Add(item);
+							item.Tag = lvi;
+							addedHT.Add(ifolderUser.UserID, item);
+							lvi.ForeColor = Color.Gray;
+						}
+						else
+						{
+							// Find and update items in the added list.
+							item = (ListViewItem)addedHT[ifolderUser.UserID];
+							if (item != null)
+							{
+								item.Tag = lvi;
+								addedHT[ifolderUser.UserID] = item;
+								lvi.ForeColor = Color.Gray;
+							}
+						}
+					}
 				}
 			}
 			catch (Exception ex)
@@ -465,6 +541,7 @@ namespace Novell.iFolderCom
 				mmb.ShowDialog();
 			}
 
+			first = false;
 			rosterLV.EndUpdate();
 			Cursor.Current = Cursors.Default;
 		}
@@ -523,25 +600,57 @@ namespace Novell.iFolderCom
 			{
 				if (lvi.ForeColor != Color.Gray)
 				{
+					ok.Enabled = true;
+
+					// Put the item in the added list.
 					ListViewItem item = new ListViewItem(lvi.Text, lvi.ImageIndex);
 					item.Tag = lvi;
 					addedLV.Items.Add(item);
+
+					// Change the fore-color of added items so that they can't be added again.
 					lvi.ForeColor = Color.Gray;
+
+					addedHT.Add(((iFolderUser)lvi.Tag).UserID, item);
+
+					iFolderUser selectedUser = (iFolderUser)lvi.Tag;
+
+					// Remove the item from the removed list.
+					if (removedList.Contains(selectedUser))
+					{
+						removedList.Remove(selectedUser);
+					}
 				}
 			}
-
-			ok.Enabled = addedLV.Items.Count > 0;
 		}
 
 		private void remove_Click(object sender, System.EventArgs e)
 		{
 			foreach (ListViewItem lvi in addedLV.SelectedItems)
 			{
-				((ListViewItem)lvi.Tag).ForeColor = Color.Black;
-				lvi.Remove();
-			}
+				iFolderUser selectedUser = (iFolderUser)((ListViewItem)lvi.Tag).Tag;
 
-			ok.Enabled = addedLV.Items.Count > 0;
+				// Remove the user if it is not the current user or current owner.
+				if (!selectedUser.UserID.Equals(currentUser.UserID) && !selectedUser.UserID.Equals(currentOwner.UserID))
+				{
+					ok.Enabled = true;
+
+					if (ht[selectedUser.UserID] != null)
+					{
+						// Add the item to the removed list.
+						if (!removedList.Contains(selectedUser))
+						{
+							removedList.Add(selectedUser);
+						}
+					}
+
+					// Change the color so it can be added again.
+					((ListViewItem)lvi.Tag).ForeColor = Color.Black;
+
+					// Remove the item from the list view and the hashtable.
+					lvi.Remove();
+					addedHT.Remove(selectedUser.UserID);
+				}
+			}
 		}
 
 		private void searchTimer_Tick(object sender, System.EventArgs e)
@@ -559,6 +668,36 @@ namespace Novell.iFolderCom
 			// Reset the timer when search text is entered.
 			searchTimer.Stop();
 			searchTimer.Start();
+		}
+
+		private void rosterLV_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			// Enable/disable the add button based on the state of the selected item(s).
+			if (rosterLV.SelectedItems.Count > 0)
+			{
+				ListViewItem lvi = rosterLV.SelectedItems[0];
+				add.Enabled = !lvi.ForeColor.Equals(Color.Gray);
+			}
+			else
+			{
+				add.Enabled = false;
+			}
+		}
+
+		private void addedLV_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			// Enable the remove button if one or more added item is selected.
+			remove.Enabled = addedLV.SelectedItems.Count > 0;
+
+			if (addedLV.SelectedItems.Count == 1)
+			{
+				// Disable the remove button if only one user is selected, and it's the current user or current owner.
+				iFolderUser selectedUser = (iFolderUser)((ListViewItem)addedLV.SelectedItems[0].Tag).Tag;
+				if (selectedUser.UserID.Equals(currentUser.UserID) || selectedUser.UserID.Equals(currentOwner.UserID))
+				{
+					remove.Enabled = false;
+				}
+			}
 		}
 		#endregion
 	}
