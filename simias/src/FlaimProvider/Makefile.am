@@ -1,4 +1,0 @@
-if WINDOWS
-SUBDIRS = FlaimWrapper
-DIST_SUBDIRS = $(SUBDIRS)
-endif
