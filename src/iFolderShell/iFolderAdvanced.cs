@@ -1588,24 +1588,31 @@ namespace Novell.iFolderCom
 					lock (userIDHT)
 					{
 						lvi = (ListViewItem)userIDHT[ifolderUser.UserID];
-					}
-					if (lvi != null)
-					{
-						// The item is already in the list ... if this is a subscribtion then delete it.
-						if (!ifolderUser.State.Equals(member))
+						if (lvi != null)
 						{
-							addItem = false;
-
-							try
+							// The item is already in the list ... if this is a subscribtion then delete it.
+							if (!ifolderUser.State.Equals(member))
 							{
-								connectToWebService();
+								addItem = false;
 
-								// Delete the subscription.
-								ifWebService.RemoveiFolderUser(currentiFolder.ID, ifolderUser.UserID);
+								try
+								{
+									connectToWebService();
+
+									// Delete the subscription.
+									ifWebService.RemoveiFolderUser(currentiFolder.ID, ifolderUser.UserID);
+								}
+								catch
+								{
+									// Ignore.
+								}
 							}
-							catch
+							else if (!((ShareListMember)lvi.Tag).iFolderUser.State.Equals(member))
 							{
-								// Ignore.
+								// If the other item in the list is a subscription, then delete it.
+								lvi.Remove();
+								subscrHT.Remove(((ShareListMember)lvi.Tag).iFolderUser.ID);
+								userIDHT.Remove(ifolderUser.UserID);
 							}
 						}
 					}
