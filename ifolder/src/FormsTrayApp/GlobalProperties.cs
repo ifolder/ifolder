@@ -1480,8 +1480,11 @@ namespace Novell.FormsTrayApp
 			menuResolve.Visible = (iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).HasConflicts;
 			menuRefresh.Visible = menuCreate.Visible = iFolderView.SelectedItems.Count == 0;
 
+			// Display the accept and delete menu items if the selected item is a subscription with state "Available"
 			menuAccept.Visible = /*menuDecline.Visible =*/ menuDelete.Visible = 
-				(iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription;
+				(iFolderView.SelectedItems.Count == 1) && 
+				((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription &&
+				((iFolder)iFolderView.SelectedItems[0].Tag).State.Equals("Available");
 		}
 
 		private void menuOpen_Click(object sender, System.EventArgs e)
