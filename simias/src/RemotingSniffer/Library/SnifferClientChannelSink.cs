@@ -48,7 +48,9 @@ namespace Simias.Sync
 
 		void IClientChannelSink.ProcessMessage(IMessage msg, ITransportHeaders requestHeaders, Stream requestStream, out ITransportHeaders responseHeaders, out Stream responseStream)
 		{
-			MyTrace.WriteLine("Initiating Remote Call:{0}", SnifferMessage.ToString(msg));
+			MyTrace.WriteLine("------------------------------");
+			MyTrace.WriteLine("Initiating Remote Call...");
+			MyTrace.WriteLine(SnifferMessage.ToString(msg));
 
 			try
 			{
@@ -59,6 +61,10 @@ namespace Simias.Sync
 				MyTrace.WriteLine(e);
 
 				throw e;
+			}
+			finally
+			{
+				MyTrace.WriteLine("------------------------------");
 			}
 		}
 

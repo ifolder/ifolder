@@ -228,21 +228,26 @@ namespace Simias.Sync
 				try
 				{
 					// get a proxy to the store service object
+					MyTrace.WriteLine("Connecting to the Sync Store Service...");
 					storeService = (SyncStoreService)Activator.GetObject(typeof(SyncStoreService), collection.ServiceUrl);
 					Debug.Assert(storeService != null);
 
 					// get a proxy to the collection service object
+					MyTrace.WriteLine("Connecting to the Sync Collection Service...");
 					service = storeService.GetCollectionService(collection.ID);
 					Debug.Assert(service != null);
 
 					// debug
-					MyTrace.WriteLine("Sync Collection Ping: {0}", service.Ping());
+					MyTrace.WriteLine("Pinging the Sync Collection Service...");
+					MyTrace.WriteLine(service.Ping().ToString());
 
 					// get the collection worker
+					MyTrace.WriteLine("Creating a Sync Worker Object...");
 					worker = syncManager.LogicFactory.GetCollectionWorker(service, collection);
 					Debug.Assert(worker != null);
 
 					// do the work
+					MyTrace.WriteLine("Starting the Sync Worker...");
 					worker.DoSyncWork();
 				}
 				catch(Exception e)

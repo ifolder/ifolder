@@ -98,13 +98,7 @@ namespace Simias.Sync
 
 		public override string ToString()
 		{
-			string header = "-------------------------------------------------------------------------------";
-			
 			StringBuilder buffer = new StringBuilder();
-
-			buffer.AppendFormat("\n{0}\n", header);
-
-			buffer.AppendFormat("\nREMOTE CALL\n\n");
 
 			if (assembly != null) buffer.AppendFormat("Assembly: {0}\n", assembly);
 
@@ -123,8 +117,6 @@ namespace Simias.Sync
 			}
 
 			if (uri != null) buffer.AppendFormat("     Uri: {0}\n", uri);
-
-			buffer.AppendFormat("\n{0}\n", header);
 
 			return buffer.ToString();
 		}
