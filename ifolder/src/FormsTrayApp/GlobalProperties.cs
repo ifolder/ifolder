@@ -42,10 +42,6 @@ namespace Novell.FormsTrayApp
 	/// </summary>
 	public class GlobalProperties : System.Windows.Forms.Form
 	{
-		// TODO: Localize
-		private const string statusConflicts = "Conflicts exist";
-		private const string statusOK = "OK";
-
 		#region Class Members
 		private const string iFolderRun = "iFolder";
 
@@ -101,11 +97,8 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuActionProperties;
 		private System.Windows.Forms.MenuItem menuActionSeparator1;
 		private System.Windows.Forms.GroupBox groupBox5;
-		private System.Windows.Forms.RadioButton noProxy;
-		private System.Windows.Forms.RadioButton useProxy;
 		private System.Windows.Forms.TextBox proxy;
 		private System.Windows.Forms.Label label7;
-		private System.Windows.Forms.TextBox port;
 		private System.Windows.Forms.Button create;
 		private System.Windows.Forms.TabPage tabPage5;
 		private System.Windows.Forms.Label label8;
@@ -142,6 +135,8 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuHelpHelp;
 		private System.Windows.Forms.MenuItem menuHelpAbout;
 		private System.Windows.Forms.Label userName;
+		private System.Windows.Forms.CheckBox useProxy;
+		private System.Windows.Forms.NumericUpDown port;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -194,11 +189,6 @@ namespace Novell.FormsTrayApp
 		{
 			if( disposing )
 			{
-/*				if (subscriber != null)
-				{
-					subscriber.Dispose();
-				}*/
-
 				if(components != null)
 				{
 					components.Dispose();
@@ -214,7 +204,6 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.label1 = new System.Windows.Forms.Label();
 			this.defaultInterval = new System.Windows.Forms.NumericUpDown();
 			this.displayConfirmation = new System.Windows.Forms.CheckBox();
 			this.ok = new System.Windows.Forms.Button();
@@ -250,11 +239,8 @@ namespace Novell.FormsTrayApp
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.autoStart = new System.Windows.Forms.CheckBox();
 			this.groupBox5 = new System.Windows.Forms.GroupBox();
-			this.port = new System.Windows.Forms.TextBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.proxy = new System.Windows.Forms.TextBox();
-			this.useProxy = new System.Windows.Forms.RadioButton();
-			this.noProxy = new System.Windows.Forms.RadioButton();
 			this.tabPage3 = new System.Windows.Forms.TabPage();
 			this.clearLog = new System.Windows.Forms.Button();
 			this.saveLog = new System.Windows.Forms.Button();
@@ -302,6 +288,8 @@ namespace Novell.FormsTrayApp
 			this.menuHelp = new System.Windows.Forms.MenuItem();
 			this.menuHelpHelp = new System.Windows.Forms.MenuItem();
 			this.menuHelpAbout = new System.Windows.Forms.MenuItem();
+			this.useProxy = new System.Windows.Forms.CheckBox();
+			this.port = new System.Windows.Forms.NumericUpDown();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -313,15 +301,8 @@ namespace Novell.FormsTrayApp
 			this.tabPage3.SuspendLayout();
 			this.tabPage5.SuspendLayout();
 			this.groupBox6.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.port)).BeginInit();
 			this.SuspendLayout();
-			// 
-			// label1
-			// 
-			this.label1.Location = new System.Drawing.Point(16, 80);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(184, 16);
-			this.label1.TabIndex = 1;
-			this.label1.Text = "Sync to host every:";
 			// 
 			// defaultInterval
 			// 
@@ -343,7 +324,7 @@ namespace Novell.FormsTrayApp
 																			-2147483648});
 			this.defaultInterval.Name = "defaultInterval";
 			this.defaultInterval.Size = new System.Drawing.Size(64, 20);
-			this.defaultInterval.TabIndex = 2;
+			this.defaultInterval.TabIndex = 1;
 			// 
 			// displayConfirmation
 			// 
@@ -379,7 +360,7 @@ namespace Novell.FormsTrayApp
 			this.label2.Location = new System.Drawing.Point(272, 80);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(72, 16);
-			this.label2.TabIndex = 3;
+			this.label2.TabIndex = 2;
 			this.label2.Text = "seconds";
 			// 
 			// tabControl1
@@ -585,7 +566,6 @@ namespace Novell.FormsTrayApp
 			this.groupBox2.Controls.Add(this.label3);
 			this.groupBox2.Controls.Add(this.defaultInterval);
 			this.groupBox2.Controls.Add(this.label2);
-			this.groupBox2.Controls.Add(this.label1);
 			this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.groupBox2.Location = new System.Drawing.Point(16, 48);
 			this.groupBox2.Name = "groupBox2";
@@ -638,63 +618,34 @@ namespace Novell.FormsTrayApp
 			// 
 			// groupBox5
 			// 
-			this.groupBox5.Controls.Add(this.port);
-			this.groupBox5.Controls.Add(this.label7);
 			this.groupBox5.Controls.Add(this.proxy);
+			this.groupBox5.Controls.Add(this.port);
 			this.groupBox5.Controls.Add(this.useProxy);
-			this.groupBox5.Controls.Add(this.noProxy);
+			this.groupBox5.Controls.Add(this.label7);
 			this.groupBox5.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.groupBox5.Location = new System.Drawing.Point(16, 280);
 			this.groupBox5.Name = "groupBox5";
-			this.groupBox5.Size = new System.Drawing.Size(392, 100);
-			this.groupBox5.TabIndex = 0;
+			this.groupBox5.Size = new System.Drawing.Size(392, 64);
+			this.groupBox5.TabIndex = 2;
 			this.groupBox5.TabStop = false;
 			this.groupBox5.Text = "Proxy Settings";
 			// 
-			// port
-			// 
-			this.port.Enabled = false;
-			this.port.Location = new System.Drawing.Point(320, 58);
-			this.port.Name = "port";
-			this.port.Size = new System.Drawing.Size(56, 20);
-			this.port.TabIndex = 4;
-			this.port.Text = "";
-			// 
 			// label7
 			// 
-			this.label7.Location = new System.Drawing.Point(280, 61);
+			this.label7.Location = new System.Drawing.Point(280, 28);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(56, 16);
-			this.label7.TabIndex = 3;
+			this.label7.TabIndex = 2;
 			this.label7.Text = "Port:";
 			// 
 			// proxy
 			// 
 			this.proxy.Enabled = false;
-			this.proxy.Location = new System.Drawing.Point(96, 58);
+			this.proxy.Location = new System.Drawing.Point(88, 26);
 			this.proxy.Name = "proxy";
 			this.proxy.Size = new System.Drawing.Size(168, 20);
-			this.proxy.TabIndex = 2;
+			this.proxy.TabIndex = 1;
 			this.proxy.Text = "";
-			// 
-			// useProxy
-			// 
-			this.useProxy.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.useProxy.Location = new System.Drawing.Point(16, 56);
-			this.useProxy.Name = "useProxy";
-			this.useProxy.Size = new System.Drawing.Size(88, 24);
-			this.useProxy.TabIndex = 1;
-			this.useProxy.Text = "Use Proxy:";
-			this.useProxy.CheckedChanged += new System.EventHandler(this.useProxy_CheckedChanged);
-			// 
-			// noProxy
-			// 
-			this.noProxy.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.noProxy.Location = new System.Drawing.Point(16, 24);
-			this.noProxy.Name = "noProxy";
-			this.noProxy.Size = new System.Drawing.Size(88, 24);
-			this.noProxy.TabIndex = 0;
-			this.noProxy.Text = "No Proxy";
 			// 
 			// tabPage3
 			// 
@@ -1083,6 +1034,23 @@ namespace Novell.FormsTrayApp
 			this.menuHelpAbout.Text = "About";
 			this.menuHelpAbout.Click += new System.EventHandler(this.menuHelpAbout_Click);
 			// 
+			// useProxy
+			// 
+			this.useProxy.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.useProxy.Location = new System.Drawing.Point(8, 24);
+			this.useProxy.Name = "useProxy";
+			this.useProxy.TabIndex = 0;
+			this.useProxy.Text = "Use proxy:";
+			this.useProxy.CheckedChanged += new System.EventHandler(this.useProxy_CheckedChanged);
+			// 
+			// port
+			// 
+			this.port.Enabled = false;
+			this.port.Location = new System.Drawing.Point(312, 26);
+			this.port.Name = "port";
+			this.port.Size = new System.Drawing.Size(72, 20);
+			this.port.TabIndex = 3;
+			// 
 			// GlobalProperties
 			// 
 			this.AcceptButton = this.ok;
@@ -1109,6 +1077,7 @@ namespace Novell.FormsTrayApp
 			this.tabPage3.ResumeLayout(false);
 			this.tabPage5.ResumeLayout(false);
 			this.groupBox6.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.port)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -1172,28 +1141,8 @@ namespace Novell.FormsTrayApp
 					int imageIndex;
 
 					items[0] = ifolder.Name;
-					if (ifolder.IsSubscription)
-					{
-						items[1] = "";
-						items[2] = stateToString(ifolder.State);
-						imageIndex = 1;
-					}
-					else
-					{
-						items[1] = ifolder.State.Equals("Local") ? ifolder.UnManagedPath : "";
-
-						if (ifolder.HasConflicts)
-						{
-							items[2] = statusConflicts;
-							// TODO: use conflict icon when it becomes available.
-							imageIndex = 0;
-						}
-						else
-						{
-							items[2] =  statusOK;
-							imageIndex = 0;
-						}
-					}
+					items[1] = ifolder.IsSubscription ? "" : ifolder.UnManagedPath;
+					items[2] = stateToString(ifolder.State, ifolder.HasConflicts, out imageIndex);
 
 					ListViewItem lvi = new ListViewItem(items, imageIndex);
 					lvi.Tag = ifolder;
@@ -1205,15 +1154,46 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private string stateToString(string state)
+		private string stateToString(string state, bool conflicts, out int imageIndex)
 		{
-			// TODO: add other states and localize.
+			string status;
+
+			// TODO: Localize.
 			switch (state)
 			{
+				case "Local":
+					if (conflicts)
+					{
+						// TODO: use conflict icon when it becomes available.
+						imageIndex = 0;
+						status = "Has conflicts";
+					}
+					else
+					{					
+						imageIndex = 0;
+						status = "OK";
+					}
+					break;
+				case "Available":
+					imageIndex = 1;
+					status = "Available";
+					break;
+				case "WaitConnect":
+					imageIndex = 1;
+					status = "Waiting to connect";
+					break;
+				case "WaitSync":
+					imageIndex = 1;
+					status = "Waiting to sync";
+					break;
 				default:
-					return state;
+					// TODO: what icon to use for unknown status?
+					imageIndex = 1;
+					status = "Unknown";
 					break;
 			}
+
+			return status;
 		}
 
 		private bool isRunEnabled()
@@ -1351,16 +1331,9 @@ namespace Novell.FormsTrayApp
 
 				refreshiFolders();
 
-/*				string proxyValue = null;
-				string portValue = null;
-				useProxy.Checked = Simias.Channels.SimiasChannelFactory.GetProxy(ref proxyValue, ref portValue);
-				if (proxyValue != null && portValue != null)
-				{
-					proxy.Text = proxyValue;
-					port.Text = portValue;
-				}
-
-				noProxy.Checked = !useProxy.Checked;*/
+				useProxy.Checked = ifSettings.UseProxy;
+				proxy.Text = ifSettings.ProxyHost;
+				port.Value = (decimal)ifSettings.ProxyPort;
 			}
 			catch (WebException ex)
 			{
@@ -1389,7 +1362,14 @@ namespace Novell.FormsTrayApp
 				ifWebService.SetDisplayConfirmation(displayConfirmation.Checked);
 
 				// Save the proxy settings.
-				//Simias.Channels.SimiasChannelFactory.SetProxy(useProxy.Checked, proxy.Text, port.Text);
+				if (useProxy.Checked)
+				{
+					ifWebService.SetupProxy(proxy.Text, (int)port.Value);
+				}
+				else
+				{
+					ifWebService.RemoveProxy();
+				}
 			}
 			catch (WebException ex)
 			{
