@@ -2,6 +2,8 @@
 
 all: ndoc
 
+all-nodeps: ndoc-nodeps
+
 clean-local: ndoc-clean
 
 simias-install:
@@ -14,22 +16,28 @@ ndoc: simias-install ndoc-nodeps
 ndoc-nodeps:
 	rm -rf simias-ndoc
 if WINDOWS
-	"$(NDOC_CMD)" `cygpath --windows "$(bindir)/Simias.dll"`,`cygpath --windows "../src/Simias.dll/Simias.doc.xml"` -documenter=MSDN -Title=Simias -OutputDirectory=simias-ndoc
+	"$(NDOC_CMD)" \
+		`cygpath --windows "$(bindir)/Simias.dll"`,`cygpath --windows "../src/Simias.dll/Simias.doc.xml"` \
+		`cygpath --windows "$(bindir)/Novell.AddressBook.dll"`,`cygpath --windows "../src/AddressBook/AddressBook.doc.xml"` \
+		-documenter=MSDN -Title=Simias -OutputDirectory=simias-ndoc
 else # NOT WINDOWS
-	"$(NDOC_CMD)" "$(bindir)/Simias.dll","../src/Simias.dll/Simias.doc.xml" -documenter=MSDN -Title=Simias -OutputDirectory=simias-ndoc
+	"$(NDOC_CMD)" \
+		"$(bindir)/Simias.dll","../src/Simias.dll/Simias.doc.xml" \
+		"$(bindir)/Novell.AddressBook.dll","../src/AddressBook/AddressBook.doc.xml" \
+		-documenter=MSDN -Title=Simias -OutputDirectory=simias-ndoc
 endif # WINDOWS
 	tar -czf simias-ndoc.tar.gz simias-ndoc
 
 else # NDOC
 
-ndoc:
+ndoc ndoc-nodeps:
 	@echo NDOC is not configured
 	mkdir -p simias-ndoc
 	touch simias-ndoc/sdk_doc_was_not_built
 
 endif # NDOC
 
-clean-local:
+ndoc-clean:
 	rm -rf simias-ndoc simias-ndoc.tar.gz
 
 maintainer-clean-local:

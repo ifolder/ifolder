@@ -435,7 +435,7 @@
 		<col def="S255">IncludeFiles</col>
 		<col def="S255">ExcludeFiles</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>Documentation.CB5C64A6_8316_4DB6_96CF_C1C6BAC2DA64</td><td>&lt;PATH_TO_DOC_FILES&gt;\ndoc</td><td>4</td><td/><td/><td>2</td></row>
+		<row><td>Documentation.CB5C64A6_8316_4DB6_96CF_C1C6BAC2DA64</td><td>&lt;PATH_TO_SOURCE&gt;\doc\addressbook-ndoc</td><td>4</td><td/><td/><td>2</td></row>
 	</table>
 
 	<table name="ISFeatureMergeModuleExcludes">

@@ -1,11 +1,10 @@
 .PHONY: addressbook-install ndoc ndoc-nodeps ndoc-clean
 
-all:
-	@echo "Novell.AddressBook APIs are currently in Simias, but will move here shortly"
+all: ndoc
 
-#all: ndoc
+all-nodeps: ndoc-nodeps
 
-#clean-local: ndoc-clean
+clean-local: ndoc-clean
 
 addressbook-install:
 	$(MAKE) -C .. install
@@ -16,23 +15,27 @@ ndoc: addressbook-install ndoc-nodeps
 
 ndoc-nodeps:
 	rm -rf addressbook-ndoc
-if WINDOWS
-	"$(NDOC_CMD)" `cygpath --windows "$(bindir)/Novell.Addressbook.dll"`,`cygpath --windows "../src/Addressbook/Novell.Addressbook.doc.xml"` -documenter=MSDN -Title=AddressBook -OutputDirectory=addressbook-ndoc
-else # NOT WINDOWS
-	"$(NDOC_CMD)" "$(bindir)/Novell.Addressbook.dll","../src/Addressbook/Novell.Addressbook.doc.xml" -documenter=MSDN -Title=AddressBook -OutputDirectory=addressbook-ndoc
-endif # WINDOWS
+	
+	@echo Novell.AddressBook.dll doc is in simias for now
+	mkdir -p addressbook-ndoc
+	touch addressbook-ndoc/sdk_doc_for_addressbook_in_simias_for_now
+#if WINDOWS
+#	"$(NDOC_CMD)" `cygpath --windows "$(bindir)/Novell.Addressbook.dll"`,`cygpath --windows "../src/Addressbook/Novell.Addressbook.doc.xml"` -documenter=MSDN -Title=AddressBook -OutputDirectory=addressbook-ndoc
+#else # NOT WINDOWS
+#	"$(NDOC_CMD)" "$(bindir)/Novell.Addressbook.dll","../src/Addressbook/Novell.Addressbook.doc.xml" -documenter=MSDN -Title=AddressBook -OutputDirectory=addressbook-ndoc
+#endif # WINDOWS
 	tar -czf addressbook-ndoc.tar.gz addressbook-ndoc
 
 else # NDOC
 
-ndoc:
+ndoc ndoc-nodeps:
 	@echo NDOC is not configured
 	mkdir -p addressbook-ndoc
 	touch addressbook-ndoc/sdk_doc_was_not_built
 
 endif # NDOC
 
-clean-local:
+ndoc-clean:
 	rm -rf addressbook-ndoc addressbook-ndoc.tar.gz
 
 maintainer-clean-local:

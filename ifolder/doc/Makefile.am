@@ -2,6 +2,8 @@
 
 all: ndoc
 
+all-nodeps: ndoc-nodeps
+
 clean-local: ndoc-clean
 
 ifolder-install:
@@ -22,14 +24,14 @@ endif # WINDOWS
 
 else # NDOC
 
-ndoc:
+ndoc ndoc-nodeps:
 	@echo NDOC is not configured
 	mkdir -p ifolder-ndoc
 	touch ifolder-ndoc/sdk_doc_was_not_built
 
 endif # NDOC
 
-clean-local:
+ndoc-clean:
 	rm -rf ifolder-ndoc ifolder-ndoc.tar.gz
 
 maintainer-clean-local:

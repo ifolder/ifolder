@@ -50,6 +50,9 @@ test-clean:
 doc:
 	$(MAKE) -C doc all
 
+doc-nodeps:
+	$(MAKE) -C doc all-nodeps
+
 doc-clean:
 	$(MAKE) -C doc clean
 
