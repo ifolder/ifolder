@@ -22,6 +22,7 @@ AssemblyInfo.cs
 ../CollectionStore/Member.cs
 ../CollectionStore/MultiValuedList.cs
 ../CollectionStore/Node.cs
+../CollectionStore/NodeCache.cs
 ../CollectionStore/Policy.cs
 ../CollectionStore/Property.cs
 ../CollectionStore/PropertyList.cs

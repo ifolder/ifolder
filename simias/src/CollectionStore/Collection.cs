@@ -743,6 +743,8 @@ namespace Simias.Storage
 							store.EventPublisher.RaiseEvent( args );
 							node.Properties.State = PropertyList.PropertyListState.Disposed;
 						}
+
+						store.Cache.Add( node );
 					}
 					else
 					{
@@ -758,6 +760,7 @@ namespace Simias.Storage
 								args.LocalOnly = node.LocalChanges;
 								store.EventPublisher.RaiseEvent( args );
 								node.Properties.State = PropertyList.PropertyListState.Update;
+								store.Cache.Add( node );
 								break;
 							}
 
@@ -767,6 +770,7 @@ namespace Simias.Storage
 								args.LocalOnly = node.LocalChanges;
 								store.EventPublisher.RaiseEvent( args );
 								node.Properties.State = PropertyList.PropertyListState.Disposed;
+								store.Cache.Remove( node.ID );
 								break;
 							}
 
@@ -777,6 +781,7 @@ namespace Simias.Storage
 								args.LocalOnly = node.LocalChanges;
 								store.EventPublisher.RaiseEvent( args );
 								node.Properties.State = PropertyList.PropertyListState.Update;
+								store.Cache.Add( node );
 								break;
 							}
 
@@ -801,6 +806,7 @@ namespace Simias.Storage
 										}
 									}
 								}
+								store.Cache.Add( node );
 								break;
 							}
 
@@ -833,6 +839,7 @@ namespace Simias.Storage
 
 								// Set the new state of the node.
 								node.Properties.State = PropertyList.PropertyListState.Update;
+								store.Cache.Add( node );
 								break;
 							}
 						}
@@ -1297,6 +1304,7 @@ namespace Simias.Storage
 					{
 						if ( node != null )
 						{
+							store.Cache.Remove( node.ID );
 							node.Properties.State = PropertyList.PropertyListState.Disposed;
 						}
 					}
@@ -1522,14 +1530,20 @@ namespace Simias.Storage
 		/// <returns>Node object for the specified identifier.</returns>
 		public Node GetNodeByID( string nodeID )
 		{
-			Node node = null;
-
-			// Call the provider to get an XML string that represents this node.
-			XmlDocument document = store.StorageProvider.GetRecord( nodeID.ToLower(), id );
-			if ( document != null )
+			// First try to get the node from the cache.
+			Node node = store.Cache.Get( nodeID.ToLower() );
+			if ( node == null )
 			{
-				// Construct a temporary Node object from the DOM.
-				node = Node.NodeFactory( store, document );
+				// Call the provider to get an XML string that represents this node.
+				XmlDocument document = store.StorageProvider.GetRecord( nodeID.ToLower(), id );
+				if ( document != null )
+				{
+					// Construct a temporary Node object from the DOM.
+					node = Node.NodeFactory( store, document );
+
+					// Add the node object to the cache.
+					store.Cache.Add( node );
+				}
 			}
 
 			return node;
@@ -1777,8 +1791,9 @@ namespace Simias.Storage
 		/// <returns>The Node object that was refreshed.</returns>
 		public Node Refresh( Node node )
 		{
-			// Call the provider to get an XML string that represents this node.
-			XmlDocument document = store.StorageProvider.GetRecord( node.ID, id );
+			// Check and see if the node is in the node cache first.
+			Node tempNode = store.Cache.Get( node.ID );
+			XmlDocument document = ( tempNode != null ) ? tempNode.Properties.PropertyDocument : store.StorageProvider.GetRecord( node.ID, id );
 			if ( document != null )
 			{
 				XmlElement element = document.DocumentElement[ XmlTags.ObjectTag ];
@@ -1787,6 +1802,12 @@ namespace Simias.Storage
 				node.BaseType = element.GetAttribute( XmlTags.TypeAttr );
 				node.InternalList = new PropertyList( document );
 				node.IncarnationUpdate = 0;
+
+				// See if node needs to be added to the cache.
+				if ( tempNode == null )
+				{
+					store.Cache.Add( node );
+				}
 			}
 
 			return node;

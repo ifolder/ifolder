@@ -112,6 +112,11 @@ namespace Simias.Storage
 		/// Used to indicate whether this instance is running on an enterprise server.
 		/// </summary>
 		private bool enterpriseServer = false;
+
+		/// <summary>
+		/// Object used to cache node objects.
+		/// </summary>
+		private NodeCache cache;
 		#endregion
 
 		#region Properties
@@ -154,6 +159,14 @@ namespace Simias.Storage
 		internal Persist.IProvider StorageProvider
 		{
 			get { return storageProvider; }
+		}
+
+		/// <summary>
+		/// Gets the NodeCache object.
+		/// </summary>
+		internal NodeCache Cache
+		{
+			get { return cache; }
 		}
 
 		/// <summary>
@@ -226,6 +239,9 @@ namespace Simias.Storage
 
 			// Setup the event publisher object.
 			eventPublisher = new EventPublisher();
+
+			// Initialize the node cache.
+			cache = new NodeCache( this );
 
 			// Create or open the underlying database.
 			storageProvider = Persist.Provider.Connect( new Persist.ProviderConfig(), out created );
@@ -397,9 +413,20 @@ namespace Simias.Storage
 		/// exist a null is returned.</returns>
 		private Node GetNodeByID( string collectionID, string nodeID )
 		{
-			// Get the specified object from the persistent store.
-			XmlDocument document = storageProvider.GetRecord( nodeID.ToLower(), collectionID.ToLower() );
-			return ( document != null ) ? Node.NodeFactory( this, document ) : null;
+			// See if the node exists in the cache first.
+			Node node = cache.Get( nodeID.ToLower() );
+			if ( node == null )
+			{
+				// Get the specified object from the persistent store.
+				XmlDocument document = storageProvider.GetRecord( nodeID.ToLower(), collectionID.ToLower() );
+				if ( document != null )
+				{
+					node = Node.NodeFactory( this, document );
+					cache.Add( node );
+				}
+			}		
+
+			return node;
 		}
 
 		/// <summary>
@@ -514,10 +541,7 @@ namespace Simias.Storage
 		/// exist a null is returned.</returns>
 		public Collection GetCollectionByID( string collectionID )
 		{
-			// Get the specified object from the persistent store.
-			string normalizedID = collectionID.ToLower();
-			XmlDocument document = storageProvider.GetRecord( normalizedID, normalizedID );
-			return ( document != null ) ? Node.NodeFactory( this, document ) as Collection : null;
+			return GetNodeByID( collectionID, collectionID ) as Collection;
 		}
 
 		/// <summary>

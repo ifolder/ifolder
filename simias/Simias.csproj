@@ -204,6 +204,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\CollectionStore\NodeCache.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\CollectionStore\Policy.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
