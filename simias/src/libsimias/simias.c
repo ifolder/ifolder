@@ -22,8 +22,30 @@
  ***********************************************************************/
 #include "simias.h"
 
+#include <stdio.h>
+#include <string.h>
+
 int
-simias_get_local_service_url(char *url)
+simias_get_local_service_url(char **url)
 {
+	char the_url[1024];
+	int b_found_url;
+	
+	b_found_url = 0;
+	
+#if defined(OSX)
+
+#elif defined(WIN32)
+
+#else
+	sprintf(the_url, "http://127.0.0.1:42227/simias10/boyd");
+	b_found_url = 1;
+#endif
+
+	if (b_found_url) {
+		*url = strdup(the_url);
+		return SIMIAS_SUCCESS;
+	}
+
 	return SIMIAS_ERROR_UNKNOWN;
 }

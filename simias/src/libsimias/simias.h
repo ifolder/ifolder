@@ -38,6 +38,6 @@
  *          above if it's not successful.  If successful, the memory used by
  *          url must be freed.
  */
-int simias_get_local_service_url(char *url);
+int simias_get_local_service_url(char **url);
 
 #endif
