@@ -48,3 +48,6 @@ clean-local:
 	rm -f $(LIBRARY)
 	rm -rf generated
 	rm -f $(API)
+
+maintainer-clean-local:
+	rm -f Makefile.in

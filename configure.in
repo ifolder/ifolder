@@ -2,8 +2,6 @@ AC_INIT(src/iFolder/iFolder.cs)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 
-PASSALONG_CONFIG_OPTIONS=$*
-
 AM_INIT_AUTOMAKE(ifolder, 0.8)
 VERSION=$VERSION.`date +%Y%m%d`
 AM_MAINTAINER_MODE
@@ -15,6 +13,11 @@ AC_PROG_CC
 case $host_os in
     linux*)
         IFOLDER_OS='linux'
+        AC_CHECK_PROG(CSC, mcs, mcs)
+        test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
+    ;;
+    darwin*)
+        IFOLDER_OS='darwin'
         AC_CHECK_PROG(CSC, mcs, mcs)
         test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
     ;;
@@ -31,6 +34,27 @@ esac
 AC_SUBST(IFOLDER_OS)
 AM_CONDITIONAL(LINUX, test "$IFOLDER_OS" = "linux")
 AM_CONDITIONAL(WINDOWS, test "$IFOLDER_OS" = "windows")
+AM_CONDITIONAL(DARWIN, test "$IFOLDER_OS" = "darwin")
+
+#
+# We add $prefix to PKG_CONFIG_PATH so pkg-config will find any other
+# packages 'make install'-ed to the same prefix.
+#
+# The default value of $prefix is not set until later in the script.
+# We set the default here, if needed.
+#
+echo prefix=${prefix}
+CONFIGURED_PREFIX="${prefix}"
+test -z "$CONFIGURED_PREFIX" -o "$CONFIGURED_PREFIX" = "NONE" && CONFIGURED_PREFIX=$ac_default_prefix
+echo CONFIGURED_PREFIX=$CONFIGURED_PREFIX
+echo PKG_CONFIG_PATH=$PKG_CONFIG_PATH
+if test -z "$PKG_CONFIG_PATH"; then
+    export PKG_CONFIG_PATH="$CONFIGURED_PREFIX/lib/pkgconfig"
+else
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$CONFIGURED_PREFIX/lib/pkgconfig"
+fi
+echo PKG_CONFIG_PATH=$PKG_CONFIG_PATH
+AC_SUBST(PKG_CONFIG_PATH)
 
 #
 # Configure C# compiler settings
@@ -48,7 +72,7 @@ case $CSC in
         CSCFLAGS_OPTIMIZE="/optimize+"
         MONO=mono
         MONO_DEBUG='mono --debug'
-        MONO_PATH='$(subst $(SPACE),:,$(addprefix $(SRCDIR)$(SEP),$(COMMON_SUBDIRS))):$(ADDRESSBOOK_INSTALL_PATH)/bin:$(SIMIAS_INSTALL_PATH)/bin'
+        MONO_PATH="\$(subst \$(SPACE),:,\$(addprefix \$(SRCDIR)$(SEP),\$(COMMON_SUBDIRS))):`pkg-config --variable=libdir addressbook`:`pkg-config --variable=libdir simias`"
         SYSTEM_XML='System.Xml.dll'
     ;;
     #
@@ -100,6 +124,8 @@ AC_SUBST(LINUX_SUBDIRS)
 AC_SUBST(WINDOWS_SUBDIRS)
 AC_SUBST(NOBUILD_SUBDIRS)
 
+COMMON_LIBS="/r:iFolder.dll"
+
 #
 # Set platform-specific variables
 #
@@ -140,14 +166,18 @@ case $IFOLDER_OS in
         GTK_SHARP_MINIMUM_VERSION=0.17
         AC_SUBST(GTK_SHARP_MINIMUM_VERSION)
 	
-	GDK20_MINIMUM_VERSION=2.2.3
-	ATK_MINIMUM_VERSION=1.2.4
+        GDK20_MINIMUM_VERSION=2.2.3
+        ATK_MINIMUM_VERSION=1.2.4
         
-        PKG_CONFIG_REQUIRES="mono-core >= $MONO_MINIMUM_VERSION, gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION, gdk-2.0 >= $GDK20_MINIMUM_VERSION, atk >= $ATK_MINIMUM_VERSION"
-        AC_SUBST(PKG_CONFIG_REQUIRES)
-        
+        PKG_CONFIG_REQUIRES="gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION, gdk-2.0 >= $GDK20_MINIMUM_VERSION, atk >= $ATK_MINIMUM_VERSION"
         PKG_CONFIG_CONFLICTS=""
-        AC_SUBST(PKG_CONFIG_CONFLICTS)
+        PKG_CONFIG_LIBS="$COMMON_LIBS /r:TrayIcon.dll"
+        
+        #
+        # Remove this when Makefile.am files are modified to SIMIAS_LIBS and ADDRESSBOOK_LIBS
+        #
+        SIMIAS_INSTALL_PATH=`pkg-config --variable=prefix simias`
+        ADDRESSBOOK_INSTALL_PATH=`pkg-config --variable=prefix addressbook`
     ;;
     #
     # Windows-specific configuration
@@ -210,8 +240,26 @@ case $IFOLDER_OS in
         SYSTEM_XML='System.XML.dll'
         TLBX='tlbexp'
         TYPE_LIB_EXT='.tlb'
+        #
+        # Set pkg-config variables
+        #
+        PKG_CONFIG_REQUIRES=""
+        PKG_CONFIG_CONFLICTS=""
+        PKG_CONFIG_LIBS="$COMMON_LIBS /r:iFolderComponent.dll"
+        
+        #
+        # Remove this when Makefile.am files are modified to SIMIAS_LIBS and ADDRESSBOOK_LIBS
+        #
+        SIMIAS_INSTALL_PATH=`pkg-config --variable=prefix simias`
+        SIMIAS_INSTALL_PATH=`cygpath --windows $SIMIAS_INSTALL_PATH | sed 's,\\\\,/,g'`
+        
+        ADDRESSBOOK_INSTALL_PATH=`pkg-config --variable=prefix addressbook`
+        ADDRESSBOOK_INSTALL_PATH=`cygpath --windows $ADDRESSBOOK_INSTALL_PATH | sed 's,\\\\,/,g'`
     ;;
 esac
+AC_SUBST(SIMIAS_INSTALL_PATH)
+AC_SUBST(ADDRESSBOOK_INSTALL_PATH)
+
 AC_SUBST(CDEF)
 AC_SUBST(CINC)
 AC_SUBST(COMMON_CLEAN_FILES)
@@ -230,6 +278,9 @@ AC_SUBST(NUNIT)
 AC_SUBST(NUNIT_FLAGS)
 AC_SUBST(NUNIT_LIBPATH)
 AC_SUBST(OBJ_EXT)
+AC_SUBST(PKG_CONFIG_REQUIRES)
+AC_SUBST(PKG_CONFIG_CONFLICTS)
+AC_SUBST(PKG_CONFIG_LIBS)
 AC_SUBST(PLATFORM_SUBDIRS)
 AC_SUBST(RC)
 AC_SUBST(RCFLAGS)
@@ -248,95 +299,6 @@ AM_PROG_CC_STDC
 AC_PROG_INSTALL
 AC_HEADER_STDC
 AM_PROG_LIBTOOL
-
-#
-# Handle --with-simias-install-path
-#
-AC_ARG_WITH(simias-install-path, [
-  --with-simias-install-path=DIR
-                          path to where Simias is installed [[PREFIX]]],
-    [ SIMIAS_INSTALL_PATH=$withval ],
-    [ SIMIAS_INSTALL_PATH=$prefix ]
-    )
-test "x$SIMIAS_INSTALL_PATH" = xNONE && SIMIAS_INSTALL_PATH=$ac_default_prefix
-mkdir -p $SIMIAS_INSTALL_PATH || AC_MSG_ERROR([mkdir -p $SIMIAS_INSTALL_PATH failed])
-SIMIAS_INSTALL_PATH=`cd $SIMIAS_INSTALL_PATH && pwd`
-case $IFOLDER_OS in
-    windows)
-        SIMIAS_INSTALL_PATH=`cygpath --windows $SIMIAS_INSTALL_PATH | sed 's,\\\\,/,g'`
-    ;;
-esac
-echo SIMIAS_INSTALL_PATH=$SIMIAS_INSTALL_PATH
-AC_SUBST(SIMIAS_INSTALL_PATH)
-
-#
-# Handle --with-simias-build-path
-#
-AC_ARG_WITH(simias-build-path, [
-  --with-simias-build-path=DIR
-                          path to a Simias build [[NONE]]],
-    [ SIMIAS_BUILD_PATH=$withval ],
-    [ SIMIAS_BUILD_PATH=NONE ]
-    )
-if test "x$SIMIAS_BUILD_PATH" = xNONE; then
-    SIMIAS_BUILD_PATH=''
-else
-    test -d $SIMIAS_BUILD_PATH || AC_MSG_ERROR([$SIMIAS_BUILD_PATH does not exist])
-    SIMIAS_BUILD_PATH=`cd $SIMIAS_BUILD_PATH && pwd`
-    case $IFOLDER_OS in
-        windows)
-            SIMIAS_BUILD_PATH=`cygpath --windows $SIMIAS_BUILD_PATH | sed 's,\\\\,/,g'`
-        ;;
-    esac
-fi
-echo SIMIAS_BUILD_PATH=$SIMIAS_BUILD_PATH
-AC_SUBST(SIMIAS_BUILD_PATH)
-
-#
-# Handle --with-addressbook-install-path
-#
-AC_ARG_WITH(addressbook-install-path, [
-  --with-addressbook-install-path=DIR
-                          path to where AddressBook is installed [[PREFIX]]],
-    [ ADDRESSBOOK_INSTALL_PATH=$withval ],
-    [ ADDRESSBOOK_INSTALL_PATH=$prefix ]
-    )
-test "x$ADDRESSBOOK_INSTALL_PATH" = xNONE && ADDRESSBOOK_INSTALL_PATH=$ac_default_prefix
-mkdir -p $ADDRESSBOOK_INSTALL_PATH || AC_MSG_ERROR([mkdir -p $ADDRESSBOOK_INSTALL_PATH failed])
-ADDRESSBOOK_INSTALL_PATH=`cd $ADDRESSBOOK_INSTALL_PATH && pwd`
-case $IFOLDER_OS in
-    windows)
-        ADDRESSBOOK_INSTALL_PATH=`cygpath --windows $ADDRESSBOOK_INSTALL_PATH | sed 's,\\\\,/,g'`
-    ;;
-esac
-echo ADDRESSBOOK_INSTALL_PATH=$ADDRESSBOOK_INSTALL_PATH
-AC_SUBST(ADDRESSBOOK_INSTALL_PATH)
-
-#
-# Handle --with-addressbook-build-path
-#
-AC_ARG_WITH(addressbook-build-path, [
-  --with-addressbook-build-path=DIR
-                          path to an AddressBook build [[NONE]]],
-    [ ADDRESSBOOK_BUILD_PATH=$withval ],
-    [ ADDRESSBOOK_BUILD_PATH=NONE ]
-    )
-if test "x$ADDRESSBOOK_BUILD_PATH" = xNONE; then
-    ADDRESSBOOK_BUILD_PATH=''
-else
-    test -d $ADDRESSBOOK_BUILD_PATH || AC_MSG_ERROR([$ADDRESSBOOK_BUILD_PATH does not exist])
-    ADDRESSBOOK_BUILD_PATH=`cd $ADDRESSBOOK_BUILD_PATH && pwd`
-    case $IFOLDER_OS in
-        windows)
-            ADDRESSBOOK_BUILD_PATH=`cygpath --windows $ADDRESSBOOK_BUILD_PATH | sed 's,\\\\,/,g'`
-        ;;
-    esac
-fi
-echo ADDRESSBOOK_BUILD_PATH=$ADDRESSBOOK_BUILD_PATH
-AC_SUBST(ADDRESSBOOK_BUILD_PATH)
-
-DISTCHECK_CONFIGURE_FLAGS="--with-simias-install-path=$SIMIAS_INSTALL_PATH --with-addressbook-install-path=$ADDRESSBOOK_INSTALL_PATH"
-AC_SUBST(DISTCHECK_CONFIGURE_FLAGS)
 
 
 #
@@ -362,7 +324,7 @@ if test -n "$NDOC_PATH"; then
     fi
     test -e "$NDOC_CMD" || AC_MSG_ERROR([NDocConsole.exe not found in $NDOC_PATH])
 fi
-echo NDOC_CMD=$NDOC_CMD
+#echo NDOC_CMD=$NDOC_CMD
 AC_SUBST(NDOC_CMD)
 AM_CONDITIONAL(NDOC, test -n "$NDOC_CMD")
 
@@ -385,14 +347,14 @@ then
   CXXFLAGS="$CXXFLAGS_DEBUG $CXXFLAGS"
   DEVENV_CONFIGURATION=Debug
   MONO=$MONO_DEBUG
-  NUNIT_FLAGS="$DEBUG_NUNITFLAGS $NUNIT_FLAGS"
+  NUNIT_FLAGS="$NUNITFLAGS_DEBUG $NUNIT_FLAGS"
 else
   # Build optimized version.
   CFLAGS="$CFLAGS_OPTIMIZE $CFLAGS"
   CSCFLAGS="$CSCFLAGS_OPTIMIZE $CSCFLAGS"
   CXXFLAGS="$CXXFLAGS_OPTIMIZE $CXXFLAGS"
   DEVENV_CONFIGURATION=Release
-  NUNIT_FLAGS="$OPTIMIZE_NUNITFLAGS $NUNIT_FLAGS"
+  NUNIT_FLAGS="$NUNITFLAGS_OPTIMIZE $NUNIT_FLAGS"
 fi
 AC_SUBST(DEVENV_CONFIGURATION)
 
@@ -403,107 +365,39 @@ AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 if test "x$PKG_CONFIG" = "xno"; then
     AC_MSG_ERROR([You need to install pkg-config])
 fi
+
+#
+# Check for required packages
+#
+PKG_CHECK_MODULES(SIMIAS, simias = $VERSION)
+AC_SUBST(SIMIAS_LIBS)
+
+PKG_CHECK_MODULES(ADDRESSBOOK, addressbook = $VERSION)
+AC_SUBST(ADDRESSBOOK_LIBS)
+
 case $IFOLDER_OS in
     linux)
         PKG_CHECK_MODULES(BASE_DEPENDENCIES, gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION)
-	GTK_SHARP_PREFIX=`pkg-config --variable=prefix gtk-sharp`
-	GTK_SHARP_VERSION=`pkg-config --modversion gtk-sharp`
-	test -x "$GTK_SHARP_PREFIX/bin/gapi-codegen" || AC_MSG_ERROR([You need to install gtk-sharp-gapi $GTK_SHARP_VERSION])
-	AC_SUBST(GTK_SHARP_PREFIX)
-	
+    GTK_SHARP_PREFIX=`pkg-config --variable=prefix gtk-sharp`
+    GTK_SHARP_VERSION=`pkg-config --modversion gtk-sharp`
+    test -x "$GTK_SHARP_PREFIX/bin/gapi-codegen" || AC_MSG_ERROR([You need to install gtk-sharp-gapi $GTK_SHARP_VERSION])
+    AC_SUBST(GTK_SHARP_PREFIX)
+    
         PKG_CHECK_MODULES(GDK20, gdk-2.0 >= $GDK20_MINIMUM_VERSION)
-	AC_SUBST(GDK20_LIBS)
-	AC_SUBST(GDK20_CFLAGS)
+    AC_SUBST(GDK20_CFLAGS)
+    AC_SUBST(GDK20_LIBS)
         PKG_CHECK_MODULES(ATK, atk >= $ATK_MINIMUM_VERSION)
-	AC_SUBST(ATK_LIBS)
-	AC_SUBST(ATK_CFLAGS)
+    AC_SUBST(ATK_CFLAGS)
+    AC_SUBST(ATK_LIBS)
     ;;
 esac
-
-#
-# We handle the --prefix and --with-{simias|addressbook}-{build|install}-path options
-# so we remove them and pass all other configuration options on to any subproject
-# we configure.
-#
-if expr "$PASSALONG_CONFIG_OPTIONS" : '.*--prefix=[[^ ]][[^ ]]* *' > /dev/null; then
-    PASSALONG_CONFIG_OPTIONS=`echo "$PASSALONG_CONFIG_OPTIONS" | sed 's,--prefix=[[^ ]][[^ ]]* *,,'`
-fi
-if expr "$PASSALONG_CONFIG_OPTIONS" : '.*--with-simias-build-path=[[^ ]][[^ ]]* *' > /dev/null; then
-    PASSALONG_CONFIG_OPTIONS=`echo "$PASSALONG_CONFIG_OPTIONS" | sed 's/--with-simias-build-path=[[^ ]][[^ ]]* *//'`
-fi
-if expr "$PASSALONG_CONFIG_OPTIONS" : '.*--with-simias-install-path=[[^ ]][[^ ]]* *' > /dev/null; then
-    PASSALONG_CONFIG_OPTIONS=`echo "$PASSALONG_CONFIG_OPTIONS" | sed 's/--with-simias-install-path=[[^ ]][[^ ]]* *//'`
-fi
-if expr "$PASSALONG_CONFIG_OPTIONS" : '.*--with-addressbook-build-path=[[^ ]][[^ ]]* *' > /dev/null; then
-    PASSALONG_CONFIG_OPTIONS=`echo "$PASSALONG_CONFIG_OPTIONS" | sed 's/--with-addressbook-build-path=[[^ ]][[^ ]]* *//'`
-fi
-if expr "$PASSALONG_CONFIG_OPTIONS" : '.*--with-addressbook-install-path=[[^ ]][[^ ]]* *' > /dev/null; then
-    PASSALONG_CONFIG_OPTIONS=`echo "$PASSALONG_CONFIG_OPTIONS" | sed 's/--with-addressbook-install-path=[[^ ]][[^ ]]* *//'`
-fi
-echo PASSALONG_CONFIG_OPTIONS="$PASSALONG_CONFIG_OPTIONS"
-
-#
-# Configure Simias subproject, if specified, only if not configuring AddressBook.
-# Otherwise, Simias will be configured when AddressBook is configured.
-#
-if test -n "$SIMIAS_BUILD_PATH" && test -z "$ADDRESSBOOK_BUILD_PATH"; then
-    CONFIG_OPTIONS="$PASSALONG_CONFIG_OPTIONS"
-    if test -n "$SIMIAS_INSTALL_PATH"; then
-        CONFIG_OPTIONS="--prefix=$SIMIAS_INSTALL_PATH ${CONFIG_OPTIONS}"
-    else
-        test "x$prefix" != xNONE &&
-            CONFIG_OPTIONS="--prefix=${prefix} ${CONFIG_OPTIONS}"
-    fi
-    if test -x "$SIMIAS_BUILD_PATH/configure"; then
-        CONFIG_CMD="./configure"
-    else
-        CONFIG_CMD="./autogen.sh"
-    fi
-    CONFIG_CMD="$CONFIG_CMD $CONFIG_OPTIONS"
-    echo "----------------------------------------------------------------------"
-    echo "cd $SIMIAS_BUILD_PATH; $CONFIG_CMD"
-    (cd $SIMIAS_BUILD_PATH; eval $CONFIG_CMD)
-    echo "----------------------------------------------------------------------"
-    SUBPROJECT_BUILD_PATHS="$SIMIAS_BUILD_PATH"
-    echo "continuing configure in `pwd`"
-fi
-
-#
-# Configure AddressBook subproject, if specified.
-#
-if test -n "$ADDRESSBOOK_BUILD_PATH"; then
-    CONFIG_OPTIONS=$PASSALONG_CONFIG_OPTIONS
-    test -n "$SIMIAS_INSTALL_PATH" &&
-        CONFIG_OPTIONS="--with-simias-install-path=$SIMIAS_INSTALL_PATH ${CONFIG_OPTIONS}"
-    test -n "$SIMIAS_BUILD_PATH" &&
-        CONFIG_OPTIONS="--with-simias-build-path=$SIMIAS_BUILD_PATH ${CONFIG_OPTIONS}"
-    if test -n "$ADDRESSBOOK_INSTALL_PATH"; then
-        CONFIG_OPTIONS="--prefix=$ADDRESSBOOK_INSTALL_PATH ${CONFIG_OPTIONS}"
-    else
-        test "x$prefix" != xNONE &&
-            CONFIG_OPTIONS="--prefix=${prefix} ${CONFIG_OPTIONS}"
-    fi
-    if test -x "$ADDRESSBOOK_BUILD_PATH/configure"; then
-        CONFIG_CMD="./configure"
-    else
-        CONFIG_CMD="./autogen.sh"
-    fi
-    CONFIG_CMD="$CONFIG_CMD  $CONFIG_OPTIONS"
-    echo "----------------------------------------------------------------------"
-    echo "cd $ADDRESSBOOK_BUILD_PATH; $CONFIG_CMD"
-    (cd $ADDRESSBOOK_BUILD_PATH; eval $CONFIG_CMD)
-    echo "----------------------------------------------------------------------"
-    SUBPROJECT_BUILD_PATHS="$ADDRESSBOOK_BUILD_PATH"
-    echo "continuing configure in `pwd`"
-fi
-AC_SUBST(SUBPROJECT_BUILD_PATHS)
-AM_CONDITIONAL(BUILD_SUBPROJECTS, test -n "$SUBPROJECT_BUILD_PATHS")
 
 #
 # Configure files
 #
 AC_OUTPUT([
 Makefile
+ifolder.pc
 src/Makefile
 src/iFolder/Makefile
 src/GtkTrayApp/Makefile
@@ -519,6 +413,5 @@ package/Makefile
 package/windows/Makefile
 package/linux/Makefile
 package/linux/ifolder.spec
-package/linux/ifolder.pc
 doc/Makefile
 ])

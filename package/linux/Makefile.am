@@ -20,18 +20,17 @@
 #  Author: Paul Thomas <pthomas@novell.com>
 #
 #######################################################################
-EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/ifolder.spec.in $(srcdir)/ifolder.pc.in
+EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/ifolder.spec.in
 
 RELEASE = 1
 RPM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).$(target_cpu).rpm
 SRPM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).src.rpm
 
-.PHONY: package package-clean package-install package-uninstall ifolder
+.PHONY: package package-clean package-install package-uninstall ifolder-dist
 
 all clean:
 
-package:
-	cd $(top_srcdir); make dist
+package: ifolder.spec ifolder-dist
 	rm -rf RPM
 	mkdir RPM
 	echo %_topdir `pwd`/RPM > $(HOME)/.rpmmacros
@@ -45,6 +44,9 @@ package:
 	rpmbuild -ba --target=$(target_triplet) RPM/SPECS/ifolder.spec
 	cp RPM/RPMS/*/$(RPM_FILE) .
 	cp RPM/SRPMS/$(SRPM_FILE) .
+	
+ifolder-dist:
+	cd $(top_srcdir); make dist
 
 package-install: package
 	su -c "rpm -Uvh $(RPM_FILE)"
