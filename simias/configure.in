@@ -9,9 +9,9 @@ TOOLDIR='$(top_srcdir)/tools'
 DOCDIR="$SRCDIR/doc"
 APIDOCDIR="$SRCDIR/api-doc"
 
-COMMON_SUBDIRS="Configuration Common CollectionEvents UserService StoreProvider FsProvider"
+COMMON_SUBDIRS="Configuration Common CollectionEvents UserService StoreProvider FsProvider Smtp"
 LINUX_SUBDIRS="CommonGtkWindows"
-WINDOWS_SUBDIRS=""
+WINDOWS_SUBDIRS="CommonFormWindows"
 
 case $host_os in
     linux)
@@ -194,8 +194,10 @@ src/Makefile
 src/Configuration/Makefile
 src/Common/Makefile
 src/CommonGtkWindows/Makefile
+src/CommonFormWindows/Makefile
 src/CollectionEvents/Makefile
 src/UserService/Makefile
 src/StoreProvider/Makefile
 src/FsProvider/Makefile
+src/Smtp/Makefile
 ])
