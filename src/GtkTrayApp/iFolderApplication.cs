@@ -40,7 +40,6 @@ using Simias.Client.Event;
 using Simias.Client;
 
 
-
 namespace Novell.iFolder
 {
 	public enum iFolderState : uint
@@ -194,6 +193,24 @@ namespace Novell.iFolder
 			iFolderStateChanged.WakeupMain();
 		}
 
+		private DomainInformation GetDomainInformation(string DomainID)
+		{
+			DomainInformation di = null;
+
+			try
+			{
+				SimiasWebService simiasSvc = 
+								new SimiasWebService();
+				simiasSvc.Url =
+					Simias.Client.Manager.LocalServiceUrl.ToString() +
+					"/Simias.asmx";
+
+				di = simiasSvc.GetDomainInformation(DomainID);
+			}
+			catch{}
+
+			return di;
+		}
 
 		private void OnSimiasNotifyEvent(object o, NotifyEventArgs args)
 		{
@@ -203,10 +220,17 @@ namespace Novell.iFolder
 				{
 					if(LoginDialog == null)
 					{
-						LoginDialog = new iFolderLoginDialog(args.Message);
-						LoginDialog.Response +=
-							new ResponseHandler(OnReLoginDialogResponse);
-						LoginDialog.ShowAll();
+						DomainInformation di = 
+									GetDomainInformation(args.Message);
+						if(di != null)
+						{
+							LoginDialog = new iFolderLoginDialog(
+								di.ID, di.Name, di.MemberName);
+
+							LoginDialog.Response +=
+								new ResponseHandler(OnReLoginDialogResponse);
+							LoginDialog.ShowAll();
+						}
 					}
 					else
 						LoginDialog.Present();
