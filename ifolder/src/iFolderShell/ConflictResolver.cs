@@ -79,6 +79,8 @@ namespace Novell.iFolderCom
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
+
+			this.StartPosition = FormStartPosition.CenterParent;
 		}
 
 		/// <summary>

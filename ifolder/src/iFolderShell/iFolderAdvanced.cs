@@ -1059,10 +1059,11 @@ namespace Novell.iFolderCom
 						}*/
 
 						// Send the invitation.
-						ifWebService.InviteUser(ifolder.ID, slMember.iFolderUser.UserID, slMember.iFolderUser.Rights);
+						slMember.iFolderUser = ifWebService.InviteUser(ifolder.ID, slMember.iFolderUser.UserID, slMember.iFolderUser.Rights);
 
-						// TODO: Localize
-						lvitem.SubItems[1].Text = "Invited";
+						// Update the listview item with the new object.
+						lvitem.Tag = slMember;
+						updateListViewItem(lvitem, slMember.iFolderUser.Rights);
 
 						// Update the state.
 						slMember.Added = false;
