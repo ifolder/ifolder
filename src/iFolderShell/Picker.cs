@@ -838,10 +838,10 @@ namespace Novell.iFolderCom
 								string attribute;
 								switch (attributeName.SelectedIndex)
 								{
-									case 0:
+									case 1:
 										attribute = "Given";
 										break;
-									case 1:
+									case 2:
 										attribute = "Family";
 										break;
 									default:
@@ -1093,10 +1093,13 @@ namespace Novell.iFolderCom
 		{
 			if (attributeName.Focused)
 			{
-				stopThread = true;
+				if (!search.Text.Equals(resourceManager.GetString("searchPrompt")))
+				{
+					stopThread = true;
 
-				searchTimer.Stop();
-				searchTimer.Start();
+					searchTimer.Stop();
+					searchTimer.Start();
+				}
 			}
 		}
 
