@@ -72,23 +72,13 @@ namespace Novell.iFolder.Install
 		/// <param name="domainID">Identifier of the domain that the user belongs to.</param>
 		private ClientUpgrade( string domainID )
 		{
-			// Connect to the local web service.
-			SimiasWebService simiasSvc = new SimiasWebService();
-			simiasSvc.Url = Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
 			WebState ws = new WebState(domainID, domainID);
-			ws.InitializeWebClient(simiasSvc);
-
-			// Get the local domain information.
-			DomainInformation domainInfo = simiasSvc.GetDomainInformation( domainID );
-			if ( domainInfo != null )
-			{
-				// Get the address of the host service.
-				hostAddress = domainInfo.Host;
-				// Setup the url to the server.
-				service = new ClientUpdate();
-				service.Url = hostAddress + "/ClientUpdate.asmx";
-				ws.InitializeWebClient(service);
-			}
+			// Get the address of the host service.
+			hostAddress = DomainProvider.ResolveLocation( domainID ).ToString();
+			// Setup the url to the server.
+			service = new ClientUpdate();
+			service.Url = hostAddress + "/ClientUpdate.asmx";
+			ws.InitializeWebClient(service);
 		}
 		#endregion
 
