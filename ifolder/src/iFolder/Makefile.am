@@ -21,8 +21,8 @@ if WINDOWS
 endif
 if LINUX
 	wsdl -nologo -out:iFolderWebService.cs $(srcdir)/iFolderWebService.wsdl
-	cat iFolderWebService.cs | sed 's/iFolder1/iFolder/' | sed 's/iFolderUser1/iFolderUser/' | sed 's/DiskSpace1/DiskSpace/' > newsource.cs
-	mv newsource.cs iFolderWebService.cs
+#	cat iFolderWebService.cs | sed 's/iFolder1/iFolder/' | sed 's/iFolderUser1/iFolderUser/' | sed 's/DiskSpace1/DiskSpace/' > newsource.cs
+#	mv newsource.cs iFolderWebService.cs
 endif
 
 Novell.iFolder.dll: iFolderWebService.cs $(iFolder_CSFILES) $(iFolder_RESOURCES)
@@ -44,7 +44,7 @@ uninstall-local:
 CLEAN_FILES = Novell.iFolder.dll Novell.iFolder.doc.xml
 
 clean-local:
-	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES) iFolderWebService.cs
+	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
     
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
