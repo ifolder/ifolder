@@ -31,6 +31,7 @@
 #include "gifolder.h"
 #include "simias-util.h"
 #include "simias-prefs.h"
+#include "gaim-domain.h"
 
 /* Gaim Includes */
 #include "internal.h"
@@ -357,6 +358,14 @@ g_print("handle_ping_response() %s -> %s entered\n",
 	/* Update the buddy's simias-url in blist.xml */
 	buddy = gaim_find_buddy(account, sender);	
 	gaim_blist_node_set_string(&(buddy->node), "simias-url", simias_url);
+
+	/**
+	 * Tell the Gaim Domain Sync Thread to go re-read the updated
+	 * information about the buddy.
+	 */
+	simias_update_member(gaim_account_get_username(account),
+						 gaim_account_get_protocol_id(account),
+						 sender);
 
 	return TRUE;
 }

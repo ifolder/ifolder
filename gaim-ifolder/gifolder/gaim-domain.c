@@ -56,6 +56,13 @@ simias_sync_member_list()
 	g_print("FIXME: Implement simias_sync_member_list()\n");
 }
 
+void
+simias_update_member(const char *account_name, const char *account_prpl_id,
+					 const char *buddy_name)
+{
+	g_print("FIXME: Implement simias_update_member()\n");
+}
+
 /* Utility functions for gSOAP */
 static char *
 get_soap_url(gboolean reread_config)
