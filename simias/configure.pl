@@ -373,8 +373,8 @@ if ($opt_shell eq 'bash')
 	$variables{'prefix'} = $prefix;
 	print "Package install prefix: $prefix\n";
 	$variables{'bindir'} = '$(prefix)/bin';
-	$variables{'libdir'} = '$(prefix)/lib';
-	$variables{'datadir'} = '$(prefix)/share';
+	$variables{'libdir'} = '$(prefix)/bin';
+	$variables{'datadir'} = '$(prefix)/bin';
 }
 # cmd
 elsif ($opt_shell eq 'cmd')
@@ -408,8 +408,8 @@ elsif ($opt_shell eq 'cmd')
 	$variables{'prefix'} = $prefix;
 	print "Package install prefix: $prefix\n";
 	$variables{'bindir'} = '$(prefix)\\bin';
-	$variables{'libdir'} = '$(prefix)\\lib';
-	$variables{'datadir'} = '$(prefix)\\share';
+	$variables{'libdir'} = '$(prefix)\\bin';
+	$variables{'datadir'} = '$(prefix)\\bin';
 }
 else
 {
@@ -789,6 +789,9 @@ close(OUT);
 # File CVS History:
 #
 # $Log$
+# Revision 1.2.2.2  2004/02/25 01:11:40  cgaisford
+# updated all of the makefiles to run test cases
+#
 # Revision 1.2.2.1  2004/02/24 16:57:33  cgaisford
 # added the Makefile for configuration and updated the configure.pl script.  Also added a new common.mk file that will do all of the install/uninstall work
 #

@@ -139,7 +139,7 @@ endif
 #=============================================================================
 .PHONY: all $(SUBDIRS)
 
-all: stage $(SUBDIRS)
+all: $(SUBDIRS)
 
 $(SUBDIRS):
 	$(call HEADER,$@)
@@ -148,27 +148,27 @@ $(SUBDIRS):
 #=============================================================================
 # stage
 #=============================================================================
-.PHONY: stage $(STAGE_DIR) $(STAGE_FILES)
+#.PHONY: stage $(STAGE_DIR) $(STAGE_FILES)
 
-stage: stage-clean stage-prep $(STAGE_DIR) $(STAGE_FILES)
+#stage: stage-clean stage-prep $(STAGE_DIR) $(STAGE_FILES)
+	
+#stage-prep:
+#	$(call HEADER,stage)
 
-stage-prep:
-	$(call HEADER,stage)
+#$(STAGE_DIR):
+#	$(MKDIR) $(STAGE_DIR)
 
-$(STAGE_DIR):
-	$(MKDIR) $(STAGE_DIR)
-
-$(STAGE_FILES):
-	$(call CP_IF_EXISTS,$@,$(STAGE_DIR))
+#$(STAGE_FILES):
+#	$(call CP_IF_EXISTS,$@,$(STAGE_DIR))
 
 #=============================================================================
 # stage-clean
 #=============================================================================
-.PHONY: stage-clean
+#.PHONY: stage-clean
 
-stage-clean:
-	$(call HEADER,$@)
-	-$(RMDIR) "$(STAGE_DIR)"
+#stage-clean:
+#	$(call HEADER,$@)
+#	-$(RMDIR) "$(STAGE_DIR)"
 
 #=============================================================================
 # clean
@@ -201,11 +201,13 @@ TEST_SUBDIRS = $(addprefix test., $(SUBDIRS))
 
 .PHONY: test $(TEST_SUBDIRS)
 
-test: all $(TEST_SUBDIRS) report
+test: $(TEST_SUBDIRS) report
 
 $(TEST_SUBDIRS):
 	$(call HEADER,$@)
-	@$(MAKE) -i -k -C $(STAGE_DIR) -f $(SRCDIR)$(SEP)$(subst test.,,$@)$(SEP)Makefile test
+	@$(MAKE) -C $(subst test.,,$@) test
+#	@$(MAKE) -i -k -C $(DESTDIR)$(bindir) -f $(SRCDIR)$(SEP)$(subst test.,,$@)$(SEP)Makefile test
+#	@$(MAKE) -i -k -C $(STAGE_DIR) -f $(SRCDIR)$(SEP)$(subst test.,,$@)$(SEP)Makefile test
 	
 #=============================================================================
 # check
@@ -360,6 +362,9 @@ report:
 # File CVS History:
 #
 # $Log$
+# Revision 1.5.2.3  2004/02/25 01:11:41  cgaisford
+# updated all of the makefiles to run test cases
+#
 # Revision 1.5.2.2  2004/02/24 23:00:23  cgaisford
 # updated common.mk and the Makefile so they both handle installtest and uninstalltest
 #

@@ -7,6 +7,8 @@ UNINSTALL_TEST_BIN_FILES := $(addprefix $(DESTDIR)$(bindir)$(SEP), $(TEST_BIN_FI
 UNINSTALL_TEST_LIB_FILES := $(addprefix $(DESTDIR)$(libdir)$(SEP), $(TEST_LIB_FILES))
 UNINSTALL_TEST_DATA_FILES := $(addprefix $(DESTDIR)$(datadir)$(SEP), $(TEST_DATA_FILES))
 
+TEST_RUN_MAKEFILE := $(DESTDIR)$(bindir)$(SEP)test.mk
+
 .PHONY: install
 .PHONY: uninstall
 
@@ -84,4 +86,16 @@ test_data_uninstall:
 	$(RM) $(UNINSTALL_TEST_DATA_FILES)
 endif
 
+
+ifdef NUNIT_TESTS
+export NUNIT_TESTS
+test: installtest $(TEST_RUN_MAKEFILE)
+	$(MAKE) -C $(DESTDIR)$(bindir) -f test.mk test
+else
+test: installtest $(TEST_RUN_MAKEFILE)
+	@echo "No Test cases to run"
+endif
+
+$(TEST_RUN_MAKEFILE):
+	$(CP) $(ROOTDIR)$(SEP)test.mk $(TEST_RUN_MAKEFILE)
 

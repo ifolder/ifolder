@@ -70,12 +70,12 @@ clean:
 	$(RM) $(TARGETS) $(CLEAN_FILES) $(STAGE_FILES)
 
 # test
-test:
-	$(NUNIT) $(NUNIT_FLAGS) /xml:CommonGtkWindows.xml $(NUNIT_TESTS)
+#test:
+#	$(NUNIT) $(NUNIT_FLAGS) /xml:CommonGtkWindows.xml $(NUNIT_TESTS)
 
 # stage files
-$(STAGE_FILES):	$(TARGETS)
-	$(CP) $(subst $(STAGE_DIR)$(SEP),,$@) $(STAGE_DIR)
+#$(STAGE_FILES):	$(TARGETS)
+#	$(CP) $(subst $(STAGE_DIR)$(SEP),,$@) $(STAGE_DIR)
 
 #=============================================================================
 # Book targets

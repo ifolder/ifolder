@@ -75,12 +75,12 @@ clean:
 	$(RM) $(TARGETS)
 
 # test
-test:
-	$(NUNIT) $(NUNIT_FLAGS) /xml:SmtpTests.xml $(NUNIT_TESTS)
+#test:
+#	$(NUNIT) $(NUNIT_FLAGS) /xml:SmtpTests.xml $(NUNIT_TESTS)
 
 # stage files
-$(STAGE_FILES): $(TARGETS)
-	$(CP) $(subst $(STAGE_DIR)$(SEP),,$@) $(STAGE_DIR)
+#$(STAGE_FILES): $(TARGETS)
+#	$(CP) $(subst $(STAGE_DIR)$(SEP),,$@) $(STAGE_DIR)
 
 #=============================================================================
 # Smtp targets

@@ -82,12 +82,12 @@ all: $(TARGETS)
 clean:
 	-$(RM) $(TARGETS) $(CLEAN_FILES)
 
-test:
-	-$(RMDIR) tmp*
-	$(NUNIT) $(NUNIT_FLAGS) /xml:Sync.TestOutput.xml $(NUNIT_TESTS)
+#test:
+#	-$(RMDIR) tmp*
+#	$(NUNIT) $(NUNIT_FLAGS) /xml:Sync.TestOutput.xml $(NUNIT_TESTS)
 
-$(STAGE_FILES): $(TARGETS)
-	-$(CP) $(subst $(STAGE_DIR)$(SEP),,$@) $(STAGE_DIR)
+#$(STAGE_FILES): $(TARGETS)
+#	-$(CP) $(subst $(STAGE_DIR)$(SEP),,$@) $(STAGE_DIR)
 
 #=============================================================================
 # Sync targets

@@ -76,16 +76,15 @@ $(CLEAN_TARGETS):
 	$(call RM_IF_EXISTS,$(subst clean.,,$@))
 
 # test
-test:
-	$(NUNIT) $(NUNIT_FLAGS) /xml:Configuration.Test.xml $(NUNIT_TESTS)
+#	$(NUNIT) $(NUNIT_FLAGS) /xml:Configuration.Test.xml $(NUNIT_TESTS)
 
 # stage files
-$(STAGE_FILES): $(TARGETS)
-	$(call CP_IF_EXISTS,$(subst $(STAGE_DIR)$(SEP),,$@),$(STAGE_DIR))
+#$(STAGE_FILES): $(TARGETS)
+#	$(call CP_IF_EXISTS,$(subst $(STAGE_DIR)$(SEP),,$@),$(STAGE_DIR))
 
 # extra stage files
-$(EXTRA_STAGE_FILES):
-	$(call CP_IF_EXISTS,$@,$(STAGE_DIR))
+#$(EXTRA_STAGE_FILES):
+#	$(call CP_IF_EXISTS,$@,$(STAGE_DIR))
 
 #=============================================================================
 # ConfTests targets

@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?><!--This file represents the results of running a test suite-->
-<test-results name="/home/calvin/code/simias/src/Common/CommonTests.dll" total="10" failures="0" not-run="0" date="02/20/2004" time="21:12">
-  <test-suite name="/home/calvin/code/simias/src/Common/CommonTests.dll" success="True" time="1.990247">
+<test-results name="/home/calvin/code/ifolder/simias.MAKEREWORK-20040224/src/Common/CommonTests.dll" total="10" failures="0" not-run="0" date="02/24/2004" time="16:23">
+  <test-suite name="/home/calvin/code/ifolder/simias.MAKEREWORK-20040224/src/Common/CommonTests.dll" success="True" time="1.918864">
     <results>
-      <test-suite name="Simias" success="True" time="1.950672">
+      <test-suite name="Simias" success="True" time="1.88099">
         <results>
-          <test-suite name="Tests" success="True" time="1.891064">
+          <test-suite name="Tests" success="True" time="1.811738">
             <results>
-              <test-suite name="CommonTests" success="True" time="1.852538">
+              <test-suite name="CommonTests" success="True" time="1.760075">
                 <results>
-                  <test-case name="Simias.Tests.CommonTests.TestMyTrace1" executed="True" success="True" time="0.316" />
+                  <test-case name="Simias.Tests.CommonTests.TestMyTrace1" executed="True" success="True" time="0.156" />
                   <test-case name="Simias.Tests.CommonTests.TestMyTrace2" executed="True" success="True" time="0.007" />
-                  <test-case name="Simias.Tests.CommonTests.TestMyTrace3" executed="True" success="True" time="0.021" />
-                  <test-case name="Simias.Tests.CommonTests.TestMyTrace1a" executed="True" success="True" time="0.057" />
-                  <test-case name="Simias.Tests.CommonTests.TestMyTrace2a" executed="True" success="True" time="0.033" />
-                  <test-case name="Simias.Tests.CommonTests.TestMyTrace3a" executed="True" success="True" time="0.023" />
-                  <test-case name="Simias.Tests.CommonTests.TestMyDns" executed="True" success="True" time="0.347" />
-                  <test-case name="Simias.Tests.CommonTests.TestMyDnsExternal" executed="True" success="True" time="0.757" />
-                  <test-case name="Simias.Tests.CommonTests.TestMyEnvironment" executed="True" success="True" time="0.022" />
+                  <test-case name="Simias.Tests.CommonTests.TestMyTrace3" executed="True" success="True" time="0.007" />
+                  <test-case name="Simias.Tests.CommonTests.TestMyTrace1a" executed="True" success="True" time="0.067" />
+                  <test-case name="Simias.Tests.CommonTests.TestMyTrace2a" executed="True" success="True" time="0.008" />
+                  <test-case name="Simias.Tests.CommonTests.TestMyTrace3a" executed="True" success="True" time="0.217" />
+                  <test-case name="Simias.Tests.CommonTests.TestMyDns" executed="True" success="True" time="0.279" />
+                  <test-case name="Simias.Tests.CommonTests.TestMyDnsExternal" executed="True" success="True" time="0.524" />
+                  <test-case name="Simias.Tests.CommonTests.TestMyEnvironment" executed="True" success="True" time="0.006" />
                   <test-case name="Simias.Tests.CommonTests.TestMyPath" executed="True" success="True" time="0.002" />
                 </results>
               </test-suite>

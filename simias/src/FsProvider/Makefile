@@ -39,8 +39,8 @@ TEST_DATA_FILES =
 
 TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
 #TARGETS =FsProvider.dll StoreProvider.dll ProviderTest.dll FsProviderTests.dll 
-CLEAN_FILES = Check.xml FsProvider.pdb FsProvider.Doc.xml Check.xml StoreProvider.pdb StoreProvider.Doc.xml Check.xml ProviderTest.pdb ProviderTest.Doc.xml Check.xml FsProviderTests.pdb FsProviderTests.Doc.xml  FsProvider.xml FsProvider.Doc.xml
-CLEAN_DIRS = bin obj ../StoreProvider/bin ../StoreProvider/obj ../StoreProvider/Test/bin ../StoreProvider/Test/obj FsProviderTests/bin FsProviderTests/obj 
+CLEAN_FILES = Check.xml FsProvider.pdb FsProvider.Doc.xml Check.xml FsProviderTests.pdb FsProviderTests.Doc.xml  FsProvider.xml FsProvider.Doc.xml
+CLEAN_DIRS = bin obj FsProviderTests/bin FsProviderTests/obj 
 NUNIT_TESTS = FsProviderTests.dll 
 STAGE_FILES = $(TARGETS) FsProvider.Doc.xml StoreProvider.Doc.xml ProviderTest.Doc.xml FsProviderTests.Doc.xml FsProvider.pdb StoreProvider.pdb ProviderTest.pdb FsProviderTests.pdb 
 STAGE_FILES := $(addprefix $(STAGE_DIR)$(SEP), $(STAGE_FILES))
@@ -80,16 +80,16 @@ $(CLEAN_TARGETS):
 	$(call RM_IF_EXISTS,$(subst clean.,,$@))
 
 # test
-test:
-	$(NUNIT) $(NUNIT_FLAGS) /xml:FsProvider.Test.xml $(NUNIT_TESTS)
+#test:
+#	$(NUNIT) $(NUNIT_FLAGS) /xml:FsProvider.Test.xml $(NUNIT_TESTS)
 
 # stage files
-$(STAGE_FILES): $(TARGETS)
-	$(call CP_IF_EXISTS,$(subst $(STAGE_DIR)$(SEP),,$@),$(STAGE_DIR))
+#$(STAGE_FILES): $(TARGETS)
+#	$(call CP_IF_EXISTS,$(subst $(STAGE_DIR)$(SEP),,$@),$(STAGE_DIR))
 
 # extra stage files
-$(EXTRA_STAGE_FILES):
-	$(call CP_IF_EXISTS,$@,$(STAGE_DIR))
+#$(EXTRA_STAGE_FILES):
+#	$(call CP_IF_EXISTS,$@,$(STAGE_DIR))
 
 #=============================================================================
 # FsProvider targets
@@ -106,38 +106,6 @@ VPATH := $(VPATH) $(FsProvider_LIBPATH) $(FsProvider_INCLUDES)
 
 FsProvider.dll: $(FsProvider_SOURCES) $(FsProvider_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:FsProvider.Doc.xml $(CSCFLAGS) $(FsProvider_FLAGS) $(FsProvider_LIBS:%=/r:%) $(FsProvider_LIBPATH:%=/lib:%) $(FsProvider_SOURCES)
-
-#=============================================================================
-# StoreProvider targets
-#=============================================================================
-
-# fix path seperator
-StoreProvider_SOURCES := $(subst /,$(SEP), $(StoreProvider_SOURCES))
-StoreProvider_INCLUDES := $(subst /,$(SEP), $(StoreProvider_INCLUDES))
-StoreProvider_DEF := $(subst /,$(SEP), $(StoreProvider_DEF))
-StoreProvider_LIBPATH := $(subst /,$(SEP), $(StoreProvider_LIBPATH))
-
-# update VPATH
-VPATH := $(VPATH) $(StoreProvider_LIBPATH) $(StoreProvider_INCLUDES)
-
-StoreProvider.dll: $(StoreProvider_SOURCES) $(StoreProvider_LIBS) ../../config.mk
-	$(CSC) /out:$@ /doc:StoreProvider.Doc.xml $(CSCFLAGS) $(StoreProvider_FLAGS) $(StoreProvider_LIBS:%=/r:%) $(StoreProvider_LIBPATH:%=/lib:%) $(StoreProvider_SOURCES)
-
-#=============================================================================
-# ProviderTest targets
-#=============================================================================
-
-# fix path seperator
-ProviderTest_SOURCES := $(subst /,$(SEP), $(ProviderTest_SOURCES))
-ProviderTest_INCLUDES := $(subst /,$(SEP), $(ProviderTest_INCLUDES))
-ProviderTest_DEF := $(subst /,$(SEP), $(ProviderTest_DEF))
-ProviderTest_LIBPATH := $(subst /,$(SEP), $(ProviderTest_LIBPATH))
-
-# update VPATH
-VPATH := $(VPATH) $(ProviderTest_LIBPATH) $(ProviderTest_INCLUDES)
-
-ProviderTest.dll: $(ProviderTest_SOURCES) $(ProviderTest_LIBS) ../../config.mk
-	$(CSC) /out:$@ /doc:ProviderTest.Doc.xml $(CSCFLAGS) $(ProviderTest_FLAGS) $(ProviderTest_LIBS:%=/r:%) $(ProviderTest_LIBPATH:%=/lib:%) $(ProviderTest_SOURCES)
 
 #=============================================================================
 # FsProviderTests targets
