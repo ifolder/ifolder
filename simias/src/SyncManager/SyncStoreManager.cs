@@ -157,12 +157,10 @@ namespace Simias.Sync
 		{
 			SyncCollectionService service = null;
 
-			log.Debug("GettingCollectionService---collectionManagers.Contains(id)");
 			if (collectionManagers.Contains(id))
 			{
 				SyncCollectionManager scm = (SyncCollectionManager)collectionManagers[id];
 
-				log.Debug("GettingCollectionService---scm.GetService()");
 				service = scm.GetService();
 
 				log.Debug("Created collection service: {0}", service.Ping().ToString());
@@ -202,7 +200,7 @@ namespace Simias.Sync
 					}
 					catch(Exception e)
 					{
-						log.Debug(e, "SyncStoreManager::AddCollectionManager -- Ignored");
+						log.Debug(e, "Ignored");
 					}
 				}
 			}
@@ -228,7 +226,7 @@ namespace Simias.Sync
 					}
 					catch(Exception e)
 					{
-						log.Debug(e, "SyncStoreManager::RemoveCollectionManager -- Ignored");
+						log.Debug(e, "Ignored");
 					}
 				}
 			}
@@ -262,7 +260,7 @@ namespace Simias.Sync
 					}
 					catch(Exception e)
 					{
-						log.Debug(e, "SyncStoreManager::SyncCollectionNow -- Ignored");
+						log.Debug(e, "Ignored");
 					}
 				}
 			}
@@ -280,7 +278,7 @@ namespace Simias.Sync
 					}
 					catch(Exception e)
 					{
-						log.Debug(e, "SyncStoreManager::SyncAllNow -- Ignored");
+						log.Debug(e, "Ignored");
 					}
 				}
 			}

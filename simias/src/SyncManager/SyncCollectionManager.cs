@@ -321,7 +321,7 @@ namespace Simias.Sync
 					}
 					catch(Exception e)
 					{
-						log.Debug(e, "SyncCollectionManager::Exception -- Ignored");
+						log.Debug(e, "Ignored");
 
 						if (working)
 						{
@@ -355,7 +355,7 @@ namespace Simias.Sync
 							}
 							catch(Exception e2)
 							{
-								log.Debug(e2, "SyncCollectionManager::Exception2 -- Ignored");
+								log.Debug(e2, "Ignored");
 							}
 						}
 					}
@@ -385,7 +385,7 @@ namespace Simias.Sync
 				}
 				catch(Exception e)
 				{
-					log.Debug(e, "SyncCollectionManager::Exception3 -- Ignored");
+					log.Debug(e, "Ignored");
 				}
 			}
 		}
