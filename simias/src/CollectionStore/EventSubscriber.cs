@@ -236,69 +236,67 @@ namespace Simias.Storage
 		{
 			try
 			{
-				string typeString = args.GetType().ToString();
-				switch (typeString)
+				NodeEventArgs nodeArgs = args as NodeEventArgs;
+				if (nodeArgs != null)
 				{
-					case "Simias.Storage.NodeEventArgs":
-						if (applyNodeFilter((NodeEventArgs)args))
+					if (applyNodeFilter(nodeArgs))
+					{
+						EventType changeType = (EventType)Enum.Parse(typeof(EventType), (string)nodeArgs.EventData, false);
+						switch (changeType)
 						{
-							EventType changeType = (EventType)Enum.Parse(typeof(EventType), (string)args.EventData, false);
-							switch (changeType)
-							{
-								case EventType.NodeChanged:
-									if (NodeChanged != null)
+							case EventType.NodeChanged:
+								if (NodeChanged != null)
+								{
+									Delegate[] cbList = NodeChanged.GetInvocationList();
+									foreach (NodeEventHandler cb in cbList)
 									{
-										Delegate[] cbList = NodeChanged.GetInvocationList();
-										foreach (NodeEventHandler cb in cbList)
+										try 
+										{ 
+											cb(nodeArgs);
+										}
+										catch
 										{
-											try 
-											{ 
-												cb((NodeEventArgs)args);
-											}
-											catch
-											{
-												NodeChanged -= cb;
-											}
+											NodeChanged -= cb;
 										}
 									}
-									break;
-								case EventType.NodeCreated:
-									if (NodeCreated != null)
+								}
+								break;
+							case EventType.NodeCreated:
+								if (NodeCreated != null)
+								{
+									Delegate[] cbList = NodeCreated.GetInvocationList();
+									foreach (NodeEventHandler cb in cbList)
 									{
-										Delegate[] cbList = NodeCreated.GetInvocationList();
-										foreach (NodeEventHandler cb in cbList)
+										try 
+										{ 
+											cb(nodeArgs);
+										}
+										catch
 										{
-											try 
-											{ 
-												cb((NodeEventArgs)args);
-											}
-											catch
-											{
-												NodeCreated -= cb;
-											}
+											NodeCreated -= cb;
 										}
 									}
-									break;
-								case EventType.NodeDeleted:
-									if (NodeDeleted != null)
+								}
+								break;
+							case EventType.NodeDeleted:
+								if (NodeDeleted != null)
+								{
+									Delegate[] cbList = NodeDeleted.GetInvocationList();
+									foreach (NodeEventHandler cb in cbList)
 									{
-										Delegate[] cbList = NodeDeleted.GetInvocationList();
-										foreach (NodeEventHandler cb in cbList)
+										try 
+										{ 
+											cb(nodeArgs);
+										}
+										catch
 										{
-											try 
-											{ 
-												cb((NodeEventArgs)args);
-											}
-											catch
-											{
-												NodeDeleted -= cb;
-											}
+											NodeDeleted -= cb;
 										}
 									}
-									break;
-							}
+								}
+								break;
 						}
-						break;
+					}
 				}
 			}
 			catch (Exception ex)
