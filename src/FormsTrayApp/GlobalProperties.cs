@@ -57,7 +57,6 @@ namespace Novell.FormsTrayApp
 		private iFolderWebService ifWebService;
 		private IProcEventClient eventClient;
 		private string currentUserID;
-		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
 		private System.Windows.Forms.Label label2;
@@ -89,7 +88,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.ColumnHeader columnHeader4;
 		private System.Windows.Forms.ColumnHeader columnHeader5;
 		private System.Windows.Forms.MenuItem menuSyncNow;
-		private System.Windows.Forms.MenuItem menuEnabled;
 		private System.Windows.Forms.MainMenu mainMenu1;
 		private System.Windows.Forms.MenuItem menuAction;
 		private System.Windows.Forms.MenuItem menuView;

@@ -40,7 +40,6 @@ namespace Novell.iFolderCom
 		#region Class Members
 		private System.Windows.Forms.Label gauge;
 		private double maxValue;
-		private double resolution;
 		private double used;
 		private Color barColor = Color.Red;
 

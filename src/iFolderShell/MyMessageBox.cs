@@ -36,16 +36,23 @@ namespace Novell.iFolderCom
 	[ComVisible(false)]
 	public class MyMessageBox : System.Windows.Forms.Form
 	{
+		#region Class Members
+		private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(MyMessageBox));
 		private const float maxWidth = 400;
 		private System.Windows.Forms.Button yes;
 		private System.Windows.Forms.Button no;
 		private System.Windows.Forms.Label message;
 		private System.Windows.Forms.PictureBox messageIcon;
 		private System.Windows.Forms.Button ok;
+		private System.Windows.Forms.Button details;
+		private bool showDetails = false;
+		private bool first = true;
+		private System.Windows.Forms.TextBox detailsBox;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
+		#endregion
 
 		/// <summary>
 		/// Constructs a MyMessageBox object.
@@ -88,6 +95,8 @@ namespace Novell.iFolderCom
 			this.message = new System.Windows.Forms.Label();
 			this.messageIcon = new System.Windows.Forms.PictureBox();
 			this.ok = new System.Windows.Forms.Button();
+			this.details = new System.Windows.Forms.Button();
+			this.detailsBox = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// yes
@@ -205,6 +214,55 @@ namespace Novell.iFolderCom
 			this.ok.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("ok.TextAlign")));
 			this.ok.Visible = ((bool)(resources.GetObject("ok.Visible")));
 			// 
+			// details
+			// 
+			this.details.AccessibleDescription = resources.GetString("details.AccessibleDescription");
+			this.details.AccessibleName = resources.GetString("details.AccessibleName");
+			this.details.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("details.Anchor")));
+			this.details.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("details.BackgroundImage")));
+			this.details.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("details.Dock")));
+			this.details.Enabled = ((bool)(resources.GetObject("details.Enabled")));
+			this.details.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("details.FlatStyle")));
+			this.details.Font = ((System.Drawing.Font)(resources.GetObject("details.Font")));
+			this.details.Image = ((System.Drawing.Image)(resources.GetObject("details.Image")));
+			this.details.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("details.ImageAlign")));
+			this.details.ImageIndex = ((int)(resources.GetObject("details.ImageIndex")));
+			this.details.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("details.ImeMode")));
+			this.details.Location = ((System.Drawing.Point)(resources.GetObject("details.Location")));
+			this.details.Name = "details";
+			this.details.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("details.RightToLeft")));
+			this.details.Size = ((System.Drawing.Size)(resources.GetObject("details.Size")));
+			this.details.TabIndex = ((int)(resources.GetObject("details.TabIndex")));
+			this.details.Text = resources.GetString("details.Text");
+			this.details.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("details.TextAlign")));
+			this.details.Visible = ((bool)(resources.GetObject("details.Visible")));
+			this.details.Click += new System.EventHandler(this.details_Click);
+			// 
+			// detailsBox
+			// 
+			this.detailsBox.AccessibleDescription = resources.GetString("detailsBox.AccessibleDescription");
+			this.detailsBox.AccessibleName = resources.GetString("detailsBox.AccessibleName");
+			this.detailsBox.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("detailsBox.Anchor")));
+			this.detailsBox.AutoSize = ((bool)(resources.GetObject("detailsBox.AutoSize")));
+			this.detailsBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("detailsBox.BackgroundImage")));
+			this.detailsBox.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("detailsBox.Dock")));
+			this.detailsBox.Enabled = ((bool)(resources.GetObject("detailsBox.Enabled")));
+			this.detailsBox.Font = ((System.Drawing.Font)(resources.GetObject("detailsBox.Font")));
+			this.detailsBox.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("detailsBox.ImeMode")));
+			this.detailsBox.Location = ((System.Drawing.Point)(resources.GetObject("detailsBox.Location")));
+			this.detailsBox.MaxLength = ((int)(resources.GetObject("detailsBox.MaxLength")));
+			this.detailsBox.Multiline = ((bool)(resources.GetObject("detailsBox.Multiline")));
+			this.detailsBox.Name = "detailsBox";
+			this.detailsBox.PasswordChar = ((char)(resources.GetObject("detailsBox.PasswordChar")));
+			this.detailsBox.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("detailsBox.RightToLeft")));
+			this.detailsBox.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("detailsBox.ScrollBars")));
+			this.detailsBox.Size = ((System.Drawing.Size)(resources.GetObject("detailsBox.Size")));
+			this.detailsBox.TabIndex = ((int)(resources.GetObject("detailsBox.TabIndex")));
+			this.detailsBox.Text = resources.GetString("detailsBox.Text");
+			this.detailsBox.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("detailsBox.TextAlign")));
+			this.detailsBox.Visible = ((bool)(resources.GetObject("detailsBox.Visible")));
+			this.detailsBox.WordWrap = ((bool)(resources.GetObject("detailsBox.WordWrap")));
+			// 
 			// MyMessageBox
 			// 
 			this.AcceptButton = this.yes;
@@ -217,6 +275,8 @@ namespace Novell.iFolderCom
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.CancelButton = this.no;
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Controls.Add(this.detailsBox);
+			this.Controls.Add(this.details);
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.messageIcon);
 			this.Controls.Add(this.message);
@@ -243,21 +303,62 @@ namespace Novell.iFolderCom
 		}
 		#endregion
 
+		#region Event Handlers
 		private void MyMessageBox_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
-			SizeF size = e.Graphics.MeasureString(message.Text, message.Font);
-			float width = (size.Width / maxWidth) > 1 ? maxWidth : size.Width;
-			float height = (float)Math.Ceiling(size.Width / width) * size.Height + 2;
-			message.Size = new Size((int)Math.Ceiling(width), (int)Math.Ceiling(height));
-			this.Width = message.Right + message.Left + 4;
+			if (first)
+			{
+				first = false;
+				SizeF size = e.Graphics.MeasureString(message.Text, message.Font);
+				float width = (size.Width / maxWidth) > 1 ? maxWidth : size.Width;
+				float height = (float)Math.Ceiling(size.Width / width) * size.Height + 2;
+				message.Size = new Size((int)Math.Ceiling(width), (int)Math.Ceiling(height));
+				this.Width = message.Right + message.Left + 4;
 
-			ok.Left = (ClientRectangle.Width - ok.Width) / 2;
-			ok.Top = message.Bottom + 12;
+				ok.Left = (ClientRectangle.Width - ok.Width) / 2;
+				ok.Top = message.Bottom + 12;
 
-			yes.Left = (ClientRectangle.Width / 2) - (yes.Width + 4);
-			no.Left = yes.Right + 4;
-			yes.Top = no.Top = ok.Top;
-			this.Height = ok.Bottom + (this.Height - ClientRectangle.Height) + 12;
+				yes.Left = (ClientRectangle.Width / 2) - (yes.Width + 4);
+				no.Left = yes.Right + 4;
+				yes.Top = no.Top = ok.Top;
+				this.Height = ok.Bottom + (this.Height - ClientRectangle.Height) + 12;
+
+				details.Top = ok.Top;
+				details.Left = ClientRectangle.Right - (details.Width + 8);
+				detailsBox.Top = ok.Bottom + 8;
+				detailsBox.Width = ClientRectangle.Right - (detailsBox.Left * 2);
+			}
+
+			if (showDetails)
+			{
+				this.Height = detailsBox.Bottom + (this.Height - ClientRectangle.Height) + 8;
+			}
+			else
+			{
+				this.Height = detailsBox.Top + (this.Height - ClientRectangle.Height);
+			}
+		}
+
+		private void details_Click(object sender, System.EventArgs e)
+		{
+			showDetails = !showDetails;
+
+			details.Text = showDetails ? resourceManager.GetString("hideDetails") : resourceManager.GetString("details.Text");
+			this.Invalidate(true);
+		}
+		#endregion
+
+		#region Properties
+		/// <summary>
+		/// Sets the string to display in the details box.
+		/// </summary>
+		public string Details
+		{
+			set
+			{
+				this.detailsBox.Text = value;
+				this.details.Visible = true;
+			}
 		}
 
 		/// <summary>
@@ -304,5 +405,6 @@ namespace Novell.iFolderCom
 				ok.Visible = !value;
 			}
 		}
+		#endregion
 	}
 }

@@ -417,6 +417,9 @@ namespace Novell.iFolderCom
 			set {ifWebService = value; }
 		}
 
+		/// <summary>
+		/// Gets the list of added users.
+		/// </summary>
 		public ListView.ListViewItemCollection AddedUsers
 		{
 			get
@@ -453,11 +456,12 @@ namespace Novell.iFolderCom
 					rosterLV.Items.Add(lvi);
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
 				System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(Picker));
 				MyMessageBox mmb = new MyMessageBox();
 				mmb.Message = resourceManager.GetString("memberReadError");
+				mmb.Details = ex.Message;
 				mmb.ShowDialog();
 			}
 
