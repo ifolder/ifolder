@@ -24,9 +24,6 @@
 using System;
 using System.Diagnostics;
 using System.Collections;
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Tcp;
 
 namespace Simias.Event
 {
