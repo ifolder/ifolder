@@ -17,7 +17,7 @@ libifolderclient_la_SOURCES = \
  	envC.c iFolderClientLib.c stdsoap2.c ifolder.c
 
 pkginclude_HEADERS = \
-	ifolder.h
+	iFolderStub.h iFolder.nsmap stdsoap2.h iFolderH.h ifolder.h
 
 libifolderclient_la_CFLAGS = \
 	-DWITH_NONAMESPACES
