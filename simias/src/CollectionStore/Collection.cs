@@ -1075,9 +1075,10 @@ namespace Simias.Storage
 		/// Gets a new copy of the Collection object data from the database. All changed Collection object data
 		/// will be lost.
 		/// </summary>
-		public void Refresh()
+		/// <returns>The Collection object that was refreshed.</returns>
+		public Collection Refresh()
 		{
-			Refresh( this );
+			return Refresh( this ) as Collection;
 		}
 
 		/// <summary>
@@ -1085,7 +1086,8 @@ namespace Simias.Storage
 		/// will be lost.
 		/// </summary>
 		/// <param name="node">Node object to refresh.</param>
-		public void Refresh( Node node )
+		/// <returns>The Node object that was refreshed.</returns>
+		public Node Refresh( Node node )
 		{
 			// Call the provider to get an XML string that represents this node.
 			XmlDocument document = store.StorageProvider.GetRecord( node.ID, id );
@@ -1104,6 +1106,8 @@ namespace Simias.Storage
 					( node as Collection ).accessControl.GetAccessInfo();
 				}
 			}
+
+			return node;
 		}
 
 		/// <summary>

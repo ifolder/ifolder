@@ -91,14 +91,12 @@ namespace Simias.Storage
 				// Refresh the identity object before returning it.
 				if ( impersonationID.Count == 0 )
 				{
-					localAb.Refresh( identity );
-					return identity;
+					return new BaseContact( localAb.Refresh( identity ) );
 				}
 				else
 				{
 					BaseContact impersonatingContact = impersonationID.Peek() as BaseContact;
-					localAb.Refresh( impersonatingContact );
-					return impersonatingContact;
+					return new BaseContact( localAb.Refresh( impersonatingContact ) );
 				}
 			}
 		}
