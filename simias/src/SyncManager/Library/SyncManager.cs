@@ -195,15 +195,11 @@ namespace Simias.Sync
 		#region Properties
 
 		/// <summary>
-		/// The default master URL for location services.
+		/// The local service Url.
 		/// </summary>
-		public Uri MasterUri
+		public Uri ServiceUrl
 		{
-			get
-			{
-				UriBuilder builder = new UriBuilder("http", properties.Host, properties.Port);
-				return builder.Uri;
-			}
+			get { return properties.ServiceUrl; }
 		}
 		
 		/// <summary>

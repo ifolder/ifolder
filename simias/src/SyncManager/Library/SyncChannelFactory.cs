@@ -28,6 +28,7 @@ using System.Collections.Specialized;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Http;
+using System.Runtime.Remoting.Channels.Tcp;
 using System.Threading;
 using System.Runtime.Serialization.Formatters;
 using System.Reflection;
@@ -106,9 +107,9 @@ namespace Simias.Sync
 		/// <param name="store"></param>
 		/// <param name="sinks"></param>
 		/// <returns></returns>
-		public SyncChannel GetChannel(Store store, SyncChannelSinks sinks)
+		public SyncChannel GetChannel(Store store, string scheme, SyncChannelSinks sinks)
 		{
-			return GetChannel(store, sinks, 0);
+			return GetChannel(store, scheme, sinks, 0);
 		}
 			
 		/// <summary>
@@ -118,7 +119,7 @@ namespace Simias.Sync
 		/// <param name="sinks"></param>
 		/// <param name="port"></param>
 		/// <returns></returns>
-		public SyncChannel GetChannel(Store store, SyncChannelSinks sinks, int port)
+		public SyncChannel GetChannel(Store store, string scheme, SyncChannelSinks sinks, int port)
 		{
 			SyncChannel result = null;
 
@@ -222,8 +223,16 @@ namespace Simias.Sync
 					// create channel
 					IChannel channel;
 
-					// http channel
-					channel = new HttpChannel(props, clientProvider, serverProvider);
+					if (scheme == "http")
+                    {
+                        // http channel
+                        channel = new HttpChannel(props, clientProvider, serverProvider);
+                    }
+                    else
+                    {
+                        // tcp channel
+                        channel = new TcpChannel(props, clientProvider, serverProvider);
+                    }
 
 					// register channel
 					ChannelServices.RegisterChannel(channel);

@@ -138,6 +138,7 @@ AssemblyInfo.cs
 ../SyncCommon/Library/SyncProperties.cs
 ../SyncCommon/Library/SyncStoreInfo.cs
 ../SyncCommon/Tests/SyncCommonTests.cs
+../SyncCommon/Library/SyncStoreService.cs
 ../SyncLogicLite/Tests/SyncLogicLiteTests.cs
 ../SyncManager/Library/SyncChannel.cs
 ../SyncManager/Library/SyncChannelFactory.cs
@@ -146,7 +147,6 @@ AssemblyInfo.cs
 ../SyncManager/Library/SyncManager.cs
 ../SyncManager/Library/SyncPing.cs
 ../SyncManager/Library/SyncStoreManager.cs
-../SyncManager/Library/SyncStoreService.cs
 ../SyncManager/Tests/SyncManagerTests.cs
 ../Sync/Conflict.cs
 ../Sync/Differ.cs

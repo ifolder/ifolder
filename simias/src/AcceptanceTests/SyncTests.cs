@@ -138,7 +138,9 @@ namespace Simias.Tests
 				// set the sync properties for store B
 				syncPropsB = new SyncProperties(configB);
 				syncPropsB.LogicFactory = syncLogicType;
-				syncPropsB.Port = syncPropsA.Port + 1;
+				UriBuilder uriB = new UriBuilder(syncPropsB.ServiceUrl);
+				uriB.Port = uriB.Port + 1;
+				syncPropsB.ServiceUrl = uriB.Uri;
 				syncPropsB.ChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor | SyncChannelSinks.Security;
 				
 				// start the service for store B
@@ -151,7 +153,9 @@ namespace Simias.Tests
 				// set the sync properties for store C
 				syncPropsC = new SyncProperties(configC);
 				syncPropsC.LogicFactory = syncLogicType;
-				syncPropsC.Port = syncPropsA.Port + 2;
+				UriBuilder uriC = new UriBuilder(syncPropsB.ServiceUrl);
+				uriC.Port = uriC.Port + 2;
+				syncPropsC.ServiceUrl = uriC.Uri;
 				syncPropsC.ChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor | SyncChannelSinks.Security;
 				
 				// start the service for store C

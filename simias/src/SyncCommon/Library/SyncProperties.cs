@@ -35,16 +35,12 @@ namespace Simias.Sync
 	public class SyncProperties : IDisposable
 	{
 		/// <summary>
-		/// The suggested sync host or ip address for the current machine.
+		/// The suggested service url for the current machine.
 		/// </summary>
-		private static readonly string DefaultHost = MyDns.GetHostName();
-		private static readonly string HostPropertyName = "Sync Host";
-
-		/// <summary>
-		/// The suggested sync port for the current machine.
-		/// </summary>
-		private static readonly int DefaultPort = 6436;
-		private static readonly string PortPropertyName = "Sync Port";
+		private static readonly Uri DefaultServiceUrl = (new UriBuilder("http",
+			MyDns.GetHostName(), 6436, SyncStoreService.EndPoint)).Uri;
+		
+		private static readonly string ServiceUrlPropertyName = "Service Url";
 
 		/// <summary>
 		/// The suggested sync logic factory for syncing.
@@ -182,19 +178,14 @@ namespace Simias.Sync
 		/// <summary>
 		/// The sync host.
 		/// </summary>
-		public string Host
+		public Uri ServiceUrl
 		{
-			get { return (string)GetProperty(HostPropertyName, DefaultHost); }
-			set { SetProperty(HostPropertyName, value, true); }
-		}
-
-		/// <summary>
-		/// The sync port.
-		/// </summary>
-		public int Port
-		{
-			get { return (int)GetProperty(PortPropertyName, DefaultPort); }
-			set { SetProperty(PortPropertyName, value, true); }
+			//get { return new Uri((string)GetProperty(ServiceUrlPropertyName, DefaultServiceUrl.ToString())); }
+			//set { SetProperty(ServiceUrlPropertyName, value.ToString(), true); }
+			
+			// TODO: save in the configuration temporarily
+			get { return new Uri(config.Get("Sync", ServiceUrlPropertyName, DefaultServiceUrl.ToString())); }
+			set { config.Set("Sync", ServiceUrlPropertyName, value.ToString()); }
 		}
 
 		/// <summary>

@@ -48,36 +48,21 @@ namespace Simias.Sync
 		/// <summary>
 		/// Ping the sync store server.
 		/// </summary>
-		/// <param name="store">The sync store object.</param>
-		/// <param name="host">The sync store server host.</param>
-		/// <returns>A ping object from the server.</returns>
-		public static SyncStoreInfo PingStore(Store store, string host)
-		{
-			return PingStore(store, host, 6436);
-		}
-
-		/// <summary>
-		/// Ping the sync store server.
-		/// </summary>
 		/// <param name="store">The store object.</param>
-		/// <param name="host">The sync store server host.</param>
-		/// <param name="port">The sync store sever port.</param>
-		/// <returns>A ping object from the server.</returns>
-		public static SyncStoreInfo PingStore(Store store, string host, int port)
+		/// <param name="url">The sync store service url.</param>
+		/// <param name="sinks">The channel sinks.</param>
+		public static SyncStoreInfo PingStore(Store store, Uri url, SyncChannelSinks sinks)
 		{
 			SyncStoreInfo info = null;
 
 			// create channel
-			SyncChannel channel = SyncChannelFactory.GetInstance().GetChannel(store, SyncChannelSinks.Binary);
-
-			// service URL
-			string serviceUrl = new UriBuilder("http", host, port, SyncStoreService.GetEndPoint(port)).ToString();
+			SyncChannel channel = SyncChannelFactory.GetInstance().GetChannel(store, url.Scheme, sinks);
 
 			try
 			{
 				// get a proxy to the sync store service object
 				SyncStoreService service = (SyncStoreService)Activator.GetObject(
-					typeof(SyncStoreService), serviceUrl);
+					typeof(SyncStoreService), url.ToString());
 
 				// ping
 				info = service.Ping();

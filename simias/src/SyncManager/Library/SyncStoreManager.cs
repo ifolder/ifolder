@@ -87,13 +87,14 @@ namespace Simias.Sync
 					// create channel
 					string name = String.Format("Store Service [{0}]", store.ID);
 
-					channel = syncManager.ChannelFactory.GetChannel(store, syncManager.ChannelSinks,
-						syncManager.MasterUri.Port);
+					channel = syncManager.ChannelFactory.GetChannel(store,
+						syncManager.ServiceUrl.Scheme, syncManager.ChannelSinks,
+						syncManager.ServiceUrl.Port);
 				
-					log.Debug("Starting Store Service: {0}", service.ServiceUrl);
+					log.Debug("Starting Store Service: {0}", syncManager.ServiceUrl);
 
 					// marshal service
-					RemotingServices.Marshal(service, service.EndPoint);
+					RemotingServices.Marshal(service, SyncStoreService.EndPoint);
 				
 					// start collection managers
 					subscriber.Enabled = true;
@@ -120,11 +121,9 @@ namespace Simias.Sync
 			{
 				lock(this)
 				{
-					int port = syncManager.MasterUri.Port;
-
 					if (service != null)
                     {
-                        log.Debug("Stopping Store Service: {0}", service.ServiceUrl);
+                        log.Debug("Stopping Store Service: {0}", syncManager.ServiceUrl);
                     }
 
 					// stop collection managers

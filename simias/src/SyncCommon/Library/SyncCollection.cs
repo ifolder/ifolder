@@ -303,8 +303,7 @@ namespace Simias.Sync
 				if (result == null)
 				{
 					// default
-					UriBuilder ub = new UriBuilder("http", props.Host, props.Port);
-					result = ub.Uri;
+					result = props.ServiceUrl;
 				}
 
 				return result;

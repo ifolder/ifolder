@@ -870,6 +870,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\SyncCommon\Library\SyncStoreService.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\SyncCommon\Tests\SyncCommonTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -906,11 +911,6 @@
                 />
                 <File
                     RelPath = "src\SyncManager\Library\SyncStoreManager.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncManager\Library\SyncStoreService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

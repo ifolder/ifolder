@@ -26,7 +26,6 @@ using System.Collections;
 using System.Threading;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Http;
 using System.Diagnostics;
 
 using Simias;
@@ -158,7 +157,8 @@ namespace Simias.Sync
 			lock(this)
 			{
 				// create channel
-				channel = syncManager.ChannelFactory.GetChannel(store, syncManager.ChannelSinks);
+				channel = syncManager.ChannelFactory.GetChannel(store,
+					syncManager.ServiceUrl.Scheme, syncManager.ChannelSinks);
 				
 				// create worker thread
 				syncWorkerThread = new Thread(new ThreadStart(this.DoSyncWork));
