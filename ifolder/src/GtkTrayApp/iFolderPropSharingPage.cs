@@ -34,7 +34,7 @@ namespace Novell.iFolder
 	public class iFolderPropSharingPage : VBox
 	{
 		private iFolderWebService	ifws;
-		private iFolderInfo			ifolder;
+		private iFolderWeb			ifolder;
 
 		private iFolderTreeView		UserTreeView;
 		private ListStore			UserTreeStore;
@@ -63,7 +63,7 @@ namespace Novell.iFolder
 
 
 
-		public void UpdateiFolder(iFolderInfo ifolder)
+		public void UpdateiFolder(iFolderWeb ifolder)
 		{
 			this.ifolder = ifolder;
 

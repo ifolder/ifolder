@@ -93,7 +93,7 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:complexType name="iFolderInfo">
+      <xs:complexType name="iFolderWeb">
         <xs:sequence>
           <xs:element minOccurs="0" maxOccurs="1" name="Domain" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="DomainIdentity" type="xs:string" />
@@ -122,7 +122,7 @@
       <xs:element name="CreateLocaliFolderResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="CreateLocaliFolderResult" type="s0:iFolderInfo" />
+            <xs:element minOccurs="0" maxOccurs="1" name="CreateLocaliFolderResult" type="s0:iFolderWeb" />
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -136,7 +136,7 @@
       <xs:element name="GetiFolderResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetiFolderResult" type="s0:iFolderInfo" />
+            <xs:element minOccurs="0" maxOccurs="1" name="GetiFolderResult" type="s0:iFolderWeb" />
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -150,7 +150,7 @@
       <xs:element name="GetiFolderByLocalPathResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetiFolderByLocalPathResult" type="s0:iFolderInfo" />
+            <xs:element minOccurs="0" maxOccurs="1" name="GetiFolderByLocalPathResult" type="s0:iFolderWeb" />
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -174,22 +174,22 @@
       <xs:element name="RevertiFolderResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="RevertiFolderResult" type="s0:iFolderInfo" />
+            <xs:element minOccurs="0" maxOccurs="1" name="RevertiFolderResult" type="s0:iFolderWeb" />
           </xs:sequence>
         </xs:complexType>
       </xs:element>
       <xs:element name="GetAlliFolders">
         <xs:complexType />
       </xs:element>
-      <xs:complexType name="ArrayOfIFolderInfo">
+      <xs:complexType name="ArrayOfIFolderWeb">
         <xs:sequence>
-          <xs:element minOccurs="0" nillable="true" maxOccurs="unbounded" name="iFolderInfo" type="s0:iFolderInfo" />
+          <xs:element minOccurs="0" nillable="true" maxOccurs="unbounded" name="iFolderWeb" type="s0:iFolderWeb" />
         </xs:sequence>
       </xs:complexType>
       <xs:element name="GetAlliFoldersResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetAlliFoldersResult" type="s0:ArrayOfIFolderInfo" />
+            <xs:element minOccurs="0" maxOccurs="1" name="GetAlliFoldersResult" type="s0:ArrayOfIFolderWeb" />
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -203,7 +203,7 @@
       <xs:element name="GetiFoldersResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetiFoldersResult" type="s0:ArrayOfIFolderInfo" />
+            <xs:element minOccurs="0" maxOccurs="1" name="GetiFoldersResult" type="s0:ArrayOfIFolderWeb" />
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -365,7 +365,7 @@
       <xs:element name="AcceptiFolderInvitationResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="AcceptiFolderInvitationResult" type="s0:iFolderInfo" />
+            <xs:element minOccurs="0" maxOccurs="1" name="AcceptiFolderInvitationResult" type="s0:iFolderWeb" />
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -588,8 +588,8 @@
       </xs:element>
       <xs:element name="iFolderSettings" type="s0:iFolderSettings" />
       <xs:element name="boolean" type="xs:boolean" />
-      <xs:element name="iFolderInfo" type="s0:iFolderInfo" />
-      <xs:element name="ArrayOfIFolderInfo" type="s0:ArrayOfIFolderInfo" />
+      <xs:element name="iFolderWeb" type="s0:iFolderWeb" />
+      <xs:element name="ArrayOfIFolderWeb" type="s0:ArrayOfIFolderWeb" />
       <xs:element name="iFolderUser" type="s0:iFolderUser" />
       <xs:element name="ArrayOfIFolderUser" type="s0:ArrayOfIFolderUser" />
       <xs:element name="DiskSpace" type="s0:DiskSpace" />
@@ -870,19 +870,19 @@
     <part name="Path" type="s:string" />
   </message>
   <message name="CreateLocaliFolderHttpGetOut">
-    <part name="Body" element="s0:iFolderInfo" />
+    <part name="Body" element="s0:iFolderWeb" />
   </message>
   <message name="GetiFolderHttpGetIn">
     <part name="iFolderID" type="s:string" />
   </message>
   <message name="GetiFolderHttpGetOut">
-    <part name="Body" element="s0:iFolderInfo" />
+    <part name="Body" element="s0:iFolderWeb" />
   </message>
   <message name="GetiFolderByLocalPathHttpGetIn">
     <part name="LocalPath" type="s:string" />
   </message>
   <message name="GetiFolderByLocalPathHttpGetOut">
-    <part name="Body" element="s0:iFolderInfo" />
+    <part name="Body" element="s0:iFolderWeb" />
   </message>
   <message name="DeleteiFolderHttpGetIn">
     <part name="iFolderID" type="s:string" />
@@ -892,17 +892,17 @@
     <part name="iFolderID" type="s:string" />
   </message>
   <message name="RevertiFolderHttpGetOut">
-    <part name="Body" element="s0:iFolderInfo" />
+    <part name="Body" element="s0:iFolderWeb" />
   </message>
   <message name="GetAlliFoldersHttpGetIn" />
   <message name="GetAlliFoldersHttpGetOut">
-    <part name="Body" element="s0:ArrayOfIFolderInfo" />
+    <part name="Body" element="s0:ArrayOfIFolderWeb" />
   </message>
   <message name="GetiFoldersHttpGetIn">
     <part name="UserID" type="s:string" />
   </message>
   <message name="GetiFoldersHttpGetOut">
-    <part name="Body" element="s0:ArrayOfIFolderInfo" />
+    <part name="Body" element="s0:ArrayOfIFolderWeb" />
   </message>
   <message name="SetUserRightsHttpGetIn">
     <part name="iFolderID" type="s:string" />
@@ -969,7 +969,7 @@
     <part name="LocalPath" type="s:string" />
   </message>
   <message name="AcceptiFolderInvitationHttpGetOut">
-    <part name="Body" element="s0:iFolderInfo" />
+    <part name="Body" element="s0:iFolderWeb" />
   </message>
   <message name="DeclineiFolderInvitationHttpGetIn">
     <part name="iFolderID" type="s:string" />
@@ -1085,19 +1085,19 @@
     <part name="Path" type="s:string" />
   </message>
   <message name="CreateLocaliFolderHttpPostOut">
-    <part name="Body" element="s0:iFolderInfo" />
+    <part name="Body" element="s0:iFolderWeb" />
   </message>
   <message name="GetiFolderHttpPostIn">
     <part name="iFolderID" type="s:string" />
   </message>
   <message name="GetiFolderHttpPostOut">
-    <part name="Body" element="s0:iFolderInfo" />
+    <part name="Body" element="s0:iFolderWeb" />
   </message>
   <message name="GetiFolderByLocalPathHttpPostIn">
     <part name="LocalPath" type="s:string" />
   </message>
   <message name="GetiFolderByLocalPathHttpPostOut">
-    <part name="Body" element="s0:iFolderInfo" />
+    <part name="Body" element="s0:iFolderWeb" />
   </message>
   <message name="DeleteiFolderHttpPostIn">
     <part name="iFolderID" type="s:string" />
@@ -1107,17 +1107,17 @@
     <part name="iFolderID" type="s:string" />
   </message>
   <message name="RevertiFolderHttpPostOut">
-    <part name="Body" element="s0:iFolderInfo" />
+    <part name="Body" element="s0:iFolderWeb" />
   </message>
   <message name="GetAlliFoldersHttpPostIn" />
   <message name="GetAlliFoldersHttpPostOut">
-    <part name="Body" element="s0:ArrayOfIFolderInfo" />
+    <part name="Body" element="s0:ArrayOfIFolderWeb" />
   </message>
   <message name="GetiFoldersHttpPostIn">
     <part name="UserID" type="s:string" />
   </message>
   <message name="GetiFoldersHttpPostOut">
-    <part name="Body" element="s0:ArrayOfIFolderInfo" />
+    <part name="Body" element="s0:ArrayOfIFolderWeb" />
   </message>
   <message name="SetUserRightsHttpPostIn">
     <part name="iFolderID" type="s:string" />
@@ -1184,7 +1184,7 @@
     <part name="LocalPath" type="s:string" />
   </message>
   <message name="AcceptiFolderInvitationHttpPostOut">
-    <part name="Body" element="s0:iFolderInfo" />
+    <part name="Body" element="s0:iFolderWeb" />
   </message>
   <message name="DeclineiFolderInvitationHttpPostIn">
     <part name="iFolderID" type="s:string" />

@@ -34,7 +34,7 @@ namespace Novell.iFolder
 	{
 		private Gtk.Window			topLevelWindow;
 		private iFolderWebService	ifws;
-		private iFolderInfo			ifolder;
+		private iFolderWeb			ifolder;
 		private DiskSpace			ds;
 		private	CheckButton 		AutoSyncCheckButton;
 		private SpinButton			SyncSpinButton;
@@ -77,7 +77,7 @@ namespace Novell.iFolder
 
 
 
-		public void UpdateiFolder(iFolderInfo ifolder)
+		public void UpdateiFolder(iFolderWeb ifolder)
 		{
 			this.ifolder = ifolder;
 

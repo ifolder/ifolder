@@ -35,7 +35,7 @@ namespace Novell.iFolder
 	public class iFolderPropertiesDialog : Dialog
 	{
 		private iFolderWebService	ifws;
-		private iFolderInfo				ifolder;
+		private iFolderWeb				ifolder;
 		private Gtk.Notebook		propNoteBook;
 		private Hashtable			ifHash;
 		private HBox				ConflictBox;
@@ -67,8 +67,8 @@ namespace Novell.iFolder
 		/// Default constructor for iFolderPropertiesDialog
 		/// </summary>
 		public iFolderPropertiesDialog(	Gtk.Window parent,
-										iFolderInfo ifolder, 
-										iFolderInfo[] ifolders,
+										iFolderWeb ifolder, 
+										iFolderWeb[] ifolders,
 										iFolderWebService iFolderWS)
 			: base()
 		{
@@ -94,7 +94,7 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Setup the UI inside the Window
 		/// </summary>
-		private void InitializeWidgets(iFolderInfo[] ifolders)
+		private void InitializeWidgets(iFolderWeb[] ifolders)
 		{
 			VBox dialogBox = new VBox();
 			this.VBox.PackStart(dialogBox);
@@ -146,7 +146,7 @@ namespace Novell.iFolder
 */
 
 			ArrayList ifList = new ArrayList();
-			foreach(iFolderInfo ifldr in ifolders)
+			foreach(iFolderWeb ifldr in ifolders)
 			{
 				if(!ifldr.IsSubscription)
 				{
@@ -257,7 +257,7 @@ namespace Novell.iFolder
 		{
 			if(iFolderPickCombo.Entry.Text.Length > 0)
 			{
-				ifolder = (iFolderInfo)ifHash[iFolderPickCombo.Entry.Text];
+				ifolder = (iFolderWeb)ifHash[iFolderPickCombo.Entry.Text];
 				SetValues();
 			}
 		}
