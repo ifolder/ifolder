@@ -33,6 +33,7 @@
 @class iFolderPrefsController;
 @class SyncLogWindowController;
 @class CreateiFolderSheetController;
+@class SetupiFolderSheetController;
 
 @interface MainWindowController : NSWindowController
 {
@@ -45,18 +46,31 @@
     IBOutlet NSArrayController				*domainsController;
 	IBOutlet SyncLogWindowController		*syncLogController;
 	IBOutlet CreateiFolderSheetController	*createSheetController;
-	
-	iFolder					*selectediFolder;	
+	IBOutlet SetupiFolderSheetController	*setupiFolderController;
+
+
 	NSToolbar				*toolbar;
 	NSMutableDictionary		*toolbarItems;
 	NSMutableArray			*toolbarItemKeys;
 }
 
+
 - (IBAction)showLoginWindow:(id)sender;
 - (IBAction)showSyncLog:(id)sender;
 - (IBAction)refreshWindow:(id)sender;
-
+- (IBAction)showHideToolbar:(id)sender;
+- (IBAction)customizeToolbar:(id)sender;
 - (IBAction)showPrefs:(id)sender;
+- (IBAction)newiFolder:(id)sender;
+- (IBAction)setupiFolder:(id)sender;
+- (IBAction)revertiFolder:(id)sender;
+- (void)revertiFolderResponse:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+- (IBAction)deleteiFolder:(id)sender;
+- (void)deleteiFolderResponse:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+- (IBAction)openiFolder:(id)sender;
+- (IBAction)showProperties:(id)sender;
+- (IBAction)shareiFolder:(id)sender;
+
 
 - (void)login:(NSString *)username withPassword:(NSString *)password toServer:(NSString *)server;
 - (void)createiFolder:(NSString *)path inDomain:(NSString *)domainID;
@@ -72,29 +86,21 @@
 
 - (void)initializeSimiasEvents;
 
-// Toobar Delegates
+// menu validation
+- (BOOL)validateUserInterfaceItem:(id)anItem;
+
+
+
+//==========================================
+// Toolbar Methods
+//==========================================
+- (void)setupToolbar;
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar
 	itemForItemIdentifier:(NSString *)itemIdentifier
 	willBeInsertedIntoToolbar:(BOOL)flag;
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar;
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar;
-- (int)count;
 
-
-// user actions
-- (void)toolbaritemclicked:(NSToolbarItem *)item;
-
-// menu actions
-- (IBAction)showHideToolbar:(id)sender;
-- (IBAction)customizeToolbar:(id)sender;
-
-// menu validation
-- (BOOL)validateUserInterfaceItem:(id)anItem;
-
-
-- (void)setupToolbar;
-
-- (NSArrayController*) DomainsController;
 
 @end
 

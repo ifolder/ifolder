@@ -304,6 +304,40 @@ void cleanup_gsoap(struct soap *pSoap);
 
 
 
+-(void)DeleteiFolder:(NSString *)iFolderID
+{
+	iFolder *ifolder = nil;
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (iFolderID != nil), @"iFolderID was nil");
+
+	struct _ns1__DeleteiFolder deleteiFolderMessage;
+	struct _ns1__DeleteiFolderResponse deleteiFolderResponse;
+	
+	deleteiFolderMessage.iFolderID = (char *)[iFolderID cString];
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__DeleteiFolder(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &deleteiFolderMessage,
+            &deleteiFolderResponse);
+
+	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in DeleteiFolder"];
+	}
+
+    cleanup_gsoap(&soap);
+}
+
+
+
+
+
 void init_gsoap(struct soap *pSoap)
 {
 	soap_init(pSoap);

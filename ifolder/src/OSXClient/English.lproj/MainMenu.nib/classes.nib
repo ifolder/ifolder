@@ -22,10 +22,17 @@
         {
             ACTIONS = {
                 customizeToolbar = id; 
+                deleteiFolder = id; 
+                newiFolder = id; 
+                openiFolder = id; 
                 refreshWindow = id; 
+                revertiFolder = id; 
+                setupiFolder = id; 
+                shareiFolder = id; 
                 showHideToolbar = id; 
                 showLoginWindow = id; 
                 showPrefs = id; 
+                showProperties = id; 
                 showSyncLog = id; 
             }; 
             CLASS = MainWindowController; 
@@ -34,6 +41,7 @@
                 createSheetController = CreateiFolderSheetController; 
                 domainsController = NSArrayController; 
                 ifoldersController = NSArrayController; 
+                setupiFolderController = SetupiFolderSheetController; 
                 syncLogController = SyncLogWindowController; 
             }; 
             SUPERCLASS = NSWindowController; 
