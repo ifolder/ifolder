@@ -26,12 +26,14 @@ package com.novell.simias.storebrowser;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
-import java.util.TreeSet;
 import java.util.Iterator;
+import java.util.TreeSet;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -80,6 +82,9 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 	private JTable jTable = null;
 	private JScrollPane jScrollPane1 = null;
 	private DefaultTreeModel treeModel = null;
+	
+	private OpenStoreDialog openStoreDialog = null;
+	private Config config = null;
 	
 	private String[] columnNames = {"Name", "Value", "Type", "Flags"};
 	
@@ -174,10 +179,14 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 	 */
 	protected void openStore() {
 		
-		// TODO: Figure out how to retrieve the most recently used URLs
-		String url = (String) JOptionPane.showInputDialog(this, "Simias Store URL:                                                                                                                                    ", "Open Simias Store",
-												 JOptionPane.QUESTION_MESSAGE, null, null,
-												 "http://bht-linux.provo.novell.com:49448/simias10/boyd/SimiasBrowser.asmx");
+		OpenStoreDialog dialog = getOpenStoreDialog();
+		
+		dialog.setVisible(true);
+		
+		if (!dialog.getOkButtonPressed()) return;
+		
+		String url = openStoreDialog.getSelectedURL();
+		
 		if (url == null)
 		{
 			return;
@@ -185,6 +194,7 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 		
 		try {
 			service = SwingStoreBrowser.getSoapService(url);
+			
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -197,6 +207,36 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 			return;
 		}
 		
+		// Test the service to see if it is valid
+		try
+		{
+			// FIXME: We should really add a Ping() method to the WebService instead
+			// of using this function
+			service.enumerateCollections();
+		}
+		catch(Exception e)
+		{
+			// The service is invalid because we weren't able to make a call on it
+			JOptionPane.showMessageDialog(this,
+				"There is no valid store service running at the specified URL",
+				"Invalid Store", JOptionPane.DEFAULT_OPTION);
+			return;
+		}
+		
+		// If we now have a valid service, add this URL to the config file
+		Config c = getConfig();
+		try {
+			c.addStoreURL(url);
+		} catch (IOException e1) {
+			// The service is invalid because we weren't able to make a call on it
+			JOptionPane.showMessageDialog(this,
+				"Error saving URL into config file: " + e1.getLocalizedMessage(),
+				"Invalid URL", JOptionPane.DEFAULT_OPTION);
+		}
+		
+		// Also add it into the combo box
+		dialog.addStoreURL(url);
+
 		tree_top = new DefaultMutableTreeNode(url);
 		
 		addNodes(tree_top);
@@ -205,6 +245,45 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 		
 		jTree.setModel(treeModel);
 	}
+	/**
+	 * @return
+	 */
+	private OpenStoreDialog getOpenStoreDialog() {
+		if (openStoreDialog == null)
+		{
+			openStoreDialog = new OpenStoreDialog(this, true);
+			
+			// Read in the saved store URLs from a config file
+			Config c = getConfig();
+
+			Collection storeURLs = c.getStoreURLs();
+			Iterator i = storeURLs.iterator();
+			while(i.hasNext())
+			{
+				openStoreDialog.addStoreURL((String)i.next());
+			}
+			
+			// Add an example URL
+			openStoreDialog.addStoreURL("http://bht-linux.provo.novell.com:49448/simias10/boyd/SimiasBrowser.asmx");
+		}
+		return openStoreDialog;
+	}
+	/**
+	 * @return
+	 */
+	private Config getConfig() {
+		if (config == null)
+		{
+			try {
+				config = Config.loadConfig("SwingStoreBrowserConfig.xml");
+			} catch (Exception e) {
+				// Create a new config file
+				config = new Config("SwingStoreBrowserConfig.xml");
+			}
+		}
+		return config;
+	}
+
 	/**
 	 * @param top
 	 */
