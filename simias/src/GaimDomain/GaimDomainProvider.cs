@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Security;
@@ -34,6 +35,9 @@ using Simias.Storage;
 using Simias.Sync;
 
 using Simias.Gaim;
+
+// shorty
+using SCodes = Simias.Authentication.StatusCodes;
 
 namespace Simias.Gaim
 {
@@ -89,10 +93,89 @@ namespace Simias.Gaim
 		/// NOTE: The domain provider must NOT end the HTTP request.
 		/// </param>
 		/// <returns>The status from the authentication.</returns>
-		public Authentication.Status Authenticate( Simias.Storage.Domain domain, HttpContext httpContext )
+		public Authentication.Status Authenticate( Simias.Storage.Domain domain, HttpContext ctx )
 		{
-			Authentication.Status status = new Authentication.Status( Authentication.StatusCodes.Success );
-			status.DomainID = domain.ID;
+			string gaimSessionTag = "gaim";
+
+			Simias.Storage.Member member = null;
+			Simias.Authentication.Status status = 
+				new Simias.Authentication.Status( SCodes.Unknown );
+
+			// Gaim domain requires session support
+			if ( ctx.Session != null )
+			{
+				GaimSession gaimSession;
+
+				// State should be 1
+				string memberID = ctx.Request.Headers[ "gaim-member" ];
+				if ( memberID == null || memberID == "" )
+				{
+					status.statusCode = SCodes.InvalidCredentials;
+					return status;
+				}
+
+				member = domain.GetMemberByID( memberID );
+				if ( member == null )
+				{
+					status.statusCode = SCodes.InvalidCredentials;
+					return status;
+				}
+
+				status.UserName = member.Name;
+				status.UserID = member.UserID;
+
+				gaimSession = ctx.Session[ gaimSessionTag ] as GaimSession;
+				if ( gaimSession == null )
+				{
+					gaimSession = new GaimSession();
+					gaimSession.MemberID = member.UserID;
+					gaimSession.State = 1;
+
+					// Fixme
+					string oneTimePassword = DateTime.Now.ToString();
+
+					// Set the one time password in the response
+					ctx.Response.AddHeader(
+						"gaim-secret",
+						oneTimePassword);
+
+					ctx.Session[ gaimSessionTag ] = gaimSession;
+					status.statusCode = SCodes.InvalidCredentials;
+				}
+				else
+					if ( status.UserID == gaimSession.MemberID )
+				{
+					// State should be 1
+					string oneTime = ctx.Request.Headers[ "gaim-secret" ];
+					if ( oneTime != null && oneTime != "" )
+					{
+						// decrypt with user's public key
+						if ( oneTime.Equals( gaimSession.OneTimePassword ) == true )
+						{
+							status.statusCode = SCodes.Success;
+							gaimSession.State = 2;
+						}
+						else
+						{
+							status.statusCode = SCodes.InvalidCredentials;
+						}				
+					}
+					else
+					{
+						// Fixme
+						gaimSession.OneTimePassword = DateTime.Now.ToString();
+						gaimSession.State = 1;
+
+						// Set the one time password in the response
+						ctx.Response.AddHeader(
+							"gaim-secret",
+							gaimSession.OneTimePassword);
+
+						status.statusCode = SCodes.InvalidCredentials;
+					}
+				}
+			}
+
 			return status;
 		}
 
@@ -477,20 +560,8 @@ namespace Simias.Gaim
 			Uri locationUri = null;
 			if( domainID.ToLower() == Simias.Gaim.GaimDomain.ID )
 			{
-				try
-				{
-					Simias.Storage.Domain domain = GaimDomain.GetDomain();
-					Member member = domain.GetMemberByID(domain.Owner.UserID);
-					if ( member != null )
-					{
-						locationUri = MemberToUri(domain, member);
-					}
-				}
-				catch ( Exception e )
-				{
-					log.Debug( e.Message );
-					log.Debug( e.StackTrace );
-				}
+				Member member = Store.GetStore().GetDomain( domainID ).GetCurrentMember();
+				locationUri = MemberToUri( GaimDomain.GetDomain(), member );
 			}
 
 			return locationUri;
@@ -638,5 +709,16 @@ namespace Simias.Gaim
 			}
 		}
 		#endregion
+
+		private class GaimSession
+		{
+			public string	MemberID;
+			public string	OneTimePassword;
+			public int		State;
+
+			public GaimSession()
+			{
+			}
+		}
 	}
 }

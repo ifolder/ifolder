@@ -189,19 +189,25 @@ namespace Simias.Gaim
 		{
 			if ( args.DomainID == Simias.Gaim.GaimDomain.ID )
 			{
+				Simias.Authentication.Status authStatus;
 				lock (inCredentialEvent)
 				{
-					// FIXME: Implement the "out-of-band" authentication
-					// that will verify the user on the remote box
-					string userID = Store.GetStore().GetUserIDFromDomainID(args.DomainID);
+					ClientAuthentication clientAuth =
+						new ClientAuthentication();
 
-					// Set credentials for this collection
-					new NetCredential( 
-						"iFolder", 
-						args.CollectionID, 
-						true, 
-						userID,
-						"@GaimDomainPPK@" );
+					authStatus = clientAuth.Authenticate(args.CollectionID);
+					if (authStatus.statusCode == Simias.Authentication.StatusCodes.Success)
+					{
+						string userID = Store.GetStore().GetUserIDFromDomainID(GaimDomain.ID);
+
+						// Set credentials for this collection
+						new NetCredential( 
+							"iFolder", 
+							args.CollectionID, 
+							true, 
+							userID,
+							"@GaimDomainPPK@" );
+					}
 				}
 			}
 		}
