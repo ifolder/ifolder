@@ -574,7 +574,6 @@ namespace Novell.iFolder
 
 			curAddrBook.AddContact(contact);
 
-			Console.WriteLine("Comitting new code");
 			contact.Commit();
 
 			ContactTreeStore.AppendValues(contact);
@@ -585,7 +584,6 @@ namespace Novell.iFolder
 		{
 			Contact contact = args.ABContact;
 
-			Console.WriteLine("Comitting existing code");
 			contact.Commit();
 
 			on_contact_selection_changed(o, args);
@@ -732,8 +730,7 @@ namespace Novell.iFolder
 		   }
 		 */
 
-		private void on_contact_row_activated(object obj,
-				RowActivatedArgs args)
+		internal void EditSelectedContact()
 		{
 			TreeSelection tSelect = ContactTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
@@ -744,6 +741,7 @@ namespace Novell.iFolder
 				tSelect.GetSelected(out tModel, out iter);
 				if(tModel != null)
 					tModel = null;
+
 				Contact c = (Contact) 
 					ContactTreeStore.GetValue(iter,0);
 
@@ -753,6 +751,18 @@ namespace Novell.iFolder
 							ContactEditedEventHandler);
 				ce.ShowAll();
 			}
+		}
+
+		internal void on_editContactButton_clicked(object obj, EventArgs args)
+		{
+			EditSelectedContact();
+		}
+
+
+		internal void on_contact_row_activated(object obj,
+				RowActivatedArgs args)
+		{
+			EditSelectedContact();
 		}
 
 		public void on_quit(object o, EventArgs args)

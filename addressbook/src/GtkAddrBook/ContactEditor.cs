@@ -36,10 +36,19 @@ using GLib;
 
 namespace Novell.iFolder
 {
+	/// <summary>
+	/// This class represents is the EventArgs used to pass to delegates
+	/// that which to be called when a Contact is Done being Edited or
+	/// Created.
+	/// </summary>
 	public class ContactEventArgs : EventArgs
 	{
 		private Contact contact;
 
+		/// <summary>
+		/// Constructor for creating a new ContactEventArgs
+		/// </summary>
+		/// <param name="contact">Contact that was edited</param>
 		public ContactEventArgs(Contact contact)
 		{
 			this.contact = contact;
@@ -58,6 +67,9 @@ namespace Novell.iFolder
 	public delegate void ContactCreatedEventHandler(object sender, 
 			ContactEventArgs args);
 
+	/// <summary>
+	/// This class is used to edit all data stored on a contact.
+	/// </summary>
 	public class ContactEditor
 	{
 		// Glade "autoconnected" members
@@ -109,6 +121,13 @@ namespace Novell.iFolder
 
 
 
+
+		/// <summary>
+		/// Constructs a new ContactEditor
+		/// </summary>
+		/// <param name="parentwin">The parent window the Contact Editor
+		///	should be transient to</param>
+		/// <param name="contact">The contact to be edited</param>
 		public ContactEditor (Gtk.Window parentwin, Contact contact)
 		{
 			if(contact == null)
@@ -130,6 +149,11 @@ namespace Novell.iFolder
 
 
 
+		/// <summary>
+		/// Constructs a new ContactEditor with a new Contact to edit
+		/// </summary>
+		/// <param name="parentwin">The parent window the Contact Editor
+		///	should be transient to</param>
 		public ContactEditor (Gtk.Window parentwin) :
 			this(parentwin, null)
 		{
@@ -666,7 +690,9 @@ namespace Novell.iFolder
 
 
 
-
+		/// <summary>
+		/// Method used internally to close and hide the Contact Editor
+		/// </summary>
 		private void CloseDialog()
 		{
 			contactEditorDialog.Hide();
@@ -677,6 +703,10 @@ namespace Novell.iFolder
 
 
 
+		/// <summary>
+		/// Glade autoconnected method that is called when the Gtk.Dialog
+		/// is deleted;
+		/// </summary>
 		private void on_contactEditor_delete_event(object o,
 				DeleteEventArgs args) 
 		{
@@ -686,6 +716,10 @@ namespace Novell.iFolder
 
 
 
+		/// <summary>
+		/// Glade autoconnected method that is called when the cancel
+		/// button on the dialog is pressed.
+		/// </summary>
 		private void on_cancelButton_clicked(object o, EventArgs args) 
 		{
 			CloseDialog();
@@ -694,6 +728,10 @@ namespace Novell.iFolder
 
 
 
+		/// <summary>
+		/// Glade autoconnected method that is called when the ok
+		/// button on the dialog is pressed.
+		/// </summary>
 		private void on_okButton_clicked(object o, EventArgs args) 
 		{
 			SaveContact();
@@ -702,22 +740,37 @@ namespace Novell.iFolder
 		}
 
 
+		/// <summary>
+		/// Glade autoconnected method that is called when the email
+		/// button on the dialog is pressed.
+		/// </summary>
 		private void on_emailButton_clicked(object o, EventArgs args) 
 		{
 			Console.WriteLine("Edit Email here");
 		}
 
+		/// <summary>
+		/// Glade autoconnected method that is called when the phone
+		/// button on the dialog is pressed.
+		/// </summary>
 		private void on_phoneButton_clicked(object o, EventArgs args) 
 		{
 			Console.WriteLine("Edit Phone here");
 		}
 
+		/// <summary>
+		/// Glade autoconnected method that is called when the address
+		/// button on the dialog is pressed.
+		/// </summary>
 		private void on_addrChangeButton_clicked(object o, EventArgs args) 
 		{
 			Console.WriteLine("Edit Address here");
 		}
 
-
+		/// <summary>
+		/// Glade autoconnected method that is called when the name 
+		/// button on the dialog is pressed.
+		/// </summary>
 		private void on_nameButton_clicked(object o, EventArgs args) 
 		{
 			NameEditor ne = new NameEditor(contactEditorDialog, preferredName);
@@ -728,9 +781,10 @@ namespace Novell.iFolder
 			}
 		}
 
-
-
-
+		/// <summary>
+		/// Glade autoconnected method that is called when the photo
+		/// button on the dialog is pressed.
+		/// </summary>
 		private void on_photoButton_clicked(object o, EventArgs args) 
 		{
 			FileSelection fs = new FileSelection("Choose a new Image");
@@ -757,8 +811,16 @@ namespace Novell.iFolder
 		}
 
 
-
-		private Pixbuf GetScaledPhoto(Contact c, int height)
+		/// <summary>
+		/// This is a method used to scale a photo to the specified height.
+		/// The method should be moved to a common place for all of the
+		/// addressbook to use.
+		/// </summary>
+		/// <param name="contact">The contact from which to extrace the 
+		/// photo</param>
+		/// <param name="height">The height to scale the photo in 
+		/// pixels</param>
+		private Pixbuf GetScaledPhoto(Contact contact, int height)
 		{
 			Pixbuf pb = null;
 
@@ -766,7 +828,7 @@ namespace Novell.iFolder
 			{
 				int newWidth, newHeight;
 
-				pb = new Pixbuf(c.ExportPhoto());
+				pb = new Pixbuf(contact.ExportPhoto());
 
 				newHeight = height;
 				newWidth = height;

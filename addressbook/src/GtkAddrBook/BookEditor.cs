@@ -36,7 +36,6 @@ namespace Novell.iFolder
 	public class BookEditEventArgs : EventArgs
 	{
 		private readonly string newBookName;
-		//private readonly string oldBookName;
 		private readonly bool changed;
 
 		//Constructor.
@@ -56,53 +55,30 @@ namespace Novell.iFolder
 		{
 			get {return changed;}
 		}
-
-		// The AlarmText property that contains the wake-up message.
-		//
-/*
-		public string AlarmText 
-		{
-			get 
-			{
-				if (snoozePressed)
-				{
-					return ("Wake Up!!! Snooze time is over.");
-				}
-				else 
-				{
-					return ("Wake Up!");
-				}
-			}
-		}  
-*/
 	}
 
 	// Delegate declaration
 	//
-	public delegate void BookEditEventHandler(object sender, BookEditEventArgs e);
+	public delegate void BookEditEventHandler(object sender,
+			BookEditEventArgs e);
 
 	public class BookEditor
 	{
 		[Glade.Widget] internal Gtk.Entry beName;
 
 		Gtk.Dialog 		beDlg = null;
+
 		public event BookEditEventHandler BookEdited;
 
 		public BookEditor () 
 		{
-			Glade.XML gxml = new Glade.XML ("addressbook.glade", "BookEditor", null);
+			Glade.XML gxml = new Glade.XML ("addressbook.glade",
+					"BookEditor", null);
 			gxml.Autoconnect (this);
 
 			beDlg = (Gtk.Dialog) gxml.GetWidget("BookEditor");
 		}
 
-		protected virtual void OnBookEdit(BookEditEventArgs e)
-		{
-			if(BookEdited != null)
-			{
-				BookEdited(this, e);
-			}
-		}
 
 		public void ShowAll()
 		{
@@ -112,33 +88,37 @@ namespace Novell.iFolder
 			}
 		}
 
-		public void on_save(object o, EventArgs args)
-		{
-			BookEditEventArgs e = new BookEditEventArgs(true, beName.Text);
-			OnBookEdit(e);
-			beDlg.Hide();
-			beDlg.Destroy();
-			beDlg = null;
-		}
 
-		public void on_cancel(object o, EventArgs args)
+		public void on_okButton_clicked(object o, EventArgs args)
 		{
-			beDlg.Hide();
-			beDlg.Destroy();
-			beDlg = null;
-		}
-
-		public void onKeyPressed(object o, KeyPressEventArgs args)
-		{
-			switch(args.Event.HardwareKeycode)
+			if(BookEdited != null)
 			{
-				case 9:
-					on_cancel(o, args);
-					break;
-				case 36:
-					on_save(o, args);
-					break;					
+				BookEditEventArgs e = new BookEditEventArgs(true, beName.Text);
+				BookEdited(this, e);
 			}
+
+			CloseDialog();
+		}
+
+
+		public void on_cancelButton_clicked(object o, EventArgs args)
+		{
+			CloseDialog();
+		}
+
+
+		private void CloseDialog()
+		{
+			beDlg.Hide();
+			beDlg.Destroy();
+			beDlg = null;
+		}
+
+
+		private void on_BookEditor_delete_event(object o,
+				DeleteEventArgs args) 
+		{
+			CloseDialog();
 		}
 	}
 }
