@@ -81,12 +81,27 @@ namespace EventLogReaderII
 					// Instantiate the next record so the id's can be compared.
 					ChangeLogRecord record = new ChangeLogRecord( buffer, index );
 
-					listBox1.Items.Add( String.Format( "\tRecord {0} - {1}: Operation = {2}, Node ID = {3}", 
-						record.RecordID, 
-						record.Epoch.ToString(), 
-						Enum.GetName( typeof( ChangeLogRecord.ChangeLogOp ), record.Operation ), 
-						record.EventID ) ); 
+					StringBuilder recStr = new StringBuilder( 
+						String.Format( "\tRecord {0} - {1}: Operation = {2}, Node ID = {3}, Flags = {4}", 
+							record.RecordID, 
+							record.Epoch.ToString(), 
+							Enum.GetName( typeof( ChangeLogRecord.ChangeLogOp ), record.Operation ), 
+							record.EventID,
+							record.Flags ) );
 
+					if ( record.Flags != 0 )
+					{
+						recStr.Append( " [" );
+
+						if ( ( record.Flags & 1 ) == 1 )
+						{
+							recStr.Append( "Local" );
+						}
+
+						recStr.Append( "]" );
+					}
+
+					listBox1.Items.Add( recStr.ToString() );  
 					index += ChangeLogRecord.RecordSize;
 				}
 
@@ -256,6 +271,8 @@ namespace EventLogReaderII
 
 		private void OpenMenuItem_Click(object sender, System.EventArgs e)
 		{
+			listBox1.Items.Clear();
+
 			OpenFileDialog ofd = new OpenFileDialog();
 			ofd.CheckFileExists = true;
 			ofd.Filter = "Event Log files (*.changelog)|*.changelog|All files (*.*)|*.*";

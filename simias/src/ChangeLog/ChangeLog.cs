@@ -382,11 +382,12 @@ namespace Simias.Storage
 		private const int epochSize = 8;
 		private const int nodeIDSize = 16;
 		private const int operationSize = 4;
+		private const int flagSize = 2;
 
 		/// <summary>
 		/// This is the total encoded record size.
 		/// </summary>
-		private const int encodedRecordSize = recordIDSize + epochSize + nodeIDSize + operationSize;
+		private const int encodedRecordSize = recordIDSize + epochSize + nodeIDSize + operationSize + flagSize;
 
 		/// <summary>
 		/// Record identitifer for this entry.
@@ -407,6 +408,11 @@ namespace Simias.Storage
 		/// Node operation type.
 		/// </summary>
 		private ChangeLogOp operation;
+
+		/// <summary>
+		/// Flags passed to the event.
+		/// </summary>
+		private ushort flags;
 		#endregion
 
 		#region Properties
@@ -455,6 +461,15 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets or sets the flags.
+		/// </summary>
+		public ushort Flags
+		{
+			get { return flags; }
+			set { flags = value; }
+		}
+
+		/// <summary>
 		/// Returns the size of the ChangeLogRecord.
 		/// </summary>
 		static public int RecordSize
@@ -470,12 +485,14 @@ namespace Simias.Storage
 		/// <param name="epoch">Date and time that event was recorded.</param>
 		/// <param name="nodeID">Identifier of Node object that triggered the event.</param>
 		/// <param name="operation">Node operation type.</param>
-		public ChangeLogRecord( DateTime epoch, string nodeID, ChangeLogOp operation )
+		/// <param name="flags">Flags passed to the event.</param>
+		public ChangeLogRecord( DateTime epoch, string nodeID, ChangeLogOp operation, ushort flags )
 		{
 			this.recordID = 0;
 			this.epoch = epoch;
 			this.nodeID = nodeID;
 			this.operation = operation;
+			this.flags = flags;
 		}
 
 		/// <summary>
@@ -508,6 +525,9 @@ namespace Simias.Storage
 
 			operation = ( ChangeLogOp )Enum.ToObject( typeof( ChangeLogOp ), BitConverter.ToInt32( encodedRecord, index ) );
 			index += operationSize;
+
+			flags = BitConverter.ToUInt16( encodedRecord, index );
+			index += flagSize;
 		}
 		#endregion
 
@@ -527,6 +547,7 @@ namespace Simias.Storage
 			byte[] rid = BitConverter.GetBytes( recordID );
 			byte[] ep = BitConverter.GetBytes( epoch.Ticks );
 			byte[] op = BitConverter.GetBytes( ( int )operation );
+			byte[] fl = BitConverter.GetBytes( flags );
 
 			// Copy the converted byte arrays to the resulting array.
 			Array.Copy( rid, 0, result, index, rid.Length );
@@ -540,6 +561,9 @@ namespace Simias.Storage
 
 			Array.Copy( op, 0, result, index, op.Length );
 			index += op.Length;
+
+			Array.Copy( fl, 0, result, index, fl.Length );
+			index += fl.Length;
 
 			return result;
 		}
@@ -909,7 +933,7 @@ namespace Simias.Storage
 		/// <param name="args">Event arguments.</param>
 		private void OnNodeChange( NodeEventArgs args )
 		{
-			ChangeLogRecord record = new ChangeLogRecord( DateTime.Now, args.ID, ChangeLogRecord.ChangeLogOp.Changed );
+			ChangeLogRecord record = new ChangeLogRecord( DateTime.Now, args.ID, ChangeLogRecord.ChangeLogOp.Changed, ( ushort )args.Flags );
 			WriteLog( record );
 		}
 
@@ -919,7 +943,7 @@ namespace Simias.Storage
 		/// <param name="args">Event arguments.</param>
 		private void OnNodeCreate( NodeEventArgs args )
 		{
-			ChangeLogRecord record = new ChangeLogRecord( DateTime.Now, args.ID, ChangeLogRecord.ChangeLogOp.Created );
+			ChangeLogRecord record = new ChangeLogRecord( DateTime.Now, args.ID, ChangeLogRecord.ChangeLogOp.Created, ( ushort )args.Flags );
 			WriteLog( record );
 		}
 
@@ -929,7 +953,7 @@ namespace Simias.Storage
 		/// <param name="args">Event arguments.</param>
 		private void OnNodeDelete( NodeEventArgs args )
 		{
-			ChangeLogRecord record = new ChangeLogRecord( DateTime.Now, args.ID, ChangeLogRecord.ChangeLogOp.Deleted );
+			ChangeLogRecord record = new ChangeLogRecord( DateTime.Now, args.ID, ChangeLogRecord.ChangeLogOp.Deleted, ( ushort )args.Flags );
 			WriteLog( record );
 		}
 
