@@ -38,9 +38,10 @@ namespace Novell.iFolder
 	public class iFolder
 	{
 #region Class Members
-		private	Collection		collection = null;
-		private Store			store = null;
-		private	Novell.AddressBook.AddressBook		ab = null;
+		private	Collection						collection = null;
+		private	Novell.AddressBook.AddressBook	ab = null;
+		private Store							store = null;
+		private Novell.AddressBook.Manager 		abMan = null;
 
 		/// <summary>
 		/// Type of collection that represents an iFolder.
@@ -87,9 +88,10 @@ namespace Novell.iFolder
 #endregion
 
 #region Constructors
-		internal iFolder(Store store)
+		internal iFolder(Store store, Novell.AddressBook.Manager manager)
 		{
 			this.store = store;
+			this.abMan = manager;
 		}
 #endregion
 
@@ -166,12 +168,12 @@ namespace Novell.iFolder
 		{
 			// TODO: where should we discover the contact information?
 			// CRG: this was connecting to the wrong store
-			Novell.AddressBook.Manager abManager =
-				Novell.AddressBook.Manager.Connect(
-						collection.LocalStore.StorePath);
+//			Novell.AddressBook.Manager abManager =
+//				Novell.AddressBook.Manager.Connect(
+//						collection.LocalStore.StorePath);
 
 			LocalAddressBook lab = store.GetLocalAddressBook();
-			this.ab = abManager.GetAddressBookByName(lab.Name);
+			this.ab = abMan.GetAddressBookByName(lab.Name);
 		}
 
 
@@ -458,6 +460,11 @@ namespace Novell.iFolder
 		public int AddiFolderNodes(string path)
 		{
 			int count = 0;
+
+			// if the current node is not added, add it now
+			AddiFolderNode(path);
+			count++;
+
 			AddiFolderNodes(path, ref count);
 
 			return count;
@@ -472,8 +479,6 @@ namespace Novell.iFolder
 		/// add.</param>
 		public iFolderNode AddiFolderNode(string path)
 		{
-			Console.WriteLine("Adding node : " + path);
-
 			// Get the leaf name from the path.
 			string name = Path.GetFileName(path);
 			string type;
@@ -493,10 +498,12 @@ namespace Novell.iFolder
 			}
 
 			// Make sure the node doesn't already exist.
-			iFolderNode ifNode =  GetiFolderNodeByPath(path);
+			iFolderNode ifNode = GetiFolderNodeByPath(path);
 			if(ifNode == null)
 			{
-				Node parentNode = GetNodeForPath(Path.GetDirectoryName(path));
+				string parentPath = Path.GetDirectoryName(path);
+
+				Node parentNode = GetNodeForPath(parentPath);
 				if(parentNode != null)
 				{
 					// Create the node.
@@ -506,8 +513,9 @@ namespace Novell.iFolder
 				}
 				else
 				{
-					throw new ArgumentException("Path " + path + 
-											" is not in this iFolder!");
+					throw new ArgumentException("Path " + path +
+						" could not be added because the parent " + 
+						parentPath + " was not in the iFolder");
 				}
 			}
 

@@ -26,6 +26,8 @@ using System.Collections;
 using System.IO;
 using Simias.Storage;
 using Simias.Agent;
+using Simias;
+using Novell.AddressBook;
 
 namespace Novell.iFolder
 {
@@ -45,7 +47,9 @@ namespace Novell.iFolder
 		/// </summary>
 		//private string	storePath = null;
 
-		private Store		store = null;
+		internal Store						store = null;
+		internal Novell.AddressBook.Manager	abMan = null;
+		internal Configuration				config = null;
 
 		//private	Collection	iFolderCollection = null;
 		private	IEnumerator	storeEnum = null;
@@ -55,28 +59,12 @@ namespace Novell.iFolder
 
 
 #region Constructors
-		internal iFolderManager(Store store)
+		internal iFolderManager(Configuration config, Store store, 
+				Novell.AddressBook.Manager manager)
 		{
+			this.config = config;
 			this.store = store;
-		}
-#endregion
-
-
-
-
-#region Private Methods
-		private static Store GetStore()
-		{
-			Store	store = Store.Connect();
-
-			return(store);
-		}
-
-
-
-		private static Store GetStore(Uri location)
-		{
-			return Store.Connect(location);
+			this.abMan = manager;
 		}
 #endregion
 
@@ -107,10 +95,14 @@ namespace Novell.iFolder
 			iFolderManager	manager = null;
 			Store	store;
 
-			store = iFolderManager.GetStore(location);
+			Configuration config = new Configuration(location.AbsolutePath);
+			store = Store.Connect(config);
 			if(store != null)
 			{
-				manager = new iFolderManager(store);
+				Novell.AddressBook.Manager abMan = 
+						Novell.AddressBook.Manager.Connect(location);
+
+				manager = new iFolderManager(config, store, abMan);
 				if(manager != null)
 				{
 					//	iFolderManager.storeUserName = userName;
@@ -142,10 +134,14 @@ namespace Novell.iFolder
 			Store	store;
 			//			string	userName = "test";
 
-			store = iFolderManager.GetStore();
+			Configuration config = new Configuration();
+			store = Store.Connect(config);
 			if(store != null)
 			{
-				manager = new iFolderManager(store);
+				Novell.AddressBook.Manager abMan = 
+					Novell.AddressBook.Manager.Connect(store.StorePath);
+
+				manager = new iFolderManager(config, store, abMan);
 				if(manager != null)
 				{
 					//	iFolderManager.storeUserName = userName;
@@ -160,6 +156,26 @@ namespace Novell.iFolder
 
 
 #region Public Methods
+		/// <summary>
+		/// Gets the current iFolder in the store.
+		/// </summary>
+		/// <returns>
+		/// An <see cref="iFolder"/> for the current iFolder.
+		/// </returns>
+		/// <remarks>
+		/// This property returns the current element in the enumerator.
+		/// </remarks>
+		public Novell.AddressBook.Manager AddressBookManager
+		{
+			get
+			{
+				return abMan;
+			}
+		}
+
+
+
+
 		/// <summary>
 		/// Creates an iFolder located at a specified directory.
 		/// </summary>
@@ -182,7 +198,7 @@ namespace Novell.iFolder
 				if(!CanBeiFolder(path))
 					throw new ApplicationException("The path specified is either a parent or a child of an existing iFolder");
 
-				iFolder newiFolder= new iFolder(store);
+				iFolder newiFolder = new iFolder(store, abMan);
 				newiFolder.Create(path);
 				return (newiFolder);
 			}
@@ -216,7 +232,7 @@ namespace Novell.iFolder
 			{
 				try
 				{
-					iFolder newiFolder = new iFolder(store);
+					iFolder newiFolder = new iFolder(store, abMan);
 					newiFolder.Create(name, path);
 					return(newiFolder);
 				}
@@ -389,7 +405,7 @@ namespace Novell.iFolder
 		{
 			try
 			{
-				iFolder tmpiFolder = new iFolder(this.store);
+				iFolder tmpiFolder = new iFolder(this.store, this.abMan);
 				tmpiFolder.Load(this.store, id);
 				return(tmpiFolder);
 			}
@@ -425,7 +441,7 @@ namespace Novell.iFolder
 								(String.Compare(path, documentRoot.LocalPath, true) == 0)) ||
 							path.Equals(documentRoot.LocalPath))
 					{
-						iFolder ifolder = new iFolder(store);
+						iFolder ifolder = new iFolder(store, abMan);
 						ifolder.Load(store, (string)c.Properties.GetSingleProperty(Property.CollectionID).Value);
 						return ifolder;
 					}
