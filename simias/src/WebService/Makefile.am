@@ -27,11 +27,9 @@ endif
 install-exec-local: SimiasWebService.dll
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) SimiasWebService.dll $(DEBUG_FILES) $(DESTDIR)$(libdir)
-endif
     
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f SimiasWebService.dll $(DEBUG_FILES)
-endif
 	
 CLEAN_FILES = SimiasWebService.dll $(DEBUG_FILES) 
 
