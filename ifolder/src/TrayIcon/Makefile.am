@@ -1,5 +1,7 @@
 SUBDIRS =       libtrayicon
 
+EXTRA_DIST = $(srcdir)/libtrayicon-sources.xml $(srcdir)/Egg.metadata
+
 ASSEMBLY =	TrayIcon
 LIBRARY =	$(ASSEMBLY).dll
 API =		libtrayicon-api.xml
@@ -35,7 +37,8 @@ $(API):
 	PERLLIB=/usr/share/perl5 gapi-parser libtrayicon-sources.xml
 
 install-exec-local: $(LIBRARY)
-	install $(LIBRARY) $(prefix)/lib
+	$(mkinstalldirs) $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) $(LIBRARY) $(DESTDIR)$(libdir)
 
 uninstall-local:
 	rm -f $(prefix)/lib/$(LIBRARY)

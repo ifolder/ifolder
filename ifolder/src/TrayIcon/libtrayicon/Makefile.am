@@ -1,6 +1,8 @@
 TRAY_ICON_CFLAGS = $(GDK20_CFLAGS) $(ATK_CFLAGS)
 TRAY_ICON_LIBS = $(GDK20_LIBS) $(ATK_LIBS)
 
+EXTRA_DIST = $(srcdir)/eggtrayicon.h
+
 INCLUDES = \
   $(TRAY_ICON_CFLAGS) \
   -I$(top_srcdir)/libegg/util \
