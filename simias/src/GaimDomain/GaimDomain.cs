@@ -145,6 +145,8 @@ namespace Simias.Gaim
 			Store store = Store.GetStore();
 			try
 			{
+				Uri localUri = Manager.LocalServiceUrl;
+
 				//
 				// Verify the local Rendezvous user exists in the local database
 				//
@@ -194,6 +196,23 @@ namespace Simias.Gaim
 							Access.Rights.Admin );
 
 					member.IsOwner = true;
+
+					// Add on the SimiasURL so that the Location Provider can determine the
+					// POBoxUrl for the Gaim Domain
+					if (localUri == null)
+					{
+						localUri = Manager.LocalServiceUrl;
+						if (localUri != null)
+						{
+							Simias.Storage.Property p = new Property("Gaim:SimiasURL", localUri.ToString());
+							p.LocalProperty = true;
+							member.Properties.AddProperty(p);
+						}
+						else
+						{
+							log.Debug("Manager.LocalServiceUrl returned NULL!");
+						}
+					}
 
 					rDomain.Commit( new Node[] { rDomain, member } );
 
@@ -773,7 +792,6 @@ namespace Simias.Gaim
 			if (buddies == null) return;
 
 			log.Debug("Synching only iFolder Plugin-enabled Buddies");
-
 
 			foreach (GaimBuddy buddy in buddies)
 			{
