@@ -36,7 +36,7 @@ install-exec-local: CollectionStore.dll
 	$(INSTALL_PROGRAM) CollectionStore.dll ../../external/SecureChannelSinks/*.dll $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f CollectionStore.dll CollectionStoreTests.test.xml $(NUNIT_TESTS); rm -rf CollectionStoreTestDir .cstore
+	cd $(DESTDIR)$(bindir); rm -f CollectionStore.dll CollectionStoreTests.test.xml Novell.Security.SecureSink*.dll $(NUNIT_TESTS); rm -rf CollectionStoreTestDir .cstore
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
