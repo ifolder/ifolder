@@ -70,48 +70,6 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// iFolder object representing the iFolder created
 		/// </returns>
-		[WebMethod(Description="Prove Brady is Wrong", EnableSession=true)]
-		[SoapRpcMethod]
-		public bool IsBradyWrong(string message)
-		{
-			int count;
-
-			if(Session["count"] == null)
-				count = 0;
-			else
-				count = (int)Session["count"];
-
-			count++;
-
-/*			HttpSessionState hss = Session;
-
-			if( (hss != null) && (hss.IsNewSession) )
-			{
-				Console.WriteLine("Hey, this is a new session!");	
-			}
-			else
-				Console.WriteLine("Either session is null, or it aint");
-*/
-
-			Console.WriteLine("This client has called me {0} times", count);
-
-			Session["count"] = count;
-
-			return true;
-		}
-
-
-
-
-		/// <summary>
-		/// WebMethod that creates and iFolder collection.
-		/// </summary>
-		/// <param name = "Path">
-		/// The full path to the iFolder on the local system
-		/// </param>
-		/// <returns>
-		/// iFolder object representing the iFolder created
-		/// </returns>
 		[WebMethod(Description="Create An iFolder. This will create an iFolder using the path specified.  The Path must exist or an exception will be thrown.")]
 		[SoapRpcMethod]
 		public iFolder CreateiFolder(string Path)
