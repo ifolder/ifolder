@@ -61,7 +61,8 @@ namespace Novell.iFolder
 		[Glade.Widget] internal Gtk.MenuItem	CloseMenuItem;
 
 		private ListStore			iFolderTreeStore;
-		iFolderManager				manager;
+//		iFolderManager				manager;
+		iFolderWebService			iFolderWS;
 		Pixbuf						iFolderPixBuf;
 		Pixbuf						CollisionPixBuf;
 		internal Configuration		config;
@@ -151,6 +152,9 @@ namespace Novell.iFolder
 
 		public int Run()
 		{
+			// initialize the web service
+			iFolderWS = new iFolderWebService();
+
 			InitGlade();
 			PopulateWidgets();
 
@@ -180,7 +184,7 @@ namespace Novell.iFolder
 				Gtk.TreeIter iter)
 		{
 			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
-			((CellRendererText) cell).Text = ifolder.LocalPath;
+			((CellRendererText) cell).Text = ifolder.UnManagedPath;
 		}
 
 		private void iFolderStatusCellTextDataFunc(
@@ -188,10 +192,10 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
-			if(ifolder.HasCollisions())
-				((CellRendererText) cell).Text = "Has File Conflicts";
-			else
+//			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
+//			if(ifolder.HasCollisions())
+//				((CellRendererText) cell).Text = "Has File Conflicts";
+//			else
 				((CellRendererText) cell).Text = "OK";
 		}
 
@@ -207,16 +211,16 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
-			if(ifolder.HasCollisions())
-				((CellRendererPixbuf) cell).Pixbuf = CollisionPixBuf;
-			else
+//			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
+//			if(ifolder.HasCollisions())
+//				((CellRendererPixbuf) cell).Pixbuf = CollisionPixBuf;
+//			else
 				((CellRendererPixbuf) cell).Pixbuf = iFolderPixBuf;
 		}
 
 		private void PopulateWidgets()
 		{
-			manager = iFolderManager.Connect();
+//			manager = iFolderManager.Connect();
 			on_refreshiFolders(null, null);
 
 			if(config == null)
@@ -230,7 +234,7 @@ namespace Novell.iFolder
 
 			StartupCheckButton.Active = true;;
 			AutoSyncCheckButton.Active = true;
-			RefreshSpinButton.Value = manager.DefaultRefreshInterval;
+//			RefreshSpinButton.Value = manager.DefaultRefreshInterval;
 
 			CreateMenuItem.Sensitive = true;
 			ShareMenuItem.Sensitive = false;
@@ -244,7 +248,9 @@ namespace Novell.iFolder
 		{
 			iFolderTreeStore.Clear();
 
-			foreach(iFolder ifolder in manager)
+			iFolder[] iFolderArray = iFolderWS.GetAlliFolders();
+
+			foreach(iFolder ifolder in iFolderArray)
 			{
 				iFolderTreeStore.AppendValues(ifolder);
 			}
@@ -273,6 +279,7 @@ namespace Novell.iFolder
 				UploadLabel.Text = "N/A";
 				SyncFilesLabel.Text = "N/A";
 
+/*
 				if(	(ifolder != null) && (ifolder.HasCollisions()) )
 				{
 					ConflictMenuItem.Sensitive = true;
@@ -281,6 +288,8 @@ namespace Novell.iFolder
 				{
 					ConflictMenuItem.Sensitive = false;
 				}
+*/
+					ConflictMenuItem.Sensitive = false;
 				ShareMenuItem.Sensitive = true;
 				OpenMenuItem.Sensitive = true;
 				RevertMenuItem.Sensitive = true;
@@ -326,7 +335,7 @@ namespace Novell.iFolder
 
 		private void on_RefreshSpinButton_changed(object o, EventArgs args)
 		{
-			manager.DefaultRefreshInterval = (int)RefreshSpinButton.Value;
+//			manager.DefaultRefreshInterval = (int)RefreshSpinButton.Value;
 		}
 
 		[GLib.ConnectBefore]
@@ -383,6 +392,7 @@ namespace Novell.iFolder
 
 						ifMenu.Append(new SeparatorMenuItem());
 
+/*
 						if(	(ifolder != null) && (ifolder.HasCollisions()) )
 						{
 							MenuItem item_resolve = 
@@ -393,6 +403,7 @@ namespace Novell.iFolder
 						
 							ifMenu.Append(new SeparatorMenuItem());
 						}
+*/
 
 						MenuItem item_properties = 
 							new MenuItem ("Properties");
@@ -435,10 +446,12 @@ namespace Novell.iFolder
 				tSelect.GetSelected(out tModel, out iter);
 				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
 
+/*
 				ConflictResolver conres = new ConflictResolver();
 				conres.iFolder = ifolder;
 				conres.TransientFor = ApplicationPropDialog;
 				conres.Run();
+*/
 			}
 		}
 
@@ -463,7 +476,7 @@ namespace Novell.iFolder
 					process.StartInfo.CreateNoWindow = true;
 					process.StartInfo.UseShellExecute = false;
 					process.StartInfo.FileName = "nautilus";
-					process.StartInfo.Arguments = ifolder.LocalPath;
+					process.StartInfo.Arguments = ifolder.UnManagedPath;
 					process.Start();
 				}
 				catch(Exception e)
@@ -492,12 +505,13 @@ namespace Novell.iFolder
 
 				tSelect.GetSelected(out tModel, out iter);
 				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
-
+/*
 				CollectionProperties colProp = new CollectionProperties();
 				colProp.TransientFor = ApplicationPropDialog;
 				colProp.Collection = ifolder;
 				colProp.ActiveTag = 1;
 				colProp.Run();
+*/
 
 /*				iFolderProperties ifProp = new iFolderProperties();
 				ifProp.TransientFor = ApplicationPropDialog;
@@ -518,23 +532,20 @@ namespace Novell.iFolder
 
 				tSelect.GetSelected(out tModel, out iter);
 				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+/*
 				try
 				{
 					CollectionProperties colProp = new CollectionProperties();
 					colProp.TransientFor = ApplicationPropDialog;
 					colProp.Collection = ifolder;
 					colProp.Run();
-/*					iFolderProperties ifProps = new iFolderProperties();
-					ifProps.CurrentiFolder = ifolder;
-					ifProps.TransientFor = ApplicationPropDialog;
-					ifProps.Run();
-*/
 				}
 				catch(Exception e)
 				{
 					Console.WriteLine(e);
 					Console.WriteLine("Unable to Show Properties");
 				}
+*/
 			}
 		}
 
@@ -554,7 +565,8 @@ namespace Novell.iFolder
 			{
 				try
 				{
-					iFolder newiFolder = manager.CreateiFolder(fs.Filename);
+    				iFolder newiFolder = 
+						iFolderWS.CreateLocaliFolder(fs.Filename);
 					iFolderTreeStore.AppendValues(newiFolder);
 
 					if(IntroDialog.UseDialog())
@@ -596,8 +608,9 @@ namespace Novell.iFolder
 				{
 					try
 					{
-						ifolder.Delete();
-						ifolder.Commit();
+    					iFolderWS.DeleteiFolder(ifolder.ID);
+						//ifolder.Delete();
+						//ifolder.Commit();
 						iFolderTreeStore.Remove(ref iter);
 					}
 					catch(Exception e)
@@ -679,7 +692,7 @@ namespace Novell.iFolder
 
 					tSelect.GetSelected(out tModel, out iter);
 					iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
-
+/*
 					if(	(ifolder != null) && (ifolder.HasCollisions()) )
 					{
 						ConflictMenuItem.Sensitive = true;
@@ -688,6 +701,8 @@ namespace Novell.iFolder
 					{
 						ConflictMenuItem.Sensitive = false;
 					}
+*/
+					ConflictMenuItem.Sensitive = false;
 
 					ShareMenuItem.Sensitive = true;
 					OpenMenuItem.Sensitive = true;

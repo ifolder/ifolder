@@ -62,10 +62,12 @@ namespace Novell.iFolder
 		static Gtk.EventBox eBox;
 		static TrayIcon tIcon;
 		static Configuration conf;
-		static Simias.Service.Manager sManager = null;
+//		static Simias.Service.Manager sManager = null;
 		static Gtk.ThreadNotify ServicesStateNotify;
 		static ServiceStates serviceState;
 //		static Mutex TrayMutex;
+
+		static iFolderWebService ifws;
 
 		public static void Main (string[] args)
 		{
@@ -82,16 +84,14 @@ namespace Novell.iFolder
 			Gnome.Program program =
 				new Program("iFolder", "0.10.0", Modules.UI, args);
 			
-//			Application.Init();
-
 			serviceState = ServiceStates.stopped;
+			SimiasLogManager.Configure(conf);
 //			TrayMutex = new Mutex();
 
 			// This is my huge try catch block to catch any exceptions
 			// that are not caught
 			try
 			{
-
 				tIcon = new TrayIcon("iFolder");
 
 				eBox = new EventBox();
@@ -115,8 +115,8 @@ namespace Novell.iFolder
 
 				tIcon.ShowAll();	
 
-				iFolderManager.CreateDefaultExclusions(conf);
-				sManager = new Simias.Service.Manager(conf);
+//				iFolderManager.CreateDefaultExclusions(conf);
+//				sManager = new Simias.Service.Manager(conf);
 
 				ServicesStateNotify = 
 				new Gtk.ThreadNotify(new Gtk.ReadyEvent(ServiceStateChange));
@@ -131,13 +131,15 @@ namespace Novell.iFolder
 			}
 			catch(Exception bigException)
 			{
-				if(sManager != null)
-					sManager.StopServices();
+//				if(sManager != null)
+//					sManager.StopServices();
 
-				CrashReport cr = new CrashReport();
-				cr.CrashText = bigException.ToString();
-				cr.Run();
-				sManager.WaitForServicesStopped();
+				iFolderCrashDialog cd = new iFolderCrashDialog(bigException);
+				cd.Run();
+				cd.Hide();
+				cd.Destroy();
+				cd = null;
+//				sManager.WaitForServicesStopped();
 				Application.Quit();
 			}
 		}
@@ -162,13 +164,21 @@ namespace Novell.iFolder
 		{
 			SetServiceState(ServiceStates.starting);
 
-			SimiasLogManager.Configure(conf);
+			try
+			{
+				ifws = new iFolderWebService();
+				// TODO: change this to some kind of init code
+				ifws.IsiFolder("/initiFolder");
+			}
+			catch(Exception e)
+			{
+			}
 
-			SyncProperties props = new SyncProperties(conf);
-			props.LogicFactory = typeof(SynkerA);
+//			SyncProperties props = new SyncProperties(conf);
+//			props.LogicFactory = typeof(SynkerA);
 
-			sManager.StartServices();
-			sManager.WaitForServicesStarted();
+//			sManager.StartServices();
+//			sManager.WaitForServicesStarted();
 
 			SetServiceState(ServiceStates.started);
 			ServicesStateNotify.WakeupMain();
@@ -176,12 +186,12 @@ namespace Novell.iFolder
 
 		static private void StopServices()
 		{
-			sManager.WaitForServicesStarted();
+//			sManager.WaitForServicesStarted();
 
 			SetServiceState(ServiceStates.stopping);
 
-			sManager.StopServices();
-			sManager.WaitForServicesStopped();
+//			sManager.StopServices();
+//			sManager.WaitForServicesStopped();
 
 			SetServiceState(ServiceStates.stopped);
 			ServicesStateNotify.WakeupMain();
@@ -197,8 +207,23 @@ namespace Novell.iFolder
 					break;
 				default:
 				case ServiceStates.started:
+				{
+					if(ifws == null)
+					{
+						iFolderMsgDialog mDialog = 
+							new iFolderMsgDialog(Gtk.Stock.DialogError,
+							"iFolder Connect Error",
+							"iFolder is Unable to locate the Simias Process",
+							"The Simias process must be running in order for iFolder to run.  Start the Simias process and try again");
+						mDialog.Run();
+						mDialog.Hide();
+						mDialog.Destroy();
+						mDialog = null;
+					}
+
 					gAppIcon.Pixbuf = ifNormalPixbuf;
 					break;
+				}
 				case ServiceStates.stopping:
 					gAppIcon.Pixbuf = ifStoppingPixbuf;
 					break;
@@ -339,7 +364,9 @@ namespace Novell.iFolder
 
 		static void show_server_info(object o, EventArgs args)
 		{
-			SimiasLogManager.Configure(conf);
+//			SimiasLogManager.Configure(conf);
+/*
+CRG: WebService Fixup
 			ServerInfoDialog sid = new ServerInfoDialog();
 			int rc = sid.Run();
 			if(rc == -5)
@@ -348,6 +375,7 @@ namespace Novell.iFolder
 				DomainAgent da = new DomainAgent(conf);
 				da.Attach(sid.Address, sid.Name, sid.Password);
 			}
+*/
 		}
 
 		static void show_help(object o, EventArgs args)
@@ -362,18 +390,30 @@ namespace Novell.iFolder
 
 		static void show_properties(object o, EventArgs args)
 		{
+			if(ifws != null)
+			{
+				iFolderWindow win;
+
+				win = new iFolderWindow(ifws);
+				win.ShowAll();
+			}
+/*
 			ApplicationProperties propDialog;
 
 			propDialog = new ApplicationProperties();
 			propDialog.Run();
+*/
 		}
 
 		static void show_rbbrowser(object o, EventArgs args)
 		{
+/*
+CRG: WebService Fixup
 			ReunionBrowser browser;
 
 			browser = new ReunionBrowser();
 			browser.ShowAll();
+*/
 		}
 		
 		static void show_messages(object o, EventArgs args)
@@ -386,10 +426,13 @@ namespace Novell.iFolder
 
 		static void show_colbrowser(object o, EventArgs args)
 		{
+/*
+CRG: WebService Fixup
 			CollectionBrowser browser;
 
 			browser = new CollectionBrowser();
 			browser.ShowAll();
+*/
 		}
 
 		static void show_AddrBook(object o, EventArgs args)

@@ -111,8 +111,8 @@ namespace Novell.iFolder
 		public void on_ShareButton_clicked(object obj, EventArgs args)
 		{
 			iFolder ifolder = null;
+/*
 			iFolderManager ifmgr;
-
 			ifmgr = iFolderManager.Connect();
 
 			if(ifmgr.IsiFolder(path))
@@ -125,7 +125,7 @@ namespace Novell.iFolder
 				colProp.ActiveTag = 1;
 				colProp.Run();
 			}
-
+*/
 
 
 /*		
