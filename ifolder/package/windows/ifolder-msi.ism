@@ -1861,7 +1861,7 @@
 		<col def="I2">Encoded</col>
 		<col def="S0">Comment</col>
 		<col def="I4">TimeStamp</col>
-		<row><td>COMPANY_NAME</td><td>1033</td><td>Novell, Inc.</td><td>0</td><td/><td>-1424454832</td></row>
+		<row><td>COMPANY_NAME</td><td>1033</td><td>Novell, Inc.</td><td>0</td><td/><td>-241597490</td></row>
 		<row><td>DN_AlwaysInstall</td><td>1033</td><td>Always Install</td><td>0</td><td>	</td><td>479664453</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_COLOR</td><td>1033</td><td>The color settings of your system are not adequate for running [ProductName].</td><td>0</td><td/><td>479664453</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_OS</td><td>1033</td><td>[ProductName] requires that your computer is running Windows 2000 or Windows XP or Windows 2003 Server</td><td>0</td><td/><td>1167632430</td></row>
@@ -2398,7 +2398,7 @@
 		<row><td>IDS__TargetReq_DESC_PROCESSOR</td><td>1033</td><td>The processor is not adequate for running [ProductName].</td><td>0</td><td/><td>479664453</td></row>
 		<row><td>IDS__TargetReq_DESC_RAM</td><td>1033</td><td>The amount of RAM is not adequate for running [ProductName].</td><td>0</td><td/><td>479664453</td></row>
 		<row><td>IDS__TargetReq_DESC_RESOLUTION</td><td>1033</td><td>The screen resolution is not adequate for running [ProductName].</td><td>0</td><td/><td>479664453</td></row>
-		<row><td>ID_STRING1</td><td>1033</td><td>http://www.ifolder.com</td><td>0</td><td/><td>-1424454832</td></row>
+		<row><td>ID_STRING1</td><td>1033</td><td>http://www.ifolder.com</td><td>0</td><td/><td>-241597490</td></row>
 		<row><td>ID_STRING10</td><td>1033</td><td>iFolder Invitation</td><td>0</td><td/><td>1394129970</td></row>
 		<row><td>ID_STRING11</td><td>1033</td><td>INVITA~1|Invitation Wizard</td><td>0</td><td/><td>1394111922</td></row>
 		<row><td>ID_STRING12</td><td>1033</td><td>STARTI~1|Start iFolder</td><td>0</td><td/><td>1394136754</td></row>
@@ -2555,7 +2555,7 @@
 		<row><td>ISSelfRegisterFinalize</td><td/><td>6601</td><td/><td/></row>
 		<row><td>ISUnSelfRegisterFiles</td><td/><td>2202</td><td/><td/></row>
 		<row><td>InstallFiles</td><td/><td>4000</td><td>InstallFiles</td><td/></row>
-		<row><td>InstallFinalize</td><td/><td>6600</td><td>InstallFinalize</td><td/></row>
+		<row><td>InstallFinalize</td><td/><td>6410</td><td>InstallFinalize</td><td/></row>
 		<row><td>InstallInitialize</td><td/><td>1501</td><td>InstallInitialize</td><td/></row>
 		<row><td>InstallODBC</td><td/><td>5400</td><td>InstallODBC</td><td/></row>
 		<row><td>InstallServices</td><td>VersionNT</td><td>5800</td><td>InstallServices</td><td/></row>
@@ -2594,7 +2594,7 @@
 		<row><td>RemoveODBC</td><td/><td>2400</td><td>RemoveODBC</td><td/></row>
 		<row><td>RemoveRegistryValues</td><td/><td>2600</td><td>RemoveRegistryValues</td><td/></row>
 		<row><td>RemoveShortcuts</td><td/><td>3200</td><td>RemoveShortcuts</td><td/></row>
-		<row><td>ScheduleReboot</td><td>ISSCHEDULEREBOOT</td><td>6410</td><td>ScheduleReboot</td><td/></row>
+		<row><td>ScheduleReboot</td><td/><td>6405</td><td>ScheduleReboot</td><td/></row>
 		<row><td>SelfRegModules</td><td/><td>5600</td><td>SelfRegModules</td><td/></row>
 		<row><td>SelfUnregModules</td><td/><td>2200</td><td>SelfUnregModules</td><td/></row>
 		<row><td>SetARPINSTALLLOCATION</td><td>Not Installed</td><td>1010</td><td>SetARPINSTALLLOCATION</td><td/></row>
