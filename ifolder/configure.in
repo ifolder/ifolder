@@ -234,7 +234,8 @@ case $IFOLDER_OS in
 		PKG_CONFIG_CONFLICTS=""
 
 		dnl Intl
-		ALL_LINGUAS="pt fr it de es ru ja"
+		ALL_LINGUAS="pt_BR"
+		#ALL_LINGUAS="pt_BR fr it de es ru ja"
 		AM_GNU_GETTEXT_VERSION(0.10.40)
 		AM_GNU_GETTEXT(external)
     ;;
