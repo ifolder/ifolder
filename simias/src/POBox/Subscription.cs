@@ -675,6 +675,22 @@ namespace Simias.POBox
 		}
 
 		/// <summary>
+		/// Accept the subscription on the slave side.
+		/// </summary>
+		/// <param name="store">The store that the POBox belongs to.</param>
+		/// <param name="disposition">The disposition to set on the subscription.</param>
+		public void Accept(Store store, SubscriptionDispositions disposition)
+		{
+			Collection c = store.GetCollectionByID(this.Properties.GetSingleProperty("CollectionId").ToString());
+
+			SubscriptionState = SubscriptionStates.Replied;
+			SubscriptionDisposition = disposition;
+			Member member = c.GetCurrentMember();
+			FromName = member.Name;
+			FromIdentity = member.UserID;
+		}
+
+		/// <summary>
 		/// Accept the subscription on the master side
 		/// </summary>
 		public void Accept(Store store, Access.Rights rights)
