@@ -81,10 +81,11 @@ installcheck-local: install $(NUNIT_TESTS)
 CLEAN_FILES = iFolderShell.dll iFolderComponent.tlb iFolderComponent.dll $(iFolderShell_OBJFILES) iFolderShell/ifoldercomponent.tlh iFolderShell/ifoldercomponent.tli $(NUNIT_TESTS) iFolderComponent.doc.xml iFolderComponentTests.test.xml iFolderShell.exp iFolderShell.lib
 
 clean-local:
-	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
+	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
     
-distclean-local: clean
+distclean-local:
+	rm -rf $(COMMON_DISTCLEAN_FILES)
 
 maintainer-clean-local:
-	rm -f Makefile.in
+	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
 

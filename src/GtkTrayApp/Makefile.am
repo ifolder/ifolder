@@ -58,11 +58,11 @@ CLEAN_FILES = iFolderApp.exe iFolderApp.doc.xml InvitationWizard.exe InvitationW
 clean-local:
 	rm -rf *.dbg *.exe $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
     
-distclean-local: clean
+distclean-local:
 	rm -f ifolder
 	rm -f invitationwizard
 	rm -f collectionbrowser
 
 maintainer-clean-local:
-	rm -f Makefile.in
+	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
 
