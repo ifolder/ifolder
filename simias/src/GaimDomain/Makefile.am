@@ -24,7 +24,7 @@ Simias.Gaim.dll: $(GaimDomain_CSFILES) $(GaimDomain_RESOURCES)
 	
 if DEBUG
 if WINDOWS
-DEBUG_CHECK_FILES = Simias.GaimDomain.pdb
+DEBUG_CHECK_FILES = Simias.Gaim.pdb
 endif
 endif
 
