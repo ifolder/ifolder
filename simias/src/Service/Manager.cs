@@ -111,6 +111,7 @@ namespace Simias.Service
 		private void installDefaultServices()
 		{
 			Install(new ProcessServiceCtl(conf, "Simias Service", "EventService.exe"));
+			Install(new ThreadServiceCtl(conf, "Simias Sync Service", "SyncManager", "Simias.Sync.SyncManagerService"));
 			Install(new ThreadServiceCtl(conf, "File Watcher Service", "FsWatcher", "Simias.Event.FsWatcher"));
 		}
 

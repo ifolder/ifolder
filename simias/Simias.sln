@@ -190,6 +190,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessServiceTest", "src\S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceTests", "src\Service\ServiceTests\ServiceTests.csproj", "{1B08B496-14CB-4361-AE3B-C2384D62B1D0}"
 	ProjectSection(ProjectDependencies) = postProject
+		{7C3A9242-E1EF-43F2-8297-4C1C98892946} = {7C3A9242-E1EF-43F2-8297-4C1C98892946}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreadServiceTest", "src\Service\ThreadServiceTest\ThreadServiceTest.csproj", "{95B0FA25-F255-447D-8078-A67A28E91254}"

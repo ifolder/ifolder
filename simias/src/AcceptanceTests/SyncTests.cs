@@ -32,6 +32,7 @@ using Simias;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.Invite;
+using Simias.Service;
 
 namespace Simias.Tests
 {
