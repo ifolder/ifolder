@@ -75,7 +75,7 @@ namespace Simias.POBox
 			subscriber.NodeDeleted += new NodeEventHandler(OnPOBoxDeleted);
 
 			// validate a default "Workgroup" PO Box
-			Debug.Assert(POBox.GetPOBox(store, Storage.Domain.WorkGroupDomainID) != null);
+			POBox.GetPOBox(store, Storage.Domain.WorkGroupDomainID);
 		}
 		/// <summary>
 		/// Start the PO Box manager.
