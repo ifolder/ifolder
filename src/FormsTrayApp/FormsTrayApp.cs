@@ -37,7 +37,6 @@ using Novell.CustomUIControls;
 using Simias.Client;
 using Simias.Client.Authentication;
 using Simias.Client.Event;
-using Novell.iFolder.Install;
 
 namespace Novell.FormsTrayApp
 {

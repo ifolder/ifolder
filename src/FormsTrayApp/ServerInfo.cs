@@ -30,7 +30,6 @@ using System.IO;
 using System.Net;
 
 using Novell.iFolderCom;
-using Novell.iFolder.Install;
 using Simias.Client;
 using Simias.Client.Authentication;
 
