@@ -1,3 +1,4 @@
+EXTRA_DIST = en
 
 install-exec-local: 
 	$(mkinstalldirs) $(DESTDIR)$(helpdir)
