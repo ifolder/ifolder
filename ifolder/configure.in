@@ -344,14 +344,9 @@ else
     test -d "$NDOC_PATH" || AC_MSG_ERROR([$NDOC_PATH does not exist])
     NDOC_PATH=`cd "$NDOC_PATH" && pwd`
 fi
-if test $NDOC_PATH; then
+if test -n "$NDOC_PATH"; then
     if test -e "$NDOC_PATH/NDocConsole.exe"; then
         NDOC_CMD="$NDOC_PATH/NDocConsole.exe"
-    else
-        find_array=(`find "$NDOC_PATH" -name NDocConsole.exe`)
-        if test `basename "${find_array[[0]]}"` = "NDocConsole.exe"; then
-            NDOC_CMD="${find_array[[0]]}"
-        fi
     fi
     test -e "$NDOC_CMD" || AC_MSG_ERROR([NDocConsole.exe not found in $NDOC_PATH])
 fi
