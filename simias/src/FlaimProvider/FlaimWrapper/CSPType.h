@@ -151,7 +151,7 @@ public:
 		{
 			nChars -= len;
 			pBuffer += len;
-			if ((len = flmstrcpy(pBuffer, m_pName, nChars)) != 0)
+			if ((len = flmstrcpyesc(pBuffer, m_pName, nChars)) != 0)
 			{
 				nChars -= len;
 				pBuffer += len;

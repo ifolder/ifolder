@@ -939,7 +939,7 @@ RCODE CSPStore::GetObject(FLMUNICODE *pProperty, FLMUNICODE *pValue, int* pnChar
 }
 
 
-RCODE CSPStore::Search(FLMUNICODE *pCollectionId, FLMUNICODE *pProperty, FLMINT op, FLMUNICODE *pValue, FLMUNICODE* pType, FLMUINT *pCount, CSPObjectIterator **ppIterator)
+RCODE CSPStore::Search(FLMUNICODE *pCollectionId, FLMUNICODE *pProperty, FLMINT op, FLMUNICODE *pValue, FLMUNICODE* pType, FLMBOOL caseSensitive, FLMUINT *pCount, CSPObjectIterator **ppIterator)
 {
 	RCODE				rc = FERR_OK;
 	HFCURSOR			cursor = 0;
@@ -959,6 +959,10 @@ RCODE CSPStore::Search(FLMUNICODE *pCollectionId, FLMUNICODE *pProperty, FLMINT 
 			rc = FlmCursorInit(m_hFlaim, FLM_DATA_CONTAINER, &cursor);
 			if (RC_OK(rc))
 			{
+				if (caseSensitive)
+				{
+					rc = FlmCursorSetMode(cursor, FLM_CASE | FLM_WILD);
+				}
 				rc = FlmCursorAddField(cursor, fieldId, 0);
 				if (RC_OK(rc))
 				{

@@ -185,6 +185,7 @@ extern FLMUNICODE *CSPTypeTimeSpanString;
 extern FLMUNICODE *CSPTypeRelationshipString;
 
 extern int flmstrcpy(FLMUNICODE *pDest, FLMUNICODE *pSrc, int size);
+extern int flmstrcpyesc(FLMUNICODE *pDest, FLMUNICODE *pSrc, int size);
 extern void printflmstring(FLMUNICODE* pString);
 extern FLMUNICODE* flmstrstr(FLMUNICODE* s1, FLMUNICODE* s2);
 extern FLMUINT	CSPTypeToFlaimTypeArray[];
@@ -246,7 +247,7 @@ public:
 	void AbortTrans();
 	RCODE EndTrans();
 	RCODE GetObject(FLMUNICODE *pProperty, FLMUNICODE *pValue, int* pnChars, FLMUNICODE *pBuffer);
-	RCODE Search(FLMUNICODE *pCollectionId, FLMUNICODE *pProperty, FLMINT op, FLMUNICODE *pValue, FLMUNICODE *pType, FLMUINT *pCount, CSPObjectIterator **ppIterator);
+	RCODE Search(FLMUNICODE *pCollectionId, FLMUNICODE *pProperty, FLMINT op, FLMUNICODE *pValue, FLMUNICODE *pType, FLMBOOL caseSensitive, FLMUINT *pCount, CSPObjectIterator **ppIterator);
 	RCODE DeleteObject(FLMUNICODE *pId, int *pFlmId);
 	RCODE RegisterField(FLMUNICODE *pFieldName, FLMUINT type, FLMUINT* pFieldId);
 	RCODE AddIndex(FLMUNICODE *pFieldName, FLMUINT fieldId);

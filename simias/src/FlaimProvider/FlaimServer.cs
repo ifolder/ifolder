@@ -99,13 +99,16 @@ namespace Simias.Storage.Provider.Flaim
 		internal FlaimError.Error DeleteStore()
 		{
 			FlaimError.Error rc = FlaimError.Error.FERR_FAILURE;
+			// Close the current handle.
+			CloseStore();
+
+			// Now force the other instances closed.
 			lock (handleTable)
 			{
 				foreach (IntPtr p in handleTable.Keys)
 				{
 					FWCloseStore(p);
 				}
-				
 				rc = FWDeleteStore(DbPath);
 				if (FlaimError.IsSuccess(rc))
 				{
@@ -127,6 +130,7 @@ namespace Simias.Storage.Provider.Flaim
 			{
 				FWCloseStore(pStore);
 				handleTable.Remove(pStore);
+				pHFlaim = IntPtr.Zero;
 			}
 		}
 
@@ -317,7 +321,7 @@ namespace Simias.Storage.Provider.Flaim
 
 
 		[DllImport("FlaimWrapper", CharSet=CharSet.Unicode)]
-		private static extern FlaimError.Error FWSearch(IntPtr pStore, string collectionId, string name, int op, string value, string type, out int count, out IntPtr pResultSet);
+		private static extern FlaimError.Error FWSearch(IntPtr pStore, string collectionId, string name, int op, string value, string type, int caseSensitive, out int count, out IntPtr pResultSet);
 		internal FlaimError.Error Search(Query query, out FlaimResultSet results)
 		{
 			FlaimError.Error rc = FlaimError.Error.FERR_OK;
@@ -327,6 +331,7 @@ namespace Simias.Storage.Provider.Flaim
 			IntPtr	pFlaimResults;
 			int		op = 0;
 			string sValue = query.Value;
+			int		caseSensitive = 0;
 			
 			switch (query.Operation)
 			{
@@ -358,14 +363,50 @@ namespace Simias.Storage.Provider.Flaim
 					op = 110;		// FLM_LE_OP
 					break;
 				case SearchOp.Exists:
-					op = 105;
-					sValue = "*";
+					switch (query.Type)
+					{
+						case Syntax.Boolean:
+							op = 112;
+							sValue = "0";
+							break;
+						case Syntax.Byte:
+						case Syntax.Char:
+						case Syntax.DateTime:
+						case Syntax.Int16:
+						case Syntax.Int32:
+						case Syntax.Int64:
+						case Syntax.SByte:
+						case Syntax.TimeSpan:
+						case Syntax.UInt16:
+						case Syntax.UInt32:
+						case Syntax.UInt64:
+							op = 111;		// FLM_GT_OP
+							sValue = Int64.MinValue.ToString();
+							break;
+							
+						case Syntax.Relationship:
+						case Syntax.String:
+						case Syntax.Uri:
+						case Syntax.XmlDocument:
+							op = 105;
+							sValue = "*";
+							break;
+
+						case Syntax.Single:
+							op = 111;		// FLM_GT_OP
+							sValue = Single.MinValue.ToString();
+							break;
+					}
+					break;
+				case SearchOp.CaseEqual:
+					caseSensitive = 1;
+					op = 103;		// FLM_EQ_OP
 					break;
 			}
 
 			if (op != 0)
 			{
-				rc = FWSearch(pStore, query.CollectionId, query.Property, op, sValue, query.Type.ToString(), out count, out pFlaimResults);
+				rc = FWSearch(pStore, query.CollectionId, query.Property, op, sValue, query.Type.ToString(), caseSensitive, out count, out pFlaimResults);
 				if (FlaimError.IsSuccess(rc))
 				{
 					results = new FlaimResultSet(pFlaimResults, count);
@@ -440,7 +481,6 @@ namespace Simias.Storage.Provider.Flaim
 				if (instance == null)
 				{
 					instance = new FlaimServer();
-					instance.AlreadyDisposed = false;
 				}
 				return instance;
 			}
@@ -460,6 +500,7 @@ namespace Simias.Storage.Provider.Flaim
 				IdQueue = (Queue)bf.Deserialize(rS);
 				rS.Close();
 				File.Delete(IdPath);
+				AlreadyDisposed = false;
 			}
 			catch
 			{
@@ -513,7 +554,9 @@ namespace Simias.Storage.Provider.Flaim
 		{
 			lock (typeof(FlaimServer))
 			{
-				return Flaim.DeleteStore();
+				FlaimError.Error rc = Flaim.DeleteStore();
+				flaim = null;
+				return rc;
 			}
 		}
 

@@ -576,17 +576,79 @@ CSPValue *CSPStoreObject::GetProperty(void *pvField)
 int flmstrcpy(FLMUNICODE *pDest, FLMUNICODE *pSrc, int size)
 {
 	int len = 0;
-	while (pSrc[len] != 0)
+	while (pSrc[len] != L'\0' && len < size)
 	{
+		pDest[len] = pSrc[len];
 		len++;
 	}
-	if (len < size)
+
+	if (pSrc[len] == 0)
 	{
-		f_unicpy(pDest, pSrc);
+        pDest[len] = L'\0';
 		return (len);
 	}
 	return (0);
 }
+
+int flmstrcpyesc(FLMUNICODE *pDest, FLMUNICODE *pSrc, int size)
+{
+	//return flmstrcpy(pDest, pSrc, size);
+
+	int dlen = 0;
+	int slen = 0;
+	while (pSrc[slen] != L'\0' && dlen < size)
+	{
+		switch (pSrc[slen])
+		{
+			case L'&':
+				pDest[dlen++] = L'&';
+				pDest[dlen++] = L'a';
+				pDest[dlen++] = L'm';
+				pDest[dlen++] = L'p';
+				pDest[dlen++] = L';';
+				break;
+			case L'<':
+				pDest[dlen++] = L'&';
+				pDest[dlen++] = L'l';
+				pDest[dlen++] = L't';
+				pDest[dlen++] = L';';
+				break;
+			case L'>':
+				pDest[dlen++] = L'&';
+				pDest[dlen++] = L'g';
+				pDest[dlen++] = L't';
+				pDest[dlen++] = L';';
+				break;
+			case L'\"':
+				pDest[dlen++] = L'&';
+				pDest[dlen++] = L'q';
+				pDest[dlen++] = L'u';
+				pDest[dlen++] = L'o';
+				pDest[dlen++] = L't';
+				pDest[dlen++] = L';';
+				break;
+			case L'\'':
+				pDest[dlen++] = L'&';
+				pDest[dlen++] = L'#';
+				pDest[dlen++] = L'3';
+				pDest[dlen++] = L'9';
+				pDest[dlen++] = L';';
+				break;
+			default:
+				pDest[dlen++] = pSrc[slen];
+				break;
+		}
+		slen++;
+	}
+
+	if (pSrc[slen] == 0)
+	{
+		pDest[dlen] = L'\0';
+		return (dlen);
+	}
+	return (0);
+}
+
 
 
 int CSPStoreObject::ToXML(FLMUNICODE *pOriginalBuffer, int nChars, FLMBOOL includeProperties, FLMBOOL includeColId)
@@ -599,7 +661,7 @@ int CSPStoreObject::ToXML(FLMUNICODE *pOriginalBuffer, int nChars, FLMBOOL inclu
 	{
 		nChars -= len;
 		pBuffer += len;
-		if ((len = m_pName->ToString(pBuffer, nChars)) != 0)
+		if ((len = flmstrcpyesc(pBuffer, (FLMUNICODE*)m_pName->SearchVal(), nChars)) != 0)
 		{
 			nChars -= len;
 			pBuffer += len;

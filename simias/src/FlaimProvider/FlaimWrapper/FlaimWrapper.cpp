@@ -162,9 +162,9 @@ FLAIMWRAPPER_API int FWDefineField(CSPStore *pStore, FLMUNICODE *pName, FLMUNICO
 	return rc;
 }
 
-FLAIMWRAPPER_API int FWSearch(CSPStore *pStore, FLMUNICODE *pCollectionId, FLMUNICODE *pName, FLMINT op, FLMUNICODE *pValue, FLMUNICODE *pType, FLMUINT* pCount, CSPObjectIterator **ppResults)
+FLAIMWRAPPER_API int FWSearch(CSPStore *pStore, FLMUNICODE *pCollectionId, FLMUNICODE *pName, FLMINT op, FLMUNICODE *pValue, FLMUNICODE *pType, FLMBOOL caseSensitive, FLMUINT* pCount, CSPObjectIterator **ppResults)
 {
-	return (pStore->Search(pCollectionId, pName, op, pValue, pType, pCount, ppResults));
+	return (pStore->Search(pCollectionId, pName, op, pValue, pType, caseSensitive, pCount, ppResults));
 }
 
 FLAIMWRAPPER_API void FWCloseSearch(CSPObjectIterator *pResults)
