@@ -302,6 +302,7 @@ namespace Novell.iFolderCom
 			this.helpProvider1.SetHelpKeyword(this.conflictsView, resources.GetString("conflictsView.HelpKeyword"));
 			this.helpProvider1.SetHelpNavigator(this.conflictsView, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("conflictsView.HelpNavigator"))));
 			this.helpProvider1.SetHelpString(this.conflictsView, resources.GetString("conflictsView.HelpString"));
+			this.conflictsView.HideSelection = false;
 			this.conflictsView.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("conflictsView.ImeMode")));
 			this.conflictsView.LabelWrap = ((bool)(resources.GetObject("conflictsView.LabelWrap")));
 			this.conflictsView.Location = ((System.Drawing.Point)(resources.GetObject("conflictsView.Location")));
@@ -953,22 +954,26 @@ namespace Novell.iFolderCom
 						mmb.ShowDialog();
 					}
 				}
-				else if (!localWins)
+				else
 				{
-					/*try
+					// Prompt for new name.
+					NameConflictPrompt namePrompt = new NameConflictPrompt();
+					namePrompt.FilePath = ifolder.UnManagedPath;
+					namePrompt.FileName = (conflict.LocalName != null) ? conflict.LocalName : conflict.ServerName;
+					namePrompt.LocalName = (conflict.LocalName != null) ? conflict.LocalFullPath : string.Empty;
+					if (namePrompt.ShowDialog() == DialogResult.OK)
 					{
-						// TODO: prompt for new name?
-						ifWebService.ResolveNameConflict(ifolder.ID, conflict.ConflictID, newName);
-						lvi.Remove();
+						try
+						{
+							ifWebService.ResolveNameConflict(ifolder.ID, conflict.ConflictID, namePrompt.FileName);
+							lvi.Remove();
+						}
+						catch (Exception ex)
+						{
+							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("conflictResolveError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							mmb.ShowDialog();
+						}
 					}
-					catch (WebException e)
-					{
-						// TODO:
-					}
-					catch (Exception e)
-					{
-						// TODO:
-					}*/
 				}
 			}
 
@@ -1044,7 +1049,16 @@ namespace Novell.iFolderCom
 				foreach (Conflict conflict in conflicts)
 				{
 					// TODO: what name to use ... and icon.
-					ListViewItem lvi = new ListViewItem(conflict.LocalName);
+					ListViewItem lvi;
+					if (!conflict.IsNameConflict)
+					{
+						lvi = new ListViewItem(conflict.LocalName);
+					}
+					else
+					{
+						lvi = new ListViewItem((conflict.ServerName != null) ? conflict.ServerName : conflict.LocalName);
+					}
+
 					lvi.Tag = conflict;
 					this.conflictsView.Items.Add(lvi);
 				}
@@ -1065,23 +1079,24 @@ namespace Novell.iFolderCom
 			{
 				conflict = (Conflict)conflictsView.SelectedItems[0].Tag;
 
-				// Fill in the server data.
-				serverName.Text = conflict.ServerName;
-				serverDate.Text = conflict.ServerDate;
-				serverSize.Text = conflict.ServerSize;
-
-				// For name conflicts there is not a local version.
-				if (conflict.IsNameConflict)
-				{
-					saveLocal.Enabled = false;
-					localName.Text = localDate.Text = localSize.Text = "";
-				}
-				else
+				// Fill in the local data.
+				if (conflict.LocalName != null)
 				{
 					localName.Text = conflict.LocalName;
 					localDate.Text = conflict.LocalDate;
 					localSize.Text = conflict.LocalSize;
 				}
+
+				// Fill in the server data.
+				if (conflict.ServerName != null)
+				{
+					serverName.Text = conflict.ServerName;
+					serverDate.Text = conflict.ServerDate;
+					serverSize.Text = conflict.ServerSize;
+				}
+
+				saveLocal.Enabled = conflict.LocalName != null;
+				saveServer.Enabled = conflict.ServerName != null;
 			}
 			else
 			{
@@ -1108,7 +1123,15 @@ namespace Novell.iFolderCom
 		{
 			if (conflict != null)
 			{
-				System.Diagnostics.Process.Start(conflict.LocalFullPath);
+				try
+				{
+					System.Diagnostics.Process.Start(conflict.LocalFullPath);
+				}
+				catch (Exception ex)
+				{
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("openFileError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+				}
 			}
 		}
 
@@ -1116,7 +1139,15 @@ namespace Novell.iFolderCom
 		{
 			if (conflict != null)
 			{
-				System.Diagnostics.Process.Start(conflict.ServerFullPath);
+				try
+				{
+					System.Diagnostics.Process.Start(conflict.ServerFullPath);
+				}
+				catch (Exception ex)
+				{
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("openFileError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+				}
 			}
 		}
 
