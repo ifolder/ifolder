@@ -268,6 +268,21 @@ namespace Novell.iFolder
 			}
 		}
 
+		public void on_quit(object o, EventArgs args)
+		{
+			if(iFolderWindow != null)
+			{
+				iFolderWindow.Hide();
+				iFolderWindow.Destroy();
+			}
+
+			if(BrowserClosed != null)
+			{
+				EventArgs e = new EventArgs();
+				BrowserClosed(this, e);
+			}
+		}
+
 		public void on_refreshCollections(object o, EventArgs args)
 		{
 			RefreshViews();
