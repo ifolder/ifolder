@@ -10,7 +10,7 @@ UILIB_FLAGS = $(CSC_LIBFLAG)
 UILIB_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll Mono.Posix.dll
 UILIB_LIBPATH = $(srcdir)/../iFolder
 
-EXTRA_DIST = $(UILIB_CSFILES) 
+EXTRA_DIST = $(UILIB_CSFILES) Util.cs.in 
 
 Util.cs: $(srcdir)/Util.cs.in
 	sed -e 's,@_prefix_@,@prefix@,g' -e 's,@_PACKAGE_@,@PACKAGE@,g' $< > $@
