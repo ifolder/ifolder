@@ -641,10 +641,24 @@ namespace Novell.iFolder
 			{
 				try
 				{
-					DomainInformation dw = simws.ConnectToDomain(
-										nameEntry.Text,
-										passEntry.Text,
-										serverEntry.Text);
+					DomainInformation dw = null;
+					dw = simws.ConnectToDomain(nameEntry.Text,
+											   passEntry.Text,
+											   serverEntry.Text);
+					if (dw == null)
+					{
+						iFolderMsgDialog dg = new iFolderMsgDialog(
+							topLevelWindow,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							Util.GS("iFolder Error"),
+							Util.GS("Invalid Account Settings"),
+							Util.GS("The account settings you've specified are invalid.  Please check the values and try again."));
+						dg.Run();
+						dg.Hide();
+						dg.Destroy();
+						return;
+					}
 	
 					ifdata.AddDomain(dw);
 
