@@ -52,6 +52,7 @@ INCLUDE_PATHS +=	-I$(GIFOLDER_ROOT) \
 			-I$(GAIM_TOP)/src \
 			-I$(GAIM_TOP)/src/win32 \
 			-I$(GAIM_TOP) \
+			-I$(GAIM_TOP)/src/protocols/oscar \
 			-I$(SIMIAS_INCLUDE)
 
 
