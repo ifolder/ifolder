@@ -85,38 +85,41 @@ namespace Simias.Event
 				while (true)
 				{
 					haveEvents.WaitOne();
-					// We have at least one event loop until the queue is empty.
-					SimiasEventArgs args = null;
-					lock (eventQueue)
+					while (true)
 					{
-						if (eventQueue.Count > 0)
+						// We have at least one event loop until the queue is empty.
+						SimiasEventArgs args = null;
+						lock (eventQueue)
 						{
-							args = (SimiasEventArgs)eventQueue.Dequeue();
-						}
-						else
-						{
-							continue;
-						}
-					}
-				
-					if (SimiasEvent != null)
-					{
-						Delegate[] cbList = SimiasEvent.GetInvocationList();
-						foreach (SimiasEventHandler cb in cbList)
-						{
-							try 
-							{ 
-								cb(args);
-								/*
-								cb.BeginInvoke(
-									args, 
-									new AsyncCallback(EventRaisedCallback), 
-									null);
-								*/
-							}
-							catch (Exception ex)
+							if (eventQueue.Count > 0)
 							{
-								logger.Debug(ex, "Delegate {0}.{1} failed", cb.Target, cb.Method);
+								args = (SimiasEventArgs)eventQueue.Dequeue();
+							}
+							else
+							{
+								break;
+							}
+						}
+				
+						if (SimiasEvent != null)
+						{
+							Delegate[] cbList = SimiasEvent.GetInvocationList();
+							foreach (SimiasEventHandler cb in cbList)
+							{
+								try 
+								{ 
+									cb(args);
+									/*
+									cb.BeginInvoke(
+										args, 
+										new AsyncCallback(EventRaisedCallback), 
+										null);
+									*/
+								}
+								catch (Exception ex)
+								{
+									logger.Debug(ex, "Delegate {0}.{1} failed", cb.Target, cb.Method);
+								}
 							}
 						}
 					}
