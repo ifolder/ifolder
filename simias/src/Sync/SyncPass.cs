@@ -108,28 +108,37 @@ public class SynkerServiceA: SyncCollectionService
 	public Access.Rights Start()
 	{
 		Access.Rights rights = Access.Rights.Deny;
-		try
-		{
-			string userId = Thread.CurrentPrincipal.Identity.Name;
-			Log.Spew("session started for user '{0}'{1}", userId, ignoreRights? " without access control": "");
-			if (ignoreRights || userId == String.Empty)
-				userId = Access.SyncOperatorRole;
-			collection.LocalStore.ImpersonateUser(userId);
-			if (collection.IsAccessAllowed(Access.Rights.ReadOnly))
-			{
-				collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole);
-				Log.Spew("dredging server at docRoot '{0}'", collection.DocumentRoot.LocalPath);
-				new Dredger(collection, true);
-				Log.Spew("done dredging server at docRoot '{0}'", collection.DocumentRoot.LocalPath);
-				inNode = new SyncIncomingNode(collection, true);
-				outNode = new SyncOutgoingNode(collection);
-				ops = new SyncOps(collection, true);
-				collection.LocalStore.Revert();
-				rights = collection.GetUserAccess(userId);
-			}
-		}
-		catch (Exception e) { Log.Uncaught(e); }
-		return rights;
+        
+        string userId = null;
+
+        try
+        {
+            userId = Thread.CurrentPrincipal.Identity.Name;
+        }
+        catch(Exception e)
+        {
+            // kludge
+            ignoreRights = true;
+        }
+        
+        Log.Spew("session started for user '{0}'{1}", userId, ignoreRights? " without access control": "");
+        if (ignoreRights || userId == String.Empty)
+            userId = Access.SyncOperatorRole;
+        collection.LocalStore.ImpersonateUser(userId);
+        if (collection.IsAccessAllowed(Access.Rights.ReadOnly))
+        {
+            collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole);
+            Log.Spew("dredging server at docRoot '{0}'", collection.DocumentRoot.LocalPath);
+            new Dredger(collection, true);
+            Log.Spew("done dredging server at docRoot '{0}'", collection.DocumentRoot.LocalPath);
+            inNode = new SyncIncomingNode(collection, true);
+            outNode = new SyncOutgoingNode(collection);
+            ops = new SyncOps(collection, true);
+            collection.LocalStore.Revert();
+            rights = collection.GetUserAccess(userId);
+        }
+		
+        return rights;
 	}
 
 	/// <summary>

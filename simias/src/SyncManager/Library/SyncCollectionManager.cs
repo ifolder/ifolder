@@ -282,10 +282,10 @@ namespace Simias.Sync
 			// validate a stop
 			Stop();
 
-			watcher.Dispose();
+			if (watcher != null) watcher.Dispose();
 			watcher = null;
 
-			collection.Dispose();
+			if (collection != null) collection.Dispose();
 			collection = null;
 		}
 

@@ -104,8 +104,8 @@ namespace Novell.iFolder.Mini
 			MyTrace.WriteLine("Local Host: {0}:{1}", properties.DefaultHost, properties.DefaultPort);
 
 			// logic factory
-			properties.DefaultLogicFactory = typeof(SyncLogicFactoryLite);
-			//properties.DefaultLogicFactory = typeof(SynkerA);
+			//properties.DefaultLogicFactory = typeof(SyncLogicFactoryLite);
+			properties.DefaultLogicFactory = typeof(SynkerA);
 
 			SyncManager manager = new SyncManager(properties);
 			
