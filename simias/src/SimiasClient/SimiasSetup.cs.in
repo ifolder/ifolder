@@ -33,25 +33,25 @@ namespace Simias.Client
 	public class SimiasSetup
 	{
 		// setup paths
-		private static string _prefix = "@prefix@";
-		private static string _bindir = "@bindir@";
-		private static string _datadir = "@datadir@";
-		private static string _includedir = "@includedir@";
-		private static string _infodir = "@infodir@";
-		private static string _libexecdir = "@libexecdir@";
-		private static string _libdir = "@libdir@";
-		private static string _localstatedir = "@localstatedir@";
-		private static string _mandir = "@mandir@";
-		private static string _sbindir = "@sbindir@";
-		private static string _sharedstatedir = "@sharedstatedir@";
-		private static string _sysconfdir = "@sysconfdir@";
+		private static string _prefix = "@_prefix_@";
+		private static string _bindir = "@_bindir_@";
+		private static string _datadir = "@_datadir_@";
+		private static string _includedir = "@_includedir_@";
+		private static string _infodir = "@_infodir_@";
+		private static string _libexecdir = "@_libexecdir_@";
+		private static string _libdir = "@_libdir_@";
+		private static string _localstatedir = "@_localstatedir_@";
+		private static string _mandir = "@_mandir_@";
+		private static string _sbindir = "@_sbindir_@";
+		private static string _sharedstatedir = "@_sharedstatedir_@";
+		private static string _sysconfdir = "@_sysconfdir_@";
 
 		// custom setup paths
-		private static string _webdir = "@webdir@";
-		private static string _webbindir = "@webbindir@";
+		private static string _webdir = "@_webdir_@";
+		private static string _webbindir = "@_webbindir_@";
 		
 		// setup info
-		private static string _target = "@target@";
+		private static string _target = "@_target_@";
 
 		/// <summary>
 		/// Static Constructor
