@@ -1,3 +1,7 @@
+if BUILD_GAIM_DOMAIN
+GAIM_DOMAIN_DIR = GaimDomain
+endif
+
 if DARWIN
 SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer libsimias
 
@@ -5,7 +9,7 @@ DIST_SUBDIRS = $(SUBDIRS)
 endif
 
 if LINUX
-SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer GaimDomain libsimias
+SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer libsimias $(GAIM_DOMAIN_DIR)
 
 DIST_SUBDIRS = $(SUBDIRS)
 endif
