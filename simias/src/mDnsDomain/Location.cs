@@ -32,6 +32,7 @@ using Mono.P2p.mDnsResponderApi;
 
 using Simias.Storage;
 using Simias.Sync;
+using Simias.POBox;
 
 namespace Simias.Location
 {
@@ -269,14 +270,22 @@ namespace Simias.Location
 		public Uri ResolveLocation( string domainID, string collectionID )
 		{
 			log.Debug( "ResolveLocation called" );
+			log.Debug( "  DomainID: " + domainID );
+			log.Debug( "  CollectionID: " + collectionID );
 
 			Uri locationUri = null;
 			if( domainID.ToLower() == Simias.mDns.Domain.ID )
 			{
 				try
 				{
-					Collection collection = Store.GetStore().GetCollectionByID( collectionID );
-					locationUri = MemberIDToUri( collection.Owner.UserID );
+					Store store = Store.GetStore();
+					Collection col = store.GetCollectionByID( collectionID );
+
+					Simias.POBox.POBox poBox = 
+						Simias.POBox.POBox.FindPOBox( store, domainID, col.GetCurrentMember().UserID );
+
+					Subscription sub = poBox.GetSubscriptionByCollectionID( collectionID );
+					locationUri = MemberIDToUri( sub.FromIdentity );
 				}
 				catch ( Exception e )
 				{
