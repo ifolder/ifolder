@@ -52,6 +52,11 @@ namespace Novell.iFolderCom
 		/// </summary>
 		protected AutoResetEvent workEvent = null;
 
+		/// <summary>
+		/// Event used to signal that the thread has started.
+		/// </summary>
+		protected AutoResetEvent waitEvent = null;
+
 		private delegate void AddLVItemEventDelegate(iFolderUser[] ifolderUsers);
 		private AddLVItemEventDelegate addLVItemEventDelegate;
 
@@ -104,6 +109,7 @@ namespace Novell.iFolderCom
 			beginAddLVItemEventDelegate = new BeginAddLVItemEventDelegate(beginAddLVItemEvent);
 
 			workEvent = new AutoResetEvent(false);
+			waitEvent = new AutoResetEvent(false);
 
 			this.StartPosition = FormStartPosition.CenterParent;
 		}
@@ -882,6 +888,9 @@ namespace Novell.iFolderCom
 								currentIndex += ifolderUsers.Length;
 							}
 
+							// Signal the event so the wait cursor can be removed.
+							waitEvent.Set();
+
 							// BeginInvoke ...
 							BeginInvoke(addLVItemEventDelegate, new object[] {ifolderUsers});
 						}
@@ -987,10 +996,10 @@ namespace Novell.iFolderCom
 			itemsViewable = rosterLV.ClientSize.Height / rect.Height;
 			rosterLV.Items.Clear();
 
-			// TODO: need to set waitcursor.
-
-			// Put the objects in the listview.
-//			displayUsers(null);
+			// Set waitcursor.
+			Cursor.Current = Cursors.WaitCursor;
+			waitEvent.WaitOne();
+			Cursor.Current = Cursors.Default;
 		}
 
 		private void Picker_SizeChanged(object sender, System.EventArgs e)
