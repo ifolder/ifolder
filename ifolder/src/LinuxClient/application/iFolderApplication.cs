@@ -88,7 +88,7 @@ namespace Novell.iFolder
 			StoppingPixbuf = 
 					new Pixbuf(Util.ImagesPath("ifolder-shutdown.png"));
 			SyncingPixbuf =
-					new Gdk.PixbufAnimation(Util.ImagesPath("ifolder.gif"));
+					new Gdk.PixbufAnimation(Util.ImagesPath("ifolder24.gif"));
 
 			gAppIcon = new Gtk.Image(RunningPixbuf);
 
