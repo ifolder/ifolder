@@ -544,6 +544,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Simias.Web\SharedCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Smtp\Base64AttachmentEncoder.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
