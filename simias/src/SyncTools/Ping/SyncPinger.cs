@@ -107,7 +107,7 @@ namespace Simias.Sync.Tools
 
 					start = Environment.TickCount;
 
-					info = SyncPing.PingStore(host);
+					info = SyncPing.PingStore(new SyncStore(), host);
 				}
 				catch(Exception e)
 				{

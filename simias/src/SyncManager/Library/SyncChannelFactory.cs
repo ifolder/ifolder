@@ -33,6 +33,10 @@ using System.Threading;
 using System.Runtime.Serialization.Formatters;
 using System.Reflection;
 
+using Novell.Security.SecureSink;
+using Novell.Security.SecureSink.SecurityProvider;
+using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
+
 namespace Simias.Sync
 {
 	/// <summary>
@@ -75,22 +79,22 @@ namespace Simias.Sync
 			index = 0;
 		}
 		
-		public SyncChannel GetChannel()
+		public SyncChannel GetChannel(SyncStore store)
 		{
-			return GetChannel(0);
+			return GetChannel(store, 0);
 		}
 		
-		public SyncChannel GetChannel(SyncChannelFormatters formatter)
+		public SyncChannel GetChannel(SyncStore store, SyncChannelFormatters formatter)
 		{
-			return GetChannel(0, formatter);
+			return GetChannel(store, 0, formatter);
 		}
 		
-		public SyncChannel GetChannel(int port)
+		public SyncChannel GetChannel(SyncStore store, int port)
 		{
-			return GetChannel(port, SyncChannelFormatters.Binary);
+			return GetChannel(store, port, SyncChannelFormatters.Binary);
 		}
 		
-		public SyncChannel GetChannel(int port, SyncChannelFormatters formatter)
+		public SyncChannel GetChannel(SyncStore store, int port, SyncChannelFormatters formatter)
 		{
 			SyncChannel result = null;
 
@@ -158,13 +162,25 @@ namespace Simias.Sync
 					debugProvider.Next = serverProvider;
 					serverProvider = debugProvider;
 #endif
+					// The server chain order should be as follows: 
+					// SecureServerProvider->DebugProvider->ServerProvider.
+					ISecurityServerFactory securityServerFactory = (ISecurityServerFactory) new RsaSecurityServerFactory(store.BaseStore.KeyStore);
+					IServerChannelSinkProvider secureServerProvider = (IServerChannelSinkProvider) new SecureServerSinkProvider(securityServerFactory, SecureServerSinkProvider.MsgSecurityLevel.privacy);
+					secureServerProvider.Next = serverProvider;
+
+					// The client chain order should be as follows:
+					// ClientProvider->ClientSecureProvider.
+					ISecurityClientFactory[] secClientFactories = new ISecurityClientFactory[1];
+					secClientFactories[0] = (ISecurityClientFactory) new RsaSecurityClientFactory(store.BaseStore.KeyStore);
+					IClientChannelSinkProvider clientSecureProvider = (IClientChannelSinkProvider) new SecureClientSinkProvider(secClientFactories);
+					clientProvider.Next = clientSecureProvider;
 
 					// create channel
 					IChannel channel;
 
 					// http channel
 					channel = new HttpChannel(props,
-						clientProvider, serverProvider);
+						clientProvider, secureServerProvider);
 
 					// register channel
 					ChannelServices.RegisterChannel(channel);

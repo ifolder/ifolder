@@ -3,8 +3,8 @@ SyncManager_CSFILES_CSC := $(subst /,$(SEP),$(SyncManager_CSFILES))
 SyncManager_INCLUDES =
 SyncManager_RESOURCES =
 SyncManager_FLAGS = $(CSC_LIBFLAG)
-SyncManager_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll Agent.dll SyncCommon.dll CollectionWatcher.dll System.Runtime.Remoting.dll StoreWatcher.dll
-SyncManager_LIBPATH = Library ../SyncCommon ../CollectionEvents ../CollectionStore ../Configuration ../StoreProvider ../Common ../CollectionWatcher ../Agent ../StoreWatcher
+SyncManager_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll Agent.dll SyncCommon.dll CollectionWatcher.dll System.Runtime.Remoting.dll StoreWatcher.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll
+SyncManager_LIBPATH = Library ../SyncCommon ../CollectionEvents ../CollectionStore ../Configuration ../StoreProvider ../Common ../CollectionWatcher ../Agent ../StoreWatcher ../../external/SecureChannelSinks
 
 NUNIT_TESTS := SyncManagerTests.dll
 

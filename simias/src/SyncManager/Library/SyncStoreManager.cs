@@ -78,7 +78,7 @@ namespace Simias.Sync
 
 					// create channel
 					string name = String.Format("Store Service [{0}]", store.ID);
-					channel = syncManager.ChannelFactory.GetChannel(port);
+					channel = syncManager.ChannelFactory.GetChannel(store, port);
 				
 					MyTrace.WriteLine("Starting Store Service: http://0.0.0.0:{0}/{1}", port, SyncStore.GetEndPoint(port));
 

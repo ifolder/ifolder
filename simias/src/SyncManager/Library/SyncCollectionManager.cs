@@ -169,7 +169,7 @@ namespace Simias.Sync
 			lock(this)
 			{
 				// create channel
-				channel = syncManager.ChannelFactory.GetChannel(collection.Port);
+				channel = syncManager.ChannelFactory.GetChannel(store, collection.Port);
 				
 				// service
 				service = syncManager.LogicFactory.GetCollectionService(collection);
@@ -206,7 +206,7 @@ namespace Simias.Sync
 			lock(this)
 			{
 				// create channel
-				channel = syncManager.ChannelFactory.GetChannel();
+				channel = syncManager.ChannelFactory.GetChannel(store);
 				
 				// get a proxy to the collection object
 				service = (SyncCollectionService)Activator.GetObject(

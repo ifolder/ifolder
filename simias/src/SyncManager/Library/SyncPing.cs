@@ -45,25 +45,27 @@ namespace Simias.Sync
 		/// <summary>
 		/// Ping the sync store server.
 		/// </summary>
+		/// <param name="store">The sync store object.</param>
 		/// <param name="host">The sync store server host.</param>
 		/// <returns>A ping object from the server.</returns>
-		public static SyncStoreInfo PingStore(string host)
+		public static SyncStoreInfo PingStore(SyncStore store, string host)
 		{
-			return PingStore(host, SyncProperties._DefaultPort);
+			return PingStore(store, host, SyncProperties._DefaultPort);
 		}
 
 		/// <summary>
 		/// Ping the sync store server.
 		/// </summary>
+		/// <param name="syncStore">The sync store object.</param>
 		/// <param name="host">The sync store server host.</param>
 		/// <param name="port">The sync store sever port.</param>
 		/// <returns>A ping object from the server.</returns>
-		public static SyncStoreInfo PingStore(string host, int port)
+		public static SyncStoreInfo PingStore(SyncStore syncStore, string host, int port)
 		{
 			SyncStoreInfo info = null;
 
 			// create channel
-			SyncChannel channel = SyncChannelFactory.GetInstance().GetChannel();
+			SyncChannel channel = SyncChannelFactory.GetInstance().GetChannel(syncStore);
 
 			// server uri
 			string serverUrl = new UriBuilder("http", host, port,

@@ -152,7 +152,7 @@ namespace Simias.Sync
 				RemotingStates state = RemotingStates.Bad;
 				SyncStoreInfo info;
 				
-				info = SyncPing.PingStore(Host, Port);
+				info = SyncPing.PingStore(StoreManager.Store, Host, Port);
 				
 				if (info != null)
 				{

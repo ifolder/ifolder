@@ -109,6 +109,26 @@
                     Project = "{6A5EF608-400F-4E03-B80C-CEA54C8ABE21}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
+                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
+                    HintPath = "..\..\..\..\SecureChannelSinks\Common\Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll"
+                />
+                <Reference
+                    Name = "Novell.Security.SecureSink"
+                    AssemblyName = "Novell.Security.SecureSink"
+                    HintPath = "..\..\..\..\SecureChannelSinks\Common\Novell.Security.SecureSink.dll"
+                />
+                <Reference
+                    Name = "Novell.Security.SecureSink.SecurityProvider"
+                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider"
+                    HintPath = "..\..\..\..\SecureChannelSinks\Common\Novell.Security.SecureSink.SecurityProvider.dll"
+                />
+                <Reference
+                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
+                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
+                    HintPath = "..\..\..\..\SecureChannelSinks\Common\Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll"
+                />
             </References>
         </Build>
         <Files>
