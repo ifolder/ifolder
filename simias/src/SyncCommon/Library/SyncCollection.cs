@@ -121,6 +121,7 @@ namespace Simias.Sync
 			invitation.MasterPort = Port.ToString();
 			invitation.Identity = identity;
 			invitation.CollectionRights = baseCollection.GetUserAccess(identity).ToString();
+			invitation.PublicKey = baseCollection.LocalStore.ServerPublicKey.ToXmlString( false );
 
 			return invitation;
 		}
