@@ -47,7 +47,7 @@ namespace Novell.iFolderCom
 		private const double megaByte = 1048576;
 
 		// Delegates used to marshal back to the control's creation thread.
-		private delegate void NodeDelegate(iFolder ifolder, iFolderUser ifolderUser, string eventData);
+		private delegate void NodeDelegate(iFolderWeb ifolder, iFolderUser ifolderUser, string eventData);
 		private NodeDelegate nodeDelegate;
 		private delegate void SyncSizeDelegate(uint objectCount);
 		private SyncSizeDelegate syncSizeDelegate;
@@ -77,7 +77,7 @@ namespace Novell.iFolderCom
 		private int initTabTop;
 		private int initHeight;
 		private bool accessClick;
-		private iFolder currentiFolder;
+		private iFolderWeb currentiFolder;
 		private iFolderUser currentUser;
 		private ListViewItem ownerLvi;
 		private ListViewItem newOwnerLvi;
@@ -1490,7 +1490,7 @@ namespace Novell.iFolderCom
 		#endregion
 
 		#region Private Methods
-		private void nodeEvent(iFolder ifolder, iFolderUser ifolderUser, string eventData)
+		private void nodeEvent(iFolderWeb ifolder, iFolderUser ifolderUser, string eventData)
 		{
 			try
 			{
@@ -2100,7 +2100,7 @@ namespace Novell.iFolderCom
 					}
 				}
 
-				iFolder ifolder = null;
+				iFolderWeb ifolder = null;
 				iFolderUser ifolderUser = null;
 				try
 				{
@@ -2181,7 +2181,7 @@ namespace Novell.iFolderCom
 		/// <summary>
 		/// Sets the current iFolder.
 		/// </summary>
-		public iFolder CurrentiFolder
+		public iFolderWeb CurrentiFolder
 		{
 			set
 			{
@@ -2283,8 +2283,8 @@ namespace Novell.iFolderCom
 				connectToWebService();
 
 				// Add all iFolders to the drop-down list.
-				iFolder[] ifolderArray = ifWebService.GetAlliFolders();
-				foreach (iFolder i in ifolderArray)
+				iFolderWeb[] ifolderArray = ifWebService.GetAlliFolders();
+				foreach (iFolderWeb i in ifolderArray)
 				{
 					if ((i.Type != null) && i.Type.Equals("iFolder") && 
 						(i.State != null) && i.State.Equals("Local"))

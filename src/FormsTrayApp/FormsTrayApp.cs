@@ -51,7 +51,7 @@ namespace Novell.FormsTrayApp
 		private delegate void SyncFileDelegate(FileSyncEventArgs syncEventArgs);
 		private SyncFileDelegate syncFileDelegate;
 
-		private delegate void CreateChangeEventDelegate(iFolder ifolder, iFolderUser ifolderUser, string eventData);
+		private delegate void CreateChangeEventDelegate(iFolderWeb ifolder, iFolderUser ifolderUser, string eventData);
 		private CreateChangeEventDelegate createChangeEventDelegate;
 
 		private System.ComponentModel.IContainer components;
@@ -577,7 +577,7 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private void createChangeEvent(iFolder ifolder, iFolderUser ifolderUser, string eventData)
+		private void createChangeEvent(iFolderWeb ifolder, iFolderUser ifolderUser, string eventData)
 		{
 			try
 			{
@@ -702,7 +702,7 @@ namespace Novell.FormsTrayApp
 					}
 				}
 
-				iFolder ifolder = null;
+				iFolderWeb ifolder = null;
 				iFolderUser ifolderUser = null;
 				try
 				{

@@ -47,7 +47,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Button browse;
 		private bool successful;
 		private iFolderWebService ifWebService;
-		private iFolder ifolder;
+		private iFolderWeb ifolder;
 		private System.Windows.Forms.Label label3;
 		/// <summary>
 		/// Required designer variable.
@@ -59,7 +59,7 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		/// <param name="ifolderWebService">The web service to use when processing the invitation.</param>
 		/// <param name="ifolder">The iFolder to accept.</param>
-		public AcceptInvitation(iFolderWebService ifolderWebService, iFolder ifolder)
+		public AcceptInvitation(iFolderWebService ifolderWebService, iFolderWeb ifolder)
 		{
 			//
 			// Required for Windows Form Designer support

@@ -95,14 +95,14 @@
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
                 />
                 <Reference
-                    Name = "SimiasClient"
-                    AssemblyName = "SimiasClient"
-                    HintPath = "..\..\..\..\final\web\bin\SimiasClient.dll"
-                />
-                <Reference
                     Name = "Novell.iFolder"
                     AssemblyName = "Novell.iFolder"
-                    HintPath = "..\..\..\final\Novell.iFolder.dll"
+                    HintPath = "..\..\..\..\stage\Novell.iFolder.dll"
+                />
+                <Reference
+                    Name = "Simias"
+                    AssemblyName = "Simias"
+                    HintPath = "..\..\..\..\stage\web\bin\Simias.dll"
                 />
             </References>
         </Build>

@@ -187,7 +187,7 @@ namespace Novell.iFolderCom
 		/// <returns>This method returns <b>true</b> if the specified path is an iFolder; otherwise <b>false</b>.</returns>
 		public bool IsiFolder([MarshalAs(UnmanagedType.LPWStr)] string path, out bool hasConflicts)
 		{
-			iFolder ifolder = null;
+			iFolderWeb ifolder = null;
 			hasConflicts = false;
 
 			try
@@ -225,7 +225,7 @@ namespace Novell.iFolderCom
 		/// <returns>This method returns <b>true</b> if the specified path is successfully converted into an iFolder; otherwise, <b>false</b>.</returns>
 		public bool CreateiFolder([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
-			iFolder ifolder = null;
+			iFolderWeb ifolder = null;
 			try
 			{
 				connectToWebService();
@@ -260,7 +260,7 @@ namespace Novell.iFolderCom
 				connectToWebService();
 				if (ifWebService != null)
 				{
-					iFolder ifolder = ifWebService.GetiFolderByLocalPath(path);
+					iFolderWeb ifolder = ifWebService.GetiFolderByLocalPath(path);
 					if (ifolder != null)
 					{
 						ifWebService.DeleteiFolder(ifolder.ID);
@@ -349,7 +349,7 @@ namespace Novell.iFolderCom
 		{
 			try
 			{
-				iFolder ifolder = ifWebService.GetiFolderByLocalPath(path);
+				iFolderWeb ifolder = ifWebService.GetiFolderByLocalPath(path);
 				ConflictResolver conflictResolver = new ConflictResolver();
 				conflictResolver.iFolder = ifolder;
 				conflictResolver.iFolderWebService = ifWebService;
