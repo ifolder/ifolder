@@ -14,7 +14,7 @@ BookLib_FLAGS = $(CSC_LIBFLAG)
 BookLib_LIBS = System.dll System.Drawing.dll System.Data.dll gtk-sharp.dll gnome-sharp.dll pango-sharp.dll glib-sharp.dll glade-sharp.dll gdk-sharp.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll Identity.dll CollectionEvents.dll CollectionStore.dll AddressBook.dll
 BookLib_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin
 
-EXTRA_DIST = $(Book_CSFILES) $(BookLib_CSFILES)
+EXTRA_DIST = $(Book_CSFILES) $(BookLib_CSFILES) $(Book_RESOURCES) $(BookLib_RESOURCES)
 
 all: Book.exe BookLib.dll
 
