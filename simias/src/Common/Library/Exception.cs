@@ -56,7 +56,7 @@ namespace Simias
 		/// </summary>
 		/// <param name="message">The message describing the exception.</param>
 		/// <param name="innerException">The exception that caused this exception.</param>
-		public SimiasException(string message, SystemException innerException) :
+		public SimiasException(string message, Exception innerException) :
 			base(message, innerException)
 		{
 			logger.Debug(this, Message, null);
