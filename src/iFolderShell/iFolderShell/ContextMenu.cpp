@@ -80,7 +80,11 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 //			OutputDebugString(TEXT("CMF_NORMAL...\n"));
 
 			UINT attrs= GetFileAttributes(m_szFileUserClickedOn);
-			if (attrs == INVALID_FILE_ATTRIBUTES)
+		
+			wchar_t lpszRoot[MAX_ROOT_PATH + 1];
+			lstrcpyn(lpszRoot, m_szFileUserClickedOn, MAX_ROOT_PATH + 1);
+
+			if ((attrs == INVALID_FILE_ATTRIBUTES) || (GetDriveType(lpszRoot) & DRIVE_REMOTE))
 			{
 				// Error.
 				return 0;

@@ -30,8 +30,6 @@ extern HINSTANCE g_hmodThisDll;
 // static members
 TCHAR CiFolderShell::m_szShellPath[MAX_PATH];
 
-#define MAX_ROOT_PATH 3 // the length of a root path i.e. c:\
-
 //
 //  FUNCTION: CiFolderShell::IsMemberOf(LPCWSTR, DWORD)
 //
@@ -53,7 +51,7 @@ STDMETHODIMP CiFolderShell::IsMemberOf(LPCWSTR pwszPath,
 	wchar_t lpszRoot[MAX_ROOT_PATH + 1];
 
 	lstrcpyn(lpszRoot, pwszPath, MAX_ROOT_PATH + 1);
-    
+
 	if ((dwAttrib & FILE_ATTRIBUTE_DIRECTORY) && !(GetDriveType(lpszRoot) & DRIVE_REMOTE))
 	{
 		VARIANT_BOOL hasConflicts;
