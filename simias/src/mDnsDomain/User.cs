@@ -52,7 +52,10 @@ namespace Simias.mDns
 		private static IResourceRegistration rr = null;
 		private static IResourceQuery query = null;
 		private readonly string memberTag = "_ifolder_member._tcp.local";
+		private static readonly string configSection = "ServiceManager";
+		private static readonly string configServices = "WebServiceUri";
 		private	IMDnsEvent cEvent = null;
+		private static Uri webServiceUri = null;
 
 
 		/// <summary>
@@ -89,6 +92,18 @@ namespace Simias.mDns
 		/// </summary>
 		static User()
 		{
+			// Get the configured/generated web service path and store
+			// it away.  The port and path are broadcast in Rendezvous
+			XmlElement servicesElement = 
+				Store.GetStore().Config.GetElement( configSection, configServices );
+			webServiceUri = new Uri( servicesElement.GetAttribute( "value" ) );
+
+			if ( webServiceUri != null )
+			{
+				log.Debug( "Web Service URI: " + webServiceUri.ToString() );
+				log.Debug( "Absolute Path: " + webServiceUri.AbsolutePath );
+			}
+
 			//
 			// Setup the remoting channel to the mDnsResponder
 			// this isn't thread safe but I know it won't be
@@ -114,6 +129,7 @@ namespace Simias.mDns
 			Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain( true );
 			mDnsUserName = Environment.UserName + "@" + mdnsDomain.Host;
 		}
+
 		#endregion
 
 
@@ -126,6 +142,11 @@ namespace Simias.mDns
 			if ( mDnsChannelUp == false )
 			{
 				throw new SimiasException( "Remoting channel not setup" );
+			}
+
+			if ( webServiceUri == null )
+			{
+				throw new SimiasException( "Web Service URI not configured" );
 			}
 
 			//
@@ -145,20 +166,20 @@ namespace Simias.mDns
 					status = 
 						rr.RegisterServiceLocation(
 							mdnsDomain.Host,
-							this.mDnsUserName,
-							(int) 8086,  // FIXME:: need to call Simias.config to get the port
+							this.mDnsUserID,
+							webServiceUri.Port,
 							0, 
 							0 );
 					if ( status == 0 )
 					{
-						status = rr.RegisterPointer( memberTag, this.mDnsUserName );
+						status = rr.RegisterPointer( memberTag, this.mDnsUserID );
 						if ( status == 0 )
 						{
 							registered = this.RegisterTextStrings();
 						}
 						else
 						{
-							rr.DeregisterServiceLocation( mdnsDomain.Host, this.mDnsUserName );
+							rr.DeregisterServiceLocation( mdnsDomain.Host, this.mDnsUserID );
 							rr.DeregisterHost( mdnsDomain.Host );
 						}
 					}
@@ -185,8 +206,8 @@ namespace Simias.mDns
 			if ( Simias.mDns.User.rr != null )
 			{
 				Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain( false );
-				rr.DeregisterPointer( memberTag, this.mDnsUserName );
-				rr.DeregisterServiceLocation( mdnsDomain.Host, this.mDnsUserName );
+				rr.DeregisterPointer( memberTag, this.mDnsUserID );
+				rr.DeregisterServiceLocation( mdnsDomain.Host, this.mDnsUserID );
 				rr.DeregisterHost( mdnsDomain.Host );
 			}
 		}
@@ -203,12 +224,14 @@ namespace Simias.mDns
 			{
 				//Roster roster = mdnsDomain.Roster;
 				Member member = mdnsDomain.Roster.GetMemberByName( mDnsUserName );
-				string[] txtStrings = new string[1];
-				string memberTxtString = "MemberID=" + member.ID;
+				string[] txtStrings = new string[2];
+				string memberTxtString = "MemberName=" + this.mDnsUserName;
+				string pathTxtString = "ServicePath=" + webServiceUri.AbsolutePath;
 				txtStrings[0] = memberTxtString;
+				txtStrings[1] = pathTxtString;
 
 				// Register the 
-				if ( rr.RegisterTextStrings( mDnsUserName, txtStrings ) == 0 )
+				if ( rr.RegisterTextStrings( this.mDnsUserID, txtStrings ) == 0 )
 				{
 					status = true;
 				}
@@ -274,43 +297,58 @@ namespace Simias.mDns
 				{
 					try
 					{
-						Store store = Store.GetStore();
+						int port = 0;
+						string memberName = null;
+						string publicKey = null;
+
 						//Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain( false );
-						Simias.Storage.Domain rDomain = store.GetDomain( Simias.mDns.Domain.ID );
+						Simias.Storage.Domain rDomain = 
+							Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
 						Simias.Storage.Roster mdnsRoster = rDomain.Roster;
 
-						Member mdnsMember = mdnsRoster.GetMemberByName( ((Ptr) cResource).Target );
-						if ( mdnsMember != null )
+						Member mdnsMember = mdnsRoster.GetMemberByID( ((Ptr) cResource).Target );
+						if ( mdnsMember == null )
 						{
-							// Update IP Address?
-						}
-						else
-						{
-							log.Debug(String.Format("Adding member: {0} to the Rendezvous Roster", ((Ptr) cResource).Target));
+							log.Debug( 
+								String.Format( 
+									"Adding member: {0} to the Rendezvous Roster", 
+									((Ptr) cResource).Target) );
 
 							// FIXME::Need to query mDns to get the address where the user is located
-							// and to get his ID from the TTL resource
+							// and to get his member name from the TTL resource
+
+							Mono.P2p.mDnsResponderApi.ServiceLocation svcLocation = null;
+							if ( query.GetServiceByName( ((Ptr) cResource).Target, ref svcLocation ) == 0 )
+							{
+								port = svcLocation.Port;
+							}
 
 							Mono.P2p.mDnsResponderApi.TextStrings txtStrings = null;
-							string memberID = null;
-
 							if ( query.GetTextStringsByName( ((Ptr) cResource).Target, ref txtStrings ) == 0 )
 							{
 								foreach( string s in txtStrings.GetTextStrings() )
 								{
 									string[] nameValues = s.Split( new char['='], 2 );
-									if ( nameValues[0] == "MemberID" )
+									if ( nameValues[0] == "MemberName" )
 									{
-										memberID = nameValues[1];
-										break;
+										memberName = nameValues[1];
 									}
-
+									else
+									if ( nameValues[0] == "PublicKey" )
+									{
+										publicKey = nameValues[1];
+									}
 								}
 
-								if ( memberID != null )
+								if ( memberName != null )
 								{
 									mdnsMember = 
-										new Member( ((Ptr) cResource).Target, memberID, Access.Rights.ReadOnly );
+										new Member( memberName, ((Ptr) cResource).Target, Access.Rights.ReadOnly );
+
+									if ( publicKey != null )
+									{
+										mdnsMember.Properties.AddProperty( "PublicKey", publicKey );
+									}
 
 									mdnsRoster.Commit( new Node[] { mdnsMember } );
 								}
@@ -337,8 +375,7 @@ namespace Simias.mDns
 			//
 
 			Simias.Storage.Member mdnsMember = null;
-			Store store = Store.GetStore();
-			Simias.Storage.Domain rDomain = store.GetDomain( Simias.mDns.Domain.ID );
+			Simias.Storage.Domain rDomain = Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
 			Simias.Storage.Roster mdnsRoster = rDomain.Roster;
 
 			Char[] sepChar = new Char [] {'='};
@@ -353,28 +390,37 @@ namespace Simias.mDns
 				foreach( Mono.P2p.mDnsResponderApi.Ptr member in ifolderMembers )
 				{
 					Mono.P2p.mDnsResponderApi.TextStrings txtStrings = null;
-					string memberID = null;
+					string memberName = null;
+					string publicKey = null;
 
 					if ( query.GetTextStringsByName( member.Target, ref txtStrings ) == 0 )
 					{
 						foreach( string s in txtStrings.GetTextStrings() )
 						{
 							string[] nameValues = s.Split( sepChar );
-							if ( nameValues[0] == "MemberID" )
+							if ( nameValues[0] == "MemberName" )
 							{
-								memberID = nameValues[1];
-								break;
+								memberName = nameValues[1];
 							}
-
+							else
+							if ( nameValues[0] == "PublicKey" )
+							{
+								publicKey = nameValues[1];
+							}
 						}
 
-						if ( memberID != null )
+						if ( memberName != null )
 						{
-							mdnsMember = mdnsRoster.GetMemberByID( memberID );
+							mdnsMember = mdnsRoster.GetMemberByID( member.Target );
 							if ( mdnsMember == null )
 							{
 								mdnsMember = 
-									new Member( member.Target, memberID, Access.Rights.ReadOnly );
+									new Member( memberName, member.Target, Access.Rights.ReadOnly );
+
+								if ( publicKey != null )
+								{
+									mdnsMember.Properties.AddProperty( "PublicKey", publicKey );
+								}
 
 								mdnsRoster.Commit( new Node[] { mdnsMember } );
 							}
@@ -415,6 +461,4 @@ namespace Simias.mDns
 		}
 		#endregion
 	}
-
-
 }

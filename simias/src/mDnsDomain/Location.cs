@@ -123,7 +123,6 @@ namespace Simias.Location
 
 			Mono.P2p.mDnsResponderApi.ServiceLocation[] sls = null;
 			if ( mDnsQuery.GetServiceLocationResources( out sls ) == 0 )
-			//if ( mDnsQuery.GetServiceByName( memberName, ref sl ) == 0 )
 			{
 				foreach(ServiceLocation sl in sls)
 				{
@@ -139,12 +138,82 @@ namespace Simias.Location
 									ArrayList ipAddrs = ha.GetIPAddresses();
 									if ( ipAddrs.Count > 0 )
 									{
-										locationUri = new Uri( "http://" + ipAddrs[0].ToString() );
+										locationUri = 
+											new Uri( "http://" + ipAddrs[0].ToString() + ":" + sl.Port.ToString() );
 									}
 									break;
 								}
 							}
 						}
+						break;
+					}
+				}
+			}
+
+			return locationUri;
+		}
+
+		private Uri MemberIDToUri( string memberID )
+		{
+			//Mono.P2p.mDnsResponderApi.ServiceLocation sl = null;
+			//Mono.P2p.mDnsResponderApi.HostAddress ha = null;
+			Uri locationUri = null;
+			string webServicePath = null;
+			Char[] sepChar = new Char [] {'='};
+
+			Mono.P2p.mDnsResponderApi.ServiceLocation[] sls = null;
+			if ( mDnsQuery.GetServiceLocationResources( out sls ) == 0 )
+			{
+				foreach(ServiceLocation sl in sls)
+				{
+					if ( sl.Name == memberID )
+					{
+						Mono.P2p.mDnsResponderApi.TextStrings[] txts = null;
+						if ( mDnsQuery.GetTextStringResources( out txts ) == 0 )
+						{
+							foreach( TextStrings ts in txts )
+							{
+								if ( ts.Name == memberID )
+								{
+									foreach( string s in ts.GetTextStrings() )
+									{
+										string[] nameValues = s.Split( sepChar );
+										if ( nameValues[0] == "ServicePath" )
+										{
+											webServicePath = nameValues[1];
+											break;
+										}
+									}
+									break;
+								}
+							}
+						}
+
+						if ( webServicePath != null )
+						{
+							Mono.P2p.mDnsResponderApi.HostAddress[] has = null;
+							if ( mDnsQuery.GetHostAddressResources( out has ) == 0 )
+							{
+								foreach( HostAddress ha in has )
+								{
+									if ( ha.Name == sl.Target )
+									{
+										ArrayList ipAddrs = ha.GetIPAddresses();
+										if ( ipAddrs.Count > 0 )
+										{
+											locationUri = 
+												new Uri(	"http://" + 
+															ipAddrs[0].ToString() + 
+															":" + 
+															sl.Port.ToString() +
+															webServicePath );
+										}
+										break;
+									}
+								}
+							}
+						}
+
 						break;
 					}
 				}
@@ -206,7 +275,7 @@ namespace Simias.Location
 				try
 				{
 					Collection collection = Store.GetStore().GetCollectionByID( collectionID );
-					locationUri = MemberToUri( collection.Owner.Name );
+					locationUri = MemberIDToUri( collection.Owner.ID );
 				}
 				catch ( Exception e )
 				{
@@ -242,7 +311,7 @@ namespace Simias.Location
 					Member member = collection.GetMemberByID( userID );
 					if ( member != null )
 					{
-						locationUri = MemberToUri( member.Name );
+						locationUri = MemberIDToUri( member.ID );
 					}
 				}
 				catch ( Exception e )
@@ -276,7 +345,7 @@ namespace Simias.Location
 					Member member = domain.Roster.GetMemberByID( userID );
 					if ( member != null )
 					{
-						locationUri = MemberToUri( member.Name );
+						locationUri = MemberIDToUri( member.ID );
 					}
 				}
 				catch ( Exception e )

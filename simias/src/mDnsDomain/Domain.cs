@@ -26,7 +26,6 @@ using System.Collections;
 using System.Xml;
 
 using Simias;
-//using Simias.Client;
 using Simias.Storage;
 
 namespace Simias.mDns
@@ -150,7 +149,6 @@ namespace Simias.mDns
 		internal void Init()
 		{
 			hostAddress = MyDns.GetHostName();
-			log.Debug( "  My Address: " + hostAddress );
 			Store store = Store.GetStore();
 
 			try
@@ -282,6 +280,7 @@ namespace Simias.mDns
 
 		#region Public Methods
 
+		/*
 		/// <summary>
 		/// Creates the local/master Rendezvous domain.
 		/// The Member, Roster and PO Box also gets created as well
@@ -345,6 +344,7 @@ namespace Simias.mDns
 				// FIXME:: rethrow the exception
 			}			
 		}
+		*/
 
 		/// <summary>
 		/// Checks if the local/master Rendezvous domain exists.
@@ -361,11 +361,9 @@ namespace Simias.mDns
 				mdnsDomain = store.GetDomain( ID );
 				if ( mdnsDomain != null )
 				{
-					Roster roster = mdnsDomain.Roster;
-					Member member = roster.GetMemberByName( mDnsUserName );
-					mDnsUserID = member.ID;
+					mDnsUserID = mdnsDomain.Roster.GetMemberByName( mDnsUserName ).ID;
 					Simias.POBox.POBox pobox = 
-						Simias.POBox.POBox.FindPOBox( store, ID, member.ID );
+						Simias.POBox.POBox.FindPOBox( store, ID, mDnsUserID );
 					mDnsPOBoxID = pobox.ID;
 					exists = true;
 				}
