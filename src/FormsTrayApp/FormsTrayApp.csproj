@@ -277,6 +277,16 @@
                     DependentUpon = "SyncLog.cs"
                     BuildAction = "EmbeddedResource"
                 />
+                <File
+                    RelPath = "ToolBarEx.cs"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ToolBarEx.resx"
+                    DependentUpon = "ToolBarEx.cs"
+                    BuildAction = "EmbeddedResource"
+                />
             </Include>
         </Files>
     </CSHARP>
