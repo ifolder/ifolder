@@ -22,7 +22,6 @@
  ***********************************************************************/
 
 #import <Cocoa/Cocoa.h>
-#include "iFolderStub.h"
 
 /*
 	@public
@@ -59,7 +58,7 @@
 -(NSMutableDictionary *) properties;
 -(void) setProperties: (NSDictionary *)newProperties;
 
--(void) setgSOAPProperties:(struct ns1__iFolderWeb *)ifolder;
+
 
 -(NSImage *)Image;
 -(NSString *)Location;

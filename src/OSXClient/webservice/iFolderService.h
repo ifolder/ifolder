@@ -26,7 +26,6 @@
 
 #import <Cocoa/Cocoa.h>
 #include <Carbon/Carbon.h>
-#import "iFolderDomain.h"
 #import "iFolder.h"
 
 
@@ -35,8 +34,6 @@
 }
 
 -(bool) Ping;
--(NSArray *) GetDomains;
--(iFolderDomain *) ConnectToDomain:(NSString *)UserName usingPassword:(NSString *)Password andHost:(NSString *)Host;
 -(void) AuthenticateToDomain:(NSString *)DomainID usingPassword:(NSString *)Password;
 -(NSArray *) GetiFolders;
 -(iFolder *) CreateiFolder:(NSString *)Path InDomain:(NSString *)DomainID;

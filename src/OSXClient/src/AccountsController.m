@@ -1,6 +1,6 @@
 #import "AccountsController.h"
 #import "MainWindowController.h"
-#import "iFolderService.h"
+#import "SimiasService.h"
 #import "iFolderDomain.h"
 
 
@@ -33,12 +33,12 @@
 	[removeAccount setEnabled:NO];
 
 	domains = [[NSMutableArray alloc] init];	
-	webService = [[iFolderService alloc] init];
+	simiasService = [[SimiasService alloc] init];
 
 	@try
 	{
 		int x;
-		NSArray *newDomains = [webService GetDomains];
+		NSArray *newDomains = [simiasService GetDomains];
 		// add all domains that are not workgroup
 		for(x=0; x < [newDomains count]; x++)
 		{
@@ -71,7 +71,7 @@
 	{
 		@try
 		{
-			iFolderDomain *newDomain = [webService ConnectToDomain:[userName stringValue] 
+			iFolderDomain *newDomain = [simiasService ConnectToDomain:[userName stringValue] 
 				usingPassword:[password stringValue] andHost:[host stringValue]];
 
 			createMode = NO;			
@@ -150,7 +150,10 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
 	NSLog(@"The selection changed");
-	selectedDomain = [domains objectAtIndex:[accounts selectedRow]];
+	if([accounts selectedRow] == -1)
+		selectedDomain = nil;
+	else
+		selectedDomain = [domains objectAtIndex:[accounts selectedRow]];
 
 	if(selectedDomain != nil)
 	{
@@ -262,9 +265,9 @@
 		([aNotification object] == host) ||
 		([aNotification object] == password) )
 	{
-		if( ([[host stringValue] length] > 0) &&
-			([[userName stringValue] length] > 0) &&
-			([[password stringValue] length] > 0) &&
+		if( ([host stringValue] != nil) && ([[host stringValue] length] > 0) &&
+			([userName stringValue] != nil) && ([[userName stringValue] length] > 0) &&
+			([password stringValue] != nil) && ([[password stringValue] length] > 0) &&
 			(createMode) )
 			[activate setEnabled:YES];
 		else
