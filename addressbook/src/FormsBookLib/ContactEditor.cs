@@ -27,7 +27,6 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
-using System.Text.RegularExpressions;
 using Simias.Storage;
 using Novell.AddressBook;
 
@@ -70,6 +69,7 @@ namespace Novell.iFolder.FormsBookLib
 		private Hashtable phoneHT;
 		private Hashtable emailHT;
 		private Name name;
+		private bool nameValidated;
 		private AddressEntry homeAddrEntry;
 		private AddressEntry workAddrEntry;
 		private string loadPath;
@@ -113,6 +113,7 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.GroupBox groupBox5;
 		private System.Windows.Forms.TextBox notes;
 		private System.Windows.Forms.Label label15;
+		private System.Windows.Forms.TextBox address;
 
 		/// <summary>
 		/// Required designer variable.
@@ -134,6 +135,9 @@ namespace Novell.iFolder.FormsBookLib
 			preferredEmail.Enabled = false;
 			birthdayPicker.Format = DateTimePickerFormat.Short;
 			anniversaryPicker.Format = DateTimePickerFormat.Short;
+
+			// TODO - remove this after rework.
+			this.address.Hide();
 		}
 
 		/// <summary>
@@ -160,6 +164,7 @@ namespace Novell.iFolder.FormsBookLib
 		{
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.address = new System.Windows.Forms.TextBox();
 			this.pictureContact = new System.Windows.Forms.PictureBox();
 			this.changePicture = new System.Windows.Forms.Button();
 			this.fullNameButton = new System.Windows.Forms.Button();
@@ -197,6 +202,9 @@ namespace Novell.iFolder.FormsBookLib
 			this.label2 = new System.Windows.Forms.Label();
 			this.fullName = new System.Windows.Forms.TextBox();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.label15 = new System.Windows.Forms.Label();
+			this.notes = new System.Windows.Forms.TextBox();
+			this.groupBox5 = new System.Windows.Forms.GroupBox();
 			this.anniversary = new System.Windows.Forms.TextBox();
 			this.anniversaryPicker = new System.Windows.Forms.DateTimePicker();
 			this.birthday = new System.Windows.Forms.TextBox();
@@ -220,9 +228,6 @@ namespace Novell.iFolder.FormsBookLib
 			this.label1 = new System.Windows.Forms.Label();
 			this.ok = new System.Windows.Forms.Button();
 			this.cancel = new System.Windows.Forms.Button();
-			this.groupBox5 = new System.Windows.Forms.GroupBox();
-			this.notes = new System.Windows.Forms.TextBox();
-			this.label15 = new System.Windows.Forms.Label();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.tabPage2.SuspendLayout();
@@ -240,6 +245,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// tabPage1
 			// 
+			this.tabPage1.Controls.Add(this.address);
 			this.tabPage1.Controls.Add(this.pictureContact);
 			this.tabPage1.Controls.Add(this.changePicture);
 			this.tabPage1.Controls.Add(this.fullNameButton);
@@ -282,6 +288,17 @@ namespace Novell.iFolder.FormsBookLib
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "General";
 			// 
+			// address
+			// 
+			this.address.Location = new System.Drawing.Point(528, 160);
+			this.address.Multiline = true;
+			this.address.Name = "address";
+			this.address.Size = new System.Drawing.Size(192, 95);
+			this.address.TabIndex = 52;
+			this.address.Text = "";
+			this.address.Leave += new System.EventHandler(this.address_Leave);
+			this.address.Enter += new System.EventHandler(this.address_Enter);
+			// 
 			// pictureContact
 			// 
 			this.pictureContact.Location = new System.Drawing.Point(16, 8);
@@ -294,9 +311,9 @@ namespace Novell.iFolder.FormsBookLib
 			// changePicture
 			// 
 			this.changePicture.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.changePicture.Location = new System.Drawing.Point(12, 4);
+			this.changePicture.Location = new System.Drawing.Point(16, 8);
 			this.changePicture.Name = "changePicture";
-			this.changePicture.Size = new System.Drawing.Size(68, 83);
+			this.changePicture.Size = new System.Drawing.Size(60, 75);
 			this.changePicture.TabIndex = 5;
 			this.changePicture.Text = "Photo...";
 			this.changePicture.Click += new System.EventHandler(this.changePicture_Click);
@@ -634,6 +651,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.fullName.Size = new System.Drawing.Size(192, 20);
 			this.fullName.TabIndex = 1;
 			this.fullName.Text = "";
+			this.fullName.TextChanged += new System.EventHandler(this.fullName_TextChanged);
 			this.fullName.Leave += new System.EventHandler(this.fullName_Leave);
 			// 
 			// tabPage2
@@ -667,6 +685,31 @@ namespace Novell.iFolder.FormsBookLib
 			this.tabPage2.Size = new System.Drawing.Size(728, 286);
 			this.tabPage2.TabIndex = 1;
 			this.tabPage2.Text = "Details";
+			// 
+			// label15
+			// 
+			this.label15.Location = new System.Drawing.Point(8, 184);
+			this.label15.Name = "label15";
+			this.label15.Size = new System.Drawing.Size(100, 16);
+			this.label15.TabIndex = 23;
+			this.label15.Text = "Notes:";
+			// 
+			// notes
+			// 
+			this.notes.Location = new System.Drawing.Point(8, 200);
+			this.notes.Multiline = true;
+			this.notes.Name = "notes";
+			this.notes.Size = new System.Drawing.Size(712, 80);
+			this.notes.TabIndex = 22;
+			this.notes.Text = "";
+			// 
+			// groupBox5
+			// 
+			this.groupBox5.Location = new System.Drawing.Point(8, 168);
+			this.groupBox5.Name = "groupBox5";
+			this.groupBox5.Size = new System.Drawing.Size(712, 4);
+			this.groupBox5.TabIndex = 21;
+			this.groupBox5.TabStop = false;
 			// 
 			// anniversary
 			// 
@@ -857,31 +900,6 @@ namespace Novell.iFolder.FormsBookLib
 			this.cancel.TabIndex = 2;
 			this.cancel.Text = "Cancel";
 			this.cancel.Click += new System.EventHandler(this.cancel_Click);
-			// 
-			// groupBox5
-			// 
-			this.groupBox5.Location = new System.Drawing.Point(8, 168);
-			this.groupBox5.Name = "groupBox5";
-			this.groupBox5.Size = new System.Drawing.Size(712, 4);
-			this.groupBox5.TabIndex = 21;
-			this.groupBox5.TabStop = false;
-			// 
-			// notes
-			// 
-			this.notes.Location = new System.Drawing.Point(8, 200);
-			this.notes.Multiline = true;
-			this.notes.Name = "notes";
-			this.notes.Size = new System.Drawing.Size(712, 80);
-			this.notes.TabIndex = 22;
-			this.notes.Text = "";
-			// 
-			// label15
-			// 
-			this.label15.Location = new System.Drawing.Point(8, 184);
-			this.label15.Name = "label15";
-			this.label15.Size = new System.Drawing.Size(100, 16);
-			this.label15.TabIndex = 23;
-			this.label15.Text = "Notes:";
 			// 
 			// ContactEditor
 			// 
@@ -1149,6 +1167,29 @@ namespace Novell.iFolder.FormsBookLib
 				if (addr.Country != "")
 					addressView.Items.Add(addr.Country);
 			}
+/* REWORK in progress...
+			address.Clear();
+
+			if (addr != null)
+			{
+				string[] fullAddr = new string[5];
+				int index = 0;
+
+				if (addr.Street != String.Empty)
+					fullAddr[index++] = addr.Street;
+				if (addr.ExtendedAddress != String.Empty)
+					fullAddr[index++] = addr.ExtendedAddress;
+				if (addr.PostalBox != String.Empty)
+					fullAddr[index++] = "P.O. Box " + addr.PostalBox;
+				if (addr.Locality != String.Empty || 
+					addr.Region != String.Empty || 
+					addr.PostalCode != String.Empty)
+					fullAddr[index++] = addr.Locality + ", " + addr.Region + " " + addr.PostalCode;
+				if (addr.Country != String.Empty)
+					fullAddr[index++] = addr.Country;
+
+				address.Lines = fullAddr;
+			}*/
 		}
 
 		private string ConvertDateToString(DateTime dt)
@@ -1176,6 +1217,8 @@ namespace Novell.iFolder.FormsBookLib
 			}
 			catch{}
 
+			pictureContact.Hide();
+
 			if (contact != null)
 			{
 				// Initialize the dialog with the specified contact.
@@ -1185,6 +1228,7 @@ namespace Novell.iFolder.FormsBookLib
 				{
 					name = this.contact.GetPreferredName();
 					fullName.Text = name.FN;
+					nameValidated = true;
 				}
 				catch
 				{
@@ -1202,12 +1246,10 @@ namespace Novell.iFolder.FormsBookLib
 				{
 					pictureContact.SizeMode = PictureBoxSizeMode.StretchImage;
 					pictureContact.Image = Image.FromStream(contact.ExportPhoto());
+					pictureContact.Show();
 					changePicture.Hide();
 				}
-				catch
-				{
-					pictureContact.Hide();
-				}
+				catch{}
 
 				bool results = LoadAddresses();
 			}
@@ -1666,6 +1708,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 
 				fullName.Text = name.FN;
+				nameValidated = true;
 			}
 		}
 
@@ -1857,58 +1900,24 @@ namespace Novell.iFolder.FormsBookLib
 			// Parse name...
 			// TODO - much more to be done here ... this is just a starting point.
 
-			// Make sure some text has been entered.
-			string tmpName = fullName.Text.Trim();
-			if (tmpName.Length > 0)
+			// If the Cancel button was clicked, we're done.
+			if (cancel.Focused)
+				return;
+
+			if (name == null)
 			{
-//				bool newName = false;
-
-				// Initialize.
-				if (name == null)
-				{
-					name = new Name();
-//					newName = true;
-				}
-
-				Regex o = new Regex("[ ]+");
-				string[] s = o.Split(tmpName);
-				int length = s.Length;
-//				if (newName)
-				{
-					name.Given = s[0];
-
-					if (length != 2)
-					{
-						if (length > 1)
-						{
-							for (int n = 1; n < length - 1; n++)
-							{
-								name.Other += s[n] + " ";
-							}
-
-							name.Other = name.Other.Trim();
-							name.Family = s[length - 1];
-						}
-
-						fullNameButton_Click(this, null);
-					}
-					else
-					{
-						name.Family = s[length - 1];
-					}
-				}
-//				else
-//				{
-//					name.Given = s[0];
-//				}
+				name = new Name();
 			}
-			else if (name != null)
+
+			// Trim whitespace from beginning and end of string.
+			string tmpName = fullName.Text.Trim();
+
+			// Parse the string.
+			if (!FullNameParser.Parse(tmpName, ref name) && !nameValidated)
 			{
-				name.Given = "";
-				name.Other = "";
-				name.Family = "";
-				name.Prefix = "";
-				name.Suffix = "";
+				// If the name didn't parse correctly and the name has not been
+				// validated by the user, popup the full name dialog.
+				fullNameButton_Click(this, null);
 			}
 		}
 
@@ -1941,6 +1950,81 @@ namespace Novell.iFolder.FormsBookLib
 //			{
 //				anniversary.Text = "None";
 //			}
+		}
+
+		private void address_Enter(object sender, System.EventArgs e)
+		{
+			// Remove accept button so that <Enter> will go to the next line in the
+			// multi-line edit box.
+			this.AcceptButton = null;
+		}
+
+		private void address_Leave(object sender, System.EventArgs e)
+		{
+/* REWORK in progress...
+			// We're done with the multi-line edit box, set the ok button back to the
+			// accept button.
+			this.AcceptButton = ok;
+		
+			AddressEntry selectedAddr;
+			
+			if (addressSelect.SelectedIndex == 0)
+			{
+				if (workAddrEntry.Addr == null)
+				{
+					workAddrEntry.Addr = new Address();
+					workAddrEntry.Add = true;
+					workAddrEntry.Addr.Types = AddressTypes.work;
+				}
+				selectedAddr = workAddrEntry;
+			}
+			else
+			{
+				if (homeAddrEntry.Addr == null)
+				{
+					homeAddrEntry.Addr = new Address();
+					homeAddrEntry.Add = true;
+					homeAddrEntry.Addr.Types = AddressTypes.home;
+				}
+				selectedAddr = homeAddrEntry;
+			}
+
+			// Parse the address.
+			AddressParser.Parse(address.Lines, ref selectedAddr);
+			int index = address.Lines.Length;
+			while (index-- > 0)
+			{
+				int comma = address.Lines[index].IndexOf(",");
+				if (comma != -1 && comma != 0)
+				{
+					// The city comes first.
+					selectedAddr.Addr.Locality = address.Lines[index].Substring(0, comma);
+
+					// Check for a zip code on this line.
+					string tmp = address.Lines[index].Substring(comma + 1).Trim();
+					int space = tmp.LastIndexOf(" ");
+					if (space != -1)
+					{
+						string tmpZip = tmp.Substring(space + 1);
+						int g;
+						try
+						{
+							g = int.Parse(tmpZip, NumberStyles.Number);
+						}
+						catch{}
+
+						bool bOOM = true;
+					}
+					
+					selectedAddr.Addr.Region = address.Lines[index].Substring(comma + 1);
+					break;
+				}
+			}*/
+		}
+
+		private void fullName_TextChanged(object sender, System.EventArgs e)
+		{
+			nameValidated = false;
 		}
 
 		private void cancel_Click(object sender, System.EventArgs e)

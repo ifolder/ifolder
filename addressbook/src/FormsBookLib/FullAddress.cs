@@ -41,7 +41,6 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Label label7;
-		private System.Windows.Forms.TextBox country;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
@@ -51,6 +50,10 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.TextBox region;
 		private System.Windows.Forms.TextBox postalBox;
 		private System.Windows.Forms.TextBox postalCode;
+		private System.Windows.Forms.ComboBox country;
+
+		// TODO - add countries to combo box.
+
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -103,10 +106,10 @@ namespace Novell.iFolder.FormsBookLib
 			this.region = new System.Windows.Forms.TextBox();
 			this.postalBox = new System.Windows.Forms.TextBox();
 			this.postalCode = new System.Windows.Forms.TextBox();
-			this.country = new System.Windows.Forms.TextBox();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.ok = new System.Windows.Forms.Button();
 			this.cancel = new System.Windows.Forms.Button();
+			this.country = new System.Windows.Forms.ComboBox();
 			this.SuspendLayout();
 			// 
 			// street
@@ -130,7 +133,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.label1.Location = new System.Drawing.Point(40, 10);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(56, 16);
-			this.label1.TabIndex = 2;
+			this.label1.TabIndex = 9;
 			this.label1.Text = "&Address:";
 			// 
 			// label2
@@ -138,7 +141,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.label2.Location = new System.Drawing.Point(31, 42);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(64, 16);
-			this.label2.TabIndex = 3;
+			this.label2.TabIndex = 10;
 			this.label2.Text = "Address &2:";
 			// 
 			// label3
@@ -146,7 +149,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.label3.Location = new System.Drawing.Point(59, 74);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(40, 16);
-			this.label3.TabIndex = 4;
+			this.label3.TabIndex = 11;
 			this.label3.Text = "Ci&ty:";
 			// 
 			// label4
@@ -154,7 +157,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.label4.Location = new System.Drawing.Point(6, 106);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(88, 16);
-			this.label4.TabIndex = 5;
+			this.label4.TabIndex = 12;
 			this.label4.Text = "&State/Province:";
 			// 
 			// label5
@@ -162,7 +165,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.label5.Location = new System.Drawing.Point(304, 42);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(56, 16);
-			this.label5.TabIndex = 6;
+			this.label5.TabIndex = 13;
 			this.label5.Text = "&PO Box:";
 			// 
 			// label6
@@ -170,7 +173,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.label6.Location = new System.Drawing.Point(296, 74);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(64, 16);
-			this.label6.TabIndex = 7;
+			this.label6.TabIndex = 14;
 			this.label6.Text = "&ZIP Code:";
 			// 
 			// label7
@@ -178,7 +181,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.label7.Location = new System.Drawing.Point(304, 106);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(48, 16);
-			this.label7.TabIndex = 8;
+			this.label7.TabIndex = 15;
 			this.label7.Text = "Countr&y:";
 			// 
 			// locality
@@ -186,7 +189,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.locality.Location = new System.Drawing.Point(88, 72);
 			this.locality.Name = "locality";
 			this.locality.Size = new System.Drawing.Size(200, 20);
-			this.locality.TabIndex = 9;
+			this.locality.TabIndex = 3;
 			this.locality.Text = "";
 			// 
 			// region
@@ -194,7 +197,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.region.Location = new System.Drawing.Point(88, 104);
 			this.region.Name = "region";
 			this.region.Size = new System.Drawing.Size(200, 20);
-			this.region.TabIndex = 10;
+			this.region.TabIndex = 4;
 			this.region.Text = "";
 			// 
 			// postalBox
@@ -202,7 +205,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.postalBox.Location = new System.Drawing.Point(352, 40);
 			this.postalBox.Name = "postalBox";
 			this.postalBox.Size = new System.Drawing.Size(200, 20);
-			this.postalBox.TabIndex = 11;
+			this.postalBox.TabIndex = 2;
 			this.postalBox.Text = "";
 			// 
 			// postalCode
@@ -210,23 +213,15 @@ namespace Novell.iFolder.FormsBookLib
 			this.postalCode.Location = new System.Drawing.Point(352, 72);
 			this.postalCode.Name = "postalCode";
 			this.postalCode.Size = new System.Drawing.Size(200, 20);
-			this.postalCode.TabIndex = 12;
+			this.postalCode.TabIndex = 5;
 			this.postalCode.Text = "";
-			// 
-			// country
-			// 
-			this.country.Location = new System.Drawing.Point(352, 104);
-			this.country.Name = "country";
-			this.country.Size = new System.Drawing.Size(200, 20);
-			this.country.TabIndex = 13;
-			this.country.Text = "";
 			// 
 			// groupBox1
 			// 
 			this.groupBox1.Location = new System.Drawing.Point(4, 136);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Size = new System.Drawing.Size(552, 4);
-			this.groupBox1.TabIndex = 14;
+			this.groupBox1.TabIndex = 16;
 			this.groupBox1.TabStop = false;
 			// 
 			// ok
@@ -235,7 +230,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.ok.Location = new System.Drawing.Point(400, 152);
 			this.ok.Name = "ok";
-			this.ok.TabIndex = 15;
+			this.ok.TabIndex = 7;
 			this.ok.Text = "OK";
 			// 
 			// cancel
@@ -244,8 +239,15 @@ namespace Novell.iFolder.FormsBookLib
 			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.cancel.Location = new System.Drawing.Point(480, 152);
 			this.cancel.Name = "cancel";
-			this.cancel.TabIndex = 16;
+			this.cancel.TabIndex = 8;
 			this.cancel.Text = "Cancel";
+			// 
+			// country
+			// 
+			this.country.Location = new System.Drawing.Point(352, 104);
+			this.country.Name = "country";
+			this.country.Size = new System.Drawing.Size(200, 21);
+			this.country.TabIndex = 6;
 			// 
 			// FullAddress
 			// 
@@ -253,10 +255,10 @@ namespace Novell.iFolder.FormsBookLib
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.CancelButton = this.cancel;
 			this.ClientSize = new System.Drawing.Size(562, 184);
+			this.Controls.Add(this.country);
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.groupBox1);
-			this.Controls.Add(this.country);
 			this.Controls.Add(this.postalCode);
 			this.Controls.Add(this.postalBox);
 			this.Controls.Add(this.extendedAddress);
