@@ -33,8 +33,8 @@ install-exec-local: Simias.mDns.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) Simias.mDns.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) mDns.asmx $(DESTDIR)$(webdir)
-	$(INSTALL_PROGRAM)./external/mDnsResponder.dll $(DESTDIR)$(webbindir)
-	$(INSTALL_PROGRAM)./external/mDnsResponderApi.dll $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) ./external/mDnsResponder.dll $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) ./external/mDnsResponderApi.dll $(DESTDIR)$(webbindir)
 	
 uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f Simias.mDns.dll mDnsResponder.dll mDnsResponderApi.dll $(DEBUG_FILES)
