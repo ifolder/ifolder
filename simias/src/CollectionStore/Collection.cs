@@ -852,6 +852,7 @@ namespace Simias.Storage
 						}
 
 						case PropertyList.PropertyListState.Update:
+						case PropertyList.PropertyListState.Import:
 						{
 							long oldLength = 0;
 
@@ -888,7 +889,9 @@ namespace Simias.Storage
 				if ( cNode.Properties.State == PropertyList.PropertyListState.Add )
 				{
 					// No need to look up the old amount, just add the new amount.
-					cNode.Properties.ModifyNodeProperty( PropertyTags.StorageSize, storeBytes );
+					Property p = new Property( PropertyTags.StorageSize, storeBytes );
+					p.LocalProperty = true;
+					cNode.Properties.ModifyNodeProperty( p );
 				}
 				else
 				{
@@ -900,7 +903,9 @@ namespace Simias.Storage
 						cNode.DiskNode = diskCollection;
 
 						// Set the new storage size for the collection.
-						cNode.Properties.ModifyNodeProperty( PropertyTags.StorageSize, diskCollection.StorageSize + storeBytes );
+						Property p = new Property( PropertyTags.StorageSize, diskCollection.StorageSize + storeBytes );
+						p.LocalProperty = true;
+						cNode.Properties.ModifyNodeProperty( p );
 					}
 				}
 			}

@@ -55,7 +55,6 @@ namespace Simias.Storage
 		/// <param name="fullPath">The full path of the modified file.</param>
 		/// <param name="collectionId">The collection that this file belongs to.</param>
 		/// <param name="changeType">The FileChangeType for this event.</param>
-		/// <param name="time">The time of the event.</param>
 		public FileEventArgs(string source, string fullPath, string collectionId, EventType changeType):
 			this(source, fullPath, collectionId, changeType, DateTime.Now)
 		{
