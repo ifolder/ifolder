@@ -205,7 +205,7 @@ namespace Simias.Gaim
 				// Verify the POBox for the local SimpleServer owner
 				//
 
-//				Member pMember;
+				Member pMember;
 				Simias.POBox.POBox poBox = null;
 				string poBoxName = "POBox:" + gaimDomain.ID + ":" + ldbMember.ID;
 
@@ -219,23 +219,23 @@ namespace Simias.Gaim
 					poBox = new Simias.POBox.POBox( store, poBoxName, gaimDomain.ID );
 					poBox.CreateMaster = false;
 
-//					pMember = 
-//						new Member( ldbMember.Name, ldbMember.ID, Access.Rights.ReadWrite );
-//					pMember.IsOwner = true;
-//					poBox.Commit(new Node[] { poBox, pMember });
+					pMember = 
+						new Member( ldbMember.Name, ldbMember.ID, Access.Rights.ReadWrite );
+					pMember.IsOwner = true;
+					poBox.Commit(new Node[] { poBox, pMember });
 					poBox.Commit(new Node[] { poBox });
 				}
 				else
 				{
 					// verify member in POBox
-//					pMember = poBox.GetMemberByID( ldbMember.ID );
-//					if (pMember == null)
-//					{
-//						pMember = 
-//							new Member( ldbMember.Name, ldbMember.ID, Access.Rights.ReadWrite );
-//						pMember.IsOwner = true;
-//						poBox.Commit(new Node[] { pMember });
-//					}
+					pMember = poBox.GetMemberByID( ldbMember.ID );
+					if (pMember == null)
+					{
+						pMember = 
+							new Member( ldbMember.Name, ldbMember.ID, Access.Rights.ReadWrite );
+						pMember.IsOwner = true;
+						poBox.Commit(new Node[] { pMember });
+					}
 				}
 			}
 			catch(Exception e1)
@@ -302,7 +302,7 @@ namespace Simias.Gaim
 					// Make sure this is an Address Book
 					//
 					gaimDomain.SetType(gaimDomain, "AB:AddressBook");
-
+					
 					gaimDomain.Commit(new Node[] {gaimDomain, domainOwner});
 
 					store.AddDomainIdentity(this.id, ownerID);
