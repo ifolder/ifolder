@@ -6,8 +6,8 @@ TrayAppGtk_CSFILES_CSC := $(subst /,$(SEP),$(TrayAppGtk_CSFILES))
 TrayAppGtk_INCLUDES = 
 TrayAppGtk_RESOURCES =
 TrayAppGtk_FLAGS = $(CSC_EXEFLAG)
-TrayAppGtk_LIBS = System.dll System.Drawing.dll System.Data.dll gtk-sharp.dll gnome-sharp.dll glib-sharp.dll glade-sharp.dll gdk-sharp.dll $(SYSTEM_XML) Common.dll StoreProvider.dll CollectionStore.dll AddressBook.dll iFolder.dll egg-sharp.dll CBLib.dll Sync.dll SyncCommon.dll Invitation.dll SyncManager.dll Common.dll CommonGtkWindows.dll SyncLogicLite.dll Simias.Service.dll
-TrayAppGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin $(ADDRESSBOOK_INSTALL_PATH)/bin ../iFolder
+TrayAppGtk_LIBS = System.dll System.Drawing.dll System.Data.dll gtk-sharp.dll gnome-sharp.dll glib-sharp.dll glade-sharp.dll gdk-sharp.dll $(SYSTEM_XML) Common.dll StoreProvider.dll CollectionStore.dll AddressBook.dll iFolder.dll TrayIcon.dll CBLib.dll Sync.dll SyncCommon.dll Invitation.dll SyncManager.dll Common.dll CommonGtkWindows.dll SyncLogicLite.dll Simias.Service.dll
+TrayAppGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin $(srcdir)/../TrayIcon $(ADDRESSBOOK_INSTALL_PATH)/bin ../iFolder
 
 
 InviteAppGtk_CSFILES = $(srcdir)/InviteApp.cs $(srcdir)/InvitationWizard.cs
@@ -29,7 +29,7 @@ CollectionBrowserGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin $(ADDRESSBOOK_INSTALL_
 
 INSTALL_FILES = $(srcdir)/invitationwizard $(srcdir)/ifolder $(srcdir)/setup-autostart
 
-DATA_FILES = $(srcdir)/ifolder.glade $(srcdir)/ifolder-confirmation.glade $(srcdir)/properties-dialog.glade $(srcdir)/folder.png $(srcdir)/ifolder.png $(srcdir)/ifolderfolder.png $(srcdir)/invitewiz.png $(srcdir)/leafnode.png $(srcdir)/node.png $(srcdir)/file.xpm $(srcdir)/ifolder.gif $(srcdir)/property.png $(srcdir)/libegg.so $(srcdir)/egg-sharp.dll
+DATA_FILES = $(srcdir)/ifolder.glade $(srcdir)/ifolder-confirmation.glade $(srcdir)/properties-dialog.glade $(srcdir)/folder.png $(srcdir)/ifolder.png $(srcdir)/ifolderfolder.png $(srcdir)/invitewiz.png $(srcdir)/leafnode.png $(srcdir)/node.png $(srcdir)/file.xpm $(srcdir)/ifolder.gif $(srcdir)/property.png
 
 EXTRA_DIST = $(TrayAppGtk_CSFILES) $(InviteAppGtk_CSFILES) $(CollectionBrowserGtk_CSFILES) $(DATA_FILES) $(INSTALL_FILES)
 
