@@ -10,7 +10,7 @@ package package-clean package-install package-uninstall:
 # On Windows, they use SUBDIRS.  These overloaded targets
 # pass the target on to any directories in DIST_SUBDIRS that
 # are not in SUBDIRS.
-distclean maintainer-clean:
+distclean maintainer-clean: package-clean
 	for subdir in $(DIST_SUBDIRS); do \
 	  test ! -f "$$subdir/Makefile" || $(MAKE) -C "$$subdir" $@; \
 	done
