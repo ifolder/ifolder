@@ -484,13 +484,10 @@ src/iFolder/iFolderCmd
 src/iFolder/ifolders
 src/GtkTrayApp/Makefile
 src/GtkTrayApp/ifolder
-src/GtkTrayApp/ifolderbrowser
 src/GtkTrayApp/ifolder.desktop
-src/GtkTrayApp/invitationwizard
 src/GtkTrayApp/collectionbrowser
 src/GtkTrayApp/setup-autostart
 src/GtkTrayApp/Util.cs
-src/iFolderNautilus/Makefile
 src/FormsTrayApp/Makefile
 src/FormsInvitationWizard/Makefile
 src/iFolderShell/Makefile
