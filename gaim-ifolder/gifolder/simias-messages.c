@@ -32,26 +32,30 @@
 #include "simias-util.h"
 #include "simias-prefs.h"
 #include "gaim-domain.h"
+#include "buddy-profile.h"
 
 /* Gaim Includes */
 #include "internal.h"
-#include "network.h"
 #include "util.h"
 #include "connection.h"
 
 /**
  * Non-public Functions
  */
-static int send_ping(GaimBuddy *recipient, const char *ping_type);
-static gboolean parse_simias_info(const char *buffer, char **publicKey, char **machineName, char **userID, char **simiasURL);
 static SIMIAS_MSG_TYPE get_possible_simias_msg_type(const char *buffer);
 
-static gboolean handle_ping_request(GaimAccount *account,
-									const char *sender,
-									const char *buffer);
-static gboolean handle_ping_response(GaimAccount *account,
-									 const char *sender,
-									 const char *buffer);
+static gboolean handle_invitation_request(GaimAccount *account,
+										  const char *sender,
+										  const char *buffer);
+static gboolean handle_invitation_deny(GaimAccount *account,
+									   const char *sender,
+									   const char *buffer);
+static gboolean handle_invitation_accept(GaimAccount *account,
+										 const char *sender,
+										 const char *buffer);
+static gboolean handle_invitation_complete(GaimAccount *account,
+										   const char *sender,
+										   const char *buffer);
 
 /**
  * This function takes a generic message and sends it to the specified recipient
@@ -85,160 +89,224 @@ fprintf(stderr, "Sending message: %s\n", msg);
 }
 
 /**
- * Replaces the host with the one Gaim determines to be public.
- * The returned string must be freed.
+ * This function sends a message with the following format:
+ *
+ * [simias:invitation-request:<Base64Encoded Public Key>:<Base64Encoded Machine Name>]
  */
-static char *
-convert_url_to_public(const char *start_url)
+int
+simias_send_invitation_request(GaimBuddy *recipient)
 {
-	char new_url[1024];
-	char *public_ip = NULL;
-	char *proto = NULL;
-	char *host = NULL;
-	char *port = NULL;
-	char *path = NULL;
-	char localhost[129];
-	struct hostent *myhost;
-	char **addr_list;
-	struct sockaddr_in sAddr;
-	char *temp_ip;
-
-	if (simias_url_parse(start_url, &proto, &host, &port, &path)) {
-	
-		if (gethostname(localhost, 128) < 0)
-			sprintf(localhost, "localhost");
-
-		myhost = gethostbyname(localhost);
-		if (myhost)
-		{	
-			addr_list = myhost->h_addr_list;
-			while (*addr_list)
-			{
-				/* Get the IP address string */
-				memcpy(&sAddr.sin_addr.s_addr, *addr_list, myhost->h_length);
-				
-				temp_ip = inet_ntoa(sAddr.sin_addr);
-				if (!temp_ip || strncmp(temp_ip, "127.0.0.", 8) == 0)
-				{
-					fprintf(stderr, "Skipping localhost\n");
-				}
-				else
-				{
-					fprintf(stderr, "Using IP: %s\n", temp_ip);
-					public_ip = strdup(temp_ip);
-					break;
-				}
-
-				addr_list++;
-			}
-
-			if (!public_ip)
-			{
-				fprintf(stderr, "Couldn't determine IP address\n");
-				public_ip = strdup(localhost);
-			}
-		}
-
-		if (path) {
-			sprintf(new_url, "%s://%s:%s/%s", proto, public_ip, port, path);
-		}
-		
-		if (public_ip) free(public_ip);
-		if (proto) free(proto);
-		if (host) free(host);
-		if (port) free(port);
-		if (path) free(path);
-		
-		return strdup(new_url);
-	}
-	
-	return NULL;
-}
-
-/**
- * This will either send a ping request or a ping response based
- * on the ping_type parameter.
- */
-static int
-send_ping(GaimBuddy *recipient, const char *ping_type)
-{
-	char msg[4096];
 	char *publicKey;
+	char msg[4096];
 	char *base64Key;
-	char *machineName;
-	char *userID;
-	char *simias_service_url;
-	char *escaped_url;
-	char *public_url;
 	int err;
 
-	/* Get the PublicKey for the user */
+	char *machineName;
+	char *base64MachineName;
+
 	err = simias_get_public_key(&publicKey);
 	if (err != 0)
 	{
-		/**
-		 * There was an error an none of the returns are valid.  The most
-		 * likely cause is that Simias was not running.
-		 */
-fprintf(stderr, "simias_get_public_key() returned: %d\n", err);
-		return -12312;
+		/* FIXME: Prompt the user to make sure iFolder is up and running...or kick Simias to start before continuing. */
+		fprintf(stderr, "Error getting public key (%d).  Maybe iFolder is not running?\n", err);
+		return -1;
 	}
 	
+	/* Base64Encode the public key so it gets sent nicely (not in XML) */
 	base64Key = gaim_base64_encode(publicKey, strlen(publicKey));
+	free(publicKey);
 
-	/* Get the Gaim Domain User Info */
-	err = simias_get_user_info(&machineName, &userID, &simias_service_url); 
+	err = simias_get_machine_name(&machineName);
 	if (err != 0)
 	{
-		/* There was an error and none of the returns are valid */
-fprintf(stderr, "simias_get_user_info() returned: %d\n", err);
-		return -23432;
+		free(base64Key);
+		fprintf(stderr, "Error (%d) calling simias_get_machine_name() in simias_send_invitation_request().  Perhaps iFolder/Simias is not running?\n", err);
+		return -2;
 	}
 
-	escaped_url = simias_escape_spaces(simias_service_url);
-	free(simias_service_url);
+	/* Base64Encode the machine name so it gets sent nicely */
+	base64MachineName = gaim_base64_encode(machineName, strlen(machineName));
+	free(machineName);
 	
-	public_url = convert_url_to_public(escaped_url);
-	if (public_url) {
-		sprintf(msg, "%s%s:%s:%s:%s]", ping_type, base64Key, machineName, userID, public_url);
-		free(public_url);
-	} else {
-		free(machineName);
-		free(userID);
-		free(escaped_url);
-		fprintf(stderr, "convert_url_to_public() returned NULL.  Cannot send message.\n");
-		return -1234;
+	sprintf(msg, "%s%s:%s]", INVITATION_REQUEST_MSG, base64Key, base64MachineName);
+	free(base64Key);
+	free(base64MachineName);
+	
+	return simias_send_msg(recipient, msg);
+}
+
+/**
+ * This function sends a message with the following format:
+ *
+ * [simias:invitation-deny]
+ */
+int
+simias_send_invitation_deny(GaimBuddy *recipient)
+{
+	return simias_send_msg(recipient, INVITATION_DENY_MSG);
+}
+
+/**
+ * This function sends a message with the following format:
+ *
+ * [simias:invitation-accept:<Base64Encoded Public Key>:<Base64Encoded Machine Name>:<Base64Encoded DES key encrypted with the recipient's public key>]
+ */
+int
+simias_send_invitation_accept(GaimBuddy *recipient, const char *recipientMachineName)
+{
+	char msg[4096];
+	char *publicKey;
+	char *base64PublicKey;
+
+	char *machineName;
+	char *base64MachineName;
+
+	char *desKey;
+
+	const char *recipientBase64PublicKey;
+	char *recipientPublicKey;
+	int recipientPublicKeyLen;
+	char settingName[1024];
+	char *encryptedDESKey;
+	int err;
+
+	err = simias_get_public_key(&publicKey);
+	if (err != 0)
+	{
+		/* FIXME: Prompt the user to make sure iFolder is up and running...or kick Simias to start before continuing. */
+		fprintf(stderr, "simias_get_public_key() returned an error (%d).  Maybe iFolder is not running?\n", err);
+		return -1;
 	}
 	
-	free(base64Key);
+	/* Base64Encode the public key so it gets sent nicely (not in XML) */
+	base64PublicKey = gaim_base64_encode(publicKey, strlen(publicKey));
 	free(publicKey);
+
+	err = simias_get_machine_name(&machineName);
+	if (err != 0)
+	{
+		free(base64PublicKey);
+		fprintf(stderr, "Error (%d) calling simias_get_machine_name() in simias_send_invitation_accept().  Perhaps iFolder/Simias is not running?\n", err);
+		return -2;
+	}
+
+	/* Base64Encode the machine name so it gets sent nicely */
+	base64MachineName = gaim_base64_encode(machineName, strlen(machineName));
 	free(machineName);
-	free(userID);
-	free(escaped_url);
+	
+	err = simias_get_des_key(&desKey);
+	if (err != 0)
+	{
+		free(base64PublicKey);
+		free(base64MachineName);
+		fprintf(stderr, "simias_get_des_key() returned an error (%d).  Maybe iFolder is not running?\n", err);
+		return -3;
+	}
+
+	sprintf(settingName, "simias-public-key:%s", recipientMachineName);
+	recipientBase64PublicKey = gaim_blist_node_get_string(&(recipient->node), settingName);
+	if (!recipientBase64PublicKey)
+	{
+		free(base64PublicKey);
+		free(base64MachineName);
+		free(desKey);
+		fprintf(stderr, "Could not get the buddy's public key from blist.xml in simias_send_invitation_accept().\n");
+		return -4;
+	}
+
+	gaim_base64_decode(recipientBase64PublicKey, &recipientPublicKey, &recipientPublicKeyLen);
+
+	err = simias_rsa_encrypt_string(recipientPublicKey, desKey, &encryptedDESKey);
+	free(recipientPublicKey);
+	free(desKey);
+	if (err != 0)
+	{
+		free(base64PublicKey);
+		free(base64MachineName);
+		fprintf(stderr, "simias_rsa_encrypt_string() had an error (%d) in simias_send_invitation_accept()\n", err);
+		return -3;
+	}
+
+	sprintf(msg, "%s%s:%s:%s]", INVITATION_ACCEPT_MSG,
+								base64PublicKey,
+								base64MachineName,
+								encryptedDESKey);
+	free(base64PublicKey);
+	free(base64MachineName);
+	free(encryptedDESKey);
 
 	return simias_send_msg(recipient, msg);
 }
 
 /**
- * This function will send a message with the following format:
- * 
- * [simias:ping-request:<sender-public-key>:<sender-machine-name>:<sender-user-id>:<simias-url>]
+ * This function sends a message with the following format:
+ *
+ * [simias:invitation-complete:<Base64Encoded Machine Name>:<Base64Encoded DES key encrypted with the recipient's public key>]
  */
 int
-simias_send_ping_req(GaimBuddy *recipient)
+simias_send_invitation_complete(GaimBuddy *recipient, const char *recipientMachineName)
 {
-	return send_ping(recipient, PING_REQUEST_MSG);
-}
+	char msg[4096];
+	char *machineName;
+	char *base64MachineName;
 
-/**
- * This function will send a message with the following format:
- * 
- * [simias:ping-response:<sender-public-key>:<sender-machine-name>:<sender-user-id>:<simias-url>]
- */
-int
-simias_send_ping_resp(GaimBuddy *recipient)
-{
-	return send_ping(recipient, PING_RESPONSE_MSG);
+	char *desKey;
+
+	const char *recipientBase64PublicKey;
+	char *recipientPublicKey;
+	int recipientPublicKeyLen;
+	char settingName[1024];
+	char *encryptedDESKey;
+	int err;
+
+	err = simias_get_machine_name(&machineName);
+	if (err != 0)
+	{
+		fprintf(stderr, "Error (%d) calling simias_get_machine_name() in simias_send_invitation_complete().  Perhaps iFolder/Simias is not running?\n", err);
+		return -1;
+	}
+
+	/* Base64Encode the machine name so it gets sent nicely */
+	base64MachineName = gaim_base64_encode(machineName, strlen(machineName));
+	free(machineName);
+	
+	err = simias_get_des_key(&desKey);
+	if (err != 0)
+	{
+		free(base64MachineName);
+		fprintf(stderr, "simias_get_des_key() returned an error (%d) in simias_send_invitation_complete().  Maybe iFolder is not running?\n", err);
+		return -2;
+	}
+
+	sprintf(settingName, "simias-public-key:%s", recipientMachineName);
+	recipientBase64PublicKey = gaim_blist_node_get_string(&(recipient->node), settingName);
+	if (!recipientBase64PublicKey)
+	{
+		free(base64MachineName);
+		free(desKey);
+		fprintf(stderr, "Could not get the buddy's public key from blist.xml in simias_send_invitation_complete().\n");
+		return -3;
+	}
+
+	gaim_base64_decode(recipientBase64PublicKey, &recipientPublicKey, &recipientPublicKeyLen);
+
+	err = simias_rsa_encrypt_string(recipientPublicKey, desKey, &encryptedDESKey);
+	free(recipientPublicKey);
+	free(desKey);
+	if (err != 0)
+	{
+		free(base64MachineName);
+		fprintf(stderr, "simias_rsa_encrypt_string() had an error (%d) in simias_send_invitation_complete()\n", err);
+		return -4;
+	}
+
+	sprintf(msg, "%s%s:%s]", INVITATION_COMPLETE_MSG,
+							 base64MachineName,
+							 encryptedDESKey);
+	free(base64MachineName);
+	free(encryptedDESKey);
+
+	return simias_send_msg(recipient, msg);
 }
 
 /**
@@ -258,9 +326,9 @@ simias_receiving_im_msg_cb(GaimAccount *account, char **sender, char **buffer,
 	
 	b_simias_msg_handled = FALSE;
 
-	g_print("Receiving message on account: %s\n",
+	fprintf(stderr, "Receiving message on account: %s\n",
 		gaim_account_get_username(account));
-	g_print("Sender: %s\n", *sender);
+	fprintf(stderr, "Sender: %s\n", *sender);
 
 	/**
 	 * Examine this message to see if it's a special Simias Gaim message.  If it
@@ -281,14 +349,37 @@ simias_receiving_im_msg_cb(GaimAccount *account, char **sender, char **buffer,
 	possible_msg_type = get_possible_simias_msg_type(html_stripped_buffer);
 
 	switch (possible_msg_type) {
-		case PING_REQUEST:
+		case INVITATION_REQUEST:
 			b_simias_msg_handled = 
-				handle_ping_request(account, *sender, html_stripped_buffer);
+				handle_invitation_request(account, *sender, html_stripped_buffer);
+			if (!b_simias_msg_handled) {
+				fprintf(stderr, "Error in invitation request message\n");
+				return TRUE; /* Prevent the message from passing through */
+			}
 			break;
-		case PING_RESPONSE:
+		case INVITATION_DENY:
 			b_simias_msg_handled = 
-				handle_ping_response(account, *sender, html_stripped_buffer);
+				handle_invitation_deny(account, *sender, html_stripped_buffer);
+			if (!b_simias_msg_handled) {
+				fprintf(stderr, "Error in invitation deny message\n");
+				return TRUE; /* Prevent the message from passing through */
+			}
 			break;
+		case INVITATION_ACCEPT:
+			b_simias_msg_handled = 
+				handle_invitation_accept(account, *sender, html_stripped_buffer);
+			if (!b_simias_msg_handled) {
+				fprintf(stderr, "Error in invitation accept message\n");
+				return TRUE; /* Prevent the message from passing through */
+			}
+			break;
+		case INVITATION_COMPLETE: 
+			b_simias_msg_handled =
+				handle_invitation_complete(account, *sender, html_stripped_buffer);
+			if (!b_simias_msg_handled) {
+				fprintf(stderr, "Error in invitation complete message\n");
+				return TRUE; /* Prevent the message from passing through */
+			}
 		default:
 			break;
 	}
@@ -303,7 +394,7 @@ simias_receiving_im_msg_cb(GaimAccount *account, char **sender, char **buffer,
 }
 
 /**
- * Non-public Functions
+ * Static Functions
  */
  
 /**
@@ -315,242 +406,389 @@ simias_receiving_im_msg_cb(GaimAccount *account, char **sender, char **buffer,
 static SIMIAS_MSG_TYPE
 get_possible_simias_msg_type(const char *buffer)
 {
-	if (strstr(buffer, PING_REQUEST_MSG) == buffer) {
-		return PING_REQUEST;
-	} else if (strstr(buffer, PING_RESPONSE_MSG) == buffer) {
-		return PING_RESPONSE;
+	if (strstr(buffer, INVITATION_REQUEST_MSG) == buffer) {
+		return INVITATION_REQUEST;
+	} else if (strstr(buffer, INVITATION_DENY_MSG) == buffer) {
+		return INVITATION_DENY;
+	} else if (strstr(buffer, INVITATION_ACCEPT_MSG) == buffer) {
+		return INVITATION_ACCEPT;
+	} else if (strstr(buffer, INVITATION_COMPLETE_MSG) == buffer) {
+		return INVITATION_COMPLETE;
 	} else {
-		return 0;
+		return UNKNOWN_MSG_TYPE;
 	}
 }
 
-/**
- * This function will parse the machineName,
- * userID, and simiasURL from a ping message.
- *
- * The buffer should contain the part of the simias message
- * AFTER the ping type, as shown here:
- *
- *     [simias:<ping-type>:<sender-public-key>:<sender-machine-name>:<sender-user-id>:<simias-url>]
- *                         ^
- *
- * Returns TRUE if all the fields could be parsed correctly, otherwise FALSE
- * is returned.
- */
 static gboolean
-parse_simias_info(const char *buffer, char **publicKey, char **machineName, char **userID, char **simiasURL)
-{
-	int colonPos;
-	char *tmp;
-
-	tmp = (char *)buffer;
-	colonPos = simias_str_index_of(tmp, ':');
-	if (colonPos <= 0)
-	{
-		fprintf(stderr, "parse_simias_info() couldn't parse the public key\n");
-		return FALSE;
-	}
-	else
-	{
-		*publicKey = malloc(sizeof(char) * (colonPos + 1));
-		memset(*publicKey, '\0', colonPos + 1);
-		strncpy(*publicKey, tmp, colonPos);
-	}
-
-	tmp = tmp + colonPos + 1;
-	colonPos = simias_str_index_of(tmp, ':');	
-	if (colonPos <= 0)
-	{
-		free(*publicKey);
-		fprintf(stderr, "parse_simias_info() couldn't parse the machine name\n");
-		return FALSE;
-	}
-	else
-	{
-		*machineName = malloc(sizeof(char) * (colonPos + 1));
-		memset(*machineName, '\0', colonPos + 1);
-		strncpy(*machineName, tmp, colonPos);
-	}
-
-	tmp = tmp + colonPos + 1;
-	colonPos = simias_str_index_of(tmp, ':');
-	if (colonPos <= 0)
-	{
-		free(*publicKey);
-		free(*machineName);
-		fprintf(stderr, "parse_simias_info() couldn't parse the user id\n");
-		return FALSE;
-	}
-	else
-	{
-		*userID = malloc(sizeof(char) * (colonPos + 1));
-		memset(*userID, '\0', colonPos + 1);
-		strncpy(*userID, tmp, colonPos); 
-	}
-
-	tmp = tmp + colonPos + 1;
-	colonPos = simias_str_index_of(tmp, ']');
-	if (colonPos <= 0)
-	{
-		free(*publicKey);
-		free(*machineName);
-		free(*userID);
-		fprintf(stderr, "parse_simias_info() couldn't parse the simias url\n");
-		return FALSE;
-	}
-	else
-	{
-		*simiasURL = malloc(sizeof(char) * (colonPos + 1));
-		memset(*simiasURL, '\0', colonPos + 1);
-		strncpy(*simiasURL, tmp, colonPos);
-	}
-
-	return TRUE;
-}
-
-/**
- * This function checks to see if this is a valid ping request and then handles
- * it.  If we can tell that we've never established any type of connection with
- * the sender before, don't send a reply.  Otherwise, reply with our IP Address.
- */
-static gboolean
-handle_ping_request(GaimAccount *account, const char *sender,
-					const char *buffer)
+handle_invitation_request(GaimAccount *account,
+						  const char *sender,
+						  const char *buffer)
 {
 	GaimBuddy *buddy;
-	char *public_key;
-	char *machine_name;
-	char *user_id;
-	char *simias_url;
-	int send_result;
-	const char *ping_reply_type;
-	
-fprintf(stderr, "handle_ping_request() %s -> %s entered\n",
-		sender, gaim_account_get_username(account));
-		
-	/**
-	 * Since this method is called, we already know that the first part of
-	 * the message matches our #define.  So, because of that, we can take
-	 * that portion out of the picture and start tokenizing the different
-	 * parts.
-	 */
+	char *base64Key;
+	char *base64MachineName;
+	char *machineName;
+	int machineNameLen;
+	int colonPos;
+	int closeBracketPos;
+	char *tmp;
+	int err;
+	GtkWidget *accept_dialog;
+	gint response;
+	char settingName[1024];
+	const char *buddy_alias = NULL;
 
+	/* FIXME: Add some type of UI callback to handle the invitation request */
+	
+	fprintf(stderr, "handle_invitation_request() %s -> %s entered\n",
+					sender, gaim_account_get_username(account));
+		
 	/**
 	 * Start parsing the message at this point:
 	 * 
-	 * 	[simias:ping-request:<sender-public-key>:<sender-machine-name>:<sender-user-id>:<simias-url>]
-	 *                       ^
+	 *  [simias:invitation-request:<Base64Encoded Public Key>:<Base64Encoded Machine Name>]
+	 *                             ^
 	 */
-	if (!parse_simias_info(buffer + strlen(PING_REQUEST_MSG),
-						  &public_key, &machine_name, &user_id, &simias_url))
+	tmp = (char *)buffer + strlen(INVITATION_REQUEST_MSG);
+	colonPos = simias_str_index_of(tmp, ':');
+	if (colonPos <= 0)
 	{
+		fprintf(stderr, "handle_invitation_request() couldn't parse the public key\n");
+		return FALSE;
+	}
+
+	base64Key = malloc(sizeof(char) * (colonPos + 1));
+	memset(base64Key, '\0', colonPos + 1);
+	strncpy(base64Key, tmp, colonPos);
+	
+	/* Parse the machine name */
+	tmp = tmp + colonPos + 1;
+	closeBracketPos = simias_str_index_of(tmp, ']');
+	if (closeBracketPos <= 0)
+	{
+		free(base64Key);
+		fprintf(stderr, "handle_invitation_request() couldn't parse the machine name\n");
 		return FALSE;
 	}
 	
-	free(public_key);
-	free(machine_name);
-	free(user_id);
-	free(simias_url);
+	base64MachineName = malloc(sizeof(char) * (closeBracketPos + 1));
+	memset(base64MachineName, '\0', closeBracketPos + 1);
+	strncpy(base64MachineName, tmp, closeBracketPos);
 	
-	ping_reply_type = gaim_prefs_get_string(SIMIAS_PREF_PING_REPLY_TYPE);
-	if (ping_reply_type) {
-		/**
-		 * If the ping reply type preference has been set to only reply to
-		 * users who are in the buddy list, return out of this function if the
-		 * sender of the ping is not in the buddy list.
-		 */
-		if (strcmp(ping_reply_type, SIMIAS_PREF_PING_REPLY_TYPE_BLIST) == 0) {
-			/* Check to see if the sender is in the buddy list. */
-			
-			/* FIXME: Not sure that we're even going to get called if the sender isn't in our buddy list.  Need to test this. */
+	gaim_base64_decode(base64MachineName, &machineName, &machineNameLen);
+	free(base64MachineName);
+
+	buddy = gaim_find_buddy(account, sender);
+	buddy_alias = gaim_buddy_get_alias(buddy);
+
+	/* Prompt the user to accept/reject the invitation */
+	/* FIXME: Call the registered UI Callback for handling the invitation request */
+	accept_dialog =
+		gtk_message_dialog_new(NULL,
+							GTK_DIALOG_DESTROY_WITH_PARENT,
+							GTK_MESSAGE_QUESTION,
+							GTK_BUTTONS_YES_NO,
+							_("%s (%s) would like to share files with you through iFolder.  Would you like to participate?"),
+							buddy_alias ? buddy_alias : sender,
+							machineName);
+	response = gtk_dialog_run(GTK_DIALOG(accept_dialog));
+
+	if (response == GTK_RESPONSE_YES)
+	{
+		sprintf(settingName, "simias-public-key:%s", machineName);
+		/* Save the buddy's public key in blist.xml */
+		gaim_blist_node_set_string(&(buddy->node),
+								   settingName,
+								   base64Key);
+
+		/* Send an accept message */
+		err = simias_send_invitation_accept(buddy, machineName);
+		if (err <= 0)
+		{
+			/* FIXME: Call the registered UI Handler's error handler */
+			fprintf(stderr, "Error sending accept invitation message\n");
+		}
+	}
+	else /* The user denied the invitation */
+	{
+		/* Send a deny message */
+		err = simias_send_invitation_deny(buddy);
+		if (err <= 0)
+		{
+			/* FIXME: Call the registered UI Handler's error handler */
+			fprintf(stderr, "Error sending deny invitation message\n");
 		}
 	}
 
-	/* Don't do anything with the URL.  If we got to this point, it's a valid message */
-	buddy = gaim_find_buddy(account, sender);	
+	gtk_widget_destroy(accept_dialog);
 
-	/* Send a ping-response message */
-	send_result = simias_send_ping_resp(buddy);
-	if (send_result <= 0) {
-		fprintf(stderr, "handle_ping_request() couldn't send ping response: %d\n", send_result);
-	}
+	free(base64Key);
+	g_free(machineName);
+
+	return TRUE;
+}
+
+static gboolean
+handle_invitation_deny(GaimAccount *account,
+					   const char *sender,
+					   const char *buffer)
+{
+	GtkWidget *dialog;
+	GaimBuddy *buddy;
+	const char *buddy_alias = NULL;
+	
+	/* FIXME: Add some type of UI callback to handle the deny invitation */
+	
+	buddy = gaim_find_buddy(account, sender);
+	buddy_alias = gaim_buddy_get_alias(buddy);
+
+	dialog =
+		gtk_message_dialog_new(NULL,
+								GTK_DIALOG_DESTROY_WITH_PARENT,
+								GTK_MESSAGE_INFO,
+								GTK_BUTTONS_OK,
+								_("%s denied your request to enable iFolder file sharing."),
+								buddy_alias ? buddy_alias : sender);
+	gtk_dialog_run(GTK_DIALOG(dialog));
+	gtk_widget_destroy(dialog);
 	
 	return TRUE;
 }
 
-/**
- * This function checks to see if the buffer is a properly formatted ping
- * response and then handles it correctly.
- * 
- * If the message is valid, update the buddy's IP Address in the Simias Gaim
- * Domain Roster.
- */
 static gboolean
-handle_ping_response(GaimAccount *account, const char *sender, 
-					 const char *buffer)
+handle_invitation_accept(GaimAccount *account,
+						 const char *sender,
+						 const char *buffer)
 {
 	GaimBuddy *buddy;
-	char *public_key;
-	char *machine_name;
-	char *user_id;
-	char *simias_url;
-	
-	char public_key_setting[2048];
-	char user_id_setting[512];
-	char simias_url_setting[512];
-	
-fprintf(stderr, "handle_ping_response() %s -> %s entered\n",
+	char *base64PublicKey;
+	char *base64MachineName;
+	char *machineName;
+	int machineNameLen;
+	char *encryptedDESKey;
+	char *privateKey;
+	char *decryptedDESKey;
+	int colonPos;
+	int closeBracketPos;
+	char *tmp;
+	char settingName[1024];
+	GtkWidget *dialog;
+	const char *buddy_alias = NULL;
+	int err;
+
+	fprintf(stderr, "handle_invitation_accept() %s -> %s entered\n",
 		sender, gaim_account_get_username(account));
-fprintf(stderr, "Message: %s\n", buffer);
 		
-	/**
-	 * Since this method is called, we already know that the first part of
-	 * the message matches our #define.  So, because of that, we can take
-	 * that portion out of the picture and start tokenizing the different
-	 * parts.
-	 */
+	buddy = gaim_find_buddy(account, sender);
 
 	/**
 	 * Start parsing the message at this point:
 	 * 
-	 * 	[simias:ping-response:<sender-public-key>:<sender-machine-name>:<sender-user-id>:<simias-url>]
-	 *                        ^
+	 * [simias:invitation-accept:<Base64Encoded Public Key>:<Base64Encoded Machine Name>:<Base64Encoded DES key encrypted with the recipient's public key>]
+	 *                           ^
 	 */
-	if (!parse_simias_info(buffer + strlen(PING_RESPONSE_MSG),
-						  &public_key, &machine_name, &user_id, &simias_url))
+	tmp = (char *)buffer + strlen(INVITATION_ACCEPT_MSG);
+	colonPos = simias_str_index_of(tmp, ':');
+	if (colonPos <= 0)
 	{
-fprintf(stderr, "couldn't parse simias_info!\n");
+		fprintf(stderr, "handle_invitation_request() couldn't parse the public key\n");
+		return FALSE;
+	}
+	base64PublicKey = malloc(sizeof(char) * (colonPos + 1));
+	memset(base64PublicKey, '\0', colonPos + 1);
+	strncpy(base64PublicKey, tmp, colonPos);
+
+	tmp = tmp + colonPos + 1;
+	colonPos = simias_str_index_of(tmp, ':');
+	if (colonPos <= 0)
+	{
+		free(base64PublicKey);
+		fprintf(stderr, "handle_invitation_request() couldn't parse the base64 encoded machine name\n");
+		return FALSE;
+	}
+	base64MachineName = malloc(sizeof(char) * (colonPos + 1));
+	memset(base64MachineName, '\0', colonPos + 1);
+	strncpy(base64MachineName, tmp, colonPos);
+
+	gaim_base64_decode(base64MachineName, &machineName, &machineNameLen);
+	free(base64MachineName);
+
+	/* Save the buddy's public key in blist.xml */
+	sprintf(settingName, "simias-public-key:%s", machineName);
+	gaim_blist_node_set_string(&(buddy->node),
+							   settingName,
+							   base64PublicKey);
+	free(base64PublicKey);
+
+	tmp = tmp + colonPos + 1;
+	closeBracketPos = simias_str_index_of(tmp, ']');
+	if (closeBracketPos <= 0)
+	{
+		g_free(machineName);
+		fprintf(stderr, "handle_invitation_request() couldn't parse the encrypted DES key\n");
+		return FALSE;
+	}
+	encryptedDESKey = malloc(sizeof(char) * (closeBracketPos + 1));
+	memset(encryptedDESKey, '\0', closeBracketPos + 1);
+	strncpy(encryptedDESKey, tmp, closeBracketPos);
+
+	/* Decrypt the DES key with our private key */
+	err = simias_get_private_key(&privateKey);
+	if (err != 0)
+	{
+		g_free(machineName);
+		free(encryptedDESKey);
+		fprintf(stderr, "Couldn't get our private key.  Maybe iFolder is not running?\n");
 		return FALSE;
 	}
 	
-	/* Update the buddy's simias-url in blist.xml */
-	buddy = gaim_find_buddy(account, sender);
-	sprintf(public_key_setting, "simias-public-key:%s", machine_name);
-	sprintf(user_id_setting, "simias-user-id:%s", machine_name);
-	sprintf(simias_url_setting, "simias-url:%s", machine_name);
-	gaim_blist_node_set_string(&(buddy->node), public_key_setting, public_key);
-	gaim_blist_node_set_string(&(buddy->node), user_id_setting, user_id);
-	gaim_blist_node_set_string(&(buddy->node), simias_url_setting, simias_url);
+	fprintf(stderr, "My RSA Private Key:\n\n%s\n\n", privateKey);
 	
-	const char *test = gaim_blist_node_get_string(&(buddy->node), public_key_setting);
-	char *decode = NULL;
-	int decode_len;
-	gaim_base64_decode(test, &decode, &decode_len);
-	fprintf(stderr, "Decoded string: %s\n", decode);
-	g_free(decode);
+	fprintf(stderr, "Encrypted DES Key:\n\n%s\n\n", encryptedDESKey);
+
+	err = simias_rsa_decrypt_string(privateKey, encryptedDESKey, &decryptedDESKey);
+	free(privateKey);
+	free(encryptedDESKey);
+	if (err != 0)
+	{
+		g_free(machineName);
+		fprintf(stderr, "simias_des_decrypt_string() returned an error (%d) in handle_invitation_accept()\n", err);
+		return FALSE;
+	}
+
+	/* Save the user's DES key in blist.xml */
+	sprintf(settingName, "simias-des-key:%s", machineName);
+	gaim_blist_node_set_string(&(buddy->node),
+							   settingName,
+							   decryptedDESKey);
+	free(decryptedDESKey);
 
 	/**
-	 * Tell the Gaim Domain Sync Thread to go re-read the updated
-	 * information about the buddy.
+	 * Now that we have the buddy's DES key, we should be able to read their
+	 * encrypted profile.  Start the asynchronous call to read it.
 	 */
-	simias_update_member(gaim_account_get_username(account),
-						 gaim_account_get_protocol_id(account),
-						 sender, machine_name);
+	simias_get_buddy_profile(buddy);
 
-	free(public_key);
-	free(machine_name);
-	free(user_id);
-	free(simias_url);
+	/* Send an invitation confirmation */
+	err = simias_send_invitation_complete(buddy, machineName);
+	if (err <= 0)
+	{
+		fprintf(stderr, "simias_send_invitation_complete() had an error (%d)\n", err);
+		/* FIXME: Add UI callback to alert error */
+	}
 
+	/* FIXME: Add some type of UI callback to handle the accept invitation */
+
+	/* FIXME: Check the plugin preferences of whether the accept invitation confirmation dialog should be shown. */
+
+	buddy_alias = gaim_buddy_get_alias(buddy);
+
+	dialog =
+		gtk_message_dialog_new(NULL,
+								GTK_DIALOG_DESTROY_WITH_PARENT,
+								GTK_MESSAGE_INFO,
+								GTK_BUTTONS_OK,
+								_("%s (%s) has accepted your request to enable iFolder file sharing.  To share files through iFolder, use the iFolder Client, create an iFolder in the Gaim Workgroup Domain, and add %s (%s) to the iFolder's member list."),
+								buddy_alias ? buddy_alias : sender,
+								machineName,
+								buddy_alias ? buddy_alias : sender,
+								machineName);
+	gtk_dialog_run(GTK_DIALOG(dialog));
+	gtk_widget_destroy(dialog);
+	
+	g_free(machineName);
+
+	return TRUE;
+}
+
+static gboolean
+handle_invitation_complete(GaimAccount *account,
+						   const char *sender,
+						   const char *buffer)
+{
+	GaimBuddy *buddy;
+	char *base64MachineName;
+	char *machineName;
+	int machineNameLen;
+	char *encryptedDESKey;
+	char *privateKey;
+	char *decryptedDESKey;
+	int colonPos;
+	int closeBracketPos;
+	char *tmp;
+	char settingName[1024];
+	int err;
+
+	fprintf(stderr, "handle_invitation_complete() %s -> %s entered\n",
+		sender, gaim_account_get_username(account));
+		
+	buddy = gaim_find_buddy(account, sender);
+
+	/**
+	 * Start parsing the message at this point:
+	 * 
+	 *  [simias:invitation-complete:<Base64Encoded Machine Name>:<Base64Encoded DES key encrypted with the recipient's public key>]
+	 *                              ^
+	 */
+	tmp = (char *)buffer + strlen(INVITATION_COMPLETE_MSG);
+	colonPos = simias_str_index_of(tmp, ':');
+	if (colonPos <= 0)
+	{
+		fprintf(stderr, "handle_invitation_complete() couldn't parse the base64 encoded machine name\n");
+		return FALSE;
+	}
+	base64MachineName = malloc(sizeof(char) * (colonPos + 1));
+	memset(base64MachineName, '\0', colonPos + 1);
+	strncpy(base64MachineName, tmp, colonPos);
+
+	gaim_base64_decode(base64MachineName, &machineName, &machineNameLen);
+	free(base64MachineName);
+
+	tmp = tmp + colonPos + 1;
+	closeBracketPos = simias_str_index_of(tmp, ']');
+	if (closeBracketPos <= 0)
+	{
+		g_free(machineName);
+		fprintf(stderr, "handle_invitation_complete() couldn't parse the encrypted DES key\n");
+		return FALSE;
+	}
+	encryptedDESKey = malloc(sizeof(char) * (closeBracketPos + 1));
+	memset(encryptedDESKey, '\0', closeBracketPos + 1);
+	strncpy(encryptedDESKey, tmp, closeBracketPos);
+
+	/* Decrypt the DES key with our private key */
+	err = simias_get_private_key(&privateKey);
+	if (err != 0)
+	{
+		g_free(machineName);
+		free(encryptedDESKey);
+		fprintf(stderr, "Couldn't get our private key in handle_invitation_complete().  Maybe iFolder is not running?\n");
+		return FALSE;
+	}
+
+	err = simias_rsa_decrypt_string(privateKey, encryptedDESKey, &decryptedDESKey);
+	free(privateKey);
+	free(encryptedDESKey);
+	if (err != 0)
+	{
+		g_free(machineName);
+		fprintf(stderr, "simias_des_decrypt_string() returned an error (%d) in handle_invitation_accept()\n", err);
+		return FALSE;
+	}
+
+	/* Save the user's DES key in blist.xml */
+	sprintf(settingName, "simias-des-key:%s", machineName);
+	g_free(machineName);
+	gaim_blist_node_set_string(&(buddy->node),
+							   settingName,
+							   decryptedDESKey);
+	free(decryptedDESKey);
+
+	/**
+	 * Now that we have the buddy's DES key, we should be able to read their
+	 * encrypted profile.  Start the asynchronous call to read it.
+	 */
+	simias_get_buddy_profile(buddy);
+	
 	return TRUE;
 }
