@@ -140,20 +140,11 @@ namespace Simias.Web
 				{
 					try
 					{
-						// Get them all?
-						if ( onlySlaves == false )
+						// Get the information about this domain.
+						DomainInformation domainInfo = new DomainInformation(shallowNode.ID);
+						if ( ( onlySlaves == false ) || ( domainInfo.Type == DomainType.Slave ) )
 						{
-							DomainInformation domainInfo = new DomainInformation(shallowNode.ID);
 							domains.Add(domainInfo);
-						}
-						else
-						{
-							Roster cRoster = store.GetRoster( shallowNode.ID );
-							if ( ( cRoster != null ) && ( cRoster.Role == SyncRoles.Slave ) )
-							{
-								DomainInformation domainInfo = new DomainInformation(shallowNode.ID);
-								domains.Add(domainInfo);
-							}
 						}
 					}
 					catch(Exception e)
@@ -478,14 +469,24 @@ namespace Simias.Web
 	public enum DomainType
 	{
 		/// <summary>
-		/// Workgroup domain
+		/// A Master Role
 		/// </summary>
-		Workgroup,
+		Master,
 
 		/// <summary>
-		/// Enterprise domain
+		/// A Slave Role
 		/// </summary>
-		Enterprise,
+		Slave,
+
+		/// <summary>
+		/// A Local Role
+		/// </summary>
+		Local,
+
+		/// <summary>
+		/// No Role
+		/// </summary>
+		None
 	};
 
 	/// <summary>
@@ -590,6 +591,7 @@ namespace Simias.Web
 				Simias.POBox.POBox.FindPOBox(store, domainID, cMember.UserID);
 
 			this.Active = new DomainAgent().IsDomainActive(cDomain.ID);
+			this.Type = GetDomainTypeFromRole(cDomain.Role);
 			this.ID = domainID;
 			this.Name = cDomain.Name;
 			this.Description = cDomain.Description;
@@ -630,6 +632,28 @@ namespace Simias.Web
 			builder.AppendFormat("  Host             : {0}{1}", this.Host, newLine);
 
 			return builder.ToString();
+		}
+
+		private DomainType GetDomainTypeFromRole(SyncRoles role)
+		{
+			DomainType type = DomainType.None;
+
+			switch (role)
+			{
+				case SyncRoles.Master:
+					type = DomainType.Master;
+					break;
+
+				case SyncRoles.Slave:
+					type = DomainType.Slave;
+					break;
+
+				case SyncRoles.Local:
+					type = DomainType.Local;
+					break;
+			}
+
+			return type;
 		}
 	}
 }
