@@ -100,13 +100,21 @@ namespace Simias.Event
 
 		bool setupBroker()
 		{
+			bool status = false;
 			broker = EventBroker.GetBroker(conf);
 			if (broker != null)
 			{
-				broker.AddSubscriber(this);
-				return true;
+				try
+				{
+					broker.AddSubscriber(this);
+					status = true;
+				}
+				catch
+				{
+					broker = null;
+				}
 			}
-			return false;
+			return status;
 		}
 
 		#endregion
@@ -171,10 +179,12 @@ namespace Simias.Event
 			{
 				if (EventBroker.RegisterClientChannel(conf))
 				{
-					setupBroker();
-					break;
+					if (setupBroker())
+					{
+						break;
+					}
 				}
-				Thread.Sleep(100);
+				Thread.Sleep(1000);
 			}
 		
 			logger.Info("Connected to event broker");
