@@ -247,15 +247,15 @@ namespace Simias.Security.Web
 			string domainID = context.Request.Headers.Get( Http.DomainIDHeader );
 			if ( domainID == null )
 			{
-				// If this address is loopback, set the local domain in the HTTP context.
-				if ( context.Request.Url.IsLoopback )
-				{
-					domainID = store.LocalDomain;
-				}
-				else if ( store.IsEnterpriseServer )
+				if ( store.IsEnterpriseServer )				
 				{
 					// If this is an enterprise server use the default domain.
 					domainID = store.DefaultDomain;
+				}
+				else if ( context.Request.Url.IsLoopback )
+				{
+					// If this address is loopback, set the local domain in the HTTP context.
+					domainID = store.LocalDomain;
 				}
 			}
 
