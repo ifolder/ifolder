@@ -1627,15 +1627,20 @@ namespace Novell.iFolder
 				
 				try
 				{
+					curiFolders.Remove(ifolder.ID);
    		 			iFolder newiFolder = iFolderWS.AcceptiFolderInvitation(
 											ifolder.ID,
 											newPath);
 	
 					// replace the old iFolder with this one
 					tModel.SetValue(iter, 0, newiFolder);
+					curiFolders.Add(newiFolder.ID, iter);
 				}
 				catch(Exception e)
 				{
+					// if we threw an exceptoin, add the old ifolder back
+					curiFolders.Add(ifolder.ID, iter);
+
 					iFolderExceptionDialog ied = new iFolderExceptionDialog(
 														this, e);
 					ied.Run();
@@ -1901,15 +1906,32 @@ namespace Novell.iFolder
 				{
 					ifolder = iFolderWS.GetiFolder(iFolderID);
 					if(ifolder != null)
+					{
+						if( ifolder.State == "Available" )
+						{
+							// this is a subscription, check to see if we
+							// have a matching ifolder to yank this one
+							// out if we need to
+							iFolder realiFolder = iFolderWS.GetiFolder(
+									ifolder.CollectionID);
+							if(realiFolder != null)
+							{
+								iFolderTreeStore.Remove(ref iter);
+								curiFolders.Remove(iFolderID);
+								return;
+							}
+						}
+
 						iFolderTreeStore.SetValue(iter, 0, ifolder);
+					}
 				}
 				catch(Exception e)
 				{
-					iFolderExceptionDialog ied = new iFolderExceptionDialog(
-													null, e);
-					ied.Run();
-					ied.Hide();
-					ied.Destroy();
+//					iFolderExceptionDialog ied = new iFolderExceptionDialog(
+//													null, e);
+//					ied.Run();
+//					ied.Hide();
+//					ied.Destroy();
 				}
 			}
 		}

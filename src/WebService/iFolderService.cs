@@ -241,7 +241,12 @@ namespace Novell.iFolder.Web
 				}
 			}
 			else
-				ifolder = new iFolder(col);
+			{
+				if(col.IsType(col, iFolder.iFolderType))
+					ifolder = new iFolder(col);
+				else
+					ifolder = null;
+			}
 
 			return ifolder;
 		}

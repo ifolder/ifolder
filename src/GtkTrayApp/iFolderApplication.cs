@@ -405,12 +405,12 @@ namespace Novell.iFolder
 					}
 					catch(Exception e)
 					{
-						iFolderExceptionDialog ied = 
-								new iFolderExceptionDialog(null, e);
-						ied.Run();
-						ied.Hide();
-						ied.Destroy();
-						ied = null;
+//						iFolderExceptionDialog ied = 
+//								new iFolderExceptionDialog(null, e);
+//						ied.Run();
+//						ied.Hide();
+//						ied.Destroy();
+//						ied = null;
 					}
 
 					break;
@@ -444,47 +444,48 @@ namespace Novell.iFolder
 					// the POBox
 					if((ifSettings != null) && (iEvent.CollectionID == ifSettings.DefaultPOBoxID) )
 					{
+						iFolder ifolder;
 						try
 						{
-							iFolder ifolder = 
-									ifws.GetiFolder(iEvent.NodeID);
-							if(	(ifolder != null) &&
-								(ifolder.State == "Available") )
-							{
-								// At this point we know it's a new subscription
-								// that's available, now check to make sure
-								// the corresponding iFolder isn't on the
-								// machine already (it was created here)
-								iFolder localiFolder = 
-									ifws.GetiFolder(ifolder.CollectionID);
-								if(localiFolder != null)
-									return;
-								
-								NotifyWindow notifyWin = new NotifyWindow(
-										tIcon, 
-										string.Format("New iFolder \"{0}\"", 
-															ifolder.Name),
-										string.Format("This iFolder is owned by {0} and is available to sync on this computer", ifolder.Owner),
-										Gtk.MessageType.Info, 5000);
-									notifyWin.ShowAll();
-	
-								if(ifwin != null)
-									ifwin.iFolderCreated(ifolder);
-							}
+							ifolder = ifws.GetiFolder(iEvent.NodeID);
 						}
 						catch(Exception e)
 						{
-							iFolderExceptionDialog ied = 
-									new iFolderExceptionDialog(null, e);
-							ied.Run();
-							ied.Hide();
-							ied.Destroy();
-							ied = null;
+							ifolder = null;
 						}
-					}
-					else
-					{
-						Console.WriteLine("CollectionID != POBoxID");
+
+						if(	(ifolder != null) &&
+							(ifolder.State == "Available") )
+						{
+							// At this point we know it's a new subscription
+							// that's available, now check to make sure
+							// the corresponding iFolder isn't on the
+							// machine already (it was created here)
+							iFolder localiFolder;
+							try
+							{
+								localiFolder = 
+									ifws.GetiFolder(ifolder.CollectionID);
+							}
+							catch(Exception e)
+							{
+								localiFolder = null;
+							}
+
+							if(localiFolder != null)
+								return;
+								
+							NotifyWindow notifyWin = new NotifyWindow(
+									tIcon, 
+									string.Format("New iFolder \"{0}\"", 
+														ifolder.Name),
+									string.Format("This iFolder is owned by {0} and is available to sync on this computer", ifolder.Owner),
+									Gtk.MessageType.Info, 5000);
+								notifyWin.ShowAll();
+	
+							if(ifwin != null)
+								ifwin.iFolderCreated(ifolder);
+						}
 					}
 					break;
 				}					
@@ -515,13 +516,40 @@ namespace Novell.iFolder
 					}
 					catch(Exception e)
 					{
-						iFolderExceptionDialog ied = 
-								new iFolderExceptionDialog(null, e);
-						ied.Run();
-						ied.Hide();
-						ied.Destroy();
-						ied = null;
+//						iFolderExceptionDialog ied = 
+//								new iFolderExceptionDialog(null, e);
+//						ied.Run();
+//						ied.Hide();
+//						ied.Destroy();
+//						ied = null;
 					}
+					break;
+				}
+
+				case "Collection":
+				{
+					try
+					{
+						iFolder ifolder = 
+								ifws.GetiFolder(iEvent.CollectionID);
+						if(ifolder != null)
+						{
+							// This is happening because we have an iFolder
+							// that we accepted down on this machine
+							if(ifwin != null)
+								ifwin.iFolderCreated(ifolder);
+						}
+					}
+					catch(Exception e)
+					{
+//						iFolderExceptionDialog ied = 
+//								new iFolderExceptionDialog(null, e);
+//						ied.Run();
+//						ied.Hide();
+//						ied.Destroy();
+//						ied = null;
+					}
+
 					break;
 				}
 			}
