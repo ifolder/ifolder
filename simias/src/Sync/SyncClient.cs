@@ -1417,7 +1417,14 @@ namespace Simias.Sync
 							string oldPath = oldNode.GetFullPath(collection);
 							if (oldPath != path)
 							{
-								Directory.Move(oldPath, path);
+								try
+								{
+									Directory.Move(oldPath, path);
+								}
+								catch (IOException ex)
+								{
+									// This directory has already been moved by the parent move.
+								}
 							}
 						}
 					}
