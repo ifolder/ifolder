@@ -241,29 +241,31 @@ namespace Simias.Sync
 						collection.MasterUrl = master;
 						collection.CreateMaster = false;
 					}
+					else
+					{
+						// get the service URL
+						string serviceUrl = collection.ServiceUrl;
+						log.Debug("Sync Store Service URL: {0}", serviceUrl);
 
-					// get the service URL
-					string serviceUrl = collection.ServiceUrl;
-					log.Debug("Sync Store Service URL: {0}", serviceUrl);
+						// get a proxy to the store service object
+						log.Debug("Connecting to the Sync Store Service...");
+						storeService = (SyncStoreService)Activator.GetObject(typeof(SyncStoreService), collection.ServiceUrl);
+						if (storeService == null) throw new ApplicationException("No Sync Store Service");
 
-					// get a proxy to the store service object
-					log.Debug("Connecting to the Sync Store Service...");
-					storeService = (SyncStoreService)Activator.GetObject(typeof(SyncStoreService), collection.ServiceUrl);
-					if (storeService == null) throw new ApplicationException("No Sync Store Service");
+						// get a proxy to the collection service object
+						log.Debug("Connecting to the Sync Collection Service...");
+						service = storeService.GetCollectionService(collection.ID);
+						if (service == null) throw new ApplicationException("No Sync Collection Service");
 
-					// get a proxy to the collection service object
-					log.Debug("Connecting to the Sync Collection Service...");
-					service = storeService.GetCollectionService(collection.ID);
-					if (service == null) throw new ApplicationException("No Sync Collection Service");
+						// get the collection worker
+						log.Debug("Creating a Sync Worker Object...");
+						worker = syncManager.LogicFactory.GetCollectionWorker(service, collection);
+						if (worker == null) throw new ApplicationException("No Sync Collection Worker");
 
-					// get the collection worker
-					log.Debug("Creating a Sync Worker Object...");
-					worker = syncManager.LogicFactory.GetCollectionWorker(service, collection);
-					if (worker == null) throw new ApplicationException("No Sync Collection Worker");
-
-					// do the work
-					log.Debug("Starting the Sync Worker...");
-					worker.DoSyncWork();
+						// do the work
+						log.Debug("Starting the Sync Worker...");
+						worker.DoSyncWork();
+					}
 				}
 				catch(Exception e)
 				{
