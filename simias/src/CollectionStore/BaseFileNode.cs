@@ -64,14 +64,7 @@ namespace Simias.Storage
 			get 
 			{ 
 				Property p = properties.FindSingleValue( PropertyTags.CreationTime );
-				if ( p != null )
-				{
-					return ( DateTime )p.Value;
-				}
-				else
-				{
-					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.CreationTime, name, id ) );
-				}
+				return ( p != null ) ? ( DateTime )p.Value : DateTime.MinValue;
 			}
 
 			set	{ properties.ModifyNodeProperty( PropertyTags.CreationTime, value ); }
@@ -85,14 +78,7 @@ namespace Simias.Storage
 			get 
 			{ 
 				Property p = properties.FindSingleValue( PropertyTags.LastAccessTime );
-				if ( p != null )
-				{
-					return ( DateTime )p.Value;
-				}
-				else
-				{
-					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.LastAccessTime, name, id ) );
-				}
+				return ( p != null ) ? ( DateTime )p.Value : DateTime.MinValue;
 			}
 
 			set { properties.ModifyNodeProperty( PropertyTags.LastAccessTime, value ); }
@@ -106,14 +92,7 @@ namespace Simias.Storage
 			get 
 			{ 
 				Property p = properties.FindSingleValue( PropertyTags.LastWriteTime );
-				if ( p != null )
-				{
-					return ( DateTime )p.Value;
-				}
-				else
-				{
-					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.LastWriteTime, name, id ) );
-				}
+				return ( p != null ) ? ( DateTime )p.Value : DateTime.MinValue;
 			}
 
 			set { properties.ModifyNodeProperty( PropertyTags.LastWriteTime, value ); }
@@ -127,14 +106,7 @@ namespace Simias.Storage
 			get 
 			{ 
 				Property p = properties.FindSingleValue( PropertyTags.FileLength );
-				if ( p != null )
-				{
-					return ( long )p.Value;
-				}
-				else
-				{
-					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.FileLength, name, id ) );
-				}
+				return ( p != null ) ? ( long )p.Value : 0;
 			}
 
 			set { properties.ModifyNodeProperty( PropertyTags.FileLength, value ); }
@@ -146,17 +118,54 @@ namespace Simias.Storage
 		/// Constructor used to create a new BaseFileNode object.
 		/// </summary>
 		/// <param name="collection">Collection that this file entry will be associated with.</param>
+		/// <param name="parentPath">Fully qualified path to the parent directory.</param>
 		/// <param name="fileName">Friendly name of the file entry.</param>
 		/// <param name="fileID">Globally unique identifier for the file entry.</param>
 		/// <param name="fileType">Class type to deserialize file entry as.</param>
-		internal protected BaseFileNode( Collection collection, string fileName, string fileID, string fileType ) :
+		internal protected BaseFileNode( Collection collection, string parentPath, string fileName, string fileID, string fileType ) :
+			this ( fileName, fileID, fileType )
+		{
+			// Add the length of the file if it exists.
+			string fullPath = Path.Combine( parentPath, fileName );
+			if ( File.Exists( fullPath ) )
+			{
+				// Get the file information for this file and set it as properties in the object.
+				FileInfo fi = new FileInfo( fullPath );
+				Length = fi.Length;
+				CreationTime = fi.CreationTime;
+				LastAccessTime = fi.LastAccessTime;
+				LastWriteTime = fi.LastWriteTime;
+
+				// If there are metadata collectors registered for this file type, add the extra metadata.
+				AddFileMetadata( collection, fullPath );
+			}
+		}
+
+		/// <summary>
+		/// Constructor used to create a new BaseFileNode object.
+		/// </summary>
+		/// <param name="stream">Stream object that contains the file data.</param>
+		/// <param name="fileName">Friendly name of the file entry.</param>
+		/// <param name="fileID">Globally unique identifier for the file entry.</param>
+		/// <param name="fileType">Class type to deserialize file entry as.</param>
+		internal protected BaseFileNode( Stream stream, string fileName, string fileID, string fileType ) :
+			this ( fileName, fileID, fileType )
+		{
+			// Add the length of the file.
+			Length = stream.Length;
+		}
+
+		/// <summary>
+		/// Constructor used to create a new BaseFileNode object.
+		/// </summary>
+		/// <param name="fileName">Friendly name of the file entry.</param>
+		/// <param name="fileID">Globally unique identifier for the file entry.</param>
+		/// <param name="fileType">Class type to deserialize file entry as.</param>
+		internal protected BaseFileNode( string fileName, string fileID, string fileType ) :
 			base ( fileName, fileID, fileType )
 		{
 			// Add to the Types list.
 			properties.AddNodeProperty( PropertyTags.Types, NodeTypes.BaseFileNodeType );
-
-			// If there are metadata collectors registered for this file type, add the extra metadata.
-			AddFileMetadata( collection );
 		}
 
 		/// <summary>
@@ -194,7 +203,8 @@ namespace Simias.Storage
 		/// added to this node.
 		/// </summary>
 		/// <param name="collection">Collection that this file entry will be associated with.</param>
-		private void AddFileMetadata( Collection collection )
+		/// <param name="filePath">Fully qualified path to the file.</param>
+		private void AddFileMetadata( Collection collection, string filePath )
 		{
 			// Get the directory path that this assembly was loaded from.
 			string loadDir = Path.GetDirectoryName( Assembly.GetExecutingAssembly().CodeBase );
@@ -208,7 +218,7 @@ namespace Simias.Storage
 				regExtDoc.Load( xmlMetaFile );
 
 				// See if this file has an extension.
-				string extension = Path.GetExtension( GetFileName() );
+				string extension = Path.GetExtension( filePath );
 				if (extension != String.Empty )
 				{
 					// Find out if there is a registered entry for this extension.
@@ -227,12 +237,12 @@ namespace Simias.Storage
 								try
 								{
 									// Found the method.  Invoke it to return a name-value object that will contain the metadata.
-									StringDictionary sd = ( StringDictionary )method.Invoke( null, new object[] { GetFullPath( collection ) } );
+									StringDictionary sd = ( StringDictionary )method.Invoke( null, new object[] { filePath } );
 
 									// Walk through each name-value and add it to the parent node.
 									foreach ( string s in sd.Keys )
 									{
-										properties.ModifyNodeProperty( s, sd[ s ] );
+										properties.ModifyProperty( s, sd[ s ] );
 									}
 								}
 								catch

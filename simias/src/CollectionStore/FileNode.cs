@@ -53,7 +53,7 @@ namespace Simias.Storage
 		/// <param name="fileName">Friendly name of the FileNode object.</param>
 		/// <param name="fileID">Globally unique identifier for the FileNode object.</param>
 		public FileNode( Collection collection, DirNode parentNode, string fileName, string fileID ) :
-			base ( collection, fileName, fileID, NodeTypes.FileNodeType )
+			base ( collection, parentNode.GetFullPath( collection ), fileName, fileID, NodeTypes.FileNodeType )
 		{
 			// Set the parent attribute.
 			properties.AddNodeProperty( PropertyTags.Parent, new Relationship( collection.ID, parentNode.ID ) );

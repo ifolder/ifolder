@@ -1097,18 +1097,6 @@ namespace Simias.Storage.Tests
 		}
 
 		/// <summary>
-		/// Tests the opening of an already existing store.  I've been running into problems, especially
-		/// with authentication where it would work differently depending on whether the store was
-		/// created vs. already existing.
-		/// </summary>
-		[Test]
-		public void StoreCreateDeleteTest()
-		{
-			// Reopen the store which should be existing.
-			Init();
-		}
-
-		/// <summary>
 		/// Tests the ability to abort pre-committed changes on a collection.
 		/// </summary>
 		[Test]
@@ -1507,7 +1495,7 @@ namespace Simias.Storage.Tests
 				fs.Position = 0;
 
 				// Create the Node object.
-				StoreFileNode sfn = new StoreFileNode( collection, "MyFile", fs );
+				StoreFileNode sfn = new StoreFileNode( "MyFile", fs );
 
 				// The file should not exist yet.
 				if ( File.Exists( sfn.GetFullPath( collection ) ) )
@@ -1718,6 +1706,118 @@ namespace Simias.Storage.Tests
 				}
 
 				store.DeleteDomainIdentity( domainID );
+			}
+		}
+
+		/// <summary>
+		/// Test the storage of file object in a collection.
+		/// </summary>
+		[Test]
+		public void CollectionStorageTest()
+		{
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+
+			string rootDir = Path.Combine( Directory.GetCurrentDirectory(), "CS_TestCollection" );
+			if ( !Directory.Exists( rootDir ) ) Directory.CreateDirectory( rootDir );
+
+			try
+			{
+				long fileSize = 0;
+				ArrayList nodeList = new ArrayList();
+
+				// Add the collection object to the commit list.
+				nodeList.Add( collection );
+
+				// Create a dirNode for the rootDir.
+				DirNode dirNode = new DirNode( collection, rootDir );
+				nodeList.Add( dirNode );
+
+				Random ran = new Random();
+
+				// Create a bunch of files of random size.
+				for ( int i = 0; i < 10; ++i )
+				{
+					string fileName = String.Format( "Test{0}.bin", i );
+					using ( FileStream fs = new FileStream( Path.Combine( rootDir, fileName ), FileMode.Create, FileAccess.Write ) )
+					{
+						byte[] array = new byte[ ran.Next( 128 * 1024 ) ];
+						ran.NextBytes( array );
+						fs.Write( array, 0, array.Length );
+						fileSize += array.Length;
+					}
+
+					// Add this file to the collection.
+					FileNode fn = new FileNode( collection, dirNode, fileName );
+					nodeList.Add( fn );
+				}
+
+				// Commit all of the nodes.
+				collection.Commit( nodeList.ToArray( typeof( Node ) ) as Node[] );
+
+				// Make sure that the sizes compare.
+				if ( collection.StorageSize != fileSize )
+				{
+					throw new ApplicationException( "Added file sizes do not match collection storage size." );
+				}
+
+				// Now add some store managed files.
+				for ( int i = 0; i < 10; ++i )
+				{
+					string fileName = String.Format( "SMFTest{0}.bin", i );
+					using ( FileStream fs = new FileStream( Path.Combine( rootDir, fileName ), FileMode.Create, FileAccess.ReadWrite, FileShare.None ) )
+					{
+						byte[] array = new byte[ ran.Next( 128 * 1024 ) ];
+						ran.NextBytes( array );
+						fs.Write( array, 0, array.Length );
+						fileSize += array.Length;
+
+						fs.Position = 0;
+						StoreFileNode sfn = new StoreFileNode( fileName, fs );
+						collection.Commit( sfn );
+					}
+				}
+
+				// Refresh the collection and make sure the sizes still match.
+				collection.Refresh();
+				if ( collection.StorageSize != fileSize )
+				{
+					throw new ApplicationException( "Added store managed file sizes do not match collection storage size." );
+				}
+
+				// Remove a the store managed files.
+				foreach( ShallowNode sn in collection )
+				{
+					if ( sn.Type == NodeTypes.StoreFileNodeType )
+					{
+						StoreFileNode sfn = new StoreFileNode( collection, sn );
+						fileSize -= sfn.Length;
+						collection.Commit( collection.Delete( sfn ) );
+
+						// Make sure the sizes still match.
+						collection.Refresh();
+						if ( collection.StorageSize != fileSize )
+						{
+							throw new ApplicationException( "Deleted store managed file sizes do not match collection storage size." );
+						}
+					}
+				}
+
+				// Finally, modify an existing FileNode and make sure that the size changes. We don't need to modify
+				// the file in the file system, just change the length on the FileNode and commit.
+				FileNode fileNode = collection.GetSingleNodeByType( NodeTypes.FileNodeType ) as FileNode;
+				fileNode.Length += 100000;
+				collection.Commit( fileNode );
+
+				collection.Refresh();
+				if ( collection.StorageSize != ( fileSize + 100000 ) )
+				{
+					throw new ApplicationException( "File size update does not match collection storage." );
+				}
+			}
+			finally
+			{
+				if ( Directory.Exists( rootDir ) ) Directory.Delete( rootDir, true );
+				collection.Commit( collection.Delete() );
 			}
 		}
 		#endregion

@@ -86,6 +86,14 @@ namespace Simias.Storage
 		/// </summary>
 		[ NonSerialized() ]
 		protected bool mergeCollisions = true;
+
+		/// <summary>
+		/// This field is used by commit so that when the database is locked and this object is read
+		/// off disk for a merge or set local property operation, it doesn't have to be read twice. This
+		/// field is meant for internal use only. It is only valid at certain times.
+		/// </summary>
+		[ NonSerialized() ]
+		protected Node diskNode = null;
 		#endregion
 
 		#region Properties
@@ -125,6 +133,16 @@ namespace Simias.Storage
 		{
 			get { return type; }
 			set { type = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets this node object that was read from the disk while the database was locked.
+		/// This is intended for use by the commit code only.
+		/// </summary>
+		internal Node DiskNode
+		{
+			get { return diskNode; }
+			set { diskNode = value; }
 		}
 
 		/// <summary>

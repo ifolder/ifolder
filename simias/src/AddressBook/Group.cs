@@ -756,7 +756,6 @@ namespace Novell.AddressBook
 				{
 					sfn =
 						new StoreFileNode(
-								this.addressBook, 
 								Common.logoProperty, 
 								srcStream);
 

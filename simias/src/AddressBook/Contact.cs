@@ -1518,7 +1518,7 @@ namespace Novell.AddressBook
 				try
 				{
 					sfn =
-						new StoreFileNode(this.addressBook, Common.photoProperty, srcStream);
+						new StoreFileNode(Common.photoProperty, srcStream);
 
 					Relationship parentChild = new
 						Relationship(

@@ -143,6 +143,18 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets the amount of data in bytes that is stored in this collection.
+		/// </summary>
+		public long StorageSize
+		{
+			get 
+			{
+				Property p = properties.GetSingleProperty( PropertyTags.StorageSize );
+				return ( p != null ) ? ( long )p.Value : 0;
+			}
+		}
+
+		/// <summary>
 		/// Gets the Store reference for this Collection object.
 		/// </summary>
 		public Store StoreReference
@@ -340,7 +352,7 @@ namespace Simias.Storage
 				incarnationValue = node.IncarnationUpdate;
 
 				// Make sure that the expected incarnation value matches the current value.
-				Node checkNode = GetNodeByID( node.ID );
+				Node checkNode = ( node.DiskNode != null ) ? node.DiskNode : GetNodeByID( node.ID );
 				
 				// Check if we are importing on the master or slave.
 				if ( !node.IsMaster)
@@ -414,11 +426,11 @@ namespace Simias.Storage
 		/// changes of the current node.</returns>
 		private Node MergeNodeProperties( Node node, out bool onlyLocalChanges )
 		{
-			// Default the value.
+			// Default the values.
 			onlyLocalChanges = true;
 
 			// Get this node from the database.
-			Node mergedNode = GetNodeByID( node.ID );
+			Node mergedNode = ( node.DiskNode != null ) ? node.DiskNode : GetNodeByID( node.ID );
 			if ( mergedNode != null )
 			{
 				// If this node is not a tombstone and the merged node is, then the node has been deleted
@@ -474,7 +486,6 @@ namespace Simias.Storage
 		private void ProcessCommit( Node[] nodeList )
 		{
 			bool deleteCollection = false;
-			Node[] commitList = nodeList;
 
 			// Create an XML document that will contain all of the changed nodes.
 			XmlDocument commitDocument = new XmlDocument();
@@ -484,7 +495,10 @@ namespace Simias.Storage
 			XmlDocument deleteDocument = new XmlDocument();
 			deleteDocument.AppendChild( deleteDocument.CreateElement( XmlTags.ObjectListTag ) );
 
-			foreach ( Node node in commitList )
+			// Process the storage size for the list.
+			SetStorageSize( nodeList );
+
+			foreach ( Node node in nodeList )
 			{
 				switch ( node.Properties.State )
 				{
@@ -647,7 +661,7 @@ namespace Simias.Storage
 			}
 			
 			// Walk the commit list and change all states to updated.
-			foreach( Node node in commitList )
+			foreach( Node node in nodeList )
 			{
 				// If this Node object is a Tombstone that is beinging added, then it came into the commit as
 				// an actual node being deleted. Indicate that the object has been deleted. Otherwise do not
@@ -702,6 +716,9 @@ namespace Simias.Storage
 							break;
 					}
 				}
+
+				// Reset the DiskNode property so it won't be valid anymore.
+				node.DiskNode = null;
 			}
 		}
 
@@ -721,7 +738,7 @@ namespace Simias.Storage
 			}
 
 			// Get the local properties from the old node, if it exists, and add them to the new node.
-			Node oldNode = GetNodeByID( node.ID );
+			Node oldNode = ( node.DiskNode != null ) ? node.DiskNode : GetNodeByID( node.ID );
 			if ( oldNode != null )
 			{
 				// Get the local properties.
@@ -741,6 +758,92 @@ namespace Simias.Storage
 				Property mvProp = new Property( PropertyTags.MasterIncarnation, ( ulong )0 );
 				mvProp.LocalProperty = true;
 				node.Properties.AddNodeProperty( mvProp );
+			}
+		}
+
+		/// <summary>
+		/// Calculates the storage size of the objects being committed and adds the value to the collection object
+		/// contained in the nodeList.
+		/// NOTE: The store lock must be held before making this call.
+		/// </summary>
+		/// <param name="nodeList">List of Node objects to be committed to the store.</param>
+		private void SetStorageSize( Node[] nodeList )
+		{
+			Collection collection = null;
+			long storeBytes = 0;
+
+			foreach ( Node node in nodeList )
+			{
+				// Check for BaseFileNode types because they are the only objects that contain files.
+				if ( IsType( node, NodeTypes.BaseFileNodeType ) )
+				{
+					switch ( node.Properties.State )
+					{
+						case PropertyList.PropertyListState.Add:
+						{
+							// Add the number of bytes to the overall total.
+							storeBytes += ( node as BaseFileNode ).Length;
+							break;
+						}
+
+						case PropertyList.PropertyListState.Delete:
+						{
+							// Subtract the number of bytes from the overall total.
+							storeBytes -= ( node as BaseFileNode ).Length;
+							break;
+						}
+
+						case PropertyList.PropertyListState.Update:
+						case PropertyList.PropertyListState.Import:
+						{
+							long oldLength = 0;
+
+							// Get the current file size from the same Node off the disk.
+							Node diskNode = GetNodeByID( node.ID );
+							if ( diskNode != null )
+							{
+								// Save this so it doesn't have to be looked up again by the commit code.
+								node.DiskNode = diskNode;
+
+								// Get the old file size.
+								oldLength = ( diskNode as BaseFileNode ).Length;
+							}
+
+							storeBytes += ( ( node as BaseFileNode ).Length - oldLength );
+							break;
+						}
+					}
+				}
+				else if ( IsType( node, NodeTypes.CollectionType ) )
+				{
+					// It could be that there are multiple collection objects in the list. We always want
+					// the last one.
+					collection = node as Collection;
+				}
+			}
+
+			// Make sure that there is a collection object.
+			if ( ( collection != null ) && ( storeBytes != 0 ) )
+			{
+				// See if this collection is new.
+				if ( collection.Properties.State == PropertyList.PropertyListState.Add )
+				{
+					// No need to look up the old amount, just add the new amount.
+					collection.Properties.ModifyNodeProperty( PropertyTags.StorageSize, storeBytes );
+				}
+				else
+				{
+					// Get the old storage size and add the delta change size.
+					Collection diskCollection = store.GetCollectionByID( id );
+					if ( diskCollection != null )
+					{
+						// Save this so it doesn't have to be looked up again by the commit code.
+						collection.DiskNode = diskCollection;
+
+						// Set the new storage size for the collection.
+						collection.Properties.ModifyNodeProperty( PropertyTags.StorageSize, diskCollection.StorageSize + storeBytes );
+					}
+				}
 			}
 		}
 
@@ -879,6 +982,7 @@ namespace Simias.Storage
 			{
 				bool createCollection = false;
 				bool deleteCollection = false;
+				bool hasCollection = false;
 				bool hasMembers = false;
 				Member collectionOwner = null;
 
@@ -895,6 +999,8 @@ namespace Simias.Storage
 						{
 							createCollection = true;
 						}
+
+						hasCollection = true;
 					}
 					else if ( IsType( node, NodeTypes.MemberType ) )
 					{
@@ -995,8 +1101,21 @@ namespace Simias.Storage
 							}
 						}
 
-						// Use the passed in list.
-						commitList = nodeList;
+						// Make sure that there is a collection object in the commit list.
+						if ( !hasCollection )
+						{
+							commitList = new Node[ nodeList.Length + 1 ];
+							nodeList.CopyTo( commitList, 0 );
+
+							// Allocate a new collection object instead of using the 'this' reference. The 'this'
+							// reference may contain changes that the caller doesn't want committed.
+							commitList[ commitList.Length - 1 ] = store.GetCollectionByID( id );
+						}
+						else
+						{
+							// Use the passed in list.
+							commitList = nodeList;
+						}
 					}
 
 					try

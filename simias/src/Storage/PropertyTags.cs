@@ -136,6 +136,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string StorageSize = "StorageSize";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string Syncable = "Syncable";
 
 		/// <summary>
@@ -188,6 +193,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( PublicKey, null );
 			systemPropertyTable.Add( Root, null );
 			systemPropertyTable.Add( Syncable, null );
+			systemPropertyTable.Add( StorageSize, null );
 			systemPropertyTable.Add( TombstoneType, null );
 			systemPropertyTable.Add( Types, null );
 		}

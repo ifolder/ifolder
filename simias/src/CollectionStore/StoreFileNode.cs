@@ -48,11 +48,10 @@ namespace Simias.Storage
 		/// Note: The Stream object parameter that is passed to this constructor becomes owned by the
 		/// StoreFileNode object and should not be manipulated or closed by the caller.
 		/// </summary>
-		/// <param name="collection">Collection that this StoreFileNode object will be associated with.</param>
 		/// <param name="name">Name of this StoreFileNode object.</param>
 		/// <param name="stream">A Stream object where the data can be read.</param>
-		public StoreFileNode( Collection collection, string name, Stream stream ) :
-			this ( collection, name, Guid.NewGuid().ToString(), stream )
+		public StoreFileNode( string name, Stream stream ) :
+			this ( name, Guid.NewGuid().ToString(), stream )
 		{
 		}
 
@@ -62,12 +61,11 @@ namespace Simias.Storage
 		/// Note: The Stream object parameter that is passed to this constructor becomes owned by the
 		/// StoreFileNode object and should not be manipulated or closed by the caller.
 		/// </summary>
-		/// <param name="collection">Collection that this StoreFileNode object will be associated with.</param>
 		/// <param name="name">Name of this StoreFileNode object.</param>
 		/// <param name="fileID">Globally unique identifier for the StoreFileNode object.</param>
 		/// <param name="stream">A Stream object where the data can be read.</param>
-		public StoreFileNode( Collection collection, string name, string fileID, Stream stream ) :
-			base( collection, name, fileID, NodeTypes.StoreFileNodeType )
+		public StoreFileNode( string name, string fileID, Stream stream ) :
+			base( stream, name, fileID, NodeTypes.StoreFileNodeType )
 		{
 			// Hold the stream object until the object is committed.
 			nodeStream = stream;
@@ -127,28 +125,27 @@ namespace Simias.Storage
 				string managedFile = Path.Combine( collection.ManagedPath, id );
 
 				// Create the store managed file.
-				FileStream fs = File.Open( managedFile, FileMode.Create, FileAccess.ReadWrite, FileShare.None );
-
-				// Copy the data.
-				int fileLength = 0;
-				byte[] buffer = new byte[ 64 * 1024 ];
-				int bytesRead = nodeStream.Read( buffer, 0, buffer.Length );
-				while ( bytesRead > 0 )
+				using ( FileStream fs = File.Open( managedFile, FileMode.Create, FileAccess.ReadWrite, FileShare.None ) )
 				{
-					fileLength += bytesRead;
-					fs.Write( buffer, 0, bytesRead );
-					bytesRead = nodeStream.Read( buffer, 0, buffer.Length );
+					// Copy the data.
+					byte[] buffer = new byte[ 64 * 1024 ];
+					int bytesRead = nodeStream.Read( buffer, 0, buffer.Length );
+					while ( bytesRead > 0 )
+					{
+						fs.Write( buffer, 0, bytesRead );
+						bytesRead = nodeStream.Read( buffer, 0, buffer.Length );
+					}
 				}
-
-				// Close the all of the streams.
-				fs.Close();
-				nodeStream.Close();
-				nodeStream = null;
 
 				// Set the creation time, last write time, and length on the node.
 				CreationTime = File.GetCreationTime( managedFile );
+				LastAccessTime = File.GetLastAccessTime( managedFile );
 				LastWriteTime = File.GetLastWriteTime( managedFile );
-				Length = fileLength;
+				Length = nodeStream.Length;
+
+				// Close the source stream.
+				nodeStream.Close();
+				nodeStream = null;
 			}
 		}
 		#endregion

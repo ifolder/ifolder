@@ -34,6 +34,15 @@ namespace Simias.Storage
 	[ Serializable ]
 	public class DirNode : Node
 	{
+		#region Class Members
+		/// <summary>
+		/// This field is only valid when the object is in the PropertyListState.Add. Once it has been committed,
+		/// it may no longer be valid.
+		/// </summary>
+		[ NonSerialized() ]
+		private string path = null;
+		#endregion
+
 		#region Properties
 		/// <summary>
 		/// Gets the directory creation time.
@@ -43,14 +52,7 @@ namespace Simias.Storage
 			get 
 			{ 
 				Property p = properties.FindSingleValue( PropertyTags.CreationTime );
-				if ( p != null )
-				{
-					return ( DateTime )p.Value;
-				}
-				else
-				{
-					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.CreationTime, name, id ) );
-				}
+				return ( p != null ) ? ( DateTime )p.Value : DateTime.MinValue;
 			}
 
 			set	{ properties.ModifyNodeProperty( PropertyTags.CreationTime, value ); }
@@ -76,14 +78,7 @@ namespace Simias.Storage
 			get 
 			{ 
 				Property p = properties.FindSingleValue( PropertyTags.LastAccessTime );
-				if ( p != null )
-				{
-					return ( DateTime )p.Value;
-				}
-				else
-				{
-					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.LastAccessTime, name, id ) );
-				}
+				return ( p != null ) ? ( DateTime )p.Value : DateTime.MinValue;
 			}
 
 			set { properties.ModifyNodeProperty( PropertyTags.LastAccessTime, value ); }
@@ -97,14 +92,7 @@ namespace Simias.Storage
 			get 
 			{ 
 				Property p = properties.FindSingleValue( PropertyTags.LastWriteTime );
-				if ( p != null )
-				{
-					return ( DateTime )p.Value;
-				}
-				else
-				{
-					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.LastWriteTime, name, id ) );
-				}
+				return ( p != null ) ? ( DateTime )p.Value : DateTime.MinValue;
 			}
 
 			set { properties.ModifyNodeProperty( PropertyTags.LastWriteTime, value ); }
@@ -135,6 +123,9 @@ namespace Simias.Storage
 		public DirNode( Collection collection, DirNode parentNode, string dirName, string dirID ) :
 			base ( dirName, dirID, NodeTypes.DirNodeType )
 		{
+			// Set the in-memory path that is only valid until this object has been committed.
+			path = Path.Combine( parentNode.GetFullPath( collection ), dirName );
+
 			// Set the parent attribute.
 			properties.AddNodeProperty( PropertyTags.Parent, new Relationship( collection.ID, parentNode.ID ) );
 		}
@@ -160,6 +151,9 @@ namespace Simias.Storage
 		public DirNode( Collection collection, string dirPath, string dirID ) :
 			base ( Path.GetFileName( dirPath ), dirID, NodeTypes.DirNodeType )
 		{
+			// Set the in-memory path that is only valid until this object has been committed.
+			path = dirPath;
+
 			// Set the parent attribute.
 			properties.AddNodeProperty( PropertyTags.Parent, new Relationship( collection ) );
 
@@ -237,6 +231,10 @@ namespace Simias.Storage
 				if ( p != null )
 				{
 					fullPath = Path.Combine( ( p.Value as Uri ).LocalPath, name );
+				}
+				else if ( properties.State == PropertyList.PropertyListState.Add )
+				{
+					fullPath = path;
 				}
 				else
 				{
