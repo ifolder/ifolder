@@ -190,6 +190,17 @@ namespace Simias.Authentication
 		}
 
 		/// <summary>
+		/// BUGBUG -- Take this out once Rob removes it from the Web Access code.
+		/// </summary>
+		/// <param name="ctx"></param>
+		/// <returns></returns>
+		[ Obsolete( "Don't use this call anymore!", false ) ]
+		static public Simias.Storage.Member GetMember( HttpContext ctx )
+		{
+			return GetMember( Store.GetStore().DefaultDomain, ctx );
+		}
+
+		/// <summary>
 		/// Summary description for Http
 		/// </summary>
 		/// <param name="domainID"></param>
