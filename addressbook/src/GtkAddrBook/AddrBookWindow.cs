@@ -574,6 +574,7 @@ namespace Novell.iFolder
 
 			curAddrBook.AddContact(contact);
 
+			Console.WriteLine("Comitting new code");
 			contact.Commit();
 
 			ContactTreeStore.AppendValues(contact);
@@ -584,6 +585,7 @@ namespace Novell.iFolder
 		{
 			Contact contact = args.ABContact;
 
+			Console.WriteLine("Comitting existing code");
 			contact.Commit();
 
 			on_contact_selection_changed(o, args);

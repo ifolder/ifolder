@@ -23,6 +23,7 @@
 
 using System;
 using System.Drawing;
+using System.Collections;
 using System.Text;
 using Novell.AddressBook;
 
@@ -103,7 +104,8 @@ namespace Novell.iFolder
 		internal Name			preferredName;
 		internal bool			isNewContact;
 
-		internal Email			currentEmail;
+		internal Email			emailOne;
+		internal Email			emailTwo;
 		internal Telephone		phoneOne;
 		internal Telephone		phoneTwo;
 		internal Telephone		phoneThree;
@@ -151,16 +153,34 @@ namespace Novell.iFolder
 			gxml.Autoconnect (this);
 
 			contactEditorDialog = (Gtk.Dialog) gxml.GetWidget("contactEditor");
+	
 
-/*			GLib.List tl = new GLib.List((IntPtr) 0, typeof(Gtk.Widget));
+			Widget[] widArray = new Widget[16];
 
-			tl.Append(ceUserName.Handle);
-			tl.Append(ceFirstName.Handle);
-			tl.Append(ceLastName.Handle);
-			tl.Append(ceEmail.Handle);
+			widArray[0] = fullNameEntry;
 
-			generalTabTable.FocusChain = (tl);
-*/		
+			widArray[1] = jobTitleEntry;
+			widArray[2] = organizationEntry;
+			widArray[3] = userIDEntry;
+
+			widArray[4] = emailOneEntry;
+			widArray[5] = emailTwoEntry;
+			widArray[6] = webURLEntry;
+			widArray[7] = blogURLEntry;
+
+			widArray[8] = phoneOneEntry;
+			widArray[9] = phoneTwoEntry;
+			widArray[10] = phoneThreeEntry;
+
+			widArray[11] = streetEntry;
+			widArray[12] = cityEntry;
+			widArray[13] = stateEntry;
+			widArray[14] = zipEntry;
+			widArray[15] = countryEntry;
+
+			generalTabTable.FocusChain = widArray;
+
+			fullNameEntry.HasFocus = true;
 
 			try
 			{
@@ -199,7 +219,7 @@ namespace Novell.iFolder
 			if(currentContact.Blog.Length > 0)
 				blogURLEntry.Text = currentContact.Blog;
 
-			PopulateCurrentEmail();
+			PopulateEmails();
 			PopulatePhoneNumbers();
 
 		}
@@ -232,7 +252,7 @@ namespace Novell.iFolder
 					phoneOneEntry.Text = tel.Number;
 					SetPhoneLabelText(phoneOneLabel, tel.Types);
 				}
-				else if(phoneOne == tel)
+				else if(phoneOne.Number == tel.Number)
 				{
 					// do nothing
 				}
@@ -265,30 +285,165 @@ namespace Novell.iFolder
 				label.Text = "Fax Phone:";
 		}
 
-
-		internal void PopulateCurrentEmail()
+		internal void SavePhoneNumbers()
 		{
-			currentEmail = GetEmailType(EmailTypes.preferred);
-			if(currentEmail == null)
-				currentEmail = GetEmailType(EmailTypes.work);
-			if(currentEmail == null)
-				currentEmail = GetEmailType(EmailTypes.personal);
-			if(currentEmail == null)
-				currentEmail = GetEmailType(EmailTypes.other);
+			bool setdefault = true;
 
-			if(currentEmail != null)
+			if(phoneOne == null)
 			{
-				emailOneEntry.Text = currentEmail.Address;
-
-				if( (currentEmail.Types & EmailTypes.work) ==
-						EmailTypes.work)
-					emailOneLabel.Text = "Work Email:";
-				else if( (currentEmail.Types & EmailTypes.personal) == 
-						EmailTypes.personal)
-					emailOneLabel.Text = "Home Email:";
-				else
-					emailOneLabel.Text = "Other Email:";
+				if(phoneOneEntry.Text.Length > 0)
+				{
+					phoneOne = new Telephone(phoneOneEntry.Text,
+							PhoneTypes.work);
+					currentContact.AddTelephoneNumber(phoneOne);
+					SetDefaultPhone(phoneOne);
+					setdefault = false;
+					Console.WriteLine("Saving phoneOne == null : " + 
+							phoneOne.Number);
+				}
 			}
+			else
+			{
+				if(phoneOneEntry.Text.Length > 0)
+				{
+					phoneOne.Number = phoneOneEntry.Text;
+					Console.WriteLine("Saving phoneOne : " + phoneOne.Number);
+					SetDefaultPhone(phoneOne);
+					setdefault = false;
+				}
+				else
+				{
+					Console.WriteLine("Removing phoneOne :" + phoneOne.Number);
+					phoneOne.Delete();
+					phoneOne = null;
+				}
+			}
+
+			if(phoneTwo == null)
+			{
+				if(phoneTwoEntry.Text.Length > 0)
+				{
+					phoneTwo = new Telephone(phoneTwoEntry.Text,
+							PhoneTypes.cell);
+					currentContact.AddTelephoneNumber(phoneTwo);
+					if(setdefault == true)
+					{
+						SetDefaultPhone(phoneTwo);
+						setdefault = false;
+					}
+					Console.WriteLine("Saving phoneTwo == null : " + 
+							phoneTwo.Number);
+				}
+			}
+			else
+			{
+				if(phoneTwoEntry.Text.Length > 0)
+				{
+					phoneTwo.Number = phoneTwoEntry.Text;
+					Console.WriteLine("Saving phoneTwo : " + phoneTwo.Number);
+					if(setdefault == true)
+					{
+						SetDefaultPhone(phoneTwo);
+						setdefault = false;
+					}
+				}
+				else
+				{
+					Console.WriteLine("Removing phoneTwo :" + phoneTwo.Number);
+					phoneTwo.Delete();
+					phoneTwo = null;
+				}
+			}
+
+			if(phoneThree == null)
+			{
+				if(phoneThreeEntry.Text.Length > 0)
+				{
+					phoneThree = new Telephone(phoneThreeEntry.Text,
+							PhoneTypes.home);
+					currentContact.AddTelephoneNumber(phoneThree);
+					if(setdefault == true)
+					{
+						SetDefaultPhone(phoneThree);
+						setdefault = false;
+					}
+					Console.WriteLine("Saving phoneThree == null : " + 
+							phoneThree.Number);
+				}
+			}
+			else
+			{
+				if(phoneThreeEntry.Text.Length > 0)
+				{
+					phoneThree.Number = phoneThreeEntry.Text;
+					Console.WriteLine("Saving phoneThree : " + phoneThree.Number);
+					if(setdefault == true)
+					{
+						SetDefaultPhone(phoneThree);
+						setdefault = false;
+					}
+				}
+				else
+				{
+					Console.WriteLine("Removing phoneThree :" + phoneThree.Number);
+					phoneThree.Delete();
+					phoneThree = null;
+				}
+			}
+		}
+
+		internal void SetDefaultPhone(Telephone curPhone)
+		{
+			foreach(Telephone tel in currentContact.GetTelephoneNumbers())
+			{
+				tel.Types &= ~PhoneTypes.preferred;
+			}
+			curPhone.Types |= PhoneTypes.preferred;
+		}
+
+		internal void PopulateEmails()
+		{
+			emailOne = GetEmailType(EmailTypes.preferred);
+			if(emailOne != null)
+			{
+				Console.WriteLine("Read Preferred : " + emailOne.Address);
+				emailOneEntry.Text = emailOne.Address;
+				SetEmailLabelText(emailOneLabel, emailOne.Types);
+			}
+
+			foreach(Email e in currentContact.GetEmailAddresses())
+			{
+				Console.WriteLine("read: "+e.Address);
+
+				if(emailOne == null)
+				{
+					Console.WriteLine("emailOne == null : " + e.Address);
+					emailOne = e;
+					emailOneEntry.Text = e.Address;
+					SetEmailLabelText(emailOneLabel, emailOne.Types);
+				}
+				else
+				{
+					if( (emailOne.Address != e.Address) &&
+							(emailTwo == null) )
+					{
+						Console.WriteLine("emailTwo == null : " + e.Address);
+						emailTwo = e;
+						emailTwoEntry.Text = e.Address;
+						SetEmailLabelText(emailTwoLabel, emailTwo.Types);
+					}
+				}
+			}
+		}
+
+		internal void SetEmailLabelText(Label label, EmailTypes type)
+		{
+			if( (type & EmailTypes.work) == EmailTypes.work)
+				label.Text = "Work Email:";
+			else if( (type & EmailTypes.personal) == EmailTypes.personal)
+				label.Text = "Home Email:";
+			else
+				label.Text = "Other Email:";
 		}
 
 		internal Email GetEmailType(EmailTypes type)
@@ -301,32 +456,77 @@ namespace Novell.iFolder
 			return null;
 		}
 
-		internal void SaveCurrentEmail()
+		internal void SaveCurrentEmails()
 		{
-			if(currentEmail == null)
+			if(emailOne == null)
 			{
 				if(emailOneEntry.Text.Length > 0)
 				{
-					currentEmail = new Email(EmailTypes.preferred,
+					emailOne = new Email(EmailTypes.work,
 							emailOneEntry.Text);
-					currentContact.AddEmailAddress(currentEmail);
-					SetCurrentDefaultEmail();
+					Console.WriteLine("Saving emailOne == null : " + 
+							emailOne.Address);
+					currentContact.AddEmailAddress(emailOne);
+					SetDefaultEmail(emailOne);
 				}
 			}
 			else
 			{
-				currentEmail.Address = emailOneEntry.Text;
-				SetCurrentDefaultEmail();
+				if(emailOneEntry.Text.Length > 0)
+				{
+					Console.WriteLine("Saving emailOne : " + emailOne.Address);
+					emailOne.Address = emailOneEntry.Text;
+					SetDefaultEmail(emailOne);
+				}
+				else
+				{
+					Console.WriteLine("Removing emailOne :" + emailOne.Address);
+					emailOne.Delete();
+					emailOne = null;
+				}
+			}
+
+			if(emailTwo == null)
+			{
+				if(emailTwoEntry.Text.Length > 0)
+				{
+					emailTwo = new Email(EmailTypes.personal,
+							emailTwoEntry.Text);
+					Console.WriteLine("Saving emailTwo == null : " + 
+							emailTwo.Address);
+					currentContact.AddEmailAddress(emailTwo);
+					if( (emailOne == null) || 
+							(emailOneEntry.Text.Length == 0) )
+						SetDefaultEmail(emailTwo);
+				}
+			}
+			else
+			{
+				if(emailTwoEntry.Text.Length > 0)
+				{
+					Console.WriteLine("Saving emailTwo : "+ emailTwo.Address);
+					emailTwo.Address = emailTwoEntry.Text;
+					if( (emailOne == null) || 
+							(emailOneEntry.Text.Length == 0) )
+						SetDefaultEmail(emailTwo);
+				}
+				else
+				{
+					Console.WriteLine("Removing emailTwo : " +
+							emailTwo.Address);
+					emailTwo.Delete();
+					emailTwo = null;
+				}
 			}
 		}
 
-		internal void SetCurrentDefaultEmail()
+		internal void SetDefaultEmail(Email curEmail)
 		{
 			foreach(Email e in currentContact.GetEmailAddresses())
 			{
 				e.Types &= ~EmailTypes.preferred;
 			}
-			currentEmail.Types |= EmailTypes.preferred;
+			curEmail.Types |= EmailTypes.preferred;
 		}
 
 
@@ -386,7 +586,8 @@ namespace Novell.iFolder
 			else
 				currentContact.Blog = null;
 			// Email
-			SaveCurrentEmail();
+			SaveCurrentEmails();
+			SavePhoneNumbers();
 		}
 
 
@@ -500,29 +701,29 @@ namespace Novell.iFolder
 		}
 
 
-/*
-		private void handle_email_options(object o, OptionChangedEventArgs args)
-		{
-			SaveCurrentEmail();
-			switch(args.OptionIndex)
-			{
-				case 0: // Work email
-					currentEmailType = EmailTypes.work;
-					currentEmail = GetEmailType(currentEmailType);
-					break;
-				case 1: // Home email
-					currentEmailType = EmailTypes.personal;
-					currentEmail = GetEmailType(currentEmailType);
-					break;
-				case 2: // Other email
-					currentEmailType = EmailTypes.other;
-					currentEmail = GetEmailType(currentEmailType);
-					break;
-			}
+		/*
+		   private void handle_email_options(object o, OptionChangedEventArgs args)
+		   {
+		   SaveCurrentEmail();
+		   switch(args.OptionIndex)
+		   {
+		   case 0: // Work email
+		   currentEmailType = EmailTypes.work;
+		   currentEmail = GetEmailType(currentEmailType);
+		   break;
+		   case 1: // Home email
+		   currentEmailType = EmailTypes.personal;
+		   currentEmail = GetEmailType(currentEmailType);
+		   break;
+		   case 2: // Other email
+		   currentEmailType = EmailTypes.other;
+		   currentEmail = GetEmailType(currentEmailType);
+		   break;
+		   }
 
-			PopulateCurrentEmail();
-		}
-*/
+		   PopulateCurrentEmail();
+		   }
+		 */
 
 		private Pixbuf GetScaledPhoto(Contact c, int height)
 		{
