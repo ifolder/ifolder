@@ -25,7 +25,7 @@ CollectionEventTests_INCLUDES =
 CollectionEventTests_RESOURCES =
 CollectionEventTests_FLAGS = $(CSC_EXEFLAG)
 CollectionEventTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Common.dll CollectionEvents.dll Simias.Service.dll
-CollectionEventTests_LIBPATH = $(NUNIT_LIBPATH) 
+CollectionEventTests_LIBPATH = $(NUNIT_LIBPATH) ../Common ../Service
 
 EXTRA_DIST = $(CollectionEvents_CSFILES) $(EventService_CSFILES) $(CollectionEventTests_CSFILES)
 
