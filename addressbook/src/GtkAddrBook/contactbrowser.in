@@ -25,6 +25,6 @@
 # Startup iFolder
 export MONO_PATH=@prefix@/lib
 export LD_LIBRARY_PATH=@prefix@/lib
-cd @prefix@/lib
+cd @prefix@/bin
 mono ContactBrowser.exe
 

@@ -33,16 +33,16 @@ Novell.AddressBook.UI.gtk.dll: $(BookLib_CSFILES) $(BookLib_RESOURCES)
 
 install-exec-local: ContactBrowser.exe Novell.AddressBook.UI.gtk.dll contactbrowser $(GLADE_FILES) $(IMAGE_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir) $(DESTDIR)$(datadir)/ifolder/glade $(DESTDIR)$(datadir)/ifolder/images
-	$(INSTALL_PROGRAM) ContactBrowser.exe Novell.AddressBook.UI.gtk.dll $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) Novell.AddressBook.UI.gtk.dll $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(GLADE_FILES) $(DESTDIR)$(datadir)/ifolder/glade
 	$(INSTALL_PROGRAM) $(IMAGE_FILES) $(DESTDIR)$(datadir)/ifolder/images
-	$(INSTALL_PROGRAM) $(srcdir)/contactbrowser $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) ContactBrowser.exe $(srcdir)/contactbrowser $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(libdir); rm -f ContactBrowser.exe Novell.AddressBook.UI.gtk.dll $(BookLib_RESOURCES)
+	cd $(DESTDIR)$(libdir); rm -f Novell.AddressBook.UI.gtk.dll $(BookLib_RESOURCES)
 	cd $(DESTDIR)$(datadir)/ifolder/glade; rm -f $(GLADE_FILES)
 	cd $(DESTDIR)$(datadir)/ifolder/images; rm -f $(IMAGE_FILES)
-	cd $(DESTDIR)$(bindir); rm -f contactbrowser
+	cd $(DESTDIR)$(bindir); rm -f ContactBrowser.exe contactbrowser
     
 installcheck-local: install
 	
