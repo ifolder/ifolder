@@ -65,9 +65,9 @@ namespace Simias.Location.Tests
 			Configuration configuration = new Configuration(path);
 
 			// create collection
-			Store store = Store.Connect(configuration);
-			Collection collection = store.CreateCollection("Location 1");
-			collection.Commit(true);
+			Store store = new Store(configuration);
+			Collection collection = new Collection(store, "Location 1");
+			collection.Commit();
 
 			// sync properties
 			SyncCollection sc = new SyncCollection(collection);

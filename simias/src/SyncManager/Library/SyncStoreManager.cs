@@ -26,6 +26,9 @@ using System.Threading;
 using System.Collections;
 using System.Runtime.Remoting;
 
+using Simias;
+using Simais.Storage;
+
 namespace Simias.Sync
 {
 	/// <summary>
@@ -34,7 +37,7 @@ namespace Simias.Sync
 	public class SyncStoreManager : IDisposable
 	{
 		private SyncManager syncManager;
-		private SyncStore store;
+		private Store store;
 		private SyncStoreService service;
 		private StoreWatcher watcher;
 		private SyncChannel channel;
@@ -62,7 +65,7 @@ namespace Simias.Sync
 			this.syncManager = syncManager;
 
 			// store
-			store = new SyncStore(syncManager.StorePath);
+			store = new Store(syncManager.Config);
 
 			// collection managers
 			collectionManagers = new Hashtable();

@@ -41,11 +41,6 @@ namespace Simias.Sync
 		public static readonly string SuggestedHost = MyDns.GetHostName();
 
 		/// <summary>
-		/// The suggested collection store path for the current machine.
-		/// </summary>
-		public static readonly string SuggestedStorePath = null;
-
-		/// <summary>
 		/// The suggested sync port for the current machine.
 		/// </summary>
 		public static readonly int SuggestedPort = 6436;
@@ -72,25 +67,18 @@ namespace Simias.Sync
 
 		// properties
 		private string host	= SuggestedHost;
-		private string path	= SuggestedStorePath;
 		private int port = SuggestedPort;
 		private Type logicFactory = SuggestedLogicFactory;
 		private int interval = SuggestedSyncInterval;
 		private SyncChannelSinks sinks = SuggestedChannelSinks;
+		private Configuration config;
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public SyncProperties()
+		public SyncProperties(Configuration config)
 		{
-		}
-
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public SyncProperties(Configuration configuration)
-		{
-			this.path = configuration.StorePath;
+			this.config = config;
 		}
 
 		#region ICloneable Members
@@ -102,10 +90,9 @@ namespace Simias.Sync
 		public object Clone()
 		{
 			// note: watch carefully!
-			SyncProperties clone = new SyncProperties();
+			SyncProperties clone = new SyncProperties(config);
 			
 			clone.host = host;
-			clone.path = path;
 			clone.port = port;
 			clone.logicFactory = logicFactory;
 			clone.interval = interval;
@@ -128,22 +115,11 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// The collection store path.
+		/// The Simias configuration object.
 		/// </summary>
-		public string StorePath
+		public Configuration Config
 		{
-			get { return path; }
-			set
-			{
-				if (value == null)
-				{
-					path = null;
-				}
-				else
-				{
-					path = Path.GetFullPath(value);
-				}
-			}
+			get { return config; }
 		}
 
 		/// <summary>

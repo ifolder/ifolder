@@ -61,7 +61,7 @@ namespace Simias.Sync
 		private bool working;
 		private Hashtable collections;
 		
-		private string path;
+		private Configuration config;
 		private Store store;
 
 		private int interval = 5;
@@ -69,13 +69,10 @@ namespace Simias.Sync
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
-		/// <param name="path">The store path.</param>
-		public StoreWatcher(string path)
+		/// <param name="config">The Simias configuration object.</param>
+		public StoreWatcher(Configuration config)
 		{
-			if (path != null)
-			{
-				this.path = Path.GetFullPath(path);
-			}
+			this.config = config;
 
 			collections = new Hashtable();
 
@@ -102,9 +99,7 @@ namespace Simias.Sync
 			}
 
 			// connect
-			Uri uri = null;
-			if (path != null) uri = new Uri(path);
-			store = Store.Connect(uri, null);
+			store = new Store(config);
 			Trace.Assert(store != null);
 		}
 
@@ -158,7 +153,7 @@ namespace Simias.Sync
 					// find created collections
 					foreach(Collection c in store)
 					{
-						string id = c.Id;
+						string id = c.ID;
 						string name = c.Name;
 
 						if (!collections.Contains(id))

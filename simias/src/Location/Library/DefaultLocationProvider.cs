@@ -23,6 +23,8 @@
 
 using System;
 
+using Simias;
+using Simias.Storage;
 using Simias.Sync;
 
 namespace Simias.Location
@@ -32,7 +34,7 @@ namespace Simias.Location
 	/// </summary>
 	public class DefaultLocationProvider : ILocationProvider
 	{
-		private string storePath;
+		private Configuration configuration;
 
 		/// <summary>
 		/// Default Constructor
@@ -49,7 +51,7 @@ namespace Simias.Location
 		/// <param name="configuration">The Simias configuration object.</param>
 		public void Configure(Configuration configuration)
 		{
-			storePath = configuration.StorePath;
+			this.configuration = configuration;
 		}
 
 		/// <summary>
@@ -61,13 +63,15 @@ namespace Simias.Location
 		{
 			Uri result = null;
 
-			SyncStore syncStore = new SyncStore(storePath);
+			Store store = new Store(configuration);
 
-			SyncCollection syncCollection = syncStore.OpenCollection(collection);
+			Collection c = store.GetCollectionByID(collection);
 
-			if (syncCollection != null)
+			if (collection != null)
 			{
-				result = syncCollection.MasterUri;
+				SyncCollection sc = new SyncCollection(c);
+
+				result = sc.MasterUri;
 			}
 
 			return result;

@@ -34,7 +34,7 @@ namespace Simias.Location
 	/// </summary>
 	public class LocationProviderList : IEnumerable, IEnumerator
 	{
-		public static readonly string LocationServicePropertyName = "Location Service";
+		public static readonly string LocationServiceNodeName = "Location Service";
 		public static readonly string LocationProviderListPropertyName = "Location Providers";
 		
 		private Store store;
@@ -49,18 +49,18 @@ namespace Simias.Location
 		/// <param name="configuration">The Simias configuration object.</param>
 		public LocationProviderList(Configuration configuration)
 		{
-			store = Store.Connect(configuration);
+			store = new Store(configuration);
 
 			collection = store.GetDatabaseObject();
 
 			// check for node
-			node = collection.GetSingleNodeByName(LocationServicePropertyName);
+			node = collection.GetSingleNodeByName(LocationServiceNodeName);
 
 			if (node == null)
 			{
 				// create node
-				node = collection.CreateChild(LocationServicePropertyName);
-				node.Commit();
+				node = new Node(LocationServiceNodeName);
+				collection.Commit(node);
 
 				Add(typeof(DefaultLocationProvider));
 			}
@@ -72,7 +72,7 @@ namespace Simias.Location
 		/// <param name="configuration">The configuration collection.</param>
 		private LocationProviderList(Collection collection)
 		{
-			this.store = collection.LocalStore;
+			this.store = collection.StoreReference;
 			this.collection = collection;
 		}
 
@@ -84,7 +84,7 @@ namespace Simias.Location
 		{
 			ArrayList current = new ArrayList();
 
-			node = collection.GetSingleNodeByName(LocationServicePropertyName);
+			node = collection.GetSingleNodeByName(LocationServiceNodeName);
 			list = node.Properties.GetProperties(LocationProviderListPropertyName);
 			
 			foreach(Property p in list)
@@ -99,7 +99,7 @@ namespace Simias.Location
 				node.Properties.AddProperty(LocationProviderListPropertyName, item);
 			}
 
-			node.Commit();
+			collection.Commit(node);
 		}
 
 		#region IEnumerable Members
@@ -122,7 +122,7 @@ namespace Simias.Location
 		/// </summary>
 		public void Reset()
 		{
-			node = collection.GetSingleNodeByName(LocationServicePropertyName);
+			node = collection.GetSingleNodeByName(LocationServiceNodeName);
 
 			list = node.Properties.GetProperties(LocationProviderListPropertyName);
 

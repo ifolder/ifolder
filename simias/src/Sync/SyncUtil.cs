@@ -29,6 +29,7 @@ using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Http;
 using System.Runtime.Remoting.Channels.Tcp;
 
+using Simias;
 using Simias.Storage;
 
 namespace Simias.Sync
@@ -42,16 +43,17 @@ namespace Simias.Sync
 /// </summary>
 public class FileInviter
 {
-	Store store;
-	SyncStore syncStore;
+	Configuration config;
+    Store store;
 
 	/// <summary>
 	/// public constructor when specifying store location
 	/// </summary>
 	public FileInviter(Uri storeLocation)
 	{
-		syncStore = new SyncStore(storeLocation == null? null: storeLocation.LocalPath);
-		store = syncStore.BaseStore;
+		config = new Configuration(storeLocation.LocalPath);
+
+        store = new Store(config);
 	}
 
 	// TODO: is the following path comparison correct? should it be case insensitive?
@@ -104,6 +106,7 @@ public class FileInviter
 		store.CurrentIdentity.Commit();
 
 		// add the invitation information to the store collection
+		
 		SyncCollection sc = syncStore.CreateCollection(invitation);
 		sc.Commit();
 		Log.Spew("Created new client collection for {0}, id {1}", docRoot.LocalPath, sc.ID);

@@ -67,6 +67,25 @@ namespace Simias.Sync
 		{
 		}
 
+		public SyncCollection(Store store, Invitation invitation)
+			: base(store, invitation.CollectionName, invitation.CollectionId, )
+		{
+			this.Type = invitation.CollectionType;
+			this.Domain = invitation.Domain;
+			this.MasterUri = invitation.MasterUri;
+			this.Role = SyncCollectionRoles.Slave;
+			
+			// TODO:
+			//Path.Combine(invitation.RootPath, invitation.CollectionName)
+
+			// add any secret to the current identity chain
+			if ((invitation.PublicKey != null) && (invitation.PublicKey.Length > 0))
+			{
+				BaseContact identity = store.CurrentIdentity;
+				identity.CreateAlias(invitation.Domain, invitation.Identity, invitation.PublicKey);
+			}
+		}
+
 		/// <summary>
 		/// Create an invitation object for the given identity.
 		/// </summary>

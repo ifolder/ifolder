@@ -26,6 +26,8 @@ using System.IO;
 
 using NUnit.Framework;
 
+using Simias;
+using Simias.Storage;
 using Simias.Sync;
 
 namespace Simias.Sync.Tests
@@ -64,11 +66,12 @@ namespace Simias.Sync.Tests
 		public void TestSyncStore()
 		{
 			string path = "./syncstore1";
+			Configuration config = new Configuration(path);
 
-			SyncStore store = new SyncStore(path);
+			Store store = new Store(config);
 
 			Assert(store.StorePath == Path.GetFullPath(path));
-			Assert(store.ID == store.BaseStore.GetDatabaseObject().Id);
+			Assert(store.ID == store.GetDatabaseObject().ID);
 
 			store.Delete();
 		}
@@ -80,11 +83,14 @@ namespace Simias.Sync.Tests
 		public void TestSyncCollection()
 		{
 			string storePath = "./syncstore2";
-			string collectionPath = "./synccollection2";
 
-			SyncStore store = new SyncStore(storePath);
+			Configuration config = new Configuration(storePath);
 
-			SyncCollection sc = store.CreateCollection("synccollection2", collectionPath);
+			Store store = new Store(config);
+			
+			Collection collection = new Collection(store, "synccollection2");
+
+			SyncCollection sc = new SyncCollection(collection);
 
 			Assert(sc != null);
 
@@ -92,11 +98,11 @@ namespace Simias.Sync.Tests
 			
 			Assert(sc.Domain != null);
 			
-			Console.WriteLine("Collection \"{0}\" Access Identity: {1}", sc.Name, sc.AccessIdentity);
+			Console.WriteLine("Collection \"{0}\" Access Identity: {1}", sc.Name, sc.DomainIdentity);
 			
-			Console.WriteLine("Current Identity: {0}", store.BaseStore.CurrentUser);
+			Console.WriteLine("Current Identity: {0}", store.CurrentUserGuid);
 
-			Assert(sc.AccessIdentity != null);
+			Assert(sc.DomainIdentity != null);
 
 			store.Delete();
 		}
