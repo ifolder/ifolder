@@ -681,7 +681,8 @@ namespace Simias.Sync
 				switch (si.Status)
 				{
 					case StartSyncStatus.AccessDenied:
-						log.Info("Failed authentication");
+						log.Info("The user no longer has rights.");
+						collection.Commit(collection.Delete());
 						break;
 					case StartSyncStatus.Locked:
 						log.Info("The collection is locked");
