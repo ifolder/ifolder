@@ -52,11 +52,6 @@ namespace Simias.Sync
 		public static readonly string MasterUrlPropertyName = "Master Url";
 		
 		/// <summary>
-		/// A collection property name for the URL of the domain service.
-		/// </summary>
-		public static readonly string DomainUrlPropertyName = "Domain Service URL";
-		
-		/// <summary>
 		/// Does the master collection need to be created?
 		/// </summary>
 		public static readonly string CreateMasterPropertyName = "Create Master Collection";
@@ -161,7 +156,6 @@ namespace Simias.Sync
 					if (Synchronizable && agent.Enabled)
 					{
 						role = SyncCollectionRoles.Slave;
-						DomainUrl = agent.ServiceUrl;
 						CreateMaster = true;
 					}
 					else
@@ -213,15 +207,6 @@ namespace Simias.Sync
 			set
 			{
 				SetProperty(MasterUrlPropertyName, value, true); }
-		}
-
-		/// <summary>
-		/// The URL of the domain service.
-		/// </summary>
-		public Uri DomainUrl
-		{
-			get { return (Uri)GetProperty(DomainUrlPropertyName); }
-			set { SetProperty(DomainUrlPropertyName, value, true); }
 		}
 
 		/// <summary>

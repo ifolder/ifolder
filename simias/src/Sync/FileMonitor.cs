@@ -645,6 +645,7 @@ namespace Simias.Sync
 											}
 											node.Name = Path.GetFileName(fullName);
 											string relativePath = GetNormalizedRelativePath(fullName);
+											string oldRelativePath = node.Properties.GetSingleProperty(PropertyTags.FileSystemPath).ValueString;
 											node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
 											if (!isDir)
 											{
@@ -652,10 +653,12 @@ namespace Simias.Sync
 											}
 											else
 											{
+												// Commit the directory.
+												collection.Commit(node);
 												// We need to rename all of the children nodes.
-												string oldRelativePath = relativePath.Substring(0, relativePath.LastIndexOf('/')) + Path.GetFileName(args.OldName);
-												ICSList nodeList = collection.Search(PropertyTags.FileSystemPath, oldRelativePath, SearchOp.Begins);
-												foreach (ShallowNode csn in nodeList)
+												ArrayList nodeList = new ArrayList();
+												ICSList csnList = collection.Search(PropertyTags.FileSystemPath, oldRelativePath, SearchOp.Begins);
+												foreach (ShallowNode csn in csnList)
 												{
 													Node childNode = collection.GetNodeByID(csn.ID);
 													if (childNode != null)
@@ -664,12 +667,13 @@ namespace Simias.Sync
 														if (childRP != null)
 														{
 															string newRP = childRP.ValueString;
-															childRP.Value = newRP.Replace(oldRelativePath, relativePath);
+															childRP.SetPropertyValue(newRP.Replace(oldRelativePath, relativePath));
 															childNode.Properties.ModifyNodeProperty(childRP);
+															nodeList.Add(childNode);
 														}
 													}
 												}
-												collection.Commit(node);
+												collection.Commit((Node[])nodeList.ToArray(typeof(Node)));
 											}
 										}
 										else

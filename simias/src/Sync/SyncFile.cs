@@ -322,7 +322,11 @@ namespace Simias.Sync
 			}
 			if (commit)
 			{
-				File.Copy(workFile, file, true);
+				string tmpFile = file + ".~stmp";
+				File.Move(file, tmpFile);
+				File.Move(workFile, file);
+                //File.Copy(workFile, file, true);
+				workFile = tmpFile;
 				FileInfo fi = new FileInfo(file);
 				fi.Attributes = fi.Attributes & ~FileAttributes.Hidden;
 				fi.LastWriteTime = node.LastWriteTime;
@@ -331,8 +335,12 @@ namespace Simias.Sync
 				{
 					// Check if this was a rename.
 					string oldPath = oldNode.GetFullPath(collection);
-					if (oldPath != file)
-						File.Delete(oldPath);
+					try
+					{
+						if (oldPath != file)
+							File.Delete(oldPath);
+					}
+					catch {};
 				}
 			}
 			// We need to delete the temp file.
@@ -372,6 +380,8 @@ namespace Simias.Sync
 		protected string		workFile;
 		/// <summary>The Prefix of the working file.</summary>
 		const string			WorkFilePrefix = ".simias.wf.";
+		static string			workBinDir = "WorkArea";
+		static string			workBin;
 		/// <summary>Used to publish Sync events.</summary>
 		static protected EventPublisher	eventPublisher = new EventPublisher();
 
@@ -397,7 +407,13 @@ namespace Simias.Sync
 			this.node = node;
 			this.nodeID = node.ID;
 			this.file = node.GetFullPath(collection);
-			this.workFile = Path.Combine(Path.GetDirectoryName(file), WorkFilePrefix + node.ID);
+			if (workBin == null)
+			{
+				workBin = Path.Combine(Configuration.GetConfiguration().StorePath, workBinDir);
+				if (!Directory.Exists(workBin))
+					Directory.CreateDirectory(workBin);
+			}
+			this.workFile = Path.Combine(workBin, WorkFilePrefix + node.ID);
 		}
 
 		#endregion
