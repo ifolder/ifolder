@@ -92,6 +92,7 @@ namespace Novell.FormsTrayApp
 		private iFolderSettings ifolderSettings = null;
 		private IProcEventClient eventClient;
 		private GlobalProperties globalProperties;
+		private Preferences preferences;
 		private SyncLog syncLog;
 		private bool eventError = false;
 		private IntPtr hwnd;
@@ -101,6 +102,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Timer syncAnimateTimer;
 		private System.Windows.Forms.MenuItem menuLogin;
 		private System.Windows.Forms.MenuItem menuSyncLog;
+		private System.Windows.Forms.MenuItem menuPreferences;
 		private int iconID;
 		#endregion
 
@@ -110,7 +112,7 @@ namespace Novell.FormsTrayApp
 			if (args.Length == 1 && args[0].Equals("-checkautorun"))
 			{
 				// Check if auto-run is enabled.
-				if (!GlobalProperties.IsRunEnabled())
+				if (!Preferences.IsRunEnabled())
 				{
 					// Auto-run is disabled ... exit.
 					return;
@@ -301,6 +303,18 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
+		private void menuPreferences_Click(object sender, System.EventArgs e)
+		{
+			if (preferences.Visible)
+			{
+				preferences.Activate();
+			}
+			else
+			{
+				preferences.Show();
+			}
+		}
+
 		private void menuSyncLog_Click(object sender, System.EventArgs e)
 		{
 			if (syncLog.Visible)
@@ -395,7 +409,7 @@ namespace Novell.FormsTrayApp
 
 					// Instantiate the GlobalProperties dialog so we can log sync events.
 					globalProperties = new GlobalProperties(ifWebService, eventClient);
-					globalProperties.ShowEnterpriseTab = true;
+					preferences = new Preferences(ifWebService);
 
 					// Create the control so that we can use the delegate to write sync events to the log.
 					// For some reason, the handle isn't created until it is referenced.
@@ -465,7 +479,6 @@ namespace Novell.FormsTrayApp
 
 		private void serverInfo_EnterpriseConnect(object sender, DomainConnectEventArgs e)
 		{
-			globalProperties.ShowEnterpriseTab = true;
 //			globalProperties.InitialConnect = true;
 			globalProperties.AddDomainToList(e.DomainWeb);
 
@@ -532,12 +545,13 @@ namespace Novell.FormsTrayApp
 			this.menuSeparator1 = new System.Windows.Forms.MenuItem();
 			this.menuProperties = new System.Windows.Forms.MenuItem();
 			this.menuLogin = new System.Windows.Forms.MenuItem();
+			this.menuSyncLog = new System.Windows.Forms.MenuItem();
 			this.menuJoin = new System.Windows.Forms.MenuItem();
 			this.menuHelp = new System.Windows.Forms.MenuItem();
 			this.menuItem10 = new System.Windows.Forms.MenuItem();
 			this.menuExit = new System.Windows.Forms.MenuItem();
 			this.syncAnimateTimer = new System.Windows.Forms.Timer(this.components);
-			this.menuSyncLog = new System.Windows.Forms.MenuItem();
+			this.menuPreferences = new System.Windows.Forms.MenuItem();
 			// 
 			// notifyIcon1
 			// 
@@ -554,6 +568,7 @@ namespace Novell.FormsTrayApp
 																						 this.menuSeparator1,
 																						 this.menuProperties,
 																						 this.menuLogin,
+																						 this.menuPreferences,
 																						 this.menuSyncLog,
 																						 this.menuJoin,
 																						 this.menuHelp,
@@ -624,10 +639,20 @@ namespace Novell.FormsTrayApp
 			this.menuLogin.Visible = ((bool)(resources.GetObject("menuLogin.Visible")));
 			this.menuLogin.Click += new System.EventHandler(this.menuLogin_Click);
 			// 
+			// menuSyncLog
+			// 
+			this.menuSyncLog.Enabled = ((bool)(resources.GetObject("menuSyncLog.Enabled")));
+			this.menuSyncLog.Index = 5;
+			this.menuSyncLog.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuSyncLog.Shortcut")));
+			this.menuSyncLog.ShowShortcut = ((bool)(resources.GetObject("menuSyncLog.ShowShortcut")));
+			this.menuSyncLog.Text = resources.GetString("menuSyncLog.Text");
+			this.menuSyncLog.Visible = ((bool)(resources.GetObject("menuSyncLog.Visible")));
+			this.menuSyncLog.Click += new System.EventHandler(this.menuSyncLog_Click);
+			// 
 			// menuJoin
 			// 
 			this.menuJoin.Enabled = ((bool)(resources.GetObject("menuJoin.Enabled")));
-			this.menuJoin.Index = 5;
+			this.menuJoin.Index = 6;
 			this.menuJoin.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuJoin.Shortcut")));
 			this.menuJoin.ShowShortcut = ((bool)(resources.GetObject("menuJoin.ShowShortcut")));
 			this.menuJoin.Text = resources.GetString("menuJoin.Text");
@@ -637,7 +662,7 @@ namespace Novell.FormsTrayApp
 			// menuHelp
 			// 
 			this.menuHelp.Enabled = ((bool)(resources.GetObject("menuHelp.Enabled")));
-			this.menuHelp.Index = 6;
+			this.menuHelp.Index = 7;
 			this.menuHelp.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuHelp.Shortcut")));
 			this.menuHelp.ShowShortcut = ((bool)(resources.GetObject("menuHelp.ShowShortcut")));
 			this.menuHelp.Text = resources.GetString("menuHelp.Text");
@@ -647,7 +672,7 @@ namespace Novell.FormsTrayApp
 			// menuItem10
 			// 
 			this.menuItem10.Enabled = ((bool)(resources.GetObject("menuItem10.Enabled")));
-			this.menuItem10.Index = 7;
+			this.menuItem10.Index = 8;
 			this.menuItem10.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuItem10.Shortcut")));
 			this.menuItem10.ShowShortcut = ((bool)(resources.GetObject("menuItem10.ShowShortcut")));
 			this.menuItem10.Text = resources.GetString("menuItem10.Text");
@@ -656,7 +681,7 @@ namespace Novell.FormsTrayApp
 			// menuExit
 			// 
 			this.menuExit.Enabled = ((bool)(resources.GetObject("menuExit.Enabled")));
-			this.menuExit.Index = 8;
+			this.menuExit.Index = 9;
 			this.menuExit.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuExit.Shortcut")));
 			this.menuExit.ShowShortcut = ((bool)(resources.GetObject("menuExit.ShowShortcut")));
 			this.menuExit.Text = resources.GetString("menuExit.Text");
@@ -667,15 +692,15 @@ namespace Novell.FormsTrayApp
 			// 
 			this.syncAnimateTimer.Tick += new System.EventHandler(this.syncAnimateTimer_Tick);
 			// 
-			// menuSyncLog
+			// menuPreferences
 			// 
-			this.menuSyncLog.Enabled = ((bool)(resources.GetObject("menuSyncLog.Enabled")));
-			this.menuSyncLog.Index = 4;
-			this.menuSyncLog.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuSyncLog.Shortcut")));
-			this.menuSyncLog.ShowShortcut = ((bool)(resources.GetObject("menuSyncLog.ShowShortcut")));
-			this.menuSyncLog.Text = resources.GetString("menuSyncLog.Text");
-			this.menuSyncLog.Visible = ((bool)(resources.GetObject("menuSyncLog.Visible")));
-			this.menuSyncLog.Click += new System.EventHandler(this.menuSyncLog_Click);
+			this.menuPreferences.Enabled = ((bool)(resources.GetObject("menuPreferences.Enabled")));
+			this.menuPreferences.Index = 4;
+			this.menuPreferences.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuPreferences.Shortcut")));
+			this.menuPreferences.ShowShortcut = ((bool)(resources.GetObject("menuPreferences.ShowShortcut")));
+			this.menuPreferences.Text = resources.GetString("menuPreferences.Text");
+			this.menuPreferences.Visible = ((bool)(resources.GetObject("menuPreferences.Visible")));
+			this.menuPreferences.Click += new System.EventHandler(this.menuPreferences_Click);
 			// 
 			// FormsTrayApp
 			// 
@@ -728,7 +753,7 @@ namespace Novell.FormsTrayApp
 			{
 				if (ifolder.HasConflicts)
 				{
-					if (globalProperties.NotifyCollisionEnabled)
+					if (preferences.NotifyCollisionEnabled)
 					{
 						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
 
@@ -746,7 +771,7 @@ namespace Novell.FormsTrayApp
 				}
 				else if (ifolder.State.Equals("Available") && eventData.Equals("NodeCreated"))
 				{
-					if (globalProperties.NotifyShareEnabled)
+					if (preferences.NotifyShareEnabled)
 					{
 						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
 
@@ -764,7 +789,7 @@ namespace Novell.FormsTrayApp
 				}
 				else if (ifolderUser != null)
 				{
-					if (globalProperties.NotifyJoinEnabled)
+					if (preferences.NotifyJoinEnabled)
 					{
 						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
 
@@ -889,7 +914,7 @@ namespace Novell.FormsTrayApp
 							{
 								ifolder = ifWebService.GetiFolder(eventArgs.Collection);
 							}
-							else if (eventArgs.Type.Equals("Node") && globalProperties.IsPOBox(eventArgs.Collection))
+							else if (eventArgs.Type.Equals("Node") && preferences.IsPOBox(eventArgs.Collection))
 							{
 								ifolder = ifWebService.GetiFolderInvitation(eventArgs.Collection, eventArgs.Node);
 							}
@@ -906,7 +931,7 @@ namespace Novell.FormsTrayApp
 								}
 								case "Node":
 								{
-									if (globalProperties.IsPOBox(eventArgs.Collection))
+									if (preferences.IsPOBox(eventArgs.Collection))
 									{
 										ifolder = ifWebService.GetiFolderInvitation(eventArgs.Collection, eventArgs.Node);
 
@@ -926,7 +951,7 @@ namespace Novell.FormsTrayApp
 									// 1. Keep track of the first sync and don't display any notifications until the initial sync has successfully completed.
 									// 2. Queue up the added members and only display a single notification ... some sort of time interval would need to be used.
 									ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
-									if ((ifolderUser != null) && !globalProperties.IsCurrentUser(ifolderUser.UserID))
+									if ((ifolderUser != null) && !preferences.IsCurrentUser(ifolderUser.UserID))
 									{
 										ifolder = ifWebService.GetiFolder(eventArgs.Collection);
 									}

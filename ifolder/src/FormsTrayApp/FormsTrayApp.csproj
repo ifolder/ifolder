@@ -144,6 +144,16 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "AdvancedSettings.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AdvancedSettings.resx"
+                    DependentUpon = "AdvancedSettings.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "App.ico"
                     BuildAction = "Content"
                 />
@@ -196,6 +206,16 @@
                     RelPath = "NotifyIconBalloonTip.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Preferences.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Preferences.resx"
+                    DependentUpon = "Preferences.cs"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "ServerDetails.cs"
