@@ -610,24 +610,22 @@ namespace Simias.POBox
 			
 			// collection type
 			// TODO: sc.SetType(this, this.SubscriptionCollectionTypes);
-			c.SetType(this, "iFolder");
+			c.SetType(c, "iFolder");
 			
 			// sync information
-			c.Properties.AddProperty(SyncCollection.RolePropertyName,
+			Property pr = new Property(SyncCollection.RolePropertyName,
 				SyncCollectionRoles.Slave);
+			pr.LocalProperty = true;
+			c.Properties.AddProperty(pr);
 			
-			c.Properties.AddProperty(SyncCollection.MasterUrlPropertyName,
+			Property pu = new Property(SyncCollection.MasterUrlPropertyName,
 				new Uri(this.SubscriptionCollectionURL));
-
-			// member
-			Member member = new Member(this.FromName, this.FromIdentity, Access.Rights.ReadWrite);
-			member.IsOwner = true;
-
-			// impersonate the member
-			c.Impersonate(member);
+			pu.LocalProperty = true;
+			c.Properties.AddProperty(pu);
 
 			// commit
-			c.Commit(new Node[] {c, member});
+			c.IsStub = true;
+			c.Commit();
 
 			// check for a dir node
 			if (((this.DirNodeID != null) && (this.DirNodeID.Length > 0))
@@ -640,6 +638,7 @@ namespace Simias.POBox
 
 				if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
+				c.Impersonate(new Member("Root", c.ID, Access.Rights.Admin));
 				c.Commit(dn);
 			}
 		}

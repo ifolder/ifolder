@@ -59,7 +59,6 @@ public class SynkerWorkerA: SyncCollectionWorker
 	{
 		ss = master;
 		collection = slave;
-		collection.Impersonate(new Member("Root", collection.ID, Access.Rights.Admin));
 		ops = new SyncOps(collection, false);
 	}
 
@@ -72,10 +71,18 @@ public class SynkerWorkerA: SyncCollectionWorker
 		Log.Spew("-------- starting sync pass for collection {0}", collection.Name);
 		try
 		{
-			moreWork = true;
-			while (moreWork)
+			collection.Impersonate(new Member("Root", collection.ID, Access.Rights.Admin));
+			try
 			{
-				DoOneSyncPass();
+				moreWork = true;
+				while (moreWork)
+				{
+					DoOneSyncPass();
+				}
+			}
+			finally
+			{
+				collection.Revert();
 			}
 		}
 		catch (Exception e)

@@ -60,9 +60,25 @@ namespace Simias.Storage
 		/// Used to do a quick lookup of the domain ID.
 		/// </summary>
 		string domainID = null;
+
+		/// <summary>
+		/// Used to indicate that the collection is a place-holder until the real collection is
+		/// sync'ed down.
+		/// </summary>
+		private bool stub = false;
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// Used to indicate if this collection is a place-holder for the real collection which will
+		/// be sync'ed down later.
+		/// </summary>
+		internal bool IsStub
+		{
+			get { return stub; }
+			set { stub = value; }
+		}
+
 		/// <summary>
 		/// Gets the name of the domain that this collection belongs to.
 		/// </summary>
@@ -669,10 +685,9 @@ namespace Simias.Storage
 			if ( IsType( node, NodeTypes.CollectionType ) )
 			{
 				// If the managed directory does not exist, create it.
-				Collection importCollection = node as Collection;
-				if ( !Directory.Exists( importCollection.ManagedPath ) )
+				if ( !Directory.Exists( ManagedPath ) )
 				{
-					Directory.CreateDirectory( importCollection.ManagedPath );
+					Directory.CreateDirectory( ManagedPath );
 				}
 			}
 
@@ -885,7 +900,7 @@ namespace Simias.Storage
 					else if ( createCollection )
 					{
 						// If there is no collection owner specified, then one needs to be created.
-						if ( collectionOwner == null )
+						if ( ( collectionOwner == null ) && !IsStub )
 						{
 							// If a collection is being created, then a Member object containing the owner of the
 							// collection needs to be created also.
@@ -904,41 +919,45 @@ namespace Simias.Storage
 						// Need to get who I am in this collection so that access control can be checked.
 						Member member = accessControl.GetCurrentMember( store, Domain, false );
 
-						// If membership is changing on the collection, make sure that the current
-						// user has sufficient rights.
-						if ( hasMembers )
+						// If the collection is being impersonated, allow all access.
+						if ( member.UserID != id )
 						{
-							if ( !IsAccessAllowed( member, Access.Rights.Admin ) )
+							// If membership is changing on the collection, make sure that the current
+							// user has sufficient rights.
+							if ( hasMembers )
 							{
-								throw new AccessException( this, member, Access.Rights.Admin, String.Format( "User {0} - ID: {1} does not have sufficient rights to change the member list.", member.Name, member.UserID ) );
-							}
-
-							// If ownership rights are changing, make sure the current user has sufficient rights.
-							if ( collectionOwner != null )
-							{
-								// Get the current owner of the collection.
-								Member currentOwner = Owner;
-
-								// See if ownership is changing and if it is, then the current user has to be
-								// the current owner.
-								if ( ( collectionOwner.UserID != currentOwner.UserID ) && ( currentOwner.UserID != member.UserID ) )
+								if ( !IsAccessAllowed( member, Access.Rights.Admin ) )
 								{
-									throw new AccessException( this, member, String.Format( "User {0} - ID: {1} does not have sufficient rights to change the collection ownership.", member.Name, member.UserID ) );
+									throw new AccessException( this, member, Access.Rights.Admin, String.Format( "User {0} - ID: {1} does not have sufficient rights to change the member list.", member.Name, member.UserID ) );
 								}
 
-								// Don't allow the owner's rights to be set below admin level.
-								if ( collectionOwner.Rights != Access.Rights.Admin )
+								// If ownership rights are changing, make sure the current user has sufficient rights.
+								if ( collectionOwner != null )
 								{
-									throw new AccessException( this, member, String.Format( "Owner {0} - ID: {1} rights cannot be downgraded.", collectionOwner.Name, collectionOwner.UserID ) );
+									// Get the current owner of the collection.
+									Member currentOwner = Owner;
+
+									// See if ownership is changing and if it is, then the current user has to be
+									// the current owner.
+									if ( ( collectionOwner.UserID != currentOwner.UserID ) && ( currentOwner.UserID != member.UserID ) )
+									{
+										throw new AccessException( this, member, String.Format( "User {0} - ID: {1} does not have sufficient rights to change the collection ownership.", member.Name, member.UserID ) );
+									}
+
+									// Don't allow the owner's rights to be set below admin level.
+									if ( collectionOwner.Rights != Access.Rights.Admin )
+									{
+										throw new AccessException( this, member, String.Format( "Owner {0} - ID: {1} rights cannot be downgraded.", collectionOwner.Name, collectionOwner.UserID ) );
+									}
 								}
 							}
-						}
-						else
-						{
-							// Make sure that current user has write rights to this collection.
-							if ( !IsAccessAllowed( member, Access.Rights.ReadWrite ) )
+							else
 							{
-								throw new AccessException( this, member, Access.Rights.ReadWrite, String.Format( "User {0} - ID: {1} does not have sufficient rights to change the collection.", member.Name, member.UserID ) );
+								// Make sure that current user has write rights to this collection.
+								if ( !IsAccessAllowed( member, Access.Rights.ReadWrite ) )
+								{
+									throw new AccessException( this, member, Access.Rights.ReadWrite, String.Format( "User {0} - ID: {1} does not have sufficient rights to change the collection.", member.Name, member.UserID ) );
+								}
 							}
 						}
 
