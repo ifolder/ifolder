@@ -21,6 +21,8 @@ namespace Novell.iFolder.iFolderCom
 	public class ConflictResolver : System.Windows.Forms.Form
 	{
 		#region Class Members
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(ConflictResolver));
+		private const string applicationIcon = "ifolder_conflict_emb.ico";
 		private iFolderManager manager;
 		private iFolder ifolder;
 		private System.Windows.Forms.Panel panel1;
@@ -37,6 +39,7 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private int labelDelta;
+		private string loadPath;
 		private System.Windows.Forms.ListView conflictFiles;
 		private System.Windows.Forms.MenuItem menuFileOpen;
 		private System.Windows.Forms.MenuItem menuView;
@@ -538,6 +541,22 @@ namespace Novell.iFolder.iFolderCom
 				ifolder = value;
 			}
 		}
+
+		/// <summary>
+		/// The path where the DLL is running from.
+		/// </summary>
+		public string LoadPath
+		{
+			get
+			{
+				return loadPath;
+			}
+
+			set
+			{
+				loadPath = value;
+			}
+		}
 		#endregion
 
 		#region Events
@@ -780,6 +799,23 @@ namespace Novell.iFolder.iFolderCom
 
 		private void ConflictResolver_Load(object sender, System.EventArgs e)
 		{
+			// Load the application icon.
+			try
+			{
+				if (loadPath != null)
+				{
+					this.Icon = new Icon(Path.Combine(loadPath, applicationIcon));
+				}
+				else
+				{
+					this.Icon = new Icon(Path.Combine(Application.StartupPath, applicationIcon));
+				}
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "Loading icon");
+			}
+
 			RefreshList();
 		}
 
