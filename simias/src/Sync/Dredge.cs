@@ -182,7 +182,20 @@ public class Dredger
 		//Log.Spew("Dredger processing subtree of path {0}", path);
 
 		DirectoryInfo tmpDi = new DirectoryInfo(path);
-		if (dnode.LastWriteTime != tmpDi.LastWriteTime)
+		bool timesMatch = false;
+		try
+		{
+			if (dnode.LastWriteTime == tmpDi.LastWriteTime)
+			{
+				timesMatch = true;
+			}
+		}
+		catch
+		{
+			dnode.LastWriteTime = tmpDi.LastWriteTime;
+			collection.Commit(dnode);
+		}
+		if (!timesMatch)
 		{
 			// remove all nodes from store that no longer exist in the file system
 			foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
