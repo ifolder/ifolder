@@ -35,10 +35,13 @@ namespace Novell.Collaboration
 	public class SlogEntry : Node
 	{
 		#region Class Members
-		public static string	dateProperty = "SLOG:Date";
-		public static string	titleProperty = "SLOG:Title";
-		public static string	entryProperty = "SLOG:Entry";
-		public static string	userIDProperty = "SLOG:UserID";
+		internal static string	dateProperty = "SLOG:Date";
+		internal static string	titleProperty = "SLOG:Title";
+		internal static string	entryProperty = "SLOG:Entry";
+		internal static string	userIDProperty = "SLOG:UserID";
+		internal static string	categoryProperty = "SLOG:Category";
+		internal static string 	commentsProperty = "SLOG:Comments";
+		
 		#endregion
 
 		#region Properties
@@ -109,8 +112,46 @@ namespace Novell.Collaboration
 		}
 
 		/// <summary>
+		/// PublishDate
+		/// Indiates when the slog entry/item was published
+		/// All dates must conform to RFC 822 date and time specification.
+		/// Ex. Sat, 07 Sep 2002 00:00:01 GMT
+		/// Note: This property is optional
+		/// </summary>
+		public string PublishDate
+		{
+			get
+			{
+				// FIXME should just get the creation date of the node
+				try
+				{
+					return(this.Properties.GetSingleProperty(dateProperty).ToString());
+				}
+				catch{}
+				return("");
+			}
+
+			set
+			{
+				try
+				{
+					if (value != null)
+					{
+						this.Properties.ModifyProperty(dateProperty, (string) value);
+					}
+					else
+					{
+						this.Properties.DeleteProperties(dateProperty);
+					}
+				}
+				catch{}
+			}
+		}
+
+		/// <summary>
 		/// Title
-		/// !NOTE! Doc incomplete
+		/// The title of the item.
+		/// Note: this property is mandatory
 		/// </summary>
 		public string Title
 		{
@@ -142,8 +183,9 @@ namespace Novell.Collaboration
 		}
 
 		/// <summary>
-		/// Title
-		/// !NOTE! Doc incomplete
+		/// Description
+		/// The item synopsis
+		/// Note: this property is mandatory
 		/// </summary>
 		public string Description
 		{
@@ -173,6 +215,97 @@ namespace Novell.Collaboration
 				catch{}
 			}
 		}
+		
+		/// <summary>
+		/// Author
+		/// UserID or email address of the author
+		/// of the slog entry/item
+		/// Note: this property is optional
+		/// </summary>
+		public string Author
+		{
+			get
+			{
+				try
+				{
+					// FIXME
+					return(this.Properties.GetSingleProperty(userIDProperty).ToString());
+				}
+				catch{}
+				return("");
+			}
+		}
+
+		/// <summary>
+		/// Category
+		/// The category the slog entry/item belongs to.
+		/// ex. Harley Davidson Enthusiast
+		/// Note: this property is optional
+		/// </summary>
+		public string Category
+		{
+			get
+			{
+				try
+				{
+					return(this.Properties.GetSingleProperty(categoryProperty).ToString());
+				}
+				catch{}
+				return("");
+			}
+
+			set
+			{
+				try
+				{
+					if (value != null)
+					{
+						this.Properties.ModifyProperty(categoryProperty, (string) value);
+					}
+					else
+					{
+						this.Properties.DeleteProperties(categoryProperty);
+					}
+				}
+				catch{}
+			}
+		}
+
+		/// <summary>
+		/// Comments
+		/// URL of a page for comments relating to this entry/item.
+		/// ex. http://www.myblog.org/comments-cgi?entry_id=290
+		/// Note: this property is optional
+		/// </summary>
+		public string Comments
+		{
+			get
+			{
+				try
+				{
+					return(this.Properties.GetSingleProperty(commentsProperty).ToString());
+				}
+				catch{}
+				return("");
+			}
+
+			set
+			{
+				try
+				{
+					if (value != null)
+					{
+						this.Properties.ModifyProperty(commentsProperty, (string) value);
+					}
+					else
+					{
+						this.Properties.DeleteProperties(commentsProperty);
+					}
+				}
+				catch{}
+			}
+		}
+								
 		#endregion
 
 		#region Constructors
