@@ -69,7 +69,7 @@ namespace Novell.iFolder
 			this.c = contact;
 		}
 
-		public Contact contact
+		public Contact Contact
 		{     
 			get { return c;}      
 		}
@@ -443,7 +443,7 @@ namespace Novell.iFolder
 		public void ContactCreatedEventHandler(object o,
 				ContactEventArgs args)
 		{
-			Contact contact = args.ABContact;
+			Contact contact = args.Contact;
 
 			curAddrBook.AddContact(contact);
 
