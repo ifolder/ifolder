@@ -14,7 +14,7 @@ lib_LTLIBRARIES = libifolderclient.la
 override CFLAGS =
 
 libifolderclient_la_SOURCES = \
- 	envC.c iFolderClientLib.c stdsoap2.c ifolder.c
+ 	envC.c iFolderClientLib.c stdsoap2.c ifolder.c ifolder.h
 
 libifolderclient_la_CFLAGS = \
 	-DWITH_NONAMESPACES
