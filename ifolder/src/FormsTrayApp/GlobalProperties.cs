@@ -47,7 +47,8 @@ namespace Novell.FormsTrayApp
 	public class GlobalProperties : System.Windows.Forms.Form
 	{
 		#region Class Members
-		private const string iFolderRun = "iFolder";
+		private const string iFolderRun = "DisableAutoStart";
+		private const string iFolderKey = @"SOFTWARE\Novell2\iFolder";
 
 		private const double megaByte = 1048576;
 		private const int maxMessages = 500;
@@ -1094,21 +1095,27 @@ namespace Novell.FormsTrayApp
 
 		#region Public Methods
 		/// <summary>
-		/// Set the run value in the Windows registery.
+		/// Checks to see if auto-run is enabled for the application.
 		/// </summary>
-		/// <param name="enable"><b>True</b> will set the run value.</param>
-		static public void SetRunValue(bool enable)
+		/// <returns><b>True</b> if auto-run is enabled; otherwise, <b>false</b>.</returns>
+		static public bool IsRunEnabled()
 		{
-			RegistryKey runKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+			int run;
 
-			if (enable)
+			try
 			{
-				runKey.SetValue(iFolderRun, Path.Combine(Application.StartupPath, "iFolderApp.exe"));
+				// Open the iFolder key.
+				RegistryKey regKey = Registry.CurrentUser.OpenSubKey(iFolderKey);
+
+				// Get the autorun value ... default the value to 0 (enabled).
+				run = (int)regKey.GetValue(iFolderRun, 0);
 			}
-			else
+			catch
 			{
-				runKey.DeleteValue(iFolderRun, false);
+				return true;
 			}
+
+			return (run == 0);
 		}
 		#endregion
 
@@ -1218,21 +1225,25 @@ namespace Novell.FormsTrayApp
 			return status;
 		}
 
-		private bool isRunEnabled()
+		/// <summary>
+		/// Set the auto-run value in the Windows registery.
+		/// </summary>
+		/// <param name="disable"><b>True</b> will disable auto-run.</param>
+		private void setAutoRunValue(bool disable)
 		{
-			string run = null;
+			// Open/create the iFolder key.
+			RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
 
-			try
+			if (disable)
 			{
-				RegistryKey runKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
-				run = (string)runKey.GetValue(iFolderRun);
+				// Set the disable value.
+				regKey.SetValue(iFolderRun, 1);
 			}
-			catch
+			else
 			{
-				return false;
+				// Delete the value.
+				regKey.DeleteValue(iFolderRun, false);
 			}
-
-			return (run != null);
 		}
 
 		private void refreshiFolders()
@@ -1361,7 +1372,7 @@ namespace Novell.FormsTrayApp
 				defaultInterval.Value = (decimal)ifWebService.GetDefaultSyncInterval();
 				autoSync.Checked = defaultInterval.Value != System.Threading.Timeout.Infinite;
 
-				autoStart.Checked = isRunEnabled();
+				autoStart.Checked = IsRunEnabled();
 
 				refreshiFolders();
 
@@ -1697,7 +1708,7 @@ namespace Novell.FormsTrayApp
 		private void autoStart_CheckedChanged(object sender, System.EventArgs e)
 		{
 			// Save the auto start value.
-			SetRunValue(autoStart.Checked);
+			setAutoRunValue(!autoStart.Checked);
 		}
 
 		private void displayConfirmation_CheckedChanged(object sender, System.EventArgs e)

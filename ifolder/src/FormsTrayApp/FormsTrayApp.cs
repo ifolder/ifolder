@@ -92,24 +92,26 @@ namespace Novell.FormsTrayApp
 		[STAThread]
 		static void Main(string[] args)
 		{
-			if (args.Length == 1 && args[0].Equals("-configure"))
+			if (args.Length == 1 && args[0].Equals("-checkautorun"))
 			{
-				// Set the run key in the registry.
-				GlobalProperties.SetRunValue(true);
+				// Check if auto-run is enabled.
+				if (!GlobalProperties.IsRunEnabled())
+				{
+					// Auto-run is disabled ... exit.
+					return;
+				}
+			}
+
+			// Check for currently running instance.
+			Process[] iFolderProcess = Process.GetProcessesByName("iFolderApp");
+			if (iFolderProcess.Length == 1)
+			{
+				Application.Run(new FormsTrayApp());
 			}
 			else
 			{
-				// Check for currently running instance.
-				Process[] iFolderProcess = Process.GetProcessesByName("iFolderApp");
-				if (iFolderProcess.Length == 1)
-				{
-					Application.Run(new FormsTrayApp());
-				}
-				else
-				{
-					// TODO: Localize
-					MessageBox.Show("There is already an instance of iFolder running.");
-				}
+				// TODO: Localize
+				MessageBox.Show("There is already an instance of iFolder running.");
 			}
 		}
 
