@@ -76,7 +76,6 @@ namespace Novell.iFolderCom
 		private bool eventError = false;
 		private int okDelta;
 		private int initTabTop;
-		private int initHeight;
 		private bool accessClick;
 		private iFolderWeb currentiFolder;
 		private iFolderUser currentUser;
@@ -96,7 +95,6 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Label objectCount;
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.LinkLabel conflicts;
-		private System.Windows.Forms.PictureBox pictureBox1;
 		private System.Windows.Forms.TabPage tabSharing;
 		private System.Windows.Forms.TabPage tabGeneral;
 		private System.Windows.Forms.CheckBox setLimit;
@@ -130,6 +128,7 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label lastSync;
 		private System.Windows.Forms.Button syncNow;
+		private System.Windows.Forms.PictureBox conflictIcon;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -160,7 +159,8 @@ namespace Novell.iFolderCom
 			syncInterval.TextChanged += new EventHandler(syncInterval_ValueChanged);
 			okDelta = ok.Top - tabControl1.Bottom;
 			initTabTop = tabControl1.Top;
-			initHeight = this.Height;
+
+			this.MinimumSize = this.Size;
 
 			currentControl = firstControl = this.ifolders;
 			lastControl = this.apply;
@@ -254,7 +254,7 @@ namespace Novell.iFolderCom
 			this.menuReadWrite = new System.Windows.Forms.MenuItem();
 			this.menuReadOnly = new System.Windows.Forms.MenuItem();
 			this.conflicts = new System.Windows.Forms.LinkLabel();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			this.conflictIcon = new System.Windows.Forms.PictureBox();
 			this.ok = new System.Windows.Forms.Button();
 			this.cancel = new System.Windows.Forms.Button();
 			this.apply = new System.Windows.Forms.Button();
@@ -1322,31 +1322,31 @@ namespace Novell.iFolderCom
 			this.conflicts.Visible = ((bool)(resources.GetObject("conflicts.Visible")));
 			this.conflicts.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.conflicts_LinkClicked);
 			// 
-			// pictureBox1
+			// conflictIcon
 			// 
-			this.pictureBox1.AccessibleDescription = resources.GetString("pictureBox1.AccessibleDescription");
-			this.pictureBox1.AccessibleName = resources.GetString("pictureBox1.AccessibleName");
-			this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("pictureBox1.Anchor")));
-			this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
-			this.pictureBox1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("pictureBox1.Dock")));
-			this.pictureBox1.Enabled = ((bool)(resources.GetObject("pictureBox1.Enabled")));
-			this.pictureBox1.Font = ((System.Drawing.Font)(resources.GetObject("pictureBox1.Font")));
-			this.helpProvider1.SetHelpKeyword(this.pictureBox1, resources.GetString("pictureBox1.HelpKeyword"));
-			this.helpProvider1.SetHelpNavigator(this.pictureBox1, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("pictureBox1.HelpNavigator"))));
-			this.helpProvider1.SetHelpString(this.pictureBox1, resources.GetString("pictureBox1.HelpString"));
-			this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-			this.pictureBox1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("pictureBox1.ImeMode")));
-			this.pictureBox1.Location = ((System.Drawing.Point)(resources.GetObject("pictureBox1.Location")));
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("pictureBox1.RightToLeft")));
-			this.helpProvider1.SetShowHelp(this.pictureBox1, ((bool)(resources.GetObject("pictureBox1.ShowHelp"))));
-			this.pictureBox1.Size = ((System.Drawing.Size)(resources.GetObject("pictureBox1.Size")));
-			this.pictureBox1.SizeMode = ((System.Windows.Forms.PictureBoxSizeMode)(resources.GetObject("pictureBox1.SizeMode")));
-			this.pictureBox1.TabIndex = ((int)(resources.GetObject("pictureBox1.TabIndex")));
-			this.pictureBox1.TabStop = false;
-			this.pictureBox1.Text = resources.GetString("pictureBox1.Text");
-			this.toolTip1.SetToolTip(this.pictureBox1, resources.GetString("pictureBox1.ToolTip"));
-			this.pictureBox1.Visible = ((bool)(resources.GetObject("pictureBox1.Visible")));
+			this.conflictIcon.AccessibleDescription = resources.GetString("conflictIcon.AccessibleDescription");
+			this.conflictIcon.AccessibleName = resources.GetString("conflictIcon.AccessibleName");
+			this.conflictIcon.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("conflictIcon.Anchor")));
+			this.conflictIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("conflictIcon.BackgroundImage")));
+			this.conflictIcon.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("conflictIcon.Dock")));
+			this.conflictIcon.Enabled = ((bool)(resources.GetObject("conflictIcon.Enabled")));
+			this.conflictIcon.Font = ((System.Drawing.Font)(resources.GetObject("conflictIcon.Font")));
+			this.helpProvider1.SetHelpKeyword(this.conflictIcon, resources.GetString("conflictIcon.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.conflictIcon, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("conflictIcon.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.conflictIcon, resources.GetString("conflictIcon.HelpString"));
+			this.conflictIcon.Image = ((System.Drawing.Image)(resources.GetObject("conflictIcon.Image")));
+			this.conflictIcon.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("conflictIcon.ImeMode")));
+			this.conflictIcon.Location = ((System.Drawing.Point)(resources.GetObject("conflictIcon.Location")));
+			this.conflictIcon.Name = "conflictIcon";
+			this.conflictIcon.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("conflictIcon.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.conflictIcon, ((bool)(resources.GetObject("conflictIcon.ShowHelp"))));
+			this.conflictIcon.Size = ((System.Drawing.Size)(resources.GetObject("conflictIcon.Size")));
+			this.conflictIcon.SizeMode = ((System.Windows.Forms.PictureBoxSizeMode)(resources.GetObject("conflictIcon.SizeMode")));
+			this.conflictIcon.TabIndex = ((int)(resources.GetObject("conflictIcon.TabIndex")));
+			this.conflictIcon.TabStop = false;
+			this.conflictIcon.Text = resources.GetString("conflictIcon.Text");
+			this.toolTip1.SetToolTip(this.conflictIcon, resources.GetString("conflictIcon.ToolTip"));
+			this.conflictIcon.Visible = ((bool)(resources.GetObject("conflictIcon.Visible")));
 			// 
 			// ok
 			// 
@@ -1545,11 +1545,10 @@ namespace Novell.iFolderCom
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.tabControl1);
-			this.Controls.Add(this.pictureBox1);
+			this.Controls.Add(this.conflictIcon);
 			this.Controls.Add(this.conflicts);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.HelpButton = true;
 			this.helpProvider1.SetHelpKeyword(this, resources.GetString("$this.HelpKeyword"));
 			this.helpProvider1.SetHelpNavigator(this, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("$this.HelpNavigator"))));
@@ -1772,25 +1771,28 @@ namespace Novell.iFolderCom
 		{
 			if (show)
 			{
-				// Display the conflicts message.
-				conflicts.Visible = pictureBox1.Visible = true;
+				if (!conflicts.Visible)
+				{
+					// Display the conflicts message.
+					conflicts.Visible = conflictIcon.Visible = true;
 
-				// Move the controls back to the original position.
-				tabControl1.Top = initTabTop;
-				this.Height = initHeight;
+					// Move the controls back to the original position.
+					tabControl1.Top = initTabTop;
+					tabControl1.Height -= tabControl1.Top - conflicts.Top;
+				}
 			}
 			else
 			{
-				// Hide the conflicts message.
-				conflicts.Visible = pictureBox1.Visible = false;
+				if (conflicts.Visible)
+				{
+					// Hide the conflicts message.
+					conflicts.Visible = conflictIcon.Visible = false;
 
-				// Move the controls up so we don't have dead space.
-				tabControl1.Top = conflicts.Top;
-				this.Height = initHeight - (initTabTop - conflicts.Top);
+					// Move the controls up so we don't have dead space.
+					tabControl1.Height += tabControl1.Top - conflicts.Top;
+					tabControl1.Top = conflicts.Top;
+				}
 			}
-			
-			// Relocate the ok, cancel, and apply buttons.
-			ok.Top = cancel.Top = apply.Top = tabControl1.Bottom + okDelta;
 		}
 
 		private void updateDiskQuotaDisplay()
@@ -2434,8 +2436,8 @@ namespace Novell.iFolderCom
 				//Assign the ImageList objects to the books ListView.
 				shareWith.SmallImageList = contactsImageList;
 
-//				pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-				pictureBox1.Image = new Icon(new Icon(Path.Combine(basePath, "ifolderconflict.ico")), 32, 32).ToBitmap();
+//				conflictIcon.SizeMode = PictureBoxSizeMode.StretchImage;
+				conflictIcon.Image = new Icon(new Icon(Path.Combine(basePath, "ifolderconflict.ico")), 32, 32).ToBitmap();
 
 				//Bitmap bitmap = new Bitmap(Path.Combine(basePath, "OpenFolder.bmp"));
 				//bitmap.MakeTransparent(bitmap.GetPixel(0,0));

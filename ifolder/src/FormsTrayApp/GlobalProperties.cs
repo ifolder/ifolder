@@ -84,6 +84,7 @@ namespace Novell.FormsTrayApp
 		private string currentUserID;
 		private string currentPOBoxID;
 		private bool initialConnect = false;
+		private int initialBannerWidth;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
 		private System.Windows.Forms.Label label2;
@@ -1706,6 +1707,7 @@ namespace Novell.FormsTrayApp
 			this.banner.TabStop = false;
 			this.banner.Text = resources.GetString("banner.Text");
 			this.banner.Visible = ((bool)(resources.GetObject("banner.Visible")));
+			this.banner.Paint += new System.Windows.Forms.PaintEventHandler(this.banner_Paint);
 			// 
 			// mainMenu1
 			// 
@@ -1976,15 +1978,12 @@ namespace Novell.FormsTrayApp
 			this.Controls.Add(this.tabControl1);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
 			this.KeyPreview = true;
 			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
-			this.MaximizeBox = false;
 			this.MaximumSize = ((System.Drawing.Size)(resources.GetObject("$this.MaximumSize")));
 			this.Menu = this.mainMenu1;
-			this.MinimizeBox = false;
 			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
 			this.Name = "GlobalProperties";
 			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
@@ -2597,6 +2596,9 @@ namespace Novell.FormsTrayApp
 			}
 			catch {} // Non-fatal ... just missing some graphics.
 
+			initialBannerWidth = banner.Width;
+			this.MinimumSize = this.Size;
+
 			// Update the iFolders listview.
 			refreshiFolders();
 		}
@@ -2727,6 +2729,16 @@ namespace Novell.FormsTrayApp
 			if (e.KeyCode == Keys.F5)
 			{
 				refreshiFolders();
+			}
+		}
+
+		private void banner_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+		{
+			// If the banner is wider than it's initial width, fill it in with white.
+			if (banner.Width > initialBannerWidth)
+			{
+				SolidBrush brush = new SolidBrush(Color.White);
+				e.Graphics.FillRectangle(brush, initialBannerWidth, 0, banner.Width - initialBannerWidth, banner.Height);
 			}
 		}
 

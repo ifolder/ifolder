@@ -43,14 +43,13 @@ namespace Novell.iFolderCom
 		private iFolderWebService ifWebService;
 		private iFolderWeb ifolder;
 		private string loadPath;
-		private bool initial = true;
+		private bool fixPath = true;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label ifolderName;
 		private System.Windows.Forms.Label ifolderPath;
 		private System.Windows.Forms.ColumnHeader columnHeader1;
-		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label6;
@@ -58,7 +57,6 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Label localDate;
 		private System.Windows.Forms.Label localSize;
 		private System.Windows.Forms.Button saveLocal;
-		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.Button saveServer;
 		private System.Windows.Forms.Label serverSize;
 		private System.Windows.Forms.Label serverDate;
@@ -71,6 +69,11 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.ListView conflictsView;
 		#endregion
 		private System.Windows.Forms.ToolTip toolTip1;
+		private System.Windows.Forms.GroupBox localVersion;
+		private System.Windows.Forms.GroupBox serverVersion;
+		private System.Windows.Forms.Panel versionsPanel;
+		private System.Windows.Forms.Panel localPanel;
+		private System.Windows.Forms.Panel serverPanel;
 		private System.ComponentModel.IContainer components;
 
 		/// <summary>
@@ -83,6 +86,7 @@ namespace Novell.iFolderCom
 			//
 			InitializeComponent();
 
+			this.MinimumSize = this.Size;
 			this.StartPosition = FormStartPosition.CenterParent;
 		}
 
@@ -117,7 +121,7 @@ namespace Novell.iFolderCom
 			this.ifolderPath = new System.Windows.Forms.Label();
 			this.conflictsView = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
-			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.localVersion = new System.Windows.Forms.GroupBox();
 			this.saveLocal = new System.Windows.Forms.Button();
 			this.localSize = new System.Windows.Forms.Label();
 			this.localDate = new System.Windows.Forms.Label();
@@ -125,7 +129,7 @@ namespace Novell.iFolderCom
 			this.label6 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
-			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.serverVersion = new System.Windows.Forms.GroupBox();
 			this.saveServer = new System.Windows.Forms.Button();
 			this.serverSize = new System.Windows.Forms.Label();
 			this.serverDate = new System.Windows.Forms.Label();
@@ -136,8 +140,14 @@ namespace Novell.iFolderCom
 			this.close = new System.Windows.Forms.Button();
 			this.help = new System.Windows.Forms.Button();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-			this.groupBox1.SuspendLayout();
-			this.groupBox2.SuspendLayout();
+			this.versionsPanel = new System.Windows.Forms.Panel();
+			this.serverPanel = new System.Windows.Forms.Panel();
+			this.localPanel = new System.Windows.Forms.Panel();
+			this.localVersion.SuspendLayout();
+			this.serverVersion.SuspendLayout();
+			this.versionsPanel.SuspendLayout();
+			this.serverPanel.SuspendLayout();
+			this.localPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -287,33 +297,33 @@ namespace Novell.iFolderCom
 			this.columnHeader1.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("columnHeader1.TextAlign")));
 			this.columnHeader1.Width = ((int)(resources.GetObject("columnHeader1.Width")));
 			// 
-			// groupBox1
+			// localVersion
 			// 
-			this.groupBox1.AccessibleDescription = resources.GetString("groupBox1.AccessibleDescription");
-			this.groupBox1.AccessibleName = resources.GetString("groupBox1.AccessibleName");
-			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox1.Anchor")));
-			this.groupBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox1.BackgroundImage")));
-			this.groupBox1.Controls.Add(this.saveLocal);
-			this.groupBox1.Controls.Add(this.localSize);
-			this.groupBox1.Controls.Add(this.localDate);
-			this.groupBox1.Controls.Add(this.localName);
-			this.groupBox1.Controls.Add(this.label6);
-			this.groupBox1.Controls.Add(this.label5);
-			this.groupBox1.Controls.Add(this.label4);
-			this.groupBox1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox1.Dock")));
-			this.groupBox1.Enabled = ((bool)(resources.GetObject("groupBox1.Enabled")));
-			this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.groupBox1.Font = ((System.Drawing.Font)(resources.GetObject("groupBox1.Font")));
-			this.groupBox1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox1.ImeMode")));
-			this.groupBox1.Location = ((System.Drawing.Point)(resources.GetObject("groupBox1.Location")));
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox1.RightToLeft")));
-			this.groupBox1.Size = ((System.Drawing.Size)(resources.GetObject("groupBox1.Size")));
-			this.groupBox1.TabIndex = ((int)(resources.GetObject("groupBox1.TabIndex")));
-			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = resources.GetString("groupBox1.Text");
-			this.toolTip1.SetToolTip(this.groupBox1, resources.GetString("groupBox1.ToolTip"));
-			this.groupBox1.Visible = ((bool)(resources.GetObject("groupBox1.Visible")));
+			this.localVersion.AccessibleDescription = resources.GetString("localVersion.AccessibleDescription");
+			this.localVersion.AccessibleName = resources.GetString("localVersion.AccessibleName");
+			this.localVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("localVersion.Anchor")));
+			this.localVersion.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("localVersion.BackgroundImage")));
+			this.localVersion.Controls.Add(this.saveLocal);
+			this.localVersion.Controls.Add(this.localSize);
+			this.localVersion.Controls.Add(this.localDate);
+			this.localVersion.Controls.Add(this.localName);
+			this.localVersion.Controls.Add(this.label6);
+			this.localVersion.Controls.Add(this.label5);
+			this.localVersion.Controls.Add(this.label4);
+			this.localVersion.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("localVersion.Dock")));
+			this.localVersion.Enabled = ((bool)(resources.GetObject("localVersion.Enabled")));
+			this.localVersion.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.localVersion.Font = ((System.Drawing.Font)(resources.GetObject("localVersion.Font")));
+			this.localVersion.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("localVersion.ImeMode")));
+			this.localVersion.Location = ((System.Drawing.Point)(resources.GetObject("localVersion.Location")));
+			this.localVersion.Name = "localVersion";
+			this.localVersion.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("localVersion.RightToLeft")));
+			this.localVersion.Size = ((System.Drawing.Size)(resources.GetObject("localVersion.Size")));
+			this.localVersion.TabIndex = ((int)(resources.GetObject("localVersion.TabIndex")));
+			this.localVersion.TabStop = false;
+			this.localVersion.Text = resources.GetString("localVersion.Text");
+			this.toolTip1.SetToolTip(this.localVersion, resources.GetString("localVersion.ToolTip"));
+			this.localVersion.Visible = ((bool)(resources.GetObject("localVersion.Visible")));
 			// 
 			// saveLocal
 			// 
@@ -478,33 +488,33 @@ namespace Novell.iFolderCom
 			this.toolTip1.SetToolTip(this.label4, resources.GetString("label4.ToolTip"));
 			this.label4.Visible = ((bool)(resources.GetObject("label4.Visible")));
 			// 
-			// groupBox2
+			// serverVersion
 			// 
-			this.groupBox2.AccessibleDescription = resources.GetString("groupBox2.AccessibleDescription");
-			this.groupBox2.AccessibleName = resources.GetString("groupBox2.AccessibleName");
-			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox2.Anchor")));
-			this.groupBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox2.BackgroundImage")));
-			this.groupBox2.Controls.Add(this.saveServer);
-			this.groupBox2.Controls.Add(this.serverSize);
-			this.groupBox2.Controls.Add(this.serverDate);
-			this.groupBox2.Controls.Add(this.serverName);
-			this.groupBox2.Controls.Add(this.label10);
-			this.groupBox2.Controls.Add(this.label11);
-			this.groupBox2.Controls.Add(this.label12);
-			this.groupBox2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox2.Dock")));
-			this.groupBox2.Enabled = ((bool)(resources.GetObject("groupBox2.Enabled")));
-			this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.groupBox2.Font = ((System.Drawing.Font)(resources.GetObject("groupBox2.Font")));
-			this.groupBox2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox2.ImeMode")));
-			this.groupBox2.Location = ((System.Drawing.Point)(resources.GetObject("groupBox2.Location")));
-			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox2.RightToLeft")));
-			this.groupBox2.Size = ((System.Drawing.Size)(resources.GetObject("groupBox2.Size")));
-			this.groupBox2.TabIndex = ((int)(resources.GetObject("groupBox2.TabIndex")));
-			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = resources.GetString("groupBox2.Text");
-			this.toolTip1.SetToolTip(this.groupBox2, resources.GetString("groupBox2.ToolTip"));
-			this.groupBox2.Visible = ((bool)(resources.GetObject("groupBox2.Visible")));
+			this.serverVersion.AccessibleDescription = resources.GetString("serverVersion.AccessibleDescription");
+			this.serverVersion.AccessibleName = resources.GetString("serverVersion.AccessibleName");
+			this.serverVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("serverVersion.Anchor")));
+			this.serverVersion.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("serverVersion.BackgroundImage")));
+			this.serverVersion.Controls.Add(this.saveServer);
+			this.serverVersion.Controls.Add(this.serverSize);
+			this.serverVersion.Controls.Add(this.serverDate);
+			this.serverVersion.Controls.Add(this.serverName);
+			this.serverVersion.Controls.Add(this.label10);
+			this.serverVersion.Controls.Add(this.label11);
+			this.serverVersion.Controls.Add(this.label12);
+			this.serverVersion.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("serverVersion.Dock")));
+			this.serverVersion.Enabled = ((bool)(resources.GetObject("serverVersion.Enabled")));
+			this.serverVersion.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.serverVersion.Font = ((System.Drawing.Font)(resources.GetObject("serverVersion.Font")));
+			this.serverVersion.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("serverVersion.ImeMode")));
+			this.serverVersion.Location = ((System.Drawing.Point)(resources.GetObject("serverVersion.Location")));
+			this.serverVersion.Name = "serverVersion";
+			this.serverVersion.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("serverVersion.RightToLeft")));
+			this.serverVersion.Size = ((System.Drawing.Size)(resources.GetObject("serverVersion.Size")));
+			this.serverVersion.TabIndex = ((int)(resources.GetObject("serverVersion.TabIndex")));
+			this.serverVersion.TabStop = false;
+			this.serverVersion.Text = resources.GetString("serverVersion.Text");
+			this.toolTip1.SetToolTip(this.serverVersion, resources.GetString("serverVersion.ToolTip"));
+			this.serverVersion.Visible = ((bool)(resources.GetObject("serverVersion.Visible")));
 			// 
 			// saveServer
 			// 
@@ -719,6 +729,76 @@ namespace Novell.iFolderCom
 			this.help.Visible = ((bool)(resources.GetObject("help.Visible")));
 			this.help.Click += new System.EventHandler(this.help_Click);
 			// 
+			// versionsPanel
+			// 
+			this.versionsPanel.AccessibleDescription = resources.GetString("versionsPanel.AccessibleDescription");
+			this.versionsPanel.AccessibleName = resources.GetString("versionsPanel.AccessibleName");
+			this.versionsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("versionsPanel.Anchor")));
+			this.versionsPanel.AutoScroll = ((bool)(resources.GetObject("versionsPanel.AutoScroll")));
+			this.versionsPanel.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("versionsPanel.AutoScrollMargin")));
+			this.versionsPanel.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("versionsPanel.AutoScrollMinSize")));
+			this.versionsPanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("versionsPanel.BackgroundImage")));
+			this.versionsPanel.Controls.Add(this.serverPanel);
+			this.versionsPanel.Controls.Add(this.localPanel);
+			this.versionsPanel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("versionsPanel.Dock")));
+			this.versionsPanel.Enabled = ((bool)(resources.GetObject("versionsPanel.Enabled")));
+			this.versionsPanel.Font = ((System.Drawing.Font)(resources.GetObject("versionsPanel.Font")));
+			this.versionsPanel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("versionsPanel.ImeMode")));
+			this.versionsPanel.Location = ((System.Drawing.Point)(resources.GetObject("versionsPanel.Location")));
+			this.versionsPanel.Name = "versionsPanel";
+			this.versionsPanel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("versionsPanel.RightToLeft")));
+			this.versionsPanel.Size = ((System.Drawing.Size)(resources.GetObject("versionsPanel.Size")));
+			this.versionsPanel.TabIndex = ((int)(resources.GetObject("versionsPanel.TabIndex")));
+			this.versionsPanel.Text = resources.GetString("versionsPanel.Text");
+			this.toolTip1.SetToolTip(this.versionsPanel, resources.GetString("versionsPanel.ToolTip"));
+			this.versionsPanel.Visible = ((bool)(resources.GetObject("versionsPanel.Visible")));
+			// 
+			// serverPanel
+			// 
+			this.serverPanel.AccessibleDescription = resources.GetString("serverPanel.AccessibleDescription");
+			this.serverPanel.AccessibleName = resources.GetString("serverPanel.AccessibleName");
+			this.serverPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("serverPanel.Anchor")));
+			this.serverPanel.AutoScroll = ((bool)(resources.GetObject("serverPanel.AutoScroll")));
+			this.serverPanel.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("serverPanel.AutoScrollMargin")));
+			this.serverPanel.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("serverPanel.AutoScrollMinSize")));
+			this.serverPanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("serverPanel.BackgroundImage")));
+			this.serverPanel.Controls.Add(this.serverVersion);
+			this.serverPanel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("serverPanel.Dock")));
+			this.serverPanel.Enabled = ((bool)(resources.GetObject("serverPanel.Enabled")));
+			this.serverPanel.Font = ((System.Drawing.Font)(resources.GetObject("serverPanel.Font")));
+			this.serverPanel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("serverPanel.ImeMode")));
+			this.serverPanel.Location = ((System.Drawing.Point)(resources.GetObject("serverPanel.Location")));
+			this.serverPanel.Name = "serverPanel";
+			this.serverPanel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("serverPanel.RightToLeft")));
+			this.serverPanel.Size = ((System.Drawing.Size)(resources.GetObject("serverPanel.Size")));
+			this.serverPanel.TabIndex = ((int)(resources.GetObject("serverPanel.TabIndex")));
+			this.serverPanel.Text = resources.GetString("serverPanel.Text");
+			this.toolTip1.SetToolTip(this.serverPanel, resources.GetString("serverPanel.ToolTip"));
+			this.serverPanel.Visible = ((bool)(resources.GetObject("serverPanel.Visible")));
+			// 
+			// localPanel
+			// 
+			this.localPanel.AccessibleDescription = resources.GetString("localPanel.AccessibleDescription");
+			this.localPanel.AccessibleName = resources.GetString("localPanel.AccessibleName");
+			this.localPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("localPanel.Anchor")));
+			this.localPanel.AutoScroll = ((bool)(resources.GetObject("localPanel.AutoScroll")));
+			this.localPanel.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("localPanel.AutoScrollMargin")));
+			this.localPanel.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("localPanel.AutoScrollMinSize")));
+			this.localPanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("localPanel.BackgroundImage")));
+			this.localPanel.Controls.Add(this.localVersion);
+			this.localPanel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("localPanel.Dock")));
+			this.localPanel.Enabled = ((bool)(resources.GetObject("localPanel.Enabled")));
+			this.localPanel.Font = ((System.Drawing.Font)(resources.GetObject("localPanel.Font")));
+			this.localPanel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("localPanel.ImeMode")));
+			this.localPanel.Location = ((System.Drawing.Point)(resources.GetObject("localPanel.Location")));
+			this.localPanel.Name = "localPanel";
+			this.localPanel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("localPanel.RightToLeft")));
+			this.localPanel.Size = ((System.Drawing.Size)(resources.GetObject("localPanel.Size")));
+			this.localPanel.TabIndex = ((int)(resources.GetObject("localPanel.TabIndex")));
+			this.localPanel.Text = resources.GetString("localPanel.Text");
+			this.toolTip1.SetToolTip(this.localPanel, resources.GetString("localPanel.ToolTip"));
+			this.localPanel.Visible = ((bool)(resources.GetObject("localPanel.Visible")));
+			// 
 			// ConflictResolver
 			// 
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
@@ -729,10 +809,9 @@ namespace Novell.iFolderCom
 			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Controls.Add(this.versionsPanel);
 			this.Controls.Add(this.help);
 			this.Controls.Add(this.close);
-			this.Controls.Add(this.groupBox2);
-			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.conflictsView);
 			this.Controls.Add(this.ifolderPath);
 			this.Controls.Add(this.ifolderName);
@@ -741,7 +820,6 @@ namespace Novell.iFolderCom
 			this.Controls.Add(this.label1);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
 			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
@@ -754,9 +832,13 @@ namespace Novell.iFolderCom
 			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
 			this.Text = resources.GetString("$this.Text");
 			this.toolTip1.SetToolTip(this, resources.GetString("$this.ToolTip"));
+			this.SizeChanged += new System.EventHandler(this.ConflictResolver_SizeChanged);
 			this.Load += new System.EventHandler(this.ConflictResolver_Load);
-			this.groupBox1.ResumeLayout(false);
-			this.groupBox2.ResumeLayout(false);
+			this.localVersion.ResumeLayout(false);
+			this.serverVersion.ResumeLayout(false);
+			this.versionsPanel.ResumeLayout(false);
+			this.serverPanel.ResumeLayout(false);
+			this.localPanel.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -934,9 +1016,9 @@ namespace Novell.iFolderCom
 		private void ifolderPath_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
 			// Only do this one time.
-			if (initial)
+			if (fixPath)
 			{
-				initial = false;
+				fixPath = false;
 
 				// Measure the string.
 				SizeF stringSize = e.Graphics.MeasureString(ifolder.UnManagedPath, ifolderPath.Font);
@@ -965,6 +1047,7 @@ namespace Novell.iFolderCom
 				{
 					// The path fits ... no truncation needed.
 					ifolderPath.Text = ifolder.UnManagedPath;
+					toolTip1.SetToolTip(ifolderPath, string.Empty);
 				}
 			}
 		}
@@ -972,6 +1055,12 @@ namespace Novell.iFolderCom
 		private void close_Click(object sender, System.EventArgs e)
 		{
 			this.Close();
+		}
+
+		private void ConflictResolver_SizeChanged(object sender, System.EventArgs e)
+		{
+			fixPath = true;
+			localPanel.Width = versionsPanel.Width / 2;
 		}
 		#endregion
 	}
