@@ -80,27 +80,38 @@ namespace Simias.Sync
 		Timer						timer;
 		int							updateTime = Timeout.Infinite;
 
-		internal class fileChangeEntry
+		internal class fileChangeEntry : IComparable
 		{
+			internal static int				counter = 0;
 			internal FileSystemEventArgs	eArgs;
-			internal DateTime				time;
+			internal int					eventNumber;
 
 			internal fileChangeEntry(FileSystemEventArgs e)
 			{
 				eArgs = e;
-				time = DateTime.Now;
+				eventNumber = Interlocked.Increment(ref counter);
 			}
 		
 			internal void update(FileSystemEventArgs e)
 			{
 				eArgs = e;
-				time = DateTime.Now;
+				eventNumber = Interlocked.Increment(ref counter);
 			}
 
 			internal void update()
 			{
-				time = DateTime.Now;
+				eventNumber = Interlocked.Increment(ref counter);
 			}
+			
+			#region IComparable Members
+
+			public int CompareTo(object obj)
+			{
+				fileChangeEntry cobj = obj as fileChangeEntry;
+				return eventNumber.CompareTo(cobj.eventNumber);
+			}
+
+			#endregion
 		}
 
 		/// <summary>
@@ -547,6 +558,9 @@ namespace Simias.Sync
 						fChanges = new fileChangeEntry[changes.Count];
 						changes.Values.CopyTo(fChanges, 0);
 					}
+
+					// Sort these by time that way they will be put in the change log in order.
+					Array.Sort(fChanges);
 			
 					foreach (fileChangeEntry fc in fChanges)
 					{

@@ -1750,6 +1750,32 @@ namespace Simias.Sync
 		Hashtable		nodesFromServer;
 		Hashtable		nodesToServer;
 		Access.Rights	rights;
+
+		internal class nodeTypeEntry : IComparable
+		{
+			static int				counter = 0;
+			internal string			ID;
+			internal SyncNodeType	Type;
+			int						EntryNumber;
+            
+			internal nodeTypeEntry(string ID, SyncNodeType type)
+			{
+				this.ID = ID;
+				this.Type = type;
+				this.EntryNumber = Interlocked.Increment(ref counter);
+			}
+
+			#region IComparable Members
+
+			public int CompareTo(object obj)
+			{
+				nodeTypeEntry se = obj as nodeTypeEntry;
+				return EntryNumber.CompareTo(se.EntryNumber);
+			}
+
+			#endregion
+		}
+
 		
 		/// <summary>
 		/// Array of items to sync.
@@ -1788,11 +1814,11 @@ namespace Simias.Sync
 				{
 					if (stamp.Operation == SyncOperation.Delete)
 					{
-						nodesFromServer[stamp.ID] = SyncNodeType.Tombstone;
+						nodesFromServer[stamp.ID] = new nodeTypeEntry(stamp.ID, SyncNodeType.Tombstone);
 					}
 					else
 					{
-						nodesFromServer[stamp.ID] = stamp.NodeType;
+						nodesFromServer[stamp.ID] = new nodeTypeEntry(stamp.ID, stamp.NodeType);
 					}
 				}
 			}
@@ -1813,7 +1839,7 @@ namespace Simias.Sync
 					if (stamp.Operation == SyncOperation.Delete)
 					{
 						RemoveNodeFromServer(stamp.ID);
-						nodesToServer[stamp.ID] = SyncNodeType.Tombstone;
+						nodesToServer[stamp.ID] = new nodeTypeEntry(stamp.ID, SyncNodeType.Tombstone);
 					}
 				}
 				else if (rights == Access.Rights.ReadOnly)
@@ -1827,11 +1853,11 @@ namespace Simias.Sync
 				{
 					if (stamp.Operation == SyncOperation.Delete)
 					{
-						nodesToServer[stamp.ID] = SyncNodeType.Tombstone;
+						nodesToServer[stamp.ID] = new nodeTypeEntry(stamp.ID, SyncNodeType.Tombstone);
 					}
 					else
 					{
-						nodesToServer[stamp.ID] = stamp.NodeType;
+						nodesToServer[stamp.ID] = new nodeTypeEntry(stamp.ID, stamp.NodeType);
 					}
 				}
 			}
@@ -1873,14 +1899,18 @@ namespace Simias.Sync
 					na.Add(collection.ID);
 			}
 			
-			foreach (DictionaryEntry de in nodesFromServer)
+			nodeTypeEntry[] entryArray = new nodeTypeEntry[nodesFromServer.Count];
+			nodesFromServer.Values.CopyTo(entryArray, 0);
+			Array.Sort(entryArray);
+			
+			foreach (nodeTypeEntry entry in entryArray)
 			{
-				if ((SyncNodeType)de.Value == oType)
+				if (entry.Type == oType)
 				{
-					if (haveCollection && (String)de.Key == collection.ID)
+					if (haveCollection && entry.ID == collection.ID)
 						haveCollection = false;
 					else
-						na.Add(de.Key);
+						na.Add(entry.ID);
 				}
 			}
 
@@ -1936,19 +1966,23 @@ namespace Simias.Sync
 			// Lets sync the collection first if it is in our list.
 			if (oType == SyncNodeType.Generic)
 			{
-				haveCollection = nodesFromServer.Contains(collection.ID);
+				haveCollection = nodesToServer.Contains(collection.ID);
 				if (haveCollection)
 					na.Add(collection.ID);
 			}
+
+			nodeTypeEntry[] entryArray = new nodeTypeEntry[nodesToServer.Count];
+			nodesToServer.Values.CopyTo(entryArray, 0);
+			Array.Sort(entryArray);
 			
-			foreach (DictionaryEntry de in nodesToServer)
+			foreach (nodeTypeEntry entry in entryArray)
 			{
-				if ((SyncNodeType)de.Value == oType)
+				if (entry.Type == oType)
 				{
-					if (haveCollection && (String)de.Key == collection.ID)
+					if (haveCollection && entry.ID == collection.ID)
 						haveCollection = false;
 					else
-						na.Add(de.Key);
+						na.Add(entry.ID);
 				}
 			}
 
