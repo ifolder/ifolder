@@ -23,7 +23,7 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
-using System.Data;
+//using System.Data;
 using System.Diagnostics;
 using System.Threading;
 using System.Web;
@@ -581,7 +581,16 @@ namespace Simias.POBoxService.Web
 				cSub.ToIdentity = toUserID;
 				cSub.FromName = fromMember.Name;
 				cSub.FromIdentity = fromUserID;
-				cSub.POServiceURL = new Uri("http://" + hostAndPort[0] + ":6436/PostOffice.rem");
+
+				// FIXME:
+				string serviceUrl = 
+						"http://" + 
+						this.Context.Request.Url.Host +
+						":" +
+						this.Context.Request.Url.Port.ToString() +
+						"/POBoxService.asmx";
+
+				cSub.POServiceURL = new Uri(serviceUrl);
 				cSub.SubscriptionCollectionID = sharedCollection.ID;
 				cSub.SubscriptionCollectionType = sharedCollectionType;
 				cSub.SubscriptionCollectionName = sharedCollection.Name;
@@ -603,103 +612,6 @@ namespace Simias.POBoxService.Web
 
 				poBox.Commit(cSub);
 				return(cSub.MessageID);
-			}
-			catch{}
-			return("");
-		}
-
-		/// <summary>
-		/// Subscribe to a shared collection
-		/// </summary>
-		/// <param name="domainID"></param>
-		/// <param name="poBoxID"></param>
-		/// <param name="ToUserID"></param>
-		/// <param name="SubscriptionName"></param>
-		/// <returns>true subscription ID - false empty string</returns>
-		[WebMethod]
-		public
-		string 
-		Subscribe(
-			string			domainID, 
-			string			fromUserID,
-			string			fromUserAlias,
-			string			fromUserPubKey,
-			string			toUserName,
-			string			toUserID,
-			string			collectionID,
-			string			subscriptionName)
-		{
-			Simias.POBox.POBox	poBox = null;
-			Store			store = Store.GetStore();
-			Subscription	cSub = null;
-			Collection		sharedCollection;
-
-			if (domainID == null || domainID == "")
-			{
-				domainID = store.DefaultDomain;
-			}
-			
-			Simias.Storage.Domain	cDomain = store.GetDomain(domainID);
-			if (cDomain == null)
-			{
-				throw new ApplicationException("Invalid Domain ID");
-			}
-
-			sharedCollection = store.GetCollectionByID(collectionID);
-			if (sharedCollection == null)
-			{
-				throw new ApplicationException("Invalid shared collection ID");
-			}
-
-			// Verify the user
-			if (fromUserID == null)
-			{
-				fromUserID = Guid.NewGuid().ToString();
-				fromUserPubKey = Guid.NewGuid().ToString();
-			}
-
-			/*
-			fromUserID = System.Threading.Thread.CurrentPrincipal.Identity.Name;
-			if ((fromUserID == null) || (fromUserID.Length == 0))
-			{
-				//throw new ApplicationException("Invalid current user.");
-
-				// Temp
-			}
-			*/
-
-			try
-			{
-				poBox = 
-					(domainID == Simias.Storage.Domain.WorkGroupDomainID)
-					? POBox.POBox.GetPOBox(store, domainID)
-					: POBox.POBox.GetPOBox(store, domainID, toUserID);
-
-				char[] seps = {':'};
-				string[] hostAndPort = this.Context.Request.Url.Authority.Split(seps);
-
-				cSub = new Subscription(subscriptionName, "Subscription", fromUserID);
-				cSub.SubscriptionState = Simias.POBox.SubscriptionStates.Pending;
-				cSub.ToName = fromUserAlias;
-				cSub.ToIdentity = fromUserID;
-				cSub.FromName = toUserName;
-				cSub.FromIdentity = toUserID;
-				cSub.POServiceURL = new Uri("http://" + hostAndPort[0] + ":6436/PostOffice.rem");
-				cSub.SubscriptionCollectionID = sharedCollection.ID;
-				cSub.SubscriptionCollectionType = "iFolder";
-				cSub.SubscriptionCollectionName = sharedCollection.Name;
-				cSub.SubscriptionCollectionURL = "http://" + hostAndPort[0] + ":6436/SyncService.rem";
-				cSub.DomainID = domainID;
-				cSub.DomainName = cDomain.Name;
-				cSub.SubscriptionKey = Guid.NewGuid().ToString();
-
-				if(domainID == Simias.Storage.Domain.WorkGroupDomainID)
-				{
-					//cSub.FromPublicKey = fromUserPubKey;
-				}
-								
-				poBox.Commit(cSub);
-				return(cSub.ID);
 			}
 			catch{}
 			return("");
