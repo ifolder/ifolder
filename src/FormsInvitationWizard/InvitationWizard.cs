@@ -81,27 +81,64 @@ namespace Novell.iFolder.InvitationWizard
 			//
 			InitializeComponent();
 
-			// This stuff is here just in case dev studio cuts it out of the InitializeComponent
-			// method ... I added it to that method.
-//			this.selectInvitationPage = new SelectInvitationPage();
-//			this.selectiFolderLocationPage = new SelectiFolderLocationPage();
+			// Initialize the wizard pages ... I had to move this here so that
+			// dev studio wouldn't wipe it out (when it was in InitializeComponent()).
+			this.welcomePage = new Novell.iFolder.InvitationWizard.WelcomePage();
+			this.selectInvitationPage = new Novell.iFolder.InvitationWizard.SelectInvitationPage();
+			this.acceptDeclinePage = new Novell.iFolder.InvitationWizard.AcceptDeclinePage();
+			this.selectiFolderLocationPage = new Novell.iFolder.InvitationWizard.SelectiFolderLocationPage();
+			this.completionPage = new CompletionPage();
 			//
+			// welcomePage
+			// 
+			this.welcomePage.DescriptionText = "This wizard will help you accept an invitation to a shared iFolder and place it in the appropriate location.\n\nTo continue, click Next.";
+			this.welcomePage.Location = new System.Drawing.Point(0, 0);
+			this.welcomePage.Name = "welcomePage";
+			this.welcomePage.Size = new System.Drawing.Size(496, 304);
+			this.welcomePage.TabIndex = 1;
+			this.welcomePage.WelcomeTitle = "Welcome to the iFolder Invitation Wizard";
+			// 
 			// selectInvitationPage
-			//
-//			this.selectInvitationPage.Location = new System.Drawing.Point(0, 0);
-//			this.selectInvitationPage.Size = new System.Drawing.Size(496, 304);
-//			this.selectInvitationPage.TabIndex = 6;
-			//
+			// 
+			this.selectInvitationPage.HeaderSubTitle = "Select an iFolder invitation to accept on this computer.";
+			this.selectInvitationPage.HeaderTitle = "Choose iFolder Invitation";
+			this.selectInvitationPage.Location = new System.Drawing.Point(0, 0);
+			this.selectInvitationPage.Name = "selectInvitationPage";
+			this.selectInvitationPage.Size = new System.Drawing.Size(496, 304);
+			this.selectInvitationPage.TabIndex = 1;
+			// 
+			// acceptDeclinePage
+			// 
+			this.acceptDeclinePage.HeaderSubTitle = "Choose to accept or decline this iFolder invitation.";
+			this.acceptDeclinePage.HeaderTitle = "Accept iFolder Invitation";
+			this.acceptDeclinePage.Location = new System.Drawing.Point(0, 0);
+			this.acceptDeclinePage.Name = "acceptDeclinePage";
+			this.acceptDeclinePage.Size = new System.Drawing.Size(496, 304);
+			this.acceptDeclinePage.TabIndex = 1;
+			// 
 			// selectiFolderLocationPage
+			// 
+			this.selectiFolderLocationPage.HeaderSubTitle = "Select a location for the shared iFolder to be placed on this computer.";
+			this.selectiFolderLocationPage.HeaderTitle = "Choose iFolder Location";
+			this.selectiFolderLocationPage.Location = new System.Drawing.Point(0, 0);
+			this.selectiFolderLocationPage.Name = "selectiFolderLocationPage";
+			this.selectiFolderLocationPage.Size = new System.Drawing.Size(496, 304);
+			this.selectiFolderLocationPage.TabIndex = 1;
 			//
-//			this.selectiFolderLocationPage.Location = new System.Drawing.Point(0, 0);
-//			this.selectiFolderLocationPage.Size = new System.Drawing.Size(496, 304);
-//			this.selectiFolderLocationPage.TabIndex = 7;
+			// completionPage
 			//
-			// InvitationWizard
-			//
-//			this.Controls.Add(this.selectInvitationPage);
-//			this.Controls.Add(this.selectiFolderLocationPage);
+			this.completionPage.DescriptionText = "Description...";
+			this.completionPage.Location = new System.Drawing.Point(0, 0);
+			this.completionPage.Name = "completionPage";
+			this.completionPage.Size = new System.Drawing.Size(496, 304);
+			this.completionPage.TabIndex = 1;
+			this.completionPage.WelcomeTitle = "Completing the iFolder Invitation Wizard";
+
+			this.Controls.Add(this.welcomePage);
+			this.Controls.Add(this.selectInvitationPage);
+			this.Controls.Add(this.acceptDeclinePage);
+			this.Controls.Add(this.selectiFolderLocationPage);
+			this.Controls.Add(this.completionPage);
 
 			// Load the application icon.
 			try
@@ -186,15 +223,12 @@ namespace Novell.iFolder.InvitationWizard
 			this.next = new System.Windows.Forms.Button();
 			this.back = new System.Windows.Forms.Button();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.welcomePage = new Novell.iFolder.InvitationWizard.WelcomePage();
-			this.selectInvitationPage = new Novell.iFolder.InvitationWizard.SelectInvitationPage();
-			this.acceptDeclinePage = new Novell.iFolder.InvitationWizard.AcceptDeclinePage();
-			this.selectiFolderLocationPage = new Novell.iFolder.InvitationWizard.SelectiFolderLocationPage();
-			this.completionPage = new CompletionPage();
 			this.SuspendLayout();
 			// 
 			// cancel
 			// 
+			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.cancel.Location = new System.Drawing.Point(416, 318);
 			this.cancel.Name = "cancel";
 			this.cancel.Size = new System.Drawing.Size(72, 23);
@@ -204,6 +238,7 @@ namespace Novell.iFolder.InvitationWizard
 			// 
 			// next
 			// 
+			this.next.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.next.Location = new System.Drawing.Point(328, 318);
 			this.next.Name = "next";
 			this.next.Size = new System.Drawing.Size(72, 23);
@@ -213,6 +248,7 @@ namespace Novell.iFolder.InvitationWizard
 			// 
 			// back
 			// 
+			this.back.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.back.Location = new System.Drawing.Point(251, 318);
 			this.back.Name = "back";
 			this.back.Size = new System.Drawing.Size(72, 23);
@@ -231,62 +267,12 @@ namespace Novell.iFolder.InvitationWizard
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "groupBox1";
 			// 
-			// welcomePage
-			// 
-			this.welcomePage.DescriptionText = "This wizard will help you accept an invitation to a shared iFolder and place it in the appropriate location.\n\nTo continue, click Next.";
-			this.welcomePage.Location = new System.Drawing.Point(0, 0);
-			this.welcomePage.Name = "welcomePage";
-			this.welcomePage.Size = new System.Drawing.Size(496, 304);
-			this.welcomePage.TabIndex = 1;
-			this.welcomePage.WelcomeTitle = "Welcome to the iFolder Invitation Wizard";
-			// 
-			// selectInvitationPage
-			// 
-			this.selectInvitationPage.HeaderSubTitle = "Select an iFolder invitation to accept on this computer.";
-			this.selectInvitationPage.HeaderTitle = "Choose iFolder Invitation";
-			this.selectInvitationPage.Location = new System.Drawing.Point(0, 0);
-			this.selectInvitationPage.Name = "selectInvitationPage";
-			this.selectInvitationPage.Size = new System.Drawing.Size(496, 304);
-			this.selectInvitationPage.TabIndex = 1;
-			// 
-			// acceptDeclinePage
-			// 
-			this.acceptDeclinePage.HeaderSubTitle = "Choose to accept or decline this iFolder invitation.";
-			this.acceptDeclinePage.HeaderTitle = "Accept iFolder Invitation";
-			this.acceptDeclinePage.Location = new System.Drawing.Point(0, 0);
-			this.acceptDeclinePage.Name = "acceptDeclinePage";
-			this.acceptDeclinePage.Size = new System.Drawing.Size(496, 304);
-			this.acceptDeclinePage.TabIndex = 1;
-			// 
-			// selectiFolderLocationPage
-			// 
-			this.selectiFolderLocationPage.HeaderSubTitle = "Select a location for the shared iFolder to be placed on this computer.";
-			this.selectiFolderLocationPage.HeaderTitle = "Choose iFolder Location";
-			this.selectiFolderLocationPage.Location = new System.Drawing.Point(0, 0);
-			this.selectiFolderLocationPage.Name = "selectiFolderLocationPage";
-			this.selectiFolderLocationPage.Size = new System.Drawing.Size(496, 304);
-			this.selectiFolderLocationPage.TabIndex = 1;
-			//
-			// completionPage
-			//
-			this.completionPage.DescriptionText = "Description...";
-			this.completionPage.Location = new System.Drawing.Point(0, 0);
-			this.completionPage.Name = "completionPage";
-			this.completionPage.Size = new System.Drawing.Size(496, 304);
-			this.completionPage.TabIndex = 1;
-			this.completionPage.WelcomeTitle = "Completing the iFolder Invitation Wizard";
-			// 
 			// InvitationWizard
 			// 
 			this.AcceptButton = this.next;
-			this.CancelButton = this.cancel;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.CancelButton = this.cancel;
 			this.ClientSize = new System.Drawing.Size(496, 348);
-			this.Controls.Add(this.welcomePage);
-			this.Controls.Add(this.selectInvitationPage);
-			this.Controls.Add(this.acceptDeclinePage);
-			this.Controls.Add(this.selectiFolderLocationPage);
-			this.Controls.Add(this.completionPage);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.back);
 			this.Controls.Add(this.next);

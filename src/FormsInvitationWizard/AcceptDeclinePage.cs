@@ -96,6 +96,7 @@ namespace Novell.iFolder.InvitationWizard
 			// 
 			// acceptInvitation
 			// 
+			this.acceptInvitation.FlatStyle = FlatStyle.System;
 			this.acceptInvitation.Checked = true;
 			this.acceptInvitation.Location = new System.Drawing.Point(24, 16);
 			this.acceptInvitation.Name = "acceptInvitation";
@@ -106,6 +107,7 @@ namespace Novell.iFolder.InvitationWizard
 			// 
 			// declineInvitation
 			// 
+			this.declineInvitation.FlatStyle = FlatStyle.System;
 			this.declineInvitation.Location = new System.Drawing.Point(24, 40);
 			this.declineInvitation.Name = "declineInvitation";
 			this.declineInvitation.Size = new System.Drawing.Size(368, 24);

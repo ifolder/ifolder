@@ -99,6 +99,7 @@ namespace Novell.iFolder.iFolderCom
 			// close
 			// 
 			this.close.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.close.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.close.Location = new System.Drawing.Point(376, 160);
 			this.close.Name = "close";
 			this.close.TabIndex = 0;
@@ -152,6 +153,7 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			// dontAsk
 			// 
+			this.dontAsk.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.dontAsk.Location = new System.Drawing.Point(16, 160);
 			this.dontAsk.Name = "dontAsk";
 			this.dontAsk.Size = new System.Drawing.Size(304, 16);

@@ -157,6 +157,7 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			// reinvite
 			// 
+			this.reinvite.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.reinvite.Location = new System.Drawing.Point(8, 232);
 			this.reinvite.Name = "reinvite";
 			this.reinvite.TabIndex = 4;
@@ -177,6 +178,7 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			// accessReadOnly
 			// 
+			this.accessReadOnly.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.accessReadOnly.Location = new System.Drawing.Point(24, 72);
 			this.accessReadOnly.Name = "accessReadOnly";
 			this.accessReadOnly.Size = new System.Drawing.Size(280, 16);
@@ -186,6 +188,7 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			// accessReadWrite
 			// 
+			this.accessReadWrite.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.accessReadWrite.Location = new System.Drawing.Point(24, 48);
 			this.accessReadWrite.Name = "accessReadWrite";
 			this.accessReadWrite.Size = new System.Drawing.Size(280, 16);
@@ -195,6 +198,7 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			// accessFullControl
 			// 
+			this.accessFullControl.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.accessFullControl.Location = new System.Drawing.Point(24, 24);
 			this.accessFullControl.Name = "accessFullControl";
 			this.accessFullControl.Size = new System.Drawing.Size(280, 16);
@@ -204,6 +208,7 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			// add
 			// 
+			this.add.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.add.Location = new System.Drawing.Point(176, 232);
 			this.add.Name = "add";
 			this.add.TabIndex = 1;
@@ -212,6 +217,7 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			// remove
 			// 
+			this.remove.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.remove.Location = new System.Drawing.Point(256, 232);
 			this.remove.Name = "remove";
 			this.remove.TabIndex = 2;
@@ -260,6 +266,7 @@ namespace Novell.iFolder.iFolderCom
 			// ok
 			// 
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.ok.Location = new System.Drawing.Point(112, 432);
 			this.ok.Name = "ok";
 			this.ok.TabIndex = 1;
@@ -269,6 +276,7 @@ namespace Novell.iFolder.iFolderCom
 			// cancel
 			// 
 			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.cancel.Location = new System.Drawing.Point(192, 432);
 			this.cancel.Name = "cancel";
 			this.cancel.TabIndex = 2;
@@ -277,6 +285,7 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			// apply
 			// 
+			this.apply.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.apply.Location = new System.Drawing.Point(272, 432);
 			this.apply.Name = "apply";
 			this.apply.TabIndex = 3;

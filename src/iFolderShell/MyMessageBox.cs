@@ -86,6 +86,7 @@ namespace Novell.iFolder.iFolderCom
 			// yes
 			// 
 			this.yes.DialogResult = System.Windows.Forms.DialogResult.Yes;
+			this.yes.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.yes.Location = new System.Drawing.Point(200, 104);
 			this.yes.Name = "yes";
 			this.yes.TabIndex = 0;
@@ -94,6 +95,7 @@ namespace Novell.iFolder.iFolderCom
 			// no
 			// 
 			this.no.DialogResult = System.Windows.Forms.DialogResult.No;
+			this.no.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.no.Location = new System.Drawing.Point(280, 104);
 			this.no.Name = "no";
 			this.no.TabIndex = 1;
