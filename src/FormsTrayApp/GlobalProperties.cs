@@ -27,6 +27,8 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
+using System.Diagnostics;
+using Microsoft.Win32;
 using Simias;
 using Simias.Sync;
 using Novell.iFolder;
@@ -40,8 +42,9 @@ namespace Novell.iFolder.FormsTrayApp
 	{
 		#region Class Members
 		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(FormsTrayApp));
+		private const string iFolderRun = "iFolder";
 
-		private iFolderManager iFManager = null;
+		private iFolderManager manager = null;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
@@ -64,13 +67,16 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.GroupBox groupBox4;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.Label amountToUpload;
-		private System.Windows.Forms.Label filesToSync;
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Button syncNow;
 		private System.Windows.Forms.ListBox log;
 		private System.Windows.Forms.Button saveLog;
 		private System.Windows.Forms.Button clearLog;
+		private System.Windows.Forms.ContextMenu contextMenu1;
+		private System.Windows.Forms.MenuItem menuOpen;
+		private System.Windows.Forms.MenuItem menuCreate;
+		private System.Windows.Forms.Label objectCount;
+		private System.Windows.Forms.Label byteCount;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -84,7 +90,7 @@ namespace Novell.iFolder.FormsTrayApp
 			//
 			InitializeComponent();
 
-			iFManager = iFolderManager.Connect();
+			manager = iFolderManager.Connect();
 		}
 
 		/// <summary>
@@ -118,8 +124,8 @@ namespace Novell.iFolder.FormsTrayApp
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
-			this.filesToSync = new System.Windows.Forms.Label();
-			this.amountToUpload = new System.Windows.Forms.Label();
+			this.objectCount = new System.Windows.Forms.Label();
+			this.byteCount = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this.iFolderView = new System.Windows.Forms.ListView();
@@ -138,6 +144,9 @@ namespace Novell.iFolder.FormsTrayApp
 			this.syncNow = new System.Windows.Forms.Button();
 			this.label6 = new System.Windows.Forms.Label();
 			this.banner = new System.Windows.Forms.PictureBox();
+			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
+			this.menuOpen = new System.Windows.Forms.MenuItem();
+			this.menuCreate = new System.Windows.Forms.MenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -236,8 +245,8 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			// groupBox4
 			// 
-			this.groupBox4.Controls.Add(this.filesToSync);
-			this.groupBox4.Controls.Add(this.amountToUpload);
+			this.groupBox4.Controls.Add(this.objectCount);
+			this.groupBox4.Controls.Add(this.byteCount);
 			this.groupBox4.Controls.Add(this.label5);
 			this.groupBox4.Controls.Add(this.label4);
 			this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.System;
@@ -248,21 +257,21 @@ namespace Novell.iFolder.FormsTrayApp
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "Synchronization";
 			// 
-			// filesToSync
+			// objectCount
 			// 
-			this.filesToSync.Location = new System.Drawing.Point(296, 48);
-			this.filesToSync.Name = "filesToSync";
-			this.filesToSync.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.filesToSync.Size = new System.Drawing.Size(100, 16);
-			this.filesToSync.TabIndex = 3;
+			this.objectCount.Location = new System.Drawing.Point(296, 48);
+			this.objectCount.Name = "objectCount";
+			this.objectCount.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+			this.objectCount.Size = new System.Drawing.Size(100, 16);
+			this.objectCount.TabIndex = 3;
 			// 
-			// amountToUpload
+			// byteCount
 			// 
-			this.amountToUpload.Location = new System.Drawing.Point(296, 24);
-			this.amountToUpload.Name = "amountToUpload";
-			this.amountToUpload.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.amountToUpload.Size = new System.Drawing.Size(100, 16);
-			this.amountToUpload.TabIndex = 1;
+			this.byteCount.Location = new System.Drawing.Point(296, 24);
+			this.byteCount.Name = "byteCount";
+			this.byteCount.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+			this.byteCount.Size = new System.Drawing.Size(100, 16);
+			this.byteCount.TabIndex = 1;
 			// 
 			// label5
 			// 
@@ -284,16 +293,21 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			this.iFolderView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
 																						  this.columnHeader1});
+			this.iFolderView.ContextMenu = this.contextMenu1;
+			this.iFolderView.HideSelection = false;
 			this.iFolderView.Location = new System.Drawing.Point(8, 16);
+			this.iFolderView.MultiSelect = false;
 			this.iFolderView.Name = "iFolderView";
 			this.iFolderView.Size = new System.Drawing.Size(408, 208);
 			this.iFolderView.TabIndex = 0;
 			this.iFolderView.View = System.Windows.Forms.View.Details;
+			this.iFolderView.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
+			this.iFolderView.SelectedIndexChanged += new System.EventHandler(this.iFolderView_SelectedIndexChanged);
 			// 
 			// columnHeader1
 			// 
 			this.columnHeader1.Text = "iFolders";
-			this.columnHeader1.Width = 406;
+			this.columnHeader1.Width = 404;
 			// 
 			// tabPage2
 			// 
@@ -442,6 +456,25 @@ namespace Novell.iFolder.FormsTrayApp
 			this.banner.TabIndex = 9;
 			this.banner.TabStop = false;
 			// 
+			// contextMenu1
+			// 
+			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																						 this.menuOpen,
+																						 this.menuCreate});
+			// 
+			// menuOpen
+			// 
+			this.menuOpen.Index = 0;
+			this.menuOpen.Text = "&Open";
+			this.menuOpen.Visible = false;
+			this.menuOpen.Click += new System.EventHandler(this.menuOpen_Click);
+			// 
+			// menuCreate
+			// 
+			this.menuCreate.Index = 1;
+			this.menuCreate.Text = "&Create";
+			this.menuCreate.Click += new System.EventHandler(this.menuCreate_Click);
+			// 
 			// GlobalProperties
 			// 
 			this.AcceptButton = this.ok;
@@ -470,6 +503,29 @@ namespace Novell.iFolder.FormsTrayApp
 		}
 		#endregion
 
+		#region Private Methods
+		private bool IsRunEnabled()
+		{
+			RegistryKey runKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+			string run = (string)runKey.GetValue(iFolderRun);
+			return (run != null);
+		}
+
+		static public void SetRunValue(bool enable)
+		{
+			RegistryKey runKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
+
+			if (enable)
+			{
+				runKey.SetValue(iFolderRun, Path.Combine(Application.StartupPath, "iFolderApp.exe"));
+			}
+			else
+			{
+				runKey.DeleteValue(iFolderRun, false);
+			}
+		}
+		#endregion
+
 		#region Event Handlers
 		private void GlobalProperties_Load(object sender, System.EventArgs e)
 		{
@@ -478,6 +534,8 @@ namespace Novell.iFolder.FormsTrayApp
 			{
 				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
 				this.banner.Image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
+				this.iFolderView.SmallImageList = new ImageList();
+				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico")));
 			}
 			catch (Exception ex)
 			{
@@ -487,12 +545,21 @@ namespace Novell.iFolder.FormsTrayApp
 			try
 			{
 				// Display the default sync interval.
-				defaultInterval.Value = (decimal)iFManager.DefaultRefreshInterval;
+				defaultInterval.Value = (decimal)manager.DefaultRefreshInterval;
 
 				// Initialize displayConfirmation.
 				Configuration config = new Configuration();
 				string showWizard = config.Get("iFolderShell", "Show wizard", "true");
 				displayConfirmation.Checked = showWizard == "true";
+
+//				autoStart.Checked = IsRunEnabled();
+
+				foreach (iFolder ifolder in manager)
+				{
+					ListViewItem lvi = new ListViewItem(ifolder.Name, 0);
+					lvi.Tag = ifolder.ID;
+					iFolderView.Items.Add(lvi);
+				}
 			}
 			catch (SimiasException ex)
 			{
@@ -500,6 +567,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
+				logger.Debug(ex, "Initializing");
 			}
 		}
 
@@ -508,7 +576,10 @@ namespace Novell.iFolder.FormsTrayApp
 			try
 			{
 				// Save the default sync interval.
-				iFManager.DefaultRefreshInterval = (int)defaultInterval.Value;
+				manager.DefaultRefreshInterval = (int)defaultInterval.Value;
+
+				// Save the auto start value.
+//				SetRunValue(autoStart.Checked);
 
 				Configuration config = new Configuration();
 				if (displayConfirmation.Checked)
@@ -526,6 +597,93 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
+				logger.Debug(ex, "Saving settings");
+			}
+		}
+
+		private void iFolderView_DoubleClick(object sender, System.EventArgs e)
+		{
+			menuOpen_Click(sender, e);
+		}
+
+		private void iFolderView_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			menuOpen.Visible = iFolderView.SelectedItems.Count == 1;
+			menuCreate.Visible = iFolderView.SelectedItems.Count == 0;
+
+			if (iFolderView.SelectedItems.Count == 1)
+			{
+				uint nodeCount;
+				ulong bytesToSend;
+
+				Cursor.Current = Cursors.WaitCursor;
+
+				try
+				{
+					// Get the sync node and byte counts.
+					iFolder ifolder = manager.GetiFolderById((string)iFolderView.SelectedItems[0].Tag);
+					SyncSize.CalculateSendSize(ifolder, out nodeCount, out bytesToSend);
+					objectCount.Text = nodeCount.ToString();
+					byteCount.Text = bytesToSend.ToString();
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+				}
+				catch (Exception ex)
+				{
+				}
+
+				Cursor.Current = Cursors.Default;
+			}
+			else
+			{
+				objectCount.Text = byteCount.Text = "";
+			}
+		}
+
+		private void menuOpen_Click(object sender, System.EventArgs e)
+		{
+			ListViewItem lvi = iFolderView.SelectedItems[0];
+			iFolder ifolder = manager.GetiFolderById((string)lvi.Tag);
+			Process.Start(ifolder.LocalPath);
+		}
+
+		private void menuCreate_Click(object sender, System.EventArgs e)
+		{
+			FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+
+			while (true)
+			{
+				if(folderBrowserDialog.ShowDialog() == DialogResult.OK)
+				{
+					try
+					{
+						if (manager.CanBeiFolder(folderBrowserDialog.SelectedPath))
+						{
+							iFolder ifolder = manager.CreateiFolder(folderBrowserDialog.SelectedPath);
+							ListViewItem lvi = new ListViewItem(ifolder.Name, 0);
+							lvi.Tag = ifolder.ID;
+							iFolderView.Items.Add(lvi);
+							break;
+						}
+						else
+						{
+							MessageBox.Show("An invalid folder was specified");
+						}
+					}
+					catch (SimiasException ex)
+					{
+						ex.LogError();
+					}
+					catch (Exception ex)
+					{
+					}
+				}
+				else
+				{
+					break;
+				}
 			}
 		}
 		#endregion
