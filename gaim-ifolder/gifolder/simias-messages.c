@@ -39,11 +39,6 @@
 #include "util.h"
 
 /**
- * Global Variables
- */
-static char *gaimDomainUserID = NULL;
-
-/**
  * Non-public Functions
  */
 static SIMIAS_MSG_TYPE get_possible_simias_msg_type(const char *buffer);
@@ -412,10 +407,5 @@ fprintf(stderr, "handle_ping_response() %s -> %s entered\n",
 static char *
 get_gaim_domain_user_id()
 {
-	if (gaimDomainUserID == NULL)
-	{
-		gaimDomainUserID = simias_get_domain_user_id();
-	}
-	
-	return gaimDomainUserID;
+	return simias_get_domain_user_id();
 }
