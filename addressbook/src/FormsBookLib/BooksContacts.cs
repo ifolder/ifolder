@@ -705,8 +705,7 @@ namespace Novell.iFolder.FormsBookLib
 				// Create address book and add it to the books listview.
 				try
 				{
-					Novell.AddressBook.AddressBook addrBook = new Novell.AddressBook.AddressBook(store, addBook.Name);
-					addrBook.Commit();
+					Novell.AddressBook.AddressBook addrBook = manager.CreateAddressBook(addBook.Name);
 					ListViewItem item = new ListViewItem(addrBook.Name, 0);
 					item.Tag = addrBook;
 					item.Selected = true;

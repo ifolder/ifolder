@@ -447,8 +447,7 @@ namespace Novell.iFolder.FormsBookLib
 			if (result == DialogResult.OK)
 			{
 				// Create address book and add it to the list.
-				Novell.AddressBook.AddressBook addrBook = new Novell.AddressBook.AddressBook(store, addBook.Name);
-				addrBook.Commit();
+				Novell.AddressBook.AddressBook addrBook = manager.CreateAddressBook(addBook.Name);
 				ListViewItem item = new ListViewItem(addrBook.Name);
 				item.Tag = addrBook;
 			}

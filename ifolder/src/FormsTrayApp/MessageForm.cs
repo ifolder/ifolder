@@ -208,7 +208,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.Controls.Add(this.messages);
 			this.MinimumSize = new System.Drawing.Size(336, 368);
 			this.Name = "MessageForm";
-			this.Text = "Messages";
+			this.Text = "Subscriptions";
 			this.Load += new System.EventHandler(this.MessageForm_Load);
 			this.ResumeLayout(false);
 
