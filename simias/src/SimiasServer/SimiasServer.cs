@@ -66,9 +66,7 @@ namespace Simias.Server
 			}
 
 			// application 
-            string application = System.IO.Path.Combine(
-                System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
-                Application);
+            string application = System.IO.Path.Combine(SimiasSetup.webbindir, Application);
 
             // arguments
             string arguments = String.Format("--applications /{0}:{1} --port {2}",
@@ -111,12 +109,15 @@ namespace Simias.Server
                 Console.WriteLine(e.StackTrace);
             }
 
-            // wait
-            Console.ReadLine();
+			if (!p.HasExited)
+			{
+				// wait
+				Console.ReadLine();
 
-            // stop
-            p.StandardInput.WriteLine();
-            p.WaitForExit();
+				// stop
+				p.StandardInput.WriteLine();
+				p.WaitForExit();
+			}
 		}
 	}
 }

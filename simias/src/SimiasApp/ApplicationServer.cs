@@ -21,7 +21,6 @@ using System.IO;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-using Simias.Service;
 using Simias.Web;
 
 namespace Mono.ASPNET

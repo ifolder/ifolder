@@ -63,7 +63,11 @@ namespace Simias.Client
 		/// </summary>
 		public string StorePath
 		{
-			get { return fixupPath(Get(storeProvider, storeProviderPath)); }
+			get 
+			{ 
+				string path = Get(storeProvider, storeProviderPath);
+				return (path != null) ? fixupPath(path) : DefaultPath; 
+			}
 		}
 
 		private static string DefaultPath

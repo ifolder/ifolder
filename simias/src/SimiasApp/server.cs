@@ -14,7 +14,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Threading;
 using System.Web.Hosting;
+
+using Simias.Client;
 
 namespace Mono.ASPNET
 {
@@ -147,9 +150,27 @@ namespace Mono.ASPNET
 				Environment.Exit (1);
 			}
 		}
-		
+
+		private static Mutex simiasAppMutex = null;
+		static private bool IsProgramRunning()
+		{
+			bool created;
+			SimiasSetup.prefix = Path.GetDirectoryName( Path.GetDirectoryName( SimiasSetup.bindir ) );
+			Console.WriteLine( "Bin Dir Path = {0}", SimiasSetup.bindir );
+			Configuration config = new Configuration();
+			simiasAppMutex = new Mutex( true, config.StorePath.Replace( "\\", "/" ), out created );
+			return !created;
+		}
+	
 		public static int Main (string [] args)
 		{
+			// See if the program is already running for the current user.
+			if ( Server.IsProgramRunning() )
+			{
+				Console.WriteLine( "An instance of this application is already running for the current user." );
+				Environment.Exit( 0 );
+			}
+
 			bool nonstop = false;
 			bool verbose = true;
 			Trace.Listeners.Add (new TextWriterTraceListener (Console.Out));

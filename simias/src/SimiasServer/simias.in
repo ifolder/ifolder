@@ -14,5 +14,5 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:@webbindir@
 export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:@webbindir@
 cd @bindir@
 
-mono @webbindir@/SimiasServer.exe $@
+mono @bindir@/SimiasServer.exe $@
 

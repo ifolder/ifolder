@@ -1,9 +1,9 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SimiasServer_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/SimiasServer.cs 
+SimiasServer_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/SimiasServer.cs
 SimiasServer_CSFILES_CSC := $(subst /,$(SEP),$(SimiasServer_CSFILES))
-SimiasServer_INCLUDES = 
+SimiasServer_INCLUDES =
 SimiasServer_RESOURCES = $(srcdir)/App$(ICON_EXT)
 SimiasServer_FLAGS = $(CSC_EXEFLAG)
 SimiasServer_LIBS = System.dll System.Data.dll $(SYSTEM_XML) SimiasClient.dll
@@ -11,7 +11,7 @@ SimiasServer_LIBPATH = ../SimiasClient
 
 PROJECT_FILES = $(srcdir)/SimiasServer.csproj
 
-EXTRA_DIST = $(SimiasServer_CSFILES) $(PROJECT_FILES) App.ico simias.in simias.cmd
+EXTRA_DIST = $(SimiasServer_CSFILES) $(PROJECT_FILES) App.ico simias.in simias.cmd SimiasServer.exe.config
 
 CUR_DIR := $(shell pwd)
 
@@ -29,7 +29,7 @@ endif
 install-exec-local: SimiasServer.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
-	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) SimiasServer.exe $(DEBUG_FILES) $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) SimiasServer.exe SimiasServer.exe.config $(DEBUG_FILES) $(DESTDIR)$(bindir)
 if WINDOWS
 	$(INSTALL_PROGRAM) simias.cmd $(DESTDIR)$(bindir)
 else
@@ -37,12 +37,12 @@ else
 endif
 if WINDOWS
 if DEBUG	
-	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(bindir)
 endif
 endif
-    
+
 uninstall-local:
-	cd $(DESTDIR)$(webbindir); rm -f SimiasServer.exe $(DEBUG_FILES)
+	cd $(DESTDIR)$(bindir); rm -f SimiasServer.exe $(DEBUG_FILES) SimiasServer.exe.config
 if WINDOWS
 	cd $(DESTDIR)$(bindir); rm -f simias.cmd
 else
@@ -50,15 +50,15 @@ else
 endif
 if WINDOWS
 if DEBUG	
-	cd $(DESTDIR)$(webbindir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)
+	cd $(DESTDIR)$(bindir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)
 endif
 endif
 	
-CLEAN_FILES = SimiasServer.exe $(DEBUG_FILES) 
+CLEAN_FILES = SimiasServer.exe $(DEBUG_FILES)
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 
