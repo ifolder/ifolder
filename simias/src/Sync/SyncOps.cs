@@ -47,7 +47,6 @@ public struct Nid
 	}
 
 	public static explicit operator Nid(string s) { return new Nid(s); }
-	//public static void Clear(out Nid id) { id.g = String.Empty; }
 	public override bool Equals(object o) { return CompareTo(o) == 0; }
 	public static bool operator==(Nid a, Nid b) { return a.Equals(b); }
 	public static bool operator!=(Nid a, Nid b) { return !a.Equals(b); }
@@ -142,7 +141,6 @@ public class SyncOutgoingNode
 		metaData = collection.LocalStore.ExportSingleNodeToXml(collection, nid.ToString()).OuterXml;
 		Log.Assert(metaData != null);
 
-		//Node node = collection.GetNodeById(nid);
 		stamp.id = nid;
 		stamp.localIncarn = node.LocalIncarnation;
 		stamp.masterIncarn = node.MasterIncarnation;

@@ -96,6 +96,16 @@ mono --debug SyncCmd.exe -s tmpClientData localsync tmpClientData/testFolder tmp
 RETVAL=$?
 if [ $RETVAL -ne 0 ]; then printf "FAILED: localsync 3 returned %s\n" $RETVAL; exit $RETVAL; fi
 
+# localsync
+mono --debug SyncCmd.exe -s tmpClientData localsync tmpClientData/testFolder tmpServerData
+RETVAL=$?
+if [ $RETVAL -ne 0 ]; then printf "FAILED: localsync 3 returned %s\n" $RETVAL; exit $RETVAL; fi
+
+# localsync
+mono --debug SyncCmd.exe -s tmpClientData localsync tmpClientData/testFolder tmpServerData
+RETVAL=$?
+if [ $RETVAL -ne 0 ]; then printf "FAILED: localsync 3 returned %s\n" $RETVAL; exit $RETVAL; fi
+
 diff tmpClientData/testFolder tmpServerData/testFolder
 RETVAL=$?
 if [ $RETVAL -ne 0 ]; then printf "FAILED: diff of testFolder after localsync 3 returned %s\n" $RETVAL; exit $RETVAL; fi 

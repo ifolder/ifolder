@@ -40,7 +40,7 @@ namespace Simias.Sync
 /// <summary>
 /// class to handle invitation generation and acceptance via files
 /// </summary>
-internal class FileInviter
+public class FileInviter
 {
 	Store store;
 	SyncStore syncStore;
@@ -52,7 +52,7 @@ internal class FileInviter
 	}
 
 	// TODO: is the following path comparison correct? should it be case insensitive?
-	public static Collection FindCollection(Store store, Uri docRoot)
+	internal static Collection FindCollection(Store store, Uri docRoot)
 	{
 		foreach (Collection c in store.GetCollectionsByType(Dredger.NodeTypeDir))
 			if (c.DocumentRoot != null && c.DocumentRoot.LocalPath == docRoot.LocalPath)
@@ -78,12 +78,15 @@ internal class FileInviter
 		Log.Spew("Created new master collection for {0}, id {1}", docRoot.LocalPath, c.Id);
 	}
 
-	/* TODO: the checks in this method ensure that multiple collections
-	 * of the same docRoot or collectionIdare not allowed should be
-	 * done at a lower level
-	 */
+	/// <summary>
+	/// Accept an invitation file for user to a collection
+	/// </summary>
 	public bool Accept(string docRootParent, string fileName)
 	{
+		/* TODO: the checks in this method that ensure that multiple collections
+		 * of the same docRoot or collectionIdare not allowed should be
+		 * done at a lower level
+		 */
 		Invitation invitation = new Invitation(fileName);
 		invitation.RootPath = docRootParent;
 
@@ -204,8 +207,11 @@ public class Client
 
 	public Client(string host, int port, string collectionId, bool useTCP)
 	{
-		channel = useTCP? (IChannel)new TcpClientChannel(channelName, null):
-				(IChannel)new HttpClientChannel(channelName, null);
+		if (useTCP)
+			channel = new TcpClientChannel(channelName, new BinaryClientFormatterSinkProvider());
+		else
+			channel = new HttpClientChannel(channelName, new SoapClientFormatterSinkProvider());
+
 		ChannelServices.RegisterChannel(channel);
 		string serverURL = Server.MakeUri(host, port, useTCP);
 		service = (Service)Activator.GetObject(typeof(Service), serverURL);

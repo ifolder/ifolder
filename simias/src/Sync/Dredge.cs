@@ -33,6 +33,10 @@ namespace Simias.Sync
 {
 
 //---------------------------------------------------------------------------
+/// <summary>
+/// class to sync a portion of the file system with a collection
+/// applying iFolder specific behavior
+/// </summary>
 public class Dredger
 {
 	Collection collection = null;
@@ -105,7 +109,7 @@ public class Dredger
 			node = parentNode.CreateChild(nodeName, type);
 			Log.Spew("Dredger adding node for {0} {1}", FullPath(node), node.Id);
 			if (type == NodeTypeFile)
-			{	//TODO: handle multiple streams 
+			{	//TODO: handle multiple streams per file system file (resource forks)
 				FileEntry fe = node.AddFileEntry(null, nodePath);
 				fe.LastWriteTime = File.GetLastWriteTime(path);
 			}
