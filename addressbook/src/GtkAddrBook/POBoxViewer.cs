@@ -240,26 +240,11 @@ namespace Novell.AddressBook.UI.gtk
 					curSub.Accept(store, curSub.SubscriptionRights);
 					pobox.Commit(curSub);
 				}
-				else if(curSub.SubscriptionState == SubscriptionStates.Received)
+				else if(curSub.SubscriptionState == SubscriptionStates.Received ||
+						(curSub.SubscriptionState == SubscriptionStates.Ready) )
 				{
 					InvitationAssistant ia = new InvitationAssistant(curSub);
 					ia.ShowAll();
-				}
-				else if(curSub.SubscriptionState == SubscriptionStates.Ready)
-				{
-					FileSelection fs = new FileSelection ("Choose a directory");
-					fs.FileList.Parent.Hide();
-					fs.SelectionEntry.Hide();
-					fs.FileopDelFile.Hide();
-					fs.FileopRenFile.Hide();
-					int rc = fs.Run ();
-					fs.Hide ();
-					if(rc == -5)
-					{
-						curSub.CollectionRoot = fs.Filename;
-						pobox.Commit(curSub);
-						curSub.CreateSlave(store);
-					}
 				}
 			}
 		}

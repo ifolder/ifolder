@@ -380,8 +380,16 @@ namespace Novell.AddressBook.UI.gtk
 					store = new Store(new Configuration());
 
 				subscription.CollectionRoot = Path.GetFullPath(CollectionPathEntry.Text);
-				subscription.Accept(store, SubscriptionDispositions.Accepted);
-				pobox.Commit(subscription);
+				if(subscription.SubscriptionState == SubscriptionStates.Ready)
+				{
+					pobox.Commit(subscription);
+					subscription.CreateSlave(store);
+				}
+				else
+				{
+					subscription.Accept(store, SubscriptionDispositions.Accepted);
+					pobox.Commit(subscription);
+				}
 			}
 			catch(SimiasException ex)
 			{
