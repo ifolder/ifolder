@@ -1742,6 +1742,59 @@ namespace Simias.Storage.Tests
 				{
 					throw new ApplicationException( "Cannot get merged property." );
 				}
+
+				// Now modify the same single value.
+				collection.Properties.AddProperty( "CS_TestModifyProperty", ( int )1 );
+				collection.Commit();
+
+				mergeCollection.Commit();
+
+				collection.Properties.ModifyProperty( "CS_TestModifyProperty", ( int ) 4 );
+				collection.Commit();
+
+				mergeCollection.Properties.ModifyProperty( "CS_TestModifyProperty", ( int )2 );
+				mergeCollection.Commit();
+
+				if ( ( int )collection.Properties.GetSingleProperty( "CS_TestModifyProperty" ).Value != 4 )
+				{
+					throw new ApplicationException( "Value unexpectedly modified." );
+				}
+
+				if ( ( int )mergeCollection.Properties.GetSingleProperty( "CS_TestModifyProperty" ).Value != 2 )
+				{
+					throw new ApplicationException( "Value unexpectedly modified." );
+				}
+
+				// Refresh the collection and the value should change to 2.
+				collection.Commit();
+				if ( ( int )collection.Properties.GetSingleProperty( "CS_TestModifyProperty" ).Value != 2 )
+				{
+					throw new ApplicationException( "Value unexpectedly modified." );
+				}
+
+				// Now modify the property to be a multivalued property.
+				p = collection.Properties.GetSingleProperty( "CS_TestModifyProperty" );
+				p.SetValue( ( int )5 );
+				p.MultiValuedProperty = true;
+				collection.Commit();
+
+				// Update to the latest.
+				mergeCollection.Commit();
+
+				// Modify after the commit.
+				collection.Properties.ModifyProperty( "CS_TestModifyProperty", ( int ) 6 );
+				collection.Commit();
+
+				mergeCollection.Properties.ModifyProperty( "CS_TestModifyProperty", ( int )7 );
+				mergeCollection.Commit();
+
+				// Should have two properties.
+				collection.Commit();
+				MultiValuedList mvl = collection.Properties.GetProperties( "CS_TestModifyProperty" );
+				if ( mvl.Count != 2 )
+				{
+					throw new ApplicationException( "Invalid property count." );
+				}
 			}
 			finally
 			{

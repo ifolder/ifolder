@@ -123,8 +123,9 @@ namespace Simias.Storage
 		/// <summary>
 		/// Types of flags that are defined on the property.
 		/// </summary>
-		internal const uint Hidden = 0x00010000;
-		internal const uint Local  = 0x00020000;
+		internal const uint Hidden      = 0x00010000;
+		internal const uint Local       = 0x00020000;
+		internal const uint MultiValued = 0x00040000;
 
 		/// <summary>
 		///  Mask used to get just the system flags.
@@ -562,6 +563,26 @@ namespace Simias.Storage
 				else
 				{
 					PropertyFlags &= ~Local;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets and sets the multivalued status of a property.
+		/// </summary>
+		public bool MultiValuedProperty
+		{
+			get { return ( PropertyFlags & MultiValued ) == MultiValued ? true : false; }
+
+			set 
+			{
+				if ( value )
+				{
+					PropertyFlags |= MultiValued;
+				}
+				else
+				{
+					PropertyFlags &= ~MultiValued;
 				}
 			}
 		}
@@ -1169,35 +1190,93 @@ namespace Simias.Storage
 
 				case Operation.Modify:
 				{
-					// Find the property that matches the one to delete.  If the property is not found,
-					// then it was deleted and should not be set. This is following the method that
-					// delete always wins.
+					Property modifyProperty = null;
+
+					// Get the current value of the property.
+					string currentValue = ValueString;
+
+					// If the value has been modified used the oldValue. Otherwise use the
+					// current value of the property.
+					string matchValue = ( oldValue == null ) ? currentValue : oldValue;
+
+					// Find the property that matches the one to modify.
 					MultiValuedList mvlModify = node.Properties.FindValues( Name, true );
-					foreach ( Property p in mvlModify )
+					if ( mvlModify.Count > 1 )
 					{
-						// If the value has been modified used the oldValue. Otherwise use the
-						// current value of the property.
-						string currentValue = ValueString;
-						string matchValue = ( oldValue == null ) ? currentValue : oldValue;
-
-						// Are the values equal?
-						if ( p.ValueString == matchValue )
+						// Search through all of the properties to find a match.
+						foreach ( Property p in mvlModify )
 						{
-							// Set the new value.
-							p.ValueString = currentValue;
-
-							// If the name has changed, update the name.
-							if ( oldName != null )
+							// Are the values equal?
+							if ( p.ValueString == matchValue )
 							{
-								p.xmlProperty.SetAttribute( Property.NameAttr, Name );
-							}
+								// Set the new value.
+								p.ValueString = currentValue;
 
-							// If the flags have changed, update the flags.
-							if ( flagsModified )
-							{
-								p.xmlProperty.SetAttribute( Property.FlagsAttr, PropertyFlags.ToString() );
+								// If the name has changed, update the name.
+								if ( oldName != null )
+								{
+									p.xmlProperty.SetAttribute( Property.NameAttr, Name );
+								}
+
+								// If the flags have changed, update the flags.
+								if ( flagsModified )
+								{
+									p.xmlProperty.SetAttribute( Property.FlagsAttr, PropertyFlags.ToString() );
+								}
+
+								modifyProperty = p;
+								break;
 							}
-							break;
+						}
+
+						// Check if a match was found.
+						if ( modifyProperty == null )
+						{
+							// A matching property was not found and this is a multivalued property.
+							// Add this property as a multivalued property.
+							XmlNode xmlNode = node.Properties.PropertyDocument.ImportNode( xmlProperty, true );
+							node.Properties.PropertyRoot.AppendChild( xmlNode );
+						}
+					}
+					else
+					{
+						// See if there is at least one value or this property is marked to be a multivalued
+						// property. If neither of these cases are true, then assume that another process
+						// has deleted the property and deletes always win.
+						if ( mvlModify.Count == 1 )
+						{
+							// Get the single property and see if either is marked as multivalued.
+							modifyProperty = mvlModify[ 0 ];
+							if ( ( modifyProperty.ValueString != matchValue ) && ( modifyProperty.MultiValuedProperty || MultiValuedProperty ) )
+							{
+								// The property is multivalued.  Add it to the node.
+								XmlNode xmlNode = node.Properties.PropertyDocument.ImportNode( xmlProperty, true );
+								node.Properties.PropertyRoot.AppendChild( xmlNode );
+							}
+							else
+							{
+								// Assume that this is a single-valued property and that it has been changed
+								// since the last time it was read.  Modify the value.
+								modifyProperty.ValueString = currentValue;
+
+								// If the name has changed, update the name.
+								if ( oldName != null )
+								{
+									modifyProperty.xmlProperty.SetAttribute( Property.NameAttr, Name );
+								}
+
+								// If the flags have changed, update the flags.
+								if ( flagsModified )
+								{
+									modifyProperty.xmlProperty.SetAttribute( Property.FlagsAttr, PropertyFlags.ToString() );
+								}
+							}
+						}
+						else
+						{
+							// The property is multivalued.  Add it to the node.
+							XmlNode xmlNode = node.Properties.PropertyDocument.ImportNode( xmlProperty, true );
+							node.Properties.PropertyRoot.AppendChild( xmlNode );
 						}
 					}
 					break;
