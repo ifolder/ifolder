@@ -231,7 +231,7 @@ namespace Simias.Storage.Provider
 				{
 					if (typeName == null)
 					{
-						typeName = "Simias.Storage.Provider.Sqlite.SqliteProvider";
+						typeName = "Simias.Storage.Provider.Flaim.FlaimProvider";
 						typeName = conf.Get(CFG_Section, CFG_TypeName, typeName);
 					}
 				}
