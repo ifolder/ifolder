@@ -29,6 +29,43 @@ using Simias.Client.Event;
 
 namespace Novell.iFolder
 {
+	/// <summary>
+	/// This is a holder class for iFolders so the client can place
+	/// extra data with an iFolder about it's status and such.
+	/// </summary>
+	public class iFolderHolder
+	{
+		private iFolder		ifolder;
+		private bool		isSyncing;
+		private bool		syncSuccessful;
+
+		public iFolderHolder(iFolder ifolder)
+		{
+			this.ifolder = ifolder;
+			isSyncing = false;
+			syncSuccessful = true;
+		}
+
+		public iFolder iFolder
+		{
+			get{ return ifolder; }
+			set{ this.ifolder = value; }
+		}
+
+		public bool IsSyncing
+		{
+			get{ return isSyncing; }
+			set{ this.isSyncing = value; }
+		}
+
+		public bool SyncSuccessful
+		{
+			get{ return syncSuccessful; }
+			set{ this.syncSuccessful = value; }
+		}
+	}
+
+
 
 	/// <summary>
 	/// This is the main iFolder Window.  This window implements all of the
@@ -439,7 +476,7 @@ namespace Novell.iFolder
 
 
 			// Setup the iFolder TreeView
-			iFolderTreeStore = new ListStore(typeof(iFolder));
+			iFolderTreeStore = new ListStore(typeof(iFolderHolder));
 			iFolderTreeView.Model = iFolderTreeStore;
 
 			// Setup Pixbuf and Text Rendering for "iFolders" column
@@ -1049,11 +1086,12 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
-			if(ifolder.State == "Local")
-				((CellRendererText) cell).Text = ifolder.UnManagedPath;
-			else if(ifolder.State == "Available")
-				((CellRendererText) cell).Text = ifolder.Owner;
+			iFolderHolder ifHolder = 
+						(iFolderHolder) tree_model.GetValue(iter,0);
+			if(ifHolder.iFolder.State == "Local")
+				((CellRendererText) cell).Text = ifHolder.iFolder.UnManagedPath;
+			else if(ifHolder.iFolder.State == "Available")
+				((CellRendererText) cell).Text = ifHolder.iFolder.Owner;
 		}
 
 
@@ -1064,20 +1102,27 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
-			if(ifolder.State == "Local")
+			iFolderHolder ifHolder =
+					(iFolderHolder) tree_model.GetValue(iter,0);
+			if(ifHolder.iFolder.State == "Local")
 			{
-				if(ifolder.HasConflicts)
+				if(ifHolder.IsSyncing)
+					((CellRendererText) cell).Text = 
+									Util.GS("Syncing");
+				else if(ifHolder.iFolder.HasConflicts)
 					((CellRendererText) cell).Text = 
 									Util.GS("Has File Conflicts");
+				else if(!ifHolder.SyncSuccessful)
+					((CellRendererText) cell).Text = 
+									Util.GS("Sync Failed");
 				else
 					((CellRendererText) cell).Text = Util.GS("OK");
 			}
-			else if(ifolder.State == "Available")
+			else if(ifHolder.iFolder.State == "Available")
 				((CellRendererText) cell).Text = Util.GS("Available");
-			else if(ifolder.State == "WaitConnect")
+			else if(ifHolder.iFolder.State == "WaitConnect")
 				((CellRendererText) cell).Text = Util.GS("Waiting to Connect");
-			else if(ifolder.State == "WaitSync")
+			else if(ifHolder.iFolder.State == "WaitSync")
 				((CellRendererText) cell).Text = Util.GS("Waiting to Sync");
 			else
 				((CellRendererText) cell).Text = Util.GS("Unknown");
@@ -1090,8 +1135,8 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
-			((CellRendererText) cell).Text = ifolder.Name;
+			iFolderHolder ifHolder = (iFolderHolder) tree_model.GetValue(iter,0);
+			((CellRendererText) cell).Text = ifHolder.iFolder.Name;
 		}
 
 
@@ -1101,10 +1146,12 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
-			if(ifolder.State == "Local")
+			iFolderHolder ifHolder = 
+					(iFolderHolder) tree_model.GetValue(iter,0);
+
+			if(ifHolder.iFolder.State == "Local")
 			{
-				if(ifolder.HasConflicts)
+				if(ifHolder.iFolder.HasConflicts)
 					((CellRendererPixbuf) cell).Pixbuf = ConflictPixBuf;
 				else
 					((CellRendererPixbuf) cell).Pixbuf = iFolderPixBuf;
@@ -1138,7 +1185,10 @@ namespace Novell.iFolder
 
 			foreach(iFolder ifolder in iFolderArray)
 			{
-				TreeIter iter = iFolderTreeStore.AppendValues(ifolder);
+				iFolderHolder holder = 
+					new iFolderHolder(ifolder);
+
+				TreeIter iter = iFolderTreeStore.AppendValues(holder);
 				curiFolders.Add(ifolder.ID, iter);
 			}
 		}
@@ -1183,7 +1233,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+				iFolderHolder ifHolder = 
+						(iFolderHolder) tModel.GetValue(iter, 0);
 
 	//			This appears to hang?
 	//			SyncSize.CalculateSendSize(	ifolder, 
@@ -1193,7 +1244,8 @@ namespace Novell.iFolder
 	//			UploadLabel.Text = bytesToSend.ToString();
 	//			SyncFilesLabel.Text = nodeCount.ToString();
 
-				if(	(ifolder != null) && (ifolder.HasConflicts) )
+				if(	(ifHolder.iFolder != null) && 
+									(ifHolder.iFolder.HasConflicts) )
 				{
 					ConflictMenuItem.Sensitive = true;
 				}
@@ -1243,7 +1295,7 @@ namespace Novell.iFolder
 
 					if(tPath != null)
 					{
-						iFolder ifolder = null;
+						iFolderHolder ifHolder = null;
 
 						TreeSelection tSelect = iFolderTreeView.Selection;
 						tSelect.SelectPath(tPath);
@@ -1253,9 +1305,9 @@ namespace Novell.iFolder
 							TreeIter iter;
 
 							tSelect.GetSelected(out tModel, out iter);
-							ifolder = (iFolder) tModel.GetValue(iter, 0);
+							ifHolder = (iFolderHolder) tModel.GetValue(iter, 0);
 
-							if(ifolder.State == "Local")
+							if(ifHolder.iFolder.State == "Local")
 							{
 								MenuItem item_open = 
 									new MenuItem (Util.GS("Open"));
@@ -1271,8 +1323,7 @@ namespace Novell.iFolder
 								item_share.Activated += new EventHandler(
 										OnShareProperties);
 
-								if(	(ifolder != null) && 
-										(ifolder.HasConflicts) )
+								if(ifHolder.iFolder.HasConflicts)
 								{
 									MenuItem item_resolve = new MenuItem (
 											Util.GS("Resolve conflicts"));
@@ -1303,7 +1354,7 @@ namespace Novell.iFolder
 								item_properties.Activated += 
 									new EventHandler( OnShowProperties );
 							}
-							else if(ifolder.State == "Available")
+							else if(ifHolder.iFolder.State == "Available")
 							{
 								MenuItem item_accept = 
 									new MenuItem (Util.GS("Setup iFolder"));
@@ -1368,8 +1419,9 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
-				if(ifolder.IsSubscription)
+				iFolderHolder ifHolder = 
+						(iFolderHolder) tModel.GetValue(iter, 0);
+				if(ifHolder.iFolder.IsSubscription)
 				{
 				
 				}
@@ -1390,11 +1442,12 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+				iFolderHolder ifHolder = 
+						(iFolderHolder) tModel.GetValue(iter, 0);
 
 				try
 				{
-					Util.OpenInBrowser(ifolder.UnManagedPath);
+					Util.OpenInBrowser(ifHolder.iFolder.UnManagedPath);
 				}
 				catch(Exception e)
 				{
@@ -1440,12 +1493,14 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+				iFolderHolder ifHolder = 
+							(iFolderHolder) tModel.GetValue(iter, 0);
 
 				try
 				{
 					PropertiesDialog = 
-						new iFolderPropertiesDialog(this, ifolder, iFolderWS);
+						new iFolderPropertiesDialog(this, 
+									ifHolder.iFolder, iFolderWS);
 					PropertiesDialog.Response += 
 							new ResponseHandler(OnPropertiesDialogResponse);
 					PropertiesDialog.CurrentPage = currentPage;
@@ -1506,7 +1561,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+				iFolderHolder ifHolder = 
+						(iFolderHolder) tModel.GetValue(iter, 0);
 
 				iFolderMsgDialog dialog = new iFolderMsgDialog(
 					this,
@@ -1523,12 +1579,13 @@ namespace Novell.iFolder
 					try
 					{
     					iFolder newiFolder = 
-								iFolderWS.RevertiFolder(ifolder.ID);
-						curiFolders.Remove(ifolder.ID);
+								iFolderWS.RevertiFolder(ifHolder.iFolder.ID);
+						curiFolders.Remove(ifHolder.iFolder.ID);
 
 						// Set the value of the returned value for the one
 						// that was there
-						iFolderTreeStore.SetValue(iter, 0, newiFolder);
+						iFolderTreeStore.SetValue(iter, 0, 
+								new iFolderHolder(newiFolder));
 						curiFolders.Add(newiFolder.ID, iter);
 					}
 					catch(Exception e)
@@ -1623,7 +1680,7 @@ namespace Novell.iFolder
 		private void OnSetupiFolder(object o, EventArgs args)
 		{
 			string newPath  = "";
-			iFolder ifolder = null;
+			iFolderHolder ifHolder = null;
 			TreeModel tModel;
 			TreeIter iter;
 
@@ -1631,14 +1688,15 @@ namespace Novell.iFolder
 			if(tSelect.CountSelectedRows() == 1)
 			{
 				tSelect.GetSelected(out tModel, out iter);
-				ifolder = (iFolder) tModel.GetValue(iter, 0);
-				if(ifolder == null)
+				ifHolder = (iFolderHolder) tModel.GetValue(iter, 0);
+				if(ifHolder.iFolder == null)
 					return;
 				int rc = 0;
 
 				do
 				{
-					iFolderAcceptDialog iad = new iFolderAcceptDialog(ifolder);
+					iFolderAcceptDialog iad = 
+							new iFolderAcceptDialog(ifHolder.iFolder);
 					iad.TransientFor = this;
 					rc = iad.Run();
 					newPath = iad.Path;
@@ -1658,19 +1716,20 @@ namespace Novell.iFolder
 				
 				try
 				{
-					curiFolders.Remove(ifolder.ID);
+					curiFolders.Remove(ifHolder.iFolder.ID);
    		 			iFolder newiFolder = iFolderWS.AcceptiFolderInvitation(
-											ifolder.ID,
+											ifHolder.iFolder.ID,
 											newPath);
 	
 					// replace the old iFolder with this one
-					tModel.SetValue(iter, 0, newiFolder);
+					tModel.SetValue(iter, 0, 
+							new iFolderHolder(newiFolder));
 					curiFolders.Add(newiFolder.ID, iter);
 				}
 				catch(Exception e)
 				{
 					// if we threw an exceptoin, add the old ifolder back
-					curiFolders.Add(ifolder.ID, iter);
+					curiFolders.Add(ifHolder.iFolder.ID, iter);
 
 					iFolderExceptionDialog ied = new iFolderExceptionDialog(
 														this, e);
@@ -1757,12 +1816,13 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+				iFolderHolder ifHolder = 
+						(iFolderHolder) tModel.GetValue(iter, 0);
 			
 				
 				ConflictDialog = new iFolderConflictDialog(
 										this,
-										ifolder,
+										ifHolder.iFolder,
 										iFolderWS);
 				ConflictDialog.Response += 
 							new ResponseHandler(OnConflictDialogResponse);
@@ -1927,7 +1987,8 @@ namespace Novell.iFolder
 			if(curiFolders.ContainsKey(ifolder.ID))
 			{
 				TreeIter iter = (TreeIter)curiFolders[ifolder.ID];
-				iFolderTreeStore.SetValue(iter, 0, ifolder);
+				iFolderTreeStore.SetValue(iter, 0, 
+						new iFolderHolder(ifolder));
 			}
 
 			// TODO: let any property dialogs know that this iFolder
@@ -1993,25 +2054,63 @@ namespace Novell.iFolder
 				{
 					UpdateStatus(string.Format(Util.GS(
 									"Syncing: {0}"), args.Name));
-					LogMessage(string.Format(Util.GS(
-							"Starting sync of Collection {0}"), args.Name));
+
+					if(curiFolders.ContainsKey(args.ID))
+					{
+						TreeIter iter = (TreeIter)curiFolders[args.ID];
+						iFolderHolder ifHolder = 
+							(iFolderHolder) iFolderTreeStore.GetValue(iter,0);
+						ifHolder.IsSyncing = true;
+						iFolderTreeStore.SetValue(iter, 0, ifHolder);
+
+						LogMessage(string.Format(Util.GS(
+							"Started sync of iFolder {0}"), args.Name));
+					}
+					else
+						LogMessage(string.Format(Util.GS(
+							"Started sync of Collection {0}"), args.Name));
+
 					break;
 				}
 				case Action.StopSync:
 				{
+					UpdateStatus(Util.GS("Idle..."));
+
 					if(args.Successful)
 					{
-						UpdateStatus(string.Format(Util.GS(
-									"Sync Succeeded: {0}"), args.Name));
-						LogMessage(string.Format(Util.GS(
-							"Finshed sync of Collection {0}"), args.Name));
+						if(curiFolders.ContainsKey(args.ID))
+						{
+							TreeIter iter = (TreeIter)curiFolders[args.ID];
+							iFolderHolder ifHolder = (iFolderHolder) 
+									iFolderTreeStore.GetValue(iter,0);
+							ifHolder.IsSyncing = false;
+							ifHolder.SyncSuccessful = true;
+							iFolderTreeStore.SetValue(iter, 0, ifHolder);
+
+							LogMessage(string.Format(Util.GS(
+								"Finshed sync of iFolder {0}"), args.Name));
+						}
+						else
+							LogMessage(string.Format(Util.GS(
+								"Finshed sync of Collection {0}"), args.Name));
 					}
 					else
 					{
-						UpdateStatus(string.Format(Util.GS(
-									"Sync Failed: {0}"), args.Name));
-						LogMessage(string.Format(Util.GS(
-							"Failed Syncing Collection {0}"), args.Name));
+						if(curiFolders.ContainsKey(args.ID))
+						{
+							TreeIter iter = (TreeIter)curiFolders[args.ID];
+							iFolderHolder ifHolder = (iFolderHolder) 
+									iFolderTreeStore.GetValue(iter,0);
+							ifHolder.IsSyncing = false;
+							ifHolder.SyncSuccessful = false;
+							iFolderTreeStore.SetValue(iter, 0, ifHolder);
+
+							LogMessage(string.Format(Util.GS(
+								"Failed sync of iFolder {0}"), args.Name));
+						}
+						else
+							LogMessage(string.Format(Util.GS(
+								"Failed Syncing Collection {0}"), args.Name));
 					}
 					break;
 				}

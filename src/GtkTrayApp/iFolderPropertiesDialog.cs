@@ -169,11 +169,13 @@ namespace Novell.iFolder
 
 			SettingsPage = new iFolderPropSettingsPage(this, ifws);
 
-			propNoteBook.AppendPage(SettingsPage, new Label(Util.GS("General")));
+			propNoteBook.AppendPage(SettingsPage, 
+								new Label(Util.GS("General")));
 
 			SharingPage = new iFolderPropSharingPage(this, ifws);
 
-			propNoteBook.AppendPage(SharingPage, new Label(Util.GS("Sharing")));
+			propNoteBook.AppendPage(SharingPage, 
+								new Label(Util.GS("Sharing")));
 
 			dialogBox.PackStart(propNoteBook);
 
