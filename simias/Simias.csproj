@@ -779,6 +779,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Sync\StrongHash.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\StrongWeakHashtable.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Sync\SyncLog.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -790,6 +800,11 @@
                 />
                 <File
                     RelPath = "src\Sync\SyncSize.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\WeakHash.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

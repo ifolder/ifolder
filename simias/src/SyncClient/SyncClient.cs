@@ -36,7 +36,7 @@ using Simias.Service;
 using Simias.Event;
 
 
-namespace Simias.Sync
+namespace Simias.Sync.Client
 {
 	/// <summary>
 	/// Class that manages the synchronization for all collection.
@@ -437,12 +437,9 @@ namespace Simias.Sync
 					// Re-queue this to run.
 					callback(this);
 					break;
-					break;
 				case SyncColStatus.NotFound:
 					// The collection does not exist or we do not have rights.
-					collection.Delete();
-					// Delete the tombstone.
-					collection.Delete();
+					collection.Commit(collection.Delete());
 					break;
 				case SyncColStatus.NoWork:
 					break;
@@ -481,14 +478,6 @@ namespace Simias.Sync
 					}
 					break;
 			}
-		}
-
-		/// <summary>
-		/// Called to calculate the nodes that need to be synced.
-		/// </summary>
-		private void GetNodesToSync(SyncStartInfo si, SyncNodeStamp[] sstamps, NodeStamp[] cstamps)
-		{
-			
 		}
 
 		/// <summary>
@@ -827,14 +816,16 @@ namespace Simias.Sync
 		/// </summary>
 		void ExecuteSync()
 		{
-			ProcessKillOnClient();
+			// Get the updates from the server.
 			ProcessNodesFromServer();
 			ProcessDirsFromServer();
 			ProcessFilesFromServer();
-			ProcessKillOnServer();
+			ProcessKillOnClient();
+			// Push the updates from the client.
 			ProcessNodesToServer();
 			ProcessDirsToServer();
 			ProcessFilesToServer();
+			ProcessKillOnServer();
 		}
 
 		/// <summary>
