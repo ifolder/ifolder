@@ -58,7 +58,7 @@ namespace Simias.Service
 		internal static string XmlAssemblyAttr = "assembly";
 		internal static string XmlEnabledAttr = "enabled";
 		internal static string XmlNameAttr = "name";
-		public static readonly string MutexBaseName = "ServiceManagerMutex___";
+		internal static string MutexBaseName = "ServiceManagerMutex___";
 		ManualResetEvent servicesStarted = new ManualResetEvent(false);
 		ManualResetEvent servicesStopped = new ManualResetEvent(true);
 		DefaultSubscriber	subscriber = null;
