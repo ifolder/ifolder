@@ -42,7 +42,7 @@ namespace Simias
 		private static readonly string NameAttr = "name";
 		private static readonly string ValueAttr = "value";
 		private static readonly string DefaultSection = "SimiasDefault";
-		private static readonly string DefaultFileName = "simias.conf";
+		private static readonly string DefaultFileName = "Simias.config";
 
 		private string storePath;
 		private FileStream fs = null;
@@ -128,19 +128,7 @@ namespace Simias
 				// If the file does not exist look for defaults.
 				if (!File.Exists(ConfigFilePath))
 				{
-					string bootStrapDir = null;
-					if (Simias.MyEnvironment.Platform == Simias.MyPlatformID.Windows)
-					{
-						// On Windows, use directory from which process was started
-						bootStrapDir = System.Environment.CurrentDirectory;
-					}
-					else
-					{
-						// Else, use sysconfdir
-						bootStrapDir = SimiasSetup.sysconfdir;
-					}
-					string bootStrapPath = Path.Combine(bootStrapDir, DefaultFileName);
-                    log.Debug("Boot Strap Path: {0}", bootStrapPath);
+					string bootStrapPath = Path.Combine(SimiasSetup.sysconfdir, DefaultFileName);
 
 					if (File.Exists(bootStrapPath))
 					{

@@ -30,7 +30,6 @@ using System.Runtime.Remoting;
 
 using Simias;
 using Simias.Mail;
-using Simias.Channels;
 
 namespace Simias.POBox
 {
@@ -197,9 +196,6 @@ namespace Simias.POBox
 			else
 			{
 				// This is an enterprise pobox contact the POService.
-				SimiasChannel channel = SimiasChannelFactory.Create(subscription.POServiceURL,
-					SimiasChannelSinks.Binary);
-
 				log.Debug("Connecting to the Post Office Service : {0}", subscription.POServiceURL);
 				PostOffice po = (PostOffice)Activator.GetObject(typeof(PostOffice),
 					subscription.POServiceURL.ToString());
@@ -217,9 +213,6 @@ namespace Simias.POBox
 
 				subscription.SubscriptionState = SubscriptionStates.Posted;
 				poBox.Commit(subscription);
-
-				// remove channel
-				channel.Dispose();
 			}
 
 			return true;
@@ -227,9 +220,6 @@ namespace Simias.POBox
 
 		private bool DoReplied()
 		{
-			SimiasChannel channel = SimiasChannelFactory.Create(subscription.POServiceURL,
-				SimiasChannelSinks.Binary);
-
 			log.Debug("Connecting to the Post Office Service : {0}", subscription.POServiceURL);
 			PostOffice po = (PostOffice)Activator.GetObject(typeof(PostOffice),
 				subscription.POServiceURL.ToString());
@@ -244,9 +234,6 @@ namespace Simias.POBox
 			// update subscription
 			subscription.SubscriptionState = SubscriptionStates.Delivered;
 			poBox.Commit(subscription);
-			
-			// remove channel
-			channel.Dispose();
 
 			// always return false to drop to the next state
 			return false;
@@ -255,9 +242,6 @@ namespace Simias.POBox
 		private bool DoDelivered()
 		{
 			bool result = false;
-
-			SimiasChannel channel = SimiasChannelFactory.Create(subscription.POServiceURL,
-				SimiasChannelSinks.Binary);
 
 			log.Debug("Connecting to the Post Office Service : {0}", subscription.POServiceURL);
 			PostOffice po = (PostOffice)Activator.GetObject(typeof(PostOffice),
@@ -303,9 +287,6 @@ namespace Simias.POBox
 				result = true;
 			}
 			
-			// remove channel
-			channel.Dispose();
-
 			return result;
 		}
 	}

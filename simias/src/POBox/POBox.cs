@@ -61,10 +61,7 @@ namespace Simias.POBox
 				else
 				{
 					// TODO: fix default
-					UriBuilder url = new UriBuilder(PostOffice.DefaultServiceUrl);
-					SyncProperties props = new SyncProperties(this.StoreReference.Config);
-					url.Host = props.ServiceUrl.Host;
-					result = url.ToString();
+					result = SimiasRemoting.GetServiceUrl(PostOffice.EndPoint).ToString();
 				}
 
 				return result;

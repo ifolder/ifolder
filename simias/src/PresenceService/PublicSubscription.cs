@@ -244,7 +244,6 @@ namespace Simias.Presence
 				{
 					log.Debug("Failed to register {0} with Reunion.", service);
 				}
-				sc.Dispose();
 			}
 		}
 

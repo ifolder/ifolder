@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Xml;
 
 using log4net;
 using log4net.Config;
@@ -39,15 +40,10 @@ namespace Simias
 	/// </summary>
 	public class SimiasLogManager
 	{
-		private static readonly string SimiasLogConfigFile = "simias.log.config";
-		private static readonly string SimiasLogFile = "simias.log";
-		private static readonly string SimiasPatternLayout = "%d [%t] %-5p %c - %m%n";
-		
-        private static bool configured = false;
+		private static readonly string DefaultConfigFile = "Simias.log4net";
+		private static readonly string ConfigFileExtension = ".log4net";
 
-		static SimiasLogManager()
-		{
-		}
+		private static bool configured = false;
 
 		/// <summary>
 		/// Default Constructor
@@ -87,43 +83,42 @@ namespace Simias
                 // only configure once
                 if (!configured)
                 {
+					// process name
+					string name = Assembly.GetEntryAssembly().GetName().Name;
+
 					// config file
-					string configFile = Path.Combine(storePath, SimiasLogConfigFile);
+					string configFile = Path.Combine(storePath, name + ConfigFileExtension);
 
 					// bootstrap config
 					if (!File.Exists(configFile))
 					{
-						string bootStrapFile = Path.Combine(SimiasSetup.sysconfdir, SimiasLogConfigFile);
+						string bootStrapFile = Path.Combine(SimiasSetup.sysconfdir, DefaultConfigFile);
 
 						if (File.Exists(bootStrapFile))
 						{
 							File.Copy(bootStrapFile, configFile);
+
+							// update log file names to store
+							XmlDocument doc = new XmlDocument();
+							doc.Load(configFile);
+
+							XmlNodeList list = doc.GetElementsByTagName("file");
+							
+							for (int i=0; i < list.Count; i++)
+							{   
+								XmlNode attr = list[i].Attributes.GetNamedItem("value");
+								attr.Value = Path.Combine(storePath, name + attr.Value).Replace("\\", "/");
+							}
+
+							XmlTextWriter writer = new XmlTextWriter(configFile, null);
+							writer.Formatting = Formatting.Indented;
+							doc.Save(writer);
+							writer.Close();
 						}
 					}
 
 					// file configuration
 					log4net.Config.DOMConfigurator.ConfigureAndWatch(new FileInfo(configFile));
-
-					// TODO: remove default appender
-					// TODO: temp code for log file name
-        			string[] args = Environment.GetCommandLineArgs();
-        
-        			string file = SimiasLogFile;
-        
-        			if ((args.Length > 0) && (args[0] != null) && (args[0].Length > 0)
-						&& !args[0].StartsWith("mono"))
-        			{
-        				file = Path.GetFileName(args[0]) + ".log";
-        			}
-        			else if ((args.Length > 1) && (args[1] != null) && (args[1].Length > 0))
-        			{
-        				file = Path.GetFileName(args[1]) + ".log";
-        			}
-        
-					// default appender
-        			BasicConfigurator.Configure(new FileAppender(
-						new PatternLayout(SimiasPatternLayout),
-        				Path.Combine(storePath, file)));
 
                     configured = true;
                 }

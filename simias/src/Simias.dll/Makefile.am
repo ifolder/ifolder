@@ -10,7 +10,7 @@ SIMIAS_FLAGS = $(CSC_LIBFLAG) /unsafe
 SIMIAS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Security.dll System.Runtime.Remoting.dll mDnsResponder.dll mDnsResponderApi.dll log4net.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll 
 SIMIAS_LIBPATH = $(srcdir)/../../external/SecureChannelSinks $(LOG4NET_DIR) $(MDNSRESPONDER_DIR)
 
-EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/SimiasSetup.cs.in ../Common/MyDns.cs.in
+EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/SimiasSetup.cs.in ../Common/Simias.remoting ../Common/Simias.log4net ../Common/Simias.config ../Common/MyDns.cs.in
 
 CUR_DIR := $(shell pwd)
 
@@ -27,6 +27,7 @@ endif
 
 install-exec-local: Simias.dll
 	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir) $(DESTDIR)$(datadir)/simias
+	$(mkinstalldirs) $(DESTDIR)$(sysconfdir)
 	$(INSTALL_PROGRAM) Simias.dll $(DEBUG_FILES) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(MDNSRESPONDER_DIR)/m*.exe $(MDNSRESPONDER_DIR)/m*.dll $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(LOG4NET_DIR)/log4net.dll $(DESTDIR)$(libdir)
@@ -34,6 +35,9 @@ install-exec-local: Simias.dll
 	$(INSTALL_PROGRAM) $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DESTDIR)$(bindir)
 	cp -f $(srcdir)/$(LOG4NET_DIR)/../../../../LICENSE.txt $(DESTDIR)$(datadir)/simias/log4net.LICENSE.txt
+	$(INSTALL_PROGRAM) ../Common/Simias.remoting $(DESTDIR)$(sysconfdir)
+	$(INSTALL_PROGRAM) ../Common/Simias.log4net $(DESTDIR)$(sysconfdir)
+	$(INSTALL_PROGRAM) ../Common/Simias.config $(DESTDIR)$(sysconfdir)
 
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f $(SQLITELIB)
@@ -42,6 +46,7 @@ uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f mDnsResponder*
 	cd $(DESTDIR)$(libdir); rm -f Simias.dll $(DEBUG_FILES)
 	cd $(DESTDIR)$(bindir); rm -f $(SQLITELIB)
+	cd $(DESTDIR)$(sysconfdir); rm -f Simias.remoting Simias.log4net Simias.config
 	cd $(DESTDIR)$(datadir)/simias; rm -f log4net.LICENSE.txt
 
 CLEAN_FILES = Simias.dll Simias.doc.xml $(DEBUG_FILES)

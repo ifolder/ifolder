@@ -30,7 +30,6 @@ using System.Diagnostics;
 
 using Simias;
 using Simias.Storage;
-using Simias.Channels;
 
 namespace Simias.POBox
 {

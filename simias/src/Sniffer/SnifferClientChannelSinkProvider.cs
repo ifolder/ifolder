@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 using System;
+using System.Collections;
 using System.Runtime.Remoting.Channels;
 
 using Simias;
@@ -39,6 +40,13 @@ namespace Simias.Sniffer
 		/// Constructor
 		/// </summary>
 		public SnifferClientChannelSinkProvider()
+		{
+		}
+		
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public SnifferClientChannelSinkProvider(IDictionary properties, ICollection providerData)
 		{
 		}
 		

@@ -163,7 +163,7 @@ case $SIMIAS_OS in
         NUNIT_LIBPATH="$TOOLDIR/NUnit/mono/bin"
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
-	MONO=mono
+		MONO=mono
         NUNITFLAGS_OPTIMIZE=''
         OBJ_EXT='.o'
         REPORT_DIR='$(DESTDIR)$(bindir)'
@@ -206,6 +206,15 @@ case $SIMIAS_OS in
     # Windows-specific configuration
     #
     windows)
+		CXX='cl -c'
+		CDEF='-D'
+		CINC='-I'
+		COUT='-Fo'
+		LD='link'
+		LDINC='-libpath:'
+		LDOUT='-out:'
+		LIB_PRE =''
+		
         CSCFLAGS="/d:WINDOWS $CSCFLAGS"
         EXE_EXT='.exe'
         ICON_EXT='.ico'
@@ -235,6 +244,15 @@ case $SIMIAS_OS in
     	libdir="${exec_prefix}"
     ;;
 esac
+AC_SUBST(CXX)
+AC_SUBST(CDEF)
+AC_SUBST(CINC)
+AC_SUBST(COUT)
+AC_SUBST(LD)
+AC_SUBST(LDINC)
+AC_SUBST(LDOUT)
+AC_SUBST(LIB_PRE)
+AC_SUBST(LIBS)
 AC_SUBST(ICON_EXT)
 AC_SUBST(ICON_FLAG)
 AC_SUBST(INSTALL_EXE_OPTS)
@@ -243,9 +261,12 @@ AC_SUBST(MDNSRESPONDER_DIR)
 AC_SUBST(NUNIT)
 AC_SUBST(NUNIT_FLAGS)
 AC_SUBST(NUNIT_LIBPATH)
+AC_SUBST(OBJ_EXT)
 AC_SUBST(REPORT_DIR)
 AC_SUBST(REPORT_EXE)
 AC_SUBST(SEP)
+AC_SUBST(SHARED_LIB_EXT)
+AC_SUBST(SHARED_LIB_FLAG)
 AC_SUBST(SQLITELIB)
 AC_SUBST(SQLITELIB_PATH)
 
@@ -354,10 +375,7 @@ src/Simias.dll/Makefile
 src/SimiasApp/Makefile
 src/SimiasApp/simias
 src/AddressBook/Makefile
-src/Events/Makefile
-src/POBox/Makefile
 src/mDnsService/Makefile
-src/SyncService/Makefile
 src/SimiasAspService/Makefile
 src/WebService/Makefile
 test/Makefile

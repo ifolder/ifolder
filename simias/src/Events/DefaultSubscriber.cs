@@ -30,15 +30,12 @@ namespace Simias.Event
 	/// <summary>
 	/// Summary description for DefaultSubscriber.
 	/// </summary>
-	public class DefaultSubscriber : MarshalByRefObject, ISubscriber, IDisposable
+	public class DefaultSubscriber : IDisposable
 	{
 		#region fields
 
 		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(DefaultSubscriber));
 		// This is a singleton per Store.
-		static Hashtable	instanceTable = new Hashtable();
-		int					count;
-		Configuration		conf;
 		EventBroker			broker = null;
 		bool				alreadyDisposed;
 
@@ -49,49 +46,17 @@ namespace Simias.Event
 		/// <summary>
 		/// Delegate to handle Collection Events.
 		/// </summary>
-		public event CollectionEventHandler CollectionEvent;
-		
-		#endregion
-
-		#region Factory Methods
-
-		internal static DefaultSubscriber GetDefaultSubscriber()
-		{
-			DefaultSubscriber instance;
-			lock (typeof(DefaultSubscriber))
-			{
-				Configuration conf = Configuration.GetConfiguration();
-				if (!instanceTable.Contains(conf.StorePath))
-				{
-					instance = new DefaultSubscriber();
-					instanceTable.Add(conf.StorePath, instance);
-				}
-				else
-				{
-					instance = (DefaultSubscriber)instanceTable[conf.StorePath];
-				}
-				++instance.count;
-			}
-			return instance;
-		}
-
+		public event SimiasEventHandler SimiasEvent;
 		
 		#endregion
 
 		#region Constructor / Finalizer
 
-		DefaultSubscriber()
+		public DefaultSubscriber()
 		{
 			alreadyDisposed = false;
-			this.conf = Configuration.GetConfiguration();
-			count = 0;
-			if (!setupBroker())
-			{
-				// Start a thread to connect when the broker is availablehandle.
-				System.Threading.Thread t = new Thread(new ThreadStart(EventThread));
-				t.IsBackground = true;
-				t.Start();
-			}
+			broker = EventBroker.GetBroker();
+			broker.SimiasEvent += new SimiasEventHandler(OnSimiasEvent);
 		}
 
 		/// <summary>
@@ -102,79 +67,29 @@ namespace Simias.Event
 			Dispose(true);
 		}
 
-		bool setupBroker()
-		{
-			bool status = false;
-			broker = EventBroker.GetBroker(conf);
-			if (broker != null)
-			{
-				try
-				{
-					broker.AddSubscriber(this);
-					status = true;
-				}
-				catch
-				{
-					broker = null;
-				}
-			}
-			return status;
-		}
-
 		#endregion
 
 		#region Callbacks
 
 		/// <summary>
-		/// Callback used by the EventBroker for Collection events.
+		/// Called when an event has been triggered.
 		/// </summary>
 		/// <param name="args">Arguments for the event.</param>
-		public void OnCollectionEvent(SimiasEventArgs args)
+		public void OnSimiasEvent(SimiasEventArgs args)
 		{
 			callDelegate(args);
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="args"></param>
-		public void RecieveEvent(SimiasEventArgs args)
-		{
-			OnCollectionEvent(args);
-		}
-
-		
-		#endregion
-
-		#region Queue and Thread Methods.
-
-		private void EventThread()
-		{
-			while (!alreadyDisposed && broker == null)
-			{
-				if (EventBroker.RegisterClientChannel(conf))
-				{
-					if (setupBroker())
-					{
-						break;
-					}
-				}
-				Thread.Sleep(1000);
-			}
-		
-			logger.Info("Connected to event broker");
-		}
-		
 		#endregion
 
 		#region Delegate Invokers
 
 		void callDelegate(SimiasEventArgs args)
 		{
-			if (CollectionEvent != null)
+			if (SimiasEvent != null)
 			{
-				Delegate[] cbList = CollectionEvent.GetInvocationList();
-				foreach (CollectionEventHandler cb in cbList)
+				Delegate[] cbList = SimiasEvent.GetInvocationList();
+				foreach (SimiasEventHandler cb in cbList)
 				{
 					try 
 					{ 
@@ -196,22 +111,16 @@ namespace Simias.Event
 		{
 			try 
 			{
-				if (!alreadyDisposed)
+				lock (this)
 				{
-					lock (typeof(DefaultSubscriber))
+					if (!alreadyDisposed)
 					{
-						--count;
-						if (count == 0)
+						alreadyDisposed = true;
+						if (!inFinalize)
 						{
-							instanceTable.Remove(conf);
-							alreadyDisposed = true;
-							
-							// Signal thread so it can exit.
-							if (!inFinalize)
-							{
-								GC.SuppressFinalize(this);
-							}
+							GC.SuppressFinalize(this);
 						}
+						broker.SimiasEvent -= new SimiasEventHandler(OnSimiasEvent);
 					}
 				}
 			}
@@ -228,19 +137,6 @@ namespace Simias.Event
 		public void Dispose()
 		{
 			Dispose(false);
-		}
-
-		#endregion
-
-		#region MarshallByRef Overrides
-
-		/// <summary>
-		/// This client will listen until it deregisteres.
-		/// </summary>
-		/// <returns>null (Do not expire object).</returns>
-		public override Object InitializeLifetimeService()
-		{
-			return null;
 		}
 
 		#endregion

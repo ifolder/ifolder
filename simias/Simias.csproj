@@ -129,21 +129,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Channels\SimiasChannel.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Channels\SimiasChannelFactory.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Channels\SimiasChannelSinks.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\CollectionStore\AccessControl.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -329,6 +314,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Common\SimiasRemoting.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Common\SimiasSetup.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -409,6 +399,21 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\POBox\POBoxManager.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\POBox\POManager.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\POBox\POService.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\POBox\PostOffice.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -430,6 +435,11 @@
                 />
                 <File
                     RelPath = "src\POBox\SubscriptionStatus.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\POBox\SubscriptionThread.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -804,11 +814,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncCommon\SyncProperties.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\SyncCommon\SyncStoreInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -825,6 +830,11 @@
                 />
                 <File
                     RelPath = "src\SyncManager\SyncManager.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\SyncManager\SyncManagerService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

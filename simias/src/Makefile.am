@@ -1,16 +1,16 @@
 if LINUX
-SUBDIRS = Simias.dll SimiasApp Events POBox mDnsService SyncService AddressBook SimiasAspService WebService
+SUBDIRS = Simias.dll SimiasApp mDnsService AddressBook SimiasAspService WebService
 DIST_SUBDIRS = $(SUBDIRS)
 endif
 
 if DARWIN
-SUBDIRS = Simias.dll SimiasApp Events POBox mDnsService SyncService AddressBook SimiasAspService WebService
+SUBDIRS = Simias.dll SimiasApp mDnsService AddressBook SimiasAspService WebService
 DIST_SUBDIRS = $(SUBDIRS)
 endif
 
 if WINDOWS
-SUBDIRS = Simias.dll SimiasApp Events POBox mDnsService SyncService AddressBook SimiasAspService WebService
-DIST_SUBDIRS = $(SUBDIRS) SimiasAspService WebService
+SUBDIRS = Simias.dll SimiasApp mDnsService AddressBook SimiasAspService WebService
+DIST_SUBDIRS = $(SUBDIRS)
 endif
 
 

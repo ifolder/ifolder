@@ -33,7 +33,6 @@ using Simias;
 using Simias.Storage;
 using Simias.Location;
 using Simias.Domain;
-using Simias.Channels;
 
 namespace Simias.Sync
 {
@@ -48,7 +47,6 @@ namespace Simias.Sync
 		private SyncStoreManager storeManager;
 		private Store store;
 		private SyncCollection collection;
-		private SimiasChannel channel;
 		private SyncStoreService storeService;
 		private SyncCollectionService collectionService;
 		private SyncCollectionWorker worker;
@@ -200,15 +198,6 @@ namespace Simias.Sync
 		{
 			lock(this)
 			{
-				log.Debug("Stopping {0} - Dispose Channel", collection.Name);
-
-				// release channel
-				if (channel != null)
-				{
-					channel.Dispose();
-					channel = null;
-				}
-				
 				log.Debug("Stopping {0} - Stop the Worker", collection.Name);
 
 				// stop worker
@@ -281,10 +270,6 @@ namespace Simias.Sync
 							// get the service URL
 							string serviceUrl = collection.MasterUrl.ToString();
 							log.Debug("Sync Work {0} - Service URL: {1}", collection.Name, serviceUrl);
-
-							// create channel
-							if (channel == null) channel = SimiasChannelFactory.Create(collection.MasterUrl,
-													 syncManager.ChannelSinks);
 
 							// get a proxy to the store service object
 							log.Debug("Sync Work {0} - Connecting...", collection.Name);
@@ -363,13 +348,6 @@ namespace Simias.Sync
 									log.Debug("  New {0} Master Url: {1}", collection.Name, locationUrl);
 
 									collection.MasterUrl = locationUrl;
-
-									// clear the channel
-									if (channel != null)
-									{
-										channel.Dispose();
-										channel = null;
-									}
 								}
 							}
 							catch(Exception e2)

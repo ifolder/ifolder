@@ -28,7 +28,6 @@ using System.Net;
 using Simias;
 using Simias.Storage;
 using Simias.Sync;
-using Simias.Channels;
 
 namespace Simias.Sync
 {
@@ -55,12 +54,6 @@ namespace Simias.Sync
 		{
 			SyncStoreInfo info = null;
 
-			SyncProperties properties = new SyncProperties(store.Config);
-
-			// create channel
-			SimiasChannel channel = SimiasChannelFactory.Create(url,
-				properties.ChannelSinks);
-
 			try
 			{
 				// get a proxy to the sync store service object
@@ -74,9 +67,6 @@ namespace Simias.Sync
 			{
 				log.Error(e, "Ping Failed");
 			}
-
-			// close
-			channel.Dispose();
 
 			log.Debug("Ping: {0}", info);
 

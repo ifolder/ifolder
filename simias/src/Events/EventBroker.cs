@@ -22,50 +22,20 @@
  ***********************************************************************/
 
 using System;
-using System.IO;
-using System.Diagnostics;
-using System.Runtime.Remoting.Messaging;
 using System.Collections;
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Tcp;
 using System.Threading;
+using System.Runtime.Remoting.Messaging;
 using Simias;
 
 
 namespace Simias.Event
 {
-	/// <summary>
-	/// Subscriber Interface. The Default Subscriber will implement this.
-	/// </summary>
-	public interface ISubscriber
-	{
-		/// <summary>
-		/// Events will be recieved on this method.
-		/// </summary>
-		/// <param name="args">Arguments for the event.</param>
-		void RecieveEvent(SimiasEventArgs args);
-	}
-
-	/// <summary>
-	/// Class to describe a subscriber.
-	/// </summary>
-	internal class SubscriberInfo
-	{
-        internal ISubscriber subscriber;
-
-		internal SubscriberInfo(ISubscriber subscriber)
-		{
-			this.subscriber = subscriber;
-		}
-	}
-
 	#region Delegate Definitions.
 
 	/// <summary>
 	/// Delegate definition for handling collection events.
 	/// </summary>
-	public delegate void CollectionEventHandler(SimiasEventArgs args);
+	public delegate void SimiasEventHandler(SimiasEventArgs args);
 
 	#endregion
 
@@ -74,30 +44,79 @@ namespace Simias.Event
 	/// <summary>
 	/// Class used to broker events to the subscribed clients.
 	/// </summary>
-	public class EventBroker : MarshalByRefObject
+	internal class EventBroker
 	{
 		#region Fields
 
 		internal static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(EventBroker));
-		//static bool serviceRegistered = false;
-		static bool clientRegistered = false;
-		static EventBroker instance = null;
+		static EventBroker instance = new EventBroker();
 		ArrayList clients = new ArrayList();
 		ArrayList failedClients = new ArrayList();
+		Queue	eventQueue = new Queue();
+		ManualResetEvent haveEvents = new ManualResetEvent(false);
+		public event SimiasEventHandler SimiasEvent;
 
 		#endregion
 
-		/// <summary>
-		/// Adds a subscriber to the list.
-		/// </summary>
-		/// <param name="subscriber">The subscriber to call.</param>
-		public void AddSubscriber(ISubscriber subscriber)
+		#region Constructor
+
+		private EventBroker()
 		{
-			lock (clients)
-			{
-				clients.Add(new SubscriberInfo(subscriber));
-			}
+			Thread t1 = new Thread(new ThreadStart(EventQueueThread));
+			t1.IsBackground = true;
+			t1.Start();
 		}
+
+		#endregion
+
+		#region EventQueueThread
+		void EventQueueThread()
+		{
+			try
+			{
+				// Loop forever waiting for events to deliver.
+				while (true)
+				{
+					haveEvents.WaitOne();
+					// We have at least one event loop until the queue is empty.
+					SimiasEventArgs args = null;
+					lock (eventQueue)
+					{
+						if (eventQueue.Count > 0)
+						{
+							args = (SimiasEventArgs)eventQueue.Dequeue();
+						}
+						else
+						{
+							haveEvents.Reset();
+							continue;
+						}
+					}
+				
+					if (SimiasEvent != null)
+					{
+						Delegate[] cbList = SimiasEvent.GetInvocationList();
+						foreach (SimiasEventHandler cb in cbList)
+						{
+							try 
+							{ 
+								cb.BeginInvoke(
+									args, 
+									new AsyncCallback(EventRaisedCallback), 
+									null);
+							}
+							catch (Exception ex)
+							{
+								logger.Debug(ex, "Delegate {0}.{1} failed", cb.Target, cb.Method);
+							}
+						}
+					}
+				}
+			}
+			catch {}
+		}
+
+		#endregion
 
 		#region Event Signalers
 
@@ -107,26 +126,10 @@ namespace Simias.Event
 		/// <param name="args">The arguments for the event.</param>
 		public void RaiseEvent(SimiasEventArgs args)
 		{
-			lock (clients)
+			lock (eventQueue)
 			{
-				foreach (SubscriberInfo si in clients)
-				{
-					CollectionEventHandler cb = new CollectionEventHandler(si.subscriber.RecieveEvent);
-					cb.BeginInvoke(
-						args,
-						new AsyncCallback(EventRaisedCallback),
-						si);
-				}
-		
-				// Now remove any failed clients.
-				lock (failedClients)
-				{
-					foreach (SubscriberInfo si in failedClients)
-					{
-						clients.Remove(si);
-					}
-					failedClients.Clear();
-				}
+				eventQueue.Enqueue(args);
+				haveEvents.Set();
 			}
 		}
 
@@ -136,31 +139,14 @@ namespace Simias.Event
 		/// <param name="ar">Results of the call.</param>
 		public void EventRaisedCallback(IAsyncResult ar)
 		{
-			CollectionEventHandler eventDelegate = null;
+			SimiasEventHandler eventDelegate = null;
 			try
 			{
-				eventDelegate = (CollectionEventHandler)((AsyncResult)ar).AsyncDelegate;
+				eventDelegate = (SimiasEventHandler)((AsyncResult)ar).AsyncDelegate;
 				eventDelegate.EndInvoke(ar);
 				// the call is successfully finished and 
 			}
-			catch(Exception ex)
-			{
-				// The call has failed.
-				// Remove the subscriber.
-				logger.Debug(ex, "Deregistered Subscriber");// {0}.{1}.", cb.Target, cb.Method);
-				lock (failedClients)
-				{
-					try
-					{
-						SubscriberInfo si = (SubscriberInfo)ar.AsyncState;
-						failedClients.Add(si);
-					}
-					catch (Exception ex1)
-					{
-						logger.Debug(ex1, "Error");
-					}
-				}
-			}
+			catch {}
 		}
 
 
@@ -168,141 +154,13 @@ namespace Simias.Event
 
 		#region statics
 
-		private const string CFG_Section = "EventService";
-		private const string CFG_AssemblyKey = "Assembly";
-		private const string CFG_Assembly = "CsEventBroker";
-		private const string CFG_UriKey = "Uri";
-		private const string CFG_Uri = "tcp://localhost/EventBroker";
-		private const string channelName = "SimiasEventChannel";
-
 		/// <summary>
 		/// Get a broker for the given simias store.
 		/// </summary>
-		/// <param name="conf">The configuration for the events.</param>
 		/// <returns></returns>
-		public static EventBroker GetBroker(Configuration conf)
+		public static EventBroker GetBroker()
 		{
-			if (instance != null)
-			{
-				return instance;
-			}
-			else
-			{
-				string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
-				if (new Uri(serviceUri).Port == -1)
-				{
-					return null;
-				}
-				EventBroker.RegisterClientChannel(conf);
-				return (EventBroker)Activator.GetObject(typeof(EventBroker), serviceUri);
-			}
-		}
-
-		/// <summary>
-		/// Method to register a client channel.
-		/// </summary>
-		public static bool RegisterClientChannel(Configuration conf)
-		{
-			lock (typeof( EventBroker))
-			{
-				if (!clientRegistered)
-				{
-					Hashtable props = new Hashtable();
-					props["port"] = 0;
-
-					BinaryServerFormatterSinkProvider
-						serverProvider = new BinaryServerFormatterSinkProvider();
-					BinaryClientFormatterSinkProvider
-						clientProvider = new BinaryClientFormatterSinkProvider();
-#if !MONO
-					serverProvider.TypeFilterLevel =
-						System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
-#endif
-					TcpChannel chan = new
-						TcpChannel(props,clientProvider,serverProvider);
-					ChannelServices.RegisterChannel(chan);
-					clientRegistered = true;
-					
-					logger.Info("Event Client Channel Registered");
-				}
-			}
-			return clientRegistered;
-		}
-
-		/// <summary>
-		/// Method to register the server channel.
-		/// </summary>
-		public static void RegisterService(Configuration conf)
-		{
-            string serviceString = CFG_Uri + "_" + conf.StorePath.GetHashCode().ToString();
-			Uri serviceUri = new Uri (serviceString);
-			
-			Hashtable props = new Hashtable();
-			props["port"] = 0; //serviceUri.Port;
-			props["name"] = channelName + conf.StorePath.GetHashCode().ToString();
-			props["rejectRemoteRequests"] = true;
-
-			BinaryServerFormatterSinkProvider
-				serverProvider = new BinaryServerFormatterSinkProvider();
-			BinaryClientFormatterSinkProvider
-				clientProvider = new BinaryClientFormatterSinkProvider();
-#if !MONO
-			serverProvider.TypeFilterLevel =
-				System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
-#endif
-			TcpChannel chan = new
-				TcpChannel(props,clientProvider,serverProvider);
-			ChannelServices.RegisterChannel(chan);
-
-			
-			instance = new EventBroker();
-			ObjRef brokerRef = RemotingServices.Marshal(instance, serviceUri.AbsolutePath.TrimStart('/'));
-			
-			string [] uriList = chan.GetUrlsForUri(serviceUri.AbsolutePath.TrimStart('/'));
-			if (uriList.Length == 1)
-			{
-				string service = uriList[0];
-				Uri sUri = new Uri(service);
-				if (!sUri.IsLoopback)
-				{
-					service = sUri.Scheme + Uri.SchemeDelimiter + "localhost:" + sUri.Port + sUri.AbsolutePath;
-				}
-				//serviceRegistered = true;
-				clientRegistered = true;
-				conf.Set(CFG_Section, CFG_UriKey, service);
-
-				logger.Info("Event Service Registered at {0}", service);
-			}
-		}
-
-		/// <summary>
-		/// Method to deregister the server channel.
-		/// </summary>
-		public static void DeRegisterService(Configuration conf)
-		{
-			if (instance != null)
-			{
-				RemotingServices.Disconnect(instance);
-				instance = null;
-			}
-			ChannelServices.UnregisterChannel(ChannelServices.GetChannel(channelName + conf.StorePath.GetHashCode().ToString()));
-			//serviceRegistered = false;
-			string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
-			conf.Set(CFG_Section, CFG_UriKey, CFG_Uri);
-			logger.Info("Event Service at {0} Deregistered", serviceUri);
-		}
-	
-		#endregion
-		
-		#region MarshallByRef Overrides
-
-		/// <summary>
-		/// This will be used as a singleton do not expire the object.
-		/// </summary>
-		/// <returns>null (Do not expire object).</returns>
-		public override Object InitializeLifetimeService()
-		{
-			return null;
+			return instance;
 		}
 
 		#endregion

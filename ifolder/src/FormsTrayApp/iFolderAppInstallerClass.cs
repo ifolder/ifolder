@@ -118,7 +118,7 @@ namespace Novell.iFolder.FormsTrayApp
 				Configuration config = Configuration.GetConfiguration();
 				foreach (Process process in ifolderProcesses)
 				{
-					Simias.Event.EventPublisher publisher = new EventPublisher(config);
+					Simias.Event.EventPublisher publisher = new EventPublisher();
 					publisher.RaiseEvent(new Simias.Service.ShutdownEventArgs());
 					process.WaitForExit (10000); // wait 10 seconds
 					try

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<configuration>
+	
+	<system.runtime.remoting>
+	
+		<application>
+		
+			<channels>
+				
+				<channel ref="http" name="SimiasClientChannel">
+			
+					<clientProviders>
+						<provider ref="sniffer" />
+						<formatter ref="binary" />
+					</clientProviders>
+				
+				</channel>
+				
+				<channel ref="http" name="SimiasServerChannel"
+					bindTo="0.0.0.0" port="6436" useIpAddress="true">
+			
+					<serverProviders>
+						<formatter ref="binary" typeFilterLevel="Full" />
+						<provider ref="sniffer" />
+					</serverProviders>
+				
+				</channel>
+				
+			</channels>
+
+		</application>
+		
+		<channelSinkProviders>
+			
+			<clientProviders>
+				<provider id="sniffer"
+					type="Simias.Sniffer.SnifferClientChannelSinkProvider, Simias" />
+            </clientProviders>
+			
+			<serverProviders>
+				<provider id="sniffer"
+					type="Simias.Sniffer.SnifferServerChannelSinkProvider, Simias" />
+            </serverProviders>
+			
+		</channelSinkProviders>
+		
+		<customErrors mode="off"/>
+		
+		<debug loadTypes="true" />
+		
+	</system.runtime.remoting>
+
+</configuration>
+

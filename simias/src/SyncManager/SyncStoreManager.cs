@@ -29,7 +29,6 @@ using System.Runtime.Remoting;
 using Simias;
 using Simias.Event;
 using Simias.Storage;
-using Simias.Channels;
 
 namespace Simias.Sync
 {
@@ -43,7 +42,6 @@ namespace Simias.Sync
 		private Store store;
 		private SyncStoreService service;
 		private SyncManager syncManager;
-		private SimiasChannel channel;
 		private Hashtable collectionManagers;
 		private EventSubscriber subscriber;
 
@@ -85,10 +83,7 @@ namespace Simias.Sync
 					// create channel
 					string name = String.Format("Store Service [{0}]", store.ID);
 
-					channel = SimiasChannelFactory.Create(syncManager.ServiceUrl,
-						syncManager.ChannelSinks, true);
-				
-					log.Debug("Starting Store Service: {0}", syncManager.ServiceUrl);
+					log.Debug("Starting Store Service: {0}", SimiasRemoting.GetServiceUrl(SyncStoreService.EndPoint));
 
 					// marshal service
 					RemotingServices.Marshal(service, SyncStoreService.EndPoint);
@@ -120,7 +115,7 @@ namespace Simias.Sync
 				{
 					if (service != null)
                     {
-                        log.Debug("Stopping Store Service: {0}", syncManager.ServiceUrl);
+                        log.Debug("Stopping Store Service: {0}", SimiasRemoting.GetServiceUrl(SyncStoreService.EndPoint));
                     }
 
 					// stop collection managers
@@ -135,13 +130,6 @@ namespace Simias.Sync
 					{
 						RemotingServices.Disconnect(service);
 						service = null;
-					}
-
-					// release channel
-					if (channel != null)
-					{
-						channel.Dispose();
-						channel = null;
 					}
 				}
 			}

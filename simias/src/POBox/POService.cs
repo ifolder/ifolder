@@ -31,26 +31,16 @@ namespace Simias.POBox
 	/// <summary>
 	/// PO Service
 	/// </summary>
-	public class POService : BaseProcessService
+	public class POService : IThreadService
 	{
-		private static POService process;
-		
 		private Configuration config;
 		private POManager manager;
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public POService() : base()
+		public POService()
 		{
-			this.config = GetConfiguration();
-			this.manager = new POManager(config);
-		}
-
-		static void Main(string[] args)
-		{
-			process = new POService();
-			process.Run();
 		}
 
 		#region BaseProcessService Members
@@ -58,9 +48,11 @@ namespace Simias.POBox
 		/// <summary>
 		/// Start the PO service.
 		/// </summary>
-		protected override void Start()
+		public void Start(Configuration config)
 		{
-			Debug.Assert(manager != null);
+			this.config = config;
+
+			this.manager = new POManager(config);
 
 			manager.Start();
 		}
@@ -68,7 +60,7 @@ namespace Simias.POBox
 		/// <summary>
 		/// Stop the PO service.
 		/// </summary>
-		protected override void Stop()
+		public void Stop()
 		{
 			Debug.Assert(manager != null);
 
@@ -78,7 +70,7 @@ namespace Simias.POBox
 		/// <summary>
 		/// Resume the PO service.
 		/// </summary>
-		protected override void Resume()
+		public void Resume()
 		{
 			Debug.Assert(manager != null);
 
@@ -88,7 +80,7 @@ namespace Simias.POBox
 		/// <summary>
 		/// Pause the PO service.
 		/// </summary>
-		protected override void Pause()
+		public void Pause()
 		{
 			Debug.Assert(manager != null);
 
@@ -100,7 +92,7 @@ namespace Simias.POBox
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="data"></param>
-		protected override void Custom(int message, string data)
+		public void Custom(int message, string data)
 		{
 		}
 

@@ -29,7 +29,6 @@ using System.Threading;
 
 using Simias;
 using Simias.Location;
-using Simias.Channels;
 
 namespace Simias.Sync
 {
@@ -62,7 +61,6 @@ namespace Simias.Sync
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncManager));
 
-		private SyncProperties properties;
 		private SyncStoreManager storeManager;
 		private SyncLogicFactory logicFactory;
 		private LocationService locationService;
@@ -76,11 +74,8 @@ namespace Simias.Sync
 		{
 			this.config = config;
 
-			// properties
-			this.properties = new SyncProperties(config);
-
 			// logic factory
-			logicFactory = (SyncLogicFactory)Activator.CreateInstance(properties.LogicFactory);
+			logicFactory = new SynkerA();
 
 			// store
 			storeManager = new SyncStoreManager(this);
@@ -146,35 +141,11 @@ namespace Simias.Sync
 		#region Properties
 
 		/// <summary>
-		/// The local service Url.
-		/// </summary>
-		public Uri ServiceUrl
-		{
-			get { return properties.ServiceUrl; }
-		}
-		
-		/// <summary>
-		/// The store path.
-		/// </summary>
-		public string StorePath
-		{
-			get { return config.StorePath; }
-		}
-
-		/// <summary>
 		/// The sync store manager.
 		/// </summary>
 		public SyncStoreManager StoreManager
 		{
 			get { return storeManager; }
-		}
-
-		/// <summary>
-		/// An enumeration of the sinks to include.
-		/// </summary>
-		public SimiasChannelSinks ChannelSinks
-		{
-			get { return properties.ChannelSinks; }
 		}
 
 		/// <summary>

@@ -38,7 +38,7 @@ namespace Simias.Sync
 	/// A sync wrapper for collection objects.  The wrapper contains property names (scheme) used
 	/// by syncing and implements serveral common tasks used by syncing on collections.
 	/// </summary>
-	public class SyncCollection : Collection, IDisposable
+	public class SyncCollection : Collection
 	{
 		/// <summary>
 		/// A collection property name for the sync role of the collection.
@@ -66,15 +66,12 @@ namespace Simias.Sync
 		/// </summary>
 		public static readonly string LogicTypePropertyName = "Sync Logic";
 
-		private SyncProperties props;
-
 		/// <summary>
 		/// Copy Constructor
 		/// </summary>
 		/// <param name="collection">The collection object.</param>
 		public SyncCollection(Collection collection) : base	(collection)
 		{
-			props = new SyncProperties(this.StoreReference.Config);
 		}
 
 		/// <summary>
@@ -142,20 +139,6 @@ namespace Simias.Sync
 			Commit();
 		}
 
-		#region IDisposable Members
-
-		public void Dispose()
-		{
-			// dispose store properties
-			if (props != null)
-			{
-				props.Dispose();
-				props = null;
-			}
-		}
-
-		#endregion
-
 		#region Properties
 		
 		/// <summary>
@@ -208,7 +191,7 @@ namespace Simias.Sync
 				if (result == null)
 				{
 					// default
-					result = props.ServiceUrl;
+					result = SimiasRemoting.GetServiceUrl(SyncStoreService.EndPoint);
 				}
 
 				return result;

@@ -79,13 +79,10 @@ namespace Simias
 				{
 					Console.WriteLine("Starting...");
 
-					// configure logging
+					// configure
 					SimiasLogManager.Configure(config);
-			
-					// set the sync properties
-					SyncProperties props = new SyncProperties(config);
-					props.LogicFactory = typeof(SynkerA);
-			
+					SimiasRemoting.Configure(config);
+
 					// create a manager
 					manager = new Manager(config);
 
@@ -112,7 +109,7 @@ namespace Simias
 					Console.WriteLine("Stopping...");
 
 					// publish the shutdown event
-					EventPublisher p = new EventPublisher(config);
+					EventPublisher p = new EventPublisher();
 
 					p.RaiseEvent(new ShutdownEventArgs());
 

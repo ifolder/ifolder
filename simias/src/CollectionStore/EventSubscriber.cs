@@ -118,8 +118,8 @@ namespace Simias.Storage
 			this.collectionId = collectionId;
 			alreadyDisposed = false;
 			
-			subscriber = DefaultSubscriber.GetDefaultSubscriber();
-			subscriber.CollectionEvent += new CollectionEventHandler(OnCollectionEvent);
+			subscriber = new DefaultSubscriber();
+			subscriber.SimiasEvent += new SimiasEventHandler(OnCollectionEvent);
 		}
 
 		/// <summary>
@@ -322,7 +322,7 @@ namespace Simias.Storage
 					alreadyDisposed = true;
 					
 					// Deregister delegates.
-					subscriber.CollectionEvent -= new CollectionEventHandler(OnCollectionEvent);
+					subscriber.SimiasEvent -= new SimiasEventHandler(OnCollectionEvent);
 					subscriber.Dispose();
 					if (!inFinalize)
 					{

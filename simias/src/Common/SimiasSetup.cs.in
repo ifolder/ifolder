@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 using System;
+using System.Reflection;
 
 namespace Simias
 {
@@ -30,22 +31,37 @@ namespace Simias
 	/// </summary>
 	public class SimiasSetup
 	{
-		public readonly static string bindir = "@bindir@";
-		public readonly static string datadir = "@datadir@";
-		public readonly static string includedir = "@includedir@";
-		public readonly static string infodir = "@infodir@";
-		public readonly static string libexecdir = "@libexecdir@";
-		public readonly static string libdir = "@libdir@";
-		public readonly static string localstatedir = "@localstatedir@";
-		public readonly static string mandir = "@mandir@";
-		public readonly static string prefix = "@prefix@";
-		public readonly static string sbindir = "@sbindir@";
-		public readonly static string sharedstatedir = "@sharedstatedir@";
-		public readonly static string sysconfdir = "@sysconfdir@";
-		public readonly static string target = "@target@";
+		private static string _bindir = "@bindir@";
+		private static string _datadir = "@datadir@";
+		private static string _includedir = "@includedir@";
+		private static string _infodir = "@infodir@";
+		private static string _libexecdir = "@libexecdir@";
+		private static string _libdir = "@libdir@";
+		private static string _localstatedir = "@localstatedir@";
+		private static string _mandir = "@mandir@";
+		private static string _prefix = "@prefix@";
+		private static string _sbindir = "@sbindir@";
+		private static string _sharedstatedir = "@sharedstatedir@";
+		private static string _sysconfdir = "@sysconfdir@";
+		private static string _target = "@target@";
+
+		static SimiasSetup()
+		{
+			if (MyEnvironment.DotNet)
+			{
+				string relbindir = Environment.CurrentDirectory;
+
+				_sysconfdir = _sysconfdir.Replace(_bindir, relbindir);
+			}
+		}
 
 		private SimiasSetup()
 		{
+		}
+
+		public static string sysconfdir
+		{
+			get { return _sysconfdir; }
 		}
 	}
 }

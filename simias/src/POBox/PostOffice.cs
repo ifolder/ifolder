@@ -36,12 +36,6 @@ namespace Simias.POBox
 	{
 		public static readonly string EndPoint = "PostOffice.rem";
 
-		/// <summary>
-		/// The suggested service url for the current machine.
-		/// </summary>
-		public static readonly Uri DefaultServiceUrl = (new UriBuilder("http",
-			MyDns.GetHostName(), 6446, EndPoint)).Uri;
-
 		private Store store;
 
 		/// <summary>

@@ -31,10 +31,8 @@ namespace Simias.Sync
 	/// <summary>
 	/// Sync Manager Service
 	/// </summary>
-	public class SyncManagerService : BaseProcessService
+	public class SyncManagerService : IThreadService
 	{
-		private static SyncManagerService process;
-		
 		private Configuration config;
 		private SyncManager manager;
 		private FileMonitorService fileMonitor;
@@ -42,17 +40,8 @@ namespace Simias.Sync
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public SyncManagerService() : base()
+		public SyncManagerService()
 		{
-			this.config = GetConfiguration();
-			this.manager = new SyncManager(config);
-			this.fileMonitor = new FileMonitorService();
-		}
-
-		static void Main(string[] args)
-		{
-			process = new SyncManagerService();
-			process.Run();
 		}
 
 		#region BaseProcessService Members
@@ -60,18 +49,23 @@ namespace Simias.Sync
 		/// <summary>
 		/// Start the sync manager service.
 		/// </summary>
-		protected override void Start()
+		public void Start(Configuration config)
 		{
-			Debug.Assert(manager != null);
+			this.config = config;
+			
+			this.manager = new SyncManager(config);
+			
+			this.fileMonitor = new FileMonitorService();
 
 			manager.Start();
+			
 			fileMonitor.Start(config);
 		}
 
 		/// <summary>
 		/// Stop the sync manager service.
 		/// </summary>
-		protected override void Stop()
+		public void Stop()
 		{
 			Debug.Assert(manager != null);
 
@@ -82,7 +76,7 @@ namespace Simias.Sync
 		/// <summary>
 		/// Resume the sync manager service.
 		/// </summary>
-		protected override void Resume()
+		public void Resume()
 		{
 			Debug.Assert(manager != null);
 
@@ -93,7 +87,7 @@ namespace Simias.Sync
 		/// <summary>
 		/// Pause the sync manager service.
 		/// </summary>
-		protected override void Pause()
+		public void Pause()
 		{
 			Debug.Assert(manager != null);
 
@@ -106,7 +100,7 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="data"></param>
-		protected override void Custom(int message, string data)
+		public void Custom(int message, string data)
 		{
 			SyncMessages msg = (SyncMessages)message;
 

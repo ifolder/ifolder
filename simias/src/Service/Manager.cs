@@ -82,8 +82,8 @@ namespace Simias.Service
 		public Manager(Configuration conf)
 		{
 			// Get an event subscriber to handle shutdown events.
-			subscriber = DefaultSubscriber.GetDefaultSubscriber();
-			subscriber.CollectionEvent +=new CollectionEventHandler(OnCollectionEvent);
+			subscriber = new DefaultSubscriber();
+			subscriber.SimiasEvent +=new SimiasEventHandler(OnSimiasEvent);
 
 			// configure logging
 			SimiasLogManager.Configure(conf);
@@ -134,7 +134,7 @@ namespace Simias.Service
 
 		#region Callbacks
 
-		private void OnCollectionEvent(SimiasEventArgs args)
+		private void OnSimiasEvent(SimiasEventArgs args)
 		{
 			try
 			{
@@ -244,13 +244,12 @@ namespace Simias.Service
 		private void installDefaultServices()
 		{
 			InternalUninstall("Simias Dredge Service");
-			Install(new ProcessServiceCtl(conf, "Simias Event Service", "EventService.exe"), 0);
 			Install(new ThreadServiceCtl(conf, "Simias Change Log Service", "Simias", "Simias.Storage.ChangeLog"), 1);
 			Install(new ProcessServiceCtl(conf, "Simias Multi-Cast DNS Service", "mDnsService.exe"), 2);
-			Install(new ProcessServiceCtl(conf, "Simias Sync Service", "SyncService.exe"));
-			Install(new ProcessServiceCtl(conf, "Simias PO Service", "POService.exe"));
+			Install(new ThreadServiceCtl(conf, "Simias Sync Service", "Simias", "Simias.Sync.SyncManagerService"));
+			Install(new ThreadServiceCtl(conf, "Simias PO Service", "Simias", "Simias.POBox.POService"));
 			Install(new ThreadServiceCtl(conf, "Simias Presence Service", "Simias", "Simias.Presence.PresenceService"), 5);
-			Install(new ThreadServiceCtl(conf, "Simias Asp Service", "SimiasAspService.dll", "Simias.Web.SimiasAspService"), 6);
+			Install(new ThreadServiceCtl(conf, "Simias Asp Service", "SimiasAspService", "Simias.Web.SimiasAspService"), 6);
 		}
 
 		/// <summary>

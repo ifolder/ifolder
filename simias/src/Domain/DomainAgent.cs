@@ -26,7 +26,6 @@ using System;
 using Simias;
 using Simias.Storage;
 using Simias.Sync;
-using Simias.Channels;
 using PostOffice = Simias.POBox;
 
 namespace Simias.Domain
@@ -57,7 +56,6 @@ namespace Simias.Domain
 		
 		
 		private Configuration config;
-		private SimiasChannel channel;
 
 		public DomainAgent(Configuration config)
 		{
@@ -132,8 +130,6 @@ namespace Simias.Domain
 			}
 
 			// clean-up
-			channel.Dispose();
-			channel = null;
 			service = null;
 		}
 
@@ -209,8 +205,6 @@ namespace Simias.Domain
 			collection.Commit();
 			
 			// clean-up
-			channel.Dispose();
-			channel = null;
 			service = null;
 		}
 
@@ -220,13 +214,7 @@ namespace Simias.Domain
 
 			if (ServiceUrl == null) return null;
 
-			// properties
-			SyncProperties props = new SyncProperties(config);
-
 			Store store = Store.GetStore();
-
-			// create channel
-			channel = SimiasChannelFactory.Create(ServiceUrl, props.ChannelSinks);
 
 			// create URL
 			string url = ServiceUrl.ToString();

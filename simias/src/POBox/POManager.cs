@@ -29,7 +29,6 @@ using System.Diagnostics;
 
 using Simias;
 using Simias.Storage;
-using Simias.Channels;
 using Simias.Sync;
 
 namespace Simias.POBox
@@ -46,8 +45,7 @@ namespace Simias.POBox
 		private Hashtable boxManagers;
 		private EventSubscriber subscriber;
 		private PostOffice service;
-		private SimiasChannel channel;
-		private Uri serviceUrl = PostOffice.DefaultServiceUrl ;
+		private Uri serviceUrl = null;
 
 		/// <summary>
 		/// Constructor
@@ -88,9 +86,6 @@ namespace Simias.POBox
 					// create channel
 					string name = String.Format("PO Service [{0}]", store.ID);
 
-					channel = SimiasChannelFactory.Create(ServiceUrl,
-						SimiasChannelSinks.Binary, true);
-				
 					log.Debug("Starting PO Service: {0}", ServiceUrl);
 
 					// marshal service
@@ -148,13 +143,6 @@ namespace Simias.POBox
 					{
 						RemotingServices.Disconnect(service);
 						service = null;
-					}
-
-					// release channel
-					if (channel != null)
-					{
-						channel.Dispose();
-						channel = null;
 					}
 				}
 			}
