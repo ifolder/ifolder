@@ -32,7 +32,6 @@ clean-local:
 	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
     
 distclean-local: clean
-	rm -f Makefile
 
 maintainer-clean-local:
 	rm -f Makefile.in
