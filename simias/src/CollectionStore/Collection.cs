@@ -40,6 +40,11 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
+		/// Used to log messages.
+		/// </summary>
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger( typeof( Collection ) );
+
+		/// <summary>
 		/// Reference to the store.
 		/// </summary>
 		private Store store;
@@ -542,21 +547,25 @@ namespace Simias.Storage
 				switch ( node.Properties.State )
 				{
 					case PropertyList.PropertyListState.Add:
+						log.Debug( "Indicating event NodeCreated: Node ID = {0}", node.ID );
 						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0 ) );
 						node.Properties.State = PropertyList.PropertyListState.Update;
 						break;
 
 					case PropertyList.PropertyListState.Delete:
+						log.Debug( "Indicating event NodeDeleted: Node ID = {0}", node.ID );
 						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeDeleted, 0 ) );
 						node.Properties.State = PropertyList.PropertyListState.Disposed;
 						break;
 
 					case PropertyList.PropertyListState.Import:
+						log.Debug( "Indicating event NodeImported: Node ID = {0}", node.ID );
 						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
 						node.Properties.State = PropertyList.PropertyListState.Update;
 						break;
 
 					case PropertyList.PropertyListState.Update:
+						log.Debug( "Indicating event NodeChanged: Node ID = {0}", node.ID );
 						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
 						break;
 

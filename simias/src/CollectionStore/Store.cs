@@ -44,6 +44,11 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
+		/// Used to log messages.
+		/// </summary>
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger( typeof( Store ) );
+
+		/// <summary>
 		/// Cross process member used to control access to the constructor.
 		/// </summary>
 		private static string ctorLock = "";
