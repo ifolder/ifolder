@@ -167,14 +167,18 @@ namespace Simias.Gaim
 				total = buddies.Length;
 				foreach (GaimBuddy buddy in buddies)
 				{
-					string givenName;
-					string familyName;
-					GaimDomain.ParseGaimBuddyAlias(buddy.Alias, out givenName, out familyName);
-
-					Member member = new Member(buddy.Name, Guid.NewGuid().ToString(),//  buddy.MungedID,
-											   Simias.Storage.Access.Rights.ReadWrite,
-											   givenName, familyName);
-					member.FN = buddy.Alias;
+					Member member = GaimDomain.FindBuddyInDomain(buddy);
+					if (member == null)
+					{
+						string givenName;
+						string familyName;
+						GaimDomain.ParseGaimBuddyAlias(buddy.Alias, out givenName, out familyName);
+	
+						member = new Member(buddy.Name, Guid.NewGuid().ToString(),
+											Simias.Storage.Access.Rights.ReadWrite,
+											givenName, familyName);
+						member.FN = buddy.Alias;
+					}
 
 					if (members.Count < count)
 					{

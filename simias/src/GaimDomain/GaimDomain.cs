@@ -587,6 +587,22 @@ namespace Simias.Gaim
 		}
 
 		/// <summary>
+		/// Returns the Member object for a GaimBuddy if the Buddy
+		/// exists in the Domain, otherwise null is returned.
+		/// </summary>
+		public static Member FindBuddyInDomain(GaimBuddy buddy)
+		{
+			Member member = null;
+			Simias.Storage.Domain domain = GetDomain();
+			if (domain != null)
+			{
+				member = FindBuddyInDomain(domain, buddy);
+			}
+			
+			return member;
+		}
+
+		/// <summary>
 		/// Obtains the string representation of this instance.
 		/// </summary>
 		/// <returns>The friendly name of the domain.</returns>
