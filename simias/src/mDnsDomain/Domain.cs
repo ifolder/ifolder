@@ -156,95 +156,57 @@ namespace Simias.mDns
 				Uri localUri = new Uri("http://" + hostAddress);
 
 				//
-				// Verify the local Rendezvous user exists in the local database
-				//
-				LocalDatabase ldb = store.GetDatabaseObject();
-				Member ldbMember;
-				Node memberNode = ldb.GetSingleNodeByName( mDnsUserName );
-				if (memberNode == null)
-				{
-					// Create a local member which is the owner of the mDnsDomain
-					ldbMember = new Member( mDnsUserName, Guid.NewGuid().ToString(), Access.Rights.Admin );
-					ldbMember.IsOwner = true;
-
-					// Save the local database changes.
-					ldb.Commit( new Node[] { ldbMember } );
-				}
-				else
-				{
-					ldbMember = new Member( memberNode );
-				}
-
-				mDnsUserID = ldbMember.ID;
-
-				//
 				// Verify the Rendezvous workgroup domain exists
 				//
 
-				Simias.Storage.Domain rDomain = store.GetDomain( ID );
+				Simias.Storage.Domain rDomain = store.GetDomain( Simias.mDns.Domain.ID );
 				if (rDomain == null)
 				{
 					// Create the Rendezvous workgroup domain
 					rDomain = 
 						new Simias.Storage.Domain(
-							store, 
-							this.mDnsDomainName,
-							Simias.mDns.Domain.ID,
-							this.description, 
-							Simias.Sync.SyncRoles.Master,
-							Simias.Storage.Domain.ConfigurationType.Workgroup );
+						store, 
+						this.mDnsDomainName,
+						Simias.mDns.Domain.ID,
+						this.description, 
+						Simias.Sync.SyncRoles.Master,
+						Simias.Storage.Domain.ConfigurationType.Workgroup );
 
 					rDomain.SetType( rDomain, "Rendezvous" );
 
 					// Create the owner member for the domain.
 					Member member = 
 						new Member(
-							mDnsUserName, 
-							ldbMember.ID,
-							Access.Rights.Admin );
+						mDnsUserName, 
+						Guid.NewGuid().ToString().ToLower(),
+						Access.Rights.Admin );
 
 					member.IsOwner = true;
+					mDnsUserID = member.UserID;
 
 					rDomain.Commit( new Node[] { rDomain, member } );
 
 					// Create the name mapping.
 					store.AddDomainIdentity( rDomain.ID, member.UserID );
 				}
+				else
+				{
+					Member member = rDomain.GetMemberByName( mDnsUserName );
+					if ( member == null )
+					{
+						string errMsg = String.Format( "Cannot find user {0} in domain {1}.", mDnsUserName, rDomain.Name );
+						log.Error( errMsg );
+						throw new SimiasException( errMsg );
+					}
+
+					mDnsUserID = member.UserID;
+				}
 
 				//
 				// Verify the POBox for the local Rendezvous user
 				//
-			
-				Member pMember;
-				Simias.POBox.POBox poBox = null;
-				string poBoxName = "POBox:" + Simias.mDns.Domain.ID + ":" + ldbMember.ID;
 
-				try
-				{
-					poBox = Simias.POBox.POBox.FindPOBox( store, Simias.mDns.Domain.ID, ldbMember.ID );
-				}
-				catch{}
-				if (poBox == null)
-				{
-					poBox = new Simias.POBox.POBox( store, poBoxName, ID );
-					pMember = 
-						new Member( ldbMember.Name, ldbMember.ID, Access.Rights.ReadWrite );
-					pMember.IsOwner = true;
-					poBox.Commit(new Node[] { poBox, pMember });
-				}
-				else
-				{
-					// verify member in POBox
-					pMember = poBox.GetMemberByID( ldbMember.ID );
-					if (pMember == null)
-					{
-						pMember = 
-							new Member( ldbMember.Name, ldbMember.ID, Access.Rights.ReadWrite );
-						pMember.IsOwner = true;
-						poBox.Commit(new Node[] { pMember });
-					}
-				}
-
+				Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox( store, rDomain.ID, mDnsUserID );
 				mDnsPOBoxID = poBox.ID;
 			}
 			catch( Exception e1 )
