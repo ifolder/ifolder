@@ -47,8 +47,6 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.Button cancel;
 		private System.Windows.Forms.Button apply;
 		private System.Windows.Forms.TabPage tabPage1;
-		private System.Windows.Forms.TabPage tabPage2;
-		private System.Windows.Forms.TabPage tabPage3;
 		private System.Windows.Forms.ListView shareWith;
 		private System.Windows.Forms.ColumnHeader columnHeader1;
 		private System.Windows.Forms.ColumnHeader columnHeader2;
@@ -121,8 +119,6 @@ namespace Novell.iFolder.iFolderCom
 			this.shareWith = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
-			this.tabPage2 = new System.Windows.Forms.TabPage();
-			this.tabPage3 = new System.Windows.Forms.TabPage();
 			this.ok = new System.Windows.Forms.Button();
 			this.cancel = new System.Windows.Forms.Button();
 			this.apply = new System.Windows.Forms.Button();
@@ -134,8 +130,6 @@ namespace Novell.iFolder.iFolderCom
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tabPage1);
-			this.tabControl1.Controls.Add(this.tabPage2);
-			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Location = new System.Drawing.Point(8, 16);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
@@ -246,22 +240,6 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			this.columnHeader2.Text = "Access";
 			this.columnHeader2.Width = 144;
-			// 
-			// tabPage2
-			// 
-			this.tabPage2.Location = new System.Drawing.Point(4, 22);
-			this.tabPage2.Name = "tabPage2";
-			this.tabPage2.Size = new System.Drawing.Size(336, 374);
-			this.tabPage2.TabIndex = 1;
-			this.tabPage2.Text = "Tab2";
-			// 
-			// tabPage3
-			// 
-			this.tabPage3.Location = new System.Drawing.Point(4, 22);
-			this.tabPage3.Name = "tabPage3";
-			this.tabPage3.Size = new System.Drawing.Size(336, 374);
-			this.tabPage3.TabIndex = 2;
-			this.tabPage3.Text = "Tab3";
 			// 
 			// ok
 			// 
