@@ -109,13 +109,23 @@ typedef enum
 
 enum
 {
-	ACCOUNT_PRTL_ICON_COL,
+	INVITATION_TYPE_ICON_COL,
 	BUDDY_NAME_COL,
 	TIME_COL,
 	COLLECTION_NAME_COL,
 	STATE_COL,
 	INVITATION_PTR,
 	N_COLS
+};
+
+enum
+{
+	TRUSTED_BUDDY_ICON_COL,
+	TRUSTED_BUDDY_NAME_COL,
+	TRUSTED_BUDDY_IP_ADDR_COL,
+	TRUSTED_BUDDY_IP_PORT_COL,
+	GAIM_ACCOUNT_PTR_COL,
+	N_TRUSTED_BUDDY_COLS
 };
 
 /****************************************************
@@ -133,6 +143,7 @@ typedef struct
 	char collection_type[32];
 	char collection_name[128];
 	char ip_addr[16];
+	char ip_port[16];
 } Invitation;
 
 /****************************************************
@@ -150,6 +161,8 @@ static GtkListStore *out_inv_store = NULL;
 static GtkWidget *out_inv_resend_button = NULL;
 static GtkWidget *out_inv_cancel_button = NULL;
 static GtkWidget *out_inv_remove_button = NULL;
+
+static GtkListStore *trusted_buddies_store = NULL;
 
 /****************************************************
  * Forward Declarations                             *
@@ -193,6 +206,9 @@ static char * fill_state_str(char *state_str, INVITATION_STATE state);
 static void add_invitation_to_store(GtkListStore *store,
 									Invitation *invitation);
 static void init_invitation_stores();
+static void add_new_trusted_buddy(GtkListStore *store, GaimBuddy *buddy,
+									char *ip_address, char *ip_port);
+static void init_trusted_buddies_store();
 static void init_invitations_window();
 static void show_invitations_window();
 static void buddylist_cb_show_invitations_window(GaimBlistNode *node,
@@ -209,6 +225,10 @@ static gboolean receiving_im_msg_cb(GaimAccount *account, char **sender,
 static gboolean lookup_collection_in_store(GtkListStore *store,
 											char *collection_id,
 											GtkTreeIter *iter);
+
+static gboolean lookup_trusted_buddy(GtkListStore *store,
+									 GaimBuddy *buddy,
+									 GtkTreeIter *iter);
 
 static gboolean handle_invitation_request(GaimAccount *account,
 										  const char *sender,
@@ -263,7 +283,7 @@ send_msg_to_buddy(GaimBuddy *recipient, char *msg)
 /**
  * This function will send a message with the following format:
  * 
- * [simias:invitation-request:<sender-ip-address>:<collection-id>:<collection-type>:<collection-name>]<Human-readable Invitation String for buddies who don't have the plugin installed/enabled>
+ * [simias:invitation-request:<ip-address>:<ip-port><collection-id>:<collection-type>:<collection-name>]<Human-readable Invitation String for buddies who don't have the plugin installed/enabled>
  */
 static int
 send_invitation_request_msg(GaimBuddy *recipient, char *collection_id,
@@ -271,12 +291,14 @@ send_invitation_request_msg(GaimBuddy *recipient, char *collection_id,
 {
 	char msg[2048];
 	const char *public_ip;
+	char *ip_port = "5432";	/* Get the WebService port from Simias */
 	
 	public_ip = gaim_network_get_my_ip(-1);
 
-	sprintf(msg, "%s%s:%s:%s:%s] %s",
+	sprintf(msg, "%s%s:%s:%s:%s:%s] %s",
 			INVITATION_REQUEST_MSG,
 			public_ip,
+			ip_port,
 			collection_id,
 			collection_type,
 			collection_name,
@@ -304,20 +326,22 @@ send_invitation_request_deny_msg(GaimBuddy *recipient, char *collection_id)
  * This function will send a message with the following format:
  * 
  * 
- * [simias:invitation-request-accept:<collection-id>:<ip-address>]
+ * [simias:invitation-request-accept:<collection-id>:<ip-address>:<ip-port>]
  */
 static int
 send_invitation_request_accept_msg(GaimBuddy *recipient, char *collection_id)
 {
 	char msg[2048];
 	const char *public_ip;
+	char *ip_port = "4321"; /* FIXME: Get WebService port from Simias */
 	
 	public_ip = gaim_network_get_my_ip(-1);
 	
-	sprintf(msg, "%s%s:%s]",
+	sprintf(msg, "%s%s:%s:%s]",
 			INVITATION_REQUEST_ACCEPT_MSG,
 			collection_id,
-			public_ip);
+			public_ip,
+			ip_port);
 
 	return send_msg_to_buddy(recipient, msg);
 }
@@ -325,17 +349,19 @@ send_invitation_request_accept_msg(GaimBuddy *recipient, char *collection_id)
 /**
  * This function will send a message with the following format:
  * 
- * [simias:ping-request:<ip-address>]
+ * [simias:ping-request:<ip-address>:<ip-port>] <Human-readable message>
  */
 static int
 send_ping_request_msg(GaimBuddy *recipient)
 {
 	char msg[2048];
 	const char *public_ip;
+	char *ip_port = "1234";	/* FIXME: Get the WebService port from Simias */
 	
 	public_ip = gaim_network_get_my_ip(-1);
 	
-	sprintf(msg, "%s%s]", PING_REQUEST_MSG, public_ip);
+	sprintf(msg, "%s%s:%s] %s", PING_REQUEST_MSG, public_ip, ip_port,
+		_("You are seeing this message because you do not have the Gaim iFolder Plugin installed/enabled.  Please visit http://www.ifolder.com/ to download the plugin."));
 
 	return send_msg_to_buddy(recipient, msg);
 }
@@ -343,17 +369,18 @@ send_ping_request_msg(GaimBuddy *recipient)
 /**
  * This function will send a message with the following format:
  * 
- * [simias:ping-response:<ip-address>]
+ * [simias:ping-response:<ip-address>:<ip-port>]
  */
 static int
 send_ping_response_msg(GaimBuddy *recipient)
 {
 	char msg[2048];
 	const char *public_ip;
+	const char *ip_port = "1234"; /* FIXME: Get the WebService port from Simias */
 	
 	public_ip = gaim_network_get_my_ip(-1);
 	
-	sprintf(msg, "%s%s]", PING_RESPONSE_MSG, public_ip);
+	sprintf(msg, "%s%s:%s]", PING_RESPONSE_MSG, public_ip, ip_port);
 
 	return send_msg_to_buddy(recipient, msg);
 }
@@ -455,6 +482,7 @@ buddylist_cb_simulate_share_ifolder(GaimBlistNode *node, gpointer user_data)
 	Invitation *invitation;
 	char guid[128];
 
+g_print("buddylist_cb_simulate_share_ifolder() entered\n");
 	if (!GAIM_BLIST_NODE_IS_BUDDY(node)) {
 		return;
 	}
@@ -547,6 +575,7 @@ in_inv_accept_button_cb(GtkWidget *w, GtkTreeView *tree)
 	GaimBuddy *buddy;
 	int send_result;
 	GtkWidget *dialog;
+	GtkTreeIter tb_iter;
 
 	sel = gtk_tree_view_get_selection(tree);
 	if (!gtk_tree_selection_get_selected(sel, &model, &iter)) {
@@ -585,6 +614,22 @@ in_inv_accept_button_cb(GtkWidget *w, GtkTreeView *tree)
 		gtk_dialog_run(GTK_DIALOG(dialog));
 		gtk_widget_destroy(dialog);
 		return;
+	}
+	
+	/**
+	 * Check to see if this buddy is already trusted.  If not, add a new entry.
+	 * If so, update the IP Address and IP Port.
+	 */
+	if (lookup_trusted_buddy(trusted_buddies_store, buddy, &tb_iter)) {
+		/* Update the trusted buddy info */
+		gtk_list_store_set(trusted_buddies_store, &tb_iter,
+							TRUSTED_BUDDY_IP_ADDR_COL, invitation->ip_addr,
+							TRUSTED_BUDDY_IP_PORT_COL, invitation->ip_port,
+							-1);
+	} else {
+		/* Add a new trusted buddy */
+		add_new_trusted_buddy(trusted_buddies_store, buddy, 
+								invitation->ip_addr, invitation->ip_port);
 	}
 
 	if (buddy->present == GAIM_BUDDY_SIGNING_OFF
@@ -1012,6 +1057,7 @@ add_invitation_to_store(GtkListStore *store, Invitation *invitation)
 	char state_str[32];
 	GdkPixbuf *invitation_icon;
 
+g_print("add_invitation_to_store() entered\n");
 	/**
 	 * FIXME: Change this icon to be based off of the type of Simias Collection
 	 * that is being shared and possibly the state of the invitation too.
@@ -1034,7 +1080,7 @@ add_invitation_to_store(GtkListStore *store, Invitation *invitation)
 
 	/* Set the new row information with the invitation */
 	gtk_list_store_set(store, &iter,
-		ACCOUNT_PRTL_ICON_COL,	invitation_icon,
+		INVITATION_TYPE_ICON_COL,	invitation_icon,
 		BUDDY_NAME_COL,			invitation->buddy_name,
 		TIME_COL,				time_str,
 		COLLECTION_NAME_COL,	invitation->collection_name,
@@ -1053,7 +1099,8 @@ add_invitation_to_store(GtkListStore *store, Invitation *invitation)
 static void
 init_invitation_stores()
 {
-	in_inv_store = gtk_list_store_new(6,
+g_print("init_invitation_stores() entered\n");
+	in_inv_store = gtk_list_store_new(N_COLS,
 					GDK_TYPE_PIXBUF,
 					G_TYPE_STRING,
 					G_TYPE_STRING,
@@ -1064,14 +1111,9 @@ init_invitation_stores()
 	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(in_inv_store),
 										1, GTK_SORT_ASCENDING);
 
-if (in_inv_store) {
-	g_print("init_stores: in_inv_store is NOT null\n");
-} else {
-	g_print("init_stores: in_inv_store IS NULL!\n");
-}
 	/* FIXME: Load in data from file */
 
-	out_inv_store = gtk_list_store_new(6,
+	out_inv_store = gtk_list_store_new(N_COLS,
 					GDK_TYPE_PIXBUF,
 					G_TYPE_STRING,
 					G_TYPE_STRING,
@@ -1082,6 +1124,69 @@ if (in_inv_store) {
 										1, GTK_SORT_ASCENDING);
 	/* FIXME: Load in data from file */
 	/*populate_out_inv_store_from_file(out_inv_store);*/
+}
+
+static void
+add_new_trusted_buddy(GtkListStore *store, GaimBuddy *buddy,
+						char *ip_address, char *ip_port)
+{
+	GtkTreeIter iter;
+	GdkPixbuf *buddy_icon;
+
+g_print("add_new_trusted_buddy() called: %s (%s:%s)\n", buddy->name, ip_address, ip_port);
+
+	/**
+	 * FIXME: Change this icon to be based off of the type of Simias Collection
+	 * that is being shared and possibly the state of the invitation too.
+	 * Perhaps the invitation state could just be shown as an emblem overlay
+	 * of the invitation icon similar to how emblems are overlaid in Nautilus.
+	 */
+	buddy_icon = create_prpl_icon(buddy->account);
+g_print("0\n");	
+	/**
+	 * Aquire an iterator.  This appends an empty row in the store and the row
+	 * must be filled in with gtk_list_store_set() or gtk_list_store_set_value().
+	 */
+	gtk_list_store_append(store, &iter);
+g_print("1\n");	
+
+	/* Set the new row information with the invitation */
+	gtk_list_store_set(store, &iter,
+		TRUSTED_BUDDY_ICON_COL,		buddy_icon,
+		TRUSTED_BUDDY_NAME_COL,		buddy->name,
+		TRUSTED_BUDDY_IP_ADDR_COL,	ip_address,
+		TRUSTED_BUDDY_IP_PORT_COL,	ip_port,
+		GAIM_ACCOUNT_PTR_COL,		buddy->account,
+		-1);
+g_print("2\n");	
+
+	if (buddy_icon)
+		g_object_unref(buddy_icon);
+g_print("3\n");	
+}
+
+/**
+ * When the plugin first loads (when Gaim starts or the user enables this
+ * plugin), fill the trusted_buddies_store with the information persited in the
+ * trusted_buddies_file.
+ */
+static void
+init_trusted_buddies_store()
+{
+	/**
+	 * When this information is stored into a file, we need to save the
+	 * following information so that we can restore the store:
+	 * 
+	 * Account Protocol, Account Username, Buddy Name, IP Address, IP Port
+	 */
+	trusted_buddies_store = gtk_list_store_new(N_TRUSTED_BUDDY_COLS,
+			GDK_TYPE_PIXBUF,	/* Put an icon for the account here */
+			G_TYPE_STRING,		/* TRUSTED_BUDDY_NAME_COL */
+			G_TYPE_STRING,		/* TRUSTED_BUDDY_IP_ADDR_COL */
+			G_TYPE_STRING,		/* TRUSTED_BUDDY_IP_PORT_COL */
+			G_TYPE_POINTER);	/* GaimAccount * */
+	
+	/* FIXME: Load in the data from a config file */
 }
 
 /**
@@ -1166,10 +1271,10 @@ init_invitations_window()
 	/* Create a cell renderer for a pixbuf */
 	in_inv_renderer = gtk_cell_renderer_pixbuf_new();
 
-	/* ACCOUNT_PRTL_ICON_COL */
+	/* INVITATION_TYPE_ICON_COL */
 	gtk_tree_view_insert_column_with_attributes(
 		GTK_TREE_VIEW(in_inv_tree),
-		-1, NULL, in_inv_renderer, "pixbuf", ACCOUNT_PRTL_ICON_COL, NULL);
+		-1, NULL, in_inv_renderer, "pixbuf", INVITATION_TYPE_ICON_COL, NULL);
 
 	/* Create a cell renderer for text */
 	in_inv_renderer = gtk_cell_renderer_text_new();
@@ -1246,10 +1351,10 @@ init_invitations_window()
 	/* Create a cell renderer for a pixbuf */
 	out_inv_renderer = gtk_cell_renderer_pixbuf_new();
 
-	/* ACCOUNT_PRTL_ICON_COL */
+	/* INVITATION_TYPE_ICON_COL */
 	gtk_tree_view_insert_column_with_attributes(
 		GTK_TREE_VIEW(out_inv_tree),
-		-1, NULL, out_inv_renderer, "pixbuf", ACCOUNT_PRTL_ICON_COL, NULL);
+		-1, NULL, out_inv_renderer, "pixbuf", INVITATION_TYPE_ICON_COL, NULL);
 
 	/* Create a cell renderer for text */
 	out_inv_renderer = gtk_cell_renderer_text_new();
@@ -1581,6 +1686,52 @@ lookup_collection_in_store(GtkListStore *store, char *collection_id,
 }
 
 /**
+ * This function returns TRUE if the buddy exists in the store and FALSE
+ * otherwise.
+ * 
+ * If TRUE is returned, iter will be set to point to the row in the store where
+ * the buddy exists.
+ */
+static gboolean
+lookup_trusted_buddy(GtkListStore *store, GaimBuddy *buddy, GtkTreeIter *iter)
+{
+	gboolean valid;
+	GaimAccount *store_account;
+	GaimBuddy *store_buddy;
+	gchar *store_buddy_name;
+	
+g_print("lookup_trusted_buddy() entered\n");
+	valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(store), iter);
+	while (valid) {
+		/* Extract the Invitation * out of the model */
+		gtk_tree_model_get(GTK_TREE_MODEL(store), iter,
+							TRUSTED_BUDDY_NAME_COL, &store_buddy_name,
+							GAIM_ACCOUNT_PTR_COL, &store_account,
+							-1);
+
+		if (!store_buddy_name) {
+			g_print("store_buddy_name is NULL inside lookup_trusted_buddy()\n");
+			continue;
+		}
+		
+		if (!store_account) {
+			g_print("store_account is NULL inside lookup_trusted_buddy()\n");
+			continue;
+		}
+		
+		store_buddy = gaim_find_buddy(store_account, store_buddy_name);
+		if (strcmp(store_buddy->name, buddy->name) == 0) {
+			/* We've found our match! */
+			return TRUE;
+		}
+
+		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(store), iter);
+	}
+	
+	return FALSE; /* No match was found */
+}
+
+/**
  * This fuction checks to see if this is a properly formatted Simias Invitation
  * Request and then notifies the user of an incoming invitation.  The user can
  * then accept or deny the request at will.
@@ -1613,20 +1764,28 @@ handle_invitation_request(GaimAccount *account, const char *sender,
 	 * parts.
 	 */
 	char *sender_ip_address;
+	char *sender_ip_port;
 	char *collection_id;
 	char *collection_type;
 	char *collection_name;
 	Invitation *invitation;
 	
+g_print("handle_invitation_request() entered\n");
 	/**
 	 * Start parsing the message at this point:
 	 * 
-	 * 	[simias:invitation-request:xxx.xxx.xxx.xxx:...
+	 * 	[simias:invitation-request:<ip-address>:<ip-port>:<collection-id>:<collection-type>:<colletion-name>]
 	 *                             ^
 	 */
 	sender_ip_address = strtok((char *) buffer + strlen(INVITATION_REQUEST_MSG), ":");
 	if (!sender_ip_address) {
 		g_print("handle_invitation_request() couldn't parse the sender-ip-address\n");
+		return FALSE;
+	}
+	
+	sender_ip_port = strtok(NULL, ":");
+	if (!sender_ip_port) {
+		g_print("handle_invitation_request_accept() couldn't parse the ip-port\n");
 		return FALSE;
 	}
 	
@@ -1657,7 +1816,7 @@ handle_invitation_request(GaimAccount *account, const char *sender,
 	invitation = malloc(sizeof(Invitation));
 	if (!invitation) {
 		g_print("out of memory in handle_invitation_request()\n");
-		return FALSE;
+		return TRUE; /* The message must be discarded */
 	}
 
 	invitation->gaim_account = account;
@@ -1671,6 +1830,7 @@ handle_invitation_request(GaimAccount *account, const char *sender,
 	sprintf(invitation->collection_type, collection_type);
 	sprintf(invitation->collection_name, collection_name);
 	sprintf(invitation->ip_addr, sender_ip_address);
+	sprintf(invitation->ip_port, sender_ip_port);
 	
 	/* Now add this new invitation to the in_inv_store. */
 	add_invitation_to_store(in_inv_store, invitation);
@@ -1737,7 +1897,7 @@ handle_invitation_request_deny(GaimAccount *account,
 	if (!lookup_collection_in_store(out_inv_store, collection_id, &iter)) {
 		g_print("handle_invitation_request_deny() couldn't find the collection-id in out_inv_store\n");
 		/* FIXME: Before returning from here, we should try to retrieve more information from Simias in case the user deleted this invitation information from Gaim */
-		return FALSE;
+		return TRUE; /* Discard the message */
 	}
 	
 	/**
@@ -1806,7 +1966,7 @@ handle_invitation_request_deny(GaimAccount *account,
  * the sync process.  If this is not the case, then tell Simias to start syncing
  * the collection with the buddy's machine.
  * 
- * [simias:invitation-request-accept:<collection-id>:<ip-address>]
+ * [simias:invitation-request-accept:<collection-id>:<ip-address>:<ip-port>]
  */
 static gboolean
 handle_invitation_request_accept(GaimAccount *account,
@@ -1817,6 +1977,8 @@ handle_invitation_request_accept(GaimAccount *account,
 	Invitation *invitation;
 	char time_str[32];
 	char state_str[32];
+	GaimBuddy *buddy;
+	GtkTreeIter tb_iter;
 	
 	/**
 	 * Since this method is called, we already know that the first part of
@@ -1826,11 +1988,12 @@ handle_invitation_request_accept(GaimAccount *account,
 	 */
 	char *collection_id;
 	char *ip_address;
+	char *ip_port;
 	
 	/**
 	 * Start parsing the message at this point:
 	 * 
-	 * 	[simias:invitation-request-accept:<collection-id>:<ip-address>]
+	 * 	[simias:invitation-request-accept:<collection-id>:<ip-address>:<ip-port>]
 	 *                                    ^
 	 */
 	collection_id = strtok(
@@ -1840,12 +2003,18 @@ handle_invitation_request_accept(GaimAccount *account,
 		return FALSE;
 	}
 
-	ip_address = strtok(NULL, "]");
+	ip_address = strtok(NULL, ":");
 	if (!ip_address) {
 		g_print("handle_invitation_request_accept() couldn't parse the ip-address\n");
 		return FALSE;
 	}
-
+	
+	ip_port = strtok(NULL, "]");
+	if (!ip_port) {
+		g_print("handle_invitation_request_accept() couldn't parse the ip-port\n");
+		return FALSE;
+	}
+	
 	/**
 	 * Lookup the collection_id in the current out_inv_store.  If it's not there
 	 * we'll just discard this message.  If it IS there, we need to update the
@@ -1854,7 +2023,7 @@ handle_invitation_request_accept(GaimAccount *account,
 	if (!lookup_collection_in_store(out_inv_store, collection_id, &iter)) {
 		g_print("handle_invitation_request_accept() couldn't find the collection-id in out_inv_store\n");
 		/* FIXME: Before returning from here, we should try to retrieve more information from Simias in case the user deleted this invitation information from Gaim */
-		return FALSE;
+		return TRUE;	/* Allow the message to be discarded */
 	}
 	
 	/**
@@ -1901,7 +2070,24 @@ handle_invitation_request_accept(GaimAccount *account,
 	out_inv_sel_changed_cb(
 		gtk_tree_view_get_selection(GTK_TREE_VIEW(out_inv_tree)),
 		GTK_TREE_VIEW(out_inv_tree));
-	
+
+	buddy = gaim_find_buddy(account, sender);
+
+	/**
+	 * Add the buddy to the list of trusted buddies if the buddy is not already
+	 * there.  If the buddy IS there, just update their IP Address and IP Port.
+	 */
+	if (lookup_trusted_buddy(trusted_buddies_store, buddy, &tb_iter)) {
+		/* Update the trusted buddy info */
+		gtk_list_store_set(trusted_buddies_store, &tb_iter,
+							TRUSTED_BUDDY_IP_ADDR_COL, ip_address,
+							TRUSTED_BUDDY_IP_PORT_COL, ip_port,
+							-1);
+	} else {
+		/* Add a new trusted buddy */
+		add_new_trusted_buddy(trusted_buddies_store, buddy, ip_address, ip_port);
+	}
+
 	/* FIXME: Add more interaction with Simias as described in the notes of the function */
 
 	/* FIXME: Change this to a tiny bubble notification instead of popping up the big Invitations Dialog */
@@ -1919,8 +2105,71 @@ static gboolean
 handle_ping_request(GaimAccount *account, const char *sender,
 					const char *buffer)
 {
-	g_print("FIXME: Implement handle_ping_request()\n");
-	return FALSE;
+	GtkTreeIter iter;
+	char *ip_address;
+	char *ip_port;
+	int send_result;
+	
+g_print("handle_ping_request() %s -> %s entered\n",
+		sender, gaim_account_get_username(account));
+	/**
+	 * Since this method is called, we already know that the first part of
+	 * the message matches our #define.  So, because of that, we can take
+	 * that portion out of the picture and start tokenizing the different
+	 * parts.
+	 */
+
+	/**
+	 * Start parsing the message at this point:
+	 * 
+	 * 	[simias:ping-request:<ip-address>:<ip-port>]
+	 *                       ^
+	 */
+	ip_address = strtok((char *) buffer + strlen(PING_REQUEST_MSG), ":");
+	if (!ip_address) {
+		g_print("handle_ping_request() couldn't parse the ip-address\n");
+		return FALSE;
+	}
+
+	ip_port = strtok(NULL, "]");
+	if (!ip_port) {
+		g_print("handle_ping_request() couldn't parse the ip-port\n");
+		return FALSE;
+	}
+
+	/**
+	 * Now check in our trusted_buddies_store to see if we have ever accepted an
+	 * invitation to share collections with this buddy.  If we have, we can send
+	 * a ping-reply message.  If not, we will just drop this message and do
+	 * nothing about it (perhaps log it so we could tell that we received it as
+	 * a security measure).
+	 */
+	if (!lookup_trusted_buddy(trusted_buddies_store,
+							gaim_find_buddy(account, sender), &iter)) {
+		g_print("Received a [simias:ping-request] from an untrusted buddy: %s (%s:%s)\n",
+				sender, ip_address, ip_port);
+		return TRUE;
+	}
+
+	/**
+	 * If we get this far, iter now points to the row of data in the store model
+	 * that contains the trusted GaimBuddy *.
+	 * 
+	 * Since we received the sender's IP Address and IP Port update it in our
+	 * own record.
+	 */
+	gtk_list_store_set(trusted_buddies_store, &iter,
+						TRUSTED_BUDDY_IP_ADDR_COL, ip_address,
+						TRUSTED_BUDDY_IP_PORT_COL, ip_port,
+						-1);
+
+	/* Send a ping-response message */
+	send_result = send_ping_response_msg(gaim_find_buddy(account, sender));
+	if (send_result <= 0) {
+		g_print("handle_ping_request() couldn't send ping response: %d\n", send_result);
+	}
+	
+	return TRUE;
 }
 
 /**
@@ -1934,8 +2183,60 @@ static gboolean
 handle_ping_response(GaimAccount *account, const char *sender, 
 					 const char *buffer)
 {
-	g_print("FIXME: Implement handle_ping_response()\n");
-	return FALSE;
+	GtkTreeIter iter;
+	char *ip_address;
+	char *ip_port;
+	
+g_print("handle_ping_response() %s -> %s) entered\n",
+		sender, gaim_account_get_username(account));
+	/**
+	 * Since this method is called, we already know that the first part of
+	 * the message matches our #define.  So, because of that, we can take
+	 * that portion out of the picture and start tokenizing the different
+	 * parts.
+	 */
+
+	/**
+	 * Start parsing the message at this point:
+	 * 
+	 * 	[simias:ping-response:<ip-address>:<ip-port>]
+	 *                        ^
+	 */
+	ip_address = strtok((char *) buffer + strlen(PING_RESPONSE_MSG), ":");
+	if (!ip_address) {
+		g_print("handle_ping_response() couldn't parse the ip-address\n");
+		return FALSE;
+	}
+
+	ip_port = strtok(NULL, "]");
+	if (!ip_port) {
+		g_print("handle_ping_response() couldn't parse the ip-port\n");
+		return FALSE;
+	}
+
+	/**
+	 * Now check in our trusted_buddies_store to make sure we trust this buddy.
+	 * If we can't find the buddy, there's no since trusting this ping-response
+	 * message because.  If we do find the buddy, go ahead and update the
+	 * IP Address and IP Port in the trusted_buddies_store.
+	 */
+	if (!lookup_trusted_buddy(trusted_buddies_store,
+							gaim_find_buddy(account, sender), &iter)) {
+		g_print("Received a [simias:ping-response] from an untrusted buddy: %s (%s:%s)\n",
+				sender, ip_address, ip_port);
+		return TRUE;
+	}
+
+	/**
+	 * If we get this far, iter now points to the row of data in the store model
+	 * that contains the trusted GaimBuddy *.
+	 */
+	gtk_list_store_set(trusted_buddies_store, &iter,
+						TRUSTED_BUDDY_IP_ADDR_COL, ip_address,
+						TRUSTED_BUDDY_IP_PORT_COL, ip_port,
+						-1);
+
+	return TRUE;
 }
 
 /**
@@ -2009,7 +2310,13 @@ buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
 				GTK_TREE_MODEL(out_inv_store), &iter);
 	}
 	
-	/* FIXME: Send ping requests for all buddies we have an IP Address */
+	if (lookup_trusted_buddy(trusted_buddies_store, buddy, &iter)) {
+		/* Send a ping-request message */
+		send_result = send_ping_request_msg(buddy);
+		if (send_result <= 0) {
+			g_print("buddy_signed_on_cb() couldn't send a ping reqest: %d\n", send_result);
+		}
+	}
 }
 
 static gboolean
@@ -2062,6 +2369,9 @@ plugin_load(GaimPlugin *plugin)
 
 	/* FIXME: Load up the GtkListStore's for incoming and outgoing invitations */
 	init_invitation_stores();
+	
+	/* FIXME: Load up the GtkListStore for trusted buddies */
+	init_trusted_buddies_store();
 				
 	/* Load, but don't show the Invitations Window */
 	init_invitations_window();
@@ -2113,7 +2423,7 @@ static GaimPluginInfo info =
 	"Boyd Timothy <btimothy@novell.com>",
 	"http://www.ifolder.com/",
 	plugin_load,
-	NULL,
+	NULL, /* FIXME: Add a plugin-unload function to store information */
 	NULL,
 	&ui_info,
 	NULL,
