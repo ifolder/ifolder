@@ -89,6 +89,7 @@ namespace Novell.iFolder
 				ifws.Url = 
 					Simias.Client.Manager.LocalServiceUrl.ToString() +
 					"/iFolder.asmx";
+				LocalService.Start(ifws);
 			}
 			catch(Exception e)
 			{
@@ -101,6 +102,7 @@ namespace Novell.iFolder
 				simws.Url = 
 					Simias.Client.Manager.LocalServiceUrl.ToString() +
 					"/Simias.asmx";
+				LocalService.Start(simws);
 			}
 			catch(Exception e)
 			{

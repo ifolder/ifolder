@@ -138,9 +138,11 @@ namespace Novell.iFolder
 					Simias.Client.Manager.LocalServiceUrl.ToString();
 				ifws = new iFolderWebService();
 				ifws.Url = localServiceUrl + "/iFolder.asmx";
+				LocalService.Start(ifws);
 				
 				simws = new SimiasWebService();
 				simws.Url = localServiceUrl + "/Simias.asmx";
+				LocalService.Start(simws);
 
 				// wait for simias to start up
 				while(!simiasRunning)
@@ -214,6 +216,7 @@ namespace Novell.iFolder
 				simiasSvc.Url =
 					Simias.Client.Manager.LocalServiceUrl.ToString() +
 					"/Simias.asmx";
+				LocalService.Start(simiasSvc);
 
 				di = simiasSvc.GetDomainInformation(DomainID);
 			}
@@ -297,6 +300,7 @@ namespace Novell.iFolder
 					simiasWebService.Url = 
 						Simias.Client.Manager.LocalServiceUrl.ToString() + 
 						"/Simias.asmx";
+					LocalService.Start(simiasWebService);
 
 					CredentialType credType = 
 						simiasWebService.GetDomainCredentials(
@@ -382,6 +386,7 @@ namespace Novell.iFolder
 								simws.Url = 
 									Simias.Client.Manager.LocalServiceUrl.ToString() + 
 									"/Simias.asmx";
+								LocalService.Start(simws);
 
 								if( LoginDialog.Password != null &&
 										LoginDialog.Password.Length > 0)

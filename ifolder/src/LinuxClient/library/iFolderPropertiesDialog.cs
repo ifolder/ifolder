@@ -110,12 +110,14 @@ namespace Novell.iFolder
 				throw new ApplicationException(
 							"Unable to obtain iFolderWebService");
 			this.ifws.Url = localServiceUrl + "/iFolder.asmx";
+			LocalService.Start(this.ifws);
 			
 			this.simws = new SimiasWebService();
 			if (this.simws == null)
 				throw new ApplicationException(
 							"Unable to obtain SimiasWebService");
 			this.simws.Url = localServiceUrl + "/Simias.asmx";
+			LocalService.Start(this.simws);
 
 			try
 			{
