@@ -161,6 +161,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InviteAgentTests", "src\Inv
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonFormsWindows", "src\CommonFormWindows\Library\CommonFormsWindows.csproj", "{CCCF72D7-AC9A-45DC-AF2D-0CF52BBA0565}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonFormsWindowsTests", "src\CommonFormWindows\Tests\CommonFormsWindowsTests.csproj", "{27C8E063-4FA2-4A0E-B9AA-0BB5ED1F4903}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -315,6 +323,14 @@ Global
 		{9BDABCB7-021A-4CB5-9133-D8FC74CA1C9C}.Debug.Build.0 = Debug|.NET
 		{9BDABCB7-021A-4CB5-9133-D8FC74CA1C9C}.Release.ActiveCfg = Release|.NET
 		{9BDABCB7-021A-4CB5-9133-D8FC74CA1C9C}.Release.Build.0 = Release|.NET
+		{CCCF72D7-AC9A-45DC-AF2D-0CF52BBA0565}.Debug.ActiveCfg = Debug|.NET
+		{CCCF72D7-AC9A-45DC-AF2D-0CF52BBA0565}.Debug.Build.0 = Debug|.NET
+		{CCCF72D7-AC9A-45DC-AF2D-0CF52BBA0565}.Release.ActiveCfg = Release|.NET
+		{CCCF72D7-AC9A-45DC-AF2D-0CF52BBA0565}.Release.Build.0 = Release|.NET
+		{27C8E063-4FA2-4A0E-B9AA-0BB5ED1F4903}.Debug.ActiveCfg = Debug|.NET
+		{27C8E063-4FA2-4A0E-B9AA-0BB5ED1F4903}.Debug.Build.0 = Debug|.NET
+		{27C8E063-4FA2-4A0E-B9AA-0BB5ED1F4903}.Release.ActiveCfg = Release|.NET
+		{27C8E063-4FA2-4A0E-B9AA-0BB5ED1F4903}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
