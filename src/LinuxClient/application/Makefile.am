@@ -11,15 +11,11 @@ iFolderClient_LIBPATH = $(srcdir)/../../TrayIcon $(srcdir)/../../iFolder $(srcdi
 
 EXTRA_DIST = $(iFolderClient_CSFILES)
 
-IFOLDER_IN = ifolder.in
-
-ifolder_in: $(IFOLDER_IN)
+ifolder: ifolder.in
 	sed -e 's,@_prefix_@,@prefix@,g' -e 's,@_webbindir_@,@webbindir@,g' $< > $@
 	chmod +x $@
 
-IFOLDER_DESKTOP_IN = ifolder.desktop.in
-
-ifolder_desktop_in: $(IFOLDER_DESKTOP_IN)
+ifolder.desktop: ifolder.desktop.in
 	sed -e 's,@_bindir_@,@bindir@,g' -e 's,@_datadir_@,@datadir@,g' $< > $@
 	chmod +x $@
 
