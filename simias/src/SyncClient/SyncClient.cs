@@ -361,6 +361,8 @@ namespace Simias.Sync
 			}
 			else
 			{
+				// BUGBUG
+				System.Diagnostics.Debugger.Break();
 				sstamps =  service.GetAllNodeStamps();
 				if (sstamps == null)
 				{
@@ -778,7 +780,7 @@ namespace Simias.Sync
 				xNode.LoadXml(sn.node);
 				Node node = Node.NodeFactory(store, xNode);
 				log.Info("Updating {0} {1} from server", node.Name, node.Type);
-				collection.ImportNode(node, false, 0);
+				Import(node);
 				commitList[i++] = node;
 			}
 			try
@@ -854,6 +856,12 @@ namespace Simias.Sync
 			}
 		}
 
+		void Import(Node node)
+		{
+			collection.ImportNode(node, false, 0);
+			node.IncarnationUpdate = node.LocalIncarnation;
+		}
+
 		void StoreDir(SyncNode snode)
 		{
 			try
@@ -862,8 +870,7 @@ namespace Simias.Sync
 				xNode.LoadXml(snode.node);
 				DirNode node = (DirNode)Node.NodeFactory(store, xNode);
 				log.Info("Updating {0} {1} from server", node.Name, node.Type);
-
-				collection.ImportNode(node, false, 0);
+				Import(node);
 			
 				// Get the old node to see if the node was renamed.
 				DirNode oldNode = collection.GetNodeByID(node.ID) as DirNode;
@@ -911,7 +918,7 @@ namespace Simias.Sync
 				XmlDocument xNode = new XmlDocument();
 				xNode.LoadXml(sn.node);
 				Node node = new Node(xNode);
-				collection.ImportNode(node, false, 0);
+				Import(node);
 				
 				// Now get the file.
 				string fPath = "temp";

@@ -241,6 +241,12 @@ public class SyncService
 		return (rights >= desiredRights) ? true : false;
 	}
 
+	void Import(Node node, ulong expectedIncarn)
+	{
+		collection.ImportNode(node, true, expectedIncarn);
+		node.IncarnationUpdate = node.LocalIncarnation;
+	}
+
 	public SyncNodeStatus[] PutNonFileNodes(SyncNode [] nodes)
 	{
 		SyncNodeStatus[]	statusList = new SyncNodeStatus[nodes.Length];
@@ -252,7 +258,7 @@ public class SyncService
 			XmlDocument xNode = new XmlDocument();
 			xNode.LoadXml(sn.node);
 			Node node = Node.NodeFactory(store, xNode);
-			collection.ImportNode(node, true, sn.expectedIncarn);
+			Import(node, sn.expectedIncarn);
 			NodeList.Add(node);
 			statusList[i] = new SyncNodeStatus();
 			statusList[i].nodeID = node.ID;
@@ -322,7 +328,7 @@ public class SyncService
 				log.Debug("Updating {0} {1} from client", node.Name, node.Type);
 
 				status.nodeID = node.ID;
-				collection.ImportNode(node, true, snode.expectedIncarn);
+				Import(node, snode.expectedIncarn);
 			
 				// Get the old node to see if the node was renamed.
 				DirNode oldNode = collection.GetNodeByID(node.ID) as DirNode;
