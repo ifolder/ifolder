@@ -162,6 +162,16 @@ namespace Simias.POBoxService.Web
 
 			log.Info("POBoxService::AcceptedSubscription - called");
 			log.Info("  subscription: " + subscriptionID);
+
+			// Verify the caller
+			log.Info("  current Principal: " + Thread.CurrentPrincipal.Identity.Name);
+			/* FIXME:: uncomment when everybody is running with authentication
+			if (toIdentity != Thread.CurrentPrincipal.Identity.Name)
+			{
+				log.Debug("Specified \"toIdentity\" is not the caller");
+				return(POBoxStatus.UnknownIdentity);
+			}
+			*/
 			
 			// open the post office box
 			poBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
@@ -209,8 +219,6 @@ namespace Simias.POBoxService.Web
 				return(POBoxStatus.UnknownIdentity);
 			}
 
-			// FIXME: need to match the caller's ID against the toIdentity
-
 			cSub.Accept(store, cSub.SubscriptionRights);
 			poBox.Commit(cSub);
 			log.Info("POBoxService::AcceptedSubscription - exit");
@@ -238,6 +246,16 @@ namespace Simias.POBoxService.Web
 			
 			log.Info("POBoxService::DeclinedSubscription - called");
 			log.Info("  subscription: " + subscriptionID);
+
+			// Verify the caller
+			log.Info("  current Principal: " + Thread.CurrentPrincipal.Identity.Name);
+			/* FIXME:: uncomment when everybody is running with authentication
+			if (toIdentity != Thread.CurrentPrincipal.Identity.Name)
+			{
+				log.Debug("Specified \"toIdentity\" is not the caller");
+				return(POBoxStatus.UnknownIdentity);
+			}
+			*/
 
 			// open the post office box of the From user
 			toPOBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
@@ -287,8 +305,6 @@ namespace Simias.POBoxService.Web
 				log.Debug("POBoxService::DeclinedSubscription - Identity does not match");
 				return(POBoxStatus.UnknownIdentity);
 			}
-
-			// FIXME: Verify the caller of the web service is the toIdentity
 
 			// Validate the shared collection
 			Collection cCol = store.GetCollectionByID(cSub.SubscriptionCollectionID);
@@ -446,6 +462,16 @@ namespace Simias.POBoxService.Web
 			log.Info("POBoxService::Acksubscription - called");
 			log.Info("  subscription: " + messageID);
 
+			// Verify the caller
+			log.Info("  current Principal: " + Thread.CurrentPrincipal.Identity.Name);
+			/*
+			if (toIdentity != Thread.CurrentPrincipal.Identity.Name)
+			{
+				log.Debug("Specified \"toIdentity\" is not the caller");
+				return(POBoxStatus.UnknownIdentity);
+			}
+			*/
+
 			// open the post office box
 			poBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
 				? Simias.POBox.POBox.GetPOBox(store, domainID)
@@ -491,8 +517,6 @@ namespace Simias.POBoxService.Web
 				log.Debug("POBoxService::AckSubscription - Identity does not match");
 				return(POBoxStatus.UnknownIdentity);
 			}
-
-			// FIXME: need to match the caller's ID against the toIdentity
 
 			cSub.SubscriptionState = Simias.POBox.SubscriptionStates.Acknowledged;
 			poBox.Commit(cSub);
@@ -648,6 +672,15 @@ namespace Simias.POBoxService.Web
 
 			log.Debug("POBoxService::Invite");
 
+			// Verify the fromMember is the caller
+			log.Info("  current Principal: " + Thread.CurrentPrincipal.Identity.Name);
+			/*
+			if (fromUserID != Thread.CurrentPrincipal.Identity.Name)
+			{
+				throw new ApplicationException("Specified \"fromUserID\" is not the caller");
+			}
+			*/
+
 			if (domainID == null || domainID == "")
 			{
 				domainID = store.DefaultDomain;
@@ -679,14 +712,6 @@ namespace Simias.POBoxService.Web
 				throw new ApplicationException("Specified \"fromUserID\" does not exist in the Domain Roster");
 			}
 
-			// Verify the fromMember is the caller
-			log.Info("Current Principal: " + Thread.CurrentPrincipal.Identity.Name);
-
-			if (fromUserID != Thread.CurrentPrincipal.Identity.Name)
-			{
-				throw new ApplicationException("Specified \"fromUserID\" is not the caller");
-			}
-
 			sharedCollection = store.GetCollectionByID(sharedCollectionID); 
 			if (sharedCollection == null)
 			{
@@ -707,7 +732,6 @@ namespace Simias.POBoxService.Web
 						? POBox.POBox.GetPOBox(store, domainID)
 						: POBox.POBox.GetPOBox(store, domainID, toUserID);
 
-				log.Debug("  newup subscription");
 				cSub = new Subscription(sharedCollection.Name + " subscription", "Subscription", fromUserID);
 				cSub.SubscriptionState = Simias.POBox.SubscriptionStates.Received;
 				cSub.ToName = toMember.Name;
@@ -727,8 +751,6 @@ namespace Simias.POBoxService.Web
 						this.Context.Request.Url.Host,
 						this.Context.Request.Url.Port,
 						appPath);
-
-				log.Info("  newup service url: " + poUri.ToString());
 
 				cSub.POServiceURL = new Uri(poUri.ToString());
 				cSub.SubscriptionCollectionID = sharedCollection.ID;
