@@ -23,9 +23,10 @@
 
 using System;
 using System.Collections;
-using System.Security.Cryptography;
-using System.Xml;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
+using System.Xml;
 
 using Simias.Client;
 using Persist = Simias.Storage.Provider;
@@ -175,6 +176,35 @@ namespace Simias.Storage
 
 		#region Private Methods
 		/// <summary>
+		/// Decrypts the credential.
+		/// </summary>
+		/// <param name="encryptedCredential">A string object that contain the encrypted credential.</param>
+		/// <returns>A string object containing the clear credential.</returns>
+		private string DecryptCredential( string encryptedCredential )
+		{
+			// Decrypt the byte array and convert it back into a string.
+			byte[] buffer = Credential.Decrypt( Convert.FromBase64String( encryptedCredential ), false );
+			return new UTF8Encoding().GetString( buffer );
+		}
+
+		/// <summary>
+		/// Encrypts the credential.
+		/// </summary>
+		/// <param name="credential">Credential to encrypt.</param>
+		/// <returns>A string object containing the encrypted credential.</returns>
+		private string EncryptCredential( string credential )
+		{
+			// Convert the string to a byte array.
+			UTF8Encoding encoding = new UTF8Encoding();
+			int byteCount = encoding.GetByteCount( credential );
+			byte[] buffer = new byte[ byteCount ];
+			encoding.GetBytes( credential, 0, credential.Length, buffer, 0 );
+
+			// Encrypt the byte array and turn it into a string.
+			return Convert.ToBase64String( Credential.Encrypt( buffer, false ) );
+		}
+
+		/// <summary>
 		/// Gets the XML document that contains the specified Domain property.
 		/// </summary>
 		/// <param name="domainID">Well known identity for the specified domain.</param>
@@ -313,7 +343,7 @@ namespace Simias.Storage
 
 			if ( ( credentials != null ) && ( type != CredentialType.None ) )
 			{
-				mapDoc.DocumentElement.SetAttribute( CredentialTag, credentials );
+				mapDoc.DocumentElement.SetAttribute( CredentialTag, EncryptCredential( credentials ) );
 			}
 
 			p.SetPropertyValue( mapDoc );
@@ -392,7 +422,8 @@ namespace Simias.Storage
 			}
 
 			userID = document.DocumentElement.GetAttribute( UserTag );
-			credentials = document.DocumentElement.GetAttribute( CredentialTag );
+			string encryptedCredentials = document.DocumentElement.GetAttribute( CredentialTag );
+			credentials = ( encryptedCredentials != String.Empty ) ? DecryptCredential( encryptedCredentials ) : null;
 
 			string credType = document.DocumentElement.GetAttribute( TypeTag );
 			return ( CredentialType )Enum.Parse( typeof( CredentialType ), credType, true );
@@ -421,7 +452,7 @@ namespace Simias.Storage
 			}
 			else
 			{
-				mapDoc.DocumentElement.SetAttribute( CredentialTag, credentials );
+				mapDoc.DocumentElement.SetAttribute( CredentialTag, EncryptCredential( credentials ) );
 			}
 
 			mapDoc.DocumentElement.SetAttribute( TypeTag, type.ToString() );
