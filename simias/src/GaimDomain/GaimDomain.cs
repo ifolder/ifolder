@@ -553,6 +553,13 @@ namespace Simias.Gaim
 			{
 				return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
 			}
+			
+			// If we make it this far, we've got items in the list, so sort them
+			try
+			{
+				buddies.Sort(BuddyComparer.GetInstance());
+			}
+			catch{}
 
 			return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
 		}
@@ -1032,5 +1039,49 @@ namespace Simias.Gaim
 		}
 		
 		#endregion
+	}
+	
+	public class BuddyComparer : IComparer
+	{
+		private static BuddyComparer staticInstance = null;
+		
+		internal BuddyComparer()
+		{
+		}
+		
+		public static BuddyComparer GetInstance()
+		{
+			if (staticInstance == null)
+				staticInstance = new BuddyComparer();
+				
+			return staticInstance;
+		}
+
+		public int Compare(object a, object b)
+		{
+			GaimBuddy b1 = (GaimBuddy)a;
+			GaimBuddy b2 = (GaimBuddy)b;
+			
+			string b1Str;
+			string b2Str;
+			
+			string alias1 = b1.Alias;
+			string alias2 = b2.Alias;
+			
+			if (alias1 != null)
+				b1Str = alias1;
+			else
+				b1Str = b1.Name;
+				
+			if (alias2 != null)
+				b2Str = alias2;
+			else
+				b2Str = b2.Name;
+
+			b1Str = b1Str.ToLower();
+			b2Str = b2Str.ToLower();
+
+			return b1Str.CompareTo(b2Str);
+		}
 	}
 }
