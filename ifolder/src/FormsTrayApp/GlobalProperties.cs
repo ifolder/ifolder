@@ -2345,7 +2345,7 @@ namespace Novell.FormsTrayApp
 
 					items[0] = ifolder.Name;
 					items[1] = ifolder.IsSubscription ? ifolder.Owner : ifolder.UnManagedPath;
-					items[2] = stateToString(ifolder.State, ifolder.HasConflicts, out imageIndex);
+					items[2] = stateToString(ifolder.State, ifolder.HasConflicts, ifolder.IsSubscription, out imageIndex);
 
 					ListViewItem lvi = new ListViewItem(items, imageIndex);
 					lvi.Tag = ifolder;
@@ -2394,7 +2394,7 @@ namespace Novell.FormsTrayApp
 				lvi.SubItems[1].Text = ifolder.IsSubscription ? "" : ifolder.UnManagedPath;
 				string statusSync = resourceManager.GetString("statusSyncing");
 				string statusSyncFail = resourceManager.GetString("statusSyncFailure");
-				string status = stateToString(ifolder.State, ifolder.HasConflicts, out imageIndex);
+				string status = stateToString(ifolder.State, ifolder.HasConflicts, ifolder.IsSubscription, out imageIndex);
 				if (!lvi.SubItems[2].Text.Equals(statusSync) && !lvi.SubItems[2].Text.Equals(statusSyncFail))
 				{
 					lvi.SubItems[2].Text = status;
@@ -2403,7 +2403,7 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private string stateToString(string state, bool conflicts, out int imageIndex)
+		private string stateToString(string state, bool conflicts, bool isSubscription, out int imageIndex)
 		{
 			string status;
 
@@ -2424,7 +2424,7 @@ namespace Novell.FormsTrayApp
 				case "Available":
 				case "WaitConnect":
 				case "WaitSync":
-					imageIndex = 1;
+					imageIndex = isSubscription ? 1 : 0;
 					status = resourceManager.GetString(state);
 					break;
 				default:
@@ -2874,6 +2874,7 @@ namespace Novell.FormsTrayApp
 				{
 					try
 					{
+						Cursor.Current = Cursors.WaitCursor;
 						if (ifWebService.CanBeiFolder(folderBrowserDialog.SelectedPath))
 						{
 							// Create the iFolder.
@@ -2885,6 +2886,8 @@ namespace Novell.FormsTrayApp
 							// Add the iFolder to the listview.
 							addiFolderToListView(ifolder);
 
+							Cursor.Current = Cursors.Default;
+
 							// Display the new iFolder intro dialog.
 							if (iFolderComponent.DisplayConfirmationEnabled)
 							{
@@ -2894,11 +2897,13 @@ namespace Novell.FormsTrayApp
 						}
 						else
 						{
+							Cursor.Current = Cursors.Default;
 							MessageBox.Show(resourceManager.GetString("invalidFolder"));
 						}
 					}
 					catch (Exception ex)
 					{
+						Cursor.Current = Cursors.Default;
 						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderCreateError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 					}

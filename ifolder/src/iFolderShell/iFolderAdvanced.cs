@@ -1879,10 +1879,9 @@ namespace Novell.iFolderCom
 				SyncSize syncSize = ifWebService.CalculateSyncSize(currentiFolder.ID);
 				objectCount.Text = syncSize.SyncNodeCount.ToString();
 			}
-			catch (Exception ex)
+			catch
 			{
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("syncReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-				mmb.ShowDialog();
+				objectCount.Text = resourceManager.GetString("unknown");
 			}
 
 			shareWith.Items.Clear();
@@ -2478,7 +2477,7 @@ namespace Novell.iFolderCom
 				foreach (iFolderWeb i in ifolderArray)
 				{
 					if ((i.Type != null) && i.Type.Equals("iFolder") && 
-						(i.State != null) && i.State.Equals("Local"))
+						!i.IsSubscription)
 					{
 						if (longName.Length < i.UnManagedPath.Length)
 						{
