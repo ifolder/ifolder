@@ -196,7 +196,7 @@ namespace Novell.FormsTrayApp
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "AcceptInvitation";
-			this.Text = "Setup iFolder";
+			this.Text = "Setup iFolder <name>";
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.AcceptInvitation_Closing);
 			this.Load += new System.EventHandler(this.AcceptInvitation_Load);
 			this.ResumeLayout(false);
@@ -341,13 +341,15 @@ namespace Novell.FormsTrayApp
 
 		private void AcceptInvitation_Load(object sender, System.EventArgs e)
 		{
+			this.Text = this.Text.Replace("<name>", ifolder.Name);
 			// Add the iFolder details to the list box.
 			string blank = "";
-/*			string name = "iFolder name: " + subscription.SubscriptionCollectionName;
+			// TODO: Localize
+			string name = "iFolder name: " + ifolder.Name;
 			iFolderDetails.Items.Add(name);
 			iFolderDetails.Items.Add(blank);
 
-			string sharedBy = "Shared by: " + subscription.FromName;
+/*			string sharedBy = "Shared by: " + subscription.FromName;
 			iFolderDetails.Items.Add(sharedBy);
 			iFolderDetails.Items.Add(blank);
 */
