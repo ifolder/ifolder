@@ -90,24 +90,14 @@
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "AddressBook"
-                    AssemblyName = "AddressBook"
-                    HintPath = "..\..\..\simias\src\AddressBook\AddressBook.dll"
-                />
-                <Reference
                     Name = "FormsBookLib"
                     AssemblyName = "FormsBookLib"
                     HintPath = "..\FormsBookLib\FormsBookLib.dll"
                 />
                 <Reference
-                    Name = "CollectionStore"
-                    AssemblyName = "CollectionStore"
-                    HintPath = "..\..\..\simias\src\CollectionStore\CollectionStore.dll"
-                />
-                <Reference
-                    Name = "Common"
-                    AssemblyName = "Common"
-                    HintPath = "..\..\..\simias\src\Common\Common.dll"
+                    Name = "Simias"
+                    AssemblyName = "Simias"
+                    HintPath = "..\..\..\simias\src\Simias.dll\Simias.dll"
                 />
             </References>
         </Build>

@@ -6,8 +6,8 @@ Book_CSFILES_CSC := $(subst /,$(SEP),$(Book_CSFILES))
 Book_INCLUDES = 
 Book_RESOURCES = $(srcdir)/App$(ICON_EXT)
 Book_FLAGS = $(CSC_WINEXEFLAG)
-Book_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) FormsBookLib.dll  Common.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll AddressBook.dll
-Book_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin ../FormsBookLib
+Book_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) FormsBookLib.dll  Simias.dll
+Book_LIBPATH = $(SIMIAS_INSTALL_PATH)/lib ../FormsBookLib
 
 DATA_FILES = address_app.ico
 
@@ -16,7 +16,7 @@ EXTRA_DIST = $(Book_CSFILES) $(DATA_FILES)
 all: ContactBrowser.exe
 
 ContactBrowser.exe: $(Book_CSFILES) $(Book_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(Book_FLAGS) $(Book_LIBS:%=/r:%) $(Book_LIBPATH:%=/lib:%) $(Book_RESOURCES:%=$(ICON_FLAG)%) $(Book_CSFILES_CSC) /doc:ContactBrowser.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(Book_FLAGS) $(SIMIAS_LIBS) $(Book_LIBS:%=/r:%) $(Book_LIBPATH:%=/lib:%) $(Book_RESOURCES:%=$(ICON_FLAG)%) $(Book_CSFILES_CSC) /doc:ContactBrowser.doc.xml
 
 if DEBUG
 if WINDOWS
