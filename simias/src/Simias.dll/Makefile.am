@@ -27,7 +27,7 @@ endif
 
 install-exec-local: Simias.dll
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) Simias.dll $(NUNIT_LIBPATH)/nunit.util.dll $(NUNIT_LIBPATH)/nunit.framework.dll ../../external/SecureChannelSinks/*.dll $(LOG4NET_DIR)/log4net.dll $(MDNSRESPONDER_DIR)/m*.exe $(MDNSRESPONDER_DIR)/m*.dll $(DEBUG_FILES) $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) Simias.dll $(NUNIT_LIBPATH)/nunit.util.dll $(NUNIT_LIBPATH)/nunit.framework.dll $(NUNIT_LIBPATH)/nunit.core.dll ../../external/SecureChannelSinks/*.dll $(LOG4NET_DIR)/log4net.dll $(MDNSRESPONDER_DIR)/m*.exe $(MDNSRESPONDER_DIR)/m*.dll $(DEBUG_FILES) $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DESTDIR)$(libdir)
 
 installcheck-local: install
 	cd $(DESTDIR)$(libdir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:Simias.test.xml Simias.dll
