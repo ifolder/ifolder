@@ -48,7 +48,7 @@
 #include "simias-event-client.h"
 
 /* Turn this on to see debug messages */
-#if 0
+#ifdef DEBUG
 #define DEBUG_SEC(args) (printf("sec: "), printf args)
 #else
 #define DEBUG_SEC

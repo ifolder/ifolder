@@ -118,6 +118,7 @@ AC_SUBST(CSC_EXEFLAG)
 AC_SUBST(CSC_LIBFLAG)
 AC_SUBST(CSC_WINEXEFLAG)
 AC_SUBST(CSCFLAGS)
+AC_SUBST(CFLAGS)
 AC_SUBST(MONO)
 AC_SUBST(MONO_PATH)
 AC_SUBST(SYSTEM_XML)
@@ -155,6 +156,7 @@ case $SIMIAS_OS in
         #
         # Set variables
         #
+        CFLAGS_DEBUG="-DDEBUG"
         CSCFLAGS="/d:DARWIN $CSCFLAGS"
         EXE_EXT=''
         ICON_EXT='.ico'
@@ -191,6 +193,7 @@ case $SIMIAS_OS in
         #
         # Set variables
         #
+        CFLAGS_DEBUG="-DDEBUG"
         CSCFLAGS="/d:LINUX $CSCFLAGS"
         EXE_EXT=''
         ICON_EXT='.ico'
