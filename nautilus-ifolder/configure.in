@@ -19,6 +19,19 @@ IFOLDER_MINIMUM_VERSION=3.0
 AC_PROG_CC
 AM_PROG_LIBTOOL
 
+dnl ==========================================================================
+ALL_LINGUAS="es de fr it ja pt_BR ru"
+
+GETTEXT_PACKAGE=$PACKAGE
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [gettext package])
+AC_DEFINE_UNQUOTED(GNOME_EXPLICIT_TRANSLATION_DOMAIN,"$GETTEXT_PACKAGE", [library gettext package])
+
+AM_GLIB_GNU_GETTEXT
+
+AC_PROG_INTLTOOL
+dnl ==========================================================================
+
 #GNOME_COMPILE_WARNINGS(maximum)
 
 AC_CHECK_PROG(CSC, mcs, mcs)
@@ -125,5 +138,6 @@ AC_OUTPUT([
   src/nautilus-ifolder
   package/Makefile
   package/nautilus-ifolder.spec
+  po/Makefile.in
 ])
 

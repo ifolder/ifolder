@@ -1,8 +1,14 @@
-SUBDIRS = src
+@INTLTOOL_DESKTOP_RULE@
+
+SUBDIRS = src po
 
 DIST_SUBDIRS = $(SUBDIRS) package
 
-EXTRA_DIST = external
+EXTRA_DIST = \
+	external \
+	intltool-extract.in \
+	intltool-merge.in \
+	intltool-update.in
 
 installcheck-summary:
 	$(MAKE) -C src $@
@@ -12,6 +18,9 @@ clean-local:
 
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
+	rm intltool-extract
+	rm intltool-merge
+	rm intltool-update
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
