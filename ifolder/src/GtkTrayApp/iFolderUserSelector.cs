@@ -329,8 +329,12 @@ namespace Novell.iFolder
 
 			if(SearchEntry.Text.Length > 0)
 			{
-			
-			
+				iFolderUser[] userlist = 
+						ifws.SearchForiFolderUsers(SearchEntry.Text);
+				foreach(iFolderUser user in userlist)
+				{
+					UserTreeStore.AppendValues(user);
+				}
 			}
 			else
 			{
