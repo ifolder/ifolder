@@ -2464,6 +2464,10 @@ namespace Novell.iFolder
 
 		public void HandleFileSyncEvent(FileSyncEventArgs args)
 		{
+			// if it isn't a file or folder, return
+			if(args.ObjectType == ObjectType.Unknown)
+				return;
+
 			switch(args.Direction)
 			{
 				case Simias.Client.Event.Direction.Uploading:
