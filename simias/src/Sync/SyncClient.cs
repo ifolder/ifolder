@@ -1854,10 +1854,16 @@ namespace Simias.Sync
 				}
 				else if (rights == Access.Rights.ReadOnly)
 				{
-					// We need to get this node from the server.
-					stamp.Operation = SyncOperation.Change;
-					stamp.LocalIncarnation = stamp.MasterIncarnation + 1;
-					AddNodeFromServer(stamp);
+					Log.log.Debug("Failed Uploading Node (ReadOnly rights)");
+				
+					// If this node exists on the server.
+					if (stamp.MasterIncarnation != 0)
+					{
+						// We need to get this node from the server.
+						stamp.Operation = SyncOperation.Change;
+						stamp.LocalIncarnation = stamp.MasterIncarnation + 1;
+						AddNodeFromServer(stamp);
+					}
 				}
 				else
 				{
