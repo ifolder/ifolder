@@ -3,8 +3,8 @@ Index: configure.ac
 RCS file: /cvsroot/gaim/gaim/configure.ac,v
 retrieving revision 1.271.2.29
 diff -r1.271.2.29 configure.ac
-346a347,362
-> dnl # Check for stuff needed by the ifolder plugin.
+346a347,364
+> dnl # Check for stuff needed by the iFolder plugin.
 > dnl #######################################################################
 > build_gifolder=no
 > AC_ARG_ENABLE(gifolder, [  --disable-gifolder    compile without the Gaim-iFolder plugin],,enable_gifolder=yes)
@@ -12,7 +12,9 @@ diff -r1.271.2.29 configure.ac
 > if test "x$enable_gifolder" = "xyes"; then
 > 	gifolder_deps="simias-client-c"
 > 	PKG_CHECK_MODULES(SIMIAS_CLIENT, $gifolder_deps, build_gifolder=yes, build_gifolder=no)
+> 	SIMIAS_CLIENT_PREFIX=`$PKG_CONFIG --variable=prefix simias-client-c`
 > 
+> 	AC_SUBST(SIMIAS_CLIENT_PREFIX)
 > 	AC_SUBST(SIMIAS_CLIENT_CFLAGS)
 > 	AC_SUBST(SIMIAS_CLIENT_LIBS)
 > fi
@@ -20,7 +22,7 @@ diff -r1.271.2.29 configure.ac
 > AM_CONDITIONAL(BUILD_GIFOLDER, test "x$build_gifolder" = "xyes")
 > 
 > dnl #######################################################################
-1178a1195,1196
+1178a1197,1198
 > 		   plugins/gifolder/Makefile
 > 		   plugins/gifolder/pixmaps/Makefile
 Index: plugins/Makefile.am
@@ -41,3 +43,16 @@ diff -r1.96 Makefile.am
 < 	$(PERL_DIR) $(TCL_DIR) ssl ticker
 ---
 > 	$(GIFOLDER_DIR) $(PERL_DIR) $(TCL_DIR) ssl ticker
+Index: plugins/Makefile.mingw
+===================================================================
+RCS file: /cvsroot/gaim/gaim/plugins/Makefile.mingw,v
+retrieving revision 1.23
+diff -r1.23 Makefile.mingw
+22a23
+> GAIM_IFOLDER := ./gifolder
+96a98
+> 	$(MAKE) -C $(GAIM_IFOLDER) -f Makefile.mingw
+106a109
+> 	$(MAKE) -C $(GAIM_IFOLDER) -f Makefile.mingw install
+141a145
+> 	$(MAKE) -C $(GAIM_IFOLDER) -f Makefile.mingw clean
