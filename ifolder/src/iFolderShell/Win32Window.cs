@@ -26,6 +26,7 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 namespace Novell.Win32Util
@@ -215,6 +216,88 @@ namespace Novell.Win32Util
 		{
 			return LoadImage(hInst, name, type, cx, cy, load);
 		}
+
+		/// <summary>
+		/// Gets rid of the shadow on an icon.  Thanks to Mick Doherty (http://dotnetrix.co.uk)
+		/// </summary>
+		/// <param name="ico"></param>
+		/// <returns></returns>
+		public static Bitmap IconToAlphaBitmap(Icon ico)
+		{
+			ICONINFO ii = new ICONINFO();
+			GetIconInfo(ico.Handle, out ii);
+			Bitmap bmp = Bitmap.FromHbitmap(ii.hbmColor);
+			DestroyIcon(ii.hbmColor);
+			DestroyIcon(ii.hbmMask);
+
+			if (Bitmap.GetPixelFormatSize(bmp.PixelFormat) < 32)
+				return ico.ToBitmap();
+
+			BitmapData bmData;
+			Rectangle bmBounds = new Rectangle(0,0,bmp.Width,bmp.Height);
+
+			bmData = bmp.LockBits(bmBounds,ImageLockMode.ReadOnly, bmp.PixelFormat);
+
+			Bitmap dstBitmap=new Bitmap(bmData.Width, bmData.Height, bmData.Stride, PixelFormat.Format32bppArgb, bmData.Scan0);
+
+			bool IsAlphaBitmap = false;
+
+			for (int y=0; y <= bmData.Height-1; y++)
+			{
+				for (int x=0; x <= bmData.Width-1; x++)
+				{
+					Color PixelColor = Color.FromArgb(Marshal.ReadInt32(bmData.Scan0, (bmData.Stride * y) + (4 * x)));
+					if (PixelColor.A > 0 & PixelColor.A < 255)
+					{
+						IsAlphaBitmap = true;
+						break;
+					}
+				}
+				if (IsAlphaBitmap) break;
+			}
+
+			bmp.UnlockBits(bmData);
+
+			if (IsAlphaBitmap==true)
+				return new Bitmap(dstBitmap);
+			else
+				return new Bitmap(ico.ToBitmap());
+		}
+
+		[ComVisible(false)]
+		private struct ICONINFO
+		{
+			/// <summary>
+			/// Icon or cursor.
+			/// </summary>
+			public bool fIcon;
+
+			/// <summary>
+			/// x-coordinate of cursor hotspot.
+			/// </summary>
+			public int xHotspot;
+
+			/// <summary>
+			/// y-coordinate of cursor hotspot.
+			/// </summary>
+			public int yHotspot;
+
+			/// <summary>
+			/// Icon bitmask bitmap.
+			/// </summary>
+			public IntPtr hbmMask;
+
+			/// <summary>
+			/// Handle to icon color bitmap.
+			/// </summary>
+			public IntPtr hbmColor;
+		}
+
+		[DllImport("user32.dll", SetLastError=true)]
+		static extern int DestroyIcon(IntPtr hIcon);
+
+		[DllImport("user32.dll")]
+		static extern bool GetIconInfo(IntPtr hIcon, out ICONINFO piconinfo);
 
 		[DllImport("user32.dll")]
 		static extern bool BringWindowToTop(IntPtr window);
