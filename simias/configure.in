@@ -305,6 +305,7 @@ src/SyncManager/Makefile
 src/Sync/Makefile
 src/SyncLogicLite/Makefile
 src/SyncTools/Makefile
+src/AddressBookCmd/Makefile
 src/AddressBook/Makefile
 src/Smtp/Makefile
 src/InviteAgent/Makefile
