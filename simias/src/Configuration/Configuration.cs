@@ -42,12 +42,12 @@ namespace Simias
 		
 		private Mutex mutex = new Mutex(false, "SimiasConfigMutex");
 
-		[Obsolete("Use SystemManager.Config to get the configuration object.", false)]
+		//[Obsolete("Use SystemManager.Config to get the configuration object.", false)]
 		public Configuration() : this(null)
 		{
 		}
 
-		[Obsolete("Use SystemManager.Config to get the configuration object.", false)]
+		//[Obsolete("Use SystemManager.Config to get the configuration object.", false)]
 		public Configuration(string path)
 		{
 			if (path == null)
@@ -77,7 +77,7 @@ namespace Simias
 		{
 		}
 
-		[Obsolete("Use .StorePath instead of .BasePath.", false)]
+		//[Obsolete("Use .StorePath instead of .BasePath.", false)]
 		public string BasePath
 		{
 			get { return storePath; }
