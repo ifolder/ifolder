@@ -47,9 +47,9 @@ namespace Simias.Channels
 		Security	= 0x0004,
 
 		/// <summary>
-		/// Specifies a monitor sink.
+		/// Specifies a sniffer sink.
 		/// </summary>
-		Monitor		= 0x0008,
+		Sniffer		= 0x0008,
 	};
 
 }

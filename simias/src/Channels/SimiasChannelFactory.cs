@@ -190,7 +190,7 @@ namespace Simias.Channels
 					}
 
 					// setup monitor providers
-					if ((sinks & SimiasChannelSinks.Monitor) > 0)
+					if ((sinks & SimiasChannelSinks.Sniffer) > 0)
 					{
 						IServerChannelSinkProvider serverMonitorProvider = new SnifferServerChannelSinkProvider();
 						serverMonitorProvider.Next = serverProvider;

@@ -62,7 +62,7 @@ namespace Simias.Sync
 		/// </summary>
 		private static readonly SimiasChannelSinks DefaultChannelSinks =
 #if DEBUG
-			SimiasChannelSinks.Binary | SimiasChannelSinks.Monitor; // | SimiasChannelSinks.Security;
+			SimiasChannelSinks.Binary | SimiasChannelSinks.Sniffer; // | SimiasChannelSinks.Security;
 #else
 			SimiasChannelSinks.Binary; // |SimiasChannelSinks.Security;
 #endif
