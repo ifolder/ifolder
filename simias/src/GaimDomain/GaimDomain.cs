@@ -115,7 +115,7 @@ namespace Simias.Gaim
 			hostName = Environment.MachineName;
 			userName = username;
 
-			domainName = "Gaim Buddy List (" + username + ")";
+			domainName = "Gaim Buddy List (" + username + "@" + hostName + ")";
 			description = "Workgroup Domain built from " + username + "'s Gaim Buddy List";
 
 			if ( init == true )
@@ -144,11 +144,8 @@ namespace Simias.Gaim
 		{
 			hostAddress = MyDns.GetHostName();
 			Store store = Store.GetStore();
-
 			try
 			{
-				Uri localUri = Manager.LocalServiceUrl;
-
 				//
 				// Verify the local Rendezvous user exists in the local database
 				//
@@ -188,7 +185,6 @@ namespace Simias.Gaim
 							Simias.Sync.SyncRoles.Master, 
 							Simias.Storage.Domain.ConfigurationType.Workgroup );
 
-					rDomain.SetType( rDomain, "GaimDomain" );
 					rDomain.SetType( rDomain, "Workgroup" );
 
 					// Create the owner member for the domain.
@@ -200,18 +196,11 @@ namespace Simias.Gaim
 
 					member.IsOwner = true;
 
-					// Add on the SimiasURL so that the Location Provider can determine the
-					// POBoxUrl for the Gaim Domain
-					Simias.Storage.Property p = new Property("Gaim:SimiasURL", localUri.ToString());
-					p.LocalProperty = true;
-					member.Properties.AddProperty(p);
-
 					rDomain.Commit( new Node[] { rDomain, member } );
 
 					// Create the name mapping.
 					store.AddDomainIdentity( rDomain.ID, member.UserID );
 
-//					GaimService.RegisterLocationProvider();
 					GaimService.RegisterDomainProvider();
 				}
 
