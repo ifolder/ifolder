@@ -45,18 +45,6 @@ namespace Novell.iFolder.FormsTrayApp
 	{
         #region Class Members
 		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(FormsTrayApp));
-
-		private NotifyIcon notifyIcon1;
-		private ContextMenu contextMenu1;
-		private MenuItem menuItemExit;
-		private MenuItem menuItemInviteWizard;
-		private MenuItem menuItemAddrBook;
-		private MenuItem menuItemTracer;
-		private MenuItem menuItemBrowser;
-		private MenuItem menuItemProperties;
-		private MenuItem menuItemHelp;
-		private MenuItem menuItemSeparator1;
-		private MenuItem menuItemSeparator2;
 		private System.ComponentModel.IContainer components;
 
 		private Thread workerThread = null;
@@ -74,6 +62,18 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private delegate void AnimateDelegate(int index);
 		private AnimateDelegate animateDelegate;
+		private System.Windows.Forms.MenuItem menuItem7;
+		private System.Windows.Forms.MenuItem menuItem10;
+		private System.Windows.Forms.MenuItem menuStoreBrowser;
+		private System.Windows.Forms.MenuItem menuSeparator1;
+		private System.Windows.Forms.MenuItem menuInvitationWizard;
+		private System.Windows.Forms.MenuItem menuAddressBook;
+		private System.Windows.Forms.MenuItem menuTraceWindow;
+		private System.Windows.Forms.MenuItem menuProperties;
+		private System.Windows.Forms.MenuItem menuHelp;
+		private System.Windows.Forms.MenuItem menuExit;
+		private System.Windows.Forms.NotifyIcon notifyIcon1;
+		private System.Windows.Forms.ContextMenu contextMenu1;
 
 		private Manager serviceManager;
 		//private const int waitTime = 3000;
@@ -90,65 +90,10 @@ namespace Novell.iFolder.FormsTrayApp
 			InitializeComponent();
 
 			this.components = new System.ComponentModel.Container();
-			this.contextMenu1 = new ContextMenu();
-			this.menuItemExit = new MenuItem("E&xit");
-			this.menuItemInviteWizard = new MenuItem("&Invitation Wizard");
-			this.menuItemAddrBook = new MenuItem("&Address Book");
-			this.menuItemTracer = new MenuItem("&Trace Window");
-			this.menuItemBrowser = new MenuItem("&Store Browser");
-			this.menuItemProperties = new MenuItem("&Properties");
-			this.menuItemHelp = new MenuItem("&Help...");
-			this.menuItemSeparator1 = new MenuItem("-");
-			this.menuItemSeparator2 = new MenuItem("-");
-
-			// Initialize contextMenu1
-			this.contextMenu1.MenuItems.AddRange(
-				new MenuItem[] {this.menuItemExit, this.menuItemSeparator1, this.menuItemHelp, this.menuItemProperties, this.menuItemSeparator2, this.menuItemInviteWizard, this.menuItemAddrBook, this.menuItemTracer});
-
-			// Initialize menuItemExit
-			this.menuItemExit.Index = 7;
-			this.menuItemExit.Enabled = false;
-			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
-
-			this.menuItemSeparator1.Index = 6;
-
-			// Initialize menuItemHelp
-			this.menuItemHelp.Index = 5;
-			this.menuItemHelp.Click += new EventHandler(menuItemHelp_Click);
-
-			// Initialize menuItemProperties
-			this.menuItemProperties.Index = 4;
-			this.menuItemProperties.DefaultItem = true;
-			this.menuItemProperties.Click += new EventHandler(menuItemProperties_Click);
-
-			this.menuItemSeparator2.Index = 3;
-
-			// Initialize menuItemInviteWizard
-			this.menuItemInviteWizard.Index = 2;
-			this.menuItemInviteWizard.Click += new System.EventHandler(this.menuItemInviteWizard_Click);
-
-			// Initialize menuItemAddrBook
-			this.menuItemAddrBook.Index = 1;
-			this.menuItemAddrBook.Click += new System.EventHandler(menuItemAddrBook_Click);
-
-			// Initialize menuItemTracer
-			this.menuItemTracer.Index = 0;
-			this.menuItemTracer.Checked = false;
-			this.menuItemTracer.Enabled = false;
-//			this.menuItemTracer.Click += new System.EventHandler(menuItemTracer_Click);
-
-			// Initialize menuItemBrowser
-			this.menuItemBrowser.Index = 0;
-			this.menuItemBrowser.Click += new EventHandler(menuItemBrowser_Click);
-
-			this.contextMenu1.Popup += new EventHandler(contextMenu1_Popup);
 
 			// Set up how the form should be displayed.
 			this.ClientSize = new System.Drawing.Size(292, 266);
 			this.Text = "iFolder Services";
-
-			// Create the NotifyIcon.
-			this.notifyIcon1 = new NotifyIcon(this.components);
 
 			// The Icon property sets the icon that will appear
 			// in the systray for this application.
@@ -178,18 +123,6 @@ namespace Novell.iFolder.FormsTrayApp
 				noTray = true;
 			}		
 
-			// The ContextMenu property sets the menu that will
-			// appear when the systray icon is right clicked.
-			notifyIcon1.ContextMenu = this.contextMenu1;
-
-			// The Text property sets the text that will be displayed,
-			// in a tooltip, when the mouse hovers over the systray icon.
-			notifyIcon1.Text = "iFolder Services";
-			notifyIcon1.Visible = true;
-
-			// Handle the DoubleClick event to activate the form.
-			notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
-
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.FormsTrayApp_Closing);
 			this.Load += new System.EventHandler(FormsTrayApp_Load);
 		}
@@ -205,23 +138,14 @@ namespace Novell.iFolder.FormsTrayApp
 		}
 
 		#region Event Handlers
-		private void notifyIcon1_DoubleClick(object Sender, EventArgs e)
+		private void menuStoreBrowser_Click(object sender, System.EventArgs e)
 		{
-			// Show the properties when the user double clicks on the notify icon.
-			menuItemProperties_Click(Sender, e);
+			Process.Start(Path.Combine(Application.StartupPath, "StoreBrowser.exe"));
 		}
 
-		private void menuItemExit_Click(object Sender, System.EventArgs e)
+		private void menuInvitationWizard_Click(object sender, System.EventArgs e)
 		{
-			// Disable the exit menu item so it cannot be clicked again.
-			this.menuItemExit.Enabled = false;
-
-			ShutdownTrayApp();
-		}
-
-		private void menuItemInviteWizard_Click(object Sender, System.EventArgs e)
-		{
-			// Check for currently running instance and switch to it.
+// Check for currently running instance and switch to it.
 //			Win32Window win32Window = Win32Window.FindWindow(null, "InvitationWizard");
 //			if (win32Window != null)
 //			{
@@ -233,9 +157,9 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 		}
 
-		private void menuItemAddrBook_Click(object sender, System.EventArgs e)
+		private void menuAddressBook_Click(object sender, System.EventArgs e)
 		{
-			// Check for currently running instance and switch to it.
+// Check for currently running instance and switch to it.
 //			Win32Window win32Window = Win32Window.FindWindow(null, "FormsAddrBook");
 //			if (win32Window != null)
 //			{
@@ -245,6 +169,61 @@ namespace Novell.iFolder.FormsTrayApp
 			{
 				Process.Start(Path.Combine(Application.StartupPath, "ContactBrowser.exe"));
 			}
+		}
+
+		private void menuTraceWindow_Click(object sender, System.EventArgs e)
+		{
+			/*			menuTraceWindow.Checked = !menuTraceWindow.Checked;
+						if (menuTraceWindow.Checked)
+						{
+							// Display the trace window.
+							this.traceForm.Show();
+						}
+						else
+						{
+							this.traceForm.Hide();
+						}
+			*/		}
+
+		private void menuProperties_Click(object sender, System.EventArgs e)
+		{
+			GlobalProperties globalProperties = new GlobalProperties();
+			globalProperties.ShowDialog();
+		}
+
+		private void menuHelp_Click(object sender, System.EventArgs e)
+		{
+			// TODO - need to use locale-specific path
+			string helpPath = Path.Combine(Application.StartupPath, @"help\en\doc\user\data\front.html");
+
+			try
+			{
+				Process.Start(helpPath);
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "Opening help");
+				MessageBox.Show("Unable to open help file: \n" + helpPath, "Help File Not Found");
+			}
+		}
+
+		private void menuExit_Click(object sender, System.EventArgs e)
+		{
+			// Disable the exit menu item so it cannot be clicked again.
+			menuExit.Enabled = false;
+
+			ShutdownTrayApp();
+		}
+
+		private void contextMenu1_Popup(object sender, System.EventArgs e)
+		{
+			// Show/hide store browser menu item based on whether or not the file is installed.
+			this.menuStoreBrowser.Visible = this.menuSeparator1.Visible = File.Exists(Path.Combine(Application.StartupPath, "StoreBrowser.exe"));
+		}
+
+		private void notifyIcon1_DoubleClick(object sender, System.EventArgs e)
+		{
+			menuProperties_Click(sender, e);
 		}
 
 		private void FormsTrayApp_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -263,26 +242,7 @@ namespace Novell.iFolder.FormsTrayApp
 				// Hide the trace window.
 				this.traceForm.Hide();
 			}
-		}
-
-		private void menuItemTracer_Click(object sender, System.EventArgs e)
-		{
-			menuItemTracer.Checked = !menuItemTracer.Checked;
-			if (menuItemTracer.Checked)
-			{
-				// Display the trace window.
-				this.traceForm.Show();
-			}
-			else
-			{
-				this.traceForm.Hide();
-			}
 		}*/
-
-		private void menuItemBrowser_Click(object sender, EventArgs e)
-		{
-			Process.Start(Path.Combine(Application.StartupPath, "StoreBrowser.exe"));
-		}
 
 		private void FormsTrayApp_Load(object sender, System.EventArgs e)
 		{
@@ -306,11 +266,11 @@ namespace Novell.iFolder.FormsTrayApp
 				}
 
 				// Now that the services are started, enable the exit menu item.
-				this.menuItemExit.Enabled = true;
+				menuExit.Enabled = true;
 
 				synkEvent = new AutoResetEvent(false);
 
-				animateDelegate = new AnimateDelegate(AnimateIcon);
+//				animateDelegate = new AnimateDelegate(AnimateIcon);
 
 				// Start the icon animation worker thread.
 				if (workerThread == null)
@@ -355,61 +315,118 @@ namespace Novell.iFolder.FormsTrayApp
 				synkEvent.Set();
 			}
 		}
-
-		private void contextMenu1_Popup(object sender, EventArgs e)
-		{
-			// Dynamically add/remove store browser menu item based on whether or not the file is installed.
-			if (File.Exists(Path.Combine(Application.StartupPath, "StoreBrowser.exe")))
-			{
-				if (this.contextMenu1.MenuItems.Contains(this.menuItemBrowser) == false)
-					this.contextMenu1.MenuItems.Add(0, this.menuItemBrowser);
-			}
-			else
-			{
-				if (this.contextMenu1.MenuItems.Contains(this.menuItemBrowser) == true)
-					this.contextMenu1.MenuItems.Remove(this.menuItemBrowser);
-			}
-		}
-
-		private void menuItemProperties_Click(object sender, EventArgs e)
-		{
-			GlobalProperties globalProperties = new GlobalProperties();
-			globalProperties.ShowDialog();
-		}
-
-		private void menuItemHelp_Click(object sender, EventArgs e)
-		{
-			// TODO - need to use locale-specific path
-			string helpPath = Path.Combine(Application.StartupPath, @"help\en\doc\user\data\front.html");
-
-			try
-			{
-				Process.Start(helpPath);
-			}
-			catch (Exception ex)
-			{
-				logger.Debug(ex, "Opening help");
-				MessageBox.Show("Unable to open help file: \n" + helpPath, "Help File Not Found");
-			}
-		}
 		#endregion
 
 		#region Private Methods
 		private void InitializeComponent()
 		{
-			//System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(FormsTrayApp));
-			this.SuspendLayout();
-			//
+			this.components = new System.ComponentModel.Container();
+			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
+			this.menuStoreBrowser = new System.Windows.Forms.MenuItem();
+			this.menuSeparator1 = new System.Windows.Forms.MenuItem();
+			this.menuInvitationWizard = new System.Windows.Forms.MenuItem();
+			this.menuAddressBook = new System.Windows.Forms.MenuItem();
+			this.menuTraceWindow = new System.Windows.Forms.MenuItem();
+			this.menuItem7 = new System.Windows.Forms.MenuItem();
+			this.menuProperties = new System.Windows.Forms.MenuItem();
+			this.menuHelp = new System.Windows.Forms.MenuItem();
+			this.menuItem10 = new System.Windows.Forms.MenuItem();
+			this.menuExit = new System.Windows.Forms.MenuItem();
+			// 
+			// notifyIcon1
+			// 
+			this.notifyIcon1.ContextMenu = this.contextMenu1;
+			this.notifyIcon1.Text = "iFolder Services";
+			this.notifyIcon1.Visible = true;
+			this.notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
+			// 
+			// contextMenu1
+			// 
+			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																						 this.menuStoreBrowser,
+																						 this.menuSeparator1,
+																						 this.menuInvitationWizard,
+																						 this.menuAddressBook,
+																						 this.menuTraceWindow,
+																						 this.menuItem7,
+																						 this.menuProperties,
+																						 this.menuHelp,
+																						 this.menuItem10,
+																						 this.menuExit});
+			this.contextMenu1.Popup += new System.EventHandler(this.contextMenu1_Popup);
+			// 
+			// menuStoreBrowser
+			// 
+			this.menuStoreBrowser.Index = 0;
+			this.menuStoreBrowser.Text = "Store Browser";
+			this.menuStoreBrowser.Visible = false;
+			this.menuStoreBrowser.Click += new System.EventHandler(this.menuStoreBrowser_Click);
+			// 
+			// menuSeparator1
+			// 
+			this.menuSeparator1.Index = 1;
+			this.menuSeparator1.Text = "-";
+			this.menuSeparator1.Visible = false;
+			// 
+			// menuInvitationWizard
+			// 
+			this.menuInvitationWizard.Index = 2;
+			this.menuInvitationWizard.Text = "Invitation Wizard...";
+			this.menuInvitationWizard.Click += new System.EventHandler(this.menuInvitationWizard_Click);
+			// 
+			// menuAddressBook
+			// 
+			this.menuAddressBook.Index = 3;
+			this.menuAddressBook.Text = "Address Book...";
+			this.menuAddressBook.Click += new System.EventHandler(this.menuAddressBook_Click);
+			// 
+			// menuTraceWindow
+			// 
+			this.menuTraceWindow.Enabled = false;
+			this.menuTraceWindow.Index = 4;
+			this.menuTraceWindow.Text = "Trace Window";
+			this.menuTraceWindow.Click += new System.EventHandler(this.menuTraceWindow_Click);
+			// 
+			// menuItem7
+			// 
+			this.menuItem7.Index = 5;
+			this.menuItem7.Text = "-";
+			// 
+			// menuProperties
+			// 
+			this.menuProperties.DefaultItem = true;
+			this.menuProperties.Index = 6;
+			this.menuProperties.Text = "Properties...";
+			this.menuProperties.Click += new System.EventHandler(this.menuProperties_Click);
+			// 
+			// menuHelp
+			// 
+			this.menuHelp.Index = 7;
+			this.menuHelp.Text = "Help...";
+			this.menuHelp.Click += new System.EventHandler(this.menuHelp_Click);
+			// 
+			// menuItem10
+			// 
+			this.menuItem10.Index = 8;
+			this.menuItem10.Text = "-";
+			// 
+			// menuExit
+			// 
+			this.menuExit.Enabled = false;
+			this.menuExit.Index = 9;
+			this.menuExit.Text = "Exit";
+			this.menuExit.Click += new System.EventHandler(this.menuExit_Click);
+			// 
 			// FormsTrayApp
-			//
+			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(292, 266);
-			//this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "FormsTrayApp";
-			this.ResumeLayout(false);
+
 		}
 
-		private void AnimateIcon(int index)
+/*		private void AnimateIcon(int index)
 		{
 			Console.WriteLine("In AnimateIcon: state = " + syncState.ToString());
 			switch (syncState)
@@ -423,7 +440,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 
 			Console.WriteLine("Leaving AnimateWorker");
-		}
+		}*/
 
 		private void ShutdownTrayApp()
 		{
