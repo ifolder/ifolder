@@ -53,6 +53,7 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.MenuItem createBookMenu;
 		private System.Windows.Forms.MenuItem deleteBookMenu;
 
+		private Store store = null;
 		private Novell.AddressBook.Manager manager = null;
 		private Novell.AddressBook.AddressBook addressBook = null;
 		private ArrayList selectedContacts;
@@ -563,30 +564,27 @@ namespace Novell.iFolder.FormsBookLib
 
 			try
 			{
+				Configuration config = new Configuration();
+				store = new Store(config);
+
 				// Put all the address books in the books listview.
-				AddressBook.AddressBook defaultBook = manager.OpenDefaultAddressBook();
 				IEnumerator addrBooks= manager.GetAddressBooks().GetEnumerator();
 
 				while (addrBooks.MoveNext())
 				{
 					AddressBook.AddressBook book = (AddressBook.AddressBook)addrBooks.Current;
 
-					// If the address book is the default book then label it as such.
 					ListViewItem item;
-					if (book.ID == defaultBook.ID)
-					{
-						item = new ListViewItem("Default", 0);
-
-						// Select the default address book.
-						item.Selected = true;
-					}
-					else
-					{
-						item = new ListViewItem(book.Name, 0);
-					}
+					item = new ListViewItem(book.Name, 0);
 
 					item.Tag = book;
 					this.books.Items.Add(item);
+				}
+
+				// Select the first book in the list.
+				if (books.Items.Count > 0)
+				{
+					books.Items[0].Selected = true;
 				}
 			}
 			catch (SimiasException ex)
@@ -707,8 +705,8 @@ namespace Novell.iFolder.FormsBookLib
 				// Create address book and add it to the books listview.
 				try
 				{
-					Novell.AddressBook.AddressBook addrBook = new Novell.AddressBook.AddressBook(addBook.Name);
-					this.manager.AddAddressBook(addrBook);
+					Novell.AddressBook.AddressBook addrBook = new Novell.AddressBook.AddressBook(store, addBook.Name);
+					addrBook.Commit();
 					ListViewItem item = new ListViewItem(addrBook.Name, 0);
 					item.Tag = addrBook;
 					this.books.Items.Add(item);
@@ -807,30 +805,23 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				Novell.AddressBook.AddressBook book = (Novell.AddressBook.AddressBook)lvitem.Tag;
 
-				if (!book.Default)
+				if (MessageBox.Show("Are you sure you want to delete this address book?", lvitem.Text.ToString(), MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
 				{
-					if (MessageBox.Show("Are you sure you want to delete this address book?", lvitem.Text.ToString(), MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+					try
 					{
-						try
-						{
-							book.Delete();
-							lvitem.Remove();
-						}
-						catch (SimiasException ex)
-						{
-							ex.LogError();
-							MessageBox.Show("An error occurred while deleting the address book.  Please see the log file for additional information.", "Delete Address Book Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-						}
-						catch (Exception ex)
-						{
-							logger.Debug(ex, "Deleting address book");
-							MessageBox.Show("An error occurred while deleting the address book.  Please see the log file for additional information.", "Delete Address Book Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-						}
+						book.Delete();
+						lvitem.Remove();
 					}
-				}
-				else
-				{
-					MessageBox.Show("Deleting the default address book is not allowed.");
+					catch (SimiasException ex)
+					{
+						ex.LogError();
+						MessageBox.Show("An error occurred while deleting the address book.  Please see the log file for additional information.", "Delete Address Book Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					}
+					catch (Exception ex)
+					{
+						logger.Debug(ex, "Deleting address book");
+						MessageBox.Show("An error occurred while deleting the address book.  Please see the log file for additional information.", "Delete Address Book Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					}
 				}
 			}
 		}
