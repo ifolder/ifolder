@@ -165,7 +165,7 @@ namespace Simias.Sync.Client
 		/// <returns>true if successful.</returns>
 		public new bool Close(bool commit)
 		{
-			bool bStatus = true;
+			bool bStatus = commit;
 			// Close the file on the server.
 			serverFile.CloseFileNode();
 			if (commit)
@@ -277,6 +277,10 @@ namespace Simias.Sync.Client
 			// don't match.
 			table.Clear();
 			HashData[] serverHashMap = serverFile.GetHashMap(BlockSize);
+			if (serverHashMap == null)
+			{
+				return new long[0];
+			}
 			table.Add(serverHashMap);
 			long[] fileMap = new long[serverHashMap.Length];
 
