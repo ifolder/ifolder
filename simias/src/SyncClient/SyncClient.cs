@@ -867,14 +867,22 @@ namespace Simias.Sync
 			
 				// Get the old node to see if the node was renamed.
 				DirNode oldNode = collection.GetNodeByID(node.ID) as DirNode;
-				string path = node.GetFullPath(collection);
-				if (oldNode != null)
+				string path;
+				if (node.IsRoot)
 				{
-					// We already have this node look for a rename.
-					string oldPath = oldNode.GetFullPath(collection);
-					if (oldPath != path)
+					path = oldNode.GetFullPath(collection);
+				}
+				else
+				{
+					path = node.GetFullPath(collection);
+					if (oldNode != null)
 					{
-						Directory.Move(oldPath, path);
+						// We already have this node look for a rename.
+						string oldPath = oldNode.GetFullPath(collection);
+						if (oldPath != path)
+						{
+							Directory.Move(oldPath, path);
+						}
 					}
 				}
 
@@ -996,6 +1004,74 @@ namespace Simias.Sync
 
 		void ProcessDirsToServer()
 		{
+			// get small nodes and files from server
+			if (dirsToServer.Count == 0)
+			{
+				return;
+			}
+			string[] nodeIDs = new string[dirsToServer.Count];
+			dirsToServer.Keys.CopyTo(nodeIDs, 0);
+				
+			// Now get the nodes in groups of BATCH_SIZE.
+			int offset = 0;
+			while (offset < nodeIDs.Length && !stopping)
+			{
+				int batchCount = nodeIDs.Length - offset < BATCH_SIZE ? nodeIDs.Length - offset : BATCH_SIZE;
+				SyncNode[] updates = new SyncNode[batchCount];
+				Node[] nodes = new Node[batchCount];
+				for (int i = offset; i < offset + batchCount; ++ i)
+				{
+					Node node = collection.GetNodeByID(nodeIDs[i]);
+					if (node != null)
+					{
+						log.Info("Updating {0} {1} to server", node.Name, node.Type);
+						nodes[i - offset] = node;
+						SyncNode snode = new SyncNode();
+						snode.node = node.Properties.ToString(true);
+						snode.expectedIncarn = node.MasterIncarnation;
+						updates[i - offset] = snode;
+					}
+				}
+
+				offset += batchCount;
+
+				SyncNodeStatus[] nodeStatus = service.PutDirs(updates);
+					
+				for (int i = 0; i < nodes.Length; ++ i)
+				{
+					Node node = nodes[i];
+					SyncNodeStatus status = nodeStatus[i];
+					switch (status.status)
+					{
+						case SyncStatus.Success:
+							if (collection.IsType(node, NodeTypes.TombstoneType))
+							{
+								collection.Commit(collection.Delete(node));
+							}
+							else
+							{
+								node.SetMasterIncarnation(node.LocalIncarnation);
+								collection.Commit(node);
+							}
+							dirsToServer.Remove(node.ID);
+							break;
+						case SyncStatus.UpdateConflict:
+						case SyncStatus.FileNameConflict:
+							// The file has been changed on the server lets get it next pass.
+							log.Debug("Skipping update of node {0} due to {1} on server",
+								status.nodeID, status.status);
+									
+							nodesFromServer.Add(node.ID, node.Type);
+							nodesToServer.Remove(node.ID);
+							break;
+						default:
+							log.Debug("Skipping update of node {0} due to {1} on server",
+								status.nodeID, status.status);
+							HadErrors = true;
+							break;
+					}
+				}
+			}
 		}
 
 		void ProcessFilesToServer()

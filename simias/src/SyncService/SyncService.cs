@@ -326,14 +326,22 @@ public class SyncService
 			
 				// Get the old node to see if the node was renamed.
 				DirNode oldNode = collection.GetNodeByID(node.ID) as DirNode;
-				string path = node.GetFullPath(collection);
-				if (oldNode != null)
+				string path;
+				if (node.IsRoot)
 				{
-					// We already have this node look for a rename.
-					string oldPath = oldNode.GetFullPath(collection);
-					if (oldPath != path)
+					path = oldNode.GetFullPath(collection);
+				}
+				else
+				{
+					path = node.GetFullPath(collection);
+					if (oldNode != null)
 					{
-						Directory.Move(oldPath, path);
+						// We already have this node look for a rename.
+						string oldPath = oldNode.GetFullPath(collection);
+						if (oldPath != path)
+						{
+							Directory.Move(oldPath, path);
+						}
 					}
 				}
 
