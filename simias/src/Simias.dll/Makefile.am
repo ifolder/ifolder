@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SIMIAS_CSFILES     := $(shell cat Simias.dll.sources)
+SIMIAS_CSFILES     := $(shell cat $(srcdir)/Simias.dll.sources)
 SIMIAS_CSFILES_SRC := $(SIMIAS_CSFILES:%=$(srcdir)/%)
 SIMIAS_CSFILES_CSC := $(subst /,$(SEP),$(SIMIAS_CSFILES_SRC))
 SIMIAS_INCLUDES =
