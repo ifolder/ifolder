@@ -36,7 +36,8 @@
 
 	int		initalTab;
 }
-
++ (PropertiesWindowController *)sharedInstance;
+- (void)windowWillClose:(NSNotification *)aNotification;
 -(void)awakeFromNib;
 
 - (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem;

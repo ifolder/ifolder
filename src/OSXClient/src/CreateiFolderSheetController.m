@@ -22,7 +22,7 @@
  ***********************************************************************/
 
 #import "CreateiFolderSheetController.h"
-#import "MainWindowController.h"
+#import "iFolderWindowController.h"
 
 
 @implementation CreateiFolderSheetController
@@ -54,7 +54,7 @@
 	if( ( selectedDomain != nil ) &&
 		( [ [pathField stringValue] length] > 0 ) )
 	{
-		[[NSApp delegate] createiFolder:[pathField stringValue] inDomain:[domainIDField stringValue] ];
+		[ifolderWindowController createiFolder:[pathField stringValue] inDomain:[domainIDField stringValue] ];
 		[createSheet orderOut:nil];
 		[NSApp endSheet:createSheet];
 	}

@@ -22,7 +22,7 @@
  ***********************************************************************/
 
 #include "SimiasEventHandlers.h"
-#include "MainWindowController.h"
+#include "iFolderApplication.h"
 
 static SimiasEventClient simiasEventClient;
 

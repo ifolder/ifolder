@@ -7,31 +7,15 @@
 	objects = {
 		080E96DDFE201D6D7F000001 = {
 			children = (
-				3E528C3107754B8E0064F585,
-				3E528C3207754B8E0064F585,
-				3E9B1B02077927E20072994B,
-				3E9B1B01077927E20072994B,
 				3E81105D076FF18700E96819,
 				3E81105E076FF18700E96819,
-				3E81105F076FF18700E96819,
-				3E811060076FF18700E96819,
 				3E4F5737078C30DA00313076,
 				3E4F5738078C30DA00313076,
-				3E70A40A078DFCD80075681D,
-				3E70A40B078DFCD80075681D,
-				3E3BC75407AB5B7B00D2AE46,
-				3E3BC75307AB5B7B00D2AE46,
-				3E6D783307B098E2001DA76A,
-				3E6D783207B098E2001DA76A,
-				3EB8C511079393B60082AA86,
-				3EB8C510079393B60082AA86,
-				3EEA9A4A07B1D9C30015FCF4,
-				3EEA9A4907B1D9C30015FCF4,
 				3E6F7ACD07B3E55A00F46F36,
 				3E6F7ACE07B3E55A00F46F36,
 			);
 			isa = PBXGroup;
-			name = Controllers;
+			name = OtherWIndows;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -137,9 +121,12 @@
 		29B97314FDCFA39411CA2CEA = {
 			children = (
 				3E66704F07B7D3A90047E683,
+				080E96DDFE201D6D7F000001,
+				3EE887F507B95C1400484B9F,
+				3EE887F407B95BF000484B9F,
+				3EE887F307B95BD700484B9F,
 				3E255FFC077235290062AB7A,
 				3EEA9A6507B1DBCC0015FCF4,
-				080E96DDFE201D6D7F000001,
 				29B97315FDCFA39411CA2CEA,
 				29B97317FDCFA39411CA2CEA,
 				29B97323FDCFA39411CA2CEA,
@@ -180,8 +167,10 @@
 				3E70A407078DFB8A0075681D,
 				3EB8C509079392230082AA86,
 				3E6F7AC907B3E4DB00F46F36,
-				3E8ACEF7078E4CFC0036C050,
+				3EE8876907B9503200484B9F,
+				3EE8881407B9603E00484B9F,
 				3E49BC6B0765224B0040812D,
+				3E8ACEF7078E4CFC0036C050,
 				3E8ACF02078E4D040036C050,
 				3EEAA53B078F167000EE44EE,
 				3EEAA53D078F167B00EE44EE,
@@ -656,9 +645,11 @@
 				3E66705307B7D3CC0047E683,
 				3E3405A5078B40EF00630436,
 				3E3405A6078B40EF00630436,
+				3EE886EA07B92E8B00484B9F,
+				3EE886E907B92E8B00484B9F,
 			);
 			isa = PBXGroup;
-			name = Classes;
+			name = Application;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -885,24 +876,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		3E81105F076FF18700E96819 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = MainWindowController.h;
-			path = src/MainWindowController.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3E811060076FF18700E96819 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = MainWindowController.m;
-			path = src/MainWindowController.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		3E811061076FF18700E96819 = {
 			fileRef = 3E81105D076FF18700E96819;
 			isa = PBXBuildFile;
@@ -911,18 +884,6 @@
 		};
 		3E811062076FF18700E96819 = {
 			fileRef = 3E81105E076FF18700E96819;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3E811063076FF18700E96819 = {
-			fileRef = 3E81105F076FF18700E96819;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3E811064076FF18700E96819 = {
-			fileRef = 3E811060076FF18700E96819;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1163,6 +1124,154 @@
 			settings = {
 			};
 		};
+		3EE886E907B92E8B00484B9F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = iFolderApplication.m;
+			path = src/iFolderApplication.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE886EA07B92E8B00484B9F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = iFolderApplication.h;
+			path = src/iFolderApplication.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE886EB07B92E8B00484B9F = {
+			fileRef = 3EE886E907B92E8B00484B9F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EE886EC07B92E8B00484B9F = {
+			fileRef = 3EE886EA07B92E8B00484B9F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EE8876907B9503200484B9F = {
+			children = (
+				3EE8876A07B9503200484B9F,
+			);
+			isa = PBXVariantGroup;
+			name = LogWindow.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE8876A07B9503200484B9F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = English.lproj/LogWindow.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE8876B07B9503200484B9F = {
+			fileRef = 3EE8876907B9503200484B9F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EE887F307B95BD700484B9F = {
+			children = (
+				3E70A40A078DFCD80075681D,
+				3E70A40B078DFCD80075681D,
+				3E3BC75407AB5B7B00D2AE46,
+				3E3BC75307AB5B7B00D2AE46,
+			);
+			isa = PBXGroup;
+			name = Preferences;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE887F407B95BF000484B9F = {
+			children = (
+				3EE8881707B9620F00484B9F,
+				3EE8881807B9620F00484B9F,
+				3E528C3107754B8E0064F585,
+				3E528C3207754B8E0064F585,
+				3E9B1B02077927E20072994B,
+				3E9B1B01077927E20072994B,
+			);
+			isa = PBXGroup;
+			name = iFolderWindow;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE887F507B95C1400484B9F = {
+			children = (
+				3EB8C511079393B60082AA86,
+				3EB8C510079393B60082AA86,
+				3EEA9A4A07B1D9C30015FCF4,
+				3EEA9A4907B1D9C30015FCF4,
+				3E6D783307B098E2001DA76A,
+				3E6D783207B098E2001DA76A,
+			);
+			isa = PBXGroup;
+			name = Properties;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE8881407B9603E00484B9F = {
+			children = (
+				3EE8881507B9603E00484B9F,
+			);
+			isa = PBXVariantGroup;
+			name = iFolderWindow.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE8881507B9603E00484B9F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = English.lproj/iFolderWindow.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE8881607B9603E00484B9F = {
+			fileRef = 3EE8881407B9603E00484B9F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EE8881707B9620F00484B9F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = iFolderWindowController.h;
+			path = src/iFolderWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE8881807B9620F00484B9F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = iFolderWindowController.m;
+			path = src/iFolderWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE8881907B9620F00484B9F = {
+			fileRef = 3EE8881707B9620F00484B9F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EE8881A07B9620F00484B9F = {
+			fileRef = 3EE8881807B9620F00484B9F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3EEA9A3407B1D3580015FCF4 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -1387,7 +1496,6 @@
 				3E23FEF20768CDCF00877BDF,
 				3E23FEF30768CDD100877BDF,
 				3E811061076FF18700E96819,
-				3E811063076FF18700E96819,
 				3E256003077235290062AB7A,
 				3E52896C0774F9FA0064F585,
 				3E52896E0774F9FA0064F585,
@@ -1425,6 +1533,10 @@
 				3E6F7B0F07B3EC5000F46F36,
 				3E66705407B7D3CC0047E683,
 				3EA94F6007B823CA0088FD0F,
+				3EE886EC07B92E8B00484B9F,
+				3EE8876B07B9503200484B9F,
+				3EE8881607B9603E00484B9F,
+				3EE8881907B9620F00484B9F,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1446,7 +1558,6 @@
 			files = (
 				8D11072D0486CEB800E47090,
 				3E811062076FF18700E96819,
-				3E811064076FF18700E96819,
 				3E256004077235290062AB7A,
 				3E52896D0774F9FA0064F585,
 				3E52896F0774F9FA0064F585,
@@ -1463,6 +1574,8 @@
 				3EEA9A6B07B1DC4F0015FCF4,
 				3E6F7AD007B3E55A00F46F36,
 				3E66705507B7D3CC0047E683,
+				3EE886EB07B92E8B00484B9F,
+				3EE8881A07B9620F00484B9F,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

@@ -21,27 +21,38 @@
  * 
  ***********************************************************************/
 
-#import "MainWindowController.h"
-#import "SyncLogWindowController.h"
-#import "LoginWindowController.h"
-#import "iFolderPrefsController.h"
+#import "iFolderWindowController.h"
+#import "iFolderApplication.h"
 #import "CreateiFolderSheetController.h"
 #import "SetupiFolderSheetController.h"
 #import "PropertiesWindowController.h"
-#import "AboutBoxController.h"
-#import "Simias.h"
 
-#include "SimiasEventHandlers.h"
+@implementation iFolderWindowController
 
 
+static iFolderWindowController *sharedInstance = nil;
 
-@implementation MainWindowController
 
-
--(id)init
++ (iFolderWindowController *)sharedInstance
 {
-    [super init];
-    return self;
+	if(sharedInstance == nil)
+	{
+		sharedInstance = [[iFolderWindowController alloc] initWithWindowNibName:@"iFolderWindow"];
+	}
+
+    return sharedInstance;
+}
+
+
+
+
+- (void)windowWillClose:(NSNotification *)aNotification
+{
+	if(sharedInstance != nil)
+	{
+		[sharedInstance release];
+		sharedInstance = nil;
+	}
 }
 
 
@@ -56,6 +67,8 @@
 }
 
 
+
+
 -(void)awakeFromNib
 {
 	[self setupToolbar];
@@ -68,16 +81,44 @@
 
 	keyedDomains = [[NSMutableDictionary alloc] init];
 	keyediFolders = [[NSMutableDictionary alloc] init];
+	
+	[[NSApp delegate] addLog:@"iFolder reading all domains"];
+	@try
+	{
+		int domainCount;
+		NSArray *newDomains = [simiasService GetDomains:NO];
+
+		for(domainCount = 0; domainCount < [newDomains count]; domainCount++)
+		{
+			iFolderDomain *newDomain = [newDomains objectAtIndex:domainCount];
+			
+			if( [[newDomain isDefault] boolValue] )
+				defaultDomain = newDomain;
+
+			[self addDomain:newDomain];
+		}
+		
+		NSArray *newiFolders = [ifolderService GetiFolders];
+		if(newiFolders != nil)
+		{
+			[ifoldersController addObjects:newiFolders];
+		}
+	}
+	@catch (NSException *e)
+	{
+		[[NSApp delegate] addLog:@"Reading domains failed with exception"];
+	}
+	
+	// Setup the double click black magic
+	[iFolderTable setDoubleAction:@selector(doubleClickedTable:)];
 }
-
-
 
 
 
 
 - (IBAction)refreshWindow:(id)sender
 {
-	[self addLog:@"Refreshing iFolder view"];
+	[[NSApp delegate] addLog:@"Refreshing iFolder view"];
 
 	@try
 	{
@@ -89,7 +130,7 @@
 	}
 	@catch (NSException *e)
 	{
-		[self addLog:@"Refreshing failed with exception"];
+		[[NSApp delegate] addLog:@"Refreshing failed with exception"];
 	}
 }
 
@@ -127,7 +168,7 @@
 {
 	// We don't have to tell the sheet anything about the iFolder because
 	// it's all bound in the nib
-	[setupiFolderController showWindow:sender];
+	[setupSheetController showWindow:sender];
 }
 
 
@@ -189,7 +230,7 @@
 
 			NSLog(@"Deleting iFolder at index %@", [ifolder Name]);
 
-			[self addLog:[NSString stringWithFormat:@"Deleting iFolder at index %@", [ifolder Name]]];
+			[[NSApp delegate] addLog:[NSString stringWithFormat:@"Deleting iFolder at index %@", [ifolder Name]]];
 
 			@try
 			{
@@ -224,47 +265,21 @@
 
 
 
-- (IBAction)showSharingProperties:(id)sender
+- (IBAction)shareiFolder:(id)sender
 {
-	if(propertiesController == nil)
-	{
-		propertiesController = [[PropertiesWindowController alloc] initWithWindowNibName:@"Properties"];
-	}
-
-	[propertiesController setSharingTab];
-	
-	[propertiesController showWindow:self];
+	[[PropertiesWindowController sharedInstance] setSharingTab];
+	[[PropertiesWindowController sharedInstance] showWindow:self];
 }
 
 
 
 
-
-- (IBAction)showGeneralProperties:(id)sender
+- (IBAction)showProperties:(id)sender
 {
-	if(propertiesController == nil)
-	{
-		propertiesController = [[PropertiesWindowController alloc] initWithWindowNibName:@"Properties"];
-	}
-
-	[propertiesController setGeneralTab];
-	
-	[propertiesController showWindow:self];
+	[[PropertiesWindowController sharedInstance] setGeneralTab];
+	[[PropertiesWindowController sharedInstance] showWindow:self];
 }
 
-
-
-
-// This is a hack to get the windows released when they are closed
-// I didn't know a better way to do this when it was written
-- (void)propertiesClosed
-{
-	if(propertiesController != nil)
-	{
-		[propertiesController release];
-		propertiesController = nil;
-	}
-}
 
 
 
@@ -372,7 +387,7 @@
 	else if(	(action == @selector(deleteiFolder:)) ||
 				(action == @selector(openiFolder:)) ||
 				(action == @selector(showProperties:)) ||
-				(action == @selector(showSharingProperties:)) ||
+				(action == @selector(shareiFolder:)) ||
 				(action == @selector(synciFolder:)) )
 	{
 		if ([ifoldersController selectionIndex] != NSNotFound)
@@ -483,7 +498,7 @@
 	[item setLabel:@"Share"]; // name for the item in the toolbar
 	[item setToolTip:@"Share an iFolder"]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
-    [item setAction:@selector(showSharingProperties:)];
+    [item setAction:@selector(shareiFolder:)];
 	[item setImage:[NSImage imageNamed:@"share24"]];
     [toolbarItems setObject:item forKey:@"ShareiFolder"]; // add to toolbar list
 	[toolbarItemKeys addObject:@"ShareiFolder"];
@@ -521,19 +536,9 @@
 
 
 
-/*
-static MyObject *sharedInstance = nil;
 
-+ (MyObject *)sharedController
-{
-return sharedInstance;
-}
 
-- (void)awakeFromNib
-{
-sharedInstance = self;
-// etc...
-}
-*/
+
+
 
 @end
