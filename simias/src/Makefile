@@ -177,9 +177,7 @@ CLEAN_SUBDIRS = $(addprefix clean., $(SUBDIRS))
 
 .PHONY: clean $(CLEAN_SUBDIRS)
 
-clean: $(CLEAN_SUBDIRS) stage-clean
-	$(call HEADER,$@)
-	-$(RM) $(ALL_SOURCE_DISTS)
+clean: $(CLEAN_SUBDIRS)
 
 $(CLEAN_SUBDIRS):
 	$(call HEADER,$@)
@@ -270,15 +268,23 @@ package-test:
 #=============================================================================
 # install/uninstall
 #=============================================================================
-.PHONY: install uninstall
+INSTALL_SUBDIRS = $(addprefix install., $(SUBDIRS))
+.PHONY: install $(INSTALL_SUBDIRS)
 
-install: dist
-	$(call HEADER,$@)
-	@$(MAKE) -C install install
+install: $(INSTALL_SUBDIRS)
 
-uninstall:
+$(INSTALL_SUBDIRS):
 	$(call HEADER,$@)
-	@$(MAKE) -C install uninstall
+	@$(MAKE) -i -k -C $(subst install.,,$@) install
+
+UNINSTALL_SUBDIRS = $(addprefix uninstall., $(SUBDIRS))
+.PHONY: uninstall $(UNINSTALL_SUBDIRS)
+
+uninstall: $(UNINSTALL_SUBDIRS)
+
+$(UNINSTALL_SUBDIRS):
+	$(call HEADER,$@)
+	@$(MAKE) -i -k -C $(subst uninstall.,,$@) uninstall
 
 #=============================================================================
 # doc
@@ -334,6 +340,9 @@ report:
 # File CVS History:
 #
 # $Log$
+# Revision 1.5.2.1  2004/02/24 22:11:56  cgaisford
+# updated the makefile to pass install on down to subprojects
+#
 # Revision 1.5  2004/02/23 23:12:49  pthomas707
 # Added package-install and package-uninstall.
 #
