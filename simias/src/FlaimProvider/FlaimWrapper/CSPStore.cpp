@@ -625,7 +625,8 @@ RCODE CSPStore::EndTrans()
 RCODE CSPStore::NameToId(FLMUNICODE *pName, FLMUINT *pId)
 {
 	RCODE rc = FERR_OK;
-	if (!m_pDB->m_NameTable.getFromTagTypeAndName((FLMUNICODE*)pName, 0, SIMIAS_TYPE, pId, 0))
+//	if (!m_pDB->m_NameTable.getFromTagTypeAndName((FLMUNICODE*)pName, 0, SIMIAS_TYPE, pId, 0))
+	if (!m_pDB->m_NameTable.getFromTagName((FLMUNICODE*)pName, 0, pId, 0, 0))
 	{
 		rc = FERR_BAD_FIELD_NUM;
 	}
