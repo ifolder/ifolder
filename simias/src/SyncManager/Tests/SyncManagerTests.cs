@@ -25,6 +25,7 @@ using System;
 using System.Threading;
 using System.Collections;
 using System.Collections.Specialized;
+using System.IO;
 
 using NUnit.Framework;
 
@@ -53,7 +54,13 @@ namespace Simias.Sync.Tests
 		[Test]
 		public void TestSyncManager()
 		{
-			Configuration config = new Configuration("./manager1");
+			string path = Path.GetFullPath("./manager1");
+
+			// clean-up
+			if (Directory.Exists(path)) Directory.Delete(path, true);
+			
+			// configuration
+			Configuration config = new Configuration(path);
 
 			SyncProperties properties = new SyncProperties(config);
 
@@ -76,7 +83,13 @@ namespace Simias.Sync.Tests
 		[Test]
 		public void TestSyncManager2()
 		{
-			Configuration config = new Configuration("./manager2");
+			string path = Path.GetFullPath("./manager2");
+
+			// clean-up
+			if (Directory.Exists(path)) Directory.Delete(path, true);
+			
+			// configuration
+			Configuration config = new Configuration(path);
 
 			// new collection
 			Store store = new Store(config);

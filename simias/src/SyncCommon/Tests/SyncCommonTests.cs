@@ -66,6 +66,11 @@ namespace Simias.Sync.Tests
 		public void TestSyncStore()
 		{
 			string path = Path.GetFullPath("./syncstore1");
+
+			// clean-up
+			if (Directory.Exists(path)) Directory.Delete(path, true);
+			
+			// configuration
 			Configuration config = new Configuration(path);
 
 			Store store = new Store(config);
@@ -85,9 +90,13 @@ namespace Simias.Sync.Tests
 		[Test]
 		public void TestSyncCollection()
 		{
-			string storePath = "./syncstore2";
+			string path = "./syncstore2";
 
-			Configuration config = new Configuration(storePath);
+			// clean-up
+			if (Directory.Exists(path)) Directory.Delete(path, true);
+			
+			// configuration
+			Configuration config = new Configuration(path);
 
 			Store store = new Store(config);
 			

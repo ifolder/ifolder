@@ -60,13 +60,11 @@ namespace Simias.Invite.Tests
 		{
 			// the test store
 			string path = Path.GetFullPath(".invitation" + id++);
-
-			// clear any stale store
-			if (Directory.Exists(path))
-			{
-				Directory.Delete(path, true);
-			}
-
+			
+			// clean-up
+			if (Directory.Exists(path)) Directory.Delete(path, true);
+			
+			// configuration
 			Configuration config = new Configuration(path);
 
 			// store

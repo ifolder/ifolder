@@ -55,16 +55,14 @@ namespace Simias.Location.Tests
 			// remove store
 			string path = Path.GetFullPath("./location1");
 
-			if (Directory.Exists(path))
-			{
-				Directory.Delete(path, true);
-			}
+			// clean-up
+			if (Directory.Exists(path)) Directory.Delete(path, true);
 			
 			// configuration
-			Configuration configuration = new Configuration(path);
+			Configuration config = new Configuration(path);
 
 			// create collection
-			Store store = new Store(configuration);
+			Store store = new Store(config);
 			Collection collection = new Collection(store, "Location 1");
 			collection.Commit();
 
@@ -75,7 +73,7 @@ namespace Simias.Location.Tests
 			sc.Commit();
 
 			// locate collection
-			LocationService service = new LocationService(configuration);
+			LocationService service = new LocationService(config);
 
 			Uri location = service.Locate(collection.ID);
 
@@ -93,21 +91,19 @@ namespace Simias.Location.Tests
 			// remove store
 			string path = Path.GetFullPath("./location2");
 
-			if (Directory.Exists(path))
-			{
-				Directory.Delete(path, true);
-			}
+			// clean-up
+			if (Directory.Exists(path)) Directory.Delete(path, true);
 			
 			// configuration
-			Configuration configuration = new Configuration(path);
+			Configuration config = new Configuration(path);
 
 			// create collection
-			Store store = new Store(configuration);
+			Store store = new Store(config);
 			Collection collection = new Collection(store, "Location 2");
 			collection.Commit();
 
 			// locate collection
-			LocationService service = new LocationService(configuration);
+			LocationService service = new LocationService(config);
 
 			Uri location = service.Locate(collection.ID);
 
