@@ -169,25 +169,6 @@ namespace Novell.iFolder.FormsBookLib
 		private int jobFixedSpace;
 		private int addrFixedSpace;
 
-		// TODO - add the rest of the countries
-		object[] countries = new object[] {
-											  "United States",
-											  "Afghanistan",
-											  "Albania",
-											  "Algeria",
-											  "American Samoa",
-											  "Andorra",
-											  "Angola",
-											  "Anguilla",
-											  "Antarctica",
-											  "Antigua And Barbuda",
-											  "Argentina",
-											  "Armenia",
-											  "Aruba",
-											  "Australia",
-											  "Austria",
-											  "Azerbaijan"};
-
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -201,13 +182,35 @@ namespace Novell.iFolder.FormsBookLib
 			//
 			InitializeComponent();
 
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
+			// Calculate the fixed space for various areas of the form.
 			emailFixedSpace = this.Size.Width - email1.Size.Width - email2.Size.Width;
 			phoneFixedSpace = this.Size.Width - phone1.Size.Width - phone2.Size.Width;
 			jobFixedSpace = this.Size.Width - profession.Size.Width - jobTitle.Size.Width;
 			addrFixedSpace = this.Size.Width - workCity.Size.Width - workZip.Size.Width;
+
+			// TODO - add the rest of the countries
+			object[] countries = new object[] {
+												  "United States",
+												  "Afghanistan",
+												  "Albania",
+												  "Algeria",
+												  "American Samoa",
+												  "Andorra",
+												  "Angola",
+												  "Anguilla",
+												  "Antarctica",
+												  "Antigua And Barbuda",
+												  "Argentina",
+												  "Armenia",
+												  "Aruba",
+												  "Australia",
+												  "Austria",
+												  "Azerbaijan"};
+
+			// Add the countries to the dropdown lists.
+			workCountry.Items.AddRange(countries);
+			homeCountry.Items.AddRange(countries);
+			otherCountry.Items.AddRange(countries);
 		}
 
 		/// <summary>
