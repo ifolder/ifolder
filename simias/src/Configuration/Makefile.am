@@ -18,6 +18,8 @@ ConfTests_LIBPATH = ConfTests $(srcdir)/../../tools/NUnit/bin
 
 EXTRA_DIST = $(Configuration_CSFILES) $(ConfTests_CSFILES)
 
+CUR_DIR := $(shell pwd)
+
 all: Configuration.dll
 
 Configuration.dll: $(Configuration_CSFILES) $(Configuration_RESOURCES)
@@ -36,7 +38,7 @@ uninstall-local:
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-	$(NUNIT) $(NUNIT_FLAGS) /xml:ConfTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:ConfTests.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = Configuration.dll $(NUNIT_TESTS) Configuration.xml ConfTests.xml
 CLEAN_DIRS = .cstore
