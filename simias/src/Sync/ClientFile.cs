@@ -426,9 +426,13 @@ namespace Simias.Sync.Client
 
 		#region publics
 
+		/// <summary>
+		/// Open the file.
+		/// </summary>
 		public void Open()
 		{
 			SyncNode snode = new SyncNode();
+			snode.nodeID = node.ID;
 			snode.node = node.Properties.ToString(true);
 			snode.expectedIncarn = node.MasterIncarnation;
 						
@@ -705,6 +709,9 @@ namespace Simias.Sync.Client
 
 	#region IServerWriteFile
 
+	/// <summary>
+	/// Interface to access a file on the server.
+	/// </summary>
 	public interface IServerWriteFile
 	{
 		/// <summary>
@@ -717,7 +724,7 @@ namespace Simias.Sync.Client
 		/// <summary>
 		/// Get the hash map of the file. This can be used to do a delta sync.
 		/// </summary>
-		/// <param name="blockSize">The size of chuncks to hash.</param>
+		/// <param name="BlockSize">The size of chuncks to hash.</param>
 		/// <returns>The hash map or null if failed.</returns>
 		HashData[] GetHashMap(int BlockSize);
 
@@ -750,10 +757,17 @@ namespace Simias.Sync.Client
 
 	#region WsServerReadFile
 
+	/// <summary>
+	/// Webservice class to access a file on the server.
+	/// </summary>
 	public class WsServerReadFile : IServerReadFile
 	{
 		SimiasSyncService		service;
 		
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="webService"></param>
 		public WsServerReadFile(SimiasSyncService webService)
 		{
 			service = webService;

@@ -1110,24 +1110,29 @@ namespace Simias.Sync.Client
 		/// <param name="nodes"></param>
 		private void StoreNodes(SyncNode [] nodes)
 		{
-			Node[]		commitList = new Node[nodes.Length];
+			ArrayList	commitArray = new ArrayList();
+			Node[]		commitList = null;
 
 			// Try to commit all the nodes at once.
-			int i = 0;
 			foreach (SyncNode sn in nodes)
 			{
-				if (sn != null)
+				if (sn.node != null)
 				{
 					XmlDocument xNode = new XmlDocument();
 					xNode.LoadXml(sn.node);
 					Node node = Node.NodeFactory(store, xNode);
 					log.Info("Importing {0} {1} from server", node.Type, node.Name);
 					Import(node);
-					commitList[i++] = node;
+					commitArray.Add(node);
+				}
+				else
+				{
+					nodesFromServer.Remove(sn.nodeID);
 				}
 			}
 			try
 			{
+				commitList = (Node[])commitArray.ToArray();
 				collection.Commit(commitList);
 				foreach ( Node node in commitList)
 				{
@@ -1231,39 +1236,42 @@ namespace Simias.Sync.Client
 		{
 			try
 			{
-				XmlDocument xNode = new XmlDocument();
-				xNode.LoadXml(snode.node);
-				DirNode node = (DirNode)Node.NodeFactory(store, xNode);
-				log.Info("Importing Directory {0} from server", node.Name);
-				Import(node);
+				if (snode.node != null)
+				{
+					XmlDocument xNode = new XmlDocument();
+					xNode.LoadXml(snode.node);
+					DirNode node = (DirNode)Node.NodeFactory(store, xNode);
+					log.Info("Importing Directory {0} from server", node.Name);
+					Import(node);
 			
-				// Get the old node to see if the node was renamed.
-				DirNode oldNode = collection.GetNodeByID(node.ID) as DirNode;
-				string path;
-				if (node.IsRoot)
-				{
-					path = oldNode.GetFullPath(collection);
-				}
-				else
-				{
-					path = node.GetFullPath(collection);
-					if (oldNode != null)
+					// Get the old node to see if the node was renamed.
+					DirNode oldNode = collection.GetNodeByID(node.ID) as DirNode;
+					string path;
+					if (node.IsRoot)
 					{
-						// We already have this node look for a rename.
-						string oldPath = oldNode.GetFullPath(collection);
-						if (oldPath != path)
+						path = oldNode.GetFullPath(collection);
+					}
+					else
+					{
+						path = node.GetFullPath(collection);
+						if (oldNode != null)
 						{
-							Directory.Move(oldPath, path);
+							// We already have this node look for a rename.
+							string oldPath = oldNode.GetFullPath(collection);
+							if (oldPath != path)
+							{
+								Directory.Move(oldPath, path);
+							}
 						}
 					}
-				}
 
-				if (!Directory.Exists(path))
-				{
-					Directory.CreateDirectory(path);
+					if (!Directory.Exists(path))
+					{
+						Directory.CreateDirectory(path);
+					}
+					collection.Commit(node);
 				}
-				collection.Commit(node);
-				dirsFromServer.Remove(node.ID);
+				dirsFromServer.Remove(snode.nodeID);
 			}
 			catch 
 			{
@@ -1393,6 +1401,7 @@ namespace Simias.Sync.Client
 							log.Info("Uploading {0} {1} to server", node.Type, node.Name);
 							nodes[i - offset] = node;
 							SyncNode snode = new SyncNode();
+							snode.nodeID = node.ID;
 							snode.node = node.Properties.ToString(true);
 							snode.expectedIncarn = node.MasterIncarnation;
 							updates[i - offset] = snode;
@@ -1473,9 +1482,14 @@ namespace Simias.Sync.Client
 							log.Info("Uploading Directory {0} to server", node.Name);
 							nodes[i - offset] = node;
 							SyncNode snode = new SyncNode();
+							snode.nodeID = node.ID;
 							snode.node = node.Properties.ToString(true);
 							snode.expectedIncarn = node.MasterIncarnation;
 							updates[i - offset] = snode;
+						}
+						else
+						{
+							dirsToServer.Remove(nodeIDs[i]);
 						}
 					}
 

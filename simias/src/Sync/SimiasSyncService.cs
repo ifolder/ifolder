@@ -27,7 +27,7 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     
     /// <remarks/>
     public SimiasSyncService() {
-        this.Url = "http://localhost:8086/SyncService.asmx";
+        this.Url = "http://localhost/SyncService.asmx";
     }
     
     /// <remarks/>
@@ -464,6 +464,9 @@ public enum SyncStatus {
 /// <remarks/>
 [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://novell.com/simias/sync/")]
 public class SyncNode {
+    
+    /// <remarks/>
+    public string nodeID;
     
     /// <remarks/>
     public string node;

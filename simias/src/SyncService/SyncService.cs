@@ -92,6 +92,10 @@ namespace Simias.Sync
 	public class SyncNode
 	{
 		/// <summary>
+		/// The ID of the node.
+		/// </summary>
+		public string		nodeID;
+		/// <summary>
 		/// The node as an XML string.
 		/// </summary>
 		public string node;
@@ -362,20 +366,21 @@ public class SyncService
 		foreach (SyncNode sn in nodes)
 		{
 			statusList[i] = new SyncNodeStatus();
+			statusList[i++].status = SyncNodeStatus.SyncStatus.ServerFailure;
+				
 			if (sn != null)
 			{
+				statusList[i].nodeID = sn.nodeID;
 				XmlDocument xNode = new XmlDocument();
 				xNode.LoadXml(sn.node);
 				Node node = Node.NodeFactory(store, xNode);
 				Import(node, sn.expectedIncarn);
 				NodeList.Add(node);
-				statusList[i].nodeID = node.ID;
 				statusList[i++].status = SyncNodeStatus.SyncStatus.Success;
 			}
 			else
 			{
-				// There is no node to store.
-				statusList[i++].status = SyncNodeStatus.SyncStatus.Success;
+				NodeList.Add(null);
 			}
 		}
 		if (!CommitNonFileNodes())
@@ -411,8 +416,6 @@ public class SyncService
 	{
 		try
 		{
-			Node[] commitList = new Node[NodeList.Count];
-			NodeList.CopyTo(commitList, 0);
 			if (NodeList.Count > 0)
 			{
 				collection.Commit((Node[])(NodeList.ToArray(typeof(Node))));
@@ -490,17 +493,17 @@ public class SyncService
 
 		for (int i = 0; i < nodeIDs.Length; ++i)
 		{
+			SyncNode snode = new SyncNode();
 			try
 			{
+				nodes[i] = snode;
+				snode.nodeID = nodeIDs[i];
 				Node node = collection.GetNodeByID(nodeIDs[i]);
-				SyncNode snode = new SyncNode();
 				snode.node = node.Properties.ToString(true);
 				snode.expectedIncarn = node.MasterIncarnation;
-				nodes[i] = snode;
 			}
 			catch
 			{
-				nodes[i] = null;
 			}
 		}
 		return nodes;
@@ -687,6 +690,7 @@ public class SyncService
 			outFile = new ServerOutFile(collection, node);
 			outFile.Open();
 			SyncNode snode = new SyncNode();
+			snode.nodeID = node.ID;
 			snode.node = node.Properties.ToString(true);
 			snode.expectedIncarn = node.MasterIncarnation;
 			return snode;
