@@ -509,6 +509,7 @@ g_print("buddylist_cb_simulate_share_ifolder() entered\n");
 
 	name_entry = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(name_entry), "My iFolder");
+	/* FIXME: The next line doesn't seem to activate the OK button when pressing Enter when name_entry has the focus.  Perhaps we need to make the OK button default.  Figure out how to do that. */
 	gtk_entry_set_activates_default(GTK_ENTRY(name_entry), TRUE);
 	gtk_editable_select_region(GTK_EDITABLE(name_entry), 0, -1);
 	gtk_widget_grab_focus(name_entry);
@@ -1769,6 +1770,8 @@ handle_invitation_request(GaimAccount *account, const char *sender,
 	char *collection_type;
 	char *collection_name;
 	Invitation *invitation;
+	GtkTreeIter iter;
+	char time_str[32];
 	
 g_print("handle_invitation_request() entered\n");
 	/**
@@ -1785,7 +1788,7 @@ g_print("handle_invitation_request() entered\n");
 	
 	sender_ip_port = strtok(NULL, ":");
 	if (!sender_ip_port) {
-		g_print("handle_invitation_request_accept() couldn't parse the ip-port\n");
+		g_print("handle_invitation_request() couldn't parse the ip-port\n");
 		return FALSE;
 	}
 	
@@ -1807,33 +1810,54 @@ g_print("handle_invitation_request() entered\n");
 		return FALSE;
 	}
 	
-	/* FIXME: Check to see if we already have this invitation in our list (based on the collection-id) and if we do, update the invitation received time and notify the user of an incoming invitation (notify bubble or invitation window show) */
-	
 	/**
-	 * Construct an Invitation, fill it with information, add it to the
-	 * in_inv_store, and show the Invitations Dialog.
+	 * Check to see if we already have this invitation in our list (based on the
+	 * collection-id) and if we do, update the invitation received time and
+	 * notify the user of an incoming invitation (notify bubble or invitation
+	 * window show)
 	 */
-	invitation = malloc(sizeof(Invitation));
-	if (!invitation) {
-		g_print("out of memory in handle_invitation_request()\n");
-		return TRUE; /* The message must be discarded */
+	if (lookup_collection_in_store(in_inv_store, collection_id, &iter)) {
+		/* Extract the Invitation * from the model using iter */
+		gtk_tree_model_get(GTK_TREE_MODEL(in_inv_store), &iter,
+							INVITATION_PTR, &invitation,
+							-1);
+		/* Update the invitation time */
+		time(&(invitation->time));
+		
+		/* Format the time to a string */
+		fill_time_str(time_str, 32, invitation->time);
+	
+		/* Update the out_inv_store */
+		gtk_list_store_set(in_inv_store, &iter,
+			TIME_COL,				time_str,
+			-1);
+	} else {
+		/**
+		 * Construct an Invitation, fill it with information, add it to the
+		 * in_inv_store, and show the Invitations Dialog.
+		 */
+		invitation = malloc(sizeof(Invitation));
+		if (!invitation) {
+			g_print("out of memory in handle_invitation_request()\n");
+			return TRUE; /* The message must be discarded */
+		}
+	
+		invitation->gaim_account = account;
+		sprintf(invitation->buddy_name, sender);
+		invitation->state = STATE_PENDING;
+		
+		/* Get the current time to store as the received time */
+		time(&(invitation->time));
+		
+		sprintf(invitation->collection_id, collection_id);
+		sprintf(invitation->collection_type, collection_type);
+		sprintf(invitation->collection_name, collection_name);
+		sprintf(invitation->ip_addr, sender_ip_address);
+		sprintf(invitation->ip_port, sender_ip_port);
+		
+		/* Now add this new invitation to the in_inv_store. */
+		add_invitation_to_store(in_inv_store, invitation);
 	}
-
-	invitation->gaim_account = account;
-	sprintf(invitation->buddy_name, sender);
-	invitation->state = STATE_PENDING;
-	
-	/* Get the current time to store as the received time */
-	time(&(invitation->time));
-	
-	sprintf(invitation->collection_id, collection_id);
-	sprintf(invitation->collection_type, collection_type);
-	sprintf(invitation->collection_name, collection_name);
-	sprintf(invitation->ip_addr, sender_ip_address);
-	sprintf(invitation->ip_port, sender_ip_port);
-	
-	/* Now add this new invitation to the in_inv_store. */
-	add_invitation_to_store(in_inv_store, invitation);
 	
 	/* FIXME: Change this to a tiny bubble notification instead of popping up the big Invitations Dialog */
 	show_invitations_window();
