@@ -38,6 +38,7 @@ using Simias.Domain;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.POBox;
+using Simias.Policy;
 using Simias.Web;
 using System.Xml;
 using System.Xml.Serialization;
@@ -1818,6 +1819,103 @@ namespace Novell.iFolder.Web
 			Store store = Store.GetStore();
 
 			return store.DefaultDomain;
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that deletes a File Size Limit policy from an iFolder.
+		/// </summary>
+		/// <param name="iFolderID">The ID of the iFolder to delete the policy from.</param>
+		[WebMethod(Description="Delete a file size limit policy from an iFolder")]
+		[SoapDocumentMethod]
+		public void DeleteiFolderFileSizeLimit(string iFolderID)
+		{
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(iFolderID);
+			if(col == null)
+				throw new Exception("Invalid iFolderID");
+
+			FileSizeFilter.Delete(col);
+		}
+
+
+		
+	
+		/// <summary>
+		/// WebMethod that gets a users File Size Limit on an iFolder.
+		/// </summary>
+		/// <param name="UserID">The ID of the user.</param>
+		/// <param name="iFolderID">The ID of the iFolder.</param>
+		/// <returns>The file size limit in megabytes.</returns>
+		[WebMethod(Description="Get a users file size limit on an iFolder")]
+		[SoapDocumentMethod]
+		public long GetMemberiFolderFileSizeLimit(string UserID, string iFolderID)
+		{
+			Store store = Store.GetStore();
+
+			Roster roster = 
+                store.GetDomainForUser(UserID).GetRoster(store);
+			if(roster == null)
+				throw new Exception("Unable to access user roster");
+
+			Simias.Storage.Member member = roster.GetMemberByID(UserID);
+			if(member == null)
+				throw new Exception("Invalid UserID");
+
+			Collection col = store.GetCollectionByID(iFolderID);
+			if (col == null)
+				throw new Exception("Invalid iFolderID");
+
+			FileSizeFilter filter = FileSizeFilter.Get(member, col);
+			if(filter == null)
+				throw new Exception("Unable to get File Size Limit");
+
+			return filter.Limit;
+		}
+
+
+		
+	
+		/// <summary>
+		/// WebMethod that gets the File Size Limit of an iFolder.
+		/// </summary>
+		/// <param name="iFolderID">The ID of the iFolder.</param>
+		/// <returns>The file size limit in megabytes.</returns>
+		[WebMethod(Description="Get the file size limit of an iFolder")]
+		[SoapDocumentMethod]
+		public long GetiFolderFileSizeLimit(string iFolderID)
+		{
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(iFolderID);
+			if (col == null)
+				throw new Exception("Invalid iFolderID");
+
+			return FileSizeFilter.GetLimit(col);
+		}
+
+
+		
+	
+		/// <summary>
+		/// WebMethod that sets the File Size Limit of an iFolder.
+		/// </summary>
+		/// <param name="iFolderID">The ID of the iFolder.</param>
+		/// <param name="Limit">The file size limit (in megabytes) to set.</param>
+		[WebMethod(Description="Set the file size limit of an iFolder")]
+		[SoapDocumentMethod]
+		public void SetiFolderFileSizeLimit(string iFolderID, long Limit)
+		{
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(iFolderID);
+			if (col == null)
+				throw new Exception("Invalid iFolderID");
+
+			FileSizeFilter.Set(col, Limit);
 		}
 	}
 }
