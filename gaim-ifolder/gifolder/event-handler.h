@@ -29,7 +29,7 @@
 #define _EVENT_HANDLER_H 1
 
 /* Simias Client Includes */
-#include <simias/simias-event-client.h>
+#include <simias-event-client.h>
 
 /* Gaim Includes */
 #include "blist.h"
