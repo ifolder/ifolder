@@ -30,6 +30,7 @@ using System.Text.RegularExpressions;
 using Simias;
 using Simias.Storage;
 using Simias.Sync;
+using Simias.Policy;
 
 namespace Novell.iFolder
 {
@@ -46,12 +47,12 @@ namespace Novell.iFolder
 		{
 			get
 			{
-				return new SyncProperties(config).Interval;
+				return SyncInterval.GetInterval(store.DefaultDomain);
 			}
 
 			set
 			{
-				new SyncProperties(config).Interval = value;
+				SyncInterval.Set(store.DefaultDomain, value);
 			}
 		}
         #endregion

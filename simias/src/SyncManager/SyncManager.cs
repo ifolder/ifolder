@@ -34,6 +34,28 @@ using Simias.Channels;
 namespace Simias.Sync
 {
 	/// <summary>
+	/// Sync manager states.
+	/// </summary>
+	[Obsolete]
+	public enum SyncManagerStates
+	{
+		/// <summary>
+		/// The sync manager is syncing (or transfering) files.
+		/// </summary>
+		Syncing,
+
+		/// <summary>
+		/// The sync manager is active.
+		/// </summary>
+		Active,
+
+		/// <summary>
+		/// They sync manager is idle.
+		/// </summary>
+		Idle,
+	};
+
+	/// <summary>
 	/// Sync Manager
 	/// </summary>
 	public class SyncManager : IDisposable

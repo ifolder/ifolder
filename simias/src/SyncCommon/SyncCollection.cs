@@ -244,16 +244,8 @@ namespace Simias.Sync
 		{
 			get
 			{
-				// get a sync interval object.
-				SyncInterval si = SyncInterval.Get(GetCurrentMember(), this);
-
-				return si.Interval;
-			}
-
-			// TODO: remove
-			set
-			{
-				SyncInterval.Create(this, value);
+				// get the policy sync interval
+				return SyncInterval.Get(GetCurrentMember(), this).Interval;
 			}
 		}
 
