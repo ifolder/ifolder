@@ -34,6 +34,7 @@ using Microsoft.Win32;
 using Simias;
 using Simias.Sync;
 using Simias.Service;
+using Simias.Storage;
 using Novell.iFolder;
 using Novell.iFolder.iFolderCom;
 using Novell.iFolder.Win32Util;
@@ -53,6 +54,8 @@ namespace Novell.iFolder.FormsTrayApp
 		const string CFG_Services = "Services";
 		const string XmlServiceTag = "Service";
 
+		private Hashtable ht;
+		private EventSubscriber subscriber;
 		private Simias.Service.Manager serviceManager = null;
 		private iFolderManager manager = null;
 		private Configuration config;
@@ -143,6 +146,14 @@ namespace Novell.iFolder.FormsTrayApp
 
 			this.config = config;
 
+			// Set up the event handlers to watch for iFolder creates/deletes.
+			subscriber = new EventSubscriber();
+			subscriber.NodeChanged += new NodeEventHandler(subscriber_NodeChanged);
+			subscriber.NodeCreated += new NodeEventHandler(subscriber_NodeCreated);
+			subscriber.NodeDeleted += new NodeEventHandler(subscriber_NodeDeleted);
+
+			ht = new Hashtable();
+
 /*			try
 			{
 				manager = iFolderManager.Connect();
@@ -164,6 +175,11 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			if( disposing )
 			{
+				if (subscriber != null)
+				{
+					subscriber.Dispose();
+				}
+
 				if(components != null)
 				{
 					components.Dispose();
@@ -926,6 +942,9 @@ namespace Novell.iFolder.FormsTrayApp
 			ListViewItem lvi = new ListViewItem(new string[] {ifolder.Name, ifolder.LocalPath, status}, 0);
 			lvi.Tag = ifolder.ID;
 			iFolderView.Items.Add(lvi);
+
+			// Add the listviewitem to the hashtable.
+			ht.Add(ifolder.ID, lvi);
 		}
 
 		private bool IsRunEnabled()
@@ -947,8 +966,11 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void refreshiFolders()
 		{
+			Cursor.Current = Cursors.WaitCursor;
+
 			iFolderView.Items.Clear();
 			iFolderView.SelectedItems.Clear();
+			ht.Clear();
 
 			iFolderView.BeginUpdate();
 
@@ -958,6 +980,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 
 			iFolderView.EndUpdate();
+			Cursor.Current = Cursors.Default;
 		}
 
 		private void invokeiFolderProperties(ListViewItem lvi, string activeTab)
@@ -994,6 +1017,12 @@ namespace Novell.iFolder.FormsTrayApp
 			catch (Exception ex)
 			{
 				logger.Debug(ex, "Sharing");
+
+				if (ifolder == null)
+				{
+					MessageBox.Show("The selected iFolder is no longer valid and will be removed from the list.");
+					iFolderView.Items.Remove(lvi);
+				}
 			}
 		}
 
@@ -1465,6 +1494,41 @@ namespace Novell.iFolder.FormsTrayApp
 			Cursor.Current = Cursors.Default;
 		}
 		#endregion
+
+		private void subscriber_NodeCreated(NodeEventArgs args)
+		{
+			try
+			{
+				iFolder ifolder = manager.GetiFolderById(args.ID);
+				if (ifolder != null)
+				{
+					AddiFolderToListView(ifolder);
+				}
+			}
+			catch (SimiasException ex)
+			{
+				ex.LogError();
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "OnNodeCreated");
+			}
+		}
+
+		private void subscriber_NodeDeleted(NodeEventArgs args)
+		{
+			ListViewItem lvi = (ListViewItem)ht[args.Node];
+			if (lvi != null)
+			{
+				lvi.Remove();
+				ht.Remove(args.Node);
+			}
+		}
+
+		private void subscriber_NodeChanged(NodeEventArgs args)
+		{
+			// TODO: implement this if needed.
+		}
 		#endregion
 
 		private const uint DRIVE_REMOTE = 4;

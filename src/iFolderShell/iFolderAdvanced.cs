@@ -119,6 +119,11 @@ namespace Novell.iFolder.iFolderCom
 		{
 			if( disposing )
 			{
+				if (subscriber != null)
+				{
+					subscriber.Dispose();
+				}
+
 				if(components != null)
 				{
 					components.Dispose();
