@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Xml;
 
@@ -42,11 +43,13 @@ namespace Simias.Gaim
 		{
 			public string userID;
 			public string simiasURL;
+			public RSACryptoServiceProvider credential = null;
 			
-			public SimiasInfo(string UserID, string SimiasURL)
+			public SimiasInfo(string UserID, string SimiasURL, RSACryptoServiceProvider Credential)
 			{
 				userID = UserID;
 				simiasURL = SimiasURL;
+				credential = Credential;
 			}
 		}
 	
@@ -190,7 +193,7 @@ namespace Simias.Gaim
 		#region Internal Methods
 		
 		///
-		/// Reads in the different UserIDs and SimiasURL settings
+		/// Reads in the different UserIDs, SimiasURL, and RSACredential settings
 		///
 		internal void ParseSimiasInfo()
 		{
@@ -207,9 +210,24 @@ namespace Simias.Gaim
 					if (simiasURLSetting != null)
 					{
 						simiasURL = simiasURLSetting.Value;
+						
+						XmlNode base64KeySetting =
+							xmlBuddyNode.SelectSingleNode(string.Format("setting[@name='simias-public-key:{0}]/text()", machineName));
+						if (base64KeySetting != null)
+						{
+							string base64Key = base64KeySetting.Value;
+							try
+							{
+								string credentialXml = Base64Decode(base64Key);
+								
+								RSACryptoServiceProvider credential = new RSACryptoServiceProvider();
+								credential.FromXmlString(credentialXml);
 
-						SimiasInfo simiasInfo = new SimiasInfo(userID, simiasURL);
-						simiasInfos.Add(machineName, simiasInfo);
+								SimiasInfo simiasInfo = new SimiasInfo(userID, simiasURL, credential);
+								simiasInfos.Add(machineName, simiasInfo);
+							}
+							catch{}
+						}
 					}
 				}
 			}
@@ -287,6 +305,21 @@ namespace Simias.Gaim
 			return null;
 		}
 		
+		public RSACryptoServiceProvider GetCredentialByUserID(string userID)
+		{
+			RSACryptoServiceProvider credential = null;
+			foreach (SimiasInfo simiasInfo in simiasInfos.Values)
+			{
+				if (simiasInfo.userID.Equals(userID))
+				{
+					credential = simiasInfo.credential;
+					break;
+				}
+			}
+			
+			return credential;
+		}
+		
 		public string GetSimiasURLByUserID(string userID)
 		{
 			string simiasURL = null;
@@ -338,6 +371,27 @@ namespace Simias.Gaim
 				return false;
 			
 			return true;
+		}
+		
+		public static string Base64Decode(string encodedString)
+		{
+			// Got this code from vbforums.com
+			try
+			{
+				System.Text.UTF8Encoding encoder = new System.Text.UTF8Encoding();
+				System.Text.Decoder utf8Decode = encoder.GetDecoder();
+				
+				byte[] todecode_byte = Convert.FromBase64String(encodedString);
+				int charCount = utf8Decode.GetCharCount(todecode_byte, 0, todecode_byte.Length);
+				char[] decoded_char = new char[charCount];
+				utf8Decode.GetChars(todecode_byte, 0, todecode_byte.Length, decoded_char, 0);
+				string result = new String(decoded_char);
+				return result;
+			}
+			catch (Exception e)
+			{
+				throw new Exception("Error decoding Base64 string: " + e.Message);
+			}
 		}
 				
 		#endregion

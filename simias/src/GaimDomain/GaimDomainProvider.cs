@@ -17,20 +17,20 @@
  *  License along with this program; if not, write to the Free
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *  Author(s): 
- *      Boyd Timothy <btimothy@novell.com>
+ *  Author: Boyd Timothy <btimothy@novell.com>
  *
  ***********************************************************************/
 
 using System;
 using System.Collections;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using System.Web.Security;
 
+using Simias;
 using Simias.Authentication;
-using Simias.Security.Web;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.POBox;
@@ -97,8 +97,10 @@ namespace Simias.Gaim
 			string gaimSessionTag = "gaim";
 
 			Simias.Storage.Member member = null;
+
+			// Assume failure
 			Simias.Authentication.Status status = 
-				new Simias.Authentication.Status( SCodes.Unknown );
+				new Simias.Authentication.Status( SCodes.InvalidCredentials );
 
 			// Gaim domain requires session support
 			if ( ctx.Session != null )
@@ -109,14 +111,12 @@ namespace Simias.Gaim
 				string memberID = ctx.Request.Headers[ "gaim-member" ];
 				if ( memberID == null || memberID == "" )
 				{
-					status.statusCode = SCodes.InvalidCredentials;
 					return status;
 				}
 
 				member = domain.GetMemberByID( memberID );
 				if ( member == null )
 				{
-					status.statusCode = SCodes.InvalidCredentials;
 					return status;
 				}
 
@@ -131,47 +131,72 @@ namespace Simias.Gaim
 					gaimSession.State = 1;
 
 					// Fixme
-					string oneTimePassword = DateTime.Now.ToString();
-					gaimSession.OneTimePassword = oneTimePassword;
-
-					// Set the one time password in the response
-					ctx.Response.AddHeader(
-						"gaim-secret",
-						oneTimePassword);
-
-					ctx.Session[ gaimSessionTag ] = gaimSession;
-					status.statusCode = SCodes.InvalidCredentials;
+					gaimSession.OneTimePassword = DateTime.UtcNow.Ticks.ToString();
+					GaimBuddy buddy = GaimDomain.GetBuddyByUserID( member.UserID );
+					if (buddy != null)
+					{
+						RSACryptoServiceProvider credential = buddy.GetCredentialByUserID( member.UserID );
+						if ( credential != null )
+						{
+							byte[] oneTime = new UTF8Encoding().GetBytes( gaimSession.OneTimePassword );
+							byte[] encryptedText = credential.Encrypt( oneTime, false );
+	
+							// Set the encrypted one time password in the response
+							ctx.Response.AddHeader(
+								"gaim-secret",
+								Convert.ToBase64String( encryptedText ) );
+								
+							ctx.Session[ gaimSessionTag ] = gaimSession;
+						}
+					}
 				}
 				else
-					if ( status.UserID == gaimSession.MemberID )
+				if ( status.UserID == gaimSession.MemberID )
 				{
 					// State should be 1
-					string oneTime = ctx.Request.Headers[ "gaim-secret" ];
-					if ( oneTime != null && oneTime != "" )
+					string encodedSecret = ctx.Request.Headers[ "gaim-secret" ];
+					if ( encodedSecret != null && encodedSecret != "" )
 					{
-						// decrypt with user's public key
-						if ( oneTime.Equals( gaimSession.OneTimePassword ) == true )
+						UTF8Encoding utf8 = new UTF8Encoding();
+						string decodedString = 
+							utf8.GetString( Convert.FromBase64String( encodedSecret ) );
+
+						// Check it...
+						if ( decodedString.Equals( gaimSession.OneTimePassword ) == true )
 						{
 							status.statusCode = SCodes.Success;
 							gaimSession.State = 2;
 						}
-						else
-						{
-							status.statusCode = SCodes.InvalidCredentials;
-						}				
 					}
 					else
 					{
 						// Fixme
-						gaimSession.OneTimePassword = DateTime.Now.ToString();
+						gaimSession.OneTimePassword = DateTime.UtcNow.Ticks.ToString();
 						gaimSession.State = 1;
 
-						// Set the one time password in the response
-						ctx.Response.AddHeader(
-							"gaim-secret",
-							gaimSession.OneTimePassword);
-
-						status.statusCode = SCodes.InvalidCredentials;
+						GaimBuddy buddy = GaimDomain.GetBuddyByUserID( member.UserID );
+						if (buddy != null)
+						{
+							RSACryptoServiceProvider credential = buddy.GetCredentialByUserID( member.UserID );
+							if ( credential != null )
+							{
+								try
+								{
+									byte[] oneTime = new UTF8Encoding().GetBytes( gaimSession.OneTimePassword );
+									byte[] encryptedText = credential.Encrypt( oneTime, false );
+	
+									// Set the encrypted one time password in the response
+									ctx.Response.AddHeader(
+										"gaim-secret",
+										Convert.ToBase64String( encryptedText ) );
+								}
+								catch( Exception encr )
+								{
+									log.Debug( encr.Message );
+									log.Debug( encr.StackTrace );
+								}
+							}
+						}
 					}
 				}
 			}
@@ -521,17 +546,6 @@ namespace Simias.Gaim
 					p.LocalProperty = true;
 					member.Properties.AddProperty(p);
 				}
-
-				// Gaim Alias
-				string alias = buddy.Alias;
-				if (alias != null && alias.Length > 0)
-				{
-					p = new Property("Gaim:Alias", alias);
-					p.LocalProperty = true;
-					member.Properties.AddProperty(p);
-
-					member.FN = string.Format("{0} ({1})", alias, machineName);
-				}
 			}
 		}
 
@@ -715,15 +729,15 @@ namespace Simias.Gaim
 
 		private string mapSimiasAttribToGaim(string attributeName)
 		{
-			switch(attributeName)
-			{
-				case "Given":
+//			switch(attributeName)
+//			{
+//				case "Given":
 					return "ScreenName";
-				case "Family":
-				case "FN":
-				default:
-					return "Alias";
-			}
+//				case "Family":
+//				case "FN":
+//				default:
+//					return "Alias";
+//			}
 		}
 		#endregion
 

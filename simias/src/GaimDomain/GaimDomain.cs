@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Xml;
 
@@ -143,20 +144,6 @@ namespace Simias.Gaim
 			}
 		}
 
-//		/// <summary>
-//		/// Constructor for creating a new Gaim Domain object.
-//		/// </summary>
-//		private GaimDomain( bool init, string username, string description ) 
-//		{
-//			hostName = Environment.MachineName.ToLower();
-//			userName = username + " (" + hostName + ")";
-//			this.description = description;
-//
-//			if ( init == true )
-//			{
-//				this.Init();
-//			}
-//		}
 		#endregion
 
 		private void Init()
@@ -684,6 +671,47 @@ namespace Simias.Gaim
 			}
 			
 			return buddy;
+		}
+
+		/// <summary>
+		/// Returns the credential used for this machine.  This is initially generated
+		/// by the Simias Store's Current User credential, but then stored in Gaim's
+		/// prefs.xml file so that it doesn't change if the Simias store is recreated.
+		/// </summary>
+		public static RSACryptoServiceProvider GetCredential()
+		{
+			RSACryptoServiceProvider credential = null;
+			XmlDocument prefsDoc = new XmlDocument();
+			try
+			{
+				prefsDoc.Load(GetGaimConfigDir() + "/prefs.xml");
+			}
+			catch
+			{
+				// Don't cause any errors to log...for the case where Gaim isn't installed or the plugin isn't installed/enabled
+				return null;
+			}
+			XmlElement topPrefElement = prefsDoc.DocumentElement;
+
+			XmlNode privateKeyNode = 
+				topPrefElement.SelectSingleNode("//pref[@name='plugins']/pref[@name='simias']/pref[@name='private_key']/@value");
+
+			if (privateKeyNode != null)
+			{
+				string credentialXml = privateKeyNode.Value;
+				if (credentialXml != null)
+				{
+					RSACryptoServiceProvider aCredential = new RSACryptoServiceProvider();
+					try
+					{
+						aCredential.FromXmlString(credentialXml);
+						credential = aCredential;
+					}
+					catch {}
+				}
+			}
+
+			return credential;
 		}
 
 		/// <summary>
