@@ -123,8 +123,9 @@ namespace Simias.Invite.Tests
 
 			invitation.CollectionID = "9876543210";
 			invitation.CollectionName = "Team Folder";
-			invitation.Identity = "1234567890";
-			invitation.Domain = "novell";
+			invitation.Identity = store.CurrentUserGuid;
+			invitation.Owner = store.CurrentUserGuid;
+			invitation.Domain = "test";
 			invitation.MasterUri = new Uri("http://192.168.2.1:6437");
 			invitation.CollectionRights = Access.Rights.ReadWrite.ToString();
 			invitation.Message = "Our Team's New Collection";
