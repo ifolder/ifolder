@@ -2,8 +2,25 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
+            ACTIONS = {
+                addSelectedUsers = id; 
+                refreshWindow = id; 
+                removeSelectedUsers = id; 
+                searchUsers = id; 
+            }; 
+            CLASS = PropSharingController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                currentUsers = NSTableView; 
+                searchedUsers = NSTableView; 
+                userSearch = NSSearchField; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
             CLASS = PropertiesWindowController; 
             LANGUAGE = ObjC; 
+            OUTLETS = {propSharingController = PropSharingController; }; 
             SUPERCLASS = NSWindowController; 
         }
     ); 

@@ -31,6 +31,7 @@ void init_gsoap(struct soap *pSoap);
 void cleanup_gsoap(struct soap *pSoap);
 
 NSDictionary *getiFolderProperties(struct ns1__iFolderWeb *ifolder);
+NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user);
 
 
 -(bool) Ping
@@ -276,6 +277,65 @@ NSDictionary *getiFolderProperties(struct ns1__iFolderWeb *ifolder);
 
 
 
+-(NSArray *) GetiFolderUsers:(NSString *)ifolderID
+{
+	NSMutableArray *users = nil;
+	
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (ifolderID != nil), @"ifolderID was nil");
+
+	struct _ns1__GetiFolderUsers		getUsersMessage;
+	struct _ns1__GetiFolderUsersResponse getUsersResponse;
+
+	getUsersMessage.iFolderID = (char *)[ifolderID cString];
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__GetiFolderUsers(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &getUsersMessage,
+            &getUsersResponse);
+
+ 	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in GetiFolderUsers"];
+	}
+	else
+	{
+		int usercount = getUsersResponse.GetiFolderUsersResult->__sizeiFolderUser;
+		if(usercount > 0)
+		{
+			users = [[NSMutableArray alloc] initWithCapacity:usercount];
+			
+			int counter;
+			for( counter = 0; counter < usercount; counter++ )
+			{
+				struct ns1__iFolderUser *curUser;
+			
+				curUser = getUsersResponse.GetiFolderUsersResult->iFolderUser[counter];
+				User *newUser = [[User alloc] init];
+
+				[newUser setProperties:getiFolderUserProperties(curUser)];
+				
+				[users addObject:newUser];
+			}
+		}
+    }
+
+    cleanup_gsoap(&soap);
+
+	return users;
+}
+
+
+
+
+
+
 void init_gsoap(struct soap *pSoap)
 {
 	soap_init(pSoap);
@@ -350,6 +410,34 @@ NSDictionary *getiFolderProperties(struct ns1__iFolderWeb *ifolder)
 	return newProperties;
 }
 
+
+NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user)
+{
+	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
+
+	if(user->Name != nil)
+		[newProperties setObject:[NSString stringWithCString:user->Name] forKey:@"Name"];
+	if(user->UserID != nil)
+		[newProperties setObject:[NSString stringWithCString:user->UserID] forKey:@"UserID"];
+	if(user->Rights != nil)
+		[newProperties setObject:[NSString stringWithCString:user->Rights] forKey:@"Rights"];
+	if(user->ID != nil)
+		[newProperties setObject:[NSString stringWithCString:user->ID] forKey:@"ID"];
+	if(user->State != nil)
+		[newProperties setObject:[NSString stringWithCString:user->State] forKey:@"State"];
+	if(user->iFolderID != nil)
+		[newProperties setObject:[NSString stringWithCString:user->iFolderID] forKey:@"iFolderID"];
+	if(user->FirstName != nil)
+		[newProperties setObject:[NSString stringWithCString:user->FirstName] forKey:@"FirstName"];
+	if(user->Surname != nil)
+		[newProperties setObject:[NSString stringWithCString:user->Surname] forKey:@"Surname"];
+	if(user->FN != nil)
+		[newProperties setObject:[NSString stringWithCString:user->FN] forKey:@"FN"];
+
+	[newProperties setObject:[NSNumber numberWithBool:user->IsOwner] forKey:@"IsOwner"];
+	
+	return newProperties;
+}
 
 
 

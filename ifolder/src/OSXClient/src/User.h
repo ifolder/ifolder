@@ -21,13 +21,30 @@
  * 
  ***********************************************************************/
 
-
 #import <Cocoa/Cocoa.h>
 
-@class PropSharingController;
+/*
+	char *Name;
+	char *UserID;
+	char *Rights;
+	char *ID;
+	char *State;
+	char *iFolderID;
+	enum xsd__boolean IsOwner;
+	char *FirstName;
+	char *Surname;
+	char *FN;
+*/
 
-@interface PropertiesWindowController : NSWindowController
+@interface User : NSObject
 {
-	IBOutlet PropSharingController	*propSharingController;
+	NSMutableDictionary * properties;
+	NSImage				* icon;
 }
+
+-(NSMutableDictionary *) properties;
+-(void) setProperties: (NSDictionary *)newProperties;
+
+
+
 @end
