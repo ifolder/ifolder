@@ -205,7 +205,7 @@ internal class SyncOps
 	public NodeStamp[] GetNodeStamps()
 	{
 		ArrayList stampList = new ArrayList();
-
+		bool foundTombstone = false;
 		foreach (ShallowNode sn in collection)
 		{
 			Node node;
@@ -224,7 +224,11 @@ internal class SyncOps
 			string path = OutgoingNode.GetOutNode(collection, ref node);
 			bool tombstone = collection.IsType(node, NodeTypes.TombstoneType);
 			if (onServer && tombstone)
+			{
+				collection.Delete(node);
+				foundTombstone = true;
 				continue;
+			}
 			NodeStamp stamp = new NodeStamp();
 			stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
 			stamp.masterIncarn = node.MasterIncarnation;
@@ -244,8 +248,13 @@ internal class SyncOps
 			stampList.Add(stamp);
 		}
 
+		if (foundTombstone)
+		{
+			collection.Commit();
+		}
+
 		stampList.Sort();
-		//Log.Spew("Found {0} nodes in {1}", stampList.Count, collection.Name);
+        //Log.Spew("Found {0} nodes in {1}", stampList.Count, collection.Name);
 		return (NodeStamp[])stampList.ToArray(typeof(NodeStamp));
 	}
 
