@@ -1,5 +1,6 @@
 {
     IBClasses = (
+        {CLASS = MCTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }, 
         {
             ACTIONS = {enableLimitToggled = id; syncNow = id; updateLimitValue = id; }; 
             CLASS = PropGeneralController; 
@@ -27,6 +28,10 @@
         {
             ACTIONS = {
                 addSelectedUsers = id; 
+                grantFullControl = id; 
+                grantReadOnly = id; 
+                grantReadWrite = id; 
+                makeOwner = id; 
                 refreshWindow = id; 
                 removeSelectedUsers = id; 
                 searchUsers = id; 
@@ -37,6 +42,7 @@
                 currentUsers = NSTableView; 
                 defaultAccess = NSPopUpButton; 
                 foundUsersController = NSArrayController; 
+                ownerName = NSTextField; 
                 propertiesWindow = NSWindow; 
                 searchedUsers = NSTableView; 
                 userSearch = NSSearchField; 
@@ -54,6 +60,7 @@
                 sharingController = PropSharingController; 
                 sharingItem = NSTabViewItem; 
                 tabView = NSTabView; 
+                userMenu = NSMenu; 
             }; 
             SUPERCLASS = NSWindowController; 
         }, 

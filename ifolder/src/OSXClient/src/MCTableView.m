@@ -10,7 +10,8 @@
 							locationInWindow] fromView: nil]];
     if (row != -1)
 	{
-        [self selectRow: row byExtendingSelection: NO];
+		if([self isRowSelected:row] == NO)
+			[self selectRow: row byExtendingSelection: NO];
     }
 
     return [super menu]; // use what we've got

@@ -66,7 +66,7 @@
 	{
 		[properties autorelease];
 		properties = [[NSMutableDictionary alloc] initWithDictionary:newProperties];
-//		[self updateDisplayInformation];
+		[self updateDisplayInformation];
 	}
 }
 
@@ -80,5 +80,66 @@
 {
 	return [self valueForKeyPath:@"properties.FN"]; 
 }
+
+-(NSString *) Name
+{
+	return [self valueForKeyPath:@"properties.Name"]; 
+}
+
+-(BOOL)isOwner
+{
+	NSNumber *num = [properties objectForKey:@"IsOwner"];
+	if(num != nil)
+		return [num boolValue];
+	else
+		return NO;	
+}
+
+
+-(void)setRights:(NSString *)rights
+{
+	[properties setObject:rights forKey:@"Rights"];
+	[self updateDisplayInformation];
+}
+
+-(void)setIsOwner:(BOOL)isOwner
+{
+	[properties setObject:[NSNumber numberWithBool:isOwner] forKey:@"IsOwner"];
+	[self updateDisplayInformation];	
+}
+
+
+
+-(void) updateDisplayInformation
+{
+	if([self isOwner])
+		[properties setObject:@"Owner" forKey:@"Status"];
+	else
+	{
+		NSString *state = [properties objectForKey:@"State"];
+		if(state != nil)
+		{
+			if([state compare:@"Member"] != 0)
+				[properties setObject:@"Invited User" forKey:@"Status"];
+			else
+				[properties setObject:@"Member" forKey:@"Status"];
+		}
+	}
+
+	NSString *rights = [properties objectForKey:@"Rights"];
+	if(rights != nil)
+	{
+		if([rights compare:@"Admin"] == 0)
+			[properties setObject:@"Full Control" forKey:@"Access"];
+		else if([rights compare:@"ReadWrite"] == 0)
+			[properties setObject:@"Read Write" forKey:@"Access"];
+		else if([rights compare:@"ReadOnly"] == 0)
+			[properties setObject:@"Read Only" forKey:@"Access"];
+		else
+			[properties setObject:@"Unknown" forKey:@"Access"];
+	}
+
+}
+
 
 @end

@@ -34,6 +34,8 @@
 	NSMutableArray				*foundUsers;
 	NSMutableDictionary			*keyedUsers;
 	iFolder						*curiFolder;
+	BOOL						hasAdminRights;
+	BOOL						isOwner;
 
     IBOutlet NSArrayController	*usersController;
     IBOutlet NSArrayController	*foundUsersController;
@@ -42,15 +44,26 @@
     IBOutlet NSSearchField		*userSearch;
 	IBOutlet NSPopUpButton		*defaultAccess;
 	IBOutlet NSWindow			*propertiesWindow;
+	IBOutlet NSTextField		*ownerName;	
 }
 
 - (IBAction)addSelectedUsers:(id)sender;
 - (IBAction)refreshWindow:(id)sender;
 - (IBAction)removeSelectedUsers:(id)sender;
 - (IBAction)searchUsers:(id)sender;
+- (IBAction)grantFullControl:(id)sender;
+- (IBAction)grantReadWrite:(id)sender;
+- (IBAction)grantReadOnly:(id)sender;
+- (IBAction)makeOwner:(id)sender;
 
 - (void)removeSelectedUsersResponse:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (void)awakeFromNib;
 - (void)addUser:(User *)newUser;
+
+- (BOOL)validateUserInterfaceItem:(id)anItem;
+- (BOOL)selectionContainsOwnerorCurrent;
+
+-(void)setSelectedUserRights:(NSString *)rights;
+
 
 @end

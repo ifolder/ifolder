@@ -47,6 +47,11 @@
 
 -(NSString *) UserID;
 -(NSString *) FN;
+-(NSString *) Name;
+-(BOOL)isOwner;
+-(void)setRights:(NSString *)rights;
+-(void)setIsOwner:(BOOL)isOwner;
 
+-(void) updateDisplayInformation;
 
 @end

@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 #import "iFolder.h"
+#import "User.h"
 
 
 @implementation iFolder
@@ -223,6 +224,13 @@
 		[image setScalesWhenResized:YES];
 		[properties setObject:image forKey:@"Image"];
 	}
+}
+
+-(void)SetOwner:(User *)user
+{
+	[properties setObject:[user Name] forKey:@"Owner"];
+	[properties setObject:[user UserID] forKey:@"OwnerID"];
+	[self updateDisplayInformation];	
 }
 
 
