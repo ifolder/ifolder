@@ -32,13 +32,13 @@ EXTRA_DIST = $(TrayAppGtk_CSFILES) $(InviteAppGtk_CSFILES) $(CollectionBrowserGt
 all: iFolderApp.exe InvitationWizard.exe CollectionBrowser.exe
 
 iFolderApp.exe: $(TrayAppGtk_CSFILES) $(TrayAppGtk_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(TrayAppGtk_FLAGS) $(TrayAppGtk_LIBS:%=/r:%) $(TrayAppGtk_LIBPATH:%=/lib:%) $(TrayAppGtk_RESOURCES:%=$(ICON_FLAG)%) $(TrayAppGtk_CSFILES_CSC) /doc:iFolderApp.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(TrayAppGtk_FLAGS) $(TrayAppGtk_LIBS:%=/r:%) $(TrayAppGtk_LIBPATH:%=/lib:%) $(TrayAppGtk_RESOURCES:%=$(ICON_FLAG)%) $(TrayAppGtk_CSFILES_CSC) /doc:iFolderApp.doc.xml
 
 InvitationWizard.exe: $(InviteAppGtk_CSFILES) $(InviteAppGtk_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(InviteAppGtk_FLAGS) $(InviteAppGtk_LIBS:%=/r:%) $(InviteAppGtk_LIBPATH:%=/lib:%) $(InviteAppGtk_RESOURCES:%=$(ICON_FLAG)%) $(InviteAppGtk_CSFILES_CSC) /doc:InvitationWizard.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(InviteAppGtk_FLAGS) $(InviteAppGtk_LIBS:%=/r:%) $(InviteAppGtk_LIBPATH:%=/lib:%) $(InviteAppGtk_RESOURCES:%=$(ICON_FLAG)%) $(InviteAppGtk_CSFILES_CSC) /doc:InvitationWizard.doc.xml
 
 CollectionBrowser.exe: $(CollectionBrowserGtk_CSFILES) $(CollectionBrowserGtk_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(CollectionBrowserGtk_FLAGS) $(CollectionBrowserGtk_LIBS:%=/r:%) $(CollectionBrowserGtk_LIBPATH:%=/lib:%) $(CollectionBrowserGtk_RESOURCES:%=$(ICON_FLAG)%) $(CollectionBrowserGtk_CSFILES_CSC) /doc:CollectionBrowser.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(CollectionBrowserGtk_FLAGS) $(CollectionBrowserGtk_LIBS:%=/r:%) $(CollectionBrowserGtk_LIBPATH:%=/lib:%) $(CollectionBrowserGtk_RESOURCES:%=$(ICON_FLAG)%) $(CollectionBrowserGtk_CSFILES_CSC) /doc:CollectionBrowser.doc.xml
 
 install-exec-local: iFolderApp.exe InvitationWizard.exe CollectionBrowser.exe $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
@@ -49,7 +49,7 @@ uninstall-local:
     
 installcheck-local: install
 	
-CLEAN_FILES = iFolderApp.exe iFolderApp.xml InvitationWizard.exe InvitationWizard.xml CollectionBrowser.exe CollectionBrowser.xml
+CLEAN_FILES = iFolderApp.exe iFolderApp.doc.xml InvitationWizard.exe InvitationWizard.doc.xml CollectionBrowser.exe CollectionBrowser.doc.xml
 
 clean-local:
 	rm -rf *.dbg *.exe $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

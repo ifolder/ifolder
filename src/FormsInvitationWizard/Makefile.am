@@ -13,7 +13,7 @@ EXTRA_DIST = $(InvitationWizard_CSFILES) $(DATA_FILES)
 all: InvitationWizard.exe
 
 InvitationWizard.exe: $(InvitationWizard_CSFILES) $(InvitationWizard_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(InvitationWizard_FLAGS) $(InvitationWizard_LIBS:%=/r:%) $(InvitationWizard_LIBPATH:%=/lib:%) $(InvitationWizard_RESOURCES:%=$(ICON_FLAG)%) $(InvitationWizard_CSFILES_CSC) /doc:InvitationWizard.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(InvitationWizard_FLAGS) $(InvitationWizard_LIBS:%=/r:%) $(InvitationWizard_LIBPATH:%=/lib:%) $(InvitationWizard_RESOURCES:%=$(ICON_FLAG)%) $(InvitationWizard_CSFILES_CSC) /doc:InvitationWizard.doc.xml
 
 install-exec-local: InvitationWizard.exe $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
@@ -24,7 +24,7 @@ uninstall-local:
     
 installcheck-local: install
 	
-CLEAN_FILES = InvitationWizard.exe InvitationWizard.xml
+CLEAN_FILES = InvitationWizard.exe InvitationWizard.doc.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
