@@ -1324,7 +1324,6 @@ namespace Novell.FormsTrayApp
 				}
 				catch (Exception ex)
 				{
-					// TODO: put string in resource file
 					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readUserError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
@@ -1437,7 +1436,6 @@ namespace Novell.FormsTrayApp
 				}
 				catch (Exception ex)
 				{
-					// TODO: put string in resource file
 					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("checkUpdateError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 					mmb.ShowDialog();
 				}
@@ -1447,13 +1445,11 @@ namespace Novell.FormsTrayApp
 				result = false;
 				if (ex.Message.IndexOf("HTTP status 401") != -1)
 				{
-					// TODO: put string in resource file
 					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
 				else
 				{
-					// TODO: put string in resource file
 					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
@@ -1524,7 +1520,6 @@ namespace Novell.FormsTrayApp
 					{
 						result = false;
 
-						// TODO: put string in resource file
 						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("saveSyncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 					}
@@ -1534,7 +1529,6 @@ namespace Novell.FormsTrayApp
 			{
 				result = false;
 
-				// TODO: put string in resource file
 				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readSyncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
@@ -1553,11 +1547,12 @@ namespace Novell.FormsTrayApp
 						ChangeDefaultDomain(this, new DomainConnectEventArgs(newDefaultDomain.DomainWeb));
 					}
 				}
-				catch
+				catch (Exception ex)
 				{
 					result = false;
 
-					// TODO: Error message.
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("setDefaultError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
 				}
 			}
 
@@ -1643,7 +1638,6 @@ namespace Novell.FormsTrayApp
 				}
 				catch (Exception ex)
 				{
-					// TODO: put string in resource file
 					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readSyncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}

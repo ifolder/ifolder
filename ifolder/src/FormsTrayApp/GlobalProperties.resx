@@ -1939,9 +1939,6 @@
 	<data name="syncError">
 		<value>An error was encountered while sending the sync command.</value>
 	</data>
-	<data name="saveSyncError">
-		<value>An error was encountered while saving the default sync interval.</value>
-	</data>
 	<data name="saveProxyError">
 		<value>An error was encountered while saving the proxy settings.</value>
 	</data>
@@ -2005,14 +2002,8 @@
 	<data name="readiFolderSettingsError">
 		<value>An error was encountered while reading the iFolder settings.</value>
 	</data>
-	<data name="readSyncError">
-		<value>An error was encountered while reading the default sync interval.</value>
-	</data>
 	<data name="readProxyError">
 		<value>An error was encountered while reading the proxy settings.</value>
-	</data>
-	<data name="readUserError">
-		<value>An error was encountered while reading the current user.</value>
 	</data>
 	<data name="deleteAction">
 		<value>Delete iFolder</value>
@@ -2043,17 +2034,5 @@
 	</data>
 	<data name="showAll">
 		<value>Show All</value>
-	</data>
-	<data name="checkUpdateError">
-		<value>An error was encountered while checking for an iFolder client upgrade.</value>
-	</data>
-	<data name="serverConnectErrorTitle">
-		<value>iFolder Connect Error</value>
-	</data>
-	<data name="failedAuth">
-		<value>The user name or password is invalid.  Please try again.</value>
-	</data>
-	<data name="serverConnectError">
-		<value>A fatal error was encountered while connecting to the server.</value>
 	</data>
 </root>
