@@ -66,7 +66,7 @@ namespace Novell.iFolder
 			this.Title = "iFolder Login";
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 			this.HasSeparator = false;
-			this.BorderWidth = 6;
+//			this.BorderWidth = 6;
 			this.Resizable = false;
 			this.Modal = true;
 			this.DefaultResponse = ResponseType.Ok;
@@ -119,7 +119,7 @@ namespace Novell.iFolder
 			this.VBox.ShowAll();
 
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
-			this.AddButton("Login", ResponseType.Ok);
+			this.AddButton("_Login", ResponseType.Ok);
 			this.SetResponseSensitive(ResponseType.Ok, false);
 		}
 
