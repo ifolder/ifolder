@@ -57,6 +57,7 @@ namespace Novell.iFolder.FormsBookLib
 		private ArrayList validSelectedContacts;
 		private System.ComponentModel.IContainer components;
 		private string loadPath;
+		private System.Windows.Forms.HelpProvider helpProvider1;
 		private string filter;
 		#endregion
 
@@ -121,6 +122,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.contacts = new System.Windows.Forms.ListView();
 			this.splitter1 = new System.Windows.Forms.Splitter();
 			this.books = new System.Windows.Forms.ListView();
+			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -140,9 +142,11 @@ namespace Novell.iFolder.FormsBookLib
 			// contacts
 			// 
 			this.contacts.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.helpProvider1.SetHelpString(this.contacts, "Displays the contacts found in the selected address book.");
 			this.contacts.HideSelection = false;
 			this.contacts.Location = new System.Drawing.Point(123, 0);
 			this.contacts.Name = "contacts";
+			this.helpProvider1.SetShowHelp(this.contacts, true);
 			this.contacts.Size = new System.Drawing.Size(245, 304);
 			this.contacts.TabIndex = 1;
 			this.contacts.KeyDown += new System.Windows.Forms.KeyEventHandler(this.contacts_KeyDown);
@@ -161,9 +165,11 @@ namespace Novell.iFolder.FormsBookLib
 			// books
 			// 
 			this.books.Dock = System.Windows.Forms.DockStyle.Left;
+			this.helpProvider1.SetHelpString(this.books, "Displays the available address books.");
 			this.books.HideSelection = false;
 			this.books.Location = new System.Drawing.Point(0, 0);
 			this.books.Name = "books";
+			this.helpProvider1.SetShowHelp(this.books, true);
 			this.books.Size = new System.Drawing.Size(120, 304);
 			this.books.TabIndex = 0;
 			this.books.KeyDown += new System.Windows.Forms.KeyEventHandler(this.books_KeyDown);

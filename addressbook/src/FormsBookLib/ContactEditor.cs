@@ -168,6 +168,7 @@ namespace Novell.iFolder.FormsBookLib
 		private int phoneFixedSpace;
 		private int jobFixedSpace;
 		private int addrFixedSpace;
+		private System.Windows.Forms.HelpProvider helpProvider1;
 
 		/// <summary>
 		/// Required designer variable.
@@ -344,6 +345,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.label24 = new System.Windows.Forms.Label();
 			this.cancel = new System.Windows.Forms.Button();
 			this.ok = new System.Windows.Forms.Button();
+			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.tabPage2.SuspendLayout();
@@ -413,11 +415,13 @@ namespace Novell.iFolder.FormsBookLib
 			// im3Location
 			// 
 			this.im3Location.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.im3Location, "Specifies a location for the instant messaging account.");
 			this.im3Location.Items.Add("Work");
 			this.im3Location.Items.Add("Home");
 			this.im3Location.Items.Add("Other");
 			this.im3Location.Location = new System.Drawing.Point(488, 448);
 			this.im3Location.Name = "im3Location";
+			this.helpProvider1.SetShowHelp(this.im3Location, true);
 			this.im3Location.Size = new System.Drawing.Size(96, 20);
 			this.im3Location.TabIndex = 37;
 			// 
@@ -434,14 +438,17 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.im3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.im3, "Specifies an instant messaging account for the contact.");
 			this.im3.Location = new System.Drawing.Point(168, 448);
 			this.im3.Name = "im3";
+			this.helpProvider1.SetShowHelp(this.im3, true);
 			this.im3.Size = new System.Drawing.Size(264, 20);
 			this.im3.TabIndex = 35;
 			this.im3.Text = "";
 			// 
 			// imLabel3
 			// 
+			this.helpProvider1.SetHelpString(this.imLabel3, "Specifies the provider for the Instant Messaging account.");
 			this.imLabel3.Items.Add("AIM");
 			this.imLabel3.Items.Add("Jabber");
 			this.imLabel3.Items.Add("Yahoo");
@@ -449,17 +456,20 @@ namespace Novell.iFolder.FormsBookLib
 			this.imLabel3.Items.Add("MSN");
 			this.imLabel3.Location = new System.Drawing.Point(24, 448);
 			this.imLabel3.Name = "imLabel3";
+			this.helpProvider1.SetShowHelp(this.imLabel3, true);
 			this.imLabel3.Size = new System.Drawing.Size(136, 20);
 			this.imLabel3.TabIndex = 34;
 			// 
 			// im2Location
 			// 
 			this.im2Location.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.im2Location, "Specifies a location for the instant messaging account.");
 			this.im2Location.Items.Add("Work");
 			this.im2Location.Items.Add("Home");
 			this.im2Location.Items.Add("Other");
 			this.im2Location.Location = new System.Drawing.Point(488, 416);
 			this.im2Location.Name = "im2Location";
+			this.helpProvider1.SetShowHelp(this.im2Location, true);
 			this.im2Location.Size = new System.Drawing.Size(96, 20);
 			this.im2Location.TabIndex = 33;
 			// 
@@ -476,14 +486,17 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.im2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.im2, "Specifies an instant messaging account for the contact.");
 			this.im2.Location = new System.Drawing.Point(168, 416);
 			this.im2.Name = "im2";
+			this.helpProvider1.SetShowHelp(this.im2, true);
 			this.im2.Size = new System.Drawing.Size(264, 20);
 			this.im2.TabIndex = 31;
 			this.im2.Text = "";
 			// 
 			// imLabel2
 			// 
+			this.helpProvider1.SetHelpString(this.imLabel2, "Specifies the provider for the Instant Messaging account.");
 			this.imLabel2.Items.Add("AIM");
 			this.imLabel2.Items.Add("Jabber");
 			this.imLabel2.Items.Add("Yahoo");
@@ -491,17 +504,20 @@ namespace Novell.iFolder.FormsBookLib
 			this.imLabel2.Items.Add("MSN");
 			this.imLabel2.Location = new System.Drawing.Point(24, 416);
 			this.imLabel2.Name = "imLabel2";
+			this.helpProvider1.SetShowHelp(this.imLabel2, true);
 			this.imLabel2.Size = new System.Drawing.Size(136, 20);
 			this.imLabel2.TabIndex = 30;
 			// 
 			// im1Location
 			// 
 			this.im1Location.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.im1Location, "Specifies a location for the instant messaging account.");
 			this.im1Location.Items.Add("Work");
 			this.im1Location.Items.Add("Home");
 			this.im1Location.Items.Add("Other");
 			this.im1Location.Location = new System.Drawing.Point(488, 384);
 			this.im1Location.Name = "im1Location";
+			this.helpProvider1.SetShowHelp(this.im1Location, true);
 			this.im1Location.Size = new System.Drawing.Size(96, 20);
 			this.im1Location.TabIndex = 29;
 			// 
@@ -518,14 +534,17 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.im1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.im1, "Specifies an instant messaging account for the contact.");
 			this.im1.Location = new System.Drawing.Point(168, 384);
 			this.im1.Name = "im1";
+			this.helpProvider1.SetShowHelp(this.im1, true);
 			this.im1.Size = new System.Drawing.Size(264, 20);
 			this.im1.TabIndex = 27;
 			this.im1.Text = "";
 			// 
 			// imLabel1
 			// 
+			this.helpProvider1.SetHelpString(this.imLabel1, "Specifies the provider for the Instant Messaging account.");
 			this.imLabel1.Items.Add("AIM");
 			this.imLabel1.Items.Add("Jabber");
 			this.imLabel1.Items.Add("Yahoo");
@@ -533,6 +552,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.imLabel1.Items.Add("MSN");
 			this.imLabel1.Location = new System.Drawing.Point(24, 384);
 			this.imLabel1.Name = "imLabel1";
+			this.helpProvider1.SetShowHelp(this.imLabel1, true);
 			this.imLabel1.Size = new System.Drawing.Size(136, 20);
 			this.imLabel1.TabIndex = 26;
 			// 
@@ -547,8 +567,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// phone4
 			// 
+			this.helpProvider1.SetHelpString(this.phone4, "Specifies a telephone number for this contact.");
 			this.phone4.Location = new System.Drawing.Point(432, 288);
 			this.phone4.Name = "phone4";
+			this.helpProvider1.SetShowHelp(this.phone4, true);
 			this.phone4.Size = new System.Drawing.Size(152, 20);
 			this.phone4.TabIndex = 24;
 			this.phone4.Text = "";
@@ -556,6 +578,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// phoneLabel4
 			// 
+			this.helpProvider1.SetHelpString(this.phoneLabel4, "Specifies the type for the telephone number.");
 			this.phoneLabel4.Items.Add("Business");
 			this.phoneLabel4.Items.Add("Business fax");
 			this.phoneLabel4.Items.Add("Home");
@@ -563,13 +586,16 @@ namespace Novell.iFolder.FormsBookLib
 			this.phoneLabel4.Items.Add("Pager");
 			this.phoneLabel4.Location = new System.Drawing.Point(304, 288);
 			this.phoneLabel4.Name = "phoneLabel4";
+			this.helpProvider1.SetShowHelp(this.phoneLabel4, true);
 			this.phoneLabel4.TabIndex = 23;
 			this.phoneLabel4.SelectedItemChanged += new System.EventHandler(this.phoneLabel4_SelectedItemChanged);
 			// 
 			// phone3
 			// 
+			this.helpProvider1.SetHelpString(this.phone3, "Specifies a telephone number for this contact.");
 			this.phone3.Location = new System.Drawing.Point(136, 288);
 			this.phone3.Name = "phone3";
+			this.helpProvider1.SetShowHelp(this.phone3, true);
 			this.phone3.Size = new System.Drawing.Size(160, 20);
 			this.phone3.TabIndex = 22;
 			this.phone3.Text = "";
@@ -577,6 +603,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// phoneLabel3
 			// 
+			this.helpProvider1.SetHelpString(this.phoneLabel3, "Specifies the type for the telephone number.");
 			this.phoneLabel3.Items.Add("Business");
 			this.phoneLabel3.Items.Add("Business fax");
 			this.phoneLabel3.Items.Add("Home");
@@ -584,14 +611,17 @@ namespace Novell.iFolder.FormsBookLib
 			this.phoneLabel3.Items.Add("Pager");
 			this.phoneLabel3.Location = new System.Drawing.Point(24, 288);
 			this.phoneLabel3.Name = "phoneLabel3";
+			this.helpProvider1.SetShowHelp(this.phoneLabel3, true);
 			this.phoneLabel3.Size = new System.Drawing.Size(104, 20);
 			this.phoneLabel3.TabIndex = 21;
 			this.phoneLabel3.SelectedItemChanged += new System.EventHandler(this.phoneLabel3_SelectedItemChanged);
 			// 
 			// phone2
 			// 
+			this.helpProvider1.SetHelpString(this.phone2, "Specifies a telephone number for this contact.");
 			this.phone2.Location = new System.Drawing.Point(432, 256);
 			this.phone2.Name = "phone2";
+			this.helpProvider1.SetShowHelp(this.phone2, true);
 			this.phone2.Size = new System.Drawing.Size(152, 20);
 			this.phone2.TabIndex = 20;
 			this.phone2.Text = "";
@@ -599,6 +629,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// phoneLabel2
 			// 
+			this.helpProvider1.SetHelpString(this.phoneLabel2, "Specifies the type for the telephone number.");
 			this.phoneLabel2.Items.Add("Business");
 			this.phoneLabel2.Items.Add("Business fax");
 			this.phoneLabel2.Items.Add("Home");
@@ -606,13 +637,16 @@ namespace Novell.iFolder.FormsBookLib
 			this.phoneLabel2.Items.Add("Pager");
 			this.phoneLabel2.Location = new System.Drawing.Point(304, 256);
 			this.phoneLabel2.Name = "phoneLabel2";
+			this.helpProvider1.SetShowHelp(this.phoneLabel2, true);
 			this.phoneLabel2.TabIndex = 19;
 			this.phoneLabel2.SelectedItemChanged += new System.EventHandler(this.phoneLabel2_SelectedItemChanged);
 			// 
 			// phone1
 			// 
+			this.helpProvider1.SetHelpString(this.phone1, "Specifies a telephone number for this contact.");
 			this.phone1.Location = new System.Drawing.Point(136, 256);
 			this.phone1.Name = "phone1";
+			this.helpProvider1.SetShowHelp(this.phone1, true);
 			this.phone1.Size = new System.Drawing.Size(160, 20);
 			this.phone1.TabIndex = 18;
 			this.phone1.Text = "";
@@ -620,6 +654,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// phoneLabel1
 			// 
+			this.helpProvider1.SetHelpString(this.phoneLabel1, "Specifies the type for the telephone number.");
 			this.phoneLabel1.Items.Add("Business");
 			this.phoneLabel1.Items.Add("Business fax");
 			this.phoneLabel1.Items.Add("Home");
@@ -627,6 +662,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.phoneLabel1.Items.Add("Pager");
 			this.phoneLabel1.Location = new System.Drawing.Point(24, 256);
 			this.phoneLabel1.Name = "phoneLabel1";
+			this.helpProvider1.SetShowHelp(this.phoneLabel1, true);
 			this.phoneLabel1.Size = new System.Drawing.Size(104, 20);
 			this.phoneLabel1.TabIndex = 17;
 			this.phoneLabel1.SelectedItemChanged += new System.EventHandler(this.phoneLabel1_SelectedItemChanged);
@@ -650,8 +686,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// email4
 			// 
+			this.helpProvider1.SetHelpString(this.email4, "Specifies an email account for the contact.");
 			this.email4.Location = new System.Drawing.Point(408, 160);
 			this.email4.Name = "email4";
+			this.helpProvider1.SetShowHelp(this.email4, true);
 			this.email4.Size = new System.Drawing.Size(176, 20);
 			this.email4.TabIndex = 14;
 			this.email4.Text = "";
@@ -660,19 +698,23 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// emailLabel4
 			// 
+			this.helpProvider1.SetHelpString(this.emailLabel4, "Specifies the type for the email account.");
 			this.emailLabel4.Items.Add("Work");
 			this.emailLabel4.Items.Add("Home");
 			this.emailLabel4.Items.Add("Other");
 			this.emailLabel4.Location = new System.Drawing.Point(312, 160);
 			this.emailLabel4.Name = "emailLabel4";
+			this.helpProvider1.SetShowHelp(this.emailLabel4, true);
 			this.emailLabel4.Size = new System.Drawing.Size(88, 20);
 			this.emailLabel4.TabIndex = 13;
 			this.emailLabel4.SelectedItemChanged += new System.EventHandler(this.emailLabel4_SelectedItemChanged);
 			// 
 			// email3
 			// 
+			this.helpProvider1.SetHelpString(this.email3, "Specifies an email account for the contact.");
 			this.email3.Location = new System.Drawing.Point(120, 160);
 			this.email3.Name = "email3";
+			this.helpProvider1.SetShowHelp(this.email3, true);
 			this.email3.Size = new System.Drawing.Size(184, 20);
 			this.email3.TabIndex = 12;
 			this.email3.Text = "";
@@ -681,19 +723,23 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// emailLabel3
 			// 
+			this.helpProvider1.SetHelpString(this.emailLabel3, "Specifies the type for the email account.");
 			this.emailLabel3.Items.Add("Work");
 			this.emailLabel3.Items.Add("Home");
 			this.emailLabel3.Items.Add("Other");
 			this.emailLabel3.Location = new System.Drawing.Point(24, 160);
 			this.emailLabel3.Name = "emailLabel3";
+			this.helpProvider1.SetShowHelp(this.emailLabel3, true);
 			this.emailLabel3.Size = new System.Drawing.Size(88, 20);
 			this.emailLabel3.TabIndex = 11;
 			this.emailLabel3.SelectedItemChanged += new System.EventHandler(this.emailLabel3_SelectedItemChanged);
 			// 
 			// email2
 			// 
+			this.helpProvider1.SetHelpString(this.email2, "Specifies an email account for the contact.");
 			this.email2.Location = new System.Drawing.Point(408, 128);
 			this.email2.Name = "email2";
+			this.helpProvider1.SetShowHelp(this.email2, true);
 			this.email2.Size = new System.Drawing.Size(176, 20);
 			this.email2.TabIndex = 10;
 			this.email2.Text = "";
@@ -702,19 +748,23 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// emailLabel2
 			// 
+			this.helpProvider1.SetHelpString(this.emailLabel2, "Specifies the type for the email account.");
 			this.emailLabel2.Items.Add("Work");
 			this.emailLabel2.Items.Add("Home");
 			this.emailLabel2.Items.Add("Other");
 			this.emailLabel2.Location = new System.Drawing.Point(312, 128);
 			this.emailLabel2.Name = "emailLabel2";
+			this.helpProvider1.SetShowHelp(this.emailLabel2, true);
 			this.emailLabel2.Size = new System.Drawing.Size(88, 20);
 			this.emailLabel2.TabIndex = 9;
 			this.emailLabel2.SelectedItemChanged += new System.EventHandler(this.emailLabel2_SelectedItemChanged);
 			// 
 			// email1
 			// 
+			this.helpProvider1.SetHelpString(this.email1, "Specifies an email account for the contact.");
 			this.email1.Location = new System.Drawing.Point(120, 128);
 			this.email1.Name = "email1";
+			this.helpProvider1.SetShowHelp(this.email1, true);
 			this.email1.Size = new System.Drawing.Size(184, 20);
 			this.email1.TabIndex = 8;
 			this.email1.Text = "";
@@ -723,11 +773,13 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// emailLabel1
 			// 
+			this.helpProvider1.SetHelpString(this.emailLabel1, "Specifies the type for the email account.");
 			this.emailLabel1.Items.Add("Work");
 			this.emailLabel1.Items.Add("Home");
 			this.emailLabel1.Items.Add("Other");
 			this.emailLabel1.Location = new System.Drawing.Point(24, 128);
 			this.emailLabel1.Name = "emailLabel1";
+			this.helpProvider1.SetShowHelp(this.emailLabel1, true);
 			this.emailLabel1.Size = new System.Drawing.Size(88, 20);
 			this.emailLabel1.TabIndex = 7;
 			this.emailLabel1.SelectedItemChanged += new System.EventHandler(this.emailLabel1_SelectedItemChanged);
@@ -753,8 +805,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// pictureContact
 			// 
+			this.helpProvider1.SetHelpString(this.pictureContact, "Click here to add or change the photo for this contact.");
 			this.pictureContact.Location = new System.Drawing.Point(16, 8);
 			this.pictureContact.Name = "pictureContact";
+			this.helpProvider1.SetShowHelp(this.pictureContact, true);
 			this.pictureContact.Size = new System.Drawing.Size(56, 70);
 			this.pictureContact.TabIndex = 4;
 			this.pictureContact.TabStop = false;
@@ -764,8 +818,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.nickname.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.nickname, "Specifies the contact\'s nickname.");
 			this.nickname.Location = new System.Drawing.Point(168, 48);
 			this.nickname.Name = "nickname";
+			this.helpProvider1.SetShowHelp(this.nickname, true);
 			this.nickname.Size = new System.Drawing.Size(176, 20);
 			this.nickname.TabIndex = 3;
 			this.nickname.Text = "";
@@ -782,8 +838,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.fullName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.fullName, "Specifies the contact\'s full name.");
 			this.fullName.Location = new System.Drawing.Point(168, 16);
 			this.fullName.Name = "fullName";
+			this.helpProvider1.SetShowHelp(this.fullName, true);
 			this.fullName.Size = new System.Drawing.Size(416, 20);
 			this.fullName.TabIndex = 1;
 			this.fullName.Text = "";
@@ -793,8 +851,10 @@ namespace Novell.iFolder.FormsBookLib
 			// fullNameButton
 			// 
 			this.fullNameButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.helpProvider1.SetHelpString(this.fullNameButton, "Click to view or change the contact\'s full name.");
 			this.fullNameButton.Location = new System.Drawing.Point(80, 14);
 			this.fullNameButton.Name = "fullNameButton";
+			this.helpProvider1.SetShowHelp(this.fullNameButton, true);
 			this.fullNameButton.Size = new System.Drawing.Size(80, 23);
 			this.fullNameButton.TabIndex = 0;
 			this.fullNameButton.Text = "Full Name...";
@@ -838,9 +898,11 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.notes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.notes, "Specifies notes for the contact.");
 			this.notes.Location = new System.Drawing.Point(80, 352);
 			this.notes.Multiline = true;
 			this.notes.Name = "notes";
+			this.helpProvider1.SetShowHelp(this.notes, true);
 			this.notes.Size = new System.Drawing.Size(504, 152);
 			this.notes.TabIndex = 25;
 			this.notes.Text = "";
@@ -855,8 +917,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// birthday
 			// 
+			this.helpProvider1.SetHelpString(this.birthday, "Specifies the contact\'s birthday.");
 			this.birthday.Location = new System.Drawing.Point(80, 320);
 			this.birthday.Name = "birthday";
+			this.helpProvider1.SetShowHelp(this.birthday, true);
 			this.birthday.Size = new System.Drawing.Size(180, 20);
 			this.birthday.TabIndex = 22;
 			this.birthday.Text = "";
@@ -889,32 +953,40 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// department
 			// 
+			this.helpProvider1.SetHelpString(this.department, "Specifies the contact\'s department.");
 			this.department.Location = new System.Drawing.Point(376, 216);
 			this.department.Name = "department";
+			this.helpProvider1.SetShowHelp(this.department, true);
 			this.department.Size = new System.Drawing.Size(208, 20);
 			this.department.TabIndex = 17;
 			this.department.Text = "";
 			// 
 			// manager
 			// 
+			this.helpProvider1.SetHelpString(this.manager, "Specifies the contact\'s manager.");
 			this.manager.Location = new System.Drawing.Point(88, 240);
 			this.manager.Name = "manager";
+			this.helpProvider1.SetShowHelp(this.manager, true);
 			this.manager.Size = new System.Drawing.Size(208, 20);
 			this.manager.TabIndex = 19;
 			this.manager.Text = "";
 			// 
 			// company
 			// 
+			this.helpProvider1.SetHelpString(this.company, "Specifies the contact\'s company.");
 			this.company.Location = new System.Drawing.Point(88, 216);
 			this.company.Name = "company";
+			this.helpProvider1.SetShowHelp(this.company, true);
 			this.company.Size = new System.Drawing.Size(208, 20);
 			this.company.TabIndex = 15;
 			this.company.Text = "";
 			// 
 			// jobTitle
 			// 
+			this.helpProvider1.SetHelpString(this.jobTitle, "Specifies the contact\'s job title.");
 			this.jobTitle.Location = new System.Drawing.Point(376, 192);
 			this.jobTitle.Name = "jobTitle";
+			this.helpProvider1.SetShowHelp(this.jobTitle, true);
 			this.jobTitle.Size = new System.Drawing.Size(208, 20);
 			this.jobTitle.TabIndex = 13;
 			this.jobTitle.Text = "";
@@ -937,8 +1009,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// profession
 			// 
+			this.helpProvider1.SetHelpString(this.profession, "Specifies the contact\'s profession.");
 			this.profession.Location = new System.Drawing.Point(88, 192);
 			this.profession.Name = "profession";
+			this.helpProvider1.SetShowHelp(this.profession, true);
 			this.profession.Size = new System.Drawing.Size(208, 20);
 			this.profession.TabIndex = 11;
 			this.profession.Text = "";
@@ -980,8 +1054,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.webcam.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.webcam, "Specifies the address of the contact\'s web camera.");
 			this.webcam.Location = new System.Drawing.Point(88, 120);
 			this.webcam.Name = "webcam";
+			this.helpProvider1.SetShowHelp(this.webcam, true);
 			this.webcam.Size = new System.Drawing.Size(496, 20);
 			this.webcam.TabIndex = 8;
 			this.webcam.Text = "";
@@ -990,8 +1066,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.calendar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.calendar, "Specifies the address of the contact\'s calendar web page.");
 			this.calendar.Location = new System.Drawing.Point(88, 96);
 			this.calendar.Name = "calendar";
+			this.helpProvider1.SetShowHelp(this.calendar, true);
 			this.calendar.Size = new System.Drawing.Size(496, 20);
 			this.calendar.TabIndex = 6;
 			this.calendar.Text = "";
@@ -1000,8 +1078,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.blog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.blog, "Specifies the address of the contact\'s web log.");
 			this.blog.Location = new System.Drawing.Point(88, 72);
 			this.blog.Name = "blog";
+			this.helpProvider1.SetShowHelp(this.blog, true);
 			this.blog.Size = new System.Drawing.Size(496, 20);
 			this.blog.TabIndex = 4;
 			this.blog.Text = "";
@@ -1010,8 +1090,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.homePage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.homePage, "Specifies the address of the contact\'s home web page.");
 			this.homePage.Location = new System.Drawing.Point(88, 48);
 			this.homePage.Name = "homePage";
+			this.helpProvider1.SetShowHelp(this.homePage, true);
 			this.homePage.Size = new System.Drawing.Size(496, 20);
 			this.homePage.TabIndex = 2;
 			this.homePage.Text = "";
@@ -1106,24 +1188,30 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// otherCountry
 			// 
+			this.helpProvider1.SetHelpString(this.otherCountry, "Specifies the country for the contact\'s alternate address.");
 			this.otherCountry.Location = new System.Drawing.Point(392, 424);
 			this.otherCountry.Name = "otherCountry";
+			this.helpProvider1.SetShowHelp(this.otherCountry, true);
 			this.otherCountry.Size = new System.Drawing.Size(192, 21);
 			this.otherCountry.TabIndex = 38;
 			this.otherCountry.TextChanged += new System.EventHandler(this.otherCountry_TextChanged);
 			// 
 			// homeCountry
 			// 
+			this.helpProvider1.SetHelpString(this.homeCountry, "Specifies the country for the contact\'s home address.");
 			this.homeCountry.Location = new System.Drawing.Point(392, 272);
 			this.homeCountry.Name = "homeCountry";
+			this.helpProvider1.SetShowHelp(this.homeCountry, true);
 			this.homeCountry.Size = new System.Drawing.Size(192, 21);
 			this.homeCountry.TabIndex = 25;
 			this.homeCountry.TextChanged += new System.EventHandler(this.homeCountry_TextChanged);
 			// 
 			// workCountry
 			// 
+			this.helpProvider1.SetHelpString(this.workCountry, "Specifies the country for the contact\'s work address.");
 			this.workCountry.Location = new System.Drawing.Point(392, 120);
 			this.workCountry.Name = "workCountry";
+			this.helpProvider1.SetShowHelp(this.workCountry, true);
 			this.workCountry.Size = new System.Drawing.Size(192, 21);
 			this.workCountry.TabIndex = 12;
 			this.workCountry.TextChanged += new System.EventHandler(this.workCountry_TextChanged);
@@ -1147,8 +1235,11 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// otherState
 			// 
+			this.helpProvider1.SetHelpString(this.otherState, "Specifies the state or province for the contact\'s work address.Specifies the city" +
+				" for the contact\'s alternate address.");
 			this.otherState.Location = new System.Drawing.Point(96, 424);
 			this.otherState.Name = "otherState";
+			this.helpProvider1.SetShowHelp(this.otherState, true);
 			this.otherState.Size = new System.Drawing.Size(192, 20);
 			this.otherState.TabIndex = 34;
 			this.otherState.Text = "";
@@ -1156,8 +1247,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// otherZip
 			// 
+			this.helpProvider1.SetHelpString(this.otherZip, "Specifies the ZIP or postal code for the contact\'s alternate address.");
 			this.otherZip.Location = new System.Drawing.Point(392, 400);
 			this.otherZip.Name = "otherZip";
+			this.helpProvider1.SetShowHelp(this.otherZip, true);
 			this.otherZip.Size = new System.Drawing.Size(192, 20);
 			this.otherZip.TabIndex = 36;
 			this.otherZip.Text = "";
@@ -1173,8 +1266,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// otherCity
 			// 
+			this.helpProvider1.SetHelpString(this.otherCity, "Specifies the city for the contact\'s alternate address.");
 			this.otherCity.Location = new System.Drawing.Point(96, 400);
 			this.otherCity.Name = "otherCity";
+			this.helpProvider1.SetShowHelp(this.otherCity, true);
 			this.otherCity.Size = new System.Drawing.Size(192, 20);
 			this.otherCity.TabIndex = 32;
 			this.otherCity.Text = "";
@@ -1184,8 +1279,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.otherAddress2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.otherAddress2, "Specifies extended information for the contact\'s alternate address.");
 			this.otherAddress2.Location = new System.Drawing.Point(96, 376);
 			this.otherAddress2.Name = "otherAddress2";
+			this.helpProvider1.SetShowHelp(this.otherAddress2, true);
 			this.otherAddress2.Size = new System.Drawing.Size(488, 20);
 			this.otherAddress2.TabIndex = 30;
 			this.otherAddress2.Text = "";
@@ -1195,8 +1292,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.otherStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.otherStreet, "Specifies the street for the contact\'s alternate address.");
 			this.otherStreet.Location = new System.Drawing.Point(96, 352);
 			this.otherStreet.Name = "otherStreet";
+			this.helpProvider1.SetShowHelp(this.otherStreet, true);
 			this.otherStreet.Size = new System.Drawing.Size(488, 20);
 			this.otherStreet.TabIndex = 28;
 			this.otherStreet.Text = "";
@@ -1244,8 +1343,11 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// homeState
 			// 
+			this.helpProvider1.SetHelpString(this.homeState, "Specifies the state or province for the contact\'s work address.Specifies the city" +
+				" for the contact\'s home address.");
 			this.homeState.Location = new System.Drawing.Point(96, 272);
 			this.homeState.Name = "homeState";
+			this.helpProvider1.SetShowHelp(this.homeState, true);
 			this.homeState.Size = new System.Drawing.Size(192, 20);
 			this.homeState.TabIndex = 21;
 			this.homeState.Text = "";
@@ -1253,8 +1355,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// homeZip
 			// 
+			this.helpProvider1.SetHelpString(this.homeZip, "Specifies the ZIP or postal code for the contact\'s home address.");
 			this.homeZip.Location = new System.Drawing.Point(392, 248);
 			this.homeZip.Name = "homeZip";
+			this.helpProvider1.SetShowHelp(this.homeZip, true);
 			this.homeZip.Size = new System.Drawing.Size(192, 20);
 			this.homeZip.TabIndex = 23;
 			this.homeZip.Text = "";
@@ -1270,8 +1374,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// homeCity
 			// 
+			this.helpProvider1.SetHelpString(this.homeCity, "Specifies the city for the contact\'s home address.");
 			this.homeCity.Location = new System.Drawing.Point(96, 248);
 			this.homeCity.Name = "homeCity";
+			this.helpProvider1.SetShowHelp(this.homeCity, true);
 			this.homeCity.Size = new System.Drawing.Size(192, 20);
 			this.homeCity.TabIndex = 19;
 			this.homeCity.Text = "";
@@ -1281,8 +1387,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.homeAddress2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.homeAddress2, "Specifies extended information for the contact\'s home address.");
 			this.homeAddress2.Location = new System.Drawing.Point(96, 224);
 			this.homeAddress2.Name = "homeAddress2";
+			this.helpProvider1.SetShowHelp(this.homeAddress2, true);
 			this.homeAddress2.Size = new System.Drawing.Size(488, 20);
 			this.homeAddress2.TabIndex = 17;
 			this.homeAddress2.Text = "";
@@ -1292,8 +1400,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.homeStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.homeStreet, "Specifies the street for the contact\'s home address.");
 			this.homeStreet.Location = new System.Drawing.Point(96, 200);
 			this.homeStreet.Name = "homeStreet";
+			this.helpProvider1.SetShowHelp(this.homeStreet, true);
 			this.homeStreet.Size = new System.Drawing.Size(488, 20);
 			this.homeStreet.TabIndex = 15;
 			this.homeStreet.Text = "";
@@ -1350,8 +1460,11 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// workState
 			// 
+			this.helpProvider1.SetHelpString(this.workState, "Specifies the state or province for the contact\'s work address.Specifies the city" +
+				" for the contact\'s work address.");
 			this.workState.Location = new System.Drawing.Point(96, 120);
 			this.workState.Name = "workState";
+			this.helpProvider1.SetShowHelp(this.workState, true);
 			this.workState.Size = new System.Drawing.Size(192, 20);
 			this.workState.TabIndex = 8;
 			this.workState.Text = "";
@@ -1359,8 +1472,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// workZip
 			// 
+			this.helpProvider1.SetHelpString(this.workZip, "Specifies the ZIP or postal code for the contact\'s work address.");
 			this.workZip.Location = new System.Drawing.Point(392, 96);
 			this.workZip.Name = "workZip";
+			this.helpProvider1.SetShowHelp(this.workZip, true);
 			this.workZip.Size = new System.Drawing.Size(192, 20);
 			this.workZip.TabIndex = 10;
 			this.workZip.Text = "";
@@ -1376,8 +1491,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// workCity
 			// 
+			this.helpProvider1.SetHelpString(this.workCity, "Specifies the city for the contact\'s work address.");
 			this.workCity.Location = new System.Drawing.Point(96, 96);
 			this.workCity.Name = "workCity";
+			this.helpProvider1.SetShowHelp(this.workCity, true);
 			this.workCity.Size = new System.Drawing.Size(192, 20);
 			this.workCity.TabIndex = 6;
 			this.workCity.Text = "";
@@ -1387,8 +1504,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.workAddress2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.workAddress2, "Specifies extended information for the contact\'s work address.");
 			this.workAddress2.Location = new System.Drawing.Point(96, 72);
 			this.workAddress2.Name = "workAddress2";
+			this.helpProvider1.SetShowHelp(this.workAddress2, true);
 			this.workAddress2.Size = new System.Drawing.Size(488, 20);
 			this.workAddress2.TabIndex = 4;
 			this.workAddress2.Text = "";
@@ -1398,8 +1517,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.workStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.workStreet, "Specifies the street for the contact\'s work address.");
 			this.workStreet.Location = new System.Drawing.Point(96, 48);
 			this.workStreet.Name = "workStreet";
+			this.helpProvider1.SetShowHelp(this.workStreet, true);
 			this.workStreet.Size = new System.Drawing.Size(488, 20);
 			this.workStreet.TabIndex = 2;
 			this.workStreet.Text = "";
@@ -1476,6 +1597,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.tabControl1);
+			this.HelpButton = true;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.MinimumSize = new System.Drawing.Size(640, 640);

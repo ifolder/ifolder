@@ -56,6 +56,7 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.GroupBox groupBox1;
 		private int fixedWidth;
 		private double booksContactsRatio;
+		private System.Windows.Forms.HelpProvider helpProvider1;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -124,14 +125,16 @@ namespace Novell.iFolder.FormsBookLib
 			this.newContact = new System.Windows.Forms.ToolBarButton();
 			this.editSearchTimer = new System.Windows.Forms.Timer(this.components);
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
 			this.SuspendLayout();
 			// 
 			// add
 			// 
-			this.add.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.add.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.helpProvider1.SetHelpString(this.add, "Adds the selected contact(s) to the picked list.");
 			this.add.Location = new System.Drawing.Point(328, 120);
 			this.add.Name = "add";
+			this.helpProvider1.SetShowHelp(this.add, true);
 			this.add.TabIndex = 2;
 			this.add.Text = "Add ->";
 			this.add.Click += new System.EventHandler(this.add_Click);
@@ -141,8 +144,10 @@ namespace Novell.iFolder.FormsBookLib
 			this.addedContacts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
 				| System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.addedContacts, "Displays contacts that have been picked.");
 			this.addedContacts.Location = new System.Drawing.Point(416, 88);
 			this.addedContacts.Name = "addedContacts";
+			this.helpProvider1.SetShowHelp(this.addedContacts, true);
 			this.addedContacts.Size = new System.Drawing.Size(176, 352);
 			this.addedContacts.TabIndex = 6;
 			this.addedContacts.KeyDown += new System.Windows.Forms.KeyEventHandler(this.addedContacts_KeyDown);
@@ -186,8 +191,10 @@ namespace Novell.iFolder.FormsBookLib
 			// remove
 			// 
 			this.remove.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.helpProvider1.SetHelpString(this.remove, "Remove the selected contact(s) from the picked list.");
 			this.remove.Location = new System.Drawing.Point(328, 152);
 			this.remove.Name = "remove";
+			this.helpProvider1.SetShowHelp(this.remove, true);
 			this.remove.TabIndex = 12;
 			this.remove.Text = "Remove";
 			this.remove.Click += new System.EventHandler(this.remove_Click);
@@ -196,8 +203,10 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.search.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.helpProvider1.SetHelpString(this.search, "Enter text to search for a specific contact in the selected address book.");
 			this.search.Location = new System.Drawing.Point(56, 56);
 			this.search.Name = "search";
+			this.helpProvider1.SetShowHelp(this.search, true);
 			this.search.Size = new System.Drawing.Size(536, 20);
 			this.search.TabIndex = 13;
 			this.search.Text = "";
@@ -271,6 +280,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.Controls.Add(this.booksContacts);
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
+			this.HelpButton = true;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.MinimumSize = new System.Drawing.Size(576, 528);
