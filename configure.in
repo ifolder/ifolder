@@ -329,4 +329,5 @@ src/iFolderShell/Makefile
 src/package/Makefile
 src/package/windows/Makefile
 src/package/linux/Makefile
+src/package/linux/ifolder.spec
 ])

@@ -1,0 +1,127 @@
+#========================================================================
+#  $RCSfile$
+# 
+#  Copyright (C) 2004 Novell, Inc.
+#
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public
+#  License as published by the Free Software Foundation; either
+#  version 2 of the License, or (at your option) any later version.
+#
+#  This library is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Library General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public
+#  License along with this library; if not, write to the Free
+#  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#
+#  Author: Paul Thomas <pthomas@novell.com>
+# 
+#========================================================================
+
+%define prefix /opt/novell/ifolder3
+
+Summary      : Simias
+Name         : @PACKAGE@
+Version      : @VERSION@
+Release      : 1
+Copyright    : GPL
+Group        : Desktop/Applications
+Source       : %{name}-%{version}.tar.gz
+URL          : http://forge.novell.com/modules/xfmod/project/?ifolder
+#Distribution : 
+Vendor       : Novell, Inc.
+Packager     : Novell, Inc.
+BuildRoot    : %{_tmppath}/%{name}-%{version}
+
+Requires     : addressbook = %{version}
+Requires     : simias = %{version}
+Requires     : mono >= 0.30
+Requires     : gtk-sharp >= 0.17
+Obsoletes    : %{name} <= %{version}
+
+#=============================================================================
+%Description
+Description of Simias
+
+#=============================================================================
+%ChangeLog
+
+
+#=============================================================================
+%Prep
+%setup -n %{name}-%{version}
+
+#=============================================================================
+%Build
+./configure --prefix=%{prefix}
+make
+
+#=============================================================================
+%Install
+%{__rm} -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT install
+
+#=============================================================================
+%Clean
+%{__rm} -rf $RPM_BUILD_ROOT
+
+#=============================================================================
+%Post
+# If path is not already in ld.so.conf, append it
+if ! grep -q "^%{prefix}/bin$" /etc/ld.so.conf ; then
+    echo "%{prefix}/bin" >> /etc/ld.so.conf
+    /sbin/ldconfig
+fi
+
+#
+# Configure tray app to start on user login for each desktop user
+#
+#for path in \`find /home -name \.gnome2 -print\`
+#do
+#    $TOP_INSTALL/bin/config-startup \`dirname \$path\`
+#done 2>/dev/null
+
+#if [ "$1" = "1" ]; then
+#    # do things appropriate for a new install
+#    echo "%Post ($1 - install)"
+#elif [ "$1" = "2" ]; then
+#    # do things appropriate for an upgrade
+#    echo "%Post ($1 - upgrade)"
+#fi
+
+#=============================================================================
+#%Preun
+#if [ "$1" != "1" ]; then
+#    # do things appropriate for a remove
+#    #
+#    # Unconfigure tray app to start on user login for each desktop user
+#    #
+#    for path in \`find /home -name \.gnome2 -print\`
+#    do
+#        $TOP_INSTALL/bin/config-startup -e \`dirname \$path\`
+#    done 2>/dev/null
+#elif [ "$1" = "1" ]; then
+#    # do things appropriate for an upgrade
+#    echo "%Postun ($1 - upgrade)"
+#fi
+
+#=============================================================================
+#%Postun
+#if [ "$1" != "1" ]; then
+#    # do things appropriate for a remove
+#    echo "%Postun ($1 - remove)"
+#elif [ "$1" = "1" ]; then
+#    # do things appropriate for an upgrade
+#    echo "%Postun ($1 - upgrade)"
+#fi
+
+#=============================================================================
+%Files
+%defattr(-,root,root)
+%{prefix}/bin/*
+#%{prefix}/lib/*
+#%{prefix}/share/*
+
