@@ -44,6 +44,8 @@ AssemblyInfo.cs
 ../FlaimProvider/FlaimRecord.cs
 ../FlaimProvider/FlaimResultSet.cs
 ../FlaimProvider/FlaimServer.cs
+../HttpAuthentication/AuthHandler.cs
+../HttpAuthentication/iAuthService.cs
 ../POBox/Message.cs
 ../POBox/POBox.cs
 ../POBox/POBoxManager.cs
