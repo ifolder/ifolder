@@ -14,8 +14,6 @@ AssemblyInfo.cs
 ../CollectionStore/FileRenameEventArgs.cs
 ../CollectionStore/NodeEventArgs.cs
 ../CollectionStore/AccessControl.cs
-../CollectionStore/Alias.cs
-../CollectionStore/BaseContact.cs
 ../CollectionStore/BaseFileNode.cs
 ../CollectionStore/Collection.cs
 ../CollectionStore/CollectionStoreTests/CollectionStoreTests.cs
@@ -24,10 +22,10 @@ AssemblyInfo.cs
 ../CollectionStore/Exception.cs
 ../CollectionStore/FileNode.cs
 ../CollectionStore/ICSEnumerator.cs
-../CollectionStore/IdentityManager.cs
+../CollectionStore/Identity.cs
 ../CollectionStore/LinkNode.cs
-../CollectionStore/LocalAddressBook.cs
 ../CollectionStore/LocalDatabase.cs
+../CollectionStore/Member.cs
 ../CollectionStore/MultiValuedList.cs
 ../CollectionStore/Node.cs
 ../CollectionStore/NodeTypes.cs
@@ -36,7 +34,6 @@ AssemblyInfo.cs
 ../CollectionStore/ShallowNode.cs
 ../CollectionStore/Store.cs
 ../CollectionStore/StoreFileNode.cs
-../CollectionStore/WorkGroup.cs
 ../Common/Library/Configuration.cs
 ../Common/Library/Exception.cs
 ../Common/Library/ISimiasLog.cs
