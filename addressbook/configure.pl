@@ -41,6 +41,10 @@ my $build_date = strftime("%Y%m%d", localtime);
 my $product_version = '';           # default complete product version
 my $package_release = '1';          # default package release
 my $src_tag = 'src';                # tag for source distribution
+my $simias_root = '';               # root location of simias
+
+# installation
+my $prefix = '';                    # default install location
 
 # options
 my $opt_cpu = '';                   # target cpu
@@ -109,6 +113,12 @@ USAGE: configure.pl [options]
     --package-release [value]   Specify the package release
                                     i.e. '1'
 
+    INSTALLATION DIRECTORIES:
+
+    --prefix [value]            specifies the location where files are
+                                placed when running a make install
+                                default value = /usr/local
+
     BUILD OPTIONS
 
     --debug                     Compile and build with debug flags
@@ -119,6 +129,8 @@ USAGE: configure.pl [options]
                                     value: linux, windows, netware
     --tools [value]             Specify the build tools
                                     value: gnu, vs, mw
+    --simias_root [value]       Specify where the root location of
+	                                the simias project is
     -? | --help                 Show usage
 
 END
@@ -140,7 +152,11 @@ GetOptions(
     'product-version=s'     => \$product_version,
     'package-release=s'     => \$package_release,
 
+    # install options
+	'prefix=s'              => \$prefix,
+
     # build options
+	'simias_root=s'         => \$simias_root,
     'cpu=s'                 => \$opt_cpu,
     'debug'                 => \$opt_debug,
     'no-doc'                => \$opt_no_doc,
@@ -334,13 +350,14 @@ if ($opt_shell eq 'bash')
 {
     # this needs to be changed but for now, assume the simias
     # diretory is up one directory from our root directory
+	my $root_dir = `pwd`;
     chdir('..');
     my $cvs_root_dir = `pwd`;
     chomp($cvs_root_dir);
 
     # directories
     # chdir('..');
-    my $root_dir = "$cvs_root_dir/addressbook";
+    # my $root_dir = "$cvs_root_dir/addressbook";
     chomp($root_dir);
     $variables{'ROOTDIR'} = $root_dir;
     $variables{'SRCDIR'} = "$root_dir/src";
@@ -348,7 +365,14 @@ if ($opt_shell eq 'bash')
     $variables{'DOCDIR'} = "$variables{'SRCDIR'}/doc";
     $variables{'APIDOCDIR'} = "$variables{'SRCDIR'}/api-doc";
     $variables{'STAGE_DIR'} = "$variables{'SRCDIR'}/stage";
-    $variables{'SIMIAS_ROOT'} = "$cvs_root_dir/simias";
+	if ($simias_root eq '')
+	{
+    	$variables{'SIMIAS_ROOT'} = "$cvs_root_dir/simias";
+	}
+	else
+	{
+    	$variables{'SIMIAS_ROOT'} = "$simias_root";
+	}
     chdir($root_dir);
 
     # commands
@@ -360,19 +384,30 @@ if ($opt_shell eq 'bash')
     $variables{'RMDIR'} = 'rm -rf';
     $variables{'SEP'} = '/';
     $variables{'ECHO_BLANK_LINE'} = "\@echo ''";
+	if ($prefix eq '')
+	{
+		$prefix = '/usr/local';
+	}
+	$variables{'prefix'} = $prefix;
+	print "Package install prefix: $prefix\n";
+	$variables{'bindir'} = '$(prefix)/bin';
+	$variables{'libdir'} = '$(prefix)/bin';
+	$variables{'datadir'} = '$(prefix)/bin';
 }
 # cmd
 elsif ($opt_shell eq 'cmd')
 {
     # this needs to be changed but for now, assume the simias
     # diretory is up one directory from our root directory
+	my $root_dir = `cd`;
+
     chdir('..');
     my $cvs_root_dir = `cd`;
     chomp($cvs_root_dir);
 
     # directories
     # chdir('..');
-    my $root_dir = "$cvs_root_dir\\addressbook";
+    # my $root_dir = "$cvs_root_dir\\addressbook";
     chomp($root_dir);
     $variables{'ROOTDIR'} = $root_dir;
     $variables{'SRCDIR'} = "$root_dir\\src";
@@ -380,7 +415,14 @@ elsif ($opt_shell eq 'cmd')
     $variables{'DOCDIR'} = "$variables{'SRCDIR'}\\doc";
     $variables{'APIDOCDIR'} = "$variables{'SRCDIR'}\\api-doc";
     $variables{'STAGE_DIR'} = "$variables{'SRCDIR'}\\stage";
-    $variables{'SIMIAS_ROOT'} = "$cvs_root_dir\\simias";
+	if ($simias_root eq '')
+	{
+    	$variables{'SIMIAS_ROOT'} = "$cvs_root_dir\\simias";
+	}
+	else
+	{
+    	$variables{'SIMIAS_ROOT'} = "$simias_root";
+	}
     chdir($root_dir);
 
     # commands
@@ -392,6 +434,15 @@ elsif ($opt_shell eq 'cmd')
     $variables{'RMDIR'} = 'call rmdir /s /q';
     $variables{'SEP'} = '$(EMPTY)\\$(EMPTY)';
     $variables{'ECHO_BLANK_LINE'} = '@call echo.';
+	if ($prefix eq '')
+	{
+		$prefix = '\\usr\\local';
+	}
+	$variables{'prefix'} = $prefix;
+	print "Package install prefix: $prefix\n";
+	$variables{'bindir'} = '$(prefix)\\bin';
+	$variables{'libdir'} = '$(prefix)\\bin';
+	$variables{'datadir'} = '$(prefix)\\bin';
 }
 else
 {
@@ -772,6 +823,9 @@ close(OUT);
 # File CVS History:
 #
 # $Log$
+# Revision 1.2.2.1  2004/02/25 04:41:04  cgaisford
+# updated files to use new make targets
+#
 # Revision 1.2  2004/02/24 00:03:46  pthomas707
 # Rename product name from denali to addressbook
 #

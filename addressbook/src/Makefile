@@ -97,68 +97,36 @@ endif
 #=============================================================================
 .PHONY: all $(SUBDIRS)
 
-all: stage $(SUBDIRS)
+all: $(SUBDIRS)
 
 $(SUBDIRS):
 	$(call HEADER,$@)
 	@$(MAKE) -C $@ all
 
 #=============================================================================
-# mkfiles
-#=============================================================================
-MKFILES = $(patsubst %,%/Makefile, $(SLNDIRS))
-
-.PHONY: mkfiles -mkfiles
-
-mkfiles: -mkfiles $(MKFILES)
-
--mkfiles:
-	$(call HEADER,mkfiles)
-
-$(MKFILES): FORCE
-	-$(SLN2MK) $(wildcard $(dir $@)*.sln) $(SLN_CONFIG)
-
-FORCE:
-
-#=============================================================================
-# mkfiles-clean
-#=============================================================================
-MKFILES_CLEAN = $(addprefix clean., $(MKFILES))
-
-.PHONY: mkfiles-clean -mkfiles-clean $(MKFILES_CLEAN)
-
-mkfiles-clean: -mkfiles-clean $(MKFILES_CLEAN)
-
--mkfiles-clean:
-	$(call HEADER,mkfiles-clean)
-
-$(MKFILES_CLEAN):
-		$(call RM_IF_EXISTS,$(subst /,$(SEP),$(subst clean.,,$@)))
-
-#=============================================================================
 # stage
 #=============================================================================
-.PHONY: stage $(STAGE_DIR) $(STAGE_FILES)
+#.PHONY: stage $(STAGE_DIR) $(STAGE_FILES)
 
-stage: stage-clean stage-prep $(STAGE_DIR) $(STAGE_FILES)
+#stage: stage-clean stage-prep $(STAGE_DIR) $(STAGE_FILES)
 
-stage-prep:
-	$(call HEADER,stage)
+#stage-prep:
+#	$(call HEADER,stage)
 
-$(STAGE_DIR):
-	$(MKDIR) $(STAGE_DIR)
+#$(STAGE_DIR):
+#	$(MKDIR) $(STAGE_DIR)
 
-$(STAGE_FILES):
-	$(call CP_IF_EXISTS,$@,$(STAGE_DIR))
+#$(STAGE_FILES):
+#	$(call CP_IF_EXISTS,$@,$(STAGE_DIR))
 
 #=============================================================================
 # stage-clean
 #=============================================================================
-.PHONY: stage-clean
+#.PHONY: stage-clean
 
-stage-clean:
-	$(call HEADER,$@)
-	-$(RMDIR) "$(STAGE_DIR)"
+#stage-clean:
+#	$(call HEADER,$@)
+#	-$(RMDIR) "$(STAGE_DIR)"
 
 #=============================================================================
 # clean
@@ -167,9 +135,7 @@ CLEAN_SUBDIRS = $(addprefix clean., $(SUBDIRS))
 
 .PHONY: clean $(CLEAN_SUBDIRS)
 
-clean: $(CLEAN_SUBDIRS) stage-clean
-	$(call HEADER,$@)
-	-$(RM) $(ALL_SOURCE_DISTS)
+clean: $(CLEAN_SUBDIRS)
 
 $(CLEAN_SUBDIRS):
 	$(call HEADER,$@)
@@ -185,7 +151,6 @@ $(CLEAN_SUBDIRS):
 
 distclean: clean package-clean api-doc-clean doc-clean mkfiles-clean
 	$(call RM_IF_EXISTS,$(PRODUCT_NAME)-$(PRODUCT_VERSION).$(ZIP_EXT))
-	$(call RM_IF_EXISTS,config.mk)
 
 #=============================================================================
 # test
@@ -194,12 +159,12 @@ TEST_SUBDIRS = $(addprefix test., $(SUBDIRS))
 
 .PHONY: test $(TEST_SUBDIRS)
 
-test: all $(TEST_SUBDIRS) report
+test: $(TEST_SUBDIRS) report
 
 $(TEST_SUBDIRS):
 	$(call HEADER,$@)
-	@$(MAKE) -i -k -C $(STAGE_DIR) -f $(SRCDIR)$(SEP)$(subst test.,,$@)$(SEP)Makefile test
-	
+	@$(MAKE) -C $(subst test.,,$@) test
+
 #=============================================================================
 # check
 #=============================================================================
@@ -262,15 +227,44 @@ package-test:
 #=============================================================================
 # install/uninstall
 #=============================================================================
-.PHONY: install uninstall
+INSTALL_SUBDIRS = $(addprefix install., $(SUBDIRS))
+.PHONY: install $(INSTALL_SUBDIRS)
 
-install: dist
-	$(call HEADER,$@)
-	@$(MAKE) -C install install
+install: $(INSTALL_SUBDIRS)
 
-uninstall:
+$(INSTALL_SUBDIRS):
 	$(call HEADER,$@)
-	@$(MAKE) -C install uninstall
+	@$(MAKE) -i -k -C $(subst install.,,$@) install
+
+UNINSTALL_SUBDIRS = $(addprefix uninstall., $(SUBDIRS))
+.PHONY: uninstall $(UNINSTALL_SUBDIRS)
+
+uninstall: $(UNINSTALL_SUBDIRS)
+
+$(UNINSTALL_SUBDIRS):
+	$(call HEADER,$@)
+	@$(MAKE) -i -k -C $(subst uninstall.,,$@) uninstall
+
+
+INSTALLTEST_SUBDIRS = $(addprefix installtest., $(SUBDIRS))
+.PHONY: installtest $(INSTALLTEST_SUBDIRS)
+
+installtest: $(INSTALLTEST_SUBDIRS)
+
+$(INSTALLTEST_SUBDIRS):
+	$(call HEADER,$@)
+	@$(MAKE) -i -k -C $(subst installtest.,,$@) installtest
+
+UNINSTALLTEST_SUBDIRS = $(addprefix uninstalltest., $(SUBDIRS))
+.PHONY: uninstalltest $(UNINSTALLTEST_SUBDIRS)
+
+uninstalltest: $(UNINSTALLTEST_SUBDIRS)
+
+$(UNINSTALLTEST_SUBDIRS):
+	$(call HEADER,$@)
+	@$(MAKE) -i -k -C $(subst uninstalltest.,,$@) uninstalltest
+
+
 
 #=============================================================================
 # doc
@@ -319,12 +313,15 @@ api-doc-clean:
 
 report:
 	$(call HEADER,$@)
-	$(REPORT) $(STAGE_DIR)
+	$(REPORT) $(DESTDIR)$(bindir)
 
 #=============================================================================
 # File CVS History:
 #
 # $Log$
+# Revision 1.3.2.1  2004/02/25 04:41:04  cgaisford
+# updated files to use new make targets
+#
 # Revision 1.3  2004/02/23 23:13:43  pthomas707
 # Renamed install directory to package
 #

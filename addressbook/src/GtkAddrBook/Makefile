@@ -30,8 +30,8 @@ Book_SOURCES = Main.cs
 Book_INCLUDES = 
 Book_RESOURCES = 
 Book_FLAGS = /t:exe
-Book_LIBS = System.dll System.Drawing.dll System.Data.dll gtk-sharp.dll pango-sharp.dll gnome-sharp.dll glib-sharp.dll gdk-sharp.dll glade-sharp.dll $(SYSTEM_XML) StoreProvider.dll Identity.dll CollectionStore.dll AddressBook.dll BookLib.dll
-Book_LIBPATH = $(SIMIAS_ROOT)/src/stage
+Book_LIBS = $(BookLib_LIBS) BookLib.dll
+Book_LIBPATH = $(BookLib_LIBPATH)
 Book_LDFLAGS = 
 
 #=============================================================================
@@ -41,20 +41,28 @@ BookLib_SOURCES = AddrBookWindow.cs ContactEditor.cs BookEditor.cs ContactPicker
 BookLib_INCLUDES = 
 BookLib_RESOURCES = addressbook.glade
 BookLib_FLAGS = /t:library
-BookLib_LIBS = System.dll System.Drawing.dll System.Data.dll gtk-sharp.dll gnome-sharp.dll pango-sharp.dll glib-sharp.dll glade-sharp.dll gdk-sharp.dll $(SYSTEM_XML) StoreProvider.dll Identity.dll CollectionStore.dll AddressBook.dll
-BookLib_LIBPATH = $(SIMIAS_ROOT)/src/stage
+BookLib_LIBS = System.dll System.Drawing.dll System.Data.dll gtk-sharp.dll gnome-sharp.dll pango-sharp.dll glib-sharp.dll glade-sharp.dll gdk-sharp.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll Identity.dll CollectionEvents.dll CollectionStore.dll AddressBook.dll
+BookLib_LIBPATH = Identity Configuration StoreProvider CollectionEvents CollectionStore AddressBook
 BookLib_LDFLAGS = 
+BookLib_LIBPATH := $(addprefix $(SIMIAS_ROOT)/src/, $(BookLib_LIBPATH))
 
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES = Book.exe
+LIB_FILES = BookLib.dll
+DATA_FILES = book.png briefcase.png contact.png contact_me.png cellphone.png connect_to_url-16.xpm galeon.png globe.png house.png ico-mail.png blankhead.png addressbook.glade
+TEST_BIN_FILES =
+TEST_LIB_FILES =
+TEST_DATA_FILES = 
 
-TARGETS = BookLib.dll Book.exe 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES)
+#TARGETS = BookLib.dll Book.exe 
 CLEAN_FILES = Check.xml iFolder.xml Check.xml
 NUNIT_TESTS =
 #STAGE_FILES = $(TARGETS) *.png
 STAGE_FILES = $(TARGETS) book.png briefcase.png contact.png contact_me.png cellphone.png connect_to_url-16.xpm galeon.png globe.png house.png ico-mail.png blankhead.png addressbook.glade
-STAGE_FILES := $(addprefix $(STAGE_DIR)$(SEP), $(STAGE_FILES))
+#STAGE_FILES := $(addprefix $(STAGE_DIR)$(SEP), $(STAGE_FILES))
 
 #=============================================================================
 # custom makefile
@@ -69,23 +77,23 @@ endif
 
 # fix path seperator
 CLEAN_FILES := $(subst /,$(SEP),$(CLEAN_FILES))
-STAGE_FILES := $(subst /,$(SEP),$(STAGE_FILES))
+#STAGE_FILES := $(subst /,$(SEP),$(STAGE_FILES))
 
 # all
-all: $(TARGETS) $(STAGE_FILES)
+all: $(TARGETS)
 
 # clean
 clean:
-	$(RM) $(TARGETS) $(CLEAN_FILES) $(STAGE_FILES)
+	$(RM) $(TARGETS)
 
 # test
-test:
-	@echo No tests available
+#test:
+#	@echo No tests available
 #	$(NUNIT) $(NUNIT_FLAGS) /xml:iFolder.xml $(NUNIT_TESTS)
 
 # stage files
-$(STAGE_FILES):	$(TARGETS)
-	$(CP) $(subst $(STAGE_DIR)$(SEP),,$@) $(STAGE_DIR)
+#$(STAGE_FILES):	$(TARGETS)
+#	$(CP) $(subst $(STAGE_DIR)$(SEP),,$@) $(STAGE_DIR)
 
 #=============================================================================
 # Book targets
@@ -116,3 +124,5 @@ VPATH := $(VPATH) $(BookLib_LIBPATH) $(BookLib_INCLUDES)
 
 BookLib.dll: $(BookLib_SOURCES) $(BookLib_RESOURCE) $(BookLib_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:BookLib.xml $(CSCFLAGS) $(BookLib_FLAGS) $(BookLib_LIBS:%=/r:%) $(BookLib_LIBPATH:%=/lib:%) $(BookLib_SOURCES)
+
+include ../../common.mk
