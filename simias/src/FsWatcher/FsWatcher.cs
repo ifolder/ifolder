@@ -34,13 +34,14 @@ namespace Simias.Event
 		string						collectionId;
 		string						domainName;
 		FileSystemWatcher			watcher;
-		static EventPublisher		publish = new EventPublisher();
+		static EventPublisher		publish;
 		
 
 		internal CollectionFilesWatcher(Collection col)
 		{
 			this.collectionId = col.Id;
 			domainName = col.LocalStore.DomainName;
+			publish = new EventPublisher(new Configuration(col.LocalStore.StorePath.LocalPath), domainName);
 			Uri pathUri = (Uri)col.Properties.GetSingleProperty(Property.DocumentRoot).Value;
 			string rootPath = pathUri.LocalPath;
 			watcher = new FileSystemWatcher(rootPath);
@@ -89,6 +90,8 @@ namespace Simias.Event
 		static Store				store;
 		static Hashtable			watcherTable;
 		EventSubscriber				collectionWatcher;
+		static string				domain;
+		static Configuration		conf;
 		
 		/// <summary>
 		/// The main entry point for the application.
@@ -97,7 +100,7 @@ namespace Simias.Event
 		static void Main(string[] args)
 		{
 			FsWatcher fsw = new FsWatcher(args);
-			fsw.Run();
+			fsw.Run(conf, domain);
 		}
 
 		public FsWatcher(string[] args)
@@ -112,7 +115,9 @@ namespace Simias.Event
 			{
 				store = Store.Connect(this.GetType().FullName);
 			}
-			collectionWatcher = new EventSubscriber(store.DomainName);
+			domain = store.DomainName;
+			conf = new Configuration(store.StorePath.LocalPath);
+			collectionWatcher = new EventSubscriber(new Configuration(store.StorePath.LocalPath), domain);
 			collectionWatcher.NodeCreated += new NodeEventHandler(OnNewCollection);
 			collectionWatcher.NodeDeleted += new NodeEventHandler(OnDeleteNode);
 			foreach (Collection col in store)

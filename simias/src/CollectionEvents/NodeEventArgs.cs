@@ -61,7 +61,7 @@ namespace Simias.Event
 			base(source, node, collection, domainName, type, changeType, eventId)
 		{
 		}
-
+		
 		/// <summary>
 		/// Gets the Node ID.
 		/// </summary>

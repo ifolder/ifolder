@@ -103,7 +103,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Used to publish store events.
 		/// </summary>
-		private EventPublisher publisher = new EventPublisher();
+		private EventPublisher publisher;
 
 		/// <summary>
 		/// Subscriber event used to keep the cached node table up to date.
@@ -311,12 +311,13 @@ namespace Simias.Storage
 				else
 				{
 					AuthenticateStore();
+					publisher = new EventPublisher(new Configuration(StorePath.LocalPath), identityManager.DomainName);
 				}
 			}
 
 			// Setup to watch for node changes on the store, so the cached node table can be kept
 			// up to date.
-			subscriber = new EventSubscriber( identityManager.DomainName );
+			subscriber = new EventSubscriber( new Configuration(StorePath.LocalPath), identityManager.DomainName );
 			subscriber.NodeChanged += new NodeEventHandler( OnNodeChanged );
 		}
 		#endregion
@@ -422,6 +423,9 @@ namespace Simias.Storage
 		{
 			// Create a domain name for this domain.
 			string domainName = Environment.UserDomainName + ":" + Guid.NewGuid().ToString().ToLower();
+
+			// Create a Publisher to publish events.
+			publisher = new EventPublisher(new Configuration(StorePath.LocalPath), domainName);
 
 			// Create a new guid for this local identity.
 			string ownerGuid = Guid.NewGuid().ToString().ToLower();

@@ -23,6 +23,7 @@
  ***********************************************************************/
 
 using System;
+using System.Text;
 
 namespace Simias.Event
 {
@@ -68,6 +69,22 @@ namespace Simias.Event
 		{
 			this.oldRoot = oldRoot;
 			this.newRoot = newRoot;
+		}
+
+		internal override string MarshallToString()
+		{
+			StringBuilder sb = new StringBuilder(base.MarshallToString());
+			sb.Append(oldRoot + seperatorChar);
+			sb.Append(newRoot + seperatorChar);
+			return sb.ToString();
+		}
+
+		internal override void MarshallFromString(string sArgs)
+		{
+			int i = 0;
+			string [] sArg = sArgs.Split(seperatorChar);
+			oldRoot = sArg[i++];
+			newRoot = sArg[i++];
 		}
 
 		/// <summary>

@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 
 namespace Simias.Event
 {
@@ -47,6 +48,20 @@ namespace Simias.Event
 			base(source, fullPath, collectionId, domainName, FileEventArgs.EventType.Renamed)
 		{
 			this.oldPath = oldPath;
+		}
+
+		internal virtual string MarshallToString()
+		{
+			StringBuilder sb = new StringBuilder(base.MarshallToString());
+			sb.Append(oldPath + seperatorChar);
+			return sb.ToString();
+		}
+
+		internal virtual void MarshallFromString(string sArgs)
+		{
+			int i = 0;
+			string [] sArg = sArgs.Split(seperatorChar);
+			oldPath = sArg[i++];
 		}
 		
 		/// <summary>

@@ -40,6 +40,9 @@ namespace Simias.Event
 	/// </summary>
 	public class EventSubscriber : MarshalByRefObject, IDisposable
 	{
+		Queue eventQueue;
+		ManualResetEvent queued;
+		string domain;
 		#region Events
 
 		/// <summary>
@@ -104,8 +107,11 @@ namespace Simias.Event
 		/// <param name="domainName">The domainName from the store that will be watched.</param>
 		/// <param name="collectionId">The collection to watch for events.</param>
 		/// <param name="rootPath">The Root Path for the collection.</param>
-		public EventSubscriber(string domainName, string collectionId, string rootPath)
+		public EventSubscriber(Configuration conf, string domainName, string collectionId, string rootPath)
 		{
+			eventQueue = new Queue();
+			queued = new ManualResetEvent(false);
+
 			this.domainName = domainName;
 			enabled = true;
 			fileNameFilter = null;
@@ -117,7 +123,7 @@ namespace Simias.Event
 			this.rootPath = rootPath;
 			alreadyDisposed = false;
 			
-			EventBroker.RegisterClientChannel();
+			EventBroker.RegisterClientChannel(conf, domainName);
 			
 			broker = new EventBroker();
 			broker.NodeChanged += new NodeEventHandler(OnNodeChanged);
@@ -128,14 +134,16 @@ namespace Simias.Event
 			broker.FileCreated += new FileEventHandler(OnFileCreated);
 			broker.FileDeleted += new FileEventHandler(OnFileDeleted);
 			broker.FileRenamed += new FileRenameEventHandler(OnFileRenamed);
+			broker.InternalEvent += new InternalEventHandler(broker_InternalEvent);
+			System.Threading.Thread t = new Thread(new ThreadStart(EventThread));
 		}
 
 		/// <summary>
 		/// Create a Subscriber to monitor changes in the complete Collection Store.
 		/// </summary>
 		/// <param name="domainName">The domainName from the store that will be watched.</param>
-		public EventSubscriber(string domainName) :
-			this(domainName, (string)null, (string)null)
+		public EventSubscriber(Configuration conf, string domainName) :
+			this(conf, domainName, (string)null, (string)null)
 		{
 		}
 
@@ -490,6 +498,15 @@ namespace Simias.Event
 			catch {};
 		}
 
+		private void EventThread()
+		{
+			while (!alreadyDisposed)
+			{
+				queued.WaitOne();
+				CollectionEventArgs args = (CollectionEventArgs)eventQueue.Dequeue();
+			}
+		}
+
 		#endregion
 
 		#region MarshalByRefObject overrides
@@ -516,5 +533,10 @@ namespace Simias.Event
 		}
 
 		#endregion
+
+		public void broker_InternalEvent(Simias.Event.CollectionEventArgs.EventType type, string args)
+		{
+			Console.WriteLine(args);
+		}
 	}
 }

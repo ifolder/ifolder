@@ -36,9 +36,13 @@ namespace Simias
 		ServiceEventSubscriber		serviceEventWatcher;
 		int							processId;
 		ManualResetEvent			shutdownEvent = new ManualResetEvent(false);
+		string						domain;
+		Configuration				conf;
 		
-		protected void Run()
+		protected void Run(Configuration conf, string domain)
 		{
+			this.domain = domain;
+			this.conf = conf;
 			processId = System.Diagnostics.Process.GetCurrentProcess().Id;
 			Thread t1 = new Thread(new ThreadStart(waitForShutdown));
 			t1.Start();
@@ -47,7 +51,7 @@ namespace Simias
 
 		public UserService()
 		{
-			serviceEventWatcher = new ServiceEventSubscriber();
+			serviceEventWatcher = new ServiceEventSubscriber(conf, domain);
 			serviceEventWatcher.ServiceControl += new ServiceEventHandler(OnServiceEvent);
 		}
 

@@ -41,8 +41,10 @@ namespace Simias.Event
 		ServiceEventSubscriber serviceSubscriber;
 		EventArgs			args;
 		ManualResetEvent	mre = new ManualResetEvent(false);
+		ManualResetEvent    shutdownEvent = new ManualResetEvent(false);
 		string				collection = "Collection123";
 		string				domainName = "TestDomain_123456789";
+		Configuration conf = new Configuration(Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath));
 
 		#endregion
 
@@ -54,13 +56,15 @@ namespace Simias.Event
 		[TestFixtureSetUp]
 		public void Init()
 		{
+			EventBroker.overrideConfig = true;
 			PublishSubscribe();
 		}
 
 		public void PublishSubscribe()
 		{
-			publisher = new EventPublisher();
-			subscriber = new EventSubscriber(domainName);
+			
+			publisher = new EventPublisher(conf, domainName);
+			subscriber = new EventSubscriber(conf, domainName);
 			subscriber.NodeChanged += new NodeEventHandler(OnNodeChange);
 			subscriber.NodeCreated += new NodeEventHandler(OnNodeCreate);
 			subscriber.NodeDeleted += new NodeEventHandler(OnNodeDelete);
@@ -70,7 +74,7 @@ namespace Simias.Event
 			subscriber.FileDeleted += new FileEventHandler(OnFileDelete);
 			subscriber.FileRenamed += new FileRenameEventHandler(OnFileRenamed);
 
-			serviceSubscriber = new ServiceEventSubscriber();
+			serviceSubscriber = new ServiceEventSubscriber(conf, domainName);
 			serviceSubscriber.ServiceControl += new ServiceEventHandler(ServiceCtlHandler);
 		}
 
@@ -82,6 +86,7 @@ namespace Simias.Event
 		{
 			subscriber.Dispose();
 			serviceSubscriber.Dispose();
+			publisher.RaiseServiceEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceEventArgs.ServiceEvent.Shutdown));
 		}
 
 		#endregion
@@ -148,6 +153,8 @@ namespace Simias.Event
 		{
 			mre.Set();
 			Console.WriteLine("Service Control Event = {0}", args.EventType); 
+			if (args.EventType == ServiceEventArgs.ServiceEvent.Shutdown)
+				shutdownEvent.Set();
 		}
 
 		#endregion
@@ -456,7 +463,7 @@ namespace Simias.Event
 			
 					if (args.Length > 1)
 					{
-						t.publisher = new EventPublisher();
+						t.publisher = new EventPublisher(t.conf, t.domainName);
 						int count = Int32.Parse(args[1]);
 						for (int i = 0; i < count; ++i)
 						{
@@ -466,14 +473,13 @@ namespace Simias.Event
 					break;
 
 				case "PS":
-					t.publisher = new EventPublisher();
+					t.publisher = new EventPublisher(t.conf, t.domainName);
 					t.publisher.RaiseServiceEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceEventArgs.ServiceEvent.Shutdown));
 					break;
 
 				case "S":
 					t.PublishSubscribe();
-					Console.WriteLine("Press enter to exit");
-					Console.ReadLine();
+					t.shutdownEvent.WaitOne();
 					t.subscriber.Dispose();
 					break;
 

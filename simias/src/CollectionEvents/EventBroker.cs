@@ -62,6 +62,11 @@ namespace Simias.Event
 	/// </summary>
 	public delegate void ServiceEventHandler(ServiceEventArgs args);
 
+	/// <summary>
+	/// Used to get around a marshalling problem seen with explorer.
+	/// </summary>
+	public delegate void InternalEventHandler(CollectionEventArgs.EventType type, string args);
+
 	#endregion
 
 	#region EventBroker class
@@ -71,6 +76,7 @@ namespace Simias.Event
 	/// </summary>
 	public class EventBroker : MarshalByRefObject
 	{
+		EventBroker instance = null;
 		#region Events
 
 		/// <summary>
@@ -113,9 +119,35 @@ namespace Simias.Event
 		/// </summary>
 		public event ServiceEventHandler ServiceControl;
 
+		/// <summary>
+		/// Used to work around a marshalling problem seen with explorer.
+		/// </summary>
+		public event InternalEventHandler InternalEvent;
+
 		#endregion
 
 		#region Event Signalers
+
+		public void RaiseEvent(CollectionEventArgs.EventType eventType, CollectionEventArgs args)
+		{
+			MyTrace.WriteLine("Recieved Event {0}", eventType.ToString());
+			if (InternalEvent != null)
+			{
+				string eventArgs = args.MarshallToString();
+				foreach (InternalEventHandler cb in InternalEvent.GetInvocationList())
+				{
+					try
+					{
+						cb(eventType, eventArgs);
+					}
+					catch
+					{
+						InternalEvent -= cb;
+						MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
+					}
+				}
+			}
+		}
 
 		/// <summary>
 		/// Used to publish a Collection root changed event.
@@ -182,7 +214,7 @@ namespace Simias.Event
 					}
 					catch 
 					{
-                        // Remove the offending delegate.
+						// Remove the offending delegate.
 						switch (args.ChangeType)
 						{
 							case NodeEventArgs.EventType.Created:
@@ -243,7 +275,7 @@ namespace Simias.Event
 							{
 								// Remove the offending delegate.
 								FileRenamed -= cb;
-								System.Diagnostics.Debug.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
+								MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
 							}
 						}
 					}
@@ -303,9 +335,13 @@ namespace Simias.Event
 					{
 						// Remove the offending delegate.
 						ServiceControl -= cb;
-						System.Diagnostics.Debug.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
+						MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
 					}
 				}
+			}
+			if (args.Target == ServiceEventArgs.TargetAll && args.EventType == ServiceEventArgs.ServiceEvent.Shutdown)
+			{
+				System.Diagnostics.Process.GetCurrentProcess().Kill();
 			}
 		}
 
@@ -317,19 +353,28 @@ namespace Simias.Event
 		private const string CFG_AssemblyKey = "Assembly";
 		private const string CFG_Assembly = "CsEventBroker";
 		private const string CFG_UriKey = "Uri";
-		private const string CFG_Uri = "tcp://localhost:7654/EventBroker";
+		private const string CFG_Uri = "tcp://localhost/EventBroker";
+
+		public static bool overrideConfig = false;
+
+		static bool RunInProcess()
+		{
+			if (overrideConfig == true)
+				return false;
+			else
+                return true;
+		}
 		
 		/// <summary>
 		/// Method to register a client channel.
 		/// </summary>
-		public static void RegisterClientChannel()
+		public static void RegisterClientChannel(Configuration conf, string domain)
 		{
-			Uri assemblyPath = new Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase));
-			startService(Path.Combine(assemblyPath.LocalPath, "CsEventBroker.exe"));
-			string service = new Simias.Configuration().Get(CFG_Section, CFG_AssemblyKey, CFG_Assembly);
-			Process [] process = Process.GetProcessesByName(service);
-			if (process.Length >= 1)
-			{				
+			// Check if we should run in process.
+			if (!RunInProcess())
+			{
+				startService(conf, domain);
+				string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
 				bool registered = false;
 
 				WellKnownClientTypeEntry [] cta = RemotingConfiguration.GetRegisteredWellKnownClientTypes();
@@ -361,7 +406,6 @@ namespace Simias.Event
 					ChannelServices.RegisterChannel(chan);
 
 					//ChannelServices.RegisterChannel(new TcpChannel());
-					string serviceUri = new Simias.Configuration().Get(CFG_Section, CFG_UriKey, CFG_Uri);
 					RemotingConfiguration.RegisterWellKnownClientType(typeof(EventBroker), serviceUri);
 				}
 			}
@@ -370,12 +414,14 @@ namespace Simias.Event
 		/// <summary>
 		/// Method to register the server channel.
 		/// </summary>
-		public static void RegisterService()
+		public static void RegisterService(Configuration conf, string domain)
 		{
-			Uri serviceUri = new Uri (new Simias.Configuration().Get(CFG_Section, CFG_UriKey, CFG_Uri));
+			string serviceString = CFG_Uri + "_" + domain;
+			Uri serviceUri = new Uri (serviceString);
 			
 			Hashtable props = new Hashtable();
-			props["port"] = serviceUri.Port;
+			props["port"] = 0; //serviceUri.Port;
+			props["rejectRemoteRequests"] = true;
 
 			BinaryServerFormatterSinkProvider
 				serverProvider = new BinaryServerFormatterSinkProvider();
@@ -391,17 +437,26 @@ namespace Simias.Event
 
 			RemotingConfiguration.RegisterWellKnownServiceType(
 				typeof(EventBroker), serviceUri.AbsolutePath.TrimStart('/'), WellKnownObjectMode.Singleton);
+
+			string [] s = chan.GetUrlsForUri(serviceUri.AbsolutePath.TrimStart('/'));
+			if (s.Length == 1)
+			{
+				conf.Set(CFG_Section, CFG_UriKey, s[0]);
+			}
 		}
 
-		private static void startService(string serviceName)
+		private static void startService(Configuration conf, string domain)
 		{
 			bool createdMutex;
-			string mutexName = "___" + Path.GetFileNameWithoutExtension(serviceName) + "___Service___";
-			mutexName += System.Environment.UserName;
+			string mutexName = "___" + domain + "___EventBrokerMutex___";
 			Mutex mutex = new Mutex(true, mutexName, out createdMutex);
 			
 			if (createdMutex)
 			{
+				Uri assemblyPath = new Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase));
+				string serviceName = conf.Get(CFG_Section, CFG_AssemblyKey, CFG_Assembly) + ".exe";
+				serviceName = Path.Combine(assemblyPath.LocalPath, serviceName);
+			
 				// The service is not running start it.
 				System.Diagnostics.Process service = new Process();
 				service.StartInfo.CreateNoWindow = true;
@@ -414,11 +469,12 @@ namespace Simias.Event
 				else
 				{
 					service.StartInfo.FileName = serviceName;
+					service.StartInfo.Arguments = null;
 				}
-				service.StartInfo.Arguments += mutexName;
+				service.StartInfo.Arguments += Path.GetDirectoryName(conf.BasePath) + " " + domain + " " + mutexName;
 				service.Start();
 				mutex.ReleaseMutex();
-				System.Threading.Thread.Sleep(2000);
+				System.Threading.Thread.Sleep(500);
 			}
 		}
 

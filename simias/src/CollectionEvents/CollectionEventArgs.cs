@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 using System;
+using System.Text;
 
 namespace Simias.Event
 {
@@ -31,14 +32,15 @@ namespace Simias.Event
 	[Serializable]
 	public abstract class CollectionEventArgs : EventArgs
 	{
+		EventType				changeType;
 		string					source;
 		string					id;
 		string					collection;
 		string					domainName;
 		string					type;
 		int						eventId;
-		EventType				changeType;
-
+		internal char			seperatorChar = '\0';
+		
 		/// <summary>
 		/// The Event types supported.
 		/// </summary>
@@ -81,15 +83,42 @@ namespace Simias.Event
 		/// <param name="eventId">A user defined event ID. Only has meaning to a publisher.</param>
 		internal CollectionEventArgs(string source, string id, string collection, string domainName, string type, EventType changeType, int eventId)
 		{
+			this.changeType = changeType;
 			this.source = source;
 			this.id = id;
 			this.collection = collection;
 			this.domainName = domainName;
 			this.type = type;
 			this.eventId = eventId;
-			this.changeType = changeType;
 		}
 
+		internal virtual string MarshallToString()
+		{
+            StringBuilder sb = new StringBuilder();
+			sb.Append(changeType.ToString() + seperatorChar);
+			sb.Append(source + seperatorChar);
+			sb.Append(id + seperatorChar);
+			sb.Append(collection + seperatorChar);
+			sb.Append(domainName + seperatorChar);
+			sb.Append(type + seperatorChar);
+			sb.Append(eventId + seperatorChar);
+			return sb.ToString();
+		}
+
+		internal virtual void MarshallFromString(string sArgs)
+		{
+			int i = 0;
+			string [] sArg = sArgs.Split(seperatorChar);
+			changeType = (EventType)Enum.Parse(typeof(EventType), sArg[i++], false);
+			source = sArg[i++];
+			id = sArg[i++];
+			collection = sArg[i++];
+			domainName = sArg[i++];
+			type = sArg[i++];
+			eventId = int.Parse(sArg[i++]);
+		}
+
+		#region Properties
 
 		/// <summary>
 		/// Gets the string that represents the source of the event.
@@ -148,5 +177,7 @@ namespace Simias.Event
 		{
 			get {return eventId;}
 		}
+
+		#endregion
 	}
 }

@@ -35,15 +35,20 @@ namespace Simias.Event
 	public class EventPublisher
 	{
 		EventBroker broker;
+		string			domain;
+		Configuration	conf;
 			
 		#region Constructor
 
 		/// <summary>
 		/// Creates an Event Publisher.
 		/// </summary>
-		public EventPublisher()
+		/// <param name="domain">The domain for this publisher obtained from the CollectionStore.</param>
+		public EventPublisher(Configuration conf, string domain)
 		{
-			EventBroker.RegisterClientChannel();
+			this.conf = conf;
+			this.domain = domain;
+			EventBroker.RegisterClientChannel(conf, domain);
 			broker = new EventBroker();
 		}
 
@@ -68,7 +73,10 @@ namespace Simias.Event
 		public void RaiseNodeEvent(NodeEventArgs args)
 		{
 			if (broker != null)
+			{
+				//broker.RaiseEvent(args.ChangeType, args);
 				broker.RaiseNodeEvent(args);
+			}
 		}
 
 		/// <summary>
