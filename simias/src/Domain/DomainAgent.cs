@@ -867,7 +867,7 @@ namespace Simias.DomainServices
 			// Construct the web client.
 			DomainService domainService = new DomainService();
 			domainService.Url = uri.ToString() + "/DomainService.asmx";
-			WebState webState = new WebState(collection.Domain, collection.ID);
+			WebState webState = new WebState(collection.Domain, store.GetUserIDFromDomainID(collection.Domain));
 			webState.InitializeWebClient(domainService);
 			
 			string rootID = null;
