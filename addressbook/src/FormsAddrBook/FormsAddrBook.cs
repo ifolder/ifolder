@@ -27,6 +27,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
+using System.Diagnostics;
 using Novell.iFolder.FormsBookLib;
 using Novell.AddressBook;
 
@@ -59,6 +60,7 @@ namespace Novell.iFolder.FormsAddrBook
 		private System.Windows.Forms.MenuItem menuToolsImportVCard;
 		private System.Windows.Forms.MenuItem menuToolsExportVCard;
 		private System.Windows.Forms.MenuItem menuHelp;
+		private System.Windows.Forms.MenuItem menuHelpContents;
 		private System.Windows.Forms.MenuItem menuHelpAbout;
 		private ArrayList selectedContacts;
 		private Contact contact;
@@ -66,7 +68,6 @@ namespace Novell.iFolder.FormsAddrBook
 		private System.Windows.Forms.Splitter splitter1;
 		private Novell.iFolder.FormsBookLib.BooksContacts booksContacts;
 		private System.Windows.Forms.Panel panel1;
-		#endregion
 		private System.Windows.Forms.TextBox search;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ToolBar toolBar1;
@@ -77,6 +78,7 @@ namespace Novell.iFolder.FormsAddrBook
 		private System.Windows.Forms.ToolBarButton toolBarButton5;
 		private System.Windows.Forms.Timer editSearchTimer;
 		private System.ComponentModel.IContainer components;
+		#endregion
 
 		public FormsAddrBook()
 		{
@@ -157,6 +159,7 @@ namespace Novell.iFolder.FormsAddrBook
 			this.toolBarButton4 = new System.Windows.Forms.ToolBarButton();
 			this.toolBarButton5 = new System.Windows.Forms.ToolBarButton();
 			this.editSearchTimer = new System.Windows.Forms.Timer(this.components);
+			this.menuHelpContents = new System.Windows.Forms.MenuItem();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -275,12 +278,13 @@ namespace Novell.iFolder.FormsAddrBook
 			// 
 			this.menuHelp.Index = 3;
 			this.menuHelp.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																					 this.menuHelpContents,
 																					 this.menuHelpAbout});
 			this.menuHelp.Text = "&Help";
 			// 
 			// menuHelpAbout
 			// 
-			this.menuHelpAbout.Index = 0;
+			this.menuHelpAbout.Index = 1;
 			this.menuHelpAbout.Text = "&About";
 			// 
 			// detailsView
@@ -387,6 +391,12 @@ namespace Novell.iFolder.FormsAddrBook
 			this.editSearchTimer.Interval = 500;
 			this.editSearchTimer.Tick += new System.EventHandler(this.editSearchTimer_Tick);
 			// 
+			// menuHelpContents
+			// 
+			this.menuHelpContents.Index = 0;
+			this.menuHelpContents.Text = "&Contents";
+			this.menuHelpContents.Click += new System.EventHandler(this.menuHelpContents_Click);
+			// 
 			// FormsAddrBook
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -474,6 +484,21 @@ namespace Novell.iFolder.FormsAddrBook
 		private void menuFileExit_Click(object sender, EventArgs e)
 		{
             this.Close();
+		}
+
+		private void menuHelpContents_Click(object sender, System.EventArgs e)
+		{
+			// TODO - need to use locale-specific path
+			string helpPath = Path.Combine(Application.StartupPath, @"help\en\doc\user\data\front.html");
+
+			try
+			{
+				Process.Start(helpPath);
+			}
+			catch
+			{
+				MessageBox.Show("Unable to open help file: \n" + helpPath, "Help File Not Found");
+			}
 		}
 
 		private void booksContacts_ContactSelected(object sender, ContactSelectedEventArgs e)

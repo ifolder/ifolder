@@ -1235,8 +1235,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// otherState
 			// 
-			this.helpProvider1.SetHelpString(this.otherState, "Specifies the state or province for the contact\'s work address.Specifies the city" +
-				" for the contact\'s alternate address.");
+			this.helpProvider1.SetHelpString(this.otherState, "Specifies the state or province for the contact\'s alternate address.");
 			this.otherState.Location = new System.Drawing.Point(96, 424);
 			this.otherState.Name = "otherState";
 			this.helpProvider1.SetShowHelp(this.otherState, true);
@@ -1343,8 +1342,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// homeState
 			// 
-			this.helpProvider1.SetHelpString(this.homeState, "Specifies the state or province for the contact\'s work address.Specifies the city" +
-				" for the contact\'s home address.");
+			this.helpProvider1.SetHelpString(this.homeState, "Specifies the state or province for the contact\'s home address.");
 			this.homeState.Location = new System.Drawing.Point(96, 272);
 			this.homeState.Name = "homeState";
 			this.helpProvider1.SetShowHelp(this.homeState, true);
@@ -1460,8 +1458,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// workState
 			// 
-			this.helpProvider1.SetHelpString(this.workState, "Specifies the state or province for the contact\'s work address.Specifies the city" +
-				" for the contact\'s work address.");
+			this.helpProvider1.SetHelpString(this.workState, "Specifies the state or province for the contact\'s work address.");
 			this.workState.Location = new System.Drawing.Point(96, 120);
 			this.workState.Name = "workState";
 			this.helpProvider1.SetShowHelp(this.workState, true);
