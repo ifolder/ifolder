@@ -29,6 +29,9 @@ import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.TreeSet;
+import java.util.Iterator;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -208,7 +211,8 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 	private void addNodes(DefaultMutableTreeNode top) {
 		top.removeAllChildren();	// Remove the old
 		
-		DefaultMutableTreeNode collection = null;
+		DefaultMutableTreeNode treeNode = null;
+		TreeSet treeSet = new TreeSet(new TreeSetComparator());
 		ArrayOfBrowserNode collections = null;
 		try {
 			collections = service.enumerateCollections();
@@ -230,21 +234,32 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 			
 			SimiasNode simiasNode = new SimiasNode(nodeData);
 			
-			collection = new DefaultMutableTreeNode();
-			collection.setUserObject(simiasNode);
+			treeNode = new DefaultMutableTreeNode();
+			treeNode.setUserObject(simiasNode);
 			// FIXME: Figure out a better way to do this (only put expanders on Collections)
 			// Add a dummy child node so that the collection will have
 			// and expander on it.  When it goes to expand, we will remove
 			// the dummy child and make a call over the wire to actually
 			// get the children.
-			collection.add(new DefaultMutableTreeNode("temp"));
-			
-			top.add(collection);
+			treeNode.add(new DefaultMutableTreeNode("temp"));
+		
+			treeSet.add(treeNode);
+		}
+		
+		// Add the sorted list into the tree
+		Iterator i = treeSet.iterator();
+		if (i != null)
+		{
+			while (i.hasNext())
+			{
+				top.add((DefaultMutableTreeNode)i.next());
+			}
 		}
 	}
 	
 	private void addChildNodes(DefaultMutableTreeNode parentNode, BrowserNode[] childNodesA)
 	{
+		TreeSet treeSet = new TreeSet(new TreeSetComparator());
 		for (int i = 0; i < childNodesA.length; i++)
 		{
 			String nodeData = childNodesA[i].getNodeData();
@@ -255,7 +270,7 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 			}
 			
 			SimiasNode simiasNode = new SimiasNode(nodeData);
-			
+
 			// Don't add the node if it's the same as the parent
 			SimiasNode parentSimiasNode = (SimiasNode) parentNode.getUserObject();
 			String parentID = parentSimiasNode.getId();
@@ -276,7 +291,13 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 				childNode.add(new DefaultMutableTreeNode("temp"));
 			}
 			
-			parentNode.add(childNode);
+			treeSet.add(childNode);
+		}
+		
+		Iterator i = treeSet.iterator();
+		while (i.hasNext())
+		{
+			parentNode.add((DefaultMutableTreeNode)i.next());
 		}
 	}
 	
@@ -479,5 +500,30 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 	 */
 	public void treeWillCollapse(TreeExpansionEvent arg0) throws ExpandVetoException {
 		// Intentionally left blank
+	}
+
+	/**
+	 * Comparator used to keep the items in the JTree sorted
+	 */
+	public class TreeSetComparator implements Comparator{
+
+		/* (non-Javadoc)
+		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+		 */
+		public int compare(Object arg0, Object arg1) {
+			
+			SimiasNode node0 = (SimiasNode) ((DefaultMutableTreeNode)arg0).getUserObject();
+			SimiasNode node1 = (SimiasNode) ((DefaultMutableTreeNode)arg1).getUserObject();
+
+			String name0 = node0.getName();
+			String name1 = node1.getName();
+			
+			if (name0 != null && name1 != null)
+			{
+				return name0.compareToIgnoreCase(name1);
+			}
+			
+			return 0;
+		}
 	}
 } //  @jve:visual-info  decl-index=0 visual-constraint="0,0"
