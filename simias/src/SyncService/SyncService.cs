@@ -33,8 +33,39 @@ using Simias;
 
 namespace Simias.Sync
 {
+	/// <summary>
+	/// Class used to set up the state for a sync pass.
+	/// </summary>
+	public class SyncStartInfo
+	{
+		/// <summary>
+		/// The collection to sync.
+		/// </summary>
+		public string		CollectionID;
+		/// <summary>
+		/// The sync context.
+		/// </summary>
+		public string		Context;
+		/// <summary>
+		/// True if only changes since last sync are wanted.
+		/// </summary>
+		public bool			ChangesOnly;
+		/// <summary>
+		/// True if the client has changes. Used to Determine if there is work.
+		/// </summary>
+		public bool			ClientHasChanges;
+		/// <summary>
+		/// The Access to the collection.
+		/// </summary>
+		public SyncAccess	Access;
+	}
+
 	public enum SyncAccess
 	{
+		/// <summary>
+		/// There is nothing to do.
+		/// </summary>
+		NoWork,
 		/// <summary>
 		/// The collection was not found.
 		/// </summary>
@@ -75,9 +106,13 @@ namespace Simias.Sync
 		/// The Master incarnation that this node is derived from.
 		/// </summary>
 		public ulong expectedIncarn;
+		/// <summary>
+		/// The operation that was that needs to be synced.
+		/// </summary>
+		public SyncOperation operation;
 	}
 
-	public enum SyncChangeType
+	public enum SyncOperation
 	{
 		/// <summary>
 		/// The node exists but no log record has been created.
@@ -87,19 +122,19 @@ namespace Simias.Sync
 		/// <summary>
 		/// Node object was created.
 		/// </summary>
-		Created,
+		Create,
 		/// <summary>
 		/// Node object was deleted.
 		/// </summary>
-		Deleted,
+		Delete,
 		/// <summary>
 		/// Node object was changed.
 		/// </summary>
-		Changed,
+		Change,
 		/// <summary>
 		/// Node object was renamed.
 		/// </summary>
-		Renamed
+		Rename
 	};
 
 	/// <summary>
@@ -127,18 +162,18 @@ namespace Simias.Sync
 		/// <summary>
 		/// 
 		/// </summary>
-		public SyncChangeType ChangeType;
+		public SyncOperation Operation;
 
 		public SyncNodeStamp()
 		{
 		}
 
-		internal SyncNodeStamp(string id, ulong incarnation, string baseType, SyncChangeType changeType)
+		internal SyncNodeStamp(string id, ulong incarnation, string baseType, SyncOperation operation)
 		{
 			ID = id;
 			Incarnation = incarnation;
 			BaseType = baseType;
-			ChangeType = changeType;
+			Operation = operation;
 		}
 
 		/// <summary> implement some convenient operator overloads </summary>
@@ -434,7 +469,7 @@ public class SyncService
 			try
 			{
 				node = new Node(collection, sn);
-				SyncNodeStamp stamp = new SyncNodeStamp(node.ID, node.LocalIncarnation, node.Type, SyncChangeType.Unknown);
+				SyncNodeStamp stamp = new SyncNodeStamp(node.ID, node.LocalIncarnation, node.Type, SyncOperation.Unknown);
 				stampList.Add(stamp);
 			}
 			catch (Storage.DoesNotExistException)
@@ -455,7 +490,7 @@ public class SyncService
 	/// <param name="nodes"></param>
 	/// <param name="context"></param>
 	/// <returns></returns>
-	public bool GetChangedNodeStamps(out SyncNodeStamp[] nodes, ref string context, out bool more)
+	public bool GetChangedNodeStamps(out SyncNodeStamp[] nodes, ref string context)
 	{
 		log.Debug("GetChangedNodeStamps Start");
 
@@ -463,7 +498,7 @@ public class SyncService
 		// Create a change log reader.
 		ChangeLogReader logReader = new ChangeLogReader( collection );
 		nodes = null;
-		more = false;
+		bool more = true;
 		try
 		{	
 			// Read the cookie from the last sync and then get the changes since then.
@@ -473,16 +508,34 @@ public class SyncService
 				ArrayList stampList = new ArrayList();
 
 				eventContext = new EventContext(context);
-				more = logReader.GetEvents(eventContext, out changeList);
-				foreach( ChangeLogRecord rec in changeList )
+				while(more)
 				{
-					// Make sure the events are not for local only changes.
-					if (((NodeEventArgs.EventFlags)rec.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0)
+				more = logReader.GetEvents(eventContext, out changeList);
+					foreach( ChangeLogRecord rec in changeList )
 					{
-						SyncNodeStamp stamp = new SyncNodeStamp(
-							rec.EventID, rec.SlaveRev, rec.Type.ToString(), 
-							(SyncChangeType)Enum.Parse(typeof(SyncChangeType),rec.Operation.ToString()));
-						stampList.Add(stamp);
+						// Make sure the events are not for local only changes.
+						if (((NodeEventArgs.EventFlags)rec.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0)
+						{
+							SyncOperation operation = SyncOperation.Unknown;
+							switch (rec.Operation)
+							{
+								case ChangeLogRecord.ChangeLogOp.Changed:
+									operation = SyncOperation.Change;
+									break;
+								case ChangeLogRecord.ChangeLogOp.Created:
+									operation = SyncOperation.Create;
+									break;
+								case ChangeLogRecord.ChangeLogOp.Deleted:
+									operation = SyncOperation.Delete;
+									break;
+								case ChangeLogRecord.ChangeLogOp.Renamed:
+									operation = SyncOperation.Rename;
+									break;
+							}
+							SyncNodeStamp stamp = new SyncNodeStamp(
+								rec.EventID, rec.SlaveRev, rec.Type.ToString(), operation);
+							stampList.Add(stamp);
+						}
 					}
 				}
 			
@@ -502,7 +555,6 @@ public class SyncService
 			context = eventContext.ToString();
 		return false;
 	}
-	
 
 	public SyncNodeStatus[] DeleteNodes(string[] nodeIDs)
 	{

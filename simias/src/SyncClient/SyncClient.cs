@@ -410,8 +410,25 @@ namespace Simias.Sync
 				hostUrl.Port = collection.MasterUrl.Port;
 			service.Url = hostUrl.ToString();
 
+			SyncNodeStamp[] sstamps;
+			NodeStamp[]		cstamps;
+			
+			// Get the current sync state.
+			GetChangeLogContext(out serverContext, out clientContext);
+			bool gotClientChanges = GetChangedNodeStamps(out cstamps, ref clientContext);
+
+			// Setup the SyncStartInfo.
+			SyncStartInfo si = new SyncStartInfo();
+			si.CollectionID = collection.ID;
+			si.Context = serverContext;
+			si.ChangesOnly = gotClientChanges;
+			si.ClientHasChanges = cstamps.Length == 0 ? false : true;
+			
 			// Start the Sync pass and save the rights.
-			rights = service.Start(collection.ID, collection.StoreReference.GetUserIDFromDomainID(collection.Domain));
+			sstamps = service.Start(ref si, store.GetUserIDFromDomainID(collection.Domain));
+
+			serverContext = si.Context;
+			rights = si.Access;
 
 			switch (rights)
 			{
@@ -429,7 +446,17 @@ namespace Simias.Sync
 					try
 					{
 						// Now lets determine the files that need to be synced.
-						GetNodesToSync();
+						if (si.ChangesOnly)
+						{
+							// We only need to look at the changed nodes.
+							ProcessChangedNodeStamps(sstamps, cstamps);
+						}
+						else
+						{
+							// We don't have any state. So do a full sync.
+							cstamps =  GetNodeStamps();
+							ReconcileAllNodeStamps(sstamps, cstamps);
+						}
 						ExecuteSync();
 					}
 					finally
@@ -450,35 +477,9 @@ namespace Simias.Sync
 		/// <summary>
 		/// Called to calculate the nodes that need to be synced.
 		/// </summary>
-		private void GetNodesToSync()
+		private void GetNodesToSync(SyncStartInfo si, SyncNodeStamp[] sstamps, NodeStamp[] cstamps)
 		{
-			SyncNodeStamp[] sstamps;
-			NodeStamp[] cstamps;
-			bool more;
-
-			// Get the current sync state.
-			GetChangeLogContext(out serverContext, out clientContext);
-
-			bool gotServerChanges = service.GetChangedNodeStamps(ref serverContext, out sstamps, out more);
-			bool gotClientChanges = GetChangedNodeStamps(out cstamps, ref clientContext, out more);
-
-			if (gotServerChanges && gotClientChanges)
-			{
-				// We only need to look at the changed nodes.
-				ProcessChangedNodeStamps(sstamps, cstamps);
-			}
-			else
-			{
-				// We don't have any state. So do a full sync.
-				sstamps =  service.GetAllNodeStamps();
-				if (sstamps == null)
-				{
-					log.Debug("Server Failure: could not get server nodestamps");
-					return;
-				}
-				cstamps =  GetNodeStamps();
-				ReconcileAllNodeStamps(sstamps, cstamps);
-			}
+			
 		}
 
 		/// <summary>
@@ -578,7 +579,7 @@ namespace Simias.Sync
 		/// <param name="nodes">returns the list of changes.</param>
 		/// <param name="context">The context handed back from the last call.</param>
 		/// <returns>false the call failed. The context is initialized.</returns>
-		internal bool GetChangedNodeStamps(out NodeStamp[] nodes, ref string context, out bool more)
+		internal bool GetChangedNodeStamps(out NodeStamp[] nodes, ref string context)
 		{
 			log.Debug("GetChangedNodeStamps Start");
 			EventContext eventContext;
@@ -588,7 +589,7 @@ namespace Simias.Sync
 			// Create a change log reader.
 			ChangeLogReader logReader = new ChangeLogReader( collection );
 			nodes = null;
-			more = false;
+			bool more = true;
 		
 			try
 			{
@@ -596,20 +597,23 @@ namespace Simias.Sync
 				if (context != null)
 				{
 					eventContext = new EventContext(context);
-					more = logReader.GetEvents(eventContext, out changeList);
-					foreach( ChangeLogRecord rec in changeList )
+					while (more)
 					{
-						// Make sure the events are not for local only changes.
-						if ((((NodeEventArgs.EventFlags)rec.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0) &&
-							(rec.MasterRev != rec.SlaveRev))
+						more = logReader.GetEvents(eventContext, out changeList);
+						foreach( ChangeLogRecord rec in changeList )
 						{
-							NodeStamp stamp = new NodeStamp();
-							stamp.localIncarn = rec.SlaveRev;
-							stamp.masterIncarn = rec.MasterRev;
-							stamp.id = rec.EventID;
-							stamp.changeType = rec.Operation;
-							stamp.type = rec.Type.ToString();
-							stampList.Add(stamp);
+							// Make sure the events are not for local only changes.
+							if ((((NodeEventArgs.EventFlags)rec.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0) &&
+								(rec.MasterRev != rec.SlaveRev))
+							{
+								NodeStamp stamp = new NodeStamp();
+								stamp.localIncarn = rec.SlaveRev;
+								stamp.masterIncarn = rec.MasterRev;
+								stamp.id = rec.EventID;
+								stamp.changeType = rec.Operation;
+								stamp.type = rec.Type.ToString();
+								stampList.Add(stamp);
+							}
 						}
 					}
 					log.Debug("Found {0} changed nodes.", stampList.Count);
@@ -637,40 +641,12 @@ namespace Simias.Sync
 		{
 			for (int i = 0; i < sstamps.Length; ++i)
 			{
-				switch (sstamps[i].ChangeType)
-				{
-					case SyncChangeType.Changed:
-					case SyncChangeType.Created:
-					case SyncChangeType.Renamed:
-						// Make sure the node has been changed.
-						Node oldNode = collection.GetNodeByID(sstamps[i].ID);
-						if (oldNode == null || oldNode.MasterIncarnation != sstamps[i].Incarnation)
-						{
-							GetNodeFromServer(sstamps[i]);
-						}
-						break;
-					case SyncChangeType.Deleted:
-						if (!killOnClient.Contains(sstamps[i].ID))
-							killOnClient.Add(sstamps[i].ID, sstamps[i].BaseType);
-						break;
-				}
+				GetNodeFromServer(sstamps[i]);
 			}
 
 			for (int i = 0; i < cstamps.Length; ++i)
 			{
-				switch (cstamps[i].changeType)
-				{
-					case ChangeLogRecord.ChangeLogOp.Changed:
-					case ChangeLogRecord.ChangeLogOp.Created:
-					case ChangeLogRecord.ChangeLogOp.Renamed:
-						if (cstamps[i].localIncarn != cstamps[i].masterIncarn)
-							PutNodeToServer(cstamps[i]);
-						break;
-					case ChangeLogRecord.ChangeLogOp.Deleted:
-						if (!killOnServer.Contains(cstamps[i]))
-							killOnServer.Add(cstamps[i].id, cstamps[i].type);
-						break;
-				}
+				PutNodeToServer(cstamps[i]);
 			}
 		}
 
@@ -680,24 +656,35 @@ namespace Simias.Sync
 		/// <param name="stamp">The SyncNodeStamp describing this node.</param>
 		void GetNodeFromServer(SyncNodeStamp stamp)
 		{
-			if (stamp.BaseType == NodeTypes.FileNodeType || stamp.BaseType == NodeTypes.StoreFileNodeType)
+			if (stamp.Operation == SyncOperation.Delete)
 			{
-				// This is a file.
-				if (!filesFromServer.Contains(stamp.ID))
-					filesFromServer.Add(stamp.ID, stamp.BaseType);
-			}
-			else if (stamp.BaseType == NodeTypes.DirNodeType)
-			{
-				// This node represents a directory.
-				if (!dirsFromServer.Contains(stamp.ID))
-					dirsFromServer.Add(stamp.ID, stamp.BaseType);
+				killOnClient[stamp.ID] = stamp.BaseType;
 			}
 			else
 			{
-				// This is a generic node.
-				if (!nodesFromServer.Contains(stamp.ID))
+				// If it is scheduled to be deleted remove from delete list.
+				if (killOnClient.Contains(stamp.ID))
+					killOnClient.Remove(stamp.ID);
+
+				// Make sure the node has been changed.
+				Node oldNode = collection.GetNodeByID(stamp.ID);
+				if (oldNode == null || oldNode.MasterIncarnation != stamp.Incarnation)
 				{
-					nodesFromServer.Add(stamp.ID, stamp.BaseType);
+					if (stamp.BaseType == NodeTypes.FileNodeType || stamp.BaseType == NodeTypes.StoreFileNodeType)
+					{
+						// This is a file.
+						filesFromServer[stamp.ID] = stamp.BaseType;
+					}
+					else if (stamp.BaseType == NodeTypes.DirNodeType)
+					{
+						// This node represents a directory.
+						dirsFromServer[stamp.ID] = stamp.BaseType;
+					}
+					else
+					{
+						// This is a generic node.
+						nodesFromServer[stamp.ID] = stamp.BaseType;
+					}
 				}
 			}
 		}
@@ -708,36 +695,33 @@ namespace Simias.Sync
 		/// <param name="stamp">The SyncNodeStamp describing this node.</param>
 		void PutNodeToServer(NodeStamp stamp)
 		{
-			if (stamp.masterIncarn == stamp.localIncarn)
-			{
-				// This node has not changed.
-				return;
-			}
-
 			if (stamp.type == NodeTypes.TombstoneType)
 			{
-				// This node needs to be deleted.
-				if (!killOnServer.Contains(stamp.id))
-					killOnServer.Add(stamp.id, stamp.type);
-			}
-			else if (stamp.type == NodeTypes.FileNodeType || stamp.type == NodeTypes.StoreFileNodeType)
-			{
-				// This node is a file.
-				if (!filesToServer.Contains(stamp.id))
-					filesToServer.Add(stamp.id, stamp.type);
-			}
-			else if (stamp.type == NodeTypes.DirNodeType)
-			{
-				// This node is a directory.
-				if (!dirsToServer.Contains(stamp.id))
-					dirsToServer.Add(stamp.id, stamp.type);
+				killOnServer[stamp.id] = stamp.type;
 			}
 			else
 			{
-				// This is a generic node.
-				if (!nodesToServer.Contains(stamp.id))
+				// Remove from the delete list if it exists.
+				if (killOnServer.Contains(stamp.id))
+					killOnServer.Remove(stamp.id);
+
+				if (stamp.masterIncarn != stamp.localIncarn)
 				{
-					nodesToServer.Add(stamp.id, stamp.type);
+					if (stamp.type == NodeTypes.FileNodeType || stamp.type == NodeTypes.StoreFileNodeType)
+					{
+						// This node is a file.
+						filesToServer[stamp.id] = stamp.type;
+					}
+					else if (stamp.type == NodeTypes.DirNodeType)
+					{
+						// This node is a directory.
+						dirsToServer[stamp.id] = stamp.type;
+					}
+					else
+					{
+						// This is a generic node.
+						nodesToServer[stamp.id] = stamp.type;
+					}
 				}
 			}
 		}
@@ -750,6 +734,16 @@ namespace Simias.Sync
 		/// <param name="cstamps">The client nodes.</param>
 		void ReconcileAllNodeStamps(SyncNodeStamp[] sstamps, NodeStamp[] cstamps)
 		{
+			// Clear all the table because we are doing a full sync.
+			killOnClient.Clear();
+			nodesFromServer.Clear();
+			dirsFromServer.Clear();
+			filesFromServer.Clear();
+			killOnServer.Clear();
+			nodesToServer.Clear();
+			dirsToServer.Clear();
+			filesToServer.Clear();
+		
 			int sCount = sstamps.Length, cCount = cstamps.Length;
 			Hashtable tempTable = new Hashtable();
 
@@ -770,8 +764,7 @@ namespace Simias.Sync
 					// If the Master Incarnation is not 0 then this node has been deleted on the server.
 					if (cStamp.masterIncarn != 0)
 					{
-						if (!killOnClient.Contains(cStamp.id))
-							killOnClient.Add(cStamp.id, cStamp.type);
+						killOnClient[cStamp.id] = cStamp.type;
 					}
 					else
 					{
@@ -786,8 +779,7 @@ namespace Simias.Sync
 					if (cStamp.type == NodeTypes.TombstoneType)
 					{
 						// This node has been deleted on the client.
-						if (!killOnServer.Contains(cStamp.id))
-							killOnServer.Add(cStamp.id, cStamp.type);
+						killOnServer[cStamp.id] = cStamp.type;
 					}
 					else if (cStamp.localIncarn != cStamp.masterIncarn)
 					{
@@ -814,7 +806,7 @@ namespace Simias.Sync
 				}
 			}
 
-			// Now Get any nodes left are on the server but not on the client.
+			// Now Get any nodes left, that are on the server but not on the client.
 			foreach(SyncNodeStamp sStamp in tempTable.Values)
 			{
 				GetNodeFromServer(sStamp);
@@ -1148,6 +1140,9 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// Delete nodes from the server.
+		/// </summary>
 		void ProcessKillOnServer()
 		{
 			// remove deleted nodes from server
@@ -1187,6 +1182,9 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// Upload the nodes to the server.
+		/// </summary>
 		void ProcessNodesToServer()
 		{
 			// get small nodes and files from server
@@ -1199,8 +1197,13 @@ namespace Simias.Sync
 				
 			// Now get the nodes in groups of BATCH_SIZE.
 			int offset = 0;
-			while (offset < nodeIDs.Length && !stopping)
+			while (offset < nodeIDs.Length)
 			{
+				if (stopping)
+				{
+					SyncComplete = false;
+					return;
+				}
 				int batchCount = nodeIDs.Length - offset < BATCH_SIZE ? nodeIDs.Length - offset : BATCH_SIZE;
 				SyncNode[] updates = new SyncNode[batchCount];
 				Node[] nodes = new Node[batchCount];

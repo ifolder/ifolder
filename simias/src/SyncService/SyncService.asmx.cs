@@ -50,20 +50,58 @@ namespace Simias.Sync.Web
 		/// <summary>
 		/// start sync of this collection -- perform basic role checks.
 		/// </summary>
-		/// <param name="collectionID">The ID of the collection to Sync.</param>
-		/// <param name="user">This is here temporarily. Used to do access checks.</param>
+		/// <param name="si">The start info used to setup this sync.</param>
+		/// <param name="user">This is temporary.  Needs to be removed when Security is added.</param>
+		/// <returns>The SyncNodeStamps for the sync.</returns>
 		[WebMethod(EnableSession = true)]
-		public SyncAccess Start(string collectionID, string user)
+		public SyncNodeStamp[] Start(ref SyncStartInfo si, string user)
 		{
+			SyncNodeStamp[] nodes = null;
+			si.Access = SyncAccess.Deny;
 			Store store = Store.GetStore();
-			Collection col = store.GetCollectionByID(collectionID);
+			Collection col = store.GetCollectionByID(si.CollectionID);
 			if (col != null)
 			{
 				SyncCollection sCol = new SyncCollection(col);
-				Service = new SyncService(sCol);
-				return Service.Start(user);
+				SyncService ss = new SyncService(sCol);
+				si.Access = ss.Start(user);
+				switch (si.Access)
+				{
+					case SyncAccess.Admin:
+					case SyncAccess.ReadOnly:
+					case SyncAccess.ReadWrite:
+						// See if there is any work to do before we try to get the lock.
+						if (si.ChangesOnly)
+						{
+							// we only need the changes.
+							si.ChangesOnly = ss.GetChangedNodeStamps(out nodes, ref si.Context);
+						}
+
+						if (!si.ChangesOnly)
+						{
+							// We need to get all of the nodes.
+							nodes = ss.GetNodeStamps();
+							if (nodes.Length == 0)
+								si.Access = SyncAccess.Deny;
+						}
+						else if (!si.ClientHasChanges && nodes.Length == 0)
+						{
+							si.Access = SyncAccess.NoWork;
+							nodes = null;
+						}
+						
+						// TODO:
+						// If we have work we need to get a lock.
+						break;
+				}
+
+				Service = ss;
 			}
-			return SyncAccess.NotFound;
+			else
+			{
+				si.Access = SyncAccess.NotFound;
+			}
+			return nodes;
 		}
 
 		/// <summary>
@@ -85,20 +123,6 @@ namespace Simias.Sync.Web
 		{
 			return Service.GetNodeStamps();
 		}
-
-		/// <summary>
-		/// Returns an array of NodeStamps for nodes that have been modified/created/deleted.
-		/// </summary>
-		/// <param name="nodes">The NodeStamps of the changed nodes.</param>
-		/// <param name="context">In/Out This is used internally to detect changed nodes.</param>
-		/// <param name="more"></param>
-		/// <returns>True if successful. If false the context is still modified.</returns>
-		[WebMethod(EnableSession = true)]
-		public bool GetChangedNodeStamps(out SyncNodeStamp[] nodes, ref string context, out bool more)
-		{
-			return Service.GetChangedNodeStamps(out nodes, ref context, out more);
-		}
-
 
 		/// <summary>
 		/// simple version string, also useful to check remoting

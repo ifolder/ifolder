@@ -32,24 +32,26 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     
     /// <remarks/>
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/Start", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public SyncAccess Start(string collectionID, string user) {
+    public SyncNodeStamp[] Start(ref SyncStartInfo si, string user) {
         object[] results = this.Invoke("Start", new object[] {
-                    collectionID,
+                    si,
                     user});
-        return ((SyncAccess)(results[0]));
+        si = ((SyncStartInfo)(results[1]));
+        return ((SyncNodeStamp[])(results[0]));
     }
     
     /// <remarks/>
-    public System.IAsyncResult BeginStart(string collectionID, string user, System.AsyncCallback callback, object asyncState) {
+    public System.IAsyncResult BeginStart(SyncStartInfo si, string user, System.AsyncCallback callback, object asyncState) {
         return this.BeginInvoke("Start", new object[] {
-                    collectionID,
+                    si,
                     user}, callback, asyncState);
     }
     
     /// <remarks/>
-    public SyncAccess EndStart(System.IAsyncResult asyncResult) {
+    public SyncNodeStamp[] EndStart(System.IAsyncResult asyncResult, out SyncStartInfo si) {
         object[] results = this.EndInvoke(asyncResult);
-        return ((SyncAccess)(results[0]));
+        si = ((SyncStartInfo)(results[1]));
+        return ((SyncNodeStamp[])(results[0]));
     }
     
     /// <remarks/>
@@ -84,32 +86,6 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     public SyncNodeStamp[] EndGetAllNodeStamps(System.IAsyncResult asyncResult) {
         object[] results = this.EndInvoke(asyncResult);
         return ((SyncNodeStamp[])(results[0]));
-    }
-    
-    /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/GetChangedNodeStamps", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public bool GetChangedNodeStamps(ref string context, out SyncNodeStamp[] nodes, out bool more) {
-        object[] results = this.Invoke("GetChangedNodeStamps", new object[] {
-                    context});
-        context = ((string)(results[1]));
-        nodes = ((SyncNodeStamp[])(results[2]));
-        more = ((bool)(results[3]));
-        return ((bool)(results[0]));
-    }
-    
-    /// <remarks/>
-    public System.IAsyncResult BeginGetChangedNodeStamps(string context, System.AsyncCallback callback, object asyncState) {
-        return this.BeginInvoke("GetChangedNodeStamps", new object[] {
-                    context}, callback, asyncState);
-    }
-    
-    /// <remarks/>
-    public bool EndGetChangedNodeStamps(System.IAsyncResult asyncResult, out string context, out SyncNodeStamp[] nodes, out bool more) {
-        object[] results = this.EndInvoke(asyncResult);
-        context = ((string)(results[1]));
-        nodes = ((SyncNodeStamp[])(results[2]));
-        more = ((bool)(results[3]));
-        return ((bool)(results[0]));
     }
     
     /// <remarks/>
@@ -383,7 +359,30 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
 
 /// <remarks/>
 [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://novell.com/simias/sync/")]
+public class SyncStartInfo {
+    
+    /// <remarks/>
+    public string CollectionID;
+    
+    /// <remarks/>
+    public string Context;
+    
+    /// <remarks/>
+    public bool ChangesOnly;
+    
+    /// <remarks/>
+    public bool ClientHasChanges;
+    
+    /// <remarks/>
+    public SyncAccess Access;
+}
+
+/// <remarks/>
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://novell.com/simias/sync/")]
 public enum SyncAccess {
+    
+    /// <remarks/>
+    NoWork,
     
     /// <remarks/>
     NotFound,
@@ -402,43 +401,6 @@ public enum SyncAccess {
     
     /// <remarks/>
     Admin,
-}
-
-/// <remarks/>
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://novell.com/simias/sync/")]
-public class SyncNodeStamp {
-    
-    /// <remarks/>
-    public string ID;
-    
-    /// <remarks/>
-    public System.UInt64 Incarnation;
-    
-    /// <remarks/>
-    public string BaseType;
-    
-    /// <remarks/>
-    public SyncChangeType ChangeType;
-}
-
-/// <remarks/>
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://novell.com/simias/sync/")]
-public enum SyncChangeType {
-    
-    /// <remarks/>
-    Unknown,
-    
-    /// <remarks/>
-    Created,
-    
-    /// <remarks/>
-    Deleted,
-    
-    /// <remarks/>
-    Changed,
-    
-    /// <remarks/>
-    Renamed,
 }
 
 /// <remarks/>
@@ -499,4 +461,44 @@ public class SyncNode {
     
     /// <remarks/>
     public System.UInt64 expectedIncarn;
+    
+    /// <remarks/>
+    public SyncOperation operation;
+}
+
+/// <remarks/>
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://novell.com/simias/sync/")]
+public enum SyncOperation {
+    
+    /// <remarks/>
+    Unknown,
+    
+    /// <remarks/>
+    Create,
+    
+    /// <remarks/>
+    Delete,
+    
+    /// <remarks/>
+    Change,
+    
+    /// <remarks/>
+    Rename,
+}
+
+/// <remarks/>
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://novell.com/simias/sync/")]
+public class SyncNodeStamp {
+    
+    /// <remarks/>
+    public string ID;
+    
+    /// <remarks/>
+    public System.UInt64 Incarnation;
+    
+    /// <remarks/>
+    public string BaseType;
+    
+    /// <remarks/>
+    public SyncOperation Operation;
 }
