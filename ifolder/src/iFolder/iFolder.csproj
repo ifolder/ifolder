@@ -70,39 +70,14 @@
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
                 />
                 <Reference
-                    Name = "CollectionStore"
-                    AssemblyName = "CollectionStore"
-                    HintPath = "..\..\..\final\bin\CollectionStore.dll"
-                />
-                <Reference
-                    Name = "Storage"
-                    AssemblyName = "Storage"
-                    HintPath = "..\..\..\final\bin\Storage.dll"
-                />
-                <Reference
-                    Name = "Common"
-                    AssemblyName = "Common"
-                    HintPath = "..\..\..\final\bin\Common.dll"
-                />
-                <Reference
-                    Name = "AddressBook"
-                    AssemblyName = "AddressBook"
-                    HintPath = "..\..\..\final\bin\AddressBook.dll"
-                />
-                <Reference
-                    Name = "Invitation"
-                    AssemblyName = "Invitation"
-                    HintPath = "..\..\..\final\bin\Invitation.dll"
-                />
-                <Reference
-                    Name = "SyncCommon"
-                    AssemblyName = "SyncCommon"
-                    HintPath = "..\..\..\final\bin\SyncCommon.dll"
-                />
-                <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                />
+                <Reference
+                    Name = "Simias"
+                    AssemblyName = "Simias"
+                    HintPath = "..\..\..\simias\src\Simias.dll\Simias.dll"
                 />
             </References>
         </Build>
