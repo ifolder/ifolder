@@ -2421,19 +2421,18 @@ namespace Novell.iFolderCom
 			try
 			{
 				// Create the ImageList object.
-				ImageList contactsImageList = new ImageList();
+				shareWith.SmallImageList = new ImageList();
 
 				// Initialize the ImageList objects with icons.
 				string basePath = loadPath != null ? Path.Combine(loadPath, "res") : Path.Combine(Application.StartupPath, "res");
-				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_me_card.ico")));
+				shareWith.SmallImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_me_card.ico")));
 				//contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_read.ico")));
 				//contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_read_write.ico")));
 				//contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_full.ico")));
-				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_card.ico")));
-				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "inviteduser.ico")));
+				shareWith.SmallImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_card.ico")));
+				shareWith.SmallImageList.Images.Add(new Icon(Path.Combine(basePath, "inviteduser.ico")));
 
-				//Assign the ImageList objects to the books ListView.
-				shareWith.SmallImageList = contactsImageList;
+				this.Icon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
 
 //				conflictIcon.SizeMode = PictureBoxSizeMode.StretchImage;
 				conflictIcon.Image = new Icon(new Icon(Path.Combine(basePath, "ifolderconflict.ico")), 32, 32).ToBitmap();
@@ -2566,6 +2565,7 @@ namespace Novell.iFolderCom
 			picker.iFolderWebService = ifWebService;
 			picker.Ht = userIDHT;
 			picker.CurrentUser = currentUser;
+			picker.DomainID = currentiFolder.DomainID;
 			if (ownerLvi != null)
 			{
 				picker.CurrentOwner = newOwnerLvi == null ? ((ShareListMember)ownerLvi.Tag).iFolderUser : ((ShareListMember)newOwnerLvi.Tag).iFolderUser;

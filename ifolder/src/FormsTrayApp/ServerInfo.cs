@@ -45,7 +45,6 @@ namespace Novell.FormsTrayApp
 		string domainID;
 		bool cancelled = false;
 		bool updateStarted = false;
-		iFolderSettings ifolderSettings;
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
 		private System.Windows.Forms.TextBox serverIP;
@@ -522,21 +521,13 @@ namespace Novell.FormsTrayApp
 		{
 			get { return updateStarted; }
 		}
-
-		/// <summary>
-		/// Gets the iFolderSettings for the default domain.
-		/// </summary>
-		public iFolderSettings ifSettings
-		{
-			get { return ifolderSettings; }
-		}
 		#endregion
 
 		#region Events
 		/// <summary>
 		/// Delegate used when successfully connected to Enterprise Server.
 		/// </summary>
-		public delegate void EnterpriseConnectDelegate(object sender, EventArgs e);
+		public delegate void EnterpriseConnectDelegate(object sender, DomainConnectEventArgs e);
 		/// <summary>
 		/// Occurs when all successfully connected to enterprise.
 		/// </summary>
@@ -560,23 +551,23 @@ namespace Novell.FormsTrayApp
 				{
 					if (ifWebService != null)
 					{
-						ifWebService.ConnectToEnterpriseServer(userName.Text, password.Text, serverIP.Text);
+						DomainWeb domain = ifWebService.ConnectToDomain(userName.Text, password.Text, serverIP.Text);
 
 						try
 						{
-							ifolderSettings = ifWebService.GetSettings();
-							domainID = ifolderSettings.DefaultDomainID;
+							domainID = domain.ID;
 						}
 						catch {}
 
 						if (EnterpriseConnect != null)
 						{
-							EnterpriseConnect(this, new EventArgs());
+							EnterpriseConnect(this, new DomainConnectEventArgs(domain));
 						}
 
 						try
 						{
-							checkForClientUpdate();
+//							checkForClientUpdate();
+							updateStarted = FormsTrayApp.CheckForClientUpdate(domainID, userName.Text, password.Text);
 						}
 						catch (Exception ex)
 						{
@@ -614,7 +605,8 @@ namespace Novell.FormsTrayApp
 						case AuthenticationStatus.Success:
 							try
 							{
-								checkForClientUpdate();
+//								checkForClientUpdate();
+								updateStarted = FormsTrayApp.CheckForClientUpdate(domainID, userName2.Text, password.Text);
 							}
 							catch (Exception ex)
 							{
@@ -663,23 +655,26 @@ namespace Novell.FormsTrayApp
 				// Ignore.
 			}
 
-			try
+			if (!domainID.Equals(string.Empty))
 			{
-				SimiasWebService simiasWebService = new SimiasWebService();
-				simiasWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
-
-				DomainInformation domainInfo = simiasWebService.GetDomainInformation(domainID);
-
-				if (domainInfo != null)
+				try
 				{
-					serverName.Text = domainInfo.Name;
-					userName2.Text = domainInfo.MemberName;
+					SimiasWebService simiasWebService = new SimiasWebService();
+					simiasWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
+
+					DomainInformation domainInfo = simiasWebService.GetDomainInformation(domainID);
+
+					if (domainInfo != null)
+					{
+						serverName.Text = domainInfo.Name;
+						userName2.Text = domainInfo.MemberName;
+					}
 				}
-			}
-			catch (Exception ex)
-			{
-				Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("domainInfoReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-				mmb.ShowDialog();
+				catch (Exception ex)
+				{
+					Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("domainInfoReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+				}
 			}
 		}
 

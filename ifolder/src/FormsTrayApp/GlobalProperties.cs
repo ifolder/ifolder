@@ -81,8 +81,6 @@ namespace Novell.FormsTrayApp
 		private Hashtable ht;
 		private iFolderWebService ifWebService;
 		private IProcEventClient eventClient;
-		private string currentUserID;
-		private string currentPOBoxID;
 		private bool initialConnect = false;
 		private int initialBannerWidth;
 		private bool shutdown = false;
@@ -174,6 +172,15 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Label totalSpaceUnits;
 		private System.Windows.Forms.Label usedSpaceUnits;
 		private System.Windows.Forms.Label freeSpaceUnits;
+		private System.Windows.Forms.ComboBox servers;
+		private System.Windows.Forms.CheckBox defaultServer;
+		private System.Windows.Forms.ComboBox servers2;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Button addAccount;
+		private System.Windows.Forms.Button removeAccount;
+		private System.Windows.Forms.GroupBox groupBox2;
+		private System.Windows.Forms.CheckBox rememberPassword;
+		private System.Windows.Forms.CheckBox autoLogin;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -249,6 +256,8 @@ namespace Novell.FormsTrayApp
 			this.label2 = new System.Windows.Forms.Label();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.servers2 = new System.Windows.Forms.ComboBox();
+			this.label1 = new System.Windows.Forms.Label();
 			this.create = new System.Windows.Forms.Button();
 			this.iFolderView = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
@@ -290,9 +299,15 @@ namespace Novell.FormsTrayApp
 			this.log = new System.Windows.Forms.ListBox();
 			this.label6 = new System.Windows.Forms.Label();
 			this.tabPage5 = new System.Windows.Forms.TabPage();
-			this.enterpriseDescription = new System.Windows.Forms.TextBox();
+			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.autoLogin = new System.Windows.Forms.CheckBox();
+			this.rememberPassword = new System.Windows.Forms.CheckBox();
 			this.userName = new System.Windows.Forms.Label();
 			this.label10 = new System.Windows.Forms.Label();
+			this.defaultServer = new System.Windows.Forms.CheckBox();
+			this.removeAccount = new System.Windows.Forms.Button();
+			this.addAccount = new System.Windows.Forms.Button();
+			this.servers = new System.Windows.Forms.ComboBox();
 			this.groupBox6 = new System.Windows.Forms.GroupBox();
 			this.label18 = new System.Windows.Forms.Label();
 			this.label17 = new System.Windows.Forms.Label();
@@ -306,9 +321,10 @@ namespace Novell.FormsTrayApp
 			this.label13 = new System.Windows.Forms.Label();
 			this.label12 = new System.Windows.Forms.Label();
 			this.label11 = new System.Windows.Forms.Label();
-			this.label9 = new System.Windows.Forms.Label();
 			this.enterpriseName = new System.Windows.Forms.Label();
 			this.label8 = new System.Windows.Forms.Label();
+			this.label9 = new System.Windows.Forms.Label();
+			this.enterpriseDescription = new System.Windows.Forms.TextBox();
 			this.banner = new System.Windows.Forms.PictureBox();
 			this.mainMenu1 = new System.Windows.Forms.MainMenu();
 			this.menuAction = new System.Windows.Forms.MenuItem();
@@ -342,6 +358,7 @@ namespace Novell.FormsTrayApp
 			((System.ComponentModel.ISupportInitialize)(this.port)).BeginInit();
 			this.tabPage3.SuspendLayout();
 			this.tabPage5.SuspendLayout();
+			this.groupBox2.SuspendLayout();
 			this.groupBox6.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -464,6 +481,8 @@ namespace Novell.FormsTrayApp
 			this.tabPage1.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("tabPage1.AutoScrollMargin")));
 			this.tabPage1.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("tabPage1.AutoScrollMinSize")));
 			this.tabPage1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabPage1.BackgroundImage")));
+			this.tabPage1.Controls.Add(this.servers2);
+			this.tabPage1.Controls.Add(this.label1);
 			this.tabPage1.Controls.Add(this.create);
 			this.tabPage1.Controls.Add(this.iFolderView);
 			this.tabPage1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabPage1.Dock")));
@@ -479,6 +498,51 @@ namespace Novell.FormsTrayApp
 			this.tabPage1.Text = resources.GetString("tabPage1.Text");
 			this.tabPage1.ToolTipText = resources.GetString("tabPage1.ToolTipText");
 			this.tabPage1.Visible = ((bool)(resources.GetObject("tabPage1.Visible")));
+			// 
+			// servers2
+			// 
+			this.servers2.AccessibleDescription = resources.GetString("servers2.AccessibleDescription");
+			this.servers2.AccessibleName = resources.GetString("servers2.AccessibleName");
+			this.servers2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("servers2.Anchor")));
+			this.servers2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("servers2.BackgroundImage")));
+			this.servers2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("servers2.Dock")));
+			this.servers2.Enabled = ((bool)(resources.GetObject("servers2.Enabled")));
+			this.servers2.Font = ((System.Drawing.Font)(resources.GetObject("servers2.Font")));
+			this.servers2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("servers2.ImeMode")));
+			this.servers2.IntegralHeight = ((bool)(resources.GetObject("servers2.IntegralHeight")));
+			this.servers2.ItemHeight = ((int)(resources.GetObject("servers2.ItemHeight")));
+			this.servers2.Location = ((System.Drawing.Point)(resources.GetObject("servers2.Location")));
+			this.servers2.MaxDropDownItems = ((int)(resources.GetObject("servers2.MaxDropDownItems")));
+			this.servers2.MaxLength = ((int)(resources.GetObject("servers2.MaxLength")));
+			this.servers2.Name = "servers2";
+			this.servers2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("servers2.RightToLeft")));
+			this.servers2.Size = ((System.Drawing.Size)(resources.GetObject("servers2.Size")));
+			this.servers2.TabIndex = ((int)(resources.GetObject("servers2.TabIndex")));
+			this.servers2.Text = resources.GetString("servers2.Text");
+			this.servers2.Visible = ((bool)(resources.GetObject("servers2.Visible")));
+			this.servers2.SelectedIndexChanged += new System.EventHandler(this.servers2_SelectedIndexChanged);
+			// 
+			// label1
+			// 
+			this.label1.AccessibleDescription = resources.GetString("label1.AccessibleDescription");
+			this.label1.AccessibleName = resources.GetString("label1.AccessibleName");
+			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label1.Anchor")));
+			this.label1.AutoSize = ((bool)(resources.GetObject("label1.AutoSize")));
+			this.label1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label1.Dock")));
+			this.label1.Enabled = ((bool)(resources.GetObject("label1.Enabled")));
+			this.label1.Font = ((System.Drawing.Font)(resources.GetObject("label1.Font")));
+			this.label1.Image = ((System.Drawing.Image)(resources.GetObject("label1.Image")));
+			this.label1.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.ImageAlign")));
+			this.label1.ImageIndex = ((int)(resources.GetObject("label1.ImageIndex")));
+			this.label1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label1.ImeMode")));
+			this.label1.Location = ((System.Drawing.Point)(resources.GetObject("label1.Location")));
+			this.label1.Name = "label1";
+			this.label1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label1.RightToLeft")));
+			this.label1.Size = ((System.Drawing.Size)(resources.GetObject("label1.Size")));
+			this.label1.TabIndex = ((int)(resources.GetObject("label1.TabIndex")));
+			this.label1.Text = resources.GetString("label1.Text");
+			this.label1.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.TextAlign")));
+			this.label1.Visible = ((bool)(resources.GetObject("label1.Visible")));
 			// 
 			// create
 			// 
@@ -1239,13 +1303,15 @@ namespace Novell.FormsTrayApp
 			this.tabPage5.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("tabPage5.AutoScrollMargin")));
 			this.tabPage5.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("tabPage5.AutoScrollMinSize")));
 			this.tabPage5.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabPage5.BackgroundImage")));
-			this.tabPage5.Controls.Add(this.enterpriseDescription);
-			this.tabPage5.Controls.Add(this.userName);
-			this.tabPage5.Controls.Add(this.label10);
+			this.tabPage5.Controls.Add(this.groupBox2);
+			this.tabPage5.Controls.Add(this.removeAccount);
+			this.tabPage5.Controls.Add(this.addAccount);
+			this.tabPage5.Controls.Add(this.servers);
 			this.tabPage5.Controls.Add(this.groupBox6);
-			this.tabPage5.Controls.Add(this.label9);
 			this.tabPage5.Controls.Add(this.enterpriseName);
 			this.tabPage5.Controls.Add(this.label8);
+			this.tabPage5.Controls.Add(this.label9);
+			this.tabPage5.Controls.Add(this.enterpriseDescription);
 			this.tabPage5.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabPage5.Dock")));
 			this.tabPage5.Enabled = ((bool)(resources.GetObject("tabPage5.Enabled")));
 			this.tabPage5.Font = ((System.Drawing.Font)(resources.GetObject("tabPage5.Font")));
@@ -1260,31 +1326,82 @@ namespace Novell.FormsTrayApp
 			this.tabPage5.ToolTipText = resources.GetString("tabPage5.ToolTipText");
 			this.tabPage5.Visible = ((bool)(resources.GetObject("tabPage5.Visible")));
 			// 
-			// enterpriseDescription
+			// groupBox2
 			// 
-			this.enterpriseDescription.AccessibleDescription = resources.GetString("enterpriseDescription.AccessibleDescription");
-			this.enterpriseDescription.AccessibleName = resources.GetString("enterpriseDescription.AccessibleName");
-			this.enterpriseDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("enterpriseDescription.Anchor")));
-			this.enterpriseDescription.AutoSize = ((bool)(resources.GetObject("enterpriseDescription.AutoSize")));
-			this.enterpriseDescription.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("enterpriseDescription.BackgroundImage")));
-			this.enterpriseDescription.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("enterpriseDescription.Dock")));
-			this.enterpriseDescription.Enabled = ((bool)(resources.GetObject("enterpriseDescription.Enabled")));
-			this.enterpriseDescription.Font = ((System.Drawing.Font)(resources.GetObject("enterpriseDescription.Font")));
-			this.enterpriseDescription.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("enterpriseDescription.ImeMode")));
-			this.enterpriseDescription.Location = ((System.Drawing.Point)(resources.GetObject("enterpriseDescription.Location")));
-			this.enterpriseDescription.MaxLength = ((int)(resources.GetObject("enterpriseDescription.MaxLength")));
-			this.enterpriseDescription.Multiline = ((bool)(resources.GetObject("enterpriseDescription.Multiline")));
-			this.enterpriseDescription.Name = "enterpriseDescription";
-			this.enterpriseDescription.PasswordChar = ((char)(resources.GetObject("enterpriseDescription.PasswordChar")));
-			this.enterpriseDescription.ReadOnly = true;
-			this.enterpriseDescription.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("enterpriseDescription.RightToLeft")));
-			this.enterpriseDescription.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("enterpriseDescription.ScrollBars")));
-			this.enterpriseDescription.Size = ((System.Drawing.Size)(resources.GetObject("enterpriseDescription.Size")));
-			this.enterpriseDescription.TabIndex = ((int)(resources.GetObject("enterpriseDescription.TabIndex")));
-			this.enterpriseDescription.Text = resources.GetString("enterpriseDescription.Text");
-			this.enterpriseDescription.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("enterpriseDescription.TextAlign")));
-			this.enterpriseDescription.Visible = ((bool)(resources.GetObject("enterpriseDescription.Visible")));
-			this.enterpriseDescription.WordWrap = ((bool)(resources.GetObject("enterpriseDescription.WordWrap")));
+			this.groupBox2.AccessibleDescription = resources.GetString("groupBox2.AccessibleDescription");
+			this.groupBox2.AccessibleName = resources.GetString("groupBox2.AccessibleName");
+			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox2.Anchor")));
+			this.groupBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox2.BackgroundImage")));
+			this.groupBox2.Controls.Add(this.autoLogin);
+			this.groupBox2.Controls.Add(this.rememberPassword);
+			this.groupBox2.Controls.Add(this.userName);
+			this.groupBox2.Controls.Add(this.label10);
+			this.groupBox2.Controls.Add(this.defaultServer);
+			this.groupBox2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox2.Dock")));
+			this.groupBox2.Enabled = ((bool)(resources.GetObject("groupBox2.Enabled")));
+			this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.groupBox2.Font = ((System.Drawing.Font)(resources.GetObject("groupBox2.Font")));
+			this.groupBox2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox2.ImeMode")));
+			this.groupBox2.Location = ((System.Drawing.Point)(resources.GetObject("groupBox2.Location")));
+			this.groupBox2.Name = "groupBox2";
+			this.groupBox2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox2.RightToLeft")));
+			this.groupBox2.Size = ((System.Drawing.Size)(resources.GetObject("groupBox2.Size")));
+			this.groupBox2.TabIndex = ((int)(resources.GetObject("groupBox2.TabIndex")));
+			this.groupBox2.TabStop = false;
+			this.groupBox2.Text = resources.GetString("groupBox2.Text");
+			this.groupBox2.Visible = ((bool)(resources.GetObject("groupBox2.Visible")));
+			// 
+			// autoLogin
+			// 
+			this.autoLogin.AccessibleDescription = resources.GetString("autoLogin.AccessibleDescription");
+			this.autoLogin.AccessibleName = resources.GetString("autoLogin.AccessibleName");
+			this.autoLogin.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("autoLogin.Anchor")));
+			this.autoLogin.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("autoLogin.Appearance")));
+			this.autoLogin.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("autoLogin.BackgroundImage")));
+			this.autoLogin.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("autoLogin.CheckAlign")));
+			this.autoLogin.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("autoLogin.Dock")));
+			this.autoLogin.Enabled = ((bool)(resources.GetObject("autoLogin.Enabled")));
+			this.autoLogin.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("autoLogin.FlatStyle")));
+			this.autoLogin.Font = ((System.Drawing.Font)(resources.GetObject("autoLogin.Font")));
+			this.autoLogin.Image = ((System.Drawing.Image)(resources.GetObject("autoLogin.Image")));
+			this.autoLogin.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("autoLogin.ImageAlign")));
+			this.autoLogin.ImageIndex = ((int)(resources.GetObject("autoLogin.ImageIndex")));
+			this.autoLogin.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("autoLogin.ImeMode")));
+			this.autoLogin.Location = ((System.Drawing.Point)(resources.GetObject("autoLogin.Location")));
+			this.autoLogin.Name = "autoLogin";
+			this.autoLogin.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("autoLogin.RightToLeft")));
+			this.autoLogin.Size = ((System.Drawing.Size)(resources.GetObject("autoLogin.Size")));
+			this.autoLogin.TabIndex = ((int)(resources.GetObject("autoLogin.TabIndex")));
+			this.autoLogin.Text = resources.GetString("autoLogin.Text");
+			this.autoLogin.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("autoLogin.TextAlign")));
+			this.autoLogin.Visible = ((bool)(resources.GetObject("autoLogin.Visible")));
+			this.autoLogin.CheckedChanged += new System.EventHandler(this.autoLogin_CheckedChanged);
+			// 
+			// rememberPassword
+			// 
+			this.rememberPassword.AccessibleDescription = resources.GetString("rememberPassword.AccessibleDescription");
+			this.rememberPassword.AccessibleName = resources.GetString("rememberPassword.AccessibleName");
+			this.rememberPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("rememberPassword.Anchor")));
+			this.rememberPassword.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("rememberPassword.Appearance")));
+			this.rememberPassword.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("rememberPassword.BackgroundImage")));
+			this.rememberPassword.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("rememberPassword.CheckAlign")));
+			this.rememberPassword.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("rememberPassword.Dock")));
+			this.rememberPassword.Enabled = ((bool)(resources.GetObject("rememberPassword.Enabled")));
+			this.rememberPassword.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("rememberPassword.FlatStyle")));
+			this.rememberPassword.Font = ((System.Drawing.Font)(resources.GetObject("rememberPassword.Font")));
+			this.rememberPassword.Image = ((System.Drawing.Image)(resources.GetObject("rememberPassword.Image")));
+			this.rememberPassword.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("rememberPassword.ImageAlign")));
+			this.rememberPassword.ImageIndex = ((int)(resources.GetObject("rememberPassword.ImageIndex")));
+			this.rememberPassword.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("rememberPassword.ImeMode")));
+			this.rememberPassword.Location = ((System.Drawing.Point)(resources.GetObject("rememberPassword.Location")));
+			this.rememberPassword.Name = "rememberPassword";
+			this.rememberPassword.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("rememberPassword.RightToLeft")));
+			this.rememberPassword.Size = ((System.Drawing.Size)(resources.GetObject("rememberPassword.Size")));
+			this.rememberPassword.TabIndex = ((int)(resources.GetObject("rememberPassword.TabIndex")));
+			this.rememberPassword.Text = resources.GetString("rememberPassword.Text");
+			this.rememberPassword.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("rememberPassword.TextAlign")));
+			this.rememberPassword.Visible = ((bool)(resources.GetObject("rememberPassword.Visible")));
+			this.rememberPassword.CheckedChanged += new System.EventHandler(this.rememberPassword_CheckedChanged);
 			// 
 			// userName
 			// 
@@ -1329,6 +1446,103 @@ namespace Novell.FormsTrayApp
 			this.label10.Text = resources.GetString("label10.Text");
 			this.label10.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label10.TextAlign")));
 			this.label10.Visible = ((bool)(resources.GetObject("label10.Visible")));
+			// 
+			// defaultServer
+			// 
+			this.defaultServer.AccessibleDescription = resources.GetString("defaultServer.AccessibleDescription");
+			this.defaultServer.AccessibleName = resources.GetString("defaultServer.AccessibleName");
+			this.defaultServer.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("defaultServer.Anchor")));
+			this.defaultServer.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("defaultServer.Appearance")));
+			this.defaultServer.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("defaultServer.BackgroundImage")));
+			this.defaultServer.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("defaultServer.CheckAlign")));
+			this.defaultServer.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("defaultServer.Dock")));
+			this.defaultServer.Enabled = ((bool)(resources.GetObject("defaultServer.Enabled")));
+			this.defaultServer.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("defaultServer.FlatStyle")));
+			this.defaultServer.Font = ((System.Drawing.Font)(resources.GetObject("defaultServer.Font")));
+			this.defaultServer.Image = ((System.Drawing.Image)(resources.GetObject("defaultServer.Image")));
+			this.defaultServer.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("defaultServer.ImageAlign")));
+			this.defaultServer.ImageIndex = ((int)(resources.GetObject("defaultServer.ImageIndex")));
+			this.defaultServer.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("defaultServer.ImeMode")));
+			this.defaultServer.Location = ((System.Drawing.Point)(resources.GetObject("defaultServer.Location")));
+			this.defaultServer.Name = "defaultServer";
+			this.defaultServer.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("defaultServer.RightToLeft")));
+			this.defaultServer.Size = ((System.Drawing.Size)(resources.GetObject("defaultServer.Size")));
+			this.defaultServer.TabIndex = ((int)(resources.GetObject("defaultServer.TabIndex")));
+			this.defaultServer.Text = resources.GetString("defaultServer.Text");
+			this.defaultServer.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("defaultServer.TextAlign")));
+			this.defaultServer.Visible = ((bool)(resources.GetObject("defaultServer.Visible")));
+			this.defaultServer.CheckedChanged += new System.EventHandler(this.defaultServer_CheckedChanged);
+			// 
+			// removeAccount
+			// 
+			this.removeAccount.AccessibleDescription = resources.GetString("removeAccount.AccessibleDescription");
+			this.removeAccount.AccessibleName = resources.GetString("removeAccount.AccessibleName");
+			this.removeAccount.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("removeAccount.Anchor")));
+			this.removeAccount.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("removeAccount.BackgroundImage")));
+			this.removeAccount.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("removeAccount.Dock")));
+			this.removeAccount.Enabled = ((bool)(resources.GetObject("removeAccount.Enabled")));
+			this.removeAccount.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("removeAccount.FlatStyle")));
+			this.removeAccount.Font = ((System.Drawing.Font)(resources.GetObject("removeAccount.Font")));
+			this.removeAccount.Image = ((System.Drawing.Image)(resources.GetObject("removeAccount.Image")));
+			this.removeAccount.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("removeAccount.ImageAlign")));
+			this.removeAccount.ImageIndex = ((int)(resources.GetObject("removeAccount.ImageIndex")));
+			this.removeAccount.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("removeAccount.ImeMode")));
+			this.removeAccount.Location = ((System.Drawing.Point)(resources.GetObject("removeAccount.Location")));
+			this.removeAccount.Name = "removeAccount";
+			this.removeAccount.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("removeAccount.RightToLeft")));
+			this.removeAccount.Size = ((System.Drawing.Size)(resources.GetObject("removeAccount.Size")));
+			this.removeAccount.TabIndex = ((int)(resources.GetObject("removeAccount.TabIndex")));
+			this.removeAccount.Text = resources.GetString("removeAccount.Text");
+			this.removeAccount.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("removeAccount.TextAlign")));
+			this.removeAccount.Visible = ((bool)(resources.GetObject("removeAccount.Visible")));
+			this.removeAccount.Click += new System.EventHandler(this.removeAccount_Click);
+			// 
+			// addAccount
+			// 
+			this.addAccount.AccessibleDescription = resources.GetString("addAccount.AccessibleDescription");
+			this.addAccount.AccessibleName = resources.GetString("addAccount.AccessibleName");
+			this.addAccount.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("addAccount.Anchor")));
+			this.addAccount.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("addAccount.BackgroundImage")));
+			this.addAccount.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("addAccount.Dock")));
+			this.addAccount.Enabled = ((bool)(resources.GetObject("addAccount.Enabled")));
+			this.addAccount.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("addAccount.FlatStyle")));
+			this.addAccount.Font = ((System.Drawing.Font)(resources.GetObject("addAccount.Font")));
+			this.addAccount.Image = ((System.Drawing.Image)(resources.GetObject("addAccount.Image")));
+			this.addAccount.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("addAccount.ImageAlign")));
+			this.addAccount.ImageIndex = ((int)(resources.GetObject("addAccount.ImageIndex")));
+			this.addAccount.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("addAccount.ImeMode")));
+			this.addAccount.Location = ((System.Drawing.Point)(resources.GetObject("addAccount.Location")));
+			this.addAccount.Name = "addAccount";
+			this.addAccount.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("addAccount.RightToLeft")));
+			this.addAccount.Size = ((System.Drawing.Size)(resources.GetObject("addAccount.Size")));
+			this.addAccount.TabIndex = ((int)(resources.GetObject("addAccount.TabIndex")));
+			this.addAccount.Text = resources.GetString("addAccount.Text");
+			this.addAccount.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("addAccount.TextAlign")));
+			this.addAccount.Visible = ((bool)(resources.GetObject("addAccount.Visible")));
+			this.addAccount.Click += new System.EventHandler(this.addAccount_Click);
+			// 
+			// servers
+			// 
+			this.servers.AccessibleDescription = resources.GetString("servers.AccessibleDescription");
+			this.servers.AccessibleName = resources.GetString("servers.AccessibleName");
+			this.servers.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("servers.Anchor")));
+			this.servers.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("servers.BackgroundImage")));
+			this.servers.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("servers.Dock")));
+			this.servers.Enabled = ((bool)(resources.GetObject("servers.Enabled")));
+			this.servers.Font = ((System.Drawing.Font)(resources.GetObject("servers.Font")));
+			this.servers.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("servers.ImeMode")));
+			this.servers.IntegralHeight = ((bool)(resources.GetObject("servers.IntegralHeight")));
+			this.servers.ItemHeight = ((int)(resources.GetObject("servers.ItemHeight")));
+			this.servers.Location = ((System.Drawing.Point)(resources.GetObject("servers.Location")));
+			this.servers.MaxDropDownItems = ((int)(resources.GetObject("servers.MaxDropDownItems")));
+			this.servers.MaxLength = ((int)(resources.GetObject("servers.MaxLength")));
+			this.servers.Name = "servers";
+			this.servers.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("servers.RightToLeft")));
+			this.servers.Size = ((System.Drawing.Size)(resources.GetObject("servers.Size")));
+			this.servers.TabIndex = ((int)(resources.GetObject("servers.TabIndex")));
+			this.servers.Text = resources.GetString("servers.Text");
+			this.servers.Visible = ((bool)(resources.GetObject("servers.Visible")));
+			this.servers.SelectedIndexChanged += new System.EventHandler(this.servers_SelectedIndexChanged);
 			// 
 			// groupBox6
 			// 
@@ -1624,28 +1838,6 @@ namespace Novell.FormsTrayApp
 			this.label11.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label11.TextAlign")));
 			this.label11.Visible = ((bool)(resources.GetObject("label11.Visible")));
 			// 
-			// label9
-			// 
-			this.label9.AccessibleDescription = resources.GetString("label9.AccessibleDescription");
-			this.label9.AccessibleName = resources.GetString("label9.AccessibleName");
-			this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label9.Anchor")));
-			this.label9.AutoSize = ((bool)(resources.GetObject("label9.AutoSize")));
-			this.label9.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label9.Dock")));
-			this.label9.Enabled = ((bool)(resources.GetObject("label9.Enabled")));
-			this.label9.Font = ((System.Drawing.Font)(resources.GetObject("label9.Font")));
-			this.label9.Image = ((System.Drawing.Image)(resources.GetObject("label9.Image")));
-			this.label9.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label9.ImageAlign")));
-			this.label9.ImageIndex = ((int)(resources.GetObject("label9.ImageIndex")));
-			this.label9.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label9.ImeMode")));
-			this.label9.Location = ((System.Drawing.Point)(resources.GetObject("label9.Location")));
-			this.label9.Name = "label9";
-			this.label9.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label9.RightToLeft")));
-			this.label9.Size = ((System.Drawing.Size)(resources.GetObject("label9.Size")));
-			this.label9.TabIndex = ((int)(resources.GetObject("label9.TabIndex")));
-			this.label9.Text = resources.GetString("label9.Text");
-			this.label9.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label9.TextAlign")));
-			this.label9.Visible = ((bool)(resources.GetObject("label9.Visible")));
-			// 
 			// enterpriseName
 			// 
 			this.enterpriseName.AccessibleDescription = resources.GetString("enterpriseName.AccessibleDescription");
@@ -1689,6 +1881,54 @@ namespace Novell.FormsTrayApp
 			this.label8.Text = resources.GetString("label8.Text");
 			this.label8.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label8.TextAlign")));
 			this.label8.Visible = ((bool)(resources.GetObject("label8.Visible")));
+			// 
+			// label9
+			// 
+			this.label9.AccessibleDescription = resources.GetString("label9.AccessibleDescription");
+			this.label9.AccessibleName = resources.GetString("label9.AccessibleName");
+			this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label9.Anchor")));
+			this.label9.AutoSize = ((bool)(resources.GetObject("label9.AutoSize")));
+			this.label9.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label9.Dock")));
+			this.label9.Enabled = ((bool)(resources.GetObject("label9.Enabled")));
+			this.label9.Font = ((System.Drawing.Font)(resources.GetObject("label9.Font")));
+			this.label9.Image = ((System.Drawing.Image)(resources.GetObject("label9.Image")));
+			this.label9.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label9.ImageAlign")));
+			this.label9.ImageIndex = ((int)(resources.GetObject("label9.ImageIndex")));
+			this.label9.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label9.ImeMode")));
+			this.label9.Location = ((System.Drawing.Point)(resources.GetObject("label9.Location")));
+			this.label9.Name = "label9";
+			this.label9.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label9.RightToLeft")));
+			this.label9.Size = ((System.Drawing.Size)(resources.GetObject("label9.Size")));
+			this.label9.TabIndex = ((int)(resources.GetObject("label9.TabIndex")));
+			this.label9.Text = resources.GetString("label9.Text");
+			this.label9.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label9.TextAlign")));
+			this.label9.Visible = ((bool)(resources.GetObject("label9.Visible")));
+			// 
+			// enterpriseDescription
+			// 
+			this.enterpriseDescription.AccessibleDescription = resources.GetString("enterpriseDescription.AccessibleDescription");
+			this.enterpriseDescription.AccessibleName = resources.GetString("enterpriseDescription.AccessibleName");
+			this.enterpriseDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("enterpriseDescription.Anchor")));
+			this.enterpriseDescription.AutoSize = ((bool)(resources.GetObject("enterpriseDescription.AutoSize")));
+			this.enterpriseDescription.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("enterpriseDescription.BackgroundImage")));
+			this.enterpriseDescription.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("enterpriseDescription.Dock")));
+			this.enterpriseDescription.Enabled = ((bool)(resources.GetObject("enterpriseDescription.Enabled")));
+			this.enterpriseDescription.Font = ((System.Drawing.Font)(resources.GetObject("enterpriseDescription.Font")));
+			this.enterpriseDescription.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("enterpriseDescription.ImeMode")));
+			this.enterpriseDescription.Location = ((System.Drawing.Point)(resources.GetObject("enterpriseDescription.Location")));
+			this.enterpriseDescription.MaxLength = ((int)(resources.GetObject("enterpriseDescription.MaxLength")));
+			this.enterpriseDescription.Multiline = ((bool)(resources.GetObject("enterpriseDescription.Multiline")));
+			this.enterpriseDescription.Name = "enterpriseDescription";
+			this.enterpriseDescription.PasswordChar = ((char)(resources.GetObject("enterpriseDescription.PasswordChar")));
+			this.enterpriseDescription.ReadOnly = true;
+			this.enterpriseDescription.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("enterpriseDescription.RightToLeft")));
+			this.enterpriseDescription.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("enterpriseDescription.ScrollBars")));
+			this.enterpriseDescription.Size = ((System.Drawing.Size)(resources.GetObject("enterpriseDescription.Size")));
+			this.enterpriseDescription.TabIndex = ((int)(resources.GetObject("enterpriseDescription.TabIndex")));
+			this.enterpriseDescription.Text = resources.GetString("enterpriseDescription.Text");
+			this.enterpriseDescription.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("enterpriseDescription.TextAlign")));
+			this.enterpriseDescription.Visible = ((bool)(resources.GetObject("enterpriseDescription.Visible")));
+			this.enterpriseDescription.WordWrap = ((bool)(resources.GetObject("enterpriseDescription.WordWrap")));
 			// 
 			// banner
 			// 
@@ -2006,6 +2246,7 @@ namespace Novell.FormsTrayApp
 			((System.ComponentModel.ISupportInitialize)(this.port)).EndInit();
 			this.tabPage3.ResumeLayout(false);
 			this.tabPage5.ResumeLayout(false);
+			this.groupBox2.ResumeLayout(false);
 			this.groupBox6.ResumeLayout(false);
 			this.ResumeLayout(false);
 
@@ -2193,6 +2434,107 @@ namespace Novell.FormsTrayApp
 
 			return (run == 0);
 		}
+
+		/// <summary>
+		/// Adds the specified domain to the dropdown lists.
+		/// </summary>
+		/// <param name="domainWeb">The DomainWeb object to add to the list.</param>
+		public void AddDomainToList(DomainWeb domainWeb)
+		{
+			Domain defaultDomain = null;
+			bool domainInList = false;
+
+			foreach (Domain d in servers.Items)
+			{
+				if (d.DomainWeb.IsDefault)
+				{
+					// The current default domain.
+					defaultDomain = d;
+				}
+
+				if (d.ID.Equals(domainWeb.ID))
+				{
+					// The domain is already in the list.
+					domainInList = true;
+				}
+			}
+
+			if (!domainInList)
+			{
+				// Reset the current default domain ... the new domain will be the default now.
+				if (defaultDomain != null)
+				{
+					defaultDomain.DomainWeb.IsDefault = false;
+				}
+
+				Domain domain = new Domain(domainWeb);
+				servers.Items.Add(domain);
+				servers.SelectedItem = domain;
+
+				servers2.Items.Add(domain);
+				servers2.SelectedItem = domain;
+			}
+		}
+
+		/// <summary>
+		/// Check the specified ID to see if it is the current user.
+		/// </summary>
+		/// <param name="userID">The ID of the user to check.</param>
+		/// <returns><b>True</b> if the specified user ID is the current user; otherwise, <b>False</b>.</returns>
+		public bool IsCurrentUser(string userID)
+		{
+			bool result = false;
+
+			foreach (Domain d in servers.Items)
+			{
+				if (d.DomainWeb.UserID.Equals(userID))
+				{
+					result = true;
+					break;
+				}
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// Check the specified ID to see if it is a POBox that is registered with the client.
+		/// </summary>
+		/// <param name="poBoxID">The ID of the POBox to check.</param>
+		/// <returns><b>True</b> if the specified POBox ID is registered with the client; otherwise, <b>False</b>.</returns>
+		public bool IsPOBox(string poBoxID)
+		{
+			bool result = false;
+
+			foreach (Domain d in servers.Items)
+			{
+				if (d.DomainWeb.POBoxID.Equals(poBoxID))
+				{
+					result = true;
+					break;
+				}
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// Checks to see if the specified Domain ID is currently selected in the dropdown list.
+		/// </summary>
+		/// <param name="domainID">The ID of the Domain.</param>
+		/// <returns><b>True</b> if the specified Domain or the wild-card Domain is the currently 
+		/// selected domain; otherwise, <b>False</b>.</returns>
+		public bool IsSelected(string domainID)
+		{
+			bool result = false;
+			Domain domain = (Domain)servers2.SelectedItem;
+			if (domain.ShowAll || domain.ID.Equals(domainID))
+			{
+				result = true;
+			}
+
+			return result;
+		}
 		#endregion
 
 		#region Private Methods
@@ -2306,12 +2648,15 @@ namespace Novell.FormsTrayApp
 			{
 				if (eventData.Equals("NodeCreated"))
 				{
-					addiFolderToListView(ifolder);
-
-					if (ifolder.State.Equals("Local"))
+					if (IsSelected(ifolder.DomainID))
 					{
-						// Notify the shell.
-						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
+						addiFolderToListView(ifolder);
+
+						if (ifolder.State.Equals("Local"))
+						{
+							// Notify the shell.
+							Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
+						}
 					}
 				}
 				else
@@ -2458,7 +2803,7 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private void refreshiFolders()
+		private void refreshiFolders(Domain domain)
 		{
 			Cursor.Current = Cursors.WaitCursor;
 
@@ -2474,7 +2819,9 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				iFolderWeb[] ifolderArray = ifWebService.GetAlliFolders();
+				iFolderWeb[] ifolderArray = domain.ShowAll ? 
+					ifWebService.GetAlliFolders() : 
+					ifWebService.GetiFoldersForDomain(domain.ID);
 				foreach (iFolderWeb ifolder in ifolderArray)
 				{
 					addiFolderToListView(ifolder);
@@ -2514,66 +2861,27 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private void updateEnterpriseData(iFolderSettings ifSettings)
+		private void updateEnterpriseData()
 		{
-			currentUserID = ifSettings.CurrentUserID;
-			currentPOBoxID = ifSettings.DefaultPOBoxID;
-
+			servers.Items.Clear();
+			DomainWeb[] domains;
 			try
 			{
-				iFolderUser ifolderUser = ifWebService.GetiFolderUser(ifSettings.CurrentUserID);
-				userName.Text = ifolderUser.Name;
+				domains = ifWebService.GetDomains();
+				foreach (DomainWeb dw in domains)
+				{
+					Domain domain = new Domain(dw);
+					servers.Items.Add(domain);
+					if (domain.DomainWeb.IsDefault)
+					{
+						servers.SelectedItem = domain;
+					}
+				}
 			}
-			catch (Exception e)
+			catch
 			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readUserError"), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-				mmb.ShowDialog();
+				// TODO: Message?
 			}
-
-			enterpriseName.Text = ifSettings.EnterpriseName;
-			enterpriseDescription.Text = ifSettings.EnterpriseDescription;
-
-			try
-			{
-				// Get the disk space.
-				DiskSpace diskSpace = ifWebService.GetUserDiskSpace(ifSettings.CurrentUserID);
-				if (diskSpace.Limit != 0)
-				{
-					usedSpaceUnits.Text = freeSpaceUnits.Text = totalSpaceUnits.Text = 
-						resourceManager.GetString("freeSpaceUnits.Text");
-					totalSpace.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
-
-					double used = Math.Round(diskSpace.UsedSpace/megaByte, 2);
-					usedSpace.Text = used.ToString();
-					freeSpace.Text = ((double)Math.Round(diskSpace.AvailableSpace/megaByte, 2)).ToString();
-
-					// Set up the gauge chart.
-					gaugeChart1.MaxValue = diskSpace.Limit / megaByte;
-					gaugeChart1.Used = used;
-					gaugeChart1.BarColor = SystemColors.ActiveCaption;
-				}
-				else
-				{
-					usedSpaceUnits.Text = freeSpaceUnits.Text = totalSpaceUnits.Text =
-						resourceManager.GetString("notApplicable");
-					usedSpace.Text = freeSpace.Text = totalSpace.Text = "";
-					gaugeChart1.Used = 0;
-				}
-			}
-			catch (Exception e)
-			{
-				if (retryCount-- > 0)
-				{
-					updateEnterpriseTimer.Start();
-				}
-				else
-				{
-					usedSpace.Text = freeSpace.Text = totalSpace.Text = resourceManager.GetString("statusUnknown");
-				}
-			}
-
-			// Cause the gauge chart to be redrawn.
-			gaugeChart1.Invalidate(true);
 		}
 		#endregion
 
@@ -2600,15 +2908,38 @@ namespace Novell.FormsTrayApp
 
 			initialBannerWidth = banner.Width;
 			this.MinimumSize = this.Size;
-
-			// Update the iFolders listview.
-			refreshiFolders();
 		}
 
 		private void GlobalProperties_VisibleChanged(object sender, System.EventArgs e)
 		{
 			if (this.Visible)
 			{
+				servers2.Items.Clear();
+
+				// Add the wild-card domain.
+				Domain domain = new Domain(resourceManager.GetString("showAll"));
+				servers2.Items.Add(domain);
+				servers2.SelectedItem = domain;
+
+				servers.Items.Clear();
+
+				DomainWeb[] domains;
+				try
+				{
+					domains = ifWebService.GetDomains();
+					foreach (DomainWeb dw in domains)
+					{
+						domain = new Domain(dw);
+						servers2.Items.Add(domain);
+						servers.Items.Add(domain);
+						if (domain.DomainWeb.IsDefault)
+						{
+							servers.SelectedItem = domain;
+						}
+					}
+				}
+				catch{}
+
 				apply.Enabled = cancel.Enabled = false;
 
 				// Update the auto start setting.
@@ -2620,20 +2951,6 @@ namespace Novell.FormsTrayApp
 
 				// Update the display confirmation setting.
 				displayConfirmation.Checked = iFolderComponent.DisplayConfirmationEnabled;
-
-				iFolderSettings ifSettings = null;
-
-				try
-				{
-					ifSettings = ifWebService.GetSettings();
-					currentUserID = ifSettings.CurrentUserID;
-					currentPOBoxID = ifSettings.DefaultPOBoxID;
-				}
-				catch (Exception ex)
-				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readiFolderSettingsError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
-				}
 
 				try
 				{
@@ -2647,12 +2964,11 @@ namespace Novell.FormsTrayApp
 					mmb.ShowDialog();
 				}
 
+				iFolderSettings ifSettings = null;
+
 				try
 				{
-					if (ifSettings == null)
-					{
-						ifSettings = ifWebService.GetSettings();
-					}
+					ifSettings = ifWebService.GetSettings();
 
 					// Update the proxy settings.
 					useProxy.Checked = ifSettings.UseProxy;
@@ -2665,10 +2981,11 @@ namespace Novell.FormsTrayApp
 					mmb.ShowDialog();
 				}
 
-				if (ifSettings.HaveEnterprise)
+				updateEnterpriseData();
+
+				if ((ifSettings != null) && ifSettings.HaveEnterprise)
 				{
 					ShowEnterpriseTab = true;
-					updateEnterpriseData(ifSettings);
 				}
 
 				Activate();
@@ -2688,8 +3005,7 @@ namespace Novell.FormsTrayApp
 		private void updateEnterpriseTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
 		{
 			updateEnterpriseTimer.Stop();
-			iFolderSettings ifSettings = ifWebService.GetSettings();
-			updateEnterpriseData(ifSettings);
+			updateEnterpriseData();
 		}
 
 		private void menuFileExit_Click(object sender, System.EventArgs e)
@@ -2733,7 +3049,7 @@ namespace Novell.FormsTrayApp
 			// Pressing the F5 key will cause a refresh to occur.
 			if (e.KeyCode == Keys.F5)
 			{
-				refreshiFolders();
+				refreshiFolders((Domain)servers2.SelectedItem);
 			}
 		}
 
@@ -2748,6 +3064,11 @@ namespace Novell.FormsTrayApp
 		}
 
 		#region iFolders Tab
+		private void servers2_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			refreshiFolders((Domain)servers2.SelectedItem);
+		}
+
 		private void contextMenu1_Popup(object sender, System.EventArgs e)
 		{
 			menuShare.Visible = menuProperties.Visible = menuRevert.Visible = menuSeparator1.Visible = 
@@ -2771,7 +3092,7 @@ namespace Novell.FormsTrayApp
 			
 			if (menuRemove.Visible)
 			{
-				menuRemove.Text = ((iFolderWeb)iFolderView.SelectedItems[0].Tag).OwnerID.Equals(currentUserID) ? resourceManager.GetString("deleteAction") : resourceManager.GetString("menuRemove.Text");
+				menuRemove.Text = IsCurrentUser(((iFolderWeb)iFolderView.SelectedItems[0].Tag).OwnerID) ? resourceManager.GetString("deleteAction") : resourceManager.GetString("menuRemove.Text");
 			}
 		}
 
@@ -2863,60 +3184,20 @@ namespace Novell.FormsTrayApp
 
 		private void menuCreate_Click(object sender, System.EventArgs e)
 		{
-			FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+			CreateiFolder createiFolder = new CreateiFolder();
+			createiFolder.Servers = servers.Items;
+			createiFolder.SelectedDomain = (Domain)servers2.SelectedItem;
+			createiFolder.iFolderWebService = ifWebService;
 
-			folderBrowserDialog.Description = resourceManager.GetString("chooseFolder");
-
-			while (true)
+			if ((DialogResult.OK == createiFolder.ShowDialog()) && iFolderComponent.DisplayConfirmationEnabled)
 			{
-				if(folderBrowserDialog.ShowDialog() == DialogResult.OK)
-				{
-					try
-					{
-						Cursor.Current = Cursors.WaitCursor;
-						if (ifWebService.CanBeiFolder(folderBrowserDialog.SelectedPath))
-						{
-							// Create the iFolder.
-							iFolderWeb ifolder = ifWebService.CreateLocaliFolder(folderBrowserDialog.SelectedPath);
-
-							// Notify the shell.
-							Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, folderBrowserDialog.SelectedPath, IntPtr.Zero);
-
-							// Add the iFolder to the listview.
-							addiFolderToListView(ifolder);
-
-							Cursor.Current = Cursors.Default;
-
-							// Display the new iFolder intro dialog.
-							if (iFolderComponent.DisplayConfirmationEnabled)
-							{
-								new iFolderComponent().NewiFolderWizard(Application.StartupPath, folderBrowserDialog.SelectedPath);
-							}
-							break;
-						}
-						else
-						{
-							Cursor.Current = Cursors.Default;
-							MessageBox.Show(resourceManager.GetString("invalidFolder"));
-						}
-					}
-					catch (Exception ex)
-					{
-						Cursor.Current = Cursors.Default;
-						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderCreateError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-						mmb.ShowDialog();
-					}
-				}
-				else
-				{
-					break;
-				}
+				new iFolderComponent().NewiFolderWizard(Application.StartupPath, createiFolder.iFolderPath);
 			}
 		}
 
 		private void menuRefresh_Click(object sender, System.EventArgs e)
 		{
-			refreshiFolders();
+			refreshiFolders((Domain)servers2.SelectedItem);
 		}
 
 		private void menuAccept_Click(object sender, System.EventArgs e)
@@ -2937,7 +3218,7 @@ namespace Novell.FormsTrayApp
 			{
 				string message, caption;
 
-				if (ifolder.OwnerID.Equals(currentUserID))
+				if (IsCurrentUser(ifolder.OwnerID))
 				{
 					message = resourceManager.GetString("deleteiFolder") + "\n\n" + 
 						resourceManager.GetString("removePrompt");
@@ -2961,7 +3242,7 @@ namespace Novell.FormsTrayApp
 						MyMessageBoxDefaultButton.Button2);
 					if (mmb.ShowDialog() == DialogResult.Yes)
 					{
-						ifWebService.DeclineiFolderInvitation(ifolder.ID);
+						ifWebService.DeclineiFolderInvitation(ifolder.DomainID, ifolder.ID);
 					}
 				}
 				else
@@ -2993,7 +3274,7 @@ namespace Novell.FormsTrayApp
 						updateListViewItem(lvi);
 
 						// Decline the invitation.
-						ifWebService.DeclineiFolderInvitation(newiFolder.ID);
+						ifWebService.DeclineiFolderInvitation(newiFolder.DomainID, newiFolder.ID);
 					}
 				}
 			}
@@ -3253,6 +3534,154 @@ namespace Novell.FormsTrayApp
 			{
 				apply.Enabled = cancel.Enabled = true;
 			}
+		}
+		#endregion
+
+		#region Server Tab
+		private void servers_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			Domain selectedDomain = (Domain)servers.SelectedItem;
+
+			try
+			{
+				iFolderUser ifolderUser = ifWebService.GetiFolderUser(selectedDomain.DomainWeb.UserID);
+				userName.Text = ifolderUser.Name;
+			}
+			catch (Exception ex)
+			{
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readUserError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+				mmb.ShowDialog();
+			}
+
+			enterpriseDescription.Text = selectedDomain.DomainWeb.Description;
+
+			// TODO: set the remember password and auto login checkboxes.
+
+			defaultServer.Checked = selectedDomain.DomainWeb.IsDefault;
+			defaultServer.Enabled = !defaultServer.Checked;
+
+			try
+			{
+				// Get the disk space.
+				DiskSpace diskSpace = ifWebService.GetUserDiskSpace(selectedDomain.DomainWeb.UserID);
+				double used = 0;
+				if (diskSpace.UsedSpace != 0)
+				{
+					usedSpaceUnits.Text = resourceManager.GetString("freeSpaceUnits.Text");
+					used = Math.Round(diskSpace.UsedSpace/megaByte, 2);
+					usedSpace.Text = used.ToString();
+				}
+				else
+				{
+					usedSpaceUnits.Text = resourceManager.GetString("notApplicable");
+					usedSpace.Text = "";
+				}
+
+				if (diskSpace.Limit != 0)
+				{
+					usedSpaceUnits.Text = freeSpaceUnits.Text = totalSpaceUnits.Text = 
+						resourceManager.GetString("freeSpaceUnits.Text");
+					totalSpace.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
+
+					freeSpace.Text = ((double)Math.Round(diskSpace.AvailableSpace/megaByte, 2)).ToString();
+
+					// Set up the gauge chart.
+					gaugeChart1.MaxValue = diskSpace.Limit / megaByte;
+					gaugeChart1.Used = used;
+					gaugeChart1.BarColor = SystemColors.ActiveCaption;
+				}
+				else
+				{
+					freeSpaceUnits.Text = totalSpaceUnits.Text =
+						resourceManager.GetString("notApplicable");
+					freeSpace.Text = totalSpace.Text = "";
+					gaugeChart1.Used = 0;
+				}
+			}
+			catch
+			{
+				usedSpace.Text = freeSpace.Text = totalSpace.Text = resourceManager.GetString("statusUnknown");
+			}
+
+			// Cause the gauge chart to be redrawn.
+			gaugeChart1.Invalidate(true);
+		}
+
+		private void defaultServer_CheckedChanged(object sender, System.EventArgs e)
+		{
+			if (defaultServer.Focused && defaultServer.Checked)
+			{
+				// Set this domain as the default.
+				try
+				{
+					Domain domain = (Domain)servers.SelectedItem;
+					ifWebService.SetDefaultDomain(domain.DomainWeb.ID);
+
+					// Reset the flag on the current default domain.
+					foreach (Domain d in servers.Items)
+					{
+						if (d.DomainWeb.IsDefault)
+						{
+							d.DomainWeb.IsDefault = false;
+							break;
+						}
+					}
+
+					// Set the flag on the new default domain.
+					domain.DomainWeb.IsDefault = true;
+
+					// Disable the checkbox so that it cannot be unchecked.
+					defaultServer.Enabled = false;
+
+					// Fix the default domain in the other server list.
+					foreach (Domain d in servers2.Items)
+					{
+						if (d.DomainWeb.IsDefault)
+						{
+							d.DomainWeb.IsDefault = false;
+						}
+
+						if (d.DomainWeb.ID.Equals(domain.DomainWeb.ID))
+						{
+							d.DomainWeb.IsDefault = true;
+						}
+					}
+				}
+				catch
+				{}
+			}
+		}
+
+		private void addAccount_Click(object sender, System.EventArgs e)
+		{
+			AddAccount addAccount = new AddAccount(ifWebService);
+			addAccount.EnterpriseConnect += new Novell.FormsTrayApp.AddAccount.EnterpriseConnectDelegate(addAccount_EnterpriseConnect);
+			addAccount.ShowDialog();
+
+			if (addAccount.UpdateStarted)
+			{
+				// TODO: An update has started ... shutdown.
+			}
+		}
+
+		private void removeAccount_Click(object sender, System.EventArgs e)
+		{
+			// TODO:
+		}
+
+		private void rememberPassword_CheckedChanged(object sender, System.EventArgs e)
+		{
+			// TODO:
+		}
+
+		private void autoLogin_CheckedChanged(object sender, System.EventArgs e)
+		{
+			// TODO:
+		}
+
+		private void addAccount_EnterpriseConnect(object sender, DomainConnectEventArgs e)
+		{
+			AddDomainToList(e.DomainWeb);
 		}
 		#endregion
 

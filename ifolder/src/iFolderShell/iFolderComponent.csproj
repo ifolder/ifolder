@@ -124,6 +124,21 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "CreateiFolder.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "CreateiFolder.resx"
+                    DependentUpon = "CreateiFolder.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Domain.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "EmailPrompt.cs"
                     SubType = "Form"
                     BuildAction = "Compile"

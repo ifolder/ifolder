@@ -36,6 +36,7 @@ using Novell.Win32Util;
 using CustomUIControls;
 using Simias.Client;
 using Simias.Client.Event;
+using Novell.iFolder.Install;
 
 namespace Novell.FormsTrayApp
 {
@@ -75,6 +76,7 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		protected AutoResetEvent workEvent = null;
 
+		private AddAccount addAccount = null;
 		private ServerInfo serverInfo = null;
 		private string domainID = string.Empty;
 		private bool loginCancelled = false;
@@ -201,6 +203,30 @@ namespace Novell.FormsTrayApp
 			base.Dispose( disposing );
 		}
 
+		static public bool CheckForClientUpdate(string domainID, string userName, string password)
+		{
+			bool updateStarted = false;
+			ClientUpgrade cUpgrade = new ClientUpgrade(domainID, userName, password);
+			string version = cUpgrade.CheckForUpdate();
+			if ( version != null )
+			{
+				// Pop up a dialog here and ask if the user wants to update the client.
+				MyMessageBox mmb = new MyMessageBox("Update client?"/*string.Format(resourceManager.GetString("clientUpgradePrompt"), version)*/, "Update"/*resourceManager.GetString("clientUpgradeTitle")*/, string.Empty, MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question);
+				DialogResult result = mmb.ShowDialog();
+				if ( result == DialogResult.Yes )
+				{
+					updateStarted = cUpgrade.RunUpdate();
+					if ( updateStarted == false )
+					{
+						mmb = new MyMessageBox("Upgrade failure"/* TODO: resourceManager.GetString("clientUpgradeFailure")*/, string.Empty /* TODO: resourceManager.GetString("clientUpgradeTitle")*/, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+						mmb.ShowDialog();
+					}
+				}
+			}
+
+			return updateStarted;
+		}
+
 		#region Event Handlers
 		private void menuStoreBrowser_Click(object sender, System.EventArgs e)
 		{
@@ -232,12 +258,21 @@ namespace Novell.FormsTrayApp
 			}*/
 
 			// Only display one dialog.
-			if (serverInfo == null)
+//			if (serverInfo == null)
+//			{
+//				serverInfo = new ServerInfo(ifWebService, string.Empty);
+//				serverInfo.EnterpriseConnect += new Novell.FormsTrayApp.ServerInfo.EnterpriseConnectDelegate(serverInfo_EnterpriseConnect);
+//				serverInfo.Closed += new EventHandler(serverInfo_Closed);
+//				serverInfo.Show();
+//			}
+
+			if (addAccount == null)
 			{
-				serverInfo = new ServerInfo(ifWebService, string.Empty);
-				serverInfo.EnterpriseConnect += new Novell.FormsTrayApp.ServerInfo.EnterpriseConnectDelegate(serverInfo_EnterpriseConnect);
-				serverInfo.Closed += new EventHandler(serverInfo_Closed);
-				serverInfo.Show();
+				addAccount = new AddAccount(ifWebService);
+				addAccount.EnterpriseConnect += new Novell.FormsTrayApp.AddAccount.EnterpriseConnectDelegate(serverInfo_EnterpriseConnect);
+				addAccount.Closed += new EventHandler(addAccount_Closed);
+				addAccount.StartPosition = FormStartPosition.CenterScreen;
+				addAccount.Show();
 			}
 		}
 
@@ -291,7 +326,7 @@ namespace Novell.FormsTrayApp
 				if (menuJoin.Visible)
 				{
 					ifolderSettings = ifWebService.GetSettings();
-					menuJoin.Visible = !ifolderSettings.HaveEnterprise;
+//					menuJoin.Visible = !ifolderSettings.HaveEnterprise;
 				}
 			}
 			catch
@@ -409,13 +444,14 @@ namespace Novell.FormsTrayApp
 			BeginInvoke(notifyMessageDelegate, new object[] {notifyEventArgs});
 		}
 
-		private void serverInfo_EnterpriseConnect(object sender, EventArgs e)
+		private void serverInfo_EnterpriseConnect(object sender, DomainConnectEventArgs e)
 		{
 			globalProperties.ShowEnterpriseTab = true;
-			globalProperties.InitialConnect = true;
+//			globalProperties.InitialConnect = true;
+			globalProperties.AddDomainToList(e.DomainWeb);
 
 			// Update the settings with the enterprise data.
-			ifolderSettings = serverInfo.ifSettings;
+//			ifolderSettings = serverInfo.ifSettings;
 		}
 
 		private void syncAnimateTimer_Tick(object sender, System.EventArgs e)
@@ -449,6 +485,19 @@ namespace Novell.FormsTrayApp
 				}
 			}
 		}
+
+
+		private void addAccount_Closed(object sender, EventArgs e)
+		{
+			bool update = addAccount.UpdateStarted;
+			addAccount.Dispose();
+			addAccount = null;
+
+			if (update)
+			{
+				ShutdownTrayApp(null);
+			}
+		}
 		#endregion
 
 		#region Private Methods
@@ -463,12 +512,12 @@ namespace Novell.FormsTrayApp
 			this.menuEventLogReader = new System.Windows.Forms.MenuItem();
 			this.menuSeparator1 = new System.Windows.Forms.MenuItem();
 			this.menuProperties = new System.Windows.Forms.MenuItem();
+			this.menuLogin = new System.Windows.Forms.MenuItem();
 			this.menuJoin = new System.Windows.Forms.MenuItem();
 			this.menuHelp = new System.Windows.Forms.MenuItem();
 			this.menuItem10 = new System.Windows.Forms.MenuItem();
 			this.menuExit = new System.Windows.Forms.MenuItem();
 			this.syncAnimateTimer = new System.Windows.Forms.Timer(this.components);
-			this.menuLogin = new System.Windows.Forms.MenuItem();
 			// 
 			// notifyIcon1
 			// 
@@ -544,6 +593,16 @@ namespace Novell.FormsTrayApp
 			this.menuProperties.Visible = ((bool)(resources.GetObject("menuProperties.Visible")));
 			this.menuProperties.Click += new System.EventHandler(this.menuProperties_Click);
 			// 
+			// menuLogin
+			// 
+			this.menuLogin.Enabled = ((bool)(resources.GetObject("menuLogin.Enabled")));
+			this.menuLogin.Index = 3;
+			this.menuLogin.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuLogin.Shortcut")));
+			this.menuLogin.ShowShortcut = ((bool)(resources.GetObject("menuLogin.ShowShortcut")));
+			this.menuLogin.Text = resources.GetString("menuLogin.Text");
+			this.menuLogin.Visible = ((bool)(resources.GetObject("menuLogin.Visible")));
+			this.menuLogin.Click += new System.EventHandler(this.menuLogin_Click);
+			// 
 			// menuJoin
 			// 
 			this.menuJoin.Enabled = ((bool)(resources.GetObject("menuJoin.Enabled")));
@@ -586,16 +645,6 @@ namespace Novell.FormsTrayApp
 			// syncAnimateTimer
 			// 
 			this.syncAnimateTimer.Tick += new System.EventHandler(this.syncAnimateTimer_Tick);
-			// 
-			// menuLogin
-			// 
-			this.menuLogin.Enabled = ((bool)(resources.GetObject("menuLogin.Enabled")));
-			this.menuLogin.Index = 3;
-			this.menuLogin.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuLogin.Shortcut")));
-			this.menuLogin.ShowShortcut = ((bool)(resources.GetObject("menuLogin.ShowShortcut")));
-			this.menuLogin.Text = resources.GetString("menuLogin.Text");
-			this.menuLogin.Visible = ((bool)(resources.GetObject("menuLogin.Visible")));
-			this.menuLogin.Click += new System.EventHandler(this.menuLogin_Click);
 			// 
 			// FormsTrayApp
 			// 
@@ -805,18 +854,13 @@ namespace Novell.FormsTrayApp
 					{
 						case "NodeChanged":
 						{
-							if (ifolderSettings == null)
-							{
-								ifolderSettings = ifWebService.GetSettings();
-							}
-
 							if (eventArgs.Type == "Collection")
 							{
 								ifolder = ifWebService.GetiFolder(eventArgs.Collection);
 							}
-							else if (eventArgs.Type.Equals("Node") && eventArgs.Collection.Equals(ifolderSettings.DefaultPOBoxID))
+							else if (eventArgs.Type.Equals("Node") && globalProperties.IsPOBox(eventArgs.Collection))
 							{
-								ifolder = ifWebService.GetiFolder(eventArgs.Node);
+								ifolder = ifWebService.GetiFolderInvitation(eventArgs.Collection, eventArgs.Node);
 							}
 							break;
 						}
@@ -831,14 +875,9 @@ namespace Novell.FormsTrayApp
 								}
 								case "Node":
 								{
-									if (ifolderSettings == null)
+									if (globalProperties.IsPOBox(eventArgs.Collection))
 									{
-										ifolderSettings = ifWebService.GetSettings();
-									}
-
-									if (eventArgs.Collection.Equals(ifolderSettings.DefaultPOBoxID))
-									{
-										ifolder = ifWebService.GetiFolder(eventArgs.Node);
+										ifolder = ifWebService.GetiFolderInvitation(eventArgs.Collection, eventArgs.Node);
 
 										// If the iFolder is not Available or it exists locally, we don't need to process the event.
 										if (!ifolder.State.Equals("Available") || (ifWebService.GetiFolder(ifolder.CollectionID) != null))
@@ -850,18 +889,13 @@ namespace Novell.FormsTrayApp
 								}
 								case "Member":
 								{
-									if (ifolderSettings == null)
-									{
-										ifolderSettings = ifWebService.GetSettings();
-									}
-
 									// TODO: This currently displays a notification for each member added to an iFolder ...
 									// so when an iFolder is accepted and synced down the first time, a notification occurs for each
 									// member of the iFolder.  A couple of ways to solve this:
 									// 1. Keep track of the first sync and don't display any notifications until the initial sync has successfully completed.
 									// 2. Queue up the added members and only display a single notification ... some sort of time interval would need to be used.
 									ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
-									if ((ifolderUser != null) && (!ifolderUser.UserID.Equals(ifolderSettings.CurrentUserID)))
+									if ((ifolderUser != null) && !globalProperties.IsCurrentUser(ifolderUser.UserID))
 									{
 										ifolder = ifWebService.GetiFolder(eventArgs.Collection);
 									}
