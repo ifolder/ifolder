@@ -659,6 +659,9 @@ namespace Simias.Storage
 						// Validate this Collection object.
 						ValidateNodeForCommit( node );
 
+						// Set the nodestamp for this object.
+						node.NodeStamp = nodeStamp;
+
 						// Copy the XML node over to the modify document.
 						XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
 						commitDocument.DocumentElement.AppendChild( xmlNode );
