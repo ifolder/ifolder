@@ -247,8 +247,6 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 	
 	private void addChildNodes(DefaultMutableTreeNode parentNode, BrowserNode[] childNodesA)
 	{
-		System.out.println("File | Exit Button Selected");
-		System.out.println("childNodesA.length: " + String.valueOf(childNodesA.length));
 		for (int i = 0; i < childNodesA.length; i++)
 		{
 			String nodeData = childNodesA[i].getNodeData();
