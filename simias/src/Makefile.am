@@ -5,7 +5,7 @@ DIST_SUBDIRS = $(SUBDIRS)
 endif
 
 if LINUX
-SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer
+SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer GaimDomain
 
 DIST_SUBDIRS = $(SUBDIRS) libsimias
 endif

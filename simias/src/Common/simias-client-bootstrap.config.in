@@ -7,6 +7,8 @@
       <Service name="Simias Interprocess Event Service" assembly="Simias" enabled="True" type="Thread" class="Simias.Event.IProcEventServer" />
       <Service name="Simias PO Service" assembly="Simias" enabled="True" type="Thread" class="Simias.POBox.POService" />
       <Service name="Simias Sync Client" assembly="Simias" enabled="True" type="Thread" class="Simias.Sync.SyncClient" />
+      <!-- Uncomment the following line to enable the Gaim Domain (Requires Gaim iFolder Plugin) -->
+      <!--<Service name="Gaim Domain Service" assembly="Simias.GaimDomain.dll" enabled="True" type="Thread" class="Simias.Gaim.GaimService" />-->
     </setting>
   </section>
   <section name="StoreProvider">
