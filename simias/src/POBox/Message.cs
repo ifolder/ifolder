@@ -312,7 +312,7 @@ namespace Simias.POBox
 			}
 			set
 			{
-				Properties.ModifyProperty(DomainIDProperty, value);
+				Properties.ModifyNodeProperty(DomainIDProperty, value);
 			}
 		}
 		
@@ -323,11 +323,11 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(DomainIDProperty).Value;
+				return (string)Properties.GetSingleProperty(DomainNameProperty).Value;
 			}
 			set
 			{
-				Properties.ModifyProperty(DomainIDProperty, value);
+				Properties.ModifyNodeProperty(DomainNameProperty, value);
 			}
 		}
 
