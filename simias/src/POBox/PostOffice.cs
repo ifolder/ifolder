@@ -169,9 +169,18 @@ namespace Simias.POBox
 
 		public void AckSubscription(string domain, string identity, string message)
 		{
+			bool workgroup = (domain == Simias.Storage.Domain.WorkGroupDomainID);
+			
 			// open the post office box
-			// TODO: POBox box = POBox.GetPOBox(store, domain, identity);
-			POBox box = POBox.GetPOBox(store, domain);
+			POBox box;
+			if (workgroup)
+			{
+				box = POBox.GetPOBox(store, domain);
+			}
+			else
+			{
+				box = POBox.GetPOBox(store, domain, identity);
+			}
 
 			// check the post office box
 			if (box == null)
@@ -203,16 +212,23 @@ namespace Simias.POBox
 		public SubscriptionStatus GetSubscriptionStatus(string domain, string identity, string message)
 		{
 			SubscriptionStatus status = null;
+			bool workgroup = (domain == Simias.Storage.Domain.WorkGroupDomainID);
 
 			// open the post office box
-			// TODO: POBox box = POBox.GetPOBox(store, domain, identity);
-			POBox box = POBox.GetPOBox(store, domain);
-
+			POBox box;
+			if (workgroup)
+			{
+				box = POBox.GetPOBox(store, domain);
+			}
+			else
+			{
+				box = POBox.GetPOBox(store, domain, identity);
+			}
+			
 			// check the post office box
 			if (box == null)
 				throw new ApplicationException("PO Box not found.");
 
-			// check that the message has already not been posted
 			// check that the message has already not been posted
 			ICSList list = box.Search(Message.MessageIDProperty, message, SearchOp.Equal);
 			
@@ -225,7 +241,7 @@ namespace Simias.POBox
 			}
 
 			if (sn == null)
-				throw new ApplicationException("Subscription already exists.");
+				throw new ApplicationException("Subscription does not exists.");
 
 			// get the status object
 			Subscription subscription = new Subscription(box, sn);
