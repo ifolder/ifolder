@@ -224,7 +224,7 @@ namespace Simias.POBox
 			}
 			else
 			{
-				log.Info("SubscriptionThread::DoInvited called");
+				log.Debug("SubscriptionThread::DoInvited called");
 				POBoxService poService = new POBoxService();
 				poService.Url = this.poServiceUrl;
 				poService.PreAuthenticate = true;
@@ -234,7 +234,7 @@ namespace Simias.POBox
 				poService.Credentials = cSimiasCreds.GetCredentials();
 				if (poService.Credentials == null)
 				{
-					log.Info("  no credentials - back to sleep");
+					log.Debug("  no credentials - back to sleep");
 					return (false);
 				}
 				
@@ -271,7 +271,6 @@ namespace Simias.POBox
 					log.Debug(
 						"Failed POBoxService::Invite - inviter's subscription {0} hasn't sync'd to the server yet",
 						subscription.MessageID);
-
 
 					return (false);
 				}
@@ -347,12 +346,12 @@ namespace Simias.POBox
 
 		private bool DoReplied()
 		{
-			log.Info("DoReplied - Connecting to the Post Office Service : {0}", subscription.POServiceURL);
-			log.Info("  calling the PO Box server to accept/reject subscription");
-			log.Info("  domainID: " + subscription.DomainID);
-			log.Info("  fromID:   " + subscription.FromIdentity);
-			log.Info("  toID:     " + subscription.ToIdentity);
-			log.Info("  SubID:    " + subscription.MessageID);
+			log.Debug("DoReplied - Connecting to the Post Office Service : {0}", subscription.POServiceURL);
+			log.Debug("  calling the PO Box server to accept/reject subscription");
+			log.Debug("  domainID: " + subscription.DomainID);
+			log.Debug("  fromID:   " + subscription.FromIdentity);
+			log.Debug("  toID:     " + subscription.ToIdentity);
+			log.Debug("  SubID:    " + subscription.MessageID);
 
 			bool result = false;
 			POBoxService poService = new POBoxService();
@@ -367,7 +366,7 @@ namespace Simias.POBox
 			poService.Credentials = cSimiasCreds.GetCredentials();
 			if (poService.Credentials == null)
 			{
-				log.Info("  no credentials - back to sleep");
+				log.Debug("  no credentials - back to sleep");
 				return result;
 			}
 
@@ -375,7 +374,7 @@ namespace Simias.POBox
 			{
 				if (subscription.SubscriptionDisposition == SubscriptionDispositions.Accepted)
 				{
-					log.Info("  subscription accepted!");
+					log.Debug("  subscription accepted!");
 					wsStatus =
 						poService.AcceptedSubscription(
 							subscription.DomainID,
@@ -412,7 +411,7 @@ namespace Simias.POBox
 				else
 				if (subscription.SubscriptionDisposition == SubscriptionDispositions.Declined)
 				{
-					log.Info("  subscription declined");
+					log.Debug("  subscription declined");
 					wsStatus =
 						poService.DeclinedSubscription(
 							subscription.DomainID,
@@ -439,9 +438,9 @@ namespace Simias.POBox
 			}
 			catch(Exception e)
 			{
-				log.Debug("DoReplied failed updating originator's PO box");
-				log.Debug(e.Message);
-				log.Debug(e.StackTrace);
+				log.Error("DoReplied failed updating originator's PO box");
+				log.Error(e.Message);
+				log.Error(e.StackTrace);
 			}
 
 			return result;
@@ -451,11 +450,11 @@ namespace Simias.POBox
 		{
 			bool result = false;
 
-			log.Info("DoDelivered::Connecting to the Post Office Service : {0}", this.poServiceUrl);
-			log.Info("  calling the PO Box server to get subscription state");
-			log.Info("  domainID: " + subscription.DomainID);
-			log.Info("  fromID:   " + subscription.FromIdentity);
-			log.Info("  SubID:    " + subscription.MessageID);
+			log.Debug("DoDelivered::Connecting to the Post Office Service : {0}", this.poServiceUrl);
+			log.Debug("  calling the PO Box server to get subscription state");
+			log.Debug("  domainID: " + subscription.DomainID);
+			log.Debug("  fromID:   " + subscription.FromIdentity);
+			log.Debug("  SubID:    " + subscription.MessageID);
 
 			POBoxService poService = new POBoxService();
 			poService.Url = this.poServiceUrl;
@@ -467,7 +466,7 @@ namespace Simias.POBox
 			poService.Credentials = cSimiasCreds.GetCredentials();
 			if (poService.Credentials == null)
 			{
-				log.Info("  no credentials - back to sleep");
+				log.Debug("  no credentials - back to sleep");
 				return(result);
 			}
 
@@ -481,10 +480,10 @@ namespace Simias.POBox
 
 				if (subInfo != null)
 				{
-					log.Info("  subInfo.FromName: " + subInfo.FromName);
-					log.Info("  subInfo.ToName: " + subInfo.ToName);
-					log.Info("  subInfo.State: " + subInfo.State.ToString());
-					log.Info("  subInfo.Disposition: " + subInfo.Disposition.ToString());
+					log.Debug("  subInfo.FromName: " + subInfo.FromName);
+					log.Debug("  subInfo.ToName: " + subInfo.ToName);
+					log.Debug("  subInfo.State: " + subInfo.State.ToString());
+					log.Debug("  subInfo.Disposition: " + subInfo.Disposition.ToString());
 				}
 
 				// update subscription
@@ -564,9 +563,9 @@ namespace Simias.POBox
 			}
 			catch(Exception e)
 			{
-				log.Debug("SubscriptionThread::DoDelivered failed with an exception");
-				log.Debug(e.Message);
-				log.Debug(e.StackTrace);
+				log.Error("SubscriptionThread::DoDelivered failed with an exception");
+				log.Error(e.Message);
+				log.Error(e.StackTrace);
 			}
 
 			return result;
