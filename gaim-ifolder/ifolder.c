@@ -75,8 +75,8 @@ typedef enum
 /**
  * The INVITATION_STATE Enumeration:
  * 
- * STATE_INIT: This state should be used when an Invitation is first allocated
- * in memory.
+ * STATE_NEW: This state is used for incoming invitations and denotes that the
+ * user has not accepted or denied the invitation.
  * 
  * STATE_PENDING: The invitation has been added by Simias but not sent yet.  If
  * an invitation stays in this state for a while it's likely that the buddy is
@@ -96,12 +96,22 @@ typedef enum
  *
  * STATE_ACCEPTED: The buddy has accepted the invitation and we've informed
  * Simias with the information (IP Address) received from the buddy.
+ * 
+ * States used for incoming invitations:
+ * 
+ * 		STATE_NEW, STATE_REJECTED_PENDING, STATE_ACCEPTED_PENDING
+ * 
+ * States used for outgoing invitations:
+ * 
+ * 		STATE_PENDING, STATE_SENT, STATE_REJECTED, STATE_ACCEPTED_PENDING,
+ * 		STATE_ACCEPTED
  */
 typedef enum
 {
-	STATE_INIT,
+	STATE_NEW,
 	STATE_PENDING,
 	STATE_SENT,
+	STATE_REJECTED_PENDING,
 	STATE_REJECTED,
 	STATE_ACCEPTED_PENDING,
 	STATE_ACCEPTED
@@ -255,6 +265,8 @@ static void buddy_signed_on_cb(GaimBuddy *buddy, void *user_data);
 /**
  * This function takes a generic message and sends it to the specified recipient
  * if they are online.
+ * 
+ * FIXME: We may have to prevent a "flood" of messages for a given account in case that some IM servers will kick us off for "abuse".
  */
 static int
 send_msg_to_buddy(GaimBuddy *recipient, char *msg)
@@ -577,6 +589,8 @@ in_inv_accept_button_cb(GtkWidget *w, GtkTreeView *tree)
 	int send_result;
 	GtkWidget *dialog;
 	GtkTreeIter tb_iter;
+	char time_str[32];
+	char state_str[32];
 
 	sel = gtk_tree_view_get_selection(tree);
 	if (!gtk_tree_selection_get_selected(sel, &model, &iter)) {
@@ -635,15 +649,31 @@ in_inv_accept_button_cb(GtkWidget *w, GtkTreeView *tree)
 
 	if (buddy->present == GAIM_BUDDY_SIGNING_OFF
 		|| buddy->present == GAIM_BUDDY_OFFLINE) {
-		/* FIXME: Instead of telling the user that the buddy is offline, just mark this accept message as a pending accept message and send it out when the buddy is online */
-		dialog = gtk_message_dialog_new(NULL,
-					GTK_DIALOG_DESTROY_WITH_PARENT,
-					GTK_MESSAGE_ERROR,
-					GTK_BUTTONS_CLOSE,
-					_("The buddy is not online.  Please wait for this buddy to be online before you accept this invitation."));
-		gtk_dialog_run(GTK_DIALOG(dialog));
-		gtk_widget_destroy(dialog);
-		return;
+		/**
+		 * Change the state of this invitation to STATE_ACCEPTED_PENDING and it
+		 * will be sent when the buddy-signed-on event occurs.
+		 */
+		invitation->state = STATE_ACCEPTED_PENDING;
+
+		/* Update the "last updated" time */
+		time(&(invitation->time));
+
+		/* Format the time to a string */
+		fill_time_str(time_str, 32, invitation->time);
+
+		/* Format the state string */
+		fill_state_str(state_str, invitation->state);
+	
+		/* Update the out_inv_store */
+		gtk_list_store_set(GTK_LIST_STORE(model), &iter,
+			TIME_COL,				time_str,
+			STATE_COL,				state_str,
+			-1);
+		
+		/* Make sure the buttons are in the correct state */
+		in_inv_sel_changed_cb(sel, GTK_TREE_VIEW(in_inv_tree));
+	
+		return; /* That's about all we can do at this point */
 	}
 
 	send_result =
@@ -685,6 +715,8 @@ in_inv_reject_button_cb(GtkWindow *w, GtkTreeView *tree)
 	GaimBuddy *buddy;
 	int send_result;
 	GtkWidget *dialog;
+	char time_str[32];
+	char state_str[32];
 
 	sel = gtk_tree_view_get_selection(tree);
 	if (!gtk_tree_selection_get_selected(sel, &model, &iter)) {
@@ -727,15 +759,31 @@ in_inv_reject_button_cb(GtkWindow *w, GtkTreeView *tree)
 
 	if (buddy->present == GAIM_BUDDY_SIGNING_OFF
 		|| buddy->present == GAIM_BUDDY_OFFLINE) {
-		/* FIXME: Instead of telling the user that the buddy is offline, just mark this accept message as a pending rejct message and send it out when the buddy is online */
-		dialog = gtk_message_dialog_new(NULL,
-					GTK_DIALOG_DESTROY_WITH_PARENT,
-					GTK_MESSAGE_ERROR,
-					GTK_BUTTONS_CLOSE,
-					_("The buddy is not online.  Please wait for this buddy to be online before you reject this invitation."));
-		gtk_dialog_run(GTK_DIALOG(dialog));
-		gtk_widget_destroy(dialog);
-		return;
+		/**
+		 * Change the state of this invitation to STATE_REJECTED_PENDING and it
+		 * will be sent when the buddy-signed-on event occurs.
+		 */
+		invitation->state = STATE_REJECTED_PENDING;
+
+		/* Update the "last updated" time */
+		time(&(invitation->time));
+
+		/* Format the time to a string */
+		fill_time_str(time_str, 32, invitation->time);
+
+		/* Format the state string */
+		fill_state_str(state_str, invitation->state);
+	
+		/* Update the out_inv_store */
+		gtk_list_store_set(GTK_LIST_STORE(model), &iter,
+			TIME_COL,				time_str,
+			STATE_COL,				state_str,
+			-1);
+
+		/* Make sure the buttons are in the correct state */
+		in_inv_sel_changed_cb(sel, GTK_TREE_VIEW(in_inv_tree));
+	
+		return; /* That's about all we can do at this point */
 	}
 
 	send_result =
@@ -767,11 +815,9 @@ in_inv_sel_changed_cb(GtkTreeSelection *sel, GtkTreeView *tree)
 {
 	GtkTreeIter iter;
 	GtkTreeModel *model;
+	Invitation *invitation;
 
-	/**
-	 * If nothing is selected, disable the buttons, otherwise, enable the
-	 * Accept and Reject buttons.
-	 */
+	/* If nothing is selected, disable the buttons. */
 	if (!gtk_tree_selection_get_selected(sel, &model, &iter)) {
 		g_print("in_inv_sel_changed_cb() called and nothing is selected.  Disabling buttons...\n");
 
@@ -779,11 +825,28 @@ in_inv_sel_changed_cb(GtkTreeSelection *sel, GtkTreeView *tree)
 		gtk_widget_set_sensitive(in_inv_accept_button, FALSE);
 		gtk_widget_set_sensitive(in_inv_reject_button, FALSE);
 	} else {
-		g_print("in_inv_sel_changed_cb() called and something is selected.  Enabling buttons...\n");
+		g_print("in_inv_sel_changed_cb() called and something is selected.\n");
 
-		/* Enable the buttons */
-		gtk_widget_set_sensitive(in_inv_accept_button, TRUE);
-		gtk_widget_set_sensitive(in_inv_reject_button, TRUE);
+		/**
+		 * If the state of the selected invitation is either
+		 * STATE_ACCEPTED_PENDING or STATE_REJECTED_PENDING, the buttons should
+		 * be disabled, otherwise, enable the buttons.
+		 */
+
+		/* Extract the Invitation * from the model using iter */
+		gtk_tree_model_get(model, &iter,
+							INVITATION_PTR, &invitation,
+							-1);
+		if (invitation->state == STATE_ACCEPTED_PENDING
+			|| invitation->state == STATE_REJECTED_PENDING) {
+			/* Disable the buttons */
+			gtk_widget_set_sensitive(in_inv_accept_button, FALSE);
+			gtk_widget_set_sensitive(in_inv_reject_button, FALSE);
+		} else {
+			/* Enable the buttons */
+			gtk_widget_set_sensitive(in_inv_accept_button, TRUE);
+			gtk_widget_set_sensitive(in_inv_reject_button, TRUE);
+		}
 	}
 }
 
@@ -849,7 +912,6 @@ out_inv_resend_button_cb(GtkWindow *w, GtkTreeView *tree)
 	
 		/* Update the out_inv_store */
 		gtk_list_store_set(GTK_LIST_STORE(model), &iter,
-			/* FIXME: Figure out how to add the correct protocol icon as the first column */
 			TIME_COL,				time_str,
 			STATE_COL,				state_str,
 			-1);
@@ -893,7 +955,6 @@ out_inv_resend_button_cb(GtkWindow *w, GtkTreeView *tree)
 
 	/* Update the out_inv_store */
 	gtk_list_store_set(GTK_LIST_STORE(model), &iter,
-		/* FIXME: Figure out how to add the correct protocol icon as the first column */
 		TIME_COL,				time_str,
 		STATE_COL,				state_str,
 		-1);
@@ -1021,14 +1082,17 @@ static char *
 fill_state_str(char *state_str, INVITATION_STATE state)
 {
 	switch (state) {
-		case STATE_INIT:
-			sprintf(state_str, _("Initializing"));
+		case STATE_NEW:
+			sprintf(state_str, _("New"));
 			break;
 		case STATE_PENDING:
 			sprintf(state_str, _("Pending"));
 			break;
 		case STATE_SENT:
 			sprintf(state_str, _("Sent"));
+			break;
+		case STATE_REJECTED_PENDING:
+			sprintf(state_str, _("Rejected (Pending)"));
 			break;
 		case STATE_REJECTED:
 			sprintf(state_str, _("Rejected"));
@@ -1289,12 +1353,17 @@ init_invitations_window()
 	/* TIME_COL */
 	gtk_tree_view_insert_column_with_attributes(
 		GTK_TREE_VIEW(in_inv_tree),
-		-1, _("Received"), in_inv_renderer, "text", TIME_COL, NULL);
+		-1, _("Sent/Received"), in_inv_renderer, "text", TIME_COL, NULL);
 
 	/* COLLECTION_NAME_COL */
 	gtk_tree_view_insert_column_with_attributes(
 		GTK_TREE_VIEW(in_inv_tree),
 		-1, _("Collection"), in_inv_renderer, "text", COLLECTION_NAME_COL, NULL);
+		
+	/* STATE_COL */
+	gtk_tree_view_insert_column_with_attributes(
+		GTK_TREE_VIEW(in_inv_tree),
+		-1, _("State"), in_inv_renderer, "text", STATE_COL, NULL);
 
 	gtk_container_add(GTK_CONTAINER(in_inv_scrolled_win), in_inv_tree);
 
@@ -1773,6 +1842,7 @@ handle_invitation_request(GaimAccount *account, const char *sender,
 	Invitation *invitation;
 	GtkTreeIter iter;
 	char time_str[32];
+	char state_str[32];
 	
 g_print("handle_invitation_request() entered\n");
 	/**
@@ -1827,10 +1897,14 @@ g_print("handle_invitation_request() entered\n");
 		
 		/* Format the time to a string */
 		fill_time_str(time_str, 32, invitation->time);
+		
+		invitation->state = STATE_NEW;
+		fill_state_str(state_str, invitation->state);
 	
 		/* Update the out_inv_store */
 		gtk_list_store_set(in_inv_store, &iter,
 			TIME_COL,				time_str,
+			STATE_COL,				state_str,
 			-1);
 	} else {
 		/**
@@ -1845,7 +1919,7 @@ g_print("handle_invitation_request() entered\n");
 	
 		invitation->gaim_account = account;
 		sprintf(invitation->buddy_name, sender);
-		invitation->state = STATE_PENDING;
+		invitation->state = STATE_NEW;
 		
 		/* Get the current time to store as the received time */
 		time(&(invitation->time));
@@ -2273,6 +2347,7 @@ g_print("handle_ping_response() %s -> %s) entered\n",
  *  2. If we have an IP Address for this buddy in the Simias Gaim Domain Roster,
  * 	   send out a [simias:ping-request] message so their IP Address will be
  * 	   updated if it's changed.
+ *  3. Send out any pending accept or reject messages for this buddy.
  */
 static void
 buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
@@ -2285,8 +2360,7 @@ buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
 	Invitation *invitation;
 	gboolean valid;
 	
-	valid = gtk_tree_model_get_iter_first(
-			GTK_TREE_MODEL(out_inv_store), &iter);
+	valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(out_inv_store), &iter);
 	while (valid) {
 		/* Extract the Invitation * out of the model */
 		gtk_tree_model_get(GTK_TREE_MODEL(out_inv_store), &iter,
@@ -2331,8 +2405,7 @@ buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
 			}
 		}
 
-		valid = gtk_tree_model_iter_next(
-				GTK_TREE_MODEL(out_inv_store), &iter);
+		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(out_inv_store), &iter);
 	}
 	
 	if (lookup_trusted_buddy(trusted_buddies_store, buddy, &iter)) {
@@ -2341,6 +2414,54 @@ buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
 		if (send_result <= 0) {
 			g_print("buddy_signed_on_cb() couldn't send a ping reqest: %d\n", send_result);
 		}
+	}
+
+	valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(in_inv_store), &iter);
+	while (valid) {
+		/* Extract the Invitation * out of the model */
+		gtk_tree_model_get(GTK_TREE_MODEL(in_inv_store), &iter,
+					INVITATION_PTR, &invitation,
+					-1);
+
+		if (buddy->present != GAIM_BUDDY_SIGNING_OFF
+			&& buddy->present != GAIM_BUDDY_OFFLINE) {
+			/* Use send_result = 1 to know if a send failed */
+			send_result = 1;
+
+			if (invitation->state == STATE_ACCEPTED_PENDING) {
+				send_result = send_invitation_request_accept_msg(buddy,
+													invitation->collection_id);
+			} else if (invitation->state == STATE_REJECTED_PENDING) {
+				send_result = send_invitation_request_deny_msg(buddy,
+													invitation->collection_id);
+			}
+
+			if (send_result <= 0) {
+				g_print("Error sending deny message in buddy_signed_on_cb()\n");
+				/**
+				 * Update the time stamp of the invitation so the user has some
+				 * idea that the message was updated.
+				 */
+				time(&(invitation->time));
+
+				/* Format the time to a string */
+				fill_time_str(time_str, 32, invitation->time);
+
+				/* Update the out_inv_store */
+				gtk_list_store_set(in_inv_store, &iter,
+					TIME_COL, time_str,
+					-1);
+			} else {
+				/**
+				 * The message was sent successfully and so we can remove the
+				 * invitation from the in_inv_store.
+				 */
+				gtk_list_store_remove(in_inv_store, &iter);
+				free(invitation);
+			}
+		}
+
+		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(in_inv_store), &iter);
 	}
 }
 
@@ -2404,6 +2525,17 @@ plugin_load(GaimPlugin *plugin)
 	return TRUE;
 }
 
+/**
+ * FIXME: Possible Configuration Settings:
+ * 
+ * [ ] Notify me when:
+ *     [ ] I receive a new invitation
+ *     [ ] Buddies accepts my invitations
+ *     [ ] Buddies reject my invitations
+ *     [ ] An error occurs
+ * 
+ * [ ] Automatically start Simias if needed
+ */
 static GtkWidget *
 get_config_frame(GaimPlugin *plugin)
 {
