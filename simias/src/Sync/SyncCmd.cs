@@ -114,7 +114,7 @@ public class FileInviter
 		}
 
 		// add the secret to the current identity chain
-		store.CurrentIdentity.CreateAlias(invitation.Domain, invitation.Identity);
+		store.CurrentIdentity.CreateAlias(invitation.Domain, invitation.Identity, invitation.PublicKey);
 		store.CurrentIdentity.Commit();
 
 		// add the invitation information to the store collection
