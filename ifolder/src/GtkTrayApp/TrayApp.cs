@@ -193,9 +193,10 @@ namespace Novell.iFolder
 			ifolder_browser_item.Activated += 
 					new EventHandler(show_ifolder_browser);
 
-			MenuItem browser_item = new MenuItem ("File Browser");
-			trayMenu.Append (browser_item);
-			browser_item.Activated += new EventHandler(show_browser);
+//			MenuItem browser_item = new MenuItem ("File Browser");
+//			trayMenu.Append (browser_item);
+//			browser_item.Activated += new EventHandler(show_browser);
+
 			MenuItem colBrowser_item = 
 					new MenuItem ("Collection Browser");
 			trayMenu.Append (colBrowser_item);
@@ -260,13 +261,13 @@ namespace Novell.iFolder
 			browser.ShowAll();
 		}
 
-		static void show_browser(object o, EventArgs args)
-		{
-			FileBrowser browser;
+//		static void show_browser(object o, EventArgs args)
+//		{
+//			FileBrowser browser;
 
-			browser = new FileBrowser();
-			browser.ShowAll();
-		}
+//			browser = new FileBrowser();
+//			browser.ShowAll();
+//		}
 
 		static void show_rbbrowser(object o, EventArgs args)
 		{
