@@ -128,7 +128,20 @@ namespace Simias.Sync
 					if (cArgs != null)
 					{
 						if (CollectionSync != null)
-							CollectionSync(cArgs);
+						{
+							Delegate[] cbList = CollectionSync.GetInvocationList();
+							foreach (CollectionSyncEventHandler cb in cbList)
+							{
+								try 
+								{ 
+									cb(cArgs);
+								}
+								catch
+								{
+									CollectionSync -= cb;
+								}
+							}
+						}
 					}
 					else
 					{
@@ -136,7 +149,20 @@ namespace Simias.Sync
 						if (fArgs != null)
 						{
 							if (FileSync != null)
-								FileSync(fArgs);
+							{
+								Delegate[] cbList = FileSync.GetInvocationList();
+								foreach (FileSyncEventHandler cb in cbList)
+								{
+									try 
+									{ 
+										cb(fArgs);
+									}
+									catch
+									{
+										FileSync -= cb;
+									}
+								}
+							}
 						}
 					}
 				}

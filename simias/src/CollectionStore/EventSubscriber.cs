@@ -246,15 +246,54 @@ namespace Simias.Storage
 							{
 								case EventType.NodeChanged:
 									if (NodeChanged != null)
-										NodeChanged((NodeEventArgs)args);
+									{
+										Delegate[] cbList = NodeChanged.GetInvocationList();
+										foreach (NodeEventHandler cb in cbList)
+										{
+											try 
+											{ 
+												cb((NodeEventArgs)args);
+											}
+											catch
+											{
+												NodeChanged -= cb;
+											}
+										}
+									}
 									break;
 								case EventType.NodeCreated:
 									if (NodeCreated != null)
-										NodeCreated((NodeEventArgs)args);
+									{
+										Delegate[] cbList = NodeCreated.GetInvocationList();
+										foreach (NodeEventHandler cb in cbList)
+										{
+											try 
+											{ 
+												cb((NodeEventArgs)args);
+											}
+											catch
+											{
+												NodeCreated -= cb;
+											}
+										}
+									}
 									break;
 								case EventType.NodeDeleted:
 									if (NodeDeleted != null)
-										NodeDeleted((NodeEventArgs)args);
+									{
+										Delegate[] cbList = NodeDeleted.GetInvocationList();
+										foreach (NodeEventHandler cb in cbList)
+										{
+											try 
+											{ 
+												cb((NodeEventArgs)args);
+											}
+											catch
+											{
+												NodeDeleted -= cb;
+											}
+										}
+									}
 									break;
 							}
 						}
