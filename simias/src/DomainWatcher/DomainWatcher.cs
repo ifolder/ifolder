@@ -165,12 +165,29 @@ namespace Simias.DomainWatcher
 							log.Debug( "checking Domain: " + cDomain.Name );
 
 							DomainAgent domainAgent = new DomainAgent();
-							if ( domainAgent.IsDomainActive( cDomain.ID ) == false )
+							try
 							{
-								log.Debug( "Domain: " + cDomain.Name + " is off-line" );
-								continue;
+								if ( domainAgent.IsDomainActive( cDomain.ID ) == false )
+								{
+									log.Debug( "Domain: " + cDomain.Name + " is off-line" );
+									continue;
+								}
 							}
+							catch(WebException we)
+							{
+								if (we.Status == WebExceptionStatus.TrustFailure)
+								{
+									// The certificate is invalid. Tell the client to login
+									Simias.Client.Event.NotifyEventArgs cArg =
+										new Simias.Client.Event.NotifyEventArgs(
+										"Domain-Up", 
+										cDomain.ID, 
+										System.DateTime.Now);
 
+									cEvent.RaiseEvent(cArg);// which will inform him of the invalid cert.
+								}
+								throw we;
+							}
 							if ( domainAgent.IsDomainAutoLoginEnabled( cDomain.ID ) == false )
 							{
 								log.Debug( "Domain: " + cDomain.Name + " auto-login is disabled" );

@@ -906,6 +906,30 @@ namespace Simias.Web
 			Store store = Store.GetStore();
 			return store.DefaultDomain;
 		}
+
+		/// <summary>
+		/// WebMethod to get the certificate for the specified host.
+		/// </summary>
+		/// <param name="host"></param>
+		/// <returns></returns>
+		[WebMethod(Description="Get the certificate of the specified host.")]
+		[SoapDocumentMethod]
+		public byte[] GetCertificate(string host)
+		{
+			return Simias.Client.CertPolicy.GetCertificate(host);
+		}
+
+		/// <summary>
+		/// WebMethod to Store the certificate for the specified host.
+		/// </summary>
+		/// <param name="certificate">The certificate to store.</param>
+		/// <param name="host">The host the certificate belongs to.</param>
+		[WebMethod(Description="Store the certificate for the specified host.")]
+		[SoapDocumentMethod]
+		public void StoreCertificate(byte[] certificate, string host)
+		{
+			Simias.Client.CertPolicy.StoreCertificate(certificate, host, true);
+		}
 	}
 
 

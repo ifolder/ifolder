@@ -24,6 +24,7 @@ using System;
 using System.Net;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Collections;
 
 namespace Simias.Client
 {
@@ -32,17 +33,46 @@ namespace Simias.Client
 	/// </summary>
 	public class CertPolicy : ICertificatePolicy
 	{
+		internal class CertificateState
+		{
+			internal X509Certificate	Certificate;
+			internal bool				Accepted;
+
+			internal CertificateState(X509Certificate certificate, bool accepted)
+			{
+				this.Certificate = certificate;
+				this.Accepted = accepted;
+			}
+		}
+
 		#region Class Members
 
-		/// <summary>
-		/// Self-signed certificate.
-		/// </summary>
-		private const long CertUNTRUSTEDROOT = -2146762487;
+		static public Hashtable CertTable = new Hashtable();
 
 		/// <summary>
 		/// The default certificate policy.
 		/// </summary>
 		private ICertificatePolicy defaultCertPolicy;
+
+		private  enum    CertificateProblem  : uint
+		{
+			CertEXPIRED                   = 0x800B0101,
+			CertVALIDITYPERIODNESTING     = 0x800B0102,
+			CertROLE                      = 0x800B0103,
+			CertPATHLENCONST              = 0x800B0104,
+			CertCRITICAL                  = 0x800B0105,
+			CertPURPOSE                   = 0x800B0106,
+			CertISSUERCHAINING            = 0x800B0107,
+			CertMALFORMED                 = 0x800B0108,
+			CertUNTRUSTEDROOT             = 0x800B0109,
+			CertCHAINING                  = 0x800B010A,
+			CertREVOKED                   = 0x800B010C,
+			CertUNTRUSTEDTESTROOT         = 0x800B010D,
+			CertREVOCATION_FAILURE        = 0x800B010E,
+			CertCN_NO_MATCH               = 0x800B010F,
+			CertWRONG_USAGE               = 0x800B0110,
+			CertUNTRUSTEDCA               = 0x800B0112
+		}
 
 		#endregion
 
@@ -59,6 +89,43 @@ namespace Simias.Client
 
 		#endregion
 
+		/// <summary>
+		/// Get the Certificate for the specified store.
+		/// </summary>
+		/// <param name="host">The host who owns the certificate.</param>
+		/// <returns>The certificate as a byte array.</returns>
+		public static byte[] GetCertificate(string host)
+		{
+			CertificateState cs = CertTable[host] as CertificateState;
+			if (cs != null)
+			{
+				return cs.Certificate.GetRawCertData();
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Store the certificate for the specified host.
+		/// </summary>
+		/// <param name="certificate">The certificate to store.</param>
+		/// <param name="host">The host the certificate belongs to.</param>
+		/// <param name="persist">If true save in store.</param>
+		public static void StoreCertificate(byte[] certificate, string host, bool persist)
+		{
+			CertTable[host] = new CertificateState(new X509Certificate(certificate), true);
+			if (persist)
+			{
+				// Save the cert in the store.
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		private void LoadCertsFromStore()
+		{
+		}
+
 		#region ICertificatePolicy Members
 
 		/// <summary>
@@ -71,19 +138,28 @@ namespace Simias.Client
 		/// <returns>True if the certificate is to be honored. Otherwise, false is returned.</returns>
 		public bool CheckValidationResult( ServicePoint srvPoint, X509Certificate certificate, WebRequest request, int certificateProblem )
 		{
-			bool honorCert = false;
+			bool honorCert = true;
 
-			// TODO: Everybody's our friend...
-			// TODO: Accept self-signed certificates for now.
-//			if ( ( certificateProblem == 0 ) || ( Convert.ToInt64( certificateProblem ) == CertUNTRUSTEDROOT ) )
-//			{
+			if ((certificateProblem == 0) || (CertificateProblem.CertEXPIRED.Equals(certificateProblem)))
+			{
 				honorCert = true;
-//			}
-//			else
-//			{
-//				honorCert = defaultCertPolicy.CheckValidationResult( srvPoint, certificate, request, certificateProblem );
-//			}
-
+			}
+			else
+			{
+				CertificateState cs = CertTable[srvPoint.Address.Host] as CertificateState;
+				if (cs != null && cs.Accepted)
+				{
+					if (cs.Certificate.GetCertHash() == certificate.GetCertHash())
+					{
+						honorCert = true;
+					}
+				}
+				else
+				{
+					// This is a new cert replace the certificate.
+					CertTable[srvPoint.Address.Host] = new CertificateState(certificate, false);
+				}
+			}
 			return honorCert;
 		}
 

@@ -49,6 +49,11 @@ namespace Simias.Authentication
 		SuccessInGrace = 0x00000001,
 
 		/// <summary>
+		/// The certificate is invalid.
+		/// </summary>
+		InvalidCertificate = 0x00000002,
+
+		/// <summary>
 		/// Invalid or Unknown user specified
 		/// </summary>
 		UnknownUser = 0x1f000001,

@@ -206,67 +206,75 @@ namespace Simias.DomainServices
 			}
 			catch(WebException webEx)
 			{
-				response = webEx.Response as HttpWebResponse;
-				if (response != null)
+				if (webEx.Status == WebExceptionStatus.TrustFailure)
 				{
-					// Look for our special header to give us more
-					// information why the authentication failed
-					string iFolderError = 
-						response.GetResponseHeader( 
-						Simias.Security.Web.AuthenticationService.Login.SimiasErrorHeader );
-
-					if ( iFolderError != null && iFolderError != "" )
-					{
-						if ( iFolderError == StatusCodes.InvalidPassword.ToString() )
-						{
-							status.statusCode = SCodes.InvalidPassword;
-						}
-						else
-						if ( iFolderError == StatusCodes.AccountDisabled.ToString() )
-						{
-							status.statusCode = SCodes.AccountDisabled;
-						}
-						else
-						if ( iFolderError == StatusCodes.AccountLockout.ToString() )
-						{
-							status.statusCode = SCodes.AccountLockout;
-						}
-						else
-						if ( iFolderError == StatusCodes.AmbiguousUser.ToString() )
-						{
-							status.statusCode = SCodes.AmbiguousUser;
-						}
-						else
-						if ( iFolderError == StatusCodes.UnknownDomain.ToString() )
-						{
-							status.statusCode = SCodes.UnknownDomain;
-						}
-						else
-						if ( iFolderError == StatusCodes.InternalException.ToString() )
-						{
-							status.statusCode = SCodes.InternalException;
-						}
-						else
-						if ( iFolderError == StatusCodes.UnknownUser.ToString() )
-						{
-							status.statusCode = SCodes.UnknownUser;
-						}
-						else
-						if ( iFolderError == StatusCodes.MethodNotSupported.ToString() )
-						{
-							status.statusCode = SCodes.MethodNotSupported;
-						}
-						else
-						if ( iFolderError == StatusCodes.InvalidCredentials.ToString() )
-						{
-							status.statusCode = SCodes.InvalidCredentials;
-						}
-					}
+					// The Certificate is invalid.
+					status.statusCode = SCodes.InvalidCertificate;
 				}
 				else
 				{
-					log.Debug(webEx.Message);
-					log.Debug(webEx.StackTrace);
+					response = webEx.Response as HttpWebResponse;
+					if (response != null)
+					{
+						// Look for our special header to give us more
+						// information why the authentication failed
+						string iFolderError = 
+							response.GetResponseHeader( 
+							Simias.Security.Web.AuthenticationService.Login.SimiasErrorHeader );
+
+						if ( iFolderError != null && iFolderError != "" )
+						{
+							if ( iFolderError == StatusCodes.InvalidPassword.ToString() )
+							{
+								status.statusCode = SCodes.InvalidPassword;
+							}
+							else
+								if ( iFolderError == StatusCodes.AccountDisabled.ToString() )
+							{
+								status.statusCode = SCodes.AccountDisabled;
+							}
+							else
+								if ( iFolderError == StatusCodes.AccountLockout.ToString() )
+							{
+								status.statusCode = SCodes.AccountLockout;
+							}
+							else
+								if ( iFolderError == StatusCodes.AmbiguousUser.ToString() )
+							{
+								status.statusCode = SCodes.AmbiguousUser;
+							}
+							else
+								if ( iFolderError == StatusCodes.UnknownDomain.ToString() )
+							{
+								status.statusCode = SCodes.UnknownDomain;
+							}
+							else
+								if ( iFolderError == StatusCodes.InternalException.ToString() )
+							{
+								status.statusCode = SCodes.InternalException;
+							}
+							else
+								if ( iFolderError == StatusCodes.UnknownUser.ToString() )
+							{
+								status.statusCode = SCodes.UnknownUser;
+							}
+							else
+								if ( iFolderError == StatusCodes.MethodNotSupported.ToString() )
+							{
+								status.statusCode = SCodes.MethodNotSupported;
+							}
+							else
+								if ( iFolderError == StatusCodes.InvalidCredentials.ToString() )
+							{
+								status.statusCode = SCodes.InvalidCredentials;
+							}
+						}
+					}
+					else
+					{
+						log.Debug(webEx.Message);
+						log.Debug(webEx.StackTrace);
+					}
 				}
 			}
 			catch(Exception ex)
@@ -344,7 +352,21 @@ namespace Simias.DomainServices
 			Store store = Store.GetStore();
 
 			// Get a URL to our service.
-			Uri domainServiceUrl = WSInspection.GetServiceUrl( host, DomainServiceType );
+			Uri domainServiceUrl = null;
+			Simias.Authentication.Status status = null;
+			try
+			{
+				domainServiceUrl = WSInspection.GetServiceUrl( host, DomainServiceType );
+			}
+			catch (WebException we)
+			{
+				if (we.Status == WebExceptionStatus.TrustFailure)
+				{
+					status = new Simias.Authentication.Status();
+					status.statusCode = Simias.Authentication.StatusCodes.InvalidCertificate;
+					return status;
+				}
+			}
 			if ( domainServiceUrl == null )
 			{
 				// There was a failure in obtaining the service url. Try a hard coded one.
@@ -366,7 +388,6 @@ namespace Simias.DomainServices
 			NetworkCredential myCred = new NetworkCredential( user, password ); 
 			CookieContainer cookie = new CookieContainer();
 
-			Simias.Authentication.Status status = null;
 			status = 
 				this.Login( 
 					new Uri( domainServiceUrl.Scheme + Uri.SchemeDelimiter + host ), 

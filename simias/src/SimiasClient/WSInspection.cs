@@ -81,8 +81,12 @@ namespace Simias.Client
 				// Get the response from the web server.
 				response = request.GetResponse() as HttpWebResponse;
 			}
-			catch
+			catch (WebException we)
 			{
+				if (we.Status == WebExceptionStatus.TrustFailure)
+				{
+					throw we;	
+				}
 				// Try 'http' next.
 				wsUri.Scheme = Uri.UriSchemeHttp;
 				wsUri.Port = ( host.IndexOf( ':' ) != -1 ) ? parseUri.Port : DefaultPort;
@@ -97,7 +101,7 @@ namespace Simias.Client
 					response = null;
 				}
 			}
-	
+			
 			// Make sure that there was an answer.
 			if ( response != null )
 			{
