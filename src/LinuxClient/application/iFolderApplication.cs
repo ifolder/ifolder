@@ -34,6 +34,7 @@ using GLib;
 using Egg;
 using Simias.Client.Event;
 using Simias.Client;
+using Simias.Client.Authentication;
 
 
 namespace Novell.iFolder
@@ -232,8 +233,11 @@ namespace Novell.iFolder
 							args.Message,
 							null);
 
-					if (domainAuth.Authenticate() != 
-						AuthenticationStatus.Success)
+					Status status =
+						domainAuth.Authenticate();
+
+					if( (status.statusCode != StatusCodes.Success) ||
+						(status.statusCode != StatusCodes.SuccessInGrace))
 					{
 						// DEBUG
 						Console.WriteLine("Domain-Up: Need credentials.");
@@ -282,7 +286,7 @@ namespace Novell.iFolder
 						"/Simias.asmx";
 
 					CredentialType credType = 
-						simiasWebService.GetSavedDomainCredentials(
+						simiasWebService.GetDomainCredentials(
 							domainID, 
 							out userID, 
 							out credentials);
@@ -300,17 +304,18 @@ namespace Novell.iFolder
 								domainID, 
 								credentials);
 
-						AuthenticationStatus authStatus = 
+						Status status = 
 							domainAuth.Authenticate();
 
-						if (authStatus == AuthenticationStatus.Success)
+						if( (status.statusCode != StatusCodes.Success) ||
+							(status.statusCode != StatusCodes.SuccessInGrace))
 						{
 							authenticated = true;
 						}
-						else if (authStatus == AuthenticationStatus.InvalidCredentials)
+						else if (status.statusCode == StatusCodes.InvalidCredentials)
 						{
 							// There are bad credentials stored. Remove them.
-							simiasWebService.SaveDomainCredentials(domainID, null, CredentialType.None);
+							simiasWebService.SetDomainCredentials(domainID, null, CredentialType.None);
 						}
 					}
 
@@ -328,13 +333,14 @@ namespace Novell.iFolder
 			{
 				case Gtk.ResponseType.Ok:
 				{
-					AuthenticationStatus status;
+					Status status;
 					DomainAuthentication cAuth = new DomainAuthentication(
 							"iFolder", 
 							LoginDialog.Domain, 
 							LoginDialog.Password);
 					status = cAuth.Authenticate();
-					if(status != AuthenticationStatus.Success)
+					if( (status.statusCode != StatusCodes.Success) ||
+						(status.statusCode != StatusCodes.SuccessInGrace))
 					{
 						iFolderMsgDialog mDialog = new iFolderMsgDialog(
 							LoginDialog, //tIcon, 
