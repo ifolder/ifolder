@@ -782,7 +782,7 @@ namespace Simias.Storage
 			// Walk the merge list and reverse the changes specified there.
 			foreach ( Property p in node.Properties.ChangeList )
 			{
-				p.AbortMergeInformation( node.Properties );
+				p.AbortMergeInformation( node );
 			}
 
 			// Get rid of all entries in the change list.

@@ -100,6 +100,18 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Sets the Node object name without triggering a property update.
+		/// </summary>
+		internal string BaseName
+		{
+			set 
+			{ 
+				name = value;
+				properties.PropertyRoot.SetAttribute( XmlTags.NameAttr, name );
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the base type (Collection or Node) for this object.
 		/// </summary>
 		internal string BaseType
@@ -143,8 +155,10 @@ namespace Simias.Storage
 
 			set 
 			{ 
-				name = value;
-				properties.PropertyRoot.SetAttribute( XmlTags.NameAttr, name );
+				// Create a property that will be used at merge time.
+				Property p = new Property( BaseSchema.ObjectName, value );
+				p.SaveMergeInformation( properties, Property.Operation.NameChange, name, false, 0 );
+				BaseName = value;
 			}
 		}
 

@@ -1485,6 +1485,17 @@ namespace Simias.Storage.Tests
 				{
 					throw new ApplicationException( "Invalid property count." );
 				}
+
+				// Change the name of the collection.
+				collection.Name = "New Collection Name";
+				collection.Commit();
+				mergeCollection.Refresh( mergeCollection );
+
+				// Should be able to see the new name.
+				if ( mergeCollection.Name != collection.Name )
+				{
+					throw new ApplicationException( "Invalid name." );
+				}
 			}
 			finally
 			{

@@ -156,7 +156,12 @@ namespace Simias.Storage
 			/// <summary>
 			/// Property value was modified.
 			/// </summary>
-			Modify
+			Modify,
+
+			/// <summary>
+			/// The name of the Node object was changed.
+			/// </summary>
+			NameChange
 		};
 
 		/// <summary>
@@ -834,14 +839,14 @@ namespace Simias.Storage
 
 		#region Internal Methods
 		/// <summary>
-		/// Restores the old state of the object.
+		/// Restores the old state of the Node object.
 		/// </summary>
-		/// <param name="propertyList">PropertyList object that this property is associated with.</param>
-		internal void AbortMergeInformation( PropertyList propertyList )
+		/// <param name="node">Node object to restore previous state for.</param>
+		internal void AbortMergeInformation( Node node )
 		{
 			// If there is no PropertyList object associated with this property or it is a new object,
 			// we don't need to track it.
-			if ( IsAssociatedProperty && ( propertyList.State == PropertyList.PropertyListState.Abort ) )
+			if ( IsAssociatedProperty && ( node.Properties.State == PropertyList.PropertyListState.Abort ) )
 			{
 				// Operation is the current state of the property.
 				switch ( operation )
@@ -859,7 +864,7 @@ namespace Simias.Storage
 
 					case Operation.Delete:
 						// Add the property back to the PropertyList.
-						propertyList.AddNodeProperty( this );
+						node.Properties.AddNodeProperty( this );
 
 						// Restore its in-memory state.
 						operation = Operation.None;
@@ -887,6 +892,15 @@ namespace Simias.Storage
 							flagsModified = false;
 							oldFlags = 0;
 						}
+						break;
+
+					case Operation.NameChange:
+						// Restore the name the Node object.
+						node.BaseName = oldValue;
+
+						// Restore its in-memory state.
+						operation = Operation.None;
+						oldValue = null;
 						break;
 				}
 			}
@@ -1011,6 +1025,13 @@ namespace Simias.Storage
 					}
 					break;
 				}
+
+				case Operation.NameChange:
+				{
+					// Set the name in the new Node object.
+					node.BaseName = ValueString;
+					break;
+				}
 			}
 		}
 
@@ -1053,7 +1074,7 @@ namespace Simias.Storage
 		{
 			// If there is no PropertyList object associated with this property or it is a new object, or
 			// if it is currently being aborted, we don't need to track it.
-			if ( IsAssociatedProperty && ValidSaveMergeInfoState( propertyList.State ) )
+			if ( ( IsAssociatedProperty && ValidSaveMergeInfoState( propertyList.State ) ) || ( op == Operation.NameChange ) )
 			{
 				// Operation is the current state of the property.
 				switch ( operation )
@@ -1158,6 +1179,9 @@ namespace Simias.Storage
 						//
 						// Modify: Set the current state to modify. Save the oldValue if not null. Save
 						// the old flags if modified. Add the modified property to the mergeList.
+						//
+						// NameChange: Set the current state to name changed. Save the oldValue. Add the modified
+						// property to the mergeList.
 					case Operation.None:
 						// This is a normal node property.
 						if ( op == Operation.Modify )
@@ -1173,9 +1197,20 @@ namespace Simias.Storage
 								flagsModified = true;
 							}
 						}
+						else if ( op == Operation.NameChange )
+						{
+							oldValue = priorValue;
+						}
 
 						operation = op;
 						propertyList.AddToChangeList( this );
+						break;
+
+						// When the current state is NameChange the new state should act as follows:
+						//
+						// NameChange: Do nothing. The property can be modified over and over again and it is still
+						// a name change operation.
+					case Operation.NameChange:
 						break;
 				}
 			}
