@@ -1,7 +1,7 @@
 /***********************************************************************
  *  CollectionStoreTests.cs - Implements unit tests for the Collection
  *  Store assembly.
- * 
+ *
  *  Copyright (C) 2004 Novell, Inc.
  *
  *  This library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  *  Author: Mike Lasky <mlasky@novell.com>
- * 
+ *
  ***********************************************************************/
 
 using System;
@@ -61,7 +61,7 @@ namespace Simias.Storage.Tests
 		public void Init()
 		{
 			// Send all traces to the console.
-			MyTrace.SendTraceToStandardOutput();
+			MyTrace.SendToConsole();
 
 			// Connect to the store.
 			store = Store.Connect( basePath );
@@ -1498,7 +1498,7 @@ namespace Simias.Storage.Tests
 				{
 					Directory.Delete( newDir, true );
 				}
-                
+
 				// Delete the collection.
 				collection.Delete( true );
 			}
@@ -1538,7 +1538,7 @@ namespace Simias.Storage.Tests
 			{
 				// Get rid of the root path.
 				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-                
+
 				// Delete the collection.
 				collection.Delete( true );
 			}
@@ -1624,7 +1624,7 @@ namespace Simias.Storage.Tests
 			{
 				// Get rid of the root path.
 				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-                
+
 				// Delete the collection.
 				collection.Delete( true );
 			}
@@ -1696,7 +1696,7 @@ namespace Simias.Storage.Tests
 			{
 				// Get rid of the root path.
 				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-                
+
 				// Delete the collection.
 				collection.Delete( true );
 			}
@@ -1813,7 +1813,7 @@ namespace Simias.Storage.Tests
 			{
 				// Get rid of the root path.
 				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-                
+
 				// Delete the collection.
 				collection.Delete( true );
 				collection.Dispose();
@@ -1856,7 +1856,7 @@ namespace Simias.Storage.Tests
 			{
 				// Get rid of the root path.
 				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-                
+
 				// Delete the collection.
 				collection.Delete( true );
 			}
