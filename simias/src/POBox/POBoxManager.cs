@@ -46,6 +46,14 @@ namespace Simias.POBox
 		private Hashtable threads;
 
 		/// <summary>
+		/// Gets the domain that this poBox belongs to.
+		/// </summary>
+		public string Domain
+		{
+			get { return poBox.Domain; }
+		}
+
+		/// <summary>
 		/// Constructor
 		/// </summary>
 		/// <param name="poManager"></param>

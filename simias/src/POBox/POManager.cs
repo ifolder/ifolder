@@ -224,14 +224,15 @@ namespace Simias.POBox
 
 		private void OnPOBoxDeleted(NodeEventArgs args)
 		{
-			Collection c = store.GetCollectionByID(args.ID);
-
-			if (c.IsType(c, typeof(POBox).Name))
+			lock(boxManagers.SyncRoot)
 			{
-				// This POBox is being deleted. Call to get rid of the domain information.
-				DomainAgent agent = new DomainAgent();
-				agent.RemoveDomainInformation(c.Domain);
-				RemovePOBoxManager(args.ID);
+				if (boxManagers.Contains(args.ID))
+				{
+					// This POBox is being deleted. Call to get rid of the domain information.
+					DomainAgent agent = new DomainAgent();
+					agent.RemoveDomainInformation((boxManagers[args.ID] as POBoxManager).Domain);
+					RemovePOBoxManager(args.ID);
+				}
 			}
 		}
 

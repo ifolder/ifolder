@@ -270,6 +270,20 @@ namespace Simias.Domain
 			element.SetAttribute(EnabledTag, enabled.ToString());
 			config.SetElement(SectionTag, ServersTag, root);
 		}
+
+		/// <summary>
+		/// Removes the domain server entry from the configuration file.
+		/// </summary>
+		public void Delete()
+		{
+			XmlElement root = config.GetElement(SectionTag, ServersTag);
+			XmlElement element = GetServerElement(root);
+			if (element != null)
+			{
+				root.RemoveChild(element);
+				config.SetElement(SectionTag, ServersTag, root);
+			}
+		}
 		#endregion
 	}
 
@@ -392,6 +406,10 @@ namespace Simias.Domain
 
 			// Remove the local domain information.
 			store.DeleteDomainIdentity(domainID);
+
+			// Remove the domain entry from the configuration file.
+			DomainConfig domainConfig = new DomainConfig( domainID);
+			domainConfig.Delete();
 		}
 		#endregion
 
