@@ -217,6 +217,16 @@
                     DependentUpon = "ServerInfo.cs"
                     BuildAction = "EmbeddedResource"
                 />
+                <File
+                    RelPath = "SyncLog.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SyncLog.resx"
+                    DependentUpon = "SyncLog.cs"
+                    BuildAction = "EmbeddedResource"
+                />
             </Include>
         </Files>
     </CSHARP>
