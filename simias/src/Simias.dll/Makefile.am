@@ -19,7 +19,7 @@ SIMIAS_LIBPATH = $(srcdir)/../../external/SecureChannelSinks $(LOG4NET_DIR) $(sr
 
 NUNIT_TESTS := 
 
-EXTRA_DIST = $(SIMIAS_CSFILES)
+EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES)
 
 CUR_DIR := $(shell pwd)
 

@@ -9,6 +9,8 @@ Service_FLAGS = $(CSC_EXEFLAG)
 Service_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Simias.dll mDnsResponder.dll
 Service_LIBPATH = ../Simias.dll $(MDNSRESPONDER_DIR)
 
+EXTRA_DIST = $(mDnsService_CSFILES)
+
 CUR_DIR := $(shell pwd)
 
 all: Simias.Service.mDnsService.exe
