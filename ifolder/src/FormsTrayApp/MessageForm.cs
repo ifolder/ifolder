@@ -205,10 +205,15 @@ namespace Novell.iFolder.FormsTrayApp
 		#region Event Handlers
 		private void MessageForm_Load(object sender, System.EventArgs e)
 		{
-//			outbound.SmallImageList = new ImageList();
-//			outbound.SmallImageList.Images.Add(Image.FromFile(@"C:\temp\icon1.ico"));
-//			outbound.SmallImageList.Images.Add(Image.FromFile(@"C:\temp\icon2.ico"));
-//			inbound.SmallImageList = outbound.SmallImageList;
+			try
+			{
+				string basePath = Path.Combine(Application.StartupPath, "res");
+				outbound.SmallImageList = new ImageList();
+				outbound.SmallImageList.Images.Add(Image.FromFile(Path.Combine(basePath, "mail_closed.ico")));
+				outbound.SmallImageList.Images.Add(Image.FromFile(Path.Combine(basePath, "mail_opened.ico")));
+				inbound.SmallImageList = outbound.SmallImageList;
+			}
+			catch {}
 
 			ICSList msgList = this.poBox.GetMessagesByMessageType(Simias.POBox.Message.OutboundMessage);
 
