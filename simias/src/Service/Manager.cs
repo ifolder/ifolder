@@ -29,6 +29,7 @@ using System.Xml;
 using System.Threading;
 using System.Reflection;
 using Simias;
+using Simias.Event;
 
 namespace Simias.Service
 {
@@ -55,7 +56,16 @@ namespace Simias.Service
 		const string mutexBaseName = "ServiceManagerMutex___";
 		ManualResetEvent servicesStarted = new ManualResetEvent(false);
 		ManualResetEvent servicesStopped = new ManualResetEvent(true);
+		DefaultSubscriber	subscriber = null;
+
+		#region Events
+		/// <summary>
+		/// Delegate to handle Shutdown events.
+		/// </summary>
+		public event ShutdownEventHandler Shutdown;
 		
+		#endregion
+
 		#endregion
 		
 		#region Constructor
@@ -66,6 +76,10 @@ namespace Simias.Service
 		/// <param name="conf">The Configuration location to manage.</param>
 		public Manager(Configuration conf)
 		{
+			// Get an event subscriber to handle shutdown events.
+			subscriber = DefaultSubscriber.GetDefaultSubscriber(conf);
+			subscriber.CollectionEvent +=new CollectionEventHandler(OnCollectionEvent);
+
             // configure logging
             SimiasLogManager.Configure(conf);
 
@@ -105,6 +119,29 @@ namespace Simias.Service
 					serviceList.Clear();
 					throw new ApplicationException("Services Already running");
 				}
+			}
+		}
+
+		#endregion
+
+		#region Callbacks
+
+		private void OnCollectionEvent(SimiasEventArgs args)
+		{
+			try
+			{
+				string typeString = args.GetType().ToString();
+				switch (typeString)
+				{
+					case "Simias.Service.ShutdownEventArgs":
+						if (Shutdown != null)
+							Shutdown((ShutdownEventArgs)args);
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				new SimiasException(args.ToString(), ex);
 			}
 		}
 
@@ -410,5 +447,21 @@ namespace Simias.Service
 		}
 
 		#endregion
+	}
+
+	#region Delegate Definitions.
+
+	/// <summary>
+	/// Delegate definition for handling shutdown events.
+	/// </summary>
+	public delegate void ShutdownEventHandler(ShutdownEventArgs args);
+
+	#endregion
+
+	/// <summary>
+	/// Event class for shutdown requests.
+	/// </summary>
+	public class ShutdownEventArgs : SimiasEventArgs
+	{
 	}
 }
