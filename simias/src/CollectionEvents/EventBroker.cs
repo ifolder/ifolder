@@ -31,135 +31,35 @@ using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 
 
-namespace Simias
+namespace Simias.Event
 {
 	#region Delegate Definitions.
 
 	/// <summary>
 	/// Delegate definition for handling collection events.
 	/// </summary>
-	public delegate void EventHandler(EventArgs args);
+	public delegate void CollectionEventHandler(CollectionRootChangedEventArgs args);
+
+	/// <summary>
+	/// Delegate definition for handling collection events.
+	/// </summary>
+	public delegate void NodeEventHandler(NodeEventArgs args);
+	
+	/// <summary>
+	/// Delegate definition for file events.
+	/// </summary>
+	public delegate void FileEventHandler(FileEventArgs args);
 
 	/// <summary>
 	/// Delegate definition for rename events.
 	/// </summary>
-	public delegate void RenameEventHandelr(EventArgs oldArgs, EventArgs newArgs);
+	public delegate void FileRenameEventHandler(FileRenameEventArgs args);
 
 	/// <summary>
 	/// Delegate definition for hanling service control events.
 	/// </summary>
-	public delegate void ServiceEventHandler(int targetProcess, ServiceEventType e);
+	public delegate void ServiceEventHandler(ServiceEventArgs args);
 
-	#endregion
-
-	#region ServiceEventType enum
-
-	/// <summary>
-	/// Service Events.
-	/// </summary>
-	public enum ServiceEventType
-	{
-		/// <summary>
-		/// The service should shutdown.
-		/// </summary>
-		Shutdown = 1,
-		/// <summary>
-		/// The service should reconfigure.
-		/// </summary>
-		Reconfigure = 2
-	};
-
-	#endregion
-
-	#region CollectionEventArgs.
-
-	/// <summary>
-	/// The event arguments for a Collection event.
-	/// </summary>
-	[Serializable]
-	public class EventArgs
-	{
-		string node;
-		string path;
-		string type;
-		string source;
-		string oldNode;
-		string oldPath;
-		
-		/// <summary>
-		/// Constructs a CollectionEventArgs that will be used by CollectionHandler delegates.
-		/// Descibes the node affected by the event.
-		/// </summary>
-		/// <param name="source">The source of the event.</param>
-		/// <param name="node">The object of the event.</param>
-		/// <param name="path">The path of the object.</param>
-		/// <param name="type">The Type of the Node.</param>
-		public EventArgs(string source, string node, string path, string type)
-		{
-			this.source = source;
-			this.node = node;
-			this.path = path;
-			this.type = type;
-			this.oldNode = null;
-			this.oldPath = null;
-		}
-
-		/// <summary>
-		/// Constructs a CollectionEventArgs that will be used by CollectionHandler delegates.
-		/// Descibes the node affected by the event.
-		/// </summary>
-		/// <param name="source">The source of the event.</param>
-		/// <param name="node">The object of the event.</param>
-		/// <param name="path">The path of the object.</param>
-		/// <param name="type">The Type of the Node.</param>
-		public EventArgs(string source, string node, string path, string oldNode, string oldPath, string type) :
-			this(source, node, path, type)
-		{
-			this.oldNode = oldNode;
-			this.oldPath = oldPath;
-		}
-
-		/// <summary>
-		/// Gets the ID of the affected Node/Collection.
-		/// </summary>
-		public string Node
-		{
-			get {return node;}
-		}
-		
-		/// <summary>
-		/// Gets the ID of the containing Collection.
-		/// </summary>
-		public string Path
-		{
-			get {return path;}
-		}
-
-		/// <summary>
-		/// Gets the Type of the affected Node.
-		/// </summary>
-		public string Type
-		{
-			get {return type;}
-		}
-
-		/// <summary>
-		/// Gets the Old Node if event is rename.
-		/// </summary>
-		public string OldNode
-		{
-			get {return oldNode;}
-		}
-
-		/// <summary>
-		/// Gets the old path if the event is a rename.
-		/// </summary>
-		public string OldPath
-		{
-			get {return oldPath;}
-		}
-	}
-	
 	#endregion
 
 	#region EventBroker class
@@ -172,74 +72,177 @@ namespace Simias
 		#region Events
 
 		/// <summary>
-		/// Delegate to handle Collection Changes.
-		/// A Node or Collection modification.
-		/// </summary>
-		public event EventHandler Changed;
-		/// <summary>
 		/// Delegate to handle Collection Creations.
 		/// A Node or Collection has been created.
 		/// </summary>
-		public event EventHandler Created;
+		public event NodeEventHandler NodeCreated;
 		/// <summary>
 		/// Delegate to handle Collection Deletions.
 		/// A Node or Collection has been deleted.
 		/// </summary>
-		public event EventHandler Deleted;
+		public event NodeEventHandler NodeDeleted;
 		/// <summary>
-		/// Delegate to handle Collection Renames.
-		/// A Node or Collection has been renamed.
+		/// Delegate to handle Collection Changes.
+		/// A Node or Collection modification.
 		/// </summary>
-		public event EventHandler Renamed;
-
+		public event NodeEventHandler NodeChanged;
+		/// <summary>
+		/// Delegate to handle Collection Root Path changes.
+		/// </summary>
+		public event CollectionEventHandler CollectionRootChanged;
+		/// <summary>
+		/// Delegate to handle File Creations.
+		/// </summary>
+		public event FileEventHandler FileCreated;
+		/// <summary>
+		/// Delegate to handle File Deletions.
+		/// </summary>
+		public event FileEventHandler FileDeleted;
+		/// <summary>
+		/// Delegate to handle Files Changes.
+		/// </summary>
+		public event FileEventHandler FileChanged;
+		/// <summary>
+		/// Delegate to handle File Renames.
+		/// </summary>
+		public event FileRenameEventHandler FileRenamed;
 		/// <summary>
 		/// Delegate used to control services in the system.
 		/// </summary>
 		public event ServiceEventHandler ServiceControl;
-
 		
 		#endregion
 
 		#region Event Signalers
 
 		/// <summary>
-		/// Used to publish a Collection change event.
+		/// Used to publish a Collection root changed event.
 		/// </summary>
 		/// <param name="args">The arguments of the event.</param>
 		[OneWay]
-		public void FireChanged(EventArgs args)
+		public void RaiseCollectionRootChangedEvent(CollectionRootChangedEventArgs args)
 		{
-			callDelegate(Changed, args);
+			if (CollectionRootChanged != null)
+			{
+				Delegate[] cbList = CollectionRootChanged.GetInvocationList();
+				foreach (CollectionEventHandler cb in cbList)
+				{
+					try 
+					{ 
+						cb(args);
+					}
+					catch 
+					{
+						// Remove the offending delegate.
+						CollectionRootChanged -= cb;
+					}
+				}
+			}
 		}
 
 		/// <summary>
-		/// Used to publish a Collection create event.
+		/// Used to publish a Node event.
 		/// </summary>
 		/// <param name="args">The arguments of the event.</param>
 		[OneWay]
-		public void FireCreated(EventArgs args)
+		public void RaiseNodeEvent(NodeEventArgs args)
 		{
-			callDelegate(Created, args);
+			NodeEventHandler eHandler;
+			switch (args.ChangeType)
+			{
+				case NodeEventArgs.EventType.Created:
+					eHandler = NodeCreated;
+					break;
+				case NodeEventArgs.EventType.Changed:
+					eHandler = NodeChanged;
+					break;
+				case NodeEventArgs.EventType.Deleted:
+					eHandler = NodeDeleted;
+					break;
+				default:
+					eHandler = null;
+					break;
+			}
+
+			if (eHandler != null)
+			{
+				Delegate[] cbList = eHandler.GetInvocationList();
+				foreach (NodeEventHandler cb in cbList)
+				{
+					try 
+					{ 
+						cb(args);
+					}
+					catch 
+					{
+						// Remove the offending delegate.
+						eHandler -= cb;
+					}
+				}
+			}
 		}
 
-		/// <summary>
-		/// Used to publish a Collection delete event.
-		/// </summary>
-		/// <param name="args">The arguments of the event.</param>
-		[OneWay]
-		public void FireDeleted(EventArgs args)
-		{
-			callDelegate(Deleted, args);
-		}
+		
 
 		/// <summary>
-		/// Used to publish a Collection rename event.
+		/// Used to publish a File event.
 		/// </summary>
 		/// <param name="args">The arguments of the event.</param>
 		[OneWay]
-		public void FireRenamed(EventArgs args)
+		public void RaiseFileEvent(FileEventArgs args)
 		{
-			callDelegate(Renamed, args);
+			FileEventHandler eHandler;
+			switch (args.ChangeType)
+			{
+				case FileEventArgs.EventType.Created:
+					eHandler = FileCreated;
+					break;
+				case FileEventArgs.EventType.Changed:
+					eHandler = FileChanged;
+					break;
+				case FileEventArgs.EventType.Deleted:
+					eHandler = FileDeleted;
+					break;
+				case FileEventArgs.EventType.Renamed:
+					eHandler = null;
+					if (FileRenamed != null)
+					{
+						Delegate[] cbList = FileRenamed.GetInvocationList();
+						foreach (FileRenameEventHandler cb in cbList)
+						{
+							try 
+							{ 
+								cb((FileRenameEventArgs)args);
+							}
+							catch 
+							{
+								// Remove the offending delegate.
+								FileRenamed -= cb;
+							}
+						}
+					}
+					break;
+				default:
+					eHandler = null;
+					break;
+			}
+
+			if (eHandler != null)
+			{
+				Delegate[] cbList = eHandler.GetInvocationList();
+				foreach (FileEventHandler cb in cbList)
+				{
+					try 
+					{ 
+						cb(args);
+					}
+					catch 
+					{
+						// Remove the offending delegate.
+						eHandler -= cb;
+					}
+				}
+			}
 		}
 
 		/// <summary>
@@ -247,7 +250,7 @@ namespace Simias
 		/// </summary>
 		/// <param name="t"></param>
 		[OneWay]
-		public void FireServiceControl(int targetProcess, ServiceEventType t)
+		public void RaiseServiceEvent(ServiceEventArgs args)
 		{
 			if (ServiceControl != null)
 			{
@@ -256,7 +259,7 @@ namespace Simias
 				{
 					try 
 					{ 
-						cb(targetProcess, t);
+						cb(args);
 					}
 					catch 
 					{
@@ -345,39 +348,7 @@ namespace Simias
 
 
 		#endregion
-
-		#region Private Event Invocation
-
-		/// <summary>
-		/// Used to call the delegate.  This is used instead of just calling the
-		/// delegate directly so that on exceptions the rest of the delegates will
-		/// still be called.  If an exception occurrs the offending delegate is
-		/// removed from the list.
-		/// </summary>
-		/// <param name="eHandler">The delegates to call.</param>
-		/// <param name="args">The args to pass.</param>
-		private void callDelegate(EventHandler eHandler, EventArgs args)
-		{
-			if (eHandler != null)
-			{
-				Delegate[] cbList = eHandler.GetInvocationList();
-				foreach (EventHandler cb in cbList)
-				{
-					try 
-					{ 
-						cb(args);
-					}
-					catch 
-					{
-						// Remove the offending delegate.
-						eHandler -= cb;
-					}
-				}
-			}
-		}
-
-		#endregion
-
+		
 		#region MarshallByRef Overrides
 
 		/// <summary>

@@ -89,6 +89,11 @@
                     AssemblyName = "CollectionEvents"
                     HintPath = "..\CollectionEvents.dll"
                 />
+                <Reference
+                    Name = "Configuration"
+                    AssemblyName = "Configuration"
+                    HintPath = "..\..\Configuration\Configuration.dll"
+                />
             </References>
         </Build>
         <Files>

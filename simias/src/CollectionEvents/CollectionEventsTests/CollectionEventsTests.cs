@@ -27,7 +27,7 @@ using System.Diagnostics;
 using NUnit.Framework;
 using Simias;
 
-namespace Simias
+namespace Simias.Event
 {
 	/// <summary>
 	/// Test Fixture for the Collection Events.
@@ -37,7 +37,7 @@ namespace Simias
 	{
 		#region Fields
 
-		Process				monitor;
+		Process				monitor = null;
 		EventSubscriber		subscriber;
 		EventPublisher		publisher;
 		EventArgs			args;
@@ -53,42 +53,42 @@ namespace Simias
 		[TestFixtureSetUp]
 		public void Init()
 		{
-			monitor = new Process();
-			monitor.StartInfo.RedirectStandardInput = true;
-			monitor.StartInfo.RedirectStandardInput = true;
-			monitor.StartInfo.CreateNoWindow = true;
-			monitor.StartInfo.UseShellExecute = false;
-			if (MyEnvironment.Mono)
+			Process [] process = Process.GetProcessesByName("CsEventBroker.exe");
+			if (process.Length == 0)
 			{
-				monitor.StartInfo.FileName = "mono";
-				monitor.StartInfo.Arguments = "CsEventBroker.exe";
+				monitor = new Process();
+				monitor.StartInfo.RedirectStandardInput = true;
+				monitor.StartInfo.RedirectStandardInput = true;
+				monitor.StartInfo.CreateNoWindow = true;
+				monitor.StartInfo.UseShellExecute = false;
+				if (MyEnvironment.Mono)
+				{
+					monitor.StartInfo.FileName = "mono";
+					monitor.StartInfo.Arguments = "CsEventBroker.exe";
+				}
+				else
+				{
+					monitor.StartInfo.FileName = "CsEventBroker.exe";
+				}
+				monitor.Start();
+				//Console.ReadLine();
+				System.Threading.Thread.Sleep(2000);
 			}
-			else
-			{
-				monitor.StartInfo.FileName = "CsEventBroker.exe";
-			}
-			monitor.Start();
-			//Console.ReadLine();
-			System.Threading.Thread.Sleep(2000);
-			
-			publisher = new EventPublisher();
-			subscriber = new EventSubscriber();
-// CRG - What is an iFolder.EventHandler... This ain't right
-			subscriber.Changed += new EventHandler(ChangeHandler);
-			subscriber.Created += new EventHandler(CreateHandler);
-			subscriber.Deleted += new EventHandler(DeleteHandler);
-			subscriber.Renamed += new EventHandler(RenameHandler);
-			subscriber.ServiceControl += new ServiceEventHandler(ServiceCtlHandler);
+				PublishSubscribe();
 		}
 
 		public void PublishSubscribe()
 		{
 			publisher = new EventPublisher();
 			subscriber = new EventSubscriber();
-			subscriber.Changed += new EventHandler(ChangeHandler);
-			subscriber.Created += new EventHandler(CreateHandler);
-			subscriber.Deleted += new EventHandler(DeleteHandler);
-			subscriber.Renamed += new EventHandler(RenameHandler);
+			subscriber.NodeChanged += new NodeEventHandler(OnNodeChange);
+			subscriber.NodeCreated += new NodeEventHandler(OnNodeCreate);
+			subscriber.NodeDeleted += new NodeEventHandler(OnNodeDelete);
+			subscriber.CollectionRootChanged += new CollectionEventHandler(OnCollectionRootChanged);
+			subscriber.FileChanged += new FileEventHandler(OnFileChange);
+			subscriber.FileCreated += new FileEventHandler(OnFileCreate);
+			subscriber.FileDeleted += new FileEventHandler(OnFileDelete);
+			subscriber.FileRenamed += new FileRenameEventHandler(OnFileRenamed);
 			subscriber.ServiceControl += new ServiceEventHandler(ServiceCtlHandler);
 		}
 
@@ -99,45 +99,75 @@ namespace Simias
 		public void Cleanup()
 		{
 			subscriber.Dispose();
-			monitor.Kill();
+			if (monitor != null)
+				monitor.Kill();
 		}
 
 		#endregion
 
 		#region Event Handlers
 
-		void CreateHandler(EventArgs args)
+		void OnNodeChange(NodeEventArgs args)
 		{
 			mre.Set();
 			this.args = args;
-			Console.WriteLine("Create: {0} {1} {2}", args.Node, args.Path, args.Type);
+			Console.WriteLine("Change: {0} {1} {2}", args.Node, args.Collection, args.Type);
 		}
 
-		void DeleteHandler(EventArgs args)
+		void OnNodeCreate(NodeEventArgs args)
 		{
 			mre.Set();
 			this.args = args;
-			Console.WriteLine("Delete: {0} {1} {2}", args.Node, args.Path, args.Type);
+			Console.WriteLine("Create: {0} {1} {2}", args.Node, args.Collection, args.Type);
+			System.Threading.Thread.Sleep(10000);
 		}
 
-		void RenameHandler(EventArgs args)
+		void OnNodeDelete(NodeEventArgs args)
 		{
 			mre.Set();
 			this.args = args;
-			Console.WriteLine("Rename: {0} {1} {2}", args.Node, args.Path, args.Type);
+			Console.WriteLine("Delete: {0} {1} {2}", args.Node, args.Collection, args.Type);
 		}
 
-		void ChangeHandler(EventArgs args)
+		void OnCollectionRootChanged(CollectionRootChangedEventArgs args)
 		{
 			mre.Set();
 			this.args = args;
-			Console.WriteLine("Change: {0} {1} {2}", args.Node, args.Path, args.Type);
+			Console.WriteLine("Collection Root Changed: from {0} to {1}", args.OldRoot, args.NewRoot);
 		}
 
-		void ServiceCtlHandler(int targetProcess, ServiceEventType t)
+		void OnFileChange(FileEventArgs args)
 		{
 			mre.Set();
-			Console.WriteLine("Service Control Event = {0}", t.ToString()); 
+			this.args = args;
+			Console.WriteLine("File Change: {0} {1} {2}", args.FullPath, args.Collection, args.Type);
+		}
+
+		void OnFileCreate(FileEventArgs args)
+		{
+			mre.Set();
+			this.args = args;
+			Console.WriteLine("File Create: {0} {1} {2}", args.FullPath, args.Collection, args.Type);
+		}
+
+		void OnFileDelete(FileEventArgs args)
+		{
+			mre.Set();
+			this.args = args;
+			Console.WriteLine("File Delete: {0} {1} {2}", args.FullPath, args.Collection, args.Type);
+		}
+
+		void OnFileRenamed(FileRenameEventArgs args)
+		{
+			mre.Set();
+			this.args = args;
+			Console.WriteLine("File Rename: {0} {1} {2}", args.OldName, args.FullPath, args.Collection);
+		}
+
+		void ServiceCtlHandler(ServiceEventArgs args)
+		{
+			mre.Set();
+			Console.WriteLine("Service Control Event = {0}", args.EventType); 
 		}
 
 		#endregion
@@ -148,10 +178,10 @@ namespace Simias
 		/// Change event test.
 		/// </summary>
 		[Test]
-		public void ChangedTest()
+		public void NodeChangeTest()
 		{
 			args = null;
-			publisher.FireChanged(new EventArgs("nifp", "1", "0", "Node"));
+			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", "1", "0", "Node", NodeEventArgs.EventType.Changed));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -162,10 +192,10 @@ namespace Simias
 		/// Create event test.
 		/// </summary>
 		[Test]
-		public void CreatedTest()
+		public void NodeCreateTest()
 		{
 			args = null;
-			publisher.FireCreated(new EventArgs("file", "2", "0", "Node"));
+			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", "2", "0", "Node", NodeEventArgs.EventType.Created));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -176,10 +206,10 @@ namespace Simias
 		/// Delete event test.
 		/// </summary>
 		[Test]
-		public void DeletedTest()
+		public void NodeDeleteTest()
 		{
 			args = null;
-			publisher.FireDeleted(new EventArgs("nifp", "3", "0", "Node"));
+			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", "3", "0", "Node", NodeEventArgs.EventType.Deleted));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -190,10 +220,10 @@ namespace Simias
 		/// Rename event test.
 		/// </summary>
 		[Test]
-		public void RenamedTest()
+		public void CollectionRootChangedTest()
 		{
 			args = null;
-			publisher.FireRenamed(new EventArgs("file", "4", "0", "Node"));
+			publisher.RaiseCollectionRootChangedEvent(new CollectionRootChangedEventArgs("CollectionEventsTests", "0", "collection", @"c:\path\oldroot", @"c:\path\newRoot"));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -201,15 +231,73 @@ namespace Simias
 		}
 
 		/// <summary>
+		/// Change event test.
+		/// </summary>
+		[Test]
+		public void FileChangeTest()
+		{
+			args = null;
+			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\file.txt", "0", FileEventArgs.EventType.Changed));
+			if (!recievedCallback)
+			{
+				throw new ApplicationException("Failed test");
+			}
+		}
+
+		/// <summary>
+		/// Create event test.
+		/// </summary>
+		[Test]
+		public void FileCreateTest()
+		{
+			args = null;
+			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\file.txt", "0", FileEventArgs.EventType.Created));
+			if (!recievedCallback)
+			{
+				throw new ApplicationException("Failed test");
+			}
+		}
+
+		/// <summary>
+		/// Delete event test.
+		/// </summary>
+		[Test]
+		public void FileDeleteTest()
+		{
+			args = null;
+			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\file.txt", "0", FileEventArgs.EventType.Deleted));
+			if (!recievedCallback)
+			{
+				throw new ApplicationException("Failed test");
+			}
+		}
+
+		/// <summary>
+		/// Rename event test.
+		/// </summary>
+		[Test]
+		public void FileRenamedTest()
+		{
+			args = null;
+			publisher.RaiseFileEvent(new FileRenameEventArgs("CollectionEventsTests", @"c:\path\newfile.txt", "0", @"c:\path\oldname.txt"));
+			if (!recievedCallback)
+			{
+				throw new ApplicationException("Failed test");
+			}
+		}
+
+
+		/// <summary>
 		/// Name filter test.
 		/// </summary>
 		[Test]
-		public void NameFilterTest()
+		public void NodeIDFilterTest()
 		{
 			// Check for a hit.
+			string nodeId = "123456789";
 			args = null;
-			subscriber.NameFilter = "test.*";
-			publisher.FireChanged(new EventArgs("nifp", "testNode", "0", "Node"));
+			subscriber.NodeIDFilter = nodeId;
+			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", nodeId, "0", "Node", NodeEventArgs.EventType.Created));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -217,26 +305,26 @@ namespace Simias
 
 			// Check for a miss.
 			args = null;
-			subscriber.NameFilter = "test.*";
-			publisher.FireChanged(new EventArgs("file", "aestNode", "0", "Node"));
+			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", "987654321", "0", "Node", NodeEventArgs.EventType.Created));
 			if (recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
 			}
 
-			subscriber.NameFilter = null;
+			subscriber.NodeIDFilter = null;
 		}
 
 		/// <summary>
 		/// Type filter test.
 		/// </summary>
 		[Test]
-		public void TypeFilterTest()
+		public void NodeTypeFilterTest()
 		{
 			// Check for a hit.
+			string nodeId = "123456789";
 			args = null;
-			subscriber.TypeFilter = "Node";
-			publisher.FireChanged(new EventArgs("nifp", "testNode", "0", "Node"));
+			subscriber.NodeTypeFilter = "Node";
+			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", nodeId, "0", "Node", NodeEventArgs.EventType.Created));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -244,15 +332,69 @@ namespace Simias
 
 			// Check for a miss.
 			args = null;
-			subscriber.TypeFilter = "Collection";
-			publisher.FireChanged(new EventArgs("file", "aestNode", "0", "Node"));
+			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", nodeId, "0", "Collection", NodeEventArgs.EventType.Created));
 			if (recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
 			}
 
-			subscriber.TypeFilter = null;
+			subscriber.NodeTypeFilter = null;
 		}
+
+		/// <summary>
+		/// Name filter test.
+		/// </summary>
+		[Test]
+		public void FileNameFilterTest()
+		{
+			// Check for a hit.
+			args = null;
+			subscriber.FileNameFilter = "test.*";
+			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\testNode.txt", "0", FileEventArgs.EventType.Created));
+			if (!recievedCallback)
+			{
+				throw new ApplicationException("Failed test");
+			}
+
+			// Check for a miss.
+			args = null;
+			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\tastNode.txt", "0", FileEventArgs.EventType.Created));
+			if (recievedCallback)
+			{
+				throw new ApplicationException("Failed test");
+			}
+
+			subscriber.FileNameFilter = null;
+		}
+
+
+		/// <summary>
+		/// Type filter test.
+		/// </summary>
+		[Test]
+		public void FileTypeFilterTest()
+		{
+			// Check for a hit.
+			args = null;
+			subscriber.FileTypeFilter = ".txt";
+			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\file.txt", "0", FileEventArgs.EventType.Created));
+			if (!recievedCallback)
+			{
+				throw new ApplicationException("Failed test");
+			}
+
+			// Check for a miss.
+			args = null;
+			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\file.doc", "0", FileEventArgs.EventType.Created));
+			if (recievedCallback)
+			{
+				throw new ApplicationException("Failed test");
+			}
+
+			subscriber.FileTypeFilter = null;
+		}
+
+
 
 		/// <summary>
 		/// Disable test.
@@ -263,7 +405,7 @@ namespace Simias
 			// Check disabled.
 			args = null;
 			subscriber.Enabled = false;
-			publisher.FireChanged(new EventArgs("file", "testNode", "0", "Node"));
+			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", "123456789", "0", "Node", NodeEventArgs.EventType.Created));
 			if (recievedCallback)
 			{
 				throw new ApplicationException("Failed disable");
@@ -272,7 +414,7 @@ namespace Simias
 			// Check reenabled.
 			args = null;
 			subscriber.Enabled = true;
-			publisher.FireChanged(new EventArgs("file", "testNode", "0", "Node"));
+			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", "123456789", "0", "Node", NodeEventArgs.EventType.Created));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed enable");
@@ -285,8 +427,8 @@ namespace Simias
 		[Test]
 		public void ServiceControlTest()
 		{
-			publisher.FireServiceControl(EventPublisher.TargetAll, ServiceEventType.Shutdown);
-			publisher.FireServiceControl(EventPublisher.TargetAll, ServiceEventType.Reconfigure);
+			publisher.RaiseServiceEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceEventArgs.ServiceEvent.Shutdown));
+			publisher.RaiseServiceEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceEventArgs.ServiceEvent.Reconfigure));
 		}
 
 		#endregion
@@ -338,14 +480,14 @@ namespace Simias
 						int count = Int32.Parse(args[1]);
 						for (int i = 0; i < count; ++i)
 						{
-							t.publisher.FireCreated(new EventArgs("nifp", i.ToString(), "0", "Node"));
+							t.publisher.RaiseNodeEvent(new NodeEventArgs("nifp", i.ToString(), "0", "Node", NodeEventArgs.EventType.Created));
 						}
 					}
 					break;
 
 				case "PS":
 					t.publisher = new EventPublisher();
-					t.publisher.FireServiceControl(EventPublisher.TargetAll, ServiceEventType.Shutdown);
+					t.publisher.RaiseServiceEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceEventArgs.ServiceEvent.Shutdown));
 					break;
 
 				case "S":

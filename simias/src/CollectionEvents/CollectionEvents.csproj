@@ -99,6 +99,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "CollectionEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "CollectionRootChangedEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "EventBroker.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -110,6 +120,26 @@
                 />
                 <File
                     RelPath = "EventSubscriber.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "FileEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "FileRenameEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NodeEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ServiceEventArgs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

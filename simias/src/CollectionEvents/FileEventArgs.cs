@@ -1,5 +1,5 @@
 /***********************************************************************
- *  CsEventBroker.cs - A service to boker events.
+ *  FileEventArgs.cs - Argument class for file events.
  * 
  *  Copyright (C) 2004 Novell, Inc.
  *
@@ -20,27 +20,45 @@
  *  Author: Russ Young <ryoung@novell.com>
  * 
  ***********************************************************************/
+
 using System;
-using System.Collections;
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Tcp;
+using System.IO;
 
 namespace Simias.Event
 {
 	/// <summary>
-	/// Summary description for Class1.
+	/// The event arguments for file events.
 	/// </summary>
-	class CsEventBroker
+	[Serializable]
+	public class FileEventArgs : CollectionEventArgs
 	{
 		/// <summary>
-		/// The main entry point for the application.
+		/// Constructs a CollectionEventArgs that will be used by CollectionHandler delegates.
+		/// Descibes the node affected by the event.
 		/// </summary>
-		static void Main(string[] args)
+		/// <param name="source">The source of the event.</param>
+		/// <param name="fullPath">The full path of the modified file.</param>
+		/// <param name="collectionId">The collection that this file belongs to.</param>
+		/// <param name="changeType">The FileChangeType for this event.</param>
+		public FileEventArgs(string source, string fullPath, string collectionId, EventType changeType):
+			base(source, fullPath, collectionId, Path.GetExtension(fullPath), changeType)
 		{
-			EventBroker.RegisterService();
-			// Wait (forever) until we are killed.
-			new System.Threading.ManualResetEvent(false).WaitOne();
+		}
+		
+		/// <summary>
+		/// Gets the full path of the file.
+		/// </summary>
+		public string FullPath
+		{
+			get {return ID;}
+		}
+
+		/// <summary>
+		/// Gets the leaf name with extension.
+		/// </summary>
+		public string Name
+		{
+			get {return Path.GetFileName(ID);}
 		}
 	}
 }

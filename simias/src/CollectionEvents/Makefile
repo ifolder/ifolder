@@ -20,7 +20,7 @@ CollectionEventsTests_LDFLAGS =
 #=============================================================================
 # CollectionEvents variables
 #=============================================================================
-CollectionEvents_SOURCES = AssemblyInfo.cs EventBroker.cs EventPublisher.cs EventSubscriber.cs
+CollectionEvents_SOURCES = AssemblyInfo.cs EventBroker.cs EventPublisher.cs EventSubscriber.cs CollectionEventArgs.cs FileEventArgs.cs ServiceEventArgs.cs CollectionRootChangedEventArgs.cs NodeEventArgs.cs FileRenameEventArgs.cs
 CollectionEvents_INCLUDES = 
 CollectionEvents_FLAGS = /t:library
 CollectionEvents_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Configuration.dll

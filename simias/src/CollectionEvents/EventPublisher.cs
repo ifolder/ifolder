@@ -27,7 +27,7 @@ using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 
-namespace Simias
+namespace Simias.Event
 {
 	/// <summary>
 	/// Class used to publish events.
@@ -35,8 +35,7 @@ namespace Simias
 	public class EventPublisher
 	{
 		EventBroker broker;
-		public static int TargetAll = 0;
-	
+			
 		#region Constructor
 
 		/// <summary>
@@ -54,54 +53,44 @@ namespace Simias
 		#region Publish Calls.
 
 		/// <summary>
-		/// Called to publish a Change event.
+		/// Called to publish a Collection root change event.
 		/// </summary>
 		/// <param name="args"></param>
-		public void FireChanged(EventArgs args)
+		public void RaiseCollectionRootChangedEvent(CollectionRootChangedEventArgs args)
 		{
 			if (broker != null)
-				broker.FireChanged(args);
+				broker.RaiseCollectionRootChangedEvent(args);
 		}
 
 		/// <summary>
-		/// Called to publish a Create event.
+		/// Called to publish a Node event.
 		/// </summary>
 		/// <param name="args"></param>
-		public void FireCreated(EventArgs args)
+		public void RaiseNodeEvent(NodeEventArgs args)
 		{
 			if (broker != null)
-				broker.FireCreated(args);
+				broker.RaiseNodeEvent(args);
 		}
 
 		/// <summary>
-		/// Called to publish a Delete event.
+		/// Called to publish a File event.
 		/// </summary>
 		/// <param name="args"></param>
-		public void FireDeleted(EventArgs args)
+		public void RaiseFileEvent(FileEventArgs args)
 		{
 			if (broker != null)
-				broker.FireDeleted(args);
+				broker.RaiseFileEvent(args);
 		}
 
 		/// <summary>
-		/// Called to publish a Rename event.
-		/// </summary>
-		/// <param name="args">The arguments of the event.</param>
-		public void FireRenamed(EventArgs args)
-		{
-			if (broker != null)
-				broker.FireRenamed(args);
-		}
-
-		/// <summary>
-		/// Called to publish an event to listening services.
+		/// Called to publish a service event to listening services.
 		/// </summary>
 		/// <param name="targetProcess">The process Id of the process to notify.</param>
 		/// <param name="t"></param>
-		public void FireServiceControl(int targetProcess, ServiceEventType t)
+		public void RaiseServiceEvent(ServiceEventArgs args)
 		{
 			if (broker != null)
-				broker.FireServiceControl(targetProcess, t);
+				broker.RaiseServiceEvent(args);
 		}
 
 		#endregion

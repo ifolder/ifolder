@@ -1,5 +1,5 @@
 /***********************************************************************
- *  CsEventBroker.cs - A service to boker events.
+ *  NodeEventArgs.cs - Argument class for node events.
  * 
  *  Copyright (C) 2004 Novell, Inc.
  *
@@ -20,27 +20,35 @@
  *  Author: Russ Young <ryoung@novell.com>
  * 
  ***********************************************************************/
+
 using System;
-using System.Collections;
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Tcp;
 
 namespace Simias.Event
 {
 	/// <summary>
-	/// Summary description for Class1.
+	/// The event arguments for a Collection event.
 	/// </summary>
-	class CsEventBroker
+	[Serializable]
+	public class NodeEventArgs : CollectionEventArgs
 	{
 		/// <summary>
-		/// The main entry point for the application.
+		/// Constructs a CollectionEventArgs that will be used by CollectionHandler delegates.
+		/// Descibes the node affected by the event.
 		/// </summary>
-		static void Main(string[] args)
+		/// <param name="source">The source of the event.</param>
+		/// <param name="node">The object of the event.</param>
+		/// <param name="collection">The Collection that the node belongs to.</param>
+		/// <param name="type">The Type of the Node.</param>
+		/// <param name="changeType">The type of change that occured.</param>
+		public NodeEventArgs(string source, string node, string collection, string type, EventType changeType) :
+			base(source, node, collection, type, changeType)
+
 		{
-			EventBroker.RegisterService();
-			// Wait (forever) until we are killed.
-			new System.Threading.ManualResetEvent(false).WaitOne();
+		}
+
+		public string Node
+		{
+			get {return ID;}
 		}
 	}
 }
