@@ -187,10 +187,6 @@ namespace Novell.iFolder.InvitationWizard
 			pages[3] = this.selectiFolderLocationPage;
 			pages[4] = this.completionPage;
 
-			// Set the current directory to the install directory.
-//			string[] args = Environment.GetCommandLineArgs();
-//			Directory.SetCurrentDirectory(Path.GetDirectoryName(args[0]));
-
 			try
 			{
 				// Load the watermark.
@@ -529,7 +525,10 @@ namespace Novell.iFolder.InvitationWizard
 				if (this.acceptDeclinePage.Accept)
 				{
 					sb.AppendFormat("You accepted the invitation to participate in the {0} iFolder shared by {1}.\n\n", subscription.SubscriptionCollectionName, subscription.FromName);
-					sb.AppendFormat("The planned location for the shared iFolder is {0}.", Path.Combine(subscription.CollectionRoot, subscription.SubscriptionCollectionName));
+					if (Subscription.HasDirNode)
+					{
+						sb.AppendFormat("The planned location for the shared iFolder is {0}.", Path.Combine(subscription.CollectionRoot, subscription.SubscriptionCollectionName));
+					}
 				}
 				else
 				{
