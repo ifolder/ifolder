@@ -99,7 +99,7 @@ case $CSC in
         CSCFLAGS_OPTIMIZE="/optimize+"
         MONO=mono
         MONO_DEBUG='mono --debug'
-        MONO_PATH="\$(subst \$(SPACE),:,\$(addprefix \$(SRCDIR)\$(SEP),iFolder)):`pkg-config --variable=libdir addressbook`:`pkg-config --variable=libdir simias`"
+        MONO_PATH="\$(subst \$(SPACE),:,\$(addprefix \$(SRCDIR)\$(SEP),iFolder)):`pkg-config --variable=libdir simias`"
         SYSTEM_XML='System.Xml.dll'
     ;;
     #
@@ -429,20 +429,9 @@ AC_SUBST(SIMIAS_LIBS)
 # if using csc, convert /lib paths using cygpath
 case $CSC in
     csc)
-		# CRG: I moved these to only be needed if we
-		# are building on Windows
-		PKG_CHECK_MODULES(ADDRESSBOOK, addressbook >= 1.0)
-		AC_SUBST(ADDRESSBOOK_LIBS)
-
-		PKG_CHECK_MODULES(ADDRESSBOOK_UI, addressbook-ui >= 1.0)
-		AC_SUBST(ADDRESSBOOK_UI_LIBS)
-
         libdir_pkg=`pkg-config --variable=libdir simias`
         libdir_cyg=`cygpath --windows $libdir_pkg | sed 's,\\\\,/,g'`
         SIMIAS_LIBS=`echo $SIMIAS_LIBS | sed "s,$libdir_pkg,$libdir_cyg,g"`
-        SIMIAS_UI_LIBS=`echo $SIMIAS_UI_LIBS | sed "s,$libdir_pkg,$libdir_cyg,g"`
-        ADDRESSBOOK_LIBS=`echo $ADDRESSBOOK_LIBS | sed "s,$libdir_pkg,$libdir_cyg,g"`
-        ADDRESSBOOK_UI_LIBS=`echo $ADDRESSBOOK_UI_LIBS | sed "s,$libdir_pkg,$libdir_cyg,g"`
     ;;
 esac
 
