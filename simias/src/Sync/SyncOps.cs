@@ -364,7 +364,8 @@ internal class SyncOps
 		foreach (NodeStamp stamp in stamps.Values)
 		{
 			chunks[i] = GetSmallNode(stamp.id);
-			chunks[i++].expectedIncarn = stamp.masterIncarn;
+			chunks[i].expectedIncarn = chunks[i].node.MasterIncarnation;
+			i++;
 		}
 		return chunks;
 	}
