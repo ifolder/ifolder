@@ -28,6 +28,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace Novell.iFolderCom
 {
@@ -100,7 +101,7 @@ namespace Novell.iFolderCom
 	{
 		#region Class Members
 		private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(MyMessageBox));
-		private const float maxWidth = 400;
+		private const float maxWidth = 600;
 		private System.Windows.Forms.Button yes;
 		private System.Windows.Forms.Button no;
 		private System.Windows.Forms.Label message;
@@ -470,11 +471,40 @@ namespace Novell.iFolderCom
 			if (first)
 			{
 				first = false;
-				SizeF size = e.Graphics.MeasureString(message.Text, message.Font);
-				float width = (size.Width / maxWidth) > 1 ? maxWidth : size.Width;
-				float height = (float)Math.Ceiling(size.Width / width) * size.Height + 2;
+
+				float width = 0;
+				float height = 0;
+				SizeF size = new SizeF(0, 0);
+
+				// Split the string at the newline boundaries.
+				Regex regex = new Regex("[\n]+");
+				foreach (string s in regex.Split(message.Text))
+				{
+					// Calculate the size for each string.
+					size = e.Graphics.MeasureString(s, message.Font);
+					width = Math.Max((size.Width / maxWidth) > 1 ? maxWidth : size.Width, width);
+					height += (float)Math.Ceiling(size.Width / width) * size.Height;
+				}
+				
+				int index = 0;
+				int newlineCount = 0;
+
+				// Count how many blank lines we have.
+				while ((index = message.Text.IndexOf("\n", index)) != -1)
+				{
+					while (message.Text[++index] == '\n')
+					{
+						newlineCount++;
+						if (index > message.Text.Length - 1)
+							break;						
+					}
+				}
+
+				// Adjust the height to include the blank lines.
+				height += (size.Height * newlineCount) + 2;
+
 				message.Size = new Size((int)Math.Ceiling(width), (int)Math.Ceiling(height));
-				this.Width = message.Right + message.Left + 4;
+				this.Width = message.Width + message.Left + 4 + (details.Visible ? details.Width : 0);
 
 				ok.Left = (ClientRectangle.Width - ok.Width) / 2;
 				ok.Top = message.Bottom + 12;
