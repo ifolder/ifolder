@@ -226,7 +226,7 @@ namespace Simias.Client
 					// Build a path to the web server application.
 					string webApp = Path.Combine( webPath, String.Format( "bin{0}SimiasApp.exe", Path.DirectorySeparatorChar ) );
 
-					webProcess.StartInfo.FileName = webApp;
+					webProcess.StartInfo.FileName = MyEnvironment.DotNet ? webApp : "mono";
 					webProcess.StartInfo.UseShellExecute = false;
 					webProcess.StartInfo.RedirectStandardInput = true;
 					webProcess.StartInfo.CreateNoWindow = true;
@@ -261,7 +261,7 @@ namespace Simias.Client
 
 					// Strip off the volume if it exists and the file name and make the path absolute from the root.
 					string appPath = String.Format( "{0}{1}", Path.DirectorySeparatorChar, webPath.Remove( 0, Path.GetPathRoot( webPath ).Length ) );
-					webProcess.StartInfo.Arguments = String.Format( "--applications {0}:\"{1}\" --port {2}", uri.PathAndQuery, appPath, uri.Port.ToString() );
+					webProcess.StartInfo.Arguments = String.Format( "{0}--applications {1}:\"{2}\" --port {3}", MyEnvironment.DotNet ? String.Empty : webApp + " ", uri.PathAndQuery, appPath, uri.Port.ToString() );
 					webProcess.Start();
 				}
 			}
