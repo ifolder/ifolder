@@ -403,10 +403,10 @@ namespace Simias.DomainServices
 			Uri loginUri = 
 				new Uri( host, Simias.Security.Web.AuthenticationService.Login.Path.ToLower() );
 			HttpWebRequest request = WebRequest.Create( loginUri ) as HttpWebRequest;
-			request.CookieContainer = cookie;
+			WebState webState = new WebState();
+			webState.InitializeWebRequest(request);
 			request.Credentials = networkCredential;
-			request.PreAuthenticate = true;
-
+			
 			if ( domainID != null && domainID != "")
 			{
 				request.Headers.Add( 
@@ -625,13 +625,13 @@ namespace Simias.DomainServices
 			// Create the domain service web client object.
 			DomainService domainService = new DomainService();
 			domainService.Url = domainServiceUrl.ToString();
+			WebState webState = new WebState();
+			webState.InitializeWebClient(domainService);
 
-			// Setup the credentials
+			// Save the credentials
 			CredentialCache myCache = new CredentialCache();
 			myCache.Add(new Uri(domainService.Url), "Basic", myCred);
 			domainService.Credentials = myCache;
-			domainService.CookieContainer = cookie;
-			domainService.PreAuthenticate = true;
 			domainService.Timeout = 30000;
 			
 			log.Debug("Calling " + domainService.Url + " to provision the user");
@@ -822,22 +822,15 @@ namespace Simias.DomainServices
 			{
 				// Set the address to the server.
 				Uri uri = Locate.ResolveLocation(domainID);
+				
 				if (uri == null)
 				{
 					throw new SimiasException(String.Format("Cannot get location for domain {0}.", domain.Name));
 				}
 
 				domainService.Url = uri.ToString() + "/DomainService.asmx";
-
-				// Get the credentials for this user.
-				Credentials cSimiasCreds = new Credentials(domainID, userID);
-				domainService.Credentials = cSimiasCreds.GetCredentials();
-				if (domainService.Credentials == null)
-				{
-					throw new ApplicationException("No credentials available for specified collection.");
-				}
-
-				domainService.PreAuthenticate = true;
+				WebState webState = new WebState(domainID, userID);
+				webState.InitializeWebClient(domainService);
 			}
 
 			// Find the user's POBox for this domain.
@@ -873,16 +866,9 @@ namespace Simias.DomainServices
 			// Construct the web client.
 			DomainService domainService = new DomainService();
 			domainService.Url = uri.ToString() + "/DomainService.asmx";
-			Credentials cSimiasCreds = new Credentials(collection.ID);
-			domainService.Credentials = cSimiasCreds.GetCredentials();
-
-			if (domainService.Credentials == null)
-			{
-				throw new SimiasException("No credentials available for specified collection.");
-			}
-
-			domainService.PreAuthenticate = true;
-
+			WebState webState = new WebState(collection.ID);
+			webState.InitializeWebClient(domainService);
+			
 			string rootID = null;
 			string rootName = null;
 

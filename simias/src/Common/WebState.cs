@@ -38,7 +38,7 @@ namespace Simias
 	{
 		static string				userAgent = "Simias Client " 
 			+ System.Reflection.Assembly.GetCallingAssembly().ImageRuntimeVersion 
-			+ "OS=" 
+			+ " OS=" 
 			+ System.Environment.OSVersion.ToString();
 		static CookieContainer		cookies = new CookieContainer();
 		IWebProxy					proxy;
