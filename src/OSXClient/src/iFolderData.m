@@ -245,8 +245,9 @@ static iFolderData *sharedInstance = nil;
 	if([ifolder IsSubscription])
 	{
 		[ifoldersController addObject:ifolder];
-		[keyediFolders setObject:ifolder forKey:[ifolder CollectionID]];
-		[keyedSubscriptions setObject:[ifolder CollectionID] forKey:[ifolder ID]];
+		NSString *colID = [ifolder CollectionID];
+		[keyediFolders setObject:ifolder forKey:colID];
+		[keyedSubscriptions setObject:colID forKey:[ifolder ID]];
 	}
 	else
 	{
@@ -272,7 +273,10 @@ static iFolderData *sharedInstance = nil;
 	{
 		realID = [self getiFolderID:ifolderID];
 		if((realID == nil) || (![self isiFolder:realID]) )
+		{
+			[instanceLock unlock];	
 			return;
+		}
 		else
 		{
 			// remove this key since we found it
@@ -282,7 +286,10 @@ static iFolderData *sharedInstance = nil;
 
 	iFolder *ifolder = [keyediFolders objectForKey:realID];
 	if(ifolder == nil)
+	{
+		[instanceLock unlock];	
 		return;
+	}
 	
 	[keyediFolders removeObjectForKey:realID];
 	[ifoldersController removeObject:ifolder];
@@ -375,7 +382,8 @@ static iFolderData *sharedInstance = nil;
 {
 	iFolder *ifolder = nil;
 	[instanceLock lock];
-//	NSLog(@"iFolderData readiFolder called for iFolder %@", ifolderID);
+
+	NSLog(@"iFolderData readiFolder called for iFolder %@", ifolderID);
 
 	ifolder = [self getiFolder:ifolderID];
 
@@ -615,6 +623,16 @@ static iFolderData *sharedInstance = nil;
 	[instanceLock lock];
 
 	ifolder = [self getAvailableiFolder:ifolderID];
+
+	// If we read an iFolder and it is not a subscription, remove it from the
+	// available iFolders and return nil
+	if(	(ifolder != nil) &&
+		(![ifolder IsSubscription]) )
+	{
+		[keyedSubscriptions removeObjectForKey:ifolderID];
+		[instanceLock unlock];	
+		return nil;
+	}
 
 	@try
 	{

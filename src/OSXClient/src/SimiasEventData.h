@@ -31,11 +31,6 @@
 @class SMEvent;
 @interface SimiasEventData : NSObject
 {
-//	SMQueue			*nodeEventQueue;
-//	SMQueue			*colSyncEventQueue;
-//	SMQueue			*fileSyncEventQueue;
-//	SMQueue			*notifyEventQueue;
-
 	SMQueue			*simiasEventQueue;
 	NSLock			*simiasEventDataLock;
 	NSConditionLock	*simiasHasDataLock;
@@ -48,18 +43,6 @@
 - (void) pushEvent:(SMEvent *)event;
 - (SMEvent *) popEvent;
 - (BOOL) hasEvents;
-
-//- (void) pushFileSyncEvent:(SMFileSyncEvent *)fileSyncEvent;
-//- (SMFileSyncEvent *) popFileSyncEvent;
-//- (BOOL) hasFileSyncEvents;
-
-//- (void) pushCollectionSyncEvent:(SMCollectionSyncEvent *)colSyncEvent;
-//- (SMCollectionSyncEvent *) popCollectionSyncEvent;
-//- (BOOL) hasCollectionSyncEvents;
-
-//- (void) pushNodeEvent:(SMNodeEvent *)nodeEvent;
-//- (SMNodeEvent *) popNodeEvent;
-//- (BOOL) hasNodeEvents;
 
 @end
 

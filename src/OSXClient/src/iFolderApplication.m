@@ -530,8 +530,6 @@
 //===================================================================
 - (void)processNotifyEvent:(SMNotifyEvent *)smne
 {
-	NSLog(@"Got Notify Message %@", [smne message]);
-		
 	if([[smne type] compare:@"Domain-Up"] == 0)
 	{
 		[self showLoginWindowTS:[smne message]];
@@ -564,7 +562,6 @@
 	}
 	else if([[ne type] compare:@"Member"] == 0)
 	{
-		NSLog(@"Processing member event");
 		[self processUserNodeEvent:ne];
 	}
 	else
@@ -587,7 +584,7 @@
 	{
 		case NODE_CREATED:
 		{
-//			NSLog(@"processCollectionNodeEvent NODE_CREATED");
+			NSLog(@"processCollectionNodeEvent NODE_CREATED");
 
 			// not sure if we should read on every one but I think we
  			// need to in case of a new iFolder
@@ -610,18 +607,28 @@
 			}
 			break;
 		}
+
+/*
+		I'm not sure I still need to handle a collection node changed, I'm pulling it out
+		because it's all handled in sync code if needed
 		case NODE_CHANGED:
 		{
-//			NSLog(@"processCollectionNodeEvent NODE_CHANGED");
-
 			BOOL isiFolder = [[iFolderData sharedInstance] 
 									isiFolder:[colNodeEvent collectionID]];
 
 			if(isiFolder)
 			{
-				[[iFolderData sharedInstance] 
-										readiFolder:[colNodeEvent collectionID]];
+				iFolder *ifolder = [[iFolderData sharedInstance]
+									getiFolder:[colNodeEvent collectionID]];
 									
+				if(![ifolder isSynchronizing])
+				{
+					NSLog(@"Collection is not syncing, processing a NODE_CHANGED on a collection");
+
+					[[iFolderData sharedInstance] 
+										readiFolder:[colNodeEvent collectionID]];
+				}
+				
 				// only do notifications now when the sync ends
 //				if([ifolder HasConflicts])
 //					[[iFolderData sharedInstance] setHasConflicts:[ifolder ID]];
@@ -629,6 +636,8 @@
 			}
 			break;
 		}
+*/
+
 	}
 }
 
@@ -677,14 +686,14 @@
 		case NODE_CHANGED:
 		{
 //			NSLog(@"processSubscriptionNodeEvent NODE_CHANGED");
-		
+	
 			// Because we use the iFolder ID to hold subscriptions in the
 			// dictionary, we need to get the iFolderID we used
 			NSString *ifolderID = [[iFolderData sharedInstance]
 										getiFolderID:[subNodeEvent nodeID]];
 			if(ifolderID == nil)
 				return;
-			
+				
 			[[iFolderData sharedInstance] readAvailableiFolder:[subNodeEvent nodeID]
 												inCollection:[subNodeEvent collectionID]];
 			break;
@@ -705,7 +714,7 @@
 	{
 		case NODE_CREATED:
 		{
-			NSLog(@"user created, marking as such in iFolderSharedData");
+//			NSLog(@"user created, marking as such in iFolderSharedData");
 			[[iFolderData sharedInstance] setUsersAdded:[userNodeEvent collectionID]];
 			break;
 		}
