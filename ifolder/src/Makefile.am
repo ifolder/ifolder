@@ -3,7 +3,7 @@ SUBDIRS = iFolder TrayIcon GtkTrayApp
 endif
 
 if DARWIN
-SUBDIRS = iFolder
+SUBDIRS = iFolder iFolderGtkUI
 endif
 
 if WINDOWS

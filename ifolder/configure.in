@@ -179,8 +179,24 @@ case $IFOLDER_OS in
         #
         # Set pkg-config variables
         #
-        MONO_MINIMUM_VERSION=0.95
+        MONO_MINIMUM_VERSION=0.91
         AC_SUBST(MONO_MINIMUM_VERSION)
+        
+        GTK_SHARP_MINIMUM_VERSION=0.91
+        AC_SUBST(GTK_SHARP_MINIMUM_VERSION)
+
+        GNOME_SHARP_MINIMUM_VERSION=0.91
+        AC_SUBST(GNOME_SHARP_MINIMUM_VERSION)
+
+        GLADE_SHARP_MINIMUM_VERSION=0.91
+        AC_SUBST(GLADE_SHARP_MINIMUM_VERSION)
+	
+        GDK20_MINIMUM_VERSION=2.2.3
+        ATK_MINIMUM_VERSION=1.2.4
+        
+        PKG_CONFIG_REQUIRES="gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION"
+        PKG_CONFIG_CONFLICTS=""
+        PKG_CONFIG_LIBS="/r:Novell.iFolder.dll /r:TrayIcon.dll"
     ;;
     #
     # Linux-specific configuration
@@ -452,6 +468,29 @@ case $IFOLDER_OS in
 	AC_SUBST(ATK_CFLAGS)
 	AC_SUBST(ATK_LIBS)
     ;;
+    darwin)
+	PKG_CHECK_MODULES(GTK_SHARP, gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION)
+    GTK_SHARP_PREFIX=`pkg-config --variable=prefix gtk-sharp`
+    GTK_SHARP_VERSION=`pkg-config --modversion gtk-sharp`
+    AC_SUBST(GTK_SHARP_PREFIX)
+	AC_SUBST(GTK_SHARP_LIBS)
+
+	PKG_CHECK_MODULES(GNOME_SHARP, gnome-sharp >= $GNOME_SHARP_MINIMUM_VERSION)
+    AC_SUBST(GNOME_SHARP_PREFIX)
+	AC_SUBST(GNOME_SHARP_LIBS)
+
+	PKG_CHECK_MODULES(GLADE_SHARP, glade-sharp >= $GLADE_SHARP_MINIMUM_VERSION)
+    AC_SUBST(GLADE_SHARP_PREFIX)
+	AC_SUBST(GLADE_SHARP_LIBS)
+
+	PKG_CHECK_MODULES(GDK20, gdk-2.0 >= $GDK20_MINIMUM_VERSION)
+	AC_SUBST(GDK20_CFLAGS)
+	AC_SUBST(GDK20_LIBS)
+
+	PKG_CHECK_MODULES(ATK, atk >= $ATK_MINIMUM_VERSION)
+	AC_SUBST(ATK_CFLAGS)
+	AC_SUBST(ATK_LIBS)
+    ;;
 esac
 
 #
@@ -464,12 +503,13 @@ src/Makefile
 src/install-ifolder-to-gac
 src/iFolder/Makefile
 src/iFolder/iFolderCmd
+src/iFolderGtkUI/Makefile
+src/iFolderGtkUI/Util.cs
+src/iFolderGtkUI/collectionbrowser
 src/GtkTrayApp/Makefile
 src/GtkTrayApp/ifolder
 src/GtkTrayApp/ifolder.desktop
-src/GtkTrayApp/collectionbrowser
 src/GtkTrayApp/setup-autostart
-src/GtkTrayApp/Util.cs
 src/FormsTrayApp/Makefile
 src/FormsInvitationWizard/Makefile
 src/iFolderShell/Makefile
