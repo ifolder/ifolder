@@ -29,8 +29,13 @@
 #import "iFolderDomain.h"
 #include "Security/Security.h"
 
-@class AuthStatus;
+typedef struct gsoap_creds
+{
+	char *username;
+	char *password;
+} GSOAP_CREDS;
 
+@class AuthStatus;
 
 @interface SimiasService : NSObject
 {
@@ -54,6 +59,7 @@
 -(void) DisableDomainAutoLogin:(NSString *)domainID;
 -(AuthStatus *) LoginToRemoteDomain:(NSString *)domainID usingPassword:(NSString *)password;
 -(AuthStatus *) LogoutFromRemoteDomain:(NSString *)domainID;
+
 
 
 @end

@@ -252,36 +252,39 @@
 
 - (IBAction)searchUsers:(id)sender
 {
-	NSLog(@"Searching for users");
-	if([[userSearch stringValue] length] > 0)
+	if(curiFolder != nil)
 	{
+		NSLog(@"Searching for users");
+		if([[userSearch stringValue] length] > 0)
+		{
+			if(searchResults != nil)
+			{
+				[searchResults release];
+				searchResults = nil;
+			}
+			// valid search attributes: "Given" "Family" "FN"
+			searchResults = [[MemberSearchResults alloc] init];
+			[searchResults searchMembers:[curiFolder DomainID] onAttribute:searchAttribute usingValue:[userSearch stringValue]];
+		}
+		else
+		{
+			if(searchResults != nil)
+			{
+				[searchResults release];
+				searchResults = nil;
+			}
+			searchResults = [[MemberSearchResults alloc] init];
+			[searchResults getAllMembers:[curiFolder DomainID]];
+		}
+
 		if(searchResults != nil)
 		{
-			[searchResults release];
-			searchResults = nil;
+			[[searchedColumn headerCell] 
+				setStringValue:[NSString stringWithFormat:NSLocalizedString(@"User count: %d", nil),[searchResults count] ]];
 		}
-		// valid search attributes: "Given" "Family" "FN"
-		searchResults = [[MemberSearchResults alloc] init];
-		[searchResults searchMembers:[curiFolder DomainID] onAttribute:searchAttribute usingValue:[userSearch stringValue]];
-	}
-	else
-	{
-		if(searchResults != nil)
-		{
-			[searchResults release];
-			searchResults = nil;
-		}
-		searchResults = [[MemberSearchResults alloc] init];
-		[searchResults getAllMembers:[curiFolder DomainID]];
-	}
 
-	if(searchResults != nil)
-	{
-		[[searchedColumn headerCell] 
-			setStringValue:[NSString stringWithFormat:NSLocalizedString(@"User count: %d", nil),[searchResults count] ]];
+		[searchedUsers reloadData];
 	}
-
-	[searchedUsers reloadData];
 }
 
 

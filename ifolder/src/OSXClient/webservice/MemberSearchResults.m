@@ -26,13 +26,14 @@
 //#include <simias.nsmap>
 #import "Simias.h"
 #import "User.h"
+#import "SimiasService.h"
 
 #define PAGED_RESULT_COUNT	25
 
 
 // methods defined in SimiasService.m
-void init_simias_gsoap(struct soap *pSoap);
-void cleanup_simias_gsoap(struct soap *pSoap);
+void init_simias_gsoap(struct soap *pSoap, GSOAP_CREDS *creds);
+void cleanup_simias_gsoap(struct soap *pSoap, GSOAP_CREDS *creds);
 NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 
 @implementation MemberSearchResults
@@ -61,6 +62,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 	{
 		// Call to release the soap structures
 		struct soap soap;
+		GSOAP_CREDS creds;		
 
 		struct _ns1__FindCloseMembers			findMessage;
 		struct _ns1__FindCloseMembersResponse	findResponse;
@@ -68,7 +70,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 		findMessage.domainID = (char *)[domainID cString];
 		findMessage.searchContext =  (char *)[searchContext cString];
 
-		init_simias_gsoap (&soap);
+		init_simias_gsoap (&soap, &creds);		
 		soap_call___ns1__FindCloseMembers(
 				&soap,
 				[simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -76,7 +78,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 				&findMessage,
 				&findResponse);
 
-		cleanup_simias_gsoap(&soap);
+		cleanup_simias_gsoap(&soap, &creds);
 
 		[domainID release];
 		[simiasURL release];
@@ -102,6 +104,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 -(void)searchMembers:(NSString *)DomainID onAttribute:(NSString *)attribute usingValue:(NSString *)value
 {
     struct soap soap;
+	GSOAP_CREDS creds;	
     int err_code;
 
 	struct _ns1__FindFirstSpecificMembers			findMessage;
@@ -118,7 +121,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 
 	findMessage.count = PAGED_RESULT_COUNT;
 
-    init_simias_gsoap (&soap);
+	init_simias_gsoap (&soap, &creds);
     err_code = soap_call___ns1__FindFirstSpecificMembers(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -155,7 +158,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 		}
     }
 
-    cleanup_simias_gsoap(&soap);
+	cleanup_simias_gsoap(&soap, &creds);
 }
 
 
@@ -164,6 +167,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 -(void)getAllMembers:(NSString *)DomainID
 {
     struct soap soap;
+	GSOAP_CREDS creds;		
     int err_code;
 
 	struct _ns1__FindFirstMembers			findMessage;
@@ -176,7 +180,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 	findMessage.domainID = (char *)[domainID cString];
 	findMessage.count = PAGED_RESULT_COUNT;
 
-    init_simias_gsoap (&soap);
+	init_simias_gsoap (&soap, &creds);
     err_code = soap_call___ns1__FindFirstMembers(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -213,7 +217,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 		}
     }
 
-    cleanup_simias_gsoap(&soap);
+	cleanup_simias_gsoap(&soap, &creds);
 }
 
 
@@ -253,6 +257,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 -(BOOL)fillMembers:(int)index
 {
     struct soap soap;
+	GSOAP_CREDS creds;		
     int err_code;
 	int actualIndex;
 
@@ -278,7 +283,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 	findMessage.offset = actualIndex;
 	findMessage.count = PAGED_RESULT_COUNT;
 
-    init_simias_gsoap (&soap);
+	init_simias_gsoap (&soap, &creds);
     err_code = soap_call___ns1__FindSeekMembers(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -289,7 +294,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
  	if(soap.error)
 	{
 		NSLog(@"Exception raised while calling FindFirstMembers: %s", soap.fault->faultstring);
-	    cleanup_simias_gsoap(&soap);
+		cleanup_simias_gsoap(&soap, &creds);
 		return NO;
 	}
 	else
@@ -331,7 +336,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 		}
     }
 
-    cleanup_simias_gsoap(&soap);
+	cleanup_simias_gsoap(&soap, &creds);
 	return YES;
 }
 
