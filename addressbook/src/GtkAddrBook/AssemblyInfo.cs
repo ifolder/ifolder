@@ -57,5 +57,5 @@ using System.Runtime.InteropServices;
 [assembly: AllowPartiallyTrustedCallers]
 [assembly: ComVisible(false)]
 
-[assembly: AssemblyDelaySign(false)]
+[assembly: AssemblyDelaySign(true)]
 [assembly: AssemblyKeyFile("../addressbook-snakeoil.keys")]
