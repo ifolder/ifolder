@@ -193,6 +193,9 @@ namespace Novell.iFolder
 			MenuItem colBrowser_item = new MenuItem ("Collection Browser");
 			trayMenu.Append (colBrowser_item);
 			colBrowser_item.Activated += new EventHandler(show_colbrowser);
+			MenuItem rbBrowser_item = new MenuItem ("Reunion Browser");
+			trayMenu.Append (rbBrowser_item);
+			rbBrowser_item.Activated += new EventHandler(show_rbbrowser);
 
 			//			trayMenu.Append(new SeparatorMenuItem());
 
@@ -245,6 +248,14 @@ namespace Novell.iFolder
 			FileBrowser browser;
 
 			browser = new FileBrowser();
+			browser.ShowAll();
+		}
+
+		static void show_rbbrowser(object o, EventArgs args)
+		{
+			ReunionBrowser browser;
+
+			browser = new ReunionBrowser();
 			browser.ShowAll();
 		}
 
