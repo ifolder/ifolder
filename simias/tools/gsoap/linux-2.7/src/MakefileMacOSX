@@ -1,0 +1,25 @@
+#	gSOAP 2 Makefile for Mac OS X by Robert van Engelen, Genivia inc.
+#	With suggested changes by Mike Helmick, helmick@cs.xu.edu
+#	Requires Flex and Bison
+CC=gcc
+CPP=g++
+LIBS=/usr/lib/libl.a
+COFLAGS=-O1
+CWFLAGS=
+CIFLAGS=
+CMFLAGS=
+CFLAGS= $(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)
+soapcpp2:	soapcpp2.h soapcpp2_yacc.o symbol2.o error2.o lex.yy.o init2.o soapcpp2.o
+		$(CC) symbol2.o error2.o soapcpp2_yacc.o lex.yy.o init2.o soapcpp2.o $(LIBS) -o $@
+soapcpp2_yacc.c:	soapcpp2_yacc.y soapcpp2.h error2.h
+		bison -d -v soapcpp2_yacc.y
+		mv -f soapcpp2_yacc.tab.h soapcpp2_yacc.h
+		mv -f soapcpp2_yacc.tab.c soapcpp2_yacc.c
+lex.yy.c:	soapcpp2_yacc.h soapcpp2_yacc.c soapcpp2_lex.l
+		flex -l soapcpp2_lex.l
+.c.o:		soapcpp2.h soapcpp2_yacc.h error2.h
+		$(CC) $(CFLAGS) -DWITH_BISON -DWITH_FLEX -c $<
+clean:		
+		rm -f *.o
+distclean:		
+		rm -f soapcpp2 *.o lex.yy.* soapcpp2_yacc.h soapcpp2_yacc.c y.tab.* *.output
