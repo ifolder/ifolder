@@ -73,7 +73,7 @@ namespace Simias
 				while( (host = reader.ReadLine()) != null)
 				{
 					IPAddress ipa = IPAddress.Parse(host);
-					if(!IPAddress.IsLoopback(ipa))
+					if(IPAddress.IsLoopback(ipa))
 						continue;
 
 					// take the first address that is not

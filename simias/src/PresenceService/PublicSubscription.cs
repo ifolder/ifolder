@@ -83,7 +83,8 @@ namespace Simias.Presence
 				if(query != null)
 				{
 					Ptr[] recordPtrs = null;
-					if (query.GetPtrResourcesByName(NAME, out recordPtrs) == 0)
+	//				if (query.GetPtrResourcesByName(NAME, out recordPtrs) == 0)
+					if (query.GetPtrResources(out recordPtrs) == 0)
 					{
 						TextStrings ts = null;
 						HostAddress ha = null;
@@ -93,12 +94,15 @@ namespace Simias.Presence
 						{
 							if(recordPtr != null)
 							{
+		log.Debug("--------------- got ptr Record {0}", recordPtr.Name);
+		log.Debug("--------------- got ptr Record {0}", recordPtr.Target);
 								bool isPublic = false;
 								SubscriptionInfo si = new SubscriptionInfo();
 
 								if(query.GetTextStringsByName(recordPtr.Target,
 											ref ts) == 0)
 								{
+		log.Debug("--------------- got TextStrings");
 									// parse out strings and add them
 									// to the subscription info
 									foreach(string strval in ts.GetTextStrings())
@@ -119,7 +123,7 @@ namespace Simias.Presence
 											if(pair[2] == "true")
 												si.SubscriptionCollectionHasDirNode = true;
 											else
-												si.SubscriptionCollectionHasDirNode = true;
+												si.SubscriptionCollectionHasDirNode = false;
 										}
 										else if(pair[0] == "public")
 										{
@@ -129,17 +133,25 @@ namespace Simias.Presence
 									}
 								}
 
+		log.Debug("--------------- getting service by name");
 								if(query.GetServiceByName(recordPtr.Target,
 											ref sl) == 0)
 								{
+		log.Debug("--------------- getting host by name");
 									if(query.GetHostByName(sl.Target,
 												ref ha) == 0)
 									{
 										string url = "http://" + ha.PrefAddress + ":" + sl.Port + "/PostOffice.rem";
 
+		log.Debug("--------------- Have Hostname, adding if public");
 										si.POServiceUrl = new Uri(url);
 										if(isPublic)
+										{
+		log.Debug("--------------- It's public, adding");
 											subArray.Add(si);
+										}
+										else
+		log.Debug("--------------- It's NOT public");
 									}
 								}
 							}
