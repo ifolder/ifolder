@@ -238,7 +238,7 @@ namespace Simias.Sync.Client
 		public bool DownLoadFile()
 		{
 			long[] fileMap = this.GetDownloadFileMap();
-			byte[] buffer = new byte[BlockSize];
+			//byte[] buffer = new byte[BlockSize];
 			WritePosition = 0;
 				
 			for (int i = 0; i < fileMap.Length; ++i)
@@ -275,12 +275,12 @@ namespace Simias.Sync.Client
 					}
 
 					byte[] readBuffer;
-					if (readBufferSize != BlockSize)
-						readBuffer = new byte[readBufferSize];
-					else
-						readBuffer = buffer;
+					//if (readBufferSize != BlockSize)
+					//	readBuffer = new byte[readBufferSize];
+					//else
+					//	readBuffer = buffer;
 
-					int bytesRead = service.Read(ref readBuffer, offset, readBufferSize);
+					int bytesRead = service.Read(offset, readBufferSize, out readBuffer);
 					Write(readBuffer, 0, bytesRead);
 				}
 			}

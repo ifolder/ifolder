@@ -141,7 +141,7 @@ namespace Simias.Sync.Web
 		[WebMethod(EnableSession = true)]
 		public bool PutFileNode(SyncNode node)
 		{
-			return false;
+			return Service.PutFileNode(node);
 		}
 
 		/// <summary>
@@ -153,7 +153,7 @@ namespace Simias.Sync.Web
 		[WebMethod(EnableSession = true)]
 		public SyncNode GetFileNode(string nodeID)
 		{
-			return null;
+			return Service.GetFileNode(nodeID);
 		}
 
 		/// <summary>
@@ -175,7 +175,7 @@ namespace Simias.Sync.Web
 		[WebMethod(EnableSession = true)]
 		public HashData[] GetHashMap(int blockSize)
 		{
-			return null;
+			return Service.GetHashMap(blockSize);
 		}
 
 		/// <summary>
@@ -184,11 +184,10 @@ namespace Simias.Sync.Web
 		/// <param name="buffer">The data to write.</param>
 		/// <param name="offset">The offset in the new file of where to write.</param>
 		/// <param name="count">The number of bytes to write.</param>
-		/// <returns>True if successful.</returns>
 		[WebMethod(EnableSession = true)]
-		public bool Write(byte[] buffer, long offset, int count)
+		public void Write(byte[] buffer, long offset, int count)
 		{
-			return false;
+			Service.Write(buffer, offset, count);
 		}
 
 		/// <summary>
@@ -197,11 +196,10 @@ namespace Simias.Sync.Web
 		/// <param name="oldOffset">The offset in the old (original file).</param>
 		/// <param name="offset">The offset in the new file.</param>
 		/// <param name="count">The number of bytes to copy.</param>
-		/// <returns>True if successful.</returns>
 		[WebMethod(EnableSession = true)]
-		public bool Copy(long oldOffset, long offset, int count)
+		public void Copy(long oldOffset, long offset, int count)
 		{
-			return false;
+			Service.Copy(oldOffset, offset, count);
 		}
 
 		/// <summary>
@@ -212,10 +210,9 @@ namespace Simias.Sync.Web
 		/// <param name="count">The number of bytes to read.</param>
 		/// <returns>The number of bytes read.</returns>
 		[WebMethod(EnableSession = true)]
-		public int Read(ref byte[] buffer, long offset, int count)
+		public int Read(out byte[] buffer, long offset, int count)
 		{
-			buffer = null;
-			return 0;
+			return Service.Read(out buffer, offset, count);
 		}
 
 		/// <summary>
@@ -223,9 +220,11 @@ namespace Simias.Sync.Web
 		/// </summary>
 		/// <param name="commit">True: commit the filenode and file.
 		/// False: Abort the changes.</param>
+		/// <returns>Returns the status of the sync.</returns>
 		[WebMethod(EnableSession = true)]
-		public void CloseFileNode(bool commit)
+		public SyncNodeStatus CloseFileNode(bool commit)
 		{
+			return Service.CloseFileNode(commit);
 		}
 	}
 }

@@ -231,10 +231,8 @@ public class SyncService
 	Store			store;
 	Member			member;
 	Access.Rights	rights = Access.Rights.Deny;
-	//SyncOps			ops;
-	//IncomingNode	inNode;
-	//OutgoingNode	outNode;
 	ArrayList		NodeList = new ArrayList();
+	ServerFile		file;
 	
 	/// <summary>
 	/// public ctor 
@@ -645,85 +643,102 @@ public class SyncService
 	}
 
 	/// <summary>
+	/// Put the node that represents the file to the server. This call is made to begin
+	/// an upload of a file.  Close must be called to cleanup resources.
+	/// </summary>
+	/// <param name="node">The node to put to ther server.</param>
+	/// <returns>True if successful.</returns>
+	public bool PutFileNode(SyncNode node)
+	{
+		file = new ServerFile(collection, node);
+		file.Open();
+		return true;
+	}
+
+	/// <summary>
+	/// Get the node that represents the file. This call is made to begin
+	/// a download of a file.  Close must be called to cleanup resources.
+	/// </summary>
+	/// <param name="nodeID">The node to get.</param>
+	/// <returns>The SyncNode.</returns>
+	public SyncNode GetFileNode(string nodeID)
+	{
+		BaseFileNode node = collection.GetNodeByID(nodeID) as BaseFileNode;
+		if (node != null)
+		{
+			file = new ServerFile(collection, node);
+			file.Open();
+			SyncNode snode = new SyncNode();
+			snode.node = node.Properties.ToString(true);
+			snode.expectedIncarn = node.MasterIncarnation;
+			return snode;
+		}
+		return null;
+	}
+
+	/// <summary>
+	/// Get a HashMap of the file.
+	/// </summary>
+	/// <param name="blockSize">The block size to be hashed.</param>
+	/// <returns>The HashMap.</returns>
+	public HashData[] GetHashMap(int blockSize)
+	{
+		return file.GetHashMap();
+	}
+
+	/// <summary>
+	/// Write the included data to the new file.
+	/// </summary>
+	/// <param name="buffer">The data to write.</param>
+	/// <param name="offset">The offset in the new file of where to write.</param>
+	/// <param name="count">The number of bytes to write.</param>
+	public void Write(byte[] buffer, long offset, int count)
+	{
+		file.Write(buffer, offset, count);
+	}
+
+	/// <summary>
+	/// Copy data from the old file to the new file.
+	/// </summary>
+	/// <param name="oldOffset">The offset in the old (original file).</param>
+	/// <param name="offset">The offset in the new file.</param>
+	/// <param name="count">The number of bytes to copy.</param>
+	public void Copy(long oldOffset, long offset, int count)
+	{
+		file.Copy(oldOffset, offset, count);
+	}
+
+	/// <summary>
+	/// Read data from the currently opened file.
+	/// </summary>
+	/// <param name="buffer">Byte array of bytes read.</param>
+	/// <param name="offset">The offset to begin reading.</param>
+	/// <param name="count">The number of bytes to read.</param>
+	/// <returns>The number of bytes read.</returns>
+	public int Read(out byte[] buffer, long offset, int count)
+	{
+		buffer = null;
+		return 0;
+	}
+
+	/// <summary>
+	/// Close the current file.
+	/// </summary>
+	/// <param name="commit">True: commit the filenode and file.
+	/// False: Abort the changes.</param>
+	/// <returns>The status of the sync.</returns>
+	public SyncNodeStatus CloseFileNode(bool commit)
+	{
+		return file.Close(commit);
+	}
+
+	/// <summary>
 	/// simple version string, also useful to check remoting
 	/// </summary>
 	public string Version
 	{
 		get { return "0.0.0"; }
 	}
-
-	/*
-
-	/// <summary>
-	/// takes metadata and first chunk of data for a large node
-	/// </summary>
-	public bool WriteLargeNode(Node node, byte[] data)
-	{
-		try
-		{
-			if (!IsAccessAllowed(Access.Rights.ReadWrite))
-				throw new UnauthorizedAccessException("Current user cannot modify this collection");
-
-			inNode.Start(node, null);
-			inNode.BlowChunk(data);
-			return true;
-		}
-		catch (Exception e) { Log.Uncaught(e); }
-		return false;
-	}
-
-	/// <summary>
-	/// takes next chunk of data for a large node, completes node if done
-	/// </summary>
-	public NodeStatus WriteLargeNode(byte[] data, ulong expectedIncarn, bool done)
-	{
-		try
-		{
-			if (!IsAccessAllowed(Access.Rights.ReadWrite))
-				throw new UnauthorizedAccessException("Current user cannot modify this collection");
-
-			inNode.BlowChunk(data);
-			return done? inNode.Complete(expectedIncarn): NodeStatus.InProgess;
-		}
-		catch (Exception e) { Log.Uncaught(e); }
-		return NodeStatus.ServerFailure;
-	}
-
-	/// <summary>
-	/// gets metadata and first chunk of data for a large node
-	/// </summary>
-	public NodeChunk ReadLargeNode(string nid, int maxSize)
-	{
-		try
-		{
-			if (!IsAccessAllowed(Access.Rights.ReadOnly))
-				throw new UnauthorizedAccessException("Current user cannot read this collection");
-
-			NodeChunk nc = new NodeChunk();
-			nc.data = (nc.node = outNode.Start(nid)) != null? outNode.ReadChunk(maxSize, out nc.totalSize): null;
-			return nc;
-		}
-		catch (Exception e) { Log.Uncaught(e); }
-		return new NodeChunk();
-	}
-
-	/// <summary>
-	/// gets next chunks of data for a large node
-	/// </summary>
-	public byte[] ReadLargeNode(int maxSize)
-	{
-		try
-		{
-			if (!IsAccessAllowed(Access.Rights.ReadOnly))
-				throw new UnauthorizedAccessException("Current user cannot read this collection");
-
-			int unused;
-			return outNode.ReadChunk(maxSize, out unused);
-		}
-		catch (Exception e) { Log.Uncaught(e); }
-		return null;
-	}
-	*/
 }
 
 //===========================================================================

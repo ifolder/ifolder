@@ -245,6 +245,7 @@ namespace Simias.Sync
 		/// <param name="node">The node that represents the file.</param>
 		protected void Open(BaseFileNode node)
 		{
+			this.node = node;
 			file = node.GetFullPath(collection);
 			workFile = Path.Combine(Path.GetDirectoryName(file), WorkFilePrefix + Path.GetFileName(file));
 			if (direction == SyncDirection.OUT)

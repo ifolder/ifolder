@@ -23,7 +23,7 @@
 using System;
 using System.IO;
 using System.Collections;
-//using System.Security.Cryptography;
+using System.Xml;
 using Simias.Storage;
 
 namespace Simias.Sync
@@ -53,31 +53,80 @@ namespace Simias.Sync
 	/// </summary>
 	public class ServerFile : SyncFile
 	{
+		SyncNode snode;
 		#region Constructors
 
 		/// <summary>
-		/// Contructs a ServerFile object that is used to sync a file to the client.
+		/// Contructs a ServerFile object that is used to sync a file from the client.
 		/// </summary>
 		/// <param name="collection">The collection the node belongs to.</param>
 		/// <param name="node">The node to sync.</param>
-		public ServerFile(Collection collection, BaseFileNode node) :
-			base(collection, SyncDirection.OUT)
+		public ServerFile(Collection collection, SyncNode snode) :
+			base(collection, SyncDirection.IN)
 		{
-			this.node = node;
+			this.snode = snode;
 		}
 
 		/// <summary>
 		/// Constructs a ServerFile object that can be used to sync a file in from a client.
 		/// </summary>
 		/// /// <param name="collection">The collection the node belongs to.</param>
-		/// <param name="nodeID">The id of the node to sync down</param>
-		public ServerFile(Collection collection, string nodeID) :
-			base(collection, SyncDirection.IN)
+		/// <param name="node">The node to sync down</param>
+		public ServerFile(Collection collection, BaseFileNode node) :
+			base(collection, SyncDirection.OUT)
 		{
-			this.nodeID = nodeID;
+			this.node = node;
 		}
 
 		#endregion
+
+		public void Open()
+		{
+			if (direction == SyncDirection.IN)
+			{
+				if (snode == null)
+				{
+					throw new SimiasException(string.Format("Node {0} not found on server.", nodeID));
+				}
+				XmlDocument xNode = new XmlDocument();
+				xNode.LoadXml(snode.node);
+				node = (BaseFileNode)Node.NodeFactory(collection.StoreReference, xNode);
+				collection.ImportNode(node, false, 0);
+				node.IncarnationUpdate = node.LocalIncarnation;
+			}
+			base.Open(node);
+		}
+
+		/// <summary>
+		/// Called to close the file.
+		/// </summary>
+		/// <param name="commit">True if changes should be commited.</param>
+		/// <returns>The status of the sync.</returns>
+		public new SyncNodeStatus Close(bool commit)
+		{
+			SyncNodeStatus status = new SyncNodeStatus();
+			status.nodeID = node.ID;
+			status.status = SyncNodeStatus.SyncStatus.Success;
+			if (direction == SyncDirection.IN)
+			{
+				try
+				{
+					collection.Commit(node);
+				}
+				catch (CollisionException c)
+				{
+					commit = false;
+					status.status = SyncNodeStatus.SyncStatus.UpdateConflict;
+				}
+				catch
+				{
+					commit = false;
+					status.status = SyncNodeStatus.SyncStatus.ServerFailure;
+				}
+			}
+			base.Close(commit);
+			return status;
+		}
 
 		/// <summary>
 		/// Get a hashed map of the file.  This can then be

@@ -268,12 +268,11 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     
     /// <remarks/>
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/Write", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public bool Write([System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")] System.Byte[] buffer, long offset, int count) {
-        object[] results = this.Invoke("Write", new object[] {
+    public void Write([System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")] System.Byte[] buffer, long offset, int count) {
+        this.Invoke("Write", new object[] {
                     buffer,
                     offset,
                     count});
-        return ((bool)(results[0]));
     }
     
     /// <remarks/>
@@ -285,19 +284,17 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     }
     
     /// <remarks/>
-    public bool EndWrite(System.IAsyncResult asyncResult) {
-        object[] results = this.EndInvoke(asyncResult);
-        return ((bool)(results[0]));
+    public void EndWrite(System.IAsyncResult asyncResult) {
+        this.EndInvoke(asyncResult);
     }
     
     /// <remarks/>
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/Copy", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public bool Copy(long oldOffset, long offset, int count) {
-        object[] results = this.Invoke("Copy", new object[] {
+    public void Copy(long oldOffset, long offset, int count) {
+        this.Invoke("Copy", new object[] {
                     oldOffset,
                     offset,
                     count});
-        return ((bool)(results[0]));
     }
     
     /// <remarks/>
@@ -309,16 +306,14 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     }
     
     /// <remarks/>
-    public bool EndCopy(System.IAsyncResult asyncResult) {
-        object[] results = this.EndInvoke(asyncResult);
-        return ((bool)(results[0]));
+    public void EndCopy(System.IAsyncResult asyncResult) {
+        this.EndInvoke(asyncResult);
     }
     
     /// <remarks/>
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/Read", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public int Read([System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")] ref System.Byte[] buffer, long offset, int count) {
+    public int Read(long offset, int count, [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")] out System.Byte[] buffer) {
         object[] results = this.Invoke("Read", new object[] {
-                    buffer,
                     offset,
                     count});
         buffer = ((System.Byte[])(results[1]));
@@ -326,9 +321,8 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     }
     
     /// <remarks/>
-    public System.IAsyncResult BeginRead(System.Byte[] buffer, long offset, int count, System.AsyncCallback callback, object asyncState) {
+    public System.IAsyncResult BeginRead(long offset, int count, System.AsyncCallback callback, object asyncState) {
         return this.BeginInvoke("Read", new object[] {
-                    buffer,
                     offset,
                     count}, callback, asyncState);
     }
@@ -342,9 +336,10 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     
     /// <remarks/>
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/CloseFileNode", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public void CloseFileNode(bool commit) {
-        this.Invoke("CloseFileNode", new object[] {
+    public SyncNodeStatus CloseFileNode(bool commit) {
+        object[] results = this.Invoke("CloseFileNode", new object[] {
                     commit});
+        return ((SyncNodeStatus)(results[0]));
     }
     
     /// <remarks/>
@@ -354,8 +349,9 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     }
     
     /// <remarks/>
-    public void EndCloseFileNode(System.IAsyncResult asyncResult) {
-        this.EndInvoke(asyncResult);
+    public SyncNodeStatus EndCloseFileNode(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((SyncNodeStatus)(results[0]));
     }
 }
 
