@@ -150,10 +150,16 @@ namespace Novell.iFolder
 			// Setup the iFolder TreeView
 			UserTreeStore = new ListStore(typeof(iFolderUser));
 			UserTreeView.Model = UserTreeStore;
+			UserTreeStore.SetSortColumnId(0, SortType.Ascending);
+			UserTreeStore.SetSortFunc(0, 
+					new TreeIterCompareFunc(TreeSortFunc), (System.IntPtr)0, 
+					new DestroyNotify(TreeDestroyFunc));
+
 
 			// Setup Pixbuf and Text Rendering for "iFolder Users" column
 			CellRendererPixbuf mcrp = new CellRendererPixbuf();
 			TreeViewColumn memberColumn = new TreeViewColumn();
+			memberColumn.SortOrder = SortType.Ascending;
 			memberColumn.PackStart(mcrp, false);
 			memberColumn.SetCellDataFunc(mcrp, new TreeCellDataFunc(
 						UserCellPixbufDataFunc));
@@ -245,7 +251,10 @@ namespace Novell.iFolder
 				Gtk.TreeIter iter)
 		{
 			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
-			((CellRendererText) cell).Text = user.Name;
+			if(user.FN != null)
+				((CellRendererText) cell).Text = user.FN;
+			else
+				((CellRendererText) cell).Text = user.Name;
 		}
 
 
@@ -330,12 +339,17 @@ namespace Novell.iFolder
 						ifws.SearchForiFolderUsers(SearchEntry.Text);
 				foreach(iFolderUser user in userlist)
 				{
-					UserTreeStore.AppendValues(user);
+					if(user != null)
+					{
+						UserTreeStore.AppendValues(user);
+					}
 				}
 			}
 			else
 			{
-				iFolderUser[] userlist = ifws.GetAlliFolderUsers();
+				// Get the first 25 users, this should return none if
+				// there are more than 25
+				iFolderUser[] userlist = ifws.GetScopediFolderUsers(25);
 				foreach(iFolderUser user in userlist)
 				{
 					UserTreeStore.AppendValues(user);
@@ -421,7 +435,31 @@ namespace Novell.iFolder
 			}
 		}
 
+		private int TreeSortFunc(TreeModel model, TreeIter a, TreeIter b)
+		{
+			iFolderUser userA = 
+					(iFolderUser) model.GetValue(a,0);
+			iFolderUser userB = 
+					(iFolderUser) model.GetValue(b,0);
+	
+			string stringA, stringB;
 
+			if(userA.Surname != null)
+				stringA = userA.Surname;
+			else
+				stringA = userA.Name;
+
+			if(userB.Surname != null)
+				stringB = userB.Surname;
+			else
+				stringB = userB.Name;
+				
+			return string.Compare(stringA, stringB);
+		}
+
+		private void TreeDestroyFunc()
+		{
+		}
 
 	}
 }
