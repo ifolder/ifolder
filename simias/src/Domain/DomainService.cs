@@ -22,7 +22,7 @@ using System.Web.Services;
 /// <remarks/>
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Web.Services.WebServiceBindingAttribute(Name="DomainServiceSoap", Namespace="http://tempuri.org/")]
+[System.Web.Services.WebServiceBindingAttribute(Name="Domain ServiceSoap", Namespace="http://novell.com/ifolder/domain")]
 public class DomainService : System.Web.Services.Protocols.SoapHttpClientProtocol {
     
     /// <remarks/>
@@ -31,7 +31,7 @@ public class DomainService : System.Web.Services.Protocols.SoapHttpClientProtoco
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetDomainInfo", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/ifolder/domain/GetDomainInfo", RequestNamespace="http://novell.com/ifolder/domain", ResponseNamespace="http://novell.com/ifolder/domain", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public DomainInfo GetDomainInfo() {
         object[] results = this.Invoke("GetDomainInfo", new object[0]);
         return ((DomainInfo)(results[0]));
@@ -49,7 +49,7 @@ public class DomainService : System.Web.Services.Protocols.SoapHttpClientProtoco
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/ProvisionUser", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/ifolder/domain/ProvisionUser", RequestNamespace="http://novell.com/ifolder/domain", ResponseNamespace="http://novell.com/ifolder/domain", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public ProvisionInfo ProvisionUser(string user, string password) {
         object[] results = this.Invoke("ProvisionUser", new object[] {
                     user,
@@ -71,7 +71,7 @@ public class DomainService : System.Web.Services.Protocols.SoapHttpClientProtoco
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/CreateMaster", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/ifolder/domain/CreateMaster", RequestNamespace="http://novell.com/ifolder/domain", ResponseNamespace="http://novell.com/ifolder/domain", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public string CreateMaster(string id, string name, string rootID, string rootName, string user) {
         object[] results = this.Invoke("CreateMaster", new object[] {
                     id,
