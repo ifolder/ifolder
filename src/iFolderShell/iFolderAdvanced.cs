@@ -412,7 +412,9 @@ namespace Novell.iFolder.iFolderCom
 			{
 				Contact currentContact = ((ShareListContact)this.shareWith.Items[0].Tag).CurrentContact;
 				if (currentContact.FN == null ||
-					currentContact.EMail == null)
+					currentContact.FN == String.Empty ||
+					currentContact.EMail == null ||
+					currentContact.EMail == String.Empty)
 				{
 					MyMessageBox mmb = new MyMessageBox();
 					mmb.Text = "Incomplete Address Book Entry";
@@ -422,6 +424,7 @@ namespace Novell.iFolder.iFolderCom
 					if (result == DialogResult.Yes)
 					{
 						ContactEditor editor = new ContactEditor();
+						editor.LoadPath = LoadPath;
 						editor.CurrentContact = currentContact;
 						editor.CurrentAddressBook = defaultAddressBook;
 						if (editor.ShowDialog() != DialogResult.OK)
@@ -468,6 +471,11 @@ namespace Novell.iFolder.iFolderCom
 		/// </summary>
 		public string LoadPath
 		{
+			get
+			{
+				return loadPath;
+			}
+
 			set
 			{
 				this.loadPath = value;
@@ -512,7 +520,7 @@ namespace Novell.iFolder.iFolderCom
 			foreach (IFAccessControlEntry ace in aclList)
 			{
 				string[] items = new string[2];
-				if (ace.Contact.FN != null)
+				if (ace.Contact.FN != null && ace.Contact.FN != String.Empty)
 				{
 					items[0] = ace.Contact.FN;
 				}
