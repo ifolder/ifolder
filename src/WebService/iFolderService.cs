@@ -500,12 +500,16 @@ namespace Novell.iFolder.Web
 		/// <param name="SubscriptionID">
 		/// The ID of the subscription to remove.
 		/// </param>
+		/// <param name="UserID">
+		/// The ID of the user owning the POBox where the subscription is stored.
+		/// </param>
 		[WebMethod(Description="Remove a subscription.")]
 		[SoapDocumentMethod]
 		public void RemoveSubscription(string DomainID,
-									   string SubscriptionID)
+									   string SubscriptionID,
+									   string UserID)
 		{
-			SharedCollection.RemoveSubscription(DomainID, SubscriptionID);
+			SharedCollection.RemoveSubscription(DomainID, SubscriptionID, UserID);
 		}
 	
 
