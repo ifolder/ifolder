@@ -281,7 +281,7 @@ namespace Novell.iFolder
 			MainNoteBook.AppendPage( CreatePreferencesPage(),
 										new Label(Util.GS("Preferences")));
 			MainNoteBook.AppendPage( CreateLogPage(),
-										new Label(Util.GS("Activity Log")));
+										new Label(Util.GS("Sync Log")));
 			if(ifSettings.HaveEnterprise)
 			{
 				MainNoteBook.AppendPage( CreateEnterprisePage(),
@@ -600,7 +600,7 @@ namespace Novell.iFolder
 			appWidgetBox.PackStart(StartAtLoginButton, false, true, 0);
 
 			ShowConfirmationButton = 
-				new CheckButton(Util.GS("Show confirmation dialog when creating iFolders"));
+				new CheckButton(Util.GS("Show Confirmation dialog when creating iFolders"));
 			appWidgetBox.PackStart(ShowConfirmationButton, false, true, 0);
 			ShowConfirmationButton.Toggled += 
 						new EventHandler(OnShowConfButton);
@@ -633,7 +633,7 @@ namespace Novell.iFolder
 			syncWidgetBox.Spacing = 10;
 
 
-			Label syncHelpLabel = new Label(Util.GS("Specify the default sync interval for synchronizing your iFolders with the host.  To specify a different sync interval for an individual iFolder, use the iFolder's properties dialog."));
+			Label syncHelpLabel = new Label(Util.GS("Specify the default Sync interval for synchronizing your iFolders with the host.  To specify a different Sync interval for an individual iFolder, use the iFolder's properties dialog."));
 			syncHelpLabel.LineWrap = true;
 			syncHelpLabel.Xalign = 0;
 			syncWidgetBox.PackStart(syncHelpLabel, false, true, 0);
@@ -2095,10 +2095,11 @@ namespace Novell.iFolder
 				}
 				case Action.StopSync:
 				{
-					UpdateStatus(Util.GS("Idle..."));
 
 					if(args.Successful)
 					{
+						UpdateStatus(Util.GS("Idle..."));
+
 						if(curiFolders.ContainsKey(args.ID))
 						{
 							TreeIter iter = (TreeIter)curiFolders[args.ID];
@@ -2117,6 +2118,8 @@ namespace Novell.iFolder
 					}
 					else
 					{
+						UpdateStatus(Util.GS("Failed synchronization"));
+
 						if(curiFolders.ContainsKey(args.ID))
 						{
 							TreeIter iter = (TreeIter)curiFolders[args.ID];
