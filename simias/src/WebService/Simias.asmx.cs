@@ -72,6 +72,55 @@ namespace Simias.Web
 
 
 		/// <summary>
+		/// Add a member to a domain.
+		/// </summary>
+		/// <param name="DomainID">The ID of the domain to add the member to.</param>
+		/// <param name="MemberName">The name of the member.</param>
+		/// <param name="MemberID">The ID of the member.</param>
+		/// <param name="PublicKey">The public key for the member.</param>
+		[WebMethod(Description="Add a member to the domain.")]
+		[SoapDocumentMethod]
+		public void AddMemberToDomain(string DomainID, string MemberName, string MemberID, string PublicKey)
+		{
+			Domain domain = Store.GetStore().GetDomain(DomainID);
+			Member member = domain.GetMemberByName(MemberName);
+			if (member == null)
+			{
+				member = new Member(MemberName, MemberID, Access.Rights.ReadOnly);
+
+				if (PublicKey != null)
+				{
+					member.Properties.AddProperty("PublicKey", PublicKey);
+				}
+
+				domain.Commit(member);
+			}
+		}
+
+
+
+
+		/// <summary>
+		/// Remove a member from a domain
+		/// </summary>
+		/// <param name="DomainID">The ID of the domain to remove the member from.</param>
+		/// <param name="MemberID">The ID of the member to remove.</param>
+		[WebMethod(Description="Remove a member from the domain.")]
+		[SoapDocumentMethod]
+		public void RemoveMemberFromDomain(string DomainID, string MemberID)
+		{
+			Domain domain = Store.GetStore().GetDomain(DomainID);
+			Member member = domain.GetMemberByID(MemberID);
+			if (member != null)
+			{
+				domain.Commit(domain.Delete(member));
+			}
+		}
+
+
+
+
+		/// <summary>
 		/// WebMethod that returns the Simias information
 		/// </summary>
 		/// <returns>
