@@ -940,7 +940,7 @@ namespace Novell.FormsTrayApp
 
 			foreach (Domain d in servers.Items)
 			{
-				if (!d.ShowAll && d.DomainWeb.MemberID.Equals(userID))
+				if (!d.ShowAll && d.DomainWeb.MemberUserID.Equals(userID))
 				{
 					result = true;
 					break;
