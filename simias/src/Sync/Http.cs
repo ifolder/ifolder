@@ -181,7 +181,7 @@ namespace Simias.Sync.Http
 			credentials = new Credentials(collection.ID).GetCredentials();
 			if (credentials == null)
 			{
-				throw new SimiasException("Need Credentials");
+				throw new NeedCredentialsException();
 			}
 		}
 
@@ -243,6 +243,7 @@ namespace Simias.Sync.Http
 		{
 			HttpWebRequest request = GetRequest(SyncMethod.GetNextInfoList);
 			request.ContentLength = 0;
+			request.KeepAlive = false;
 			request.GetRequestStream().Close();
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 			try
@@ -735,7 +736,7 @@ namespace Simias.Sync.Http
 		/// <param name="response">The HttpResponse.</param>
 		public void GetNextInfoList(HttpRequest request, HttpResponse response)
 		{
-			int count = 500;
+			int count = 100;
 			SyncNodeInfo[] infoArray = service.NextNodeInfoList(ref count);
 			response.ContentType = "application/octet-stream";
 			response.AddHeader(SyncHeaders.ObjectCount, count.ToString());

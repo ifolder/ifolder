@@ -249,6 +249,10 @@ namespace Simias.Sync
 							cClient.SyncNow();
 							log.Info("{0} : Finished Sync.", cClient);
 						}
+						catch (NeedCredentialsException ex)
+						{
+							log.Debug(ex.Message);
+						}
 						catch (Exception ex)
 						{
 							log.Debug(ex, "Finished Sync. Error =  {0}", ex.Message);

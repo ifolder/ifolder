@@ -213,4 +213,18 @@ namespace Simias
 		}
 	}
 
+	/// <summary>
+	/// Need Credentials Exception.
+	/// </summary>
+	public class NeedCredentialsException : SimiasException
+	{
+		/// <summary>
+		/// Create a NeedCredentialsException
+		/// </summary>
+		public NeedCredentialsException() :
+			base ("Need Credentials")
+		{
+		}
+	}
+
 }
