@@ -775,7 +775,6 @@ namespace Simias.Storage
 			// Make sure that something is in the list.
 			if ( nodeList.Length > 0 )
 			{
-				bool containsCollection = false;
 				bool onlyTombstones = true;
 				bool onlyImports = true;
 				Node deleteNode = null;
@@ -790,8 +789,6 @@ namespace Simias.Storage
 
 						if ( IsType( node, NodeTypes.CollectionType ) )
 						{
-							containsCollection = true;
-
 							if ( node.Properties.State == PropertyList.PropertyListState.Delete )
 							{
 								deleteNode = node;
@@ -825,20 +822,8 @@ namespace Simias.Storage
 					}
 					else
 					{
-						// Use the node list as is if it already contains a Collection object or if the list
-						// just consists of tombstones.
-						if ( containsCollection || onlyTombstones || onlyImports )
-						{
-							// Use the passed in list.
-							commitList = nodeList;
-						}
-						else
-						{
-							// Need to add the collection object to the list.
-							commitList = new Node[ nodeList.Length + 1 ];
-							commitList[ 0 ] = this;
-							Array.Copy( nodeList, 0, commitList, 1, nodeList.Length );
-						}
+						// Use the passed in list.
+						commitList = nodeList;
 
 						// Make sure that current user has write rights to this collection.
 						if ( !IsAccessAllowed( Access.Rights.ReadWrite ) )
