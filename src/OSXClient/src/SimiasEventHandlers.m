@@ -53,8 +53,19 @@ int SimiasEventStateCallBack(SEC_STATE_EVENT state_event, const char *message, v
 		case SEC_STATE_EVENT_CONNECTED:
 			[[NSApp delegate] addLog:@"Simias Event Client Event Connected... Registering for events"];
 			sec_set_event(*sec, ACTION_NODE_CREATED, true, (SimiasEventFunc)SimiasEventNodeCreated, nil);
+			[[NSApp delegate] addLog:@"Registered for Node Created Events"];
 			sec_set_event(*sec, ACTION_NODE_DELETED, true, (SimiasEventFunc)SimiasEventNodeDeleted, nil);
+			[[NSApp delegate] addLog:@"Registered for Node Deleted Events"];
 			sec_set_event(*sec, ACTION_NODE_CHANGED, true, (SimiasEventFunc)SimiasEventNodeChanged, nil);
+			[[NSApp delegate] addLog:@"Registered for Node Changed Events"];
+
+			sec_set_event(*sec, ACTION_COLLECTION_SYNC, true, (SimiasEventFunc)SimiasEventSyncCollection, nil);
+			[[NSApp delegate] addLog:@"Registered for Collection Sync Events"];
+			sec_set_event(*sec, ACTION_FILE_SYNC, true, (SimiasEventFunc)SimiasEventSyncFile, nil);
+			[[NSApp delegate] addLog:@"Registered for File Sync Events"];
+			sec_set_event(*sec, ACTION_NOTIFY_MESSAGE, true, (SimiasEventFunc)SimiasEventNotifyMessage, nil);
+			[[NSApp delegate] addLog:@"Registered for Notify Message Events"];
+
 			break;
 		case SEC_STATE_EVENT_DISCONNECTED:
 			[[NSApp delegate] addLog:@"Simias Event Client Event Disconnected"];		
@@ -62,31 +73,49 @@ int SimiasEventStateCallBack(SEC_STATE_EVENT state_event, const char *message, v
 		case SEC_STATE_EVENT_ERROR:
 			[[NSApp delegate] addLog:@"Simias Event Client Event Error!"];		
 			break;
-		default:
-			[[NSApp delegate] addLog:@"Simias Event Client Event Error!"];		
-			break;
 	}
 	return 0;
 }
 
 
-int SimiasEventNodeCreated(SimiasNodeEvent *event, void *data)
+int SimiasEventNodeCreated(SimiasNodeEvent *nodeEvent, void *data)
 {
-	[[NSApp delegate] addLog:@"SimiasEventNodeCreated was called"];		
+	[[NSApp delegate] addLog:[NSString stringWithFormat:@"Node created: %s", nodeEvent->node]];
+    return 0;
+}
+
+int SimiasEventNodeDeleted(SimiasNodeEvent *nodeEvent, void *data)
+{
+	[[NSApp delegate] addLog:[NSString stringWithFormat:@"Node deleted: %s", nodeEvent->node]];
+    return 0;
+}
+
+int SimiasEventNodeChanged(SimiasNodeEvent *nodeEvent, void *data)
+{
+	[[NSApp delegate] addLog:[NSString stringWithFormat:@"Node changed: %s", nodeEvent->node]];
 
     return 0;
 }
 
-int SimiasEventNodeDeleted(SimiasNodeEvent *event, void *data)
+int SimiasEventSyncCollection(SimiasCollectionSyncEvent *collectionEvent, void *data)
 {
-	[[NSApp delegate] addLog:@"SimiasEventNodeDeleted was called"];		
+	[[NSApp delegate] addLog:[NSString stringWithFormat:@"Collection sync: %s", collectionEvent->name]];
 
     return 0;
 }
 
-int SimiasEventNodeChanged(SimiasNodeEvent *event, void *data)
+int SimiasEventSyncFile(SimiasFileSyncEvent *fileEvent, void *data)
 {
-	[[NSApp delegate] addLog:@"SimiasEventNodeChanged was called"];		
+	[[NSApp delegate] addLog:[NSString stringWithFormat:@"File Sync: %s", fileEvent->name]];
 
     return 0;
 }
+
+int SimiasEventNotifyMessage(SimiasNotifyEvent *notifyEvent, void *data)
+{
+	[[NSApp delegate] addLog:[NSString stringWithFormat:@"Notify Message: %s", notifyEvent->message]];
+
+    return 0;
+}
+
+

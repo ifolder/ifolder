@@ -12,8 +12,9 @@
 
 - (void)logEntry:(NSString *)entry
 {
-	NSString *logMessage = [NSString stringWithFormat:@"%@ %@", [[NSDate date] descriptionWithCalendarFormat:@"%m/%d/%Y %H:%M:%S" timeZone:nil locale:nil], entry];
-	[logController addObject:logMessage];
+	[logController addObject:[NSString stringWithFormat:@"%@ %@", 
+			[[NSDate date] descriptionWithCalendarFormat:@"%m/%d/%Y %H:%M:%S" timeZone:nil locale:nil], 
+			entry]];
 }
 
 

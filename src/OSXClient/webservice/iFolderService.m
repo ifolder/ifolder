@@ -77,8 +77,13 @@ void cleanup_gsoap(struct soap *pSoap);
             &getDomainsMessage,
             &getDomainsResponse);
 
-    if (err_code == SOAP_OK)
-    {
+ 	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in GetDomains"];
+	}
+	else
+	{
 		domains = [[NSMutableArray alloc]
 				initWithCapacity:getDomainsResponse.GetDomainsResult->__sizeDomainWeb];
 		int counter;
@@ -94,10 +99,6 @@ void cleanup_gsoap(struct soap *pSoap);
 			[domains addObject:newDomain];
 		}
     }
-	else
-	{
-		[NSException raise:@"GetDomainsException" format:@"An error happened when calling GetDomains"];
-	}
 
     cleanup_gsoap(&soap);
 
@@ -132,8 +133,13 @@ void cleanup_gsoap(struct soap *pSoap);
             &connectToDomainMessage,
             &connectToDomainResponse);
 
-    if (err_code == SOAP_OK)
-    {
+ 	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in ConnectToDomain"];
+	}
+	else
+	{
 		domain = [ [iFolderDomain alloc] init];
 		
 		struct ns1__DomainWeb *curDomain;
@@ -141,10 +147,6 @@ void cleanup_gsoap(struct soap *pSoap);
 		curDomain = connectToDomainResponse.ConnectToDomainResult;
 		[domain setgSOAPProperties:curDomain];
     }
-	else
-	{
-		[NSException raise:@"ConnectToDomainException" format:@"An error happened when calling ConnectToDomain"];
-	}
 
     cleanup_gsoap(&soap);
 
@@ -172,8 +174,13 @@ void cleanup_gsoap(struct soap *pSoap);
             &getiFoldersMessage,
             &getiFoldersResponse);
 
-    if (err_code == SOAP_OK)
-    {
+ 	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in GetAlliFolders"];
+	}
+	else
+	{
 		int iFolderCount = getiFoldersResponse.GetAlliFoldersResult->__sizeiFolderWeb;
 		if(iFolderCount > 0)
 		{
@@ -193,10 +200,6 @@ void cleanup_gsoap(struct soap *pSoap);
 			}
 		}
     }
-	else
-	{
-		[NSException raise:@"GetAlliFoldersException" format:@"An error happened when calling GetAlliFolders"];
-	}
 
     cleanup_gsoap(&soap);
 
@@ -229,8 +232,13 @@ void cleanup_gsoap(struct soap *pSoap);
             &createiFolderMessage,
             &createiFolderResponse);
 
-    if (err_code == SOAP_OK)
-    {
+	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in CreateiFolder:inDomain"];
+	}
+	else
+	{
 		ifolder = [ [iFolder alloc] init];
 		
 		struct ns1__iFolderWeb *curiFolder;
@@ -238,10 +246,6 @@ void cleanup_gsoap(struct soap *pSoap);
 		curiFolder = createiFolderResponse.CreateiFolderInDomainResult;
 		[ifolder setgSOAPProperties:curiFolder];
     }
-	else
-	{
-		[NSException raise:@"CreateiFolder:inDomain" format:@"An error happened when calling CreateiFolder:inDomain"];
-	}
 
     cleanup_gsoap(&soap);
 
@@ -276,8 +280,14 @@ void cleanup_gsoap(struct soap *pSoap);
             &acceptiFolderMessage,
             &acceptiFolderResponse);
 
-    if (err_code == SOAP_OK)
-    {
+
+	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in AcceptiFolderInvitation:inDomain"];
+	}
+	else
+	{
 		ifolder = [ [iFolder alloc] init];
 		
 		struct ns1__iFolderWeb *curiFolder;
@@ -285,10 +295,6 @@ void cleanup_gsoap(struct soap *pSoap);
 		curiFolder = acceptiFolderResponse.AcceptiFolderInvitationResult;
 		[ifolder setgSOAPProperties:curiFolder];
     }
-	else
-	{
-		[NSException raise:@"AcceptiFolderInvitation:inDomain" format:@"An error happened when calling AcceptiFolderInvitation:inDomain"];
-	}
 
     cleanup_gsoap(&soap);
 
@@ -304,9 +310,15 @@ void init_gsoap(struct soap *pSoap)
 	soap_set_namespaces(pSoap, iFolder_namespaces);
 }
 
+
+
+
 void cleanup_gsoap(struct soap *pSoap)
 {
 	soap_end(pSoap);
 }
+
+
+
 
 @end

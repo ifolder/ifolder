@@ -42,6 +42,8 @@
 
 - (void)dealloc
 {
+	[toolbar release];
+	[items release];	
     [super dealloc];
 }
 
@@ -50,6 +52,42 @@
 
 -(void)awakeFromNib
 {
+	[self setupToolbar];
+
+/*
+    int i;
+	
+	items = [[NSMutableDictionary alloc] init];
+
+    for(i=0;i<50;i++)
+	{
+        NSString *name=[[NSString alloc] initWithFormat:@"Item %d",i];
+        NSToolbarItem *item=[[NSToolbarItem alloc] initWithItemIdentifier:name];
+
+        [item setPaletteLabel:name]; // name for the "Customize Toolbar" sheet
+        [item setLabel:name]; // name for the item in the toolbar
+        [item setToolTip:[NSString stringWithFormat:@"This is item %d",i]]; // tooltip
+        [item setTarget:self]; // what should happen when it's clicked
+        [item setAction:@selector(toolbaritemclicked:)];
+		NSImage *icon = [NSImage imageNamed:@"ifolder-new"];
+		[icon setScalesWhenResized:YES];
+		[item setImage:icon];
+        
+        [items setObject:item forKey:name]; // add to toolbar list
+
+        [item release];
+        [name release];
+    }
+
+
+	
+	toolbar = [[NSToolbar alloc] initWithIdentifier:@"iFolderToolbar"];
+	[toolbar setDelegate:self];
+	[toolbar setAllowsUserCustomization:YES];
+	[toolbar setAutosavesConfiguration:YES];
+	[[self window] setToolbar:toolbar];
+*/	
+
 	webService = [[iFolderService alloc] init];
 
 	[self addLog:@"initializing Simias Events"];
@@ -137,6 +175,20 @@
 
 
 
+- (IBAction)showHideToolbar:(id)sender
+{
+	[toolbar setVisible:![toolbar isVisible]];
+}
+
+
+
+- (IBAction)customizeToolbar:(id)sender
+{
+	[toolbar runCustomizationPalette:sender];
+}
+
+
+
 -(void)login:(NSString *)username withPassword:(NSString *)password toServer:(NSString *)server
 {
 	@try
@@ -150,7 +202,7 @@
 	@catch (NSException *e)
 	{
 		NSString *error = [e name];
-		NSRunAlertPanel(@"Error connecting to Server", [e name], @"OK",nil, nil);
+		NSRunAlertPanel(@"Login Error", [e name], @"OK",nil, nil);
 	}
 
 }
@@ -168,7 +220,7 @@
 	@catch (NSException *e)
 	{
 		NSString *error = [e name];
-		NSRunAlertPanel(@"Error connecting to Server", [e name], @"OK",nil, nil);
+		NSRunAlertPanel(@"Error creating iFolder", [e name], @"OK",nil, nil);
 	}
 }
 
@@ -221,7 +273,97 @@
 }
 
 
+// Toobar Delegates
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar
+	itemForItemIdentifier:(NSString *)itemIdentifier
+	willBeInsertedIntoToolbar:(BOOL)flag
+{
+	return[items objectForKey:itemIdentifier];
+}
 
 
+- (int)count
+{
+	return [items count];
+}
+
+
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar
+{
+	return [items allKeys];
+}
+
+
+
+
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
+{
+	return [[items allKeys] subarrayWithRange:NSMakeRange(0,1)];
+}
+
+
+
+
+- (void)toolbarWillAddItem:(NSNotification *)notification
+{
+	NSToolbarItem *addedItem = [[notification userInfo] objectForKey:@"item"];
+
+	// setup associated info here
+}
+
+
+
+
+- (void)toolbarDidRemoveItem:(NSNotification *)notification
+{
+	NSToolbarItem *addedItem = [[notification userInfo] objectForKey:@"item"];
+
+	// clear associated info here
+}
+
+
+
+- (void)toolbaritemclicked:(NSToolbarItem *)item
+{
+	NSLog(@"Click %@!", [item label]);
+}
+
+
+- (BOOL)validateUserInterfaceItem:(id)anItem
+{
+	SEL action = [anItem action];
+	
+	if(action == @selector(showLoginWindow:))
+	{
+		return YES;
+	}
+	
+	return YES;
+}
+
+
+
+- (void)setupToolbar
+{
+	items = [[NSMutableDictionary alloc] init];
+
+	// New iFolder ToolbarItem
+	NSToolbarItem *item=[[NSToolbarItem alloc] initWithItemIdentifier:@"New iFolder"];
+	[item setPaletteLabel:@"Create a new iFolder"]; // name for the "Customize Toolbar" sheet
+	[item setLabel:@"New iFolder"]; // name for the item in the toolbar
+	[item setToolTip:@"Create a new iFolder"]; // tooltip
+    [item setTarget:createSheetController]; // what should happen when it's clicked
+    [item setAction:@selector(showWindow:)];
+	[item setImage:[NSImage imageNamed:@"ifolder-new"]];
+    [items setObject:item forKey:@"New iFolder"]; // add to toolbar list
+	[item release];
+
+
+	toolbar = [[NSToolbar alloc] initWithIdentifier:@"iFolderToolbar"];
+	[toolbar setDelegate:self];
+	[toolbar setAllowsUserCustomization:YES];
+	[toolbar setAutosavesConfiguration:YES];
+	[[self window] setToolbar:toolbar];
+}
 
 @end

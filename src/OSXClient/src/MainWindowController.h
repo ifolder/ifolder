@@ -31,18 +31,22 @@
 // Forward Declarations
 @class LoginWindowController;
 @class SyncLogWindowController;
+@class CreateiFolderSheetController;
 
 @interface MainWindowController : NSWindowController
 {
-	LoginWindowController			*loginController;
-	iFolderService					*webService;
-	NSMutableArray					*domains;
-	NSMutableArray					*ifolders;
-    IBOutlet NSArrayController		*ifoldersController;
-    IBOutlet NSArrayController		*domainsController;
-	IBOutlet SyncLogWindowController *syncLogController;
+	LoginWindowController					*loginController;
+	iFolderService							*webService;
+	NSMutableArray							*domains;
+	NSMutableArray							*ifolders;
+    IBOutlet NSArrayController				*ifoldersController;
+    IBOutlet NSArrayController				*domainsController;
+	IBOutlet SyncLogWindowController		*syncLogController;
+	IBOutlet CreateiFolderSheetController	*createSheetController;
 	
-	iFolder *selectediFolder;	
+	iFolder					*selectediFolder;	
+	NSToolbar				*toolbar;
+	NSMutableDictionary		*items;
 }
 
 - (IBAction)showLoginWindow:(id)sender;
@@ -56,12 +60,37 @@
 
 
 - (void)awakeFromNib;
+- (void)dealloc;
 
 - (void)addDomain:(iFolderDomain *)newDomain;
 - (void)addiFolder:(iFolder *)newiFolder;
 - (void)addLog:(NSString *)entry;
 
 - (void)initializeSimiasEvents;
+
+// Toobar Delegates
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar
+	itemForItemIdentifier:(NSString *)itemIdentifier
+	willBeInsertedIntoToolbar:(BOOL)flag;
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar;
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar;
+- (int)count;
+
+- (void)toolbarWillAddItem:(NSNotification *)notification;
+- (void)toolbarDidRemoveItem:(NSNotification *)notification;
+
+// user actions
+- (void)toolbaritemclicked:(NSToolbarItem *)item;
+
+// menu actions
+- (IBAction)showHideToolbar:(id)sender;
+- (IBAction)customizeToolbar:(id)sender;
+
+// menu validation
+- (BOOL)validateUserInterfaceItem:(id)anItem;
+
+
+- (void)setupToolbar;
 
 @end
 
