@@ -25,6 +25,8 @@ AM_PROG_LIBTOOL
 AC_CHECK_PROG(CSC, mcs, mcs)
 test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
 
+PKG_CONFIG_DIR='lib'
+
 #
 # We add $prefix to PKG_CONFIG_PATH so pkg-config will find any other
 # packages 'make install'-ed to the same prefix.
