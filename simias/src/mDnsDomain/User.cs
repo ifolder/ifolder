@@ -72,7 +72,7 @@ namespace Simias.mDns
 	public class User
 	{
 		#region DllImports
-		[ DllImport( "ifolder-rendezvous" ) ]
+		[ DllImport( "simdezvous" ) ]
 		private 
 		extern 
 		static 
@@ -86,14 +86,14 @@ namespace Simias.mDns
 			string		PublicKey,
 			ref IntPtr	Cookie);
 
-		[ DllImport( "ifolder-rendezvous" ) ]
+		[ DllImport( "simdezvous" ) ]
 		private 
 		extern 
 		static 
 		User.kErrorType
 		DeregisterLocalMember(string ID, int Cookie);
 
-		[ DllImport( "ifolder-rendezvous" ) ]
+		[ DllImport( "simdezvous" ) ]
 		private 
 		extern 
 		static 
@@ -106,28 +106,28 @@ namespace Simias.mDns
 			[In, Out] char[]	HostName,
 			ref       int		Port);
 
-		[ DllImport( "ifolder-rendezvous" ) ]
+		[ DllImport( "simdezvous" ) ]
 		private 
 		extern 
 		static 
 		User.kErrorType
 		BrowseMembersInit( MemberBrowseCallback	callback, ref IntPtr handle );
 		
-		[ DllImport( "ifolder-rendezvous" ) ]
+		[ DllImport( "simdezvous" ) ]
 		private 
 		extern 
 		static 
 		User.kErrorType
 		BrowseMembersShutdown( int handle );
 
-		[ DllImport( "ifolder-rendezvous" ) ]
+		[ DllImport( "simdezvous" ) ]
 		private 
 		extern 
 		static 
 		User.kErrorType
 		BrowseMembers( int handle, int timeout );
 
-		[ DllImport( "ifolder-rendezvous" ) ]
+		[ DllImport( "simdezvous" ) ]
 		internal 
 		extern 
 		static 
@@ -156,7 +156,7 @@ namespace Simias.mDns
 
 		// TEMP need to fix protection level here
 		internal static UserLock	memberListLock;
-		internal static ArrayList memberList;
+		internal static ArrayList	memberList;
 
 		/// <summary>
 		/// Used to log messages.
@@ -256,15 +256,6 @@ namespace Simias.mDns
 				log.Debug( e.StackTrace );
 			}
 		}
-
-		/*
-		/// <summary>
-		/// Constructor for newing up an mDns user object.
-		/// </summary>
-		public User()
-		{
-		}
-		*/
 
 		/// <summary>
 		/// Constructor for newing up an mDns user object.

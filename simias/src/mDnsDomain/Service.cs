@@ -41,8 +41,10 @@ using Simias.Service;
 using Simias.Storage;
 using Simias.Sync;
 
-using Mono.P2p.mDnsResponder;
-using Mono.P2p.mDnsResponderApi;
+using SCodes = Simias.Authentication.StatusCodes;
+
+//using Mono.P2p.mDnsResponder;
+//using Mono.P2p.mDnsResponderApi;
 using Novell.Security.ClientPasswordManager;
 
 namespace Simias.mDns
@@ -209,31 +211,27 @@ namespace Simias.mDns
 		{
 			if ( args.DomainID == Simias.mDns.Domain.ID )
 			{
+				Simias.Authentication.Status authStatus;
+
 				lock ( Simias.mDns.Service.inCredentialEvent )
 				{
-					// Attempt to authenticate
-					//Simias.Storage.Collection collection =
-					//	Store.GetStore().GetCollectionByID( args.CollectionID );
-					//if ( collection != null )
-					//{
-						Simias.mDns.ClientAuthentication clientAuth =
-							new Simias.mDns.ClientAuthentication();
+					Simias.mDns.ClientAuthentication clientAuth =
+						new Simias.mDns.ClientAuthentication();
 
-						if ( clientAuth.Authenticate( args.CollectionID ) == true )
-						{
-							string userID = 
-								Store.GetStore().GetDomain( args.DomainID ).GetCurrentMember().UserID;
+					authStatus = clientAuth.Authenticate( args.CollectionID );
+					if ( authStatus.statusCode == SCodes.Success )
+					{
+						string userID = 
+							Store.GetStore().GetDomain( args.DomainID ).GetCurrentMember().UserID;
 
-							// Set credentials for this collection
-							new NetCredential( 
-								"iFolder", 
-								args.CollectionID, 
-								true, 
-								userID,
-								"@PPK@" );
-
-						}
-					//}
+						// Set credentials for this collection
+						new NetCredential( 
+							"iFolder", 
+							args.CollectionID, 
+							true, 
+							userID,
+							"@PPK@" );
+					}
 				}
 			}
 		}
@@ -256,7 +254,7 @@ namespace Simias.mDns
 		static AutoResetEvent syncEvent = null;
 		static bool exiting;
 		static bool syncOnStart = true;
-		static int syncInterval = 30 * 1000;
+		static int syncInterval = 60 * 1000;
 		static Thread syncThread = null;
 
 		internal static Simias.mDns.User mdnsUser = null;

@@ -44,6 +44,12 @@ namespace Simias.mDns
 	/// </summary>
 	public class ClientAuthentication
 	{
+		/// <summary>
+		/// Used to log messages.
+		/// </summary>
+		private static readonly ISimiasLog log = 
+			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public ClientAuthentication()
 		{
 			//
@@ -51,252 +57,126 @@ namespace Simias.mDns
 			//
 		}
 
-		public bool Authenticate( string collectionID )
+		/// <summary>
+		/// Login to a remote domain using username and password
+		/// Assumes a slave domain has been provisioned locally
+		/// </summary>
+		/// <param name="domainID">ID of the remote domain.</param>
+		/// <param name="user">Member to login as</param>
+		/// <param name="password">Password to validate user.</param>
+		/// <returns>
+		/// The status of the remote authentication
+		/// </returns>
+		public
+		Simias.Authentication.Status
+		Authenticate( string collectionID )
 		{
+			HttpWebResponse response = null;
+
+			Simias.Authentication.Status status =	
+				new Simias.Authentication.Status( SCodes.Unknown );
+
 			Store store = Store.GetStore();
 			Simias.Storage.Domain domain = store.GetDomain( Simias.mDns.Domain.ID );
-			Simias.Storage.Collection collection = store.GetCollectionByID( collectionID );
-			if ( domain == null || collection == null )
-			{
-				return false;
-			}
+			Simias.Storage.Member member = domain.GetCurrentMember();
 
-			Simias.Location.mDnsProvider mdnsProv = new Simias.Location.mDnsProvider();
+			Simias.mDnsProvider mdnsProv = new Simias.mDnsProvider();
 			Uri remoteUri = mdnsProv.ResolveLocation( Simias.mDns.Domain.ID, collectionID );
 			if ( remoteUri == null )
 			{
-				return false;
+				return status;
 			}
 
-			SimiasAuthenticationProxy auth = new SimiasAuthenticationProxy();
-			auth.Url = remoteUri.ToString() + "/mDns.asmx";
-			auth.MemberID = collection.GetCurrentMember().UserID;
-			auth.DomainID = Simias.mDns.Domain.ID;
+			//SimiasAuthenticationProxy auth = new SimiasAuthenticationProxy();
+
+			Uri loginUri = new Uri( remoteUri.ToString() + "/Login.ashx" );
+			//auth.Url = loginUri.ToString() + "/Login.ashx";
+			//auth.MemberID = domain.GetCurrentMember().UserID;
+		//	auth.DomainID = Simias.mDns.Domain.ID;
+
+			HttpWebRequest request = WebRequest.Create( loginUri ) as HttpWebRequest;
+			WebState webState = new WebState();
+			webState.InitializeWebRequest( request );
+			//request.Credentials = networkCredential;
 			
+			request.Headers.Add( 
+				Simias.Security.Web.AuthenticationService.Login.DomainIDHeader,
+				Simias.mDns.Domain.ID );
+
+			request.Headers.Add( "mdns-member", member.UserID );
+			
+			request.Method = "POST";
+			request.ContentLength = 0;
+
 			try
 			{
-				auth.Authenticate( auth.MemberID );
-			}
-			catch( WebException webEx )
-			{
-				Console.WriteLine( webEx.Status );
-
-				HttpWebResponse response = webEx.Response as HttpWebResponse;
+				request.GetRequestStream().Close();
+				response = request.GetResponse() as HttpWebResponse;
 				if ( response != null )
 				{
-					Console.WriteLine( response.StatusCode.ToString() );
+					status.statusCode = SCodes.Success;
+				}
+			}
+			catch(WebException webEx)
+			{
+				response = webEx.Response as HttpWebResponse;
+				if (response != null)
+				{
+					log.Debug( response.StatusCode.ToString() );
 					if ( response.StatusCode == System.Net.HttpStatusCode.Unauthorized )
 					{
 						string oneTimeChallenge = response.Headers[ "mdns-secret" ];
 						if ( oneTimeChallenge != null && oneTimeChallenge != "" )
 						{
-							auth.ChallengeSecret = oneTimeChallenge;
-							
+							HttpWebRequest request2 = WebRequest.Create( loginUri ) as HttpWebRequest;
+							WebState webState2 = new WebState();
+							webState2.InitializeWebRequest( request2 );
+							//request.Credentials = networkCredential;
+			
+							request2.Headers.Add( 
+								Simias.Security.Web.AuthenticationService.Login.DomainIDHeader,
+								Simias.mDns.Domain.ID );
+							request2.Headers.Add( "mdns-member", member.UserID );
+							request2.Headers.Add( "mdns-secret", oneTimeChallenge );
+			
+							request2.Method = "POST";
+							request2.ContentLength = 0;
+
 							// Try again with the challenge
 							try
 							{
-								auth.Authenticate( auth.MemberID );
-								Console.WriteLine( "Successfull authentication" );
+								request2.GetRequestStream().Close();
+								response = request2.GetResponse() as HttpWebResponse;
+								if ( response != null )
+								{
+									status.statusCode = SCodes.Success;
+								}
 							}
 							catch( WebException webEx2 )
 							{
-								Console.WriteLine( webEx2.Status );
+								log.Debug( webEx2.Status.ToString() );
 							}
 							catch( Exception e2 )
 							{
-								Console.WriteLine( e2.Message );
-								Console.WriteLine( e2.StackTrace );
+								log.Debug( e2.Message );
+								log.Debug( e2.StackTrace );
 							}
 						}
 					}
 				}
-			}
-			catch( Exception e )
-			{
-				Console.WriteLine( e.Message );
-				Console.WriteLine( e.StackTrace );
-			}
-
-			return false;
-		}
-	}
-
-	/// <summary>
-	/// Summary description for SimiasClientProtocol.
-	/// </summary>
-	public class SimiasAuthenticationProxy : SimiasmDnsAuthenticationWebService
-	{
-		string memberID;
-		string domainID;
-		string secret;
-
-		protected override WebRequest GetWebRequest(Uri uri)
-		{
-			WebRequest request = base.GetWebRequest( uri );
-			if ( memberID != null )
-				request.Headers.Add( "mdns-member", memberID );
-			if ( domainID != null )
-				request.Headers.Add( "DomainID", domainID );
-			if ( secret != null )
-				request.Headers.Add( "mdns-secret", secret );
-				
-			return request;
-		}
-
-		public string MemberID
-		{
-			get { return memberID; }
-			set { memberID = value; }
-		}
-
-		public string DomainID
-		{
-			set { domainID = value; }
-		}
-
-		public string ChallengeSecret
-		{
-			set { secret = value; }
-		}
-	}
-
-
-	/// <summary>
-	/// Summary description for Auth.
-	/// </summary>
-	public class ServerAuthentication
-	{
-		public ServerAuthentication()
-		{
-			//
-			// TODO: Add constructor logic here
-			//
-		}
-
-		private class MDnsSession
-		{
-			public string	MemberID;
-			public string	OneTimePassword;
-			public int		State;
-
-			public MDnsSession()
-			{
-			}
-		}
-
-		/// <summary>
-		/// TEMP function
-		/// </summary>
-		public 
-		static
-		Simias.Authentication.Status 
-		Authenticate( Simias.Storage.Domain domain, HttpContext ctx )
-		{
-			string mdnsSessionTag = "mdns";
-
-			Simias.Storage.Member member = null;
-			Simias.Authentication.Status status = 
-				new Simias.Authentication.Status( SCodes.Unknown );
-
-			// Rendezvous domain requires session support
-			if ( ctx.Session != null )
-			{
-				MDnsSession mdnsSession;
-
-				// State should be 1
-				string memberID = ctx.Request.Headers[ "mdns-member" ];
-				if ( memberID == null || memberID == "" )
-				{
-					status.statusCode = SCodes.InvalidCredentials;
-					return status;
-				}
-
-				member = domain.GetMemberByID( memberID );
-				if ( member == null )
-				{
-					status.statusCode = SCodes.InvalidCredentials;
-					return status;
-				}
-
-				status.UserName = member.Name;
-				status.UserID = member.UserID;
-
-				mdnsSession = ctx.Session[ mdnsSessionTag ] as MDnsSession;
-				if ( mdnsSession == null )
-				{
-					mdnsSession = new MDnsSession();
-					mdnsSession.MemberID = member.UserID;
-					mdnsSession.State = 1;
-
-					// Fixme
-					mdnsSession.OneTimePassword = DateTime.Now.ToString();
-
-					// Set the one time password in the response
-					ctx.Response.AddHeader(
-						"mdns-secret",
-						mdnsSession.OneTimePassword);
-
-					ctx.Session[ mdnsSessionTag ] = mdnsSession;
-					status.statusCode = SCodes.InvalidCredentials;
-				}
 				else
-				if ( status.UserID == mdnsSession.MemberID )
 				{
-					// State should be 1
-					string oneTime = ctx.Request.Headers[ "mdns-secret" ];
-
-					// decrypt with user's public key
-					if ( oneTime.Equals( mdnsSession.OneTimePassword ) == true )
-					{
-						status.statusCode = SCodes.Success;
-						mdnsSession.State = 2;
-					}
-					else
-					{
-						status.statusCode = SCodes.InvalidCredentials;
-					}
+					log.Debug(webEx.Message);
+					log.Debug(webEx.StackTrace);
 				}
+			}
+			catch(Exception ex)
+			{
+				log.Debug(ex.Message);
+				log.Debug(ex.StackTrace);
 			}
 
 			return status;
-		}
-	}
-
-	/// <summary>
-	/// Rendezvous authentication web service
-	/// </summary>
-	[WebService(
-		 Namespace="http://novell.com/simias/mdns-auth/",
-		 Name="Simias mDns Authentication Web Service",
-		 Description="Web Service providing remote authentication to an mDns domain")]
-	public class AuthService : WebService
-	{
-		private static readonly ISimiasLog log = SimiasLogManager.GetLogger( typeof( AuthService ) );
-
-		/// <summary>
-		/// Yep
-		/// </summary>
-		public AuthService()
-		{
-		}
-
-		/// <summary>
-		/// Authenticate
-		/// </summary>
-		/// 
-		[WebMethod(EnableSession = true, Description="Authenticate to a remote mDns domain.")]
-		[SoapDocumentMethod]
-		public bool Authenticate( string memberID )
-		{
-			Simias.Storage.Member member =
-				Simias.Authentication.Http.GetMember( HttpContext.Current );
-
-			if ( member != null && member.UserID == memberID )
-			{
-				return true;
-			}
-
-			return false;
 		}
 	}
 }

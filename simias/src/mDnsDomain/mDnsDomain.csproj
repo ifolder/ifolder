@@ -125,7 +125,7 @@
             <Include>
                 <File
                     RelPath = "Auth.cs"
-                    SubType = "Component"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File

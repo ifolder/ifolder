@@ -48,6 +48,9 @@ namespace Simias
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
+		private Hashtable searchContexts;
+		private mDnsProviderLock mdnsLock;
+
 		#region Properties
 
 		/// <summary>
@@ -70,14 +73,26 @@ namespace Simias
 		#region Constructor
 		public mDnsProvider()
 		{
-			//
-			// TODO: Add constructor logic here
-			//
+			searchContexts = new Hashtable();
+			mdnsLock = new mDnsProviderLock();
 		}
 		#endregion
 
 
 		#region Private Members
+
+		private class mDnsSearchCtx
+		{
+			public ArrayList memberList = new ArrayList();
+			public string id = Guid.NewGuid().ToString();
+			public int index = 0;
+		}
+
+		private class mDnsProviderLock
+		{
+			string lockit = "mdns-lock";
+		}
+
 		private Uri MemberIDToUri( string memberID )
 		{
 			Uri locationUri = null;
@@ -260,30 +275,17 @@ namespace Simias
 		/// </summary>
 		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers or
 		/// FindNextDomainMembers methods.</param>
-		public void FindCloseDomainMembers( string context )
+		public void FindCloseDomainMembers( string ctx )
 		{
 			log.Debug( "FindCloseDomainMembers called" );
+			lock( this.mdnsLock )
+			{
+				if ( searchContexts.Contains( ctx ) )
+				{
+					searchContexts.Remove( ctx );
+				}
+			}
 			return;
-		}
-
-		/// <summary>
-		/// Starts a search for all domain members.
-		/// </summary>
-		/// <param name="domainID">The identifier of the domain to search for members in.</param>
-		/// <param name="searchContext">Receives a provider specific search context object. This object must be serializable.</param>
-		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
-		/// <param name="total">Receives the total number of objects found in the search.</param>
-		/// <param name="count">Maximum number of member objects to return.</param>
-		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindFirstDomainMembers( string domainID, out Object searchContext, out Member[] memberList, out int total, int count )
-		{
-			searchContext = null;
-			memberList = null;
-			total = 0;
-
-			log.Debug( "FindFirstDomainMembers called" );
-
-			return false;
 		}
 
 		/// <summary>
@@ -300,13 +302,76 @@ namespace Simias
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
 		public bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, int count, out string searchContext, out Member[] memberList, out int total )
 		{
+			bool moreMembers = false;
 			searchContext = null;
 			memberList = null;
 			total = 0;
 
-			log.Debug( "FindCloseDomainMembers (with search op) called" );
+			log.Debug( "FindFirstDomainMembers (with search op) called" );
 
-			return false;
+			mDnsSearchCtx searchCtx = new mDnsSearchCtx();
+
+			// Add the members in the store
+			Simias.Storage.Domain domain = Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
+			foreach( Member member in domain.GetMemberList() )
+			{
+				total++;
+				if ( searchCtx.index < count )
+				{
+					searchCtx.memberList.Add( member );
+					searchCtx.index++;
+				}
+			}
+
+			total += Simias.mDns.User.memberList.Count;
+			if ( searchCtx.index < count )
+			{
+				// Now add the members in Rendezvous list - some will be duplicates
+				lock( Simias.mDns.User.memberListLock )
+				{
+					bool foundIt;
+					foreach( Simias.mDns.RendezvousUser rUser in Simias.mDns.User.memberList )
+					{
+						foundIt = false;
+						foreach( Member member in searchCtx.memberList )
+						{
+							if ( rUser.ID == member.UserID )
+							{
+								break;
+							}
+						}
+
+						if ( foundIt == false )
+						{
+							if ( searchCtx.index < count )
+							{
+								Member nMember = 
+									new Member( rUser.FriendlyName, rUser.ID, Access.Rights.ReadWrite );
+								searchCtx.memberList.Add( nMember );
+								searchCtx.index++;
+							}
+							else
+							{
+								break;
+							}
+						}
+					}
+				}
+			}
+
+			if ( searchCtx.index < total )
+			{
+				moreMembers = true;
+			}
+
+			memberList = searchCtx.memberList.ToArray( typeof( Member ) ) as Member[];
+			searchContext = searchCtx.id;
+			lock( this.mdnsLock )
+			{
+				searchContexts.Add( searchCtx.id, searchCtx );
+			}
+
+			return moreMembers;
 		}
 
 		/// <summary>
@@ -320,12 +385,7 @@ namespace Simias
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
 		public bool FindFirstDomainMembers( string domainID, int count, out string searchContext, out Member[] memberList, out int total )
 		{
-			searchContext = null;
-			memberList = null;
-			total = 0;
-
-			log.Debug( "FindCloseDomainMembers (3) called" );
-			return false;
+			return FindFirstDomainMembers(domainID, PropertyTags.FullName, String.Empty, SearchOp.Contains, count, out searchContext, out memberList, out total);
 		}
 
 
@@ -388,7 +448,6 @@ namespace Simias
 		/// specified domain. Otherwise, False is returned.</returns>
 		public bool OwnsDomain( string domainID )
 		{
-			log.Debug( "OwnsDomain called" );
 			return ( domainID.ToLower() == Simias.mDns.Domain.ID ) ? true : false;
 		}
 
@@ -401,8 +460,6 @@ namespace Simias
 		/// </returns>
 		public Uri ResolveLocation( string domainID )
 		{
-			log.Debug( "ResolveLocation called" );
-
 			Uri locationUri = null;
 			if( domainID.ToLower() == Simias.mDns.Domain.ID )
 			{
@@ -464,8 +521,6 @@ namespace Simias
 		/// </returns>
 		public Uri ResolveLocation( string domainID, string userID, string collectionID )
 		{
-			log.Debug( "ResolveLocation with userID called" );
-
 			Uri locationUri = null;
 			if( domainID.ToLower() == Simias.mDns.Domain.ID )
 			{
@@ -493,8 +548,6 @@ namespace Simias
 		/// </returns>
 		public Uri ResolvePOBoxLocation( string domainID, string userID )
 		{
-			log.Debug( "ResolveLocation with userID called" );
-
 			Uri locationUri = null;
 			if( domainID.ToLower() == Simias.mDns.Domain.ID )
 			{
@@ -523,8 +576,6 @@ namespace Simias
 		{
 			return;
 		}
-
 		#endregion
-
 	}
 }
