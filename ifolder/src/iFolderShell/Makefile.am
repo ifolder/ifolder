@@ -29,7 +29,7 @@ iFolderShell_LIBPATH = iFolderShell
 iFolderShell_LIBFLAGS = $(SHARED_LIB_FLAG)
 iFolderShell_DEF = $(srcdir)/iFolderShell/iFolderShell.Def
 
-DATA_FILES = $(srcdir)/iFolderShell/ifolder_emblem.ico $(srcdir)/iFolderShell/ifolder_conflict_emb.ico $(srcdir)/iFolderShell/images.bmp
+DATA_FILES = $(srcdir)/iFolderShell/ifolder_emblem.ico $(srcdir)/iFolderShell/ifolder_conflict_emb.ico
 RESX_FILES = $(srcdir)/ConflictResolver.resx $(srcdir)/MyMessageBox.resx $(srcdir)/NewiFolder.resx $(srcdir)/iFolderAdvanced.resx $(srcdir)/UserProperties.resx
 WINDOWS_FILES = $(srcdir)/explorer.exe.manifest $(srcdir)/explorer.exe.config
 

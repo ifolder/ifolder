@@ -55,12 +55,13 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
     //OutputDebugString(TEXT("CiFolderShell::QueryContextMenu()\n"));
 
     UINT idCmd= idCmdFirst;
-	// TODO - get these from a resource file.
+	TCHAR sziFolderMenu[]= TEXT("iFolder");
+
+	// TODO: Localize
     TCHAR szCreateiFolderMenu[]= TEXT("Convert to an iFolder");
     TCHAR szDeleteiFolderMenu[]= TEXT("Revert to a Normal Folder");
-	TCHAR sziFolderMenu[]= TEXT("iFolder");
-	TCHAR sziFolderConflictMenu[] = TEXT("Resolve conflicts...");
-	TCHAR sziFolderPropMenu[]= TEXT("Properties...");
+	TCHAR sziFolderConflictMenu[] = TEXT("Resolve conflicts");
+	TCHAR sziFolderPropMenu[]= TEXT("Properties");
 	TCHAR sziFolderShareMenu[]= TEXT("Share with...");
 	TCHAR sziFolderHelpMenu[] = TEXT("Help...");
     BOOL bAppendItems= FALSE;

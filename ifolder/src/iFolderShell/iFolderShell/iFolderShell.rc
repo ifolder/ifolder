@@ -119,10 +119,19 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Bitmap
+// String Table
 //
 
-IDB_IMAGES              BITMAP                  "images.bmp"
+STRINGTABLE 
+BEGIN
+    IDS_CONVERT             "Convert to an iFolder"
+    IDS_REVERT              "Revert to a Normal Folder"
+    IDS_RESOLVE             "Resolve conflicts"
+    IDS_PROPERTIES          "Properties"
+    IDS_SHARE               "Share with..."
+    IDS_HELP                "Help..."
+END
+
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 
