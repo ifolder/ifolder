@@ -407,10 +407,9 @@ sec_reg_thread (void *user_data)
 				port_str,
 				WEB_SERVICE_TRUE_STRING,
 				REGISTRATION_TOP_ELEMENT_NAME);
-			reg_msg [strlen (reg_msg) + 1] = '\0';
 			
 			/* Send registration message */
-			if (sec_send_message (ec, s, reg_msg, strlen (reg_msg) + 1) <= 0) {
+			if (sec_send_message (ec, s, reg_msg, strlen (reg_msg)) <= 0) {
 				/* FIXME: Handle error...no data sent */
 				perror ("simias-event-client send registration message");
 			}
@@ -480,18 +479,18 @@ sec_send_message (SimiasEventClient *ec, int s, char * message, int len)
 {
 	int sent_length;
 	char err_msg [2048];
-	char *real_message;
+	void *real_message;
 	
-	real_message = malloc ((sizeof (char) * len + 1));
+	real_message = (void *)malloc (len + 4);
 	if (!real_message) {
 		fprintf (stderr, "Out of memory\n");
 		return 0;
 	}
 	
-	real_message [0] = len + 1;
-	sprintf (real_message + 1, "%s", message);
+	*((int *)real_message) = len;
+	sprintf (real_message + 4, "%s", message);
 	
-	sent_length = send (s, real_message, len + 1, 0);
+	sent_length = send (s, real_message, len + 4, 0);
 	
 	free (real_message);
 	
