@@ -2890,7 +2890,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<row><td>Registry21</td><td>2</td><td>SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ShellIconOverlayIdentifiers\iFolder0</td><td/><td>{AA81D830-3B41-497c-B508-E9D02F8DF421}</td><td>ISRegistryComponent</td><td>0</td></row>
 		<row><td>Registry210</td><td>2</td><td>SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved</td><td>{AA81D830-3B41-497c-B508-E9D02F8DF421}</td><td>iFolder0</td><td>ISRegistryComponent</td><td>0</td></row>
 		<row><td>Registry22</td><td>2</td><td>SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ShellIconOverlayIdentifiers\iFolder1</td><td/><td>{AA81D831-3B41-497c-B508-E9D02F8DF421}</td><td>ISRegistryComponent</td><td>0</td></row>
-		<row><td>Registry3</td><td>1</td><td>Software\Microsoft\Windows\CurrentVersion\RunOnce</td><td>iFolder</td><td>"[INSTALLDIR]\iFolderApp.exe"</td><td>iFolderApp.exe</td><td>0</td></row>
+		<row><td>Registry3</td><td>1</td><td>Software\Microsoft\Windows\CurrentVersion\Run</td><td>iFolder</td><td>"[INSTALLDIR]\iFolderApp.exe"</td><td>iFolderApp.exe</td><td>0</td></row>
 	</table>
 
 	<table name="RemoveFile">
