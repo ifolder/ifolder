@@ -155,7 +155,6 @@ namespace Novell.iFolder
 		private Statusbar			MainStatusBar;
 		private ProgressBar			SyncBar;
 		private Toolbar				toolbar;
-		private bool				showTooltips = true;
 		private Gtk.TreeView		iFolderTreeView;
 		private Gtk.ListStore		iFolderTreeStore;
 
@@ -164,8 +163,6 @@ namespace Novell.iFolder
 		private Gtk.Widget			SyncButton;
 		private Gtk.Widget			ShareButton;
 		private Gtk.Widget			ConflictButton;
-		private Gtk.Widget			RefreshButton;
-		private Gtk.Widget			PrefsButton;
 
 
 		private ImageMenuItem		NewMenuItem;
@@ -261,6 +258,12 @@ namespace Novell.iFolder
 			RevertMenuItem.Sensitive = false;
 			PropMenuItem.Sensitive = false;;
 
+			NewButton.Sensitive = true;
+			SetupButton.Sensitive = false;
+			SyncButton.Sensitive = false;
+			ShareButton.Sensitive = false;
+			ConflictButton.Sensitive = false;
+
 			// Setup an event to refresh when the window is
 			// being drawn
 			this.Realized += new EventHandler(OnRealizeWidget);
@@ -279,8 +282,6 @@ namespace Novell.iFolder
 		{
 			Toolbar tb = new Toolbar();
 
-//			NewButton.Sensitive = false;
-//			SetupButton.Sensitive = false;
 			NewButton = tb.AppendItem(Util.GS("New"), 
 				Util.GS("Create a New iFolder"), "Toolbar/New iFolder",
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("newifolder24.png"))),
@@ -289,43 +290,26 @@ namespace Novell.iFolder
 			SetupButton = tb.AppendItem(Util.GS("Setup"),
 				Util.GS("Setup an Existing iFolder"), "Toolbar/Setup iFolder",
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("setup24.png"))),
-				new SignalFunc(CreateNewiFolder));
+				new SignalFunc(SetupiFolder));
 
 			tb.AppendSpace ();
 
 			SyncButton = tb.AppendItem(Util.GS("Sync"),
 				Util.GS("Synchronize an iFolder"), "Toolbar/Sync iFolder",
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("sync24.png"))),
-				new SignalFunc(CreateNewiFolder));
+				new SignalFunc(SynciFolder));
 
 			ShareButton = tb.AppendItem(Util.GS("Share"),
 				Util.GS("Share an iFolder"), "Toolbar/Share iFolder",
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("share24.png"))),
-				new SignalFunc(CreateNewiFolder));
+				new SignalFunc(ShareiFolder));
 
 			ConflictButton = tb.AppendItem(Util.GS("Resolve"),
 				Util.GS("Resolve File Conflicts"), "Toolbar/Resolve iFolder",
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("conflict24.png"))),
-				new SignalFunc(CreateNewiFolder));
+				new SignalFunc(ResolveConflicts));
 
 			tb.AppendSpace ();
-
-			RefreshButton = tb.AppendItem(Util.GS("Refresh"),
-				Util.GS("Refresh View"), "Toolbar/Refresh iFolder",
-				new Image(Stock.Refresh, IconSize.LargeToolbar),
-				new SignalFunc(CreateNewiFolder));
-
-			PrefsButton = tb.AppendItem(Util.GS("Preferences"),
-				Util.GS("iFolder Preferences"), "Toolbar/Prefs iFolder",
-				new Image(new Gdk.Pixbuf(Util.ImagesPath("prefs24.png"))),
-				new SignalFunc(CreateNewiFolder));
-
-			tb.AppendSpace ();
-
-			tb.AppendItem(Util.GS("Close"),
-				Util.GS("Close Window"), "Toolbar/Close",
-				new Image(Stock.Close, IconSize.LargeToolbar),
-				new SignalFunc(CloseWindow));
 
 			return tb;
 		}
@@ -362,7 +346,7 @@ namespace Novell.iFolder
 			SetupMenuItem =
 				new MenuItem (Util.GS("_Setup iFolder"));
 			iFolderMenu.Append(SetupMenuItem);
-			SetupMenuItem.Activated += new EventHandler(OnSetupiFolder);
+			SetupMenuItem.Activated += new EventHandler(SetupiFolderHandler);
 
 			DeleteMenuItem =
 				new ImageMenuItem (Util.GS("_Delete iFolder"));
@@ -383,15 +367,16 @@ namespace Novell.iFolder
 
 			ShareMenuItem = new MenuItem (Util.GS("Share _with..."));
 			iFolderMenu.Append(ShareMenuItem);
-			ShareMenuItem.Activated += new EventHandler(OnShareProperties);
+			ShareMenuItem.Activated += new EventHandler(ShareiFolderHandler);
 
 			ConflictMenuItem = new MenuItem (Util.GS("Re_solve conflicts"));
 			iFolderMenu.Append(ConflictMenuItem);
-			ConflictMenuItem.Activated += new EventHandler(OnResolveConflicts);
+			ConflictMenuItem.Activated += 
+					new EventHandler(ResolveConflictHandler);
 
 			SyncNowMenuItem = new MenuItem(Util.GS("Sync _now"));
 			iFolderMenu.Append(SyncNowMenuItem);
-			SyncNowMenuItem.Activated += new EventHandler(OnSyncNow);
+			SyncNowMenuItem.Activated += new EventHandler(SynciFolderHandler);
 
 			RevertMenuItem = 
 				new ImageMenuItem (Util.GS("Re_vert to a normal folder"));
@@ -422,7 +407,7 @@ namespace Novell.iFolder
 				new ImageMenuItem(Stock.Refresh, agrp);
 			ViewMenu.Append(RefreshMenuItem);
 			RefreshMenuItem.Activated += 
-					new EventHandler(RefreshiFolderTreeView);
+					new EventHandler(RefreshiFoldersHandler);
 
 			MenuItem ViewMenuItem = new MenuItem(Util.GS("_View"));
 			ViewMenuItem.Submenu = ViewMenu;
@@ -548,7 +533,7 @@ namespace Novell.iFolder
 
 		private void OnRealizeWidget(object o, EventArgs args)
 		{
-			RefreshiFolderTreeView(o, args);
+			RefreshiFolders();
 		}
 
 
@@ -611,9 +596,13 @@ namespace Novell.iFolder
 		}
 
 
+		private void RefreshiFoldersHandler(object o, EventArgs args)
+		{
+			RefreshiFolders();
+		}
 
 
-		public void RefreshiFolderTreeView(object o, EventArgs args)
+		public void RefreshiFolders()
 		{
 			iFolderWeb[]	iFolderArray;
 			try
@@ -686,10 +675,12 @@ namespace Novell.iFolder
 									(ifHolder.iFolder.HasConflicts) )
 				{
 					ConflictMenuItem.Sensitive = true;
+					ConflictButton.Sensitive = true;
 				}
 				else
 				{
 					ConflictMenuItem.Sensitive = false;
+					ConflictButton.Sensitive = false;
 				}
 
 				if(!ifHolder.iFolder.IsSubscription)
@@ -700,6 +691,10 @@ namespace Novell.iFolder
 					SyncNowMenuItem.Sensitive = true;
 					RevertMenuItem.Sensitive = true;
 					PropMenuItem.Sensitive = true;
+
+					SetupButton.Sensitive = false;
+					SyncButton.Sensitive = true;
+					ShareButton.Sensitive = true;
 				}
 				else
 				{
@@ -709,6 +704,10 @@ namespace Novell.iFolder
 					SyncNowMenuItem.Sensitive = false;
 					RevertMenuItem.Sensitive = false;
 					PropMenuItem.Sensitive = false;
+
+					SetupButton.Sensitive = true;
+					SyncButton.Sensitive = false;
+					ShareButton.Sensitive = false;
 				}
 
 				if(ifHolder.iFolder.OwnerID == 
@@ -740,6 +739,11 @@ namespace Novell.iFolder
 				RemoveMenuItem.Visible = false;
 				PropMenuItem.Sensitive = false;
 				SetupMenuItem.Sensitive = false;
+
+				SetupButton.Sensitive = false;
+				SyncButton.Sensitive = false;
+				ShareButton.Sensitive = false;
+				ConflictButton.Sensitive = false;
 			}
 		}
 
@@ -793,7 +797,7 @@ namespace Novell.iFolder
 									new MenuItem (Util.GS("Share with..."));
 								ifMenu.Append (item_share);
 								item_share.Activated += new EventHandler(
-										OnShareProperties);
+										ShareiFolderHandler);
 
 								if(ifHolder.iFolder.HasConflicts)
 								{
@@ -801,7 +805,7 @@ namespace Novell.iFolder
 											Util.GS("Resolve conflicts"));
 									ifMenu.Append (item_resolve);
 									item_resolve.Activated += new EventHandler(
-										OnResolveConflicts);
+										ResolveConflictHandler);
 							
 									ifMenu.Append(new SeparatorMenuItem());
 								}
@@ -810,7 +814,7 @@ namespace Novell.iFolder
 									new MenuItem(Util.GS("Sync now"));
 								ifMenu.Append (item_sync);
 								item_sync.Activated += new EventHandler(
-										OnSyncNow);
+										SynciFolderHandler);
 
 								MenuItem item_revert = new MenuItem (
 										Util.GS("Revert to a normal folder"));
@@ -851,7 +855,7 @@ namespace Novell.iFolder
 									new MenuItem (Util.GS("Setup iFolder"));
 								ifMenu.Append (item_accept);
 								item_accept.Activated += new EventHandler(
-										OnSetupiFolder);
+										SetupiFolderHandler);
 
 								if(ifHolder.iFolder.OwnerID == 
 												ifHolder.iFolder.CurrentUserID)
@@ -893,7 +897,7 @@ namespace Novell.iFolder
 							new MenuItem (Util.GS("Refresh list"));
 						ifMenu.Append (item_refresh);
 						item_refresh.Activated += 
-							new EventHandler(RefreshiFolderTreeView);
+							new EventHandler(RefreshiFoldersHandler);
 					}
 		
 					ifMenu.ShowAll();
@@ -925,7 +929,7 @@ namespace Novell.iFolder
 				if(ifHolder.iFolder.IsSubscription)
 				{
 					if(ifHolder.iFolder.State == "Available")
-						OnSetupiFolder(o, args);
+						SetupiFolderHandler(o, args);
 				}
 				else
 				{
@@ -970,7 +974,14 @@ namespace Novell.iFolder
 
 
 
-		public void OnShareProperties(object o, EventArgs args)
+		public void ShareiFolderHandler(object o, EventArgs args)
+		{
+			ShareiFolder();
+		}
+
+
+
+		private void ShareiFolder()
 		{
 			ShowProperties(1);
 		}
@@ -1071,33 +1082,9 @@ namespace Novell.iFolder
 
 
 
-		public void	OnSyncNow(object o, EventArgs args)
+		public void	SynciFolderHandler(object o, EventArgs args)
 		{
-			TreeSelection tSelect = iFolderTreeView.Selection;
-			if(tSelect.CountSelectedRows() == 1)
-			{
-				TreeModel tModel;
-				TreeIter iter;
-
-				tSelect.GetSelected(out tModel, out iter);
-				iFolderHolder ifHolder = 
-						(iFolderHolder) tModel.GetValue(iter, 0);
-
-				try
-				{
-    				ifws.SynciFolderNow(ifHolder.iFolder.ID);
-				}
-				catch(Exception e)
-				{
-					iFolderExceptionDialog ied = 
-						new iFolderExceptionDialog(
-							this,
-							e);
-					ied.Run();
-					ied.Hide();
-					ied.Destroy();
-				}
-			}
+			SynciFolder();
 		}
 
 
@@ -1164,68 +1151,9 @@ namespace Novell.iFolder
 
 
 
-		private void OnSetupiFolder(object o, EventArgs args)
+		private void SetupiFolderHandler(object o, EventArgs args)
 		{
-			string newPath  = "";
-			iFolderHolder ifHolder = null;
-			TreeModel tModel;
-			TreeIter iter;
-
-			TreeSelection tSelect = iFolderTreeView.Selection;
-			if(tSelect.CountSelectedRows() == 1)
-			{
-				tSelect.GetSelected(out tModel, out iter);
-				ifHolder = (iFolderHolder) tModel.GetValue(iter, 0);
-				if(ifHolder.iFolder == null)
-					return;
-				int rc = 0;
-
-				do
-				{
-					iFolderAcceptDialog iad = 
-							new iFolderAcceptDialog(ifHolder.iFolder);
-					iad.TransientFor = this;
-					rc = iad.Run();
-					newPath = iad.Path;
-					iad.Hide();
-					iad.Destroy();
-					if(rc != -5)
-						return;
-
-					// if the user selected OK, check the path they
-					// selectected, if we didn't show there was a bad
-					// path, set rc to 0 to accept the ifolder
-					if(!ShowBadiFolderPath(newPath, ifHolder.iFolder.Name))
-						rc = 0;
-				}
-				while(rc == -5);
-				
-				try
-				{
-					curiFolders.Remove(ifHolder.iFolder.ID);
-   		 			iFolderWeb newiFolder = ifws.AcceptiFolderInvitation(
-											ifHolder.iFolder.DomainID,
-											ifHolder.iFolder.ID,
-											newPath);
-	
-					// replace the old iFolder with this one
-					tModel.SetValue(iter, 0, 
-							new iFolderHolder(newiFolder));
-					curiFolders.Add(newiFolder.ID, iter);
-				}
-				catch(Exception e)
-				{
-					// if we threw an exceptoin, add the old ifolder back
-					curiFolders.Add(ifHolder.iFolder.ID, iter);
-
-					iFolderExceptionDialog ied = new iFolderExceptionDialog(
-														this, e);
-					ied.Run();
-					ied.Hide();
-					ied.Destroy();
-					return;
-				}
-			}
+			SetupiFolder();
 		}
 
 
@@ -1396,7 +1324,7 @@ namespace Novell.iFolder
 
 
 
-		private void OnResolveConflicts(object o, EventArgs args)
+		private void ResolveConflicts()
 		{
 			TreeSelection tSelect = iFolderTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
@@ -1417,6 +1345,14 @@ namespace Novell.iFolder
 							new ResponseHandler(OnConflictDialogResponse);
 				ConflictDialog.ShowAll();
 			}
+		}
+
+
+
+
+		private void ResolveConflictHandler(object o, EventArgs args)
+		{
+			ResolveConflicts();
 		}
 
 
@@ -1683,6 +1619,105 @@ namespace Novell.iFolder
 
 
 
+		public void	SynciFolder()
+		{
+			TreeSelection tSelect = iFolderTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				iFolderHolder ifHolder = 
+						(iFolderHolder) tModel.GetValue(iter, 0);
+
+				try
+				{
+    				ifws.SynciFolderNow(ifHolder.iFolder.ID);
+				}
+				catch(Exception e)
+				{
+					iFolderExceptionDialog ied = 
+						new iFolderExceptionDialog(
+							this,
+							e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+				}
+			}
+		}
+
+
+
+
+		private void SetupiFolder()
+		{
+			string newPath  = "";
+			iFolderHolder ifHolder = null;
+			TreeModel tModel;
+			TreeIter iter;
+
+			TreeSelection tSelect = iFolderTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				tSelect.GetSelected(out tModel, out iter);
+				ifHolder = (iFolderHolder) tModel.GetValue(iter, 0);
+				if(ifHolder.iFolder == null)
+					return;
+				int rc = 0;
+
+				do
+				{
+					iFolderAcceptDialog iad = 
+							new iFolderAcceptDialog(ifHolder.iFolder);
+					iad.TransientFor = this;
+					rc = iad.Run();
+					newPath = iad.Path;
+					iad.Hide();
+					iad.Destroy();
+					if(rc != -5)
+						return;
+
+					// if the user selected OK, check the path they
+					// selectected, if we didn't show there was a bad
+					// path, set rc to 0 to accept the ifolder
+					if(!ShowBadiFolderPath(newPath, ifHolder.iFolder.Name))
+						rc = 0;
+				}
+				while(rc == -5);
+				
+				try
+				{
+					curiFolders.Remove(ifHolder.iFolder.ID);
+   		 			iFolderWeb newiFolder = ifws.AcceptiFolderInvitation(
+											ifHolder.iFolder.DomainID,
+											ifHolder.iFolder.ID,
+											newPath);
+	
+					// replace the old iFolder with this one
+					tModel.SetValue(iter, 0, 
+							new iFolderHolder(newiFolder));
+					curiFolders.Add(newiFolder.ID, iter);
+				}
+				catch(Exception e)
+				{
+					// if we threw an exceptoin, add the old ifolder back
+					curiFolders.Add(ifHolder.iFolder.ID, iter);
+
+					iFolderExceptionDialog ied = new iFolderExceptionDialog(
+														this, e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+					return;
+				}
+			}
+		}
+
+
+
+
 		private void CreateNewiFolder()
 		{
 			// Read all current domains before letting them create
@@ -1777,6 +1812,23 @@ namespace Novell.iFolder
 				}
 			}
 			while(rc == -5);
+		}
+
+
+
+		private void ShowPreferences()
+		{
+			iFolderMsgDialog dg = new iFolderMsgDialog(
+				this,
+				iFolderMsgDialog.DialogType.Info,
+				iFolderMsgDialog.ButtonSet.Ok,
+				Util.GS("Show Preferences"),
+				Util.GS("This will show preferences"),
+				Util.GS("Eventually Calvin will get around to adding code here that will show the preferences dialog."));
+			dg.Run();
+			dg.Hide();
+			dg.Destroy();
+		
 		}
 
 /*
