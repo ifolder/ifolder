@@ -269,9 +269,7 @@ namespace Simias.SimpleServer
 					ssRoster = new Roster( store, store.GetDomain( this.id ));
 					rMember = new Member( ldbMember.Name, ldbMember.ID, Access.Rights.Admin );
 					rMember.IsOwner = true;
-					//rMember.Properties.ModifyProperty( "POBox", hostAddress );
 					changeList.Add(ssRoster);
-					//mdnsRoster.Commit( new Node[] { mdnsRoster, rMember } );
 				}
 				else
 				{
@@ -468,6 +466,22 @@ namespace Simias.SimpleServer
 
 						if (ssMember != null)
 						{
+							// Check if the password has changed
+							XmlAttribute pwdAttr = 
+								domainElement.ChildNodes[i].Attributes["Password"];
+							if (pwdAttr != null)
+							{
+								Property pwd = new Property( "SS:Password", pwdAttr.Value );
+								pwd.LocalProperty = true;
+								ssMember.Properties.ModifyProperty( pwd );
+							}
+							else
+							{
+								ssMember.Properties.DeleteSingleProperty( new Property( "SS:Password", "bogus" ));
+							}
+
+							ssRoster.Commit(ssMember);
+
 							//
 							// First get the contact that's related to this member
 							//
@@ -550,6 +564,17 @@ namespace Simias.SimpleServer
 
 								// Set the local property sync guid
 								ssMember.Properties.ModifyProperty(syncP);
+
+								// Get the password
+								XmlAttribute pwdAttr = 
+									domainElement.ChildNodes[i].Attributes["Password"];
+								if (pwdAttr != null)
+								{
+									Property pwd = new Property( "SS:Password", pwdAttr.Value );
+									pwd.LocalProperty = true;
+									ssMember.Properties.ModifyProperty( pwd );
+								}
+
 								ssRoster.Commit(ssMember);
 							}
 							catch

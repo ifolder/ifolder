@@ -24,8 +24,7 @@
 
 using System;
 using System.Reflection;
-
-using log4net;
+using System.Xml;
 
 using Simias;
 using Simias.Service;
@@ -39,9 +38,16 @@ namespace Simias.SimpleServer
     [IAuthenticationServiceAttribute]
     public class Authentication : IAuthenticationService
     {
-		private static readonly log4net.ILog log =
-			LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ISimiasLog log = 
+			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+		private Simias.Storage.Domain domain = null;
+		private Simias.SimpleServer.Domain ssDomain = null;
+		private Simias.Storage.Store store = null;
+		private Simias.Storage.Roster roster = null;
+
+		private XmlDocument simpleServerDoc = null;
+		private XmlElement domainElement = null;
 
 		#region Constructors
 		/// <summary>
@@ -49,6 +55,14 @@ namespace Simias.SimpleServer
 		/// </summary>
 		public  Authentication()
 		{
+			this.store = Store.GetStore();
+			this.ssDomain = new Simias.SimpleServer.Domain( true );
+			this.domain = store.GetDomain( ssDomain.ID );
+			this.roster = this.domain.GetRoster( this.store );
+
+			this.simpleServerDoc = new XmlDocument();
+			this.simpleServerDoc.Load("SimpleServer.xml");
+			domainElement = this.simpleServerDoc.DocumentElement;
 		}
 		#endregion
 
@@ -75,7 +89,49 @@ namespace Simias.SimpleServer
 
 		public AuthenticationStatus AuthenticateByName(string user, string password)
 		{
-			AuthenticationStatus status = new AuthenticationStatus(StatusCode.Success);
+			AuthenticationStatus status = new AuthenticationStatus(StatusCode.Unknown);
+
+			try
+			{
+				//
+				// First verify the user exists in the SimpleServer roster
+				//
+
+				if (this.roster != null)
+				{
+					Simias.Storage.Member member = this.roster.GetMemberByName( user );
+					if ( member != null )
+					{
+						Property pwd = member.Properties.GetSingleProperty( "SS:Password" );
+						if (pwd != null)
+						{
+							if (pwd.Value == password)
+							{
+								status.status = StatusCode.Success;
+								status.UserID = member.ID;
+								status.UserName = member.Name;
+							}
+							else
+							{
+								status.status = StatusCode.InvalidPassword;
+							}
+						}
+					}
+					else
+					{
+						status.status = StatusCode.InvalidUser;
+					}
+				}
+			}
+			catch(Exception authEx)
+			{
+				log.Debug(authEx.Message);
+				log.Debug(authEx.StackTrace);
+
+				status.status = StatusCode.InternalException;
+				status.ExceptionMessage = authEx.Message;
+			}
+
 			return status;
 		}
 
@@ -88,7 +144,7 @@ namespace Simias.SimpleServer
 
 		public AuthenticationStatus AuthenticateByID(string id, string password)
 		{
-			AuthenticationStatus status = new AuthenticationStatus(StatusCode.Success);
+			AuthenticationStatus status = new AuthenticationStatus(StatusCode.MethodNotSupported);
 			return status;
 		}
     }
