@@ -65,7 +65,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.CheckBox autoSync;
 		private System.Windows.Forms.CheckBox autoStart;
-		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label10;
 		private System.Windows.Forms.Button apply;
 		private System.Windows.Forms.Button cancel;
@@ -170,7 +169,6 @@ namespace Novell.FormsTrayApp
 			this.notifyJoins = new System.Windows.Forms.CheckBox();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.autoSync = new System.Windows.Forms.CheckBox();
-			this.label3 = new System.Windows.Forms.Label();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.autoStart = new System.Windows.Forms.CheckBox();
 			this.cancel = new System.Windows.Forms.Button();
@@ -872,7 +870,6 @@ namespace Novell.FormsTrayApp
 			this.groupBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox1.BackgroundImage")));
 			this.groupBox1.Controls.Add(this.defaultInterval);
 			this.groupBox1.Controls.Add(this.autoSync);
-			this.groupBox1.Controls.Add(this.label3);
 			this.groupBox1.Controls.Add(this.label2);
 			this.groupBox1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox1.Dock")));
 			this.groupBox1.Enabled = ((bool)(resources.GetObject("groupBox1.Enabled")));
@@ -915,28 +912,6 @@ namespace Novell.FormsTrayApp
 			this.autoSync.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("autoSync.TextAlign")));
 			this.autoSync.Visible = ((bool)(resources.GetObject("autoSync.Visible")));
 			this.autoSync.CheckedChanged += new System.EventHandler(this.autoSync_CheckedChanged);
-			// 
-			// label3
-			// 
-			this.label3.AccessibleDescription = resources.GetString("label3.AccessibleDescription");
-			this.label3.AccessibleName = resources.GetString("label3.AccessibleName");
-			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label3.Anchor")));
-			this.label3.AutoSize = ((bool)(resources.GetObject("label3.AutoSize")));
-			this.label3.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label3.Dock")));
-			this.label3.Enabled = ((bool)(resources.GetObject("label3.Enabled")));
-			this.label3.Font = ((System.Drawing.Font)(resources.GetObject("label3.Font")));
-			this.label3.Image = ((System.Drawing.Image)(resources.GetObject("label3.Image")));
-			this.label3.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label3.ImageAlign")));
-			this.label3.ImageIndex = ((int)(resources.GetObject("label3.ImageIndex")));
-			this.label3.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label3.ImeMode")));
-			this.label3.Location = ((System.Drawing.Point)(resources.GetObject("label3.Location")));
-			this.label3.Name = "label3";
-			this.label3.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label3.RightToLeft")));
-			this.label3.Size = ((System.Drawing.Size)(resources.GetObject("label3.Size")));
-			this.label3.TabIndex = ((int)(resources.GetObject("label3.TabIndex")));
-			this.label3.Text = resources.GetString("label3.Text");
-			this.label3.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label3.TextAlign")));
-			this.label3.Visible = ((bool)(resources.GetObject("label3.Visible")));
 			// 
 			// groupBox3
 			// 
@@ -2025,7 +2000,10 @@ namespace Novell.FormsTrayApp
 									password.Text = credentials;
 								}
 							}
-							catch {}
+							catch (Exception ex)
+							{
+								MessageBox.Show(ex.Message);
+							}
 
 
 							// TODO: set auto login setting.
