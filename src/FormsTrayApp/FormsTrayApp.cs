@@ -71,7 +71,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private AnimateDelegate animateDelegate;
 
 		private	EventPublisher publisher;
-		private SystemManager sysManager;
+//		private SystemManager sysManager;
 		//System.Diagnostics.Process monitor;
 		//private const int waitTime = 3000;
 		#endregion
@@ -120,7 +120,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 			// Initialize menuItemTracer
 			this.menuItemTracer.Index = 0;
-			this.menuItemTracer.Checked = true;
+			this.menuItemTracer.Checked = false;
 			this.menuItemTracer.Click += new System.EventHandler(menuItemTracer_Click);
 
 			// Initialize menuItemBrowser
@@ -225,10 +225,10 @@ namespace Novell.iFolder.FormsTrayApp
 				publisher.RaiseEvent(args);
 			}
 
-			if (sysManager != null)
-			{
-				sysManager.StopServices();
-			}
+//			if (sysManager != null)
+//			{
+//				sysManager.StopServices();
+//			}
 
 			/*
 			if (monitor != null)
@@ -291,10 +291,10 @@ namespace Novell.iFolder.FormsTrayApp
 				publisher.RaiseEvent(args);
 			}
 
-			if (sysManager != null)
-			{
-				sysManager.StopServices();
-			}
+//			if (sysManager != null)
+//			{
+//				sysManager.StopServices();
+//			}
 
 			/*
 			if (monitor != null)
@@ -373,15 +373,20 @@ namespace Novell.iFolder.FormsTrayApp
 				workerThread.Start();
 			}
 
-			// Create the trace window.
+			// Create the trace window ... initially hidden.
 			traceForm = new MyTraceForm();
 			traceForm.Closing += new System.ComponentModel.CancelEventHandler(traceForm_Closing);
-			traceForm.Show();
 
-			Console.WriteLine("Creating sync object");
+			// Trace messages will immediately be written, so we need the window handle to be created.
+			traceForm.CreateControl();
 
+			// For some reason the handle isn't really created until it is referenced.
+			IntPtr handle = traceForm.Handle;
+
+			// Sync properties used by SyncManager.
 			SyncProperties properties = new SyncProperties();
 
+			// Don't use secure channel for now.
 			properties.DefaultChannelSinks = 
 				SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
 

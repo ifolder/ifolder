@@ -109,7 +109,6 @@ namespace Novell.iFolder.iFolderCom
 
 		public String Description
 		{
-			// TODO - fix this.
 			get { return ifoldernode.Description; }
 			set
 			{
@@ -228,10 +227,9 @@ namespace Novell.iFolder.iFolderCom
 		public bool GetiFolderPropInit()
 		{
 			// Set up the enumerator to get the Properties on the Node.
-			// TODO - fix this.
-//			propEnumerator = ( ICSEnumerator )ifoldernode.ThisNode.Properties.GetEnumerator();
+			propEnumerator = ( ICSEnumerator )ifoldernode.iFolder.CurrentNode.Properties.GetEnumerator();
 
-//			return (propEnumerator != null);
+			return (propEnumerator != null);
 			return false;
 		}
 
