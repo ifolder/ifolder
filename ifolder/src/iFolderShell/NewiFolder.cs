@@ -44,7 +44,6 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.LinkLabel iFolderProperties;
 		private System.Windows.Forms.PictureBox iFolderEmblem;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.CheckBox dontAsk;
 		private string folderName;
 		private string loadPath;
@@ -92,7 +91,6 @@ namespace Novell.iFolder.iFolderCom
 			this.iFolderProperties = new System.Windows.Forms.LinkLabel();
 			this.iFolderEmblem = new System.Windows.Forms.PictureBox();
 			this.label2 = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
 			this.dontAsk = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
@@ -112,16 +110,19 @@ namespace Novell.iFolder.iFolderCom
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(424, 24);
 			this.label1.TabIndex = 1;
-			this.label1.Text = "Congratulations, you\'ve just converted this folder into an iFolder!  ...";
+			this.label1.Text = "Congratulations, you\'ve just converted this folder into an iFolder!";
 			// 
 			// iFolderProperties
 			// 
-			this.iFolderProperties.Location = new System.Drawing.Point(352, 125);
+			this.iFolderProperties.LinkArea = new System.Windows.Forms.LinkArea(156, 173);
+			this.iFolderProperties.Location = new System.Drawing.Point(16, 112);
 			this.iFolderProperties.Name = "iFolderProperties";
-			this.iFolderProperties.Size = new System.Drawing.Size(136, 16);
+			this.iFolderProperties.Size = new System.Drawing.Size(432, 32);
 			this.iFolderProperties.TabIndex = 2;
 			this.iFolderProperties.TabStop = true;
-			this.iFolderProperties.Text = "by clicking here.";
+			this.iFolderProperties.Text = "In order to fully utilize your new iFolder, you need to share it.  You can share " +
+				"the iFolder by right-clicking the folder and accessing the iFolder menu or by cl" +
+				"icking here.";
 			this.iFolderProperties.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.iFolderProperties_LinkClicked);
 			// 
 			// iFolderEmblem
@@ -142,15 +143,6 @@ namespace Novell.iFolder.iFolderCom
 			this.label2.Text = "iFolders are identified by the iFolder emblem being placed on the folder as shown" +
 				".";
 			// 
-			// label3
-			// 
-			this.label3.Location = new System.Drawing.Point(16, 112);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(424, 32);
-			this.label3.TabIndex = 5;
-			this.label3.Text = "In order to fully utilize your new iFolder, you need to share it.  You can share " +
-				"the iFolder by right-clicking the folder and accessing the iFolder menu or";
-			// 
 			// dontAsk
 			// 
 			this.dontAsk.FlatStyle = System.Windows.Forms.FlatStyle.System;
@@ -167,7 +159,6 @@ namespace Novell.iFolder.iFolderCom
 			this.ClientSize = new System.Drawing.Size(456, 192);
 			this.Controls.Add(this.dontAsk);
 			this.Controls.Add(this.iFolderProperties);
-			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.iFolderEmblem);
 			this.Controls.Add(this.label1);
