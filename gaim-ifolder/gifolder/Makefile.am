@@ -1,3 +1,5 @@
+SUBDIRS = pixmaps
+
 plugindir = $(libdir)/gaim
 
 gifolder_la_LDFLAGS = \
