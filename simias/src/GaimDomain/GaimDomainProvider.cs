@@ -44,7 +44,8 @@ namespace Simias.Location
 	{
 		#region Class Members
 		private string providerName = "Gaim Domain Provider";
-		private string description = "Simias Workgroup Domain Provider built from a user's Gaim Buddy List";
+		private string description = "Simias Domain Provider for the Gaim Workgroup Domain";
+		private Hashtable searchContexts = new Hashtable();
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
@@ -98,8 +99,7 @@ namespace Simias.Location
 		/// <returns>The status from the authentication.</returns>
 		public Authentication.Status Authenticate( Simias.Storage.Domain domain, HttpContext httpContext )
 		{
-			// FIXME: Figure out how to return Authentication.Status in Authenticate()
-			return null;
+			return new Authentication.Status( Authentication.StatusCodes.Success );
 		}
 
 		/// <summary>
@@ -112,12 +112,8 @@ namespace Simias.Location
 		/// is being deleted.</param>
 		public void DeleteLocation( string domainID, string collectionID )
 		{
-			log.Debug( "DeleteLocation called" );
-			
 			// GaimDomain does not keep location state
 			// so wave it on through
-
-			return;
 		}
 
 		/// <summary>
@@ -127,7 +123,13 @@ namespace Simias.Location
 		/// FindNextDomainMembers methods.</param>
 		public void FindCloseDomainMembers( Object searchContext )
 		{
-			// FIXME: Implement FindCloseDomainMembers()
+			if (searchContext == null) return;
+
+			GaimDomainSearchContext gaimDomainSearchContext = (GaimDomainSearchContext)searchContext;
+			if (searchContexts.Contains(gaimDomainSearchContext.ID))
+			{
+				searchContexts.Remove(gaimDomainSearchContext.ID);
+			}
 		}
 
 		/// <summary>
@@ -143,11 +145,7 @@ namespace Simias.Location
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
 		public bool FindFirstDomainMembers( string domainID, out Object searchContext, out Member[] memberList, out int total, int count )
 		{
-			// FIXME: Implement FindFirstDomainMembers()
-			searchContext = null;
-			memberList = null;
-			total = 0;
-			return false;
+			return FindFirstDomainMembers(domainID, PropertyTags.FullName, String.Empty, SearchOp.Contains, out searchContext, out memberList, out total, count);
 		}
 
 		/// <summary>
@@ -164,7 +162,18 @@ namespace Simias.Location
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
 		public bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, out Object searchContext, out Member[] memberList, out int total, int count )
 		{
-			// FIXME: Implement FindFirstDomainMembers()
+			GaimDomain gaimDomain = GaimDomain.GetDomain();
+
+
+			// Ignore the domainID since we only ever have one domain to deal with
+			GaimBuddy[] buddies =
+				GaimDomain.SearchForBuddies(mapSimiasAttribToGaim(attributeName),
+											searchString,
+											operation);
+			if (buddies != null && buddies.Length > 0)
+			{
+			}
+
 			searchContext = null;
 			memberList = null;
 			total = 0;
@@ -367,6 +376,7 @@ namespace Simias.Location
 
 		#endregion
 
+		#region Private Methods
 		private Uri MemberToUri(Simias.Storage.Domain domain, Member member)
 		{
 			Uri locationUri = null;
@@ -383,5 +393,21 @@ namespace Simias.Location
 
 			return locationUri;
 		}
+
+		private string mapSimiasAttribToGaim(string attributeName)
+		{
+			switch(attributeName)
+			{
+				case PropertyTags.Given:
+					return "ScreenName";
+					break;
+				case PropertyTags.Family:
+				case PropertyTags.FullName:
+				default:
+					return "Alias";
+					break;
+			}
+		}
+		#endregion
 	}
 }

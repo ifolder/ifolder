@@ -453,6 +453,76 @@ namespace Simias.Gaim
 			SyncBuddies(domain);
 		}
 
+		public static GaimBuddy[] SearchForBuddies(string attributeName, string searchString, SearchOp operation)
+		{
+			ArrayList buddies = new ArrayList();
+			XmlDocument blistDoc = new XmlDocument();
+			try
+			{
+				blistDoc.Load(GetGaimConfigDir() + "/blist.xml");
+			}
+			catch (Exception e)
+			{
+				return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
+			}
+
+			XmlElement gaimElement = blistDoc.DocumentElement;
+			
+			XmlNodeList buddyNodes = null;
+
+			string trustedBuddiesOnlyConditionNull = "";
+			string trustedBuddiesOnlyConditionOther = "";
+			if (syncMethodPref == "plugin-enabled")
+			{
+				trustedBuddiesOnlyConditionNull = "[setting[@name='simias-url']]";
+				trustedBuddiesOnlyConditionOther = "setting[@name='simias-url'] and ";
+			}
+
+			string xpathExp;
+
+			if (searchString == null || searchString.Length == 0)
+				xpathExp = string.Format("//buddy{0}", trustedBuddiesOnlyConditionNull);
+			else
+			{
+				string searchOp;
+				if (operation == SearchOp.Begins)
+					searchOp = "starts-with";
+				else
+					searchOp = "contains";
+
+				string attrib;
+				if (attributeName == "Alias")
+					attrib = "alias";
+				else
+					attrib = "name";
+
+				xpathExp = string.Format("//buddy[{0}{1}({2}, {3})]",
+										 trustedBuddiesOnlyConditionOther,
+										 searchOp,
+										 attrib,
+									     searchString);
+			}
+
+			buddyNodes = gaimElement.SelectNodes(xpathExp);
+			if (buddyNodes == null)
+				return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
+			
+			foreach (XmlNode buddyNode in buddyNodes)
+			{
+				try
+				{
+					GaimBuddy buddy = new GaimBuddy(buddyNode);
+					buddies.Add(buddy);
+				}
+				catch (Exception e)
+				{
+					// Ignore errors (i.e., spare the log file)
+				}
+			}
+			
+			return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
+		}
+
 		/// <summary>
 		/// Obtains the string representation of this instance.
 		/// </summary>
