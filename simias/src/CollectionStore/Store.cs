@@ -517,6 +517,45 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets a list of collections that the specified user is the owner of.
+		/// </summary>
+		/// <param name="userID">User identifier that is the owner.</param>
+		/// <returns>An ICSList object containing the ShallowNode objects that the specified user is
+		/// the owner of.</returns>
+		public ICSList GetCollectionsByOwner( string userID )
+		{
+			return GetCollectionsByOwner( userID, null );
+		}
+
+		/// <summary>
+		/// Gets a list of collections that the specified user is the owner of.
+		/// </summary>
+		/// <param name="userID">User identifier that is the owner.</param>
+		/// <param name="domainID">Domain identifier to filter the collections by. If this parameter is
+		/// null, all collections are returned regardless of which domain they are in.</param>
+		/// <returns>An ICSList object containing the ShallowNode objects that the specified user is
+		/// the owner of.</returns>
+		public ICSList GetCollectionsByOwner( string userID, string domainID )
+		{
+			string normUserID = userID.ToLower();
+			string normDomainID = ( domainID != null ) ? domainID.ToLower() : null;
+			ICSList ownerList = new ICSList();
+
+			// Get all of the collections that the user is a member of in the specified domain.
+			ICSList collectionList = GetCollectionsByUser( normUserID );
+			foreach ( ShallowNode sn in collectionList )
+			{
+				Collection c = new Collection( this, sn );
+				if ( ( c.Owner.UserID == normUserID ) && ( ( normDomainID == null ) || ( c.Domain == normDomainID ) ) )
+				{
+					ownerList.Add( sn );
+				}
+			}
+
+			return ownerList;
+		}
+
+		/// <summary>
 		///  Gets all collections that have the specified type.
 		/// </summary>
 		/// <param name="type">String that contains the type of the collection(s) to search for.</param>
@@ -668,6 +707,30 @@ namespace Simias.Storage
 			}
 
 			return domain;
+		}
+
+		/// <summary>
+		/// Gets the Roster object for the specified domain.
+		/// </summary>
+		/// <param name="domainID">Identifier for the domain to return the Roster object for.</param>
+		/// <returns>A reference to a Roster object if successful. Otherwise a null is returned.</returns>
+		public Roster GetRoster( string domainID )
+		{
+			Roster roster = null;
+			string normDomainID = domainID.ToLower();
+
+			ICSList rosterList = GetCollectionsByType( NodeTypes.RosterType );
+			foreach ( ShallowNode sn in rosterList )
+			{
+				Roster r = new Roster( this, sn );
+				if ( r.Domain == normDomainID )
+				{
+					roster = r;
+					break;
+				}
+			}
+
+			return roster;
 		}
 
 		/// <summary>

@@ -483,6 +483,14 @@ namespace Simias.Storage
 					rNode = new Roster( store, document );
 					break;
 
+				case "SystemPolicy":
+					rNode = new SystemPolicy( document );
+					break;
+
+				case "UserPolicy":
+					rNode = new UserPolicy( document );
+					break;
+
 				default:
 					rNode = new Node( document );
 					break;
@@ -561,6 +569,14 @@ namespace Simias.Storage
 
 				case "Roster":
 					rNode = new Roster( collection.StoreReference, shallowNode );
+					break;
+
+				case "SystemPolicy":
+					rNode = new SystemPolicy( collection, shallowNode );
+					break;
+
+				case "UserPolicy":
+					rNode = new UserPolicy( collection, shallowNode );
 					break;
 
 				default:

@@ -136,11 +136,27 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets the SystemPolicy class name.
+		/// </summary>
+		static public string SystemPolicyType
+		{
+			get { return classNames[ 12 ]; }
+		}
+
+		/// <summary>
 		/// Gets the Tombstone class name.
 		/// </summary>
 		static public string TombstoneType
 		{
-			get { return classNames[ 12 ]; }
+			get { return classNames[ 13 ]; }
+		}
+
+		/// <summary>
+		/// Gets the UserPolicy class name.
+		/// </summary>
+		static public string UserPolicyType
+		{
+			get { return classNames[ 14 ]; }
 		}
 		#endregion
 
@@ -162,7 +178,9 @@ namespace Simias.Storage
 										  typeof( Node ).Name,
 										  typeof( Roster ).Name,
 										  typeof( StoreFileNode ).Name,
-										  "Tombstone" };
+										  typeof( SystemPolicy ).Name,
+										  "Tombstone",
+										  typeof( UserPolicy ).Name };
 		}
 		#endregion
 

@@ -279,6 +279,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\CollectionStore\SystemPolicy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\CollectionStore\UserPolicy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Common\Configuration.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -409,6 +419,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Manager\Manager.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\POBox\Message.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -440,6 +455,16 @@
                 />
                 <File
                     RelPath = "src\POBox\SubscriptionStatus.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Policy\IPolicy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Policy\WorkGroupPolicy.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

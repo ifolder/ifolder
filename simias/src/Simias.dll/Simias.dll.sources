@@ -35,6 +35,8 @@ AssemblyInfo.cs
 ../CollectionStore/ShallowNode.cs
 ../CollectionStore/Store.cs
 ../CollectionStore/StoreFileNode.cs
+../CollectionStore/SystemPolicy.cs
+../CollectionStore/UserPolicy.cs
 ../Common/SimiasMutex.cs
 ../Common/Configuration.cs
 ../Common/Exception.cs
@@ -57,6 +59,7 @@ AssemblyInfo.cs
 ../Location/LocationProviderList.cs
 ../Location/LocationService.cs
 ../Location/mDnsLocationProvider.cs
+../Manager/Manager.cs
 ../POBox/POBox.cs
 ../POBox/Message.cs
 ../POBox/Subscription.cs
@@ -64,6 +67,8 @@ AssemblyInfo.cs
 ../POBox/SubscriptionDetails.cs
 ../POBox/SubscriptionStatus.cs
 ../POBox/PostOffice.cs
+../Policy/IPolicy.cs
+../Policy/WorkGroupPolicy.cs
 ../Sniffer/SnifferClientChannelSink.cs
 ../Sniffer/SnifferClientChannelSinkProvider.cs
 ../Sniffer/SnifferMessage.cs

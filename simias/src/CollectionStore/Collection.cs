@@ -1063,7 +1063,7 @@ namespace Simias.Storage
 				bool createCollection = false;
 				bool deleteCollection = false;
 				bool hasCollection = false;
-				bool hasMembers = false;
+				bool doAdminCheck = false;
 				Member collectionOwner = null;
 
 				// Walk the commit list to see if there are any creation and deletion of the collection states.
@@ -1085,7 +1085,7 @@ namespace Simias.Storage
 					else if ( IsType( node, NodeTypes.MemberType ) )
 					{
 						// Administrative access needs to be checked because collection membership has changed.
-						hasMembers = true;
+						doAdminCheck = true;
 
 						// Keep track of any ownership changes.
 						if ( node.Properties.HasProperty( PropertyTags.Owner ) )
@@ -1099,6 +1099,11 @@ namespace Simias.Storage
 
 							collectionOwner = new Member( node );
 						}
+					}
+					else if ( IsType( node, NodeTypes.SystemPolicyType ) )
+					{
+						// Administrative access needs to be checked because system policies are controlled objects.
+						doAdminCheck = true;
 					}
 				}
 
@@ -1144,7 +1149,7 @@ namespace Simias.Storage
 
 							// If membership is changing on the collection, make sure that the current
 							// user has sufficient rights.
-							if ( hasMembers )
+							if ( doAdminCheck )
 							{
 								if ( !IsAccessAllowed( member, Access.Rights.Admin ) )
 								{
