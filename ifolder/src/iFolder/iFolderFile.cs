@@ -39,7 +39,7 @@ namespace Novell.iFolder
 		private iFolder ifolder;
 		private Node parentNode;
 		private Node thisNode;
-		private NodeStream thisNodeStream;
+		//private NodeStream thisNodeStream;
 		#endregion
 
 		#region Properties
@@ -174,7 +174,8 @@ namespace Novell.iFolder
 				// Create the stream node.
 				if (type == iFolder.iFolderFileType)
 				{
-					thisNodeStream= thisNode.AddStream(name, relativePath);
+					//thisNodeStream= thisNode.AddStream(name, relativePath);
+					thisNode.AddFileEntry(name, relativePath);
 				}
 			}
 			else
