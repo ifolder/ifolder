@@ -108,21 +108,26 @@ public class SimiasNode {
 			NamedNodeMap attribs = node.getAttributes();
 			if (attribs != null && attribs.getLength() > 0) {
 				Node nameNode = attribs.getNamedItem("name");
-				nodeName = nameNode.getNodeValue();
+				if (nameNode != null)
+				{
+					nodeName = nameNode.getNodeValue();
+					SimiasNodeProperty p = new SimiasNodeProperty("Name", "String", "", nameNode.getNodeValue());
+					properties.add(p);
+				}
 				
 				// Get the other properties while we have the Object tag
 				Node idNode = attribs.getNamedItem("id");
 				if (idNode != null)
 				{
 					id = idNode.getNodeValue(); 
-					SimiasNodeProperty p = new SimiasNodeProperty("id", "String", "", idNode.getNodeValue());
+					SimiasNodeProperty p = new SimiasNodeProperty("ID", "String", "", idNode.getNodeValue());
 					properties.add(p);
 				}
 				
 				Node typeNode = attribs.getNamedItem("type");
 				if (typeNode != null)
 				{
-					SimiasNodeProperty p = new SimiasNodeProperty("type", "String", "", typeNode.getNodeValue());
+					SimiasNodeProperty p = new SimiasNodeProperty("Type", "String", "", typeNode.getNodeValue());
 					properties.add(p);
 				}
 			}
