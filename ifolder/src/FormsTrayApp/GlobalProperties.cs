@@ -810,8 +810,6 @@ namespace Novell.FormsTrayApp
 		/// <param name="domainWeb">The DomainWeb object to add to the list.</param>
 		public void AddDomainToList(DomainWeb domainWeb)
 		{
-			bool domainInList = false;
-
 			Domain domain = null;
 			foreach (Domain d in servers.Items)
 			{

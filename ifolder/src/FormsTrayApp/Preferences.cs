@@ -52,7 +52,8 @@ namespace Novell.FormsTrayApp
 		private iFolderWebService ifWebService;
 		private bool initialConnect = false;
 		private bool shutdown = false;
-		private Domain defaultDomain = null;
+		private Domain currentDefaultDomain;
+		private Domain newDefaultDomain;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
 		private System.Windows.Forms.Label label2;
@@ -1260,8 +1261,7 @@ namespace Novell.FormsTrayApp
 		/// <param name="domainWeb">The DomainWeb object to add to the list.</param>
 		public void AddDomainToList(DomainWeb domainWeb)
 		{
-			bool domainInList = false;
-
+			Domain domain = null;
 			foreach (ListViewItem lvi in accounts.Items)
 			{
 				Domain d = (Domain)lvi.Tag;
@@ -1269,23 +1269,23 @@ namespace Novell.FormsTrayApp
 				if (d.ID.Equals(domainWeb.ID))
 				{
 					// The domain is already in the list.
-					domainInList = true;
+					domain = d;
 				}
 			}
 
-			if (!domainInList)
+			if (domain == null)
 			{
+				domain = new Domain(domainWeb);
+
 				// Reset the current default domain if the added domain is set to be the default.
-				if ((defaultDomain != null) && domainWeb.IsDefault)
-				{
-					defaultDomain.DomainWeb.IsDefault = false;
-				}
-
-				Domain domain = new Domain(domainWeb);
-
 				if (domainWeb.IsDefault)
 				{
-					defaultDomain = domain;
+					if (currentDefaultDomain != null)
+					{
+						currentDefaultDomain.DomainWeb.IsDefault = false;
+					}
+
+					currentDefaultDomain = domain;
 				}
 
 				try
@@ -1293,6 +1293,7 @@ namespace Novell.FormsTrayApp
 					iFolderUser ifolderUser = ifWebService.GetiFolderUser(domainWeb.UserID);
 					ListViewItem lvi = new ListViewItem(new string[] {ifolderUser.Name, domain.Name});
 					lvi.Tag = domain;
+					lvi.Selected = domainWeb.IsDefault;
 					accounts.Items.Add(lvi);
 				}
 				catch (Exception ex)
@@ -1427,11 +1428,14 @@ namespace Novell.FormsTrayApp
 				}
 			}
 
-			if ((domain != null) && !domain.ID.Equals(defaultDomain.ID))
+			if ((domain != null) && !domain.ID.Equals(currentDefaultDomain.ID))
 			{
 				try
 				{
 					ifWebService.SetDefaultDomain(domain.DomainWeb.ID);
+
+					currentDefaultDomain = domain;
+					newDefaultDomain = null;
 
 					if (ChangeDefaultDomain != null)
 					{
@@ -1531,6 +1535,7 @@ namespace Novell.FormsTrayApp
 			if (!shutdown)
 			{
 				e.Cancel = true;
+				currentDefaultDomain = newDefaultDomain = null;
 				Hide();
 			}
 		}
@@ -1626,17 +1631,19 @@ namespace Novell.FormsTrayApp
 				try
 				{
 					Domain domain = (Domain)accounts.SelectedItems[0].Tag;
-//					ifWebService.SetDefaultDomain(domain.DomainWeb.ID);
-
-					// TODO: need to rework this ... may need to keep track of currently "non-commited"
-					// default domain as well as the actual default domain.
 
 					// Reset the flag on the current default domain.
-					defaultDomain.DomainWeb.IsDefault = false;
+					currentDefaultDomain.DomainWeb.IsDefault = false;
+
+					// Reset the flag on the "old" new default domain.
+					if (newDefaultDomain != null)
+					{
+						newDefaultDomain.DomainWeb.IsDefault = false;
+					}
 
 					// Set the flag on the new default domain.
 					domain.DomainWeb.IsDefault = true;
-					defaultDomain = domain;
+					newDefaultDomain = domain;
 
 					// Disable the checkbox so that it cannot be unchecked.
 					defaultServer.Enabled = false;
@@ -1658,14 +1665,20 @@ namespace Novell.FormsTrayApp
 
 		private void userName_TextChanged(object sender, System.EventArgs e)
 		{
-			ListViewItem lvi = accounts.SelectedItems[0];
-			lvi.SubItems[0].Text = userName.Text;
+			if (userName.Focused)
+			{
+				ListViewItem lvi = accounts.SelectedItems[0];
+				lvi.SubItems[0].Text = userName.Text;
+			}
 		}
 
 		private void server_TextChanged(object sender, System.EventArgs e)
 		{
-			ListViewItem lvi = accounts.SelectedItems[0];
-			lvi.SubItems[1].Text = server.Text;
+			if (server.Focused)
+			{
+				ListViewItem lvi = accounts.SelectedItems[0];
+				lvi.SubItems[1].Text = server.Text;
+			}
 		}
 
 		private void removeAccount_Click(object sender, System.EventArgs e)
@@ -1725,6 +1738,11 @@ namespace Novell.FormsTrayApp
 			}
 			else
 			{
+				// Reset the controls.
+				userName.Text = server.Text = password.Text = string.Empty;
+				rememberPassword.Checked = autoLogin.Checked = defaultServer.Checked = false;
+
+				// Disable the controls.
 				userName.Enabled = server.Enabled = password.Enabled = rememberPassword.Enabled =
 					autoLogin.Enabled = defaultServer.Enabled = details.Enabled = 
 					removeAccount.Enabled = false;
@@ -1758,8 +1776,14 @@ namespace Novell.FormsTrayApp
 				// Update default.
 				if (domainWeb.IsDefault)
 				{
-					defaultDomain.DomainWeb.IsDefault = false;
-					defaultDomain = domain;
+					if (newDefaultDomain != null)
+					{
+						newDefaultDomain.DomainWeb.IsDefault = false;
+						newDefaultDomain = null;
+					}
+
+					currentDefaultDomain.DomainWeb.IsDefault = false;
+					currentDefaultDomain = domain;
 					defaultServer.Checked = true;
 					defaultServer.Enabled = false;
 				}
