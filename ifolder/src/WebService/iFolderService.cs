@@ -1176,6 +1176,35 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
+		/// WebMethod that gets the DiskSpaceQuota for a given member
+		/// </summary>
+		/// <param name = "DomainID">
+		/// The ID of the domain that the member belongs to.
+		/// </param>
+		/// <param name = "UserID">
+		/// The ID of the member to get the DiskSpaceQuota
+		/// </param>
+		/// <returns>
+		/// DiskSpaceQuota for the specified member
+		/// </returns>
+		[WebMethod(Description="Gets the DiskSpaceQuota for a member")]
+		[SoapRpcMethod]
+		public DiskSpace GetDomainUserDiskSpace( string DomainID, string UserID )
+		{
+			try
+			{
+				return DiskSpace.GetMemberDiskSpace(DomainID, UserID);
+			}
+			catch(Exception e)
+			{
+				throw e;
+			}
+		}
+
+
+
+
+		/// <summary>
 		/// WebMethod that gets the DiskSpaceQuota for a given iFolder
 		/// </summary>
 		/// <param name = "iFolderID">
@@ -1208,6 +1237,28 @@ namespace Novell.iFolder.Web
 		public void SetUserDiskSpaceLimit( string UserID, long Limit )
 		{
 			DiskSpace.SetUserDiskSpaceLimit(UserID, Limit);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that sets the disk space limit for a member
+		/// </summary>
+		/// <param name = "DomainID">
+		/// The ID of the domain that the member belongs to.
+		/// </param>
+		/// <param name = "UserID">
+		/// The ID of the member to set the disk space limit
+		/// </param>
+		/// <param name = "Limit">
+		/// The size to set in MegaBytes
+		/// </param>
+		[WebMethod(Description="Sets the Disk Space Limit for a user")]
+		[SoapRpcMethod]
+		public void SetDomainUserDiskSpaceLimit( string DomainID, string UserID, long Limit )
+		{
+			DiskSpace.SetUserDiskSpaceLimit(DomainID, UserID, Limit);
 		}
 
 

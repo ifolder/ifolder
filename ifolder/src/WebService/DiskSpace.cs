@@ -85,6 +85,42 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
+		/// WebMethod that gets the DiskSpaceQuota for a given member
+		/// </summary>
+		/// <param name = "DomainID">
+		/// The ID of the domain that the member belongs to.
+		/// </param>
+		/// <param name = "UserID">
+		/// The ID of the member to get the DiskSpaceQuota
+		/// </param>
+		/// <returns>
+		/// DiskSpaceQuota for the specified member
+		/// </returns>
+		public static DiskSpace GetMemberDiskSpace( string DomainID, string UserID )
+		{
+			Store store = Store.GetStore();
+
+			Roster roster = 
+					store.GetDomain(DomainID).GetRoster(store);
+			if(roster == null)
+				throw new Exception("Unable to access user roster");
+
+			Simias.Storage.Member simMem = roster.GetMemberByID(UserID);
+			if(simMem == null)
+				throw new Exception("Invalid UserID");
+
+			Simias.Policy.DiskSpaceQuota squota =
+				Simias.Policy.DiskSpaceQuota.Get(simMem);
+			if(squota == null)
+				throw new Exception("Unable to get Disk Space Quota");
+
+			return new DiskSpace(squota);
+		}
+
+
+
+
+		/// <summary>
 		/// WebMethod that gets the DiskSpaceQuota for a given iFolder
 		/// </summary>
 		/// <param name = "iFolderID">
@@ -127,6 +163,34 @@ namespace Novell.iFolder.Web
 
 			Roster roster = 
 					store.GetDomain(store.DefaultDomain).GetRoster(store);
+			if(roster == null)
+				throw new Exception("Unable to access user roster");
+
+			Simias.Storage.Member simMem = roster.GetMemberByID(UserID);
+			if(simMem == null)
+				throw new Exception("Invalid UserID");
+
+			Simias.Policy.DiskSpaceQuota.Set(simMem, limit);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that sets the disk space limit for a member
+		/// </summary>
+		/// <param name = "DomainID">
+		/// The ID of the domain that the member belongs to.
+		/// </param>
+		/// <param name = "UserID">
+		/// The ID of the member to set the disk space limit
+		/// </param>
+		public static void SetUserDiskSpaceLimit( string DomainID, string UserID, long limit )
+		{
+			Store store = Store.GetStore();
+
+			Roster roster = 
+					store.GetDomain(DomainID).GetRoster(store);
 			if(roster == null)
 				throw new Exception("Unable to access user roster");
 

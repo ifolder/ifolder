@@ -416,6 +416,13 @@
   <message name="GetUserDiskSpaceSoapOut">
     <part name="GetUserDiskSpaceResult" xmlns:q17="http://novell.com/ifolder/web/encodedTypes" type="q17:DiskSpace" />
   </message>
+  <message name="GetDomainUserDiskSpaceSoapIn">
+    <part name="DomainID" type="s:string" />
+    <part name="UserID" type="s:string" />
+  </message>
+  <message name="GetDomainUserDiskSpaceSoapOut">
+    <part name="GetDomainUserDiskSpaceResult" xmlns:q17="http://novell.com/ifolder/web/encodedTypes" type="q17:DiskSpace" />
+  </message>
   <message name="GetiFolderDiskSpaceSoapIn">
     <part name="iFolderID" type="s:string" />
   </message>
@@ -427,6 +434,12 @@
     <part name="Limit" type="s:long" />
   </message>
   <message name="SetUserDiskSpaceLimitSoapOut" />
+  <message name="SetDomainUserDiskSpaceLimitSoapIn">
+    <part name="DomainID" type="s:string" />
+    <part name="UserID" type="s:string" />
+    <part name="Limit" type="s:long" />
+  </message>
+  <message name="SetDomainUserDiskSpaceLimitSoapOut" />
   <message name="SetiFolderDiskSpaceLimitSoapIn">
     <part name="iFolderID" type="s:string" />
     <part name="Limit" type="s:long" />
@@ -656,6 +669,13 @@
   <message name="GetUserDiskSpaceHttpGetOut">
     <part name="Body" element="s0:DiskSpace" />
   </message>
+  <message name="GetDomainUserDiskSpaceHttpGetIn">
+    <part name="DomainID" type="s:string" />
+    <part name="UserID" type="s:string" />
+  </message>
+  <message name="GetDomainUserDiskSpaceHttpGetOut">
+    <part name="Body" element="s0:DiskSpace" />
+  </message>
   <message name="GetiFolderDiskSpaceHttpGetIn">
     <part name="iFolderID" type="s:string" />
   </message>
@@ -667,6 +687,12 @@
     <part name="Limit" type="s:long" />
   </message>
   <message name="SetUserDiskSpaceLimitHttpGetOut" />
+  <message name="SetDomainUserDiskSpaceLimitHttpGetIn">
+    <part name="DomainID" type="s:string" />
+    <part name="UserID" type="s:string" />
+    <part name="Limit" type="s:long" />
+  </message>
+  <message name="SetDomainUserDiskSpaceLimitHttpGetOut" />
   <message name="SetiFolderDiskSpaceLimitHttpGetIn">
     <part name="iFolderID" type="s:string" />
     <part name="Limit" type="s:long" />
@@ -896,6 +922,13 @@
   <message name="GetUserDiskSpaceHttpPostOut">
     <part name="Body" element="s0:DiskSpace" />
   </message>
+  <message name="GetDomainUserDiskSpaceHttpPostIn">
+    <part name="DomainID" type="s:string" />
+    <part name="UserID" type="s:string" />
+  </message>
+  <message name="GetDomainUserDiskSpaceHttpPostOut">
+    <part name="Body" element="s0:DiskSpace" />
+  </message>
   <message name="GetiFolderDiskSpaceHttpPostIn">
     <part name="iFolderID" type="s:string" />
   </message>
@@ -907,6 +940,12 @@
     <part name="Limit" type="s:long" />
   </message>
   <message name="SetUserDiskSpaceLimitHttpPostOut" />
+  <message name="SetDomainUserDiskSpaceLimitHttpPostIn">
+    <part name="DomainID" type="s:string" />
+    <part name="UserID" type="s:string" />
+    <part name="Limit" type="s:long" />
+  </message>
+  <message name="SetDomainUserDiskSpaceLimitHttpPostOut" />
   <message name="SetiFolderDiskSpaceLimitHttpPostIn">
     <part name="iFolderID" type="s:string" />
     <part name="Limit" type="s:long" />
@@ -1121,6 +1160,11 @@
       <output message="s0:GetUserDiskSpaceSoapOut" />
       <documentation>Gets the DiskSpaceQuota for a member</documentation>
     </operation>
+    <operation name="GetDomainUserDiskSpace">
+      <input message="s0:GetDomainUserDiskSpaceSoapIn" />
+      <output message="s0:GetDomainUserDiskSpaceSoapOut" />
+      <documentation>Gets the DiskSpaceQuota for a member</documentation>
+    </operation>
     <operation name="GetiFolderDiskSpace">
       <input message="s0:GetiFolderDiskSpaceSoapIn" />
       <output message="s0:GetiFolderDiskSpaceSoapOut" />
@@ -1129,6 +1173,11 @@
     <operation name="SetUserDiskSpaceLimit">
       <input message="s0:SetUserDiskSpaceLimitSoapIn" />
       <output message="s0:SetUserDiskSpaceLimitSoapOut" />
+      <documentation>Sets the Disk Space Limit for a user</documentation>
+    </operation>
+    <operation name="SetDomainUserDiskSpaceLimit">
+      <input message="s0:SetDomainUserDiskSpaceLimitSoapIn" />
+      <output message="s0:SetDomainUserDiskSpaceLimitSoapOut" />
       <documentation>Sets the Disk Space Limit for a user</documentation>
     </operation>
     <operation name="SetiFolderDiskSpaceLimit">
@@ -1343,6 +1392,11 @@
       <output message="s0:GetUserDiskSpaceHttpGetOut" />
       <documentation>Gets the DiskSpaceQuota for a member</documentation>
     </operation>
+    <operation name="GetDomainUserDiskSpace">
+      <input message="s0:GetDomainUserDiskSpaceHttpGetIn" />
+      <output message="s0:GetDomainUserDiskSpaceHttpGetOut" />
+      <documentation>Gets the DiskSpaceQuota for a member</documentation>
+    </operation>
     <operation name="GetiFolderDiskSpace">
       <input message="s0:GetiFolderDiskSpaceHttpGetIn" />
       <output message="s0:GetiFolderDiskSpaceHttpGetOut" />
@@ -1351,6 +1405,11 @@
     <operation name="SetUserDiskSpaceLimit">
       <input message="s0:SetUserDiskSpaceLimitHttpGetIn" />
       <output message="s0:SetUserDiskSpaceLimitHttpGetOut" />
+      <documentation>Sets the Disk Space Limit for a user</documentation>
+    </operation>
+    <operation name="SetDomainUserDiskSpaceLimit">
+      <input message="s0:SetDomainUserDiskSpaceLimitHttpGetIn" />
+      <output message="s0:SetDomainUserDiskSpaceLimitHttpGetOut" />
       <documentation>Sets the Disk Space Limit for a user</documentation>
     </operation>
     <operation name="SetiFolderDiskSpaceLimit">
@@ -1565,6 +1624,11 @@
       <output message="s0:GetUserDiskSpaceHttpPostOut" />
       <documentation>Gets the DiskSpaceQuota for a member</documentation>
     </operation>
+    <operation name="GetDomainUserDiskSpace">
+      <input message="s0:GetDomainUserDiskSpaceHttpPostIn" />
+      <output message="s0:GetDomainUserDiskSpaceHttpPostOut" />
+      <documentation>Gets the DiskSpaceQuota for a member</documentation>
+    </operation>
     <operation name="GetiFolderDiskSpace">
       <input message="s0:GetiFolderDiskSpaceHttpPostIn" />
       <output message="s0:GetiFolderDiskSpaceHttpPostOut" />
@@ -1573,6 +1637,11 @@
     <operation name="SetUserDiskSpaceLimit">
       <input message="s0:SetUserDiskSpaceLimitHttpPostIn" />
       <output message="s0:SetUserDiskSpaceLimitHttpPostOut" />
+      <documentation>Sets the Disk Space Limit for a user</documentation>
+    </operation>
+    <operation name="SetDomainUserDiskSpaceLimit">
+      <input message="s0:SetDomainUserDiskSpaceLimitHttpPostIn" />
+      <output message="s0:SetDomainUserDiskSpaceLimitHttpPostOut" />
       <documentation>Sets the Disk Space Limit for a user</documentation>
     </operation>
     <operation name="SetiFolderDiskSpaceLimit">
@@ -1900,6 +1969,15 @@
         <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
+    <operation name="GetDomainUserDiskSpace">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetDomainUserDiskSpace" style="rpc" />
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
+      </output>
+    </operation>
     <operation name="GetiFolderDiskSpace">
       <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderDiskSpace" style="rpc" />
       <input>
@@ -1911,6 +1989,15 @@
     </operation>
     <operation name="SetUserDiskSpaceLimit">
       <soap:operation soapAction="http://novell.com/ifolder/web/SetUserDiskSpaceLimit" style="rpc" />
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
+      </output>
+    </operation>
+    <operation name="SetDomainUserDiskSpaceLimit">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetDomainUserDiskSpaceLimit" style="rpc" />
       <input>
         <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
@@ -2285,6 +2372,15 @@
         <mime:mimeXml part="Body" />
       </output>
     </operation>
+    <operation name="GetDomainUserDiskSpace">
+      <http:operation location="/GetDomainUserDiskSpace" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
     <operation name="GetiFolderDiskSpace">
       <http:operation location="/GetiFolderDiskSpace" />
       <input>
@@ -2296,6 +2392,13 @@
     </operation>
     <operation name="SetUserDiskSpaceLimit">
       <http:operation location="/SetUserDiskSpaceLimit" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output />
+    </operation>
+    <operation name="SetDomainUserDiskSpaceLimit">
+      <http:operation location="/SetDomainUserDiskSpaceLimit" />
       <input>
         <http:urlEncoded />
       </input>
@@ -2652,6 +2755,15 @@
         <mime:mimeXml part="Body" />
       </output>
     </operation>
+    <operation name="GetDomainUserDiskSpace">
+      <http:operation location="/GetDomainUserDiskSpace" />
+      <input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
     <operation name="GetiFolderDiskSpace">
       <http:operation location="/GetiFolderDiskSpace" />
       <input>
@@ -2663,6 +2775,13 @@
     </operation>
     <operation name="SetUserDiskSpaceLimit">
       <http:operation location="/SetUserDiskSpaceLimit" />
+      <input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </input>
+      <output />
+    </operation>
+    <operation name="SetDomainUserDiskSpaceLimit">
+      <http:operation location="/SetDomainUserDiskSpaceLimit" />
       <input>
         <mime:content type="application/x-www-form-urlencoded" />
       </input>
