@@ -410,6 +410,7 @@ src/mDnsService/Makefile
 src/SimiasAspService/Makefile
 src/WebService/Makefile
 test/Makefile
+test/ChangeLog/Makefile
 test/Common/Makefile
 test/Configuration/Makefile
 test/CollectionStore/Makefile

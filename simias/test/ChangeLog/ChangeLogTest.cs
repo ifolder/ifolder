@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 
 using NUnit.Framework;
@@ -32,6 +34,7 @@ namespace ChangeLogTest
 		public void Init()
 		{
 			Configuration config = Configuration.CreateDefaultConfig( Directory.GetCurrentDirectory() );
+			SimiasRemoting.Configure( config );
 
 			manager = new Manager( config );
 			manager.StartServices();
@@ -143,9 +146,6 @@ namespace ChangeLogTest
 		[Test]
 		public void Test3()
 		{
-			manager.StopServices();
-			manager.WaitForServicesStopped();
-
 			Collection collection = store.GetCollectionByID( collectionID );
 			ChangeLogReader logReader = new ChangeLogReader( collection );
 
@@ -155,9 +155,6 @@ namespace ChangeLogTest
 			{
 				throw new ApplicationException( "Still have unconsumed events." );
 			}
-
-			manager.StartServices();
-			manager.WaitForServicesStarted();
 		}
 		#endregion
 
@@ -168,10 +165,9 @@ namespace ChangeLogTest
 		[TestFixtureTearDown]
 		public void Cleanup()
 		{
-			store.Delete();
-
 			manager.StopServices();
 			manager.WaitForServicesStopped();
+			store.Delete();
 		}
 		#endregion
 	}

@@ -72,7 +72,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Cross-process database lock function.
 		/// </summary>
-		private SimiasMutex storeMutex;
+		static private Mutex storeMutex = new Mutex();
 
 		/// <summary>
 		/// String that identifies the publisher of events for this object instance.
@@ -229,9 +229,6 @@ namespace Simias.Storage
 					localDb = new LocalDatabase( this );
 					nodeList.Add( localDb );
 
-					// Create the database lock.
-					storeMutex = new SimiasMutex( ID );
-
 					// Create an identity that represents the current user.  This user will become the 
 					// database owner. Add the domain mapping to the identity.
 					identity = new Identity( this, Environment.UserName, Guid.NewGuid().ToString() );
@@ -325,9 +322,6 @@ namespace Simias.Storage
 				{
 					throw new DoesNotExistException( String.Format( "User {0} does not exist in the database.", Environment.UserName ) );
 				}
-
-				// Create the database lock.
-				storeMutex = new SimiasMutex( ID );
 			}
 		}
 		#endregion

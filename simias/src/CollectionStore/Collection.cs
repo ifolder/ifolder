@@ -1246,10 +1246,10 @@ namespace Simias.Storage
 						}
 					}
 
+					// Acquire the store lock.
+					store.LockStore();
 					try
 					{
-						// Acquire the store lock.
-						store.LockStore();
 						ProcessCommit( commitList );
 					}
 					finally

@@ -38,6 +38,192 @@ using Simias.Storage;
 namespace Simias.Storage
 {
 	/// <summary>
+	/// Class used to implement an inprocess mutex that protects the log file from reentrancy.
+	/// </summary>
+	internal class LogMutex
+	{
+		#region Class Members
+		/// <summary>
+		/// Table used to keep track of per log file mutexes.
+		/// </summary>
+		static private Hashtable mutexTable = new Hashtable();
+		#endregion
+
+		#region Constructor
+		/// <summary>
+		/// Initializes a new instance of the Mutex class with default properties.
+		/// </summary>
+		/// <param name="collectionID">Identifier of the collection associated 
+		/// with the log file.</param>
+		public LogMutex( string collectionID )
+		{
+			lock( typeof( LogMutex ) )
+			{
+				// See if a mutex already exists for this collection's logfile.
+				if ( !mutexTable.ContainsKey( collectionID ) )
+				{
+					mutexTable.Add( collectionID, new Mutex() );
+				}
+			}
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the Mutex class with a Boolean value 
+		/// indicating whether the calling thread should have initial ownership 
+		/// of the mutex.
+		/// </summary>
+		/// <param name="collectionID">Identifier of the collection associated 
+		/// with the log file.</param>
+		/// <param name="initiallyOwned">true to give the calling thread initial 
+		/// ownership of the mutex; otherwise, false.</param>
+		public LogMutex( string collectionID, bool initiallyOwned )
+		{
+			bool created = false;
+			lock( typeof( LogMutex ) )
+			{
+				if ( !mutexTable.ContainsKey( collectionID ) )
+				{
+					mutexTable.Add( collectionID, new Mutex( initiallyOwned ) );
+					created = true;
+				}
+			}
+
+			// If the mutex already existed and the caller specified to acquire
+			// the mutex before returning, get it now.
+			if ( !created && initiallyOwned )
+			{
+				WaitOne( collectionID );
+			}
+		}
+		#endregion
+
+		#region Public Methods
+		/// <summary>
+		/// Releases all resources held by the current WaitHandle.
+		/// </summary>
+		/// <param name="collectionID">Identifier of the collection associated 
+		/// with the log file.</param>
+		public void Close( string collectionID )
+		{
+			lock( typeof( LogMutex ) )
+			{
+				Mutex mutex = mutexTable[ collectionID ] as Mutex;
+				if ( mutex != null )
+				{
+					mutex.Close();
+					mutexTable.Remove( collectionID );
+				}
+			}
+		}
+
+		/// <summary>
+		/// Releases the mutex once.
+		/// </summary>
+		/// <param name="collectionID">Identifier of the collection associated 
+		/// with the log file.</param>
+		public void ReleaseMutex( string collectionID )
+		{
+			Mutex mutex = null;
+
+			lock ( typeof( LogMutex ) )
+			{
+				mutex = mutexTable[ collectionID ] as Mutex;
+			}
+
+			if ( mutex == null )
+			{
+				throw new SimiasException( "Log mutex does not exist for collection " + collectionID );
+			}
+
+			mutex.ReleaseMutex();
+		}
+
+		/// <summary>
+		/// Blocks the current thread until the current WaitHandle receives a signal.
+		/// </summary>
+		/// <param name="collectionID">Identifier of the collection associated 
+		/// with the log file.</param>
+		/// <returns>true if the current instance receives a signal. If the current 
+		/// instance is never signaled, WaitOne never returns.</returns>
+		public bool WaitOne( string collectionID )
+		{
+			Mutex mutex = null;
+
+			lock( typeof( LogMutex ) )
+			{
+				mutex = mutexTable[ collectionID ] as Mutex;
+			}
+
+			if ( mutex == null )
+			{
+				throw new SimiasException( "Log mutex does not exist for collection " + collectionID );
+			}
+
+			return mutex.WaitOne();
+		}
+
+		/// <summary>
+		/// Blocks the current thread until the current WaitHandle receives a signal, 
+		/// using 32-bit signed integer to measure the time interval and specifying 
+		/// whether to exit the synchronization domain before the wait.
+		/// </summary>
+		/// <param name="collectionID">Identifier of the collection associated 
+		/// with the log file.</param>
+		/// <param name="millisecondsTimeout">The number of milliseconds to wait, or 
+		/// Timeout.Infinite (-1) to wait indefinitely. </param>
+		/// <param name="exitContext">true to exit the synchronization domain for the 
+		/// context before the wait (if in a synchronized context), and reacquire it; otherwise, false.</param>
+		/// <returns>true if the current instance receives a signal; otherwise, false.</returns>
+		public bool WaitOne( string collectionID, int millisecondsTimeout, bool exitContext )
+		{
+			Mutex mutex = null;
+
+			lock( typeof( LogMutex ) )
+			{
+				mutex = mutexTable[ collectionID ] as Mutex;
+			}
+
+			if ( mutex == null )
+			{
+				throw new SimiasException( "Log mutex does not exist for collection " + collectionID );
+			}
+
+			return mutex.WaitOne( millisecondsTimeout, exitContext );
+		}
+
+		/// <summary>
+		/// Blocks the current thread until the current instance receives a signal, 
+		/// using a TimeSpan to measure the time interval and specifying whether to 
+		/// exit the synchronization domain before the wait.
+		/// </summary>
+		/// <param name="collectionID">Identifier of the collection associated 
+		/// with the log file.</param>
+		/// <param name="timeout">The number of milliseconds to wait, or a TimeSpan 
+		/// that represents -1 milliseconds to wait indefinitely.</param>
+		/// <param name="exitContext">true to exit the synchronization domain for the 
+		/// context before the wait (if in a synchronized context), and reacquire it; 
+		/// otherwise, false.</param>
+		/// <returns>true if the current instance receives a signal; otherwise, false.</returns>
+		public bool WaitOne( string collectionID, TimeSpan timeout, bool exitContext )
+		{
+			Mutex mutex = null;
+
+			lock( typeof( LogMutex ) )
+			{
+				mutex = mutexTable[ collectionID ] as Mutex;
+			}
+
+			if ( mutex == null )
+			{
+				throw new SimiasException( "Log mutex does not exist for collection " + collectionID );
+			}
+
+			return mutex.WaitOne( timeout, exitContext );
+		}
+		#endregion
+	}
+
+	/// <summary>
 	/// Exception that indicates that the event context cookie has expired and that
 	/// sync must dredge for changes.
 	/// </summary>
@@ -754,6 +940,16 @@ namespace Simias.Storage
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger( typeof( ChangeLogWriter ) );
 
 		/// <summary>
+		/// Collection that the log file belongs to.
+		/// </summary>
+		private string collectionID;
+        
+		/// <summary>
+		/// Inprocess mutex used to control access to the log file.
+		/// </summary>
+		private LogMutex mutex;
+
+		/// <summary>
 		/// Specifies whether object is viable.
 		/// </summary>
 		private bool disposed = false;
@@ -792,55 +988,66 @@ namespace Simias.Storage
 		/// <param name="collectionID">Collection identifier to listen for events.</param>
 		public ChangeLogWriter( Configuration config, string collectionID )
 		{
-			// Get the path to the store managed directory for this collection.
-			string logFileDir = Path.Combine( config.StorePath, "log" );
-			if ( !Directory.Exists( logFileDir ) )
-			{
-				Directory.CreateDirectory( logFileDir );
-			}
+			this.collectionID = collectionID;
 
-			// Build the log file path.
-			logFilePath = Path.Combine( logFileDir, collectionID + ".changelog" );
+			// Create the mutex that will protect this logfile.
+			mutex = new LogMutex( collectionID, true );
+			try
+			{
+				// Get the path to the store managed directory for this collection.
+				string logFileDir = Path.Combine( config.StorePath, "log" );
+				if ( !Directory.Exists( logFileDir ) )
+				{
+					Directory.CreateDirectory( logFileDir );
+				}
 
-			// Check to see if the file exists.
-			if ( !File.Exists( logFilePath ) )
-			{
-				// Create the file.
-				FileStream fs = new FileStream( logFilePath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None );
-				try
+				// Build the log file path.
+				logFilePath = Path.Combine( logFileDir, collectionID + ".changelog" );
+
+				// Check to see if the file exists.
+				if ( !File.Exists( logFilePath ) )
 				{
-					// Create the log file header.
-					CreateLogFileHeader( fs, collectionID );
-				}
-				finally
-				{
-					fs.Close();
-				}
-			}
-			else
-			{
-				// Open the existing log file.
-				FileStream fs = new FileStream( logFilePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None );
-				try
-				{
-					// Check to see if the log file was shutdown gracefully.
-					if ( CheckIntegrity( fs, collectionID ) )
+					// Create the file.
+					FileStream fs = new FileStream( logFilePath, FileMode.CreateNew, FileAccess.ReadWrite );
+					try
 					{
-						// Setup the current write position.
-						SetCurrentWritePosition( fs );
+						// Create the log file header.
+						CreateLogFileHeader( fs, collectionID );
+					}
+					finally
+					{
+						fs.Close();
 					}
 				}
-				finally
+				else
 				{
-					fs.Close();
+					// Open the existing log file.
+					FileStream fs = new FileStream( logFilePath, FileMode.Open, FileAccess.ReadWrite );
+					try
+					{
+						// Check to see if the log file was shutdown gracefully.
+						if ( CheckIntegrity( fs, collectionID ) )
+						{
+							// Setup the current write position.
+							SetCurrentWritePosition( fs );
+						}
+					}
+					finally
+					{
+						fs.Close();
+					}
 				}
-			}
 
-			// Setup the event listeners.
-			subscriber = new EventSubscriber(collectionID );
-			subscriber.NodeChanged += new NodeEventHandler( OnNodeChange );
-			subscriber.NodeCreated += new NodeEventHandler( OnNodeCreate );
-			subscriber.NodeDeleted += new NodeEventHandler( OnNodeDelete );
+				// Setup the event listeners.
+				subscriber = new EventSubscriber(collectionID );
+				subscriber.NodeChanged += new NodeEventHandler( OnNodeChange );
+				subscriber.NodeCreated += new NodeEventHandler( OnNodeCreate );
+				subscriber.NodeDeleted += new NodeEventHandler( OnNodeDelete );
+			}
+			finally
+			{
+				mutex.ReleaseMutex( collectionID );
+			}
 		}
 		#endregion
 
@@ -967,32 +1174,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Opens the event log file, retrying if the file is currently in use.
-		/// </summary>
-		/// <returns>A FileStream object associated with the event log file.</returns>
-		private FileStream OpenLogFile()
-		{
-			FileStream fs = null;
-
-			// Stay in the loop until the file is opened or we tried the maximum number of times.
-			for ( int i = 0; ( fs == null ) && ( i < 10 ); ++i )
-			{
-				try
-				{
-					// Open the log file.
-					fs = new FileStream( logFilePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None );
-				}
-				catch ( IOException )
-				{
-					// Wait for a moment before trying to open the file again.
-					Thread.Sleep( 100 );
-				}
-			}
-
-			return fs;
-		}
-
-		/// <summary>
 		/// Sets the next write position in the log file.
 		/// </summary>
 		/// <param name="fs">FileStream object that references the log file.</param>
@@ -1071,12 +1252,14 @@ namespace Simias.Storage
 		/// <param name="record">ChangeLogRecord to write to file.</param>
 		private void WriteLog( ChangeLogRecord record )
 		{
-			// Open the log file.
-			FileStream fs = OpenLogFile();
-			if ( fs != null )
+			// Acquire the mutex protecting the log file.
+			mutex.WaitOne( collectionID );
+			try
 			{
 				try
 				{
+					// Open the log file.
+					FileStream fs = new FileStream( logFilePath, FileMode.Open, FileAccess.ReadWrite );
 					try
 					{
 						// Add the next ID to the record.
@@ -1094,19 +1277,19 @@ namespace Simias.Storage
 							writePosition = LogFileHeader.RecordSize;
 						}
 					}
-					catch ( IOException e )
+					finally
 					{
-						log.Error( "Failed to write event to event log. Epoch: {0}, ID: {1}, Operation: {2} {3}", record.Epoch, record.EventID, record.Operation, e.Message );
+						fs.Close();
 					}
 				}
-				finally
+				catch( IOException e )
 				{
-					fs.Close();
+					log.Error( "Lost event - Epoch: {0}, ID: {1}, Operation: {2}. Exception {3}", record.Epoch, record.EventID, record.Operation, e.Message );
 				}
 			}
-			else
+			finally
 			{
-				log.Error( "Failed to open event log file. Lost event - Epoch: {0}, ID: {1}, Operation: {2}", record.Epoch, record.EventID, record.Operation );
+				mutex.ReleaseMutex( collectionID );
 			}
 		}
 
@@ -1116,22 +1299,31 @@ namespace Simias.Storage
 		/// <param name="status">Status of the log file.</param>
 		private void WriteLogFileStatus( LogFileHeader.LogState status )
 		{
-			// Open the log file.
-			FileStream fs = OpenLogFile();
-			if ( fs != null )
+			// Acquire the mutex protecting the log file.
+			mutex.WaitOne( collectionID );
+			try
 			{
 				try
 				{
-					WriteLogFileStatus( fs, status );
+					// Open the log file.
+					FileStream fs = new FileStream( logFilePath, FileMode.Open, FileAccess.ReadWrite );
+					try
+					{
+						WriteLogFileStatus( fs, status );
+					}
+					finally
+					{
+						fs.Close();
+					}
 				}
-				finally
+				catch( IOException e )
 				{
-					fs.Close();
+					log.Error( "Failed to open event log file. Lost status - status: {0}. Exception: {1}", status, e.Message );
 				}
 			}
-			else
+			finally
 			{
-				log.Error( "Failed to open event log file. Lost status - status: {0}", status );
+				mutex.ReleaseMutex( collectionID );
 			}
 		}
 
@@ -1233,6 +1425,16 @@ namespace Simias.Storage
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger( typeof( ChangeLogReader ) );
 
 		/// <summary>
+		/// Collection that the log file belongs to.
+		/// </summary>
+		private string collectionID;
+        
+		/// <summary>
+		/// Inprocess mutex used to control access to the log file.
+		/// </summary>
+		private LogMutex mutex;
+
+		/// <summary>
 		/// Contains absolute path to the logfile.
 		/// </summary>
 		private string logFilePath;
@@ -1245,6 +1447,11 @@ namespace Simias.Storage
 		/// <param name="collection">Collection object to listen for events on.</param>
 		public ChangeLogReader( Collection collection )
 		{
+			collectionID = collection.ID;
+
+			// Create the mutex that will protect this logfile.
+			mutex = new LogMutex( collectionID );
+
 			// Build the log file path.
 			logFilePath = Path.Combine( Path.Combine( collection.StoreReference.StorePath, "log" ), collection.ID + ".changelog" );
 		}
@@ -1305,34 +1512,6 @@ namespace Simias.Storage
 
 			return foundOffset;
 		}
-
-		/// <summary>
-		/// Opens the event log file, retrying if the file is currently in use.
-		/// </summary>
-		/// <returns>A FileStream object associated with the event log file.</returns>
-		private FileStream OpenLogFile()
-		{
-			FileStream fs = null;
-
-			// Stay in the loop until the file is opened or we tried the maximum number of times.
-			for ( int i = 0; ( fs == null ) && ( i < 10 ); ++i )
-			{
-				try
-				{
-					// Open the log file.
-					fs = new FileStream( logFilePath, FileMode.Open, FileAccess.Read, FileShare.Read );
-				}
-				catch ( IOException e )
-				{
-					log.Error( "Failed to open log file. {0}", e.Message );
-
-					// Wait for a moment before trying to open the file again.
-					Thread.Sleep( 100 );
-				}
-			}
-
-			return fs;
-		}
 		#endregion
 
 		#region Public Methods
@@ -1343,13 +1522,15 @@ namespace Simias.Storage
 		public EventContext GetEventContext()
 		{
 			EventContext cookie = null;
-			
-			// Open the event log file.
-			FileStream fs = OpenLogFile();
-			if ( fs != null )
+
+			// Acquire the mutex protecting the log file.
+			mutex.WaitOne( collectionID );
+			try
 			{
 				try
 				{
+					// Open the log file.
+					FileStream fs = new FileStream( logFilePath, FileMode.Open, FileAccess.Read );
 					try
 					{
 						// Allocate a buffer to hold the records that are read.
@@ -1415,15 +1596,19 @@ namespace Simias.Storage
 							cookie = new EventContext( DateTime.MinValue, 0, fs.Position );
 						}
 					}
-					catch ( IOException e )
+					finally
 					{
-						log.Error( e.Message );
+						fs.Close();
 					}
 				}
-				finally
+				catch( IOException e )
 				{
-					fs.Close();
+					log.Error( e.Message );
 				}
+			}
+			finally
+			{
+				mutex.ReleaseMutex( collectionID );
 			}
 
 			return cookie;
@@ -1437,72 +1622,68 @@ namespace Simias.Storage
 		/// <returns>True if there is more data to get. Otherwise false is returned.</returns>
 		public bool GetEvents( EventContext cookie, out ArrayList changeList )
 		{
-			bool moreData = true;
+			long lastRecordOffset;
 
 			// Initialize the out parameter.
 			changeList = new ArrayList();
 			byte[] buffer = new byte[ ChangeLogRecord.RecordSize * 100 ];
 			int bytesRead = 0;
 
-			// Open the ChangeLog file.
-			FileStream fs = OpenLogFile();
-			if ( fs != null )
+			// Acquire the mutex protecting the log file.
+			mutex.WaitOne( collectionID );
+			try
 			{
 				try
 				{
+					// Open the ChangeLog file.
+					FileStream fs = new FileStream( logFilePath, FileMode.Open, FileAccess.Read );
 					try
 					{
 						// Calculate where changes need to start being added based on the EventContext.
-						if ( GetReadPosition( fs, cookie ) )
-						{
-							// Read the data.
-							bytesRead = fs.Read( buffer, 0, buffer.Length );
-						}
-						else
+						if ( !GetReadPosition( fs, cookie ) )
 						{
 							// The cookie has been pushed out of the log.
 							throw new CookieExpiredException();
 						}
 
-						long lastRecordOffset = fs.Position - ChangeLogRecord.RecordSize;
+						// Read the data.
+						bytesRead = fs.Read( buffer, 0, buffer.Length );
 
-						// Done reading from the file. Close it.
-						fs.Close();
-
-						// Make sure that something was read.
-						for ( int i = 0; i < bytesRead; i += ChangeLogRecord.RecordSize )
-						{
-							changeList.Add( new ChangeLogRecord( buffer, i ) );
-						}
-
-						// If there were events to pass back, update the cookie.
-						if ( changeList.Count > 0 )
-						{
-							ChangeLogRecord record = ( ChangeLogRecord )changeList[ changeList.Count - 1 ];
-							cookie.TimeStamp = record.Epoch;
-							cookie.RecordID = record.RecordID;
-							cookie.Hint = lastRecordOffset;
-						}
-
-						// If less data was read that we had buffer for, we have all of the data.
-						moreData = ( bytesRead == buffer.Length ) ? true : false;
+						// Calculate the offset to the last record read.
+						lastRecordOffset = fs.Position - ChangeLogRecord.RecordSize;
 					}
-					catch ( IOException e )
+					finally
 					{
-						throw new CookieExpiredException( e );
+						fs.Close();
 					}
 				}
-				finally
+				catch( IOException e )
 				{
-					fs.Close();
+					throw new CookieExpiredException( e );
 				}
 			}
-			else
+			finally
 			{
-				throw new CookieExpiredException();
+				mutex.ReleaseMutex( collectionID );
 			}
 
-			return moreData;
+			// Make sure that something was read.
+			for ( int i = 0; i < bytesRead; i += ChangeLogRecord.RecordSize )
+			{
+				changeList.Add( new ChangeLogRecord( buffer, i ) );
+			}
+
+			// If there were events to pass back, update the cookie.
+			if ( changeList.Count > 0 )
+			{
+				ChangeLogRecord record = ( ChangeLogRecord )changeList[ changeList.Count - 1 ];
+				cookie.TimeStamp = record.Epoch;
+				cookie.RecordID = record.RecordID;
+				cookie.Hint = lastRecordOffset;
+			}
+
+			// If less data was read that we had buffer for, we have all of the data.
+			return ( bytesRead == buffer.Length ) ? true : false;
 		}
 		#endregion
 	}
