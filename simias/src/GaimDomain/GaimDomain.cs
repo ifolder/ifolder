@@ -128,10 +128,10 @@ namespace Simias.Gaim
 		/// <summary>
 		/// Constructor for creating a new Gaim Domain object.
 		/// </summary>
-		internal GaimDomain( bool init )
+		private GaimDomain( bool init, string username )
 		{
 			hostName = Environment.MachineName;
-			userName = Environment.UserName + ".gaim";
+			userName = username;
 
 			description = 
 				Environment.UserName +
@@ -146,11 +146,10 @@ namespace Simias.Gaim
 		/// <summary>
 		/// Constructor for creating a new Gaim Domain object.
 		/// </summary>
-		/// <param name="description">String that describes this domain.</param>
-		internal GaimDomain( bool init, string description ) 
+		private GaimDomain( bool init, string username, string description ) 
 		{
 			hostName = Environment.MachineName;
-			userName = Environment.UserName + ".gaim";
+			userName = username;
 			this.description = description;
 
 			if ( init == true )
@@ -160,7 +159,7 @@ namespace Simias.Gaim
 		}
 		#endregion
 
-		internal void Init()
+		private void Init()
 		{
 			hostAddress = MyDns.GetHostName();
 			Store store = Store.GetStore();
@@ -304,7 +303,7 @@ namespace Simias.Gaim
 		/// <summary>
 		/// Method to get the Gaim Domain
 		/// </summary>
-		public Simias.Storage.Domain GetDomain()
+		public static Simias.Storage.Domain GetDomain()
 		{
 			//
 			//  Check if the Gaim Domain exists in the store
@@ -328,6 +327,51 @@ namespace Simias.Gaim
 
 			return gaimDomain;
 		}
+		
+		/// <summary>
+		/// This function is called each time a sync interval is called.  If a
+		/// user does not have Gaim installed on their computer, a Gaim Domain
+		/// will not be created in Simias.  The same is true if the DO have
+		/// Gaim installed, but not the Gaim iFolder Plugin installed/enabled.
+		/// Since SychronizeMembers() is called periodically, it will continue
+		/// to check for Gaim + iFolder Plugin and create the Domain when it
+		/// finds those two things in existence.
+		/// </summary>
+		public static void SynchronizeMembers()
+		{
+			log.Debug("SynchronizeMembers() called");
+			
+			if (!IsGaimPluginEnabled())
+			{
+				log.Debug("Gaim Plugin is not installed/enabled");
+				return;
+			}
+			
+			Simias.Storage.Domain domain = GetDomain();
+			if (domain == null)
+			{
+				// Woot!  Time to create the Gaim Domain
+				GaimAccount gaimAccount = GetDefaultGaimAccount();
+				if (gaimAccount == null)
+				{
+					log.Debug("No default (AIM/prpl-oscar) Gaim Account");
+					return;
+				}
+				
+				Simias.Gaim.GaimDomain gaimDomain =
+					new Simias.Gaim.GaimDomain(true, gaimAccount.Name);
+
+				GaimService.RegisterLocationProvider();
+				
+				// Try again to get the domain
+				domain = GetDomain();
+			}
+			
+			if (domain == null) return; // The domain must not be ready yet
+			
+			// Sync all buddies into the domain
+			SyncBuddies(domain);
+		}
 
 		/// <summary>
 		/// Obtains the string representation of this instance.
@@ -337,6 +381,310 @@ namespace Simias.Gaim
 		{
 			return this.domainName;
 		}
+		#endregion
+		
+		#region More Internal Methods
+		internal static string GetGaimConfigDir()
+		{
+			// FIXME: Write some code to properly return the Gaim Config Dir (typically ~/.gaim/ in Linux
+			return "/home/boyd/.gaim";
+		}
+		
+		/// <summary>
+		/// This function will return true only if the following conditions are
+		/// met:
+		///     (1) Gaim is installed
+		///     (2) The Gaim iFolder Plugin is installed
+		/// </summary>
+		internal static bool IsGaimPluginEnabled()
+		{
+			XmlDocument prefsDoc = new XmlDocument();
+			try
+			{
+				prefsDoc.Load(GetGaimConfigDir()
+								 /* FIXME: use proper path separator */
+								 + "/prefs.xml");
+			}
+			catch (Exception e)
+			{
+				// Don't cause any errors to log...for the case where Gaim isn't installed or the plugin isn't installed/enabled
+				return false;
+			}
+			XmlElement topPrefElement = prefsDoc.DocumentElement;
+
+			XmlNodeList loadedPlugins = 
+				topPrefElement.SelectNodes("//pref[@name='gaim']/pref[@name='gtk']/pref[@name='plugins']/pref[@name='loaded']/item");
+
+			if (loadedPlugins != null)
+			{
+				// Look through the list to find "gifolder"
+				foreach (XmlNode loadedPlugin in loadedPlugins)
+				{
+					XmlAttribute attr = loadedPlugin.Attributes["value"];
+					if (attr != null)
+					{
+						string value = attr.Value;
+						if (value != null)
+						{
+							if (value.IndexOf("gifolder") > 0)
+							{
+								return true;
+							}
+						}
+					}
+				}
+			}		
+		
+			return false;
+		}
+		
+		internal static GaimAccount GetDefaultGaimAccount()
+		{
+			GaimAccount[] accounts = GetGaimAccounts();
+			if (accounts == null) return null;
+			
+			// Loop through the array until the first AIM/prpl-oscar account
+			// is found (the one we'll call our default)
+			
+			for (int i = 0; i < accounts.Length; i++)
+			{
+				string acctProto = accounts[i].ProtocolID;
+				if (acctProto != null && acctProto == "prpl-oscar")
+				{
+					return accounts[i];
+				}
+			}
+			
+			return null;
+		}
+		
+		internal static GaimAccount[] GetGaimAccounts()
+		{
+			ArrayList accounts = new ArrayList();
+			XmlDocument accountsDoc = new XmlDocument();
+			try
+			{
+				accountsDoc.Load(GetGaimConfigDir()
+								 /* FIXME: use proper path separator */
+								 + "/accounts.xml");
+			}
+			catch (Exception e)
+			{
+				log.Error(e.Message);
+				log.Error(e.StackTrace);
+			}
+			XmlElement accountsElement = accountsDoc.DocumentElement;
+			
+			XmlNodeList accountNodes =
+				accountsElement.SelectNodes("//account");
+			if (accountNodes == null)
+				return (GaimAccount[])accounts.ToArray(typeof(Simias.Gaim.GaimAccount));
+			
+			foreach (XmlNode accountNode in accountNodes)
+			{
+				try
+				{
+					GaimAccount account = new GaimAccount(accountNode);
+					accounts.Add(account);
+				}
+				catch (Exception e)
+				{
+					log.Error( e.Message );
+					log.Error( e.StackTrace );
+				}
+			}
+			
+			return (GaimAccount[])accounts.ToArray(typeof(Simias.Gaim.GaimAccount));
+		}
+		
+		internal static GaimBuddy[] GetAllBuddies()
+		{
+			ArrayList buddies = new ArrayList();
+			XmlDocument blistDoc = new XmlDocument();
+			try
+			{
+				blistDoc.Load(GetGaimConfigDir()
+							 /* FIXME: use proper path separator */
+							 + "/blist.xml");
+			}
+			catch (Exception e)
+			{
+				log.Error(e.Message);
+				log.Error(e.StackTrace);
+			}
+			XmlElement gaimElement = blistDoc.DocumentElement;
+			
+			XmlNodeList buddyNodes =
+				gaimElement.SelectNodes("//buddy");
+			if (buddyNodes == null)
+				return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
+			
+			foreach (XmlNode buddyNode in buddyNodes)
+			{
+				try
+				{
+					GaimBuddy buddy = new GaimBuddy(buddyNode);
+					buddies.Add(buddy);
+				}
+				catch (Exception e)
+				{
+					// Ignore errors (i.e., spare the log file)
+				}
+			}
+			
+			return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
+		}
+		
+		internal static Member FindBuddyInDomain(Simias.Storage.Domain domain, GaimBuddy buddy)
+		{
+			// Check to see if the buddy already exists
+			Member member = null;
+			string buddyMungedID = GetGaimMungedID(buddy);
+			ICSList domainMembers = domain.GetNodesByName(buddy.Name);
+			foreach (ShallowNode sNode in domainMembers)
+			{
+				Simias.Storage.Member aMember =	
+					new Simias.Storage.Member(domain, sNode);
+					
+				Simias.Storage.PropertyList pList = aMember.Properties;
+				Simias.Storage.Property p = pList.GetSingleProperty("Gaim:MungedID");
+				if (p != null && ((string) p.Value) == buddyMungedID)
+				{
+					member = aMember;
+					break;
+				}
+			}
+
+			return member;			
+		}
+		
+		internal static string GetGaimMungedID(GaimBuddy buddy)
+		{
+			return buddy.AccountName 
+				+ ":" 
+				+ buddy.AccountProtocolID
+				+ ":"
+				+ buddy.Name;
+		}
+
+		internal static void SyncBuddies(Simias.Storage.Domain domain)
+		{
+			// FIXME: Read the sync method type from Gaim's prefs.xml so we
+			// know whether to sync ALL buddies or just those who have the
+			// plugin installed.
+			
+			// The Gaim Buddy List wins any conflicts
+			
+			GaimBuddy[] buddies = GetAllBuddies();
+			if (buddies == null) return;
+			
+			for (int i = 0; i < buddies.Length; i++)
+			{
+				GaimBuddy buddy = buddies[i];
+				
+				Member member =
+					FindBuddyInDomain(domain, buddy);
+				
+				if (member == null)
+				{
+					CreateNewMember(domain, buddy);
+				}
+				else
+				{
+					UpdateMember(domain, member, buddy);
+				}
+			}
+		}
+		
+		internal static void CreateNewMember(Simias.Storage.Domain domain, GaimBuddy buddy)
+		{
+			//
+			// Create a new member and add on the properties
+			//
+			
+			// Create the member
+			Member member = new Member(buddy.Name, Guid.NewGuid().ToString(), Access.Rights.ReadWrite);
+			
+			// Gaim Munge ID (Account Name + Account Proto + Buddy Name) for faster lookups
+			Simias.Storage.Property p =
+				new Property("Gaim:MungedID", GetGaimMungedID(buddy));
+			p.LocalProperty = true;
+			member.Properties.AddProperty(p);
+			
+			// Gaim Account Name
+			p = new Property("Gaim:AccountName", buddy.AccountName);
+			p.LocalProperty = true;
+			member.Properties.AddProperty(p);
+			
+			// Gaim Account Protocol
+			p = new Property("Gaim:AccountProto", buddy.AccountProtocolID);
+			p.LocalProperty = true;
+			member.Properties.AddProperty(p);
+			
+			if (buddy.Alias != null)
+			{
+				p = new Property("Gaim:Alias", buddy.Alias);
+				p.LocalProperty = true;
+				member.Properties.AddProperty(p);
+			}
+			
+			// Buddy Simias URL
+			if (buddy.SimiasURL != null)
+			{
+				p = new Property("Gaim:SimiasURL", buddy.SimiasURL);
+				p.LocalProperty = true;
+				member.Properties.AddProperty(p);
+			}
+			
+			// Commit the changes
+			domain.Commit(member);
+		}
+		
+		internal static void UpdateMember(Simias.Storage.Domain domain, Member member, GaimBuddy buddy)
+		{
+			Simias.Storage.PropertyList pList = member.Properties;
+			Simias.Storage.Property p;
+			
+			// Buddy Alias
+			if (buddy.Alias != null && buddy.Alias.Length > 0)
+			{
+				if (pList.HasProperty("Gaim:Alias"))
+				{
+					pList.ModifyProperty("Gaim:Alias", buddy.Alias);
+				}
+				else
+				{
+					p = new Property("Gaim:Alias", buddy.Alias);
+					p.LocalProperty = true;
+					member.Properties.AddProperty(p);
+				}
+			}
+			
+			// Buddy Simias URL
+			if (buddy.SimiasURL != null && buddy.SimiasURL.Length > 0)
+			{
+				if (pList.HasProperty("Gaim:SimiasURL"))
+				{
+					pList.ModifyProperty("Gaim:SimiasURL", buddy.SimiasURL);
+				}
+				else
+				{
+					p = new Property("Gaim:SimiasURL", buddy.SimiasURL);
+					p.LocalProperty = true;
+					member.Properties.AddProperty(p);
+				}
+			}
+			
+			// Commit the changes
+			domain.Commit(member);
+		}
+		
+		internal static void RemoveMember(Simias.Storage.Domain domain, Member member)
+		{
+			domain.Delete(member);
+			domain.Commit();
+		}
+		
 		#endregion
 	}
 }

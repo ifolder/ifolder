@@ -3,7 +3,7 @@ export MONO_PATH := $(MONO_PATH):$(DESTDIR)$(libdir)
 
 SUBDIRS = libsimias-gaim
 
-GaimDomain_CSFILES = $(srcdir)/GaimService.cs $(srcdir)/GaimDomain.cs $(srcdir)/GaimDomainInfo.cs $(srcdir)/GaimDomainService.asmx.cs $(srcdir)/LocationProvider.cs
+GaimDomain_CSFILES = $(srcdir)/GaimService.cs $(srcdir)/GaimDomain.cs $(srcdir)/GaimDomainInfo.cs $(srcdir)/GaimDomainService.asmx.cs $(srcdir)/LocationProvider.cs $(srcdir)/GaimObjects.cs
 GaimDomain_CSFILES_CSC := $(subst /,$(SEP),$(GaimDomain_CSFILES))
 GaimDomain_INCLUDES =
 GaimDomain_RESOURCES =

@@ -18,8 +18,8 @@
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  *  Author(s): 
- *      Brady Anderson <banderso@novell.com>
  *      Boyd Timothy <btimothy@novell.com>
+ *      Brady Anderson <banderso@novell.com>
  *
  ***********************************************************************/
 
