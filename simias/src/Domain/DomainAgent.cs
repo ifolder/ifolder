@@ -351,6 +351,18 @@ namespace Simias.DomainServices
 				domainServiceUrl = new Uri( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host + DomainServicePath );
 			}
 
+			// Create the domain service web client object.
+			DomainService domainService = new DomainService();
+			domainService.Url = domainServiceUrl.ToString();
+
+			// Check to see if this domain already exists in this store.
+			string domainID = domainService.GetDomainID();
+			if ( ( domainID != null ) && ( store.GetDomain( domainID ) != null ) )
+			{
+				throw new ExistsException( String.Format( "A user is already provisioned in domain {0}", domainID ) );
+			}
+
+			// Build a credential from the user name and password.
 			NetworkCredential myCred = new NetworkCredential( user, password ); 
 			CookieContainer cookie = new CookieContainer();
 
@@ -361,8 +373,7 @@ namespace Simias.DomainServices
 					null,
 					ref cookie, 
 					myCred );
-			if ( status.statusCode != SCodes.Success && 
-				status.statusCode != SCodes.SuccessInGrace )
+			if ( ( status.statusCode != SCodes.Success ) && ( status.statusCode != SCodes.SuccessInGrace ) )
 			{
 				return status;
 			}
@@ -372,9 +383,7 @@ namespace Simias.DomainServices
 			int startIndex = hostString.LastIndexOf( "/" );
 			Uri hostUri = new Uri( hostString.Remove( startIndex, hostString.Length - startIndex ) );
 
-			// Create the domain service web client object.
-			DomainService domainService = new DomainService();
-			domainService.Url = domainServiceUrl.ToString();
+			// The web state object lets the connection use common state information.
 			WebState webState = new WebState();
 			webState.InitializeWebClient(domainService);
 

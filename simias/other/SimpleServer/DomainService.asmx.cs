@@ -292,5 +292,19 @@ namespace Simias.DomainService.Web
 				}
 			}
 		}
+
+		/// <summary>
+		/// Gets the ID for this simple server domain.
+		/// </summary>
+		/// <returns>Domain ID for the simple server domain.</returns>
+		[WebMethod(EnableSession=true)]
+		[SoapDocumentMethod]
+		public string GetDomainID()
+		{
+			// We don't need to check authentication for this method.
+			Simias.SimpleServer.Domain ssDomain = new Simias.SimpleServer.Domain( false );
+			Simias.Storage.Domain domain = ssDomain.GetSimpleServerDomain( false, "" );
+			return ( domain != null ) ? domain.ID : null;
+		}
 	}
 }

@@ -125,6 +125,24 @@ public class DomainService : System.Web.Services.Protocols.SoapHttpClientProtoco
     public void EndRemoveServerCollections(System.IAsyncResult asyncResult) {
         this.EndInvoke(asyncResult);
     }
+    
+    /// <remarks/>
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/domain/GetDomainID", RequestNamespace="http://novell.com/simias/domain", ResponseNamespace="http://novell.com/simias/domain", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public string GetDomainID() {
+        object[] results = this.Invoke("GetDomainID", new object[0]);
+        return ((string)(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginGetDomainID(System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("GetDomainID", new object[0], callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public string EndGetDomainID(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((string)(results[0]));
+    }
 }
 
 /// <remarks/>
