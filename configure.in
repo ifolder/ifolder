@@ -124,7 +124,7 @@ case $IFOLDER_OS in
         CSC_EXEFLAG=/target:exe
         CSC_LIBFLAG=/target:library
         CSC_WINEXEFLAG=/target:winexe
-        CSCFLAGS='/d:DOTNET /warn:4 /d:TRACE'
+        CSCFLAGS='/d:DOTNET /warn:4 /d:TRACE /nologo'
         CXXFLAGS="-nologo -GX -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPACKAGE=\$(PACKAGE) -DVERSION=\$(VERSION)";
         DEBUG_CFLAGS="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
         DEBUG_CSCFLAGS="/debug+ /d:DEBUG"
