@@ -33,7 +33,7 @@ namespace Novell.iFolder
 			this.SetDefaultSize (600, 400);
 			this.Title = "iFolder Unhandled Exception";
 			this.HasSeparator = false;
-			this.BorderWidth = 10;
+//			this.BorderWidth = 10;
 			this.Resizable = true;
 
 
@@ -69,6 +69,7 @@ namespace Novell.iFolder
 
 			tv.Buffer.Text = e.ToString();
 			ScrolledWindow sw = new ScrolledWindow();
+			sw.ShadowType = Gtk.ShadowType.EtchedIn;
 			sw.Add(tv);
 			h.PackEnd(sw, true, true, 0);
 

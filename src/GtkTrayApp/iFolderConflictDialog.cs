@@ -73,7 +73,6 @@ namespace Novell.iFolder
 			this.ifws = iFolderWS;
 			this.ifolder = ifolder;
 			this.HasSeparator = false;
-			this.BorderWidth = 10;
 			this.Resizable = true;
 			this.Modal = true;
 			if(parent != null)
@@ -94,8 +93,6 @@ namespace Novell.iFolder
 			this.SetDefaultSize (600, 400);
 			this.Icon = 
 				new Gdk.Pixbuf(Util.ImagesPath("ifolder-collision.png"));
-
-			this.VBox.Spacing = 10;
 
 			HBox topbox = new HBox();
 			topbox.Spacing = 10;
