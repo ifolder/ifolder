@@ -113,7 +113,7 @@ namespace Novell.iFolder
 			textbox.PackStart(l, true, true, 0);
 
 			Table ifTable = new Table(2,2,false);
-			ifTable.ColumnSpacing = 6;
+			ifTable.ColumnSpacing = 10;
 			ifTable.Homogeneous = false;
 
 			Label nameLabel = new Label("iFolder Name:");
@@ -145,6 +145,7 @@ namespace Novell.iFolder
 			ConflictTreeView = new TreeView();
 			ScrolledWindow sw = new ScrolledWindow();
 			sw.Add(ConflictTreeView);
+			sw.ShadowType = Gtk.ShadowType.EtchedIn;
 			this.VBox.PackStart(sw, true, true, 0);
 
 

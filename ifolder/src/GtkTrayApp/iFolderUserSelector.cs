@@ -78,7 +78,7 @@ namespace Novell.iFolder
 				throw new ApplicationException("iFolderWebServices was null");
 			this.ifws = iFolderWS;
 			this.HasSeparator = false;
-			this.BorderWidth = 6;
+			this.BorderWidth = 10;
 			this.Resizable = true;
 			this.Modal = true;
 			if(parent != null)

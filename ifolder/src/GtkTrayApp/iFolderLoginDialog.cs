@@ -66,7 +66,7 @@ namespace Novell.iFolder
 			this.Title = "iFolder Login";
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 			this.HasSeparator = false;
-//			this.BorderWidth = 6;
+//			this.BorderWidth = 10;
 			this.Resizable = false;
 			this.Modal = true;
 			this.DefaultResponse = ResponseType.Ok;
@@ -76,9 +76,9 @@ namespace Novell.iFolder
 			this.VBox.PackStart (iFolderImage, false, false, 0);
 	
 			Table loginTable = new Table(3,2,false);
-			loginTable.BorderWidth = 6;
-			loginTable.RowSpacing = 6;
-			loginTable.ColumnSpacing = 6;
+			loginTable.BorderWidth = 10;
+			loginTable.RowSpacing = 10;
+			loginTable.ColumnSpacing = 10;
 			loginTable.Homogeneous = false;
 	
 			Label nameLabel = new Label("User Name:");

@@ -33,7 +33,7 @@ namespace Novell.iFolder
 			this.SetDefaultSize (600, 400);
 			this.Title = "iFolder Unhandled Exception";
 			this.HasSeparator = false;
-			this.BorderWidth = 6;
+			this.BorderWidth = 10;
 			this.Resizable = true;
 
 
@@ -43,8 +43,8 @@ namespace Novell.iFolder
 				new Image(new Gdk.PixbufAnimation(Util.ImagesPath("ifolder-crash.gif")));
 
 			VBox vbox = new VBox();
-			vbox.BorderWidth = 6;
-			vbox.Spacing = 12;
+			vbox.BorderWidth = 10;
+			vbox.Spacing = 10;
 
 			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
 						"iFolder crashed because of an unhandled exception" + 
@@ -56,7 +56,7 @@ namespace Novell.iFolder
 			vbox.PackStart(l, false, false, 0);
 
 			HBox h = new HBox();
-			h.BorderWidth = 6;
+			h.BorderWidth = 10;
 			h.Spacing = 12;
 
 			crashImage.SetAlignment(0.5F, 0);

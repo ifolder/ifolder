@@ -335,12 +335,12 @@ namespace Novell.iFolder
 				new Gdk.Pixbuf(Util.ImagesPath("ifolder-collision.png"));
 
 
-			// Create an HBox that is not homogeneous and spacing of 6
-			HBox hbox = new HBox(false, 6);
+			// Create an HBox that is not homogeneous and spacing of 10 
+			HBox hbox = new HBox(false, 10);
 			// Create another HBox (in case we add more buttons)
 			// so they will line up to the right and be the same
 			// widgth
-			HBox leftHBox = new HBox(true, 6);
+			HBox leftHBox = new HBox(true, 10);
 			Button add_button = new Button(Gtk.Stock.Add);
 
 			add_button.Clicked += new EventHandler(OnCreateiFolder);
@@ -503,17 +503,17 @@ namespace Novell.iFolder
 
 			// Setup buttons for add/remove/accept/decline
 			HBox buttonBox = new HBox();
-			buttonBox.Spacing = 6;
+			buttonBox.Spacing = 10;
 			vbox.PackStart(buttonBox, false, false, 0);
 
 			HBox leftBox = new HBox();
-			leftBox.Spacing = 6;
+			leftBox.Spacing = 10;
 			buttonBox.PackStart(leftBox, false, false, 0);
 			HBox midBox = new HBox();
-			midBox.Spacing = 6;
+			midBox.Spacing = 10;
 			buttonBox.PackStart(midBox, true, true, 0);
 			HBox rightBox = new HBox();
-			rightBox.Spacing = 6;
+			rightBox.Spacing = 10;
 			buttonBox.PackStart(rightBox, false, false, 0);
 
 			Button SaveButton = new Button(Gtk.Stock.Save);

@@ -36,15 +36,15 @@ namespace Novell.iFolder
 //			this.ifolder = ifolder;
 			this.Title = "iFolder Introduction";
 			this.HasSeparator = false;
-			this.BorderWidth = 6;
+			this.BorderWidth = 10;
 			this.Resizable = false;
 
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 			Image folderImage = new Image(this.Icon);
 
 			VBox vbox = new VBox();
-			vbox.BorderWidth = 6;
-			vbox.Spacing = 6;
+			vbox.BorderWidth = 10;
+			vbox.Spacing = 10;
 
 			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
 						"Congratulations! A new iFolder was created</span>");
@@ -56,14 +56,14 @@ namespace Novell.iFolder
 			vbox.PackStart(l, false, false, 0);
 
 			HBox h = new HBox();
-//			h.BorderWidth = 6;
+//			h.BorderWidth = 10;
 			h.Spacing = 12;
 
 			folderImage.SetAlignment(0.5F, 0);
 			h.PackStart(folderImage, false, false, 0);
 
 			VBox vbox2 = new VBox();
-			vbox2.Spacing = 6;
+			vbox2.Spacing = 10;
 
 			l = new Label("The files in your new iFolder are being prepared to be shared with others.  We need more text here to describe what just happened and perhaps what they might do.  I'm not sure what to add here other than a bunch of text though.");
 

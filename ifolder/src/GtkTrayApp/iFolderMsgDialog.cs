@@ -54,15 +54,15 @@ public class iFolderMsgDialog : Dialog
 	{
 		this.Title = title;
 		this.HasSeparator = false;
-		this.BorderWidth = 6;
+		this.BorderWidth = 10;
 		this.Resizable = false;
 		this.Modal = true;
 		if(parent != null)
 			this.TransientFor = parent;
 
 		HBox h = new HBox();
-		h.BorderWidth = 6;
-		h.Spacing = 12;
+		h.BorderWidth = 10;
+		h.Spacing = 10;
 
 		Image i = new Image();
 		switch(type)

@@ -1,7 +1,6 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-#UILIB_CSFILES = $(srcdir)/ServerInfoDialog.cs $(srcdir)/ConflictResolver.cs $(srcdir)/ApplicationProperties.cs $(srcdir)/DirectoryEntry.cs $(srcdir)/CollectionBrowser.cs $(srcdir)/IntroDialog.cs $(srcdir)/SettingsPage.cs $(srcdir)/CrashReport.cs $(srcdir)/ReunionBrowser.cs
 UILIB_CSFILES = $(srcdir)/iFolderConflictDialog.cs $(srcdir)/iFolderAcceptDialog.cs $(srcdir)/iFolderUserSelector.cs $(srcdir)/iFolderLoginDialog.cs $(srcdir)/iFolderPropSettingsPage.cs $(srcdir)/iFolderPropSharingPage.cs $(srcdir)/iFolderPropertiesDialog.cs $(srcdir)/iFolderCrashDialog.cs $(srcdir)/iFolderMsgDialog.cs $(srcdir)/iFolderWindow.cs $(srcdir)/iFolderCreationDialog.cs $(srcdir)/iFolderExceptionDialog.cs
 UILIB_CSFILES_CSC := $(subst /,$(SEP),$(UILIB_CSFILES))
 UILIB_INCLUDES = 
@@ -24,24 +23,24 @@ INSTALL_BIN_FILES = $(srcdir)/ifolder
 
 INSTALL_LIB_FILES = $(srcdir)/setup-autostart
 
-IMAGE_FILES = inviteduser.png ifolderuser.png serverifolder.png collection.png Node.png Tombstone.png BaseContact.png folder.png ifolder.png ifolder-banner.png ifolder-collision.png ifolder-shutdown.png ifolder-startup.png ifolderfolder.png file.png ifolder.gif property.png ifolder-crash.png ifolder-crash.gif
+IMAGE_FILES = inviteduser.png ifolderuser.png serverifolder.png ifolder.png ifolder-banner.png ifolder-collision.png ifolder-shutdown.png ifolder-startup.png ifolder.gif ifolder-crash.png ifolder-crash.gif
 
 MIME_FILES = $(srcdir)/ifolder.mime $(srcdir)/ifolder.keys
 APPLICATIONS_FILES = $(srcdir)/ifolder.applications
 
-EXTRA_DIST = $(UILIB_CSFILES) $(TrayAppGtk_CSFILES) $(GLADE_FILES) $(IMAGE_FILES) ifolder.in $(INSTALL_LIB_FILES) ifolder.desktop.in $(MIME_FILES) $(APPLICATIONS_FILES)
+EXTRA_DIST = $(UILIB_CSFILES) $(TrayAppGtk_CSFILES) $(IMAGE_FILES) ifolder.in $(INSTALL_LIB_FILES) ifolder.desktop.in $(MIME_FILES) $(APPLICATIONS_FILES)
 
 all: Novell.iFolder.UI.gtk.dll iFolderGtkApp.exe 
 #all: Novell.iFolder.UI.gtk.dll iFolderGtkApp.exe CollectionBrowser.exe ReunionBrowser.exe 
 
 Novell.iFolder.UI.gtk.dll: $(UILIB_CSFILES) $(UILIB_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(UILIB_FLAGS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(UILIB_LIBS:%=/r:%) $(UILIB_LIBPATH:%=/lib:%) $(UILIB_RESOURCES:%=$(ICON_FLAG)%) $(UILIB_CSFILES_CSC) Util.cs /doc:Novell.iFolder.UI.gtk.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(UILIB_FLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(UILIB_LIBS:%=/r:%) $(UILIB_LIBPATH:%=/lib:%) $(UILIB_RESOURCES:%=$(ICON_FLAG)%) $(UILIB_CSFILES_CSC) Util.cs /doc:Novell.iFolder.UI.gtk.doc.xml
 
 iFolderGtkApp.exe: $(TrayAppGtk_CSFILES) $(TrayAppGtk_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(TrayAppGtk_FLAGS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(TrayAppGtk_LIBS:%=/r:%) $(TrayAppGtk_LIBPATH:%=/lib:%) $(TrayAppGtk_RESOURCES:%=$(ICON_FLAG)%) $(TrayAppGtk_CSFILES_CSC) Util.cs /doc:iFolderGtkApp.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(TrayAppGtk_FLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(TrayAppGtk_LIBS:%=/r:%) $(TrayAppGtk_LIBPATH:%=/lib:%) $(TrayAppGtk_RESOURCES:%=$(ICON_FLAG)%) $(TrayAppGtk_CSFILES_CSC) Util.cs /doc:iFolderGtkApp.doc.xml
 
 
-install-exec-local: all $(GLADE_FILES) $(IMAGE_FILES)
+install-exec-local: all $(IMAGE_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir) $(DESTDIR)$(libdir) $(DESTDIR)$(datadir)/ifolder3/images $(DESTDIR)$(datadir)/applications $(DESTDIR)$(datadir)/pixmaps $(DESTDIR)$(datadir)/mime-info $(DESTDIR)$(datadir)/application-registry
 	$(INSTALL_PROGRAM) Novell.iFolder.UI.gtk.dll $(INSTALL_LIB_FILES) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(IMAGE_FILES) $(DESTDIR)$(datadir)/ifolder3/images
@@ -71,4 +70,3 @@ distclean-local:
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
-

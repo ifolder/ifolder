@@ -38,7 +38,7 @@ public class iFolderExceptionDialog : Dialog
 	{
 		this.Title = "iFolder Error";
 		this.HasSeparator = true;
-		this.BorderWidth = 6;
+		this.BorderWidth = 10;
 		this.Resizable = false;
 		this.Modal = true;
 		this.ex = exception;
@@ -47,8 +47,8 @@ public class iFolderExceptionDialog : Dialog
 			this.TransientFor = parent;
 
 		HBox h = new HBox();
-		h.BorderWidth = 6;
-		h.Spacing = 12;
+		h.BorderWidth = 10;
+		h.Spacing = 10;
 
 		Image i = new Image();
 		i.SetFromStock(Gtk.Stock.DialogError, IconSize.Dialog);
@@ -56,8 +56,8 @@ public class iFolderExceptionDialog : Dialog
 		h.PackStart(i, false, false, 0);
 
 		VBox v = new VBox();
-		v.BorderWidth = 6;
-		v.Spacing = 12;
+		v.BorderWidth = 10;
+		v.Spacing = 10;
 		Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
 			exception.Message + "</span>");
 		l.LineWrap = true;

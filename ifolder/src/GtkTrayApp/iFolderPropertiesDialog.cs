@@ -66,7 +66,7 @@ namespace Novell.iFolder
 			this.ifws = iFolderWS;
 			this.ifolder = ifolder;
 			this.HasSeparator = false;
-			this.BorderWidth = 6;
+			this.BorderWidth = 10;
 //			this.Resizable = false;
 			this.Modal = true;
 			if(parent != null)

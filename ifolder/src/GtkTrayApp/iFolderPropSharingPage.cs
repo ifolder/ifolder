@@ -68,13 +68,14 @@ namespace Novell.iFolder
 		/// </summary>
 		private void InitializeWidgets()
 		{
-			this.Spacing = 6;
-			this.BorderWidth = 6;
+			this.Spacing = 10;
+			this.BorderWidth = 10;
 			
 			// Create the main TreeView and add it to a scrolled
 			// window, then add it to the main vbox widget
 			UserTreeView = new TreeView();
 			ScrolledWindow sw = new ScrolledWindow();
+			sw.ShadowType = Gtk.ShadowType.EtchedIn;
 			sw.Add(UserTreeView);
 			this.PackStart(sw, true, true, 0);
 
@@ -131,17 +132,17 @@ namespace Novell.iFolder
 
 			// Setup buttons for add/remove/accept/decline
 			HBox buttonBox = new HBox();
-			buttonBox.Spacing = 6;
+			buttonBox.Spacing = 10;
 			this.PackStart(buttonBox, false, false, 0);
 
 			HBox leftBox = new HBox();
-			leftBox.Spacing = 6;
+			leftBox.Spacing = 10;
 			buttonBox.PackStart(leftBox, false, false, 0);
 			HBox midBox = new HBox();
-			midBox.Spacing = 6;
+			midBox.Spacing = 10;
 			buttonBox.PackStart(midBox, true, true, 0);
 			HBox rightBox = new HBox();
-			rightBox.Spacing = 6;
+			rightBox.Spacing = 10;
 			buttonBox.PackStart(rightBox, false, false, 0);
 
 			AddButton = new Button(Gtk.Stock.Add);
