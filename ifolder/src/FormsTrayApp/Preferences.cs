@@ -1510,7 +1510,7 @@ namespace Novell.FormsTrayApp
 		#region Private Methods
 		private bool connectToEnterprise()
 		{
-			bool result = true;
+			bool result = false;
 
 			Cursor.Current = Cursors.WaitCursor;
 
@@ -1522,95 +1522,122 @@ namespace Novell.FormsTrayApp
 				DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, password.Text);
 				Status authStatus = domainAuth.Authenticate();
 
-				Domain domain = new Domain(domainInfo);
-
-				updateAccount(domain);
-
-				// Associate the new domain with the listview item.
-				newAccountLvi.SubItems[0].Text = domainInfo.Name;
-
-				newAccountLvi.SubItems[2].Text = resourceManager.GetString("statusEnabled");
-				newAccountLvi.Tag = domain;
-				server.Text = domainInfo.Host;
-				newAccountLvi = null;
-
-				// Successfully joined ... don't allow the fields to be changed.
-				userName.ReadOnly = server.ReadOnly = true;
-				processing = false;
-
-				if (EnterpriseConnect != null)
+				MyMessageBox mmb;
+				switch (authStatus.statusCode)
 				{
-					// Fire the event telling that a new domain has been added.
-					EnterpriseConnect(this, new DomainConnectEventArgs(domainInfo));
-				}
+					case StatusCodes.Success:
+					case StatusCodes.SuccessInGrace:
+						Domain domain = new Domain(domainInfo);
 
-				if (domainInfo.IsDefault)
-				{
-					// Remove any new default.
-					if (newDefaultDomain != null)
-					{
-						newDefaultDomain.DomainInfo.IsDefault = false;
-						newDefaultDomain = null;
-					}
+						updateAccount(domain);
 
-					// Reset the current default.
-					if (currentDefaultDomain != null)
-					{
-						currentDefaultDomain.DomainInfo.IsDefault = false;
-					}
+						// Associate the new domain with the listview item.
+						newAccountLvi.SubItems[0].Text = domainInfo.Name;
 
-					// Save the new default.
-					currentDefaultDomain = domain;
+						newAccountLvi.SubItems[2].Text = resourceManager.GetString("statusEnabled");
+						newAccountLvi.Tag = domain;
+						server.Text = domainInfo.Host;
+						newAccountLvi = null;
 
-					defaultServer.Checked = true;
-					defaultServer.Enabled = false;
-				}
+						// Successfully joined ... don't allow the fields to be changed.
+						userName.ReadOnly = server.ReadOnly = true;
+						processing = false;
 
-				addAccount.Enabled = details.Enabled = enableAccount.Enabled = true;
-
-				activate.Enabled = false;
-
-				try
-				{
-					// Check for an update.
-					bool updateStarted = FormsTrayApp.CheckForClientUpdate(domainInfo.ID, userName.Text, password.Text);
-					if (updateStarted)
-					{
-						if (ShutdownTrayApp != null)
+						if (EnterpriseConnect != null)
 						{
-							// Shut down the tray app.
-							ShutdownTrayApp(this, new EventArgs());
+							// Fire the event telling that a new domain has been added.
+							EnterpriseConnect(this, new DomainConnectEventArgs(domainInfo));
 						}
-					}
-				}
-				catch (Exception ex)
-				{
-					Cursor.Current = Cursors.Default;
 
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("checkUpdateError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-					mmb.ShowDialog();
-				}
+						if (domainInfo.IsDefault)
+						{
+							// Remove any new default.
+							if (newDefaultDomain != null)
+							{
+								newDefaultDomain.DomainInfo.IsDefault = false;
+								newDefaultDomain = null;
+							}
 
-				if (!rememberPassword.Checked)
-				{
-					password.Text = string.Empty;
+							// Reset the current default.
+							if (currentDefaultDomain != null)
+							{
+								currentDefaultDomain.DomainInfo.IsDefault = false;
+							}
+
+							// Save the new default.
+							currentDefaultDomain = domain;
+
+							defaultServer.Checked = true;
+							defaultServer.Enabled = false;
+						}
+
+						addAccount.Enabled = details.Enabled = enableAccount.Enabled = true;
+
+						activate.Enabled = false;
+
+						try
+						{
+							// Check for an update.
+							bool updateStarted = FormsTrayApp.CheckForClientUpdate(domainInfo.ID, userName.Text, password.Text);
+							if (updateStarted)
+							{
+								if (ShutdownTrayApp != null)
+								{
+									// Shut down the tray app.
+									ShutdownTrayApp(this, new EventArgs());
+								}
+							}
+						}
+						catch (Exception ex)
+						{
+							Cursor.Current = Cursors.Default;
+
+							mmb = new MyMessageBox(resourceManager.GetString("checkUpdateError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+							mmb.ShowDialog();
+						}
+
+						if (!rememberPassword.Checked)
+						{
+							password.Text = string.Empty;
+						}
+
+						if (authStatus.RemainingGraceLogins < authStatus.TotalGraceLogins)
+						{
+							mmb = new MyMessageBox(
+								string.Format(resourceManager.GetString("graceLogin"), authStatus.RemainingGraceLogins),
+								resourceManager.GetString("graceLoginTitle"),
+								string.Empty,
+								MyMessageBoxButtons.OK,
+								MyMessageBoxIcon.Information);
+							mmb.ShowDialog();
+						}
+						
+						result = true;
+						break;
+					case StatusCodes.InvalidCredentials:
+					case StatusCodes.InvalidPassword:
+						mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
+						break;
+					case StatusCodes.AccountDisabled:
+						mmb = new MyMessageBox(resourceManager.GetString("accountDisabled"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+						mmb.ShowDialog();
+						break;
+					case StatusCodes.AccountLockout:
+						mmb = new MyMessageBox(resourceManager.GetString("accountLockout"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+						mmb.ShowDialog();
+						break;
+					default:
+						mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
+						break;
 				}
 			}
 			catch (Exception ex)
 			{
 				Cursor.Current = Cursors.Default;
-
-				result = false;
-				if (ex.Message.IndexOf("HTTP status 401") != -1)
-				{
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
-				}
-				else
-				{
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
-				}
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+				mmb.ShowDialog();
 			}
 
 			Cursor.Current = Cursors.Default;
@@ -2000,9 +2027,18 @@ namespace Novell.FormsTrayApp
 				e.Cancel = true;
 				currentDefaultDomain = newDefaultDomain = null;
 				newAccountLvi = null;
+				updatePassword = updateEnabled = false;
+
+				// Reset the controls.
+				userName.Text = server.Text = password.Text = string.Empty;
+				rememberPassword.Checked = enableAccount.Checked = defaultServer.Checked = false;
+
+				// Disable/enable the controls.
 				addAccount.Enabled = true;
-				updatePassword = false;
-				updateEnabled = false;
+				userName.Enabled = server.Enabled = password.Enabled = rememberPassword.Enabled =
+					enableAccount.Enabled = defaultServer.Enabled = details.Enabled = 
+					removeAccount.Enabled = proxy.Enabled = activate.Enabled = false;
+
 				Hide();
 			}
 		}
