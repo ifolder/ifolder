@@ -9,7 +9,7 @@ POBoxWS_FLAGS = $(CSC_LIBFLAG)
 POBoxWS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasClient.dll Simias.dll
 POBoxWS_LIBPATH = ../SimiasClient ../Simias.dll
 
-EXTRA_DIST = POService.asmx $(POBoxWS_CSFILES)
+EXTRA_DIST = POService.asmx $(POBoxWS_CSFILES1)
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml

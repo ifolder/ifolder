@@ -9,7 +9,7 @@ SyncService_FLAGS = $(CSC_LIBFLAG)
 SyncService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasClient.dll Simias.dll
 SyncService_LIBPATH = ../SimiasClient ../Simias.dll
 
-EXTRA_DIST = SyncHandler.ashx $(SyncService_CSFILES)
+EXTRA_DIST = SyncHandler.ashx $(SyncService_CSFILES1)
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml

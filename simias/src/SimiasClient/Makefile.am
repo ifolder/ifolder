@@ -11,7 +11,7 @@ SimiasClient_FLAGS = $(CSC_LIBFLAG)
 SimiasClient_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Security.dll System.Web.dll System.Web.Services.dll Novell.Security.ClientPasswordManager.NetCredential.dll
 SimiasClient_LIBPATH = $(NOVELL_SECURITY_DIR)
 
-EXTRA_DIST = $(SimiasClient_CSFILES) $(srcdir)/SimiasSetup.cs.in
+EXTRA_DIST = $(SimiasClient_CSFILES1) $(srcdir)/SimiasSetup.cs.in
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
