@@ -578,12 +578,11 @@ namespace Novell.iFolder.Web
 			}
 			else
 			{
-				// TODO: Rework for multi-domain
 				// If the user wasn't found, look for the UserID as
 				// a subscription in the default POBox
 				POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
-						store.DefaultDomain, 
-						store.GetUserIDFromDomainID(store.DefaultDomain));
+						col.Domain, 
+						store.GetUserIDFromDomainID(col.Domain));
 				if(poBox == null)
 				{
 					throw new Exception("Unable to access POBox");
