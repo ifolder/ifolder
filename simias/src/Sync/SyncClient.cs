@@ -616,7 +616,7 @@ namespace Simias.Sync
 			
 			// Only syncronize local changes when we have finished with the 
 			// Server side changes.
-			if (workArray.DownCount == 0)
+			if (workArray == null || workArray.DownCount == 0)
 				fileMonitor.CheckForFileChanges();
 			if (collection.Role != SyncRoles.Slave)
 				return;
