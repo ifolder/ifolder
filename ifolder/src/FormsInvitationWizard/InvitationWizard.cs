@@ -104,7 +104,7 @@ namespace Novell.iFolder.InvitationWizard
 			// 
 			// selectInvitationPage
 			// 
-			this.selectInvitationPage.HeaderSubTitle = "Specify the location of the iFolder Invitation you want to accept or decline.";
+			this.selectInvitationPage.HeaderSubTitle = "Specify the location of the iFolder Invitation to accept or decline.";
 			this.selectInvitationPage.HeaderTitle = "Select an iFolder Invitation";
 			this.selectInvitationPage.Location = new System.Drawing.Point(0, 0);
 			this.selectInvitationPage.Name = "selectInvitationPage";
@@ -122,7 +122,7 @@ namespace Novell.iFolder.InvitationWizard
 			// 
 			// selectiFolderLocationPage
 			// 
-			this.selectiFolderLocationPage.HeaderSubTitle = "Specify the location on this computer where you want to place the shared iFolder.";
+			this.selectiFolderLocationPage.HeaderSubTitle = "Specify the location on this computer to place the shared iFolder.";
 			this.selectiFolderLocationPage.HeaderTitle = "Select iFolder Location";
 			this.selectiFolderLocationPage.Location = new System.Drawing.Point(0, 0);
 			this.selectiFolderLocationPage.Name = "selectiFolderLocationPage";
