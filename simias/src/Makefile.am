@@ -6,8 +6,8 @@ DIST_SUBDIRS = $(COMMON_SUBDIRS) $(LINUX_SUBDIRS) $(WINDOWS_SUBDIRS) package
 package:
 	$(MAKE) -C package all
 
-package-clean:
-	$(MAKE) -C package clean
+package-clean package-install package-uninstall:
+	$(MAKE) -C package $(subst package-,,$@)
 
 clean-local:
 	$(MAKE) -C package $@
