@@ -9,9 +9,7 @@ WebService_FLAGS = $(CSC_LIBFLAG)
 WebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Simias.dll System.Web.dll
 WebService_LIBPATH = ../Simias.dll
 
-PROJECT_FILES = 
-
-EXTRA_DIST = $(WebService_CSFILES) $(PROJECT_FILES)
+EXTRA_DIST = $(WebService_CSFILES)
 
 CUR_DIR := $(shell pwd)
 
@@ -29,18 +27,10 @@ endif
 install-exec-local: SimiasWebService.dll
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) SimiasWebService.dll $(DEBUG_FILES) $(DESTDIR)$(libdir)
-if WINDOWS
-if DEBUG	
-	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(libdir)
-endif
 endif
     
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f SimiasWebService.dll $(DEBUG_FILES)
-if WINDOWS
-if DEBUG	
-	cd $(DESTDIR)$(libdir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)
-endif
 endif
 	
 CLEAN_FILES = SimiasWebService.dll $(DEBUG_FILES) 
