@@ -77,8 +77,7 @@ namespace Novell.iFolder
 			Console.WriteLine("Creating sync object");
 
 			SyncProperties props = new SyncProperties();
-//			props.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
-//			props.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
+            props.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
 
 			string logicFactory = new Configuration().Get("iFolderApp", 
 				"SyncLogic", "SynkerA");
