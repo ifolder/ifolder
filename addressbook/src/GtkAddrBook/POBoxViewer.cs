@@ -23,6 +23,8 @@
 using System;
 using Novell.AddressBook;
 using Simias.Storage;
+using Simias.POBox;
+using Simias;
 using System.Collections;
 using System.IO;
 
@@ -31,6 +33,8 @@ using Gdk;
 using Glade;
 using GtkSharp;
 using GLib;
+using Gnome;
+
 
 namespace Novell.AddressBook.UI.gtk
 {
@@ -48,13 +52,50 @@ namespace Novell.AddressBook.UI.gtk
 		[Glade.Widget] private Gtk.Button	DeleteButton = null;
 
 		private ListStore	SubTreeStore;
+		private Pixbuf		InvitationPixbuf;
+		private Subscription curSub;
+
+		private Simias.POBox.POBox		pobox;
+		private Store					store;
 
 		public event EventHandler ViewerClosed;
 
 		public POBoxViewer() 
 		{
 			Init();
+			Refresh();
 		}
+
+		public void Refresh()
+		{
+			SubTreeStore.Clear();
+
+			if(store == null)
+				store = new Store( new Configuration(null) );
+			if(store != null)
+			{
+				pobox = Simias.POBox.POBox.GetPOBox(store, 
+													store.DefaultDomain);
+			}
+
+			if(pobox != null)
+			{
+
+				ICSList poList = pobox.Search(
+						PropertyTags.Types,
+						typeof(Subscription).Name,
+						SearchOp.Equal);
+			
+				foreach(ShallowNode sNode in poList)
+				{
+					Subscription sub = new Subscription(pobox, sNode);
+					SubTreeStore.AppendValues(sub);
+				}
+			}
+			curSub = null;
+		}
+
+
 		public void Init () 
 		{
 			Glade.XML gxml = 
@@ -66,7 +107,7 @@ namespace Novell.AddressBook.UI.gtk
 			// ****************************************
 			// Book Tree View Setup
 			// ****************************************
-			SubTreeStore = new ListStore(typeof(string));
+			SubTreeStore = new ListStore(typeof(Subscription));
 			SubTreeView.Model = SubTreeStore;
 
 			CellRendererPixbuf bcrp = new CellRendererPixbuf();
@@ -81,8 +122,16 @@ namespace Novell.AddressBook.UI.gtk
 						SubCellTextDataFunc));
 			btvc.Title = "Subscription";
 			SubTreeView.AppendColumn(btvc);
+
+			SubTreeView.AppendColumn("State", 
+					new CellRendererText(), 
+					new TreeCellDataFunc(StateCellTextDataFunc));
+
 			SubTreeView.Selection.Changed +=
 				new EventHandler(on_selection_changed);
+
+			InvitationPixbuf = 
+					new Pixbuf(Util.ImagesPath("invitation_16.png"));
 
 			AcceptItem.Sensitive = false;
 			DeclineItem.Sensitive = false;
@@ -93,20 +142,27 @@ namespace Novell.AddressBook.UI.gtk
 			DeleteButton.Sensitive = false;
 		}
 
-
 		private void SubCellTextDataFunc (Gtk.TreeViewColumn tree_column,
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-//			AddressBook book = (AddressBook) BookTreeStore.GetValue(iter,0);
-			((CellRendererText) cell).Text = "new";
+			Subscription sub = (Subscription) SubTreeStore.GetValue(iter,0);
+			((CellRendererText) cell).Text = sub.Name;
+		}
+
+		private void StateCellTextDataFunc (Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
+		{
+			Subscription sub = (Subscription) SubTreeStore.GetValue(iter,0);
+			((CellRendererText) cell).Text = sub.SubscriptionState.ToString();
 		}
 
 		private void SubCellPixbufDataFunc (Gtk.TreeViewColumn tree_column,
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-//			((CellRendererPixbuf) cell).Pixbuf = BookPixBuf;
+			((CellRendererPixbuf) cell).Pixbuf = InvitationPixbuf;
 		}
 
 		public void ShowAll()
@@ -116,7 +172,6 @@ namespace Novell.AddressBook.UI.gtk
 
 		public void on_POViewerApp_delete_event(object o, DeleteEventArgs args) 
 		{
-			Console.WriteLine("We are called to delete");
 			args.RetVal = true;
 			on_quit(o, args);
 		}
@@ -130,14 +185,23 @@ namespace Novell.AddressBook.UI.gtk
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
+				if(tModel != null)
+					tModel = null;
 
-				string test = (string) tModel.GetValue(iter,0);
+				Subscription sub = (Subscription) 
+					SubTreeStore.GetValue(iter,0);
+				
+				curSub = sub;
 
-				AcceptItem.Sensitive = true;
-				DeclineItem.Sensitive = true;
+				if(sub.SubscriptionState == SubscriptionStates.Pending)
+				{
+					AcceptItem.Sensitive = true;
+					DeclineItem.Sensitive = true;
+					AcceptButton.Sensitive = true;
+					DeclineButton.Sensitive = true;
+				}
+
 				DeleteItem.Sensitive = true;
-				AcceptButton.Sensitive = true;
-				DeclineButton.Sensitive = true;
 				DeleteButton.Sensitive = true;
 			}
 			else
@@ -148,37 +212,93 @@ namespace Novell.AddressBook.UI.gtk
 				AcceptButton.Sensitive = false;
 				DeclineButton.Sensitive = false;
 				DeleteButton.Sensitive = false;
+				curSub = null;
 			}
 		}
 
 		public void on_refresh(object o, EventArgs eventArgs)
 		{
-			//Refresh the app
-			Console.WriteLine("TODO: add refresh");
+			Refresh();
 		}
 
 		public void on_accept(object o, EventArgs eventArgs)
 		{
-			//Refresh the app
-			Console.WriteLine("TODO: add accept");
+			if(curSub != null)
+			{
+				curSub.Accept(store, curSub.SubscriptionRights);
+				pobox.Commit(curSub);
+			}
 		}
 
 		public void on_decline(object o, EventArgs eventArgs)
 		{
-			//Refresh the app
-			Console.WriteLine("TODO: add decline");
+			if(curSub != null)
+			{
+				curSub.Decline();
+				pobox.Commit(curSub);
+			}
 		}
 
 		public void on_delete(object o, EventArgs eventArgs)
 		{
-			//Refresh the app
-			Console.WriteLine("TODO: add delete");
+			if(curSub != null)
+			{
+				TreeSelection tSelect = SubTreeView.Selection;
+				if(tSelect.CountSelectedRows() == 1)
+				{
+					TreeModel tModel;
+					TreeIter iter;
+
+					tSelect.GetSelected(out tModel, out iter);
+
+					pobox.Commit(pobox.Delete(curSub));
+
+					SubTreeStore.Remove(ref iter);
+					curSub = null;
+				}
+			}
 		}
 
 		public void on_about(object o, EventArgs eventArgs)
 		{
-			//Refresh the app
-			Console.WriteLine("TODO: add about");
+			try
+			{
+				// Replace this with the logo graphic when we get it
+				//Pixbuf logo = new Pixbuf(ImagesPath("ifolder.png"));
+				string[] authors = new string[]
+				{
+					"Jared Allen <jpallen@novell.com>",
+					"Brady Anderson <banderso@novell.com>",
+					"James Bell",
+					"Doug Eddy",
+					"Calvin Gaisford <cgaisford@novell.com>",
+					"Bruce Getter",
+					"Mike Lasky",
+					"Rob Lyon",
+					"Dale Olds",
+					"Sharon Smith",
+					"Joe Stark",
+					"Paul Thomas",
+					"Russ Young",
+				};
+				string[] documentors = new string[]
+				{
+					"Catherine Craft",
+					"Sean Beall"
+				};
+
+				About about = new About("Post Office", "0.10",
+					"Copyright (C) 2004 Novell, Inc.",
+					"Post Office is the happy place where all invitations to Simias Collections go!",
+					authors,
+					documentors,
+					"Translated to English from the language of \"The Incan Monkey God\" by the Mono compiler",
+					new Pixbuf( Util.ImagesPath("invitation_128.png")));
+				about.Show();
+			}
+			catch(Exception e)
+			{
+			}
 		}
 
 		public void on_quit(object o, EventArgs args)

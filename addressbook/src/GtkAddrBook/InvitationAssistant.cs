@@ -65,11 +65,6 @@ namespace Novell.AddressBook.UI.gtk
 		[Glade.Widget] private Gtk.Entry	InvitationEntry = null;
 
 		/// <summary>
-		/// autoloaded widget to browse for invitations
-		/// </summary>
-		[Glade.Widget] private Gtk.Button OpenInvitationButton = null;
-
-		/// <summary>
 		/// autoloaded widget used to enter collection location
 		/// </summary>
 		[Glade.Widget] private Gtk.Entry CollectionPathEntry = null;

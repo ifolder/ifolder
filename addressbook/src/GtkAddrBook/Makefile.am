@@ -36,9 +36,9 @@ BookLib_FLAGS = $(CSC_LIBFLAG)
 BookLib_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.AddressBook.dll
 BookLib_LIBPATH = ../AddressBook
 
-GLADE_FILES = $(srcdir)/pobox-viewer.glade $(srcdir)/collection-picker.glade $(srcdir)/teamspace.png $(srcdir)/invitation-assistant.glade $(srcdir)/invitation.png $(srcdir)/collection-properties.glade $(srcdir)/vcardimport.png $(srcdir)/vcardexport.png $(srcdir)/book.png $(srcdir)/contact.png $(srcdir)/blankhead.png $(srcdir)/contact-browser.glade $(srcdir)/contact-picker.glade $(srcdir)/name-editor.glade $(srcdir)/contact-editor.glade
+GLADE_FILES = $(srcdir)/pobox-viewer.glade $(srcdir)/collection-picker.glade $(srcdir)/invitation-assistant.glade $(srcdir)/invitation.png $(srcdir)/collection-properties.glade $(srcdir)/vcardimport.png $(srcdir)/vcardexport.png $(srcdir)/book.png $(srcdir)/contact.png $(srcdir)/blankhead.png $(srcdir)/contact-browser.glade $(srcdir)/contact-picker.glade $(srcdir)/name-editor.glade $(srcdir)/contact-editor.glade
 
-IMAGE_FILES = $(srcdir)/teamspace.png $(srcdir)/property.png $(srcdir)/invited-contact.png $(srcdir)/vcardimport.png $(srcdir)/vcardexport.png $(srcdir)/book.png $(srcdir)/contact.png $(srcdir)/contact_me.png $(srcdir)/blankhead.png
+IMAGE_FILES = $(srcdir)/invitation_128.png $(srcdir)/invitation_16.png $(srcdir)/teamspace.png $(srcdir)/property.png $(srcdir)/invited-contact.png $(srcdir)/vcardimport.png $(srcdir)/vcardexport.png $(srcdir)/book.png $(srcdir)/contact.png $(srcdir)/contact_me.png $(srcdir)/blankhead.png
 
 EXTRA_DIST = $(Book_CSFILES) $(BookLib_CSFILES) $(IA_CSFILES) $(Book_RESOURCES) $(BookLib_RESOURCES) $(IA_RESOURCES) $(GLADE_FILES) $(IMAGE_FILES)
 

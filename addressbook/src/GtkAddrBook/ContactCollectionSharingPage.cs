@@ -401,7 +401,6 @@ namespace Novell.AddressBook.UI.gtk
 
 		private void SetCurrentAccessRights(Access.Rights rights)
 		{
-/*
 			TreeSelection tSelect = ContactTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
 			{
@@ -409,14 +408,21 @@ namespace Novell.AddressBook.UI.gtk
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				SharingListHolder slh = (SharingListHolder)
-					ContactTreeStore.GetValue(iter,0);
 
-				ifolder.SetRights(slh.Contact, rights);
-				slh.Rights = rights;
-				tModel.SetValue(iter, 0, slh);
+				SharingListHolder slh = (SharingListHolder)
+					tModel.GetValue(iter,0);
+
+				if(slh.Member != null)
+				{
+					slh.Member.Rights = rights;
+					collection.Commit(slh.Member);
+				}
+				else if(slh.Subscription != null)
+				{
+					slh.Subscription.SubscriptionRights = rights;
+					pobox.Commit(slh.Subscription);
+				}
 			}
-*/
 		}
 
 		private void on_remove_sharing(object o, EventArgs args) 
@@ -432,9 +438,19 @@ namespace Novell.AddressBook.UI.gtk
 				SharingListHolder slh = (SharingListHolder)
 					tModel.GetValue(iter,0);
 
-				ContactTreeStore.Remove(ref iter);
 				if(slh.Member != null)
+				{
 					guidList.Remove(slh.Member.UserID);
+					collection.Commit(collection.Delete(slh.Member));
+
+				}
+				else if(slh.Subscription != null)
+				{
+					pobox.Commit(pobox.Delete(slh.Subscription));
+				}
+
+				ContactTreeStore.Remove(ref iter);
+
 				removeSharingButton.Sensitive = false;
 				FullControlRB.Sensitive = false;
 				ReadWriteRB.Sensitive = false;
