@@ -43,8 +43,7 @@ Obsoletes    : %{name} <= %{version}
 
 #=============================================================================
 %Description
-iFolder 3 supports file sharing and collaboration within a workgroup or
-across an enterprise.
+iFolder 3 supports file sharing and collaboration across an enterprise.
 
 
 #=============================================================================
@@ -84,11 +83,11 @@ if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
     #
     # Configure tray app to start on user login for each desktop user
     #
-    HOME_DIRS=`sed 's;[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\([^:]*\).*;\1;' /etc/passwd`
-    for path in $HOME_DIRS
-    do
-	%{prefix}/lib/setup-autostart $path
-    done 2>/dev/null
+    #HOME_DIRS=`sed 's;[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\([^:]*\).*;\1;' /etc/passwd`
+    #for path in $HOME_DIRS
+    #do
+	#%{prefix}/lib/setup-autostart $path
+    #done 2>/dev/null
 
     #
     # Create ifolder.sh in /etc/profile.d to set PKG_CONFIG_PATH
@@ -105,14 +104,24 @@ if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
     #
 #    %{prefix}/bin/install-ifolder-to-gac -i
 
+
+	#
+	# Set up iFolder in the menu for Gnome
+	#
+    if test -d "$GNOMEDIR" -a \( "%{prefix}" != "$GNOMEDIR" \); then
+        cp -f %{prefix}/share/applications/ifolder.desktop $GNOMEDIR/share/applications
+    fi
+
+
+
     #
     # Set up iFolder file associations for Gnome
     #
-    if test -d "$GNOMEDIR" -a \( "%{prefix}" != "$GNOMEDIR" \); then
-        cp -f %{prefix}/share/mime-info/ifolder.mime $GNOMEDIR/share/mime-info
-        cp -f %{prefix}/share/mime-info/ifolder.keys $GNOMEDIR/share/mime-info
-        cp -f %{prefix}/share/application-registry/ifolder.applications $GNOMEDIR/share/application-registry
-    fi
+    #if test -d "$GNOMEDIR" -a \( "%{prefix}" != "$GNOMEDIR" \); then
+    #    cp -f %{prefix}/share/mime-info/ifolder.mime $GNOMEDIR/share/mime-info
+    #    cp -f %{prefix}/share/mime-info/ifolder.keys $GNOMEDIR/share/mime-info
+    #    cp -f %{prefix}/share/application-registry/ifolder.applications $GNOMEDIR/share/application-registry
+    #fi
 
 fi
 
@@ -123,24 +132,32 @@ if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
     #
     # Unconfigure tray app to start on user login for each desktop user
     #
-    HOME_DIRS=`sed 's;[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\([^:]*\).*;\1;' /etc/passwd`
-    for path in $HOME_DIRS
-    do
-        %{prefix}/lib/setup-autostart -e $path
-    done 2>/dev/null
+    #HOME_DIRS=`sed 's;[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\([^:]*\).*;\1;' /etc/passwd`
+    #for path in $HOME_DIRS
+    #do
+    #    %{prefix}/lib/setup-autostart -e $path
+    #done 2>/dev/null
+
     #
     # Remove assemblies from the gac
     #
 #    %{prefix}/bin/install-ifolder-to-gac -u
 
+	#
+	# Set up iFolder in the menu for Gnome
+	#
+    if test -d "$GNOMEDIR"; then
+        rm -f $GNOMEDIR/share/applications/ifolder.desktop
+    fi
+
     #
     # Remove iFolder file associations for Gnome
     #
-    if test -d "$GNOMEDIR" -a \( "%{prefix}" != "$GNOMEDIR" \); then
-        rm -f $GNOMEDIR/share/mime-info/ifolder.mime
-        rm -f $GNOMEDIR/share/mime-info/ifolder.keys
-        rm -f $GNOMEDIR/share/application-registry/ifolder.applications
-    fi
+    #if test -d "$GNOMEDIR" -a \( "%{prefix}" != "$GNOMEDIR" \); then
+    #    rm -f $GNOMEDIR/share/mime-info/ifolder.mime
+    #    rm -f $GNOMEDIR/share/mime-info/ifolder.keys
+    #    rm -f $GNOMEDIR/share/application-registry/ifolder.applications
+    #fi
 
 fi
     
