@@ -41,6 +41,8 @@ namespace Simias
 		private TreeView tree;
 		private bool scrollLock = false;
 
+		public delegate void WriteDelegate(string message, string category);
+
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
@@ -85,6 +87,12 @@ namespace Simias
 		/// <param name="category">The category of the message.</param>
 		public override void WriteLine(string message, string category)
 		{
+			tree.Invoke(new WriteDelegate(WriteCallBack), new string[] { message, category });
+		}
+
+		public void WriteCallBack(string message, string category)
+		{
+			
 			// add category
 			TreeNode node = GetCategory(category);
 
