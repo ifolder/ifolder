@@ -25,6 +25,7 @@
 using System;
 using System.Collections;
 using Gtk;
+using Simias.Client.Event;
 
 namespace Novell.iFolder
 {
@@ -37,6 +38,7 @@ namespace Novell.iFolder
 	{
 		// for the statusbar
 		const int ctx = 1;
+		private string				SyncFileName = "";
 
 		private iFolderWebService	iFolderWS;
 		private Gdk.Pixbuf			iFolderPixBuf;
@@ -82,6 +84,8 @@ namespace Novell.iFolder
 		private iFolderSettings		ifSettings;
 		private Hashtable			curiFolders;
 
+		private TreeView			LogTreeView;
+		private ListStore			LogTreeStore;
 
 		public iFolderSettings GlobalSettings
 		{
@@ -754,7 +758,8 @@ namespace Novell.iFolder
 			ScrolledWindow sw = new ScrolledWindow();
 			sw.ShadowType = Gtk.ShadowType.EtchedIn;
 			TextView srvDescValue = new TextView();
-			srvDescValue.Buffer.Text = ifSettings.EnterpriseDescription;
+			if(ifSettings.EnterpriseDescription != null)
+				srvDescValue.Buffer.Text = ifSettings.EnterpriseDescription;
 			srvDescValue.WrapMode = Gtk.WrapMode.Word;
 			srvDescValue.Editable = false;
 			srvDescValue.CursorVisible = false;
@@ -968,12 +973,12 @@ namespace Novell.iFolder
 			ScrolledWindow sw = new ScrolledWindow();
 			sw.ShadowType = Gtk.ShadowType.EtchedIn;
 			vbox.PackStart(sw, true, true, 0);
-			TreeView LogTreeView = new TreeView();
+			LogTreeView = new TreeView();
 			sw.Add(LogTreeView);
 			LogTreeView.HeadersVisible = false;
 
 			// Setup the iFolder TreeView
-			ListStore LogTreeStore = new ListStore(typeof(string));
+			LogTreeStore = new ListStore(typeof(string));
 			LogTreeView.Model = LogTreeStore;
 
 			CellRendererText logcr = new CellRendererText();
@@ -1004,6 +1009,28 @@ namespace Novell.iFolder
 			rightBox.PackStart(ClearButton);
 
 			return vbox;
+		}
+
+
+
+		private void LogMessage(string logEntry)
+		{
+			TreeIter iter;
+
+			while(LogTreeStore.IterNChildren() > 500)
+			{
+				if(LogTreeStore.GetIterFirst(out iter))
+				{
+					LogTreeStore.Remove(ref iter);
+				}
+			}
+
+			iter = LogTreeStore.AppendValues(string.Format(
+							"{0} {1}", DateTime.Now.ToString(), logEntry));
+
+			TreePath path = LogTreeStore.GetPath(iter);
+
+			LogTreeView.ScrollToCell(path, null, true, 1, 1);	
 		}
 
 
@@ -1954,6 +1981,68 @@ namespace Novell.iFolder
 			{
 				TreeIter iter = iFolderTreeStore.AppendValues(ifolder);
 				curiFolders.Add(ifolder.ID, iter);
+			}
+		}
+
+
+		public void HandleSyncEvent(CollectionSyncEventArgs args)
+		{
+			switch(args.Action)
+			{
+				case Action.StartSync:
+				{
+					UpdateStatus(string.Format(Util.GS(
+									"Syncing: {0}"), args.Name));
+					LogMessage(string.Format(Util.GS(
+							"Starting sync of Collection {0}"), args.Name));
+					break;
+				}
+				case Action.StopSync:
+				{
+					if(args.Successful)
+					{
+						UpdateStatus(string.Format(Util.GS(
+									"Sync Succeeded: {0}"), args.Name));
+						LogMessage(string.Format(Util.GS(
+							"Finshed sync of Collection {0}"), args.Name));
+					}
+					else
+					{
+						UpdateStatus(string.Format(Util.GS(
+									"Sync Failed: {0}"), args.Name));
+						LogMessage(string.Format(Util.GS(
+							"Failed Syncing Collection {0}"), args.Name));
+					}
+					break;
+				}
+			}
+		}
+
+
+		public void HandleFileSyncEvent(FileSyncEventArgs args)
+		{
+			switch(args.Direction)
+			{
+				case Simias.Client.Event.Direction.Uploading:
+					UpdateStatus(string.Format(Util.GS(
+									"Uploading file {0}"), args.Name));
+					if(SyncFileName != args.Name)
+					{
+						LogMessage(string.Format(Util.GS(
+								"Uploading file {0}"), args.Name));
+						SyncFileName = args.Name;
+					}
+					break;
+				case Simias.Client.Event.Direction.Downloading:
+					UpdateStatus(string.Format(Util.GS(
+									"Downloading file {0}"), args.Name));
+					if(SyncFileName != args.Name)
+					{
+						LogMessage(string.Format(Util.GS(
+								"Downloading file {0}"), args.Name));
+						SyncFileName = args.Name;
+					}
+					break;
 			}
 		}
 
