@@ -171,13 +171,21 @@ fi
     
 #=============================================================================
 %Postun
-#INSTANCES_AFTER_UNINSTALL=$1
-#if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
+INSTANCES_AFTER_UNINSTALL=$1
+if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
+        #Remove the ~/.local/simias folder recursively for all users
+        echo "Removing simias information for all users"
+        if [ -e /root/.local/simias]
+        then
+                rm -rf /root/.local/simias
+        fi
+        rm -rf /home/${*}/.local/simias
+                                                                                                                                  
     #
     # Remove ifolder.sh from /etc/profile.d
     #
 #    %{__rm} -f /etc/profile.d/ifolder.sh
-#fi
+fi
 
 #=============================================================================
 %Files
