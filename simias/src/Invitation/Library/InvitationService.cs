@@ -71,7 +71,7 @@ namespace Simias.Invite
 		{
 			// TODO: remove hard-coded answer
 			IInvitationProvider ip = (IInvitationProvider)Activator.CreateInstance(
-				"SmtpInvitationProvider", "Simias.Invite.SmtpInvitationProvider").Unwrap();
+				"Simias", "Simias.Invite.SmtpInvitationProvider").Unwrap();
 
 			// invite
 			ip.Invite(invitation);
