@@ -663,23 +663,26 @@ namespace Novell.FormsTrayApp
 				// Ignore.
 			}
 
-			try
+			if (!domainID.Equals(string.Empty))
 			{
-				SimiasWebService simiasWebService = new SimiasWebService();
-				simiasWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
-
-				DomainInformation domainInfo = simiasWebService.GetDomainInformation(domainID);
-
-				if (domainInfo != null)
+				try
 				{
-					serverName.Text = domainInfo.Name;
-					userName2.Text = domainInfo.MemberName;
+					SimiasWebService simiasWebService = new SimiasWebService();
+					simiasWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
+
+					DomainInformation domainInfo = simiasWebService.GetDomainInformation(domainID);
+
+					if (domainInfo != null)
+					{
+						serverName.Text = domainInfo.Name;
+						userName2.Text = domainInfo.MemberName;
+					}
 				}
-			}
-			catch (Exception ex)
-			{
-				Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("domainInfoReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-				mmb.ShowDialog();
+				catch (Exception ex)
+				{
+					Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("domainInfoReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+				}
 			}
 		}
 
