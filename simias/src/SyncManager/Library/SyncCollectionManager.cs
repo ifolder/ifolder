@@ -168,7 +168,7 @@ namespace Simias.Sync
 				syncWorkerThread.Start();
 			}
 
-			log.Debug("{0} Url: {1}", collection.Name, collection.ServiceUrl);
+			log.Debug("{0} Url: {1}", collection.Name, collection.MasterUrl);
 		}
 
 		private void StopSlave()
@@ -258,12 +258,12 @@ namespace Simias.Sync
 					else
 					{
 						// get the service URL
-						string serviceUrl = collection.ServiceUrl;
+						string serviceUrl = collection.MasterUrl.ToString();
 						log.Debug("Sync Store Service URL: {0}", serviceUrl);
 
 						// get a proxy to the store service object
 						log.Debug("Connecting to the Sync Store Service...");
-						storeService = (SyncStoreService)Activator.GetObject(typeof(SyncStoreService), collection.ServiceUrl);
+						storeService = (SyncStoreService)Activator.GetObject(typeof(SyncStoreService), serviceUrl);
 						if (storeService == null) throw new ApplicationException("No Sync Store Service");
 
 						// get a proxy to the collection service object

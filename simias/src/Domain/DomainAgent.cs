@@ -32,6 +32,12 @@ namespace Simias.Domain
 	/// </summary>
 	public class DomainAgent
 	{
+		/// <summary>
+		/// The suggested service url for the current machine.
+		/// </summary>
+		private static readonly Uri DefaultServiceUrl = (new UriBuilder("http",
+			MyDns.GetHostName(), 6346, EndPoint)).Uri;
+
 		private static readonly string SectionName = "Domain";
 		private static readonly string UrlKeyName = "Service Url";
 
@@ -58,37 +64,11 @@ namespace Simias.Domain
 			get { return "DomainService.rem"; }
 		}
 
-		public static int Port
-		{
-			get { return 6346; }
-		}
-
 		public Uri ServiceUrl
 		{
-			get
-			{
-				Uri uri = null;
+			get { return new Uri(config.Get(SectionName, UrlKeyName, DefaultServiceUrl.ToString())); }
 
-				string uriString = config.Get(SectionName, UrlKeyName, null);
-
-				if ((uriString != null) && (uriString.Length > 0))
-				{
-					UriBuilder ub = new UriBuilder(uriString);
-					ub.Path = EndPoint;
-					ub.Port = Port;
-					uri = ub.Uri;
-				}
-
-				return uri;
-			}
-
-			set
-			{
-				if (value != null)
-				{
-					config.Set(SectionName, UrlKeyName, value.ToString());
-				}
-			}
+			set { config.Set(SectionName, UrlKeyName, value.ToString()); }
 		}
 
 		#endregion

@@ -70,7 +70,7 @@ namespace Simias.Sync
 			this.name = collection.Name;
 			this.masterIncarnation = collection.MasterIncarnation;
 			this.localIncarnation = collection.LocalIncarnation;
-			this.url = collection.ServiceUrl;
+			this.url = collection.MasterUrl.ToString();
 			this.role = collection.Role;
 		}
 		
