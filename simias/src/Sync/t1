@@ -9,7 +9,9 @@
 # do many combinations of the preceding two with no sync inbetween, then sync
 
 
-#setup
+#---------------------------------------------------------------------------
+# setup folders and add some files to server folder
+
 rm -rf tmpServerData tmpClientData
 mkdir tmpServerData tmpClientData tmpServerData/testFolder
 mkdir tmpServerData/testFolder/emptydir
@@ -18,17 +20,22 @@ cp *.cs tmpServerData/testFolder
 cp ~/*.ogg tmpServerData/testFolder/subdir
 cp *.dll tmpServerData/testFolder/subdir
 
-#invite
+#---------------------------------------------------------------------------
+# invite
 mono --debug SyncCmd.exe -s tmpServerData invite tmpServerData/testFolder tmpClientData/invitation
 RETVAL=$?
 if [ $RETVAL -ne 0 ]; then printf "FAILED: invite returned %s\n" $RETVAL; exit $RETVAL; fi 
 
-#accept
+#---------------------------------------------------------------------------
+# accept
+
 mono --debug SyncCmd.exe -s tmpClientData accept tmpClientData/invitation tmpClientData
 RETVAL=$?
 if [ $RETVAL -ne 0 ]; then printf "FAILED: accept returned %s\n" $RETVAL; exit $RETVAL; fi 
 
-#localsync
+#---------------------------------------------------------------------------
+# localsync 1, just sync setup files and check that they are received correctly
+
 mono --debug SyncCmd.exe -s tmpClientData localsync tmpClientData/testFolder tmpServerData
 RETVAL=$?
 if [ $RETVAL -ne 0 ]; then printf "FAILED: first localsync returned %s\n" $RETVAL; exit $RETVAL; fi 
@@ -45,6 +52,7 @@ diff tmpClientData/testFolder/subdir tmpServerData/testFolder/subdir
 RETVAL=$?
 if [ $RETVAL -ne 0 ]; then printf "FAILED: diff of subdir after localsync 1 returned %s\n" $RETVAL; exit $RETVAL; fi 
 
+#---------------------------------------------------------------------------
 # test deletes: delete a file from each end, and cause deletion collision
 # sync and make sure everything got sorted out
 
@@ -59,7 +67,7 @@ rmdir tmpServerData/testFolder/emptydir
 #localsync
 mono --debug SyncCmd.exe -s tmpClientData localsync tmpClientData/testFolder tmpServerData
 RETVAL=$?
-if [ $RETVAL -ne 0 ]; then printf "FAILED: second localsync returned %s\n" $RETVAL; exit $RETVAL; fi
+if [ $RETVAL -ne 0 ]; then printf "FAILED: localsync 2 returned %s\n" $RETVAL; exit $RETVAL; fi
 
 diff tmpClientData/testFolder tmpServerData/testFolder
 RETVAL=$?
@@ -74,6 +82,28 @@ if [ -f tmpClientData/testFolder/SyncPass.cs ]; then printf "FAILED: deleted fil
 if [ -f tmpClientData/testFolder/SyncOps.cs ]; then printf "FAILED: deleted file still exists\n"; exit 3; fi 
 if [ -f tmpClientData/testFolder/subdir/*.ogg ]; then printf "FAILED: deleted file still exists\n"; exit 4; fi 
 if [ -f tmpClientData/testFolder/subdir/Sync.dll ]; then printf "FAILED: deleted file still exists\n"; exit 5; fi 
-if [ -d tmpClientData/testFolder/emptydir ]; then printf "FAILED: deleted file still exists\n"; exit 6; fi 
+if [ -d tmpClientData/testFolder/emptydir ]; then printf "FAILED: deleted file still exists\n"; exit 6; fi
 
+#---------------------------------------------------------------------------
+# test duplicate adds: add different files of the same name both sides
+# sync and make sure everything got sorted out
+
+echo "This is file 1" > tmpServerData/testFolder/CollisionFile.txt
+echo "This is file 2 and is longer" > tmpClientData/testFolder/CollisionFile.txt
+
+# localsync
+mono --debug SyncCmd.exe -s tmpClientData localsync tmpClientData/testFolder tmpServerData
+RETVAL=$?
+if [ $RETVAL -ne 0 ]; then printf "FAILED: localsync 3 returned %s\n" $RETVAL; exit $RETVAL; fi
+
+diff tmpClientData/testFolder tmpServerData/testFolder
+RETVAL=$?
+if [ $RETVAL -ne 0 ]; then printf "FAILED: diff of testFolder after localsync 3 returned %s\n" $RETVAL; exit $RETVAL; fi 
+
+if ! [ -f tmpClientData/testFolder/CollisionFile.txt ]; then printf "FAILED: added file does not exists\n"; exit 1; fi
+
+cat tmpServerData/testFolder/CollisionFile.txt
+
+#===========================================================================
 echo "PASSED"
+

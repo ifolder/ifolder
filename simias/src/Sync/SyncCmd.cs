@@ -27,10 +27,40 @@ using System.Threading;
 
 //using Simias;
 using Simias.Storage;
-//using Simias.Identity;
+//using Simias.InviteAgent;
 
 namespace Simias.Sync
 {
+
+//---------------------------------------------------------------------------
+/// <summary>
+/// command line execution of sync operations
+/// </summary>
+
+/*
+public class FileInviteAgent: InviteAgent
+{
+	private string fileName;
+
+	/// <summary>
+	/// public constructor must specify fileName and path to local collection store
+	/// </summary>
+	public FileInviteAgent(string fileName, string storePath)
+	{
+		this.fileName = fileName;
+		base.StorePath = storePath;
+	}
+
+	/// <summary>
+	/// Invite a user to a collection via a file
+	/// </summary>
+	/// <param name="invitation">The invitation to save into filename</param>
+	public override void Invite(Invitation invitation)
+	{
+		invitation.Save(fileName);
+	}
+}
+*/
 
 //---------------------------------------------------------------------------
 /// <summary>

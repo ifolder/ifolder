@@ -37,9 +37,7 @@ namespace Simias.Sync
 [Serializable]
 public class Nid
 {
-	public string g;
-
-	//public Nid() { g = String.Empty; }
+	private string g;
 
 	// run string through Guid constructor to throw exception if bad format
 	public Nid(string s)
@@ -74,17 +72,17 @@ public class Nid
 }
 
 [Serializable]
-public class NodeStamp: IComparable
+public struct NodeStamp: IComparable
 {
-	public Nid id = null;
+	public Nid id;
 
 	// if localIncarn == UInt64.MaxValue, node is a tombstone
-	public ulong localIncarn = 0, masterIncarn = 0;
+	public ulong localIncarn, masterIncarn;
 
 	// total size of all streams
-	public ulong streamsSize = 0;
+	public ulong streamsSize;
 
-	public string name = null; //just for debug
+	public string name; //just for debug
 
 	public int CompareTo(object obj)
 	{
@@ -94,14 +92,6 @@ public class NodeStamp: IComparable
 			throw new ArgumentException("object is not NodeStamp");
 		return id.CompareTo(((NodeStamp)obj).id);
 	}
-
-	//public static void Clear(out NodeStamp stamp)
-	//{
-	//	//Nid.Clear(out stamp.id);
-	//	stamp.id = null;
-	//	stamp.name = null;
-	//	stamp.localIncarn = stamp.masterIncarn = stamp.streamsSize = 0;
-	//}
 }
 
 [Serializable]
@@ -230,19 +220,8 @@ public class SyncIncomingNode
 	public bool Complete(string metaData)
 	{
 		XmlDocument doc = new XmlDocument();
-		if (doc == null)
-		{
-			Log.Spew("No doc created by XmlDocument!?");
-			return false;
-		}
-		if (metaData == null)
-		{
-			Log.Spew("skipping node, no metadata given");
-			return false;
-		}
 		doc.LoadXml(metaData);
 		Log.Spew("importing {0} {1} to collection {2}", stamp.name, stamp.id, collection.Name);
-		//Log.Spew("       {0}", metaData);
 		Node node = collection.LocalStore.ImportSingleNodeFromXml(collection, doc);
 		Log.Assert(node.Id == stamp.id.ToString());
 		if (onServer)
@@ -268,8 +247,9 @@ public class SyncIncomingNode
 			fs = null;
 			if (File.Exists(fileName))
 			{
-				Log.Error("File {0} exists, removing it to place incoming file", fileName);
-				File.Delete(fileName);
+				Log.Spew("File {0} exists, rejecting incoming node", fileName);
+				fi.Delete();
+				return false;
 			}
 			fi.MoveTo(fileName);
 			fi = null;
@@ -281,8 +261,6 @@ public class SyncIncomingNode
 			
 		}
 		
-		// Log.Spew("  metadata:   {0}", metaData);
-
 		/* TODO: If the node was a directory, we need to create it in
 		 * the file system. Like the dredger looking for deleted files,
 		 * we cannot rely on NodeStream.RelativePath to do it, so we
@@ -362,18 +340,9 @@ public class SyncOps
 			//Log.Spew("listing stamp for {0} Nid '{1}'", stamp.name, stamp.id.g);
 		}
 
-		//foreach (NodeStamp stamp in stampList)
-		//	Log.Spew("listed stamp for {0} Nid '{1}'", stamp.name, stamp.id.g);
-
 		stampList.Sort();
-
-		//foreach (NodeStamp stamp in stampList)
-		//	Log.Spew("sorted stamp for Nid '{0}'", stamp.id);
-
-		NodeStamp[] stampArray = (NodeStamp[])stampList.ToArray(typeof(NodeStamp));
-		//Array.Sort(stampArray);
-		Log.Spew("Found {0} nodes in {1}", stampArray.Length, collection.Name);
-		return stampArray;
+		Log.Spew("Found {0} nodes in {1}", stampList.Count, collection.Name);
+		return (NodeStamp[])stampList.ToArray(typeof(NodeStamp));
 	}
 
 	/// <summary>

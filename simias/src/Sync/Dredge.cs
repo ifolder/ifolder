@@ -158,7 +158,6 @@ public class Dredger
 		this.onServer = onServer;
 		this.docRoot = collection.DocumentRoot.LocalPath;
 		DoSubtree(collection, this.docRoot);
-		//collection.Commit(true);
 	}
 }
 

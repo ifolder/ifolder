@@ -60,6 +60,16 @@ public class Log
 		}
 	}
 
+	public static void Here()
+	{
+		if (traceSwitch.TraceVerbose)
+		{
+			StackFrame sf = new StackTrace(1, true).GetFrame(0);
+			Trace.WriteLine(String.Format("Here: {0}:{1} {2}",
+					sf.GetFileName(), sf.GetFileLineNumber(), sf.GetMethod().ToString()));
+		}
+	}
+
 	static void DumpStack()
 	{
 		StackTrace st = new StackTrace(2, true);

@@ -133,6 +133,7 @@ public class SyncSession: Session
 
 		Log.Spew("dredging server at store {0}, docRoot '{1}'", storeLocation, collection.DocumentRoot.LocalPath);
 		new Dredger(collection, true);
+		Log.Spew("done dredging server at store {0}, docRoot '{1}'", storeLocation, collection.DocumentRoot.LocalPath);
 		inNode = new SyncIncomingNode(collection, true);
 		outNode = new SyncOutgoingNode(collection);
 		ops = new SyncOps(collection, true);
@@ -143,6 +144,8 @@ public class SyncSession: Session
 		//TODO: this check should be before updating the collection from the file system
 		if (!collection.IsAccessAllowed(Access.Rights.ReadOnly))
 			throw new UnauthorizedAccessException("Current user cannot read this collection");
+
+		Log.Spew("session created");
 	}
 
 	public NodeStamp[] GetNodeStamps()
@@ -266,12 +269,16 @@ public class SyncPass
 		NodeStamp[] sstamps = ss.GetNodeStamps();
 		NodeStamp[] cstamps = ops.GetNodeStamps();
 
-		ArrayList getLargeFromServer = new ArrayList();
-		ArrayList getSmallFromServer = new ArrayList();
+		ArrayList addLargeFromServer = new ArrayList();
+		ArrayList addSmallFromServer = new ArrayList();
+		ArrayList updateLargeFromServer = new ArrayList();
+		ArrayList updateSmallFromServer = new ArrayList();
 		ArrayList killOnServer = new ArrayList();
 		ArrayList killOnClient = new ArrayList();
-		ArrayList sendSmallToServer = new ArrayList();
-		ArrayList sendLargeToServer = new ArrayList();
+		ArrayList addSmallToServer = new ArrayList();
+		ArrayList addLargeToServer = new ArrayList();
+		ArrayList updateSmallToServer = new ArrayList();
+		ArrayList updateLargeToServer = new ArrayList();
 		int si = 0, ci = 0;
 		int sCount = sstamps.Length, cCount = cstamps.Length;
 
@@ -295,7 +302,7 @@ public class SyncPass
 				if (cstamps[ci].masterIncarn == 0 && cstamps[ci].localIncarn != UInt64.MaxValue)
 				{
 					Log.Spew("{1} '{0}' is new on the client, send to server", cstamps[ci].name,  cstamps[ci].id);
-					AddToUpdateList(cstamps[ci], sendSmallToServer, sendLargeToServer);
+					AddToUpdateList(cstamps[ci], addSmallToServer, addLargeToServer);
 				}
 				else
 				{
@@ -308,7 +315,7 @@ public class SyncPass
 			else if (ci == cCount || cstamps[ci].CompareTo(sstamps[si]) > 0)
 			{
 				Log.Spew("{1} '{0}' exists on server, but not client (no tombstone either), get it", sstamps[si].name, sstamps[si].id);
-				AddToUpdateList(sstamps[si], getSmallFromServer, getLargeFromServer);
+				AddToUpdateList(sstamps[si], addSmallFromServer, addLargeFromServer);
 				si++;
 			}
 			else
@@ -322,13 +329,13 @@ public class SyncPass
 				{
 					Log.Assert(sstamps[si].localIncarn > cstamps[ci].masterIncarn);
 					Log.Spew("{2} '{0}' has changed on server, get incarn {1}", sstamps[si].name, sstamps[si].localIncarn, sstamps[si].id);
-					AddToUpdateList(sstamps[si], getSmallFromServer, getLargeFromServer);
+					AddToUpdateList(sstamps[si], updateSmallFromServer, updateLargeFromServer);
 				}
 				else if (cstamps[ci].localIncarn != cstamps[ci].masterIncarn)
 				{
 					Log.Assert(cstamps[ci].localIncarn > cstamps[ci].masterIncarn);
 					Log.Spew("{2} '{0}' has changed, send incarn {1} to server", cstamps[ci].name, cstamps[ci].localIncarn, cstamps[ci].id);
-					AddToUpdateList(cstamps[ci], sendSmallToServer, sendLargeToServer);
+					AddToUpdateList(cstamps[ci], updateSmallToServer, updateLargeToServer);
 				}
 				ci++;
 				si++;
@@ -348,9 +355,24 @@ public class SyncPass
 			ops.DeleteNodes(ids); // remove tombstones from client
 		}
 
-		// push up new and modified small files
+		// push up new small files
 		SmallNode[] updates = null;
-		ids = MoveIdsToArray(sendSmallToServer);
+		ids = MoveIdsToArray(addSmallToServer);
+		if (ids != null && ids.Length > 0)
+			updates = ops.GetSmallNodes(ids);
+		if (updates != null && updates.Length > 0)
+		{
+			Nid[] rejectedUpdates = ss.PutSmallNodes(updates);
+			foreach (SmallNode sn in updates)
+				if (Array.IndexOf(rejectedUpdates, sn.stamp.id) == -1)
+					ops.UpdateIncarn(sn.stamp);
+				//TODO: else
+				//TODO:	DeleteNode (not stream);
+		}
+
+		// push up modified small files
+		updates = null;
+		ids = MoveIdsToArray(updateSmallToServer);
 		if (ids != null && ids.Length > 0)
 			updates = ops.GetSmallNodes(ids);
 		if (updates != null && updates.Length > 0)
@@ -361,16 +383,24 @@ public class SyncPass
 					ops.UpdateIncarn(sn.stamp);
 		}
 
-		// get small files from server
+		// get new small files from server
 		updates = null;
-		ids = MoveIdsToArray(getSmallFromServer);
+		ids = MoveIdsToArray(addSmallFromServer);
+		if (ids != null && ids.Length > 0)
+			updates = ss.GetSmallNodes(ids);
+		if (updates != null && updates.Length > 0)
+			ops.PutSmallNodes(updates);
+
+		// get modified small files from server
+		updates = null;
+		ids = MoveIdsToArray(updateSmallFromServer);
 		if (ids != null && ids.Length > 0)
 			updates = ss.GetSmallNodes(ids);
 		if (updates != null && updates.Length > 0)
 			ops.PutSmallNodes(updates);
 
 		// push up new and modified large files
-		foreach (Nid nid in sendLargeToServer)
+		foreach (Nid nid in addLargeToServer)
 		{
 			NodeStamp stamp;
 			string metaData, relativePath;
@@ -391,12 +421,12 @@ public class SyncPass
 			if (ss.WriteLargeNode(data, metaData))
 				ops.UpdateIncarn(stamp);
 			else
-				Log.Spew("skipping update of incarnation for large node {0} due to local collision", stamp.name);
+				Log.Spew("skipping update of incarnation for large node {0} due to collision on server", stamp.name);
 		}
-		sendLargeToServer.Clear();
+		addLargeToServer.Clear();
 
 		// get large files from server
-		foreach (Nid nid in getLargeFromServer)
+		foreach (Nid nid in addLargeFromServer)
 		{
 			NodeStamp stamp;
 			string metaData, relativePath;
@@ -411,7 +441,7 @@ public class SyncPass
 			if (!inNode.Complete(metaData))
 				Log.Spew("skipped update of large node {0} from server due to local collision", stamp.name);
 		}
-		getLargeFromServer.Clear();
+		addLargeFromServer.Clear();
 	}
 }
 
