@@ -29,7 +29,7 @@ using System.Windows.Forms;
 using System.IO;
 using Simias;
 using Simias.Sync;
-using Simias.Invite;
+using Simias.POBox;
 
 namespace Novell.iFolder.InvitationWizard
 {
@@ -50,7 +50,6 @@ namespace Novell.iFolder.InvitationWizard
 			// This call is required by the Windows Form Designer.
 			InitializeComponent();
 
-			// TODO: Add any initialization after the InitializeComponent call
 		}
 
 		/// <summary>
@@ -152,7 +151,7 @@ namespace Novell.iFolder.InvitationWizard
 			OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
 //			openFileDialog1.InitialDirectory = "c:\\" ;
-			openFileDialog1.Filter = "ifi files (*.ifi)|*.ifi" ;
+			openFileDialog1.Filter = "csi files (*.csi)|*.csi" ;
 			openFileDialog1.RestoreDirectory = true ;
 
 			if(openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -189,12 +188,11 @@ namespace Novell.iFolder.InvitationWizard
 			}
 			else
 			{
-				Invitation invitation = new Invitation();
-
 				try
 				{
-					invitation.Load(invitationFile.Text);
-					((InvitationWizard)(this.Parent)).Invitation = invitation;
+					SubscriptionInfo subInfo = new SubscriptionInfo(invitationFile.Text);
+					Subscription sub = ((InvitationWizard)(this.Parent)).ConvertSubscriptionInfo(subInfo);
+					((InvitationWizard)(this.Parent)).Subscription = sub;
 				}
 				catch (SimiasException e)
 				{

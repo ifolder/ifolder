@@ -46,7 +46,6 @@ namespace Novell.iFolder.InvitationWizard
 			// This call is required by the Windows Form Designer.
 			InitializeComponent();
 
-			// TODO: Add any initialization after the InitializeComponent call
 		}
 
 		/// <summary>
@@ -173,15 +172,15 @@ namespace Novell.iFolder.InvitationWizard
 
 			// Add the iFolder details to the list box.
 			string blank = "";
-			string name = "iFolder name: " + ((InvitationWizard)(this.Parent)).Invitation.CollectionName;
+			string name = "iFolder name: " + ((InvitationWizard)(this.Parent)).Subscription.SubscriptionCollectionName;
 			iFolderDetails.Items.Add(name);
 			iFolderDetails.Items.Add(blank);
 
-			string sharedBy = "Shared by: " + ((InvitationWizard)(this.Parent)).Invitation.FromName;
+			string sharedBy = "Shared by: " + ((InvitationWizard)(this.Parent)).Subscription.FromName;
 			iFolderDetails.Items.Add(sharedBy);
 			iFolderDetails.Items.Add(blank);
 
-			string rights = "Rights: " + ((InvitationWizard)(this.Parent)).Invitation.CollectionRights;
+			string rights = "Rights: " + ((InvitationWizard)(this.Parent)).Subscription.SubscriptionRights;
 			iFolderDetails.Items.Add(rights);
 			iFolderDetails.Items.Add(blank);
 

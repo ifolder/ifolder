@@ -31,7 +31,8 @@ using System.IO;
 using System.Reflection;
 using Simias;
 using Simias.Sync;
-using Simias.Invite;
+using Simias.POBox;
+using Simias.Storage;
 using Novell.iFolder;
 using System.Text;
 
@@ -68,8 +69,11 @@ namespace Novell.iFolder.InvitationWizard
 		private BaseWizardPage[] pages;
 		internal const int maxPages = 5;
 		private int currentIndex = 0;
-		private Invitation invitation;
+		private SubscriptionInfo subInfo;
+		private Subscription subscription;
 		private string invitationFile;
+		private Store store;
+		private POBox poBox = null;
 
 		/// <summary>
 		/// Required designer variable.
@@ -186,14 +190,19 @@ namespace Novell.iFolder.InvitationWizard
 			// Activate the first wizard page.
 			pages[0].ActivatePage(0);
 
-			invitation = new Invitation();
+			store = new Store(new Configuration());
+
 			this.invitationFile = invitationFile;
 
 			if (this.invitationFile != "")
 			{
 				try
 				{
-					invitation.Load(this.invitationFile);
+					subInfo = new SubscriptionInfo(invitationFile);
+
+					subscription = ConvertSubscriptionInfo(subInfo);
+
+					// TODO: check the state of the subscription.  If it is ready, proceed; otherwise, quit.
 				}
 				catch (SimiasException e)
 				{
@@ -333,8 +342,8 @@ namespace Novell.iFolder.InvitationWizard
 					// Accept the invitation
 					try
 					{
-						iFolderManager manager = iFolderManager.Connect();
-						manager.AcceptInvitation(invitation, invitation.RootPath);
+// TODO:						iFolderManager manager = iFolderManager.Connect();
+//						manager.AcceptInvitation(invitation, invitation.RootPath);
 					}
 					catch (SimiasException ex)
 					{
@@ -415,16 +424,16 @@ namespace Novell.iFolder.InvitationWizard
 			}
 		}
 
-		public Invitation Invitation
+		public Subscription Subscription
 		{
 			get
 			{
-				return invitation;
+				return subscription;
 			}
 
 			set
 			{
-				invitation = value;
+				subscription = value;
 			}
 		}
 
@@ -452,17 +461,40 @@ namespace Novell.iFolder.InvitationWizard
 				StringBuilder sb = new StringBuilder("The wizard is ready to respond to the iFolder Invitation.\n\n");
 				if (this.acceptDeclinePage.Accept)
 				{
-					sb.AppendFormat("You accepted the invitation to participate in the {0} iFolder shared by {1}.\n\n", this.Invitation.CollectionName, this.Invitation.FromName);
-					sb.AppendFormat("The planned location for the shared iFolder is {0}.", Path.Combine(this.Invitation.RootPath, this.Invitation.CollectionName));
+					sb.AppendFormat("You accepted the invitation to participate in the {0} iFolder shared by {1}.\n\n", subscription.SubscriptionCollectionName, subscription.FromName);
+					sb.AppendFormat("The planned location for the shared iFolder is {0}.", Path.Combine(subscription.CollectionRoot, subscription.SubscriptionCollectionName));
 				}
 				else
 				{
-					sb.AppendFormat("You declined the invitation to participate in the {0} iFolder shared by {1}.\n\n", this.Invitation.CollectionName, this.Invitation.FromName);
+					sb.AppendFormat("You declined the invitation to participate in the {0} iFolder shared by {1}.\n\n", subscription.SubscriptionCollectionName, subscription.FromName);
 					sb.Append("The invitation will be revoked and cannot be accepted at another computer.");
 				}
 
 				return sb.ToString();				
 			}
+		}
+		#endregion
+
+		#region Public Methods
+		public Subscription ConvertSubscriptionInfo(SubscriptionInfo subscriptionInfo)
+		{
+			Subscription subscription;
+
+			// Check for existing Subscription object in the POBox.
+			poBox = POBox.GetPOBox(store, subscriptionInfo.DomainID);
+			Node node = poBox.GetNodeByID(subscriptionInfo.SubscriptionID);
+			if (node != null)
+			{
+				subscription = new Subscription(node);
+			}
+			else
+			{
+				// TODO: what should we name these?
+				subscription = new Subscription("Subscription Name", subscriptionInfo);
+				poBox.AddMessage(subscription);
+			}
+
+			return subscription;
 		}
 		#endregion
 	}
