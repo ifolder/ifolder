@@ -108,6 +108,7 @@ namespace Simias.POBox
 			SetType(this, typeof(POBox).Name);
 			Sealed = true;
 		}
+
 		#endregion
 
 		#region Private Methods

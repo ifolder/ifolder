@@ -173,7 +173,8 @@ namespace Simias.Sync
 				if (store.GetCollectionByID(id) != null)
 				{
 					// we are in a bad state with now collection manager / service
-					throw new ApplicationException("No service found for an existing collection: {0}");
+					throw new ApplicationException(
+						String.Format("No service found for an existing collection: {0}", id));
 				}
 			}
 
