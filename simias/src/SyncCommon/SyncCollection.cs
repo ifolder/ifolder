@@ -231,7 +231,24 @@ namespace Simias.Sync
 				Properties.DeleteSingleProperty(name);
 			}
 
-			Commit();
+			// always impersonate on local properties to write
+			if (local)
+			{
+				this.Impersonate(new Member("Root", this.ID, Access.Rights.Admin));
+				
+				try
+				{
+					Commit();
+				}
+				finally
+				{
+					this.Revert();
+				}
+			}
+			else
+			{
+				Commit();
+			}
 		}
 
 		#region IDisposable Members
@@ -306,7 +323,9 @@ namespace Simias.Sync
 				return result;
 			}
 			
-			set { SetProperty(MasterUrlPropertyName, value, true); }
+			set
+			{
+				SetProperty(MasterUrlPropertyName, value, true); }
 		}
 
 		/// <summary>
