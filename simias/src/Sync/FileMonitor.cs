@@ -155,7 +155,8 @@ namespace Simias.Sync
 		/// <returns>The new FileNode.</returns>
 		FileNode CreateFileNode(string path, DirNode parentNode)
 		{
-//			FileInfo fi = new FileInfo(path);
+			if (isSyncFile(path))
+				return null;
 			FileNode fnode = new FileNode(collection, parentNode, Path.GetFileName(path));
 			log.Debug("Adding file node for {0} {1}", path, fnode.ID);
 			collection.Commit(fnode);
@@ -200,7 +201,9 @@ namespace Simias.Sync
 		/// <returns>The new DirNode.</returns>
 		DirNode CreateDirNode(string path, DirNode parentNode)
 		{
-//			DirectoryInfo di = new DirectoryInfo(path);
+			if (isSyncFile(path))
+				return null;
+
 			DirNode dnode = new DirNode(collection, parentNode, Path.GetFileName(path));
 			log.Debug("Adding dir node for {0} {1}", path, dnode.ID);
 			collection.Commit(dnode);
