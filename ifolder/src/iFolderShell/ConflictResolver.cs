@@ -360,7 +360,7 @@ namespace Novell.iFolder.iFolderCom
 					string name = fileNode.GetFileName();
 					string[] items = new string[] {name, path, fileNode.LastWriteTime.ToString()};
 
-					Simias.Sync.Conflict conflict = new Simias.Sync.Conflict(ifolder, fileNode);
+					Simias.Sync.Conflict conflict = new Simias.Sync.Conflict(ifolder, conflictNode);
 
 					ListViewItem lvi = new ListViewItem(items);
 					CollisionNode cNode = new CollisionNode();
@@ -380,7 +380,10 @@ namespace Novell.iFolder.iFolderCom
 			{
 				CollisionNode cn = (CollisionNode)lviLocal.Tag;
 				iFolder ifolder = manager.GetiFolderById(cn.LocalNode.Properties.GetSingleProperty("CollectionId").ToString());
-				Simias.Sync.Conflict conflict = new Simias.Sync.Conflict(ifolder, cn.LocalNode);
+
+				// Get the collision node.
+				Node conflictNode = new Node(ifolder, cn.ConflictNode);
+				Simias.Sync.Conflict conflict = new Simias.Sync.Conflict(ifolder, conflictNode);
 
 				if (lviLocal.Checked)
 				{
@@ -404,7 +407,10 @@ namespace Novell.iFolder.iFolderCom
 		private void RefreshList()
 		{
 			Cursor.Current = Cursors.WaitCursor;
-			localFiles.Clear();
+			conflictFiles.Items.Clear();
+			conflictFiles.SelectedItems.Clear();
+			localFiles.Items.Clear();
+			localFiles.SelectedItems.Clear();
 			localFiles.BeginUpdate();
 			
 			try
