@@ -522,7 +522,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.services.Size = new System.Drawing.Size(408, 208);
 			this.services.TabIndex = 0;
 			this.services.View = System.Windows.Forms.View.Details;
-			this.services.SelectedIndexChanged += new System.EventHandler(this.services_SelectedIndexChanged);
 			// 
 			// columnHeader2
 			// 
@@ -541,6 +540,7 @@ namespace Novell.iFolder.FormsTrayApp
 																						 this.menuPause,
 																						 this.menuStop,
 																						 this.menuRestart});
+			this.contextMenu2.Popup += new System.EventHandler(this.contextMenu2_Popup);
 			// 
 			// menuStart
 			// 
@@ -695,6 +695,8 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void ok_Click(object sender, System.EventArgs e)
 		{
+			Cursor.Current = Cursors.WaitCursor;
+
 			try
 			{
 				// Save the default sync interval.
@@ -721,6 +723,8 @@ namespace Novell.iFolder.FormsTrayApp
 			{
 				logger.Debug(ex, "Saving settings");
 			}
+
+			Cursor.Current = Cursors.Default;
 		}
 
 		private void iFolderView_DoubleClick(object sender, System.EventArgs e)
@@ -829,21 +833,23 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 		}
 
-		private void services_SelectedIndexChanged(object sender, System.EventArgs e)
+		private void contextMenu2_Popup(object sender, System.EventArgs e)
 		{
 			if (services.SelectedItems.Count == 1)
 			{
 				menuStart.Visible = menuPause.Visible = menuStop.Visible = menuRestart.Visible = true;
 				ListViewItem lvi = services.SelectedItems[0];
-/*				switch (lvi.SubItems[1].Text)
+				switch (lvi.SubItems[1].Text)
 				{
 					case "Stopped":
-                        menuStart.Enabled = true;
+						menuStart.Enabled = true;
+						menuStop.Enabled = menuRestart.Enabled = false;
 						break;
 					case "Running":
+						menuStart.Enabled = false;
 						menuStop.Enabled = menuRestart.Enabled = true;
 						break;
-				}*/
+				}
 			}
 			else
 			{
@@ -856,8 +862,17 @@ namespace Novell.iFolder.FormsTrayApp
 			ListViewItem lvi = services.SelectedItems[0];
 			ServiceCtl svc = (ServiceCtl)lvi.Tag;
 
-			svc.Start();
+			Cursor.Current = Cursors.WaitCursor;
+
+			try
+			{
+				svc.Start();
+			}
+			catch{}
+
 			lvi.SubItems[1].Text = svc.State.ToString();
+
+			Cursor.Current = Cursors.Default;
 		}
 
 		private void menuRestart_Click(object sender, System.EventArgs e)
@@ -865,10 +880,19 @@ namespace Novell.iFolder.FormsTrayApp
 			ListViewItem lvi = services.SelectedItems[0];
 			ServiceCtl svc = (ServiceCtl)lvi.Tag;
 
-			svc.Stop();
+			Cursor.Current = Cursors.WaitCursor;
+
+			try
+			{
+				svc.Stop();
+				lvi.SubItems[1].Text = svc.State.ToString();
+				svc.Start();
+			}
+			catch{}
+
 			lvi.SubItems[1].Text = svc.State.ToString();
-			svc.Start();
-			lvi.SubItems[1].Text = svc.State.ToString();
+
+			Cursor.Current = Cursors.Default;
 		}
 
 		private void menuStop_Click(object sender, System.EventArgs e)
@@ -876,8 +900,17 @@ namespace Novell.iFolder.FormsTrayApp
 			ListViewItem lvi = services.SelectedItems[0];
 			ServiceCtl svc = (ServiceCtl)lvi.Tag;
 
-			svc.Stop();
+			Cursor.Current = Cursors.WaitCursor;
+
+			try
+			{
+				svc.Stop();
+			}
+			catch{}
+
 			lvi.SubItems[1].Text = svc.State.ToString();
+
+			Cursor.Current = Cursors.Default;
 		}
 		#endregion
 	}
