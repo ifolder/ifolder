@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 using System;
+using System.Threading;
 using System.Collections;
 using System.Runtime.Remoting;
 
@@ -32,12 +33,16 @@ namespace Simias.Sync
 	/// </summary>
 	public class SyncStoreManager : IDisposable
 	{
+		private static readonly int monitorInterval = 5;
+
 		private SyncManager syncManager;
 		private SyncStore store;
 		private SyncStoreService service;
 		private StoreWatcher watcher;
 		private SyncChannel channel;
 		private Hashtable collectionManagers;
+		private Thread monitorThread;
+		private bool monitoring;
 
 		public SyncStoreManager(SyncManager syncManager)
 		{
@@ -100,6 +105,11 @@ namespace Simias.Sync
 
 					// start the watcher
 					watcher.Start();
+
+					// monitor thread
+					monitorThread = new Thread(new ThreadStart(this.DoMonitorWork));
+					monitoring = true;
+					monitorThread.Start();
 				}
 			}
 			catch(Exception e)
@@ -119,6 +129,18 @@ namespace Simias.Sync
 					int port = syncManager.Port;
 
 					MyTrace.WriteLine("Stopping Store Service: http://0.0.0.0:{0}/{1}", port, SyncStore.GetEndPoint(port));
+
+					// stop monitor
+					monitoring = false;
+
+					try
+					{
+						monitorThread.Join();
+					}
+					catch
+					{
+						// ignore
+					}
 
 					// stop watcher
 					watcher.Stop();
@@ -152,6 +174,37 @@ namespace Simias.Sync
 			}
 		}
 
+
+		private void DoMonitorWork()
+		{
+			while(monitoring)
+			{
+				// get permission from sync manager
+				syncManager.ReadyToWork();
+
+				MyTrace.WriteLine("Sync Store Monitor Starting: {0}", service.Ping().StoreID);
+
+				try
+				{
+					MyTrace.WriteLine("Store Service Uri: {0}", RemotingServices.GetObjectUri(service));
+				}
+				catch(Exception e)
+				{
+					MyTrace.WriteLine(e);
+				}
+				finally
+				{
+					// marshal service
+					RemotingServices.Marshal(service, SyncStore.GetEndPoint(syncManager.Port));
+				}
+
+				MyTrace.WriteLine("Sync Store Monitor Finished: {0}", service.Ping().StoreID);
+
+				// sleep
+				if (monitoring) Thread.Sleep(TimeSpan.FromSeconds(monitorInterval));
+			}
+		}
+
 		internal SyncCollectionService GetCollectionService(string id)
 		{
 			SyncCollectionService service = null;
@@ -166,6 +219,8 @@ namespace Simias.Sync
 				}
 
                 service = scm.GetService();
+
+				MyTrace.WriteLine("Serving Collection Service: {0}", service.Ping().ToString());
 			}
 
 			return service;

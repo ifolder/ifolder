@@ -31,7 +31,7 @@ using Simias;
 using Simias.Sync;
 using Simias.Storage;
 
-namespace Novell.iFolder.Mini
+namespace Simias.Mini
 {
 	/// <summary>
 	/// Mini iFolder
@@ -40,8 +40,12 @@ namespace Novell.iFolder.Mini
 	{
 		private static readonly string collectionId =
 			"a10db843-6048-4343-bedd-d2d807dfa358";
-		private static readonly string collectionName = "MiniCollection";
-		private static readonly string collectionType = "MiniCollectionType";
+
+		private static readonly string collectionName = "minishare";
+		private static readonly string collectionType = "minishare";
+
+		private static readonly string masterPath = Path.GetFullPath("./minimaster");
+		private static readonly string slavePath = Path.GetFullPath("./minislave");
 
 		/// <summary>
 		/// The main entry point for the application.
@@ -59,9 +63,9 @@ namespace Novell.iFolder.Mini
 			Console.WriteLine();
 
 			// check arguments
-			if (args.Length < 1 || args.Length > 2)
+			if (args.Length > 1)
 			{
-				Console.WriteLine("USAGE: MiniFolder.exe RootPath [MasterHost]");
+				Console.WriteLine("USAGE: MiniFolder.exe [MasterHost]");
 				return -1;
 			}
 
@@ -70,7 +74,6 @@ namespace Novell.iFolder.Mini
 			Console.WriteLine();
 
 			// properties
-			string rootPath = Path.GetFullPath(args[0]);
 			SyncProperties properties = new SyncProperties();
 
 			// sinks
@@ -81,27 +84,32 @@ namespace Novell.iFolder.Mini
 			
 			if (args.Length == 1)
 			{
-				role = SyncCollectionRoles.Master;
-				properties.StorePath = Path.GetFullPath("./MiniMasterStore");
-			}
-			else
-			{
 				role = SyncCollectionRoles.Slave;
-				properties.StorePath = Path.GetFullPath("./MiniSlaveStore");
-			}
-			
-			MyTrace.WriteLine("Role: {0}", role);
+				properties.StorePath = slavePath;
 
-			// host
-			if (role == SyncCollectionRoles.Slave)
-			{
-				properties.DefaultHost = args[1];
+				// master host
+				properties.DefaultHost = args[0];
 
 				// put the slave on a different port
 				properties.DefaultPort = SyncProperties.SuggestedPort + 1;
 			}
+			else
+			{
+				role = SyncCollectionRoles.Master;
+				properties.StorePath = masterPath;
+			}
 			
-			MyTrace.WriteLine("Local Host: {0}:{1}", properties.DefaultHost, properties.DefaultPort);
+			MyTrace.WriteLine("Sync Role: {0}", role);
+
+			// clean up directory
+			if (Directory.Exists(properties.StorePath)) Directory.Delete(properties.StorePath, true);
+
+			// host
+			if (role == SyncCollectionRoles.Slave)
+			{
+			}
+			
+			MyTrace.WriteLine("Master Host: {0}:{1}", properties.DefaultHost, SyncProperties.SuggestedPort);
 
 			// logic factory
 			//properties.DefaultLogicFactory = typeof(SyncLogicFactoryLite);
@@ -113,49 +121,38 @@ namespace Novell.iFolder.Mini
 			
 			manager.Start();
 
-			MyTrace.WriteLine("Path: {0}", manager.StorePath);
+			MyTrace.WriteLine("Store Path: {0}", manager.StorePath);
 			
-			// create collection, if needed
-			SyncCollection collection = null;	
+			MyTrace.WriteLine("Creating Shared Collection...");
 
-			collection = manager.StoreManager.Store.OpenCollection(collectionId);
+			SyncStore store = new SyncStore(manager.StorePath);
+			
+			SyncCollection collection = null;
 
-			if (collection == null)
+			// set the role
+			if (role == SyncCollectionRoles.Master)
 			{
-				MyTrace.WriteLine("Creating Collection...");
-
-				SyncStore store = new SyncStore(manager.StorePath);
-				
-				// set the role
-				if (role == SyncCollectionRoles.Master)
-				{
-					// create the master collection
-					// for testing purposes let the role, host, and port default
-					collection = store.CreateCollection(collectionId,
-						collectionName, collectionType,
-						Path.Combine(rootPath, collectionName));
-
-					// save the new collection
-					collection.Commit();
-				}
-				else if (role == SyncCollectionRoles.Slave)
-				{
-					// create the slave collection
-					collection = store.CreateCollection(collectionId,
-						collectionName, collectionType,
-						Path.Combine(rootPath, collectionName),
-						role, properties.DefaultHost, SyncProperties.SuggestedPort);
-
-					// save the new collection
-					collection.Commit();
-				}
+				// create the master collection
+				// for testing purposes let the role, host, and port default
+				collection = store.CreateCollection(collectionId,
+					collectionName, collectionType,
+					Path.Combine(properties.StorePath, collectionName));
 			}
 			else if (role == SyncCollectionRoles.Slave)
 			{
-				// reset the host
-				collection.Host = properties.DefaultHost;
-				collection.Commit();
+				// create the slave collection
+				collection = store.CreateCollection(collectionId,
+					collectionName, collectionType,
+					Path.Combine(properties.StorePath, collectionName),
+					role, properties.DefaultHost, SyncProperties.SuggestedPort);
 			}
+
+			MyTrace.WriteLine("Committing Collection...");
+
+			// save the new collection
+			collection.Commit();
+
+			MyTrace.WriteLine("Working...");
 
 			// end
 			Console.ReadLine();
@@ -164,7 +161,7 @@ namespace Novell.iFolder.Mini
 
 			MyTrace.WriteLine("Done.");
 
-			//done
+			// kludge to kill all threads
 			Environment.Exit(0);
 
 			return 0;
@@ -172,7 +169,7 @@ namespace Novell.iFolder.Mini
 
 		private static void OnChangedSyncState(SyncManagerStates state)
 		{
-			MyTrace.WriteLine("Sync Manager Stage: {0}", state);
+			MyTrace.WriteLine("Sync Manager State: {0}", state);
 		}
 	}
 }
