@@ -2025,7 +2025,11 @@ namespace Novell.FormsTrayApp
 							defaultServer.Enabled = !defaultServer.Checked;
 
 							// Don't allow the current or new default account to be removed.
-							removeAccount.Enabled = !currentDefaultDomain.ID.Equals(selectedDomain.ID) && !defaultServer.Checked;
+							try
+							{
+								removeAccount.Enabled = !currentDefaultDomain.ID.Equals(selectedDomain.ID) && !defaultServer.Checked;
+							}
+							catch {}
 
 							if (selectedDomain.ID.Equals(FormsTrayApp.WorkGroupDomainID))
 							{
@@ -2055,7 +2059,8 @@ namespace Novell.FormsTrayApp
 								MessageBox.Show(ex.Message);
 							}
 
-							// TODO: display the auto login setting.
+							// auto login setting.
+							autoLogin.Checked = selectedDomain.DomainWeb.AutoLogin;
 						}
 					}
 				}

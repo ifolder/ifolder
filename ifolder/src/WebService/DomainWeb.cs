@@ -41,6 +41,9 @@ namespace Novell.iFolder.Web
 		public string UserID;
 		public string UserName;
 		public bool IsDefault;
+		public bool IsSlave;
+		public bool AutoLogin;
+		public bool IsConnected;
 
 		public DomainWeb()
 		{}
@@ -74,6 +77,9 @@ namespace Novell.iFolder.Web
 				throw new Exception("Unable to access user roster");
 
 			this.UserName = roster.GetMemberByID(this.UserID).Name;
+			this.IsSlave = roster.Role.Equals(Simias.Sync.SyncCollectionRoles.Slave);
+
+			this.AutoLogin = true;
 		}
 
 	}
