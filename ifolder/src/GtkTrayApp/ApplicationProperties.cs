@@ -250,8 +250,10 @@ namespace Novell.iFolder
 	//										out nodeCount, 
 	//										out bytesToSend);
 
-				UploadLabel.Text = bytesToSend.ToString();
-				SyncFilesLabel.Text = nodeCount.ToString();
+	//			UploadLabel.Text = bytesToSend.ToString();
+	//			SyncFilesLabel.Text = nodeCount.ToString();
+				UploadLabel.Text = "N/A";
+				SyncFilesLabel.Text = "N/A";
 			}
 		}
 
@@ -312,6 +314,7 @@ namespace Novell.iFolder
 						iFolder ifolder = null;
 
 						TreeSelection tSelect = iFolderTreeView.Selection;
+						tSelect.SelectPath(tPath);
 						if(tSelect.CountSelectedRows() == 1)
 						{
 							TreeModel tModel;
@@ -320,6 +323,12 @@ namespace Novell.iFolder
 							tSelect.GetSelected(out tModel, out iter);
 							ifolder = (iFolder) tModel.GetValue(iter, 0);
 						}
+
+						MenuItem item_open = 
+							new MenuItem ("Open");
+						ifMenu.Append (item_open);
+						item_open.Activated += new EventHandler(
+								on_openifolder_context_menu);
 
 						MenuItem item_share = 
 							new MenuItem ("Share with...");
@@ -391,6 +400,46 @@ namespace Novell.iFolder
 				conres.iFolder = ifolder;
 				conres.TransientFor = ApplicationPropDialog;
 				conres.Run();
+			}
+		}
+
+
+		public void on_openifolder_context_menu(object o, EventArgs args)
+		{
+			TreeSelection tSelect = iFolderTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+
+
+				try
+				{
+					System.Diagnostics.Process process;
+
+					process = new System.Diagnostics.Process();
+					process.StartInfo.CreateNoWindow = true;
+					process.StartInfo.UseShellExecute = false;
+					process.StartInfo.FileName = "nautilus";
+					process.StartInfo.Arguments = ifolder.LocalPath;
+					process.Start();
+				}
+				catch(Exception e)
+				{
+					MessageDialog dialog = 
+						new MessageDialog(ApplicationPropDialog,
+						DialogFlags.Modal | DialogFlags.DestroyWithParent,
+						MessageType.Info,
+						ButtonsType.Ok,
+						"Unable to open a Nautilus window.");
+					dialog.Title = "iFolder Message";
+					dialog.Run();
+					dialog.Hide();
+					dialog.Destroy();
+				}
 			}
 		}
 

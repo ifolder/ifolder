@@ -101,11 +101,6 @@ namespace Novell.iFolder
 		private void RefreshView()
 		{
 			ReunionTreeStore.Clear();
-
-			ReunionTreeStore.AppendValues("Test1");
-			ReunionTreeStore.AppendValues("Test1");
-			ReunionTreeStore.AppendValues("Test1");
-			ReunionTreeStore.AppendValues("Test1");
 		}
 
 		public void ShowAll()

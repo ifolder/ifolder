@@ -284,28 +284,44 @@ namespace Novell.iFolder
 
 		public void on_auto(object o, EventArgs args)
 		{
-			MessageDialog dialog = new MessageDialog(ConflictDialog,
-				DialogFlags.Modal | DialogFlags.DestroyWithParent,
-				MessageType.Question,
-				ButtonsType.None,
-				"Auto Resolution will resolve all conflicts using the Copy you select here.  Which copy should all conflicts be resolved to?");
-			dialog.Title = "Auto Resolve Conflicts";
-			dialog.AddButton("Local Copy", -1);
-			dialog.AddButton("Server Copy", -2);
-			dialog.AddButton("Cancel", -9);
-			int rc = dialog.Run();
-			dialog.Hide();
-			dialog.Destroy();
-			switch(rc)
+			// test to see if there is anyting in the store
+			if(ConflictTreeStore.IterNChildren() > 0)
 			{
-				case -1:	// resolve all local
-					resolveAll(true);
-					break;
-				case -2:	// resolve all server
-					resolveAll(false);
-					break; 
-				case -9:	// cancel
-					break;
+				MessageDialog dialog = new MessageDialog(ConflictDialog,
+					DialogFlags.Modal | DialogFlags.DestroyWithParent,
+					MessageType.Question,
+					ButtonsType.None,
+					"Auto Resolution will resolve all conflicts.  Which copy should all conflicts be resolved to?");
+				dialog.Title = "Auto Resolve Conflicts";
+				dialog.AddButton("Local Copy", -1);
+				dialog.AddButton("Server Copy", -2);
+				dialog.AddButton("Cancel", -9);
+				int rc = dialog.Run();
+				dialog.Hide();
+				dialog.Destroy();
+				switch(rc)
+				{
+					case -1:	// resolve all local
+						resolveAll(true);
+						break;
+					case -2:	// resolve all server
+						resolveAll(false);
+						break; 
+					case -9:	// cancel
+						break;
+				}
+			}
+			else
+			{
+				MessageDialog dialog = new MessageDialog(ConflictDialog,
+					DialogFlags.Modal | DialogFlags.DestroyWithParent,
+					MessageType.Info,
+					ButtonsType.Ok,
+					"There are no conflicts to resolve");
+				dialog.Title = "Conflict Resolver Message";
+				dialog.Run();
+				dialog.Hide();
+				dialog.Destroy();
 			}
 		}
 
