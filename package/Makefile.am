@@ -22,7 +22,7 @@
 #######################################################################
 SUBDIRS = @IFOLDER_OS@
 
-DIST_SUBDIRS = linux windows
+DIST_SUBDIRS = linux windows darwin
 
 sdk:	
 	$(MAKE) -C $(IFOLDER_OS) sdk
