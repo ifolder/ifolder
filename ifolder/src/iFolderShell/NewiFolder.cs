@@ -253,7 +253,8 @@ namespace Novell.iFolderCom
 				}
 				catch
 				{
-					// TODO: Display message
+					// TODO: Localize
+					MessageBox.Show("An error was encountered while saving configuration.");
 				}
 			}
 

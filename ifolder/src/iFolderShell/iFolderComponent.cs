@@ -139,9 +139,9 @@ namespace Novell.iFolderCom
 					ifWebService = null;
 				}
 			}
-			catch (Exception e)
+			catch
 			{
-				// TODO:
+				// Ignore.
 			}
 		}
 
@@ -334,6 +334,8 @@ namespace Novell.iFolderCom
 				}
 				catch (WebException e)
 				{
+					// TODO: Localize
+					MessageBox.Show("An error was encountered while attempting to display the iFolder properties dialog.");
 					if (e.Status == WebExceptionStatus.ConnectFailure)
 					{
 						ifWebService = null;
@@ -341,7 +343,8 @@ namespace Novell.iFolderCom
 				}
 				catch (Exception e)
 				{
-					// TODO:
+					// TODO: Localize
+					MessageBox.Show("An error was encountered while attempting to display the iFolder properties dialog.");
 				}
 			}
 		}
@@ -364,11 +367,13 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException e)
 			{
-				// TODO:
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while attempting to display the Conflict Resolver dialog.");
 			}
 			catch (Exception e)
 			{
-				// TODO:
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while attempting to display the Conflict Resolver dialog.");
 			}
 		}
 

@@ -411,7 +411,7 @@ namespace Novell.FormsTrayApp
 			this.iFolderView.Size = new System.Drawing.Size(408, 336);
 			this.iFolderView.TabIndex = 0;
 			this.iFolderView.View = System.Windows.Forms.View.Details;
-			this.iFolderView.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
+			this.iFolderView.DoubleClick += new System.EventHandler(this.menuOpen_Click);
 			// 
 			// columnHeader1
 			// 
@@ -1437,11 +1437,6 @@ namespace Novell.FormsTrayApp
 		}
 
 		#region iFolders Tab
-		private void iFolderView_DoubleClick(object sender, System.EventArgs e)
-		{
-			menuOpen_Click(sender, e);
-		}
-
 		private void contextMenu1_Popup(object sender, System.EventArgs e)
 		{
 			menuShare.Visible = menuProperties.Visible = menuRevert.Visible = menuSeparator1.Visible = 

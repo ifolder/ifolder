@@ -77,10 +77,6 @@ namespace Novell.iFolderCom
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
 		}
 
 		/// <summary>
@@ -394,11 +390,13 @@ namespace Novell.iFolderCom
 					}
 					catch (WebException ex)
 					{
-						// TODO:
+						// TODO: Localize
+						MessageBox.Show("An error was encountered while attempting to resolve the conflict.");
 					}
 					catch (Exception ex)
 					{
-						// TODO:
+						// TODO: Localize
+						MessageBox.Show("An error was encountered while attempting to resolve the conflict.");
 					}
 				}
 				else if (!localWins)
@@ -497,11 +495,13 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException ex)
 			{
-				// TODO: Post a message
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while reading the conflicts.");
 			}
 			catch (Exception ex)
 			{
-				// TODO: Post a message
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while reading the conflicts.");
 			}
 		}
 
