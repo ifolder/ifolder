@@ -85,8 +85,8 @@ namespace Simias
 		public static void Configure(String storePath)
 		{
 			// TEMP: log file
-			BasicConfigurator.Configure(new FileAppender(new PatternLayout(SimiasPatternLayout),
-				Path.Combine(storePath, SimiasLogFile)));
+//			BasicConfigurator.Configure(new FileAppender(new PatternLayout(SimiasPatternLayout),
+//				Path.Combine(storePath, SimiasLogFile)));
 
 			// config file
 			FileInfo info = new FileInfo(Path.Combine(storePath, SimiasLogConfigFile));
