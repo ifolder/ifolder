@@ -569,11 +569,7 @@ namespace Simias.Policy
 			}
 
 			// Add a relationship property to the POBox object.
-			POBox.POBox poBox = POBox.POBox.FindPOBox( store, domainID, member.UserID );
-			if ( poBox == null )
-			{
-				throw new CollectionStoreException( String.Format( "POBox does not exist for member {0}", member.UserID ) );
-			}
+			POBox.POBox poBox = POBox.POBox.GetPOBox( store, domainID, member.UserID );
 
 			policy.IsSystemPolicy = true;
 			policy.Properties.ModifyNodeProperty( PropertyTags.PolicyAssociation, new Relationship( poBox ) );
