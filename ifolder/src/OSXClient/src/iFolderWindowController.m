@@ -29,6 +29,7 @@
 #import "iFolder.h"
 #import "iFolderDomain.h"
 #import "iFolderData.h"
+#import "MCTableView.h"
 
 
 @implementation iFolderWindowController
@@ -337,20 +338,23 @@ static iFolderWindowController *sharedInstance = nil;
 - (IBAction)openiFolder:(id)sender
 {
 	int selIndex = [ifoldersController selectionIndex];
-	
-	iFolder *ifolder = [[ifoldersController arrangedObjects] objectAtIndex:selIndex];
-	NSString *path = [ifolder Path];
 
-	if(	([path length] > 0) &&
-		([ifolder IsSubscription] == NO) )
+	if(selIndex != NSNotFound)
 	{
-		if([[NSUserDefaults standardUserDefaults] integerForKey:PREFKEY_CLICKIFOLDER] == 0)
-			[[NSWorkspace sharedWorkspace] openFile:path];
+		iFolder *ifolder = [[ifoldersController arrangedObjects] objectAtIndex:selIndex];
+		NSString *path = [ifolder Path];
+
+		if(	([path length] > 0) &&
+			([ifolder IsSubscription] == NO) )
+		{
+			if([[NSUserDefaults standardUserDefaults] integerForKey:PREFKEY_CLICKIFOLDER] == 0)
+				[[NSWorkspace sharedWorkspace] openFile:path];
+			else
+				[self showProperties:self];
+		}
 		else
-			[self showProperties:self];
+			[self setupiFolder:sender];
 	}
-	else
-		[self setupiFolder:sender];
 }
 
 
@@ -428,20 +432,25 @@ static iFolderWindowController *sharedInstance = nil;
 
 
 
+
 - (BOOL)validateUserInterfaceItem:(id)anItem
 {
 	SEL action = [anItem action];
-	int selIndex = [ifoldersController selectionIndex];
 
-	if([[NSApp delegate] simiasIsRunning] == NO)
-			return NO;
-			
 	if(action == @selector(newiFolder:))
 	{
+		if([[NSApp delegate] simiasIsRunning] == NO)
+			return NO;
+
 		return YES;
 	}
 	else if(action == @selector(setupiFolder:))
 	{
+		if([[NSApp delegate] simiasIsRunning] == NO)
+			return NO;
+
+		int selIndex = [ifoldersController selectionIndex];
+
 		if (selIndex != NSNotFound)
 		{
 			if([[[ifoldersController arrangedObjects] objectAtIndex:selIndex]
@@ -452,6 +461,11 @@ static iFolderWindowController *sharedInstance = nil;
 	}
 	else if(action == @selector(deleteiFolder:))
 	{
+		if([[NSApp delegate] simiasIsRunning] == NO)
+			return NO;
+
+		int selIndex = [ifoldersController selectionIndex];
+
 		if (selIndex != NSNotFound)
 		{
 			return YES;
@@ -463,6 +477,11 @@ static iFolderWindowController *sharedInstance = nil;
 				(action == @selector(shareiFolder:)) ||
 				(action == @selector(synciFolder:)) )
 	{
+		if([[NSApp delegate] simiasIsRunning] == NO)
+			return NO;
+
+		int selIndex = [ifoldersController selectionIndex];
+
 		if (selIndex != NSNotFound)
 		{
 			if([[[ifoldersController arrangedObjects] objectAtIndex:selIndex]
@@ -473,6 +492,11 @@ static iFolderWindowController *sharedInstance = nil;
 	}
 	else if(action == @selector(revertiFolder:))
 	{
+		if([[NSApp delegate] simiasIsRunning] == NO)
+			return NO;
+
+		int selIndex = [ifoldersController selectionIndex];
+
 		if (selIndex != NSNotFound)
 		{
 			if( ([[[ifoldersController arrangedObjects] objectAtIndex:selIndex] IsSubscription] == NO) &&
@@ -485,12 +509,6 @@ static iFolderWindowController *sharedInstance = nil;
 	return YES;
 }
 
-
-
-- (NSArrayController *)DomainsController
-{
-	return nil;//domainsController;
-}
 
 -(iFolder *)selectediFolder
 {
@@ -605,8 +623,6 @@ static iFolderWindowController *sharedInstance = nil;
 	[[self window] setToolbar:toolbar];
 	
 }
-
-
 
 
 

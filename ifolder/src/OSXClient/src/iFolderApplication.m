@@ -252,7 +252,7 @@
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
 	[self setupApplicationDefaults];
-	
+
 	// check if we should restore windows
 	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_RESTOREWIN])
 	{
@@ -276,6 +276,7 @@
 //===================================================================
 - (void)setupApplicationDefaults
 {
+
 	NSArray *keys	= [NSArray arrayWithObjects:	PREFKEY_WINPOS,
 													PREFKEY_RESTOREWIN,
 													PREFKEY_CLICKIFOLDER,
@@ -283,6 +284,7 @@
 													PREFKEY_NOTIFYCOLL,
 													PREFKEY_NOTIFYUSER,
 													PREFKEY_NOTIFYBYINDEX,
+													STATE_SHOWMAINWINDOW,
 													nil];
 
 	NSArray *values = [NSArray arrayWithObjects:	[NSNumber numberWithBool:YES],
@@ -292,6 +294,7 @@
 													[NSNumber numberWithBool:YES],
 													[NSNumber numberWithBool:YES],
 													[NSNumber numberWithInt:0],
+													[NSNumber numberWithBool:YES],
 													nil];
 
 	NSDictionary *defaults = [[NSMutableDictionary alloc]
