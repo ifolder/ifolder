@@ -37,15 +37,19 @@ namespace Simias.Event
 		/// </summary>
 		/// <param name="source">The source of the event.</param>
 		/// <param name="node">The object of the event.</param>
-		/// <param name="collection">The Collection that the node belongs to.</param>
+		/// <param name="collection">The Collection that the node belongs to.</param>\
+		/// <param name="domainName">The domainName from the store that the collection belongs to.</param>
 		/// <param name="type">The Type of the Node.</param>
 		/// <param name="changeType">The type of change that occured.</param>
-		public NodeEventArgs(string source, string node, string collection, string type, EventType changeType) :
-			base(source, node, collection, type, changeType)
+		public NodeEventArgs(string source, string node, string collection, string domainName, string type, EventType changeType) :
+			base(source, node, collection, domainName, type, changeType)
 
 		{
 		}
 
+		/// <summary>
+		/// Gets the Node ID.
+		/// </summary>
 		public string Node
 		{
 			get {return ID;}

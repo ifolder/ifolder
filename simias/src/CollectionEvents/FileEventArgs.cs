@@ -39,9 +39,10 @@ namespace Simias.Event
 		/// <param name="source">The source of the event.</param>
 		/// <param name="fullPath">The full path of the modified file.</param>
 		/// <param name="collectionId">The collection that this file belongs to.</param>
+		/// <param name="domainName">The domainName from the store that the collection belongs to.</param>
 		/// <param name="changeType">The FileChangeType for this event.</param>
-		public FileEventArgs(string source, string fullPath, string collectionId, EventType changeType):
-			base(source, fullPath, collectionId, Path.GetExtension(fullPath), changeType)
+		public FileEventArgs(string source, string fullPath, string collectionId, string domainName, EventType changeType):
+			base(source, fullPath, collectionId, domainName, Path.GetExtension(fullPath), changeType)
 		{
 		}
 		

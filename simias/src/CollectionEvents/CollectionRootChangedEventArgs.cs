@@ -41,21 +41,29 @@ namespace Simias.Event
 		/// </summary>
 		/// <param name="source">The source of the event.</param>
 		/// <param name="collection">The Collection that the node belongs to.</param>
+		/// <param name="domainName">The domainName from the store that the collection belongs to.</param>
 		/// <param name="type">The Type of the Node.</param>
 		/// <param name="oldRoot">The old path to the root path.</param>
 		/// <param name="newRoot">The new path to the root path.</param>
-		public CollectionRootChangedEventArgs(string source, string collection, string type, string oldRoot, string newRoot) :
-			base(source, collection, collection, type, CollectionEventArgs.EventType.RootChanged)
+		public CollectionRootChangedEventArgs(string source, string collection, string domainName, string type, string oldRoot, string newRoot) :
+			base(source, collection, collection, domainName, type, CollectionEventArgs.EventType.RootChanged)
 
 		{
 			this.oldRoot = oldRoot;
 			this.newRoot = newRoot;
 		}
 
+		/// <summary>
+		/// Gets the Old full name.
+		/// </summary>
 		public string OldRoot
 		{
 			get {return oldRoot;}
 		}
+
+		/// <summary>
+		/// Gets the new full name.
+		/// </summary>
 		public string NewRoot
 		{
 			get {return newRoot;}

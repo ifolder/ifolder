@@ -77,16 +77,13 @@ namespace Simias.Event
 		/// Delegate to handle File Renames.
 		/// </summary>
 		public event FileRenameEventHandler FileRenamed;
-		/// <summary>
-		/// Delegate used to control services in the system.
-		/// </summary>
-		public event ServiceEventHandler ServiceControl;
 		
 		#endregion
 
 		#region Private Fields
 
 		EventBroker broker;
+		string		domainName;
 		bool		enabled;
 		Regex		fileNameFilter;
 		Regex		fileTypeFilter;
@@ -104,10 +101,12 @@ namespace Simias.Event
 		/// <summary>
 		/// Creates a Subscriber to watch the specified Collection.
 		/// </summary>
+		/// <param name="domainName">The domainName from the store that will be watched.</param>
 		/// <param name="collectionId">The collection to watch for events.</param>
 		/// <param name="rootPath">The Root Path for the collection.</param>
-		public EventSubscriber(string collectionId, string rootPath)
+		public EventSubscriber(string domainName, string collectionId, string rootPath)
 		{
+			this.domainName = domainName;
 			enabled = true;
 			fileNameFilter = null;
 			fileTypeFilter = null;
@@ -129,14 +128,14 @@ namespace Simias.Event
 			broker.FileCreated += new FileEventHandler(OnFileCreated);
 			broker.FileDeleted += new FileEventHandler(OnFileDeleted);
 			broker.FileRenamed += new FileRenameEventHandler(OnFileRenamed);
-			broker.ServiceControl += new ServiceEventHandler(OnServiceControl);
 		}
 
 		/// <summary>
 		/// Create a Subscriber to monitor changes in the complete Collection Store.
 		/// </summary>
-		public EventSubscriber() :
-			this((string)null, (string)null)
+		/// <param name="domainName">The domainName from the store that will be watched.</param>
+		public EventSubscriber(string domainName) :
+			this(domainName, (string)null, (string)null)
 		{
 		}
 
@@ -371,32 +370,6 @@ namespace Simias.Event
 			}
 		}
 
-		/// <summary>
-		/// Callback used to control services in the Simias System.
-		/// </summary>
-		/// <param name="targetProcess">The Id of the target process.</param>
-		/// <param name="t">The control event type.</param>
-		//[OneWay]
-		public void OnServiceControl(ServiceEventArgs args)
-		{
-			if (ServiceControl != null)
-			{
-				Delegate[] cbList = ServiceControl.GetInvocationList();
-				foreach (ServiceEventHandler cb in cbList)
-				{
-					try 
-					{ 
-						cb(args);
-					}
-					catch 
-					{
-						// Remove the offending delegate.
-						ServiceControl -= cb;
-					}
-				}
-			}
-		}
-
 		#endregion
 
 		#region Private Methods
@@ -454,7 +427,7 @@ namespace Simias.Event
 		/// <returns>True If matches the filter. False no match.</returns>
 		private bool applyNodeFilter(NodeEventArgs args)
 		{
-			if (enabled)
+			if (enabled && domainName == args.DomainName)
 			{
 				if (collectionId == null || args.Collection == collectionId)
 				{
@@ -477,7 +450,7 @@ namespace Simias.Event
 		/// <returns>True If matches the filter. False no match.</returns>
 		private bool applyFileFilter(FileEventArgs args)
 		{
-			if (enabled)
+			if (enabled && domainName == args.DomainName)
 			{
 				if (collectionId == null || args.Collection == collectionId)
 				{
@@ -508,7 +481,6 @@ namespace Simias.Event
 					broker.FileCreated -= new FileEventHandler(OnFileCreated);
 					broker.FileDeleted -= new FileEventHandler(OnFileDeleted);
 					broker.FileRenamed -= new FileRenameEventHandler(OnFileRenamed);
-					broker.ServiceControl -= new ServiceEventHandler(OnServiceControl);
 					if (!inFinalize)
 					{
 						GC.SuppressFinalize(this);

@@ -33,9 +33,9 @@ namespace Simias
 	/// </summary>
 	public class UserService
 	{
-		EventSubscriber		serviceEventWatcher;
-		int					processId;
-		ManualResetEvent	shutdownEvent = new ManualResetEvent(false);
+		ServiceEventSubscriber		serviceEventWatcher;
+		int							processId;
+		ManualResetEvent			shutdownEvent = new ManualResetEvent(false);
 		
 		protected void Run()
 		{
@@ -47,7 +47,7 @@ namespace Simias
 
 		public UserService()
 		{
-			serviceEventWatcher = new EventSubscriber();
+			serviceEventWatcher = new ServiceEventSubscriber();
 			serviceEventWatcher.ServiceControl += new ServiceEventHandler(OnServiceEvent);
 		}
 

@@ -25,6 +25,7 @@ using System.Collections;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
+using System.Threading;
 
 namespace Simias.Event
 {
@@ -38,6 +39,23 @@ namespace Simias.Event
 		/// </summary>
 		static void Main(string[] args)
 		{
+			string mutexName;
+			if (args.Length != 1)
+			{
+				mutexName = "CsEventBroker_Mutex";
+			}
+			else
+			{
+				mutexName = args[0];
+			}
+
+			bool createdMutex;
+			Mutex mutex = new Mutex(true, mutexName, out createdMutex);
+			if (!createdMutex)
+			{
+				mutex.WaitOne();
+			}
+
 			EventBroker.RegisterService();
 			// Wait (forever) until we are killed.
 			new System.Threading.ManualResetEvent(false).WaitOne();

@@ -1,10 +1,10 @@
-CollectionEvents_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/EventBroker.cs $(srcdir)/EventPublisher.cs $(srcdir)/EventSubscriber.cs $(srcdir)/CollectionEventArgs.cs $(srcdir)/FileEventArgs.cs $(srcdir)/ServiceEventArgs.cs $(srcdir)/CollectionRootChangedEventArgs.cs $(srcdir)/NodeEventArgs.cs $(srcdir)/FileRenameEventArgs.cs
+CollectionEvents_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/EventBroker.cs $(srcdir)/EventPublisher.cs $(srcdir)/EventSubscriber.cs $(srcdir)/CollectionEventArgs.cs $(srcdir)/FileEventArgs.cs $(srcdir)/ServiceEventArgs.cs $(srcdir)/ServiceEventSubscriber.cs $(srcdir)/CollectionRootChangedEventArgs.cs $(srcdir)/NodeEventArgs.cs $(srcdir)/FileRenameEventArgs.cs
 CollectionEvents_CSFILES_CSC := $(subst /,$(SEP),$(CollectionEvents_CSFILES))
 CollectionEvents_INCLUDES = 
 CollectionEvents_RESOURCES =
 CollectionEvents_FLAGS = $(CSC_LIBFLAG)
-CollectionEvents_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Configuration.dll
-CollectionEvents_LIBPATH = /opt/gnome2/lib /usr/lib ../Configuration
+CollectionEvents_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Configuration.dll Common.dll
+CollectionEvents_LIBPATH = /opt/gnome2/lib /usr/lib ../Configuration ../Common
 
 CsEventBroker_CSFILES = $(srcdir)/CsEventBroker/AssemblyInfo.cs $(srcdir)/CsEventBroker/CsEventBroker.cs
 CsEventBroker_CSFILES_CSC := $(subst /,$(SEP),$(CsEventBroker_CSFILES))

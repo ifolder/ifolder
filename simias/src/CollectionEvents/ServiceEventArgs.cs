@@ -8,9 +8,13 @@ namespace Simias.Event
 	[Serializable]
 	public class ServiceEventArgs : EventArgs
 	{
+		/// <summary>
+		/// Used to target all services.
+		/// </summary>
 		public static int	TargetAll = 0;
 		int					target;
 		ServiceEvent		eventType;
+		string				userName;
 		
 		/// <summary>
 		/// Service Events.
@@ -32,12 +36,13 @@ namespace Simias.Event
 		/// <summary>
 		/// Constructs a ServiceEventArgs to describe the event.
 		/// </summary>
-		/// <param name="Target">The Process ID of the service to signal.</param>
+		/// <param name="target">The Process ID of the service to signal.</param>
 		/// <param name="eventType">The event to execute.</param>
 		public ServiceEventArgs(int target, ServiceEvent eventType)
 		{
 			this.target = target;
 			this.eventType = eventType;
+			this.userName = System.Environment.UserName;
 		}
 
 		/// <summary>
@@ -54,6 +59,14 @@ namespace Simias.Event
 		public ServiceEvent EventType
 		{
 			get {return eventType;}
+		}
+
+		/// <summary>
+		/// Gets the userName that publised the event.
+		/// </summary>
+		public string UserName 
+		{
+			get {return userName;}
 		}
 	}
 }

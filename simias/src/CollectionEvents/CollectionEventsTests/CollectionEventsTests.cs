@@ -36,12 +36,13 @@ namespace Simias.Event
 	public class EventsTests
 	{
 		#region Fields
-
-		Process				monitor = null;
 		EventSubscriber		subscriber;
 		EventPublisher		publisher;
+		ServiceEventSubscriber serviceSubscriber;
 		EventArgs			args;
 		ManualResetEvent	mre = new ManualResetEvent(false);
+		string				collection = "Collection123";
+		string				domainName = "TestDomain_123456789";
 
 		#endregion
 
@@ -53,34 +54,13 @@ namespace Simias.Event
 		[TestFixtureSetUp]
 		public void Init()
 		{
-			Process [] process = Process.GetProcessesByName("CsEventBroker.exe");
-			if (process.Length == 0)
-			{
-				monitor = new Process();
-				monitor.StartInfo.RedirectStandardInput = true;
-				monitor.StartInfo.RedirectStandardInput = true;
-				monitor.StartInfo.CreateNoWindow = true;
-				monitor.StartInfo.UseShellExecute = false;
-				if (MyEnvironment.Mono)
-				{
-					monitor.StartInfo.FileName = "mono";
-					monitor.StartInfo.Arguments = "CsEventBroker.exe";
-				}
-				else
-				{
-					monitor.StartInfo.FileName = "CsEventBroker.exe";
-				}
-				monitor.Start();
-				//Console.ReadLine();
-				System.Threading.Thread.Sleep(2000);
-			}
-				PublishSubscribe();
+			PublishSubscribe();
 		}
 
 		public void PublishSubscribe()
 		{
 			publisher = new EventPublisher();
-			subscriber = new EventSubscriber();
+			subscriber = new EventSubscriber(domainName);
 			subscriber.NodeChanged += new NodeEventHandler(OnNodeChange);
 			subscriber.NodeCreated += new NodeEventHandler(OnNodeCreate);
 			subscriber.NodeDeleted += new NodeEventHandler(OnNodeDelete);
@@ -89,7 +69,9 @@ namespace Simias.Event
 			subscriber.FileCreated += new FileEventHandler(OnFileCreate);
 			subscriber.FileDeleted += new FileEventHandler(OnFileDelete);
 			subscriber.FileRenamed += new FileRenameEventHandler(OnFileRenamed);
-			subscriber.ServiceControl += new ServiceEventHandler(ServiceCtlHandler);
+
+			serviceSubscriber = new ServiceEventSubscriber();
+			serviceSubscriber.ServiceControl += new ServiceEventHandler(ServiceCtlHandler);
 		}
 
 		/// <summary>
@@ -99,8 +81,7 @@ namespace Simias.Event
 		public void Cleanup()
 		{
 			subscriber.Dispose();
-			if (monitor != null)
-				monitor.Kill();
+			serviceSubscriber.Dispose();
 		}
 
 		#endregion
@@ -180,7 +161,7 @@ namespace Simias.Event
 		public void NodeChangeTest()
 		{
 			args = null;
-			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", "1", "0", "Node", NodeEventArgs.EventType.Changed));
+			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", "1", collection, domainName, "Node", NodeEventArgs.EventType.Changed));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -194,7 +175,7 @@ namespace Simias.Event
 		public void NodeCreateTest()
 		{
 			args = null;
-			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", "2", "0", "Node", NodeEventArgs.EventType.Created));
+			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", "2", collection, domainName, "Node", NodeEventArgs.EventType.Created));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -208,7 +189,7 @@ namespace Simias.Event
 		public void NodeDeleteTest()
 		{
 			args = null;
-			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", "3", "0", "Node", NodeEventArgs.EventType.Deleted));
+			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", "3", collection, domainName, "Node", NodeEventArgs.EventType.Deleted));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -222,7 +203,7 @@ namespace Simias.Event
 		public void CollectionRootChangedTest()
 		{
 			args = null;
-			publisher.RaiseCollectionRootChangedEvent(new CollectionRootChangedEventArgs("CollectionEventsTests", "0", "collection", @"c:\path\oldroot", @"c:\path\newRoot"));
+			publisher.RaiseCollectionRootChangedEvent(new CollectionRootChangedEventArgs("CollectionEventsTests", collection, domainName, "collection", @"c:\path\oldroot", @"c:\path\newRoot"));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -236,7 +217,7 @@ namespace Simias.Event
 		public void FileChangeTest()
 		{
 			args = null;
-			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\file.txt", "0", FileEventArgs.EventType.Changed));
+			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\file.txt", collection, domainName, FileEventArgs.EventType.Changed));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -250,7 +231,7 @@ namespace Simias.Event
 		public void FileCreateTest()
 		{
 			args = null;
-			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\file.txt", "0", FileEventArgs.EventType.Created));
+			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\file.txt", collection, domainName, FileEventArgs.EventType.Created));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -264,7 +245,7 @@ namespace Simias.Event
 		public void FileDeleteTest()
 		{
 			args = null;
-			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\file.txt", "0", FileEventArgs.EventType.Deleted));
+			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\file.txt", collection, domainName, FileEventArgs.EventType.Deleted));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -278,7 +259,7 @@ namespace Simias.Event
 		public void FileRenamedTest()
 		{
 			args = null;
-			publisher.RaiseFileEvent(new FileRenameEventArgs("CollectionEventsTests", @"c:\path\newfile.txt", "0", @"c:\path\oldname.txt"));
+			publisher.RaiseFileEvent(new FileRenameEventArgs("CollectionEventsTests", @"c:\path\newfile.txt", collection, domainName, @"c:\path\oldname.txt"));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -296,7 +277,7 @@ namespace Simias.Event
 			string nodeId = "123456789";
 			args = null;
 			subscriber.NodeIDFilter = nodeId;
-			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", nodeId, "0", "Node", NodeEventArgs.EventType.Created));
+			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", nodeId, collection, domainName, "Node", NodeEventArgs.EventType.Created));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -304,7 +285,7 @@ namespace Simias.Event
 
 			// Check for a miss.
 			args = null;
-			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", "987654321", "0", "Node", NodeEventArgs.EventType.Created));
+			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", "987654321", collection, domainName, "Node", NodeEventArgs.EventType.Created));
 			if (recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -323,7 +304,7 @@ namespace Simias.Event
 			string nodeId = "123456789";
 			args = null;
 			subscriber.NodeTypeFilter = "Node";
-			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", nodeId, "0", "Node", NodeEventArgs.EventType.Created));
+			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", nodeId, collection, domainName, "Node", NodeEventArgs.EventType.Created));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -331,7 +312,7 @@ namespace Simias.Event
 
 			// Check for a miss.
 			args = null;
-			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", nodeId, "0", "Collection", NodeEventArgs.EventType.Created));
+			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", nodeId, collection, domainName, "Collection", NodeEventArgs.EventType.Created));
 			if (recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -349,7 +330,7 @@ namespace Simias.Event
 			// Check for a hit.
 			args = null;
 			subscriber.FileNameFilter = "test.*";
-			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\testNode.txt", "0", FileEventArgs.EventType.Created));
+			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\testNode.txt", collection, domainName, FileEventArgs.EventType.Created));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -357,7 +338,7 @@ namespace Simias.Event
 
 			// Check for a miss.
 			args = null;
-			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\tastNode.txt", "0", FileEventArgs.EventType.Created));
+			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\tastNode.txt", collection, domainName, FileEventArgs.EventType.Created));
 			if (recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -376,7 +357,7 @@ namespace Simias.Event
 			// Check for a hit.
 			args = null;
 			subscriber.FileTypeFilter = ".txt";
-			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\file.txt", "0", FileEventArgs.EventType.Created));
+			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\file.txt", collection, domainName, FileEventArgs.EventType.Created));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -384,7 +365,7 @@ namespace Simias.Event
 
 			// Check for a miss.
 			args = null;
-			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\file.doc", "0", FileEventArgs.EventType.Created));
+			publisher.RaiseFileEvent(new FileEventArgs("CollectionEventsTests", @"c:\path\file.doc", collection, domainName, FileEventArgs.EventType.Created));
 			if (recievedCallback)
 			{
 				throw new ApplicationException("Failed test");
@@ -404,7 +385,7 @@ namespace Simias.Event
 			// Check disabled.
 			args = null;
 			subscriber.Enabled = false;
-			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", "123456789", "0", "Node", NodeEventArgs.EventType.Created));
+			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", "123456789", collection, domainName, "Node", NodeEventArgs.EventType.Created));
 			if (recievedCallback)
 			{
 				throw new ApplicationException("Failed disable");
@@ -413,7 +394,7 @@ namespace Simias.Event
 			// Check reenabled.
 			args = null;
 			subscriber.Enabled = true;
-			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", "123456789", "0", "Node", NodeEventArgs.EventType.Created));
+			publisher.RaiseNodeEvent(new NodeEventArgs("CollectionEventsTests", "123456789", collection, domainName, "Node", NodeEventArgs.EventType.Created));
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed enable");
@@ -479,7 +460,7 @@ namespace Simias.Event
 						int count = Int32.Parse(args[1]);
 						for (int i = 0; i < count; ++i)
 						{
-							t.publisher.RaiseNodeEvent(new NodeEventArgs("nifp", i.ToString(), "0", "Node", NodeEventArgs.EventType.Created));
+							t.publisher.RaiseNodeEvent(new NodeEventArgs("nifp", i.ToString(), t.collection, t.domainName, "Node", NodeEventArgs.EventType.Created));
 						}
 					}
 					break;

@@ -34,16 +34,35 @@ namespace Simias.Event
 		string					source;
 		string					id;
 		string					collection;
+		string					domainName;
 		string					type;
 		EventType				changeType;
 
+		/// <summary>
+		/// The Event types supported.
+		/// </summary>
 		[FlagsAttribute] 
 		public enum EventType : short
 		{
+			/// <summary>
+			/// The event is for a create.
+			/// </summary>
 			Created = 1,
+			/// <summary>
+			/// The event is for a delete.
+			/// </summary>
 			Deleted = 2,
+			/// <summary>
+			/// The event is for a change.
+			/// </summary>
 			Changed = 4,
+			/// <summary>
+			/// The event is for a rename.
+			/// </summary>
 			Renamed = 8,
+			/// <summary>
+			/// The event is for a collection root path change.
+			/// </summary>
 			RootChanged = 16
 		};
 
@@ -55,13 +74,15 @@ namespace Simias.Event
 		/// <param name="source">The source of the event.</param>
 		/// <param name="id">The object of the event.</param>
 		/// <param name="collection">The Collection that the node belongs to.</param>
+		/// <param name="domainName">The domainName from the store that the collection belongs to.</param>
 		/// <param name="type">The Type of the Node.</param>
 		/// <param name="changeType">The type of change that occured.</param>
-		internal CollectionEventArgs(string source, string id, string collection, string type, EventType changeType)
+		internal CollectionEventArgs(string source, string id, string collection, string domainName, string type, EventType changeType)
 		{
 			this.source = source;
 			this.id = id;
 			this.collection = collection;
+			this.domainName = domainName;
 			this.type = type;
 			this.changeType = changeType;
 		}
@@ -91,6 +112,14 @@ namespace Simias.Event
 		}
 
 		/// <summary>
+		/// Gets the DomainName for the event.
+		/// </summary>
+		public string DomainName
+		{
+			get {return domainName;}
+		}
+
+		/// <summary>
 		/// Gets the Type of the affected Node.
 		/// </summary>
 		public string Type
@@ -98,6 +127,9 @@ namespace Simias.Event
 			get {return type;}
 		}
 
+		/// <summary>
+		/// Gets the ChangeType for the event.
+		/// </summary>
 		public EventType ChangeType
 		{
 			get {return changeType;}

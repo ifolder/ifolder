@@ -44,7 +44,6 @@ namespace Simias.Event
 		public EventPublisher()
 		{
 			EventBroker.RegisterClientChannel();
-
 			broker = new EventBroker();
 		}
 
@@ -85,8 +84,7 @@ namespace Simias.Event
 		/// <summary>
 		/// Called to publish a service event to listening services.
 		/// </summary>
-		/// <param name="targetProcess">The process Id of the process to notify.</param>
-		/// <param name="t"></param>
+		/// <param name="args">Arguments for the event.</param>
 		public void RaiseServiceEvent(ServiceEventArgs args)
 		{
 			if (broker != null)

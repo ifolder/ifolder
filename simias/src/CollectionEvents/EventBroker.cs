@@ -29,6 +29,8 @@ using System.Collections;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
+using System.Threading;
+using Simias;
 
 
 namespace Simias.Event
@@ -276,7 +278,7 @@ namespace Simias.Event
 		/// <summary>
 		/// Used to publish a service control event to listening service.
 		/// </summary>
-		/// <param name="t"></param>
+		/// <param name="args">Arguments for the event.</param>
 		[OneWay]
 		public void RaiseServiceEvent(ServiceEventArgs args)
 		{
@@ -309,8 +311,12 @@ namespace Simias.Event
 		private const string CFG_UriKey = "Uri";
 		private const string CFG_Uri = "tcp://localhost:7654/EventBroker";
 		
+		/// <summary>
+		/// Method to register a client channel.
+		/// </summary>
 		public static void RegisterClientChannel()
 		{
+			startService("CsEventBroker.exe");
 			string service = new Simias.Configuration().Get(CFG_Section, CFG_AssemblyKey, CFG_Assembly);
 			Process [] process = Process.GetProcessesByName(service);
 			if (process.Length >= 1)
@@ -352,6 +358,9 @@ namespace Simias.Event
 			}
 		}
 
+		/// <summary>
+		/// Method to register the server channel.
+		/// </summary>
 		public static void RegisterService()
 		{
 			Uri serviceUri = new Uri (new Simias.Configuration().Get(CFG_Section, CFG_UriKey, CFG_Uri));
@@ -375,6 +384,36 @@ namespace Simias.Event
 				typeof(EventBroker), serviceUri.AbsolutePath.TrimStart('/'), WellKnownObjectMode.Singleton);
 		}
 
+		private static void startService(string serviceName)
+		{
+			bool createdMutex;
+			string mutexName = "___" + serviceName + "___Service___";
+			mutexName += System.Environment.UserName;
+			Mutex mutex = new Mutex(true, mutexName, out createdMutex);
+			
+			if (createdMutex)
+			{
+				// The service is not running start it.
+				System.Diagnostics.Process service = new Process();
+				service.StartInfo.RedirectStandardInput = true;
+				service.StartInfo.RedirectStandardInput = true;
+				service.StartInfo.CreateNoWindow = true;
+				service.StartInfo.UseShellExecute = false;
+				if (MyEnvironment.Mono)
+				{
+					service.StartInfo.FileName = "mono";
+					service.StartInfo.Arguments = serviceName + " ";
+				}
+				else
+				{
+					service.StartInfo.FileName = serviceName;
+				}
+				service.StartInfo.Arguments += mutexName;
+				service.Start();
+				mutex.ReleaseMutex();
+				System.Threading.Thread.Sleep(2000);
+			}
+		}
 
 		#endregion
 		
