@@ -28,6 +28,7 @@ AssemblyInfo.cs
 ../CollectionStore/BaseFileNode.cs
 ../CollectionStore/Collection.cs
 ../CollectionStore/CollectionStoreTests/CollectionStoreTests.cs
+../CollectionStore/Collision.cs
 ../CollectionStore/DirNode.cs
 ../CollectionStore/Exception.cs
 ../CollectionStore/FileNode.cs

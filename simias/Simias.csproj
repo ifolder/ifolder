@@ -265,6 +265,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\CollectionStore\Collision.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\CollectionStore\DirNode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

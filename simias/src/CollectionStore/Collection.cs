@@ -884,8 +884,42 @@ namespace Simias.Storage
 			Node node = GetNodeByID( collisionNode.ID );
 			if ( node != null )
 			{
-				// Add a property that holds the data from the collided Node object.
-				Property p = new Property( PropertyTags.Collision, collisionNode.Properties.PropertyDocument );
+				// See if a collision property already exists.
+				Property p = node.Properties.GetSingleProperty( PropertyTags.Collision );
+				CollisionList cList = ( p == null ) ? new CollisionList() : new CollisionList( p.Value as XmlDocument );
+
+				// Add the new collision to the collision list.
+				cList.Add( new Collision( Collision.CollisionType.Node, collisionNode.Properties.PropertyDocument.InnerXml ) );
+
+				// Modify or add the collision list.
+				p = new Property( PropertyTags.Collision, cList.Document );
+				p.LocalProperty = true;
+				node.Properties.ModifyNodeProperty( p );
+			}
+
+			return node;
+		}
+
+		/// <summary>
+		/// Creates a property on a Node object that represents a file conflict.
+		/// </summary>
+		/// <param name="id">Node identifier where file conflict should be stored.</param>
+		/// <returns>A Node object that the collision was stored on.</returns>
+		public Node CreateCollision( string id )
+		{
+			// Look up the Node by ID.
+			Node node = GetNodeByID( id );
+			if ( node != null )
+			{
+				// See if a collision property already exists.
+				Property p = node.Properties.GetSingleProperty( PropertyTags.Collision );
+				CollisionList cList = ( p == null ) ? new CollisionList() : new CollisionList( p.Value as XmlDocument );
+
+				// Add the new collision to the collision list.
+				cList.Add( new Collision( Collision.CollisionType.File, String.Empty ) );
+
+				// Modify or add the collision list.
+				p = new Property( PropertyTags.Collision, cList.Document );
 				p.LocalProperty = true;
 				node.Properties.ModifyNodeProperty( p );
 			}
@@ -1061,8 +1095,29 @@ namespace Simias.Storage
 		/// <returns>The Node object that caused the collision. Otherwise a null is returned.</returns>
 		public Node GetNodeFromCollision( Node node )
 		{
+			Node collisionNode = null;
+
+			// Get the collision property.
 			Property p = node.Properties.GetSingleProperty( PropertyTags.Collision );
-			return ( p == null ) ? null : Node.NodeFactory( StoreReference, p.Value as XmlDocument );
+			if ( p != null )
+			{
+				// Get a list of collisions.
+				ICSEnumerator e = new CollisionList( p.Value as XmlDocument ).GetEnumerator() as ICSEnumerator;
+				if ( e.MoveNext() )
+				{
+					Collision c = e.Current as Collision;
+					if ( c.Type == Collision.CollisionType.Node )
+					{
+						XmlDocument document = new XmlDocument();
+						document.LoadXml( c.ContextData );
+						collisionNode = Node.NodeFactory( StoreReference, document );
+					}
+				}
+
+				e.Dispose();
+			}
+
+			return collisionNode;
 		}
 
 		/// <summary>

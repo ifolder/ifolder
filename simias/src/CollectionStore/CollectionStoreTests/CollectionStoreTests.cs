@@ -1667,6 +1667,26 @@ namespace Simias.Storage.Tests
 				{
 					throw new ApplicationException( "Cannot delete collision node." );
 				}
+
+				// Create a file collision.
+				collisionNode = collection.CreateCollision( collisionNode.ID );
+				collection.Commit( collisionNode );
+
+				// Get the collision back.
+				collectionNode = collection.GetNodeFromCollision( collisionNode );
+				if ( collectionNode != null )
+				{
+					throw new ApplicationException( "File conflict returned wrong collision." );
+				}
+
+				// Delete the collision node.
+				collection.Commit( collection.DeleteCollision( collisionNode ) );
+
+				// Should not be anymore collisions.
+				if ( collection.HasCollisions() )
+				{
+					throw new ApplicationException( "Cannot delete collision node." );
+				}
 			}
 			finally
 			{
