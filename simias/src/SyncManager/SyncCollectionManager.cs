@@ -177,8 +177,12 @@ namespace Simias.Sync
 
 		private void StopSlave()
 		{
+			log.Debug("Stopping {0} - Locking Manager", collection.Name);
+
 			lock(this)
 			{
+				log.Debug("Stopping {0} - Dispose Channel", collection.Name);
+
 				// release channel
 				if (channel != null)
 				{
@@ -186,10 +190,14 @@ namespace Simias.Sync
 					channel = null;
 				}
 				
+				log.Debug("Stopping {0} - Stop the Worker", collection.Name);
+
 				// stop worker
 				working = false;
 				stopSleepEvent.Set();
 	
+				log.Debug("Stopping {0} - Notify the Sync Engine", collection.Name);
+
 				// send a stop message
 				try
 				{
@@ -200,6 +208,9 @@ namespace Simias.Sync
 					// ignore
 				}
 
+				log.Debug("Stopping {0} - Join the Sync Engine", collection.Name);
+
+				// join the sync engine
 				try
 				{
 					syncWorkerThread.Join();
@@ -213,18 +224,22 @@ namespace Simias.Sync
 
 		private void DoSyncWork()
 		{
+			log.Debug("Sync Work {0} - Initiated", collection.Name);
+
 			while(working)
 			{
 				// get permission from sync manager
 				syncManager.ReadyToWork();
 
-				log.Info("Starting Sync Cycle: {0}", collection.Name);
+				log.Debug("Sync Work {0} - Starting", collection.Name);
 
 				try
 				{
 					// check master
 					if (collection.CreateMaster)
 					{
+						log.Debug("Sync Work {0} - Provisioning the Manager", collection.Name);
+
 						DomainAgent dAgent = new DomainAgent(syncManager.Config);
 
 						log.Debug("Connecting to Domain Service: {0}", dAgent.ServiceUrl);
@@ -269,7 +284,7 @@ namespace Simias.Sync
 					{
 						// get the service URL
 						string serviceUrl = collection.MasterUrl.ToString();
-						log.Debug("Sync Store Service URL: {0}", serviceUrl);
+						log.Debug("Sync Work {0} - Service URL: {1}", collection.Name, serviceUrl);
 
 						// check the channel
 						if (channel == null)
@@ -280,7 +295,7 @@ namespace Simias.Sync
 						}
 
 						// get a proxy to the store service object
-						log.Debug("Connecting to the Sync Store Service...");
+						log.Debug("Sync Work {0} - Connecting...", collection.Name);
 						storeService = (SyncStoreService)Activator.GetObject(typeof(SyncStoreService), serviceUrl);
 						if (storeService == null) throw new ApplicationException("No Sync Store Service");
 
@@ -301,8 +316,9 @@ namespace Simias.Sync
 						if (worker == null) throw new ApplicationException("No Sync Collection Worker");
 
 						// do the work
-						log.Debug("Starting the Sync Worker...");
+						log.Debug("Sync Work {0} - Worker Start", collection.Name);
 						worker.DoSyncWork();
+						log.Debug("Sync Work {0} - Worker Done", collection.Name);
 					}
 				}
 				catch(Exception e)
@@ -320,6 +336,9 @@ namespace Simias.Sync
 						// update the URL
 						if ((locationUrl != null) && (locationUrl != collection.MasterUrl))
 						{
+							// try the location service on an exception
+							log.Debug("Updating Master Service Url...");
+
 							collection.MasterUrl = locationUrl;
 
 							// clear channel
@@ -347,8 +366,12 @@ namespace Simias.Sync
 				// finish with sync manager
 				syncManager.DoneWithWork();
 
+				log.Debug("Sync Work {0} - Sleeping", collection.Name);
+
 				// sleep
 				stopSleepEvent.WaitOne(TimeSpan.FromSeconds(collection.Interval), true);
+
+				log.Debug("Sync Work {0} - Done Sleeping", collection.Name);
 			}
 		}
 	}

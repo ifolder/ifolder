@@ -162,16 +162,18 @@ namespace Simias.Sync
 			{
 				SyncCollectionManager scm = (SyncCollectionManager)collectionManagers[id];
 
-				if (scm == null)
+				service = scm.GetService();
+
+				log.Debug("Created collection service: {0}", service.Ping().ToString());
+			}
+			else
+			{
+				log.Debug("No collection service for unknown collection: {0}", id);
+	
+				foreach(string key in collectionManagers.Keys)
 				{
-					log.Debug("Collection Service: {0}", id);
-					
-					throw new ApplicationException("The sync collection service was not found.");
+					log.Debug("Known collection: {0}", key);
 				}
-
-                service = scm.GetService();
-
-				log.Debug("Serving Collection Service: {0}", service.Ping().ToString());
 			}
 
 			return service;
