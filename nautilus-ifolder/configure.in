@@ -115,6 +115,9 @@ AC_SUBST(SIMIAS_EVENT_CLIENT_PREFIX)
 PKG_CHECK_MODULES(IFOLDER, ifolder3 >= $IFOLDER_MINIMUM_VERSION)
 AC_SUBST(IFOLDER_LIBS)
 
+ifolder_prefix=$(pkg-config --variable=prefix ifolder3)
+AC_SUBST(ifolder_prefix)
+
 gnome_root=$(pkg-config --variable=prefix libnautilus-extension)
 AC_SUBST(gnome_root)
 INSTALL_BIN_OPTS='--mode=755'

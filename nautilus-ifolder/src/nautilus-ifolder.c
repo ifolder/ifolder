@@ -28,6 +28,7 @@
 #include <eel/eel-stock-dialogs.h>
 
 #include <gtk/gtk.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 #include <libintl.h>
 #include <string.h>
 #include <stdio.h>
@@ -1071,16 +1072,14 @@ gboolean
 show_ifolder_creation_dialog (void *user_data)
 {
 	DEBUG_IFOLDER (("*** show_ifolder_creation_dialog () called\n"));
-	GtkDialog *creation_dialog;
+	GtkWidget *dialog, *label, *check_button, *vbox, *vbox2, *hbox,
+			  *cb_alignment, *folder_image;
 	GtkWindow *parent_window;
 	gint response;
-	
+	char label_str [1024];
 	parent_window = GTK_WINDOW (user_data);
 
-
-	/* FIXME: Create a dialog to look exactly like the one that the C# iFolder Client is showing */
-
-	creation_dialog = gtk_dialog_new_with_buttons (
+	dialog = gtk_dialog_new_with_buttons (
 						_("iFolder Introduction"),
 						parent_window,
 						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -1089,9 +1088,61 @@ show_ifolder_creation_dialog (void *user_data)
 						GTK_STOCK_HELP,		/* Help button */
 						GTK_RESPONSE_HELP,
 						NULL);
-	response = gtk_dialog_run (creation_dialog);
+						
+	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
+	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
 	
-	gtk_widget_destroy (creation_dialog);
+	gtk_window_set_icon_from_file (GTK_WINDOW (dialog),
+								   IFOLDER_IMAGE_IFOLDER,
+								   NULL);
+	folder_image = gtk_image_new_from_file (IFOLDER_IMAGE_BIG_IFOLDER);
+
+	vbox = gtk_vbox_new (FALSE, 10);
+	gtk_container_border_width (GTK_CONTAINER (vbox), 10);
+
+	sprintf (label_str,
+			 "<span weight=\"bold\" size=\"larger\">%s</span>",
+			 _("Congratulations! A new iFolder was created"));
+	label = gtk_label_new ("");
+	gtk_label_set_line_wrap		(GTK_LABEL (label), FALSE);
+	gtk_label_set_markup		(GTK_LABEL (label), label_str);
+	gtk_label_set_selectable	(GTK_LABEL (label), FALSE);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+	 
+	hbox = gtk_hbox_new (FALSE, 12);
+
+	gtk_misc_set_alignment (GTK_MISC (folder_image), 0.5, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), folder_image, FALSE, FALSE, 0);
+	
+	vbox2 = gtk_vbox_new (FALSE, 10);
+	
+	label = gtk_label_new (_("The new iFolder has been added to your list of iFolders."));
+	gtk_label_set_line_wrap		(GTK_LABEL (label), FALSE);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_box_pack_start (GTK_BOX (vbox2), label, TRUE, TRUE, 0);
+	
+	gtk_box_pack_end (GTK_BOX (hbox), vbox2, TRUE, TRUE, 0);
+	
+	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+	label = gtk_label_new (_("To share your iFolder and it's contents with others, right-click the iFolder and select \"Share with...\"."));
+	gtk_label_set_line_wrap		(GTK_LABEL (label), TRUE);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, TRUE, 0);
+	
+	cb_alignment = gtk_alignment_new (1, 1, 1, 0);
+	check_button = gtk_check_button_new_with_mnemonic (_("Do not show this message again."));
+	gtk_container_add (GTK_CONTAINER (cb_alignment), check_button);
+	gtk_box_pack_start (GTK_BOX (vbox), cb_alignment, TRUE, TRUE, 0);
+
+	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox),
+					   vbox);
+			   
+	gtk_widget_show_all (dialog);
+	response = gtk_dialog_run (GTK_DIALOG (dialog));
+	
+	gtk_widget_destroy (dialog);
 	
 	return FALSE;
 }

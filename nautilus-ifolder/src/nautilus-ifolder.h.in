@@ -1,1 +1,3 @@
-#define NAUTILUS_IFOLDER_SH_PATH "@prefix@/lib/nautilus-ifolder"
+#define NAUTILUS_IFOLDER_SH_PATH	"@prefix@/lib/nautilus-ifolder"
+#define IFOLDER_IMAGE_IFOLDER		"@ifolder_prefix@/share/ifolder3/images/ifolder.png"
+#define IFOLDER_IMAGE_BIG_IFOLDER	"@ifolder_prefix@/share/ifolder3/images/ifolder48.png"
