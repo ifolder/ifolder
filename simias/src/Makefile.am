@@ -5,12 +5,12 @@ GAIM_DOMAIN_DIR = GaimDomain
 endif
 
 if DARWIN
-SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer mDnsDomain libsimias
+SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer libsimias
 
 endif
 
 if LINUX
-SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer mDnsDomain libsimias $(GAIM_DOMAIN_DIR)
+SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer libsimias $(GAIM_DOMAIN_DIR)
 
 endif
 
