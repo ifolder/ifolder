@@ -1,6 +1,6 @@
 AC_INIT(src/NautilusExtension.cs)
 AC_CANONICAL_SYSTEM
-AM_INIT_AUTOMAKE(ifolder-nautilus, 0.10)
+AM_INIT_AUTOMAKE(ifolder-nautilus, 0.12)
 VERSION=0.1.0
 AM_MAINTAINER_MODE
 
