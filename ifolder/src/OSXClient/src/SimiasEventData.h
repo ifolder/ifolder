@@ -23,18 +23,20 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class SMNotifyEvent;
-@class SMFileSyncEvent;
-@class SMCollectionSyncEvent;
-@class SMNodeEvent;
+//@class SMNotifyEvent;
+//@class SMFileSyncEvent;
+//@class SMCollectionSyncEvent;
+//@class SMNodeEvent;
 @class SMQueue;
-
+@class SMEvent;
 @interface SimiasEventData : NSObject
 {
-	SMQueue			*nodeEventQueue;
-	SMQueue			*colSyncEventQueue;
-	SMQueue			*fileSyncEventQueue;
-	SMQueue			*notifyEventQueue;
+//	SMQueue			*nodeEventQueue;
+//	SMQueue			*colSyncEventQueue;
+//	SMQueue			*fileSyncEventQueue;
+//	SMQueue			*notifyEventQueue;
+
+	SMQueue			*simiasEventQueue;
 	NSLock			*simiasEventDataLock;
 	NSConditionLock	*simiasHasDataLock;
 }
@@ -43,21 +45,21 @@
 
 -(void)blockUntilEvents;
 
-- (void) pushNotifyEvent:(SMNotifyEvent *)notifyEvent;
-- (SMNotifyEvent *) popNotifyEvent;
-- (BOOL) hasNotifyEvents;
+- (void) pushEvent:(SMEvent *)event;
+- (SMEvent *) popEvent;
+- (BOOL) hasEvents;
 
-- (void) pushFileSyncEvent:(SMFileSyncEvent *)fileSyncEvent;
-- (SMFileSyncEvent *) popFileSyncEvent;
-- (BOOL) hasFileSyncEvents;
+//- (void) pushFileSyncEvent:(SMFileSyncEvent *)fileSyncEvent;
+//- (SMFileSyncEvent *) popFileSyncEvent;
+//- (BOOL) hasFileSyncEvents;
 
-- (void) pushCollectionSyncEvent:(SMCollectionSyncEvent *)colSyncEvent;
-- (SMCollectionSyncEvent *) popCollectionSyncEvent;
-- (BOOL) hasCollectionSyncEvents;
+//- (void) pushCollectionSyncEvent:(SMCollectionSyncEvent *)colSyncEvent;
+//- (SMCollectionSyncEvent *) popCollectionSyncEvent;
+//- (BOOL) hasCollectionSyncEvents;
 
-- (void) pushNodeEvent:(SMNodeEvent *)nodeEvent;
-- (SMNodeEvent *) popNodeEvent;
-- (BOOL) hasNodeEvents;
+//- (void) pushNodeEvent:(SMNodeEvent *)nodeEvent;
+//- (SMNodeEvent *) popNodeEvent;
+//- (BOOL) hasNodeEvents;
 
 @end
 

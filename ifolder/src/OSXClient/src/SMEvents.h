@@ -37,7 +37,6 @@
 #define NODE_DELETED			2
 #define NODE_CHANGED			3
 
-
 @interface SMEvent : NSObject
 {
 	NSMutableDictionary * properties;
@@ -45,7 +44,7 @@
 
 -(NSMutableDictionary *) properties;
 -(void) setProperties: (NSDictionary *)newProperties;
--(NSString *)eventType;
+-(NSString *) eventType;
 
 @end
 

@@ -54,6 +54,8 @@ static iFolderData *sharedInstance = nil;
 			ifolderService = [[iFolderService alloc] init];
 			simiasService = [[SimiasService alloc] init];	
 			
+			ifolderUserChanges = [[NSMutableDictionary alloc] init];	
+			
 			keyedDomains = [[NSMutableDictionary alloc] init];
 			keyediFolders = [[NSMutableDictionary alloc] init];
 			keyedSubscriptions = [[NSMutableDictionary alloc] init];
@@ -100,6 +102,7 @@ static iFolderData *sharedInstance = nil;
 	[ifolderDataAlias release];
 	[ifoldersController release];
 	[domainsController release];
+	[ifolderUserChanges release];
 
 	[super dealloc];
 }
@@ -758,6 +761,38 @@ static iFolderData *sharedInstance = nil;
 	}
 	else
 		[domainsController setSelectionIndex:0];
+}
+
+
+
+-(void)setUsersAdded:(NSString *)ifolderID
+{
+	NSLog(@"Setting user added for %@", ifolderID);
+	[instanceLock lock];
+	[ifolderUserChanges setObject:[NSNumber numberWithBool:YES] forKey:ifolderID];
+	[instanceLock unlock];	
+}
+
+
+
+-(BOOL)usersAdded:(NSString *)ifolderID
+{
+	NSLog(@"Checking user added for %@", ifolderID);
+	BOOL useradded = NO;
+	[instanceLock lock];
+	useradded = ([ifolderUserChanges objectForKey:ifolderID] != nil);
+	[instanceLock unlock];	
+	return useradded;
+}
+
+
+
+-(void)clearUsersAdded:(NSString *)ifolderID
+{
+	NSLog(@"Clearing user added for %@", ifolderID);
+	[instanceLock lock];
+	[ifolderUserChanges removeObjectForKey:ifolderID];
+	[instanceLock unlock];	
 }
 
 

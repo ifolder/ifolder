@@ -46,10 +46,11 @@ static SimiasEventData	*sharedSimiasEventData = nil;
 
 - (id)init 
 {
-	nodeEventQueue = [[SMQueue alloc] init];
-	colSyncEventQueue = [[SMQueue alloc] init];
-	fileSyncEventQueue = [[SMQueue alloc] init];
-	notifyEventQueue = [[SMQueue alloc] init];
+	simiasEventQueue = [[SMQueue alloc] init];
+//	nodeEventQueue = [[SMQueue alloc] init];
+//	colSyncEventQueue = [[SMQueue alloc] init];
+//	fileSyncEventQueue = [[SMQueue alloc] init];
+//	notifyEventQueue = [[SMQueue alloc] init];
 	simiasEventDataLock	= [[NSLock alloc] init];
 	simiasHasDataLock = [[NSConditionLock alloc] initWithCondition:NO_EVENTS];
 	return self;
@@ -57,48 +58,47 @@ static SimiasEventData	*sharedSimiasEventData = nil;
 
 
 //===================================================================
-// pushNotifyEvent
-// pushes an SMNotifyEvent on the queue
+// pushEvent
+// pushes an Event on the queue
 //===================================================================
--(void)pushNotifyEvent:(SMNotifyEvent *)notifyEvent
+-(void)pushEvent:(SMEvent *)event
 {
 	[simiasEventDataLock lock];
-	[notifyEventQueue push:notifyEvent];
-//	NSLog(@"SMNotifyEvent Pushed... count:%d", [notifyEventQueue count]);
+	[simiasEventQueue push:event];
 	[simiasHasDataLock unlockWithCondition:HAS_EVENTS];
 	[simiasEventDataLock unlock];
 }
 
 //===================================================================
-// popNotifyEvent
-// pops an SMNotifyEvent from the queue
+// popEvent
+// pops an Event from the queue
 //===================================================================
--(SMNotifyEvent *)popNotifyEvent
+-(SMEvent *)popEvent
 {
-	SMNotifyEvent *ne;
+	SMEvent *sme;
 	[simiasEventDataLock lock];
-	ne = [[notifyEventQueue pop] retain];
-//	NSLog(@"SMNotifyEvent Popped... count:%d", [notifyEventQueue count]);
+	sme = [[simiasEventQueue pop] retain];
 	[simiasEventDataLock unlock];
-	return [ne autorelease];
+	return [sme autorelease];
 }
 //===================================================================
 // hasNotifyEvents
-// determines if there are NotifyEvents
+// determines if there are events
 //===================================================================
-- (BOOL) hasNotifyEvents
+- (BOOL) hasEvents
 {
-	BOOL hasEvents = false;
+	BOOL eventExist = false;
 	[simiasEventDataLock lock];
-	hasEvents = ![notifyEventQueue isEmpty];
+	eventExist = ![simiasEventQueue isEmpty];
 	[simiasEventDataLock unlock];
-	return hasEvents;
+	return eventExist;
 }
 
 //===================================================================
 // pushFileSyncEvent
 // pushes an SMFileSyncEvent to the queue
 //===================================================================
+/*
 -(void)pushFileSyncEvent:(SMFileSyncEvent *)fileSyncEvent
 {
 	[simiasEventDataLock lock];
@@ -214,7 +214,7 @@ static SimiasEventData	*sharedSimiasEventData = nil;
 	[simiasEventDataLock unlock];
 	return hasEvents;
 }
-
+*/
 
 
 

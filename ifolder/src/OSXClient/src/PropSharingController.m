@@ -54,7 +54,7 @@
 					User *newUser = [newUsers objectAtIndex:userCount];
 
 					[self addUser:newUser];
-					if([newUser isOwner])
+					if([[curiFolder OwnerUserID] compare:[newUser UserID]] == 0)
 						[ownerName setStringValue:[newUser FN]];
 				}
 			}
