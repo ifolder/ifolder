@@ -257,6 +257,7 @@ namespace Simias.POBoxService.Web
 			
 			// FIXME:  Temp remove
 			Console.WriteLine("POBoxService::AcceptSubscription - called");
+			Console.WriteLine("  Subscription ID: " + subscriptionID);
 
 			// open the post office box
 			poBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
