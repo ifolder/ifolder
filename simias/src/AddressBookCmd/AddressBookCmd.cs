@@ -117,8 +117,6 @@ namespace AddressBookCmd
 			Console.WriteLine("    addaddressproperty -c <contact name> -p <addressproperty>");
 			Console.WriteLine("    deleteproperty -c <contact name> -p <property>");
 			Console.WriteLine("    exportvcard -f <path> -c <contact name> - b <address book name>");
-			Console.WriteLine("   /aa <address> - add address property (ex. zip=84604;pref;home)");
-			Console.WriteLine("   /an <name> - add name property (ex. given=brady;family=anderson)");
 			Console.WriteLine("   -t = time the command");
 			Console.WriteLine("   -v = verbose");
 			return;
