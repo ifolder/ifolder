@@ -359,6 +359,35 @@ namespace Novell.iFolder
 					if( (status.statusCode == StatusCodes.Success) ||
 						(status.statusCode == StatusCodes.SuccessInGrace))
 					{
+						if (LoginDialog.ShouldSavePassword)
+						{
+							try
+							{
+								SimiasWebService simws = 
+									new SimiasWebService();
+			
+								simws.Url = 
+									Simias.Client.Manager.LocalServiceUrl.ToString() + 
+									"/Simias.asmx";
+
+								if( LoginDialog.Password != null &&
+										LoginDialog.Password.Length > 0)
+								{
+									simws.SetDomainCredentials(LoginDialog.Domain,
+											LoginDialog.Password, CredentialType.Basic);
+								}
+								else
+								{
+									simws.SetDomainCredentials(LoginDialog.Domain,
+											null, CredentialType.None);
+								}
+							}
+							catch (Exception ex)
+							{
+								// Ignore this error for now 
+							}
+						}
+
 						if (status.statusCode == StatusCodes.SuccessInGrace)
 						{
 							if (status.RemainingGraceLogins < status.TotalGraceLogins)
