@@ -14,5 +14,9 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:@webbindir@
 export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:@webbindir@
 cd @bindir@
 
-mono ../web/bin/SimiasApp.exe --applications /simias10:../web --port 8086 $1 $2 $3 $4 $5 $6 $7 $8 $9
+if ! [ -f ../web/inspection.wsil ]; then
+	cp ../etc/inspection.wsil ../web/inspection.wsil
+fi
+
+mono ../web/bin/SimiasApp.exe --applications /:../web,/simias10:../web --port 8086 $1 $2 $3 $4 $5 $6 $7 $8 $9
 
