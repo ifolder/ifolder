@@ -171,6 +171,10 @@ namespace Simias.POBox
 
 			log.Info("Invitation Sent: {0}", info);
 
+			// update subscription
+			subscription.SubscriptionState = SubscriptionStates.Posted;
+			poBox.Commit(subscription);
+
 			return true;
 		}
 
@@ -234,7 +238,7 @@ namespace Simias.POBox
 				{
 					log.Debug("Creating collection...");
 
-					//TODO: ? subscription.CreateSlaveCollection();
+					subscription.CreateSlaveCollection(poBox.StoreReference);
 				}
 
 				// done with the subscription

@@ -32,6 +32,14 @@ namespace Simias.POBox
 	/// </summary>
 	public class PostOffice : MarshalByRefObject
 	{
+		public static readonly string EndPoint = "PostOffice.rem";
+
+		/// <summary>
+		/// The suggested service url for the current machine.
+		/// </summary>
+		public static readonly Uri DefaultServiceUrl = (new UriBuilder("http",
+			MyDns.GetHostName(), 6446, EndPoint)).Uri;
+
 		private Configuration config;
 		private Store store;
 
@@ -98,11 +106,6 @@ namespace Simias.POBox
 			return result;
 		}
 
-		public SubscriptionDetails GetSubscriptionDetails(string domain, string identity, string collection)
-		{
-			return null;
-		}
-
 		public void AckSubscription(string domain, string identity, string message)
 		{
 			// open the post office box
@@ -146,6 +149,20 @@ namespace Simias.POBox
 			status = subscription.GenerateStatus();
 
 			return status;
+		}
+
+		public SubscriptionDetails GetSubscriptionDetails(string domain, string identity, string collection)
+		{
+			SubscriptionDetails details = null;
+
+			// open the collection
+			Collection c = store.GetCollectionByID(collection);
+
+			// check the collection
+			if (c == null)
+				throw new ApplicationException("Collection not found.");
+
+			return details;
 		}
 	}
 }

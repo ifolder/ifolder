@@ -352,7 +352,7 @@ namespace Simias.POBox
 		public Message(string messageName, string messageID) :
 			base (messageName, messageID)
 		{
-			Properties.AddProperty(PropertyTags.Types, typeof(Message).Name);
+			Properties.AddNodeProperty(PropertyTags.Types, typeof(Message).Name);
 		}
 
 		/// <summary>
@@ -377,6 +377,7 @@ namespace Simias.POBox
 			State = MessageState.New;
 			MessageType = messageType;
 			FromIdentity = fromIdentity;
+			Properties.AddNodeProperty(PropertyTags.Types, typeof(Message).Name);
 		}
 
 		/// <summary>

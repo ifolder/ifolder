@@ -637,6 +637,7 @@ namespace Novell.iFolder.iFolderCom
 					subscr.FromAddress = sendersEmail;
 					subscr.SubscriptionRights = slMember.Member.Rights;
 					subscr.ToName = slMember.Member.Name;
+					subscr.SubscriptionCollectionName = ifolder.Name;
 					Relationship relationship = (Relationship)slMember.Member.Properties.GetSingleProperty("Contact").Value;
 					Property property = new Property("Contact", relationship);
 					property.LocalProperty = true;

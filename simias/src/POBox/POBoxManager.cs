@@ -63,11 +63,11 @@ namespace Simias.POBox
 			threads = new Hashtable();
 
 			// events
-			subscriber = new EventSubscriber(config);
+			subscriber = new EventSubscriber(config, poBox.ID);
 			subscriber.Enabled = false;
-			subscriber.NodeTypeFilter = typeof(Message).Name;
+			subscriber.NodeTypeFilter = NodeTypes.NodeType;
 			subscriber.NodeCreated += new NodeEventHandler(OnMessageChanged);
-			subscriber.NodeChanged +=new NodeEventHandler(OnMessageChanged);
+			subscriber.NodeChanged += new NodeEventHandler(OnMessageChanged);
 		}
 
 		/// <summary>
@@ -102,9 +102,7 @@ namespace Simias.POBox
 
 			if (node != null)
 			{
-				string type = node.GetType().Name;
-
-				if (type == typeof(Subscription).Name)
+				if (poBox.IsType(node, typeof(Subscription).Name))
 				{
 					UpdateSubscription(node);
 				}
@@ -127,7 +125,7 @@ namespace Simias.POBox
 					lock(threads.SyncRoot)
 					{
 						// start threads only on new subscription updates
-						if (threads.Contains(subscription.ID))
+						if (!threads.Contains(subscription.ID))
 						{
 							// subscription thread
 							SubscriptionThread st = new SubscriptionThread(poBox, subscription, threads);

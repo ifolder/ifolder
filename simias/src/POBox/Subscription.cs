@@ -24,7 +24,9 @@
 using System;
 using System.IO;
 
+using Simias;
 using Simias.Storage;
+using Simias.Sync;
 
 namespace Simias.POBox
 {
@@ -205,6 +207,7 @@ namespace Simias.POBox
 			DomainName = subscriptionInfo.DomainName;
 			SubscriptionCollectionID = subscriptionInfo.SubscriptionCollectionID;
 			POServiceURL = subscriptionInfo.POServiceUrl;
+			Properties.AddNodeProperty(PropertyTags.Types, typeof(Subscription).Name);
 		}
 
 		/// <summary>
@@ -225,6 +228,7 @@ namespace Simias.POBox
 		public Subscription(string messageName, string messageID) :
 			base (messageName, messageID)
 		{
+			Properties.AddNodeProperty(PropertyTags.Types, typeof(Subscription).Name);
 		}
 	
 		/// <summary>
@@ -237,6 +241,7 @@ namespace Simias.POBox
 			base (messageName, messageType, fromIdentity)
 		{
 			SubscriptionState = SubscriptionStates.Invited;
+			Properties.AddNodeProperty(PropertyTags.Types, typeof(Subscription).Name);
 		}
 
 		/// <summary>
@@ -250,6 +255,7 @@ namespace Simias.POBox
 			base (messageName, messageType, fromIdentity, fromAddress)
 		{
 			SubscriptionState = SubscriptionStates.Invited;
+			Properties.AddNodeProperty(PropertyTags.Types, typeof(Subscription).Name);
 		}
 
 		/// <summary>
@@ -264,6 +270,7 @@ namespace Simias.POBox
 			base (messageName, messageType, fromIdentity, fromAddress, toAddress)
 		{
 			SubscriptionState = SubscriptionStates.Invited;
+			Properties.AddNodeProperty(PropertyTags.Types, typeof(Subscription).Name);
 		}
 
 		/// <summary>
@@ -279,6 +286,7 @@ namespace Simias.POBox
 			base (messageName, messageType, fromIdentity, fromAddress, toAddress, toIdentity)
 		{
 			SubscriptionState = SubscriptionStates.Invited;
+			Properties.AddNodeProperty(PropertyTags.Types, typeof(Subscription).Name);
 		}
 
 		#endregion
@@ -415,7 +423,9 @@ namespace Simias.POBox
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(CollectionDescriptionProperty).Value;
+				Property p = Properties.GetSingleProperty(CollectionDescriptionProperty);
+
+				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
@@ -514,7 +524,11 @@ namespace Simias.POBox
 
 			si.DomainID = DomainID;
 			si.DomainName = DomainName;
-			si.POServiceUrl = POServiceURL;
+			
+			// TODO: where should this be set?
+			// TODO: si.POServiceUrl = POServiceURL;
+			si.POServiceUrl = PostOffice.DefaultServiceUrl;
+			
 			si.SubscriptionCollectionID = SubscriptionCollectionID;
 			si.SubscriptionID = ID;
 
@@ -533,6 +547,48 @@ namespace Simias.POBox
 			status.Disposition = this.SubscriptionDisposition;
 
 			return status;
+		}
+
+		/// <summary>
+		/// Create the slave collection (stub for syncing)
+		/// </summary>
+		public void CreateSlaveCollection(Store store)
+		{
+			Collection c = new Collection(store, this.SubscriptionCollectionName,
+				this.SubscriptionCollectionID, this.DomainID);
+			
+			SyncCollection sc = new SyncCollection(c);
+
+			// collection type
+			// TODO: sc.SetType(this, this.SubscriptionCollectionTypes);
+			sc.SetType(this, "iFolder");
+			
+			// sync information
+			sc.MasterUrl = new Uri(this.SubscriptionCollectionURL);
+			sc.Role = SyncCollectionRoles.Slave;
+			
+			// member
+			Member member = new Member(this.ToName, this.ToIdentity, this.SubscriptionRights);
+
+			// impersonate the member
+			sc.Impersonate(member);
+
+			// commit
+			sc.Commit(new Node[] {sc, member});
+
+			// check for a dir node
+			if (((this.DirNodeID != null) && (this.DirNodeID.Length > 0))
+				&& (this.DirNodeName != null) && (this.DirNodeName.Length > 0)
+				&& (this.CollectionRoot != null) && (this.CollectionRoot.Length > 0))
+			{
+				string path = Path.Combine(this.CollectionRoot, this.DirNodeName);
+
+				DirNode dn = new DirNode(sc, path, this.DirNodeID);
+
+				if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+
+				sc.Commit(dn);
+			}
 		}
 
 		#endregion

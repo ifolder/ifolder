@@ -40,14 +40,6 @@ namespace Simias.POBox
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(POManager));
 
-		private static readonly string endPoint = "PostOffice.rem";
-
-		/// <summary>
-		/// The suggested service url for the current machine.
-		/// </summary>
-		private static readonly Uri DefaultServiceUrl = (new UriBuilder("http",
-			MyDns.GetHostName(), 6446, EndPoint)).Uri;
-
 		private Store store;
 		private Configuration config;
 		private Hashtable boxManagers;
@@ -55,7 +47,7 @@ namespace Simias.POBox
 		private PostOffice service;
 		private SimiasChannelFactory channelFactory;
 		private SimiasChannel channel;
-		private Uri serviceUrl = DefaultServiceUrl ;
+		private Uri serviceUrl = PostOffice.DefaultServiceUrl ;
 
 		/// <summary>
 		/// Constructor
@@ -106,7 +98,7 @@ namespace Simias.POBox
 					log.Debug("Starting PO Service: {0}", ServiceUrl);
 
 					// marshal service
-					RemotingServices.Marshal(service, EndPoint);
+					RemotingServices.Marshal(service, PostOffice.EndPoint);
 				
 					// start collection managers
 					subscriber.Enabled = true;
@@ -248,11 +240,6 @@ namespace Simias.POBox
 
 		#region Properties
 		
-		public static string EndPoint
-		{
-			get { return endPoint; }
-		}
-
 		public Uri ServiceUrl
 		{
 			get { return serviceUrl; }
