@@ -175,6 +175,14 @@ namespace Novell.AddressBook.UI.gtk
 			foreach(ShallowNode sNode in poList)
 			{
 				Subscription sub = new Subscription(pobox, sNode);
+				// Filter out subscriptions that we own.
+				if (sub.SubscriptionState == SubscriptionStates.Ready)
+				{
+					if (pobox.StoreReference.GetCollectionByID(sub.SubscriptionCollectionID) != null)
+					{
+						continue;
+					}
+				}
 				SharingListHolder slh = new SharingListHolder(
 					null, sub);
 
