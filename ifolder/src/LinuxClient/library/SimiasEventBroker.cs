@@ -464,7 +464,7 @@ namespace Novell.iFolder
 		{
 			switch(nargs.Type)
 			{
-				case "Node":
+				case "Subscription":
 				{
 					if(ifdata.ISPOBox(nargs.Collection))
 					{
@@ -586,7 +586,7 @@ namespace Novell.iFolder
 				}
 
 
-				case "Node":
+				case "Subscription":
 				{
 					if(ifdata.ISPOBox(nargs.Collection))
 					{
@@ -619,7 +619,7 @@ namespace Novell.iFolder
 		{
 			switch(nargs.Type)
 			{
-				case "Node":
+				case "Subscription":
 				{
 					if(ifdata.ISPOBox(nargs.Collection))
 					{
