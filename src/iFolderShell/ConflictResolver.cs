@@ -174,6 +174,7 @@ namespace Novell.iFolder.iFolderCom
 			this.localFiles.Size = new System.Drawing.Size(253, 416);
 			this.localFiles.TabIndex = 4;
 			this.localFiles.View = System.Windows.Forms.View.Details;
+			this.localFiles.SelectedIndexChanged += new System.EventHandler(this.localFiles_SelectedIndexChanged);
 			this.localFiles.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.localFiles_ItemCheck);
 			// 
 			// columnHeader1
@@ -183,6 +184,7 @@ namespace Novell.iFolder.iFolderCom
 			// columnHeader2
 			// 
 			this.columnHeader2.Text = "Location";
+			this.columnHeader2.Width = 65;
 			// 
 			// columnHeader3
 			// 
@@ -233,17 +235,17 @@ namespace Novell.iFolder.iFolderCom
 			// columnHeader4
 			// 
 			this.columnHeader4.Text = "Name";
-			this.columnHeader4.Width = 78;
+			this.columnHeader4.Width = 93;
 			// 
 			// columnHeader6
 			// 
 			this.columnHeader6.Text = "Conflict Type";
-			this.columnHeader6.Width = 77;
+			this.columnHeader6.Width = 94;
 			// 
 			// columnHeader5
 			// 
 			this.columnHeader5.Text = "Date Modified";
-			this.columnHeader5.Width = 182;
+			this.columnHeader5.Width = 145;
 			// 
 			// toolBar1
 			// 
@@ -524,6 +526,9 @@ namespace Novell.iFolder.iFolderCom
 			localFiles.Items.Clear();
 			localFiles.SelectedItems.Clear();
 
+			// Disable the open button/menuitem.
+			toolBarButton1.Enabled = menuFileOpen.Enabled = false;
+
 			// Wait before redrawing the listview.
 			conflictFiles.BeginUpdate();
 			
@@ -654,13 +659,26 @@ namespace Novell.iFolder.iFolderCom
 					// This is a name collision, so there is nothing to display in the localFiles listview.
 					localFiles.Items.Clear();
 				}
+
+				// Enable the open button/menuitem.
+				toolBarButton1.Enabled = menuFileOpen.Enabled = true;
 			}
 			else
 			{
 				// If multiple items are selected, disable label edit and clear the local files listview.
 				conflictFiles.LabelEdit = false;
 				localFiles.Items.Clear();
+
+				// Disable the open button/menuitem.
+				toolBarButton1.Enabled = menuFileOpen.Enabled = false;
 			}
+		}
+
+		private void localFiles_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			// Enable/disable the open button/menuitem.
+			toolBarButton1.Enabled = menuFileOpen.Enabled = localFiles.SelectedItems.Count == 1;
+		
 		}
 
 		private void conflictFiles_AfterLabelEdit(object sender, System.Windows.Forms.LabelEditEventArgs e)
@@ -819,7 +837,7 @@ namespace Novell.iFolder.iFolderCom
 			{
 				OpenLocalFile();
 			}
-			else
+			else if (conflictFiles.Focused)
 			{
 				OpenConflictFile();
 			}
@@ -832,7 +850,7 @@ namespace Novell.iFolder.iFolderCom
 			{
 				menuOpen.Enabled = localFiles.SelectedItems.Count == 1;
 			}
-			else
+			else if (conflictFiles.Focused)
 			{
 				menuOpen.Enabled = conflictFiles.SelectedItems.Count == 1;
 			}
