@@ -1147,6 +1147,9 @@
   <data name="accountDisabled">
     <value>The user account is disabled.  Please contact your network administrator for assistance. </value>
   </data>
+  <data name="iFolderAccountDisabled">
+    <value>The iFolder account is disabled.  Please contact your network administrator for assistance.</value>
+  </data>
   <data name="accountLockout">
     <value>The user account has been locked out.  Please contact your network administrator for assistance.</value>
   </data>
