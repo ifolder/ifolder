@@ -68,9 +68,17 @@ namespace Simias.Policy
 							if ( pv.Name == IntervalTag )
 							{
 								int policyInterval = ( int )pv.Value;
-								if ( policyInterval > interval )
+								if ( policyInterval != InfiniteSyncInterval )
+								{
+									if ( policyInterval > interval )
+									{
+										interval = policyInterval;
+									}
+								}
+								else
 								{
 									interval = policyInterval;
+									break;
 								}
 							}
 						}
