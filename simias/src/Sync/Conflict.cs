@@ -159,8 +159,7 @@ public class Conflict
 			string ucp = UpdateConflictPath;
 			if (ucp != null)
 				File.Delete(ucp);
-			node = collection.DeleteCollision(node);
-			node.SetIncarnationValues(conflictNode.MasterIncarnation, conflictNode.LocalIncarnation);
+			node = collection.ResolveCollision(node, conflictNode.LocalIncarnation, true);
 			collection.Commit(node);
 			Log.Spew("Local changes win in conflict for {0} node {1}", node.Type, node.Name);
 			return;
@@ -184,11 +183,9 @@ public class Conflict
 				File.Move(UpdateConflictPath, fncpath);
 			}
 		}
-		collection.ImportNode(conflictNode, node.LocalIncarnation);
-		if (fncpath == null)
-			node = collection.DeleteCollision(conflictNode);
-		else
-			node = collection.CreateCollision(conflictNode);
+		node = collection.ResolveCollision(node, conflictNode.LocalIncarnation, false);
+		if (fncpath != null)
+			node = collection.CreateCollision(conflictNode, true);
 		conflictNode = null;
 		collection.Commit(node);
 		Log.Spew("Master update wins in conflict for {0} node {1}", node.Type, node.Name);

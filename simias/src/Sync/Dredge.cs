@@ -157,7 +157,7 @@ public class Dredger
 			FileNode unode = new FileNode(node);
 			DateTime lastWrote = File.GetLastWriteTime(path);
 			DateTime created = File.GetCreationTime(path);
-			if (unode.LastWriteTime != lastWrote || unode.CreationTime != created)
+			if (unode.LastWriteTime != lastWrote)
 			{
 				unode.LastWriteTime = lastWrote;
 				unode.CreationTime = created;

@@ -392,9 +392,8 @@ internal class SyncOps
 	public void UpdateIncarn(Nid nid, ulong masterIncarn)
 	{
 		Log.Assert(!onServer);
-		Node node = collection.GetNodeByID(nid);
-		collection.ImportNode(node, masterIncarn);
-		node.IncarnationUpdate = masterIncarn;
+        Node node = collection.GetNodeByID(nid);
+		node.SetMasterIncarnation(masterIncarn);
 		collection.Commit(node);
 		//node = collection.GetNodeByID(nid);
 		//Log.Assert(node.MasterIncarnation == masterIncarn);

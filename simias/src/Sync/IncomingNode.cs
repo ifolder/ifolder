@@ -280,7 +280,7 @@ internal class IncomingNode
 				return NodeStatus.ServerFailure;
 			}
 			status = NodeStatus.FileNameConflict;
-			node = collection.CreateCollision(node);
+			node = collection.CreateCollision(node, true);
 		}
 		try
 		{
@@ -308,13 +308,17 @@ internal class IncomingNode
 	{
 		Log.Spew("importing {0} {1} to collection {2}", node.Name, node.ID, collection.Name);
 
-		if (!onServer && expectedIncarn == 0)
+		if (!onServer)
 		{
-			// This is the first sync.  We expect the servers version.
-			expectedIncarn = node.LocalIncarnation;
+			// If we are on a client we don't know the version
+			// to expect.  We only need to know if the node has been
+			// changed locally.  This is done by comparing the local
+			// to the master.
+			expectedIncarn = 0;
 		}
 		collection.ImportNode(node, expectedIncarn);
 		node.Properties.ModifyProperty(TempFileDone, true);
+		node.IncarnationUpdate = node.LocalIncarnation;
 		if (onServer)
 		{
 			try
@@ -330,7 +334,6 @@ internal class IncomingNode
 		}
 		else
 		{
-			node.IncarnationUpdate = node.LocalIncarnation;
 			try
 			{
 				collection.Commit(node);
@@ -338,24 +341,17 @@ internal class IncomingNode
 			catch (CollisionException c)
 			{
 				Log.Spew("Node {0} {1} has lost an update collision", node.Type, node.Name);
-				expectedIncarn = c.ExpectedIncarnation;
 				node.Properties.DeleteSingleProperty(TempFileDone);
-				for (;;)
+				node = collection.CreateCollision(node, false);
+				node.Properties.ModifyProperty(TempFileDone, true);
+				try
 				{
-					oldNode = collection.GetNodeByID(node.ID);
-					collection.ImportNode(oldNode, expectedIncarn);
-					collection.CreateCollision(oldNode, node);
-					oldNode.Properties.ModifyProperty(TempFileDone, true);
-					try
-					{
-						collection.Commit(oldNode);
-						return CommitFile(NodeStatus.UpdateConflict);
-					}
-					catch (CollisionException ce)
-					{
-						Log.Spew("Node {0} has again lost an update collision", oldNode.Name);
-						expectedIncarn = ce.ExpectedIncarnation;
-					}
+					collection.Commit(node);
+					return CommitFile(NodeStatus.UpdateConflict);
+				}
+				catch (CollisionException ce)
+				{
+					Log.Spew("Node {0} has again lost an update collision", oldNode.Name);
 				}
 			}
 		}
