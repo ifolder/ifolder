@@ -29,6 +29,8 @@ using System.Windows.Forms;
 using System.IO;
 using System.Net;
 
+using Novell.iFolderCom;
+
 namespace Novell.FormsTrayApp
 {
 	/// <summary>
@@ -391,7 +393,7 @@ namespace Novell.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), ex.Message);
+				Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 

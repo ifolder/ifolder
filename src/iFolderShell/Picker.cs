@@ -537,7 +537,7 @@ namespace Novell.iFolderCom
 			catch (Exception ex)
 			{
 				System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(Picker));
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("memberReadError"), string.Empty, ex.Message);
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("memberReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 

@@ -423,7 +423,7 @@ namespace Novell.FormsTrayApp
 						}
 						catch (Exception ex)
 						{
-							Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("createDirectoryError"), string.Empty, ex.Message);
+							Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("createDirectoryError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 							mmb.ShowDialog();
 							iFolderLocation.Focus();
 							successful = false;
@@ -460,7 +460,8 @@ namespace Novell.FormsTrayApp
 					if (isPathInvalid)
 					{
 						// The directory is under an existing iFolder ... 
-						MessageBox.Show(resourceManager.GetString("pathInvalidError"), resourceManager.GetString("pathInvalidErrorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("pathInvalidError"), resourceManager.GetString("pathInvalidErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
 						iFolderLocation.Focus();
 
 						successful = false;
@@ -482,7 +483,7 @@ namespace Novell.FormsTrayApp
 							}
 							else
 							{
-								Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("acceptError"), string.Empty, ex.Message);
+								Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("acceptError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 								mmb.ShowDialog();
 							}
 
