@@ -154,6 +154,24 @@ public class SynkerServiceA: SyncCollectionService
 		get { return "0.0.0"; }
 	}
 
+	public NodeChunk[] CollectionChunk
+	{
+		get
+		{
+			NodeChunk nc;
+			nc.node = collection.GetNodeByID(collection.ID);
+			nc.expectedIncarn = 7;
+			nc.totalSize = -1;
+			nc.forkChunks = null;
+			//nc.forkChunks = new ForkChunk[0];
+			//nc.forkChunks[0].name = ForkChunk.DataForkName;
+			//nc.forkChunks[0].data = new byte[1] {8};
+			//nc.forkChunks[1].name = "fred";
+			//nc.forkChunks[1].data = new byte[1] {8};;
+			return new NodeChunk[1] { nc };
+		}
+	}
+
 	/// <summary>
 	/// takes an array of small nodes. returns rejected nodes
 	/// </summary>
@@ -347,6 +365,9 @@ public class SynkerWorkerA: SyncCollectionWorker
 			Log.Error("Sync with collection {0} denied", collection.Name);
 			return;
 		}
+
+		NodeChunk[] testchunk = ss.CollectionChunk;
+		Log.Spew("Syncing with Collection {0} {1}", testchunk[0].node.Name, testchunk[0].expectedIncarn);
 
 		//TODO: we don't know the previous state of collection identity, will this always work?
 		//collection.StoreReference.Revert();

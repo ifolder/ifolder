@@ -277,7 +277,7 @@ internal class SyncOutgoingNode
 			if (totalSize >= maxSize)
 				break;
 		}
-		return (ForkChunk[])chunks.ToArray(typeof(ForkChunk));
+		return chunks.Count == 0? null: (ForkChunk[])chunks.ToArray(typeof(ForkChunk));
 	}
 }
 
@@ -351,7 +351,7 @@ internal class SyncIncomingNode
 
 	public void BlowChunks(ForkChunk[] chunks)
 	{
-		foreach (ForkChunk chunk in chunks)
+		if (chunks != null) foreach (ForkChunk chunk in chunks)
 		{
 			bool done = false;
 
@@ -633,6 +633,9 @@ internal class SyncOps
 				 */
 				chunk.forkChunks = null;
 		}
+
+		Log.Spew("chunk: {0}, expIncarn {1}, totalSize {2}, forkCount {3}",
+				chunk.node.Name, chunk.expectedIncarn, chunk.totalSize, chunk.forkChunks == null? -1: chunk.forkChunks.Length);
 		return chunk;
 	}
 
