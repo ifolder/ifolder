@@ -226,6 +226,36 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
+		/// Web method that gets a subscription based on ID.
+		/// </summary>
+		/// <param name="CollectionID">The collection ID of the POBox holding the subscription.</param>
+		/// <param name="NodeID">The node ID of the subscription.</param>
+		/// <returns>An iFolder object representing the subscription.</returns>
+		[WebMethod(Description="Get a subscription")]
+		[SoapDocumentMethod]
+		public iFolder GetSubscription(string CollectionID, string NodeID)
+		{
+			iFolder ifolder = null;
+			Store store = Store.GetStore();
+
+			POBox poBox = POBox.GetPOBoxByID(store, CollectionID);
+			if(poBox != null)
+			{
+				Node node = poBox.GetNodeByID(NodeID);
+				if (node != null)
+				{
+					ifolder = new iFolder(new Subscription(node));
+				}
+			}
+				
+			return ifolder;
+		}
+
+
+
+
+
+		/// <summary>
 		/// WebMethod that gets an iFolder based on a LocalPath
 		/// </summary>
 		/// <param name = "LocalPath">
@@ -722,10 +752,24 @@ namespace Novell.iFolder.Web
 				throw new Exception("Invalid iFolderID");
 
 			Simias.Storage.Member simMem = col.GetMemberByID(UserID);
-			if(simMem == null)
+			if(simMem != null)
+			{
+				return new iFolderUser(simMem);
+			}
+			else
+			{
+				Node node = col.GetNodeByID(UserID);
+				if (node != null)
+				{
+					Subscription sub = new Subscription(node);
+					if (sub != null)
+					{
+						return new iFolderUser(sub);
+					}
+				}
+					
 				throw new Exception("Invalid UserID");
-
-			return new iFolderUser(simMem);
+			}
 		}
 
 
@@ -842,12 +886,12 @@ namespace Novell.iFolder.Web
 
 			Subscription sub = new Subscription(node);
 
-			if(CanBeiFolder(Path.Combine(LocalPath, sub.DirNodeName)) == false)
-				throw new Exception("Path specified Cannot be an iFolder, it is either a parent or a child of an existing iFolder");
-
 			sub.CollectionRoot = Path.GetFullPath(LocalPath);
 			if(sub.SubscriptionState == SubscriptionStates.Ready)
 			{
+				if(CanBeiFolder(Path.Combine(LocalPath, sub.DirNodeName)) == false)
+					throw new Exception("Path specified Cannot be an iFolder, it is either a parent or a child of an existing iFolder");
+
 				poBox.Commit(sub);
 				sub.CreateSlave(store);
 			}

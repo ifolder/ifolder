@@ -137,6 +137,21 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="GetSubscription">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="CollectionID" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="NodeID" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetSubscriptionResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetSubscriptionResult" type="s0:iFolder" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="GetiFolderByLocalPath">
         <xs:complexType>
           <xs:sequence>
@@ -630,6 +645,12 @@
   <message name="GetiFolderSoapOut">
     <part name="parameters" element="s0:GetiFolderResponse" />
   </message>
+  <message name="GetSubscriptionSoapIn">
+    <part name="parameters" element="s0:GetSubscription" />
+  </message>
+  <message name="GetSubscriptionSoapOut">
+    <part name="parameters" element="s0:GetSubscriptionResponse" />
+  </message>
   <message name="GetiFolderByLocalPathSoapIn">
     <part name="parameters" element="s0:GetiFolderByLocalPath" />
   </message>
@@ -856,6 +877,13 @@
   <message name="GetiFolderHttpGetOut">
     <part name="Body" element="s0:iFolder" />
   </message>
+  <message name="GetSubscriptionHttpGetIn">
+    <part name="CollectionID" type="s:string" />
+    <part name="NodeID" type="s:string" />
+  </message>
+  <message name="GetSubscriptionHttpGetOut">
+    <part name="Body" element="s0:iFolder" />
+  </message>
   <message name="GetiFolderByLocalPathHttpGetIn">
     <part name="LocalPath" type="s:string" />
   </message>
@@ -1065,6 +1093,13 @@
     <part name="iFolderID" type="s:string" />
   </message>
   <message name="GetiFolderHttpPostOut">
+    <part name="Body" element="s0:iFolder" />
+  </message>
+  <message name="GetSubscriptionHttpPostIn">
+    <part name="CollectionID" type="s:string" />
+    <part name="NodeID" type="s:string" />
+  </message>
+  <message name="GetSubscriptionHttpPostOut">
     <part name="Body" element="s0:iFolder" />
   </message>
   <message name="GetiFolderByLocalPathHttpPostIn">
@@ -1279,6 +1314,11 @@
       <output message="s0:GetiFolderSoapOut" />
       <documentation>Get An iFolder</documentation>
     </operation>
+    <operation name="GetSubscription">
+      <input message="s0:GetSubscriptionSoapIn" />
+      <output message="s0:GetSubscriptionSoapOut" />
+      <documentation>Get a subscription.</documentation>
+    </operation>
     <operation name="GetiFolderByLocalPath">
       <input message="s0:GetiFolderByLocalPathSoapIn" />
       <output message="s0:GetiFolderByLocalPathSoapOut" />
@@ -1476,6 +1516,11 @@
       <output message="s0:GetiFolderHttpGetOut" />
       <documentation>Get An iFolder</documentation>
     </operation>
+    <operation name="GetSubscription">
+      <input message="s0:GetSubscriptionHttpGetIn" />
+      <output message="s0:GetSubscriptionHttpGetOut" />
+      <documentation>Get a subscription.</documentation>
+    </operation>
     <operation name="GetiFolderByLocalPath">
       <input message="s0:GetiFolderByLocalPathHttpGetIn" />
       <output message="s0:GetiFolderByLocalPathHttpGetOut" />
@@ -1672,6 +1717,11 @@
       <input message="s0:GetiFolderHttpPostIn" />
       <output message="s0:GetiFolderHttpPostOut" />
       <documentation>Get An iFolder</documentation>
+    </operation>
+    <operation name="GetSubscription">
+      <input message="s0:GetSubscriptionHttpPostIn" />
+      <output message="s0:GetSubscriptionHttpPostOut" />
+      <documentation>Get a subscription.</documentation>
     </operation>
     <operation name="GetiFolderByLocalPath">
       <input message="s0:GetiFolderByLocalPathHttpPostIn" />
@@ -1896,6 +1946,15 @@
     </operation>
     <operation name="GetiFolder">
       <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolder" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="GetSubscription">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetSubscription" style="document" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -2253,6 +2312,15 @@
         <mime:mimeXml part="Body" />
       </output>
     </operation>
+    <operation name="GetSubscription">
+      <http:operation location="/GetSubscription" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
     <operation name="GetiFolderByLocalPath">
       <http:operation location="/GetiFolderByLocalPath" />
       <input>
@@ -2568,6 +2636,15 @@
     </operation>
     <operation name="GetiFolder">
       <http:operation location="/GetiFolder" />
+      <input>
+        <mime:content part="" type="application/x-www-form-urlencoded" />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+    <operation name="GetSubscription">
+      <http:operation location="/GetSubscription" />
       <input>
         <mime:content part="" type="application/x-www-form-urlencoded" />
       </input>
