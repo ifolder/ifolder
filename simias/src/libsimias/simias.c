@@ -205,8 +205,6 @@ simias_get_domains(bool only_slaves, SimiasDomainInfo **ret_domainsA[])
 	
 	soap_url = get_soap_url(true);
 	if (!soap_url) {
-		soap_print_fault(&soap, stderr);
-		soap_print_fault(&soap, stdout);
 		return -1;
 	}
 
