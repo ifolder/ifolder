@@ -442,8 +442,6 @@ src/POBoxWS/Makefile
 src/SyncService/Makefile
 src/SqliteProvider/Makefile
 src/libsimias/Makefile
-src/libsimdezvous/Makefile
-src/mDnsDomain/Makefile
 test/Makefile
 test/Common/Makefile
 test/ChangeLog/Makefile
