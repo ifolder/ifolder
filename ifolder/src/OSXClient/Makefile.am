@@ -6,7 +6,7 @@ export MONO_PATH := $(MONO_PATH)
 dist-hook:
 	rm -rf `find $(distdir) -name CVS`
 
-EXTRA_DIST = $(srcdir)/English.lproj $(srcdir)/Info.plist $(srcdir)/iFolder.xcode $(srcdir)/iFolder_Prefix.pch $(srcdir)/ifolder.icns $(srcdir)/main.m $(srcdir)/version.plist $(srcdir)/src $(srcdir)/webservice $(srcdir)/ifolder24.png $(srcdir)/ifolderonserver24.png $(srcdir)/ifolder-banner.png $(srcdir)/ifolder-banner-scaler.png $(srcdir)/ifolder-new.png $(srcdir)/prefs-accounts.png $(srcdir)/prefs-general.png $(srcdir)/prefs-notification.png $(srcdir)/prefs-sync.png
+EXTRA_DIST = $(srcdir)/English.lproj $(srcdir)/Info.plist $(srcdir)/iFolder.xcode $(srcdir)/iFolder_Prefix.pch $(srcdir)/ifolder.icns $(srcdir)/main.m $(srcdir)/version.plist $(srcdir)/src $(srcdir)/webservice
 
 
 if DEBUG
