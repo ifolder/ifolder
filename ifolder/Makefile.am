@@ -1,4 +1,15 @@
+if LINUX
+SUBDIRS = po src help
+endif
+
+if DARWIN
 SUBDIRS = src help
+endif
+
+if WINDOWS
+SUBDIRS = src help
+endif
+
 
 DIST_SUBDIRS = $(SUBDIRS) doc package test
 
@@ -60,7 +71,7 @@ maintainer-clean-local:
 	rm -f config.guess config.sub config.status config.h.in
 	rm -f ltmain.sh libtool
 	rm -f install-sh install-sh.lnk INSTALL INSTALL.lnk
-	rm -f missing missing.lnk mkinstalldirs mkinstalldir.lnk
+	rm -f missing missing.lnk mkinstalldir.lnk
 	rm -rf autom4te.cache
 
 .PHONY: test
