@@ -42,7 +42,7 @@
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
 
-#include <simias/simias-event-client.h>
+#include <simias-event-client.h>
 
 #include "iFolderClientStub.h"
 #include "iFolderClient.nsmap"
