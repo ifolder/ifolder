@@ -39,6 +39,7 @@ using Simias.Storage;
 using Simias.Sync;
 
 using Novell.Security.ClientPasswordManager;
+using SCodes = Simias.Authentication.StatusCodes;
 
 namespace Simias.DomainWatcher
 {
@@ -155,15 +156,14 @@ namespace Simias.DomainWatcher
 						Simias.Storage.Domain cDomain = store.GetDomain( shallowNode.ID );
 					
 						// Make sure this domain is a slave since we don't watch
-						// mastered domains.  We can tell by looking at the Roster
-
-						Roster cRoster = cDomain.Roster;
-						if ( cRoster.Role == SyncRoles.Slave )
+						// mastered domains.
+						if ( cDomain.Role == SyncRoles.Slave )
 						{
 							Member cMember;
 							log.Debug("checking Domain: " + cDomain.Name);
 
-							if ( new DomainAgent().IsDomainActive( cDomain.ID ) == false )
+							DomainAgent domainAgent = new DomainAgent();
+							if ( domainAgent.IsDomainActive( cDomain.ID ) == false )
 							{
 								log.Debug( "Domain: " + cDomain.Name + " is off-line" );
 								continue;
@@ -175,12 +175,12 @@ namespace Simias.DomainWatcher
 							// Only basic type authentication is supported right now.
 							if ( credType != CredentialType.Basic )
 							{
-								cMember = cRoster.GetCurrentMember();
+								cMember = cDomain.Roster.GetCurrentMember();
 								credentials = null;
 							}
 							else
 							{
-								cMember = cRoster.GetMemberByID(userID);
+								cMember = cDomain.Roster.GetMemberByID(userID);
 							}
 
 							// Can we talk to the domain?
@@ -189,51 +189,47 @@ namespace Simias.DomainWatcher
 
 							NetCredential cCreds = 
 								new NetCredential(
-								"iFolder", 
-								cDomain.ID, 
-								true, 
-								cMember.Name, 
-								credentials);
+									"iFolder", 
+									cDomain.ID, 
+									true, 
+									cMember.Name, 
+									credentials);
 
-							Uri cUri = new Uri(cDomain.HostAddress.ToString());
-							NetworkCredential netCreds = cCreds.GetCredential(cUri, "BASIC");
-							if ((netCreds == null) || firstTime)
+							Uri cUri = new Uri( cDomain.HostAddress.ToString() );
+							NetworkCredential netCreds = cCreds.GetCredential( cUri, "BASIC" );
+							if ( ( netCreds == null ) || firstTime )
 							{
-								// Create the domain service web client object.
-								DomainService domainSvc = new DomainService();
-								domainSvc.Url = 
-									cDomain.HostAddress.ToString() + "/DomainService.asmx";
-								domainSvc.Credentials = netCreds;
-								domainSvc.Timeout = 30000;
-							
-								try
+								bool raiseEvent = false;
+								Simias.Authentication.Status authStatus;
+
+								if ( netCreds == null )
 								{
-									log.Debug("Calling remote domain at: " + domainSvc.Url);
-									domainSvc.GetDomainInfo(userID);
-									// CRG: Change this to a one so
-									// we don't cause an event to happen
-									status = 1;
-								}
-								catch(WebException webEx)
-								{
-									status = -1;
-									log.Error("failed getting Domain Information  status: " + webEx.Status.ToString());
-									if (webEx.Status == System.Net.WebExceptionStatus.ProtocolError ||
-										webEx.Status == System.Net.WebExceptionStatus.TrustFailure )
+									authStatus = 
+										domainAgent.Login( 
+											cDomain.ID, 
+											DateTime.Now.ToString(), 
+											DateTime.Now.ToString() );
+
+									if ( authStatus.statusCode == SCodes.UnknownUser )
 									{
-										credentials = null;
-										status = 0;
+										raiseEvent = true;
 									}
 								}
-								catch(Exception ex)
+								else
 								{
-									status = -1;
-									log.Error("failed getting Domain Information - normal exception status: " + ex.Message);
+									authStatus = 
+										domainAgent.Login( 
+											cDomain.ID, 
+											netCreds.UserName,
+											netCreds.Password );
+
+									if ( authStatus.statusCode == SCodes.InvalidPassword )
+									{
+										raiseEvent = true;
+									}
 								}
 
-								domainSvc = null;
-
-								if (status == 0)
+								if ( raiseEvent == true )
 								{
 									Simias.Client.Event.NotifyEventArgs cArg =
 										new Simias.Client.Event.NotifyEventArgs(

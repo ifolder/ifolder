@@ -96,6 +96,11 @@ namespace Simias.Authentication
 		MethodNotSupported = 0x1f000101,
 
 		/// <summary>
+		/// The operation timed out on the client request
+		/// </summary>
+		Timeout = 0x1f000102,
+
+		/// <summary>
 		/// Authentication failed with an unknown reason
 		/// </summary>
 		Unknown = 0x1f001fff

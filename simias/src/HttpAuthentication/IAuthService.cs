@@ -55,22 +55,8 @@ namespace Simias.Security.Web.AuthenticationService
 		public readonly static string GraceTotalHeader = "Simias-Grace-Total";
 		public readonly static string GraceRemainingHeader = "Simias-Grace-Remaining";
 		public readonly static string SimiasErrorHeader = "Simias-Error";
+		public readonly static string DomainIDHeader = "Domain-ID";
 	}
-
-	/*
-	/// <summary>
-	/// Response headers set by the Http Authentication Module
-	/// </summary>
-	public class ResponseHeaders
-	{
-		public readonly static string Lockout = "Simias-Account-Lockout";
-		public readonly static string Disabled = "Simias-Account-Disabled";
-		public readonly static string GraceTotal = "Simias-Grace-Total";
-		public readonly static string GraceRemaining = "Simias-Grace-Remaining";
-		public readonly static string AmbiguousUser = "Simias-Ambiguous-User";
-		public readonly static string Unknown = "Simias-Unknown-Error";
-	}
-	*/
 
 	/// <summary>
 	/// Defines the AuthenticationService interface.

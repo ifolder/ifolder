@@ -370,7 +370,7 @@ namespace Simias.Domain
 		/// </returns>
 		private 
 		Simias.Authentication.Status
-		Login(Uri host, ref CookieContainer cookie, NetworkCredential networkCredential)
+		Login(Uri host, string domainID, ref CookieContainer cookie, NetworkCredential networkCredential)
 		{
 			HttpWebResponse response = null;
 
@@ -383,7 +383,16 @@ namespace Simias.Domain
 			request.CookieContainer = cookie;
 			request.Credentials = networkCredential;
 			request.PreAuthenticate = true;
-			request.Headers.Add( "DomainID", "5" );
+
+			if ( domainID != null && domainID != "")
+			{
+				request.Headers.Add( 
+					Simias.Security.Web.AuthenticationService.Login.DomainIDHeader,
+					domainID);
+			}
+
+			request.Method = "POST";
+			request.ContentLength = 0;
 
 			try
 			{
@@ -578,6 +587,7 @@ namespace Simias.Domain
 			status = 
 				this.Login( 
 					new Uri( domainServiceUrl.Scheme + Uri.SchemeDelimiter + host ), 
+					null,
 					ref cookie, 
 					myCred );
 			if ( status.statusCode != SCodes.Success && 
@@ -730,7 +740,7 @@ namespace Simias.Domain
 				{
 					CookieContainer cookie = new CookieContainer();
 					NetworkCredential netCred = new NetworkCredential( user, password );
-					status = this.Login( cDomain.HostAddress, ref cookie, netCred );
+					status = this.Login( cDomain.HostAddress, domainID, ref cookie, netCred );
 					if ( status.statusCode == SCodes.Success ||
 						status.statusCode == SCodes.SuccessInGrace )
 					{

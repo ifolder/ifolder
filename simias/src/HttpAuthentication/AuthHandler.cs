@@ -38,6 +38,8 @@ using System.Web.SessionState;
 ////using Simias.Client;
 //using Simias.Client.Authentication;
 
+using Simias;
+using Simias.Storage;
 using Simias.Security.Web.AuthenticationService;
 using SCodes = Simias.Authentication.StatusCodes;
 
@@ -282,6 +284,7 @@ namespace Simias.Security.Web
 		private string m_authenticationRealm;
 		private readonly string sessionTag = "simias-user";
 		private readonly string[] rolesArray = { "users" };
+		private Store store;
 
 		private	Assembly authAssembly;
 		private Type iAuthService;
@@ -292,6 +295,8 @@ namespace Simias.Security.Web
 			string [] settings;
 
 			log.Debug( "AuthenticationModule Init()");
+
+			this.store = Store.GetStore();
 
 			app.BeginRequest += new
 				EventHandler( this.OnBeginRequest );
@@ -377,12 +382,11 @@ namespace Simias.Security.Web
  
 		void OnAcquireRequestState(Object source, EventArgs eventArgs) 
 		{
-			bool authenticationSuccessful = false;
 			bool challengeRequest = true;
 			HttpApplication app = (HttpApplication)source;
 			HttpContext context = HttpContext.Current;
 
-			log.Debug( "OnAcquireRequestState - called" );
+			//log.Debug( "OnAcquireRequestState - called" );
 
 			//
 			// Check the session to see if we have already authenticated this user
@@ -390,7 +394,7 @@ namespace Simias.Security.Web
 
 			if (context.Session != null)
 			{
-				log.Debug( "SessionTag: " + app.Context.Session.SessionID );
+				//log.Debug( "SessionTag: " + app.Context.Session.SessionID );
    				GenericPrincipal sessionPrincipal;
    
 				sessionPrincipal = (GenericPrincipal)(context.Session[this.sessionTag]);
@@ -401,19 +405,19 @@ namespace Simias.Security.Web
    				}
 				else
 				{
-					log.Debug( "Session object " + sessionTag + " not set!" );
+					//log.Debug( "Session object " + sessionTag + " not set!" );
 				}
    
    				if (context.User.Identity.IsAuthenticated)
    				{
 					challengeRequest = false;
 
-					log.Debug( "User is authenticated!" );
-					log.Debug( "Context.User.Identity exists: " + context.User.Identity.Name );
+					//log.Debug( "User is authenticated!" );
+				    //log.Debug( "Context.User.Identity exists: " + context.User.Identity.Name );
    				}
    				else
    				{
-					log.Debug( "User is not authenticated" );
+					//log.Debug( "User is not authenticated" );
    
    					//
    					// Check for Authorization headers coming back
@@ -431,63 +435,61 @@ namespace Simias.Security.Web
 						{
 							Simias.Authentication.Status authStatus = 
 								creds.Authenticate( this.iAuthService );
+
+							this.SetSimiasResponseHeaders( context, authStatus );
+
 							if ( authStatus.statusCode == SCodes.Success ||
 								authStatus.statusCode == SCodes.SuccessInGrace )
 							{
 								authServiceUser = authStatus.UserID;
-								authenticationSuccessful = true;
-							}
+								challengeRequest = false;
 
-							this.SetSimiasResponseHeaders( context, authStatus );
+								this.SetLastLoginTime( context, authStatus );
+   
+								//
+								// Set the context user for this request
+								//
+   
+								context.User = 
+									new GenericPrincipal(
+										new GenericIdentity(
+											authServiceUser, 
+											"Basic authentication"), 
+											rolesArray);
+   
+								//
+								// Set the current user for this thread
+								//
+   
+								Thread.CurrentPrincipal = context.User;
+   							
+								//
+								// Save off the user principle so we can associate them
+								// with their next request
+								//
+   
+								context.Session.Add( sessionTag, context.User );
+								context.SkipAuthorization = true;
+
+								//log.Debug( "Authentication successful - session object set!" );
+
+								if ( context.Items["simias-login"] != null )
+								{
+									log.Debug( "completing login request" );
+									app.CompleteRequest();
+								}
+							}
 						}
 						else
 						{
 							log.Debug( "Invalid credentials" );
 						}
-   
-   						if (authenticationSuccessful == true)
-   						{
-   							challengeRequest = false;
-   
-   							//
-   							// Set the context user for this request
-   							//
-   
-   							context.User = 
-   								new GenericPrincipal(
-   									new GenericIdentity(
-   										authServiceUser, 
-   										"Basic authentication"), 
-   										rolesArray);
-   
-   							//
-   							// Set the current user for this thread
-   							//
-   
-   							Thread.CurrentPrincipal = context.User;
-   							
-   							//
-   							// Save off the user principle so we can associate them
-   							// with their next request
-   							//
-   
-   							context.Session.Add(sessionTag, context.User);
-   							context.SkipAuthorization = true;
-
-							log.Debug( "Authentication successful - session object set!" );
-
-							if ( context.Items["simias-login"] != null )
-							{
-								log.Debug( "completing login request" );
-								app.CompleteRequest();
-							}
-   						}
    					}
    				}
 			}
 			else
 			{
-				log.Debug( "No context.Session in OnAcquireRequestState" );
+				//log.Debug( "No context.Session in OnAcquireRequestState" );
 
 				// Check if this is our special URL
 				if ( context.Items["simias-login"] != null )
@@ -504,6 +506,12 @@ namespace Simias.Security.Web
 								creds.Authenticate( this.iAuthService );
 
 							this.SetSimiasResponseHeaders( context, authStatus );
+
+							if ( authStatus.statusCode == SCodes.Success ||
+								authStatus.statusCode == SCodes.SuccessInGrace )
+							{
+								this.SetLastLoginTime( context, authStatus );
+							}
 
 							app.CompleteRequest();
 							challengeRequest = false;
@@ -523,11 +531,30 @@ namespace Simias.Security.Web
 				// Force a 'Basic' popup dialog
 				//
 
+				Simias.Storage.Domain domain;
+				string[] domainID = 
+					context.Request.Headers.GetValues(
+					Simias.Security.Web.AuthenticationService.Login.DomainIDHeader);
+				if ( domainID != null && domainID[0] != null && domainID[0] != "" )
+				{
+					domain = store.GetDomain( domainID[0] );
+				}
+				else
+				{
+					domain = store.GetDomain( store.DefaultDomain );
+				}
+
 				context.Response.StatusCode = 401;
 				context.Response.StatusDescription = "Unauthorized";
 				context.Response.AddHeader( 
 					"WWW-Authenticate", 
+					String.Concat("Basic realm=\"", domain.Name, "\""));					
+
+				/*
+				context.Response.AddHeader( 
+					"WWW-Authenticate", 
 					String.Concat("Basic realm=\"", m_authenticationRealm, "\""));					
+				*/
 
 	            //
 		        // Add to the session data to force a cookie with the 401.
@@ -594,7 +621,7 @@ namespace Simias.Security.Web
 			incomingCookies = (cookies.Count != 0);
             context.Items.Add("IncomingCookies", incomingCookies);
 
-			log.Debug( "Incoming cookie: " + incomingCookies.ToString() );
+			//log.Debug( "Incoming cookie: " + incomingCookies.ToString() );
 			return;
 		}
 
@@ -603,7 +630,7 @@ namespace Simias.Security.Web
 			HttpApplication app = (HttpApplication)source;
 			HttpContext context = HttpContext.Current;
 
-			log.Debug( "OnBeginRequest called" );
+			//log.Debug( "OnBeginRequest called" );
 
             string physicalPath = app.Request.PhysicalPath;
 
@@ -623,34 +650,53 @@ namespace Simias.Security.Web
 
 		void OnDisposed( Object source, EventArgs eventArgs ) 
 		{
-			log.Debug( "OnDisposed - called" );
+			//log.Debug( "OnDisposed - called" );
 		}
 
 		void OnEndRequest( Object source, EventArgs eventArgs ) 
 		{
-			log.Debug( "OnEndRequest - called" );
+			//log.Debug( "OnEndRequest - called" );
 		}
 
 		void OnReleaseRequestState( Object source, EventArgs eventArgs ) 
 		{
-			log.Debug( "OnReleaseRequestState - called" );
+			//log.Debug( "OnReleaseRequestState - called" );
 		}
 
 		private void OnAuthenticate(AuthenticationEventArgs e)
 		{
-			log.Debug( "OnAuthenticate - called" );
+			//log.Debug( "OnAuthenticate - called" );
 
 			if (m_eventHandler == null)
 			{
 				return;
 			}
 
-			log.Debug( "Calling m_eventHandler in OnAuthenticate" );
+			//log.Debug( "Calling m_eventHandler in OnAuthenticate" );
 
 			m_eventHandler(this, e);
 			if (e.User != null)
 			{
 				e.Context.User = e.Principal;
+			}
+		}
+
+		private void SetLastLoginTime( HttpContext context, Simias.Authentication.Status authStatus)
+		{
+			string[] domainID = 
+				context.Request.Headers.GetValues(
+				Simias.Security.Web.AuthenticationService.Login.DomainIDHeader);
+			if ( domainID != null && domainID[0] != null && domainID[0] != "" )
+			{
+				Simias.Storage.Domain domain = store.GetDomain( domainID[0] );
+				if ( domain != null )
+				{
+					Roster roster = domain.Roster;
+					Member member = roster.GetMemberByID( authStatus.UserID );
+					Property p = new Property( "LastLogin", DateTime.Now );
+					p.LocalProperty = true;
+					member.Properties.ModifyProperty( p );
+				}
 			}
 		}
 
