@@ -56,7 +56,7 @@ namespace Simias.Sync.Web
 		[WebMethod(EnableSession = true)]
 		public SyncNodeStamp[] Start(ref SyncStartInfo si, string user)
 		{
-			SyncNodeStamp[] nodes = null;
+			SyncNodeStamp[] nodes = new SyncNodeStamp[0];
 			si.Access = SyncAccess.Deny;
 			Store store = Store.GetStore();
 			Collection col = store.GetCollectionByID(si.CollectionID);
