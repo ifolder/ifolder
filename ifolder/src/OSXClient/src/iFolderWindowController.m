@@ -99,6 +99,7 @@ static iFolderWindowController *sharedInstance = nil;
 	{
 		[sharedInstance release];
 		sharedInstance = nil;
+		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:STATE_SHOWMAINWINDOW];		
 	}
 }
 
@@ -120,8 +121,11 @@ static iFolderWindowController *sharedInstance = nil;
 {
 	[self setupToolbar];
 
-	[super setShouldCascadeWindows:NO];
-	[super setWindowFrameAutosaveName:@"iFolderWindow"];
+	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_WINPOS])
+	{
+		[super setShouldCascadeWindows:NO];
+		[super setWindowFrameAutosaveName:@"iFolderWindow"];
+	}
 
 	ifolderService = [[iFolderService alloc] init];
 	simiasService = [[SimiasService alloc] init];
@@ -146,6 +150,8 @@ static iFolderWindowController *sharedInstance = nil;
 
 	// Setup the double click black magic
 	[iFolderTable setDoubleAction:@selector(doubleClickedTable:)];
+	
+	[[NSUserDefaults standardUserDefaults] setBool:YES forKey:STATE_SHOWMAINWINDOW];		
 }
 
 
@@ -334,9 +340,15 @@ static iFolderWindowController *sharedInstance = nil;
 	
 	iFolder *ifolder = [[ifoldersController arrangedObjects] objectAtIndex:selIndex];
 	NSString *path = [ifolder Path];
+
 	if(	([path length] > 0) &&
 		([ifolder IsSubscription] == NO) )
-		[[NSWorkspace sharedWorkspace] openFile:path];
+	{
+		if([[NSUserDefaults standardUserDefaults] integerForKey:PREFKEY_CLICKIFOLDER] == 0)
+			[[NSWorkspace sharedWorkspace] openFile:path];
+		else
+			[self showProperties:self];
+	}
 	else
 		[self setupiFolder:sender];
 }
