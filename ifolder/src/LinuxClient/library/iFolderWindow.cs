@@ -535,6 +535,7 @@ namespace Novell.iFolder
 
 		private void OnRealizeWidget(object o, EventArgs args)
 		{
+			iFolderTreeView.HasFocus = true;
 			RefreshiFolders();
 		}
 
