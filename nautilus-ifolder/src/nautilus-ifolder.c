@@ -397,7 +397,9 @@ is_ifolder (NautilusFileInfo *file)
 	struct soap soap;
 	gboolean b_is_ifolder = FALSE;
 	gchar *folder_path;
-	
+	char username[512];
+	char password[1024];
+
 	folder_path = get_file_path (file);
 	if (folder_path != NULL) {
 		DEBUG_IFOLDER (("****About to call IsiFolder (\"%s\")...\n", folder_path));
@@ -405,6 +407,10 @@ is_ifolder (NautilusFileInfo *file)
 		struct _ns1__IsiFolderResponse ns1__IsiFolderResponse;
 		ns1__IsiFolder.LocalPath = folder_path;
 		init_gsoap (&soap);
+		if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
+			soap.userid = username;
+			soap.passwd = password;
+		}
 		soap_call___ns1__IsiFolder (&soap, 
 									soapURL, 
 									NULL, 
@@ -435,6 +441,8 @@ can_be_ifolder (NautilusFileInfo *file)
 	struct soap soap;
 	gchar *folder_path;
 	gboolean b_can_be_ifolder = TRUE;
+	char username[512];
+	char password[1024];
 	
 	if (!nautilus_file_info_is_directory (file))
 		return FALSE;
@@ -446,6 +454,10 @@ can_be_ifolder (NautilusFileInfo *file)
 		struct _ns1__CanBeiFolderResponse ns1__CanBeiFolderResponse;
 		ns1__CanBeiFolder.LocalPath = folder_path;
 		init_gsoap (&soap);
+		if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
+			soap.userid = username;
+			soap.passwd = password;
+		}
 		soap_call___ns1__CanBeiFolder (&soap,
 									   soapURL, 
 									   NULL, 
@@ -475,6 +487,8 @@ create_ifolder_in_domain (NautilusFileInfo *file, char *domain_id)
 {
 	struct soap soap;
 	gchar *folder_path;
+	char username[512];
+	char password[1024];
 	
 	folder_path = get_file_path (file);
 	if (folder_path != NULL) {
@@ -484,6 +498,10 @@ create_ifolder_in_domain (NautilusFileInfo *file, char *domain_id)
 		req.Path = folder_path;
 		req.DomainID = domain_id;
 		init_gsoap (&soap);
+		if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
+			soap.userid = username;
+			soap.passwd = password;
+		}
 		soap_call___ns1__CreateiFolderInDomain (&soap, soapURL, NULL, &req, &resp);
 		g_free (folder_path);
 		if (soap.error) {
@@ -520,7 +538,9 @@ get_ifolder_id_by_local_path (gchar *path)
 {
 	struct soap soap;
 	gchar *ifolder_id;
-	
+	char username[512];
+	char password[1024];
+
 	ifolder_id = NULL;
 
 	if (path != NULL) {
@@ -529,6 +549,10 @@ get_ifolder_id_by_local_path (gchar *path)
 		struct _ns1__GetiFolderByLocalPathResponse ns1__GetiFolderByLocalPathResponse;
 		ns1__GetiFolderByLocalPath.LocalPath = path;
 		init_gsoap (&soap);
+		if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
+			soap.userid = username;
+			soap.passwd = password;
+		}
 		soap_call___ns1__GetiFolderByLocalPath (&soap, 
 										soapURL, 
 										NULL, 
@@ -568,7 +592,9 @@ revert_ifolder (NautilusFileInfo *file)
 	struct soap soap;
 	gchar *folder_path;
 	gchar *ifolder_id;
-	
+	char username[512];
+	char password[1024];
+
 	folder_path = get_file_path (file);
 	if (folder_path != NULL) {
 		ifolder_id = get_ifolder_id_by_local_path (folder_path);
@@ -579,6 +605,10 @@ revert_ifolder (NautilusFileInfo *file)
 			struct _ns1__RevertiFolderResponse ns1__RevertiFolderResponse;
 			ns1__RevertiFolder.iFolderID = ifolder_id;
 			init_gsoap (&soap);
+			if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
+				soap.userid = username;
+				soap.passwd = password;
+			}
 			soap_call___ns1__RevertiFolder (&soap, 
 												 soapURL, 
 												 NULL, 
@@ -620,7 +650,9 @@ get_unmanaged_path (gchar *ifolder_id)
 {
 	struct soap soap;
 	gchar *unmanaged_path;
-	
+	char username[512];
+	char password[1024];
+
 	unmanaged_path = NULL;
 
 	if (ifolder_id != NULL) {
@@ -629,6 +661,10 @@ get_unmanaged_path (gchar *ifolder_id)
 		struct _ns1__GetiFolderResponse ns1__GetiFolderResponse;
 		ns1__GetiFolder.iFolderID = ifolder_id;
 		init_gsoap (&soap);
+		if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
+			soap.userid = username;
+			soap.passwd = password;
+		}
 		soap_call___ns1__GetiFolder (&soap,
 									 soapURL,
 									 NULL,
@@ -678,12 +714,18 @@ get_all_ifolder_paths ()
 	struct _ns1__GetAlliFolders ns1__GetAlliFolders;
 	struct _ns1__GetAlliFoldersResponse ns1__GetAlliFoldersResponse;
 	char *unmanaged_path;
+	char username[512];
+	char password[1024];
 	
 	ifolder_local_paths = NULL;
 	
 	DEBUG_IFOLDER (("****About to call GetiFolders ()\n"));
 
 	init_gsoap (&soap);
+	if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
+		soap.userid = username;
+		soap.passwd = password;
+	}
 	soap_call___ns1__GetAlliFolders (&soap,
 									 soapURL,
 									 NULL,
