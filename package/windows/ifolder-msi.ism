@@ -225,6 +225,7 @@
 	<table name="AppSearch">
 		<col key="yes" def="s72">Property</col>
 		<col key="yes" def="s72">Signature_</col>
+		<row><td>LOCATION_OF_INSTALLUTIL</td><td>installutil_sig</td></row>
 		<row><td>LOCATION_OF_REGASM</td><td>regasm_sig</td></row>
 	</table>
 
@@ -976,10 +977,12 @@
 		<row><td>ISSelfRegisterFiles</td><td>1025</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFiles</td><td/></row>
 		<row><td>ISSelfRegisterFinalize</td><td>1</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFinalize</td><td/></row>
 		<row><td>ISUnSelfRegisterFiles</td><td>1025</td><td>ISSELFREG.DLL</td><td>ISUnSelfRegisterFiles</td><td/></row>
-		<row><td>RegAsm_iFolderComponent</td><td>50</td><td>LOCATION_OF_REGASM</td><td>"[INSTALLDIR]iFolderComponent.dll" /codebase</td><td>Registers iFolderComponent.dll using RegAsm.exe on target machine</td></row>
+		<row><td>InstallUtil_iFolderApp</td><td>50</td><td>LOCATION_OF_INSTALLUTIL</td><td>/LogToConsole=false /ShowCallStack /LogFile=iFolderApp.InstallLog "[INSTALLDIR]iFolderApp.exe"</td><td>Runs InstallUtil on iFolderApp.exe to install it</td></row>
+		<row><td>InstallUtil_iFolderApp_uninstall</td><td>50</td><td>LOCATION_OF_INSTALLUTIL</td><td>/uninstall /LogToConsole=false /ShowCallStack /LogFile=iFolderApp.InstallLog "[INSTALLDIR]iFolderApp.exe"</td><td>Runs InstallUtil on iFolderApp.exe to uninstall it</td></row>
+		<row><td>RegAsm_iFolderComponent</td><td>50</td><td>LOCATION_OF_REGASM</td><td>"[INSTALLDIR]iFolderComponent.dll" /codebase /silent /nologo</td><td>Registers iFolderComponent.dll using RegAsm.exe on target machine</td></row>
+		<row><td>RegAsm_iFolderComponent_uninstall</td><td>50</td><td>LOCATION_OF_REGASM</td><td>"[INSTALLDIR]iFolderComponent.dll" /unregister /silent /nologo</td><td>Unregisters iFolderComponent.dll using RegAsm.exe on target machine</td></row>
 		<row><td>SetARPINSTALLLOCATION</td><td>51</td><td>ARPINSTALLLOCATION</td><td>[INSTALLDIR]</td><td/></row>
 		<row><td>SetAllUsersProfileNT</td><td>51</td><td>ALLUSERSPROFILE</td><td>[%SystemRoot]\Profiles\All Users</td><td/></row>
-		<row><td>Shutdown</td><td>18</td><td>ShutdowniFolder.exe</td><td/><td>Shuts down iFolderApp.exe on uninstall</td></row>
 		<row><td>setAllUsersProfile2K</td><td>51</td><td>ALLUSERSPROFILE</td><td>[%ALLUSERSPROFILE]</td><td/></row>
 		<row><td>setUserProfileNT</td><td>51</td><td>USERPROFILE</td><td>[%USERPROFILE]</td><td/></row>
 	</table>
@@ -1085,7 +1088,8 @@
 		<col key="yes" def="S72">Parent</col>
 		<col key="yes" def="S255">Path</col>
 		<col def="I2">Depth</col>
-		<row><td>regasm_sig</td><td></td><td>[WindowsFolder]\Microsoft.NET\Framework\v1.1.4322</td><td>2</td></row>
+		<row><td>installutil_sig</td><td></td><td>[WindowsFolder]\Microsoft.NET\Framework</td><td>3</td></row>
+		<row><td>regasm_sig</td><td></td><td>[WindowsFolder]\Microsoft.NET\Framework</td><td>3</td></row>
 	</table>
 
 	<table name="DuplicateFile">
@@ -2526,6 +2530,8 @@
 		<row><td>InstallInitialize</td><td/><td>1501</td><td>InstallInitialize</td><td/></row>
 		<row><td>InstallODBC</td><td/><td>5400</td><td>InstallODBC</td><td/></row>
 		<row><td>InstallServices</td><td>VersionNT</td><td>5800</td><td>InstallServices</td><td/></row>
+		<row><td>InstallUtil_iFolderApp</td><td>(NOT REMOVE) AND LOCATION_OF_INSTALLUTIL</td><td>6655</td><td/><td/></row>
+		<row><td>InstallUtil_iFolderApp_uninstall</td><td>REMOVE="ALL"</td><td>1405</td><td/><td/></row>
 		<row><td>InstallValidate</td><td/><td>1400</td><td>InstallValidate</td><td/></row>
 		<row><td>IsolateComponents</td><td/><td>950</td><td>IsolateComponents</td><td/></row>
 		<row><td>LaunchConditions</td><td>Not Installed</td><td>410</td><td>LaunchConditions</td><td/></row>
@@ -2540,6 +2546,7 @@
 		<row><td>PublishProduct</td><td/><td>6400</td><td>PublishProduct</td><td/></row>
 		<row><td>RMCCPSearch</td><td>Not CCP_SUCCESS And CCP_TEST</td><td>600</td><td>RMCCPSearch</td><td/></row>
 		<row><td>RegAsm_iFolderComponent</td><td>(NOT REMOVE) AND LOCATION_OF_REGASM</td><td>6605</td><td/><td/></row>
+		<row><td>RegAsm_iFolderComponent_uninstall</td><td>REMOVE="ALL"</td><td>1402</td><td/><td/></row>
 		<row><td>RegisterClassInfo</td><td/><td>4600</td><td>RegisterClassInfo</td><td/></row>
 		<row><td>RegisterComPlus</td><td/><td>5700</td><td>RegisterComPlus</td><td/></row>
 		<row><td>RegisterExtensionInfo</td><td/><td>4700</td><td>RegisterExtensionInfo</td><td/></row>
@@ -2563,7 +2570,6 @@
 		<row><td>SelfUnregModules</td><td/><td>2200</td><td>SelfUnregModules</td><td/></row>
 		<row><td>SetARPINSTALLLOCATION</td><td>Not Installed</td><td>1010</td><td>SetARPINSTALLLOCATION</td><td/></row>
 		<row><td>SetODBCFolders</td><td/><td>1100</td><td>SetODBCFolders</td><td/></row>
-		<row><td>Shutdown</td><td>REMOVE="ALL"</td><td>1405</td><td/><td/></row>
 		<row><td>StartServices</td><td>VersionNT</td><td>5900</td><td>StartServices</td><td/></row>
 		<row><td>StopServices</td><td>VersionNT</td><td>1900</td><td>StopServices</td><td/></row>
 		<row><td>UnpublishComponents</td><td/><td>1700</td><td>UnpublishComponents</td><td/></row>
@@ -2822,6 +2828,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<row><td>ISSCRIPT_VERSION_OLD</td><td>##IDS_ISSCRIPT_VERSION_OLD##</td><td/></row>
 		<row><td>ISVROOT_PORT_NO</td><td>0</td><td/></row>
 		<row><td>InstallChoice</td><td>AR</td><td/></row>
+		<row><td>LOCATION_OF_INSTALLUTIL</td><td/><td>Used in AppSearch table to set location of InstallUtil.exe on target machine.</td></row>
 		<row><td>LOCATION_OF_REGASM</td><td/><td>Used in AppSearch table to set location of RegAsm.exe on target machine.</td></row>
 		<row><td>Manufacturer</td><td>##COMPANY_NAME##</td><td/></row>
 		<row><td>PIDTemplate</td><td>12345&lt;###-%%%%%%%&gt;@@@@@</td><td/></row>
@@ -3004,7 +3011,8 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="I4">MinDate</col>
 		<col def="I4">MaxDate</col>
 		<col def="S255">Languages</col>
-		<row><td>regasm_sig</td><td>RegAsm.exe</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>installutil_sig</td><td>InstallUtil.exe</td><td>1.1</td><td/><td/><td/><td/><td/><td/></row>
+		<row><td>regasm_sig</td><td>RegAsm.exe</td><td>1.1</td><td/><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="TextStyle">

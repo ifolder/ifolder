@@ -1,7 +1,9 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-iFolderApp_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/FormsTrayApp.cs $(srcdir)/GlobalProperties.cs
+INSTALLUTIL := $(shell cygpath --unix "$(FRAMEWORKDIR)\v1.1*\InstallUtil.exe")
+
+iFolderApp_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/FormsTrayApp.cs $(srcdir)/GlobalProperties.cs $(srcdir)/iFolderAppInstallerClass.cs
 iFolderApp_CSFILES_CSC := $(subst /,$(SEP),$(iFolderApp_CSFILES))
 iFolderApp_INCLUDES = 
 iFolderApp_RESOURCES = $(srcdir)/App$(ICON_EXT)
@@ -32,8 +34,14 @@ install-exec-local: iFolderApp.exe $(DATA_FILES)
 	$(INSTALL_PROGRAM) iFolderApp.exe iFolderApp.exe.manifest $(DEBUG_FILES) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(DATA_FILES) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(RES_FILES) $(DESTDIR)$(bindir)/res
-    
+	if test -f "$(DESTDIR)$(bindir)/iFolderApp.exe"; then \
+		$(INSTALLUTIL) /LogToConsole=false /ShowCallStack /LogFile=iFolderApp.InstallLog `cygpath --windows "$(DESTDIR)$(bindir)/iFolderApp.exe"`; \
+	fi
+     
 uninstall-local:
+	if test -f "$(DESTDIR)$(bindir)/iFolderApp.exe"; then \
+		$(INSTALLUTIL) /uninstall /LogToConsole=false /ShowCallStack /LogFile=iFolderApp.UninstallLog `cygpath --windows "$(DESTDIR)$(bindir)/iFolderApp.exe"`; \
+	fi
 	cd $(DESTDIR)$(bindir); rm -f iFolderApp.exe iFolderApp.exe.manifest $(DEBUG_FILES)
 	cd $(DESTDIR)$(bindir); rm -f $(DATA_FILES)
 	cd $(DESTDIR)$(bindir)/res; rm -f $(RES_FILES:res/%=%) ifolder-banner.png
@@ -44,6 +52,7 @@ CLEAN_FILES = iFolderApp.exe iFolderApp.doc.xml
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
+	rm -f *Log
     
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
