@@ -117,10 +117,6 @@ namespace Simias
 			configDoc = new XmlDocument();
 			configDoc.Load(configFilePath);
 			configDoc.PreserveWhitespace = true;
-
-			// Set events to watch for changes to the document.
-			configDoc.NodeChanged += new XmlNodeChangedEventHandler(UpdateConfigFile);
-			configDoc.NodeInserted += new XmlNodeChangedEventHandler(UpdateConfigFile);
 		}
 		#endregion
 
@@ -175,7 +171,7 @@ namespace Simias
 		#endregion
 
 		#region Private Methods
-		private XmlElement GetSection(string section)
+		private XmlElement GetSection(string section, ref bool changed)
 		{
 			string str = string.Format("//section[@name='{0}']", section);
 			XmlElement sectionElement = (XmlElement)configDoc.DocumentElement.SelectSingleNode(str);
@@ -185,15 +181,16 @@ namespace Simias
 				sectionElement = configDoc.CreateElement(SectionTag);
 				sectionElement.SetAttribute(NameAttr, section);
 				configDoc.DocumentElement.AppendChild(sectionElement);
+				changed = true;
 			}
 
 			return sectionElement;
 		}
 
-		private XmlElement GetKey(string section, string key)
+		private XmlElement GetKey(string section, string key, ref bool changed)
 		{
 			// Get the section that the key belongs to.
-			XmlElement sectionElement = GetSection(section);
+			XmlElement sectionElement = GetSection(section, ref changed);
 
 			string str = string.Format("//{0}[@{1}='{2}']/{3}[@{1}='{4}']", SectionTag, NameAttr, section, SettingTag, key);
 			XmlElement keyElement = (XmlElement)sectionElement.SelectSingleNode(str);
@@ -203,6 +200,7 @@ namespace Simias
 				keyElement = configDoc.CreateElement(SettingTag);
 				keyElement.SetAttribute(NameAttr, key);
 				sectionElement.AppendChild(keyElement);
+				changed = true;
 			}
 
 			return keyElement;
@@ -226,21 +224,12 @@ namespace Simias
 			return foundKey;
 		}
 
-		private void UpdateConfigFile(object sender, XmlNodeChangedEventArgs e)
+		private void UpdateConfigFile()
 		{
-			// Ignore all other changes.
-			if ((e.Node.NodeType == XmlNodeType.Element) ||
-				(e.Node.NodeType == XmlNodeType.Attribute) ||
-				(e.Action == XmlNodeChangedAction.Change))
-			{
-				lock(typeof(Configuration))
-				{
-					XmlTextWriter xtw = new XmlTextWriter(ConfigFilePath, Encoding.ASCII);
-					xtw.Formatting = Formatting.Indented;
-					configDoc.WriteTo(xtw);
-					xtw.Close();
-				}
-			}
+			XmlTextWriter xtw = new XmlTextWriter(ConfigFilePath, Encoding.ASCII);
+			xtw.Formatting = Formatting.Indented;
+			configDoc.WriteTo(xtw);
+			xtw.Close();
 		}
 		
 		private static string fixupPath(string path)
@@ -283,7 +272,14 @@ namespace Simias
 		{
 			lock(typeof(Configuration))
 			{
-				return GetKey(section, key);
+				bool changed = false;
+				XmlElement element = GetKey(section, key, ref changed);
+				if (changed)
+				{
+					UpdateConfigFile();
+				}
+
+				return element;
 			}
 		}
 
@@ -297,8 +293,10 @@ namespace Simias
 		{
 			lock(typeof(Configuration))
 			{
-				XmlElement keyElement = GetKey(section, key);
+				bool changed = false;
+				XmlElement keyElement = GetKey(section, key, ref changed);
 				keyElement.InnerXml = newElement.InnerXml;
+				UpdateConfigFile();
 			}
 		}
 
@@ -324,7 +322,8 @@ namespace Simias
 		{
 			lock(typeof(Configuration))
 			{
-				XmlElement keyElement = GetKey(section, key);
+				bool changed = false;
+				XmlElement keyElement = GetKey(section, key, ref changed);
 				string keyValue = keyElement.GetAttribute(ValueAttr);
 				if (keyValue == string.Empty)
 				{
@@ -332,11 +331,17 @@ namespace Simias
 					{
 						keyElement.SetAttribute(ValueAttr, defaultValue);
 						keyValue = defaultValue;
+						changed = true;
 					}
 					else
 					{
 						keyValue = null;
 					}
+				}
+
+				if (changed)
+				{
+					UpdateConfigFile();
 				}
 
 				return keyValue;
@@ -363,8 +368,10 @@ namespace Simias
 		{
 			lock(typeof(Configuration))
 			{
-				XmlElement keyElement = GetKey(section, key);
+				bool changed = false;
+				XmlElement keyElement = GetKey(section, key, ref changed);
 				keyElement.SetAttribute(ValueAttr, keyValue);
+				UpdateConfigFile();
 			}
 		}
 
