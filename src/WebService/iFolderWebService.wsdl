@@ -1,16 +1,127 @@
-<?xml version="1.0" encoding="us-ascii"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <definitions xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:s0="http://novell.com/ifolder/web/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" name="iFolderWebService" targetNamespace="http://novell.com/ifolder/web/" xmlns="http://schemas.xmlsoap.org/wsdl/">
   <types>
+    <xs:schema xmlns:tns="http://novell.com/ifolder/web/encodedTypes" targetNamespace="http://novell.com/ifolder/web/encodedTypes" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+      <xs:import namespace="http://schemas.xmlsoap.org/wsdl/" />
+      <xs:complexType name="iFolderSettings">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="DefaultDomainID" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="DefaultPOBoxID" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="HaveEnterprise" type="xs:boolean" />
+          <xs:element minOccurs="1" maxOccurs="1" name="DisplayConfirmation" type="xs:boolean" />
+          <xs:element minOccurs="1" maxOccurs="1" name="EnterpriseName" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="EnterpriseDescription" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="DefaultSyncInterval" type="xs:int" />
+          <xs:element minOccurs="1" maxOccurs="1" name="UseProxy" type="xs:boolean" />
+          <xs:element minOccurs="1" maxOccurs="1" name="ProxyHost" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="ProxyPort" type="xs:int" />
+          <xs:element minOccurs="1" maxOccurs="1" name="CurrentUserID" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="CurrentUserName" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="iFolderWeb">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="Domain" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="DomainIdentity" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="ID" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="LocalIncarnation" type="xs:unsignedLong" />
+          <xs:element minOccurs="1" maxOccurs="1" name="ManagedPath" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="UnManagedPath" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="MasterIncarnation" type="xs:unsignedLong" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Name" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Owner" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="OwnerID" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="EffectiveSyncInterval" type="xs:int" />
+          <xs:element minOccurs="1" maxOccurs="1" name="SyncInterval" type="xs:int" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Synchronizable" type="xs:boolean" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Type" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Description" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="State" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="IsSubscription" type="xs:boolean" />
+          <xs:element minOccurs="1" maxOccurs="1" name="EnumeratedState" type="xs:int" />
+          <xs:element minOccurs="1" maxOccurs="1" name="IsWorkgroup" type="xs:boolean" />
+          <xs:element minOccurs="1" maxOccurs="1" name="HasConflicts" type="xs:boolean" />
+          <xs:element minOccurs="1" maxOccurs="1" name="CurrentUserID" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="CurrentUserRights" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="CollectionID" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="LastSyncTime" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ArrayOfIFolderWeb">
+        <xs:complexContent mixed="false">
+          <xs:restriction base="soapenc:Array">
+            <xs:attribute ref="soapenc:arrayType" d7p1:arrayType="tns:iFolderWeb[]" xmlns:d7p1="http://schemas.xmlsoap.org/wsdl/" />
+          </xs:restriction>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="iFolderUser">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="Name" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="UserID" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Rights" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="ID" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="State" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="iFolderID" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="IsOwner" type="xs:boolean" />
+          <xs:element minOccurs="1" maxOccurs="1" name="FirstName" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Surname" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="FN" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ArrayOfIFolderUser">
+        <xs:complexContent mixed="false">
+          <xs:restriction base="soapenc:Array">
+            <xs:attribute ref="soapenc:arrayType" d7p1:arrayType="tns:iFolderUser[]" xmlns:d7p1="http://schemas.xmlsoap.org/wsdl/" />
+          </xs:restriction>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="DiskSpace">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="AvailableSpace" type="xs:long" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Limit" type="xs:long" />
+          <xs:element minOccurs="1" maxOccurs="1" name="UsedSpace" type="xs:long" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DomainWeb">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="ID" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="POBoxID" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Name" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Description" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Host" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="UserID" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="UserName" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ArrayOfConflict">
+        <xs:complexContent mixed="false">
+          <xs:restriction base="soapenc:Array">
+            <xs:attribute ref="soapenc:arrayType" d7p1:arrayType="tns:Conflict[]" xmlns:d7p1="http://schemas.xmlsoap.org/wsdl/" />
+          </xs:restriction>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="Conflict">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="iFolderID" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="ConflictID" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="LocalName" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="LocalDate" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="LocalSize" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="IsNameConflict" type="xs:boolean" />
+          <xs:element minOccurs="1" maxOccurs="1" name="ServerName" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="ServerDate" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="ServerSize" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SyncSize">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="SyncNodeCount" type="xs:unsignedInt" />
+          <xs:element minOccurs="1" maxOccurs="1" name="SyncByteCount" type="xs:unsignedLong" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
     <xs:schema elementFormDefault="qualified" targetNamespace="http://novell.com/ifolder/web/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-      <xs:element name="Ping">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="PingResponse">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="GetSettings">
-        <xs:complexType />
-      </xs:element>
       <xs:complexType name="iFolderSettings">
         <xs:sequence>
           <xs:element minOccurs="0" maxOccurs="1" name="DefaultDomainID" type="xs:string" />
@@ -27,72 +138,8 @@
           <xs:element minOccurs="0" maxOccurs="1" name="CurrentUserName" type="xs:string" />
         </xs:sequence>
       </xs:complexType>
-      <xs:element name="GetSettingsResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetSettingsResult" type="s0:iFolderSettings" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SetDisplayConfirmation">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="DisplayConfirmation" type="xs:boolean" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SetDisplayConfirmationResponse">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="IsiFolder">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="LocalPath" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="IsiFolderResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="IsiFolderResult" type="xs:boolean" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="CanBeiFolder">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="LocalPath" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="CanBeiFolderResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="CanBeiFolderResult" type="xs:boolean" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="IsPathIniFolder">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="LocalPath" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="IsPathIniFolderResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="IsPathIniFolderResult" type="xs:boolean" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="CreateLocaliFolder">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="Path" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
+      <xs:element name="iFolderSettings" type="s0:iFolderSettings" />
+      <xs:element name="boolean" type="xs:boolean" />
       <xs:complexType name="iFolderWeb">
         <xs:sequence>
           <xs:element minOccurs="0" maxOccurs="1" name="Domain" type="xs:string" />
@@ -121,113 +168,13 @@
           <xs:element minOccurs="0" maxOccurs="1" name="LastSyncTime" type="xs:string" />
         </xs:sequence>
       </xs:complexType>
-      <xs:element name="CreateLocaliFolderResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="CreateLocaliFolderResult" type="s0:iFolderWeb" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="GetiFolder">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="GetiFolderResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetiFolderResult" type="s0:iFolderWeb" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="GetiFolderByLocalPath">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="LocalPath" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="GetiFolderByLocalPathResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetiFolderByLocalPathResult" type="s0:iFolderWeb" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="DeleteiFolder">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="DeleteiFolderResponse">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="RevertiFolder">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="RevertiFolderResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="RevertiFolderResult" type="s0:iFolderWeb" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="GetAlliFolders">
-        <xs:complexType />
-      </xs:element>
+      <xs:element name="iFolderWeb" type="s0:iFolderWeb" />
       <xs:complexType name="ArrayOfIFolderWeb">
         <xs:sequence>
           <xs:element minOccurs="0" nillable="true" maxOccurs="unbounded" name="iFolderWeb" type="s0:iFolderWeb" />
         </xs:sequence>
       </xs:complexType>
-      <xs:element name="GetAlliFoldersResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetAlliFoldersResult" type="s0:ArrayOfIFolderWeb" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="GetiFolders">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="GetiFoldersResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetiFoldersResult" type="s0:ArrayOfIFolderWeb" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SetUserRights">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-            <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string" />
-            <xs:element minOccurs="0" maxOccurs="1" name="Rights" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SetUserRightsResponse">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="GetOwner">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
+      <xs:element name="ArrayOfIFolderWeb" type="s0:ArrayOfIFolderWeb" />
       <xs:complexType name="iFolderUser">
         <xs:sequence>
           <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
@@ -242,170 +189,13 @@
           <xs:element minOccurs="0" maxOccurs="1" name="FN" type="xs:string" />
         </xs:sequence>
       </xs:complexType>
-      <xs:element name="GetOwnerResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetOwnerResult" type="s0:iFolderUser" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="ChangeOwner">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-            <xs:element minOccurs="0" maxOccurs="1" name="NewOwnerUserID" type="xs:string" />
-            <xs:element minOccurs="0" maxOccurs="1" name="OldOwnerRights" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="ChangeOwnerResponse">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="RemoveiFolderUser">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-            <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="RemoveiFolderUserResponse">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="GetiFolderUsers">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
+      <xs:element name="iFolderUser" type="s0:iFolderUser" />
       <xs:complexType name="ArrayOfIFolderUser">
         <xs:sequence>
           <xs:element minOccurs="0" nillable="true" maxOccurs="unbounded" name="iFolderUser" type="s0:iFolderUser" />
         </xs:sequence>
       </xs:complexType>
-      <xs:element name="GetiFolderUsersResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetiFolderUsersResult" type="s0:ArrayOfIFolderUser" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="GetAlliFolderUsers">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="GetAlliFolderUsersResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetAlliFolderUsersResult" type="s0:ArrayOfIFolderUser" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="GetScopediFolderUsers">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="numUsers" type="xs:int" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="GetScopediFolderUsersResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetScopediFolderUsersResult" type="s0:ArrayOfIFolderUser" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SearchForiFolderUsers">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="SearchString" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SearchForiFolderUsersResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="SearchForiFolderUsersResult" type="s0:ArrayOfIFolderUser" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="GetiFolderUser">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="GetiFolderUserResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetiFolderUserResult" type="s0:iFolderUser" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="GetiFolderUserFromNodeID">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="CollectionID" type="xs:string" />
-            <xs:element minOccurs="0" maxOccurs="1" name="NodeID" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="GetiFolderUserFromNodeIDResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetiFolderUserFromNodeIDResult" type="s0:iFolderUser" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="InviteUser">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-            <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string" />
-            <xs:element minOccurs="0" maxOccurs="1" name="Rights" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="InviteUserResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="InviteUserResult" type="s0:iFolderUser" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="AcceptiFolderInvitation">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-            <xs:element minOccurs="0" maxOccurs="1" name="LocalPath" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="AcceptiFolderInvitationResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="AcceptiFolderInvitationResult" type="s0:iFolderWeb" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="DeclineiFolderInvitation">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="DeclineiFolderInvitationResponse">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="GetUserDiskSpace">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
+      <xs:element name="ArrayOfIFolderUser" type="s0:ArrayOfIFolderUser" />
       <xs:complexType name="DiskSpace">
         <xs:sequence>
           <xs:element minOccurs="1" maxOccurs="1" name="AvailableSpace" type="xs:long" />
@@ -413,105 +203,8 @@
           <xs:element minOccurs="1" maxOccurs="1" name="UsedSpace" type="xs:long" />
         </xs:sequence>
       </xs:complexType>
-      <xs:element name="GetUserDiskSpaceResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetUserDiskSpaceResult" type="s0:DiskSpace" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="GetiFolderDiskSpace">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="GetiFolderDiskSpaceResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetiFolderDiskSpaceResult" type="s0:DiskSpace" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SetUserDiskSpaceLimit">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string" />
-            <xs:element minOccurs="1" maxOccurs="1" name="Limit" type="xs:long" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SetUserDiskSpaceLimitResponse">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="SetiFolderDiskSpaceLimit">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-            <xs:element minOccurs="1" maxOccurs="1" name="Limit" type="xs:long" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SetiFolderDiskSpaceLimitResponse">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="SetiFolderSyncInterval">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-            <xs:element minOccurs="1" maxOccurs="1" name="Interval" type="xs:int" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SetiFolderSyncIntervalResponse">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="SetDefaultSyncInterval">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="Interval" type="xs:int" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SetDefaultSyncIntervalResponse">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="GetDefaultSyncInterval">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="GetDefaultSyncIntervalResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="GetDefaultSyncIntervalResult" type="xs:int" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="ConnectToEnterpriseServer">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="UserName" type="xs:string" />
-            <xs:element minOccurs="0" maxOccurs="1" name="Password" type="xs:string" />
-            <xs:element minOccurs="0" maxOccurs="1" name="Host" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="ConnectToEnterpriseServerResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="ConnectToEnterpriseServerResult" type="s0:iFolderSettings" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="ConnectToDomain">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="UserName" type="xs:string" />
-            <xs:element minOccurs="0" maxOccurs="1" name="Password" type="xs:string" />
-            <xs:element minOccurs="0" maxOccurs="1" name="Host" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
+      <xs:element name="DiskSpace" type="s0:DiskSpace" />
+      <xs:element name="int" type="xs:int" />
       <xs:complexType name="DomainWeb">
         <xs:sequence>
           <xs:element minOccurs="0" maxOccurs="1" name="ID" type="xs:string" />
@@ -523,20 +216,7 @@
           <xs:element minOccurs="0" maxOccurs="1" name="UserName" type="xs:string" />
         </xs:sequence>
       </xs:complexType>
-      <xs:element name="ConnectToDomainResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="ConnectToDomainResult" type="s0:DomainWeb" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="GetiFolderConflicts">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
+      <xs:element name="DomainWeb" type="s0:DomainWeb" />
       <xs:complexType name="ArrayOfConflict">
         <xs:sequence>
           <xs:element minOccurs="0" nillable="true" maxOccurs="unbounded" name="Conflict" type="s0:Conflict" />
@@ -555,349 +235,245 @@
           <xs:element minOccurs="0" maxOccurs="1" name="ServerSize" type="xs:string" />
         </xs:sequence>
       </xs:complexType>
-      <xs:element name="GetiFolderConflictsResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetiFolderConflictsResult" type="s0:ArrayOfConflict" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="ResolveFileConflict">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-            <xs:element minOccurs="0" maxOccurs="1" name="conflictID" type="xs:string" />
-            <xs:element minOccurs="1" maxOccurs="1" name="localChangesWin" type="xs:boolean" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="ResolveFileConflictResponse">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="ResolveNameConflict">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-            <xs:element minOccurs="0" maxOccurs="1" name="conflictID" type="xs:string" />
-            <xs:element minOccurs="0" maxOccurs="1" name="newLocalName" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="ResolveNameConflictResponse">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="SetupProxy">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="Host" type="xs:string" />
-            <xs:element minOccurs="1" maxOccurs="1" name="Port" type="xs:int" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SetupProxyResponse">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="RemoveProxy">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="RemoveProxyResponse">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="CalculateSyncSize">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
+      <xs:element name="ArrayOfConflict" type="s0:ArrayOfConflict" />
       <xs:complexType name="SyncSize">
         <xs:sequence>
           <xs:element minOccurs="1" maxOccurs="1" name="SyncNodeCount" type="xs:unsignedInt" />
           <xs:element minOccurs="1" maxOccurs="1" name="SyncByteCount" type="xs:unsignedLong" />
         </xs:sequence>
       </xs:complexType>
-      <xs:element name="CalculateSyncSizeResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="CalculateSyncSizeResult" type="s0:SyncSize" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SynciFolderNow">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SynciFolderNowResponse">
-        <xs:complexType />
-      </xs:element>
-      <xs:element name="iFolderSettings" type="s0:iFolderSettings" />
-      <xs:element name="boolean" type="xs:boolean" />
-      <xs:element name="iFolderWeb" type="s0:iFolderWeb" />
-      <xs:element name="ArrayOfIFolderWeb" type="s0:ArrayOfIFolderWeb" />
-      <xs:element name="iFolderUser" type="s0:iFolderUser" />
-      <xs:element name="ArrayOfIFolderUser" type="s0:ArrayOfIFolderUser" />
-      <xs:element name="DiskSpace" type="s0:DiskSpace" />
-      <xs:element name="int" type="xs:int" />
-      <xs:element name="DomainWeb" type="s0:DomainWeb" />
-      <xs:element name="ArrayOfConflict" type="s0:ArrayOfConflict" />
       <xs:element name="SyncSize" type="s0:SyncSize" />
     </xs:schema>
   </types>
-  <message name="PingSoapIn">
-    <part name="parameters" element="s0:Ping" />
-  </message>
-  <message name="PingSoapOut">
-    <part name="parameters" element="s0:PingResponse" />
-  </message>
-  <message name="GetSettingsSoapIn">
-    <part name="parameters" element="s0:GetSettings" />
-  </message>
+  <message name="PingSoapIn" />
+  <message name="PingSoapOut" />
+  <message name="GetSettingsSoapIn" />
   <message name="GetSettingsSoapOut">
-    <part name="parameters" element="s0:GetSettingsResponse" />
+    <part name="GetSettingsResult" xmlns:q1="http://novell.com/ifolder/web/encodedTypes" type="q1:iFolderSettings" />
   </message>
   <message name="SetDisplayConfirmationSoapIn">
-    <part name="parameters" element="s0:SetDisplayConfirmation" />
+    <part name="DisplayConfirmation" type="s:boolean" />
   </message>
-  <message name="SetDisplayConfirmationSoapOut">
-    <part name="parameters" element="s0:SetDisplayConfirmationResponse" />
-  </message>
+  <message name="SetDisplayConfirmationSoapOut" />
   <message name="IsiFolderSoapIn">
-    <part name="parameters" element="s0:IsiFolder" />
+    <part name="LocalPath" type="s:string" />
   </message>
   <message name="IsiFolderSoapOut">
-    <part name="parameters" element="s0:IsiFolderResponse" />
+    <part name="IsiFolderResult" type="s:boolean" />
   </message>
   <message name="CanBeiFolderSoapIn">
-    <part name="parameters" element="s0:CanBeiFolder" />
+    <part name="LocalPath" type="s:string" />
   </message>
   <message name="CanBeiFolderSoapOut">
-    <part name="parameters" element="s0:CanBeiFolderResponse" />
+    <part name="CanBeiFolderResult" type="s:boolean" />
   </message>
   <message name="IsPathIniFolderSoapIn">
-    <part name="parameters" element="s0:IsPathIniFolder" />
+    <part name="LocalPath" type="s:string" />
   </message>
   <message name="IsPathIniFolderSoapOut">
-    <part name="parameters" element="s0:IsPathIniFolderResponse" />
+    <part name="IsPathIniFolderResult" type="s:boolean" />
   </message>
   <message name="CreateLocaliFolderSoapIn">
-    <part name="parameters" element="s0:CreateLocaliFolder" />
+    <part name="Path" type="s:string" />
   </message>
   <message name="CreateLocaliFolderSoapOut">
-    <part name="parameters" element="s0:CreateLocaliFolderResponse" />
+    <part name="CreateLocaliFolderResult" xmlns:q2="http://novell.com/ifolder/web/encodedTypes" type="q2:iFolderWeb" />
   </message>
   <message name="GetiFolderSoapIn">
-    <part name="parameters" element="s0:GetiFolder" />
+    <part name="iFolderID" type="s:string" />
   </message>
   <message name="GetiFolderSoapOut">
-    <part name="parameters" element="s0:GetiFolderResponse" />
+    <part name="GetiFolderResult" xmlns:q3="http://novell.com/ifolder/web/encodedTypes" type="q3:iFolderWeb" />
   </message>
   <message name="GetiFolderByLocalPathSoapIn">
-    <part name="parameters" element="s0:GetiFolderByLocalPath" />
+    <part name="LocalPath" type="s:string" />
   </message>
   <message name="GetiFolderByLocalPathSoapOut">
-    <part name="parameters" element="s0:GetiFolderByLocalPathResponse" />
+    <part name="GetiFolderByLocalPathResult" xmlns:q4="http://novell.com/ifolder/web/encodedTypes" type="q4:iFolderWeb" />
   </message>
   <message name="DeleteiFolderSoapIn">
-    <part name="parameters" element="s0:DeleteiFolder" />
+    <part name="iFolderID" type="s:string" />
   </message>
-  <message name="DeleteiFolderSoapOut">
-    <part name="parameters" element="s0:DeleteiFolderResponse" />
-  </message>
+  <message name="DeleteiFolderSoapOut" />
   <message name="RevertiFolderSoapIn">
-    <part name="parameters" element="s0:RevertiFolder" />
+    <part name="iFolderID" type="s:string" />
   </message>
   <message name="RevertiFolderSoapOut">
-    <part name="parameters" element="s0:RevertiFolderResponse" />
+    <part name="RevertiFolderResult" xmlns:q5="http://novell.com/ifolder/web/encodedTypes" type="q5:iFolderWeb" />
   </message>
-  <message name="GetAlliFoldersSoapIn">
-    <part name="parameters" element="s0:GetAlliFolders" />
-  </message>
+  <message name="GetAlliFoldersSoapIn" />
   <message name="GetAlliFoldersSoapOut">
-    <part name="parameters" element="s0:GetAlliFoldersResponse" />
+    <part name="GetAlliFoldersResult" xmlns:q6="http://novell.com/ifolder/web/encodedTypes" type="q6:ArrayOfIFolderWeb" />
   </message>
   <message name="GetiFoldersSoapIn">
-    <part name="parameters" element="s0:GetiFolders" />
+    <part name="UserID" type="s:string" />
   </message>
   <message name="GetiFoldersSoapOut">
-    <part name="parameters" element="s0:GetiFoldersResponse" />
+    <part name="GetiFoldersResult" xmlns:q7="http://novell.com/ifolder/web/encodedTypes" type="q7:ArrayOfIFolderWeb" />
   </message>
   <message name="SetUserRightsSoapIn">
-    <part name="parameters" element="s0:SetUserRights" />
+    <part name="iFolderID" type="s:string" />
+    <part name="UserID" type="s:string" />
+    <part name="Rights" type="s:string" />
   </message>
-  <message name="SetUserRightsSoapOut">
-    <part name="parameters" element="s0:SetUserRightsResponse" />
-  </message>
+  <message name="SetUserRightsSoapOut" />
   <message name="GetOwnerSoapIn">
-    <part name="parameters" element="s0:GetOwner" />
+    <part name="iFolderID" type="s:string" />
   </message>
   <message name="GetOwnerSoapOut">
-    <part name="parameters" element="s0:GetOwnerResponse" />
+    <part name="GetOwnerResult" xmlns:q8="http://novell.com/ifolder/web/encodedTypes" type="q8:iFolderUser" />
   </message>
   <message name="ChangeOwnerSoapIn">
-    <part name="parameters" element="s0:ChangeOwner" />
+    <part name="iFolderID" type="s:string" />
+    <part name="NewOwnerUserID" type="s:string" />
+    <part name="OldOwnerRights" type="s:string" />
   </message>
-  <message name="ChangeOwnerSoapOut">
-    <part name="parameters" element="s0:ChangeOwnerResponse" />
-  </message>
+  <message name="ChangeOwnerSoapOut" />
   <message name="RemoveiFolderUserSoapIn">
-    <part name="parameters" element="s0:RemoveiFolderUser" />
+    <part name="iFolderID" type="s:string" />
+    <part name="UserID" type="s:string" />
   </message>
-  <message name="RemoveiFolderUserSoapOut">
-    <part name="parameters" element="s0:RemoveiFolderUserResponse" />
-  </message>
+  <message name="RemoveiFolderUserSoapOut" />
   <message name="GetiFolderUsersSoapIn">
-    <part name="parameters" element="s0:GetiFolderUsers" />
+    <part name="iFolderID" type="s:string" />
   </message>
   <message name="GetiFolderUsersSoapOut">
-    <part name="parameters" element="s0:GetiFolderUsersResponse" />
+    <part name="GetiFolderUsersResult" xmlns:q9="http://novell.com/ifolder/web/encodedTypes" type="q9:ArrayOfIFolderUser" />
   </message>
-  <message name="GetAlliFolderUsersSoapIn">
-    <part name="parameters" element="s0:GetAlliFolderUsers" />
-  </message>
+  <message name="GetAlliFolderUsersSoapIn" />
   <message name="GetAlliFolderUsersSoapOut">
-    <part name="parameters" element="s0:GetAlliFolderUsersResponse" />
+    <part name="GetAlliFolderUsersResult" xmlns:q10="http://novell.com/ifolder/web/encodedTypes" type="q10:ArrayOfIFolderUser" />
   </message>
   <message name="GetScopediFolderUsersSoapIn">
-    <part name="parameters" element="s0:GetScopediFolderUsers" />
+    <part name="numUsers" type="s:int" />
   </message>
   <message name="GetScopediFolderUsersSoapOut">
-    <part name="parameters" element="s0:GetScopediFolderUsersResponse" />
+    <part name="GetScopediFolderUsersResult" xmlns:q11="http://novell.com/ifolder/web/encodedTypes" type="q11:ArrayOfIFolderUser" />
   </message>
   <message name="SearchForiFolderUsersSoapIn">
-    <part name="parameters" element="s0:SearchForiFolderUsers" />
+    <part name="SearchString" type="s:string" />
   </message>
   <message name="SearchForiFolderUsersSoapOut">
-    <part name="parameters" element="s0:SearchForiFolderUsersResponse" />
+    <part name="SearchForiFolderUsersResult" xmlns:q12="http://novell.com/ifolder/web/encodedTypes" type="q12:ArrayOfIFolderUser" />
   </message>
   <message name="GetiFolderUserSoapIn">
-    <part name="parameters" element="s0:GetiFolderUser" />
+    <part name="UserID" type="s:string" />
   </message>
   <message name="GetiFolderUserSoapOut">
-    <part name="parameters" element="s0:GetiFolderUserResponse" />
+    <part name="GetiFolderUserResult" xmlns:q13="http://novell.com/ifolder/web/encodedTypes" type="q13:iFolderUser" />
   </message>
   <message name="GetiFolderUserFromNodeIDSoapIn">
-    <part name="parameters" element="s0:GetiFolderUserFromNodeID" />
+    <part name="CollectionID" type="s:string" />
+    <part name="NodeID" type="s:string" />
   </message>
   <message name="GetiFolderUserFromNodeIDSoapOut">
-    <part name="parameters" element="s0:GetiFolderUserFromNodeIDResponse" />
+    <part name="GetiFolderUserFromNodeIDResult" xmlns:q14="http://novell.com/ifolder/web/encodedTypes" type="q14:iFolderUser" />
   </message>
   <message name="InviteUserSoapIn">
-    <part name="parameters" element="s0:InviteUser" />
+    <part name="iFolderID" type="s:string" />
+    <part name="UserID" type="s:string" />
+    <part name="Rights" type="s:string" />
   </message>
   <message name="InviteUserSoapOut">
-    <part name="parameters" element="s0:InviteUserResponse" />
+    <part name="InviteUserResult" xmlns:q15="http://novell.com/ifolder/web/encodedTypes" type="q15:iFolderUser" />
   </message>
   <message name="AcceptiFolderInvitationSoapIn">
-    <part name="parameters" element="s0:AcceptiFolderInvitation" />
+    <part name="iFolderID" type="s:string" />
+    <part name="LocalPath" type="s:string" />
   </message>
   <message name="AcceptiFolderInvitationSoapOut">
-    <part name="parameters" element="s0:AcceptiFolderInvitationResponse" />
+    <part name="AcceptiFolderInvitationResult" xmlns:q16="http://novell.com/ifolder/web/encodedTypes" type="q16:iFolderWeb" />
   </message>
   <message name="DeclineiFolderInvitationSoapIn">
-    <part name="parameters" element="s0:DeclineiFolderInvitation" />
+    <part name="iFolderID" type="s:string" />
   </message>
-  <message name="DeclineiFolderInvitationSoapOut">
-    <part name="parameters" element="s0:DeclineiFolderInvitationResponse" />
-  </message>
+  <message name="DeclineiFolderInvitationSoapOut" />
   <message name="GetUserDiskSpaceSoapIn">
-    <part name="parameters" element="s0:GetUserDiskSpace" />
+    <part name="UserID" type="s:string" />
   </message>
   <message name="GetUserDiskSpaceSoapOut">
-    <part name="parameters" element="s0:GetUserDiskSpaceResponse" />
+    <part name="GetUserDiskSpaceResult" xmlns:q17="http://novell.com/ifolder/web/encodedTypes" type="q17:DiskSpace" />
   </message>
   <message name="GetiFolderDiskSpaceSoapIn">
-    <part name="parameters" element="s0:GetiFolderDiskSpace" />
+    <part name="iFolderID" type="s:string" />
   </message>
   <message name="GetiFolderDiskSpaceSoapOut">
-    <part name="parameters" element="s0:GetiFolderDiskSpaceResponse" />
+    <part name="GetiFolderDiskSpaceResult" xmlns:q18="http://novell.com/ifolder/web/encodedTypes" type="q18:DiskSpace" />
   </message>
   <message name="SetUserDiskSpaceLimitSoapIn">
-    <part name="parameters" element="s0:SetUserDiskSpaceLimit" />
+    <part name="UserID" type="s:string" />
+    <part name="Limit" type="s:long" />
   </message>
-  <message name="SetUserDiskSpaceLimitSoapOut">
-    <part name="parameters" element="s0:SetUserDiskSpaceLimitResponse" />
-  </message>
+  <message name="SetUserDiskSpaceLimitSoapOut" />
   <message name="SetiFolderDiskSpaceLimitSoapIn">
-    <part name="parameters" element="s0:SetiFolderDiskSpaceLimit" />
+    <part name="iFolderID" type="s:string" />
+    <part name="Limit" type="s:long" />
   </message>
-  <message name="SetiFolderDiskSpaceLimitSoapOut">
-    <part name="parameters" element="s0:SetiFolderDiskSpaceLimitResponse" />
-  </message>
+  <message name="SetiFolderDiskSpaceLimitSoapOut" />
   <message name="SetiFolderSyncIntervalSoapIn">
-    <part name="parameters" element="s0:SetiFolderSyncInterval" />
+    <part name="iFolderID" type="s:string" />
+    <part name="Interval" type="s:int" />
   </message>
-  <message name="SetiFolderSyncIntervalSoapOut">
-    <part name="parameters" element="s0:SetiFolderSyncIntervalResponse" />
-  </message>
+  <message name="SetiFolderSyncIntervalSoapOut" />
   <message name="SetDefaultSyncIntervalSoapIn">
-    <part name="parameters" element="s0:SetDefaultSyncInterval" />
+    <part name="Interval" type="s:int" />
   </message>
-  <message name="SetDefaultSyncIntervalSoapOut">
-    <part name="parameters" element="s0:SetDefaultSyncIntervalResponse" />
-  </message>
-  <message name="GetDefaultSyncIntervalSoapIn">
-    <part name="parameters" element="s0:GetDefaultSyncInterval" />
-  </message>
+  <message name="SetDefaultSyncIntervalSoapOut" />
+  <message name="GetDefaultSyncIntervalSoapIn" />
   <message name="GetDefaultSyncIntervalSoapOut">
-    <part name="parameters" element="s0:GetDefaultSyncIntervalResponse" />
+    <part name="GetDefaultSyncIntervalResult" type="s:int" />
   </message>
   <message name="ConnectToEnterpriseServerSoapIn">
-    <part name="parameters" element="s0:ConnectToEnterpriseServer" />
+    <part name="UserName" type="s:string" />
+    <part name="Password" type="s:string" />
+    <part name="Host" type="s:string" />
   </message>
   <message name="ConnectToEnterpriseServerSoapOut">
-    <part name="parameters" element="s0:ConnectToEnterpriseServerResponse" />
+    <part name="ConnectToEnterpriseServerResult" xmlns:q19="http://novell.com/ifolder/web/encodedTypes" type="q19:iFolderSettings" />
   </message>
   <message name="ConnectToDomainSoapIn">
-    <part name="parameters" element="s0:ConnectToDomain" />
+    <part name="UserName" type="s:string" />
+    <part name="Password" type="s:string" />
+    <part name="Host" type="s:string" />
   </message>
   <message name="ConnectToDomainSoapOut">
-    <part name="parameters" element="s0:ConnectToDomainResponse" />
+    <part name="ConnectToDomainResult" xmlns:q20="http://novell.com/ifolder/web/encodedTypes" type="q20:DomainWeb" />
   </message>
   <message name="GetiFolderConflictsSoapIn">
-    <part name="parameters" element="s0:GetiFolderConflicts" />
+    <part name="iFolderID" type="s:string" />
   </message>
   <message name="GetiFolderConflictsSoapOut">
-    <part name="parameters" element="s0:GetiFolderConflictsResponse" />
+    <part name="GetiFolderConflictsResult" xmlns:q21="http://novell.com/ifolder/web/encodedTypes" type="q21:ArrayOfConflict" />
   </message>
   <message name="ResolveFileConflictSoapIn">
-    <part name="parameters" element="s0:ResolveFileConflict" />
+    <part name="iFolderID" type="s:string" />
+    <part name="conflictID" type="s:string" />
+    <part name="localChangesWin" type="s:boolean" />
   </message>
-  <message name="ResolveFileConflictSoapOut">
-    <part name="parameters" element="s0:ResolveFileConflictResponse" />
-  </message>
+  <message name="ResolveFileConflictSoapOut" />
   <message name="ResolveNameConflictSoapIn">
-    <part name="parameters" element="s0:ResolveNameConflict" />
+    <part name="iFolderID" type="s:string" />
+    <part name="conflictID" type="s:string" />
+    <part name="newLocalName" type="s:string" />
   </message>
-  <message name="ResolveNameConflictSoapOut">
-    <part name="parameters" element="s0:ResolveNameConflictResponse" />
-  </message>
+  <message name="ResolveNameConflictSoapOut" />
   <message name="SetupProxySoapIn">
-    <part name="parameters" element="s0:SetupProxy" />
+    <part name="Host" type="s:string" />
+    <part name="Port" type="s:int" />
   </message>
-  <message name="SetupProxySoapOut">
-    <part name="parameters" element="s0:SetupProxyResponse" />
-  </message>
-  <message name="RemoveProxySoapIn">
-    <part name="parameters" element="s0:RemoveProxy" />
-  </message>
-  <message name="RemoveProxySoapOut">
-    <part name="parameters" element="s0:RemoveProxyResponse" />
-  </message>
+  <message name="SetupProxySoapOut" />
+  <message name="RemoveProxySoapIn" />
+  <message name="RemoveProxySoapOut" />
   <message name="CalculateSyncSizeSoapIn">
-    <part name="parameters" element="s0:CalculateSyncSize" />
+    <part name="iFolderID" type="s:string" />
   </message>
   <message name="CalculateSyncSizeSoapOut">
-    <part name="parameters" element="s0:CalculateSyncSizeResponse" />
+    <part name="CalculateSyncSizeResult" xmlns:q22="http://novell.com/ifolder/web/encodedTypes" type="q22:SyncSize" />
   </message>
   <message name="SynciFolderNowSoapIn">
-    <part name="parameters" element="s0:SynciFolderNow" />
+    <part name="iFolderID" type="s:string" />
   </message>
-  <message name="SynciFolderNowSoapOut">
-    <part name="parameters" element="s0:SynciFolderNowResponse" />
-  </message>
+  <message name="SynciFolderNowSoapOut" />
   <message name="PingHttpGetIn" />
   <message name="PingHttpGetOut" />
   <message name="GetSettingsHttpGetIn" />
@@ -1995,381 +1571,381 @@
   <binding name="iFolderWebServiceSoap" type="s0:iFolderWebServiceSoap">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
     <operation name="Ping">
-      <soap:operation soapAction="http://novell.com/ifolder/web/Ping" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/Ping" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="GetSettings">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetSettings" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetSettings" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="SetDisplayConfirmation">
-      <soap:operation soapAction="http://novell.com/ifolder/web/SetDisplayConfirmation" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetDisplayConfirmation" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="IsiFolder">
-      <soap:operation soapAction="http://novell.com/ifolder/web/IsiFolder" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/IsiFolder" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="CanBeiFolder">
-      <soap:operation soapAction="http://novell.com/ifolder/web/CanBeiFolder" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/CanBeiFolder" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="IsPathIniFolder">
-      <soap:operation soapAction="http://novell.com/ifolder/web/IsPathIniFolder" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/IsPathIniFolder" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="CreateLocaliFolder">
-      <soap:operation soapAction="http://novell.com/ifolder/web/CreateLocaliFolder" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/CreateLocaliFolder" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="GetiFolder">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolder" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolder" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="GetiFolderByLocalPath">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderByLocalPath" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderByLocalPath" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="DeleteiFolder">
-      <soap:operation soapAction="http://novell.com/ifolder/web/DeleteiFolder" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/DeleteiFolder" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="RevertiFolder">
-      <soap:operation soapAction="http://novell.com/ifolder/web/RevertiFolder" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/RevertiFolder" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="GetAlliFolders">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetAlliFolders" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetAlliFolders" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="GetiFolders">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolders" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolders" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="SetUserRights">
-      <soap:operation soapAction="http://novell.com/ifolder/web/SetUserRights" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetUserRights" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="GetOwner">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetOwner" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetOwner" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="ChangeOwner">
-      <soap:operation soapAction="http://novell.com/ifolder/web/ChangeOwner" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/ChangeOwner" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="RemoveiFolderUser">
-      <soap:operation soapAction="http://novell.com/ifolder/web/RemoveiFolderUser" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/RemoveiFolderUser" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="GetiFolderUsers">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderUsers" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderUsers" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="GetAlliFolderUsers">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetAlliFolderUsers" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetAlliFolderUsers" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="GetScopediFolderUsers">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetScopediFolderUsers" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetScopediFolderUsers" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="SearchForiFolderUsers">
-      <soap:operation soapAction="http://novell.com/ifolder/web/SearchForiFolderUsers" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/SearchForiFolderUsers" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="GetiFolderUser">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderUser" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderUser" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="GetiFolderUserFromNodeID">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderUserFromNodeID" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderUserFromNodeID" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="InviteUser">
-      <soap:operation soapAction="http://novell.com/ifolder/web/InviteUser" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/InviteUser" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="AcceptiFolderInvitation">
-      <soap:operation soapAction="http://novell.com/ifolder/web/AcceptiFolderInvitation" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/AcceptiFolderInvitation" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="DeclineiFolderInvitation">
-      <soap:operation soapAction="http://novell.com/ifolder/web/DeclineiFolderInvitation" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/DeclineiFolderInvitation" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="GetUserDiskSpace">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetUserDiskSpace" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetUserDiskSpace" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="GetiFolderDiskSpace">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderDiskSpace" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderDiskSpace" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="SetUserDiskSpaceLimit">
-      <soap:operation soapAction="http://novell.com/ifolder/web/SetUserDiskSpaceLimit" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetUserDiskSpaceLimit" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="SetiFolderDiskSpaceLimit">
-      <soap:operation soapAction="http://novell.com/ifolder/web/SetiFolderDiskSpaceLimit" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetiFolderDiskSpaceLimit" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="SetiFolderSyncInterval">
-      <soap:operation soapAction="http://novell.com/ifolder/web/SetiFolderSyncInterval" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetiFolderSyncInterval" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="SetDefaultSyncInterval">
-      <soap:operation soapAction="http://novell.com/ifolder/web/SetDefaultSyncInterval" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetDefaultSyncInterval" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="GetDefaultSyncInterval">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetDefaultSyncInterval" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetDefaultSyncInterval" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="ConnectToEnterpriseServer">
-      <soap:operation soapAction="http://novell.com/ifolder/web/ConnectToEnterpriseServer" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/ConnectToEnterpriseServer" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="ConnectToDomain">
-      <soap:operation soapAction="http://novell.com/ifolder/web/ConnectToDomain" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/ConnectToDomain" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="GetiFolderConflicts">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderConflicts" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderConflicts" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="ResolveFileConflict">
-      <soap:operation soapAction="http://novell.com/ifolder/web/ResolveFileConflict" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/ResolveFileConflict" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="ResolveNameConflict">
-      <soap:operation soapAction="http://novell.com/ifolder/web/ResolveNameConflict" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/ResolveNameConflict" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="SetupProxy">
-      <soap:operation soapAction="http://novell.com/ifolder/web/SetupProxy" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetupProxy" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="RemoveProxy">
-      <soap:operation soapAction="http://novell.com/ifolder/web/RemoveProxy" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/RemoveProxy" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="CalculateSyncSize">
-      <soap:operation soapAction="http://novell.com/ifolder/web/CalculateSyncSize" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/CalculateSyncSize" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
     <operation name="SynciFolderNow">
-      <soap:operation soapAction="http://novell.com/ifolder/web/SynciFolderNow" style="document" />
+      <soap:operation soapAction="http://novell.com/ifolder/web/SynciFolderNow" style="rpc" />
       <input>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
       <output>
-        <soap:body use="literal" />
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </output>
     </operation>
   </binding>
@@ -3073,13 +2649,13 @@
   </binding>
   <service name="iFolderWebService">
     <port name="iFolderWebServiceSoap" binding="s0:iFolderWebServiceSoap">
-      <soap:address location="http://127.0.0.1:8086/simias10/iFolder.asmx" />
+      <soap:address location="http://localhost:45215/simias10/bgetter/iFolder.asmx" />
     </port>
     <port name="iFolderWebServiceHttpGet" binding="s0:iFolderWebServiceHttpGet">
-      <http:address location="http://127.0.0.1:8086/simias10/iFolder.asmx" />
+      <http:address location="http://localhost:45215/simias10/bgetter/iFolder.asmx" />
     </port>
     <port name="iFolderWebServiceHttpPost" binding="s0:iFolderWebServiceHttpPost">
-      <http:address location="http://127.0.0.1:8086/simias10/iFolder.asmx" />
+      <http:address location="http://localhost:45215/simias10/bgetter/iFolder.asmx" />
     </port>
     <documentation>Web Service providing access to iFolder</documentation>
   </service>
