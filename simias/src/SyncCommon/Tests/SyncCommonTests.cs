@@ -120,7 +120,7 @@ namespace Simias.Sync.Tests
 
 			// create invitaiton 1
 			Invitation invitation1 = new Invitation();
-			invitation1.CollectionId = "9876543210";
+			invitation1.CollectionID = "9876543210";
 			invitation1.CollectionName = "Team Collection";
 			invitation1.Identity = "1234567890";
 			invitation1.Owner = "0987654321";
@@ -140,7 +140,7 @@ namespace Simias.Sync.Tests
 			Invitation invitation2 = new Invitation(path);
 
 			// validate serialization
-			Assert(invitation1.CollectionId == invitation2.CollectionId);
+			Assert(invitation1.CollectionID == invitation2.CollectionID);
 			Assert(invitation1.CollectionName == invitation2.CollectionName);
 			Assert(invitation1.CollectionRights == invitation2.CollectionRights);
 			Assert(invitation1.Owner == invitation2.Owner);
@@ -151,6 +151,7 @@ namespace Simias.Sync.Tests
 			Assert(invitation1.MasterUri.Host == invitation2.MasterUri.Host);
 			Assert(invitation1.MasterUri.Port == invitation2.MasterUri.Port);
 			Assert(invitation1.Message == invitation2.Message);
+			Assert(invitation1.DirNodeID == invitation2.DirNodeID);
 			Assert(invitation1.RootPath == invitation2.RootPath);
 			Assert(invitation1.ToEmail == invitation2.ToEmail);
 			Assert(invitation1.ToName == invitation2.ToName);

@@ -87,14 +87,14 @@ public class FileInviter
 		Collection c = FindCollection(store, docRoot);
 		if (c != null)
 		{
-			if ((Nid)c.ID == (Nid)invitation.CollectionId)
+			if ((Nid)c.ID == (Nid)invitation.CollectionID)
 				Log.Info("ignoring duplicate invitation for folder {0}", docRoot.LocalPath);
 			else
 				Log.Error("ignoring invitation, folder {0} already linked to a different collection", docRoot.LocalPath);
 			return false;
 		}
 
-		if ((c = store.GetCollectionByID(invitation.CollectionId)) != null)
+		if ((c = store.GetCollectionByID(invitation.CollectionID)) != null)
 		{
 			Log.Warn("Collection already exists rooted in different local folder");
 			return false;

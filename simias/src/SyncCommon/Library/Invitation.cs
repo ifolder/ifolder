@@ -142,10 +142,10 @@ namespace Simias.Sync
 		/// <summary>
 		/// The id of the Collection
 		/// </summary>
-		public string CollectionId
+		public string CollectionID
 		{
-			get { return fields["CollectionId"]; }
-			set { fields["CollectionId"] = value; }
+			get { return fields["CollectionID"]; }
+			set { fields["CollectionID"] = value; }
 		}
 
 		/// <summary>
@@ -209,6 +209,15 @@ namespace Simias.Sync
 		{
 			get { return fields["Message"]; }
 			set { fields["Message"] = value; }
+		}
+
+		/// <summary>
+		/// An optional DirNode id.
+		/// </summary>
+		public string DirNodeID
+		{
+			get { return fields["DirNodeID"]; }
+			set { fields["DirNodeID"] = value; }
 		}
 
 		/// <summary>

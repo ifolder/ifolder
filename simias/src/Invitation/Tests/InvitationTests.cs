@@ -121,7 +121,7 @@ namespace Simias.Invite.Tests
 		{
 			Invitation invitation = new Invitation();
 
-			invitation.CollectionId = "9876543210";
+			invitation.CollectionID = "9876543210";
 			invitation.CollectionName = "Team Folder";
 			invitation.Identity = "1234567890";
 			invitation.Domain = "novell";

@@ -118,7 +118,7 @@ namespace Simias.Sync
 				// directory node
 				if (node.GetType().IsSubclassOf(typeof(DirNode)) && path != null)
 				{
-					string fullPath = Path.Combine(collection.RootPath, path);
+					string fullPath = (node as DirNode).GetFullPath(collection);
 
 					if (!Directory.Exists(fullPath))
 					{
@@ -130,7 +130,7 @@ namespace Simias.Sync
 				else if ((node.GetType().IsSubclassOf(typeof(BaseFileNode)))
 					&& path != null && stream != null)
 				{
-					string fullPath = Path.Combine(collection.RootPath, path);
+					string fullPath = (node as BaseFileNode).GetFullPath(collection);
 
 					string tempFileName = Path.GetTempFileName();
 					

@@ -55,11 +55,6 @@ namespace Simias.Sync
 		public static readonly string IntervalPropertyName = "Sync Interval";
 		
 		/// <summary>
-		/// A root path property name in a collection.
-		/// </summary>
-		public static readonly string RootPathPropertyName = "Root Path";
-		
-		/// <summary>
 		/// A collection property name of the sync logic class and assembly of the collection.
 		/// Only collection using the same sync logic can communicate.
 		/// </summary>
@@ -79,12 +74,11 @@ namespace Simias.Sync
 		/// <param name="store">The store object.</param>
 		/// <param name="invitation">An invitation object.</param>
 		public SyncCollection(Store store, Invitation invitation)
-			: base(store, invitation.CollectionName, invitation.CollectionId,
+			: base(store, invitation.CollectionName, invitation.CollectionID,
 					invitation.Owner, invitation.Domain)
 		{
 			this.MasterUri = invitation.MasterUri;
 			this.Role = SyncCollectionRoles.Slave;
-			this.RootPath = invitation.RootPath;
 			
 			// add any secret to the current identity chain
 			if ((invitation.PublicKey != null) && (invitation.PublicKey.Length > 0))
@@ -92,6 +86,18 @@ namespace Simias.Sync
 				BaseContact identity = store.CurrentIdentity;
 				identity.CreateAlias(invitation.Domain, invitation.Identity, invitation.PublicKey);
 				store.GetLocalAddressBook().Commit(identity);
+			}
+
+			// commit
+			Commit();
+
+			// check for a dir node
+			if (((invitation.DirNodeID != null) && (invitation.DirNodeID.Length > 0))
+				&& (invitation.RootPath != null) && (invitation.RootPath.Length > 0))
+			{
+				DirNode dn = new DirNode(this, invitation.RootPath, invitation.DirNodeID);
+
+				Commit(dn);
 			}
 		}
 
@@ -111,7 +117,7 @@ namespace Simias.Sync
 			// create the invitation
 			Invitation invitation = new Invitation();
 
-			invitation.CollectionId = ID;
+			invitation.CollectionID = ID;
 			invitation.CollectionName = Name;
 			invitation.Owner = Owner;
 			invitation.Domain = Domain;
@@ -119,6 +125,16 @@ namespace Simias.Sync
 			invitation.Identity = identity;
 			invitation.CollectionRights = GetUserAccess(identity).ToString();
 			invitation.PublicKey = StoreReference.ServerPublicKey.ToXmlString(false);
+
+			// check for a dir node
+			DirNode dn = this.GetRootDirectory();
+
+			if (dn != null)
+			{
+				// TODO: ?
+				// invitation.RootPath = dn.GetFullPath(this);
+				invitation.DirNodeID = dn.ID;
+			}
 
 			return invitation;
 		}
@@ -229,15 +245,6 @@ namespace Simias.Sync
 		{
 			get { return (int)GetProperty(IntervalPropertyName, -1); }
 			set { SetProperty(IntervalPropertyName, value, true); }
-		}
-
-		/// <summary>
-		/// The root path of the collection.
-		/// </summary>
-		public string RootPath
-		{
-			get { return (string)GetProperty(RootPathPropertyName); }
-			set { SetProperty(RootPathPropertyName, value, true); }
 		}
 
 		/// <summary>
