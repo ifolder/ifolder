@@ -54,6 +54,7 @@ namespace Simias.Gaim
 		private string description = "";
 		private string hostName;
 		private string userName;
+		private string aliasName;
 		private string userID;
 		private string poBoxID;
 		private static bool bPruneOldMembers = false;
@@ -99,6 +100,14 @@ namespace Simias.Gaim
 		{
 			get { return( this.userName ); }
 		}
+
+		/// <summary>
+		/// Gets the Gaim Domain's Alias (Gaim User Account Alias)
+		/// </summary>
+		public string Alias
+		{
+			get { return( this.aliasName ); }
+		}
 		#endregion
 
 		#region Constructors
@@ -109,13 +118,22 @@ namespace Simias.Gaim
 		/// <summary>
 		/// Constructor for creating a new Gaim Domain object.
 		/// </summary>
-		private GaimDomain( bool init, string username )
+		private GaimDomain( bool init, string username, string alias )
 		{
 			hostName = Environment.MachineName.ToLower();
 			userName = username;
+			aliasName = alias;
 
-			domainName = "Gaim Buddy List (" + username + "@" + hostName + ")";
-			description = "Workgroup Domain built from " + username + "'s Gaim Buddy List";
+			if (alias != null && alias.Length > 0)
+			{
+				domainName = "Gaim Buddy List (" + alias + "@" + hostName + ")";
+				description = "Workgroup Domain built from " + alias + "'s Gaim Buddy List";
+			}
+			else
+			{
+				domainName = "Gaim Buddy List (" + username + "@" + hostName + ")";
+				description = "Workgroup Domain built from " + username + "'s Gaim Buddy List";
+			}
 
 			userName = username + " (" + hostName + ")";
 
@@ -125,20 +143,20 @@ namespace Simias.Gaim
 			}
 		}
 
-		/// <summary>
-		/// Constructor for creating a new Gaim Domain object.
-		/// </summary>
-		private GaimDomain( bool init, string username, string description ) 
-		{
-			hostName = Environment.MachineName.ToLower();
-			userName = username + " (" + hostName + ")";
-			this.description = description;
-
-			if ( init == true )
-			{
-				this.Init();
-			}
-		}
+//		/// <summary>
+//		/// Constructor for creating a new Gaim Domain object.
+//		/// </summary>
+//		private GaimDomain( bool init, string username, string description ) 
+//		{
+//			hostName = Environment.MachineName.ToLower();
+//			userName = username + " (" + hostName + ")";
+//			this.description = description;
+//
+//			if ( init == true )
+//			{
+//				this.Init();
+//			}
+//		}
 		#endregion
 
 		private void Init()
@@ -214,6 +232,15 @@ namespace Simias.Gaim
 						{
 							log.Debug("Manager.LocalServiceUrl returned NULL!");
 						}
+					}
+
+					// Add on the Account Alias if one exists
+					if (aliasName != null && aliasName.Length > 0)
+					{
+						Simias.Storage.Property p = new Property("Gaim:Alias", aliasName);
+						p.LocalProperty = true;
+
+						member.FN = string.Format("{0} ({1})", aliasName, hostName);
 					}
 
 					rDomain.Commit( new Node[] { rDomain, member } );
@@ -381,11 +408,12 @@ namespace Simias.Gaim
 				return;
 			}
 			
+			GaimAccount gaimAccount = GetDefaultGaimAccount();
+
 			Simias.Storage.Domain domain = GetDomain();
 			if (domain == null)
 			{
 				// Time to create the Gaim Domain
-				GaimAccount gaimAccount = GetDefaultGaimAccount();
 				if (gaimAccount == null)
 				{
 					log.Debug("No default (AIM/prpl-oscar) Gaim Account");
@@ -393,13 +421,72 @@ namespace Simias.Gaim
 				}
 				
 				Simias.Gaim.GaimDomain gaimDomain =
-					new Simias.Gaim.GaimDomain(true, gaimAccount.Name);
+					new Simias.Gaim.GaimDomain(true, gaimAccount.Name, gaimAccount.Alias);
 
 				// Try again to get the domain
 				domain = GetDomain();
 			}
 			
 			if (domain == null) return; // The domain must not be ready yet
+
+			// Update the account alias if one exists
+			if (gaimAccount == null)
+			{
+				log.Debug("A Gaim Domain was created and not we can't get the GaimAccount.  Was the account deleted from Gaim?");
+			}
+			else
+			{
+				string accountAlias = gaimAccount.Alias;
+				if (accountAlias != null && accountAlias.Length > 0)
+				{
+					Member member = domain.Owner;
+					if (member != null)
+					{
+						PropertyList pList = member.Properties;
+						if (pList != null)
+						{
+							bool bChanged = false;
+							if (pList.HasProperty("Gaim:Alias"))
+							{
+								Property oldProp = pList.GetSingleProperty("Gaim:Alias");
+								if (!accountAlias.Equals((string)oldProp.Value))
+								{
+									pList.ModifyProperty("Gaim:Alias", accountAlias);
+									bChanged = true;
+								}
+							}
+							else
+							{
+								Property p = new Property("Gaim:Alias", accountAlias);
+								p.LocalProperty = true;
+								member.Properties.AddProperty(p);
+								bChanged = true;
+							}
+
+							// Check the full name and change it of the alias has changed
+							string machineName = Environment.MachineName.ToLower();
+							string fullName = string.Format("{0} ({1})",
+															accountAlias,
+															machineName);
+
+							if (member.FN == null || !member.FN.Equals(fullName))
+							{
+								member.FN = fullName;
+								bChanged = true;
+							}
+
+							// Modify the domain name and description if the alias has changed
+
+							if (bChanged)
+							{
+								domain.Name = string.Format("Gaim Buddy List ({0}@{1})", accountAlias, machineName);
+								domain.Description = string.Format("Workgroup Domain built from {0}'s Gaim Buddy List", accountAlias);
+								domain.Commit( new Node[] { domain, member } );
+							}
+						}
+					}
+				}
+			}
 			
 			// Sync all buddies into the domain
 			SyncBuddies(domain);
