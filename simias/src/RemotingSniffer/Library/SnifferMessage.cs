@@ -60,37 +60,47 @@ namespace Simias.Sync
 				
 					object value = msg.Properties[key];
 
-					if (keyString.Equals("__TypeName"))
+					// skip all null valued keys
+					if (value != null)
 					{
-						string typeName = value.ToString();
-
-						string[] data = Regex.Split(typeName, "(, )", RegexOptions.Compiled);
-
-						type = data[0];
-						assembly = data[2];
-					}
-					else if (keyString.Equals("__MethodName"))
-					{
-						method = value.ToString();
-					}
-					else if (keyString.Equals("__Args"))
-					{
-						args = new ArrayList();
-
-						object[] oArray = (object[])value;
-
-						foreach(object o in oArray)
+						if (keyString.Equals("__TypeName"))
 						{
-							args.Add(o.ToString());
+							string typeName = value.ToString();
+
+							string[] data = Regex.Split(typeName, "(, )", RegexOptions.Compiled);
+
+							if ((data != null) && (data.Length >= 3))
+							{
+								type = data[0];
+								assembly = data[2];
+							}
 						}
-					}
-					else if (keyString.Equals("__Return"))
-					{
-						result = value.ToString();
-					}
-					else if (keyString.Equals("__Uri"))
-					{
-						uri = value.ToString();
+						else if (keyString.Equals("__MethodName"))
+						{
+							method = value.ToString();
+						}
+						else if (keyString.Equals("__Args"))
+						{
+							args = new ArrayList();
+
+							object[] oArray = (object[])value;
+
+							foreach(object o in oArray)
+							{
+								if (o != null)
+								{
+									args.Add(o.ToString());
+								}
+							}
+						}
+						else if (keyString.Equals("__Return"))
+						{
+							result = value.ToString();
+						}
+						else if (keyString.Equals("__Uri"))
+						{
+							uri = value.ToString();
+						}
 					}
 				}
 			}
