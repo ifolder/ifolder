@@ -51,6 +51,7 @@ namespace Novell.iFolder
 		static TrayIcon				tIcon;
 		static Gtk.ThreadNotify		iFolderStateNotify;
 		static iFolderWebService	ifws;
+		static iFolderWindow 		ifwin;
 
 		public static void Main (string[] args)
 		{
@@ -186,41 +187,27 @@ namespace Novell.iFolder
 
 		static void show_tray_menu()
 		{
+			AccelGroup agrp = new AccelGroup();
 			Menu trayMenu = new Menu();
 
-			MenuItem connect_item = new MenuItem ("iFolder Server Connect...");
-			trayMenu.Append (connect_item);
-			connect_item.Activated += new EventHandler(show_server_info);
-
-			trayMenu.Append(new SeparatorMenuItem());
-			
-			MenuItem iFolders_item = new MenuItem ("iFolders");
+			MenuItem iFolders_item = new MenuItem ("My iFolders...");
 			trayMenu.Append (iFolders_item);
 			iFolders_item.Activated += 
 					new EventHandler(show_properties);
 			
-			trayMenu.Append(new SeparatorMenuItem());
+			MenuItem connect_item = new MenuItem ("Join Enterprise Server");
+			trayMenu.Append (connect_item);
+			connect_item.Activated += new EventHandler(show_server_info);
 
-			MenuItem about_item = new MenuItem ("About...");
-			trayMenu.Append (about_item);
-			about_item.Activated += 
-					new EventHandler(show_about);
-			MenuItem help_item = new MenuItem ("Help");
+			ImageMenuItem help_item = new ImageMenuItem (Gtk.Stock.Help, agrp);
 			trayMenu.Append (help_item);
 			help_item.Activated += 
 					new EventHandler(show_help);
 
 			trayMenu.Append(new SeparatorMenuItem());
-			
-			
-			MenuItem properties_item = new MenuItem ("Properties");
-			trayMenu.Append (properties_item);
-			properties_item.Activated += 
-					new EventHandler(show_properties);
 
-			trayMenu.Append(new SeparatorMenuItem());
 
-			MenuItem quit_item = new MenuItem ("Exit");
+			ImageMenuItem quit_item = new ImageMenuItem (Gtk.Stock.Quit, agrp);
 			quit_item.Activated += new EventHandler(quit_ifolder);
 			trayMenu.Append (quit_item);
 
@@ -270,10 +257,20 @@ CRG: WebService Fixup
 		{
 			if(CheckWebService())
 			{
-				iFolderWindow win;
+				if(ifwin == null)
+				{
+					ifwin = new iFolderWindow(ifws);
+					ifwin.ShowAll();
+				}
+				else
+				{
+					// this will raise the window to the front
+					ifwin.Present();
+				}
+//				iFolderWindow win;
 
-				win = new iFolderWindow(ifws);
-				win.ShowAll();
+//				win = new iFolderWindow(ifws);
+//				win.ShowAll();
 			}
 /*
 			ApplicationProperties propDialog;

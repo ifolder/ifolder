@@ -60,7 +60,7 @@ public class iFolderExceptionDialog : Dialog
 		v.Spacing = 12;
 		Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
 			exception.Message + "</span>");
-		l.LineWrap = false;
+		l.LineWrap = true;
 		l.UseMarkup = true;
 		l.Selectable = true;
 		l.Xalign = 0; l.Yalign = 0;

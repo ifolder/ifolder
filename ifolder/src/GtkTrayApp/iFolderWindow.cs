@@ -119,7 +119,7 @@ namespace Novell.iFolder
 
 			// Setup an event to refresh when the window is
 			// being drawn
-			this.Realized += new EventHandler(OnShowWindow);
+			this.Realized += new EventHandler(OnRealizeWidget);
 		}
 
 
@@ -149,12 +149,12 @@ namespace Novell.iFolder
 			CreateMenuItem.AddAccelerator("activate", agrp,
 				new AccelKey(Gdk.Key.C, Gdk.ModifierType.ControlMask,
 								AccelFlags.Visible));
-			CreateMenuItem.Activated += new EventHandler(On_CreateiFolder);
+			CreateMenuItem.Activated += new EventHandler(OnCreateiFolder);
 
 			iFolderMenu.Append(new SeparatorMenuItem());
 			OpenMenuItem = new ImageMenuItem ( Stock.Open, agrp );
 			iFolderMenu.Append(OpenMenuItem);
-//			OpenMenuItem.Activated += new EventHandler(On_CreateiFolder);
+			OpenMenuItem.Activated += new EventHandler(OnOpeniFolderMenu);
 
 			ShareMenuItem = new MenuItem ("Share _with...");
 			iFolderMenu.Append(ShareMenuItem);
@@ -167,7 +167,7 @@ namespace Novell.iFolder
 			RevertMenuItem = new ImageMenuItem ("Re_vert");
 			RevertMenuItem.Image = new Image(Stock.Undo, Gtk.IconSize.Menu);
 			iFolderMenu.Append(RevertMenuItem);
-//			RevertMenuItem.Activated += new EventHandler(On_CreateiFolder);
+			RevertMenuItem.Activated += new EventHandler(OnDeleteiFolder);
 
 			PropMenuItem = new ImageMenuItem (Stock.Properties, agrp);
 			iFolderMenu.Append(PropMenuItem);
@@ -176,7 +176,7 @@ namespace Novell.iFolder
 			iFolderMenu.Append(new SeparatorMenuItem());
 			CloseMenuItem = new ImageMenuItem (Stock.Close, agrp);
 			iFolderMenu.Append(CloseMenuItem);
-//			CloseMenuItem.Activated += new EventHandler(On_CreateiFolder);
+			CloseMenuItem.Activated += new EventHandler(OnCloseWindow);
 
 			MenuItem iFolderMenuItem = new MenuItem("i_Folder");
 			iFolderMenuItem.Submenu = iFolderMenu;
@@ -191,7 +191,8 @@ namespace Novell.iFolder
 			RefreshMenuItem = 
 				new ImageMenuItem(Stock.Refresh, agrp);
 			ViewMenu.Append(RefreshMenuItem);
-//			RefreshMenuItem.Activated += new EventHandler(On_CreateiFolder);
+			RefreshMenuItem.Activated += 
+					new EventHandler(RefreshiFolderTreeView);
 
 			MenuItem ViewMenuItem = new MenuItem("_View");
 			ViewMenuItem.Submenu = ViewMenu;
@@ -309,7 +310,7 @@ namespace Novell.iFolder
 			HBox leftHBox = new HBox(true, 6);
 			Button add_button = new Button(Gtk.Stock.Add);
 
-			add_button.Clicked += new EventHandler(On_CreateiFolder);
+			add_button.Clicked += new EventHandler(OnCreateiFolder);
 			
 			leftHBox.PackEnd(add_button);
 			hbox.PackEnd(leftHBox, false, false, 0);
@@ -321,7 +322,7 @@ namespace Novell.iFolder
 
 
 
-		private void OnShowWindow(object o, EventArgs args)
+		private void OnRealizeWidget(object o, EventArgs args)
 		{
 			RefreshiFolderTreeView(o, args);
 		}
@@ -408,23 +409,22 @@ namespace Novell.iFolder
 		}
 
 
-
-		private void On_CreateiFolder(object o, EventArgs args)
-		{
-			Console.WriteLine("Create an iFolder here");
-			// TODO
-		}
-
-
-
-
+		// This message is sent when the window is deleted 
+		// or the X is clicked.  We just want to hide it so
+		// we set the args.RetVal to true saying we handled the
+		// delete even when we didn't
 		private void WindowDelete (object o, DeleteEventArgs args)
 		{
-			this.Hide ();
-			this.Destroy ();
+			OnCloseWindow(o, args);
 			args.RetVal = true;
 		}
 
+
+
+		private void OnCloseWindow(object o, EventArgs args)
+		{
+			this.Hide ();
+		}
 
 
 
@@ -525,7 +525,7 @@ namespace Novell.iFolder
 							new MenuItem ("Open");
 						ifMenu.Append (item_open);
 						item_open.Activated += new EventHandler(
-								OnOpeniFolderContactMenu);
+								OnOpeniFolderMenu);
 
 						MenuItem item_share = 
 							new MenuItem ("Share with...");
@@ -537,7 +537,7 @@ namespace Novell.iFolder
 								new MenuItem ("Revert to a Normal Folder");
 						ifMenu.Append (item_revert);
 						item_revert.Activated += new EventHandler(
-								on_deleteiFolder);
+								OnDeleteiFolder);
 
 						ifMenu.Append(new SeparatorMenuItem());
 
@@ -566,7 +566,7 @@ namespace Novell.iFolder
 							new MenuItem ("Create iFolder");
 						ifMenu.Append (item_create);
 						item_create.Activated += 
-							new EventHandler(on_newiFolder);
+							new EventHandler(OnCreateiFolder);
 
 						MenuItem item_refresh = 
 							new MenuItem ("Refresh List");
@@ -584,7 +584,7 @@ namespace Novell.iFolder
 			}
 		}
 
-		private void OnOpeniFolderContactMenu(object o, EventArgs args)
+		private void OnOpeniFolderMenu(object o, EventArgs args)
 		{
 			OpenSelectediFolder();
 		}
@@ -698,7 +698,7 @@ namespace Novell.iFolder
 
 
 
-		public void on_deleteiFolder(object o, EventArgs args)
+		public void OnDeleteiFolder(object o, EventArgs args)
 		{
 			TreeSelection tSelect = iFolderTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
@@ -745,7 +745,7 @@ namespace Novell.iFolder
 
 
 
-		public void on_newiFolder(object o, EventArgs args)
+		public void OnCreateiFolder(object o, EventArgs args)
 		{
 			// create a file selection dialog and turn off all of the
 			// file operations and controlls
