@@ -37,13 +37,7 @@ namespace Simias.Domain
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(DomainAgent));
 
-		private static readonly string SectionName = "Domain";
-
-		/// <summary>
-		/// The suggested service url for the current machine.
-		/// </summary>
-		private static readonly Uri DefaultServiceUrl = (new UriBuilder("http",
-			MyDns.GetHostName(), 6346, EndPoint)).Uri;
+		private static readonly string SectionName = "Enterprise";
 
 		private static readonly string UrlKeyName = "Service URL";
 		
@@ -52,8 +46,7 @@ namespace Simias.Domain
 		/// </summary>
 		private static readonly bool DefaultEnabled = false;
 
-		private static readonly string EnabledKeyName = "Enabled";
-		
+		private static readonly string EnabledKeyName = "Client Enabled";
 		
 		private Configuration config;
 
@@ -68,7 +61,7 @@ namespace Simias.Domain
 			this.Enabled = false;
 
 			// update service URL
-			UriBuilder url = new UriBuilder(this.ServiceUrl);
+			UriBuilder url = new UriBuilder(SimiasRemoting.GetServiceUrl(EndPoint));
 			url.Host = host;
 			this.ServiceUrl = url.Uri;
 			log.Debug("Updated Domain Service URL: {0}", ServiceUrl);
@@ -234,7 +227,7 @@ namespace Simias.Domain
 
 		public Uri ServiceUrl
 		{
-			get { return new Uri(config.Get(SectionName, UrlKeyName, DefaultServiceUrl.ToString())); }
+			get { return new Uri(config.Get(SectionName, UrlKeyName, SimiasRemoting.GetServiceUrl(EndPoint).ToString())); }
 
 			set { config.Set(SectionName, UrlKeyName, value.ToString()); }
 		}

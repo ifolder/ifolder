@@ -11,7 +11,6 @@
 				<channel ref="http" name="SimiasClientChannel">
 			
 					<clientProviders>
-						<provider ref="sniffer" />
 						<formatter ref="binary" />
 					</clientProviders>
 				
@@ -22,7 +21,6 @@
 			
 					<serverProviders>
 						<formatter ref="binary" typeFilterLevel="Full" />
-						<provider ref="sniffer" />
 					</serverProviders>
 				
 				</channel>
