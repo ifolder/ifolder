@@ -83,9 +83,10 @@
 		{
 			iFolderDomain *newDomain = [newDomains objectAtIndex:domainCount];
 			
+			if( [[newDomain IsDefault] boolValue] )
+				defaultDomain = newDomain;
+
 			[self addDomain:newDomain];
-			if( [newDomain IsDefault] )
-				[domainsController setSelectionIndex:domainCount];
 		}
 //		[domainsController addObjects:newDomains];
 		
@@ -175,8 +176,8 @@
 
 - (IBAction)newiFolder:(id)sender
 {
-	[createSheetController setSelectedDomain:
-		[[domainsController selectedObjects] objectAtIndex:[domainsController selectionIndex] ] ];
+	
+	[createSheetController setSelectedDomain:defaultDomain];
 	[createSheetController showWindow:self];
 }
 

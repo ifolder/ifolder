@@ -54,7 +54,8 @@
 -(NSString *)UserName;
 -(NSString *)Host;
 -(NSString *)Password;
--(bool)IsDefault;
+-(NSNumber *)IsDefault;
+
 
 
 @end

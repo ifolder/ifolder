@@ -192,7 +192,7 @@
 		{
 			[icon release];
 		}
-		icon = [NSImage imageNamed:@"ifolderonserver24"];
+		icon = [NSImage imageNamed:@"serverifolder24"];
 		[icon setScalesWhenResized:YES];
 	}
 	else
