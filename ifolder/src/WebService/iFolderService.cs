@@ -2081,8 +2081,6 @@ namespace Novell.iFolder.Web
 		}
 
 
-		
-	
 		/// <summary>
 		/// WebMethod that sets the File Size Limit of an iFolder.
 		/// </summary>
@@ -2099,6 +2097,32 @@ namespace Novell.iFolder.Web
 				throw new Exception("Invalid iFolderID");
 
 			FileSizeFilter.Set(col, Limit);
+		}
+
+		/// <summary>
+		/// Checks to see if there is a newer client application on the domain server and
+		/// prompts the user to upgrade.
+		/// </summary>
+		/// <param name="domainID">The ID of the domain to check for updates against.</param>
+		/// <returns>The version of the update if available. Otherwise null is returned.</returns>
+		[WebMethod(Description="Check for an available update")]
+		[SoapDocumentMethod]
+		public string CheckForUpdatedClient(string domainID)
+		{
+			return Novell.iFolder.Install.ClientUpgrade.CheckForUpdate(domainID);
+		}
+
+		/// <summary>
+		/// Gets the updated client application and runs the installation program.
+		/// Note: This call will return before the application is updated.
+		/// </summary>
+		/// <param name="domainID">The ID of the domain to check for updates against.</param>
+		/// <returns>True if the installation program is successfully started. Otherwise false is returned.</returns>
+		[WebMethod(Description="Run the client update")]
+		[SoapDocumentMethod]
+		public bool RunClientUpdate(string domainID)
+		{
+			return Novell.iFolder.Install.ClientUpgrade.RunUpdate(domainID);
 		}
 	}
 }

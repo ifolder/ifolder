@@ -73,6 +73,10 @@ namespace Simias.Sync
 		/// The collection is locked.
 		/// </summary>
 		Locked,
+		/// <summary>
+		/// The user has not been authenticated.
+		/// </summary>
+		UserNotAuthenticated,
 	};
 
 	#endregion
@@ -660,7 +664,7 @@ namespace Simias.Sync
 			// Setup the url to the server.
 			string userID = store.GetUserIDFromDomainID(collection.Domain);
 			string userName = collection.GetMemberByID(userID).Name;
-			service = new HttpSyncProxy(collection, userName, store.GetUserIDFromDomainID(collection.Domain));
+			service = new HttpSyncProxy(collection, userName, userID);
 
 			SyncNodeInfo[] cstamps;
 			
@@ -730,6 +734,9 @@ namespace Simias.Sync
 						break;
 					case StartSyncStatus.NoWork:
 						log.Debug("No work to do");
+						break;
+					case StartSyncStatus.UserNotAuthenticated:
+						log.Debug("The user could not be authenticated");
 						break;
 					case StartSyncStatus.Success:
 					switch (rights)

@@ -516,7 +516,7 @@ namespace Novell.FormsTrayApp
 						{
 							try
 							{
-								updateStarted = FormsTrayApp.CheckForClientUpdate(domainInfo.ID, userName.Text, password.Text);
+								updateStarted = FormsTrayApp.CheckForClientUpdate(domainInfo.ID);
 							}
 							catch // Ignore
 							{

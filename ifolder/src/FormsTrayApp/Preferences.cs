@@ -1667,7 +1667,7 @@ namespace Novell.FormsTrayApp
 									try
 									{
 										// Check for an update.
-										if (FormsTrayApp.CheckForClientUpdate(domainInfo.ID, userName.Text, password.Text))
+										if (FormsTrayApp.CheckForClientUpdate(domainInfo.ID))
 										{
 											if (ShutdownTrayApp != null)
 											{
@@ -2740,7 +2740,7 @@ namespace Novell.FormsTrayApp
 								try
 								{
 									Cursor.Current = Cursors.WaitCursor;
-									bool update = FormsTrayApp.CheckForClientUpdate(domain.ID, userName.Text, password.Text);
+									bool update = FormsTrayApp.CheckForClientUpdate(domain.ID);
 									Cursor.Current = Cursors.Default;
 									if (update)
 									{

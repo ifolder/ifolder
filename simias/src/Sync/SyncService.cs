@@ -207,21 +207,25 @@ namespace Simias.Sync
 			// Check our rights.
 			member = null;
 			string userID = Thread.CurrentPrincipal.Identity.Name;
-			if (userID != null)
+			if (userID != null && userID.Length != 0)
 			{
-				if (userID.Length != 0)
-					member = collection.GetMemberByID(userID);
+				member = collection.GetMemberByID(userID);
 				if (member != null)
 				{
 					collection.Impersonate(member);
 					rights = member.Rights;
 					si.Access = rights;
 				}
+				else
+				{
+					si.Status = StartSyncStatus.AccessDenied;
+					return;
+				}
 			}
-
-			if (member == null)
+			else
 			{
-				si.Status = StartSyncStatus.AccessDenied;
+				// We are not authenticated.
+				si.Status = StartSyncStatus.UserNotAuthenticated;
 				return;
 			}
 
