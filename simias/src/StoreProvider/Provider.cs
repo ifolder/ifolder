@@ -269,7 +269,6 @@ namespace Simias.Storage.Provider
 		/// <returns></returns>
 		public static IProvider Connect(string path, out bool created)
 		{
-			path = Provider.fixupPath(path);
 			return (LoadProvider(new Configuration(path), out created));
 		}
 		
@@ -283,7 +282,6 @@ namespace Simias.Storage.Provider
 		/// <returns></returns>
 		public static IProvider Connect(string assembly, string providerType, string path, out bool created)
 		{
-			path = Provider.fixupPath(path);
 			Configuration conf = new Configuration(path);
 			conf.Assembly = assembly;
 			conf.TypeName = providerType;
@@ -374,7 +372,6 @@ namespace Simias.Storage.Provider
 		/// </summary>
 		public static void Delete(string path)
 		{
-			//string path = DbPath;
 			if (Directory.Exists(path))
 			{
 				Directory.Delete(path, true);
@@ -391,12 +388,7 @@ namespace Simias.Storage.Provider
 				return Simias.Configuration.DefaultPath;
 			}
 		}
-
-		private static string fixupPath(string path)
-		{
-			return Simias.Configuration.fixupPath(path);
-		}
-
+		
 		#endregion
 	}
 
@@ -419,7 +411,7 @@ namespace Simias.Storage.Provider
 		internal Configuration(string path)
 		{
 			conf = new Simias.Configuration(path);
-			Path = path;
+			Path = conf.BasePath;
 		}
 
 		/// <summary>
