@@ -58,25 +58,6 @@ namespace Simias.POBox
 			this.poBox = poBox;
 			this.subscription = subscription;
 			this.threads = threads;
-
-			/*
-			if (subscription.SubscriptionCollectionURL != null && 
-				subscription.SubscriptionCollectionURL != "")
-			{
-				this.poServiceUrl = subscription.SubscriptionCollectionURL + poServiceLabel;
-			}
-			else
-			{
-				Collection cCollection = 
-					poBox.StoreReference.GetCollectionByID(subscription.SubscriptionCollectionID); 
-				if (cCollection == null)
-				{
-					throw new ApplicationException("Invalid shared collection ID");
-				}
-
-				poServiceUrl = cCollection.MasterUrl.ToString() + poServiceLabel;
-			}
-			*/
 		}
 
 		/// <summary>
@@ -88,7 +69,7 @@ namespace Simias.POBox
 
 			try
 			{
-				while(!done)
+				while( done == false )
 				{
 					try
 					{
@@ -143,8 +124,9 @@ namespace Simias.POBox
 
 		private bool DoInvited()
 		{
-			bool result = true;
-			log.Debug("SubscriptionThread::DoInvited called");
+			bool result = false;
+			log.Debug( "SubscriptionThread::DoInvited called" );
+
 			POBoxService poService = new POBoxService();
 			poService.PreAuthenticate = true;
 			poService.CookieContainer = new CookieContainer();
@@ -160,7 +142,7 @@ namespace Simias.POBox
 			else
 			{
 				log.Debug( "  Could not resolve the PO Box location for: " + subscription.FromIdentity );
-				return false;
+				return result;
 			}
 
 			Credentials cSimiasCreds = 
@@ -170,7 +152,7 @@ namespace Simias.POBox
 			if ( poService.Credentials == null )
 			{
 				log.Debug( "  no credentials - back to sleep" );
-				return false;
+				return result;
 			}
 
 			//
@@ -181,7 +163,7 @@ namespace Simias.POBox
 				Store.GetStore().GetCollectionByID(subscription.SubscriptionCollectionID);
 			if (cSharedCollection == null)
 			{
-				return (false);
+				return result;
 			}
 
 			if ( cSharedCollection.Role == SyncRoles.Slave &&
@@ -190,7 +172,7 @@ namespace Simias.POBox
 				log.Debug(
 					"Failed POBoxService::Invite - collection: {0} hasn't sync'd to the server yet",
 					subscription.SubscriptionCollectionID);
-				return (false);
+				return result;
 			}
 
 			//
@@ -209,12 +191,12 @@ namespace Simias.POBox
 						"Failed POBoxService::Invite - inviter's subscription {0} hasn't sync'd to the server yet",
 						subscription.MessageID);
 
-					return false;
+					return result;
 				}
 			}
 		
-			// This is an enterprise pobox contact the POService.
-			log.Debug("Connecting to the Post Office Service : {0}", subscription.POServiceURL);
+			// Remove location of the POBox service
+			log.Debug( "Connecting to the Post Office Service : " + poService.Url );
 
 			try
 			{
@@ -224,31 +206,22 @@ namespace Simias.POBox
 				subscription.FromIdentity = me.UserID;
 				subscription.FromName = me.Name;
 
-				bool status =
-					poService.Invite(
-						subscription.DomainID,
-						subscription.FromIdentity,
-						subscription.ToIdentity,
-						subscription.SubscriptionCollectionID,
-						subscription.SubscriptionCollectionType,
-						(int) subscription.SubscriptionRights,
-						subscription.MessageID);
-				if (status)
+				POBoxStatus status = poService.Invite( subscription.GenerateSubscriptionMessage() );
+				if ( status == POBoxStatus.Success )
 				{
 					// FIXME:: sync my PostOffice right now!
 					subscription.SubscriptionState = SubscriptionStates.Posted;
-					poBox.Commit(subscription);
+					poBox.Commit( subscription );
+					result = true;
 				}
 				else
 				{
-					log.Debug("Failed the remote invite call");
-					result = false;
+					log.Debug( "Failed the remote invite call -  Status: " + status.ToString() );
 				}
 			}
 			catch
 			{
-				log.Debug("Failed POBoxService::Invite - target: " + poService.Url);
-				result = false;
+				log.Debug( "Failed POBoxService::Invite - target: " + poService.Url );
 			}
 
 			return result;
@@ -256,12 +229,12 @@ namespace Simias.POBox
 
 		private bool DoReplied()
 		{
-			log.Debug("DoReplied - Connecting to the Post Office Service : {0}", subscription.POServiceURL);
-			log.Debug("  calling the PO Box server to accept/reject subscription");
-			log.Debug("  domainID: " + subscription.DomainID);
-			log.Debug("  fromID:   " + subscription.FromIdentity);
-			log.Debug("  toID:     " + subscription.ToIdentity);
-			log.Debug("  SubID:    " + subscription.MessageID);
+			log.Debug( "DoReplied" );
+			log.Debug( "  calling the PO Box server to accept/reject subscription" );
+			log.Debug( "  domainID: " + subscription.DomainID );
+			log.Debug( "  fromID:   " + subscription.FromIdentity );
+			log.Debug( "  toID:     " + subscription.ToIdentity );
+			log.Debug( "  SubID:    " + subscription.MessageID );
 
 			bool result = false;
 			POBoxService poService = new POBoxService();
@@ -282,43 +255,39 @@ namespace Simias.POBox
 				return false;
 			}
 
+			log.Debug( "  connecting to the Post Office Service : " + poService.Url );
+
 			// Get credentials for the request
 			Credentials cSimiasCreds = 
 				new Credentials(subscription.DomainID, subscription.ToIdentity);
 			poService.Credentials = cSimiasCreds.GetCredentials();
 			if (poService.Credentials == null)
 			{
-				log.Debug("  no credentials - back to sleep");
+				log.Debug( "  no credentials - back to sleep" );
 				return result;
 			}
 
 			try
 			{
-				if (subscription.SubscriptionDisposition == SubscriptionDispositions.Accepted)
+				if ( subscription.SubscriptionDisposition == SubscriptionDispositions.Accepted )
 				{
 					log.Debug("  subscription accepted!");
-					wsStatus =
-						poService.AcceptedSubscription(
-							subscription.DomainID,
-							subscription.FromIdentity,
-							subscription.ToIdentity,
-							subscription.MessageID,
-							subscription.SubscriptionCollectionID);
 
-					// update local subscription
-					if (wsStatus == POBoxStatus.Success)
+					SubscriptionMsg subMsg = subscription.GenerateSubscriptionMessage();
+					wsStatus = poService.AcceptedSubscription( subMsg );
+					if ( wsStatus == POBoxStatus.Success )
 					{
 						subscription.SubscriptionState = SubscriptionStates.Delivered;
-						poBox.Commit(subscription);
+						poBox.Commit( subscription );
 					}
 					else
 					if (wsStatus == POBoxStatus.UnknownSubscription)
 					{
-						log.Debug("Failed accepting/declining a subscription");
-						log.Debug("The subscription did not exist on the server");
-						log.Debug("Deleting the local subscription");
+						log.Debug( "Failed accepting/declining a subscription" );
+						log.Debug( "The subscription did not exist on the server" );
+						log.Debug( "Deleting the local subscription" );
 
-						poBox.Commit(poBox.Delete(subscription));
+						poBox.Commit( poBox.Delete( subscription ) );
 
 						// return true so the thread controlling the
 						// subscription will die off
@@ -332,30 +301,25 @@ namespace Simias.POBox
 					}
 				}
 				else
-				if (subscription.SubscriptionDisposition == SubscriptionDispositions.Declined)
+				if ( subscription.SubscriptionDisposition == SubscriptionDispositions.Declined )
 				{
 					log.Debug("  subscription declined");
-					wsStatus =
-						poService.DeclinedSubscription(
-							subscription.DomainID,
-							subscription.FromIdentity,
-							subscription.ToIdentity,
-							subscription.MessageID,
-							subscription.SubscriptionCollectionID);
 
+					SubscriptionMsg subMsg = subscription.GenerateSubscriptionMessage();
+					wsStatus = poService.DeclinedSubscription( subMsg );
 					if (wsStatus == POBoxStatus.Success)
 					{
 						// This subscription is done!
 						result = true;
 					}
 					else
-					if (wsStatus == POBoxStatus.UnknownCollection)
+					if ( wsStatus == POBoxStatus.UnknownCollection )
 					{
-						log.Debug("Failed declining a subscription");
-						log.Debug("The Collection did not exist on the server");
-						log.Debug("Deleting the local subscription");
+						log.Debug( "Failed declining a subscription" );
+						log.Debug( "The Collection did not exist on the server" );
+						log.Debug( "Deleting the local subscription" );
 
-						poBox.Commit(poBox.Delete(subscription));
+						poBox.Commit( poBox.Delete( subscription ) );
 						result = true;
 					}
 				}
@@ -375,10 +339,10 @@ namespace Simias.POBox
 			bool result = false;
 
 			//log.Debug("DoDelivered::Connecting to the Post Office Service : {0}", this.poServiceUrl);
-			log.Debug("  calling the PO Box server to get subscription state");
-			log.Debug("  domainID: " + subscription.DomainID);
-			log.Debug("  fromID:   " + subscription.FromIdentity);
-			log.Debug("  SubID:    " + subscription.MessageID);
+			log.Debug("  calling the PO Box server to get subscription state" );
+			log.Debug("  domainID: " + subscription.DomainID );
+			log.Debug("  fromID:   " + subscription.FromIdentity );
+			log.Debug("  SubID:    " + subscription.MessageID );
 
 			POBoxService poService = new POBoxService();
 			poService.PreAuthenticate = true;
@@ -394,16 +358,16 @@ namespace Simias.POBox
 			else
 			{
 				log.Debug( "  Could not resolve the PO Box location for: " + subscription.FromIdentity );
-				return false;
+				return result;
 			}
 
 			Credentials cSimiasCreds = 
 				new Credentials(subscription.DomainID, subscription.ToIdentity);
 			poService.Credentials = cSimiasCreds.GetCredentials();
-			if (poService.Credentials == null)
+			if ( poService.Credentials == null )
 			{
-				log.Debug("  no credentials - back to sleep");
-				return(result);
+				log.Debug( "  no credentials - back to sleep" );
+				return result;
 			}
 
 			try
@@ -414,24 +378,24 @@ namespace Simias.POBox
 						subscription.FromIdentity,
 						subscription.MessageID);
 
-				if (subInfo != null)
+				if ( subInfo != null )
 				{
-					log.Debug("  subInfo.FromName: " + subInfo.FromName);
-					log.Debug("  subInfo.ToName: " + subInfo.ToName);
-					log.Debug("  subInfo.State: " + subInfo.State.ToString());
-					log.Debug("  subInfo.Disposition: " + subInfo.Disposition.ToString());
+					log.Debug( "  subInfo.FromName: " + subInfo.FromName );
+					log.Debug( "  subInfo.ToName: " + subInfo.ToName );
+					log.Debug( "  subInfo.State: " + subInfo.State.ToString() );
+					log.Debug( "  subInfo.Disposition: " + subInfo.Disposition.ToString() );
 				}
 
 				// update subscription
-				if (subInfo.State == (int) SubscriptionStates.Responded)
+				if ( subInfo.State == (int) SubscriptionStates.Responded )
 				{
 					// create proxy
-					if (subInfo.Disposition == (int) SubscriptionDispositions.Accepted)
+					if ( subInfo.Disposition == (int) SubscriptionDispositions.Accepted )
 					{
-						log.Debug("Creating collection...");
+						log.Debug( "Creating collection..." );
 
 						// do not re-create the proxy
-						if (poBox.StoreReference.GetCollectionByID(subscription.SubscriptionCollectionID) == null)
+						if ( poBox.StoreReference.GetCollectionByID( subscription.SubscriptionCollectionID ) == null )
 						{
 							SubscriptionDetails details = new SubscriptionDetails();
 							details.DirNodeID = subInfo.DirNodeID;
@@ -444,38 +408,32 @@ namespace Simias.POBox
 								(Simias.Storage.Access.Rights) subInfo.AccessRights;
 
 							// save details
-							subscription.AddDetails(details);
-							poBox.Commit(subscription);
+							subscription.AddDetails( details );
+							poBox.Commit( subscription );
 					
 							// create slave stub
 							subscription.ToMemberNodeID = subInfo.ToNodeID;
-							subscription.CreateSlave(poBox.StoreReference);
+							subscription.CreateSlave( poBox.StoreReference );
 						}
-
+						
 						// acknowledge the message
 						// which removes the originator's 
-						POBoxStatus wsStatus =
-							poService.AckSubscription(
-								subscription.DomainID,
-								subscription.FromIdentity, 
-								subscription.ToIdentity,
-								subscription.MessageID,
-								subscription.SubscriptionCollectionID);
-
-						if (wsStatus == POBoxStatus.Success)
+						SubscriptionMsg subMsg = subscription.GenerateSubscriptionMessage();
+						POBoxStatus wsStatus = poService.AckSubscription( subMsg );
+						if ( wsStatus == POBoxStatus.Success )
 						{
 							// done with the subscription - move to local subscription to the ready state
 							subscription.SubscriptionState = SubscriptionStates.Ready;
-							poBox.Commit(subscription);
+							poBox.Commit( subscription );
 						}
-						else
+						else 
 						if (wsStatus == POBoxStatus.UnknownSubscription)
 						{
-							log.Debug("Failed acknowledging a subscription");
-							log.Debug("The subscription did not exist on the server");
-							log.Debug("Deleting the local subscription");
+							log.Debug( "Failed acknowledging a subscription" );
+							log.Debug( "The subscription did not exist on the server" );
+							log.Debug( "Deleting the local subscription" );
 
-							poBox.Commit(poBox.Delete(subscription));
+							poBox.Commit( poBox.Delete( subscription ) );
 
 							// return true so the thread controlling the
 							// subscription will die off
@@ -491,7 +449,7 @@ namespace Simias.POBox
 					else
 					{
 						// Remove the subscription from the local PO box
-						poBox.Commit(poBox.Delete(subscription));
+						poBox.Commit( poBox.Delete( subscription ) );
 					}
 
 					// done

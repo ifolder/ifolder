@@ -131,11 +131,6 @@ namespace Simias.POBox
 		public const string SubjectProperty = "Subject";
 
 		/// <summary>
-		/// The name of the property storing the master URL.
-		/// </summary>
-		public const string MasterURLProperty = "MasterUrl";
-		
-		/// <summary>
 		/// The name of the property storing the domain id.
 		/// </summary>
 		public const string DomainIDProperty = "DomainID";
@@ -325,22 +320,6 @@ namespace Simias.POBox
 			}
 		}
 
-		/// <summary>
-		/// Gets/sets the master URL for the collection.
-		/// </summary>
-		public Uri MasterURL
-		{
-			get
-			{
-				Property p = properties.FindSingleValue(MasterURLProperty);
-				return (p != null) ? (Uri)p.Value : null;
-			}
-			set
-			{
-				properties.ModifyNodeProperty(MasterURLProperty, value);
-			}
-		}
-		
 		/// <summary>
 		/// Gets/sets the identity domain id.
 		/// </summary>

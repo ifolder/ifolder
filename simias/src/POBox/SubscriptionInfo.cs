@@ -189,15 +189,6 @@ namespace Simias.POBox
 			set { fields[Subscription.SubscriptionCollectionHasDirNodeProperty] = value.ToString(); }
 		}
 
-		/// <summary>
-		/// The post office service URL
-		/// </summary>
-		public Uri POServiceUrl
-		{
-			get { return new Uri(fields[Subscription.POServiceURLProperty]); }
-			set { fields[Subscription.POServiceURLProperty] = value.ToString(); }
-		}
-
 		#endregion Properties
 	}
 

@@ -163,19 +163,9 @@ namespace Simias.POBox
 		public const string SubscriptionCollectionTypeProperty = "SbColType";
 
 		/// <summary>
-		/// The name of the property storing the collection master URL.
-		/// </summary>
-		public const string SubscriptionCollectionURLProperty = "SbColURL";
-
-		/// <summary>
 		/// The name of the property storing the value that tells if the collection has a DirNode.
 		/// </summary>
 		public static readonly string SubscriptionCollectionHasDirNodeProperty = "HasDirNode";
-
-		/// <summary>
-		/// The name of the property storing the post office service url.
-		/// </summary>
-		public static readonly string POServiceURLProperty = "POSvcURL";
 
 		/// <summary>
 		/// The name of the property storing the collection description.
@@ -235,7 +225,6 @@ namespace Simias.POBox
 			SubscriptionCollectionName = subscriptionInfo.SubscriptionCollectionName;
 			SubscriptionCollectionType = subscriptionInfo.SubscriptionCollectionType;
 			HasDirNode = subscriptionInfo.SubscriptionCollectionHasDirNode;
-			POServiceURL = subscriptionInfo.POServiceUrl;
 		}
 
 		/// <summary>
@@ -465,40 +454,6 @@ namespace Simias.POBox
 		}
 
 		/// <summary>
-		/// Gets/sets the master URL of the collection to share.
-		/// </summary>
-		public string SubscriptionCollectionURL
-		{
-			get
-			{
-				Property p = properties.FindSingleValue(SubscriptionCollectionURLProperty);
-
-				return (p != null) ? p.ToString() : null;
-			}
-			set
-			{
-				properties.ModifyNodeProperty(SubscriptionCollectionURLProperty, value);
-			}
-		}
-
-		/// <summary>
-		/// Gets/sets the URL of the post office service.
-		/// </summary>
-		public Uri POServiceURL
-		{
-			get
-			{
-				Property p = properties.FindSingleValue(POServiceURLProperty);
-
-				return (p != null) ? (Uri)p.Value : null;
-			}
-			set
-			{
-				properties.ModifyNodeProperty(POServiceURLProperty, value);
-			}
-		}
-
-		/// <summary>
 		/// Gets/sets the description of the collection to share.
 		/// </summary>
 		public string CollectionDescription
@@ -719,11 +674,6 @@ namespace Simias.POBox
 			si.DomainID = DomainID;
 			si.DomainName = DomainName;
 			
-			// TODO: where should this be set?
-			// TODO: si.POServiceUrl = POServiceURL;
-			Collection sc = store.GetCollectionByID(si.SubscriptionCollectionID);
-			si.POServiceUrl = new Uri(sc.MasterUrl.ToString() + "/POService.asmx");
-			
 			si.SubscriptionCollectionID = SubscriptionCollectionID;
 			si.SubscriptionCollectionName = SubscriptionCollectionName;
 			si.SubscriptionCollectionType = SubscriptionCollectionType;
@@ -736,6 +686,37 @@ namespace Simias.POBox
 				(c != null) ? (c.GetRootDirectory() != null) : false;
 			
 			return si;
+		}
+
+		/// <summary>
+		/// Generates a SubscriptionInfo object from the Subscription object
+		/// </summary>
+		/// <returns>A SubscriptionInfo object</returns>
+		public SubscriptionMsg GenerateSubscriptionMessage()
+		{
+
+			SubscriptionMsg subMsg = new SubscriptionMsg();
+			subMsg.DomainID = this.DomainID;
+			subMsg.FromID = this.FromIdentity;
+			subMsg.ToID = this.ToIdentity;
+			subMsg.SharedCollectionID = this.SubscriptionCollectionID;
+			subMsg.SharedCollectionType = this.SubscriptionCollectionType;
+			subMsg.SharedCollectionName = this.SubscriptionCollectionName;
+			subMsg.AccessRights = (int) this.SubscriptionRights;
+			subMsg.SubscriptionID = this.MessageID;
+
+			Collection collection = Store.GetStore().GetCollectionByID( subMsg.SharedCollectionID );
+			if ( collection != null )
+			{
+				DirNode dirNode = collection.GetRootDirectory();
+				if( dirNode != null )
+				{
+					subMsg.DirNodeID = dirNode.ID;
+					subMsg.DirNodeName = dirNode.Name;
+				}
+			}
+
+			return subMsg;
 		}
 		
 		/// <summary>
@@ -769,8 +750,6 @@ namespace Simias.POBox
 				{
 					this.DirNodeName = details.DirNodeName;
 				}
-
-				this.SubscriptionCollectionURL = details.CollectionUrl;
 			}
 		}
 
