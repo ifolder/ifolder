@@ -33,19 +33,27 @@ using Nautilus;
 
 namespace Novell.iFolder
 {
-	public class NautilusProvider : GLib.Object, 
-									Nautilus.PropertyPageProvider, 
-									Nautilus.MenuProvider,
-									Nautilus.InfoProvider 
-
-/*	public class NautilusProvider : Nautilus.PropertyPageProvider, 
-									Nautilus.MenuProvider,
-									Nautilus.InfoProvider 
-*/
+	// FIXME: This derives from Gtk.Object right now, because of 
+	// a bug that has been fixed in cvs gtk-sharp.  When gtk-sharp
+	// 1.0 is out, this class should derive from GLib.Object instead
+	public class NautilusProvider : Gtk.Object,
+		Nautilus.PropertyPageProvider, 
+		Nautilus.MenuProvider,
+		Nautilus.InfoProvider 
 	{
 		iFolderManager ifmgr;
 
-		public NautilusProvider () : base(IntPtr.Zero)
+		static GLib.GType gtype = GLib.GType.Invalid;
+		public static new GLib.GType GType {
+			get {
+				gtype = GLib.Object.GType;
+				if (gtype == GLib.GType.Invalid)
+					gtype = RegisterGType (typeof (NautilusProvider));
+				return gtype;
+			}
+		}
+						
+		public NautilusProvider () : base (GType)
 		{
 			ifmgr = iFolderManager.Connect();
 		}
@@ -225,6 +233,7 @@ namespace Novell.iFolder
 			{
 				if(ifmgr.IsiFolder(GetLocalPath (file)))
 				{
+					System.Console.WriteLine ("adding emblem to {0}", file.Uri);
 					file.AddEmblem ("ifolder");
 				}
 			}
