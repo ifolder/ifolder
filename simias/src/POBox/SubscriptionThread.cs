@@ -175,6 +175,7 @@ namespace Simias.POBox
 			subscription.SubscriptionState = SubscriptionStates.Posted;
 			poBox.Commit(subscription);
 
+			// always return false to drop to the next 
 			return true;
 		}
 
@@ -204,7 +205,8 @@ namespace Simias.POBox
 			subscription.SubscriptionState = SubscriptionStates.Delivered;
 			poBox.Commit(subscription);
 
-			return true;
+			// always return false to drop to the next state
+			return false;
 		}
 
 		private bool DoDelivered()

@@ -1394,17 +1394,17 @@ namespace Novell.iFolder.iFolderCom
 		private void menuAccept_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = this.shareWith.SelectedItems[0];
-			Subscription subs = (Subscription)lvi.Tag;
-			subs.Accept(ifolder.StoreReference, this.stringToRights(lvi.SubItems[2].Text));
-			poBox.Commit(subs);
+			ShareListMember slMember = (ShareListMember)lvi.Tag;
+			slMember.Subscription.Accept(ifolder.StoreReference, this.stringToRights(lvi.SubItems[2].Text));
+			poBox.Commit(slMember.Subscription);
 		}
 
 		private void menuDecline_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = this.shareWith.SelectedItems[0];
-			Subscription subs = (Subscription)lvi.Tag;
-			subs.Decline();
-			poBox.Commit(subs);
+			ShareListMember slMember = (ShareListMember)lvi.Tag;
+			slMember.Subscription.Decline();
+			poBox.Commit(slMember.Subscription);
 		}
 
 		private void contextMenu1_Popup(object sender, System.EventArgs e)

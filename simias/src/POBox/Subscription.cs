@@ -614,18 +614,18 @@ namespace Simias.POBox
 			// TODO: sc.SetType(this, this.SubscriptionCollectionTypes);
 			sc.SetType(this, "iFolder");
 			
-			// sync information
-			sc.MasterUrl = new Uri(this.SubscriptionCollectionURL);
-			sc.Role = SyncCollectionRoles.Slave;
-			
 			// member
-			Member member = new Member(this.ToName, this.ToIdentity, Access.Rights.ReadWrite);
+			Member member = new Member(this.FromName, this.FromIdentity, Access.Rights.ReadWrite);
 
 			// impersonate the member
 			sc.Impersonate(member);
 
 			// commit
 			sc.Commit(new Node[] {sc, member});
+
+			// sync information
+			sc.MasterUrl = new Uri(this.SubscriptionCollectionURL);
+			sc.Role = SyncCollectionRoles.Slave;
 
 			// check for a dir node
 			if (((this.DirNodeID != null) && (this.DirNodeID.Length > 0))

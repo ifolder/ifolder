@@ -165,7 +165,7 @@ namespace Simias.POBox
 			// check that the message has already not been posted
 			Node node = box.GetNodeByID(message);
 
-			if (node != null)
+			if (node == null)
 				throw new ApplicationException("Subscription already exists.");
 
 			// get the status object
@@ -177,7 +177,7 @@ namespace Simias.POBox
 
 		public SubscriptionDetails GetSubscriptionDetails(string domain, string identity, string collection)
 		{
-			SubscriptionDetails details = null;
+			SubscriptionDetails details = new SubscriptionDetails();
 
 			// open the collection
 			Collection c = store.GetCollectionByID(collection);
