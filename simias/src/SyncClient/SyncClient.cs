@@ -1123,7 +1123,7 @@ namespace Simias.Sync.Client
 						return;
 					}
 
-					ClientInFile file = new ClientInFile(collection, nodeID, service);
+					ClientInFile file = new ClientInFile(collection, nodeID, new WsServerReadFile(service));
 					file.Open();
 					bool success = false;
 					try
@@ -1348,7 +1348,7 @@ namespace Simias.Sync.Client
 					BaseFileNode node = collection.GetNodeByID(nodeID) as BaseFileNode;
 					if (node != null)
 					{
-						ClientOutFile file = new ClientOutFile(collection, node, service);
+						ClientOutFile file = new ClientOutFile(collection, node, new WsServerWriteFile(service));
 						file.Open();
 						bool success = false;
 						try

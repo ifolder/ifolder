@@ -118,7 +118,7 @@ namespace Simias.Sync.Client
 		#region fields
 
 		StrongWeakHashtable		table = new StrongWeakHashtable();
-		SimiasSyncService		service;
+		IServerReadFile			serverFile;
 		const string			ConflictUpdatePrefix = ".simias.cu.";
 		const string			ConflictFilePrefix = ".simias.cf.";
 		
@@ -131,11 +131,11 @@ namespace Simias.Sync.Client
 		/// </summary>
 		/// /// <param name="collection">The collection the node belongs to.</param>
 		/// <param name="nodeID">The id of the node to sync down</param>
-		/// <param name="service">The service to access the server file.</param>
-		public ClientInFile(Collection collection, string nodeID, SimiasSyncService service) :
+		/// <param name="serverFile">The service to access the server file.</param>
+		public ClientInFile(Collection collection, string nodeID, IServerReadFile serverFile) :
 			base(collection)
 		{
-			this.service = service;
+			this.serverFile = serverFile;
 			this.nodeID = nodeID;
 		}
 
@@ -145,7 +145,7 @@ namespace Simias.Sync.Client
 
 		public void Open()
 		{
-			SyncNode snode = service.GetFileNode(nodeID);
+			SyncNode snode = serverFile.GetFileNode(nodeID);
 			if (snode == null)
 			{
 				throw new SimiasException(string.Format("Node {0} not found on server.", nodeID));
@@ -167,7 +167,7 @@ namespace Simias.Sync.Client
 		{
 			bool bStatus = true;
 			// Close the file on the server.
-			SyncNodeStatus status = service.CloseFileNode(commit);
+			serverFile.CloseFileNode();
 			if (commit)
 			{
 				try
@@ -254,7 +254,7 @@ namespace Simias.Sync.Client
 					//else
 					//	readBuffer = buffer;
 
-					int bytesRead = service.Read(offset, readBufferSize, out readBuffer);
+					int bytesRead = serverFile.Read(offset, readBufferSize, out readBuffer);
 					Write(readBuffer, 0, bytesRead);
 				}
 			}
@@ -276,7 +276,7 @@ namespace Simias.Sync.Client
 			// Since we are doing the diffing on the client we will download all blocks that
 			// don't match.
 			table.Clear();
-			HashData[] serverHashMap = service.GetHashMap(BlockSize);
+			HashData[] serverHashMap = serverFile.GetHashMap(BlockSize);
 			table.Add(serverHashMap);
 			long[] fileMap = new long[serverHashMap.Length];
 
@@ -392,7 +392,7 @@ namespace Simias.Sync.Client
 		#region fields
 
 		StrongWeakHashtable		table = new StrongWeakHashtable();
-		SimiasSyncService		service;
+		IServerWriteFile		serverFile;
 		
 		#endregion
 		
@@ -403,11 +403,11 @@ namespace Simias.Sync.Client
 		/// </summary>
 		/// <param name="collection">The collection the node belongs to.</param>
 		/// <param name="node">The node to sync up.</param>
-		/// <param name="service">The service to access the server file.</param>
-		public ClientOutFile(Collection collection, BaseFileNode node, SimiasSyncService service) :
+		/// <param name="serverFile">The service to access the server file.</param>
+		public ClientOutFile(Collection collection, BaseFileNode node, IServerWriteFile serverFile) :
 			base(collection)
 		{
-			this.service = service;
+			this.serverFile = serverFile;
 			this.node = node;
 		}
 
@@ -421,7 +421,7 @@ namespace Simias.Sync.Client
 			snode.node = node.Properties.ToString(true);
 			snode.expectedIncarn = node.MasterIncarnation;
 						
-			if (!service.PutFileNode(snode))
+			if (!serverFile.PutFileNode(snode))
 			{
 				throw new SimiasException(string.Format("Node {0} not found on server.", nodeID));
 			}
@@ -437,7 +437,7 @@ namespace Simias.Sync.Client
 		{
 			bool bStatus = true;
 			// Close the file on the server.
-			SyncNodeStatus status = service.CloseFileNode(commit);
+			SyncNodeStatus status = serverFile.CloseFileNode(commit);
 			if (commit)
 			{
 				node.SetMasterIncarnation(node.LocalIncarnation);
@@ -463,7 +463,7 @@ namespace Simias.Sync.Client
 				{
 					BlockSegment bs = (BlockSegment)segment;
 					int bytesToWrite = (bs.EndBlock - bs.StartBlock + 1) * BlockSize;
-					service.Copy(bs.StartBlock * BlockSize, offset, bytesToWrite);
+					serverFile.Copy(bs.StartBlock * BlockSize, offset, bytesToWrite);
 					offset += bytesToWrite;
 				}
 				else
@@ -473,7 +473,7 @@ namespace Simias.Sync.Client
 					byte[] dataBuffer = new byte[seg.Length];
 					ReadPosition = seg.Offset;
 					int bytesRead = Read(dataBuffer, 0, seg.Length);
-					service.Write(dataBuffer, offset, bytesRead);
+					serverFile.Write(dataBuffer, offset, bytesRead);
 					offset += seg.Length;
 				}
 			}
@@ -494,7 +494,7 @@ namespace Simias.Sync.Client
 			ArrayList fileMap = new ArrayList();
 
 			// Get the hash map from the server.
-			HashData[] serverHashMap = service.GetHashMap(BlockSize);
+			HashData[] serverHashMap = serverFile.GetHashMap(BlockSize);
 			
 			if (serverHashMap == null)
 			{
@@ -639,6 +639,223 @@ namespace Simias.Sync.Client
 				}
 			}
 			return sw.ToString();
+		}
+
+		#endregion
+	}
+
+	#endregion
+
+	#region IServerReadFile
+
+	public interface IServerReadFile
+	{
+		/// <summary>
+		/// Get the Node that represents this file from the server.
+		/// The file must be closed if null is not returned.
+		/// </summary>
+		/// <param name="nodeID">The ID of the node to get.</param>
+		/// <returns>The node. null if failed.</returns>
+		SyncNode GetFileNode(string nodeID);
+
+		/// <summary>
+		/// Get the hash map of the file. This can be used to do a delta sync.
+		/// </summary>
+		/// <param name="blockSize">The size of chuncks to hash.</param>
+		/// <returns>The hash map or null if failed.</returns>
+		HashData[] GetHashMap(int blockSize);
+
+		/// <summary>
+		/// Read data from the server file.
+		/// </summary>
+		/// <param name="offset">The offset in the file to begin the read.</param>
+		/// <param name="count">The number of bytes to read.</param>
+		/// <param name="buffer">The data that was read.</param>
+		/// <returns>The number of bytes read.</returns>
+		int Read(long offset, int count, out byte[] buffer);
+
+		/// <summary>
+		/// Close the file and cleanup any resources.
+		/// This must be called ater a successful call to GetFileNode.
+		/// </summary>
+		void CloseFileNode();
+	}
+
+	#endregion
+
+	#region IServerWriteFile
+
+	public interface IServerWriteFile
+	{
+		/// <summary>
+		/// Put the node that represents the file to the server.
+		/// </summary>
+		/// <param name="snode">The node to put.</param>
+		/// <returns>true if successful.</returns>
+		bool PutFileNode(SyncNode snode);
+
+		/// <summary>
+		/// Get the hash map of the file. This can be used to do a delta sync.
+		/// </summary>
+		/// <param name="blockSize">The size of chuncks to hash.</param>
+		/// <returns>The hash map or null if failed.</returns>
+		HashData[] GetHashMap(int BlockSize);
+
+		/// <summary>
+		/// Copy data from the current file to the new file.
+		/// </summary>
+		/// <param name="originalOffset">The offset in the original file.</param>
+		/// <param name="offset">The offset in the new file.</param>
+		/// <param name="count">The number of bytes to copy.</param>
+		void Copy(long originalOffset, long offset, int count);
+
+		/// <summary>
+		/// Write data to the file.
+		/// </summary>
+		/// <param name="buffer">The data to write.</param>
+		/// <param name="offset">The offset to write at.</param>
+		/// <param name="count">The number of bytes to write.</param>
+		void Write(byte[] buffer, long offset, int count);
+
+		/// <summary>
+		/// Close the file and cleanup any resources.
+		/// This must be called ater a successful call to PutFileNode.
+		/// </summary>
+		/// <param name="commit">true if the files should be commited.</param>
+		/// <returns>The status of the commit.</returns>
+		SyncNodeStatus CloseFileNode(bool commit);
+	}
+
+	#endregion
+
+	#region WsServerReadFile
+
+	public class WsServerReadFile : IServerReadFile
+	{
+		SimiasSyncService		service;
+		
+		public WsServerReadFile(SimiasSyncService webService)
+		{
+			service = webService;
+		}
+		
+		#region IServerReadFile Members
+
+		/// <summary>
+		/// Get the Node that represents this file from the server.
+		/// The file must be closed if null is not returned.
+		/// </summary>
+		/// <param name="nodeID">The ID of the node to get.</param>
+		/// <returns>The node. null if failed.</returns>
+		public SyncNode GetFileNode(string nodeID)
+		{
+			return service.GetFileNode(nodeID);
+		}
+
+		/// <summary>
+		/// Get the hash map of the file. This can be used to do a delta sync.
+		/// </summary>
+		/// <param name="blockSize">The size of chuncks to hash.</param>
+		/// <returns>The hash map or null if failed.</returns>
+		public HashData[] GetHashMap(int blockSize)
+		{
+			return service.GetHashMap(blockSize);
+		}
+
+		/// <summary>
+		/// Read data from the server file.
+		/// </summary>
+		/// <param name="offset">The offset in the file to begin the read.</param>
+		/// <param name="count">The number of bytes to read.</param>
+		/// <param name="buffer">The data that was read.</param>
+		/// <returns>The number of bytes read.</returns>
+		public int Read(long offset, int count, out byte[] buffer)
+		{
+			return service.Read(offset, count, out buffer);
+		}
+
+		/// <summary>
+		/// Close the file and cleanup any resources.
+		/// This must be called ater a successful call to GetFileNode.
+		/// </summary>
+		public void CloseFileNode()
+		{
+			service.CloseFileNode(false);
+		}
+
+		#endregion
+	}
+
+	#endregion
+
+	#region WsServerWriteFile
+
+	public class WsServerWriteFile : IServerWriteFile
+	{
+		SimiasSyncService		service;
+
+		/// <summary>
+		/// Constructs a object that can be used to sync a file to the server.
+		/// </summary>
+		/// <param name="webService">The Sync web service.</param>
+		public WsServerWriteFile(SimiasSyncService webService)
+		{
+			service = webService;
+		}
+		
+		#region IServerWriteFile Members
+
+		/// <summary>
+		/// Put the node that represents the file to the server.
+		/// </summary>
+		/// <param name="snode">The node to put.</param>
+		/// <returns>true if successful.</returns>
+		public bool PutFileNode(SyncNode snode)
+		{
+			return service.PutFileNode(snode);
+		}
+
+		/// <summary>
+		/// Get the hash map of the file. This can be used to do a delta sync.
+		/// </summary>
+		/// <param name="blockSize">The size of chuncks to hash.</param>
+		/// <returns>The hash map or null if failed.</returns>
+		public HashData[] GetHashMap(int blockSize)
+		{
+			return service.GetHashMap(blockSize);
+		}
+
+		/// <summary>
+		/// Copy data from the current file to the new file.
+		/// </summary>
+		/// <param name="originalOffset">The offset in the original file.</param>
+		/// <param name="offset">The offset in the new file.</param>
+		/// <param name="count">The number of bytes to copy.</param>
+		public void Copy(long originalOffset, long offset, int count)
+		{
+			service.Copy(originalOffset, offset, count);
+		}
+
+		/// <summary>
+		/// Write data to the file.
+		/// </summary>
+		/// <param name="buffer">The data to write.</param>
+		/// <param name="offset">The offset to write at.</param>
+		/// <param name="count">The number of bytes to write.</param>
+		public void Write(byte[] buffer, long offset, int count)
+		{
+			service.Write(buffer, offset, count);
+		}
+
+		/// <summary>
+		/// Close the file and cleanup any resources.
+		/// This must be called ater a successful call to PutFileNode.
+		/// </summary>
+		/// <param name="commit">true if the files should be commited.</param>
+		/// <returns>The status of the commit.</returns>
+		public SyncNodeStatus CloseFileNode(bool commit)
+		{
+			return service.CloseFileNode(commit);
 		}
 
 		#endregion
