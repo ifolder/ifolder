@@ -528,8 +528,7 @@ namespace Simias.Domain
 				Simias.Storage.Domain cDomain = store.GetDomain( domainID );
 					
 				// Make sure this domain is a slave 
-				Roster cRoster = cDomain.GetRoster( Store.GetStore() );
-				if ( cRoster.Role.ToString() == "Slave" )
+				if ( cDomain.Role == SyncRoles.Slave )
 				{
 					Property p = 
 						cDomain.Properties.GetSingleProperty( this.activePropertyName );
@@ -553,8 +552,7 @@ namespace Simias.Domain
 			try
 			{
 				Simias.Storage.Domain cDomain = store.GetDomain( domainID );
-				Roster cRoster = cDomain.GetRoster( Store.GetStore() );
-				if ( cRoster.Role.ToString() == "Slave" )
+				if ( cDomain.Role == SyncRoles.Slave )
 				{
 					Property p = new Property( this.activePropertyName, true );
 					p.LocalProperty = true;
@@ -580,8 +578,7 @@ namespace Simias.Domain
 			try
 			{
 				Simias.Storage.Domain cDomain = store.GetDomain( domainID );
-				Roster cRoster = cDomain.GetRoster( Store.GetStore() );
-				if ( cRoster.Role.ToString() == "Slave" )
+				if ( cDomain.Role == SyncRoles.Slave )
 				{
 					Property p = new Property( this.activePropertyName, false );
 					p.LocalProperty = true;

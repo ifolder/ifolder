@@ -58,7 +58,7 @@ namespace Simias.SimpleServer
 			this.store = Store.GetStore();
 			this.ssDomain = new Simias.SimpleServer.Domain( true );
 			this.domain = store.GetDomain( ssDomain.ID );
-			this.roster = this.domain.GetRoster( this.store );
+			this.roster = this.domain.Roster;
 
 			this.simpleServerDoc = new XmlDocument();
 			this.simpleServerDoc.Load("SimpleServer.xml");

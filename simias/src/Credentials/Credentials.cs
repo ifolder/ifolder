@@ -108,8 +108,7 @@ namespace Simias.Authentication
 				else
 				{
 					cDomain = this.store.GetDomain(this.domainID);
-					Roster cRoster = cDomain.GetRoster(this.store);
-					cMember = cRoster.GetMemberByID(this.memberID);
+					cMember = cDomain.Roster.GetMemberByID(this.memberID);
 				}
 
 				//

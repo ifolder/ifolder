@@ -243,7 +243,7 @@ namespace Simias.SimpleServer
 
 				try
 				{
-					ssRoster = rDomain.GetRoster( store );
+					ssRoster = rDomain.Roster;
 				}
 				catch{}
 				if ( ssRoster == null )
@@ -416,7 +416,7 @@ namespace Simias.SimpleServer
 			try
 			{
 				ssDomain = this.GetSimpleServerDomain( false, "" );
-				ssRoster = ssDomain.GetRoster( store );
+				ssRoster = ssDomain.Roster;
 			}
 			catch{}
 

@@ -25,6 +25,7 @@ using System;
 using System.Xml;
 
 using Simias.Client;
+using Simias.Sync;
 
 namespace Simias.Storage
 {
@@ -92,6 +93,26 @@ namespace Simias.Storage
 			}
 
 			set { properties.ModifyNodeProperty( PropertyTags.HostAddress, value ); }
+		}
+
+		/// <summary>
+		/// Gets the synchronization role for this domain.
+		/// </summary>
+		public SyncRoles Role
+		{
+			get
+			{
+				Roster roster = Roster;
+				return ( roster != null ) ? roster.Role : SyncRoles.None;
+			}
+		}
+
+		/// <summary>
+		/// Gets the roster for this domain.
+		/// </summary>
+		public Roster Roster
+		{
+			get { return Store.GetStore().GetRoster( id ); }
 		}
 		#endregion
 
@@ -169,6 +190,7 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="store">Store object.</param>
 		/// <returns>The Roster object associated with this domain. Null is returned if the call fails.</returns>
+		[ Obsolete( "This method should no longer be used. Use the property Roster instead.", false ) ]
 		public Roster GetRoster( Store store )
 		{
 			Roster roster = null;

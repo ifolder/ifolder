@@ -96,7 +96,7 @@ namespace Simias.Web
 				Store store = Store.GetStore();
 
 				Simias.Storage.Domain cDomain = store.GetDomain(domainID);
-				Roster cRoster = cDomain.GetRoster(store);
+				Roster cRoster = cDomain.Roster;
 				Member cMember = cRoster.GetCurrentMember();
 
 				cDomainInfo = new DomainInformation();
@@ -157,11 +157,10 @@ namespace Simias.Web
 					}
 					else
 					{
-						Simias.Storage.Domain cDomain = store.GetDomain( shallowNode.ID );
-						Roster cRoster = cDomain.GetRoster(store);
-						if ( cRoster.Role.ToString() == "Slave" )
+						Roster cRoster = store.GetRoster( shallowNode.ID );
+						if ( ( cRoster != null ) && ( cRoster.Role == SyncRoles.Slave ) )
 						{
-							domainIDs.Add( cDomain.ID );
+							domainIDs.Add( shallowNode.ID );
 						}
 					}
 				}
@@ -199,8 +198,7 @@ namespace Simias.Web
 				// Make sure the Domain ID is not workgroup
 				if (domainID != Simias.Storage.Domain.WorkGroupDomainID)
 				{
-					Simias.Storage.Domain cDomain = store.GetDomain(domainID);
-					Roster cRoster = cDomain.GetRoster(store);
+					Roster cRoster = store.GetRoster(domainID);
 					Member cMember = cRoster.GetMemberByID(memberID);
 
 					NetCredential cCreds = 
@@ -276,8 +274,7 @@ namespace Simias.Web
 				if (domainID != Simias.Storage.Domain.WorkGroupDomainID)
 				{
 					// roster
-					Simias.Storage.Domain cDomain = store.GetDomain(domainID);
-					Roster roster = cDomain.GetRoster(store);
+					Roster roster = store.GetRoster(domainID);
 
 					// find user
 					Member cMember = roster.GetMemberByID(memberID);

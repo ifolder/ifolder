@@ -68,7 +68,7 @@ namespace Novell.iFolder.DomainService
 			info.Description = domain.Description;
 			
 			// roster
-			Roster roster = domain.GetRoster(store);
+			Roster roster = domain.Roster;
 			
 			info.RosterID = roster.ID;
 			info.RosterName = roster.Name;
@@ -108,7 +108,7 @@ namespace Novell.iFolder.DomainService
 			}
 
 			// roster
-			Roster roster = domain.GetRoster( store );
+			Roster roster = domain.Roster;
 
 			// find user
 			Member member = roster.GetMemberByName( user );
@@ -165,7 +165,7 @@ namespace Novell.iFolder.DomainService
 			nodeList.Add(c);
 			
 			// Make sure that the caller is the current owner.
-			Roster roster = domain.GetRoster( store );
+			Roster roster = domain.Roster;
 			if (roster == null)
 			{
 				throw new SimiasException( "Roster does not exist for the SimpleServer domain." );
@@ -251,7 +251,7 @@ namespace Novell.iFolder.DomainService
 
 			// Make sure that the caller is the current owner.
 			Store store = Store.GetStore();
-			Roster roster = domain.GetRoster( store );
+			Roster roster = domain.Roster;
 			if (roster == null)
 			{
 				throw new SimiasException(String.Format("Roster does not exist for domain.", domainID));

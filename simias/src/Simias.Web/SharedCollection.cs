@@ -95,7 +95,7 @@ namespace Simias.Web
 			Store store = Store.GetStore();
 
 			Roster roster = 
-					store.GetDomain(store.DefaultDomain).GetRoster(store);
+					store.GetDomain(store.DefaultDomain).Roster;
 			if(roster == null)
 				throw new Exception("Unable to obtain default Roster");
 
@@ -131,7 +131,7 @@ namespace Simias.Web
 			Store store = Store.GetStore();
 
 			Roster roster = 
-					store.GetDomain(store.DefaultDomain).GetRoster(store);
+					store.GetDomain(store.DefaultDomain).Roster;
 			if(roster == null)
 				throw new Exception("Unable to obtain default Roster");
 
@@ -170,7 +170,7 @@ namespace Simias.Web
 			Store store = Store.GetStore();
 
 			Roster roster = 
-					store.GetDomain(DomainID).GetRoster(store);
+					store.GetDomain(DomainID).Roster;
 			if(roster == null)
 				throw new Exception("Unable to obtain default Roster");
 
@@ -269,7 +269,7 @@ namespace Simias.Web
 
 			// Create the member and add it as the owner
 			Roster roster = 
-					store.GetDomain(DomainID).GetRoster(store);
+					store.GetDomain(DomainID).Roster;
 			if(roster == null)
 				throw new Exception("Unable to obtain default Roster");
 
@@ -892,7 +892,7 @@ namespace Simias.Web
 				throw new Simias.NotExistException(CollectionID);
 
 			Roster roster = 
-				store.GetDomain(col.Domain).GetRoster(store);
+				store.GetDomain(col.Domain).Roster;
 			if(roster == null)
 				throw new Simias.NotExistException(col.Domain);
 
@@ -1129,7 +1129,7 @@ namespace Simias.Web
 			// copied from the iFolder code, this may need to change
 			// in the future
 			Roster roster = 
-				store.GetDomain(collection.Domain).GetRoster(store);
+				store.GetDomain(collection.Domain).Roster;
 			sub.SubscriptionCollectionURL = roster.MasterUrl.ToString();
 
 			DirNode dirNode = collection.GetRootDirectory();

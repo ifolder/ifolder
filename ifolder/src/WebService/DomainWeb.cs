@@ -71,8 +71,7 @@ namespace Novell.iFolder.Web
 				this.POBoxID = poBox.ID;
 			}
 
-			Roster roster =
-				domain.GetRoster(store);
+			Roster roster =	domain.Roster;
 			if (roster == null)
 				throw new Exception("Unable to access user roster");
 

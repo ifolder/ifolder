@@ -809,7 +809,7 @@ namespace Simias.POBoxService.Web
 			}
 
 			// Verify and get additional information about the "To" user
-			Simias.Storage.Roster currentRoster = cDomain.GetRoster(store);
+			Simias.Storage.Roster currentRoster = cDomain.Roster;
 			if (currentRoster == null)
 			{
 				throw new ApplicationException("No member Roster exists for the specified Domain");

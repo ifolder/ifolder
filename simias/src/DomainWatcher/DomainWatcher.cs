@@ -157,8 +157,8 @@ namespace Simias.DomainWatcher
 						// Make sure this domain is a slave since we don't watch
 						// mastered domains.  We can tell by looking at the Roster
 
-						Roster cRoster = cDomain.GetRoster( store );
-						if ( cRoster.Role.ToString() == "Slave" )
+						Roster cRoster = cDomain.Roster;
+						if ( cRoster.Role == SyncRoles.Slave )
 						{
 							Member cMember;
 							log.Debug("checking Domain: " + cDomain.Name);
