@@ -96,6 +96,8 @@ namespace Novell.iFolder.iFolderCom
 			this.apply.Enabled = false;
 			this.remove.Enabled = false;
 			this.reinvite.Enabled = false;
+
+			interval.TextChanged += new EventHandler(interval_ValueChanged);
 //			currentControl = this;
 		}
 
@@ -1156,8 +1158,9 @@ namespace Novell.iFolder.iFolderCom
 
 		private void interval_ValueChanged(object sender, System.EventArgs e)
 		{
-			// Enable the apply button.
-			apply.Enabled = true;		
+			// Enable the apply button if the user changed the interval.
+			if (interval.Focused)
+				apply.Enabled = true;		
 		}
 
 		private void tabControl1_SelectedIndexChanged(object sender, System.EventArgs e)
