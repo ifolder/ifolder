@@ -87,26 +87,32 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_6D95901DCBE94A8DAF931D6AE75FCE53"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_7E6EB9854A2C4186A66DB854FE6185DF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_83694938015F4993AE711930A005DFC9"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_86658F20DBEB48678EB97CB75214FDC9"
+        "MsmKey" = "8:_8155A628C99F4B1BB4D57AFB43C35E9E"
         "OwnerKey" = "8:_0C336FC79B14484D84C6E37B881F55AB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_86658F20DBEB48678EB97CB75214FDC9"
+        "MsmKey" = "8:_8155A628C99F4B1BB4D57AFB43C35E9E"
         "OwnerKey" = "8:_29384441CBFF43FFB98D254AC90BD163"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_83694938015F4993AE711930A005DFC9"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -244,7 +250,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:FormsBookLib, Version=1.0.1584.23420, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:FormsBookLib, Version=1.0.1586.13543, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_0C336FC79B14484D84C6E37B881F55AB"
@@ -355,7 +361,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ContactBrowser, Version=1.0.1584.23421, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:ContactBrowser, Version=1.0.1586.13544, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_29384441CBFF43FFB98D254AC90BD163"
@@ -448,6 +454,26 @@
             "TargetName" = "8:globe.png"
             "Tag" = "8:"
             "Folder" = "8:_E399BA44EF6041E4A7DD991F5F019CA6"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_6D95901DCBE94A8DAF931D6AE75FCE53"
+            {
+            "SourcePath" = "8:..\\..\\..\\src\\FormsAddrBook\\ContactBrowser.exe.manifest"
+            "TargetName" = "8:ContactBrowser.exe.manifest"
+            "Tag" = "8:"
+            "Folder" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -690,7 +716,7 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_86658F20DBEB48678EB97CB75214FDC9"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_8155A628C99F4B1BB4D57AFB43C35E9E"
             {
             "UseDynamicProperties" = "11:FALSE"
             "IsDependency" = "11:TRUE"
