@@ -191,10 +191,6 @@ case $IFOLDER_OS in
         SQLITELIB_PATH="../../external/sqlite/darwin"
         SQLITELIB="sqlite"
         SYSTEM_XML='System.Xml.dll'
-        #
-        # Set pkg-config variables
-        #
-        PKG_CONFIG_LIBS="/r:Novell.iFolder.dll"
     ;;
     #
     # Linux-specific configuration
@@ -226,7 +222,6 @@ case $IFOLDER_OS in
         #
         # Set pkg-config variables
         #
-        PKG_CONFIG_LIBS="/r:Novell.iFolder.dll"
         UI_PKG_CONFIG_REQUIRES="ifolder = $VERSION gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION"
         UI_PKG_CONFIG_LIBS="/r:TrayIcon.dll"
     ;;
@@ -294,7 +289,6 @@ case $IFOLDER_OS in
         #
         # Set pkg-config variables
         #
-        PKG_CONFIG_LIBS="/r:Novell.iFolder.dll"
         UI_PKG_CONFIG_REQUIRES="ifolder = $VERSION"
         UI_PKG_CONFIG_LIBS="/r:TrayIcon.dll"
         #
@@ -324,9 +318,6 @@ AC_SUBST(NUNIT)
 AC_SUBST(NUNIT_FLAGS)
 AC_SUBST(NUNIT_LIBPATH)
 AC_SUBST(OBJ_EXT)
-AC_SUBST(PKG_CONFIG_REQUIRES)
-AC_SUBST(PKG_CONFIG_CONFLICTS)
-AC_SUBST(PKG_CONFIG_LIBS)
 AC_SUBST(RC)
 AC_SUBST(RCFLAGS)
 AC_SUBST(REPORT_DIR)
@@ -342,7 +333,7 @@ AC_SUBST(TLBX)
 #
 PKG_CONFIG_REQUIRES="simias >= 1.0"
 PKG_CONFIG_CONFLICTS=""
-PKG_CONFIG_LIBS="/r:Novell.iFolder.dll"
+PKG_CONFIG_LIBS="/lib:$bindir/bin /r:Novell.iFolder.dll /r:Novell.iFolder.Web.dll"
 AC_SUBST(PKG_CONFIG_REQUIRES)
 AC_SUBST(PKG_CONFIG_LIBS)
 AC_SUBST(PKG_CONFIG_CONFLICTS)
