@@ -54,7 +54,9 @@ namespace Novell.FormsTrayApp
 		private const string notifyShareDisabled = "NotifyShareDisable";
 		private const string notifyCollisionDisabled = "NotifyCollisionDisabled";
 		private const string notifyJoinDisabled = "NotifyJoinDisabled";
-		private const string iFolderKey = @"SOFTWARE\Novell\iFolder";
+		public static readonly string iFolderKey = @"SOFTWARE\Novell\iFolder";
+		private const string preferencesX = "PreferencesX";
+		private const string preferencesY = "PreferencesY";
 		private decimal minimumSyncInterval;
 		private decimal minimumSeconds;
 		private iFolderWebService ifWebService;
@@ -68,6 +70,7 @@ namespace Novell.FormsTrayApp
 		private bool successful;
 		private bool updatePassword = false;
 		private bool updateEnabled = false;
+		private bool initialPositionSet = false;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
 		private System.Windows.Forms.TabControl tabControl1;
@@ -1238,6 +1241,7 @@ namespace Novell.FormsTrayApp
 			this.Text = resources.GetString("$this.Text");
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.Preferences_Closing);
 			this.Load += new System.EventHandler(this.Preferences_Load);
+			this.Move += new System.EventHandler(this.Preferences_Move);
 			this.VisibleChanged += new System.EventHandler(this.Preferences_VisibleChanged);
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).EndInit();
 			this.tabControl1.ResumeLayout(false);
@@ -2618,6 +2622,41 @@ namespace Novell.FormsTrayApp
 					// Reference the help using locale-specific path.
 					helpProvider1.HelpNamespace = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\accounts.html");
 					break;
+			}
+		}
+
+		private void Preferences_Move(object sender, System.EventArgs e)
+		{
+			if (initialPositionSet)
+			{
+				try
+				{
+					// Create/open the iFolder key.
+					RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+					// Set the location values.
+					regKey.SetValue(preferencesX, Location.X);
+					regKey.SetValue(preferencesY, Location.Y);
+				}
+				catch {}
+			}
+			else
+			{
+				try
+				{
+					// Create/open the iFolder key.
+					RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+					// Get the location values.
+					int x = (int)regKey.GetValue(preferencesX);
+					int y = (int)regKey.GetValue(preferencesY);
+
+					Point point = new Point(x, y);
+					this.Location = point;
+				}
+				catch {}
+
+				initialPositionSet = true;
 			}
 		}
 		#endregion

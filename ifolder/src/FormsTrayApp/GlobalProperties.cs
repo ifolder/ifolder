@@ -43,6 +43,9 @@ namespace Novell.FormsTrayApp
 	public class GlobalProperties : System.Windows.Forms.Form
 	{
 		#region Class Members
+		private const string myiFoldersX = "MyiFoldersX";
+		private const string myiFoldersY = "MyiFoldersY";
+
 		// Delegates used to marshal back to the control's creation thread.
 		private delegate void SyncCollectionDelegate(CollectionSyncEventArgs syncEventArgs);
 		private SyncCollectionDelegate syncCollectionDelegate;
@@ -86,6 +89,7 @@ namespace Novell.FormsTrayApp
 		private IProcEventClient eventClient;
 		private bool initialConnect = false;
 		private bool shutdown = false;
+		private bool initialPositionSet = false;
 		private Domain defaultDomain = null;
 		private string domainList;
 		private System.Windows.Forms.ListView iFolderView;
@@ -832,6 +836,7 @@ namespace Novell.FormsTrayApp
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlobalProperties_KeyDown);
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.GlobalProperties_Closing);
 			this.Load += new System.EventHandler(this.GlobalProperties_Load);
+			this.Move += new System.EventHandler(this.GlobalProperties_Move);
 			this.VisibleChanged += new System.EventHandler(this.GlobalProperties_VisibleChanged);
 			this.ResumeLayout(false);
 
@@ -1682,6 +1687,41 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Event Handlers
+		private void GlobalProperties_Move(object sender, System.EventArgs e)
+		{
+			if (initialPositionSet)
+			{
+				try
+				{
+					// Create/open the iFolder key.
+					RegistryKey regKey = Registry.CurrentUser.CreateSubKey(Preferences.iFolderKey);
+
+					// Set the location values.
+					regKey.SetValue(myiFoldersX, Location.X);
+					regKey.SetValue(myiFoldersY, Location.Y);
+				}
+				catch {}
+			}
+			else
+			{
+				try
+				{
+					// Create/open the iFolder key.
+					RegistryKey regKey = Registry.CurrentUser.CreateSubKey(Preferences.iFolderKey);
+
+					// Get the location values.
+					int x = (int)regKey.GetValue(myiFoldersX);
+					int y = (int)regKey.GetValue(myiFoldersY);
+
+					Point point = new Point(x, y);
+					this.Location = point;
+				}
+				catch {}
+
+				initialPositionSet = true;
+			}
+		}
+
 		private void GlobalProperties_Load(object sender, System.EventArgs e)
 		{
 			// Load the application icon

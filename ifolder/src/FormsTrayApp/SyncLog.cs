@@ -28,6 +28,8 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
 
+using Microsoft.Win32;
+
 using Simias.Client.Event;
 
 namespace Novell.FormsTrayApp
@@ -39,9 +41,11 @@ namespace Novell.FormsTrayApp
 	{
 		#region Class Members
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(SyncLog));
+		private const string syncLogX = "SyncLogX";
+		private const string syncLogY = "SyncLogY";
 		private const int maxMessages = 500;
-		private IProcEventClient eventClient;
 		private bool shutdown = false;
+		private bool initialPositionSet = false;
 		private System.Windows.Forms.ListBox log;
 		private System.Windows.Forms.ToolBar toolBar1;
 		private System.Windows.Forms.ToolBarButton toolBarSave;
@@ -191,6 +195,7 @@ namespace Novell.FormsTrayApp
 			this.Text = resources.GetString("$this.Text");
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.SyncLog_Closing);
 			this.Load += new System.EventHandler(this.SyncLog_Load);
+			this.Move += new System.EventHandler(this.SyncLog_Move);
 			this.ResumeLayout(false);
 
 		}
@@ -273,6 +278,41 @@ namespace Novell.FormsTrayApp
 				case 1: // Clear log
 					clearLog();
 					break;
+			}
+		}
+
+		private void SyncLog_Move(object sender, System.EventArgs e)
+		{
+			if (initialPositionSet)
+			{
+				try
+				{
+					// Create/open the iFolder key.
+					RegistryKey regKey = Registry.CurrentUser.CreateSubKey(Preferences.iFolderKey);
+
+					// Set the location values.
+					regKey.SetValue(syncLogX, Location.X);
+					regKey.SetValue(syncLogY, Location.Y);
+				}
+				catch {}
+			}
+			else
+			{
+				try
+				{
+					// Create/open the iFolder key.
+					RegistryKey regKey = Registry.CurrentUser.CreateSubKey(Preferences.iFolderKey);
+
+					// Get the location values.
+					int x = (int)regKey.GetValue(syncLogX);
+					int y = (int)regKey.GetValue(syncLogY);
+
+					Point point = new Point(x, y);
+					this.Location = point;
+				}
+				catch {}
+
+				initialPositionSet = true;
 			}
 		}
 		#endregion
