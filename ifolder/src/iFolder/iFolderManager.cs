@@ -343,7 +343,7 @@ namespace Novell.iFolder
 			return iniFolder;
 		}
 
-		/// <summary>
+/*		/// <summary>
 		/// Accepts an invitation to share an iFolder.
 		/// </summary>
 		/// <param name="invitation">
@@ -355,7 +355,7 @@ namespace Novell.iFolder
 		/// <exception cref="ApplicationException">
 		/// <paramref name="path"/> is within an existing iFolder."
 		/// </exception>
-/*		public void AcceptInvitation( Invitation invitation, string path )
+		public void AcceptInvitation( Invitation invitation, string path )
 		{
 			// Check the path to see if it is inside an existing iFolder
 			if( IsPathIniFolder( path ) )
