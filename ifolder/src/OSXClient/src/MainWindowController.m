@@ -1,29 +1,29 @@
 #import "MainWindowController.h"
-#import "IFSubViewController.h"
+#import "SubViewController.h"
 
 @implementation MainWindowController
 
 -(id)init
 {
     [super init];
-    iFolderView = nil;
+    ifoldersView = nil;
     return self;
 }
 
 - (void)dealloc
 {
     [super dealloc];
-    [iFolderView release];
+    [ifoldersView release];
 }
 
 -(void)awakeFromNib
 {
 	// Setup the views to look the way they should when
 	//  load
-	iFolderView = [[self loadViewFromNib:@"iFolderView"] retain];
-    if (iFolderView) 
+	ifoldersView = [[self loadViewFromNib:@"iFoldersView"] retain];
+    if (ifoldersView) 
 	{
-		[[ifolderTabView tabViewItemAtIndex:0] setView:iFolderView];
+		[[ifolderTabView tabViewItemAtIndex:0] setView:ifoldersView];
 	}
 
 	webService = [[iFolderService alloc] init];
@@ -105,9 +105,9 @@
 -(NSView*)loadViewFromNib:(NSString*)nibName
 {
     NSView * 		newView;
-    IFSubViewController *	subViewController;
+    SubViewController *	subViewController;
     
-    subViewController = [IFSubViewController alloc];
+    subViewController = [SubViewController alloc];
     // Creates an instance of SubViewController which loads the specified nib.
     [subViewController initWithNibName:nibName andOwner:self];
     newView = [subViewController view];
@@ -127,14 +127,14 @@
     // view fromt he nib.
     if([[tabViewItem identifier] isEqualToString:@"1"])
 	{
-        if(iFolderView) 
-            [tabViewItem setView:iFolderView];
+        if(ifoldersView) 
+            [tabViewItem setView:ifoldersView];
         else 
 		{
-            iFolderView = [[self loadViewFromNib:@"iFolderView"] retain];
-            if (iFolderView) 
+            ifoldersView = [[self loadViewFromNib:@"iFoldersView"] retain];
+            if (ifoldersView) 
 			{
-                [tabViewItem setView:iFolderView];
+                [tabViewItem setView:ifoldersView];
             }
         }
     }

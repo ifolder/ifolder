@@ -1,13 +1,13 @@
 /* IFFoldersView */
 
 #import <Cocoa/Cocoa.h>
-#import "IFSubViewController.h"
+#import "SubViewController.h"
 
-@interface IFFoldersView : NSView
+@interface iFoldersView : NSView
 {
     IBOutlet NSButton *createButton;
     IBOutlet NSTableView *ifolderTable;
-    IBOutlet IFSubViewController *owner;
+    IBOutlet SubViewController *owner;
 }
 
 - (IBAction)delete:(id)sender;
