@@ -47,7 +47,6 @@ namespace Simias.Policy
 		/// <summary>
 		/// Used to hold all Policies associated with a Member.
 		/// </summary>
-		[ NonSerialized() ]
 		private Policy[] aggregatePolicy = null;
 		#endregion
 
@@ -70,20 +69,6 @@ namespace Simias.Policy
 		}
 
 		/// <summary>
-		/// Gets or sets the detailed description for this system policy.
-		/// </summary>
-		public string Description
-		{
-			get
-			{
-				Property p = properties.GetSingleProperty( PropertyTags.Description );
-				return ( p != null ) ? p.Value as string : null;
-			}
-
-			set { properties.ModifyNodeProperty( PropertyTags.Description, value ); }
-		}
-
-		/// <summary>
 		/// Gets or set an aggregate local policy.
 		/// </summary>
 		internal Policy LocalPolicy
@@ -98,6 +83,37 @@ namespace Simias.Policy
 
 				aggregatePolicy[ ( int )AggregatePolicyOrder.Local ] = value; 
 			}
+		}
+
+		/// <summary>
+		/// Gets or sets an aggregate user policy.
+		/// </summary>
+		internal Policy UserPolicy
+		{
+			get { return ( aggregatePolicy != null ) ? aggregatePolicy[ ( int )AggregatePolicyOrder.User ] : null; }
+			set 
+			{ 
+				if ( aggregatePolicy == null )
+				{
+					aggregatePolicy = new Policy[ Enum.GetValues( typeof( AggregatePolicyOrder ) ).Length ];
+				}
+
+				aggregatePolicy[ ( int )AggregatePolicyOrder.User ] = value; 
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the detailed description for this system policy.
+		/// </summary>
+		public string Description
+		{
+			get
+			{
+				Property p = properties.GetSingleProperty( PropertyTags.Description );
+				return ( p != null ) ? p.Value as string : null;
+			}
+
+			set { properties.ModifyNodeProperty( PropertyTags.Description, value ); }
 		}
 
 		/// <summary>
@@ -179,35 +195,18 @@ namespace Simias.Policy
 			get { return Name; }
 			set { Name = value; }
 		}
-
-		/// <summary>
-		/// Gets or sets an aggregate user policy.
-		/// </summary>
-		internal Policy UserPolicy
-		{
-			get { return ( aggregatePolicy != null ) ? aggregatePolicy[ ( int )AggregatePolicyOrder.User ] : null; }
-			set 
-			{ 
-				if ( aggregatePolicy == null )
-				{
-					aggregatePolicy = new Policy[ Enum.GetValues( typeof( AggregatePolicyOrder ) ).Length ];
-				}
-
-				aggregatePolicy[ ( int )AggregatePolicyOrder.User ] = value; 
-			}
-		}
 		#endregion
 
 		#region Constructor
 		/// <summary>
 		/// Constructor for creating a new Policy object.
 		/// </summary>
-		/// <param name="strongName">Strong name of the policy. This should be a well-known GUID.</param>
+		/// <param name="policyID">Strong name of the policy. This should be a well-known GUID.</param>
 		/// <param name="shortDescription">A short friendly description of the policy.</param>
-		public Policy( string strongName, string shortDescription ) :
+		public Policy( string policyID, string shortDescription ) :
 			base( shortDescription, Guid.NewGuid().ToString(), NodeTypes.PolicyType )
 		{
-			properties.AddNodeProperty( PropertyTags.PolicyID, strongName );
+			properties.AddNodeProperty( PropertyTags.PolicyID, policyID );
 		}
 
 		/// <summary>
@@ -417,12 +416,35 @@ namespace Simias.Policy
 		/// The caller must possess Admin rights in order to commit a Policy.
 		/// </summary>
 		/// <param name="policy">Policy to be saved.</param>
-		public void CommitPolicy( Policy policy )
+		public void CommitLocalMachinePolicy( Policy policy )
 		{
 			// Add a relationship property to the LocalDatabase object.
 			LocalDatabase localDb = store.GetDatabaseObject();
 			policy.Properties.ModifyNodeProperty( PropertyTags.PolicyAssociation, new Relationship( localDb.ID ) );
 			localDb.Commit( policy );
+		}
+
+		/// <summary>
+		/// Saves and associates the Policy how it was previously committed. If the policy 
+		/// has not been previously committed an exception is thrown.
+		/// The caller must possess Admin rights in order to commit a Policy.
+		/// </summary>
+		/// <param name="policy">Policy to be saved.</param>
+		public void CommitPolicy( Policy policy )
+		{
+			// Get the associated collection from the relationship.
+			Property p = policy.Properties.GetSingleProperty( PropertyTags.PolicyAssociation );
+			if ( p == null )
+			{
+				throw new CollectionStoreException( "Policy was not previously committed." );
+			}
+
+			// Get the collection object from the relationship.
+			Collection c = store.GetCollectionByID( ( p.Value as Relationship ).CollectionID );
+			if ( c != null )
+			{
+				c.Commit( policy );
+			}
 		}
 
 		/// <summary>
@@ -505,23 +527,23 @@ namespace Simias.Policy
 		/// be searched for an associated Policy. If there is a local Policy for the user it will
 		/// be aggregated with the other Policy if one was found. Otherwise it will be returned.
 		/// </summary>
-		/// <param name="strongName">Strong name of the Policy.</param>
+		/// <param name="policyID">Strong name for the Policy.</param>
 		/// <param name="member">Member used to lookup the associated aggregate Policy.</param>
 		/// <returns>A reference to the associated aggregate Policy if successful. A null is
 		/// returned if the Policy does not exist.</returns>
-		public Policy GetAggregatePolicy( string strongName, Member member )
+		public Policy GetAggregatePolicy( string policyID, Member member )
 		{
 			// First look for an exception policy for the member object. If a policy is found,
 			// then we don't need to look for a domain policy since the exception policy will
 			// override the domain policy.
-			Policy policy = GetPolicy( strongName, member );
+			Policy policy = GetPolicy( policyID, member );
 			if ( policy == null )
 			{
 				// Look for a domain policy since there is no exception policy.
 				string domainID = member.GetDomainID( store );
 				if ( domainID != null )
 				{
-					policy = GetPolicy( strongName, domainID );
+					policy = GetPolicy( policyID, domainID );
 				}
 			}
 
@@ -532,7 +554,7 @@ namespace Simias.Policy
 			}
 
 			// Check for a local policy.
-			Policy localPolicy = GetPolicy( strongName );
+			Policy localPolicy = GetPolicy( policyID );
 			if ( localPolicy != null )
 			{
 				// If there is no exception or domain policy return the local policy.
@@ -556,18 +578,18 @@ namespace Simias.Policy
 		/// it will be returned. The procedure for the local Policy is also followed for an 
 		/// associated Collection Policy.
 		/// </summary>
-		/// <param name="strongName">Strong name of the Policy.</param>
+		/// <param name="policyID">Strong name of the Policy.</param>
 		/// <param name="member">Member used to lookup the associated aggregate Policy.</param>
 		/// <param name="collection">Collection used to lookup the associated aggregate Policy.</param>
 		/// <returns>A reference to the associated aggregate Policy if successful. A null is
 		/// returned if the Policy does not exist.</returns>
-		public Policy GetAggregatePolicy( string strongName, Member member, Collection collection )
+		public Policy GetAggregatePolicy( string policyID, Member member, Collection collection )
 		{
 			// Get the aggregate for the member.
-			Policy policy = GetAggregatePolicy( strongName, member );
+			Policy policy = GetAggregatePolicy( policyID, member );
 
 			// Check for a collection policy.
-			Policy collectionPolicy = GetPolicy( strongName, collection );
+			Policy collectionPolicy = GetPolicy( policyID, collection );
 			if ( collectionPolicy != null )
 			{
 				// If there is no exception or domain policy return the local policy.
@@ -586,16 +608,16 @@ namespace Simias.Policy
 		/// <summary>
 		/// Gets the Policy associated with the current user on the current machine.
 		/// </summary>
-		/// <param name="strongName">Strong name of the Policy.</param>
+		/// <param name="policyID">Strong name of the Policy.</param>
 		/// <returns>A reference to the associated Policy if successful. A null is 
 		/// returned if the Policy does not exist.</returns>
-		public Policy GetPolicy( string strongName )
+		public Policy GetPolicy( string policyID )
 		{
 			Policy policy = null;
 
 			// Search the local database for the specified policy.
 			LocalDatabase localDb = store.GetDatabaseObject();
-			ICSList list = localDb.Search( PropertyTags.PolicyID, strongName, SearchOp.Equal );
+			ICSList list = localDb.Search( PropertyTags.PolicyID, policyID, SearchOp.Equal );
 			foreach ( ShallowNode sn in list )
 			{
 				policy = new Policy( localDb, sn );
@@ -608,11 +630,11 @@ namespace Simias.Policy
 		/// <summary>
 		/// Gets the Policy that is associated with the domain.
 		/// </summary>
-		/// <param name="strongName">Strong name of the Policy.</param>
+		/// <param name="policyID">Strong name of the Policy.</param>
 		/// <param name="domainID">Identifier for the domain to use to lookup the Policy.</param>
 		/// <returns>A reference to the associated Policy if successful. A null is
 		/// returned if the Policy does not exist.</returns>
-		public Policy GetPolicy( string strongName, string domainID )
+		public Policy GetPolicy( string policyID, string domainID )
 		{
 			Policy policy = null;
 
@@ -620,7 +642,7 @@ namespace Simias.Policy
 			Roster roster = store.GetRoster( domainID );
 			if ( roster != null )
 			{
-				ICSList list = roster.Search( PropertyTags.PolicyID, strongName, SearchOp.Equal );
+				ICSList list = roster.Search( PropertyTags.PolicyID, policyID, SearchOp.Equal );
 				foreach ( ShallowNode sn in list )
 				{
 					policy = new Policy( roster, sn );
@@ -634,11 +656,11 @@ namespace Simias.Policy
 		/// <summary>
 		/// Gets the Policy that is associated with the user.
 		/// </summary>
-		/// <param name="strongName">Strong name of the Policy.</param>
+		/// <param name="policyID">Strong name of the Policy.</param>
 		/// <param name="member">Member used to lookup the associated Policy.</param>
 		/// <returns>A reference to the associated Policy if successful. A null is
 		/// returned if the Policy does not exist.</returns>
-		public Policy GetPolicy( string strongName, Member member )
+		public Policy GetPolicy( string policyID, Member member )
 		{
 			Policy policy = null;
 
@@ -650,7 +672,7 @@ namespace Simias.Policy
 				POBox.POBox poBox = POBox.POBox.FindPOBox( store, domainID, member.UserID );
 				if ( poBox != null )
 				{
-					ICSList list = poBox.Search( PropertyTags.PolicyID, strongName, SearchOp.Equal );
+					ICSList list = poBox.Search( PropertyTags.PolicyID, policyID, SearchOp.Equal );
 					foreach ( ShallowNode sn in list )
 					{
 						policy = new Policy( poBox, sn );
@@ -665,16 +687,16 @@ namespace Simias.Policy
 		/// <summary>
 		/// Gets the Policy that is associated with the collection.
 		/// </summary>
-		/// <param name="strongName">Strong name of the Policy.</param>
+		/// <param name="policyID">Strong name of the Policy.</param>
 		/// <param name="collection">Collection used to lookup the associated Policy.</param>
 		/// <returns>A reference to the associated Policy if successful. A null is
 		/// returned if the Policy does not exist.</returns>
-		public Policy GetPolicy( string strongName, Collection collection )
+		public Policy GetPolicy( string policyID, Collection collection )
 		{
 			Policy policy = null;
 
 			// Search the collection for the specified policy.
-			ICSList list = collection.Search( PropertyTags.PolicyID, strongName, SearchOp.Equal );
+			ICSList list = collection.Search( PropertyTags.PolicyID, policyID, SearchOp.Equal );
 			foreach ( ShallowNode sn in list )
 			{
 				policy = new Policy( collection, sn );

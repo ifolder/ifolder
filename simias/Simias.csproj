@@ -449,6 +449,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Policy\DiskSpaceQuota.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Service\BaseProcessService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
