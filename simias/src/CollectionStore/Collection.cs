@@ -799,16 +799,13 @@ namespace Simias.Storage
 				// Check for BaseFileNode types because they are the only objects that contain files.
 				if ( IsType( node, NodeTypes.BaseFileNodeType ) )
 				{
-					// Can't assume that the incoming Node object has been instantiated with the
-					// right derived type.
-					BaseFileNode bfn = Node.NodeFactory( this, node ) as BaseFileNode;
-
 					// Calculate the new storage size based on the state of the Node object.
 					switch ( node.Properties.State )
 					{
 						case PropertyList.PropertyListState.Add:
 						{
 							// Add the number of bytes to the overall total.
+							BaseFileNode bfn = Node.NodeFactory( this, node ) as BaseFileNode;
 							storeBytes += bfn.Length;
 							break;
 						}
@@ -816,12 +813,12 @@ namespace Simias.Storage
 						case PropertyList.PropertyListState.Delete:
 						{
 							// Subtract the number of bytes from the overall total.
+							BaseFileNode bfn = Node.NodeFactory( this, node ) as BaseFileNode;
 							storeBytes -= bfn.Length;
 							break;
 						}
 
 						case PropertyList.PropertyListState.Update:
-						case PropertyList.PropertyListState.Import:
 						{
 							long oldLength = 0;
 
@@ -836,6 +833,7 @@ namespace Simias.Storage
 								oldLength = diskNode.Length;
 							}
 
+							BaseFileNode bfn = Node.NodeFactory( this, node ) as BaseFileNode;
 							storeBytes += ( bfn.Length - oldLength );
 							break;
 						}
