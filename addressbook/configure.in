@@ -14,6 +14,8 @@ LINUX_SUBDIRS="GtkAddrBook"
 WINDOWS_SUBDIRS="FormsBookLib FormsAddrBook"
 
 #
+# Check for a valid operating system
+#
 case $host_os in
     linux*)
         ADDRESSBOOK_OS='linux'
