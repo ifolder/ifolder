@@ -750,6 +750,18 @@
       <xs:element name="ResolveNameConflictResponse">
         <xs:complexType/>
       </xs:element>
+      <xs:element name="RenameAndResolveConflict">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="conflictID" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="newFileName" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RenameAndResolveConflictResponse">
+        <xs:complexType/>
+      </xs:element>
       <xs:element name="SetupProxy">
         <xs:complexType>
           <xs:sequence>
@@ -1126,6 +1138,12 @@
   <message name="ResolveNameConflictSoapOut">
     <part name="parameters" element="s0:ResolveNameConflictResponse"/>
   </message>
+  <message name="RenameAndResolveConflictSoapIn">
+    <part name="parameters" element="s0:RenameAndResolveConflict"/>
+  </message>
+  <message name="RenameAndResolveConflictSoapOut">
+    <part name="parameters" element="s0:RenameAndResolveConflictResponse"/>
+  </message>
   <message name="SetupProxySoapIn">
     <part name="parameters" element="s0:SetupProxy"/>
   </message>
@@ -1406,6 +1424,12 @@
     <part name="newLocalName" type="s:string"/>
   </message>
   <message name="ResolveNameConflictHttpGetOut"/>
+  <message name="RenameAndResolveConflictHttpGetIn">
+    <part name="iFolderID" type="s:string"/>
+    <part name="conflictID" type="s:string"/>
+    <part name="newFileName" type="s:string"/>
+  </message>
+  <message name="RenameAndResolveConflictHttpGetOut"/>
   <message name="SetupProxyHttpGetIn">
     <part name="Host" type="s:string"/>
     <part name="Port" type="s:int"/>
@@ -1677,6 +1701,12 @@
     <part name="newLocalName" type="s:string"/>
   </message>
   <message name="ResolveNameConflictHttpPostOut"/>
+  <message name="RenameAndResolveConflictHttpPostIn">
+    <part name="iFolderID" type="s:string"/>
+    <part name="conflictID" type="s:string"/>
+    <part name="newFileName" type="s:string"/>
+  </message>
+  <message name="RenameAndResolveConflictHttpPostOut"/>
   <message name="SetupProxyHttpPostIn">
     <part name="Host" type="s:string"/>
     <part name="Port" type="s:int"/>
@@ -1950,6 +1980,11 @@
       <output message="s0:ResolveNameConflictSoapOut"/>
       <documentation>Resolves a name conflict</documentation>
     </operation>
+    <operation name="RenameAndResolveConflict">
+      <input message="s0:RenameAndResolveConflictSoapIn"/>
+      <output message="s0:RenameAndResolveConflictSoapOut"/>
+      <documentation>Renames a file and resolves a name conflict</documentation>
+    </operation>
     <operation name="SetupProxy">
       <input message="s0:SetupProxySoapIn"/>
       <output message="s0:SetupProxySoapOut"/>
@@ -2199,6 +2234,11 @@
       <output message="s0:ResolveNameConflictHttpGetOut"/>
       <documentation>Resolves a name conflict</documentation>
     </operation>
+    <operation name="RenameAndResolveConflict">
+      <input message="s0:RenameAndResolveConflictHttpGetIn"/>
+      <output message="s0:RenameAndResolveConflictHttpGetOut"/>
+      <documentation>Renames a file and resolves a name conflict</documentation>
+    </operation>
     <operation name="SetupProxy">
       <input message="s0:SetupProxyHttpGetIn"/>
       <output message="s0:SetupProxyHttpGetOut"/>
@@ -2447,6 +2487,11 @@
       <input message="s0:ResolveNameConflictHttpPostIn"/>
       <output message="s0:ResolveNameConflictHttpPostOut"/>
       <documentation>Resolves a name conflict</documentation>
+    </operation>
+    <operation name="RenameAndResolveConflict">
+      <input message="s0:RenameAndResolveConflictHttpPostIn"/>
+      <output message="s0:RenameAndResolveConflictHttpPostOut"/>
+      <documentation>Renames a file and resolves a name conflict</documentation>
     </operation>
     <operation name="SetupProxy">
       <input message="s0:SetupProxyHttpPostIn"/>
@@ -2926,6 +2971,16 @@
         <soap:body use="literal"/>
       </output>
     </operation>
+    <operation name="RenameAndResolveConflict">
+      <soap:operation soapAction="http://novell.com/ifolder/web/RenameAndResolveConflict"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
     <operation name="SetupProxy">
       <soap:operation soapAction="http://novell.com/ifolder/web/SetupProxy" style="document"/>
       <input>
@@ -3332,6 +3387,13 @@
       </input>
       <output/>
     </operation>
+    <operation name="RenameAndResolveConflict">
+      <http:operation location="/RenameAndResolveConflict"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output/>
+    </operation>
     <operation name="SetupProxy">
       <http:operation location="/SetupProxy"/>
       <input>
@@ -3717,6 +3779,13 @@
     </operation>
     <operation name="ResolveNameConflict">
       <http:operation location="/ResolveNameConflict"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="RenameAndResolveConflict">
+      <http:operation location="/RenameAndResolveConflict"/>
       <input>
         <mime:content type="application/x-www-form-urlencoded"/>
       </input>

@@ -45,6 +45,7 @@ namespace Novell.iFolderCom
 		private string loadPath;
 		private bool fixPath = true;
 		private Conflicts conflicts = null;
+		private bool readOnly;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
@@ -966,8 +967,17 @@ namespace Novell.iFolderCom
 						{
 							try
 							{
-								ifWebService.ResolveNameConflict(ifolder.ID, conflicts.LocalConflict.ConflictID, namePrompt.FileName);
-								ifWebService.ResolveNameConflict(ifolder.ID, conflicts.ServerConflict.ConflictID, conflicts.ServerConflict.ServerName);
+								if (readOnly)
+								{
+									// The user has read-only access, they can only rename the local copy to get it out of the way.
+									ifWebService.RenameAndResolveConflict(ifolder.ID, conflicts.ServerConflict.ConflictID, namePrompt.FileName);
+								}
+								else
+								{
+									ifWebService.ResolveNameConflict(ifolder.ID, conflicts.LocalConflict.ConflictID, namePrompt.FileName);
+									ifWebService.ResolveNameConflict(ifolder.ID, conflicts.ServerConflict.ConflictID, conflicts.ServerConflict.ServerName);
+								}
+
 								lvi.Remove();
 							}
 							catch (Exception ex)
@@ -1111,6 +1121,14 @@ namespace Novell.iFolderCom
 				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("conflictReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
+
+			readOnly = ifolder.CurrentUserRights.Equals("ReadOnly");
+			if (readOnly)
+			{
+				// Show message explaining limitations in resolving for read-only.
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readOnlyInfo"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+				mmb.ShowDialog();
+			}
 		}
 
 		private void conflictsView_SelectedIndexChanged(object sender, System.EventArgs e)
@@ -1134,7 +1152,8 @@ namespace Novell.iFolderCom
 					localDate.Text = conflicts.ServerConflict.LocalDate;
 					localSize.Text = conflicts.ServerConflict.LocalSize;
 
-					saveLocal.Enabled = saveServer.Enabled = true;
+					saveLocal.Enabled = !readOnly;
+					saveServer.Enabled = true;
 				}
 				else
 				{
@@ -1146,6 +1165,25 @@ namespace Novell.iFolderCom
 						localSize.Text = conflicts.LocalConflict.LocalSize;
 						saveLocal.Enabled = true;
 						saveServer.Enabled = false;
+					}
+					else if (readOnly)
+					{
+						string localFile = Path.Combine(ifolder.UnManagedPath, conflicts.ServerConflict.ServerName);
+						if (File.Exists(localFile))
+						{
+							conflicts.LocalConflict = new Conflict();
+							localName.Text = conflicts.LocalConflict.LocalName = conflicts.ServerConflict.ServerName;
+							conflicts.LocalConflict.LocalFullPath = Path.Combine(ifolder.UnManagedPath, conflicts.LocalConflict.LocalName);
+							localDate.Text = File.GetLastWriteTime(localFile).ToString();
+							// TODO: fill in the size.
+							saveLocal.Enabled = true;
+							saveServer.Enabled = false;
+						}
+						else
+						{
+							saveLocal.Enabled = false;
+							saveServer.Enabled = false;
+						}
 					}
 					else
 					{
