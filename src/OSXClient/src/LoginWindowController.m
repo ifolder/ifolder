@@ -132,6 +132,14 @@
 					NSLocalizedString(@"The user account is disabled.  Please contact your network administrator for assistance.", nil));
 					break;
 				}
+				case ns1__StatusCodes__SimiasLoginDisabled:
+				{
+					NSBeginAlertSheet(NSLocalizedString(@"Unable to Connect to iFolder Server", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil, 
+					[self window], nil, nil, nil, nil, 
+					NSLocalizedString(@"This user account has been disabled in iFolder.  Please contact your network administrator for assistance.", nil));
+					break;
+				}
 				case ns1__StatusCodes__AccountLockout:		// AccountLockout
 				{
 					NSBeginAlertSheet(NSLocalizedString(@"iFolder login failed", nil), 
