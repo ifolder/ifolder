@@ -9,6 +9,6 @@ prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
 
-Libs:-Wl,-rpath,${libdir} -L${libdir} -lifolder
+Libs:-Wl,-rpath,${libdir} -L${libdir} -lifolderclient
 Cflags: -I${includedir}
 
