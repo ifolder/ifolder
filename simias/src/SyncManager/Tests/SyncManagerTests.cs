@@ -44,7 +44,6 @@ namespace Simias.Sync.Tests
 		/// </summary>
 		public SyncManagerTests()
 		{
-			MyTrace.SendToConsole();
 		}
 
 		/// <summary>
@@ -53,8 +52,11 @@ namespace Simias.Sync.Tests
 		[Test]
 		public void TestSyncManager()
 		{
-			SyncProperties properties = new SyncProperties();
-			properties.StorePath = "./manager1";
+			Configuration config = new Configuration("./manager1");
+
+			SyncProperties properties = new SyncProperties(config);
+
+			properties.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
 
 			SyncManager manager = new SyncManager(properties);
 			

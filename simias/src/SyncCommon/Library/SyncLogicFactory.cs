@@ -48,15 +48,6 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// Get the collection service object type.
-		/// </summary>
-		/// <returns>A type object for the service class.</returns>
-		public virtual Type GetCollectionServiceType()
-		{
-			return typeof(SyncCollectionService);
-		}
-
-		/// <summary>
 		/// Generate a collection worker object.
 		/// </summary>
 		/// <param name="master">The master collection object.</param>
@@ -65,15 +56,6 @@ namespace Simias.Sync
 		public virtual SyncCollectionWorker GetCollectionWorker(SyncCollectionService master, SyncCollection slave)
 		{
 			return new SyncCollectionWorker(master, slave);
-		}
-
-		/// <summary>
-		/// Should the collection watcher be running?
-		/// </summary>
-		/// <returns>true, if the collection watcher should be started.</returns>
-		public virtual bool WatchFileSystem()
-		{
-			return true;
 		}
 	}
 }

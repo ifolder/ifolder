@@ -39,44 +39,32 @@ namespace Simias.Sync
 	/// </remarks>
 	public class SyncCollectionWorkerLite : SyncCollectionWorker
 	{
-		SyncCollectionServiceLite masterService;
-		SyncCollection localCollection;
-		SyncCollectionServiceLite localService;
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncCollectionServiceLite));
 
-		// TODO: should we be using two services?
+		private SyncCollectionServiceLite masterService;
+		private SyncCollection local;
+		private SyncCollectionServiceLite localService;
+
 		public SyncCollectionWorkerLite(SyncCollectionServiceLite master,
 			SyncCollection slave)
 				: base(master, slave)
 		{
 			this.masterService = master;
-			this.localCollection = slave;
+			this.local = slave;
 			this.localService = new SyncCollectionServiceLite(slave);
 		}
 
 		public override void DoSyncWork()
 		{
-			SyncNodeInfo[] masterNodes = masterService.GetNodeInfoArray();
-			SyncNodeInfo[] localNodes = localService.GetNodeInfoArray();
+			SyncNodeInfo[] masterNodes = masterService.GetNodes();
+			SyncNodeInfo[] localNodes = localService.GetNodes();
 
-#if TRACE
-			MyTrace.WriteLine("Master Nodes: {0}", masterNodes.Length);
+			log.Debug("Master Nodes: {0}", masterNodes.Length);
 			
-			foreach(SyncNodeInfo info in masterNodes)
-			{
-				MyTrace.WriteLine(" {0}", info);
-			}
+			log.Debug("Local Nodes: {0}", localNodes.Length);
 			
-			MyTrace.WriteLine("Local Nodes: {0}", localNodes.Length);
-			
-			foreach(SyncNodeInfo info in localNodes)
-			{
-				MyTrace.WriteLine(" {0}", info);
-			}
-#endif
-
 			// create a working local node list
 			Hashtable localNodeList = new Hashtable();
-			
 			foreach(SyncNodeInfo info in localNodes)
 			{
 				localNodeList.Add(info.ID, info);
@@ -86,12 +74,12 @@ namespace Simias.Sync
 			foreach(SyncNodeInfo masterNodeInfo in masterNodes)
 			{
 				// download any nodes that we do not have
-				if (!localNodeList.Contains(masterNodeInfo.ID) && !masterNodeInfo.Tombstone)
+				if (!localNodeList.Contains(masterNodeInfo.ID))
 				{
-					MyTrace.WriteLine("Download New Node: {0}", masterNodeInfo.NodePath);
+					log.Debug("Download New Node: {0}", masterNodeInfo.Name);
 					
 					// download and update master incarnation
-					Download(masterNodeInfo.ID, masterNodeInfo.LocalIncarnation);
+					Download(masterNodeInfo);
 				}
 				
 				// compare the nodes
@@ -100,39 +88,30 @@ namespace Simias.Sync
 					// get the local node with the same id
 					SyncNodeInfo localNodeInfo = (SyncNodeInfo)localNodeList[masterNodeInfo.ID];
 
-					// remove the slave node from the list
+					// pop the slave node from the list
 					localNodeList.Remove(masterNodeInfo.ID);
 
 					// check for changes on the master first (ignore tombstones)
-					if ((masterNodeInfo.LocalIncarnation > localNodeInfo.MasterIncarnation) && !localNodeInfo.Tombstone)
+					if (masterNodeInfo.LocalIncarnation > localNodeInfo.MasterIncarnation)
 					{
-						MyTrace.WriteLine("Download Changed Node: {0}", masterNodeInfo.NodePath);
+						log.Debug("Download Changed Node: {0}", masterNodeInfo.Name);
 						
 						// download and update master incarnation
-						Download(masterNodeInfo.ID, masterNodeInfo.LocalIncarnation);
+						Download(masterNodeInfo);
 					}
 
 					// check for local changes
 					else if (localNodeInfo.LocalIncarnation > localNodeInfo.MasterIncarnation)
 					{
-						MyTrace.WriteLine("Upload Changed Node: {0}", masterNodeInfo.NodePath);
+						log.Debug("Upload Changed Node: {0}", masterNodeInfo.Name);
 						
 						// upload
-						Upload(localNodeInfo.ID);
+						Upload(localNodeInfo);
 					}
 
-					// tombstones that have not been modified
-					else if (localNodeInfo.Tombstone)
-					{
-						MyTrace.WriteLine("Upload Deleted Node: {0}", masterNodeInfo.NodePath);
-						
-						// delete off the master
-						masterService.DeleteNode(masterNodeInfo.ID);
-						localService.DeleteNode(localNodeInfo.ID);
-					}
+					// no changes
 					else
 					{
-						// no changes
 					}
 				}
 			}
@@ -141,49 +120,44 @@ namespace Simias.Sync
 			foreach(SyncNodeInfo localNodeInfo in localNodeList.Values)
 			{
 				// is this node unmodified and deleted off the master?
-				if ((localNodeInfo.MasterIncarnation == localNodeInfo.LocalIncarnation) && !localNodeInfo.Tombstone)
+				if (localNodeInfo.MasterIncarnation == localNodeInfo.LocalIncarnation)
 				{
-					MyTrace.WriteLine("Download Deleted Node: {0}", localNodeInfo.NodePath);
+					log.Debug("Download Deleted Node: {0}", localNodeInfo.Name);
 					
+					// pop
 					localService.DeleteNode(localNodeInfo.ID);
 				}
 				
-				// remove any stale tombstones
-				else if (localNodeInfo.Tombstone)
-				{
-					MyTrace.WriteLine("Delete Local Stale Node: {0}", localNodeInfo.NodePath);
-					localService.DeleteNode(localNodeInfo.ID);
-				}
-
-				// a new ifle
+				// a new local node
 				else
 				{
 					// upload
-					MyTrace.WriteLine("Upload New Node: {0}", localNodeInfo.NodePath);
+					log.Debug("Upload New Node: {0}", localNodeInfo.Name);
 					
-					Upload(localNodeInfo.ID);
+					Upload(localNodeInfo);
 				}
 			}
 		}
 
-		public void Download(string id, ulong incarnation)
+		public void Download(SyncNodeInfo node)
 		{
 			// download and update master incarnation
-			localService.CommitSyncPacket(masterService.GetSyncPacket(id), incarnation);
+			localService.Commit(masterService.GetSyncPacket(node.ID), node.MasterIncarnation);
 		}
 
-		public void Upload(string id)
+		public void Upload(SyncNodeInfo node)
 		{
 			// TODO: do we need a node lock to protect the node between the following calls?
 			
 			// upload
-			ulong incarnation = masterService.CommitSyncPacket(localService.GetSyncPacket(id));
+			ulong incarnation = masterService.Commit(localService.GetSyncPacket(node.ID));
 
-			// update the master incarnation (except on collection)
+			// update the master incarnation on the local node
 			if (incarnation != 0)
 			{
-				SyncNode node = localCollection.GetNode(id);
-				node.UpdateIncarnation(incarnation);
+				Node n = local.GetNodeByID(node.ID);
+				n.IncarnationUpdate = incarnation;
+				local.Commit(n);
 			}
 		}
 	}

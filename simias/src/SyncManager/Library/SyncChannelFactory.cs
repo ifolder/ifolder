@@ -36,6 +36,9 @@ using Novell.Security.SecureSink;
 using Novell.Security.SecureSink.SecurityProvider;
 using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
 
+using Simias;
+using Simias.Storage;
+
 namespace Simias.Sync
 {
 	/// <summary>
@@ -43,6 +46,8 @@ namespace Simias.Sync
 	/// </summary>
 	public class SyncChannelFactory
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncChannelFactory));
+
 		private static SyncChannelFactory singleton;
 
 		private ArrayList channels;
@@ -54,6 +59,19 @@ namespace Simias.Sync
 			// send the errors back on debug
 			RemotingConfiguration.CustomErrorsEnabled(false);
 #endif
+			// TODO: remove or update
+			string config = "remoting.config";
+
+			try
+			{
+				RemotingConfiguration.Configure(config);
+			}
+			catch
+			{
+				config = "Not Found";
+			}
+
+			log.Debug("Remoting Configuration File: {0}", config);
 		}
 
 		public static SyncChannelFactory GetInstance()
@@ -78,12 +96,12 @@ namespace Simias.Sync
 			index = 0;
 		}
 		
-		public SyncChannel GetChannel(SyncStore store, SyncChannelSinks sinks)
+		public SyncChannel GetChannel(Store store, SyncChannelSinks sinks)
 		{
 			return GetChannel(store, sinks, 0);
 		}
 			
-		public SyncChannel GetChannel(SyncStore store, SyncChannelSinks sinks, int port)
+		public SyncChannel GetChannel(Store store, SyncChannelSinks sinks, int port)
 		{
 			SyncChannel result = null;
 
@@ -103,7 +121,7 @@ namespace Simias.Sync
 									"Another channel already exists on the requested port with different sinks.");
 							}
 
-							MyTrace.WriteLine("Channel Opened: {0}", sc.Name);
+							log.Debug("Channel Opened: {0}", sc.Name);
 
 							break;
 						}
@@ -164,13 +182,13 @@ namespace Simias.Sync
 					// setup security providers
 					if ((sinks & SyncChannelSinks.Security) > 0)
 					{
-						ISecurityServerFactory securityServerFactory = (ISecurityServerFactory) new RsaSecurityServerFactory(store.BaseStore.KeyStore);
+						ISecurityServerFactory securityServerFactory = (ISecurityServerFactory) new RsaSecurityServerFactory(store.KeyStore);
 						IServerChannelSinkProvider serverSecurityProvider = (IServerChannelSinkProvider) new SecureServerSinkProvider(securityServerFactory, SecureServerSinkProvider.MsgSecurityLevel.privacy);
 						serverSecurityProvider.Next = serverProvider;
 						serverProvider = serverSecurityProvider;
 
 						ISecurityClientFactory[] secClientFactories = new ISecurityClientFactory[1];
-						secClientFactories[0] = (ISecurityClientFactory) new RsaSecurityClientFactory(store.BaseStore.KeyStore);
+						secClientFactories[0] = (ISecurityClientFactory) new RsaSecurityClientFactory(store.KeyStore);
 						IClientChannelSinkProvider clientSecureProvider = (IClientChannelSinkProvider) new SecureClientSinkProvider(secClientFactories);
 						
 						// TODO: fix with cleaner solution
@@ -198,7 +216,7 @@ namespace Simias.Sync
 					// add channel
 					channels.Add(result);
 
-					MyTrace.WriteLine("Channel Registered: {0} ({1})", name, sinks);
+					log.Debug("Channel Registered: {0} ({1})", name, sinks);
 				}
 			}
 	
@@ -213,7 +231,7 @@ namespace Simias.Sync
 				ChannelServices.UnregisterChannel(channel.Channel);
 			}
 
-			MyTrace.WriteLine("Channel Unregistered: {0}", channel.Name);
+			log.Debug("Channel Unregistered: {0}", channel.Name);
 		}
 	}
 }

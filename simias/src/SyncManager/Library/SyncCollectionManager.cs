@@ -28,20 +28,21 @@ using System.Runtime.Remoting;
 using System.Diagnostics;
 
 using Simias;
+using Simias.Storage;
 
 namespace Simias.Sync
 {
 	/// <summary>
 	/// Sync Collection Manager
 	/// </summary>
-	public class SyncCollectionManager : IDisposable
+	public class SyncCollectionManager
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncCollectionManager));
+
 		private SyncManager syncManager;
 		private SyncStoreManager storeManager;
-		private SyncStore store;
+		private Store store;
 		private SyncCollection collection;
-		private CollectionWatcher watcher;
-		private bool watching;
 		private SyncChannel channel;
 		private SyncStoreService storeService;
 		private SyncCollectionService service;
@@ -56,21 +57,12 @@ namespace Simias.Sync
 			
 			// open store and collection
 			// note: the store provider requires that we open a new store for each thread
-			store = new SyncStore(syncManager.StorePath);
-			collection = store.OpenCollection(id);
+			store = new Store(syncManager.Config);
+			collection = new SyncCollection(store.GetCollectionByID(id));
 			Debug.Assert(collection != null);
 
 			// check sync properties
 			CheckProperties();
-
-			// watcher
-			watching = syncManager.LogicFactory.WatchFileSystem();
-			
-			if (watching)
-			{
-				watcher = new CollectionWatcher(syncManager.StorePath, id);
-				watcher.ChangedFile += new ChangedFileEventHandler(OnChangedFile);
-			}
 		}
 
 		private void CheckProperties()
@@ -102,9 +94,6 @@ namespace Simias.Sync
 					case SyncCollectionRoles.Slave:
 						// start the slave
 						StartSlave();
-				
-						// start the watcher
-						if (watching) watcher.Start();
 						break;
 
 					case SyncCollectionRoles.Local:
@@ -115,7 +104,7 @@ namespace Simias.Sync
 			}
 			catch(Exception e)
 			{
-				MyTrace.WriteLine(e);
+				log.Error(e, "Unable to start collection manager.");
 
 				throw e;
 			}
@@ -132,9 +121,6 @@ namespace Simias.Sync
 						break;
 
 					case SyncCollectionRoles.Slave:
-						// stop watcher
-						if (watching) watcher.Stop();
-
 						// stop the master
 						StopSlave();
 						break;
@@ -147,7 +133,7 @@ namespace Simias.Sync
 			}
 			catch(Exception e)
 			{
-				MyTrace.WriteLine(e);
+				log.Error(e, "Unable to stop collection manager.");
 
 				throw e;
 			}
@@ -175,7 +161,7 @@ namespace Simias.Sync
 				syncWorkerThread.Start();
 			}
 
-			MyTrace.WriteLine("{0} Url: {1}", collection.Name, collection.ServiceUrl);
+			log.Debug("{0} Url: {1}", collection.Name, collection.ServiceUrl);
 		}
 
 		private void StopSlave()
@@ -220,7 +206,7 @@ namespace Simias.Sync
 				// get permission from sync manager
 				syncManager.ReadyToWork();
 
-				MyTrace.WriteLine("Sync Cycle Starting: {0}", collection.Name);
+				log.Info("Starting Sync Cycle: {0}", collection.Name);
 
 				// TODO: the remoting connection is currently being created with each sync interval,
 				// once we have more confidence in remoting the connection should be created less often
@@ -238,34 +224,34 @@ namespace Simias.Sync
 
 					string serviceUrl = serviceUri.ToString();
 
-					MyTrace.WriteLine("Sync Store Service URL: {0}", serviceUrl);
+					log.Debug("Sync Store Service URL: {0}", serviceUrl);
 
 					// get a proxy to the store service object
-					MyTrace.WriteLine("Connecting to the Sync Store Service...");
+					log.Debug("Connecting to the Sync Store Service...");
 					storeService = (SyncStoreService)Activator.GetObject(typeof(SyncStoreService), collection.ServiceUrl);
 					Debug.Assert(storeService != null);
 
 					// get a proxy to the collection service object
-					MyTrace.WriteLine("Connecting to the Sync Collection Service...");
+					log.Debug("Connecting to the Sync Collection Service...");
 					service = storeService.GetCollectionService(collection.ID);
 					Debug.Assert(service != null);
 
 					// debug
-					MyTrace.WriteLine("Pinging the Sync Collection Service...");
-					MyTrace.WriteLine(service.Ping().ToString());
+					log.Debug("Pinging the Sync Collection Service...");
+					log.Debug(service.Ping().ToString());
 
 					// get the collection worker
-					MyTrace.WriteLine("Creating a Sync Worker Object...");
+					log.Debug("Creating a Sync Worker Object...");
 					worker = syncManager.LogicFactory.GetCollectionWorker(service, collection);
 					Debug.Assert(worker != null);
 
 					// do the work
-					MyTrace.WriteLine("Starting the Sync Worker...");
+					log.Debug("Starting the Sync Worker...");
 					worker.DoSyncWork();
 				}
 				catch(Exception e)
 				{
-					MyTrace.WriteLine(e);
+					log.Debug(e, "Ignored");
 				}
 				finally
 				{
@@ -274,7 +260,7 @@ namespace Simias.Sync
 					worker = null;
 				}
 
-				MyTrace.WriteLine("Sync Cycle Finished: {0}", collection.Name);
+				log.Info("Finished Sync Cycle: {0}", collection.Name);
 
 				// finish with sync manager
 				syncManager.DoneWithWork();
@@ -283,25 +269,5 @@ namespace Simias.Sync
 				if (working) Thread.Sleep(TimeSpan.FromSeconds(collection.Interval));
 			}
 		}
-
-		private void OnChangedFile(string id)
-		{
-		}
-
-		#region IDisposable Members
-
-		public void Dispose()
-		{
-			// validate a stop
-			Stop();
-
-			if (watcher != null) watcher.Dispose();
-			watcher = null;
-
-			if (collection != null) collection.Dispose();
-			collection = null;
-		}
-
-		#endregion
 	}
 }

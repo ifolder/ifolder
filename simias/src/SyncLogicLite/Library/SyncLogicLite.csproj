@@ -119,17 +119,12 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "SyncNodeInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "SyncPacket.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "SyncPacketData.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "SyncPacketHeader.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

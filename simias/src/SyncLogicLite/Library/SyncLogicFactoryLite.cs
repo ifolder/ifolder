@@ -40,11 +40,6 @@ namespace Simias.Sync
 			return new SyncCollectionServiceLite(collection);
 		}
 
-		public override Type GetCollectionServiceType()
-		{
-			return typeof(SyncCollectionServiceLite);
-		}
-
 		public override SyncCollectionWorker GetCollectionWorker(
 			SyncCollectionService master, SyncCollection slave)
 		{

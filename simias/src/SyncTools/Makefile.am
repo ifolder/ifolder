@@ -6,8 +6,8 @@ SyncPing_CSFILES_CSC := $(subst /,$(SEP),$(SyncPing_CSFILES))
 SyncPing_INCLUDES =
 SyncPing_RESOURCES = $(srcdir)/Ping/App$(ICON_EXT)
 SyncPing_FLAGS = $(CSC_EXEFLAG)
-SyncPing_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll SyncCommon.dll CollectionWatcher.dll StoreWatcher.dll SyncManager.dll
-SyncPing_LIBPATH = Library ../Common ../SyncCommon ../StoreProvider ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../CollectionEvents ../SyncManager ../CollectionWatcher ../StoreWatcher
+SyncPing_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll SyncCommon.dll SyncManager.dll
+SyncPing_LIBPATH = Library ../Common ../SyncCommon ../StoreProvider ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../CollectionEvents ../SyncManager 
 
 EXTRA_DIST = $(SyncPing_CSFILES) $(SyncPing_RESOURCES)
 

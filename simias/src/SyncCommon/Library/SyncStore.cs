@@ -32,51 +32,14 @@ namespace Simias.Sync
 	/// <summary>
 	/// Sync Store
 	/// </summary>
-	public class SyncStore : IDisposable
+	public class SyncStore : Store
 	{
-		private string path;
-		private Store baseStore;
-
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public SyncStore() : this((string)null)
+		public SyncStore(Configuration configuration) : base(configuration)
 		{
-		}
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="path">The collection store path</param>
-		public SyncStore(string path)
-		{
-			this.path = path;
-			
-			// store required uri handling
-			Uri storeUri = null;
-
-			if ((path != null) && (path.Length > 0))
-			{
-				this.path = Path.GetFullPath(path);
-
-				storeUri = new Uri(this.path);
-			}
-			
-			// base store
-			baseStore = Store.Connect(storeUri, null);
-		}
-
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="store">The collection store object</param>
-		public SyncStore(Store store)
-		{
-			// path
-			this.path = store.StorePath.LocalPath;
-			
-			// base store
-			baseStore = store;
 		}
 
 		/// <summary>
@@ -201,54 +164,14 @@ namespace Simias.Sync
 			return String.Format("SyncStoreService{0}.rem", port);
 		}
 
-		/// <summary>
-		/// Delete the collection from the store.
-		/// </summary>
-		public void Delete()
-		{
-			baseStore.ImpersonateUser(Access.StoreAdminRole);
-			baseStore.Delete();
-			
-			this.Dispose();
-		}
-
-		#region IDisposable Members
-
-		/// <summary>
-		/// Clean-up all the resources used by the collection.
-		/// </summary>
-		public void Dispose()
-		{
-			baseStore.Dispose();
-			baseStore = null;
-		}
-
-		#endregion
-
 		#region Properties
 		
-		/// <summary>
-		/// The base store object.
-		/// </summary>
-		public Store BaseStore
-		{
-			get { return baseStore; }
-		}
-
 		/// <summary>
 		/// The store id.
 		/// </summary>
 		public string ID
 		{
-			get { return baseStore.GetDatabaseObject().Id; }
-		}
-
-		/// <summary>
-		/// The store path.
-		/// </summary>
-		public string StorePath
-		{
-			get { return path; }
+			get { return base.GetDatabaseObject().ID; }
 		}
 
 		#endregion

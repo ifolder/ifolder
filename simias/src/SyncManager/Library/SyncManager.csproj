@@ -100,16 +100,6 @@
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "CollectionWatcher"
-                    Project = "{22DA6C47-F4B3-456E-9514-B7417B4D9865}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "StoreWatcher"
-                    Project = "{6A5EF608-400F-4E03-B80C-CEA54C8ABE21}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
                     Name = "Novell.Security.SecureSink"
                     AssemblyName = "Novell.Security.SecureSink"
                     HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.dll"
@@ -143,6 +133,16 @@
                     Name = "Location"
                     Project = "{A3BE2C80-E2B0-4549-A64F-1C506772EE97}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "CollectionEvents"
+                    Project = "{680C2A55-3F33-45EA-AA67-5652592D93FE}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "mDnsResponderApi"
+                    AssemblyName = "mDnsResponderApi"
+                    HintPath = "..\..\..\external\mDnsResponder\net\mDnsResponderApi.dll"
                 />
             </References>
         </Build>

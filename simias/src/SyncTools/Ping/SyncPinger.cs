@@ -26,12 +26,13 @@ using System.Threading;
 using System.Net;
 
 using Simias;
+using Simias.Storage;
 using Simias.Sync;
 
 namespace Simias.Sync.Tools
 {
 	/// <summary>
-	/// Sync Ping
+	/// Sync Pinger
 	/// </summary>
 	public class SyncPinger
 	{
@@ -104,11 +105,10 @@ namespace Simias.Sync.Tools
 
 					start = Environment.TickCount;
 
-					info = SyncPing.PingStore(new SyncStore(), host);
+					info = SyncPing.PingStore(new Store(new Configuration()), host);
 				}
-				catch(Exception e)
+				catch
 				{
-					MyTrace.WriteLine(e);
 					info = null;
 				}
 				finally

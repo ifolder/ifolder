@@ -30,6 +30,8 @@ namespace Simias.Sync
 	/// </summary>
 	public class SyncCollectionService : MarshalByRefObject
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncCollectionService));
+
 		private SyncCollection collection;
 
 		/// <summary>
@@ -48,13 +50,9 @@ namespace Simias.Sync
 		/// <param name="collection">The collection object.</param>
 		public SyncCollectionService(SyncCollection collection)
 		{
-			MyTrace.WriteLine("Creating Sync Collection Service: {0}", collection.ID);
-			this.collection = collection;
+			log.Debug("Creating Sync Collection Service: {0}", collection.Name);
 			
-			// refresh the connection
-			collection.Refresh();
-
-			MyTrace.WriteLine("Refreshed Sync Collection Service: {0}", collection.ID);
+			this.collection = collection;
 		}
 
 		/// <summary>
@@ -65,7 +63,7 @@ namespace Simias.Sync
 		{
 			SyncCollectionInfo info = new SyncCollectionInfo(collection);
 
-			MyTrace.WriteLine("Preparing Ping Response: {0}", info);
+			log.Debug("Preparing Ping Response: {0}", info);
 
 			return info;
 		}
