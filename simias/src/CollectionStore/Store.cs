@@ -478,7 +478,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets all collections that have the specified name.
 		/// </summary>
-		/// <param name="name">A string containing the name of the collection(s) to search for.
+		/// <param name="name">A string containing the name of the collection(s) to search for.</param>
 		/// <returns>An ICSList object containing ShallowNode objects that represent the Collection 
 		/// objects that matched the specified name.</returns>
 		public ICSList GetCollectionsByName( string name )

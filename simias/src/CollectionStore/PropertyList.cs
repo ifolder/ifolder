@@ -773,7 +773,7 @@ namespace Simias.Storage
 		internal void StripLocalProperties( XmlDocument document )
 		{
 			// Strip out any non-transient values.
-			XmlNodeList nonTransList = document.DocumentElement.SelectNodes( "//Property[@flags]" );
+			XmlNodeList nonTransList = document.DocumentElement.SelectNodes( "//" + XmlTags.PropertyTag + "[@" + XmlTags.FlagsAttr + "]" );
 			foreach( XmlNode tempNode in nonTransList )
 			{
 				uint flags = Convert.ToUInt32( tempNode.Attributes[ XmlTags.FlagsAttr ].Value );
