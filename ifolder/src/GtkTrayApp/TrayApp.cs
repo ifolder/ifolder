@@ -66,7 +66,7 @@ namespace Novell.iFolder
 
 			Gnome.Program program =
 				new Program("iFolder", "0.10.0", Modules.UI, args);
-			
+
 			// This is my huge try catch block to catch any exceptions
 			// that are not caught
 			try

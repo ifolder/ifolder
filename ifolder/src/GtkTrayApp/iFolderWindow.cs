@@ -191,7 +191,7 @@ namespace Novell.iFolder
 		/// </summary>
 		private void CreateWidgets()
 		{
-			this.SetDefaultSize (200, 480);
+			this.SetDefaultSize (540, 480);
 			this.DeleteEvent += new DeleteEventHandler (WindowDelete);
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 			this.WindowPosition = Gtk.WindowPosition.Center;
@@ -1473,7 +1473,7 @@ namespace Novell.iFolder
 				{
 					try
 					{
-    					iFolderWS.DeleteiFolder(ifolder.ID);
+    					iFolderWS.RevertiFolder(ifolder.ID);
 						// iFolderTreeStore.Remove(ref iter);
 						// Refresh the view so the Subscription shows up again
 						RefreshiFolderTreeView(o, args);

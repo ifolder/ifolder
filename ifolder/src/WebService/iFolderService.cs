@@ -300,6 +300,27 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
+		/// WebMethod that will revert an iFolder back to an unsubscribed
+		/// state that can be then re-setup on the local box.  This API will
+		/// not delete the iFolder
+		/// </summary>
+		/// <param name = "iFolderID">
+		/// The ID of the collection representing this iFolder
+		/// </param>
+		/// <returns>
+		/// true if the iFolder was successfully removed
+		/// </returns>
+		[WebMethod(Description="Revert an iFolder on the local computer but remain a member")]
+		[SoapDocumentMethod]
+		public void RevertiFolder(string iFolderID)
+		{
+			SharedCollection.RevertSharedCollection(iFolderID);
+		}
+
+
+
+
+		/// <summary>
 		/// WebMethod that returns all iFolders on the iFolder Server
 		/// </summary>
 		/// <returns>
@@ -463,6 +484,7 @@ namespace Novell.iFolder.Web
 				foreach(ShallowNode sNode in poList)
 				{
 					sub = new Subscription(pobox, sNode);
+					break;
 				}
 
 				if (sub == null)
