@@ -48,10 +48,10 @@ namespace Novell.FormsTrayApp
 		private const int maxMessages = 500;
 		private IProcEventClient eventClient;
 		private bool shutdown = false;
-		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ListBox log;
-		private System.Windows.Forms.Button saveLog;
-		private System.Windows.Forms.Button clearLog;
+		private System.Windows.Forms.ToolBar toolBar1;
+		private System.Windows.Forms.ToolBarButton toolBarSave;
+		private System.Windows.Forms.ToolBarButton toolBarClear;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -104,9 +104,9 @@ namespace Novell.FormsTrayApp
 		{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(SyncLog));
 			this.log = new System.Windows.Forms.ListBox();
-			this.label1 = new System.Windows.Forms.Label();
-			this.saveLog = new System.Windows.Forms.Button();
-			this.clearLog = new System.Windows.Forms.Button();
+			this.toolBar1 = new System.Windows.Forms.ToolBar();
+			this.toolBarSave = new System.Windows.Forms.ToolBarButton();
+			this.toolBarClear = new System.Windows.Forms.ToolBarButton();
 			this.SuspendLayout();
 			// 
 			// log
@@ -132,75 +132,49 @@ namespace Novell.FormsTrayApp
 			this.log.TabIndex = ((int)(resources.GetObject("log.TabIndex")));
 			this.log.Visible = ((bool)(resources.GetObject("log.Visible")));
 			// 
-			// label1
+			// toolBar1
 			// 
-			this.label1.AccessibleDescription = resources.GetString("label1.AccessibleDescription");
-			this.label1.AccessibleName = resources.GetString("label1.AccessibleName");
-			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label1.Anchor")));
-			this.label1.AutoSize = ((bool)(resources.GetObject("label1.AutoSize")));
-			this.label1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label1.Dock")));
-			this.label1.Enabled = ((bool)(resources.GetObject("label1.Enabled")));
-			this.label1.Font = ((System.Drawing.Font)(resources.GetObject("label1.Font")));
-			this.label1.Image = ((System.Drawing.Image)(resources.GetObject("label1.Image")));
-			this.label1.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.ImageAlign")));
-			this.label1.ImageIndex = ((int)(resources.GetObject("label1.ImageIndex")));
-			this.label1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label1.ImeMode")));
-			this.label1.Location = ((System.Drawing.Point)(resources.GetObject("label1.Location")));
-			this.label1.Name = "label1";
-			this.label1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label1.RightToLeft")));
-			this.label1.Size = ((System.Drawing.Size)(resources.GetObject("label1.Size")));
-			this.label1.TabIndex = ((int)(resources.GetObject("label1.TabIndex")));
-			this.label1.Text = resources.GetString("label1.Text");
-			this.label1.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.TextAlign")));
-			this.label1.Visible = ((bool)(resources.GetObject("label1.Visible")));
+			this.toolBar1.AccessibleDescription = resources.GetString("toolBar1.AccessibleDescription");
+			this.toolBar1.AccessibleName = resources.GetString("toolBar1.AccessibleName");
+			this.toolBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("toolBar1.Anchor")));
+			this.toolBar1.Appearance = ((System.Windows.Forms.ToolBarAppearance)(resources.GetObject("toolBar1.Appearance")));
+			this.toolBar1.AutoSize = ((bool)(resources.GetObject("toolBar1.AutoSize")));
+			this.toolBar1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("toolBar1.BackgroundImage")));
+			this.toolBar1.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
+																						this.toolBarSave,
+																						this.toolBarClear});
+			this.toolBar1.ButtonSize = ((System.Drawing.Size)(resources.GetObject("toolBar1.ButtonSize")));
+			this.toolBar1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("toolBar1.Dock")));
+			this.toolBar1.DropDownArrows = ((bool)(resources.GetObject("toolBar1.DropDownArrows")));
+			this.toolBar1.Enabled = ((bool)(resources.GetObject("toolBar1.Enabled")));
+			this.toolBar1.Font = ((System.Drawing.Font)(resources.GetObject("toolBar1.Font")));
+			this.toolBar1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("toolBar1.ImeMode")));
+			this.toolBar1.Location = ((System.Drawing.Point)(resources.GetObject("toolBar1.Location")));
+			this.toolBar1.Name = "toolBar1";
+			this.toolBar1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("toolBar1.RightToLeft")));
+			this.toolBar1.ShowToolTips = ((bool)(resources.GetObject("toolBar1.ShowToolTips")));
+			this.toolBar1.Size = ((System.Drawing.Size)(resources.GetObject("toolBar1.Size")));
+			this.toolBar1.TabIndex = ((int)(resources.GetObject("toolBar1.TabIndex")));
+			this.toolBar1.TextAlign = ((System.Windows.Forms.ToolBarTextAlign)(resources.GetObject("toolBar1.TextAlign")));
+			this.toolBar1.Visible = ((bool)(resources.GetObject("toolBar1.Visible")));
+			this.toolBar1.Wrappable = ((bool)(resources.GetObject("toolBar1.Wrappable")));
+			this.toolBar1.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.toolBar1_ButtonClick);
 			// 
-			// saveLog
+			// toolBarSave
 			// 
-			this.saveLog.AccessibleDescription = resources.GetString("saveLog.AccessibleDescription");
-			this.saveLog.AccessibleName = resources.GetString("saveLog.AccessibleName");
-			this.saveLog.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("saveLog.Anchor")));
-			this.saveLog.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("saveLog.BackgroundImage")));
-			this.saveLog.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("saveLog.Dock")));
-			this.saveLog.Enabled = ((bool)(resources.GetObject("saveLog.Enabled")));
-			this.saveLog.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("saveLog.FlatStyle")));
-			this.saveLog.Font = ((System.Drawing.Font)(resources.GetObject("saveLog.Font")));
-			this.saveLog.Image = ((System.Drawing.Image)(resources.GetObject("saveLog.Image")));
-			this.saveLog.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("saveLog.ImageAlign")));
-			this.saveLog.ImageIndex = ((int)(resources.GetObject("saveLog.ImageIndex")));
-			this.saveLog.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("saveLog.ImeMode")));
-			this.saveLog.Location = ((System.Drawing.Point)(resources.GetObject("saveLog.Location")));
-			this.saveLog.Name = "saveLog";
-			this.saveLog.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("saveLog.RightToLeft")));
-			this.saveLog.Size = ((System.Drawing.Size)(resources.GetObject("saveLog.Size")));
-			this.saveLog.TabIndex = ((int)(resources.GetObject("saveLog.TabIndex")));
-			this.saveLog.Text = resources.GetString("saveLog.Text");
-			this.saveLog.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("saveLog.TextAlign")));
-			this.saveLog.Visible = ((bool)(resources.GetObject("saveLog.Visible")));
-			this.saveLog.Click += new System.EventHandler(this.saveLog_Click);
+			this.toolBarSave.Enabled = ((bool)(resources.GetObject("toolBarSave.Enabled")));
+			this.toolBarSave.ImageIndex = ((int)(resources.GetObject("toolBarSave.ImageIndex")));
+			this.toolBarSave.Text = resources.GetString("toolBarSave.Text");
+			this.toolBarSave.ToolTipText = resources.GetString("toolBarSave.ToolTipText");
+			this.toolBarSave.Visible = ((bool)(resources.GetObject("toolBarSave.Visible")));
 			// 
-			// clearLog
+			// toolBarClear
 			// 
-			this.clearLog.AccessibleDescription = resources.GetString("clearLog.AccessibleDescription");
-			this.clearLog.AccessibleName = resources.GetString("clearLog.AccessibleName");
-			this.clearLog.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("clearLog.Anchor")));
-			this.clearLog.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("clearLog.BackgroundImage")));
-			this.clearLog.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("clearLog.Dock")));
-			this.clearLog.Enabled = ((bool)(resources.GetObject("clearLog.Enabled")));
-			this.clearLog.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("clearLog.FlatStyle")));
-			this.clearLog.Font = ((System.Drawing.Font)(resources.GetObject("clearLog.Font")));
-			this.clearLog.Image = ((System.Drawing.Image)(resources.GetObject("clearLog.Image")));
-			this.clearLog.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("clearLog.ImageAlign")));
-			this.clearLog.ImageIndex = ((int)(resources.GetObject("clearLog.ImageIndex")));
-			this.clearLog.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("clearLog.ImeMode")));
-			this.clearLog.Location = ((System.Drawing.Point)(resources.GetObject("clearLog.Location")));
-			this.clearLog.Name = "clearLog";
-			this.clearLog.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("clearLog.RightToLeft")));
-			this.clearLog.Size = ((System.Drawing.Size)(resources.GetObject("clearLog.Size")));
-			this.clearLog.TabIndex = ((int)(resources.GetObject("clearLog.TabIndex")));
-			this.clearLog.Text = resources.GetString("clearLog.Text");
-			this.clearLog.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("clearLog.TextAlign")));
-			this.clearLog.Visible = ((bool)(resources.GetObject("clearLog.Visible")));
-			this.clearLog.Click += new System.EventHandler(this.clearLog_Click);
+			this.toolBarClear.Enabled = ((bool)(resources.GetObject("toolBarClear.Enabled")));
+			this.toolBarClear.ImageIndex = ((int)(resources.GetObject("toolBarClear.ImageIndex")));
+			this.toolBarClear.Text = resources.GetString("toolBarClear.Text");
+			this.toolBarClear.ToolTipText = resources.GetString("toolBarClear.ToolTipText");
+			this.toolBarClear.Visible = ((bool)(resources.GetObject("toolBarClear.Visible")));
 			// 
 			// SyncLog
 			// 
@@ -212,9 +186,7 @@ namespace Novell.FormsTrayApp
 			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
-			this.Controls.Add(this.clearLog);
-			this.Controls.Add(this.saveLog);
-			this.Controls.Add(this.label1);
+			this.Controls.Add(this.toolBar1);
 			this.Controls.Add(this.log);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
@@ -263,13 +235,38 @@ namespace Novell.FormsTrayApp
 			{
 				log.Items.Add(dateTime.ToString() + " " + message);
 				log.SelectedIndex = log.Items.Count - 1;
-				saveLog.Enabled = clearLog.Enabled = true;
+				toolBarSave.Enabled = toolBarClear.Enabled = true;
 
 				// This should only have to execute once.
 				while (log.Items.Count > maxMessages)
 				{
 					log.Items.RemoveAt(0);
 				}
+			}
+		}
+
+		private void clearLog()
+		{
+			log.Items.Clear();
+
+			log.Items.Add(DateTime.Now.ToString() + " " + resourceManager.GetString("logEntriesCleared"));
+
+			toolBarSave.Enabled = toolBarClear.Enabled = false;
+		}
+
+		private void saveLog()
+		{
+			SaveFileDialog saveFileDialog = new SaveFileDialog();
+			if (saveFileDialog.ShowDialog() == DialogResult.OK)
+			{
+				StreamWriter streamWriter = File.CreateText(saveFileDialog.FileName);
+				foreach (string s in log.Items)
+				{
+					streamWriter.WriteLine(s);
+				}
+
+				streamWriter.Flush();
+				streamWriter.Close();
 			}
 		}
 
@@ -352,29 +349,17 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private void saveLog_Click(object sender, System.EventArgs e)
+		private void toolBar1_ButtonClick(object sender, System.Windows.Forms.ToolBarButtonClickEventArgs e)
 		{
-			SaveFileDialog saveFileDialog = new SaveFileDialog();
-			if (saveFileDialog.ShowDialog() == DialogResult.OK)
+			switch (toolBar1.Buttons.IndexOf(e.Button))
 			{
-				StreamWriter streamWriter = File.CreateText(saveFileDialog.FileName);
-				foreach (string s in log.Items)
-				{
-					streamWriter.WriteLine(s);
-				}
-
-				streamWriter.Flush();
-				streamWriter.Close();
+				case 0: // Save log
+					saveLog();
+					break;
+				case 1: // Clear log
+					clearLog();
+					break;
 			}
-		}
-
-		private void clearLog_Click(object sender, System.EventArgs e)
-		{
-			log.Items.Clear();
-
-			log.Items.Add(DateTime.Now.ToString() + " " + resourceManager.GetString("logEntriesCleared"));
-
-			saveLog.Enabled = clearLog.Enabled = false;
 		}
 		#endregion
 
