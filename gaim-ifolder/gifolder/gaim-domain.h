@@ -35,9 +35,16 @@ int simias_get_local_service_url(char **url);
 
 void simias_sync_member_list();
 void simias_update_member(const char *account_name, const char *account_prpl_id,
-						  const char *buddy_name);
+						  const char *buddy_name, const char *machine_name);
 
-/* The returned string, if not null, needs to be freed by the caller */
-char * simias_get_domain_user_id();
+/**
+ * Gets the machineName, userID, and simiasURL for the current Gaim Domain Owner.
+ *
+ * This method returns 0 on success.  If success is returned, the machineName,
+ * userID, and simiasURL parameters will have had new strings allocated to them
+ * and need to be freed.  If there is an error, the output parameters are
+ * invalid and do not need to be freed.
+ */
+int simias_get_user_info(char **machineName, char **userID, char **simiasURL);
 
 #endif

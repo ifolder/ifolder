@@ -25,6 +25,11 @@
  *  distributed under the GPL.
  ***********************************************************************/
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+
 #include "simias-prefs.h"
 
 /* Gaim Includes */
@@ -56,6 +61,11 @@ simias_init_default_prefs()
 		gaim_prefs_add_string(SIMIAS_PREF_MACHINE_NAME,
 							 machine_name);
 		free(machine_name);
+	}
+
+	if (!gaim_prefs_exists(SIMIAS_PREF_SYNC_INTERVAL)) {
+		gaim_prefs_add_int(SIMIAS_PREF_SYNC_INTERVAL,
+				      SIMIAS_PREF_SYNC_INTERVAL_DEF);
 	}
 
 	if (!gaim_prefs_exists(SIMIAS_PREF_PING_REPLY_TYPE)) {

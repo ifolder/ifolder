@@ -220,30 +220,64 @@ simias_get_config_frame(GaimPlugin *plugin)
 	GtkWidget *label;
 	GtkWidget *sync_now_button;
 	GtkWidget *select;
+	char machine_name_str[512];
 	ret = gtk_vbox_new(FALSE, 18);
 	gtk_container_set_border_width (GTK_CONTAINER (ret), 12);
 
+	/* SECTION: Note */
+	vbox = gaim_gtk_make_frame(ret, _("Note"));
+	
+	label = gtk_label_new("");
+	gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
+	gtk_label_set_markup(GTK_LABEL(label), _("The iFolder Plugin for Gaim provides Workgroup (Peer to Peer) file sharing for <b><i>this computer only</i></b>.  Logging into Gaim from another computer will not affect the iFolders configured on this computer.  You will be identified by both your screenname and your computer's machine name."));
+	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
+
+	label = gtk_label_new("");
+	gtk_label_set_markup(GTK_LABEL(label), _("The Gaim Workgroup will only be available in iFolder (Simias) when you have this plugin enabled <b>AND</b> have a AIM (AOL Instant Messenger) account."));
+	gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
+	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
+	
+	/* SECTION: Identification */
 	vbox = gaim_gtk_make_frame(ret, _("Identification"));
 	
-	sprintf(machine_name_str, "<b>%s</b>: %s",
+	sprintf(machine_name_str, "%s: %s",
 			_("Machine Name"),
 			gaim_prefs_get_string(SIMIAS_PREF_MACHINE_NAME));
 	
 	label = gtk_label_new("");
 	gtk_label_set_markup(GTK_LABEL(label), machine_name_str);
+	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
 	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
 	
-	hbox = gtk_hbox_new(TRUE, 0);
-	label = gtk_label_new("");
-	gtk_label_set_linewrap(GTK_LABEL(label), TRUE);
-	gtk_label_set_markup(_("The iFolder Plugin for Gaim provides <b>Workgroup</b> (Peer to Peer) file sharing for <b>this</b> computer only.  Logging into Gaim from another computer will not affect the iFolders configured on this computer.  You will be identified by both your <b>screenname</b> and your computer's <b>machine name</b>."));
-	gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 0);
+	/* SECTION: Gaim Domain Member List */
+	vbox = gaim_gtk_make_frame(ret, _("Gaim Domain Member List"));
+
+	hbox = gtk_hbox_new(FALSE, 0);
+
+	select = gaim_gtk_prefs_labeled_spin_button(hbox,
+			_("Synchronize every:"), SIMIAS_PREF_SYNC_INTERVAL,
+			1, 24 * 60, NULL);
+	label = gtk_label_new(_("minutes"));
+	gtk_box_pack_end(GTK_BOX(hbox), label, TRUE, TRUE, 4);
+	
 	gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
+	
+	hbox = gtk_hbox_new(TRUE, 0);
+	sync_now_button =
+		gtk_button_new_with_mnemonic(_("_Synchronize Now"));
+	gtk_box_pack_end(GTK_BOX(hbox),
+			sync_now_button, FALSE, FALSE, 50);
+	gtk_box_pack_end(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
+
+	g_signal_connect(G_OBJECT(sync_now_button), "clicked",
+		G_CALLBACK(simias_sync_member_list), NULL);
 
 	/* SECTION: Other */
 	vbox = gaim_gtk_make_frame(ret, _("Other"));
 	
-	gaim_gtk_prefs_checkbox(_("_Automatically start Simias (iFolder Synchronization Engine) if it's not running"),
+	gaim_gtk_prefs_checkbox(_("_Automatically start iFolder (Simias) if it's not running."),
 	                SIMIAS_PREF_SIMIAS_AUTO_START, vbox);
 	label = gtk_label_new("(Not implemented yet)");
 	gtk_box_pack_end(GTK_BOX(vbox), label, FALSE, FALSE, 0);
