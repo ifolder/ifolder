@@ -100,11 +100,6 @@
                     HintPath = "..\iFolderShell\iFolderComponent.dll"
                 />
                 <Reference
-                    Name = "Simias"
-                    AssemblyName = "Simias"
-                    HintPath = "..\..\..\final\web\bin\Simias.dll"
-                />
-                <Reference
                     Name = "System.Configuration.Install"
                     AssemblyName = "System.Configuration.Install"
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Configuration.Install.dll"
@@ -113,6 +108,16 @@
                     Name = "System.Web.Services"
                     AssemblyName = "System.Web.Services"
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
+                />
+                <Reference
+                    Name = "Simias"
+                    AssemblyName = "Simias"
+                    HintPath = "..\..\..\..\final\web\bin\Simias.dll"
+                />
+                <Reference
+                    Name = "SimiasClient"
+                    AssemblyName = "SimiasClient"
+                    HintPath = "..\..\..\..\final\web\bin\SimiasClient.dll"
                 />
             </References>
         </Build>
@@ -164,7 +169,7 @@
                 />
                 <File
                     RelPath = "iFolderAppInstallerClass.cs"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File

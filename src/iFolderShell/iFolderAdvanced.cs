@@ -2535,7 +2535,7 @@ namespace Novell.iFolderCom
 			showConflictMessage(false);
 		}
 
-		private void errorHandler( SimiasException e, object context )
+		private void errorHandler( ApplicationException e, object context )
 		{
 			eventError = true;
 		}
