@@ -38,20 +38,24 @@ namespace Novell.iFolder
 		private Gtk.TreeView		MemberTreeView;
 		private ListStore			MemberTreeStore;
 		private Gdk.Pixbuf			ContactPixBuf;
+		private Gtk.Window			topLevelWindow;
 
 		private Button 				AddButton;
 		private Button				RemoveButton;
 		private Button				AccessButton;
+		private iFolderMemberSelector MemberSelector;
 
 		/// <summary>
 		/// Default constructor for iFolderPropSharingPage
 		/// </summary>
-		public iFolderPropSharingPage(	iFolder ifolder, 
+		public iFolderPropSharingPage(	Gtk.Window topWindow,
+										iFolder ifolder, 
 										iFolderWebService iFolderWS)
 			: base()
 		{
 			this.ifws = iFolderWS;
 			this.ifolder = ifolder;
+			this.topLevelWindow = topWindow;
 			InitializeWidgets();
 		}
 
@@ -127,6 +131,8 @@ namespace Novell.iFolder
 
 			AddButton = new Button(Gtk.Stock.Add);
 			rightBox.PackStart(AddButton);
+			AddButton.Clicked += new EventHandler(OnAddMember);
+
 			RemoveButton = new Button(Gtk.Stock.Remove);
 			rightBox.PackStart(RemoveButton);
 
@@ -140,7 +146,10 @@ namespace Novell.iFolder
 		private void RefreshMemberList()
 		{
     		Member[] memberlist =  ifws.GetMembers(ifolder.ID);
-			MemberTreeStore.AppendValues(memberlist);
+			foreach(Member mem in memberlist)
+			{
+				MemberTreeStore.AppendValues(mem);
+			}
 		}
 
 
@@ -186,5 +195,27 @@ namespace Novell.iFolder
 			((CellRendererText) cell).Text = "No Access";
 		}
 
+		private void OnAddMember(object o, EventArgs args)
+		{
+			MemberSelector = new iFolderMemberSelector(
+						topLevelWindow,
+						ifolder, ifws);
+
+			MemberSelector.Response += 
+						new ResponseHandler(OnMemberSelectorResponse);
+
+			MemberSelector.ShowAll();
+		}
+
+		private void OnMemberSelectorResponse(object o, ResponseArgs args)
+		{
+	//		if(args.ResponseId
+			if(MemberSelector != null)
+			{
+				MemberSelector.Hide();
+				MemberSelector.Destroy();
+				MemberSelector = null;
+			}
+		}
 	}
 }

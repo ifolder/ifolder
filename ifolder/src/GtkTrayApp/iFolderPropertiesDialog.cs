@@ -79,7 +79,7 @@ namespace Novell.iFolder
 			propNoteBook.AppendPage(settingsPage, new Label("Settings"));
 
 			iFolderPropSharingPage sharingPage = 
-				new iFolderPropSharingPage(ifolder, ifws);
+				new iFolderPropSharingPage(this, ifolder, ifws);
 
 			propNoteBook.AppendPage(sharingPage, new Label("Sharing"));
 
