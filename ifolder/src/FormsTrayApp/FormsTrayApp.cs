@@ -165,6 +165,8 @@ namespace Novell.iFolder.FormsTrayApp
 //				noTray = true;
 			}		
 
+			ifManager = iFolderManager.Connect();
+
 			Type t = notifyIcon1.GetType();
 			hwnd = ((NativeWindow)t.GetField("window",System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(notifyIcon1)).Handle;
 			iconID = (int)t.GetField("id",System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(notifyIcon1);
@@ -401,8 +403,6 @@ namespace Novell.iFolder.FormsTrayApp
 
 				// Now that the services are started, enable the exit menu item.
 				menuExit.Enabled = true;
-
-				ifManager = iFolderManager.Connect();
 
 				synkEvent = new AutoResetEvent(false);
 
