@@ -36,6 +36,7 @@ namespace Novell.iFolder.InvitationWizard
 	public class SelectInvitationPage : Novell.iFolder.InvitationWizard.InteriorPageTemplate
 	{
 		#region Class Members
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(SelectInvitationPage));
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button fileBrowser;
 		private System.Windows.Forms.TextBox invitationFile;
@@ -194,6 +195,7 @@ namespace Novell.iFolder.InvitationWizard
 				catch (Exception e)
 				{
 					// TODO - resource strings.
+					logger.Debug(e, "Invalid file");
 					MessageBox.Show("The file specified is not a valid iFolder invitation file.\n\n" + e.Message, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					invitationFile.Focus();
 

@@ -55,6 +55,7 @@ namespace Novell.iFolder.InvitationWizard
 	public class InvitationWizard : System.Windows.Forms.Form
 	{
 		#region Class Members
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(InvitationWizard));
 		private System.Windows.Forms.Button cancel;
 		private System.Windows.Forms.Button next;
 		private System.Windows.Forms.Button back;
@@ -147,7 +148,10 @@ namespace Novell.iFolder.InvitationWizard
 			{
 				this.Icon = new Icon(Path.Combine(Application.StartupPath, "Invitation.ico"));
 			}
-			catch{}
+			catch (Exception e)
+			{
+				logger.Debug(e, "Loading icon");
+			}
 
 			// Put the wizard pages in order.
 			pages = new BaseWizardPage[maxPages];
@@ -168,7 +172,10 @@ namespace Novell.iFolder.InvitationWizard
 				this.welcomePage.Watermark = image;
 				this.completionPage.Watermark = image;
 			}
-			catch{}
+			catch (Exception e)
+			{
+				logger.Debug(e, "Loading watermark");
+			}
 
 			foreach (BaseWizardPage page in pages)
 			{
@@ -196,7 +203,8 @@ namespace Novell.iFolder.InvitationWizard
 				catch (Exception e)
 				{
 					// TODO - resource strings.
-					MessageBox.Show("An invalid iFolder invitation file was specified on the command-line.\n\n" + this.invitationFile, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					logger.Debug(e, "Invalid file");
+					MessageBox.Show("An invalid iFolder invitation file was specified on the command-line.  Please see the log file for additional information.\n\n" + this.invitationFile, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 					this.invitationFile = "";
 				}
 			}
@@ -332,7 +340,8 @@ namespace Novell.iFolder.InvitationWizard
 					}
 					catch (Exception ex)
 					{
-						MessageBox.Show("An exception occurred while accepting the iFolder invitation.\n" + ex.Message + "\n" + ex.StackTrace, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+						logger.Fatal(ex, "Accepting invitation");
+						MessageBox.Show("An exception occurred while accepting the iFolder invitation.  Please view the log file for additional information.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
 					}
 				}
 
