@@ -431,6 +431,13 @@ namespace Novell.iFolder
 				}
 				case Gtk.ResponseType.Cancel:
 				{
+					// Prevent the auto login feature from being called again
+					try
+					{
+						simws.DisableDomainAutoLogin(LoginDialog.Domain);
+					}
+					catch {}
+
 					LoginDialog.Hide();
 					LoginDialog.Destroy();
 					LoginDialog = null;
