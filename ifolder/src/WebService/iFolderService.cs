@@ -97,7 +97,7 @@ namespace Novell.iFolder.Web
 		/// WebMethod that allows a client to ping the service to see
 		/// if it is up and running
 		/// </summary>
-		[WebMethod(Description="Allows a client to pint to make sure the Web Service is up and running")]
+		[WebMethod(Description="Allows a client to ping to make sure the Web Service is up and running")]
 		[SoapDocumentMethod]
 		public void Ping()
 		{
@@ -692,7 +692,9 @@ namespace Novell.iFolder.Web
 			if(col == null)
 				throw new Exception("Invalid iFolderID");
 
-			iFolderUser user = new iFolderUser( col.Owner );
+			Domain domain = store.GetDomain( col.Domain);
+
+			iFolderUser user = new iFolderUser( domain, col.Owner );
 			return user;
 		}
 
@@ -785,7 +787,7 @@ namespace Novell.iFolder.Web
 			{
 				if ( sNode.Type.Equals( "Member" ) )
 				{
-					members.Add( new iFolderUser( new Member( domain, sNode ) ) );
+					members.Add( new iFolderUser( domain, new Member( domain, sNode ) ) );
 				}
 			}	
 
@@ -863,7 +865,7 @@ namespace Novell.iFolder.Web
 						break;
 					}
 
-					members.Add( new iFolderUser( new Member( domain, sNode ) ) );
+					members.Add( new iFolderUser( domain, new Member( domain, sNode ) ) );
 				}
 			}	
 
@@ -906,7 +908,7 @@ namespace Novell.iFolder.Web
 				{
 					Member member = new Member( domain, sNode );
 					matches.Add( sNode.ID, member );
-					members.Add( new iFolderUser( member ) );
+					members.Add( new iFolderUser( domain, member ) );
 				}
 			}	
 
@@ -917,7 +919,7 @@ namespace Novell.iFolder.Web
 				{
 					if ( matches.Contains( sNode.ID ) == false )
 					{
-						members.Add( new iFolderUser( new Member( domain, sNode ) ) );
+						members.Add( new iFolderUser( domain, new Member( domain, sNode ) ) );
 					}
 				}
 			}	
@@ -929,7 +931,7 @@ namespace Novell.iFolder.Web
 				{
 					if ( matches.Contains( sNode.ID ) == false )
 					{
-						members.Add( new iFolderUser( new Member( domain, sNode ) ) );
+						members.Add( new iFolderUser( domain, new Member( domain, sNode ) ) );
 					}
 				}
 			}
@@ -970,7 +972,7 @@ namespace Novell.iFolder.Web
 			if(simMem == null)
 				throw new Exception("Invalid UserID");
 
-			return new iFolderUser( simMem );
+			return new iFolderUser( domain, simMem );
 		}
 
 
@@ -1002,9 +1004,10 @@ namespace Novell.iFolder.Web
 				Node node = col.GetNodeByID(NodeID);
 				if(node != null)
 				{
+					Domain domain = store.GetDomain( col.Domain );
 					if (col.IsBaseType(node, NodeTypes.MemberType))
 					{
-						ifolderUser = new iFolderUser( new Member( node ) );
+						ifolderUser = new iFolderUser( domain, new Member( node ) );
 					}
 					else if (col.IsType(node, typeof( Subscription ).Name))
 					{
@@ -1082,13 +1085,6 @@ namespace Novell.iFolder.Web
 			sub.ToIdentity = UserID;
 
 			poBox.AddMessage(sub);
-
-			/*
-			Novell.AddressBook.Manager abMan = 
-				Novell.AddressBook.Manager.Connect();
-
-			Contact c = abMan.GetContact(sub.ToIdentity);
-			*/
 
 			iFolderUser user = new iFolderUser( sub );
 			return user;
