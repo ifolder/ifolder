@@ -787,7 +787,7 @@ namespace Novell.iFolder.Web
 			{
 				if ( sNode.Type.Equals( "Member" ) )
 				{
-					members.Add( new iFolderUser( domain, new Member( domain, sNode ) ) );
+					members.Add( new iFolderUser( domain, new Member( col, sNode ) ) );
 				}
 			}	
 
