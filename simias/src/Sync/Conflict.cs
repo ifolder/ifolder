@@ -343,19 +343,21 @@ public class Conflict
 			if (sn.ID == node.ID)
 				continue;
 			fn = collection.GetNodeByID(sn.ID) as BaseFileNode;
+			break;
 		}
 
 		if (fn != null)
 		{
 			// Now rename the file and the node.
-			string tmpName = Path.Combine(rootPath, TempFilePrefix + fn.ID);
-			string newFName = Path.Combine(rootPath, newName);
+			string parentPath = Path.GetDirectoryName(fn.GetFullPath(collection));
+			string tmpName = Path.Combine(parentPath, TempFilePrefix + fn.ID);
+			string newFName = Path.Combine(parentPath, newName);
 			File.Move(fn.GetFullPath(collection), tmpName);
 			File.Move(tmpName, newFName);
 			string relativePath = fn.Properties.GetSingleProperty(PropertyTags.FileSystemPath).Value.ToString();
 			relativePath = relativePath.Remove(relativePath.Length - fn.Name.Length, fn.Name.Length) + newName;
-			node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
-			node.Name = newName;
+			fn.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
+			fn.Name = newName;
 		}
 		collection.Commit(fn);
 	}
