@@ -244,7 +244,7 @@ namespace Simias.Gaim.DomainService
 		/// </returns>
 		[WebMethod(Description="Generates a Base64 Encoded DES Symmetric Key")]
 		[SoapDocumentMethod]
-		public string GenerateSymmetricKey()
+		public string GenerateDESKey()
 		{
 			DESCryptoServiceProvider des = (DESCryptoServiceProvider) DESCryptoServiceProvider.Create();
 			return Convert.ToBase64String(des.Key);
