@@ -104,28 +104,8 @@ namespace Simias.Gaim
 
 		#region Constructors
 		
-		/// This domain so that it is NOT created if
-		/// the user does not have Gaim installed/configured/etc.  The
-		/// Gaim domain should only be created if the user has it installed
-		/// and has a prpl-oscar account setup in .gaim/accounts.xml.
-		/// Once this is verified, create the domain inside the Sync
-		/// code using the prpl-oscar username as the domain owner.
-		/// Build the Gaim Domain Member List from .gaim/blist.xml.
-		///
-		/// The Gaim Plugin needs to be modified so that it populates
-		/// location information of the buddy into .gaim/blist.xml.  Then,
-		/// when the LocationProvider is asked for location information
-		/// about a buddy, the LocationProvider just parses blist.xml for
-		/// the information.
-		///
-		/// The Gaim Plugin needs to be modified so that it is able to
-		/// read AIM buddy profiles and search for an iFolder Plugin ID
-		/// in an HTML comment.  A prerequisite is that the profile
-		/// information should be set on the remote side to add in the
-		/// hidden HTML comment.  If the buddy is determined to have the
-		/// iFolder Plugin installed, then at buddy signon, we should
-		/// send special messages to retrieve the buddy's POBoxURL and
-		/// then store this as extra information in .gaim/blist.xml.
+		/// This domain is NOT created if the user does not have the
+		/// Gaim iFolder Plugin installed and enabled.
 		
 		/// <summary>
 		/// Constructor for creating a new Gaim Domain object.
@@ -456,39 +436,25 @@ namespace Simias.Gaim
 		public static GaimBuddy[] SearchForBuddies(string attributeName, string searchString, SearchOp operation)
 		{
 			ArrayList buddies = new ArrayList();
-			XmlDocument blistDoc = new XmlDocument();
-			try
-			{
-				blistDoc.Load(GetGaimConfigDir() + "/blist.xml");
-			}
-			catch
-			{
-				return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
-			}
-
-			XmlElement gaimElement = blistDoc.DocumentElement;
-			
-			XmlNodeList buddyNodes = null;
-
+			GaimBuddy[] allBuddies;
 			if (syncMethodPref == "plugin-enabled")
 			{
-				buddyNodes = gaimElement.SelectNodes("//buddy[setting[@name='simias-url']]");
+				allBuddies = GetBuddies(true);
 			}
 			else
 			{
-				buddyNodes = gaimElement.SelectNodes("//buddy");
+				allBuddies = GetBuddies(false);
 			}
-
-			if (buddyNodes != null)
+			
+			if (allBuddies != null && allBuddies.Length > 0)
 			{
-				foreach (XmlNode buddyNode in buddyNodes)
+				foreach (GaimBuddy buddy in allBuddies)
 				{
 					if (searchString == null)
 					{
 						// Just add on every buddyNode
 						try
 						{
-							GaimBuddy buddy = new GaimBuddy(buddyNode);
 							buddies.Add(buddy);
 						}
 						catch {} // Ignore errors
@@ -499,21 +465,13 @@ namespace Simias.Gaim
 					if (attributeName != null && attributeName == "Alias")
 					{
 						// Use the buddy alias (if one exists)
-						XmlNode aliasNode = buddyNode.SelectSingleNode("alias/text()");
-						if (aliasNode != null)
-						{
-							compareString = aliasNode.Value;
-						}
+						compareString = buddy.Alias;
 					}
 					
 					if (compareString == null)
 					{
 						// Use the screenname
-						XmlNode nameNode = buddyNode.SelectSingleNode("name/text()");
-						if (nameNode != null)
-						{
-							compareString = nameNode.Value;
-						}
+						compareString = buddy.Name;
 					}
 
 					if (compareString != null)
@@ -527,7 +485,6 @@ namespace Simias.Gaim
 								{
 									try
 									{
-										GaimBuddy buddy = new GaimBuddy(buddyNode);
 										buddies.Add(buddy);
 									}
 									catch {} // Ignore errors
@@ -540,7 +497,6 @@ namespace Simias.Gaim
 								{
 									try
 									{
-										GaimBuddy buddy = new GaimBuddy(buddyNode);
 										buddies.Add(buddy);
 									}
 									catch {} // Ignore errors
