@@ -1531,7 +1531,7 @@ namespace Novell.FormsTrayApp
 					// The domain is in the list.
 					lvitem = lvi;
 				}
-				else if (d.ID.Equals(defaultDomainID))
+				else if ((defaultDomainID != null) && d.ID.Equals(defaultDomainID))
 				{
 					defaultDomain = d;
 				}
