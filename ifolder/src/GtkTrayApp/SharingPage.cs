@@ -245,6 +245,7 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
+				tModel = null;
 				SharingListHolder slh = (SharingListHolder) 
 						ContactTreeStore.GetValue(iter,0);
 
@@ -407,6 +408,7 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
+				tModel = null;
 				SharingListHolder slh = (SharingListHolder)
 						ContactTreeStore.GetValue(iter,0);
 

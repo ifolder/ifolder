@@ -207,6 +207,14 @@ namespace Novell.iFolder
 						on_open_context_menu);
 				trayMenu.Append (open_item);
 
+				if(!node.HasChildren)
+				{
+					MenuItem delete_item = new MenuItem ("Delete");
+					delete_item.Activated += new EventHandler(
+						on_delete_context_menu);
+					trayMenu.Append (delete_item);
+				}
+
 				trayMenu.Append(new SeparatorMenuItem());
 
 				MenuItem properties_item = new MenuItem (
@@ -235,6 +243,20 @@ namespace Novell.iFolder
 				PropertiesDialog pd = new PropertiesDialog(node);
 				pd.ShowAll(1);
 			}
+		}
+
+		public void on_refresh()
+		{
+			SetCurrentNode(curNode);
+		}
+
+		public void on_delete_context_menu(object o, EventArgs args)
+		{
+			Node node = GetSelectedItem();
+
+			node.Delete(true);
+
+			on_refresh();
 		}
 
 		public void on_open_context_menu(object o, EventArgs args)
