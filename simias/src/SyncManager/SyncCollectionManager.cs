@@ -27,6 +27,7 @@ using System.Threading;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Diagnostics;
+using System.IO;
 
 using Simias;
 using Simias.Storage;
@@ -237,139 +238,159 @@ namespace Simias.Sync
 
 			while(working)
 			{
-				// get permission from sync manager
-				syncManager.ReadyToWork();
-
-				log.Debug("Sync Work {0} - Starting", collection.Name);
-
+				// huge try/catch for Mono exceptions
 				try
 				{
-					// check master
-					if (collection.CreateMaster)
+					// get permission from sync manager
+					syncManager.ReadyToWork();
+
+					log.Debug("Sync Work {0} - Starting", collection.Name);
+
+					try
 					{
-						log.Debug("Sync Work {0} - Creating the Master", collection.Name);
+						// check master
+						if (collection.CreateMaster)
+						{
+							log.Debug("Sync Work {0} - Creating the Master", collection.Name);
 
-						DomainAgent dAgent = new DomainAgent(syncManager.Config);
+							DomainAgent dAgent = new DomainAgent(syncManager.Config);
 
-						dAgent.CreateMaster(collection);
+							dAgent.CreateMaster(collection);
+						}
+						else
+						{
+							// get the service URL
+							string serviceUrl = collection.MasterUrl.ToString();
+							log.Debug("Sync Work {0} - Service URL: {1}", collection.Name, serviceUrl);
+
+							// check the channel
+							if (channel == null)
+							{
+								// create channel
+								channel = syncManager.ChannelFactory.GetChannel(store,
+									collection.MasterUrl.Scheme, syncManager.ChannelSinks);
+							}
+
+							// get a proxy to the store service object
+							log.Debug("Sync Work {0} - Connecting...", collection.Name);
+							storeService = (SyncStoreService)Activator.GetObject(typeof(SyncStoreService), serviceUrl);
+						
+							// no store service
+							if (storeService == null) throw new ApplicationException("No Sync Store Service");
+
+							// ping the store
+							log.Debug("Store Service Ping: {0}", storeService.Ping());
+
+							// get a proxy to the collection service object
+							log.Debug("Connecting to the Sync Collection Service...");
+							service = storeService.GetCollectionService(collection.ID);
+						
+							// removed collection?
+							if (service == null)
+							{
+								log.Debug("The collection is no longer on the server.");
+								log.Debug("Removing collection from the client.");
+							
+								// delete the colection
+								collection.Commit(collection.Delete());
+							
+								// stop the slave
+								working = false;
+								continue;
+							}
+
+							// ping the collection
+							log.Debug("Collection Service Ping: {0}", service.Ping());
+
+							// get the collection worker
+							log.Debug("Creating a Sync Worker Object...");
+							if (worker == null)
+							{
+								worker = syncManager.LogicFactory.GetCollectionWorker(collection);
+							}
+						
+							// bad worker
+							if (worker == null) throw new ApplicationException("No Sync Collection Worker");
+
+							// do the work
+							log.Debug("Sync Work {0} - Worker Start", collection.Name);
+							worker.DoSyncWork(service);
+							log.Debug("Sync Work {0} - Worker Done", collection.Name);
+						}
 					}
-					else
+					catch(Exception e)
 					{
-						// get the service URL
-						string serviceUrl = collection.MasterUrl.ToString();
-						log.Debug("Sync Work {0} - Service URL: {1}", collection.Name, serviceUrl);
+						log.Debug(e, "Ignored");
 
-						// check the channel
-						if (channel == null)
+						if (working)
 						{
-							// create channel
-							channel = syncManager.ChannelFactory.GetChannel(store,
-								collection.MasterUrl.Scheme, syncManager.ChannelSinks);
+							// reset worker
+							worker = null;
+
+							try
+							{
+								// try the location service on an exception
+								log.Debug("Querying the Location Service...");
+
+								// find the URL with the location service
+								Uri locationUrl = syncManager.Location.Locate(collection.ID);
+
+								// update the URL
+								if ((locationUrl != null) && (locationUrl != collection.MasterUrl))
+								{
+									// try the location service on an exception
+									log.Debug("Updating Master Service Url...");
+
+									collection.MasterUrl = locationUrl;
+
+									// clear channel
+									if (channel != null)
+									{
+										channel.Dispose();
+										channel = null;
+									}
+								}
+							}
+							catch(Exception e2)
+							{
+								log.Debug(e2, "Ignored");
+							}
 						}
-
-						// get a proxy to the store service object
-						log.Debug("Sync Work {0} - Connecting...", collection.Name);
-						storeService = (SyncStoreService)Activator.GetObject(typeof(SyncStoreService), serviceUrl);
-						
-						// no store service
-						if (storeService == null) throw new ApplicationException("No Sync Store Service");
-
-						// ping the store
-						log.Debug("Store Service Ping: {0}", storeService.Ping());
-
-						// get a proxy to the collection service object
-						log.Debug("Connecting to the Sync Collection Service...");
-						service = storeService.GetCollectionService(collection.ID);
-						
-						// removed collection?
-						if (service == null)
-						{
-							log.Debug("The collection is no longer on the server.");
-							log.Debug("Removing collection from the client.");
-							
-							// delete the colection
-							collection.Commit(collection.Delete());
-							
-							// stop the slave
-							working = false;
-							continue;
-						}
-
-						// ping the collection
-						log.Debug("Collection Service Ping: {0}", service.Ping());
-
-						// get the collection worker
-						log.Debug("Creating a Sync Worker Object...");
-						if (worker == null)
-						{
-							worker = syncManager.LogicFactory.GetCollectionWorker(collection);
-						}
-						
-						// bad worker
-						if (worker == null) throw new ApplicationException("No Sync Collection Worker");
-
-						// do the work
-						log.Debug("Sync Work {0} - Worker Start", collection.Name);
-						worker.DoSyncWork(service);
-						log.Debug("Sync Work {0} - Worker Done", collection.Name);
 					}
+					catch
+					{
+						log.Debug("Caught unknown exception!");
+					}
+					finally
+					{
+						storeService = null;
+						service = null;
+					}
+
+					log.Info("Finished Sync Cycle: {0}", collection.Name);
+
+					// finish with sync manager
+					syncManager.DoneWithWork();
+
+					log.Debug("Sync Work {0} - Sleeping", collection.Name);
+
+					// sleep
+					stopSleepEvent.WaitOne(TimeSpan.FromSeconds(collection.Interval), true);
+
+					log.Debug("Sync Work {0} - Done Sleeping", collection.Name);
 				}
 				catch(Exception e)
 				{
-					log.Debug(e, "Ignored");
-
-					if (working)
+					// TODO: clean-up
+					try
 					{
-						// reset worker
-						worker = null;
-
-						try
-						{
-							// try the location service on an exception
-							log.Debug("Querying the Location Service...");
-
-							// find the URL with the location service
-							Uri locationUrl = syncManager.Location.Locate(collection.ID);
-
-							// update the URL
-							if ((locationUrl != null) && (locationUrl != collection.MasterUrl))
-							{
-								// try the location service on an exception
-								log.Debug("Updating Master Service Url...");
-
-								collection.MasterUrl = locationUrl;
-
-								// clear channel
-								if (channel != null)
-								{
-									channel.Dispose();
-									channel = null;
-								}
-							}
-						}
-						catch(Exception e2)
-						{
-							log.Debug(e2, "Ignored");
-						}
+						log.Debug(e, "Ignored");
+					}
+					catch
+					{
+						File.CreateText(Path.Combine(Configuration.GetConfiguration().StorePath, "double.exception")).Close();
 					}
 				}
-				finally
-				{
-					storeService = null;
-					service = null;
-				}
-
-				log.Info("Finished Sync Cycle: {0}", collection.Name);
-
-				// finish with sync manager
-				syncManager.DoneWithWork();
-
-				log.Debug("Sync Work {0} - Sleeping", collection.Name);
-
-				// sleep
-				stopSleepEvent.WaitOne(TimeSpan.FromSeconds(collection.Interval), true);
-
-				log.Debug("Sync Work {0} - Done Sleeping", collection.Name);
 			}
 		}
 	}
