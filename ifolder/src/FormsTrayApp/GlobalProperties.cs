@@ -62,7 +62,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.GroupBox groupBox3;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.CheckBox autoSync;
-		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.PictureBox banner;
 		private System.Windows.Forms.CheckBox autoStart;
 		private System.Windows.Forms.Label label3;
@@ -137,6 +136,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Label userName;
 		private System.Windows.Forms.CheckBox useProxy;
 		private System.Windows.Forms.NumericUpDown port;
+		private System.Windows.Forms.Label label4;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -159,6 +159,10 @@ namespace Novell.FormsTrayApp
 			tabControl1.SelectedTab = tabPage1;
 
 			ifWebService = ifolderWebService;
+
+			// Set the min/max values for port.
+			port.Minimum = IPEndPoint.MinPort;
+			port.Maximum = IPEndPoint.MaxPort;
 
 			// Set up the event handlers to watch for iFolder creates/deletes.
 /*			subscriber = new EventSubscriber();
@@ -233,7 +237,6 @@ namespace Novell.FormsTrayApp
 			this.menuProperties = new System.Windows.Forms.MenuItem();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this.autoSync = new System.Windows.Forms.CheckBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -290,12 +293,12 @@ namespace Novell.FormsTrayApp
 			this.menuHelpAbout = new System.Windows.Forms.MenuItem();
 			this.useProxy = new System.Windows.Forms.CheckBox();
 			this.port = new System.Windows.Forms.NumericUpDown();
+			this.label4 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.tabPage2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
-			this.groupBox2.SuspendLayout();
 			this.groupBox3.SuspendLayout();
 			this.groupBox5.SuspendLayout();
 			this.tabPage3.SuspendLayout();
@@ -311,7 +314,7 @@ namespace Novell.FormsTrayApp
 																			  0,
 																			  0,
 																			  0});
-			this.defaultInterval.Location = new System.Drawing.Point(200, 78);
+			this.defaultInterval.Location = new System.Drawing.Point(152, 78);
 			this.defaultInterval.Maximum = new System.Decimal(new int[] {
 																			86400,
 																			0,
@@ -324,7 +327,7 @@ namespace Novell.FormsTrayApp
 																			-2147483648});
 			this.defaultInterval.Name = "defaultInterval";
 			this.defaultInterval.Size = new System.Drawing.Size(64, 20);
-			this.defaultInterval.TabIndex = 1;
+			this.defaultInterval.TabIndex = 2;
 			// 
 			// displayConfirmation
 			// 
@@ -357,10 +360,10 @@ namespace Novell.FormsTrayApp
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(272, 80);
+			this.label2.Location = new System.Drawing.Point(224, 80);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(72, 16);
-			this.label2.TabIndex = 2;
+			this.label2.TabIndex = 3;
 			this.label2.Text = "seconds";
 			// 
 			// tabControl1
@@ -551,37 +554,26 @@ namespace Novell.FormsTrayApp
 			// 
 			// groupBox1
 			// 
-			this.groupBox1.Controls.Add(this.groupBox2);
+			this.groupBox1.Controls.Add(this.defaultInterval);
 			this.groupBox1.Controls.Add(this.autoSync);
+			this.groupBox1.Controls.Add(this.label3);
+			this.groupBox1.Controls.Add(this.label2);
 			this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.groupBox1.Location = new System.Drawing.Point(16, 112);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(398, 160);
+			this.groupBox1.Size = new System.Drawing.Size(398, 112);
 			this.groupBox1.TabIndex = 1;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Synchronization";
-			// 
-			// groupBox2
-			// 
-			this.groupBox2.Controls.Add(this.label3);
-			this.groupBox2.Controls.Add(this.defaultInterval);
-			this.groupBox2.Controls.Add(this.label2);
-			this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.groupBox2.Location = new System.Drawing.Point(16, 48);
-			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(366, 104);
-			this.groupBox2.TabIndex = 1;
-			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "Synchronize to host";
 			// 
 			// label3
 			// 
 			this.label3.Location = new System.Drawing.Point(16, 24);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(336, 48);
+			this.label3.Size = new System.Drawing.Size(376, 48);
 			this.label3.TabIndex = 0;
-			this.label3.Text = "This value sets the default value for how often the host of an iFolder will be co" +
-				"ntacted  to sync files.";
+			this.label3.Text = "This will set the default sync setting for all iFolders.  You can change the sync" +
+				" setting for an individual iFolder from the iFolder\'s Property dialog.";
 			// 
 			// autoSync
 			// 
@@ -589,11 +581,12 @@ namespace Novell.FormsTrayApp
 			this.autoSync.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.autoSync.Enabled = false;
 			this.autoSync.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.autoSync.Location = new System.Drawing.Point(16, 24);
+			this.autoSync.Location = new System.Drawing.Point(16, 80);
 			this.autoSync.Name = "autoSync";
-			this.autoSync.Size = new System.Drawing.Size(368, 16);
-			this.autoSync.TabIndex = 0;
-			this.autoSync.Text = "&Automatic sync";
+			this.autoSync.Size = new System.Drawing.Size(160, 16);
+			this.autoSync.TabIndex = 1;
+			this.autoSync.Text = "S&ync to host every:";
+			this.autoSync.CheckedChanged += new System.EventHandler(this.autoSync_CheckedChanged);
 			// 
 			// groupBox3
 			// 
@@ -622,29 +615,30 @@ namespace Novell.FormsTrayApp
 			this.groupBox5.Controls.Add(this.port);
 			this.groupBox5.Controls.Add(this.useProxy);
 			this.groupBox5.Controls.Add(this.label7);
+			this.groupBox5.Controls.Add(this.label4);
 			this.groupBox5.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.groupBox5.Location = new System.Drawing.Point(16, 280);
+			this.groupBox5.Location = new System.Drawing.Point(16, 240);
 			this.groupBox5.Name = "groupBox5";
-			this.groupBox5.Size = new System.Drawing.Size(392, 64);
+			this.groupBox5.Size = new System.Drawing.Size(398, 88);
 			this.groupBox5.TabIndex = 2;
 			this.groupBox5.TabStop = false;
-			this.groupBox5.Text = "Proxy Settings";
+			this.groupBox5.Text = "Proxy";
 			// 
 			// label7
 			// 
-			this.label7.Location = new System.Drawing.Point(280, 28);
+			this.label7.Location = new System.Drawing.Point(280, 58);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(56, 16);
-			this.label7.TabIndex = 2;
+			this.label7.TabIndex = 3;
 			this.label7.Text = "Port:";
 			// 
 			// proxy
 			// 
 			this.proxy.Enabled = false;
-			this.proxy.Location = new System.Drawing.Point(88, 26);
+			this.proxy.Location = new System.Drawing.Point(88, 56);
 			this.proxy.Name = "proxy";
 			this.proxy.Size = new System.Drawing.Size(168, 20);
-			this.proxy.TabIndex = 1;
+			this.proxy.TabIndex = 2;
 			this.proxy.Text = "";
 			// 
 			// tabPage3
@@ -665,7 +659,7 @@ namespace Novell.FormsTrayApp
 			this.clearLog.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.clearLog.Location = new System.Drawing.Point(344, 352);
 			this.clearLog.Name = "clearLog";
-			this.clearLog.TabIndex = 4;
+			this.clearLog.TabIndex = 3;
 			this.clearLog.Text = "&Clear";
 			// 
 			// saveLog
@@ -674,7 +668,7 @@ namespace Novell.FormsTrayApp
 			this.saveLog.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.saveLog.Location = new System.Drawing.Point(264, 352);
 			this.saveLog.Name = "saveLog";
-			this.saveLog.TabIndex = 3;
+			this.saveLog.TabIndex = 2;
 			this.saveLog.Text = "&Save";
 			// 
 			// log
@@ -684,7 +678,7 @@ namespace Novell.FormsTrayApp
 			this.log.Name = "log";
 			this.log.ScrollAlwaysVisible = true;
 			this.log.Size = new System.Drawing.Size(408, 290);
-			this.log.TabIndex = 2;
+			this.log.TabIndex = 1;
 			// 
 			// label6
 			// 
@@ -714,14 +708,14 @@ namespace Novell.FormsTrayApp
 			this.userName.Location = new System.Drawing.Point(144, 24);
 			this.userName.Name = "userName";
 			this.userName.Size = new System.Drawing.Size(272, 16);
-			this.userName.TabIndex = 6;
+			this.userName.TabIndex = 1;
 			// 
 			// label10
 			// 
 			this.label10.Location = new System.Drawing.Point(16, 24);
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(120, 16);
-			this.label10.TabIndex = 5;
+			this.label10.TabIndex = 0;
 			this.label10.Text = "User name:";
 			// 
 			// groupBox6
@@ -742,7 +736,7 @@ namespace Novell.FormsTrayApp
 			this.groupBox6.Location = new System.Drawing.Point(16, 176);
 			this.groupBox6.Name = "groupBox6";
 			this.groupBox6.Size = new System.Drawing.Size(400, 120);
-			this.groupBox6.TabIndex = 4;
+			this.groupBox6.TabIndex = 6;
 			this.groupBox6.TabStop = false;
 			this.groupBox6.Text = "Disk space";
 			// 
@@ -782,7 +776,7 @@ namespace Novell.FormsTrayApp
 			this.label15.Location = new System.Drawing.Point(248, 56);
 			this.label15.Name = "label15";
 			this.label15.Size = new System.Drawing.Size(24, 16);
-			this.label15.TabIndex = 7;
+			this.label15.TabIndex = 5;
 			this.label15.Text = "MB";
 			// 
 			// label14
@@ -790,7 +784,7 @@ namespace Novell.FormsTrayApp
 			this.label14.Location = new System.Drawing.Point(248, 32);
 			this.label14.Name = "label14";
 			this.label14.Size = new System.Drawing.Size(24, 16);
-			this.label14.TabIndex = 6;
+			this.label14.TabIndex = 2;
 			this.label14.Text = "MB";
 			// 
 			// totalSpace
@@ -799,7 +793,7 @@ namespace Novell.FormsTrayApp
 			this.totalSpace.Name = "totalSpace";
 			this.totalSpace.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.totalSpace.Size = new System.Drawing.Size(80, 16);
-			this.totalSpace.TabIndex = 5;
+			this.totalSpace.TabIndex = 7;
 			// 
 			// usedSpace
 			// 
@@ -815,14 +809,14 @@ namespace Novell.FormsTrayApp
 			this.freeSpace.Name = "freeSpace";
 			this.freeSpace.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.freeSpace.Size = new System.Drawing.Size(80, 16);
-			this.freeSpace.TabIndex = 3;
+			this.freeSpace.TabIndex = 1;
 			// 
 			// label13
 			// 
 			this.label13.Location = new System.Drawing.Point(16, 80);
 			this.label13.Name = "label13";
 			this.label13.Size = new System.Drawing.Size(136, 16);
-			this.label13.TabIndex = 2;
+			this.label13.TabIndex = 6;
 			this.label13.Text = "Total space on server:";
 			// 
 			// label12
@@ -830,7 +824,7 @@ namespace Novell.FormsTrayApp
 			this.label12.Location = new System.Drawing.Point(16, 56);
 			this.label12.Name = "label12";
 			this.label12.Size = new System.Drawing.Size(136, 16);
-			this.label12.TabIndex = 1;
+			this.label12.TabIndex = 3;
 			this.label12.Text = "Used space on server:";
 			// 
 			// label11
@@ -846,14 +840,14 @@ namespace Novell.FormsTrayApp
 			this.enterpriseDescription.Location = new System.Drawing.Point(152, 72);
 			this.enterpriseDescription.Name = "enterpriseDescription";
 			this.enterpriseDescription.Size = new System.Drawing.Size(264, 48);
-			this.enterpriseDescription.TabIndex = 3;
+			this.enterpriseDescription.TabIndex = 5;
 			// 
 			// label9
 			// 
 			this.label9.Location = new System.Drawing.Point(16, 72);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(120, 16);
-			this.label9.TabIndex = 2;
+			this.label9.TabIndex = 4;
 			this.label9.Text = "Server description:";
 			// 
 			// enterpriseName
@@ -861,14 +855,14 @@ namespace Novell.FormsTrayApp
 			this.enterpriseName.Location = new System.Drawing.Point(152, 48);
 			this.enterpriseName.Name = "enterpriseName";
 			this.enterpriseName.Size = new System.Drawing.Size(264, 16);
-			this.enterpriseName.TabIndex = 1;
+			this.enterpriseName.TabIndex = 3;
 			// 
 			// label8
 			// 
 			this.label8.Location = new System.Drawing.Point(16, 48);
 			this.label8.Name = "label8";
 			this.label8.Size = new System.Drawing.Size(120, 16);
-			this.label8.TabIndex = 0;
+			this.label8.TabIndex = 2;
 			this.label8.Text = "iFolder server:";
 			// 
 			// banner
@@ -1037,19 +1031,28 @@ namespace Novell.FormsTrayApp
 			// useProxy
 			// 
 			this.useProxy.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.useProxy.Location = new System.Drawing.Point(8, 24);
+			this.useProxy.Location = new System.Drawing.Point(16, 24);
 			this.useProxy.Name = "useProxy";
+			this.useProxy.Size = new System.Drawing.Size(360, 16);
 			this.useProxy.TabIndex = 0;
-			this.useProxy.Text = "Use proxy:";
+			this.useProxy.Text = "Use a proxy to sync iFolders.";
 			this.useProxy.CheckedChanged += new System.EventHandler(this.useProxy_CheckedChanged);
 			// 
 			// port
 			// 
 			this.port.Enabled = false;
-			this.port.Location = new System.Drawing.Point(312, 26);
+			this.port.Location = new System.Drawing.Point(312, 56);
 			this.port.Name = "port";
 			this.port.Size = new System.Drawing.Size(72, 20);
-			this.port.TabIndex = 3;
+			this.port.TabIndex = 4;
+			// 
+			// label4
+			// 
+			this.label4.Location = new System.Drawing.Point(16, 58);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(100, 16);
+			this.label4.TabIndex = 1;
+			this.label4.Text = "Proxy host:";
 			// 
 			// GlobalProperties
 			// 
@@ -1071,7 +1074,6 @@ namespace Novell.FormsTrayApp
 			this.tabPage1.ResumeLayout(false);
 			this.tabPage2.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
-			this.groupBox2.ResumeLayout(false);
 			this.groupBox3.ResumeLayout(false);
 			this.groupBox5.ResumeLayout(false);
 			this.tabPage3.ResumeLayout(false);
@@ -1619,10 +1621,15 @@ namespace Novell.FormsTrayApp
 		#region Log Tab
 		#endregion
 
-		#region Network Tab
+		#region Preferences Tab
 		private void useProxy_CheckedChanged(object sender, System.EventArgs e)
 		{
 			proxy.Enabled = port.Enabled = useProxy.Checked;
+		}
+
+		private void autoSync_CheckedChanged(object sender, System.EventArgs e)
+		{
+			defaultInterval.Enabled = autoSync.Checked;
 		}
 		#endregion
 
