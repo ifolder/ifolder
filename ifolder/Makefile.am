@@ -1,4 +1,4 @@
-SUBDIRS = src help
+SUBDIRS = src help po
 
 DIST_SUBDIRS = $(SUBDIRS) doc package test
 

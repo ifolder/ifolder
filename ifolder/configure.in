@@ -502,6 +502,7 @@ package/linux/Makefile
 package/linux/ifolder.spec
 doc/Makefile
 help/Makefile
+po/Makefile
 ])
 
 
