@@ -207,6 +207,10 @@ namespace Simias.Sync
 			DirNode dnode = new DirNode(collection, parentNode, Path.GetFileName(path));
 			log.Debug("Adding dir node for {0} {1}", path, dnode.ID);
 			collection.Commit(dnode);
+			if (Directory.GetFileSystemEntries(path).Length != 0)
+			{
+				this.DoSubtree(path, dnode, dnode.ID, true);
+			}
 			foundChange = true;
 			return dnode;
 		}
