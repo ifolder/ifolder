@@ -134,16 +134,6 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "AddAccount.cs"
-                    SubType = "Form"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "AddAccount.resx"
-                    DependentUpon = "AddAccount.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "AdvancedSettings.cs"
                     SubType = "Form"
                     BuildAction = "Compile"

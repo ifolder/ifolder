@@ -76,7 +76,6 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		protected AutoResetEvent workEvent = null;
 
-		private AddAccount addAccount = null;
 		private ServerInfo serverInfo = null;
 		private string domainID = string.Empty;
 		private bool loginCancelled = false;
@@ -269,15 +268,6 @@ namespace Novell.FormsTrayApp
 //				serverInfo.Closed += new EventHandler(serverInfo_Closed);
 //				serverInfo.Show();
 //			}
-
-/*			if (addAccount == null)
-			{
-				addAccount = new AddAccount(ifWebService);
-				addAccount.EnterpriseConnect += new Novell.FormsTrayApp.AddAccount.EnterpriseConnectDelegate(serverInfo_EnterpriseConnect);
-				addAccount.Closed += new EventHandler(addAccount_Closed);
-				addAccount.StartPosition = FormStartPosition.CenterScreen;
-				addAccount.Show();
-			}*/
 
 			if (preferences.Visible)
 			{
@@ -534,19 +524,6 @@ namespace Novell.FormsTrayApp
 				{
 					ShutdownTrayApp(null);
 				}
-			}
-		}
-
-
-		private void addAccount_Closed(object sender, EventArgs e)
-		{
-			bool update = addAccount.UpdateStarted;
-			addAccount.Dispose();
-			addAccount = null;
-
-			if (update)
-			{
-				ShutdownTrayApp(null);
 			}
 		}
 		#endregion
