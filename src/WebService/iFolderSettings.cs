@@ -52,10 +52,18 @@ namespace Novell.iFolder.Web
 			Store store = Store.GetStore();
 			DefaultDomainID = store.DefaultDomain;
 			
-			Simias.POBox.POBox pobox = Simias.POBox.POBox.GetPOBox(store, 
-													store.DefaultDomain);
-			if(pobox != null)
-				DefaultPOBoxID = pobox.ID;
+			Simias.POBox.POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
+						store.DefaultDomain, 
+						store.GetUserIDFromDomainID(store.DefaultDomain));
+
+			if( (poBox == null) && (DefaultDomainID ==
+										Domain.WorkGroupDomainID) )
+			{
+				poBox = Simias.POBox.POBox.GetPOBox(store, store.DefaultDomain);
+			}
+
+			if(poBox != null)
+				DefaultPOBoxID = poBox.ID;
 
 			HaveEnterprise = false;
 			Domain enterpriseDomain = null;
@@ -89,6 +97,9 @@ namespace Novell.iFolder.Web
 			// I don't know how to do this but I know we'll need it
 			UseProxy = false;
 
+			CurrentUserID = store.GetUserIDFromDomainID(DefaultDomainID);
+			Console.WriteLine("User ID: {0}", CurrentUserID);
+
 			try
 			{
 				// On first connect this will cause an exception because the 
@@ -97,7 +108,6 @@ namespace Novell.iFolder.Web
 						store.GetRoster(DefaultDomainID).GetCurrentMember();
 				if (currentMember != null)
 				{
-					CurrentUserID = currentMember.UserID;
 					CurrentUserName = currentMember.Name;
 				}
 			}

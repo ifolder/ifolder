@@ -92,10 +92,12 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
-		/// WebMethod that sets the display iFolder creation confirmation setting.
+		/// WebMethod that sets the display iFolder creation confirmation 
+		/// setting.
 		/// </summary>
 		/// <param name="DisplayConfirmation">
-		/// Set to <b>true</b> to enable the iFolder creation confirmation dialog.
+		/// Set to <b>true</b> to enable the iFolder creation confirmation 
+		/// dialog.
 		/// </param>
 		[WebMethod(Description="Sets the display iFolder confirmation setting")]
 		[SoapDocumentMethod]
@@ -214,12 +216,34 @@ namespace Novell.iFolder.Web
 		[SoapDocumentMethod]
 		public iFolder GetiFolder(string iFolderID)
 		{
+			iFolder ifolder = null;
+
 			Store store = Store.GetStore();
 			Collection col = store.GetCollectionByID(iFolderID);
 			if(col == null)
-				return null;
+			{
+				// if the iFolderID was not an iFolder, check to see if
+				// there is a subscription with that ID
+				POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
+						store.DefaultDomain, 
+						store.GetUserIDFromDomainID(store.DefaultDomain));
 
-			return new iFolder(col);
+//				POBox poBox = Simias.POBox.POBox.GetPOBox(store, 
+//						store.DefaultDomain);
+
+				if(poBox != null)
+				{
+					Node node = poBox.GetNodeByID(iFolderID);
+					if (node != null)
+					{
+						ifolder = new iFolder(new Subscription(node));
+					}
+				}
+			}
+			else
+				ifolder = new iFolder(col);
+
+			return ifolder;
 		}
 
 
@@ -352,24 +376,27 @@ namespace Novell.iFolder.Web
 
 
 			// Now we need to get all of Subscriptions
-			POBox pobox = Simias.POBox.POBox.GetPOBox(store, 
-													store.DefaultDomain);
-			if(pobox != null)
+			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
+						store.DefaultDomain, 
+						store.GetUserIDFromDomainID(store.DefaultDomain));
+	//		POBox poBox = Simias.POBox.POBox.GetPOBox(store, 
+	//												store.DefaultDomain);
+			if(poBox != null)
 			{
 
 				// Get all of the subscription obects in the POBox
-				ICSList poList = pobox.Search(
+				ICSList poList = poBox.Search(
 						PropertyTags.Types,
 						typeof(Subscription).Name,
 						SearchOp.Equal);
 
 				foreach(ShallowNode sNode in poList)
 				{
-					Subscription sub = new Subscription(pobox, sNode);
+					Subscription sub = new Subscription(poBox, sNode);
 
 					// if the subscription is not for us, we don't
 					// care
-					if(sub.ToIdentity != pobox.Owner.UserID)
+					if(sub.ToIdentity != poBox.Owner.UserID)
 						continue;
 
 					// Filter out all subscriptions that match
@@ -475,14 +502,17 @@ namespace Novell.iFolder.Web
 			{
 				// If the user wasn't found, look for the UserID as
 				// a subscription in the default POBox
-				POBox pobox = Simias.POBox.POBox.GetPOBox(store, 
-													store.DefaultDomain);
-				if(pobox == null)
+				POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
+						store.DefaultDomain, 
+						store.GetUserIDFromDomainID(store.DefaultDomain));
+//				POBox poBox = Simias.POBox.POBox.GetPOBox(store, 
+//													store.DefaultDomain);
+				if(poBox == null)
 				{
 					throw new Exception("Unable to access POBox");
 				}
 
-				ICSList poList = pobox.Search(
+				ICSList poList = poBox.Search(
 							Subscription.ToIdentityProperty,
 							UserID,
 							SearchOp.Equal);
@@ -490,7 +520,7 @@ namespace Novell.iFolder.Web
 				Subscription sub = null;
 				foreach(ShallowNode sNode in poList)
 				{
-					sub = new Subscription(pobox, sNode);
+					sub = new Subscription(poBox, sNode);
 					break;
 				}
 
@@ -508,7 +538,7 @@ namespace Novell.iFolder.Web
 				else
 					throw new Exception("Invalid Rights Specified");
 
-				pobox.Commit(sub);
+				poBox.Commit(sub);
 			}
 		}
 
@@ -652,24 +682,27 @@ namespace Novell.iFolder.Web
 			}
 
 			// Use the POBox for the domain that this iFolder belongs to.
-			Simias.POBox.POBox pobox = Simias.POBox.POBox.GetPOBox(
-											store,
-											col.Domain);
+			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
+						col.Domain, 
+						store.GetUserIDFromDomainID(col.Domain));
+//			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(
+//											store,
+//											col.Domain);
 
-			ICSList poList = pobox.Search(
+			ICSList poList = poBox.Search(
 					Subscription.SubscriptionCollectionIDProperty,
 					col.ID,
 					SearchOp.Equal);
 
 			foreach(ShallowNode sNode in poList)
 			{
-				Subscription sub = new Subscription(pobox, sNode);
+				Subscription sub = new Subscription(poBox, sNode);
 
 				// Filter out subscriptions that are on this box
 				// already
 				if (sub.SubscriptionState == SubscriptionStates.Ready)
 				{
-					if (pobox.StoreReference.GetCollectionByID(
+					if (poBox.StoreReference.GetCollectionByID(
 							sub.SubscriptionCollectionID) != null)
 					{
 						continue;
@@ -900,9 +933,12 @@ namespace Novell.iFolder.Web
 
 
 			// Use the POBox for the domain that this iFolder belongs to.
-			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(
-											store, 
-											col.Domain);
+			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
+						col.Domain, 
+						store.GetUserIDFromDomainID(col.Domain));
+//			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(
+//											store, 
+//											col.Domain);
 
 			Subscription sub = poBox.CreateSubscription(col,
 										col.GetCurrentMember(),
@@ -940,9 +976,12 @@ namespace Novell.iFolder.Web
 			if(store.DefaultDomain == Simias.Storage.Domain.WorkGroupDomainID)
 				throw new Exception("The client default is set to Workgroup Mode.  Invitations only work in the enterprise version of ifolder.");
 
-			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(
-											store, 
-											store.DefaultDomain);
+			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
+						store.DefaultDomain, 
+						store.GetUserIDFromDomainID(store.DefaultDomain));
+//			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(
+//											store, 
+//											store.DefaultDomain);
 
 			// iFolders returned in the Web service are also
 			// Subscriptions and it ID will be the subscription ID
@@ -987,7 +1026,15 @@ namespace Novell.iFolder.Web
 		[SoapDocumentMethod]
 		public DiskSpace GetUserDiskSpace( string UserID )
 		{
-			return DiskSpace.GetMemberDiskSpace(UserID);
+			try
+			{
+				return DiskSpace.GetMemberDiskSpace(UserID);
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine("GetUserDiskSpace for: {0}", UserID);
+				throw e;
+			}
 		}
 
 
@@ -1132,7 +1179,9 @@ namespace Novell.iFolder.Web
 			Configuration conf = Configuration.GetConfiguration();
 			Simias.Domain.DomainAgent da = new Simias.Domain.DomainAgent(conf);
 			da.Attach(Host, UserName, Password);
-			return new iFolderSettings();
+			iFolderSettings ifSettings = new iFolderSettings();
+			ifSettings.CurrentUserName = UserName;
+			return ifSettings;
 		}
 
 

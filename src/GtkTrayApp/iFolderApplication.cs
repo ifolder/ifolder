@@ -168,6 +168,15 @@ namespace Novell.iFolder
 					new System.Threading.Thread(new ThreadStart(StartiFolder));
 			startupThread.Start();
 
+
+			base.Run();
+		}
+
+
+
+
+		private void SetupSimiasEventHandlers()
+		{
 			simiasEventClient = new IProcEventClient( 
 					new IProcEventError( ErrorHandler), null);
 
@@ -181,9 +190,10 @@ namespace Novell.iFolder
 
 			simiasEventClient.SetEvent( IProcEventAction.AddNodeDeleted,
 				new IProcEventHandler( SimiasEventNodeDeletedHandler ) );
-
-			base.Run();
 		}
+
+
+
 
 		private void ErrorHandler( SimiasException e, object context )
 		{
@@ -194,9 +204,13 @@ namespace Novell.iFolder
 			}
 		}
 
+
+
+
 		private void SimiasEventNodeCreatedHandler(SimiasEventArgs args)
 		{
 			NodeEventArgs nargs = args as NodeEventArgs;
+			Console.WriteLine("Received a Node Created Event");
 			lock(EventQueue)
 			{
 				EventQueue.Enqueue(new iFolderEvent(nargs, 
@@ -205,9 +219,13 @@ namespace Novell.iFolder
 			}
 		}
 
+
+
+
 		private void SimiasEventNodeChangedHandler(SimiasEventArgs args)
 		{
 			NodeEventArgs nargs = args as NodeEventArgs;
+			Console.WriteLine("Received a Node Changed Event");
 			lock(EventQueue)
 			{
 				EventQueue.Enqueue(new iFolderEvent(nargs, 
@@ -216,9 +234,13 @@ namespace Novell.iFolder
 			}
 		}
 
+
+
+
 		private void SimiasEventNodeDeletedHandler(SimiasEventArgs args)
 		{
 			NodeEventArgs nargs = args as NodeEventArgs;
+			Console.WriteLine("Received a Node Deleted Event");
 			lock(EventQueue)
 			{
 				EventQueue.Enqueue(new iFolderEvent(nargs, 
@@ -226,6 +248,9 @@ namespace Novell.iFolder
 				SimiasEventFired.WakeupMain();
 			}
 		}
+
+
+
 
 
 		private void StartiFolder()
@@ -308,37 +333,47 @@ namespace Novell.iFolder
 		private void OnSimiasEventFired()
 		{
 			iFolderEvent iEvent;
+			bool hasmore = false;
 			// at this point, we are running in the same thread
 			// so we can safely show events
 			lock(EventQueue)
 			{
-				iEvent = (iFolderEvent)EventQueue.Dequeue();
+				hasmore = (EventQueue.Count > 0);
 			}
-			
-			switch(iEvent.EventType)
+
+			while(hasmore)
 			{
-				case iFolderEventTypes.Exception:
+				lock(EventQueue)
 				{
-					// TODO: Not sure what to do here
-					break;
+					iEvent = (iFolderEvent)EventQueue.Dequeue();
+					hasmore = (EventQueue.Count > 0);
 				}
-
-				case iFolderEventTypes.NodeCreated:
+				
+				switch(iEvent.EventType)
 				{
-					HandleNodeCreatedEvent(iEvent);
-					break;
-				}
-
-				case iFolderEventTypes.NodeChanged:
-				{
-					HandleNodeChangedEvent(iEvent);
-					break;
-				}
-
-				case iFolderEventTypes.NodeDeleted:
-				{
-					HandleNodeDeletedEvent(iEvent);
-					break;
+					case iFolderEventTypes.Exception:
+					{
+						// TODO: Not sure what to do here
+						break;
+					}
+	
+					case iFolderEventTypes.NodeCreated:
+					{
+						HandleNodeCreatedEvent(iEvent);
+						break;
+					}
+	
+					case iFolderEventTypes.NodeChanged:
+					{
+						HandleNodeChangedEvent(iEvent);
+						break;
+					}
+	
+					case iFolderEventTypes.NodeDeleted:
+					{
+						HandleNodeDeletedEvent(iEvent);
+						break;
+					}
 				}
 			}
 		}
@@ -404,9 +439,10 @@ namespace Novell.iFolder
 			{
 				case "Node":
 				{
+					Console.WriteLine("Handling a node CreatedEvent");
 					// Check to see if the Node that changed is part of
 					// the POBox
-					if(iEvent.CollectionID == ifSettings.DefaultPOBoxID)
+					if((ifSettings != null) && (iEvent.CollectionID == ifSettings.DefaultPOBoxID) )
 					{
 						try
 						{
@@ -415,8 +451,15 @@ namespace Novell.iFolder
 							if(	(ifolder != null) &&
 								(ifolder.State == "Available") )
 							{
-								// show a popup letting everyone know
-								// a new iFolder was added
+								// At this point we know it's a new subscription
+								// that's available, now check to make sure
+								// the corresponding iFolder isn't on the
+								// machine already (it was created here)
+								iFolder localiFolder = 
+									ifws.GetiFolder(ifolder.CollectionID);
+								if(localiFolder != null)
+									return;
+								
 								NotifyWindow notifyWin = new NotifyWindow(
 										tIcon, 
 										string.Format("New iFolder \"{0}\"", 
@@ -438,6 +481,10 @@ namespace Novell.iFolder
 							ied.Destroy();
 							ied = null;
 						}
+					}
+					else
+					{
+						Console.WriteLine("CollectionID != POBoxID");
 					}
 					break;
 				}					
@@ -487,7 +534,7 @@ namespace Novell.iFolder
 			{
 				case "Node":
 				{
-					if(iEvent.CollectionID == ifSettings.DefaultPOBoxID)
+					if( (ifSettings != null) && (iEvent.CollectionID == ifSettings.DefaultPOBoxID) )
 					{
 						if(ifwin != null)
 							ifwin.iFolderDeleted(iEvent.NodeID);
@@ -516,6 +563,7 @@ namespace Novell.iFolder
 
 				case iFolderState.Running:
 					gAppIcon.Pixbuf = RunningPixbuf;
+					SetupSimiasEventHandlers();
 					break;
 
 				case iFolderState.Stopping:
