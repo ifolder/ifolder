@@ -1197,7 +1197,13 @@ namespace Novell.iFolder.iFolderCom
 		{
 			ConflictResolver conflictResolver = new ConflictResolver();
 			conflictResolver.IFolder = this.ifolder;
+			conflictResolver.ConflictsResolved += new Novell.iFolder.iFolderCom.ConflictResolver.ConflictsResolvedDelegate(conflictResolver_ConflictsResolved);
 			conflictResolver.Show();		
+		}
+
+		private void conflictResolver_ConflictsResolved(object sender, EventArgs e)
+		{
+			conflicts.Visible = pictureBox1.Visible = false;
 		}
 		#endregion
 

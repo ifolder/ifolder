@@ -486,6 +486,17 @@ namespace Novell.iFolder.iFolderCom
 		}
 		#endregion
 
+		#region Events
+		/// <summary>
+		/// Delegate used when conflicts have been resolved.
+		/// </summary>
+		public delegate void ConflictsResolvedDelegate(object sender, EventArgs e);
+		/// <summary>
+		/// Occurs when all conflicts have been resolved.
+		/// </summary>
+		public event ConflictsResolvedDelegate ConflictsResolved;
+		#endregion
+
 		#region Event Handlers
 		private void localFiles_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
@@ -616,6 +627,12 @@ namespace Novell.iFolder.iFolderCom
 
 					// Update the listview.
 					RefreshList();
+
+					if (localFiles.Items.Count == 0 && ConflictsResolved != null)
+					{
+						// If all the conflicts have been resolved, fire the ConflictsResolved event.
+						ConflictsResolved(this, new EventArgs());
+					}
 					break;
 				case "Refresh":
 					RefreshList();
