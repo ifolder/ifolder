@@ -43,7 +43,7 @@ namespace Simias.Storage
 		/// <param name="ownerGuid">Owner identifier of this object.</param>
 		/// <param name="domainName">Name of the domain that this address book belongs to.</param>
 		internal LocalAddressBook( Store storeObject, string bookName, string bookID, string ownerGuid, string domainName ) :
-			base ( storeObject, bookName, bookID, ownerGuid, domainName )
+			base ( storeObject, bookName, bookID, NodeTypes.LocalAddressBookType, ownerGuid, domainName )
 		{
 			// Add the properties that make this an address book.
 			properties.AddNodeProperty( PropertyTags.DefaultAddressBook, true );
@@ -60,7 +60,7 @@ namespace Simias.Storage
 		internal LocalAddressBook( Store storeObject, Node node ) :
 			base( storeObject, node )
 		{
-			if ( !IsType( this, NodeTypes.LocalAddressBookType ) )
+			if ( type != NodeTypes.LocalAddressBookType )
 			{
 				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.LocalAddressBookType, type ) );
 			}
@@ -74,7 +74,7 @@ namespace Simias.Storage
 		internal LocalAddressBook( Store storeObject, ShallowNode shallowNode ) :
 			base( storeObject, shallowNode )
 		{
-			if ( !IsType( this, NodeTypes.CollectionType ) )
+			if ( type != NodeTypes.LocalAddressBookType )
 			{
 				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.LocalAddressBookType, type ) );
 			}
@@ -88,7 +88,7 @@ namespace Simias.Storage
 		internal LocalAddressBook( Store storeObject, XmlDocument document ) :
 			base( storeObject, document )
 		{
-			if ( !IsType( this, NodeTypes.LocalAddressBookType ) )
+			if ( type != NodeTypes.LocalAddressBookType )
 			{
 				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.LocalAddressBookType, type ) );
 			}

@@ -227,8 +227,12 @@ namespace Simias.Storage
 			// Create a new PropertyList object.
 			properties = new PropertyList( name, id, type );
 
-			// Set the object type in the properties.
+			// Set the object type(s) in the properties.
 			properties.AddNodeProperty( PropertyTags.Types, nodeType );
+			if ( nodeType != NodeTypes.NodeType )
+			{
+				properties.AddNodeProperty( PropertyTags.Types, NodeTypes.NodeType );
+			}
 		}
 
 		/// <summary>
@@ -297,6 +301,10 @@ namespace Simias.Storage
 					rNode = new Node( document );
 					break;
 
+				case "Collision":
+					rNode = new Collision( store, document );
+					break;
+
 				default:
 					rNode = new Node( document );
 					break;
@@ -353,6 +361,10 @@ namespace Simias.Storage
 
 				case "Tombstone":
 					rNode = new Node( collection, shallowNode );
+					break;
+
+				case "Collision":
+					rNode = new Collision( collection.StoreReference, shallowNode );
 					break;
 
 				default:

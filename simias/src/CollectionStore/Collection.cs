@@ -164,32 +164,8 @@ namespace Simias.Storage
 		/// <param name="ownerGuid">The identifier for the owner of this object.</param>
 		/// <param name="domainName">The domain that this object is stored in.</param>
 		public Collection( Store storeObject, string collectionName, string collectionID, string ownerGuid, string domainName ) :
-			base( collectionName, collectionID, NodeTypes.CollectionType )
+			this( storeObject, collectionName, collectionID, NodeTypes.CollectionType, ownerGuid, domainName )
 		{
-			store = storeObject;
-
-			// Don't allow this collection to be created, if one already exist by the same id.
-			if ( store.GetCollectionByID( id ) != null )
-			{
-				throw new AlreadyExistsException( String.Format( "The collection: {0} - ID: {1} already exists.", collectionName, collectionID ) );
-			}
-
-			// If the managed directory does not exist, create it.
-			if ( !Directory.Exists( ManagedPath ) )
-			{
-				Directory.CreateDirectory( ManagedPath );
-			}
-
-			// Add the owner identifier and domain name as properties.
-			properties.AddNodeProperty( PropertyTags.Owner, ownerGuid.ToLower() );
-			properties.AddNodeProperty( PropertyTags.DomainName, domainName );
-			
-			// Set the owner to have all rights to the collection.
-			AccessControlEntry ace = new AccessControlEntry( ownerGuid, Access.Rights.Admin );
-			ace.Set( this );
-
-			// Setup the access control for this collection.
-			accessControl = new AccessControl( this );
 		}
 
 		/// <summary>
@@ -212,7 +188,7 @@ namespace Simias.Storage
 		public Collection( Store storeObject, Node node ) :
 			base( node )
 		{
-			if ( type != NodeTypes.CollectionType )
+			if ( !IsType( this, NodeTypes.CollectionType ) )
 			{
 				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.CollectionType, type ) );
 			}
@@ -228,12 +204,51 @@ namespace Simias.Storage
 		public Collection( Collection collection ) :
 			base( collection )
 		{
-			if ( type != NodeTypes.CollectionType )
+			store = collection.store;
+			accessControl = new AccessControl( this );
+		}
+
+		/// <summary>
+		/// Constructor to create a new Collection object.
+		/// </summary>
+		/// <param name="storeObject">Store object that this collection belongs to.</param>
+		/// <param name="collectionName">This is the friendly name that is used by applications to describe this object.</param>
+		/// <param name="collectionID">The globally unique identifier for this object.</param>
+		/// <param name="collectionType">Base type of collection object.</param>
+		/// <param name="ownerGuid">The identifier for the owner of this object.</param>
+		/// <param name="domainName">The domain that this object is stored in.</param>
+		internal protected Collection( Store storeObject, string collectionName, string collectionID, string collectionType, string ownerGuid, string domainName ) :
+			base( collectionName, collectionID, collectionType )
+		{
+			store = storeObject;
+
+			// Don't allow this collection to be created, if one already exist by the same id.
+			if ( store.GetCollectionByID( id ) != null )
 			{
-				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.CollectionType, type ) );
+				throw new AlreadyExistsException( String.Format( "The collection: {0} - ID: {1} already exists.", collectionName, collectionID ) );
 			}
 
-			store = collection.store;
+			// If the managed directory does not exist, create it.
+			if ( !Directory.Exists( ManagedPath ) )
+			{
+				Directory.CreateDirectory( ManagedPath );
+			}
+
+			// Add that this is a Collection type if it is specified as a derived type.
+			if ( collectionType != NodeTypes.CollectionType )
+			{
+				properties.AddNodeProperty( PropertyTags.Types, NodeTypes.CollectionType );
+			}
+
+			// Add the owner identifier and domain name as properties.
+			properties.AddNodeProperty( PropertyTags.Owner, ownerGuid.ToLower() );
+			properties.AddNodeProperty( PropertyTags.DomainName, domainName );
+			
+			// Set the owner to have all rights to the collection.
+			AccessControlEntry ace = new AccessControlEntry( ownerGuid, Access.Rights.Admin );
+			ace.Set( this );
+
+			// Setup the access control for this collection.
 			accessControl = new AccessControl( this );
 		}
 
@@ -326,16 +341,6 @@ namespace Simias.Storage
 				ulong incarnationValue = node.LocalIncarnation;
 				node.Properties.ModifyNodeProperty( PropertyTags.LocalIncarnation, ++incarnationValue );
 			}
-		}
-
-		/// <summary>
-		/// Returns whether the specified Node object is a Collection object type.
-		/// </summary>
-		/// <param name="node">Node to check to see if it is a Collection object.</param>
-		/// <returns>True if the specified Node object is a Collection object. Otherwise false.</returns>
-		private bool IsCollection( Node node )
-		{
-			return ( node.Type == NodeTypes.CollectionType ) ? true : false;
 		}
 
 		/// <summary>
@@ -436,7 +441,7 @@ namespace Simias.Storage
 						break;
 
 					case PropertyList.PropertyListState.Delete:
-						if ( IsCollection( node ) )
+						if ( IsType( node, NodeTypes.CollectionType ) )
 						{
 							deleteCollection = true;
 						}
@@ -575,7 +580,7 @@ namespace Simias.Storage
 		/// <param name="node">Node to copy local properties to.</param>
 		private void SetLocalProperties( Node node )
 		{
-			if ( IsCollection( node ) )
+			if ( IsType( node, NodeTypes.CollectionType ) )
 			{
 				// Instantiate the Collection object to be imported.
 				Collection importCollection = new Collection( store, node );
@@ -709,7 +714,6 @@ namespace Simias.Storage
 		public static Collection CollectionFactory( Store store, ShallowNode shallowNode )
 		{
 			Collection rCollection = null;
-
 			switch ( shallowNode.Type )
 			{
 				case "Collection":
@@ -718,6 +722,10 @@ namespace Simias.Storage
 
 				case "LocalAddressBook":
 					rCollection = new LocalAddressBook( store, shallowNode );
+					break;
+
+				case "Collision":
+					rCollection = new Collision( store, shallowNode );
 					break;
 
 				default:
@@ -772,7 +780,7 @@ namespace Simias.Storage
 					{
 						onlyTombstones = false;
 
-						if ( IsCollection( node ) )
+						if ( IsType( node, NodeTypes.CollectionType ) )
 						{
 							containsCollection = true;
 
@@ -1128,7 +1136,7 @@ namespace Simias.Storage
 				node.IncarnationUpdate = 0;
 
 				// If this is a collection, refresh the access control.
-				if ( IsCollection( node ) )
+				if ( IsType( node, NodeTypes.CollectionType ) )
 				{
 					( node as Collection ).accessControl.GetAccessInfo();
 				}

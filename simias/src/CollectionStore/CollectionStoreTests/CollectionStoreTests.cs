@@ -1020,7 +1020,7 @@ namespace Simias.Storage.Tests
 
 				int count = 0;
 				while ( e2.MoveNext() ) ++count;
-				if ( count != 4 )
+				if ( count != 5 )
 				{
 					e2.Dispose();
 					throw new ApplicationException( "Enumeration access control without impersonation failed" );
@@ -1582,6 +1582,100 @@ namespace Simias.Storage.Tests
 				if ( File.Exists( sfn.GetFullPath( collection ) ) )
 				{
 					throw new ApplicationException( "Store managed file should not exist after delete and commit." );
+				}
+			}
+			finally
+			{
+				collection.Commit( collection.Delete() );
+			}
+		}
+
+		/// <summary>
+		/// Test the collision operations.
+		/// </summary>
+		[Test]
+		public void CollisionTest()
+		{
+			Collection collection = new Collection( store, "CS_TestCollection" );
+			try
+			{
+				// Commit the collection.
+				collection.Commit();
+
+				// Get the collision object.
+				Collision collision = store.GetCollisionObject();
+
+				// Create a collision Node that represents the collection object and commit it to the collision
+				// collection.
+				Node node = collision.CreateCollisionNode( collection, collection );
+				collision.Commit( node );
+
+				// Should have a collision.
+				if ( !collision.HasCollisions( collection, collection ) )
+				{
+					throw new ApplicationException( "Collision node not created." );
+				}
+
+				// Find the collision Node.
+				ICSList colList = collision.GetCollisions( collection );
+				ICSEnumerator e = colList.GetEnumerator() as ICSEnumerator;
+				if ( e.MoveNext() )
+				{
+					if ( ( e.Current as ShallowNode ).ID != node.ID )
+					{
+						throw new ApplicationException( "Found wrong collision node." );
+					}
+
+					if ( e.MoveNext() )
+					{
+						throw new ApplicationException( "Collision node exception." );
+					}
+				}
+				else
+				{
+					throw new ApplicationException( "Collision node exception." );
+				}
+
+				e.Dispose();
+
+				// Try to find the collision Node object a different way.
+				colList = collision.GetCollisions( collection, collection );
+				e = colList.GetEnumerator() as ICSEnumerator;
+				if ( e.MoveNext() )
+				{
+					ShallowNode sn = e.Current as ShallowNode;
+					if ( sn.ID != node.ID )
+					{
+						throw new ApplicationException( "Found wrong collision node." );
+					}
+
+					if ( e.MoveNext() )
+					{
+						throw new ApplicationException( "Collision node exception." );
+					}
+
+					// Reconstitute the collision Node and get the Node that it represents.
+					node = new Node( collision, sn );
+					Node collectionNode = collision.GetNodeFromCollision( node );
+					if ( collectionNode.ID != collection.ID )
+					{
+						throw new ApplicationException( "Cannot find proper Node from collision." );
+					}
+
+					// Delete the collision node.
+					collision.Commit( collision.Delete( node ) );
+				}
+				else
+				{
+					throw new ApplicationException( "Collision node exception." );
+				}
+
+				e.Dispose();
+
+				// Should not be anymore collisions.
+				if ( collision.HasCollisions( collection ) )
+				{
+					throw new ApplicationException( "Cannot delete collision node." );
 				}
 			}
 			finally

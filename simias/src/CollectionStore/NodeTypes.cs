@@ -117,6 +117,14 @@ namespace Simias.Storage
 		{
 			get { return classNames[ 9 ]; }
 		}
+
+		/// <summary>
+		/// Gets the Collision class name.
+		/// </summary>
+		public static string CollisionType
+		{
+			get { return classNames[ 10 ]; }
+		}
 		#endregion
 
 		#region Constructor
@@ -134,7 +142,8 @@ namespace Simias.Storage
 										typeof( LocalAddressBook ).Name,
 										typeof( Node ).Name,
 										typeof( StoreFileNode ).Name,
-										"Tombstone" };
+										"Tombstone",
+										typeof( Collision ).Name };
 		}
 		#endregion
 
