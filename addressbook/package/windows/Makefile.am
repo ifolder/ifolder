@@ -27,8 +27,8 @@ package-clean clean-local:
 	rm -rf  *.msi *.msm Release Debug */Release */Debug *.log *.suo
 
 distclean-local: package-clean
-	rm -f ../*/Makefile ../linux/addressbook.spec
+	rm -f Makefile addressbook.spec
 
 maintainer-clean-local:
-	rm -f ../*/Makefile.in
+	rm -f Makefile.in
 

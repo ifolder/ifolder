@@ -18,6 +18,3 @@ distclean maintainer-clean: package-clean
 		rm -f Makefile.in; \
 	fi
 
-maintainer-clean:
-
-

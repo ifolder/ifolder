@@ -37,9 +37,9 @@ package-uninstall:
 package-clean clean-local:
 	rm -rf *.rpm RPM
 
-distclean-local:
-	rm -f ../*/Makefile addressbook.spec
+distclean-local: package-clean
+	rm -f Makefile addressbook.spec
 
 maintainer-clean-local:
-	rm -f ../*/Makefile.in
+	rm -f Makefile.in
 
