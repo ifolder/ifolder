@@ -1040,26 +1040,22 @@ namespace Simias.Sync.Client
 								File.Delete(conflictPath);
 						}
 						
-						Node[] deleted;
 						BaseFileNode bfn = node as BaseFileNode;
 						if (bfn != null)
 						{
 							File.Delete(bfn.GetFullPath(collection));
-							deleted = collection.Delete(node);
+							collection.Delete(node);
+							collection.Commit(node);
+							collection.Commit(node);
 						}
 						DirNode dn = node as DirNode;
 						if (dn != null)
 						{
 							Directory.Delete(dn.GetFullPath(collection), true);
-							deleted = collection.Delete(node, PropertyTags.Parent);
+							Node[] deleted = collection.Delete(node, PropertyTags.Parent);
+							collection.Commit(deleted);
+							collection.Commit(deleted);
 						}
-						
-						// Do a deep delete.
-						collection.Commit(deleted);
-
-						// Now delete the tombstones.
-						collection.Commit(deleted);
-
 						DeleteOnClient.Remove(id);
 					}
 					catch
