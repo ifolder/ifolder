@@ -120,6 +120,7 @@
 		};
 		29B97314FDCFA39411CA2CEA = {
 			children = (
+				3E8853C907C6F80A00E8B6CD,
 				3E19994507BAE41E00AAC29A,
 				3E66704F07B7D3A90047E683,
 				080E96DDFE201D6D7F000001,
@@ -1058,6 +1059,134 @@
 			settings = {
 			};
 		};
+		3E8853C907C6F80A00E8B6CD = {
+			children = (
+				3E8853CA07C6F80A00E8B6CD,
+				3E8853CB07C6F80A00E8B6CD,
+				3E8853CE07C6F80A00E8B6CD,
+				3E8853CF07C6F80A00E8B6CD,
+				3E8853D007C6F80A00E8B6CD,
+				3E8853D107C6F80A00E8B6CD,
+				3E8853D207C6F80A00E8B6CD,
+				3E8853D307C6F80A00E8B6CD,
+			);
+			isa = PBXGroup;
+			path = notify;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E8853CA07C6F80A00E8B6CD = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = iFolderNotificationController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E8853CB07C6F80A00E8B6CD = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = iFolderNotificationController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E8853CE07C6F80A00E8B6CD = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = KABubbleWindow.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E8853CF07C6F80A00E8B6CD = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = KABubbleWindow.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E8853D007C6F80A00E8B6CD = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = KABubbleWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E8853D107C6F80A00E8B6CD = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = KABubbleWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E8853D207C6F80A00E8B6CD = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = KABubbleWindowView.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E8853D307C6F80A00E8B6CD = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = KABubbleWindowView.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E8853D407C6F80A00E8B6CD = {
+			fileRef = 3E8853CA07C6F80A00E8B6CD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E8853D507C6F80A00E8B6CD = {
+			fileRef = 3E8853CB07C6F80A00E8B6CD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E8853D807C6F80A00E8B6CD = {
+			fileRef = 3E8853CE07C6F80A00E8B6CD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E8853D907C6F80A00E8B6CD = {
+			fileRef = 3E8853CF07C6F80A00E8B6CD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E8853DA07C6F80A00E8B6CD = {
+			fileRef = 3E8853D007C6F80A00E8B6CD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E8853DB07C6F80A00E8B6CD = {
+			fileRef = 3E8853D107C6F80A00E8B6CD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E8853DC07C6F80A00E8B6CD = {
+			fileRef = 3E8853D207C6F80A00E8B6CD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E8853DD07C6F80A00E8B6CD = {
+			fileRef = 3E8853D307C6F80A00E8B6CD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3E8A565307C1039E00FDAD31 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -1896,6 +2025,10 @@
 				3EE278EE07C46CD500A645A0,
 				3E15669E07C5330600972388,
 				3EDA494407C681B7007CD1E0,
+				3E8853D407C6F80A00E8B6CD,
+				3E8853D807C6F80A00E8B6CD,
+				3E8853DA07C6F80A00E8B6CD,
+				3E8853DC07C6F80A00E8B6CD,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1945,6 +2078,10 @@
 				3EE278EF07C46CD500A645A0,
 				3E15669D07C5330600972388,
 				3EDA494507C681B7007CD1E0,
+				3E8853D507C6F80A00E8B6CD,
+				3E8853D907C6F80A00E8B6CD,
+				3E8853DB07C6F80A00E8B6CD,
+				3E8853DD07C6F80A00E8B6CD,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
