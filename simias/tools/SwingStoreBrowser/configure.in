@@ -81,18 +81,20 @@ AC_SUBST(COMMON_DISTCLEAN_FILES)
 AC_SUBST(COMMON_MAINTAINER_CLEAN_FILES)
 
 #
-# Check JAVA_HOME and java -version
+# Make sure "java", "javac", and "jar" are available on the path
 #
-if test -z "$JAVA_HOME"; then
-    AC_MSG_ERROR([JAVA_HOME must be set])
-fi
-echo JAVA_HOME=$JAVA_HOME
-JAVA_VERSION_MESSAGE=`$JAVA_HOME/bin/java -version 2>&1`
+AC_CHECK_PROG(JAVA, java, java)
+test -z "$JAVA" && AC_MSG_ERROR([no JRE: java not found in \$PATH])
+
+AC_CHECK_PROG(JAVAC, javac, javac)
+test -z "$JAVAC" && AC_MSG_ERROR([no Java Compiler: javac not found in \$PATH])
+
+AC_CHECK_PROG(JAR, jar, jar)
+test -z "$JAR" && AC_MSG_ERROR([no Jar Tool: jar not found in \$PATH])
+
+JAVA_VERSION_MESSAGE=`java -version 2>&1`
 JAVA_VERSION=`echo $JAVA_VERSION_MESSAGE | sed 's/[[^0-9]]*\([[0-9\._]]*\).*/\1/'`
 echo JAVA_VERSION=$JAVA_VERSION
-if ! expr "$JAVA_VERSION" : "1\.4\.2.*" >/dev/null; then
-    AC_MSG_ERROR([JAVA_VERSION must be 1.4.2])
-fi
 
 #
 # Set platform-specific variables
@@ -107,10 +109,7 @@ case $IFOLDER_OS in
         #
         PLATFORM_SUBDIRS=$LINUX_SUBDIRS
         SEP='/'
-        JAVA="$JAVA_HOME/bin/java"
-        JAVAC="$JAVA_HOME/bin/javac"
-        JAR="$JAVA_HOME/bin/jar"
-		PATH_SEP=':'
+	PATH_SEP=':'
     ;;
     #
     # Linux-specific configuration
@@ -121,10 +120,7 @@ case $IFOLDER_OS in
         #
         PLATFORM_SUBDIRS=$LINUX_SUBDIRS
         SEP='/'
-        JAVA="$JAVA_HOME/bin/java"
-        JAVAC="$JAVA_HOME/bin/javac"
-        JAR="$JAVA_HOME/bin/jar"
-		PATH_SEP=':'
+	PATH_SEP=':'
     ;;
     #
     # Windows-specific configuration
@@ -132,9 +128,6 @@ case $IFOLDER_OS in
     windows)
         PLATFORM_SUBDIRS=$WINDOWS_SUBDIRS
 		SEP='$(EMPTY)\\$(EMPTY)'
-		JAVA='$(shell cygpath --mixed --absolute $$JAVA_HOME)/bin/java'
-		JAVAC='$(shell cygpath --mixed --absolute $$JAVA_HOME)/bin/javac'
-		JAR='$(shell cygpath --mixed --absolute $$JAVA_HOME)/bin/jar'
 		PATH_SEP=';'
 		
 		# override Linux-like directory structure
