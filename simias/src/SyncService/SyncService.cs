@@ -361,6 +361,7 @@ public class SyncService
 		int i = 0;
 		foreach (SyncNode sn in nodes)
 		{
+			statusList[i] = new SyncNodeStatus();
 			if (sn != null)
 			{
 				XmlDocument xNode = new XmlDocument();
@@ -368,7 +369,6 @@ public class SyncService
 				Node node = Node.NodeFactory(store, xNode);
 				Import(node, sn.expectedIncarn);
 				NodeList.Add(node);
-				statusList[i] = new SyncNodeStatus();
 				statusList[i].nodeID = node.ID;
 				statusList[i++].status = SyncNodeStatus.SyncStatus.Success;
 			}
@@ -384,6 +384,8 @@ public class SyncService
 			// If we get here the import failed try to commit the nodes one at a time.
 			foreach (Node node in NodeList)
 			{
+				if (node == null)
+					continue;
 				try
 				{
 					collection.Commit(node);

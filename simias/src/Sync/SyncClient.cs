@@ -1001,69 +1001,69 @@ namespace Simias.Sync.Client
 		/// </summary>
 		private void ProcessDeleteOnClient()
 		{
+			if (DeleteOnClient.Count == 0)
+				return;
+			
 			// remove deleted nodes from client
-			if (DeleteOnClient.Count > 0)
+			log.Info("Deleting {0} nodes on client", DeleteOnClient.Count);
+			string[] idList = new string[DeleteOnClient.Count];
+			DeleteOnClient.Keys.CopyTo(idList, 0);
+			foreach (string id in idList)
 			{
-				log.Info("Deleting {0} nodes on client", DeleteOnClient.Count);
-				string[] idList = new string[DeleteOnClient.Count];
-				DeleteOnClient.Keys.CopyTo(idList, 0);
-				foreach (string id in idList)
+				if (stopping)
 				{
-					if (stopping)
+					return;
+				}
+				try
+				{
+					Node node = collection.GetNodeByID(id);
+					if (node == null)
 					{
-						return;
-					}
-					try
-					{
-						Node node = collection.GetNodeByID(id);
-						if (node == null)
-						{
-							log.Debug("Ignoring attempt to delete non-existent node {0}", id);
-							DeleteOnClient.Remove(id);
-							continue;
-						}
-
-						log.Info("Deleting {0} on client", node.Name);
-						// If this is a collision node then delete the collision file.
-						if (collection.HasCollisions(node))
-						{
-							Conflict conflict = new Conflict(collection, node);
-							string conflictPath;
-							if (conflict.IsFileNameConflict)
-							{
-								conflictPath = conflict.FileNameConflictPath;
-							}
-							else 
-							{
-								conflictPath = conflict.UpdateConflictPath;
-							}
-							if (conflictPath != null)
-								File.Delete(conflictPath);
-						}
-						
-						DirNode dn = node as DirNode;
-						if (dn != null)
-						{
-							Directory.Delete(dn.GetFullPath(collection), true);
-							Node[] deleted = collection.Delete(node, PropertyTags.Parent);
-							collection.Commit(deleted);
-							collection.Commit(deleted);
-						}
-						else
-						{
-							BaseFileNode bfn = node as BaseFileNode;
-							if (bfn != null)
-								File.Delete(bfn.GetFullPath(collection));
-							collection.Delete(node);
-							collection.Commit(node);
-							collection.Commit(node);
-						}
+						log.Debug("Ignoring attempt to delete non-existent node {0}", id);
 						DeleteOnClient.Remove(id);
+						continue;
 					}
-					catch
+
+					log.Info("Deleting {0} on client", node.Name);
+					// If this is a collision node then delete the collision file.
+					if (collection.HasCollisions(node))
 					{
-						// Try to delete the next node.
+						Conflict conflict = new Conflict(collection, node);
+						string conflictPath;
+						if (conflict.IsFileNameConflict)
+						{
+							conflictPath = conflict.FileNameConflictPath;
+						}
+						else 
+						{
+							conflictPath = conflict.UpdateConflictPath;
+						}
+						if (conflictPath != null)
+							File.Delete(conflictPath);
 					}
+						
+					DirNode dn = node as DirNode;
+					if (dn != null)
+					{
+						Directory.Delete(dn.GetFullPath(collection), true);
+						Node[] deleted = collection.Delete(node, PropertyTags.Parent);
+						collection.Commit(deleted);
+						collection.Commit(deleted);
+					}
+					else
+					{
+						BaseFileNode bfn = node as BaseFileNode;
+						if (bfn != null)
+							File.Delete(bfn.GetFullPath(collection));
+						collection.Delete(node);
+						collection.Commit(node);
+						collection.Commit(node);
+					}
+					DeleteOnClient.Remove(id);
+				}
+				catch
+				{
+					// Try to delete the next node.
 				}
 			}
 		}
@@ -1073,37 +1073,37 @@ namespace Simias.Sync.Client
 		/// </summary>
 		private void ProcessNodesFromServer()
 		{
+			if (nodesFromServer.Count == 0)
+				return;
+
 			SyncNode[] updates = null;
 
 			// get small nodes and files from server
-			if (nodesFromServer.Count > 0)
-			{
-				log.Info("Downloading {0} Nodes from server", nodesFromServer.Count);
-				string[] nodeIDs = new string[nodesFromServer.Count];
-				nodesFromServer.Keys.CopyTo(nodeIDs, 0);
+			log.Info("Downloading {0} Nodes from server", nodesFromServer.Count);
+			string[] nodeIDs = new string[nodesFromServer.Count];
+			nodesFromServer.Keys.CopyTo(nodeIDs, 0);
 				
-				// Now get the nodes in groups of BATCH_SIZE.
-				int offset = 0;
-				while (offset < nodeIDs.Length)
+			// Now get the nodes in groups of BATCH_SIZE.
+			int offset = 0;
+			while (offset < nodeIDs.Length)
+			{
+				if (stopping)
 				{
-					if (stopping)
-					{
-						return;
-					}
-					int batchCount = nodeIDs.Length - offset < BATCH_SIZE ? nodeIDs.Length - offset : BATCH_SIZE;
-					try
-					{
-						string[] batchIDs = new string[batchCount];
-						Array.Copy(nodeIDs, offset, batchIDs, 0, batchCount);
-						updates = service.GetNodes(batchIDs);
-						StoreNodes(updates);
-					}
-					catch {}
-					offset += batchCount;
+					return;
 				}
+				int batchCount = nodeIDs.Length - offset < BATCH_SIZE ? nodeIDs.Length - offset : BATCH_SIZE;
+				try
+				{
+					string[] batchIDs = new string[batchCount];
+					Array.Copy(nodeIDs, offset, batchIDs, 0, batchCount);
+					updates = service.GetNodes(batchIDs);
+					StoreNodes(updates);
+				}
+				catch {}
+				offset += batchCount;
 			}
 		}
-
+	
 		/// <summary>
 		/// Save the nodes from the server in the local store.
 		/// </summary>
@@ -1145,8 +1145,8 @@ namespace Simias.Sync.Client
 						if (node != null)
 						{
 							collection.Commit(node);
-							nodesFromServer.Remove(node.ID);
 						}
+						nodesFromServer.Remove(node.ID);
 					}
 					catch (CollisionException)
 					{
@@ -1174,45 +1174,45 @@ namespace Simias.Sync.Client
 		/// </summary>
 		private void ProcessDirsFromServer()
 		{
+			if (dirsFromServer.Count == 0)
+				return;
+
 			SyncNode[] updates = null;
 
 			// get small nodes and files from server
-			if (dirsFromServer.Count > 0)
-			{
-				log.Info("Downloading {0} Directories from server", dirsFromServer.Count);
-				string[] nodeIDs = new string[dirsFromServer.Count];
-				dirsFromServer.Keys.CopyTo(nodeIDs, 0);
+			log.Info("Downloading {0} Directories from server", dirsFromServer.Count);
+			string[] nodeIDs = new string[dirsFromServer.Count];
+			dirsFromServer.Keys.CopyTo(nodeIDs, 0);
 				
-				// Now get the nodes in groups of BATCH_SIZE.
-				int offset = 0;
-				while (offset < nodeIDs.Length)
+			// Now get the nodes in groups of BATCH_SIZE.
+			int offset = 0;
+			while (offset < nodeIDs.Length)
+			{
+				if (stopping)
 				{
-					if (stopping)
-					{
-						return;
-					}
-
-					int batchCount = nodeIDs.Length - offset < BATCH_SIZE ? nodeIDs.Length - offset : BATCH_SIZE;
-					try
-					{
-						string[] batchIDs = new string[batchCount];
-						Array.Copy(nodeIDs, offset, batchIDs, 0, batchCount);
-					
-						updates = service.GetDirs(batchIDs);
-
-						foreach (SyncNode snode in updates)
-						{
-							StoreDir(snode);
-						}
-					}
-					catch
-					{
-					}
-					offset += batchCount;
+					return;
 				}
+
+				int batchCount = nodeIDs.Length - offset < BATCH_SIZE ? nodeIDs.Length - offset : BATCH_SIZE;
+				try
+				{
+					string[] batchIDs = new string[batchCount];
+					Array.Copy(nodeIDs, offset, batchIDs, 0, batchCount);
+					
+					updates = service.GetDirs(batchIDs);
+
+					foreach (SyncNode snode in updates)
+					{
+						StoreDir(snode);
+					}
+				}
+				catch
+				{
+				}
+				offset += batchCount;
 			}
 		}
-
+	
 		/// <summary>
 		/// Called to import a node.
 		/// </summary>
@@ -1325,9 +1325,8 @@ namespace Simias.Sync.Client
 		{
 			// remove deleted nodes from server
 			if (DeleteOnServer.Count == 0)
-			{
 				return;
-			}
+		
 			try
 			{
 				log.Info("Deleting {0} Nodes on server", DeleteOnServer.Count);
@@ -1398,6 +1397,10 @@ namespace Simias.Sync.Client
 							snode.expectedIncarn = node.MasterIncarnation;
 							updates[i - offset] = snode;
 						}
+						else
+						{
+							nodesToServer.Remove(nodeIDs[i]);
+						}
 					}
 
 					SyncNodeStatus[] nodeStatus = service.PutNodes(updates);
@@ -1405,6 +1408,8 @@ namespace Simias.Sync.Client
 					for (int i = 0; i < nodes.Length; ++ i)
 					{
 						Node node = nodes[i];
+						if (node == null)
+							continue;
 						SyncNodeStatus status = nodeStatus[i];
 						switch (status.status)
 						{
