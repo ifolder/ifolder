@@ -121,18 +121,21 @@ namespace Simias.Event
 							}
 							else
 							{
-								Delegate[] cbList = ServiceEvent.GetInvocationList();
-								foreach (ServiceEventHandler cb in cbList)
+								if (ServiceEvent != null)
 								{
-									try 
-									{ 
-										cb((ServiceEventArgs)args);
-									}
-									catch 
+									Delegate[] cbList = ServiceEvent.GetInvocationList();
+									foreach (ServiceEventHandler cb in cbList)
 									{
-										// Remove the offending delegate.
-										ServiceEvent -= cb;
-										MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
+										try 
+										{ 
+											cb((ServiceEventArgs)args);
+										}
+										catch 
+										{
+											// Remove the offending delegate.
+											ServiceEvent -= cb;
+											MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
+										}
 									}
 								}
 								if (((ServiceEventArgs)args).ControlEvent == ServiceControl.Shutdown)
