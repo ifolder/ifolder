@@ -108,8 +108,8 @@ public class FileInviter
 		}
 
 		// add the secret to the current identity chain
-		IIdentity identity = IdentityManager.Connect().CurrentId;
-		identity.SetKeyChainItem(invitation.Domain, invitation.Identity, "novell");
+		store.CurrentIdentity.CreateAlias(invitation.Domain, invitation.Identity);
+		store.CurrentIdentity.Commit();
 
 		// add the invitation information to the store collection
 		SyncCollection sc = syncStore.CreateCollection(invitation);
@@ -127,9 +127,8 @@ public class FileInviter
 		if (c == null)
 			return false;
 		SyncCollection sc = new SyncCollection(c);
-		IIdentity ident = IdentityManager.Connect().CurrentId;
-		Invitation invitation = sc.CreateInvitation(ident.UserGuid);
-		invitation.Domain = ident.DomainName;
+		Invitation invitation = sc.CreateInvitation(store.CurrentUser);
+		invitation.Domain = store.DomainName;
 		invitation.Save(fileName);
 		return true;
 	}

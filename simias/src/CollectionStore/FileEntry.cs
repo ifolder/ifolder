@@ -205,7 +205,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Deletes the directory entry from the file system (if it exists) and this object.
 		/// </summary>
-		/// <param name="deleteDirectory">Deletes the file system entry that this property represents 
+		/// <param name="deleteEntry">Deletes the file system entry that this property represents 
 		/// from the file system if true.</param>
 		public override void Delete( bool deleteEntry )
 		{

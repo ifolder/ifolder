@@ -1008,6 +1008,46 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets all file system entry objects that match the specified name.
+		/// </summary>
+		/// <param name="name">File system entry name.</param>
+		/// <returns>An ICSList object containing a list of file system entry objects that matched the
+		/// specified name.</returns>
+		public ICSList GetFileSystemEntriesByName( string name )
+		{
+			ICSList fseList = new ICSList();
+			foreach( FileSystemEntry fse in GetFileSystemEntryList() )
+			{
+				if ( fse.Name == name )
+				{
+					fseList.Add( fse );
+				}
+			}
+
+			return fseList;
+		}
+
+		/// <summary>
+		/// Gets all file system entry objects that match the specified type.
+		/// </summary>
+		/// <param name="type">File system entry type.</param>
+		/// <returns>An ICSList object containing a list of file system entry objects that matched the
+		/// specified type.</returns>
+		public ICSList GetFileSystemEntriesByType( string type )
+		{
+			ICSList fseList = new ICSList();
+			foreach( FileSystemEntry fse in GetFileSystemEntryList() )
+			{
+				if ( fse.Type == type )
+				{
+					fseList.Add( fse );
+				}
+			}
+
+			return fseList;
+		}
+
+		/// <summary>
 		/// Gets the specified file system entry object by its ID.
 		/// </summary>
 		/// <param name="id">Entry ID.</param>
@@ -1186,6 +1226,44 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets the first file system entry object that matches the specified name.
+		/// </summary>
+		/// <param name="name">File system entry name.</param>
+		/// <returns>A FileSystemEntry object that represents the specified name.</returns>
+		public FileSystemEntry GetSingleFileSystemEntryByName( string name )
+		{
+			ICSList entryList = GetFileSystemEntryList();
+			foreach( FileSystemEntry fse in entryList )
+			{
+				if ( fse.Name == name )
+				{
+					return fse;
+				}
+			}
+
+			return null;
+		}
+
+		/// <summary>
+		/// Gets the first file system entry object that matches the specified type.
+		/// </summary>
+		/// <param name="type">File system entry type.</param>
+		/// <returns>A FileSystemEntry object that represents the specified type.</returns>
+		public FileSystemEntry GetSingleFileSystemEntryByType( string type )
+		{
+			ICSList entryList = GetFileSystemEntryList();
+			foreach( FileSystemEntry fse in entryList )
+			{
+				if ( fse.Type == type )
+				{
+					return fse;
+				}
+			}
+
+			return null;
+		}
+
+		/// <summary>
 		/// Gets the first node that matches the specified name.
 		/// </summary>
 		/// <param name="name">A string containing the name for the node.</param>
@@ -1193,13 +1271,13 @@ namespace Simias.Storage
 		public Node GetSingleNodeByName( string name )
 		{
 			Node node = null;
-			ICSEnumerator e = ( ICSEnumerator )CollectionNode.Search( Property.ObjectName, name, Property.Operator.Equal ).GetEnumerator();
-			if ( e.MoveNext() )
+			ICSList nodeList = CollectionNode.Search( Property.ObjectName, name, Property.Operator.Equal );
+			foreach ( Node tempNode in nodeList )
 			{
-				node = ( Node )e.Current;
+				node = tempNode;
+				break;
 			}
 
-			e.Dispose();
 			return node;
 		}
 

@@ -11,31 +11,31 @@ include ../../config.mk
 # CollectionStoreTests variables
 #=============================================================================
 CollectionStoreTests_SOURCES = CollectionStoreTests/AssemblyInfo.cs CollectionStoreTests/CollectionStoreTests.cs
-CollectionStoreTests_INCLUDES = 
+CollectionStoreTests_INCLUDES =
 CollectionStoreTests_FLAGS = /t:library
 CollectionStoreTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Identity.dll nunit.extensions.dll nunit.framework.dll CollectionStore.dll CollectionEvents.dll
 CollectionStoreTests_LIBPATH = CollectionStoreTests CollectionStoreTests/../../stage CollectionStoreTests/../../../tools/NUnit/bin CollectionStoreTests/../../../tools/NUnit/bin CollectionStoreTests/../../stage CollectionStoreTests/../../stage
-CollectionStoreTests_LDFLAGS = 
+CollectionStoreTests_LDFLAGS =
 
 #=============================================================================
 # CollectionStore variables
 #=============================================================================
-CollectionStore_SOURCES = AccessControl.cs AssemblyInfo.cs CacheNode.cs Collection.cs DirectoryEntry.cs FileEntry.cs FileSystemEntry.cs ICSEnumerator.cs MultiValuedList.cs Node.cs NodeStream.cs Property.cs PropertyList.cs Store.cs StoreIdentity.cs
-CollectionStore_INCLUDES = 
+CollectionStore_SOURCES = AccessControl.cs Alias.cs AssemblyInfo.cs CacheNode.cs Collection.cs DirectoryEntry.cs FileEntry.cs FileSystemEntry.cs ICSEnumerator.cs Identity.cs IdentityManager.cs LocalAddressBook.cs MultiValuedList.cs Node.cs NodeStream.cs Property.cs PropertyList.cs Store.cs
+CollectionStore_INCLUDES =
 CollectionStore_FLAGS = /t:library
 CollectionStore_LIBS = System.dll System.Data.dll $(SYSTEM_XML) StoreProvider.dll System.Security.dll Identity.dll CollectionEvents.dll
 CollectionStore_LIBPATH = ../stage ../stage ../stage
-CollectionStore_LDFLAGS = 
+CollectionStore_LDFLAGS =
 
 #=============================================================================
 # globals
 #=============================================================================
 
-TARGETS = CollectionStoreTests.dll CollectionStore.dll 
+TARGETS = CollectionStoreTests.dll CollectionStore.dll
 CLEAN_FILES = Check.xml CollectionStoreTests.pdb CollectionStoreTests.Doc.xml Check.xml CollectionStore.pdb CollectionStore.Doc.xml  CollectionStore.xml CollectionStore.Doc.xml
-CLEAN_DIRS = CollectionStoreTests/bin CollectionStoreTests/obj bin obj 
-NUNIT_TESTS = CollectionStoreTests.dll 
-STAGE_FILES = $(TARGETS) CollectionStoreTests.Doc.xml CollectionStore.Doc.xml CollectionStoreTests.pdb CollectionStore.pdb 
+CLEAN_DIRS = CollectionStoreTests/bin CollectionStoreTests/obj bin obj
+NUNIT_TESTS = CollectionStoreTests.dll
+STAGE_FILES = $(TARGETS) CollectionStoreTests.Doc.xml CollectionStore.Doc.xml CollectionStoreTests.pdb CollectionStore.pdb
 STAGE_FILES := $(addprefix $(STAGE_DIR)$(SEP), $(STAGE_FILES))
 
 #=============================================================================
@@ -68,7 +68,7 @@ all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 clean: $(CLEAN_TARGETS)
 	-$(RMDIR) $(CLEAN_DIRS)
 
-$(CLEAN_TARGETS): 
+$(CLEAN_TARGETS):
 	$(call RM_IF_EXISTS,$(subst clean.,,$@))
 
 # test

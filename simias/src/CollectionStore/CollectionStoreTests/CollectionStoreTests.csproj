@@ -80,22 +80,6 @@
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "Identity"
-                    AssemblyName = "Identity"
-                    HintPath = "..\..\stage\Identity.dll"
-                    Private = "True"
-                />
-                <Reference
-                    Name = "nunit.extensions"
-                    AssemblyName = "nunit.extensions"
-                    HintPath = "..\..\..\tools\NUnit\bin\nunit.extensions.dll"
-                />
-                <Reference
-                    Name = "nunit.framework"
-                    AssemblyName = "nunit.framework"
-                    HintPath = "..\..\..\tools\NUnit\bin\nunit.framework.dll"
-                />
-                <Reference
                     Name = "CollectionStore"
                     AssemblyName = "CollectionStore"
                     HintPath = "..\..\stage\CollectionStore.dll"
@@ -104,6 +88,16 @@
                     Name = "CollectionEvents"
                     AssemblyName = "CollectionEvents"
                     HintPath = "..\..\stage\CollectionEvents.dll"
+                />
+                <Reference
+                    Name = "nunit.extensions"
+                    AssemblyName = "nunit.extensions"
+                    HintPath = "..\..\stage\nunit.extensions.dll"
+                />
+                <Reference
+                    Name = "nunit.framework"
+                    AssemblyName = "nunit.framework"
+                    HintPath = "..\..\stage\nunit.framework.dll"
                 />
             </References>
         </Build>

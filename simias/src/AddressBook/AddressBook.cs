@@ -26,7 +26,6 @@ using System.Collections;
 using System.IO;
 using System.Text.RegularExpressions;
 using Simias.Storage;
-using Simias.Identity;
 
 namespace Novell.AddressBook
 {
@@ -378,7 +377,6 @@ namespace Novell.AddressBook
 			}
 		}
 
-
 		/// <summary>
 		/// Method: Add
 		/// Abstract: Address books are added through the AddressBook.Manager class.
@@ -394,13 +392,6 @@ namespace Novell.AddressBook
 			{
 				this.collection.Properties.AddProperty( "AB:Default", this.defaultBook);
 			}
-
-			/*
-			if (this.domain != null && this.domain != "")
-			{
-				this.collection.Properties.AddProperty( "AB:Domain", this.domain);
-			}
-			*/
 
 			this.collection.Commit(true);
 			this.changed = false;
@@ -704,8 +695,11 @@ namespace Novell.AddressBook
 		/// If an associated contact is not found an application exception is raised
 		/// </remarks>
 		/// <returns>A Contact object with at minimum a valid username property.</returns>
+		/// 
+		[ Obsolete( "This method is marked for removal. Contacts and Identities are no longer separate.", false ) ]
 		public Contact GetContactByIdentity(string identityID)
 		{
+			/*
 			// First make sure we get the master ID
 			IIdentityFactory idFactory = IdentityManager.Connect();
 			IIdentity masterID = idFactory.GetIdentityFromUserGuid( identityID );
@@ -724,6 +718,7 @@ namespace Novell.AddressBook
 				}
 			}
 			catch{}
+			*/
 			throw new ApplicationException(Common.addressBookExceptionHeader + "Contact does not exist");
 		}
 

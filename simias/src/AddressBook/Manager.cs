@@ -25,7 +25,7 @@ using System;
 using System.Collections;
 using System.IO;
 using Simias.Storage;
-using Simias.Identity;
+//using Simias.Identity;
 
 namespace Novell.AddressBook
 {
@@ -147,20 +147,22 @@ namespace Novell.AddressBook
 		}
 
 		/// <summary>
-		/// Opens or Creates the default address book for the calling user.
+		/// Opens the default or local address book.
+		/// The collection store always creates the local address
+		/// book when the store is created so we should always find it
 		/// </summary>
 		///	<returns>An AddressBook object</returns>
 		public AddressBook OpenDefaultAddressBook()
 		{
-			IIdentityFactory idFactory = IdentityManager.Connect();
-
 			try
 			{
-				// GetAddressByName returns a not found exception if the address book doesn't exist
-				return(this.GetAddressBookByName(idFactory.CurrentId.DomainName + ":" + Environment.UserName));
+				LocalAddressBook lAddressBook = this.store.GetLocalAddressBook();
+				return(this.GetAddressBookByName(lAddressBook.Name));
 			}
 			catch{}
+			return(null);
 
+			/*
 			try
 			{
 				AddressBook addrBook = 
@@ -188,6 +190,7 @@ namespace Novell.AddressBook
 			{
 				throw new ApplicationException(Common.addressBookExceptionHeader + "failed to create the default address book");
 			}
+			*/
 		}
 
 		/// <summary>

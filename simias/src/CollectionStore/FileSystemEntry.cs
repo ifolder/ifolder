@@ -243,6 +243,14 @@ namespace Simias.Storage
 		{
 			get { return properties; }
 		}
+
+		/// <summary>
+		/// Gets the entry property represented by this file system entry.
+		/// </summary>
+		internal Property EntryProperty
+		{
+			get { return entryProperty; }
+		}
 		#endregion
 
 		#region Constructors
@@ -308,7 +316,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Deletes the entry from the file system (if it exists) and this object.
 		/// </summary>
-		/// <param name="deleteDirectory">Deletes the file system entry that this property represents 
+		/// <param name="deleteEntry">Deletes the file system entry that this property represents 
 		/// from the file system if true.</param>
 		public abstract void Delete( bool deleteEntry );
 		#endregion
@@ -344,7 +352,7 @@ namespace Simias.Storage
 			internal FileSystemEntryEnumerator( Node node )
 			{
 				this.node = node;
-				entryListEnumerator = ( ICSEnumerator )node.Properties.FindValues( Property.NodeFileSystemEntry ).GetEnumerator();
+				entryListEnumerator = ( ICSEnumerator )node.Properties.FindValues( Property.NodeFileSystemEntry, true ).GetEnumerator();
 			}
 			#endregion
 

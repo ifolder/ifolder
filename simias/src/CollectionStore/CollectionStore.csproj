@@ -91,12 +91,6 @@
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Security.dll"
                 />
                 <Reference
-                    Name = "Identity"
-                    AssemblyName = "Identity"
-                    HintPath = "..\stage\Identity.dll"
-                    Private = "True"
-                />
-                <Reference
                     Name = "CollectionEvents"
                     AssemblyName = "CollectionEvents"
                     HintPath = "..\stage\CollectionEvents.dll"
@@ -107,6 +101,11 @@
             <Include>
                 <File
                     RelPath = "AccessControl.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Alias.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -124,11 +123,6 @@
                     RelPath = "Collection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Collection.resx"
-                    DependentUpon = "Collection.cs"
-                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "DirectoryEntry.cs"
@@ -151,6 +145,21 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Identity.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IdentityManager.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "LocalAddressBook.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "MultiValuedList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -159,11 +168,6 @@
                     RelPath = "Node.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Node.resx"
-                    DependentUpon = "Node.cs"
-                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "NodeStream.cs"
@@ -176,27 +180,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Property.resx"
-                    DependentUpon = "Property.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "PropertyList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Store.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Store.resx"
-                    DependentUpon = "Store.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "StoreIdentity.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

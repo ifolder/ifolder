@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\code\denali\src\stage\;C:\code\AB20040120\denali\src\stage\;C:\code\denali\src\Identity\bin\Debug\;C:\code\denali\src\CollectionStore\bin\Debug\;C:\denali\src\CollectionStore\bin\Debug\;C:\code\denali\src\CollectionStore\;C:\code\denali\src\Identity\;C:\code\denali\src\WorkGroupIdentity\;C:\code\AB20040120\denali\src\WorkGroupIdentity\;C:\ifolder\denali\src\stage\" >
+            <Settings ReferencePath = "C:\code\simias\src\stage\;C:\code\denali\src\stage\;C:\code\AB20040120\denali\src\stage\;C:\code\denali\src\Identity\bin\Debug\;C:\code\denali\src\CollectionStore\bin\Debug\;C:\denali\src\CollectionStore\bin\Debug\;C:\code\denali\src\CollectionStore\;C:\code\denali\src\Identity\;C:\code\denali\src\WorkGroupIdentity\;C:\code\AB20040120\denali\src\WorkGroupIdentity\;C:\ifolder\denali\src\stage\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"

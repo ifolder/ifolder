@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\denali\tools\NUnit\bin\;C:\denali\src\AddressBook\bin\Debug\;C:\Dev\denali\tools\NUnit\bin\;C:\Dev\denali\src\AddressBook\bin\Debug\;C:\code\denali\tools\NUnit\bin\;C:\code\denali\src\AddressBook\bin\Debug\;C:\code\AB20040120\denali\tools\NUnit\bin\;C:\ifolder\denali\tools\NUnit\bin\;C:\ifolder\denali\src\AddressBook\" >
+            <Settings ReferencePath = "C:\denali\tools\NUnit\bin\;C:\denali\src\AddressBook\bin\Debug\;C:\Dev\denali\tools\NUnit\bin\;C:\Dev\denali\src\AddressBook\bin\Debug\;C:\code\denali\tools\NUnit\bin\;C:\code\denali\src\AddressBook\bin\Debug\;C:\code\AB20040120\denali\tools\NUnit\bin\;C:\ifolder\denali\tools\NUnit\bin\;C:\ifolder\denali\src\AddressBook\;C:\code\simias\src\AddressBook\;C:\code\simias\tools\NUnit\bin\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"

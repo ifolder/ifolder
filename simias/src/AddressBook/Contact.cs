@@ -25,7 +25,6 @@ using System;
 using System.IO;
 using System.Collections;
 using Simias.Storage;
-using Simias.Identity;
 
 namespace Novell.AddressBook
 {
@@ -539,26 +538,8 @@ namespace Novell.AddressBook
 				
 				if (userName != null && userName != "")
 				{
-					//
-					// !BUGBUG! This is a hack for the December 19th 2003 iteration
-					// Anytime we create a contact we will also create an identity
-					// with the secret set to "novell"
-					//
-
-					string	userGuid;
-					if (identityGuid == null)
-					{
-						IIdentityFactory idFactory = IdentityManager.Connect();
-						//IIdentity id = idFactory.Create(collection.DomainName, userName, "novell");
-						IIdentity id = idFactory.Create(userName, "novell");
-						userGuid = id.UserGuid;
-					}
-					else
-					{
-						userGuid = identityGuid;
-					}
-
-					this.thisNode = new Node(this.collection, userName, userGuid, Common.contactType);
+					this.thisNode = new Node(this.collection, userName, Guid.NewGuid().ToString(), Common.contactType);
+					//this.thisNode = new Node(this.collection, userName, userGuid, Common.contactType);
 					this.thisNode.SetParent(this.collection);
 					this.id = this.thisNode.Id;
 
@@ -566,8 +547,8 @@ namespace Novell.AddressBook
 					this.productID = "Novell.AddressBook";
 
 					// Store the guid of the identity in the contact
-					this.thisNode.Properties.ModifyProperty( Common.identityProperty, userGuid );
-					this.identity = userGuid;
+					//this.thisNode.Properties.ModifyProperty( Common.identityProperty, userGuid );
+					//this.identity = userGuid;
 
 					//
 					// Check if any dirty data exists in the node
