@@ -1492,26 +1492,33 @@ namespace Simias.Storage
 			{
 				// Set the state to update internally.
 				localNode.Properties.State = PropertyList.PropertyListState.Internal;
-
-				// See if a collision property already exists.
-				Property p = localNode.Properties.GetSingleProperty( PropertyTags.Collision );
-				CollisionList cList = ( p == null ) ? new CollisionList() : new CollisionList( p.Value as XmlDocument );
-
-				// Add the new collision to the collision list.
-				if ( isFileCollision )
-				{
-					cList.Modify( new Collision( Collision.CollisionType.File, String.Empty ) );
-				}
-				else
-				{
-					cList.Modify( new Collision( Collision.CollisionType.Node, collisionNode.Properties.PropertyDocument.InnerXml ) );
-				}
-
-				// Modify or add the collision list.
-				p = new Property( PropertyTags.Collision, cList.Document );
-				p.LocalProperty = true;
-				localNode.Properties.ModifyNodeProperty( p );
 			}
+			else
+			{
+				// No node exists on the disk, create the collision from the node object that was
+				// passed in. Set the state to import so that it commits properly.
+				localNode = collisionNode;
+				localNode.Properties.State = PropertyList.PropertyListState.Import;
+			}
+
+			// See if a collision property already exists.
+			Property p = localNode.Properties.GetSingleProperty( PropertyTags.Collision );
+			CollisionList cList = ( p == null ) ? new CollisionList() : new CollisionList( p.Value as XmlDocument );
+
+			// Add the new collision to the collision list.
+			if ( isFileCollision )
+			{
+				cList.Modify( new Collision( Collision.CollisionType.File, String.Empty ) );
+			}
+			else
+			{
+				cList.Modify( new Collision( Collision.CollisionType.Node, collisionNode.Properties.PropertyDocument.InnerXml ) );
+			}
+
+			// Modify or add the collision list.
+			p = new Property( PropertyTags.Collision, cList.Document );
+			p.LocalProperty = true;
+			localNode.Properties.ModifyNodeProperty( p );
 
 			return localNode;
 		}
