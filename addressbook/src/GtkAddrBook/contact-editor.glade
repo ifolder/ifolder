@@ -83,10 +83,10 @@
 
 	  <child>
 	    <widget class="GtkVBox" id="vbox37">
-	      <property name="border_width">12</property>
+	      <property name="border_width">10</property>
 	      <property name="visible">True</property>
 	      <property name="homogeneous">False</property>
-	      <property name="spacing">1</property>
+	      <property name="spacing">0</property>
 
 	      <child>
 		<widget class="GtkHBox" id="hbox61">
@@ -1333,7 +1333,7 @@
 			    <widget class="GtkOptionMenu" id="IMTwoLocOptionMenu">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
-			      <property name="history">0</property>
+			      <property name="history">1</property>
 
 			      <child>
 				<widget class="GtkMenu" id="menu187">
@@ -1402,7 +1402,7 @@
 			    <widget class="GtkOptionMenu" id="IMThreeLocOptionMenu">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
-			      <property name="history">0</property>
+			      <property name="history">2</property>
 
 			      <child>
 				<widget class="GtkMenu" id="menu188">
@@ -1505,10 +1505,10 @@
 
 	  <child>
 	    <widget class="GtkVBox" id="vbox39">
-	      <property name="border_width">12</property>
+	      <property name="border_width">10</property>
 	      <property name="visible">True</property>
 	      <property name="homogeneous">False</property>
-	      <property name="spacing">12</property>
+	      <property name="spacing">0</property>
 
 	      <child>
 		<widget class="GtkFrame" id="frame78">
@@ -2181,10 +2181,10 @@
 
 	  <child>
 	    <widget class="GtkVBox" id="vbox40">
-	      <property name="border_width">12</property>
+	      <property name="border_width">10</property>
 	      <property name="visible">True</property>
 	      <property name="homogeneous">False</property>
-	      <property name="spacing">12</property>
+	      <property name="spacing">0</property>
 
 	      <child>
 		<widget class="GtkFrame" id="frame81">

@@ -92,6 +92,12 @@ namespace Novell.AddressBook.UI.gtk
 		[Glade.Widget] internal Gtk.Entry			IMOneEntry;
 		[Glade.Widget] internal Gtk.Entry			IMTwoEntry;
 		[Glade.Widget] internal Gtk.Entry			IMThreeEntry;
+		[Glade.Widget] internal Gtk.OptionMenu		IMOneOptionMenu;
+		[Glade.Widget] internal Gtk.OptionMenu		IMTwoOptionMenu;
+		[Glade.Widget] internal Gtk.OptionMenu		IMThreeOptionMenu;
+		[Glade.Widget] internal Gtk.OptionMenu		IMOneLocOptionMenu;
+		[Glade.Widget] internal Gtk.OptionMenu		IMTwoLocOptionMenu;
+		[Glade.Widget] internal Gtk.OptionMenu		IMThreeLocOptionMenu;
 
 		// Web Addresses Controls
 		[Glade.Widget] internal Gtk.Entry			WebHomeEntry;
@@ -152,7 +158,16 @@ namespace Novell.AddressBook.UI.gtk
 		internal Address		workAddress = null;
 		internal Address		homeAddress = null;
 		internal Address		otherAddress = null;
+		internal IM				imOne = null;
+		internal IM				imTwo = null;
+		internal IM				imThree = null;
 
+		private static readonly string PROVIDER_AIM = "AIM";
+		private static readonly string PROVIDER_IRC = "IRC";
+		private static readonly string PROVIDER_JABBER = "Jabber";
+		private static readonly string PROVIDER_MSN = "MSN";
+		private static readonly string PROVIDER_GROUPWISE = "GroupWise";
+		private static readonly string PROVIDER_YAHOO = "Yahoo";
 
 		/// <summary>
 		/// Constructs a new ContactEditor
@@ -176,30 +191,6 @@ namespace Novell.AddressBook.UI.gtk
 
 			contactEditorDialog = (Gtk.Dialog) gxml.GetWidget("ContactEditor");
 
-			//------------------------------
-			// This will setup the tab stops
-			//------------------------------
-/*			Widget[] widArray = new Widget[13];
-
-			widArray[0] = FullNameEntry;
-			widArray[1] = NickNameEntry;
-
-			widArray[2] = MOneEntry;
-			widArray[3] = MTwoEntry;
-			widArray[4] = MThreeEntry;
-			widArray[5] = MFourEntry;
-
-			widArray[6] = PhoneOneEntry;
-			widArray[7] = PhoneTwoEntry;
-			widArray[8] = PhoneThreeEntry;
-			widArray[9] = PhoneFourEntry;
-
-			widArray[10] = IMOneEntry;
-			widArray[11] = IMTwoEntry;
-			widArray[12] = IMThreeEntry;
-
-			generalTabTable.FocusChain = widArray;
-*/
 			FullNameEntry.HasFocus = true;
 		}
 	
@@ -263,6 +254,7 @@ namespace Novell.AddressBook.UI.gtk
 
 			PopulateEmails();
 			PopulatePhoneNumbers();
+			PopulateIM();
 
 
 			WebHomeEntry.Text = currentContact.Url;
@@ -281,6 +273,277 @@ namespace Novell.AddressBook.UI.gtk
 
 
 			PopulateAddresses();
+		}
+
+
+
+
+		/// <summary>
+		/// Method used to populate the phone controls in the dialog
+		/// with the data from the currentContact
+		/// </summary>
+		internal void PopulateIM()
+		{
+			PopulateIMType(IMTypes.preferred);
+			PopulateIMType(IMTypes.work);
+			PopulateIMType(IMTypes.home);
+			PopulateIMType(IMTypes.other);
+		}
+
+
+
+
+		/// <summary>
+		/// Method used to populate the phone controls in the dialog
+		/// with the data from the currentContact
+		/// </summary>
+		internal void PopulateIMType(IMTypes types)
+		{
+			foreach(IM im in currentContact.GetInstantMessageAccounts())
+			{
+				// if the type being asked for is not
+				// preferred, filter out all preferred
+				if( types != IMTypes.preferred )
+				{
+					if( (im.Types & IMTypes.preferred) ==
+							IMTypes.preferred)
+					{
+						continue;
+					}
+				}
+
+				if( (im.Types & types) != types)
+				{
+					continue;
+				}
+
+				if(imOne == null)
+				{
+					imOne = im;
+					IMOneEntry.Text = im.Address;
+					SetIMTypeMenu(IMOneLocOptionMenu, im.Types);
+					SetIMTypeProvider(IMOneOptionMenu, im.Provider);
+				}
+				else if(imTwo == null)
+				{
+					imTwo = im;
+					IMTwoEntry.Text = im.Address;
+					SetIMTypeMenu(IMTwoLocOptionMenu, im.Types);
+					SetIMTypeProvider(IMTwoOptionMenu, im.Provider);
+				}
+				else if(imThree == null)
+				{
+					imThree = im;
+					IMThreeEntry.Text = im.Address;
+					SetIMTypeMenu(IMThreeLocOptionMenu, im.Types);
+					SetIMTypeProvider(IMThreeOptionMenu, im.Provider);
+				}
+			}
+		}
+
+
+
+
+		/// <summary>
+		/// Method used to set IM location option menu
+		/// </summary>
+		internal void SetIMTypeMenu(Gtk.OptionMenu locMenu, IMTypes type)
+		{
+			if(	(type & IMTypes.work) == IMTypes.work)
+			{
+				locMenu.SetHistory(0);
+				return;
+			}
+
+			if(	(type & IMTypes.home) == IMTypes.home)
+			{
+				locMenu.SetHistory(1);
+				return;
+			}
+
+			locMenu.SetHistory(2);
+		}
+
+
+
+
+		/// <summary>
+		/// Method used to set IM provider option menu
+		/// </summary>
+		internal void SetIMTypeProvider(Gtk.OptionMenu providerMenu, 
+							string provider)
+		{
+			if(provider == PROVIDER_AIM)
+			{
+				providerMenu.SetHistory(0);
+				return;
+			}
+			if(provider == PROVIDER_IRC)
+			{
+				providerMenu.SetHistory(1);
+				return;
+			}
+			if(provider == PROVIDER_JABBER)
+			{
+				providerMenu.SetHistory(2);
+				return;
+			}
+			if(provider == PROVIDER_MSN)
+			{
+				providerMenu.SetHistory(3);
+				return;
+			}
+			if(provider == PROVIDER_GROUPWISE)
+			{
+				providerMenu.SetHistory(4);
+				return;
+			}
+			if(provider == PROVIDER_YAHOO)
+			{
+				providerMenu.SetHistory(5);
+				return;
+			}
+
+			providerMenu.SetHistory(0);
+		}
+
+
+
+
+		/// <summary>
+		/// Method used to save Instant Message account information
+		/// </summary>
+		internal void SaveIMInfo()
+		{
+			// IM One
+			if(IMOneEntry.Text.Length > 0)
+			{
+				IMTypes selType = GetIMType(IMOneLocOptionMenu);
+				string selProvider = GetIMProvider(IMOneOptionMenu);
+				if(imOne == null)
+				{
+					imOne = new IM( IMOneEntry.Text, selProvider,
+						(selType | IMTypes.preferred)); 
+
+					currentContact.AddInstantMessage(imOne);
+				}
+				else
+				{
+					imOne.Types = (selType | IMTypes.preferred);
+					imOne.Address = IMOneEntry.Text;
+					imOne.Provider = selProvider;
+				}
+			}
+			else
+			{
+				if(imOne != null)
+				{
+					imOne.Delete();
+				}
+			}
+
+			// IM Two
+			if(IMTwoEntry.Text.Length > 0)
+			{
+				IMTypes selType = GetIMType(IMTwoLocOptionMenu);
+				string selProvider = GetIMProvider(IMTwoOptionMenu);
+				if(imTwo == null)
+				{
+					imTwo = new IM(IMTwoEntry.Text, 
+							selProvider, selType);
+						
+					currentContact.AddInstantMessage(imTwo);
+				}
+				else
+				{
+					imTwo.Types = selType;
+					imTwo.Address = IMTwoEntry.Text;
+					imTwo.Provider = selProvider;
+				}
+			}
+			else
+			{
+				if(imTwo != null)
+				{
+					imTwo.Delete();
+				}
+			}
+
+			// IM Three 
+			if(IMThreeEntry.Text.Length > 0)
+			{
+				IMTypes selType = GetIMType(IMThreeLocOptionMenu);
+				string selProvider = GetIMProvider(IMThreeOptionMenu);
+				if(imThree == null)
+				{
+					imThree = new IM(IMThreeEntry.Text,
+							selProvider, selType);
+					currentContact.AddInstantMessage(imThree);
+				}
+				else
+				{
+					imThree.Types = selType;
+					imThree.Address = IMThreeEntry.Text;
+					imThree.Provider = selProvider;
+				}
+			}
+			else
+			{
+				if(imThree != null)
+				{
+					imThree.Delete();
+				}
+			}
+		}
+
+
+
+
+		/// <summary>
+		/// Method used to retrieve a specific type of IM from
+		/// the current contact
+		/// </summary>
+		internal IMTypes GetIMType(Gtk.OptionMenu optMenu)
+		{
+			switch(optMenu.History)
+			{
+				case 0:
+					return IMTypes.work;
+				case 1:
+					return IMTypes.home;
+				case 2:
+					return IMTypes.other;
+			}
+
+			return IMTypes.other;
+		}
+
+
+
+
+		/// <summary>
+		/// Method used to get the provider string from the option menu
+		/// </summary>
+		internal string GetIMProvider(Gtk.OptionMenu optMenu)
+		{
+			switch(optMenu.History)
+			{
+				case 0:
+					return PROVIDER_AIM;
+				case 1:
+					return PROVIDER_IRC;
+				case 2:
+					return PROVIDER_JABBER;
+				case 3:
+					return PROVIDER_MSN;
+				case 4:
+					return PROVIDER_GROUPWISE;
+				case 5:
+					return PROVIDER_YAHOO;
+			}
+
+			// return default as AOL?
+			return PROVIDER_AIM;
 		}
 
 
@@ -953,6 +1216,7 @@ namespace Novell.AddressBook.UI.gtk
 
 			SaveCurrentEmails();
 			SavePhoneNumbers();
+			SaveIMInfo();
 
 			if(WebHomeEntry.Text.Length > 0)
 				currentContact.Url = WebHomeEntry.Text;
