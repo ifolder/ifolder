@@ -370,17 +370,6 @@ namespace Simias.Client
 
 		#region Public Methods
 		/// <summary>
-		/// Gets the remote address to the specified domain server.
-		/// </summary>
-		/// <param name="domainID">Identifier of the domain to get address for.</param>
-		/// <returns>A Uri object that contain the remote address for the domain server.</returns>
-		static public Uri GetDomainServiceUrl( string domainID )
-		{
-			DomainConfig domainCfg = new DomainConfig( domainID );
-			return domainCfg.ServiceUrl;
-		}
-
-		/// <summary>
 		/// Starts up the simias web service.
 		/// </summary>
 		static public void Start()

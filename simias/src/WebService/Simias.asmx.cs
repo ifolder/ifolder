@@ -969,9 +969,7 @@ namespace Simias.Web
 			this.MemberUserID = cMember.UserID;
 			this.MemberName = cMember.Name;
 
-			Uri uri = new Uri( "http://localhost/temp" );
-			//Uri uri = Locate.ResolveLocation(domainID);
-
+			Uri uri = Locate.ResolveLocation(domainID);
 			this.RemoteUrl = (uri != null) ?
 				uri.ToString() + "/DomainService.asmx" :
 				String.Empty;

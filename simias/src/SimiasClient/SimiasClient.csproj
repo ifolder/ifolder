@@ -134,11 +134,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DomainConfig.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "DomainService.cs"
                     SubType = "code"
                     BuildAction = "Compile"
