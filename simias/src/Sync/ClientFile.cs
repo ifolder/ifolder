@@ -135,7 +135,7 @@ namespace Simias.Sync.Client
 		/// /// <param name="collection">The collection the node belongs to.</param>
 		/// <param name="nodeID">The id of the node to sync down</param>
 		/// <param name="serverFile">The service to access the server file.</param>
-		public ClientInFile(Collection collection, string nodeID, IServerReadFile serverFile) :
+		public ClientInFile(SyncCollection collection, string nodeID, IServerReadFile serverFile) :
 			base(collection)
 		{
 			this.serverFile = serverFile;
@@ -447,7 +447,7 @@ namespace Simias.Sync.Client
 		/// <param name="collection">The collection the node belongs to.</param>
 		/// <param name="node">The node to sync up.</param>
 		/// <param name="serverFile">The service to access the server file.</param>
-		public ClientOutFile(Collection collection, BaseFileNode node, IServerWriteFile serverFile) :
+		public ClientOutFile(SyncCollection collection, BaseFileNode node, IServerWriteFile serverFile) :
 			base(collection)
 		{
 			this.serverFile = serverFile;

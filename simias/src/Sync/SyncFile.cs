@@ -50,7 +50,7 @@ namespace Simias.Sync
 		/// Constructs an OutFile object.
 		/// </summary>
 		/// <param name="collection">The collection that the node belongs to.</param>
-		protected OutFile(Collection collection) :
+		protected OutFile(SyncCollection collection) :
 			base(collection)
 		{
 		}
@@ -118,14 +118,12 @@ namespace Simias.Sync
 		{
 			SetupFileNames(node, sessionID);
 			Log.log.Debug("Opening File {0}", file);
-			/*
 			if (Store.GetStore().IsEnterpriseServer)
 			{
 				workStream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read);
 				workFile = null;
 			}
 			else
-			*/
 			{
 				// This file is being pushed make a copy to work from.
 				File.Copy(file, workFile, true);
@@ -199,7 +197,7 @@ namespace Simias.Sync
 		/// Constructs an InFile object.
 		/// </summary>
 		/// <param name="collection">The collection that the node belongs to.</param>
-		protected InFile(Collection collection) :
+		protected InFile(SyncCollection collection) :
 			base(collection)
 		{
 		}
@@ -325,8 +323,6 @@ namespace Simias.Sync
 			}
 			catch (FileNotFoundException)
 			{
-				/*
-				// BUGBUG partialfile
 				// Check to see if we have a partially downloaded file to delta sync with.
 				if (File.Exists(workFile))
 				{
@@ -334,7 +330,6 @@ namespace Simias.Sync
 					File.Move(workFile, partialFile);
 					stream = File.Open(partialFile, FileMode.Open, FileAccess.Read, FileShare.None);
 				}
-				*/
 			}
 			workStream = File.Open(workFile, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None);
 		}
@@ -425,7 +420,7 @@ namespace Simias.Sync
 
 			// We need to delete the temp file if we are the master.
 			// On the client leave for a delta sync.
-			if (workFile != null) // BUGBUG partialfile && collection.IsMaster)
+			if (workFile != null && !(collection.Role == SyncCollectionRoles.Slave))
 				File.Delete(workFile);
 
 			if (partialFile != null)
@@ -454,7 +449,7 @@ namespace Simias.Sync
 		#region fields
 
 		/// <summary>The Collection the file belongs to.</summary>
-		protected Collection	collection;
+		protected SyncCollection	collection;
 		/// <summary> The node that represents the file.</summary>
 		protected BaseFileNode	node;
 		/// <summary>The ID of the node.</summary>
@@ -482,7 +477,7 @@ namespace Simias.Sync
 		/// 
 		/// </summary>
 		/// <param name="collection">The collection that the node belongs to.</param>
-		protected SyncFile(Collection collection)
+		protected SyncFile(SyncCollection collection)
 		{
 			this.collection = collection;
 		}
