@@ -420,6 +420,12 @@ namespace Novell.iFolderCom
 					}*/
 				}
 			}
+
+			if (conflictsView.Items.Count == 0 && ConflictsResolved != null)
+			{
+				// If all the conflicts have been resolved, fire the ConflictsResolved event.
+				ConflictsResolved(this, new EventArgs());
+			}
 		}
 		#endregion
 
@@ -447,6 +453,17 @@ namespace Novell.iFolderCom
 		{
 			set { loadPath = value; }
 		}
+		#endregion
+
+		#region Events
+		/// <summary>
+		/// Delegate used when conflicts have been resolved.
+		/// </summary>
+		public delegate void ConflictsResolvedDelegate(object sender, EventArgs e);
+		/// <summary>
+		/// Occurs when all conflicts have been resolved.
+		/// </summary>
+		public event ConflictsResolvedDelegate ConflictsResolved;
 		#endregion
 
 		#region Event Handlers

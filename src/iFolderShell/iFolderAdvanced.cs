@@ -52,6 +52,9 @@ namespace Novell.iFolderCom
 
 		//private Hashtable subscrHT;
 		//private EventSubscriber subscriber;
+		private int okDelta;
+		private int initTabTop;
+		private int initHeight;
 		private bool accessClick;
 		private iFolder ifolder;
 		private iFolderUser currentUser;
@@ -119,6 +122,9 @@ namespace Novell.iFolderCom
 			apply.Enabled = remove.Enabled = /*accept.Enabled = decline.Enabled =*/ false;
 
 			syncInterval.TextChanged += new EventHandler(syncInterval_ValueChanged);
+			okDelta = ok.Top - tabControl1.Bottom;
+			initTabTop = tabControl1.Top;
+			initHeight = this.Height;
 //			currentControl = this;
 		}
 
@@ -703,6 +709,31 @@ namespace Novell.iFolderCom
 		#endregion
 
 		#region Private Methods
+		private void showConflictMessage(bool show)
+		{
+			if (show)
+			{
+				// Display the conflicts message.
+				conflicts.Visible = pictureBox1.Visible = true;
+
+				// Move the controls back to the original position.
+				tabControl1.Top = initTabTop;
+				this.Height = initHeight;
+			}
+			else
+			{
+				// Hide the conflicts message.
+				conflicts.Visible = pictureBox1.Visible = false;
+
+				// Move the controls up so we don't have dead space.
+				tabControl1.Top = conflicts.Top;
+				this.Height = initHeight - (initTabTop - conflicts.Top);
+			}
+			
+			// Relocate the ok, cancel, and apply buttons.
+			ok.Top = cancel.Top = apply.Top = tabControl1.Bottom + okDelta;
+		}
+
 		private void updateDiskQuotaDisplay()
 		{
 			connectToWebService();
@@ -746,7 +777,7 @@ namespace Novell.iFolderCom
 				syncInterval.Value = (decimal)ifolder.SyncInterval;
 
 				// Show/hide the collision message.
-				conflicts.Visible = pictureBox1.Visible = ifolder.HasConflicts;
+				showConflictMessage(ifolder.HasConflicts);
 
 				// Get the sync node and byte counts.
 				SyncSize syncSize = ifWebService.CalculateSyncSize(ifolder.ID);
@@ -1585,16 +1616,17 @@ namespace Novell.iFolderCom
 
 		private void conflicts_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
 		{
-/*			ConflictResolver conflictResolver = new ConflictResolver();
-			conflictResolver.IFolder = this.ifolder;
+			ConflictResolver conflictResolver = new ConflictResolver();
+			conflictResolver.iFolder = ifolder;
+			conflictResolver.iFolderWebService = ifWebService;
 			conflictResolver.LoadPath = loadPath;
-			conflictResolver.ConflictsResolved += new Novell.iFolder.iFolderCom.ConflictResolver.ConflictsResolvedDelegate(conflictResolver_ConflictsResolved);
+			conflictResolver.ConflictsResolved += new Novell.iFolderCom.ConflictResolver.ConflictsResolvedDelegate(conflictResolver_ConflictsResolved);
 			conflictResolver.Show();		
-*/		}
+		}
 
 		private void conflictResolver_ConflictsResolved(object sender, EventArgs e)
 		{
-			conflicts.Visible = pictureBox1.Visible = false;
+			showConflictMessage(false);
 		}
 
 /*		private void subscriber_NodeCreated(NodeEventArgs args)
