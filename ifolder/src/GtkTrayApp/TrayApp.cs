@@ -230,11 +230,22 @@ namespace Novell.iFolder
 //			ifolder_browser_item.Activated += 
 //					new EventHandler(show_ifolder_browser);
 
-			MenuItem connect_item = new MenuItem ("iFolder Server Login...");
+			MenuItem connect_item = new MenuItem ("iFolder Server Connect...");
 			trayMenu.Append (connect_item);
 			connect_item.Activated += new EventHandler(show_server_info);
 
 			trayMenu.Append(new SeparatorMenuItem());
+			
+			MenuItem iFolders_item = new MenuItem ("iFolders");
+			trayMenu.Append (iFolders_item);
+			iFolders_item.Activated += 
+					new EventHandler(show_properties);
+			
+			MenuItem messages_item = 
+					new MenuItem ("Subscriptions");
+			trayMenu.Append (messages_item);
+			messages_item.Activated +=
+					new EventHandler(show_messages);
 
 			MenuItem InvWizard_item = new MenuItem ("Invitation Assistant");
 			trayMenu.Append (InvWizard_item);
@@ -261,12 +272,8 @@ namespace Novell.iFolder
 
 			trayMenu.Append(new SeparatorMenuItem());
 			
-			MenuItem messages_item = 
-					new MenuItem ("Messages...");
-			trayMenu.Append (messages_item);
-			messages_item.Activated +=
-					new EventHandler(show_messages);
-
+			
+#if DEBUG
 			MenuItem colBrowser_item = 
 					new MenuItem ("Collection Browser");
 			trayMenu.Append (colBrowser_item);
@@ -277,6 +284,8 @@ namespace Novell.iFolder
 			rbBrowser_item.Activated += new EventHandler(show_rbbrowser);
 
 			trayMenu.Append(new SeparatorMenuItem());
+#endif			
+			
 
 			MenuItem properties_item = new MenuItem ("Properties");
 			trayMenu.Append (properties_item);
