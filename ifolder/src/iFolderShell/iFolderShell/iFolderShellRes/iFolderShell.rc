@@ -75,6 +75,8 @@ BEGIN
     IDS_SHARE_DESC          "Share this iFolder with another user"
     IDS_PROPERTIES_DESC     "Display properties for this iFolder"
     IDS_HELP_DESC           "Access the iFolder help"
+    IDS_REVERT_TITLE        "Revert iFolder Confirmation"
+    IDS_REVERT_PROMPT       "This will revert this iFolder back to a normal folder and leave the files intact.  The iFolder will then be available from the server and will need to be setup in a different location in order to sync.\n\nAre you sure you want to revert this iFolder to a normal folder?"
 END
 
 #endif    // English (U.S.) resources
