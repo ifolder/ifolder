@@ -44,13 +44,10 @@ namespace Simias
 		private static readonly string DefaultSection = "SimiasDefault";
 		private static readonly string DefaultFileName = "simias.conf";
 
-		// Used to hold off multiple waiters during the opening of the configuration file.
-		private static object fileLock = new object();
 		private string storePath;
 		private FileStream fs = null;
 		private bool modified;
 		private XmlDocument doc;
-		private XmlElement docElement;
 
 		private static Configuration instance = null;
 		
@@ -74,7 +71,10 @@ namespace Simias
 		}
 
 		#region Factory  Methods
-
+		/// <summary>
+		/// Gets the instance of the configuration object for this process.
+		/// </summary>
+		/// <returns>A reference to the configuration object.</returns>
 		static public Configuration GetConfiguration()
 		{
 			lock (typeof(Configuration))
@@ -85,6 +85,11 @@ namespace Simias
 			}
 		}
 
+		/// <summary>
+		/// Creates the default instance of the configuration.
+		/// </summary>
+		/// <param name="path">Path to where the data store is.</param>
+		/// <returns>A reference to the configuration object.</returns>
 		static public Configuration CreateDefaultConfig(string path)
 		{
 			lock (typeof(Configuration))
@@ -98,6 +103,9 @@ namespace Simias
 			}
 		}
 
+		/// <summary>
+		/// Releases the instance of the configuration object for this process.
+		/// </summary>
 		static public void DisposeDefaultConfig()
 		{
 			lock (typeof(Configuration))
@@ -108,7 +116,6 @@ namespace Simias
 				}
 			}
 		}
-
 		#endregion
 
 		/// <summary>
@@ -116,7 +123,7 @@ namespace Simias
 		/// </summary>
 		public void CreateDefaults()
 		{
-			lock ( fileLock )
+			lock (typeof(Configuration))
 			{
 				// If the file does not exist look for defaults.
 				if (!File.Exists(ConfigFilePath))
@@ -142,7 +149,7 @@ namespace Simias
 					}
 					else
 					{
-						fs = File.Create(ConfigFilePath);
+						fs = new FileStream(ConfigFilePath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None );
                         try
                         {
                             doc = new XmlDocument();
@@ -151,9 +158,8 @@ namespace Simias
                         }
                         finally
                         {
-                            fs.Close();
-                            fs = null;
-                            doc = null;
+							doc = null;
+							fs.Close();
                         }
 					}
 				}
@@ -194,7 +200,7 @@ namespace Simias
 		public XmlElement GetElement(string section, string key)
 		{
 			XmlElement keyElement = null;
-			GetDocElement();
+			LoadConfigDocument();
 
 			try
 			{
@@ -202,7 +208,7 @@ namespace Simias
 			}
 			finally
 			{
-				ReleaseDocElement();
+				ReleaseConfigDocument();
 			}
 
 			return keyElement;
@@ -214,7 +220,7 @@ namespace Simias
 		/// <param name="keyElement">The element to save.</param>
 		public void SetElement(string section, string key, XmlElement newElement)
 		{
-			GetDocElement();
+			LoadConfigDocument();
 
 			try
 			{
@@ -224,7 +230,7 @@ namespace Simias
 			}
 			finally
 			{
-				ReleaseDocElement();
+				ReleaseConfigDocument();
 			}
 		}
 
@@ -249,7 +255,7 @@ namespace Simias
 		public string Get(string section, string key, string defaultValue)
 		{
 			string keyValue = null;
-			GetDocElement();
+			LoadConfigDocument();
 
 			try
 			{
@@ -271,7 +277,7 @@ namespace Simias
 			}
 			finally
 			{
-				ReleaseDocElement();
+				ReleaseConfigDocument();
 			}
 
 			return keyValue;
@@ -295,7 +301,7 @@ namespace Simias
 		/// <param name="keyValue">The value of the key.</param>
 		public void Set(string section, string key, string keyValue)
 		{
-			GetDocElement();
+			LoadConfigDocument();
 
 			try
 			{
@@ -305,7 +311,7 @@ namespace Simias
 			}
 			finally
 			{
-				ReleaseDocElement();
+				ReleaseConfigDocument();
 			}
 		}
 
@@ -327,7 +333,7 @@ namespace Simias
 		/// <returns>True if the section and key exists, otherwise false is returned.</returns>
 		public bool Exists( string section, string key )
 		{
-			GetDocElement();
+			LoadConfigDocument();
 			bool exists;
 
 			try
@@ -336,7 +342,7 @@ namespace Simias
 			}
 			finally
 			{
-				ReleaseDocElement();
+				ReleaseConfigDocument();
 			}
 
 			return exists;
@@ -350,14 +356,14 @@ namespace Simias
 			XmlElement sectionElement;
 
 			string str = string.Format("//section[@name='{0}']", section);
-			sectionElement = (XmlElement)docElement.SelectSingleNode(str);
+			sectionElement = (XmlElement)doc.DocumentElement.SelectSingleNode(str);
 
 			if(sectionElement == null)
 			{
 				// Create the Section node
-				sectionElement = docElement.OwnerDocument.CreateElement(SectionTag);
+				sectionElement = doc.CreateElement(SectionTag);
 				sectionElement.SetAttribute(NameAttr, section);
-				docElement.AppendChild(sectionElement);
+				doc.DocumentElement.AppendChild(sectionElement);
 				modified = true;
 			}
 
@@ -387,7 +393,7 @@ namespace Simias
 			bool foundKey = false;
 		
 			string xpath = string.Format("//{0}[@{1}='{2}']", SectionTag, NameAttr, section);
-			XmlElement sectionElement = (XmlElement)docElement.SelectSingleNode(xpath);
+			XmlElement sectionElement = (XmlElement)doc.DocumentElement.SelectSingleNode(xpath);
 			if(sectionElement != null)
 			{
 				xpath = string.Format("//{0}[@{1}='{2}']/{3}[@{1}='{4}']", SectionTag, NameAttr, section, SettingTag, key);
@@ -400,48 +406,22 @@ namespace Simias
 			return foundKey;
 		}
 
-		private void GetDocElement()
+		private void LoadConfigDocument()
 		{
-			// TODO: remove
+			// Open the configuration file.
+			OpenConfigFile();
+
 			try
 			{
-				OpenConfigFile();
 				modified = false;
 				doc = new XmlDocument();
-            
-				// TODO: remove
-				if (doc == null)
-				{
-					log.Debug("Unable to create XmlDocument.");
-					throw new Exception("Unable to create XmlDocument.");
-				}
-			}
-			catch(Exception e)
-			{
-				log.Debug(e, "new XmlDocument()");
-				throw new Exception("new XmlDocument()", e);
-			}
-
-			// TODO: remove
-			try
-			{
 				doc.Load(fs);
 			}
 			catch(Exception e)
 			{
-				log.Debug(e, "doc.Load(fs)");
-				throw new Exception("doc.Load(fs)", e);
-			}
-            
-			// TODO: remove
-			try
-			{
-				docElement = doc.DocumentElement;
-			}
-			catch(Exception e)
-			{
-				log.Debug(e, "doc.DocumentElement");
-				throw new Exception("doc.DocumentElement", e);
+				doc = null;
+				fs.Close();
+				throw new SimiasException("Failed to load config document.", e);
 			}
 		}
 
@@ -453,7 +433,7 @@ namespace Simias
 		{
 			FileStream fsLocal = null;
 
-			lock ( fileLock )
+			lock (typeof(Configuration))
 			{
 				// Stay in the loop until the file is opened.
 				while ( fsLocal == null )
@@ -480,7 +460,7 @@ namespace Simias
 			}
 		}
 
-		private void ReleaseDocElement()
+		private void ReleaseConfigDocument()
 		{
 			if (modified)
 			{
@@ -490,9 +470,10 @@ namespace Simias
 				modified = false;
 			}
 
-            fs.Close();
 			doc = null;
-			docElement = null;
+
+			// No member variables should be touched after the close.
+			fs.Close();
 		}
 
 		#region Static Methods
