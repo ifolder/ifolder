@@ -1408,7 +1408,7 @@ namespace Novell.FormsTrayApp
 					defaultServer.Enabled = false;
 				}
 
-				addAccount.Enabled = details.Enabled = true;
+				addAccount.Enabled = details.Enabled = enableAccount.Enabled = true;
 
 				activate.Enabled = false;
 
@@ -1622,20 +1622,18 @@ namespace Novell.FormsTrayApp
 					try
 					{
 						// Update the enabled setting.
-						ListViewItem lvi = accounts.SelectedItems[0];
 						if (enableAccount.Checked)
 						{
 							ifWebService.SetDomainActive(domain.ID);
 							domain.DomainWeb.IsEnabled = true;
-							lvi.SubItems[2].Text = resourceManager.GetString("statusEnabled");
 						}
 						else
 						{
 							ifWebService.SetDomainInactive(domain.ID);
 							domain.DomainWeb.IsEnabled = false;
-							lvi.SubItems[2].Text = resourceManager.GetString("statusDisabled");
 						}
 
+						updateDomainStatus(domain);
 						updateEnabled = false;
 					}
 					catch {}
@@ -1643,6 +1641,20 @@ namespace Novell.FormsTrayApp
 			}
 
 			return result;
+		}
+
+		private void updateDomainStatus(Domain domain)
+		{
+			foreach (ListViewItem lvi in accounts.Items)
+			{
+				Domain d = (Domain)lvi.Tag;
+				if (d.ID.Equals(domain.ID))
+				{
+					lvi.SubItems[2].Text = domain.DomainWeb.IsEnabled ? 
+						resourceManager.GetString("statusEnabled") : resourceManager.GetString("statusDisabled");
+					break;
+				}
+			}
 		}
 		#endregion
 
