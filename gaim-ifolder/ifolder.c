@@ -214,6 +214,13 @@ static gboolean trusted_buddies_safe_to_write = FALSE;
 /****************************************************
  * Forward Declarations                             *
  ****************************************************/
+ 
+/**
+ * FIXME: Figure out a good way to separate up these files complete with both
+ * header (.h) and implementation files (.c).  The length of this file is
+ * getting out of control.  Also, I'm sure it'd be possible to collapse a lot
+ * of functions so there isn't so much duplication of code everywhere.
+ */
 static int send_msg_to_buddy(GaimBuddy *recipient, char *msg);
 static int send_invitation_request_msg(GaimBuddy *recipient,
 									   char *collection_id,
@@ -574,6 +581,8 @@ g_print("buddylist_cb_simulate_share_ifolder() entered\n");
 	gtk_editable_select_region(GTK_EDITABLE(name_entry), 0, -1);
 	gtk_widget_grab_focus(name_entry);
 	gtk_box_pack_end(GTK_BOX(vbox), name_entry, FALSE, FALSE, 0);
+	
+	/* FIXME: Add a drop-down control that lists the collection types: ifolder & glyphmarks */
 	
 	gtk_widget_show_all(vbox);
 
@@ -1214,6 +1223,8 @@ g_print("add_invitation_to_store() entered\n");
 	 * that is being shared and possibly the state of the invitation too.
 	 * Perhaps the invitation state could just be shown as an emblem overlay
 	 * of the invitation icon similar to how emblems are overlaid in Nautilus.
+	 * 
+	 * Change this to be either an iFolder icon or a Glyphmarks icon.
 	 */
 	invitation_icon = create_prpl_icon(invitation->gaim_account);
 	
@@ -1289,7 +1300,7 @@ write_invitations_file(FILE *file, GtkListStore *store)
 	char time_str[32];
 
 	gaim_debug(GAIM_DEBUG_INFO, "simias",
-			   "write_invitations_file() called on: %s",
+			   "write_invitations_file() called on: %s\n",
 			   (store == in_inv_store ? "Incoming Invitations" :
 			   		store == out_inv_store ? "Outgoing Invitations" :
 			   			"Unknown Invitation Store"));
@@ -1353,7 +1364,7 @@ simias_invitations_write(GtkListStore *store)
 	char *filename_real;
 	
 	gaim_debug(GAIM_DEBUG_INFO, "simias",
-			   "simias_invitations_write() called on: %s",
+			   "simias_invitations_write() called on: %s\n",
 			   (store == in_inv_store ? "Incoming Invitations" :
 			   		store == out_inv_store ? "Outgoing Invitations" :
 			   			"Unknown Invitation Store"));
@@ -1683,14 +1694,113 @@ g_print("add_new_trusted_buddy() called: %s (%s:%s)\n", buddy->name, ip_address,
 static gboolean
 write_trusted_buddies_file(FILE *file, GtkListStore *store)
 {
-	/* FIXME: Implement write_trusted_buddies_file() */
-	return FALSE;
+	GtkTreeIter iter;
+	gboolean valid;
+	char *buddy_name;
+	char *ip_addr;
+	char *ip_port;
+	GaimAccount *gaim_account;
+
+	gaim_debug(GAIM_DEBUG_INFO, "simias",
+			   "write_trusted_buddies_file() called\n");
+
+	fprintf(file, "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n\n");
+	fprintf(file, "<simias>\n");
+	fprintf(file, "\t<buddies>\n");
+
+	valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(store), &iter);
+	while (valid) {
+		/* Extract the buddy information out of the model */
+		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter,
+					TRUSTED_BUDDY_NAME_COL, &buddy_name,
+					TRUSTED_BUDDY_IP_ADDR_COL, &ip_addr,
+					TRUSTED_BUDDY_IP_PORT_COL, &ip_port,
+					GAIM_ACCOUNT_PTR_COL, &gaim_account,
+					-1);
+
+		if (!gaim_account) {
+			continue;
+		}
+		
+		fprintf(file, "\t\t<buddy\n");
+		
+		fprintf(file, "\t\t\taccount-name=\"%s\"\n",
+				gaim_account_get_username(gaim_account));
+		fprintf(file, "\t\t\taccount-proto=\"%s\"\n",
+				gaim_account_get_protocol_id(gaim_account));
+		fprintf(file, "\t\t\tbuddy-name=\"%s\"\n", buddy_name);
+		fprintf(file, "\t\t\tip-addr=\"%s\"\n", ip_addr);
+		fprintf(file, "\t\t\tip-port=\"%s\"\n", ip_port);
+		
+		fprintf(file, "\t\t/>\n");
+		
+		/* FIXME: Go through the file and make sure to free all the strings extracted from a model in the same manner as the following three lines */
+		g_free(buddy_name);
+		g_free(ip_addr);
+		g_free(ip_port);
+
+		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(store), &iter);
+	}
+	
+	fprintf(file, "\t</buddies>\n");
+	fprintf(file, "</simias>\n");
 }
 
 static void
 save_trusted_buddies(GtkListStore *store)
 {
-	/* FIXME: Implement save_trusted_buddies() */
+	FILE *file;
+	struct stat st;
+	char *user_dir = gaim_user_dir();
+	char *filename;
+	char filename_save[512];
+	char *filename_real;
+	
+	gaim_debug(GAIM_DEBUG_INFO, "simias",
+			   "save_trusted_buddies() called\n");
+
+	if (!trusted_buddies_safe_to_write) {
+		gaim_debug(GAIM_DEBUG_WARNING, "simias",
+				   "Tried to write to the trusted buddies file before reading it!\n");
+		return;
+	}
+	
+	file = fopen(user_dir, "r");
+	if (!file)
+		mkdir(user_dir, S_IRUSR | S_IWUSR | S_IXUSR);
+	else
+		fclose(file);
+	
+	sprintf(filename_save, "%s.save", FILENAME_TRUSTED_BUDDIES);
+		
+	filename = g_build_filename(user_dir, filename_save, NULL);
+
+	if ((file = fopen(filename, "w"))) {
+		write_trusted_buddies_file(file, store);
+		fclose(file);
+		chmod(filename, S_IRUSR | S_IWUSR);
+	} else {
+		gaim_debug(GAIM_DEBUG_ERROR, "simias", "Unable to write %s\n",
+				   filename);
+		g_free(filename);
+		return;
+	}
+
+	if (stat(filename, &st) || (st.st_size == 0)) {
+		gaim_debug_error("simias", "Failed to save trusted buddies file\n");
+		unlink(filename);
+		g_free(filename);
+		return;
+	}
+
+	filename_real = g_build_filename(user_dir, FILENAME_TRUSTED_BUDDIES, NULL);
+
+	if (rename(filename, filename_real) < 0)
+		gaim_debug(GAIM_DEBUG_ERROR, "simias",
+				   "Error renaming %s to %s\n", filename, filename_real);
+
+	g_free(filename);
+	g_free(filename_real);
 }
 
 static gboolean
@@ -1813,8 +1923,6 @@ load_trusted_buddies_from_file(GtkListStore *store, const char *name)
 		g_print("load_trusted_buddies_from_file() got NULL response from gaim_user_dir()\n");
 	}
 	
-	trusted_buddies_safe_to_write = TRUE;
-	
 	filename = g_build_filename(user_dir, name, NULL);
 	
 	if (g_file_test(filename, G_FILE_TEST_EXISTS)) {
@@ -1829,6 +1937,8 @@ load_trusted_buddies_from_file(GtkListStore *store, const char *name)
 		gaim_debug(GAIM_DEBUG_INFO, "simias", "load_trusted_buddies_from_file() file does not exist: %s\n",
 					filename);
 	}
+	
+	trusted_buddies_safe_to_write = TRUE;
 	
 	g_free(filename);
 }
