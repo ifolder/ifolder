@@ -49,9 +49,7 @@ public class SyncTests: Assertion
 	private static readonly string clientDir = Path.GetFullPath("SyncTestClientData");
 	private static readonly string clientFolder = Path.Combine(clientDir, folderName);
 	private static readonly string serverFolder = Path.Combine(serverDir, folderName);
-
-	//private CmdServer cmdServer = null;
-	//cmdServer = new CmdServer(host, serverPort, new Uri(serverDir), useTCP);
+	private bool runChildProcess = true;
 
 	//---------------------------------------------------------------------------
 	public static int Run(string program, string args)
@@ -63,6 +61,19 @@ public class SyncTests: Assertion
 		int exitCode = p.ExitCode;
 		p.Close();
 		return exitCode;
+	}
+
+	//---------------------------------------------------------------------------
+	private bool RunClient()
+	{
+		if (!runChildProcess)
+			return CmdClient.RunOnce(new Uri(clientDir), new Uri(clientFolder), serverDir, useTCP);
+
+		CmdServer cmdServer = new CmdServer(host, serverPort, new Uri(serverDir), useTCP);
+		int exitCode = Run("/usr/bin/mono", String.Format("--debug SyncCmd.exe -s {0} {1} sync {2}",
+				clientDir, useTCP? "": "-h", clientFolder));
+		cmdServer.Stop();
+		return exitCode == 0;
 	}
 
 	//---------------------------------------------------------------------------
@@ -139,7 +150,7 @@ public class SyncTests: Assertion
 		Directory.CreateDirectory(dir1);
 		Directory.CreateDirectory(dir2);
 		Differ.CreateFile(Path.Combine(dir1, "file1"), "file 1 contents");
-		if (!CmdClient.RunOnce(new Uri(clientDir), new Uri(clientFolder), serverDir, useTCP))
+		if (!RunClient())
 		{
 			Log.Spew("failed first sync");
 			return false;
@@ -178,13 +189,14 @@ public class SyncTests: Assertion
 				Differ.CreateFile(Path.Combine(dirS, i.ToString() + "-simple-file.txt"), "odd simple file contents" + i + " from collision\n");
 		}
 
-		if (!CmdClient.RunOnce(new Uri(clientDir), new Uri(clientFolder), serverDir, useTCP))
+		if (!RunClient())
 		{
 			Log.Spew("failed simpleAdds sync");
 			return false;
 		}
 		return Differ.CompareDirectories(serverFolder, clientFolder);
 	}
+
 
 	//---------------------------------------------------------------------------
 	// test deletes: delete a file from each end, and cause deletion collision
@@ -204,7 +216,7 @@ public class SyncTests: Assertion
 		for (int i = delNums.Length - 4; i < delNums.Length; ++i)
 			File.Delete(Path.Combine(dirS, "simple-file-" + delNums[i] + ".txt"));
 
-		if (!CmdClient.RunOnce(new Uri(clientDir), new Uri(clientFolder), serverDir, useTCP))
+		if (!RunClient())
 		{
 			Log.Spew("failed simple deletes sync");
 			return false;
@@ -261,7 +273,6 @@ public class SyncTests: Assertion
 	[TestFixtureTearDown]
 	public void Cleanup()
 	{
-		//cmdServer.Stop();
 		//DeleteFileData();
 	}
 

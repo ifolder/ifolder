@@ -122,7 +122,7 @@ public struct NodeChunk
 
 //---------------------------------------------------------------------------
 [Serializable]
-public struct RejectedNodes
+public class RejectedNodes
 {
 	public Nid[] updateCollisions;
 	public Nid[] fileSystemEntryCollisions;
@@ -482,7 +482,7 @@ public class SyncOps
             }
 		}
 		
-        RejectedNodes rejects;
+        RejectedNodes rejects = new RejectedNodes();
 		rejects.updateCollisions = (Nid[])updateRejects.ToArray(typeof(Nid));
 		rejects.fileSystemEntryCollisions = (Nid[])fseRejects.ToArray(typeof(Nid));
 		return rejects;

@@ -165,7 +165,7 @@ public class CmdServer
 	CmdService obj = null;
 	IChannel channel = null;
 	ObjRef objRef = null;
-	string uri;
+	string uri = null;
 
 	const string serviceTag = "sync.rem";
 	const string channelName = "SyncCmdServer";
@@ -189,12 +189,19 @@ public class CmdServer
 
 	public void Stop()
 	{
-		Log.Spew("CmdServer {0} stopping", uri);
+		if (uri != null)
+			Log.Spew("CmdServer {0} stopping", uri);
 		if (obj != null)
 			RemotingServices.Disconnect(obj);
 		if (channel != null)
 			ChannelServices.UnregisterChannel(channel);
+		obj = null;
+		channel = null;
+		objRef = null;
+		uri = null;
 	}
+
+	~CmdServer() { Stop(); }
 }
 
 //---------------------------------------------------------------------------
