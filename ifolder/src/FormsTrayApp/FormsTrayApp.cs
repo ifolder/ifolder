@@ -646,6 +646,107 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Private Methods
+		private bool authenticate(DomainInformation domainInfo, out string credentials)
+		{
+			bool result = false;
+			credentials = null;
+
+			try
+			{
+				// See if credentials have already been set in
+				// this process.
+				DomainAuthentication domainAuth =
+					new DomainAuthentication(
+					"iFolder",
+					domainInfo.ID,
+					null);
+
+				MyMessageBox mmb;
+				Status status = domainAuth.Authenticate();
+				switch (status.statusCode)
+				{
+					case StatusCodes.InvalidCertificate:
+						byte[] byteArray = simiasWebService.GetCertificate(domainInfo.Host);
+						System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
+						mmb = new MyMessageBox(resourceManager.GetString("verifyCert"), resourceManager.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
+						if (mmb.ShowDialog() == DialogResult.Yes)
+						{
+							simiasWebService.StoreCertificate(byteArray, domainInfo.Host);
+							result = authenticate(domainInfo, out credentials);
+						}
+						break;
+					case StatusCodes.Success:
+						result = true;
+						break;
+					case StatusCodes.SuccessInGrace:
+						mmb = new MyMessageBox(
+							string.Format(resourceManager.GetString("graceLogin"), status.RemainingGraceLogins),
+							resourceManager.GetString("graceLoginTitle"),
+							string.Empty,
+							MyMessageBoxButtons.OK,
+							MyMessageBoxIcon.Information);
+						mmb.StartPosition = FormStartPosition.CenterScreen;
+						mmb.ShowDialog();
+						result = true;
+						break;
+					default:
+					{
+						string userID;
+
+						// See if there is a password saved on this domain.
+						CredentialType credType = simiasWebService.GetDomainCredentials(domainInfo.ID, out userID, out credentials);
+						if ((credType == CredentialType.Basic) && (credentials != null))
+						{
+							// There are credentials that were saved on the domain. Use them to authenticate.
+							// If the authentication fails for any reason, pop up and ask for new credentials.
+							domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, credentials);
+							Status authStatus = domainAuth.Authenticate();
+							switch (authStatus.statusCode)
+							{
+								case StatusCodes.Success:
+									result = true;
+									break;
+								case StatusCodes.SuccessInGrace:
+									mmb = new MyMessageBox(
+										string.Format(resourceManager.GetString("graceLogin"), status.RemainingGraceLogins),
+										resourceManager.GetString("graceLoginTitle"),
+										string.Empty,
+										MyMessageBoxButtons.OK,
+										MyMessageBoxIcon.Information);
+									mmb.StartPosition = FormStartPosition.CenterScreen;
+									mmb.ShowDialog();
+									result = true;
+									break;
+								case StatusCodes.AccountDisabled:
+									mmb = new MyMessageBox(resourceManager.GetString("accountDisabled"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+									mmb.StartPosition = FormStartPosition.CenterScreen;
+									mmb.ShowDialog();
+									break;
+								case StatusCodes.AccountLockout:
+									mmb = new MyMessageBox(resourceManager.GetString("accountLockout"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+									mmb.StartPosition = FormStartPosition.CenterScreen;
+									mmb.ShowDialog();
+									break;
+								case StatusCodes.UnknownUser:
+								case StatusCodes.InvalidPassword:
+								case StatusCodes.InvalidCredentials:
+									// There are bad credentials stored. Remove them.
+									simiasWebService.SetDomainCredentials(domainInfo.ID, null, CredentialType.None);
+									mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+									mmb.StartPosition = FormStartPosition.CenterScreen;
+									mmb.ShowDialog();
+									break;
+							}
+						}
+						break;
+					}
+				}
+			}
+			catch {}
+
+			return result;
+		}
+
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
@@ -986,91 +1087,17 @@ namespace Novell.FormsTrayApp
 				{
 					try
 					{
-						// Only display one dialog.
-						if (serverInfo == null)
+						DomainInformation domainInfo = simiasWebService.GetDomainInformation(notifyEventArgs.Message);
+						string credentials;
+						if (!authenticate(domainInfo, out credentials))
 						{
-							// See if credentials have already been set in
-							// this process before showing the user the
-							// login dialog.
-							DomainAuthentication domainAuth =
-								new DomainAuthentication(
-								"iFolder",
-								notifyEventArgs.Message,
-								null);
-
-							Status status = domainAuth.Authenticate();
-							if ( status.statusCode != StatusCodes.Success &&
-								status.statusCode != StatusCodes.SuccessInGrace )
+							// Only display one dialog.
+							if (serverInfo == null)
 							{
-								string userID;
-								string credentials;
-
-								string domainID = notifyEventArgs.Message;
-
-								// See if there is a password saved on this domain.
-								CredentialType credType = simiasWebService.GetDomainCredentials(domainID, out userID, out credentials);
-								if ((credType == CredentialType.Basic) && (credentials != null))
-								{
-									// There are credentials that were saved on the domain. Use them to authenticate.
-									// If the authentication fails for any reason, pop up and ask for new credentials.
-									domainAuth = new DomainAuthentication("iFolder", domainID, credentials);
-									Status authStatus = domainAuth.Authenticate();
-									if (authStatus.statusCode == StatusCodes.Success)
-									{
-										break;
-									}
-									else if (authStatus.statusCode == StatusCodes.SuccessInGrace)
-									{
-										MyMessageBox mmb = new MyMessageBox(
-											string.Format(resourceManager.GetString("graceLogin"), status.RemainingGraceLogins),
-											resourceManager.GetString("graceLoginTitle"),
-											string.Empty,
-											MyMessageBoxButtons.OK,
-											MyMessageBoxIcon.Information);
-										mmb.StartPosition = FormStartPosition.CenterScreen;
-										mmb.ShowDialog();
-
-										break;
-									}
-									else if (authStatus.statusCode.Equals(StatusCodes.AccountDisabled))
-									{
-										MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("accountDisabled"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-										mmb.StartPosition = FormStartPosition.CenterScreen;
-										mmb.ShowDialog();
-									}
-									else if (authStatus.statusCode.Equals(StatusCodes.AccountLockout))
-									{
-										MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("accountLockout"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-										mmb.StartPosition = FormStartPosition.CenterScreen;
-										mmb.ShowDialog();
-									}
-									else if (authStatus.statusCode == StatusCodes.UnknownUser ||
-										authStatus.statusCode == StatusCodes.InvalidPassword ||
-										authStatus.statusCode == StatusCodes.InvalidCredentials )
-									{
-										// There are bad credentials stored. Remove them.
-										simiasWebService.SetDomainCredentials(domainID, null, CredentialType.None);
-										MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-										mmb.StartPosition = FormStartPosition.CenterScreen;
-										mmb.ShowDialog();
-									}
-								}
-
-								serverInfo = new ServerInfo(domainID, credentials);
+								serverInfo = new ServerInfo(domainInfo, credentials);
 								serverInfo.Closed += new EventHandler(serverInfo_Closed);
 								serverInfo.Show();
 								ShellNotifyIcon.SetForegroundWindow(serverInfo.Handle);
-							}
-							else if (status.statusCode.Equals(StatusCodes.SuccessInGrace))
-							{
-								MyMessageBox mmb = new MyMessageBox(
-									string.Format(resourceManager.GetString("graceLogin"), status.RemainingGraceLogins),
-									resourceManager.GetString("graceLoginTitle"),
-									string.Empty,
-									MyMessageBoxButtons.OK,
-									MyMessageBoxIcon.Information);
-								mmb.StartPosition = FormStartPosition.CenterScreen;
-								mmb.ShowDialog();
 							}
 						}
 					}

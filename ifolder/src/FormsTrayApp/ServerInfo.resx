@@ -1123,37 +1123,43 @@
   <data name="&gt;&gt;$this.Type">
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-	<data name="serverConnectError">
-		<value>An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.</value>
-	</data>
-	<data name="serverConnectErrorTitle">
-		<value>Unable to Connect to iFolder Server</value>
-	</data>
-	<data name="serverReconnectError">
-		<value>The authentication returned the error {0}.</value>
-	</data>
-	<data name="domainInfoReadError">
-		<value>An error was encountered while querying for the server and user name.</value>
-	</data>
-	<data name="failedAuth">
-		<value>The user name or password is invalid.  Please try again.</value>
-	</data>
-	<data name="badPassword">
-		<value>The password is invalid.  Please try again.</value>
-	</data>
-	<data name="savePasswordError">
-		<value>An error was encountered while saving the password.</value>
-	</data>
-	<data name="accountDisabled">
-		<value>The user account is disabled.  Please contact your network administrator for assistance. </value>
-	</data>
-	<data name="accountLockout">
-		<value>The user account has been locked out.  Please contact your network administrator for assistance.</value>
-	</data>
-	<data name="graceLogin">
-		<value>Your password has expired.  You have {0} grace logins remaining.</value>
-	</data>
-	<data name="graceLoginTitle">
-		<value>Expired Password</value>
-	</data>
+  <data name="serverConnectError">
+    <value>An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.</value>
+  </data>
+  <data name="serverConnectErrorTitle">
+    <value>Unable to Connect to iFolder Server</value>
+  </data>
+  <data name="serverReconnectError">
+    <value>The authentication returned the error {0}.</value>
+  </data>
+  <data name="domainInfoReadError">
+    <value>An error was encountered while querying for the server and user name.</value>
+  </data>
+  <data name="failedAuth">
+    <value>The user name or password is invalid.  Please try again.</value>
+  </data>
+  <data name="badPassword">
+    <value>The password is invalid.  Please try again.</value>
+  </data>
+  <data name="savePasswordError">
+    <value>An error was encountered while saving the password.</value>
+  </data>
+  <data name="accountDisabled">
+    <value>The user account is disabled.  Please contact your network administrator for assistance. </value>
+  </data>
+  <data name="accountLockout">
+    <value>The user account has been locked out.  Please contact your network administrator for assistance.</value>
+  </data>
+  <data name="graceLogin">
+    <value>Your password has expired.  You have {0} grace logins remaining.</value>
+  </data>
+  <data name="graceLoginTitle">
+    <value>Expired Password</value>
+  </data>
+  <data name="verifyCert">
+    <value>Unable to verify the identity of {0} as a trusted site.  Before accepting this certificate, you should examine the certificate by clicking Show Details.  Do you want to accept this certificate?</value>
+  </data>
+  <data name="verifyCertTitle">
+    <value>Unable to Verify Identity</value>
+  </data>
 </root>

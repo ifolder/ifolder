@@ -1641,15 +1641,27 @@ namespace Novell.FormsTrayApp
 			{
 				DomainInformation domainInfo = simiasWebService.ConnectToDomain(userName.Text, password.Text, server.Text);
 
+				MyMessageBox mmb;
 				switch (domainInfo.StatusCode)
 				{
+					case StatusCodes.InvalidCertificate:
+					{
+						byte[] byteArray = simiasWebService.GetCertificate(server.Text);
+						System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
+						mmb = new MyMessageBox(resourceManager.GetString("verifyCert"), resourceManager.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
+						if (mmb.ShowDialog() == DialogResult.Yes)
+						{
+							simiasWebService.StoreCertificate(byteArray, server.Text);
+							result = connectToEnterprise();
+						}
+						break;
+					}
 					case StatusCodes.Success:
 					case StatusCodes.SuccessInGrace:
 						// Set the credentials in the current process.
 						DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, password.Text);
 						Status authStatus = domainAuth.Authenticate();
 
-						MyMessageBox mmb;
 						switch (authStatus.statusCode)
 						{
 							case StatusCodes.Success:
@@ -1794,8 +1806,16 @@ namespace Novell.FormsTrayApp
 			catch (Exception ex)
 			{
 				Cursor.Current = Cursors.Default;
-				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-				mmb.ShowDialog();
+				if (ex.Message.IndexOf("Simias.ExistsException") != -1)
+				{
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("alreadyJoined"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+					mmb.ShowDialog();
+				}
+				else
+				{
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+				}
 			}
 
 			Cursor.Current = Cursors.Default;
