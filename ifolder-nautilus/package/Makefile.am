@@ -22,11 +22,9 @@
 #######################################################################
 EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/ifolder-nautilus.spec
 
-.PHONY: package package-clean package-install package-uninstall ifolder-dist
+.PHONY: ifolder-dist
 
-all clean:
-
-package: ifolder-nautilus.spec ifolder-nautilus-dist
+all: ifolder-nautilus.spec ifolder-nautilus-dist
 	rm -rf RPM
 	mkdir RPM
 	echo %_topdir `pwd`/RPM > $(HOME)/.rpmmacros
@@ -42,11 +40,11 @@ package: ifolder-nautilus.spec ifolder-nautilus-dist
 ifolder-nautilus-dist:
 	cd $(top_srcdir); make dist
 
-package-install: package
-	su -c "rpm -Uvh $(RPM_FILE)"
+install: package
+	sudo "rpm -Uvh $(RPM_FILE)"
 	
-package-uninstall:
-	su -c "rpm -e $(PACKAGE)"
+uninstall:
+	sudo "rpm -e $(PACKAGE)"
 
 clean-local:
 	rm -rf *.rpm RPM
@@ -55,4 +53,3 @@ distclean-local: package-clean
 
 maintainer-clean-local:
 	rm -rf Makefile Makefile.in RPM
-

@@ -20,18 +20,12 @@
 #  Author: Paul Thomas <pthomas@novell.com>
 #
 #######################################################################
-SUBDIRS = $(IFOLDER_OS)
+SUBDIRS = @IFOLDER_OS@
 
 DIST_SUBDIRS = linux windows
 
-all:	
-	$(MAKE) -C $(IFOLDER_OS) all
-
 sdk:	
 	$(MAKE) -C $(IFOLDER_OS) sdk
-
-clean:	
-	$(MAKE) -C $(IFOLDER_OS) clean
 
 maintainer-clean-local:
 	rm -f Makefile.in

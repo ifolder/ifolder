@@ -20,12 +20,11 @@
 #  Author: Paul Thomas <pthomas@novell.com>
 #
 #######################################################################
-SUBDIRS = $(ADDRESSBOOK_OS)
+SUBDIRS = @ADDRESSBOOK_OS@
 
 DIST_SUBDIRS = linux windows
 
-.PHONY: package package-sdk package-clean package-install package-uninstall
-package package-sdk package-clean package-install package-uninstall:
+sdk:
 	$(MAKE) -C $(ADDRESSBOOK_OS) $@
 
 maintainer-clean-local:

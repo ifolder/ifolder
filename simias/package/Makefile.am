@@ -20,12 +20,11 @@
 #  Author: Paul Thomas <pthomas@novell.com>
 #
 #######################################################################
-SUBDIRS = $(SIMIAS_OS)
+SUBDIRS = @SIMIAS_OS@
 
 DIST_SUBDIRS = darwin linux windows
 
-.PHONY: package package-sdk package-clean package-install package-uninstall
-package package-sdk package-clean package-install package-uninstall:
+sdk:
 	$(MAKE) -C $(SIMIAS_OS) $@
 
 maintainer-clean-local:

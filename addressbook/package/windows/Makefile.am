@@ -139,7 +139,7 @@ addressbook-dist:
 addressbook-doc: addressbook
 	$(MAKE) -C $(top_srcdir)/doc all
 	
-clean:
+clean-local:
 	rm -rf $(COMMON_CLEAN_FILES)
 	rm -rf *-setup.exe *.msi *.msm *.log
 	rm -rf MSI

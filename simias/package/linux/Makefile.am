@@ -28,8 +28,6 @@ SRPM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).src.rpm
 
 .PHONY: simias-dist
 
-all clean:
-
 all: simias.spec simias-dist
 	rm -rf RPM
 	mkdir RPM
@@ -58,7 +56,7 @@ install: $(RPM_FILE)
 uninstall:
 	sudo "rpm -e $(PACKAGE)"
 
-clean:
+clean-local:
 	rm -rf *.rpm RPM
 
 distclean-local:
