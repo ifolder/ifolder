@@ -1,7 +1,7 @@
 /* MainWindowController */
 
 #import <Cocoa/Cocoa.h>
-#import "iFolderService.h"
+#import <iFolderService.h>
 
 @class LoginWindowController;  // Forward declaration
 
@@ -9,7 +9,7 @@
 {
 	LoginWindowController	*_loginController;
 	iFolderService			*webService;
-	NSMutableDictionary		*domains;
+//	NSMutableDictionary		*domains;
 }
 
 -(void)login:(NSString *)username withPassword:(NSString *)password toServer:(NSString *)server;

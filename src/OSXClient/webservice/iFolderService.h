@@ -10,15 +10,15 @@
 #define __iFolderService__
 
 #import <Cocoa/Cocoa.h>
-#import "Domain.h"
+#include <Carbon/Carbon.h>
+#import "IFDomain.h"
 
 
 @interface iFolderService : NSObject
 {
 }
 
--(NSMutableDictionary *) GetDomains;
--(Domain*) ConnectToDomain:(NSString*) in_UserName in_Password:(NSString*) in_Password in_Host:(NSString*) in_Host;
+-(bool) Ping;
 
 @end
 

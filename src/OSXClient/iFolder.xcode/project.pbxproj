@@ -118,7 +118,7 @@
 		};
 		29B97314FDCFA39411CA2CEA = {
 			children = (
-				3E4BFDF1076E5BEE005A4A32,
+				3E255FFC077235290062AB7A,
 				080E96DDFE201D6D7F000001,
 				29B97315FDCFA39411CA2CEA,
 				29B97317FDCFA39411CA2CEA,
@@ -185,6 +185,7 @@
 		};
 		29B97323FDCFA39411CA2CEA = {
 			children = (
+				3E34A2810772BF1A009AC400,
 				3EAEF5050769104900B98AF6,
 				1058C7A0FEA54F0111CA2CBB,
 				1058C7A2FEA54F0111CA2CBB,
@@ -263,6 +264,87 @@
 			settings = {
 			};
 		};
+		3E255FFC077235290062AB7A = {
+			children = (
+				3E255FFD077235290062AB7A,
+				3E255FFE077235290062AB7A,
+				3E255FFF077235290062AB7A,
+				3E256000077235290062AB7A,
+			);
+			isa = PBXGroup;
+			path = webservice;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E255FFD077235290062AB7A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = IFDomain.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E255FFE077235290062AB7A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = IFDomain.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E255FFF077235290062AB7A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = iFolderService.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E256000077235290062AB7A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = iFolderService.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E256001077235290062AB7A = {
+			fileRef = 3E255FFD077235290062AB7A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E256002077235290062AB7A = {
+			fileRef = 3E255FFE077235290062AB7A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E256003077235290062AB7A = {
+			fileRef = 3E255FFF077235290062AB7A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E256004077235290062AB7A = {
+			fileRef = 3E256000077235290062AB7A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E34A2810772BF1A009AC400 = {
+			isa = PBXFileReference;
+			lastKnownFileType = "compiled.mach-o.dylib";
+			path = libifolderclient.0.dylib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E34A2820772BF1A009AC400 = {
+			fileRef = 3E34A2810772BF1A009AC400;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3E49BC6B0765224B0040812D = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.icns;
@@ -272,82 +354,6 @@
 		};
 		3E49BC6C0765224B0040812D = {
 			fileRef = 3E49BC6B0765224B0040812D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3E4BFDF1076E5BEE005A4A32 = {
-			children = (
-				3EFA4F8C076FF114007CBB5A,
-				3EFA4F8D076FF114007CBB5A,
-				3EFA4F8E076FF114007CBB5A,
-				3EFA4F8F076FF114007CBB5A,
-				3E4BFDF3076E5BFF005A4A32,
-				3E4BFDF4076E5BFF005A4A32,
-				3E4BFDF5076E5BFF005A4A32,
-				3E4BFDF6076E5BFF005A4A32,
-			);
-			isa = PBXGroup;
-			name = webservice;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3E4BFDF3076E5BFF005A4A32 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = iFolderWSStubs.h;
-			path = webservice/iFolderWSStubs.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3E4BFDF4076E5BFF005A4A32 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = iFolderWSStubs.m;
-			path = webservice/iFolderWSStubs.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3E4BFDF5076E5BFF005A4A32 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = WSGeneratedObj.h;
-			path = webservice/WSGeneratedObj.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3E4BFDF6076E5BFF005A4A32 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = WSGeneratedObj.m;
-			path = webservice/WSGeneratedObj.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3E4BFDF7076E5BFF005A4A32 = {
-			fileRef = 3E4BFDF3076E5BFF005A4A32;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3E4BFDF8076E5BFF005A4A32 = {
-			fileRef = 3E4BFDF4076E5BFF005A4A32;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3E4BFDF9076E5BFF005A4A32 = {
-			fileRef = 3E4BFDF5076E5BFF005A4A32;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3E4BFDFA076E5BFF005A4A32 = {
-			fileRef = 3E4BFDF6076E5BFF005A4A32;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -464,66 +470,6 @@
 			settings = {
 			};
 		};
-		3EFA4F8C076FF114007CBB5A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = Domain.h;
-			path = webservice/Domain.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3EFA4F8D076FF114007CBB5A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = Domain.m;
-			path = webservice/Domain.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3EFA4F8E076FF114007CBB5A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = iFolderService.h;
-			path = webservice/iFolderService.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3EFA4F8F076FF114007CBB5A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = iFolderService.m;
-			path = webservice/iFolderService.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3EFA4F90076FF114007CBB5A = {
-			fileRef = 3EFA4F8C076FF114007CBB5A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3EFA4F91076FF114007CBB5A = {
-			fileRef = 3EFA4F8D076FF114007CBB5A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3EFA4F92076FF114007CBB5A = {
-			fileRef = 3EFA4F8E076FF114007CBB5A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3EFA4F93076FF114007CBB5A = {
-			fileRef = 3EFA4F8F076FF114007CBB5A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 //3E0
 //3E1
 //3E2
@@ -542,6 +488,9 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = ../libifolder;
+				LIBRARY_SEARCH_PATHS = ../libifolder/.libs;
+				PREBINDING = YES;
 				ZERO_LINK = YES;
 			};
 			isa = PBXBuildStyle;
@@ -552,6 +501,9 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				HEADER_SEARCH_PATHS = ../libifolder;
+				LIBRARY_SEARCH_PATHS = ../libifolder/.libs;
+				OTHER_LDFLAGS = "-flat_namespace";
 				ZERO_LINK = NO;
 			};
 			isa = PBXBuildStyle;
@@ -581,6 +533,7 @@
 				GCC_PREFIX_HEADER = iFolder_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "/Users/calvin/code/ifolder/ifolder/src/libifolder/libs /Users/calvin/code/ifolder/ifolder/src/OSXClient /Users/calvin/code/ifolder/ifolder/src/OSXClient/build";
 				PRODUCT_NAME = iFolder;
 				WRAPPER_EXTENSION = app;
 			};
@@ -603,12 +556,10 @@
 				3EF2212F07681AA400EE2EF6,
 				3E23FEF20768CDCF00877BDF,
 				3E23FEF30768CDD100877BDF,
-				3E4BFDF7076E5BFF005A4A32,
-				3E4BFDF9076E5BFF005A4A32,
-				3EFA4F90076FF114007CBB5A,
-				3EFA4F92076FF114007CBB5A,
 				3E811061076FF18700E96819,
 				3E811063076FF18700E96819,
+				3E256001077235290062AB7A,
+				3E256003077235290062AB7A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -629,12 +580,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072D0486CEB800E47090,
-				3E4BFDF8076E5BFF005A4A32,
-				3E4BFDFA076E5BFF005A4A32,
-				3EFA4F91076FF114007CBB5A,
-				3EFA4F93076FF114007CBB5A,
 				3E811062076FF18700E96819,
 				3E811064076FF18700E96819,
+				3E256002077235290062AB7A,
+				3E256004077235290062AB7A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -654,6 +603,7 @@
 				3E23FEF00768CDC500877BDF,
 				3E23FEF10768CDCA00877BDF,
 				3EAEF5060769104900B98AF6,
+				3E34A2820772BF1A009AC400,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

@@ -6,10 +6,10 @@
 //  Copyright 2004 __MyCompanyName__. All rights reserved.
 //
 
-#import "Domain.h"
+#import "IFDomain.h"
 
 
-@implementation Domain
+@implementation IFDomain
 
 -(void) readDictionary:(NSDictionary *)dictionary
 {

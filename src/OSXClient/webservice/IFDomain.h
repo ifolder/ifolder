@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface Domain : NSObject
+@interface IFDomain : NSObject
 {
 	@public
 		NSString	*ID;
