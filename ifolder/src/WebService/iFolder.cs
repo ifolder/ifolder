@@ -40,9 +40,6 @@ namespace Novell.iFolder.Web
 		public static readonly string iFolderType = "iFolder";
 
 		public string DomainID;
-		// TODO: Remove Domain and DomainIdentity
-		public string Domain;
-		public string DomainIdentity;
 		public string ID;
 		public ulong LocalIncarnation;
 		public string ManagedPath;
@@ -72,8 +69,6 @@ namespace Novell.iFolder.Web
 
 		public iFolderWeb(Collection collection)
 		{
-			this.Domain = collection.Domain;
-			this.DomainIdentity = collection.Domain;
 			this.DomainID = collection.Domain;
 			this.ID = collection.ID;
 			this.CollectionID = collection.ID;
@@ -130,8 +125,6 @@ namespace Novell.iFolder.Web
 
 		public iFolderWeb(Subscription subscription)
 		{
-			this.Domain = subscription.DomainID;
-			this.DomainIdentity = subscription.DomainID;
 			this.DomainID = subscription.DomainID;
 			this.Name = subscription.SubscriptionCollectionName;
 			this.ID = subscription.ID;

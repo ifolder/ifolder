@@ -109,8 +109,6 @@
       <xs:complexType name="iFolderWeb">
         <xs:sequence>
           <xs:element minOccurs="0" maxOccurs="1" name="DomainID" type="xs:string"/>
-          <xs:element minOccurs="0" maxOccurs="1" name="Domain" type="xs:string"/>
-          <xs:element minOccurs="0" maxOccurs="1" name="DomainIdentity" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="ID" type="xs:string"/>
           <xs:element minOccurs="1" maxOccurs="1" name="LocalIncarnation"
                 type="xs:unsignedLong"/>
