@@ -103,6 +103,8 @@ namespace Novell.iFolder.Web
 
 		public iFolder(Subscription subscription)
 		{
+			this.Domain = subscription.DomainID;
+			this.DomainIdentity = subscription.DomainID;
 			this.Name = subscription.SubscriptionCollectionName;
 			this.ID = subscription.ID;
 			this.Description = subscription.CollectionDescription;

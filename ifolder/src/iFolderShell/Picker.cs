@@ -310,6 +310,11 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException ex)
 			{
+				// TODO:
+			}
+			catch (Exception ex)
+			{
+				// TODO:
 			}
 		}
 

@@ -494,19 +494,18 @@ namespace Novell.iFolder.Web
 		/// <summary>
 		/// WebMethod that removes a subscription for an iFolder.
 		/// </summary>
-		/// <param name="iFolderID">
-		/// The ID of the collection representing the iFolder for which
-		/// the subscription will be removed.
+		/// <param name="DomainID">
+		/// The ID of the domain that the subscription belongs to.
 		/// </param>
-		/// <param name="UserID">
-		/// The ID of the member to which the subscription was sent.
+		/// <param name="SubscriptionID">
+		/// The ID of the subscription to remove.
 		/// </param>
-		[WebMethod(Description="Remove a subscription for an iFolder")]
+		[WebMethod(Description="Remove a subscription.")]
 		[SoapDocumentMethod]
-		public void RemoveSubscription(string iFolderID,
-									   string UserID)
+		public void RemoveSubscription(string DomainID,
+									   string SubscriptionID)
 		{
-			SharedCollection.RemoveSubscription(iFolderID, UserID);
+			SharedCollection.RemoveSubscription(DomainID, SubscriptionID);
 		}
 	
 
@@ -543,9 +542,10 @@ namespace Novell.iFolder.Web
 				list.Add(user);
 			}
 
+			// Use the POBox for the domain that this iFolder belongs to.
 			Simias.POBox.POBox pobox = Simias.POBox.POBox.GetPOBox(
 											store,
-											store.DefaultDomain);
+											col.Domain);
 
 			ICSList poList = pobox.Search(
 					Subscription.SubscriptionCollectionIDProperty,
@@ -736,9 +736,10 @@ namespace Novell.iFolder.Web
 				throw new Exception("Invalid Rights Specified");
 
 
+			// Use the POBox for the domain that this iFolder belongs to.
 			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(
 											store, 
-											store.DefaultDomain);
+											col.Domain);
 
 			Subscription sub = poBox.CreateSubscription(col,
 										col.GetCurrentMember(),

@@ -248,8 +248,8 @@
       <xs:element name="RemoveSubscription">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
-            <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DomainID" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="SubscriptionID" type="xs:string" />
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -833,8 +833,8 @@
   </message>
   <message name="RemoveiFolderUserHttpGetOut" />
   <message name="RemoveSubscriptionHttpGetIn">
-    <part name="iFolderID" type="s:string" />
-    <part name="UserID" type="s:string" />
+    <part name="DomainID" type="s:string" />
+    <part name="SubscriptionID" type="s:string" />
   </message>
   <message name="RemoveSubscriptionHttpGetOut" />
   <message name="GetiFolderUsersHttpGetIn">
@@ -1027,8 +1027,8 @@
   </message>
   <message name="RemoveiFolderUserHttpPostOut" />
   <message name="RemoveSubscriptionHttpPostIn">
-    <part name="iFolderID" type="s:string" />
-    <part name="UserID" type="s:string" />
+    <part name="DomainID" type="s:string" />
+    <part name="SubscriptionID" type="s:string" />
   </message>
   <message name="RemoveSubscriptionHttpPostOut" />
   <message name="GetiFolderUsersHttpPostIn">
@@ -1221,7 +1221,7 @@
     <operation name="RemoveSubscription">
       <input message="s0:RemoveSubscriptionSoapIn" />
       <output message="s0:RemoveSubscriptionSoapOut" />
-      <documentation>Remove a subscription for an iFolder</documentation>
+      <documentation>Remove a subscription.</documentation>
     </operation>
     <operation name="GetiFolderUsers">
       <input message="s0:GetiFolderUsersSoapIn" />
@@ -1403,7 +1403,7 @@
     <operation name="RemoveSubscription">
       <input message="s0:RemoveSubscriptionHttpGetIn" />
       <output message="s0:RemoveSubscriptionHttpGetOut" />
-      <documentation>Remove a subscription for an iFolder</documentation>
+      <documentation>Remove a subscription.</documentation>
     </operation>
     <operation name="GetiFolderUsers">
       <input message="s0:GetiFolderUsersHttpGetIn" />
@@ -1585,7 +1585,7 @@
     <operation name="RemoveSubscription">
       <input message="s0:RemoveSubscriptionHttpPostIn" />
       <output message="s0:RemoveSubscriptionHttpPostOut" />
-      <documentation>Remove a subscription for an iFolder</documentation>
+      <documentation>Remove a subscription.</documentation>
     </operation>
     <operation name="GetiFolderUsers">
       <input message="s0:GetiFolderUsersHttpPostIn" />

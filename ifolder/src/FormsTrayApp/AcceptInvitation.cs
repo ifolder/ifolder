@@ -27,12 +27,9 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
-using Novell.iFolder;
-using Simias;
-using Simias.Storage;
-using Simias.POBox;
+using System.Net;
 
-namespace Novell.iFolder.FormsTrayApp
+namespace Novell.FormsTrayApp
 {
 	/// <summary>
 	/// Summary description for AcceptInvitation.
@@ -48,24 +45,24 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Button browse;
 		private bool successful;
-		private POBox poBox;
-		private Subscription subscription;
+		private iFolderWebService ifWebService;
+		private iFolder ifolder;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
-		public AcceptInvitation(POBox poBox, Subscription subscription)
+		public AcceptInvitation(iFolderWebService ifolderWebService, iFolder ifolder)
 		{
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
 
-			this.poBox = poBox;
-			this.subscription = subscription;
+			this.ifWebService = ifolderWebService;
+			this.ifolder = ifolder;
 
-			iFolderLocation.Text = Subscription.DefaultRootPath;
+			//iFolderLocation.Text = Subscription.DefaultRootPath;
 		}
 
 		/// <summary>
@@ -154,7 +151,7 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(24, 168);
+			this.label2.Location = new System.Drawing.Point(24, 176);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(128, 16);
 			this.label2.TabIndex = 6;
@@ -183,6 +180,9 @@ namespace Novell.iFolder.FormsTrayApp
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.groupBox1);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "AcceptInvitation";
 			this.Text = "AcceptInvitation";
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.AcceptInvitation_Closing);
@@ -196,103 +196,119 @@ namespace Novell.iFolder.FormsTrayApp
 		private void ok_Click(object sender, System.EventArgs e)
 		{
 			successful = true;
-			if (!Directory.Exists(iFolderLocation.Text))
+
+			if ((GlobalProperties.GetDriveType(Path.GetPathRoot(iFolderLocation.Text)) & GlobalProperties.DRIVE_REMOTE) 
+				!= GlobalProperties.DRIVE_REMOTE)
 			{
-				// If a leaf node is specified, the directory will be created
-				// under the current working directory ... display this path.
-				bool parentExists = false;
-				string parent = Path.GetDirectoryName(iFolderLocation.Text);
-				while (parent != "")
+				if (!Directory.Exists(iFolderLocation.Text))
 				{
-					if (Directory.Exists(parent))
+					// If a leaf node is specified, the directory will be created
+					// under the current working directory ... display this path.
+					bool parentExists = false;
+					string parent = Path.GetDirectoryName(iFolderLocation.Text);
+					while (parent != "")
 					{
-						parentExists = true;
-						break;
+						if (Directory.Exists(parent))
+						{
+							parentExists = true;
+							break;
+						}
+
+						parent = Path.GetDirectoryName(parent);
 					}
 
-					parent = Path.GetDirectoryName(parent);
-				}
-
-				if (!parentExists)
-				{
-					iFolderLocation.Text = Path.Combine(Environment.CurrentDirectory, iFolderLocation.Text);
-				}
-
-				// The directory doesn't exist ... 
-				if (MessageBox.Show("The directory specified does not exist.  Do you want to create the directory?", "Create Directory", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-				{					
-					// Create the directory.
-					try
+					if (!parentExists)
 					{
-						Directory.CreateDirectory(iFolderLocation.Text);
+						iFolderLocation.Text = Path.Combine(Environment.CurrentDirectory, iFolderLocation.Text);
 					}
-					catch (Exception ex)
+
+					// The directory doesn't exist ... 
+					if (MessageBox.Show("The directory specified does not exist.  Do you want to create the directory?", "Create Directory", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+					{					
+						// Create the directory.
+						try
+						{
+							Directory.CreateDirectory(iFolderLocation.Text);
+						}
+						catch (Exception ex)
+						{
+							MessageBox.Show("Unable to create directory:\n\n" + ex.Message, "Create Failed");
+							iFolderLocation.Focus();
+							successful = false;
+						}
+					}
+					else
 					{
-						MessageBox.Show("Unable to create directory:\n\n" + ex.Message, "Create Failed");
 						iFolderLocation.Focus();
 						successful = false;
 					}
 				}
-				else
-				{
-					iFolderLocation.Focus();
-					successful = false;
-				}
-			}
 
-			if (successful)
-			{
-				// Display wait cursor.
-				Cursor = Cursors.WaitCursor;
-
-				bool isPathInvalid = true;
-
-				// Call into iFolder to make sure the directory specified is valid...
-				try
+				if (successful)
 				{
-					iFolderManager manager = iFolderManager.Connect();
-					isPathInvalid = manager.IsPathIniFolder(iFolderLocation.Text);
-				}
-				catch (SimiasException ex)
-				{
-					MessageBox.Show("An exception occurred while validating the path.\n\n" + ex.Message, "Path Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show("An exception occurred while validating the path.\n\n" + ex.Message, "Path Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				}
+					// Display wait cursor.
+					Cursor = Cursors.WaitCursor;
 
-				// Restore the cursor.
-				Cursor = Cursors.Default;
+					bool isPathInvalid = true;
 
-				if (isPathInvalid)
-				{
-					// The directory is under an existing iFolder ... 
-					MessageBox.Show("The location selected for the new iFolder is below an existing iFolder and cannot be used.  Please select a new location.", "Invalid Directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
-					iFolderLocation.Focus();
-
-					successful = false;
-				}
-				else
-				{
-					// Save the path ...
-					subscription.CollectionRoot = iFolderLocation.Text;
+					// Call into iFolder to make sure the directory specified is valid...
 					try
 					{
-						subscription.Accept(Store.GetStore(), SubscriptionDispositions.Accepted);
-						poBox.Commit(subscription);
+						isPathInvalid = ifWebService.IsPathIniFolder(iFolderLocation.Text);
 					}
-					catch (SimiasException ex)
+					catch (WebException ex)
 					{
-						MessageBox.Show("An exception occurred while accepting the invitation.\n\n" + ex.Message, "Accept Error");
+						MessageBox.Show("An exception occurred while validating the path.\n\n" + ex.Message, "Path Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					}
+					catch (Exception ex)
+					{
+						// TODO:
+					}
+
+					// Restore the cursor.
+					Cursor = Cursors.Default;
+
+					if (isPathInvalid)
+					{
+						// The directory is under an existing iFolder ... 
+						MessageBox.Show("The location selected for the new iFolder is below an existing iFolder and cannot be used.  Please select a new location.", "Invalid Directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						iFolderLocation.Focus();
+
+						successful = false;
+					}
+					else
+					{
+						// Save the path ...
+						//subscription.CollectionRoot = iFolderLocation.Text;
+						try
+						{
+							ifWebService.AcceptiFolderInvitation(ifolder.ID, iFolderLocation.Text);
+						}
+						catch (WebException ex)
+						{
+							MessageBox.Show("An exception occurred while accepting the invitation.\n\n" + ex.Message, "Accept Error");
+						}
+						catch (Exception ex)
+						{
+							// TODO:
+						}
 					}
 				}
+			}
+			else
+			{
+				MessageBox.Show("iFolders cannot be placed in a network drive.");
+				iFolderLocation.Focus();
+				successful = false;
 			}
 		}
 
 		private void browse_Click(object sender, System.EventArgs e)
 		{
 			FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+
+			// TODO: Localize
+			folderBrowserDialog.Description = "Select a location for the iFolder.";
 
 			// If a valid directory is specified, set it in the browser dialog.
 			if ((iFolderLocation.Text != "") && Directory.Exists(iFolderLocation.Text))
@@ -315,14 +331,14 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			// Add the iFolder details to the list box.
 			string blank = "";
-			string name = "iFolder name: " + subscription.SubscriptionCollectionName;
+/*			string name = "iFolder name: " + subscription.SubscriptionCollectionName;
 			iFolderDetails.Items.Add(name);
 			iFolderDetails.Items.Add(blank);
 
 			string sharedBy = "Shared by: " + subscription.FromName;
 			iFolderDetails.Items.Add(sharedBy);
 			iFolderDetails.Items.Add(blank);
-
+*/
 //			string rights = "Rights: " + ((InvitationWizard)(this.Parent)).Subscription.SubscriptionRights;
 //			iFolderDetails.Items.Add(rights);
 //			iFolderDetails.Items.Add(blank);

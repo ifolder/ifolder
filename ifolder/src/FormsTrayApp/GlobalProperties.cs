@@ -162,6 +162,14 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Label enterpriseDescription;
 		private System.Windows.Forms.MenuItem menuResolve;
 		private System.Windows.Forms.MenuItem menuActionResolve;
+		private System.Windows.Forms.MenuItem menuAccept;
+		private System.Windows.Forms.MenuItem menuDecline;
+		private System.Windows.Forms.MenuItem menuDelete;
+		private System.Windows.Forms.MenuItem menuActionAccept;
+		private System.Windows.Forms.MenuItem menuActionDecline;
+		private System.Windows.Forms.MenuItem menuActionDelete;
+		private System.Windows.Forms.MenuItem menuActionSeparator2;
+		private System.Windows.Forms.MenuItem menuSeparator3;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -420,7 +428,10 @@ namespace Novell.FormsTrayApp
 			this.menuOpen = new System.Windows.Forms.MenuItem();
 			this.menuCreate = new System.Windows.Forms.MenuItem();
 			this.menuRefresh = new System.Windows.Forms.MenuItem();
+			this.menuAccept = new System.Windows.Forms.MenuItem();
+			this.menuDecline = new System.Windows.Forms.MenuItem();
 			this.menuSeparator1 = new System.Windows.Forms.MenuItem();
+			this.menuDelete = new System.Windows.Forms.MenuItem();
 			this.menuRevert = new System.Windows.Forms.MenuItem();
 			this.menuResolve = new System.Windows.Forms.MenuItem();
 			this.menuShare = new System.Windows.Forms.MenuItem();
@@ -472,8 +483,13 @@ namespace Novell.FormsTrayApp
 			this.menuAction = new System.Windows.Forms.MenuItem();
 			this.menuActionCreate = new System.Windows.Forms.MenuItem();
 			this.menuActionSeparator1 = new System.Windows.Forms.MenuItem();
+			this.menuActionAccept = new System.Windows.Forms.MenuItem();
+			this.menuActionDecline = new System.Windows.Forms.MenuItem();
+			this.menuActionSeparator2 = new System.Windows.Forms.MenuItem();
+			this.menuActionDelete = new System.Windows.Forms.MenuItem();
 			this.menuActionOpen = new System.Windows.Forms.MenuItem();
 			this.menuActionRevert = new System.Windows.Forms.MenuItem();
+			this.menuActionResolve = new System.Windows.Forms.MenuItem();
 			this.menuActionShare = new System.Windows.Forms.MenuItem();
 			this.menuActionSync = new System.Windows.Forms.MenuItem();
 			this.menuActionProperties = new System.Windows.Forms.MenuItem();
@@ -484,7 +500,7 @@ namespace Novell.FormsTrayApp
 			this.menuActionRestart = new System.Windows.Forms.MenuItem();
 			this.menuView = new System.Windows.Forms.MenuItem();
 			this.menuViewRefresh = new System.Windows.Forms.MenuItem();
-			this.menuActionResolve = new System.Windows.Forms.MenuItem();
+			this.menuSeparator3 = new System.Windows.Forms.MenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -683,6 +699,10 @@ namespace Novell.FormsTrayApp
 																						 this.menuOpen,
 																						 this.menuCreate,
 																						 this.menuRefresh,
+																						 this.menuAccept,
+																						 this.menuDecline,
+																						 this.menuSeparator3,
+																						 this.menuDelete,
 																						 this.menuSeparator1,
 																						 this.menuRevert,
 																						 this.menuResolve,
@@ -711,49 +731,70 @@ namespace Novell.FormsTrayApp
 			this.menuRefresh.Text = "&Refresh list";
 			this.menuRefresh.Click += new System.EventHandler(this.menuRefresh_Click);
 			// 
+			// menuAccept
+			// 
+			this.menuAccept.Index = 3;
+			this.menuAccept.Text = "Accept";
+			this.menuAccept.Visible = false;
+			this.menuAccept.Click += new System.EventHandler(this.menuAccept_Click);
+			// 
+			// menuDecline
+			// 
+			this.menuDecline.Index = 4;
+			this.menuDecline.Text = "Decline";
+			this.menuDecline.Visible = false;
+			this.menuDecline.Click += new System.EventHandler(this.menuDecline_Click);
+			// 
 			// menuSeparator1
 			// 
-			this.menuSeparator1.Index = 3;
+			this.menuSeparator1.Index = 7;
 			this.menuSeparator1.Text = "-";
 			this.menuSeparator1.Visible = false;
 			// 
+			// menuDelete
+			// 
+			this.menuDelete.Index = 6;
+			this.menuDelete.Text = "Delete";
+			this.menuDelete.Visible = false;
+			this.menuDelete.Click += new System.EventHandler(this.menuDelete_Click);
+			// 
 			// menuRevert
 			// 
-			this.menuRevert.Index = 4;
+			this.menuRevert.Index = 8;
 			this.menuRevert.Text = "Revert to a normal folder";
 			this.menuRevert.Visible = false;
 			this.menuRevert.Click += new System.EventHandler(this.menuRevert_Click);
 			// 
 			// menuResolve
 			// 
-			this.menuResolve.Index = 5;
+			this.menuResolve.Index = 9;
 			this.menuResolve.Text = "Resolve conflicts...";
 			this.menuResolve.Visible = false;
 			this.menuResolve.Click += new System.EventHandler(this.menuResolve_Click);
 			// 
 			// menuShare
 			// 
-			this.menuShare.Index = 6;
+			this.menuShare.Index = 10;
 			this.menuShare.Text = "&Share with...";
 			this.menuShare.Visible = false;
 			this.menuShare.Click += new System.EventHandler(this.menuShare_Click);
 			// 
 			// menuSyncNow
 			// 
-			this.menuSyncNow.Index = 7;
+			this.menuSyncNow.Index = 11;
 			this.menuSyncNow.Text = "Sync now";
 			this.menuSyncNow.Visible = false;
 			this.menuSyncNow.Click += new System.EventHandler(this.menuSyncNow_Click);
 			// 
 			// menuSeparator2
 			// 
-			this.menuSeparator2.Index = 8;
+			this.menuSeparator2.Index = 12;
 			this.menuSeparator2.Text = "-";
 			this.menuSeparator2.Visible = false;
 			// 
 			// menuProperties
 			// 
-			this.menuProperties.Index = 9;
+			this.menuProperties.Index = 13;
 			this.menuProperties.Text = "Properties...";
 			this.menuProperties.Visible = false;
 			this.menuProperties.Click += new System.EventHandler(this.menuProperties_Click);
@@ -1149,6 +1190,10 @@ namespace Novell.FormsTrayApp
 			this.menuAction.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																					   this.menuActionCreate,
 																					   this.menuActionSeparator1,
+																					   this.menuActionAccept,
+																					   this.menuActionDecline,
+																					   this.menuActionSeparator2,
+																					   this.menuActionDelete,
 																					   this.menuActionOpen,
 																					   this.menuActionRevert,
 																					   this.menuActionResolve,
@@ -1175,72 +1220,106 @@ namespace Novell.FormsTrayApp
 			this.menuActionSeparator1.Text = "-";
 			this.menuActionSeparator1.Visible = false;
 			// 
+			// menuActionAccept
+			// 
+			this.menuActionAccept.Index = 2;
+			this.menuActionAccept.Text = "Accept";
+			this.menuActionAccept.Visible = false;
+			this.menuActionAccept.Click += new System.EventHandler(this.menuAccept_Click);
+			// 
+			// menuActionDecline
+			// 
+			this.menuActionDecline.Index = 3;
+			this.menuActionDecline.Text = "Decline";
+			this.menuActionDecline.Visible = false;
+			this.menuActionDecline.Click += new System.EventHandler(this.menuDecline_Click);
+			// 
+			// menuActionSeparator2
+			// 
+			this.menuActionSeparator2.Index = 4;
+			this.menuActionSeparator2.Text = "-";
+			this.menuActionSeparator2.Visible = false;
+			// 
+			// menuActionDelete
+			// 
+			this.menuActionDelete.Index = 5;
+			this.menuActionDelete.Text = "Delete";
+			this.menuActionDelete.Visible = false;
+			this.menuActionDelete.Click += new System.EventHandler(this.menuDelete_Click);
+			// 
 			// menuActionOpen
 			// 
-			this.menuActionOpen.Index = 2;
+			this.menuActionOpen.Index = 6;
 			this.menuActionOpen.Text = "Open...";
 			this.menuActionOpen.Visible = false;
 			this.menuActionOpen.Click += new System.EventHandler(this.menuOpen_Click);
 			// 
 			// menuActionRevert
 			// 
-			this.menuActionRevert.Index = 3;
+			this.menuActionRevert.Index = 7;
 			this.menuActionRevert.Text = "Revert to a normal folder";
 			this.menuActionRevert.Visible = false;
 			this.menuActionRevert.Click += new System.EventHandler(this.menuRevert_Click);
 			// 
+			// menuActionResolve
+			// 
+			this.menuActionResolve.Index = 8;
+			this.menuActionResolve.Text = "Resolve conflicts...";
+			this.menuActionResolve.Visible = false;
+			this.menuActionResolve.Click += new System.EventHandler(this.menuResolve_Click);
+			// 
 			// menuActionShare
 			// 
-			this.menuActionShare.Index = 5;
+			this.menuActionShare.Index = 9;
 			this.menuActionShare.Text = "Share with...";
 			this.menuActionShare.Visible = false;
 			this.menuActionShare.Click += new System.EventHandler(this.menuShare_Click);
 			// 
 			// menuActionSync
 			// 
-			this.menuActionSync.Index = 6;
+			this.menuActionSync.Index = 10;
 			this.menuActionSync.Text = "Sync now";
 			this.menuActionSync.Visible = false;
 			this.menuActionSync.Click += new System.EventHandler(this.menuSyncNow_Click);
 			// 
 			// menuActionProperties
 			// 
-			this.menuActionProperties.Index = 7;
+			this.menuActionProperties.Index = 11;
 			this.menuActionProperties.Text = "Properties...";
 			this.menuActionProperties.Visible = false;
 			this.menuActionProperties.Click += new System.EventHandler(this.menuProperties_Click);
 			// 
 			// menuActionEnable
 			// 
-			this.menuActionEnable.Index = 8;
+			this.menuActionEnable.Index = 12;
 			this.menuActionEnable.Text = "Enable";
 			this.menuActionEnable.Visible = false;
 			this.menuActionEnable.Click += new System.EventHandler(this.menuEnabled_Click);
 			// 
 			// menuActionStart
 			// 
-			this.menuActionStart.Index = 9;
+			this.menuActionStart.Index = 13;
 			this.menuActionStart.Text = "Start";
 			this.menuActionStart.Visible = false;
 			this.menuActionStart.Click += new System.EventHandler(this.menuStart_Click);
 			// 
 			// menuActionPause
 			// 
-			this.menuActionPause.Index = 10;
+			this.menuActionPause.Index = 14;
 			this.menuActionPause.Text = "Pause";
 			this.menuActionPause.Visible = false;
 			this.menuActionPause.Click += new System.EventHandler(this.menuPause_Click);
 			// 
 			// menuActionStop
 			// 
-			this.menuActionStop.Index = 11;
+			this.menuActionStop.Index = 15;
 			this.menuActionStop.Text = "Stop";
 			this.menuActionStop.Visible = false;
 			this.menuActionStop.Click += new System.EventHandler(this.menuStop_Click);
 			// 
 			// menuActionRestart
 			// 
-			this.menuActionRestart.Index = 12;
+			this.menuActionRestart.Index = 16;
 			this.menuActionRestart.Text = "Restart";
 			this.menuActionRestart.Visible = false;
 			this.menuActionRestart.Click += new System.EventHandler(this.menuRestart_Click);
@@ -1260,12 +1339,11 @@ namespace Novell.FormsTrayApp
 			this.menuViewRefresh.Text = "Refresh";
 			this.menuViewRefresh.Click += new System.EventHandler(this.menuRefresh_Click);
 			// 
-			// menuActionResolve
+			// menuSeparator3
 			// 
-			this.menuActionResolve.Index = 4;
-			this.menuActionResolve.Text = "Resolve conflicts...";
-			this.menuActionResolve.Visible = false;
-			this.menuActionResolve.Click += new System.EventHandler(this.menuResolve_Click);
+			this.menuSeparator3.Index = 5;
+			this.menuSeparator3.Text = "-";
+			this.menuSeparator3.Visible = false;
 			// 
 			// GlobalProperties
 			// 
@@ -1675,6 +1753,9 @@ namespace Novell.FormsTrayApp
 			// Enable/disable resolve menu item.
 			menuActionResolve.Enabled = (iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).HasConflicts;
 
+			menuActionAccept.Visible = menuActionDecline.Visible = menuActionDelete.Visible = menuActionSeparator2.Visible = 
+				(iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription;
+
 			SetupServicesMenu();
 		}
 
@@ -1731,6 +1812,9 @@ namespace Novell.FormsTrayApp
 
 			menuResolve.Visible = (iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).HasConflicts;
 			menuRefresh.Visible = menuCreate.Visible = iFolderView.SelectedItems.Count == 0;
+
+			menuAccept.Visible = menuDecline.Visible = menuDelete.Visible = menuSeparator3.Visible = 
+				(iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription;
 		}
 
 		private void menuOpen_Click(object sender, System.EventArgs e)
@@ -1812,6 +1896,9 @@ namespace Novell.FormsTrayApp
 		{
 			FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
 
+			// TODO: Localize
+			folderBrowserDialog.Description = "Choose a folder to convert to an iFolder.";
+
 			while (true)
 			{
 				if(folderBrowserDialog.ShowDialog() == DialogResult.OK)
@@ -1858,6 +1945,40 @@ namespace Novell.FormsTrayApp
 		private void menuRefresh_Click(object sender, System.EventArgs e)
 		{
 			refreshiFolders();
+		}
+
+		private void menuAccept_Click(object sender, System.EventArgs e)
+		{
+			iFolder ifolder = (iFolder)iFolderView.SelectedItems[0].Tag;
+
+			AcceptInvitation acceptInvitation = new AcceptInvitation(ifWebService, ifolder);
+			acceptInvitation.ShowDialog();
+		}
+
+		private void menuDecline_Click(object sender, System.EventArgs e)
+		{
+			// TODO:
+			MessageBox.Show("This action is not yet implemented.");
+		}
+
+		private void menuDelete_Click(object sender, System.EventArgs e)
+		{
+			ListViewItem lvi = iFolderView.SelectedItems[0];
+			iFolder ifolder = (iFolder)lvi.Tag;
+
+			try
+			{
+				ifWebService.RemoveSubscription(ifolder.Domain, ifolder.ID);
+				lvi.Remove();
+			}
+			catch (WebException ex)
+			{
+				// TODO:
+			}
+			catch (Exception ex)
+			{
+				// TODO:
+			}
 		}
 		#endregion
 
@@ -2023,10 +2144,10 @@ namespace Novell.FormsTrayApp
 
 		#endregion
 
-		private const uint DRIVE_REMOTE = 4;
+		internal static readonly uint DRIVE_REMOTE = 4;
 
 		[DllImport("kernel32.dll")]
-		static extern uint GetDriveType(string rootPathName);
+		internal static extern uint GetDriveType(string rootPathName);
 
 		private void cancel_Click(object sender, System.EventArgs e)
 		{

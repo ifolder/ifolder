@@ -10,7 +10,6 @@ InvitationWizard_LIBS = System.dll System.Data.dll System.Drawing.dll System.Win
 InvitationWizard_LIBPATH = ../iFolder
 
 DATA_FILES = $(srcdir)/App.ico $(srcdir)/Invitation.ico $(srcdir)/InvitationWizard.exe.manifest
-GTK_DATA_FILES = $(srcdir)/../GtkTrayApp/invitewiz.png
 RESX_FILES = $(srcdir)/AcceptDeclinePage.resx $(srcdir)/BaseWizardPage.resx $(srcdir)/CompletionPage.resx $(srcdir)/InteriorPageTemplate.resx $(srcdir)/InvitationWizard.resx $(srcdir)/SelectInvitationPage.resx $(srcdir)/SelectiFolderLocationPage.resx $(srcdir)/WelcomePage.resx $(srcdir)/WelcomePageTemplate.resx
 
 PROJECT_FILES = $(srcdir)/InvitationWizard.csproj $(srcdir)/FormsInvitationWizard.sln
@@ -32,7 +31,6 @@ install-exec-local: InvitationWizard.exe $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) InvitationWizard.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(DATA_FILES) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(GTK_DATA_FILES) $(DESTDIR)$(bindir)
 if WINDOWS
 if DEBUG	
 	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(bindir)
@@ -42,7 +40,6 @@ endif
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f InvitationWizard.exe $(DEBUG_FILES)
 	cd $(DESTDIR)$(bindir); rm -f $(DATA_FILES:$(srcdir)/%=%)
-	cd $(DESTDIR)$(bindir); rm -f $(GTK_DATA_FILES:$(srcdir)/../GtkTrayApp/%=%)
 if WINDOWS
 if DEBUG	
 	cd $(DESTDIR)$(bindir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)

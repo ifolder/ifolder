@@ -320,6 +320,10 @@ namespace Novell.FormsTrayApp
 			{
 				// TODO: Post a message.
 			}
+			catch (Exception ex)
+			{
+				// TODO:
+			}
 		}
 
 		private void notifyIcon1_DoubleClick(object sender, System.EventArgs e)
@@ -350,6 +354,7 @@ namespace Novell.FormsTrayApp
 			try
 			{
 				ifWebService = new iFolderWebService();
+				ifWebService.Ping();
 				//iFolderManager.CreateDefaultExclusions(config);
 
 				synkEvent = new AutoResetEvent(false);
