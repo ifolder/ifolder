@@ -1364,6 +1364,7 @@ namespace Simias.Storage
 				bool hasCollection = false;
 				bool hasFileNode = false;
 				bool hasCurrentOwner = false;
+				bool isProxy = false;
 				Member collectionOwner = null;
 				Member currentOwner = Owner;
 
@@ -1381,6 +1382,10 @@ namespace Simias.Storage
 							else if ( node.Properties.State == PropertyList.PropertyListState.Add )
 							{
 								createCollection = true;
+							}
+							else if ( node.Properties.State == PropertyList.PropertyListState.Proxy )
+							{
+								isProxy = true;
 							}
 
 							hasCollection = true;
@@ -1464,8 +1469,9 @@ namespace Simias.Storage
 					else
 					{
 						// Make sure that ownership of the collection is right.
-						if ( ( hasCurrentOwner && ( collectionOwner == null ) ) ||
-							 ( !hasCurrentOwner && ( collectionOwner != null ) ) )
+						if ( ( ( hasCurrentOwner && ( collectionOwner == null ) ) ||
+							 ( !hasCurrentOwner && ( collectionOwner != null ) ) ) &&
+							 ( isProxy == false ) )
 						{
 							throw new CollectionStoreException( "Collection owner is in an invalid state." );
 						}
