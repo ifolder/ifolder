@@ -97,9 +97,7 @@ namespace Novell.AddressBook
 			{
 				try
 				{
-					// FIXUP
-					//return(this.GetFullName());
-					return("");
+					return(this.GetFullName());
 				}
 				catch
 				{
@@ -590,15 +588,12 @@ namespace Novell.AddressBook
 			{
 				try
 				{
-					// FIXUP
-					/*
-					if (this.addressBook.store.CurrentUser == this.ID)
+					if (this.addressBook != null && 
+						this.addressBook.store != null &&
+						this.addressBook.store.CurrentUserGuid == this.ID)
 					{
 						return(true);
 					}
-					*/
-
-					return(true);
 				}
 				catch{}
 				return(false);
@@ -678,24 +673,18 @@ namespace Novell.AddressBook
 
 		private	string GetFullName()
 		{
-			Name	tmpName = null;
-			string fn = "";
+			Name	tmpName;
 
 			try
 			{
 				tmpName = this.GetPreferredName();
+				if (tmpName != null)
+				{
+					return(tmpName.FN);
+				}
 			}
-			catch
-			{
-				return("");
-			}
-
-			if (tmpName != null)
-			{
-				fn = tmpName.FN;
-			}
-
-			return(fn);
+			catch{}
+			return("");
 		}
 
 		/// <summary>
@@ -2346,94 +2335,6 @@ namespace Novell.AddressBook
 			thisEnum.Reset();
 		}
 
-		#endregion
-	}
-
-	/// <summary>
-	/// Class used for enumerating all address objects attached to the contact
-	/// </summary>
-	public class AddressEnumerator : IEnumerable, IEnumerator
-	{
-		#region Class Members
-
-		private	Contact		parentContact;
-		private	Node		parentNode;
-		private	IEnumerator	nodeEnum = null;
-
-		#endregion
-
-		#region Properties
-		#endregion
-
-		#region Constructor
-		/// <summary>
-		/// Constructor used to instantiate this object by means of an enumerator.
-		/// </summary>
-		/// 
-		internal AddressEnumerator(Node parentNode, Contact parentContact)
-		{
-			this.parentNode = parentNode;
-			this.parentContact = parentContact;
-			this.Reset();
-		}
-		#endregion
-
-		#region IEnumerator Members
-
-		/// <summary>
-		/// Gets an enumerator object
-		/// </summary>
-		public IEnumerator GetEnumerator()
-		{
-			Reset();
-			return(this);
-		}
-
-		/// <summary>
-		/// Sets the enumerator to its initial position, which is the first string
-		/// in the string array
-		/// </summary>
-		public void Reset()
-		{
-			//nodeEnum = this.parentNode.GetEnumerator();
-		}
-
-		/// <summary>
-		/// Gets the current node contained in thisNode
-		/// </summary>
-		public object Current
-		{
-			get
-			{
-				Node cNode = (Node) this.nodeEnum.Current;
-				//Address addr = this.parentContact.GetAddress(cNode.Id);
-				//return(addr);
-
-				// remove when we fixup addr
-				return(null);
-			}
-		}
-
-		/// <summary>
-		/// Advances the enumerator to the next address of the contact
-		/// </summary>
-		/// <returns>
-		/// true if the enumerator was successfully advanced to the next element; 
-		/// false if the enumerator has passed the end of the collection.
-		/// </returns>
-		public bool MoveNext()
-		{
-			while(this.nodeEnum.MoveNext() == true)
-			{
-				Node tmpNode = (Node) this.nodeEnum.Current;
-				if(tmpNode.Type == Common.addressProperty)
-				{
-					return(true);
-				}
-			}
-
-			return(false);
-		}
 		#endregion
 	}
 }

@@ -317,27 +317,27 @@ namespace Novell.AddressBook
 		{
 			string fn = "";
 
-			if((Prefix != null) && (Prefix.Length > 0))
+			if((Prefix != "") && (Prefix.Length > 0))
 			{
 				fn += Prefix + " ";
 			}
 
-			if((Given != null) && (Given.Length > 0))
+			if((Given != "") && (Given.Length > 0))
 			{
 				fn += Given + " ";
 			}
 
-			if((Other != null) && (Other.Length > 0))
+			if((Other != "") && (Other.Length > 0))
 			{
 				fn += Other + " ";
 			}
 
-			if((Family != null) && (Family.Length > 0))
+			if((Family != "") && (Family.Length > 0))
 			{
 				fn += Family;
 			}
 
-			if((Suffix != null) && (Suffix.Length > 0))
+			if((Suffix != "") && (Suffix.Length > 0))
 			{
 				fn += " " + Suffix;
 			}

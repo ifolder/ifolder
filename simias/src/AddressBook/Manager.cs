@@ -285,7 +285,8 @@ namespace Novell.AddressBook
 		///	<returns>An IEnumerator object</returns>
 		public IEnumerator GetEnumerator()
         {
-			storeEnum = store.GetEnumerator();
+			ICSList	abList = this.store.GetCollectionsByType("AB:AddressBook");
+			storeEnum = abList.GetEnumerator();
 			return(this);
         }
 
@@ -301,11 +302,7 @@ namespace Novell.AddressBook
         {
 			while(storeEnum.MoveNext())
 			{
-				Node cNode = (Node) storeEnum.Current;
-				if (cNode.Type == "AB:AddressBook")
-				{
-					return(true);
-				}
+				return(true);
 			}
 
 			return(false);
@@ -321,9 +318,8 @@ namespace Novell.AddressBook
             {
 				try
 				{
-					Node cNode = (Node) storeEnum.Current;
 					AddressBook tmpBook = new AddressBook(this.store);
-					tmpBook.ToObject(cNode.ID);
+					tmpBook.ToObject(((ShallowNode) storeEnum.Current).ID);
 					return((object) tmpBook);
 				}
 				catch{}
