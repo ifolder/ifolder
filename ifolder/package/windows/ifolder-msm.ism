@@ -126,7 +126,6 @@
 		<col key="yes" def="s72">Name</col>
 		<col def="V0">Data</col>
 		<col def="S255">ISBuildSourcePath</col>
-		<row><td>ISSELFREG.DLL</td><td/><td>&lt;ISProductFolder&gt;\redist\language independent\i386\isregsvr.dll</td></row>
 	</table>
 
 	<table name="BindImage">
@@ -188,6 +187,7 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
+		<row><td>Novell.iFolder.Web.dll.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>{7A15F7EE-FCFB-477C-B8CB-5950BC6C895A}</td><td>BIN.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>0</td><td/><td>Novell.iFolder.Web.dll.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>17</td><td>This component consists of a Windows dynamic link library.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Novell.iFolder.dll.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>{1F1DD867-A31E-4AB1-BD99-ACA8864D6D0C}</td><td>INSTALLDIR.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>0</td><td/><td>Novell.iFolder.dll.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>17</td><td>This component consists of a Windows dynamic link library.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
@@ -243,10 +243,6 @@
 		<col def="S64">Source</col>
 		<col def="S0">Target</col>
 		<col def="S255">ISComments</col>
-		<row><td>ISSelfRegisterCosting</td><td>1</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterCosting</td><td/></row>
-		<row><td>ISSelfRegisterFiles</td><td>1025</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFiles</td><td/></row>
-		<row><td>ISSelfRegisterFinalize</td><td>1</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFinalize</td><td/></row>
-		<row><td>ISUnSelfRegisterFiles</td><td>1025</td><td>ISSELFREG.DLL</td><td>ISUnSelfRegisterFiles</td><td/></row>
 		<row><td>SetAllUsersProfileNT</td><td>51</td><td>ALLUSERSPROFILE</td><td>[%SystemRoot]\Profiles\All Users</td><td/></row>
 		<row><td>setAllUsersProfile2K</td><td>51</td><td>ALLUSERSPROFILE</td><td>[%ALLUSERSPROFILE]</td><td/></row>
 		<row><td>setUserProfileNT</td><td>51</td><td>USERPROFILE</td><td>[%USERPROFILE]</td><td/></row>
@@ -279,6 +275,7 @@
 		<row><td>ALLUSERSPROFILE</td><td>TARGETDIR</td><td>.:ALLUSE~1|All Users</td><td/><td>0</td><td/></row>
 		<row><td>AdminToolsFolder</td><td>TARGETDIR</td><td>.:Admint~1|AdminTools</td><td/><td>0</td><td/></row>
 		<row><td>AppDataFolder</td><td>TARGETDIR</td><td>.:APPLIC~1|Application Data</td><td/><td>0</td><td/></row>
+		<row><td>BIN.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>INSTALLDIR.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>bin</td><td/><td>0</td><td/></row>
 		<row><td>CommonAppDataFolder</td><td>TARGETDIR</td><td>.:Common~1|CommonAppData</td><td/><td>0</td><td/></row>
 		<row><td>CommonFiles64Folder</td><td>TARGETDIR</td><td>.:Common64</td><td/><td>0</td><td/></row>
 		<row><td>CommonFilesFolder</td><td>TARGETDIR</td><td>.:Common</td><td/><td>0</td><td/></row>
@@ -362,6 +359,7 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
+		<row><td>Novell.iFolder.Web.dll.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>Novell.iFolder.Web.dll.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>NOVELL~1.DLL|Novell.iFolder.Web.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\bin\Novell.iFolder.Web.dll</td><td>1</td><td/></row>
 		<row><td>Novell.iFolder.dll.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>Novell.iFolder.dll.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>NOVELL~1.DLL|Novell.iFolder.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\Novell.iFolder.dll</td><td>1</td><td/></row>
 	</table>
 
@@ -413,6 +411,7 @@
 		<col def="S0">FTPLocation</col>
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
+		<row><td>Novell.iFolder.Web.dll.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td/><td/><td>_7A55C7CE_B433_48AA_B87A_9A7309F164B8_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Novell.iFolder.dll.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td/><td/><td>_4FA0400E_643B_4784_88A9_83E16641FD9D_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
@@ -441,6 +440,7 @@
 		<col def="S255">IncludeFiles</col>
 		<col def="S255">ExcludeFiles</col>
 		<col def="I4">ISAttributes</col>
+		<row><td>Novell.iFolder.Web.dll.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>&lt;ISProjectFolder&gt;\msi\install\bin</td><td>4</td><td/><td>Novell.iFolder.Web.dll</td><td>0</td></row>
 	</table>
 
 	<table name="ISFeatureMergeModuleExcludes">
@@ -846,6 +846,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col key="yes" def="s72">Component</col>
 		<col key="yes" def="s72">ModuleID</col>
 		<col key="yes" def="i2">Language</col>
+		<row><td>Novell.iFolder.Web.dll.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>ifolder.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>0</td></row>
 		<row><td>Novell.iFolder.dll.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>ifolder.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>0</td></row>
 	</table>
 
@@ -891,13 +892,6 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="S64">BaseAction</col>
 		<col def="I2">After</col>
 		<col def="S255">Condition</col>
-		<row><td>ISSelfRegisterCosting</td><td/><td>SelfUnregModules</td><td>1</td><td/></row>
-		<row><td>ISSelfRegisterFiles</td><td/><td>SelfRegModules</td><td>1</td><td/></row>
-		<row><td>ISSelfRegisterFinalize</td><td/><td>InstallFinalize</td><td>1</td><td/></row>
-		<row><td>ISUnSelfRegisterFiles</td><td/><td>ISSelfRegisterCosting</td><td>1</td><td/></row>
-		<row><td>InstallFinalize</td><td>3150</td><td/><td/><td/></row>
-		<row><td>SelfRegModules</td><td>2850</td><td/><td/><td/></row>
-		<row><td>SelfUnregModules</td><td>1100</td><td/><td/><td/></row>
 	</table>
 
 	<table name="ModuleInstallUISequence">
