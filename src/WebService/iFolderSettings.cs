@@ -44,6 +44,7 @@ namespace Novell.iFolder.Web
 		public string ProxyHost;
 		public int ProxyPort;
 		public string CurrentUserID;
+		public string CurrentUserName;
 
 		public iFolderSettings()
 		{
@@ -72,7 +73,9 @@ namespace Novell.iFolder.Web
 			
 			Configuration config = Configuration.GetConfiguration();
 			bool defaultValue = true;
-			DisplayConfirmation = config.Get("iFolderUI", "Display Confirmation", defaultValue.ToString()) == defaultValue.ToString();
+			DisplayConfirmation = config.Get("iFolderUI", 
+						"Display Confirmation", 
+						defaultValue.ToString()) == defaultValue.ToString();
 
 			DefaultSyncInterval = 
 				Simias.Policy.SyncInterval.GetInterval();
@@ -82,12 +85,14 @@ namespace Novell.iFolder.Web
 
 			try
 			{
-				// On first connect this will cause an exception because the roster
-				// hasn't sync'd yet.
-				Member currentMember = store.GetRoster(DefaultDomainID).GetCurrentMember();
+				// On first connect this will cause an exception because the 
+				// roster hasn't sync'd yet.
+				Member currentMember = 
+						store.GetRoster(DefaultDomainID).GetCurrentMember();
 				if (currentMember != null)
 				{
 					CurrentUserID = currentMember.UserID;
+					CurrentUserName = currentMember.Name;
 				}
 			}
 			catch
@@ -99,7 +104,8 @@ namespace Novell.iFolder.Web
 		public static void SetDisplayConfirmation(bool displayConfirmation)
 		{
 			Configuration config = Configuration.GetConfiguration();
-			config.Set("iFolderUI", "Display Confirmation", displayConfirmation.ToString());
+			config.Set("iFolderUI", "Display Confirmation", 
+										displayConfirmation.ToString());
 		}
 	}
 }
