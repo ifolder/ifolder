@@ -729,6 +729,7 @@ namespace Simias.Event
 							instanceTable.Remove(conf);
 							alreadyDisposed = true;
 							broker.CollectionEvent -= new CollectionEventHandler(OnCollectionEvent);
+							broker.ServiceEvent -= new ServiceEventHandler(OnServiceEvent);
 
 							// Signal thread so it can exit.
 							queued.Set();
