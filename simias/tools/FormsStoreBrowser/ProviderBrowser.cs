@@ -29,9 +29,6 @@ using System.Windows.Forms;
 using System.Data;
 using System.IO;
 using System.Xml;
-using Simias;
-using Simias.Storage;
-using Simias.Storage.Provider;
 
 namespace StoreBrowser
 {
@@ -42,15 +39,15 @@ namespace StoreBrowser
 	{
 		TreeView tView;
 		RichTextBox  rBox;
-		IProvider provider;
+		Browser browser;
 		bool alreadyDisposed;
 
-		public ProviderBrowser(TreeView view, RichTextBox box)
+		public ProviderBrowser(TreeView view, RichTextBox box, string host)
 		{
 			tView = view;
 			rBox = box;
-			bool created;
-			provider = Provider.Connect(out created);
+			browser = new Browser();
+			browser.Url = String.Format("http://{0}/SimiasBrowser.asmx", host);
 			rBox.Show();
 			tView.Dock = DockStyle.Left;
 			alreadyDisposed = false;
@@ -59,6 +56,11 @@ namespace StoreBrowser
 		~ProviderBrowser()
 		{
 			Dispose(true);
+		}
+
+		public Browser StoreBrowser
+		{
+			get { return browser; }
 		}
 
 		public void Show()
@@ -76,38 +78,37 @@ namespace StoreBrowser
 		{
 			tView.BeginUpdate();
 			tNode.Nodes.Clear();
+
 			// Get each Collection.
-			char [] buffer1 = new char[4096];
-			IResultSet results1 = provider.Search(new Query("Types", SearchOp.Equal, "Collection", Syntax.String));
-			int len1 = results1.GetNext(ref buffer1);
-			if (len1 > 0)
+			BrowserNode[] list = browser.EnumerateCollections();
+			foreach(BrowserNode bn in list )
 			{
-				XmlDocument doc1 = new XmlDocument();
-				doc1.LoadXml(new string(buffer1, 0, len1));
-				XmlNodeList recordList1 = doc1.DocumentElement.SelectNodes(XmlTags.ObjectTag);
-				foreach (XmlElement recordEl1 in recordList1)
-				{
-					string id = recordEl1.GetAttribute(XmlTags.IdAttr);
-					TreeNode colNode = new TreeNode(recordEl1.GetAttribute(XmlTags.IdAttr));
-					tNode.Nodes.Add(colNode);
-					colNode.Tag = id;
-					colNode.Nodes.Add("Temp");
-				}
+				DisplayNode dspNode = new DisplayNode(bn);
+				TreeNode colNode = new TreeNode(dspNode.ID);
+				tNode.Nodes.Add(colNode);
+				colNode.Tag = dspNode;
+				colNode.Nodes.Add("Temp");
 			}
-			results1.Dispose();
+
 			tView.EndUpdate();
 		}
 
 		public void ShowNode(TreeNode node)
 		{
 			rBox.BringToFront();
-			string id = node.Text;
-			TreeNode parent = node.Parent;
-            string colId = parent != null ? parent.Text : null;
-			StringWriter sw = new StringWriter();
-			writeXml(provider.GetRecord(id, colId), sw);
-			rBox.Clear();
-			rBox.AppendText(sw.ToString());
+
+			if (node.Tag != null)
+			{
+				DisplayNode dspNode = (DisplayNode)node.Tag;
+				StringWriter sw = new StringWriter();
+				writeXml(dspNode.Document, sw);
+				rBox.Clear();
+				rBox.AppendText(sw.ToString());
+			}
+			else
+			{
+				rBox.Clear();
+			}
 		}
 
 		public void AddChildren(TreeNode colNode)
@@ -118,26 +119,21 @@ namespace StoreBrowser
 			}
 			else
 			{
-				string id = (string)colNode.Tag;
-				char [] buffer = new char[4096];
-				IResultSet results = provider.Search(new Query(id, BaseSchema.ObjectName, SearchOp.Begins, "", Syntax.String));
-				int len = results.GetNext(ref buffer);
-				if (len > 0)
+				DisplayNode dspNode = (DisplayNode)colNode.Tag;
+				if (dspNode.IsCollection )
 				{
-					XmlDocument doc = new XmlDocument();
-					string s = new string(buffer, 0, len);
-					doc.LoadXml(s);
-					XmlNodeList recordList = doc.DocumentElement.SelectNodes(XmlTags.ObjectTag);
-					foreach (XmlElement recordEl in recordList)
+					BrowserNode[] list = browser.EnumerateNodes( dspNode.ID );
+					foreach(BrowserNode bn in list)
 					{
-						string nodeId = recordEl.GetAttribute(XmlTags.IdAttr);
-						if (nodeId != id)
+						DisplayNode n = new DisplayNode(bn);
+						if (n.ID != dspNode.ID)
 						{
-							colNode.Nodes.Add(new TreeNode(recordEl.GetAttribute(XmlTags.IdAttr), 1, 1));
+							TreeNode tn = new TreeNode(n.ID, 1, 1);
+							tn.Tag = n;
+							colNode.Nodes.Add(tn);
 						}
 					}
 				}
-				results.Dispose();
 			}
 		}
 
@@ -160,7 +156,6 @@ namespace StoreBrowser
 					GC.SuppressFinalize(this);
 				}
 				alreadyDisposed = true;
-				provider.Dispose();
 			}
 		}
 

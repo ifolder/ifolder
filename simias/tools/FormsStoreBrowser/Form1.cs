@@ -28,8 +28,6 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
 using System.IO;
-using Simias;
-using Simias.Storage;
 
 
 namespace StoreBrowser
@@ -39,7 +37,7 @@ namespace StoreBrowser
 	/// </summary>
 	public class Form1 : System.Windows.Forms.Form
 	{
-		string path = null;
+		string hostName = "localhost:8086";
 		IStoreBrowser browser = null;
 		private System.Windows.Forms.MainMenu mainMenu1;
 		private System.Windows.Forms.MenuItem menuItem1;
@@ -78,8 +76,7 @@ namespace StoreBrowser
 			this.listView1.Hide();
 			tView.ImageList = imageList1;
 			tView.Dock = DockStyle.Fill;
-			Configuration.GetConfiguration();
-			browser = new NodeBrowser(tView, listView1);
+			browser = new NodeBrowser(tView, listView1, hostName);
 			browser.Show();
 		}
 
@@ -128,11 +125,11 @@ namespace StoreBrowser
 			this.Flags = new System.Windows.Forms.ColumnHeader();
 			this.NodeMenu = new System.Windows.Forms.ContextMenu();
 			this.cmDelete = new System.Windows.Forms.MenuItem();
-			this.CmNew = new System.Windows.Forms.MenuItem();
 			this.PropertyMenu = new System.Windows.Forms.ContextMenu();
 			this.pcmDelete = new System.Windows.Forms.MenuItem();
 			this.pcmNew = new System.Windows.Forms.MenuItem();
 			this.pcmEdit = new System.Windows.Forms.MenuItem();
+			this.CmNew = new System.Windows.Forms.MenuItem();
 			this.SuspendLayout();
 			// 
 			// mainMenu1
@@ -289,12 +286,6 @@ namespace StoreBrowser
 			this.cmDelete.Text = "Delete";
 			this.cmDelete.Click += new System.EventHandler(this.cmDelete_Click);
 			// 
-			// CmNew
-			// 
-			this.CmNew.Index = 1;
-			this.CmNew.Text = "New";
-			this.CmNew.Click += new System.EventHandler(this.CmNew_Click);
-			// 
 			// PropertyMenu
 			// 
 			this.PropertyMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
@@ -319,6 +310,12 @@ namespace StoreBrowser
 			this.pcmEdit.Index = 2;
 			this.pcmEdit.Text = "Edit";
 			this.pcmEdit.Click += new System.EventHandler(this.pcmEdit_Click);
+			// 
+			// CmNew
+			// 
+			this.CmNew.Index = 1;
+			this.CmNew.Text = "New";
+			this.CmNew.Click += new System.EventHandler(this.CmNew_Click);
 			// 
 			// Form1
 			// 
@@ -349,24 +346,15 @@ namespace StoreBrowser
 		{
 			tView.Nodes.Clear();
 			richTextBox1.Clear();
-			FolderBrowserDialog fb = new FolderBrowserDialog();
-			if (path == null)
-				path = Configuration.GetConfiguration().StorePath;
 
-			// Reset the configuration and store instances.
-			Store.DeleteInstance();
-			Configuration.DisposeDefaultConfig();
+			HostDialog hDiag = new HostDialog();
+			hDiag.HostName = hostName;
 
-			fb.SelectedPath = path;
-			if (fb.ShowDialog() == DialogResult.OK)
+			if (hDiag.ShowDialog() == DialogResult.OK)
 			{
-                path = fb.SelectedPath;
-				if (Path.GetFileName(path) == "simias")
-				{
-					Configuration.CreateDefaultConfig( path );
-					browser = new NodeBrowser(tView, listView1);
-					browser.Show();
-				}
+				hostName = hDiag.HostName;
+				browser = new NodeBrowser(tView, listView1, hostName);
+				browser.Show();
 			}
 		}
 
@@ -374,22 +362,16 @@ namespace StoreBrowser
 		{
 			tView.Nodes.Clear();
 			richTextBox1.Clear();
-			FolderBrowserDialog fb = new FolderBrowserDialog();
+			richTextBox1.BringToFront();
 
-			// Reset the configuration and store instances.
-			Store.DeleteInstance();
-			Configuration.DisposeDefaultConfig();
+			HostDialog hDiag = new HostDialog();
+			hDiag.HostName = hostName;
 
-			fb.SelectedPath = path;
-			if (fb.ShowDialog() == DialogResult.OK)
+			if (hDiag.ShowDialog() == DialogResult.OK)
 			{
-				path = fb.SelectedPath;
-				if (Path.GetFileName(path) == "simias")
-				{
-					Configuration.CreateDefaultConfig( path );
-					browser = new ProviderBrowser(tView, richTextBox1);
-					browser.Show();
-				}
+				hostName = hDiag.HostName;
+				browser = new ProviderBrowser(tView, richTextBox1, hostName);
+				browser.Show();
 			}
 		}
 
@@ -429,9 +411,9 @@ namespace StoreBrowser
 			{
 				TreeNode tn = tView.GetNodeAt(e.X, e.Y);
 				tView.SelectedNode = tn;
-				if (tn.Tag == null || tn.Tag is Collection)
+				if (tn.Tag == null || ((DisplayNode)tn.Tag).IsCollection)
 				{
-					CmNew.Enabled = true;
+					CmNew.Enabled = false;
 				}
 				else
 				{
@@ -445,20 +427,43 @@ namespace StoreBrowser
 		{
 			tView.BeginUpdate();
 			TreeNode tn = tView.SelectedNode;
-			if (tn.Tag is Collection)
+			DisplayNode dspNode = (DisplayNode)tn.Tag;
+			if (dspNode != null)
 			{
-				Collection col = (Collection)tn.Tag;
-				col.Delete();
-				col.Commit();
-				tn.Remove();
+				if (dspNode.IsCollection)
+				{
+					try
+					{
+						DialogResult result = MessageBox.Show("Do you really want to delete this collection?", "Delete collection", MessageBoxButtons.YesNo);
+						if (result == DialogResult.Yes)
+						{
+							browser.StoreBrowser.DeleteCollection(dspNode.ID);
+							tn.Remove();
+						}
+					}
+					catch(Exception ex)
+					{
+						MessageBox.Show(ex.Message, "Error deleting collection");
+					}
+				}
+				else
+				{
+					try
+					{
+						DialogResult result = MessageBox.Show("Do you really want to delete this node?", "Delete node", MessageBoxButtons.YesNo);
+						if (result == DialogResult.Yes)
+						{
+							browser.StoreBrowser.DeleteNode(dspNode.CollectionID, dspNode.ID);
+							tn.Remove();
+						}
+					}
+					catch(Exception ex)
+					{
+						MessageBox.Show(ex.Message, "Error deleting node");
+					}
+				}
 			}
-			else if (tn.Tag is Node)
-			{
-				Collection col = (Collection)tn.Parent.Tag;
-				col.Delete((Node)tn.Tag);
-				col.Commit((Node)tn.Tag);
-				tn.Remove();
-			}
+
 			tView.EndUpdate();
 			tView.Update();
 		}
@@ -488,74 +493,95 @@ namespace StoreBrowser
 
 		private void pcmEdit_Click(object sender, System.EventArgs e)
 		{
-			Collection col;
-			Node node = (Node)tView.SelectedNode.Tag;
-			if (node is Collection)
-				col = (Collection)node;
-			else
-				col = (Collection)tView.SelectedNode.Parent.Tag;
-
-			ListView.SelectedListViewItemCollection itemList = listView1.SelectedItems;
-			if (itemList.Count == 1)
+			DisplayNode dspNode = (DisplayNode)tView.SelectedNode.Tag;
+			if (dspNode != null)
 			{
-				ListViewItem.ListViewSubItemCollection items = itemList[0].SubItems;
-				MultiValuedList mvList = node.Properties.GetProperties(items[0].Text);
-				Property property = null;
-				if (mvList.Count > 1)
+				ListView.SelectedListViewItemCollection itemList = listView1.SelectedItems;
+				if (itemList.Count == 1)
 				{
-					foreach (Property p in mvList)
+					ListViewItem.ListViewSubItemCollection items = itemList[0].SubItems;
+					foreach(DisplayProperty p in dspNode)
 					{
-						if (p.Value.ToString() == items[1].Text)
+						if ((p.Name == items[0].Text) && (p.Value == items[1].Text))
 						{
-							property = p;
+							try
+							{
+								new PropertyForm(browser.StoreBrowser, dspNode, p).ShowDialog();
+							}
+							catch(Exception ex)
+							{
+								MessageBox.Show(ex.Message, "Error editing node property");
+							}
 							break;
 						}
 					}
 				}
-				else
-				{
-					property = mvList[0];
-				}
 
-				new PropertyForm(col, node, property).Show();
+				// Get a refreshed node.
+				BrowserNode bn = browser.StoreBrowser.GetNodeByID(dspNode.CollectionID, dspNode.ID);
+				if (bn != null)
+				{
+					tView.SelectedNode.Tag = new DisplayNode(bn);
+					browser.ShowNode(tView.SelectedNode);
+					listView1.Refresh();
+				}
 			}
-			tView.SelectedNode.Tag = col.Refresh(node);
-			browser.ShowNode(tView.SelectedNode);
-			listView1.Refresh();
 		}
 
 		private void pcmNew_Click(object sender, System.EventArgs e)
 		{
-			Collection col;
-			Node node = (Node)tView.SelectedNode.Tag;
-			if (node is Collection)
-				col = (Collection)node;
-			else
-				col = (Collection)tView.SelectedNode.Parent.Tag;
-			new PropertyForm(col, node, null).ShowDialog();
-			tView.SelectedNode.Tag = col.Refresh(node);
-			listView1.Refresh();
-			browser.ShowNode(tView.SelectedNode);
+			DisplayNode dspNode = (DisplayNode)tView.SelectedNode.Tag;
+			if (dspNode != null)
+			{
+				new PropertyForm(browser.StoreBrowser, dspNode, null).ShowDialog();
+			}
+
+			// Get a refreshed node.
+			BrowserNode bn = browser.StoreBrowser.GetNodeByID(dspNode.CollectionID, dspNode.ID);
+			if (bn != null)
+			{
+				tView.SelectedNode.Tag = new DisplayNode(bn);
+				browser.ShowNode(tView.SelectedNode);
+				listView1.Refresh();
+			}
 		}
 
 		private void pcmDelete_Click(object sender, System.EventArgs e)
 		{
-			Collection col;
-			Node node = (Node)tView.SelectedNode.Tag;
-			if (node is Collection)
-				col = (Collection)node;
-			else
-				col = (Collection)tView.SelectedNode.Parent.Tag;
-			
-			ListView.SelectedListViewItemCollection itemList = listView1.SelectedItems;
-			foreach (ListViewItem item in itemList)
+			DisplayNode dspNode = (DisplayNode)tView.SelectedNode.Tag;
+			if (dspNode != null)
 			{
-				node.Properties.DeleteSingleProperty(item.Text);
-				col.Commit(node);
+				ListView.SelectedListViewItemCollection itemList = listView1.SelectedItems;
+				foreach (ListViewItem item in itemList)
+				{
+					ListViewItem.ListViewSubItemCollection subItems = item.SubItems;
+					foreach(DisplayProperty p in dspNode)
+					{
+						if ((p.Name == subItems[0].Text) && (p.Value == subItems[1].Text))
+						{
+							try
+							{
+								browser.StoreBrowser.DeleteProperty(dspNode.CollectionID, dspNode.ID, subItems[0].Text, subItems[2].Text, subItems[1].Text);
+							}
+							catch(Exception ex)
+							{
+								MessageBox.Show(ex.Message, "Error deleting node property");
+							}
+
+							break;
+						}
+					}
+				}
+
+				// Get a refreshed node.
+				BrowserNode bn = browser.StoreBrowser.GetNodeByID(dspNode.CollectionID, dspNode.ID);
+				if (bn != null)
+				{
+					tView.SelectedNode.Tag = new DisplayNode(bn);
+					browser.ShowNode(tView.SelectedNode);
+					listView1.Refresh();
+				}
 			}
-			tView.SelectedNode.Tag = col.Refresh(node);
-			listView1.Refresh();
-			browser.ShowNode(tView.SelectedNode);
 		}
 	}
 
@@ -564,5 +590,6 @@ namespace StoreBrowser
 		void Show();
 		void ShowNode(TreeNode node);
 		void AddChildren(TreeNode tNode);
+		Browser StoreBrowser { get; }
 	}
 }

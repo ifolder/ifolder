@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
-using Simias.Storage;
 
 namespace StoreBrowser
 {
@@ -12,9 +11,9 @@ namespace StoreBrowser
 	/// </summary>
 	public class PropertyForm : System.Windows.Forms.Form
 	{
-		private Collection collection;
-		private Node node;
-		private Property property;
+		private Browser browser;
+		private DisplayNode node;
+		private DisplayProperty property;
 		private System.Windows.Forms.Button bOK;
 		private System.Windows.Forms.Button bCancel;
 		public StoreBrowser.PropertyEditor propertyEditor;
@@ -23,9 +22,9 @@ namespace StoreBrowser
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
-		public PropertyForm(Collection col, Node node, Property property)
+		public PropertyForm(Browser browser, DisplayNode node, DisplayProperty property)
 		{
-			this.collection = col;
+			this.browser = browser;
 			this.node = node;
 			this.property = property;
 			
@@ -41,18 +40,18 @@ namespace StoreBrowser
 			{
 				propertyEditor.Name = property.Name;
 				propertyEditor.tbName.Enabled = false;
-				propertyEditor.Type = property.Type.ToString();
-				propertyEditor.Value = property.ToString();
+				propertyEditor.Type = property.Type;
+				propertyEditor.Value = property.Value;
 				propertyEditor.cbType.Enabled = false;
-				propertyEditor.Local = property.LocalProperty;
-				propertyEditor.MultiValued = property.MultiValuedProperty;
+				propertyEditor.Local = property.IsLocal;
+				propertyEditor.MultiValued = property.IsMultiValued;
 			}
 			else
 			{
 				propertyEditor.tbName.Enabled = true;
 				propertyEditor.Name = "";
 				propertyEditor.cbType.Enabled = true;
-				propertyEditor.Type = Syntax.String.ToString();
+				propertyEditor.Type = "String";
 				propertyEditor.Value = "";
 			}
 		}
@@ -131,80 +130,23 @@ namespace StoreBrowser
 
 		private void bOK_Click(object sender, System.EventArgs e)
 		{
-			Syntax pType;
-			object pValue = null;
-			pType = property == null ? (Syntax)Enum.Parse(typeof(Syntax), propertyEditor.Type) : property.Type;
-			
-			switch (pType)
+			string pType = (property == null) ? propertyEditor.Type : property.Type;
+			if (propertyEditor.Value != null)
 			{
-				case Syntax.Boolean:
-					pValue = Boolean.Parse(propertyEditor.Value);
-					break;
-				case Syntax.Byte:
-					pValue = Byte.Parse(propertyEditor.Value);
-					break;
-				case Syntax.Char:
-					pValue = Char.Parse(propertyEditor.Value);
-					break;
-				case Syntax.DateTime:
-					pValue = DateTime.Parse(propertyEditor.Value);
-					break;
-				case Syntax.Int16:
-					pValue = Int16.Parse(propertyEditor.Value);
-					break;
-				case Syntax.Int32:
-					pValue = Int32.Parse(propertyEditor.Value);
-					break;
-				case Syntax.Int64:
-					pValue = Int64.Parse(propertyEditor.Value);
-					break;
-				case Syntax.Relationship:
-					break;
-				case Syntax.SByte:
-					pValue = SByte.Parse(propertyEditor.Value);
-					break;
-				case Syntax.Single:
-					pValue = Single.Parse(propertyEditor.Value);
-					break;
-				case Syntax.String:
-					pValue = propertyEditor.Value;
-					break;
-				case Syntax.TimeSpan:
-					pValue = TimeSpan.Parse(propertyEditor.Value);
-					break;
-				case Syntax.UInt16:
-					pValue = UInt16.Parse(propertyEditor.Value);
-					break;
-				case Syntax.UInt32:
-					pValue = UInt32.Parse(propertyEditor.Value);
-					break;
-				case Syntax.UInt64:
-					pValue = UInt64.Parse(propertyEditor.Value);
-					break;
-				case Syntax.Uri:
-					pValue = new Uri(propertyEditor.Value);
-					break;
-				case Syntax.XmlDocument:
-					System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
-					doc.LoadXml(propertyEditor.Value);
-					pValue = doc;
-					break;
-			}
-			if (pValue != null)
-			{
+				uint flags = 0;
+				flags += propertyEditor.Local ? ( uint )0x00020000 : 0;
+				flags += propertyEditor.MultiValued ? ( uint )0x00040000 : 0;
+
 				if (property == null)
 				{
-					property = new Property(propertyEditor.Name, pValue);
+					browser.AddProperty(node.CollectionID, node.ID, propertyEditor.Name, pType, propertyEditor.Value, flags);
 				}
 				else
 				{
-					property.SetValue(pValue);
+					browser.ModifyProperty(node.CollectionID, node.ID, property.Name, property.Type, property.Value, propertyEditor.Value, flags);
 				}
-				property.LocalProperty = propertyEditor.Local;
-				property.MultiValuedProperty = propertyEditor.MultiValued;
-				node.Properties.ModifyProperty(property);
-				collection.Commit(node);
 			}
+
 			Close();
 		}
 
