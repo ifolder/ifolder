@@ -105,11 +105,9 @@ public class SynkerServiceA: SyncCollectionService
 	/// <summary>
 	/// start sync of this collection -- perform basic role checks and dredge server file system
 	/// </summary>
-	//public Access.Rights Start()
-	public int Start()
+	public Access.Rights Start()
 	{
 		Access.Rights rights = Access.Rights.Deny;
-
 		try
 		{
 			string userId = Thread.CurrentPrincipal.Identity.Name;
@@ -131,9 +129,7 @@ public class SynkerServiceA: SyncCollectionService
 			}
 		}
 		catch (Exception e) { Log.Uncaught(e); }
-		
-		//return rights;
-		return (int)rights;
+		return rights;
 	}
 
 	/// <summary>
@@ -322,7 +318,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 	/// </summary>
 	public override void DoSyncWork()
 	{
-		Access.Rights rights = (Access.Rights)ss.Start();
+		Access.Rights rights = ss.Start();
 
 		if (rights == Access.Rights.Deny)
 		{
