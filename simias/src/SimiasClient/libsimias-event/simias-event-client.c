@@ -62,12 +62,12 @@
 /* union semun is defined by including <sys/sem.h> */
 #else
 /* according to X/OPEN we have to define it ourselves */
-union semun {
-		int val;
-		struct semid_ds *buf;
-		unsigned short *array;
-		struct seminfo *__buf;
-};
+//union semun {
+//		int val;
+//		struct semid_ds *buf;
+//		unsigned short *array;
+///		struct seminfo *__buf;//
+//};
 #endif
 #endif /* DARWIN */
 
@@ -340,11 +340,8 @@ int sec_init (SimiasEventClient *sec,
 		ec->event_handlers [i] = NULL;
 	}
 	
-	/* Create a socket to communicate with the event server on */
-	if ((ec->event_socket = socket (PF_INET, SOCK_STREAM, 0)) < 0) {
-		perror ("sec: client event socket");
-		return -1;
-	}
+	/* moved code to create ec->event_socket into the sec_registerthread */
+
 	
 	DEBUG_SEC (("ec->event_socket: %d\n", ec->event_socket));
 	
@@ -871,10 +868,16 @@ sec_reg_thread (void *user_data)
 			return;
 		}
 		
+		/* Create a socket to communicate with the event server on */
+		if ((ec->event_socket = socket (PF_INET, SOCK_STREAM, 0)) < 0) {
+			perror ("sec: client event socket");
+			return NULL;
+		}
+		
 		/* Connect to the server */
 		if (connect (ec->event_socket, 
 					 (struct sockaddr *)&sin, 
-					 sizeof (sin)) == 0) {
+					 sizeof (struct sockaddr)) == 0) {
 			/* Determine what port the client is listening on (implicit bind) */
 			my_sin_addr_len = sizeof (struct sockaddr_in);
 			if (getsockname (ec->event_socket, 
@@ -918,6 +921,13 @@ sec_reg_thread (void *user_data)
 				}
 			}
 		} else {
+		
+			/* Close the old socket if it is still open */
+			if (ec->event_socket) {
+				close (ec->event_socket);
+				ec->event_socket = 0;
+			}
+			
 			/* FIXME: Handle the error here */
 			perror ("sec: connect");
 			
