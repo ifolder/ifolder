@@ -432,7 +432,7 @@ namespace Simias.Sync
 
 		internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(CollectionSyncClient));
 		EventPublisher	eventPublisher = new EventPublisher();
-		HttpSyncProxy		service;
+		HttpSyncProxy	service;
 		SyncWorkArray	workArray;
 		Store			store;
 		Collection		collection;
@@ -449,7 +449,7 @@ namespace Simias.Sync
 		static int		BATCH_SIZE = 50;
 		private const string	ServerCLContextProp = "ServerCLContext";
 		private const string	ClientCLContextProp = "ClientCLContext";
-		int				nodesToSync;
+		int				nodesToSync = 0;
 		static int		initialSyncDelay = 10 * 1000; // 10 seconds.
 		DateTime		syncStartTime; // Time stamp when sync was called.
 		const int		timeSlice = 3; //Timeslice in minutes.
@@ -546,6 +546,10 @@ namespace Simias.Sync
 				else if (!serverAlive)
 				{
 					seconds = 10;
+				}
+				else if (workArray.Count != 0 && nodesToSync > workArray.Count)
+				{
+					seconds = 0;
 				}
 				else 
 				{
@@ -1054,7 +1058,6 @@ namespace Simias.Sync
 		private void ExecuteSync()
 		{
 			nodesToSync = workArray.Count;
-
 			if (workArray.DownCount != 0)
 			{
 				// Get the updates from the server.

@@ -341,6 +341,8 @@ namespace Simias.Sync
 				// Check to see if we have a partially downloaded file to delta sync with.
 				if (collection.Role == SyncRoles.Slave && File.Exists(workFile))
 				{
+					if (File.Exists(partialFile))
+						File.Delete(partialFile);
 					partialFile = workFile + ".part";
 					File.Move(workFile, partialFile);
 					stream = File.Open(partialFile, FileMode.Open, FileAccess.Read, FileShare.None);
