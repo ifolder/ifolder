@@ -30,12 +30,14 @@
 
 // Forward Declarations
 @class LoginWindowController;
+@class iFolderPrefsController;
 @class SyncLogWindowController;
 @class CreateiFolderSheetController;
 
 @interface MainWindowController : NSWindowController
 {
 	LoginWindowController					*loginController;
+	iFolderPrefsController					*prefsController;
 	iFolderService							*webService;
 	NSMutableArray							*domains;
 	NSMutableArray							*ifolders;
@@ -46,13 +48,15 @@
 	
 	iFolder					*selectediFolder;	
 	NSToolbar				*toolbar;
-	NSMutableDictionary		*items;
+	NSMutableDictionary		*toolbarItems;
+	NSMutableArray			*toolbarItemKeys;
 }
 
 - (IBAction)showLoginWindow:(id)sender;
 - (IBAction)showSyncLog:(id)sender;
 - (IBAction)refreshWindow:(id)sender;
 
+- (IBAction)showPrefs:(id)sender;
 
 - (void)login:(NSString *)username withPassword:(NSString *)password toServer:(NSString *)server;
 - (void)createiFolder:(NSString *)path inDomain:(NSString *)domainID;

@@ -2,6 +2,13 @@
 
 @implementation SyncLogWindowController
 
+-(void)awakeFromNib
+{
+	[super setShouldCascadeWindows:NO];
+	[super setWindowFrameAutosaveName:@"ifolder_log_window"];
+}
+
+
 - (IBAction)clearLog:(id)sender
 {
 }

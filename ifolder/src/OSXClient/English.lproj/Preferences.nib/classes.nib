@@ -1,0 +1,12 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = iFolderPrefsController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {accountsView = NSView; blankView = NSView; generalView = NSView; }; 
+            SUPERCLASS = NSWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}

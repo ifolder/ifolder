@@ -24,6 +24,7 @@
 #import "MainWindowController.h"
 #import "SyncLogWindowController.h"
 #import "LoginWindowController.h"
+#import "iFolderPrefsController.h"
 #include "SimiasEventHandlers.h"
 
 
@@ -43,7 +44,8 @@
 - (void)dealloc
 {
 	[toolbar release];
-	[items release];	
+	[toolbarItems release];	
+	[toolbarItemKeys release];	
     [super dealloc];
 }
 
@@ -53,6 +55,9 @@
 -(void)awakeFromNib
 {
 	[self setupToolbar];
+
+	[super setShouldCascadeWindows:NO];
+	[super setWindowFrameAutosaveName:@"ifolder_window"];
 
 /*
     int i;
@@ -110,16 +115,23 @@
 
 		// if we have less than two domains, we don't have enterprise
 		// so we better ask the user to login
+/*
 		if([newDomains count] < 2)
 			[self showLoginWindow:self];
 		else
+		{
 			[self showWindow:self];
+		}
+*/
 	}
 	@catch (NSException *e)
 	{
 		[self addLog:@"Reading domains failed with exception"];
-		[self showWindow:self];
 	}
+
+	// Show the main iFolder window
+	// fix this so it uses prefs from last time run
+	[self showWindow:self];
 }
 
 
@@ -161,6 +173,18 @@
 	[[loginController window] center];
 	[loginController showWindow:self];
 }
+
+
+- (IBAction)showPrefs:(id)sender
+{
+	if(prefsController == nil)
+	{
+		prefsController = [[iFolderPrefsController alloc] initWithWindowNibName:@"Preferences"];
+	}
+	
+	[prefsController showWindow:self];
+}
+
 
 
 - (IBAction)showSyncLog:(id)sender
@@ -278,19 +302,19 @@
 	itemForItemIdentifier:(NSString *)itemIdentifier
 	willBeInsertedIntoToolbar:(BOOL)flag
 {
-	return[items objectForKey:itemIdentifier];
+	return[toolbarItems objectForKey:itemIdentifier];
 }
 
 
 - (int)count
 {
-	return [items count];
+	return [toolbarItems count];
 }
 
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar
 {
-	return [items allKeys];
+	return toolbarItemKeys;
 }
 
 
@@ -298,28 +322,9 @@
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
 {
-	return [[items allKeys] subarrayWithRange:NSMakeRange(0,1)];
+	return [toolbarItemKeys subarrayWithRange:NSMakeRange(0,2)];
 }
 
-
-
-
-- (void)toolbarWillAddItem:(NSNotification *)notification
-{
-	NSToolbarItem *addedItem = [[notification userInfo] objectForKey:@"item"];
-
-	// setup associated info here
-}
-
-
-
-
-- (void)toolbarDidRemoveItem:(NSNotification *)notification
-{
-	NSToolbarItem *addedItem = [[notification userInfo] objectForKey:@"item"];
-
-	// clear associated info here
-}
 
 
 
@@ -345,7 +350,8 @@
 
 - (void)setupToolbar
 {
-	items = [[NSMutableDictionary alloc] init];
+	toolbarItems =		[[NSMutableDictionary alloc] init];
+	toolbarItemKeys =	[[NSMutableArray alloc] init];
 
 	// New iFolder ToolbarItem
 	NSToolbarItem *item=[[NSToolbarItem alloc] initWithItemIdentifier:@"New iFolder"];
@@ -355,9 +361,20 @@
     [item setTarget:createSheetController]; // what should happen when it's clicked
     [item setAction:@selector(showWindow:)];
 	[item setImage:[NSImage imageNamed:@"ifolder-new"]];
-    [items setObject:item forKey:@"New iFolder"]; // add to toolbar list
+    [toolbarItems setObject:item forKey:@"New iFolder"]; // add to toolbar list
+	[toolbarItemKeys addObject:@"New iFolder"];
 	[item release];
 
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Revert iFolder"];
+	[item setPaletteLabel:@"Revert to normal folder"]; // name for the "Customize Toolbar" sheet
+	[item setLabel:@"Revert iFolder"]; // name for the item in the toolbar
+	[item setToolTip:@"Revert to a normal folder"]; // tooltip
+    [item setTarget:createSheetController]; // what should happen when it's clicked
+    [item setAction:@selector(showWindow:)];
+	[item setImage:[NSImage imageNamed:@"ifolderonserver24"]];
+    [toolbarItems setObject:item forKey:@"Revert iFolder"]; // add to toolbar list
+	[toolbarItemKeys addObject:@"Revert iFolder"];
+	[item release];
 
 	toolbar = [[NSToolbar alloc] initWithIdentifier:@"iFolderToolbar"];
 	[toolbar setDelegate:self];
