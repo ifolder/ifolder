@@ -15,7 +15,7 @@
                 DefaultHTMLPageLayout = "Grid"
                 DefaultTargetSchema = "IE50"
                 DelaySign = "false"
-                OutputType = "Exe"
+                OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
                 RootNamespace = "Simias.Event"

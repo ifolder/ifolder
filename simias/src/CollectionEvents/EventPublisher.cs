@@ -51,8 +51,8 @@ namespace Simias.Event
 		public EventPublisher(Configuration conf)
 		{
 			this.conf = conf;
-			if (EventBroker.RegisterClientChannel(conf))
-				broker = new EventBroker();
+			//if (EventBroker.RegisterClientChannel(conf))
+				broker = EventBroker.GetBroker(conf); //new EventBroker();
 		}
 
 		#endregion
@@ -69,9 +69,9 @@ namespace Simias.Event
 			{
 				if (broker == null)
 				{
-					if (EventBroker.RegisterClientChannel(conf))
+					//if (EventBroker.RegisterClientChannel(conf))
 					{
-						broker = new EventBroker();
+						broker = EventBroker.GetBroker(conf); //new EventBroker();
 						broker.RaiseEvent(args);
 					}
 				}
@@ -80,7 +80,7 @@ namespace Simias.Event
 					broker.RaiseEvent(args);
 				}
 			}
-			catch{}
+			catch {}
 		}
 
 		#endregion

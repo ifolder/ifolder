@@ -63,7 +63,6 @@ namespace Simias.Event
 		{
 			serviceManager = new Manager(conf);
 			serviceManager.StartServices();
-			Thread.Sleep(500);
 			publish();
 			subscribe();
 		}
@@ -177,8 +176,15 @@ namespace Simias.Event
 		[Test]
 		public void NodeChangeTest()
 		{
-			args = null;
-			publisher.RaiseEvent(new NodeEventArgs("CollectionEventsTests", "1", collection, "Node", EventType.NodeChanged));
+			try
+			{
+				args = null;
+				publisher.RaiseEvent(new NodeEventArgs("CollectionEventsTests", "1", collection, "Node", EventType.NodeChanged));
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+			}
 			if (!recievedCallback)
 			{
 				throw new ApplicationException("Failed test");

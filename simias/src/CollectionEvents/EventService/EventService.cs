@@ -35,36 +35,40 @@ namespace Simias.Event
 	/// <summary>
 	/// Summary description for Class1.
 	/// </summary>
-	class EventService : BaseProcessService
+	class EventService : IThreadService //BaseProcessService
 	{
+		Configuration conf;
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
-		static void Main()
+		/*static void Main()
 		{
 			EventService service = new EventService();
 			service.Run();
 		}
-
-		protected override void Start()
+*/
+		public /*protected override*/ void Start(Configuration conf)
 		{
-			EventBroker.RegisterService(GetConfiguration());
+			this.conf = conf;
+			//EventBroker.RegisterService(GetConfiguration());
+			EventBroker.RegisterService(conf);
 		}
 
-		protected override void Stop()
+		public /*protected override*/ void Stop()
 		{
-			EventBroker.DeRegisterService(GetConfiguration());
+			//EventBroker.DeRegisterService(GetConfiguration());
+			EventBroker.DeRegisterService(conf);
 		}
 
-		protected override void Pause()
-		{
-		}
-
-		protected override void Resume()
+		public /*protected override*/ void Pause()
 		{
 		}
 
-		protected override void Custom(int message, string data)
+		public /*protected override*/ void Resume()
+		{
+		}
+
+		public /*protected override*/ void Custom(int message, string data)
 		{
 		}
 	}

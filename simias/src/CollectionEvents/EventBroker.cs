@@ -168,6 +168,18 @@ namespace Simias.Event
 		private const string CFG_Uri = "tcp://localhost/EventBroker";
 		private const string channelName = "SimiasEventChannel";
 
+		public static EventBroker GetBroker(Configuration conf)
+		{
+			string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
+			if (new Uri(serviceUri).Port == -1)
+			{
+				return null;
+			}
+			EventBroker.RegisterClientChannel(conf);
+				
+			return (EventBroker)Activator.GetObject(typeof(EventBroker), serviceUri);
+		}
+
 		/// <summary>
 		/// Method to register a client channel.
 		/// </summary>
@@ -177,45 +189,22 @@ namespace Simias.Event
 			{
 				if (!clientRegistered)
 				{
-					string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
-                    bool registered = false;
-					if (new Uri(serviceUri).Port == -1)
-					{
-						return (clientRegistered);
-					}
-						
-					WellKnownClientTypeEntry [] cta = RemotingConfiguration.GetRegisteredWellKnownClientTypes();
-					foreach (WellKnownClientTypeEntry ct in cta)
-					{
-						Type t = typeof(EventBroker);
-						Type t1 = ct.ObjectType;
-						if (Type.Equals(t, t1))
-						{
-							registered = true;
-							break;
-						}
-					}
-					if (!registered)
-					{
-						Hashtable props = new Hashtable();
-						props["port"] = 0;
+					Hashtable props = new Hashtable();
+					props["port"] = 0;
 
-						BinaryServerFormatterSinkProvider
-							serverProvider = new BinaryServerFormatterSinkProvider();
-						BinaryClientFormatterSinkProvider
-							clientProvider = new BinaryClientFormatterSinkProvider();
+					BinaryServerFormatterSinkProvider
+						serverProvider = new BinaryServerFormatterSinkProvider();
+					BinaryClientFormatterSinkProvider
+						clientProvider = new BinaryClientFormatterSinkProvider();
 #if !MONO
-						serverProvider.TypeFilterLevel =
-							System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
+					serverProvider.TypeFilterLevel =
+						System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
 #endif
-						TcpChannel chan = new
-							TcpChannel(props,clientProvider,serverProvider);
-						ChannelServices.RegisterChannel(chan);
+					TcpChannel chan = new
+						TcpChannel(props,clientProvider,serverProvider);
+					ChannelServices.RegisterChannel(chan);
 
-							//ChannelServices.RegisterChannel(new TcpChannel());
-						RemotingConfiguration.RegisterWellKnownClientType(typeof(EventBroker), serviceUri);
 						clientRegistered = true;
-					}
 				}
 			}
 			return clientRegistered;
@@ -259,6 +248,7 @@ namespace Simias.Event
 					service = sUri.Scheme + Uri.SchemeDelimiter + "localhost:" + sUri.Port + sUri.AbsolutePath;
 				}
 				serviceRegistered = true;
+				clientRegistered = true;
 				conf.Set(CFG_Section, CFG_UriKey, service);
 			}
 		}
@@ -310,40 +300,9 @@ namespace Simias.Event
 		#region Events
 
 		/// <summary>
-		/// Delegate to handle Collection Creations.
-		/// A Node or Collection has been created.
+		/// Delegate to handle Collection Events.
 		/// </summary>
-		public event NodeEventHandler NodeCreated;
-		/// <summary>
-		/// Delegate to handle Collection Deletions.
-		/// A Node or Collection has been deleted.
-		/// </summary>
-		public event NodeEventHandler NodeDeleted;
-		/// <summary>
-		/// Delegate to handle Collection Changes.
-		/// A Node or Collection modification.
-		/// </summary>
-		public event NodeEventHandler NodeChanged;
-		/// <summary>
-		/// Delegate to handle Collection Root Path changes.
-		/// </summary>
-		public event CollectionRootChangedHandler CollectionRootChanged;
-		/// <summary>
-		/// Delegate to handle File Creations.
-		/// </summary>
-		public event FileEventHandler FileCreated;
-		/// <summary>
-		/// Delegate to handle File Deletions.
-		/// </summary>
-		public event FileEventHandler FileDeleted;
-		/// <summary>
-		/// Delegate to handle Files Changes.
-		/// </summary>
-		public event FileEventHandler FileChanged;
-		/// <summary>
-		/// Delegate to handle File Renames.
-		/// </summary>
-		public event FileRenameEventHandler FileRenamed;
+		public event CollectionEventHandler CollectionEvent;
 		
 		#endregion
 
@@ -378,7 +337,7 @@ namespace Simias.Event
 			alreadyDisposed = false;
 			this.conf = conf;
 			count = 0;
-			if (EventBroker.RegisterClientChannel(conf))
+			//if (EventBroker.RegisterClientChannel(conf))
 				setupBroker();
 			// Start a thread to handle events.
 			eventQueue = new Queue();
@@ -395,7 +354,7 @@ namespace Simias.Event
 
 		void setupBroker()
 		{
-			broker = new EventBroker();
+			broker = EventBroker.GetBroker(conf);
 			broker.CollectionEvent += new CollectionEventHandlerS(OnCollectionEventS);
 		}
 
@@ -492,40 +451,13 @@ namespace Simias.Event
 						if (eventQueue.Count > 0)
 						{
 							args = (CollectionEventArgs)eventQueue.Dequeue();
+							callDelegate(args);
 						}
 						else
 						{
 							queued.Reset();
 							continue;
 						}
-					}
-
-					switch (args.ChangeType)
-					{
-						case EventType.NodeCreated:
-							callNodeDelegate(NodeCreated, (NodeEventArgs)args);
-							break;
-						case EventType.NodeDeleted:
-							callNodeDelegate(NodeDeleted, (NodeEventArgs)args);
-							break;
-						case EventType.NodeChanged:
-							callNodeDelegate(NodeChanged, (NodeEventArgs)args);
-							break;
-						case EventType.CollectionRootChanged:
-							callCrcDelegate((CollectionRootChangedEventArgs)args);
-							break;
-						case EventType.FileCreated:
-							callFileDelegate(FileCreated, (FileEventArgs)args);
-							break;
-						case EventType.FileDeleted:
-							callFileDelegate(FileDeleted, (FileEventArgs)args);
-							break;
-						case EventType.FileChanged:
-							callFileDelegate(FileChanged, (FileEventArgs)args);
-							break;
-						case EventType.FileRenamed:
-							callFileRenDelegate((FileRenameEventArgs)args);
-							break;
 					}
 				}
 				catch {}
@@ -536,12 +468,12 @@ namespace Simias.Event
 
 		#region Delegate Invokers
 
-		void callNodeDelegate(NodeEventHandler eHandler, NodeEventArgs args)
+		void callDelegate(CollectionEventArgs args)
 		{
-			if (eHandler != null)
+			if (CollectionEvent != null)
 			{
-				Delegate[] cbList = eHandler.GetInvocationList();
-				foreach (NodeEventHandler cb in cbList)
+				Delegate[] cbList = CollectionEvent.GetInvocationList();
+				foreach (CollectionEventHandler cb in cbList)
 				{
 					try 
 					{ 
@@ -550,92 +482,7 @@ namespace Simias.Event
 					catch 
 					{
 						// Remove the offending delegate.
-						switch (args.ChangeType)
-						{
-							case EventType.NodeCreated:
-								NodeCreated -= cb;
-								break;
-							case EventType.NodeDeleted:
-								NodeDeleted -= cb;
-								break;
-							case EventType.NodeChanged:
-								NodeChanged -= cb;
-								break;
-						}
-						MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
-					}
-				}
-			}
-		}
-
-		void callCrcDelegate(CollectionRootChangedEventArgs args)
-		{
-			if (CollectionRootChanged != null)
-			{
-				Delegate[] cbList = CollectionRootChanged.GetInvocationList();
-				foreach (CollectionRootChangedHandler cb in cbList)
-				{
-					try 
-					{ 
-						cb(args);
-					}
-					catch 
-					{
-						// Remove the offending delegate.
-						CollectionRootChanged -= cb;
-						MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
-					}
-				}
-			}
-		}
-
-		void callFileDelegate(FileEventHandler eHandler, FileEventArgs args)
-		{
-			if (eHandler != null)
-			{
-				Delegate[] cbList = eHandler.GetInvocationList();
-				foreach (FileEventHandler cb in cbList)
-				{
-					try 
-					{ 
-						cb(args);
-					}
-					catch 
-					{
-						// Remove the offending delegate.
-						switch (args.ChangeType)
-						{
-							case EventType.FileCreated:
-								FileCreated -= cb;
-								break;
-							case EventType.FileDeleted:
-								FileDeleted -= cb;
-								break;
-							case EventType.FileChanged:
-								FileChanged -= cb;
-								break;
-						}
-						MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
-					}
-				}
-			}
-		}
-
-		void callFileRenDelegate(FileRenameEventArgs args)
-		{
-			if (FileRenamed != null)
-			{
-				Delegate[] cbList = FileRenamed.GetInvocationList();
-				foreach (FileRenameEventHandler cb in cbList)
-				{
-					try 
-					{ 
-						cb(args);
-					}
-					catch 
-					{
-						// Remove the offending delegate.
-						FileRenamed -= cb;
+						CollectionEvent -= cb;
 						MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
 					}
 				}
