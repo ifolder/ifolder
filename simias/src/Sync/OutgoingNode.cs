@@ -73,13 +73,15 @@ internal class OutgoingNode
 		 * GetNodeByID in case it is a Collection node which is not
 		 * serializable (but a raw node is).
 		 */
-		Node node = new Node(collection.GetNodeByID(nid));
+		Node node = collection.GetNodeByID(nid);
 		if (node == null)
 		{
 			Log.Spew("ignoring attempt to start outgoing sync for non-existent node {0}", nid);
 			return null;
 		}
 
+		node = new Node(node);
+		
 		string path = GetOutNode(collection, ref node);
 		if (path != null)
 		{
