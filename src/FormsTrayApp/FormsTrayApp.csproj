@@ -104,6 +104,11 @@
                     AssemblyName = "iFolderComponent"
                     HintPath = "..\iFolderShell\iFolderComponent.dll"
                 />
+                <Reference
+                    Name = "Novell.AddressBook"
+                    AssemblyName = "Novell.AddressBook"
+                    HintPath = "..\..\..\addressbook\src\AddressBook\Novell.AddressBook.dll"
+                />
             </References>
         </Build>
         <Files>

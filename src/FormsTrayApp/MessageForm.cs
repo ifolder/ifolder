@@ -27,9 +27,11 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
+using System.Diagnostics;
 using Simias;
 using Simias.Storage;
 using Simias.POBox;
+using Novell.AddressBook;
 
 namespace Novell.iFolder.FormsTrayApp
 {
@@ -38,13 +40,19 @@ namespace Novell.iFolder.FormsTrayApp
 	/// </summary>
 	public class MessageForm : System.Windows.Forms.Form
 	{
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(MessageForm));
 		private POBox poBox = null;
 		private Store store = null;
+		private Configuration config;
+		private Manager abManager;
 		private System.Windows.Forms.ComboBox comboBox1;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ColumnHeader columnHeader1;
 		private System.Windows.Forms.ListView messages;
 		private System.Windows.Forms.ColumnHeader columnHeader2;
+		private System.Windows.Forms.Button accept;
+		private System.Windows.Forms.Button decline;
+		private System.Windows.Forms.Button remove;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -58,6 +66,8 @@ namespace Novell.iFolder.FormsTrayApp
 			InitializeComponent();
 
 			Configuration config = new Configuration();
+			abManager = Manager.Connect(config);
+
 			store = new Store(config);
 
 			// TODO: pass in correct domain ... for now just use the default.
@@ -107,26 +117,38 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			this.messages = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.comboBox1 = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
-			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+			this.accept = new System.Windows.Forms.Button();
+			this.decline = new System.Windows.Forms.Button();
+			this.remove = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// messages
 			// 
+			this.messages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+				| System.Windows.Forms.AnchorStyles.Left) 
+				| System.Windows.Forms.AnchorStyles.Right)));
 			this.messages.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
 																					   this.columnHeader1,
 																					   this.columnHeader2});
 			this.messages.Location = new System.Drawing.Point(16, 112);
 			this.messages.Name = "messages";
-			this.messages.Size = new System.Drawing.Size(480, 232);
+			this.messages.Size = new System.Drawing.Size(424, 280);
 			this.messages.TabIndex = 0;
 			this.messages.View = System.Windows.Forms.View.Details;
+			this.messages.SelectedIndexChanged += new System.EventHandler(this.messages_SelectedIndexChanged);
 			// 
 			// columnHeader1
 			// 
 			this.columnHeader1.Text = "Name";
 			this.columnHeader1.Width = 125;
+			// 
+			// columnHeader2
+			// 
+			this.columnHeader2.Text = "State";
+			this.columnHeader2.Width = 92;
 			// 
 			// comboBox1
 			// 
@@ -145,18 +167,50 @@ namespace Novell.iFolder.FormsTrayApp
 			this.label1.TabIndex = 3;
 			this.label1.Text = "Domain:";
 			// 
-			// columnHeader2
+			// accept
 			// 
-			this.columnHeader2.Text = "State";
-			this.columnHeader2.Width = 92;
+			this.accept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.accept.Enabled = false;
+			this.accept.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.accept.Location = new System.Drawing.Point(16, 400);
+			this.accept.Name = "accept";
+			this.accept.TabIndex = 4;
+			this.accept.Text = "Accept";
+			this.accept.Click += new System.EventHandler(this.accept_Click);
+			// 
+			// decline
+			// 
+			this.decline.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.decline.Enabled = false;
+			this.decline.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.decline.Location = new System.Drawing.Point(96, 400);
+			this.decline.Name = "decline";
+			this.decline.TabIndex = 5;
+			this.decline.Text = "Decline";
+			this.decline.Click += new System.EventHandler(this.decline_Click);
+			// 
+			// remove
+			// 
+			this.remove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.remove.Enabled = false;
+			this.remove.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.remove.Location = new System.Drawing.Point(365, 400);
+			this.remove.Name = "remove";
+			this.remove.TabIndex = 6;
+			this.remove.Text = "Remove";
+			this.remove.Click += new System.EventHandler(this.remove_Click);
 			// 
 			// MessageForm
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(512, 454);
+			this.ClientSize = new System.Drawing.Size(456, 430);
+			this.Controls.Add(this.remove);
+			this.Controls.Add(this.decline);
+			this.Controls.Add(this.accept);
 			this.Controls.Add(this.comboBox1);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.messages);
+			this.MinimumSize = new System.Drawing.Size(336, 368);
 			this.Name = "MessageForm";
 			this.Text = "Messages";
 			this.Load += new System.EventHandler(this.MessageForm_Load);
@@ -171,15 +225,20 @@ namespace Novell.iFolder.FormsTrayApp
 		#region Event Handlers
 		private void MessageForm_Load(object sender, System.EventArgs e)
 		{
+			// Load the application icon.
 			try
 			{
-				string basePath = Path.Combine(Application.StartupPath, "res");
-				messages.SmallImageList = new ImageList();
-				messages.SmallImageList.Images.Add(Image.FromFile(Path.Combine(basePath, "mail_closed.ico")));
-				messages.SmallImageList.Images.Add(Image.FromFile(Path.Combine(basePath, "mail_opened.ico")));
-			}
-			catch {}
+				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"Invitation.ico"));
 
+				messages.SmallImageList = new ImageList();
+				messages.SmallImageList.Images.Add(Image.FromFile(Path.Combine(Application.StartupPath, "Invitation.ico")));
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "Loading graphics");
+			}
+
+			config = new Configuration();
 //			ICSList msgList = this.poBox.GetMessagesByMessageType(Simias.POBox.Message.OutboundMessage);
 
 			ICSList msgList = poBox.GetNodesByType(typeof(Subscription).Name);
@@ -189,11 +248,82 @@ namespace Novell.iFolder.FormsTrayApp
 			{
 				Subscription sub = new Subscription(poBox, sn);
 				string[] items = new string[]{sub.Name, sub.SubscriptionState.ToString()};
-				ListViewItem lvi = new ListViewItem(items, (int)sub.State);
+				ListViewItem lvi = new ListViewItem(items, 0);
 				lvi.Tag = sub;
 				messages.Items.Add(lvi);
 			}
 			messages.EndUpdate();
+		}
+
+		private void messages_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			// TODO: for now, we only care about the accept button.
+			if (messages.SelectedItems.Count > 0)
+			{
+				if (messages.SelectedItems.Count == 1)
+				{
+					Subscription sub = (Subscription)messages.SelectedItems[0].Tag;
+					if ((sub.SubscriptionState == SubscriptionStates.Received) ||
+						(sub.SubscriptionState == SubscriptionStates.Pending))
+					{
+						accept.Enabled = true;
+					}
+				}
+				else
+				{
+					accept.Enabled = false;
+				}
+			}
+			else
+			{
+				accept.Enabled = decline.Enabled = remove.Enabled = false;
+			}
+		}
+
+		private void accept_Click(object sender, System.EventArgs e)
+		{
+			ListViewItem lvi = messages.SelectedItems[0];
+			Subscription sub = (Subscription)lvi.Tag;
+			if (sub.SubscriptionState == SubscriptionStates.Received)
+			{
+				Process.Start(Path.Combine(Application.StartupPath, "InvitationWizard.exe"), "/ID=" + sub.ID + ":" + sub.DomainID);
+			}
+			else
+			{
+				Member member = sub.Accept(store, sub.SubscriptionRights);
+
+				if (sub.DomainID == Domain.WorkGroupDomainID)
+				{
+					// Take the relationship off the Subsription object
+					Property property = sub.Properties.GetSingleProperty("Contact");
+					if (property != null)
+					{
+						Relationship relationship = (Relationship)property.Value;
+
+						// Get the contact from the relationship.
+						Novell.AddressBook.AddressBook ab = this.abManager.GetAddressBook(relationship.CollectionID);
+						Contact contact = ab.GetContact(relationship.NodeID);
+
+						// Put the Member userID into the Contact userID.
+						contact.UserID = member.UserID;
+						ab.Commit(contact);
+					}
+				}
+
+				poBox.Commit(sub);
+
+				lvi.SubItems[1].Text = sub.SubscriptionState.ToString();
+			}
+
+			accept.Enabled = false;
+		}
+
+		private void decline_Click(object sender, System.EventArgs e)
+		{
+		}
+
+		private void remove_Click(object sender, System.EventArgs e)
+		{
 		}
 		#endregion
 	}

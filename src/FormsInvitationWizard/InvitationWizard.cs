@@ -70,9 +70,13 @@ namespace Novell.iFolder.InvitationWizard
 		internal const int maxPages = 5;
 		private int currentIndex = 0;
 		private SubscriptionInfo subInfo;
-		private Subscription subscription;
-		private string invitationFile;
+		private Subscription subscription = null;
+		private string invitationFile = "";
+		private string domainID;
+		private string subscriptionID;
+		private bool subscriptionMode = false;
 		private Store store;
+		private POBox poBox = null;
 
 		/// <summary>
 		/// Required designer variable.
@@ -80,7 +84,7 @@ namespace Novell.iFolder.InvitationWizard
 		private System.ComponentModel.Container components = null;
 		#endregion
 
-		public InvitationWizard(string invitationFile)
+		public InvitationWizard(string[] args)
 		{
 			//
 			// Required for Windows Form Designer support
@@ -166,13 +170,13 @@ namespace Novell.iFolder.InvitationWizard
 			pages[4] = this.completionPage;
 
 			// Set the current directory to the install directory.
-			string[] args = Environment.GetCommandLineArgs();
-			Directory.SetCurrentDirectory(Path.GetDirectoryName(args[0]));
+//			string[] args = Environment.GetCommandLineArgs();
+//			Directory.SetCurrentDirectory(Path.GetDirectoryName(args[0]));
 
 			try
 			{
 				// Load the watermark.
-				Image image = Image.FromFile("invitewiz.png");
+				Image image = Image.FromFile(Path.Combine(Application.StartupPath, "invitewiz.png"));
 				this.welcomePage.Watermark = image;
 				this.completionPage.Watermark = image;
 			}
@@ -189,7 +193,27 @@ namespace Novell.iFolder.InvitationWizard
 			// Activate the first wizard page.
 			pages[0].ActivatePage(0);
 
-			this.invitationFile = invitationFile;
+			if (args.Length > 0)
+			{
+				string arg = "/ID=";
+				if (args[0].StartsWith(arg))
+				{
+					subscriptionMode = true;
+
+					string tmp = args[0].Substring(arg.Length);
+
+					int index = tmp.IndexOf( ':' );
+					if ( index != -1 )
+					{
+						subscriptionID = tmp.Substring( 0, index );
+						domainID = tmp.Substring( index + 1 );
+					}
+				}
+				else
+				{
+					this.invitationFile = args[0];
+				}
+			}
 
 //			this.selectInvitationPage.Hide();
 //			this.selectiFolderLocationPage.Hide();
@@ -292,14 +316,7 @@ namespace Novell.iFolder.InvitationWizard
 		[STAThread]
 		static void Main(string[] args) 
 		{
-			string invitationFile = "";
-
-			if (args.Length > 0)
-			{
-				invitationFile = args[0].ToString();
-			}
-
-			Application.Run(new InvitationWizard(invitationFile));
+			Application.Run(new InvitationWizard(args));
 		}
 
 		#region Event Handlers
@@ -307,7 +324,13 @@ namespace Novell.iFolder.InvitationWizard
 		{
 			store = new Store(new Configuration());
 
-			if (this.invitationFile != "")
+			if (subscriptionMode)
+			{
+				poBox = POBox.GetPOBox(store, domainID);
+				Node node = poBox.GetNodeByID(subscriptionID);
+				subscription = new Subscription(node);				
+			}
+			else if (this.invitationFile != "")
 			{
 				try
 				{
@@ -340,7 +363,10 @@ namespace Novell.iFolder.InvitationWizard
 				try
 				{
 					subscription.Accept(store, acceptDeclinePage.Accept ? SubscriptionDispositions.Accepted : SubscriptionDispositions.Declined);
-					POBox poBox = POBox.GetPOBox(store, subscription.DomainID);
+					if (poBox == null)
+					{
+						poBox = POBox.GetPOBox(store, subscription.DomainID);
+					}
 					poBox.Commit(subscription);
 				}
 				catch (SimiasException ex)
