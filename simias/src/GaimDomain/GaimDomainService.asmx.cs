@@ -86,35 +86,33 @@ namespace Simias.Gaim.DomainService
 			return info;
 		}
 
-		internal Member FindBuddyInRoster(Simias.Storage.Roster roster,
-										  string accountName, string accountProto, string buddyName)
+		internal Member FindBuddyInRoster(Simias.Storage.Roster roster, string accountName,
+										  string accountProto, string buddyName)
 		{
 			// Check to see if the buddy already exists
 			Member member = null;
-			ICSList rosterMembers = roster.GetMemberList();
+			string buddyMungedID = GetGaimMungedID(accountName, accountProto, buddyName);
+			ICSList rosterMembers = roster.GetNodesByName(buddyName);
 			foreach (ShallowNode sNode in rosterMembers)
 			{
 				Simias.Storage.Member aMember =	
 					new Simias.Storage.Member(roster, sNode);
-
-				if (buddyName == aMember.Name)
+					
+				Simias.Storage.PropertyList pList = aMember.Properties;
+				Simias.Storage.Property p = pList.GetSingleProperty("Gaim:MungedID");
+				if (p != null && ((string) p.Value) == buddyMungedID)
 				{
-					// Make sure the accountName and accountProtocol match
-					Simias.Storage.PropertyList pList = aMember.Properties;
-					Simias.Storage.Property prop = pList.GetSingleProperty("Gaim:AccountName");
-					if (prop != null && ((string) prop.Value) == accountName)
-					{
-						prop = pList.GetSingleProperty("Gaim:AccountProto");
-						if (prop != null && ((string) prop.Value) == accountProto)
-						{
-							member = aMember;
-							break;
-						}
-					}
+					member = aMember;
+					break;
 				}
 			}
 
 			return member;			
+		}
+		
+		internal string GetGaimMungedID(string accountName, string accountProto, string buddyName)
+		{
+			return accountName + ":" + accountProto + ":" + buddyName;
 		}
 
 		/// <summary>
@@ -158,9 +156,15 @@ namespace Simias.Gaim.DomainService
 			
 			// Create the member
 			member = new Member(buddyName, Guid.NewGuid().ToString(), Access.Rights.ReadWrite);
-
+			
+			// Gaim Munge ID (Account Name + Account Proto + Buddy Name) for faster lookups
+			Simias.Storage.Property p = new Property("Gaim:MungedID",
+													 GetGaimMungedID(accountName, accountProto, buddyName));
+			p.LocalProperty = true;
+			member.Properties.AddProperty(p);
+			
 			// Gaim Account Name
-			Simias.Storage.Property p = new Property("Gaim:AccountName", accountName);
+			p = new Property("Gaim:AccountName", accountName);
 			p.LocalProperty = true;
 			member.Properties.AddProperty(p);
 			
