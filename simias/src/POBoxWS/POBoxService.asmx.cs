@@ -116,6 +116,9 @@ namespace Simias.POBoxService.Web
 		{
 			Simias.POBox.POBox	poBox;
 			Store				store = Store.GetStore();
+
+			log.Info("POBoxService::AcceptedSubscription - called");
+			log.Info("  subscription: " + subscriptionID);
 			
 			// open the post office box
 			poBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
@@ -163,6 +166,7 @@ namespace Simias.POBoxService.Web
 
 			cSub.Accept(store, cSub.SubscriptionRights);
 			poBox.Commit(cSub);
+			log.Info("POBoxService::AcceptedSubscription - exit");
 		}
 
 		/// <summary>
@@ -184,9 +188,8 @@ namespace Simias.POBoxService.Web
 			Simias.POBox.POBox	poBox;
 			Store				store = Store.GetStore();
 			
-			// FIXME:  Temp remove
-			Console.WriteLine("POBoxService::DeclinedSubscription - called");
-			Console.WriteLine("  Subscription ID: " + subscriptionID);
+			log.Info("POBoxService::DeclinedSubscription - called");
+			log.Info("  subscription: " + subscriptionID);
 
 			// open the post office box
 			poBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
@@ -232,6 +235,7 @@ namespace Simias.POBoxService.Web
 
 			cSub.Decline();
 			poBox.Commit(cSub);
+			log.Info("POBoxService::DeclinedSubscription - exit");
 		}
 
 		/// <summary>
@@ -253,8 +257,8 @@ namespace Simias.POBoxService.Web
 			Simias.POBox.POBox	poBox;
 			Store				store = Store.GetStore();
 			
-			// FIXME:  Temp remove
-			Console.WriteLine("POBoxService::AckSubscription - called");
+			log.Info("POBoxService::Acksubscription - called");
+			log.Info("  subscription: " + messageID);
 
 			// open the post office box
 			poBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
@@ -303,6 +307,8 @@ namespace Simias.POBoxService.Web
 			cSub.SubscriptionState = Simias.POBox.SubscriptionStates.Acknowledged;
 			poBox.Commit(cSub);
 			poBox.Commit(poBox.Delete(cSub));
+
+			log.Info("POBoxService::Acksubscription - exit");
 		}
 
 		/// <summary>
@@ -320,6 +326,9 @@ namespace Simias.POBoxService.Web
 		{
 			Simias.POBox.POBox	poBox;
 			Store store = Store.GetStore();
+
+			log.Info("POBoxService::GetSubscriptionInfo - called");
+			log.Info("  for subscription: " + messageID);
 
 			// open the post office box
 			poBox =
@@ -369,6 +378,7 @@ namespace Simias.POBoxService.Web
 			SubscriptionInformation subInfo = new SubscriptionInformation();
 			subInfo.GenerateFromSubscription(cSub);
 
+			log.Info("POBoxService::GetSubscriptionInfo - exit");
 			return subInfo;
 		}
 
@@ -453,9 +463,12 @@ namespace Simias.POBoxService.Web
 				cSub.FromName = fromMember.Name;
 				cSub.FromIdentity = fromUserID;
 
-				// FIXME:
-				string serviceUrl = 
-						"http://" + 
+				// FIXME: got to be a better way
+				string serviceUrl =
+					(this.Context.Request.IsSecureConnection == true)
+						? "https://" : "http://";
+				
+				serviceUrl += 
 						this.Context.Request.Url.Host +
 						":" +
 						this.Context.Request.Url.Port.ToString() +
@@ -471,9 +484,23 @@ namespace Simias.POBoxService.Web
 				cSub.SubscriptionKey = Guid.NewGuid().ToString();
 				cSub.MessageType = "Outbound";  // ????
 
+				/*
 				SyncCollection sc = new SyncCollection(sharedCollection);
 				cSub.SubscriptionCollectionURL = sc.MasterUrl.ToString();
+				*/
+				
+				// FIXME: got to be a better way
+				cSub.SubscriptionCollectionURL =
+					(this.Context.Request.IsSecureConnection == true)
+						? "https://" : "http://";
 
+				cSub.SubscriptionCollectionURL +=
+					this.Context.Request.Url.Host +
+					":" +
+					this.Context.Request.Url.Port.ToString() +
+					"/SyncService.asmx";
+
+				log.Debug("SubscriptionCollectionURL: " + cSub.SubscriptionCollectionURL);
 				log.Debug("  getting the dir node"); 
 				DirNode dirNode = sharedCollection.GetRootDirectory();
 				if(dirNode != null)
