@@ -203,9 +203,16 @@ namespace Simias
 				keyValue = keyElement.GetAttribute(ValueAttr);
 				if (keyValue == "")
 				{
-					keyElement.SetAttribute(ValueAttr, defaultValue);
-					keyElement.OwnerDocument.Save(ConfigFilePath);
-					keyValue = keyElement.GetAttribute(ValueAttr);
+					if (defaultValue != null )
+					{
+						keyElement.SetAttribute(ValueAttr, defaultValue);
+						keyElement.OwnerDocument.Save(ConfigFilePath);
+						keyValue = keyElement.GetAttribute(ValueAttr);
+					}
+					else
+					{
+						keyValue = null;
+					}
 				}
 				return keyValue;
 			}
