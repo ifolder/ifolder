@@ -77,7 +77,7 @@ namespace Novell.iFolder
 			tv.Editable = false;
 			tv.CursorVisible = false;
 			TextBuffer buffer = tv.Buffer;
-			buffer.Text = string.Format(Util.GS("iFolder name: {0}\niFolder Owner: {1}\nRights: {2}"), ifolder.Name, ifolder.Owner, GetDisplayRights(ifolder.CurrentUserRights));
+			buffer.Text = string.Format(Util.GS("iFolder name: {0}\nShared by: {1}\nRights: {2}"), ifolder.Name, ifolder.Owner, GetDisplayRights(ifolder.CurrentUserRights));
 
 			ScrolledWindow sw = new ScrolledWindow();
 			sw.ShadowType = Gtk.ShadowType.EtchedIn;
