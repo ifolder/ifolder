@@ -36,7 +36,6 @@ using Simias;
 
 namespace Simias.Sync
 {
-
 //---------------------------------------------------------------------------
 /// <summary>
 /// struct to represent the minimal information that the sync code would need
@@ -53,11 +52,6 @@ public struct NodeStamp: IComparable
 	// total size of all streams, expected to be used for sync progress meter
 	// if -1, this node is not derived from BaseFileNode.
 	public long streamsSize;
-
-	/// <summary>
-	/// 
-	/// </summary>
-	public string name; //just for debug
 
 	/// <summary>
 	/// 
@@ -80,19 +74,6 @@ public struct NodeStamp: IComparable
 
 //---------------------------------------------------------------------------
 /// <summary>
-/// a chunk of data from a particular data stream (fork) of a node
-/// </summary>
-// TODO: should this just be a nested class in ForkChunk
-[Serializable]
-public struct ForkChunk
-{
-	public const string DataForkName = "data";
-	public string name;
-	public byte[] data;
-}
-
-//---------------------------------------------------------------------------
-/// <summary>
 /// a chunk of data about a particular incarnation of a node
 /// </summary>
 [Serializable]
@@ -104,7 +85,7 @@ public struct NodeChunk
 	public ulong expectedIncarn;
 	public int totalSize;
 	public string relativePath;
-	public ForkChunk[] forkChunks;
+	public byte[] data;
 }
 
 //---------------------------------------------------------------------------
@@ -205,6 +186,7 @@ internal class SyncOps
 			return;
 		}
 
+		Log.log.Info("Deleting {0}", node.Name);
 		if (whackFile)
 		{
 			// If this is a collision node then delete the collision file.
@@ -255,24 +237,23 @@ internal class SyncOps
 		OutgoingNode ogn = new OutgoingNode(collection);
 		NodeChunk chunk = new NodeChunk();
 		chunk.totalSize = 0;
-		chunk.forkChunks = null;
+		chunk.data = null;
 		chunk.expectedIncarn = 0;
 		chunk.relativePath = null;
 		if ((chunk.node = ogn.Start(nid)) != null)
 		{
+			Log.log.Info("Synchronizing {0} to {1}", chunk.node.Name, onServer ? "client" : "server");
 			chunk.relativePath = GetDirNodePath(chunk.node);
-			if ((chunk.forkChunks = ogn.ReadChunks(NodeChunk.MaxSize, out chunk.totalSize)) == null)
+			if ((chunk.data = ogn.ReadChunk(NodeChunk.MaxSize, out chunk.totalSize)) == null)
 				Log.Assert(chunk.totalSize == 0);
 			else if (chunk.totalSize >= NodeChunk.MaxSize)
+			{
 				/* the file grew larger than a SmallNode should handle,
 				 * indicate client should retry as large node
 				 */
-				chunk.forkChunks = null;
+				chunk.data = null;
+			}
 		}
-
-		//Log.Spew("chunk: {0}, expIncarn {1}, totalSize {2}, forkCount {3}, relPath {4}",
-		//		chunk.node.Name, chunk.expectedIncarn, chunk.totalSize,
-		//		chunk.forkChunks == null? -1: chunk.forkChunks.Length, chunk.relativePath);
 		return chunk;
 	}
 
@@ -321,7 +302,7 @@ internal class SyncOps
 	public NodeStatus PutSmallNode(NodeChunk nc)
 	{
 		IncomingNode inNode = new IncomingNode(collection, onServer);
-		if (nc.forkChunks == null && nc.totalSize >= NodeChunk.MaxSize)
+		if (nc.data == null && nc.totalSize >= NodeChunk.MaxSize)
 		{
 			Log.Spew("skipping update of node {0}, retry next sync", nc.node.Name);
 			return NodeStatus.ServerFailure;
@@ -333,8 +314,9 @@ internal class SyncOps
 			return NodeStatus.Complete;
 		}
 		
+		Log.log.Info("Synchronizing {0} from {1}", nc.node.Name, onServer ? "client" : "server");
 		inNode.Start(nc.node, nc.relativePath);
-		inNode.BlowChunks(nc.forkChunks);
+		inNode.BlowChunk(nc.data);
 		NodeStatus status = inNode.Complete(nc.expectedIncarn);
 		return status == NodeStatus.FileNameConflict ? NodeStatus.Complete : status;
 	}
@@ -404,7 +386,7 @@ internal class SyncOps
 			else
 			{
 				eventCookie = new EventContext(cookie);
-				while (more && eventCookie.TimeStamp < collection.NodeStamp)
+				while (more)
 				{
 					more = logReader.GetEvents(eventCookie, out changeList);
 					foreach( ChangeLogRecord rec in changeList )
@@ -412,21 +394,35 @@ internal class SyncOps
 						// Make sure the events are not for local only changes.
 						if (((NodeEventArgs.EventFlags)rec.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0)
 						{
-							Node node = collection.GetNodeByID(rec.EventID);
-							if (node != null)
-							{
-								NodeStamp stamp = OutgoingNode.GetOutNodeStamp(collection, ref node, rec.Operation);
-								stampList.Add(stamp);
-							}
-							else if (rec.Operation == ChangeLogRecord.ChangeLogOp.Deleted)
+							/*
+							if (onServer)
 							{
 								NodeStamp stamp = new NodeStamp();
-								stamp.localIncarn = UInt64.MaxValue;
-								stamp.masterIncarn = 0;
+								stamp.localIncarn = rec.SlaveRev;
+								stamp.masterIncarn = rec.MasterRev;
 								stamp.id = rec.EventID;
-								stamp.name = "";
 								stamp.changeType = rec.Operation;
+								stamp.streamsSize = rec.FileLength;
 								stampList.Add(stamp);
+							}
+							else
+							*/
+							{
+								Node node = collection.GetNodeByID(rec.EventID);
+								if (node != null)
+								{
+									NodeStamp stamp = OutgoingNode.GetOutNodeStamp(collection, ref node, rec.Operation);
+									stampList.Add(stamp);
+								}
+								else if (rec.Operation == ChangeLogRecord.ChangeLogOp.Deleted)
+								{
+									NodeStamp stamp = new NodeStamp();
+									stamp.localIncarn = UInt64.MaxValue;
+									stamp.masterIncarn = 0;
+									stamp.id = rec.EventID;
+									stamp.changeType = rec.Operation;
+									stampList.Add(stamp);
+								}
 							}
 						}
 					}

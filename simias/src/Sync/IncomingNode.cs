@@ -76,8 +76,7 @@ internal class IncomingNode
 	bool onServer;
 	Node node, oldNode;
 	FileInfo fileInfo, oldFi;
-	class Fork { public string name; public Stream stream; };
-	ArrayList forkList = null;
+	Stream stream;
 	string path = null;  // for DirNodes this is the full path, all others it is the parent path
 	FileStream oldFileStream = null;
 	bool		fileNameConflict = false;
@@ -92,16 +91,10 @@ internal class IncomingNode
 
 	void CleanUp()
 	{
-		if (forkList != null)
+		if (stream != null)
 		{
-			foreach (Fork fork in forkList)
-			{
-				if (fork.stream != null)
-				{
-					fork.stream.Close();
-				}
-			}
-			forkList = null;
+			stream.Close();
+			stream = null;
 		}
 		if (oldFileStream != null)
 		{
@@ -181,44 +174,16 @@ internal class IncomingNode
 	}
 
 	// accept some chunks of data for this file
-	public void BlowChunks(ForkChunk[] chunks)
+	public void BlowChunk(byte[] data)
 	{
-		if (chunks == null)
+		if (data == null)
 			return;
 
-		foreach (ForkChunk chunk in chunks)
+		if (stream == null)
 		{
-			bool done = false;
-
-			if (forkList == null)
-				forkList = new ArrayList();
-			else
-				foreach (Fork fork in forkList)
-					if (chunk.name == fork.name)
-					{
-						fork.stream.Write(chunk.data, 0, chunk.data.Length);
-						done = true;
-						break;
-					}
-
-			if (!done)
-			{
-				/* TODO: handle multiple forks (streams), EAs, etc. For right now
-				 * this is just a guess at how to do it, stubbed to support
-				 * OutgoingNode.
-				 * Multiple data streams are really a pain, It is unknown and
-				 * unlikely that they are needed or supported by mono or .net
-				 */
-				Log.Assert(chunk.name == ForkChunk.DataForkName);
-
-				if (fileInfo == null)
-					fileInfo = new FileInfo(Path.Combine(path, TempFilePrefix + node.ID));
-				Fork fork = new Fork();
-				fork.name = chunk.name;
-				fork.stream = fileInfo.Open(FileMode.Create, FileAccess.Write, FileShare.None);
-				fork.stream.Write(chunk.data, 0, chunk.data.Length);
-				forkList.Add(fork);
-			}
+			fileInfo = new FileInfo(Path.Combine(path, TempFilePrefix + node.ID));
+			stream = fileInfo.Open(FileMode.Create, FileAccess.Write, FileShare.None);
+			stream.Write(data, 0, data.Length);
 		}
 	}
 
@@ -261,18 +226,15 @@ internal class IncomingNode
 		if (bfn == null)
 		{
 			Log.log.Debug("commiting nonFile, nonDir {0}", node.Name);
-			Log.Assert(forkList == null);
+			Log.Assert(stream == null);
 			ClearTemp();
 			return status;
 		}
 		
-		Log.Assert(forkList != null);
-		foreach (Fork fork in forkList)
-		{
-			fork.stream.Close();
-			fork.stream = null;
-		}
-
+		Log.Assert(stream != null);
+		stream.Close();
+		stream = null;
+		
 		path = status == NodeStatus.UpdateConflict?
 				Path.Combine(path, ConflictUpdatePrefix + bfn.ID + Path.GetExtension(bfn.GetFileName())):
 				Path.Combine(path, bfn.GetFileName());

@@ -112,7 +112,6 @@ public class SynkerWorkerA: SyncCollectionWorker
 	{
 		// TODO: deal with small files in pages, right now we just limit the
 		// first small file page and then consider everything a large file
-		Log.log.Debug("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
 		Log.Assert(stamp.streamsSize >= -1);
 
 		if (stamp.isDir)
@@ -141,13 +140,11 @@ public class SynkerWorkerA: SyncCollectionWorker
 	{
 		// TODO: deal with small files in pages, right now we just limit the
 		// first small file page and then consider everything a large file
-		Log.log.Debug("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
 		Log.Assert(stamp.streamsSize >= -1);
 		if (stamp.isDir)
 		{
 			if(!dirsFromServer.Contains(stamp.id))
 				dirsFromServer.Add(stamp.id, stamp);
-
 		}
 		else if (stamp.streamsSize == -1)
 		{
@@ -260,8 +257,6 @@ public class SynkerWorkerA: SyncCollectionWorker
 					PutNodeToServer(ref cstamps[ci], "is new on the client, send to server");
 				else
 				{
-					Log.log.Debug("{1} {0} has been killed or synced before or is RO, but is not on the server, just kill it locally",
-						cstamps[ci].name, cstamps[ci].id);
 					if (!killOnClient.Contains(cstamps[ci].id))
 						killOnClient.Add(cstamps[ci].id, cstamps[ci]);
 				}
@@ -575,28 +570,24 @@ public class SynkerWorkerA: SyncCollectionWorker
 					}
 
 					int totalSize;
-					ForkChunk[] chunks = outNode.ReadChunks(NodeChunk.MaxSize, out totalSize);
-					if (!ss.WriteLargeNode(node, chunks))
+					byte[] data = outNode.ReadChunk(NodeChunk.MaxSize, out totalSize);
+					if (!ss.WriteLargeNode(node, data))
 					{
 						Log.log.Debug("Could not write large node {0}", node.Name);
 						HadErrors = true;
 						continue;
 					}
-					if (chunks == null || totalSize < NodeChunk.MaxSize)
+
+					while (true)
 					{
-						chunks = null;
+						data = outNode.ReadChunk(NodeChunk.MaxSize, out totalSize);
+						if (data != null && totalSize >= NodeChunk.MaxSize)
+							ss.WriteLargeNode(data, 0, false);
+						else
+							break;
 					}
-					else
-					{
-						while (true)
-						{
-							chunks = outNode.ReadChunks(NodeChunk.MaxSize, out totalSize);
-							if (chunks == null || totalSize < NodeChunk.MaxSize)
-								break;
-							ss.WriteLargeNode(chunks, 0, false);
-						}
-					}
-					NodeStatus status = ss.WriteLargeNode(chunks, stamp.masterIncarn, true);
+
+					NodeStatus status = ss.WriteLargeNode(data, stamp.masterIncarn, true);
 					if (status == NodeStatus.Complete || status == NodeStatus.FileNameConflict)
 					{
 						ops.UpdateIncarn(node.ID, node.LocalIncarnation);
@@ -634,25 +625,23 @@ public class SynkerWorkerA: SyncCollectionWorker
 						return;
 					NodeChunk nc = ss.ReadLargeNode(stamp.id, NodeChunk.MaxSize);
 					inNode.Start(nc.node, null);
-					inNode.BlowChunks(nc.forkChunks);
+					inNode.BlowChunk(nc.data);
 					while (nc.totalSize >= NodeChunk.MaxSize)
 					{
-						nc.forkChunks = ss.ReadLargeNode(NodeChunk.MaxSize);
-						inNode.BlowChunks(nc.forkChunks);
-						nc.totalSize = 0;
-						foreach (ForkChunk chunk in nc.forkChunks)
-							nc.totalSize += chunk.data.Length;
+						nc.data = ss.ReadLargeNode(NodeChunk.MaxSize);
+						inNode.BlowChunk(nc.data);
+						nc.totalSize = nc.data.Length;
 					}
 					NodeStatus status = inNode.Complete(stamp.masterIncarn);
 					if (status == NodeStatus.Complete || 
 						status == NodeStatus.FileNameConflict ||
 						status == NodeStatus.UpdateConflict)
 					{
-						largeFromServer.Remove(stamp.id);
+						largeFromServer.Remove(nc.node.ID);
 					}
 					else
 					{
-						Log.log.Debug("failed to update large node {0} from master, status {1}", stamp.name, status);
+						Log.log.Debug("failed to update large node {0} from master, status {1}", nc.node.Name, status);
 						HadErrors = true;
 					}
 				}

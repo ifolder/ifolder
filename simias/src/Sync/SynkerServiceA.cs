@@ -115,6 +115,9 @@ public class SynkerServiceA: SyncCollectionService
 		return rights;
 	}
 
+	/// <summary>
+	/// Called when done with the sync cycle.
+	/// </summary>
 	public void Stop()
 	{
 		collection.Revert();
@@ -152,6 +155,7 @@ public class SynkerServiceA: SyncCollectionService
 	/// 
 	/// </summary>
 	/// <param name="nodes"></param>
+	/// <param name="cookie"></param>
 	/// <returns></returns>
 	public bool GetChangedNodeStamps(out NodeStamp[] nodes, ref string cookie)
 	{
@@ -217,7 +221,7 @@ public class SynkerServiceA: SyncCollectionService
 	/// <summary>
 	/// takes metadata and first chunk of data for a large node
 	/// </summary>
-	public bool WriteLargeNode(Node node, ForkChunk[] forkChunks)
+	public bool WriteLargeNode(Node node, byte[] data)
 	{
 		try
 		{
@@ -225,7 +229,7 @@ public class SynkerServiceA: SyncCollectionService
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
 			inNode.Start(node, null);
-			inNode.BlowChunks(forkChunks);
+			inNode.BlowChunk(data);
 			return true;
 		}
 		catch (Exception e) { Log.Uncaught(e); }
@@ -235,14 +239,14 @@ public class SynkerServiceA: SyncCollectionService
 	/// <summary>
 	/// takes next chunk of data for a large node, completes node if done
 	/// </summary>
-	public NodeStatus WriteLargeNode(ForkChunk[] forkChunks, ulong expectedIncarn, bool done)
+	public NodeStatus WriteLargeNode(byte[] data, ulong expectedIncarn, bool done)
 	{
 		try
 		{
 			if (!IsAccessAllowed(Access.Rights.ReadWrite))
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
-			inNode.BlowChunks(forkChunks);
+			inNode.BlowChunk(data);
 			return done? inNode.Complete(expectedIncarn): NodeStatus.InProgess;
 		}
 		catch (Exception e) { Log.Uncaught(e); }
@@ -260,7 +264,7 @@ public class SynkerServiceA: SyncCollectionService
 				throw new UnauthorizedAccessException("Current user cannot read this collection");
 
 			NodeChunk nc = new NodeChunk();
-			nc.forkChunks = (nc.node = outNode.Start(nid)) != null? outNode.ReadChunks(maxSize, out nc.totalSize): null;
+			nc.data = (nc.node = outNode.Start(nid)) != null? outNode.ReadChunk(maxSize, out nc.totalSize): null;
 			return nc;
 		}
 		catch (Exception e) { Log.Uncaught(e); }
@@ -270,7 +274,7 @@ public class SynkerServiceA: SyncCollectionService
 	/// <summary>
 	/// gets next chunks of data for a large node
 	/// </summary>
-	public ForkChunk[] ReadLargeNode(int maxSize)
+	public byte[] ReadLargeNode(int maxSize)
 	{
 		try
 		{
@@ -278,7 +282,7 @@ public class SynkerServiceA: SyncCollectionService
 				throw new UnauthorizedAccessException("Current user cannot read this collection");
 
 			int unused;
-			return outNode.ReadChunks(maxSize, out unused);
+			return outNode.ReadChunk(maxSize, out unused);
 		}
 		catch (Exception e) { Log.Uncaught(e); }
 		return null;
