@@ -314,16 +314,9 @@ namespace Simias.Storage
 				{
 					if ( node.IncarnationUpdate != 0 )
 					{
-						// Update both incarnation values to the specified value.
+						// Update the master incarnation value to the specified value.
 						node.Properties.ModifyNodeProperty( PropertyTags.MasterIncarnation, node.IncarnationUpdate );
-						//node.Properties.ModifyNodeProperty( PropertyTags.LocalIncarnation, node.IncarnationUpdate );
 						node.IncarnationUpdate = 0;
-					}
-					else
-					{
-						// Increment the property value.
-						//ulong incarnationValue = node.LocalIncarnation;
-						//node.Properties.ModifyNodeProperty( PropertyTags.LocalIncarnation, ++incarnationValue );
 					}
 
 					// Reset the expected incarnation value.
@@ -554,20 +547,24 @@ namespace Simias.Storage
 					case PropertyList.PropertyListState.Add:
 						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0 ) );
 						node.Properties.State = PropertyList.PropertyListState.Update;
+						log.Info( "Added new node: {0} - ID: {1}", node.Name, node.ID );
 						break;
 
 					case PropertyList.PropertyListState.Delete:
 						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeDeleted, 0 ) );
 						node.Properties.State = PropertyList.PropertyListState.Disposed;
+						log.Info( "Deleted node: {0} - ID: {1}", node.Name, node.ID );
 						break;
 
 					case PropertyList.PropertyListState.Import:
 						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
 						node.Properties.State = PropertyList.PropertyListState.Update;
+						log.Info( "Imported node: {0} - ID: {1}", node.Name, node.ID );
 						break;
 
 					case PropertyList.PropertyListState.Update:
 						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
+						log.Info( "Modified node: {0} - ID: {1}", node.Name, node.ID );
 						break;
 
 				}
