@@ -57,6 +57,9 @@ SDK_MSM = ifolder-sdk-msm
 MSI_LOG_FILE     = issabld-$(MSI).log
 MSM_LOG_FILE     = issabld-$(MSM).log
 SDK_MSM_LOG_FILE = issabld-$(SDK_MSM)-msm.log
+BLD_VER_LOG_FILE = bldver.log
+
+SYNC_BLD_VERSION = $(TOOLDIR)/SyncBuildVersion/bin/SyncBuildVersion.exe
 
 ISSABLD_CONFIG  = web
 ISSABLD_RELEASE = release
@@ -68,7 +71,7 @@ SDK_MSM_DISK1 = $(SDK_MSM)/$(DISK1)/$(subst -,_,ifolder)_sdk.msm
 
 all: $(MSI_FILE)
 
-$(MSI_FILE): issabld $(MSM_FILE) $(SDK_MSM_FILE) $(MSI).ism
+$(MSI_FILE): issabld $(MSM_FILE) $(SDK_MSM_FILE) $(MSI).ism sync_build_version
 	@rm -f $@ "$(MSI_DISK1)" "$(MSI_LOG_FILE)"
 	@CMD='"$(ISSABLD)" -t "$(REGASM_DIR)" -p "$(MSI).ism" -o "$(ISSABLD_DIR),$(MERGE_MODULES_WIN)"'; \
 		echo $$CMD; \
@@ -94,7 +97,7 @@ $(MSM_FILE): issabld $(PACKAGE)-install $(MSM).ism
 		else \
 			cat "$(MSM_LOG_FILE)"; \
 			echo FAILED; exit 1; \
-		fi 
+		fi
 	@mkdir -p "$(MERGE_MODULES_UNIX)"; \
 		CMD='cp -f "$(MSM_DISK1)" "$(MERGE_MODULES_UNIX)"'; \
 		echo $$CMD; \
@@ -110,7 +113,7 @@ $(SDK_MSM_FILE): issabld $(PACKAGE)-doc $(SDK_MSM).ism
 		else \
 			cat "$(MSM_LOG_FILE)"; \
 			echo FAILED; \
-		fi 
+		fi
 	@mkdir -p "$(MERGE_MODULES_UNIX)"; \
 		CMD='cp -f "$(SDK_MSM_DISK1)" "$(MERGE_MODULES_UNIX)"'; \
 		echo $$CMD; \
@@ -128,6 +131,11 @@ issabld:
 		echo ""; \
 		exit 1; \
 	fi
+	
+sync_build_version:
+	@CMD='"$(SYNC_BLD_VERSION)" . ../../src/FormsTrayApp'; \
+		echo $$CMD; \
+		eval $$CMD > "$(BLD_VER_LOG_FILE)" 2>&1;
 
 $(PACKAGE)-install: $(PACKAGE)
 	$(MAKE) -C MSI/BUILD/$(PACKAGE)-$(VERSION) install
