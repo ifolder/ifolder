@@ -685,8 +685,7 @@ namespace Novell.iFolder
 				else
 					nameEntry.Text = "";
 				if(dom.Host != null)
-					serverEntry.Text = ParseHostAndPort(dom.Host);
-//					serverEntry.Text = dom.Host;
+					serverEntry.Text = dom.Host;
 				else
 					serverEntry.Text = "";
 				
@@ -1129,29 +1128,6 @@ namespace Novell.iFolder
 			}
 		}
 		
-		/// <summary>
-		/// The purpose of this method is to be able to strip off the URL parts
-		/// off of the Simias URL.  There's no reason to show this to an end
-		/// user.  This is what you call giving the Linux Client a little love.
-		/// </summary>
-		private string ParseHostAndPort(string serverUrl)
-		{
-			// serverUrl will be in the following format:
-			//     http(s)://servername[:optional port]/simias10
-			//               ^^We're after this part^^^
-			
-			if (serverUrl == null) return "";
-			int doubleSlashPos = serverUrl.IndexOf("//");
-			int lastSlashPos   = serverUrl.IndexOf('/', doubleSlashPos + 2);
-			
-			if (doubleSlashPos > 0 && lastSlashPos > 0)
-				return serverUrl.Substring(doubleSlashPos + 2, lastSlashPos - doubleSlashPos - 2);
-			
-			return serverUrl;
-		}
-
-
-
 		/// <summary>
 		/// This should be called anytime the authentication status of a domain
 		/// changes because of events external to this page.
