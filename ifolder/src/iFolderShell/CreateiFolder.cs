@@ -413,11 +413,24 @@ namespace Novell.iFolderCom
 					servers.SelectedIndex = 0;
 				}
 			}
+
+			if (!ifolderPath.Text.Equals(string.Empty))
+			{
+				ifolderPath.ReadOnly = true;
+				browse.Enabled = false;
+			}
 		}
 
 		private void CreateiFolder_Activated(object sender, System.EventArgs e)
 		{
-			ifolderPath.Focus();
+			if (ifolderPath.ReadOnly)
+			{
+				servers.Focus();
+			}
+			else
+			{
+				ifolderPath.Focus();
+			}
 		}
 
 		private void browse_Click(object sender, System.EventArgs e)
