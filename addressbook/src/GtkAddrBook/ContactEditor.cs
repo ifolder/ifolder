@@ -23,6 +23,7 @@
 
 using System;
 using System.Drawing;
+using System.Text;
 using Novell.AddressBook;
 
 using Gtk;
@@ -34,201 +35,327 @@ using GLib;
 
 namespace Novell.iFolder
 {
-
-	public class ContactEditEventArgs : EventArgs
+	public class ContactEventArgs : EventArgs
 	{
-		private Contact c;
-		private bool isNewContact;
+		private Contact contact;
 
-		//Constructor.
-		//
-		public ContactEditEventArgs(Contact con, bool newContact)
+		public ContactEventArgs(Contact contact)
 		{
-			this.c = con;
-			this.isNewContact = newContact;
-		}
-
-		public bool isNew
-		{
-			get { return isNewContact;}      
+			this.contact = contact;
 		}
 
 		public Contact ABContact 
 		{     
-			get { return c;}      
+			get { return contact;}      
 		}
 	}
 
 	// Delegate declaration
-	//
-	public delegate void ContactEditEventHandler(object sender, ContactEditEventArgs e);
+	public delegate void ContactEditedEventHandler(object sender, 
+			ContactEventArgs args);
+
+	public delegate void ContactCreatedEventHandler(object sender, 
+			ContactEventArgs args);
 
 	public class ContactEditor
 	{
-		[Glade.Widget] Gtk.Entry ceUserName;
-		[Glade.Widget] Gtk.Entry ceFirstName;
-		[Glade.Widget] Gtk.Entry ceLastName;
-		[Glade.Widget] Gtk.Entry ceEmail;
-		[Glade.Widget] Gtk.Button ceChangeImage;
-		[Glade.Widget] Gtk.Image ceImage;
-		[Glade.Widget] Gtk.Table ceGeneralTabTable;
+		// Glade "autoconnected" members
+		[Glade.Widget] protected Gtk.Image			userImage;
+		[Glade.Widget] protected Gtk.Entry			fullNameEntry;
+		[Glade.Widget] protected Gtk.Entry			jobTitleEntry;
+		[Glade.Widget] protected Gtk.Entry			organizationEntry;
+		[Glade.Widget] protected Gtk.Entry			userIDEntry;
 
-		Gtk.Window 		cewin;
-		Contact			contact;
-		bool			isNew;
+		[Glade.Widget] protected Gtk.Entry			phoneOneEntry;
+		[Glade.Widget] protected Gtk.Entry			phoneTwoEntry;
+		[Glade.Widget] protected Gtk.Entry			phoneFourEntry;
+		[Glade.Widget] protected Gtk.Label			phoneOneLabel;
+		[Glade.Widget] protected Gtk.Label			phoneTwoLabel;
+		[Glade.Widget] protected Gtk.Label			phoneThreeLabel;
+		[Glade.Widget] protected Gtk.Label			phoneFourLabel;
 
-		public event ContactEditEventHandler ContactEdited;
+		[Glade.Widget] protected Gtk.Entry			emailEntry;
+		[Glade.Widget] protected Gtk.Label			emailLabel;
+		[Glade.Widget] protected Gtk.CheckButton	emailHTMLButton;
 
-		public ContactEditor (Gtk.Window parentwin, Contact con, bool newContact) 
+		[Glade.Widget] protected Gtk.Entry			webURLEntry;
+		[Glade.Widget] protected Gtk.Button			webURLButton;
+		[Glade.Widget] protected Gtk.Entry			blogURLEntry;
+		[Glade.Widget] protected Gtk.Button			blogURLButton;
+
+		[Glade.Widget] protected Gtk.Label			addrLabel;
+		[Glade.Widget] protected Gtk.TextView		addrTextView;
+		[Glade.Widget] protected Gtk.Button			addrChangeButton;
+		[Glade.Widget] protected Gtk.CheckButton	addrMailingButton;
+
+		[Glade.Widget] protected Gtk.Button			cancelButton;
+		[Glade.Widget] protected Gtk.Button			okButton; 
+
+		[Glade.Widget] protected Gtk.Table			generalTabTable;
+
+
+		private Gtk.Dialog 		contactEditorDialog;
+		private Contact			currentContact;
+		private Name			preferredName;
+		private bool			isNewContact;
+
+		public event ContactEditedEventHandler	ContactEdited;
+		public event ContactCreatedEventHandler	ContactCreated;
+
+
+
+
+		public ContactEditor (Gtk.Window parentwin, Contact contact)
 		{
-			contact = con;
-			isNew = newContact;
-
-			InitGlade();
-
-			cewin.TransientFor = parentwin;
-
-			if(!newContact)
+			if(contact == null)
 			{
-				try
-				{
-					Name prefName = con.GetPreferredName();
-
-					ceFirstName.Text = prefName.Given; 
-					ceLastName.Text = prefName.Family;
-					ceEmail.Text = con.EMail;
-				}
-				catch(Exception e)
-				{}
-				ceUserName.Text = con.UserName;
+				currentContact = new Contact();
+				isNewContact = true;
 			}
+			else
+			{
+				currentContact = contact;
+				isNewContact = false;
+			}
+
+			Init();
+
+			contactEditorDialog.TransientFor = parentwin;
 		}
 
-		protected void InitGlade()
+
+
+
+		public ContactEditor (Gtk.Window parentwin) :
+			this(parentwin, null)
 		{
-			Glade.XML gxml = new Glade.XML ("addressbook.glade", 
-					"abContact", null);
+		}
+
+
+
+
+		private void Init()
+		{
+			Glade.XML gxml = new Glade.XML ("contact-editor.glade", 
+					"contactEditor", null);
+
 			gxml.Autoconnect (this);
 
-			cewin = (Gtk.Window) gxml.GetWidget("abContact");
+			contactEditorDialog = (Gtk.Dialog) gxml.GetWidget("contactEditor");
 
-			//Gtk.Image tmpImg = (Gtk.Image) gxml.GetWidget("image4");
-			GLib.List tl = new GLib.List((IntPtr) 0, typeof(Gtk.Widget));
+/*			GLib.List tl = new GLib.List((IntPtr) 0, typeof(Gtk.Widget));
 
 			tl.Append(ceUserName.Handle);
 			tl.Append(ceFirstName.Handle);
 			tl.Append(ceLastName.Handle);
 			tl.Append(ceEmail.Handle);
 
-			//ceGeneralTabTable.SetFocusChain(tl);
-		
-			Pixbuf pb = GetScaledPhoto(contact, 64);
-			if(pb != null)
-				ceImage.FromPixbuf = pb;
-		}
-
-		protected virtual void OnContactEdit(ContactEditEventArgs e)
-		{
-			if(ContactEdited != null)
+			generalTabTable.FocusChain = (tl);
+*/		
+			try
 			{
-				ContactEdited(this, e);
+				preferredName = currentContact.GetPreferredName();
 			}
+			catch(Exception e)
+			{
+				preferredName = new Name("", "");
+				preferredName.Preferred = true;
+				currentContact.AddName(preferredName);
+			}
+
+			PopulateWidgets();
+		}
+		
+
+
+
+		private void PopulateWidgets()
+		{
+			fullNameEntry.Text = preferredName.FN;
+
+			Pixbuf pb = GetScaledPhoto(currentContact, 64);
+			if(pb != null)
+				userImage.FromPixbuf = pb;
+
+			if(currentContact.UserName.Length > 0)
+				userIDEntry.Text = currentContact.UserName;
+			if(currentContact.Title.Length > 0)
+				jobTitleEntry.Text = currentContact.Title;
+			if(currentContact.Url.Length > 0)
+				webURLEntry.Text = currentContact.Url;
 		}
 
 		public void ShowAll()
 		{
-			if(cewin != null)
-				cewin.ShowAll();
+			if(contactEditorDialog != null)
+				contactEditorDialog.ShowAll();
 		}
 
-		public void onSave(object o, EventArgs args)
-		{
-			if( (ceUserName.Text.Length > 0) &&
-					(ceFirstName.Text.Length > 0) &&
-					(ceLastName.Text.Length > 0) &&
-					(ceEmail.Text.Length > 0) )
-			{
-				contact.UserName = ceUserName.Text;
-/*
-				if(isNew)
-				{
-					contact.CreateName(ceFirstName.Text, ceLastName.Text, true);
-				}
-				else
-				{
-*/
-					try
-					{
-						Name prefName = contact.GetPreferredName();
-						prefName.Family = ceLastName.Text;
-						prefName.Given = ceFirstName.Text;
-//						prefName.Commit();
-					}
-					catch(Exception except)
-					{
-						// probably didn't have a prefName
-						// Try creating one and getting it
-						Name prefName = new 
-								Name(ceFirstName.Text, ceLastName.Text);
-						prefName.Preferred = true;
-						contact.AddName(prefName);
-					}
-//				}
 
-				contact.EMail = ceEmail.Text;
-				ContactEditEventArgs e = new ContactEditEventArgs(contact, 
-						isNew);
-				OnContactEdit(e);
-				cewin.Hide();
-				cewin.Destroy();
-				cewin = null;
+
+
+		private void NotifyContactEdit()
+		{
+			ContactEventArgs cArgs = new ContactEventArgs(currentContact);
+
+			if(isNewContact && (ContactCreated != null) )
+				ContactCreated(this, cArgs);
+			else if(ContactEdited != null)
+				ContactEdited(this, cArgs);
+		}
+
+
+
+
+		private void SaveContact()
+		{
+			if(userIDEntry.Text.Length > 0)
+				currentContact.UserName = userIDEntry.Text;
+			if(jobTitleEntry.Text.Length > 0)
+				currentContact.Title = jobTitleEntry.Text;
+			if(webURLEntry.Text.Length > 0)
+				currentContact.Url = webURLEntry.Text;
+		}
+
+
+
+		/*
+		   private Novell.AddressBook.Name ParseFullNameEntry(string name)
+		   {
+		   Novell.AddressBook.Name ABName = null;
+
+		   if(name.Length > 0)
+		   {
+		   string curString;
+		   int curIndex;
+		   string lastName = null;
+
+		   ArrayList nameList = new ArrayList();
+
+		   curString = name;
+
+		   curIndex = curString.IndexOf(',');
+		   if(curIndex != -1)
+		   {
+		   lastName = curString.Substring(0, curIndex);
+		   curString = curString.Substring(curIndex + 1).Trim();
+		   }
+
+		   curIndex = 0;
+
+		   while(curIndex != -1)
+		   {
+		   string nameString;
+
+		   curIndex = curString.IndexOf(' ');
+		   if(curIndex != -1)
+		   {
+		   nameString = curString.Substring(0, curIndex);
+		   curString = curString.Substring(curIndex + 1).Trim();
+		   }
+		   else
+		   nameString = curString;
+
+		   if(nameString.Length > 0)
+		   nameList.Add(nameString);
+		   }
+		   if(lastName != null)
+		   nameList.Add(lastName);
+
+		   foreach(string s in nameList)
+		   {
+		   Console.WriteLine(s);
+		   }
+
+		   }
+		   return ABName;
+		   }
+		 */
+
+
+
+
+		private void CloseDialog()
+		{
+			contactEditorDialog.Hide();
+			contactEditorDialog.Destroy();
+			contactEditorDialog = null;
+		}
+
+
+
+
+		private void on_contactEditor_delete_event(object o,
+				DeleteEventArgs args) 
+		{
+			CloseDialog();
+		}
+
+
+
+
+		private void on_cancelButton_clicked(object o, EventArgs args) 
+		{
+			CloseDialog();
+		}
+
+
+
+
+		private void on_okButton_clicked(object o, EventArgs args) 
+		{
+			SaveContact();
+			NotifyContactEdit();
+			CloseDialog();
+		}
+
+
+
+
+		private void on_fullNameButton_clicked(object o, EventArgs args) 
+		{
+			NameEditor ne = new NameEditor(contactEditorDialog, preferredName);
+			if(ne.Run() == -5)
+			{
+				fullNameEntry.Text = preferredName.FN;
 			}
 		}
 
-		public void onCancel(object o, EventArgs args) 
-		{
-			cewin.Hide();
-			cewin.Destroy();
-			cewin = null;
-		}
 
-		public void on_changeImage_clicked(object o, EventArgs args) 
+
+
+		private void on_changeImageButton_clicked(object o, EventArgs args) 
 		{
 			FileSelection fs = new FileSelection("Choose a new Image");
+
+			// setup file selector to be modal to the ContactEditor
+			fs.Modal = true;
+			fs.TransientFor = contactEditorDialog;
+
+
 			int retVal = fs.Run();
-			Console.WriteLine("Result was : " + retVal);
+
 			fs.Hide();
+
+			// if they selected a file, try to import it
 			if(retVal == -5)
 			{
-				int newWidth, newHeight;
-
-				Console.WriteLine("Selected File: " + fs.Filename);
-				if(contact.ImportPhoto(fs.Filename))
+				if(currentContact.ImportPhoto(fs.Filename))
 				{
-					Pixbuf pb = GetScaledPhoto(contact, 64);
+					Pixbuf pb = GetScaledPhoto(currentContact, 64);
 					if(pb != null)
-						ceImage.FromPixbuf = pb;
+						userImage.FromPixbuf = pb;
 				}
 			}
 		}
 
-		public void onKeyPressed(object o, KeyPressEventArgs args)
-		{
-			switch(args.Event.HardwareKeycode)
-			{
-				case 9:
-					onCancel(o, args);
-					break;
-				case 36:
-					onSave(o, args);
-					break;					
-			}
-		}
+
+
 
 		private Pixbuf GetScaledPhoto(Contact c, int height)
 		{
 			Pixbuf pb = null;
-			
+
 			try
 			{
 				int newWidth, newHeight;

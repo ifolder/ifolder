@@ -408,11 +408,11 @@ namespace Novell.iFolder
 
 		public void on_add_contact_clicked(object o, EventArgs args) 
 		{
-			Contact newContact = new Contact();
+			ContactEditor ce = new ContactEditor(cpwin);
 
-			ContactEditor ce = new ContactEditor(cpwin, newContact, true);
-			ce.ContactEdited +=
-				new ContactEditEventHandler(CreateContactEventHandler);
+			ce.ContactCreated +=
+				new ContactCreatedEventHandler(ContactCreatedEventHandler);
+
 			ce.ShowAll();
 		}
 
@@ -436,22 +436,16 @@ namespace Novell.iFolder
 			}
 		}
 
-		public void CreateContactEventHandler(object o,
-				ContactEditEventArgs args)
+		public void ContactCreatedEventHandler(object o,
+				ContactEventArgs args)
 		{
 			Contact contact = args.ABContact;
 
-			if(args.isNew)
-			{
-				curAddrBook.AddContact(contact);
-			}
+			curAddrBook.AddContact(contact);
 
 			contact.Commit();
 
-			if(args.isNew)
-			{
-				ContactTreeStore.AppendValues(contact);
-			}
+			ContactTreeStore.AppendValues(contact);
 		}
 
 		public void CreateBookEventHandler(object o, BookEditEventArgs args)

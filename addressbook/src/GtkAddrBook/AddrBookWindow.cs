@@ -338,12 +338,11 @@ namespace Novell.iFolder
 		{
 			if(CreateContactButton.Sensitive == true)
 			{
-				Contact newContact = new Contact();
+				ContactEditor ce = new ContactEditor(abMainWin);
 
-				ContactEditor ce = new ContactEditor(abMainWin, 
-						newContact, true);
-				ce.ContactEdited +=
-					new ContactEditEventHandler(CreateContactEventHandler);
+				ce.ContactCreated +=
+					new ContactCreatedEventHandler(ContactCreatedEventHandler);
+
 				ce.ShowAll();
 			}
 		}
@@ -560,26 +559,26 @@ namespace Novell.iFolder
 			}
 		}
 
-		public void CreateContactEventHandler(object o,
-				ContactEditEventArgs args)
+		public void ContactCreatedEventHandler(object o,
+				ContactEventArgs args)
 		{
 			Contact contact = args.ABContact;
 
-			if(args.isNew)
-			{
-				curAddrBook.AddContact(contact);
-			}
-			else
-			{
-				on_contact_selection_changed(o, args);
-			}
+			curAddrBook.AddContact(contact);
 
 			contact.Commit();
 
-			if(args.isNew)
-			{
-				ContactTreeStore.AppendValues(contact);
-			}
+			ContactTreeStore.AppendValues(contact);
+		}
+
+		public void ContactEditedEventHandler(object o,
+				ContactEventArgs args)
+		{
+			Contact contact = args.ABContact;
+
+			contact.Commit();
+
+			on_contact_selection_changed(o, args);
 		}
 
 		public void on_contact_key_press(object o, KeyPressEventArgs args)
@@ -734,12 +733,10 @@ namespace Novell.iFolder
 				Contact c = (Contact) 
 					ContactTreeStore.GetValue(iter,0);
 
-				ContactEditor ce = new ContactEditor(
-						abMainWin, c, false);
+				ContactEditor ce = new ContactEditor(abMainWin, c);
 				ce.ContactEdited +=
-					new ContactEditEventHandler(
-							CreateContactEventHandler);
-				ce.ShowAll();
+					new ContactEditedEventHandler(
+							ContactEditedEventHandler);
 			}
 		}
 

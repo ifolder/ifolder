@@ -230,11 +230,31 @@ namespace Novell.AddressBook
 				suffix = value;
 				if (thisNode != null)
 				{
-					thisNode.Properties.ModifyProperty(suffixProperty, prefix);
+					thisNode.Properties.ModifyProperty(suffixProperty, suffix);
 					parentContact.SetDirty();
 				}
 
 				changed = true;
+			}
+		}
+
+		/// <summary>
+		/// FN - Specifies the formatted text corresponding to the name of
+		/// the object this contact represents.  This type is based on the 
+		/// semantics of the X.520 Common Name attribute.
+		///
+		/// Type Value: A read-only single text value
+		///
+		/// Example: FN:Mr. John Q. Public\, Esq.
+		/// Note: The FN property is built from the preferred Name attribute 
+		///       which is a complex attribute.
+		///
+		/// </summary>
+		public string FN
+		{
+			get
+			{
+				return(this.GetFullName());
 			}
 		}
 		
@@ -292,6 +312,39 @@ namespace Novell.AddressBook
 		#endregion
 
 		#region Internal Methods
+
+		internal string GetFullName()
+		{
+			string fn = "";
+
+			if((Prefix != null) && (Prefix.Length > 0))
+			{
+				fn += Prefix + " ";
+			}
+
+			if((Given != null) && (Given.Length > 0))
+			{
+				fn += Given + " ";
+			}
+
+			if((Other != null) && (Other.Length > 0))
+			{
+				fn += Other + " ";
+			}
+
+			if((Family != null) && (Family.Length > 0))
+			{
+				fn += Family;
+			}
+
+			if((Suffix != null) && (Suffix.Length > 0))
+			{
+				fn += " " + Suffix;
+			}
+
+			return(fn);
+		}
+
 		internal void Create(Collection collection, Node parentNode, Contact contact)
 		{
 			this.parentCollection = collection;

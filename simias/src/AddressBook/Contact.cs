@@ -617,43 +617,7 @@ namespace Novell.AddressBook
 
 			if (tmpName != null)
 			{
-				fn = "";
-
-				try
-				{
-					if (tmpName.Prefix != null)
-					{
-						fn += tmpName.Prefix + " ";
-					}
-				}
-				catch{}
-
-				try
-				{
-					if (tmpName.Given != null)
-					{
-						fn += tmpName.Given + " ";
-					}
-				}
-				catch{}
-
-				try
-				{
-					if (tmpName.Family != null)
-					{
-						fn += tmpName.Family;
-					}
-				}
-				catch{}
-
-				try
-				{
-					if (tmpName.Suffix != null)
-					{
-						fn += " " + tmpName.Suffix;
-					}
-				}
-				catch{}
+				fn = tmpName.FN;
 			}
 
 			return(fn);
