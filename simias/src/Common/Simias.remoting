@@ -8,7 +8,7 @@
 		
 			<channels>
 				
-				<channel ref="http" bindTo="0.0.0.0" port="6436" useIpAddress="true">
+				<channel ref="http" port="6436" useIpAddress="true">
 			
 					<clientProviders>
 						<formatter ref="binary" />
