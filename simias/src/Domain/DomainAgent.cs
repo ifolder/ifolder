@@ -98,14 +98,25 @@ namespace Simias.Domain
 
 			try
 			{
-				// create roster proxy
-				CreateRosterProxy(store, domain, domainInfo.RosterID,
-					domainInfo.SyncServiceUrl);
-			
-				// create PO Box proxy
-				CreatePOBoxProxy(store, domainInfo.ID, provisionInfo.POBoxID,
-					provisionInfo.POBoxName, domainInfo.SyncServiceUrl,
-					domainInfo.POServiceUrl);
+				// create roster if needed
+				if (store.GetCollectionByID(domainInfo.RosterID) == null)
+				{
+					// create roster proxy
+					CreateRosterProxy(store, domain, domainInfo.RosterID,
+						domainInfo.SyncServiceUrl);
+					
+					log.Debug("Creating Roster Proxy: {0}", domainInfo.RosterName);
+				}
+
+				if (store.GetCollectionByID(provisionInfo.POBoxID) == null)
+				{
+					// create PO Box proxy
+					CreatePOBoxProxy(store, domainInfo.ID, provisionInfo.POBoxID,
+						provisionInfo.POBoxName, domainInfo.SyncServiceUrl,
+						domainInfo.POServiceUrl);
+					
+					log.Debug("Creating PO Box Proxy: {0}", provisionInfo.POBoxName);
+				}
 
 				// enable the new domain
 				this.Enabled = true;
