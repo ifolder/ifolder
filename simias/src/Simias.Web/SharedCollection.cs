@@ -32,6 +32,10 @@ using Simias.Sync;
 using Simias.Sync.Client;
 using Simias.POBox;
 
+#if MONO
+	using Mono.Posix;
+#endif
+
 namespace Simias.Web
 {
 	/// <summary>
@@ -303,6 +307,64 @@ namespace Simias.Web
 					return false;
 				}
 			}
+
+#if MONO
+			/*   Check for rights here
+			// this call will check for rights once it's done
+			try
+			{
+				if(Mono.Posix.Syscall.access(path, 
+							Mono.Posix.AccessMode.W_OK) != 0)
+				{
+					return false;
+				}
+			}
+			catch{}
+			*/
+
+
+			// This will check on Linux to see if a path is on a physical
+			// drive and not mounted off the network
+			if(File.Exists("/proc/mounts"))
+			{
+				bool retval = false;
+
+				FileStream fs = File.OpenRead("/proc/mounts");
+				if(fs != null)
+				{
+					StreamReader sr = new StreamReader(fs);
+					string mntLine = sr.ReadLine();
+
+					// Get the stat structure on the path
+					Stat pathStat;
+					Mono.Posix.Syscall.stat(path, out pathStat);
+
+					while(mntLine != null)
+					{
+						// verify it's a device on this box
+						if(mntLine.StartsWith("/dev"))
+						{
+							Stat stat;
+							string[] entries;
+	
+							entries = mntLine.Split(' ');
+							Mono.Posix.Syscall.stat(entries[1], out stat);
+	
+							if(stat.Device == pathStat.Device)
+							{
+								retval = true;
+								break;
+							}
+						}
+						mntLine = sr.ReadLine();
+					}
+					sr.Close();
+				}
+				if(!retval)
+					return retval;
+			}
+#endif
+
 
 			Store store = Store.GetStore();
 
