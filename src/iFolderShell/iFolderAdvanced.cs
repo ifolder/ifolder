@@ -1845,13 +1845,14 @@ namespace Novell.iFolder.iFolderCom
 		private void access_Click(object sender, System.EventArgs e)
 		{
 			UserProperties userProperties = new UserProperties();
-			if (userProperties.SingleSelect = (shareWith.SelectedItems.Count == 1))
+			userProperties.OwnerCanBeSet = (currentMember.IsOwner && (shareWith.SelectedItems.Count == 1));
+			if (shareWith.SelectedItems.Count == 1)
 			{
 				ListViewItem lvi = shareWith.SelectedItems[0];
 				userProperties.Title = "Properties for " + lvi.Text;
 				userProperties.Rights = ((ShareListMember)lvi.Tag).Rights;
 				userProperties.CanBeOwner = ((ShareListMember)lvi.Tag).Member != null;
-				userProperties.Owner = lvi.SubItems[1].Text.Equals("Owner");
+				userProperties.Owner = newOwnerLvi != null ? lvi.Equals(newOwnerLvi) : lvi.Equals(ownerLvi);//lvi.SubItems[1].Text.Equals("Owner");
 			}
 
 			if (DialogResult.OK == userProperties.ShowDialog())
