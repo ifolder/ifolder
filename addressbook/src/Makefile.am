@@ -2,6 +2,8 @@ SUBDIRS = $(COMMON_SUBDIRS) $(PLATFORM_SUBDIRS)
 
 DIST_SUBDIRS = $(COMMON_SUBDIRS) $(LINUX_SUBDIRS) $(WINDOWS_SUBDIRS)
 
+EXTRA_DIST = $(srcdir)/addressbook-snakeoil.keys
+
 installcheck-summary:
 	rm -f $(REPORT_DIR)/*.test.xml
 	$(MAKE) -i installcheck
