@@ -116,9 +116,7 @@ AssemblyInfo.cs
 ../StoreProvider/Provider.cs
 ../StoreProvider/Query.cs
 ../StoreProvider/Record.cs
-../Sync/Differ.cs
 ../Sync/Dredge.cs
-../Sync/SyncCmd.cs
 ../Sync/SyncLog.cs
 ../Sync/SyncOps.cs
 ../Sync/SyncPass.cs
