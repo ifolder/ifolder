@@ -46,9 +46,11 @@ namespace Novell.iFolderCom
 		private const string inviting = "Inviting";
 		private const double megaByte = 1048576;
 
-		// Delegate used to marshal back to the control's creation thread.
+		// Delegates used to marshal back to the control's creation thread.
 		private delegate void NodeDelegate(iFolder ifolder, iFolderUser ifolderUser, string eventData);
 		private NodeDelegate nodeDelegate;
+		private delegate void SyncSizeDelegate(uint objectCount);
+		private SyncSizeDelegate syncSizeDelegate;
 
 		private Queue eventQueue;
 		private Thread worker = null;
@@ -64,6 +66,7 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Button remove;
 		private System.Windows.Forms.Button add;
 
+		private string currentSyncingID = String.Empty;
 		private string longName = String.Empty;
 		private Hashtable subscrHT;
 		private IProcEventClient eventClient;
@@ -92,9 +95,7 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.CheckBox autoSync;
 		private System.Windows.Forms.GroupBox groupBox4;
 		private System.Windows.Forms.Label objectCount;
-		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label8;
-		private System.Windows.Forms.Label byteCount;
 		private System.Windows.Forms.LinkLabel conflicts;
 		private System.Windows.Forms.PictureBox pictureBox1;
 		private System.Windows.Forms.TabPage tabSharing;
@@ -133,6 +134,7 @@ namespace Novell.iFolderCom
 		public iFolderAdvanced()
 		{
 			nodeDelegate = new NodeDelegate(nodeEvent);
+			syncSizeDelegate = new SyncSizeDelegate(updateSyncSize);
 			
 			eventQueue = new Queue();
 			workEvent = new AutoResetEvent(false);
@@ -174,6 +176,8 @@ namespace Novell.iFolderCom
 						eventClient.SetEvent(IProcEventAction.RemoveNodeChanged, new IProcEventHandler(nodeEventHandler));
 						eventClient.SetEvent(IProcEventAction.RemoveNodeCreated, new IProcEventHandler(nodeEventHandler));
 						eventClient.SetEvent(IProcEventAction.RemoveNodeDeleted, new IProcEventHandler(nodeEventHandler));
+						eventClient.SetEvent(IProcEventAction.RemoveCollectionSync, new IProcEventHandler(collectionSyncHandler));
+						eventClient.SetEvent(IProcEventAction.RemoveFileSync, new IProcEventHandler(fileSyncHandler));
 					}
 					else
 					{
@@ -208,9 +212,7 @@ namespace Novell.iFolderCom
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
 			this.objectCount = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
 			this.label8 = new System.Windows.Forms.Label();
-			this.byteCount = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
 			this.syncInterval = new System.Windows.Forms.NumericUpDown();
 			this.label6 = new System.Windows.Forms.Label();
@@ -359,9 +361,7 @@ namespace Novell.iFolderCom
 			this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox4.Anchor")));
 			this.groupBox4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox4.BackgroundImage")));
 			this.groupBox4.Controls.Add(this.objectCount);
-			this.groupBox4.Controls.Add(this.label2);
 			this.groupBox4.Controls.Add(this.label8);
-			this.groupBox4.Controls.Add(this.byteCount);
 			this.groupBox4.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox4.Dock")));
 			this.groupBox4.Enabled = ((bool)(resources.GetObject("groupBox4.Enabled")));
 			this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.System;
@@ -408,33 +408,6 @@ namespace Novell.iFolderCom
 			this.toolTip1.SetToolTip(this.objectCount, resources.GetString("objectCount.ToolTip"));
 			this.objectCount.Visible = ((bool)(resources.GetObject("objectCount.Visible")));
 			// 
-			// label2
-			// 
-			this.label2.AccessibleDescription = resources.GetString("label2.AccessibleDescription");
-			this.label2.AccessibleName = resources.GetString("label2.AccessibleName");
-			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label2.Anchor")));
-			this.label2.AutoSize = ((bool)(resources.GetObject("label2.AutoSize")));
-			this.label2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label2.Dock")));
-			this.label2.Enabled = ((bool)(resources.GetObject("label2.Enabled")));
-			this.label2.Font = ((System.Drawing.Font)(resources.GetObject("label2.Font")));
-			this.helpProvider1.SetHelpKeyword(this.label2, resources.GetString("label2.HelpKeyword"));
-			this.helpProvider1.SetHelpNavigator(this.label2, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label2.HelpNavigator"))));
-			this.helpProvider1.SetHelpString(this.label2, resources.GetString("label2.HelpString"));
-			this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
-			this.label2.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.ImageAlign")));
-			this.label2.ImageIndex = ((int)(resources.GetObject("label2.ImageIndex")));
-			this.label2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label2.ImeMode")));
-			this.label2.Location = ((System.Drawing.Point)(resources.GetObject("label2.Location")));
-			this.label2.Name = "label2";
-			this.label2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label2.RightToLeft")));
-			this.helpProvider1.SetShowHelp(this.label2, ((bool)(resources.GetObject("label2.ShowHelp"))));
-			this.label2.Size = ((System.Drawing.Size)(resources.GetObject("label2.Size")));
-			this.label2.TabIndex = ((int)(resources.GetObject("label2.TabIndex")));
-			this.label2.Text = resources.GetString("label2.Text");
-			this.label2.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.TextAlign")));
-			this.toolTip1.SetToolTip(this.label2, resources.GetString("label2.ToolTip"));
-			this.label2.Visible = ((bool)(resources.GetObject("label2.Visible")));
-			// 
 			// label8
 			// 
 			this.label8.AccessibleDescription = resources.GetString("label8.AccessibleDescription");
@@ -461,33 +434,6 @@ namespace Novell.iFolderCom
 			this.label8.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label8.TextAlign")));
 			this.toolTip1.SetToolTip(this.label8, resources.GetString("label8.ToolTip"));
 			this.label8.Visible = ((bool)(resources.GetObject("label8.Visible")));
-			// 
-			// byteCount
-			// 
-			this.byteCount.AccessibleDescription = resources.GetString("byteCount.AccessibleDescription");
-			this.byteCount.AccessibleName = resources.GetString("byteCount.AccessibleName");
-			this.byteCount.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("byteCount.Anchor")));
-			this.byteCount.AutoSize = ((bool)(resources.GetObject("byteCount.AutoSize")));
-			this.byteCount.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("byteCount.Dock")));
-			this.byteCount.Enabled = ((bool)(resources.GetObject("byteCount.Enabled")));
-			this.byteCount.Font = ((System.Drawing.Font)(resources.GetObject("byteCount.Font")));
-			this.helpProvider1.SetHelpKeyword(this.byteCount, resources.GetString("byteCount.HelpKeyword"));
-			this.helpProvider1.SetHelpNavigator(this.byteCount, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("byteCount.HelpNavigator"))));
-			this.helpProvider1.SetHelpString(this.byteCount, resources.GetString("byteCount.HelpString"));
-			this.byteCount.Image = ((System.Drawing.Image)(resources.GetObject("byteCount.Image")));
-			this.byteCount.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("byteCount.ImageAlign")));
-			this.byteCount.ImageIndex = ((int)(resources.GetObject("byteCount.ImageIndex")));
-			this.byteCount.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("byteCount.ImeMode")));
-			this.byteCount.Location = ((System.Drawing.Point)(resources.GetObject("byteCount.Location")));
-			this.byteCount.Name = "byteCount";
-			this.byteCount.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("byteCount.RightToLeft")));
-			this.helpProvider1.SetShowHelp(this.byteCount, ((bool)(resources.GetObject("byteCount.ShowHelp"))));
-			this.byteCount.Size = ((System.Drawing.Size)(resources.GetObject("byteCount.Size")));
-			this.byteCount.TabIndex = ((int)(resources.GetObject("byteCount.TabIndex")));
-			this.byteCount.Text = resources.GetString("byteCount.Text");
-			this.byteCount.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("byteCount.TextAlign")));
-			this.toolTip1.SetToolTip(this.byteCount, resources.GetString("byteCount.ToolTip"));
-			this.byteCount.Visible = ((bool)(resources.GetObject("byteCount.Visible")));
 			// 
 			// label5
 			// 
@@ -1655,6 +1601,11 @@ namespace Novell.iFolderCom
 			}
 		}
 
+		private void updateSyncSize(uint syncSize)
+		{
+			objectCount.Text = syncSize.ToString();
+		}
+
 		private void connectToWebService()
 		{
 			if (ifWebService == null)
@@ -1807,7 +1758,6 @@ namespace Novell.iFolderCom
 				// Get the sync node and byte counts.
 				SyncSize syncSize = ifWebService.CalculateSyncSize(currentiFolder.ID);
 				objectCount.Text = syncSize.SyncNodeCount.ToString();
-				byteCount.Text = syncSize.SyncByteCount.ToString();
 			}
 			catch (Exception ex)
 			{
@@ -2374,6 +2324,8 @@ namespace Novell.iFolderCom
 				eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(nodeEventHandler));
 				eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(nodeEventHandler));
 				eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(nodeEventHandler));
+				eventClient.SetEvent(IProcEventAction.AddCollectionSync, new IProcEventHandler(collectionSyncHandler));
+				eventClient.SetEvent(IProcEventAction.AddFileSync, new IProcEventHandler(fileSyncHandler));
 			}
 
 			try
@@ -2777,6 +2729,23 @@ namespace Novell.iFolderCom
 
 				// Signal that there are events in the queue.
 				workEvent.Set();
+			}
+		}
+
+		private void collectionSyncHandler(SimiasEventArgs args)
+		{
+			CollectionSyncEventArgs syncEventArgs = args as CollectionSyncEventArgs;
+			currentSyncingID = (syncEventArgs.Action == Action.StartSync) ? syncEventArgs.ID : String.Empty;
+		}
+
+		private void fileSyncHandler(SimiasEventArgs args)
+		{
+			FileSyncEventArgs syncEventArgs = args as FileSyncEventArgs;
+
+			if (currentSyncingID.Equals(currentiFolder.ID))
+			{
+				SyncSize syncSize = ifWebService.CalculateSyncSize(currentiFolder.ID);
+				BeginInvoke(syncSizeDelegate, new object[] {syncSize.SyncNodeCount});
 			}
 		}
 
