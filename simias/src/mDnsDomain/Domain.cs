@@ -172,7 +172,7 @@ namespace Simias.mDns
 				}
 				else
 				{
-					ldbMember = new Member(memberNode);
+					ldbMember = new Member( memberNode );
 				}
 
 				mDnsUserID = ldbMember.ID;
@@ -184,53 +184,32 @@ namespace Simias.mDns
 				Simias.Storage.Domain rDomain = store.GetDomain( ID );
 				if (rDomain == null)
 				{
-					// Create the mDnsDomain and add an identity mapping.
-					store.AddDomainIdentity(
-						ldbMember.ID,
-						this.mDnsDomainName, 
-						Simias.mDns.Domain.ID, 
-						this.description,
-						localUri,
-						Simias.Sync.SyncRoles.Master );
-				}
+					// Create the Rendezvous workgroup domain
+					rDomain = 
+						new Simias.Storage.Domain(
+							store, 
+							this.mDnsDomainName,
+							Simias.mDns.Domain.ID,
+							this.description, 
+							Simias.Sync.SyncRoles.Master, 
+							localUri );
 
-				//
-				// Verify the Rendezvous workgroup roster
-				//
+					rDomain.SetType( rDomain, "Rendezvous" );
 
-				Roster mdnsRoster = null;
-				Member rMember;
-				ArrayList changeList = new ArrayList();
+					// Create the owner member for the domain.
+					Member member = 
+						new Member(
+							mDnsUserName, 
+							ldbMember.ID,
+							Access.Rights.Admin );
 
-				try
-				{
-					mdnsRoster = rDomain.Roster;
-				}
-				catch{}
-				if (mdnsRoster == null)
-				{
-					mdnsRoster = new Roster( store, store.GetDomain( Simias.mDns.Domain.ID ) );
-					rMember = new Member( ldbMember.Name, ldbMember.ID, Access.Rights.Admin );
-					rMember.IsOwner = true;
-					//rMember.Properties.ModifyProperty( "POBox", hostAddress );
-					changeList.Add( mdnsRoster );
-					//mdnsRoster.Commit( new Node[] { mdnsRoster, rMember } );
-				}
-				else
-				{
-					// Make sure the member exists
-					rMember = mdnsRoster.GetMemberByID( ldbMember.ID );
-					if (rMember == null)
-					{
-						rMember = new Member( ldbMember.Name, ldbMember.ID, Access.Rights.Admin );
-						rMember.IsOwner = true;
-						//mdnsRoster.Commit( new Node[] { rMember } );
-					}
-				}
+					member.IsOwner = true;
 
-				rMember.Properties.ModifyProperty( "POBox", hostAddress );
-				changeList.Add(rMember);
-				mdnsRoster.Commit( changeList.ToArray( typeof( Node ) ) as Node[] );
+					rDomain.Commit( new Node[] { rDomain, member } );
+
+					// Create the name mapping.
+					store.AddDomainIdentity( rDomain.ID, member.UserID );
+				}
 
 				//
 				// Verify the POBox for the local Rendezvous user
@@ -268,7 +247,7 @@ namespace Simias.mDns
 
 				mDnsPOBoxID = poBox.ID;
 			}
-			catch(Exception e1)
+			catch( Exception e1 )
 			{
 				log.Error(e1.Message);
 				log.Error(e1.StackTrace);
@@ -361,7 +340,7 @@ namespace Simias.mDns
 				mdnsDomain = store.GetDomain( ID );
 				if ( mdnsDomain != null )
 				{
-					mDnsUserID = mdnsDomain.Roster.GetMemberByName( mDnsUserName ).ID;
+					mDnsUserID = mdnsDomain.GetMemberByName( mDnsUserName ).ID;
 					Simias.POBox.POBox pobox = 
 						Simias.POBox.POBox.FindPOBox( store, ID, mDnsUserID );
 					mDnsPOBoxID = pobox.ID;

@@ -131,10 +131,11 @@ namespace Simias.mDns
 
 			try
 			{
-				Roster roster = Store.GetStore().GetDomain( Simias.mDns.Domain.ID ).Roster;
-				if ( roster != null )
+				Simias.Storage.Domain rDomain = 
+					Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
+				if ( rDomain != null )
 				{
-					this.mDnsUserID = roster.GetMemberByName( mDnsUserName).UserID;
+					this.mDnsUserID = rDomain.GetMemberByName( mDnsUserName).UserID;
 				}
 			}
 			catch( Exception e )
@@ -236,7 +237,7 @@ namespace Simias.mDns
 			if ( mdnsDomain != null )
 			{
 				//Roster roster = mdnsDomain.Roster;
-				Member member = mdnsDomain.Roster.GetMemberByName( mDnsUserName );
+				Member member = mdnsDomain.GetMemberByName( mDnsUserName );
 				string[] txtStrings = new string[2];
 				string memberTxtString = "MemberName=" + this.mDnsUserName;
 				string pathTxtString = "ServicePath=" + webServiceUri.AbsolutePath;
@@ -317,9 +318,8 @@ namespace Simias.mDns
 						//Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain( false );
 						Simias.Storage.Domain rDomain = 
 							Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
-						Simias.Storage.Roster mdnsRoster = rDomain.Roster;
 
-						Member mdnsMember = mdnsRoster.GetMemberByID( ((Ptr) cResource).Target );
+						Member mdnsMember = rDomain.GetMemberByID( ((Ptr) cResource).Target );
 						if ( mdnsMember == null )
 						{
 							log.Debug( 
@@ -363,7 +363,7 @@ namespace Simias.mDns
 										mdnsMember.Properties.AddProperty( "PublicKey", publicKey );
 									}
 
-									mdnsRoster.Commit( new Node[] { mdnsMember } );
+									rDomain.Commit( new Node[] { mdnsMember } );
 								}
 							}
 						}
@@ -388,7 +388,7 @@ namespace Simias.mDns
 			//
 
 			Simias.Storage.Member mdnsMember = null;
-			Simias.Storage.Roster mdnsRoster = Store.GetStore().GetDomain( Simias.mDns.Domain.ID ).Roster;
+			Simias.Storage.Domain mdnsDomain = Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
 
 			Char[] sepChar = new Char [] {'='};
 
@@ -423,7 +423,7 @@ namespace Simias.mDns
 
 						if ( memberName != null )
 						{
-							mdnsMember = mdnsRoster.GetMemberByName( memberName );
+							mdnsMember = mdnsDomain.GetMemberByName( memberName );
 							if ( mdnsMember == null )
 							{
 								mdnsMember = 
@@ -434,7 +434,7 @@ namespace Simias.mDns
 									mdnsMember.Properties.AddProperty( "PublicKey", publicKey );
 								}
 
-								mdnsRoster.Commit( new Node[] { mdnsMember } );
+								mdnsDomain.Commit( new Node[] { mdnsMember } );
 							}
 							else
 							{

@@ -310,7 +310,7 @@ namespace Simias.Location
 				try
 				{
 					Simias.Storage.Domain domain = Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
-					Member member = domain.Roster.GetMemberByID( userID );
+					Member member = domain.GetMemberByID( userID );
 					if ( member != null )
 					{
 						locationUri = MemberIDToUri( member.UserID );

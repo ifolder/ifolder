@@ -85,14 +85,14 @@
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "Simias"
-                    AssemblyName = "Simias"
-                    HintPath = "..\Simias.dll\Simias.dll"
-                />
-                <Reference
                     Name = "Novell.Security.ClientPasswordManager.NetCredential"
                     AssemblyName = "Novell.Security.ClientPasswordManager.NetCredential"
                     HintPath = "..\..\external\Novell.Security\net\bin\Novell.Security.ClientPasswordManager.NetCredential.dll"
+                />
+                <Reference
+                    Name = "Simias"
+                    AssemblyName = "Simias"
+                    HintPath = "..\..\stage\web\bin\Simias.dll"
                 />
             </References>
         </Build>
