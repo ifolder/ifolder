@@ -67,6 +67,8 @@ includedir="${prefix}/include"
 oldincludedir="/usr/include"
 infodir="${prefix}/info"
 mandir="${prefix}/man"
+webdir="${exec_prefix}/web"
+webbindir="${exec_prefix}/web/bin"
 
 if test -z "$PKG_CONFIG_PATH"; then
     export PKG_CONFIG_PATH="$prefix/$PKG_CONFIG_DIR/pkgconfig"
@@ -303,6 +305,8 @@ AC_SUBST(SHARED_LIB_EXT)
 AC_SUBST(SHARED_LIB_FLAG)
 AC_SUBST(STORELIB)
 AC_SUBST(STORELIB_PATH)
+AC_SUBST(webdir)
+AC_SUBST(webbindir)
 
 #
 # Set pkg-config variables

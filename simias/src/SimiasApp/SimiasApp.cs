@@ -35,6 +35,32 @@ namespace Simias.Web
 			IPAddress ipaddr = null;
 			ushort port;
 
+			// CRG: This is a total hack for now
+			string curdir = Directory.GetCurrentDirectory();
+			string winweb = curdir + 
+								System.IO.Path.DirectorySeparatorChar + "web";
+			string nixweb = curdir + System.IO.Path.DirectorySeparatorChar + 
+						".." + System.IO.Path.DirectorySeparatorChar + "web";
+
+			Console.WriteLine(curdir);
+			Console.WriteLine(winweb);
+			Console.WriteLine(nixweb);
+
+			// check for web dir on Windows
+			if(Directory.Exists(winweb))
+			{
+				Console.WriteLine("We are getting here");
+				Environment.CurrentDirectory = winweb;
+			}
+			else if(Directory.Exists(nixweb))
+			{
+				Environment.CurrentDirectory = nixweb;
+//				Directory.SetCurrentDirectory(nixweb);
+				Console.WriteLine("Just set: " + nixweb);
+			}
+
+			Console.WriteLine("Setting root to: {0}", Directory.GetCurrentDirectory());
+
 			port = Convert.ToUInt16 (8086);
 			ipaddr = IPAddress.Parse ("0.0.0.0");
 

@@ -40,11 +40,11 @@ $(FlaimWrapper_Target): $(OBJS)
 	$(CXX) $(CXX_FLAGS) $<
 
 install-exec-local: $(FlaimWrapper_Target)
-	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir) $(DESTDIR)$(datadir)/simias
-	$(INSTALL_PROGRAM) $(FlaimWrapper_Target) $(DEBUG_FILES) $(DESTDIR)$(libdir)
+	$(mkinstalldirs) $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) $(FlaimWrapper_Target) $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(libdir); rm -f $(FlaimWrapper_Target) $(DEBUG_FILES)
+	cd $(DESTDIR)$(webbindir); rm -f $(FlaimWrapper_Target) $(DEBUG_FILES)
 
 CLEAN_FILES = $(FlaimWrapper_Target) $(OBJS)
 

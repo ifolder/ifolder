@@ -27,6 +27,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Web;
 using System.Web.SessionState;
+using System.IO;
 
 using Simias;
 
@@ -49,6 +50,14 @@ namespace Simias.Web
 		
 		protected void Application_Start(Object sender, EventArgs e)
 		{
+			// CRG: This is a total hack for now
+			string newdir = Directory.GetCurrentDirectory() +
+								System.IO.Path.DirectorySeparatorChar + "bin";
+
+			Console.WriteLine(newdir);
+
+			Environment.CurrentDirectory = newdir;
+
 			Console.WriteLine("Starting Simias Process");
 			serviceManager.StartServices();
 			serviceManager.WaitForServicesStarted();

@@ -27,11 +27,11 @@ endif
 endif
 
 install-exec-local: Novell.AddressBook.dll
-	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) Novell.AddressBook.dll $(DEBUG_FILES) $(DESTDIR)$(libdir)
+	$(mkinstalldirs) $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) Novell.AddressBook.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(libdir); rm -f Novell.AddressBook.dll $(DEBUG_FILES)
+	cd $(DESTDIR)$(webbindir); rm -f Novell.AddressBook.dll $(DEBUG_FILES)
 
 CLEAN_FILES = Novell.AddressBook.dll AddressBook.doc.xml
 

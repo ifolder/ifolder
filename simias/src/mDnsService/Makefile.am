@@ -27,19 +27,19 @@ endif
 endif
 
 install-exec-local: mDnsService.exe
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) mDnsService.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(mkinstalldirs) $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) mDnsService.exe $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 if WINDOWS
 if DEBUG	
-	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(webbindir)
 endif
 endif
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f mDnsService.exe $(DEBUG_FILES)
+	cd $(DESTDIR)$(webbindir); rm -f mDnsService.exe $(DEBUG_FILES)
 if WINDOWS
 if DEBUG	
-	cd $(DESTDIR)$(bindir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)
+	cd $(DESTDIR)$(webbindir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)
 endif
 endif
 	
