@@ -723,7 +723,7 @@ namespace Simias.Web
 			{
 				// try to find a subscription with this ID
 				Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(                                             store,
-									store.DefaultDomain);
+									col.Domain);
 
 				if(poBox == null)
 				{
@@ -748,8 +748,7 @@ namespace Simias.Web
 					throw new Exception("Invalid UserID");
 				}
 
-				poBox.Delete(sub);	
-				poBox.Commit(sub);
+				poBox.Commit(poBox.Delete(sub));
 			}
 		}
 
