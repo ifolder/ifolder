@@ -809,7 +809,7 @@ namespace Novell.iFolder.FormsBookLib
 				{
 					try
 					{
-						book.Delete();
+						book.Commit(book.Delete());
 						lvitem.Remove();
 					}
 					catch (SimiasException ex)
