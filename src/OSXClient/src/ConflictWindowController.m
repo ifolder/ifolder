@@ -128,7 +128,8 @@ static ConflictWindowController *conflictSharedInstance = nil;
 			}
 			@catch(NSException *ex)
 			{
-				NSBeginAlertSheet(@"Error resolving conflict", @"OK", nil, nil,
+				NSBeginAlertSheet(NSLocalizedString(@"Error resolving conflict", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil,
 					[self window], self, nil, nil, NULL, 
 					[ex description]);
 			}
@@ -155,9 +156,10 @@ static ConflictWindowController *conflictSharedInstance = nil;
 			// it's a local rename
 			if( [localName compare:newName] == 0)
 			{
-				NSBeginAlertSheet(@"File names match", @"OK", nil, nil,
+				NSBeginAlertSheet(NSLocalizedString(@"File names match", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil,
 					[self window], self, nil, nil, NULL, 
-					@"You must select a new name in order to resolve this conflict.");
+					NSLocalizedString(@"You must select a new name in order to resolve this conflict.", nil));
 			}
 			else
 			{
@@ -169,7 +171,8 @@ static ConflictWindowController *conflictSharedInstance = nil;
 				}
 				@catch(NSException *ex)
 				{
-					NSBeginAlertSheet(@"Error resolving conflict", @"OK", nil, nil,
+					NSBeginAlertSheet(NSLocalizedString(@"Error resolving conflict", nil), 
+						NSLocalizedString(@"OK", nil), nil, nil,
 						[self window], self, nil, nil, NULL, 
 						[ex description]);
 				}
@@ -180,9 +183,10 @@ static ConflictWindowController *conflictSharedInstance = nil;
 			// it's a server rename
 			if( [serverName compare:newName] == 0)
 			{
-				NSBeginAlertSheet(@"File names match", @"OK", nil, nil,
+				NSBeginAlertSheet(NSLocalizedString(@"File names match", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil,
 					[self window], self, nil, nil, NULL, 
-					@"You must select a new name in order to resolve this conflict.");
+					NSLocalizedString(@"You must select a new name in order to resolve this conflict.", nil));
 			}
 			else
 			{
@@ -193,7 +197,8 @@ static ConflictWindowController *conflictSharedInstance = nil;
 				}
 				@catch(NSException *ex)
 				{
-					NSBeginAlertSheet(@"Error resolving conflict", @"OK", nil, nil,
+					NSBeginAlertSheet(NSLocalizedString(@"Error resolving conflict", nil), 
+						NSLocalizedString(@"OK", nil), nil, nil,
 						[self window], self, nil, nil, NULL, 
 						[ex description]);
 				}

@@ -33,43 +33,37 @@ void SimiasEventInitialize(void)
 {
 	if(sec_init (&simiasEventClient, SimiasEventStateCallBack, &simiasEventClient) != 0)
 	{
-		[[NSApp delegate] addLogTS:@"Error initializing the Simias Event Client"];
+		[[NSApp delegate] addLogTS:NSLocalizedString(@"Error initializing the Simias Event Client", nil)];
 		return;
 	}
 
 	if(sec_register(simiasEventClient) != 0)
 	{
-		[[NSApp delegate] addLogTS:@"Error registering the Simias Event Client"];
+		[[NSApp delegate] addLogTS:NSLocalizedString(@"Error registering the Simias Event Client", nil)];
 		return;
 	}
 
-	[[NSApp delegate] addLogTS:@"Simias Event Client initialized and registered"];
+	[[NSApp delegate] addLogTS:NSLocalizedString(@"Simias Event Client initialized and registered", nil)];
 }
 
 
 void SimiasEventDisconnect(void)
 {
 	sec_set_event(simiasEventClient, ACTION_NODE_CREATED, false, nil, nil);
-	[[NSApp delegate] addLogTS:@"De-Registered from Node Created Events"];
 	sec_set_event(simiasEventClient, ACTION_NODE_DELETED, false, nil, nil);
-	[[NSApp delegate] addLogTS:@"De-Registered from Node Deleted Events"];
 	sec_set_event(simiasEventClient, ACTION_NODE_CHANGED, false, nil, nil);
-	[[NSApp delegate] addLogTS:@"De-Registered from Node Changed Events"];
 
 	sec_set_event(simiasEventClient, ACTION_COLLECTION_SYNC, false, nil, nil);
-	[[NSApp delegate] addLogTS:@"De-Registered from Collection Sync Events"];
 	sec_set_event(simiasEventClient, ACTION_FILE_SYNC, false, nil, nil);
-	[[NSApp delegate] addLogTS:@"De-Registered from File Sync Events"];
 	sec_set_event(simiasEventClient, ACTION_NOTIFY_MESSAGE, false, nil, nil);
-	[[NSApp delegate] addLogTS:@"De-Registered from Notify Message Events"];
 
 	if(sec_deregister(simiasEventClient) != 0)
 	{
-		[[NSApp delegate] addLogTS:@"Error deregistering the Simias Event Client"];
+		[[NSApp delegate] addLogTS:NSLocalizedString(@"Error deregistering the Simias Event Client", nil)];
 		return;
 	}
 
-	[[NSApp delegate] addLogTS:@"Simias Event Client de-registered"];
+	[[NSApp delegate] addLogTS:NSLocalizedString(@"Simias Event Client de-registered", nil)];
 }
 
 

@@ -118,7 +118,7 @@
 			if([curiFolder EffectiveSyncInterval] == 0)
 			{
 				[syncInterval setHidden:YES];
-				[syncIntervalLabel setStringValue:@"This iFolder does not automatically sync"];
+				[syncIntervalLabel setStringValue:NSLocalizedString(@"This iFolder does not automatically sync", nil)];
 			}
 			else
 			{
@@ -140,7 +140,7 @@
 		}
 		@catch(NSException *e)
 		{
-			[filesToSync setStringValue:@"unknown"];
+			[filesToSync setStringValue:NSLocalizedString(@"unknown", nil)];
 		}
 
 	}

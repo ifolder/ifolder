@@ -64,7 +64,7 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 	
 	[[self window] setContentSize:[generalView frame].size];
 	[[self window] setContentView: generalView];
-	[[self window] setTitle:@"iFolder Preferences: General"];
+	[[self window] setTitle:NSLocalizedString(@"iFolder Preferences: General", nil)];
 	
 	[self setupToolbar];
 
@@ -215,7 +215,7 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 		[[self window] setContentView: blankView];
 		[self updateSize:[generalView frame].size];
 		[[self window] setContentView: generalView];
-		[[self window] setTitle:@"iFolder Preferences: General"];	
+		[[self window] setTitle:NSLocalizedString(@"iFolder Preferences: General", nil)];	
 	}
 }
 
@@ -229,7 +229,7 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 		[[self window] setContentView: blankView];
 		[self updateSize:[accountsView frame].size];
 		[[self window] setContentView: accountsView];
-		[[self window] setTitle:@"iFolder Preferences: Accounts"];	
+		[[self window] setTitle:NSLocalizedString(@"iFolder Preferences: Accounts", nil)];	
 	}
 }
 
@@ -242,7 +242,7 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 		[[self window] setContentView: blankView];
 		[self updateSize:[syncView frame].size];
 		[[self window] setContentView: syncView];
-		[[self window] setTitle:@"iFolder Preferences: Synchronization"];	
+		[[self window] setTitle:NSLocalizedString(@"iFolder Preferences: Synchronization", nil)];	
 	}
 }
 
@@ -255,7 +255,7 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 		[[self window] setContentView: blankView];
 		[self updateSize:[notifyView frame].size];
 		[[self window] setContentView: notifyView];
-		[[self window] setTitle:@"iFolder Preferences: Notification"];	
+		[[self window] setTitle:NSLocalizedString(@"iFolder Preferences: Notification", nil)];	
 	}
 }
 
@@ -267,9 +267,9 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 	toolbarItemArray = [[NSMutableArray alloc] init];
 
 	NSToolbarItem *item=[[NSToolbarItem alloc] initWithItemIdentifier:@"General"];
-	[item setPaletteLabel:@"General"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"General"]; // name for the item in the toolbar
-	[item setToolTip:@"General Settings"]; // tooltip
+	[item setPaletteLabel:NSLocalizedString(@"General", nil)]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"General", nil)]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"General Settings", nil)]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(generalPreferences:)];
 	[item setImage:[NSImage imageNamed:@"prefs-general32"]];
@@ -279,9 +279,9 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 
 	
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Accounts"];
-	[item setPaletteLabel:@"Accounts"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"Accounts"]; // name for the item in the toolbar
-	[item setToolTip:@"Accounts"]; // tooltip
+	[item setPaletteLabel:NSLocalizedString(@"Accounts", nil)]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"Accounts", nil)]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"Accounts", nil)]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(accountPreferences:)];
 	[item setImage:[NSImage imageNamed:@"prefs-accounts32"]];
@@ -291,9 +291,9 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 
 
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Synchronization"];
-	[item setPaletteLabel:@"Synchronization"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"Synchronization"]; // name for the item in the toolbar
-	[item setToolTip:@"Synchronization"]; // tooltip
+	[item setPaletteLabel:NSLocalizedString(@"Synchronization", nil)]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"Synchronization", nil)]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"Synchronization", nil)]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(syncPreferences:)];
 	[item setImage:[NSImage imageNamed:@"prefs-sync32"]];
@@ -303,9 +303,9 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 	
 	
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Notification"];
-	[item setPaletteLabel:@"Notification"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"Notification"]; // name for the item in the toolbar
-	[item setToolTip:@"Notification"]; // tooltip
+	[item setPaletteLabel:NSLocalizedString(@"Notification", nil)]; // name for the "Customize Toolbar" sheet
+	[item setLabel:NSLocalizedString(@"Notification", nil)]; // name for the item in the toolbar
+	[item setToolTip:NSLocalizedString(@"Notification", nil)]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(notifyPreferences:)];
 	[item setImage:[NSImage imageNamed:@"prefs-notification32"]];
@@ -326,7 +326,7 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 {
 	NSString *sName = [[NSUserDefaults standardUserDefaults] objectForKey:PREFKEY_NOTIFYSOUND];
 	// uh... this sucks! Can you say English only?
-	if([sName compare:@"No sound"] == 0)
+	if([sName compare:NSLocalizedString(@"No sound", nil)] == 0)
 		return;
 
 	NSSound *sound = [NSSound soundNamed:sName];
