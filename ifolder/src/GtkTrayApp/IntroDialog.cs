@@ -28,6 +28,7 @@ namespace Novell.iFolder
 	using System.Drawing;
 	using Simias.Storage;
 	using Simias;
+	using Novell.AddressBook.UI.gtk;
 
 	using Gtk;
 	using Gdk;
@@ -109,13 +110,31 @@ namespace Novell.iFolder
 
 		public void on_ShareButton_clicked(object obj, EventArgs args)
 		{
+			iFolder ifolder = null;
+			iFolderManager ifmgr;
+
+			ifmgr = iFolderManager.Connect();
+
+			if(ifmgr.IsiFolder(path))
+			{
+				ifolder = ifmgr.GetiFolderByPath(path);
+
+				CollectionProperties colProp = new CollectionProperties();
+				colProp.TransientFor = dialog;
+				colProp.Collection = ifolder;
+				colProp.ActiveTag = 1;
+				colProp.Run();
+			}
+
+
+
+/*		
 			iFolderProperties ifProp = new iFolderProperties();
 			ifProp.TransientFor = dialog;
 			ifProp.iFolderPath = path;
 			ifProp.ActiveTag = 1;
 			ifProp.Run();
-/*
-/*		
+
 			PropertiesDialog pd = new PropertiesDialog();
 			pd.iFolderPath = path;
 			pd.TransientFor = dialog;

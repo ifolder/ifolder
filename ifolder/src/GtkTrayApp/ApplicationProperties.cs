@@ -29,6 +29,7 @@ namespace Novell.iFolder
 	using Simias.Storage;
 	using Simias.Sync;
 	using Simias;
+	using Novell.AddressBook.UI.gtk;
 
 	using Gtk;
 	using Gdk;
@@ -492,11 +493,18 @@ namespace Novell.iFolder
 				tSelect.GetSelected(out tModel, out iter);
 				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
 
-				iFolderProperties ifProp = new iFolderProperties();
+				CollectionProperties colProp = new CollectionProperties();
+				colProp.TransientFor = ApplicationPropDialog;
+				colProp.Collection = ifolder;
+				colProp.ActiveTag = 1;
+				colProp.Run();
+
+/*				iFolderProperties ifProp = new iFolderProperties();
 				ifProp.TransientFor = ApplicationPropDialog;
 				ifProp.CurrentiFolder = ifolder;
 				ifProp.ActiveTag = 1;
 				ifProp.Run();
+*/
 			}
 		}
 
@@ -512,10 +520,15 @@ namespace Novell.iFolder
 				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
 				try
 				{
-					iFolderProperties ifProps = new iFolderProperties();
+					CollectionProperties colProp = new CollectionProperties();
+					colProp.TransientFor = ApplicationPropDialog;
+					colProp.Collection = ifolder;
+					colProp.Run();
+/*					iFolderProperties ifProps = new iFolderProperties();
 					ifProps.CurrentiFolder = ifolder;
 					ifProps.TransientFor = ApplicationPropDialog;
 					ifProps.Run();
+*/
 				}
 				catch(Exception e)
 				{

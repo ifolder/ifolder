@@ -64,7 +64,7 @@ namespace Novell.iFolder
 		static Simias.Service.Manager sManager = null;
 		static Gtk.ThreadNotify ServicesStateNotify;
 		static ServiceStates serviceState;
-		static Mutex TrayMutex;
+//		static Mutex TrayMutex;
 
 		public static void Main (string[] args)
 		{
@@ -74,7 +74,7 @@ namespace Novell.iFolder
 //			Application.Init();
 
 			serviceState = ServiceStates.stopped;
-			TrayMutex = new Mutex();
+//			TrayMutex = new Mutex();
 
 			// This is my huge try catch block to catch any exceptions
 			// that are not caught
@@ -134,18 +134,18 @@ namespace Novell.iFolder
 
 		static private void SetServiceState(ServiceStates state)
 		{
-			lock(TrayMutex)
-			{
+//			lock(TrayMutex)
+//			{
 				serviceState = state;
-			}
+//			}
 		}
 
 		static private ServiceStates GetServiceState()
 		{
-			lock(TrayMutex)
-			{
+//			lock(TrayMutex)
+//			{
 				return serviceState;
-			}
+//			}
 		}
 
 		static private void StartServices()
@@ -325,13 +325,14 @@ namespace Novell.iFolder
 			propDialog.Run();
 		}
 
-		static void show_ifolder_browser(object o, EventArgs args)
+/*		static void show_ifolder_browser(object o, EventArgs args)
 		{
 			iFolderBrowser browser;
 
 			browser = new iFolderBrowser();
 			browser.ShowAll();
 		}
+*/
 
 		static void show_rbbrowser(object o, EventArgs args)
 		{
