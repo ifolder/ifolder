@@ -361,8 +361,6 @@ namespace Simias.Sync
 			}
 			else
 			{
-				// BUGBUG
-				System.Diagnostics.Debugger.Break();
 				sstamps =  service.GetAllNodeStamps();
 				if (sstamps == null)
 				{
@@ -555,7 +553,7 @@ namespace Simias.Sync
 
 		void GetNodeFromServer(SyncNodeStamp stamp)
 		{
-			if (stamp.BaseType == NodeTypes.BaseFileNodeType)
+			if (stamp.BaseType == NodeTypes.FileNodeType || stamp.BaseType == NodeTypes.StoreFileNodeType)
 			{
 				if (!filesFromServer.Contains(stamp.ID))
 					filesFromServer.Add(stamp.ID, stamp.BaseType);
@@ -576,7 +574,7 @@ namespace Simias.Sync
 
 		void PutNodeToServer(NodeStamp stamp)
 		{
-			if (stamp.type == NodeTypes.BaseFileNodeType)
+			if (stamp.type == NodeTypes.TombstoneType)
 			{
 				if (!killOnServer.Contains(stamp.id))
 					killOnServer.Add(stamp.id, stamp.type);
@@ -587,7 +585,7 @@ namespace Simias.Sync
 				return;
 			}
 
-			if (stamp.type == NodeTypes.BaseFileNodeType)
+			if (stamp.type == NodeTypes.FileNodeType || stamp.type == NodeTypes.StoreFileNodeType)
 			{
 				if (!filesToServer.Contains(stamp.id))
 					filesToServer.Add(stamp.id, stamp.type);
