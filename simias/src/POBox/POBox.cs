@@ -139,7 +139,7 @@ namespace Simias.POBox
 		/// <param name="domainId">The ID of the domain that the POBox belongs to.</param>
 		/// <param name="userId">The ID of the user that the POBox belongs to.</param>
 		/// <returns></returns>
-		internal static POBox FindPOBox(Store storeObject, string domainId, string userId)
+		public static POBox FindPOBox(Store storeObject, string domainId, string userId)
 		{
 			POBox poBox = null;
 
