@@ -32,6 +32,7 @@
 #import "SimiasEventData.h"
 #import "SMEvents.h"
 #import "iFolderNotificationController.h"
+#import "config.h"
 
 
 @implementation iFolderApplication
@@ -115,6 +116,20 @@
 {
 	[[iFolderWindowController sharedInstance] showWindow:self];
 }
+
+
+
+
+//===================================================================
+// showiFolderWindow
+// Shows the main iFolder Window
+//===================================================================
+- (IBAction)showHelp:(id)sender
+{
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:
+		[NSString stringWithFormat:@"file://localhost%s/share/ifolder3/help/en/doc/user/data/front.html", IFOLDER_PREFIX]]];
+}
+
 
 
 
