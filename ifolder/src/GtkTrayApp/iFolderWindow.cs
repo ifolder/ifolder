@@ -171,7 +171,7 @@ namespace Novell.iFolder
 
 			PropMenuItem = new ImageMenuItem (Stock.Properties, agrp);
 			iFolderMenu.Append(PropMenuItem);
-//			PropMenuItem.Activated += new EventHandler(On_CreateiFolder);
+			PropMenuItem.Activated += new EventHandler( OnShowProperties );
 
 			iFolderMenu.Append(new SeparatorMenuItem());
 			CloseMenuItem = new ImageMenuItem (Stock.Close, agrp);
@@ -558,7 +558,7 @@ namespace Novell.iFolder
 							new MenuItem ("Properties");
 						ifMenu.Append (item_properties);
 						item_properties.Activated += 
-							new EventHandler( on_properties_event );
+							new EventHandler( OnShowProperties );
 					}
 					else
 					{
@@ -668,7 +668,7 @@ namespace Novell.iFolder
 
 
 
-		public void on_properties_event(object o, EventArgs args)
+		public void OnShowProperties(object o, EventArgs args)
 		{
 			TreeSelection tSelect = iFolderTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
@@ -678,20 +678,26 @@ namespace Novell.iFolder
 
 				tSelect.GetSelected(out tModel, out iter);
 				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
-/*
+
 				try
 				{
-					CollectionProperties colProp = new CollectionProperties();
-					colProp.TransientFor = this;
-					colProp.Collection = ifolder;
-					colProp.Run();
+					iFolderPropertiesDialog propDialog = 
+						new iFolderPropertiesDialog(this, ifolder, iFolderWS);
+//					int rc = propDialog.Run();
+					int rc = propDialog.Run();
+					propDialog.Hide();
+					propDialog.Destroy();
+					propDialog = null;
 				}
 				catch(Exception e)
 				{
-					Console.WriteLine(e);
-					Console.WriteLine("Unable to Show Properties");
+					iFolderExceptionDialog ied = 
+						new iFolderExceptionDialog(this, e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+					ied = null;
 				}
-*/
 			}
 		}
 
