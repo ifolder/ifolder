@@ -46,6 +46,7 @@ namespace Novell.iFolderCom
 		private int itemsViewable;
 		private int index;
 		private bool stopThread = false;
+		private bool noSearch = true;
 		private Thread worker = null;
 		/// <summary>
 		/// Event used to signal that there is work to do.
@@ -299,6 +300,7 @@ namespace Novell.iFolderCom
 			this.search.Visible = ((bool)(resources.GetObject("search.Visible")));
 			this.search.WordWrap = ((bool)(resources.GetObject("search.WordWrap")));
 			this.search.TextChanged += new System.EventHandler(this.search_TextChanged);
+			this.search.Enter += new System.EventHandler(this.search_Enter);
 			// 
 			// label1
 			// 
@@ -1079,7 +1081,7 @@ namespace Novell.iFolderCom
 
 		private void search_TextChanged(object sender, System.EventArgs e)
 		{
-			if (search.Focused)
+			if (search.Focused && !noSearch)
 			{
 				stopThread = true;
 
@@ -1178,6 +1180,15 @@ namespace Novell.iFolderCom
 					searchContext = null;
 				}
 				catch {}
+			}
+		}
+
+		private void search_Enter(object sender, System.EventArgs e)
+		{
+			if (search.Text.Equals(resourceManager.GetString("searchPrompt")))
+			{
+				search.Clear();
+				noSearch = false;
 			}
 		}
 		#endregion
