@@ -132,8 +132,14 @@ on_simias_node_created(SimiasNodeEvent *event, void *data)
 	char *service_url;
 	int err;
 	char *ip_addr = NULL;
-	char *ip_port = NULL;
+	char ip_port[16];
 	char *temp;
+	
+	char *ret_host = NULL;
+	int   ret_port = 0;
+	char *ret_path = NULL;
+	char *ret_user = NULL;
+	char *ret_passwd = NULL;
 	
 	g_print("on_simias_node_created() entered\n");
 	print_event(event);
@@ -145,24 +151,40 @@ on_simias_node_created(SimiasNodeEvent *event, void *data)
 	/* Send out an invitation for the collection */
 	err = simias_get_local_service_url(&service_url);
 	if (err == SIMIAS_SUCCESS) {
+		g_print("Service URL: %s\n", service_url);
 		/* Parse off the IP Address & Port */
+		gaim_url_parse(service_url, &ret_host, &ret_port,
+					   &ret_path, &ret_user, &ret_passwd);
+		if (ret_host) {
+			g_print("ret_host: %s\n", ret_host);
+			ip_addr = ret_host;
+		} else {
+			ip_addr = strdup("Unknown");
+		}
 		
-		/* Advance to the first "//" */
-		temp = strtok(service_url, "/");
-		if (temp) {
-			ip_addr = strtok(temp + 1, ":");
-			if (ip_addr) {
-				ip_port = strtok(temp + strlen(ip_addr), "/");
-			} else {
-				/* Maybe there's no port specified */
-				ip_addr = strtok(temp, "/");
-			}
+		g_print("ret port: %d\n", ret_port);
+		sprintf(ip_port, "%d", ret_port);
+		
+		if (ret_path) {
+			g_print("ret_path: %s\n", ret_path);
+			g_free(ret_path);
+		}
+		
+		if (ret_user) {
+			g_print("ret_user: %s\n", ret_user);
+			g_free(ret_user);
+		}
+		
+		if (ret_passwd) {
+			g_print("ret_passwd: %s\n", ret_passwd);
+			g_free(ret_passwd);
 		}
 		
 		/* FIXME: Create and send a new invitation */
 		g_print("FIXME: Send a new invitation to the buddy\n");
 		if (ip_addr) {
 			g_print("\tFrom IP: %s\n", ip_addr);
+			g_free(ip_addr);
 		}
 		
 		if (ip_port) {
