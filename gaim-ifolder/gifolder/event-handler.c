@@ -29,7 +29,6 @@
 
 /* Gaim iFolder Includes */
 #include "gaim-domain.h"
-#include "simias-invitation-store.h"
 #include "simias-messages.h"
 #include "simias-util.h"
 #include "simias-prefs.h"

@@ -31,29 +31,6 @@
 /* GLib/Gtk Includes */
 #include <glib.h>
 
-int gaim_domain_add_gaim_buddy(const char *account_name,
-							   const char *account_proto,
-							   const char *buddy_name,
-							   const char *alias,
-							   const char *ip_addr,
-							   const char *ip_port);
-
-int gaim_domain_update_gaim_buddy(const char *account_name,
-								  const char *account_proto,
-								  const char *buddy_name,
-								  const char *alias,
-								  const char *ip_addr,
-								  const char *ip_port);
-
-/**
- * Callback to sync a buddy when using a g_hash_table_for_each.
- */
-void sync_buddy_with_simias_roster(gpointer key,
-								   gpointer value,
-								   gpointer user_data);
-
-char *gaim_domain_get_po_box_id();
-
 void simias_sync_member_list();
 
 #endif

@@ -28,9 +28,4 @@
 #ifndef _GIFOLDER_H
 #define _GIFOLDER_H 1
 
-void simias_show_invitations_window();
-
-void simias_in_inv_sel_changed_cb(GtkTreeSelection *sel, GtkTreeView *tree);
-void simias_out_inv_sel_changed_cb(GtkTreeSelection *sel, GtkTreeView *tree);
-
 #endif

@@ -33,16 +33,6 @@
 #include "account.h"
 #include "blist.h"
 
-/* Gaim iFolder Includes */
-#include "simias-invitation-store.h"
-
-#define IFOLDER_MSG_IP_ADDR_REQ		"[simias:ip_addr_req:"
-#define IFOLDER_MSG_IP_ADDR_RESP	"[simias:ip_addr_resp:"
-#define IFOLDER_MSG_IP_ADDR_REQ_DENY	"[simias:ip_addr_req_deny]"
-
-#define INVITATION_REQUEST_MSG		"[simias:invitation-request:"
-#define INVITATION_REQUEST_DENY_MSG	"[simias:invitation-request-deny:"
-#define INVITATION_REQUEST_ACCEPT_MSG	"[simias:invitation-request-accept:"
 #define PING_REQUEST_MSG		"[simias:ping-request:"
 #define PING_RESPONSE_MSG		"[simias:ping-response:"
 
@@ -51,9 +41,6 @@
  ****************************************************/
 typedef enum
 {
-	INVITATION_REQUEST = 1,
-	INVITATION_REQUEST_DENY,
-	INVITATION_REQUEST_ACCEPT,
 	PING_REQUEST,
 	PING_RESPONSE
 } SIMIAS_MSG_TYPE;
@@ -62,13 +49,6 @@ typedef enum
  * Functions                                        *
  ****************************************************/
 int simias_send_msg(GaimBuddy *recipient, char *msg);
-
-int simias_send_invitation_req(GaimBuddy *recipient, char *collection_id,
-							   char *collection_type, char *collection_name);
-
-int simias_send_invitation_deny(GaimBuddy *recipient, char *collection_id);
-											
-int simias_send_invitation_accept(GaimBuddy *recipient, char *collection_id);
 
 int simias_send_ping_req(GaimBuddy *recipient);
 
