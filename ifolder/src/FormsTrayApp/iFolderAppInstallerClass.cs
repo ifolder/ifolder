@@ -29,8 +29,6 @@ using System.Configuration.Install;
 using System.Xml;
 using System.IO;
 using System.Text;
-//using Simias;
-//using Simias.Event;
 
 namespace Novell.FormsTrayApp
 {
@@ -277,6 +275,12 @@ namespace Novell.FormsTrayApp
 				Directory.CreateDirectory(path);
 			}
 
+			// Set access on the path so that members of the Users group can access it.
+			new Security().SetAccess(
+				path, 
+				Security.CONTAINER_INHERIT_ACE | Security.OBJECT_INHERIT_ACE,
+				Security.GENERIC_EXECUTE | Security.GENERIC_READ | Security.GENERIC_WRITE);
+ 
 			XmlNode compilation = configDoc.DocumentElement.SelectSingleNode("/configuration/system.web/compilation");
 			if (compilation != null)
 			{
