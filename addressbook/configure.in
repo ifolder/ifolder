@@ -88,6 +88,7 @@ case $ADDRESSBOOK_OS in
         LIBFLAG='-l'
         LIBS=''
         MONO=mono
+        MONO_DEBUG='mono --debug'
         MONO_PATH='$(subst $(SPACE),:,$(addprefix $(SRCDIR)$(SEP),$(COMMON_SUBDIRS))):$(SIMIAS_INSTALL_PATH)/bin'
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_FLAGS='/nologo'
@@ -156,6 +157,7 @@ case $ADDRESSBOOK_OS in
         LIBFLAG=''
         LIBS='kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib rpcrt4.lib ws2_32.lib imagehlp.lib'
         MONO=
+        MONO_DEBUG=
         MONO_PATH=
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_FLAGS='/nologo'
@@ -299,6 +301,7 @@ then
   CSCFLAGS="$DEBUG_CSCFLAGS $CSCFLAGS"
   CXXFLAGS="$DEBUG_CXXFLAGS $CXXFLAGS"
   DEVENV_CONFIGURATION=Debug
+  MONO=$MONO_DEBUG
   NUNIT_FLAGS="$DEBUG_NUNITFLAGS $NUNIT_FLAGS"
 else
   # Build optimized version.
