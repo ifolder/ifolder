@@ -42,7 +42,6 @@ using System.Text;
 using System.Threading;
 using System.Web;
 using System.Web.Hosting;
-//using Math = System.Math;
 
 namespace Mono.ASPNET
 {

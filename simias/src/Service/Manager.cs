@@ -254,10 +254,15 @@ namespace Simias.Service
 		private void Monitor()
 		{
 			// TODO: This can be removed when mono compacts the heap.
-			Thread.Sleep( 1000 * 60 );
-			DateTime thresholdTime = DateTime.Now + new TimeSpan(0, thresholdTimeLimit, 0);
-			float initialMemorySize = GetSimiasMemorySize();
-			logger.Debug( "Intialize memory size = {0} KB", initialMemorySize / 1024 );
+			DateTime thresholdTime = DateTime.Now;
+			float initialMemorySize = 0;
+			if ( MyEnvironment.Mono )
+			{
+				Thread.Sleep( 1000 * 60 );
+				thresholdTime += new TimeSpan(0, thresholdTimeLimit, 0);
+				initialMemorySize = GetSimiasMemorySize();
+				logger.Debug( "Intialize memory size = {0} KB", initialMemorySize / 1024 );
+			}
 			// TODO: End
 
 			while (true)
