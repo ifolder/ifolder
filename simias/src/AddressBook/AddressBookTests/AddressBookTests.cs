@@ -1199,6 +1199,104 @@ namespace Novell.AddressBook.Tests
 			Console.WriteLine("Ending \"Cleanup Test\"");
 		}
 
+		[Test]
+		public void BasicGroupTest()
+		{
+			Console.WriteLine("");
+			Console.WriteLine("Starting \"Basic Group Test\"");
+			const string userOne = "smele";
+			const string userOneFirst = "Stone";
+			const string userOneLast = "Mele";
+
+			const string userTwo = "sgonzales";
+			const string userTwoFirst = "Samantha";
+			const string userTwoLast = "Gonazales";
+
+			const string userThree = "banderson";
+			const string userThreeFirst = "Braylee";
+			const string userThreeLast = "Anderson";
+
+			const string userFour = "ianderson";
+			const string userFourFirst = "Ian";
+			const string userFourLast = "Anderson";
+
+			AddressBook tstBook = null;
+
+			try
+			{
+				tstBook = new 
+					AddressBook(
+						"TestBookForSearchLastNameTest",
+						Novell.AddressBook.AddressBookType.Private,
+						Novell.AddressBook.AddressBookRights.ReadWrite,
+						false);
+
+				abManager.AddAddressBook(tstBook);
+
+				// Create the contacts in the new book
+				Console.WriteLine("Creating test contacts");
+				Console.WriteLine("   Adding " + userOne);
+				Contact user1 = new Contact();
+				user1.UserName = userOne;
+				Name user1name = new Name(userOneFirst, userOneLast);
+				user1.AddName(user1name);
+				tstBook.AddContact(user1);
+				user1.Commit();
+
+				Console.WriteLine("   Adding " + userTwo);
+				Contact user2 = new Contact();
+				user2.UserName = userTwo;
+				Name user2name = new Name(userTwoFirst, userTwoLast);
+				user2.AddName(user2name);
+				tstBook.AddContact(user2);
+				user2.Commit();
+
+				Console.WriteLine("   Adding " + userThree);
+				Contact user3 = new Contact();
+				user3.UserName = userThree;
+				Name user3name = new Name(userThreeFirst, userThreeLast);
+				user3.AddName(user3name);
+				tstBook.AddContact(user3);
+				user3.Commit();
+
+				Console.WriteLine("   Adding " + userFour);
+				Contact user4 = new Contact();
+				user4.UserName = userFour;
+				Name user4name = new Name(userFourFirst, userFourLast);
+				user4.AddName(user4name);
+				tstBook.AddContact(user4);
+				user4.Commit();
+
+				// Now create a group and add the contacts to the Group
+				Group cGroup = new Group("TestGroup");
+				cGroup.Description = "Cool guys";
+				cGroup.Note = "nieces and newphews";
+
+				tstBook.AddGroup(cGroup);
+
+				cGroup.AddContact(user1);
+				cGroup.AddContact(user2);
+				cGroup.AddContact(user3);
+				cGroup.AddContact(user4);
+				cGroup.Commit();
+
+				// Now enumerate the contacts in the list
+				foreach(Contact cContact in cGroup.GetContactList())
+				{
+					Console.WriteLine(cContact.UserName);
+				}
+			}
+			finally
+			{
+				if (tstBook != null)
+				{
+					tstBook.Delete();
+				}
+			}
+
+			Console.WriteLine("Ending \"Search Name Test\"");
+		}
+
 		public class Tests
 		{
 			static void Main()
@@ -1206,7 +1304,6 @@ namespace Novell.AddressBook.Tests
 				Iteration0Tests tests = new Iteration0Tests();
 				tests.Init();
 				tests.OpenDefaultBook();
-				/*
 				tests.EnumerateMyAddressBooks();
 				tests.CreateDeleteAddressBook();
 				tests.BasicContactTests();
@@ -1217,11 +1314,10 @@ namespace Novell.AddressBook.Tests
 				tests.EnumContactsTest();
 				tests.BasicAddressTest();
 				tests.SearchNameTest();
-				tests.ImportPhotoTest();
+				//tests.ImportPhotoTest();
 				tests.InstantMessageTests();
-				*/
-
 				tests.CleanupTest();
+				tests.BasicGroupTest();
 			}
 		}
 	}

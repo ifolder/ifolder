@@ -119,6 +119,11 @@ namespace Novell.AddressBook
 		internal const string contactType = "AB:Contact";
 
 		/// <summary>
+		/// Node type a group is known by in the Collection Store
+		/// </summary>
+		internal const string groupType = "AB:Group";
+
+		/// <summary>
 		/// vCard N (Name) property which is contained in a contact
 		/// </summary>
 		internal const string nameProperty = "VC:N";
@@ -235,6 +240,11 @@ namespace Novell.AddressBook
 		/// AddressTypes (ex. work, home, other, dom, intl etc.)
 		/// </summary>
 		internal const string addressTypesProperty = "VC:AddressTypes";
+
+		/// <summary>
+		/// AddressTypes (ex. work, home, other, dom, intl etc.)
+		/// </summary>
+		internal const string groupDescriptionProperty = "AB:GroupDescription";
 		
 		/// <summary>
 		/// A vCard LABEL property may contain the following types
@@ -258,6 +268,11 @@ namespace Novell.AddressBook
 		internal const string addressToContact = "AB:AddressToContact";
 		internal const string photoToContact = "AB:PhotoToContact";
 		internal const string contactToPhoto = "AB:ContactToPhoto";
+		internal const string groupToAddressBook = "AB:GroupToAddressBook";
+		internal const string groupToLogo = "AB:GroupToLogo";
+		internal const string addressToGroup = "AB:AddressToGroup";
+		internal const string contactToGroup = "AB:ContactToGroup";
+		internal const string groupToContact = "AB:GroupToContact";
 
 		#endregion
 

@@ -85,7 +85,6 @@ namespace Novell.AddressBook
 		#region Class Members
 		internal	Store				store;
 		internal	Collection			collection;
-		private		bool				deleted;
 		private		bool				changed;
 		private		IEnumerator			contactEnum = null;
 		private		AddressBookType		addressBookType;
@@ -160,7 +159,6 @@ namespace Novell.AddressBook
 
 		internal void CommonInitialization()
 		{
-			this.deleted = false;
 			this.changed = false;
 			this.defaultBook = false;
 			this.collection = null;
@@ -470,8 +468,6 @@ namespace Novell.AddressBook
 				this.defaultBook = false;
 			}
 			*/
-
-			this.deleted = false;
 		}
 		#endregion
 
@@ -598,7 +594,6 @@ namespace Novell.AddressBook
 		}
 		#endregion
 
-
 		/// <summary>
 		/// Method: AddContact
 		/// Abstract: Method to create a contact in the store
@@ -622,6 +617,7 @@ namespace Novell.AddressBook
 				throw new ApplicationException("AddressBook::The address book has not been added to the store");
 			}
 		}
+
 
 		internal bool AddVCardContact(Contact cContact)
 		{
@@ -731,6 +727,23 @@ namespace Novell.AddressBook
 		}
 
 		/// <summary>
+		/// Method: AddGroup
+		/// Abstract: Method to create a Group in the address book
+		/// </summary>
+		public void AddGroup(Group cGroup)
+		{
+			if (this.collection != null)
+			{
+				//contact.Add(this.collection, this, identityId);
+				cGroup.Add(this);
+			}
+			else
+			{
+				throw new ApplicationException("AddressBook::The address book has not been added to the store");
+			}
+		}
+
+		/// <summary>
 		/// Method: Commit
 		/// Abstract: Method to commit the address book changes to the store.
 		/// </summary>
@@ -761,7 +774,7 @@ namespace Novell.AddressBook
 			}
 
 			this.collection.Commit( this.collection.Delete() );
-			this.deleted = true;
+			//this.deleted = true;
 		}
 
 		/// <summary>
@@ -796,6 +809,63 @@ namespace Novell.AddressBook
 			}
 
 			return(cContact);
+		}
+
+		/// <summary>
+		/// Retrieve a group using a specified id.
+		/// </summary>
+		/// <param name="id">Specified contact ID</param>
+		/// <remarks>
+		/// If the group is not found a null is returned.
+		/// </remarks>
+		/// <returns>A Group object with at minimum a valid name property.</returns>
+		public Group GetGroup(string id)
+		{
+			Group cGroup = null;
+			if (this.collection != null)
+			{
+				try
+				{
+					Node cNode = this.collection.GetNodeByID(id);
+					if ( cNode != null )
+					{
+						if (this.collection.IsType(cNode, Common.groupType) == true)
+						{
+							cGroup = new Group(this, cNode);
+						}
+					}
+				}
+				catch(Exception e)
+				{
+					Console.WriteLine(e.Message);
+					cGroup = null;
+				}
+			}
+
+			return(cGroup);
+		}
+
+		public IABList GetGroups()
+		{
+			IABList cList = new IABList();
+
+			try
+			{
+				Relationship parentChild =
+					new Relationship( this.collection.ID, this.ID );
+				ICSList results =
+					this.collection.Search( Common.groupToAddressBook, parentChild );
+				foreach ( ShallowNode cShallow in results )
+				{
+					Node cNode = new Node(this.collection, cShallow);
+					if (this.collection.IsType(cNode, Common.groupType) == true)
+					{
+						cList.Add(new Group(this, cNode));
+					}
+				}
+			}
+			catch{}
+			return(cList);
 		}
 
 		/// <summary>

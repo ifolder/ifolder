@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-AddressBook_CSFILES = $(srcdir)/Address.cs $(srcdir)/AddressBook.cs $(srcdir)/AssemblyInfo.cs $(srcdir)/Common.cs $(srcdir)/Contact.cs $(srcdir)/Email.cs $(srcdir)/InstantMessage.cs $(srcdir)/Manager.cs $(srcdir)/Name.cs $(srcdir)/Phone.cs
+AddressBook_CSFILES = $(srcdir)/Address.cs $(srcdir)/AddressBook.cs $(srcdir)/AssemblyInfo.cs $(srcdir)/Common.cs $(srcdir)/Contact.cs $(srcdir)/Email.cs $(srcdir)/Group.cs $(srcdir)/InstantMessage.cs $(srcdir)/Manager.cs $(srcdir)/Name.cs $(srcdir)/Phone.cs
 AddressBook_CSFILES_CSC := $(subst /,$(SEP),$(AddressBook_CSFILES))
 AddressBook_INCLUDES =
 AddressBook_RESOURCES =

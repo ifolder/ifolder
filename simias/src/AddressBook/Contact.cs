@@ -37,7 +37,7 @@ namespace Novell.AddressBook
 	{
 		#region Class Members
 		internal	AddressBook		addressBook = null;
-		private		IEnumerator		thisEnum = null;
+		//private		IEnumerator		thisEnum = null;
 
 		// Private members used for caching objects to the contact before
 		// the contact has been added to an address list

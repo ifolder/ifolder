@@ -82,6 +82,7 @@ namespace Novell.AddressBook
 	{
 		#region Class Members
 		private Contact			parentContact;
+		private Group			parentGroup;
 //		private bool			preferred = false;
 		private AddressTypes	defaultTypes = AddressTypes.work | AddressTypes.parcel | AddressTypes.postal;
 
@@ -511,6 +512,11 @@ namespace Novell.AddressBook
 			this.parentContact = parentContact;
 		}
 
+		internal Address(Group parent, Node cNode) : base(cNode)
+		{
+			this.parentGroup = parent;
+		}
+
 		#endregion
 
 		#region Internal Methods
@@ -561,6 +567,52 @@ namespace Novell.AddressBook
 			this.parentContact.addressList.Add(this);
 		}
 
+		/// <summary>
+		/// Adds a structured address property to a Group.
+		/// If the method fails an exception is raised
+		/// </summary>
+		/// <param name="parentContact"></param>
+		/// <remarks>
+		/// The address is not commited to the store until a commit on the 
+		/// Group is called.
+		/// </remarks>
+		/// <returns>nothing if successful - raises an application exception if an error occurs.</returns>
+		internal void Add(Group parent)
+		{
+			this.parentGroup = parent;
+
+			// If we're preferred make sure nobody else is
+			if (this.Preferred == true)
+			{
+				foreach(Address cAddr in parentGroup.addressList)
+				{
+					if (cAddr.Preferred == true)
+					{
+						cAddr.Preferred = false;
+					}
+				}
+			}
+
+			//
+			// Add a relationship for Address node to Contact node.
+			//
+
+			// Can't create and add the relationship object if the contact
+			// hasn't been attached to the address book
+			if (parentContact.addressBook != null &&
+				parentContact.addressBook.collection != null)
+			{
+				Relationship parentChild = new 
+					Relationship( 
+					parentContact.addressBook.collection.ID, 
+					parentGroup.ID );
+
+				this.Properties.AddProperty( Common.addressToGroup, parentChild );
+			}
+
+			this.parentGroup.addressList.Add(this);
+		}
+
 		internal static bool PrepareToCommit(Contact contact)
 		{
 			// Anything in the list to persist?
@@ -601,6 +653,55 @@ namespace Novell.AddressBook
 				if (foundPreferred == false)
 				{
 					foreach(Address tmpAddress in contact.addressList)
+					{
+						tmpAddress.Preferred = true;
+						break;
+					}
+				}
+			}
+			return(true);
+		}
+
+		internal static bool PrepareToCommit(Group cGroup)
+		{
+			// Anything in the list to persist?
+			if (cGroup.addressList.Count == 0)
+			{
+				return(false);
+			}
+
+			// assume no preferred is set
+			bool foundPreferred = false;
+
+			// Make sure we have a preferred
+			foreach(Address tmpAddress in cGroup.addressList)
+			{
+				if (tmpAddress.Preferred == true)
+				{
+					foundPreferred = true;
+					break;
+				}
+			}
+
+			if (foundPreferred == false)
+			{
+				// No preferred do we have one typed WORK?
+				foreach(Address tmpAddress in cGroup.addressList)
+				{
+					AddressTypes addrTypes = (AddressTypes)
+						tmpAddress.Properties.GetSingleProperty(Common.addressTypesProperty).Value;
+
+					if ((addrTypes & AddressTypes.work) == AddressTypes.work)
+					{
+						tmpAddress.Preferred = true;
+						break;
+					}
+				}
+
+				// Any will do
+				if (foundPreferred == false)
+				{
+					foreach(Address tmpAddress in cGroup.addressList)
 					{
 						tmpAddress.Preferred = true;
 						break;
