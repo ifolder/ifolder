@@ -1239,6 +1239,10 @@ namespace Simias.Sync.Client
 							log.Info("Downloading File {0} from server", file.Name);
 							success = file.DownLoadFile();
 						}
+						catch (Exception ex)
+						{
+							Log.log.Debug(ex, "Failed Download before close");
+						}
 						finally
 						{
 							success = file.Close(success);
@@ -1260,7 +1264,7 @@ namespace Simias.Sync.Client
 				}
 				catch (Exception ex)
 				{
-					Log.log.Debug(ex, "Failed Downloading File");
+					Log.log.Debug(ex, "Failed Downloading File during close");
 				}
 			}
 		}

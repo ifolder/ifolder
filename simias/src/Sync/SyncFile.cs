@@ -78,7 +78,7 @@ namespace Simias.Sync
 		{
 			try
 			{
-				Log.log.Debug("Reading File {0} : offset = {1}", file, ReadPosition);
+				//Log.log.Debug("Reading File {0} : offset = {1}", file, ReadPosition);
 				return workStream.Read(buffer, offset, count);
 			}
 			catch (Exception ex)
@@ -183,6 +183,8 @@ namespace Simias.Sync
 		FileStream	workStream;
 		/// <summary>Stream to the Original file.</summary>
 		FileStream	stream;
+		/// <summary>The partially downloaded file.</summary>
+		string		partialFile;
 		/// <summary>The Old Node if it exists.</summary>
 		protected BaseFileNode	oldNode;
 		Exception				exception;
@@ -238,7 +240,7 @@ namespace Simias.Sync
 			asyncEvent.WaitOne();
 			if (exception == null)
 			{
-				Log.log.Debug("Writing File {0} : offset = {1}", file, WritePosition);
+				//Log.log.Debug("Writing File {0} : offset = {1}", file, WritePosition);
 				asyncEvent.Reset();
 				workStream.BeginWrite(buffer, offset, count, new AsyncCallback(WriteCallback), null);
 			}
@@ -321,7 +323,19 @@ namespace Simias.Sync
 			{
 				stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.None);
 			}
-			catch (FileNotFoundException){}
+			catch (FileNotFoundException)
+			{
+				/*
+				// BUGBUG partialfile
+				// Check to see if we have a partially downloaded file to delta sync with.
+				if (File.Exists(workFile))
+				{
+					partialFile = workStream + ".part";
+					File.Move(workFile, partialFile);
+					stream = File.Open(partialFile, FileMode.Open, FileAccess.Read, FileShare.None);
+				}
+				*/
+			}
 			workStream = File.Open(workFile, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None);
 		}
 
@@ -350,6 +364,7 @@ namespace Simias.Sync
 			}
 			catch (Exception ex)
 			{
+				Log.log.Debug(ex, "WriteCallBack");
 				exception = ex;
 			}
 			asyncEvent.Set();
@@ -407,13 +422,18 @@ namespace Simias.Sync
 					catch {};
 				}
 			}
-			// We need to delete the temp file.
 
-			if (workFile != null)
+			// We need to delete the temp file if we are the master.
+			// On the client leave for a delta sync.
+			if (workFile != null) // BUGBUG partialfile && collection.IsMaster)
 				File.Delete(workFile);
+
+			if (partialFile != null)
+				File.Delete(partialFile);
 
 			if (exception != null)
 			{
+				Log.log.Debug(exception, "Failed reading file");
 				throw (exception);
 			}
 		}
