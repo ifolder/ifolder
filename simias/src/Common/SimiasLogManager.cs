@@ -85,7 +85,10 @@ namespace Simias
                 // only configure once
                 if (!configured)
                 {
-                    // TODO: temp code for log file name
+					// file configuration
+					log4net.Config.DOMConfigurator.ConfigureAndWatch(new FileInfo(Path.Combine(storePath, "simias.log.config")));
+
+					// TODO: temp code for log file name
         			string[] args = Environment.GetCommandLineArgs();
         
         			string file = SimiasLogFile;
@@ -99,12 +102,9 @@ namespace Simias
         				file = Path.GetFileName(args[1]) + ".log";
         			}
         
-        			// log file path
-                    string filePath = Path.Combine(storePath, file);
-        
-                    // default appender
+					// default appender
         			BasicConfigurator.Configure(new FileAppender(new PatternLayout(SimiasPatternLayout),
-        				filePath));
+        				Path.Combine(storePath, file)));
 
                     configured = true;
                 }
