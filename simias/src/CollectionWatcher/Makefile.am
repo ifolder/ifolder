@@ -31,18 +31,25 @@ CollectionWatcher.dll: $(CollectionWatcher_CSFILES) $(CollectionWatcher_RESOURCE
 CollectionWatcherTests.dll: $(CollectionWatcherTests_CSFILES) $(CollectionWatcherTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(CollectionWatcherTests_FLAGS) $(CollectionWatcherTests_LIBS:%=/r:%) $(CollectionWatcherTests_LIBPATH:%=/lib:%) $(CollectionWatcherTests_CSFILES_CSC)
 	
+if DEBUG
+if WINDOWS
+DEBUG_FILES = CollectionWatcher.pdb
+DEBUG_CHECK_FILES = CollectionWatcherTests.pdb
+endif
+endif
+
 install-exec-local: CollectionWatcher.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) CollectionWatcher.dll $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) CollectionWatcher.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)
 
 uninstall-local:
 	cd $(DESTDIR)$(bindir); \
-		rm -f CollectionWatcher.dll CollectionWatcherTests.test.xml $(NUNIT_TESTS); \
+		rm -f CollectionWatcher.dll CollectionWatcherTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES); \
 		rm -rf cwatcher
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:CollectionWatcherTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = CollectionWatcher.dll $(NUNIT_TESTS) CollectionWatcher.doc.xml CollectionWatcherTests.test.xml

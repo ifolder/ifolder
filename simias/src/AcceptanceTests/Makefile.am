@@ -15,23 +15,29 @@ EXTRA_DIST = $(AcceptanceTests_CSFILES)
 
 CUR_DIR := $(shell pwd)
 
-all: AcceptanceTests.dll
+all:
 
 AcceptanceTests.dll: $(SyncManagerTests_CSFILES) $(SyncManagerTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(AcceptanceTests_FLAGS) $(AcceptanceTests_LIBS:%=/r:%) $(AcceptanceTests_LIBPATH:%=/lib:%) $(AcceptanceTests_CSFILES_CSC)
 	
-install-exec-local: AcceptanceTests.dll
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) AcceptanceTests.dll $(DESTDIR)$(bindir)
+if DEBUG
+if WINDOWS
+DEBUG_CHECK_FILES = AcceptanceTests.pdb
+endif
+endif
+
+#install-exec-local: AcceptanceTests.dll
+#	$(mkinstalldirs) $(DESTDIR)$(bindir)
+#	$(INSTALL_PROGRAM) AcceptanceTests.dll $(DESTDIR)$(bindir)
 
 uninstall-local:
 	cd $(DESTDIR)$(bindir); \
-		rm -f AcceptanceTests.test.xml $(NUNIT_TESTS); \
+		rm -f AcceptanceTests.test.xml $(NUNIT_TESTS) $(DEBUG_CHECK_FILES); \
 		rm -rf storeA storeB storeC
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:AcceptanceTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = $(NUNIT_TESTS) AcceptanceTests.doc.xml AcceptanceTests.test.xml

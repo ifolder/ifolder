@@ -31,18 +31,25 @@ SyncManager.dll: $(SyncManager_CSFILES) $(SyncManager_RESOURCES)
 SyncManagerTests.dll: $(SyncManagerTests_CSFILES) $(SyncManagerTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SyncManagerTests_FLAGS) $(SyncManagerTests_LIBS:%=/r:%) $(SyncManagerTests_LIBPATH:%=/lib:%) $(SyncManagerTests_CSFILES_CSC)
 	
+if DEBUG
+if WINDOWS
+DEBUG_FILES = SyncManager.pdb
+DEBUG_CHECK_FILES = SyncManagerTests.pdb
+endif
+endif
+
 install-exec-local: SyncManager.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) SyncManager.dll remoting.config $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) SyncManager.dll remoting.config $(DEBUG_FILES) $(DESTDIR)$(bindir)
 
 uninstall-local:
 	cd $(DESTDIR)$(bindir); \
-		rm -f SyncManager.dll remoting.config SyncManagerTests.test.xml $(NUNIT_TESTS); \
+		rm -f SyncManager.dll remoting.config SyncManagerTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES); \
 		rm -rf manager1
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:SyncManagerTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = SyncManager.dll $(NUNIT_TESTS) SyncManager.doc.xml SyncManagerTests.test.xml

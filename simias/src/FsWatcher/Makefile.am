@@ -31,12 +31,18 @@ FsWatcher.exe: $(FsWatcher_CSFILES) $(FsWatcher_RESOURCES)
 #FsWatcherTests.dll: $(FsWatcherTests_CSFILES) $(FsWatcherTests_RESOURCES)
 #	$(CSC) /out:$@ $(CSCFLAGS) $(FsWatcherTests_FLAGS) $(FsWatcherTests_LIBS:%=/r:%) $(FsWatcherTests_LIBPATH:%=/lib:%) $(FsWatcherTests_CSFILES_CSC)
 	
+if DEBUG
+if WINDOWS
+DEBUG_FILES = FsWatcher.pdb
+endif
+endif
+
 install-exec-local: FsWatcher.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) FsWatcher.exe $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) FsWatcher.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f FsWatcher.exe FsWatcherTests.test.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f FsWatcher.exe FsWatcherTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES)
 
 installcheck-local: install $(NUNIT_TESTS)
 #	$(mkinstalldirs) $(DESTDIR)$(bindir)

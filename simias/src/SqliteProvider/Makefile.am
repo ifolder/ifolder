@@ -42,16 +42,23 @@ SqliteWrapper.dll: $(SqliteWrapper_CSFILES) $(SqliteWrapper_RESOURCES)
 SqliteProviderTests.dll: $(SqliteProviderTests_CSFILES) $(SqliteProviderTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SqliteProviderTests_FLAGS) $(SqliteProviderTests_LIBS:%=/r:%) $(SqliteProviderTests_LIBPATH:%=/lib:%) $(SqliteProviderTests_CSFILES_CSC)
 	
+if DEBUG
+if WINDOWS
+DEBUG_FILES = SqliteWrapper.pdb SqliteProvider.pdb
+DEBUG_CHECK_FILES = SqliteProviderTests.pdb
+endif
+endif
+
 install-exec-local: SqliteProvider.dll SqliteWrapper.dll $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) SqliteProvider.dll SqliteWrapper.dll $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) SqliteProvider.dll SqliteWrapper.dll $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f SqliteProvider.dll SqliteWrapper.dll SqliteProviderTests.test.xml $(SQLITELIB) $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f SqliteProvider.dll SqliteWrapper.dll SqliteProviderTests.test.xml $(SQLITELIB) $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:SqliteProviderTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = SqliteProvider.dll SqliteWrapper.dll $(NUNIT_TESTS) SqliteProvider.doc.xml SqliteWrapper.doc.xml SqliteProviderTests.test.xml

@@ -16,12 +16,18 @@ all: SyncPing.exe
 SyncPing.exe: $(SyncPing_CSFILES) $(SyncPing_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SyncPing_FLAGS) $(SyncPing_LIBS:%=/r:%) $(SyncPing_LIBPATH:%=/lib:%) $(SyncPing_RESOURCES:%=$(ICON_FLAG)%) $(SyncPing_CSFILES_CSC) /doc:SyncPing.doc.xml
 
+if DEBUG
+if WINDOWS
+DEBUG_FILES = SyncPing.pdb
+endif
+endif
+
 install-exec-local: SyncPing.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) SyncPing.exe $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) SyncPing.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f SyncPing.exe $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f SyncPing.exe $(NUNIT_TESTS) $(DEBUG_FILES)
 
 installcheck-local: install $(NUNIT_TESTS)
 #	$(mkinstalldirs) $(DESTDIR)$(bindir)

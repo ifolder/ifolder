@@ -16,12 +16,18 @@ all: Storage.dll
 Storage.dll: $(Storage_CSFILES) $(Storage_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(Storage_FLAGS) $(Storage_LIBS:%=/r:%) $(Storage_LIBPATH:%=/lib:%) $(Storage_CSFILES_CSC) /doc:Storage.doc.xml
 
+if DEBUG
+if WINDOWS
+DEBUG_FILES = Storage.pdb
+endif
+endif
+
 install-exec-local: Storage.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) Storage.dll $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) Storage.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Storage.dll $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f Storage.dll $(NUNIT_TESTS) $(DEBUG_FILES)
     
 installcheck-local: install $(NUNIT_TESTS)
 	

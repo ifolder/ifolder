@@ -42,18 +42,25 @@ SyncCmd.exe: $(SyncCmd_CSFILES) $(SyncCmd_RESOURCES)
 TestSync.exe: $(TestSync_CSFILES) $(TestSync_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(TestSync_FLAGS) $(TestSync_LIBS:%=/r:%) $(TestSync_LIBPATH:%=/lib:%) $(TestSync_CSFILES_CSC)
 	
+if DEBUG
+if WINDOWS
+DEBUG_FILES = Sync.pdb SyncCmd.pdb
+DEBUG_CHECK_FILES = TestSync.pdb
+endif
+endif
+
 install-exec-local: Sync.dll SyncCmd.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) Sync.dll SyncCmd.exe $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) Sync.dll SyncCmd.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
 
 uninstall-local:
 	cd $(DESTDIR)$(bindir); \
-		rm -f Sync.dll SyncCmd.exe TestSync.doc.test.xml SyncTests.xml $(NUNIT_TESTS); \
+		rm -f Sync.dll SyncCmd.exe TestSync.doc.test.xml SyncTests.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES); \
 		rm -rf tmpS tmpStoreC tmpStoreS
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:TestSync.doc.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = Sync.dll SyncCmd.exe TestSync.exe $(NUNIT_TESTS) Sync.doc.xml SyncCmd.doc.xml TestSync.doc.test.xml SyncTests.xml

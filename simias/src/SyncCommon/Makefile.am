@@ -31,16 +31,23 @@ SyncCommon.dll: $(SyncCommon_CSFILES) $(SyncCommon_RESOURCES)
 SyncCommonTests.dll: $(SyncCommonTests_CSFILES) $(SyncCommonTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SyncCommonTests_FLAGS) $(SyncCommonTests_LIBS:%=/r:%) $(SyncCommonTests_LIBPATH:%=/lib:%) $(SyncCommonTests_CSFILES_CSC)
 	
+if DEBUG
+if WINDOWS
+DEBUG_FILES = SyncCommon.pdb
+DEBUG_CHECK_FILES = SyncCommonTests.pdb
+endif
+endif
+
 install-exec-local: SyncCommon.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) SyncCommon.dll $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) SyncCommon.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f SyncCommon.dll SyncCommonTests.test.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f SyncCommon.dll SyncCommonTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:SyncCommonTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = SyncCommon.dll $(NUNIT_TESTS) SyncCommon.doc.xml SyncCommonTests.test.xml

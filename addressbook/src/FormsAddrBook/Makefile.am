@@ -18,12 +18,18 @@ all: Book.exe
 Book.exe: $(Book_CSFILES) $(Book_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(Book_FLAGS) $(Book_LIBS:%=/r:%) $(Book_LIBPATH:%=/lib:%) $(Book_RESOURCES:%=$(ICON_FLAG)%) $(Book_CSFILES_CSC) /doc:Book.doc.xml
 
+if DEBUG
+if WINDOWS
+DEBUG_FILES = Book.pdb
+endif
+endif
+
 install-exec-local: Book.exe $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) Book.exe $(DATA_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) Book.exe $(DATA_FILES) $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Book.exe $(DATA_FILES)
+	cd $(DESTDIR)$(bindir); rm -f Book.exe $(DATA_FILES) $(DEBUG_FILES)
     
 installcheck-local: install
 	

@@ -42,16 +42,23 @@ CsEventBroker.exe: $(CsEventBroker_CSFILES) $(CsEventBroker_RESOURCES)
 CollectionEventTests.exe: $(CollectionEventTests_CSFILES) $(CollectionEventTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(CollectionEventTests_FLAGS) $(CollectionEventTests_LIBS:%=/r:%) $(CollectionEventTests_LIBPATH:%=/lib:%) $(CollectionEventTests_CSFILES_CSC)
 	
+if DEBUG
+if WINDOWS
+DEBUG_FILES = CollectionEvents.pdb CsEventBroker.pdb
+DEBUG_CHECK_FILES = CollectionEventTests.pdb
+endif
+endif
+
 install-exec-local: CollectionEvents.dll CsEventBroker.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) CollectionEvents.dll CsEventBroker.exe $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) CollectionEvents.dll CsEventBroker.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f CollectionEvents.dll CsEventBroker.exe CollectionEventTests.test.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f CollectionEvents.dll CsEventBroker.exe CollectionEventTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:CollectionEventTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = CollectionEvents.dll CsEventBroker.exe $(NUNIT_TESTS) CollectionEvents.doc.xml CsEventBroker.doc.xml

@@ -31,12 +31,18 @@ AddressBookCmd.exe: $(AddressBookCmd_CSFILES) $(AddressBookCmd_RESOURCES)
 #AddressBookCmdTests.dll: $(AddressBookCmdTests_CSFILES) $(AddressBookCmdTests_RESOURCES)
 #	$(CSC) /out:$@ $(CSCFLAGS) $(AddressBookCmdTests_FLAGS) $(AddressBookCmdTests_LIBS:%=/r:%) $(AddressBookCmdTests_LIBPATH:%=/lib:%) $(AddressBookCmdTests_CSFILES_CSC)
 	
+if DEBUG
+if WINDOWS
+DEBUG_FILES = AddressBookCmd.pdb
+endif
+endif
+
 install-exec-local: AddressBookCmd.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) AddressBookCmd.exe $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) AddressBookCmd.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f AddressBookCmd.exe AddressBookCmdTests.test.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f AddressBookCmd.exe AddressBookCmdTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES)
 
 installcheck-local: install $(NUNIT_TESTS)
 #	$(mkinstalldirs) $(DESTDIR)$(bindir)

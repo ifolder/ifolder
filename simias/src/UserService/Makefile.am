@@ -19,12 +19,18 @@ all: UserService.dll
 UserService.dll: $(UserService_CSFILES) $(UserService_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(UserService_FLAGS) $(UserService_LIBS:%=/r:%) $(UserService_LIBPATH:%=/lib:%) $(UserService_CSFILES_CSC) /doc:UserService.doc.xml
 
+if DEBUG
+if WINDOWS
+DEBUG_FILES = UserService.pdb
+endif
+endif
+
 install-exec-local: UserService.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) UserService.dll $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) UserService.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f UserService.dll $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f UserService.dll $(NUNIT_TESTS) $(DEBUG_FILES)
     
 installcheck-local: install $(NUNIT_TESTS)
 	

@@ -31,16 +31,23 @@ AddressBook.dll: $(AddressBook_CSFILES) $(AddressBook_RESOURCES)
 AddressBookTests.exe: $(AddressBookTests_CSFILES) $(AddressBookTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(AddressBookTests_FLAGS) $(AddressBookTests_LIBS:%=/r:%) $(AddressBookTests_LIBPATH:%=/lib:%) $(AddressBookTests_CSFILES_CSC)
 	
+if DEBUG
+if WINDOWS
+DEBUG_FILES = AddressBook.pdb
+DEBUG_CHECK_FILES = AddressBookTests.pdb
+endif
+endif
+
 install-exec-local: AddressBook.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) AddressBook.dll $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) AddressBook.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f AddressBook.dll AddressBookTests.test.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f AddressBook.dll AddressBookTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:AddressBookTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = AddressBook.dll $(NUNIT_TESTS) AddressBook.doc.xml AddressBookTests.test.xml

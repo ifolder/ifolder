@@ -31,16 +31,23 @@ Configuration.dll: $(Configuration_CSFILES) $(Configuration_RESOURCES)
 ConfTests.exe: $(ConfTests_CSFILES) $(ConfTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(ConfTests_FLAGS) $(ConfTests_LIBS:%=/r:%) $(ConfTests_LIBPATH:%=/lib:%) $(ConfTests_CSFILES_CSC)
 	
+if DEBUG
+if WINDOWS
+DEBUG_FILES = Configuration.pdb
+DEBUG_CHECK_FILES = ConfTests.pdb
+endif
+endif
+
 install-exec-local: Configuration.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) Configuration.dll $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) Configuration.dll $(DEBUG_FILES) $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Configuration.dll ConfTests.test.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f Configuration.dll ConfTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:ConfTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = Configuration.dll $(NUNIT_TESTS) Configuration.doc.xml ConfTests.test.xml

@@ -23,12 +23,18 @@ MiniFolder.exe: $(MiniFolder_CSFILES) $(MiniFolder_RESOURCES)
 echopath:
 	echo $(MONO_PATH)
 	
+if DEBUG
+if WINDOWS
+DEBUG_FILES = MiniFolder.pdb
+endif
+endif
+
 install-exec-local: MiniFolder.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) MiniFolder.exe $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) MiniFolder.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f MiniFolder.exe $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f MiniFolder.exe $(NUNIT_TESTS) $(DEBUG_FILES)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)

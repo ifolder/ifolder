@@ -18,12 +18,18 @@ all: InvitationWizard.exe
 InvitationWizard.exe: $(InvitationWizard_CSFILES) $(InvitationWizard_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(InvitationWizard_FLAGS) $(InvitationWizard_LIBS:%=/r:%) $(InvitationWizard_LIBPATH:%=/lib:%) $(InvitationWizard_RESOURCES:%=$(ICON_FLAG)%) $(InvitationWizard_CSFILES_CSC) /doc:InvitationWizard.doc.xml
 
+if DEBUG
+if WINDOWS
+DEBUG_FILES = InvitationWizard.pdb
+endif
+endif
+
 install-exec-local: InvitationWizard.exe $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) InvitationWizard.exe $(DATA_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) InvitationWizard.exe $(DATA_FILES) $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f InvitationWizard.exe $(DATA_FILES)
+	cd $(DESTDIR)$(bindir); rm -f InvitationWizard.exe $(DATA_FILES) $(DEBUG_FILES)
     
 installcheck-local: install
 	

@@ -18,12 +18,18 @@ all: FormsBookLib.dll
 FormsBookLib.dll: $(FormsBookLib_CSFILES) $(FormsBookLib_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(FormsBookLib_FLAGS) $(FormsBookLib_LIBS:%=/r:%) $(FormsBookLib_LIBPATH:%=/lib:%) $(FormsBookLib_CSFILES_CSC) /doc:FormsBookLib.doc.xml
 
+if DEBUG
+if WINDOWS
+DEBUG_FILES = FormsBookLib.pdb
+endif
+endif
+
 install-exec-local: FormsBookLib.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) FormsBookLib.dll $(DATA_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) FormsBookLib.dll $(DATA_FILES) $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f FormsBookLib.dll $(DATA_FILES)
+	cd $(DESTDIR)$(bindir); rm -f FormsBookLib.dll $(DATA_FILES) $(DEBUG_FILES)
     
 installcheck-local: install
 	

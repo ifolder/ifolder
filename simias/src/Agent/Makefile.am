@@ -31,16 +31,23 @@ Agent.dll: $(Agent_CSFILES) $(Agent_RESOURCES)
 AgentTests.dll: $(AgentTests_CSFILES) $(AgentTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(AgentTests_FLAGS) $(AgentTests_LIBS:%=/r:%) $(AgentTests_LIBPATH:%=/lib:%) $(AgentTests_CSFILES_CSC)
 	
+if DEBUG
+if WINDOWS
+DEBUG_FILES = Agent.pdb
+DEBUG_CHECK_FILES = AgentTests.pdb
+endif
+endif
+
 install-exec-local: Agent.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) Agent.dll $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) Agent.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Agent.dll AgentTests.test.xml invitation.ifi $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f Agent.dll AgentTests.test.xml invitation.ifi $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:AgentTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = Agent.dll $(NUNIT_TESTS) Agent.doc.xml AgentTests.test.xml

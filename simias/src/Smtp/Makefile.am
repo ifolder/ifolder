@@ -31,16 +31,23 @@ Smtp.dll: $(Smtp_CSFILES) $(Smtp_RESOURCES)
 SmtpTests.exe: $(SmtpTests_CSFILES) $(SmtpTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SmtpTests_FLAGS) $(SmtpTests_LIBS:%=/r:%) $(SmtpTests_LIBPATH:%=/lib:%) $(SmtpTests_CSFILES_CSC)
 	
+if DEBUG
+if WINDOWS
+DEBUG_FILES = Smtp.pdb
+DEBUG_CHECK_FILES = SmtpTests.pdb
+endif
+endif
+
 install-exec-local: Smtp.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) Smtp.dll $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) Smtp.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Smtp.dll SmtpTests.test.xml $(NUNIT_TESTS) smtptst1.gif smtptst2.gif
+	cd $(DESTDIR)$(bindir); rm -f Smtp.dll SmtpTests.test.xml $(NUNIT_TESTS) smtptst1.gif smtptst2.gif $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(SmtpTests_RESOURCES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(SmtpTests_RESOURCES) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:SmtpTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = Smtp.dll $(NUNIT_TESTS) Smtp.doc.xml SmtpTests.test.xml

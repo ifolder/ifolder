@@ -20,16 +20,22 @@ all: RemotingSnifferLibrary.dll
 RemotingSnifferLibrary.dll: $(RemotingSnifferLibrary_CSFILES) $(RemotingSnifferLibrary_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(RemotingSnifferLibrary_FLAGS) $(RemotingSnifferLibrary_LIBS:%=/r:%) $(RemotingSnifferLibrary_LIBPATH:%=/lib:%) $(RemotingSnifferLibrary_CSFILES_CSC) /doc:RemotingSnifferLibrary.doc.xml
 
+if DEBUG
+if WINDOWS
+DEBUG_FILES = RemotingSnifferLibrary.pdb
+endif
+endif
+
 install-exec-local: RemotingSnifferLibrary.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) RemotingSnifferLibrary.dll $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) RemotingSnifferLibrary.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f RemotingSnifferLibrary.dll RemotingSnifferLibraryTests.test.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f RemotingSnifferLibrary.dll RemotingSnifferLibraryTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-#	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+#	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 #	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:RemotingSnifferLibraryTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = RemotingSnifferLibrary.dll $(NUNIT_TESTS) RemotingSnifferLibrary.doc.xml RemotingSnifferLibraryTests.test.xml

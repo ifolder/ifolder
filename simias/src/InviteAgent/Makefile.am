@@ -42,16 +42,23 @@ EmailInviteAgent.dll: $(EmailInviteAgent_CSFILES) $(EmailInviteAgent_RESOURCES)
 InviteAgentTests.dll: $(InviteAgentTests_CSFILES) $(InviteAgentTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(InviteAgentTests_FLAGS) $(InviteAgentTests_LIBS:%=/r:%) $(InviteAgentTests_LIBPATH:%=/lib:%) $(InviteAgentTests_CSFILES_CSC)
 	
+if DEBUG
+if WINDOWS
+DEBUG_FILES = InviteAgent.pdb EmailInviteAgent.pdb
+DEBUG_CHECK_FILES = InviteAgentTests.pdb
+endif
+endif
+
 install-exec-local: InviteAgent.dll EmailInviteAgent.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) InviteAgent.dll EmailInviteAgent.dll $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) InviteAgent.dll EmailInviteAgent.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f InviteAgent.dll EmailInviteAgent.dll InviteAgentTests.test.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f InviteAgent.dll EmailInviteAgent.dll InviteAgentTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:InviteAgentTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = InviteAgent.dll EmailInviteAgent.dll $(NUNIT_TESTS) InviteAgent.doc.xml EmailInviteAgent.doc.xml InviteAgentTests.test.xml

@@ -42,16 +42,23 @@ iFolderCmd.exe: $(iFolderCmd_CSFILES) $(iFolderCmd_RESOURCES)
 iFolderTests.exe: $(iFolderTests_CSFILES) $(iFolderTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderTests_FLAGS) $(iFolderTests_LIBS:%=/r:%) $(iFolderTests_LIBPATH:%=/lib:%) $(iFolderTests_CSFILES_CSC)
 	
+if DEBUG
+if WINDOWS
+DEBUG_FILES = iFolder.pdb iFolderCmd.pdb
+DEBUG_CHECK_FILES = iFolderTests.pdb
+endif
+endif
+
 install-exec-local: iFolder.dll iFolderCmd.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) iFolder.dll iFolderCmd.exe $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) iFolder.dll iFolderCmd.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f iFolder.dll iFolderCmd.exe iFolderTests.test.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f iFolder.dll iFolderCmd.exe iFolderTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:iFolderTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = iFolder.dll iFolderCmd.exe $(NUNIT_TESTS) iFolder.doc.xml iFolderTests.test.xml iFolderCmd.doc.xml

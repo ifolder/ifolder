@@ -31,16 +31,23 @@ FsProvider.dll: $(FsProvider_CSFILES) $(FsProvider_RESOURCES)
 FsProviderTests.dll: $(FsProviderTests_CSFILES) $(FsProviderTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(FsProviderTests_FLAGS) $(FsProviderTests_LIBS:%=/r:%) $(FsProviderTests_LIBPATH:%=/lib:%) $(FsProviderTests_CSFILES_CSC)
 	
+if DEBUG
+if WINDOWS
+DEBUG_FILES = FsProvider.pdb
+DEBUG_CHECK_FILES = FsProviderTests.pdb
+endif
+endif
+
 install-exec-local: FsProvider.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) FsProvider.dll $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) FsProvider.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f FsProvider.dll FsProviderTests.test.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f FsProvider.dll FsProviderTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:FsProviderTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = FsProvider.dll $(NUNIT_TESTS) FsProvider.doc.xml FsProviderTests.test.xml
