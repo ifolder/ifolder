@@ -1075,10 +1075,6 @@ namespace Novell.iFolder
 					{
 						AddLabeledValue("other", e.Address);
 					}
-					if((e.Types & EmailTypes.preferred) == EmailTypes.preferred)
-					{
-						AddLabeledValue("preferred", e.Address);
-					}
 				}
 
 				//------------------------
