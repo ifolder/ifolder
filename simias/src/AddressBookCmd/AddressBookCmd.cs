@@ -487,42 +487,42 @@ namespace AddressBookCmd
 				{
 					if ((cAddress.Types & AddressTypes.preferred) == AddressTypes.preferred)
 					{
-						Console.Write(";PREF");
+						Console.Write(";pref");
 					}								  
 		
 					if ((cAddress.Types & AddressTypes.home) == AddressTypes.home)
 					{
-						Console.Write(";HOME");
+						Console.Write(";home");
 					}								  
 
 					if ((cAddress.Types & AddressTypes.work) == AddressTypes.work)
 					{
-						Console.Write(";WORK");
+						Console.Write(";work");
 					}					
 			  
 					if ((cAddress.Types & AddressTypes.other) == AddressTypes.other)
 					{
-						Console.Write(";OTHER");
+						Console.Write(";other");
 					}
 					
 					if ((cAddress.Types & AddressTypes.postal) == AddressTypes.postal)
 					{
-						Console.Write(";POSTAL");
+						Console.Write(";postal");
 					}								  
 
 					if ((cAddress.Types & AddressTypes.parcel) == AddressTypes.parcel)
 					{
-						Console.Write(";PARCEL");
+						Console.Write(";parcel");
 					}								  
 
 					if ((cAddress.Types & AddressTypes.dom) == AddressTypes.dom)
 					{
-						Console.Write(";DOMESTIC");
+						Console.Write(";dom");
 					}								  
 
 					if ((cAddress.Types & AddressTypes.intl) == AddressTypes.intl)
 					{
-						Console.Write(";INTL");
+						Console.Write(";intl");
 					}								  
 				}
 
