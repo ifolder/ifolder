@@ -1415,7 +1415,14 @@ namespace Simias.Sync
 								eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.Unknown, true, node.Name, 0, 0, 0, Direction.Uploading));
 								log.Info("Deleting {0} from server", node.Name);
 								// Delete the tombstone.
-								collection.Commit(collection.Delete(node));
+								try
+								{
+									collection.Commit(collection.Delete(node));
+								}
+								catch
+								{
+									// The node does not exist. just ignore the error.
+								}
 							}
 							workArray.RemoveNodeToServer(status.nodeID);
 						}
