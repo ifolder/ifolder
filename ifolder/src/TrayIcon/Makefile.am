@@ -34,7 +34,7 @@ generated-stamp: $(API)
 $(API):
 	PERLLIB=/usr/share/perl5 gapi-parser libtrayicon-sources.xml
 
-install-exec-local:
+install-exec-local: $(LIBRARY)
 	install $(LIBRARY) $(prefix)/lib
 
 uninstall-local:
