@@ -32,6 +32,11 @@ namespace Simias.Policy
 		static public int DefaultSyncInterval = 60;
 
 		/// <summary>
+		/// Implies to never synchronize.
+		/// </summary>
+		static public int InfiniteSyncInterval = -1;
+
+		/// <summary>
 		/// Used to hold the aggregate policy.
 		/// </summary>
 		private Policy policy;
@@ -101,7 +106,7 @@ namespace Simias.Policy
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( SyncIntervalPolicyID, domainID );
-			if ( interval > 0 )
+			if ( ( interval == InfiniteSyncInterval ) || ( interval > 0 ) )
 			{
 				if ( policy == null )
 				{
@@ -132,7 +137,7 @@ namespace Simias.Policy
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( SyncIntervalPolicyID, member );
-			if ( interval > 0 )
+			if ( ( interval == InfiniteSyncInterval ) || ( interval > 0 ) )
 			{
 				if ( policy == null )
 				{
@@ -163,7 +168,7 @@ namespace Simias.Policy
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( SyncIntervalPolicyID, collection );
-			if ( interval > 0 )
+			if ( ( interval == InfiniteSyncInterval ) || ( interval > 0 ) )
 			{
 				if ( policy == null )
 				{
@@ -193,7 +198,7 @@ namespace Simias.Policy
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( SyncIntervalPolicyID );
-			if ( interval > 0 )
+			if ( ( interval == InfiniteSyncInterval ) || ( interval > 0 ) )
 			{
 				if ( policy == null )
 				{
