@@ -17,73 +17,17 @@ Author(s):
 Building the Gaim iFolder Plugin
 ---------------------------------
 
-First, you must build Gaim.  Follow the instructions available from
-http://gaim.sourceforge.net/ for your particular platform and come back to
-these instructions.  For anybody using Novell Linux Desktop (NLD), I've
-included instructions to do this below in the "Building Gaim on NLD" section
-(These instructions for NLD should be about the same for other Linux
-distributions).
-
-Copy "ifolder.c" to the "gaim/plugins" directory.  From the "gaim/plugins"
-directory type the following to build the plugin:
-
-Linux
-------
-
-	make ifolder.so
-
-Win32
-------
-
-	make -f Makefile.mingw ifolder.dll
-
------------------------------------
-Installing the Gaim iFolder Plugin
------------------------------------
-
-Once you've got a library (.so/.dll), copy the library file to the following
-directory:
-
-Linux
-------
-
-	<your gaim prefix>/lib/gaim/
-	
-Win32
-------
-
-	C:\Program Files\Gaim\plugins\
-
-Now start Gaim and the iFolder Plugin will be available from the "Preferences"
-window under "Plugins".
-
-Installing the Invitation Graphics
------------------------------------
-
-I haven't figured out the best way to do this yet, so for now, copy the PNG
-files inside the gaim-ifolder/pixmaps/ directory (ifolder48.png &
-glyphmarks48.png) to you Gaim User directory:
-
-Linux
-------
-
-	~/.gaim/
-
-Win32
-------
-
-	? - I'm not sure what this would be.  If you know, please fill me in and I
-	    will update these instructions.
+See the BUILDING file.
 
 
 --------------------------------------
 Using/Testing the Gaim iFolder Plugin
 --------------------------------------
 
-Once you've installed and enabled the plugin, you'll be able to simulate adding
-a member to an iFolder.  Normally, once we plug in the calls to iFolder/Simias,
-an invitation to share an iFolder will be sent to a buddy automatically when
-you add the buddy as a member of an iFolder.
+Once you've enabled the plugin, you'll be able to simulate adding a member to
+an iFolder.  Normally, once we plug in the calls to iFolder/Simias, an
+invitation to share an iFolder will be sent to a buddy automatically when you
+add the buddy as a member of an iFolder.
 
 To simulate adding a buddy as an iFolder member, right-click on the buddy in
 the Gaim Buddy List and select "Simulate Add Member".  It will prompt you for
@@ -102,46 +46,6 @@ Note: It might be easy to annoy buddies who do not have this plugin installed
 by sending them invitations (since they'll see a message asking them to install
 the plugin.  Either don't do this, or help them get the plugin installed too so
 you can both join in on the fun.
-
-
----------------------
-Building Gaim on NLD
----------------------
-
-1. Download Gaim 1.1.2 to your home directory
-
-	http://prdownloads.sourceforge.net/gaim/gaim-1.1.2.tar.bz2?download
-
-2. Uncompress the source package
-
-	cd /home/<your-username>
-	tar -xjvf gaim-1.1.2.tar.bz2 (this will create the gaim-1.1.2/ directory
-                                  in your home directory)
-
-3. Build and Install Gaim
-
-	cd /home/<your-username>/gaim-1.1.2
-	./configure --prefix=/home/<your-username>/gaim-stage --enable-debug
-	make install
-
-4. Build and Install the Gaim iFolder Plugin
-
-	Copy gaim-ifolder/ifolder.c into /home/<your-username>/gaim-1.1.2/plugins
-	
-	cd /home/<your-username>/gaim-1.1.2/plugins
-	make ifolder.so
-	cp ifolder.so /home/<your-username>/gaim-stage/lib/gaim
-
-	Follow the instructions above to install ifolder48.png & glyphmarks48.png.
-
-5. Run Gaim with a test configuration directory so you won't interfere with
-   any Gaim preferences you've already established.
-   
-   cd /home/<your-username>/gaim-stage
-   ./gaim --config=/home/<your-username>/.gaim-stage
-
-6. Enable the Gaim iFolder Plugin in Gaim Preferences | Plugins and you're
-   ready to start!
 
 
 ---------------------
