@@ -46,7 +46,7 @@ ifeq ($(TARGET_OS), linux)
 	LIB_FILES = $(BUILD_LIB_FILES) ../../external/sqlite/linux/libsqlite.so
 endif
 ifeq ($(TARGET_OS), windows)
-	LIB_FILES = $(BUILD_LIB_FILES) ../../external/sqlite/w32/sqlite.dll
+	LIB_FILES = $(BUILD_LIB_FILES) ..\..\external\sqlite\w32\sqlite.dll
 endif
 DATA_FILES = 
 TEST_BIN_FILES =

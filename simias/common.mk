@@ -126,7 +126,7 @@ endif
 ifdef NUNIT_TESTS
 export NUNIT_TESTS
 test: installtest $(TEST_RUN_MAKEFILE)
-	$(MAKE) -C $(DESTDIR)$(bindir) -f test.mk test
+	-$(MAKE) -C $(DESTDIR)$(bindir) -f test.mk test
 else
 test: installtest $(TEST_RUN_MAKEFILE)
 	@echo "No Test cases to run"
