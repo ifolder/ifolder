@@ -65,6 +65,80 @@ static char * sec_server_config_elements [] = {
 	NULL
 };
 
+/**
+ * Internal structures
+ */
+/* Tags used to get the host and port number in the IProcConfig.cfg file. */
+#define HOST_TAG "Host"
+#define PORT_TAG "Port"
+
+/**
+ * Error returned when the Registration thread terminates with a receive
+ * outstanding.
+ */
+#define OWNER_THREAD_TERMINATED 995
+
+/* File name of the IProcEvent configuration file */
+#define CONFIG_FILE_NAME "IProcEvent.cfg"
+
+#define RECEIVE_BUFFER_SIZE 2048
+
+typedef enum
+{
+	CLIENT_STATE_INITIALIZING,
+	CLIENT_STATE_REGISTERING,
+	CLIENT_STATE_RUNNING,
+	CLIENT_STATE_SHUTDOWN
+} CLIENT_STATE;
+
+typedef enum
+{
+	REG_THREAD_STATE_INITIALIZING,
+	REG_THREAD_STATE_RUNNING,
+	REG_THREAD_STATE_TERMINATED,
+	REG_THREAD_STATE_TERMINATION_ACK
+} REG_THREAD_STATE;
+
+/**
+ * This structure represents the SimiasEventClient typedef declared in the
+ * public API.  It is abstracted so the end-user of the API doesn't have to know
+ * all the internals of what goes on.  This should make the API more clear.
+ */
+typedef struct
+{
+	/* Initialization state of the client */
+	CLIENT_STATE state;
+	
+	/* Socket used to listen for events from the event server */
+	int event_socket;
+	
+	/* Buffer used to receive the socket messages */
+	char receive_buffer [RECEIVE_BUFFER_SIZE];
+	
+	/* Indicates the current amount of data in the buffer to be processed */
+	int buffer_length;
+	
+	/* Contains the address and port information for this client */
+	struct sockaddr_in local_sin;
+
+	/* Delegate and context used to indicate an error */	
+	void (*error_handler)	(void *user_data);
+	
+	/**
+	 * Tells the state of the registration thread.  This is a work around for
+	 * the error that gets thrown when the registration thread exits with a
+	 * pending async receive.
+	 */
+	REG_THREAD_STATE reg_thread_state;
+
+	/* Thread handle to the event thread */
+	pthread_t event_thread;
+	
+	/* Thread handle to the registration thread */
+	pthread_t reg_thread;
+} RealSimiasEventClient;
+
+
 /* EventRegistration Message */
 #define REGISTRATION_TOP_ELEMENT_NAME	"EventRegistration"
 #define REGISTRATION_HOST_ATTR_NAME		"host"
@@ -134,22 +208,27 @@ typedef enum
 #define SIMIAS_EVENT_SERVER_HOST "127.0.0.1"
 #define SIMIAS_EVENT_SERVER_PORT 5432
 
+/* FIXME: Move this into the RealSimiasEventClient structure somehow */
+void (*simias_node_created_function) (SimiasNodeEvent *);
+void (*simias_node_changed_function) (SimiasNodeEvent *);
+void (*simias_node_deleted_function) (SimiasNodeEvent *);
+
 /* #region Forward declarations for private functions */
 static void * sec_thread (void *user_data);
 static void * sec_reg_thread (void *user_data);
 static void sec_wait_for_file_change (char *file_path);
 static void sec_config_file_changed_callback (void *user_data);
-static void sec_shutdown (SimiasEventClient *ec, const char *err_msg);
-static void sec_report_error (SimiasEventClient *ec, const char *err_msg);
-static int sec_send_message (SimiasEventClient *ec,
+static void sec_shutdown (RealSimiasEventClient *ec, const char *err_msg);
+static void sec_report_error (RealSimiasEventClient *ec, const char *err_msg);
+static int sec_send_message (RealSimiasEventClient *ec,
 							 char * message, int len);
-static int sec_get_server_host_address (SimiasEventClient *ec,
+static int sec_get_server_host_address (RealSimiasEventClient *ec,
 										struct sockaddr_in *sin);
 static char * sec_get_config_file_path (char *dest_path);
 
 static void * sec_parse_struct_from_doc (xmlDoc *doc);
 static void * sec_create_struct_from_xpath (xmlXPathContext *xpath_ctx);
-static int sec_process_message (SimiasEventClient *ec, 
+static int sec_process_message (RealSimiasEventClient *ec, 
 								char *message, 
 								int length);
 /* Anytime an event struct is returned, it must be freed using this function. */
@@ -158,9 +237,11 @@ static void sec_free_event_struct (void *event_struct);
 
 /* #region Public Functions */
 static int
-sec_init (SimiasEventClient *ec, void *error_handler)
+sec_init (SimiasEventClient *sec, void *error_handler)
 {
-printf ("SEC: sec_init () called\n");	
+printf ("SEC: sec_init () called\n");
+	RealSimiasEventClient *ec = malloc (sizeof (RealSimiasEventClient));
+	*sec = ec;
 	/**
 	 * The following macro/function initializes the XML library and checks for
 	 * potential API mismatches between the version it was compiled for and the
@@ -193,17 +274,21 @@ printf ("SEC: sec_init () called\n");
  * Any cleanup should be done in this function.
  */
 static int
-sec_cleanup (SimiasEventClient *ec)
+sec_cleanup (SimiasEventClient *sec)
 {
+	/* Free the memory being used by SimiasEventClient */
+	free (*sec);
+	*sec = NULL;
+	
 	/* Cleanup function for the XML library */
 	xmlCleanupParser ();
 }
 
 static int
-sec_register (SimiasEventClient *ec)
+sec_register (SimiasEventClient sec)
 {
 printf ("SEC: sec_register () called\n");	
-
+	RealSimiasEventClient *ec = (RealSimiasEventClient *)sec;
 	/* Don't let registeration happen multiple times */
 	if (ec->state == CLIENT_STATE_INITIALIZING) {
 		/* Set the states to registering */
@@ -222,8 +307,9 @@ printf ("SEC: sec_register () called\n");
 }
 
 static int
-sec_deregister (SimiasEventClient *ec)
+sec_deregister (SimiasEventClient sec)
 {
+	RealSimiasEventClient *ec = (RealSimiasEventClient *)sec;
 	char reg_msg [4096];
 	struct sockaddr_in my_sin;
 	int my_sin_addr_len;
@@ -268,8 +354,9 @@ sec_deregister (SimiasEventClient *ec)
 }
 
 static int
-sec_set_event (SimiasEventClient *ec, IPROC_EVENT_ACTION action, void **handler)
+sec_set_event (SimiasEventClient sec, IPROC_EVENT_ACTION action, void (*handler)(void *))
 {
+	RealSimiasEventClient *ec = (RealSimiasEventClient *)sec;
 	char msg [4096];
 	char action_str [256];
 	
@@ -277,12 +364,15 @@ sec_set_event (SimiasEventClient *ec, IPROC_EVENT_ACTION action, void **handler)
 	switch (action) {
 		case ACTION_ADD_NODE_CREATED:
 			sprintf (action_str, "AddNodeCreated");
+			simias_node_created_function = handler;
 			break;
 		case ACTION_ADD_NODE_CHANGED:
 			sprintf (action_str, "AddNodeChanged");
+			simias_node_changed_function = handler;
 			break;
 		case ACTION_ADD_NODE_DELETED:
 			sprintf (action_str, "AddNodeDeleted");
+			simias_node_deleted_function = handler;
 			break;
 		case ACTION_ADD_COLLECTION_SYNC:
 			sprintf (action_str, "AddCollectionSync");
@@ -338,7 +428,7 @@ sec_set_event (SimiasEventClient *ec, IPROC_EVENT_ACTION action, void **handler)
 static void *
 sec_thread (void *user_data)
 {
-	SimiasEventClient *ec = (SimiasEventClient *)user_data;
+	RealSimiasEventClient *ec = (RealSimiasEventClient *)user_data;
 	int new_s, sin_size, len, real_length;
 	char my_host_name [512];
 	struct hostent *hp;
@@ -363,7 +453,7 @@ printf ("SEC: sec_thread () called\n");
 printf ("SEC: sec_thread: recv () called\n");
 			real_length = *((int *)buf);
 			printf ("real_length: %d\n", real_length);
-			if (real_length > 0) {
+			if (real_length > 0 && (real_length == (len - 4))) {
 				real_message = malloc (sizeof (char) * real_length);
 				
 				strncpy (real_message, buf + 4, real_length);
@@ -373,6 +463,8 @@ printf ("SEC: sec_thread: recv () called\n");
 				sec_process_message (ec, real_message, real_length);
 				
 				free (real_message);
+			} else {
+				printf ("SEC: recv () returned %d bytes\n", len);
 			}
 		}
 	}
@@ -382,7 +474,7 @@ static void *
 sec_reg_thread (void *user_data)
 {
 	/* FIXME: Implement sec_reg_thread */
-	SimiasEventClient *ec = (SimiasEventClient *)user_data;
+	RealSimiasEventClient *ec = (RealSimiasEventClient *)user_data;
 	struct sockaddr_in sin;
 	struct sockaddr_in my_sin;
 	int my_sin_addr_len;
@@ -477,7 +569,7 @@ sec_config_file_changed_callback (void *user_data)
 }
 
 static void
-sec_shutdown (SimiasEventClient *ec, const char *err_msg)
+sec_shutdown (RealSimiasEventClient *ec, const char *err_msg)
 {
 	/* FIXME: Figure out how to lock on *ec */
 	if (ec->state != CLIENT_STATE_SHUTDOWN) {
@@ -505,7 +597,7 @@ sec_shutdown (SimiasEventClient *ec, const char *err_msg)
  * specified.
  */
 static void
-sec_report_error (SimiasEventClient *ec, const char *err_msg)
+sec_report_error (RealSimiasEventClient *ec, const char *err_msg)
 {
 	if (ec->error_handler != NULL) {
 		ec->error_handler ((char *)err_msg);
@@ -516,7 +608,7 @@ sec_report_error (SimiasEventClient *ec, const char *err_msg)
  * Returns the number of bytes that were sent or -1 if there were errors.
  */
 static int
-sec_send_message (SimiasEventClient *ec, char * message, int len)
+sec_send_message (RealSimiasEventClient *ec, char * message, int len)
 {
 	int sent_length;
 	char err_msg [2048];
@@ -555,7 +647,7 @@ sec_send_message (SimiasEventClient *ec, char * message, int len)
  * Returns 0 if successful or -1 if there was an error.
  */
 static int
-sec_get_server_host_address (SimiasEventClient *ec, 
+sec_get_server_host_address (RealSimiasEventClient *ec, 
 											 struct sockaddr_in *sin)
 {
 	char config_file_path [1024];
@@ -660,7 +752,7 @@ sec_get_config_file_path (char *dest_path)
 }
 
 static int
-sec_process_message (SimiasEventClient *ec, char *message, int length)
+sec_process_message (RealSimiasEventClient *ec, char *message, int length)
 {
 	xmlDoc *doc;
 	void *message_struct;
@@ -682,17 +774,17 @@ sec_process_message (SimiasEventClient *ec, char *message, int length)
 		if (strcmp ("NodeEventArgs", struct_ptr [0]) == 0) {
 			SimiasNodeEvent *event = (SimiasNodeEvent *)message_struct;
 			printf ("NodeEventArgs received\n");
-			printf ("\t%s: %s\n", "action", event->action);
-			printf ("\t%s: %s\n", "time", event->time);
-			printf ("\t%s: %s\n", "source", event->source);
-			printf ("\t%s: %s\n", "collection", event->collection);
-			printf ("\t%s: %s\n", "type", event->type);
-			printf ("\t%s: %s\n", "event_id", event->event_id);
-			printf ("\t%s: %s\n", "node", event->node);
-			printf ("\t%s: %s\n", "flags", event->flags);
-			printf ("\t%s: %s\n", "master_rev", event->master_rev);
-			printf ("\t%s: %s\n", "slave_rev", event->slave_rev);
-			printf ("\t%s: %s\n", "file_size", event->file_size);
+
+			if (strcmp ("NodeCreated", event->action) == 0) {
+				if (simias_node_created_function != NULL)
+					simias_node_created_function (event);
+			} else if (strcmp ("NodeChanged", event->action) == 0) {
+				if (simias_node_changed_function != NULL)
+					simias_node_changed_function (event);
+			} else if (strcmp ("NodeDeleted", event->action) == 0) {
+				if (simias_node_deleted_function != NULL)
+					simias_node_deleted_function (event);
+			}
 		} else if (strcmp ("CollectionSyncEventArgs", struct_ptr [0]) == 0) {
 			printf ("CollectionSyncEventArgs message received\n");
 		} else if (strcmp ("FileSyncEventArgs", struct_ptr [0]) == 0) {
@@ -919,7 +1011,49 @@ printf ("SEC: Freeing unknown event type (memory leak possible)\n");
 /* #endregion */
 
 /* #region Testing */
-int main (int argc, char *argv[])
+
+void
+print_simias_node_event (SimiasNodeEvent *event)
+{
+	printf ("\t%s: %s\n", "action", event->action);
+	printf ("\t%s: %s\n", "time", event->time);
+	printf ("\t%s: %s\n", "source", event->source);
+	printf ("\t%s: %s\n", "collection", event->collection);
+	printf ("\t%s: %s\n", "type", event->type);
+	printf ("\t%s: %s\n", "event_id", event->event_id);
+	printf ("\t%s: %s\n", "node", event->node);
+	printf ("\t%s: %s\n", "flags", event->flags);
+	printf ("\t%s: %s\n", "master_rev", event->master_rev);
+	printf ("\t%s: %s\n", "slave_rev", event->slave_rev);
+	printf ("\t%s: %s\n", "file_size", event->file_size);
+}
+
+void 
+simias_node_created_callback (SimiasNodeEvent *event)
+{
+	printf ("simias_node_created_callback () entered\n");
+	
+	print_simias_node_event (event);
+}
+
+void
+simias_node_changed_callback (SimiasNodeEvent *event)
+{
+	printf ("simias_node_changed_callback () entered\n");
+	
+	print_simias_node_event (event);
+}
+
+void
+simias_node_deleted_callback (SimiasNodeEvent *event)
+{
+	printf ("simias_node_deleted_callback () entered\n");
+	
+	print_simias_node_event (event);
+}
+
+int
+main (int argc, char *argv[])
 {
 	SimiasEventClient ec;
 	char buf [256];
@@ -929,7 +1063,7 @@ int main (int argc, char *argv[])
 		return -1;
 	}
 	
-	if (sec_register (&ec) != 0) {
+	if (sec_register (ec) != 0) {
 		fprintf (stderr, "sec_register failed\n");
 		return -1;
 	}
@@ -940,8 +1074,8 @@ int main (int argc, char *argv[])
 	 * Until the message queue is implemented, we need to wait for the client
 	 * to be running before continuing
 	 */
-	while (ec.state != CLIENT_STATE_RUNNING) {
-		if (ec.state == CLIENT_STATE_SHUTDOWN) {
+	while (((RealSimiasEventClient *)ec)->state != CLIENT_STATE_RUNNING) {
+		if (((RealSimiasEventClient *)ec)->state == CLIENT_STATE_SHUTDOWN) {
 			fprintf (stderr, "Shutdown initiated prematurely\n");
 			return -1;
 		}
@@ -951,17 +1085,17 @@ int main (int argc, char *argv[])
 	}
 	
 	/* Ask to listen to some events by calling sec_set_event () */
-	sec_set_event (&ec, ACTION_ADD_NODE_CREATED, NULL);
-	sec_set_event (&ec, ACTION_ADD_NODE_CHANGED, NULL);
-	sec_set_event (&ec, ACTION_ADD_NODE_DELETED, NULL);
-	sec_set_event (&ec, ACTION_ADD_COLLECTION_SYNC, NULL);
-	sec_set_event (&ec, ACTION_ADD_FILE_SYNC, NULL);
-	sec_set_event (&ec, ACTION_ADD_NOTIFY_MESSAGE, NULL);
+	sec_set_event (ec, ACTION_ADD_NODE_CREATED, (void *)&simias_node_created_callback);
+	sec_set_event (ec, ACTION_ADD_NODE_CHANGED, (void *)&simias_node_changed_callback);
+	sec_set_event (ec, ACTION_ADD_NODE_DELETED, (void *)&simias_node_deleted_callback);
+	sec_set_event (ec, ACTION_ADD_COLLECTION_SYNC, NULL);
+	sec_set_event (ec, ACTION_ADD_FILE_SYNC, NULL);
+	sec_set_event (ec, ACTION_ADD_NOTIFY_MESSAGE, NULL);
 	
 	fprintf (stdout, "Press <Enter> to stop the client...");
 	fgets (buf, sizeof (buf), stdin);
 	
-	if (sec_deregister (&ec) != 0) {
+	if (sec_deregister (ec) != 0) {
 		fprintf (stderr, "sec_deregister failed\n");
 		return -1;
 	}
