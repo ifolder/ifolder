@@ -520,10 +520,13 @@ namespace Simias.POBoxService.Web
 				cSub.SubscriptionCollectionID = sharedCollection.ID;
 				cSub.SubscriptionCollectionType = sharedCollectionType;
 				cSub.SubscriptionCollectionName = sharedCollection.Name;
-				cSub.SubscriptionCollectionURL = "http://" + hostAndPort[0] + ":6436/SyncService.rem";
+				//cSub.SubscriptionCollectionURL = "http://" + hostAndPort[0] + ":6436/SyncService.rem";
 				cSub.DomainID = domainID;
 				cSub.DomainName = cDomain.Name;
 				cSub.SubscriptionKey = Guid.NewGuid().ToString();
+
+				SyncCollection sc = new SyncCollection(sharedCollection);
+				cSub.SubscriptionCollectionURL = sc.MasterUrl.ToString();
 
 				DirNode dirNode = sharedCollection.GetRootDirectory();
 				if(dirNode != null)
