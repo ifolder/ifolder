@@ -24,6 +24,7 @@
 		089C165CFE840E0CC02AAC07 = {
 			children = (
 				089C165DFE840E0CC02AAC07,
+				3E9D3F5407DFAA6C00AA93D6,
 			);
 			isa = PBXVariantGroup;
 			name = InfoPlist.strings;
@@ -210,6 +211,7 @@
 		29B97318FDCFA39411CA2CEA = {
 			children = (
 				29B97319FDCFA39411CA2CEA,
+				3E9D3F5507DFAA7600AA93D6,
 			);
 			isa = PBXVariantGroup;
 			name = MainMenu.nib;
@@ -1033,6 +1035,7 @@
 		3E70A407078DFB8A0075681D = {
 			children = (
 				3E70A408078DFB8A0075681D,
+				3E9D3F5707DFAA8800AA93D6,
 			);
 			isa = PBXVariantGroup;
 			name = Preferences.nib;
@@ -1310,6 +1313,78 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		3E9D3F5307DFAA5F00AA93D6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = Japanese;
+			path = Japanese.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E9D3F5407DFAA6C00AA93D6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = Japanese;
+			path = Japanese.lproj/InfoPlist.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E9D3F5507DFAA7600AA93D6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Japanese;
+			path = Japanese.lproj/MainMenu.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E9D3F5607DFAA7F00AA93D6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Japanese;
+			path = Japanese.lproj/LoginWindow.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E9D3F5707DFAA8800AA93D6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Japanese;
+			path = Japanese.lproj/Preferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E9D3F5807DFAA9100AA93D6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Japanese;
+			path = Japanese.lproj/Properties.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E9D3F5907DFAA9A00AA93D6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Japanese;
+			path = Japanese.lproj/LogWindow.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E9D3F5A07DFAAA200AA93D6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Japanese;
+			path = Japanese.lproj/iFolderWindow.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E9D3F5B07DFAAAA00AA93D6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Japanese;
+			path = Japanese.lproj/ConflictResolver.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		3EA94F5F07B823CA0088FD0F = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -1328,6 +1403,7 @@
 		3EA98A9F07C7A4520078451D = {
 			children = (
 				3EA98AA007C7A4520078451D,
+				3E9D3F5B07DFAAAA00AA93D6,
 			);
 			isa = PBXVariantGroup;
 			name = ConflictResolver.nib;
@@ -1409,6 +1485,7 @@
 		3EB8C509079392230082AA86 = {
 			children = (
 				3EB8C50A079392230082AA86,
+				3E9D3F5807DFAA9100AA93D6,
 			);
 			isa = PBXVariantGroup;
 			name = Properties.nib;
@@ -1755,6 +1832,7 @@
 		3EE8876907B9503200484B9F = {
 			children = (
 				3EE8876A07B9503200484B9F,
+				3E9D3F5907DFAA9A00AA93D6,
 			);
 			isa = PBXVariantGroup;
 			name = LogWindow.nib;
@@ -1823,6 +1901,7 @@
 		3EE8881407B9603E00484B9F = {
 			children = (
 				3EE8881507B9603E00484B9F,
+				3E9D3F5A07DFAAA200AA93D6,
 			);
 			isa = PBXVariantGroup;
 			name = iFolderWindow.nib;
@@ -1971,6 +2050,7 @@
 		3EF2212D07681AA400EE2EF6 = {
 			children = (
 				3EF2212E07681AA400EE2EF6,
+				3E9D3F5607DFAA7F00AA93D6,
 			);
 			isa = PBXVariantGroup;
 			name = LoginWindow.nib;
@@ -1995,6 +2075,7 @@
 		3EF97A7B07DF77E100BA8880 = {
 			children = (
 				3EF97A7C07DF77E100BA8880,
+				3E9D3F5307DFAA5F00AA93D6,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
