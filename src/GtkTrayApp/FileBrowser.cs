@@ -243,6 +243,12 @@ namespace Novell.iFolder
 						share_item.Activated += new EventHandler(
 								on_shareifolder_context_menu);
 
+						MenuItem refresh_item = new MenuItem (
+								"Refresh iFolder");
+						trayMenu.Append (refresh_item);
+						refresh_item.Activated += new EventHandler(
+								on_refreshifolder_context_menu);
+
 						MenuItem unmake_item = new MenuItem (
 								"Revert to a Normal Folder");
 						trayMenu.Append (unmake_item);
@@ -289,6 +295,17 @@ namespace Novell.iFolder
 				Console.WriteLine("Show properties for: " + de.FullName);
 				PropertiesDialog pd = new PropertiesDialog(de.FullName);
 				pd.ShowAll();
+			}
+		}
+
+		public void on_refreshifolder_context_menu(object o, EventArgs args)
+		{	
+			DirectoryEntry de = GetSelectedItem();
+			if(de != null)
+			{
+				iFolder ifldr = ifmgr.GetiFolderByPath(de.FullName);
+				if(ifldr != null)
+					ifldr.Update();
 			}
 		}
 

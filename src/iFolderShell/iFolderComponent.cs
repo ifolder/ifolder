@@ -61,7 +61,7 @@ namespace Novell.iFolder.iFolderCom
 	public class iFolderComponent : IiFolderComponent
 	{
 		static private iFolderManager manager = null;//= Manager.Connect();
-		private iFolderFile ifolderfile;
+		private iFolderNode ifoldernode;
 		private ICSEnumerator propEnumerator;
 		private ICSEnumerator aclEnumerator;
 
@@ -110,14 +110,14 @@ namespace Novell.iFolder.iFolderCom
 		public String Description
 		{
 			// TODO - fix this.
-			get { return ifolderfile.Description; }
+			get { return ifoldernode.Description; }
 			set
 			{
-				ifolderfile.Description = value;
+				ifoldernode.Description = value;
 
 				// TODO - move this so that the commit can be done once at the end of
 				// a bunch of modifies.
-				ifolderfile.ThisNode.Commit();
+//				ifoldernode.iFolder.CurrentNode.Commit();
 			}
 		}
 
@@ -138,21 +138,6 @@ namespace Novell.iFolder.iFolderCom
 
 		public bool IsiFolder([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
-/*			try
-			{
-				if (manager.IsiFolder(path))
-				{
-					this.ifolder = manager.GetiFolderByPath(path);
-					this.ifolderfile = this.ifolder.GetiFolderFileByName(path);
-					return true;
-				}
-			}
-			catch (Exception e)
-			{
-				System.Diagnostics.Debug.WriteLine(e.Message);
-				System.Diagnostics.Debug.WriteLine(e.StackTrace);
-			}*/
-
 			return manager.IsiFolder(path);
 		}
 
@@ -211,11 +196,10 @@ namespace Novell.iFolder.iFolderCom
 			{
 				foreach(iFolder ifolder in manager)
 				{
-//					string rootPath= ifolder.LocalPath + Path.DirectorySeparatorChar.ToString();
 					if (path.StartsWith(ifolder.LocalPath))
 					{
-						ifolderfile= ifolder.GetiFolderFileByName(path);
-						if (ifolderfile != null)
+						ifoldernode = ifolder.GetiFolderNodeByPath(path);
+						if (ifoldernode != null)
 						{
 							System.Diagnostics.Debug.WriteLine("GetiFolderNode() returning true");
 							return true;
@@ -244,9 +228,11 @@ namespace Novell.iFolder.iFolderCom
 		public bool GetiFolderPropInit()
 		{
 			// Set up the enumerator to get the Properties on the Node.
-			propEnumerator = ( ICSEnumerator )ifolderfile.ThisNode.Properties.GetEnumerator();
+			// TODO - fix this.
+//			propEnumerator = ( ICSEnumerator )ifoldernode.ThisNode.Properties.GetEnumerator();
 
-			return (propEnumerator != null);
+//			return (propEnumerator != null);
+			return false;
 		}
 
 		public bool GetNextiFolderProp(out string name, out string val)
@@ -263,7 +249,7 @@ namespace Novell.iFolder.iFolderCom
 				propEnumerator.Dispose();
 				name = null;
 				val = null;
-				this.ifolderfile = null;
+				ifoldernode = null;
 				return false;
 			}
 		}

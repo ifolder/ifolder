@@ -30,6 +30,7 @@ using Novell.iFolder;
 /// </summary>
 public class iFolderCmd
 {
+
 	static bool CreateiFolder(string [] args)
 	{
 		if(args[0] != "create")
@@ -44,7 +45,6 @@ public class iFolderCmd
 		try
 		{
 			iFolderManager manager = iFolderManager.Connect();
-			//iFolder newiFolder = manager.CreateiFolder(args[1]);
 			manager.CreateiFolder(args[1]);
 		}
 		catch(Exception e)
@@ -53,6 +53,9 @@ public class iFolderCmd
 		}
 		return true;
 	}
+
+
+
 
 	static bool ListiFolders(string [] args)
 	{
@@ -76,6 +79,9 @@ public class iFolderCmd
 		}
 		return true;
 	}
+
+
+
 
 	static bool DeleteiFolder(string [] args)
 	{
@@ -107,6 +113,9 @@ public class iFolderCmd
 		Console.WriteLine("iFolder not found: " + args[1]);
 		return true;
 	}
+
+
+
 
 	static void Main(string [] args)
 	{
