@@ -42,9 +42,6 @@ namespace Simias.Service
 		static private ISimiasLog logger = Simias.SimiasLogManager.GetLogger(typeof(Manager));
 
 		private Configuration conf;
-		static Thread			messageThread = null;
-		static Queue			messageQueue = new Queue();
-		static ManualResetEvent	queueEvent = new ManualResetEvent(false);
 		XmlElement servicesElement;
 		ArrayList serviceList = new ArrayList();
 		Mutex serviceMutex = null;
@@ -78,10 +75,7 @@ namespace Simias.Service
 					serviceMutex = mutex;
 					this.conf = conf;
 
-					// Start the MessageThread
-					messageThread = new Thread(new ThreadStart(messageDispatcher));
-					messageThread.IsBackground = true;
-					messageThread.Start();
+					ServiceDelegate += new ServiceEvent(messageDispatcher);
 					
 					// Get the XmlElement for the Services.
 					servicesElement = conf.GetElement(CFG_Section, CFG_Services);
@@ -118,93 +112,74 @@ namespace Simias.Service
 
 		#region Message handling
 
+		internal delegate void ServiceEvent(Message msg);
+		internal ServiceEvent ServiceDelegate;
+		
 		private void postMessage(Message msg)
 		{
-			lock (messageQueue)
-			{
-				messageQueue.Enqueue(msg);
-			}
-			queueEvent.Set();
+			ServiceDelegate.BeginInvoke(msg, null, null);
 		}
 
-		private void messageDispatcher()
+		private void messageDispatcher(Message msg)
 		{
-			Message		msg;
-			ServiceCtl	svcCtl;
-			while (true)
-			{	
-				queueEvent.WaitOne();
-				try
+			ServiceCtl	svcCtl = msg.service;
+			try
+			{
+				switch (msg.MajorMessage)
 				{
-					lock (messageQueue)
-					{
-						if (messageQueue.Count != 0)
+					case MessageCode.Start:
+						if (svcCtl.State == State.Stopped && svcCtl.Enabled)
 						{
-							msg = (Message)messageQueue.Dequeue();
-							svcCtl = msg.service;
+							svcCtl.Start();
+							svcCtl.state = State.Running;
+							logger.Info("\"{0}\" service started.", svcCtl.Name);
 						}
-						else
+						break;
+					case MessageCode.Stop:
+						if (svcCtl.state == State.Running || svcCtl.state == State.Paused)
 						{
-							queueEvent.Reset();
-							continue;
+							svcCtl.Stop();
+							svcCtl.state = State.Stopped;
+							logger.Info("\"{0}\" service stopped.", svcCtl.Name);
 						}
-					}
-					switch (msg.MajorMessage)
-					{
-						case MessageCode.Start:
-							if (svcCtl.State == State.Stopped && svcCtl.Enabled)
-							{
-								svcCtl.Start();
-								svcCtl.state = State.Running;
-								logger.Info("\"{0}\" service started.", svcCtl.Name);
-							}
-							break;
-						case MessageCode.Stop:
-							if (svcCtl.state == State.Running || svcCtl.state == State.Paused)
-							{
-								svcCtl.Stop();
-								svcCtl.state = State.Stopped;
-								logger.Info("\"{0}\" service stopped.", svcCtl.Name);
-							}
-							break;
-						case MessageCode.Pause:
-							if (svcCtl.state == State.Running)
-							{
-								svcCtl.Pause();
-								svcCtl.state = State.Paused;
-								logger.Info("\"{0}\" service Paused.", svcCtl.Name);
-							}
-							break;
-						case MessageCode.Resume:
-							if (svcCtl.state == State.Paused)
-							{
-								svcCtl.Resume();
-								svcCtl.state = State.Running;
-								logger.Info("\"{0}\" service resumed.", svcCtl.Name);
-							}
-							break;
-						case MessageCode.Custom:
-							svcCtl.Custom(msg.CustomMessage, msg.Data);
-							break;
-						case MessageCode.StartComplete:
-							servicesStarted.Set();
-							servicesStopped.Reset();
-							logger.Info("Services started.");
-							break;
-						case MessageCode.StopComplete:
-							servicesStopped.Set();
-                            servicesStarted.Reset();
-							logger.Info("Services stopped.");
-							break;
-					}
-				}
-				catch (Exception ex)
-				{
-					logger.Error(ex, ex.Message);
+						break;
+					case MessageCode.Pause:
+						if (svcCtl.state == State.Running)
+						{
+							svcCtl.Pause();
+							svcCtl.state = State.Paused;
+							logger.Info("\"{0}\" service Paused.", svcCtl.Name);
+						}
+						break;
+					case MessageCode.Resume:
+						if (svcCtl.state == State.Paused)
+						{
+							svcCtl.Resume();
+							svcCtl.state = State.Running;
+							logger.Info("\"{0}\" service resumed.", svcCtl.Name);
+						}
+						break;
+					case MessageCode.Custom:
+						svcCtl.Custom(msg.CustomMessage, msg.Data);
+						break;
+					case MessageCode.StartComplete:
+						servicesStarted.Set();
+						servicesStopped.Reset();
+						logger.Info("Services started.");
+						break;
+					case MessageCode.StopComplete:
+						servicesStopped.Set();
+						servicesStarted.Reset();
+						logger.Info("Services stopped.");
+						break;
 				}
 			}
+			catch (Exception ex)
+			{
+				logger.Error(ex, ex.Message);
+			}
 		}
-
+		
 		#endregion
 
 		#region Installation methods.
