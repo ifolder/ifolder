@@ -24,157 +24,154 @@
 using System;
 using System.IO;
 using System.Xml;
+using System.Threading;
 
 namespace Simias
 {
 	public sealed class Configuration
 	{
-		private static string basePath;
+		private string basePath;
+		private Mutex mutex = new Mutex(false, "SimiasConfigMutex");
 
 		private const string RootElementTag = "configuration";
 		private const string SectionTag = "section";
 		private const string SettingTag = "setting";
+		private const string NameAttr = "name";
+		private const string ValueAttr = "value";
 		private const string DefaultSection = "SimiasDefault";
-		private const string DefaultInnerPath = ".simias";
 		private const string DefaultFileName = "simias.conf";
+
+		public Configuration() : this(null)
+		{
+		}
+
+		public Configuration(string basePath)
+		{
+			if(basePath == null)
+			{
+				basePath = DefaultPath;
+			}
+			else
+			{
+				basePath = fixupPath(basePath);
+			}
+
+			BaseConfigPath = basePath;
+		}
 			
-		public static string BaseConfigPath
+		private string BaseConfigPath
 		{
 			get
 			{
-				if(basePath == null)
-				{
-					basePath = Environment.GetFolderPath(
-						Environment.SpecialFolder.LocalApplicationData);
-
-					if(basePath == "")
-					{
-						basePath = Environment.GetFolderPath(
-								Environment.SpecialFolder.Personal);
-					}
-
-					basePath += Path.DirectorySeparatorChar.ToString();
-					basePath += DefaultInnerPath;
-
-
-					DirectoryInfo dir = new DirectoryInfo(basePath);
-					if (dir.Exists == false)
-					{
-						dir.Create();
-					}
-				}
-
 				return basePath;
 			}
 
 			set
 			{
 				basePath = value;
-
-				DirectoryInfo dir = new DirectoryInfo(basePath);
-				if (dir.Exists == false)
-				{
-					dir.Create();
-				}
 			}
 		}
 
-		private static string ConfigFilePath
+		private string ConfigFilePath
 		{
 			get
 			{
-				string fileName = BaseConfigPath + 
-					Path.DirectorySeparatorChar.ToString() +
-					DefaultFileName;
-
-				return fileName;
+				return Path.Combine(BaseConfigPath, DefaultFileName);
 			}
 		}
 
-		public static string Get(string key, string defaultValue)
+		public string Get(string key, string defaultValue)
 		{
 			return Get(DefaultSection, key, defaultValue);
 		}
 
-		public static string Get(string section, string key, 
-				string defaultValue)
+		public string Get(string section, string key, string defaultValue)
 		{
-			XmlNode valNode;
+			string keyValue = null;
 
-			XmlElement sectionElement = GetSection(section);
-			XmlElement keyElement = sectionElement[key];
-			if(keyElement == null)
+			try
 			{
-				keyElement = sectionElement.OwnerDocument.CreateElement(key);
-				sectionElement.AppendChild(keyElement);
+				mutex.WaitOne();
+				XmlElement sectionElement = GetSection(section);
+				string xpath = string.Format("//{0}[@{1}='{2}']", SettingTag, NameAttr, key);
+				XmlElement keyElement = (XmlElement)sectionElement.SelectSingleNode(xpath);
+				if (keyElement == null)
+				{				
+					keyElement = (XmlElement)sectionElement.OwnerDocument.CreateNode(XmlNodeType.Element, SettingTag, "");
+					keyElement.SetAttribute(NameAttr, key);
+					sectionElement.AppendChild(keyElement);
+				}
+
+				keyValue = keyElement.GetAttribute(ValueAttr);
+				if (keyValue == "")
+				{
+					keyElement.SetAttribute(ValueAttr, defaultValue);
+					keyElement.OwnerDocument.Save(ConfigFilePath);
+					keyValue = keyElement.GetAttribute(ValueAttr);
+				}
+			}
+			finally
+			{
+				mutex.ReleaseMutex();
 			}
 
-			valNode = keyElement.FirstChild;
-			if(valNode == null)
+			return keyValue;
+		}
+
+		public void Set(string key, string keyValue)
+		{
+			Set(DefaultSection, key, keyValue);
+		}
+
+		public void Set(string section, string key, string keyValue)
+		{
+			try
 			{
-				valNode = (XmlNode) 
-					keyElement.OwnerDocument.CreateTextNode(defaultValue);
-				keyElement.AppendChild(valNode);
+				mutex.WaitOne();
+				XmlElement sectionElement = GetSection(section);
+				string xpath = string.Format("//{0}[@{1}='{2}']", SettingTag, NameAttr, key);
+				XmlElement keyElement = (XmlElement)sectionElement.SelectSingleNode(xpath);
+				if (keyElement == null)
+				{				
+					keyElement = (XmlElement)sectionElement.OwnerDocument.CreateNode(XmlNodeType.Element, SettingTag, "");
+					keyElement.SetAttribute(NameAttr, key);
+					sectionElement.AppendChild(keyElement);
+				}
+
+				keyElement.SetAttribute(ValueAttr, keyValue);
 				keyElement.OwnerDocument.Save(ConfigFilePath);
 			}
-			return valNode.Value;
-		}
-
-		public static void Set(string key, string value)
-		{
-			Set(DefaultSection, key, value);
-		}
-
-		public static void Set(string section, string key, string value)
-		{
-			XmlNode valNode;
-
-			XmlElement sectionElement = GetSection(section);
-			XmlElement keyElement = sectionElement[key];
-			if(keyElement == null)
+			finally
 			{
-				keyElement = sectionElement.OwnerDocument.CreateElement(key);
-				sectionElement.AppendChild(keyElement);
+				mutex.ReleaseMutex();
 			}
-
-			valNode = keyElement.FirstChild;
-			if(valNode == null)
-			{
-				valNode = (XmlNode) 
-						keyElement.OwnerDocument.CreateTextNode(value);
-				keyElement.AppendChild(valNode);
-			}
-			else
-			{
-				valNode.Value = value;
-			}
-
-			keyElement.OwnerDocument.Save(ConfigFilePath);
 		}
 
 		// These two methods are going to read the XML document every
 		// time they are called but it's a cheap way to have fresh data
 		// and this is probably not called all the time
-		private static XmlElement GetSection(string section)
+		private XmlElement GetSection(string section)
 		{
-			XmlElement sectionElement;
 			XmlElement docElement;
+			XmlElement sectionElement;
 			
 			docElement = GetDocElement();
 
-			sectionElement = docElement[section];
+			string str = string.Format("//section[@name='{0}']", section);
+			sectionElement = (XmlElement)docElement.SelectSingleNode(str);
 
 			if(sectionElement == null)
 			{
-				// Create the Section element cuase it don't exist
-				sectionElement = 
-						docElement.OwnerDocument.CreateElement(section);
-				docElement.AppendChild(sectionElement);
+				// Create the Section node
+				sectionElement = docElement.OwnerDocument.CreateElement(SectionTag);
+				sectionElement.SetAttribute(NameAttr, section);
+				docElement.AppendChild(sectionElement);				
 			}
+
 			return sectionElement;
 		}
 
-		private static XmlElement GetDocElement()
+		private XmlElement GetDocElement()
 		{
 			XmlElement docElement = null;
 
@@ -184,7 +181,7 @@ namespace Simias
 			{
 				doc.Load(ConfigFilePath);
 			}
-			catch(Exception e)
+			catch
 			{
 				doc = new XmlDocument();
 				docElement = doc.CreateElement(RootElementTag);
@@ -195,6 +192,35 @@ namespace Simias
 
 			return docElement;
 		}
+
+		#region Static Methods
+		/// <summary>
+		/// Gets the default database path.
+		/// </summary>
+		public static string DefaultPath
+		{
+			get
+			{
+				string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+				if (path == null || path.Length == 0)
+				{
+					path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+				}
+				path = fixupPath(path);
+				return (path);
+			}
+		}
+
+		public static string fixupPath(string path)
+		{
+			path = Path.Combine(path, ".cstore");
+			if (!Directory.Exists(path))
+			{
+				Directory.CreateDirectory(path);
+			}
+			return path;
+		}
+		#endregion
 	}
 }
 
