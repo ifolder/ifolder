@@ -628,6 +628,7 @@ namespace Novell.AddressBook
 				{
 					if (cNode.Type == Common.contactType)
 					{
+						cNode.Refresh();
 						this.userName = cNode.Name;
 						this.id = cNode.Id;
 						this.thisNode = cNode;
