@@ -95,6 +95,7 @@ simias_escape_spaces(char *str_with_space)
 gboolean
 simias_url_parse(const char *url, char **proto, char **host, char **port, char **path)
 {
+	char *tmp_save;
 	char *tmp;
 	int colonPos;
 	int slashPos;
@@ -106,11 +107,12 @@ simias_url_parse(const char *url, char **proto, char **host, char **port, char *
 
 	// Host
 	tmp = strdup(url);
+	tmp_save = tmp;
 	colonPos = simias_str_index_of(tmp, ':');
 	if (colonPos <= 0)
 	{
 fprintf(stderr, "Couldn't parse the protocol in simias_url_parse()\n");
-		free(tmp);
+		free(tmp_save);
 		return FALSE;
 	}
 	else
@@ -131,7 +133,7 @@ fprintf(stderr, "Couldn't parse the protocol in simias_url_parse()\n");
 		{
 fprintf(stderr, "Couldn't parse the hostname in simias_url_parse()\n");
 			free(*host);
-			free(tmp);
+			free(tmp_save);
 			return FALSE;
 		}
 		else
@@ -159,7 +161,7 @@ fprintf(stderr, "Couldn't parse the hostname in simias_url_parse()\n");
 fprintf(stderr, "Couldn't parse the port in simias_url_parse()\n");
 			free(*proto);
 			free(*host);
-			free(tmp);
+			free(tmp_save);
 			return FALSE;
 		}
 		else
@@ -173,8 +175,8 @@ fprintf(stderr, "Couldn't parse the port in simias_url_parse()\n");
 	}
 
 	// Parse the path
-	*path = strdup(tmp);
+	*path = strdup((const char *)tmp);
 
-	free(tmp);
+	free(tmp_save);
 	return TRUE;
 }
