@@ -704,6 +704,15 @@ namespace Simias.Security.Web
 					break;
 				}
 
+				case SCodes.UnknownUser:
+				{
+					context.Response.StatusCode = 500;
+					context.Response.AddHeader(
+						Login.SimiasErrorHeader,
+						StatusCodes.UnknownUser.ToString() );
+					break;
+				}
+
 				case SCodes.Unknown:
 				{
 					context.Response.StatusCode = 500;
