@@ -111,6 +111,7 @@ public class SynkerServiceA: SyncCollectionService
         
         string userId = null;
 
+        // BSK: 
         try
         {
             userId = Thread.CurrentPrincipal.Identity.Name;
@@ -187,7 +188,8 @@ public class SynkerServiceA: SyncCollectionService
 	/// <summary>
 	/// takes an array of small nodes. returns rejected nodes
 	/// </summary>
-	public RejectedNodes PutSmallNodes(NodeChunk[] nodes)
+	// BSK: public RejectedNodes PutSmallNodes(NodeChunk[] nodes)
+	public void PutSmallNodes(NodeChunk[] nodes)
 	{
 		try
 		{
@@ -195,10 +197,11 @@ public class SynkerServiceA: SyncCollectionService
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
 			Log.Spew("SyncSession.PutSmallNodes() Count {0}", nodes.Length);
-			return ops.PutSmallNodes(nodes);
+			// BSK: return ops.PutSmallNodes(nodes);
+			ops.PutSmallNodes(nodes);
 		}
 		catch (Exception e) { Log.Uncaught(e); }
-		return new RejectedNodes();
+		// BSK: return new RejectedNodes();
 	}
 
 	/// <summary>
@@ -455,15 +458,16 @@ public class SynkerWorkerA: SyncCollectionWorker
 			updates = ops.GetSmallNodes(ids);
 		if (updates != null && updates.Length > 0)
 		{
-			RejectedNodes rejects = ss.PutSmallNodes(updates);
+			// BSK: RejectedNodes rejects = ss.PutSmallNodes(updates);
+			ss.PutSmallNodes(updates);
 			foreach (NodeChunk nc in updates)
 			{
-				if (Array.IndexOf(rejects.updateCollisions, nc.stamp.id) == -1
-						&& Array.IndexOf(rejects.fileSystemEntryCollisions, nc.stamp.id) == -1)
+				// BSK: if (Array.IndexOf(rejects.updateCollisions, nc.stamp.id) == -1
+				// BSK: && Array.IndexOf(rejects.fileSystemEntryCollisions, nc.stamp.id) == -1)
 					ops.UpdateIncarn(nc.stamp);
 			}
-			foreach (Nid nid in rejects.fileSystemEntryCollisions)
-				ops.DeleteSpuriousNode(nid);
+			// BSK: foreach (Nid nid in rejects.fileSystemEntryCollisions)
+			// BSK: ops.DeleteSpuriousNode(nid);
 		}
 
 		// get small files from server

@@ -455,11 +455,12 @@ public class SyncOps
 	/// <summary>
 	/// returns nodes were not updated due to collisions
 	/// </summary>
-	public RejectedNodes PutSmallNodes(NodeChunk[] nodeChunks)
+    // BSK: public RejectedNodes PutSmallNodes(NodeChunk[] nodeChunks)
+	public void PutSmallNodes(NodeChunk[] nodeChunks)
 	{
 		SyncIncomingNode inNode = new SyncIncomingNode(collection, onServer);
-		ArrayList updateRejects = new ArrayList();
-		ArrayList fseRejects = new ArrayList();
+		// BSK: ArrayList updateRejects = new ArrayList();
+		// BSK: ArrayList fseRejects = new ArrayList();
 		foreach (NodeChunk nc in nodeChunks)
 		{
 			if (!onServer && nc.fseChunks == null && nc.totalSize >= NodeChunk.MaxSize)
@@ -469,16 +470,17 @@ public class SyncOps
 			}
 			inNode.Start(nc.stamp);
 			inNode.WriteChunks(nc.fseChunks);
-			switch (inNode.Complete(nc.metaData))
-			{
-				case SyncIncomingNode.Status.UpdateCollision: updateRejects.Add(nc.stamp.id); break;
-				case SyncIncomingNode.Status.FileSystemEntryCollision: fseRejects.Add(nc.stamp.id); break;
-			}
+			// BSK: switch (inNode.Complete(nc.metaData))
+			// BSK: {
+				// BSK: case SyncIncomingNode.Status.UpdateCollision: updateRejects.Add(nc.stamp.id); break;
+				// BSK: case SyncIncomingNode.Status.FileSystemEntryCollision: fseRejects.Add(nc.stamp.id); break;
+			// BSK: }
 		}
-		RejectedNodes rejects;
-		rejects.updateCollisions = (Nid[])updateRejects.ToArray(typeof(Nid));
-		rejects.fileSystemEntryCollisions = (Nid[])fseRejects.ToArray(typeof(Nid));
-		return rejects;
+		
+        // BSK: RejectedNodes rejects;
+		// BSK: rejects.updateCollisions = (Nid[])updateRejects.ToArray(typeof(Nid));
+		// BSK: rejects.fileSystemEntryCollisions = (Nid[])fseRejects.ToArray(typeof(Nid));
+		// BSK: return rejects;
 	}
 
 	/// <summary>
