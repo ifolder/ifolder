@@ -227,6 +227,26 @@ namespace Simias.mDns
 	/// </summary>
 	public class User
 	{
+
+		[ StructLayout( LayoutKind.Sequential, CharSet=CharSet.Ansi )]
+		public class MemberInfo
+		{
+			[ MarshalAs( UnmanagedType.ByValTStr, SizeConst=64 ) ]
+			public String Name = null;
+
+			[ MarshalAs( UnmanagedType.ByValTStr, SizeConst=128 ) ]
+			public String ServicePath = null;
+
+			[ MarshalAs( UnmanagedType.ByValTStr, SizeConst=256 ) ]
+			public String PublicKey = null;
+
+			[ MarshalAs( UnmanagedType.ByValTStr, SizeConst=64 ) ]
+			public String Host = null;
+
+			public int Port;
+		}
+
+
 		#region DllImports
 		[ DllImport( "simdezvous" ) ]
 		private 
@@ -260,6 +280,15 @@ namespace Simias.mDns
 			[In, Out] byte[]	PublicKey,
 			[In, Out] char[]	HostName,
 			ref       int		Port);
+
+		[ DllImport( "simdezvous", CharSet=CharSet.Auto ) ]
+		private 
+		extern 
+		static 
+		User.kErrorType
+		GetMemberInfo2(
+			[MarshalAs(UnmanagedType.LPStr)] string	ID,
+			[In, Out] MemberInfo Info);
 
 		[ DllImport( "simdezvous" ) ]
 		private 
@@ -689,6 +718,16 @@ namespace Simias.mDns
 					{
 						int	port = 0;
 						log.Debug( "Calling GetMemberInfo for: " + rMember.UserID );
+
+						MemberInfo info = new MemberInfo();
+
+						status = GetMemberInfo2( rMember.UserID, info );
+						log.Debug( "  Friendly Name: " + info.Name );
+						log.Debug( "  Service Path:  " + info.ServicePath );
+						log.Debug( "  Host:          " + info.Host );
+						log.Debug( "  Port:          " + info.Port.ToString() );
+
+						/*
 						status = 
 							GetMemberInfo( 
 								rMember.UserID,
@@ -697,36 +736,43 @@ namespace Simias.mDns
 								infoPublicKey,
 								infoHost,
 								ref port );
+							*/
 
 						if ( status == kErrorType.kDNSServiceErr_NoError )
 						{
-							rMember.Name = (new string( infoName )).TrimEnd( trimNull );
+//							rMember.Name = (new string( infoName )).TrimEnd( trimNull );
+							rMember.Name = info.Name;
 							rMember.FN = rMember.Name;
 
 							Property host = 
 								new Property( 
 										RendezvousUsers.HostProperty, 
-										(new string( infoHost )).TrimEnd( trimNull ) );
+										info.Host );
+										//(new string( infoHost )).TrimEnd( trimNull ) );
 							host.LocalProperty = true;
 							rMember.Properties.AddProperty( host );
 
 							Property path = 
 								new Property( 
 								RendezvousUsers.PathProperty,
-								(new string( infoServicePath )).TrimEnd( trimNull ) );
+								info.ServicePath );
+								//(new string( infoServicePath )).TrimEnd( trimNull ) );
 							path.LocalProperty = true;
 							rMember.Properties.AddProperty( path );
 
-							Property rport = new Property( RendezvousUsers.PortProperty, port );
+							Property rport = new Property( RendezvousUsers.PortProperty, info.Port );
 							rMember.Properties.AddProperty( rport );
 
+							/*
 							UTF8Encoding utf8 = new UTF8Encoding();
 							string pubKey = utf8.GetString( infoPublicKey );
+							*/
 
 							Property key = 
 								new Property( 
 									RendezvousUsers.KeyProperty, 
-									pubKey.TrimEnd( trimNull ) );
+									info.PublicKey );
+//									pubKey.TrimEnd( trimNull ) );
 
 							rMember.Properties.AddProperty( key );
 
