@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?> 
 <Domain Name="SimpleServer" Description="Brady's Simple Server">
-	<Member Name="banderso" Owner="true">
+	<Member Name="banderso">
 		<Password>novell</Password>			
 		<First>Brady</First>
 		<Last>Anderson</Last>
 		<Email Type="work"> banderso@novell.com</Email>
 		<IM>igolfinutah</IM>
+	</Member>
+	<Member Name="angie" Owner="true">
+		<Password>novell</Password>			
+		<First>Angie</First>
+		<Last>Anderson</Last>
+		<Email Type="work"> angie@novell.com</Email>
+		<IM>angieandersonAIM</IM>
 	</Member>
 	<Member Name="cgaisford">
 		<Password>novell</Password>			

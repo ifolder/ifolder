@@ -3,6 +3,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleServer", "SimpleServe
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerXml", "ServerXml\ServerXml.csproj", "{3F4EA6E0-0059-42E5-B3F7-6B6478A2151E}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -13,6 +17,10 @@ Global
 		{1376F3A9-1870-43D1-8EEF-08C977E4D246}.Debug.Build.0 = Debug|.NET
 		{1376F3A9-1870-43D1-8EEF-08C977E4D246}.Release.ActiveCfg = Release|.NET
 		{1376F3A9-1870-43D1-8EEF-08C977E4D246}.Release.Build.0 = Release|.NET
+		{3F4EA6E0-0059-42E5-B3F7-6B6478A2151E}.Debug.ActiveCfg = Debug|.NET
+		{3F4EA6E0-0059-42E5-B3F7-6B6478A2151E}.Debug.Build.0 = Debug|.NET
+		{3F4EA6E0-0059-42E5-B3F7-6B6478A2151E}.Release.ActiveCfg = Release|.NET
+		{3F4EA6E0-0059-42E5-B3F7-6B6478A2151E}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

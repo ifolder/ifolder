@@ -23,11 +23,14 @@
 
 using System;
 using System.Collections;
+using System.Threading;
 using System.Xml;
 
 using Simias;
 using Simias.Client;
 using Simias.Storage;
+
+using Novell.AddressBook;
 
 namespace Simias.SimpleServer
 {
@@ -51,6 +54,7 @@ namespace Simias.SimpleServer
 		private string domainName = "SimpleServer";
 		private string hostAddress;
 		private string description = "Simple Server domain";
+		private string ownerMember;
 
 		/// <summary>
 		/// Used to log messages.
@@ -143,9 +147,7 @@ namespace Simias.SimpleServer
 				serverDoc.Load(serverDocumentPath);
 
 				XmlElement domainElement = serverDoc.DocumentElement;
-				domainElement.GetAttributeNode("Owner");
-
-				this.domainName = domainElement.GetAttribute("Name");
+				domainName = domainElement.GetAttribute("Name");
 				string tmpDescription = "";
 				try
 				{
@@ -154,40 +156,68 @@ namespace Simias.SimpleServer
 				catch{}
 				if ( tmpDescription != null )
 				{
-					this.description = tmpDescription;
+					description = tmpDescription;
 				}
 
+				XmlAttribute attr;
+				XmlNode ownerNode = null;
+				for (int i = 0; i < domainElement.ChildNodes.Count; i++)
+				{
+					attr = domainElement.ChildNodes[i].Attributes["Owner"];
+					if (attr != null && attr.Value == "true")
+					{
+						ownerNode = domainElement.ChildNodes[i];
+						ownerMember = ownerNode.Attributes["Name"].Value;
+						break;
+					}
+				}
+
+				if ( ownerMember == null || ownerMember == "")
+				{
+					throw new Exception("No member with owner status specified");
+				}
 
 				//
 				// The current member of the local database will be
 				// the SimpleServer domain owner
 				//
 
-				// Find the Member designated as owner
-				XmlNode root = serverDoc.DocumentElement;
-				XmlNodeList nodeList = 
-					root.SelectNodes("/Member/Owner");
-
-				XmlNode xmlOwner = null;
-				foreach(XmlNode xmlNode in nodeList)
-				{
-					xmlOwner = xmlNode;
-					break;
-				}
-
-				if (xmlOwner == null)
-				{
-					throw new Exception("No member with owner status specified");
-				}
-				
-				string owner = xmlOwner.Attributes["Name"].Name;
-
-
+				Member ldbMember = null;
 				LocalDatabase ldb = store.GetDatabaseObject();
-				Member ldbMember = ldb.GetCurrentMember();
+				
+				ICSList memberList = ldb.GetNodesByName( ownerMember );
+				foreach( ShallowNode shallowNode in memberList )
+				{
+					Node cNode = new Node( ldb, shallowNode );
+					Simias.Storage.Property simpleProp = 
+						cNode.Properties.GetSingleProperty( "SimpleServer" );
+					if (simpleProp != null)
+					{
+						ldbMember = new Member( cNode );
+						break;
+					}
+				}
+
+				if ( ldbMember == null )
+				{
+					// Create a local member which is the owner of the mDnsDomain
+					ldbMember = new Member( ownerMember, Guid.NewGuid().ToString(), Access.Rights.Admin );
+					ldbMember.IsOwner = true;
+
+					Simias.Storage.Property simpleProp = new Property( "SimpleServer" , true );
+					simpleProp.LocalProperty = true;
+					ldbMember.Properties.AddProperty( simpleProp );
+
+					// Save the local database changes.
+					ldb.Commit( new Node[] { ldbMember } );
+				}
 
 				//
 				// Verify the SimpleServer domain exists
+				// FIXME:: need to enum domains and look for my special property
+				// or maybe add a new type to the domain to know it's a SimpleServer
+				// You should only be able to have one SimpleServer domain in a master
+				// role per store
 				//
 			
 				Uri localUri = new Uri("http://" + hostAddress + "/simias10");
@@ -290,7 +320,7 @@ namespace Simias.SimpleServer
 				log.Error(e1.Message);
 				log.Error(e1.StackTrace);
 
-				throw e1;
+				//throw e1;
 				// FIXME:: rethrow the exception
 			}			
 		}
@@ -302,6 +332,287 @@ namespace Simias.SimpleServer
 		/// </summary>
 		public void SynchronizeMembers()
 		{
+			string	member;
+			string	firstName;
+			string	lastName;
+			string	im;
+			string	email;
+
+			//Thread.Sleep(20000);
+
+			//
+			// Create a sync iteration guid which will be stamped
+			// in all matching objects as a local property
+			//
+
+			Property syncP = new Property("SyncGuid", Guid.NewGuid().ToString());
+			syncP.LocalProperty = true;
+			bool errorDuringSync = false;
+
+			//
+			// First verify the System Book exists in Simias
+			//
+
+			Store store = Store.GetStore();
+			if (store == null)
+			{
+				log.Error("failed to connect to the Simias store");
+				return;
+			}
+
+			Novell.AddressBook.Manager abManager = Novell.AddressBook.Manager.Connect();
+			if (abManager == null)
+			{
+				log.Error("failed to connect to the address book");
+				return;
+			}
+
+			Simias.Storage.Domain ssDomain = null;
+			Simias.Storage.Roster ssRoster = null;
+
+			try
+			{
+				ssDomain = store.GetDomain( this.id );
+				ssRoster = ssDomain.GetRoster( store );
+			}
+			catch(Exception e)
+			{
+				log.Error("Failed getting the SimpleServer roster");
+				log.Error(e.Message);
+				log.Error(e.StackTrace);
+			}
+
+			if (ssRoster == null)
+			{
+				return;
+			}
+
+			//
+			// If this roster isn't already an Address Book, make it one
+			//
+			if (ssRoster.IsType( ssRoster, "AB:AddressBook" ) == false)
+			{
+				ssRoster.SetType( ssRoster, "AB:AddressBook" );
+				ssRoster.Commit();
+			}
+
+			AddressBook systemBook = abManager.GetAddressBook( ssRoster.ID );
+
+			try
+			{
+				// Load the SimpleServer domain and memberlist XML file.
+				XmlDocument serverDoc = new XmlDocument();
+				serverDoc.Load(serverDocumentPath);
+
+				XmlElement domainElement = serverDoc.DocumentElement;
+
+				XmlAttribute attr;
+				XmlNode ownerNode = null;
+				for (int i = 0; i < domainElement.ChildNodes.Count; i++)
+				{
+					firstName = "";
+					lastName = "";
+					im = "";
+					email = "";
+
+					attr = domainElement.ChildNodes[i].Attributes["Name"];
+					if (attr != null)
+					{
+						XmlNode cNode = domainElement.ChildNodes[i];
+						member = cNode.Attributes["Name"].Value;
+
+						// Get the rest of the contact information
+
+						//
+						// Check if this member already exists
+						//
+
+						Simias.Storage.Member ssMember = null;
+						try
+						{	
+							ssMember = ssRoster.GetMemberByName(member);
+						}
+						catch{}
+
+						if (ssMember != null)
+						{
+							//
+							// First get the contact that's related to this member
+							//
+
+							Contact ssContact = null;
+							Relationship contactMember = new Relationship( ssRoster.ID, ssMember.ID );
+							ICSList results = ssRoster.Search( "Member", contactMember );
+							IEnumerator contactEnum = results.GetEnumerator();
+							if (contactEnum.MoveNext() == false)
+							{
+								// This member does not have an associated contact
+
+								// FIXME::Dictionary
+								if (firstName == null &&
+									lastName == null &&
+									email == null &&
+									im == null)
+								{
+									continue;
+								}
+
+								ssContact = new Contact();
+								ssContact.UserID = ssMember.UserID;
+								ssContact.UserName = member;
+
+								//
+								// Setup a relationship from the contact to the member
+								// The relationship must be setup this way because normal users
+								// will always have read-only access to the system book members
+								// and contacts.  For contact self-service a personal contact will
+								// be related back to the member and any changes to the personal
+								// contact will be reflected back to LDAP in an out-of-band
+								// communication.  
+								//
+
+								Relationship cRelationship = new Relationship( ssRoster.ID, ssMember.ID );
+								ssContact.Properties.ModifyProperty( "Member", cRelationship );
+								systemBook.AddContact( ssContact );
+								ssContact.Commit();
+							}
+							else
+							{
+								ShallowNode cShallow = (ShallowNode) contactEnum.Current;
+								ssContact = systemBook.GetContact( cShallow.ID );
+							}
+						
+							//
+							// check if the ldap object's time stamp has changed
+							//
+
+							try
+							{
+								if (ssContact != null)
+								{
+									/*  FIXME
+									if( LdapSync.UpdateContactProperties(cEntry, cContact) == true)
+									{
+										log.Info("Updating: " + cEntry.DN);
+										cContact.Commit();
+									}
+									*/
+								}
+							}
+							catch{}
+
+							ssMember.Properties.ModifyProperty(syncP);
+							ssRoster.Commit( ssMember );
+						}
+						else
+						{
+							//
+							// The member didn't exist so let's create it
+							//
+
+							try
+							{
+								// Create a new member and then contact
+								ssMember = new
+									Member(
+										member,
+										Guid.NewGuid().ToString(), 
+										Simias.Storage.Access.Rights.ReadOnly);
+
+								// Set the local property sync guid
+								ssMember.Properties.ModifyProperty(syncP);
+							}
+							catch
+							{
+								continue;
+							}
+
+							// If no Contact properties exist don't create the
+							// contact
+							if (firstName == null &&
+								lastName == null &&
+								im == null &&
+								email == null)
+							{
+								continue;
+							}
+
+							Contact ssContact = new Contact();
+							ssContact.UserID = ssMember.UserID;
+							ssContact.UserName = member;
+
+							//
+							// Setup a relationship from the contact to the member
+							// The relationship must be setup this way because normal users
+							// will always have read-only access to the system book members
+							// and contacts.  For contact self-service a personal contact will
+							// be related back to the member and any changes to the personal
+							// contact will be reflected back to LDAP in an out-of-band
+							// communication.  
+							//
+
+							Relationship cRelationship = new Relationship( ssRoster.ID, ssMember.ID );
+							ssContact.Properties.ModifyProperty( "Member", cRelationship );
+
+							// Update the contact properties
+							//LdapSync.UpdateContactProperties(cEntry, cContact);
+							ssRoster.Commit(ssMember);
+							systemBook.AddContact(ssContact);
+							ssContact.Commit();
+						}	
+					}
+				}
+			}
+			catch(Exception e)
+			{
+				log.Error("Error:" + e.Message);
+				errorDuringSync = true;
+				//syncException = e;
+			}
+
+			// If we didn't have any errors delete any members that
+			// don't exist in the xml list
+
+			if (errorDuringSync == false)
+			{
+				log.Debug("Checking for deleted SimpleServer.xml members");
+				ICSList	deleteList = ssRoster.Search("SyncGuid", syncP.Value, SearchOp.Not_Equal);
+				try
+				{
+					foreach(ShallowNode cShallow in deleteList)
+					{
+						Node cNode = new Node( ssRoster, cShallow );
+						if ( ssRoster.IsType( cNode, "Member" ) == true )
+						{	
+							try
+							{
+								Property p = cNode.Properties.GetSingleProperty( "MemberToContact" );
+								if ( p != null )
+								{
+									Simias.Storage.Relationship cRelationship =
+										(Simias.Storage.Relationship) p.Value;
+
+									Contact cContact =
+										systemBook.GetContact(cRelationship.NodeID);
+									if (cContact != null)
+									{
+										cContact.Delete();
+									}
+								}
+							}
+							catch{}
+
+							// Delete this sucker...
+							log.Debug("deleting: " + cNode.Name);
+							ssRoster.Delete(cNode);
+							ssRoster.Commit(cNode);
+						}
+					}
+				}
+				catch{}
+				log.Debug("Finished checking for deleted SimpleServer.xml members");
+			}
+
 			return;
 		}
 

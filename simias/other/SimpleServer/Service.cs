@@ -78,14 +78,17 @@ namespace Simias.SimpleServer
 			log.Debug("Start called");
 			this.config = config;
 
-			Thread.Sleep(30000);
-			Store store = Store.GetStore();
-
 			//
 			// Initialize/Verify the Simple Server domain
 			//
 
 			Simias.SimpleServer.Domain ssDomain = new Simias.SimpleServer.Domain(true);
+
+			//
+			// Synchronize the Domain XML file to the store at startup
+			//
+
+			ssDomain.SynchronizeMembers();
 		}
 
 		/// <summary>
