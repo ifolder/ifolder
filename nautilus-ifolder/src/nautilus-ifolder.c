@@ -652,6 +652,7 @@ get_all_ifolder_paths ()
 	struct soap soap;
 	struct _ns1__GetAlliFolders ns1__GetAlliFolders;
 	struct _ns1__GetAlliFoldersResponse ns1__GetAlliFoldersResponse;
+	char *unmanaged_path;
 	
 	ifolder_local_paths = NULL;
 	
@@ -680,9 +681,17 @@ get_all_ifolder_paths ()
 			/* Get all the iFolder ID's and copy them into a new array */
 			if (array_of_ifolders->__sizeiFolderWeb > 0) {
 				for (i = 0; i < array_of_ifolders->__sizeiFolderWeb; i++) {
-					ifolder_local_paths =
-						g_slist_prepend (ifolder_local_paths,
-								strdup (array_of_ifolders->iFolderWeb [i]->UnManagedPath));
+					/**
+					 * iFolders that are not local iFolders will not have an
+					 * UnManagedPath.
+					 */
+					unmanaged_path = 
+						array_of_ifolders->iFolderWeb [i]->UnManagedPath;
+					if (unmanaged_path) {
+						ifolder_local_paths = 
+							g_slist_prepend (ifolder_local_paths,
+											 strdup (unmanaged_path));
+					}
 				}
 			}
 		}
