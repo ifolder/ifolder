@@ -6,7 +6,7 @@ Book_CSFILES_CSC = $(subst /,$(SEP),$(Book_CSFILES))
 Book_INCLUDES = 
 Book_RESOURCES = $(srcdir)/App$(ICON_EXT)
 Book_FLAGS = $(CSC_WINEXEFLAG)
-Book_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) FormsBookLib.dll  Simias.dll
+Book_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) FormsBookLib.dll  Simias.dll Novell.AddressBook.dll
 Book_LIBPATH = ../FormsBookLib
 
 DATA_FILES = $(srcdir)/address_app.ico $(srcdir)/App.ico

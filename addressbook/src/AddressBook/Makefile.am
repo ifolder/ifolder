@@ -33,7 +33,7 @@ AddressBookTests.exe: $(AddressBookTests_CSFILES) $(AddressBookTests_RESOURCES)
 	
 if DEBUG
 if WINDOWS
-DEBUG_FILES = AddressBook.pdb
+DEBUG_FILES = Novell.AddressBook.pdb
 DEBUG_CHECK_FILES = AddressBookTests.pdb
 endif
 endif
