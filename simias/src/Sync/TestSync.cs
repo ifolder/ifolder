@@ -49,7 +49,7 @@ public class SyncTests: Assertion
 	private static readonly string clientDir = Path.GetFullPath("SyncTestClientData");
 	private static readonly string clientFolder = Path.Combine(clientDir, folderName);
 	private static readonly string serverFolder = Path.Combine(serverDir, folderName);
-	private bool runChildProcess = false;
+	private bool runChildProcess = true;
 
 	//---------------------------------------------------------------------------
 	public static int Run(string program, string args)
@@ -70,8 +70,14 @@ public class SyncTests: Assertion
 			return CmdClient.RunOnce(new Uri(clientDir), new Uri(clientFolder), serverDir, useTCP);
 
 		CmdServer cmdServer = new CmdServer(host, serverPort, new Uri(serverDir), useTCP);
-		int err = Run("/usr/bin/mono", String.Format("--debug SyncCmd.exe -s {0} {1} sync {2}",
-				clientDir, useTCP? "": "-h", clientFolder));
+		string syncCmdLine = String.Format("-s {0} {1} sync {2}", clientDir, useTCP? "": "-h", clientFolder);
+		int err;
+
+		//TODO: very gross, but what to do?
+		if (Path.DirectorySeparatorChar == '/')
+			err = Run("/usr/bin/mono", "--debug SyncCmd.exe " + syncCmdLine);
+		else
+			err = Run("SyncCmd.exe", syncCmdLine);
 		cmdServer.Stop();
 		return err == 0;
 	}
@@ -277,45 +283,14 @@ public class SyncTests: Assertion
 		return Differ.CompareDirectories(serverFolder, clientFolder);
 	}
 
-
-
-//   #---------------------------------------------------------------------------
-//   # test duplicate adds: add different files of the same name both sides
-//   # sync and make sure everything got sorted out
-//   
-//   echo "This is file 1" > tmpServerData/testFolder/CollisionFile.txt
-//   echo "This is file 2 and is longer" > tmpClientData/testFolder/CollisionFile.txt
-//   
-//   # localsync
-//   mono --debug SyncCmd.exe -s tmpClientData localsync tmpClientData/testFolder tmpServerData
-//   RETVAL=$?
-//   if [ $RETVAL -ne 0 ]; then printf "FAILED: localsync 3 returned %s\n" $RETVAL; exit $RETVAL; fi
-//   
-//   # localsync
-//   mono --debug SyncCmd.exe -s tmpClientData localsync tmpClientData/testFolder tmpServerData
-//   RETVAL=$?
-//   if [ $RETVAL -ne 0 ]; then printf "FAILED: localsync 3 returned %s\n" $RETVAL; exit $RETVAL; fi
-//   
-//   # localsync
-//   mono --debug SyncCmd.exe -s tmpClientData localsync tmpClientData/testFolder tmpServerData
-//   RETVAL=$?
-//   if [ $RETVAL -ne 0 ]; then printf "FAILED: localsync 3 returned %s\n" $RETVAL; exit $RETVAL; fi
-//   
-//   diff tmpClientData/testFolder tmpServerData/testFolder
-//   RETVAL=$?
-//   if [ $RETVAL -ne 0 ]; then printf "FAILED: diff of testFolder after localsync 3 returned %s\n" $RETVAL; exit $RETVAL; fi 
-//   
-//   if ! [ -f tmpClientData/testFolder/CollisionFile.txt ]; then printf "FAILED: added file does not exists\n"; exit 1; fi
-//   
-//   cat tmpServerData/testFolder/CollisionFile.txt
-//   
-
+	//---------------------------------------------------------------------------
 	[TestFixtureTearDown]
 	public void Cleanup()
 	{
 		//DeleteFileData();
 	}
 
+	//---------------------------------------------------------------------------
 	void Run()
 	{
 		Console.WriteLine("init");
@@ -329,6 +304,7 @@ public class SyncTests: Assertion
 		Cleanup();
 	}
 
+	//---------------------------------------------------------------------------
 	static void Main()
 	{
 		SyncTests t = new SyncTests();

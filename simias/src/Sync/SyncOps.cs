@@ -351,9 +351,12 @@ public class SyncIncomingNode
 
 		foreach (FileSystemEntry fse in node.GetFileSystemEntryList())
 		{
-			File.SetLastWriteTime(fse.FullName, fse.LastWriteTime);
-			//File.SetCreationTime(fse.FullName, fse.CreationTime);
-			//File.SetLastAccessTime(fse.FullName, fse.LastAccessTime);
+			if (fse.IsFile)
+			{
+				File.SetLastWriteTime(fse.FullName, fse.LastWriteTime);
+				File.SetCreationTime(fse.FullName, fse.CreationTime);
+				//File.SetLastAccessTime(fse.FullName, fse.LastAccessTime);
+			}
 		}
 
 		Log.Assert(stamp.localIncarn > node.MasterIncarnation);
