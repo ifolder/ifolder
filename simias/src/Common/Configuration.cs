@@ -123,7 +123,7 @@ namespace Simias
 			configDoc.Load(configFilePath);
 
 			// Get or set the store path.
-			storePath = Get( storeProvider, storeProviderPath, Path.GetDirectoryName( configFilePath ) );
+			storePath = fixupPath( Get( storeProvider, storeProviderPath, Path.GetDirectoryName( configFilePath ) ) );
 		}
 		#endregion
 

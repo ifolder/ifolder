@@ -267,7 +267,6 @@ namespace Simias.Sync.Client
 		string			clientContext;
 		int				MAX_XFER_SIZE = 1024 * 64;
 		static int		BATCH_SIZE = 50;
-		bool			SyncComplete;
 		private const string	ServerCLContextProp = "ServerCLContext";
 		private const string	ClientCLContextProp = "ClientCLContext";
 	
@@ -368,6 +367,24 @@ namespace Simias.Sync.Client
 			buffer = new byte[MAX_XFER_SIZE];
 		}
 
+		private bool SyncComplete
+		{
+			get
+			{
+				int count = 0;
+				count += killOnClient.Count;
+				count += nodesFromServer.Count;
+				count += dirsFromServer.Count;
+				count += filesFromServer.Count;
+				count += killOnServer.Count;
+				count += nodesToServer.Count;
+				count += dirsToServer.Count;
+				count += filesToServer.Count;
+			
+				return count == 0 ? true : false;
+			}
+		}
+
 		/// <summary>
 		/// Called to schedule a sync operation a the set sync Interval.
 		/// </summary>
@@ -391,7 +408,6 @@ namespace Simias.Sync.Client
 		/// </summary>
 		internal void SyncNow()
 		{
-			SyncComplete = true;
 			// Refresh the collection.
 			collection.Refresh();
 			
@@ -417,7 +433,7 @@ namespace Simias.Sync.Client
 			SyncStartInfo si = new SyncStartInfo();
 			si.CollectionID = collection.ID;
 			si.Context = serverContext;
-			si.ChangesOnly = gotClientChanges;
+			si.ChangesOnly = gotClientChanges | !SyncComplete;
 			si.ClientHasChanges = (gotClientChanges && cstamps.Length == 0) ? false : true;
 			
 			// Start the Sync pass and save the rights.
@@ -691,7 +707,7 @@ namespace Simias.Sync.Client
 		/// <param name="stamp">The SyncNodeStamp describing this node.</param>
 		void PutNodeToServer(NodeStamp stamp)
 		{
-			if (stamp.type == NodeTypes.TombstoneType)
+			if (stamp.type == NodeTypes.TombstoneType || stamp.changeType == ChangeLogRecord.ChangeLogOp.Deleted)
 			{
 				killOnServer[stamp.id] = stamp.type;
 			}
@@ -841,7 +857,6 @@ namespace Simias.Sync.Client
 				{
 					if (stopping)
 					{
-						SyncComplete = false;
 						return;
 					}
 					try
@@ -892,7 +907,6 @@ namespace Simias.Sync.Client
 					catch
 					{
 						// Try to delete the next node.
-						SyncComplete = false;
 					}
 				}
 			}
@@ -918,7 +932,6 @@ namespace Simias.Sync.Client
 				{
 					if (stopping)
 					{
-						SyncComplete = false;
 						return;
 					}
 					int batchCount = nodeIDs.Length - offset < BATCH_SIZE ? nodeIDs.Length - offset : BATCH_SIZE;
@@ -929,10 +942,7 @@ namespace Simias.Sync.Client
 						updates = service.GetNodes(batchIDs);
 						StoreNodes(updates);
 					}
-					catch
-					{
-						SyncComplete = false;
-					}
+					catch {}
 					offset += batchCount;
 				}
 			}
@@ -989,13 +999,11 @@ namespace Simias.Sync.Client
 						}
 						catch
 						{
-							SyncComplete = false;
 						}
 					}
 					catch
 					{
 						// Handle any other errors.
-						SyncComplete = false;
 					}
 				}
 			}
@@ -1021,7 +1029,6 @@ namespace Simias.Sync.Client
 				{
 					if (stopping)
 					{
-						SyncComplete = false;
 						return;
 					}
 
@@ -1040,7 +1047,6 @@ namespace Simias.Sync.Client
 					}
 					catch
 					{
-						SyncComplete = false;
 					}
 					offset += batchCount;
 				}
@@ -1101,7 +1107,6 @@ namespace Simias.Sync.Client
 			}
 			catch 
 			{
-				SyncComplete = false;
 			}
 		}
 
@@ -1123,7 +1128,6 @@ namespace Simias.Sync.Client
 				{
 					if (stopping)
 					{
-						SyncComplete = false;
 						return;
 					}
 
@@ -1144,14 +1148,12 @@ namespace Simias.Sync.Client
 						}
 						else
 						{
-							SyncComplete = false;
 							log.Info("Failed Downloading File {0}", file.Name);
 						}
 					}
 				}
 				catch 
 				{
-					SyncComplete = false;
 				}
 			}
 		}
@@ -1190,13 +1192,11 @@ namespace Simias.Sync.Client
 					}
 					catch 
 					{
-						SyncComplete = false;
 					}
 				}
 			}
 			catch
 			{
-				SyncComplete = false;
 			}
 		}
 
@@ -1219,7 +1219,6 @@ namespace Simias.Sync.Client
 			{
 				if (stopping)
 				{
-					SyncComplete = false;
 					return;
 				}
 				int batchCount = nodeIDs.Length - offset < BATCH_SIZE ? nodeIDs.Length - offset : BATCH_SIZE;
@@ -1266,14 +1265,12 @@ namespace Simias.Sync.Client
 							default:
 								log.Debug("Skipping update of node {0} due to {1} on server",
 									status.nodeID, status.status);
-								SyncComplete = false;
 								break;
 						}
 					}
 				}
 				catch
 				{
-					SyncComplete = false;
 				}
 				offset += batchCount;
 			}
@@ -1295,7 +1292,6 @@ namespace Simias.Sync.Client
 			{
 				if (stopping)
 				{
-					SyncComplete = false;
 					return;
 				}
 
@@ -1309,7 +1305,7 @@ namespace Simias.Sync.Client
 						Node node = collection.GetNodeByID(nodeIDs[i]);
 						if (node != null)
 						{
-							log.Info("Uploading Directory {1} to server", node.Name);
+							log.Info("Uploading Directory {0} to server", node.Name);
 							nodes[i - offset] = node;
 							SyncNode snode = new SyncNode();
 							snode.node = node.Properties.ToString(true);
@@ -1343,14 +1339,12 @@ namespace Simias.Sync.Client
 							default:
 								log.Debug("Failed update of node {0} due to {1} on server",
 									status.nodeID, status.status);
-								SyncComplete = false;
 								break;
 						}
 					}
 				}
 				catch
 				{
-					SyncComplete = false;
 				}
 				offset += batchCount;
 			}
@@ -1371,7 +1365,6 @@ namespace Simias.Sync.Client
 				{
 					if (stopping)
 					{
-						SyncComplete = false;
 						return;
 					}
 
@@ -1395,7 +1388,6 @@ namespace Simias.Sync.Client
 							}
 							else
 							{
-								SyncComplete = false;
 								log.Info("Failed Uploading File {0}", file.Name);
 							}
 						}
@@ -1403,7 +1395,6 @@ namespace Simias.Sync.Client
 				}
 				catch 
 				{
-					SyncComplete = false;
 				}
 			}
 		}
