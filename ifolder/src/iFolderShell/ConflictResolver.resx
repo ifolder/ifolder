@@ -2620,4 +2620,7 @@
 	<data name="openFileError">
 		<value>Unable to open the file.</value>
 	</data>
+	<data name="readOnlyInfo">
+		<value>Your ability to resolve conflicts is limited because you have read-only rights to this iFolder.  If there are conflicts that you are not allowed to resolve, the owner of this iFolder will need to fix the conflicts for you.</value>
+	</data>
 </root>

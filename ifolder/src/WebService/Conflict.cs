@@ -196,6 +196,30 @@ namespace Novell.iFolder.Web
 				throw new Exception("Resolve must be called with a boolean option of which version wins, server or local.  This call is for Name conflicts");
 		}
 
+
+
+
+		/// <summary>
+		/// A method used to rename a conflicting (local) file and resolve the conflicted (server) file
+		/// to the same name.
+		/// </summary>
+		/// <param name="col">The collection containing the conflict.</param>
+		/// <param name="node">The conflicted node.</param>
+		/// <param name="newFileName">The new name to assign to the conflicting file.</param>
+		public static void RenameConflictingAndResolve(Collection col, Node node, string newFileName)
+		{
+			Simias.Sync.Conflict conflict = new Simias.Sync.Conflict(col, node);
+			if ((conflict != null) && conflict.IsFileNameConflict)
+			{
+				conflict.RenameConflictingFile(newFileName);
+				conflict.Resolve(Path.GetFileName(conflict.NonconflictedPath));
+			}
+			else
+			{
+				throw new Exception("RenameConflictingAndResolve can only be called on a name collision conflict.");
+			}
+		}
+
 		
 	
 	

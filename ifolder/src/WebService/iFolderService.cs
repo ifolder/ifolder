@@ -1913,6 +1913,31 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
+		/// Webmethod that renames a conflicting (local) file and resolves the conflicted (server) file
+		/// to the same name.
+		/// </summary>
+		/// <param name="iFolderID">The ID of the iFolder containing the conflict.</param>
+		/// <param name="conflictID">The ID of the conflict.</param>
+		/// <param name="newFileName">The new name of the conflicting file.</param>
+		[WebMethod(Description="Renames a file and resolves a name conflict")]
+		[SoapDocumentMethod]
+		public void RenameAndResolveConflict(string iFolderID, string conflictID, string newFileName)
+		{
+			Collection col = Store.GetStore().GetCollectionByID(iFolderID);
+			if (col == null)
+				throw new Exception("Invalid iFolderID");
+
+			Node conflictNode = col.GetNodeByID(conflictID);
+			if (conflictNode == null)
+				throw new Exception("Invalid conflictID");
+
+			Conflict.RenameConflictingAndResolve(col, conflictNode, newFileName);
+		}
+
+
+
+
+		/// <summary>
 		/// WebMethod that will setup the Proxy
 		/// </summary>
 		/// <param name = "Host">
