@@ -97,7 +97,7 @@ public class SynkerServiceA: SyncCollectionService
 			rights = member.Rights;
 			Log.Info("Sync session starting for {0}", member.Name);
 		}
-		else if (collection.Proxy && userID == collection.ProxyUserID)
+		else if (userID == collection.ProxyUserID)
 		{
 			rights = Access.Rights.Admin;
 			Log.Info("Sync session starting for {0}", userID);
