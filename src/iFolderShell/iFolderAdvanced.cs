@@ -1614,6 +1614,41 @@ namespace Novell.iFolderCom
 
 			return languageDirectory;
 		}
+
+		/// <summary>
+		/// Converts seconds to the nearest whole value of time.
+		/// </summary>
+		/// <param name="seconds">The value to convert.</param>
+		/// <param name="units">The units returned ("seconds", "minutes", "hours", or "days").</param>
+		/// <returns>The value of time in the returned units.</returns>
+		static public decimal ConvertSecondsToTimeUnit(int seconds, out string units)
+		{
+			decimal time;
+			TimeSpan timeSpan = new TimeSpan(0, 0, seconds);
+
+			if (timeSpan.TotalDays.Equals(Math.Floor(timeSpan.TotalDays)))
+			{
+				time = (decimal)timeSpan.TotalDays;
+				units = "days";
+			}
+			else if (timeSpan.TotalHours.Equals(Math.Floor(timeSpan.TotalHours)))
+			{
+				time = (decimal)timeSpan.TotalHours;
+				units = "hours";
+			}
+			else if (timeSpan.TotalMinutes.Equals(Math.Floor(timeSpan.TotalMinutes)))
+			{
+				time = (decimal)timeSpan.TotalMinutes;
+				units = "minutes";
+			}
+			else
+			{
+				time = (decimal)seconds;
+				units = "seconds";
+			}
+
+			return time;
+		}
 		#endregion
 
 		#region Private Methods
@@ -1893,15 +1928,24 @@ namespace Novell.iFolderCom
 
 				syncUnits.Visible = autoSync.Visible = syncInterval.Visible = local;
 				syncNow.Enabled = !local;
-				syncLabel.Text = local ? 
-					resourceManager.GetString("syncLabel.Text") : 
-					string.Format(resourceManager.GetString("slaveSyncInterval"), currentiFolder.EffectiveSyncInterval);
+				if (local)
+				{
+					syncLabel.Text = resourceManager.GetString("syncLabel.Text");
+				}
+				else
+				{
+					string units;
+					decimal syncValue = ConvertSecondsToTimeUnit(currentiFolder.EffectiveSyncInterval, out units);
+					syncLabel.Text = string.Format(resourceManager.GetString("slaveSyncInterval"), syncValue, resourceManager.GetString(units));
+				}
 			}
 			else
 			{
 				syncUnits.Visible = autoSync.Visible = syncInterval.Visible = false;
 				syncNow.Enabled = true;
-				syncLabel.Text = string.Format(resourceManager.GetString("slaveSyncInterval"), currentiFolder.EffectiveSyncInterval);
+				string units;
+				decimal syncValue = ConvertSecondsToTimeUnit(currentiFolder.EffectiveSyncInterval, out units);
+				syncLabel.Text = string.Format(resourceManager.GetString("slaveSyncInterval"), syncValue, resourceManager.GetString(units));
 			}
 
 			// Show/hide the collision message.

@@ -44,11 +44,17 @@ namespace Novell.FormsTrayApp
 	{
 		#region Class Members
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(Preferences));
+		private const decimal minimumSeconds = 60;
+		private const decimal maximumSeconds = int.MaxValue;
+		private const decimal maximumMinutes = (decimal)(maximumSeconds / 60);
+		private const decimal maximumHours = (decimal)(maximumMinutes / 60);
+		private const decimal maximumDays = (decimal)(maximumHours / 24);
 		private const string iFolderRun = "DisableAutoStart";
 		private const string notifyShareDisabled = "NotifyShareDisable";
 		private const string notifyCollisionDisabled = "NotifyCollisionDisabled";
 		private const string notifyJoinDisabled = "NotifyJoinDisabled";
 		private const string iFolderKey = @"SOFTWARE\Novell\iFolder";
+		private decimal minimumSyncInterval = minimumSeconds;
 		private iFolderWebService ifWebService;
 		private SimiasWebService simiasWebService;
 		private bool shutdown = false;
@@ -62,7 +68,6 @@ namespace Novell.FormsTrayApp
 		private bool updateEnabled = false;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
-		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.GroupBox groupBox3;
 		private System.Windows.Forms.GroupBox groupBox1;
@@ -98,6 +103,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.CheckBox enableAccount;
 		private System.Windows.Forms.Button activate;
 		private System.Windows.Forms.HelpProvider helpProvider1;
+		private System.Windows.Forms.ComboBox timeUnit;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -146,7 +152,6 @@ namespace Novell.FormsTrayApp
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(Preferences));
 			this.defaultInterval = new System.Windows.Forms.NumericUpDown();
 			this.displayConfirmation = new System.Windows.Forms.CheckBox();
-			this.label2 = new System.Windows.Forms.Label();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabGeneral = new System.Windows.Forms.TabPage();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -154,6 +159,7 @@ namespace Novell.FormsTrayApp
 			this.notifyShared = new System.Windows.Forms.CheckBox();
 			this.notifyJoins = new System.Windows.Forms.CheckBox();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.timeUnit = new System.Windows.Forms.ComboBox();
 			this.autoSync = new System.Windows.Forms.CheckBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.autoStart = new System.Windows.Forms.CheckBox();
@@ -211,15 +217,10 @@ namespace Novell.FormsTrayApp
 																			  0});
 			this.defaultInterval.Location = ((System.Drawing.Point)(resources.GetObject("defaultInterval.Location")));
 			this.defaultInterval.Maximum = new System.Decimal(new int[] {
-																			86400,
+																			2147483647,
 																			0,
 																			0,
 																			0});
-			this.defaultInterval.Minimum = new System.Decimal(new int[] {
-																			1,
-																			0,
-																			0,
-																			-2147483648});
 			this.defaultInterval.Name = "defaultInterval";
 			this.defaultInterval.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("defaultInterval.RightToLeft")));
 			this.helpProvider1.SetShowHelp(this.defaultInterval, ((bool)(resources.GetObject("defaultInterval.ShowHelp"))));
@@ -228,6 +229,11 @@ namespace Novell.FormsTrayApp
 			this.defaultInterval.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("defaultInterval.TextAlign")));
 			this.defaultInterval.ThousandsSeparator = ((bool)(resources.GetObject("defaultInterval.ThousandsSeparator")));
 			this.defaultInterval.UpDownAlign = ((System.Windows.Forms.LeftRightAlignment)(resources.GetObject("defaultInterval.UpDownAlign")));
+			this.defaultInterval.Value = new System.Decimal(new int[] {
+																		  60,
+																		  0,
+																		  0,
+																		  0});
 			this.defaultInterval.Visible = ((bool)(resources.GetObject("defaultInterval.Visible")));
 			// 
 			// displayConfirmation
@@ -259,32 +265,6 @@ namespace Novell.FormsTrayApp
 			this.displayConfirmation.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("displayConfirmation.TextAlign")));
 			this.displayConfirmation.Visible = ((bool)(resources.GetObject("displayConfirmation.Visible")));
 			this.displayConfirmation.CheckedChanged += new System.EventHandler(this.displayConfirmation_CheckedChanged);
-			// 
-			// label2
-			// 
-			this.label2.AccessibleDescription = resources.GetString("label2.AccessibleDescription");
-			this.label2.AccessibleName = resources.GetString("label2.AccessibleName");
-			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label2.Anchor")));
-			this.label2.AutoSize = ((bool)(resources.GetObject("label2.AutoSize")));
-			this.label2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label2.Dock")));
-			this.label2.Enabled = ((bool)(resources.GetObject("label2.Enabled")));
-			this.label2.Font = ((System.Drawing.Font)(resources.GetObject("label2.Font")));
-			this.helpProvider1.SetHelpKeyword(this.label2, resources.GetString("label2.HelpKeyword"));
-			this.helpProvider1.SetHelpNavigator(this.label2, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label2.HelpNavigator"))));
-			this.helpProvider1.SetHelpString(this.label2, resources.GetString("label2.HelpString"));
-			this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
-			this.label2.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.ImageAlign")));
-			this.label2.ImageIndex = ((int)(resources.GetObject("label2.ImageIndex")));
-			this.label2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label2.ImeMode")));
-			this.label2.Location = ((System.Drawing.Point)(resources.GetObject("label2.Location")));
-			this.label2.Name = "label2";
-			this.label2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label2.RightToLeft")));
-			this.helpProvider1.SetShowHelp(this.label2, ((bool)(resources.GetObject("label2.ShowHelp"))));
-			this.label2.Size = ((System.Drawing.Size)(resources.GetObject("label2.Size")));
-			this.label2.TabIndex = ((int)(resources.GetObject("label2.TabIndex")));
-			this.label2.Text = resources.GetString("label2.Text");
-			this.label2.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.TextAlign")));
-			this.label2.Visible = ((bool)(resources.GetObject("label2.Visible")));
 			// 
 			// tabControl1
 			// 
@@ -469,9 +449,9 @@ namespace Novell.FormsTrayApp
 			this.groupBox1.AccessibleName = resources.GetString("groupBox1.AccessibleName");
 			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox1.Anchor")));
 			this.groupBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox1.BackgroundImage")));
+			this.groupBox1.Controls.Add(this.timeUnit);
 			this.groupBox1.Controls.Add(this.defaultInterval);
 			this.groupBox1.Controls.Add(this.autoSync);
-			this.groupBox1.Controls.Add(this.label2);
 			this.groupBox1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox1.Dock")));
 			this.groupBox1.Enabled = ((bool)(resources.GetObject("groupBox1.Enabled")));
 			this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
@@ -489,6 +469,34 @@ namespace Novell.FormsTrayApp
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = resources.GetString("groupBox1.Text");
 			this.groupBox1.Visible = ((bool)(resources.GetObject("groupBox1.Visible")));
+			// 
+			// timeUnit
+			// 
+			this.timeUnit.AccessibleDescription = resources.GetString("timeUnit.AccessibleDescription");
+			this.timeUnit.AccessibleName = resources.GetString("timeUnit.AccessibleName");
+			this.timeUnit.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("timeUnit.Anchor")));
+			this.timeUnit.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("timeUnit.BackgroundImage")));
+			this.timeUnit.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("timeUnit.Dock")));
+			this.timeUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.timeUnit.Enabled = ((bool)(resources.GetObject("timeUnit.Enabled")));
+			this.timeUnit.Font = ((System.Drawing.Font)(resources.GetObject("timeUnit.Font")));
+			this.helpProvider1.SetHelpKeyword(this.timeUnit, resources.GetString("timeUnit.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.timeUnit, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("timeUnit.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.timeUnit, resources.GetString("timeUnit.HelpString"));
+			this.timeUnit.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("timeUnit.ImeMode")));
+			this.timeUnit.IntegralHeight = ((bool)(resources.GetObject("timeUnit.IntegralHeight")));
+			this.timeUnit.ItemHeight = ((int)(resources.GetObject("timeUnit.ItemHeight")));
+			this.timeUnit.Location = ((System.Drawing.Point)(resources.GetObject("timeUnit.Location")));
+			this.timeUnit.MaxDropDownItems = ((int)(resources.GetObject("timeUnit.MaxDropDownItems")));
+			this.timeUnit.MaxLength = ((int)(resources.GetObject("timeUnit.MaxLength")));
+			this.timeUnit.Name = "timeUnit";
+			this.timeUnit.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("timeUnit.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.timeUnit, ((bool)(resources.GetObject("timeUnit.ShowHelp"))));
+			this.timeUnit.Size = ((System.Drawing.Size)(resources.GetObject("timeUnit.Size")));
+			this.timeUnit.TabIndex = ((int)(resources.GetObject("timeUnit.TabIndex")));
+			this.timeUnit.Text = resources.GetString("timeUnit.Text");
+			this.timeUnit.Visible = ((bool)(resources.GetObject("timeUnit.Visible")));
+			this.timeUnit.SelectedIndexChanged += new System.EventHandler(this.timeUnit_SelectedIndexChanged);
 			// 
 			// autoSync
 			// 
@@ -1682,14 +1690,33 @@ namespace Novell.FormsTrayApp
 			try
 			{
 				// Check and update default sync interval.
+				decimal syncValueInSeconds;
+
+				if (((string)timeUnit.SelectedItem).Equals(resourceManager.GetString("days")))
+				{
+					syncValueInSeconds = defaultInterval.Value * 86400;
+				}
+				else if (((string)timeUnit.SelectedItem).Equals(resourceManager.GetString("hours")))
+				{
+					syncValueInSeconds = defaultInterval.Value * 3600;
+				}
+				else if (((string)timeUnit.SelectedItem).Equals(resourceManager.GetString("minutes")))
+				{
+					syncValueInSeconds = defaultInterval.Value * 60;
+				}
+				else
+				{
+					syncValueInSeconds = defaultInterval.Value;
+				}
+				
 				int currentInterval = ifWebService.GetDefaultSyncInterval();
-				if ((defaultInterval.Value != (decimal)currentInterval) ||
+				if ((!syncValueInSeconds.Equals((decimal)currentInterval)) ||
 					(autoSync.Checked != (currentInterval != System.Threading.Timeout.Infinite)))
 				{
 					try
 					{
 						// Save the default sync interval.
-						ifWebService.SetDefaultSyncInterval(autoSync.Checked ? (int)defaultInterval.Value : System.Threading.Timeout.Infinite);
+						ifWebService.SetDefaultSyncInterval(autoSync.Checked ? (int)syncValueInSeconds : System.Threading.Timeout.Infinite);
 					}
 					catch (Exception ex)
 					{
@@ -1879,6 +1906,11 @@ namespace Novell.FormsTrayApp
 			{
 				tabGeneral.BackColor = tabAccounts.BackColor = Color.FromKnownColor(KnownColor.ControlLightLight);
 			}
+
+			timeUnit.Items.Add(resourceManager.GetString("seconds"));
+			timeUnit.Items.Add(resourceManager.GetString("minutes"));
+			timeUnit.Items.Add(resourceManager.GetString("hours"));
+			timeUnit.Items.Add(resourceManager.GetString("days"));
 		}
 
 		private void Preferences_VisibleChanged(object sender, System.EventArgs e)
@@ -1921,8 +1953,13 @@ namespace Novell.FormsTrayApp
 				try
 				{
 					// Update the default sync interval setting.
-					defaultInterval.Value = (decimal)ifWebService.GetDefaultSyncInterval();
-					autoSync.Checked = defaultInterval.Value != System.Threading.Timeout.Infinite;
+					int syncInterval = ifWebService.GetDefaultSyncInterval();
+					autoSync.Checked = syncInterval != System.Threading.Timeout.Infinite;
+					string units = resourceManager.GetString("seconds");
+					decimal displayValue = autoSync.Checked ? 
+						iFolderAdvanced.ConvertSecondsToTimeUnit(syncInterval, out units) : minimumSeconds;
+					timeUnit.SelectedItem = resourceManager.GetString(units);
+					defaultInterval.Value = displayValue;
 				}
 				catch (Exception ex)
 				{
@@ -2001,19 +2038,6 @@ namespace Novell.FormsTrayApp
 			defaultInterval.Enabled = autoSync.Checked;
 		}
 
-		private void defaultInterval_ValueChanged(object sender, System.EventArgs e)
-		{
-			if (defaultInterval.Focused)
-			{
-				if (!defaultInterval.Text.Equals(string.Empty))
-				{
-					defaultInterval.Value = decimal.Parse(defaultInterval.Text);
-				}
-
-				apply.Enabled = true;
-			}
-		}
-
 		private void notifyShared_CheckedChanged(object sender, System.EventArgs e)
 		{
 			if (notifyShared.Focused)
@@ -2036,6 +2060,68 @@ namespace Novell.FormsTrayApp
 			{
 				apply.Enabled = true;
 			}
+		}
+
+		private void defaultInterval_ValueChanged(object sender, System.EventArgs e)
+		{
+			if (defaultInterval.Focused)
+			{
+				try
+				{
+					if (!defaultInterval.Text.Equals(string.Empty))
+					{
+						defaultInterval.Value = decimal.Parse(defaultInterval.Text);
+					}
+				}
+				catch
+				{
+					defaultInterval.Value = minimumSyncInterval;
+				}
+
+				if (defaultInterval.Value < minimumSyncInterval)
+				{
+					defaultInterval.Value = minimumSyncInterval;
+				}
+
+				apply.Enabled = true;
+			}
+		}
+
+		private void timeUnit_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			if (timeUnit.Focused)
+			{
+				apply.Enabled = true;
+			}
+
+			if (((string)timeUnit.SelectedItem).Equals(resourceManager.GetString("seconds")))
+			{
+				minimumSyncInterval = minimumSeconds;
+				defaultInterval.Maximum = maximumSeconds;
+				defaultInterval.Increment = 5;
+
+				if (defaultInterval.Value < minimumSyncInterval)
+				{
+					defaultInterval.Value = minimumSyncInterval;
+				}
+			}
+			else if (((string)timeUnit.SelectedItem).Equals(resourceManager.GetString("minutes")))
+			{
+				minimumSyncInterval = defaultInterval.Increment = 1;
+				defaultInterval.Maximum = maximumMinutes;				
+			}
+			else if (((string)timeUnit.SelectedItem).Equals(resourceManager.GetString("hours")))
+			{
+				minimumSyncInterval = defaultInterval.Increment = 1;
+				defaultInterval.Maximum = maximumHours;
+			}
+			else if (((string)timeUnit.SelectedItem).Equals(resourceManager.GetString("days")))
+			{
+				minimumSyncInterval = defaultInterval.Increment = 1;
+				defaultInterval.Maximum = maximumDays;
+			}
+
+			defaultInterval.Minimum = minimumSyncInterval;
 		}
 		#endregion
 
