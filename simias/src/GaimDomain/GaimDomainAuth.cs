@@ -126,6 +126,7 @@ namespace Simias.Gaim
 							HttpWebRequest request2 = WebRequest.Create( loginUri ) as HttpWebRequest;
 							WebState webState2 = new WebState();
 							webState2.InitializeWebRequest( request2 );
+							request2.CookieContainer.Add(response.Cookies);	// Have to do this because of a bug in MONO
 
 							request2.Headers.Add( 
 								Simias.Security.Web.AuthenticationService.Login.DomainIDHeader,
@@ -144,12 +145,14 @@ namespace Simias.Gaim
 								}
 								else
 								{
+									log.Debug( "Couldn't get our own RSACryptoServiceProvider (our private key)" );
 									status.statusCode = SCodes.Unknown;
 									return status;
 								}
 							}
 							catch( Exception enc )
 							{
+								log.Debug( "Error decrypting one time secret." );
 								log.Debug( enc.Message );
 								log.Debug( enc.StackTrace );
 							}
@@ -169,24 +172,33 @@ namespace Simias.Gaim
 							}
 							catch( WebException webEx2 )
 							{
-								log.Debug( webEx2.Status.ToString() );
+								log.Debug( "WebException: " + webEx2.Status.ToString() );
+								log.Debug( webEx2.Message );
+								log.Debug( webEx2.StackTrace );
 							}
 							catch( Exception e2 )
 							{
+								log.Debug( "Other exception" );
 								log.Debug( e2.Message );
 								log.Debug( e2.StackTrace );
 							}
+						}
+						else
+						{
+							log.Debug( "One Time Challenge NOT present");
 						}
 					}
 				}
 				else
 				{
+					log.Debug( "Couldn't get the HttpWebResponse" );
 					log.Debug(webEx.Message);
 					log.Debug(webEx.StackTrace);
 				}
 			}
 			catch(Exception ex)
 			{
+				log.Debug( "Catch-all Exception" );
 				log.Debug(ex.Message);
 				log.Debug(ex.StackTrace);
 			}
