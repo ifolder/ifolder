@@ -1,8 +1,8 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-mDnsService_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/mDnsService.cs 
-mDnsService_CSFILES := $(subst /,$(SEP),$(mDnsService_CSFILES1))
+mDnsService_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/mDnsService.cs 
+mDnsService_CSFILES_CSC := $(subst /,$(SEP),$(mDnsService_CSFILES))
 mDnsService_INCLUDES = 
 mDnsService_RESOURCES =
 mDnsService_FLAGS = $(CSC_EXEFLAG)
@@ -16,7 +16,7 @@ CUR_DIR := $(shell pwd)
 all: mDnsService.exe
 
 mDnsService.exe: $(mDnsService_CSFILES) $(mDnsService_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(mDnsService_FLAGS) $(mDnsService_LIBS:%=/r:%) $(mDnsService_LIBPATH:%=/lib:%) $(mDnsService_CSFILES) /doc:mDnsService.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(mDnsService_FLAGS) $(mDnsService_LIBS:%=/r:%) $(mDnsService_LIBPATH:%=/lib:%) $(mDnsService_CSFILES_CSC) /doc:mDnsService.doc.xml
 	
 if DEBUG
 if WINDOWS
