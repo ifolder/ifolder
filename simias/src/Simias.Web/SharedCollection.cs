@@ -877,6 +877,82 @@ namespace Simias.Web
 
 
 
+		/// <summary>
+		/// WebMethod that sets a Collection's SyncInterval
+		/// </summary>
+		/// <param name = "CollectionID">
+		/// The ID of the Collection to set the disk space limit
+		/// </param>
+		/// <param name = "Interval">
+		/// The Sync interval to be set in seconds
+		/// </param>
+		public static void SetCollectionSyncInterval( 
+								string CollectionID, int Interval )
+		{
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(CollectionID);
+			if(col == null)
+				throw new Exception("Invalid CollectionID");
+
+			Simias.Policy.SyncInterval.Set(col, Interval);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that sets the current User's default SyncInterval
+		/// </summary>
+		/// <param name = "Interval">
+		/// The Sync interval to be set in seconds
+		/// </param>
+		public static void SetDefaultSyncInterval( int Interval )
+		{
+			Simias.Policy.SyncInterval.Set( Interval );
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that gets a Collection's SyncInterval
+		/// </summary>
+		/// <param name = "CollectionID">
+		/// The ID of the Collection to set the disk space limit
+		/// </param>
+		/// <returns>
+		/// The SyncInterval for the specified Collection
+		/// </returns>
+		public static int GetCollectionSyncInterval( string CollectionID )
+		{
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(CollectionID);
+			if(col == null)
+				throw new Exception("Invalid CollectionID");
+
+			return Simias.Policy.SyncInterval.GetInterval(col);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that gets the current User's default SyncInterval
+		/// </summary>
+		/// <returns>
+		/// The SyncInterval for the current user
+		/// </returns>
+		public static int GetDefaultSyncInterval()
+		{
+			return Simias.Policy.SyncInterval.GetInterval();
+		}
+
+
+
+
+
 
 		/// <summary>
 		/// Utility method that should be moved into the POBox class.
