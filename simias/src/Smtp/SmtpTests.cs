@@ -16,10 +16,10 @@ namespace Simias.Mail.Tests
 				{
 					Console.WriteLine("");
 					Console.WriteLine("=== Setting up Smtp Tests ===");
-					Configuration.BaseConfigPath = "./";
-					smtpHost = Configuration.Get("Simias.Mail", "smtpServer", "mail");
-					fromAddr = Configuration.Get("Simias.Mail.Tests", "fromAddr", "Simias.Mail.Tests.SmtpTests@localhost");
-					toAddr = Configuration.Get("Simias.Mail.Tests", "toAddr", "denali@novell.com");
+					Configuration config = new Configuration("./");
+					smtpHost = config.Get("Simias.Mail", "smtpServer", "mail");
+					fromAddr = config.Get("Simias.Mail.Tests", "fromAddr", "Simias.Mail.Tests.SmtpTests@localhost");
+					toAddr = config.Get("Simias.Mail.Tests", "toAddr", "denali@novell.com");
 				}
 
 			[Test]

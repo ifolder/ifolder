@@ -82,12 +82,12 @@
                 <Reference
                     Name = "StoreProvider"
                     AssemblyName = "StoreProvider"
-                    HintPath = "..\stage\StoreProvider.dll"
+                    HintPath = "..\StoreProvider\StoreProvider.dll"
                 />
                 <Reference
                     Name = "SqliteWrapper"
                     AssemblyName = "SqliteWrapper"
-                    HintPath = "..\stage\SqliteWrapper.dll"
+                    HintPath = "SqliteWrapper.dll"
                 />
             </References>
         </Build>

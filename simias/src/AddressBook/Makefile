@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # AddressBook variables
@@ -96,7 +96,7 @@ AddressBook_LIBPATH := $(subst /,$(SEP), $(AddressBook_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(AddressBook_LIBPATH) $(AddressBook_INCLUDES)
 
-AddressBook.dll: $(AddressBook_SOURCES) $(AddressBook_LIBS) ../config.mk
+AddressBook.dll: $(AddressBook_SOURCES) $(AddressBook_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:AddressBook.Doc.xml $(CSCFLAGS) $(AddressBook_FLAGS) $(AddressBook_LIBS:%=/r:%) $(AddressBook_LIBPATH:%=/lib:%) $(AddressBook_SOURCES)
 
 #=============================================================================
@@ -112,6 +112,6 @@ AddressBookTests_LIBPATH := $(subst /,$(SEP), $(AddressBookTests_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(AddressBookTests_LIBPATH) $(AddressBookTests_INCLUDES)
 
-AddressBookTests.exe: $(AddressBookTests_SOURCES) $(AddressBookTests_LIBS) ../config.mk
+AddressBookTests.exe: $(AddressBookTests_SOURCES) $(AddressBookTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:AddressBookTests.Doc.xml $(CSCFLAGS) $(AddressBookTests_FLAGS) $(AddressBookTests_LIBS:%=/r:%) $(AddressBookTests_LIBPATH:%=/lib:%) $(AddressBookTests_SOURCES)
 

@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # UserService variables
@@ -86,6 +86,6 @@ UserService_LIBPATH := $(subst /,$(SEP), $(UserService_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(UserService_LIBPATH) $(UserService_INCLUDES)
 
-UserService.dll: $(UserService_SOURCES) $(UserService_LIBS) ../config.mk
+UserService.dll: $(UserService_SOURCES) $(UserService_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:UserService.Doc.xml $(CSCFLAGS) $(UserService_FLAGS) $(UserService_LIBS:%=/r:%) $(UserService_LIBPATH:%=/lib:%) $(UserService_SOURCES)
 

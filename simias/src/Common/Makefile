@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # Common variables
@@ -96,7 +96,7 @@ Common_LIBPATH := $(subst /,$(SEP), $(Common_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(Common_LIBPATH) $(Common_INCLUDES)
 
-Common.dll: $(Common_SOURCES) $(Common_LIBS) ../config.mk
+Common.dll: $(Common_SOURCES) $(Common_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:Common.Doc.xml $(CSCFLAGS) $(Common_FLAGS) $(Common_LIBS:%=/r:%) $(Common_LIBPATH:%=/lib:%) $(Common_SOURCES)
 
 #=============================================================================
@@ -112,6 +112,6 @@ CommonTests_LIBPATH := $(subst /,$(SEP), $(CommonTests_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(CommonTests_LIBPATH) $(CommonTests_INCLUDES)
 
-CommonTests.dll: $(CommonTests_SOURCES) $(CommonTests_LIBS) ../config.mk
+CommonTests.dll: $(CommonTests_SOURCES) $(CommonTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:CommonTests.Doc.xml $(CSCFLAGS) $(CommonTests_FLAGS) $(CommonTests_LIBS:%=/r:%) $(CommonTests_LIBPATH:%=/lib:%) $(CommonTests_SOURCES)
 

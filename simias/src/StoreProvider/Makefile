@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # StoreProvider variables
@@ -96,7 +96,7 @@ StoreProvider_LIBPATH := $(subst /,$(SEP), $(StoreProvider_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(StoreProvider_LIBPATH) $(StoreProvider_INCLUDES)
 
-StoreProvider.dll: $(StoreProvider_SOURCES) $(StoreProvider_LIBS) ../config.mk
+StoreProvider.dll: $(StoreProvider_SOURCES) $(StoreProvider_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:StoreProvider.Doc.xml $(CSCFLAGS) $(StoreProvider_FLAGS) $(StoreProvider_LIBS:%=/r:%) $(StoreProvider_LIBPATH:%=/lib:%) $(StoreProvider_SOURCES)
 
 #=============================================================================
@@ -112,6 +112,6 @@ ProviderTest_LIBPATH := $(subst /,$(SEP), $(ProviderTest_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(ProviderTest_LIBPATH) $(ProviderTest_INCLUDES)
 
-ProviderTest.dll: $(ProviderTest_SOURCES) $(ProviderTest_LIBS) ../config.mk
+ProviderTest.dll: $(ProviderTest_SOURCES) $(ProviderTest_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:ProviderTest.Doc.xml $(CSCFLAGS) $(ProviderTest_FLAGS) $(ProviderTest_LIBS:%=/r:%) $(ProviderTest_LIBPATH:%=/lib:%) $(ProviderTest_SOURCES)
 

@@ -204,14 +204,7 @@ namespace Simias.Storage.Provider
 			/// </summary>
 			public const string TimeSpan = "TimeSpan";
 		}
-
-		private const string CFG_Section = "StoreProvider";
-		private const string CFG_Path = "Path";
-		private const string CFG_Assembly = "Assembly";
-		private const string CFG_TypeName = "Type";
-		private const string CFG_Version = "Version";
-		private const string StoreName = ".simias";
-
+		
 		#endregion
 
 		#region Errors
@@ -265,7 +258,7 @@ namespace Simias.Storage.Provider
 		/// <returns></returns>
 		public static IProvider Connect(out bool created)
 		{
-			return LoadProvider(DefaultPath, out created);
+			return LoadProvider(new Configuration(), out created);
 		}
 
 		/// <summary>
@@ -277,12 +270,7 @@ namespace Simias.Storage.Provider
 		public static IProvider Connect(string path, out bool created)
 		{
 			path = Provider.fixupPath(path);
-			//if (!path.Equals(DbPath))
-			//	Simias.Configuration.BaseConfigPath = path;
-			//DbPath = path;
-			//return (Connect("FlaimProvider.dll", "Simias.Storage.Provider.Flaim.FlaimProvider", path, out created));
-			return (LoadProvider(path, out created));
-			//return (Connect("FsProvider.dll", "Simias.Storage.Provider.Fs.FsProvider", path, out created));
+			return (LoadProvider(new Configuration(path), out created));
 		}
 		
 		/// <summary>
@@ -296,12 +284,10 @@ namespace Simias.Storage.Provider
 		public static IProvider Connect(string assembly, string providerType, string path, out bool created)
 		{
 			path = Provider.fixupPath(path);
-			//if (!path.Equals(DbPath))
-			//	Simias.Configuration.BaseConfigPath = path;
-			Assembly = assembly;
-			TypeName = providerType;
-			//DbPath = path;
-			return (LoadProvider(path, out created));
+			Configuration conf = new Configuration(path);
+			conf.Assembly = assembly;
+			conf.TypeName = providerType;
+			return (LoadProvider(conf, out created));
 		}
 		
 		/// <summary>
@@ -310,10 +296,11 @@ namespace Simias.Storage.Provider
 		/// <param name="path">The path to the DB.</param>
 		/// <param name="created">True if the Store was created.</param>
 		/// <returns></returns>
-		private static IProvider LoadProvider(string path, out bool created)
+		private static IProvider LoadProvider(Configuration conf, out bool created)
 		{
-			string assembly = Assembly;
-			string providerType = TypeName;
+			string path = conf.Path;
+			string assembly = conf.Assembly;
+			string providerType = conf.TypeName;
 			//string path = DbPath;
 			created = false;
 			IProvider provider = null;
@@ -337,7 +324,7 @@ namespace Simias.Storage.Provider
 				return (null);
 			}
 
-			object[] args = {path};
+			object[] args = {conf};
 			object[] activationAttrs = null;
 			
 			/* This needs to be commented out till I can fix the service code.
@@ -371,21 +358,12 @@ namespace Simias.Storage.Provider
 			}
 			catch
 			{
-				try
-				{
-					provider.CreateStore();
-					// Set the Provider in the configuration.
-					Assembly = assembly;
-					TypeName = providerType;
-					//DbPath = path;
-					created = true;
-				}
-				catch (Exception e)
-				{
-					throw;
-//					Console.WriteLine(e.Message);
-//					Console.WriteLine(e.StackTrace);
-				}
+				provider.CreateStore();
+				// Set the Provider in the configuration.
+				conf.Assembly = assembly;
+				conf.TypeName = providerType;
+				//DbPath = path;
+				created = true;
 			}
 			
 			return (provider);
@@ -402,78 +380,7 @@ namespace Simias.Storage.Provider
 				Directory.Delete(path, true);
 			}
 		}
-
-		/// <summary>
-		/// Gets and Sets the Provider Version.
-		/// </summary>
-		public static string Version
-		{
-			get
-			{
-				string version = "0";
-				return (Simias.Configuration.Get(CFG_Section, CFG_Version, version));
-			}
-			set
-			{
-				Simias.Configuration.Set(CFG_Section, CFG_Version, value);
-			}
-		}
-
-		/// <summary>
-		/// Gets and Sets the Assembly that implements the provider instance used.
-		/// </summary>
-		public static string Assembly
-		{
-			get
-			{
-				string assembly = "SqliteProvider.dll";
-				return (Simias.Configuration.Get(CFG_Section, CFG_Assembly, assembly));
-			}
-			set
-			{
-				Simias.Configuration.Set(CFG_Section, CFG_Assembly, value);
-			}
-		}
-
-		/// <summary>
-		/// Gets and Sets the Class Type of the implemented provider.
-		/// </summary>
-		public static string TypeName
-		{
-			get
-			{
-				string providerType = "Simias.Storage.Provider.Sqlite.SqliteProvider";
-				return (Simias.Configuration.Get(CFG_Section, CFG_TypeName, providerType));
-			}
-			set
-			{
-				Simias.Configuration.Set(CFG_Section, CFG_TypeName, value);
-			}
-		}
-
-		/*
-		/// <summary>
-		/// Gets and Sets the database path of the implemented provider.
-		/// </summary>
-		public static string DbPath
-		{
-			get
-			{
-				string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-				if (path == null || path.Length == 0)
-				{
-					path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-				}
-				path = Provider.fixupPath(path);
-				return (Simias.Configuration.Get(CFG_Section, CFG_Path, path));
-			}
-			set
-			{
-				Simias.Configuration.Set(CFG_Section, CFG_Path, value);
-			}
-		}
-		*/
-
+		
 		/// <summary>
 		/// Gets the default database path.
 		/// </summary>
@@ -481,26 +388,102 @@ namespace Simias.Storage.Provider
 		{
 			get
 			{
-				string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-				if (path == null || path.Length == 0)
-				{
-					path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-				}
-				path = Provider.fixupPath(path);
-				return (path);
+				return Simias.Configuration.DefaultPath;
 			}
 		}
 
 		private static string fixupPath(string path)
 		{
-			path = Path.Combine(path, StoreName);
-			if (!Directory.Exists(path))
-			{
-				Directory.CreateDirectory(path);
-			}
-			return path;
+			return Simias.Configuration.fixupPath(path);
 		}
 
 		#endregion
+	}
+
+	public class Configuration
+	{
+		private const string CFG_Section = "StoreProvider";
+		private const string CFG_Path = "Path";
+		private const string CFG_Assembly = "Assembly";
+		private const string CFG_TypeName = "Type";
+		private const string CFG_Version = "Version";
+		private const string StoreName = ".simias";
+
+		Simias.Configuration conf;
+
+		internal Configuration()
+		{
+			conf = new Simias.Configuration();
+		}
+
+		internal Configuration(string path)
+		{
+			conf = new Simias.Configuration(path);
+			Path = path;
+		}
+
+		/// <summary>
+		/// Gets and Sets the DB Path.
+		/// </summary>
+		public string Path
+		{
+			get
+			{
+				string path = Simias.Configuration.DefaultPath;
+				return (conf.Get(CFG_Section, CFG_Path, path));
+			}
+			set
+			{
+				conf.Set(CFG_Section, CFG_Path, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets and Sets the Provider Version.
+		/// </summary>
+		public string Version
+		{
+			get
+			{
+				string version = "0";
+				return (conf.Get(CFG_Section, CFG_Version, version));
+			}
+			set
+			{
+				conf.Set(CFG_Section, CFG_Version, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets and Sets the Assembly that implements the provider instance used.
+		/// </summary>
+		public string Assembly
+		{
+			get
+			{
+				string assembly = "SqliteProvider.dll";
+				return (conf.Get(CFG_Section, CFG_Assembly, assembly));
+			}
+			set
+			{
+				conf.Set(CFG_Section, CFG_Assembly, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets and Sets the Class Type of the implemented provider.
+		/// </summary>
+		public string TypeName
+		{
+			get
+			{
+				string providerType = "Simias.Storage.Provider.Sqlite.SqliteProvider";
+				return (conf.Get(CFG_Section, CFG_TypeName, providerType));
+			}
+			set
+			{
+				conf.Set(CFG_Section, CFG_TypeName, value);
+			}
+		}
 	}
 }

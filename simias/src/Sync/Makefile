@@ -1,5 +1,5 @@
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # Sync variables
@@ -93,7 +93,7 @@ Sync_LIBPATH := $(subst /,$(SEP), $(Sync_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(Sync_LIBPATH) $(Sync_INCLUDES)
 
-Sync.dll: $(Sync_SOURCES) $(Sync_LIBS) ../config.mk
+Sync.dll: $(Sync_SOURCES) $(Sync_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:Sync.xml $(CSCFLAGS) $(Sync_FLAGS) $(Sync_LIBS:%=/r:%) $(Sync_LIBPATH:%=/lib:%) $(Sync_SOURCES)
 
 #=============================================================================
@@ -108,7 +108,7 @@ SyncCmd_LIBPATH := $(subst /,$(SEP), $(SyncCmd_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(SyncCmd_LIBPATH) $(SyncCmd_INCLUDES)
 
-SyncCmd.exe: $(SyncCmd_SOURCES) $(SyncCmd_LIBS) ../config.mk
+SyncCmd.exe: $(SyncCmd_SOURCES) $(SyncCmd_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SyncCmd.xml $(CSCFLAGS) $(SyncCmd_FLAGS) $(SyncCmd_LIBS:%=/r:%) $(SyncCmd_LIBPATH:%=/lib:%) $(SyncCmd_SOURCES)
 
 #=============================================================================
@@ -123,7 +123,7 @@ TestSync_LIBPATH := $(subst /,$(SEP), $(TestSync_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(TestSync_LIBPATH) $(TestSync_INCLUDES)
 
-TestSync.exe: $(TestSync_SOURCES) $(TestSync_LIBS) ../config.mk
+TestSync.exe: $(TestSync_SOURCES) $(TestSync_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:TestSync.xml $(CSCFLAGS) $(TestSync_FLAGS) $(TestSync_LIBS:%=/r:%) $(TestSync_LIBPATH:%=/lib:%) $(TestSync_SOURCES)
 
 #=============================================================================
@@ -138,6 +138,6 @@ SyncTests_LIBPATH := $(subst /,$(SEP), $(SyncTests_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(SyncTests_LIBPATH) $(SyncTests_INCLUDES)
 
-SyncTests.dll: $(SyncTests_SOURCES) $(SyncTests_LIBS) ../config.mk
+SyncTests.dll: $(SyncTests_SOURCES) $(SyncTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SyncTests.xml $(CSCFLAGS) $(SyncTests_FLAGS) $(SyncTests_LIBS:%=/r:%) $(SyncTests_LIBPATH:%=/lib:%) $(SyncTests_SOURCES)
 

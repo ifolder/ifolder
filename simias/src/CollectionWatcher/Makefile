@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # CollectionWatcher variables
@@ -96,7 +96,7 @@ CollectionWatcher_LIBPATH := $(subst /,$(SEP), $(CollectionWatcher_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(CollectionWatcher_LIBPATH) $(CollectionWatcher_INCLUDES)
 
-CollectionWatcher.dll: $(CollectionWatcher_SOURCES) $(CollectionWatcher_LIBS) ../config.mk
+CollectionWatcher.dll: $(CollectionWatcher_SOURCES) $(CollectionWatcher_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:CollectionWatcher.Doc.xml $(CSCFLAGS) $(CollectionWatcher_FLAGS) $(CollectionWatcher_LIBS:%=/r:%) $(CollectionWatcher_LIBPATH:%=/lib:%) $(CollectionWatcher_SOURCES)
 
 #=============================================================================
@@ -112,6 +112,6 @@ CollectionWatcherTests_LIBPATH := $(subst /,$(SEP), $(CollectionWatcherTests_LIB
 # update VPATH
 VPATH := $(VPATH) $(CollectionWatcherTests_LIBPATH) $(CollectionWatcherTests_INCLUDES)
 
-CollectionWatcherTests.dll: $(CollectionWatcherTests_SOURCES) $(CollectionWatcherTests_LIBS) ../config.mk
+CollectionWatcherTests.dll: $(CollectionWatcherTests_SOURCES) $(CollectionWatcherTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:CollectionWatcherTests.Doc.xml $(CSCFLAGS) $(CollectionWatcherTests_FLAGS) $(CollectionWatcherTests_LIBS:%=/r:%) $(CollectionWatcherTests_LIBPATH:%=/lib:%) $(CollectionWatcherTests_SOURCES)
 

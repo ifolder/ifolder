@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # CollectionEventsTests variables
@@ -106,7 +106,7 @@ CollectionEventsTests_LIBPATH := $(subst /,$(SEP), $(CollectionEventsTests_LIBPA
 # update VPATH
 VPATH := $(VPATH) $(CollectionEventsTests_LIBPATH) $(CollectionEventsTests_INCLUDES)
 
-CollectionEventsTests.exe: $(CollectionEventsTests_SOURCES) $(CollectionEventsTests_LIBS) ../config.mk
+CollectionEventsTests.exe: $(CollectionEventsTests_SOURCES) $(CollectionEventsTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:CollectionEventsTests.Doc.xml $(CSCFLAGS) $(CollectionEventsTests_FLAGS) $(CollectionEventsTests_LIBS:%=/r:%) $(CollectionEventsTests_LIBPATH:%=/lib:%) $(CollectionEventsTests_SOURCES)
 
 #=============================================================================
@@ -122,7 +122,7 @@ CollectionEvents_LIBPATH := $(subst /,$(SEP), $(CollectionEvents_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(CollectionEvents_LIBPATH) $(CollectionEvents_INCLUDES)
 
-CollectionEvents.dll: $(CollectionEvents_SOURCES) $(CollectionEvents_LIBS) ../config.mk
+CollectionEvents.dll: $(CollectionEvents_SOURCES) $(CollectionEvents_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:CollectionEvents.Doc.xml $(CSCFLAGS) $(CollectionEvents_FLAGS) $(CollectionEvents_LIBS:%=/r:%) $(CollectionEvents_LIBPATH:%=/lib:%) $(CollectionEvents_SOURCES)
 
 #=============================================================================
@@ -138,6 +138,6 @@ CsEventBroker_LIBPATH := $(subst /,$(SEP), $(CsEventBroker_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(CsEventBroker_LIBPATH) $(CsEventBroker_INCLUDES)
 
-CsEventBroker.exe: $(CsEventBroker_SOURCES) $(CsEventBroker_LIBS) ../config.mk
+CsEventBroker.exe: $(CsEventBroker_SOURCES) $(CsEventBroker_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:CsEventBroker.Doc.xml $(CSCFLAGS) $(CsEventBroker_FLAGS) $(CsEventBroker_LIBS:%=/r:%) $(CsEventBroker_LIBPATH:%=/lib:%) $(CsEventBroker_SOURCES)
 
