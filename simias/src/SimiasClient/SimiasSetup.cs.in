@@ -99,6 +99,11 @@ namespace Simias.Client
 			
 			set
 			{
+				// On some Windows clients, the initial prefix path is C:\ which causes
+				// a malformed path to be returned by Replace ... removing the trailing separator
+				// will fix this.
+				_prefix = _prefix.Trim(Path.DirectorySeparatorChar);
+				
 				// replace the old prefix
 				_bindir = Path.GetFullPath(_bindir.Replace(_prefix, value));
 				_datadir = Path.GetFullPath(_datadir.Replace(_prefix, value));
