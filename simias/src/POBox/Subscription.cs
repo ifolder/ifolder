@@ -621,6 +621,7 @@ namespace Simias.POBox
 
 			// member
 			Member member = new Member(this.FromName, this.FromIdentity, Access.Rights.ReadWrite);
+			member.IsOwner = true;
 
 			// impersonate the member
 			c.Impersonate(member);

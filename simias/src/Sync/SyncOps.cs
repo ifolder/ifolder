@@ -208,9 +208,9 @@ internal class SyncOps
 		return null;
 	}
 
-	public SyncOps(Collection collection, bool onServer)
+	public SyncOps(SyncCollection collection, bool onServer)
 	{
-		this.collection = new SyncCollection(collection);
+		this.collection = collection;
 		this.onServer = onServer;
 	}
 
