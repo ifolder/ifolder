@@ -40,7 +40,6 @@ namespace Novell.iFolder.FormsAddrBook
 		#region Class Members
 		private BooksContacts booksContacts = null;
 		private System.Windows.Forms.Panel panel1;
-		private System.Windows.Forms.ListView listView1;
 		private Novell.AddressBook.Manager manager = null;
 		private Novell.AddressBook.AddressBook selectedBook;
 		private System.Windows.Forms.MainMenu mainMenu1;
@@ -63,6 +62,8 @@ namespace Novell.iFolder.FormsAddrBook
 		private System.Windows.Forms.MenuItem menuHelp;
 		private System.Windows.Forms.MenuItem menuHelpAbout;
 		private ArrayList selectedContacts;
+		private System.Windows.Forms.Panel detailsView;
+		private Contact contact;
 
 		/// <summary>
 		/// Required designer variable.
@@ -89,6 +90,9 @@ namespace Novell.iFolder.FormsAddrBook
 				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\address_app.ico"));
 			}
 			catch{}
+
+			this.booksContacts.ContactSelected += new Novell.iFolder.FormsBookLib.BooksContacts.ContactSelectedDelegate(booksContacts_ContactSelected);
+			this.detailsView.Paint += new PaintEventHandler(detailsView_Paint);
 		}
 
 		/// <summary>
@@ -114,8 +118,8 @@ namespace Novell.iFolder.FormsAddrBook
 		private void InitializeComponent()
 		{
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.detailsView = new System.Windows.Forms.Panel();
 			this.booksContacts = new Novell.iFolder.FormsBookLib.BooksContacts();
-			this.listView1 = new System.Windows.Forms.ListView();
 			this.mainMenu1 = new System.Windows.Forms.MainMenu();
 			this.menuFile = new System.Windows.Forms.MenuItem();
 			this.menuFileNew = new System.Windows.Forms.MenuItem();
@@ -140,34 +144,36 @@ namespace Novell.iFolder.FormsAddrBook
 			// 
 			// panel1
 			// 
-			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+				| System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.panel1.Controls.Add(this.detailsView);
 			this.panel1.Controls.Add(this.booksContacts);
-			this.panel1.Controls.Add(this.listView1);
 			this.panel1.Location = new System.Drawing.Point(8, 0);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(552, 400);
 			this.panel1.TabIndex = 1;
 			// 
+			// detailsView
+			// 
+			this.detailsView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+				| System.Windows.Forms.AnchorStyles.Left) 
+				| System.Windows.Forms.AnchorStyles.Right)));
+			this.detailsView.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+			this.detailsView.Location = new System.Drawing.Point(312, 56);
+			this.detailsView.Name = "detailsView";
+			this.detailsView.Size = new System.Drawing.Size(232, 304);
+			this.detailsView.TabIndex = 1;
+			// 
 			// booksContacts
 			// 
 			this.booksContacts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
 				| System.Windows.Forms.AnchorStyles.Left)));
- 			this.booksContacts.Location = new System.Drawing.Point(0, 0);
+			this.booksContacts.Location = new System.Drawing.Point(0, 0);
 			this.booksContacts.Name = "booksContacts";
 			this.booksContacts.Size = new System.Drawing.Size(304, 400);
 			this.booksContacts.TabIndex = 0;
 			this.booksContacts.ContactDoubleClicked += new Novell.iFolder.FormsBookLib.BooksContacts.ContactDoubleClickedDelegate(this.booksContacts_ContactDoubleClicked);
-			// 
-			// listView1
-			// 
-			this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-				| System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
-			this.listView1.Location = new System.Drawing.Point(307, 56);
-			this.listView1.Name = "listView1";
-			this.listView1.Size = new System.Drawing.Size(237, 304);
-			this.listView1.TabIndex = 2;
 			// 
 			// mainMenu1
 			// 
@@ -198,13 +204,13 @@ namespace Novell.iFolder.FormsAddrBook
 			// 
 			this.menuFileNewAddressBook.Index = 0;
 			this.menuFileNewAddressBook.Text = "Address &Book";
-			this.menuFileNewAddressBook.Click += new EventHandler(menuFileNewAddressBook_Click);
+			this.menuFileNewAddressBook.Click += new System.EventHandler(this.menuFileNewAddressBook_Click);
 			// 
 			// menuFileNewContact
 			// 
 			this.menuFileNewContact.Index = 1;
 			this.menuFileNewContact.Text = "&Contact";
-			this.menuFileNewContact.Click += new EventHandler(menuFileNewContact_Click);
+			this.menuFileNewContact.Click += new System.EventHandler(this.menuFileNewContact_Click);
 			// 
 			// menuFileDivider
 			// 
@@ -215,7 +221,7 @@ namespace Novell.iFolder.FormsAddrBook
 			// 
 			this.menuFileExit.Index = 2;
 			this.menuFileExit.Text = "E&xit";
-			this.menuFileExit.Click += new EventHandler(menuFileExit_Click);
+			this.menuFileExit.Click += new System.EventHandler(this.menuFileExit_Click);
 			// 
 			// menuEdit
 			// 
@@ -228,13 +234,13 @@ namespace Novell.iFolder.FormsAddrBook
 																					 this.menuEditPaste,
 																					 this.menuEditDelete});
 			this.menuEdit.Text = "&Edit";
-			this.menuEdit.Popup += new EventHandler(menuEdit_Popup);
+			this.menuEdit.Popup += new System.EventHandler(this.menuEdit_Popup);
 			// 
 			// menuEditContact
 			// 
 			this.menuEditContact.Index = 0;
 			this.menuEditContact.Text = "&Contact";
-			this.menuEditContact.Click += new EventHandler(menuEditContact_Click);
+			this.menuEditContact.Click += new System.EventHandler(this.menuEditContact_Click);
 			// 
 			// menuEditDivider
 			// 
@@ -260,7 +266,7 @@ namespace Novell.iFolder.FormsAddrBook
 			// 
 			this.menuEditDelete.Index = 5;
 			this.menuEditDelete.Text = "&Delete";
-			this.menuEditDelete.Click += new EventHandler(menuEditDelete_Click);
+			this.menuEditDelete.Click += new System.EventHandler(this.menuEditDelete_Click);
 			// 
 			// menuTools
 			// 
@@ -374,6 +380,232 @@ namespace Novell.iFolder.FormsAddrBook
 		private void menuFileExit_Click(object sender, EventArgs e)
 		{
             this.Close();
+		}
+
+		private void booksContacts_ContactSelected(object sender, ContactSelectedEventArgs e)
+		{
+			if (e.singleSelected)
+			{
+				contact = (Contact)((ListViewItem)booksContacts.SelectedContacts[0]).Tag;
+			}
+			else
+			{
+				contact = null;
+			}
+
+			detailsView.Invalidate();
+		}
+
+		private void detailsView_Paint(object sender, PaintEventArgs e)
+		{
+			if (contact != null)
+			{
+				// Display the photo.
+				Image image;
+				Rectangle rect = new Rectangle(8, 8, 60, 75);
+
+				float x = 75;
+				float y = 8;
+				int delta = 10;
+				try
+				{
+					image = Image.FromStream(contact.ExportPhoto());
+					e.Graphics.DrawImage(image, rect);
+				}
+				catch
+				{
+					try
+					{
+						// There was a problem loading the image ... use the default image.
+						// Get the base path.
+						string basePath = Path.Combine(Application.StartupPath, "res");
+
+						image = Image.FromFile(Path.Combine(basePath, "blankhead.png"));
+						e.Graphics.DrawImage(image, rect);
+					}
+					catch{}
+				}
+
+				// Display the full name.
+				Font boldFont = new Font(Font.FontFamily, 14, FontStyle.Bold);
+				e.Graphics.DrawString(contact.FN, boldFont, SystemBrushes.WindowText, x, y);
+				y += boldFont.Size + delta;
+
+				// Display the title.
+				e.Graphics.DrawString(contact.Title, Font, SystemBrushes.WindowText, x, y);
+
+				y = 90;
+				try
+				{
+					// Display the phone numbers.
+					StringFormat format = new StringFormat(StringFormatFlags.DirectionRightToLeft);
+					foreach(Telephone phone in contact.GetTelephoneNumbers())
+					{
+						if ((phone.Types & (PhoneTypes.work | PhoneTypes.voice)) == (PhoneTypes.work | PhoneTypes.voice))
+						{
+							e.Graphics.DrawString("work", Font, SystemBrushes.ControlDark, x-1, y, format);
+							e.Graphics.DrawString(phone.Number, Font, SystemBrushes.WindowText, x, y);
+							y += Font.Size + 5;
+						}
+					}
+
+					foreach(Telephone phone in contact.GetTelephoneNumbers())
+					{
+						if ((phone.Types & (PhoneTypes.work | PhoneTypes.fax)) == (PhoneTypes.work | PhoneTypes.fax))
+						{
+							e.Graphics.DrawString("fax", Font, SystemBrushes.ControlDark, x-1, y, format);
+							e.Graphics.DrawString(phone.Number, Font, SystemBrushes.WindowText, x, y);
+							y += Font.Size + 5;
+						}
+					}
+
+					foreach(Telephone phone in contact.GetTelephoneNumbers())
+					{
+						if ((phone.Types & PhoneTypes.cell) == PhoneTypes.cell)
+						{
+							e.Graphics.DrawString("mobile", Font, SystemBrushes.ControlDark, x-1, y, format);
+							e.Graphics.DrawString(phone.Number, Font, SystemBrushes.WindowText, x, y);
+							y += Font.Size + 5;
+						}
+					}
+
+					foreach(Telephone phone in contact.GetTelephoneNumbers())
+					{
+						if ((phone.Types & PhoneTypes.pager) == PhoneTypes.pager)
+						{
+							e.Graphics.DrawString("pager", Font, SystemBrushes.ControlDark, x-1, y, format);
+							e.Graphics.DrawString(phone.Number, Font, SystemBrushes.WindowText, x, y);
+							y += Font.Size + 5;
+						}
+					}
+
+					foreach(Telephone phone in contact.GetTelephoneNumbers())
+					{
+						if ((phone.Types & (PhoneTypes.home | PhoneTypes.voice)) == (PhoneTypes.home | PhoneTypes.voice))
+						{
+							e.Graphics.DrawString("home", Font, SystemBrushes.ControlDark, x-1, y, format);
+							e.Graphics.DrawString(phone.Number, Font, SystemBrushes.WindowText, x, y);
+							y += Font.Size + 5;
+						}
+					}
+
+					// Display the e-mail addresses.
+					y += delta;
+					foreach(Email email in contact.GetEmailAddresses())
+					{
+						if ((email.Types & EmailTypes.work) == EmailTypes.work)
+						{
+							e.Graphics.DrawString("work", Font, SystemBrushes.ControlDark, x-1, y, format);
+							e.Graphics.DrawString(email.Address, Font, SystemBrushes.WindowText, x, y);
+							y += Font.Size + 5;
+						}
+					}
+
+					foreach(Email email in contact.GetEmailAddresses())
+					{
+						if ((email.Types & EmailTypes.personal) == EmailTypes.personal)
+						{
+							e.Graphics.DrawString("home", Font, SystemBrushes.ControlDark, x-1, y, format);
+							e.Graphics.DrawString(email.Address, Font, SystemBrushes.WindowText, x, y);
+							y += Font.Size + 5;
+						}
+					}
+
+					foreach(Email email in contact.GetEmailAddresses())
+					{
+						if ((email.Types & EmailTypes.other) == EmailTypes.other)
+						{
+							e.Graphics.DrawString("other", Font, SystemBrushes.ControlDark, x-1, y, format);
+							e.Graphics.DrawString(email.Address, Font, SystemBrushes.WindowText, x, y);
+							y += Font.Size + 5;
+						}
+					}
+
+					// Display the mailing addresses.
+					y += delta;
+					foreach(Address addr in contact.GetAddresses())
+					{
+						if((addr.Types & AddressTypes.work) == AddressTypes.work)
+						{
+							e.Graphics.DrawString("work", Font, SystemBrushes.ControlDark, x-1, y, format);
+							e.Graphics.DrawString(addr.Street, Font, SystemBrushes.WindowText, x, y);
+							y += Font.Size + 5;
+							if (addr.ExtendedAddress != "")
+							{
+								e.Graphics.DrawString(addr.ExtendedAddress, Font, SystemBrushes.WindowText, x, y);
+								y += Font.Size + 5;
+							}
+							
+							if (addr.PostalBox != "")
+							{
+								e.Graphics.DrawString("P.O. Box " + addr.PostalBox, Font, SystemBrushes.WindowText, x, y);
+								y += Font.Size + 5;
+							}
+							
+							if (addr.Locality != "" ||
+								addr.Region != "" ||
+								addr.PostalCode != "")
+							{
+								string cityState = addr.Locality + ", " + addr.Region + " " + addr.PostalCode;
+								e.Graphics.DrawString(cityState.Trim(), Font, SystemBrushes.WindowText, x, y);
+								y += Font.Size + 5;
+							}
+
+							if (addr.Country != "")
+							{
+								e.Graphics.DrawString(addr.Country, Font, SystemBrushes.WindowText, x, y);
+								y += Font.Size + 5;
+							}
+
+							y += delta;
+						}
+					}
+
+					foreach(Address addr in contact.GetAddresses())
+					{
+						if((addr.Types & AddressTypes.home) == AddressTypes.home)
+						{
+							e.Graphics.DrawString("home", Font, SystemBrushes.ControlDark, x-1, y, format);
+							e.Graphics.DrawString(addr.Street, Font, SystemBrushes.WindowText, x, y);
+							y += Font.Size + 5;
+							if (addr.ExtendedAddress != "")
+							{
+								e.Graphics.DrawString(addr.ExtendedAddress, Font, SystemBrushes.WindowText, x, y);
+								y += Font.Size + 5;
+							}
+							
+							if (addr.PostalBox != "")
+							{
+								e.Graphics.DrawString("P.O. Box " + addr.PostalBox, Font, SystemBrushes.WindowText, x, y);
+								y += Font.Size + 5;
+							}
+							
+							if (addr.Locality != "" ||
+								addr.Region != "" ||
+								addr.PostalCode != "")
+							{
+								string cityState = addr.Locality + ", " + addr.Region + " " + addr.PostalCode;
+								e.Graphics.DrawString(cityState.Trim(), Font, SystemBrushes.WindowText, x, y);
+								y += Font.Size + 5;
+							}
+
+							if (addr.Country != "")
+							{
+								e.Graphics.DrawString(addr.Country, Font, SystemBrushes.WindowText, x, y);
+								y += Font.Size + 5;
+							}
+
+							y += delta;
+						}
+					}
+				}
+				catch{}
+			}
+			else
+			{
+				// Clear the display.
+				e.Graphics.Clear(Color.White);
+			}
 		}
 		#endregion
 	}
