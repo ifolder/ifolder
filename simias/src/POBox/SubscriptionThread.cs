@@ -303,6 +303,9 @@ namespace Simias.POBox
 			try
 			{
 				log.Info("  calling the PO Box server to get subscription state");
+				log.Info("  domainID: " + subscription.DomainID);
+				log.Info("  fromID:   " + subscription.FromIdentity);
+				log.Info("  SubID:    " + subscription.MessageID);
 
 				SubscriptionInformation subInfo =
 					poService.GetSubscriptionInfo(
@@ -366,7 +369,12 @@ namespace Simias.POBox
 					result = true;
 				}
 			}
-			catch{}
+			catch(Exception e)
+			{
+				log.Debug("SubscriptionThread::DoDelivered failed with an exception");
+				log.Debug(e.Message);
+				log.Debug(e.StackTrace);
+			}
 			return result;
 		}
 	}
