@@ -92,7 +92,7 @@
           <xs:element minOccurs="1" maxOccurs="1" name="IsSubscription" type="xs:boolean" />
           <xs:element minOccurs="1" maxOccurs="1" name="EnumeratedState" type="xs:int" />
           <xs:element minOccurs="1" maxOccurs="1" name="IsWorkgroup" type="xs:boolean" />
-          <xs:element minOccurs="1" maxOccurs="1" name="HasCollisions" type="xs:boolean" />
+          <xs:element minOccurs="1" maxOccurs="1" name="HasConflicts" type="xs:boolean" />
           <xs:element minOccurs="0" maxOccurs="1" name="CurrentUserID" type="xs:string" />
         </xs:sequence>
       </xs:complexType>
@@ -432,6 +432,62 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="GetiFolderConflicts">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="ArrayOfConflict">
+        <xs:sequence>
+          <xs:element minOccurs="0" nillable="true" maxOccurs="unbounded" name="Conflict" type="s0:Conflict" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Conflict">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ConflictID" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="LocalName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="LocalDate" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="LocalSize" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="IsNameConflict" type="xs:boolean" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ServerName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ServerDate" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ServerSize" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="GetiFolderConflictsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetiFolderConflictsResult" type="s0:ArrayOfConflict" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ResolveFileConflict">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="conflictID" type="xs:string" />
+            <xs:element minOccurs="1" maxOccurs="1" name="localChangesWin" type="xs:boolean" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ResolveFileConflictResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="ResolveNameConflict">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="conflictID" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="newLocalName" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ResolveNameConflictResponse">
+        <xs:complexType />
+      </xs:element>
       <xs:element name="iFolderSettings" type="s0:iFolderSettings" />
       <xs:element name="boolean" type="xs:boolean" />
       <xs:element name="iFolder" type="s0:iFolder" />
@@ -440,6 +496,7 @@
       <xs:element name="ArrayOfIFolderUser" type="s0:ArrayOfIFolderUser" />
       <xs:element name="DiskSpace" type="s0:DiskSpace" />
       <xs:element name="int" type="xs:int" />
+      <xs:element name="ArrayOfConflict" type="s0:ArrayOfConflict" />
     </xs:schema>
   </types>
   <message name="PingSoapIn">
@@ -622,6 +679,24 @@
   <message name="ConnectToEnterpriseServerSoapOut">
     <part name="parameters" element="s0:ConnectToEnterpriseServerResponse" />
   </message>
+  <message name="GetiFolderConflictsSoapIn">
+    <part name="parameters" element="s0:GetiFolderConflicts" />
+  </message>
+  <message name="GetiFolderConflictsSoapOut">
+    <part name="parameters" element="s0:GetiFolderConflictsResponse" />
+  </message>
+  <message name="ResolveFileConflictSoapIn">
+    <part name="parameters" element="s0:ResolveFileConflict" />
+  </message>
+  <message name="ResolveFileConflictSoapOut">
+    <part name="parameters" element="s0:ResolveFileConflictResponse" />
+  </message>
+  <message name="ResolveNameConflictSoapIn">
+    <part name="parameters" element="s0:ResolveNameConflict" />
+  </message>
+  <message name="ResolveNameConflictSoapOut">
+    <part name="parameters" element="s0:ResolveNameConflictResponse" />
+  </message>
   <message name="PingHttpGetIn" />
   <message name="PingHttpGetOut" />
   <message name="GetSettingsHttpGetIn" />
@@ -787,6 +862,24 @@
   <message name="ConnectToEnterpriseServerHttpGetOut">
     <part name="Body" element="s0:iFolderSettings" />
   </message>
+  <message name="GetiFolderConflictsHttpGetIn">
+    <part name="iFolderID" type="s:string" />
+  </message>
+  <message name="GetiFolderConflictsHttpGetOut">
+    <part name="Body" element="s0:ArrayOfConflict" />
+  </message>
+  <message name="ResolveFileConflictHttpGetIn">
+    <part name="iFolderID" type="s:string" />
+    <part name="conflictID" type="s:string" />
+    <part name="localChangesWin" type="s:boolean" />
+  </message>
+  <message name="ResolveFileConflictHttpGetOut" />
+  <message name="ResolveNameConflictHttpGetIn">
+    <part name="iFolderID" type="s:string" />
+    <part name="conflictID" type="s:string" />
+    <part name="newLocalName" type="s:string" />
+  </message>
+  <message name="ResolveNameConflictHttpGetOut" />
   <message name="PingHttpPostIn" />
   <message name="PingHttpPostOut" />
   <message name="GetSettingsHttpPostIn" />
@@ -952,6 +1045,24 @@
   <message name="ConnectToEnterpriseServerHttpPostOut">
     <part name="Body" element="s0:iFolderSettings" />
   </message>
+  <message name="GetiFolderConflictsHttpPostIn">
+    <part name="iFolderID" type="s:string" />
+  </message>
+  <message name="GetiFolderConflictsHttpPostOut">
+    <part name="Body" element="s0:ArrayOfConflict" />
+  </message>
+  <message name="ResolveFileConflictHttpPostIn">
+    <part name="iFolderID" type="s:string" />
+    <part name="conflictID" type="s:string" />
+    <part name="localChangesWin" type="s:boolean" />
+  </message>
+  <message name="ResolveFileConflictHttpPostOut" />
+  <message name="ResolveNameConflictHttpPostIn">
+    <part name="iFolderID" type="s:string" />
+    <part name="conflictID" type="s:string" />
+    <part name="newLocalName" type="s:string" />
+  </message>
+  <message name="ResolveNameConflictHttpPostOut" />
   <portType name="iFolder Web ServiceSoap">
     <operation name="Ping">
       <input message="s0:PingSoapIn" />
@@ -1102,6 +1213,21 @@
       <input message="s0:ConnectToEnterpriseServerSoapIn" />
       <output message="s0:ConnectToEnterpriseServerSoapOut" />
       <documentation>Connects to an iFolder Enterprise Server</documentation>
+    </operation>
+    <operation name="GetiFolderConflicts">
+      <input message="s0:GetiFolderConflictsSoapIn" />
+      <output message="s0:GetiFolderConflictsSoapOut" />
+      <documentation>Connects to an iFolder Enterprise Server</documentation>
+    </operation>
+    <operation name="ResolveFileConflict">
+      <input message="s0:ResolveFileConflictSoapIn" />
+      <output message="s0:ResolveFileConflictSoapOut" />
+      <documentation>Resolves a file conflict in an iFolder.</documentation>
+    </operation>
+    <operation name="ResolveNameConflict">
+      <input message="s0:ResolveNameConflictSoapIn" />
+      <output message="s0:ResolveNameConflictSoapOut" />
+      <documentation>Resolves a name conflict</documentation>
     </operation>
   </portType>
   <portType name="iFolder Web ServiceHttpGet">
@@ -1255,6 +1381,21 @@
       <output message="s0:ConnectToEnterpriseServerHttpGetOut" />
       <documentation>Connects to an iFolder Enterprise Server</documentation>
     </operation>
+    <operation name="GetiFolderConflicts">
+      <input message="s0:GetiFolderConflictsHttpGetIn" />
+      <output message="s0:GetiFolderConflictsHttpGetOut" />
+      <documentation>Connects to an iFolder Enterprise Server</documentation>
+    </operation>
+    <operation name="ResolveFileConflict">
+      <input message="s0:ResolveFileConflictHttpGetIn" />
+      <output message="s0:ResolveFileConflictHttpGetOut" />
+      <documentation>Resolves a file conflict in an iFolder.</documentation>
+    </operation>
+    <operation name="ResolveNameConflict">
+      <input message="s0:ResolveNameConflictHttpGetIn" />
+      <output message="s0:ResolveNameConflictHttpGetOut" />
+      <documentation>Resolves a name conflict</documentation>
+    </operation>
   </portType>
   <portType name="iFolder Web ServiceHttpPost">
     <operation name="Ping">
@@ -1406,6 +1547,21 @@
       <input message="s0:ConnectToEnterpriseServerHttpPostIn" />
       <output message="s0:ConnectToEnterpriseServerHttpPostOut" />
       <documentation>Connects to an iFolder Enterprise Server</documentation>
+    </operation>
+    <operation name="GetiFolderConflicts">
+      <input message="s0:GetiFolderConflictsHttpPostIn" />
+      <output message="s0:GetiFolderConflictsHttpPostOut" />
+      <documentation>Connects to an iFolder Enterprise Server</documentation>
+    </operation>
+    <operation name="ResolveFileConflict">
+      <input message="s0:ResolveFileConflictHttpPostIn" />
+      <output message="s0:ResolveFileConflictHttpPostOut" />
+      <documentation>Resolves a file conflict in an iFolder.</documentation>
+    </operation>
+    <operation name="ResolveNameConflict">
+      <input message="s0:ResolveNameConflictHttpPostIn" />
+      <output message="s0:ResolveNameConflictHttpPostOut" />
+      <documentation>Resolves a name conflict</documentation>
     </operation>
   </portType>
   <binding name="iFolder Web ServiceSoap" type="s0:iFolder Web ServiceSoap">
@@ -1680,6 +1836,33 @@
         <soap:body use="literal" />
       </output>
     </operation>
+    <operation name="GetiFolderConflicts">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderConflicts" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="ResolveFileConflict">
+      <soap:operation soapAction="http://novell.com/ifolder/web/ResolveFileConflict" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="ResolveNameConflict">
+      <soap:operation soapAction="http://novell.com/ifolder/web/ResolveNameConflict" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
   </binding>
   <binding name="iFolder Web ServiceHttpGet" type="s0:iFolder Web ServiceHttpGet">
     <http:binding verb="GET" />
@@ -1933,6 +2116,29 @@
         <mime:mimeXml part="Body" />
       </output>
     </operation>
+    <operation name="GetiFolderConflicts">
+      <http:operation location="/GetiFolderConflicts" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+    <operation name="ResolveFileConflict">
+      <http:operation location="/ResolveFileConflict" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output />
+    </operation>
+    <operation name="ResolveNameConflict">
+      <http:operation location="/ResolveNameConflict" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output />
+    </operation>
   </binding>
   <binding name="iFolder Web ServiceHttpPost" type="s0:iFolder Web ServiceHttpPost">
     <http:binding verb="POST" />
@@ -2185,6 +2391,29 @@
       <output>
         <mime:mimeXml part="Body" />
       </output>
+    </operation>
+    <operation name="GetiFolderConflicts">
+      <http:operation location="/GetiFolderConflicts" />
+      <input>
+        <mime:content part="" type="application/x-www-form-urlencoded" />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+    <operation name="ResolveFileConflict">
+      <http:operation location="/ResolveFileConflict" />
+      <input>
+        <mime:content part="" type="application/x-www-form-urlencoded" />
+      </input>
+      <output />
+    </operation>
+    <operation name="ResolveNameConflict">
+      <http:operation location="/ResolveNameConflict" />
+      <input>
+        <mime:content part="" type="application/x-www-form-urlencoded" />
+      </input>
+      <output />
     </operation>
   </binding>
   <service name="iFolder Web Service">
