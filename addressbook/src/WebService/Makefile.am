@@ -9,7 +9,7 @@ CABWebService_FLAGS = $(CSC_LIBFLAG)
 CABWebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.Services.dll
 CABWebService_LIBPATH = $(LOG4NET_DIR)
 
-EXTRA_DIST = iFolder.asmx $(CABWebService_CSFILES)
+EXTRA_DIST = AddressBook.asmx $(CABWebService_CSFILES)
 
 all: Novell.AddressBook.Web.dll
 
