@@ -1496,6 +1496,7 @@ namespace Novell.iFolderCom
 			{
 				if (ifolder != null)
 				{
+					currentiFolder = ifolder;
 					showConflictMessage(ifolder.HasConflicts);
 				}
 				else if (ifolderUser != null)
@@ -2079,7 +2080,32 @@ namespace Novell.iFolderCom
 		private void updateListViewItem(ListViewItem lvi)
 		{
 			ShareListMember slMember = (ShareListMember)lvi.Tag;
-			lvi.ImageIndex = slMember.iFolderUser.State.Equals(member) ? 1 : 2;
+
+			if (slMember.iFolderUser.UserID.Equals(currentUser.UserID))
+			{
+				// Update the current user
+				currentUser = slMember.iFolderUser;
+				lvi.ImageIndex = 0;
+
+				// Enable/disable the Add button.
+				add.Enabled = currentUser.Rights.Equals("Admin");
+
+				// Disable the access, remove, and access menu items if they are currently
+				// enabled and the current user is not an admin.
+				access.Enabled = access.Enabled ? add.Enabled : false;
+				remove.Enabled = remove.Enabled ? add.Enabled : false;
+				menuFullControl.Enabled = menuReadWrite.Enabled = menuReadOnly.Enabled = 
+					menuFullControl.Enabled ? add.Enabled : false;
+
+				// Update the disk space restriction controls (in case the current user's ownership has changed).
+//				setLimit.Visible = limitEdit.Visible = currentUser.UserID.Equals(currentiFolder.OwnerID);
+//				limitLabel.Visible = limit.Visible = !setLimit.Visible;
+			}
+			else
+			{
+				lvi.ImageIndex = slMember.iFolderUser.State.Equals(member) ? 1 : 2;
+			}
+
 			lvi.SubItems[0].Text = slMember.iFolderUser.Name;
 			lvi.SubItems[1].Text = stateToString(slMember.iFolderUser.State, slMember.iFolderUser.UserID);
 			lvi.SubItems[2].Text = rightsToString(slMember.iFolderUser.Rights);
@@ -2110,8 +2136,7 @@ namespace Novell.iFolderCom
 						{
 							if (eventArgs.Type.Equals(NodeTypes.CollectionType) && currentiFolder.ID.Equals(eventArgs.Collection))
 							{
-								// This is the iFolder currently displayed ... check for conflicts and
-								// update the display.
+								// This is the iFolder currently displayed ...
 								ifolder = ifWebService.GetiFolder(eventArgs.Collection);
 							}
 							else if (eventArgs.Type.Equals(NodeTypes.MemberType) || eventArgs.Type.Equals(NodeTypes.NodeType))
