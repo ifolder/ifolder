@@ -1,5 +1,5 @@
 if LINUX
-SUBDIRS = AddressBook AddressBookCmd Simias.UI.gtk.dll GtkAddrBook
+SUBDIRS = AddressBook AddressBookCmd GtkAddrBook
 endif
 
 if WINDOWS
