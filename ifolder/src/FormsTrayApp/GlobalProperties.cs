@@ -47,6 +47,8 @@ namespace Novell.iFolder.FormsTrayApp
 	/// </summary>
 	public class GlobalProperties : System.Windows.Forms.Form
 	{
+		// TODO: Localize
+		private static readonly string conflictsExist = "Conflicts exist";
 		#region Class Members
 		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(GlobalProperties));
 		private const string iFolderRun = "iFolder";
@@ -154,6 +156,8 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.Label label17;
 		private System.Windows.Forms.Label label18;
 		private System.Windows.Forms.Label enterpriseDescription;
+		private System.Windows.Forms.MenuItem menuResolve;
+		private System.Windows.Forms.MenuItem menuActionResolve;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -414,15 +418,11 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuRefresh = new System.Windows.Forms.MenuItem();
 			this.menuSeparator1 = new System.Windows.Forms.MenuItem();
 			this.menuRevert = new System.Windows.Forms.MenuItem();
+			this.menuResolve = new System.Windows.Forms.MenuItem();
 			this.menuShare = new System.Windows.Forms.MenuItem();
 			this.menuSyncNow = new System.Windows.Forms.MenuItem();
 			this.menuSeparator2 = new System.Windows.Forms.MenuItem();
 			this.menuProperties = new System.Windows.Forms.MenuItem();
-			this.tabPage3 = new System.Windows.Forms.TabPage();
-			this.clearLog = new System.Windows.Forms.Button();
-			this.saveLog = new System.Windows.Forms.Button();
-			this.log = new System.Windows.Forms.ListBox();
-			this.label6 = new System.Windows.Forms.Label();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -436,6 +436,11 @@ namespace Novell.iFolder.FormsTrayApp
 			this.proxy = new System.Windows.Forms.TextBox();
 			this.useProxy = new System.Windows.Forms.RadioButton();
 			this.noProxy = new System.Windows.Forms.RadioButton();
+			this.tabPage3 = new System.Windows.Forms.TabPage();
+			this.clearLog = new System.Windows.Forms.Button();
+			this.saveLog = new System.Windows.Forms.Button();
+			this.log = new System.Windows.Forms.ListBox();
+			this.label6 = new System.Windows.Forms.Label();
 			this.tabPage5 = new System.Windows.Forms.TabPage();
 			this.groupBox6 = new System.Windows.Forms.GroupBox();
 			this.label18 = new System.Windows.Forms.Label();
@@ -475,16 +480,17 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuActionRestart = new System.Windows.Forms.MenuItem();
 			this.menuView = new System.Windows.Forms.MenuItem();
 			this.menuViewRefresh = new System.Windows.Forms.MenuItem();
+			this.menuActionResolve = new System.Windows.Forms.MenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.groupBox4.SuspendLayout();
-			this.tabPage3.SuspendLayout();
 			this.tabPage2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.groupBox3.SuspendLayout();
 			this.groupBox5.SuspendLayout();
+			this.tabPage3.SuspendLayout();
 			this.tabPage5.SuspendLayout();
 			this.groupBox6.SuspendLayout();
 			this.SuspendLayout();
@@ -675,6 +681,7 @@ namespace Novell.iFolder.FormsTrayApp
 																						 this.menuRefresh,
 																						 this.menuSeparator1,
 																						 this.menuRevert,
+																						 this.menuResolve,
 																						 this.menuShare,
 																						 this.menuSyncNow,
 																						 this.menuSeparator2,
@@ -713,79 +720,39 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuRevert.Visible = false;
 			this.menuRevert.Click += new System.EventHandler(this.menuRevert_Click);
 			// 
+			// menuResolve
+			// 
+			this.menuResolve.Index = 5;
+			this.menuResolve.Text = "Resolve conflicts...";
+			this.menuResolve.Visible = false;
+			this.menuResolve.Click += new System.EventHandler(this.menuResolve_Click);
+			// 
 			// menuShare
 			// 
-			this.menuShare.Index = 5;
+			this.menuShare.Index = 6;
 			this.menuShare.Text = "&Share with...";
 			this.menuShare.Visible = false;
 			this.menuShare.Click += new System.EventHandler(this.menuShare_Click);
 			// 
 			// menuSyncNow
 			// 
-			this.menuSyncNow.Index = 6;
+			this.menuSyncNow.Index = 7;
 			this.menuSyncNow.Text = "Sync now";
 			this.menuSyncNow.Visible = false;
 			this.menuSyncNow.Click += new System.EventHandler(this.menuSyncNow_Click);
 			// 
 			// menuSeparator2
 			// 
-			this.menuSeparator2.Index = 7;
+			this.menuSeparator2.Index = 8;
 			this.menuSeparator2.Text = "-";
 			this.menuSeparator2.Visible = false;
 			// 
 			// menuProperties
 			// 
-			this.menuProperties.Index = 8;
+			this.menuProperties.Index = 9;
 			this.menuProperties.Text = "Properties...";
 			this.menuProperties.Visible = false;
 			this.menuProperties.Click += new System.EventHandler(this.menuProperties_Click);
-			// 
-			// tabPage3
-			// 
-			this.tabPage3.Controls.Add(this.clearLog);
-			this.tabPage3.Controls.Add(this.saveLog);
-			this.tabPage3.Controls.Add(this.log);
-			this.tabPage3.Controls.Add(this.label6);
-			this.tabPage3.Location = new System.Drawing.Point(4, 22);
-			this.tabPage3.Name = "tabPage3";
-			this.tabPage3.Size = new System.Drawing.Size(426, 390);
-			this.tabPage3.TabIndex = 2;
-			this.tabPage3.Text = "Log";
-			// 
-			// clearLog
-			// 
-			this.clearLog.Enabled = false;
-			this.clearLog.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.clearLog.Location = new System.Drawing.Point(88, 288);
-			this.clearLog.Name = "clearLog";
-			this.clearLog.TabIndex = 4;
-			this.clearLog.Text = "&Clear";
-			// 
-			// saveLog
-			// 
-			this.saveLog.Enabled = false;
-			this.saveLog.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.saveLog.Location = new System.Drawing.Point(8, 288);
-			this.saveLog.Name = "saveLog";
-			this.saveLog.TabIndex = 3;
-			this.saveLog.Text = "&Save...";
-			// 
-			// log
-			// 
-			this.log.HorizontalScrollbar = true;
-			this.log.Location = new System.Drawing.Point(8, 48);
-			this.log.Name = "log";
-			this.log.ScrollAlwaysVisible = true;
-			this.log.Size = new System.Drawing.Size(408, 225);
-			this.log.TabIndex = 2;
-			// 
-			// label6
-			// 
-			this.label6.Location = new System.Drawing.Point(8, 16);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(296, 16);
-			this.label6.TabIndex = 0;
-			this.label6.Text = "This log shows current iFolder activity.";
 			// 
 			// tabPage2
 			// 
@@ -925,6 +892,53 @@ namespace Novell.iFolder.FormsTrayApp
 			this.noProxy.Size = new System.Drawing.Size(88, 24);
 			this.noProxy.TabIndex = 0;
 			this.noProxy.Text = "No Proxy";
+			// 
+			// tabPage3
+			// 
+			this.tabPage3.Controls.Add(this.clearLog);
+			this.tabPage3.Controls.Add(this.saveLog);
+			this.tabPage3.Controls.Add(this.log);
+			this.tabPage3.Controls.Add(this.label6);
+			this.tabPage3.Location = new System.Drawing.Point(4, 22);
+			this.tabPage3.Name = "tabPage3";
+			this.tabPage3.Size = new System.Drawing.Size(426, 390);
+			this.tabPage3.TabIndex = 2;
+			this.tabPage3.Text = "Log";
+			// 
+			// clearLog
+			// 
+			this.clearLog.Enabled = false;
+			this.clearLog.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.clearLog.Location = new System.Drawing.Point(88, 288);
+			this.clearLog.Name = "clearLog";
+			this.clearLog.TabIndex = 4;
+			this.clearLog.Text = "&Clear";
+			// 
+			// saveLog
+			// 
+			this.saveLog.Enabled = false;
+			this.saveLog.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.saveLog.Location = new System.Drawing.Point(8, 288);
+			this.saveLog.Name = "saveLog";
+			this.saveLog.TabIndex = 3;
+			this.saveLog.Text = "&Save...";
+			// 
+			// log
+			// 
+			this.log.HorizontalScrollbar = true;
+			this.log.Location = new System.Drawing.Point(8, 48);
+			this.log.Name = "log";
+			this.log.ScrollAlwaysVisible = true;
+			this.log.Size = new System.Drawing.Size(408, 225);
+			this.log.TabIndex = 2;
+			// 
+			// label6
+			// 
+			this.label6.Location = new System.Drawing.Point(8, 16);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(296, 16);
+			this.label6.TabIndex = 0;
+			this.label6.Text = "This log shows current iFolder activity.";
 			// 
 			// tabPage5
 			// 
@@ -1133,6 +1147,7 @@ namespace Novell.iFolder.FormsTrayApp
 																					   this.menuActionSeparator1,
 																					   this.menuActionOpen,
 																					   this.menuActionRevert,
+																					   this.menuActionResolve,
 																					   this.menuActionShare,
 																					   this.menuActionSync,
 																					   this.menuActionProperties,
@@ -1172,56 +1187,56 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			// menuActionShare
 			// 
-			this.menuActionShare.Index = 4;
+			this.menuActionShare.Index = 5;
 			this.menuActionShare.Text = "Share with...";
 			this.menuActionShare.Visible = false;
 			this.menuActionShare.Click += new System.EventHandler(this.menuShare_Click);
 			// 
 			// menuActionSync
 			// 
-			this.menuActionSync.Index = 5;
+			this.menuActionSync.Index = 6;
 			this.menuActionSync.Text = "Sync now";
 			this.menuActionSync.Visible = false;
 			this.menuActionSync.Click += new System.EventHandler(this.menuSyncNow_Click);
 			// 
 			// menuActionProperties
 			// 
-			this.menuActionProperties.Index = 6;
+			this.menuActionProperties.Index = 7;
 			this.menuActionProperties.Text = "Properties...";
 			this.menuActionProperties.Visible = false;
 			this.menuActionProperties.Click += new System.EventHandler(this.menuProperties_Click);
 			// 
 			// menuActionEnable
 			// 
-			this.menuActionEnable.Index = 7;
+			this.menuActionEnable.Index = 8;
 			this.menuActionEnable.Text = "Enable";
 			this.menuActionEnable.Visible = false;
 			this.menuActionEnable.Click += new System.EventHandler(this.menuEnabled_Click);
 			// 
 			// menuActionStart
 			// 
-			this.menuActionStart.Index = 8;
+			this.menuActionStart.Index = 9;
 			this.menuActionStart.Text = "Start";
 			this.menuActionStart.Visible = false;
 			this.menuActionStart.Click += new System.EventHandler(this.menuStart_Click);
 			// 
 			// menuActionPause
 			// 
-			this.menuActionPause.Index = 9;
+			this.menuActionPause.Index = 10;
 			this.menuActionPause.Text = "Pause";
 			this.menuActionPause.Visible = false;
 			this.menuActionPause.Click += new System.EventHandler(this.menuPause_Click);
 			// 
 			// menuActionStop
 			// 
-			this.menuActionStop.Index = 10;
+			this.menuActionStop.Index = 11;
 			this.menuActionStop.Text = "Stop";
 			this.menuActionStop.Visible = false;
 			this.menuActionStop.Click += new System.EventHandler(this.menuStop_Click);
 			// 
 			// menuActionRestart
 			// 
-			this.menuActionRestart.Index = 11;
+			this.menuActionRestart.Index = 12;
 			this.menuActionRestart.Text = "Restart";
 			this.menuActionRestart.Visible = false;
 			this.menuActionRestart.Click += new System.EventHandler(this.menuRestart_Click);
@@ -1240,6 +1255,13 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuViewRefresh.Index = 0;
 			this.menuViewRefresh.Text = "Refresh";
 			this.menuViewRefresh.Click += new System.EventHandler(this.menuRefresh_Click);
+			// 
+			// menuActionResolve
+			// 
+			this.menuActionResolve.Index = 4;
+			this.menuActionResolve.Text = "Resolve conflicts...";
+			this.menuActionResolve.Visible = false;
+			this.menuActionResolve.Click += new System.EventHandler(this.menuResolve_Click);
 			// 
 			// GlobalProperties
 			// 
@@ -1260,12 +1282,12 @@ namespace Novell.iFolder.FormsTrayApp
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
 			this.groupBox4.ResumeLayout(false);
-			this.tabPage3.ResumeLayout(false);
 			this.tabPage2.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox3.ResumeLayout(false);
 			this.groupBox5.ResumeLayout(false);
+			this.tabPage3.ResumeLayout(false);
 			this.tabPage5.ResumeLayout(false);
 			this.groupBox6.ResumeLayout(false);
 			this.ResumeLayout(false);
@@ -1346,7 +1368,7 @@ namespace Novell.iFolder.FormsTrayApp
 				// Add only if it isn't already in the list.
 				if (ht[ifolder.ID] == null)
 				{
-					string status = ifolder.HasCollisions() ? "Conflicts exist" : "OK";
+					string status = ifolder.HasCollisions() ? conflictsExist : "OK";
 					ListViewItem lvi = new ListViewItem(new string[] {ifolder.Name, ifolder.LocalPath, status}, 0);
 					lvi.Tag = ifolder.ID;
 					iFolderView.Items.Add(lvi);
@@ -1399,45 +1421,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void invokeiFolderProperties(ListViewItem lvi, int activeTab)
 		{
-			iFolder ifolder = null;
-
-			try
-			{
-				ifolder = manager.GetiFolderById((string)lvi.Tag);
-
-				string windowName = "Advanced iFolder Properties for " + Path.GetFileName(ifolder.LocalPath);
-
-				// Search for existing window and bring it to foreground ...
-				Win32Window win32Window = Win32Util.Win32Window.FindWindow(null, windowName);
-				if (win32Window != null)
-				{
-					win32Window.BringWindowToTop();
-				}
-				else
-				{
-					iFolderAdvanced ifolderAdvanced = new iFolderAdvanced();
-					ifolderAdvanced.Name = ifolder.LocalPath;
-					ifolderAdvanced.Text = windowName;
-					ifolderAdvanced.CurrentiFolder = ifolder;
-					ifolderAdvanced.ActiveTab = activeTab;
-
-					ifolderAdvanced.ShowDialog();
-				}
-			}
-			catch (SimiasException ex)
-			{
-				ex.LogError();
-			}
-			catch (Exception ex)
-			{
-				logger.Debug(ex, "Sharing");
-
-				if (ifolder == null)
-				{
-					MessageBox.Show("The selected iFolder is no longer valid and will be removed from the list.");
-					iFolderView.Items.Remove(lvi);
-				}
-			}
+			new iFolderComponent().InvokeAdvancedDlg(Application.StartupPath, lvi.SubItems[1].Text, activeTab, true);
 		}
 
 		private void synciFolder(string id)
@@ -1609,12 +1593,17 @@ namespace Novell.iFolder.FormsTrayApp
 				menuActionRestart.Visible = menuActionStop.Visible = tabControl1.SelectedTab.Equals(tabPage4);
 
 			menuActionOpen.Visible = menuActionProperties.Visible = menuActionShare.Visible =
-				menuActionSync.Visible = menuActionRevert.Visible = tabControl1.SelectedTab.Equals(tabPage1);
+				menuActionSync.Visible = menuActionRevert.Visible = menuActionResolve.Visible =
+				tabControl1.SelectedTab.Equals(tabPage1);
 
 			this.menuActionSeparator1.Visible = (tabControl1.SelectedTab.Equals(tabPage1) || tabControl1.SelectedTab.Equals(tabPage4));
 
 			menuActionShare.Enabled = menuActionProperties.Enabled = menuActionRevert.Enabled = 
 				menuActionSync.Enabled = menuActionOpen.Enabled = iFolderView.SelectedItems.Count == 1;
+
+			// TODO: May want to change this to check the iFolder instead of doing the string compare ...
+			// the iFolder could then be passed to an overloaded method of iFolderComponent.
+			menuActionResolve.Enabled = ((iFolderView.SelectedItems.Count == 1) && (iFolderView.SelectedItems[0].SubItems[2].Text.Equals(conflictsExist)));
 
 			SetupServicesMenu();
 		}
@@ -1669,6 +1658,9 @@ namespace Novell.iFolder.FormsTrayApp
 			menuShare.Visible = menuProperties.Visible = menuRevert.Visible = 
 				menuSeparator1.Visible = menuSeparator2.Visible = menuSyncNow.Visible =
 				menuOpen.Visible = iFolderView.SelectedItems.Count == 1;
+			// TODO: May want to change this to check the iFolder instead of doing the string compare ...
+			// the iFolder could then be passed to an overloaded method of iFolderComponent.
+			menuResolve.Visible = ((iFolderView.SelectedItems.Count == 1) && (iFolderView.SelectedItems[0].SubItems[2].Text.Equals(conflictsExist)));
 			menuRefresh.Visible = menuCreate.Visible = iFolderView.SelectedItems.Count == 0;
 		}
 
@@ -1731,6 +1723,11 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 
 			Cursor.Current = Cursors.Default;
+		}
+
+		private void menuResolve_Click(object sender, System.EventArgs e)
+		{
+			new iFolderComponent().InvokeConflictResolverDlg(Application.StartupPath, iFolderView.SelectedItems[0].SubItems[1].Text);
 		}
 
 		private void menuShare_Click(object sender, System.EventArgs e)
