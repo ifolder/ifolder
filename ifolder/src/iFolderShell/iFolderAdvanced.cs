@@ -2107,7 +2107,7 @@ namespace Novell.iFolderCom
 					stateString = resourceManager.GetString(state);
 					break;
 				case member:
-					stateString = isOwner ? resourceManager.GetString("owner") : "";
+					stateString = resourceManager.GetString(isOwner ? "owner" : "user");
 					break;
 				default:
 					stateString = resourceManager.GetString("unknown");
@@ -2363,7 +2363,7 @@ namespace Novell.iFolderCom
 					setLimit.Visible = limitEdit.Visible = true;
 					limitLabel.Visible = limit.Visible = false;
 
-					ownerLvi.SubItems[1].Text = "";
+					ownerLvi.SubItems[1].Text = resourceManager.GetString("user");
 					ownerLvi = lvi;
 				}
 			}
@@ -3094,12 +3094,12 @@ namespace Novell.iFolderCom
 						if (newOwnerLvi != null)
 						{
 							// Update the previous "new owner"
-							newOwnerLvi.SubItems[1].Text = "";
+							newOwnerLvi.SubItems[1].Text = resourceManager.GetString("user");
 						}
 						else
 						{
 							// Update the old owner.
-							ownerLvi.SubItems[1].Text = "";
+							ownerLvi.SubItems[1].Text = resourceManager.GetString("user");
 						}
 
 						// Keep track of the new owner.
