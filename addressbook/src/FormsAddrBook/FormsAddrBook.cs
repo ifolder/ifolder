@@ -481,36 +481,68 @@ namespace Novell.iFolder.FormsAddrBook
 
 		private void exportVCard()
 		{
-			SaveFileDialog saveFileDialog = new SaveFileDialog();
-
-			saveFileDialog.Filter = "vcf files (*.vcf)|*.vcf";
-			saveFileDialog.RestoreDirectory = true;
-
-			foreach (ListViewItem lvi in booksContacts.SelectedContacts)
+			if (booksContacts.SelectedContacts.Count > 1)
 			{
-				Contact c = (Contact)lvi.Tag;
-				saveFileDialog.Title = "Export vCard for " + c.FN;
-				Name name = c.GetPreferredName();
-				saveFileDialog.FileName = name.Given + name.Family;
+				FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+				folderBrowserDialog.Description = "Select the location to save the vCards in.";
+				folderBrowserDialog.ShowNewFolderButton = true;
 
-				if (saveFileDialog.ShowDialog() == DialogResult.OK)
+				if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
 				{
-					try
+					Cursor.Current = Cursors.WaitCursor;
+					foreach (ListViewItem lvi in booksContacts.SelectedContacts)
+					{
+						try
+						{
+							Contact c = (Contact)lvi.Tag;
+							Name name = c.GetPreferredName();
+							string fileName = Path.Combine(folderBrowserDialog.SelectedPath, name.Given + name.Family + ".vcf");
+							c.ExportVCard(fileName);
+						}
+						catch (SimiasException e)
+						{
+							e.LogError();
+							MessageBox.Show("An error occurred while exporting the vCard.  Please see the log file for additional information", "vCard Export Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+						}
+						catch (Exception e)
+						{
+							logger.Debug(e, "Exporting vCard");
+							MessageBox.Show("An error occurred while exporting the vCard.  Please see the log file for additional information", "vCard Export Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+						}
+					}
+
+					Cursor.Current = Cursors.Default;
+				}
+			}
+			else
+			{
+				SaveFileDialog saveFileDialog = new SaveFileDialog();
+
+				saveFileDialog.Filter = "vcf files (*.vcf)|*.vcf";
+				saveFileDialog.RestoreDirectory = true;
+
+				try
+				{
+					saveFileDialog.Title = "Export vCard for " + contact.FN;
+					Name name = contact.GetPreferredName();
+					saveFileDialog.FileName = name.Given + name.Family;
+
+					if (saveFileDialog.ShowDialog() == DialogResult.OK)
 					{
 						Cursor.Current = Cursors.WaitCursor;
-						c.ExportVCard(saveFileDialog.FileName);
+						contact.ExportVCard(saveFileDialog.FileName);
 						Cursor.Current = Cursors.Default;
 					}
-					catch (SimiasException e)
-					{
-						e.LogError();
-						MessageBox.Show("An error occurred while exporting the vCard.  Please see the log file for additional information", "vCard Export Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-					}
-					catch (Exception e)
-					{
-						logger.Debug(e, "Exporting vCard");
-						MessageBox.Show("An error occurred while exporting the vCard.  Please see the log file for additional information", "vCard Export Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-					}
+				}
+				catch (SimiasException e)
+				{
+					e.LogError();
+					MessageBox.Show("An error occurred while exporting the vCard.  Please see the log file for additional information", "vCard Export Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception e)
+				{
+					logger.Debug(e, "Exporting vCard");
+					MessageBox.Show("An error occurred while exporting the vCard.  Please see the log file for additional information", "vCard Export Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
 		}
