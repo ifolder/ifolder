@@ -57,6 +57,8 @@ namespace Novell.iFolderCom
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
+
+			this.StartPosition = FormStartPosition.CenterParent;
 		}
 
 		/// <summary>
@@ -173,7 +175,7 @@ namespace Novell.iFolderCom
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "UserProperties";
-			this.Text = "TestForm";
+			this.Text = "Properties for Multiple Users";
 			this.Load += new System.EventHandler(this.TestForm_Load);
 			this.accessButtons.ResumeLayout(false);
 			this.ResumeLayout(false);

@@ -130,6 +130,8 @@ namespace Novell.iFolderCom
 
 			currentControl = firstControl = this.ifolders;
 			lastControl = this.apply;
+
+			this.StartPosition = FormStartPosition.CenterParent;
 		}
 
 		/// <summary>
@@ -834,8 +836,7 @@ namespace Novell.iFolderCom
 					string[] items = new string[3];
 
 					items[0] = ifolderUser.Name;
-					// TODO: Localize
-					items[1] = ifolderUser.ID.Equals(ifolder.OwnerID) ? "Owner" : "";
+					items[1] = stateToString(ifolderUser.State, ifolderUser.UserID);
 					int imageIndex = 1;
 					items[2] = rightsToString(ifolderUser.Rights/*, out imageIndex*/);
 
@@ -851,7 +852,7 @@ namespace Novell.iFolderCom
 					ListViewItem lvitem = new ListViewItem(items, imageIndex);
 					lvitem.Tag = slMember;
 
-					if (ifolderUser.ID.Equals(ifolder.OwnerID))
+					if (ifolderUser.UserID.Equals(ifolder.OwnerID))
 					{
 						// Keep track of the current (or old) owner.
 						ownerLvi = lvitem;
@@ -969,6 +970,36 @@ namespace Novell.iFolderCom
 			return rightsString;
 		}
 
+		private string stateToString(string state, string userID)
+		{
+			string stateString;
+
+			// TODO: Localize
+			switch (state)
+			{
+				case "Invited":
+					stateString = "Invited";
+					break;
+				case "WaitSync":
+					stateString = "Waiting to sync";
+					break;
+				case "AccessRequest":
+					stateString = "Access requested";
+					break;
+				case "Declined":
+					stateString = "Declined";
+					break;
+				case "Member":
+					stateString = userID.Equals(ifolder.OwnerID) ? "Owner" : "";
+					break;
+				default:
+					stateString = "Unknown";
+					break;
+			}
+
+			return stateString;
+		}
+
 		private void processChanges()
 		{
 			// Change the pointer to an hourglass.
@@ -1046,10 +1077,7 @@ namespace Novell.iFolderCom
 					}
 					else if (slMember.Changed)
 					{
-						if (slMember.iFolderUser.State.Equals("Member"))
-						{
-							ifWebService.SetUserRights(ifolder.ID, slMember.iFolderUser.UserID, slMember.iFolderUser.Rights);
-						}
+						ifWebService.SetUserRights(ifolder.ID, slMember.iFolderUser.UserID, slMember.iFolderUser.Rights);
 
 						// Reset the flags.
 						slMember.Changed = false;
@@ -1171,9 +1199,11 @@ namespace Novell.iFolderCom
 
 			try
 			{
-				if (currentUser.UserID.Equals(slMember.iFolderUser.UserID))
+				if (slMember.iFolderUser.UserID.Equals(currentUser.UserID) ||
+					slMember.iFolderUser.UserID.Equals(ifolder.OwnerID) ||
+					((newOwnerLvi != null) && lvi.Equals(this.newOwnerLvi)))
 				{
-					// Don't allow current user to be modified.
+					// Don't allow current user, owner, or new owner to be modified.
 				}
 				else
 				{
@@ -1196,8 +1226,7 @@ namespace Novell.iFolderCom
 					if (slMember.iFolderUser.State.Equals(member))
 					{
 						//lvi.ImageIndex = imageIndex;
-						// TODO: Localize
-						lvi.SubItems[1].Text = slMember.iFolderUser.ID.Equals(ifolder.OwnerID) ? "Owner" : "";
+						lvi.SubItems[1].Text = stateToString(slMember.iFolderUser.State, slMember.iFolderUser.UserID);
 					}
 				}
 			}
@@ -1349,9 +1378,11 @@ namespace Novell.iFolderCom
 			}
 
 			if ((shareWith.SelectedItems.Count == 1) && 
-				((ShareListMember)shareWith.SelectedItems[0].Tag).iFolderUser.UserID.Equals(currentUser.UserID))
+				(((ShareListMember)shareWith.SelectedItems[0].Tag).iFolderUser.UserID.Equals(currentUser.UserID) ||
+				((ShareListMember)shareWith.SelectedItems[0].Tag).iFolderUser.UserID.Equals(ifolder.OwnerID) ||
+				((newOwnerLvi != null) && shareWith.SelectedItems[0].Equals(newOwnerLvi))))
 			{
-				// The current member is the only one selected, disable the access control
+				// The current member, owner or new owner is the only one selected, disable the access control
 				// menus and the remove button.
 				remove.Enabled = access.Enabled = menuFullControl.Enabled = 
 					menuReadWrite.Enabled = menuReadOnly.Enabled = false;
@@ -1854,7 +1885,7 @@ namespace Novell.iFolderCom
 		private void access_Click(object sender, System.EventArgs e)
 		{
 			UserProperties userProperties = new UserProperties();
-			userProperties.OwnerCanBeSet = (currentUser.ID.Equals(ifolder.OwnerID) && (shareWith.SelectedItems.Count == 1));
+			userProperties.OwnerCanBeSet = (currentUser.UserID.Equals(ifolder.OwnerID) && (shareWith.SelectedItems.Count == 1));
 			if (shareWith.SelectedItems.Count == 1)
 			{
 				ListViewItem lvi = shareWith.SelectedItems[0];
@@ -1867,10 +1898,7 @@ namespace Novell.iFolderCom
 
 			if (DialogResult.OK == userProperties.ShowDialog())
 			{
-				foreach (ListViewItem lvi in shareWith.SelectedItems)
-				{
-					updateListViewItem(lvi, userProperties.Rights);
-				}
+				updateSelectedListViewItems(userProperties.Rights);
 
 				if (shareWith.SelectedItems.Count == 1)
 				{
@@ -1894,6 +1922,12 @@ namespace Novell.iFolderCom
 
 						// Keep track of the new owner.
 						newOwnerLvi = lvi;
+
+						// Disable the remove and access buttons.
+						access.Enabled = remove.Enabled = false;
+
+						// Enable the apply button.
+						apply.Enabled = true;
 					}
 				}
 			}
@@ -1966,7 +2000,6 @@ namespace Novell.iFolderCom
 				remove_Click(this, new System.EventArgs());
 			}
 		}
-		#endregion
 
 		private void tabControl1_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
 		{
@@ -2017,6 +2050,7 @@ namespace Novell.iFolderCom
 				}
 			}
 		}
+		#endregion
 
 		private void connectToWebService()
 		{
