@@ -10,13 +10,15 @@ namespace Simias.Gaim
 	{
 		#region Class Members
 		private String id;
-		private ArrayList buddies;
+		private ArrayList members;
+		private int currentIndex;
 		#endregion
 
 		#region Constructor
 		public GaimDomainSearchContext()
 		{
 			id = Guid.NewGuid().ToString();
+			currentIndex = 0;
 		}
 		#endregion
 
@@ -29,17 +31,17 @@ namespace Simias.Gaim
 			}
 		}
 
-		public ArrayList Buddies
+		public ArrayList Members
 		{
 			get
 			{
-				return buddies;
+				return members;
 			}
 			set
 			{
 				if (value != null)
 				{
-					buddies = value;
+					members = value;
 				}
 			}
 		}
@@ -48,12 +50,24 @@ namespace Simias.Gaim
 		{
 			get
 			{
-				if (buddies != null)
+				if (members != null)
 				{
-					return buddies.Count;
+					return members.Count;
 				}
 				else
 					return 0;
+			}
+		}
+		
+		public int CurrentIndex
+		{
+			get
+			{
+				return currentIndex;
+			}
+			set
+			{
+				currentIndex = value;
 			}
 		}
 		#endregion

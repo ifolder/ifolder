@@ -125,10 +125,9 @@ namespace Simias.Gaim
 		{
 			if (searchContext == null) return;
 
-			string searchContextID = (string)searchContext;
-			if (searchContexts.Contains(searchContextID))
+			if (searchContexts.Contains(searchContext))
 			{
-				searchContexts.Remove(searchContextID);
+				searchContexts.Remove(searchContext);
 			}
 		}
 
@@ -162,9 +161,8 @@ namespace Simias.Gaim
 		{
 			// Ignore the domainID since we only ever have one domain to deal with
 
-			bool bMoreEntries = false;
 			ArrayList members = new ArrayList();
-			ArrayList extraBuddies = new ArrayList();
+			ArrayList allMembers = new ArrayList();
 			searchContext = null;
 			total = 0;
 
@@ -177,45 +175,44 @@ namespace Simias.Gaim
 				total = buddies.Length;
 				foreach (GaimBuddy buddy in buddies)
 				{
+					string givenName;
+					string familyName;
+					GaimDomain.ParseGaimBuddyAlias(buddy.Alias, out givenName, out familyName);
+
+					Member member = new Member(buddy.Name, Guid.NewGuid().ToString(),//  buddy.MungedID,
+											   Simias.Storage.Access.Rights.ReadWrite,
+											   givenName, familyName);
+					member.FN = buddy.Alias;
+
 					if (members.Count < count)
 					{
 						// We haven't exceeded the requested search size
 
-						string givenName;
-						string familyName;
-						GaimDomain.ParseGaimBuddyAlias(buddy.Alias, out givenName, out familyName);
-
-						Member member = new Member(buddy.Name, Guid.NewGuid().ToString(),//  buddy.MungedID,
-												   Simias.Storage.Access.Rights.ReadWrite,
-												   givenName, familyName);
-						member.FN = buddy.Alias;
-
 						members.Add(member);
 					}
-					else
-					{
-						// Save the extra buddies for later
-						extraBuddies.Add(buddy);
-					}
+
+					// Save all the buddies for later
+					allMembers.Add(member);
 				}
 			}
 
 			memberList = members.ToArray(typeof(Member)) as Member[];
 
-			if (extraBuddies.Count > 0)
+			if (allMembers.Count > 0)
 			{
 				GaimDomainSearchContext newSearchContext = new GaimDomainSearchContext();
-				newSearchContext.Buddies = extraBuddies;
+				newSearchContext.Members = allMembers;
+				newSearchContext.CurrentIndex = members.Count;
+//System.Console.WriteLine("Members Count: {0}", members.Count);
+//System.Console.WriteLine("Initial CurrentIndex: {0}", newSearchContext.CurrentIndex);
 				searchContext = newSearchContext.ID;
 				lock (searchContexts.SyncRoot)
 				{
 					searchContexts.Add(searchContext, newSearchContext);
 				}
-
-				bMoreEntries = true;
 			}
 
-			return bMoreEntries;
+			return members.Count < allMembers.Count ? true : false;
 		}
 
 		/// <summary>
@@ -234,49 +231,49 @@ namespace Simias.Gaim
 			if (searchContext == null)
 				throw new ArgumentNullException("searchContext cannot be null when calling FindNextDomainMembers");
 
-			string searchContextID = (string)searchContext;
 			lock (searchContexts.SyncRoot)
 			{
-				if (!searchContexts.Contains(searchContextID))
+				if (!searchContexts.Contains(searchContext))
 					return false;
 
-				GaimDomainSearchContext gaimDomainSearchContext = (GaimDomainSearchContext)searchContexts[searchContextID];
+				GaimDomainSearchContext gaimDomainSearchContext = (GaimDomainSearchContext)searchContexts[searchContext];
+				
+				int i = gaimDomainSearchContext.CurrentIndex;
 
-				foreach (GaimBuddy buddy in gaimDomainSearchContext.Buddies)
+				while (i < gaimDomainSearchContext.Count)
 				{
-					if (members.Count < count)
+//System.Console.WriteLine("Current Index: {0}", i);
+					Member member = (Member)gaimDomainSearchContext.Members[i];
+					if (member != null)
 					{
-						string givenName;
-						string familyName;
-						GaimDomain.ParseGaimBuddyAlias(buddy.Alias, out givenName, out familyName);
-
-						Member member = new Member(buddy.Name, Guid.NewGuid().ToString(), //buddy.MungedID,
-							Simias.Storage.Access.Rights.ReadWrite,
-							givenName, familyName);
-
-						member.FN = buddy.Alias;
-
-						members.Add(member);
-
-						gaimDomainSearchContext.Buddies.Remove(buddy);
+						if (members.Count < count)
+						{
+							members.Add(member);
+						}
+						else
+						{
+							bMoreEntries = true;
+							break;
+						}
 					}
-					else
-					{
-						bMoreEntries = true;
-						break;
-					}
+					
+					i++;
+				}
+
+				if (i >= gaimDomainSearchContext.Count)
+				{
+					// Position the index at the end
+					gaimDomainSearchContext.CurrentIndex = gaimDomainSearchContext.Count - 1;
+				}
+				else
+				{
+					gaimDomainSearchContext.CurrentIndex = i;
 				}
 			}
 
 			if (members.Count > 0)
 			{
 				memberList = members.ToArray(typeof (Member)) as Member[];
-			}
-
-			if (!bMoreEntries)
-			{
-				// Cleanup the searchContext just in case the caller forgets to
-				FindCloseDomainMembers(searchContext);
 			}
 
 			return bMoreEntries;

@@ -495,15 +495,19 @@ namespace Simias.Gaim
 					attrib = "alias";
 				else
 					attrib = "name";
+					
+				string searchCondition = BuildCaseInsensitiveSearchCondition(searchOp, attrib, searchString);
 
-				xpathExp = string.Format("//buddy[{0}{1}({2}, '{3}')]",
-										 trustedBuddiesOnlyConditionOther,
-										 searchOp,
-										 attrib,
-									     searchString);
+				xpathExp = string.Format("//buddy[{0}{1}]", trustedBuddiesOnlyConditionOther, searchCondition);
+//				xpathExp = string.Format("//buddy[{0}{1}({2}, '{3}')]",
+//										 trustedBuddiesOnlyConditionOther,
+//										 searchOp,
+//										 attrib,
+//									     searchString);
 			}
 
 			log.Debug("Search XPath: " + xpathExp);
+			System.Console.WriteLine("Search XPath: " + xpathExp);
 			buddyNodes = gaimElement.SelectNodes(xpathExp);
 			if (buddyNodes == null)
 				return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
@@ -520,7 +524,7 @@ namespace Simias.Gaim
 					// Ignore errors (i.e., spare the log file)
 				}
 			}
-			
+System.Console.WriteLine("returning from GaimDomain.SearchForBuddies()");			
 			return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
 		}
 
@@ -869,7 +873,7 @@ namespace Simias.Gaim
 				member.Properties.AddProperty(p);
 				
 				// Use the buddy alias for the member full name
-				member.FN = buddy.Alias;
+				member.FN = string.Format("{0} ({1})", buddy.Alias, buddy.Name);
 
 				string familyName = null;
 				string givenName = null;
@@ -920,7 +924,7 @@ namespace Simias.Gaim
 					member.Properties.AddProperty(p);
 				
 					// Use the buddy alias for the member full name
-					member.FN = buddy.Alias;
+					member.FN = string.Format("{0} ({1})", buddy.Alias, buddy.Name);
 					
 					string familyName = null;
 					string givenName = null;
@@ -996,6 +1000,56 @@ namespace Simias.Gaim
 					domain.Commit(domain.Delete(member));
 				}
 			}
+		}
+		
+		internal static string BuildCaseInsensitiveSearchCondition(string searchOp, string attrib, string searchString)
+		{
+			string searchStringReturn = "";
+			ArrayList searchConditions = new ArrayList();
+			string[] searchStringMutations = GetAllPossibleCaseMutations(searchString);
+			
+			for (int i = 0; i < searchStringMutations.Length; i++)
+			{
+				string mutation = searchStringMutations[i];
+				string searchCondition =
+					string.Format("{0}{1}({2}, '{3}')",
+								  i > 0 ? " or " : "",
+								  searchOp,
+								  attrib,
+								  mutation);
+				searchConditions.Add(searchCondition);
+			}
+			
+			if (searchConditions.Count > 0)
+			{
+				foreach (string searchCondition in searchConditions)
+				{
+					searchStringReturn += searchCondition;
+				}
+				
+				if (searchConditions.Count > 1)
+				{
+					searchStringReturn = "(" + searchStringReturn + ")";
+				}
+			}
+			
+			return searchStringReturn;
+		}
+		
+		internal static string[] GetAllPossibleCaseMutations(string origString)
+		{
+			ArrayList strings = new ArrayList();
+			
+			if (origString != null)
+			{
+				strings.Add(origString);
+				strings.Add(origString.ToLower());
+				strings.Add(origString.ToUpper());
+				
+				// FIXME: Now fill in every combination in-between
+			}
+			
+			return (string[])strings.ToArray(typeof(string));
 		}
 		
 		#endregion
