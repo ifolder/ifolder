@@ -91,8 +91,8 @@ namespace Novell.FormsTrayApp
 			// Get the Windows directory.
 			string windowsDir = Environment.GetEnvironmentVariable("windir");
 
-			//fixConfigFile(ifolderAppPath);
-			fixConfigFile(Path.Combine(windowsDir, "explorer.exe.config"), installDir);
+			fixAppConfigFile(Path.Combine(windowsDir, "explorer.exe.config"), installDir);
+			fixWebConfigFile(Path.Combine(installDir, @"web\web.config"));
 		}
 		/// <summary>
 		/// Override the 'Commit' method.
@@ -152,7 +152,7 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private bool fixConfigFile(string configFilePath, string installDir)
+		private bool fixAppConfigFile(string configFilePath, string installDir)
 		{
 			try
 			{
@@ -175,19 +175,7 @@ namespace Novell.FormsTrayApp
 					replaceCodeBase(log4netNode, installDir);
 				}
 
-
-				// Save the config file.
-				XmlTextWriter xtw = new XmlTextWriter(configFilePath, Encoding.ASCII);
-				try
-				{
-					xtw.Formatting = Formatting.Indented;
-
-					configDoc.WriteTo(xtw);
-				}
-				finally
-				{
-					xtw.Close();
-				}
+				saveXmlFile(configDoc, configFilePath);
 			}
 			catch
 			{
@@ -195,6 +183,42 @@ namespace Novell.FormsTrayApp
 			}
 
 			return true;
+		}
+
+		private void fixWebConfigFile(string webConfigFile)
+		{
+			configDoc = new XmlDocument();
+			configDoc.Load(webConfigFile);
+
+			// Build the path.
+			string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "iFolder");
+
+			// Make sure the path exists.
+			if (!Directory.Exists(path))
+			{
+				Directory.CreateDirectory(path);
+			}
+
+			XmlNode compilation = configDoc.DocumentElement.SelectSingleNode("/configuration/system.web/compilation");
+			if (compilation != null)
+			{
+				// modify the existing entry.
+				((XmlElement)compilation).SetAttribute("tempDirectory", path);
+			}
+			else
+			{
+				// create the entry.
+				XmlNode webNode = configDoc.DocumentElement.SelectSingleNode("/configuration/system.web");
+				if (webNode != null)
+				{
+
+					XmlElement element = configDoc.CreateElement("compilation");
+					element.SetAttribute("tempDirectory", path);
+					webNode.AppendChild(element);
+				}
+			}
+
+			saveXmlFile(configDoc, webConfigFile);
 		}
 
 		private void replaceCodeBase(XmlNode node, string path)
@@ -214,6 +238,22 @@ namespace Novell.FormsTrayApp
 
 			// Replace the element.
 			node.ReplaceChild(element, codebase);
+		}
+
+		private void saveXmlFile(XmlDocument doc, string path)
+		{
+			// Save the config file.
+			XmlTextWriter xtw = new XmlTextWriter(path, Encoding.ASCII);
+			try
+			{
+				xtw.Formatting = Formatting.Indented;
+
+				doc.WriteTo(xtw);
+			}
+			finally
+			{
+				xtw.Close();
+			}
 		}
 
 		private void StopShell()
