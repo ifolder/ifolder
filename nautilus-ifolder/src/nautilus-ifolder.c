@@ -72,6 +72,16 @@ static pthread_t ec_register_handlers_thread;
 static gboolean b_nautilus_ifolder_running;
 
 /**
+ * This hashtable is used to track the iFolders that the extension has seen and
+ * added an emblem to.  When a SimiasNodeDeleted event occurs and the iFolder is
+ * in this list, it will be used to remove the iFolder emblem from the Folder.
+ * 
+ * Hashtable keys:		iFolder Simias Node ID
+ * Hashtable values: 	Nautilus File URI
+ */
+static GHashTable *seen_ifolders_ht;
+
+/**
  * FIXME: Once nautilus-extension provides nautilus_file_info_get_existing () we
  * can change our implementation to use the functions defined in the internal
  * nautilus API.
@@ -93,6 +103,10 @@ gchar * get_ifolder_id_by_local_path (gchar *path);
 gint revert_ifolder (NautilusFileInfo *file);
 gchar * get_unmanaged_path (gchar *ifolder_id);
 
+/* Functions for seen_ifolders_ht (GHashTable) */
+void seen_ifolders_ht_destroy_key (gpointer key);
+void seen_ifolders_ht_destroy_value (gpointer value);
+
 /**
  * This function is intended to be called using g_idle_add by the event system
  * to let Nautilus invalidate the extension info for the given 
@@ -112,75 +126,8 @@ invalidate_ifolder_extension_info (void *user_data)
 }
 
 /**
- * Named Pipe event implementation
- * 
- * Until a C library for the iFolder event system is provided, this named pipe
- * event implementation will allow us to receive events from the Mono/Gtk
- * iFolder client when a new iFolder is created or when an iFolder is reverted.
+ * Callback functions for the Simias Event Client
  */
- 
-/**
- * The purpose of this thread/function is to listen/read folder paths sent by
- * the Mono/Gtk iFolder client.  When they are received, the code will lookup
- * a corresponding NautilusFileInfo and invalidate the nautilus-ifolder
- * extension information so the emblem is added/removed accordingly.
- */
-static pthread_t named_pipe_thread;
-
-static void *
-named_pipe_listener_thread (gpointer user_data)
-{
-	char fifo_path [IFOLDER_BUF_SIZE];
-	char s [IFOLDER_BUF_SIZE];
-	char file_uri [IFOLDER_BUF_SIZE];
-	int num, fd, err;
-	
-	sprintf (fifo_path, "%s/%s", g_get_home_dir (), IFOLDER_FIFO_NAME);
-	err = mknod (fifo_path, S_IFIFO | 0600, 0);
-	if (err == -1 && errno != EEXIST) {
-		g_print ("Couldn't make the event FIFO\n");
-		perror ("mknode");
-		return;
-	}
-	
-	/* As long as this extension is running, wait for events */
-	for (;;) {
-		g_print ("Waiting for an event from iFolder...\n");
-		fd = open (fifo_path, O_RDONLY);
-		if (fd == -1) {
-			perror ("open");
-			continue;
-		}
-		
-		g_print ("iFolder Client connected\n");
-		
-		do {
-			if ((num = read (fd, s, IFOLDER_BUF_SIZE)) == -1) {
-				perror ("read");
-				break;
-			} else {
-				s [num] = '\0';
-				g_printf ("iFolder Client changed folder: %s\n", s);
-				sprintf (file_uri, "file://%s", s);
-
-				/* FIXME: Change the following to be nautilus_file_info_get_existing () once it's available in the Nautilus Extension API */
-				NautilusFile *file = nautilus_file_get_existing (file_uri);
-															 
-				if (file) {
-					g_printf ("Found NautilusFile: %s\n", file_uri);
-					/* Let nautilus run this in the main loop */
-					g_idle_add (invalidate_ifolder_extension_info, file);
-				}
-			}
-		} while (num > 0);
-		
-		err = close (fd);
-		if (err == -1) {
-			perror ("close");
-		}
-	}
-}
-
 int
 simias_node_created_cb (SimiasNodeEvent *event, void *data)
 {
@@ -216,26 +163,34 @@ simias_node_created_cb (SimiasNodeEvent *event, void *data)
 int
 simias_node_deleted_cb (SimiasNodeEvent *event, void *data)
 {
+	gchar *file_uri;
+	NautilusFile *file;
+	
 	printf ("nautilus-ifolder: simias_node_deleted_cb () entered\n");
 	
-	return 0;
-}
-
-int
-simias_node_changed_cb (SimiasNodeEvent *event, void *data)
-{
-	printf ("nautilus-ifolder: simias_node_changed_cb () entered\n");
-	printf ("\t%s: %s\n", "action", event->action);
-	printf ("\t%s: %s\n", "time", event->time);
-	printf ("\t%s: %s\n", "source", event->source);
-	printf ("\t%s: %s\n", "collection", event->collection);
-	printf ("\t%s: %s\n", "type", event->type);
-	printf ("\t%s: %s\n", "event_id", event->event_id);
-	printf ("\t%s: %s\n", "node", event->node);
-	printf ("\t%s: %s\n", "flags", event->flags);
-	printf ("\t%s: %s\n", "master_rev", event->master_rev);
-	printf ("\t%s: %s\n", "slave_rev", event->slave_rev);
-	printf ("\t%s: %s\n", "file_size", event->file_size);
+	/**
+	 * Look in the seen_ifolders_ht (GHashTable) to see if we've ever added an
+	 * iFolder emblem onto this folder.
+	 */
+	file_uri = (gchar *)g_hash_table_lookup (seen_ifolders_ht, event->node);
+	if (file_uri) {
+		/**
+		 * Get an existing (in memory) NautilusFileInfo object associated with
+		 * this file_uri and invalidate the extension information.
+		 */
+		/* FIXME: Change the following to be nautilus_file_info_get_existing () once it's available in the Nautilus Extension API */
+		file = nautilus_file_get_existing (file_uri);
+		if (file) {
+			/* Allow nautilus to run this in the main loop (problems otherwise) */
+			g_idle_add (invalidate_ifolder_extension_info, file);
+		}
+		
+		/**
+		 * Now that this folder is not an iFolder anymore, we can remove it
+		 * from the seen_ifolders_ht (GHashTable).
+		 */
+		g_hash_table_remove (seen_ifolders_ht, event->node);
+	}
 	
 	return 0;
 }
@@ -260,7 +215,6 @@ ec_register_event_handlers (gpointer user_data)
 	
 	/* Register our event handler */
 	sec_set_event (ec, ACTION_NODE_CREATED, true, (SimiasEventFunc)simias_node_created_cb, NULL);
-	sec_set_event (ec, ACTION_NODE_CHANGED, true, (SimiasEventFunc)simias_node_changed_cb, NULL);
 	sec_set_event (ec, ACTION_NODE_DELETED, true, (SimiasEventFunc)simias_node_deleted_cb, NULL);
 	
 	g_printf ("nautilus-ifolder: finished registering for simias events\n");
@@ -655,6 +609,9 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 								   GClosure					*update_complete,
 								   NautilusOperationHandle	**handle)
 {
+	gchar *ifolder_id;
+	gchar *file_uri;
+	gchar *file_path;
 	g_print ("--> ifolder_nautilus_update_file_info called\n");
 	
 	/* Don't do anything if the specified file is not a directory. */
@@ -662,9 +619,42 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 		return NAUTILUS_OPERATION_COMPLETE;
 	
 	if (is_ifolder_running ()) {
-		if (is_ifolder (file))
-		{
-			nautilus_file_info_add_emblem (file, "ifolder");
+		file_path = get_file_path (file);
+		if (file_path) {
+			ifolder_id = get_ifolder_id_by_local_path (file_path);
+			g_free (file_path);
+			if (ifolder_id) {
+				nautilus_file_info_add_emblem (file, "ifolder");
+
+				/**
+				 * Store the file_uri into a hashtable with the key being the
+				 * iFolder Simias Node ID.  This is needed because when we get a
+				 * SimiasNodeDeleted event, the iFolder in Simias no longer has any
+				 * path information.  This hash table is the only way we'll be able
+				 * to cause Nautilus to invalidate our information so that the
+				 * iFolder emblem will be removed.
+				 */
+				/* FIXME: Add the file_uri to a hashtable */
+				file_uri = nautilus_file_info_get_uri (file);
+				if (file_uri) {
+					g_printf ("Adding iFolder to Hashtable: %s = %s\n", ifolder_id, file_uri);
+					
+					/**
+					 * The memory for ifolder_id and file_uri are freed when the
+					 * hashtable item is removed from the hashtable.
+					 */
+					g_hash_table_insert (seen_ifolders_ht,
+										 ifolder_id,
+										 file_uri);
+				} else {
+					/**
+					 * ifolder_id is otherwise freed when removed from the
+					 * hashtable.  But, if the code made it here, we need to
+					 * free it.
+					 */
+					g_free (ifolder_id);
+				}
+			}
 		}
 	} else {
 		g_print ("*** iFolder is NOT running\n");
@@ -677,6 +667,33 @@ static void
 ifolder_nautilus_info_provider_iface_init (NautilusInfoProviderIface *iface)
 {
 	iface->update_file_info	= ifolder_nautilus_update_file_info;
+}
+
+/**
+ * Functions for seen_ifolders_ht (GHashTable)
+ */
+/**
+ * This function gets called when the entry is being removed and this allows us
+ * to cleanup the memory being used by the ifolder_id.
+ */
+void
+seen_ifolders_ht_destroy_key (gpointer key)
+{
+	char *ifolder_id = (char *)key;
+	
+	free (ifolder_id);
+}
+
+/**
+ * This function gets called when the entry is being removed and this allows us
+ * to cleanup the memory being used by the file_uri.
+ */
+void
+seen_ifolders_ht_destroy_value (gpointer value)
+{
+	gchar *file_uri = (gchar *)value;
+	
+	g_free (file_uri);
 }
 
 /**
@@ -772,8 +789,6 @@ create_ifolder_thread (gpointer user_data)
 		errMsg->message	= _("The folder could not be converted.");
 		errMsg->detail	= _("Sorry, unable to convert the specified folder into an iFolder.");
 		g_idle_add (show_ifolder_error_message, errMsg);
-	} else {
-		nautilus_file_info_invalidate_extension_info (file);
 	}
 }
 
@@ -811,8 +826,6 @@ revert_ifolder_thread (gpointer user_data)
 		errMsg->message	= _("The iFolder could not be reverted.");
 		errMsg->detail	= _("Sorry, unable to revert the specified iFolder to a normal folder.");
 		g_idle_add (show_ifolder_error_message, errMsg);
-	} else {
-		nautilus_file_info_invalidate_extension_info (file);
 	}
 }
 
@@ -1209,12 +1222,12 @@ nautilus_module_initialize (GTypeModule *module)
 	
 	soapURL = getLocalServiceUrl ();
 	
-	/* Start the named pipe listener thread */
-	pthread_create (&named_pipe_thread, 
-					NULL, 
-					named_pipe_listener_thread,
-					NULL);
-					
+	/* Initialize the GHashTable */
+	seen_ifolders_ht = 
+		g_hash_table_new_full (g_str_hash, g_str_equal,
+							   seen_ifolders_ht_destroy_key,
+							   seen_ifolders_ht_destroy_value);
+	
 	/* Start the Simias Event Client */
 	start_simias_event_client ();
 }
@@ -1247,6 +1260,9 @@ nautilus_module_shutdown (void)
 		fprintf (stderr, "sec_cleanup failed\n");
 		return;
 	}
+	
+	/* Cleanup the GHashTable */
+	g_hash_table_destroy (seen_ifolders_ht);
 }
 
 void
