@@ -535,6 +535,17 @@ RCODE CSPStore::OpenStore( char *pStorePath)
 
 	if (pDbPath)
 	{
+
+// OS X uses the new flaim which requires the NULL be passed
+#ifdef OSX	
+		rc = FlmDbOpen(
+			(FLMBYTE*)pDbPath,
+			NULL,
+			NULL,			//default pRflDir
+			FO_SHARE,
+			NULL,
+			&m_hFlaim);
+#else
 		rc = FlmDbOpen(
 			(FLMBYTE*)pDbPath,
 			NULL,
@@ -542,6 +553,7 @@ RCODE CSPStore::OpenStore( char *pStorePath)
 			FO_SHARE,
 			//NULL,
 			&m_hFlaim);
+#endif
 
 		if (RC_OK(rc))
 		{
