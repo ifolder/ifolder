@@ -645,6 +645,40 @@ namespace Novell.AddressBook
 				return(false);
 			}
 		}
+
+
+		/// <summary>
+		/// Title -
+		/// !NOTE! Doc incomplete
+		/// </summary>
+		public string UserID
+		{
+			get
+			{
+				try
+				{
+					return(this.Properties.GetSingleProperty(Common.userIDProperty).ToString());
+				}
+				catch{}
+				return("");
+			}
+
+			set
+			{
+				try
+				{
+					if (value != null)
+					{
+						this.Properties.ModifyProperty(Common.userIDProperty, (string) value);
+					}
+					else
+					{
+						this.Properties.DeleteProperties(Common.userIDProperty);
+					}
+				}
+				catch{}
+			}
+		}
 		#endregion
 
 		#region Constructors

@@ -246,6 +246,11 @@ namespace Novell.AddressBook
 		/// AddressTypes (ex. work, home, other, dom, intl etc.)
 		/// </summary>
 		internal const string groupDescriptionProperty = "AB:GroupDescription";
+
+		/// <summary>
+		/// Address Book property referecing a member's UserID
+		/// </summary>
+		internal const string userIDProperty = "AB:UserID";
 		
 		/// <summary>
 		/// A vCard LABEL property may contain the following types
