@@ -1725,7 +1725,7 @@ namespace Novell.iFolderCom
 
 						string[] items = new string[3];
 
-						items[0] = ifolderUser.Name;
+						items[0] = (ifolderUser.FN != null) && !ifolderUser.FN.Equals(string.Empty) ? ifolderUser.FN : ifolderUser.Name;
 						items[1] = stateToString(ifolderUser.State, ifolderUser.IsOwner);
 						int imageIndex = 1;
 						items[2] = rightsToString(ifolderUser.Rights/*, out imageIndex*/);
@@ -2087,7 +2087,7 @@ namespace Novell.iFolderCom
 				}
 				catch (WebException e)
 				{
-					MyMessageBox mmb = new MyMessageBox(string.Format(resourceManager.GetString("memberCommitError"), slMember.iFolderUser.Name), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					MyMessageBox mmb = new MyMessageBox(string.Format(resourceManager.GetString("memberCommitError"), slMember.Name), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 
 					if (e.Status == WebExceptionStatus.ConnectFailure)
@@ -2097,7 +2097,7 @@ namespace Novell.iFolderCom
 				}
 				catch (Exception e)
 				{
-					MyMessageBox mmb = new MyMessageBox(string.Format(resourceManager.GetString("memberCommitError"), slMember.iFolderUser.Name), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					MyMessageBox mmb = new MyMessageBox(string.Format(resourceManager.GetString("memberCommitError"), slMember.Name), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
 			}
@@ -2236,7 +2236,7 @@ namespace Novell.iFolderCom
 		{
 			ShareListMember slMember = (ShareListMember)lvi.Tag;
 
-			lvi.SubItems[0].Text = slMember.iFolderUser.Name;
+			lvi.SubItems[0].Text = slMember.Name;
 			lvi.SubItems[1].Text = stateToString(slMember.iFolderUser.State, slMember.iFolderUser.IsOwner);
 			lvi.SubItems[2].Text = rightsToString(slMember.iFolderUser.Rights);
 
@@ -2577,7 +2577,7 @@ namespace Novell.iFolderCom
 				// Add the added users if they are not already in the list.
 				foreach (ListViewItem lvi in picker.AddedUsers)
 				{
-					iFolderUser user = (iFolderUser)((ListViewItem)lvi.Tag).Tag;
+					iFolderUser user = picker.GetiFolderUserFromListViewItem(lvi);
 
 					ListViewItem lvitem;
 					lock (userIDHT)

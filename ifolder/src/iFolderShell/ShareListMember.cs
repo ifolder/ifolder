@@ -72,6 +72,17 @@ namespace Novell.iFolderCom
 			get { return ifolderUser; }
 			set { ifolderUser = value; }
 		}
+
+		/// <summary>
+		/// Gets the name of the iFolder user.
+		/// </summary>
+		public string Name
+		{
+			get
+			{
+				return (ifolderUser.FN != null) && !ifolderUser.FN.Equals(string.Empty) ? ifolderUser.FN : ifolderUser.Name;
+			}
+		}
 		#endregion
 	}
 }

@@ -804,7 +804,7 @@ namespace Novell.iFolder.Web
 					Simias.Storage.SearchOp.Begins);
 			foreach(Contact c in clist)
 			{
-				if(!idHash.Contains(c.ID))
+				if(!idHash.Contains(c.UserID))
 				{
 					Simias.Storage.Member simMem =
 						roster.GetMemberByID(c.UserID);
