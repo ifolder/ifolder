@@ -60,6 +60,7 @@ namespace Novell.iFolder
 		private Label				DiskUsageFullLabel;
 		private Label				DiskUsageEmptyLabel;
 
+		private Button				SyncNowButton;
 
 		/// <summary>
 		/// Default constructor for iFolderPropSharingPage
@@ -385,6 +386,7 @@ namespace Novell.iFolder
 			// create a vbox to actually place the widgets in for section
 			VBox syncWidgetBox = new VBox();
 			syncSpacerBox.PackStart(syncWidgetBox, true, true, 0);
+			syncWidgetBox.Spacing = 10;
 
 			// create a table to hold the values
 			Table syncTable = new Table(3,2,false);
@@ -418,6 +420,14 @@ namespace Novell.iFolder
 			SyncIntervalValue = new Label("1 minute(s)");
 			SyncIntervalValue.Xalign = 0;
 			syncTable.Attach(SyncIntervalValue, 1,2,2,3);
+			
+			HBox rightBox = new HBox();
+			rightBox.Spacing = 10;
+			syncWidgetBox.PackEnd(rightBox, false, false, 0);
+			
+			SyncNowButton = new Button(Util.GS("Sync _Now"));
+			rightBox.PackEnd(SyncNowButton, false, false, 0);
+			SyncNowButton.Clicked += new EventHandler(OnSyncNowClicked);
 		}
 
 
@@ -503,6 +513,14 @@ namespace Novell.iFolder
 		private void OnLimitFocusLost(object o, FocusOutEventArgs args)
 		{
 			SaveLimit();
+		}
+
+
+
+
+		private void OnSyncNowClicked(object o, EventArgs args)
+		{
+			System.Console.WriteLine("OnSyncNowClicked() called");
 		}
 
 
