@@ -25,6 +25,8 @@ using System;
 using Gtk;
 using System.Collections;
 
+using Simias.Client;
+
 namespace Novell.iFolder
 {
 
@@ -34,6 +36,7 @@ namespace Novell.iFolder
 	public class iFolderPropSharingPage : VBox
 	{
 		private iFolderWebService	ifws;
+		private SimiasWebService	simws;
 		private iFolderWeb			ifolder;
 
 		private iFolderTreeView		UserTreeView;
@@ -53,10 +56,12 @@ namespace Novell.iFolder
 		/// Default constructor for iFolderPropSharingPage
 		/// </summary>
 		public iFolderPropSharingPage(	Gtk.Window topWindow,
-										iFolderWebService iFolderWS)
+										iFolderWebService iFolderWS,
+										SimiasWebService SimiasWS)
 			: base()
 		{
 			this.ifws = iFolderWS;
+			this.simws = SimiasWS;
 			this.topLevelWindow = topWindow;
 			curUsers = new Hashtable();
 			InitializeWidgets();
@@ -260,6 +265,7 @@ namespace Novell.iFolder
 		{
 			UserSelector = new iFolderUserSelector( topLevelWindow, 
 													ifws,
+													simws,
 													ifolder.DomainID);
 
 			UserSelector.Response += 
@@ -506,15 +512,20 @@ namespace Novell.iFolder
 				{
 					case Gtk.ResponseType.Ok:
 					{
-						foreach(iFolderUser user in UserSelector.SelectedUsers)
+						foreach(MemberInfo member in UserSelector.SelectedUsers)
 						{
-							if(!curUsers.ContainsKey(user.UserID))
+							if(!curUsers.ContainsKey(member.UserID))
 							{
 								try
 								{
+//									simws.AddMemberToDomain(domainID, MemberName, string MemberID, publickey, givenname, familyname);
+									// FIXME: Check to see if the user is already a member of the
+									// domain and add them if they are not.
+								
+								
     								iFolderUser newUser = ifws.InviteUser(
 															ifolder.ID,
-															user.UserID,
+															member.UserID,
 															"ReadWrite");
 	
 									TreeIter iter = 

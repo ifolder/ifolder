@@ -26,6 +26,8 @@ using System;
 using System.IO;
 using System.Collections;
 using Gtk;
+
+using Simias.Client;
 using Simias.Client.Event;
 
 namespace Novell.iFolder
@@ -172,6 +174,7 @@ namespace Novell.iFolder
 		// for the statusbar
 		const int ctx = 1;
 		private iFolderWebService	ifws;
+		private SimiasWebService	simws;
 		private iFolderData			ifdata;
 		private Gdk.Pixbuf			iFolderPixBuf;
 		private Gdk.Pixbuf			ServeriFolderPixBuf;
@@ -220,13 +223,14 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Default constructor for iFolderWindow
 		/// </summary>
-		public iFolderWindow(iFolderWebService webService)
+		public iFolderWindow(iFolderWebService webService, SimiasWebService SimiasWS)
 			: base (Util.GS("iFolders"))
 		{
 			if(webService == null)
 				throw new ApplicationException("iFolderWebServices was null");
 
 			ifws = webService;
+			simws = SimiasWS;
 			ifdata = iFolderData.GetData();
 			curiFolders = new Hashtable();
 			curDomain = null;
@@ -1093,7 +1097,7 @@ namespace Novell.iFolder
 						new iFolderPropertiesDialog(this, 
 									ifHolder.iFolder, 
 									ifList,
-									ifws);
+									ifws, simws);
 					PropertiesDialog.Response += 
 							new ResponseHandler(OnPropertiesDialogResponse);
 					PropertiesDialog.CurrentPage = currentPage;
