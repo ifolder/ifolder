@@ -97,7 +97,7 @@
                 <Reference
                     Name = "AddressBook"
                     AssemblyName = "AddressBook"
-                    HintPath = "..\AddressBook\AddressBook.dll"
+                    HintPath = "..\..\..\simias\src\AddressBook\AddressBook.dll"
                 />
             </References>
         </Build>

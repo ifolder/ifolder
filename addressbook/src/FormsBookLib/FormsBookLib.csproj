@@ -92,12 +92,12 @@
                 <Reference
                     Name = "AddressBook"
                     AssemblyName = "AddressBook"
-                    HintPath = "..\AddressBook\AddressBook.dll"
+                    HintPath = "..\..\..\simias\src\AddressBook\AddressBook.dll"
                 />
                 <Reference
                     Name = "CollectionStore"
                     AssemblyName = "CollectionStore"
-                    HintPath = "..\CollectionStore\CollectionStore.dll"
+                    HintPath = "..\..\..\simias\src\CollectionStore\CollectionStore.dll"
                 />
             </References>
         </Build>

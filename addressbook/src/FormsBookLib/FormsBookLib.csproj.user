@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\dev\denali\src\AddressBook\;C:\dev\denali\src\CollectionStore\" >
+            <Settings ReferencePath = "C:\dev\simias\src\CollectionStore\;C:\dev\simias\src\AddressBook\;C:\dev\denali\src\AddressBook\;C:\dev\denali\src\CollectionStore\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"

@@ -92,7 +92,7 @@
                 <Reference
                     Name = "Agent"
                     AssemblyName = "Agent"
-                    HintPath = "..\Agent\Agent.dll"
+                    HintPath = "..\..\..\simias\src\Agent\Agent.dll"
                 />
                 <Reference
                     Name = "iFolder"
