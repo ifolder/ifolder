@@ -703,6 +703,22 @@ namespace Novell.iFolder.FormsTrayApp
 		}
 		#endregion
 
+		#region Public Methods
+		static public void SetRunValue(bool enable)
+		{
+			RegistryKey runKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+
+			if (enable)
+			{
+				runKey.SetValue(iFolderRun, Path.Combine(Application.StartupPath, "iFolderApp.exe"));
+			}
+			else
+			{
+				runKey.DeleteValue(iFolderRun, false);
+			}
+		}
+		#endregion
+
 		#region Private Methods
 		private void AddiFolderToListView(iFolder ifolder)
 		{
@@ -714,23 +730,19 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private bool IsRunEnabled()
 		{
-			RegistryKey runKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
-			string run = (string)runKey.GetValue(iFolderRun);
+			string run = null;
+
+			try
+			{
+				RegistryKey runKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+				run = (string)runKey.GetValue(iFolderRun);
+			}
+			catch
+			{
+				return false;
+			}
+
 			return (run != null);
-		}
-
-		static public void SetRunValue(bool enable)
-		{
-			RegistryKey runKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
-
-			if (enable)
-			{
-				runKey.SetValue(iFolderRun, Path.Combine(Application.StartupPath, "iFolderApp.exe"));
-			}
-			else
-			{
-				runKey.DeleteValue(iFolderRun, false);
-			}
 		}
 
 		private void refreshiFolders()
