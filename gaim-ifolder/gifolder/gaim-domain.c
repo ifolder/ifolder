@@ -149,6 +149,35 @@ sync_buddy_with_simias_roster(gpointer key, gpointer value, gpointer user_data)
 	 */
 }
 
+char *
+gaim_domain_get_po_box_id()
+{
+	char *soap_url;
+	struct soap soap;
+	struct _ns1__GetGaimPOBoxID req;
+	struct _ns1__GetGaimPOBoxIDResponse resp;
+	char *po_box_id = NULL;
+	
+	soap_url = get_soap_url(FALSE);
+	if (!soap_url) {
+		return NULL;
+	}
+	
+	init_gsoap(&soap);
+	soap_call___ns1__GetGaimPOBoxID(&soap, soap_url, NULL, &req, &resp);
+	if (soap.error) {
+		cleanup_gsoap(&soap);
+		return NULL;
+	}
+	
+	/* Get the POBox ID */
+	po_box_id = strdup(resp.GetGaimPOBoxIDResult);
+	
+	cleanup_gsoap(&soap);
+	
+	return po_box_id;
+}
+
 /* Sync Buddies to Simias Gaim Domain Roster */
 int
 sync_buddies_to_simias(GList *gaim_accounts)

@@ -52,4 +52,6 @@ void sync_buddy_with_simias_roster(gpointer key,
 								   gpointer value,
 								   gpointer user_data);
 
+char *gaim_domain_get_po_box_id();
+
 #endif

@@ -26,8 +26,11 @@
  ***********************************************************************/
 
 #include "event-handler.h"
+#include "gaim-domain.h"
 
 #include <glib.h>
+
+static char *po_box_id = NULL;
 
 int
 on_sec_state_event(SEC_STATE_EVENT state_event, const char *message, void *data)
@@ -47,6 +50,17 @@ on_sec_state_event(SEC_STATE_EVENT state_event, const char *message, void *data)
 						   (SimiasEventFunc)on_simias_node_changed, ec);
 			sec_set_event (*ec, ACTION_NODE_DELETED, true,
 						   (SimiasEventFunc)on_simias_node_deleted, ec);
+			
+			/**
+			 * Get the Gaim POBox ID so we'll know whether we should pay
+			 * attention to incoming events or not.
+			 */
+			po_box_id = gaim_domain_get_po_box_id();
+			if (!po_box_id) {
+				g_print("gaim_domain_get_po_box_id() returned NULL!\n");
+			} else {
+				g_print("POBox ID: %s\n", po_box_id);
+			}
 			
 			/* Specify that we're only interested in changes in subscriptions */
 			node_type = NODE_TYPE_NODE;
@@ -92,12 +106,32 @@ static void print_event(SimiasNodeEvent *event)
 	g_print("\tFile Size: %s\n", event->file_size);
 }
 
+gboolean
+is_gaim_subscription(SimiasNodeEvent *event)
+{
+	/* Check to see if this is an invitation/subscription node for Gaim */
+	if (!po_box_id) {
+		/* Can't do the check */
+		return FALSE;
+	}
+	if (strcmp(po_box_id, event->collection)) {
+		/* This is not a subscription in the Gaim POBox */
+		return FALSE;
+	}
+	
+	return TRUE;
+}
+
 int
 on_simias_node_created(SimiasNodeEvent *event, void *data)
 {
 	g_print("on_simias_node_created() entered\n");
 	print_event(event);
 
+	if (!is_gaim_subscription(event)) {
+		return 0; /* Ignore this event */
+	}
+	
 	/* FIXME: Check to see if this is a member/subscription to a collection */
 	
 	return 0;
@@ -109,6 +143,10 @@ on_simias_node_changed(SimiasNodeEvent *event, void *data)
 	g_print("on_simias_node_changed() entered\n");
 	print_event(event);
 	
+	if (!is_gaim_subscription(event)) {
+		return 0; /* Ignore this event */
+	}
+	
 	/* FIXME: Figure out if we need to do anything with a changed subscription */
 	
 	return 0;
@@ -119,6 +157,10 @@ on_simias_node_deleted(SimiasNodeEvent *event, void *data)
 {
 	g_print("on_simias_node_deleted() entered\n");
 	print_event(event);
+	
+	if (!is_gaim_subscription(event)) {
+		return 0; /* Ignore this event */
+	}
 	
 	/* FIXME: Check to see if this is a member/subscription to a collection */
 	
