@@ -150,17 +150,16 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %{prefix}/bin/libsqlite.so
 %{prefix}/bin/SimiasApp.exe
 %{prefix}/bin/simias
-%{prefix}/bin/EventService.exe
-%{prefix}/bin/POService.exe
 %{prefix}/bin/mDnsService.exe
-%{prefix}/bin/SyncService.exe
-%{prefix}/bin/remoting.config
 %{prefix}/bin/install-simias-to-gac
 %{prefix}/bin/Simias.asmx
 %{prefix}/bin/web.config
 %{prefix}/bin/Global.asax
 %{prefix}/bin/bin/Simias.Web.dll
 %{prefix}/lib/SimiasAspService.dll
+%{prefix}/etc/Simias.config
+%{prefix}/etc/Simias.remoting
+%{prefix}/etc/Simias.log4net
 %dir %{prefix}/share
 %dir %{prefix}/share/simias
 %{prefix}/share/simias/log4net.LICENSE.txt
