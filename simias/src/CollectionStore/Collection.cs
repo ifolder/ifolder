@@ -35,7 +35,7 @@ namespace Simias.Storage
 	/// A Collection object is contained by a Store object and describes a relationship between the objects
 	/// that it contains.
 	/// </summary>
-	public class Collection : Node
+	public class Collection : Node, IEnumerable
 	{
 		#region Class Members
 		/// <summary>
@@ -1263,6 +1263,15 @@ namespace Simias.Storage
 		#endregion
 
 		#region IEnumerable Members
+		/// <summary>
+		/// Gets an enumerator for all of the Node objects belonging to this collection.
+		/// </summary>
+		/// <returns>An IEnumerator object.</returns>
+		public IEnumerator GetEnumerator()
+		{
+			return new NodeEnumerator( this, new Property( BaseSchema.CollectionId, id ), SearchOp.Equal );
+		}
+
 		/// <summary>
 		/// Enumerator class for the node object that allows enumeration of specified node objects
 		/// within the collection.

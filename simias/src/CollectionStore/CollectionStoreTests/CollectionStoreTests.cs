@@ -1520,6 +1520,46 @@ namespace Simias.Storage.Tests
 			{
 			}
 		}
+
+		/// <summary>
+		///  Tests the Enumeration of nodes in a collection.
+		/// </summary>
+		[Test]
+		public void EnumerateNodesTest()
+		{
+			Collection collection = new Collection( store, "CS_TestCollection" );
+			try
+			{
+				Node[] commitList = { collection,
+									  new Node( "CS_Node1" ),
+									  new Node( "CS_Node2" ),
+									  new Node( "CS_Node3" ),
+									  new Node( "CS_Node4" ),
+									  new Node( "CS_Node5" ),
+									  new Node( "CS_Node6" ),
+									  new Node( "CS_Node7" ),
+									  new Node( "CS_Node8" ),
+									  new Node( "CS_Node9" ) };
+
+				collection.Commit( commitList );
+
+				int count = 0;
+				foreach( ShallowNode sn in collection )
+				{
+					Console.WriteLine( "Found node {0}", sn.Name );
+					++count;
+				}
+
+				if ( count != 10 )
+				{
+					throw new ApplicationException( "Enumeration failed." );
+				}
+			}
+			finally
+			{
+				collection.Commit( collection.Delete() );
+			}
+		}
 		#endregion
 
 		#region Test Clean Up
