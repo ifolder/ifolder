@@ -9,7 +9,7 @@ FormsBookLib_FLAGS = $(CSC_LIBFLAG)
 FormsBookLib_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll Simias.dll Novell.AddressBook.dll
 FormsBookLib_LIBPATH =
 
-DATA_FILES = $(srcdir)/ifolder_add_bk.ico $(srcdir)/ifolder_contact_card.ico $(srcdir)/ifolder_contact_full.ico $(srcdir)/ifolder_contact_read.ico $(srcdir)/ifolder_contact_read_write.ico $(srcdir)/ifolder_me_card.ico
+DATA_FILES = $(srcdir)/ifolder_add_bk.ico $(srcdir)/ifolder_contact_card.ico $(srcdir)/ifolder_contact_full.ico $(srcdir)/ifolder_contact_read.ico $(srcdir)/ifolder_contact_read_write.ico $(srcdir)/ifolder_me_card.ico $(srcdir)/contactimport_16.ico $(srcdir)/contactexport_16.ico
 
 EXTRA_DIST = $(FormsBookLib_CSFILES) $(DATA_FILES)
 

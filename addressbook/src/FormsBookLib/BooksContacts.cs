@@ -544,8 +544,8 @@ namespace Novell.iFolder.FormsBookLib
 				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_me_card.ico")));
 				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_card.ico")));
 				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_add_bk.ico")));
-				contactsImageList.Images.Add(Image.FromFile(Path.Combine(basePath, "vcardimport.png")));
-				contactsImageList.Images.Add(Image.FromFile(Path.Combine(basePath, "vcardexport.png")));
+				contactsImageList.Images.Add(Image.FromFile(Path.Combine(basePath, "contactimport_16.ico")));
+				contactsImageList.Images.Add(Image.FromFile(Path.Combine(basePath, "contactexport_16.ico")));
 
 				//Assign the ImageList objects to the books ListView.
 				contacts.SmallImageList = contactsImageList;
