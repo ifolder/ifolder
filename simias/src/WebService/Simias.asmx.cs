@@ -47,6 +47,61 @@ using Simias.Security.Web.AuthenticationService;
 
 namespace Simias.Web
 {
+	[ Serializable ]
+	public class Member
+	{
+		public string	ID;
+		public string	Name;
+		public string	GivenName;
+		public string	FamilyName;
+		public string	FullName;
+
+		public int		AccessRights;
+		public bool		IsOwner;
+
+		public Member()
+		{
+		}
+
+		//[ NonSerializable ]
+		internal Member( Simias.Storage.Member member )
+		{
+			this.ID = member.ID;
+			this.Name = member.Name;
+			this.GivenName = member.Given;
+			this.FamilyName = member.Family;
+			this.FullName = member.FN;
+			this.AccessRights = (int) member.Rights;
+			this.IsOwner = member.IsOwner;
+		}
+	}
+
+	public class ContactComparer : IComparer  
+	{
+		int IComparer.Compare( Object x, Object y )  
+		{
+			Simias.Web.Member memberX = x as Simias.Web.Member;
+			Simias.Web.Member memberY = y as Simias.Web.Member;
+
+			if ( memberX.FullName != null )
+			{
+				if (memberY.FullName != null)
+				{
+					return (new CaseInsensitiveComparer()).Compare( memberX.FullName, memberY.FullName );
+				}
+
+				return (new CaseInsensitiveComparer()).Compare( memberX.FullName, memberY.Name );
+			}
+			else
+			if ( memberY.FullName != null )
+			{
+				return ( new CaseInsensitiveComparer()).Compare( memberX.Name, memberY.FullName );
+			}
+
+			return ( new CaseInsensitiveComparer()).Compare( memberX.Name, memberY.Name );
+		}
+	}
+
 	/// <summary>
 	/// This is the core of the iFolderServce.  All of the methods in the
 	/// web service are implemented here.
@@ -59,18 +114,12 @@ namespace Simias.Web
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SimiasService));
 
-
-
-
 		/// <summary>
 		/// Creates the SimiasService and sets up logging
 		/// </summary>
 		public SimiasService()
 		{
 		}
-
-
-
 
 		/// <summary>
 		/// Add a member to a domain.
@@ -84,17 +133,17 @@ namespace Simias.Web
 		public void AddMemberToDomain(string DomainID, string MemberName, string MemberID, string PublicKey)
 		{
 			Domain domain = Store.GetStore().GetDomain(DomainID);
-			Member member = domain.GetMemberByName(MemberName);
+			Simias.Storage.Member member = domain.GetMemberByName(MemberName);
 			if (member == null)
 			{
-				member = new Member(MemberName, MemberID, Access.Rights.ReadOnly);
+				member = new Simias.Storage.Member(MemberName, MemberID, Access.Rights.ReadOnly);
 
 				if (PublicKey != null)
 				{
 					member.Properties.AddProperty("PublicKey", PublicKey);
 				}
 
-				domain.Commit(member);
+				domain.Commit( member );
 			}
 		}
 
@@ -111,15 +160,121 @@ namespace Simias.Web
 		public void RemoveMemberFromDomain(string DomainID, string MemberID)
 		{
 			Domain domain = Store.GetStore().GetDomain(DomainID);
-			Member member = domain.GetMemberByID(MemberID);
-			if (member != null)
+			Simias.Storage.Member member = domain.GetMemberByID( MemberID );
+			if ( member != null )
 			{
-				domain.Commit(domain.Delete(member));
+				domain.Commit( domain.Delete( member ) );
 			}
 		}
 
+		/// <summary>
+		/// Search for Members in a domain given a specified search string
+		/// </summary>
+		/// <param name="DomainID">The ID of the domain to search against.</param>
+		/// <param name="SearchString">Search string for finding members</param>
+		[WebMethod(Description="Generic search members in a specified domain.")]
+		[SoapDocumentMethod]
+		public Simias.Web.Member[] SearchMembers( string DomainID, string SearchString )
+		{
+			ArrayList members = new ArrayList();
+			Hashtable matches = new Hashtable();
+			ICSList searchList;
 
+			Domain domain = Store.GetStore().GetDomain( DomainID );
+			if ( domain != null )
+			{
+				searchList = domain.Search( PropertyTags.FullName, SearchString, SearchOp.Begins );
+				foreach( ShallowNode sNode in searchList )
+				{
+					if ( sNode.Type.Equals( "Member" ) )
+					{
+						Simias.Storage.Member member = new Simias.Storage.Member( domain, sNode );
+						matches.Add( sNode.ID, member );
+						Simias.Web.Member webMember = new Simias.Web.Member( member );
+						members.Add( webMember );
+					}
+				}	
 
+				searchList = domain.Search( BaseSchema.ObjectName, SearchString, SearchOp.Begins );
+				foreach( ShallowNode sNode in searchList )
+				{
+					if ( sNode.Type.Equals( "Member" ) )
+					{
+						if ( matches.Contains( sNode.ID ) == false )
+						{
+							Simias.Storage.Member member = new Simias.Storage.Member( domain, sNode );
+							Simias.Web.Member webMember = new Simias.Web.Member( member );
+							members.Add( webMember );
+						}
+					}
+				}
+
+				ContactComparer comparer = new ContactComparer();
+				members.Sort( 0, members.Count, comparer );
+			}
+
+			return ( Simias.Web.Member[] )( members.ToArray( typeof( Simias.Web.Member ) ) );
+		}
+
+		/// <summary>
+		/// Search Simias members by their friendly member name in the specified domain.
+		/// </summary>
+		/// <param name="DomainID">The ID of the domain to search against.</param>
+		/// <param name="SearchString">The string to find members against</param>
+		[WebMethod(Description="Search Simias members by their member name in a specified domain.")]
+		[SoapDocumentMethod]
+		public Simias.Web.Member[] SearchMemberName( string DomainID, string SearchString )
+		{
+			ArrayList matches = new ArrayList();
+			ICSList searchList;
+
+			Domain domain = Store.GetStore().GetDomain( DomainID );
+			if ( domain != null )
+			{
+				searchList = domain.Search( BaseSchema.ObjectName, SearchString, SearchOp.Begins );
+				foreach( ShallowNode sNode in searchList )
+				{
+					if ( sNode.Type.Equals( "Member" ) )
+					{
+						Simias.Storage.Member member = new Simias.Storage.Member( domain, sNode );
+						Simias.Web.Member webMember = new Simias.Web.Member( member );
+						matches.Add( webMember );
+					}
+				}
+			}
+
+			return ( Simias.Web.Member[] )( matches.ToArray( typeof( Simias.Web.Member ) ) );
+		}
+
+		/// <summary>
+		/// Search Simias members by their full name (FN) in the specified domain.
+		/// </summary>
+		/// <param name="DomainID">The ID of the domain to search against.</param>
+		/// <param name="SearchString">The string to find members against</param>
+		[WebMethod(Description="Search Simias members by their full name in a specified domain.")]
+		[SoapDocumentMethod]
+		public Simias.Web.Member[] SearchFullName( string DomainID, string SearchString )
+		{
+			ArrayList matches = new ArrayList();
+			ICSList searchList;
+
+			Domain domain = Store.GetStore().GetDomain( DomainID );
+			if ( domain != null )
+			{
+				searchList = domain.Search( PropertyTags.FullName, SearchString, SearchOp.Begins );
+				foreach( ShallowNode sNode in searchList )
+				{
+					if ( sNode.Type.Equals( "Member" ) )
+					{
+						Simias.Storage.Member member = new Simias.Storage.Member( domain, sNode );
+						Simias.Web.Member webMember = new Simias.Web.Member( member );
+						matches.Add( webMember );
+					}
+				}
+			}
+
+			return ( Simias.Web.Member[] )( matches.ToArray( typeof( Simias.Web.Member ) ) );
+		}
 
 		/// <summary>
 		/// WebMethod that returns the Simias information
@@ -234,17 +389,19 @@ namespace Simias.Web
 		{ 
 			Store store = Store.GetStore();
 			Simias.Storage.Domain domain = store.GetDomain(domainID);
-			if(domain == null)
-				return  new Simias.Authentication.Status( 
-					Simias.Authentication.StatusCodes.UnknownDomain );
+			if( domain == null )
+			{
+				return new Simias.Authentication.Status( Simias.Authentication.StatusCodes.UnknownDomain );
+			}
 
-			Member member = domain.GetCurrentMember();
-			if(member == null)
-				return  new Simias.Authentication.Status( 
-					Simias.Authentication.StatusCodes.UnknownUser );
+			Simias.Storage.Member member = domain.GetCurrentMember();
+			if( member == null )
+			{
+				return new Simias.Authentication.Status( Simias.Authentication.StatusCodes.UnknownUser );
+			}
 
 			DomainAgent domainAgent = new DomainAgent();
-			return	domainAgent.Login( domainID, member.Name, password );
+			return domainAgent.Login( domainID, member.Name, password );
 		}
 
 
@@ -350,7 +507,7 @@ namespace Simias.Web
 				Domain domain = store.GetDomain(domainID);
 
 				// find user
-				Member cMember = domain.GetMemberByID(memberID);
+				Simias.Storage.Member cMember = domain.GetMemberByID( memberID );
 
 				NetCredential cCreds = 
 					new NetCredential("iFolder", domainID, true, cMember.Name, null);
@@ -620,7 +777,7 @@ namespace Simias.Web
 			Store store = Store.GetStore();
 
 			Domain cDomain = store.GetDomain(domainID);
-			Member cMember = cDomain.GetCurrentMember();
+			Simias.Storage.Member cMember = cDomain.GetCurrentMember();
 			Simias.POBox.POBox poBox = 
 				Simias.POBox.POBox.FindPOBox(store, domainID, cMember.UserID);
 			this.POBoxID = ( poBox != null ) ? poBox.ID : "";
@@ -632,7 +789,8 @@ namespace Simias.Web
 			this.MemberUserID = cMember.UserID;
 			this.MemberName = cMember.Name;
 
-			Uri uri = Locate.ResolveLocation(domainID);
+			Uri uri = new Uri( "http://localhost/temp" );
+			//Uri uri = Locate.ResolveLocation(domainID);
 
 			this.RemoteUrl = (uri != null) ?
 				uri.ToString() + "/DomainService.asmx" :
