@@ -417,6 +417,8 @@ namespace Simias.Storage.Provider.Sqlite
 	{
 		#region Varibles
         
+		Configuration			conf;
+
 		/// <summary>
 		/// Collection Table. Holds all collection nodes.
 		/// </summary>
@@ -444,9 +446,10 @@ namespace Simias.Storage.Provider.Sqlite
 		/// 
 		/// </summary>
 		/// <param name="path">The path where the DataBase exists or will be created.</param>
-		public SqliteProvider(string path)
+		public SqliteProvider(Configuration conf)
 		{
-			storePath = Path.GetFullPath(path);
+			this.conf = conf;
+			storePath = Path.GetFullPath(conf.Path);
 			DbPath = System.IO.Path.Combine(storePath, Name);
 			sqliteDb = new SqliteConnection();
 		}
@@ -603,7 +606,7 @@ namespace Simias.Storage.Provider.Sqlite
 					sqliteDb.Open();
 
 					// Set the version.
-					Provider.Version = version;
+					conf.Version = version;
 					
 					IDbTransaction trans = sqliteDb.BeginTransaction();
 					try
@@ -649,10 +652,10 @@ namespace Simias.Storage.Provider.Sqlite
 			if (File.Exists(DbPath))
 			{
 				// Make sure the version is correct.
-				//if (Provider.Version != version)
-				//{
-				//	throw new CSPException("Wrong DataBase Version", Provider.Error.Version);
-				//}
+				if (conf.Version != version)
+				{
+					throw new CSPException("Wrong DataBase Version", Provider.Error.Version);
+				}
 				sqliteDb.ConnectionString = "URI=file:" + DbPath;
 				sqliteDb.Open();
 				Init();
