@@ -38,6 +38,7 @@ using Novell.Security.ClientPasswordManager;
 
 using Simias;
 using Simias.Client;
+using Simias.Domain;
 using Simias.Storage;
 using Simias.Sync;
 //using Simias.POBox;
@@ -105,6 +106,7 @@ namespace Simias.Web
 						? DomainType.Workgroup
 						: DomainType.Enterprise;
 
+				cDomainInfo.Active = new DomainAgent().IsDomainActive( cDomain.ID );
 				cDomainInfo.ID = domainID;
 				cDomainInfo.Name = cDomain.Name;
 				cDomainInfo.Description = cDomain.Description;
@@ -124,6 +126,53 @@ namespace Simias.Web
 			}
 
 			return(cDomainInfo);
+		}
+
+
+		/// <summary>
+		/// WebMethod to get a list of local domain IDs
+		/// </summary>
+		/// <returns>
+		/// 0 success, !0 failed
+		/// </returns>
+		[WebMethod(Description="GetDomainList")]
+		[SoapDocumentMethod]
+		public
+		string[]
+		GetDomainList(bool onlySlaves)
+		{
+			ArrayList domainIDs = new ArrayList();
+
+			try
+			{
+				Store store = Store.GetStore();
+				LocalDatabase ldb = store.GetDatabaseObject();
+				ICSList domainList = ldb.GetNodesByType( "Domain" );
+				foreach( ShallowNode shallowNode in domainList )
+				{
+					// Get them all?
+					if ( onlySlaves == false )
+					{
+						domainIDs.Add( shallowNode.ID );
+					}
+					else
+					{
+						Simias.Storage.Domain cDomain = store.GetDomain( shallowNode.ID );
+						Roster cRoster = cDomain.GetRoster(store);
+						if ( cRoster.Role.ToString() == "Slave" )
+						{
+							domainIDs.Add( cDomain.ID );
+						}
+					}
+				}
+			}
+			catch(Exception e)
+			{
+				log.Error(e.Message);
+				log.Error(e.StackTrace);
+			}
+
+			return( ( domainIDs.Count == 0 ) ? null : (string[]) domainIDs.ToArray( typeof( string ) ) );
 		}
 
 
@@ -172,6 +221,39 @@ namespace Simias.Web
 			return(status);
 		}
 
+		/// <summary>
+		/// WebMethod to set a slave domain "active"
+		/// A Domain marked "active" will synchronize
+		/// collections, subscriptions etc. to the remote server
+		/// </summary>
+		/// <returns>
+		/// 0 success, !0 failed
+		/// </returns>
+		[WebMethod(Description="SetDomainActive - enables synchronization to the remote server")]
+		[SoapDocumentMethod]
+		public int SetDomainActive(string domainID)
+		{
+			DomainAgent domainAgent = new DomainAgent();
+			domainAgent.SetDomainActive( domainID );
+			return(0);
+		}
+
+		/// <summary>
+		/// WebMethod to mark a slave domain "inactive"
+		/// Marking a domain inactive disables all synchronization
+		/// to the remote machine.
+		/// </summary>
+		/// <returns>
+		/// 0 success, !0 failed
+		/// </returns>
+		[WebMethod(Description="SetDomainInactive - disables remote synchronization")]
+		[SoapDocumentMethod]
+		public int SetDomainInactive(string domainID)
+		{
+			DomainAgent domainAgent = new DomainAgent();
+			domainAgent.SetDomainInactive( domainID );
+			return(0);
+		}
 
 		/// <summary>
 		/// WebMethod that checks to see if a full set of credentials
@@ -283,6 +365,15 @@ namespace Simias.Web
 		/// Domain Type
 		/// </summary>
 		public DomainType Type;
+
+		/// <summary>
+		/// Domain Active
+		/// true - a state where collections belonging
+		/// to the domain can synchronize, remote invitations
+		/// can occur etc.
+		/// false - no remote actions will take place
+		/// </summary>
+		public bool Active;
 
 		/// <summary>
 		/// Domain Name
