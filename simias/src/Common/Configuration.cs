@@ -34,6 +34,8 @@ namespace Simias
 	/// </summary>
 	public sealed class Configuration
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(Configuration));
+
 		private static readonly string RootElementTag = "configuration";
 		private static readonly string SectionTag = "section";
 		private static readonly string SettingTag = "setting";
@@ -131,14 +133,11 @@ namespace Simias
 						bootStrapDir = SimiasSetup.sysconfdir;
 					}
 					string bootStrapPath = Path.Combine(bootStrapDir, DefaultFileName);
-#if DEBUG
-                    Console.WriteLine("bootStrapPath=" + bootStrapPath);
-#endif
+                    log.Debug("Boot Strap Path: {0}", bootStrapPath);
+
 					if (File.Exists(bootStrapPath))
 					{
-#if DEBUG
-                        Console.WriteLine("Copy " + bootStrapPath + " to " + ConfigFilePath);
-#endif
+                        log.Debug("Initializing \"{0}\" with \"{1}\"...", ConfigFilePath, bootStrapPath);
 						File.Copy(bootStrapPath, ConfigFilePath);
 					}
 					else
@@ -403,11 +402,47 @@ namespace Simias
 
 		private void GetDocElement()
 		{
-            OpenConfigFile();
-            modified = false;
-            doc = new XmlDocument();
-            doc.Load(fs);
-            docElement = doc.DocumentElement;
+			// TODO: remove
+			try
+			{
+				OpenConfigFile();
+				modified = false;
+				doc = new XmlDocument();
+            
+				// TODO: remove
+				if (doc == null)
+				{
+					log.Debug("Unable to create XmlDocument.");
+					throw new Exception("Unable to create XmlDocument.");
+				}
+			}
+			catch(Exception e)
+			{
+				log.Debug(e, "new XmlDocument()");
+				throw new Exception("new XmlDocument()", e);
+			}
+
+			// TODO: remove
+			try
+			{
+				doc.Load(fs);
+			}
+			catch(Exception e)
+			{
+				log.Debug(e, "doc.Load(fs)");
+				throw new Exception("doc.Load(fs)", e);
+			}
+            
+			// TODO: remove
+			try
+			{
+				docElement = doc.DocumentElement;
+			}
+			catch(Exception e)
+			{
+				log.Debug(e, "doc.DocumentElement");
+				throw new Exception("doc.DocumentElement", e);
+			}
 		}
 
 		/// <summary>
@@ -432,6 +467,12 @@ namespace Simias
 					{
 						// Wait for a moment before trying to open the file again.
 						Thread.Sleep( 100 );
+					}
+					catch ( Exception e )
+					{
+						log.Error(e, "Unhandled Exception");
+
+						throw new Exception("Unhandled Exception", e);
 					}
 				}
 
