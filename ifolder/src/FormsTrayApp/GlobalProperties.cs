@@ -3460,7 +3460,7 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				iFolderUser ifolderUser = ifWebService.GetDomainiFolderUser(selectedDomain.DomainWeb.ID, selectedDomain.DomainWeb.UserID);
+				iFolderUser ifolderUser = ifWebService.GetiFolderUser(selectedDomain.DomainWeb.UserID);
 				userName.Text = ifolderUser.Name;
 			}
 			catch (Exception ex)
@@ -3478,7 +3478,7 @@ namespace Novell.FormsTrayApp
 			try
 			{
 				// Get the disk space.
-				DiskSpace diskSpace = ifWebService.GetDomainUserDiskSpace(selectedDomain.DomainWeb.ID, selectedDomain.DomainWeb.UserID);
+				DiskSpace diskSpace = ifWebService.GetUserDiskSpace(selectedDomain.DomainWeb.UserID);
 				if (diskSpace.Limit != 0)
 				{
 					usedSpaceUnits.Text = freeSpaceUnits.Text = totalSpaceUnits.Text = 
