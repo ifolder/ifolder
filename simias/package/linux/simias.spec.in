@@ -36,11 +36,10 @@ Vendor       : <unknown>
 Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
-Requires     : mono-core >= 0.91
-Requires     : mono-data >= 0.91
-Requires     : mono-posix >= 0.91
-Requires     : mono-remoting >= 0.91
-Requires     : mono-nunit >= 0.91
+Requires     : mono-core >= 0.95
+Requires     : mono-data >= 0.95
+Requires     : mono-remoting >= 0.95
+Requires     : mono-nunit >= 0.95
 Obsoletes    : %{name} <= %{version}
 
 #=============================================================================
