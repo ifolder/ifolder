@@ -110,6 +110,7 @@ namespace Simias.POBox
 	/// <summary>
 	/// An Subscription object is a specialized message used for inviting someone to a team space.
 	/// </summary>
+	[Serializable]
 	public class Subscription : Message
 	{
 		#region Class Members

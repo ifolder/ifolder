@@ -59,6 +59,7 @@ namespace Simias.POBox
 	/// <summary>
 	/// A Message object is a specialized node used to hold ...
 	/// </summary>
+	[Serializable]
 	public class Message : Node
 	{
 		#region Class Members
