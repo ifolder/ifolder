@@ -35,43 +35,73 @@ namespace Simias.Sync
 
 //---------------------------------------------------------------------------
 [Serializable]
-public struct NodeId
+public class Nid
 {
-	public string s;
+	public string g;
+
+	//public Nid() { g = String.Empty; }
+
+	// run string through Guid constructor to throw exception if bad format
+	public Nid(string s)
+	{
+		try { g = new Guid(s).ToString(); }
+		catch (FormatException) { Log.Spew("'{0}' is not a valid guid", s); throw; }
+	}
+
+	//public static implicit operator Nid(string s) { return new Nid(s); }
+	//public static void Clear(out Nid id) { id.g = String.Empty; }
+	public override bool Equals(object o) { return CompareTo(o) == 0; }
+	public static bool operator==(Nid a, Nid b) { return a.Equals(b); }
+	public static bool operator!=(Nid a, Nid b) { return !a.Equals(b); }
+	public override string ToString() { return g; }
+	public override int GetHashCode() { return g.GetHashCode(); }
+	public bool Valid() { return Valid(g); }
+	public void Validate() { Log.Assert(Valid(g)); }
+	static public void Validate(string g) { Log.Assert(Valid(g)); }
+
+	static public bool Valid(string g)
+	{
+		try { return String.Compare(new Nid(g).ToString(), g, true) == 0; }
+		catch (FormatException) { return false; }
+	}
 
 	public int CompareTo(object obj)
 	{
-		if (!(obj is NodeId))
-			throw new ArgumentException("object is not NodeId");
-		return String.Compare(((NodeId)obj).s, s, true);
+		if (!(obj is Nid))
+			throw new ArgumentException("object is not Nid");
+		return String.Compare(((Nid)obj).g, g, true);
 	}
 }
 
 [Serializable]
-public struct NodeStamp: IComparable
+public class NodeStamp: IComparable
 {
-	public NodeId id;
+	public Nid id = null;
 
 	// if localIncarn == UInt64.MaxValue, node is a tombstone
-	public ulong localIncarn, masterIncarn;
+	public ulong localIncarn = 0, masterIncarn = 0;
 
 	// total size of all streams
-	public ulong streamsSize;
+	public ulong streamsSize = 0;
 
-	public string name; //just for debug
+	public string name = null; //just for debug
 
 	public int CompareTo(object obj)
 	{
+		if (obj == null)
+			Log.Spew("obj is null");
 		if (!(obj is NodeStamp))
 			throw new ArgumentException("object is not NodeStamp");
-		return String.Compare(((NodeStamp)obj).id.s, id.s, true);
+		return id.CompareTo(((NodeStamp)obj).id);
 	}
 
-	public static void Clear(out NodeStamp stamp)
-	{
-		stamp.id.s = stamp.name = null;
-		stamp.localIncarn = stamp.masterIncarn = stamp.streamsSize = 0;
-	}
+	//public static void Clear(out NodeStamp stamp)
+	//{
+	//	//Nid.Clear(out stamp.id);
+	//	stamp.id = null;
+	//	stamp.name = null;
+	//	stamp.localIncarn = stamp.masterIncarn = stamp.streamsSize = 0;
+	//}
 }
 
 [Serializable]
@@ -97,39 +127,41 @@ public class SyncOutgoingNode
 		this.collection = collection;
 	}
 
-	public bool Start(NodeId nid, out NodeStamp stamp, out string metaData, out string relativePath)
+	public bool Start(Nid nid, out NodeStamp stamp, out string metaData, out string relativePath)
 	{
+		nid.Validate();
 		if (fs != null)
 		{
 			fs.Close();
 			fs = null;
 		}
-		Debug.Assert(collection != null && nid.s != null && collection.LocalStore != null);
+		Log.Assert(collection != null && collection.LocalStore != null);
 
-		NodeStamp.Clear(out stamp);
-		Node node = collection.GetNodeById(nid.s);
-		Debug.Assert(collection != null && nid.s != null && collection.LocalStore != null);
+		//NodeStamp.Clear(out stamp);
+		stamp = new NodeStamp();
+		Node node = collection.GetNodeById(nid.ToString());
+		Log.Assert(collection != null && nid.Valid() && collection.LocalStore != null);
 		if (node == null)
 		{
-			Log.Spew("ignoring attempt to start outgoing sync for non-existent node {0}", nid.s);
+			Log.Spew("ignoring attempt to start outgoing sync for non-existent node {0}", nid);
 			metaData = null;
 			relativePath = null;
 			return false;
 		}
 
-		metaData = collection.LocalStore.ExportSingleNodeToXml(collection, nid.s).OuterXml;
-		Debug.Assert(metaData != null);
+		metaData = collection.LocalStore.ExportSingleNodeToXml(collection, nid.ToString()).OuterXml;
+		Log.Assert(metaData != null);
 
-		//Node node = collection.GetNodeById(nid.s);
+		//Node node = collection.GetNodeById(nid);
 		stamp.id = nid;
 		stamp.localIncarn = node.LocalIncarnation;
 		stamp.masterIncarn = node.MasterIncarnation;
 		stamp.name = node.Name;
 		relativePath = null;
-		foreach (NodeStream ns in node.GetStreamList())
+		foreach (FileEntry fe in node.GetFileSystemEntryList())
 		{
-			relativePath = ns.RelativePath;
-			fs = ns.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+			relativePath = fe.RelativePath;
+			fs = fe.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
 			break; //TODO: handle multiple streams
 		}
 		return true;
@@ -143,7 +175,7 @@ public class SyncOutgoingNode
 		int chunkSize = remaining < MaxSize? (int)remaining: MaxSize;
 		byte[] buffer = new byte[chunkSize];
 		int bytesRead = fs.Read(buffer, 0, buffer.Length);
-		Debug.Assert(bytesRead == buffer.Length);
+		Log.Assert(bytesRead == buffer.Length);
 		if (chunkSize < MaxSize)
 		{
 			fs.Close();
@@ -184,7 +216,7 @@ public class SyncIncomingNode
 			fileName = Path.Combine(collection.DocumentRoot.LocalPath, relativePath);
 			string dirName = Path.GetDirectoryName(fileName);
 			Directory.CreateDirectory(dirName);
-			fi = new FileInfo(Path.Combine(dirName, ".simias." + stamp.id.s));
+			fi = new FileInfo(Path.Combine(dirName, ".simias." + stamp.id));
 			fs = fi.Open(FileMode.CreateNew, FileAccess.Write, FileShare.None);
 		}
 	}
@@ -209,10 +241,10 @@ public class SyncIncomingNode
 			return false;
 		}
 		doc.LoadXml(metaData);
-		Log.Spew("importing {0} {1} to collection {2}", stamp.name, stamp.id.s, collection.Name);
+		Log.Spew("importing {0} {1} to collection {2}", stamp.name, stamp.id, collection.Name);
 		//Log.Spew("       {0}", metaData);
 		Node node = collection.LocalStore.ImportSingleNodeFromXml(collection, doc);
-		Log.Assert(node.Id == stamp.id.s);
+		Log.Assert(node.Id == stamp.id.ToString());
 		if (onServer)
 		{
 			if (node.LocalIncarnation != stamp.masterIncarn)
@@ -226,11 +258,13 @@ public class SyncIncomingNode
 			Log.Spew("Collision: overwriting local node {0} with node from server", node.Name);
 
 		if (fi == null)
-			Log.Spew("updating metadata only for {0}", node.Name);
+		{
+			//Log.Spew("updating metadata only for {0}", node.Name);
+		}
 		else
 		{
 			fs.Close();
-			Log.Spew("placing file {0}", fileName);
+			//Log.Spew("placing file {0}", fileName);
 			fs = null;
 			if (File.Exists(fileName))
 			{
@@ -239,14 +273,15 @@ public class SyncIncomingNode
 			}
 			fi.MoveTo(fileName);
 			fi = null;
-			foreach (NodeStream ns in node.GetStreamList())
+			foreach (FileSystemEntry fse in node.GetFileSystemEntryList())
 			{
-				File.SetLastWriteTime(fileName, ns.LastWriteTime);
+				File.SetLastWriteTime(fileName, fse.LastWriteTime);
 				break; //TODO: handle multiple streams 
 			}
 			
 		}
-		//Log.Spew("  metadata:   {0}", metaData);
+		
+		// Log.Spew("  metadata:   {0}", metaData);
 
 		/* TODO: If the node was a directory, we need to create it in
 		 * the file system. Like the dredger looking for deleted files,
@@ -312,19 +347,31 @@ public class SyncOps
 			bool tombstone = node.IsTombstone;
 			if (onServer && tombstone)
 				continue;
-			NodeStamp stamp;
+			NodeStamp stamp = new NodeStamp();
 			stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
 			stamp.masterIncarn = node.MasterIncarnation;
-			stamp.id.s = node.Id;
+			stamp.id = new Nid(node.Id);
 			stamp.streamsSize = 0;
 			stamp.name = node.Name;
-			foreach (NodeStream ns in node.GetStreamList())
-				stamp.streamsSize += (ulong)ns.Length;
+			foreach (FileEntry fe in node.GetFileSystemEntryList())
+			{
+				if (fe != null)
+					stamp.streamsSize += (ulong)fe.Length;
+			}
 			stampList.Add(stamp);
+			//Log.Spew("listing stamp for {0} Nid '{1}'", stamp.name, stamp.id.g);
 		}
 
+		//foreach (NodeStamp stamp in stampList)
+		//	Log.Spew("listed stamp for {0} Nid '{1}'", stamp.name, stamp.id.g);
+
+		stampList.Sort();
+
+		//foreach (NodeStamp stamp in stampList)
+		//	Log.Spew("sorted stamp for Nid '{0}'", stamp.id);
+
 		NodeStamp[] stampArray = (NodeStamp[])stampList.ToArray(typeof(NodeStamp));
-		Array.Sort(stampArray);
+		//Array.Sort(stampArray);
 		Log.Spew("Found {0} nodes in {1}", stampArray.Length, collection.Name);
 		return stampArray;
 	}
@@ -332,18 +379,18 @@ public class SyncOps
 	/// <summary>
 	/// deletes a list of nodes from a collection and removes the tombstones
 	/// </summary>
-	public void DeleteNodes(NodeId[] nodes)
+	public void DeleteNodes(Nid[] nodes)
 	{
-		foreach (NodeId nid in nodes)
+		foreach (Nid nid in nodes)
 		{
-			Node node = collection.GetNodeById(nid.s);
+			Node node = collection.GetNodeById(nid.ToString());
 			if (node == null)
 			{
-				Log.Spew("ignoring attempt to delete non-existent node {0}", nid.s);
+				Log.Spew("ignoring attempt to delete non-existent node {0}", nid);
 				continue;
 			}
-			foreach(NodeStream ns in node.GetStreamList())
-				ns.Delete(true);
+			foreach(FileSystemEntry fse in node.GetFileSystemEntryList())
+				fse.Delete(true);
 
 			/* TODO: If the node was a directory, we need to delete it from
 			 * the file system. Like the dredger looking for deleted files,
@@ -364,18 +411,18 @@ public class SyncOps
 	/// <summary>
 	/// returns array of nodes with stamp, metadata and file contents
 	/// </summary>
-	public SmallNode[] GetSmallNodes(NodeId[] nids)
+	public SmallNode[] GetSmallNodes(Nid[] nids)
 	{
 		uint i = 0;
 		SyncOutgoingNode outNode = new SyncOutgoingNode(collection);
 		SmallNode[] nodes = new SmallNode[nids.Length];
-		foreach (NodeId nid in nids)
+		foreach (Nid nid in nids)
 		{
 			if (outNode.Start(nid, out nodes[i].stamp, out nodes[i].metaData, out nodes[i].relativePath))
 			{
 				nodes[i].data = outNode.GetChunk(SmallNode.MaxSize);
 				if (nodes[i].data == null)
-					Debug.Assert(nodes[i].stamp.streamsSize == 0);
+					Log.Assert(nodes[i].stamp.streamsSize == 0);
 				else if (nodes[i].data.Length >= SmallNode.MaxSize)
 				{   // the file grew larger than a SmallNode should handle, tell client to retry
 					nodes[i].stamp.streamsSize = (ulong)nodes[i].data.Length;
@@ -388,9 +435,9 @@ public class SyncOps
 	}
 
 	/// <summary>
-	/// returns array of NodeIds that were not updated due to collisions
+	/// returns array of Nids that were not updated due to collisions
 	/// </summary>
-	public NodeId[] PutSmallNodes(SmallNode[] nodes)
+	public Nid[] PutSmallNodes(SmallNode[] nodes)
 	{
 		SyncIncomingNode inNode = new SyncIncomingNode(collection, onServer);
 		ArrayList rejects = new ArrayList();
@@ -407,7 +454,7 @@ public class SyncOps
 			if (!inNode.Complete(sn.metaData))
 				rejects.Add(sn.stamp.id);
 		}
-		return (NodeId[])rejects.ToArray(typeof(NodeId));
+		return (Nid[])rejects.ToArray(typeof(Nid));
 	}
 
 	/// <summary>
@@ -416,10 +463,10 @@ public class SyncOps
 	/// </summary>
 	public void UpdateIncarn(NodeStamp stamp)
 	{
-		Debug.Assert(!onServer);
+		Log.Assert(!onServer);
 
-		Node node = collection.GetNodeById(stamp.id.s);
-		Debug.Assert(node.MasterIncarnation == stamp.masterIncarn);
+		Node node = collection.GetNodeById(stamp.id.ToString());
+		Log.Assert(node.MasterIncarnation == stamp.masterIncarn);
 		if (stamp.localIncarn != node.LocalIncarnation)
 			Log.Spew("Local node {0} has been updated again, skipping update of master incarnation number", node.Name);
 		else

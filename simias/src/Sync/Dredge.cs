@@ -106,8 +106,8 @@ public class Dredger
 			Log.Spew("Dredger adding node for {0} {1}", FullPath(node), node.Id);
 			if (type == NodeTypeFile)
 			{	//TODO: handle multiple streams 
-				NodeStream ns = node.AddFileEntry(null, nodePath);
-				ns.LastWriteTime = File.GetLastWriteTime(path);
+				FileEntry fe = node.AddFileEntry(null, nodePath);
+				fe.LastWriteTime = File.GetLastWriteTime(path);
 			}
 			node.Commit();
 			return node;
