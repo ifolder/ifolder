@@ -25,22 +25,12 @@
  *  distributed under the GPL.
  ***********************************************************************/
 
-#ifndef _EVENT_HANDLER_H
-#define _EVENT_HANDLER_H 1
+#ifndef _GIFOLDER_H
+#define _GIFOLDER_H 1
 
-/* Simias Client Includes */
-#include <simias/simias-event-client.h>
+void simias_show_invitations_window();
 
-/* Gaim Includes */
-#include "blist.h"
-
-int on_sec_state_event(SEC_STATE_EVENT state_event, const char *message,
-					   void *data);
-					   
-int on_simias_node_created(SimiasNodeEvent *event, void *data);
-int on_simias_node_changed(SimiasNodeEvent *event, void *data);
-int on_simias_node_deleted(SimiasNodeEvent *event, void *data);
-
-void simias_buddy_signed_on_cb(GaimBuddy *buddy, void *user_data);
+void simias_in_inv_sel_changed_cb(GtkTreeSelection *sel, GtkTreeView *tree);
+void simias_out_inv_sel_changed_cb(GtkTreeSelection *sel, GtkTreeView *tree);
 
 #endif

@@ -26,9 +26,16 @@
  ***********************************************************************/
 
 #include "event-handler.h"
+
+/* Gaim iFolder Includes */
 #include "gaim-domain.h"
+#include "simias-invitation-store.h"
+#include "simias-messages.h"
+#include "simias-util.h"
+#include "simias-prefs.h"
 
 #include <glib.h>
+#include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -36,6 +43,11 @@
 
 #include "blist.h"
 #include "util.h"
+
+/* Externs */
+extern GtkListStore *in_inv_store;
+extern GtkListStore *out_inv_store;
+extern GtkListStore *trusted_buddies_store;
 
 static char *po_box_id = NULL;
 
@@ -237,4 +249,161 @@ on_simias_node_deleted(SimiasNodeEvent *event, void *data)
 	/* FIXME: Check to see if this is a member/subscription to a collection */
 	
 	return 0;
+}
+
+/**
+ * This function is called any time a buddy-sign-on event occurs.  When this
+ * happens, we need to do the following:
+ * 
+ * 	1. Send out any invitations that are for this buddy that are in the
+ *	   STATE_PENDING state.
+ *  2. If we have an IP Address for this buddy in the Simias Gaim Domain Roster,
+ * 	   send out a [simias:ping-request] message so their IP Address will be
+ * 	   updated if it's changed.
+ *  3. Send out any pending accept or reject messages for this buddy.
+ */
+void
+simias_buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
+{
+	GtkTreeIter iter;
+	int send_result;
+	char time_str[32];
+	char state_str[32];
+
+	Invitation *invitation;
+	gboolean valid;
+	gboolean b_in_store_updated = FALSE;
+	gboolean b_out_store_updated = FALSE;
+	
+	valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(out_inv_store), &iter);
+	while (valid) {
+		/* Extract the Invitation * out of the model */
+		gtk_tree_model_get(GTK_TREE_MODEL(out_inv_store), &iter,
+					INVITATION_PTR, &invitation,
+					-1);
+					
+		/**
+		 * Make sure all the following conditions exist before sending the
+		 * message:
+		 * 	- The invitation state is STATE_PENDING 
+		 * 	- The current invitation is intended for this buddy
+		 * 	- The buddy is not signing or signed off
+		 */
+		if (invitation->state == STATE_PENDING
+			&& buddy->account == invitation->gaim_account
+			&& strcmp(buddy->name, invitation->buddy_name) == 0
+			&& buddy->present != GAIM_BUDDY_SIGNING_OFF
+			&& buddy->present != GAIM_BUDDY_OFFLINE) {
+			send_result = simias_send_invitation_req(
+					buddy,
+					invitation->collection_id,
+					invitation->collection_type,
+					invitation->collection_name);
+		
+			if (send_result > 0) {
+				/* Update the invitation time and resend the invitation */
+				time(&(invitation->time));
+
+				/* Update the invitation state */
+				invitation->state = STATE_SENT;
+	
+				/* Format the time to a string */
+				simias_fill_time_str(time_str, 32, invitation->time);
+
+				/* Format the state string */
+				simias_fill_state_str(state_str, invitation->state);
+
+				/* Update the out_inv_store */
+				gtk_list_store_set(
+					GTK_LIST_STORE(out_inv_store),
+					&iter,
+					TIME_COL, time_str,
+					STATE_COL, state_str,
+					-1);
+
+				b_out_store_updated = TRUE;
+			}
+		}
+
+		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(out_inv_store), &iter);
+	}
+
+	if (gaim_prefs_get_bool(SIMIAS_PREF_REDISCOVER_IP_ADDRS)) {
+		if (simias_lookup_trusted_buddy(trusted_buddies_store, buddy, &iter)) {
+			/* Send a ping-request message */
+			send_result = simias_send_ping_req(buddy);
+			if (send_result <= 0) {
+				g_print("simias_buddy_signed_on_cb() couldn't send a ping reqest: %d\n", send_result);
+			}
+		}
+	}
+
+	valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(in_inv_store), &iter);
+	while (valid) {
+		/* Extract the Invitation * out of the model */
+		gtk_tree_model_get(GTK_TREE_MODEL(in_inv_store), &iter,
+					INVITATION_PTR, &invitation,
+					-1);
+
+		/**
+		 * Make sure all the following conditions exist before sending the
+		 * message:
+		 * 	- The current invitation is intended for this buddy
+		 * 	- The buddy is not signing or signed off
+		 */
+		if (buddy->account == invitation->gaim_account
+			&& strcmp(buddy->name, invitation->buddy_name) == 0
+			&& buddy->present != GAIM_BUDDY_SIGNING_OFF
+			&& buddy->present != GAIM_BUDDY_OFFLINE) {
+			/* Use send_result = 1 to know if a send failed */
+			send_result = 1;
+
+			if (invitation->state == STATE_ACCEPTED_PENDING) {
+				send_result = simias_send_invitation_accept(buddy,
+													invitation->collection_id);
+			} else if (invitation->state == STATE_REJECTED_PENDING) {
+				send_result = simias_send_invitation_deny(buddy,
+													invitation->collection_id);
+			}
+
+			if (send_result <= 0) {
+				g_print("Error sending deny message in simias_buddy_signed_on_cb()\n");
+				/**
+				 * Update the time stamp of the invitation so the user has some
+				 * idea that the message was updated.
+				 */
+				time(&(invitation->time));
+
+				/* Format the time to a string */
+				simias_fill_time_str(time_str, 32, invitation->time);
+
+				/* Update the out_inv_store */
+				gtk_list_store_set(in_inv_store, &iter,
+					TIME_COL, time_str,
+					-1);
+
+				b_in_store_updated = TRUE;
+			} else {
+				/**
+				 * The message was sent successfully and so we can remove the
+				 * invitation from the in_inv_store.
+				 */
+				gtk_list_store_remove(in_inv_store, &iter);
+				free(invitation);
+
+				b_in_store_updated = TRUE;
+			}
+		}
+
+		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(in_inv_store), &iter);
+	}
+
+	if (b_in_store_updated) {
+		/* Save the updates to a file */
+		simias_save_invitations(in_inv_store);
+	}
+	if (b_out_store_updated) {
+		/* Save the updates to a file */
+		simias_save_invitations(out_inv_store);
+	}
 }

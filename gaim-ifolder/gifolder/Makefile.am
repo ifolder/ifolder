@@ -14,8 +14,10 @@ gifolder_la_SOURCES = \
 	gifolder.c \
 	event-handler.c \
 	gaim-domain.c \
+	simias-invitation-store.c \
 	simias-messages.c \
-	simias-prefs.c
+	simias-prefs.c \
+	simias-util.c
 
 endif
 

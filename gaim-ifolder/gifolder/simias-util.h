@@ -25,22 +25,21 @@
  *  distributed under the GPL.
  ***********************************************************************/
 
-#ifndef _EVENT_HANDLER_H
-#define _EVENT_HANDLER_H 1
+#ifndef _SIMIAS_UTIL_H
+#define _SIMIAS_UTIL_H 1
 
-/* Simias Client Includes */
-#include <simias/simias-event-client.h>
+#include <time.h>
 
-/* Gaim Includes */
-#include "blist.h"
+/* Gaim iFolder Includes */
+#include "simias-invitation-store.h"
 
-int on_sec_state_event(SEC_STATE_EVENT state_event, const char *message,
-					   void *data);
-					   
-int on_simias_node_created(SimiasNodeEvent *event, void *data);
-int on_simias_node_changed(SimiasNodeEvent *event, void *data);
-int on_simias_node_deleted(SimiasNodeEvent *event, void *data);
+#define TIMESTAMP_FORMAT "%I/%d/%Y %I:%M %p"
 
-void simias_buddy_signed_on_cb(GaimBuddy *buddy, void *user_data);
+char * simias_fill_time_str(char *time_str, int buf_len, time_t time);
+char * simias_fill_state_str(char *state_str, INVITATION_STATE state);
+
+/* These next two are likely not needed anymore */
+gboolean simias_is_valid_ip_part(const char *ip_part);
+int simias_length_of_ip_address(const char *buffer);
 
 #endif
