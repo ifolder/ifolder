@@ -283,7 +283,10 @@ namespace Simias.Sync.Client
 					}
 
 					byte[] readBuffer;
+					readBufferSize = (readBufferSize > sizeRemaining) ? (int)sizeRemaining : readBufferSize;
 					int bytesRead = serverFile.Read(offset, readBufferSize, out readBuffer);
+					if (bytesRead != readBufferSize)
+						return false;
 					Write(readBuffer, 0, bytesRead);
 					sizeRemaining -= bytesRead;
 					Log.log.Debug("Finished Download bytes remaining = {0}", sizeRemaining);
@@ -319,7 +322,7 @@ namespace Simias.Sync.Client
 				return fileMap;
 			}
 			
-			sizeToSync = BlockSize * serverHashMap.Length;
+			sizeToSync = (BlockSize * (serverHashMap.Length - 1)) + node.Length % BlockSize;
 			table.Add(serverHashMap);
 			fileMap = new long[serverHashMap.Length];
 
@@ -1040,17 +1043,16 @@ namespace Simias.Sync.Client
 		{
 			HttpWebRequest request = GetRequest();
 			WebHeaderCollection headers = request.Headers;
-			request.Method = "Put";
-			request.ContentLength = 0;
+			request.Method = "GET";
 			headers.Add(SyncHttp.SyncRange, offset.ToString() + '-' + (offset + count).ToString());
 			headers.Add(SyncHttp.SyncOperation, SyncHttp.Operation.Read.ToString());
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 			if (response.StatusCode == HttpStatusCode.OK)
 			{
 				buffer = new byte[count];
-				response.GetResponseStream().Read(buffer, 0, count);
+				int length = response.GetResponseStream().Read(buffer, 0, count);
 				response.Close();
-				return count;
+				return length;
 			}
 
 			throw new SimiasException(response.StatusDescription);
@@ -1098,7 +1100,7 @@ namespace Simias.Sync.Client
 		{
 			HttpWebRequest request = GetRequest();
 			WebHeaderCollection headers = request.Headers;
-			request.Method = "Post";
+			request.Method = "POST";
 			request.ContentLength = 0;
 			headers.Add(SyncHttp.CopyOffset, originalOffset.ToString());
 			headers.Add(SyncHttp.SyncRange, offset.ToString() + '-' + (offset + count).ToString());
@@ -1121,7 +1123,7 @@ namespace Simias.Sync.Client
 		{
 			HttpWebRequest request = GetRequest();
 			WebHeaderCollection headers = request.Headers;
-			request.Method = "Post";
+			request.Method = "POST";
 			request.ContentLength = count;
 			headers.Add(SyncHttp.SyncOperation, SyncHttp.Operation.Write.ToString());
 			headers.Add(SyncHttp.SyncRange, offset.ToString() + "-" + ((long)(offset + count)).ToString());

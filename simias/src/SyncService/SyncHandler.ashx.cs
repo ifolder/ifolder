@@ -54,7 +54,11 @@ namespace Simias.Sync.Web
 							long size;
 							if (GetRange(Request, out offset, out size))
 							{
-								Response.WriteFile(service.GetReadHandle(), offset, size);
+								byte[] buffer;
+								service.Read(out buffer, offset, (int)size);
+								Response.BinaryWrite(buffer);
+								Response.End();
+								//Response.WriteFile((service.GetReadHandle(), offset, size);
 							}
 							else
 							{
