@@ -145,7 +145,6 @@ namespace Simias.mDns
 			if ( mDnsChannelUp == false )
 			{
 				throw new SimiasException( "Remoting channel not setup" );
-				return;
 			}
 
 			//
@@ -200,7 +199,6 @@ namespace Simias.mDns
 			if ( mDnsChannelUp == false )
 			{
 				throw new SimiasException( "Remoting channel not setup" );
-				return;
 			}
 
 			if ( this.rr != null )
