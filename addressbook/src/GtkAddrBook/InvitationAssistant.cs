@@ -57,7 +57,7 @@ namespace Novell.AddressBook.UI.gtk
 		/// <summary>
 		/// autoloaded widget being the druid
 		/// </summary>
-//		[Glade.Widget] private Gnome.DruidPageStandard	SelectLocationPage;
+		[Glade.Widget] private Gnome.DruidPageStandard	SelectLocationPage;
 
 		/// <summary>
 		/// autoloaded widget used to enter invitation path
@@ -113,6 +113,8 @@ namespace Novell.AddressBook.UI.gtk
 		private Subscription		subscription = null;
 		private Store				store = null;
 		private POBox				pobox = null;
+		
+		private bool			SelectorIsFirst = false;
 
 		public event EventHandler AssistantClosed;
 
@@ -124,8 +126,6 @@ namespace Novell.AddressBook.UI.gtk
 		/// </summary>
 		public InvitationAssistant()
 		{
-			inviteFile = "";
-//			showLoadPage = true;
 			Init_Glade();
 		}
 
@@ -137,7 +137,18 @@ namespace Novell.AddressBook.UI.gtk
 		public InvitationAssistant(string inviteFile)
 		{
 			this.inviteFile = inviteFile;
-//			showLoadPage = false;
+			Init_Glade();
+		}
+
+
+		/// <summary>
+		/// Constructor for creating a new InvitationAssistant.
+		/// In this mode, the Load page will not be shown.
+		/// </summary>
+		/// <param name="sub">An instance of a subscription.</param>
+		public InvitationAssistant(Subscription sub)
+		{
+			subscription = sub;
 			Init_Glade();
 		}
 #endregion
@@ -153,6 +164,13 @@ namespace Novell.AddressBook.UI.gtk
 				"InviteWindow", 
 				null);
 			mainXml.Autoconnect (this);
+
+			// if we already have a subscription
+			if( (subscription != null) || (inviteFile != null) )
+			{
+				SelectorIsFirst = true;
+				InvitationDruid.Page = SelectLocationPage;
+			}
 		}
 
 		/// <summary>
@@ -269,8 +287,43 @@ namespace Novell.AddressBook.UI.gtk
 
 		private void on_select_location_prepare(object o, EventArgs args)
 		{
-			if((subInfo != null) && (subscription != null))
+			// add in a bunch of crap because the stupid DRUID gtk-sharp
+			// code won't let me control the Damn pages unless I
+			// subclass it.  Duh, how about something useful here!
+			if(SelectorIsFirst)
 			{
+				if(store == null)
+					store = new Store(new Configuration());
+
+				if(inviteFile != null)
+				{
+					subInfo = new SubscriptionInfo(inviteFile);
+
+					pobox = POBox.GetPOBox(store, subInfo.DomainID);
+					Node node = pobox.GetNodeByID(subInfo.SubscriptionID);
+					if(node != null)
+					{
+						subscription = new Subscription(node);
+					}
+					else
+					{
+						subscription = new Subscription("Subscription Name",
+															subInfo);
+						subscription.SubscriptionState = 
+								SubscriptionStates.Received;
+
+						pobox.AddMessage(subscription);
+					}
+				}
+			}
+
+			if(subscription != null)
+			{
+				if(pobox == null)
+				{
+					pobox = POBox.GetPOBox(store, subscription.DomainID);
+				}
+
 				CollectionNameLabel.Text = 
 						subscription.SubscriptionCollectionName;
 				if( (subscription.SubscriptionCollectionType != null) && 
@@ -282,7 +335,7 @@ namespace Novell.AddressBook.UI.gtk
 
 				CollectionFromLabel.Text = subscription.FromName;
 
-				if(!subInfo.SubscriptionCollectionHasDirNode)
+				if(!subscription.HasDirNode)
 				{
 					SelectLabel.Hide();
 					SelectPathLabel.Hide();
@@ -291,15 +344,20 @@ namespace Novell.AddressBook.UI.gtk
 				}
 
 				// Setup the buttons				back  next   cancl help
-				if( (subInfo.SubscriptionCollectionHasDirNode) && 
+				if( (subscription.HasDirNode) && 
 						(CollectionPathEntry.Text.Length == 0))
-					InvitationDruid.SetButtonsSensitive(true, false, 
-															true, true);
+					InvitationDruid.SetButtonsSensitive((!SelectorIsFirst), 
+												false, true, true);
 				else
-					InvitationDruid.SetButtonsSensitive(true, true, true, true);
+					InvitationDruid.SetButtonsSensitive((!SelectorIsFirst), 
+												true, true, true);
 			}
 			else
-				InvitationDruid.SetButtonsSensitive(true, false, true, true);
+			{
+				Console.WriteLine("Ney, Ialksdjflkasjdfkl'm getting called");
+				InvitationDruid.SetButtonsSensitive((!SelectorIsFirst), 
+													false, true, true);
+			}
 		}
 
 		private void on_collection_path_changed(object o, EventArgs args)

@@ -7,7 +7,7 @@
 <widget class="GtkWindow" id="InviteWindow">
   <property name="title" translatable="yes">Invitation Assistant</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
-  <property name="window_position">GTK_WIN_POS_NONE</property>
+  <property name="window_position">GTK_WIN_POS_CENTER</property>
   <property name="modal">False</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
@@ -18,7 +18,7 @@
     <widget class="GnomeDruid" id="InvitationDruid">
       <property name="border_width">4</property>
       <property name="visible">True</property>
-      <property name="show_help">True</property>
+      <property name="show_help">False</property>
       <signal name="cancel" handler="on_druid_cancel" last_modification_time="Wed, 07 Jul 2004 08:19:34 GMT"/>
 
       <child>
