@@ -39,3 +39,24 @@ package:
 
 package-clean:
 	$(MAKE) -C package clean
+
+#	
+# Create the ChangeLog(s) directly from the CVS archive
+# The ChangeLog should be generated and checked-in manually
+# each time a release is made by typing: make ChangeLog
+#
+# nautilus-ifolder/ChangeLog contains all changes except
+# for changes made to nautilus-ifolder/po/*.po files.
+#
+# nautilus-ifolder/po/ChangeLog contains only changes made
+# to nautilus-ifolder/po/*.po files.
+#
+CVS2CL = external/cvs2cl/cvs2cl.pl
+USERMAP = external/cvs2cl/usermap.txt
+$(srcdir)/ChangeLog: $(srcdir)/Makefile.am
+	if (cd $(srcdir); $(CVS2CL) --separate-header --no-wrap --revisions --utc --usermap $(USERMAP) --ignore ^po\/.*\.po$ ); then \
+	rm -f $(srcdir)/ChangeLog.bak \
+	else true; fi
+	if (cd $(srcdir)/po; ../$(CVS2CL) --separate-header --no-wrap --revisions --utc --usermap ../$(USERMAP) --regexp .*\.po$ ); then \
+	rm -f $(srcdir)/po/ChangeLog.bak \
+	else true; fi
