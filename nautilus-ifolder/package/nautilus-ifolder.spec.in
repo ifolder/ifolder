@@ -22,7 +22,8 @@
 #
 #######################################################################
 
-%define prefix /opt/gnome
+%define prefix @prefix@
+%define gnome_root @gnome_root@
 
 Summary      : nautilus-ifolder
 Name         : @PACKAGE@
@@ -79,7 +80,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 #=============================================================================
 %Files
 %defattr(-,root,root)
-/opt/gnome/lib/nautilus-ifolder*
-/opt/gnome/lib/nautilus/extensions-1.0/libnautilus-ifolder*
-/opt/gnome/share/icons/gnome/48x48/emblems/emblem-ifolder.png
-/opt/gnome/share/icons/gnome/24x24/apps/ifolder-folder.png
+%{prefix}/*
+@gnome_root@/lib/nautilus/extensions-1.0/libnautilus-ifolder*
+@gnome_root@/share/icons/gnome/48x48/emblems/emblem-ifolder.png
+@gnome_root@/share/icons/gnome/24x24/apps/ifolder-folder.png
