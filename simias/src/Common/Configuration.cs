@@ -84,15 +84,6 @@ namespace Simias
 		#endregion
 		
 		#region Constructor
-		
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		/// <param name="path">The path to the configuration file.</param>
-		private Configuration(string path) : this(path, true)
-		{
-		}
-
 		/// <summary>
 		/// Constructor.
 		/// </summary>
