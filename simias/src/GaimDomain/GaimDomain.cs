@@ -505,7 +505,8 @@ namespace Simias.Gaim
 							compareString = aliasNode.Value;
 						}
 					}
-					else
+					
+					if (compareString == null)
 					{
 						// Use the screenname
 						XmlNode nameNode = buddyNode.SelectSingleNode("name/text()");
