@@ -41,7 +41,7 @@ namespace Novell.iFolder.iFolderCom
 	{
 		String Description{get; set;}
 		bool CanBeiFolder([MarshalAs(UnmanagedType.LPWStr)] string path);
-		bool IsiFolder([MarshalAs(UnmanagedType.LPWStr)] string path);
+		bool IsiFolder([MarshalAs(UnmanagedType.LPWStr)] string path, out bool hasConflicts);
 		bool IsShareable([MarshalAs(UnmanagedType.LPWStr)] string path);
 		bool CreateiFolder([MarshalAs(UnmanagedType.LPWStr)] string path);
 		void DeleteiFolder([MarshalAs(UnmanagedType.LPWStr)] string path);
@@ -131,16 +131,37 @@ namespace Novell.iFolder.iFolderCom
 			return false;
 		}
 
-		public bool IsiFolder([MarshalAs(UnmanagedType.LPWStr)] string path)
+		public bool IsiFolder([MarshalAs(UnmanagedType.LPWStr)] string path, out bool hasConflicts)
 		{
-			return manager.IsiFolder(path);
+			iFolder ifolder = null;
+			hasConflicts = false;
+
+			try
+			{
+				ifolder = manager.GetiFolderByPath(path);
+				if (ifolder != null)
+				{
+					hasConflicts = ifolder.HasCollisions();
+				}
+			}
+			catch (SimiasException e)
+			{
+				e.LogError();
+			}
+			catch (Exception e)
+			{
+				logger.Debug(e, "IsiFolder");
+			}
+
+			return ifolder != null;
 		}
 
 		public bool IsShareable([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
 			try
 			{
-				if (IsiFolder(path))
+				bool hasConflicts;
+				if (IsiFolder(path, out hasConflicts))
 				{
 					return manager.GetiFolderByPath(path).Shareable;
 				}

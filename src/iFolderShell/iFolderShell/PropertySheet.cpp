@@ -288,8 +288,9 @@ STDMETHODIMP CiFolderShell::AddPages(LPFNADDPROPSHEETPAGE lpfnAddPage,
 
 				if (m_spiFolder)
 				{
+					VARIANT_BOOL hasConflicts;
 					bDispPropPage= m_spiFolder->IsiFolderNode(m_szFileUserClickedOn);
-					bDispSharePage= m_spiFolder->IsiFolder(m_szFileUserClickedOn);
+					bDispSharePage= m_spiFolder->IsiFolder(m_szFileUserClickedOn, &hasConflicts);
 				}
 			}
 			catch (...)

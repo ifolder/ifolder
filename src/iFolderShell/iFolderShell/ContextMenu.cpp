@@ -98,7 +98,8 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 
 				if (m_spiFolder)
 				{
-					biFolder= m_spiFolder->IsiFolder(m_szFileUserClickedOn);
+					VARIANT_BOOL hasConflicts;
+					biFolder= m_spiFolder->IsiFolder(m_szFileUserClickedOn, &hasConflicts);
 				}
 			}
 			catch (...)
