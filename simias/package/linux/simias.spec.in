@@ -39,7 +39,7 @@ BuildRoot    : %{_tmppath}/%{name}-%{version}
 Requires     : mono-core >= 0.91
 Requires     : mono-data >= 0.91
 Requires     : mono-remoting >= 0.91
-Requires     : mono-nunit >= 0.91
+#Requires     : mono-nunit >= 0.91
 Obsoletes    : %{name} <= %{version}
 
 #=============================================================================
