@@ -16,7 +16,7 @@ BookLib_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin
 
 DATA_FILES = book.png briefcase.png contact.png contact_me.png cellphone.png connect_to_url-16.xpm galeon.png globe.png house.png ico-mail.png blankhead.png addressbook.glade
 
-EXTRA_DIST = $(Book_CSFILES) $(BookLib_CSFILES) $(Book_RESOURCES) $(BookLib_RESOURCES)
+EXTRA_DIST = $(Book_CSFILES) $(BookLib_CSFILES) $(Book_RESOURCES) $(BookLib_RESOURCES) $(DATA_FILES)
 
 all: Book.exe BookLib.dll
 
@@ -26,9 +26,9 @@ Book.exe: $(Book_CSFILES) $(Book_RESOURCES) BookLib.dll
 BookLib.dll: $(BookLib_CSFILES) $(BookLib_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(BookLib_FLAGS) $(BookLib_LIBS:%=/r:%) $(BookLib_LIBPATH:%=/lib:%) $(BookLib_RESOURCES:%=$(ICON_FLAG)%) $(BookLib_CSFILES_CSC) /doc:BookLib.xml
 
-install-exec-local: Book.exe BookLib.dll $(DATA_FILES:%=$(srcdir)/%)
+install-exec-local: Book.exe BookLib.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) Book.exe BookLib.dll $(DATA_FILES:%=$(srcdir)/%) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) Book.exe BookLib.dll $(DATA_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f Book.exe BookLib.dll $(DATA_FILES) $(BookLib_RESOURCES)

@@ -6,19 +6,21 @@ Book_FLAGS = $(CSC_EXEFLAG)
 Book_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) FormsBookLib.dll  Configuration.dll StoreProvider.dll Identity.dll CollectionEvents.dll CollectionStore.dll AddressBook.dll
 Book_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin
 
-EXTRA_DIST = $(Book_CSFILES)
+DATA_FILES = address_app.ico
+
+EXTRA_DIST = $(Book_CSFILES) $(DATA_FILES)
 
 all: Book.exe
 
 Book.exe: $(Book_CSFILES) $(Book_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(Book_FLAGS) $(Book_LIBS:%=/r:%) $(Book_LIBPATH:%=/lib:%) $(Book_RESOURCES:%=$(ICON_FLAG)%) $(Book_CSFILES_CSC) /doc:Book.xml
 
-install-exec-local: Book.exe
+install-exec-local: Book.exe $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) Book.exe $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) Book.exe $(DATA_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Book.exe
+	cd $(DESTDIR)$(bindir); rm -f Book.exe $(DATA_FILES)
     
 installcheck-local: install
 	
