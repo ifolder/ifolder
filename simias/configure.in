@@ -352,6 +352,7 @@ src/Simias.dll/Makefile
 src/CollectionEvents/Makefile
 src/mDnsService/Makefile
 src/SyncManager/Makefile
+src/AddressBookCmd/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile
