@@ -106,7 +106,7 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="collection"></param>
 		/// <param name="onServer"></param>
-		public FileWatcher(Collection collection, bool onServer)
+		public FileWatcher(SyncCollection collection, bool onServer)
 		{
 			// TODO: Syncronize the dredger with the sync engine.
 			this.collection = new SyncCollection(collection);

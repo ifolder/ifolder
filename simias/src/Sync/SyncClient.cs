@@ -420,6 +420,7 @@ namespace Simias.Sync.Client
 		private const string	ServerCLContextProp = "ServerCLContext";
 		private const string	ClientCLContextProp = "ClientCLContext";
 		int				nodesToSync;
+		static int		initialSyncDelay = 10 * 1000; // 10 seconds.
 
 		#endregion
 	
@@ -477,6 +478,11 @@ namespace Simias.Sync.Client
 		/// <param name="SyncNow">If true schedule now.</param>
 		internal void Reschedule(bool SyncNow)
 		{
+			if (collection.Role != SyncCollectionRoles.Slave)
+			{
+				timer.Change(Timeout.Infinite, Timeout.Infinite);
+				return;
+			}
 			if (!stopping)
 			{
                 int seconds;
@@ -562,6 +568,8 @@ namespace Simias.Sync.Client
 			
 			// Sync the file system with the local store.
 			fileMonitor.CheckForFileChanges();
+			if (collection.Role != SyncCollectionRoles.Slave)
+				return;
 
 			// We may have just created or deleted nodes wait for the events to settle.
 			Thread.Sleep(500);
@@ -689,9 +697,28 @@ namespace Simias.Sync.Client
 		/// This will happen when we are disconected.
 		/// </summary>
 		/// <param name="collectionClient"></param>
-		private void RetryInit(object collectionClient)
+		private void InitializeSlave(object collectionClient)
 		{
-			Initialize();
+			int delay;
+			if (collection.MasterIncarnation == 0) delay = initialSyncDelay;
+			else delay = collection.Interval == Timeout.Infinite ? Timeout.Infinite : initialSyncDelay;
+			
+			// If the master has not been created. Do it now.
+			try
+			{
+				if (collection.CreateMaster)
+				{
+					new Simias.Domain.DomainAgent(Configuration.GetConfiguration()).CreateMaster(collection);
+				}
+				workArray = new SyncWorkArray(collection);
+				serverContext = null;
+				clientContext = null;
+				timer = new Timer(callback, this, delay, Timeout.Infinite);
+			}
+			catch
+			{
+				timer = new Timer(new TimerCallback(InitializeSlave), this, delay, Timeout.Infinite);
+			}
 		}
 
 		/// <summary>
@@ -705,30 +732,11 @@ namespace Simias.Sync.Client
 				case SyncCollectionRoles.Master:
 				case SyncCollectionRoles.Local:
 				default:
-					timer = new Timer(callback, this, Timeout.Infinite, Timeout.Infinite);				
+					timer = new Timer(callback, this, initialSyncDelay, Timeout.Infinite);				
 					break;
 
 				case SyncCollectionRoles.Slave:
-					int delay;
-					if (collection.MasterIncarnation == 0) delay = 0;
-					else delay = collection.Interval == Timeout.Infinite ? Timeout.Infinite : 0;
-			
-					// If the master has not been created. Do it now.
-					try
-					{
-						if (collection.CreateMaster)
-						{
-							new Simias.Domain.DomainAgent(Configuration.GetConfiguration()).CreateMaster(collection);
-						}
-						workArray = new SyncWorkArray(collection);
-						serverContext = null;
-						clientContext = null;
-						timer = new Timer(callback, this, delay, Timeout.Infinite);
-					}
-					catch
-					{
-						timer = new Timer(new TimerCallback(RetryInit), this, delay, Timeout.Infinite);
-					}
+					InitializeSlave(this);
 					break;
 			}
 		}

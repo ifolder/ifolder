@@ -64,6 +64,14 @@ namespace Simias.Event
 			Thread t1 = new Thread(new ThreadStart(EventQueueThread));
 			t1.IsBackground = true;
 			t1.Start();
+
+			Thread t2 = new Thread(new ThreadStart(EventQueueThread));
+			t2.IsBackground = true;
+			t2.Start();
+
+			Thread t3 = new Thread(new ThreadStart(EventQueueThread));
+			t3.IsBackground = true;
+			t3.Start();
 		}
 
 		#endregion
