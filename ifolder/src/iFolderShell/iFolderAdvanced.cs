@@ -51,6 +51,8 @@ namespace Novell.iFolderCom
 		private NodeDelegate nodeDelegate;
 		private delegate void SyncSizeDelegate(uint objectCount);
 		private SyncSizeDelegate syncSizeDelegate;
+		private delegate void SyncSizeAndTimeDelegate(uint objectCount, DateTime dateTime);
+		private SyncSizeAndTimeDelegate syncSizeAndTimeDelegate;
 
 		private Queue eventQueue;
 		private Thread worker = null;
@@ -89,9 +91,7 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.ToolTip toolTip1;
 		private System.Windows.Forms.HelpProvider helpProvider1;
 		private System.Windows.Forms.GroupBox groupBox1;
-		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.NumericUpDown syncInterval;
-		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.CheckBox autoSync;
 		private System.Windows.Forms.Label objectCount;
 		private System.Windows.Forms.Label label8;
@@ -125,6 +125,11 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Label limit;
 		private Novell.iFolderCom.GaugeChart gaugeChart;
 		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.Label syncLabel;
+		private System.Windows.Forms.Label syncUnits;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.Label lastSync;
+		private System.Windows.Forms.Button syncNow;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -135,6 +140,7 @@ namespace Novell.iFolderCom
 		{
 			nodeDelegate = new NodeDelegate(nodeEvent);
 			syncSizeDelegate = new SyncSizeDelegate(updateSyncSize);
+			syncSizeAndTimeDelegate = new SyncSizeAndTimeDelegate(updateSyncSizeAndTime);
 			
 			eventQueue = new Queue();
 			workEvent = new AutoResetEvent(false);
@@ -210,10 +216,13 @@ namespace Novell.iFolderCom
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabGeneral = new System.Windows.Forms.TabPage();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.syncNow = new System.Windows.Forms.Button();
+			this.lastSync = new System.Windows.Forms.Label();
+			this.label4 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
-			this.label5 = new System.Windows.Forms.Label();
+			this.syncLabel = new System.Windows.Forms.Label();
 			this.syncInterval = new System.Windows.Forms.NumericUpDown();
-			this.label6 = new System.Windows.Forms.Label();
+			this.syncUnits = new System.Windows.Forms.Label();
 			this.autoSync = new System.Windows.Forms.CheckBox();
 			this.objectCount = new System.Windows.Forms.Label();
 			this.label8 = new System.Windows.Forms.Label();
@@ -329,10 +338,13 @@ namespace Novell.iFolderCom
 			this.groupBox1.AccessibleName = resources.GetString("groupBox1.AccessibleName");
 			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox1.Anchor")));
 			this.groupBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox1.BackgroundImage")));
+			this.groupBox1.Controls.Add(this.syncNow);
+			this.groupBox1.Controls.Add(this.lastSync);
+			this.groupBox1.Controls.Add(this.label4);
 			this.groupBox1.Controls.Add(this.label2);
-			this.groupBox1.Controls.Add(this.label5);
+			this.groupBox1.Controls.Add(this.syncLabel);
 			this.groupBox1.Controls.Add(this.syncInterval);
-			this.groupBox1.Controls.Add(this.label6);
+			this.groupBox1.Controls.Add(this.syncUnits);
 			this.groupBox1.Controls.Add(this.autoSync);
 			this.groupBox1.Controls.Add(this.objectCount);
 			this.groupBox1.Controls.Add(this.label8);
@@ -354,6 +366,89 @@ namespace Novell.iFolderCom
 			this.groupBox1.Text = resources.GetString("groupBox1.Text");
 			this.toolTip1.SetToolTip(this.groupBox1, resources.GetString("groupBox1.ToolTip"));
 			this.groupBox1.Visible = ((bool)(resources.GetObject("groupBox1.Visible")));
+			// 
+			// syncNow
+			// 
+			this.syncNow.AccessibleDescription = resources.GetString("syncNow.AccessibleDescription");
+			this.syncNow.AccessibleName = resources.GetString("syncNow.AccessibleName");
+			this.syncNow.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("syncNow.Anchor")));
+			this.syncNow.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("syncNow.BackgroundImage")));
+			this.syncNow.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("syncNow.Dock")));
+			this.syncNow.Enabled = ((bool)(resources.GetObject("syncNow.Enabled")));
+			this.syncNow.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("syncNow.FlatStyle")));
+			this.syncNow.Font = ((System.Drawing.Font)(resources.GetObject("syncNow.Font")));
+			this.helpProvider1.SetHelpKeyword(this.syncNow, resources.GetString("syncNow.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.syncNow, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("syncNow.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.syncNow, resources.GetString("syncNow.HelpString"));
+			this.syncNow.Image = ((System.Drawing.Image)(resources.GetObject("syncNow.Image")));
+			this.syncNow.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("syncNow.ImageAlign")));
+			this.syncNow.ImageIndex = ((int)(resources.GetObject("syncNow.ImageIndex")));
+			this.syncNow.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("syncNow.ImeMode")));
+			this.syncNow.Location = ((System.Drawing.Point)(resources.GetObject("syncNow.Location")));
+			this.syncNow.Name = "syncNow";
+			this.syncNow.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("syncNow.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.syncNow, ((bool)(resources.GetObject("syncNow.ShowHelp"))));
+			this.syncNow.Size = ((System.Drawing.Size)(resources.GetObject("syncNow.Size")));
+			this.syncNow.TabIndex = ((int)(resources.GetObject("syncNow.TabIndex")));
+			this.syncNow.Text = resources.GetString("syncNow.Text");
+			this.syncNow.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("syncNow.TextAlign")));
+			this.toolTip1.SetToolTip(this.syncNow, resources.GetString("syncNow.ToolTip"));
+			this.syncNow.Visible = ((bool)(resources.GetObject("syncNow.Visible")));
+			this.syncNow.Click += new System.EventHandler(this.syncNow_Click);
+			// 
+			// lastSync
+			// 
+			this.lastSync.AccessibleDescription = resources.GetString("lastSync.AccessibleDescription");
+			this.lastSync.AccessibleName = resources.GetString("lastSync.AccessibleName");
+			this.lastSync.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("lastSync.Anchor")));
+			this.lastSync.AutoSize = ((bool)(resources.GetObject("lastSync.AutoSize")));
+			this.lastSync.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("lastSync.Dock")));
+			this.lastSync.Enabled = ((bool)(resources.GetObject("lastSync.Enabled")));
+			this.lastSync.Font = ((System.Drawing.Font)(resources.GetObject("lastSync.Font")));
+			this.helpProvider1.SetHelpKeyword(this.lastSync, resources.GetString("lastSync.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.lastSync, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("lastSync.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.lastSync, resources.GetString("lastSync.HelpString"));
+			this.lastSync.Image = ((System.Drawing.Image)(resources.GetObject("lastSync.Image")));
+			this.lastSync.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("lastSync.ImageAlign")));
+			this.lastSync.ImageIndex = ((int)(resources.GetObject("lastSync.ImageIndex")));
+			this.lastSync.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("lastSync.ImeMode")));
+			this.lastSync.Location = ((System.Drawing.Point)(resources.GetObject("lastSync.Location")));
+			this.lastSync.Name = "lastSync";
+			this.lastSync.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("lastSync.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.lastSync, ((bool)(resources.GetObject("lastSync.ShowHelp"))));
+			this.lastSync.Size = ((System.Drawing.Size)(resources.GetObject("lastSync.Size")));
+			this.lastSync.TabIndex = ((int)(resources.GetObject("lastSync.TabIndex")));
+			this.lastSync.Text = resources.GetString("lastSync.Text");
+			this.lastSync.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("lastSync.TextAlign")));
+			this.toolTip1.SetToolTip(this.lastSync, resources.GetString("lastSync.ToolTip"));
+			this.lastSync.Visible = ((bool)(resources.GetObject("lastSync.Visible")));
+			// 
+			// label4
+			// 
+			this.label4.AccessibleDescription = resources.GetString("label4.AccessibleDescription");
+			this.label4.AccessibleName = resources.GetString("label4.AccessibleName");
+			this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label4.Anchor")));
+			this.label4.AutoSize = ((bool)(resources.GetObject("label4.AutoSize")));
+			this.label4.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label4.Dock")));
+			this.label4.Enabled = ((bool)(resources.GetObject("label4.Enabled")));
+			this.label4.Font = ((System.Drawing.Font)(resources.GetObject("label4.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label4, resources.GetString("label4.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label4, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label4.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label4, resources.GetString("label4.HelpString"));
+			this.label4.Image = ((System.Drawing.Image)(resources.GetObject("label4.Image")));
+			this.label4.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label4.ImageAlign")));
+			this.label4.ImageIndex = ((int)(resources.GetObject("label4.ImageIndex")));
+			this.label4.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label4.ImeMode")));
+			this.label4.Location = ((System.Drawing.Point)(resources.GetObject("label4.Location")));
+			this.label4.Name = "label4";
+			this.label4.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label4.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label4, ((bool)(resources.GetObject("label4.ShowHelp"))));
+			this.label4.Size = ((System.Drawing.Size)(resources.GetObject("label4.Size")));
+			this.label4.TabIndex = ((int)(resources.GetObject("label4.TabIndex")));
+			this.label4.Text = resources.GetString("label4.Text");
+			this.label4.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label4.TextAlign")));
+			this.toolTip1.SetToolTip(this.label4, resources.GetString("label4.ToolTip"));
+			this.label4.Visible = ((bool)(resources.GetObject("label4.Visible")));
 			// 
 			// label2
 			// 
@@ -382,32 +477,32 @@ namespace Novell.iFolderCom
 			this.toolTip1.SetToolTip(this.label2, resources.GetString("label2.ToolTip"));
 			this.label2.Visible = ((bool)(resources.GetObject("label2.Visible")));
 			// 
-			// label5
+			// syncLabel
 			// 
-			this.label5.AccessibleDescription = resources.GetString("label5.AccessibleDescription");
-			this.label5.AccessibleName = resources.GetString("label5.AccessibleName");
-			this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label5.Anchor")));
-			this.label5.AutoSize = ((bool)(resources.GetObject("label5.AutoSize")));
-			this.label5.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label5.Dock")));
-			this.label5.Enabled = ((bool)(resources.GetObject("label5.Enabled")));
-			this.label5.Font = ((System.Drawing.Font)(resources.GetObject("label5.Font")));
-			this.helpProvider1.SetHelpKeyword(this.label5, resources.GetString("label5.HelpKeyword"));
-			this.helpProvider1.SetHelpNavigator(this.label5, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label5.HelpNavigator"))));
-			this.helpProvider1.SetHelpString(this.label5, resources.GetString("label5.HelpString"));
-			this.label5.Image = ((System.Drawing.Image)(resources.GetObject("label5.Image")));
-			this.label5.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label5.ImageAlign")));
-			this.label5.ImageIndex = ((int)(resources.GetObject("label5.ImageIndex")));
-			this.label5.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label5.ImeMode")));
-			this.label5.Location = ((System.Drawing.Point)(resources.GetObject("label5.Location")));
-			this.label5.Name = "label5";
-			this.label5.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label5.RightToLeft")));
-			this.helpProvider1.SetShowHelp(this.label5, ((bool)(resources.GetObject("label5.ShowHelp"))));
-			this.label5.Size = ((System.Drawing.Size)(resources.GetObject("label5.Size")));
-			this.label5.TabIndex = ((int)(resources.GetObject("label5.TabIndex")));
-			this.label5.Text = resources.GetString("label5.Text");
-			this.label5.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label5.TextAlign")));
-			this.toolTip1.SetToolTip(this.label5, resources.GetString("label5.ToolTip"));
-			this.label5.Visible = ((bool)(resources.GetObject("label5.Visible")));
+			this.syncLabel.AccessibleDescription = resources.GetString("syncLabel.AccessibleDescription");
+			this.syncLabel.AccessibleName = resources.GetString("syncLabel.AccessibleName");
+			this.syncLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("syncLabel.Anchor")));
+			this.syncLabel.AutoSize = ((bool)(resources.GetObject("syncLabel.AutoSize")));
+			this.syncLabel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("syncLabel.Dock")));
+			this.syncLabel.Enabled = ((bool)(resources.GetObject("syncLabel.Enabled")));
+			this.syncLabel.Font = ((System.Drawing.Font)(resources.GetObject("syncLabel.Font")));
+			this.helpProvider1.SetHelpKeyword(this.syncLabel, resources.GetString("syncLabel.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.syncLabel, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("syncLabel.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.syncLabel, resources.GetString("syncLabel.HelpString"));
+			this.syncLabel.Image = ((System.Drawing.Image)(resources.GetObject("syncLabel.Image")));
+			this.syncLabel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("syncLabel.ImageAlign")));
+			this.syncLabel.ImageIndex = ((int)(resources.GetObject("syncLabel.ImageIndex")));
+			this.syncLabel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("syncLabel.ImeMode")));
+			this.syncLabel.Location = ((System.Drawing.Point)(resources.GetObject("syncLabel.Location")));
+			this.syncLabel.Name = "syncLabel";
+			this.syncLabel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("syncLabel.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.syncLabel, ((bool)(resources.GetObject("syncLabel.ShowHelp"))));
+			this.syncLabel.Size = ((System.Drawing.Size)(resources.GetObject("syncLabel.Size")));
+			this.syncLabel.TabIndex = ((int)(resources.GetObject("syncLabel.TabIndex")));
+			this.syncLabel.Text = resources.GetString("syncLabel.Text");
+			this.syncLabel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("syncLabel.TextAlign")));
+			this.toolTip1.SetToolTip(this.syncLabel, resources.GetString("syncLabel.ToolTip"));
+			this.syncLabel.Visible = ((bool)(resources.GetObject("syncLabel.Visible")));
 			// 
 			// syncInterval
 			// 
@@ -448,32 +543,32 @@ namespace Novell.iFolderCom
 			this.syncInterval.UpDownAlign = ((System.Windows.Forms.LeftRightAlignment)(resources.GetObject("syncInterval.UpDownAlign")));
 			this.syncInterval.Visible = ((bool)(resources.GetObject("syncInterval.Visible")));
 			// 
-			// label6
+			// syncUnits
 			// 
-			this.label6.AccessibleDescription = resources.GetString("label6.AccessibleDescription");
-			this.label6.AccessibleName = resources.GetString("label6.AccessibleName");
-			this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label6.Anchor")));
-			this.label6.AutoSize = ((bool)(resources.GetObject("label6.AutoSize")));
-			this.label6.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label6.Dock")));
-			this.label6.Enabled = ((bool)(resources.GetObject("label6.Enabled")));
-			this.label6.Font = ((System.Drawing.Font)(resources.GetObject("label6.Font")));
-			this.helpProvider1.SetHelpKeyword(this.label6, resources.GetString("label6.HelpKeyword"));
-			this.helpProvider1.SetHelpNavigator(this.label6, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label6.HelpNavigator"))));
-			this.helpProvider1.SetHelpString(this.label6, resources.GetString("label6.HelpString"));
-			this.label6.Image = ((System.Drawing.Image)(resources.GetObject("label6.Image")));
-			this.label6.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label6.ImageAlign")));
-			this.label6.ImageIndex = ((int)(resources.GetObject("label6.ImageIndex")));
-			this.label6.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label6.ImeMode")));
-			this.label6.Location = ((System.Drawing.Point)(resources.GetObject("label6.Location")));
-			this.label6.Name = "label6";
-			this.label6.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label6.RightToLeft")));
-			this.helpProvider1.SetShowHelp(this.label6, ((bool)(resources.GetObject("label6.ShowHelp"))));
-			this.label6.Size = ((System.Drawing.Size)(resources.GetObject("label6.Size")));
-			this.label6.TabIndex = ((int)(resources.GetObject("label6.TabIndex")));
-			this.label6.Text = resources.GetString("label6.Text");
-			this.label6.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label6.TextAlign")));
-			this.toolTip1.SetToolTip(this.label6, resources.GetString("label6.ToolTip"));
-			this.label6.Visible = ((bool)(resources.GetObject("label6.Visible")));
+			this.syncUnits.AccessibleDescription = resources.GetString("syncUnits.AccessibleDescription");
+			this.syncUnits.AccessibleName = resources.GetString("syncUnits.AccessibleName");
+			this.syncUnits.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("syncUnits.Anchor")));
+			this.syncUnits.AutoSize = ((bool)(resources.GetObject("syncUnits.AutoSize")));
+			this.syncUnits.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("syncUnits.Dock")));
+			this.syncUnits.Enabled = ((bool)(resources.GetObject("syncUnits.Enabled")));
+			this.syncUnits.Font = ((System.Drawing.Font)(resources.GetObject("syncUnits.Font")));
+			this.helpProvider1.SetHelpKeyword(this.syncUnits, resources.GetString("syncUnits.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.syncUnits, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("syncUnits.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.syncUnits, resources.GetString("syncUnits.HelpString"));
+			this.syncUnits.Image = ((System.Drawing.Image)(resources.GetObject("syncUnits.Image")));
+			this.syncUnits.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("syncUnits.ImageAlign")));
+			this.syncUnits.ImageIndex = ((int)(resources.GetObject("syncUnits.ImageIndex")));
+			this.syncUnits.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("syncUnits.ImeMode")));
+			this.syncUnits.Location = ((System.Drawing.Point)(resources.GetObject("syncUnits.Location")));
+			this.syncUnits.Name = "syncUnits";
+			this.syncUnits.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("syncUnits.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.syncUnits, ((bool)(resources.GetObject("syncUnits.ShowHelp"))));
+			this.syncUnits.Size = ((System.Drawing.Size)(resources.GetObject("syncUnits.Size")));
+			this.syncUnits.TabIndex = ((int)(resources.GetObject("syncUnits.TabIndex")));
+			this.syncUnits.Text = resources.GetString("syncUnits.Text");
+			this.syncUnits.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("syncUnits.TextAlign")));
+			this.toolTip1.SetToolTip(this.syncUnits, resources.GetString("syncUnits.ToolTip"));
+			this.syncUnits.Visible = ((bool)(resources.GetObject("syncUnits.Visible")));
 			// 
 			// autoSync
 			// 
@@ -1557,6 +1652,12 @@ namespace Novell.iFolderCom
 			objectCount.Text = syncSize.ToString();
 		}
 
+		private void updateSyncSizeAndTime(uint syncSize, DateTime dateTime)
+		{
+			updateSyncSize(syncSize);
+			lastSync.Text = dateTime.ToString();
+		}
+
 		private void connectToWebService()
 		{
 			if (ifWebService == null)
@@ -1741,9 +1842,28 @@ namespace Novell.iFolderCom
 
 			updateDiskQuotaDisplay();
 
-			// Get the refresh interval.
-			syncInterval.Value = (decimal)currentiFolder.SyncInterval;
-			autoSync.Checked = currentiFolder.SyncInterval != Timeout.Infinite;
+			// TODO: Read and display last sync time.
+
+			if (currentiFolder.IsWorkgroup)
+			{
+				// TODO: check if this iFolder is hosted locally.
+				bool local = false;
+
+				syncLabel.Visible = autoSync.Visible = syncInterval.Visible = syncUnits.Visible = local;
+				syncNow.Visible = !local;
+
+				if (local)
+				{
+					// Get the refresh interval.
+					syncInterval.Value = (decimal)currentiFolder.SyncInterval;
+					autoSync.Checked = currentiFolder.SyncInterval != Timeout.Infinite;
+				}
+			}
+			else
+			{
+				syncLabel.Visible = autoSync.Visible = syncInterval.Visible = syncUnits.Visible = false;
+				syncNow.Visible = true;
+			}
 
 			// Show/hide the collision message.
 			showConflictMessage(currentiFolder.HasConflicts);
@@ -2812,7 +2932,14 @@ namespace Novell.iFolderCom
 			if ((syncEventArgs.Action == Action.StopSync) && currentiFolder.ID.Equals(syncEventArgs.ID))
 			{
 				SyncSize syncSize = ifWebService.CalculateSyncSize(currentiFolder.ID);
-				BeginInvoke(syncSizeDelegate, new object[] {syncSize.SyncNodeCount});
+				if (syncEventArgs.Successful)
+				{
+					BeginInvoke(syncSizeAndTimeDelegate, new object[] {syncSize.SyncNodeCount, DateTime.Now});
+				}
+				else
+				{
+					BeginInvoke(syncSizeDelegate, new object[] {syncSize.SyncNodeCount});
+				}
 			}
 		}
 
@@ -3077,6 +3204,19 @@ namespace Novell.iFolderCom
 				SizeF size = e.Graphics.MeasureString(longName, ifolders.Font);
 				int maxWidth = ifolders.Width * 2;
 				ifolders.DropDownWidth = (int)size.Width > maxWidth ? maxWidth : (int)size.Width;
+			}
+		}
+
+		private void syncNow_Click(object sender, System.EventArgs e)
+		{
+			try
+			{
+				ifWebService.SynciFolderNow(currentiFolder.ID);
+			}
+			catch (Exception ex)
+			{
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("syncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+				mmb.ShowDialog();
 			}
 		}
 		#endregion
