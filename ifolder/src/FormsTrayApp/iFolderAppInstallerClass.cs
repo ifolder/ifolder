@@ -26,8 +26,8 @@ using System.Diagnostics;
 using System.Collections;
 using System.ComponentModel;
 using System.Configuration.Install;
-using Simias;
-using Simias.Event;
+//using Simias;
+//using Simias.Event;
 
 namespace Novell.FormsTrayApp
 {
@@ -113,14 +113,21 @@ namespace Novell.FormsTrayApp
 				base.Uninstall(savedState);
 				Console.WriteLine( "iFolderApp Uninstall" );
 
-				Process[] ifolderProcesses = Process.GetProcessesByName("iFolderApp");
-
-				Configuration config = Configuration.GetConfiguration();
-				foreach (Process process in ifolderProcesses)
+				// Kill SimiasApp
+                Process[] simiasAppProcesses = Process.GetProcessesByName("SimiasApp");
+				foreach (Process process in simiasAppProcesses)
 				{
-					//Simias.Event.EventPublisher publisher = new EventPublisher(config);
-					//publisher.RaiseEvent(new Simias.Service.ShutdownEventArgs());
-					//process.WaitForExit (10000); // wait 10 seconds
+					try
+					{
+						process.Kill(); // This will throw if the process is no longer running
+					}
+					catch {}
+					process.Close();
+				}
+				// Kill iFolderApp
+                Process[] ifolderAppProcesses = Process.GetProcessesByName("iFolderApp");
+				foreach (Process process in ifolderAppProcesses)
+				{
 					try
 					{
 						process.Kill(); // This will throw if the process is no longer running
