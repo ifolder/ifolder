@@ -613,7 +613,7 @@ namespace Novell.FormsTrayApp
 				// Keep track of the cancelled state.
 				if (serverInfo.Cancelled)
 				{
-					simiasWebService.DisableDomainAutoLogin(serverInfo.DomainID);
+					//TODO: Enable for RC1-simiasWebService.DisableDomainAutoLogin(serverInfo.DomainID);
 				}
 
 				bool update = serverInfo.UpdateStarted;

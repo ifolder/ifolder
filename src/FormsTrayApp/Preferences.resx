@@ -3553,6 +3553,9 @@
   <data name="statusLoggedOut">
     <value>Logged out</value>
   </data>
+  <data name="statusEnabled">
+    <value>Enabled</value>
+  </data>
   <data name="statusDisabled">
     <value>Disabled</value>
   </data>

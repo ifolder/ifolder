@@ -1522,7 +1522,8 @@ namespace Novell.FormsTrayApp
 					new string[] {domain.Name,
 									 domainInfo.MemberName,
 									 domainInfo.Active ? 
-									 (domainInfo.Authenticated ? resourceManager.GetString("statusLoggedIn") : resourceManager.GetString("statusLoggedOut"))
+									 /*TODO: Enable for RC1-(domainInfo.Authenticated ? resourceManager.GetString("statusLoggedIn") : resourceManager.GetString("statusLoggedOut"))*/
+									 resourceManager.GetString("statusEnabled") // TODO: Remove this for RC1
 									 : resourceManager.GetString("statusDisabled")});
 				lvi.Tag = domain;
 				lvi.Selected = domainInfo.IsDefault;
@@ -1655,7 +1656,7 @@ namespace Novell.FormsTrayApp
 								// Associate the new domain with the listview item.
 								newAccountLvi.SubItems[0].Text = domainInfo.Name;
 
-								newAccountLvi.SubItems[2].Text = resourceManager.GetString("statusLoggedIn");
+								newAccountLvi.SubItems[2].Text = resourceManager.GetString("statusEnabled"); //TODO: Enable for RC1-resourceManager.GetString("statusLoggedIn");
 								newAccountLvi.Tag = domain;
 								server.Text = domainInfo.Name;
 								newAccountLvi = null;
@@ -1672,8 +1673,8 @@ namespace Novell.FormsTrayApp
 
 								addAccount.Enabled = details.Enabled = enableAccount.Enabled = true;
 
-								activate.Enabled = activate.Visible = false;
-								logout.Visible = true;
+								activate.Enabled = /*TODO: Enable for RC1-activate.Visible =*/ false;
+								// TODO: Enable for RC1-logout.Visible = true;
 
 								// Don't burn a grace login looking for an update.
 								if (!authStatus.statusCode.Equals(StatusCodes.SuccessInGrace))
@@ -2030,7 +2031,9 @@ namespace Novell.FormsTrayApp
 				if (d.ID.Equals(domain.ID))
 				{
 					lvi.SubItems[2].Text = domain.DomainInfo.Active ? 
-						(domain.DomainInfo.Authenticated ? resourceManager.GetString("statusLoggedIn") : resourceManager.GetString("statusLoggedOut")) : resourceManager.GetString("statusDisabled");
+						/*TODO: Enable for RC1-(domain.DomainInfo.Authenticated ? resourceManager.GetString("statusLoggedIn") : resourceManager.GetString("statusLoggedOut"))*/ 
+						resourceManager.GetString("statusEnabled") // TODO: Remove this along with entry in resx file.
+						: resourceManager.GetString("statusDisabled");
 					break;
 				}
 			}
@@ -2656,8 +2659,8 @@ namespace Novell.FormsTrayApp
 							enableAccount.Enabled = true;
 							login.Enabled = logout.Enabled = enableAccount.Checked = 
 								selectedDomain.DomainInfo.Active;
-							login.Visible = !selectedDomain.DomainInfo.Authenticated;
-							logout.Visible = selectedDomain.DomainInfo.Authenticated;
+							// TODO: Enable for RC1-login.Visible = !selectedDomain.DomainInfo.Authenticated;
+							// TODO: Enable for RC1-logout.Visible = selectedDomain.DomainInfo.Authenticated;
 						}
 					}
 				}
