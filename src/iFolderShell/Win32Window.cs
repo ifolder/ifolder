@@ -28,7 +28,7 @@ using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Win32Util
+namespace Novell.iFolder.Win32Util
 {
 	/// <summary>
 	/// Encapsulates window functions that aren't in the framework.
