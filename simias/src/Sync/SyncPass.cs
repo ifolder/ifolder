@@ -76,7 +76,7 @@ public class SynkerServiceA: SyncCollectionService
 	{
 		try
 		{
-			collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole, null);
+			collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole);
 		
 			Log.Spew("dredging server at docRoot '{0}'", collection.DocumentRoot.LocalPath);
 			new Dredger(collection, true);
@@ -86,7 +86,7 @@ public class SynkerServiceA: SyncCollectionService
 			ops = new SyncOps(collection, true);
 
 			//store.Revert();
-			//store.ImpersonateUser(userId, credential);
+			//store.ImpersonateUser(userId);
 
 			//TODO: this check should be before updating the collection from the file system
 			if (!collection.IsAccessAllowed(Access.Rights.ReadOnly))
@@ -281,7 +281,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 
 		Log.Spew("client connected to server version {0}", ss.Version);
 
-		collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole, null);
+		collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole);
 
 		new Dredger(collection, false);
 		SyncIncomingNode inNode = new SyncIncomingNode(collection, false);

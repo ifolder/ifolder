@@ -84,7 +84,7 @@ public class Tests : Assertion
 			string collectionId, string localPath)
 	{
 		//Console.WriteLine("adding share info {0}", localPath);
-		store.ImpersonateUser(Access.SyncOperatorRole, null);
+		store.ImpersonateUser(Access.SyncOperatorRole);
 		Collection dbo = store.GetDatabaseObject();
 		if (dbo == null)
 			Console.WriteLine("no dbo");
@@ -200,7 +200,7 @@ public class Tests : Assertion
 			Console.WriteLine("node {0} has {1} streams, path '{2}'", node.Name, streamCount, relPath);
 		}
 
-//		store.ImpersonateUser(Access.StoreAdminRole, null);
+//		store.ImpersonateUser(Access.StoreAdminRole);
 		store.Delete();
 		store = null;
 		
@@ -253,11 +253,11 @@ public class Tests : Assertion
 	{
 		Console.WriteLine("Deleting stores");
 		
-		storeC.ImpersonateUser(Access.StoreAdminRole, null);
+		storeC.ImpersonateUser(Access.StoreAdminRole);
 		storeC.Delete();
 		storeC = null;
 		
-		storeS.ImpersonateUser(Access.StoreAdminRole, null);
+		storeS.ImpersonateUser(Access.StoreAdminRole);
 		storeS.Delete();
 		storeS = null;
 		

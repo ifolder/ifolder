@@ -147,7 +147,7 @@ namespace Simias.Sync.Tests
 			GC.Collect();
 
 			// get rid of the store
-			store.ImpersonateUser(Access.StoreAdminRole, null);
+			store.ImpersonateUser(Access.StoreAdminRole);
 			store.Delete();
 		}
 

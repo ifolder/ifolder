@@ -52,7 +52,7 @@ namespace Simias
 			IPHostEntry ipHostEntry = Dns.Resolve(host);
 			host = ipHostEntry.HostName;
 
-			MyTrace.WriteLine("Host Name: {0}", host);
+			//MyTrace.WriteLine("Host Name: {0}", host);
 
 			// loop through addresses
 			foreach(IPAddress ipAddress in ipHostEntry.AddressList)
@@ -60,7 +60,7 @@ namespace Simias
 				// skip loop backs
 				if (!ipAddress.Equals(IPAddress.Loopback))
 				{
-					MyTrace.WriteLine("IP Address: {0}", ipAddress);
+					//MyTrace.WriteLine("IP Address: {0}", ipAddress);
 				
 					// use the address
 					host = ipAddress.ToString();
