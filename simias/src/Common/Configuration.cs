@@ -42,10 +42,10 @@ namespace Simias
 		private static readonly string DefaultSection = "SimiasDefault";
 		private static readonly string DefaultFileName = "simias.conf";
 
+		// Used to hold off multiple waiters during the opening of the configuration file.
+		private static object fileLock = new object();
 		private string storePath;
 		
-		private Mutex mutex = new Mutex(false, "SimiasConfigMutex");
-
 		/// <summary>
 		/// Default Constructor.
 		/// </summary>
@@ -72,26 +72,12 @@ namespace Simias
 			CreateDefaults();
 		}
 
-		/*
-		internal Configuration(string path, bool remove)
-		{
-			this.storePath = path;
-
-			if (!File.Exists(ConfigFilePath))
-			{
-				// create defaults
-				CreateDefaults();
-			}
-		}
-		*/
-
 		/// <summary>
 		/// 
 		/// </summary>
 		public void CreateDefaults()
 		{
-			mutex.WaitOne();
-			try
+			lock ( fileLock )
 			{
 				// If the file does not exist look for defaults.
 				if (!File.Exists(ConfigFilePath))
@@ -106,10 +92,6 @@ namespace Simias
 						File.Create(ConfigFilePath).Close();
 					}
 				}
-			}
-			finally
-			{
-				mutex.ReleaseMutex();
 			}
 		}
 
@@ -146,16 +128,8 @@ namespace Simias
 		/// <returns>The key as an XmlElement.</returns>
 		public XmlElement GetElement(string section, string key)
 		{
-			mutex.WaitOne();
-			try
-			{
-				XmlElement keyElement = GetKey(section, key);
-				return keyElement;
-			}
-			finally
-			{
-				mutex.ReleaseMutex();
-			}
+			XmlElement keyElement = GetKey(section, key);
+			return keyElement;
 		}
 
 		/// <summary>
@@ -164,15 +138,7 @@ namespace Simias
 		/// <param name="keyElement">The element to save.</param>
 		public void SetElement(XmlElement keyElement)
 		{
-			mutex.WaitOne();
-			try
-			{
-				keyElement.OwnerDocument.Save(ConfigFilePath);
-			}
-			finally
-			{
-				mutex.ReleaseMutex();
-			}
+			SaveConfigFile( keyElement.OwnerDocument );
 		}
 
 		/// <summary>
@@ -195,31 +161,24 @@ namespace Simias
 		/// <returns>The value as a string.</returns>
 		public string Get(string section, string key, string defaultValue)
 		{
-			mutex.WaitOne();
-			try
+			string keyValue = null;
+			XmlElement keyElement = GetKey(section, key);
+			keyValue = keyElement.GetAttribute(ValueAttr);
+			if (keyValue == "")
 			{
-				string keyValue = null;
-				XmlElement keyElement = GetKey(section, key);
-				keyValue = keyElement.GetAttribute(ValueAttr);
-				if (keyValue == "")
+				if (defaultValue != null )
 				{
-					if (defaultValue != null )
-					{
-						keyElement.SetAttribute(ValueAttr, defaultValue);
-						keyElement.OwnerDocument.Save(ConfigFilePath);
-						keyValue = keyElement.GetAttribute(ValueAttr);
-					}
-					else
-					{
-						keyValue = null;
-					}
+					keyElement.SetAttribute(ValueAttr, defaultValue);
+					SaveConfigFile( keyElement.OwnerDocument );
+					keyValue = defaultValue;
 				}
-				return keyValue;
+				else
+				{
+					keyValue = null;
+				}
 			}
-			finally
-			{
-				mutex.ReleaseMutex();
-			}
+
+			return keyValue;
 		}
 
 		/// <summary>
@@ -240,17 +199,9 @@ namespace Simias
 		/// <param name="keyValue">The value of the key.</param>
 		public void Set(string section, string key, string keyValue)
 		{
-			mutex.WaitOne();
-			try
-			{
-				XmlElement keyElement = GetKey(section, key);
-				keyElement.SetAttribute(ValueAttr, keyValue);
-				keyElement.OwnerDocument.Save(ConfigFilePath);
-			}
-			finally
-			{
-				mutex.ReleaseMutex();
-			}
+			XmlElement keyElement = GetKey(section, key);
+			keyElement.SetAttribute(ValueAttr, keyValue);
+			SaveConfigFile( keyElement.OwnerDocument );
 		}
 
 		/// <summary>
@@ -271,15 +222,7 @@ namespace Simias
 		/// <returns>True if the section and key exists, otherwise false is returned.</returns>
 		public bool Exists( string section, string key )
 		{
-			mutex.WaitOne();
-			try
-			{
-				return KeyExists(section, key);
-			}
-			finally
-			{
-				mutex.ReleaseMutex();
-			}
+			return KeyExists(section, key);
 		}
 
 		// These two methods are going to read the XML document every
@@ -317,7 +260,7 @@ namespace Simias
 				keyElement = (XmlElement)sectionElement.OwnerDocument.CreateNode(XmlNodeType.Element, SettingTag, "");
 				keyElement.SetAttribute(NameAttr, key);
 				sectionElement.AppendChild(keyElement);
-				keyElement.OwnerDocument.Save(ConfigFilePath);
+				SaveConfigFile( keyElement.OwnerDocument );
 			}
 
 			return keyElement;
@@ -343,24 +286,74 @@ namespace Simias
 
 		private XmlElement GetDocElement()
 		{
-			XmlElement docElement = null;
-
 			XmlDocument doc = new XmlDocument();
 
 			try
 			{
-				doc.Load(ConfigFilePath);
+				FileStream fs = OpenConfigFile();
+
+				try
+				{
+					doc.Load(fs);
+				}
+				finally
+				{
+					fs.Close();
+				}
 			}
 			catch
 			{
-				doc = new XmlDocument();
-				docElement = doc.CreateElement(RootElementTag);
-				doc.AppendChild(docElement);
+				doc.AppendChild(doc.CreateElement(RootElementTag));
 			}
 
-			docElement = doc.DocumentElement;
+			return doc.DocumentElement;
+		}
 
-			return docElement;
+		/// <summary>
+		/// Opens the event log file, retrying if the file is currently in use.
+		/// </summary>
+		/// <returns>A FileStream object associated with the event log file.</returns>
+		private FileStream OpenConfigFile()
+		{
+			FileStream fs = null;
+
+			lock ( fileLock )
+			{
+				// Stay in the loop until the file is opened.
+				while ( fs == null )
+				{
+					try
+					{
+						// Open the log file.
+						fs = new FileStream( ConfigFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None );
+					}
+					catch ( IOException )
+					{
+						// Wait for a moment before trying to open the file again.
+						Thread.Sleep( 100 );
+					}
+				}
+			}
+
+			return fs;
+		}
+
+		/// <summary>
+		/// Save the specified Xml document to the configuration file.
+		/// </summary>
+		/// <param name="document">Xml document to save to the configuration file.</param>
+		private void SaveConfigFile( XmlDocument document )
+		{
+			FileStream fs = OpenConfigFile();
+
+			try
+			{
+				document.Save( fs );
+			}
+			finally
+			{
+				fs.Close();
+			}
 		}
 
 		#region Static Methods
