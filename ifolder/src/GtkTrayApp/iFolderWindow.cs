@@ -88,8 +88,9 @@ namespace Novell.iFolder
 			VBox vbox = new VBox (false, 0);
 			this.Add (vbox);
 
+			//-----------------------------
 			// Create the menubar
-
+			//-----------------------------
 			AccelGroup accelGroup = new AccelGroup ();
 			this.AddAccelGroup (accelGroup);
 			
@@ -97,23 +98,34 @@ namespace Novell.iFolder
 			vbox.PackStart (menubar, false, false, 0);
 
 
+			//-----------------------------
+			// Add iFolderGraphic
+			//-----------------------------
 			Image iFolderImage = new Image(
 					new Gdk.Pixbuf(Util.ImagesPath("ifolder-banner.png")));
 			vbox.PackStart (iFolderImage, false, false, 0);
 
 
+			//-----------------------------
+			// Create Tabs
+			//-----------------------------
 			MainNoteBook = new Notebook();
 			MainNoteBook.AppendPage(	CreateiFoldersPage(), 
 										new Label("iFolders"));
 			vbox.PackStart(MainNoteBook, true, true, 0);
 
 
+			//-----------------------------
+			// Create Status Bar
+			//-----------------------------
 			MainStatusBar = new Statusbar ();
 			UpdateStatus("Idle...");
 
 			vbox.PackStart (MainStatusBar, false, false, 0);
 
-
+			//-----------------------------
+			// Set Menu Status
+			//-----------------------------
 			CreateMenuItem.Sensitive = true;
 			ShareMenuItem.Sensitive = false;
 			OpenMenuItem.Sensitive = false;
@@ -225,7 +237,9 @@ namespace Novell.iFolder
 
 			return menubar;
 		}
-	
+
+
+
 
 		/// <summary>
 		/// Creates the Main Widget for the iFolderPage
@@ -293,10 +307,10 @@ namespace Novell.iFolder
 
 
 			iFolderTreeView.Selection.Changed += new EventHandler(
-						on_iFolder_selection_changed);
+						OniFolderSelectionChanged);
 
 			iFolderTreeView.ButtonPressEvent += new ButtonPressEventHandler(
-						iFolderTreeView_ButtonPressed);
+						iFolderTreeViewButtonPressed);
 
 			iFolderTreeView.RowActivated += new RowActivatedHandler(
 						OniFolderRowActivated);
@@ -460,7 +474,7 @@ namespace Novell.iFolder
 
 
 
-		public void on_iFolder_selection_changed(object o, EventArgs args)
+		public void OniFolderSelectionChanged(object o, EventArgs args)
 		{
 			TreeSelection tSelect = iFolderTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
@@ -509,7 +523,7 @@ namespace Novell.iFolder
 
 
 		[GLib.ConnectBefore]
-		public void iFolderTreeView_ButtonPressed(	object obj, 
+		public void iFolderTreeViewButtonPressed(	object obj, 
 								ButtonPressEventArgs args)
 		{
 			switch(args.Event.Button)
