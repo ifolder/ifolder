@@ -311,6 +311,23 @@ namespace Novell.iFolder
 							(status.statusCode == StatusCodes.SuccessInGrace))
 						{
 							authenticated = true;
+							
+							if (status.statusCode == StatusCodes.SuccessInGrace)
+							{
+								if (status.RemainingGraceLogins < status.TotalGraceLogins)
+								{
+									iFolderMsgDialog dg = new iFolderMsgDialog(
+										LoginDialog,
+										iFolderMsgDialog.DialogType.Error,
+										iFolderMsgDialog.ButtonSet.Ok,
+										Util.GS("iFolder Error"),
+										Util.GS("Expired Password"),
+										string.Format(Util.GS("Your password has expired.  You have {0} grace logins remaining."), status.RemainingGraceLogins));
+									dg.Run();
+									dg.Hide();
+									dg.Destroy();
+								}
+							}
 						}
 						else if (status.statusCode == StatusCodes.InvalidCredentials)
 						{
@@ -342,6 +359,23 @@ namespace Novell.iFolder
 					if( (status.statusCode == StatusCodes.Success) ||
 						(status.statusCode == StatusCodes.SuccessInGrace))
 					{
+						if (status.statusCode == StatusCodes.SuccessInGrace)
+						{
+							if (status.RemainingGraceLogins < status.TotalGraceLogins)
+							{
+								iFolderMsgDialog dg = new iFolderMsgDialog(
+									LoginDialog,
+									iFolderMsgDialog.DialogType.Error,
+									iFolderMsgDialog.ButtonSet.Ok,
+									Util.GS("iFolder Error"),
+									Util.GS("Expired Password"),
+									string.Format(Util.GS("Your password has expired.  You have {0} grace logins remaining."), status.RemainingGraceLogins));
+								dg.Run();
+								dg.Hide();
+								dg.Destroy();
+							}
+						}
+
 						LoginDialog.Hide();
 						LoginDialog.Destroy();
 						LoginDialog = null;
