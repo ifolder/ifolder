@@ -37,9 +37,9 @@ namespace Novell.iFolder
 {
 	public class FileBrowser
 	{
-		[Glade.Widget] IconList BrowserIconList;
+		[Glade.Widget] IconList BrowserIconList = null;
 		//[Glade.Widget] TreeView	BrowserTreeView;
-		[Glade.Widget] Gtk.Entry	PathEntry;
+		[Glade.Widget] Gtk.Entry	PathEntry = null;
 
 		Gtk.Window nifWindow; 
 		//ListStore BrowserTreeStore;
@@ -174,17 +174,16 @@ namespace Novell.iFolder
 		}
 
 		private void on_select_icon(object obj, 
-				GnomeSharp.IconSelectedArgs args)
+				IconSelectedArgs args)
 		{
 			if(args.Event != null)
 			{
 				int idx = args.Num;
-				Event ev_any = args.Event;
 
-				EventButton ev = EventButton.New(ev_any.Handle);
+				EventButton ev = new EventButton(args.Event.Handle);
 
-				if(	(ev.type == EventType.TwoButtonPress) && 
-										(ev.button == 1) &&
+				if(	(args.Event.Type == EventType.TwoButtonPress) && 
+										(ev.Button == 1) &&
 										(enableDblClick) )
 				{
 					DirectoryEntry de = (DirectoryEntry) DirEntryArray[idx];
@@ -194,7 +193,7 @@ namespace Novell.iFolder
 					}
 				}
 
-				if(ev.type == EventType.ButtonPress)
+				if(args.Event.Type == EventType.ButtonPress)
 				{
 					if(idx == curIndex)
 						enableDblClick = true;
@@ -204,7 +203,7 @@ namespace Novell.iFolder
 					curIndex = idx;
 				}
 
-				if(ev.button == 3)
+				if(ev.Button == 3)
 				{
 					show_context_menu(idx);
 				}
@@ -243,6 +242,12 @@ namespace Novell.iFolder
 						trayMenu.Append (share_item);
 						share_item.Activated += new EventHandler(
 								on_shareifolder_context_menu);
+
+						MenuItem refresh_item = new MenuItem (
+								"Refresh iFolder");
+						trayMenu.Append (refresh_item);
+						refresh_item.Activated += new EventHandler(
+								on_refreshifolder_context_menu);
 
 						MenuItem unmake_item = new MenuItem (
 								"Revert to a Normal Folder");
@@ -293,6 +298,17 @@ namespace Novell.iFolder
 			}
 		}
 
+		public void on_refreshifolder_context_menu(object o, EventArgs args)
+		{	
+			DirectoryEntry de = GetSelectedItem();
+			if(de != null)
+			{
+				iFolder ifldr = ifmgr.GetiFolderByPath(de.FullName);
+				if(ifldr != null)
+					ifldr.Update();
+			}
+		}
+
 		public void on_shareifolder_context_menu(object o, EventArgs args)
 		{
 			DirectoryEntry de = GetSelectedItem();
@@ -310,8 +326,9 @@ namespace Novell.iFolder
 			{
 				try
 				{
-					int count;
-					iFolder ifldr = ifmgr.CreateiFolder(de.FullName);
+					//int count;
+					//iFolder ifldr = ifmgr.CreateiFolder(de.FullName);
+					ifmgr.CreateiFolder(de.FullName);
 					set_item_pixBuf(curIndex, iFolderPixBuf);
 				}
 				catch(Exception e)

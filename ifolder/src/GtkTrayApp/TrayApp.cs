@@ -43,22 +43,22 @@ namespace Novell.iFolder
 		static Gtk.Image gAppIcon;
 		static Gdk.PixbufAnimation gSyncAnimation;
 		static Gdk.Pixbuf gNifPixbuf;
-		static bool gIsSyncing;
 		static Gtk.EventBox eBox;
 		static TrayIcon tIcon;
 		static GtkTraceWindow twin;
+		static Gtk.ThreadNotify mainThreadNotify;
+		static SyncManagerStates syncState;
 
 		public static void Main (string[] args)
 		{
-			gIsSyncing = false;
-
 			Application.Init();
 
 			tIcon = new TrayIcon("iFolder");
 
 			eBox = new EventBox();
 
-			eBox.ButtonPressEvent += new ButtonPressEventHandler(trayapp_clicked);
+			eBox.ButtonPressEvent += 
+					new ButtonPressEventHandler(trayapp_clicked);
 			gNifPixbuf = new Pixbuf("ifolder.png");
 
 			gAppIcon = new Gtk.Image(gNifPixbuf);
@@ -71,11 +71,16 @@ namespace Novell.iFolder
 
 			tIcon.ShowAll();
 
-			Console.WriteLine("Creating sync object");
+			syncState = SyncManagerStates.Idle;
+
+			mainThreadNotify =
+				new Gtk.ThreadNotify(new Gtk.ReadyEvent(ChangeState));
 
 			SyncProperties props = new SyncProperties();
+            props.DefaultChannelSinks = 
+					SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
 
-			string logicFactory = Configuration.Get("iFolderApp", 
+			string logicFactory = new Configuration().Get("iFolderApp", 
 				"SyncLogic", "SynkerA");
 
 			switch (logicFactory)
@@ -92,45 +97,75 @@ namespace Novell.iFolder
 			}
 
 			syncManager = new SyncManager(props);
-//			syncManager.ChangedState += 
-//					new ChangedSyncStateEventHandler(syncManager_ChangedState);
+			syncManager.ChangedState += 
+					new ChangedSyncStateEventHandler(syncManager_ChangedState);
 
 			// Trace levels.
 			MyTrace.Switch.Level = TraceLevel.Verbose;
 
 			twin = new GtkTraceWindow();
-			twin.ShowAll();
-
-			//MyTrace.SendTraceToStandardOutput();
 
 			Simias.Sync.Log.SetLevel("verbose");
 
-			Console.WriteLine("Starting sync object");
+			Console.WriteLine("Starting sync object...");
 			syncManager.Start();
 
+			Console.WriteLine("iFolder is now running.");
 			Application.Run();
 		}
 
-		private static void syncManager_ChangedState(SyncManagerStates state)
+
+
+
+		static void ChangeState()
 		{
-			if(state == SyncManagerStates.Active)
+			lock(syncManager)
 			{
-				start_sync(null, null);
-				Console.WriteLine("The Synker is running");
-			}
-			else
-			{
-				stop_sync(null, null);
-				Console.WriteLine("The Synker is stopping");
+				switch(syncState)
+				{
+					case SyncManagerStates.Active:
+					{		
+						gAppIcon.FromAnimation = gSyncAnimation;
+						Console.WriteLine("SyncManager is Active");
+						break;
+					}
+					case SyncManagerStates.Syncing:
+					{
+						gAppIcon.FromAnimation = gSyncAnimation;
+						Console.WriteLine("SyncManager is Syncing");
+						break;
+					}
+					default:
+					{
+						gAppIcon.Pixbuf = gNifPixbuf;
+						Console.WriteLine("SyncManager is Idle");
+						break;
+					}
+				}
 			}
 		}
 
+
+
+
+		private static void syncManager_ChangedState(SyncManagerStates state)
+		{
+			lock(syncManager)
+			{
+				syncState = state;	
+				mainThreadNotify.WakeupMain();
+			}
+		}
+
+
+
+
 		static void trayapp_clicked(object obj, ButtonPressEventArgs args)
 		{
-			switch(args.Event.button)
+			switch(args.Event.Button)
 			{
 				case 1: // first mouse button
-					if(args.Event.type == Gdk.EventType.TwoButtonPress)
+					if(args.Event.Type == Gdk.EventType.TwoButtonPress)
 					{
 						show_browser(obj, args);
 					}
@@ -142,6 +177,9 @@ namespace Novell.iFolder
 					break;
 			}
 		}
+
+
+
 
 		static void show_tray_menu()
 		{
@@ -179,30 +217,13 @@ namespace Novell.iFolder
 
 			trayMenu.ShowAll();
 
-			trayMenu.Popup(null, null, null, IntPtr.Zero, 3, Gtk.Global.CurrentEventTime);
+			trayMenu.Popup(null, null, null, IntPtr.Zero, 3, 
+					Gtk.Global.CurrentEventTime);
 		}
 
 		static void show_tracewin(object o, EventArgs args)
 		{
 			twin.ShowAll();
-		}
-
-		static void start_sync(object o, EventArgs args)
-		{
-			lock(gAppIcon);
-			{
-				gAppIcon.FromAnimation = gSyncAnimation;
-			}
-			gIsSyncing = true;
-		}
-
-		static void stop_sync(object o, EventArgs args)
-		{
-			lock(gAppIcon);
-			{
-				gAppIcon.Pixbuf = gNifPixbuf;
-			}
-			gIsSyncing = false;
 		}
 
 		static void quit_ifolder(object o, EventArgs args)

@@ -76,23 +76,18 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
                     Name = "iFolderComponent"
                     AssemblyName = "iFolderComponent"
-                    HintPath = "..\bin\Debug\iFolderComponent.dll"
+                    HintPath = "..\iFolderComponent.dll"
                 />
                 <Reference
                     Name = "nunit.framework"
                     AssemblyName = "nunit.framework"
                     HintPath = "..\..\..\tools\NUnit\bin\nunit.framework.dll"
-                />
-                <Reference
-                    Name = "nunit.extensions"
-                    AssemblyName = "nunit.extensions"
-                    HintPath = "..\..\..\tools\NUnit\bin\nunit.extensions.dll"
                 />
             </References>
         </Build>

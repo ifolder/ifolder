@@ -80,16 +80,6 @@
                     HintPath = "..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "iFolder"
-                    AssemblyName = "iFolder"
-                    HintPath = "..\iFolder\iFolder.dll"
-                />
-                <Reference
-                    Name = "CollectionStore"
-                    AssemblyName = "CollectionStore"
-                    HintPath = "..\CollectionStore\CollectionStore.dll"
-                />
-                <Reference
                     Name = "System.Drawing"
                     AssemblyName = "System.Drawing"
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
@@ -102,12 +92,27 @@
                 <Reference
                     Name = "AddressBook"
                     AssemblyName = "AddressBook"
-                    HintPath = "..\AddressBook\AddressBook.dll"
+                    HintPath = "..\..\..\simias\src\AddressBook\AddressBook.dll"
+                />
+                <Reference
+                    Name = "CollectionStore"
+                    AssemblyName = "CollectionStore"
+                    HintPath = "..\..\..\simias\src\CollectionStore\CollectionStore.dll"
                 />
                 <Reference
                     Name = "FormsBookLib"
                     AssemblyName = "FormsBookLib"
-                    HintPath = "..\FormsBookLib\FormsBookLib.dll"
+                    HintPath = "..\..\..\addressbook\src\FormsBookLib\FormsBookLib.dll"
+                />
+                <Reference
+                    Name = "iFolder"
+                    AssemblyName = "iFolder"
+                    HintPath = "..\iFolder\iFolder.dll"
+                />
+                <Reference
+                    Name = "Configuration"
+                    AssemblyName = "Configuration"
+                    HintPath = "..\..\..\simias\src\Configuration\Configuration.dll"
                 />
             </References>
         </Build>
@@ -130,6 +135,31 @@
                 />
                 <File
                     RelPath = "iFolderComponent.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MyMessageBox.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MyMessageBox.resx"
+                    DependentUpon = "MyMessageBox.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "NewiFolder.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NewiFolder.resx"
+                    DependentUpon = "NewiFolder.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Win32Window.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

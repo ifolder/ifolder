@@ -1,79 +1,18 @@
-#=============================================================================
-# Module:	sln2mk Generated Makefile
-#
-# Source:	Report.sln
-#=============================================================================
+CSCFLAGS = /optimize+ /d:MONO /warn:4 /d:TRACE /nologo
+#CSCFLAGS = /debug+ /d:DEBUG /d:TRACE
 
-# configure makefile
-include config.mk
-
-#=============================================================================
-# Report variables
-#=============================================================================
-Report_SOURCES = AssemblyInfo.cs Report.cs
-Report_INCLUDES = 
+Report_CSFILES = AssemblyInfo.cs Report.cs
 Report_FLAGS = /t:exe
-Report_LIBS = System.dll System.Data.dll $(SYSTEM_XML)
+Report_LIBS = System.dll System.Data.dll System.Xml.dll
 Report_LIBPATH = 
-Report_LDFLAGS = 
 
-#=============================================================================
-# globals
-#=============================================================================
+all: Report.exe
 
-TARGETS = Report.exe 
-CLEAN_FILES = Check.xml Report.pdb Report.xml  Report.xml
-NUNIT_TESTS = 
-STAGE_FILES = $(TARGETS)
+Report.exe: $(Report_CSFILES)
+	csc /out:$@ /doc:Report.doc.xml $(CSCFLAGS) $(Report_FLAGS) $(Report_LIBS:%=/r:%) $(Report_LIBPATH:%=/lib:%) $(Report_CSFILES)
 
-#=============================================================================
-# custom makefile
-#=============================================================================
-ifneq "$(wildcard custom.mk)" ""
-	include custom.mk
-endif
-
-#=============================================================================
-# global targets
-#=============================================================================
-
-# fix path seperator
-CLEAN_FILES := $(subst /,$(SEP),$(CLEAN_FILES))
-STAGE_FILES := $(subst /,$(SEP),$(STAGE_FILES))
-
-# all
-all: $(TARGETS)
-
-# clean
 clean:
-	$(RM) $(TARGETS) $(CLEAN_FILES)
+	rm -f Report.exe Report.pdb Report.suo Report.csproj.user *.xml
+	rm -rf obj bin
 
-# test
-test:
-	@echo No NUnit test assemblies found.
-
-# stage
-STAGE_TARGETS = $(addprefix stage., $(STAGE_FILES))
-
-.PHONY: stage $(STAGE_TARGETS)
-
-stage: all $(STAGE_TARGETS)
-
-$(STAGE_TARGETS):
-	$(CP) $(subst stage.,,$@) $(STAGE_DIR)
-
-#=============================================================================
-# Report targets
-#=============================================================================
-
-# fix path seperator
-Report_SOURCES := $(subst /,$(SEP), $(Report_SOURCES))
-Report_INCLUDES := $(subst /,$(SEP), $(Report_INCLUDES))
-Report_LIBPATH := $(subst /,$(SEP), $(Report_LIBPATH))
-
-# update VPATH
-VPATH := $(VPATH) $(Report_LIBPATH) $(Report_INCLUDES)
-
-Report.exe: $(Report_SOURCES) $(Report_LIBS) config.mk
-	$(CSC) /out:$@ /doc:Report.xml $(CSCFLAGS) $(Report_FLAGS) $(Report_LIBS:%=/r:%) $(Report_LIBPATH:%=/lib:%) $(Report_SOURCES)
 

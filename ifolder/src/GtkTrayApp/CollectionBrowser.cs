@@ -26,6 +26,7 @@ using System.IO;
 using System.Drawing;
 using System.Collections;
 using Simias.Storage;
+using Simias;
 
 using Gtk;
 using Gdk;
@@ -40,9 +41,8 @@ namespace Novell.iFolder
 
 	public class CollectionBrowser
 	{
-		[Glade.Widget] IconList BrowserIconList;
+		[Glade.Widget] IconList		BrowserIconList = null;
 		//[Glade.Widget] TreeView	BrowserTreeView;
-		[Glade.Widget] Gtk.Entry	PathEntry;
 
 		Gtk.Window nifWindow; 
 		Pixbuf	NodePixBuf;
@@ -55,7 +55,26 @@ namespace Novell.iFolder
 
 		public event EventHandler BrowserClosed;
 
+		public CollectionBrowser(Store store) 
+		{
+			Init();
+
+			this.store = store;
+
+			SetCurrentNode(null);
+		}
+
 		public CollectionBrowser() 
+		{
+			Init();
+
+			Configuration config = new Configuration();
+			store = Store.Connect(config);
+
+			SetCurrentNode(null);
+		}
+
+		private void Init()
 		{
 			Glade.XML gxml = new Glade.XML ("ifolder.glade", 
 					"BrowserWindow", 
@@ -72,12 +91,10 @@ namespace Novell.iFolder
 			nifWindow.Icon = NodePixBuf;
 			nifWindow.Title = "Denali Collection Browser";
 
-			store = Store.Connect();
-
 			curIndex = -1;
 			enableDblClick = false;
-			SetCurrentNode(null);
 		}
+
 
 		private void SetCurrentNode(Simias.Storage.Node nifNode)
 		{
@@ -150,23 +167,22 @@ namespace Novell.iFolder
 		}
 
 		private void on_select_icon(object obj, 
-				GnomeSharp.IconSelectedArgs args)
+				IconSelectedArgs args)
 		{
 			if(args.Event != null)
 			{
 				int idx = args.Num;
-				Event ev_any = args.Event;
 
-				EventButton ev = EventButton.New(ev_any.Handle);
+				EventButton ev = new EventButton(args.Event.Handle);
 
-				if(	(ev.type == EventType.TwoButtonPress) && 
-						(ev.button == 1) &&
+				if(	(args.Event.Type == EventType.TwoButtonPress) && 
+						(ev.Button == 1) &&
 						(enableDblClick) )
 				{
 					on_open_context_menu(obj, args);
 				}
 
-				if(ev.type == EventType.ButtonPress)
+				if(args.Event.Type == EventType.ButtonPress)
 				{
 					if(idx == curIndex)
 						enableDblClick = true;
@@ -176,7 +192,7 @@ namespace Novell.iFolder
 					curIndex = idx;
 				}
 
-				if(ev.button == 3)
+				if(ev.Button == 3)
 				{
 					show_context_menu(idx);
 				}
@@ -208,6 +224,14 @@ namespace Novell.iFolder
 						on_open_context_menu);
 				trayMenu.Append (open_item);
 
+				if(!node.HasChildren)
+				{
+					MenuItem delete_item = new MenuItem ("Delete");
+					delete_item.Activated += new EventHandler(
+						on_delete_context_menu);
+					trayMenu.Append (delete_item);
+				}
+
 				trayMenu.Append(new SeparatorMenuItem());
 
 				MenuItem properties_item = new MenuItem (
@@ -236,6 +260,20 @@ namespace Novell.iFolder
 				PropertiesDialog pd = new PropertiesDialog(node);
 				pd.ShowAll(1);
 			}
+		}
+
+		public void on_refresh()
+		{
+			SetCurrentNode(curNode);
+		}
+
+		public void on_delete_context_menu(object o, EventArgs args)
+		{
+			Node node = GetSelectedItem();
+
+			node.Delete(true);
+
+			on_refresh();
 		}
 
 		public void on_open_context_menu(object o, EventArgs args)

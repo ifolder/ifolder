@@ -90,44 +90,49 @@
                     HintPath = "..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "Sync"
-                    AssemblyName = "Sync"
-                    HintPath = "..\Sync\Sync.dll"
-                />
-                <Reference
-                    Name = "SyncManager"
-                    AssemblyName = "SyncManager"
-                    HintPath = "..\SyncManager\SyncManager.dll"
-                />
-                <Reference
-                    Name = "SyncCommon"
-                    AssemblyName = "SyncCommon"
-                    HintPath = "..\SyncCommon\SyncCommon.dll"
-                />
-                <Reference
-                    Name = "CommonFormWindows"
-                    AssemblyName = "CommonFormWindows"
-                    HintPath = "..\CommonFormWindows\CommonFormWindows.dll"
+                    Name = "CollectionEvents"
+                    AssemblyName = "CollectionEvents"
+                    HintPath = "..\..\..\simias\src\CollectionEvents\CollectionEvents.dll"
                 />
                 <Reference
                     Name = "Common"
                     AssemblyName = "Common"
-                    HintPath = "..\Common\Common.dll"
+                    HintPath = "..\..\..\simias\src\Common\Common.dll"
                 />
                 <Reference
-                    Name = "SyncLogicLite"
-                    AssemblyName = "SyncLogicLite"
-                    HintPath = "..\SyncLogicLite\SyncLogicLite.dll"
+                    Name = "CommonFormWindows"
+                    AssemblyName = "CommonFormWindows"
+                    HintPath = "..\..\..\simias\src\CommonFormWindows\CommonFormWindows.dll"
                 />
                 <Reference
                     Name = "Configuration"
                     AssemblyName = "Configuration"
-                    HintPath = "..\Configuration\Configuration.dll"
+                    HintPath = "..\..\..\simias\src\Configuration\Configuration.dll"
                 />
                 <Reference
-                    Name = "CollectionEvents"
-                    AssemblyName = "CollectionEvents"
-                    HintPath = "..\CollectionEvents\CollectionEvents.dll"
+                    Name = "Sync"
+                    AssemblyName = "Sync"
+                    HintPath = "..\..\..\simias\src\Sync\Sync.dll"
+                />
+                <Reference
+                    Name = "SyncCommon"
+                    AssemblyName = "SyncCommon"
+                    HintPath = "..\..\..\simias\src\SyncCommon\SyncCommon.dll"
+                />
+                <Reference
+                    Name = "SyncLogicLite"
+                    AssemblyName = "SyncLogicLite"
+                    HintPath = "..\..\..\simias\src\SyncLogicLite\SyncLogicLite.dll"
+                />
+                <Reference
+                    Name = "SyncManager"
+                    AssemblyName = "SyncManager"
+                    HintPath = "..\..\..\simias\src\SyncManager\SyncManager.dll"
+                />
+                <Reference
+                    Name = "UserService"
+                    AssemblyName = "UserService"
+                    HintPath = "..\..\..\simias\src\UserService\UserService.dll"
                 />
             </References>
         </Build>
@@ -151,6 +156,11 @@
                     RelPath = "FormsTrayApp.resx"
                     DependentUpon = "FormsTrayApp.cs"
                     BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Win32Window.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
             </Include>
         </Files>

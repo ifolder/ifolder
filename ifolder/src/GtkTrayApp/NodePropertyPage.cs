@@ -24,7 +24,6 @@
 using System;
 using System.Collections;
 using System.Drawing;
-using Novell.AddressBook;
 using Simias.Storage;
 
 using Gtk;
@@ -38,18 +37,16 @@ namespace Novell.iFolder
 {
 	public class NodePropertyPage
 	{
-		[Glade.Widget] TreeView	PropertyTreeView;
+		[Glade.Widget] TreeView	PropertyTreeView = null;
 
 		Gtk.VBox PropertyVBox;
 		ListStore PropertyTreeStore;
 		Pixbuf	PropertyPixBuf;
 		Node	node;
-		Gtk.Window propWin;
 
-		public NodePropertyPage (Gtk.Window win, Node node)
+		public NodePropertyPage (Node node)
 		{
 			this.node = node;
-			propWin = win;
 
 			Glade.XML gxml = new Glade.XML ("ifolder.glade", "NodePropertiesPage", null);
 
@@ -74,8 +71,8 @@ namespace Novell.iFolder
 					new CellRendererText(), 
 					new TreeCellDataFunc(ValueCellTextDataFunc));
 
-			PropertyPixBuf = new Pixbuf("property.xpm");
-			foreach(Simias.Storage.Property prop in node.Properties)
+			PropertyPixBuf = new Pixbuf("property.png");
+			foreach(Simias.Storage.Property prop in this.node.Properties)
 			{
 				PropertyTreeStore.AppendValues(prop);
 			}

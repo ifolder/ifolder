@@ -31,6 +31,7 @@ using Novell.iFolder;
 using Simias.Storage;
 using Novell.AddressBook;
 using Novell.iFolder.FormsBookLib;
+using Simias;
 
 namespace Novell.iFolder.iFolderCom
 {
@@ -46,12 +47,8 @@ namespace Novell.iFolder.iFolderCom
 		bool IsiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path);
 		bool GetiFolderPropInit();
 		bool GetNextiFolderProp(out string name, out string val);
-		bool GetiFolderAclInit();
-		bool GetNextiFolderAce(out string guid, out string name, out int rights);
-		void ShareiFolder(string id, int rights, bool invite);
-		void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string path);
-		bool InvokeContactPickerDlg();
-		bool GetNextAddedItem(out string guid, out string name);
+		void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, bool modal);
+		void NewiFolderWizard([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path);
 	}
 
 	/// <summary>
@@ -64,8 +61,7 @@ namespace Novell.iFolder.iFolderCom
 	public class iFolderComponent : IiFolderComponent
 	{
 		static private iFolderManager manager = null;//= Manager.Connect();
-		private iFolder ifolder;
-		private iFolderFile ifolderfile;
+		private iFolderNode ifoldernode;
 		private ICSEnumerator propEnumerator;
 		private ICSEnumerator aclEnumerator;
 
@@ -113,14 +109,15 @@ namespace Novell.iFolder.iFolderCom
 
 		public String Description
 		{
-			get { return ifolderfile.Description; }
+			// TODO - fix this.
+			get { return ifoldernode.Description; }
 			set
 			{
-				ifolderfile.Description = value;
+				ifoldernode.Description = value;
 
 				// TODO - move this so that the commit can be done once at the end of
 				// a bunch of modifies.
-				ifolderfile.ThisNode.Commit();
+//				ifoldernode.iFolder.CurrentNode.Commit();
 			}
 		}
 
@@ -141,22 +138,7 @@ namespace Novell.iFolder.iFolderCom
 
 		public bool IsiFolder([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
-			try
-			{
-				if (manager.IsiFolder(path))
-				{
-					this.ifolder = manager.GetiFolderByPath(path);
-					this.ifolderfile = this.ifolder.GetiFolderFileByName(path);
-					return true;
-				}
-			}
-			catch (Exception e)
-			{
-				System.Diagnostics.Debug.WriteLine(e.Message);
-				System.Diagnostics.Debug.WriteLine(e.StackTrace);
-			}
-
-			return false;
+			return manager.IsiFolder(path);
 		}
 
 		public bool IsShareable([MarshalAs(UnmanagedType.LPWStr)] string path)
@@ -165,7 +147,7 @@ namespace Novell.iFolder.iFolderCom
 			{
 				if (IsiFolder(path))
 				{
-					return this.ifolder.IsShareable();
+					return manager.GetiFolderByPath(path).IsShareable();
 				}
 			}
 			catch (Exception e)
@@ -179,9 +161,10 @@ namespace Novell.iFolder.iFolderCom
 
 		public bool CreateiFolder([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
+			iFolder ifolder = null;
 			try
 			{
-				ifolder= manager.CreateiFolder(path);
+				ifolder = manager.CreateiFolder(path);
 			}
 			catch (Exception e)
 			{
@@ -213,11 +196,10 @@ namespace Novell.iFolder.iFolderCom
 			{
 				foreach(iFolder ifolder in manager)
 				{
-//					string rootPath= ifolder.LocalPath + Path.DirectorySeparatorChar.ToString();
 					if (path.StartsWith(ifolder.LocalPath))
 					{
-						ifolderfile= ifolder.GetiFolderFileByName(path);
-						if (ifolderfile != null)
+						ifoldernode = ifolder.GetiFolderNodeByPath(path);
+						if (ifoldernode != null)
 						{
 							System.Diagnostics.Debug.WriteLine("GetiFolderNode() returning true");
 							return true;
@@ -246,9 +228,11 @@ namespace Novell.iFolder.iFolderCom
 		public bool GetiFolderPropInit()
 		{
 			// Set up the enumerator to get the Properties on the Node.
-			propEnumerator = ( ICSEnumerator )ifolderfile.ThisNode.Properties.GetEnumerator();
+			// TODO - fix this.
+//			propEnumerator = ( ICSEnumerator )ifoldernode.ThisNode.Properties.GetEnumerator();
 
-			return (propEnumerator != null);
+//			return (propEnumerator != null);
+			return false;
 		}
 
 		public bool GetNextiFolderProp(out string name, out string val)
@@ -265,110 +249,51 @@ namespace Novell.iFolder.iFolderCom
 				propEnumerator.Dispose();
 				name = null;
 				val = null;
+				ifoldernode = null;
 				return false;
 			}
 		}
 
-		public bool GetiFolderAclInit()
+		public void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, bool modal)
 		{
-			// Get the access control list for the collection.
-			aclEnumerator = (ICSEnumerator)ifolder.GetShareAccess().GetEnumerator();
+			string windowName = "Advanced iFolder Properties for " + Path.GetFileName(path);
 
-			return (aclEnumerator != null);
-		}
-
-		public bool GetNextiFolderAce(out string guid, out string name, out int rights)
-		{
-			name = null;
-			if (aclEnumerator.MoveNext())
+			// Search for existing window and bring it to foreground ...
+			Win32Util.Win32Window win32Window = Win32Util.Win32Window.FindWindow(null, windowName);
+			if (win32Window != null)
 			{
-				AccessControlEntry ace = (AccessControlEntry)aclEnumerator.Current;
-				guid = new string(ace.Id.ToString().ToCharArray());
-				rights = (int)ace.Rights;
-				
-				if (!ace.WellKnown)
-				{
-					// Get the user name from the store.
-					name = GetContact(guid);
-				}
-
-				return true;
+				win32Window.BringWindowToTop();
 			}
 			else
 			{
-				aclEnumerator.Dispose();
-				guid = null;
-				rights = 0;
-				return false;
-			}
-		}
+				iFolderAdvanced ifolderAdvanced = new iFolderAdvanced();
+				ifolderAdvanced.Name = path;
+				ifolderAdvanced.Text = windowName;
+				ifolderAdvanced.ABManager = abManager;
+				ifolderAdvanced.CurrentiFolder = manager.GetiFolderByPath(path);
+				ifolderAdvanced.LoadPath = dllPath;
 
-		public void ShareiFolder(string id, int rights, bool invite)
-		{
-			ifolder.Share(id, (Access.Rights)rights, invite);
-		}
-
-		private string GetContact(string userID)
-		{
-			// Retrieve the contact
-			try
-			{
-				Contact myContact = addressBook.GetContactByIdentity(userID);
-				return myContact.UserName;
-			}
-			catch (Exception)
-			{
-				// If there is a problem resolving, just return the ID.
-				return userID;
-			}
-		}
-
-		public void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string path)
-		{
-			iFolderAdvanced ifolderAdvanced = new iFolderAdvanced();
-			ifolderAdvanced.Name = path;
-			ifolderAdvanced.Text = "Advanced iFolder Properties for " + Path.GetFileName(path);
-			ifolderAdvanced.ABManager = abManager;
-			ifolderAdvanced.CurrentiFolder = manager.GetiFolderByPath(path);
-
-			// TODO - may be times we want to do Show rather than ShowDialog ... maybe have two different methods.
-//			ifolderAdvanced.Show();
-			ifolderAdvanced.ShowDialog();
-		}
-
-		public bool InvokeContactPickerDlg()
-		{
-			ContactPicker picker = new ContactPicker();
-			picker.CurrentManager = abManager;
-			DialogResult result = picker.ShowDialog();
-			if (result == DialogResult.OK)
-			{
-				ArrayList contactList = picker.GetContactList;
-				if (contactList.Count > 0)
+				if (modal)
 				{
-					items = contactList.GetEnumerator();
-					return true;
+					ifolderAdvanced.ShowDialog();
+				}
+				else
+				{
+					ifolderAdvanced.Show();
 				}
 			}
-
-			return false;
 		}
 
-        // TODO - is there a better way to do this???
-		public bool GetNextAddedItem(out string guid, out string name)
+		public void NewiFolderWizard([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
-			if (items.MoveNext())
+			Configuration config = new Configuration();
+			string showWizard = config.Get("iFolderShell", "Show wizard", "true");
+			if (showWizard == "true")
 			{
-				Contact contact = (Contact)items.Current;
-				name = contact.UserName;
-				guid = contact.Identity;
-				return true;
-			}
-			else
-			{
-				guid = null;
-				name = null;
-				return false;
+				NewiFolder newiFolder = new NewiFolder();
+				newiFolder.FolderName = path;
+				newiFolder.LoadPath = dllPath;
+				newiFolder.Show();
 			}
 		}
 	}

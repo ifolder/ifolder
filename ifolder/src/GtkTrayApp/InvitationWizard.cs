@@ -437,7 +437,7 @@ namespace Novell.iFolder
 							MessageType.Error,
 							ButtonsType.Close,
 							"The location selected for the new iFolder is below an existing iFolder and cannot be used.  Please select a new location.");
-				int result = md.Run();
+				md.Run();
 				md.Hide();
 		
 				MoveToAcceptPage();
@@ -458,7 +458,7 @@ namespace Novell.iFolder
 							MessageType.Error,
 							ButtonsType.Close,
 							"Unable to accept the invitation due to an error while processing the invitation.\n" + e);
-				int result = md.Run();
+				md.Run();
 				md.Hide();
 
 				// Go back to the Load Page so they can choose another
@@ -505,8 +505,8 @@ namespace Novell.iFolder
 											MessageType.Error,
 											ButtonsType.Close,
 											"Unable to open file or file is not an iFolder Invitation:\n" + inviteFile);
-				int result = md.Run();
-				Console.WriteLine("Response was: " + result);
+				md.Run();
+				//Console.WriteLine("Response was: " + result);
 				md.Hide();
 
 				// Go back to the Load Page so they can choose another

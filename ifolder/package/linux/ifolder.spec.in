@@ -1,0 +1,113 @@
+#========================================================================
+#  $RCSfile$
+# 
+#  Copyright (C) 2004 Novell, Inc.
+#
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public
+#  License as published by the Free Software Foundation; either
+#  version 2 of the License, or (at your option) any later version.
+#
+#  This library is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Library General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public
+#  License along with this library; if not, write to the Free
+#  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#
+#  Author: Paul Thomas <pthomas@novell.com>
+# 
+#========================================================================
+
+%define prefix /opt/ifolder
+
+Summary      : iFolder
+Name         : @PACKAGE@
+Version      : @VERSION@
+Release      : 1
+Copyright    : GPL
+Group        : Applications/Productivity
+Source       : %{name}-%{version}.tar.gz
+URL          : http://forge.novell.com/modules/xfmod/project/?ifolder
+#Distribution : 
+Vendor       : <unknown>
+Packager     : <unknown>
+BuildRoot    : %{_tmppath}/%{name}-%{version}
+
+Requires     : addressbook = %{version}
+Requires     : simias = %{version}
+Requires     : mono >= 0.30
+Requires     : gtk-sharp >= 0.17
+Obsoletes    : %{name} <= %{version}
+
+#=============================================================================
+%Description
+iFolder supports file sharing and collaboration within a workgroup.
+
+#=============================================================================
+%ChangeLog
+
+
+#=============================================================================
+%Prep
+%setup -n %{name}-%{version}
+
+#=============================================================================
+%Build
+./configure --prefix=%{prefix} --with-simias-install-path=@SIMIAS_INSTALL_PATH@ --with-addressbook-install-path=@ADDRESSBOOK_INSTALL_PATH@
+make
+
+#=============================================================================
+%Install
+%{__rm} -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT install
+
+#=============================================================================
+%Clean
+%{__rm} -rf $RPM_BUILD_ROOT
+
+#=============================================================================
+%Post
+INSTANCES_AFTER_INSTALL=$1
+if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
+    #
+    # If path is not already in ld.so.conf, append it
+    #
+    if ! grep -q "^%{prefix}/bin$" /etc/ld.so.conf ; then
+        echo "%{prefix}/bin" >> /etc/ld.so.conf
+        /sbin/ldconfig
+    fi
+    
+    #
+    # Configure tray app to start on user login for each desktop user
+    #
+    HOME_DIRS=`sed 's;[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\([^:]*\).*;\1;' /etc/passwd`
+    for path in $HOME_DIRS
+    do
+	%{prefix}/bin/setup-autostart $path
+    done 2>/dev/null
+fi
+
+#=============================================================================
+%Preun
+INSTANCES_AFTER_UNINSTALL=$1
+if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
+    #
+    # Unconfigure tray app to start on user login for each desktop user
+    #
+    HOME_DIRS=`sed 's;[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\([^:]*\).*;\1;' /etc/passwd`
+    for path in $HOME_DIRS
+    do
+        %{prefix}/bin/setup-autostart -e $path
+    done 2>/dev/null
+fi
+
+#=============================================================================
+%Files
+%defattr(-,root,root)
+%{prefix}/bin/*
+#%{prefix}/lib/*
+#%{prefix}/share/*
+
