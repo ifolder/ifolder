@@ -57,6 +57,7 @@ namespace Novell.iFolder.Web
 		public int EnumeratedState;
 		public bool IsWorkgroup;
 		public bool HasCollisions;
+		public string CurrentUserID;
 
 		public iFolder()
 		{
@@ -92,6 +93,7 @@ namespace Novell.iFolder.Web
 			this.IsWorkgroup = 
 				(collection.Domain == Simias.Storage.Domain.WorkGroupDomainID);
 			this.HasCollisions = collection.HasCollisions();
+			this.CurrentUserID = collection.GetCurrentMember().UserID;
 		}
 
 

@@ -93,6 +93,7 @@
           <xs:element minOccurs="1" maxOccurs="1" name="EnumeratedState" type="xs:int" />
           <xs:element minOccurs="1" maxOccurs="1" name="IsWorkgroup" type="xs:boolean" />
           <xs:element minOccurs="1" maxOccurs="1" name="HasCollisions" type="xs:boolean" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CurrentUserID" type="xs:string" />
         </xs:sequence>
       </xs:complexType>
       <xs:element name="CreateLocaliFolderResponse">
