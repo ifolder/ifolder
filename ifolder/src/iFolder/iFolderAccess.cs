@@ -80,7 +80,7 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Constructor for the IFACEList to use to construct entries
 		/// </summary>
-		internal IFAccessControlList(Collection collection, AddressBook ab)
+		internal IFAccessControlList(Collection collection, Novell.AddressBook.AddressBook ab)
 		{
 			ICSList icsList = collection.GetAccessControlList();
 
@@ -97,9 +97,9 @@ namespace Novell.iFolder
 		private class IFACLEnumerator : IEnumerator
 		{
 			private IEnumerator iEnumerator;
-			private AddressBook	ab;
+			private Novell.AddressBook.AddressBook	ab;
 
-			public IFACLEnumerator( AddressBook ab,
+			public IFACLEnumerator( Novell.AddressBook.AddressBook ab,
 									IEnumerator iEnumerator )
 			{
 				this.ab = ab;

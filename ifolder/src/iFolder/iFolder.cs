@@ -40,7 +40,7 @@ namespace Novell.iFolder
 #region Class Members
 		private	Collection		collection = null;
 		private Store			store = null;
-		private	AddressBook		ab = null;
+		private	Novell.AddressBook.AddressBook		ab = null;
 
 		/// <summary>
 		/// Type of collection that represents an iFolder.
