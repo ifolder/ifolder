@@ -75,7 +75,7 @@ namespace Novell.iFolder
 
 
 			// Setup the iFolder TreeView
-			MemberTreeStore = new ListStore(typeof(Member1));
+			MemberTreeStore = new ListStore(typeof(Member));
 			MemberTreeView.Model = MemberTreeStore;
 
 			CellRendererPixbuf mcrp = new CellRendererPixbuf();
@@ -139,7 +139,7 @@ namespace Novell.iFolder
 
 		private void RefreshMemberList()
 		{
-    		Member1[] memberlist =  ifws.GetMembers(ifolder.ID);
+    		Member[] memberlist =  ifws.GetMembers(ifolder.ID);
 			MemberTreeStore.AppendValues(memberlist);
 		}
 
@@ -151,7 +151,7 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			Member1 member = (Member1) tree_model.GetValue(iter,0);
+			Member member = (Member) tree_model.GetValue(iter,0);
 			((CellRendererText) cell).Text = member.Name;
 		}
 
@@ -162,7 +162,7 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			Member1 member = (Member1) tree_model.GetValue(iter,0);
+			Member member = (Member) tree_model.GetValue(iter,0);
 			((CellRendererPixbuf) cell).Pixbuf = ContactPixBuf;
 		}
 
@@ -173,7 +173,7 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			Member1 member = (Member1) tree_model.GetValue(iter,0);
+			Member member = (Member) tree_model.GetValue(iter,0);
 			((CellRendererText) cell).Text = "Dude";
 		}
 
@@ -182,7 +182,7 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			Member1 member = (Member1) tree_model.GetValue(iter,0);
+			Member member = (Member) tree_model.GetValue(iter,0);
 			((CellRendererText) cell).Text = "No Access";
 		}
 

@@ -57,7 +57,37 @@ namespace Novell.iFolder.Web
 		public iFolderService()
 		{
 		}
-	
+
+
+
+
+		/// <summary>
+		/// WebMethod that allows a client to ping the service to see
+		/// if it is up and running
+		/// </summary>
+		[WebMethod(Description="Allows a client to pint to make sure the Web Service is up and running")]
+		[SoapRpcMethod]
+		public void Ping()
+		{
+			// Nothing to do here, just return
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that gets general iFolder Settings
+		/// </summary>
+		/// <returns>
+		/// Settings
+		/// </returns>
+		[WebMethod(Description="Gets the current iFolder Settings")]
+		[SoapRpcMethod]
+		public Settings GetSettings()
+		{
+			return SharedCollection.GetSettings();
+		}
+
 
 
 
@@ -564,6 +594,33 @@ namespace Novell.iFolder.Web
 
 
 
+
+		/// <summary>
+		/// WebMethod that connects up an iFolder Enterprise Server
+		/// </summary>
+		/// <param name = "UserName">
+		/// The username to use to connect to the Enterprise server
+		/// </param>
+		/// <param name = "Password">
+		/// The password to use to connect to the Enterprise server
+		/// </param>
+		/// <param name = "Host">
+		/// The host of the enterprise server
+		/// </param>
+		/// <returns>
+		/// The current Settings
+		/// </returns>
+		[WebMethod(Description="Connects to an iFolder Enterprise Server")]
+		[SoapRpcMethod]
+		public Settings ConnectToEnterpriseServer(	string UserName,
+													string Password,
+													string Host)
+		{
+			Configuration conf = Configuration.GetConfiguration();
+			Simias.Domain.DomainAgent da = new Simias.Domain.DomainAgent(conf);
+			da.Attach(Host, UserName, Password);
+			return SharedCollection.GetSettings();
+		}
 
 
 	}

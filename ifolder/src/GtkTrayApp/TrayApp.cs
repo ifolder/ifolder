@@ -52,6 +52,7 @@ namespace Novell.iFolder
 		static Gtk.ThreadNotify		iFolderStateNotify;
 		static iFolderWebService	ifws;
 		static iFolderWindow 		ifwin;
+		static Settings				ifSettings;
 
 		public static void Main (string[] args)
 		{
@@ -113,10 +114,12 @@ namespace Novell.iFolder
 					ifws = new iFolderWebService();
 	
 					// TODO: change this to some kind of init code
-					ifws.IsiFolder("/initiFolder");
+					ifSettings = ifws.GetSettings();
+					//ifws.Ping();
 				}
 				catch(System.Net.WebException we)
 				{
+					ifSettings = null;
 					ifws = null;
 
 					if(we.Message == "Error: ConnectFailure")
@@ -138,6 +141,7 @@ namespace Novell.iFolder
 				}
 				catch(Exception e)
 				{
+					ifSettings = null;
 					ifws = null;
 
 					iFolderExceptionDialog ied = new iFolderExceptionDialog(
@@ -195,9 +199,12 @@ namespace Novell.iFolder
 			iFolders_item.Activated += 
 					new EventHandler(show_properties);
 			
-			MenuItem connect_item = new MenuItem ("Join Enterprise Server");
-			trayMenu.Append (connect_item);
-			connect_item.Activated += new EventHandler(OnJoinEnterprise);
+			if( (ifSettings != null) && (!ifSettings.HaveEnterprise) )
+			{
+				MenuItem connect_item = new MenuItem ("Join Enterprise Server");
+				trayMenu.Append (connect_item);
+				connect_item.Activated += new EventHandler(OnJoinEnterprise);
+			}
 
 			ImageMenuItem help_item = new ImageMenuItem (Gtk.Stock.Help, agrp);
 			trayMenu.Append (help_item);
@@ -238,9 +245,12 @@ namespace Novell.iFolder
 			{
 				try
 				{
-					ifws.ConnectToEnterpriseServer(	loginDialog.UserName,
+					Settings tmpSettings;
+					tmpSettings = ifws.ConnectToEnterpriseServer(
+													loginDialog.UserName,
 													loginDialog.Password,
 													loginDialog.Host);
+					ifSettings = tmpSettings;
 				}
 				catch(Exception e)
 				{
