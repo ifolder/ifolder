@@ -758,12 +758,15 @@ namespace Simias.POBoxService.Web
 			string			messageID)
 		{
 			bool				status = false;
-			Collection			sharedCollection;
+			Collection			sharedCollection = null;
 			Simias.POBox.POBox	poBox = null;
 			Store				store = Store.GetStore();
 			Subscription		cSub = null;
 
-			log.Debug("Invite - called");
+			log.Debug( "Invite - called" );
+			log.Debug( "  DomainID: " + domainID );
+			log.Debug( "  FromUserID: " + fromUserID );
+			log.Debug( "  ToUserID: " + toUserID );
 
 			// Verify the fromMember is the caller
 			log.Debug("  current Principal: " + Thread.CurrentPrincipal.Identity.Name);
@@ -780,9 +783,10 @@ namespace Simias.POBoxService.Web
 			}
 
 			// Verify domain
-			Simias.Storage.Domain cDomain = store.GetDomain(domainID);
+			Simias.Storage.Domain cDomain = store.GetDomain( domainID );
 			if (cDomain == null)
 			{
+				log.Debug( " Invalid Domain ID!" );
 				throw new ApplicationException("Invalid Domain ID");
 			}
 
@@ -790,25 +794,29 @@ namespace Simias.POBoxService.Web
 			Simias.Storage.Roster currentRoster = cDomain.Roster;
 			if (currentRoster == null)
 			{
+				log.Debug( " No Roster existed for domain!" );
 				throw new ApplicationException("No member Roster exists for the specified Domain");
 			}
 
-			Member toMember = currentRoster.GetMemberByID(toUserID);
+			Member toMember = currentRoster.GetMemberByID( toUserID );
 			if (toMember == null)
 			{
+				log.Debug( " Specified \"toUserID\" does not exist in the roster!" );
 				throw new ApplicationException("Specified \"toUserID\" does not exist in the Domain Roster");
 			}
 
-			Member fromMember = currentRoster.GetMemberByID(fromUserID);
-			if (fromMember == null)
+			Member fromMember = currentRoster.GetMemberByID( fromUserID );
+			if ( fromMember == null )
 			{
+				log.Debug( " Specified \"fromUserID\" does not exist in the roster!" );
 				throw new ApplicationException("Specified \"fromUserID\" does not exist in the Domain Roster");
 			}
 
-			sharedCollection = store.GetCollectionByID(sharedCollectionID); 
-			if (sharedCollection == null)
+			// In peer-to-peer the collection won't exist 
+			sharedCollection = store.GetCollectionByID( sharedCollectionID ); 
+			if ( sharedCollection == null )
 			{
-				throw new ApplicationException("Invalid shared collection ID");
+				log.Debug( " Shared collection does not exist" );
 			}
 
 			if (rights > (int) Simias.Storage.Access.Rights.Admin)
@@ -819,10 +827,15 @@ namespace Simias.POBoxService.Web
 			try
 			{
 				log.Debug("  looking up POBox for: " + toUserID);
-			
-				poBox = POBox.POBox.GetPOBox(store, domainID, toUserID);
-
-				cSub = new Subscription(sharedCollection.Name + " subscription", "Subscription", fromUserID);
+				poBox = POBox.POBox.GetPOBox( store, domainID, toUserID );
+				if ( sharedCollection == null )
+				{
+					cSub = new Subscription( "Subscription from " + fromMember.Name, "Subscription", fromUserID );
+				}
+				else
+				{
+					cSub = new Subscription(sharedCollection.Name + " subscription", "Subscription", fromUserID );
+				}
 				cSub.SubscriptionState = Simias.POBox.SubscriptionStates.Received;
 				cSub.ToName = toMember.Name;
 				cSub.ToIdentity = toUserID;
