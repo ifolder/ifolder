@@ -50,7 +50,7 @@ namespace Novell.iFolder.Web
 	/// </summary>
 	[WebService(
 	Namespace="http://novell.com/ifolder/web/",
-	Name="iFolder Web Service",
+	Name="iFolderWebService",
 	Description="Web Service providing access to iFolder")]
 	public class iFolderService : WebService
 	{
