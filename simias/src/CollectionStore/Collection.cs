@@ -1827,8 +1827,12 @@ namespace Simias.Storage
 				throw new InvalidOperationException( "Cannot set a base type of a Node object." );
 			}
 
-			// Set the new type.
-			node.Properties.AddNodeProperty( PropertyTags.Types, type );
+			// See if the node already has this type.
+			if ( !IsType( node, type ) )
+			{
+				// Set the new type.
+				node.Properties.AddNodeProperty( PropertyTags.Types, type );
+			}
 		}
 		#endregion
 
