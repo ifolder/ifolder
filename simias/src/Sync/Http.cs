@@ -995,13 +995,14 @@ namespace Simias.Sync.Http
 				else
 				{
 					long offset = 0;
-					IntPtr handle = service.GetReadStream().Handle;
-					FileStream stream = service.GetReadStream();
+					byte[] buffer = new byte[blockSize];
+					Stream outStream = response.OutputStream;
 					for (int i = 0; i < blockCount; ++i)
 					{
 						if (fileMap[i] == -1)
 						{
-							response.WriteFile(handle, offset, blockSize);
+							int bytesRead = service.Read(buffer, offset, blockSize);
+							outStream.Write(buffer, 0, bytesRead);
 						}
 						offset += blockSize;
 					}

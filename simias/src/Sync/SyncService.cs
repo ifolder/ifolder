@@ -804,14 +804,13 @@ namespace Simias.Sync
 		/// <summary>
 		/// Read data from the currently opened file.
 		/// </summary>
-		/// <param name="buffer">Byte array of bytes read.</param>
+		/// <param name="buffer">Buffer to read into.</param>
 		/// <param name="offset">The offset to begin reading.</param>
 		/// <param name="count">The number of bytes to read.</param>
 		/// <returns>The number of bytes read.</returns>
-		public int Read(out byte[] buffer, long offset, int count)
+		public int Read(byte[] buffer, long offset, int count)
 		{
 			outFile.ReadPosition = offset;
-			buffer = new byte[count];
 			return outFile.Read(buffer, 0, count);
 		}
 
