@@ -180,6 +180,10 @@ case $IFOLDER_OS in
         PKG_CONFIG_REQUIRES="simias >= 1.0"
 		PKG_CONFIG_LIBS="/r:Novell.iFolder.dll"
 		PKG_CONFIG_CONFLICTS=""
+    	bindir='${exec_prefix}'
+    	sbindir='${exec_prefix}'
+    	libexecdir='${exec_prefix}'
+    	libdir='${exec_prefix}'
     ;;
     #
     # Linux-specific configuration
@@ -221,6 +225,10 @@ case $IFOLDER_OS in
 		#ALL_LINGUAS="pt_BR fr it de es ru ja"
 		#AM_GNU_GETTEXT_VERSION(0.10.40)
 		AM_GNU_GETTEXT(external)
+    	bindir='${exec_prefix}'
+    	sbindir='${exec_prefix}'
+    	libexecdir='${exec_prefix}'
+    	libdir='${exec_prefix}'
     ;;
     #
     # Windows-specific configuration
@@ -294,10 +302,10 @@ case $IFOLDER_OS in
         #
         # Override Linux-like directory structure
         #
-        bindir='${exec_prefix}'
-        sbindir='${exec_prefix}'
-        libexecdir='${exec_prefix}'
-        libdir='${exec_prefix}'
+    	bindir='$(shell cygpath --mixed ${exec_prefix}'
+    	sbindir='$(shell cygpath --mixed ${exec_prefix}'
+    	libexecdir='$(shell cygpath --mixed ${exec_prefix}'
+    	libdir='$(shell cygpath --mixed ${exec_prefix}'
     ;;
 esac
 AC_SUBST(CDEF)
