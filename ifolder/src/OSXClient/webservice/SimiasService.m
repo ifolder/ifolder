@@ -22,8 +22,8 @@
  ***********************************************************************/
 
 #import "SimiasService.h"
-#include "simiasStub.h"
-#include "simias.nsmap"
+#include <simiasStub.h>
+#include <simias.nsmap>
 
 @implementation SimiasService
 

@@ -22,7 +22,6 @@
  ***********************************************************************/
 
 #import <Cocoa/Cocoa.h>
-#include "simiasStub.h"
 
 /*
 	enum ns1__DomainType Type;

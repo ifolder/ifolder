@@ -22,7 +22,7 @@ all: $(srcdir)/build/iFolder.app
 
 
 $(srcdir)/build/iFolder.app: iFolder.xcode
-	xcodebuild -buildstyle $(BUILDSTYLE)
+	xcodebuild -buildstyle $(BUILDSTYLE) HEADER_SEARCH_PATHS="../libifolder $(SIMIAS_CLIENT_C_INCLUDES)" LIBRARY_SEARCH_PATHS="../libifolder/.libs $(SIMIAS_CLIENT_C_LIBS)"
 
 install-exec-local: $(srcdir)/build/iFolder.app
 	$(mkinstalldirs) $(DESTDIR)$(prefix)/Applications
