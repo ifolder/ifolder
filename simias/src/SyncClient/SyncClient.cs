@@ -100,9 +100,20 @@ namespace Simias.Sync
 					{
 						// Sync this collection now.
 						log.Info("{0} : Starting Sync.", cClient);
-						cClient.SyncNow();
+						try
+						{
+							cClient.SyncNow();
+						}
+						catch (Exception ex)
+						{
+							log.Debug(ex, "Sync Failed");
+						}
 						log.Info("{0} : Finished Sync.", cClient);
-						cClient.Reschedule();
+						try
+						{
+							cClient.Reschedule();
+						}
+						catch {};
 					}
 				}
 			}
@@ -193,7 +204,12 @@ namespace Simias.Sync
 			{
 				lock (collections)
 				{
-					collections.Remove(args.ID);
+					CollectionSyncClient client = (CollectionSyncClient)collections[args.ID];
+					if (client != null)
+					{
+						client.Stop();
+						collections.Remove(args.ID);
+					}
 				}
 			}
 		}
@@ -310,11 +326,13 @@ namespace Simias.Sync
 
 		internal void Reschedule()
 		{
-			timer.Change(collection.Interval * 1000, Timeout.Infinite);
+			if (!stopping)
+				timer.Change(collection.Interval * 1000, Timeout.Infinite);
 		}
 
 		internal void Stop()
 		{
+			timer.Dispose();
 			stopping = true;
 		}
 
@@ -428,8 +446,6 @@ namespace Simias.Sync
 		/// <returns>Array of NodeStamps</returns>
 		private NodeStamp[] GetNodeStamps()
 		{
-			// BUGBUG
-			System.Diagnostics.Debugger.Break();
 			log.Debug("GetNodeStamps start");
 			ArrayList stampList = new ArrayList();
 			foreach (ShallowNode sn in collection)
@@ -642,7 +658,12 @@ namespace Simias.Sync
 				{
 					// The node is on both the server and the client.  Check which way the node
 					// should go.
-					if (cStamp.localIncarn != cStamp.masterIncarn)
+					if (cStamp.type == NodeTypes.TombstoneType)
+					{
+						if (!killOnServer.Contains(cStamp.id))
+							killOnServer.Add(cStamp.id, cStamp.type);
+					}
+					else if (cStamp.localIncarn != cStamp.masterIncarn)
 					{
 						// The file has been changed locally if the master is correct, push this file.
 						if (cStamp.masterIncarn == sStamp.Incarnation)
@@ -701,10 +722,11 @@ namespace Simias.Sync
 						if (node == null)
 						{
 							log.Debug("Ignoring attempt to delete non-existent node {0}", id);
+							killOnClient.Remove(id);
 							continue;
 						}
 
-						log.Info("Deleting {0}", node.Name);
+						log.Info("Deleting {0} on client", node.Name);
 						// If this is a collision node then delete the collision file.
 						if (collection.HasCollisions(node))
 						{
@@ -951,8 +973,9 @@ namespace Simias.Sync
 							Node node = collection.GetNodeByID(status.nodeID);
 							if (node != null)
 							{
+								log.Info("Deleting {0} from server", node.Name);
 								// Delete the tombstone.
-								collection.Commit(collection.Delete());
+								collection.Commit(collection.Delete(node));
 							}
 							killOnServer.Remove(status.nodeID);
 						}
@@ -1004,15 +1027,8 @@ namespace Simias.Sync
 					switch (status.status)
 					{
 						case SyncStatus.Success:
-							if (collection.IsType(node, NodeTypes.TombstoneType))
-							{
-								collection.Commit(collection.Delete(node));
-							}
-							else
-							{
-								node.SetMasterIncarnation(node.LocalIncarnation);
-								collection.Commit(node);
-							}
+							node.SetMasterIncarnation(node.LocalIncarnation);
+							collection.Commit(node);
 							nodesToServer.Remove(node.ID);
 							break;
 						case SyncStatus.UpdateConflict:
@@ -1076,15 +1092,8 @@ namespace Simias.Sync
 					switch (status.status)
 					{
 						case SyncStatus.Success:
-							if (collection.IsType(node, NodeTypes.TombstoneType))
-							{
-								collection.Commit(collection.Delete(node));
-							}
-							else
-							{
-								node.SetMasterIncarnation(node.LocalIncarnation);
-								collection.Commit(node);
-							}
+							node.SetMasterIncarnation(node.LocalIncarnation);
+							collection.Commit(node);
 							dirsToServer.Remove(node.ID);
 							break;
 						case SyncStatus.UpdateConflict:

@@ -754,7 +754,7 @@ namespace Simias.Sync
 			{
 				try
 				{
-					string[] caseSensitivePath = Directory.GetFiles(Path.GetDirectoryName(fullPath), Path.GetFileName(fullPath));
+					string[] caseSensitivePath = Directory.GetFileSystemEntries(Path.GetDirectoryName(fullPath), Path.GetFileName(fullPath));
 					if (caseSensitivePath.Length == 1)
 					{
 						// We should only have one match.
