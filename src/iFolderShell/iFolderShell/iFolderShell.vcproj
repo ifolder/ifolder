@@ -137,9 +137,6 @@
 			<File
 				RelativePath=".\Registry.cpp">
 			</File>
-			<File
-				RelativePath=".\ShareiFolder.cpp">
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"

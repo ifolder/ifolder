@@ -16,8 +16,8 @@ iFolderComponentTests_FLAGS = $(CSC_LIBFLAG)
 iFolderComponentTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) iFolderComponent.dll nunit.framework.dll nunit.extensions.dll
 iFolderComponentTests_LIBPATH = $(iFolderComponent_LIBPATH) $(srcdir)/../../tools/NUnit/bin
 
-iFolderShell_SRCFILES = $(srcdir)/iFolderShell/ContextMenu.cpp $(srcdir)/iFolderShell/IconOverlay.cpp $(srcdir)/iFolderShell/iFolderShell.cpp $(srcdir)/iFolderShell/PropertySheet.cpp $(srcdir)/iFolderShell/Registry.cpp $(srcdir)/iFolderShell/ShareiFolder.cpp $(srcdir)/iFolderShell/iFolderShell.rc
-iFolderShell_OBJFILES = iFolderShell/ContextMenu.obj iFolderShell/IconOverlay.obj iFolderShell/iFolderShell.obj iFolderShell/PropertySheet.obj iFolderShell/Registry.obj iFolderShell/ShareiFolder.obj iFolderShell/iFolderShell$(RES_EXT)
+iFolderShell_SRCFILES = $(srcdir)/iFolderShell/ContextMenu.cpp $(srcdir)/iFolderShell/IconOverlay.cpp $(srcdir)/iFolderShell/iFolderShell.cpp $(srcdir)/iFolderShell/PropertySheet.cpp $(srcdir)/iFolderShell/Registry.cpp $(srcdir)/iFolderShell/iFolderShell.rc
+iFolderShell_OBJFILES = iFolderShell/ContextMenu.obj iFolderShell/IconOverlay.obj iFolderShell/iFolderShell.obj iFolderShell/PropertySheet.obj iFolderShell/Registry.obj iFolderShell/iFolderShell$(RES_EXT)
 iFolderShell_INCLUDES = iFolderShell
 iFolderShell_FLAGS = -D_USRDLL -DIFOLDERSHELL_EXPORTS
 iFolderShell_CHARFLAGS = -DUNICODE -D_UNICODE

@@ -46,12 +46,7 @@ namespace Novell.iFolder.iFolderCom
 		bool IsiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path);
 		bool GetiFolderPropInit();
 		bool GetNextiFolderProp(out string name, out string val);
-		bool GetiFolderAclInit();
-		bool GetNextiFolderAce(out string guid, out string name, out int rights);
-		void ShareiFolder(string id, int rights, bool invite);
 		void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, bool modal);
-		bool InvokeContactPickerDlg();
-		bool GetNextAddedItem(out string guid, out string name);
 	}
 
 	/// <summary>
@@ -64,7 +59,6 @@ namespace Novell.iFolder.iFolderCom
 	public class iFolderComponent : IiFolderComponent
 	{
 		static private iFolderManager manager = null;//= Manager.Connect();
-		private iFolder ifolder;
 		private iFolderFile ifolderfile;
 		private ICSEnumerator propEnumerator;
 		private ICSEnumerator aclEnumerator;
@@ -113,6 +107,7 @@ namespace Novell.iFolder.iFolderCom
 
 		public String Description
 		{
+			// TODO - fix this.
 			get { return ifolderfile.Description; }
 			set
 			{
@@ -141,7 +136,7 @@ namespace Novell.iFolder.iFolderCom
 
 		public bool IsiFolder([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
-			try
+/*			try
 			{
 				if (manager.IsiFolder(path))
 				{
@@ -154,9 +149,9 @@ namespace Novell.iFolder.iFolderCom
 			{
 				System.Diagnostics.Debug.WriteLine(e.Message);
 				System.Diagnostics.Debug.WriteLine(e.StackTrace);
-			}
+			}*/
 
-			return false;
+			return manager.IsiFolder(path);
 		}
 
 		public bool IsShareable([MarshalAs(UnmanagedType.LPWStr)] string path)
@@ -165,7 +160,7 @@ namespace Novell.iFolder.iFolderCom
 			{
 				if (IsiFolder(path))
 				{
-					return this.ifolder.IsShareable();
+					return manager.GetiFolderByPath(path).IsShareable();
 				}
 			}
 			catch (Exception e)
@@ -179,9 +174,10 @@ namespace Novell.iFolder.iFolderCom
 
 		public bool CreateiFolder([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
+			iFolder ifolder = null;
 			try
 			{
-				ifolder= manager.CreateiFolder(path);
+				ifolder = manager.CreateiFolder(path);
 			}
 			catch (Exception e)
 			{
@@ -265,61 +261,8 @@ namespace Novell.iFolder.iFolderCom
 				propEnumerator.Dispose();
 				name = null;
 				val = null;
+				this.ifolderfile = null;
 				return false;
-			}
-		}
-
-		public bool GetiFolderAclInit()
-		{
-			// Get the access control list for the collection.
-			aclEnumerator = (ICSEnumerator)ifolder.GetShareAccess().GetEnumerator();
-
-			return (aclEnumerator != null);
-		}
-
-		public bool GetNextiFolderAce(out string guid, out string name, out int rights)
-		{
-			name = null;
-			if (aclEnumerator.MoveNext())
-			{
-				AccessControlEntry ace = (AccessControlEntry)aclEnumerator.Current;
-				guid = new string(ace.Id.ToString().ToCharArray());
-				rights = (int)ace.Rights;
-				
-				if (!ace.WellKnown)
-				{
-					// Get the user name from the store.
-					name = GetContact(guid);
-				}
-
-				return true;
-			}
-			else
-			{
-				aclEnumerator.Dispose();
-				guid = null;
-				rights = 0;
-				return false;
-			}
-		}
-
-		public void ShareiFolder(string id, int rights, bool invite)
-		{
-			ifolder.Share(id, (Access.Rights)rights, invite);
-		}
-
-		private string GetContact(string userID)
-		{
-			// Retrieve the contact
-			try
-			{
-				Contact myContact = addressBook.GetContactByIdentity(userID);
-				return myContact.UserName;
-			}
-			catch (Exception)
-			{
-				// If there is a problem resolving, just return the ID.
-				return userID;
 			}
 		}
 
@@ -350,42 +293,6 @@ namespace Novell.iFolder.iFolderCom
 				{
 					ifolderAdvanced.Show();
 				}
-			}
-		}
-
-		public bool InvokeContactPickerDlg()
-		{
-			ContactPicker picker = new ContactPicker();
-			picker.CurrentManager = abManager;
-			DialogResult result = picker.ShowDialog();
-			if (result == DialogResult.OK)
-			{
-				ArrayList contactList = picker.GetContactList;
-				if (contactList.Count > 0)
-				{
-					items = contactList.GetEnumerator();
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-        // TODO - is there a better way to do this???
-		public bool GetNextAddedItem(out string guid, out string name)
-		{
-			if (items.MoveNext())
-			{
-				Contact contact = (Contact)items.Current;
-				name = contact.UserName;
-				guid = contact.Identity;
-				return true;
-			}
-			else
-			{
-				guid = null;
-				name = null;
-				return false;
 			}
 		}
 	}
