@@ -20,7 +20,7 @@ CollectionEventTests_CSFILES = $(srcdir)/CollectionEventsTests/AssemblyInfo.cs $
 CollectionEventTests_CSFILES_CSC := $(subst /,$(SEP),$(CollectionEventTests_CSFILES))
 CollectionEventTests_INCLUDES = 
 CollectionEventTests_RESOURCES =
-CollectionEventTests_FLAGS = $(CSC_LIBFLAG)
+CollectionEventTests_FLAGS = $(CSC_EXEFLAG)
 CollectionEventTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Configuration.dll Common.dll CollectionEvents.dll
 CollectionEventTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common ../Configuration 
 
