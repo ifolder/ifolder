@@ -24,15 +24,7 @@ TestSync_FLAGS = $(CSC_LIBFLAG)
 TestSync_LIBS = $(Sync_LIBS) $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Sync.dll
 TestSync_LIBPATH = $(Sync_LIBPATH) ../../tools/NUnit/bin $(srcdir)/../../tools/NUnit/bin
 
-SyncTests_CSFILES = $(srcdir)/SyncTestStore.cs $(srcdir)/SyncTestCollection.cs $(srcdir)/Sync01Tests.cs $(srcdir)/Sync02Tests.cs
-SyncTests_CSFILES_CSC := $(subst /,$(SEP),$(SyncTests_CSFILES))
-SyncTests_INCLUDES =
-SyncTests_RESOURCES =
-SyncTests_FLAGS = $(CSC_LIBFLAG)
-SyncTests_LIBS = Sync.dll System.dll System.Data.dll CollectionStore.dll System.Runtime.Remoting.dll nunit.util.dll nunit.framework.dll
-SyncTests_LIBPATH = $(Sync_LIBPATH) $(srcdir)/../../tools/NUnit/bin
-
-EXTRA_DIST = $(Sync_CSFILES) $(SyncCmd_CSFILES) $(TestSync_CSFILES) $(SyncTests_CSFILES)
+EXTRA_DIST = $(Sync_CSFILES) $(SyncCmd_CSFILES) $(TestSync_CSFILES)
 
 CUR_DIR := $(shell pwd)
 
@@ -46,9 +38,6 @@ SyncCmd.exe: $(SyncCmd_CSFILES) $(SyncCmd_RESOURCES)
 
 TestSync.exe: $(TestSync_CSFILES) $(TestSync_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(TestSync_FLAGS) $(TestSync_LIBS:%=/r:%) $(TestSync_LIBPATH:%=/lib:%) $(TestSync_CSFILES_CSC)
-	
-SyncTests.exe: $(SyncTests_CSFILES) $(SyncTests_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SyncTests_FLAGS) $(SyncTests_LIBS:%=/r:%) $(SyncTests_LIBPATH:%=/lib:%) $(SyncTests_CSFILES_CSC)
 	
 install-exec-local: Sync.dll SyncCmd.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
