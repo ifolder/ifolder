@@ -26,6 +26,7 @@
 
 // Handle to this DLL.
 extern HINSTANCE g_hmodThisDll;
+extern HMODULE g_hmodResDll;
 
 //
 //  FUNCTION: CiFolderShell::QueryContextMenu(HMENU, UINT, UINT, UINT, UINT)
@@ -65,12 +66,12 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 	TCHAR sziFolderHelpMenu[MAX_MENU_LENGTH];
     BOOL bAppendItems= FALSE;
 
-	LoadString(g_hmodThisDll, IDS_CONVERT, szCreateiFolderMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
-	LoadString(g_hmodThisDll, IDS_REVERT, szDeleteiFolderMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
-	LoadString(g_hmodThisDll, IDS_RESOLVE, sziFolderConflictMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
-	LoadString(g_hmodThisDll, IDS_PROPERTIES, sziFolderPropMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
-	LoadString(g_hmodThisDll, IDS_SHARE, sziFolderShareMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
-	LoadString(g_hmodThisDll, IDS_HELP, sziFolderHelpMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
+	LoadString(g_hmodResDll, IDS_CONVERT, szCreateiFolderMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
+	LoadString(g_hmodResDll, IDS_REVERT, szDeleteiFolderMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
+	LoadString(g_hmodResDll, IDS_RESOLVE, sziFolderConflictMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
+	LoadString(g_hmodResDll, IDS_PROPERTIES, sziFolderPropMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
+	LoadString(g_hmodResDll, IDS_SHARE, sziFolderShareMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
+	LoadString(g_hmodResDll, IDS_HELP, sziFolderHelpMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
 
 	STGMEDIUM medium;
 	// TODO - should we use pidl's instead?

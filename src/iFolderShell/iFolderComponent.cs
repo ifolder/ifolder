@@ -29,6 +29,7 @@ using System.Windows.Forms;
 using System.Collections;
 using System.Diagnostics;
 using System.Net;
+using System.Globalization;
 using Novell.Win32Util;
 
 namespace Novell.iFolderCom
@@ -99,6 +100,12 @@ namespace Novell.iFolderCom
 		/// </summary>
 		/// <param name="dllPath">The path where this assembly was loaded from.</param>
 		void ShowHelp([MarshalAs(UnmanagedType.LPWStr)] string dllPath);
+
+		/// <summary>
+		/// Gets the name of the language directory where resource files are installed.
+		/// </summary>
+		/// <returns>The name of the language directory.</returns>
+		String GetLanguageDirectory();
 	}
 
 	/// <summary>
@@ -412,8 +419,7 @@ namespace Novell.iFolderCom
 		public void ShowHelp([MarshalAs(UnmanagedType.LPWStr)] string dllPath)
 		{
 			// TODO - may need to pass in a specific page to load.
-			// TODO: i18n - need to use locale-specific path
-			string helpPath = Path.Combine(dllPath, @"help\en\doc\user\data\front.html");
+			string helpPath = Path.Combine(Path.Combine(Path.Combine(dllPath, "help"), GetLanguageDirectory()), @"doc\user\data\front.html");
 
 			try
 			{
@@ -425,6 +431,21 @@ namespace Novell.iFolderCom
 				mmb.Message = resourceManager.GetString("helpFileError") + "\n" + helpPath;
 				mmb.ShowDialog();
 			}
+		}
+
+		public String GetLanguageDirectory()
+		{
+			string languageDirectory;
+
+			// TODO: i18n - add other languages
+			switch (CultureInfo.CurrentCulture.Name)
+			{
+				default:
+					languageDirectory = "en";
+					break;
+			}
+
+			return languageDirectory;
 		}
 
 		private void connectToWebService()

@@ -4,9 +4,7 @@
 //
 #define IDS_CONVERT                     105
 #define IDS_REVERT                      106
-#define IDD_IFOLDERPROP                 107
 #define IDS_RESOLVE                     107
-#define IDD_IFOLDERSHARINGPROP          108
 #define IDS_PROPERTIES                  108
 #define IDS_SHARE                       109
 #define IDS_HELP                        110

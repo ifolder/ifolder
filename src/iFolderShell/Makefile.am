@@ -29,19 +29,25 @@ iFolderShell_LIBPATH = iFolderShell
 iFolderShell_LIBFLAGS = $(SHARED_LIB_FLAG)
 iFolderShell_DEF = $(srcdir)/iFolderShell/iFolderShell.Def
 
+iFolderShellRes_SRCFILES = $(srcdir)/iFolderShell/iFolderShellRes.cpp $(srcdir)/iFolderShell/iFolderShell.rc
+iFolderShellRes_OBJFILES = iFolderShell/iFolderShellRes.obj iFolderShell/iFolderShell$(RES_EXT)
+
 DATA_FILES = $(srcdir)/iFolderShell/ifolder_emblem.ico $(srcdir)/iFolderShell/ifolder_conflict_emb.ico
 RESX_FILES = $(srcdir)/ConflictResolver.resx $(srcdir)/MyMessageBox.resx $(srcdir)/NewiFolder.resx $(srcdir)/iFolderAdvanced.resx $(srcdir)/UserProperties.resx
 WINDOWS_FILES = $(srcdir)/explorer.exe.manifest $(srcdir)/explorer.exe.config
 
 PROJECT_FILES = $(srcdir)/iFolderComponent.csproj $(srcdir)/iFolderComponent.sln
 
-EXTRA_DIST = $(iFolderComponent_CSFILES) $(iFolderShell_SRCFILES) $(iFolderShell_DEF) $(DATA_FILES) $(RESX_FILES) $(WINDOWS_FILES) $(srcdir)/iFolderShell.reg  $(PROJECT_FILES)
+EXTRA_DIST = $(iFolderComponent_CSFILES) $(iFolderShell_SRCFILES) $(iFolderShellRes_SRCFILES) $(iFolderShell_DEF) $(DATA_FILES) $(RESX_FILES) $(WINDOWS_FILES) $(srcdir)/iFolderShell.reg  $(PROJECT_FILES)
 
 CUR_DIR := $(shell pwd)
 
 all: iFolderShell.dll
 
-iFolderShell.dll: iFolderComponent.tlb $(iFolderShell_OBJFILES)
+iFolderShellRes.dll: $(iFolderShellRes_OBJFILES)
+	$(LD) $(iFolderShell_LIBFLAGS) $(LDFLAGS) $(LDOUT)$@ $(iFolderShell_LIBPATH:%=$(LDINC)%) $(iFolderShellRes_OBJFILES) $(LIBS)
+	
+iFolderShell.dll: iFolderShellRes.dll iFolderComponent.tlb $(iFolderShell_OBJFILES)
 	$(LD) $(iFolderShell_LIBFLAGS) $(LDFLAGS) $(LDOUT)$@ $(iFolderShell_LIBPATH:%=$(LDINC)%) $(iFolderShell_DEF:%=$(DEF)%) $(iFolderShell_OBJFILES) $(iFolderShell_LIBS:%=$(LIBFLAG)%) $(LIBS)
 
 %.obj : %.c
@@ -99,7 +105,7 @@ unregister:
 	-$(REGSVR32) /u /s `cygpath --windows $(DESTDIR)$(libdir)/iFolderShell.dll`
 	$(REGASM) `cygpath --windows $(DESTDIR)$(libdir)/iFolderComponent.dll` /unregister
 
-CLEAN_FILES = iFolderShell.dll iFolderComponent.tlb iFolderComponent.dll $(iFolderComponent_RESOURCES_FILES:%=Novell.iFolderCom.%) $(iFolderShell_OBJFILES) iFolderShell/ifoldercomponent.tlh iFolderShell/ifoldercomponent.tli iFolderComponent.doc.xml iFolderShell.exp iFolderShell.lib
+CLEAN_FILES = iFolderShell.dll iFolderComponent.tlb iFolderComponent.dll $(iFolderComponent_RESOURCES_FILES:%=Novell.iFolderCom.%) $(iFolderShell_OBJFILES) $(iFolderShellRes_OBJFILES) iFolderShell/ifoldercomponent.tlh iFolderShell/ifoldercomponent.tli iFolderComponent.doc.xml iFolderShell.exp iFolderShell.lib
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

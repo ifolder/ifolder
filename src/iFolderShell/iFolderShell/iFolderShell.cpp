@@ -39,6 +39,7 @@
 //
 UINT      g_cRefThisDll = 0;    // Reference count of this DLL.
 HINSTANCE g_hmodThisDll = NULL; // Handle to this DLL itself.
+HMODULE g_hmodResDll = NULL; // Handle to resource DLL.
 
 
 // static members
@@ -365,6 +366,12 @@ CiFolderShell::~CiFolderShell()
 //		m_spiFolder.Release();
 
     InterlockedDecrement((LONG *)&g_cRefThisDll);
+
+	if ((g_cRefThisDll == 0) && (g_hmodResDll != g_hmodThisDll))
+	{
+		FreeLibrary(g_hmodResDll);
+		g_hmodResDll = NULL;
+	}
 }
 
 STDMETHODIMP CiFolderShell::QueryInterface(REFIID riid, LPVOID FAR *ppv)
@@ -488,6 +495,34 @@ STDMETHODIMP CiFolderShell::Initialize(LPCITEMIDLIST pidlFolder,
         m_pDataObj= pDataObj;
         pDataObj->AddRef();
     }
+
+	if (g_hmodResDll == NULL)
+	{
+		if (m_spiFolder == NULL)
+		{
+			// Instantiate the iFolder smart pointer.
+			m_spiFolder.CreateInstance(__uuidof(iFolderComponent));
+		}
+
+		// Get the language directory
+		BSTR strLang = m_spiFolder->GetLanguageDirectory();
+
+		// Build the path to the resource dll.
+		TCHAR szPath[MAX_PATH];
+		lstrcpy(szPath, m_szShellPath);
+		lstrcat(szPath, strLang);
+		lstrcat(szPath, TEXT("\\iFolderShellRes.dll"));
+
+		g_hmodResDll = LoadLibrary(szPath);
+		if (g_hmodResDll == NULL)
+		{
+			// Can't find the resource file ... default to English.
+			g_hmodResDll = g_hmodThisDll;
+		}
+
+		SysFreeString(strLang);
+	}
+
 
 //	STGMEDIUM medium;
 	// TODO - should we use pidl's instead?
