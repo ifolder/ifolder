@@ -207,7 +207,7 @@ namespace Simias.POBox
 
 		private bool DoDelivered()
 		{
-			bool result = true;
+			bool result = false;
 
 			SimiasChannel channel = SimiasChannelFactory.GetInstance().GetChannel(poBox.StoreReference,
 				subscription.POServiceURL.Scheme, SimiasChannelSinks.Binary,
