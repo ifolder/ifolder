@@ -277,8 +277,8 @@ namespace Novell.FormsTrayApp
 			this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("tabControl1.Anchor")));
 			this.tabControl1.Appearance = ((System.Windows.Forms.TabAppearance)(resources.GetObject("tabControl1.Appearance")));
 			this.tabControl1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabControl1.BackgroundImage")));
-			this.tabControl1.Controls.Add(this.tabAccounts);
 			this.tabControl1.Controls.Add(this.tabGeneral);
+			this.tabControl1.Controls.Add(this.tabAccounts);
 			this.tabControl1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabControl1.Dock")));
 			this.tabControl1.Enabled = ((bool)(resources.GetObject("tabControl1.Enabled")));
 			this.tabControl1.Font = ((System.Drawing.Font)(resources.GetObject("tabControl1.Font")));
