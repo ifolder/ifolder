@@ -109,11 +109,19 @@ namespace Novell.iFolder
 
 		public void on_ShareButton_clicked(object obj, EventArgs args)
 		{
+			iFolderProperties ifProp = new iFolderProperties();
+			ifProp.TransientFor = dialog;
+			ifProp.iFolderPath = path;
+			ifProp.ActiveTag = 1;
+			ifProp.Run();
+/*
+/*		
 			PropertiesDialog pd = new PropertiesDialog();
 			pd.iFolderPath = path;
 			pd.TransientFor = dialog;
 			pd.ActiveTag = 1;
 			pd.Run();
+*/
 		}
 
 		static public bool UseDialog()

@@ -38,6 +38,24 @@ namespace Novell.iFolder
 	/// </summary>
 	public class iFolderManager : IEnumerable
 	{
+		#region Properties
+		/// <summary>
+		/// Gets/sets the default refresh interval for iFolders.
+		/// </summary>
+		public int DefaultRefreshInterval
+		{
+			get
+			{
+				return new SyncProperties(config).Interval;
+			}
+
+			set
+			{
+				new SyncProperties(config).Interval = value;
+			}
+		}
+        #endregion
+
 		#region Class Members
 		
         internal Store						store;
