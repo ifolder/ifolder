@@ -36,6 +36,7 @@ AssemblyInfo.cs
 ../Common/SimiasLogManager.cs
 ../Common/WebState.cs
 ../Credentials/Credentials.cs
+../NeedCredentialsEventSubscriber.cs
 ../Domain/DomainAgent.cs
 ../DomainWatcher/Service.cs
 ../DomainWatcher/DomainWatcher.cs
