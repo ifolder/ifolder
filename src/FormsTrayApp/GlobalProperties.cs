@@ -82,7 +82,6 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label6;
-		private System.Windows.Forms.Button syncNow;
 		private System.Windows.Forms.ListBox log;
 		private System.Windows.Forms.Button saveLog;
 		private System.Windows.Forms.Button clearLog;
@@ -134,6 +133,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.TextBox proxy;
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.TextBox port;
+		private System.Windows.Forms.Button create;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -399,20 +399,19 @@ namespace Novell.iFolder.FormsTrayApp
 			this.autoSync = new System.Windows.Forms.CheckBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.autoStart = new System.Windows.Forms.CheckBox();
-			this.tabPage3 = new System.Windows.Forms.TabPage();
-			this.clearLog = new System.Windows.Forms.Button();
-			this.saveLog = new System.Windows.Forms.Button();
-			this.log = new System.Windows.Forms.ListBox();
-			this.syncNow = new System.Windows.Forms.Button();
-			this.label6 = new System.Windows.Forms.Label();
-			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.groupBox5 = new System.Windows.Forms.GroupBox();
 			this.port = new System.Windows.Forms.TextBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.proxy = new System.Windows.Forms.TextBox();
 			this.useProxy = new System.Windows.Forms.RadioButton();
 			this.noProxy = new System.Windows.Forms.RadioButton();
+			this.tabPage3 = new System.Windows.Forms.TabPage();
+			this.clearLog = new System.Windows.Forms.Button();
+			this.saveLog = new System.Windows.Forms.Button();
+			this.log = new System.Windows.Forms.ListBox();
+			this.label6 = new System.Windows.Forms.Label();
+			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.banner = new System.Windows.Forms.PictureBox();
 			this.mainMenu1 = new System.Windows.Forms.MainMenu();
 			this.menuFile = new System.Windows.Forms.MenuItem();
@@ -432,6 +431,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuActionRestart = new System.Windows.Forms.MenuItem();
 			this.menuView = new System.Windows.Forms.MenuItem();
 			this.menuViewRefresh = new System.Windows.Forms.MenuItem();
+			this.create = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -440,8 +440,8 @@ namespace Novell.iFolder.FormsTrayApp
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.groupBox3.SuspendLayout();
-			this.tabPage3.SuspendLayout();
 			this.groupBox5.SuspendLayout();
+			this.tabPage3.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -524,6 +524,7 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			// tabPage1
 			// 
+			this.tabPage1.Controls.Add(this.create);
 			this.tabPage1.Controls.Add(this.groupBox4);
 			this.tabPage1.Controls.Add(this.iFolderView);
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
@@ -539,7 +540,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.groupBox4.Controls.Add(this.label5);
 			this.groupBox4.Controls.Add(this.label4);
 			this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.groupBox4.Location = new System.Drawing.Point(8, 240);
+			this.groupBox4.Location = new System.Drawing.Point(8, 304);
 			this.groupBox4.Name = "groupBox4";
 			this.groupBox4.Size = new System.Drawing.Size(408, 72);
 			this.groupBox4.TabIndex = 1;
@@ -590,7 +591,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.iFolderView.Location = new System.Drawing.Point(8, 16);
 			this.iFolderView.MultiSelect = false;
 			this.iFolderView.Name = "iFolderView";
-			this.iFolderView.Size = new System.Drawing.Size(408, 208);
+			this.iFolderView.Size = new System.Drawing.Size(408, 248);
 			this.iFolderView.TabIndex = 0;
 			this.iFolderView.View = System.Windows.Forms.View.Details;
 			this.iFolderView.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
@@ -763,74 +764,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.autoStart.TabIndex = 0;
 			this.autoStart.Text = "&Startup iFolder at login.";
 			// 
-			// tabPage3
-			// 
-			this.tabPage3.Controls.Add(this.clearLog);
-			this.tabPage3.Controls.Add(this.saveLog);
-			this.tabPage3.Controls.Add(this.log);
-			this.tabPage3.Controls.Add(this.syncNow);
-			this.tabPage3.Controls.Add(this.label6);
-			this.tabPage3.Location = new System.Drawing.Point(4, 22);
-			this.tabPage3.Name = "tabPage3";
-			this.tabPage3.Size = new System.Drawing.Size(426, 390);
-			this.tabPage3.TabIndex = 2;
-			this.tabPage3.Text = "Log";
-			// 
-			// clearLog
-			// 
-			this.clearLog.Enabled = false;
-			this.clearLog.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.clearLog.Location = new System.Drawing.Point(88, 288);
-			this.clearLog.Name = "clearLog";
-			this.clearLog.TabIndex = 4;
-			this.clearLog.Text = "&Clear";
-			// 
-			// saveLog
-			// 
-			this.saveLog.Enabled = false;
-			this.saveLog.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.saveLog.Location = new System.Drawing.Point(8, 288);
-			this.saveLog.Name = "saveLog";
-			this.saveLog.TabIndex = 3;
-			this.saveLog.Text = "&Save...";
-			// 
-			// log
-			// 
-			this.log.HorizontalScrollbar = true;
-			this.log.Location = new System.Drawing.Point(8, 48);
-			this.log.Name = "log";
-			this.log.ScrollAlwaysVisible = true;
-			this.log.Size = new System.Drawing.Size(408, 225);
-			this.log.TabIndex = 2;
-			// 
-			// syncNow
-			// 
-			this.syncNow.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.syncNow.Location = new System.Drawing.Point(320, 12);
-			this.syncNow.Name = "syncNow";
-			this.syncNow.Size = new System.Drawing.Size(96, 23);
-			this.syncNow.TabIndex = 1;
-			this.syncNow.Text = "S&ync now";
-			this.syncNow.Click += new System.EventHandler(this.syncNow_Click);
-			// 
-			// label6
-			// 
-			this.label6.Location = new System.Drawing.Point(8, 16);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(296, 16);
-			this.label6.TabIndex = 0;
-			this.label6.Text = "This log shows current iFolder activity.";
-			// 
-			// columnHeader2
-			// 
-			this.columnHeader2.Text = "Service";
-			this.columnHeader2.Width = 209;
-			// 
-			// columnHeader3
-			// 
-			this.columnHeader3.Text = "Status";
-			this.columnHeader3.Width = 195;
-			// 
 			// groupBox5
 			// 
 			this.groupBox5.Controls.Add(this.port);
@@ -890,6 +823,63 @@ namespace Novell.iFolder.FormsTrayApp
 			this.noProxy.Size = new System.Drawing.Size(88, 24);
 			this.noProxy.TabIndex = 0;
 			this.noProxy.Text = "No Proxy";
+			// 
+			// tabPage3
+			// 
+			this.tabPage3.Controls.Add(this.clearLog);
+			this.tabPage3.Controls.Add(this.saveLog);
+			this.tabPage3.Controls.Add(this.log);
+			this.tabPage3.Controls.Add(this.label6);
+			this.tabPage3.Location = new System.Drawing.Point(4, 22);
+			this.tabPage3.Name = "tabPage3";
+			this.tabPage3.Size = new System.Drawing.Size(426, 390);
+			this.tabPage3.TabIndex = 2;
+			this.tabPage3.Text = "Log";
+			// 
+			// clearLog
+			// 
+			this.clearLog.Enabled = false;
+			this.clearLog.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.clearLog.Location = new System.Drawing.Point(88, 288);
+			this.clearLog.Name = "clearLog";
+			this.clearLog.TabIndex = 4;
+			this.clearLog.Text = "&Clear";
+			// 
+			// saveLog
+			// 
+			this.saveLog.Enabled = false;
+			this.saveLog.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.saveLog.Location = new System.Drawing.Point(8, 288);
+			this.saveLog.Name = "saveLog";
+			this.saveLog.TabIndex = 3;
+			this.saveLog.Text = "&Save...";
+			// 
+			// log
+			// 
+			this.log.HorizontalScrollbar = true;
+			this.log.Location = new System.Drawing.Point(8, 48);
+			this.log.Name = "log";
+			this.log.ScrollAlwaysVisible = true;
+			this.log.Size = new System.Drawing.Size(408, 225);
+			this.log.TabIndex = 2;
+			// 
+			// label6
+			// 
+			this.label6.Location = new System.Drawing.Point(8, 16);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(296, 16);
+			this.label6.TabIndex = 0;
+			this.label6.Text = "This log shows current iFolder activity.";
+			// 
+			// columnHeader2
+			// 
+			this.columnHeader2.Text = "Service";
+			this.columnHeader2.Width = 209;
+			// 
+			// columnHeader3
+			// 
+			this.columnHeader3.Text = "Status";
+			this.columnHeader3.Width = 195;
 			// 
 			// banner
 			// 
@@ -1036,6 +1026,14 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuViewRefresh.Text = "Refresh";
 			this.menuViewRefresh.Click += new System.EventHandler(this.menuRefresh_Click);
 			// 
+			// create
+			// 
+			this.create.Location = new System.Drawing.Point(341, 272);
+			this.create.Name = "create";
+			this.create.TabIndex = 2;
+			this.create.Text = "Create...";
+			this.create.Click += new System.EventHandler(this.menuCreate_Click);
+			// 
 			// GlobalProperties
 			// 
 			this.AcceptButton = this.ok;
@@ -1059,8 +1057,8 @@ namespace Novell.iFolder.FormsTrayApp
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox3.ResumeLayout(false);
-			this.tabPage3.ResumeLayout(false);
 			this.groupBox5.ResumeLayout(false);
+			this.tabPage3.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -1529,10 +1527,6 @@ namespace Novell.iFolder.FormsTrayApp
 		#endregion
 
 		#region Log Tab
-		private void syncNow_Click(object sender, System.EventArgs e)
-		{
-			synciFolder("");
-		}
 		#endregion
 
 		#region Services Tab
