@@ -169,7 +169,7 @@ simias_node_created_cb (SimiasNodeEvent *event, void *data)
 int
 simias_node_deleted_cb (SimiasNodeEvent *event, void *data)
 {
-	char *file_uri;
+	gchar *file_uri;
 	NautilusFile *file;
 	
 	printf ("nautilus-ifolder: simias_node_deleted_cb () entered\n");
@@ -178,7 +178,7 @@ simias_node_deleted_cb (SimiasNodeEvent *event, void *data)
 	 * Look in the seen_ifolders_ht (GHashTable) to see if we've ever added an
 	 * iFolder emblem onto this folder.
 	 */
-	file_uri = (char *)g_hash_table_lookup (seen_ifolders_ht, event->node);
+	file_uri = (gchar *)g_hash_table_lookup (seen_ifolders_ht, event->node);
 	if (file_uri) {
 		/**
 		 * Get an existing (in memory) NautilusFileInfo object associated with
@@ -780,17 +780,18 @@ seen_ifolders_ht_destroy_key (gpointer key)
 void
 seen_ifolders_ht_destroy_value (gpointer value)
 {
-	char *file_uri = (char *)value;
+	gchar *file_uri = (gchar *)value;
 	
-	free (file_uri);
+	g_free (file_uri);
 }
 
 void
 ht_invalidate_ifolder (gpointer key, gpointer value, gpointer user_data)
 {
-	char *file_uri;
+	gchar *file_uri;
 	NautilusFileInfo *file;
 	
+	file_uri = (gchar *)value;
 	file = nautilus_file_get_existing (file_uri);
 
 	if (file) {
