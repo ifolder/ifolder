@@ -238,7 +238,7 @@ internal class SyncOutgoingNode
 			maxSize = 4096;
 		ArrayList chunks = new ArrayList();
 		totalSize = 0;
-		foreach (Fork fork in forkList)
+		if (forkList != null) foreach (Fork fork in forkList)
 		{
 			if (fork.name == null)
 				continue;
@@ -306,20 +306,22 @@ internal class SyncIncomingNode
 	{
 		CleanUp();
 		this.node = node;
-		if (collection.IsType(node, typeof(DirNode).Name) && !((DirNode)node).IsRoot
+		if (collection.IsType(node, typeof(DirNode).Name) && !new DirNode(collection, node).IsRoot
 				|| collection.IsType(node, typeof(FileNode).Name))
 		{
 			Property p = node.Properties.GetSingleProperty(PropertyTags.Parent);
 			Relationship rship = p == null? null: (p.Value as Relationship);
 			if (rship == null)
 				throw new ApplicationException("file or dir node has no parent");
-			DirNode pn = collection.GetNodeByID(rship.NodeID) as DirNode;
+			Node n = collection.GetNodeByID(rship.NodeID);
+			DirNode pn = n == null? null: new DirNode(collection, collection.GetNodeByID(rship.NodeID));
 			if (pn == null)
 				throw new ApplicationException("parent is not DirNode");
 			parentPath = pn.GetFullPath(collection);
 		}
 		else
 			parentPath = collection.ManagedPath;
+		Log.Spew("Starting incoming node, path {0}", parentPath);
 	}
 
 	public void BlowChunks(ForkChunk[] chunks)
@@ -362,9 +364,15 @@ internal class SyncIncomingNode
 	{
 		//TODO: check here for whether the proposed file name is available, i.e. make current and proposed LocalFileName
 		if (collection.IsType(node, typeof(DirNode).Name))
+		{
+			Log.Spew("Create directory {0}", Path.Combine(parentPath, node.Name));
 			Directory.CreateDirectory(Path.Combine(parentPath, node.Name));
-		else if (!collection.IsType(node, typeof(BaseFileNode).Name))
+		}
+		else if (!collection.IsType(node, typeof(FileNode).Name) && !collection.IsType(node, typeof(StoreFileNode).Name))
+		{
+			Log.Spew("commiting nonFile, nonDir {0}", node.Name);
 			Log.Assert(forkList == null);
+		}
 		else
 		{
 			foreach (Fork fork in forkList)
@@ -385,6 +393,7 @@ internal class SyncIncomingNode
 
 	public NodeStatus Complete(ulong expectedIncarn)
 	{
+		Node curNode;
 		Log.Spew("importing {0} {1} to collection {2}", node.Name, node.ID, collection.Name);
 
 		if (!onServer)
@@ -416,12 +425,32 @@ internal class SyncIncomingNode
 			 *  what are the rules for dredger, file change events, applications 
 			 *  and concurrent clients accessing this collection on the server?
 			 */
-			Log.Spew("Collision: overwriting local node {0} with node from server", node.Name);
-			collection.ImportNode(node, expectedIncarn);
-			node.IncarnationUpdate = node.LocalIncarnation;
-			CommitFile();
-			collection.Commit(node);
-			return NodeStatus.Complete;
+			Log.Spew("writing local node {0} with node from server", node.Name);
+
+			for (;;)
+			{
+				collection.ImportNode(node, expectedIncarn);
+				node.IncarnationUpdate = node.LocalIncarnation;
+				node.Properties.ModifyProperty("TemporaryFileComplete", true);
+				try
+				{
+					collection.Commit(node);
+				}
+				catch (ApplicationException e)
+				{
+					if (!e.Message.StartsWith("Collision"))
+						throw e;
+					Log.Spew("Node {0} has lost a collision", node.Name);
+					//TODO move file and data out of the way here to collision bin here.
+					curNode = collection.GetNodeByID(node.ID);
+					expectedIncarn = curNode.LocalIncarnation;
+					continue;
+				}
+				CommitFile();
+				node.Properties.DeleteSingleProperty("TemporaryFileComplete");
+				collection.Commit(node);
+				return NodeStatus.Complete;
+			}
 		}
 
 		/* TODO: this is a problem because we cannot lock curNode until commit
@@ -454,7 +483,7 @@ internal class SyncIncomingNode
 		 *  what are the rules for dredger, file change events, applications 
 		 *  and concurrent clients accessing this collection on the server?
 		 */
-		Node curNode = collection.GetNodeByID(node.ID);
+		curNode = collection.GetNodeByID(node.ID);
 		if (curNode != null && curNode.LocalIncarnation != expectedIncarn)
 		{
 			Log.Spew("Rejecting update for node {0} due to update collision on server", node.Name);
@@ -463,6 +492,21 @@ internal class SyncIncomingNode
 		}
 		CommitFile();
 		collection.ImportNode(node, expectedIncarn);
+		node.Properties.ModifyProperty("TemporaryFileComplete", true);
+		try
+		{
+			collection.Commit(node);
+		}
+		catch (ApplicationException e)
+		{
+			if (!e.Message.StartsWith("Collision"))
+				throw e;
+			Log.Spew("Rejecting update for node {0} due to update collision on server", node.Name);
+			CleanUp();
+			return NodeStatus.UpdateCollision;
+		}
+		CommitFile();
+		node.Properties.DeleteSingleProperty("TemporaryFileComplete");
 		collection.Commit(node);
 		return NodeStatus.Complete;
 	}
@@ -487,8 +531,9 @@ internal class SyncOps
 	{
 		ArrayList stampList = new ArrayList();
 
-		foreach (Node node in collection)
+		foreach (ShallowNode sn in collection)
 		{
+			Node node = new Node(collection, sn);
 			bool tombstone = collection.IsType(node, NodeTypes.TombstoneType);
 			if (onServer && tombstone)
 				continue;

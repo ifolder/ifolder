@@ -66,7 +66,7 @@ public class SynkerServiceA: SyncCollectionService
 	SyncOps ops;
 	SyncIncomingNode inNode;
 	SyncOutgoingNode outNode;
-	bool ignoreRights = false;
+	bool ignoreRights = true;
 
 	/// <summary>
 	/// public ctor 
@@ -112,16 +112,20 @@ public class SynkerServiceA: SyncCollectionService
 
 		if (ignoreRights || collection.IsAccessAllowed(Access.Rights.ReadOnly))
 		{
-			collection.StoreReference.Revert(); //TODO: what if this is second time for this collection?
+			//collection.StoreReference.Revert(); //TODO: what if this is second time for this collection?
 			Log.Spew("dredging server for collection '{0}'", collection.Name);
 			new Dredger(collection, true);
 			Log.Spew("done dredging server for collection '{0}'", collection.Name);
 			inNode = new SyncIncomingNode(collection, true);
 			outNode = new SyncOutgoingNode(collection);
 			ops = new SyncOps(collection, true);
-			if (!ignoreRights)
+			if (ignoreRights)
+				rights = Access.Rights.ReadWrite;
+			else
+			{
 				collection.StoreReference.ImpersonateUser(userID);
-			rights = collection.GetUserAccess(userID);
+				rights = collection.GetUserAccess(userID);
+			}
 		}
 		
 		return rights;
@@ -345,7 +349,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 		}
 
 		//TODO: we don't know the previous state of collection identity, will this always work?
-		collection.StoreReference.Revert();
+		//collection.StoreReference.Revert();
 
 		new Dredger(collection, false);
 

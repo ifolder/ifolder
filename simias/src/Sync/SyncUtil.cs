@@ -53,6 +53,7 @@ public class FileInviter
 	{
 		config = new Configuration(storeLocation.LocalPath);
         store = new Store(config);
+		store.Revert();
 	}
 
 	// TODO: is the following path comparison correct? should it be case insensitive?
@@ -163,7 +164,8 @@ public class CmdService: MarshalByRefObject
 		try
 		{
 			Store store = new Store(new Configuration(storeLocation.LocalPath));
-			Collection c = new Collection(store, collectionId);
+			store.Revert();
+			Collection c = store.GetCollectionByID(collectionId);
 			return c == null? null: new SynkerServiceA(new SyncCollection(c), true);
 		}
 		catch (Exception e) { Log.Uncaught(e); }
@@ -274,6 +276,7 @@ public class CmdClient
 	public static bool RunOnce(Uri storeLocation, Uri docRoot, string serverStoreLocation, bool useTCP)
 	{
 		Store store = new Store(new Configuration(storeLocation == null? null: storeLocation.LocalPath));
+		store.Revert();
 		Collection c = FileInviter.FindCollection(store, docRoot);
 		if (c == null)
 			return false;
@@ -282,7 +285,8 @@ public class CmdClient
 		if (serverStoreLocation != null)
 		{
 			Store servStore = new Store(new Configuration(serverStoreLocation));
-			Collection servCollection = new Collection(servStore, csc.ID);
+			servStore.Revert();
+			Collection servCollection = servStore.GetCollectionByID(csc.ID);
 			Log.Spew("server collection {0}", servCollection == null? "null": servCollection.ID);
 			SynkerServiceA ssa = new SynkerServiceA(new SyncCollection(servCollection));
 			new SynkerWorkerA(ssa, csc).DoSyncWork();
