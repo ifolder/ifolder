@@ -1048,7 +1048,8 @@ namespace Novell.FormsTrayApp
 				!((iFolderWeb)iFolderView.SelectedItems[0].Tag).IsSubscription &&
 				((iFolderWeb)iFolderView.SelectedItems[0].Tag).DomainID.Equals(domainInfo.ID))
 			{
-				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = domainInfo.Active;
+				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = 
+					((iFolderWeb)iFolderView.SelectedItems[0].Tag).Role.Equals("Slave") && domainInfo.Active;
 			}
 		}
 		#endregion
@@ -1474,64 +1475,81 @@ namespace Novell.FormsTrayApp
 
 		private void updateMenus(iFolderWeb ifolderWeb)
 		{
-			menuShare.Visible = menuActionShare.Enabled = toolBarShare.Enabled =
-				menuProperties.Visible = menuActionProperties.Enabled = /*toolBarProperties.Enabled =*/
-				menuRevert.Visible = menuActionRevert.Enabled = /*toolBarRevert.Enabled =*/
-				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled =
-				menuOpen.Visible = menuActionOpen.Enabled = /*toolBarOpen.Enabled =*/
-				menuSeparator1.Visible = menuSeparator2.Visible = 				
-				(ifolderWeb != null) && !ifolderWeb.IsSubscription;
+			if (ifolderWeb == null)
+			{
+				menuShare.Visible = menuActionShare.Enabled = toolBarShare.Enabled =
+					menuProperties.Visible = menuActionProperties.Enabled = /*toolBarProperties.Enabled =*/
+					menuRevert.Visible = menuActionRevert.Enabled = /*toolBarRevert.Enabled =*/
+					menuOpen.Visible = menuActionOpen.Enabled = /*toolBarOpen.Enabled =*/
+					menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = 
+					menuSeparator1.Visible = menuSeparator2.Visible = 				
+					menuResolve.Visible = menuActionResolve.Visible = toolBarResolve.Enabled =
+					menuAccept.Visible = menuActionAccept.Visible = toolBarSetup.Enabled =
+					menuActionSeparator2.Visible =
+					menuRemove.Visible = menuActionRemove.Visible = /*toolBarRemove.Enabled =*/
+					menuActionSeparator2.Visible = false;
 
-			Domain selectedDomain = (Domain)servers.SelectedItem;
-			if (!selectedDomain.ShowAll)
-			{
-				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = selectedDomain.DomainInfo.Active;
 			}
-			else if (toolBarSync.Enabled)
+			else
 			{
-				foreach (Domain d in servers.Items)
+				menuShare.Visible = menuActionShare.Enabled = toolBarShare.Enabled =
+					menuProperties.Visible = menuActionProperties.Enabled = /*toolBarProperties.Enabled =*/
+					menuRevert.Visible = menuActionRevert.Enabled = /*toolBarRevert.Enabled =*/
+					menuOpen.Visible = menuActionOpen.Enabled = /*toolBarOpen.Enabled =*/
+					menuSeparator1.Visible = menuSeparator2.Visible = 				
+					!ifolderWeb.IsSubscription;
+
+				if (ifolderWeb.IsSubscription || !ifolderWeb.Role.Equals("Slave"))
 				{
-					if (d.ID.Equals(ifolderWeb.DomainID))
+					menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = false;
+				}
+				else
+				{
+					Domain selectedDomain = (Domain)servers.SelectedItem;
+					if (!selectedDomain.ShowAll)
 					{
-						menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = d.DomainInfo.Active;
-						break;
+						menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = selectedDomain.DomainInfo.Active;
+					}
+					else
+					{
+						foreach (Domain d in servers.Items)
+						{
+							if (d.ID.Equals(ifolderWeb.DomainID))
+							{
+								menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = d.DomainInfo.Active;
+								break;
+							}
+						}
+					}
+				}
+
+				menuResolve.Visible = menuActionResolve.Visible = toolBarResolve.Enabled = ifolderWeb.HasConflicts;
+
+				// Display the accept menu item if the selected item is a subscription with state "Available"
+				menuAccept.Visible = menuActionAccept.Visible = toolBarSetup.Enabled =
+					menuActionSeparator2.Visible = ifolderWeb.IsSubscription &&	ifolderWeb.State.Equals("Available");
+
+				// Display the decline menu item if the selected item is a subscription with state "Available" and from someone else.
+				menuRemove.Visible = menuActionRemove.Visible = /*toolBarRemove.Enabled =*/
+					menuActionSeparator2.Visible = (!ifolderWeb.IsSubscription || ifolderWeb.State.Equals("Available"));
+
+				if (menuRemove.Visible)
+				{
+					if (IsCurrentUser(ifolderWeb.OwnerID))
+					{
+						menuRemove.Text = menuActionRemove.Text = /*toolBarRemove.ToolTipText =*/
+							resourceManager.GetString("deleteAction");
+					}
+					else
+					{
+						menuRemove.Text = resourceManager.GetString("menuRemove.Text");
+						menuActionRemove.Text = resourceManager.GetString("menuActionRemove.Text");
+						/*toolBarRemove.ToolTipText = resourceManager.GetString("toolBarRemove.ToolTipText");*/
 					}
 				}
 			}
 
-			menuResolve.Visible = menuActionResolve.Visible = toolBarResolve.Enabled =
-				(ifolderWeb != null) && ifolderWeb.HasConflicts;
-
 			menuRefresh.Visible = menuCreate.Visible = iFolderView.SelectedItems.Count == 0;
-
-			// Display the accept menu item if the selected item is a subscription with state "Available"
-			menuAccept.Visible = menuActionAccept.Visible = toolBarSetup.Enabled =
-				menuActionSeparator2.Visible =
-				(ifolderWeb != null) &&
-				ifolderWeb.IsSubscription &&
-				ifolderWeb.State.Equals("Available");
-
-			// Display the decline menu item if the selected item is a subscription with state "Available" and from someone else.
-			menuRemove.Visible = menuActionRemove.Visible = /*toolBarRemove.Enabled =*/
-				menuActionSeparator2.Visible =
-				(ifolderWeb != null) &&
-				(!ifolderWeb.IsSubscription ||
-				ifolderWeb.State.Equals("Available"));
-
-			if (menuRemove.Visible)
-			{
-				if (IsCurrentUser(((iFolderWeb)iFolderView.SelectedItems[0].Tag).OwnerID))
-				{
-					menuRemove.Text = menuActionRemove.Text = /*toolBarRemove.ToolTipText =*/
-						resourceManager.GetString("deleteAction");
-				}
-				else
-				{
-					menuRemove.Text = resourceManager.GetString("menuRemove.Text");
-					menuActionRemove.Text = resourceManager.GetString("menuActionRemove.Text");
-					/*toolBarRemove.ToolTipText = resourceManager.GetString("toolBarRemove.ToolTipText");*/
-				}
-			}
 		}
 
 		private void updateEnterpriseData()

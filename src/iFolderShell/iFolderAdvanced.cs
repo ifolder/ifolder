@@ -1935,31 +1935,20 @@ namespace Novell.iFolderCom
 			syncInterval.Value = (decimal)currentiFolder.SyncInterval;
 			autoSync.Checked = currentiFolder.SyncInterval != Timeout.Infinite;
 
-/*			if (currentiFolder.IsWorkgroup)
+			switch (currentiFolder.Role)
 			{
-				// TODO: check if this iFolder is hosted locally.
-				bool local = false;
-
-				syncUnits.Visible = autoSync.Visible = syncInterval.Visible = local;
-				syncNow.Enabled = !local;
-				if (local)
-				{
+				case "Master":
+					syncUnits.Visible = autoSync.Visible = syncInterval.Visible = true;
+					syncNow.Enabled = false;
 					syncLabel.Text = resourceManager.GetString("syncLabel.Text");
-				}
-				else
-				{
+					break;
+				case "Slave":
+					syncUnits.Visible = autoSync.Visible = syncInterval.Visible = false;
+					syncNow.Enabled = true;
 					string units;
 					decimal syncValue = ConvertSecondsToTimeUnit(currentiFolder.EffectiveSyncInterval, out units);
 					syncLabel.Text = string.Format(resourceManager.GetString("slaveSyncInterval"), syncValue, resourceManager.GetString(units));
-				}
-			}
-			else*/
-			{
-				syncUnits.Visible = autoSync.Visible = syncInterval.Visible = false;
-				syncNow.Enabled = true;
-				string units;
-				decimal syncValue = ConvertSecondsToTimeUnit(currentiFolder.EffectiveSyncInterval, out units);
-				syncLabel.Text = string.Format(resourceManager.GetString("slaveSyncInterval"), syncValue, resourceManager.GetString(units));
+					break;
 			}
 
 			// Show/hide the collision message.
