@@ -303,4 +303,20 @@ namespace Simias.Storage
 		}
 		#endregion
 	}
+
+	/// <summary>
+	/// Exception that indicates that a policy violation has occurred.
+	/// </summary>
+	public class PolicyException : CollectionStoreException
+	{
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the object class where access is being requested.
+		/// </summary>
+		public PolicyException() :
+			base ( "A policy exception has occurred." )
+		{
+		}
+		#endregion
+	}
 }

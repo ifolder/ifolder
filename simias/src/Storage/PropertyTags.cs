@@ -131,6 +131,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string PolicyAssociation = "Association";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string ProxyUserID = "ProxyUserID";
 
 		/// <summary>
@@ -207,6 +212,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( Owner, null );
 			systemPropertyTable.Add( Parent, null );
 			systemPropertyTable.Add( PolicyID, null );
+			systemPropertyTable.Add( PolicyAssociation, null );
 			systemPropertyTable.Add( ProxyUserID, null );
 			systemPropertyTable.Add( PublicKey, null );
 			systemPropertyTable.Add( Root, null );

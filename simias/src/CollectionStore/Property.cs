@@ -211,7 +211,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets or sets a string representation of the property value.
 		/// </summary>
-		private string ValueString
+		internal string ValueString
 		{
 			get { return ( Type == Syntax.XmlDocument ) ? xmlProperty.InnerXml : xmlProperty.InnerText; }
 			set
@@ -614,29 +614,6 @@ namespace Simias.Storage
 		#endregion
 
 		#region Private Methods
-		/// <summary>
-		/// Returns the syntax type from a C# object.
-		/// </summary>
-		/// <param name="propertyValue">Value type</param>
-		/// <returns>The syntax type that represents the property value.</returns>
-		private Syntax GetSyntaxType( object propertyValue )
-		{
-			Syntax syntax;
-
-			// Get the type of object from propertyValue.
-			// There is no top level type that matches this object.  Check for an enumerated type.
-			if ( propertyValue.GetType().BaseType.Name == "Enum" )
-			{
-				syntax = ( Syntax )Enum.Parse( typeof( Syntax ),  Enum.GetUnderlyingType( propertyValue.GetType() ).Name );
-			}
-			else
-			{
-				syntax = ( Syntax )Enum.Parse( typeof( Syntax ), propertyValue.GetType().Name );
-			}
-
-			return syntax;
-		}
-
 		/// <summary>
 		/// Returns an object containing the value of this property.
 		/// </summary>
@@ -1061,6 +1038,29 @@ namespace Simias.Storage
 				// Setup the now detached property.
 				propertyList = null;
 			}
+		}
+
+		/// <summary>
+		/// Returns the syntax type from a C# object.
+		/// </summary>
+		/// <param name="propertyValue">Value type</param>
+		/// <returns>The syntax type that represents the property value.</returns>
+		static internal Syntax GetSyntaxType( object propertyValue )
+		{
+			Syntax syntax;
+
+			// Get the type of object from propertyValue.
+			// There is no top level type that matches this object.  Check for an enumerated type.
+			if ( propertyValue.GetType().BaseType.Name == "Enum" )
+			{
+				syntax = ( Syntax )Enum.Parse( typeof( Syntax ),  Enum.GetUnderlyingType( propertyValue.GetType() ).Name );
+			}
+			else
+			{
+				syntax = ( Syntax )Enum.Parse( typeof( Syntax ), propertyValue.GetType().Name );
+			}
+
+			return syntax;
 		}
 
 		/// <summary>

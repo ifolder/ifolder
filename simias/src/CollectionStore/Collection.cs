@@ -615,6 +615,10 @@ namespace Simias.Storage
 									mergeNode.NodeStamp = nodeStamp;
 								}
 
+								// Update the old node with the new merged data.
+								node.BaseName = mergeNode.Name;
+								node.InternalList = new PropertyList( mergeNode.Properties.PropertyDocument );
+
 								// Copy the XML node over to the modify document.
 								XmlNode xmlNode = commitDocument.ImportNode( mergeNode.Properties.PropertyRoot, true );
 								commitDocument.DocumentElement.AppendChild( xmlNode );
@@ -650,6 +654,11 @@ namespace Simias.Storage
 						{
 							// Remember later for event processing.
 							node.LocalChanges = onlyLocalChanges;
+
+							// Update the old node with the new merged data, but keep the state the same.
+							node.BaseName = mergeNode.Name;
+							node.InternalList = new PropertyList( mergeNode.Properties.PropertyDocument );
+							node.Properties.State = PropertyList.PropertyListState.Internal;
 
 							// Copy the XML node over to the modify document.
 							XmlNode xmlNode = commitDocument.ImportNode( mergeNode.Properties.PropertyRoot, true );
@@ -1100,7 +1109,7 @@ namespace Simias.Storage
 							collectionOwner = new Member( node );
 						}
 					}
-					else if ( IsType( node, NodeTypes.SystemPolicyType ) )
+					else if ( IsType( node, NodeTypes.PolicyType ) )
 					{
 						// Administrative access needs to be checked because system policies are controlled objects.
 						doAdminCheck = true;

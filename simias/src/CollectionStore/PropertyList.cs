@@ -463,7 +463,7 @@ namespace Simias.Storage
 		/// Deletes the all occurances of the specified property from the property list.
 		/// </summary>
 		/// <param name="name">Name of property to delete.</param>
-		public void DeleteNodeProperties( string name )
+		internal void DeleteNodeProperties( string name )
 		{
 			// Find all of the existing values.
 			MultiValuedList mvp = FindValues( name );

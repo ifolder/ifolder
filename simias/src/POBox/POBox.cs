@@ -134,19 +134,7 @@ namespace Simias.POBox
 		
 		#endregion
 
-		#region Public Methods
-		
-		/// <summary>
-		/// POBox factory method that constructs a POBox object for the specified domain ID.
-		/// </summary>
-		/// <param name="storeObject">The Store object that the POBox belongs to.</param>
-		/// <param name="domainId">The ID of the domain that the POBox belongs to.</param>
-		/// <returns></returns>
-		public static POBox GetPOBox(Store storeObject, string domainId)
-		{
-			return GetPOBox(storeObject, domainId, storeObject.GetUserIDFromDomainID(domainId));
-		}
-
+		#region Internal Methods
 		/// <summary>
 		/// POBox factory method that constructs a POBox object for the specified user in the specified domain.
 		/// </summary>
@@ -154,7 +142,7 @@ namespace Simias.POBox
 		/// <param name="domainId">The ID of the domain that the POBox belongs to.</param>
 		/// <param name="userId">The ID of the user that the POBox belongs to.</param>
 		/// <returns></returns>
-		public static POBox GetPOBox(Store storeObject, string domainId, string userId)
+		internal static POBox FindPOBox(Store storeObject, string domainId, string userId)
 		{
 			POBox poBox = null;
 
@@ -177,13 +165,42 @@ namespace Simias.POBox
 				poBox = new POBox(storeObject, shallowNode);
 			}
 
-			// If the POBox cannot be found, create it.
+			listEnum.Dispose();
+			return poBox;
+		}
+		#endregion
+
+		#region Public Methods
+		
+		/// <summary>
+		/// POBox factory method that constructs a POBox object for the specified domain ID.
+		/// </summary>
+		/// <param name="storeObject">The Store object that the POBox belongs to.</param>
+		/// <param name="domainId">The ID of the domain that the POBox belongs to.</param>
+		/// <returns></returns>
+		public static POBox GetPOBox(Store storeObject, string domainId)
+		{
+			return GetPOBox(storeObject, domainId, storeObject.GetUserIDFromDomainID(domainId));
+		}
+
+		/// <summary>
+		/// POBox factory method that constructs a POBox object for the specified user in the specified domain.
+		/// </summary>
+		/// <param name="storeObject">The Store object that the POBox belongs to.</param>
+		/// <param name="domainId">The ID of the domain that the POBox belongs to.</param>
+		/// <param name="userId">The ID of the user that the POBox belongs to.</param>
+		/// <returns></returns>
+		public static POBox GetPOBox(Store storeObject, string domainId, string userId)
+		{
+			POBox poBox = FindPOBox( storeObject, domainId, userId );
 			if (poBox == null)
 			{
+				// If the POBox cannot be found, create it.
+				// Build the name of the POBox.
+				string name = "POBox:" + domainId + ":" + userId;
 				poBox = new POBox(storeObject, name, domainId);
 				
-				Roster roster = storeObject.GetDomain(storeObject.DefaultDomain).GetRoster(storeObject);
-				
+				Roster roster = storeObject.GetRoster( storeObject.DefaultDomain );
 				Member current = roster.GetMemberByID(userId);
 
 				Member member = new Member(current.Name, current.UserID, Access.Rights.Admin);

@@ -222,6 +222,29 @@ namespace Simias.Storage
 
 		#region Internal Methods
 		/// <summary>
+		/// Gets the domain associated with this Member.
+		/// </summary>
+		/// <param name="store">Handle to the collection store.</param>
+		/// <returns>A string containing the Domain ID that the member belongs to. If the Member
+		/// object has not been committed, a null is returned.</returns>
+		internal string GetDomainID( Store store )
+		{
+			string domainID = null;
+
+			Property p = properties.FindSingleValue( BaseSchema.CollectionId );
+			if ( p != null )
+			{
+				Collection c = store.GetCollectionByID( p.Value as string );
+				if ( c != null )
+				{
+					domainID = c.Domain;
+				}
+			}
+
+			return domainID;
+		}
+
+		/// <summary>
 		/// Updates the cached access control after the object has been committed.
 		/// </summary>
 		internal void UpdateAccessControl()
