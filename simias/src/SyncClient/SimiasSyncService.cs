@@ -374,12 +374,18 @@ public class SyncStartInfo {
     public bool ClientHasChanges;
     
     /// <remarks/>
-    public SyncAccess Access;
+    public SyncColStatus Status;
+    
+    /// <remarks/>
+    public Rights Access;
 }
 
 /// <remarks/>
 [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://novell.com/simias/sync/")]
-public enum SyncAccess {
+public enum SyncColStatus {
+    
+    /// <remarks/>
+    Success,
     
     /// <remarks/>
     NoWork,
@@ -389,6 +395,11 @@ public enum SyncAccess {
     
     /// <remarks/>
     Busy,
+}
+
+/// <remarks/>
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://novell.com/simias/sync/")]
+public enum Rights {
     
     /// <remarks/>
     Deny,

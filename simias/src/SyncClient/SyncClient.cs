@@ -262,7 +262,7 @@ namespace Simias.Sync
 		Hashtable		filesToServer;
 		FileWatcher		fileMonitor;
 		bool			stopping;
-		SyncAccess		rights;
+		Rights			rights;
 		string			serverContext;
 		string			clientContext;
 		int				MAX_XFER_SIZE = 1024 * 64;
@@ -430,46 +430,55 @@ namespace Simias.Sync
 			serverContext = si.Context;
 			rights = si.Access;
 
-			switch (rights)
+			switch (si.Status)
 			{
-				case SyncAccess.Deny:
-				case SyncAccess.NotFound:
-					// We no longer have rights to this collections
-					// Delete it.
-					collection.Delete();
-					// Now delete the tombstone.
-					collection.Delete();
-					break;
-				case SyncAccess.Admin:
-				case SyncAccess.ReadOnly:
-				case SyncAccess.ReadWrite:
-					try
-					{
-						// Now lets determine the files that need to be synced.
-						if (si.ChangesOnly)
-						{
-							// We only need to look at the changed nodes.
-							ProcessChangedNodeStamps(sstamps, cstamps);
-						}
-						else
-						{
-							// We don't have any state. So do a full sync.
-							cstamps =  GetNodeStamps();
-							ReconcileAllNodeStamps(sstamps, cstamps);
-						}
-						ExecuteSync();
-					}
-					finally
-					{
-						// Save the sync state.
-						SetChangeLogContext(serverContext, clientContext, SyncComplete);
-						// End the sync.
-						service.Stop();
-					}
-					break;
-				case SyncAccess.Busy:
+				case SyncColStatus.Busy:
+					// BUGBUG. we may need to back off.
 					// Re-queue this to run.
 					callback(this);
+					break;
+					break;
+				case SyncColStatus.NotFound:
+					// The collection does not exist or we do not have rights.
+					collection.Delete();
+					// Delete the tombstone.
+					collection.Delete();
+					break;
+				case SyncColStatus.NoWork:
+					break;
+				case SyncColStatus.Success:
+				switch (rights)
+					{
+						case Rights.Deny:
+							break;
+						case Rights.Admin:
+						case Rights.ReadOnly:
+						case Rights.ReadWrite:
+							try
+							{
+								// Now lets determine the files that need to be synced.
+								if (si.ChangesOnly)
+								{
+									// We only need to look at the changed nodes.
+									ProcessChangedNodeStamps(sstamps, cstamps);
+								}
+								else
+								{
+									// We don't have any state. So do a full sync.
+									cstamps =  GetNodeStamps();
+									ReconcileAllNodeStamps(sstamps, cstamps);
+								}
+								ExecuteSync();
+							}
+							finally
+							{
+								// Save the sync state.
+								SetChangeLogContext(serverContext, clientContext, SyncComplete);
+								// End the sync.
+								service.Stop();
+							}
+							break;
+					}
 					break;
 			}
 		}

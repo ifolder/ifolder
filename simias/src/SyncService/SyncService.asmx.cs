@@ -39,8 +39,6 @@ namespace Simias.Sync.Web
 		 Description = "Web Service providing Syncronization to Simias")]
 	public class SyncWebService : System.Web.Services.WebService
 	{
-		string cID;
-
 		SyncService Service
 		{
 			get { return (SyncService)Session["SyncService"]; }
@@ -56,51 +54,12 @@ namespace Simias.Sync.Web
 		[WebMethod(EnableSession = true)]
 		public SyncNodeStamp[] Start(ref SyncStartInfo si, string user)
 		{
-			SyncNodeStamp[] nodes = new SyncNodeStamp[0];
-			si.Access = SyncAccess.Deny;
-			Store store = Store.GetStore();
-			Collection col = store.GetCollectionByID(si.CollectionID);
-			if (col != null)
-			{
-				SyncCollection sCol = new SyncCollection(col);
-				SyncService ss = new SyncService(sCol);
-				si.Access = ss.Start(user);
-				switch (si.Access)
-				{
-					case SyncAccess.Admin:
-					case SyncAccess.ReadOnly:
-					case SyncAccess.ReadWrite:
-						// See if there is any work to do before we try to get the lock.
-						if (si.ChangesOnly)
-						{
-							// we only need the changes.
-							si.ChangesOnly = ss.GetChangedNodeStamps(out nodes, ref si.Context);
-						}
-
-						if (!si.ChangesOnly)
-						{
-							// We need to get all of the nodes.
-							nodes = ss.GetNodeStamps();
-							if (nodes.Length == 0)
-								si.Access = SyncAccess.Deny;
-						}
-						else if (!si.ClientHasChanges && nodes.Length == 0)
-						{
-							si.Access = SyncAccess.NoWork;
-							nodes = null;
-						}
-						
-						// TODO:
-						// If we have work we need to get a lock.
-						break;
-				}
-
-				Service = ss;
-			}
-			else
-			{
-				si.Access = SyncAccess.NotFound;
-			}
+			SyncService ss = new SyncService(si.CollectionID);
+			Service = ss;
+			SyncNodeStamp[] nodes = ss.Start(ref si, user);
+			
+			// TODO:
+			// If we have work we need to get a lock.
 			return nodes;
 		}
 

@@ -41,27 +41,35 @@ namespace Simias.Sync
 		/// <summary>
 		/// The collection to sync.
 		/// </summary>
-		public string		CollectionID;
+		public string			CollectionID;
 		/// <summary>
 		/// The sync context.
 		/// </summary>
-		public string		Context;
+		public string			Context;
 		/// <summary>
 		/// True if only changes since last sync are wanted.
 		/// </summary>
-		public bool			ChangesOnly;
+		public bool				ChangesOnly;
 		/// <summary>
 		/// True if the client has changes. Used to Determine if there is work.
 		/// </summary>
-		public bool			ClientHasChanges;
+		public bool				ClientHasChanges;
 		/// <summary>
-		/// The Access to the collection.
+		/// The Status of this sync.
 		/// </summary>
-		public SyncAccess	Access;
+		public SyncColStatus	Status;
+		/// <summary>
+		/// The access allowed to the collection.
+		/// </summary>
+		public Access.Rights	Access;
 	}
 
-	public enum SyncAccess
+	public enum SyncColStatus
 	{
+		/// <summary>
+		/// We need to sync.
+		/// </summary>
+		Success,
 		/// <summary>
 		/// There is nothing to do.
 		/// </summary>
@@ -74,22 +82,6 @@ namespace Simias.Sync
 		/// Someone is sync-ing now come back latter.
 		/// </summary>
 		Busy,
-		/// <summary>
-		/// User has no rights to the collection.
-		/// </summary>
-		Deny,
-		/// <summary>
-		/// User can view information in a collection.
-		/// </summary>
-		ReadOnly,
-		/// <summary>
-		/// User can view and modify information in a collection.
-		/// </summary>
-		ReadWrite,
-		/// <summary>
-		/// User can view, modify and change rights in a collection.
-		/// </summary>
-		Admin
 	};
 	
 	/// <summary>
@@ -248,44 +240,91 @@ public class SyncService
 	/// <summary>
 	/// public ctor 
 	/// </summary>
-	public SyncService(SyncCollection collection)
+	public SyncService(string collectionID)
 	{
-		this.collection = collection;
-		store = Store.GetStore();
+		
 	}
 
 	
 	/// <summary>
 	/// start sync of this collection -- perform basic role checks and dredge server file system
 	/// </summary>
-	public SyncAccess Start(string user)
+	/// <param name="si">The start info to initialize the sync.</param>
+	/// <param name="user">This is temporary.</param>
+	public SyncNodeStamp[] Start(ref SyncStartInfo si, string user)
 	{
-		SyncAccess access = SyncAccess.Busy;
+		si.Status = SyncColStatus.Success;
+		si.Access = Access.Rights.Deny;
+		SyncNodeStamp[] nodes = null;
+		
+		store = Store.GetStore();
+		Collection col = store.GetCollectionByID(si.CollectionID);
+		if (col == null)
+		{
+			si.Status = SyncColStatus.NotFound;
+			return null;
+		}
+		
+		collection = new SyncCollection(col);
+		// BUGBUG SyncAccess access = SyncAccess.Busy;
 
+		// Check our rights.
 		string userID = Thread.CurrentPrincipal.Identity.Name;
-			
 		if ((userID == null) || (userID.Length == 0))
 		{
 			// Kludge: for now trust the client.  this need to be removed before shipping.
 			userID = user;
 		}
-		
 		member = collection.GetMemberByID(userID);
-
 		if (member != null)
 		{
 			collection.Impersonate(member);
 			rights = member.Rights;
-			access = (SyncAccess)Enum.Parse(typeof(SyncAccess), rights.ToString(), true);
+			si.Access = rights;
 			log.Info("Starting Sync of {0} for {1} rights : {2}.", collection, member.Name, rights);
 		}
 		else if (userID == collection.ProxyUserID)
 		{
 			rights = Access.Rights.Admin;
-			access = SyncAccess.Admin;
+			si.Access = rights;
 			log.Info("Sync session starting for {0}", userID);
 		}
-		return access;
+
+		switch (rights)
+		{
+			case Access.Rights.Admin:
+			case Access.Rights.ReadOnly:
+			case Access.Rights.ReadWrite:
+				// See if there is any work to do before we try to get the lock.
+				if (si.ChangesOnly)
+				{
+					// we only need the changes.
+					si.ChangesOnly = GetChangedNodeStamps(out nodes, ref si.Context);
+				}
+
+				// If we failed to get the changes get all.
+				if (!si.ChangesOnly)
+				{
+					// We need to get all of the nodes.
+					nodes = GetNodeStamps();
+					if (nodes.Length == 0)
+					{
+						rights = Access.Rights.Deny;
+						si.Access = rights;
+					}
+				}
+				else if (!si.ClientHasChanges && nodes.Length == 0)
+				{
+					si.Status = SyncColStatus.NoWork;
+					nodes = null;
+				}
+				break;
+			case Access.Rights.Deny:
+				nodes = null;
+				si.Status = SyncColStatus.NotFound;
+				break;
+		}
+		return nodes;
 	}
 
 	/// <summary>
