@@ -612,7 +612,7 @@ namespace Simias.Storage
 								}
 								else
 								{
-									node.NodeStamp = nodeStamp;
+									mergeNode.NodeStamp = nodeStamp;
 								}
 
 								// Copy the XML node over to the modify document.
