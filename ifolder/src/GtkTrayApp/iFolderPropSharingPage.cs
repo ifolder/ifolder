@@ -36,7 +36,7 @@ namespace Novell.iFolder
 		private iFolderWebService	ifws;
 		private iFolder				ifolder;
 
-		private Gtk.TreeView		UserTreeView;
+		private iFolderTreeView		UserTreeView;
 		private ListStore			UserTreeStore;
 		private Gdk.Pixbuf			UserPixBuf;
 		private Gdk.Pixbuf			CurrentUserPixBuf;
@@ -84,7 +84,7 @@ namespace Novell.iFolder
 			
 			// Create the main TreeView and add it to a scrolled
 			// window, then add it to the main vbox widget
-			UserTreeView = new TreeView();
+			UserTreeView = new iFolderTreeView();
 			ScrolledWindow sw = new ScrolledWindow();
 			sw.ShadowType = Gtk.ShadowType.EtchedIn;
 			sw.Add(UserTreeView);
@@ -130,8 +130,8 @@ namespace Novell.iFolder
 			UserTreeView.Selection.Changed +=
 				new EventHandler(OnUserSelectionChanged);
 
-//			UserTreeView.ButtonPressEvent += new ButtonPressEventHandler(
-//						OnUserTreeViewButtonPressed);
+			UserTreeView.ButtonPressEvent += new ButtonPressEventHandler(
+						OnUserTreeViewButtonPressed);
 
 			UserPixBuf = 
 					new Gdk.Pixbuf(Util.ImagesPath("ifolderuser.png"));
@@ -566,6 +566,154 @@ namespace Novell.iFolder
 			}
 			return false;
 		}
+
+
+
+
+		public void OnUserTreeViewButtonPressed(object obj, 
+											ButtonPressEventArgs args)
+		{
+			switch(args.Event.Button)
+			{
+				case 1: // first mouse button
+					break;
+				case 2: // second mouse button
+					break;
+				case 3: // third mouse button
+				{
+					TreePath tPath = null;
+					TreeViewColumn tColumn = null;
+//					TreeModel tModel;
+
+					if(UserTreeView.GetPathAtPos(	(int)args.Event.X,
+													(int)args.Event.Y,
+													out tPath,
+													out tColumn) == true)
+					{
+						// User clicked in a column with data
+						if(UserTreeView.GetColumn(2) == tColumn)
+						{
+							TreeSelection tSelect = UserTreeView.Selection;
+
+							if( (ifolder.CurrentUserRights == "Admin") &&
+								(tSelect.CountSelectedRows() > 0) )
+							{
+								Menu rightsMenu = new Menu();
+			
+								RadioMenuItem adminItem = 
+									new RadioMenuItem ("Full Control");
+								rightsMenu.Append(adminItem);
+
+								RadioMenuItem rwItem = 
+									new RadioMenuItem (adminItem.Group, 
+														"Read/Write");
+								rightsMenu.Append(rwItem);
+
+								RadioMenuItem roItem = 
+									new RadioMenuItem (adminItem.Group, 
+														"Read Only");
+								rightsMenu.Append(roItem);
+
+								if(SelectionHasOwnerOrCurrent())
+								{
+									adminItem.Sensitive = false;
+									rwItem.Sensitive = false;
+									roItem.Sensitive = false;
+								}
+
+								// Get the Value of the actual user selected
+								TreeIter iter;
+		
+								if(UserTreeStore.GetIter(out iter, tPath))
+								{
+									iFolderUser user = (iFolderUser) 
+											UserTreeStore.GetValue(iter, 0);
+									if(user.Rights == "ReadWrite")
+										rwItem.Active = true;
+									else if(user.Rights == "Admin")
+										adminItem.Active = true;
+									else
+										roItem.Active = true;
+								}
+
+								adminItem.Activated += new EventHandler(
+										OnAdminRightsMenu);
+								rwItem.Activated += new EventHandler(
+										OnRWRightsMenu);
+								roItem.Activated += new EventHandler(
+										OnRORightsMenu);
+
+								rightsMenu.ShowAll();
+
+								rightsMenu.Popup(null, null, null, 
+									IntPtr.Zero, 3, 
+									Gtk.Global.CurrentEventTime);
+							}
+						}
+					}
+					break;
+				}
+			}
+		}
+
+		private void OnAdminRightsMenu(object o, EventArgs args)
+		{
+			SetSelectedUserRights("Admin");
+		}
+
+		private void OnRWRightsMenu(object o, EventArgs args)
+		{
+			SetSelectedUserRights("ReadWrite");
+		}
+
+		private void OnRORightsMenu(object o, EventArgs args)
+		{
+			SetSelectedUserRights("ReadOnly");
+		}
+
+		private void SetSelectedUserRights(string rights)
+		{
+			TreeModel tModel;
+			
+			// User clicked on rights
+			TreeSelection tSelect = UserTreeView.Selection;
+
+			Array treePaths = 
+					tSelect.GetSelectedRows(out tModel);
+
+			foreach(TreePath tPath in treePaths)
+			{
+				TreeIter iter;
+		
+				if(UserTreeStore.GetIter(out iter, tPath))
+				{
+					iFolderUser user = 
+						(iFolderUser) tModel.GetValue(iter, 0);
+
+					try
+					{
+    					ifws.SetUserRights( ifolder.ID,
+											user.UserID,
+											rights);
+						user.Rights = rights;
+
+						tModel.SetValue(iter, 0, user);
+					}
+					catch(Exception e)
+					{
+						iFolderExceptionDialog ied = 
+								new iFolderExceptionDialog(
+										topLevelWindow, e);
+						ied.Run();
+						ied.Hide();
+						ied.Destroy();
+						ied = null;
+					}
+				}
+			}
+		}
+
+
 
 
 	}
