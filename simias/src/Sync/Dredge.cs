@@ -283,13 +283,15 @@ public class Dredger
 		// TODO: Syncronize the dredger with the sync engine.
 		this.collection = new SyncCollection(collection);
 		this.onServer = onServer;
-
+		
 		try
 		{
 			lastDredgeTime = (DateTime)(collection.Properties.GetSingleProperty(lastDredgeProp).Value);
 		}
 		catch
 		{
+			// Set found change so the lastDredgeTime will get updated.
+			foundChange = true;
 			log.Debug("Failed to get the last dredge time");
 		}
 		foundChange = false;
@@ -379,9 +381,7 @@ public class Dredger
 								needToDredge = false;
 							*/
 					}
-					Dredger.log.Debug("Sleeping----------------");
 					Thread.Sleep(1000 * 60);
-					Dredger.log.Debug("Waking up---------------");
 				}
 				catch (Exception ex)
 				{
