@@ -184,7 +184,7 @@ public struct RejectedNode
 // various useful Sync operations that are called by client and server
 internal class SyncOps
 {
-	Collection collection;
+	SyncCollection collection;
 	bool onServer;
 	private const string ServerChangeLogCookieProp = "ServerChangeLogCookie";
 	private const string ClientChangeLogCookieProp = "ClientChangeLogCookie";
@@ -210,7 +210,7 @@ internal class SyncOps
 
 	public SyncOps(Collection collection, bool onServer)
 	{
-		this.collection = collection;
+		this.collection = new SyncCollection(collection);
 		this.onServer = onServer;
 	}
 

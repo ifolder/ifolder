@@ -152,13 +152,15 @@ public class Dredger
 			}
 			else
 			{
+				if (Directory.GetLastWriteTime(path).CompareTo(lastDredgeTime) < 0)
+					Directory.SetLastWriteTime(path, dredgeTimeStamp);
 				DirNode dnode = new DirNode(collection, parentNode, name);
 				dnode.LastWriteTime = Directory.GetLastWriteTime(path);
 				dnode.CreationTime = Directory.GetCreationTime(path);
 				Log.Spew("Dredger adding dir node for {0} {1}", path, dnode.ID);
 				collection.Commit(dnode);
 				foundChange = true;
-				DoSubtree(dnode, subTreeHasChanged);
+				DoSubtree(dnode, true);
 			}
 		}
 		else if (type == typeof(FileNode).Name)

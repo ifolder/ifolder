@@ -47,7 +47,8 @@ public class SynkerWorkerA: SyncCollectionWorker
 	Hashtable	largeToServer, smallToServer, dirsToServer;
     Hashtable	killOnClient;
 	SyncOps		ops;
-	static int BATCH_SIZE = 50;
+	static int BATCH_SIZE = 10;
+	bool		moreWork;
 			
 	bool stopping;
 
@@ -70,7 +71,11 @@ public class SynkerWorkerA: SyncCollectionWorker
 		Log.Spew("-------- starting sync pass for collection {0}", collection.Name);
 		try
 		{
-			DoOneSyncPass();
+			moreWork = true;
+			while (moreWork)
+			{
+				DoOneSyncPass();
+			}
 		}
 		catch (Exception e)
 		{
@@ -190,6 +195,11 @@ public class SynkerWorkerA: SyncCollectionWorker
 		
 		if (gotServerChanges && gotClientChanges)
 		{
+			if (sstamps.Length != 0 || cstamps.Length != 0)
+				moreWork = true;
+			else
+				moreWork = false;
+
 			ProcessChangedNodeStamps(rights, sstamps, cstamps);
 			ExecuteSync();
 			ops.SetChangeLogCookies(newServerCookie, newClientCookie);
@@ -206,6 +216,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 			BruttForceSync(rights, sstamps, cstamps);
 			ExecuteSync();
 			ops.SetChangeLogCookies(oldServerCookie, oldClientCookie);
+			moreWork = false;
 		}
 	}
 		
@@ -213,6 +224,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 	/// <summary>
 	/// 
 	/// </summary>
+	/// <param name="rights"></param>
 	/// <param name="sstamps"></param>
 	/// <param name="cstamps"></param>
 	void BruttForceSync(Access.Rights rights, NodeStamp[] sstamps, NodeStamp[] cstamps)
