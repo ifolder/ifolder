@@ -11,7 +11,7 @@
 
 export MONO_PATH=@webbindir@
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:@webbindir@
-export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:@webbindir@
+export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:@webbindir@:/Library/Frameworks/Mono.framework/Versions/Current/lib
 cd @bindir@
 
 ulimit -n 1024
