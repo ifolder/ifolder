@@ -96,6 +96,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Button login;
 		private System.Windows.Forms.Button proxy;
 		private System.Windows.Forms.Button logout;
+		private System.Windows.Forms.ColumnHeader columnHeader1;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -179,6 +180,7 @@ namespace Novell.FormsTrayApp
 			this.apply = new System.Windows.Forms.Button();
 			this.ok = new System.Windows.Forms.Button();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
+			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
@@ -560,7 +562,8 @@ namespace Novell.FormsTrayApp
 			this.accounts.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("accounts.BackgroundImage")));
 			this.accounts.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
 																					   this.columnHeader3,
-																					   this.columnHeader2});
+																					   this.columnHeader2,
+																					   this.columnHeader1});
 			this.accounts.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("accounts.Dock")));
 			this.accounts.Enabled = ((bool)(resources.GetObject("accounts.Enabled")));
 			this.accounts.Font = ((System.Drawing.Font)(resources.GetObject("accounts.Font")));
@@ -1069,6 +1072,12 @@ namespace Novell.FormsTrayApp
 			this.timer1.Interval = 10;
 			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
 			// 
+			// columnHeader1
+			// 
+			this.columnHeader1.Text = resources.GetString("columnHeader1.Text");
+			this.columnHeader1.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("columnHeader1.TextAlign")));
+			this.columnHeader1.Width = ((int)(resources.GetObject("columnHeader1.Width")));
+			// 
 			// Preferences
 			// 
 			this.AcceptButton = this.ok;
@@ -1312,7 +1321,11 @@ namespace Novell.FormsTrayApp
 					currentDefaultDomain = domain;
 				}
 
-				ListViewItem lvi = new ListViewItem(new string[] {domain.Name, domainWeb.UserName});
+				ListViewItem lvi = new ListViewItem(
+					new string[] {domain.Name,
+									 domainWeb.UserName,
+									 domainWeb.IsConnected ? 
+									 resourceManager.GetString("statusConnected") : resourceManager.GetString("statusDisconnected")});
 				lvi.Tag = domain;
 				lvi.Selected = domainWeb.IsDefault;
 				accounts.Items.Add(lvi);
@@ -1383,6 +1396,8 @@ namespace Novell.FormsTrayApp
 
 				// Associate the new domain with the listview item.
 				newAccountLvi.SubItems[0].Text = domainWeb.Name;
+
+				newAccountLvi.SubItems[2].Text = resourceManager.GetString("statusConnected");
 				newAccountLvi.Tag = domain;
 				server.Text = domainWeb.Host;
 				newAccountLvi = null;
@@ -1416,9 +1431,10 @@ namespace Novell.FormsTrayApp
 					defaultServer.Enabled = false;
 				}
 
-				// TODO: enable the logout button
 				addAccount.Enabled = details.Enabled = true;
+
 				login.Enabled = false;
+				logout.Enabled = true;
 
 				try
 				{
@@ -1884,7 +1900,7 @@ namespace Novell.FormsTrayApp
 			// Only allow one-at-a-time account creation.
 			addAccount.Enabled = false;
 
-			ListViewItem lvi = new ListViewItem(new string[] {string.Empty, string.Empty});
+			ListViewItem lvi = new ListViewItem(new string[] {string.Empty, string.Empty, string.Empty});
 			accounts.Items.Add(lvi);
 			accounts.SelectedItems.Clear();
 			lvi.Selected = true;
@@ -1969,7 +1985,7 @@ namespace Novell.FormsTrayApp
 						else if (domain.Equals(currentDefaultDomain))
 						{
 							// The default domain was removed, get the new default.
-							defaultDomainID = ifWebService.GetDefaultDomain();
+							defaultDomainID = ifWebService.GetDefaultDomainID();
 						}
 
 						if (RemoveDomain != null)
@@ -2091,9 +2107,6 @@ namespace Novell.FormsTrayApp
 				{
 					proxy.Enabled = true;
 
-					// TODO: determine which are enabled.
-					login.Enabled = logout.Enabled = false;
-
 					if ((newAccountLvi == null) || (lvi == newAccountLvi))
 					{
 						userName.Enabled = server.Enabled = 
@@ -2110,7 +2123,8 @@ namespace Novell.FormsTrayApp
 							server.Text = lvi.SubItems[0].Text;
 							newAccountLvi = lvi;
 							userName.ReadOnly = server.ReadOnly = false;
-							details.Enabled = defaultServer.Checked = defaultServer.Enabled = false;
+							details.Enabled = defaultServer.Checked = defaultServer.Enabled =
+								login.Enabled = logout.Enabled = false;
 							server.Focus();
 						}
 						else
@@ -2143,6 +2157,9 @@ namespace Novell.FormsTrayApp
 
 							// auto login setting.
 							autoLogin.Checked = selectedDomain.DomainWeb.AutoLogin;
+
+							logout.Enabled = selectedDomain.DomainWeb.IsConnected;
+							login.Enabled = !logout.Enabled;
 						}
 					}
 				}
@@ -2180,15 +2197,47 @@ namespace Novell.FormsTrayApp
 
 		private void login_Click(object sender, System.EventArgs e)
 		{
-			Cursor.Current = Cursors.WaitCursor;
+			ListViewItem lvi = accounts.SelectedItems[0];
 
-			connectToEnterprise();
+			Domain domain = (Domain)lvi.Tag;
 
-			Cursor.Current = Cursors.Default;
+			if (domain == null)
+			{
+				Cursor.Current = Cursors.WaitCursor;
+				connectToEnterprise();
+				Cursor.Current = Cursors.Default;
+			}
+			else
+			{
+				try
+				{
+					ifWebService.SetDomainActive(domain.ID);
+
+					domain.DomainWeb.IsConnected = true;
+
+					lvi.SubItems[2].Text = resourceManager.GetString("statusConnected");
+					login.Enabled = false;
+					logout.Enabled = true;
+				}
+				catch {}
+			}
 		}
 
 		private void logout_Click(object sender, System.EventArgs e)
 		{
+			ListViewItem lvi = accounts.SelectedItems[0];
+			Domain domain = (Domain)lvi.Tag;
+			try
+			{
+				ifWebService.SetDomainInactive(domain.ID);
+
+				domain.DomainWeb.IsConnected = false;
+
+				lvi.SubItems[2].Text = resourceManager.GetString("statusDisconnected");
+				logout.Enabled = false;
+				login.Enabled = true;
+			}
+			catch {}
 		}
 		#endregion
 

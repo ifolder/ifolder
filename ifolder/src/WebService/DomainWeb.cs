@@ -80,6 +80,7 @@ namespace Novell.iFolder.Web
 			this.IsSlave = roster.Role.Equals(Simias.Sync.SyncCollectionRoles.Slave);
 
 			this.AutoLogin = true;
+			this.IsConnected = new Simias.Domain.DomainAgent().IsDomainActive(domainID);
 		}
 
 	}
