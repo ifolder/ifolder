@@ -50,50 +50,41 @@ namespace Simias.Storage.Provider
 		
 		#endregion
 
-		#region Collection Calls.
+		#region ContainerCalls Calls.
+		
 		/// <summary>
-		/// Called to create or modify a collection.
+		/// Called to create a container to hold records.  This call does not need to
+		/// be made.  If a record is created and the container does not exist. it will be created.
 		/// </summary>
-		/// <param name="collectionId">The Id of the collection to create.</param>
-		void CreateCollection(string collectionId);
+		/// <param name="name">The name of the container.</param>
+		void CreateContainer(string name);
 
 		/// <summary>
-		/// Called to delete an existing collection.
+		/// Called to Delete a record container.  
+		/// This call is deep (all records contained are deleted).
 		/// </summary>
-		/// <param name="collectionId">The ID of the collection to delete.</param>
-		void DeleteCollection(string collectionId);
+		/// <param name="name">The name of the container.</param>
+		void DeleteContainer(string name);
+
 		#endregion
 
 		#region Record Calls.
 
 		/// <summary>
-		/// Called to create or modify 1 or more Records
+		/// Used to Create, Modify or Delete records from the store.
 		/// </summary>
-		/// <param name="recordXml">Xml string that describes the new/modified Records.</param>
-		/// <param name="collectionId">The id of the collection containing these objects.</param>
-		void CreateRecord(string recordXml, string collectionId);		
-
-		/// <summary>
-		/// Called to delete a Record.  The record is specified by it ID.
-		/// </summary>
-		/// <param name="recordId">string that contains the ID of the Object to delete</param>
-		/// <param name="collectionId">The id of the collection that contains this object</param>
-		void DeleteRecord(string recordId, string collectionId);
-
-		/// <summary>
-		/// Called to delete 1 or more Records.
-		/// </summary>
-		/// <param name="recordXml">Xml string describing Records to delete.</param>
-		/// <param name="collectionId">The id of the collection that contains these objects.</param>
-		void DeleteRecords(string recordXml, string collectionId);
-
+		/// <param name="container">The container that the commit applies to.</param>
+		/// <param name="createDoc">The records to create or modify.</param>
+		/// <param name="deleteDoc">The records to delete.</param>
+		void CommitRecords(string container, XmlDocument createDoc, XmlDocument deleteDoc);
+		
 		/// <summary>
 		/// Called to ge a Record.  The record is returned as an XML string representation.  
 		/// </summary>
 		/// <param name="recordId">string that contains the ID of the Record to retrieve</param>
-		/// <param name="collectionId">The id of the collection that contains this Record.</param>
+		/// <param name="container">The container that holds the record.</param>
 		/// <returns>XML string describing the Record</returns>
-		string GetRecord(string recordId, string collectionId);
+		XmlDocument GetRecord(string recordId, string container);
 
 		#endregion
 		
@@ -119,5 +110,7 @@ namespace Simias.Storage.Provider
 		}
 
 		#endregion
+
+
 	}
 }

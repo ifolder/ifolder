@@ -57,7 +57,10 @@ namespace Simias.Storage.Provider
 		{
 			collectionId = recordId + firstRecordId;
 			bool created;
-			provider = Provider.Connect(providerAssembly, providerClass, ".", out created);
+			ProviderConfig conf = new ProviderConfig(".");
+			conf.Assembly = providerAssembly;
+			conf.TypeName = providerClass;
+			provider = Provider.Connect(conf, out created);
 		}
 
 		/// <summary>
@@ -204,22 +207,20 @@ namespace Simias.Storage.Provider
 			try
 			{
 				CreateObjects(recordCount);
-				string sObject = provider.GetRecord(recordId + 1, collectionId);
-				if (sObject != null)
+				XmlDocument originalObject = provider.GetRecord(recordId + 1, collectionId);
+				if (originalObject != null)
 				{
-					XmlDocument originalObject = new XmlDocument();
-					originalObject.LoadXml(sObject);
 					XmlElement root = originalObject.DocumentElement;
 					XmlNode node = root.SelectSingleNode("*/" + XmlTags.PropertyTag);
 					if (node != null)
 					{
 						node.ParentNode.RemoveChild(node);
 					}
-					provider.CreateRecord(originalObject.InnerXml, collectionId);
-					string newObject = provider.GetRecord(recordId + 1, collectionId);
+					provider.CommitRecords(collectionId, originalObject, null);
+					XmlDocument newObject = provider.GetRecord(recordId + 1, collectionId);
 					if (newObject != null)
 					{
-						if (newObject.Equals(sObject))
+						if (!newObject.InnerXml.Equals(originalObject.InnerXml))
 						{
 							throw new Exception("Failed to modify object");
 						}
@@ -299,7 +300,7 @@ namespace Simias.Storage.Provider
 		/// <param name="collectionId">The Id of the collection.</param>
 		private void CreateCollection(string collectionId)
 		{
-			provider.CreateCollection(collectionId);
+			provider.CreateContainer(collectionId);
 		}
 
 		/// <summary>
@@ -308,7 +309,7 @@ namespace Simias.Storage.Provider
 		/// <param name="collectionId">The ID of the collection to delete.</param>
 		private void DeleteCollection(string collectionId)
 		{
-			provider.DeleteCollection(collectionId);
+			provider.DeleteContainer(collectionId);
 		}
 
 		/// <summary>
@@ -320,11 +321,10 @@ namespace Simias.Storage.Provider
 		{
 			ArrayList objectList = GetObjectXml(recordCount, true);
 			DateTime startTime = DateTime.Now;
-			provider.CreateCollection(collectionId);
 			foreach (XmlDocument objectDoc in objectList)
 			{
 				//writeXml(recordDoc.InnerXml);
-				provider.CreateRecord(objectDoc.InnerXml, collectionId);
+				provider.CommitRecords(collectionId, objectDoc, null);
 			}
 			TimeSpan deltaTime = DateTime.Now - startTime;
 			return (deltaTime);
@@ -340,7 +340,7 @@ namespace Simias.Storage.Provider
 			DateTime startTime = DateTime.Now;
 			for (i = firstRecordId; i <= recordCount; ++i)
 			{
-				string sObject = provider.GetRecord(recordId + i, collectionId);
+				XmlDocument sObject = provider.GetRecord(recordId + i, collectionId);
 				if (sObject == null)
 				{
 					throw (new ApplicationException("Failed to get Object" + recordId));
@@ -601,7 +601,7 @@ namespace Simias.Storage.Provider
 			foreach (XmlDocument objectDoc in objectList)
 			{
 				//writeXml(recordDoc.InnerXml);
-				provider.DeleteRecords(objectDoc.InnerXml, collectionId);
+				provider.CommitRecords(collectionId, null, objectDoc);
 			}
 			TimeSpan deltaTime = DateTime.Now - startTime;
 			return (deltaTime);
@@ -610,7 +610,7 @@ namespace Simias.Storage.Provider
 		private TimeSpan DeleteColection(string collectionId)
 		{
 			DateTime startTime = DateTime.Now;
-			provider.DeleteCollection(collectionId);
+			provider.DeleteContainer(collectionId);
 			TimeSpan deltaTime = DateTime.Now - startTime;
 			return (deltaTime);
 		}
@@ -621,7 +621,7 @@ namespace Simias.Storage.Provider
 			int i;
 			for (i = firstRecordId; i <= recordCount; ++i)
 			{
-				string sObject = null;
+				XmlDocument sObject = null;
 				try
 				{
 					sObject = provider.GetRecord(recordId + i, collectionId);
