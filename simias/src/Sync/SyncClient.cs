@@ -631,7 +631,10 @@ namespace Simias.Sync
 			if (workArray == null || workArray.DownCount == 0)
 				fileMonitor.CheckForFileChanges();
 			if (collection.Role != SyncRoles.Slave)
+			{
+				serverAlive = true;
 				return;
+			}
 
 			// We may have just created or deleted nodes wait for the events to settle.
 			Thread.Sleep(500);
