@@ -308,6 +308,25 @@ namespace Simias.POBox
 							subscription.FromIdentity,
 							subscription.ToIdentity,
 							subscription.MessageID);
+
+					// update local subscription
+					if (wsStatus == POBoxStatus.Success)
+					{
+						subscription.SubscriptionState = SubscriptionStates.Delivered;
+						poBox.Commit(subscription);
+					}
+					else
+					{
+						poBox.Commit(poBox.Delete(subscription));
+
+						log.Debug(
+							"Failed Accepting/Declining a subscription.  Status: " + 
+							wsStatus.ToString());
+
+						// return true so the thread controlling the
+						// subscription will die off
+						status = true;
+					}
 				}
 				else
 				if (subscription.SubscriptionDisposition == SubscriptionDispositions.Declined)
@@ -319,25 +338,12 @@ namespace Simias.POBox
 							subscription.FromIdentity,
 							subscription.ToIdentity,
 							subscription.MessageID);
-				}
 
-				// update local subscription
-				if (wsStatus == POBoxStatus.Success)
-				{
-					subscription.SubscriptionState = SubscriptionStates.Delivered;
-					poBox.Commit(subscription);
-				}
-				else
-				{
-					poBox.Commit(poBox.Delete(subscription));
-
-					log.Debug(
-						"Failed Accepting/Declining a subscription.  Status: " + 
-						wsStatus.ToString());
-
-					// return true so the thread controlling the
-					// subscription will die off
-					status = true;
+					if (wsStatus == POBoxStatus.Success)
+					{
+						// This subscription is done!
+						status = true;
+					}
 				}
 			}
 			catch(Exception e)
@@ -346,9 +352,8 @@ namespace Simias.POBox
 				log.Debug(e.Message);
 				log.Debug(e.StackTrace);
 			}
-			poService = null;
 
-			// always return false to drop to the next state
+			poService = null;
 			return status;
 		}
 
