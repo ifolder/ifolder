@@ -445,10 +445,8 @@ namespace Novell.FormsTrayApp
 						{
 							updateStarted = FormsTrayApp.CheckForClientUpdate(domainID, userName.Text, password.Text);
 						}
-						catch (Exception ex)
+						catch // Ignore
 						{
-							mmb = new MyMessageBox(resourceManager.GetString("checkUpdateError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-							mmb.ShowDialog();
 						}
 
 						if (rememberPassword.Checked)

@@ -1075,7 +1075,7 @@ namespace Novell.iFolderCom
 					if (!conflict.IsNameConflict)
 					{
 						lvi = new ListViewItem(conflict.LocalName);
-						conflicts.LocalConflict = conflict;
+						conflicts.ServerConflict = conflict;
 					}
 					else if (conflict.ServerName != null)
 					{
@@ -1130,7 +1130,7 @@ namespace Novell.iFolderCom
 
 				if (!conflicts.ServerConflict.IsNameConflict)
 				{
-					// Fill in the server data.
+					// Fill in the local data.
 					localName.Text = conflicts.ServerConflict.LocalName;
 					localDate.Text = conflicts.ServerConflict.LocalDate;
 					localSize.Text = conflicts.ServerConflict.LocalSize;
