@@ -27,6 +27,7 @@
 #import <Cocoa/Cocoa.h>
 #include <Carbon/Carbon.h>
 #import "iFolder.h"
+#import "User.h"
 
 
 @interface iFolderService : NSObject
@@ -39,6 +40,8 @@
 -(iFolder *) AcceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)DomainID toPath:(NSString *)localPath;
 -(void) DeleteiFolder:(NSString *)iFolderID;
 -(void) SynciFolderNow:(NSString *)iFolderID;
+
+-(NSArray *) GetiFolderUsers:(NSString *)ifolderID;
 
 
 @end

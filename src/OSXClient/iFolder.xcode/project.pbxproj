@@ -7,33 +7,31 @@
 	objects = {
 		080E96DDFE201D6D7F000001 = {
 			children = (
-				3E5289680774F9FA0064F585,
-				3E5289690774F9FA0064F585,
-				3E52896A0774F9FA0064F585,
-				3E52896B0774F9FA0064F585,
 				3E528C3107754B8E0064F585,
 				3E528C3207754B8E0064F585,
+				3E9B1B02077927E20072994B,
+				3E9B1B01077927E20072994B,
 				3E81105D076FF18700E96819,
 				3E81105E076FF18700E96819,
 				3E81105F076FF18700E96819,
 				3E811060076FF18700E96819,
-				3E9B1B02077927E20072994B,
-				3E9B1B01077927E20072994B,
 				3E3405A5078B40EF00630436,
 				3E3405A6078B40EF00630436,
 				3E4F5737078C30DA00313076,
 				3E4F5738078C30DA00313076,
 				3E70A40A078DFCD80075681D,
 				3E70A40B078DFCD80075681D,
-				3EB8C511079393B60082AA86,
-				3EB8C510079393B60082AA86,
 				3E3BC75407AB5B7B00D2AE46,
 				3E3BC75307AB5B7B00D2AE46,
 				3E6D783307B098E2001DA76A,
 				3E6D783207B098E2001DA76A,
+				3EB8C511079393B60082AA86,
+				3EB8C510079393B60082AA86,
+				3EEA9A4907B1D9C30015FCF4,
+				3EEA9A4A07B1D9C30015FCF4,
 			);
 			isa = PBXGroup;
-			name = Classes;
+			name = Controllers;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -139,6 +137,7 @@
 		29B97314FDCFA39411CA2CEA = {
 			children = (
 				3E255FFC077235290062AB7A,
+				3EEA9A6507B1DBCC0015FCF4,
 				080E96DDFE201D6D7F000001,
 				29B97315FDCFA39411CA2CEA,
 				29B97317FDCFA39411CA2CEA,
@@ -192,6 +191,7 @@
 				3EE449E307A7DF0000B93B2F,
 				3E19255007A7E1FF00F9E44D,
 				3E19255207A7E20700F9E44D,
+				3EEA9A3407B1D3580015FCF4,
 			);
 			isa = PBXGroup;
 			name = Resources;
@@ -1024,6 +1024,94 @@
 			settings = {
 			};
 		};
+		3EEA9A3407B1D3580015FCF4 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = ifolderuser.png;
+			path = /Users/calvin/code/ifolder/ifolder/src/images/ifolderuser.png;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		3EEA9A3507B1D3580015FCF4 = {
+			fileRef = 3EEA9A3407B1D3580015FCF4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EEA9A4907B1D9C30015FCF4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = PropSharingController.m;
+			path = src/PropSharingController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EEA9A4A07B1D9C30015FCF4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = PropSharingController.h;
+			path = src/PropSharingController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EEA9A4B07B1D9C30015FCF4 = {
+			fileRef = 3EEA9A4907B1D9C30015FCF4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EEA9A4C07B1D9C30015FCF4 = {
+			fileRef = 3EEA9A4A07B1D9C30015FCF4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EEA9A6507B1DBCC0015FCF4 = {
+			children = (
+				3E5289680774F9FA0064F585,
+				3E5289690774F9FA0064F585,
+				3E52896A0774F9FA0064F585,
+				3E52896B0774F9FA0064F585,
+				3EEA9A6807B1DC4F0015FCF4,
+				3EEA9A6907B1DC4F0015FCF4,
+			);
+			isa = PBXGroup;
+			name = Models;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EEA9A6807B1DC4F0015FCF4 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = User.h;
+			path = src/User.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EEA9A6907B1DC4F0015FCF4 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = User.m;
+			path = src/User.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EEA9A6A07B1DC4F0015FCF4 = {
+			fileRef = 3EEA9A6807B1DC4F0015FCF4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EEA9A6B07B1DC4F0015FCF4 = {
+			fileRef = 3EEA9A6907B1DC4F0015FCF4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3EEAA53B078F167000EE44EE = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -1190,6 +1278,9 @@
 				3EC02E2107AED395001FF59D,
 				3EC02F2107AED3C4001FF59D,
 				3E6D783507B098E2001DA76A,
+				3EEA9A3507B1D3580015FCF4,
+				3EEA9A4C07B1D9C30015FCF4,
+				3EEA9A6A07B1DC4F0015FCF4,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1224,6 +1315,8 @@
 				3E3BC75507AB5B7B00D2AE46,
 				3EDD6ADB07AEAECB008A2A3B,
 				3E6D783407B098E2001DA76A,
+				3EEA9A4B07B1D9C30015FCF4,
+				3EEA9A6B07B1DC4F0015FCF4,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

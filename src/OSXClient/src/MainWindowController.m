@@ -447,7 +447,7 @@
 				(action == @selector(openiFolder:)) ||
 				(action == @selector(showProperties:)) ||
 				(action == @selector(shareiFolder:)) ||
-				(action == @selector(synciFolderNow:)) )
+				(action == @selector(synciFolder:)) )
 	{
 		if ([ifoldersController selectionIndex] != NSNotFound)
 		{

@@ -21,13 +21,54 @@
  * 
  ***********************************************************************/
 
+#import "User.h"
 
-#import <Cocoa/Cocoa.h>
 
-@class PropSharingController;
+@implementation User
 
-@interface PropertiesWindowController : NSWindowController
+- (id) init
 {
-	IBOutlet PropSharingController	*propSharingController;
+	if(self = [super init])
+	{
+		NSArray *keys = [NSArray arrayWithObjects:
+			@"Name", nil];
+			
+		NSArray *values		= [NSArray arrayWithObjects:
+			@"New User", nil];
+		
+		properties = [[NSMutableDictionary alloc]
+			initWithObjects:values forKeys: keys];
+	}
+	return self;
 }
+
+
+-(void) dealloc
+{
+	[properties release];
+	[icon release];
+	
+	[super dealloc];
+}
+
+
+-(NSMutableDictionary *) properties
+{
+	return properties;
+}
+
+
+
+
+-(void) setProperties: (NSDictionary *)newProperties
+{
+	if(properties != newProperties)
+	{
+		[properties autorelease];
+		properties = [[NSMutableDictionary alloc] initWithDictionary:newProperties];
+//		[self updateDisplayInformation];
+	}
+}
+
+
 @end
