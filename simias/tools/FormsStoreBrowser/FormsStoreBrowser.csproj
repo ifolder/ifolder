@@ -99,10 +99,6 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "app.config"
-                    BuildAction = "None"
-                />
-                <File
                     RelPath = "App.ico"
                     BuildAction = "Content"
                 />
