@@ -127,7 +127,7 @@ namespace Simias.DomainWatcher
 		/// </summary>
 		public void WatcherThread()
 		{
-			log.Info("DomainWatcher thread started");
+			log.Debug("DomainWatcher thread started");
 			int status;
 			this.started = true;
 			do 
@@ -165,21 +165,30 @@ namespace Simias.DomainWatcher
 							DomainService domainSvc = new DomainService();
 							domainSvc.Url = 
 								cDomain.HostAddress.ToString() + "/DomainService.asmx";
+
+                            domainSvc.Timeout = 30000;
 							
 							try
 							{
+                                log.Debug("Calling remote domain at: " + domainSvc.Url);
 								domainSvc.GetDomainInfo(cMember.ID);
 								status = 0;
 							}
 							catch(WebException webEx)
 							{
 								status = -1;
+                                log.Error("failed getting Domain Information  status: " + webEx.Status.ToString());
 								if (webEx.Status == System.Net.WebExceptionStatus.ProtocolError ||
 									webEx.Status == System.Net.WebExceptionStatus.TrustFailure )
 								{
 									status = 0;
 								}
 							}
+                            catch(Exception ex)
+                            {
+                                status = -1;
+                                log.Error("failed getting Domain Information - normal exception status: " + ex.Message);
+                            }
 
 							if (status == 0)
 							{
@@ -199,12 +208,14 @@ namespace Simias.DomainWatcher
 				}
 				catch(Exception e)
 				{
-					log.Debug("DomainWatcher::WatcherThread");
-					log.Debug(e.Message);
-					log.Debug(e.StackTrace);
+					log.Error("DomainWatcher::WatcherThread");
+					log.Error(e.Message);
+					log.Error(e.StackTrace);
 				}
 
+                log.Debug("back to sleep");
 				stopEvent.WaitOne((30 * 1000), false);
+                log.Debug("alive");
 			} while(this.stop == false);
 
 			this.started = false;
