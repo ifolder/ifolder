@@ -39,7 +39,8 @@ namespace Simias.Service
 		IThreadService			service = null;
 		string					classType;
 		static Queue			messageQueue = new Queue();
-		static ManualResetEvent	queueEvent = new ManualResetEvent(false);
+		static AutoResetEvent	queueEvent = new AutoResetEvent(false);
+		static AutoResetEvent	messageProcessed = new AutoResetEvent(false);
 		static Thread			messageThread = null;
 
 		class SvcMessage : Message
@@ -91,8 +92,9 @@ namespace Simias.Service
 			lock (messageQueue)
 			{
 				messageQueue.Enqueue(msg);
-				queueEvent.Set();
 			}
+			queueEvent.Set();
+			messageProcessed.WaitOne();
 		}
 
 		private static void messageDispatcher()
@@ -101,9 +103,10 @@ namespace Simias.Service
 			ThreadServiceCtl svcCtl;
 			while (true)
 			{	
+				
+				queueEvent.WaitOne();
 				try
 				{
-					queueEvent.WaitOne();
 					lock (messageQueue)
 					{
 						queueEvent.Reset();
@@ -150,6 +153,7 @@ namespace Simias.Service
 					}
 				}
 				catch {}
+				messageProcessed.Set();
 			}
 		}
 
