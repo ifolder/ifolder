@@ -513,7 +513,7 @@ namespace Novell.iFolder
 			// Create a new VBox and place 10 pixels between
 			// each item in the vBox
 			VBox vbox = new VBox();
-			vbox.Spacing = 15;
+			vbox.Spacing = 20;
 			vbox.BorderWidth = 10;
 
 
@@ -522,6 +522,7 @@ namespace Novell.iFolder
 			//------------------------------
 			// create a section box
 			VBox appSectionBox = new VBox();
+			appSectionBox.Spacing = 5;
 			vbox.PackStart(appSectionBox, false, true, 0);
 			Label appSectionLabel = new Label("<span weight=\"bold\">" +
 												"Application" +
@@ -557,6 +558,7 @@ namespace Novell.iFolder
 			//------------------------------
 			// create a section box
 			VBox syncSectionBox = new VBox();
+			syncSectionBox.Spacing = 5;
 			vbox.PackStart(syncSectionBox, false, true, 0);
 			Label syncSectionLabel = new Label("<span weight=\"bold\">" +
 												"Synchronization" +
@@ -604,6 +606,7 @@ namespace Novell.iFolder
 			//------------------------------
 			// create a section box
 			VBox proxySectionBox = new VBox();
+			proxySectionBox.Spacing = 5;
 			vbox.PackStart(proxySectionBox, true, true, 0);
 			Label proxySectionLabel = new Label("<span weight=\"bold\">" +
 												"Proxy" +
@@ -621,7 +624,7 @@ namespace Novell.iFolder
 			// create a vbox to actually place the widgets in for section
 			VBox proxyWidgetBox = new VBox();
 			proxySpacerBox.PackStart(proxyWidgetBox, true, true, 0);
-			proxyWidgetBox.Spacing = 10;
+			proxyWidgetBox.Spacing = 5;
 
 
 			UseProxyButton = new CheckButton("Use a proxy to sync iFolders");
@@ -673,7 +676,7 @@ namespace Novell.iFolder
 			// Create a new VBox and place 10 pixels between
 			// each item in the vBox
 			VBox vbox = new VBox();
-			vbox.Spacing = 30;
+			vbox.Spacing = 20;
 			vbox.BorderWidth = 10;
 
 
@@ -682,7 +685,7 @@ namespace Novell.iFolder
 			//------------------------------
 			// create a section box
 			VBox srvSectionBox = new VBox();
-			srvSectionBox.Spacing = 10;
+			srvSectionBox.Spacing = 5;
 			vbox.PackStart(srvSectionBox, false, true, 0);
 			Label srvSectionLabel = new Label("<span weight=\"bold\">" +
 												"Server Information" +
@@ -743,7 +746,7 @@ namespace Novell.iFolder
 			//------------------------------
 			// create a section box
 			VBox diskSectionBox = new VBox();
-			diskSectionBox.Spacing = 10;
+			diskSectionBox.Spacing = 5;
 			vbox.PackStart(diskSectionBox, false, true, 0);
 			Label diskSectionLabel = new Label("<span weight=\"bold\">" +
 												"Disk Space" +

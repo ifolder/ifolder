@@ -38,7 +38,7 @@ public class iFolderExceptionDialog : Dialog
 	{
 		this.Title = "iFolder Error";
 		this.HasSeparator = true;
-		this.BorderWidth = 10;
+//		this.BorderWidth = 10;
 		this.Resizable = false;
 		this.Modal = true;
 		this.ex = exception;
