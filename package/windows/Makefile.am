@@ -59,7 +59,7 @@ MSM_LOG_FILE     = issabld-$(MSM).log
 SDK_MSM_LOG_FILE = issabld-$(SDK_MSM)-msm.log
 BLD_VER_LOG_FILE = bldver.log
 
-SYNC_BLD_VERSION = $(TOOLDIR)/SyncBuildVersion/SyncBuildVersion.exe
+SYNC_BLD_VERSION = $(TOOLDIR)/SyncBuildVersion/bin/SyncBuildVersion.exe
 
 ISSABLD_CONFIG  = web
 ISSABLD_RELEASE = release
@@ -133,7 +133,7 @@ issabld:
 	fi
 	
 sync_build_version:
-	-@CMD='"$(SYNC_BLD_VERSION)" . ../../src/FormsTrayApp'; \
+	@CMD='"$(SYNC_BLD_VERSION)" . ../../src/FormsTrayApp'; \
 		echo $$CMD; \
 		eval $$CMD > "$(BLD_VER_LOG_FILE)" 2>&1;
 
