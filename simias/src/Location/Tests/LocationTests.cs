@@ -44,7 +44,6 @@ namespace Simias.Location.Tests
 		/// </summary>
 		public LocationTests()
 		{
-			MyTrace.SendToConsole();
 		}
 
 		/// <summary>
@@ -65,9 +64,9 @@ namespace Simias.Location.Tests
 			Configuration configuration = new Configuration(path);
 
 			// create collection
-			Store store = Store.Connect(configuration);
-			Collection collection = store.CreateCollection("Location 1");
-			collection.Commit(true);
+			Store store = new Store(configuration);
+			Collection collection = new Collection(store, "Location 1");
+			collection.Commit();
 
 			// sync properties
 			SyncCollection sc = new SyncCollection(collection);
@@ -78,11 +77,11 @@ namespace Simias.Location.Tests
 			// locate collection
 			LocationService service = new LocationService(configuration);
 
-			Uri location = service.Locate(collection.Id);
+			Uri location = service.Locate(collection.ID);
 
 			Assert("Location Not Found!", location != null);
 
-			MyTrace.WriteLine("Location: {0}", location);
+			Console.WriteLine("Location: {0}", location);
 		}
 	}
 }

@@ -48,10 +48,6 @@ namespace Simias.Mini
 		[STAThread]
 		static int Main(string[] args)
 		{
-			// tracing
-			MyTrace.SendToConsole();
-			MyTrace.Switch.Level = TraceLevel.Verbose;
-
 			// check arguments
 			if (args.Length > 1)
 			{
@@ -59,12 +55,26 @@ namespace Simias.Mini
 				return -1;
 			}
 
+			// path
+			string path;
+			if (args.Length == 0)
+			{
+				// master path
+				path = Path.GetFullPath(Path.Combine(".", masterDirectory));
+			}
+			else
+			{
+				// slave path
+				path = Path.GetFullPath(Path.Combine(".", slaveDirectory));
+			}
+
 			// properties
-			SyncProperties properties = new SyncProperties();
+			Configuration config = new Configuration(path);
+			SyncProperties properties = new SyncProperties(config);
 
 			// logic factory
-			//properties.DefaultLogicFactory = typeof(SyncLogicFactoryLite);
-			properties.DefaultLogicFactory = typeof(SynkerA);
+			properties.DefaultLogicFactory = typeof(SyncLogicFactoryLite);
+			//properties.DefaultLogicFactory = typeof(SynkerA);
 
 			// sinks
 			properties.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
@@ -76,31 +86,26 @@ namespace Simias.Mini
 				Console.WriteLine("MiniShare Master");
 				Console.WriteLine();
 
-				// master path
-				string path = Path.GetFullPath(Path.Combine(".", masterDirectory));
-
 				// clean up directory
 				if (Directory.Exists(path)) Directory.Delete(path, true);
 
 				// create store
-				SyncStore store = new SyncStore(path);
+				Store store = new Store(config);
 
 				// create the master collection
-				SyncCollection collection = store.CreateCollection(
-					collectionName, Path.Combine(path, collectionName));
+				SyncCollection collection = new SyncCollection(new Collection(store, collectionName));
 				UriBuilder builder = new UriBuilder("http", properties.DefaultHost, 7464);
 				collection.MasterUri = builder.Uri;
 				collection.Commit();
 
 				// create invitation
 				Invitation invitation = 
-					collection.CreateInvitation(store.BaseStore.CurrentUser);
+					collection.CreateInvitation(store.CurrentUserGuid);
 
 				// save invitation
 				invitation.Save(Path.Combine(path, "invitation.ifi"));
 
 				// sync properties
-				properties.StorePath = path;
 				properties.DefaultPort = collection.MasterUri.Port;
 			}
 			else
@@ -110,25 +115,21 @@ namespace Simias.Mini
 				Console.WriteLine("MiniShare Slave");
 				Console.WriteLine();
 
-				// master path
-				string path = Path.GetFullPath(Path.Combine(".", slaveDirectory));
-
 				// clean up directory
 				if (Directory.Exists(path)) Directory.Delete(path, true);
 
 				// create store
-				SyncStore store = new SyncStore(path);
+				Store store = new Store(config);
 
 				// import invitation
 				Invitation invitation = new Invitation(args[0]);
 				invitation.RootPath = path;
 
 				// accept invitation
-				SyncCollection collection = store.CreateCollection(invitation);
+				SyncCollection collection = new SyncCollection(store, invitation);
 				collection.Commit();
 
 				// sync properties
-				properties.StorePath = path;
 				properties.DefaultPort = 7465;
 			}
 			
@@ -137,7 +138,7 @@ namespace Simias.Mini
 			manager.ChangedState += new ChangedSyncStateEventHandler(OnChangedSyncState);
 			manager.Start();
 
-			MyTrace.WriteLine("Running...");
+			Console.WriteLine("Running...");
 
 			// exit message
 			Console.WriteLine("Press [Enter] to exit...");
@@ -149,7 +150,7 @@ namespace Simias.Mini
 			// clean-up
 			manager.Dispose();
 
-			MyTrace.WriteLine("Done.");
+			Console.WriteLine("Done.");
 
 			// kludge to kill all threads
 			Environment.Exit(0);
@@ -159,7 +160,7 @@ namespace Simias.Mini
 
 		private static void OnChangedSyncState(SyncManagerStates state)
 		{
-			MyTrace.WriteLine("Sync State Changed: {0}", state);
+			Console.WriteLine("Sync State Changed: {0}", state);
 		}
 	}
 }

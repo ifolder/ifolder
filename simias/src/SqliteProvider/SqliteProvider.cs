@@ -226,6 +226,7 @@ namespace Simias.Storage.Provider.Sqlite
 	#endregion
 
 	#region ValueTable class
+
 	/// <summary>
 	/// The value table holds the properties for a record. One table
 	/// exists for each collection.  There is also a collection table
@@ -243,7 +244,6 @@ namespace Simias.Storage.Provider.Sqlite
 	class ValueTable
 	{
 		internal static readonly string vTableName = "T_ValueTable";
-		internal static readonly string	Id = "ID";
 		internal static readonly string	Name = "Name";
 		internal static readonly string	Type = "Type";
 		internal static readonly string	RecordId = "RecordID";
@@ -251,9 +251,8 @@ namespace Simias.Storage.Provider.Sqlite
 		internal static readonly string	Flags = "Flags";
 
 		private static string createString = string.Format(
-			"CREATE TABLE '{0}' ({1} char(40), {2} char(255), {3} char(40), {4} char(40), {5} INTEGER, {6} int)",
+			"CREATE TABLE '{0}' ({1} char(255), {2} char(40), {3} char(40), {4} INTEGER, {5} int)",
 			"{0}",
-			Id,
 			Name,
 			Type,
 			RecordId,
@@ -305,8 +304,6 @@ namespace Simias.Storage.Provider.Sqlite
 
 		public static void Insert(string table, Record record, IDbCommand command)
 		{
-			int valueId = 0;
-			//string safeTable = table.Replace("'", "''");
 			string safeTable = vTableName;
 
 			StringBuilder sb = new StringBuilder();
@@ -315,26 +312,14 @@ namespace Simias.Storage.Provider.Sqlite
 			{
 				SchemaTable.Insert(property.Name, property.Type, command);
 				// Add this record to the table.
-				sb.Append(string.Format("INSERT INTO '{0}' values('{1}','{2}','{3}','{4}','{5}','{6}');", 
+				sb.Append(string.Format("INSERT INTO '{0}' values('{1}','{2}','{3}','{4}','{5}');", 
 					safeTable,
-					valueId++, 
 					property.Name,
 					property.Type,
 					record.Id, 
 					property.Value.Replace("'", "''"), 
 					property.Flags.Replace("'", "''")));
 				
-				/*
-				command.CommandText = string.Format("INSERT INTO '{0}' values('{1}','{2}','{3}','{4}','{5}','{6}')", 
-					safeTable,
-					valueId++, 
-					property.Name,
-					property.Type,
-					record.Id, 
-					property.Value.Replace("'", "''"), 
-					property.Flags.Replace("'", "''"));
-				command.ExecuteNonQuery();
-				*/
 			}
 			sb.Length = sb.Length - 1;
 			command.CommandText = sb.ToString();
@@ -361,15 +346,14 @@ namespace Simias.Storage.Provider.Sqlite
 			string safeTable = vTableName;
 
 			command.CommandText = string.Format(
-				"SELECT {1}, {2}, {3}, {4} FROM '{0}' WHERE {5} = '{6}' ORDER by {7}", 
+				"SELECT {1}, {2}, {3}, {4} FROM '{0}' WHERE {5} = '{6}'", 
 				safeTable,
 				Name,
 				Type,
 				Flags,
 				Value,
 				RecordId,
-				recordId,
-				Id);
+				recordId);
 			return command.ExecuteReader();
 		}
 
@@ -398,6 +382,7 @@ namespace Simias.Storage.Provider.Sqlite
 	#endregion
 
 	/// <summary>
+	/// SQLITE needs to use a 
 	/// Class used to keep a connection per thread.
 	/// </summary>
 	internal class InternalConnection
@@ -445,7 +430,7 @@ namespace Simias.Storage.Provider.Sqlite
 
 		Hashtable				connectionTable = new Hashtable();
 
-		Configuration			conf;
+		ProviderConfig			conf;
 
 		/// <summary>
 		/// Collection Table. Holds all collection nodes.
@@ -463,7 +448,7 @@ namespace Simias.Storage.Provider.Sqlite
 		bool					AlreadyDisposed;
 		string					DbPath;
 		const string			Name = "ColSqlite.db";
-		const string 			version = "0.1";
+		const string 			version = "0.2";
 		string					storePath;
 		bool					opened = false;
 		#endregion
@@ -502,7 +487,7 @@ namespace Simias.Storage.Provider.Sqlite
 		/// 
 		/// </summary>
 		/// <param name="conf">The Configuration object used for this instance.</param>
-		public SqliteProvider(Configuration conf)
+		public SqliteProvider(ProviderConfig conf)
 		{
 			this.conf = conf;
 			storePath = Path.GetFullPath(conf.Path);
@@ -593,6 +578,35 @@ namespace Simias.Storage.Provider.Sqlite
 			foreach (XmlElement recordEl in recordList)
 			{
 				CreateRecord(table, collectionId, recordEl, command);
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="doc"></param>
+		/// <param name="collectionId"></param>
+		/// <param name="command"></param>
+		public void DeleteRecords(XmlDocument doc, string collectionId, IDbCommand command)
+		{
+			XmlElement root = doc.DocumentElement;
+			XmlNodeList objectList = root.SelectNodes(XmlTags.ObjectTag);
+			foreach (XmlElement recordEl in objectList)
+			{
+				// Get ID.
+				string id = recordEl.GetAttribute(XmlTags.IdAttr);
+				if (id != null)
+				{
+					if (id == collectionId)
+					{
+						RemoveCollection(id, command);
+						break;
+					}
+					else
+					{
+						InternalDeleteRecord(id, collectionId, command);
+					}
+				}
 			}
 		}
 
@@ -747,28 +761,30 @@ namespace Simias.Storage.Provider.Sqlite
 		
 		#endregion
 
-		#region Collection Calls.
+		#region Container Calls.
 
 		/// <summary>
-		/// Called to create or modify a collection.
+		/// Called to create a container to hold records.  This call does not need to
+		/// be made.  If a record is created and the container does not exist. it will be created.
 		/// </summary>
-		/// <param name="collectionId">The Id of the collection to create.</param>
-		public void CreateCollection(string collectionId)
+		/// <param name="name">The name of the container.</param>
+		public void CreateContainer(string name)
 		{
 			// Nothing to do.
 		}
 
 		/// <summary>
-		/// Called to delete an existing collection.
+		/// Called to Delete a record container.  
+		/// This call is deep (all records contained are deleted).
 		/// </summary>
-		/// <param name="collectionId">The ID of the collection to delete.</param>
-		public void DeleteCollection(string collectionId)
+		/// <param name="name">The name of the container.</param>
+		public void DeleteContainer(string name)
 		{
 			InternalConnection conn = sqliteConn;
 			IDbTransaction trans = conn.sqliteDb.BeginTransaction();
 			try
 			{
-				RemoveCollection(collectionId, conn.command);
+				RemoveCollection(name, conn.command);
 			}
 			catch 
 			{
@@ -783,82 +799,28 @@ namespace Simias.Storage.Provider.Sqlite
 		#region Record Calls.
 
 		/// <summary>
-		/// Called to create or modify 1 or more Records
+		/// Used to Create, Modify or Delete records from the store.
 		/// </summary>
-		/// <param name="recordXml">Xml string that describes the new/modified Records.</param>
-		/// <param name="collectionId">The id of the collection containing these objects.</param>
-		public void CreateRecord(string recordXml, string collectionId)	
+		/// <param name="collectionId">The collection that the records belong to.</param>
+		/// <param name="createDoc">The records to create or modify.</param>
+		/// <param name="deleteDoc">The records to delete.</param>
+		public void CommitRecords(string collectionId, XmlDocument createDoc, XmlDocument deleteDoc)
 		{
 			InternalConnection conn = sqliteConn;
 			IDbTransaction trans = conn.sqliteDb.BeginTransaction();
 			try
 			{
-				if (recordXml != null)
+				if (createDoc != null)
 				{
-					XmlDocument createXml = new XmlDocument();
-					createXml.LoadXml(recordXml);
-					CreateRecords(createXml, collectionId, conn.command);
+					CreateRecords(createDoc, collectionId, conn.command);
+				}
+				if (deleteDoc != null)
+				{
+					DeleteRecords(deleteDoc, collectionId, conn.command);
 				}
 			}
 			catch 
 			{
-				trans.Rollback();
-				throw; // (ex);
-			}
-			trans.Commit();
-		}
-
-		/// <summary>
-		/// Called to delete a Record.  The record is specified by it ID.
-		/// </summary>
-		/// <param name="recordId">string that contains the ID of the Object to delete</param>
-		/// <param name="collectionId">The id of the collection that contains this object</param>
-		public void DeleteRecord(string recordId, string collectionId)
-		{
-			InternalConnection conn = sqliteConn;
-			IDbTransaction trans = conn.sqliteDb.BeginTransaction();
-			try
-			{
-				InternalDeleteRecord(recordId, collectionId, conn.command);
-			}
-			catch //(System.Exception ex)
-			{
-				trans.Rollback();
-				throw; // ex;
-			}
-            
-			trans.Commit();
-		}
-
-		/// <summary>
-		/// Called to delete 1 or more Records.
-		/// </summary>
-		/// <param name="recordXml">Xml string describing Records to delete.</param>
-		/// <param name="collectionId">The id of the collection that contains these objects.</param>
-		public void DeleteRecords(string recordXml, string collectionId)
-		{
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml(recordXml);
-			XmlElement root = doc.DocumentElement;
-			XmlNodeList objectList = root.SelectNodes(XmlTags.ObjectTag);
-			
-			InternalConnection conn = sqliteConn;
-			IDbTransaction trans = conn.sqliteDb.BeginTransaction();
-			try
-			{
-				foreach (XmlElement recordEl in objectList)
-				{
-					// Get ID.
-					string id = recordEl.GetAttribute(XmlTags.IdAttr);
-					if (id != null)
-					{
-						InternalDeleteRecord(id, collectionId, conn.command);
-					}
-				}
-			}
-			catch
-			{
-				Console.WriteLine("Failed Delete");
 				trans.Rollback();
 				throw; // (ex);
 			}
@@ -871,10 +833,9 @@ namespace Simias.Storage.Provider.Sqlite
 		/// <param name="recordId">string that contains the ID of the Record to retrieve</param>
 		/// <param name="collectionId">The id of the collection that contains this Record.</param>
 		/// <returns>XML string describing the Record</returns>
-		public string GetRecord(string recordId, string collectionId)
+		public XmlDocument GetRecord(string recordId, string collectionId)
 		{
-			string recordXml = null;
-			XmlDocument doc = new XmlDocument();
+			XmlDocument doc = null;
 			
 			string Name;
 			string Type;
@@ -882,6 +843,7 @@ namespace Simias.Storage.Provider.Sqlite
 			IDbCommand command = sqliteConn.command;
 			if (RecordTable.Select(recordId, command, out Name, out Type))
 			{
+				doc = new XmlDocument();
 				XmlElement node, root;
 				root = doc.CreateElement(XmlTags.ObjectListTag);
 				doc.AppendChild(root);
@@ -900,10 +862,9 @@ namespace Simias.Storage.Provider.Sqlite
 						node.AppendChild(property);
 					}
 				}
-				recordXml = doc.InnerXml;
 				reader.Close();
 			}
-			return (recordXml);
+			return (doc);
 		}
 
 		#endregion
@@ -942,32 +903,35 @@ namespace Simias.Storage.Provider.Sqlite
 			}
 			switch (query.Operation)
 			{
-				case Query.Operator.Equal:
+				case SearchOp.Equal:
 					op = string.Format("= '{0}'", safeValue);
 					break;
-				case Query.Operator.Not_Equal:
+				case SearchOp.Not_Equal:
 					op = string.Format("!= '{0}'", safeValue);
 					break;
-				case Query.Operator.Begins:
+				case SearchOp.Begins:
 					op = string.Format("LIKE '{0}%'", safeValue);
 					break;
-				case Query.Operator.Ends:
+				case SearchOp.Ends:
 					op = string.Format("LIKE '%{0}'", safeValue);
 					break;
-				case Query.Operator.Contains:
+				case SearchOp.Contains:
 					op = string.Format("LIKE '%{0}%'", safeValue);
 					break;
-				case Query.Operator.Greater:
+				case SearchOp.Greater:
 					op = string.Format("> '{0}'", safeValue);
 					break;
-				case Query.Operator.Less:
+				case SearchOp.Less:
 					op = string.Format("< '{0}'", safeValue);
 					break;
-				case Query.Operator.Greater_Equal:
+				case SearchOp.Greater_Equal:
 					op = string.Format(">= '{0}'", safeValue);
 					break;
-				case Query.Operator.Less_Equal:
+				case SearchOp.Less_Equal:
 					op = string.Format("<= '{0}'", safeValue);
+					break;
+				case SearchOp.Exists:
+					op = string.Format("LIKE '%'");
 					break;
 			}
 

@@ -41,7 +41,6 @@ namespace Simias.Tests
 		/// </summary>
 		public CommonFormWindowsTests()
 		{
-			MyTrace.SendToConsole();
 		}
 
 		/// <summary>
@@ -54,23 +53,23 @@ namespace Simias.Tests
 			form.Show();
 			form.Refresh();
 
-			MyTrace.WriteLine("test1");
+			Console.WriteLine("test1");
 			form.Refresh();
 			Thread.Sleep(TimeSpan.FromSeconds(1));
 
-			MyTrace.WriteLine("test2");
+			Console.WriteLine("test2");
 			form.Refresh();
 			Thread.Sleep(TimeSpan.FromSeconds(1));
 
-			MyTrace.WriteLine("test3");
+			Console.WriteLine("test3");
 			form.Refresh();
 			Thread.Sleep(TimeSpan.FromSeconds(1));
 
-			MyTrace.WriteLine("test4");
+			Console.WriteLine("test4");
 			form.Refresh();
 			Thread.Sleep(TimeSpan.FromSeconds(1));
 
-			MyTrace.WriteLine("test5");
+			Console.WriteLine("test5");
 			form.Refresh();
 			Thread.Sleep(TimeSpan.FromSeconds(1));
 

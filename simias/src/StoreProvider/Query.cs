@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 using System;
+using Simias.Storage;
 
 namespace Simias.Storage.Provider
 {
@@ -33,56 +34,9 @@ namespace Simias.Storage.Provider
 	{
 		string collectionId;
 		string property;
-		Operator operation;
+		SearchOp operation;
 		string value;
 		Syntax type;
-
-		/// <summary>
-		/// Search Operators.
-		/// </summary>
-		public enum Operator
-		{
-			/// <summary>
-			/// Equal operator.
-			/// </summary>
-			Equal,
-			/// <summary>
-			/// Not Equal operator.
-			/// </summary>
-			Not_Equal,
-			/// <summary>
-			/// Begins with operator.
-			/// </summary>
-			Begins,
-			/// <summary>
-			/// Ends with operator.
-			/// </summary>
-			Ends,
-			/// <summary>
-			/// Contain operator.
-			/// </summary>
-			Contains,
-			/// <summary>
-			/// Greater than operator.
-			/// </summary>
-			Greater,
-			/// <summary>
-			/// Less than operator.
-			/// </summary>
-			Less,
-			/// <summary>
-			/// Greater than or equal to operator.
-			/// </summary>
-			Greater_Equal,
-			/// <summary>
-			/// Less than or equal to operator.
-			/// </summary>
-			Less_Equal,
-			/// <summary>
-			/// Existence of a property.
-			/// </summary>
-			Exists
-		};
 		
 		/// <summary>
 		/// Construct a Query object that can be used to perform a search.
@@ -92,7 +46,7 @@ namespace Simias.Storage.Provider
 		/// <param name="op">The operator used for the match criteria.</param>
 		/// <param name="value">The value to match.</param>
 		/// <param name="type">The Type of the value to search for.</param>
-		public Query(string collectionId, string property, Operator op, string value, Syntax type)
+		public Query(string collectionId, string property, SearchOp op, string value, Syntax type)
 		{
 			this.collectionId = collectionId;
 			this.property = property;
@@ -116,7 +70,7 @@ namespace Simias.Storage.Provider
 		/// <param name="op"></param>
 		/// <param name="value"></param>
 		/// <param name="type"></param>
-		public Query(string property, Operator op, string value, Syntax type) :
+		public Query(string property, SearchOp op, string value, Syntax type) :
 			this(null, property, op, value, type)
 		{
 		}
@@ -146,7 +100,7 @@ namespace Simias.Storage.Provider
 		/// <summary>
 		/// Read only property to get the query operation.
 		/// </summary>
-		public Operator Operation
+		public SearchOp Operation
 		{
 			get
 			{

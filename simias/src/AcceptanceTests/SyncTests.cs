@@ -91,10 +91,6 @@ namespace Simias.Tests
 		/// </summary>
 		public SyncTests()
 		{
-			// send trace messages to the console
-			MyTrace.SendToConsole();
-
-			MyTrace.Switch.Level = TraceLevel.Verbose;
 		}
 
 		/// <summary>

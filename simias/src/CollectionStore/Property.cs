@@ -24,10 +24,108 @@
 using System;
 using System.Collections;
 using System.Xml;
-using Persist = Simias.Storage.Provider;
 
 namespace Simias.Storage
 {
+	/// <summary>
+	/// Defines a relationship between Node objects.
+	/// </summary>
+	public class Relationship
+	{
+		#region Class Members
+		/// <summary>
+		/// Well known identifier that represents the root directory relationship in a dirNode.
+		/// </summary>
+		private const string RootID = "a9d9a742-fd42-492c-a7f2-4ec4f023c625";
+
+		/// <summary>
+		/// Collection that reference belongs to.
+		/// </summary>
+		private string collectionID;
+
+		/// <summary>
+		/// Node object that is the reference.
+		/// </summary>
+		private string nodeID;
+		#endregion
+
+		#region Properties
+		/// <summary>
+		/// Gets the Collection identifier for the relationship.
+		/// </summary>
+		public string CollectionID
+		{
+			get { return collectionID; }
+		}
+
+		/// <summary>
+		/// Gets whether this object is the root relationship.
+		/// </summary>
+		public bool IsRoot
+		{
+			get { return ( nodeID == RootID ) ? true : false; }
+		}
+
+		/// <summary>
+		/// Gets the Node identifier for the relationship.
+		/// </summary>
+		public string NodeID
+		{
+			get { return nodeID; }
+		}
+		#endregion
+
+		#region Constructor
+		/// <summary>
+		/// Constructor for the Relationship object that creates a root relationship object.
+		/// </summary>
+		/// <param name="collection">Collection for the relationship.</param>
+		public Relationship( Collection collection ) :
+			this ( collection.ID, null )
+		{
+		}
+
+		/// <summary>
+		/// Constructor for the Relationship object.
+		/// </summary>
+		/// <param name="collectionID">Collection identifier for the relationship.</param>
+		/// <param name="nodeID">Node identifier for the relationship. If this parameter is null,
+		/// this object is the root of the relationship.</param>
+		public Relationship( string collectionID, string nodeID )
+		{
+			this.collectionID = collectionID.ToLower();
+			this.nodeID = ( nodeID != null ) ? nodeID.ToLower() : RootID;
+		}
+
+		/// <summary>
+		/// Constructs the Relationship object from its internal representation.
+		/// </summary>
+		/// <param name="relationString">Internal representation of relationship.</param>
+		internal Relationship( string relationString )
+		{
+			int index = relationString.IndexOf( ':' );
+			if ( index == -1 )
+			{
+				throw new ApplicationException( "Invalid relationship string." );
+			}
+
+			nodeID = relationString.Substring( 0, index );
+			collectionID = relationString.Substring( index + 1 );
+		}
+		#endregion
+
+		#region Internal Methods
+		/// <summary>
+		/// Returns internal representation of relationship.
+		/// </summary>
+		/// <returns>A string containing the internal representation of the relationship.</returns>
+		internal new string ToString()
+		{
+			return nodeID + ":" + collectionID;
+		}
+		#endregion
+	}
+
 	/// <summary>
 	/// Represents a property name/value pair for a node.  Properties have
 	/// well-defined syntax types.
@@ -35,13 +133,6 @@ namespace Simias.Storage
 	public class Property
 	{
 		#region Class Members
-
-		#region Constant and Static Members
-		/// <summary>
-		/// Initial size for the system property table.
-		/// </summary>
-		private const int initialSysPropTableSize = 20;
-
 		/// <summary>
 		/// Property operations that are recorded so properties can be merged at object commit time.
 		/// </summary>
@@ -69,57 +160,6 @@ namespace Simias.Storage
 		};
 
 		/// <summary>
-		/// Supported store search operators.
-		/// </summary>
-		public enum Operator
-		{
-			/// <summary>
-			/// Used to compare if two values are equal.
-			/// </summary>
-			Equal         = Persist.Query.Operator.Equal,
-
-			/// <summary>
-			/// Used to compare if two values are not equal.
-			/// </summary>
-			Not_Equal     = Persist.Query.Operator.Not_Equal,
-
-			/// <summary>
-			/// Used to compare if a string value begins with a sub-string value.
-			/// </summary>
-			Begins        = Persist.Query.Operator.Begins,
-
-			/// <summary>
-			/// Used to compare if a string value ends with a sub-string value.
-			/// </summary>
-			Ends          = Persist.Query.Operator.Ends,
-
-			/// <summary>
-			/// Used to compare if a string value contains a sub-string value.
-			/// </summary>
-			Contains      = Persist.Query.Operator.Contains,
-
-			/// <summary>
-			/// Used to compare if a value is greater than another value.
-			/// </summary>
-			Greater       = Persist.Query.Operator.Greater,
-
-			/// <summary>
-			/// Used to compare if a value is less than another value.
-			/// </summary>
-			Less          = Persist.Query.Operator.Less,
-
-			/// <summary>
-			/// Used to compare if a value is greater than or equal to another value.
-			/// </summary>
-			Greater_Equal = Persist.Query.Operator.Greater_Equal,
-
-			/// <summary>
-			/// Used to compare if a value is less than or equal to another value.
-			/// </summary>
-			Less_Equal    = Persist.Query.Operator.Less_Equal
-		};
-
-		/// <summary>
 		/// Types of flags that are defined on the property.
 		/// </summary>
 		internal const uint Hidden      = 0x00010000;
@@ -131,253 +171,6 @@ namespace Simias.Storage
 		/// </summary>
 		private const uint SystemFlagMask = 0xFFFF0000;
 
-		#region Well known Property names
-		//
-		// These names are not exported outside of the assembly.
-		//
-	
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string IDAttr = XmlTags.IdAttr;
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string NameAttr = XmlTags.NameAttr;
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string PropertyTag = XmlTags.PropertyTag;
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string ObjectListTag = XmlTags.ObjectListTag;
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string ObjectTag = XmlTags.ObjectTag;
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string TypeAttr = XmlTags.TypeAttr;
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string FlagsAttr = XmlTags.FlagsAttr;
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string Ace = "Ace";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string NodeFileSystemEntry = "NodeFileSystemEntry";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string FileSystemEntryTag = "FsEntry";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string EntryType = "EntryType";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string FileType = "File";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string DirectoryType = "Directory";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string MasterIncarnation = "MasterIncarnation";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string LocalIncarnation = "LocalIncarnation";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string Shareable = "Shareable";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string Syncable = "Syncable";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string LocalAddressBook = "AB:Local";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string AddressBookType = "AB:AddressBook";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string Alias = "AB:Alias";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string ServerCredential = "AB:ServerCredential";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string ClientCredential = "AB:ClientCredential";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string AliasParameters = "AliasParameters";
-
-		/// <summary>
-		///  Well known XML attribute.
-		/// </summary>
-		internal const string IdentityRole = "AB:Role";
-
-		/// <summary>
-		/// Well known XML attribute;
-		/// </summary>
-		internal const string ClientPublicKey = "ClientPublicKey";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string TrueStr = "1";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		internal const string FalseStr = "0";
-
-
-		//
-		// These names are made public to the client application.
-		//
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string CollectionID = BaseSchema.CollectionId;
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string CreationTime = "CreationTime";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string ModifyTime = "ModifyTime";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string ParentID = "ParentID";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string ObjectId = BaseSchema.ObjectId;
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string ObjectName = BaseSchema.ObjectName;
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string ObjectType = BaseSchema.ObjectType;
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string Owner = "Owner";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string DocumentRoot = "DocumentRoot";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string DocumentPath = "DocumentPath";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string IDPath = "IdPath";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string FileCreationTime = "FileCreationTime";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string FileLastAccessTime = "FileLastAccessTime";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string FileLastWriteTime = "FileLastWriteTime";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string FileLength = "FileLength";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string DomainName = "DomainName";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string IdentityType = "AB:Contact";
-
-		/// <summary>
-		/// Well known XML attribute.
-		/// </summary>
-		public const string DefaultAddressBook = "AB:Default";
-		#endregion
-
-		/// <summary>
-		/// Hashtable providing quick lookup to well-known system properties.
-		/// </summary>
-		static private Hashtable systemPropertyTable;
-		#endregion
-
-		/// <summary>
-		/// Reference to a store object if this is an associated property.  Otherwise it is a reference to this.
-		/// </summary>
-		private object lockObject;
-
 		/// <summary>
 		/// This XmlElement contains all the information about the property.
 		/// </summary>
@@ -386,7 +179,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// The property list where this property is stored.
 		/// </summary>
-		private PropertyList propertyList;
+		private PropertyList propertyList = null;
 
 		/// <summary>
 		/// Member used to keep track of property additions, deletions and modifications.
@@ -399,11 +192,6 @@ namespace Simias.Storage
 		private string oldValue = null;
 
 		/// <summary>
-		/// Member used to store the old name of the property, if it was modified.
-		/// </summary>
-		private string oldName = null;
-
-		/// <summary>
 		/// Member used to indicate if the oldFlags value contains a changed value.
 		/// </summary>
 		private bool flagsModified = false;
@@ -412,11 +200,6 @@ namespace Simias.Storage
 		/// Member used to store the old flag value, if it was modified.
 		/// </summary>
 		private uint oldFlags = 0;
-
-		/// <summary>
-		/// Node that this property is attached to.
-		/// </summary>
-		private Node node = null;
 		#endregion
 
 		#region Properties
@@ -426,8 +209,8 @@ namespace Simias.Storage
 		private string ValueString
 		{
 			get { return ( Type == Syntax.XmlDocument ) ? xmlProperty.InnerXml : xmlProperty.InnerText; }
-			set 
-			{ 
+			set
+			{
 				if ( Type == Syntax.XmlDocument )
 				{
 					xmlProperty.InnerXml = value;
@@ -448,7 +231,7 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Allows the corresponding XML element to be set into the object when this property 
+		/// Allows the corresponding XML element to be set into the object when this property
 		/// has been added to the property list.
 		/// </summary>
 		internal XmlElement XmlProperty
@@ -458,17 +241,13 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Allows the property list to be set into the object when this property has been 
+		/// Allows the property list to be set into the object when this property has been
 		/// added to the property list.
 		/// </summary>
 		internal PropertyList XmlPropertyList
 		{
 			get { return propertyList; }
-			set 
-			{ 
-				propertyList = value; 
-				lockObject = propertyList.PropertyNode.store;
-			}
+			set { propertyList = value; }
 		}
 
 		/// <summary>
@@ -478,7 +257,7 @@ namespace Simias.Storage
 		{
 			get { return ( PropertyFlags & Hidden ) == Hidden ? true : false; }
 
-			set 
+			set
 			{
 				if ( value )
 				{
@@ -496,33 +275,25 @@ namespace Simias.Storage
 		/// </summary>
 		internal uint PropertyFlags
 		{
-			get 
+			get
 			{
 				// Check to see if this property contains any flags.
 				uint propertyFlags = 0;
-				if ( xmlProperty.HasAttribute( FlagsAttr ) )
+				if ( xmlProperty.HasAttribute( XmlTags.FlagsAttr ) )
 				{
-					propertyFlags = Convert.ToUInt32( xmlProperty.GetAttribute( FlagsAttr ) );
+					propertyFlags = Convert.ToUInt32( xmlProperty.GetAttribute( XmlTags.FlagsAttr ) );
 				}
 
 				return propertyFlags;
 			}
 
-			set 
+			set
 			{
 				// Save the current flags value.
-				uint currentFlags = PropertyFlags; 
-				SetPropertyAttribute( Property.FlagsAttr, value.ToString() );
-				SaveMergeInformation( node, Operation.Modify, null, null, true, currentFlags );
+				uint currentFlags = PropertyFlags;
+				xmlProperty.SetAttribute( XmlTags.FlagsAttr, value.ToString() );
+				SaveMergeInformation( propertyList, Operation.Modify, null, true, currentFlags );
 			}
-		}
-
-		/// <summary>
-		/// Marks a property so that it will not be merged.
-		/// </summary>
-		internal bool Expire
-		{
-			set { operation = Operation.None; }
 		}
 
 		/// <summary>
@@ -530,24 +301,7 @@ namespace Simias.Storage
 		/// </summary>
 		public string Name
 		{
-			get 
-			{ 
-				lock ( lockObject )
-				{
-					return xmlProperty.GetAttribute( Property.NameAttr ); 
-				}
-			}
-
-			set 
-			{ 
-				lock ( lockObject )
-				{
-					// Save the old name before changing to the new name.
-					string currentName = Name;
-					SetPropertyAttribute( Property.NameAttr, value );
-					SaveMergeInformation( node, Operation.Modify, null, currentName, false, 0 );
-				}
-			}
+			get { return xmlProperty.GetAttribute( XmlTags.NameAttr ); }
 		}
 
 		/// <summary>
@@ -555,22 +309,7 @@ namespace Simias.Storage
 		/// </summary>
 		public Syntax Type
 		{
-			get 
-			{ 
-				lock ( lockObject )
-				{
-					return ( Syntax )Enum.Parse( typeof( Syntax ), xmlProperty.GetAttribute( Property.TypeAttr ) ); 
-				}
-			}
-
-			set 
-			{ 
-				lock ( lockObject )
-				{
-					// Make sure the current user has write access to the collection.
-					SetPropertyAttribute( Property.TypeAttr, value.ToString() ); 
-				}
-			}
+			get { return ( Syntax )Enum.Parse( typeof( Syntax ), xmlProperty.GetAttribute( XmlTags.TypeAttr ) ); }
 		}
 
 		/// <summary>
@@ -578,29 +317,8 @@ namespace Simias.Storage
 		/// </summary>
 		public ushort Flags
 		{
-			get 
-			{ 
-				lock ( lockObject )
-				{
-					return ( ushort )PropertyFlags; 
-				}
-			}
-
-			set 
-			{ 
-				lock ( lockObject )
-				{
-					PropertyFlags = ( PropertyFlags & SystemFlagMask ) | ( uint )value; 
-				}
-			}
-		}
-
-		/// <summary>
-		/// Gets the string representation of the property syntax type.
-		/// </summary>
-		public string TypeString
-		{
-			get { return Type.ToString(); }
+			get { return ( ushort )PropertyFlags; }
+			set { PropertyFlags = ( PropertyFlags & SystemFlagMask ) | ( uint )value; }
 		}
 
 		/// <summary>
@@ -608,18 +326,8 @@ namespace Simias.Storage
 		/// </summary>
 		public object Value
 		{
-			get 
-			{ 
-				lock ( lockObject )
-				{
-					return GetValue(); 
-				}
-			}
-
-			set 
-			{ 
-				SetValue( value ); 
-			}
+			get { return GetValue(); }
+			set { SetValue( value ); }
 		}
 
 		/// <summary>
@@ -631,32 +339,23 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets and sets the transient status of a property.  If this flag is false, this property will synchronize
-		/// to other stores.  If it is true, it is a property local to this store only.  This flag is set to false by
-		/// default.
+		/// Gets and sets the transient status of a property.  If this flag is false, this property will
+		/// synchronize to other stores.  If it is true, it is a property local to this store only.  This
+		/// flag is set to false by default.
 		/// </summary>
 		public bool LocalProperty
 		{
-			get 
-			{ 
-				lock ( lockObject )
-				{
-					return ( PropertyFlags & Local ) == Local ? true : false; 
-				}
-			}
+			get { return ( PropertyFlags & Local ) == Local ? true : false; }
 
-			set 
+			set
 			{
-				lock ( lockObject )
+				if ( value )
 				{
-					if ( value )
-					{
-						PropertyFlags |= Local;
-					}
-					else
-					{
-						PropertyFlags &= ~Local;
-					}
+					PropertyFlags |= Local;
+				}
+				else
+				{
+					PropertyFlags &= ~Local;
 				}
 			}
 		}
@@ -666,26 +365,17 @@ namespace Simias.Storage
 		/// </summary>
 		public bool MultiValuedProperty
 		{
-			get 
-			{ 
-				lock ( lockObject )
-				{
-					return ( PropertyFlags & MultiValued ) == MultiValued ? true : false; 
-				}
-			}
+			get { return ( PropertyFlags & MultiValued ) == MultiValued ? true : false; }
 
-			set 
+			set
 			{
-				lock ( lockObject )
+				if ( value )
 				{
-					if ( value )
-					{
-						PropertyFlags |= MultiValued;
-					}
-					else
-					{
-						PropertyFlags &= ~MultiValued;
-					}
+					PropertyFlags |= MultiValued;
+				}
+				else
+				{
+					PropertyFlags &= ~MultiValued;
 				}
 			}
 		}
@@ -693,70 +383,12 @@ namespace Simias.Storage
 
 		#region Constructors
 		/// <summary>
-		/// Static constructor for the object.
-		/// </summary>
-		static Property()
-		{
-			// Allocate the tables to hold the reserved property names.
-			systemPropertyTable = new Hashtable( initialSysPropTableSize, new CaseInsensitiveHashCodeProvider(), new CaseInsensitiveComparer() );
-
-			// Add the well-known system properties to the hashtable.  Don't need to add values
-			// with them.  Just need to know if they exist.
-			systemPropertyTable.Add( IDAttr, null );
-			systemPropertyTable.Add( NameAttr, null );
-			systemPropertyTable.Add( PropertyTag, null );
-			systemPropertyTable.Add( ObjectListTag, null );
-			systemPropertyTable.Add( ObjectTag, null );
-			systemPropertyTable.Add( TypeAttr, null );
-			systemPropertyTable.Add( FlagsAttr, null );
-			systemPropertyTable.Add( Ace, null );
-			systemPropertyTable.Add( FileSystemEntryTag, null );
-			systemPropertyTable.Add( EntryType, null );
-			systemPropertyTable.Add( FileType, null );
-			systemPropertyTable.Add( DirectoryType, null );
-			systemPropertyTable.Add( MasterIncarnation, null );
-			systemPropertyTable.Add( LocalIncarnation, null );
-			systemPropertyTable.Add( Shareable, null );
-			systemPropertyTable.Add( Syncable, null );
-			systemPropertyTable.Add( NodeFileSystemEntry, null );
-			systemPropertyTable.Add( LocalAddressBook, null );
-			systemPropertyTable.Add( Alias, null );
-			systemPropertyTable.Add( ServerCredential, null );
-			systemPropertyTable.Add( ClientCredential, null );
-			systemPropertyTable.Add( AliasParameters, null );
-			systemPropertyTable.Add( AddressBookType, null );
-			systemPropertyTable.Add( IdentityRole, null );
-			systemPropertyTable.Add( ClientPublicKey, null );
-
-			systemPropertyTable.Add( CollectionID, null );
-			systemPropertyTable.Add( CreationTime, null );
-			systemPropertyTable.Add( ModifyTime, null );
-			systemPropertyTable.Add( ParentID, null );
-			systemPropertyTable.Add( ObjectId, null );
-			systemPropertyTable.Add( ObjectName, null );
-			systemPropertyTable.Add( ObjectType, null );
-			systemPropertyTable.Add( Owner, null );
-			systemPropertyTable.Add( DocumentRoot, null );
-			systemPropertyTable.Add( DocumentPath, null );
-			systemPropertyTable.Add( IDPath, null );
-			systemPropertyTable.Add( FileCreationTime, null );
-			systemPropertyTable.Add( FileLastAccessTime, null );
-			systemPropertyTable.Add( FileLastWriteTime, null );
-			systemPropertyTable.Add( FileLength, null );
-			systemPropertyTable.Add( DomainName, null );
-			systemPropertyTable.Add( IdentityType, null );
-			systemPropertyTable.Add( DefaultAddressBook, null );
-		}
-
-		/// <summary>
 		/// Constructor used by the PropertyList.IEnumerable interface to create property objects.
 		/// </summary>
 		/// <param name="propertyList">The property list where this property is stored.</param>
 		/// <param name="xmlProperty">An XML element object that contains the name and value for this property.</param>
 		internal Property( PropertyList propertyList, XmlElement xmlProperty )
 		{
-			node = propertyList.PropertyNode;
-			lockObject = node.store;
 			this.propertyList = propertyList;
 			this.xmlProperty = xmlProperty;
 		}
@@ -767,35 +399,22 @@ namespace Simias.Storage
 		/// <param name="name">Name of the property to construct.</param>
 		/// <param name="syntax">Syntax type of the value.</param>
 		/// <param name="propertyValue">Value of the property.</param>
-		private Property( string name, Syntax syntax, string propertyValue )
+		internal Property( string name, Syntax syntax, string propertyValue )
 		{
-			propertyList = null;
-			lockObject = this;
-
 			XmlDocument propDoc = new XmlDocument();
-			xmlProperty = propDoc.CreateElement( Property.PropertyTag );
+			xmlProperty = propDoc.CreateElement( XmlTags.PropertyTag );
 
-			// Must guarantee order on the attributes.
-			XmlAttribute xmlAttr = propDoc.CreateAttribute( Property.NameAttr );
-			xmlAttr.Value = name;
-			xmlProperty.Attributes.Prepend( xmlAttr );
-
-			xmlAttr = propDoc.CreateAttribute( Property.TypeAttr );
-			xmlAttr.Value = syntax.ToString();
-			xmlProperty.Attributes.Append( xmlAttr );
-
+			xmlProperty.SetAttribute( XmlTags.NameAttr, name );
+			xmlProperty.SetAttribute( XmlTags.TypeAttr, syntax.ToString() );
 			ValueString = propertyValue;
 		}
 
 		/// <summary>
 		/// Constructs a property.
 		/// </summary>
-		/// <param name="property">Property.</param>
+		/// <param name="property">PropertyTags.</param>
 		public Property( Property property )
 		{
-			propertyList = null;
-			lockObject = this;
-
 			XmlDocument propDoc = new XmlDocument();
 			xmlProperty = ( XmlElement )propDoc.ImportNode( property.xmlProperty, true );
 			propDoc.AppendChild( xmlProperty );
@@ -808,22 +427,12 @@ namespace Simias.Storage
 		/// <param name="propertyValue">Object representation of the value.</param>
 		public Property( string name, object propertyValue )
 		{
-			propertyList = null;
-			lockObject = this;
-
 			Syntax syntax = GetSyntaxType( propertyValue );
 
 			XmlDocument propDoc = new XmlDocument();
-			xmlProperty = propDoc.CreateElement( Property.PropertyTag );
-
-			// Must guarantee order on the attributes.
-			XmlAttribute xmlAttr = propDoc.CreateAttribute( Property.NameAttr );
-			xmlAttr.Value = name;
-			xmlProperty.Attributes.Prepend( xmlAttr );
-
-			xmlAttr = propDoc.CreateAttribute( Property.TypeAttr );
-			xmlAttr.Value = syntax.ToString();
-			xmlProperty.Attributes.Append( xmlAttr );
+			xmlProperty = propDoc.CreateElement( XmlTags.PropertyTag );
+			xmlProperty.SetAttribute( XmlTags.NameAttr, name );
+			xmlProperty.SetAttribute( XmlTags.TypeAttr, syntax.ToString() );
 
 			ValueString = GetValueFromPropertyObject( syntax, propertyValue );
 		}
@@ -987,6 +596,16 @@ namespace Simias.Storage
 			this( name, Syntax.TimeSpan, propertyValue.Ticks.ToString() )
 		{
 		}
+
+		/// <summary>
+		/// Constructs a property.
+		/// </summary>
+		/// <param name="name">Name of the property.</param>
+		/// <param name="relationship">Relationship object.</param>
+		public Property( string name, Relationship relationship ) :
+			this( name, Syntax.Relationship, relationship.ToString() )
+		{
+		}
 		#endregion
 
 		#region Private Methods
@@ -1091,6 +710,10 @@ namespace Simias.Storage
 					propertyValue = new TimeSpan( tickValue );
 					break;
 
+				case Syntax.Relationship:
+					propertyValue = new Relationship( xmlProperty.InnerText );
+					break;
+
 				default:
 					throw new ArgumentException( "Invalid syntax type specified" );
 			}
@@ -1175,6 +798,10 @@ namespace Simias.Storage
 					valueString = ( ( TimeSpan ) propertyValue ).Ticks.ToString();
 					break;
 
+				case Syntax.Relationship:
+					valueString = ( ( Relationship ) propertyValue ).ToString();
+					break;
+
 				default:
 					// There is no top level type that matches this object.  Check for an enumerated type.
 					if ( propertyValue.GetType().BaseType.Name == "System.Enum" )
@@ -1192,77 +819,79 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Returns whether specified property is already in the merge list.
+		/// Returns if specified state is valid state to save property merge information.
 		/// </summary>
-		/// <param name="node">Node where the merge list exist.</param>
-		/// <param name="fsProperty">FileSystemEntry property to look for in the merge list.</param>
-		/// <returns>True if specified property is in the list, otherwise false.</returns>
-		private bool IsFsEntryPropertyInMergeList( Node node, Property fsProperty )
+		/// <param name="state">Current property state.</param>
+		/// <returns>True if valid state, otherwise false.</returns>
+		private bool ValidSaveMergeInfoState( PropertyList.PropertyListState state )
 		{
-			bool foundProperty = false;
-			string id = fsProperty.propertyList.PropertyRoot.GetAttribute( Property.IDAttr );
-
-			// Walk each property in the merge list to determine if the specified property is already
-			// in the list.
-			foreach ( Property p in node.cNode.mergeList )
-			{
-				// Is this a file system entry property?
-				if ( p.Name == Property.NodeFileSystemEntry )
-				{
-					// To validate for sure, compare the file ids.
-					if ( p.xmlProperty[ Property.FileSystemEntryTag ].GetAttribute( Property.IDAttr ) == id )
-					{
-						foundProperty = true;
-						break;
-					}
-				}
-			}
-
-			return foundProperty;
-		}
-
-		/// <summary>
-		/// Sets the specified attribute on the property.
-		/// </summary>
-		/// <param name="attributeName">Name of the property attribute.</param>
-		/// <param name="attributeValue">Attribute value.</param>
-		private void SetPropertyAttribute( string attributeName, string attributeValue )
-		{
-			XmlAttribute xmlAttr = xmlProperty.OwnerDocument.CreateAttribute( attributeName );
-			xmlAttr.Value = attributeValue;
-
-			switch ( attributeName )
-			{
-				case NameAttr:
-					xmlProperty.Attributes.Prepend( xmlAttr );
-					break;
-
-				case TypeAttr:
-					xmlProperty.Attributes.InsertAfter( xmlAttr, xmlProperty.Attributes[ NameAttr ] );
-					break;
-
-				case FlagsAttr:
-					xmlProperty.Attributes.InsertAfter( xmlAttr, xmlProperty.Attributes[ TypeAttr ] );
-					break;
-			}
-
-			SetPropertyChanged();
-		}
-
-		/// <summary>
-		/// Sets state that this property has changed and to reflect that change back to the node.
-		/// If this property is not attached to a property list, ignore the indication.
-		/// </summary>
-		private void SetPropertyChanged()
-		{
-			if ( propertyList != null )
-			{
-				propertyList.SetListChanged();
-			}
+			return ( ( state != PropertyList.PropertyListState.Add ) &&
+					 ( state != PropertyList.PropertyListState.Abort ) &&
+					 ( state != PropertyList.PropertyListState.Import)  &&
+					 ( state != PropertyList.PropertyListState.Disposed ) ) ? true : false;
 		}
 		#endregion
 
 		#region Internal Methods
+		/// <summary>
+		/// Restores the old state of the object.
+		/// </summary>
+		/// <param name="propertyList">PropertyList object that this property is associated with.</param>
+		internal void AbortMergeInformation( PropertyList propertyList )
+		{
+			// If there is no PropertyList object associated with this property or it is a new object,
+			// we don't need to track it.
+			if ( IsAssociatedProperty && ( propertyList.State == PropertyList.PropertyListState.Abort ) )
+			{
+				// Operation is the current state of the property.
+				switch ( operation )
+				{
+					case Operation.Add:
+						// Remove the property from the PropertyList object.
+						DeleteProperty();
+
+						// Restore its in-memory state.
+						operation = Operation.None;
+						oldValue = null;
+						flagsModified = false;
+						oldFlags = 0;
+						break;
+
+					case Operation.Delete:
+						// Add the property back to the PropertyList.
+						propertyList.AddNodeProperty( this );
+
+						// Restore its in-memory state.
+						operation = Operation.None;
+						oldValue = null;
+						flagsModified = false;
+						oldFlags = 0;
+						break;
+
+					case Operation.Modify:
+						// Restore its in-memory state.
+						operation = Operation.None;
+
+						// Has the value changed?
+						if ( oldValue != null )
+						{
+							// Set the value back into the property.
+							ValueString = oldValue;
+							oldValue = null;
+						}
+
+						// Have the flags changed?
+						if ( flagsModified )
+						{
+							PropertyFlags = oldFlags;
+							flagsModified = false;
+							oldFlags = 0;
+						}
+						break;
+				}
+			}
+		}
+
 		/// <summary>
 		/// Applies the merge information contained in this property to the specified node.
 		/// </summary>
@@ -1280,21 +909,15 @@ namespace Simias.Storage
 
 				case Operation.Delete:
 				{
-					// Remember if this is a special file system entry property.
-					bool isFse = ( Name == Property.NodeFileSystemEntry ) ? true : false;
-
 					// Get the current value of this property.
-					string currentValue = isFse ? xmlProperty[ Property.FileSystemEntryTag ].GetAttribute( Property.IDAttr ) : ValueString;
+					string currentValue = ValueString;
 
 					// Find the property that matches the one to delete.
 					MultiValuedList mvlDelete = node.Properties.FindValues( Name, true );
 					foreach ( Property p in mvlDelete )
 					{
-						// Get the proper match value.
-						string matchValue = isFse ? p.xmlProperty[ Property.FileSystemEntryTag ].GetAttribute( Property.IDAttr ) : p.ValueString;
-
 						// Does the value match?
-						if ( matchValue == currentValue )
+						if ( p.ValueString == currentValue )
 						{
 							// Remove all the children of this xml property node and remove this node
 							// from its parent.
@@ -1310,23 +933,11 @@ namespace Simias.Storage
 				{
 					Property modifyProperty = null;
 
-					// Remember if this is a special file system entry property.
-					bool isFse = ( Name == Property.NodeFileSystemEntry ) ? true : false;
-
 					// Get the current value of the property.
 					string currentValue = ValueString;
-					string matchValueA;
 
-					if ( oldValue != null )
-					{
-						// If the value has been modified used the oldValue.
-						matchValueA = oldValue;
-					}
-					else
-					{
-						// Use the corrent match value for file system entries.  Otherwise use the current value.
-						matchValueA = isFse ? xmlProperty[ Property.FileSystemEntryTag ].GetAttribute( Property.IDAttr ) : currentValue;
-					}
+					// If the value has been modified used the oldValue.
+					string matchValue = ( oldValue != null ) ? oldValue : currentValue;
 
 					// Find the property that matches the one to modify.
 					MultiValuedList mvlModify = node.Properties.FindValues( Name, true );
@@ -1335,25 +946,16 @@ namespace Simias.Storage
 						// Search through all of the properties to find a match.
 						foreach ( Property p in mvlModify )
 						{
-							// Get the proper match value.
-							string matchValueB = isFse ? p.xmlProperty[ Property.FileSystemEntryTag ].GetAttribute( Property.IDAttr ) : p.ValueString;
-
 							// Are the values equal?
-							if ( matchValueA == matchValueB )
+							if ( p.ValueString == matchValue )
 							{
 								// Set the new value.
 								p.ValueString = currentValue;
 
-								// If the name has changed, update the name.
-								if ( oldName != null )
-								{
-									p.xmlProperty.SetAttribute( Property.NameAttr, Name );
-								}
-
 								// If the flags have changed, update the flags.
 								if ( flagsModified )
 								{
-									p.xmlProperty.SetAttribute( Property.FlagsAttr, PropertyFlags.ToString() );
+									p.xmlProperty.SetAttribute( XmlTags.FlagsAttr, PropertyFlags.ToString() );
 								}
 
 								modifyProperty = p;
@@ -1380,11 +982,8 @@ namespace Simias.Storage
 							// Get the single property and see if either is marked as multivalued.
 							modifyProperty = mvlModify[ 0 ];
 
-							// Get the proper match value.
-							string matchValueB = isFse ? modifyProperty.xmlProperty[ Property.FileSystemEntryTag ].GetAttribute( Property.IDAttr ) : modifyProperty.ValueString;
-
 							// Is it a match?
-							if ( ( matchValueA != matchValueB ) && ( modifyProperty.MultiValuedProperty || MultiValuedProperty ) )
+							if ( ( modifyProperty.ValueString != matchValue ) && ( modifyProperty.MultiValuedProperty || MultiValuedProperty ) )
 							{
 								// The property is multivalued.  Add it to the node.
 								XmlNode xmlNode = node.Properties.PropertyDocument.ImportNode( xmlProperty, true );
@@ -1396,16 +995,10 @@ namespace Simias.Storage
 								// since the last time it was read.  Modify the value.
 								modifyProperty.ValueString = currentValue;
 
-								// If the name has changed, update the name.
-								if ( oldName != null )
-								{
-									modifyProperty.xmlProperty.SetAttribute( Property.NameAttr, Name );
-								}
-
 								// If the flags have changed, update the flags.
 								if ( flagsModified )
 								{
-									modifyProperty.xmlProperty.SetAttribute( Property.FlagsAttr, PropertyFlags.ToString() );
+									modifyProperty.xmlProperty.SetAttribute( XmlTags.FlagsAttr, PropertyFlags.ToString() );
 								}
 							}
 						}
@@ -1427,65 +1020,43 @@ namespace Simias.Storage
 		internal void DeleteProperty()
 		{
 			// Only delete if the property is attached to a list.
-			if ( propertyList != null )
+			if ( IsAssociatedProperty )
 			{
 				// Create a detached property since this is being removed from the list.
 				XmlDocument tempDoc = new XmlDocument();
 				tempDoc.AppendChild( tempDoc.ImportNode( xmlProperty, true ) );
 
 				// Save the property merge information before all the pertinent info is destroyed.
-				SaveMergeInformation( node, Operation.Delete, null, null, false, 0 );
+				SaveMergeInformation( propertyList, Operation.Delete, null, false, 0 );
 
 				// Remove all the children of this xml property node.
 				xmlProperty.RemoveAll();
 
 				// Remove this node from its parent.
 				xmlProperty.ParentNode.RemoveChild( xmlProperty );
-				SetPropertyChanged();
+				xmlProperty = ( XmlElement )tempDoc.FirstChild;
 
 				// Setup the now detached property.
 				propertyList = null;
-				node = null;
-				lockObject = this;
-				xmlProperty = ( XmlElement )tempDoc.FirstChild;
 			}
-		}
-
-		/// <summary>
-		/// Determines if the propertyName is a system property.
-		/// </summary>
-		/// <returns>true if propertyName specifies a system property.</returns>
-		internal bool IsSystemProperty()
-		{
-			return systemPropertyTable.Contains( xmlProperty.GetAttribute( Property.NameAttr ) );
-		}
-
-		/// <summary>
-		/// Maps a Property.Operator value to a Persist.Query.Operator type.
-		/// </summary>
-		/// <param name="op">Property.Operator type to map.</param>
-		/// <returns>The value that mapped to Persist.Query.Operator.</returns>
-		static internal Persist.Query.Operator MapQueryOp( Property.Operator op )
-		{
-			return ( Persist.Query.Operator )Enum.Parse( typeof( Persist.Query.Operator ), op.ToString() );
 		}
 
 		/// <summary>
 		/// Saves the old state of the object so it can be merged at object commit time.
 		/// </summary>
-		/// <param name="node">Node that this property is associated with.</param>
+		/// <param name="propertyList">PropertyList object that this property is associated with.</param>
 		/// <param name="op">Operation being performed on this property.</param>
-		/// <param name="oldValue">Old value of the property, may be null.</param>
-		/// <param name="oldName">Old name of the property, may be null.</param>
-		/// <param name="flagsModified">Set to true if property flags have been modified.</param>
-		/// <param name="oldFlags">Old flag value, may be zero.</param>
-		internal void SaveMergeInformation( Node node, Operation op, string oldValue, string oldName, bool flagsModified, uint oldFlags )
+		/// <param name="priorValue">Previous value of the property, may be null.</param>
+		/// <param name="priorFlagsModified">Set to true if property flags have been modified.</param>
+		/// <param name="priorFlags">Previous flag value, may be zero.</param>
+		internal void SaveMergeInformation( PropertyList propertyList, Operation op, string priorValue, bool priorFlagsModified, uint priorFlags )
 		{
-			// If there is no node associated with this property or it is a new node, we don't need to track it.
-			if ( ( node != null ) && node.IsPersisted )
+			// If there is no PropertyList object associated with this property or it is a new object, or
+			// if it is currently being aborted, we don't need to track it.
+			if ( IsAssociatedProperty && ValidSaveMergeInfoState( propertyList.State ) )
 			{
 				// Operation is the current state of the property.
-				switch ( this.operation )
+				switch ( operation )
 				{
 						// When the current state is Add the new state should act as follows:
 						//
@@ -1501,8 +1072,8 @@ namespace Simias.Storage
 						if ( op == Operation.Delete )
 						{
 							// Set back to pre-add state.
-							this.operation = Operation.None;
-							node.cNode.mergeList.Remove( this );
+							operation = Operation.None;
+							propertyList.RemoveFromChangeList( this );
 						}
 
 						break;
@@ -1520,8 +1091,8 @@ namespace Simias.Storage
 						if ( op == Operation.Add )
 						{
 							// Set back to pre-delete state.
-							this.operation = Operation.None;
-							node.cNode.mergeList.Remove( this );
+							operation = Operation.None;
+							propertyList.RemoveFromChangeList( this );
 						}
 
 						break;
@@ -1532,8 +1103,8 @@ namespace Simias.Storage
 						// that the new state is modify.
 						//
 						// Delete: Set the current state to delete.  Set the current value to oldValue, if not
-						// null.  Set current name to oldName, if not null. Set current flags to oldFlags, if
-						// they have been modified.  Set oldValue and oldName to null.  Set modifiedFlags to false.
+						// null.  Set current flags to oldFlags, if they have been modified.  Set oldValue
+						// to null.  Set modifiedFlags to false.
 						// Leave in the mergeList.
 						//
 						// Modify: Do nothing. The property can be modified over and over again and it is still
@@ -1543,48 +1114,36 @@ namespace Simias.Storage
 						if ( op == Operation.Delete )
 						{
 							// Set the new state to delete.
-							this.operation = Operation.Delete;
+							operation = Operation.Delete;
 
 							// Has the value changed?
-							if ( this.oldValue != null )
+							if ( oldValue != null )
 							{
 								// Set the value back into the property.
-								ValueString = this.oldValue;
-								this.oldValue = null;
-							}
-
-							// Has the name changed?
-							if ( this.oldName != null )
-							{
-								Name = this.oldName;
-								this.oldName = null;
+								ValueString = oldValue;
+								oldValue = null;
 							}
 
 							// Have the flags changed?
-							if ( this.flagsModified )
+							if ( flagsModified )
 							{
-								this.PropertyFlags = this.oldFlags;
-								this.flagsModified = false;
-								this.oldFlags = 0;
+								PropertyFlags = oldFlags;
+								flagsModified = false;
+								oldFlags = 0;
 							}
 						}
 						else if ( op == Operation.Modify )
 						{
 							// Don't ever overwrite a saved old value.
-							if ( ( this.oldValue == null ) && ( oldValue != null ) )
+							if ( ( oldValue == null ) && ( priorValue != null ) )
 							{
-								this.oldValue = oldValue;
+								oldValue = priorValue;
 							}
 
-							if ( ( this.oldName == null ) && ( oldName != null ) )
+							if ( ( flagsModified == false )  && ( priorFlagsModified == true ) )
 							{
-								this.oldName = oldName;
-							}
-
-							if ( ( this.flagsModified == false )  && ( flagsModified == true ) )
-							{
-								this.oldFlags = oldFlags;
-								this.flagsModified = true;
+								oldFlags = priorFlags;
+								flagsModified = true;
 							}
 						}
 
@@ -1594,65 +1153,31 @@ namespace Simias.Storage
 						//
 						// Add: Set the current state to add and add the new property to the mergeList.
 						//
-						// Delete: Set the current state to delete and add the deleted property to the mergeList.
+						// Delete: Set the current state to delete and add the deleted property to the
+						// mergeList.
 						//
-						// Modify: Set the current state to modify. Save the oldValue if not null. Save the oldName
-						// if not null. Save the old flags if modified. Add the modified property to the mergeList.
+						// Modify: Set the current state to modify. Save the oldValue if not null. Save
+						// the old flags if modified. Add the modified property to the mergeList.
 					case Operation.None:
-						// Check if this is a file system entry property.  If it is then get the parent xml property.
-						if ( propertyList.PropertyRoot.Name == Property.FileSystemEntryTag )
+						// This is a normal node property.
+						if ( op == Operation.Modify )
 						{
-							// This is a file system entry property which is entirely contained within a xml property.
-							// Get the containing xml property and work with it as a whole instead of individual entries.
-							// All operations on encapsulated xml properties are always treated as a modify operation.
-							if ( !IsFsEntryPropertyInMergeList( node, this ) )
+							if ( priorValue != null )
 							{
-								// Don't update the this property with the current operation. Leave it as Operation.None
-								// So the next time it is modified, we come back into this same code. There is no sense
-								// having to support this feature in all the different operation states, because once
-								// the containing xml property is in the merge list, it can be modified repeatedly with
-								// no futher processing required.
-								Property tempProperty = new Property( node.Properties, propertyList.PropertyRoot.ParentNode as XmlElement );
-								tempProperty.operation = Operation.Modify;
-								node.cNode.mergeList.Add( tempProperty );
+								oldValue = priorValue;
+							}
+
+							if ( priorFlagsModified )
+							{
+								oldFlags = priorFlags;
+								flagsModified = true;
 							}
 						}
-						else
-						{
-							// This is a normal node property.
-							if ( op == Operation.Modify )
-							{
-								if ( oldValue != null )
-								{
-									this.oldValue = oldValue;
-								}
 
-								if ( oldName != null )
-								{
-									this.oldName = oldName;
-								}
-
-								if ( flagsModified )
-								{
-									this.oldFlags = oldFlags;
-									this.flagsModified = true;
-								}
-							}
-							else if ( op == Operation.Add )
-							{
-								this.node = node;
-							}
-
-							operation = op;
-							node.cNode.mergeList.Add( this );
-						}
-
+						operation = op;
+						propertyList.AddToChangeList( this );
 						break;
 				}
-			}
-			else if ( op == Operation.Add )
-			{
-				this.node = node;
 			}
 		}
 
@@ -1729,6 +1254,10 @@ namespace Simias.Storage
 					SetPropertyValue( ( TimeSpan )propertyValue );
 					break;
 
+				case Syntax.Relationship:
+					SetPropertyValue( ( Relationship )propertyValue );
+					break;
+
 				default:
 					throw new ArgumentException( "Invalid object type" );
 			}
@@ -1749,8 +1278,7 @@ namespace Simias.Storage
 			string currentValue = ValueString;
 			ValueString = propertyValue.ValueString;
 
-			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
-			SetPropertyChanged();
+			SaveMergeInformation( propertyList, Operation.Modify, currentValue, false, 0 );
 		}
 
 		/// <summary>
@@ -1768,8 +1296,7 @@ namespace Simias.Storage
 			string currentValue = ValueString;
 			ValueString = propertyValue;
 
-			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
-			SetPropertyChanged();
+			SaveMergeInformation( propertyList, Operation.Modify, currentValue, false, 0 );
 		}
 
 		/// <summary>
@@ -1787,8 +1314,7 @@ namespace Simias.Storage
 			string currentValue = ValueString;
 			ValueString = propertyValue.ToString();
 
-			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
-			SetPropertyChanged();
+			SaveMergeInformation( propertyList, Operation.Modify, currentValue, false, 0 );
 		}
 
 		/// <summary>
@@ -1806,8 +1332,7 @@ namespace Simias.Storage
 			string currentValue = ValueString;
 			ValueString = propertyValue.ToString();
 
-			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
-			SetPropertyChanged();
+			SaveMergeInformation( propertyList, Operation.Modify, currentValue, false, 0 );
 		}
 
 		/// <summary>
@@ -1825,8 +1350,7 @@ namespace Simias.Storage
 			string currentValue = ValueString;
 			ValueString = propertyValue.ToString();
 
-			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
-			SetPropertyChanged();
+			SaveMergeInformation( propertyList, Operation.Modify, currentValue, false, 0 );
 		}
 
 		/// <summary>
@@ -1844,8 +1368,7 @@ namespace Simias.Storage
 			string currentValue = ValueString;
 			ValueString = propertyValue.ToString();
 
-			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
-			SetPropertyChanged();
+			SaveMergeInformation( propertyList, Operation.Modify, currentValue, false, 0 );
 		}
 
 		/// <summary>
@@ -1863,8 +1386,7 @@ namespace Simias.Storage
 			string currentValue = ValueString;
 			ValueString = propertyValue.ToString();
 
-			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
-			SetPropertyChanged();
+			SaveMergeInformation( propertyList, Operation.Modify, currentValue, false, 0 );
 		}
 
 		/// <summary>
@@ -1882,8 +1404,7 @@ namespace Simias.Storage
 			string currentValue = ValueString;
 			ValueString = propertyValue.ToString();
 
-			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
-			SetPropertyChanged();
+			SaveMergeInformation( propertyList, Operation.Modify, currentValue, false, 0 );
 		}
 
 		/// <summary>
@@ -1901,8 +1422,7 @@ namespace Simias.Storage
 			string currentValue = ValueString;
 			ValueString = propertyValue.ToString();
 
-			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
-			SetPropertyChanged();
+			SaveMergeInformation( propertyList, Operation.Modify, currentValue, false, 0 );
 		}
 
 		/// <summary>
@@ -1920,8 +1440,7 @@ namespace Simias.Storage
 			string currentValue = ValueString;
 			ValueString = propertyValue.ToString();
 
-			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
-			SetPropertyChanged();
+			SaveMergeInformation( propertyList, Operation.Modify, currentValue, false, 0 );
 		}
 
 		/// <summary>
@@ -1939,8 +1458,7 @@ namespace Simias.Storage
 			string currentValue = ValueString;
 			ValueString = ( ( ushort )propertyValue ).ToString();
 
-			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
-			SetPropertyChanged();
+			SaveMergeInformation( propertyList, Operation.Modify, currentValue, false, 0 );
 		}
 
 		/// <summary>
@@ -1958,8 +1476,7 @@ namespace Simias.Storage
 			string currentValue = ValueString;
 			ValueString = propertyValue.ToString();
 
-			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
-			SetPropertyChanged();
+			SaveMergeInformation( propertyList, Operation.Modify, currentValue, false, 0 );
 		}
 
 		/// <summary>
@@ -1977,8 +1494,7 @@ namespace Simias.Storage
 			string currentValue = ValueString;
 			ValueString = propertyValue ? "1" : "0";
 
-			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
-			SetPropertyChanged();
+			SaveMergeInformation( propertyList, Operation.Modify, currentValue, false, 0 );
 		}
 
 		/// <summary>
@@ -1996,8 +1512,7 @@ namespace Simias.Storage
 			string currentValue = ValueString;
 			ValueString = propertyValue.Ticks.ToString();
 
-			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
-			SetPropertyChanged();
+			SaveMergeInformation( propertyList, Operation.Modify, currentValue, false, 0 );
 		}
 
 		/// <summary>
@@ -2015,8 +1530,7 @@ namespace Simias.Storage
 			string currentValue = ValueString;
 			ValueString = propertyValue.ToString();
 
-			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
-			SetPropertyChanged();
+			SaveMergeInformation( propertyList, Operation.Modify, currentValue, false, 0 );
 		}
 
 		/// <summary>
@@ -2034,8 +1548,7 @@ namespace Simias.Storage
 			string currentValue = ValueString;
 			ValueString = propertyValue.InnerXml;
 
-			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
-			SetPropertyChanged();
+			SaveMergeInformation( propertyList, Operation.Modify, currentValue, false, 0 );
 		}
 
 		/// <summary>
@@ -2053,8 +1566,25 @@ namespace Simias.Storage
 			string currentValue = ValueString;
 			ValueString = propertyValue.Ticks.ToString();
 
-			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
-			SetPropertyChanged();
+			SaveMergeInformation( propertyList, Operation.Modify, currentValue, false, 0 );
+		}
+
+		/// <summary>
+		/// Sets a Relationship value into the property.
+		/// </summary>
+		/// <param name="relationship">Relationship value to set in property.</param>
+		internal void SetPropertyValue( Relationship relationship )
+		{
+			if ( Type != Syntax.Relationship )
+			{
+				throw new ApplicationException( "Cannot mix property types" );
+			}
+
+			// Remember the old value before overwriting it with the new value.
+			string currentValue = ValueString;
+			ValueString = relationship.ToString();
+
+			SaveMergeInformation( propertyList, Operation.Modify, currentValue, false, 0 );
 		}
 		#endregion
 
@@ -2064,16 +1594,22 @@ namespace Simias.Storage
 		/// </summary>
 		public void Delete()
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				DeleteProperty();
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			DeleteProperty();
+		}
+
+		/// <summary>
+		/// Determines if the property is a system (non-editable) property.
+		/// </summary>
+		/// <returns>True if propertyName specifies a system property, otherwise false is returned.</returns>
+		public bool IsSystemProperty()
+		{
+			return PropertyTags.IsSystemProperty( xmlProperty.GetAttribute( XmlTags.NameAttr ) ); 
 		}
 
 		/// <summary>
@@ -2082,16 +1618,13 @@ namespace Simias.Storage
 		/// <param name="propertyValue">Property value to set.</param>
 		public void SetValue( Property propertyValue )
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				SetPropertyValue( propertyValue );
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			SetPropertyValue( propertyValue );
 		}
 
 		/// <summary>
@@ -2100,16 +1633,13 @@ namespace Simias.Storage
 		/// <param name="propertyValue">Property value to set.</param>
 		public void SetValue( object propertyValue )
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				SetPropertyValue( propertyValue );
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			SetPropertyValue( propertyValue );
 		}
 
 		/// <summary>
@@ -2118,16 +1648,13 @@ namespace Simias.Storage
 		/// <param name="propertyValue">string value to set in property.</param>
 		public void SetValue( string propertyValue )
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				SetPropertyValue( propertyValue );
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			SetPropertyValue( propertyValue );
 		}
 
 		/// <summary>
@@ -2136,16 +1663,13 @@ namespace Simias.Storage
 		/// <param name="propertyValue">sbyte value to set in property.</param>
 		public void SetValue( sbyte propertyValue )
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				SetPropertyValue( propertyValue );
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			SetPropertyValue( propertyValue );
 		}
 
 		/// <summary>
@@ -2154,16 +1678,13 @@ namespace Simias.Storage
 		/// <param name="propertyValue">byte value to set in property.</param>
 		public void SetValue( byte propertyValue )
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				SetPropertyValue( propertyValue );
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			SetPropertyValue( propertyValue );
 		}
 
 		/// <summary>
@@ -2172,16 +1693,13 @@ namespace Simias.Storage
 		/// <param name="propertyValue">short value to set in property.</param>
 		public void SetValue( short propertyValue )
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				SetPropertyValue( propertyValue );
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			SetPropertyValue( propertyValue );
 		}
 
 		/// <summary>
@@ -2190,16 +1708,13 @@ namespace Simias.Storage
 		/// <param name="propertyValue">ushort value to set in property.</param>
 		public void SetValue( ushort propertyValue )
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				SetPropertyValue( propertyValue );
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			SetPropertyValue( propertyValue );
 		}
 
 		/// <summary>
@@ -2208,16 +1723,13 @@ namespace Simias.Storage
 		/// <param name="propertyValue">int value to set in property.</param>
 		public void SetValue( int propertyValue )
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				SetPropertyValue( propertyValue );
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			SetPropertyValue( propertyValue );
 		}
 
 		/// <summary>
@@ -2226,16 +1738,13 @@ namespace Simias.Storage
 		/// <param name="propertyValue">uint value to set in property.</param>
 		public void SetValue( uint propertyValue )
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				SetPropertyValue( propertyValue );
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			SetPropertyValue( propertyValue );
 		}
 
 		/// <summary>
@@ -2244,16 +1753,13 @@ namespace Simias.Storage
 		/// <param name="propertyValue">long value to set in property.</param>
 		public void SetValue( long propertyValue )
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				SetPropertyValue( propertyValue );
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			SetPropertyValue( propertyValue );
 		}
 
 		/// <summary>
@@ -2262,16 +1768,13 @@ namespace Simias.Storage
 		/// <param name="propertyValue">ulong value to set in property.</param>
 		public void SetValue( ulong propertyValue )
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				SetPropertyValue( propertyValue );
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			SetPropertyValue( propertyValue );
 		}
 
 		/// <summary>
@@ -2280,16 +1783,13 @@ namespace Simias.Storage
 		/// <param name="propertyValue">char value to set in property.</param>
 		public void SetValue( char propertyValue )
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				SetPropertyValue( propertyValue );
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			SetPropertyValue( propertyValue );
 		}
 
 		/// <summary>
@@ -2298,16 +1798,13 @@ namespace Simias.Storage
 		/// <param name="propertyValue">float value to set in property.</param>
 		public void SetValue( float propertyValue )
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				SetPropertyValue( propertyValue );
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			SetPropertyValue( propertyValue );
 		}
 
 		/// <summary>
@@ -2316,16 +1813,13 @@ namespace Simias.Storage
 		/// <param name="propertyValue">bool value to set in property.</param>
 		public void SetValue( bool propertyValue )
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				SetPropertyValue( propertyValue );
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			SetPropertyValue( propertyValue );
 		}
 
 		/// <summary>
@@ -2334,16 +1828,13 @@ namespace Simias.Storage
 		/// <param name="propertyValue">DateTime value to set in property.</param>
 		public void SetValue( DateTime propertyValue )
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				SetPropertyValue( propertyValue );
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			SetPropertyValue( propertyValue );
 		}
 
 		/// <summary>
@@ -2352,16 +1843,13 @@ namespace Simias.Storage
 		/// <param name="propertyValue">Uri value to set in property.</param>
 		public void SetValue( Uri propertyValue )
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				SetPropertyValue( propertyValue );
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			SetPropertyValue( propertyValue );
 		}
 
 		/// <summary>
@@ -2370,16 +1858,13 @@ namespace Simias.Storage
 		/// <param name="propertyValue">Xml value to set in property.</param>
 		public void SetValue( XmlDocument propertyValue )
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				SetPropertyValue( propertyValue );
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			SetPropertyValue( propertyValue );
 		}
 
 		/// <summary>
@@ -2388,16 +1873,28 @@ namespace Simias.Storage
 		/// <param name="propertyValue">TimeSpan value to set in property.</param>
 		public void SetValue( TimeSpan propertyValue )
 		{
-			lock ( lockObject )
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
 			{
-				// Make sure this is not a system property
-				if ( IsSystemProperty() )
-				{
-					throw new ApplicationException( "Cannot delete a system property" );
-				}
-
-				SetPropertyValue( propertyValue );
+				throw new ApplicationException( "Cannot delete a system property" );
 			}
+
+			SetPropertyValue( propertyValue );
+		}
+
+		/// <summary>
+		/// Sets a Relationship value into the property.
+		/// </summary>
+		/// <param name="propertyValue">Relationship value to set in property.</param>
+		public void SetValue( Relationship propertyValue )
+		{
+			// Make sure this is not a system property
+			if ( IsSystemProperty() )
+			{
+				throw new ApplicationException( "Cannot delete a system property" );
+			}
+
+			SetPropertyValue( propertyValue );
 		}
 
 		/// <summary>
@@ -2406,153 +1903,151 @@ namespace Simias.Storage
 		/// <returns>A string representing the value of this object.</returns>
 		public override string ToString()
 		{
-			lock ( lockObject )
+			string output = null;
+
+			switch ( Type )
 			{
-				string output = null;
+				case Syntax.String:
+					output = ( ( string )GetValue() ).ToString();
+					break;
+				
+				case Syntax.SByte:
+					output = ( ( sbyte )GetValue() ).ToString();
+					break;
 
-				switch ( Type )
-				{
-					case Syntax.String:
-						output = ( ( string )GetValue() ).ToString();
-						break;
+				case Syntax.Byte:
+					output = ( ( byte )GetValue() ).ToString();
+					break;
+
+				case Syntax.Int16:
+					output = ( ( short )GetValue() ).ToString();
+					break;
+
+				case Syntax.UInt16:
+					output = ( ( ushort )GetValue() ).ToString();
+					break;
+
+				case Syntax.Int32:
+					output = ( ( int )GetValue() ).ToString();
+					break;
+
+				case Syntax.UInt32:
+					output = ( ( uint )GetValue() ).ToString();
+					break;
+
+				case Syntax.Int64:
+					output = ( ( long )GetValue() ).ToString();
+					break;
+
+				case Syntax.UInt64:
+					output = ( ( ulong )GetValue() ).ToString();
+					break;
+
+				case Syntax.Char:
+					output = ( ( char )GetValue() ).ToString();
+					break;
+				
+				case Syntax.Single:
+					output = ( ( float )GetValue() ).ToString();
+					break;
+
+				case Syntax.Boolean:
+					output = ( ( bool )GetValue() ).ToString();
+					break;
+
+				case Syntax.DateTime:
+					output = ( ( DateTime )GetValue() ).ToString();
+					break;
+
+				case Syntax.Uri:
+					output = ( ( Uri )GetValue() ).ToString();
+					break;
+
+				case Syntax.XmlDocument:
+					output = ( ( XmlDocument )GetValue() ).ToString();
+					break;
+
+				case Syntax.TimeSpan:
+					output = ( ( TimeSpan )GetValue() ).ToString();
+					break;
 					
-					case Syntax.SByte:
-						output = ( ( sbyte )GetValue() ).ToString();
-						break;
-
-					case Syntax.Byte:
-						output = ( ( byte )GetValue() ).ToString();
-						break;
-
-					case Syntax.Int16:
-						output = ( ( short )GetValue() ).ToString();
-						break;
-
-					case Syntax.UInt16:
-						output = ( ( ushort )GetValue() ).ToString();
-						break;
-
-					case Syntax.Int32:
-						output = ( ( int )GetValue() ).ToString();
-						break;
-
-					case Syntax.UInt32:
-						output = ( ( uint )GetValue() ).ToString();
-						break;
-
-					case Syntax.Int64:
-						output = ( ( long )GetValue() ).ToString();
-						break;
-
-					case Syntax.UInt64:
-						output = ( ( ulong )GetValue() ).ToString();
-						break;
-
-					case Syntax.Char:
-						output = ( ( char )GetValue() ).ToString();
-						break;
-					
-					case Syntax.Single:
-						output = ( ( float )GetValue() ).ToString();
-						break;
-
-					case Syntax.Boolean:
-						output = ( ( bool )GetValue() ).ToString();
-						break;
-
-					case Syntax.DateTime:
-						output = ( ( DateTime )GetValue() ).ToString();
-						break;
-
-					case Syntax.Uri:
-						output = ( ( Uri )GetValue() ).ToString();
-						break;
-
-					case Syntax.XmlDocument:
-						output = ( ( XmlDocument )GetValue() ).ToString();
-						break;
-
-					case Syntax.TimeSpan:
-						output = ( ( TimeSpan )GetValue() ).ToString();
-						break;
-				}
-
-				return output;
+				case Syntax.Relationship:
+					output = ( ( Relationship )GetValue() ).ToString();
+					break;
 			}
+
+			return output;
 		}
 
 		/// <summary>
-		///	Converts the property value of this instance to its equivalent string using the specified 
+		///	Converts the property value of this instance to its equivalent string using the specified
 		///	culture-specific format information.
 		/// </summary>
 		/// <param name="ifProvider">An IFormatProvider that supplies culture-specific formatting information.</param>
 		/// <returns>A string representing the value of this object.</returns>
 		public string ToString( IFormatProvider ifProvider )
 		{
-			lock ( lockObject )
+			string output = null;
+
+			switch ( Type )
 			{
-				string output = null;
+				case Syntax.String:
+					output = ( ( string )GetValue() ).ToString( ifProvider );
+					break;
 
-				switch ( Type )
-				{
-					case Syntax.String:
-						output = ( ( string )GetValue() ).ToString( ifProvider );
-						break;
+				case Syntax.SByte:
+					output = ( ( sbyte )GetValue() ).ToString( ifProvider );
+					break;
 
-					case Syntax.SByte:
-						output = ( ( sbyte )GetValue() ).ToString( ifProvider );
-						break;
+				case Syntax.Byte:
+					output = ( ( byte )GetValue() ).ToString( ifProvider );
+					break;
 
-					case Syntax.Byte:
-						output = ( ( byte )GetValue() ).ToString( ifProvider );
-						break;
+				case Syntax.Int16:
+					output = ( ( short )GetValue() ).ToString( ifProvider );
+					break;
 
-					case Syntax.Int16:
-						output = ( ( short )GetValue() ).ToString( ifProvider );
-						break;
+				case Syntax.UInt16:
+					output = ( ( ushort )GetValue() ).ToString( ifProvider );
+					break;
 
-					case Syntax.UInt16:
-						output = ( ( ushort )GetValue() ).ToString( ifProvider );
-						break;
+				case Syntax.Int32:
+					output = ( ( int )GetValue() ).ToString( ifProvider );
+					break;
 
-					case Syntax.Int32:
-						output = ( ( int )GetValue() ).ToString( ifProvider );
-						break;
+				case Syntax.UInt32:
+					output = ( ( uint )GetValue() ).ToString( ifProvider );
+					break;
 
-					case Syntax.UInt32:
-						output = ( ( uint )GetValue() ).ToString( ifProvider );
-						break;
+				case Syntax.Int64:
+					output = ( ( long )GetValue() ).ToString( ifProvider );
+					break;
 
-					case Syntax.Int64:
-						output = ( ( long )GetValue() ).ToString( ifProvider );
-						break;
+				case Syntax.UInt64:
+					output = ( ( ulong )GetValue() ).ToString( ifProvider );
+					break;
 
-					case Syntax.UInt64:
-						output = ( ( ulong )GetValue() ).ToString( ifProvider );
-						break;
+				case Syntax.Char:
+					output = ( ( char )GetValue() ).ToString( ifProvider );
+					break;
+				
+				case Syntax.Single:
+					output = ( ( float )GetValue() ).ToString( ifProvider );
+					break;
 
-					case Syntax.Char:
-						output = ( ( char )GetValue() ).ToString( ifProvider );
-						break;
-					
-					case Syntax.Single:
-						output = ( ( float )GetValue() ).ToString( ifProvider );
-						break;
+				case Syntax.Boolean:
+					output = ( ( bool )GetValue() ).ToString( ifProvider );
+					break;
 
-					case Syntax.Boolean:
-						output = ( ( bool )GetValue() ).ToString( ifProvider );
-						break;
+				case Syntax.DateTime:
+					output = ( ( DateTime )GetValue() ).ToString( ifProvider );
+					break;
 
-					case Syntax.DateTime:
-						output = ( ( DateTime )GetValue() ).ToString( ifProvider );
-						break;
-
-					default:
-						throw new ArgumentException( "Objects of type " + Type.ToString() + " do not take formatters" );
-				}
-
-				return output;
+				default:
+					throw new ArgumentException( "Objects of type " + Type.ToString() + " do not take formatters" );
 			}
+
+			return output;
 		}
 
 		/// <summary>
@@ -2562,62 +2057,59 @@ namespace Simias.Storage
 		/// <returns>A string representing the value of this object.</returns>
 		public string ToString( string format )
 		{
-			lock ( lockObject )
+			string output = null;
+
+			switch ( Type )
 			{
-				string output = null;
+				case Syntax.SByte:
+					output = ( ( sbyte )GetValue() ).ToString( format );
+					break;
 
-				switch ( Type )
-				{
-					case Syntax.SByte:
-						output = ( ( sbyte )GetValue() ).ToString( format );
-						break;
+				case Syntax.Byte:
+					output = ( ( byte )GetValue() ).ToString( format );
+					break;
 
-					case Syntax.Byte:
-						output = ( ( byte )GetValue() ).ToString( format );
-						break;
+				case Syntax.Int16:
+					output = ( ( short )GetValue() ).ToString( format );
+					break;
 
-					case Syntax.Int16:
-						output = ( ( short )GetValue() ).ToString( format );
-						break;
+				case Syntax.UInt16:
+					output = ( ( ushort )GetValue() ).ToString( format );
+					break;
 
-					case Syntax.UInt16:
-						output = ( ( ushort )GetValue() ).ToString( format );
-						break;
+				case Syntax.Int32:
+					output = ( ( int )GetValue() ).ToString( format );
+					break;
 
-					case Syntax.Int32:
-						output = ( ( int )GetValue() ).ToString( format );
-						break;
+				case Syntax.UInt32:
+					output = ( ( uint )GetValue() ).ToString( format );
+					break;
 
-					case Syntax.UInt32:
-						output = ( ( uint )GetValue() ).ToString( format );
-						break;
+				case Syntax.Int64:
+					output = ( ( long )GetValue() ).ToString( format );
+					break;
 
-					case Syntax.Int64:
-						output = ( ( long )GetValue() ).ToString( format );
-						break;
+				case Syntax.UInt64:
+					output = ( ( ulong )GetValue() ).ToString( format );
+					break;
 
-					case Syntax.UInt64:
-						output = ( ( ulong )GetValue() ).ToString( format );
-						break;
+				case Syntax.Single:
+					output = ( ( float )GetValue() ).ToString( format );
+					break;
 
-					case Syntax.Single:
-						output = ( ( float )GetValue() ).ToString( format );
-						break;
+				case Syntax.DateTime:
+					output = ( ( DateTime )GetValue() ).ToString( format );
+					break;
 
-					case Syntax.DateTime:
-						output = ( ( DateTime )GetValue() ).ToString( format );
-						break;
-
-					default:
-						throw new ArgumentException( "Objects of type " + Type.ToString() + " do not take formatters" );
-				}
-
-				return output;
+				default:
+					throw new ArgumentException( "Objects of type " + Type.ToString() + " do not take formatters" );
 			}
+
+			return output;
 		}
 
 		/// <summary>
-		/// Converts the numeric value of this instance to its equivalent string using the specified 
+		/// Converts the numeric value of this instance to its equivalent string using the specified
 		/// format and culture-specific format information.
 		/// </summary>
 		/// <param name="format">A string that specifies the return format.</param>
@@ -2625,58 +2117,55 @@ namespace Simias.Storage
 		/// <returns>A string representing the value of this object.</returns>
 		public string ToString( string format, IFormatProvider ifProvider )
 		{
-			lock ( lockObject )
+			string output = null;
+
+			switch ( Type )
 			{
-				string output = null;
+				case Syntax.SByte:
+					output = ( ( sbyte )GetValue() ).ToString( format, ifProvider );
+					break;
 
-				switch ( Type )
-				{
-					case Syntax.SByte:
-						output = ( ( sbyte )GetValue() ).ToString( format, ifProvider );
-						break;
+				case Syntax.Byte:
+					output = ( ( byte )GetValue() ).ToString( format, ifProvider );
+					break;
 
-					case Syntax.Byte:
-						output = ( ( byte )GetValue() ).ToString( format, ifProvider );
-						break;
+				case Syntax.Int16:
+					output = ( ( short )GetValue() ).ToString( format, ifProvider );
+					break;
 
-					case Syntax.Int16:
-						output = ( ( short )GetValue() ).ToString( format, ifProvider );
-						break;
+				case Syntax.UInt16:
+					output = ( ( ushort )GetValue() ).ToString( format, ifProvider );
+					break;
 
-					case Syntax.UInt16:
-						output = ( ( ushort )GetValue() ).ToString( format, ifProvider );
-						break;
+				case Syntax.Int32:
+					output = ( ( int )GetValue() ).ToString( format, ifProvider );
+					break;
 
-					case Syntax.Int32:
-						output = ( ( int )GetValue() ).ToString( format, ifProvider );
-						break;
+				case Syntax.UInt32:
+					output = ( ( uint )GetValue() ).ToString( format, ifProvider );
+					break;
 
-					case Syntax.UInt32:
-						output = ( ( uint )GetValue() ).ToString( format, ifProvider );
-						break;
+				case Syntax.Int64:
+					output = ( ( long )GetValue() ).ToString( format, ifProvider );
+					break;
 
-					case Syntax.Int64:
-						output = ( ( long )GetValue() ).ToString( format, ifProvider );
-						break;
+				case Syntax.UInt64:
+					output = ( ( ulong )GetValue() ).ToString( format, ifProvider );
+					break;
 
-					case Syntax.UInt64:
-						output = ( ( ulong )GetValue() ).ToString( format, ifProvider );
-						break;
+				case Syntax.Single:
+					output = ( ( float )GetValue() ).ToString( format, ifProvider );
+					break;
 
-					case Syntax.Single:
-						output = ( ( float )GetValue() ).ToString( format, ifProvider );
-						break;
+				case Syntax.DateTime:
+					output = ( ( DateTime )GetValue() ).ToString( format, ifProvider );
+					break;
 
-					case Syntax.DateTime:
-						output = ( ( DateTime )GetValue() ).ToString( format, ifProvider );
-						break;
-
-					default:
-						throw new ArgumentException( "Objects of type " + Type.ToString() + " do not take formatters" );
-				}
-
-				return output;
+				default:
+					throw new ArgumentException( "Objects of type " + Type.ToString() + " do not take formatters" );
 			}
+
+			return output;
 		}
 		#endregion
 	}

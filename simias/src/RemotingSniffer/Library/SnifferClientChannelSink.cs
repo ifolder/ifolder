@@ -37,6 +37,8 @@ namespace Simias.Sync
 	/// </summary>
 	public class SnifferClientChannelSink : IClientChannelSink
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SnifferClientChannelSink));
+
 		private IClientChannelSink nextSink;
 
 		public SnifferClientChannelSink(IClientChannelSink nextSink)
@@ -48,9 +50,9 @@ namespace Simias.Sync
 
 		void IClientChannelSink.ProcessMessage(IMessage msg, ITransportHeaders requestHeaders, Stream requestStream, out ITransportHeaders responseHeaders, out Stream responseStream)
 		{
-			MyTrace.WriteLine("****** SNIFFER PROCESS [CLIENT] MESSAGE START ******");
+			log.Debug("****** SNIFFER PROCESS [CLIENT] MESSAGE START ******");
 
-			MyTrace.WriteLine("Initiating Remote Call...{0}{1}", Environment.NewLine, SnifferMessage.ToString(msg));
+			log.Debug("Initiating Remote Call...{0}{1}", Environment.NewLine, SnifferMessage.ToString(msg));
 
 			try
 			{
@@ -58,13 +60,13 @@ namespace Simias.Sync
 			}
 			catch(Exception e)
 			{
-				MyTrace.WriteLine(e);
+				log.Error(e, "Client Sink Process Exception");
 
 				throw e;
 			}
 			finally
 			{
-				MyTrace.WriteLine("******* SNIFFER PROCESS [CLIENT] MESSAGE END *******");
+				log.Debug("******* SNIFFER PROCESS [CLIENT] MESSAGE END *******");
 			}
 		}
 

@@ -21,6 +21,7 @@
  *
  ***********************************************************************/
 using System;
+using Simias;
 using Simias.Storage;
 
 namespace Novell.AddressBook
@@ -77,22 +78,12 @@ namespace Novell.AddressBook
 	/// Summary description for an address.
     /// An address is equivalent to a Node in the collection server.
 	/// </summary>
-	public class Address
+	public class Address : Node
 	{
 		#region Class Members
 		private Contact			parentContact;
-		private Node			thisNode;
-		private string			id;
-		private string			locality;
-		private string			region;
-		private string			country;
-		private string			zip;
-		private string			street;
-		private string			poBox;
-		private string			extAddress;
-		private string			mailStop;
 //		private bool			preferred = false;
-		private AddressTypes	addressTypes = AddressTypes.work | AddressTypes.parcel | AddressTypes.postal;
+		private AddressTypes	defaultTypes = AddressTypes.work | AddressTypes.parcel | AddressTypes.postal;
 
 		#endregion
 
@@ -109,19 +100,35 @@ namespace Novell.AddressBook
 
 		public AddressTypes Types
 		{
+
 			get
-			{
-				return(this.addressTypes);
+			{	
+				try
+				{
+					return((AddressTypes) this.Properties.GetSingleProperty( Common.addressTypesProperty ).Value);
+				}
+				catch{}
+				return(0);
 			}
 
 			set
 			{
-				// BUGBUG validate the address types first
-				this.addressTypes = value;
-				if (parentContact != null)
+				try
 				{
-					parentContact.SetDirty(ChangeMap.address);
+					if (value != 0)
+					{
+						this.Properties.ModifyProperty( 
+							Common.addressTypesProperty, 
+							value );
+					}
+					else
+					{
+						this.Properties.ModifyProperty( 
+							Common.addressTypesProperty, 
+							this.defaultTypes);
+					}
 				}
+				catch{}
 			}
 		}
 
@@ -136,22 +143,29 @@ namespace Novell.AddressBook
 		public string Street
 		{
 			get
-			{
-				if (this.street != null)
+			{	
+				try
 				{
-					return(this.street);
+					return(this.Properties.GetSingleProperty( Common.streetProperty ).ToString());
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.street = value;
-				if (parentContact != null)
+				try
 				{
-					parentContact.SetDirty(ChangeMap.address);
+					if (value != null)
+					{
+						this.Properties.ModifyProperty( Common.streetProperty, value );
+					}
+					else
+					{
+						this.Properties.DeleteProperties( Common.streetProperty );
+					}
 				}
+				catch{}
 			}
 		}
 
@@ -166,22 +180,29 @@ namespace Novell.AddressBook
 		public string Locality
 		{
 			get
-			{
-				if (this.locality != null)
+			{	
+				try
 				{
-					return(this.locality);
+					return(this.Properties.GetSingleProperty( Common.localityProperty ).ToString());
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.locality = value;
-				if (parentContact != null)
+				try
 				{
-					parentContact.SetDirty(ChangeMap.address);
+					if (value != null)
+					{
+						this.Properties.ModifyProperty( Common.localityProperty, value );
+					}
+					else
+					{
+						this.Properties.DeleteProperties( Common.localityProperty );
+					}
 				}
+				catch{}
 			}
 		}
 
@@ -196,22 +217,29 @@ namespace Novell.AddressBook
 		public string Region
 		{
 			get
-			{
-				if (this.region != null)
+			{	
+				try
 				{
-					return(this.region);
+					return(this.Properties.GetSingleProperty( Common.regionProperty ).ToString());
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.region = value;
-				if (parentContact != null)
+				try
 				{
-					parentContact.SetDirty(ChangeMap.address);
+					if (value != null)
+					{
+						this.Properties.ModifyProperty( Common.regionProperty, value );
+					}
+					else
+					{
+						this.Properties.DeleteProperties( Common.regionProperty );
+					}
 				}
+				catch{}
 			}
 		}
 
@@ -226,22 +254,29 @@ namespace Novell.AddressBook
 		public string Country
 		{
 			get
-			{
-				if (this.country != null)
+			{	
+				try
 				{
-					return(this.country);
+					return(this.Properties.GetSingleProperty( Common.countryProperty ).ToString());
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.country = value;
-				if (parentContact != null)
+				try
 				{
-					parentContact.SetDirty(ChangeMap.address);
+					if (value != null)
+					{
+						this.Properties.ModifyProperty( Common.countryProperty, value );
+					}
+					else
+					{
+						this.Properties.DeleteProperties( Common.countryProperty );
+					}
 				}
+				catch{}
 			}
 		}
 
@@ -256,23 +291,31 @@ namespace Novell.AddressBook
 		public string PostalBox
 		{
 			get
-			{
-				if (this.poBox != null)
+			{	
+				try
 				{
-					return(this.poBox);
+					return(this.Properties.GetSingleProperty( Common.poBoxProperty ).ToString());
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.poBox = value;
-				if (parentContact != null)
+				try
 				{
-					parentContact.SetDirty(ChangeMap.address);
+					if (value != null)
+					{
+						this.Properties.ModifyProperty( Common.poBoxProperty, value );
+					}
+					else
+					{
+						this.Properties.DeleteProperties( Common.poBoxProperty );
+					}
 				}
+				catch{}
 			}
+
 		}
 
 		/// <summary>
@@ -286,22 +329,29 @@ namespace Novell.AddressBook
 		public string ExtendedAddress
 		{
 			get
-			{
-				if (this.extAddress != null)
+			{	
+				try
 				{
-					return(this.extAddress);
+					return(this.Properties.GetSingleProperty( Common.extendedProperty ).ToString());
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.extAddress = value;
-				if (parentContact != null)
+				try
 				{
-					parentContact.SetDirty(ChangeMap.address);
+					if (value != null)
+					{
+						this.Properties.ModifyProperty( Common.extendedProperty, value );
+					}
+					else
+					{
+						this.Properties.DeleteProperties( Common.extendedProperty );
+					}
 				}
+				catch{}
 			}
 		}
 
@@ -317,21 +367,24 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				if (this.zip != null)
+				try
 				{
-					return(this.zip);
+					return(this.Name);
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.zip = value;
-				if (parentContact != null)
+				try
 				{
-					parentContact.SetDirty(ChangeMap.address);
+					if (value != null)
+					{
+						this.Name = value;
+					}
 				}
+				catch{}
 			}
 		}
 
@@ -347,22 +400,29 @@ namespace Novell.AddressBook
 		public string MailStop
 		{
 			get
-			{
-				if (this.mailStop != null)
+			{	
+				try
 				{
-					return(this.mailStop);
+					return(this.Properties.GetSingleProperty( Common.mailStopProperty ).ToString());
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.mailStop = value;
-				if (parentContact != null)
+				try
 				{
-					parentContact.SetDirty(ChangeMap.address);
+					if (value != null)
+					{
+						this.Properties.ModifyProperty( Common.mailStopProperty, value );
+					}
+					else
+					{
+						this.Properties.DeleteProperties( Common.mailStopProperty );
+					}
 				}
+				catch{}
 			}
 		}
 
@@ -375,52 +435,44 @@ namespace Novell.AddressBook
 		public bool Preferred
 		{
 			get
-			{
-				if ((this.addressTypes & AddressTypes.preferred) == AddressTypes.preferred)
+			{	
+				try
 				{
-					return(true);
+					AddressTypes addrTypes = (AddressTypes)
+						this.Properties.GetSingleProperty(
+							Common.addressTypesProperty).Value;
+					if ((addrTypes & AddressTypes.preferred) == AddressTypes.preferred)
+					{
+						return(true);
+					}
 				}
-				else
-				{
-					return(false);
-				}
+				catch{}
+				return(false);
 			}
 
 			set
 			{
-				if (value == true)
+				try
 				{
-					this.addressTypes |= AddressTypes.preferred;
-				}
-				else
-				{
-					this.addressTypes &= ~AddressTypes.preferred;
-				}
+					AddressTypes addrTypes = (AddressTypes)
+						this.Properties.GetSingleProperty(
+							Common.addressTypesProperty).Value;
 
-				if (parentContact != null)
-				{
-					parentContact.SetDirty(ChangeMap.address);
+					if (value == true)
+					{
+						addrTypes |= AddressTypes.preferred;
+					}
+					else
+					{
+						addrTypes &= ~AddressTypes.preferred;
+					}
+
+					this.Properties.ModifyProperty( Common.addressTypesProperty, addrTypes );
 				}
-			}
+				catch{}
+			}	
 		}
 
-		/// <summary>
-		/// ID - ID of the ADR structured property
-		///
-		/// Type Value: A single text value
-		/// </summary>
-		public string ID
-		{
-			get
-			{
-				if (this.id != null)
-				{
-					return(this.id);
-				}
-
-				return("");
-			}
-		}
 		#endregion
 
 		#region Constructors
@@ -428,27 +480,35 @@ namespace Novell.AddressBook
 		/// <summary>
 		/// Simple Address constructor
 		/// </summary>
-		public Address()
+		public Address() : base("")
 		{
+			this.Properties.ModifyProperty(
+				Common.addressTypesProperty, 
+				this.defaultTypes);
 		}
 
 		/// <summary>
 		/// An Address constructor which includes the zip code
 		/// Zip code is a mandatory property for ADR
 		/// </summary>
-		public Address(string zip)
+		public Address(string zip) : base(zip)
 		{
-			this.zip = zip;
+			this.Properties.ModifyProperty(
+				Common.addressTypesProperty, 
+				this.defaultTypes);
 		}
 
-		internal Address(Contact parentContact)
+		internal Address(Contact parentContact) : base("")
 		{
 			this.parentContact = parentContact;
+			this.Properties.ModifyProperty( 
+				Common.addressTypesProperty, 
+				this.defaultTypes);
 		}
 
-		internal Address(Contact parentContact, string addressID)
+		internal Address(Contact parentContact, Node cNode) : base(cNode)
 		{
-			this.ToObject(parentContact, addressID);
+			this.parentContact = parentContact;
 		}
 
 		#endregion
@@ -472,143 +532,37 @@ namespace Novell.AddressBook
 			// If we're preferred make sure nobody else is
 			if (this.Preferred == true)
 			{
-				foreach(Address tmpAddress in parentContact.addressList)
+				foreach(Address cAddr in parentContact.addressList)
 				{
-					if (tmpAddress.Preferred == true)
+					if (cAddr.Preferred == true)
 					{
-						tmpAddress.Preferred = false;
+						cAddr.Preferred = false;
 					}
 				}
+			}
+
+			//
+			// Add a relationship for Address node to Contact node.
+			//
+
+			// Can't create and add the relationship object if the contact
+			// hasn't been attached to the address book
+			if (parentContact.addressBook != null &&
+				parentContact.addressBook.collection != null)
+			{
+				Relationship parentChild = new 
+					Relationship( 
+						parentContact.addressBook.collection.ID, 
+						parentContact.ID );
+
+				this.Properties.AddProperty( Common.addressToContact, parentChild );
 			}
 
 			this.parentContact.addressList.Add(this);
-			this.parentContact.SetDirty(ChangeMap.address);
 		}
 
-		/// <summary>
-		/// Called by the static method PersistToStore
-		/// </summary>
-		/// <returns>nothing</returns>
-		private void Commit()
+		internal static bool PrepareToCommit(Contact contact)
 		{
-			try
-			{
-				if (this.parentContact != null)
-				{
-					// New object?
-					if (this.ID == "")
-					{
-						Node cNode = parentContact.thisNode.CreateChild(this.zip, Common.addressProperty);
-						//cNode.Properties.AddProperty(Common.preferredProperty, this.preferred);
-						//cNode.Properties.AddProperty(Common.addressTypesProperty, this.addressTypes);
-						this.thisNode = cNode;
-						this.id = cNode.Id;
-					}
-
-					if (this.street != null)
-					{
-						if (this.street != "")
-						{
-							this.thisNode.Properties.ModifyProperty( Common.streetProperty, this.street);
-						}
-						else
-						{
-							this.thisNode.Properties.DeleteProperties( Common.streetProperty );
-						}
-					}
-
-					if (this.locality != null)
-					{
-						if (this.locality != "")
-						{
-							this.thisNode.Properties.ModifyProperty( Common.localityProperty, this.locality);
-						}
-						else
-						{
-							this.thisNode.Properties.DeleteProperties( Common.localityProperty );
-						}
-					}
-
-					if (this.region != null)
-					{
-						if (this.region != "")
-						{
-							this.thisNode.Properties.ModifyProperty( Common.regionProperty, this.region );
-						}
-						else
-						{
-							this.thisNode.Properties.DeleteProperties( Common.regionProperty );
-						}
-					}
-
-					if (this.poBox != null)
-					{
-						if (this.poBox != "")
-						{
-							this.thisNode.Properties.ModifyProperty( Common.poBoxProperty, this.poBox );
-						}
-						else
-						{
-							this.thisNode.Properties.DeleteProperties( Common.poBoxProperty );
-						}
-					}
-
-					if (this.extAddress != null)
-					{
-						if (this.extAddress != "")
-						{
-							this.thisNode.Properties.ModifyProperty( Common.extendedProperty, this.extAddress );
-						}
-						else
-						{
-							this.thisNode.Properties.DeleteProperties( Common.extendedProperty );
-						}
-					}
-
-					if (this.mailStop != null)
-					{
-						if (this.mailStop != "")
-						{
-							this.thisNode.Properties.ModifyProperty( Common.mailStopProperty, this.mailStop );
-						}
-						else
-						{
-							this.thisNode.Properties.DeleteProperties( Common.mailStopProperty );
-						}
-					}
-
-					if (this.country != null)
-					{
-						if (this.country != "")
-						{
-							this.thisNode.Properties.ModifyProperty( Common.countryProperty, this.country );
-						}
-						else
-						{
-							this.thisNode.Properties.DeleteProperties( Common.countryProperty );
-						}
-					}
-
-					if (this.addressTypes == 0)
-					{
-						this.addressTypes = AddressTypes.work | AddressTypes.parcel | AddressTypes.postal;
-					}
-
-					this.thisNode.Properties.ModifyProperty( Common.addressTypesProperty, this.addressTypes );
-				}
-			}
-			catch{}
-			// FIXME - log commit errors
-		}
-
-		internal static bool PersistToStore(Contact contact)
-		{
-			// The contact needs to be attached to the store in order to persist
-			if (contact.thisNode == null)
-			{
-				return(false);
-			}
-
 			// Anything in the list to persist?
 			if (contact.addressList.Count == 0)
 			{
@@ -633,7 +587,10 @@ namespace Novell.AddressBook
 				// No preferred do we have one typed WORK?
 				foreach(Address tmpAddress in contact.addressList)
 				{
-					if ((tmpAddress.addressTypes & AddressTypes.work) == AddressTypes.work)
+					AddressTypes addrTypes = (AddressTypes)
+						tmpAddress.Properties.GetSingleProperty(Common.addressTypesProperty).Value;
+
+					if ((addrTypes & AddressTypes.work) == AddressTypes.work)
 					{
 						tmpAddress.Preferred = true;
 						break;
@@ -650,13 +607,6 @@ namespace Novell.AddressBook
 					}
 				}
 			}
-
-			// To the collection store they go!
-			foreach(Address tmpAddress in contact.addressList)
-			{
-				tmpAddress.Commit();
-			}
-
 			return(true);
 		}
 
@@ -668,17 +618,18 @@ namespace Novell.AddressBook
 		{
 			this.parentContact = parentContact;
 
+			/*
 			try
 			{
-				this.thisNode = this.parentContact.addressBook.collection.GetNodeById(addressID);
+				this.thisNode = this.parentContact.addressBook.collection.GetNodeByID(addressID);
 				if (this.thisNode != null)
 				{
-					this.id = this.thisNode.Id;
+					this.id = this.ID;
 
 					try
 					{
 						//this.zip = this.thisNode.Properties.GetSingleProperty( Common.zipProperty ).ToString();
-						this.zip = this.thisNode.Name;
+						this.zip = this.Name;
 					}
 					catch{}
 
@@ -738,6 +689,7 @@ namespace Novell.AddressBook
 			{
 				throw new ApplicationException(Common.addressBookExceptionHeader + "Address node not found");
 			}
+			*/
 		}
 
 		#endregion
@@ -753,12 +705,9 @@ namespace Novell.AddressBook
 			if (this.parentContact != null)
 			{
 				this.parentContact.addressList.Remove(this);
-
-				if (this.thisNode != null)
-				{
-					this.thisNode.Delete(true);
-				}
 			}
+
+			this.Delete();
 		}
 
 		#endregion

@@ -1,1 +1,0 @@
-The multi-cast DNS responder is not yet in a state where it is useable.  Today it is not incuded in the build.

@@ -92,7 +92,7 @@ SPACE='$(EMPTY) $(EMPTY)'
 AC_SUBST(EMPTY)
 AC_SUBST(SPACE)
 
-COMMON_SUBDIRS="Common Service CollectionEvents Storage StoreProvider FsProvider SqliteProvider CollectionStore FsWatcher RemotingSniffer SyncCommon Location Agent StoreWatcher CollectionWatcher SyncManager Sync SyncLogicLite SyncTools AddressBook AddressBookCmd Smtp Invitation MiniShare AcceptanceTests"
+COMMON_SUBDIRS="Common Service CollectionEvents Storage StoreProvider FsProvider SqliteProvider CollectionStore FsWatcher RemotingSniffer SyncCommon Location Agent SyncManager SyncLogicLite SyncTools Sync AddressBook Smtp Invitation MiniShare"
 LINUX_SUBDIRS="CommonGtkWindows"
 WINDOWS_SUBDIRS="CommonFormWindows"
 DARWIN_SUBDIRS=
@@ -100,6 +100,28 @@ DARWIN_SUBDIRS=
 AC_SUBST(COMMON_SUBDIRS)
 AC_SUBST(LINUX_SUBDIRS)
 AC_SUBST(WINDOWS_SUBDIRS)
+
+#
+# Check for a valid operating system
+#
+case $host_os in
+    linux*)
+        SIMIAS_OS='linux'
+    ;;
+    darwin*)
+        SIMIAS_OS='darwin'
+    ;;
+    cygwin*)
+        SIMIAS_OS='windows'
+    ;;
+    *)
+        AC_MSG_ERROR([Unknown host_os: $host_os])
+    ;;
+esac
+AC_SUBST(SIMIAS_OS)
+AM_CONDITIONAL(LINUX, test "$SIMIAS_OS" = "linux")
+AM_CONDITIONAL(WINDOWS, test "$SIMIAS_OS" = "windows")
+AM_CONDITIONAL(DARWIN, test "$SIMIAS_OS" = "darwin")
 
 #
 # Set platform-specific variables
@@ -116,6 +138,7 @@ case $SIMIAS_OS in
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/mono/1.0/release"
+        MDNSRESPONDER_DIR="$EXTERNAL_DIR/mDnsResponder/mono"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
         NUNIT_FLAGS='/nologo'
@@ -140,6 +163,7 @@ case $SIMIAS_OS in
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/mono/1.0/release"
+        MDNSRESPONDER_DIR="$EXTERNAL_DIR/mDnsResponder/mono"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
         NUNIT_FLAGS='/nologo'
@@ -160,6 +184,7 @@ case $SIMIAS_OS in
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
         LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/net/1.0/release"
+        MDNSRESPONDER_DIR="$EXTERNAL_DIR/mDnsResponder/net"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_LIBPATH='$(shell cygpath --windows "$TOOLDIR/NUnit/bin")'
         NUNIT_FLAGS='/nologo'
@@ -177,6 +202,7 @@ AC_SUBST(COMMON_CLEAN_FILES)
 AC_SUBST(ICON_EXT)
 AC_SUBST(ICON_FLAG)
 AC_SUBST(LOG4NET_DIR)
+AC_SUBST(MDNSRESPONDER_DIR)
 AC_SUBST(NUNIT)
 AC_SUBST(NUNIT_FLAGS)
 AC_SUBST(NUNIT_LIBPATH)
@@ -288,18 +314,14 @@ src/RemotingSniffer/Makefile
 src/SyncCommon/Makefile
 src/Location/Makefile
 src/Agent/Makefile
-src/StoreWatcher/Makefile
-src/CollectionWatcher/Makefile
 src/SyncManager/Makefile
-src/Sync/Makefile
 src/SyncLogicLite/Makefile
 src/SyncTools/Makefile
-src/AddressBookCmd/Makefile
+src/Sync/Makefile
 src/AddressBook/Makefile
 src/Smtp/Makefile
 src/Invitation/Makefile
 src/MiniShare/Makefile
-src/AcceptanceTests/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile

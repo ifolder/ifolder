@@ -1,13 +1,13 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-Location_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/LocationService.cs $(srcdir)/Library/ILocationProvider.cs $(srcdir)/Library/LocationProviderList.cs $(srcdir)/Library/DefaultLocationProvider.cs $(srcdir)/Library/MultiCastLocationProvider.cs
+Location_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/LocationService.cs $(srcdir)/Library/ILocationProvider.cs $(srcdir)/Library/LocationProviderList.cs $(srcdir)/Library/DefaultLocationProvider.cs $(srcdir)/Library/MDnsLocationProvider.cs
 Location_CSFILES_CSC := $(subst /,$(SEP),$(Location_CSFILES))
 Location_INCLUDES = 
 Location_RESOURCES =
 Location_FLAGS = $(CSC_LIBFLAG)
-Location_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll CollectionStore.dll SyncCommon.dll
-Location_LIBPATH = /opt/gnome2/lib /usr/lib ../Common ../CollectionStore ../SyncCommon
+Location_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Common.dll CollectionStore.dll SyncCommon.dll mDnsResponderApi.dll
+Location_LIBPATH = /opt/gnome2/lib /usr/lib ../Common ../CollectionStore ../SyncCommon $(MDNSRESPONDER_DIR)
 
 NUNIT_TESTS := LocationTests.dll
 
@@ -40,10 +40,10 @@ endif
 
 install-exec-local: Location.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) Location.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) Location.dll $(DEBUG_FILES) $(MDNSRESPONDER_DIR)/mDnsResponderApi.dll $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Location.dll LocationTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
+	cd $(DESTDIR)$(bindir); rm -f Location.dll LocationTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) mDnsResponderApi.dll $(DEBUG_CHECK_FILES)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)

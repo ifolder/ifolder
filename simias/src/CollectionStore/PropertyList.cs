@@ -23,9 +23,9 @@
 
 using System;
 using System.Collections;
+using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Xml;
-using Persist = Simias.Storage.Provider;
 
 namespace Simias.Storage
 {
@@ -33,28 +33,65 @@ namespace Simias.Storage
 	/// Represents the list of properties on an object.  Properties maybe added, retrieved,
 	/// enumerated, or deleted from this object.
 	/// </summary>
-	public class PropertyList : IEnumerable
+	[ Serializable ]
+	public class PropertyList : IEnumerable, ISerializable
 	{
 		#region Class Members
 		/// <summary>
-		/// Reference to the store object for this property list.
+		/// State of the PropertyList object. This state is used to determine what to do at commit time.
 		/// </summary>
-		private Store store;
+		internal enum PropertyListState
+		{
+			/// <summary>
+			/// PropertyList object changes are being aborted.
+			/// </summary>
+			Abort,
+
+			/// <summary>
+			/// Add the new PropertyList object to data store.
+			/// </summary>
+			Add,
+		
+			/// <summary>
+			/// Delete the PropertyList object from the data store.
+			/// </summary>
+			Delete,
+
+			/// <summary>
+			/// Node has been deleted and cannot be committed.
+			/// </summary>
+			Disposed,
+
+			/// <summary>
+			/// Node is being imported from another client.
+			/// </summary>
+			Import,
+
+			/// <summary>
+			/// Update the PropertyList object in the data store.
+			/// </summary>
+			Update
+	};
 
 		/// <summary>
-		/// The node that this PropertyList belongs to.
+		/// DOM document containing the property list for this Collection Store object.
 		/// </summary>
-		private Node node;
-
-		/// <summary>
-		/// DOM document containing the property list for this node.
-		/// </summary>
-		private XmlDocument nodeDocument = null;
+		private XmlDocument nodeDocument;
 
 		/// <summary>
 		/// Xml element that all properties are subordinate to.
 		/// </summary>
-		private XmlElement propertyRoot = null;
+		private XmlElement propertyRoot;
+
+		/// <summary>
+		/// List used to hold changes to the Property objects in this list.
+		/// </summary>
+		private ArrayList changeList = new ArrayList();
+
+		/// <summary>
+		/// Holds the state of the PropertyList object.
+		/// </summary>
+		private PropertyListState state;
 		#endregion
 
 		#region Properties
@@ -80,6 +117,14 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets the list of changes made to this object.
+		/// </summary>
+		internal ArrayList ChangeList
+		{
+			get { return changeList; }
+		}
+
+		/// <summary>
 		/// Gets the parent element where the xml properties are stored.
 		/// </summary>
 		internal XmlElement PropertyRoot
@@ -88,15 +133,7 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets the node associated with this property list.
-		/// </summary>
-		internal Node PropertyNode
-		{
-			get { return node; }
-		}
-
-		/// <summary>
-		/// Returns the DOM representing this node.
+		/// Returns the DOM representing this Collection Store object.
 		/// </summary>
 		internal XmlDocument PropertyDocument
 		{
@@ -104,17 +141,20 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets and Sets the state of the PropertyList object.
+		/// </summary>
+		internal PropertyListState State
+		{
+			get { return state; }
+			set { state = value; }
+		}
+
+		/// <summary>
 		/// Gets the count of properties in the list not including the hidden properties.
 		/// </summary>
 		public int Count
 		{
-			get 
-			{  
-				lock ( store )
-				{
-					return InternalCount - HiddenCount; 
-				}
-			}
+			get { return InternalCount - HiddenCount; }
 		}
 		#endregion
 
@@ -122,37 +162,84 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructor for the property object.
 		/// </summary>
-		/// <param name="node">The node that this PropertyList belongs to.</param>
-		internal PropertyList( Node node )
+		/// <param name="name">Name of the Collection Store object.</param>
+		/// <param name="ID">Globally unique identifier for the Collection Store object.</param>
+		/// <param name="type">Class type of the Collection Store object.</param>
+		internal PropertyList( string name, string ID, string type )
 		{
-			this.store = node.store;
-			this.node = node;
-
 			// Create an empty DOM document that will hold the properties.
 			nodeDocument = new XmlDocument();
-			XmlElement element = nodeDocument.CreateElement( Property.ObjectListTag );
+			XmlElement element = nodeDocument.CreateElement( XmlTags.ObjectListTag );
 			nodeDocument.AppendChild( element );
 
-			// Set the node attributes in the XML document.
-			propertyRoot = nodeDocument.CreateElement( Property.ObjectTag );
-			node.SetNodeAttribute( propertyRoot, Property.NameAttr, node.Name );
-			node.SetNodeAttribute( propertyRoot, Property.IDAttr, node.Id );
-			node.SetNodeAttribute( propertyRoot, Property.TypeAttr, node.NameSpaceType );
+			// Set the attributes in the XML document.
+			propertyRoot = nodeDocument.CreateElement( XmlTags.ObjectTag );
+			propertyRoot.SetAttribute( XmlTags.NameAttr, name );
+			propertyRoot.SetAttribute( XmlTags.IdAttr, ID );
+			propertyRoot.SetAttribute( XmlTags.TypeAttr, type );
 			nodeDocument.DocumentElement.AppendChild( propertyRoot );
+
+			state = PropertyListState.Add;
+
+			// Set the default properties for this object.
+			AddNodeProperty( PropertyTags.CreationTime, DateTime.UtcNow );
+
+			Property mvProp = new Property( PropertyTags.MasterIncarnation, ( ulong )0 );
+			mvProp.LocalProperty = true;
+			AddNodeProperty( mvProp );
+
+			Property lvProp = new Property( PropertyTags.LocalIncarnation, ( ulong )0 );
+			//lvProp.LocalProperty = true;
+			AddNodeProperty( lvProp );
 		}
 
 		/// <summary>
-		/// Constructor for the object where the XML document describing the properties is
-		/// already available.
+		/// Constructor for creating an existing PropertyList object.
 		/// </summary>
-		/// <param name="node">The node that this PropertyList belongs to.</param>
-		/// <param name="xmlProperties">An XML element where the properties for this node are rooted.</param>
-		internal PropertyList( Node node, XmlElement xmlProperties )
+		/// <param name="propertyDocument">An XML document that describes the properties for a Collection Store
+		/// object.</param>
+		internal PropertyList( XmlDocument propertyDocument )
 		{
-			this.store = node.store;
-			this.node = node;
-			this.nodeDocument = xmlProperties.OwnerDocument;
-			this.propertyRoot = xmlProperties;
+			nodeDocument = propertyDocument;
+			propertyRoot = nodeDocument.DocumentElement[ XmlTags.ObjectTag ];
+			state = PropertyListState.Update;
+		}
+
+		/// <summary>
+		/// Copy constructor for the PropertyList object.
+		/// </summary>
+		/// <param name="properties">PropertyList object to create new PropertyList object from.</param>
+		internal PropertyList( PropertyList properties )
+		{
+			nodeDocument = properties.nodeDocument.Clone() as XmlDocument;
+			propertyRoot = nodeDocument.DocumentElement[ XmlTags.ObjectTag ];
+			state = properties.state;
+		}
+
+		/// <summary>
+		/// Special constructor used to deserialize a PropertyList object.
+		/// </summary>
+		/// <param name="info">The SerializationInfo populated with the data.</param>
+		/// <param name="context">The source (see StreamingContext) for this serialization.</param>
+		protected PropertyList ( SerializationInfo info, StreamingContext context )
+		{
+			// Covert the string into an XML DOM.
+			nodeDocument = new XmlDocument();
+			nodeDocument.LoadXml( info.GetString( "PropertyData" ) );
+			propertyRoot = nodeDocument.DocumentElement[ XmlTags.ObjectTag ];
+			state = ( PropertyListState )Enum.Parse( typeof( PropertyListState ), info.GetString( "ListState" ) );
+
+			// Strip out any non-transient values.
+			XmlNodeList nonTransList = nodeDocument.DocumentElement.SelectNodes( "//Property[@flags]" );
+			foreach( XmlNode tempNode in nonTransList )
+			{
+				uint flags = Convert.ToUInt32( tempNode.Attributes[ XmlTags.FlagsAttr ].Value );
+				if ( ( flags & Property.Local ) == Property.Local )
+				{
+					// Remove this property out of the document.
+					tempNode.ParentNode.RemoveChild( tempNode );
+				}
+			}
 		}
 		#endregion
 
@@ -168,15 +255,14 @@ namespace Simias.Storage
 			{
 				property.XmlProperty = ( XmlElement )nodeDocument.ImportNode( property.XmlProperty, true );
 				property.XmlPropertyList = this;
-				property.SaveMergeInformation( node, Property.Operation.Add, null, null, false, 0 );
+				property.SaveMergeInformation( this, Property.Operation.Add, null, false, 0 );
 			}
 			else
 			{
-				property.SaveMergeInformation( node, Property.Operation.Modify, null, null, false, 0 );
+				property.SaveMergeInformation( this, Property.Operation.Modify, null, false, 0 );
 			}
 
 			propertyRoot.AppendChild( property.XmlProperty );
-			SetListChanged();
 		}
 
 		/// <summary>
@@ -350,13 +436,30 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Copies the contents of the specified property list to this property list.
+		/// Adds a Relationship type property to the existing property list.
 		/// </summary>
-		/// <param name="propertyList">Source property list.</param>
-		internal void Copy( PropertyList propertyList )
+		/// <param name="name">Name of the property to add.</param>
+		/// <param name="propertyValue">Relationship value of the property to add.</param>
+		internal void AddNodeProperty( string name, Relationship propertyValue )
 		{
-			this.nodeDocument = propertyList.nodeDocument;
-			this.propertyRoot = propertyList.propertyRoot;
+			AddNodeProperty( new Property( name, propertyValue ) );
+		}
+
+		/// <summary>
+		/// Adds the specified property to the change list.
+		/// </summary>
+		/// <param name="property"></param>
+		internal void AddToChangeList( Property property )
+		{
+			changeList.Add( property );
+		}
+
+		/// <summary>
+		/// Clears all Property objects from the change list.
+		/// </summary>
+		internal void ClearChangeList()
+		{
+			changeList.Clear();
 		}
 
 		/// <summary>
@@ -376,7 +479,7 @@ namespace Simias.Storage
 			// Walk each property node and do a case-insensitive compare on the names.
 			foreach ( XmlElement x in propertyRoot )
 			{
-				if ( searchName.IsMatch( x.GetAttribute( Property.NameAttr ) ) )
+				if ( searchName.IsMatch( x.GetAttribute( XmlTags.NameAttr ) ) )
 				{
 					property = new Property( this, x );
 					break;
@@ -616,13 +719,23 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Indicates that the property list has changed and its node needs to be added to the dirty list.  If the node
-		/// does not belong to a collection, don't add it to the list.
+		/// Modifies the first matching Relationship property in the list.  If the property doesn't
+		/// exist, it is created.
 		/// </summary>
-		internal void SetListChanged()
+		/// <param name="name">Name of the Relationship property to modify.</param>
+		/// <param name="propertyValue">New Relationship property value.</param>
+		internal void ModifyNodeProperty( string name, Relationship propertyValue )
 		{
-			// Add this node to the dirty list.
-			node.CollectionNode.AddDirtyNodeToList( node );
+			ModifyNodeProperty( new Property( name, propertyValue ) );
+		}
+
+		/// <summary>
+		/// Removes the specified property from the change list.
+		/// </summary>
+		/// <param name="property"></param>
+		internal void RemoveFromChangeList( Property property )
+		{
+			changeList.Remove( property );
 		}
 		#endregion
 
@@ -633,18 +746,15 @@ namespace Simias.Storage
 		/// <param name="property">Property to add.</param>
 		public void AddProperty( Property property )
 		{
-			lock ( store )
+			// Check to see if the property being set is a system property.
+			if ( !property.IsSystemProperty() )
 			{
-				// Check to see if the property being set is a system property.
-				if ( !property.IsSystemProperty() )
-				{
-					// Make sure that current user has write rights to this collection.
-					AddNodeProperty( property );
-				}
-				else
-				{
-					throw new ApplicationException( "Cannot set reserved property" );
-				}
+				// Make sure that current user has write rights to this collection.
+				AddNodeProperty( property );
+			}
+			else
+			{
+				throw new ApplicationException( "Cannot set reserved property" );
 			}
 		}
 
@@ -819,19 +929,26 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Adds a Relationship type property to the existing property list.
+		/// </summary>
+		/// <param name="name">Name of the property to add.</param>
+		/// <param name="propertyValue">Relationship value of the property to add.</param>
+		public void AddProperty( string name, Relationship propertyValue )
+		{
+			AddProperty( new Property( name, propertyValue ) );
+		}
+
+		/// <summary>
 		/// Deletes the all occurances of the specified property from the property list.
 		/// </summary>
 		/// <param name="name">Name of property to delete.</param>
 		public void DeleteProperties( string name )
 		{
-			lock ( store )
+			// Find all of the existing values.
+			MultiValuedList mvp = FindValues( name );
+			foreach ( Property p in mvp )
 			{
-				// Find all of the existing values.
-				MultiValuedList mvp = FindValues( name );
-				foreach ( Property p in mvp )
-				{
-					p.Delete();
-				}
+				p.Delete();
 			}
 		}
 
@@ -841,15 +958,12 @@ namespace Simias.Storage
 		/// <param name="name">Name of property to delete.</param>
 		public void DeleteSingleProperty( string name )
 		{
-			lock ( store )
+			// Find the first existing value.
+			Property existingProperty = FindSingleValue( name );
+			if ( existingProperty != null )
 			{
-				// Find the first existing value.
-				Property existingProperty = FindSingleValue( name );
-				if ( existingProperty != null )
-				{
-					// Remove this property from the node.
-					existingProperty.Delete();
-				}
+				// Remove this property from the node.
+				existingProperty.Delete();
 			}
 		}
 
@@ -869,18 +983,15 @@ namespace Simias.Storage
 		/// <returns>A property object containing the value of the property if it exists. Otherwise a null is returned.</returns>
 		public Property GetSingleProperty( string name )
 		{
-			lock ( store )
+			// Get the property.
+			Property p = FindSingleValue( name );
+			if ( ( p != null ) && ( p.HiddenProperty == false ) )
 			{
-				// Get the property.
-				Property p = FindSingleValue( name );
-				if ( ( p != null ) && ( p.HiddenProperty == false ) )
-				{
-					return p;
-				}
-				else
-				{
-					return null;
-				}
+				return p;
+			}
+			else
+			{
+				return null;
 			}
 		}
 
@@ -891,10 +1002,7 @@ namespace Simias.Storage
 		/// <returns>A MultiValuedList object that contains all of the values for the specified property.</returns>
 		public MultiValuedList GetProperties( string name )
 		{
-			lock ( store )
-			{
-				return FindValues( name );
-			}
+			return FindValues( name );
 		}
 
 		/// <summary>
@@ -904,16 +1012,13 @@ namespace Simias.Storage
 		/// <param name="property">Property to modify.</param>
 		public void ModifyProperty( Property property )
 		{
-			lock ( store )
+			if ( !property.IsSystemProperty() )
 			{
-				if ( !property.IsSystemProperty() )
-				{
-					ModifyNodeProperty( property );
-				}
-				else
-				{
-					throw new ApplicationException( "Cannot modify a system property" );
-				}
+				ModifyNodeProperty( property );
+			}
+			else
+			{
+				throw new ApplicationException( "Cannot modify a system property" );
 			}
 		}
 
@@ -1103,6 +1208,17 @@ namespace Simias.Storage
 		{
 			ModifyProperty( new Property( name, propertyValue ) );
 		}
+
+		/// <summary>
+		/// Modifies the first matching Relationship property in the list.  If the property doesn't
+		/// exist, it is created.
+		/// </summary>
+		/// <param name="name">Name of the Relationship property to modify.</param>
+		/// <param name="propertyValue">New Relationship property value.</param>
+		public void ModifyProperty( string name, Relationship propertyValue )
+		{
+			ModifyProperty( new Property( name, propertyValue ) );
+		}
 		#endregion
 
 		#region IEnumerable Members
@@ -1116,15 +1232,12 @@ namespace Simias.Storage
 		/// <returns>A property object that can enumerate the property list.</returns>
 		public IEnumerator GetEnumerator()
 		{
-			lock ( store )
-			{
-				return new PropertyEnumerator( this, propertyRoot );
-			}
+			return new PropertyEnumerator( this, propertyRoot );
 		}
 
 		/// <summary>
 		/// Enumerator class for the PropertyList object that allows enumeration of property objects
-		/// within a node.
+		/// within a Collection Store object.
 		/// </summary>
 		private class PropertyEnumerator : ICSEnumerator
 		{
@@ -1145,8 +1258,8 @@ namespace Simias.Storage
 			/// Constructor used to instaniate this object by means of an enumerator.
 			/// </summary>
 			/// <param name="propertyList">The property list object where the enumeration is being performed.</param>
-			/// <param name="xmlProperties">XML element that contains the properties for a node.</param>
-			internal PropertyEnumerator( PropertyList propertyList, XmlElement xmlProperties )
+			/// <param name="xmlProperties">XML element that contains the properties for a Collection Store object.</param>
+			public PropertyEnumerator( PropertyList propertyList, XmlElement xmlProperties )
 			{
 				this.propertyList = propertyList;
 				propertyEnumerator = xmlProperties.GetEnumerator();
@@ -1160,10 +1273,7 @@ namespace Simias.Storage
 			/// </summary>
 			public void Reset()
 			{
-				lock ( propertyList.store )
-				{
-					propertyEnumerator.Reset();
-				}
+				propertyEnumerator.Reset();
 			}
 
 			/// <summary>
@@ -1171,13 +1281,7 @@ namespace Simias.Storage
 			/// </summary>
 			public object Current
 			{
-				get
-				{
-					lock ( propertyList.store )
-					{
-						return new Property( propertyList, ( XmlElement )propertyEnumerator.Current );
-					}
-				}
+				get { return new Property( propertyList, ( XmlElement )propertyEnumerator.Current ); }
 			}
 
 			/// <summary>
@@ -1189,24 +1293,21 @@ namespace Simias.Storage
 			/// </returns>
 			public bool MoveNext()
 			{
-				lock ( propertyList.store )
+				bool moreData = propertyEnumerator.MoveNext();
+				while ( moreData )
 				{
-					bool moreData = propertyEnumerator.MoveNext();
-					while ( moreData )
+					// See if this is a property that is not supposed to be returned.
+					if ( ( ( Property )Current ).HiddenProperty )
 					{
-						// See if this is a property that is not supposed to be returned.
-						if ( ( ( Property )Current ).HiddenProperty )
-						{
-							moreData = propertyEnumerator.MoveNext();
-						}
-						else
-						{
-							break;
-						}
+						moreData = propertyEnumerator.MoveNext();
 					}
-
-					return moreData;
+					else
+					{
+						break;
+					}
 				}
+
+				return moreData;
 			}
 			#endregion
 
@@ -1219,6 +1320,19 @@ namespace Simias.Storage
 			{
 			}
 			#endregion
+		}
+		#endregion
+
+		#region ISerializable Members
+		/// <summary>
+		/// Called by the ISerializable interface to serialize a Node object.
+		/// </summary>
+		/// <param name="info">The SerializationInfo to populate with data.</param>
+		/// <param name="context">The destination (see StreamingContext) for this serialization.</param>
+		public virtual void GetObjectData( SerializationInfo info, StreamingContext context )
+		{
+			info.AddValue( "PropertyData", nodeDocument.OuterXml );
+			info.AddValue( "ListState", Enum.GetName( typeof( PropertyListState ), state ) );
 		}
 		#endregion
 	}

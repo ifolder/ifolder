@@ -41,6 +41,9 @@ namespace ApplicationForms
 		private System.Windows.Forms.ColumnHeader columnHeader2;
 		private System.ComponentModel.Container components = null;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public RemotingSnifferForm()
 		{
 			InitializeComponent();

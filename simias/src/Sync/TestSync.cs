@@ -47,7 +47,7 @@ public class SyncTests: Assertion
 	const string sshCmd = "ssh.exe";
 	const string monoCmd = "/usr/bin/mono";
 	const string monoSyncCmd = "--debug SyncCmd.exe";
-	const bool useTCP = true;
+	const bool useTCP = false;
 	const string relClientDir = "SyncTestClientData";
 	const string remoteBinDir = "$IFOLDER_BIN";
 	static readonly string serverDir = Path.GetFullPath("SyncTestServerData");
@@ -55,7 +55,7 @@ public class SyncTests: Assertion
 	static readonly string clientFolder = Path.Combine(clientDir, folderName);
 	static readonly string serverFolder = Path.Combine(serverDir, folderName);
 
-	bool runChildProcess = true;
+	bool runChildProcess = false;
 	string clientAddress = null; // for use in SSH commandlines, can be user@hostname, raw IP, etc.
 	string host = "127.0.0.1"; // must be set to name or external address of this machine if clientAddress is set
 

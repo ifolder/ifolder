@@ -33,6 +33,11 @@ namespace Novell.AddressBook
 	public class Common
 	{
 		#region Class Members
+
+		internal static string addressBookProperty = "AB:AddressBook";
+		internal static string addressBookTypeProperty = "AB:AddressBookType";
+		internal static string addressBookRightsProperty = "AB:AddressBookRights";
+
 		/// <summary>
 		/// email property which is contained in a contact
 		/// </summary>
@@ -226,12 +231,16 @@ namespace Novell.AddressBook
 		/// </summary>
 		internal static string[] vCardProperties = new string[] {"ADR", "BDAY", "EMAIL", "LOGO", "N", "NICKNAME", "NOTE", "ORG", "PHOTO", "ROLE", "SOUND", "TEL", "TITLE", "URL", "X-NAB-BLOG", "X-NAB-USERNAME"};
 
-
 		/// <summary>
 		/// Exception header for all application exceptions thrown by the address book
 		/// </summary>
 		internal const string abExceptionHeader = "Novell.AddressBook.Exception - ";
 		internal const string addressBookExceptionHeader = "Novell.AddressBook.Exception - ";
+
+		// Relationship property names
+		internal const string contactToAddressBook = "AB:ContactToAddressBook";
+		internal const string nameToContact = "AB:NameToContact";
+		internal const string addressToContact = "AB:AddressToContact";
 
 		#endregion
 

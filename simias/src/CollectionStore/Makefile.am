@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-CollectionStore_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/AccessControl.cs $(srcdir)/Alias.cs $(srcdir)/Identity.cs $(srcdir)/IdentityManager.cs $(srcdir)/LocalAddressBook.cs $(srcdir)/CacheNode.cs $(srcdir)/Collection.cs $(srcdir)/DirectoryEntry.cs $(srcdir)/FileEntry.cs $(srcdir)/FileSystemEntry.cs $(srcdir)/ICSEnumerator.cs $(srcdir)/MultiValuedList.cs $(srcdir)/Node.cs $(srcdir)/NodeStream.cs $(srcdir)/Property.cs $(srcdir)/PropertyList.cs $(srcdir)/Store.cs
+CollectionStore_CSFILES = $(srcdir)/AccessControl.cs $(srcdir)/Alias.cs $(srcdir)/AssemblyInfo.cs $(srcdir)/BaseContact.cs $(srcdir)/BaseFileNode.cs $(srcdir)/Collection.cs $(srcdir)/DirNode.cs $(srcdir)/FileNode.cs $(srcdir)/ICSEnumerator.cs $(srcdir)/IdentityManager.cs $(srcdir)/LinkNode.cs $(srcdir)/LocalAddressBook.cs $(srcdir)/MultiValuedList.cs $(srcdir)/Node.cs $(srcdir)/NodeTypes.cs $(srcdir)/Property.cs $(srcdir)/PropertyList.cs $(srcdir)/ShallowNode.cs $(srcdir)/Store.cs $(srcdir)/StoreFileNode.cs
 CollectionStore_CSFILES_CSC := $(subst /,$(SEP),$(CollectionStore_CSFILES))
 CollectionStore_INCLUDES =
 CollectionStore_RESOURCES =
@@ -16,8 +16,8 @@ CollectionStoreTests_CSFILES_CSC := $(subst /,$(SEP),$(CollectionStoreTests_CSFI
 CollectionStoreTests_INCLUDES =
 CollectionStoreTests_RESOURCES =
 CollectionStoreTests_FLAGS = $(CSC_LIBFLAG)
-CollectionStoreTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Security.dll nunit.util.dll nunit.framework.dll Common.dll CollectionStore.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll
-CollectionStoreTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common $(srcdir)/../../external/SecureChannelSinks
+CollectionStoreTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Security.dll nunit.util.dll nunit.framework.dll Common.dll CollectionStore.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Storage.dll
+CollectionStoreTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common $(srcdir)/../../external/SecureChannelSinks ../Storage
 
 EXTRA_DIST = $(CollectionStore_CSFILES) $(CollectionStoreTests_CSFILES)
 

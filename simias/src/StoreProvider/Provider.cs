@@ -86,6 +86,7 @@ namespace Simias.Storage.Provider
 		#endregion
 
 		#region Static Methods.
+
 		/// <summary>
 		/// Connect to the default provider.
 		/// </summary>
@@ -93,48 +94,20 @@ namespace Simias.Storage.Provider
 		/// <returns></returns>
 		public static IProvider Connect(out bool created)
 		{
-			return LoadProvider(new Configuration(), out created);
+			return Connect(new ProviderConfig(), out created);
 		}
 
 		/// <summary>
-		/// Connect to the default provider.
+		/// Connect to the store using the provided configuration.
 		/// </summary>
-		/// <param name="path">Path to the store.</param>
-		/// <param name="created">True if the Store was created.</param>
+		/// <param name="conf"></param>
+		/// <param name="created"></param>
 		/// <returns></returns>
-		public static IProvider Connect(string path, out bool created)
-		{
-			return (LoadProvider(new Configuration(path), out created));
-		}
-		
-		/// <summary>
-		/// Connect to the specified provider.
-		/// </summary>
-		/// <param name="assembly">Path to the assembly that contains the provider.</param>
-		/// <param name="providerType">Name of the class that implements the IProvider interface.</param>
-		/// <param name="path"></param>
-		/// <param name="created">True if the Store was created.</param>
-		/// <returns></returns>
-		public static IProvider Connect(string assembly, string providerType, string path, out bool created)
-		{
-			Configuration conf = new Configuration(path);
-			conf.Assembly = assembly;
-			conf.TypeName = providerType;
-			return (LoadProvider(conf, out created));
-		}
-		
-		/// <summary>
-		/// Connect to the specified provider.
-		/// </summary>
-		/// <param name="path">The path to the DB.</param>
-		/// <param name="created">True if the Store was created.</param>
-		/// <returns></returns>
-		private static IProvider LoadProvider(Configuration conf, out bool created)
+		public static IProvider Connect(ProviderConfig conf, out bool created)
 		{
 			string path = conf.Path;
 			string assembly = conf.Assembly;
 			string providerType = conf.TypeName;
-			//string path = DbPath;
 			created = false;
 			IProvider provider = null;
 
@@ -195,7 +168,6 @@ namespace Simias.Storage.Provider
 				// Set the Provider in the configuration.
 				conf.Assembly = assembly;
 				conf.TypeName = providerType;
-				//DbPath = path;
 				created = true;
 			}
 			
@@ -213,21 +185,13 @@ namespace Simias.Storage.Provider
 			}
 		}
 		
-		/// <summary>
-		/// Gets the default database path.
-		/// </summary>
-		public static string DefaultPath
-		{
-			get
-			{
-				return Simias.Configuration.DefaultPath;
-			}
-		}
-		
 		#endregion
 	}
 
-	public class Configuration
+	/// <summary>
+	/// Store configuration class.
+	/// </summary>
+	public class ProviderConfig
 	{
 		private const string CFG_Section = "StoreProvider";
 		private const string CFG_Path = "Path";
@@ -238,14 +202,32 @@ namespace Simias.Storage.Provider
 
 		Simias.Configuration conf;
 
-		internal Configuration()
+		/// <summary>
+		/// Default Constructor
+		/// </summary>
+		public ProviderConfig()
 		{
 			conf = new Simias.Configuration();
+			Path = conf.StorePath;
 		}
 
-		internal Configuration(string path)
+		/// <summary>
+		/// Constructor that takes a path.
+		/// </summary>
+		/// <param name="path">The path to the Configuration.</param>
+		public ProviderConfig(string path)
 		{
 			conf = new Simias.Configuration(path);
+			Path = conf.StorePath;
+		}
+
+		/// <summary>
+		/// Constructor that takes a Simias.Configuration object.
+		/// </summary>
+		/// <param name="sConf">The the simias configuration object.</param>
+		public ProviderConfig(Configuration sConf)
+		{
+			conf = sConf;
 			Path = conf.StorePath;
 		}
 
@@ -256,7 +238,7 @@ namespace Simias.Storage.Provider
 		{
 			get
 			{
-				string path = Simias.Configuration.DefaultPath;
+				string path = conf.StorePath;
 				return (conf.Get(CFG_Section, CFG_Path, path));
 			}
 			set

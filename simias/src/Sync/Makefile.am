@@ -6,8 +6,8 @@ Sync_CSFILES_CSC := $(subst /,$(SEP),$(Sync_CSFILES))
 Sync_INCLUDES =
 Sync_RESOURCES =
 Sync_FLAGS = $(CSC_LIBFLAG)
-Sync_LIBS = Common.dll CollectionEvents.dll StoreProvider.dll CollectionStore.dll SyncCommon.dll System.dll System.Data.dll System.Runtime.Remoting.dll
-Sync_LIBPATH = ../Common ../SyncCommon ../CollectionEvents ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../StoreProvider ../FsProvider ../SqliteProvider ../../external/sqlite/linux
+Sync_LIBS = Common.dll CollectionEvents.dll StoreProvider.dll CollectionStore.dll SyncCommon.dll System.dll System.Data.dll System.Runtime.Remoting.dll Storage.dll
+Sync_LIBPATH = ../Common ../SyncCommon ../CollectionEvents ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../StoreProvider ../FsProvider ../SqliteProvider ../../external/sqlite/linux ../Storage
 
 SyncCmd_CSFILES = $(srcdir)/SyncCmd.cs
 SyncCmd_CSFILES_CSC := $(subst /,$(SEP),$(SyncCmd_CSFILES))

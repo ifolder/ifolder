@@ -26,8 +26,6 @@ using System.Collections;
 using System.Security.Cryptography;
 
 using Simias;
-using Simias.Event;
-using Persist = Simias.Storage.Provider;
 using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
 
 namespace Simias.Storage
@@ -38,28 +36,30 @@ namespace Simias.Storage
 	/// since the database only ever has one owner.  All other identities can access the database 
 	/// only by impersonation.
 	/// </summary>
-	internal class IdentityManager : RsaKeyStore, IDisposable
+	internal class IdentityManager : RsaKeyStore
 	{
 		#region Class Members
 		/// <summary>
-		/// Reference to the store object.
+		/// This is used to keep from generating a new key set everytime a new RSACryptoSecurityProvider
+		/// object is instantiated. This is passed as a parameter to the constructor and will initially
+		/// use the dummy key set until the real key set is imported.
 		/// </summary>
-		private Store store;
+		static internal CspParameters dummyCsp;
 
 		/// <summary>
-		/// Handle to the local address book.
-		/// </summary>
-		private LocalAddressBook localAb;
-
-		/// <summary>
-		/// Name of this domain that the store object belongs in.
+		/// Name of the local Collection Store domain.
 		/// </summary>
 		private string domainName;
 
 		/// <summary>
+		/// Reference to the LocalAddressBook object.
+		/// </summary>
+		private LocalAddressBook localAb;
+
+		/// <summary>
 		/// Represents the identity of the user that instantiated this object.
 		/// </summary>
-		private Identity identity;
+		private BaseContact identity;
 
 		/// <summary>
 		/// Holds the public key for the server.
@@ -69,12 +69,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Container used to keep track of the current identity for this store handle.
 		/// </summary>
-		private Stack impersonationId = new Stack();
-
-		/// <summary>
-		/// Indicates if the object has been disposed.
-		/// </summary>
-		private bool disposed = false;
+		private Stack impersonationID = new Stack();
 		#endregion
 
 		#region Properties
@@ -83,36 +78,25 @@ namespace Simias.Storage
 		/// </summary>
 		public string CurrentUserGuid
 		{
-			get 
-			{ 
-				lock ( store )
-				{
-					if ( disposed )
-					{
-						throw new ObjectDisposedException( this.ToString() );
-					}
-
-					return ( impersonationId.Count == 0 ) ? identity.Id : ( impersonationId.Peek() as Identity ).Id; 
-				}
-			}
+			get { return ( impersonationID.Count == 0 ) ? identity.ID : ( impersonationID.Peek() as BaseContact ).ID; }
 		}
 
 		/// <summary>
 		/// Gets the current impersonating identity.
 		/// </summary>
-		public Identity CurrentIdentity
+		public BaseContact CurrentIdentity
 		{
 			get 
 			{ 
-				lock ( store )
+				// Refresh the identity object before returning it.
+				if ( impersonationID.Count == 0 )
 				{
-					if ( disposed )
-					{
-						throw new ObjectDisposedException( this.ToString() );
-					}
-
-					identity.Refresh();
-					return ( impersonationId.Count == 0 ) ? identity : impersonationId.Peek() as Identity; 
+					localAb.Refresh( identity );
+					return identity;
+				}
+				else
+				{
+					return impersonationID.Peek() as BaseContact; 
 				}
 			}
 		}
@@ -122,15 +106,15 @@ namespace Simias.Storage
 		/// </summary>
 		public string DomainName
 		{
-			get 
-			{ 
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
+			get { return domainName; }
+		}
 
-				return domainName; 
-			}
+		/// <summary>
+		/// Gets whether the current executing user is being impersonated.
+		/// </summary>
+		public bool IsImpersonating
+		{
+			get { return ( impersonationID.Count > 0 ) ? true : false; }
 		}
 
 		/// <summary>
@@ -138,49 +122,36 @@ namespace Simias.Storage
 		/// </summary>
 		public RSACryptoServiceProvider PublicKey
 		{
-			get 
-			{ 
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
-
-				return publicKey; 
-			}
+			get { return publicKey; }
 		}
 		#endregion
 
 		#region Constructor
 		/// <summary>
-		/// Constructor of the object.
+		/// Static constructor for the object.
 		/// </summary>
-		/// <param name="identity">Object that represents the current identity.</param>
-		public IdentityManager( Identity identity )
+		static IdentityManager()
 		{
-			this.identity = identity;
-			this.localAb = identity.AddressBook;
-			this.store = identity.AddressBook.LocalStore;
-			this.domainName = identity.AddressBook.DomainName;
-			this.publicKey = new RSACryptoServiceProvider();
-			this.publicKey.ImportParameters( identity.ServerCredential.ExportParameters( false ) );
-
-//			// Set up a delegate to update the identity object if it changes.
-//			string[] identityFilter = new string[ 1 ];
-//			identityFilter[ 0 ] = identity.Id;
-//			localAb.NodeEventsSubscribe( new LocalAddressBook.NodeChangeHandler( OnChangedIdentity ), identityFilter );
+			// Set up the dummy key store so that it will contain a dummy key set.
+			dummyCsp = new CspParameters();
+			dummyCsp.KeyContainerName = "DummyKeyStore";
+			new RSACryptoServiceProvider( dummyCsp );
 		}
-		#endregion
 
-		#region Private Methods
-//		/// <summary>
-//		/// This method is informed of a change to the identity object and will automatically refresh it.
-//		/// </summary>
-//		/// <param name="args">Event context arguments.</param>
-//		private void OnChangedIdentity( NodeEventArgs args )
-//		{
-//			MyTrace.WriteLine( "Refreshing local identity object." );
-//			identity.Refresh();
-//		}
+		/// <summary>
+		/// Constructor for the IdentityManager object.
+		/// </summary>
+		/// <param name="domainName">Name of the local Collection Store domain.</param>
+		/// <param name="localAb">Object reference to the LocalAddressBook object.</param>
+		/// <param name="identity">Object that represents the current identity.</param>
+		public IdentityManager( string domainName, LocalAddressBook localAb, BaseContact identity )
+		{
+			this.domainName = domainName;
+			this.identity = identity;
+			this.localAb = localAb;
+			publicKey = new RSACryptoServiceProvider( dummyCsp );
+			publicKey.ImportParameters( identity.ServerCredential.ExportParameters( false ) );
+		}
 		#endregion
 
 		#region Public Methods
@@ -191,7 +162,7 @@ namespace Simias.Storage
 		/// prevents it from accepting credentials received during peer authentication. Failing to
 		/// raise an exception with such a policy in effect will result in a policy violation because
 		/// the caller will consider that it is OK to use the credentials to authenticate the peer.
-		/// /// </summary>
+		/// </summary>
 		/// <param name="realm">The realm to which the server principal belongs</param>
 		/// <param name="principalName">The name of the server principal</param>
 		/// <param name="rsaKeys">RSA algorithm with the server principal's public key</param>
@@ -207,30 +178,22 @@ namespace Simias.Storage
 		/// prevents it from accepting credentials received during peer authentication. Failing to
 		/// raise an exception with such a policy in effect will result in a policy violation because
 		/// the caller will consider that it is OK to use the credentials to authenticate the peer.
-		/// /// </summary>
+		/// </summary>
 		/// <param name="realm">The realm to which the client principal belongs</param>
 		/// <param name="principalName">The name of the client principal</param>
 		/// <param name="rsaKeys">RSA algorithm with the client principal's public key</param>
 		public override void AcceptClientPrincipalCredentials(string realm, string principalName, RSACryptoServiceProvider rsaKeys)
 		{
-			lock ( store )
+			// Find this contact.
+			BaseContact tempIdentity = new BaseContact( localAb, localAb.GetNodeByID( principalName ) );
+			if ( tempIdentity == null )
 			{
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
-
-				// Find this contact.
-				Identity tempIdentity = localAb.GetIdentityById( principalName );
-				if ( tempIdentity == null )
-				{
-					throw new ApplicationException( "No such identity." );
-				}
-
-				// Add the public key to this identity.
-				tempIdentity.AddPublicKey( realm, rsaKeys );
-				tempIdentity.Commit();
+				throw new ApplicationException( "No such identity." );
 			}
+
+			// Add the public key to this identity.
+			tempIdentity.AddPublicKey( realm, rsaKeys );
+			localAb.Commit( tempIdentity );
 		}
 
 		/// <summary>
@@ -241,32 +204,24 @@ namespace Simias.Storage
 		/// <param name="rsaKeys">RSA algorithm with the client principal's public key, null if no credentials found</param>
 		public override void GetClientPrincipalCredentials(string realm, string principalName, out RSACryptoServiceProvider rsaKeys)
 		{
-			lock ( store )
+			// Get the public key associated with the domain.
+			// If the specified realm is the same as the current realm, use the public key from the 
+			// principal name instead of a client key.
+			if ( realm == domainName )
 			{
-				if ( disposed )
+				rsaKeys = publicKey;
+			}
+			else
+			{
+				// Find the specified contact and return the public key information.
+				BaseContact tempIdentity = new BaseContact( localAb, localAb.GetNodeByID( principalName ) );
+				if ( tempIdentity != null )
 				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
-
-				// Get the public key associated with the domain.
-				// If the specified realm is the same as the current realm, use the public key from the 
-				// principal name instead of a client key.
-				if ( realm == domainName )
-				{
-					rsaKeys = publicKey;
+					rsaKeys = tempIdentity.GetDomainPublicKey( realm );
 				}
 				else
 				{
-					// Find the specified contact and return the public key information.
-					Identity tempIdentity = localAb.GetIdentityById( principalName );
-					if ( tempIdentity != null )
-					{
-						rsaKeys = tempIdentity.GetDomainPublicKey( realm );
-					}
-					else
-					{
-						rsaKeys = null;
-					}
+					rsaKeys = null;
 				}
 			}
 		}
@@ -283,34 +238,28 @@ namespace Simias.Storage
 		/// <param name="rsaKeys">RSA algorithm with the client principal's public and private keys</param>
 		public override void GetLocalCredentialsForServer(string serverRealm, string server, out string realm, out string principalName, out RSACryptoServiceProvider rsaKeys)
 		{
-			lock ( store )
+			// If the server realm is the same as the current realm then use the primary credentials.
+			if ( serverRealm != domainName )
 			{
-				if ( disposed )
+				// Refresh the identity object.
+				localAb.Refresh( identity );
+
+				// Find the alias that belongs to the specified domain.
+				Alias alias = identity.GetAliasFromDomain( serverRealm );
+				if ( alias == null )
 				{
-					throw new ObjectDisposedException( this.ToString() );
+					throw new ApplicationException( "No identity exists for specified domain." );
 				}
 
-				// If the server realm is the same as the current realm then use the primary credentials.
-				if ( serverRealm != domainName )
-				{
-					// Find the alias that belongs to the specified domain.
-					identity.Refresh();
-					Alias alias = identity.GetAliasFromDomain( serverRealm );
-					if ( alias == null )
-					{
-						throw new ApplicationException( "No identity exists for specified domain." );
-					}
-
-					principalName = alias.Id;
-				}
-				else
-				{
-					principalName = identity.Id;
-				}
-
-				realm = domainName;
-				rsaKeys = identity.ServerCredential;
+				principalName = alias.ID;
 			}
+			else
+			{
+				principalName = identity.ID;
+			}
+
+			realm = domainName;
+			rsaKeys = identity.ServerCredential;
 		}
 
 		/// <summary>
@@ -323,17 +272,9 @@ namespace Simias.Storage
 		/// <param name="rsaKeys">RSA algorithm with the principal's public and private keys</param>
 		public override void GetServerCredentials(out string realm, out string principalName, out RSACryptoServiceProvider rsaKeys)
 		{
-			lock ( store )
-			{
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
-
-				realm = domainName;
-				principalName = identity.Id;
-				rsaKeys = identity.ServerCredential;
-			}
+			realm = domainName;
+			principalName = identity.ID;
+			rsaKeys = identity.ServerCredential;
 		}
 
 		/// <summary>
@@ -344,31 +285,25 @@ namespace Simias.Storage
 		/// <param name="rsaKeys">RSA algorithm with the server principal's public key, null if no credentials found</param>
 		public override void GetServerPrincipalCredentials(string realm, string principalName, out RSACryptoServiceProvider rsaKeys)
 		{
-			lock ( store )
+			// If the realm is the same as the current realm, just return the public key for the current realm.
+			if ( realm == domainName )
 			{
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
+				rsaKeys = publicKey;
+			}
+			else
+			{
+				// Refresh the identity object first.
+				localAb.Refresh( identity );
 
-				// If the realm is the same as the current realm, just return the public key for the current realm.
-				if ( realm == domainName )
+				// Need to look up the alias for the specified domain and return the public key.
+				Alias alias = identity.GetAliasFromDomain( realm );
+				if ( alias != null )
 				{
-					rsaKeys = publicKey;
+					rsaKeys = alias.PublicKey;
 				}
 				else
 				{
-					// Need to look up the alias for the specified domain and return the public key.
-					identity.Refresh();
-					Alias alias = identity.GetAliasFromDomain( realm );
-					if ( alias != null )
-					{
-						rsaKeys = alias.PublicKey;
-					}
-					else
-					{
-						rsaKeys = null;
-					}
+					rsaKeys = null;
 				}
 			}
 		}
@@ -376,26 +311,18 @@ namespace Simias.Storage
 		/// <summary>
 		/// Impersonates the specified identity, if the userId is verified.
 		/// </summary>
-		/// <param name="userId">User ID to impersonate.</param>
-		public void Impersonate( string userId )
+		/// <param name="userGuid">User ID to impersonate.</param>
+		public void Impersonate( string userGuid )
 		{
-			lock ( store )
+			// Look up the specified user in the local address book.
+			BaseContact impersonator = new BaseContact( localAb, localAb.GetNodeByID( userGuid ) );
+			if ( impersonator == null )
 			{
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
-
-				// Look up the specified user in the local address book.
-				Identity impersonator = localAb.GetIdentityById( userId );
-				if ( impersonator == null )
-				{
-					throw new ApplicationException( "No such user." );
-				}
-
-				// Push the user onto the impersonation stack.
-				impersonationId.Push( impersonator );
+				throw new ApplicationException( "No such user." );
 			}
+
+			// Push the user onto the impersonation stack.
+			impersonationID.Push( impersonator );
 		}
 
 		/// <summary>
@@ -403,84 +330,10 @@ namespace Simias.Storage
 		/// </summary>
 		public void Revert()
 		{
-			lock ( store )
+			// Don't ever pop an empty stack.
+			if ( impersonationID.Count > 0 )
 			{
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
-
-				// Don't ever pop an empty stack.
-				if ( impersonationId.Count > 0 )
-				{
-					impersonationId.Pop();
-				}
-			}
-		}
-		#endregion
-
-		#region IDisposable Members
-		/// <summary>
-		/// Allows for quick release of managed and unmanaged resources.
-		/// Called by applications.
-		/// </summary>
-		public void Dispose()
-		{
-			lock ( store )
-			{
-				Dispose( true );
-				GC.SuppressFinalize( this );
-			}
-		}
-
-		/// <summary>
-		/// Dispose( bool disposing ) executes in two distinct scenarios.
-		/// If disposing equals true, the method has been called directly
-		/// or indirectly by a user's code. Managed and unmanaged resources
-		/// can be disposed.
-		/// If disposing equals false, the method has been called by the 
-		/// runtime from inside the finalizer and you should not reference 
-		/// other objects. Only unmanaged resources can be disposed.
-		/// </summary>
-		/// <param name="disposing">Specifies whether called from the finalizer or from the application.</param>
-		private void Dispose( bool disposing )
-		{
-			// Check to see if Dispose has already been called.
-			if ( !disposed )
-			{
-				// Protect callers from accessing the freed members.
-				disposed = true;
-
-				// If disposing equals true, dispose all managed and unmanaged resources.
-				if ( disposing )
-				{
-					// Let go of the address book.
-					if ( localAb != null )
-					{
-						localAb.Dispose();
-					}
-
-					// Clean out the impersonation stack.
-					impersonationId.Clear();
-
-					// Let go of the other managed references.
-					identity = null;
-					store = null;
-				}
-			}
-		}
-		
-		/// <summary>
-		/// Use C# destructor syntax for finalization code.
-		/// This destructor will run only if the Dispose method does not get called.
-		/// It gives your base class the opportunity to finalize.
-		/// Do not provide destructors in types derived from this class.
-		/// </summary>
-		~IdentityManager()      
-		{
-			lock ( this )
-			{
-				Dispose( false );
+				impersonationID.Pop();
 			}
 		}
 		#endregion

@@ -89,6 +89,16 @@
                     Project = "{91EECEEF-0FD1-41A3-892C-D3A0F39BC711}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "CollectionStore"
+                    AssemblyName = "CollectionStore"
+                    HintPath = "..\..\CollectionStore\bin\Debug\CollectionStore.dll"
+                />
+                <Reference
+                    Name = "Common"
+                    AssemblyName = "Common"
+                    HintPath = "..\..\Common\Library\bin\Debug\Common.dll"
+                />
             </References>
         </Build>
         <Files>

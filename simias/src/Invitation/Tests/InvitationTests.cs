@@ -41,8 +41,6 @@ namespace Simias.Invite.Tests
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(InvitationTests));
 
-		string testStorePath;
-		Uri testStoreUri;
 		int id = 0;
 		Store store;
 		Collection collection;
@@ -52,7 +50,6 @@ namespace Simias.Invite.Tests
 		/// </summary>
 		public InvitationTests()
 		{
-			MyTrace.SendToConsole();
 		}
 
 		/// <summary>
@@ -62,23 +59,24 @@ namespace Simias.Invite.Tests
 		public void SetUp()
 		{
 			// the test store
-			testStorePath = Path.GetFullPath(".invitation" + id++);
-			testStoreUri = new Uri(testStorePath);
+			string path = Path.GetFullPath(".invitation" + id++);
 
 			// clear any stale store
-			if (Directory.Exists(testStorePath))
+			if (Directory.Exists(path))
 			{
-				Directory.Delete(testStorePath, true);
+				Directory.Delete(path, true);
 			}
 
+			Configuration config = new Configuration(path);
+
 			// store
-			store = Store.Connect(testStoreUri, null);
+			store = new Store(config);
 
 			// create collection
-			collection = store.CreateCollection("Invitation Collection");
+			collection = new Collection(store, "Invitation Collection");
 			UriBuilder builder = new UriBuilder("http", SyncProperties.SuggestedHost, SyncProperties.SuggestedPort);
 			collection.Properties.AddProperty(SyncCollection.MasterUriPropertyName, builder.Uri);
-			collection.Commit(true);
+			collection.Commit();
 		}
 
 		/// <summary>
@@ -88,13 +86,9 @@ namespace Simias.Invite.Tests
 		public void TearDown()
 		{
 			// remove collection
-			collection.Delete(true);
-
-			// kludge for the store provider
-			GC.Collect();
+			collection.Delete();
 
 			// remove store
-			store.ImpersonateUser(Access.StoreAdminRole);
 			store.Delete();
 			store = null;
 		}
@@ -107,7 +101,7 @@ namespace Simias.Invite.Tests
 		{
 			// user
 			Invitation invitation = InvitationService.CreateInvitation(collection,
-				collection.LocalStore.CurrentUser);
+				collection.StoreReference.CurrentUserGuid);
 
 			invitation.FromName = "JDoe";
 			invitation.FromEmail = "denali@novell.com";
@@ -152,7 +146,7 @@ namespace Simias.Invite.Tests
 		{
 			// user
 			Invitation invitation = InvitationService.CreateInvitation(collection,
-				collection.LocalStore.CurrentUser);
+				collection.StoreReference.CurrentUserGuid);
 
 			invitation.FromName = "JDoe";
 			// BAD: invitation.FromEmail = "denali@novell.com";
@@ -173,7 +167,7 @@ namespace Simias.Invite.Tests
 		{
 			// user
 			Invitation invitation = InvitationService.CreateInvitation(collection,
-				collection.LocalStore.CurrentUser);
+				collection.StoreReference.CurrentUserGuid);
 
 			invitation.FromName = "JDoe";
 			invitation.FromEmail = "denali@novell.com";

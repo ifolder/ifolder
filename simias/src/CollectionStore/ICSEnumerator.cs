@@ -28,14 +28,9 @@ namespace Simias.Storage
 {
 	/// <summary>
 	/// Interface declaration for an enumerator that implements a dispose method.
-	/// The Simias.Storage.Provider.iResultsSet requires that it be disposed
-	/// by the same thread that allocated it.  This interface gives the applications
-	/// a way to know that even though they receive an IEnumerator interface to Collection
-	/// Store objects, the IEnumerator can always be upcasted to ICSEnumerator and
-	/// Dispose() can then be called.
 	/// </summary>
 	/// <remarks>
-	/// The client must call Dispose() to free up system resources before releasing
+	/// The application should call Dispose() to free up system resources before releasing
 	/// the reference to the ICSEnumerator.
 	/// </remarks>
 	public interface ICSEnumerator : IEnumerator, IDisposable

@@ -35,11 +35,6 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
-		/// Reference to the store object.
-		/// </summary>
-		private Store store;
-
-		/// <summary>
 		/// Name of this property.
 		/// </summary>
 		private string name;
@@ -61,13 +56,7 @@ namespace Simias.Storage
 		/// </summary>
 		public int Count
 		{
-			get 
-			{ 
-				lock ( store )
-				{
-					return valueList.Count; 
-				}
-			}
+			get { return valueList.Count; }
 		}
 
 		/// <summary>
@@ -75,13 +64,7 @@ namespace Simias.Storage
 		/// </summary>
 		public Property this[ int index ]
 		{
-			get 
-			{ 
-				lock ( store )
-				{
-					return new Property( propertyList, ( XmlElement )valueList[ index ] ); 
-				}
-			}
+			get { return new Property( propertyList, ( XmlElement )valueList[ index ] ); }
 		}
 		#endregion
 
@@ -94,7 +77,6 @@ namespace Simias.Storage
 		/// <param name="hiddenProperties">If true, return hidden properties.</param>
 		internal MultiValuedList( PropertyList propertyList, string name, bool hiddenProperties )
 		{
-			this.store = propertyList.PropertyNode.store;
 			this.propertyList = propertyList;
 			this.name = name;
             
@@ -124,7 +106,6 @@ namespace Simias.Storage
 		{
 			Regex searchValue = null;
 
-			this.store = propertyList.PropertyNode.store;
 			this.propertyList = propertyList;
 			this.name = attribute;
 
@@ -156,19 +137,18 @@ namespace Simias.Storage
 		/// <param name="flagBits">Specifies that all properties with the specified flags bits set are returned.</param>
 		internal MultiValuedList( PropertyList propertyList, uint flagBits )
 		{
-			this.store = propertyList.PropertyNode.store;
 			this.propertyList = propertyList;
-			this.name = Property.FlagsAttr;
+			this.name = XmlTags.FlagsAttr;
 
 			// Build the list of property values.
 			// Walk each property node and do a check to see if the flagbits match.
 			foreach ( XmlElement x in propertyList.PropertyRoot )
 			{
 				// Check if this xml node contains the specified attribute.
-				if ( x.HasAttribute( Property.FlagsAttr ) )
+				if ( x.HasAttribute( XmlTags.FlagsAttr ) )
 				{
 					// See if the flag bits match.
-					if ( ( Convert.ToUInt32( x.GetAttribute( Property.FlagsAttr ) ) & flagBits ) == flagBits )
+					if ( ( Convert.ToUInt32( x.GetAttribute( XmlTags.FlagsAttr ) ) & flagBits ) == flagBits )
 					{
 						valueList.Add( x );
 					}
@@ -188,10 +168,7 @@ namespace Simias.Storage
 		/// <returns>A property object that can enumerate the property list.</returns>
 		public IEnumerator GetEnumerator()
 		{
-			lock ( store )
-			{
-				return new MultiValuedEnumerator( propertyList, valueList );
-			}
+			return new MultiValuedEnumerator( propertyList, valueList );
 		}
 
 		/// <summary>
@@ -200,11 +177,6 @@ namespace Simias.Storage
 		private class MultiValuedEnumerator : ICSEnumerator
 		{
 			#region Class Members
-			/// <summary>
-			/// Reference to the store object.
-			/// </summary>
-			private Store store;
-
 			/// <summary>
 			/// The enumerator that we will use to enumerate the DOM tree.
 			/// </summary>
@@ -224,7 +196,6 @@ namespace Simias.Storage
 			/// <param name="valueList">ArrayList that contains the multivalued properties for a node.</param>
 			internal MultiValuedEnumerator( PropertyList propertyList, ArrayList valueList )
 			{
-				this.store = propertyList.PropertyNode.store;
 				this.propertyList = propertyList;
 				multiValuedEnumerator = valueList.GetEnumerator();
 			}
@@ -237,10 +208,7 @@ namespace Simias.Storage
 			/// </summary>
 			public void Reset()
 			{
-				lock ( store )
-				{
-					multiValuedEnumerator.Reset();
-				}
+				multiValuedEnumerator.Reset();
 			}
 
 			/// <summary>
@@ -248,13 +216,7 @@ namespace Simias.Storage
 			/// </summary>
 			public object Current
 			{
-				get
-				{
-					lock ( store )
-					{
-						return new Property( propertyList, ( XmlElement )multiValuedEnumerator.Current );
-					}
-				}
+				get	{ return new Property( propertyList, ( XmlElement )multiValuedEnumerator.Current ); }
 			}
 
 			/// <summary>
@@ -266,10 +228,7 @@ namespace Simias.Storage
 			/// </returns>
 			public bool MoveNext()
 			{
-				lock ( store )
-				{
-					return multiValuedEnumerator.MoveNext();
-				}
+				return multiValuedEnumerator.MoveNext();
 			}
 			#endregion
 
