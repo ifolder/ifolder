@@ -1,7 +1,8 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-TrayAppGtk_CSFILES = $(srcdir)/TrayApp.cs $(srcdir)/SharingPage.cs $(srcdir)/FileBrowser.cs $(srcdir)/DirectoryEntry.cs $(srcdir)/PropertiesDialog.cs $(srcdir)/CollectionBrowser.cs $(srcdir)/InvitationWizard.cs $(srcdir)/NodePropertyPage.cs $(srcdir)/IntroDialog.cs $(srcdir)/SettingsPage.cs $(srcdir)/CrashReport.cs
+TrayAppGtk_CSFILES = $(srcdir)/TrayApp.cs $(srcdir)/SharingPage.cs $(srcdir)/FileBrowser.cs $(srcdir)/DirectoryEntry.cs $(srcdir)/PropertiesDialog.cs $(srcdir)/CollectionBrowser.cs $(srcdir)/InvitationWizard.cs $(srcdir)/NodePropertyPage.cs $(srcdir)/IntroDialog.cs $(srcdir)/SettingsPage.cs $(srcdir)/CrashReport.cs $(srcdir)/ReunionBrowser.cs
+
 TrayAppGtk_CSFILES_CSC := $(subst /,$(SEP),$(TrayAppGtk_CSFILES))
 TrayAppGtk_INCLUDES = 
 TrayAppGtk_RESOURCES =
@@ -30,7 +31,7 @@ CollectionBrowserGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/lib $(ADDRESSBOOK_INSTALL_
 INSTALL_BIN_FILES = $(srcdir)/invitationwizard $(srcdir)/collectionbrowser $(srcdir)/ifolder
 INSTALL_LIB_FILES = $(srcdir)/setup-autostart
 
-DATA_FILES = $(srcdir)/ifolder.glade $(srcdir)/collection-browser.glade $(srcdir)/ifolder-confirmation.glade $(srcdir)/properties-dialog.glade $(srcdir)/crash-report.glade  $(srcdir)/collection.png $(srcdir)/Node.png $(srcdir)/Tombstone.png $(srcdir)/BaseContact.png $(srcdir)/folder.png $(srcdir)/ifolder.png $(srcdir)/ifolderfolder.png $(srcdir)/invitewiz.png $(srcdir)/file.xpm $(srcdir)/ifolder.gif $(srcdir)/property.png $(srcdir)/nuke.png
+DATA_FILES = $(srcdir)/ifolder.glade $(srcdir)/collection-browser.glade $(srcdir)/ifolder-confirmation.glade $(srcdir)/properties-dialog.glade $(srcdir)/crash-report.glade $(srcdir)/reunion-browser.glade $(srcdir)/collection.png $(srcdir)/Node.png $(srcdir)/Tombstone.png $(srcdir)/BaseContact.png $(srcdir)/folder.png $(srcdir)/ifolder.png $(srcdir)/ifolderfolder.png $(srcdir)/invitewiz.png $(srcdir)/file.xpm $(srcdir)/ifolder.gif $(srcdir)/property.png $(srcdir)/nuke.png
 
 EXTRA_DIST = $(TrayAppGtk_CSFILES) $(InviteAppGtk_CSFILES) $(CollectionBrowserGtk_CSFILES) $(DATA_FILES) $(INSTALL_BIN_FILES) $(INSTALL_LIB_FILES)
 
