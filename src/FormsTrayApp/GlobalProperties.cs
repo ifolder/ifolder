@@ -373,6 +373,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.label2 = new System.Windows.Forms.Label();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.create = new System.Windows.Forms.Button();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
 			this.objectCount = new System.Windows.Forms.Label();
 			this.byteCount = new System.Windows.Forms.Label();
@@ -431,7 +432,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuActionRestart = new System.Windows.Forms.MenuItem();
 			this.menuView = new System.Windows.Forms.MenuItem();
 			this.menuViewRefresh = new System.Windows.Forms.MenuItem();
-			this.create = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -532,6 +532,15 @@ namespace Novell.iFolder.FormsTrayApp
 			this.tabPage1.Size = new System.Drawing.Size(426, 390);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "iFolders";
+			// 
+			// create
+			// 
+			this.create.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.create.Location = new System.Drawing.Point(341, 272);
+			this.create.Name = "create";
+			this.create.TabIndex = 2;
+			this.create.Text = "Create...";
+			this.create.Click += new System.EventHandler(this.menuCreate_Click);
 			// 
 			// groupBox4
 			// 
@@ -1025,14 +1034,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuViewRefresh.Index = 0;
 			this.menuViewRefresh.Text = "Refresh";
 			this.menuViewRefresh.Click += new System.EventHandler(this.menuRefresh_Click);
-			// 
-			// create
-			// 
-			this.create.Location = new System.Drawing.Point(341, 272);
-			this.create.Name = "create";
-			this.create.TabIndex = 2;
-			this.create.Text = "Create...";
-			this.create.Click += new System.EventHandler(this.menuCreate_Click);
 			// 
 			// GlobalProperties
 			// 
