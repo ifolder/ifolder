@@ -360,7 +360,6 @@ sec_set_event (SimiasEventClient sec, IPROC_EVENT_ACTION action, void (*handler)
 	char msg [4096];
 	char action_str [256];
 	
-	/* FIXME: Implement sec_set_event */
 	switch (action) {
 		case ACTION_ADD_NODE_CREATED:
 			sprintf (action_str, "AddNodeCreated");
@@ -473,7 +472,6 @@ printf ("SEC: sec_thread: recv () called\n");
 static void *
 sec_reg_thread (void *user_data)
 {
-	/* FIXME: Implement sec_reg_thread */
 	RealSimiasEventClient *ec = (RealSimiasEventClient *)user_data;
 	struct sockaddr_in sin;
 	struct sockaddr_in my_sin;
