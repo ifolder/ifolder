@@ -11,7 +11,7 @@ SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService WebService SyncServi
 endif
 
 if WINDOWS
-SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService WebService SyncService POBoxWS SimiasApp SimiasServer GaimDomain
+SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService WebService SyncService POBoxWS SimiasApp SimiasServer libsimias GaimDomain
 
 endif
 
