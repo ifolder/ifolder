@@ -1544,7 +1544,7 @@ namespace Novell.FormsTrayApp
 
 					if (ChangeDefaultDomain != null)
 					{
-						ChangeDefaultDomain(this, new DomainConnectEventArgs(newDefaultDomain.DomainWeb));
+						ChangeDefaultDomain(this, new DomainConnectEventArgs(currentDefaultDomain.DomainWeb));
 					}
 				}
 				catch (Exception ex)
@@ -1824,15 +1824,30 @@ namespace Novell.FormsTrayApp
 		private void removeAccount_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = accounts.SelectedItems[0];
+			Domain domain = (Domain)lvi.Tag;
 
-			if (lvi.Tag == null)
+			if (domain == null)
 			{
+				// Remove the new account
 				newAccountLvi = null;
 				lvi.Remove();
 				addAccount.Enabled = true;
 			}
-
-			// TODO: Handle accounts that have already joined the enterprise.
+			else
+			{
+				// Remove the enterprise account.
+				// TODO: localize
+				string message = resourceManager.GetString("deleteAccountPrompt") + "\n\n" +
+					resourceManager.GetString("deleteAccountInfo");
+				DialogResult dialogResult = MessageBox.Show(message, resourceManager.GetString("deleteAccountTitle"),
+					MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+				if (dialogResult != DialogResult.Cancel)
+				{
+					ifWebService.LeaveDomain(domain.ID, dialogResult == DialogResult.No);
+					lvi.Remove();
+					// TODO: delegate to remove the domain from the server dropdown list.
+				}
+			}
 		}
 
 		private void rememberPassword_CheckedChanged(object sender, System.EventArgs e)
@@ -1859,7 +1874,7 @@ namespace Novell.FormsTrayApp
 
 			if (!processing && (newAccountLvi != null))
 			{
-				if (MessageBox.Show("Do you want to save the new account?", "Save New Account", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+				if (MessageBox.Show(resourceManager.GetString("saveAccountPrompt"), resourceManager.GetString("saveAccountTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 				{
 					processing = true;
 //					processChanges();
