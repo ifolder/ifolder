@@ -197,7 +197,7 @@ namespace Simias.POBox
 				string name = "POBox:" + domainId + ":" + userId;
 				poBox = new POBox(storeObject, name, domainId);
 				
-				Roster roster = storeObject.GetRoster( storeObject.DefaultDomain );
+				Roster roster = storeObject.GetRoster( domainId );
 				Member current = roster.GetMemberByID(userId);
 
 				Member member = new Member(current.Name, current.UserID, Access.Rights.ReadWrite);
