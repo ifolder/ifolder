@@ -39,6 +39,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "simias-util.h"
+
 #if defined(WIN32)
 #define DIR_SEP "\\"
 #else
@@ -51,8 +53,6 @@ static char *the_soap_url = NULL;
 /* Forward Declarations of Static Functions */
 static char *simias_get_user_profile_dir_path(char *dest_path);
 static char *parse_local_service_url(FILE *file);
-static int get_char_index(char *str, char search_char);
-static char *escape_spaces(char *str_with_space);
 
 static void init_gsoap (struct soap *p_soap);
 static void cleanup_gsoap (struct soap *p_soap);
@@ -190,7 +190,7 @@ get_soap_url(gboolean reread_config)
 
 		if (the_soap_url)
 			free(the_soap_url);
-		the_soap_url = escape_spaces(gaim_domain_url);
+		the_soap_url = simias_escape_spaces(gaim_domain_url);
 		return the_soap_url;
 
 		/**
@@ -290,7 +290,7 @@ parse_local_service_url(FILE *file)
 		if (value_idx) {
 			start_quote_idx = strstr(value_idx, "\"");
 			if (start_quote_idx) {
-				end_quote_idx = get_char_index(start_quote_idx + 1, '\"');
+				end_quote_idx = simias_str_index_of(start_quote_idx + 1, '\"');
 				if (end_quote_idx > 0)
 				{
 					strncpy(uri, start_quote_idx + 1, end_quote_idx);
@@ -309,61 +309,6 @@ parse_local_service_url(FILE *file)
 	}
 
 	return strdup(uri);
-}
-
-/**
- * The behavior of this function is like String.IndexOf();
- */
-static int
-get_char_index(char *str, char search_char)
-{
-	int i;
-	int length;
-
-	if (!str)
-		return -1;
-
-	length = strlen(str);
-	for (i = 0; i < length; i++)
-	{
-		if (str[i] == search_char)
-			return i;
-	}
-
-	return -1;
-}
-
-/**
- * Returned value must be freed.
- *
- * Param: str_with_space should be a null-terminated string that
- *        potentially has spaces in it.  All spaces will be
- *        converted to "%20".
- */
-static char *
-escape_spaces(char *str_with_space)
-{
-	char escapedString[1024];
-	int i;
-	int j = 0;
-
-	for (i = 0; str_with_space[i] != '\0'; i++)
-	{
-		if (str_with_space[i] == ' ')
-		{
-			escapedString[j++] = '%';
-			escapedString[j++] = '2';
-			escapedString[j++] = '0';
-		}
-		else
-		{
-			escapedString[j++] = str_with_space[i];
-		}
-	}
-
-	escapedString[j] = '\0';
-
-	return strdup(escapedString);
 }
 
 int
