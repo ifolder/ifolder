@@ -58,7 +58,7 @@ case $SIMIAS_OS in
         CDEF='-D'
         CFLAGS="-pipe -Wall -W -DLINUX -DPRODUCT_NAME=@PRODUCT_NAME@ -DPRODUCT_VERSION=@PRODUCT_VERSION@"
         CINC='-I'
-        COMMON_CLEAN_FILES='.cstore'
+        COMMON_CLEAN_FILES='.cstore .simias'
         COUT='-o'
         CSC_EXEFLAG=/target:exe
         CSC_LIBFLAG=/target:library
@@ -127,7 +127,7 @@ case $SIMIAS_OS in
         CDEF='-D'
         CFLAGS="-nologo -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPRODUCT_NAME=@PRODUCT_NAME@ -DPRODUCT_VERSION=@PRODUCT_VERSION@";
         CINC='-I'
-        COMMON_CLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj *.xml */*.xml .cstore'
+        COMMON_CLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj *.xml */*.xml *.pdb */*.pdb .cstore .simias'
         COUT='-Fo'
         CSC_EXEFLAG=/target:exe
         CSC_LIBFLAG=/target:library
@@ -238,7 +238,7 @@ AC_HEADER_STDC
 # Handle --enable-debug
 #
 AC_ARG_ENABLE(debug, [
-  --enable-debug    Configure the Makefiles to build in DEBUG mode],
+  --enable-debug          configure the Makefiles to build in DEBUG mode],
     [case "${enableval}" in
         yes) enable_debug=true ;;
         no)  enable_debug=false ;;

@@ -141,6 +141,13 @@ conf_flags="--config-cache --enable-maintainer-mode --enable-compile-warnings" #
 cd "$ORIGDIR"
 
 if test x$NOCONFIGURE = x; then
+  #
+  # If a build path is provided for Simias, remove the configure script from that
+  # directory. This will trigger configure to run autogen.sh for that project.
+  #
+  simias_build_path=`echo $@ | sed 's,.*--with-simias-build-path=\([^ ]*\).*,\1,'`
+  test -n "$simias_build_path" && rm -f $simias_build_path/configure
+
   echo Running $srcdir/configure $conf_flags "$@" ...
   $srcdir/configure $conf_flags "$@" \
   && echo Now type \`make\' to compile $PROJECT  || exit 1

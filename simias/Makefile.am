@@ -12,10 +12,10 @@ installcheck-summary:
 clean-local:
 	rm -rf stage *.suo
 
-maintainer-clean-local:
+maintainer-clean:
 	rm -f configure Makefile.in simias-*.tar.gz
-	rm -f aclocal.m4
-	rm -f config.guess config.sub
+	rm -f aclocal.m4 conf*.sh configure.lineno
+	rm -f config.guess config.sub config.status
 	rm -f ltmain.sh libtool
 	rm -f install-sh install-sh.lnk INSTALL INSTALL.lnk
 	rm -f missing missing.lnk mkinstalldirs mkinstalldir.lnk
