@@ -514,6 +514,8 @@ show_ifolder_error_message (void *user_data)
 	gtk_object_destroy (GTK_OBJECT (message_dialog));
 	
 	free (errMsg);
+	
+	return FALSE;
 }
 
 /**
