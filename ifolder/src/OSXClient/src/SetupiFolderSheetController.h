@@ -23,6 +23,9 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class iFolderWindowController;
+
+
 @interface SetupiFolderSheetController : NSWindowController
 {
     IBOutlet NSTextField *iFolderName;
@@ -33,6 +36,7 @@
 	IBOutlet NSTextField *domainID;
 	IBOutlet id setupSheet;
 	IBOutlet id mainWindow;
+	IBOutlet iFolderWindowController *ifolderWindowController;
 
 }
 - (IBAction)showWindow:(id)sender;

@@ -25,65 +25,56 @@
 #import <iFolderService.h>
 #import <SimiasService.h>
 
-#ifndef __MAIN_WINDOW_CONTROLLER
-#define __MAIN_WINDOW_CONTROLLER
-
 
 // Forward Declarations
-@class LoginWindowController;
-@class iFolderPrefsController;
-@class SyncLogWindowController;
 @class CreateiFolderSheetController;
 @class SetupiFolderSheetController;
 @class PropertiesWindowController;
 @class iFolder;
 
-@interface MainWindowController : NSWindowController
-{
 
+@interface iFolderWindowController : NSWindowController
+{
+    IBOutlet SetupiFolderSheetController *setupSheetController;
+    IBOutlet CreateiFolderSheetController *createSheetController;
+    IBOutlet NSArrayController *domainsController;
+    IBOutlet NSArrayController *ifoldersController;
+    IBOutlet NSTableView *iFolderTable;
+	
 	PropertiesWindowController				*propertiesController;
 	iFolderService							*ifolderService;
 	SimiasService							*simiasService;
 	NSMutableArray							*domains;
 	NSMutableArray							*ifolders;
-    IBOutlet NSArrayController				*ifoldersController;
-    IBOutlet NSArrayController				*domainsController;
-	IBOutlet CreateiFolderSheetController	*createSheetController;
-	IBOutlet SetupiFolderSheetController	*setupiFolderController;
-	IBOutlet NSTableView					*iFolderTable;
 
 	NSToolbar				*toolbar;
 	NSMutableDictionary		*toolbarItems;
 	NSMutableArray			*toolbarItemKeys;
 	NSMutableDictionary		*keyedDomains;
 	NSMutableDictionary		*keyediFolders;
-	iFolderDomain			*defaultDomain;
+	iFolderDomain			*defaultDomain;	
 }
++ (iFolderWindowController *)sharedInstance;
+- (void)windowWillClose:(NSNotification *)aNotification;
 
-
-
-- (IBAction)refreshWindow:(id)sender;
-- (IBAction)showHideToolbar:(id)sender;
 - (IBAction)customizeToolbar:(id)sender;
-- (IBAction)newiFolder:(id)sender;
-- (IBAction)setupiFolder:(id)sender;
-- (IBAction)revertiFolder:(id)sender;
-- (void)revertiFolderResponse:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (IBAction)deleteiFolder:(id)sender;
-- (void)deleteiFolderResponse:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+- (IBAction)doubleClickedTable:(id)sender;
+- (IBAction)newiFolder:(id)sender;
 - (IBAction)openiFolder:(id)sender;
-- (IBAction)showGeneralProperties:(id)sender;
-- (IBAction)showSharingProperties:(id)sender;
+- (IBAction)refreshWindow:(id)sender;
+- (IBAction)revertiFolder:(id)sender;
+- (IBAction)setupiFolder:(id)sender;
+- (IBAction)showProperties:(id)sender;
+- (IBAction)shareiFolder:(id)sender;
 - (IBAction)synciFolder:(id)sender;
 
-- (void)doubleClickedTable:(id)sender;
 
-- (BOOL)authenticateToDomain:(NSString *)domainID withPassword:(NSString *)password;
-- (void)createiFolder:(NSString *)path inDomain:(NSString *)domainID;
-- (void)acceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)domainID toPath:(NSString *)localPath;
+//- (IBAction)showHideToolbar:(id)sender;
 
 
-- (void)propertiesClosed;
+- (void)revertiFolderResponse:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+- (void)deleteiFolderResponse:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 
 
 - (void)awakeFromNib;
@@ -92,15 +83,12 @@
 - (void)addDomain:(iFolderDomain *)newDomain;
 - (void)addiFolder:(iFolder *)newiFolder;
 
-
 -(iFolder *)selectediFolder;
 
 // menu validation
 - (BOOL)validateUserInterfaceItem:(id)anItem;
 
-
 - (NSArrayController *)DomainsController;
-
 
 //==========================================
 // Toolbar Methods
@@ -113,8 +101,14 @@
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar;
 
 
+//==========================================
+// Methods to create/delete/revert iFolders
+//==========================================
+- (void)createiFolder:(NSString *)path inDomain:(NSString *)domainID;
+- (void)acceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)domainID toPath:(NSString *)localPath;
+
+
+
+
 
 @end
-
-#endif	// __MAIN_WINDOW_CONTROLLER
-

@@ -26,15 +26,16 @@
 @interface SyncLogWindowController : NSWindowController
 {
 	NSMutableArray					*synclog;
-    IBOutlet NSArrayController *logController;
+    IBOutlet NSArrayController		*logController;
+	IBOutlet NSWindow				*window;
 }
 
--(void)awakeFromNib;
-
++ (SyncLogWindowController *)sharedInstance;
++ (void)logEntry:(NSString *)entry;
 
 - (IBAction)clearLog:(id)sender;
 - (IBAction)saveLog:(id)sender;
 
-- (void)logEntry:(NSString *)entry;
+- (void)addEntry:(NSString *)entry;
 
 @end

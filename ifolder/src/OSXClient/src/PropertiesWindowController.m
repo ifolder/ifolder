@@ -26,6 +26,34 @@
 
 @implementation PropertiesWindowController
 
+
+static PropertiesWindowController *sharedInstance = nil;
+
+
++ (PropertiesWindowController *)sharedInstance
+{
+	if(sharedInstance == nil)
+	{
+		sharedInstance = [[PropertiesWindowController alloc] initWithWindowNibName:@"Properties"];
+	}
+
+    return sharedInstance;
+}
+
+
+
+
+- (void)windowWillClose:(NSNotification *)aNotification
+{
+	if(sharedInstance != nil)
+	{
+		[sharedInstance release];
+		sharedInstance = nil;
+	}
+}
+
+
+
 -(void)awakeFromNib
 {
 	[tabView selectTabViewItemAtIndex:initalTab];
@@ -42,12 +70,6 @@
 }
 
 
-- (void)windowWillClose:(NSNotification *)aNotification
-{
-	NSLog(@"Called to close window");
-	[[aNotification object] setDelegate:nil];
-	[[NSApp delegate] propertiesClosed];
-}
 
 - (void)setSharingTab
 {

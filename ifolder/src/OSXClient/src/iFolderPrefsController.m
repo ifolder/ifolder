@@ -22,10 +22,37 @@
  ***********************************************************************/
  
 #import "iFolderPrefsController.h"
-#import "MainWindowController.h"
 #import "AccountsController.h"
 
 @implementation iFolderPrefsController
+
+static iFolderPrefsController *sharedInstance = nil;
+
+
++ (iFolderPrefsController *)sharedInstance
+{
+	if(sharedInstance == nil)
+	{
+		sharedInstance = [[iFolderPrefsController alloc] initWithWindowNibName:@"Preferences"];
+	}
+
+    return sharedInstance;
+}
+
+
+
+
+- (void)windowWillClose:(NSNotification *)aNotification
+{
+	if(sharedInstance != nil)
+	{
+		[sharedInstance release];
+		sharedInstance = nil;
+	}
+}
+
+
+
 
 - (void)awakeFromNib
 {
@@ -201,12 +228,6 @@
 	[[self window] setToolbar:toolbar];
 }
 
-
-- (void)windowWillClose:(NSNotification *)aNotification
-{
-	[[aNotification object] setDelegate:nil];
-	[[NSApp delegate] preferencesClosed];
-}
 
 /*
 	This is old binding code that I didn't want to loose so it's down here

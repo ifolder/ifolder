@@ -24,6 +24,7 @@
 #import <Cocoa/Cocoa.h>
 #import "iFolderDomain.h"
 
+@class iFolderWindowController;
 
 @interface CreateiFolderSheetController : NSWindowController 
 {
@@ -32,6 +33,7 @@
 	IBOutlet NSPopUpButton *domainSelector;
 	IBOutlet NSTextField *pathField;
 	IBOutlet NSTextField *domainIDField;
+	IBOutlet iFolderWindowController *ifolderWindowController;
 	
 	iFolderDomain *selectedDomain;
 }

@@ -41,6 +41,8 @@
 	int						modalReturnCode;
 }
 
++ (iFolderPrefsController *)sharedInstance;
+
 - (void) updateSize:(NSSize)newSize;
 
 // Toobar Delegates
@@ -62,7 +64,5 @@
 
 - (void)setupToolbar;
 
-
-						
 					
 @end

@@ -25,6 +25,31 @@
 
 @implementation SyncLogWindowController
 
+
+static SyncLogWindowController *sharedInstance = nil;
+
+
++ (SyncLogWindowController *)sharedInstance
+{
+	if(sharedInstance == nil)
+	{
+		sharedInstance = [[SyncLogWindowController alloc] initWithWindowNibName:@"LogWindow"];
+	}
+
+    return sharedInstance;
+}
+
+
+
+
++ (void)logEntry:(NSString *)entry
+{
+	[[SyncLogWindowController sharedInstance] addEntry:entry];
+}
+
+
+
+
 -(void)awakeFromNib
 {
 	[super setShouldCascadeWindows:NO];
@@ -32,20 +57,29 @@
 }
 
 
+
+
 - (IBAction)clearLog:(id)sender
 {
 }
+
+
+
 
 - (IBAction)saveLog:(id)sender
 {
 }
 
-- (void)logEntry:(NSString *)entry
+
+
+
+- (void)addEntry:(NSString *)entry
 {
 	[logController addObject:[NSString stringWithFormat:@"%@ %@", 
 			[[NSDate date] descriptionWithCalendarFormat:@"%m/%d/%Y %H:%M:%S" timeZone:nil locale:nil], 
 			entry]];
 }
+
 
 
 @end

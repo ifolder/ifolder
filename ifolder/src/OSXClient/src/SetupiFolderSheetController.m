@@ -23,7 +23,7 @@
  
  
 #import "SetupiFolderSheetController.h"
-#import "MainWindowController.h"
+#import "iFolderWindowController.h"
 
 @implementation SetupiFolderSheetController
 
@@ -74,7 +74,7 @@
 		[setupSheet orderOut:nil];
 		[NSApp endSheet:setupSheet];
 
-		[[NSApp delegate] acceptiFolderInvitation:[iFolderID stringValue]
+		[ifolderWindowController acceptiFolderInvitation:[iFolderID stringValue]
 							InDomain:[domainID stringValue]
 							toPath:[pathField stringValue] ];
 	}

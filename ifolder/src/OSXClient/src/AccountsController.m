@@ -22,7 +22,7 @@
  ***********************************************************************/
 
 #import "AccountsController.h"
-#import "MainWindowController.h"
+#import "iFolderApplication.h"
 #import "SimiasService.h"
 #import "iFolderDomain.h"
 #import "LeaveDomainSheetController.h"
