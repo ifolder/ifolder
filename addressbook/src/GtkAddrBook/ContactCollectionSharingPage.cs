@@ -376,22 +376,23 @@ namespace Novell.AddressBook.UI.gtk
 		{
 			try
 			{
-			Subscription sub = pobox.CreateSubscription(collection,
+				Subscription sub = pobox.CreateSubscription(collection,
 										collection.GetCurrentMember(),
 										"iFolder");
 
-			sub.FromAddress = String.Format("{0}@{1}", 
+				sub.FromAddress = String.Format("{0}@{1}", 
 									System.Environment.UserName, 
 									Simias.MyDns.GetHostName());
 
-			sub.SubscriptionRights = Access.Rights.ReadWrite;
-			sub.ToName = c.FN;
-			sub.ToAddress = c.EMail;
-			pobox.AddMessage(sub);
+				sub.SubscriptionRights = Access.Rights.ReadWrite;
+				sub.ToName = c.FN;
+				sub.ToAddress = c.EMail;
+				sub.FromIdentity = c.UserID;
+				pobox.AddMessage(sub);
 
-			SharingListHolder slh = new SharingListHolder(null, sub);
+				SharingListHolder slh = new SharingListHolder(null, sub);
 
-			ContactTreeStore.AppendValues(slh);
+				ContactTreeStore.AppendValues(slh);
 			}
 			catch(Exception e)
 			{
