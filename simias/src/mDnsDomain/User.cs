@@ -128,6 +128,20 @@ namespace Simias.mDns
 		{
 			Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain( true );
 			mDnsUserName = Environment.UserName + "@" + mdnsDomain.Host;
+
+			try
+			{
+				Roster roster = Store.GetStore().GetDomain( Simias.mDns.Domain.ID ).Roster;
+				if ( roster != null )
+				{
+					this.mDnsUserID = roster.GetMemberByName( mDnsUserName).UserID;
+				}
+			}
+			catch( Exception e )
+			{
+				log.Debug( e.Message );
+				log.Debug( e.StackTrace );
+			}
 		}
 
 		#endregion
@@ -375,8 +389,7 @@ namespace Simias.mDns
 			//
 
 			Simias.Storage.Member mdnsMember = null;
-			Simias.Storage.Domain rDomain = Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
-			Simias.Storage.Roster mdnsRoster = rDomain.Roster;
+			Simias.Storage.Roster mdnsRoster = Store.GetStore().GetDomain( Simias.mDns.Domain.ID ).Roster;
 
 			Char[] sepChar = new Char [] {'='};
 
@@ -411,7 +424,7 @@ namespace Simias.mDns
 
 						if ( memberName != null )
 						{
-							mdnsMember = mdnsRoster.GetMemberByID( member.Target );
+							mdnsMember = mdnsRoster.GetMemberByName( memberName );
 							if ( mdnsMember == null )
 							{
 								mdnsMember = 

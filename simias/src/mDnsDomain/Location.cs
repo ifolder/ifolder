@@ -50,6 +50,7 @@ namespace Simias.Location
 
 		//public static readonly string ID = "74d3a71f-daae-4a36-b9f3-6466081f6401";
 		private IResourceQuery mDnsQuery = null;
+		private IRemoteFactory mDnsFactory = null;
 		#endregion
 
 		#region Properties
@@ -99,12 +100,12 @@ namespace Simias.Location
 			log.Debug( "Instance constructor called" );
 			try
 			{
-				IRemoteFactory factory = 
+				mDnsFactory = 
 					(IRemoteFactory) Activator.GetObject(
 					typeof(IRemoteFactory),
 					"tcp://localhost:8091/mDnsRemoteFactory.tcp");
 					
-				mDnsQuery = factory.GetQueryInstance();
+				mDnsQuery = mDnsFactory.GetQueryInstance();
 			}
 			catch( Exception e )
 			{
@@ -161,15 +162,17 @@ namespace Simias.Location
 			string webServicePath = null;
 			Char[] sepChar = new Char [] {'='};
 
+			IResourceQuery mQuery = mDnsFactory.GetQueryInstance();
+
 			Mono.P2p.mDnsResponderApi.ServiceLocation[] sls = null;
-			if ( mDnsQuery.GetServiceLocationResources( out sls ) == 0 )
+			if ( mQuery.GetServiceLocationResources( out sls ) == 0 )
 			{
 				foreach(ServiceLocation sl in sls)
 				{
 					if ( sl.Name == memberID )
 					{
 						Mono.P2p.mDnsResponderApi.TextStrings[] txts = null;
-						if ( mDnsQuery.GetTextStringResources( out txts ) == 0 )
+						if ( mQuery.GetTextStringResources( out txts ) == 0 )
 						{
 							foreach( TextStrings ts in txts )
 							{
@@ -192,7 +195,7 @@ namespace Simias.Location
 						if ( webServicePath != null )
 						{
 							Mono.P2p.mDnsResponderApi.HostAddress[] has = null;
-							if ( mDnsQuery.GetHostAddressResources( out has ) == 0 )
+							if ( mQuery.GetHostAddressResources( out has ) == 0 )
 							{
 								foreach( HostAddress ha in has )
 								{
@@ -275,7 +278,7 @@ namespace Simias.Location
 				try
 				{
 					Collection collection = Store.GetStore().GetCollectionByID( collectionID );
-					locationUri = MemberIDToUri( collection.Owner.ID );
+					locationUri = MemberIDToUri( collection.Owner.UserID );
 				}
 				catch ( Exception e )
 				{
@@ -311,7 +314,7 @@ namespace Simias.Location
 					Member member = collection.GetMemberByID( userID );
 					if ( member != null )
 					{
-						locationUri = MemberIDToUri( member.ID );
+						locationUri = MemberIDToUri( member.UserID );
 					}
 				}
 				catch ( Exception e )
@@ -345,7 +348,7 @@ namespace Simias.Location
 					Member member = domain.Roster.GetMemberByID( userID );
 					if ( member != null )
 					{
-						locationUri = MemberIDToUri( member.ID );
+						locationUri = MemberIDToUri( member.UserID );
 					}
 				}
 				catch ( Exception e )
