@@ -110,7 +110,7 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Instantiates a Preferences object.
 		/// </summary>
-		public Preferences(iFolderWebService ifolderWebService)
+		public Preferences(iFolderWebService ifolderWebService, SimiasWebService simiasWebService)
 		{
 			//
 			// Required for Windows Form Designer support
@@ -120,8 +120,7 @@ namespace Novell.FormsTrayApp
 			defaultInterval.TextChanged += new EventHandler(defaultInterval_ValueChanged);
 
 			ifWebService = ifolderWebService;
-			simiasWebService = new SimiasWebService();
-			simiasWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
+			this.simiasWebService = simiasWebService;
 
 			this.StartPosition = FormStartPosition.CenterScreen;
 		}
@@ -1420,7 +1419,7 @@ namespace Novell.FormsTrayApp
 		/// Adds the specified domain to the dropdown lists.
 		/// </summary>
 		/// <param name="domainWeb">The DomainWeb object to add to the list.</param>
-		public void AddDomainToList(DomainWeb domainWeb)
+		public void AddDomainToList(DomainInformation domainWeb)
 		{
 			Domain domain = null;
 			foreach (ListViewItem lvi in accounts.Items)
@@ -1451,8 +1450,8 @@ namespace Novell.FormsTrayApp
 
 				ListViewItem lvi = new ListViewItem(
 					new string[] {domain.Name,
-									 domainWeb.UserName,
-									 domainWeb.IsEnabled ? 
+									 domainWeb.MemberName,//.UserName,
+									 domainWeb.Active ? 
 									 resourceManager.GetString("statusEnabled") : resourceManager.GetString("statusDisabled")});
 				lvi.Tag = domain;
 				lvi.Selected = domainWeb.IsDefault;
@@ -1473,7 +1472,7 @@ namespace Novell.FormsTrayApp
 			{
 				Domain d = (Domain)lvi.Tag;
 
-				if (d.DomainWeb.UserID.Equals(userID))
+				if (d.DomainWeb.MemberID.Equals(userID))
 				{
 					result = true;
 					break;
@@ -1516,7 +1515,7 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				DomainWeb domainWeb = ifWebService.ConnectToDomain(userName.Text, password.Text, server.Text);
+				DomainInformation domainWeb = simiasWebService.ConnectToDomain(userName.Text, password.Text, server.Text);
 
 				// Set the credentials in the current process.
 				DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainWeb.ID, password.Text);
@@ -1825,12 +1824,12 @@ namespace Novell.FormsTrayApp
 						if (enableAccount.Checked)
 						{
 							ifWebService.SetDomainActive(domain.ID);
-							domain.DomainWeb.IsEnabled = true;
+							domain.DomainWeb.Active = true;
 						}
 						else
 						{
 							ifWebService.SetDomainInactive(domain.ID);
-							domain.DomainWeb.IsEnabled = false;
+							domain.DomainWeb.Active = false;
 						}
 
 						updateDomainStatus(domain);
@@ -1850,7 +1849,7 @@ namespace Novell.FormsTrayApp
 				Domain d = (Domain)lvi.Tag;
 				if (d.ID.Equals(domain.ID))
 				{
-					lvi.SubItems[2].Text = domain.DomainWeb.IsEnabled ? 
+					lvi.SubItems[2].Text = domain.DomainWeb.Active ? 
 						resourceManager.GetString("statusEnabled") : resourceManager.GetString("statusDisabled");
 					break;
 				}
@@ -1945,13 +1944,13 @@ namespace Novell.FormsTrayApp
 				accounts.Items.Clear();
 				successful = true;
 
-				DomainWeb[] domains;
+				DomainInformation[] domains;
 				try
 				{
-					domains = ifWebService.GetDomains();
-					foreach (DomainWeb dw in domains)
+					domains = simiasWebService.GetDomains(true);//ifWebService.GetDomains();
+					foreach (DomainInformation dw in domains)
 					{
-						if (dw.IsSlave)
+//						if (dw.IsSlave)
 						{
 							AddDomainToList(dw);
 						}
@@ -2456,7 +2455,7 @@ namespace Novell.FormsTrayApp
 							}
 
 							enableAccount.Enabled = true;
-							enableAccount.Checked = selectedDomain.DomainWeb.IsEnabled;
+							enableAccount.Checked = selectedDomain.DomainWeb.Active;
 						}
 					}
 				}

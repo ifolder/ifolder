@@ -601,7 +601,7 @@ namespace Novell.FormsTrayApp
 			try
 			{
 				// Get the disk space.
-				DiskSpace diskSpace = ifWebService.GetUserDiskSpace(selectedDomain.DomainWeb.UserID);
+				DiskSpace diskSpace = ifWebService.GetUserDiskSpace(selectedDomain.DomainWeb.MemberID);
 				double used = 0;
 				if (diskSpace.UsedSpace != 0)
 				{

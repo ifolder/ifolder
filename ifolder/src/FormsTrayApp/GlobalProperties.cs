@@ -72,6 +72,7 @@ namespace Novell.FormsTrayApp
 		private short retryCount = 2;
 		private Hashtable ht;
 		private iFolderWebService ifWebService;
+		private SimiasWebService simiasWebService;
 		private IProcEventClient eventClient;
 		private bool initialConnect = false;
 		private bool shutdown = false;
@@ -129,7 +130,7 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Instantiates a GlobalProperties object.
 		/// </summary>
-		public GlobalProperties(iFolderWebService ifolderWebService, IProcEventClient eventClient)
+		public GlobalProperties(iFolderWebService ifolderWebService, SimiasWebService simiasWebService, IProcEventClient eventClient)
 		{
 			syncCollectionDelegate = new SyncCollectionDelegate(syncCollection);
 			syncFileDelegate = new SyncFileDelegate(syncFile);
@@ -144,6 +145,7 @@ namespace Novell.FormsTrayApp
 			progressBar1.Visible = false;
 
 			ifWebService = ifolderWebService;
+			this.simiasWebService = simiasWebService;
 			this.eventClient = eventClient;
 
 			// Set up the event handlers for sync events ... these need to be active here so that sync events can
@@ -840,7 +842,7 @@ namespace Novell.FormsTrayApp
 		/// Adds the specified domain to the dropdown list.
 		/// </summary>
 		/// <param name="domainWeb">The DomainWeb object to add to the list.</param>
-		public void AddDomainToList(DomainWeb domainWeb)
+		public void AddDomainToList(DomainInformation domainWeb)
 		{
 			Domain domain = null;
 			foreach (Domain d in servers.Items)
@@ -876,7 +878,7 @@ namespace Novell.FormsTrayApp
 		/// Remove the specified domain from the dropdown list.
 		/// </summary>
 		/// <param name="domainWeb">The domainWeb object representing the domain to remove.</param>
-		public void RemoveDomainFromList(DomainWeb domainWeb, string defaultDomainID)
+		public void RemoveDomainFromList(DomainInformation domainWeb, string defaultDomainID)
 		{
 			Domain domain = null;
 			Domain showAllDomain = null;
@@ -938,7 +940,7 @@ namespace Novell.FormsTrayApp
 
 			foreach (Domain d in servers.Items)
 			{
-				if (!d.ShowAll && d.DomainWeb.UserID.Equals(userID))
+				if (!d.ShowAll && d.DomainWeb.MemberID.Equals(userID))
 				{
 					result = true;
 					break;
@@ -992,7 +994,7 @@ namespace Novell.FormsTrayApp
 			return result;
 		}
 
-		public void UpdateDomain(DomainWeb domainWeb)
+		public void UpdateDomain(DomainInformation domainWeb)
 		{
 			foreach (Domain d in servers.Items)
 			{
@@ -1007,7 +1009,7 @@ namespace Novell.FormsTrayApp
 				!((iFolderWeb)iFolderView.SelectedItems[0].Tag).IsSubscription &&
 				((iFolderWeb)iFolderView.SelectedItems[0].Tag).DomainID.Equals(domainWeb.ID))
 			{
-				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = domainWeb.IsEnabled;
+				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = domainWeb.Active;
 			}
 		}
 		#endregion
@@ -1309,11 +1311,11 @@ namespace Novell.FormsTrayApp
 		private void updateEnterpriseData()
 		{
 			servers.Items.Clear();
-			DomainWeb[] domains;
+			DomainInformation[] domains;
 			try
 			{
-				domains = ifWebService.GetDomains();
-				foreach (DomainWeb dw in domains)
+				domains = simiasWebService.GetDomains(false);//ifWebService.GetDomains();
+				foreach (DomainInformation dw in domains)
 				{
 					AddDomainToList(dw);
 				}
@@ -1357,11 +1359,11 @@ namespace Novell.FormsTrayApp
 			{
 				InitializeServerList();
 
-				DomainWeb[] domains;
+				DomainInformation[] domains;
 				try
 				{
-					domains = ifWebService.GetDomains();
-					foreach (DomainWeb dw in domains)
+					domains = simiasWebService.GetDomains(false);//ifWebService.GetDomains();
+					foreach (DomainInformation dw in domains)
 					{
 						AddDomainToList(dw);
 					}
@@ -1628,7 +1630,7 @@ namespace Novell.FormsTrayApp
 			Domain selectedDomain = (Domain)servers.SelectedItem;
 			if (!selectedDomain.ShowAll)
 			{
-				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = selectedDomain.DomainWeb.IsEnabled;
+				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = selectedDomain.DomainWeb.Active;
 			}
 			else if (toolBarSync.Enabled)
 			{
@@ -1636,7 +1638,7 @@ namespace Novell.FormsTrayApp
 				{
 					if (d.ID.Equals(ifolderWeb.DomainID))
 					{
-						menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = d.DomainWeb.IsEnabled;
+						menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = d.DomainWeb.Active;
 						break;
 					}
 				}

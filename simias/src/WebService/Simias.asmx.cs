@@ -91,32 +91,10 @@ namespace Simias.Web
 		GetDomainInformation(string domainID)
 		{
 			DomainInformation cDomainInfo = null;
+
 			try
 			{
-				Store store = Store.GetStore();
-
-				Simias.Storage.Domain cDomain = store.GetDomain(domainID);
-				Roster cRoster = cDomain.Roster;
-				Member cMember = cRoster.GetCurrentMember();
-
-				cDomainInfo = new DomainInformation();
-
-				cDomainInfo.Type =
-					(domainID == Simias.Storage.Domain.WorkGroupDomainID)
-						? DomainType.Workgroup
-						: DomainType.Enterprise;
-
-				cDomainInfo.Active = new DomainAgent().IsDomainActive( cDomain.ID );
-				cDomainInfo.ID = domainID;
-				cDomainInfo.Name = cDomain.Name;
-				cDomainInfo.Description = cDomain.Description;
-				cDomainInfo.RosterID = cRoster.ID;
-				cDomainInfo.RosterName = cRoster.Name;
-				cDomainInfo.RosterID = cRoster.ID;
-				cDomainInfo.MemberID = cMember.UserID;
-				cDomainInfo.MemberName = cMember.Name;
-				cDomainInfo.RemoteUrl = 
-					cDomain.HostAddress.ToString() + "/DomainService.asmx";
+				cDomainInfo = new DomainInformation(domainID);
 			}
 			catch(Exception e)
 			{
@@ -130,37 +108,38 @@ namespace Simias.Web
 
 
 		/// <summary>
-		/// WebMethod to get a list of local domain IDs
+		/// WebMethod to get a list of local domains
 		/// </summary>
 		/// <returns>
 		/// 0 success, !0 failed
 		/// </returns>
-		[WebMethod(Description="GetDomainList")]
+		[WebMethod(Description="Get a list of local domains")]
 		[SoapDocumentMethod]
 		public
-		string[]
-		GetDomainList(bool onlySlaves)
+		DomainInformation[]
+		GetDomains(bool onlySlaves)
 		{
-			ArrayList domainIDs = new ArrayList();
+			ArrayList domains = new ArrayList();
 
 			try
 			{
 				Store store = Store.GetStore();
-				LocalDatabase ldb = store.GetDatabaseObject();
-				ICSList domainList = ldb.GetNodesByType( "Domain" );
+				ICSList domainList = store.GetDomainList();
 				foreach( ShallowNode shallowNode in domainList )
 				{
 					// Get them all?
 					if ( onlySlaves == false )
 					{
-						domainIDs.Add( shallowNode.ID );
+						DomainInformation domainInfo = new DomainInformation(shallowNode.ID);
+						domains.Add(domainInfo);
 					}
 					else
 					{
 						Roster cRoster = store.GetRoster( shallowNode.ID );
 						if ( ( cRoster != null ) && ( cRoster.Role == SyncRoles.Slave ) )
 						{
-							domainIDs.Add( shallowNode.ID );
+							DomainInformation domainInfo = new DomainInformation(shallowNode.ID);
+							domains.Add(domainInfo);
 						}
 					}
 				}
@@ -171,7 +150,7 @@ namespace Simias.Web
 				log.Error(e.StackTrace);
 			}
 
-			return( ( domainIDs.Count == 0 ) ? null : (string[]) domainIDs.ToArray( typeof( string ) ) );
+			return((domains.Count == 0) ? null : (DomainInformation[]) domains.ToArray(typeof(DomainInformation)));
 		}
 
 
@@ -333,6 +312,35 @@ namespace Simias.Web
 			Store store = Store.GetStore();
 			return store.GetDomainCredentials(domainID, out userID, out credentials);
 		}
+	
+		/// <summary>
+		/// WebMethod that connects up an iFolder Domain
+		/// </summary>
+		/// <param name = "UserName">
+		/// The username to use to connect to the Domain
+		/// </param>
+		/// <param name = "Password">
+		/// The password to use to connect to the Domain
+		/// </param>
+		/// <param name = "Host">
+		/// The host of the enterprise server
+		/// </param>
+		/// <returns>
+		/// The Domain object associated with this Server
+		/// </returns>
+		[WebMethod(Description="Connects to a Domain")]
+		[SoapDocumentMethod]
+		public DomainInformation ConnectToDomain(string UserName,
+												 string Password,
+												 string Host)
+		{
+			DomainInformation domainInfo = null;
+			Simias.Domain.DomainAgent da = new Simias.Domain.DomainAgent();
+			string domainID = da.Attach(Host, UserName, Password);
+			domainInfo = new DomainInformation(domainID);
+			domainInfo.MemberName = UserName;
+			return domainInfo;
+		}
 	}
 
 	/// <summary>
@@ -412,11 +420,52 @@ namespace Simias.Web
 		/// </summary>
 		public string RemoteUrl;
 
+
+		public string POBoxID;
+
+		public string Host;
+
+		public bool IsSlave;
+
+		public bool IsDefault;
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
 		public DomainInformation()
 		{
+		}
+
+		public DomainInformation(string domainID)
+		{
+			Store store = Store.GetStore();
+
+			Simias.Storage.Domain cDomain = store.GetDomain(domainID);
+			Roster cRoster = cDomain.Roster;
+			Member cMember = cRoster.GetCurrentMember();
+			Simias.POBox.POBox poBox = 
+				Simias.POBox.POBox.FindPOBox(store, domainID, cMember.UserID);
+
+			this.Type =
+				(domainID == Simias.Storage.Domain.WorkGroupDomainID)
+					? DomainType.Workgroup
+					: DomainType.Enterprise;
+
+			this.Active = new DomainAgent().IsDomainActive(cDomain.ID);
+			this.ID = domainID;
+			this.Name = cDomain.Name;
+			this.Description = cDomain.Description;
+			this.RosterID = cRoster.ID;
+			this.RosterName = cRoster.Name;
+			this.RosterID = cRoster.ID;
+			this.MemberID = cMember.UserID;
+			this.MemberName = cMember.Name;
+			this.RemoteUrl = 
+				cDomain.HostAddress.ToString() + "/DomainService.asmx";
+			this.Host = cDomain.HostAddress.ToString();
+			this.IsSlave = cRoster.Role.Equals(Simias.Sync.SyncRoles.Slave);
+			this.POBoxID = poBox.ID;
+			this.IsDefault = domainID.Equals(store.DefaultDomain);
 		}
 
 		/// <summary>
@@ -439,6 +488,8 @@ namespace Simias.Web
 			builder.AppendFormat("  Member Node ID   : {0}{1}", this.MemberID, newLine);
 			builder.AppendFormat("  Member Node Name : {0}{1}", this.MemberName, newLine);
 			builder.AppendFormat("  Remote Url       : {0}{1}", this.RemoteUrl, newLine);
+			builder.AppendFormat("  POBox ID         : {0}{1}", this.POBoxID, newLine);
+			builder.AppendFormat("  Host             : {0}{1}", this.Host, newLine);
 
 			return builder.ToString();
 		}

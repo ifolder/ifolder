@@ -94,6 +94,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.ContextMenu contextMenu1;
 		private System.Windows.Forms.MenuItem menuEventLogReader;
 		private iFolderWebService ifWebService = null;
+		private SimiasWebService simiasWebService;
 		private IProcEventClient eventClient;
 		private GlobalProperties globalProperties;
 		private Preferences preferences;
@@ -364,6 +365,8 @@ namespace Novell.FormsTrayApp
 
 					ifWebService = new iFolderWebService();
 					ifWebService.Url = Manager.LocalServiceUrl.ToString() + "/iFolder.asmx";
+					simiasWebService = new SimiasWebService();
+					simiasWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
 
 					eventQueue = new Queue();
 					workEvent = new AutoResetEvent(false);
@@ -382,14 +385,14 @@ namespace Novell.FormsTrayApp
 					}
 
 					// Instantiate the GlobalProperties dialog.
-					globalProperties = new GlobalProperties(ifWebService, eventClient);
+					globalProperties = new GlobalProperties(ifWebService, simiasWebService, eventClient);
 
 					// Create the control so that we can use the delegate to write sync events to the log.
 					// For some reason, the handle isn't created until it is referenced.
 					globalProperties.CreateControl();
 					IntPtr handle = globalProperties.Handle;
 
-					preferences = new Preferences(ifWebService);
+					preferences = new Preferences(ifWebService, simiasWebService);
 					preferences.EnterpriseConnect += new Novell.FormsTrayApp.Preferences.EnterpriseConnectDelegate(preferences_EnterpriseConnect);
 					preferences.ChangeDefaultDomain += new Novell.FormsTrayApp.Preferences.ChangeDefaultDomainDelegate(preferences_EnterpriseConnect);
 					preferences.RemoveDomain += new Novell.FormsTrayApp.Preferences.RemoveDomainDelegate(preferences_RemoveDomain);
@@ -410,9 +413,13 @@ namespace Novell.FormsTrayApp
 						// Pre-load the servers and accounts list.
 						globalProperties.InitializeServerList();
 
-						DomainWeb[] domains;
-						domains = ifWebService.GetDomains();
-						foreach (DomainWeb dw in domains)
+//						DomainWeb[] domains;
+//						domains = ifWebService.GetDomains();
+//						foreach (DomainWeb dw in domains)
+
+						DomainInformation[] domains;
+						domains = this.simiasWebService.GetDomains(false);
+						foreach(DomainInformation dw in domains)
 						{
 							if (dw.IsSlave)
 							{
@@ -852,8 +859,6 @@ namespace Novell.FormsTrayApp
 									string domainID = notifyEventArgs.Message;
 
 									// See if there is a password saved on this domain.
-									SimiasWebService simiasWebService = new SimiasWebService();
-									simiasWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
 									CredentialType credType = simiasWebService.GetSavedDomainCredentials(domainID, out userID, out credentials);
 									if ((credType == CredentialType.Basic) && (credentials != null))
 									{
