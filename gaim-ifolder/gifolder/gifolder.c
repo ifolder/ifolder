@@ -199,20 +199,12 @@ plugin_unload(GaimPlugin *plugin)
  * 
  * Gaim Domain Member List
  * 
- *   Use:
- *     (*) All buddies
- *     ( ) iFolder-enabled buddies
- * 
  *   Synchronize every:
- *     [60] seconds
+ *     [5] minutes
  *
  *   [Synchronize Now Button]
  *
  * Other
- *
- *   Automatically respond with my PO Box URL to:
- *     (*) Users in my buddy list (recommended)
- *     ( ) Any AIM user
  *
  *   [ ] Automatically start iFolder if it's not running
  */
@@ -230,15 +222,6 @@ simias_get_config_frame(GaimPlugin *plugin)
 
 	/* SECTION: Gaim Domain Member List */
 	vbox = gaim_gtk_make_frame(ret, _("Gaim Domain Member List"));
-
-	gaim_gtk_prefs_dropdown(vbox, _("Use:"), 
-		GAIM_PREF_STRING, SIMIAS_PREF_SYNC_METHOD,
-		_("All buddies"), SIMIAS_PREF_SYNC_METHOD_ALL,
-		_("iFolder-enabled buddies"), SIMIAS_PREF_SYNC_METHOD_PLUGIN_ENABLED,
-		NULL);
-
-	gaim_gtk_prefs_checkbox(_("Prune old members"),
-							SIMIAS_PREF_SYNC_PRUNE_MEMBERS, vbox);
 
 	hbox = gtk_hbox_new(FALSE, 0);
 
@@ -263,15 +246,10 @@ simias_get_config_frame(GaimPlugin *plugin)
 	/* SECTION: Other */
 	vbox = gaim_gtk_make_frame(ret, _("Other"));
 	
-	gaim_gtk_prefs_dropdown(vbox, _("Reply with my PO BOX URL to:"),
-		GAIM_PREF_STRING, SIMIAS_PREF_PING_REPLY_TYPE,
-		_("Users in my buddy list (recommended)"), SIMIAS_PREF_PING_REPLY_TYPE_BLIST,
-		_("Any AIM User"), SIMIAS_PREF_PING_REPLY_TYPE_ANY,
-		NULL);
-
 	gaim_gtk_prefs_checkbox(_("_Automatically start iFolder if it's not running"),
 	                SIMIAS_PREF_SIMIAS_AUTO_START, vbox);
 	label = gtk_label_new("(Not implemented yet)");
+	gtk_box_pack_end(GTK_BOX(vbox), label, FALSE, FALSE, 0);
 
 
 	gtk_widget_show_all(ret);
