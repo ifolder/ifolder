@@ -55,6 +55,7 @@ static GType ifolder_nautilus_type;
  * gSOAP variables
  */
 struct soap soap;
+char *soapURL = NULL;
 
 /**
  * Utility functions
@@ -102,7 +103,7 @@ is_ifolder (NautilusFileInfo *file)
 		struct _ns1__IsiFolderResponse ns1__IsiFolderResponse;
 		ns1__IsiFolder.LocalPath = folder_path;
 		soap_call___ns1__IsiFolder (&soap, 
-									NULL, 
+									soapURL, 
 									NULL, 
 									&ns1__IsiFolder, 
 									&ns1__IsiFolderResponse);
@@ -139,7 +140,7 @@ can_be_ifolder (NautilusFileInfo *file)
 		struct _ns1__CanBeiFolderResponse ns1__CanBeiFolderResponse;
 		ns1__CanBeiFolder.LocalPath = folder_path;
 		soap_call___ns1__CanBeiFolder (&soap,
-									   NULL, 
+									   soapURL, 
 									   NULL, 
 									   &ns1__CanBeiFolder, 
 									   &ns1__CanBeiFolderResponse);
@@ -172,7 +173,7 @@ create_local_ifolder (NautilusFileInfo *file)
 		struct _ns1__CreateLocaliFolderResponse ns1__CreateLocaliFolderResponse;
 		ns1__CreateLocaliFolder.Path = folder_path;
 		soap_call___ns1__CreateLocaliFolder (&soap, 
-											 NULL, 
+											 soapURL, 
 											 NULL, 
 											 &ns1__CreateLocaliFolder, 
 											 &ns1__CreateLocaliFolderResponse);
@@ -217,7 +218,7 @@ get_ifolder_id_by_local_path (gchar *path)
 		struct _ns1__GetiFolderByLocalPathResponse ns1__GetiFolderByLocalPathResponse;
 		ns1__GetiFolderByLocalPath.LocalPath = path;
 		soap_call___ns1__GetiFolderByLocalPath (&soap, 
-										NULL, 
+										soapURL, 
 										NULL, 
 										&ns1__GetiFolderByLocalPath, 
 										&ns1__GetiFolderByLocalPathResponse);
@@ -260,7 +261,7 @@ revert_ifolder (NautilusFileInfo *file)
 			struct _ns1__RevertiFolderResponse ns1__RevertiFolderResponse;
 			ns1__RevertiFolder.iFolderID = ifolder_id;
 			soap_call___ns1__RevertiFolder (&soap, 
-												 NULL, 
+												 soapURL, 
 												 NULL, 
 												 &ns1__RevertiFolder, 
 												 &ns1__RevertiFolderResponse);
@@ -583,6 +584,9 @@ nautilus_module_initialize (GTypeModule *module)
 	/* Initialize gSOAP */
 	soap_init (&soap);
 	soap_set_namespaces (&soap, iFolderClient_namespaces);
+	
+	/* FIXME: Determine the correct SOAP URL to access */
+	soapURL = strdup ("http://localhost:33079/simias10/boyd/iFolder.asmx");
 }
 
 void
@@ -592,6 +596,9 @@ nautilus_module_shutdown (void)
 	
 	/* Cleanup gSOAP */
 	soap_end (&soap);
+	if (soapURL) {
+		free (soapURL);
+	}
 }
 
 void
