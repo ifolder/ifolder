@@ -30,6 +30,7 @@ using System.Xml;
 using Simias;
 using Simias.Authentication;
 using Simias.Client;
+using Simias.POBox;
 using Simias.Storage;
 using Simias.Sync;
 
@@ -296,6 +297,11 @@ namespace Simias.Domain
 		/// </summary>
 		public DomainAgent()
 		{
+			if (store.DefaultDomain == Simias.Storage.Domain.WorkGroupDomainID)
+			{
+				throw new SimiasException("The WorkGroup domain cannot be used.");
+			}
+
 			domainConfiguration = new DomainConfig(store.DefaultDomain);
 		}
 
@@ -314,6 +320,11 @@ namespace Simias.Domain
 		/// <param name="domainID">Identifier for the domain.</param>
 		public DomainAgent(string domainID)
 		{
+			if (domainID == Simias.Storage.Domain.WorkGroupDomainID)
+			{
+				throw new SimiasException("The WorkGroup domain cannot be used.");
+			}
+
 			domainConfiguration = new DomainConfig(domainID);
 		}
 		#endregion
@@ -420,6 +431,104 @@ namespace Simias.Domain
 				throw e;
 			}
 			return domainInfo.ID;
+		}
+
+		/// <summary>
+		/// Removes this workstation from the domain or removes the workstation from all machines
+		/// owned by the user.
+		/// </summary>
+		/// <param name="localOnly">If true then only this workstation is removed from the domain.
+		/// If false, then the domain will be deleted from every workstation that the user owns.</param>
+		public void Unattach(bool localOnly)
+		{
+			string domainID = domainConfiguration.ID;
+			string userID = store.GetUserIDFromDomainID(domainID);
+
+			// Construct the web client.
+			DomainService domainService = new DomainService();
+
+			// This information needs to be gathered before the local domain collections are deleted.
+			if ( !localOnly )
+			{
+				// Set the address to the server.
+				Uri uri = domainConfiguration.ServiceUrl;
+				if (uri == null)
+				{
+					throw new SimiasException("Domain URL is not set.");
+				}
+
+				domainService.Url = uri.ToString() + "/DomainService.asmx";
+
+				// Get the credentials for this user.
+				Credentials cSimiasCreds = new Credentials(domainID, userID);
+				domainService.Credentials = cSimiasCreds.GetCredentials();
+				if (domainService.Credentials == null)
+				{
+					throw new ApplicationException("No credentials available for specified collection.");
+				}
+
+				domainService.PreAuthenticate = true;
+			}
+
+			// Find the user's POBox for this domain.
+			POBox.POBox poBox = POBox.POBox.FindPOBox(store, domainID, userID);
+			if (poBox == null)
+			{
+				throw new SimiasException(String.Format("Cannot find POBox belonging to domain {0}", domainID));
+			}
+
+			// Delete the POBox for this domain which will start the domain cleanup process.
+			poBox.Commit(poBox.Delete());
+
+			if (!localOnly)
+			{
+				// Remove the user from the domain server.
+//				RemoveServerCollections(domainID, userID);
+			}
+		}
+
+		/// <summary>
+		/// Removes all traces of the domain from this machine.
+		/// </summary>
+		public void RemoveDomainInformation()
+		{
+			string domainID = domainConfiguration.ID;
+
+			// If the default domain is the one that is being deleted, set a new one.
+			if (store.DefaultDomain == domainID)
+			{
+				// If there are no other domains present, the default goes back to
+				// the workgroup domain.
+				string defaultDomain = Simias.Storage.Domain.WorkGroupDomainID;
+
+				// Set the new default domain.
+				LocalDatabase ldb = store.GetDatabaseObject();
+				ICSList dList = ldb.GetNodesByType(NodeTypes.DomainType);
+				foreach(ShallowNode sn in dList)
+				{
+					// Find the first domain that is not the one being deleted or is the
+					// WorkGroup domain.
+					if ((sn.ID != domainID) && (sn.ID != Simias.Storage.Domain.WorkGroupDomainID))
+					{
+						defaultDomain = sn.ID;
+						break;
+					}
+				}
+
+				// Set the new default domain.
+				ldb.DefaultDomain = defaultDomain;
+			}
+
+			// Get a list of all the collections that belong to this domain and delete them.
+			ICSList cList = store.GetCollectionsByDomain(domainID);
+			foreach(ShallowNode sn in cList)
+			{
+				Collection c = new Collection(store, sn);
+				c.Commit(c.Delete());
+			}
+
+			// Remove the local domain information.
+			store.DeleteDomainIdentity(domainID);
 		}
 
 		private void CreateRosterProxy(Store store, Storage.Domain domain, string userID, DomainInfo info, Uri host)

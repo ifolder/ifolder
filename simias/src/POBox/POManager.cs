@@ -30,6 +30,7 @@ using System.Diagnostics;
 using Simias;
 using Simias.Client;
 using Simias.Client.Event;
+using Simias.Domain;
 using Simias.Storage;
 using Simias.Sync;
 
@@ -227,6 +228,9 @@ namespace Simias.POBox
 
 			if (c.IsType(c, typeof(POBox).Name))
 			{
+				// This POBox is being deleted. Call to get rid of the domain information.
+				DomainAgent agent = new DomainAgent(c.Domain);
+				agent.RemoveDomainInformation();
 				RemovePOBoxManager(args.ID);
 			}
 		}
