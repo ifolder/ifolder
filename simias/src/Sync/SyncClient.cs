@@ -702,6 +702,12 @@ namespace Simias.Sync
 				switch (si.Status)
 				{
 					case StartSyncStatus.AccessDenied:
+						new EventPublisher().RaiseEvent(
+							new NodeEventArgs(
+								"Sync", collection.ID, collection.ID, 
+								collection.BaseType, EventType.NoAccess, 
+								0, DateTime.Now, collection.MasterIncarnation,
+								collection.LocalIncarnation, 0)); 
 						log.Info("The user no longer has rights.");
 						collection.Commit(collection.Delete());
 						break;
@@ -712,6 +718,12 @@ namespace Simias.Sync
 						log.Info("The server is busy");
 						break;
 					case StartSyncStatus.NotFound:
+						new EventPublisher().RaiseEvent(
+							new NodeEventArgs(
+								"Sync", collection.ID, collection.ID, 
+								collection.BaseType, EventType.NoAccess, 
+								0, DateTime.Now, collection.MasterIncarnation, 
+								collection.LocalIncarnation, 0)); 
 						log.Info("The collection no longer exists");
 						// The collection does not exist or we do not have rights.
 						collection.Commit(collection.Delete());

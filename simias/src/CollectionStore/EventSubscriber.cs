@@ -72,6 +72,11 @@ namespace Simias.Storage
 		/// A Node or Collection modification.
 		/// </summary>
 		public event NodeEventHandler NodeChanged;
+		/// <summary>
+		/// Delegate to handle No Access the client
+		/// no longer has access to the node.
+		/// </summary>
+		public event NodeEventHandler NoAccess;
 		
 		#endregion
 
@@ -286,6 +291,24 @@ namespace Simias.Storage
 								if (NodeDeleted != null)
 								{
 									Delegate[] cbList = NodeDeleted.GetInvocationList();
+									foreach (NodeEventHandler cb in cbList)
+									{
+										try 
+										{ 
+											cb(nodeArgs);
+										}
+										catch(Exception ex)
+										{
+											logger.Debug(ex, "Delegate {0}.{1} failed", cb.Target, cb.Method);
+											NodeDeleted -= cb;
+										}
+									}
+								}
+								break;
+							case EventType.NoAccess:
+								if (NoAccess != null)
+								{
+									Delegate[] cbList = NoAccess.GetInvocationList();
 									foreach (NodeEventHandler cb in cbList)
 									{
 										try 

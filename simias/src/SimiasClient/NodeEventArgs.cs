@@ -43,7 +43,11 @@ namespace Simias.Client.Event
 		/// <summary>
 		/// The event is for a node change.
 		/// </summary>
-		NodeChanged = 4
+		NodeChanged = 4,
+		/// <summary>
+		/// The event is for no access.
+		/// </summary>
+		NoAccess = 8
 	};
 
 	/// <summary>
