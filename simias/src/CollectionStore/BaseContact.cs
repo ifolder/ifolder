@@ -25,7 +25,7 @@ using System;
 using System.Collections;
 using System.Security.Cryptography;
 using System.Xml;
-using System.Xml.Serialization;
+
 using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
 
 namespace Simias.Storage
@@ -97,9 +97,9 @@ namespace Simias.Storage
 			XmlDocument dpkDocument = new XmlDocument();
 			dpkDocument.LoadXml( xmlString );
 
-			this.domain = dpkDocument.DocumentElement.GetAttribute( Property.DomainName );
-			this.credential = new RSACryptoServiceProvider();
-			this.credential.FromXmlString( dpkDocument.DocumentElement.InnerText );
+			domain = dpkDocument.DocumentElement.GetAttribute( Property.DomainName );
+			credential = new RSACryptoServiceProvider( IdentityManager.dummyCsp );
+			credential.FromXmlString( dpkDocument.DocumentElement.InnerText );
 		}
 
 		/// <summary>
@@ -126,24 +126,9 @@ namespace Simias.Storage
 	/// <summary>
 	/// Class that represents a user in the Collection Store.
 	/// </summary>
-	public class Identity : Node
+	public class BaseContact : Node
 	{
-		#region Class Members
-		/// <summary>
-		/// The local address book that this identity belongs to.
-		/// </summary>
-		private LocalAddressBook localAb;
-		#endregion
-
 		#region Properties
-		/// <summary>
-		/// Gets the local address book that this identity belongs to.
-		/// </summary>
-		internal LocalAddressBook AddressBook
-		{
-			get { return localAb; }
-		}
-
 		/// <summary>
 		/// Gets the public/private key values for the specified identity.
 		/// </summary>
@@ -152,10 +137,10 @@ namespace Simias.Storage
 			get
 			{
 				// Lookup the credential property on the identity.
-				Property p = Properties.FindSingleValue( Property.ServerCredential );
+				Property p = properties.FindSingleValue( Property.ServerCredential );
 				if ( p != null )
 				{
-					RSACryptoServiceProvider credential = new RSACryptoServiceProvider();
+					RSACryptoServiceProvider credential = new RSACryptoServiceProvider( IdentityManager.dummyCsp );
 					credential.FromXmlString( p.Value as string );
 					return credential;
 				}
@@ -169,72 +154,56 @@ namespace Simias.Storage
 
 		#region Constructors
 		/// <summary>
-		/// Constructor for creating an identity with a known GUID.
+		/// Constructor for creating a new BaseContact object.
 		/// </summary>
-		/// <param name="localAb">Address book that the identity will belong to.</param>
+		/// <param name="userName">User name of the identity.</param>
+		public BaseContact( string userName ) :
+			this( userName, Guid.NewGuid().ToString() )
+		{
+		}
+
+		/// <summary>
+		/// Constructor for creating a new BaseContact object.
+		/// </summary>
 		/// <param name="userName">User name of the identity.</param>
 		/// <param name="userGuid">Unique identifier for the user.</param>
-		/// <param name="type">Type of identity to create.</param>
-		internal Identity( LocalAddressBook localAb, string userName, string userGuid, string type ) :
-			base ( localAb, userName, userGuid, type )
+		public BaseContact( string userName, string userGuid ) :
+			base ( userName, userGuid, "BaseContact" )
 		{
-			this.localAb = localAb;
-			SetParent( localAb );
 		}
 
 		/// <summary>
-		/// Constructor for creating an identity with a known GUID.
+		/// Constructor that creates a BaseContact object from a Node object.
 		/// </summary>
-		/// <param name="localAb">Address book that the identity will belong to.</param>
-		/// <param name="userName">User name of the identity.</param>
-		/// <param name="userGuid">Unique identifier for the user.</param>
-		public Identity( LocalAddressBook localAb, string userName, string userGuid ) :
-			this ( localAb, userName, userGuid, Property.IdentityType )
+		/// <param name="collection">Collection that the specified Node object belongs to.</param>
+		/// <param name="node">Node object to create the BaseContact object from.</param>
+		public BaseContact( Collection collection, Node node ) :
+			base( node )
 		{
-			this.localAb = localAb;
-		}
-
-		/// <summary>
-		/// Constructor for creating a new identity.
-		/// </summary>
-		/// <param name="localAb">Address book that the identity will belong to.</param>
-		/// <param name="userName">User name of the identity.</param>
-		public Identity( LocalAddressBook localAb, string userName ) :
-			this( localAb, userName, Guid.NewGuid().ToString().ToLower(), Property.IdentityType )
-		{
-			this.localAb = localAb;
-		}
-
-		/// <summary>
-		/// Constructor that creates a identity from a Node.
-		/// </summary>
-		/// <param name="node">Node that is an identity type.</param>
-		internal Identity( Node node ) :
-			base( node.cNode, true )
-		{
-			// Need to convert the collection type to a local address book type.
-			this.localAb = new LocalAddressBook( store, CollectionNode );
-			InternalCollectionHandle = this.localAb;
+			if ( !collection.IsType( node, "BaseContact" ) )
+			{
+				throw new ApplicationException( "Cannot construct object from specified type." );
+			}
 		}
 		#endregion
 
 		#region Private Methods
 		/// <summary>
-		/// Finds the specified alias property on the identity node.
+		/// Finds the specified alias property on the BaseContact object.
 		/// </summary>
-		/// <param name="domain">Domain that id is contained in.</param>
-		/// <param name="userGuid">Unique identifier that user is known as in specified domain. </param>
+		/// <param name="domain">Domain that alias is contained in.</param>
+		/// <param name="userGuid">Unique identifier that alias is known as in the specified domain. </param>
 		/// <returns>A property object that contains the alias object.</returns>
-		public Property FindAliasProperty( string domain, string userGuid )
+		private Property FindAliasProperty( string domain, string userGuid )
 		{
 			Property aliasProperty = null;
 
 			// Find if there is an existing alias.  If there is don't add the new one.
-			MultiValuedList mvl = Properties.FindValues( Property.Alias );
+			MultiValuedList mvl = properties.FindValues( Property.Alias );
 			foreach( Property p in mvl )
 			{
 				Alias tempAlias = new Alias( p );
-				if ( ( tempAlias.Domain == domain ) && ( tempAlias.Id == userGuid ) )
+				if ( ( tempAlias.Domain == domain ) && ( tempAlias.ID == userGuid ) )
 				{
 					aliasProperty = p;
 					break;
@@ -247,7 +216,7 @@ namespace Simias.Storage
 
 		#region Internal Methods
 		/// <summary>
-		/// Adds the specified public key to this identity's client credential list.
+		/// Adds the specified public key to this BaseContact object's client credential list.
 		/// </summary>
 		/// <param name="domain">Domain that the public key belongs to.</param>
 		/// <param name="publicKey">Public key for the domain.</param>
@@ -257,10 +226,10 @@ namespace Simias.Storage
 			DomainPublicKey dpk = new DomainPublicKey( domain, publicKey );
 
 			// Set the property on the identity object.  Don't show this property through normal
-			// enumeration.  But, let the property replicate.
+			// enumeration, but let the property replicate.
 			Property clientpkp = new Property( Property.ClientCredential, dpk.ToXmlString() );
 			clientpkp.HiddenProperty = true;
-			Properties.AddNodeProperty( clientpkp );
+			properties.AddNodeProperty( clientpkp );
 		}
 
 		/// <summary>
@@ -276,7 +245,7 @@ namespace Simias.Storage
 			Property p = new Property( Property.ServerCredential, credential.ToXmlString( true ) );
 			p.HiddenProperty = true;
 			p.LocalProperty = true;
-			Properties.ModifyNodeProperty( p );
+			properties.ModifyNodeProperty( p );
 		}
 
 		/// <summary>
@@ -286,7 +255,7 @@ namespace Simias.Storage
 		internal void DeletePublicKey( string domain )
 		{
 			// Look up any client credential properties for this identity.
-			MultiValuedList mvl = Properties.FindValues( Property.ClientCredential, true );
+			MultiValuedList mvl = properties.FindValues( Property.ClientCredential, true );
 			foreach ( Property keyProp in mvl )
 			{
 				// Export the public key from the client credentials.
@@ -310,7 +279,7 @@ namespace Simias.Storage
 			RSACryptoServiceProvider credential = null;
 
 			// Look up any client credential properties for this identity.
-			MultiValuedList mvl = Properties.FindValues( Property.ClientCredential, true );
+			MultiValuedList mvl = properties.FindValues( Property.ClientCredential, true );
 			foreach ( Property keyProp in mvl )
 			{
 				// Export the public key from the client credentials.
@@ -336,39 +305,26 @@ namespace Simias.Storage
 		/// <param name="publicKeyString">Domain's public key represented as a string.</param>
 		public Alias CreateAlias( string domain, string userGuid, string publicKeyString )
 		{
-			RSACryptoServiceProvider publicKey = new RSACryptoServiceProvider();
+			RSACryptoServiceProvider publicKey = new RSACryptoServiceProvider( IdentityManager.dummyCsp );
 			publicKey.FromXmlString( publicKeyString );
-			return CreateAlias( domain, userGuid, publicKey );
-		}
 
-		/// <summary>
-		/// Sets a property on the identity object that represents this identity in another domain.
-		/// </summary>
-		/// <param name="domain">Domain that id is contained in.</param>
-		/// <param name="userGuid">Unique identifier that user is known as in specified domain. </param>
-		/// <param name="publicKey">Domain's public key.</param>
-		public Alias CreateAlias( string domain, string userGuid, RSACryptoServiceProvider publicKey )
-		{
-			lock ( store )
+			// Set up an alias object to store on this identity.
+			Alias alias = new Alias( domain, userGuid, publicKey );
+
+			// Look for an existing alias property.
+			Property aliasProperty = FindAliasProperty( domain, userGuid );
+			if (aliasProperty == null )
 			{
-				// Set up an alias object to store on this identity.
-				Alias alias = new Alias( domain, userGuid, publicKey );
-
-				// Look for an existing alias property.
-				Property aliasProperty = FindAliasProperty( domain, userGuid );
-				if (aliasProperty == null )
-				{
-					// Create a property to store the object on.
-					Properties.AddNodeProperty( new Property( Property.Alias, alias.ToXmlString() ) );
-				}
-				else
-				{
-					// Set a new credential on an existing alias property.
-					aliasProperty.SetPropertyValue( alias.ToXmlString() );
-				}
-
-				return alias;
+				// Create a property to store the object on.
+				properties.AddNodeProperty( new Property( Property.Alias, alias.ToXmlString() ) );
 			}
+			else
+			{
+				// Set a new credential on an existing alias property.
+				aliasProperty.SetPropertyValue( alias.ToXmlString() );
+			}
+
+			return alias;
 		}
 
 		/// <summary>
@@ -378,13 +334,10 @@ namespace Simias.Storage
 		/// <param name="userGuid">Unique identifier that user is known as in specified domain. </param>
 		public void DeleteAlias( string domain, string userGuid )
 		{
-			lock ( store )
+			Property p = FindAliasProperty( domain, userGuid );
+			if ( p != null )
 			{
-				Property p = FindAliasProperty( domain, userGuid );
-				if ( p != null )
-				{
-					p.Delete();
-				}
+				p.Delete();
 			}
 		}
 
@@ -396,11 +349,8 @@ namespace Simias.Storage
 		/// <returns>The specified alias if found, otherwise a null.</returns>
 		public Alias FindAlias( string domain, string userGuid )
 		{
-			lock ( store )
-			{
-				Property p = FindAliasProperty( domain, userGuid );
-				return ( p != null ) ? new Alias( p ) : null;
-			}
+			Property p = FindAliasProperty( domain, userGuid );
+			return ( p != null ) ? new Alias( p ) : null;
 		}
 
 		/// <summary>
@@ -410,22 +360,19 @@ namespace Simias.Storage
 		/// <returns>An alias object representing the user in the specified domain.</returns>
 		public Alias GetAliasFromDomain( string domain )
 		{
-			lock ( store )
+			Alias alias = null;
+
+			// Look through the list of aliases that this identity is known by in other domains.
+			foreach ( Alias tempAlias in GetAliasList() )
 			{
-				Alias alias = null;
-
-				// Look through the list of aliases that this identity is known by in other domains.
-				foreach ( Alias tempAlias in GetAliasList() )
+				if ( tempAlias.Domain == domain )
 				{
-					if ( tempAlias.Domain == domain )
-					{
-						alias = tempAlias;
-						break;
-					}
+					alias = tempAlias;
+					break;
 				}
-
-				return alias;
 			}
+
+			return alias;
 		}
 
 		/// <summary>
@@ -434,17 +381,15 @@ namespace Simias.Storage
 		/// <returns>An ICSList object containing all of the aliases for this identity.</returns>
 		public ICSList GetAliasList()
 		{
-			lock ( store )
-			{
-				ICSList aliasList = new ICSList();
-				MultiValuedList mvl = Properties.FindValues( Property.Alias );
-				foreach( Property p in mvl )
-				{
-					aliasList.Add( new Alias( p ) );
-				}
+			ICSList aliasList = new ICSList();
 
-				return aliasList;
+			MultiValuedList mvl = properties.FindValues( Property.Alias );
+			foreach( Property p in mvl )
+			{
+				aliasList.Add( new Alias( p ) );
 			}
+
+			return aliasList;
 		}
 
 		/// <summary>
@@ -453,50 +398,45 @@ namespace Simias.Storage
 		/// <returns>An array list of guids that represents the current user and all of its aliases.</returns>
 		public ArrayList GetIdentityAndAliases()
 		{
-			lock ( store )
+			ArrayList ids = new ArrayList();
+			ids.Add( id );
+
+			// Add any aliases to the list also.
+			foreach ( Alias alias in GetAliasList() )
 			{
-				ArrayList ids = new ArrayList();
-				ids.Add( Id );
-
-				// Add any aliases to the list also.
-				foreach ( Alias alias in GetAliasList() )
-				{
-					ids.Add( alias.Id );
-				}
-
-				return ids;
+				ids.Add( alias.ID );
 			}
+
+			return ids;
 		}
 
 		/// <summary>
 		/// Returns the user guid that the current user is known as in the specified domain.
 		/// </summary>
-		/// <param name="domain">The domain that the user is in.</param>
+		/// <param name="localDomain">The domain name of the local domain.</param>
+		/// <param name="userDomain">The domain that the user is in.</param>
 		/// <returns>A string representing the user's guid in the specified domain.  If the user does not exist
 		/// in the specified domain, the current user guid is returned.</returns>
-		public string GetDomainUserGuid( string domain )
+		public string GetDomainUserGuid( string localDomain, string userDomain )
 		{
-			lock ( store )
-			{
-				string userGuid = Id;
+			string userGuid = id;
 
-				// If no domain is specified or it is the current domain, use the current identity.
-				if ( ( domain != null ) && ( domain != CollectionNode.DomainName ) )
+			// If no domain is specified or it is the current domain, use the current identity.
+			if ( ( userDomain != null ) && ( userDomain != localDomain ) )
+			{
+				// This is not the store's domain.  Look through the list of aliases that this
+				// identity is known by in other domains.
+				foreach ( Alias alias in GetAliasList() )
 				{
-					// This is not the store's domain.  Look through the list of aliases that this
-					// identity is known by in other domains.
-					foreach ( Alias alias in GetAliasList() )
+					if ( alias.Domain == userDomain )
 					{
-						if ( alias.Domain == domain )
-						{
-							userGuid = alias.Id;
-							break;
-						}
+						userGuid = alias.ID;
+						break;
 					}
 				}
-
-				return userGuid;
 			}
+
+			return userGuid;
 		}
 		#endregion
 	}

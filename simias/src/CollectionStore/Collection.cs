@@ -25,108 +25,53 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Xml;
+
 using Simias;
-using Simias.Event;
 using Persist = Simias.Storage.Provider;
 
 namespace Simias.Storage
 {
 	/// <summary>
-	/// A collection is contained by a Store.  It contains properties and nodes that describe a grouping
-	/// of objects (such as files).  A collection cannot be contained in another Collection or within a
-	/// node.
+	/// A Collection object is contained by a Store object and describes a relationship between the objects
+	/// that it contains.
 	/// </summary>
-	public class Collection : Node, IDisposable
+	public class Collection : Node
 	{
 		#region Class Members
 		/// <summary>
-		/// Initial size of the list that keeps track of the dirty nodes.
+		/// Reference to the store.
 		/// </summary>
-		private const int initialDirtyNodeListSize = 10;
+		private Store store;
 
 		/// <summary>
-		/// Reference to the persistent database object.
+		/// Access control object for this Collection object.
 		/// </summary>
-		private Persist.IProvider database;
-
-		/// <summary>
-		/// Domain that this collection belongs to.
-		/// </summary>
-		private string domainName = null;
-
-		/// <summary>
-		/// Subscriber event used to keep the cached node table up to date.
-		/// </summary>
-		private EventSubscriber subscriber = null;
-
-		/// <summary>
-		/// Array of node Ids to filter events with.
-		/// </summary>
-		private string[] nodeFilter = null;
-
-		/// <summary>
-		/// Event handler for node change delegates.
-		/// </summary>
-		private event NodeChangeHandler nEventHandler = null;
-
-		/// <summary>
-		/// Indicates if object has been disposed.
-		/// </summary>
-		private bool disposed = false;
-
-		/// <summary>
-		/// Delegate to capture node change events for this collection.
-		/// </summary>
-		public delegate void NodeChangeHandler( NodeEventArgs args );
+		private AccessControl accessControl;
 		#endregion
 
 		#region Properties
-		/// <summary>
-		/// Gets whether current user has owner access rights to this collection.
-		/// </summary>
-		internal bool HasOwnerAccess
-		{
-			get 
-			{ 
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
-
-				return cNode.accessControl.IsOwnerAccessAllowed(); 
-			}
-		}
-
 		/// <summary>
 		/// Gets the identity that the current user is known as in the collection's domain.
 		/// </summary>
 		internal string DomainIdentity
 		{
-			get 
-			{ 
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
-
-				return store.CurrentIdentity.GetDomainUserGuid( DomainName ); 
-			}
+			get { return store.CurrentIdentity.GetDomainUserGuid( store.DomainName, Domain ); }
 		}
 
 		/// <summary>
-		/// Gets the local store handle.
+		/// Gets the name of the domain that this collection belongs to.
 		/// </summary>
-		public Store LocalStore
+		public string Domain
 		{
-			get 
-			{ 
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
+			get { return properties.FindSingleValue( Property.DomainName ).Value as string; }
+		}
 
-				return store; 
-			}
+		/// <summary>
+		/// Gets the directory where store managed files are kept.
+		/// </summary>
+		internal string ManagedPath
+		{
+			get { return store.GetStoreManagedPath( id ); }
 		}
 
 		/// <summary>
@@ -134,586 +79,495 @@ namespace Simias.Storage
 		/// </summary>
 		public string Owner
 		{
-			// An owner property will always exist.
-			get 
-			{ 
-				lock ( store )
-				{
-					if ( disposed )
-					{
-						throw new ObjectDisposedException( this.ToString() );
-					}
+			get { return properties.FindSingleValue( Property.Owner ).Value as string; }
+		}
 
-					return cNode.accessControl.Owner; 
-				}
-			}
+		/// <summary>
+		/// Gets and sets the location in the external file system where all external files and directories
+		/// belonging to the collection are rooted.  If the root is changed, all external files and directories
+		/// belonging to the collection are moved to the new specified root in the external file system.
+		/// </summary>
+		public string Root
+		{
+			get { return ( properties.FindSingleValue( Property.Root ).Value as Uri ).LocalPath; }
+			set { properties.ModifyNodeProperty( Property.Root, new Uri( value ) ); }
 		}
 
 		/// <summary>
 		/// Gets or sets whether this collection can be shared.  By default, a collection is always shareable.
-		/// The Collection Store cannot prevent an application from sharing a collection even though this property
-		/// is set non-shareable.  This property is only meant as a common means to indicate shareability and must
-		/// be enforced at a higher layer.
+		/// The Collection Store cannot prevent an application from sharing a collection even though this 
+		/// property is set non-shareable.  This property is only meant as a common means to indicate 
+		/// shareability and must be enforced at a higher layer.
 		/// </summary>
 		public bool Shareable
 		{
 			get 
 			{
-				lock ( store )
-				{
-					if ( disposed )
-					{
-						throw new ObjectDisposedException( this.ToString() );
-					}
-
-					Property p = Properties.GetSingleProperty( Property.Shareable );
-					bool shareable = ( p != null ) ? ( bool )p.Value : true;
-					return ( IsAccessAllowed( Access.Rights.Admin ) && shareable && Synchronizable ) ? true : false;
-				}
+				Property p = properties.FindSingleValue( Property.Shareable );
+				bool shareable = ( p != null ) ? ( bool )p.Value : true;
+				return ( IsAccessAllowed( Access.Rights.Admin ) && shareable && Synchronizable ) ? true : false;
 			}
 
-			set 
-			{
-				lock ( store )
-				{
-					if ( disposed )
-					{
-						throw new ObjectDisposedException( this.ToString() );
-					}
-
-					// Only allow the collection owner to set this property.
-					if ( !HasOwnerAccess )
-					{
-						throw new ApplicationException( "Current user is not the collection owner." );
-					}
-
-					Properties.ModifyNodeProperty( Property.Shareable, value );
-				}
-			}
+			set { properties.ModifyNodeProperty( Property.Shareable, value ); }
 		}
 
 		/// <summary>
-		/// Gets or sets whether this collection can be synchronized.  By default, a collection is always synchronizeable.
-		/// The Collection Store cannot prevent an application from synchronizing a collection even though this property
-		/// is set not synchronizable.  This property is only meant as a common means to indicate synchronizability and must
-		/// be enforced at a higher layer.
+		/// Gets the Store reference for this Collection object.
+		/// </summary>
+		public Store StoreReference
+		{
+			get { return store; }
+		}
+
+		/// <summary>
+		/// Gets or sets whether this collection can be synchronized.  By default, a collection is always 
+		/// synchronizeable. The Collection Store cannot prevent an application from synchronizing a 
+		/// collection even though this property is set not synchronizable.  This property is only meant 
+		/// as a common means to indicate synchronizability and must be enforced at a higher layer.
 		/// </summary>
 		public bool Synchronizable
 		{
 			get 
 			{
-				lock ( store )
-				{
-					if ( disposed )
-					{
-						throw new ObjectDisposedException( this.ToString() );
-					}
-
-					Property p = Properties.GetSingleProperty( Property.Syncable );
-					return ( p != null ) ? ( bool )p.Value : true;
-				}
+				Property p = properties.FindSingleValue( Property.Syncable );
+				return ( p != null ) ? ( bool )p.Value : true;
 			}
 
-			set 
-			{
-				lock ( store )
-				{
-					if ( disposed )
-					{
-						throw new ObjectDisposedException( this.ToString() );
-					}
-
-					// Only allow the collection owner to set this property.
-					if ( !HasOwnerAccess )
-					{
-						throw new ApplicationException( "Current user is not the collection owner." );
-					}
-
-					Properties.ModifyNodeProperty( Property.Syncable, value );
-				}
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets whether this collection can be synchronized.  By default, a collection is always synchronizeable.
-		/// The Collection Store cannot prevent an application from synchronizing a collection even though this property
-		/// is set not synchronizable.  This property is only meant as a common means to indicate synchronizability and must
-		/// be enforced at a higher layer.
-		/// </summary>
-		[ Obsolete( "This property is marked for removal.  Use Property 'Synchronizable' instead.", false ) ]
-		public bool Synchronizeable
-		{
-			get { return Synchronizable; }
-			set { Synchronizable = value; }
-		}
-
-		/// <summary>
-		/// Gets the domain name that this collection belongs to.
-		/// </summary>
-		public string DomainName
-		{
-			get 
-			{
-				lock ( store )
-				{
-					if ( disposed )
-					{
-						throw new ObjectDisposedException( this.ToString() );
-					}
-
-					if ( domainName == null )
-					{
-						Property p = Properties.GetSingleProperty( Property.DomainName );
-						domainName = p.ToString();
-					}
-
-					return domainName;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Gets and sets the document root where all files belonging to the collection are rooted.  If the document
-		/// root is changed, all files belonging to the collection are moved to the new document root in the file system.
-		/// </summary>
-		public Uri DocumentRoot
-		{
-			get 
-			{
-				lock ( store )
-				{
-					if ( disposed )
-					{
-						throw new ObjectDisposedException( this.ToString() );
-					}
-
-					Property p = Properties.GetSingleProperty( Property.DocumentRoot );
-					return ( p != null ) ? ( Uri )p.Value : null;
-				}
-			}
-
-			set 
-			{ 
-				lock ( store )
-				{
-					if ( disposed )
-					{
-						throw new ObjectDisposedException( this.ToString() );
-					}
-
-					MoveRoot( value ); 
-				}
-			}
+			set { properties.ModifyNodeProperty( Property.Syncable, value ); }
 		}
 		#endregion
 
 		#region Constructors
 		/// <summary>
-		/// Constructor to create a new collection object.
+		/// Constructor to create a new Collection object.
 		/// </summary>
-		/// <param name="store">Virtual store that this collection belongs to.</param>
-		/// <param name="name">Name that is used by applications to describe the collection.</param>
-		/// <param name="id">Globally unique identifier for this collection.</param>
-		/// <param name="type">Type of collection.</param>
-		/// <param name="documentRoot">Path where the collection documents are rooted.</param>
-		public Collection( Store store, string name, string id, string type, Uri documentRoot ) :
-			base( store, name, ( id == String.Empty ) ? Guid.NewGuid().ToString() : id, CollectionType + type, false )
+		/// <param name="storeObject">Store object that this collection belongs to.</param>
+		/// <param name="collectionName">This is the friendly name that is used by applications to describe the collection.</param>
+		public Collection( Store storeObject, string collectionName ) : 
+			this ( storeObject, collectionName, Guid.NewGuid().ToString() )
 		{
-			lock ( store )
+		}
+
+		/// <summary>
+		/// Constructor to create a new Collection object.
+		/// </summary>
+		/// <param name="storeObject">Store object that this collection belongs to.</param>
+		/// <param name="collectionName">This is the friendly name that is used by applications to describe the collection.</param>
+		/// <param name="collectionID">The globally unique identifier for this Collection object.</param>
+		public Collection( Store storeObject, string collectionName, string collectionID ) : 
+			this ( storeObject, collectionName, collectionID, storeObject.CurrentUserGuid, storeObject.DomainName, storeObject.GetStoreManagedPath( collectionID ) )
+		{
+		}
+
+		/// <summary>
+		/// Constructor to create a new Collection object.
+		/// </summary>
+		/// <param name="storeObject">Store object that this collection belongs to.</param>
+		/// <param name="collectionName">This is the friendly name that is used by applications to describe
+		/// this object.</param>
+		/// <param name="collectionID">The globally unique identifier for this object.</param>
+		/// <param name="ownerGuid">The identifier for the owner of this object.</param>
+		/// <param name="domainName">The domain that this object is stored in.</param>
+		/// <param name="collectionRoot">The location in the external file system where all external files 
+		/// and directories belonging to the collection are rooted.</param>
+		public Collection( Store storeObject, string collectionName, string collectionID, string ownerGuid, string domainName, string collectionRoot ) :
+			base( collectionName, collectionID, "Collection" )
+		{
+			store = storeObject;
+
+			// Don't allow this collection to be created, if one already exist by the same id.
+			if ( store.GetCollectionByID( id ) != null )
 			{
-				// Set the collection into the node.  Since node is a sub-class of collection, its 
-				// constructor runs before the collection constructor, so we can't set the 'this' value.
-				InternalCollectionHandle = this;
-
-				// Setup the dirty list.
-				cNode.dirtyNodeList = new Hashtable( initialDirtyNodeListSize );
-
-				// Don't allow another database object to be created.
-				if ( ( type == Store.DatabaseType ) && ( store.GetDatabaseObject() != null ) )
-				{
-					throw new ApplicationException( Store.DatabaseType + " already exists." );
-				}
-
-				// Don't allow this collection to be created, if one already exist by the same id.
-				if ( store.GetCollectionById( Id ) != null )
-				{
-					throw new ApplicationException( "Collection already exists with specified ID." );
-				}
-
-				// Initialize my class members.
-				this.store = store;
-				this.database = store.StorageProvider;
-
-				// Initialize the access control object.
-				cNode.accessControl = new AccessControl( this );
-
-				// Set the default access control for this collection.
-				cNode.accessControl.SetDefaultAccessControl();
-				UpdateAccessControl();
-
-				// If no document root was passed in, use the default one.
-				if ( documentRoot == null )
-				{
-					documentRoot = GetStoreManagedPath();
-				}
-
-				// If the document root directory does not exist, create it.
-				if ( !Directory.Exists( documentRoot.LocalPath ) )
-				{
-					Directory.CreateDirectory( documentRoot.LocalPath );
-				}
-
-				// Set the default properties for this node.
-				Properties.AddNodeProperty( Property.CreationTime, DateTime.UtcNow );
-				Properties.AddNodeProperty( Property.ModifyTime, DateTime.UtcNow );
-				Properties.AddNodeProperty( Property.CollectionID, Id );
-				Properties.AddNodeProperty( Property.IDPath, "/" + Id );
-				Properties.AddNodeProperty( Property.DomainName, store.DomainName );
-
-				// Add the document root as a local property.
-				Property docRootProp = new Property( Property.DocumentRoot, documentRoot );
-				docRootProp.LocalProperty = true;
-				Properties.AddNodeProperty( docRootProp );
-
-				// Set the sync versions.
-				Property mvProp = new Property( Property.MasterIncarnation, ( ulong )0 );
-				mvProp.LocalProperty = true;
-				Properties.AddNodeProperty( mvProp );
-
-				Property lvProp = new Property( Property.LocalIncarnation, ( ulong )0 );
-				lvProp.LocalProperty = true;
-				Properties.AddNodeProperty( lvProp );
-
-				// Add this node to the cache table.
-				cNode = cNode.AddToCacheTable();
+				throw new ApplicationException( "Collection already exists with specified ID." );
 			}
-		}
 
-		/// <summary>
-		/// Constructor to create a new collection object.
-		/// </summary>
-		/// <param name="store">Virtual store that this collection belongs to.</param>
-		/// <param name="name">Name that is used by applications to describe the collection.</param>
-		/// <param name="type">Type of collection.</param>
-		/// <param name="documentRoot">Path where the collection documents are rooted.</param>
-		public Collection( Store store, string name, string type, Uri documentRoot ) :
-			this( store, name, String.Empty, type, documentRoot )
-		{
-		}
-
-		/// <summary>
-		/// Constructor to create a new collection object that contains store-managed files.
-		/// </summary>
-		/// <param name="store">Virtual store that this collection belongs to.</param>
-		/// <param name="name">Name that is used by applications to describe the collection.</param>
-		/// <param name="type">Type of collection.</param>
-		public Collection( Store store, string name, string type ) :
-			this( store, name, String.Empty, type, ( Uri )null )
-		{
-		}
-
-		/// <summary>
-		/// Constructor to create an existing collection object.
-		/// </summary>
-		/// <param name="store">Virtual store that this collection belongs to.</param>
-		/// <param name="xmlProperties">List of properties that belong to this collection.</param>
-		/// <param name="imported">Set to true if collection is being imported.</param>
-		internal Collection( Store store, XmlElement xmlProperties, bool imported ) :
-			base( store, xmlProperties )
-		{
-			// Set the collection into the node.  Since node is a sub-class of collection, its 
-			// constructor runs before the collection constructor, so we can't set the value.
-			InternalCollectionHandle = this;
-
-			// Setup the dirty list.
-			cNode.dirtyNodeList = new Hashtable( initialDirtyNodeListSize );
-
-			// Initialize my class members.
-			this.store = store;
-			this.database = store.StorageProvider;
-
-			// Initialize the access control object.
-			cNode.accessControl = new AccessControl( this );
-			UpdateAccessControl();
-
-			if ( imported )
+			// If the document root directory does not exist, create it.
+			if ( !Directory.Exists( collectionRoot ) )
 			{
-				// Because this node is being imported, it needs to be the one in the cache node table.
-				// Otherwise all import changes will be lost.
-				CacheNode tempCacheNode = store.GetCacheNode( Id );
-				if ( tempCacheNode != null )
-				{
-					// Copy this cache node to the one in the table so that all node will see the import
-					// changes.
-					tempCacheNode.Copy( cNode );
-
-					// GetCacheNode() incremented the reference count.  Need to decrement it.
-					store.RemoveCacheNode( tempCacheNode, false );
-				}
-
-				// Add this node to the cache table.
-				cNode = cNode.AddToCacheTable();
-
-				// Add this object to the dirty list.
-				AddDirtyNodeToList( this );
+				Directory.CreateDirectory( collectionRoot );
 			}
-			else
+
+			// Add the collection root as a local property.
+			Property rootProp = new Property( Property.Root, new Uri( collectionRoot ) );
+			rootProp.LocalProperty = true;
+			properties.AddNodeProperty( rootProp );
+
+			// Add the owner identifier and domain name as properties.
+			properties.AddNodeProperty( Property.Owner, ownerGuid.ToLower() );
+			properties.AddNodeProperty( Property.DomainName, domainName );
+			
+			// Set the owner to have all rights to the collection.
+			AccessControlEntry ace = new AccessControlEntry( ownerGuid, Access.Rights.Admin );
+			ace.Set( this );
+
+			// Setup the access control for this collection.
+			accessControl = new AccessControl( this );
+		}
+
+		/// <summary>
+		/// Constructor for creating an existing Collection object from a ShallowNode.
+		/// </summary>
+		/// <param name="storeObject">Store object that this collection belongs to.</param>
+		/// <param name="shallowNode">A ShallowNode object.</param>
+		public Collection( Store storeObject, ShallowNode shallowNode ) :
+			base( storeObject.GetCollectionByID( shallowNode.ID ) )
+		{
+			store = storeObject;
+			accessControl = new AccessControl( this );
+		}
+
+		/// <summary>
+		/// Constructor to create a Collection object from a Node object.
+		/// </summary>
+		/// <param name="storeObject">Store object that this collection belongs to.</param>
+		/// <param name="node">Node object to construct Collection object from.</param>
+		internal protected Collection( Store storeObject, Node node ) :
+			base( node )
+		{
+			if ( !IsType( node, "Collection" ) )
 			{
-				// Add this node to the cache table.
-				cNode = cNode.AddToCacheTable();
+				throw new ApplicationException( "Cannot construct object from specified type." );
 			}
+
+			store = storeObject;
+			accessControl = new AccessControl( this );
 		}
 
 		/// <summary>
-		/// Constructor to create an existing collection object without properties.
+		/// Constructor for creating an existing Collection object.
 		/// </summary>
-		/// <param name="store">Virtual store that this collection belongs to.</param>
-		/// <param name="name">Name used by applications to describe the collection.</param>
-		/// <param name="id">Globally unique identifier for this collection.</param>
-		/// <param name="type">Type of collection.</param>
-		internal Collection( Store store, string name, string id, string type ) :
-			base( store, name, id, type, true )
+		/// <param name="storeObject">Store object that this collection belongs to.</param>
+		/// <param name="document">Xml document that describes a Collection object.</param>
+		internal protected Collection( Store storeObject, XmlDocument document ) :
+			base( document )
 		{
-			// Set the collection into the node.  Since node is a sub-class of collection, its 
-			// constructor runs before the collection constructor, so we can't set the value.
-			InternalCollectionHandle = this;
-
-			// Setup the dirty list.
-			cNode.dirtyNodeList = new Hashtable( initialDirtyNodeListSize );
-
-			// Initialize my class members.
-			this.store = store;
-			this.database = store.StorageProvider;
-
-			// Initialize the access control object.
-			cNode.accessControl = new AccessControl( this );
-
-			// Add this node to the cache table.
-			cNode = cNode.AddToCacheTable();
-		}
-
-		/// <summary>
-		/// Constructor to create an existing collection object without properties with a specified owner.
-		/// This constructor is used at store construction time because there is no current owner of the store 
-		/// established yet.
-		/// </summary>
-		/// <param name="store">Virtual store that this collection belongs to.</param>
-		/// <param name="name">Name used by applications to describe the collection.</param>
-		/// <param name="id">Globally unique identifier for this collection.</param>
-		/// <param name="type">Type of collection.</param>
-		/// <param name="constructorId">Identifier of user opening this object.</param>
-		internal Collection( Store store, string name, string id, string type, string constructorId ) :
-			base( store, name, id, type, true )
-		{
-			// Set the collection into the node.  Since node is a sub-class of collection, its 
-			// constructor runs before the collection constructor, so we can't set the value.
-			InternalCollectionHandle = this;
-
-			// Setup the dirty list.
-			cNode.dirtyNodeList = new Hashtable( initialDirtyNodeListSize );
-
-			// Initialize my class members.
-			this.store = store;
-			this.database = store.StorageProvider;
-
-			// Initialize the access control object.
-			cNode.accessControl = new AccessControl( this, constructorId );
-
-			// Add this node to the cache table.
-			cNode = cNode.AddToCacheTable();
-		}
-
-		/// <summary>
-		/// Constructor for creating a collection from a cache node.
-		/// </summary>
-		/// <param name="store">Object representing the local store.</param>
-		/// <param name="cNode">Cache node that contains the node data.</param>
-		/// <param name="incReference">Increments the reference count on cNode if true.</param>
-		internal Collection( Store store, CacheNode cNode, bool incReference ) :
-			base( cNode, incReference )
-		{
-			// Initialize my class members.
-			this.store = store;
-			this.database = store.StorageProvider;
+			store = storeObject;
+			accessControl = new AccessControl( this );
 		}
 		#endregion
 
 		#region Private Methods
 		/// <summary>
-		/// Checks to see if this event should be filtered out.
+		/// Changes a Node object into a Tombstone object.
 		/// </summary>
-		/// <param name="args">Event context received from callback node changed event.</param>
-		/// <returns>True if event is to be published, otherwise false is returned.</returns>
-		private bool ApplyNodeFilter( NodeEventArgs args )
+		/// <param name="node">Node object to change.</param>
+		private void ChangeToTombstone( Node node )
 		{
-			bool publish = false;
+			node.Name = "Tombstone:" + node.Name;
+			node.Type = "Tombstone";
+			node.InternalList = new PropertyList( node.Name, node.ID, node.Type );
+			node.Properties.AddNodeProperty( Property.Types, "Tombstone" );
+			node.IncarnationUpdate = 0;
+		}
 
-			// Don't publish events that came from this store handle.
-			if ( args.EventId != store.Instance )
+		/// <summary>
+		/// Increments the local incarnation property.
+		/// 
+		/// NOTE: The database must be locked before making this call and must continue to be held until
+		/// this node has been committed to disk.
+		/// </summary>
+		/// <param name="node">Node object that contains the local incarnation value.</param>
+		/// <param name="isMaster">If true then the specified Node object is the master and a read of
+		/// the Node object off the disk to check for collisions is not necessary.</param>
+		private void IncrementLocalIncarnation( Node node, bool isMaster )
+		{
+			// Check if the master incarnation value needs to be set.
+			if ( node.IncarnationUpdate != 0 )
 			{
-				// If no filter specified, then publish all events.
-				if ( nodeFilter == null )
+				// The Master incarnation number needs to be set.
+				Node checkNode = isMaster ? node : GetNodeByID( node.ID );
+				if ( ( checkNode == null ) || ( checkNode.LocalIncarnation == node.LocalIncarnation ) )
 				{
-					publish = true;
+					// Update both incarnation values to the specified value.
+					node.Properties.ModifyNodeProperty( Property.MasterIncarnation, node.IncarnationUpdate );
+					node.Properties.ModifyNodeProperty( Property.LocalIncarnation, node.IncarnationUpdate );
+					node.IncarnationUpdate = 0;
 				}
 				else
 				{
-					// Walk the filter list looking for a matching node id.
-					foreach ( string nodeId in nodeFilter )
+					// There was a collision.
+					throw new ApplicationException( "Collision on node: " + node.ID );
+				}
+			}
+			else
+			{
+				// Increment the property value.
+				ulong incarnationValue = node.LocalIncarnation;
+				node.Properties.ModifyNodeProperty( Property.LocalIncarnation, ++incarnationValue );
+			}
+		}
+
+		/// <summary>
+		/// Returns whether the specified Node object is a Collection object type.
+		/// </summary>
+		/// <param name="node">Node to check to see if it is a Collection object.</param>
+		/// <returns>True if the specified Node object is a Collection object. Otherwise false.</returns>
+		private bool IsCollection( Node node )
+		{
+			return ( node.Type == "Collection" ) ? true : false;
+		}
+
+		/// <summary>
+		/// Returns whether the specified Node object is a deleted Node object type.
+		/// </summary>
+		/// <param name="node">Node to check to see if it is a deleted Node object.</param>
+		/// <returns>True if the specified Node object is a deleted Node object. Otherwise false.</returns>
+		private bool IsTombstone( Node node )
+		{
+			return ( node.Type == "Tombstone" ) ? true : false;
+		}
+
+		/// <summary>
+		/// Merges all property changes on the current node with the current object in the database.
+		/// 
+		/// Note: The database lock must be acquired before making this call.
+		/// </summary>
+		/// <param name="node">Existing node that may or may not contain changed properties.</param>
+		/// <returns>A node that contains the current object from the database with all of the property
+		/// changes of the current node.</returns>
+		private Node MergeNodeProperties( Node node )
+		{
+			// Get this node from the database.
+			Node mergedNode = GetNodeByID( node.ID );
+			if ( mergedNode != null )
+			{
+				// If this node is not a tombstone and the merged node is, then the node has been deleted 
+				// and delete wins.
+				if ( !IsTombstone( node ) && IsTombstone( mergedNode ) )
+				{
+					mergedNode = null;
+				}
+				else if ( IsTombstone( node ) && !IsTombstone( mergedNode ) )
+				{
+					// If this node is a tombstone and the merged node is not, then delete wins again and 
+					// the merged node will be turned into a tombstone.
+					mergedNode = node;
+				}
+				else
+				{
+					// If this node is a tombstone and the merged node is a tombstone, then merge the changes or
+					// if this node is not a tombstone and the merged node is not a tombstone, merge the changes.
+					// Walk the merge list and perform the changes specified there to the mergedNode.
+					foreach ( Property p in node.Properties.ChangeList )
 					{
-						if ( nodeId == args.Node )
+						p.ApplyMergeInformation( mergedNode );
+					}
+				}
+			}
+
+			// Clear the change list.
+			node.Properties.ClearChangeList();
+			return mergedNode;
+		}
+
+		/// <summary>
+		/// Commits all of the changes made to the Collection object to persistent storage.
+		/// After a node has been committed, it will be updated to reflect any new changes that 
+		/// have occurred if it had to be merged with the current Collection object in the database.
+		/// </summary>
+		/// <param name="nodeList">Array of Node objects to commit to the database.</param>
+		public void ProcessCommit( Node[] nodeList )
+		{
+			bool deleteCollection = false;
+			Node[] commitList = nodeList;
+
+			// Create an XML document that will contain all of the changed nodes.
+			XmlDocument commitDocument = new XmlDocument();
+			commitDocument.AppendChild( commitDocument.CreateElement( XmlTags.ObjectListTag ) );
+
+			// Create an XML document that will contain all of the deleted nodes.
+			XmlDocument deleteDocument = new XmlDocument();
+			deleteDocument.AppendChild( deleteDocument.CreateElement( XmlTags.ObjectListTag ) );
+
+			foreach ( Node node in commitList )
+			{
+				switch ( node.Properties.State )
+				{
+					case PropertyList.PropertyListState.Add:
+						// Validate this Collection object.
+						ValidateNodeForCommit( node );
+
+						// Set the modify time for this object.
+						node.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
+
+						// Increment the local incarnation number for the object.
+						IncrementLocalIncarnation( node, true );
+
+						// Copy the XML node over to the modify document.
+						XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
+						commitDocument.DocumentElement.AppendChild( xmlNode );
+						break;
+
+					case PropertyList.PropertyListState.Delete:
+						if ( IsCollection( node ) )
 						{
-							publish = true;
-							break;
+							deleteCollection = true;
 						}
-					}
+						else
+						{
+							// If this Node object is already a Tombstone, delete it.
+							if ( IsTombstone( node ) )
+							{
+								// Copy the XML node over to the delete document.
+								xmlNode = deleteDocument.ImportNode( node.Properties.PropertyRoot, true );
+								deleteDocument.DocumentElement.AppendChild( xmlNode );
+							}
+							else
+							{
+								// Convert this Node object to a Tombstone.
+								ChangeToTombstone( node );
+
+								// Validate this Collection object.
+								ValidateNodeForCommit( node );
+
+								// Set the modify time for this object.
+								node.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
+
+								// Increment the local incarnation number for the object.
+								IncrementLocalIncarnation( node, true );
+
+								// Copy the XML node over to the modify document.
+								xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
+								commitDocument.DocumentElement.AppendChild( xmlNode );
+							}
+						}
+						break;
+
+					case PropertyList.PropertyListState.Update:
+						// Merge any changes made to the object on the database before this object's
+						// changes are committed.
+						Node mergeNode = MergeNodeProperties( node );
+						if ( mergeNode != null )
+						{
+							// Validate this Collection object.
+							ValidateNodeForCommit( mergeNode );
+
+							// Set the modify time for this object.
+							node.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
+
+							// Increment the local incarnation number for the object.
+							IncrementLocalIncarnation( node, true );
+
+							// Copy the XML node over to the modify document.
+							xmlNode = commitDocument.ImportNode( mergeNode.Properties.PropertyRoot, true );
+							commitDocument.DocumentElement.AppendChild( xmlNode );
+						}
+						break;
+
+					case PropertyList.PropertyListState.Import:
+						// Validate this Collection object.
+						ValidateNodeForCommit( node );
+
+						// Increment the local incarnation number for the object.
+						IncrementLocalIncarnation( node, false );
+
+						// Copy the XML node over to the modify document.
+						xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
+						commitDocument.DocumentElement.AppendChild( xmlNode );
+						break;
+
+					default:
+						throw new ApplicationException( "Invalid PropertyList state." );
 				}
 			}
 
-			return publish;
-		}
-
-		/// <summary>
-		/// Moves where the files in the collection are rooted in the filesystem.  This change will automatically commit
-		/// the collection node and cannot be rolled back.
-		/// </summary>
-		/// <param name="newRoot">New location to root collection files.</param>
-		private void MoveRoot( Uri newRoot )
-		{
-			// Make sure the current user has write access to this collection.
-			if ( !IsAccessAllowed( Access.Rights.ReadWrite ) )
+			// Call the store provider to update the records.
+			if ( commitDocument.DocumentElement.HasChildNodes )
 			{
-				throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
+				store.StorageProvider.CreateRecord( commitDocument.OuterXml, id );
 			}
 
-			// Move the file system directory where all of the files are contained.
-			string sourcePathString = DocumentRoot.LocalPath;
-
-			// Try and move the files to the new directory.
-			Directory.Move( sourcePathString, newRoot.LocalPath );
-
-			try
+			// Call the store provider to delete the records, even if they have just been created.
+			// Delete always wins.
+			if ( deleteDocument.DocumentElement.HasChildNodes )
 			{
-				// Now reset the new document root.
-				Properties.ModifyNodeProperty( Property.DocumentRoot, newRoot );
-				Commit();
+				store.StorageProvider.DeleteRecords( deleteDocument.OuterXml, id );
 			}
-			catch ( Exception e )
+
+			// See if the whole Collection is to be deleted. Do this last so that a delete of a
+			// Collection always wins, nothing can be added back.
+			if ( deleteCollection )
 			{
-				try
+				// Delete the collection from the database.
+				store.StorageProvider.DeleteCollection( id );
+
+				// If there are store managed files, delete them also.
+				string rootPath = store.GetStoreManagedPath( id );
+				if ( Directory.Exists( rootPath ) )
 				{
-					// Attempt to move the files back.
-					Directory.Move( newRoot.LocalPath, sourcePathString );
-
-					// Generate event that document root was changed.
-					store.Publisher.RaiseEvent( new CollectionRootChangedEventArgs( store.ComponentId, Id, NameSpaceType, sourcePathString, newRoot.LocalPath ) );
+					Directory.Delete( rootPath, true );
 				}
-				catch
+			}
+			else
+			{
+				// Update the access control information.
+				accessControl.GetAccessInfo();
+			}
+			
+			// Walk the commit list and change all states to updated.
+			foreach( Node node in commitList )
+			{
+				// Clear the change list for each Node object.
+				node.Properties.ClearChangeList();
+
+				// Set the new state for the Node object.
+				if ( node.Properties.State != PropertyList.PropertyListState.Delete )
 				{
-					// Don't report any errors putting the files back.
-					;
+					node.Properties.State = PropertyList.PropertyListState.Update;
 				}
-
-				throw e;
 			}
 		}
 
 		/// <summary>
-		/// Callback that handles node events from the event broker.
+		/// Validates and performs access checks on a Collection before it is committed.
 		/// </summary>
-		/// <param name="args">Arguments that give context for the call.</param>
-		private void OnNodeChanged( NodeEventArgs args )
+		/// <param name="node">Node object to validate changes for.</param>
+		private void ValidateNodeForCommit( Node node )
 		{
-			try
+			// Check if there is a valid collection ID property.
+			Property property = node.Properties.FindSingleValue( BaseSchema.CollectionId );
+			if ( property != null )
 			{
-				// See if there is any delegates registered.
-				if ( nEventHandler != null )
+				// Verify that this object belongs to this collection.
+				if ( property.Value as string != id )
 				{
-					if ( ApplyNodeFilter( args ) )
-					{
-						nEventHandler( args ); 
-					}
+					throw new ApplicationException( "Object cannot be committed to a different collection." );
 				}
 			}
-			catch ( Exception e )
+			else
 			{
-				MyTrace.WriteLine( e );
+				// Assign the collection id.
+				node.Properties.AddNodeProperty( BaseSchema.CollectionId, id );
 			}
-		}
-		#endregion
-
-		#region Internal Methods
-		/// <summary>
-		/// Adds nodes to a list that need to be written to the persistent store.
-		/// </summary>
-		/// <param name="dirtyNode">Node object to add to the list.</param>
-		internal void AddDirtyNodeToList( Node dirtyNode )
-		{
-			if ( disposed )
-			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
-
-			if ( !cNode.dirtyNodeList.ContainsKey( dirtyNode.Id ) && !dirtyNode.IsTombstone )
-			{
-				cNode.dirtyNodeList.Add( dirtyNode.Id, dirtyNode.cNode );
-			}
-		}
-
-		/// <summary>
-		/// Clears out the dirty node list.
-		/// </summary>
-		internal void ClearDirtyList()
-		{
-			if ( disposed )
-			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
-
-			cNode.dirtyNodeList.Clear();
-		}
-
-		/// <summary>
-		/// Gets a path to where the store managed files for this collection should be created.
-		/// </summary>
-		/// <returns>A Uri object that represents the store managed path.</returns>
-		internal Uri GetStoreManagedPath()
-		{
-			if ( disposed )
-			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
-
-			return new Uri( Path.Combine( database.StoreDirectory.LocalPath, Path.Combine( store.StoreManagedPath.LocalPath, Id ) ) );
-		}
-
-		/// <summary>
-		/// Removes the specified node from the list.
-		/// </summary>
-		/// <param name="nodeId">Node identifier to remove from the dirtyList.</param>
-		internal void RemoveDirtyNodeFromList( string nodeId )
-		{
-			if ( disposed )
-			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
-
-			cNode.dirtyNodeList.Remove( nodeId );
-		}
-
-		// Updates the access control list from the committed properties.
-		internal void UpdateAccessControl()
-		{
-			if ( disposed )
-			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
-
-			cNode.accessControl.GetCommittedAcl();
 		}
 		#endregion
 
 		#region Public Methods
+		/// <summary>
+		/// Aborts non-committed changes to the specified Node object.
+		/// </summary>
+		/// <param name="node">Node object to abort changes.</param>
+		public void Abort( Node node )
+		{
+			// Save the old PropertyList state.
+			PropertyList.PropertyListState oldState = node.Properties.State;
+
+			// Set the current state of the PropertyList object to abort.
+			node.Properties.State = PropertyList.PropertyListState.Abort;
+
+			// Walk the merge list and reverse the changes specified there.
+			foreach ( Property p in node.Properties.ChangeList )
+			{
+				p.AbortMergeInformation( node.Properties );
+			}
+
+			// Get rid of all entries in the change list.
+			node.Properties.ClearChangeList();
+
+			// Restore the PropertyList state.
+			node.Properties.State = oldState;
+		}
+
 		/// <summary>
 		/// Changes the owner of the collection and assigns the specified right to the old owner.
 		/// Only the current owner can set new ownership on the collection. 
@@ -722,141 +576,119 @@ namespace Simias.Storage
 		/// <param name="oldOwnerRights">Rights to give the old owner of the collection.</param>
 		public void ChangeOwner( string newOwnerId, Access.Rights oldOwnerRights )
 		{
-			lock ( store )
-			{
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
-
-				cNode.accessControl.ChangeOwner( newOwnerId.ToLower(), oldOwnerRights );
-			}
+			accessControl.ChangeOwner( newOwnerId, oldOwnerRights );
 		}
 
 		/// <summary>
-		/// Commits all changes in the collection to persistent storage if deep is set to true.
-		/// Otherwise, just commits the collection node. After a node has been committed, it 
-		/// will be updated to reflect any new changes that occurred if it had to be merged 
-		/// with the current node in the database.
+		/// Commits all of the changes made to the Collection object to persistent storage.
+		/// After a Node object has been committed, it will be updated to reflect any new changes that 
+		/// have occurred if it had to be merged with the current Node object in the database.
 		/// </summary>
-		public void Commit( bool deep )
+		public void Commit()
 		{
-			lock ( store )
+			Commit( this );
+		}
+
+		/// <summary>
+		/// Commits all of the changes made to the Collection object to persistent storage.
+		/// After a node has been committed, it will be updated to reflect any new changes that 
+		/// have occurred if it had to be merged with the current Collection object in the database.
+		/// </summary>
+		/// <param name="node">Node object to commit to the database.</param>
+		public void Commit( Node node )
+		{
+			Node[] nodeList = { node };
+			Commit( nodeList );
+		}
+
+		/// <summary>
+		/// Commits all of the changes made to the Collection object to persistent storage.
+		/// After a node has been committed, it will be updated to reflect any new changes that 
+		/// have occurred if it had to be merged with the current Collection object in the database.
+		/// </summary>
+		/// <param name="nodeList">An array of Node objects to commit to the database.</param>
+		public void Commit( Node[] nodeList )
+		{
+			// Make sure that something is in the list.
+			if ( nodeList.Length > 0 )
 			{
-				if ( disposed )
+				bool containsCollection = false;
+				Node deleteNode = null;
+				Node createNode = null;
+
+				// Walk the commit list to see if there are any creation and deletion of the collection states.
+				foreach( Node node in nodeList )
 				{
-					throw new ObjectDisposedException( this.ToString() );
+					if ( IsCollection( node ) )
+					{
+						containsCollection = true;
+
+						if ( node.Properties.State == PropertyList.PropertyListState.Delete )
+						{
+							deleteNode = node;
+						}
+						else if ( node.Properties.State == PropertyList.PropertyListState.Add )
+						{
+							createNode = node;
+						}
+					}
 				}
 
-				// Make sure the current user has write access to this collection.
-				if ( !IsAccessAllowed( Access.Rights.ReadWrite ) )
+				// If the collection is both created and deleted, then there is nothing to do.
+				if ( ( deleteNode == null ) || ( createNode == null ) )
 				{
-					throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
-				}
+					Node[] commitList;
 
-				if ( deep )
-				{
-					// Allocate a queue to hold committed nodes.
-					Queue nodeQ = new Queue( cNode.dirtyNodeList.Count );
+					// Delete of a collection supercedes all other operations.  It also is not subject to
+					// a rights check.
+					if ( deleteNode != null )
+					{
+						commitList = new Node[ 1 ];
+						commitList[ 0 ] = deleteNode;
+					}
+					else
+					{
+						if ( containsCollection )
+						{
+							// Use the passed in list.
+							commitList = nodeList;
+						}
+						else
+						{
+							// Need to add the collection object to the list.
+							commitList = new Node[ nodeList.Length + 1 ];
+							commitList[ 0 ] = this;
+							Array.Copy( nodeList, 0, commitList, 1, nodeList.Length );
+						}
 
-					// Create an XML document that will contain all of the changed nodes.
-					XmlDocument commitDoc = new XmlDocument();
-					commitDoc.AppendChild( commitDoc.CreateElement( Property.ObjectListTag ) );
+						// Make sure that current user has write rights to this collection.
+						if ( !IsAccessAllowed( Access.Rights.ReadWrite ) )
+						{
+							throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
+						}
+					}
 
 					try
 					{
 						// Acquire the store lock.
 						store.LockStore();
-
-						// Increment the collection incarnation number here so it gets added to the dirty list and
-						// processed with the rest of the changed nodes.
-						IncrementLocalIncarnation();
-
-						// Parse the node into an XML document because that is the format that the provider expects.
-						foreach ( CacheNode tempCacheNode in cNode.dirtyNodeList.Values )
-						{
-							// Instantiate a node object from the cache node.
-							Node tempNode = new Node( tempCacheNode, true );
-
-							// If this node has not been persisted, no need to do a merge.
-							if ( tempNode.IsPersisted )
-							{
-								// Merge this node with the current node in the database.
-								tempNode = tempNode.MergeNodeProperties( true );
-								if ( tempNode == null )
-								{
-									// The node has been deleted in the database, move to the next one.
-									continue;
-								}
-
-								// Update this node to reflect the latest changes.
-								tempCacheNode.Copy( tempNode.cNode );
-							}
-
-							// Set the modify time for this node.
-							tempNode.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
-
-							// Don't increment the incarnation number on the collection again.
-							if ( !tempNode.IsCollection )
-							{
-								// Increment the local incarnation number.
-								tempNode.IncrementLocalIncarnation();
-							}
-
-							// Copy the XML node over to the modify document.
-							XmlNode xmlNode = commitDoc.ImportNode( tempNode.Properties.PropertyRoot, true );
-							commitDoc.DocumentElement.AppendChild( xmlNode );
-
-							// Add the cache node to the queue.
-							nodeQ.Enqueue( tempCacheNode );
-						}
-
-						// If this collection is new, call to create it before sending down the nodes.
-						if ( !IsPersisted )
-						{
-							database.CreateCollection( Id );
-						}
-
-						// Call the store provider to create the records.
-						database.CreateRecord( commitDoc.OuterXml, Id );
+						ProcessCommit( commitList );
 					}
 					finally
 					{
 						// Release the store lock.
 						store.UnlockStore();
 					}
-
-					// Set all of the nodes in the list as committed.
-					foreach ( CacheNode tempCacheNode in nodeQ )
-					{
-						// Fire an event for this commit action.
-						if ( tempCacheNode.isPersisted )
-						{
-							// Fire an event to notify that this node has been changed.
-							store.Publisher.RaiseEvent( new NodeEventArgs( store.ComponentId, tempCacheNode.id, Id, tempCacheNode.type, EventType.NodeChanged, store.Instance ) );
-						}
-						else
-						{
-							// Fire an event to notify that this node has been created.
-							store.Publisher.RaiseEvent( new NodeEventArgs( store.ComponentId, tempCacheNode.id, Id, tempCacheNode.type, EventType.NodeCreated, store.Instance ) );
-
-							// Mark the node as persisted.
-							tempCacheNode.isPersisted = true;
-						}
-					}
-
-					// Clear the cached node queue.
-					nodeQ.Clear();
-
-					// Clear the dirty node queue.
-					ClearDirtyList();
-
-					// Update the access control list.
-					UpdateAccessControl();
 				}
-				else
+
+				// Check if the collection was deleted.
+				if ( deleteNode != null )
 				{
-					base.Commit();
+					// Go through each entry marking it deleted.
+					foreach( Node node in nodeList )
+					{
+						node.Properties.State = PropertyList.PropertyListState.Delete;
+					}
 				}
 			}
 		}
@@ -865,69 +697,241 @@ namespace Simias.Storage
 		/// Deletes the specified collection from the persistent store.  If there are nodes
 		/// subordinate to this collection, an exception will be thrown.
 		/// </summary>
-		public new void Delete()
+		public void Delete()
 		{
-			Delete( false );
+			Delete( this );
 		}
 
 		/// <summary>
 		/// Deletes the specified collection from the persistent store.  There is no access check on delete of a
 		/// collection.
+		/// 
+		/// Note: DirNode objects cannot be deleted with this method because they have special containment
+		/// rules which must be followed.  Use DirNode.Delete() instead.
 		/// </summary>
 		/// <param name="deep">Indicates whether to all children nodes of this node are deleted also.</param>
-		public new void Delete( bool deep )
+		public void Delete( Node node )
 		{
-			lock ( store )
+			Delete( node, null );
+		}
+
+		/// <summary>
+		/// Deletes the specified collection from the persistent store.  There is no access check on delete 
+		/// of a collection.
+		/// 
+		/// Note: DirNode objects cannot be deleted with this method because they have special containment
+		/// rules which must be followed.  Use DirNode.Delete() instead.
+		/// </summary>
+		/// <param name="node">Node to delete.</param>
+		/// <param name="relationshipName">If not null, indicates to delete all Node objects that have a 
+		/// relationship to the specified Node object.</param>
+		/// <returns>An array of Nodes that have been deleted.</returns>
+		public Node[] Delete( Node node, string relationshipName )
+		{
+			// Temporary holding list.
+			ArrayList tempList = new ArrayList();
+
+			// If the node has not been previously committed or is already deleted, don't add it to the list.
+			PropertyList.PropertyListState oldState = node.Properties.State;
+			if ( oldState == PropertyList.PropertyListState.Update )
 			{
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
+				tempList.Add( node );
+			}
 
-				// Delete the collection and all of its members if specified.
-				base.Delete( deep );
+			if ( relationshipName != null )
+			{
+				// Search for all objects that have this object as a relationship.
+				ICSList results = Search( relationshipName, new Relationship( id, node.ID ) );
 
-				// If there are store managed files, delete them also.
-				Uri documentRoot = GetStoreManagedPath();
-				if ( Directory.Exists( documentRoot.LocalPath ) )
+				// Go through the list, setting the state to deleted.
+				foreach( ShallowNode shallowNode in results )
 				{
-					Directory.Delete( documentRoot.LocalPath, true );
+					// Add the resultant Node objects to the temp list.
+					tempList.Add( new Node( this, shallowNode ) );
 				}
 			}
+
+			// Allocate the Node object array and copy over the results.
+			Node[] nodeList = new Node[ tempList.Count ];
+			int index = 0;
+
+			foreach( Node n in tempList )
+			{
+				// If any of the Nodes objects are DirNode objects, don't allow them to be deleted here.
+				// They must go through DirNode.Delete().
+				if ( IsType( n, "DirNode" ) )
+				{
+					// Reset the old state in the specified Node object.
+					node.Properties.State = oldState;
+					throw new ApplicationException( "DirNode objects cannot be deleted through this method." );
+				}
+
+				n.Properties.State = PropertyList.PropertyListState.Delete;
+				nodeList[ index++ ] = n;
+			}
+
+			return nodeList;
 		}
 
 		/// <summary>
 		/// Gets the access control list for this collection object.
 		/// </summary>
-		/// <returns>An ICSEnumerator object that will enumerate the access control list.</returns>
+		/// <returns>An ICSEnumerator object that will enumerate the access control list. The ICSList object
+		/// will contain Access objects.</returns>
 		public ICSList GetAccessControlList()
 		{
-			lock ( store )
-			{
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
+			return new ICSList( new Access( this ) );
+		}
 
-				return new ICSList( new Access( this ) );
+		/// <summary>
+		/// Gets a Node object for the specified identifier.
+		/// </summary>
+		/// <param name="nodeID">Identifier uniquely naming the node.</param>
+		/// <returns>Node object for the specified identifier.</returns>
+		public Node GetNodeByID( string nodeID )
+		{
+			Node node = null;
+
+			// Call the provider to get an XML string that represents this node.
+			string xmlString = store.StorageProvider.GetRecord( nodeID.ToLower(), id );
+			if ( xmlString != null )
+			{
+				// Covert the XML string into a DOM that we can then parse.
+				XmlDocument document = new XmlDocument();
+				document.LoadXml( xmlString );
+
+				// Construct a temporary Node object from the DOM.
+				node = new Node( document );
 			}
+
+			return node;
+		}
+
+		/// <summary>
+		/// Get all Node objects that have the specified name.
+		/// </summary>
+		/// <param name="name">A string containing the name for the Node object(s).</param>
+		/// <returns>An ICSList object containing ShallowNode objects that represent the Node object(s) 
+		/// that that have the specified name.</returns>
+		public ICSList GetNodesByName( string name )
+		{
+			return Search( BaseSchema.ObjectName, name, SearchOp.Equal );
+		}
+
+		/// <summary>
+		/// Get all Node objects that have the specified type.
+		/// </summary>
+		/// <param name="typeString">A string containing the type for the Node object(s).</param>
+		/// <returns>An ICSList object containing the ShallowNode objects that represent the Node object(s)
+		/// that that have the specified type.</returns>
+		public ICSList GetNodesByType( string typeString )
+		{
+			return Search( Property.Types, typeString , SearchOp.Equal );
+		}
+
+		/// <summary>
+		/// Gets the first Node object that matches the specified name.
+		/// </summary>
+		/// <param name="name">A string containing the name for the Node object.</param>
+		/// <returns>The first Node object that matches the specified name.  A null is returned if no 
+		/// matching Node object is found.</returns>
+		public Node GetSingleNodeByName( string name )
+		{
+			Node node = null;
+			ICSList nodeList = GetNodesByName( name );
+			foreach( ShallowNode shallowNode in nodeList )
+			{
+				node = new Node( this, shallowNode );
+				break;
+			}
+
+			return node;
+		}
+
+		/// <summary>
+		///  Gets the first Node object that corresponds to the specified type.
+		/// </summary>
+		/// <param name="typeString">String that contains the type of the node.</param>
+		/// <returns>The first Node object that corresponds to the specified node path name.  A null 
+		/// is returned if no matching Node object is found.</returns>
+		public Node GetSingleNodeByType( string typeString )
+		{
+			Node node = null;
+			ICSList nodeList = GetNodesByType( typeString );
+			foreach ( ShallowNode shallowNode in nodeList )
+			{
+				node = new Node( this, shallowNode );
+				break;
+			}
+
+			return node;
 		}
 
 		/// <summary>
 		/// Gets the access rights for the specified user on the collection.
 		/// </summary>
-		/// <param name="userId">User ID to get rights for.</param>
+		/// <param name="userID">User ID to get rights for.</param>
 		/// <returns>Access rights for the specified user ID.</returns>
-		public Access.Rights GetUserAccess( string userId )
+		public Access.Rights GetUserAccess( string userID )
 		{
-			lock ( store )
-			{
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
+			return accessControl.GetUserRights( userID );
+		}
 
-				return cNode.accessControl.GetUserRights( userId.ToLower() );
+		/// <summary>
+		/// Imports a Node object into this Collection, merging all local properties.
+		/// </summary>
+		/// <param name="node">Node to import into this Collection.</param>
+		public void ImportNode( Node node )
+		{
+			// Set the current state of the node indicating that it is being imported.
+			node.Properties.State = PropertyList.PropertyListState.Import;
+
+			if ( IsCollection( node ) )
+			{
+				// Instantiate the Collection object to be imported.
+				Collection importCollection = new Collection( store, node );
+
+				// See if the user has the right to update the access control list.  If he doesn't, 
+				// use the ACL in the current collection.
+				if ( !IsAccessAllowed( Access.Rights.Admin ) )
+				{
+					// Get the list of access control entries and remove them from the collection object.
+					ICSList aclList = importCollection.GetAccessControlList();
+					foreach ( AccessControlEntry ace in aclList )
+					{
+						ace.Delete();
+					}
+
+					// Now add in the existing collection aces
+					aclList = GetAccessControlList();
+					foreach ( AccessControlEntry ace in aclList )
+					{
+						importCollection.accessControl.SetUserRights( ace.ID, ace.Rights );
+					}
+
+					// Set the owner.
+					node.Properties.ModifyNodeProperty( Property.Owner, Owner );
+				}
+				else
+				{
+					// The user must have owner access in order to set the new owner.
+					if ( !accessControl.IsOwner( store.CurrentUserGuid ) )
+					{
+						importCollection.accessControl.ChangeCollectionOwner( Owner, Access.Rights.Deny );
+					}
+				}
+			}
+
+			// Get the local properties from the old node, if it exists, and add them to the new node.
+			Node oldNode = GetNodeByID( node.ID ); 
+			if ( oldNode != null )
+			{
+				// Get the local properties.
+				MultiValuedList localProps = new MultiValuedList( oldNode.Properties, Property.Local );
+				foreach ( Property p in localProps )
+				{
+					node.Properties.AddNodeProperty( p );
+				}
 			}
 		}
 
@@ -938,468 +942,649 @@ namespace Simias.Storage
 		/// <returns>True if the user has the desired access rights, otherwise false.</returns>
 		public bool IsAccessAllowed( Access.Rights desiredRights )
 		{
-			lock ( store )
-			{
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
+			return accessControl.IsAccessAllowed( desiredRights );
+		}
 
-				return cNode.accessControl.IsAccessAllowed( desiredRights );
+		/// <summary>
+		/// Returns whether specified Node object is the specified type.
+		/// </summary>
+		/// <param name="node">Node object to check type.</param>
+		/// <param name="typeString">Type of Node object.</param>
+		/// <returns>True if Node object is the specified type, otherwise false is returned.</returns>
+		public bool IsType( Node node, string typeString )
+		{
+			bool isType = false;
+			MultiValuedList mvl = node.Properties.FindValues( Property.Types );
+			foreach( Property p in mvl )
+			{
+				if ( p.ToString() == typeString )
+				{
+					isType = true;
+					break;
+				}
 			}
+
+			return isType;
 		}
 
 		/// <summary>
 		/// Removes all access rights on the collection for the specified user.
 		/// </summary>
-		/// <param name="userId">User ID to remove rights for.</param>
-		public void RemoveUserAccess( string userId )
+		/// <param name="userID">User ID to remove rights for.</param>
+		public void RemoveUserAccess( string userID )
 		{
-			lock ( store )
-			{
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
-
-				cNode.accessControl.RemoveUserRights( userId.ToLower() );
-			}
+			accessControl.RemoveUserRights( userID );
 		}
 
 		/// <summary>
-		/// Rolls back changes made to the last time the collection was committed.  If the a node has never been committed,
-		/// it is just removed from the transaction list.
+		/// Searches the collection for the specified property.  An enumerator is returned that
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
-		new public void Rollback()
+		/// <param name="propertyName">Property name to search for.</param>
+		/// <param name="propertySyntax">Syntax of property to search for.</param>
+		/// <returns>An ICSList object that contains the results of the search.</returns>
+		public ICSList Search( string propertyName, Syntax propertySyntax )
 		{
-			lock ( store )
-			{
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
-
-				// Take each node that is currently on the dirty list and roll it back to it's post committed state.
-				foreach ( CacheNode tempCacheNode in cNode.dirtyNodeList.Values )
-				{
-					new Node( tempCacheNode, true ).RollbackNode();
-				}
-
-				ClearDirtyList();
-			}
+			return new ICSList( new NodeEnumerator( this, new Property( propertyName, propertySyntax, String.Empty ), SearchOp.Exists ) );
 		}
 
 		/// <summary>
 		/// Searches the collection for the specified properties.  An enumerator is returned that
-		/// returns all nodes that match the query criteria.
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
 		/// <param name="property">Property object containing the value to search for.</param>
-		/// <param name="queryOperator">Query operator.</param>
+		/// <param name="searchOperator">Query operator.</param>
 		/// <returns>An ICSList object that contains the results of the search.</returns>
-		public ICSList Search( Property property, Property.Operator queryOperator )
+		public ICSList Search( Property property, SearchOp searchOperator )
 		{
-			lock ( store )
-			{
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
-
-				return new ICSList( new NodeEnumerator( this, property, Property.MapQueryOp( queryOperator ) ) );
-			}
+			return new ICSList( new NodeEnumerator( this, property, searchOperator ) );
 		}
 
 		/// <summary>
 		/// Searches the collection for the specified properties.  An enumerator is returned that
-		/// returns all nodes that match the query criteria.
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
 		/// <param name="propertyName">Name of property.</param>
 		/// <param name="propertyValue">Value to match.</param>
-		/// <param name="queryOperator">Query operator.</param>
+		/// <param name="searchOperator">Query operator.</param>
 		/// <returns>An ICSList object that contains the results of the search.</returns>
-		public ICSList Search( string propertyName, object propertyValue, Property.Operator queryOperator )
+		public ICSList Search( string propertyName, object propertyValue, SearchOp searchOperator )
 		{
-			return Search( new Property( propertyName, propertyValue ), queryOperator );
+			return Search( new Property( propertyName, propertyValue ), searchOperator );
 		}
 
 		/// <summary>
 		/// Searches the collection for the specified properties.  An enumerator is returned that
-		/// returns all nodes that match the query criteria.
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
 		/// <param name="propertyName">Name of property.</param>
 		/// <param name="propertyValue">Value to match.</param>
-		/// <param name="queryOperator">Query operator.</param>
+		/// <param name="searchOperator">Query operator.</param>
 		/// <returns>An ICSList object that contains the results of the search.</returns>
-		public ICSList Search( string propertyName, string propertyValue, Property.Operator queryOperator )
+		public ICSList Search( string propertyName, string propertyValue, SearchOp searchOperator )
 		{
-			return Search( new Property( propertyName, propertyValue ), queryOperator );
+			return Search( new Property( propertyName, propertyValue ), searchOperator );
 		}
 
 		/// <summary>
 		/// Searches the collection for the specified sbyte property.  An enumerator is returned that
-		/// returns all nodes that match the query criteria.
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
 		/// <param name="propertyName">Name of property.</param>
 		/// <param name="propertyValue">sbyte value to match.</param>
-		/// <param name="queryOperator">Query operator.</param>
+		/// <param name="searchOperator">Query operator.</param>
 		/// <returns>An ICSList object that contains the results of the search.</returns>
-		public ICSList Search( string propertyName, sbyte propertyValue, Property.Operator queryOperator )
+		public ICSList Search( string propertyName, sbyte propertyValue, SearchOp searchOperator )
 		{
-			return Search( new Property( propertyName, propertyValue ), queryOperator );
+			return Search( new Property( propertyName, propertyValue ), searchOperator );
 		}
 
 		/// <summary>
 		/// Searches the collection for the specified byte property.  An enumerator is returned that
-		/// returns all nodes that match the query criteria.
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
 		/// <param name="propertyName">Name of property.</param>
 		/// <param name="propertyValue">byte value to match.</param>
-		/// <param name="queryOperator">Query operator.</param>
+		/// <param name="searchOperator">Query operator.</param>
 		/// <returns>An ICSList object that contains the results of the search.</returns>
-		public ICSList Search( string propertyName, byte propertyValue, Property.Operator queryOperator )
+		public ICSList Search( string propertyName, byte propertyValue, SearchOp searchOperator )
 		{
-			return Search( new Property( propertyName, propertyValue ), queryOperator );
+			return Search( new Property( propertyName, propertyValue ), searchOperator );
 		}
 
 		/// <summary>
 		/// Searches the collection for the specified short property.  An enumerator is returned that
-		/// returns all nodes that match the query criteria.
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
 		/// <param name="propertyName">Name of property.</param>
 		/// <param name="propertyValue">short value to match.</param>
-		/// <param name="queryOperator">Query operator.</param>
+		/// <param name="searchOperator">Query operator.</param>
 		/// <returns>An ICSList object that contains the results of the search.</returns>
-		public ICSList Search( string propertyName, short propertyValue, Property.Operator queryOperator )
+		public ICSList Search( string propertyName, short propertyValue, SearchOp searchOperator )
 		{
-			return Search( new Property( propertyName, propertyValue ), queryOperator );
+			return Search( new Property( propertyName, propertyValue ), searchOperator );
 		}
 
 		/// <summary>
 		/// Searches the collection for the specified ushort property.  An enumerator is returned that
-		/// returns all nodes that match the query criteria.
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
 		/// <param name="propertyName">Name of property.</param>
 		/// <param name="propertyValue">ushort value to match.</param>
-		/// <param name="queryOperator">Query operator.</param>
+		/// <param name="searchOperator">Query operator.</param>
 		/// <returns>An ICSList object that contains the results of the search.</returns>
-		public ICSList Search( string propertyName, ushort propertyValue, Property.Operator queryOperator )
+		public ICSList Search( string propertyName, ushort propertyValue, SearchOp searchOperator )
 		{
-			return Search( new Property( propertyName, propertyValue ), queryOperator );
+			return Search( new Property( propertyName, propertyValue ), searchOperator );
 		}
 
 		/// <summary>
 		/// Searches the collection for the specified int properties.  An enumerator is returned that
-		/// returns all nodes that match the query criteria.
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
 		/// <param name="propertyName">Name of property.</param>
 		/// <param name="propertyValue">int value to match.</param>
-		/// <param name="queryOperator">Query operator.</param>
+		/// <param name="searchOperator">Query operator.</param>
 		/// <returns>An ICSList object that contains the results of the search.</returns>
-		public ICSList Search( string propertyName, int propertyValue, Property.Operator queryOperator )
+		public ICSList Search( string propertyName, int propertyValue, SearchOp searchOperator )
 		{
-			return Search( new Property( propertyName, propertyValue ), queryOperator );
+			return Search( new Property( propertyName, propertyValue ), searchOperator );
 		}
 
 		/// <summary>
 		/// Searches the collection for the specified uint property.  An enumerator is returned that
-		/// returns all nodes that match the query criteria.
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
 		/// <param name="propertyName">Name of property.</param>
 		/// <param name="propertyValue">uint value to match.</param>
-		/// <param name="queryOperator">Query operator.</param>
+		/// <param name="searchOperator">Query operator.</param>
 		/// <returns>An ICSList object that contains the results of the search.</returns>
-		public ICSList Search( string propertyName, uint propertyValue, Property.Operator queryOperator )
+		public ICSList Search( string propertyName, uint propertyValue, SearchOp searchOperator )
 		{
-			return Search( new Property( propertyName, propertyValue ), queryOperator );
+			return Search( new Property( propertyName, propertyValue ), searchOperator );
 		}
 
 		/// <summary>
 		/// Searches the collection for the specified long property.  An enumerator is returned that
-		/// returns all nodes that match the query criteria.
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
 		/// <param name="propertyName">Name of property.</param>
 		/// <param name="propertyValue">long value to match.</param>
-		/// <param name="queryOperator">Query operator.</param>
+		/// <param name="searchOperator">Query operator.</param>
 		/// <returns>An ICSList object that contains the results of the search.</returns>
-		public ICSList Search( string propertyName, long propertyValue, Property.Operator queryOperator )
+		public ICSList Search( string propertyName, long propertyValue, SearchOp searchOperator )
 		{
-			return Search( new Property( propertyName, propertyValue ), queryOperator );
+			return Search( new Property( propertyName, propertyValue ), searchOperator );
 		}
 
 		/// <summary>
 		/// Searches the collection for the specified ulong property.  An enumerator is returned that
-		/// returns all nodes that match the query criteria.
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
 		/// <param name="propertyName">Name of property.</param>
 		/// <param name="propertyValue">ulong value to match.</param>
-		/// <param name="queryOperator">Query operator.</param>
+		/// <param name="searchOperator">Query operator.</param>
 		/// <returns>An ICSList object that contains the results of the search.</returns>
-		public ICSList Search( string propertyName, ulong propertyValue, Property.Operator queryOperator )
+		public ICSList Search( string propertyName, ulong propertyValue, SearchOp searchOperator )
 		{
-			return Search( new Property( propertyName, propertyValue ), queryOperator );
+			return Search( new Property( propertyName, propertyValue ), searchOperator );
 		}
 
 		/// <summary>
 		/// Searches the collection for the specified char property.  An enumerator is returned that
-		/// returns all nodes that match the query criteria.
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
 		/// <param name="propertyName">Name of property.</param>
 		/// <param name="propertyValue">char value to match.</param>
-		/// <param name="queryOperator">Query operator.</param>
+		/// <param name="searchOperator">Query operator.</param>
 		/// <returns>An ICSList object that contains the results of the search.</returns>
-		public ICSList Search( string propertyName, char propertyValue, Property.Operator queryOperator )
+		public ICSList Search( string propertyName, char propertyValue, SearchOp searchOperator )
 		{
-			return Search( new Property( propertyName, propertyValue ), queryOperator );
+			return Search( new Property( propertyName, propertyValue ), searchOperator );
 		}
 
 		/// <summary>
 		/// Searches the collection for the specified float property.  An enumerator is returned that
-		/// returns all nodes that match the query criteria.
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
 		/// <param name="propertyName">Name of property.</param>
 		/// <param name="propertyValue">float value to match.</param>
-		/// <param name="queryOperator">Query operator.</param>
+		/// <param name="searchOperator">Query operator.</param>
 		/// <returns>An ICSList object that contains the results of the search.</returns>
-		public ICSList Search( string propertyName, float propertyValue, Property.Operator queryOperator )
+		public ICSList Search( string propertyName, float propertyValue, SearchOp searchOperator )
 		{
-			return Search( new Property( propertyName, propertyValue ), queryOperator );
+			return Search( new Property( propertyName, propertyValue ), searchOperator );
 		}
 
 		/// <summary>
 		/// Searches the collection for the specified bool property.  An enumerator is returned that
-		/// returns all nodes that match the query criteria.
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
 		/// <param name="propertyName">Name of property.</param>
 		/// <param name="propertyValue">bool value to match.</param>
-		/// <param name="queryOperator">Query operator.</param>
+		/// <param name="searchOperator">Query operator.</param>
 		/// <returns>An ICSList object that contains the results of the search.</returns>
-		public ICSList Search( string propertyName, bool propertyValue, Property.Operator queryOperator )
+		public ICSList Search( string propertyName, bool propertyValue, SearchOp searchOperator )
 		{
-			return Search( new Property( propertyName, propertyValue ), queryOperator );
+			return Search( new Property( propertyName, propertyValue ), searchOperator );
 		}
 
 		/// <summary>
 		/// Searches the collection for the specified DateTime property.  An enumerator is returned that
-		/// returns all nodes that match the query criteria.
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
 		/// <param name="propertyName">Name of property.</param>
 		/// <param name="propertyValue">DateTime value to match.</param>
-		/// <param name="queryOperator">Query operator.</param>
+		/// <param name="searchOperator">Query operator.</param>
 		/// <returns>An ICSList object that contains the results of the search.</returns>
-		public ICSList Search( string propertyName, DateTime propertyValue, Property.Operator queryOperator )
+		public ICSList Search( string propertyName, DateTime propertyValue, SearchOp searchOperator )
 		{
-			return Search( new Property( propertyName, propertyValue ), queryOperator );
+			return Search( new Property( propertyName, propertyValue ), searchOperator );
 		}
 
 		/// <summary>
 		/// Searches the collection for the specified Uri property.  An enumerator is returned that
-		/// returns all nodes that match the query criteria.
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
 		/// <param name="propertyName">Name of property.</param>
 		/// <param name="propertyValue">Uri value to match.</param>
-		/// <param name="queryOperator">Query operator.</param>
+		/// <param name="searchOperator">Query operator.</param>
 		/// <returns>An ICSList object that contains the results of the search.</returns>
-		public ICSList Search( string propertyName, Uri propertyValue, Property.Operator queryOperator )
+		public ICSList Search( string propertyName, Uri propertyValue, SearchOp searchOperator )
 		{
-			return Search( new Property( propertyName, propertyValue ), queryOperator );
+			return Search( new Property( propertyName, propertyValue ), searchOperator );
 		}
 
 		/// <summary>
 		/// Searches the collection for the specified XmlDocument property.  An enumerator is returned that
-		/// returns all nodes that match the query criteria.
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
 		/// <param name="propertyName">Name of property.</param>
 		/// <param name="propertyValue">XmlDocument value to match.</param>
-		/// <param name="queryOperator">Query operator.</param>
+		/// <param name="searchOperator">Query operator.</param>
 		/// <returns>An ICSList object that contains the results of the search.</returns>
-		public ICSList Search( string propertyName, XmlDocument propertyValue, Property.Operator queryOperator )
+		public ICSList Search( string propertyName, XmlDocument propertyValue, SearchOp searchOperator )
 		{
-			return Search( new Property( propertyName, propertyValue ), queryOperator );
+			return Search( new Property( propertyName, propertyValue ), searchOperator );
 		}
 
 		/// <summary>
 		/// Searches the collection for the specified TimeSpan property.  An enumerator is returned that
-		/// returns all nodes that match the query criteria.
+		/// returns all of the ShallowNode objects that match the query criteria.
 		/// </summary>
 		/// <param name="propertyName">Name of property.</param>
 		/// <param name="propertyValue">TimeSpan value to match.</param>
-		/// <param name="queryOperator">Query operator.</param>
+		/// <param name="searchOperator">Query operator.</param>
 		/// <returns>An ICSList object that contains the results of the search.</returns>
-		public ICSList Search( string propertyName, TimeSpan propertyValue, Property.Operator queryOperator )
+		public ICSList Search( string propertyName, TimeSpan propertyValue, SearchOp searchOperator )
 		{
-			return Search( new Property( propertyName, propertyValue ), queryOperator );
+			return Search( new Property( propertyName, propertyValue ), searchOperator );
+		}
+
+		/// <summary>
+		/// Searches the collection for the specified Relationship property.  An enumerator is returned that
+		/// returns all of the ShallowNode objects that match the query criteria.
+		/// </summary>
+		/// <param name="propertyName">Name of property.</param>
+		/// <param name="propertyValue">Relationship value to match.</param>
+		/// <returns>An ICSList object that contains the results of the search.</returns>
+		public ICSList Search( string propertyName, Relationship propertyValue )
+		{
+			return Search( new Property( propertyName, propertyValue ), SearchOp.Equal );
 		}
 
 		/// <summary>
 		/// Sets the specified access rights for the specified user on the collection.
 		/// </summary>
-		/// <param name="userId">User to add to the collection's access control list.</param>
+		/// <param name="userID">User to add to the collection's access control list.</param>
 		/// <param name="desiredRights">Rights to assign to user.</param>
-		public void SetUserAccess( string userId, Access.Rights desiredRights )
+		public void SetUserAccess( string userID, Access.Rights desiredRights )
 		{
-			lock ( store )
-			{
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
-
-				if ( userId == String.Empty )
-				{
-					throw new ApplicationException( "Invalid user guid." );
-				}
-
-				cNode.accessControl.SetUserRights( userId.ToLower(), desiredRights );
-			}
+			accessControl.SetUserRights( userID, desiredRights );
 		}
 
 		/// <summary>
-		/// Subscribes to node change events.
+		/// Updates the master and local incarnation properties on the specified Node object.
+		/// 
+		/// Note: This operation performs a commit on this node before returning.  The incarnation numbers 
+		/// will be updated immediately along with any other changes made to the node.  The collection 
+		/// incarnation numbers will not be updated and the property data will not be merged with an existing
+		/// Node object.
 		/// </summary>
-		/// <param name="handler">Delegate which defines handler signature.</param>
-		/// <param name="nodeIdFilter">Specifies a list of nodes to watch for changes.  If null, then all
-		/// node changes in the collection will be indicated.</param>
-		public void NodeEventsSubscribe( NodeChangeHandler handler, string[] nodeIdFilter )
+		/// <param name="master">New master incarnation to be set on the Node object.</param>
+		/// <returns>True if incarnation value was updated, otherwise false is returned indicating a collision.</returns>
+		public bool UpdateIncarnation( Node node, ulong master )
 		{
-			lock ( store )
+			bool updated = false;
+
+			try
 			{
-				if ( disposed )
+				// Acquire the store lock.
+				store.LockStore();
+
+				// See if the node has been updated since the last time we checked.
+				Node currentNode = GetNodeByID( node.ID );
+				if ( ( currentNode == null ) || ( currentNode.LocalIncarnation == node.LocalIncarnation ) )
 				{
-					throw new ObjectDisposedException( this.ToString() );
+					// Update both incarnation values to the specified value.
+					node.Properties.ModifyNodeProperty( Property.MasterIncarnation, master );
+					node.Properties.ModifyNodeProperty( Property.LocalIncarnation, master );
+
+					// If this is a new collection, create it.
+					if ( ( node.Properties.State == PropertyList.PropertyListState.Add ) && IsCollection( node ) )
+					{
+						store.StorageProvider.CreateCollection( node.ID );
+					}
+
+					// Call the store provider to update the records.
+					store.StorageProvider.CreateRecord( node.Properties.PropertyDocument.OuterXml, id );
+
+					// Node has been updated.
+					updated = true;
 				}
-
-				// Setup to watch for node changes on this collection.
-				subscriber = new EventSubscriber( store.Config, Id);
-				subscriber.NodeChanged += new NodeEventHandler( OnNodeChanged );
-				subscriber.NodeCreated += new NodeEventHandler( OnNodeChanged );
-				subscriber.NodeDeleted += new NodeEventHandler( OnNodeChanged );
-
-				// Register the delegate with the event handler.
-				nEventHandler += handler;
-				nodeFilter = nodeIdFilter;
 			}
-		}
-
-		/// <summary>
-		/// Unsubscribes from node change events.
-		/// </summary>
-		/// <param name="handler">Delegate passed to NodeEventsSubscribe.</param>
-		public void NodeEventsUnsubscribe( NodeChangeHandler handler )
-		{
-			lock ( store )
+			finally
 			{
-				if ( disposed )
-				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
-
-				// Deregister from the event broker.
-				subscriber = new EventSubscriber( store.Config );
-				subscriber.NodeChanged -= new NodeEventHandler( OnNodeChanged );
-				subscriber.NodeCreated -= new NodeEventHandler( OnNodeChanged );
-				subscriber.NodeDeleted -= new NodeEventHandler( OnNodeChanged );
-				subscriber.Dispose();
-
-				// Deregister the delegate with the event handler.
-				nEventHandler -= handler;
-				nodeFilter = null;
+				// Release the store lock.
+				store.UnlockStore();
 			}
+
+			// If the node has been updated, a little more processing outside of the store lock is needed.
+			if ( updated )
+			{
+				// This node has been successfully committed to the database.
+				node.Properties.State = PropertyList.PropertyListState.Update;
+
+				if ( IsCollection( node ) )
+				{
+					// Update the access control list.
+					accessControl.GetAccessInfo();
+				}
+			}
+
+			return updated;
 		}
 		#endregion
 
 		#region IEnumerable Members
 		/// <summary>
-		/// Mandatory method used by clients to enumerate node objects.
+		/// Enumerator class for the node object that allows enumeration of specified node objects
+		/// within the collection.
 		/// </summary>
-		/// <remarks>
-		/// The client must call Dispose() to free up system resources before releasing
-		/// the reference to the ICSEnumerator.
-		/// </remarks>
-		/// <returns>IEnumerator object used to enumerate nodes within collections.</returns>
-		public new IEnumerator GetEnumerator()
+		protected class NodeEnumerator : ICSEnumerator
 		{
-			lock ( store )
+			#region Class Members
+			/// <summary>
+			/// Indicates whether this object has been disposed.
+			/// </summary>
+			private bool disposed = false;
+
+			/// <summary>
+			/// Collection associated with this search.
+			/// </summary>
+			private Collection collection;
+
+			/// <summary>
+			/// Property containing the data to search for.
+			/// </summary>
+			private Property property;
+
+			/// <summary>
+			/// Type of search operation.
+			/// </summary>
+			private SearchOp queryOperator;
+
+			/// <summary>
+			/// Enumerator used to enumerate each returned item in the chunk enumerator list.
+			/// </summary>
+			private IEnumerator nodeListEnumerator;
+
+			/// <summary>
+			/// The internal enumerator to use to enumerate all of the child nodes belonging to this node.
+			/// </summary>
+			private Persist.IResultSet chunkIterator = null;
+
+			/// <summary>
+			/// Array where the query results are stored.
+			/// </summary>
+			private char[] results = new char[ 4096 ];
+
+			/// <summary>
+			/// Hashtable used to filter out duplicate nodes returned by the chunkIterator.
+			/// </summary>
+			private Hashtable filterNodes;
+			#endregion
+
+			#region Constructor
+			/// <summary>
+			/// Constructor for the NodeEnumerator object.
+			/// </summary>
+			/// <param name="collection">Collection object that this enumerator belongs to.</param>
+			/// <param name="property">Property object containing the data to search for.</param>
+			/// <param name="queryOperator">Query operator to use when comparing value.</param>
+			public NodeEnumerator( Collection collection, Property property, SearchOp queryOperator )
+			{
+				this.collection = collection;
+				this.property = property;
+				this.queryOperator = queryOperator;
+				Reset();
+			}
+			#endregion
+
+			#region Private Methods
+			/// <summary>
+			/// Determines if the specified ID already has been returned to the user during enumeration.
+			/// </summary>
+			/// <param name="nodeID">Node identifier to check for duplicity.</param>
+			/// <returns>True if the ID is a duplicate, otherwise false.</returns>
+			private bool IsDuplicate( string nodeID )
+			{
+				bool keyExists = filterNodes.ContainsKey( nodeID );
+				if ( !keyExists )
+				{
+					filterNodes.Add( nodeID, null );
+				}
+
+				return keyExists;
+			}
+			#endregion
+
+			#region IEnumerator Members
+			/// <summary>
+			/// Sets the enumerator to its initial position, which is before
+			/// the first element in the collection.
+			/// </summary>
+			public void Reset()
 			{
 				if ( disposed )
 				{
 					throw new ObjectDisposedException( this.ToString() );
 				}
 
-				return new NodeEnumerator( this, new Property( Property.CollectionID, Id ), Persist.Query.Operator.Equal );
-			}
-		}
-		#endregion
+				// Create a new hashtable instance.
+				filterNodes = new Hashtable();
 
-		#region IDisposable Members
-		/// <summary>
-		/// Allows for quick release of managed and unmanaged resources.
-		/// Called by applications.
-		/// </summary>
-		public void Dispose()
-		{
-			lock ( store )
+				// Release previously allocated chunkIterator.
+				if ( chunkIterator != null )
+				{
+					chunkIterator.Dispose();
+				}
+
+				// Create a query object that will return a result set containing the children of this node.
+				Persist.Query query = new Persist.Query( collection.id, property.Name, queryOperator, property.ToString(), property.Type );
+				chunkIterator = collection.store.StorageProvider.Search( query );
+				if ( chunkIterator != null )
+				{
+					// Get the first set of results from the query.
+					int length = chunkIterator.GetNext( ref results );
+					if ( length > 0 )
+					{
+						// Set up the XML document that we will use as the granular query to the client.
+						XmlDocument nodeList = new XmlDocument();
+						nodeList.LoadXml( new string( results, 0, length ) );
+						nodeListEnumerator = nodeList.DocumentElement.GetEnumerator();
+					}
+					else
+					{
+						nodeListEnumerator = null;
+					}
+				}
+				else
+				{
+					nodeListEnumerator = null;
+				}
+			}
+
+			/// <summary>
+			/// Gets the current element in the collection.
+			/// </summary>
+			public object Current
+			{
+				get
+				{
+					if ( disposed )
+					{
+						throw new ObjectDisposedException( this.ToString() );
+					}
+
+					if ( nodeListEnumerator == null )
+					{
+						throw new InvalidOperationException( "Empty enumeration" );
+					}
+
+					return new ShallowNode( ( XmlElement )nodeListEnumerator.Current );
+				}
+			}
+
+			/// <summary>
+			/// Advances the enumerator to the next element of the collection.
+			/// </summary>
+			/// <returns>
+			/// true if the enumerator was successfully advanced to the next element; 
+			/// false if the enumerator has passed the end of the collection.
+			/// </returns>
+			public bool MoveNext()
+			{
+				bool moreData;
+
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				// Make sure that there is data in the list.
+				if ( nodeListEnumerator != null )
+				{
+					// Prime the loop.
+					bool duplicate = true;
+
+					// There is a valid enumerator, assume there is more data.
+					moreData = true;
+
+					// Look for the next unique node in the enumeration list.
+					while ( moreData && duplicate )
+					{
+						// See if there is anymore data left in this result set.
+						moreData = nodeListEnumerator.MoveNext();
+						if ( !moreData )
+						{
+							// Get the next page of the results set.
+							int length = chunkIterator.GetNext( ref results );
+							if ( length > 0 )
+							{
+								// Set up the XML document that we will use as the granular query to the client.
+								XmlDocument nodeList = new XmlDocument();
+								nodeList.LoadXml( new string( results, 0, length ) );
+								nodeListEnumerator = nodeList.DocumentElement.GetEnumerator();
+
+								// Move to the first entry in the document.
+								moreData = nodeListEnumerator.MoveNext();
+								if ( moreData )
+								{
+									// Filter out nodes that are duplicates.
+									duplicate = IsDuplicate( new ShallowNode( ( XmlElement )nodeListEnumerator.Current ).ID );
+								}
+								else
+								{
+									// Out of data.
+									nodeListEnumerator = null;
+								}
+							}
+							else
+							{
+								// Out of data.
+								nodeListEnumerator = null;
+								moreData = false;
+							}
+						}
+						else
+						{
+							// Filter out nodes that are duplicates.
+							duplicate = IsDuplicate( new ShallowNode( ( XmlElement )nodeListEnumerator.Current ).ID );
+						}
+					}
+				}
+				else
+				{
+					moreData = false;
+				}
+
+				return moreData;
+			}
+			#endregion
+
+			#region IDisposable Members
+			/// <summary>
+			/// Allows for quick release of managed and unmanaged resources.
+			/// Called by applications.
+			/// </summary>
+			public void Dispose()
 			{
 				Dispose( true );
 				GC.SuppressFinalize( this );
 			}
-		}
 
-		/// <summary>
-		/// Dispose( bool disposing ) executes in two distinct scenarios.
-		/// If disposing equals true, the method has been called directly
-		/// or indirectly by a user's code. Managed and unmanaged resources
-		/// can be disposed.
-		/// If disposing equals false, the method has been called by the 
-		/// runtime from inside the finalizer and you should not reference 
-		/// other objects. Only unmanaged resources can be disposed.
-		/// </summary>
-		/// <param name="disposing">Specifies whether called from the finalizer or from the application.</param>
-		private void Dispose( bool disposing )
-		{
-			// Check to see if Dispose has already been called.
-			if ( !disposed )
+			/// <summary>
+			/// Dispose( bool disposing ) executes in two distinct scenarios.
+			/// If disposing equals true, the method has been called directly
+			/// or indirectly by a user's code. Managed and unmanaged resources
+			/// can be disposed.
+			/// If disposing equals false, the method has been called by the 
+			/// runtime from inside the finalizer and you should not reference 
+			/// other objects. Only unmanaged resources can be disposed.
+			/// </summary>
+			/// <param name="disposing">Specifies whether called from the finalizer or from the application.</param>
+			protected virtual void Dispose( bool disposing )
 			{
-				// Protect callers from accessing the freed members.
-				disposed = true;
-
-				// If disposing equals true, dispose all managed and unmanaged resources.
-				if ( disposing )
+				// Check to see if Dispose has already been called.
+				if ( !disposed )
 				{
-					// Dispose managed resources.
-					if ( nEventHandler != null )
+					// Set disposed here to protect callers from accessing freed members.
+					disposed = true;
+
+					// If disposing equals true, dispose all managed and unmanaged resources.
+					if ( disposing )
 					{
-						Delegate[] delegateList = nEventHandler.GetInvocationList();
-						foreach ( Delegate d in delegateList )
+						// Dispose managed resources.
+						if ( chunkIterator != null )
 						{
-							nEventHandler -= d as NodeChangeHandler;
+							chunkIterator.Dispose();
 						}
-
-						nEventHandler = null;
 					}
-
-					if ( subscriber != null )
-					{
-						subscriber.Dispose();
-					}
-
-					database = null;
-					store = null;
 				}
 			}
-		}
-		
-		/// <summary>
-		/// Use C# destructor syntax for finalization code.
-		/// This destructor will run only if the Dispose method does not get called.
-		/// It gives your base class the opportunity to finalize.
-		/// Do not provide destructors in types derived from this class.
-		/// </summary>
-		~Collection()      
-		{
-			lock ( store )
+
+			/// <summary>
+			/// Use C# destructor syntax for finalization code.
+			/// This destructor will run only if the Dispose method does not get called.
+			/// It gives your base class the opportunity to finalize.
+			/// Do not provide destructors in types derived from this class.
+			/// </summary>
+			~NodeEnumerator()      
 			{
 				Dispose( false );
 			}
+			#endregion
 		}
 		#endregion
 	}

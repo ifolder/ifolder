@@ -61,30 +61,9 @@ namespace Simias.Storage
 			Admin 
 		};
 
-		/// <summary>
-		/// Well known identity role for the administrator of the local database.
-		/// </summary>
-		public const string StoreAdminRole = "1edcfe90-45e8-11d8-a9c7-444553544200";
-
-		/// <summary>
-		/// Well known identity role for the synchronizing operator.
-		/// </summary>
-		public const string SyncOperatorRole = "1edcfe91-45e8-11d8-a9c7-444553544200";
-
-		/// <summary>
-		/// Well known identity role for the backup operator.
-		/// </summary>
-		public const string BackupOperatorRole = "1edcfe92-45e8-11d8-a9c7-444553544200";
-
-		/// <summary>
 		/// Well know identity role for world access.
 		/// </summary>
-		public const string WorldRole = "1edcfe93-45e8-11d8-a9c7-444553544200";
-
-		/// <summary>
-		/// Reference to the store object.
-		/// </summary>
-		private Store store;
+		public const string World = "1edcfe93-45e8-11d8-a9c7-444553544200";
 
 		/// <summary>
 		/// Access control list enumerator.
@@ -99,7 +78,6 @@ namespace Simias.Storage
 		/// <param name="collection">Collection to enumerator rights on.</param>
 		internal Access( Collection collection )
 		{
-			this.store = collection.LocalStore;
 			MultiValuedList mvl = collection.Properties.FindValues( Property.Ace, true );
 			aclEnumerator = ( ICSEnumerator )mvl.GetEnumerator();
 		}
@@ -112,10 +90,7 @@ namespace Simias.Storage
 		/// </summary>
 		public void Reset()
 		{
-			lock ( store )
-			{
-				aclEnumerator.Reset();
-			}
+			aclEnumerator.Reset();
 		}
 
 		/// <summary>
@@ -123,13 +98,7 @@ namespace Simias.Storage
 		/// </summary>
 		public object Current
 		{
-			get 
-			{ 
-				lock ( store )
-				{
-					return new AccessControlEntry( ( Property )aclEnumerator.Current ); 
-				}
-			}
+			get { return new AccessControlEntry( ( Property )aclEnumerator.Current ); }
 		}
 
 		/// <summary>
@@ -141,10 +110,7 @@ namespace Simias.Storage
 		/// </returns>
 		public bool MoveNext()
 		{
-			lock ( store )
-			{
-				return aclEnumerator.MoveNext();
-			}
+			return aclEnumerator.MoveNext();
 		}
 		#endregion
 
@@ -185,7 +151,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets the id for this entry.
 		/// </summary>
-		public string Id
+		public string ID
 		{
 			get { return id; }
 		}
@@ -197,35 +163,19 @@ namespace Simias.Storage
 		{
 			get { return rights; }
 		}
-
-		/// <summary>
-		/// Returns true if this object is a well known identity
-		/// </summary>
-		public bool WellKnown
-		{
-			get
-			{
-				if( (id == Access.StoreAdminRole)		||
-					(id == Access.SyncOperatorRole)		||
-					(id == Access.BackupOperatorRole)	||
-					(id == Access.WorldRole) )
-					return true;
-				return false;
-			}
-		}
 		#endregion
 
 		#region Constructors
 		/// <summary>
 		/// Constructor for the AccessControlEntry object.
 		/// </summary>
-		/// <param name="id">Identifier for user.</param>
-		/// <param name="rights">Access control rights to assign to user.</param>
-		internal AccessControlEntry( string id, Access.Rights rights )
+		/// <param name="ID">Identifier for user.</param>
+		/// <param name="accessRights">Access control rights to assign to user.</param>
+		internal AccessControlEntry( string ID, Access.Rights accessRights )
 		{
-			this.id = id.ToLower();
-			this.rights = rights;
-			aceProperty = new Property( Property.Ace, this.id + ":" + Enum.GetName( typeof( Access.Rights ), rights ) );
+			id = ID.ToLower();
+			rights = accessRights;
+			aceProperty = new Property( Property.Ace, id + ":" + Enum.GetName( typeof( Access.Rights ), rights ) );
 			aceProperty.HiddenProperty = true;
 		}
 
@@ -292,56 +242,36 @@ namespace Simias.Storage
 	}
 
 	/// <summary>
-	/// Object that provides access control functionality for the CollectionStore.
+	/// Object that provides access control functionality for the Collection Store.
 	/// </summary>
 	internal class AccessControl
 	{
 		#region Class Members
 		/// <summary>
-		/// Collection object that this object controls access for.
+		/// Collection object that this object protects.
 		/// </summary>
 		private Collection collection;
 
 		/// <summary>
-		/// Specifies the owner of the collection.
+		/// Specifies the identifier of the owner of the collection.
 		/// </summary>
-		private string owner = null;
+		private string ownerID;
 
 		/// <summary>
 		/// List of access control entries at the time the object was constructed.
 		/// This list will be updated whenever the collection access control list is changed.
 		/// </summary>
-		private ArrayList committedAcl = new ArrayList();
+		private ArrayList aclList = new ArrayList();
 
 		/// <summary>
 		/// Constructor access control entry so it doesn't have to be looked up each time.
 		/// </summary>
-		private AccessControlEntry impersonatingAce = null;
+		private AccessControlEntry impersonatingAce;
 
 		/// <summary>
 		/// World ace used to cache the ace entry so it doesn't have to be looked up each time.
 		/// </summary>
-		private AccessControlEntry worldAce = null;
-		#endregion
-
-		#region Properties
-		/// <summary>
-		/// Gets the owner of the collection.
-		/// </summary>
-		public string Owner
-		{
-			get 
-			{ 
-				if ( owner == null )
-				{
-					// The collection has never been accessed. Force the collection properties to be loaded on this
-					// object and the owner will automatically be filled in.
-					collection.SetNodeProperties();
-				}
-
-				return owner; 
-			}
-		}
+		private AccessControlEntry worldAce;
 		#endregion
 
 		#region Constructor
@@ -352,17 +282,7 @@ namespace Simias.Storage
 		public AccessControl( Collection collection )
 		{
 			this.collection = collection;
-		}
-
-		/// <summary>
-		/// Constructor for the object.
-		/// </summary>
-		/// <param name="collection">Collection that this object controls access for.</param>
-		/// <param name="constructorId">User identifier that is constructing the specified collection object.</param>
-		public AccessControl( Collection collection, string constructorId )
-		{
-			this.collection = collection;
-			owner = constructorId.ToLower();
+			GetAccessInfo();
 		}
 		#endregion
 
@@ -370,16 +290,16 @@ namespace Simias.Storage
 		/// <summary>
 		/// Finds the access control entry for the specified user ID.
 		/// </summary>
-		/// <param name="userId">User ID to find access control entry for.</param>
+		/// <param name="userID">User ID to find access control entry for.</param>
 		/// <returns>An AccessControlEntry object that contains the access rights for the specified user.</returns>
-		private AccessControlEntry FindAce( string userId )
+		private AccessControlEntry FindAce( string userID )
 		{
 			AccessControlEntry ace = null;
 
-			// Find the specified access control entry in the committed acl.
-			foreach ( AccessControlEntry committedAce in committedAcl )
+			// Find the specified access control entry in the acl list.
+			foreach ( AccessControlEntry committedAce in aclList )
 			{
-				if ( committedAce.Id == userId )
+				if ( committedAce.ID == userID )
 				{
 					ace = committedAce;
 					break;
@@ -387,16 +307,6 @@ namespace Simias.Storage
 			}
 
 			return ace;
-		}
-
-		/// <summary>
-		/// Returns whether the user has owner rights to the collection.
-		/// </summary>
-		/// <param name="userId">User id to check for owner rights.</param>
-		/// <returns>True if userId has owner rights on the collection, otherwise false.</returns>
-		private bool IsOwner( string userId )
-		{
-			return ( ( userId == Access.StoreAdminRole ) || ( userId == Owner ) ) ? true : false;
 		}
 
 		/// <summary>
@@ -411,7 +321,7 @@ namespace Simias.Storage
 			if ( worldAce == null )
 			{
 				// See if world access is allowed.
-				worldAce = FindAce( Access.WorldRole );
+				worldAce = FindAce( Access.World );
 				if ( ( worldAce != null ) && ( worldAce.Rights >= desiredRights ) )
 				{
 					allowed = true;
@@ -428,73 +338,37 @@ namespace Simias.Storage
 
 		#region Internal Methods
 		/// <summary>
-		/// Gets the current list of access control entries from the collection object and maintains them
-		/// in this object.
-		/// </summary>
-		internal void GetCommittedAcl()
-		{
-			// Clear out the old acl.
-			committedAcl.Clear();
-			impersonatingAce = null;
-
-			// Get the list of access control entries.
-			ICSList acl = collection.GetAccessControlList();
-			foreach ( AccessControlEntry ace in acl )
-			{
-				committedAcl.Add( ace );
-			}
-
-			// Get the committed owner of the collection.
-			Property ownerProperty = collection.Properties.GetSingleProperty( Property.Owner );
-			if ( ownerProperty != null )
-			{
-				owner = ownerProperty.ToString();
-			}
-			else
-			{
-				throw new ApplicationException( "There is no owner for the collection." );
-			}
-		}
-		#endregion
-
-		#region Public Methods
-		/// <summary>
 		/// Makes the specified user owner of the collection that this object protects.
 		/// </summary>
-		/// <param name="userId">User ID to make owner.</param>
+		/// <param name="userID">User ID to make owner.</param>
 		/// <param name="oldOwnerRight">The rights that the old owner should be assigned.</param>
-		public void ChangeOwner( string userId, Access.Rights oldOwnerRight )
+		internal void ChangeCollectionOwner( string userID, Access.Rights oldOwnerRight )
 		{
-			// Only the current owner can change ownership rights.
-			if ( !IsOwnerAccessAllowed() )
-			{
-				throw new UnauthorizedAccessException( "Current user cannot modify collection owner's right." );
-			}
+			// Normalize the user ID.
+			string normUserID = userID.ToLower();
 
 			// Find the existing owner ace.
-			AccessControlEntry oldOwnerAce = FindAce( Owner );
-			if ( oldOwnerAce != null )
-			{
-				// Reset the old ace.
-				if ( oldOwnerRight == Access.Rights.Deny )
-				{
-					// Old owner will have no rights to the collection.
-					oldOwnerAce.Delete();
-				}
-				else
-				{
-					// Set the new right for the old owner.
-					oldOwnerAce.SetRights( oldOwnerRight );
-					oldOwnerAce.Set( collection );
-				}
-			}
-			else
+			AccessControlEntry oldOwnerAce = FindAce( collection.Owner );
+			if ( oldOwnerAce == null )
 			{
 				throw new ApplicationException( "Existing collection does not have an owner ace" );
 			}
 
+			// Reset the old ace.
+			if ( oldOwnerRight == Access.Rights.Deny )
+			{
+				// Old owner will have no rights to the collection.
+				oldOwnerAce.Delete();
+			}
+			else
+			{
+				// Set the new right for the old owner.
+				oldOwnerAce.SetRights( oldOwnerRight );
+				oldOwnerAce.Set( collection );
+			}
+
 			// Add an ace for the new owner. Check if there is an existing ace first.
-			AccessControlEntry newOwnerAce = FindAce( userId );
+			AccessControlEntry newOwnerAce = FindAce( normUserID );
 			if ( newOwnerAce != null )
 			{
 				// Just change the rights on the current ace and reset it.
@@ -503,46 +377,64 @@ namespace Simias.Storage
 			else
 			{
 				// The ace did not exist. Set the new rights on the collection.
-				newOwnerAce = new AccessControlEntry( userId, Access.Rights.Admin );
+				newOwnerAce = new AccessControlEntry( normUserID, Access.Rights.Admin );
 			}
 
 			// Set the new collection owner.
 			newOwnerAce.Set( collection );
-			collection.Properties.ModifyNodeProperty( Property.Owner, userId );
+			collection.Properties.ModifyNodeProperty( Property.Owner, normUserID );
+		}
+
+		/// <summary>
+		/// Gets the current list of access control entries from the collection object and maintains them
+		/// in this object.
+		/// </summary>
+		internal void GetAccessInfo()
+		{
+			// Clear out the old access information
+			aclList.Clear();
+			impersonatingAce = null;
+			worldAce = null;
+
+			// Get the list of access control entries.
+			ICSList acl = collection.GetAccessControlList();
+			foreach ( AccessControlEntry ace in acl )
+			{
+				aclList.Add( ace );
+			}
+
+			// Get the committed owner of the collection.
+			ownerID = collection.Owner;
+		}
+		#endregion
+
+		#region Public Methods
+		/// <summary>
+		/// Makes the specified user owner of the collection that this object protects.
+		/// </summary>
+		/// <param name="userID">User ID to make owner.</param>
+		/// <param name="oldOwnerRight">The rights that the old owner should be assigned.</param>
+		public void ChangeOwner( string userID, Access.Rights oldOwnerRight )
+		{
+			// Only the current owner can change ownership rights.
+			if ( !IsOwnerAccessAllowed() )
+			{
+				throw new UnauthorizedAccessException( "Current user cannot modify collection owner's right." );
+			}
+
+			ChangeCollectionOwner( userID, oldOwnerRight );
 		}
 
 		/// <summary>
 		/// Gets the access rights for the specified user on the collection protected by this object.
 		/// </summary>
-		/// <param name="userId">User ID to get rights for.</param>
+		/// <param name="userID">User ID to get rights for.</param>
 		/// <returns>Access rights for the specified user ID.</returns>
-		public Access.Rights GetUserRights( string userId )
+		public Access.Rights GetUserRights( string userID )
 		{
-			Access.Rights rights;
-
-			// See if the user is the owner of the store or the collection.
-			if ( IsOwner( userId ) )
-			{
-				// User has all rights.
-				rights = Access.Rights.Admin;
-			}
-			else
-			{
-				// See if there is an ace for this user.
-				AccessControlEntry ace = FindAce( userId );
-				if ( ace != null )
-				{
-					// User has rights granted to them.
-					rights = ace.Rights;
-				}
-				else
-				{
-					// User has no rights.
-					rights = Access.Rights.Deny;
-				}
-			}
-
-			return rights;
+			// See if there is an ace for this user.
+			AccessControlEntry ace = FindAce( userID.ToLower() );
+			return ( ace != null ) ? ace.Rights : Access.Rights.Deny;
 		}
 
 		/// <summary>
@@ -553,16 +445,16 @@ namespace Simias.Storage
 		public bool IsAccessAllowed( Access.Rights desiredRights )
 		{
 			bool allowed = true;
-			string currentId = collection.DomainIdentity;
+			string currentID = collection.DomainIdentity;
 
 			// Is this user the database owner?
-			if ( ( currentId != Access.StoreAdminRole ) && ( currentId != Owner ) )
+			if ( collection.StoreReference.IsImpersonating && ( currentID != ownerID ) )
 			{
 				// Check if the current identity's ace has already been found.
-				if ( impersonatingAce == null || ( currentId != impersonatingAce.Id ) )
+				if ( impersonatingAce == null || ( currentID != impersonatingAce.ID ) )
 				{
 					// Check the rights on the owner ace.
-					impersonatingAce = FindAce( currentId );
+					impersonatingAce = FindAce( currentID );
 					if ( ( impersonatingAce == null ) || ( impersonatingAce.Rights < desiredRights ) )
 					{
 						allowed = IsWorldAccessAllowed( desiredRights );
@@ -578,22 +470,31 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Returns whether the user has owner rights to the collection.
+		/// </summary>
+		/// <param name="userID">User id to check for owner rights.</param>
+		/// <returns>True if userId has owner rights on the collection, otherwise false.</returns>
+		public bool IsOwner( string userID )
+		{
+			return ( !collection.StoreReference.IsImpersonating || ( userID == ownerID ) ) ? true : false;
+		}
+
+		/// <summary>
 		/// Determines if the current user has owner rights to this collection.  This means that the
 		/// current user must be either the database owner or the collection owner.
 		/// </summary>
 		/// <returns>True if the current user is a database owner or collection owner. Otherwise false is returned.</returns>
 		public bool IsOwnerAccessAllowed()
 		{
-			// Is this user the database owner or the collection owner?
-			string currentId = collection.DomainIdentity;
-			return ( ( currentId == Access.StoreAdminRole ) || ( currentId == Owner ) ) ? true : false;
+			// Is this user the collection owner?
+			return IsOwner( collection.DomainIdentity );
 		}
 
 		/// <summary>
 		/// Removes all access rights on the collection for the specified user.
 		/// </summary>
 		/// <param name="userId">User ID to remove rights for.</param>
-		public void RemoveUserRights( string userId )
+		public void RemoveUserRights( string userID )
 		{
 			if ( !IsAccessAllowed( Access.Rights.Admin ) )
 			{
@@ -601,13 +502,13 @@ namespace Simias.Storage
 			}
 
 			// Don't allow the owner's access to be removed.
-			if ( IsOwner( userId ) )
+			if ( IsOwner( userID ) )
 			{
 				throw new UnauthorizedAccessException( "Cannot remove owner access rights" );
 			}
 
 			// Find the user's ace and remove it.
-			AccessControlEntry ace = FindAce( userId );
+			AccessControlEntry ace = FindAce( userID.ToLower() );
 			if ( ace != null )
 			{
 				ace.Delete();
@@ -617,9 +518,9 @@ namespace Simias.Storage
 		/// <summary>
 		/// Sets the specified access rights for the specified user on the collection protected by this object.
 		/// </summary>
-		/// <param name="userId">User ID to set rights for.</param>
+		/// <param name="userID">User ID to set rights for.</param>
 		/// <param name="rights">Access rights to set for the user.</param>
-		public void SetUserRights( string userId, Access.Rights rights )
+		public void SetUserRights( string userID, Access.Rights rights )
 		{
 			// See if current user has rights to change access control list.
 			if ( !IsAccessAllowed( Access.Rights.Admin ) )
@@ -628,13 +529,16 @@ namespace Simias.Storage
 			}
 
 			// Don't allow the collection owner's rights to be modified.
-			if ( IsOwner( userId ) )
+			if ( IsOwner( userID ) )
 			{
 				throw new UnauthorizedAccessException( "Current user cannot modify collection owner's right." );
 			}
 
+			// Normalize the user ID
+			string normUserID = userID.ToLower();
+
 			// Check if there is an existing ace for the specified user.
-			AccessControlEntry ace = FindAce( userId );
+			AccessControlEntry ace = FindAce( normUserID );
 			if ( ace != null )
 			{
 				if ( rights == Access.Rights.Deny )
@@ -655,31 +559,10 @@ namespace Simias.Storage
 				if ( rights != Access.Rights.Deny )
 				{
 					// Set the new rights on the collection.
-					ace = new AccessControlEntry( userId, rights );
+					ace = new AccessControlEntry( normUserID, rights );
 					ace.Set( collection );
 				}
 			}
-		}
-
-		/// <summary>
-		/// Makes the current user owner of a new collection that this object protects and adds other
-		/// default access control.
-		/// </summary>
-		public void SetDefaultAccessControl()
-		{
-			// Set the owner of this collection.
-			owner = collection.LocalStore.CurrentUser;
-			collection.Properties.AddNodeProperty( Property.Owner, owner );
-			AccessControlEntry ace = new AccessControlEntry( owner, Access.Rights.Admin );
-			ace.Set( collection );
-
-			// Give the backup operator read/write rights.
-			ace = new AccessControlEntry( Access.BackupOperatorRole, Access.Rights.ReadWrite );
-			ace.Set( collection );
-
-			// Give the sync operator all access rights.
-			ace = new AccessControlEntry( Access.SyncOperatorRole, Access.Rights.Admin );
-			ace.Set( collection );
 		}
 		#endregion
 	}

@@ -85,21 +85,6 @@
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Security.dll"
                 />
                 <Reference
-                    Name = "CollectionEvents"
-                    Project = "{680C2A55-3F33-45EA-AA67-5652592D93FE}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "StoreProvider"
-                    Project = "{4271E7EE-BB9B-4C31-B753-EE4796B4E1CB}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "SqliteProvider"
-                    Project = "{7BD9D007-359B-4A8F-AC5D-48C75222D0A4}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
                     Name = "Common"
                     Project = "{2E918CCD-6919-4453-9BDE-1FF22657CAB5}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
@@ -115,9 +100,14 @@
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "Novell.Security.SecureSink.SecurityProvider"
-                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider"
-                    HintPath = "..\..\external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.dll"
+                    Name = "StoreProvider"
+                    Project = "{4271E7EE-BB9B-4C31-B753-EE4796B4E1CB}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
+                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
+                    HintPath = "..\..\external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll"
                 />
                 <Reference
                     Name = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
@@ -144,7 +134,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "CacheNode.cs"
+                    RelPath = "BaseContact.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BaseFileNode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -154,17 +149,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DirectoryEntry.cs"
+                    RelPath = "DirNode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "FileEntry.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "FileSystemEntry.cs"
+                    RelPath = "FileNode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -174,12 +164,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Identity.cs"
+                    RelPath = "IdentityManager.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "IdentityManager.cs"
+                    RelPath = "LinkNode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -199,11 +189,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "NodeStream.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Property.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -214,7 +199,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "ShallowNode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Store.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "StoreFileNode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

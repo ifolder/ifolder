@@ -67,7 +67,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets the unique identifier for this alias.
 		/// </summary>
-		public string Id
+		public string ID
 		{
 			get { return id; }
 		}
@@ -79,16 +79,13 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				lock ( this )
+				if ( credential == null )
 				{
-					if ( credential == null )
-					{
-						credential = new RSACryptoServiceProvider();
-						credential.FromXmlString( credentialString );
-					}
-
-					return credential; 
+					credential = new RSACryptoServiceProvider( IdentityManager.dummyCsp );
+					credential.FromXmlString( credentialString );
 				}
+
+				return credential; 
 			}
 		}
 		#endregion
@@ -104,7 +101,7 @@ namespace Simias.Storage
 			XmlDocument alias = new XmlDocument();
 			alias.LoadXml( aliasProperty.Value as string );
 			this.domain = alias.DocumentElement.GetAttribute( Property.DomainName );
-			this.id = alias.DocumentElement.GetAttribute( Property.IDAttr );
+			this.id = alias.DocumentElement.GetAttribute( XmlTags.IdAttr );
 
 			// Don't reconstitute the credentials yet. Wait until they are asked for.
 			this.credential = null;
@@ -141,7 +138,7 @@ namespace Simias.Storage
 
 			// Set the attributes on the object.
 			aliasRoot.SetAttribute( Property.DomainName, domain );
-			aliasRoot.SetAttribute( Property.IDAttr, id );
+			aliasRoot.SetAttribute( XmlTags.IdAttr, id );
 			aliasRoot.InnerText = credentialString;
 			return alias.OuterXml;
 		}
