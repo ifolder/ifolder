@@ -80,8 +80,6 @@ namespace Simias.Sync.Tests
 
 			Assert(store.StorePath.StartsWith(path));
 			Assert(store.ID == store.GetDatabaseObject().ID);
-
-			store.Delete();
 		}
 
 		/// <summary>
@@ -115,8 +113,6 @@ namespace Simias.Sync.Tests
 			Console.WriteLine("Current Identity: {0}", store.CurrentUserGuid);
 
 			Assert(sc.DomainIdentity != null);
-
-			store.Delete();
 		}
 
 		/// <summary>

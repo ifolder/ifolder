@@ -81,12 +81,6 @@ namespace Simias.Invite.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			// remove collection
-			collection.Delete();
-
-			// remove store
-			store.Delete();
-			store = null;
 		}
 
 		/// <summary>

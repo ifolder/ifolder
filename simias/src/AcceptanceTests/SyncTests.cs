@@ -217,25 +217,6 @@ namespace Simias.Tests
 			managerC.StopServices();
 			managerB.StopServices();
 			managerA.StopServices();
-
-			// dispose stores
-			storeC.Dispose();
-			storeB.Dispose();
-			storeA.Dispose();
-
-			// delete stores
-			DeleteStore(ref storeC);
-			DeleteStore(ref storeB);
-			DeleteStore(ref storeA);
-		}
-
-		private void DeleteStore(ref Store store)
-		{
-			if (store != null)
-			{
-				store.Delete();
-				store = null;
-			}
 		}
 
 		/// <summary>
