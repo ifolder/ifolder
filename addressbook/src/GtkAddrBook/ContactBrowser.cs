@@ -454,6 +454,14 @@ namespace Novell.AddressBook.UI.gtk
 		public void onCreateGroup(object o, EventArgs args)
 		{
 		}
+		
+		public void on_HelpButton_clicked(object o, EventArgs args)
+		{
+		}
+
+		public void on_DeleteButton_clicked(object o, EventArgs args)
+		{
+		}
 
 		public void DeleteSelectedBooks()
 		{	
