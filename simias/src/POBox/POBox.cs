@@ -223,13 +223,12 @@ namespace Simias.POBox
 
 			subscription.FromName = fromMember.Name;
 			subscription.FromIdentity = fromMember.UserID;
+			subscription.FromPublicKey = fromMember.PublicKey;
 			subscription.SubscriptionCollectionID = collection.ID;
 			subscription.DomainID = collection.Domain;
 			subscription.DomainName = collection.StoreReference.GetDomain(collection.Domain).Name;
 			subscription.POServiceURL = new Uri(this.POServiceUrl);
 			subscription.SubscriptionCollectionType = type;
-
-			// TODO: fromAddress, toAddress, toName
 
 			return subscription;
 		}

@@ -106,6 +106,10 @@ namespace Simias.POBox
 							subscription.SubscriptionCollectionID = temp.SubscriptionCollectionID;
 							subscription.FromName = temp.FromName;
 							subscription.FromIdentity = temp.FromIdentity;
+							if (workgroup)
+							{
+								subscription.FromPublicKey = temp.FromPublicKey;
+							}
 							subscription.ToName = temp.ToName;
 							subscription.ToIdentity = temp.ToIdentity;
 							result = true;

@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using System.Security.Cryptography;
 
 using Simias;
 using Simias.Storage;
@@ -326,34 +327,54 @@ namespace Simias.POBox
 		/// <summary>
 		/// Gets/sets the recipient's public key
 		/// </summary>
-		public string ToPublicKey
+		public RSACryptoServiceProvider ToPublicKey
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(ToPublicKeyProperty);
+				RSACryptoServiceProvider pk = null;
 
-				return (p != null) ? p.ToString() : null;
+				Property p = properties.GetSingleProperty( ToPublicKeyProperty );
+				if ( p != null )
+				{
+					pk = new RSACryptoServiceProvider( Identity.DummyCsp );
+					pk.FromXmlString( p.ToString() );
+				}
+
+				return pk;
 			}
 			set
 			{
-				Properties.ModifyProperty(ToPublicKeyProperty, value);
+				if ( value != null )
+				{
+					properties.ModifyNodeProperty( ToPublicKeyProperty, value.ToXmlString( false ) );
+				}
 			}
 		}
 
 		/// <summary>
 		/// Gets/sets the sender's public key.
 		/// </summary>
-		public string FromPublicKey
+		public RSACryptoServiceProvider FromPublicKey
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(FromPublicKeyProperty);
+				RSACryptoServiceProvider pk = null;
 
-				return (p != null) ? p.ToString() : null;
+				Property p = properties.GetSingleProperty( FromPublicKeyProperty );
+				if ( p != null )
+				{
+					pk = new RSACryptoServiceProvider( Identity.DummyCsp );
+					pk.FromXmlString( p.ToString() );
+				}
+
+				return pk;
 			}
 			set
 			{
-				Properties.ModifyProperty(FromPublicKeyProperty, value);
+				if ( value != null )
+				{
+					properties.ModifyNodeProperty( FromPublicKeyProperty, value.ToXmlString( false ) );
+				}
 			}
 		}
 
@@ -735,7 +756,7 @@ namespace Simias.POBox
 				throw new ApplicationException("Collection does not exist.");
 
 			// member
-			Member member = new Member(this.ToName, this.ToIdentity, rights);
+			Member member = new Member(this.ToName, this.ToIdentity, rights, this.ToPublicKey);
 
 			// commit
 			c.Commit(member);

@@ -78,7 +78,7 @@ namespace Novell.iFolder.InvitationWizard
 		#region Overridden Methods
 		internal override int ValidatePage(int currentIndex)
 		{
-			if (((InvitationWizard)(this.Parent)).InvitationFile != "")
+			if (((InvitationWizard)(this.Parent)).Subscription != null)
 				return currentIndex + 2;
 
 			return base.ValidatePage (currentIndex);

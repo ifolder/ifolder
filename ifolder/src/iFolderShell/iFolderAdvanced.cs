@@ -1243,16 +1243,21 @@ namespace Novell.iFolder.iFolderCom
 			ShareListMember slMember = (ShareListMember)lvi.Tag;
 			slMember.Member = slMember.Subscription.Accept(ifolder.StoreReference, this.stringToRights(lvi.SubItems[2].Text));
 
-			// Take the relationship off the Subsription object
-			Relationship relationship = (Relationship)slMember.Subscription.Properties.GetSingleProperty("Contact").Value;
+			// Take the relationship off the Subscription object
+			Property property = slMember.Subscription.Properties.GetSingleProperty("Contact");
+			if (property != null)
+			{
+				Relationship relationship = (Relationship)property.Value;
 
-			// Get the contact from the relationship.
-			Novell.AddressBook.AddressBook ab = this.abManager.GetAddressBook(relationship.CollectionID);
-			Contact contact = ab.GetContact(relationship.NodeID);
+				// Get the contact from the relationship.
+				Novell.AddressBook.AddressBook ab = this.abManager.GetAddressBook(relationship.CollectionID);
+				Contact contact = ab.GetContact(relationship.NodeID);
 
-			// Put the Member userID into the Contact userID.
-			contact.UserID = slMember.Member.UserID;
-			ab.Commit(contact);
+				// Put the Member userID into the Contact userID.
+				contact.UserID = slMember.Member.UserID;
+				ab.Commit(contact);
+			}
+
 			poBox.Commit(slMember.Subscription);
 			
 			// This entry is now a member.
