@@ -202,7 +202,7 @@ namespace Simias.Sync
 				return null;
 			}
 
-			int				blockCount = (int)(Length / BlockSize) + 1;
+			int				blockCount = (int)((Length + BlockSize -1)/ BlockSize);
 			HashData[]		list = new HashData[blockCount];
 			byte[]			buffer = new byte[BlockSize];
 			StrongHash		sh = new StrongHash();

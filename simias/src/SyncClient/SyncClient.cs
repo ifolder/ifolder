@@ -438,7 +438,7 @@ namespace Simias.Sync.Client
 			si.CollectionID = collection.ID;
 			si.Context = serverContext;
 			si.ChangesOnly = gotClientChanges | !SyncComplete;
-			si.ClientHasChanges = (gotClientChanges || cstamps.Length != 0) ? true : false;
+			si.ClientHasChanges = si.ChangesOnly;
 			
 			// Start the Sync pass and save the rights.
 			sstamps = service.Start(ref si, store.GetUserIDFromDomainID(collection.Domain));
