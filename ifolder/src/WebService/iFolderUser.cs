@@ -35,9 +35,8 @@ namespace Novell.iFolder.Web
 		public string Name;
 		public string UserID;
 		public string Rights;
-		public bool IsOwner;
 		public string ID;
-		public bool IsSubscription;
+		public string State;
 
 		public iFolderUser()
 		{
@@ -48,9 +47,8 @@ namespace Novell.iFolder.Web
 			this.Name = member.Name;
 			this.UserID = member.UserID;
 			this.Rights = member.Rights.ToString();
-			this.IsOwner = member.IsOwner;
 			this.ID = member.ID;
-			this.IsSubscription = false;
+			this.State = "Member";
 		}
 
 
@@ -59,9 +57,37 @@ namespace Novell.iFolder.Web
 			this.Name = sub.ToName;
 			this.UserID = sub.ToIdentity;
 			this.Rights = sub.SubscriptionRights.ToString();
-			this.IsOwner = false;
 			this.ID = sub.ID;
-			this.IsSubscription = true;
+			this.State = "Invited";
+
+			if(sub.SubscriptionState == 
+							Simias.POBox.SubscriptionStates.Invited)
+			{
+				this.State = "WaitSync";
+			}
+			else if(sub.SubscriptionState == 
+							Simias.POBox.SubscriptionStates.Posted)
+			{
+				this.State = "Invited";
+			}
+			else if(sub.SubscriptionState == 
+							Simias.POBox.SubscriptionStates.Pending)
+			{
+				this.State = "AccessRequest";
+			}
+			else if(sub.SubscriptionState == 
+							Simias.POBox.SubscriptionStates.Acknowledged)
+			{
+				if(sub.SubscriptionDisposition ==
+								Simias.POBox.SubscriptionDispositions.Declined)
+					this.State = "Declined";
+				else
+					this.State = "Unknown";
+			}
+			else
+			{
+				this.State = "Unknown";
+			}
 		}
 	}
 }

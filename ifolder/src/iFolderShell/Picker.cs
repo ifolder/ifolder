@@ -138,6 +138,7 @@ namespace Novell.iFolderCom
 			this.rosterLV.Size = new System.Drawing.Size(200, 288);
 			this.rosterLV.TabIndex = 0;
 			this.rosterLV.View = System.Windows.Forms.View.Details;
+			this.rosterLV.DoubleClick += new System.EventHandler(this.add_Click);
 			// 
 			// columnHeader1
 			// 

@@ -29,10 +29,7 @@ using System.Windows.Forms;
 using System.Collections;
 using System.Diagnostics;
 using System.Net;
-//using Novell.iFolder;
-using Simias.Storage;
 using Novell.Win32Util;
-using Simias;
 
 namespace Novell.iFolderCom
 {
@@ -118,11 +115,7 @@ namespace Novell.iFolderCom
 		static private long ticks = 0;
 		static private readonly long delta = 50000000; // 5 seconds
 
-		//private iFolderNode ifoldernode;
-		private ICSEnumerator propEnumerator;
-		private ICSEnumerator aclEnumerator;
 
-		private IEnumerator items;
 //		public iFolderComponent(Uri location)
 //		{
 //			manager= iFolderManager.Connect(location);

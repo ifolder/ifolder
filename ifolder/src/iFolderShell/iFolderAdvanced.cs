@@ -47,12 +47,12 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Button apply;
 		private System.Windows.Forms.ListView shareWith;
 		private System.Windows.Forms.ColumnHeader columnHeader1;
-		private System.Windows.Forms.ColumnHeader columnHeader2;
 		private System.Windows.Forms.Button remove;
 		private System.Windows.Forms.Button add;
 
 		//private Hashtable subscrHT;
 		//private EventSubscriber subscriber;
+		private bool accessClick;
 		private iFolder ifolder;
 		private iFolderUser currentUser;
 		private ListViewItem ownerLvi;
@@ -77,9 +77,6 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.PictureBox pictureBox1;
 		private System.Windows.Forms.TabPage tabSharing;
 		private System.Windows.Forms.TabPage tabGeneral;
-		private System.Windows.Forms.ColumnHeader columnHeader3;
-		private System.Windows.Forms.Button accept;
-		private System.Windows.Forms.Button decline;
 		private System.Windows.Forms.CheckBox setLimit;
 		private System.Windows.Forms.TextBox limit;
 		private System.Windows.Forms.Label label1;
@@ -104,6 +101,8 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.Label total;
 		private System.Windows.Forms.Label label12;
+		private System.Windows.Forms.ColumnHeader columnHeader2;
+		private System.Windows.Forms.ColumnHeader columnHeader3;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -117,7 +116,7 @@ namespace Novell.iFolderCom
 			//
 			InitializeComponent();
 
-			apply.Enabled = remove.Enabled = accept.Enabled = decline.Enabled = false;
+			apply.Enabled = remove.Enabled = /*accept.Enabled = decline.Enabled =*/ false;
 
 			syncInterval.TextChanged += new EventHandler(syncInterval_ValueChanged);
 //			currentControl = this;
@@ -154,16 +153,19 @@ namespace Novell.iFolderCom
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabGeneral = new System.Windows.Forms.TabPage();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.label5 = new System.Windows.Forms.Label();
-			this.syncInterval = new System.Windows.Forms.NumericUpDown();
-			this.label6 = new System.Windows.Forms.Label();
-			this.autoSync = new System.Windows.Forms.CheckBox();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
 			this.objectCount = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label8 = new System.Windows.Forms.Label();
 			this.byteCount = new System.Windows.Forms.Label();
+			this.label5 = new System.Windows.Forms.Label();
+			this.syncInterval = new System.Windows.Forms.NumericUpDown();
+			this.label6 = new System.Windows.Forms.Label();
+			this.autoSync = new System.Windows.Forms.CheckBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.label7 = new System.Windows.Forms.Label();
+			this.total = new System.Windows.Forms.Label();
+			this.label12 = new System.Windows.Forms.Label();
 			this.limit = new System.Windows.Forms.TextBox();
 			this.setLimit = new System.Windows.Forms.CheckBox();
 			this.label10 = new System.Windows.Forms.Label();
@@ -177,14 +179,12 @@ namespace Novell.iFolderCom
 			this.label4 = new System.Windows.Forms.Label();
 			this.tabSharing = new System.Windows.Forms.TabPage();
 			this.access = new System.Windows.Forms.Button();
-			this.decline = new System.Windows.Forms.Button();
-			this.accept = new System.Windows.Forms.Button();
 			this.add = new System.Windows.Forms.Button();
 			this.remove = new System.Windows.Forms.Button();
 			this.shareWith = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
 			this.menuFullControl = new System.Windows.Forms.MenuItem();
 			this.menuReadWrite = new System.Windows.Forms.MenuItem();
@@ -199,15 +199,12 @@ namespace Novell.iFolderCom
 			this.ifolders = new System.Windows.Forms.ComboBox();
 			this.ifolderLabel = new System.Windows.Forms.Label();
 			this.open = new System.Windows.Forms.Button();
-			this.label7 = new System.Windows.Forms.Label();
-			this.total = new System.Windows.Forms.Label();
-			this.label12 = new System.Windows.Forms.Label();
 			this.gaugeChart = new Novell.Forms.Controls.GaugeChart();
 			this.tabControl1.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
 			this.groupBox1.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.syncInterval)).BeginInit();
 			this.groupBox4.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.syncInterval)).BeginInit();
 			this.groupBox3.SuspendLayout();
 			this.tabSharing.SuspendLayout();
 			this.SuspendLayout();
@@ -247,6 +244,52 @@ namespace Novell.iFolderCom
 			this.groupBox1.TabIndex = 4;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Synchronization";
+			// 
+			// groupBox4
+			// 
+			this.groupBox4.Controls.Add(this.objectCount);
+			this.groupBox4.Controls.Add(this.label2);
+			this.groupBox4.Controls.Add(this.label8);
+			this.groupBox4.Controls.Add(this.byteCount);
+			this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.groupBox4.Location = new System.Drawing.Point(16, 104);
+			this.groupBox4.Name = "groupBox4";
+			this.groupBox4.Size = new System.Drawing.Size(368, 72);
+			this.groupBox4.TabIndex = 9;
+			this.groupBox4.TabStop = false;
+			this.groupBox4.Text = "Statistics";
+			// 
+			// objectCount
+			// 
+			this.objectCount.Location = new System.Drawing.Point(272, 48);
+			this.objectCount.Name = "objectCount";
+			this.objectCount.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+			this.objectCount.Size = new System.Drawing.Size(80, 16);
+			this.objectCount.TabIndex = 6;
+			// 
+			// label2
+			// 
+			this.label2.Location = new System.Drawing.Point(8, 24);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(184, 16);
+			this.label2.TabIndex = 2;
+			this.label2.Text = "Amount to upload:";
+			// 
+			// label8
+			// 
+			this.label8.Location = new System.Drawing.Point(8, 48);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(184, 16);
+			this.label8.TabIndex = 1;
+			this.label8.Text = "Files/folders to synchronize:";
+			// 
+			// byteCount
+			// 
+			this.byteCount.Location = new System.Drawing.Point(272, 24);
+			this.byteCount.Name = "byteCount";
+			this.byteCount.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+			this.byteCount.Size = new System.Drawing.Size(80, 16);
+			this.byteCount.TabIndex = 7;
 			// 
 			// label5
 			// 
@@ -298,52 +341,6 @@ namespace Novell.iFolderCom
 			this.autoSync.TabIndex = 0;
 			this.autoSync.Text = "Sync to host every:";
 			// 
-			// groupBox4
-			// 
-			this.groupBox4.Controls.Add(this.objectCount);
-			this.groupBox4.Controls.Add(this.label2);
-			this.groupBox4.Controls.Add(this.label8);
-			this.groupBox4.Controls.Add(this.byteCount);
-			this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.groupBox4.Location = new System.Drawing.Point(16, 104);
-			this.groupBox4.Name = "groupBox4";
-			this.groupBox4.Size = new System.Drawing.Size(368, 72);
-			this.groupBox4.TabIndex = 9;
-			this.groupBox4.TabStop = false;
-			this.groupBox4.Text = "Statistics";
-			// 
-			// objectCount
-			// 
-			this.objectCount.Location = new System.Drawing.Point(272, 48);
-			this.objectCount.Name = "objectCount";
-			this.objectCount.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.objectCount.Size = new System.Drawing.Size(80, 16);
-			this.objectCount.TabIndex = 6;
-			// 
-			// label2
-			// 
-			this.label2.Location = new System.Drawing.Point(8, 24);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(184, 16);
-			this.label2.TabIndex = 2;
-			this.label2.Text = "Amount to upload:";
-			// 
-			// label8
-			// 
-			this.label8.Location = new System.Drawing.Point(8, 48);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(184, 16);
-			this.label8.TabIndex = 1;
-			this.label8.Text = "Files/folders to synchronize:";
-			// 
-			// byteCount
-			// 
-			this.byteCount.Location = new System.Drawing.Point(272, 24);
-			this.byteCount.Name = "byteCount";
-			this.byteCount.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.byteCount.Size = new System.Drawing.Size(80, 16);
-			this.byteCount.TabIndex = 7;
-			// 
 			// groupBox3
 			// 
 			this.groupBox3.Controls.Add(this.gaugeChart);
@@ -368,6 +365,30 @@ namespace Novell.iFolderCom
 			this.groupBox3.TabIndex = 12;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Disk space";
+			// 
+			// label7
+			// 
+			this.label7.Location = new System.Drawing.Point(264, 80);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(24, 16);
+			this.label7.TabIndex = 14;
+			this.label7.Text = "MB";
+			// 
+			// total
+			// 
+			this.total.Location = new System.Drawing.Point(168, 80);
+			this.total.Name = "total";
+			this.total.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+			this.total.Size = new System.Drawing.Size(88, 16);
+			this.total.TabIndex = 13;
+			// 
+			// label12
+			// 
+			this.label12.Location = new System.Drawing.Point(16, 80);
+			this.label12.Name = "label12";
+			this.label12.Size = new System.Drawing.Size(144, 16);
+			this.label12.TabIndex = 12;
+			this.label12.Text = "Total space:";
 			// 
 			// limit
 			// 
@@ -465,8 +486,6 @@ namespace Novell.iFolderCom
 			// tabSharing
 			// 
 			this.tabSharing.Controls.Add(this.access);
-			this.tabSharing.Controls.Add(this.decline);
-			this.tabSharing.Controls.Add(this.accept);
 			this.tabSharing.Controls.Add(this.add);
 			this.tabSharing.Controls.Add(this.remove);
 			this.tabSharing.Controls.Add(this.shareWith);
@@ -479,37 +498,17 @@ namespace Novell.iFolderCom
 			// access
 			// 
 			this.access.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.access.Location = new System.Drawing.Point(333, 360);
+			this.access.Location = new System.Drawing.Point(8, 360);
 			this.access.Name = "access";
 			this.access.TabIndex = 6;
 			this.access.Text = "Access...";
 			this.access.Click += new System.EventHandler(this.access_Click);
 			// 
-			// decline
-			// 
-			this.decline.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.decline.Location = new System.Drawing.Point(88, 328);
-			this.decline.Name = "decline";
-			this.decline.TabIndex = 5;
-			this.decline.Text = "&Decline";
-			this.decline.Click += new System.EventHandler(this.decline_Click);
-			// 
-			// accept
-			// 
-			this.accept.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.helpProvider1.SetHelpString(this.accept, "Click to send another invitation to the selected contacts.");
-			this.accept.Location = new System.Drawing.Point(8, 328);
-			this.accept.Name = "accept";
-			this.helpProvider1.SetShowHelp(this.accept, true);
-			this.accept.TabIndex = 1;
-			this.accept.Text = "A&ccept";
-			this.accept.Click += new System.EventHandler(this.accept_Click);
-			// 
 			// add
 			// 
 			this.add.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.helpProvider1.SetHelpString(this.add, "Click to add contacts to share this iFolder with.");
-			this.add.Location = new System.Drawing.Point(253, 328);
+			this.add.Location = new System.Drawing.Point(253, 360);
 			this.add.Name = "add";
 			this.helpProvider1.SetShowHelp(this.add, true);
 			this.add.TabIndex = 2;
@@ -520,7 +519,7 @@ namespace Novell.iFolderCom
 			// 
 			this.remove.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.helpProvider1.SetHelpString(this.remove, "Click to stop sharing this iFolder with the selected contact(s).");
-			this.remove.Location = new System.Drawing.Point(333, 328);
+			this.remove.Location = new System.Drawing.Point(333, 360);
 			this.remove.Name = "remove";
 			this.helpProvider1.SetShowHelp(this.remove, true);
 			this.remove.TabIndex = 3;
@@ -531,8 +530,8 @@ namespace Novell.iFolderCom
 			// 
 			this.shareWith.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
 																						this.columnHeader1,
-																						this.columnHeader3,
-																						this.columnHeader2});
+																						this.columnHeader2,
+																						this.columnHeader3});
 			this.shareWith.ContextMenu = this.contextMenu1;
 			this.shareWith.FullRowSelect = true;
 			this.helpProvider1.SetHelpString(this.shareWith, "Lists the contacts that this iFolder is currently being shared with.");
@@ -540,7 +539,7 @@ namespace Novell.iFolderCom
 			this.shareWith.Location = new System.Drawing.Point(8, 8);
 			this.shareWith.Name = "shareWith";
 			this.helpProvider1.SetShowHelp(this.shareWith, true);
-			this.shareWith.Size = new System.Drawing.Size(400, 312);
+			this.shareWith.Size = new System.Drawing.Size(400, 344);
 			this.shareWith.TabIndex = 0;
 			this.shareWith.View = System.Windows.Forms.View.Details;
 			this.shareWith.KeyDown += new System.Windows.Forms.KeyEventHandler(this.shareWith_KeyDown);
@@ -552,15 +551,15 @@ namespace Novell.iFolderCom
 			this.columnHeader1.Text = "Name";
 			this.columnHeader1.Width = 107;
 			// 
-			// columnHeader3
-			// 
-			this.columnHeader3.Text = "Status";
-			this.columnHeader3.Width = 219;
-			// 
 			// columnHeader2
 			// 
-			this.columnHeader2.Text = "Access";
-			this.columnHeader2.Width = 70;
+			this.columnHeader2.Text = "Status";
+			this.columnHeader2.Width = 219;
+			// 
+			// columnHeader3
+			// 
+			this.columnHeader3.Text = "Access";
+			this.columnHeader3.Width = 70;
 			// 
 			// contextMenu1
 			// 
@@ -662,34 +661,10 @@ namespace Novell.iFolderCom
 			this.open.TabIndex = 8;
 			this.open.Click += new System.EventHandler(this.open_Click);
 			// 
-			// label7
-			// 
-			this.label7.Location = new System.Drawing.Point(264, 80);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(24, 16);
-			this.label7.TabIndex = 14;
-			this.label7.Text = "MB";
-			// 
-			// total
-			// 
-			this.total.Location = new System.Drawing.Point(168, 80);
-			this.total.Name = "total";
-			this.total.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.total.Size = new System.Drawing.Size(88, 16);
-			this.total.TabIndex = 13;
-			// 
-			// label12
-			// 
-			this.label12.Location = new System.Drawing.Point(16, 80);
-			this.label12.Name = "label12";
-			this.label12.Size = new System.Drawing.Size(144, 16);
-			this.label12.TabIndex = 12;
-			this.label12.Text = "Total space:";
-			// 
 			// gaugeChart
 			// 
 			this.gaugeChart.Location = new System.Drawing.Point(312, 24);
-			this.gaugeChart.Name = "gaugeChart1";
+			this.gaugeChart.Name = "gaugeChart";
 			this.gaugeChart.Size = new System.Drawing.Size(16, 72);
 			this.gaugeChart.TabIndex = 15;
 			// 
@@ -718,8 +693,8 @@ namespace Novell.iFolderCom
 			this.tabControl1.ResumeLayout(false);
 			this.tabGeneral.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.syncInterval)).EndInit();
 			this.groupBox4.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.syncInterval)).EndInit();
 			this.groupBox3.ResumeLayout(false);
 			this.tabSharing.ResumeLayout(false);
 			this.ResumeLayout(false);
@@ -734,7 +709,7 @@ namespace Novell.iFolderCom
 			DiskSpace diskSpace = ifWebService.GetiFolderDiskSpace(ifolder.ID);
 			if (diskSpace.Limit != 0)
 			{
-				limit.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
+				total.Text = limit.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
 				setLimit.Checked = true;
 
 				double usedSpace = Math.Round(diskSpace.UsedSpace/megaByte, 2);
@@ -748,7 +723,7 @@ namespace Novell.iFolderCom
 			else
 			{
 				setLimit.Checked = false;
-				used.Text = available.Text = limit.Text = "";
+				total.Text = used.Text = available.Text = limit.Text = "";
 				gaugeChart.Used = 0;
 			}
 
@@ -1303,13 +1278,13 @@ namespace Novell.iFolderCom
 
 				// TODO: handle subscriptions.
 				// Enable the accept and decline buttons if the subscription state is "Pending".
-				accept.Enabled = decline.Enabled = lvi.SubItems[1].Text.Equals("TODO:");
+				//accept.Enabled = decline.Enabled = lvi.SubItems[1].Text.Equals("TODO:");
 			}
 			else
 			{
 				// Multiple items are selected ... disable
 				// the accept and decline buttons.
-				accept.Enabled = decline.Enabled = false;
+				//accept.Enabled = decline.Enabled = false;
 			}
 
 			if ((shareWith.SelectedItems.Count == 1) && 
@@ -1861,38 +1836,46 @@ namespace Novell.iFolderCom
 
 		private void shareWith_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
-			// TODO: do we want the access menu to only show up when clicking in the Access column?
+			// Only display the access menu when clicking in the Access column.
 			if (e.Button.Equals(MouseButtons.Right))
 			{
+				accessClick = e.X > (columnHeader1.Width + columnHeader2.Width);
 			}
 		}
 
 		private void contextMenu1_Popup(object sender, System.EventArgs e)
 		{
-			menuFullControl.Visible = menuReadWrite.Visible = menuReadOnly.Visible = shareWith.SelectedItems.Count != 0;
-
-			if (shareWith.SelectedItems.Count == 1)
+			if (accessClick)
 			{
-				ShareListMember slMember = (ShareListMember)shareWith.SelectedItems[0].Tag;
-				switch (slMember.iFolderUser.Rights)
+				menuFullControl.Visible = menuReadWrite.Visible = menuReadOnly.Visible = shareWith.SelectedItems.Count != 0;
+
+				if (shareWith.SelectedItems.Count == 1)
 				{
-					case "Admin":
-						menuFullControl.Checked = true;
-						menuReadWrite.Checked = menuReadOnly.Checked = false;
-						break;
-					case "ReadWrite":
-						menuReadWrite.Checked = true;
-						menuFullControl.Checked = menuReadOnly.Checked = false;
-						break;
-					case "ReadOnly":
-						menuReadOnly.Checked = true;
-						menuFullControl.Checked = menuReadWrite.Checked = false;
-						break;
+					ShareListMember slMember = (ShareListMember)shareWith.SelectedItems[0].Tag;
+					switch (slMember.iFolderUser.Rights)
+					{
+						case "Admin":
+							menuFullControl.Checked = true;
+							menuReadWrite.Checked = menuReadOnly.Checked = false;
+							break;
+						case "ReadWrite":
+							menuReadWrite.Checked = true;
+							menuFullControl.Checked = menuReadOnly.Checked = false;
+							break;
+						case "ReadOnly":
+							menuReadOnly.Checked = true;
+							menuFullControl.Checked = menuReadWrite.Checked = false;
+							break;
+					}
+				}
+				else if (shareWith.SelectedItems.Count > 1)
+				{
+					menuFullControl.Checked = menuReadWrite.Checked = menuReadOnly.Checked = false;
 				}
 			}
-			else if (shareWith.SelectedItems.Count > 1)
+			else
 			{
-				menuFullControl.Checked = menuReadWrite.Checked = menuReadOnly.Checked = false;
+				menuFullControl.Visible = menuReadWrite.Visible = menuReadOnly.Visible = false;
 			}
 		}
 
