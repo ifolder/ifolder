@@ -112,6 +112,13 @@ namespace Novell.iFolder.iFolderCom
 		void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, int tabPage, bool modal);
 
 		/// <summary>
+		/// Displays the Conflict Resolver dialog for the specified iFolder.
+		/// </summary>
+		/// <param name="dllPath">The path where the assembly was loaded from.</param>
+		/// <param name="path">The path of the iFolder.</param>
+		void InvokeConflictResolverDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path);
+		
+		/// <summary>
 		/// Display the iFolder confirmation dialog.
 		/// </summary>
 		/// <param name="dllPath">The path where the assembly was loaded from.</param>
@@ -438,6 +445,19 @@ namespace Novell.iFolder.iFolderCom
 					ifolderAdvanced.Show();
 				}
 			}
+		}
+
+		/// <summary>
+		/// Displays the Conflict Resolver dialog for the specified iFolder.
+		/// </summary>
+		/// <param name="dllPath">The path where the assembly was loaded from.</param>
+		/// <param name="path">The path of the iFolder.</param>
+		public void InvokeConflictResolverDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path)
+		{
+			ConflictResolver conflictResolver = new ConflictResolver();
+			conflictResolver.IFolder = manager.GetiFolderByPath(path);
+			conflictResolver.LoadPath = dllPath;
+			conflictResolver.Show();		
 		}
 
 		/// <summary>
