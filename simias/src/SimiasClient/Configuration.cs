@@ -23,7 +23,6 @@
  ***********************************************************************/
 	 
 using System;
-using System.Collections.Specialized;
 using System.IO;
 using System.Xml;
 
@@ -44,8 +43,6 @@ namespace Simias.Client
 		private const string storeProvider = "StoreProvider";
 		private const string storeProviderPath = "Path";
 
-		private const string enterpriseServer = "Enterprise";
-		private const string serverBootStrapFileName = "simias-server-bootstrap.config";
 		private const string clientBootStrapFileName = "simias-client-bootstrap.config";
 
 		private string configFilePath;
@@ -94,25 +91,11 @@ namespace Simias.Client
 		/// </summary>
 		public Configuration()
 		{
-			string bootStrapFilePath = null;
+			// Check to see if the file exists.
 			configFilePath = Path.Combine( DefaultPath, DefaultFileName );
-
-			// See if we are running as a client or server.
-			NameValueCollection nvc = System.Configuration.ConfigurationSettings.AppSettings;
-			if (nvc.Get( enterpriseServer ) != null )
-			{
-				// Enterprise server.
-				bootStrapFilePath = Path.Combine( SimiasSetup.sysconfdir, serverBootStrapFileName );
-			}
-			else
-			{
-				// Client
-				bootStrapFilePath = Path.Combine( SimiasSetup.sysconfdir, clientBootStrapFileName );
-			}
-
-			// Check to see if the file already exists.
 			if ( !File.Exists( configFilePath ) )
 			{
+				string bootStrapFilePath = Path.Combine( SimiasSetup.sysconfdir, clientBootStrapFileName );
 				if ( !File.Exists( bootStrapFilePath ) )
 				{
 					throw new ApplicationException( String.Format( "Cannot locate {0} or {1}", configFilePath, bootStrapFilePath ) );
