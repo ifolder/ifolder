@@ -51,9 +51,6 @@ namespace Simias.Storage.Tests
 
 		// Object used to access the store.
 		private Store store = null;
-
-		// Path to store.
-		private string basePath = Path.Combine( Directory.GetCurrentDirectory(), "CollectionStoreTestDir" );
 		#endregion
 
 		#region Test Setup
@@ -1626,7 +1623,7 @@ namespace Simias.Storage.Tests
 			string domainID = Guid.NewGuid().ToString();
 
 			// Create a new domain.
-			store.AddDomainIdentity( userID, "Oklahoma", domainID, "Test domain"  ); 
+			store.AddDomainIdentity( userID, "Oklahoma", domainID, "Test domain", new Uri( "http://localhost" ) ); 
 
 			// Create a whole bunch of collections.
 			Collection[] c = new Collection[ 10 ];
@@ -2388,6 +2385,83 @@ namespace Simias.Storage.Tests
 			finally
 			{
 				collection.Commit( collection.Delete() );
+			}
+		}
+
+		/// <summary>
+		/// Tests the collection locks.
+		/// </summary>
+		[Test]
+		public void CollectionLockTest()
+		{
+			Collection collection1 = new Collection( store, "CS_TestCollection1", store.DefaultDomain );
+			Collection collection2 = new Collection( store, "CS_TestCollection2", store.DefaultDomain );
+			collection1.Commit();
+
+			try
+			{
+				collection1.Lock( Collection.LockType.Permanent );
+				collection2.Lock( Collection.LockType.Backup );
+
+				ICSList list = store.GetLockedCollections();
+				foreach( ShallowNode sn in list )
+				{
+					if ( sn.ID != collection1.ID && sn.ID != collection2.ID )
+					{
+						throw new ApplicationException( "Found unlocked collections." );
+					}
+				}
+
+				list = store.GetLockedCollections( Collection.LockType.Backup );
+				foreach( ShallowNode sn in list )
+				{
+					if ( sn.ID != collection2.ID )
+					{
+						throw new ApplicationException( "Found wrong locked collection." );
+					}
+				}
+
+				collection1.Impersonate( collection1.GetCurrentMember() );
+				collection1.Properties.AddProperty( "New Property", "Text" );
+				try
+				{
+					collection1.Commit();
+				}
+				catch ( LockException )
+				{}
+
+				try
+				{
+					collection1.Commit( collection1.Delete() );
+				}
+				catch ( LockException )
+				{}
+
+				collection1.Revert();
+
+				collection1.Unlock();
+				collection2.Unlock();
+
+				list = store.GetLockedCollections();
+				foreach( ShallowNode sn in list )
+				{
+					throw new ApplicationException( "Found locked collections." );
+				}
+
+				list = store.GetLockedCollections( Collection.LockType.Backup );
+				foreach( ShallowNode sn in list )
+				{
+					throw new ApplicationException( "Found locked collection." );
+				}
+
+				collection2.Properties.AddProperty( "New Property", "Text" );
+				collection2.Commit();
+				collection1.Commit();
+			}
+			finally
+			{
+				collection1.Commit( collection1.Delete() );
+				collection2.Commit( collection2.Delete() );
 			}
 		}
 		#endregion

@@ -8,6 +8,7 @@ using System.Threading;
 using NUnit.Framework;
 
 using Simias;
+using Simias.Client;
 using Simias.Service;
 using Simias.Storage;
 
@@ -21,7 +22,7 @@ namespace ChangeLogTest
 	{
 		#region Class Members
 		private Store store;
-		private Manager manager;
+		private Simias.Service.Manager manager;
 		private string collectionID = Guid.NewGuid().ToString();
 		private EventContext eventCookie;
 		#endregion
@@ -33,10 +34,7 @@ namespace ChangeLogTest
 		[TestFixtureSetUp]
 		public void Init()
 		{
-			Configuration config = Configuration.CreateDefaultConfig( Directory.GetCurrentDirectory() );
-			SimiasRemoting.Configure( config );
-
-			manager = new Manager( config );
+			manager = new Simias.Service.Manager( Simias.Configuration.GetConfiguration() );
 			manager.StartServices();
 			manager.WaitForServicesStarted();
 

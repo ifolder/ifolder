@@ -319,4 +319,20 @@ namespace Simias.Storage
 		}
 		#endregion
 	}
+
+	/// <summary>
+	/// Exception that indicates that a collection is locked and changes are not permitted.
+	/// </summary>
+	public class LockException : CollectionStoreException
+	{
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the object class.
+		/// </summary>
+		public LockException() :
+			base ( "Collection is locked." )
+		{
+		}
+		#endregion
+	}
 }

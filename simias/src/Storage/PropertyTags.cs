@@ -46,6 +46,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string CollectionLock = "Lock";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string CreationTime = "Create";
 
 		/// <summary>
@@ -216,6 +221,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( BaseSchema.ObjectType, null );
 			systemPropertyTable.Add( BaseSchema.CollectionId, null );
 			systemPropertyTable.Add( Collision, null );
+			systemPropertyTable.Add( CollectionLock, null );
 			systemPropertyTable.Add( CreationTime, null );
 			systemPropertyTable.Add( Credential, null );
 			systemPropertyTable.Add( DefaultDomain, null );

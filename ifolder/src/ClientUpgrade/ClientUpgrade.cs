@@ -130,6 +130,7 @@ namespace Novell.iFolder.Install
 			{
 				// Construct a WebClient to do the downloads.
 				WebClient webClient = new WebClient();
+				webClient.Credentials = service.Credentials; 
 				foreach ( string file in fileList )
 				{
 					// Add the filename as the query string.

@@ -44,6 +44,29 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
+		/// Type of collection locks. These are mainly informational to allow an
+		/// administrator to have some sort of context of why the collection was
+		/// locked.
+		/// </summary>
+		public enum LockType
+		{
+			/// <summary>
+			/// No changes made to the collection, ever.
+			/// </summary>
+			Permanent,
+
+			/// <summary>
+			/// Backup or restore going on.
+			/// </summary>
+			Backup,
+
+			/// <summary>
+			/// User defined lock.
+			/// </summary>
+			User
+		}
+
+		/// <summary>
 		/// Reference to the store.
 		/// </summary>
 		private Store store;
@@ -212,6 +235,31 @@ namespace Simias.Storage
 		public bool IsProxy
 		{
 			get { return ( LocalIncarnation == 0 ) ? true : false; }
+		}
+
+		/// <summary>
+		/// Gets whether this collection is locked, preventing modifications from being made
+		/// by an impersonating user.
+		/// </summary>
+		public bool IsLocked
+		{
+			get
+			{
+				bool locked = false;
+
+				// Always get the latest collection from disk (or cache).
+				Collection c = store.GetCollectionByID( id );
+				if ( c != null )
+				{
+					// The existence of the attribute signifies a lock.
+					if ( c.properties.FindSingleValue( PropertyTags.CollectionLock ) != null )
+					{
+						locked = true;
+					}
+				}
+	
+				return locked;
+			}
 		}
 		#endregion
 
@@ -1175,8 +1223,11 @@ namespace Simias.Storage
 		/// <param name="node">Node object to commit to the database.</param>
 		public void Commit( Node node )
 		{
-			Node[] nodeList = { node };
-			Commit( nodeList );
+			if ( node != null )
+			{
+				Node[] nodeList = { node };
+				Commit( nodeList );
+			}
 		}
 
 		/// <summary>
@@ -1188,7 +1239,7 @@ namespace Simias.Storage
 		public void Commit( Node[] nodeList )
 		{
 			// Make sure that something is in the list.
-			if ( nodeList.Length > 0 )
+			if ( ( nodeList != null ) && ( nodeList.Length > 0 ) )
 			{
 				bool createCollection = false;
 				bool deleteCollection = false;
@@ -1253,9 +1304,16 @@ namespace Simias.Storage
 					Node[] commitList;
 
 					// Delete of a collection supercedes all other operations.  It also is not subject to
-					// a rights check.
+					// a rights check. However, a locked collection cannot be deleted by an impersonating
+					// member.
 					if ( deleteCollection )
 					{
+						// Check if this collection is locked, preventing changes made by impersonating users.
+						if ( accessControl.IsImpersonating && IsLocked )
+						{
+							throw new LockException();
+						}
+
 						// Only the collection needs to be processed. All other Node objects will automatically
 						// be deleted when the collection is deleted.
 						commitList = new Node[ 1 ];
@@ -1284,6 +1342,12 @@ namespace Simias.Storage
 						// rights checking. Access rights are only checked for impersonated users.
 						if ( accessControl.IsImpersonating )
 						{
+							// Check if this collection is locked, preventing changes made by impersonating users.
+							if ( IsLocked )
+							{
+								throw new LockException();
+							}
+
 							// Get the impersonating member.
 							Member member = accessControl.ImpersonationMember;
 
@@ -1428,7 +1492,7 @@ namespace Simias.Storage
 		public Node Delete( Node node )
 		{
 			Node[] nodeList = Delete( node, null );
-			return nodeList[ 0 ];
+			return ( nodeList.Length > 0 ) ? nodeList[ 0 ] : null;
 		}
 
 		/// <summary>
@@ -1831,6 +1895,35 @@ namespace Simias.Storage
 		public bool IsBaseType( Node node, string typeString )
 		{
 			return ( node.Type == typeString ? true : false );
+		}
+
+		/// <summary>
+		/// Locks the collection so that changes by an impersonated user are not allowed.
+		/// </summary>
+		/// <param name="lockType">Reason for the lock.</param>
+		public void Lock( LockType lockType )
+		{
+			// User must not be impersonating.
+			if ( accessControl.IsImpersonating )
+			{
+				throw new AccessException( this, GetCurrentMember(), "Insufficent rights to set a lock on this collection." );
+			}
+
+			// The current collection object might have modifications made to it. Get
+			// a new object that we can guarantee is not modified. We don't want to unknowingly
+			// commit changes made to the current collection object.
+			Collection c = store.GetCollectionByID( id );
+			if ( c == null )
+			{
+				// Use the current collection object since it has not been committed yet.
+				c = this;
+			}
+
+			// Set a persistent local property that will represent the lock.
+			Property p = new Property( PropertyTags.CollectionLock, lockType );
+			p.LocalProperty = true;
+			c.properties.ModifyNodeProperty( p );
+			c.Commit();
 		}
 
 		/// <summary>
@@ -2253,6 +2346,34 @@ namespace Simias.Storage
 			{
 				// Set the new type.
 				node.Properties.AddNodeProperty( PropertyTags.Types, type );
+			}
+		}
+
+		/// <summary>
+		/// Unlocks a previously locked collection.
+		/// </summary>
+		public void Unlock()
+		{
+			// User must not be impersonating.
+			if ( accessControl.IsImpersonating )
+			{
+				throw new AccessException( this, GetCurrentMember(), "Insufficent rights to remove lock on this collection." );
+			}
+
+			// The current collection object might have modifications made to it. Get
+			// a new object that we can guarantee is not modified. We don't want to unknowingly
+			// commit changes made to the current collection object.
+			Collection c = store.GetCollectionByID( id );
+			if ( c != null )
+			{
+				// Find the lock attribute.
+				Property p = c.properties.FindSingleValue( PropertyTags.CollectionLock );
+				if ( p != null )
+				{
+					// Delete the property and commit the change.
+					p.DeleteProperty();
+					c.Commit();
+				}
 			}
 		}
 		#endregion
