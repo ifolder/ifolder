@@ -351,6 +351,7 @@ namespace Novell.AddressBook
 				if(tmpMail.Address == this.Address)
 				{
 					contact.emailList.Remove(tmpMail);
+					break;
 				}
 			}
 
