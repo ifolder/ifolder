@@ -9,7 +9,7 @@ ClientUpgrade_FLAGS = $(CSC_LIBFLAG)
 ClientUpgrade_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll
 ClientUpgrade_LIBPATH =
 
-EXTRA_DIST = $(ClientUpgrade_CSFILES)
+EXTRA_DIST = $(ClientUpgrade_CSFILES1)
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
