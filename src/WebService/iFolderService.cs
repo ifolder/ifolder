@@ -1768,9 +1768,7 @@ namespace Novell.iFolder.Web
 
 			Store store = Store.GetStore();
 			
-			LocalDatabase ldb = store.GetDatabaseObject();
-
-			ICSList domainList = ldb.FindType(NodeTypes.DomainType);
+			ICSList domainList = store.GetDomainList();
 
 			foreach( ShallowNode sn in domainList )
 			{
@@ -1967,6 +1965,22 @@ namespace Novell.iFolder.Web
 		public void SetDefaultDomain(string domainID)
 		{
 			SharedCollection.SetDefaultDomain(domainID);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that gets the ID of the default domain.
+		/// </summary>
+		/// <returns>The ID of the default domain.</returns>
+		[WebMethod(Description="Get the ID of the default domain")]
+		[SoapDocumentMethod]
+		public string GetDefaultDomainID()
+		{
+			Store store = Store.GetStore();
+
+			return store.DefaultDomain;
 		}
 	}
 }
