@@ -93,19 +93,22 @@ namespace Simias.Sync
 			SyncNodeStatus status = new SyncNodeStatus();
 			status.nodeID = node.ID;
 			status.status = SyncNodeStatus.SyncStatus.Success;
-			try
+			if (commit)
 			{
-				collection.Commit(node);
-			}
-			catch (CollisionException)
-			{
-				commit = false;
-				status.status = SyncNodeStatus.SyncStatus.UpdateConflict;
-			}
-			catch
-			{
-				commit = false;
-				status.status = SyncNodeStatus.SyncStatus.ServerFailure;
+				try
+				{
+					collection.Commit(node);
+				}
+				catch (CollisionException)
+				{
+					commit = false;
+					status.status = SyncNodeStatus.SyncStatus.UpdateConflict;
+				}
+				catch
+				{
+					commit = false;
+					status.status = SyncNodeStatus.SyncStatus.ServerFailure;
+				}
 			}
 			base.Close(commit);
 			return status;
