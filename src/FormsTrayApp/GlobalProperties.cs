@@ -2568,8 +2568,7 @@ namespace Novell.FormsTrayApp
 				}
 				else
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readQuotaError"), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-					mmb.ShowDialog();
+					usedSpace.Text = freeSpace.Text = totalSpace.Text = resourceManager.GetString("statusUnknown");
 				}
 			}
 

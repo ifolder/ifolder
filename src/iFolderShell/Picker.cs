@@ -360,7 +360,7 @@ namespace Novell.iFolderCom
 			// 
 			// searchTimer
 			// 
-			this.searchTimer.Interval = 500;
+			this.searchTimer.Interval = 1000;
 			this.searchTimer.Tick += new System.EventHandler(this.searchTimer_Tick);
 			// 
 			// panel1

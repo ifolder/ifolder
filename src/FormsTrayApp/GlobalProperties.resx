@@ -5224,9 +5224,6 @@
 	<data name="readUserError">
 		<value>An error was encountered while reading the current user.</value>
 	</data>
-	<data name="readQuotaError">
-		<value>An error was encountered while reading the disk space restrictions.</value>
-	</data>
 	<data name="deleteAction">
 		<value>Delete iFolder</value>
 	</data>
