@@ -991,6 +991,28 @@ namespace Novell.AddressBook
 									}
 								}
 								else
+								if (token == "ORG")
+								{
+									if (enumTokens.MoveNext())
+									{
+										if ((string) enumTokens.Current != "")
+										{
+											cContact.Organization = (string) enumTokens.Current;
+										}
+									}
+								}
+								else
+								if (token == "URL")
+								{
+									if (enumTokens.MoveNext())
+									{
+										if ((string) enumTokens.Current != "")
+										{
+											cContact.Url = (string) enumTokens.Current;
+										}
+									}
+								}
+								else
 								if (token == "PHOTO")
 								{
 									byte[] binaryData = null;

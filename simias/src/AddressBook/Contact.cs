@@ -1652,19 +1652,22 @@ namespace Novell.AddressBook
 		public void ExportVCard(Stream vCard)
 		{
 			//MemoryStream	vCard = new MemoryStream();
-			string			beginHdr = "BEGIN:VCARD";
-			string			versionHdr = "VERSION:3.0";
-			string			endHdr = "END:VCARD";
-			string			emailHdr = "EMAIL";
-			string			prefHdr = "PREF";
-			string			homeHdr = "HOME";
-			string			workHdr = "WORK";
-			string			photoHdr = "PHOTO;ENCODING=b;";
-			string			jpegHdr = "TYPE=JPEG:";
-			string			prodidHdr = "PRODID:";
+			const string	beginHdr = "BEGIN:VCARD";
+			const string	versionHdr = "VERSION:3.0";
+			const string	endHdr = "END:VCARD";
+			const string	emailHdr = "EMAIL";
+			const string	prefHdr = "PREF";
+			const string	homeHdr = "HOME";
+			const string	workHdr = "WORK";
+			const string	photoHdr = "PHOTO;ENCODING=b;";
+			const string	jpegHdr = "TYPE=JPEG:";
+			const string	prodidHdr = "PRODID:";
+			const string	urlHdr = "URL:";
+			const string	bdayHdr = "BDAY:";
 			const string	noteHdr = "NOTE:";
 			const string	uuidHdr = "UID:";
 			const string	usernameHdr = "X-NAB-USERNAME:";
+			const string	blogHdr = "X-NAB-BLOG:";
 
 			foreach(char c in beginHdr)
 			{
@@ -1799,6 +1802,25 @@ namespace Novell.AddressBook
 				vCard.WriteByte(0xA);
 			}
 
+			// Write out the organization
+			if (this.Organization != "")
+			{
+				vCard.WriteByte((byte) 'O');
+				vCard.WriteByte((byte) 'R');
+				vCard.WriteByte((byte) 'G');
+				vCard.WriteByte((byte) ':');
+
+				foreach(char c in this.Organization)
+				{
+					vCard.WriteByte((byte) c);
+				}
+
+				vCard.WriteByte(0xD);
+				vCard.WriteByte(0xA);
+
+
+			}
+
 			// Write out the title
 			if (this.Title != "")
 			{
@@ -1839,11 +1861,10 @@ namespace Novell.AddressBook
 			// Write out birthday
 			if (this.Birthday != "")
 			{
-				vCard.WriteByte((byte) 'B');
-				vCard.WriteByte((byte) 'D');
-				vCard.WriteByte((byte) 'A');
-				vCard.WriteByte((byte) 'Y');
-				vCard.WriteByte((byte) ':');
+				foreach(char c in bdayHdr)
+				{
+					vCard.WriteByte(Convert.ToByte(c));
+				}
 
 				foreach(char c in this.Birthday)
 				{
@@ -1853,6 +1874,48 @@ namespace Novell.AddressBook
 				vCard.WriteByte(0xD);
 				vCard.WriteByte(0xA);
 			}
+
+			// Write out the web page url
+			try
+			{
+				if (this.Url != "")
+				{
+					foreach(char c in urlHdr)
+					{
+						vCard.WriteByte(Convert.ToByte(c));
+					}
+					
+					foreach(char c in this.Url)
+					{
+						vCard.WriteByte(Convert.ToByte(c));
+					}
+
+					vCard.WriteByte(0xD);
+					vCard.WriteByte(0xA);
+				}
+			}
+			catch{}
+
+			// Write out the blog url
+			try
+			{
+				if (this.Blog != "")
+				{
+					foreach(char c in blogHdr)
+					{
+						vCard.WriteByte(Convert.ToByte(c));
+					}
+					
+					foreach(char c in this.Blog)
+					{
+						vCard.WriteByte(Convert.ToByte(c));
+					}
+
+					vCard.WriteByte(0xD);
+					vCard.WriteByte(0xA);
+				}
+			}
+			catch{}
 
 			// Write out all addresses attached to this contact
 			try
