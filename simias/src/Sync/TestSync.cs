@@ -1,6 +1,6 @@
 /***********************************************************************
  *  $RCSfile$
- * 
+ *
  *  Copyright (C) 2004 Novell, Inc.
  *
  *  This library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  *  Author: Dale Olds <olds@novell.com>
- * 
+ *
  ***********************************************************************/
 using System;
 using System.Collections;
@@ -88,13 +88,12 @@ public class Tests : Assertion
 		Collection dbo = store.GetDatabaseObject();
 		if (dbo == null)
 			Console.WriteLine("no dbo");
-		IIdentity id = IdentityManager.Connect().CurrentId;
 		Node shares = dbo.GetSingleNodeByName("Shares");
 		if (shares == null)
 			shares = dbo.CreateChild("Shares", "Shares");
 			
 		Console.WriteLine("adding share info {0} 1 ", localPath);
-		Node share = shares.CreateChild(id.UserGuid, "Share");
+		Node share = shares.CreateChild(store.CurrentUser, "Share");
 		share.Properties.AddProperty("ShareUri", "nifp://" + host + ":"
 				+ port + "/" + collectionId);
 		share.Properties.AddProperty("RootPath",
