@@ -461,7 +461,7 @@ namespace Simias.Gaim
 			{
 				blistDoc.Load(GetGaimConfigDir() + "/blist.xml");
 			}
-			catch (Exception e)
+			catch
 			{
 				return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
 			}
@@ -470,61 +470,90 @@ namespace Simias.Gaim
 			
 			XmlNodeList buddyNodes = null;
 
-			string trustedBuddiesOnlyConditionNull = "";
-			string trustedBuddiesOnlyConditionOther = "";
 			if (syncMethodPref == "plugin-enabled")
 			{
-				trustedBuddiesOnlyConditionNull = "[setting[@name='simias-url']]";
-				trustedBuddiesOnlyConditionOther = "setting[@name='simias-url'] and ";
+				buddyNodes = gaimElement.SelectNodes("//buddy[setting[@name='simias-url']]");
 			}
-
-			string xpathExp;
-
-			if (searchString == null || searchString.Length == 0)
-				xpathExp = string.Format("//buddy{0}", trustedBuddiesOnlyConditionNull);
 			else
 			{
-				string searchOp;
-				if (operation == SearchOp.Begins)
-					searchOp = "starts-with";
-				else
-					searchOp = "contains";
-
-				string attrib;
-				if (attributeName == "Alias")
-					attrib = "alias";
-				else
-					attrib = "name";
-					
-				string searchCondition = BuildCaseInsensitiveSearchCondition(searchOp, attrib, searchString);
-
-				xpathExp = string.Format("//buddy[{0}{1}]", trustedBuddiesOnlyConditionOther, searchCondition);
-//				xpathExp = string.Format("//buddy[{0}{1}({2}, '{3}')]",
-//										 trustedBuddiesOnlyConditionOther,
-//										 searchOp,
-//										 attrib,
-//									     searchString);
+				buddyNodes = gaimElement.SelectNodes("//buddy");
 			}
 
-			log.Debug("Search XPath: " + xpathExp);
-			System.Console.WriteLine("Search XPath: " + xpathExp);
-			buddyNodes = gaimElement.SelectNodes(xpathExp);
-			if (buddyNodes == null)
-				return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
-			
-			foreach (XmlNode buddyNode in buddyNodes)
+			if (buddyNodes != null)
 			{
-				try
+				foreach (XmlNode buddyNode in buddyNodes)
 				{
-					GaimBuddy buddy = new GaimBuddy(buddyNode);
-					buddies.Add(buddy);
-				}
-				catch (Exception e)
-				{
-					// Ignore errors (i.e., spare the log file)
+					if (searchString == null)
+					{
+						// Just add on every buddyNode
+						try
+						{
+							GaimBuddy buddy = new GaimBuddy(buddyNode);
+							buddies.Add(buddy);
+						}
+						catch {} // Ignore errors
+						continue;
+					}
+
+					string compareString = null;
+					if (attributeName != null && attributeName == "Alias")
+					{
+						// Use the buddy alias (if one exists)
+						XmlNode aliasNode = buddyNode.SelectSingleNode("alias/text()");
+						if (aliasNode != null)
+						{
+							compareString = aliasNode.Value;
+						}
+					}
+					else
+					{
+						// Use the screenname
+						XmlNode nameNode = buddyNode.SelectSingleNode("name/text()");
+						if (nameNode != null)
+						{
+							compareString = nameNode.Value;
+						}
+					}
+
+					if (compareString != null)
+					{
+						compareString = compareString.ToLower();
+						searchString = searchString.ToLower();
+						switch(operation)
+						{
+							case SearchOp.Begins:
+								if (compareString.StartsWith(searchString))
+								{
+									try
+									{
+										GaimBuddy buddy = new GaimBuddy(buddyNode);
+										buddies.Add(buddy);
+									}
+									catch {} // Ignore errors
+								}
+								break;
+							case SearchOp.Exists:
+							case SearchOp.Contains:
+							default:
+								if (compareString.IndexOf(searchString) >= 0)
+								{
+									try
+									{
+										GaimBuddy buddy = new GaimBuddy(buddyNode);
+										buddies.Add(buddy);
+									}
+									catch {} // Ignore errors
+								}
+								break;
+						}
+					}
 				}
 			}
-System.Console.WriteLine("returning from GaimDomain.SearchForBuddies()");			
+			else
+			{
+				return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
+			}
+
 			return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
 		}
 
@@ -1000,56 +1029,6 @@ System.Console.WriteLine("returning from GaimDomain.SearchForBuddies()");
 					domain.Commit(domain.Delete(member));
 				}
 			}
-		}
-		
-		internal static string BuildCaseInsensitiveSearchCondition(string searchOp, string attrib, string searchString)
-		{
-			string searchStringReturn = "";
-			ArrayList searchConditions = new ArrayList();
-			string[] searchStringMutations = GetAllPossibleCaseMutations(searchString);
-			
-			for (int i = 0; i < searchStringMutations.Length; i++)
-			{
-				string mutation = searchStringMutations[i];
-				string searchCondition =
-					string.Format("{0}{1}({2}, '{3}')",
-								  i > 0 ? " or " : "",
-								  searchOp,
-								  attrib,
-								  mutation);
-				searchConditions.Add(searchCondition);
-			}
-			
-			if (searchConditions.Count > 0)
-			{
-				foreach (string searchCondition in searchConditions)
-				{
-					searchStringReturn += searchCondition;
-				}
-				
-				if (searchConditions.Count > 1)
-				{
-					searchStringReturn = "(" + searchStringReturn + ")";
-				}
-			}
-			
-			return searchStringReturn;
-		}
-		
-		internal static string[] GetAllPossibleCaseMutations(string origString)
-		{
-			ArrayList strings = new ArrayList();
-			
-			if (origString != null)
-			{
-				strings.Add(origString);
-				strings.Add(origString.ToLower());
-				strings.Add(origString.ToUpper());
-				
-				// FIXME: Now fill in every combination in-between
-			}
-			
-			return (string[])strings.ToArray(typeof(string));
 		}
 		
 		#endregion
