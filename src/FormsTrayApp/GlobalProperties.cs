@@ -79,6 +79,8 @@ namespace Novell.FormsTrayApp
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(GlobalProperties));
 		private System.Timers.Timer updateEnterpriseTimer;
 		private Hashtable ht;
+		private uint objectsToSync;
+		private bool startSync;
 		private iFolderWebService ifWebService;
 		private SimiasWebService simiasWebService;
 		private IProcEventClient eventClient;
@@ -982,6 +984,9 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
+		/// <summary>
+		/// Intializes the list of servers displayed in the dropdown list.
+		/// </summary>
 		public void InitializeServerList()
 		{
 			servers.Items.Clear();
@@ -1090,6 +1095,10 @@ namespace Novell.FormsTrayApp
 			return result;
 		}
 
+		/// <summary>
+		/// Updates the specified domain.
+		/// </summary>
+		/// <param name="domainInfo">The DomainInformation object representing the domain to update.</param>
 		public void UpdateDomain(DomainInformation domainInfo)
 		{
 			foreach (Domain d in servers.Items)
@@ -1102,11 +1111,11 @@ namespace Novell.FormsTrayApp
 			}
 
 			if ((iFolderView.SelectedItems.Count == 1) && 
-				!((iFolderWeb)iFolderView.SelectedItems[0].Tag).IsSubscription &&
-				((iFolderWeb)iFolderView.SelectedItems[0].Tag).DomainID.Equals(domainInfo.ID))
+				!((iFolderObject)iFolderView.SelectedItems[0].Tag).iFolderWeb.IsSubscription &&
+				((iFolderObject)iFolderView.SelectedItems[0].Tag).iFolderWeb.DomainID.Equals(domainInfo.ID))
 			{
 				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = 
-					((iFolderWeb)iFolderView.SelectedItems[0].Tag).Role.Equals("Slave") && domainInfo.Active;
+					((iFolderObject)iFolderView.SelectedItems[0].Tag).iFolderWeb.Role.Equals("Slave") && domainInfo.Active;
 			}
 		}
 		#endregion
@@ -1250,6 +1259,8 @@ namespace Novell.FormsTrayApp
 							ListViewItem lvi = (ListViewItem)ht[syncEventArgs.ID];
 							if (lvi != null)
 							{
+								startSync = true;
+								((iFolderObject)lvi.Tag).iFolderState = iFolderState.Synchronizing;
 								lvi.SubItems[2].Text = resourceManager.GetString("statusSyncing");
 							}
 						}
@@ -1263,8 +1274,19 @@ namespace Novell.FormsTrayApp
 
 							if (lvi != null)
 							{
-								lvi.SubItems[2].Text = syncEventArgs.Successful ? resourceManager.GetString("statusOK") : resourceManager.GetString("statusSyncFailure");
+								SyncSize syncSize = ifWebService.CalculateSyncSize(syncEventArgs.ID);
+								objectsToSync = syncSize.SyncNodeCount;
+
+								lvi.SubItems[2].Text = syncEventArgs.Successful ? 
+									resourceManager.GetString("statusOK") : 
+//									resourceManager.GetString("statusSyncFailure");
+									string.Format(resourceManager.GetString("statusSyncItemsFailed"), objectsToSync);
+								((iFolderObject)lvi.Tag).iFolderState = syncEventArgs.Successful ? 
+									iFolderState.Normal :
+									iFolderState.FailedSync;
 							}
+
+							objectsToSync = 0;
 						}
 
 						status.Text = resourceManager.GetString("status.Text");
@@ -1289,6 +1311,22 @@ namespace Novell.FormsTrayApp
 					progressBar1.Visible = syncEventArgs.SizeToSync > 0;
 					progressBar1.Value = 0;
 					progressBar1.Maximum = (int)syncEventArgs.SizeToSync;
+
+					if (startSync || (objectsToSync <= 0))
+					{
+						startSync = false;
+						SyncSize syncSize = ifWebService.CalculateSyncSize(syncEventArgs.CollectionID);
+						objectsToSync = syncSize.SyncNodeCount;
+					}
+
+					lock (ht)
+					{
+						ListViewItem lvi = (ListViewItem)ht[syncEventArgs.CollectionID];
+						if (lvi != null)
+						{
+							lvi.SubItems[2].Text = string.Format(resourceManager.GetString("statusSyncingItems"), objectsToSync--);
+						}
+					}
 
 					switch (syncEventArgs.ObjectType)
 					{
@@ -1366,7 +1404,7 @@ namespace Novell.FormsTrayApp
 					if (lvi != null)
 					{
 						// Update the tag data.
-						lvi.Tag = ifolder;
+						((iFolderObject)lvi.Tag).iFolderWeb = ifolder;
 						updateListViewItem(lvi);
 					}
 				}
@@ -1388,7 +1426,7 @@ namespace Novell.FormsTrayApp
 					items[2] = stateToString(ifolder.State, ifolder.HasConflicts, ifolder.IsSubscription, out imageIndex);
 
 					ListViewItem lvi = new ListViewItem(items, imageIndex);
-					lvi.Tag = ifolder;
+					lvi.Tag = new iFolderObject(ifolder);
 					iFolderView.Items.Add(lvi);
 
 					// Add the listviewitem to the hashtable.
@@ -1399,14 +1437,16 @@ namespace Novell.FormsTrayApp
 
 		private void updateListViewItem(ListViewItem lvi)
 		{
-			iFolderWeb ifolder = (iFolderWeb)lvi.Tag;
+			iFolderObject ifolderObject = (iFolderObject)lvi.Tag;
+			iFolderWeb ifolder = ifolderObject.iFolderWeb;
 
-			if (ifolder.State.Equals("Available") && (ifWebService.GetiFolder(ifolder.CollectionID) != null))
+			if (ifolder.State.Equals("Available") &&
+				(ifWebService.GetiFolder(ifolder.CollectionID) != null))
 			{
 				// The iFolder already exists locally ... remove it from the list.
 				lock (ht)
 				{
-					ht.Remove(((iFolderWeb)lvi.Tag).ID);
+					ht.Remove(ifolder.ID);
 				}
 
 				lvi.Remove();
@@ -1416,10 +1456,8 @@ namespace Novell.FormsTrayApp
 				int imageIndex;
 				lvi.SubItems[0].Text = ifolder.Name;
 				lvi.SubItems[1].Text = ifolder.IsSubscription ? "" : ifolder.UnManagedPath;
-				string statusSync = resourceManager.GetString("statusSyncing");
-				string statusSyncFail = resourceManager.GetString("statusSyncFailure");
 				string status = stateToString(ifolder.State, ifolder.HasConflicts, ifolder.IsSubscription, out imageIndex);
-				if (!lvi.SubItems[2].Text.Equals(statusSync) && !lvi.SubItems[2].Text.Equals(statusSyncFail))
+				if (ifolderObject.iFolderState.Equals(iFolderState.Normal))
 				{
 					lvi.SubItems[2].Text = status;
 				}
@@ -1520,7 +1558,7 @@ namespace Novell.FormsTrayApp
 		private void invokeiFolderProperties(ListViewItem lvi, int activeTab)
 		{
 			iFolderAdvanced ifolderAdvanced = new iFolderAdvanced();
-			ifolderAdvanced.CurrentiFolder = (iFolderWeb)lvi.Tag;
+			ifolderAdvanced.CurrentiFolder = ((iFolderObject)lvi.Tag).iFolderWeb;
 			ifolderAdvanced.LoadPath = Application.StartupPath;
 			ifolderAdvanced.ActiveTab = activeTab;
 			ifolderAdvanced.EventClient = eventClient;
@@ -1746,7 +1784,7 @@ namespace Novell.FormsTrayApp
 		private void menuOpen_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = iFolderView.SelectedItems[0];
-			iFolderWeb ifolder = (iFolderWeb)lvi.Tag;
+			iFolderWeb ifolder = ((iFolderObject)lvi.Tag).iFolderWeb;
 
 			try
 			{
@@ -1767,7 +1805,7 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				iFolderWeb ifolder = (iFolderWeb)lvi.Tag;
+				iFolderWeb ifolder = ((iFolderObject)lvi.Tag).iFolderWeb;
 
 				MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(
 					resourceManager.GetString("revertiFolder") + "\n\n" +
@@ -1785,7 +1823,7 @@ namespace Novell.FormsTrayApp
 					// Notify the shell.
 					Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
 
-					lvi.Tag = newiFolder;
+					lvi.Tag = new iFolderObject(newiFolder);
 
 					lock (ht)
 					{
@@ -1808,7 +1846,7 @@ namespace Novell.FormsTrayApp
 		private void menuResolve_Click(object sender, System.EventArgs e)
 		{
 			ConflictResolver conflictResolver = new ConflictResolver();
-			conflictResolver.iFolder = (iFolderWeb)iFolderView.SelectedItems[0].Tag;
+			conflictResolver.iFolder = ((iFolderObject)iFolderView.SelectedItems[0].Tag).iFolderWeb;
 			conflictResolver.iFolderWebService = ifWebService;
 			conflictResolver.LoadPath = Application.StartupPath;
 			conflictResolver.Show();		
@@ -1821,7 +1859,7 @@ namespace Novell.FormsTrayApp
 
 		private void menuSyncNow_Click(object sender, System.EventArgs e)
 		{
-			synciFolder(((iFolderWeb)iFolderView.SelectedItems[0].Tag).ID);
+			synciFolder(((iFolderObject)iFolderView.SelectedItems[0].Tag).iFolderWeb.ID);
 		}
 
 		private void menuProperties_Click(object sender, System.EventArgs e)
@@ -1870,7 +1908,7 @@ namespace Novell.FormsTrayApp
 		private void menuAccept_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = iFolderView.SelectedItems[0];
-			iFolderWeb ifolder = (iFolderWeb)lvi.Tag;
+			iFolderWeb ifolder = ((iFolderObject)lvi.Tag).iFolderWeb;
 
 			AcceptInvitation acceptInvitation = new AcceptInvitation(ifWebService, ifolder);
 			// TODO: get iFolder from acceptInvitation and update the listviewitem with it.
@@ -1880,7 +1918,7 @@ namespace Novell.FormsTrayApp
 		private void menuRemove_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = iFolderView.SelectedItems[0];
-			iFolderWeb ifolder = (iFolderWeb)lvi.Tag;
+			iFolderWeb ifolder = ((iFolderObject)lvi.Tag).iFolderWeb;
 			try
 			{
 				string message, caption;
@@ -1930,7 +1968,7 @@ namespace Novell.FormsTrayApp
 						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
 
 						// Update the listview item.
-						lvi.Tag = newiFolder;
+						lvi.Tag = new iFolderObject(newiFolder);
 
 						lock (ht)
 						{
@@ -1958,7 +1996,7 @@ namespace Novell.FormsTrayApp
 
 			if (iFolderView.SelectedItems.Count == 1)
 			{
-				ifolderWeb = (iFolderWeb)iFolderView.SelectedItems[0].Tag;
+				ifolderWeb = ((iFolderObject)iFolderView.SelectedItems[0].Tag).iFolderWeb;
 			}
 
 			updateMenus(ifolderWeb);
@@ -1969,7 +2007,7 @@ namespace Novell.FormsTrayApp
 			if (iFolderView.SelectedItems.Count == 1)
 			{
 				ListViewItem lvi = iFolderView.SelectedItems[0];
-				iFolderWeb ifolder = (iFolderWeb)lvi.Tag;
+				iFolderWeb ifolder = ((iFolderObject)lvi.Tag).iFolderWeb;
 				if (ifolder.IsSubscription)
 				{
 					menuAccept_Click(sender, e);
@@ -1998,7 +2036,7 @@ namespace Novell.FormsTrayApp
 					menuResolve_Click(this, new EventArgs());
 					break;
 				case 4: // Sync
-					synciFolder(((iFolderWeb)iFolderView.SelectedItems[0].Tag).ID);
+					synciFolder(((iFolderObject)iFolderView.SelectedItems[0].Tag).iFolderWeb.ID);
 					break;
 /*				case 1: // Open
 					menuOpen_Click(this, new EventArgs());
