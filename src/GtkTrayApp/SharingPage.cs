@@ -98,7 +98,7 @@ namespace Novell.iFolder
 
 		private void Init()
 		{
-			Glade.XML gxml = new Glade.XML ("ifolder.glade", 
+			Glade.XML gxml = new Glade.XML (Util.GladePath("ifolder.glade"), 
 					"SharingPropertyPage", null);
 			gxml.Autoconnect (this);
 
@@ -126,8 +126,8 @@ namespace Novell.iFolder
 			ContactTreeView.Selection.Changed += 
 					new EventHandler(on_selection_changed);
 
-			ContactPixBuf = new Pixbuf("contact.png");
-			CurContactPixBuf = new Pixbuf("contact_me.png");
+			ContactPixBuf = new Pixbuf(Util.ImagesPath("contact.png"));
+			CurContactPixBuf = new Pixbuf(Util.ImagesPath("contact_me.png"));
 
 			guidList = new ArrayList();
 

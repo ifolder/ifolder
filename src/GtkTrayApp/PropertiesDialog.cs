@@ -113,7 +113,8 @@ namespace Novell.iFolder
 
 		public void InitGlade()
 		{
-			Glade.XML gxml = new Glade.XML ("properties-dialog.glade", 
+			Glade.XML gxml = 
+					new Glade.XML (Util.GladePath("properties-dialog.glade"), 
 					"PropertiesDialog", 
 					null);
 			gxml.Autoconnect (this);
@@ -155,7 +156,8 @@ namespace Novell.iFolder
 					npwidget = nppage.GetWidget();
 					propNoteBook.AppendPage(npwidget, new Label("Advanced"));
 	
-					dialog.Icon = new Pixbuf("ifolderfolder.png");
+					dialog.Icon = 
+							new Pixbuf(Util.ImagesPath("ifolderfolder.png"));
 				}
 				else if(node != null)
 				{

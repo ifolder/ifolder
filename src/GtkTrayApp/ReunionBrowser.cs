@@ -55,7 +55,8 @@ namespace Novell.iFolder
 
 		private void InitUI()
 		{
-			Glade.XML gxml = new Glade.XML ("reunion-browser.glade", 
+			Glade.XML gxml = 
+					new Glade.XML (Util.GladePath("reunion-browser.glade"), 
 					"RBWindow", 
 					null);
 			gxml.Autoconnect (this);
@@ -78,7 +79,7 @@ namespace Novell.iFolder
 //			ReunionTreeView.Selection.Changed += new EventHandler(
 //						on_reunion_selection_changed);
 
-			ifolder_pixbuf = new Pixbuf("ifolder.png");
+			ifolder_pixbuf = new Pixbuf(Util.ImagesPath("ifolder.png"));
 		}
 
 

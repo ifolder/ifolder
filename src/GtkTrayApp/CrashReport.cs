@@ -60,7 +60,8 @@ namespace Novell.iFolder
 
 		public CrashReport() 
 		{
-			Glade.XML gxml = new Glade.XML ("crash-report.glade",
+			Glade.XML gxml = 
+					new Glade.XML (Util.GladePath("crash-report.glade"),
 					"CrashDialog", null);
 			gxml.Autoconnect (this);
 

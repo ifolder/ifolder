@@ -56,7 +56,7 @@ namespace Novell.iFolder
 
 		public FileBrowser() 
 		{
-			Glade.XML gxml = new Glade.XML ("ifolder.glade", 
+			Glade.XML gxml = new Glade.XML (Util.GladePath("ifolder.glade"), 
 					"BrowserWindow", 
 					null);
 			gxml.Autoconnect (this);
@@ -68,9 +68,9 @@ namespace Novell.iFolder
 					Environment.GetFolderPath(
 						Environment.SpecialFolder.Personal));
 
-			FilePixBuf = new Pixbuf("file.xpm");
-			FolderPixBuf = new Pixbuf("folder.png");
-			iFolderPixBuf = new Pixbuf("ifolderfolder.png");
+			FilePixBuf = new Pixbuf(Util.ImagesPath("file.png"));
+			FolderPixBuf = new Pixbuf(Util.ImagesPath("folder.png"));
+			iFolderPixBuf = new Pixbuf(Util.ImagesPath("ifolderfolder.png"));
 
 			ifmgr = iFolderManager.Connect();
 			DirEntryArray = new ArrayList();

@@ -233,7 +233,8 @@ namespace Novell.iFolder
 		private void InitWizardGUI() 
 		{
 			// --- Main Invitation Wizard ---
-			Glade.XML mainXml = new Glade.XML ("ifolder.glade", 
+			Glade.XML mainXml = 
+					new Glade.XML (Util.GladePath("ifolder.glade"), 
 					"InviteWizard", 
 					null);
 			mainXml.Autoconnect (this);
@@ -241,14 +242,16 @@ namespace Novell.iFolder
 
 			// --- Welcome Page ---
 			// This page is used to welcome the user to the 
-			Glade.XML welcomeXml = new Glade.XML ("ifolder.glade", 
+			Glade.XML welcomeXml = 
+					new Glade.XML (Util.GladePath("ifolder.glade"), 
 					"WelcomePage", 
 					null);
 			welcomePage = welcomeXml.GetWidget("WelcomePage");
 			WizardBox.PackEnd(welcomePage);
 
 			// --- Load Page ---
-			Glade.XML loadXml = new Glade.XML ("ifolder.glade", 
+			Glade.XML loadXml = 
+					new Glade.XML (Util.GladePath("ifolder.glade"), 
 					"LoadPage", 
 					null);
 			loadPage = loadXml.GetWidget("LoadPage");
@@ -261,7 +264,8 @@ namespace Novell.iFolder
 
 
 			// Load in and hookup the Accept Wizard Page
-			Glade.XML acceptXml = new Glade.XML ("ifolder.glade", 
+			Glade.XML acceptXml = 
+					new Glade.XML (Util.GladePath("ifolder.glade"), 
 					"AcceptPage", 
 					null);
 			acceptPage = acceptXml.GetWidget("AcceptPage");
@@ -284,7 +288,8 @@ namespace Novell.iFolder
 				EventHandler(on_accept_path_changed);
 
 			// Load in and hookup the Final Wizard Page
-			Glade.XML finalXml = new Glade.XML ("ifolder.glade", 
+			Glade.XML finalXml = 
+					new Glade.XML (Util.GladePath("ifolder.glade"), 
 					"FinalPage", 
 					null);
 			finalPage = finalXml.GetWidget("FinalPage");

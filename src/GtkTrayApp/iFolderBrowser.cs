@@ -43,7 +43,7 @@ namespace Novell.iFolder
 		[Glade.Widget] internal Gtk.TreeView	iFolderTreeView;
 		[Glade.Widget] internal Gtk.TreeView	FileTreeView;
 		[Glade.Widget] internal Gtk.Window		iFolderWindow;
-		[Glade.Widget] private Gtk.Entry		CurrentPathEntry;
+		[Glade.Widget] internal Gtk.Entry		CurrentPathEntry;
 
 		private ListStore			iFolderTreeStore;
 		private ListStore			NodeTreeStore;
@@ -67,7 +67,8 @@ namespace Novell.iFolder
 
 		private void InitUI()
 		{
-			Glade.XML gxml = new Glade.XML ("ifolder-browser.glade", 
+			Glade.XML gxml = 
+					new Glade.XML (Util.GladePath("ifolder-browser.glade"), 
 					"iFolderWindow", 
 					null);
 			gxml.Autoconnect (this);
@@ -124,9 +125,9 @@ namespace Novell.iFolder
 			nodeIDColumn.Title = "ID";
 			FileTreeView.AppendColumn(nodeIDColumn);
 
-			iFolderPixBuf = new Pixbuf("ifolder.png");
-			filePixBuf = new Pixbuf("file.png");
-			folderPixBuf = new Pixbuf("folder.png");
+			iFolderPixBuf = new Pixbuf(Util.ImagesPath("ifolder.png"));
+			filePixBuf = new Pixbuf(Util.ImagesPath("file.png"));
+			folderPixBuf = new Pixbuf(Util.ImagesPath("folder.png"));
 		}
 
 
