@@ -395,6 +395,24 @@ namespace Simias.POBoxService.Web
 					}
 				}
 
+				//
+				// If the collection has unmanaged files we need
+				// to delete those as well
+				// FIXME:: this may need to be queued off asynchronously
+				// since it could take a long time to delete a directory
+				// with thousands of files
+				//
+
+				try
+				{
+					DirNode dirNode = cCol.GetRootDirectory();
+					if(dirNode != null)
+					{
+						Directory.Delete(dirNode.GetFullPath(cCol), true);
+					}
+				}
+				catch{}
+
 				// Delete the shared collection itself
 				cCol.Commit(cCol.Delete());
 			}
