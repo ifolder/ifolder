@@ -204,6 +204,21 @@ namespace Simias.Storage
 		static public string Types = "Types";
 
 		/// <summary>
+		/// Well known property name.
+		/// </summary>
+		static public readonly string Given = "Given";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
+		static public readonly string Family = "Family";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
+		static public readonly string FullName = "FN";
+
+		/// <summary>
 		/// Hashtable providing quick lookup to well-known system properties.
 		/// </summary>
 		private static Hashtable systemPropertyTable;
