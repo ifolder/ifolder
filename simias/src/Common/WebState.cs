@@ -139,5 +139,13 @@ namespace Simias
 			// request.Proxy = proxy;
 			request.PreAuthenticate = true;
 		}
+
+		/// <summary>
+		/// Resets the WebState object.
+		/// </summary>
+		static public void ResetWebState()
+		{
+			cookies = new CookieContainer();
+		}
 	}
 }

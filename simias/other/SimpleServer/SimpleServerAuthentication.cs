@@ -208,7 +208,7 @@ namespace Simias.SimpleServer
 							}
 							else
 							{
-								status.statusCode = SCodes.InvalidPassword;
+								status.statusCode = SCodes.InvalidCredentials;
 							}
 						}
 					}

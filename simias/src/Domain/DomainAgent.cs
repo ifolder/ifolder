@@ -539,22 +539,11 @@ namespace Simias.DomainServices
 				return new Simias.Authentication.Status( Simias.Authentication.StatusCodes.UnknownDomain );
 			}
 
-			// Create a web request for the domain Uri.
-			Uri loginUri = 
-				new Uri( domain.MasterUrl, Simias.Security.Web.AuthenticationService.Login.Path );
-			HttpWebRequest request = WebRequest.Create( loginUri ) as HttpWebRequest;
-			WebState webState = new WebState();
-			webState.InitializeWebRequest(request);
-
 			// Clear the cookies for this Uri.
-			CookieCollection cc = request.CookieContainer.GetCookies(domain.MasterUrl);
-			foreach (Cookie cookie in cc)
-			{
-				cookie.Expired = true;
-			}
+			WebState.ResetWebState();
 
 			// Set the state for this domain.
-			new DomainAgent().SetDomainState(domainID, false, false);
+			SetDomainState(domainID, false, false);
 
 			// Clear the password from the cache.
 			Member member = domain.GetMemberByID( store.GetUserIDFromDomainID( domainID ) );
