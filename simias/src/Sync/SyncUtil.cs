@@ -60,9 +60,14 @@ public class FileInviter
 	internal static Collection FindCollection(Store store, Uri docRoot)
 	{
 		DirNode dn;
-		foreach (Collection c in store)
+		//foreach (Collection c in store)
+		//foreach (Collection c in store.GetCollectionsByType("*"))
+		foreach (ShallowNode sn in store)
+		{
+			Collection c = new Collection(store, sn);
 			if ((dn = c.GetRootDirectory()) != null && dn.GetFullPath(c) == docRoot.LocalPath)
 				return c;
+		}
 		return null;
 	}
 
@@ -122,7 +127,7 @@ public class FileInviter
 			DirectoryInfo di = new DirectoryInfo(docRoot.LocalPath);
 			di.Create();
 			c = new Collection(store, di.Name);
-			DirNode dn = new DirNode(c, (DirNode)null, di.Name);
+			DirNode dn = new DirNode(c, docRoot.LocalPath);
 			c.Commit(c);
 			c.Commit(dn);
 			sc = new SyncCollection(c);

@@ -47,12 +47,13 @@ internal class Dredger
 		Log.Spew("Dredger deleting orphaned node {0}, {1}", node.Name, node.ID);
 		Node[] deleted = collection.Delete(node, PropertyTags.Parent);
 		collection.Commit(deleted);
+
+		/* TODO: right now we never leave tombstones on the server. Fix this
+		 * such that we only leave tombstones when this collection has an
+		 * upstream master.
+		 */
 		if (onServer)
-		{
-			foreach (Node del in deleted)
-				collection.Delete(del); // don't leave a tombstone on the server
-			collection.Commit(deleted);
-		}
+			collection.Commit(collection.Delete(deleted));
 	}
 
 	//--------------------------------------------------------------------

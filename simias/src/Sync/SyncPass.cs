@@ -106,22 +106,21 @@ public class SynkerServiceA: SyncCollectionService
 			ignoreRights = true;
 		}
 
-		//TODO: where did SyncOperatorRole go?
+		// further kludge
 		if (ignoreRights || userID == String.Empty)
-			userID = "unknown-user";
-		//	userID = Access.SyncOperatorRole;
-		collection.StoreReference.ImpersonateUser(userID);
-		if (collection.IsAccessAllowed(Access.Rights.ReadOnly))
+			ignoreRights = true;
+
+		if (ignoreRights || collection.IsAccessAllowed(Access.Rights.ReadOnly))
 		{
-			//TODO: where did SyncOperatorRole go?
-			//collection.StoreReference.ImpersonateUser(Access.SyncOperatorRole);
+			collection.StoreReference.Revert(); //TODO: what if this is second time for this collection?
 			Log.Spew("dredging server for collection '{0}'", collection.Name);
 			new Dredger(collection, true);
 			Log.Spew("done dredging server for collection '{0}'", collection.Name);
 			inNode = new SyncIncomingNode(collection, true);
 			outNode = new SyncOutgoingNode(collection);
 			ops = new SyncOps(collection, true);
-			collection.StoreReference.Revert();
+			if (!ignoreRights)
+				collection.StoreReference.ImpersonateUser(userID);
 			rights = collection.GetUserAccess(userID);
 		}
 		
@@ -149,25 +148,6 @@ public class SynkerServiceA: SyncCollectionService
 	public string Version
 	{
 		get { return "0.0.0"; }
-	}
-
-	/// <summary>
-	/// deletes specified nodes
-	/// </summary>
-	public bool DeleteNodes(Nid[] nids)
-	{
-		try
-		{
-			Log.Spew("SyncSession.DeleteNodes() Count {0}", nids.Length);
-
-			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
-				throw new UnauthorizedAccessException("Current user cannot modify this collection");
-		
-			ops.DeleteNodes(nids);
-			return true;
-		}
-		catch (Exception e) { Log.Uncaught(e); }
-		return false;
 	}
 
 	/// <summary>
@@ -285,6 +265,10 @@ public class SynkerWorkerA: SyncCollectionWorker
 	SynkerServiceA ss;
 	SyncCollection collection;
 
+	ArrayList largeFromServer, smallFromServer, nonFileFromServer;
+	ArrayList largeToServer, smallToServer, nonFileToServer;
+	ArrayList killOnClient;
+
 	/// <summary>
 	/// public constructor which accepts real or proxy objects specifying master and collection
 	/// </summary>
@@ -294,14 +278,51 @@ public class SynkerWorkerA: SyncCollectionWorker
 		collection = slave;
 	}
 
-	static void AddToUpdateList(NodeStamp stamp, ArrayList small, ArrayList large)
+	/// <summary>
+	/// used to perform one synchronization pass on one collection
+	/// </summary>
+	public override void DoSyncWork()
 	{
-		// TODO: send small files in pages, right now we just limit the
+		Log.Spew("-------- starting sync pass for collection {0}", collection.Name);
+		try
+		{
+			DoOneSyncPass();
+		}
+		catch (Exception e)
+		{
+			Log.Spew("Uncaught exception in DoSyncWork: {0}", e.Message);
+			Log.Spew(e.StackTrace);
+		}
+		catch { Log.Spew("Uncaught foreign exception in DoSyncWork"); }
+		Log.Spew("-------- end of sync pass for collection {0}", collection.Name);
+	}
+
+	void PutNodeToServer(ref NodeStamp stamp, string message)
+	{
+		// TODO: deal with small files in pages, right now we just limit the
 		// first small file page and then consider everything a large file
-		if (stamp.streamsSize >= NodeChunk.MaxSize || small.Count > 100)
-			large.Add(stamp.id);
+		Log.Spew("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
+		Log.Assert(stamp.streamsSize >= -1);
+		if (stamp.streamsSize == -1)
+			nonFileToServer.Add(stamp);
+		else if (stamp.streamsSize >= NodeChunk.MaxSize || smallFromServer.Count > 100)
+			largeToServer.Add(stamp);
 		else
-			small.Add(stamp.id);
+			smallToServer.Add(stamp);
+	}
+
+	void GetNodeFromServer(ref NodeStamp stamp, string message)
+	{
+		// TODO: deal with small files in pages, right now we just limit the
+		// first small file page and then consider everything a large file
+		Log.Spew("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
+		Log.Assert(stamp.streamsSize >= -1);
+		if (stamp.streamsSize == -1)
+			nonFileFromServer.Add(stamp.id);
+		else if (stamp.streamsSize >= NodeChunk.MaxSize || smallFromServer.Count > 100)
+			largeFromServer.Add(stamp.id);
+		else
+			smallFromServer.Add(stamp.id);
 	}
 
 	static Nid[] MoveIdsToArray(ArrayList idList)
@@ -314,55 +335,36 @@ public class SynkerWorkerA: SyncCollectionWorker
 	/// <summary>
 	/// used to perform one synchronization pass on one collection
 	/// </summary>
-	public override void DoSyncWork()
-	{
-	Log.Spew("-------- starting sync pass for collection {0}", collection.Name);
-	try
+	void DoOneSyncPass()
 	{
 		Access.Rights rights = ss.Start();
-		Log.Spew("-------- started sync pass for collection {0}", collection.Name);
-
 		if (rights == Access.Rights.Deny)
 		{
 			Log.Error("Sync with collection {0} denied", collection.Name);
 			return;
 		}
 
-		Log.Spew("-------- starting dredge for collection {0}", collection.Name);
-		//TODO: what happened to SyncOperatorRole?
-		//collection.StoreReference.ImpersonateUser(Access.SyncOperatorRole);
-		new Dredger(collection, false);
+		//TODO: we don't know the previous state of collection identity, will this always work?
+		collection.StoreReference.Revert();
 
-		Log.Spew("-------- completed dredge for collection {0}", collection.Name);
+		new Dredger(collection, false);
 
 		SyncIncomingNode inNode = new SyncIncomingNode(collection, false);
 		SyncOutgoingNode outNode = new SyncOutgoingNode(collection);
 		SyncOps ops = new SyncOps(collection, false);
-
+		largeFromServer = new ArrayList();
+		smallFromServer = new ArrayList();
+		nonFileFromServer = new ArrayList();
+		largeToServer = new ArrayList();
+		smallToServer = new ArrayList();
+		nonFileToServer = new ArrayList();
+		killOnClient = new ArrayList();
 
 		NodeStamp[] sstamps = ss.GetNodeStamps();
-		Log.Spew("-------- got local node stamps for collection {0}", collection.Name);
-
 		NodeStamp[] cstamps = ops.GetNodeStamps();
-		Log.Spew("-------- got server node stamps for collection {0}", collection.Name);
 
-		ArrayList largeFromServer = new ArrayList();
-		ArrayList smallFromServer = new ArrayList();
-		ArrayList killOnServer = new ArrayList();
-		ArrayList killOnClient = new ArrayList();
-		ArrayList smallToServer = new ArrayList();
-		ArrayList largeToServer = new ArrayList();
 		int si = 0, ci = 0;
 		int sCount = sstamps.Length, cCount = cstamps.Length;
-
-		Log.Spew("Got {0} NodeStamps from server, {1} from client", sCount, cCount);
-
-		//Log.Spew("Got {0} NodeStamps from server", sCount);
-		//foreach (NodeStamp stamp in sstamps)
-		//	Log.Spew("{0} {1}", stamp.id.s, stamp.name);
-		//Log.Spew("Got {0} NodeStamps from client", cCount);
-		//foreach (NodeStamp stamp in cstamps)
-		//	Log.Spew("{0} {1}", stamp.id.s, stamp.name);
 
 		Log.Spew("Got {0} nodes in chunk from server, {1} from client", sCount, cCount);
 
@@ -375,13 +377,10 @@ public class SynkerWorkerA: SyncCollectionWorker
 				if (cstamps[ci].masterIncarn == 0
 						&& cstamps[ci].localIncarn != UInt64.MaxValue
 						&& rights != Access.Rights.ReadOnly)
-				{
-					Log.Spew("{1} '{0}' is new on the client, send to server", cstamps[ci].name,  cstamps[ci].id);
-					AddToUpdateList(cstamps[ci], smallToServer, largeToServer);
-				}
+					PutNodeToServer(ref cstamps[ci], "is new on the client, send to server");
 				else
 				{
-					Log.Spew("{1} '{0}' has been killed or synced before or is RO, but is not on the server, just kill it locally",
+					Log.Spew("{1} {0} has been killed or synced before or is RO, but is not on the server, just kill it locally",
 							cstamps[ci].name, cstamps[ci].id);
 					killOnClient.Add(cstamps[ci].id);
 				}
@@ -390,45 +389,40 @@ public class SynkerWorkerA: SyncCollectionWorker
 			else if (ci == cCount || cstamps[ci].CompareTo(sstamps[si]) > 0)
 			{
 				// node si exists on server but not client
-				Log.Spew("{1} '{0}' exists on server but not client, get it", sstamps[si].name, sstamps[si].id);
-				AddToUpdateList(sstamps[si], smallFromServer, largeFromServer);
-				si++;
+				GetNodeFromServer(ref sstamps[si++], "exists on server but not client, get it");
 			}
 			else
 			{
+				Log.Assert(ci < cCount && si < sCount && cstamps[ci].CompareTo(sstamps[si]) == 0);
 				if (cstamps[ci].localIncarn == UInt64.MaxValue)
 				{
 					if (rights == Access.Rights.ReadOnly)
 					{
-						ops.DeleteSpuriousNode(cstamps[ci].id);
-						Log.Spew("{1} '{0}' reconstitute from server after illegal delete", cstamps[ci].name, cstamps[ci].id);
-						AddToUpdateList(cstamps[ci], smallFromServer, largeFromServer);
+						ops.DeleteNode(cstamps[ci].id, false);
+						GetNodeFromServer(ref sstamps[si], "reconstitute from server after illegal delete");
 					}
 					else
 					{
-						Log.Spew("{1} '{0}' is local tombstone, delete on server", sstamps[si].name, sstamps[si].id);
-						killOnServer.Add(cstamps[ci].id);
+						Log.Assert(cstamps[ci].streamsSize == -1);
+						PutNodeToServer(ref cstamps[ci], "is local tombstone, delete on server");
 					}
 				}
 				else if (sstamps[si].localIncarn != cstamps[ci].masterIncarn)
 				{
 					Log.Assert(sstamps[si].localIncarn > cstamps[ci].masterIncarn);
-					Log.Spew("{2} '{0}' has changed on server, get incarn {1}", sstamps[si].name, sstamps[si].localIncarn, sstamps[si].id);
-					AddToUpdateList(sstamps[si], smallFromServer, largeFromServer);
+					GetNodeFromServer(ref sstamps[si], "has changed on server, get it");
 				}
 				else if (cstamps[ci].localIncarn != cstamps[ci].masterIncarn)
 				{
 					if (rights == Access.Rights.ReadOnly)
 					{
-						ops.DeleteSpuriousNode(cstamps[ci].id);
-						Log.Spew("{1} '{0}' reconstitute from server after illegal update", cstamps[ci].name, cstamps[ci].id);
-						AddToUpdateList(cstamps[ci], smallFromServer, largeFromServer);
+						ops.DeleteNode(cstamps[ci].id, false);
+						GetNodeFromServer(ref sstamps[si], "reconstitute from server after illegal update");
 					}
 					else
 					{
 						Log.Assert(cstamps[ci].localIncarn > cstamps[ci].masterIncarn);
-						Log.Spew("{2} '{0}' has changed, send incarn {1} to server", cstamps[ci].name, cstamps[ci].localIncarn, cstamps[ci].id);
-						AddToUpdateList(cstamps[ci], smallToServer, largeToServer);
+						PutNodeToServer(ref cstamps[ci], "has changed locally, send to server");
 					}
 				}
 				ci++;
@@ -437,33 +431,26 @@ public class SynkerWorkerA: SyncCollectionWorker
 		}
 
 		// remove deleted nodes from client
-		Nid[] ids = MoveIdsToArray(killOnClient);
-		if (ids != null && ids.Length > 0)
-			ops.DeleteNodes(ids);
+		foreach (Nid nid in killOnClient)
+			ops.DeleteNode(nid, true);
 
-		// remove deleted nodes from server
-		ids = MoveIdsToArray(killOnServer);
-		if (ids != null && ids.Length > 0)
-		{
-			ss.DeleteNodes(ids);
-			ops.DeleteNodes(ids); // remove tombstones from client
-		}
-
-		// get small files from server
+		// get nonFiles and small files from server
 		NodeChunk[] updates = null;
-		ids = MoveIdsToArray(smallFromServer);
-		if (ids != null && ids.Length > 0)
+		if (nonFileFromServer.Count > 0 || smallFromServer.Count > 0)
+		{
+			int i = 0;
+			Nid[] ids = new Nid[nonFileFromServer.Count + smallFromServer.Count];
+			foreach (Nid nid in nonFileFromServer)
+				ids[i++] = nid;
+			foreach (Nid nid in smallFromServer)
+				ids[i++] = nid;
 			updates = ss.GetSmallNodes(ids);
+		}
 		if (updates != null && updates.Length > 0)
 			ops.PutSmallNodes(updates);
-		updates = null;
 
-		// push up small files
-		updates = null;
-		ids = MoveIdsToArray(smallToServer);
-		if (ids != null && ids.Length > 0)
-			updates = ops.GetSmallNodes(ids);
-		if (updates != null && updates.Length > 0)
+		// push up nonFiles and small files to server
+		if ((updates = ops.GetSmallNodes(nonFileToServer, smallToServer)) != null)
 		{
 			RejectedNode[] rejects = ss.PutSmallNodes(updates);
 			if (rejects == null)
@@ -477,26 +464,28 @@ public class SynkerWorkerA: SyncCollectionWorker
 					{
 						if (reject.nid == nc.node.ID)
 						{
-							//if (reject.status == NodeStatus.FileSystemEntryCollision)
-							//	ops.DeleteSpuriousNode(reject.nid);
-							//else
-								Log.Spew("skipping update of incarnation for small node {0} due to {1} on server",
+							Log.Spew("skipping update of incarnation for small node {0} due to {1} on server",
 										reject.nid, reject.status);
 							updateIncarn = false;
 							break;
 						}
 					}
 					if (updateIncarn == true)
-						ops.UpdateIncarn((Nid)nc.node.ID);
+					{
+						if (collection.IsType(nc.node, NodeTypes.TombstoneType))
+							ops.DeleteNode((Nid)nc.node.ID, false);
+						else
+							ops.UpdateIncarn((Nid)nc.node.ID, nc.node.LocalIncarnation);
+					}
 				}
 			}
 		}
 
 		// push up large files
-		foreach (Nid nid in largeToServer)
+		foreach (NodeStamp stamp in largeToServer)
 		{
 			Node node;
-			if ((node = outNode.Start(nid)) == null)
+			if ((node = outNode.Start(stamp.id)) == null)
 				continue;
 
 			int totalSize;
@@ -516,16 +505,12 @@ public class SynkerWorkerA: SyncCollectionWorker
 						break;
 					ss.WriteLargeNode(chunks, 0, false);
 				}
-			//TODO: fill in expectedIncarn here
-			NodeStatus status = ss.WriteLargeNode(chunks, 0, true);
-			switch (status)
-			{
-				case NodeStatus.Complete: ops.UpdateIncarn(nid); break;
-				//case NodeStatus.FileSystemEntryCollision: ops.DeleteSpuriousNode(nid); break;
-				default: Log.Spew("skipping update of incarnation for large node {0} due to {1}", node.Name, status); break;
-			}
+			NodeStatus status = ss.WriteLargeNode(chunks, stamp.masterIncarn, true);
+			if (status == NodeStatus.Complete)
+				ops.UpdateIncarn((Nid)node.ID, node.LocalIncarnation);
+			else
+				Log.Spew("skipping update of incarnation for large node {0} due to {1}", node.Name, status);
 		}
-		largeToServer.Clear();
 
 		// get large files from server
 		foreach (Nid nid in largeFromServer)
@@ -541,23 +526,10 @@ public class SynkerWorkerA: SyncCollectionWorker
 				foreach (ForkChunk chunk in nc.forkChunks)
 					nc.totalSize += chunk.data.Length;
 			}
-			//TODO: fill in expectedIncarn here
 			NodeStatus status = inNode.Complete(0);
-			switch (status)
-			{
-				case NodeStatus.Complete: break;
-				default: Log.Spew("skipping update of incarnation for large node {0} due to update {1}", nid, status); break;
-			}
+			if (status != NodeStatus.Complete)
+				Log.Spew("skipping update of incarnation for large node {0} due to update {1}", nid, status);
 		}
-		largeFromServer.Clear();
-	}
-	catch (Exception e)
-	{
-		Log.Spew("Uncaught exception in DoSyncWork: {0}", e.Message);
-		Log.Spew(e.StackTrace);
-	}
-	catch { Log.Spew("Uncaught foreign exception in DoSyncWork"); }
-	Log.Spew("-------- end of sync pass for collection {0}", collection.Name);
 	}
 }
 

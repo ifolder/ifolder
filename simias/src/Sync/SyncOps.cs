@@ -47,9 +47,6 @@ public enum NodeStatus
 	/// <summary> node update was aborted due to update from other client </summary>
 	UpdateCollision,
 
-	/// <summary> node update was aborted due to other node referencing same file </summary>
-	//FileSystemEntryCollision,
-
 	/// <summary> node update was probably unsuccessful, unhandled exception on the server </summary>
 	ServerFailure,
 
@@ -128,7 +125,8 @@ public struct NodeStamp: IComparable
 	// if localIncarn == UInt64.MaxValue, node is a tombstone
 	internal ulong localIncarn, masterIncarn;
 
-	// total size of all streams
+	// total size of all streams, expected to be used for sync progress meter
+	// if -1, this node is not derived from BaseFileNode.
 	internal long streamsSize;
 
 	internal string name; //just for debug
@@ -360,30 +358,11 @@ internal class SyncIncomingNode
 		}
 	}
 
-	public NodeStatus Complete(ulong expectedIncarn)
+	void CommitFile()
 	{
-		Log.Spew("importing {0} {1} to collection {2}", node.Name, node.ID, collection.Name);
-
-		/* TODO: this is a problem because we cannot lock curNode until commit
-		 *       could ImportNode do this for us?
-		 */
-		Node curNode = collection.GetNodeByID(node.ID);
-		if (curNode != null && curNode.LocalIncarnation != expectedIncarn)
-		{
-			if (onServer)
-			{
-				Log.Spew("Rejecting update for node {0} due to update collision on server", node.Name);
-				CleanUp();
-				return NodeStatus.UpdateCollision;
-			}
-			//TODO: handle collision here
-			Log.Spew("Collision: overwriting local node {0} with node from server", node.Name);
-		}
-
 		//TODO: check here for whether the proposed file name is available, i.e. make current and proposed LocalFileName
-		string path = Path.Combine(parentPath, node.Name);
 		if (collection.IsType(node, typeof(DirNode).Name))
-			Directory.CreateDirectory(path);
+			Directory.CreateDirectory(Path.Combine(parentPath, node.Name));
 		else if (!collection.IsType(node, typeof(BaseFileNode).Name))
 			Log.Assert(forkList == null);
 		else
@@ -393,6 +372,7 @@ internal class SyncIncomingNode
 				fork.stream.Close();
 				fork.stream = null;
 			}
+			string path = Path.Combine(parentPath, node.Name);
 			Log.Spew("placing file {0}", path);
 			File.Delete(path); //TODO: delete current LocalFileName
 			fileInfo.MoveTo(path); //TODO: moved to proposed LocalFileName
@@ -401,12 +381,88 @@ internal class SyncIncomingNode
 			fileInfo.CreationTime = fnode.CreationTime;
 			fileInfo = null;
 		}
+	}
 
-		/* TODO: here is where we should commit or abort,
-		 *     returning NodeStatus.Complete or NodeStatus.UpdateCollision
+	public NodeStatus Complete(ulong expectedIncarn)
+	{
+		Log.Spew("importing {0} {1} to collection {2}", node.Name, node.ID, collection.Name);
+
+		if (!onServer)
+		{
+			/* TODO: handle collision here, see discussion of server side below
+			 *
+			 * current plans:
+			 *
+			 *     ImportNode just sets state and expected incarn
+			 *     Set flag on node that temp file is complete
+		     *     set master incarn to new local incarn (how to avoid merging this?)
+			 *     Attempt commit
+			 *     if (LocalIncarn != expectedIncarn)
+			 *         abort commit
+			 *         mark and commit old node as loser (if a new one comes in, it still loses)
+			 *         copy file to collision collection
+			 *         copy node to collision collection
+			 *     force commit of node
+			 *     CommitFile();
+			 *     clear and commit tempFile flag
+			 *     return NodeStatus.Complete
+			 *
+			 * perhaps rename loser file first (does fs support a double move?) and then
+			 * copy loser data. Set node in collision collections in same transaction?
+			 * perhaps do rename of old file, then exclusive open, then see if it's the right one
+			 *
+			 *  consider a delegate to call back within transaction to do file system stuff?
+			 *
+			 *  what are the rules for dredger, file change events, applications 
+			 *  and concurrent clients accessing this collection on the server?
+			 */
+			Log.Spew("Collision: overwriting local node {0} with node from server", node.Name);
+			collection.ImportNode(node);
+			node.IncarnationUpdate = node.LocalIncarnation;
+			CommitFile();
+			collection.Commit(node);
+			return NodeStatus.Complete;
+		}
+
+		/* TODO: this is a problem because we cannot lock curNode until commit
+		 *     rearrange this code when ImportNode/Commit does this for us
+		 *
+		 *  first we need to check that we should even try to support
+		 *     absolute sync update consistency during power failure.
+		 *     (if lower levels will fail, why should we work so hard to succeed?)
+		 *  if we do need to recover from power failure in mid sync:
+		 *
+		 *  replace curNode in what follows with:
+		 *     ImportNode just sets state and expected incarn
+		 *     Set flag on node that temp file is complete
+		 *     Attempt commit
+		 *     if (LocalIncarn != expectedIncarn)
+		 *         delete temp file
+		 *         return NodeStatus.UpdateCollision;
+		 *     CommitFile();
+		 *     clear tempFile flag
+		 *
+		 *  On sync process startup, if sync ended abnormally
+		 *   (actually, sync could just always check for this flag and
+		 *    just handle it, depending on how we handle concurrent
+		 *    clients)
+		 *     for each file with tempFileComplete flag
+		 *         if temp file exists
+		 *             CommitFile()
+		 *         Clear tempFileFlag
+		 *
+		 *  what are the rules for dredger, file change events, applications 
+		 *  and concurrent clients accessing this collection on the server?
 		 */
+		Node curNode = collection.GetNodeByID(node.ID);
+		if (curNode != null && curNode.LocalIncarnation != expectedIncarn)
+		{
+			Log.Spew("Rejecting update for node {0} due to update collision on server", node.Name);
+			CleanUp();
+			return NodeStatus.UpdateCollision;
+		}
+		CommitFile();
 		collection.ImportNode(node);
-		node.IncarnationUpdate = node.LocalIncarnation;
 		collection.Commit(node);
 		return NodeStatus.Complete;
 	}
@@ -433,23 +489,21 @@ internal class SyncOps
 
 		foreach (Node node in collection)
 		{
-			bool tombstone = collection.IsTombstone(node);
+			bool tombstone = collection.IsType(node, NodeTypes.TombstoneType);
 			if (onServer && tombstone)
 				continue;
 			NodeStamp stamp = new NodeStamp();
 			stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
 			stamp.masterIncarn = node.MasterIncarnation;
 			stamp.id = new Nid(node.ID);
-			stamp.streamsSize = 0;
 			stamp.name = node.Name;
-			BaseFileNode bfn = node as BaseFileNode;
 
 			//TODO: another place to handle multiple forks
-			if (bfn != null)
-			{
-				FileInfo fi = new FileInfo(bfn.GetFullPath(collection));
-				stamp.streamsSize += fi.Length;
-			}
+			BaseFileNode bfn = node as BaseFileNode;
+			if (bfn == null)
+				stamp.streamsSize = -1;
+			else
+				stamp.streamsSize = new FileInfo(bfn.GetFullPath(collection)).Length;
 			
 			stampList.Add(stamp);
 		}
@@ -459,80 +513,102 @@ internal class SyncOps
 		return (NodeStamp[])stampList.ToArray(typeof(NodeStamp));
 	}
 
-
-	void DeleteNode(Node node)
-	{
-		Node[] deleted = collection.Delete(node, PropertyTags.Parent);
-		collection.Commit(deleted);
-		if (onServer)
-		{
-			foreach (Node del in deleted)
-				collection.Delete(del); // don't leave a tombstone on the server
-			collection.Commit(deleted);
-		}
-	}
-
 	/// <summary>
-	/// deletes a list of nodes from a collection and removes the tombstones
+	/// deletes a list of nodes from a collection and deals with
+	/// tombstones, files, and directories
 	/// </summary>
-	public void DeleteNodes(Nid[] nids)
-	{
-		foreach (Nid nid in nids)
-		{
-			Node node = collection.GetNodeByID(nid);
-			if (node == null)
-				Log.Spew("ignoring attempt to delete non-existent node {0}", nid);
-			else
-			{
-				//TODO: another place to handle multiple forks
-				BaseFileNode bfn = node as BaseFileNode;
-				if (bfn != null)
-					File.Delete(bfn.GetFullPath(collection));
-
-				DeleteNode(node);
-			}
-		}
-	}
-
-	/// <summary>
-	/// deletes a node that is colliding with another node due to a FileSystemEntry collision.
-	/// </summary>
-	public void DeleteSpuriousNode(Nid nid)
+	public void DeleteNode(Nid nid, bool whackFile)
 	{
 		Node node = collection.GetNodeByID(nid);
 		if (node == null)
-			Log.Spew("ignoring attempt to delete non-existent spurious node {0}", nid);
-		else
 		{
-			Log.Spew("deleting spurious node {0}", node.Name);
-			DeleteNode(node);
+			Log.Spew("ignoring attempt to delete non-existent node {0}", nid);
+			return;
 		}
+
+		if (whackFile)
+		{
+			//TODO: another place to handle multiple forks
+			BaseFileNode bfn = node as BaseFileNode;
+			if (bfn != null)
+				File.Delete(bfn.GetFullPath(collection));
+			else
+			{
+				DirNode dn = node as DirNode;
+				if (dn != null)
+					Directory.Delete(dn.GetFullPath(collection));
+			}
+		}
+
+		Node[] deleted = collection.Delete(node, PropertyTags.Parent);
+		collection.Commit(deleted);
+
+		/* TODO: right now we never leave tombstones on the server. Fix this
+		 * such that we only leave tombstones when this collection has an
+		 * upstream master.
+		 */
+		if (onServer)
+			collection.Commit(collection.Delete(deleted));
+	}
+
+	/// <summary>
+	/// returns a node chunk
+	/// </summary>
+	public NodeChunk GetSmallNode(Nid nid)
+	{
+		SyncOutgoingNode ogn = new SyncOutgoingNode(collection);
+		NodeChunk chunk;
+		chunk.totalSize = 0;
+		chunk.forkChunks = null;
+		chunk.expectedIncarn = 0;
+		if ((chunk.node = ogn.Start(nid)) != null)
+		{
+			if ((chunk.forkChunks = ogn.ReadChunks(NodeChunk.MaxSize, out chunk.totalSize)) == null)
+				Log.Assert(chunk.totalSize == 0);
+			else if (chunk.totalSize >= NodeChunk.MaxSize)
+				/* the file grew larger than a SmallNode should handle,
+				 * indicate client should retry as large node
+				 */
+				chunk.forkChunks = null;
+		}
+		return chunk;
 	}
 
 	/// <summary>
 	/// returns array of nodes with stamp, metadata and file contents
+	/// this one takes Nids and does not fill in the expectedIncarn
+	/// in the NodeChunks -- only called on the server
 	/// </summary>
 	public NodeChunk[] GetSmallNodes(Nid[] nids)
 	{
-		SyncOutgoingNode ogn = new SyncOutgoingNode(collection);
 		NodeChunk[] chunks = new NodeChunk[nids.Length];
 		uint i = 0;
 		foreach (Nid nid in nids)
+			chunks[i++] = GetSmallNode(nid);
+		return chunks;
+	}
+
+	/// <summary>
+	/// returns array of nodes with stamp, metadata and file contents
+	/// this one takes NodeStamps and fills in the expectedIncarn
+	/// in the NodeChunks from the masterIncarn in the NodeStamp
+	///    -- only makes sense to be called on the client
+	/// </summary>
+	public NodeChunk[] GetSmallNodes(ArrayList stampsA, ArrayList stampsB)
+	{
+		if (stampsA.Count == 0 && stampsB.Count == 0)
+			return null;
+		NodeChunk[] chunks = new NodeChunk[stampsA.Count + stampsB.Count];
+		uint i = 0;
+		foreach (NodeStamp stamp in stampsA)
 		{
-			if ((chunks[i].node = ogn.Start(nid)) != null)
-			{
-				chunks[i].forkChunks = ogn.ReadChunks(NodeChunk.MaxSize, out chunks[i].totalSize);
-				if (chunks[i].forkChunks == null)
-					Log.Assert(chunks[i].totalSize == 0);
-				else if (chunks[i].totalSize >= NodeChunk.MaxSize)
-				{
-					/* the file grew larger than a SmallNode should handle,
-					 * tell client to add this to large node list
-					 */
-					chunks[i].forkChunks = null;
-				}
-			}
-			++i;
+			chunks[i] = GetSmallNode(stamp.id);
+			chunks[i++].expectedIncarn = stamp.masterIncarn;
+		}
+		foreach (NodeStamp stamp in stampsB)
+		{
+			chunks[i] = GetSmallNode(stamp.id);
+			chunks[i++].expectedIncarn = stamp.masterIncarn;
 		}
 		return chunks;
 	}
@@ -552,6 +628,12 @@ internal class SyncOps
 				Log.Spew("skipping update of node {0}, retry next sync", nc.node.Name);
 				continue;
 			}
+			if (collection.IsType(nc.node, NodeTypes.TombstoneType))
+			{
+				Log.Assert(onServer); // should not get tombstones on client from server
+				DeleteNode((Nid)nc.node.ID, true);
+				continue;
+			}
 			inNode.Start(nc.node);
 			inNode.BlowChunks(nc.forkChunks);
 			NodeStatus status = inNode.Complete(nc.expectedIncarn);
@@ -565,27 +647,12 @@ internal class SyncOps
 	/// only called on the client after the node has been updated on the
 	/// server. Just sets the MasterIncarnation to the LocalIncarnation
 	/// </summary>
-	public void UpdateIncarn(Nid nid)
+	public void UpdateIncarn(Nid nid, ulong masterIncarn)
 	{
 		Log.Assert(!onServer);
-		for (bool done = false; !done;)
-		{
-			Node node = collection.GetNodeByID(nid);
-
-			//TODO: review this
-
-			//NOTE: caller already has node, why not use it?
-			
-			//Log.Assert(node.MasterIncarnation == stamp.masterIncarn);
-			//bool wasUpdatedAgain = stamp.localIncarn != node.LocalIncarnation;
-			//if (!(done = node.UpdateIncarnation(stamp.localIncarn)))
-			//	node.Rollback();
-			//else if (wasUpdatedAgain)
-			//	node.Commit(); // increment LocalIncarnation
-
-			node.IncarnationUpdate = node.LocalIncarnation;
-			collection.Commit(node);
-		}
+		Node node = collection.GetNodeByID(nid);
+		node.IncarnationUpdate = masterIncarn;
+		collection.Commit(node);
 	}
 }
 
