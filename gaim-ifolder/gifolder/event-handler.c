@@ -267,8 +267,6 @@ void
 simias_buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
 {
 	const char *prpl_id;
-	char *buddy_profile;
-	char *simias_plugin_installed;
 
 	/* Only do anything if this is an AOL (prpl-oscar) buddy */
 	prpl_id = gaim_account_get_protocol_id(buddy->account);
