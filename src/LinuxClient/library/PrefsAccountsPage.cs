@@ -38,6 +38,7 @@ namespace Novell.iFolder
 	public class PrefsAccountsPage : VBox
 	{
 		private Gtk.Window				topLevelWindow;
+		private iFolderData				ifdata;
 		private iFolderWebService		ifws;
 		private SimiasWebService		simws;
 
@@ -64,7 +65,6 @@ namespace Novell.iFolder
 
 		private string		curDomainPassword;
 		private DomainWeb	curDomain;
-		private DomainWeb	defaultDomain;
 
 		/// <summary>
 		/// Default constructor for iFolderAccountsPage
@@ -79,6 +79,7 @@ namespace Novell.iFolder
 			simws.Url = Simias.Client.Manager.LocalServiceUrl.ToString() +
 					"/Simias.asmx";
 
+			ifdata = iFolderData.GetData();
 
 			InitializeWidgets();
 			this.Realized += new EventHandler(OnRealizeWidget);
@@ -284,31 +285,14 @@ namespace Novell.iFolder
 		{
 			// Read all current domains before letting them create
 			// a new ifolder
-			defaultDomain = null;
-			try
-			{
-				DomainWeb[] domains;
-				domains = ifws.GetDomains();
 
-				foreach(DomainWeb dom in domains)
-				{
-					// temporary hack until we get flag to remove
-					// local domains
-					if(dom.ID != "363051d1-8841-4c7b-a1dd-71abbd0f4ada")
-						AccTreeStore.AppendValues(dom);
+			DomainWeb[] domains = ifdata.GetDomains();
 
-					if(dom.IsDefault)
-						defaultDomain = dom;
-				}
-			}
-			catch(Exception e)
+			foreach(DomainWeb dom in domains)
 			{
-				iFolderExceptionDialog ied = new iFolderExceptionDialog(
-													topLevelWindow, e);
-				ied.Run();
-				ied.Hide();
-				ied.Destroy();
-				return;
+				// only show Domains that are slaves (not on this machine)
+				if(dom.IsSlave)
+					AccTreeStore.AppendValues(dom);
 			}
 
  			detailsFrame.Sensitive = false;
@@ -446,6 +430,8 @@ namespace Novell.iFolder
 						return;
 					}
 
+					ifdata.RemoveDomain(dom.ID);
+
 					AccTreeStore.Remove(ref iter);
 					curDomain = null;
 					detailsFrame.Sensitive = false;
@@ -494,7 +480,7 @@ namespace Novell.iFolder
 				DomainWeb dom = 
 						(DomainWeb) tModel.GetValue(iter, 0);
 
-				AccountDialog accDialog = new AccountDialog(ifws, dom);
+				AccountDialog accDialog = new AccountDialog(dom);
 				accDialog.TransientFor = topLevelWindow;
 				accDialog.Run();
 				accDialog.Hide();
@@ -624,7 +610,7 @@ namespace Novell.iFolder
 					savePasswordButton.Active = false;
 				}
 
-				autoLoginButton.Active = dom.IsConnected;
+				autoLoginButton.Active = dom.IsEnabled;
 				defaultAccButton.Active = dom.IsDefault;
 				defaultAccButton.Sensitive = !dom.IsDefault;
 
@@ -651,11 +637,11 @@ namespace Novell.iFolder
 										passEntry.Text,
 										serverEntry.Text);
 	
+					ifdata.AddDomain(dw);
+
 					NewAccountMode = false;
 					TreeIter iter = AccTreeStore.AppendValues(dw);
 					TreeSelection sel = AccTreeView.Selection;
-					if(defaultDomain != null)
-						defaultDomain.IsDefault = false;
 					curDomain = dw;
 
 					if(savePasswordButton.Active == true)
@@ -793,19 +779,19 @@ namespace Novell.iFolder
 			// it will be handled at creation time
 			if(!NewAccountMode)
 			{
-				if(autoLoginButton.Active != curDomain.IsConnected)
+				if(autoLoginButton.Active != curDomain.IsEnabled)
 				{
 					try
 					{
 						if(autoLoginButton.Active)
 						{
 							ifws.SetDomainActive(curDomain.ID);
-							curDomain.IsConnected = true;
+							curDomain.IsEnabled = true;
 						}
 						else
 						{
 							ifws.SetDomainInactive(curDomain.ID);
-							curDomain.IsConnected = false;
+							curDomain.IsEnabled = false;
 						}
 					}
 					catch (Exception ex)
@@ -825,18 +811,8 @@ namespace Novell.iFolder
 				if( (defaultAccButton.Active != curDomain.IsDefault) &&
 					(defaultAccButton.Active == true ) )
 				{
-					try
-					{
-						ifws.SetDefaultDomain(curDomain.ID);
-						curDomain.IsDefault = true;
-						defaultDomain.IsDefault = false;
-						defaultDomain = curDomain;
-						defaultAccButton.Sensitive = false;
-					}
-					catch (Exception ex)
-					{
-						// Ignore this error for now 
-					}
+					defaultAccButton.Sensitive = 
+							ifdata.SetDefaultDomain(curDomain);
 				}
 			}
 		}
