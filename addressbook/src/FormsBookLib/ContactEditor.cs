@@ -2119,6 +2119,23 @@ namespace Novell.iFolder.FormsBookLib
 		#region Event Handlers
 		private void ContactEditor_Load(object sender, System.EventArgs e)
 		{
+			// Load the application icon.
+			try
+			{
+				if (loadPath != null)
+				{
+					this.Icon = new Icon(Path.Combine(loadPath, @"res\ifolder_contact_card.ico"));
+				}
+				else
+				{
+					this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_contact_card.ico"));
+				}
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "Loading icon");
+			}
+
 			// Initialize the labels
 			emailLabel1.SelectedIndex = 0;
 			emailLabel2.SelectedIndex = 1;

@@ -26,6 +26,7 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.IO;
 using Novell.AddressBook;
 using Simias;
 
@@ -457,6 +458,16 @@ namespace Novell.iFolder.FormsBookLib
 
 		private void ContactPicker_Load(object sender, System.EventArgs e)
 		{
+			// Load the application icon.
+			try
+			{
+				this.Icon = new Icon(Path.Combine(LoadPath, @"res\ifolder_contact_card.ico"));
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "Loading icon");
+			}
+
 			this.addedContacts.SmallImageList = this.booksContacts.ContactImageList;
 			this.toolBar1.ImageList = addedContacts.SmallImageList;
 			toolBar1.Buttons[0].ImageIndex = 2;
