@@ -1977,7 +1977,8 @@ namespace Simias.Storage.Tests
 			{
 				Member member = collection.GetCurrentMember();
 				FileTypeEntry[] dfte = new FileTypeEntry[] { new FileTypeEntry( ".mP3$", false, true ), 
-															 new FileTypeEntry( ".avi$", false ) };
+															 new FileTypeEntry( ".avi$", false ),
+															 new FileTypeEntry( ".", true ) };
 
 				// Create a system-wide file filter policy.
 				FileTypeFilter.Create( store.DefaultDomain, dfte );
@@ -1998,7 +1999,7 @@ namespace Simias.Storage.Tests
 				}
 
 				// Create an additive filter.
-				FileTypeEntry[] lfte = new FileTypeEntry[] { new FileTypeEntry( ".mov", false ) };
+				FileTypeEntry[] lfte = new FileTypeEntry[] { new FileTypeEntry( ".mov$", false, true ) };
 
 				// Apply a file type filter on the current user on this machine.
 				FileTypeFilter.Create( lfte );
@@ -2007,7 +2008,7 @@ namespace Simias.Storage.Tests
 				ftf = FileTypeFilter.Get( member );
 				
 				// Check the aggregate list.
-				if ( ftf.FilterList.Length != 3 )
+				if ( ftf.FilterList.Length != 4 )
 				{
 					throw new ApplicationException( "Aggregate member filter not set." );
 				}
@@ -2026,14 +2027,14 @@ namespace Simias.Storage.Tests
 
 
 				// Apply a filter on the collection.
-				FileTypeEntry[] cfte = new FileTypeEntry[] { new FileTypeEntry( ".wav", false ) };
+				FileTypeEntry[] cfte = new FileTypeEntry[] { new FileTypeEntry( ".wav$", false, true ) };
 				FileTypeFilter.Create( collection, cfte );
 
 				// Get a quota object.
 				ftf = FileTypeFilter.Get( member, collection );
 				
 				// Check the aggregate list.
-				if ( ftf.FilterList.Length != 4 )
+				if ( ftf.FilterList.Length != 5 )
 				{
 					throw new ApplicationException( "Aggregate collection filter not set." );
 				}
@@ -2055,7 +2056,7 @@ namespace Simias.Storage.Tests
 				POBox.POBox.GetPOBox( store, store.DefaultDomain, member.UserID );
 
 				// Reset the member's filter to allow only .doc files.
-				FileTypeEntry[] mfte = new FileTypeEntry[] { new FileTypeEntry( ".doc", true ) };
+				FileTypeEntry[] mfte = new FileTypeEntry[] { new FileTypeEntry( ".doc$", true, true ) };
 				FileTypeFilter.Create( member, mfte );
 
 				// Get a filter object.

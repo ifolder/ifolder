@@ -16,7 +16,7 @@ namespace Simias.Policy
 		/// <summary>
 		/// File extension to add as filter.
 		/// </summary>
-		private string fileNameExtension;
+		private string fileName;
 
 		/// <summary>
 		/// If true then file extension will be allowed to pass through the filter
@@ -36,7 +36,7 @@ namespace Simias.Policy
 		/// </summary>
 		public string Name
 		{
-			get { return fileNameExtension; }
+			get { return fileName; }
 		}
 
 		/// <summary>
@@ -60,24 +60,24 @@ namespace Simias.Policy
 		/// <summary>
 		/// Initializes an instance of the object.
 		/// </summary>
-		/// <param name="fileNameExtension">Filename extension to use as a filter.</param>
+		/// <param name="fileName">Filename to use as a filter. Can be a regular expression.</param>
 		/// <param name="allowed">If true then all files that have extensions that match the 
 		/// fileNameExtension parameter will be allowed to pass through the filter.</param>
-		public FileTypeEntry( string fileNameExtension, bool allowed ) :
-			this ( fileNameExtension, allowed, false )
+		public FileTypeEntry( string fileName, bool allowed ) :
+			this ( fileName, allowed, false )
 		{
 		}
 
 		/// <summary>
 		/// Initializes an instance of the object.
 		/// </summary>
-		/// <param name="fileNameExtension">Filename extension to use as a filter.</param>
+		/// <param name="fileName">Filename to use as a filter. Can be a regular expression.</param>
 		/// <param name="allowed">If true then all files that have extensions that match the 
 		/// fileNameExtension parameter will be allowed to pass through the filter.</param>
 		/// <param name="ignoreCase">If true filter comparision will be case-insensitive.</param>
-		public FileTypeEntry( string fileNameExtension, bool allowed, bool ignoreCase )
+		public FileTypeEntry( string fileName, bool allowed, bool ignoreCase )
 		{
-			this.fileNameExtension = fileNameExtension;
+			this.fileName = fileName;
 			this.allowed = allowed;
 			this.ignoreCase = ignoreCase;
 		}
