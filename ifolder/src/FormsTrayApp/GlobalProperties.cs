@@ -360,8 +360,8 @@ namespace Novell.FormsTrayApp
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tabPage1);
-			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Controls.Add(this.tabPage3);
+			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Controls.Add(this.tabPage5);
 			this.tabControl1.Location = new System.Drawing.Point(8, 72);
 			this.tabControl1.Name = "tabControl1";
@@ -554,7 +554,6 @@ namespace Novell.FormsTrayApp
 			// 
 			this.autoSync.Checked = true;
 			this.autoSync.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.autoSync.Enabled = false;
 			this.autoSync.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.autoSync.Location = new System.Drawing.Point(16, 80);
 			this.autoSync.Name = "autoSync";
@@ -1346,6 +1345,7 @@ namespace Novell.FormsTrayApp
 
 				// Display the default sync interval.
 				defaultInterval.Value = (decimal)ifWebService.GetDefaultSyncInterval();
+				autoSync.Checked = defaultInterval.Value != System.Threading.Timeout.Infinite;
 
 				autoStart.Checked = isRunEnabled();
 
@@ -1668,6 +1668,10 @@ namespace Novell.FormsTrayApp
 		private void autoSync_CheckedChanged(object sender, System.EventArgs e)
 		{
 			defaultInterval.Enabled = autoSync.Checked;
+			if (!autoSync.Checked)
+			{
+				defaultInterval.Value = System.Threading.Timeout.Infinite;
+			}
 		}
 		#endregion
 

@@ -329,7 +329,7 @@ namespace Novell.iFolderCom
 																		   0,
 																		   0,
 																		   0});
-			this.syncInterval.Location = new System.Drawing.Point(144, 56);
+			this.syncInterval.Location = new System.Drawing.Point(144, 54);
 			this.syncInterval.Maximum = new System.Decimal(new int[] {
 																		 86400,
 																		 0,
@@ -356,13 +356,13 @@ namespace Novell.iFolderCom
 			// 
 			this.autoSync.Checked = true;
 			this.autoSync.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.autoSync.Enabled = false;
 			this.autoSync.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.autoSync.Location = new System.Drawing.Point(16, 56);
 			this.autoSync.Name = "autoSync";
 			this.autoSync.Size = new System.Drawing.Size(160, 16);
 			this.autoSync.TabIndex = 1;
 			this.autoSync.Text = "Sync to host every:";
+			this.autoSync.CheckedChanged += new System.EventHandler(this.autoSync_CheckedChanged);
 			// 
 			// groupBox3
 			// 
@@ -857,6 +857,7 @@ namespace Novell.iFolderCom
 
 			// Get the refresh interval.
 			syncInterval.Value = (decimal)ifolder.SyncInterval;
+			autoSync.Checked = ifolder.SyncInterval != System.Threading.Timeout.Infinite;
 
 			// Show/hide the collision message.
 			showConflictMessage(ifolder.HasConflicts);
@@ -1751,6 +1752,19 @@ namespace Novell.iFolderCom
 		private void cancel_Click(object sender, System.EventArgs e)
 		{
 			this.Close();	
+		}
+
+		private void autoSync_CheckedChanged(object sender, System.EventArgs e)
+		{
+			syncInterval.Enabled = autoSync.Checked;
+			if (!autoSync.Checked)
+			{
+				syncInterval.Value = System.Threading.Timeout.Infinite;
+			}
+
+			// Enable the apply button if the user checked/unchecked the box.
+			if (autoSync.Focused)
+				apply.Enabled = true;
 		}
 
 		private void syncInterval_ValueChanged(object sender, System.EventArgs e)
