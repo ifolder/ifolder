@@ -174,6 +174,16 @@ namespace Simias.Web
 		{
 			ArrayList nodeList = new ArrayList();
 
+			// if they are attempting to create a Collection using
+			// a path, then check to see if that path can be used
+			if(	UnmanagedFiles && (CollectionPath != null) )
+			{
+				if( CanBeCollection( CollectionPath )  == false )
+				{
+					throw new Exception("Path is either a parent or child of an existing Collection.  Collections cannot be nested");
+				}
+			}
+
 			Configuration config = Configuration.GetConfiguration();
 			Store store = Store.GetStore();
 
@@ -237,6 +247,174 @@ namespace Simias.Web
 					member, SubscriptionStates.Ready);
 
 			return c;
+		}
+
+
+
+
+		/// <summary>
+		/// Checks whether it is valid to make a given directory a
+		/// Collection
+		/// </summary>
+		/// <param name="path">
+		/// An absolute path to check.
+		/// </param>
+		/// <returns>
+		/// True if the path can be a Collection, otherwise false
+		/// </returns>
+		/// <remarks>
+		/// Nested Collections (iFolder) are not permitted.  The path is
+		/// checked to see if it is within, or contains, a Collection .
+		/// </remarks>
+		public static bool CanBeCollection( string path )
+		{
+			bool canBeCollection = true;
+			Store store = Store.GetStore();
+
+			// Make sure the paths end with a separator.
+			// Create a normalized path that can be compared on any platform.
+			Uri nPath = GetUriPath(path);
+
+			// CRG: There was some code in here to check for allowed types of
+			// paths but it was Linux specific so I didn't include it from
+			// the source in iFolderManager
+			foreach(ShallowNode sn in store)
+			{
+				Collection col = store.GetCollectionByID(sn.ID);
+				DirNode dirNode = col.GetRootDirectory();
+				if(dirNode != null)
+				{
+					Uri colPath = GetUriPath( dirNode.GetFullPath(col) );
+
+					if(nPath.LocalPath.StartsWith( colPath.LocalPath ) || 
+						colPath.LocalPath.StartsWith( nPath.LocalPath ) )
+					{
+						canBeCollection = false;
+						break;
+					}
+				}
+			}
+			return canBeCollection;
+		}
+
+
+
+
+		/// <summary>
+		/// Generates a comparable URI path
+		/// </summary>
+		/// <param name="path">
+		/// Path to build URI from
+		/// </param>
+		/// <returns>
+		/// Uri that can be compared against another Uri
+		/// </returns>
+		public static Uri GetUriPath(string path)
+		{
+			Uri uriPath = new Uri( path.EndsWith(
+								Path.DirectorySeparatorChar.ToString()) ?
+								path :
+								path + Path.DirectorySeparatorChar.ToString());
+			return uriPath;
+		}
+
+
+
+
+		/// <summary>
+		/// Checks whether a given path is within an existing Collection.
+		/// </summary>
+		/// <param name="path">
+		/// An absolute path to check.
+		/// </param>
+		/// <returns>
+		/// <b>true</b> if <paramref name="path"/> is in a Collection;
+		/// otherwise, <b>false</b>.
+		/// </returns>
+		public static bool IsPathInCollection( string path )
+		{
+			bool inCollection = false;
+			Store store = Store.GetStore();
+
+			// Create a normalized path that can be compared on any platform.
+			Uri nPath = GetUriPath( path );
+
+			foreach(ShallowNode sn in store)
+			{
+				Collection col = store.GetCollectionByID(sn.ID);
+				DirNode dirNode = col.GetRootDirectory();
+				if(dirNode != null)
+				{
+					Uri colPath = GetUriPath( dirNode.GetFullPath(col) );
+					if(nPath.LocalPath.StartsWith( colPath.LocalPath ) )
+					{
+						inCollection = true;
+						break;
+					}
+				}
+			}
+			return inCollection;
+		}
+
+
+
+
+		/// <summary>
+		/// Checks whether a given directory is a Collection
+		/// </summary>
+		/// <param name="path">
+		/// An absolute path to check.
+		/// </param>
+		/// <returns>
+		/// <b>true</b> if <paramref name="path"/> is a Collection;
+		/// otherwise, <b>false</b>.
+		/// </returns>
+		public static bool IsCollection( string path )
+		{
+			return ( GetCollectionByPath( path ) != null ) ? true : false;
+		}
+
+
+
+
+		/// <summary>
+		/// Get a Collection by it's local path
+		/// </summary>
+		/// <param>
+		/// The rooted local path of the Collection.
+		/// </param>
+		/// <returns>
+		/// A Collection object if found
+		/// </returns>
+		public static Collection GetCollectionByPath( string path )
+		{
+			Collection col = null;
+			Uri nPath = GetUriPath( path );
+
+			Store store = Store.GetStore();
+
+			// In the old iFolder code we used to get the Collection by
+			// name and use the filename on the path passed in.  That 
+			// will not work because the name of the collection does
+			// not have to be the name of the directory that contains it
+			foreach(ShallowNode sn in store)
+			{
+				Collection tmpCol = store.GetCollectionByID(sn.ID);
+				DirNode dirNode = tmpCol.GetRootDirectory();
+				if(dirNode != null)
+				{
+					Uri colPath = GetUriPath( dirNode.GetFullPath(tmpCol) );
+					// Compare the two paths and ignore the case if our
+					// platform is not Unix
+					if ( String.Compare( nPath.LocalPath, colPath.LocalPath, 
+							!MyEnvironment.Unix ) == 0 )
+					{
+						col = tmpCol;
+						break;
+					}
+				}
+			}
+			return col;
 		}
 
 
