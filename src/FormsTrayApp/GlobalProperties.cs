@@ -31,6 +31,7 @@ using System.Diagnostics;
 using Microsoft.Win32;
 using Simias;
 using Simias.Sync;
+using Simias.Service;
 using Novell.iFolder;
 
 namespace Novell.iFolder.FormsTrayApp
@@ -44,6 +45,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(FormsTrayApp));
 		private const string iFolderRun = "iFolder";
 
+		private Manager serviceManager = null;
 		private iFolderManager manager = null;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
@@ -77,12 +79,24 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuCreate;
 		private System.Windows.Forms.Label objectCount;
 		private System.Windows.Forms.Label byteCount;
+		private System.Windows.Forms.TabPage tabPage4;
+		private System.Windows.Forms.ListView services;
+		private System.Windows.Forms.ColumnHeader columnHeader2;
+		private System.Windows.Forms.ColumnHeader columnHeader3;
+		private System.Windows.Forms.ContextMenu contextMenu2;
+		private System.Windows.Forms.MenuItem menuStart;
+		private System.Windows.Forms.MenuItem menuPause;
+		private System.Windows.Forms.MenuItem menuStop;
+		private System.Windows.Forms.MenuItem menuRestart;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 		#endregion
 
+		/// <summary>
+		/// Instantiates a GlobalProperties object.
+		/// </summary>
 		public GlobalProperties()
 		{
 			//
@@ -141,6 +155,9 @@ namespace Novell.iFolder.FormsTrayApp
 			this.label4 = new System.Windows.Forms.Label();
 			this.iFolderView = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
+			this.menuOpen = new System.Windows.Forms.MenuItem();
+			this.menuCreate = new System.Windows.Forms.MenuItem();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -155,9 +172,15 @@ namespace Novell.iFolder.FormsTrayApp
 			this.syncNow = new System.Windows.Forms.Button();
 			this.label6 = new System.Windows.Forms.Label();
 			this.banner = new System.Windows.Forms.PictureBox();
-			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
-			this.menuOpen = new System.Windows.Forms.MenuItem();
-			this.menuCreate = new System.Windows.Forms.MenuItem();
+			this.tabPage4 = new System.Windows.Forms.TabPage();
+			this.services = new System.Windows.Forms.ListView();
+			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
+			this.contextMenu2 = new System.Windows.Forms.ContextMenu();
+			this.menuStart = new System.Windows.Forms.MenuItem();
+			this.menuPause = new System.Windows.Forms.MenuItem();
+			this.menuStop = new System.Windows.Forms.MenuItem();
+			this.menuRestart = new System.Windows.Forms.MenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -167,6 +190,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.groupBox2.SuspendLayout();
 			this.groupBox3.SuspendLayout();
 			this.tabPage3.SuspendLayout();
+			this.tabPage4.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -238,6 +262,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Controls.Add(this.tabPage3);
+			this.tabControl1.Controls.Add(this.tabPage4);
 			this.tabControl1.Location = new System.Drawing.Point(8, 65);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
@@ -319,6 +344,25 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			this.columnHeader1.Text = "iFolders";
 			this.columnHeader1.Width = 404;
+			// 
+			// contextMenu1
+			// 
+			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																						 this.menuOpen,
+																						 this.menuCreate});
+			// 
+			// menuOpen
+			// 
+			this.menuOpen.Index = 0;
+			this.menuOpen.Text = "&Open";
+			this.menuOpen.Visible = false;
+			this.menuOpen.Click += new System.EventHandler(this.menuOpen_Click);
+			// 
+			// menuCreate
+			// 
+			this.menuCreate.Index = 1;
+			this.menuCreate.Text = "&Create";
+			this.menuCreate.Click += new System.EventHandler(this.menuCreate_Click);
 			// 
 			// tabPage2
 			// 
@@ -467,24 +511,74 @@ namespace Novell.iFolder.FormsTrayApp
 			this.banner.TabIndex = 9;
 			this.banner.TabStop = false;
 			// 
-			// contextMenu1
+			// tabPage4
 			// 
-			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																						 this.menuOpen,
-																						 this.menuCreate});
+			this.tabPage4.Controls.Add(this.services);
+			this.tabPage4.Location = new System.Drawing.Point(4, 22);
+			this.tabPage4.Name = "tabPage4";
+			this.tabPage4.Size = new System.Drawing.Size(426, 333);
+			this.tabPage4.TabIndex = 3;
+			this.tabPage4.Text = "Services";
 			// 
-			// menuOpen
+			// services
 			// 
-			this.menuOpen.Index = 0;
-			this.menuOpen.Text = "&Open";
-			this.menuOpen.Visible = false;
-			this.menuOpen.Click += new System.EventHandler(this.menuOpen_Click);
+			this.services.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+																					   this.columnHeader2,
+																					   this.columnHeader3});
+			this.services.ContextMenu = this.contextMenu2;
+			this.services.FullRowSelect = true;
+			this.services.Location = new System.Drawing.Point(8, 16);
+			this.services.MultiSelect = false;
+			this.services.Name = "services";
+			this.services.Size = new System.Drawing.Size(408, 208);
+			this.services.TabIndex = 0;
+			this.services.View = System.Windows.Forms.View.Details;
+			this.services.SelectedIndexChanged += new System.EventHandler(this.services_SelectedIndexChanged);
 			// 
-			// menuCreate
+			// columnHeader2
 			// 
-			this.menuCreate.Index = 1;
-			this.menuCreate.Text = "&Create";
-			this.menuCreate.Click += new System.EventHandler(this.menuCreate_Click);
+			this.columnHeader2.Text = "Service";
+			this.columnHeader2.Width = 209;
+			// 
+			// columnHeader3
+			// 
+			this.columnHeader3.Text = "State";
+			this.columnHeader3.Width = 195;
+			// 
+			// contextMenu2
+			// 
+			this.contextMenu2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																						 this.menuStart,
+																						 this.menuPause,
+																						 this.menuStop,
+																						 this.menuRestart});
+			// 
+			// menuStart
+			// 
+			this.menuStart.Enabled = false;
+			this.menuStart.Index = 0;
+			this.menuStart.Text = "Start";
+			this.menuStart.Click += new System.EventHandler(this.menuStart_Click);
+			// 
+			// menuPause
+			// 
+			this.menuPause.Enabled = false;
+			this.menuPause.Index = 1;
+			this.menuPause.Text = "Pause";
+			// 
+			// menuStop
+			// 
+			this.menuStop.Enabled = false;
+			this.menuStop.Index = 2;
+			this.menuStop.Text = "Stop";
+			this.menuStop.Click += new System.EventHandler(this.menuStop_Click);
+			// 
+			// menuRestart
+			// 
+			this.menuRestart.Enabled = false;
+			this.menuRestart.Index = 3;
+			this.menuRestart.Text = "Restart";
+			this.menuRestart.Click += new System.EventHandler(this.menuRestart_Click);
 			// 
 			// GlobalProperties
 			// 
@@ -509,8 +603,19 @@ namespace Novell.iFolder.FormsTrayApp
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox3.ResumeLayout(false);
 			this.tabPage3.ResumeLayout(false);
+			this.tabPage4.ResumeLayout(false);
 			this.ResumeLayout(false);
 
+		}
+		#endregion
+
+		#region Properties
+		public Manager ServiceManager
+		{
+			set
+			{
+				serviceManager = value;
+			}
 		}
 		#endregion
 
@@ -570,6 +675,15 @@ namespace Novell.iFolder.FormsTrayApp
 					ListViewItem lvi = new ListViewItem(ifolder.Name, 0);
 					lvi.Tag = ifolder.ID;
 					iFolderView.Items.Add(lvi);
+				}
+
+				foreach (ServiceCtl svc in serviceManager)
+				{
+					ListViewItem lvi = new ListViewItem(new string[] {
+                                                                         svc.Name,
+																		 svc.State.ToString()}, 0);
+					lvi.Tag = svc;
+					services.Items.Add(lvi);
 				}
 			}
 			catch (SimiasException ex)
@@ -716,6 +830,57 @@ namespace Novell.iFolder.FormsTrayApp
 					break;
 				}
 			}
+		}
+
+		private void services_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			if (services.SelectedItems.Count == 1)
+			{
+				menuStart.Visible = menuPause.Visible = menuStop.Visible = menuRestart.Visible = true;
+				ListViewItem lvi = services.SelectedItems[0];
+/*				switch (lvi.SubItems[1].Text)
+				{
+					case "Stopped":
+                        menuStart.Enabled = true;
+						break;
+					case "Running":
+						menuStop.Enabled = menuRestart.Enabled = true;
+						break;
+				}*/
+			}
+			else
+			{
+				menuStart.Visible = menuPause.Visible = menuStop.Visible = menuRestart.Visible = false;
+			}
+		}
+
+		private void menuStart_Click(object sender, System.EventArgs e)
+		{
+			ListViewItem lvi = services.SelectedItems[0];
+			ServiceCtl svc = (ServiceCtl)lvi.Tag;
+
+			svc.Start();
+			lvi.SubItems[1].Text = svc.State.ToString();
+		}
+
+		private void menuRestart_Click(object sender, System.EventArgs e)
+		{
+			ListViewItem lvi = services.SelectedItems[0];
+			ServiceCtl svc = (ServiceCtl)lvi.Tag;
+
+			svc.Stop();
+			lvi.SubItems[1].Text = svc.State.ToString();
+			svc.Start();
+			lvi.SubItems[1].Text = svc.State.ToString();
+		}
+
+		private void menuStop_Click(object sender, System.EventArgs e)
+		{
+			ListViewItem lvi = services.SelectedItems[0];
+			ServiceCtl svc = (ServiceCtl)lvi.Tag;
+
+			svc.Stop();
+			lvi.SubItems[1].Text = svc.State.ToString();
 		}
 		#endregion
 	}
