@@ -818,8 +818,8 @@ namespace Novell.iFolderCom
 					items[0] = ifolderUser.Name;
 					// TODO: Localize
 					items[1] = ifolderUser.Name.Equals(ifolder.Owner) ? "Owner" : "";
-					int imageIndex;
-					items[2] = rightsToString(ifolderUser.Rights, out imageIndex);
+					int imageIndex = 1;
+					items[2] = rightsToString(ifolderUser.Rights/*, out imageIndex*/);
 
 					if ((currentUser != null) && currentUser.UserID.Equals(ifolderUser.UserID))
 					{
@@ -827,7 +827,7 @@ namespace Novell.iFolderCom
 					}
 					else if ((ifolderUser.State != null) && !ifolderUser.State.Equals(member))
 					{
-						imageIndex = 5;
+						imageIndex = 2;
 					}
 
 					ListViewItem lvitem = new ListViewItem(items, imageIndex);
@@ -912,9 +912,8 @@ namespace Novell.iFolderCom
 			Cursor = Cursors.Default;
 		}
 
-		private string rightsToString(string rights, out int imageIndex)
+		private string rightsToString(string rights/*, out int imageIndex*/)
 		{
-			// TODO: are the images going to go away?  ... the goofy looking read/write, etc.
 			string rightsString = null;
 
 			// TODO: Localize
@@ -923,25 +922,25 @@ namespace Novell.iFolderCom
 				case "Admin":
 				{
 					rightsString = "Full Control";
-					imageIndex = 3;
+					//imageIndex = 3;
 					break;
 				}
 				case "ReadWrite":
 				{
 					rightsString = "Read/Write";
-					imageIndex = 2;
+					//imageIndex = 2;
 					break;
 				}
 				case "ReadOnly":
 				{
 					rightsString = "Read Only";
-					imageIndex = 1;
+					//imageIndex = 1;
 					break;
 				}
 				default:
 				{
 					rightsString = "Unknown";
-					imageIndex = 4;
+					//imageIndex = 4;
 					break;
 				}
 			}
@@ -1139,8 +1138,8 @@ namespace Novell.iFolderCom
 		{
 			ShareListMember slMember = (ShareListMember)lvi.Tag;
 
-			int imageIndex;
-			string access = rightsToString(rights, out imageIndex);
+			//int imageIndex;
+			string access = rightsToString(rights/*, out imageIndex*/);
 
 			try
 			{
@@ -1168,7 +1167,7 @@ namespace Novell.iFolderCom
 					// Don't change the image if this item is not a member.
 					if (slMember.iFolderUser.State.Equals(member))
 					{
-						lvi.ImageIndex = imageIndex;
+						//lvi.ImageIndex = imageIndex;
 						// TODO: Localize
 						lvi.SubItems[1].Text = slMember.iFolderUser.Name.Equals(ifolder.Owner) ? "Owner" : "";
 					}
@@ -1242,11 +1241,11 @@ namespace Novell.iFolderCom
 				// Initialize the ImageList objects with icons.
 				string basePath = loadPath != null ? Path.Combine(loadPath, "res") : Path.Combine(Application.StartupPath, "res");
 				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_me_card.ico")));
-				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_read.ico")));
-				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_read_write.ico")));
-				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_full.ico")));
+				//contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_read.ico")));
+				//contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_read_write.ico")));
+				//contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_full.ico")));
 				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_card.ico")));
-				contactsImageList.Images.Add(new Icon(Path.Combine(Path.GetDirectoryName(basePath), "Invitation.ico")));
+				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "inviteduser.ico")));
 
 				//Assign the ImageList objects to the books ListView.
 				shareWith.SmallImageList = contactsImageList;
@@ -1362,13 +1361,12 @@ namespace Novell.iFolderCom
 					slMember.iFolderUser.Rights = "ReadWrite";
 					slMember.iFolderUser.State = "Inviting";
 
-					int imageIndex;
 					string[] items = new string[3];
 					items[0] = user.Name;
 					// TODO: Localize
 					items[1] = "Ready to invite";
-					items[2] = rightsToString(slMember.iFolderUser.Rights, out imageIndex);
-					ListViewItem lvitem = new ListViewItem(items, 5);
+					items[2] = rightsToString(slMember.iFolderUser.Rights);
+					ListViewItem lvitem = new ListViewItem(items, 2);
 					lvitem.Tag = slMember;
 					lvitem.Selected = true;
 					shareWith.Items.Add(lvitem);
