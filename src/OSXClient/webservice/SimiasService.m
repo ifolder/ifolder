@@ -181,8 +181,17 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
             &connectToDomainResponse);
  	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		if( (strstr(soap.fault->faultstring, "Domain") == soap.fault->faultstring) &&
+			(strstr(soap.fault->faultstring, "already exists") != NULL) )
+		{
+			[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"DomainExistsError"];
+		}
+		else
+		{
+			[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
 					format:@"Error in ConnectToDomain"];
+		}
 	}
 	else
 	{
