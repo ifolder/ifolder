@@ -94,6 +94,8 @@
 
 - (void)setupToolbar;
 
+- (NSArrayController*) DomainsController;
+
 @end
 
 #endif	// __MAIN_WINDOW_CONTROLLER

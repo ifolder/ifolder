@@ -9,6 +9,7 @@
     IBOutlet NSView *notifyView;
     IBOutlet NSView *syncView;
 	IBOutlet NSView *blankView;
+
 	
 	NSToolbar				*toolbar;
 	NSMutableDictionary		*toolbarItemDict;	
