@@ -2,7 +2,7 @@ FsWatcher_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/FsWatcher.cs
 FsWatcher_CSFILES_CSC := $(subst /,$(SEP),$(FsWatcher_CSFILES))
 FsWatcher_INCLUDES = 
 FsWatcher_RESOURCES =
-FsWatcher_FLAGS = $(CSC_EXEFLAG) $(ICON_FLAG)App$(ICON_EXT)
+FsWatcher_FLAGS = $(CSC_EXEFLAG) $(ICON_FLAG)$(srcdir)/App$(ICON_EXT)
 FsWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll CollectionEvents.dll Identity.dll CollectionStore.dll UserService.dll
 FsWatcher_LIBPATH = ../Configuration ../StoreProvider ../CollectionStore ../CollectionEvents ../UserService ../Identity
 
