@@ -488,44 +488,48 @@ internal class SyncOps
 					more = logReader.GetEvents(eventCookie, out changeList);
 					foreach( ChangeLogRecord rec in changeList )
 					{
-						Node node = collection.GetNodeByID(rec.EventID);
-						if (node != null)
+						// Make sure the events are not for local only changes.
+						if (((NodeEventArgs.EventFlags)rec.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0)
 						{
-							string path = OutgoingNode.GetOutNode(collection, ref node);
-							bool tombstone = collection.IsType(node, NodeTypes.TombstoneType);
-							if (onServer && tombstone)
+							Node node = collection.GetNodeByID(rec.EventID);
+							if (node != null)
 							{
-								collection.Commit(collection.Delete(node));
-							}
-							NodeStamp stamp = new NodeStamp();
-							stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
-							stamp.masterIncarn = node.MasterIncarnation;
-							stamp.id = new Nid(node.ID);
-							stamp.isDir = collection.IsType(node, NodeTypes.DirNodeType);
-							stamp.name = node.Name;
-							stamp.changeType = rec.Operation;
+								string path = OutgoingNode.GetOutNode(collection, ref node);
+								bool tombstone = collection.IsType(node, NodeTypes.TombstoneType);
+								if (onServer && tombstone)
+								{
+									collection.Commit(collection.Delete(node));
+								}
+								NodeStamp stamp = new NodeStamp();
+								stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
+								stamp.masterIncarn = node.MasterIncarnation;
+								stamp.id = new Nid(node.ID);
+								stamp.isDir = collection.IsType(node, NodeTypes.DirNodeType);
+								stamp.name = node.Name;
+								stamp.changeType = rec.Operation;
 
-							//TODO: another place to handle multiple forks
-							try
-							{
-								stamp.streamsSize = path == null? -1: new FileInfo(path).Length;
+								//TODO: another place to handle multiple forks
+								try
+								{
+									stamp.streamsSize = path == null? -1: new FileInfo(path).Length;
+								}
+								catch (Exception e)
+								{
+									Log.Spew("Could not get file size of {0}: {1}", path, e);
+									stamp.streamsSize = 0;
+								}
+								stampList.Add(stamp);
 							}
-							catch (Exception e)
+							else if (rec.Operation == ChangeLogRecord.ChangeLogOp.Deleted)
 							{
-								Log.Spew("Could not get file size of {0}: {1}", path, e);
-								stamp.streamsSize = 0;
+								NodeStamp stamp = new NodeStamp();
+								stamp.localIncarn = UInt64.MaxValue;
+								stamp.masterIncarn = 0;
+								stamp.id = new Nid(rec.EventID);
+								stamp.name = "";
+								stamp.changeType = rec.Operation;
+								stampList.Add(stamp);
 							}
-							stampList.Add(stamp);
-						}
-						else if (rec.Operation == ChangeLogRecord.ChangeLogOp.Deleted)
-						{
-							NodeStamp stamp = new NodeStamp();
-							stamp.localIncarn = UInt64.MaxValue;
-							stamp.masterIncarn = 0;
-							stamp.id = new Nid(rec.EventID);
-							stamp.name = "";
-							stamp.changeType = rec.Operation;
-							stampList.Add(stamp);
 						}
 					}
 				}
