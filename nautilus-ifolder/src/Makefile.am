@@ -16,7 +16,7 @@ INCLUDES =						\
 	$(IFOLDER_C_CFLAGS)	\
 	$(XML2_CFLAGS)
 
-EXTRA_DIST = nautilus-ifolder.h nautilus-ifolder.cs emblem-ifolder.png ifolder-folder.png stdsoap2.h
+EXTRA_DIST = nautilus-ifolder.h nautilus-ifolder.cs emblem-ifolder.png ifolder-folder.png
 
 # Make sure the following files are not included in the dist
 dist-hook:
