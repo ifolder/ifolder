@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Novell.iFolder.iFolderCom
+namespace Novell.iFolderCom
 {
 	/// <summary>
 	/// Summary description for iFolderInfo.

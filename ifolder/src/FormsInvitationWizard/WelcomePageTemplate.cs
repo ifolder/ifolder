@@ -28,12 +28,12 @@ using System.Drawing;
 using System.Data;
 using System.Windows.Forms;
 
-namespace Novell.iFolder.InvitationWizard
+namespace Novell.InvitationWizard
 {
 	/// <summary>
 	/// A class that is used as a template for exterior wizard pages.
 	/// </summary>
-	public class WelcomePageTemplate : Novell.iFolder.InvitationWizard.BaseWizardPage
+	public class WelcomePageTemplate : Novell.InvitationWizard.BaseWizardPage
 	{
 		#region Class Members
 		private System.Windows.Forms.Panel panel1;

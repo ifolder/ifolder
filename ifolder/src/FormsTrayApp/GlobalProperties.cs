@@ -36,11 +36,11 @@ using Simias.Sync;
 using Simias.Service;
 using Simias.Storage;
 using Simias.Policy;
-using Novell.iFolder;
-using Novell.iFolder.iFolderCom;
-using Novell.iFolder.Win32Util;
+//using Novell.iFolder;
+using Novell.iFolderCom;
+using Novell.Win32Util;
 
-namespace Novell.iFolder.FormsTrayApp
+namespace Novell.FormsTrayApp
 {
 	/// <summary>
 	/// Summary description for GlobalProperties.
@@ -50,7 +50,7 @@ namespace Novell.iFolder.FormsTrayApp
 		// TODO: Localize
 		private static readonly string conflictsExist = "Conflicts exist";
 		#region Class Members
-		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(GlobalProperties));
+		//private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(GlobalProperties));
 		private const string iFolderRun = "iFolder";
 
 		const string CFG_Section = "ServiceManager";
@@ -60,8 +60,8 @@ namespace Novell.iFolder.FormsTrayApp
 		private const double megaByte = 1048576;
 		private Hashtable ht;
 		private EventSubscriber subscriber;
-		private Simias.Service.Manager serviceManager = null;
-		private iFolderManager manager = null;
+		//private Simias.Service.Manager serviceManager = null;
+//		private iFolderManager manager = null;
 		private Configuration config;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
@@ -152,7 +152,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.Label label14;
 		private System.Windows.Forms.Label label15;
 		private System.Windows.Forms.Label label16;
-		private Novell.iFolder.Forms.Controls.GaugeChart gaugeChart1;
+		private Novell.Forms.Controls.GaugeChart gaugeChart1;
 		private System.Windows.Forms.Label label17;
 		private System.Windows.Forms.Label label18;
 		private System.Windows.Forms.Label enterpriseDescription;
@@ -312,14 +312,14 @@ namespace Novell.iFolder.FormsTrayApp
 		[Conditional("DEBUG")]
 		private void AddServicesToListView()
 		{
-			foreach (ServiceCtl svc in serviceManager)
+/*			foreach (ServiceCtl svc in serviceManager)
 			{
 				ListViewItem lvi = new ListViewItem(new string[] {
 																	 svc.Name,
 																	 svc.State.ToString()}, 0);
 				lvi.Tag = new ServiceWithState(svc);
 				services.Items.Add(lvi);
-			}
+			}*/
 		}
 
 		[Conditional("DEBUG")]
@@ -330,7 +330,7 @@ namespace Novell.iFolder.FormsTrayApp
 				ServiceWithState service = (ServiceWithState)lvi.Tag;
 				if (service.Changed)
 				{
-					this.serviceManager.Install(service.Svc);
+					//this.serviceManager.Install(service.Svc);
 				}
 			}
 		}
@@ -445,7 +445,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.groupBox6 = new System.Windows.Forms.GroupBox();
 			this.label18 = new System.Windows.Forms.Label();
 			this.label17 = new System.Windows.Forms.Label();
-			this.gaugeChart1 = new Novell.iFolder.Forms.Controls.GaugeChart();
+			this.gaugeChart1 = new Novell.Forms.Controls.GaugeChart();
 			this.label16 = new System.Windows.Forms.Label();
 			this.label15 = new System.Windows.Forms.Label();
 			this.label14 = new System.Windows.Forms.Label();
@@ -1299,24 +1299,24 @@ namespace Novell.iFolder.FormsTrayApp
 		/// <summary>
 		/// Sets the ServiceManager.
 		/// </summary>
-		public Simias.Service.Manager ServiceManager
+/*		public Simias.Service.Manager ServiceManager
 		{
 			set
 			{
 				serviceManager = value;
 			}
-		}
+		}*/
 
 		/// <summary>
 		/// Sets the iFolderManager.
 		/// </summary>
-		public iFolderManager IFManager
+/*		public iFolderManager IFManager
 		{
 			set
 			{
 				manager = value;
 			}
-		}
+		}*/
 
 		public bool ShowEnterpriseTab
 		{
@@ -1363,7 +1363,7 @@ namespace Novell.iFolder.FormsTrayApp
 		#region Private Methods
 		private void AddiFolderToListView(iFolder ifolder)
 		{
-			lock (ht)
+/*			lock (ht)
 			{
 				// Add only if it isn't already in the list.
 				if (ht[ifolder.ID] == null)
@@ -1376,7 +1376,7 @@ namespace Novell.iFolder.FormsTrayApp
 					// Add the listviewitem to the hashtable.
 					ht.Add(ifolder.ID, lvi);
 				}
-			}
+			}*/
 		}
 
 		private bool IsRunEnabled()
@@ -1410,10 +1410,10 @@ namespace Novell.iFolder.FormsTrayApp
 
 			iFolderView.BeginUpdate();
 
-			foreach (iFolder ifolder in manager)
+/*			foreach (iFolder ifolder in manager)
 			{
 				AddiFolderToListView(ifolder);
-			}
+			}*/
 
 			iFolderView.EndUpdate();
 			Cursor.Current = Cursors.Default;
@@ -1421,15 +1421,15 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void invokeiFolderProperties(ListViewItem lvi, int activeTab)
 		{
-			new iFolderComponent().InvokeAdvancedDlg(Application.StartupPath, lvi.SubItems[1].Text, activeTab, true);
+//			new iFolderComponent().InvokeAdvancedDlg(Application.StartupPath, lvi.SubItems[1].Text, activeTab, true);
 		}
 
 		private void synciFolder(string id)
 		{
 			try
 			{
-				ServiceCtl svc = serviceManager.GetService("Simias Sync Service");
-				svc.Custom((int)(id == String.Empty ? SyncMessages.SyncAllNow : SyncMessages.SyncCollectionNow), id);
+//				ServiceCtl svc = serviceManager.GetService("Simias Sync Service");
+//				svc.Custom((int)(id == String.Empty ? SyncMessages.SyncAllNow : SyncMessages.SyncCollectionNow), id);
 			}
 			catch (SimiasException ex)
 			{
@@ -1437,7 +1437,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				logger.Debug(ex, "SyncCollection");
+				//logger.Debug(ex, "SyncCollection");
 			}
 		}
 		#endregion
@@ -1455,7 +1455,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				logger.Debug(ex, "Loading graphics");
+				//logger.Debug(ex, "Loading graphics");
 			}
 
 			try
@@ -1506,7 +1506,7 @@ namespace Novell.iFolder.FormsTrayApp
 				}
 
 				// Display the default sync interval.
-				defaultInterval.Value = (decimal)manager.DefaultRefreshInterval;
+				//defaultInterval.Value = (decimal)manager.DefaultRefreshInterval;
 
 				// Initialize displayConfirmation.
 				string showWizard = config.Get("iFolderShell", "Show wizard", "true");
@@ -1535,7 +1535,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				logger.Debug(ex, "Initializing");
+				//logger.Debug(ex, "Initializing");
 			}
 		}
 
@@ -1546,7 +1546,7 @@ namespace Novell.iFolder.FormsTrayApp
 			try
 			{
 				// Save the default sync interval.
-				manager.DefaultRefreshInterval = (int)defaultInterval.Value;
+				//manager.DefaultRefreshInterval = (int)defaultInterval.Value;
 
 				// Save the auto start value.
 				SetRunValue(autoStart.Checked);
@@ -1574,7 +1574,7 @@ namespace Novell.iFolder.FormsTrayApp
 			catch (Exception ex)
 			{
 				MessageBox.Show(ex.Message);
-				logger.Debug(ex, "Saving settings");
+				//logger.Debug(ex, "Saving settings");
 			}
 
 			Cursor.Current = Cursors.Default;
@@ -1631,10 +1631,10 @@ namespace Novell.iFolder.FormsTrayApp
 					// Get the sync node and byte counts.
 					uint nodeCount;
 					ulong bytesToSend;
-					iFolder ifolder = manager.GetiFolderById((string)lvi.Tag);
+					/*iFolder ifolder = manager.GetiFolderById((string)lvi.Tag);
 					SyncSize.CalculateSendSize(ifolder, out nodeCount, out bytesToSend);
 					objectCount.Text = nodeCount.ToString();
-					byteCount.Text = bytesToSend.ToString();
+					byteCount.Text = bytesToSend.ToString();*/
 				}
 				catch (SimiasException ex)
 				{
@@ -1642,7 +1642,7 @@ namespace Novell.iFolder.FormsTrayApp
 				}
 				catch (Exception ex)
 				{
-					logger.Debug(ex, "Selecting iFolder");
+					//logger.Debug(ex, "Selecting iFolder");
 				}
 
 				Cursor.Current = Cursors.Default;
@@ -1671,8 +1671,8 @@ namespace Novell.iFolder.FormsTrayApp
 
 			try
 			{
-				ifolder = manager.GetiFolderById((string)lvi.Tag);
-				Process.Start(ifolder.LocalPath);
+				//ifolder = manager.GetiFolderById((string)lvi.Tag);
+				//Process.Start(ifolder.LocalPath);
 			}
 			catch (SimiasException ex)
 			{
@@ -1680,7 +1680,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				logger.Debug(ex, "Opening iFolder");
+				//logger.Debug(ex, "Opening iFolder");
 				if (ifolder == null)
 				{
 					MessageBox.Show("The selected iFolder is no longer valid and will be removed from the list.");
@@ -1697,7 +1697,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 			try
 			{
-				iFolder ifolder = manager.GetiFolderById((string)lvi.Tag);
+				/*iFolder ifolder = manager.GetiFolderById((string)lvi.Tag);
 				string path = ifolder.LocalPath;
 
 				// Delete the iFolder.
@@ -1710,7 +1710,7 @@ namespace Novell.iFolder.FormsTrayApp
 				{
 					ht.Remove((string)lvi.Tag);
 				}
-
+*/
 				lvi.Remove();
 			}
 			catch (SimiasException ex)
@@ -1719,7 +1719,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				logger.Debug(ex, "Reverting");
+				//logger.Debug(ex, "Reverting");
 			}
 
 			Cursor.Current = Cursors.Default;
@@ -1727,7 +1727,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void menuResolve_Click(object sender, System.EventArgs e)
 		{
-			new iFolderComponent().InvokeConflictResolverDlg(Application.StartupPath, iFolderView.SelectedItems[0].SubItems[1].Text);
+//			new iFolderComponent().InvokeConflictResolverDlg(Application.StartupPath, iFolderView.SelectedItems[0].SubItems[1].Text);
 		}
 
 		private void menuShare_Click(object sender, System.EventArgs e)
@@ -1755,7 +1755,7 @@ namespace Novell.iFolder.FormsTrayApp
 				{
 					try
 					{
-						if (manager.CanBeiFolder(folderBrowserDialog.SelectedPath) && 
+/*						if (manager.CanBeiFolder(folderBrowserDialog.SelectedPath) && 
 							((GlobalProperties.GetDriveType(Path.GetPathRoot(folderBrowserDialog.SelectedPath)) & DRIVE_REMOTE) != DRIVE_REMOTE))
 						{
 							// Create the iFolder.
@@ -1774,7 +1774,7 @@ namespace Novell.iFolder.FormsTrayApp
 						else
 						{
 							MessageBox.Show("An invalid folder was specified");
-						}
+						}*/
 					}
 					catch (SimiasException ex)
 					{
@@ -1782,7 +1782,7 @@ namespace Novell.iFolder.FormsTrayApp
 					}
 					catch (Exception ex)
 					{
-						logger.Debug(ex, "Creating iFolder");
+						//logger.Debug(ex, "Creating iFolder");
 					}
 				}
 				else
@@ -1829,7 +1829,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				logger.Debug(ex, "Enabling/disabling service");
+				//logger.Debug(ex, "Enabling/disabling service");
 			}
 		}
 
@@ -1923,11 +1923,11 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			try
 			{
-				iFolder ifolder = manager.GetiFolderById(args.ID);
+/*				iFolder ifolder = manager.GetiFolderById(args.ID);
 				if (ifolder != null)
 				{
 					AddiFolderToListView(ifolder);
-				}
+				}*/
 			}
 			catch (SimiasException ex)
 			{
@@ -1935,7 +1935,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				logger.Debug(ex, "OnNodeCreated");
+				//logger.Debug(ex, "OnNodeCreated");
 			}
 		}
 

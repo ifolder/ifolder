@@ -27,7 +27,7 @@ using Microsoft.Win32;
 
 using Simias;
 
-namespace Novell.iFolder.FormsTrayApp
+namespace Novell.FormsTrayApp
 {
 	/// <summary>
 	/// Summary description for iFolderMigration.
@@ -35,7 +35,7 @@ namespace Novell.iFolder.FormsTrayApp
 	public class iFolderMigration
 	{
 		#region Class Members
-		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(iFolderMigration));
+		//private static readonly ISimiasLog d = SimiasLogManager.GetLogger(typeof(iFolderMigration));
 		private Configuration config;
 
 		private static readonly string iFolderRegistryKey = @"Software\Novell iFolder";
@@ -138,7 +138,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			catch (Exception e)
 			{
-				logger.Debug(e, "Migrating settings");
+				//logger.Debug(e, "Migrating settings");
 			}
 		}
 		#endregion

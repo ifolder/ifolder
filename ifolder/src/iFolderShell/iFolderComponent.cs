@@ -28,12 +28,13 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Collections;
 using System.Diagnostics;
-using Novell.iFolder;
+using System.Net;
+//using Novell.iFolder;
 using Simias.Storage;
-using Novell.iFolder.Win32Util;
+using Novell.Win32Util;
 using Simias;
 
-namespace Novell.iFolder.iFolderCom
+namespace Novell.iFolderCom
 {
 	/// <summary>
 	/// Interface used for COM
@@ -43,7 +44,7 @@ namespace Novell.iFolder.iFolderCom
 		/// <summary>
 		/// Gets/sets the description of the iFolder.
 		/// </summary>
-		String Description{get; set;}
+		//String Description{get; set;}
 
 		/// <summary>
 		/// Checks to see if a path can become an iFolder.
@@ -79,20 +80,20 @@ namespace Novell.iFolder.iFolderCom
 		/// </summary>
 		/// <param name="path"></param>
 		/// <returns></returns>
-		bool GetiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path);
+		//bool GetiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path);
 
 		/// <summary>
 		/// Checks to see if the specified path is contained in an iFolder.
 		/// </summary>
 		/// <param name="path"></param>
 		/// <returns></returns>
-		bool IsiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path);
+		//bool IsiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path);
 
 		/// <summary>
 		/// Initializes the properties enumerator.
 		/// </summary>
 		/// <returns>This method returns <b>true</b> if the properties enumerator is successfully initialized; otherwise, <b>false</b>.</returns>
-		bool GetiFolderPropInit();
+		//bool GetiFolderPropInit();
 
 		/// <summary>
 		/// Walks the properties enumerator.
@@ -100,7 +101,7 @@ namespace Novell.iFolder.iFolderCom
 		/// <param name="name">This parameter returns the name of the property.</param>
 		/// <param name="val">This parameter returns the value of the property.</param>
 		/// <returns>This method returns <b>true</b> if a property is successfully read; otherwise, <b>false</b>.</returns>
-		bool GetNextiFolderProp(out string name, out string val);
+		//bool GetNextiFolderProp(out string name, out string val);
 
 		/// <summary>
 		/// Displays the Advanced Properties dialog for the specified iFolder.
@@ -116,7 +117,7 @@ namespace Novell.iFolder.iFolderCom
 		/// </summary>
 		/// <param name="dllPath">The path where the assembly was loaded from.</param>
 		/// <param name="path">The path of the iFolder.</param>
-		void InvokeConflictResolverDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path);
+		//void InvokeConflictResolverDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path);
 		
 		/// <summary>
 		/// Display the iFolder confirmation dialog.
@@ -148,9 +149,12 @@ namespace Novell.iFolder.iFolderCom
 	]
 	public class iFolderComponent : IiFolderComponent
 	{
-		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(iFolderComponent));
-		static private iFolderManager manager = null;//= Manager.Connect();
-		private iFolderNode ifoldernode;
+		//private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(iFolderComponent));
+		static private iFolderWebService ifWebService = null;
+		static private long ticks = 0;
+		static private readonly long delta = 50000000; // 5 seconds
+
+		//private iFolderNode ifoldernode;
 		private ICSEnumerator propEnumerator;
 		private ICSEnumerator aclEnumerator;
 
@@ -165,32 +169,29 @@ namespace Novell.iFolder.iFolderCom
 		/// </summary>
 		public iFolderComponent()
 		{
-			//
-			// TODO: Add constructor logic here
-			//
 			System.Diagnostics.Debug.WriteLine("In iFolderComponent()");
 
 			try
 			{
-				if (manager == null)
-				{
-					manager= iFolderManager.Connect();
-				}
+				connectToWebService();
 			}
-			catch (SimiasException e)
+			catch (WebException e)
 			{
-				e.LogError();
+				if (e.Status == WebExceptionStatus.ConnectFailure)
+				{
+					ifWebService = null;
+				}
 			}
 			catch (Exception e)
 			{
-				logger.Debug(e, "Initialization");
+				// TODO:
 			}
 		}
 
 		/// <summary>
 		/// Gets/sets the description of the iFolder.
 		/// </summary>
-		public String Description
+		/*public String Description
 		{
 			get { return ifoldernode.Description; }
 			set
@@ -201,7 +202,7 @@ namespace Novell.iFolder.iFolderCom
 				// a bunch of modifies.
 //				ifoldernode.iFolder.Commit();
 			}
-		}
+		}*/
 
 		/// <summary>
 		/// Checks to see if a path can become an iFolder.
@@ -212,15 +213,23 @@ namespace Novell.iFolder.iFolderCom
 		{
 			try
 			{
-				return manager.CanBeiFolder(path);
+				connectToWebService();
+				if (ifWebService != null)
+				{
+					return ifWebService.CanBeiFolder(path);
+				}
 			}
-			catch (SimiasException e)
+			catch (WebException e)
 			{
-				e.LogError();
+				if (e.Status == WebExceptionStatus.ConnectFailure)
+				{
+					ifWebService = null;
+				}
 			}
 			catch (Exception e)
 			{
-				logger.Debug(e, "CanBeiFolder");
+				System.Diagnostics.Debug.WriteLine("Caught exception");
+				//logger.Debug(e, "CanBeiFolder");
 			}
 
 			return false;
@@ -239,19 +248,28 @@ namespace Novell.iFolder.iFolderCom
 
 			try
 			{
-				ifolder = manager.GetiFolderByPath(path);
-				if (ifolder != null)
+				connectToWebService();
+				if (ifWebService != null)
 				{
-					hasConflicts = ifolder.HasCollisions();
+					//ifolder = manager.GetiFolderByPath(path);
+					ifolder = ifWebService.GetiFolderByLocalPath(path);
+					if (ifolder != null)
+					{
+	//					hasConflicts = ifolder.HasCollisions();
+					}
 				}
 			}
-			catch (SimiasException e)
+			catch (WebException e)
 			{
-				e.LogError();
+				if (e.Status == WebExceptionStatus.ConnectFailure)
+				{
+					ifWebService = null;
+				}
 			}
 			catch (Exception e)
 			{
-				logger.Debug(e, "IsiFolder");
+				System.Diagnostics.Debug.WriteLine("Caught exception");
+				//logger.Debug(e, "IsiFolder");
 			}
 
 			return ifolder != null;
@@ -289,15 +307,22 @@ namespace Novell.iFolder.iFolderCom
 			iFolder ifolder = null;
 			try
 			{
-				ifolder = manager.CreateiFolder(path);
+				connectToWebService();
+				if (ifWebService != null)
+				{
+					ifolder = ifWebService.CreateLocaliFolder(path);
+				}
 			}
-			catch (SimiasException e)
+			catch (WebException e)
 			{
-				e.LogError();
+				if (e.Status == WebExceptionStatus.ConnectFailure)
+				{
+					ifWebService = null;
+				}
 			}
 			catch (Exception e)
 			{
-				logger.Debug(e, "CreateiFolder");
+				System.Diagnostics.Debug.WriteLine(e.Message);
 			}
 
 			return (ifolder != null);
@@ -311,15 +336,26 @@ namespace Novell.iFolder.iFolderCom
 		{
 			try
 			{
-				manager.DeleteiFolderByPath(path);
+				connectToWebService();
+				if (ifWebService != null)
+				{
+					iFolder ifolder = ifWebService.GetiFolderByLocalPath(path);
+					if (ifolder != null)
+					{
+						ifWebService.DeleteiFolder(ifolder.ID);
+					}
+				}
 			}
-			catch (SimiasException e)
+			catch (WebException e)
 			{
-				e.LogError();
+				if (e.Status == WebExceptionStatus.ConnectFailure)
+				{
+					ifWebService = null;
+				}
 			}
 			catch (Exception e)
 			{
-				logger.Debug(e, "DeleteiFolderByPath");
+				//logger.Debug(e, "DeleteiFolderByPath");
 			}
 		}
 
@@ -328,7 +364,7 @@ namespace Novell.iFolder.iFolderCom
 		/// </summary>
 		/// <param name="path"></param>
 		/// <returns></returns>
-		public bool GetiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path)
+		/*public bool GetiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
 			System.Diagnostics.Debug.WriteLine("In GetiFolderNode()");
 
@@ -361,29 +397,29 @@ namespace Novell.iFolder.iFolderCom
 			System.Diagnostics.Debug.WriteLine("GetiFolderNode() returning false");
 
 			return false;
-		}
+		}*/
 
 		/// <summary>
 		/// Checks to see if the specified path is contained in an iFolder.
 		/// </summary>
 		/// <param name="path"></param>
 		/// <returns></returns>
-		public bool IsiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path)
+		/*public bool IsiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
 			return manager.IsPathIniFolder(path);
-		}
+		}*/
 
 		/// <summary>
 		/// Initializes the properties enumerator.
 		/// </summary>
 		/// <returns>This method returns <b>true</b> if the properties enumerator is successfully initialized; otherwise, <b>false</b>.</returns>
-		public bool GetiFolderPropInit()
+		/*public bool GetiFolderPropInit()
 		{
 			// Set up the enumerator to get the Properties on the Node.
 			propEnumerator = ( ICSEnumerator )ifoldernode.iFolder.Properties.GetEnumerator();
 
 			return (propEnumerator != null);
-		}
+		}*/
 
 		/// <summary>
 		/// Walks the properties enumerator.
@@ -391,7 +427,7 @@ namespace Novell.iFolder.iFolderCom
 		/// <param name="name">This parameter returns the name of the property.</param>
 		/// <param name="val">This parameter returns the value of the property.</param>
 		/// <returns>This method returns <b>true</b> if a property is successfully read; otherwise, <b>false</b>.</returns>
-		public bool GetNextiFolderProp(out string name, out string val)
+		/*public bool GetNextiFolderProp(out string name, out string val)
 		{
 			if (propEnumerator.MoveNext())
 			{
@@ -408,7 +444,7 @@ namespace Novell.iFolder.iFolderCom
 				ifoldernode = null;
 				return false;
 			}
-		}
+		}*/
 
 		/// <summary>
 		/// Displays the Advanced Properties dialog for the specified iFolder.
@@ -429,20 +465,35 @@ namespace Novell.iFolder.iFolderCom
 			}
 			else
 			{
-				iFolderAdvanced ifolderAdvanced = new iFolderAdvanced();
-				ifolderAdvanced.Name = path;
-				ifolderAdvanced.Text = windowName;
-				ifolderAdvanced.CurrentiFolder = manager.GetiFolderByPath(path);
-				ifolderAdvanced.LoadPath = dllPath;
-				ifolderAdvanced.ActiveTab = tabPage;
+				try
+				{
+					iFolderAdvanced ifolderAdvanced = new iFolderAdvanced();
+					ifolderAdvanced.Name = path;
+					ifolderAdvanced.Text = windowName;
+					connectToWebService();
+					ifolderAdvanced.CurrentiFolder = ifWebService.GetiFolderByLocalPath(path);
+					ifolderAdvanced.LoadPath = dllPath;
+					ifolderAdvanced.ActiveTab = tabPage;
 
-				if (modal)
-				{
-					ifolderAdvanced.ShowDialog();
+					if (modal)
+					{
+						ifolderAdvanced.ShowDialog();
+					}
+					else
+					{
+						ifolderAdvanced.Show();
+					}
 				}
-				else
+				catch (WebException e)
 				{
-					ifolderAdvanced.Show();
+					if (e.Status == WebExceptionStatus.ConnectFailure)
+					{
+						ifWebService = null;
+					}
+				}
+				catch (Exception e)
+				{
+					// TODO:
 				}
 			}
 		}
@@ -452,13 +503,13 @@ namespace Novell.iFolder.iFolderCom
 		/// </summary>
 		/// <param name="dllPath">The path where the assembly was loaded from.</param>
 		/// <param name="path">The path of the iFolder.</param>
-		public void InvokeConflictResolverDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path)
+		/*public void InvokeConflictResolverDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
 			ConflictResolver conflictResolver = new ConflictResolver();
 			conflictResolver.IFolder = manager.GetiFolderByPath(path);
 			conflictResolver.LoadPath = dllPath;
 			conflictResolver.Show();		
-		}
+		}*/
 
 		/// <summary>
 		/// Display the iFolder confirmation dialog.
@@ -493,7 +544,7 @@ namespace Novell.iFolder.iFolderCom
 			}
 			catch (Exception e)
 			{
-				logger.Debug(e, "Opening help");
+				//logger.Debug(e, "Opening help");
 				MessageBox.Show("Unable to open help file: \n" + helpPath, "Help File Not Found");
 			}
 		}
@@ -505,13 +556,26 @@ namespace Novell.iFolder.iFolderCom
 		/// <returns>This method returns <b>true</b> if the iFolder contains conflicts; otherwise, <b>false</b>.</returns>
 		public bool HasConflicts([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
-			iFolder ifolder = manager.GetiFolderByPath(path);
+			iFolder ifolder = null;//manager.GetiFolderByPath(path);
 			if (ifolder != null)
 			{
-				return ifolder.HasCollisions();
+//				return ifolder.HasCollisions();
 			}
 
 			return false;
+		}
+
+		private void connectToWebService()
+		{
+			if (ifWebService == null)
+			{
+				DateTime currentTime = DateTime.Now;
+				if ((currentTime.Ticks - ticks) > delta)
+				{
+					ticks = currentTime.Ticks;
+					ifWebService = new iFolderWebService();
+				}
+			}
 		}
 	}
 }

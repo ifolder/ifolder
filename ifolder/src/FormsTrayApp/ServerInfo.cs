@@ -27,17 +27,15 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
-using Simias;
-using Simias.Domain;
+using System.Net;
 
-namespace Novell.iFolder.FormsTrayApp
+namespace Novell.FormsTrayApp
 {
 	/// <summary>
 	/// Summary description for ServerInfo.
 	/// </summary>
 	public class ServerInfo : System.Windows.Forms.Form
 	{
-		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(ServerInfo));
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
 		private System.Windows.Forms.TextBox serverIP;
@@ -46,8 +44,8 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.TextBox password;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.TextBox userName;
-		private Configuration config;
 		private System.Windows.Forms.PictureBox banner;
+		private iFolderWebService ifWebService;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -57,17 +55,14 @@ namespace Novell.iFolder.FormsTrayApp
 		/// Constructs a ServerInfo object.
 		/// </summary>
 		/// <param name="config">The Configuration object to use.</param>
-		public ServerInfo(Configuration config)
+		public ServerInfo(iFolderWebService ifolderWebService)
 		{
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
 
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
-			this.config = config;
+			ifWebService = ifolderWebService;
 		}
 
 		/// <summary>
@@ -214,17 +209,19 @@ namespace Novell.iFolder.FormsTrayApp
 
 			try
 			{
-				DomainAgent da = new DomainAgent(config);
-				da.Attach(serverIP.Text, userName.Text, password.Text);
+				if (ifWebService != null)
+				{
+					ifWebService.ConnectToEnterpriseServer(userName.Text, password.Text, serverIP.Text);
+				}
 			}
-			catch (SimiasException ex)
+			catch (WebException ex)
 			{
-				ex.LogError();
+				// TODO: Localize
 				MessageBox.Show("A fatal error was encountered while connecting to the server.\n\n" + ex.Message, "Server Connect Error");
 			}
 			catch (Exception ex)
 			{
-				logger.Debug(ex, "Connecting to server");
+				// TODO: Localize
 				MessageBox.Show("A fatal error was encountered while connecting to the server.\n\n" + ex.Message, "Server Connect Error");
 			}
 
@@ -241,7 +238,6 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				logger.Debug(ex, "Loading graphics");
 			}
 		}
 

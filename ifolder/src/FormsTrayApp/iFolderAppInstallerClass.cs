@@ -29,7 +29,7 @@ using System.Configuration.Install;
 using Simias;
 using Simias.Event;
 
-namespace Novell.iFolder.FormsTrayApp
+namespace Novell.FormsTrayApp
 {
 	/// <summary>
 	/// Provides custom installation for iFolderApp.exe.

@@ -26,9 +26,9 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
-using Simias.Storage;
+//using Simias.Storage;
 
-namespace Novell.iFolder.iFolderCom
+namespace Novell.iFolderCom
 {
 	/// <summary>
 	/// Summary description for TestForm.
@@ -205,34 +205,34 @@ namespace Novell.iFolder.iFolderCom
 		/// <summary>
 		/// Gets/sets the value of the rights displayed in the access control buttons.
 		/// </summary>
-		public Simias.Storage.Access.Rights Rights
+		public string Rights
 		{
 			get
 			{
 				if (fullControl.Checked)
 				{
-					return Access.Rights.Admin;
+					return "Admin";
 				}
 				else if (readWrite.Checked)
 				{
-					return Access.Rights.ReadWrite;
+					return "ReadWrite";
 				}
 				else
 				{
-					return Access.Rights.ReadOnly;
+					return "ReadOnly";
 				}
 			}
 			set 
 			{
 				switch (value)
 				{
-					case Access.Rights.Admin:
+					case "Admin":
 						fullControl.Checked = true;
 						break;
-					case Access.Rights.ReadWrite:
+					case "ReadWrite":
 						readWrite.Checked = true;
 						break;
-					default:
+					case "ReadOnly":
 						readOnly.Checked = true;
 						break;
 				}
@@ -250,7 +250,7 @@ namespace Novell.iFolder.iFolderCom
 		/// <summary>
 		/// Gets/sets a value indicating that the selected user is the owner.
 		/// </summary>
-		public bool Owner
+		public bool IsOwner
 		{
 			get { return owner.Checked; }
 			set { owner.Checked = value; }

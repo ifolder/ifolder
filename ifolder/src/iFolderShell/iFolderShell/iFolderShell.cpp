@@ -49,7 +49,7 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
     if (dwReason == DLL_PROCESS_ATTACH)
     {
-        //OutputDebugString(TEXT("In DLLMain, DLL_PROCESS_ATTACH\n"));
+        OutputDebugString(TEXT("In DLLMain, DLL_PROCESS_ATTACH\n"));
 
 		InitCommonControls();
 
@@ -58,7 +58,7 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
     }
     else if (dwReason == DLL_PROCESS_DETACH)
     {
-        //OutputDebugString(TEXT("In DLLMain, DLL_PROCESS_DETACH\n"));
+        OutputDebugString(TEXT("In DLLMain, DLL_PROCESS_DETACH\n"));
     }
 
     return 1;
@@ -70,14 +70,14 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 
 STDAPI DllCanUnloadNow(void)
 {
-    //OutputDebugString(TEXT("In DLLCanUnloadNow\n"));
+    OutputDebugString(TEXT("In DLLCanUnloadNow\n"));
 
     return (g_cRefThisDll == 0 ? S_OK : S_FALSE);
 }
 
 STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID *ppvOut)
 {
-    //OutputDebugString(TEXT("In DllGetClassObject\n"));
+    OutputDebugString(TEXT("In DllGetClassObject\n"));
 
     *ppvOut = NULL;
 
@@ -253,7 +253,7 @@ STDAPI DllUnregisterServer(void)
 
 CiFolderShellClassFactory::CiFolderShellClassFactory(iFolderClass iFClass)
 {
-    //OutputDebugString(TEXT("CiFolderShellClassFactory::CiFolderShellClassFactory()\n"));
+    OutputDebugString(TEXT("CiFolderShellClassFactory::CiFolderShellClassFactory()\n"));
 
     m_cRef = 0L;
 	m_class = iFClass;
@@ -269,7 +269,7 @@ CiFolderShellClassFactory::~CiFolderShellClassFactory()
 STDMETHODIMP CiFolderShellClassFactory::QueryInterface(REFIID riid,
                                                    LPVOID FAR *ppv)
 {
-    //OutputDebugString(TEXT("CiFolderShellClassFactory::QueryInterface()\n"));
+    OutputDebugString(TEXT("CiFolderShellClassFactory::QueryInterface()\n"));
 
     *ppv = NULL;
 
@@ -306,7 +306,7 @@ STDMETHODIMP CiFolderShellClassFactory::CreateInstance(LPUNKNOWN pUnkOuter,
 													   REFIID riid,
 													   LPVOID *ppvObj)
 {
-    //OutputDebugString(TEXT("CiFolderShellClassFactory::CreateInstance()\n"));
+    OutputDebugString(TEXT("CiFolderShellClassFactory::CreateInstance()\n"));
 
     *ppvObj = NULL;
 
@@ -337,7 +337,7 @@ STDMETHODIMP CiFolderShellClassFactory::LockServer(BOOL fLock)
 // *********************** CiFolderShell *************************
 CiFolderShell::CiFolderShell(iFolderClass iFClass)
 {
-    //OutputDebugString(TEXT("CiFolderShell::CiFolderShell()\n"));
+    OutputDebugString(TEXT("CiFolderShell::CiFolderShell()\n"));
 
     m_cRef = 0L;
     m_pDataObj = NULL;
@@ -373,25 +373,25 @@ STDMETHODIMP CiFolderShell::QueryInterface(REFIID riid, LPVOID FAR *ppv)
 
     if (IsEqualIID(riid, IID_IShellExtInit) || IsEqualIID(riid, IID_IUnknown))
     {
-        //OutputDebugString(TEXT("CiFolderShell::QueryInterface()==>IID_IShellExtInit\n"));
+        OutputDebugString(TEXT("CiFolderShell::QueryInterface()==>IID_IShellExtInit\n"));
 
         *ppv = (LPSHELLEXTINIT)this;
     }
     else if (IsEqualIID(riid, IID_IContextMenu))
     {
-        //OutputDebugString(TEXT("CiFolderShell::QueryInterface()==>IID_IContextMenu\n"));
+        OutputDebugString(TEXT("CiFolderShell::QueryInterface()==>IID_IContextMenu\n"));
 
         *ppv = (LPCONTEXTMENU)this;
     }
 	else if (IsEqualIID(riid, IID_IShellIconOverlayIdentifier))
 	{
-		//OutputDebugString(TEXT("CiFolderShell::QueryInterface()==>IID_IShellIconOverlayIdentifier\n"));
+		OutputDebugString(TEXT("CiFolderShell::QueryInterface()==>IID_IShellIconOverlayIdentifier\n"));
 
 		*ppv= (IShellIconOverlayIdentifier *)this;
 	}
     else if (IsEqualIID(riid, IID_IShellPropSheetExt))
     {
-        //OutputDebugString(TEXT("CiFolderShell::QueryInterface()==>IShellPropSheetExt\n"));
+        OutputDebugString(TEXT("CiFolderShell::QueryInterface()==>IShellPropSheetExt\n"));
 
         *ppv = (LPSHELLPROPSHEETEXT)this;
     }
@@ -473,7 +473,7 @@ STDMETHODIMP CiFolderShell::Initialize(LPCITEMIDLIST pidlFolder,
 									   LPDATAOBJECT pDataObj,
 									   HKEY hKeyProgID)
 {
-    //OutputDebugString(TEXT("CiFolderShell::Initialize()\n"));
+    OutputDebugString(TEXT("CiFolderShell::Initialize()\n"));
 
 	if (pDataObj == NULL)
 		return E_INVALIDARG;

@@ -30,9 +30,9 @@ using System.Net;
 using System.Diagnostics;
 using System.IO;
 using Simias.Sync;
-using Novell.iFolder;
-using Novell.iFolder.iFolderCom;
-using Novell.iFolder.Win32Util;
+//using Novell.iFolder;
+using Novell.iFolderCom;
+using Novell.Win32Util;
 using Simias;
 using Simias.Event;
 using Simias.Service;
@@ -40,7 +40,7 @@ using Simias.Storage;
 using Simias.POBox;
 using CustomUIControls;
 
-namespace Novell.iFolder.FormsTrayApp
+namespace Novell.FormsTrayApp
 {
 	/// <summary>
 	/// Summary description for FormsTrayApp.
@@ -48,7 +48,7 @@ namespace Novell.iFolder.FormsTrayApp
 	public class FormsTrayApp : Form
 	{
         #region Class Members
-		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(FormsTrayApp));
+//		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(FormsTrayApp));
 		private System.ComponentModel.IContainer components;
 
 		private Thread workerThread = null;
@@ -83,11 +83,12 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.ContextMenu contextMenu1;
 		private System.Windows.Forms.MenuItem menuConflictResolver;
 
-		private Simias.Service.Manager serviceManager;
+//		private Simias.Service.Manager serviceManager;
 		private System.Windows.Forms.MenuItem menuPOBox;
-		private iFolderManager ifManager;
+//		private iFolderManager ifManager;
 		private System.Windows.Forms.MenuItem menuEventLogReader;
-		private Configuration config;
+		//private Configuration config;
+		private iFolderWebService ifWebService;
 		private EventSubscriber subscriber;
 		private IntPtr hwnd;
 		private System.Windows.Forms.MenuItem menuJoin;
@@ -160,11 +161,11 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			catch (Exception e)
 			{
-				logger.Debug(e, "Loading icons");
+				//logger.Debug(e, "Loading icons");
 //				noTray = true;
 			}		
 
-			ifManager = iFolderManager.Connect();
+//			ifManager = iFolderManager.Connect();
 
 			Type t = notifyIcon1.GetType();
 			hwnd = ((NativeWindow)t.GetField("window",System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(notifyIcon1)).Handle;
@@ -203,7 +204,7 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			// TODO: this may need to move if the server connect dialog goes away.
 			// Check for old versions of the iFolder client.
-			iFolderMigration migrate = new iFolderMigration(config);
+/*			iFolderMigration migrate = new iFolderMigration(config);
 			if (migrate.CanBeMigrated())
 			{
 				if (DialogResult.Yes == MessageBox.Show("An old version of iFolder has been detected.  Do you want to migrate your old iFolder client settings to the new iFolder client?", "Migrate iFolder Client Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
@@ -216,9 +217,9 @@ namespace Novell.iFolder.FormsTrayApp
 					// Set state so that we don't ask again.
 					migrate.SetMigratedValue(0);
 				}
-			}
+			}*/
 
-			ServerInfo serverInfo = new ServerInfo(this.config);
+			ServerInfo serverInfo = new ServerInfo(ifWebService);
 			if (DialogResult.OK != serverInfo.ShowDialog())
 			{
 				// TODO: post a message.
@@ -227,9 +228,9 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void menuPOBox_Click(object sender, System.EventArgs e)
 		{
-			MessageForm messages = new MessageForm(config);
-			messages.MessagesServiced += new Novell.iFolder.FormsTrayApp.MessageForm.MessagesServicedDelegate(messages_MessagesServiced);
-			messages.ShowDialog();
+//			MessageForm messages = new MessageForm(config);
+//			messages.MessagesServiced += new Novell.iFolder.FormsTrayApp.MessageForm.MessagesServicedDelegate(messages_MessagesServiced);
+//			messages.ShowDialog();
 		}
 
 		private void menuInvitationWizard_Click(object sender, System.EventArgs e)
@@ -255,9 +256,9 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			else
 			{
-				ConflictResolver conflictResolver = new ConflictResolver();
-				conflictResolver.ConflictsResolved += new Novell.iFolder.iFolderCom.ConflictResolver.ConflictsResolvedDelegate(conflictResolver_ConflictsResolved);
-				conflictResolver.Show();
+//				ConflictResolver conflictResolver = new ConflictResolver();
+//				conflictResolver.ConflictsResolved += new Novell.iFolder.iFolderCom.ConflictResolver.ConflictsResolvedDelegate(conflictResolver_ConflictsResolved);
+//				conflictResolver.Show();
 			}
 		}
 
@@ -277,10 +278,10 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void menuProperties_Click(object sender, System.EventArgs e)
 		{
-			GlobalProperties globalProperties = new GlobalProperties(config);
-			globalProperties.ServiceManager = this.serviceManager;
-			globalProperties.IFManager = this.ifManager;
-			globalProperties.ShowDialog();
+			//GlobalProperties globalProperties = new GlobalProperties(config);
+//			globalProperties.ServiceManager = this.serviceManager;
+//			globalProperties.IFManager = this.ifManager;
+			//globalProperties.ShowDialog();
 		}
 
 		private void menuHelp_Click(object sender, System.EventArgs e)
@@ -294,7 +295,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				logger.Debug(ex, "Opening help");
+				//logger.Debug(ex, "Opening help");
 				MessageBox.Show("Unable to open help file: \n" + helpPath, "Help File Not Found");
 			}
 		}
@@ -327,7 +328,7 @@ namespace Novell.iFolder.FormsTrayApp
 			menuSeparator1.Visible = menuTools.Visible = menuStoreBrowser.Visible | menuEventLogReader.Visible;
 
 			// Check for collisions.
-			bool collisions = false;
+/*			bool collisions = false;
 			foreach (iFolder ifolder in ifManager)
 			{
 				if (ifolder.HasCollisions())
@@ -337,7 +338,7 @@ namespace Novell.iFolder.FormsTrayApp
 				}
 			}
 
-			menuConflictResolver.Enabled = collisions;
+			menuConflictResolver.Enabled = collisions;*/
 
 			// Check to see if we have already connected to an enterprise server.
 			Store store = Store.GetStore();
@@ -381,25 +382,26 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			try
 			{
-				config = Configuration.GetConfiguration();
-				iFolderManager.CreateDefaultExclusions(config);
+				//config = Configuration.GetConfiguration();
+				ifWebService = new iFolderWebService();
+				//iFolderManager.CreateDefaultExclusions(config);
 
-				SimiasLogManager.Configure(config);
+//				SimiasLogManager.Configure(config);
 			
-				SyncProperties props = new SyncProperties(config);
-				props.LogicFactory = typeof(SynkerA);
+//				SyncProperties props = new SyncProperties(config);
+//				props.LogicFactory = typeof(SynkerA);
 			
-				serviceManager = new Simias.Service.Manager(config);
-				serviceManager.StartServices();
+//				serviceManager = new Simias.Service.Manager(config);
+//				serviceManager.StartServices();
 
 				// Wait for the services to start.
-				while (!serviceManager.ServiceStarted)
-				{
-					Application.DoEvents();
-					Thread.Sleep(100);
-				}
+//				while (!serviceManager.ServiceStarted)
+//				{
+//					Application.DoEvents();
+//					Thread.Sleep(100);
+//				}
 
-				serviceManager.Shutdown += new ShutdownEventHandler(serviceManager_Shutdown);
+//				serviceManager.Shutdown += new ShutdownEventHandler(serviceManager_Shutdown);
 
 				// Now that the services are started, enable the exit menu item.
 				menuExit.Enabled = true;
@@ -443,7 +445,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				logger.Fatal(ex, "Initializing tray app");
+				//logger.Fatal(ex, "Initializing tray app");
 				CleanupTrayApp();
 			}
 		}
@@ -458,10 +460,10 @@ namespace Novell.iFolder.FormsTrayApp
 //			}
 //		}
 
-		private void serviceManager_Shutdown(ShutdownEventArgs args)
-		{
-			ShutdownTrayApp();
-		}
+//		private void serviceManager_Shutdown(ShutdownEventArgs args)
+//		{
+//			ShutdownTrayApp();
+//		}
 
 		private void subscriber_NodeCreated(NodeEventArgs args)
 		{
@@ -502,7 +504,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				logger.Debug(ex, "OnNodeCreated");
+				//logger.Debug(ex, "OnNodeCreated");
 			}
 		}
 
@@ -717,14 +719,14 @@ namespace Novell.iFolder.FormsTrayApp
 				}
 
 				// Stop the services.
-				serviceManager.StopServices();
+//				serviceManager.StopServices();
 
 				// Wait for the services to stop.
-				while (!serviceManager.ServicesStopped)
-				{
-					Application.DoEvents();
-					Thread.Sleep(100);
-				}
+//				while (!serviceManager.ServicesStopped)
+//				{
+//					Application.DoEvents();
+//					Thread.Sleep(100);
+//				}
 			}
 			catch (SimiasException e)
 			{
@@ -732,7 +734,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			catch (Exception e)
 			{
-				logger.Debug(e, "Shutting down");
+				//logger.Debug(e, "Shutting down");
 			}
 
 			Cursor.Current = Cursors.Default;
@@ -743,15 +745,15 @@ namespace Novell.iFolder.FormsTrayApp
 		private void CleanupTrayApp()
 		{
 			MessageBox.Show("A fatal error was encountered during iFolder initialization.  Please see the log file for additional information", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-			if (serviceManager != null)
-			{
-				serviceManager.StopServices();
-				while (!serviceManager.ServicesStopped)
-				{
-					Application.DoEvents();
-					Thread.Sleep(100);
-				}
-			}
+//			if (serviceManager != null)
+//			{
+//				serviceManager.StopServices();
+//				while (!serviceManager.ServicesStopped)
+//				{
+//					Application.DoEvents();
+//					Thread.Sleep(100);
+//				}
+//			}
 
 			Application.Exit();
 		}

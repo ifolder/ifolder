@@ -29,9 +29,9 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.IO;
 using Simias;
-using Novell.iFolder.Win32Util;
+using Novell.Win32Util;
 
-namespace Novell.iFolder.iFolderCom
+namespace Novell.iFolderCom
 {
 	/// <summary>
 	/// Summary description for NewiFolder.

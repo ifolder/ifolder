@@ -33,7 +33,7 @@ using Simias.Storage;
 using Simias.POBox;
 using Novell.AddressBook;
 
-namespace Novell.iFolder.FormsTrayApp
+namespace Novell.FormsTrayApp
 {
 	/// <summary>
 	/// Summary description for MessageForm.

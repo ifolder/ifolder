@@ -90,11 +90,6 @@
                     HintPath = "..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "Simias"
-                    AssemblyName = "Simias"
-                    HintPath = "..\..\..\simias\src\Simias.dll\Simias.dll"
-                />
-                <Reference
                     Name = "Novell.iFolder"
                     AssemblyName = "Novell.iFolder"
                     HintPath = "..\iFolder\Novell.iFolder.dll"

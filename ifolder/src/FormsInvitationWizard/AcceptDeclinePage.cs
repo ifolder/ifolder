@@ -27,12 +27,12 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Novell.iFolder.InvitationWizard
+namespace Novell.InvitationWizard
 {
 	/// <summary>
 	/// Class for the wizard page where the invitation is accepted or declined.
 	/// </summary>
-	public class AcceptDeclinePage : Novell.iFolder.InvitationWizard.InteriorPageTemplate
+	public class AcceptDeclinePage : Novell.InvitationWizard.InteriorPageTemplate
 	{
 		#region Class Members
 		private System.Windows.Forms.Label label1;
