@@ -4,13 +4,6 @@ DIST_SUBDIRS = $(SUBDIRS) doc
 
 EXTRA_DIST = tools $(srcdir)/ifolder.pc.in
 
-.PHONY: doc doc-clean
-doc:
-	$(MAKE) -C doc all
-
-doc-clean:
-	$(MAKE) -C doc clean
-
 install-exec-local:
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig
 	$(INSTALL_PROGRAM) $(srcdir)/ifolder.pc $(DESTDIR)$(libdir)/pkgconfig
@@ -22,12 +15,14 @@ uninstall-local:
 	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f ifolder.pc
 
 clean-local:
-	rm -rf stage *.suo
+	rm -rf $(COMMON_CLEAN_FILES)
 
-dist-clean-local: doc-clean
+distclean-local:
+	rm -rf $(COMMON_DISTCLEAN_FILES)
 
 maintainer-clean-local:
-	rm -f configure Makefile.in ifolder-*.tar.gz config.cache
+	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
+	rm -f configure ifolder-*.tar.gz config.cache
 	rm -f aclocal.m4 conf*.sh configure.lineno config.log
 	rm -f config.guess config.sub config.status
 	rm -f ltmain.sh libtool
@@ -35,7 +30,15 @@ maintainer-clean-local:
 	rm -f missing missing.lnk mkinstalldirs mkinstalldir.lnk
 	rm -rf autom4te.cache
 
+.PHONY: doc doc-clean
+doc:
+	$(MAKE) -C doc all
+
+doc-clean:
+	$(MAKE) -C doc clean
+
 .PHONY: package package-sdk package-clean package-install package-uninstall
 
 package package-sdk package-clean package-install package-uninstall:
 	$(MAKE) -C package $@
+
