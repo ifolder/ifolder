@@ -49,6 +49,12 @@ namespace Simias.Gaim.DomainService
 	public class GaimDomainService : System.Web.Services.WebService
 	{
 		/// <summary>
+		/// Used to log messages.
+		/// </summary>
+		private static readonly ISimiasLog log = 
+			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		/// <summary>
 		/// Constructor
 		/// </summary>
 		public GaimDomainService()
@@ -87,6 +93,7 @@ namespace Simias.Gaim.DomainService
 		[SoapDocumentMethod]
 		public void SynchronizeMemberList()
 		{
+			log.Debug("GaimDomainService.SynchronizeMemberList() entered");
 			Simias.Gaim.Sync.SyncNow(null);
 		}
 		
@@ -104,7 +111,25 @@ namespace Simias.Gaim.DomainService
 		[SoapDocumentMethod]
 		public void UpdateMember(string AccountName, string AccountProtocolID, string BuddyName)
 		{
+			log.Debug("GaimDomainService.UpdateMember() entered");
 			GaimDomain.UpdateMember(AccountName, AccountProtocolID, BuddyName);
+		}
+
+		/// <summary>
+		/// Returns the Local GaimDomain's UserID (ACE)
+		/// </summary>
+		[WebMethod(Description="GetDomainUserID")]
+		[SoapDocumentMethod]
+		public string GetDomainUserID()
+		{
+			log.Debug("GaimDomainService.GetDomainUserID() entered");
+			Simias.Storage.Domain domain = GaimDomain.GetDomain();
+			if (domain != null)
+			{
+				return Store.GetStore().GetUserIDFromDomainID(domain.ID);
+			}
+
+			return null;
 		}
 	}
 

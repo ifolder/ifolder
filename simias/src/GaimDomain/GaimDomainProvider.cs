@@ -175,7 +175,7 @@ namespace Simias.Gaim
 						string familyName;
 						GaimDomain.ParseGaimBuddyAlias(buddy.Alias, out givenName, out familyName);
 	
-						member = new Member(buddy.Name, Guid.NewGuid().ToString(),
+						member = new Member(buddy.Name, buddy.SimiasUserID,
 											Simias.Storage.Access.Rights.ReadWrite,
 											givenName, familyName);
 
@@ -481,6 +481,14 @@ namespace Simias.Gaim
 				member.Given = givenName;
 			}
 			
+			// Buddy Simias UserID
+			if (buddy.SimiasUserID != null)
+			{
+				p = new Property("Gaim:SimiasUserID", buddy.SimiasUserID);
+				p.LocalProperty = true;
+				member.Properties.AddProperty(p);
+			}
+
 			// Buddy Simias URL
 			if (buddy.SimiasURL != null)
 			{

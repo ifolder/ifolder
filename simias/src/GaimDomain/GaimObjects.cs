@@ -43,6 +43,7 @@ namespace Simias.Gaim
 		private string accountProtocolID = null;
 		private string name = null;
 		private string alias = null;
+		private string simiasUserID = null;
 		private string simiasURL = null;
 		private XmlNode xmlBuddyNode = null;
 
@@ -128,6 +129,27 @@ namespace Simias.Gaim
 				}
 				
 				return alias;
+			}
+		}
+
+		/// <summary>
+		/// Gets the buddy's SimiasURL or null if there is none
+		/// </summary>
+		public string SimiasUserID
+		{
+			get
+			{
+				if (simiasUserID != null) return simiasUserID;
+				
+				// Parse simiasUserID from the xmlBuddyNode
+				XmlNode node =
+					xmlBuddyNode.SelectSingleNode("setting[@name='simias-user-id']/text()");
+				if (node != null)
+				{
+					simiasUserID = node.Value;
+				}
+				
+				return simiasUserID;
 			}
 		}
 

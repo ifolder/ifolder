@@ -328,7 +328,7 @@ namespace Simias.Gaim
 			{
 				prefsDoc.Load(GetGaimConfigDir() + "/prefs.xml");
 			}
-			catch (Exception e)
+			catch
 			{
 				return;
 			}
@@ -531,14 +531,14 @@ namespace Simias.Gaim
 			{
 				blistDoc.Load(GetGaimConfigDir() + "/blist.xml");
 			}
-			catch (Exception e)
+			catch
 			{
 				return;
 			}
 			XmlElement gaimElement = blistDoc.DocumentElement;
 			
 			string xPathQuery =
-				string.Format("//buddy[@account='{0}' and @proto='{1}' and name='{2}' and setting[@name='simias-url']]",
+				string.Format("//buddy[@account='{0}' and @proto='{1}' and name='{2}' and setting[@name='simias-user-id']]",
 				AccountName, AccountProtocolID, BuddyName);
 			XmlNode buddyNode = gaimElement.SelectSingleNode(xPathQuery);
 			if (buddyNode != null)
@@ -698,7 +698,7 @@ namespace Simias.Gaim
 			{
 				prefsDoc.Load(GetGaimConfigDir() + "/prefs.xml");
 			}
-			catch (Exception e)
+			catch
 			{
 				// Don't cause any errors to log...for the case where Gaim isn't installed or the plugin isn't installed/enabled
 				return false;
@@ -759,7 +759,7 @@ namespace Simias.Gaim
 			{
 				accountsDoc.Load(GetGaimConfigDir() + "/accounts.xml");
 			}
-			catch (Exception e)
+			catch
 			{
 				return (GaimAccount[])accounts.ToArray(typeof(Simias.Gaim.GaimAccount));
 			}
@@ -795,7 +795,7 @@ namespace Simias.Gaim
 			{
 				blistDoc.Load(GetGaimConfigDir() + "/blist.xml");
 			}
-			catch (Exception e)
+			catch
 			{
 				return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
 			}
@@ -820,7 +820,7 @@ namespace Simias.Gaim
 					GaimBuddy buddy = new GaimBuddy(buddyNode);
 					buddies.Add(buddy);
 				}
-				catch (Exception e)
+				catch
 				{
 					// Ignore errors (i.e., spare the log file)
 				}
@@ -928,6 +928,21 @@ namespace Simias.Gaim
 					}
 					
 					member.Given = givenName;
+				}
+			}
+
+			// Simias UserID
+			if (buddy.SimiasUserID != null && buddy.SimiasUserID.Length > 0)
+			{
+				if (pList.HasProperty("Gaim:SimiasUserID"))
+				{
+					pList.ModifyProperty("Gaim:SimiasUserID", buddy.SimiasUserID);
+				}
+				else
+				{
+					p = new Property("Gaim:SimiasUserID", buddy.SimiasUserID);
+					p.LocalProperty = true;
+					member.Properties.AddProperty(p);
 				}
 			}
 			
