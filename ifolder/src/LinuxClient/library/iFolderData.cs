@@ -702,6 +702,19 @@ namespace Novell.iFolder
 
 
 
+		public DomainInformation GetDomain(string domainID)
+		{
+			lock(typeof(iFolderWeb))
+			{
+				if (keyedDomains.Contains(domainID))
+					return (DomainInformation)keyedDomains[domainID];
+				else
+					return null;
+			}
+		}
+
+
+
 		public bool SetDefaultDomain(DomainInformation domain)
 		{
 			lock(typeof(iFolderWeb))
