@@ -181,8 +181,11 @@ namespace Novell.iFolder
     		iFolderUser[] userlist =  ifws.GetiFolderUsers(ifolder.ID);
 			foreach(iFolderUser user in userlist)
 			{
-				TreeIter iter = UserTreeStore.AppendValues(user);
-				curUsers.Add(user.UserID, iter);
+				if(!curUsers.ContainsKey(user.UserID))
+				{
+					TreeIter iter = UserTreeStore.AppendValues(user);
+					curUsers.Add(user.UserID, iter);
+				}
 			}
 		}
 		
