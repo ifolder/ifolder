@@ -14,7 +14,51 @@ namespace Mono.P2p.mDnsResponder
 	{
 		private static readonly log4net.ILog log = 
 			log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		static bool	mDnsStopping = false;
+		static Thread reqHandlerThread = null;
+		static AutoResetEvent reqHandlerEvent = null;
 	
+		internal static int	StartRequestHandler()
+		{
+			log.Info("StartRequestHandler called");
+
+			reqHandlerEvent = new AutoResetEvent(false);
+			reqHandlerThread = new Thread(new ThreadStart(RequestHandler.RequestHandlerThread));
+			reqHandlerThread.IsBackground = true;
+			reqHandlerThread.Start();
+			
+			log.Info("StartRequestHandler finished");
+			return(0);
+		}
+
+		internal static int	StopRequestHandler()
+		{
+			log.Info("StopRequestHandler called");
+			
+			try
+			{
+				mDnsStopping = true;
+				reqHandlerEvent.Set();
+				Thread.Sleep(0);
+				reqHandlerThread.Abort();
+				Thread.Sleep(0);
+				reqHandlerEvent.Close();
+			}
+			catch{}
+			
+			log.Info("StopRequestHandler finished");
+			return(0);
+		}
+		
+		// FIXME - temporary
+		internal static void KickRequestHandler()
+		{
+			reqHandlerEvent.Set();
+		}
+	
+		// FIXME need to setup an event which gets signaled when an object
+		// is placed in the queue
 		internal static void RequestHandlerThread()
 		{
 			DnsRequest		dnsRequest;
@@ -23,8 +67,13 @@ namespace Mono.P2p.mDnsResponder
 			// Setup an endpoint to multi-cast datagrams
 			UdpClient server = new UdpClient("224.0.0.251", 5353);
 
-			while(true)
+			while(reqHandlerEvent.WaitOne(120000, true))
 			{
+				if (mDnsStopping == true)
+				{
+					return;
+				}
+				
 				// Need an event to kick us alive
 				dnsRequest = null;
 				DnsRequest.requestsMtx.WaitOne();
@@ -40,7 +89,6 @@ namespace Mono.P2p.mDnsResponder
 
 					if (dnsRequest != null)
 					{
-						Console.WriteLine("Dequeued Request");
 						if ((dnsRequest.Flags & DnsFlags.request) == DnsFlags.request)
 						{
 							Console.WriteLine("  DNS:    Query");
@@ -265,7 +313,7 @@ namespace Mono.P2p.mDnsResponder
 				else
 				{
 					DnsRequest.requestsMtx.ReleaseMutex();
-					Thread.Sleep(1000);
+					//Thread.Sleep(1000);
 					//Console.WriteLine("RequestHandlerThread - alive");
 				}
 			}

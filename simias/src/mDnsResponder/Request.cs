@@ -294,7 +294,10 @@ namespace Mono.P2p.mDnsResponder
 				}
 				catch(Exception e)
 				{
-					log.Debug("Failed calling ReceiveFrom", e);
+					if (stoppingDnsRequests == false)
+					{
+						log.Debug("Failed calling ReceiveFrom", e);
+					}
 				}
 
 				// Outside forces telling us to stop?
@@ -550,6 +553,8 @@ namespace Mono.P2p.mDnsResponder
 					}
 					
 					dnsRequest.Queue();
+					// FIXME - temporary
+					RequestHandler.KickRequestHandler();
 				}
 			}
 		}

@@ -75,19 +75,8 @@ namespace Mono.P2p.mDnsResponder
 			Resources.AddTextStrings(txtStrs);
 			
 			Registration.Startup();
-
-			log.Info("starting RequestHandler thread");
-			Thread reqHandler = new Thread(new ThreadStart(RequestHandler.RequestHandlerThread));
-			reqHandler.IsBackground = true;
-			reqHandler.Start();
-
-			log.Info("starting Maintenance thread");
-			Thread maintThread = new Thread(new ThreadStart(Resources.MaintenanceThread));
-			maintThread.IsBackground = true;
-			maintThread.Start();
-
-			log.Info("starting up DnsReceive");
-			// Startup up the Dns Receive thread
+			RequestHandler.StartRequestHandler();
+			Resources.StartMaintenanceThread();
 			DnsRequest.StartDnsReceive();
 
 			log.Info("waiting for console input...");
@@ -95,7 +84,9 @@ namespace Mono.P2p.mDnsResponder
 
 			DnsRequest.StopDnsReceive();
 			Thread.Sleep(0);
-			reqHandler.Abort();
+			RequestHandler.StopRequestHandler();
+			Resources.StopMaintenanceThread();
+			Thread.Sleep(1000);
 		}
 	}
 }

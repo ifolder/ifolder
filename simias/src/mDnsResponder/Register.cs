@@ -34,27 +34,23 @@ using System.Text;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels.Http;
 using System.Runtime.Remoting.Channels;
+using Mono.P2p.mDnsResponderApi;
 
 namespace Mono.P2p.mDnsResponder
 {
 	/// <summary>
-	/// Summary description for ServiceRegistrationmDnsHost
+	/// Summary description for ResourceRegistration
 	/// </summary>'
-	public class ServiceRegistration : MarshalByRefObject
+	public class ResourceRegistration : MarshalByRefObject, IResourceRegistration
 	{
 		#region Class Members
-
-		/*
-		static internal ArrayList	hosts = new ArrayList();
-		static internal Mutex		hostsMtx = new Mutex(false);
-		*/
 		#endregion
 
 		#region Properties
 		#endregion
 
 		#region Constructors
-		public ServiceRegistration()
+		public ResourceRegistration()
 		{
 		}
 		#endregion
@@ -63,30 +59,126 @@ namespace Mono.P2p.mDnsResponder
 		#endregion
 
 		#region Static Methods
-		public int	RegisterServiceLocation(string host, string serviceName, short port)
+		#endregion
+		
+		#region Public Methods
+		public int	RegisterServiceLocation(string host, string serviceName, int port, int priority, int weight)
 		{
+			ServiceLocation	sl = new
+				ServiceLocation(
+					serviceName, 
+					Defaults.timeToLive, 
+					mDnsType.serviceLocation, 
+					mDnsClass.iNet, 
+					true);
+					
+			sl.Target = host;
+			sl.Port = port;
+			sl.Priority = priority;
+			sl.Weight = weight;
+			Resources.AddServiceLocation(sl);
 			return(0);
 		}
 		
 		public int	DeregisterServiceLocation(string host, string serviceName)
 		{
+			ServiceLocation	sl = new
+				ServiceLocation(
+					serviceName, 
+					Defaults.timeToLive, 
+					mDnsType.serviceLocation, 
+					mDnsClass.iNet, 
+					true);
+					
+			sl.Target = host;
+			Resources.RemoveServiceLocation(sl);
 			return(0);
 		}
 
 		public int	RegisterPointer(string domain, string target)
 		{
+			Ptr	ptr = new Ptr(domain, Defaults.timeToLive, mDnsType.ptr, mDnsClass.iNet, true);
+			ptr.Target = target;
+			Resources.AddPtr(ptr); 
 			return(0);
 		}
 		
 		public int	DeregisterPointer(string domain, string target)
 		{
+			Ptr	ptr = new Ptr(domain, Defaults.timeToLive, mDnsType.ptr, mDnsClass.iNet, true);
+			ptr.Target = target;
+			Resources.RemovePtr(ptr); 
 			return(0);
 		}
-		
+		#endregion
+	}
+
+	/// <summary>
+	/// Summary description for ResourceQuery
+	/// </summary>'
+	public class ResourceQuery : MarshalByRefObject, IResourceQuery
+	{
+		#region Constructors
+		public ResourceQuery()
+		{
+		}
 		#endregion
 
 		#region Public Methods
+		
+		public int LookupServiceLocation(string serviceName, ref string host, ref int port, ref int priority, ref int weight)
+		{
+			int status = 0;
+			ServiceLocation cLoc = Resources.GetServiceLocation(serviceName);
+			if (cLoc != null)
+			{
+				host = cLoc.Target;
+				port = cLoc.Port;
+				priority = cLoc.Priority;
+				weight = cLoc.Weight;
+			}
+			else
+			{
+				status = -1;
+			}	
+
+			return(status);	
+		}
+
+		public int LookupHost(string host, out RHostAddress ha)
+		{
+			Console.WriteLine("LookupHost called");
+			int status = 0;
+			ha = null;
+			HostAddress cHost = Resources.GetHostAddress(host);
+			if (cHost != null)
+			{
+				ha = new RHostAddress(cHost.Name, cHost.Ttl, (Mono.P2p.mDnsResponderApi.mDnsType) cHost.Type, (Mono.P2p.mDnsResponderApi.mDnsClass) cHost.Class, false);
+				ha.AddIPAddress(cHost.PrefAddress);
+			}
+			
+			return(status);
+		}
+
+		public int	LookupPtr(string domain, ref string target)
+		{
+			return(-1);
+		}	
+	
 		#endregion
+	}
+	
+	public class mDnsRemoteFactory: MarshalByRefObject, IRemoteFactory
+	{
+		public IResourceRegistration GetRegistrationInstance()
+		{
+			return(new ResourceRegistration());
+		}
+		
+		public IResourceQuery GetQueryInstance()
+		{
+			return(new ResourceQuery());
+		}
 	}
 	
 	/// <summary>
@@ -109,14 +201,13 @@ namespace Mono.P2p.mDnsResponder
 		#region Static Methods
 		public static int Startup()
 		{
-			HttpChannel chnl = new HttpChannel(6151);
-			
+			HttpChannel chnl = new HttpChannel(8091);
 			ChannelServices.RegisterChannel(chnl);
 			
 			RemotingConfiguration.RegisterWellKnownServiceType(
-				typeof(ServiceRegistration),
-				"ServiceRegistration.soap",
-				WellKnownObjectMode.SingleCall);
+				typeof(mDnsRemoteFactory),
+				"factory.soap",
+				WellKnownObjectMode.Singleton);
 				
 			return(0);
 		}

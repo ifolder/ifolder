@@ -125,6 +125,29 @@ namespace Mono.P2p.mDnsResponder
 			Resources.resourceMtx.ReleaseMutex();
 		}
 
+		static public HostAddress GetHostAddress(string host)
+		{
+			log.Info("GetHostAddress called");
+			
+			HostAddress	rHost = null;
+			
+			Resources.resourceMtx.WaitOne();
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.Name == host &&
+					cResource.Type == mDnsType.hostAddress)
+				{
+					HostAddress cHost = (HostAddress) cResource;
+					
+					rHost = new HostAddress(cHost.Name, cHost.Ttl, cHost.Type, cHost.Class, false);
+					rHost.AddIPAddress(cHost.PrefAddress);
+					break;
+				}
+			}
+
+			Resources.resourceMtx.ReleaseMutex();
+			return(rHost);
+		}
 		static public void AddServiceLocation(ServiceLocation serviceLocation)
 		{
 			log.Info("AddServiceLocation called");
@@ -157,6 +180,58 @@ namespace Mono.P2p.mDnsResponder
 			Resources.resourceMtx.ReleaseMutex();
 		}
 
+		static public ServiceLocation GetServiceLocation(string service)
+		{
+			log.Info("GetServiceLocation called");
+			
+			ServiceLocation	rLocation = null;
+			
+			Resources.resourceMtx.WaitOne();
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.Name == service &&
+					cResource.Type == mDnsType.serviceLocation)
+				{
+					ServiceLocation cLocation = (ServiceLocation) cResource;
+					
+					rLocation = new ServiceLocation(cLocation.Name, cLocation.Ttl, cLocation.Type, cLocation.Class, false);
+					rLocation.Target = cLocation.Target;
+					rLocation.Port = cLocation.Port;
+					rLocation.Priority = cLocation.Priority;
+					rLocation.Weight = cLocation.Weight;
+					break;
+				}
+			}
+
+			Resources.resourceMtx.ReleaseMutex();
+			return(rLocation);
+		}
+
+		// TODO need to send a dying record out 
+		static public void RemoveServiceLocation(ServiceLocation serviceLocation)
+		{
+			log.Info("RemoveServiceLocation called");
+			
+			Resources.resourceMtx.WaitOne();
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.Name == serviceLocation.Name &&
+					cResource.Type == serviceLocation.Type)
+				{
+				
+					// Update the record
+					ServiceLocation cLocation = (ServiceLocation) cResource;
+					if (cLocation.Target == serviceLocation.Target)
+					{
+						Resources.resourceList.Remove(cResource);
+						break;
+					}
+				}
+			}
+
+			Resources.resourceMtx.ReleaseMutex();
+		}
+
 		static public void AddPtr(Ptr ptr)
 		{
 			log.Info("AddPtr called");
@@ -175,7 +250,7 @@ namespace Mono.P2p.mDnsResponder
 						if (ptr.Ttl == 0)
 						{
 							log.Info("   Removing " + ptr.Name);
-							Resources.resourceList.Remove(cPtr);	
+							Resources.resourceList.Remove(cResource);	
 						}
 							
 						break;
@@ -192,6 +267,28 @@ namespace Mono.P2p.mDnsResponder
 				}
 			}
 			
+			Resources.resourceMtx.ReleaseMutex();
+		}
+
+		static public void RemovePtr(Ptr ptr)
+		{
+			log.Info("RemovePtr called");
+
+			Resources.resourceMtx.WaitOne();
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.Name == ptr.Name &&
+					cResource.Type == ptr.Type)
+				{
+					Ptr cPtr = (Ptr) cResource;
+					if(cPtr.Target == ptr.Target)
+					{
+						log.Info("   Removing " + ptr.Name);
+						Resources.resourceList.Remove(cResource);	
+						break;
+					}
+				}
+			}
 			Resources.resourceMtx.ReleaseMutex();
 		}
 
@@ -458,6 +555,41 @@ namespace Mono.P2p.mDnsResponder
 			return(index);
 		}
 
+		static bool	mDnsStopping = false;
+		static Thread maintenanceThread = null;
+		static AutoResetEvent maintenanceEvent = null;
+	
+		internal static int	StartMaintenanceThread()
+		{
+			log.Info("StartMaintenanceThread called");
+
+			maintenanceEvent = new AutoResetEvent(false);
+
+			maintenanceThread = new Thread(new ThreadStart(Resources.MaintenanceThread));
+			maintenanceThread.IsBackground = true;
+			maintenanceThread.Start();
+			
+			log.Info("StartMaintenanceThread finished");
+			return(0);
+		}
+
+		internal static int	StopMaintenanceThread()
+		{
+			log.Info("StopMaintenanceThread called");
+			mDnsStopping = true;
+			maintenanceEvent.Set();
+			Thread.Sleep(0);
+			if (maintenanceThread != null)
+			{
+				maintenanceThread.Abort();
+				Thread.Sleep(0);
+			}
+			
+			maintenanceEvent.Close();
+			log.Info("StopMaintenanceThread finished");
+			return(0);
+		}
+
  		// Used to send out the gratutious answers
 		internal static void MaintenanceThread()
 		{
@@ -471,11 +603,15 @@ namespace Mono.P2p.mDnsResponder
 			// Setup an endpoint to multi-cast datagrams
 			UdpClient server = new UdpClient("224.0.0.251", 5353);
 
-			while(true)
+			while(maintenanceEvent.WaitOne((Defaults.maintenanceNapTime * 1000), true))
 			{
-				//				Thread.Sleep(120000);
-				Thread.Sleep(Defaults.maintenanceNapTime * 1000);
+				//Thread.Sleep(Defaults.maintenanceNapTime * 1000);
 				log.Info("Maintenance thread awake");
+				if (mDnsStopping == true)
+				{
+					return;
+				}
+				
 				Resources.resourceMtx.WaitOne();
 				foreach(BaseResource cResource in Resources.resourceList)
 				{
@@ -875,6 +1011,7 @@ namespace Mono.P2p.mDnsResponder
 	/// <summary>
 	/// Summary description for Host Resource
 	/// </summary>
+	[Serializable]
 	class HostAddress : BaseResource
 	{
 		#region Class Members
@@ -1030,17 +1167,6 @@ namespace Mono.P2p.mDnsResponder
 		}
 		*/
 
-/*
-		public ServiceResource(string service, int port, int priority, int weight)
-		{
-			this.serviceName = service;
-			this.port = port;
-			this.priority = priority;
-			this.weight = weight;
-			this.nameValues = new ArrayList();
-		}
-*/
-		
 		public ServiceLocation(string name, int ttl, mDnsType dnsType, mDnsClass dnsClass, bool owner) : base(name, ttl, dnsType, dnsClass, owner)
 		{
 			this.nameValues = new ArrayList();
