@@ -26,8 +26,9 @@ using System;
 using Gtk;
 using Gdk;
 using GtkSharp;
+using Novell.AddressBook.UI;
 
-namespace Novell.iFolder
+namespace ContactBrowser
 {
 	public class ContactBrowserApp 
 	{
