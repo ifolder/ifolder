@@ -36,7 +36,6 @@ using Simias;
 using Simias.Event;
 using Simias.Service;
 
-
 namespace Novell.iFolder.FormsTrayApp
 {
 	/// <summary>
@@ -355,6 +354,10 @@ namespace Novell.iFolder.FormsTrayApp
 //			sysManager.StartServices();
 
             SimiasLogManager.Configure(conf);
+			
+			SyncProperties props = new SyncProperties(conf);
+			props.LogicFactory = typeof(SynkerA);
+			
 			serviceManager = new Manager(conf);
 			serviceManager.StartServices();
 
@@ -379,6 +382,9 @@ namespace Novell.iFolder.FormsTrayApp
 
 			// Trace messages will immediately be written, so we need the window handle to be created.
 			traceForm.CreateControl();
+			
+			// sync logging
+			Log.SetLevel("verbose");
 
 			// For some reason the handle isn't really created until it is referenced.
 			IntPtr handle = traceForm.Handle;
