@@ -42,6 +42,10 @@ namespace Simias.Sync.Web
 			HttpService Service = (HttpService)Session[ServiceString];
 			// Set no cache-ing.
 			Response.Cache.SetCacheability(HttpCacheability.NoCache);
+
+			// Set the current principal on this thread.
+			Simias.Authentication.Http.GetMember( context );
+
 			string httpMethod = Request.HttpMethod;
 			SyncMethod method = (SyncMethod)Enum.Parse(typeof(SyncMethod), Request.Headers.Get(SyncHeaders.Method), true);
 			if (string.Compare(httpMethod, "POST", true) == 0)
