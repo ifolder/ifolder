@@ -354,6 +354,132 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\FlaimProvider\FlaimError.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimProvider.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimProvider.resx"
+                    DependentUpon = "FlaimProvider.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimRecord.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimResultSet.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimServer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\CSPObjectIterator.cpp"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\CSPObjectIterator.h"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\CSPropertyIterator.cpp"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\CSPropertyIterator.h"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\CSPStore.cpp"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\CSPStore.h"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\CSPStoreObject.cpp"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\CSPStoreObject.h"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\CSPType.h"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\FlaimWrapper.cpp"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\FlaimWrapper.h"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\Debug\BuildLog.htm"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\Debug\CSPObjectIterator.obj"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\Debug\CSPropertyIterator.obj"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\Debug\CSPStore.obj"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\Debug\CSPStoreObject.obj"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\Debug\FlaimWrapper.dll"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\Debug\FlaimWrapper.exp"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\Debug\FlaimWrapper.ilk"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\Debug\FlaimWrapper.lib"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\Debug\FlaimWrapper.obj"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\Debug\FlaimWrapper.pdb"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\Debug\vc70.idb"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "src\FlaimProvider\FlaimWrapper\Debug\vc70.pdb"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "src\Location\DefaultLocationProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

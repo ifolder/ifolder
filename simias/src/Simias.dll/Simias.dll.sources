@@ -43,6 +43,11 @@ AssemblyInfo.cs
 ../Domain/DomainInfo.cs
 ../Domain/IDomainService.cs
 ../Domain/ProvisionInfo.cs
+../FlaimProvider/FlaimError.cs
+../FlaimProvider/FlaimProvider.cs
+../FlaimProvider/FlaimRecord.cs
+../FlaimProvider/FlaimResultSet.cs
+../FlaimProvider/FlaimServer.cs
 ../Location/DefaultLocationProvider.cs
 ../Location/ILocationProvider.cs
 ../Location/LocationProviderList.cs

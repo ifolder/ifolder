@@ -403,6 +403,8 @@ src/install-simias-to-gac
 src/Common/SimiasSetup.cs
 src/Common/MyDns.cs
 src/Simias.dll/Makefile
+src/FlaimProvider/Makefile
+src/FlaimProvider/FlaimWrapper/Makefile
 src/SimiasApp/Makefile
 src/SimiasApp/simias
 src/AddressBook/Makefile

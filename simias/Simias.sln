@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimiasApp", "src\SimiasApp\
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FlaimWrapper", "src\FlaimProvider\FlaimWrapper\FlaimWrapper.vcproj", "{188191A2-3D4D-404E-8F66-A1FAB865F586}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -29,6 +33,10 @@ Global
 		{FBC32721-2AEE-48D5-8353-FAACC2AF16B2}.Debug.Build.0 = Debug|.NET
 		{FBC32721-2AEE-48D5-8353-FAACC2AF16B2}.Release.ActiveCfg = Release|.NET
 		{FBC32721-2AEE-48D5-8353-FAACC2AF16B2}.Release.Build.0 = Release|.NET
+		{188191A2-3D4D-404E-8F66-A1FAB865F586}.Debug.ActiveCfg = Debug|Win32
+		{188191A2-3D4D-404E-8F66-A1FAB865F586}.Debug.Build.0 = Debug|Win32
+		{188191A2-3D4D-404E-8F66-A1FAB865F586}.Release.ActiveCfg = Release|Win32
+		{188191A2-3D4D-404E-8F66-A1FAB865F586}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
