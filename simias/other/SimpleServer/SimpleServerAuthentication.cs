@@ -441,8 +441,10 @@ namespace Simias.SimpleServer
 		public bool OwnsDomain( string domainID )
 		{
 			log.Debug( "OwnsDomain called" );
+			log.Debug( "  with domain: " + domainID );
 
 			Simias.SimpleServer.Domain thisDomain = new Simias.SimpleServer.Domain( false );
+			log.Debug( "  this SimpleServer domain is: " + thisDomain.ID );
 			if ( thisDomain.ID == domainID )
 			{
 				log.Debug( "  returning true" );
