@@ -98,6 +98,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuSeparator2;
 		private System.Windows.Forms.ColumnHeader columnHeader4;
 		private System.Windows.Forms.ColumnHeader columnHeader5;
+		private System.Windows.Forms.MenuItem menuSyncNow;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -165,6 +166,8 @@ namespace Novell.iFolder.FormsTrayApp
 			this.label4 = new System.Windows.Forms.Label();
 			this.iFolderView = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
 			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
 			this.menuOpen = new System.Windows.Forms.MenuItem();
 			this.menuCreate = new System.Windows.Forms.MenuItem();
@@ -197,8 +200,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuStop = new System.Windows.Forms.MenuItem();
 			this.menuRestart = new System.Windows.Forms.MenuItem();
 			this.banner = new System.Windows.Forms.PictureBox();
-			this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
+			this.menuSyncNow = new System.Windows.Forms.MenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -366,6 +368,16 @@ namespace Novell.iFolder.FormsTrayApp
 			this.columnHeader1.Text = "Name";
 			this.columnHeader1.Width = 100;
 			// 
+			// columnHeader4
+			// 
+			this.columnHeader4.Text = "Location";
+			this.columnHeader4.Width = 240;
+			// 
+			// columnHeader5
+			// 
+			this.columnHeader5.Text = "Status";
+			this.columnHeader5.Width = 64;
+			// 
 			// contextMenu1
 			// 
 			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
@@ -375,6 +387,7 @@ namespace Novell.iFolder.FormsTrayApp
 																						 this.menuSeparator1,
 																						 this.menuRevert,
 																						 this.menuShare,
+																						 this.menuSyncNow,
 																						 this.menuSeparator2,
 																						 this.menuProperties});
 			this.contextMenu1.Popup += new System.EventHandler(this.contextMenu1_Popup);
@@ -420,13 +433,13 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			// menuSeparator2
 			// 
-			this.menuSeparator2.Index = 6;
+			this.menuSeparator2.Index = 7;
 			this.menuSeparator2.Text = "-";
 			this.menuSeparator2.Visible = false;
 			// 
 			// menuProperties
 			// 
-			this.menuProperties.Index = 7;
+			this.menuProperties.Index = 8;
 			this.menuProperties.Text = "Properties...";
 			this.menuProperties.Visible = false;
 			this.menuProperties.Click += new System.EventHandler(this.menuProperties_Click);
@@ -551,13 +564,13 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			// syncNow
 			// 
-			this.syncNow.Enabled = false;
 			this.syncNow.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.syncNow.Location = new System.Drawing.Point(320, 12);
 			this.syncNow.Name = "syncNow";
 			this.syncNow.Size = new System.Drawing.Size(96, 23);
 			this.syncNow.TabIndex = 1;
 			this.syncNow.Text = "Sync now";
+			this.syncNow.Click += new System.EventHandler(this.syncNow_Click);
 			// 
 			// label6
 			// 
@@ -644,15 +657,12 @@ namespace Novell.iFolder.FormsTrayApp
 			this.banner.TabIndex = 9;
 			this.banner.TabStop = false;
 			// 
-			// columnHeader4
+			// menuSyncNow
 			// 
-			this.columnHeader4.Text = "Location";
-			this.columnHeader4.Width = 240;
-			// 
-			// columnHeader5
-			// 
-			this.columnHeader5.Text = "Status";
-			this.columnHeader5.Width = 64;
+			this.menuSyncNow.Index = 6;
+			this.menuSyncNow.Text = "Sync now";
+			this.menuSyncNow.Visible = false;
+			this.menuSyncNow.Click += new System.EventHandler(this.menuSyncNow_Click);
 			// 
 			// GlobalProperties
 			// 
@@ -774,6 +784,23 @@ namespace Novell.iFolder.FormsTrayApp
 				logger.Debug(ex, "Sharing");
 			}
 		}
+
+		private void synciFolder(string id)
+		{
+			try
+			{
+				ServiceCtl svc = serviceManager.GetService("Simias Sync Service");
+				svc.Custom((int)(id == String.Empty ? SyncMessages.SyncAllNow : SyncMessages.SyncCollectionNow), id);
+			}
+			catch (SimiasException ex)
+			{
+				ex.LogError();
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "SyncCollection");
+			}
+		}
 		#endregion
 
 		#region Event Handlers
@@ -859,6 +886,7 @@ namespace Novell.iFolder.FormsTrayApp
 			Cursor.Current = Cursors.Default;
 		}
 
+		#region iFolders Tab
 		private void iFolderView_DoubleClick(object sender, System.EventArgs e)
 		{
 			menuOpen_Click(sender, e);
@@ -901,7 +929,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private void contextMenu1_Popup(object sender, System.EventArgs e)
 		{
 			menuShare.Visible = menuProperties.Visible = menuRevert.Visible = 
-				menuSeparator1.Visible = menuSeparator2.Visible = 
+				menuSeparator1.Visible = menuSeparator2.Visible = menuSyncNow.Visible =
 				menuOpen.Visible = iFolderView.SelectedItems.Count == 1;
 			menuRefresh.Visible = menuCreate.Visible = iFolderView.SelectedItems.Count == 0;
 		}
@@ -967,6 +995,11 @@ namespace Novell.iFolder.FormsTrayApp
 			invokeiFolderProperties(iFolderView.SelectedItems[0], "share");
 		}
 
+		private void menuSyncNow_Click(object sender, System.EventArgs e)
+		{
+			synciFolder((string)iFolderView.SelectedItems[0].Tag);
+		}
+
 		private void menuProperties_Click(object sender, System.EventArgs e)
 		{
 			invokeiFolderProperties(iFolderView.SelectedItems[0], null);
@@ -1019,7 +1052,16 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			refreshiFolders();
 		}
+		#endregion
 
+		#region Log Tab
+		private void syncNow_Click(object sender, System.EventArgs e)
+		{
+			synciFolder("");
+		}
+		#endregion
+
+		#region Services Tab
 		private void contextMenu2_Popup(object sender, System.EventArgs e)
 		{
 			if (services.SelectedItems.Count == 1)
@@ -1099,6 +1141,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 			Cursor.Current = Cursors.Default;
 		}
+		#endregion
 		#endregion
 	}
 }
