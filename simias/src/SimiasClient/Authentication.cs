@@ -32,6 +32,33 @@ using Novell.Security.ClientPasswordManager;
 namespace Simias.Client
 {
 	/// <summary>
+	/// Defines the credential types stored on a domain.
+	/// </summary>
+	[Serializable]
+	public enum CredentialType
+	{
+		/// <summary>
+		/// Credentials have not been set on this domain.
+		/// </summary>
+		None,
+
+		/// <summary>
+		/// Credentials are not required for this domain.
+		/// </summary>
+		NotRequired,
+
+		/// <summary>
+		/// HTTP basic credentials.
+		/// </summary>
+		Basic,
+
+		/// <summary>
+		/// Public/Private key credentials.
+		/// </summary>
+		PPK
+	}
+
+	/// <summary>
 	/// Status codes returned from Autheticate methods
 	/// </summary>
 	[Serializable]

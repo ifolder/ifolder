@@ -46,9 +46,13 @@ namespace Simias.Storage
 		static internal CspParameters DummyCsp;
 
 		/// <summary>
-		/// Used to separate the user ID and domain ID in the Domain property.
+		/// Xml tags used to store the domain mapping information.
 		/// </summary>
-		static private char valueSeparator = ':';
+		static private readonly string MappingTag = "Mapping";
+		static private readonly string DomainTag = "Domain";
+		static private readonly string UserTag = "User";
+		static private readonly string CredentialTag = "Credential";
+		static private readonly string TypeTag = "Type";
 		#endregion
 
 		#region Properties
@@ -62,11 +66,11 @@ namespace Simias.Storage
 				RSACryptoServiceProvider credential = null;
 
 				// Lookup the credential property on the identity.
-				Property p = properties.FindSingleValue( PropertyTags.Credential );
-				if ( p != null )
+				XmlDocument mapDoc = GetDocumentByDomain( Domain.WorkGroupDomainID );
+				if ( mapDoc != null )
 				{
 					credential = new RSACryptoServiceProvider( Identity.DummyCsp );
-					credential.FromXmlString( p.Value as string );
+					credential.FromXmlString( mapDoc.DocumentElement.GetAttribute( CredentialTag ) );
 				}
 
 				return credential;
@@ -126,13 +130,6 @@ namespace Simias.Storage
 		internal Identity( string userName, string userGuid ) :
 			base ( userName, userGuid, NodeTypes.IdentityType )
 		{
-			// Create a local, hidden property to store the credential in.
-			// The RSA parameters will be stored as a string object on the identity node.
-			RSACryptoServiceProvider credential = new RSACryptoServiceProvider( 1024 );
-			Property p = new Property( PropertyTags.Credential, credential.ToXmlString( true ) );
-			p.HiddenProperty = true;
-			p.LocalProperty = true;
-			properties.AddNodeProperty( p );
 		}
 
 		/// <summary>
@@ -178,6 +175,52 @@ namespace Simias.Storage
 
 		#region Private Methods
 		/// <summary>
+		/// Gets the XML document that contains the specified Domain property.
+		/// </summary>
+		/// <param name="domainID">Well known identity for the specified domain.</param>
+		/// <returns>An XmlDocument object containing the found domain property.</returns>
+		private XmlDocument GetDocumentByDomain( string domainID )
+		{
+			XmlDocument document = null;
+
+			MultiValuedList mvl = properties.GetProperties( PropertyTags.Domain );
+			foreach ( Property p in mvl )
+			{
+				XmlDocument mapDoc = p.Value as XmlDocument;
+				if ( mapDoc.DocumentElement.GetAttribute( DomainTag ) == domainID )
+				{
+					document = mapDoc;
+					break;
+				}
+			}
+
+			return document;
+		}
+
+		/// <summary>
+		/// Gets the XML document that contains the specified Domain property.
+		/// </summary>
+		/// <param name="userID">User ID to use to discover domain property.</param>
+		/// <returns>An XmlDocument object containing the found domain property.</returns>
+		private XmlDocument GetDocumentByUserID( string userID )
+		{
+			XmlDocument document = null;
+
+			MultiValuedList mvl = properties.GetProperties( PropertyTags.Domain );
+			foreach ( Property p in mvl )
+			{
+				XmlDocument mapDoc = p.Value as XmlDocument;
+				if ( mapDoc.DocumentElement.GetAttribute( UserTag ) == userID )
+				{
+					document = mapDoc;
+					break;
+				}
+			}
+
+			return document;
+		}
+
+		/// <summary>
 		/// Gets the specified Domain property.
 		/// </summary>
 		/// <param name="domainID">Well known identity for the specified domain.</param>
@@ -189,7 +232,8 @@ namespace Simias.Storage
 			MultiValuedList mvl = properties.GetProperties( PropertyTags.Domain );
 			foreach ( Property p in mvl )
 			{
-				if ( ( p.Value as string ).EndsWith( domainID ) )
+				XmlDocument mapDoc = p.Value as XmlDocument;
+				if ( mapDoc.DocumentElement.GetAttribute( DomainTag ) == domainID )
 				{
 					property = p;
 					break;
@@ -211,7 +255,8 @@ namespace Simias.Storage
 			MultiValuedList mvl = properties.GetProperties( PropertyTags.Domain );
 			foreach ( Property p in mvl )
 			{
-				if ( ( p.Value as string ).StartsWith( userID ) )
+				XmlDocument mapDoc = p.Value as XmlDocument;
+				if ( mapDoc.DocumentElement.GetAttribute( UserTag ) == userID )
 				{
 					property = p;
 					break;
@@ -231,7 +276,47 @@ namespace Simias.Storage
 		/// <returns>The modified identity object.</returns>
 		internal Identity AddDomainIdentity( string userID, string domainID )
 		{
-			properties.AddNodeProperty( PropertyTags.Domain, userID.ToLower() + valueSeparator + domainID.ToLower() );
+			return AddDomainIdentity( userID, domainID, null, CredentialType.None );
+		}
+
+		/// <summary>
+		/// Adds a domain identity property to the Identity object.
+		/// </summary>
+		/// <param name="userID">Identity that this user is known as in the specified domain.</param>
+		/// <param name="domainID">Well known identity for the specified domain.</param>
+		/// <param name="credentials">Credentials for this domain. This may be null.</param>
+		/// <param name="type">The type of credentials stored.</param>
+		/// <returns>The modified identity object.</returns>
+		internal Identity AddDomainIdentity( string userID, string domainID, string credentials, CredentialType type )
+		{
+			XmlDocument mapDoc = null;
+			
+			// Check to see if the domain already exists.
+			Property p = GetPropertyByDomain( domainID );
+			if ( p != null )
+			{
+				mapDoc = p.Value as XmlDocument;
+			}
+			else
+			{
+				mapDoc = new XmlDocument();
+				XmlElement root = mapDoc.CreateElement( MappingTag );
+				mapDoc.AppendChild( root );
+				mapDoc.DocumentElement.SetAttribute( DomainTag, domainID );
+
+				p = new Property( PropertyTags.Domain, mapDoc );
+				properties.AddNodeProperty( p );
+			}
+
+			mapDoc.DocumentElement.SetAttribute( UserTag, userID );
+			mapDoc.DocumentElement.SetAttribute( TypeTag, type.ToString() );
+
+			if ( ( credentials != null ) && ( type != CredentialType.None ) )
+			{
+				mapDoc.DocumentElement.SetAttribute( CredentialTag, credentials );
+			}
+
+			p.SetPropertyValue( mapDoc );
 			return this;
 		}
 
@@ -259,9 +344,16 @@ namespace Simias.Storage
 		/// <returns>Domain name associated with the specified user ID if it exists. Otherwise null is returned.</returns>
 		internal string GetDomainFromUserID( string userID )
 		{
+			string domainID = null;
+
 			// Find the property associated with the user ID.
-			Property p = GetPropertyByUserID( userID.ToLower() );
-			return ( p != null ) ? ( p.Value as string ).Substring( userID.Length + 1 ) : null;
+			XmlDocument document = GetDocumentByUserID( userID.ToLower() );
+			if ( document != null )
+			{
+				domainID = document.DocumentElement.GetAttribute( DomainTag );
+			}
+
+			return ( ( domainID != null ) && ( domainID != String.Empty ) ) ? domainID : null;
 		}
 
 		/// <summary>
@@ -271,9 +363,70 @@ namespace Simias.Storage
 		/// <returns>User ID associated with the specified domain ID if it exists. Otherwise null is returned.</returns>
 		internal string GetUserIDFromDomain( string domainID )
 		{
+			string userID = null;
+
 			// Find the property associated with the user ID.
+			XmlDocument document = GetDocumentByDomain( domainID.ToLower() );
+			if ( document != null )
+			{
+				userID = document.DocumentElement.GetAttribute( UserTag );
+			}
+
+			return ( ( userID != null ) && ( userID != String.Empty ) ) ? userID : null;
+		}
+
+		/// <summary>
+		/// Gets the user identifier and credentials for the specified domain.
+		/// </summary>
+		/// <param name="domainID">The identifier for the domain.</param>
+		/// <param name="userID">Gets the userID of the user associated with the specified domain.</param>
+		/// <param name="credentials">Gets the credentials for the user.</param>
+		/// <returns>CredentialType enumerated object.</returns>
+		internal CredentialType GetDomainCredentials( string domainID, out string userID, out string credentials )
+		{
+			// Find the property associated with the domain.
+			XmlDocument document = GetDocumentByDomain( domainID );
+			if ( document == null )
+			{
+				throw new CollectionStoreException( "The specified domain does not exist." );
+			}
+
+			userID = document.DocumentElement.GetAttribute( UserTag );
+			credentials = document.DocumentElement.GetAttribute( CredentialTag );
+
+			string credType = document.DocumentElement.GetAttribute( TypeTag );
+			return ( CredentialType )Enum.Parse( typeof( CredentialType ), credType, true );
+		}
+
+		/// <summary>
+		/// Sets the credentials for the specified domain.
+		/// </summary>
+		/// <param name="domainID">The domain to set the password for.</param>
+		/// <param name="credentials">The domain credentials.</param>
+		/// <param name="type">Type of credentials.</param>
+		/// <returns>The modified identity object.</returns>
+		internal Identity SetDomainCredentials( string domainID, string credentials, CredentialType type )
+		{
 			Property p = GetPropertyByDomain( domainID.ToLower() );
-			return ( p != null ) ? ( p.Value as string ).Substring( 0, domainID.Length ) : null;
+			if ( p == null )
+			{
+				throw new CollectionStoreException( "There is no mapping for this domain." );
+			}
+
+			// Set the password on the mapping.
+			XmlDocument mapDoc = p.Value as XmlDocument;
+			if ( type == CredentialType.None )
+			{
+				mapDoc.DocumentElement.RemoveAttribute( CredentialTag );
+			}
+			else
+			{
+				mapDoc.DocumentElement.SetAttribute( CredentialTag, credentials );
+			}
+
+			mapDoc.DocumentElement.SetAttribute( TypeTag, type.ToString() );
+			p.SetPropertyValue( mapDoc );
+			return this;
 		}
 		#endregion
 	}

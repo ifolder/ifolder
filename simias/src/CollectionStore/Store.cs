@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Net;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Xml;
 
@@ -321,7 +322,10 @@ namespace Simias.Storage
 					// Create the default workgroup domain and add an identity mapping.
 					Domain wgDomain = new Domain( Domain.WorkGroupDomainName, Domain.WorkGroupDomainID );
 					wgDomain.HostAddress = localUri;
-					owner.AddDomainIdentity( owner.ID, wgDomain.ID );
+
+					// Create a credential to use with workgroup domains.
+					RSACryptoServiceProvider credential = new RSACryptoServiceProvider( 1024 );
+					owner.AddDomainIdentity( owner.ID, wgDomain.ID, credential.ToXmlString( true ), CredentialType.PPK );
 
 					// Save the local database changes.
 					ldb.Commit( new Node[] { ldb, member, owner, wgDomain } );
@@ -572,6 +576,22 @@ namespace Simias.Storage
 		/// <returns>The created Domain object.</returns>
 		public Domain AddDomainIdentity( string userID, string domainName, string domainID, string domainDescription, Uri domainHost )
 		{
+			return AddDomainIdentity( userID, null, CredentialType.None, domainName, domainID, domainDescription, domainHost );
+		}
+
+		/// <summary>
+		/// Adds a domain identity to the Collection Store.
+		/// </summary>
+		/// <param name="userID">Identity that this user is known as in the specified domain.</param>
+		///	<param name="credentials">Credentials for the user. May be null.</param>
+		///	<param name="credType">Type of credentials being stored.</param>
+		/// <param name="domainName">Name of the domain.</param>
+		/// <param name="domainID">Well known identity for the specified domain.</param>
+		/// <param name="domainDescription">String that describes the specified domain.</param>
+		/// <param name="domainHost">The URI of where the domain is hosted.</param>
+		/// <returns>The created Domain object.</returns>
+		public Domain AddDomainIdentity( string userID, string credentials, CredentialType credType, string domainName, string domainID, string domainDescription, Uri domainHost )
+		{
 			Node[] nodeList = new Node[ 2 ];
 
 			// Normalize the domain ID.
@@ -580,7 +600,7 @@ namespace Simias.Storage
 			// Create the domain object.
 			Domain domain = new Domain( domainName, domainID, domainDescription );
 			nodeList[ 0 ] = domain;
-			nodeList[ 1 ] = CurrentUser.AddDomainIdentity( userID.ToLower(), domainID );
+			nodeList[ 1 ] = CurrentUser.AddDomainIdentity( userID.ToLower(), domainID, credentials, credType );
 
 			// Add the uri.
 			domain.HostAddress = domainHost;
@@ -621,6 +641,15 @@ namespace Simias.Storage
 
 			// Commit the changes.
 			ldb.Commit( nodeList );
+		}
+
+		/// <summary>
+		/// Removes the credentials from the specified domain.
+		/// </summary>
+		/// <param name="domainID">Domain identifier to remove the password from.</param>
+		public void DeleteDomainCredentials( string domainID )
+		{
+			LocalDb.Commit( CurrentUser.SetDomainCredentials( domainID.ToLower(), null, CredentialType.None ) );
 		}
 
 		/// <summary>
@@ -912,6 +941,18 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets the domain credentials for the specified domain.
+		/// </summary>
+		/// <param name="domainID">Identifier of the domain to get the credentials from.</param>
+		/// <param name="userID">Gets the identifier of the domain user.</param>
+		/// <param name="credentials">Gets the credentials for the domain.</param>
+		/// <returns>The type of credentials.</returns>
+		public CredentialType GetDomainCredentials( string domainID, out string userID, out string credentials )
+		{
+			return CurrentUser.GetDomainCredentials( domainID.ToLower(), out userID, out credentials );
+		}
+
+		/// <summary>
 		/// Gets the Domain object that the specified user belongs to.
 		/// </summary>
 		/// <param name="userID">Identifier for the user.</param>
@@ -1020,6 +1061,17 @@ namespace Simias.Storage
 		public string GetUserIDFromDomainID( string domainID )
 		{
 			return CurrentUser.GetUserIDFromDomain( domainID );
+		}
+
+		/// <summary>
+		/// Sets credentials for the specified domain.
+		/// </summary>
+		/// <param name="domainID">The domain ID to set the password for.</param>
+		/// <param name="credentials">Credentials for the domain.</param>
+		/// <param name="credType">Type of credentials being stored.</param>
+		public void SetDomainCredentials( string domainID, string credentials, CredentialType credType )
+		{
+			LocalDb.Commit( CurrentUser.SetDomainCredentials( domainID.ToLower(), credentials, credType ) );
 		}
 		#endregion
 

@@ -225,6 +225,35 @@ namespace Simias.Web
 
 			return(status);
 		}
+
+		/// <summary>
+		/// Saves the domain credentials to the local store.
+		/// </summary>
+		/// <param name="domainID">The ID of the domain to set the credentials on.</param>
+		/// <param name="credentials">Credentials to set.</param>
+		/// <param name="type">Type of credentials.</param>
+		[WebMethod(Description="Save domain credentials to the local store")]
+		[SoapDocumentMethod]
+		public void SaveDomainCredentials(string domainID, string credentials, CredentialType type)
+		{
+			Store store = Store.GetStore();
+			store.SetDomainCredentials(domainID, credentials, type);
+		}
+
+		/// <summary>
+		/// Gets the saved credentials from the specified domain object.
+		/// </summary>
+		/// <param name="domainID">The ID of the domain to set the credentials on.</param>
+		/// <param name="userID">Gets the ID of the user.</param>
+		/// <param name="credentials">Gets the credentials for the domain.</param>
+		/// <returns>The type of credentials.</returns>
+		[WebMethod(Description="Get the saved credentials from a domain")]
+		[SoapDocumentMethod]
+		public CredentialType GetSavedDomainCredentials(string domainID, out string userID, out string credentials)
+		{
+			Store store = Store.GetStore();
+			return store.GetDomainCredentials(domainID, out userID, out credentials);
+		}
 	}
 
 	/// <summary>

@@ -130,8 +130,23 @@ namespace Simias.DomainWatcher
 		public void WatcherThread()
 		{
 			log.Debug("WatcherThread started");
+			bool firstTime = true;
 			int status;
 			this.started = true;
+			EventPublisher cEvent = new EventPublisher();
+
+			// See if the user has credentials stored for this domain.
+			string domainID = store.DefaultDomain;
+			string userID;
+			string credentials;
+			CredentialType credType = store.GetDomainCredentials(domainID, out userID, out credentials);
+
+			// Only basic type authentication is supported right now.
+			if ( credType != CredentialType.Basic )
+			{
+				credentials = null;
+			}
+
 			do 
 			{
 				//
@@ -141,13 +156,13 @@ namespace Simias.DomainWatcher
 
 				try
 				{
-					Simias.Storage.Domain cDomain = store.GetDomain(store.DefaultDomain);
+					Simias.Storage.Domain cDomain = store.GetDomain(domainID);
 					if (cDomain != null &&
 						cDomain.ID != Simias.Storage.Domain.WorkGroupDomainID) 
 					{
 						log.Debug("checking Domain: " + cDomain.Name);
 						Roster cRoster = cDomain.GetRoster(store);
-						Member cMember = cRoster.GetCurrentMember();
+						Member cMember = cRoster.GetMemberByID(userID);
 
 						// Can we talk to the domain?
 						// Check to see if a full set of credentials exist
@@ -156,56 +171,60 @@ namespace Simias.DomainWatcher
 						NetCredential cCreds = 
 							new NetCredential(
 								"iFolder", 
-								cDomain.ID, 
+								domainID, 
 								true, 
 								cMember.Name, 
-								null);
+								credentials);
 
 						Uri cUri = new Uri(cDomain.HostAddress.ToString());
-						if (cCreds.GetCredential(cUri, "BASIC") == null)
+						NetworkCredential netCreds = cCreds.GetCredential(cUri, "BASIC");
+						if ((netCreds == null) || firstTime)
 						{
+							firstTime = false;
+
 							// Create the domain service web client object.
 							DomainService domainSvc = new DomainService();
 							domainSvc.Url = 
 								cDomain.HostAddress.ToString() + "/DomainService.asmx";
+							domainSvc.Credentials = netCreds;
 
-                            domainSvc.Timeout = 30000;
+							domainSvc.Timeout = 30000;
 							
 							try
 							{
-                                log.Debug("Calling remote domain at: " + domainSvc.Url);
-								domainSvc.GetDomainInfo(cMember.ID);
+								log.Debug("Calling remote domain at: " + domainSvc.Url);
+								domainSvc.GetDomainInfo(userID);
 								status = 0;
 							}
 							catch(WebException webEx)
 							{
 								status = -1;
-                                log.Error("failed getting Domain Information  status: " + webEx.Status.ToString());
+								log.Error("failed getting Domain Information  status: " + webEx.Status.ToString());
 								if (webEx.Status == System.Net.WebExceptionStatus.ProtocolError ||
 									webEx.Status == System.Net.WebExceptionStatus.TrustFailure )
 								{
+									credentials = null;
 									status = 0;
 								}
 							}
-                            catch(Exception ex)
-                            {
-                                status = -1;
-                                log.Error("failed getting Domain Information - normal exception status: " + ex.Message);
-                            }
+							catch(Exception ex)
+							{
+								status = -1;
+								log.Error("failed getting Domain Information - normal exception status: " + ex.Message);
+							}
+
+							domainSvc = null;
 
 							if (status == 0)
 							{
-								EventPublisher cEvent = new EventPublisher();
 								Simias.Client.Event.NotifyEventArgs cArg =
 									new Simias.Client.Event.NotifyEventArgs(
 									"Domain-Up", 
-									cDomain.ID, 
+									domainID, 
 									System.DateTime.Now);
 
 								cEvent.RaiseEvent(cArg);
 							}
-
-							domainSvc = null;
 						}
 					}
 				}
@@ -216,6 +235,7 @@ namespace Simias.DomainWatcher
 				}
 
 				stopEvent.WaitOne((30 * 1000), false);
+
 			} while(this.stop == false);
 
 			this.started = false;

@@ -731,9 +731,34 @@ namespace Novell.FormsTrayApp
 						// Only display one dialog.
 						if (serverInfo == null)
 						{
+							string userID;
+							string credentials;
+
 							domainID = notifyEventArgs.Message;
 							serverInfo = new ServerInfo(ifWebService, domainID);
 							serverInfo.Closed += new EventHandler(serverInfo_Closed);
+
+							// See if there is a password saved on this domain.
+							SimiasWebService simiasWebService = new SimiasWebService();
+							simiasWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
+							CredentialType credType = simiasWebService.GetSavedDomainCredentials(domainID, out userID, out credentials);
+							if ((credType == CredentialType.Basic) && (credentials != null))
+							{
+								// There are credentials that were saved on the domain. Use them to authenticate.
+								// If the authentication fails for any reason, pop up and ask for new credentials.
+								DomainAuthentication domainAuth = new DomainAuthentication(domainID, credentials);
+								AuthenticationStatus authStatus = domainAuth.Authenticate();
+								if (authStatus == AuthenticationStatus.Success)
+								{
+									break;
+								}
+								else if (authStatus == AuthenticationStatus.InvalidCredentials)
+								{
+									// There are bad credentials stored. Remove them.
+									simiasWebService.SaveDomainCredentials(domainID, null, CredentialType.None);
+								}
+							}
+
 							serverInfo.Show();
 						}
 					}

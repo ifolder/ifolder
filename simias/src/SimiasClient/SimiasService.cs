@@ -27,7 +27,7 @@ public class SimiasWebService : System.Web.Services.Protocols.SoapHttpClientProt
     
     /// <remarks/>
     public SimiasWebService() {
-        this.Url = "http://127.0.0.1:1273/simias10/banderso/Simias.asmx";
+        this.Url = "http://localhost:4699/simias10/mlasky/Simias.asmx";
     }
     
     /// <remarks/>
@@ -113,6 +113,52 @@ public class SimiasWebService : System.Web.Services.Protocols.SoapHttpClientProt
         object[] results = this.EndInvoke(asyncResult);
         return ((bool)(results[0]));
     }
+    
+    /// <remarks/>
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/web/SaveDomainCredentials", RequestNamespace="http://novell.com/simias/web/", ResponseNamespace="http://novell.com/simias/web/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public void SaveDomainCredentials(string domainID, string credentials, CredentialType type) {
+        this.Invoke("SaveDomainCredentials", new object[] {
+                    domainID,
+                    credentials,
+                    type});
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginSaveDomainCredentials(string domainID, string credentials, CredentialType type, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("SaveDomainCredentials", new object[] {
+                    domainID,
+                    credentials,
+                    type}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public void EndSaveDomainCredentials(System.IAsyncResult asyncResult) {
+        this.EndInvoke(asyncResult);
+    }
+    
+    /// <remarks/>
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/web/GetSavedDomainCredentials", RequestNamespace="http://novell.com/simias/web/", ResponseNamespace="http://novell.com/simias/web/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public CredentialType GetSavedDomainCredentials(string domainID, out string userID, out string credentials) {
+        object[] results = this.Invoke("GetSavedDomainCredentials", new object[] {
+                    domainID});
+        userID = ((string)(results[1]));
+        credentials = ((string)(results[2]));
+        return ((CredentialType)(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginGetSavedDomainCredentials(string domainID, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("GetSavedDomainCredentials", new object[] {
+                    domainID}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public CredentialType EndGetSavedDomainCredentials(System.IAsyncResult asyncResult, out string userID, out string credentials) {
+        object[] results = this.EndInvoke(asyncResult);
+        userID = ((string)(results[1]));
+        credentials = ((string)(results[2]));
+        return ((CredentialType)(results[0]));
+    }
 }
 
 /// <remarks/>
@@ -156,4 +202,21 @@ public enum DomainType {
     
     /// <remarks/>
     Enterprise,
+}
+
+/// <remarks/>
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://novell.com/simias/web/")]
+public enum CredentialType {
+    
+    /// <remarks/>
+    None,
+    
+    /// <remarks/>
+    NotRequired,
+    
+    /// <remarks/>
+    Basic,
+    
+    /// <remarks/>
+    PPK,
 }

@@ -61,11 +61,6 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		static public string Credential = "Credential";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
 		static public string DefaultDomain = "DefaultDomain";
 
 		/// <summary>
@@ -234,7 +229,6 @@ namespace Simias.Storage
 			systemPropertyTable.Add( CollectionLock, null );
 			systemPropertyTable.Add( CreateMaster, null );
 			systemPropertyTable.Add( CreationTime, null );
-			systemPropertyTable.Add( Credential, null );
 			systemPropertyTable.Add( DefaultDomain, null );
 			systemPropertyTable.Add( Domain, null );
 			systemPropertyTable.Add( DomainID, null );
