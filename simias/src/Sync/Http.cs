@@ -222,6 +222,11 @@ namespace Simias.Sync.Http
 			{
 				if (response.StatusCode != HttpStatusCode.OK)
 				{
+					CookieCollection cc = cookies.GetCookies(new Uri(url));
+					foreach (Cookie cookie in cc)
+					{
+						cookie.Expired = true;
+					}
 					throw new SimiasException(response.StatusDescription);
 				}
 				// Now get the StartSyncInfo back;
@@ -487,8 +492,12 @@ namespace Simias.Sync.Http
 					throw new SimiasException(response.StatusDescription);
 				}
 				// Now get the SyncNode.
-				BinaryReader reader = new BinaryReader(response.GetResponseStream());
-				return new SyncNode(reader);
+				if (response.ContentLength != 0)
+				{
+					BinaryReader reader = new BinaryReader(response.GetResponseStream());
+					return new SyncNode(reader);
+				}
+				return null;
 			}
 			finally
 			{
@@ -921,9 +930,12 @@ namespace Simias.Sync.Http
 			string nodeID = new Guid(reader.ReadBytes(16)).ToString();
 			SyncNode node = service.GetFileNode(nodeID);
 			response.ContentType = "application/octet-stream";
-			BinaryWriter writer = new BinaryWriter(response.OutputStream);
-			node.Serialize(writer);
-			writer.Close();
+			if (node != null)
+			{
+				BinaryWriter writer = new BinaryWriter(response.OutputStream);
+				node.Serialize(writer);
+				writer.Close();
+			}
 		}
 
 		/// <summary>
