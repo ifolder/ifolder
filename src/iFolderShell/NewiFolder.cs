@@ -48,6 +48,7 @@ namespace Novell.iFolder.iFolderCom
 		private string folderName;
 		private string loadPath;
 		private const int SHOP_FILEPATH = 0x2;
+		private System.Windows.Forms.LinkLabel iFolderHelp;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -92,13 +93,14 @@ namespace Novell.iFolder.iFolderCom
 			this.iFolderEmblem = new System.Windows.Forms.PictureBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.dontAsk = new System.Windows.Forms.CheckBox();
+			this.iFolderHelp = new System.Windows.Forms.LinkLabel();
 			this.SuspendLayout();
 			// 
 			// close
 			// 
 			this.close.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.close.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.close.Location = new System.Drawing.Point(376, 160);
+			this.close.Location = new System.Drawing.Point(376, 192);
 			this.close.Name = "close";
 			this.close.TabIndex = 0;
 			this.close.Text = "Close";
@@ -110,19 +112,18 @@ namespace Novell.iFolder.iFolderCom
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(424, 24);
 			this.label1.TabIndex = 1;
-			this.label1.Text = "Congratulations, you\'ve just converted this folder into an iFolder!";
+			this.label1.Text = "Congratulations!  You successfully converted this normal folder to an iFolder.";
 			// 
 			// iFolderProperties
 			// 
-			this.iFolderProperties.LinkArea = new System.Windows.Forms.LinkArea(156, 173);
+			this.iFolderProperties.LinkArea = new System.Windows.Forms.LinkArea(113, 14);
 			this.iFolderProperties.Location = new System.Drawing.Point(16, 112);
 			this.iFolderProperties.Name = "iFolderProperties";
 			this.iFolderProperties.Size = new System.Drawing.Size(432, 32);
 			this.iFolderProperties.TabIndex = 2;
 			this.iFolderProperties.TabStop = true;
-			this.iFolderProperties.Text = "In order to fully utilize your new iFolder, you need to share it.  You can share " +
-				"the iFolder by right-clicking the folder and accessing the iFolder menu or by cl" +
-				"icking here.";
+			this.iFolderProperties.Text = "To share your iFolder and its contents with others, right-click the iFolder, then" +
+				" click iFolder > Share With, or click here now.";
 			this.iFolderProperties.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.iFolderProperties_LinkClicked);
 			// 
 			// iFolderEmblem
@@ -136,27 +137,38 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(72, 56);
+			this.label2.Location = new System.Drawing.Point(72, 64);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(368, 32);
+			this.label2.Size = new System.Drawing.Size(368, 24);
 			this.label2.TabIndex = 4;
-			this.label2.Text = "iFolders are identified by the iFolder emblem being placed on the folder as shown" +
-				".";
+			this.label2.Text = "The iFolder emblem distinguishes iFolders from normal folders.";
 			// 
 			// dontAsk
 			// 
 			this.dontAsk.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.dontAsk.Location = new System.Drawing.Point(16, 160);
+			this.dontAsk.Location = new System.Drawing.Point(16, 192);
 			this.dontAsk.Name = "dontAsk";
 			this.dontAsk.Size = new System.Drawing.Size(304, 16);
 			this.dontAsk.TabIndex = 6;
-			this.dontAsk.Text = "Please don\'t show me this again.";
+			this.dontAsk.Text = "Do not show this message again.";
+			// 
+			// iFolderHelp
+			// 
+			this.iFolderHelp.LinkArea = new System.Windows.Forms.LinkArea(65, 14);
+			this.iFolderHelp.Location = new System.Drawing.Point(16, 152);
+			this.iFolderHelp.Name = "iFolderHelp";
+			this.iFolderHelp.Size = new System.Drawing.Size(432, 23);
+			this.iFolderHelp.TabIndex = 7;
+			this.iFolderHelp.TabStop = true;
+			this.iFolderHelp.Text = "For help, right-click the iFolder, then click iFolder > Help, or click here now.";
+			this.iFolderHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.iFolderHelp_LinkClicked);
 			// 
 			// NewiFolder
 			// 
 			this.AcceptButton = this.close;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(456, 192);
+			this.ClientSize = new System.Drawing.Size(456, 224);
+			this.Controls.Add(this.iFolderHelp);
 			this.Controls.Add(this.dontAsk);
 			this.Controls.Add(this.iFolderProperties);
 			this.Controls.Add(this.label2);
@@ -207,6 +219,12 @@ namespace Novell.iFolder.iFolderCom
 //			Win32Window.ShObjectProperties(IntPtr.Zero, SHOP_FILEPATH, FolderName, "iFolder");
 			iFolderComponent ifCom = new iFolderComponent();
 			ifCom.InvokeAdvancedDlg(LoadPath, FolderName, "share", false);
+		}
+
+		private void iFolderHelp_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+		{
+			iFolderComponent ifCom = new iFolderComponent();
+			ifCom.ShowHelp(LoadPath);
 		}
 
 		private void close_Click(object sender, System.EventArgs e)
