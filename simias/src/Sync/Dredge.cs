@@ -246,7 +246,7 @@ public class Dredger
 			paused = shuttingDown = false;
 			thread = new Thread(new ThreadStart(DoDredge));
 			thread.IsBackground = true;
-			thread.Priority = ThreadPriority.Lowest;
+			thread.Priority = ThreadPriority.BelowNormal;
 			thread.Start();
 		}
 
