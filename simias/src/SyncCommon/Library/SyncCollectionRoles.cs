@@ -30,9 +30,24 @@ namespace Simias.Sync
 	/// </summary>
 	public enum SyncCollectionRoles
 	{
+		/// <summary>
+		/// A Master Collection Role
+		/// </summary>
 		Master,
+
+		/// <summary>
+		/// A Slave Collection Role
+		/// </summary>
 		Slave,
+
+		/// <summary>
+		/// A Local Collection Role
+		/// </summary>
 		Local,
+
+		/// <summary>
+		/// No Collection Role
+		/// </summary>
 		None,
 	}
 }

@@ -31,12 +31,23 @@ namespace Simias.Sync
 	[Serializable]
 	public class SyncCollectionInfo : SyncNodeInfo
 	{
+		/// <summary>
+		/// The sync url of the collection.
+		/// </summary>
 		protected string url;
+
+		/// <summary>
+		/// The sync logic type of the collection.
+		/// </summary>
 		protected string logicType;
+
+		/// <summary>
+		/// The sync role of the collection.
+		/// </summary>
 		protected SyncCollectionRoles role;
 
 		/// <summary>
-		/// Default Constructor
+		/// Constructor
 		/// </summary>
 		public SyncCollectionInfo(SyncCollection collection) : base(collection)
 		{
@@ -45,6 +56,10 @@ namespace Simias.Sync
 			this.role = collection.Role;
 		}
 		
+		/// <summary>
+		/// Generate a string representation of the collection information.
+		/// </summary>
+		/// <returns>The string representation of the collection information.</returns>
 		public override string ToString()
 		{
 			return String.Format("{0} {1}.{2} [{3}]", name, masterIncarnation, localIncarnation, id);
@@ -52,16 +67,25 @@ namespace Simias.Sync
 
 		#region Properties
 
+		/// <summary>
+		/// The sync URL of the collection.
+		/// </summary>
 		public string Url
 		{
 			get { return url; }
 		}
 		
+		/// <summary>
+		/// The sync logic type of the collection.
+		/// </summary>
 		public string LogicType
 		{
 			get { return logicType; }
 		}
 
+		/// <summary>
+		/// The sync role of the collection.
+		/// </summary>
 		public SyncCollectionRoles SyncRole
 		{
 			get { return role; }

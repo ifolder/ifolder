@@ -87,11 +87,19 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// Commit the changes to the base collection.
+		/// </summary>
 		public override void Commit()
 		{
 			baseCollection.Commit(true);
 		}
 
+		/// <summary>
+		/// Create an invitation object for the given identity.
+		/// </summary>
+		/// <param name="identity">The identity for the invitation.</param>
+		/// <returns>A new invitation object.</returns>
 		public Invitation CreateInvitation(string identity)
 		{
 			// validate the host and port
@@ -117,11 +125,18 @@ namespace Simias.Sync
 			return invitation;
 		}
 
+		/// <summary>
+		/// Refresh (or reload) the base collection to ensure that we are up-to-date.
+		/// </summary>
 		public void Refresh()
 		{
 			baseCollection = baseCollection.LocalStore.GetCollectionById(baseCollection.Id);
 		}
 
+		/// <summary>
+		/// Generate a SyncNodeInfo object array from all the children of the base collection.
+		/// </summary>
+		/// <returns>The object array.</returns>
 		public SyncNodeInfo[] GetNodeInfoArray()
 		{
 			ArrayList list = new ArrayList();
@@ -134,6 +149,11 @@ namespace Simias.Sync
 			return (SyncNodeInfo[])list.ToArray(typeof(SyncNodeInfo));
 		}
 
+		/// <summary>
+		/// Get a node from the base collection with the given id.
+		/// </summary>
+		/// <param name="id">The id of the node.</param>
+		/// <returns>The node object.</returns>
 		public SyncNode GetNode(string id)
 		{
 			Node node = baseCollection.GetNodeById(id);
@@ -141,6 +161,11 @@ namespace Simias.Sync
 			return new SyncNode(node);
 		}
 
+		/// <summary>
+		/// Get the xml representation of a node from the base collection with the given id.
+		/// </summary>
+		/// <param name="id">The id of the node.</param>
+		/// <returns>A string of xml representing the data of the node.</returns>
 		public string GetNodeXml(string id)
 		{
 			XmlDocument doc = baseCollection.LocalStore.ExportSingleNodeToXml(baseCollection, id);
@@ -148,6 +173,11 @@ namespace Simias.Sync
 			return doc.OuterXml;
 		}
 
+		/// <summary>
+		/// Create a node object from a xml data string.
+		/// </summary>
+		/// <param name="xml">The node data in xml format.</param>
+		/// <returns>The node object.</returns>
 		public SyncNode CreateNodeFromXml(string xml)
 		{
 			XmlDocument doc = new XmlDocument();
@@ -161,6 +191,9 @@ namespace Simias.Sync
 
 		#region IDisposable Members
 
+		/// <summary>
+		/// Dispose of this object.
+		/// </summary>
 		public override void Dispose()
 		{
 			base.Dispose();
@@ -172,11 +205,17 @@ namespace Simias.Sync
 
 		#region Properties
 		
+		/// <summary>
+		/// The base collection object.
+		/// </summary>
 		public Collection BaseCollection
 		{
 			get { return baseCollection; }
 		}
 
+		/// <summary>
+		/// The syncing role of the base collection.
+		/// </summary>
 		public SyncCollectionRoles Role
 		{
 			get
@@ -197,60 +236,93 @@ namespace Simias.Sync
 			set { SetProperty(RolePropertyName, value, true); }
 		}
 
+		/// <summary>
+		/// The syncing host of the base collection.
+		/// </summary>
 		public string Host
 		{
 			get { return (string)GetProperty(HostPropertyName); }
 			set { SetProperty(HostPropertyName, value, true); }
 		}
 
+		/// <summary>
+		/// The syncing port of the base collection.
+		/// </summary>
 		public int Port
 		{
 			get { return (int)GetProperty(PortPropertyName, -1); }
 			set { SetProperty(PortPropertyName, value, true); }
 		}
 
+		/// <summary>
+		/// The syncing interval of the base collection.
+		/// </summary>
 		public int Interval
 		{
 			get { return (int)GetProperty(IntervalPropertyName, -1); }
 			set { SetProperty(IntervalPropertyName, value, true); }
 		}
 
+		/// <summary>
+		/// The syncing logic of the base collection.
+		/// </summary>
 		public string LogicType
 		{
 			get { return (string)GetProperty(LogicTypePropertyName); }
 			set { SetProperty(LogicTypePropertyName, value, true); }
 		}
 
+		/// <summary>
+		/// The remoting endpoint for the base collection.
+		/// </summary>
 		public string EndPoint
 		{
 			get { return ID + ".rem"; }
 		}
 
+		/// <summary>
+		/// The syncing URL for the base collection.
+		/// </summary>
 		public string Url
 		{
 			get { return (new UriBuilder("http", Host, Port, EndPoint).ToString()); }
 		}
 
+		/// <summary>
+		/// The store path of the base collection.
+		/// </summary>
 		public string StorePath
 		{
 			get { return Path.GetDirectoryName(baseCollection.LocalStore.StorePath.LocalPath); }
 		}
 
+		/// <summary>
+		/// The root path of the base collection.
+		/// </summary>
 		public string RootPath
 		{
 			get { return Path.GetDirectoryName(baseCollection.DocumentRoot.LocalPath); }
 		}
 
+		/// <summary>
+		/// The root path of the file entries of the collection.
+		/// </summary>
 		public string StreamRootPath
 		{
 			get { return baseCollection.DocumentRoot.LocalPath; }
 		}
 
+		/// <summary>
+		/// The authroization domain of the base collection.
+		/// </summary>
 		public string Domain
 		{
 			get { return baseCollection.DomainName; }
 		}
 
+		/// <summary>
+		/// The identity for accessing the base collection.
+		/// </summary>
 		public string AccessIdentity
 		{
 			get

@@ -34,21 +34,38 @@ namespace Simias.Sync
 	/// </summary>
 	public class SyncNode : IDisposable
 	{
+		/// <summary>
+		/// The file node type string.
+		/// </summary>
 		public static readonly string FileNodeType = "File";
+		
+		/// <summary>
+		/// The directory node type string.
+		/// </summary>
 		public static readonly string DirectoryNodeType = "Directory";
 
 		private Node baseNode;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="node">The base node object.</param>
 		public SyncNode(Node node)
 		{
 			this.baseNode = node;
 		}
 
+		/// <summary>
+		/// Commit any changes to the base node.
+		/// </summary>
 		public virtual void Commit()
 		{
 			baseNode.Commit();
 		}
 		
+		/// <summary>
+		/// Delete the base node and its file entries.
+		/// </summary>
 		public void Delete()
 		{
 			ulong incarnation = baseNode.MasterIncarnation;
@@ -80,6 +97,10 @@ namespace Simias.Sync
 			Dispose();
 		}
 
+		/// <summary>
+		/// Update the incarnation number of the base node.
+		/// </summary>
+		/// <param name="incarnation">The new incarnation number.</param>
 		public void UpdateIncarnation(ulong incarnation)
 		{
 			// sync role
@@ -91,16 +112,31 @@ namespace Simias.Sync
 			baseNode.CollectionNode.LocalStore.Revert();
 		}
 
+		/// <summary>
+		/// Get the node object data in xml format.
+		/// </summary>
+		/// <returns>An xml data string of the node object.</returns>
 		public string ToXml()
 		{
 			return baseNode.CollectionNode.LocalStore.ExportSingleNodeToXml(baseNode.CollectionNode, ID).OuterXml;
 		}
 
+		/// <summary>
+		/// Get a property value from the base node.
+		/// </summary>
+		/// <param name="name">The name of the property.</param>
+		/// <returns>The value of the property.</returns>
 		public object GetProperty(string name)
 		{
 			return GetProperty(name, null);
 		}
 
+		/// <summary>
+		/// Get a poperty value from the base node.
+		/// </summary>
+		/// <param name="name">The name of the property.</param>
+		/// <param name="defaultValue">A default value to return if the property has no value.</param>
+		/// <returns>The property value, if it exists, or the default value.</returns>
 		public object GetProperty(string name, object defaultValue)
 		{
 			object result = defaultValue;
@@ -115,11 +151,22 @@ namespace Simias.Sync
 			return result;
 		}
 
+		/// <summary>
+		/// Set the value of the given property of the base node.
+		/// </summary>
+		/// <param name="name">The property name.</param>
+		/// <param name="value">The new property value.</param>
 		public void SetProperty(string name, object value)
 		{
 			SetProperty(name, value, false);
 		}
 
+		/// <summary>
+		/// Set the value of the given property of the base node.
+		/// </summary>
+		/// <param name="name">The property name.</param>
+		/// <param name="value">The new property value.</param>
+		/// <param name="local">Is this a local only property? (non-synced)</param>
 		public void SetProperty(string name, object value, bool local)
 		{
 			if (value != null)
@@ -137,6 +184,9 @@ namespace Simias.Sync
 
 		#region IDisposable Members
 
+		/// <summary>
+		/// Dispose this object.
+		/// </summary>
 		public virtual void Dispose()
 		{
 			this.baseNode = null;
@@ -146,31 +196,49 @@ namespace Simias.Sync
 
 		#region Properties
 		
+		/// <summary>
+		/// The base node object.
+		/// </summary>
 		public Node BaseNode
 		{
 			get { return baseNode; }
 		}
 
+		/// <summary>
+		/// The node ID.
+		/// </summary>
 		public string ID
 		{
 			get { return baseNode.Id; }
 		}
 
+		/// <summary>
+		/// The node name.
+		/// </summary>
 		public string Name
 		{
 			get { return baseNode.Name; }
 		}
 
+		/// <summary>
+		/// Is the base node a file node?
+		/// </summary>
 		public bool IsFile
 		{
 			get { return baseNode.Type.Equals(FileNodeType); }
 		}
 
+		/// <summary>
+		/// Is the base node a directory node?
+		/// </summary>
 		public bool IsDirectory
 		{
 			get { return baseNode.Type.Equals(DirectoryNodeType); }
 		}
 
+		/// <summary>
+		/// The node path.
+		/// </summary>
 		public string NodePath
 		{
 			get
@@ -186,11 +254,17 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// The master incarnation number of the base node.
+		/// </summary>
 		public ulong MasterIncarnation
 		{
 			get { return baseNode.MasterIncarnation; }
 		}
 
+		/// <summary>
+		/// The local incarantion number of the base node.
+		/// </summary>
 		public ulong LocalIncarnation
 		{
 			get { return baseNode.LocalIncarnation; }

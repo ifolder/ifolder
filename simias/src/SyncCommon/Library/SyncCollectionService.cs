@@ -32,6 +32,10 @@ namespace Simias.Sync
 	{
 		private SyncCollection collection;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="collection">The collection object.</param>
 		public SyncCollectionService(SyncCollection collection)
 		{
 			MyTrace.WriteLine("Creating Sync Collection Service: {0}", collection.ID);
@@ -43,6 +47,10 @@ namespace Simias.Sync
 			MyTrace.WriteLine("Refreshed Sync Collection Service: {0}", collection.ID);
 		}
 
+		/// <summary>
+		/// Generate the ping information for the collection.
+		/// </summary>
+		/// <returns></returns>
 		public SyncCollectionInfo Ping()
 		{
 			SyncCollectionInfo info = new SyncCollectionInfo(collection);

@@ -33,12 +33,35 @@ namespace Simias.Sync
 	[Serializable]
 	public class SyncNodeInfo
 	{
+		/// <summary>
+		/// The id of the node.
+		/// </summary>
 		protected string id;
+
+		/// <summary>
+		/// The name of the node.
+		/// </summary>
 		protected string name;
+
+		/// <summary>
+		/// The path of the node.
+		/// </summary>
 		protected string path;
+
+		/// <summary>
+		/// The master incarnation number of the node.
+		/// </summary>
 		protected ulong masterIncarnation;
+
+		/// <summary>
+		/// The local incarnation number of the node.
+		/// </summary>
 		protected ulong localIncarnation;
 	
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="node">The node object.</param>
 		public SyncNodeInfo(SyncNode node)
 		{
 			this.id = node.ID;
@@ -48,10 +71,18 @@ namespace Simias.Sync
 			this.localIncarnation = node.LocalIncarnation;
 		}
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="node">The node object.</param>
 		public SyncNodeInfo(Node node) : this(new SyncNode(node))
 		{
 		}
 
+		/// <summary>
+		/// Create a string representation of the node information.
+		/// </summary>
+		/// <returns></returns>
 		public override string ToString()
 		{
 			return String.Format("{0} {1}.{2} [{3}]", name, masterIncarnation, localIncarnation, id);
@@ -60,31 +91,49 @@ namespace Simias.Sync
 
 		#region Properties
 		
+		/// <summary>
+		/// The id of the node.
+		/// </summary>
 		public string ID
 		{
 			get { return id; }
 		}
 		
+		/// <summary>
+		/// The name of the node.
+		/// </summary>
 		public string Name
 		{
 			get { return name; }
 		}
 		
+		/// <summary>
+		/// The path of the node.
+		/// </summary>
 		public string NodePath
 		{
 			get { return path; }
 		}
 		
+		/// <summary>
+		/// The master incarnation number of the node.
+		/// </summary>
 		public ulong MasterIncarnation
 		{
 			get { return masterIncarnation; }
 		}
 		
+		/// <summary>
+		/// The local incarnation number of the node.
+		/// </summary>
 		public ulong LocalIncarnation
 		{
 			get { return localIncarnation; }
 		}
 
+		/// <summary>
+		/// Is the node a tombstone?
+		/// </summary>
 		public bool Tombstone
 		{
 			get { return ((masterIncarnation == 0) && (localIncarnation == 0)); }

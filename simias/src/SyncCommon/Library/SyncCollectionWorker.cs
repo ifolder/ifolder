@@ -42,10 +42,16 @@ namespace Simias.Sync
 			this.slave = slave;
 		}
 
+		/// <summary>
+		/// Do the sync work.
+		/// </summary>
 		public virtual void DoSyncWork()
 		{
 		}
 
+		/// <summary>
+		/// A stop syncing request.
+		/// </summary>
 		public virtual void StopSyncWork()
 		{
 		}
