@@ -70,6 +70,12 @@ static char * sec_server_config_elements [] = {
 #define REGISTRATION_HOST_ATTR_NAME		"host"
 #define REGISTRATION_PORT_ATTR_NAME		"port"
 
+/* Event Listener Tags */
+#define EVENT_LISTENER_ELEMENT_NAME		"EventListener"
+#define EVENT_ELEMENT_NAME				"Event"
+#define EVENT_ACTION_ATTR_NAME			"action"
+
+
 #define SEC_EVENT_TYPE_XPATH "//Event/@type"
 
 static char * sec_node_event_elements [] = {
@@ -135,7 +141,7 @@ static void sec_wait_for_file_change (char *file_path);
 static void sec_config_file_changed_callback (void *user_data);
 static void sec_shutdown (SimiasEventClient *ec, const char *err_msg);
 static void sec_report_error (SimiasEventClient *ec, const char *err_msg);
-static int sec_send_message (SimiasEventClient *ec, int s, 
+static int sec_send_message (SimiasEventClient *ec,
 							 char * message, int len);
 static int sec_get_server_host_address (SimiasEventClient *ec,
 										struct sockaddr_in *sin);
@@ -159,12 +165,18 @@ sec_init (SimiasEventClient *ec, void *error_handler)
 	 */
 	LIBXML_TEST_VERSION
 	
-	/* Create a socket to communicate with the event server on. */
+	/* Create a socket to listen for events from the event server. */
 	if ((ec->event_socket = socket (PF_INET, SOCK_STREAM, 0)) < 0) {
-		perror ("simias-event-client: socket");
+		perror ("simias-event-client: listen socket");
 		return -1;
 	}
 	
+	/* Create a socket to send messages to the event server. */
+	if ((ec->message_socket = socket (PF_INET, SOCK_STREAM, 0)) < 0) {
+		perror ("simias-event-client: send socket");
+		return -1;
+	}
+
 	ec->state = CLIENT_STATE_INITIALIZING;
 	
 	/* Save the error handling information. */
@@ -229,35 +241,64 @@ sec_deregister (SimiasEventClient *ec)
 static int
 sec_set_event (SimiasEventClient *ec, IPROC_EVENT_ACTION action, void **handler)
 {
+	char msg [4096];
+	char action_str [256];
+	
 	/* FIXME: Implement sec_set_event */
 	switch (action) {
 		case ACTION_ADD_NODE_CREATED:
+			sprintf (action_str, "AddNodeCreated");
 			break;
 		case ACTION_ADD_NODE_CHANGED:
+			sprintf (action_str, "AddNodeChanged");
 			break;
 		case ACTION_ADD_NODE_DELETED:
+			sprintf (action_str, "AddNodeDeleted");
 			break;
 		case ACTION_ADD_COLLECTION_SYNC:
+			sprintf (action_str, "AddCollectionSync");
 			break;
 		case ACTION_ADD_FILE_SYNC:
+			sprintf (action_str, "AddFileSync");
 			break;
 		case ACTION_ADD_NOTIFY_MESSAGE:
+			sprintf (action_str, "AddNotifyMessage");
 			break;
 		case ACTION_REMOVE_NODE_CREATED:
+			sprintf (action_str, "RemoveNodeCreated");
 			break;
 		case ACTION_REMOVE_NODE_CHANGED:
+			sprintf (action_str, "RemoveNodeChanged");
 			break;
 		case ACTION_REMOVE_NODE_DELETED:
+			sprintf (action_str, "RemoveNodeDeleted");
 			break;
 		case ACTION_REMOVE_COLLECTION_SYNC:
+			sprintf (action_str, "RemoveCollectionSync");
 			break;
 		case ACTION_REMOVE_FILE_SYNC:
+			sprintf (action_str, "RemoveFileSync");
 			break;
 		case ACTION_REMOVE_NOTIFY_MESSAGE:
+			sprintf (action_str, "RemoveNotifyMessage");
 			break;
 		default:
 			/* Don't know what the user is talking about */
 			return -1;
+	}
+	
+	sprintf (msg, 
+		"<%s><%s %s=\"%s\" /></%s>",
+		EVENT_LISTENER_ELEMENT_NAME,
+		EVENT_ELEMENT_NAME,
+		EVENT_ACTION_ATTR_NAME,
+		action_str,
+		EVENT_LISTENER_ELEMENT_NAME);
+
+	/* Send registration message */
+	if (sec_send_message (ec, msg, strlen (msg)) <= 0) {
+		/* FIXME: Handle error...no data sent */
+		perror ("simias-event-client send registration message");
 	}
 	
 	return 0;
@@ -338,7 +379,6 @@ sec_reg_thread (void *user_data)
 {
 	/* FIXME: Implement sec_reg_thread */
 	SimiasEventClient *ec = (SimiasEventClient *)user_data;
-	int s;
 	struct sockaddr_in sin;
 	struct sockaddr_in my_sin;
 	int my_sin_addr_len;
@@ -347,7 +387,7 @@ sec_reg_thread (void *user_data)
 	int b_connected = 0;
 	char addr_str [32];
 	char port_str [32];
-
+	
 	/**
 	 * Wait until the event client thread is running before continuing.  If we
 	 * don't wait, we will not be able to know what port the client is listening
@@ -374,12 +414,6 @@ sec_reg_thread (void *user_data)
 	sprintf (port_str, "%d", my_sin.sin_port);
 	fprintf (stderr, "Client listening on %s:%s\n", addr_str, port_str);
 	
-	/* Initialize a socket to talk with the server */
-	if ((s = socket (PF_INET, SOCK_STREAM, 0)) < 0) {
-		perror ("simias-event-client: registration socket");
-		return NULL;
-	}
-	
 	/* Stay in this loop until we connect */
 	while (!b_connected && (ec->state != CLIENT_STATE_SHUTDOWN)) {
 		if ((sec_get_server_host_address (ec, &sin)) != 0) {
@@ -388,14 +422,16 @@ sec_reg_thread (void *user_data)
 		
 		if (ec->state == CLIENT_STATE_SHUTDOWN) {
 			/* FIXME: Figure out what to do here */
-			close (s);
 			return;
 		}
 		
 		/* Connect to the server */
-		if (connect (s, (struct sockaddr *)&sin, sizeof (sin)) == 0) {
+		if (connect (ec->message_socket, 
+					 (struct sockaddr *)&sin, 
+					 sizeof (sin)) == 0) {
 			b_connected = 1;
-			/* FIXME: Figure out how to get the local sockaddr_in */
+
+			ec->reg_thread_state = REG_THREAD_STATE_RUNNING;
 			
 			/* Format the XML for registration message */
 			sprintf (reg_msg, 
@@ -409,7 +445,7 @@ sec_reg_thread (void *user_data)
 				REGISTRATION_TOP_ELEMENT_NAME);
 			
 			/* Send registration message */
-			if (sec_send_message (ec, s, reg_msg, strlen (reg_msg)) <= 0) {
+			if (sec_send_message (ec, reg_msg, strlen (reg_msg)) <= 0) {
 				/* FIXME: Handle error...no data sent */
 				perror ("simias-event-client send registration message");
 			}
@@ -420,8 +456,8 @@ sec_reg_thread (void *user_data)
 			sleep (2);
 		}
 	}
-
-	close (s);
+	
+	ec->reg_thread_state = REG_THREAD_STATE_TERMINATED;
 }
 
 static void
@@ -451,6 +487,11 @@ sec_shutdown (SimiasEventClient *ec, const char *err_msg)
 		if (ec->event_socket >= 0) {
 			close (ec->event_socket);
 		}
+		
+		/* Close the socket if it is still open */
+		if (ec->message_socket >= 0) {
+			close (ec->message_socket);
+		}
 	}
 	
 	/* Inform the application if an error occurred */
@@ -475,11 +516,19 @@ sec_report_error (SimiasEventClient *ec, const char *err_msg)
  * Returns the number of bytes that were sent or -1 if there were errors.
  */
 static int
-sec_send_message (SimiasEventClient *ec, int s, char * message, int len)
+sec_send_message (SimiasEventClient *ec, char * message, int len)
 {
 	int sent_length;
 	char err_msg [2048];
 	void *real_message;
+	
+	printf ("Value of socket: %d\n", ec->message_socket);
+	
+	/* Cannot send if we haven't registered */
+	if (ec->reg_thread_state == REG_THREAD_STATE_INITIALIZING) {
+		fprintf (stderr, "Cannot send message to server.  Registration hasn't completed.\n");
+		return 0;
+	}
 	
 	real_message = (void *)malloc (len + 4);
 	if (!real_message) {
@@ -490,7 +539,7 @@ sec_send_message (SimiasEventClient *ec, int s, char * message, int len)
 	*((int *)real_message) = len;
 	sprintf (real_message + 4, "%s", message);
 	
-	sent_length = send (s, real_message, len + 4, 0);
+	sent_length = send (ec->message_socket, real_message, len + 4, 0);
 	
 	free (real_message);
 	
@@ -829,7 +878,20 @@ int main (int argc, char *argv[])
 		return -1;
 	}
 	
+	while (ec.reg_thread_state == REG_THREAD_STATE_INITIALIZING) {
+		printf ("Waiting for registration to complete\n");
+		sleep (2);
+	}
+	
+	printf ("Registration complete\n");
+	
 	/* FIXME: Ask to listen to some events by calling sec_set_event () */
+	sec_set_event (&ec, ACTION_ADD_NODE_CREATED, NULL);
+	sec_set_event (&ec, ACTION_ADD_NODE_CHANGED, NULL);
+	sec_set_event (&ec, ACTION_ADD_NODE_DELETED, NULL);
+	sec_set_event (&ec, ACTION_ADD_COLLECTION_SYNC, NULL);
+	sec_set_event (&ec, ACTION_ADD_FILE_SYNC, NULL);
+	sec_set_event (&ec, ACTION_ADD_NOTIFY_MESSAGE, NULL);
 	
 	fprintf (stdout, "Press <Enter> to stop the client...");
 	fgets (buf, sizeof (buf), stdin);

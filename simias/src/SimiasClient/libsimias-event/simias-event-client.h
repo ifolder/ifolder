@@ -77,8 +77,11 @@ typedef struct
 	/* Initialization state of the client */
 	CLIENT_STATE state;
 	
-	/* Socket used to communicate with the event server */
+	/* Socket used to listen for events from the event server */
 	int event_socket;
+	
+	/* Socket used to send messages to the event server */
+	int message_socket;
 	
 	/* Buffer used to receive the socket messages */
 	char receive_buffer [RECEIVE_BUFFER_SIZE];
