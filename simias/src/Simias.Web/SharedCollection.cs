@@ -868,6 +868,7 @@ namespace Simias.Web
 														collectionType);
 			sub.ToName = newMember.Name;
 			sub.ToIdentity = newMember.UserID;
+			sub.ToMemberNodeID = newMember.ID;
 			sub.ToPublicKey = newMember.PublicKey;
 			sub.SubscriptionRights = newMember.Rights;
 			sub.SubscriptionState = state;

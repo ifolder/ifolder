@@ -810,9 +810,12 @@ namespace Simias.POBox
 			c.Properties.AddProperty(pu);
 
 			// Create the member as well
-			Member member = new Member(this.ToName, this.ToMemberNodeID, this.ToIdentity, this.SubscriptionRights, null);
-			member.Proxy = true;
-			commitList.Add(member);
+			if (this.ToMemberNodeID != null && this.ToMemberNodeID != "")
+			{
+				Member member = new Member(this.ToName, this.ToMemberNodeID, this.ToIdentity, this.SubscriptionRights, null);
+				member.Proxy = true;
+				commitList.Add(member);
+			}
 
 			// check for a dir node
 			if (((this.DirNodeID != null) && (this.DirNodeID.Length > 0))
