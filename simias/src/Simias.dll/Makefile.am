@@ -7,8 +7,14 @@ SIMIAS_CSFILES_CSC := $(subst /,$(SEP),$(SIMIAS_CSFILES_SRC))
 SIMIAS_INCLUDES =
 SIMIAS_RESOURCES =
 SIMIAS_FLAGS = $(CSC_LIBFLAG) /unsafe
-SIMIAS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Security.dll System.Runtime.Remoting.dll System.Web.dll System.Web.Services.dll SimiasClient.dll mDnsResponder.dll mDnsResponderApi.dll log4net.dll
-SIMIAS_LIBPATH = $(LOG4NET_DIR) $(MDNSRESPONDER_DIR) ../SimiasClient
+SIMIAS_LIBS1 = System.dll System.Data.dll $(SYSTEM_XML) System.Security.dll System.Runtime.Remoting.dll System.Web.dll System.Web.Services.dll SimiasClient.dll mDnsResponder.dll mDnsResponderApi.dll log4net.dll Novell.Security.ClientPasswordManager.NetCredential.dll Novell.Security.Utilities.dll
+SIMIAS_LIBPATH = $(LOG4NET_DIR) $(MDNSRESPONDER_DIR) $(NOVELL_SECURITY_DIR) ../SimiasClient
+
+if !WINDOWS
+	SIMIAS_LIBS = $(SIMIAS_LIBS1) Mono.Posix.dll
+else
+	SIMIAS_LIBS = $(SIMIAS_LIBS1)
+endif
 
 EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/Simias.log4net ../Common/simias-client-bootstrap.config.in ../Common/MyDns.cs.in
 
@@ -30,6 +36,8 @@ install-exec-local: Simias.dll
 	$(INSTALL_PROGRAM) Simias.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(MDNSRESPONDER_DIR)/m*.exe $(MDNSRESPONDER_DIR)/m*.dll $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(LOG4NET_DIR)/log4net.dll $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) $(srcdir)/$(NOVELL_SECURITY_DIR)/Novell.Security.ClientPasswordManager.NetCredential.dll $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) $(srcdir)/$(NOVELL_SECURITY_DIR)/Novell.Security.Utilities.dll $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(STORELIB_PATH)/$(STORELIB) $(DESTDIR)$(webbindir)
 	cp -f $(srcdir)/$(LOG4NET_DIR)/../../../../LICENSE.txt $(DESTDIR)$(datadir)/simias/log4net.LICENSE.txt
 	$(INSTALL_PROGRAM) ../Common/Simias.log4net $(DESTDIR)$(sysconfdir)
@@ -39,6 +47,7 @@ uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f $(STORELIB)
 	cd $(DESTDIR)$(webbindir); rm -f Novell.Security.SecureSink*.dll
 	cd $(DESTDIR)$(webbindir); rm -f log4net.dll
+	cd $(DESTDIR)$(webbindir); rm -f Novell.Security*.dll
 	cd $(DESTDIR)$(webbindir); rm -f mDnsResponder*
 	cd $(DESTDIR)$(webbindir); rm -f Simias.dll $(DEBUG_FILES)
 	cd $(DESTDIR)$(sysconfdir); rm -f Simias.log4net simias-client-bootstrap.config
