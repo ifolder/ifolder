@@ -52,6 +52,7 @@
 
 #ifdef _
 #undef _
+#endif 
 
 #ifndef _
 #define _(STRING) dgettext(GETTEXT_PACKAGE, STRING)
