@@ -404,12 +404,19 @@ namespace Novell.FormsTrayApp
 
 					try
 					{
-						// Pre-load the accounts list so that we can use it when processing events.
+						// Pre-load the servers and accounts list.
+						globalProperties.InitializeServerList();
+
 						DomainWeb[] domains;
 						domains = ifWebService.GetDomains();
 						foreach (DomainWeb dw in domains)
 						{
-							preferences.AddDomainToList(dw);
+							if (dw.IsSlave)
+							{
+								preferences.AddDomainToList(dw);
+							}
+
+							globalProperties.AddDomainToList(dw);
 						}
 					}
 					catch{}
@@ -477,9 +484,9 @@ namespace Novell.FormsTrayApp
 			globalProperties.AddDomainToList(e.DomainWeb);
 		}
 
-		private void preferences_RemoveDomain(object sender, DomainConnectEventArgs e)
+		private void preferences_RemoveDomain(object sender, DomainRemoveEventArgs e)
 		{
-			globalProperties.RemoveDomainFromList(e.DomainWeb);
+			globalProperties.RemoveDomainFromList(e.DomainWeb, e.DefaultDomainID);
 		}
 
 		private void preferences_ShutdownTrayApp(object sender, EventArgs e)
