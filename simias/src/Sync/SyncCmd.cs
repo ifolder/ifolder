@@ -156,7 +156,7 @@ public class Service: MarshalByRefObject
 		{
 			SyncStore store = new SyncStore(storeLocation.LocalPath);
 			SyncCollection c = store.OpenCollection(collectionId);
-			return c == null? null: new SynkerServiceA(c);
+			return c == null? null: new SynkerServiceA(c, true);
 		}
 		catch (Exception e) { Log.Uncaught(e); }
 		return null;

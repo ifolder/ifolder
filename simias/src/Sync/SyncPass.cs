@@ -25,6 +25,7 @@ using System.Collections;
 using System.IO;
 using System.Xml;
 using System.Diagnostics;
+using System.Threading;
 
 using Simias.Storage;
 using Simias;
@@ -82,6 +83,7 @@ public class SynkerServiceA: SyncCollectionService
 	SyncOps ops;
 	SyncIncomingNode inNode;
 	SyncOutgoingNode outNode;
+	bool ignoreRights = true;
 
 	/// <summary>
 	/// public ctor 
@@ -92,33 +94,42 @@ public class SynkerServiceA: SyncCollectionService
 	}
 
 	/// <summary>
+	/// debug ctor 
+	/// </summary>
+	public SynkerServiceA(SyncCollection collection, bool ignoreRights): base(collection)
+	{
+		this.collection = collection.BaseCollection;
+		this.ignoreRights = ignoreRights;
+	}
+
+	/// <summary>
 	/// start sync of this collection -- perform basic role checks and dredge server file system
 	/// </summary>
-	public bool Start()
+	public Access.Rights Start()
 	{
-		// TODO: fix identity, get it from channel?
+		Access.Rights rights = Access.Rights.Deny;
 		try
 		{
-			collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole);
-		
-			Log.Spew("dredging server at docRoot '{0}'", collection.DocumentRoot.LocalPath);
-			new Dredger(collection, true);
-			Log.Spew("done dredging server at docRoot '{0}'", collection.DocumentRoot.LocalPath);
-			inNode = new SyncIncomingNode(collection, true);
-			outNode = new SyncOutgoingNode(collection);
-			ops = new SyncOps(collection, true);
-
-			//store.Revert();
-			//store.ImpersonateUser(userId);
-
-			//TODO: this check should be before updating the collection from the file system
-			if (!collection.IsAccessAllowed(Access.Rights.ReadOnly))
-				return false;
-			Log.Spew("session started");
-			return true;
+			string userId = Thread.CurrentPrincipal.Identity.Name;
+			Log.Spew("session started for user '{0}'{1}", userId, ignoreRights? " without access control": "");
+			if (ignoreRights)
+				userId = Access.SyncOperatorRole;
+			collection.LocalStore.ImpersonateUser(userId);
+			if (collection.IsAccessAllowed(Access.Rights.ReadOnly))
+			{
+				collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole);
+				Log.Spew("dredging server at docRoot '{0}'", collection.DocumentRoot.LocalPath);
+				new Dredger(collection, true);
+				Log.Spew("done dredging server at docRoot '{0}'", collection.DocumentRoot.LocalPath);
+				inNode = new SyncIncomingNode(collection, true);
+				outNode = new SyncOutgoingNode(collection);
+				ops = new SyncOps(collection, true);
+				collection.LocalStore.Revert();
+				rights = collection.GetUserAccess(userId);
+			}
 		}
 		catch (Exception e) { Log.Uncaught(e); }
-		return false;
+		return rights;
 	}
 
 	/// <summary>
@@ -307,12 +318,17 @@ public class SynkerWorkerA: SyncCollectionWorker
 	/// </summary>
 	public override void DoSyncWork()
 	{
-		ss.Start();
+		Access.Rights rights = ss.Start();
 
-		Log.Spew("client connected to server version {0}", ss.Version);
+		if (rights == Access.Rights.Deny)
+		{
+			Log.Error("Sync with collection {0} denied", collection.Name);
+			return;
+		}
+
+		//Log.Spew("client connected to server version {0}", ss.Version);
 
 		collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole);
-
 		new Dredger(collection, false);
 		SyncIncomingNode inNode = new SyncIncomingNode(collection, false);
 		SyncOutgoingNode outNode = new SyncOutgoingNode(collection);
@@ -347,14 +363,16 @@ public class SynkerWorkerA: SyncCollectionWorker
 			if (si == sCount || ci < cCount && cstamps[ci].CompareTo(sstamps[si]) < 0)
 			{
 				// file ci exists on client but not server
-				if (cstamps[ci].masterIncarn == 0 && cstamps[ci].localIncarn != UInt64.MaxValue)
+				if (cstamps[ci].masterIncarn == 0
+						&& cstamps[ci].localIncarn != UInt64.MaxValue
+						&& rights != Access.Rights.ReadOnly)
 				{
 					Log.Spew("{1} '{0}' is new on the client, send to server", cstamps[ci].name,  cstamps[ci].id);
 					AddToUpdateList(cstamps[ci], smallToServer, largeToServer);
 				}
 				else
 				{
-					Log.Spew("{1} '{0}' has been killed or synced before, but is no longer on the server, just kill it locally",
+					Log.Spew("{1} '{0}' has been killed or synced before or is RO, but is not on the server, just kill it locally",
 							cstamps[ci].name, cstamps[ci].id);
 					killOnClient.Add(cstamps[ci].id);
 				}
@@ -362,7 +380,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 			}
 			else if (ci == cCount || cstamps[ci].CompareTo(sstamps[si]) > 0)
 			{
-				Log.Spew("{1} '{0}' exists on server, but not client (no tombstone either), get it", sstamps[si].name, sstamps[si].id);
+				Log.Spew("{1} '{0}' exists on server but not client, get it", sstamps[si].name, sstamps[si].id);
 				AddToUpdateList(sstamps[si], smallFromServer, largeFromServer);
 				si++;
 			}
@@ -370,8 +388,17 @@ public class SynkerWorkerA: SyncCollectionWorker
 			{
 				if (cstamps[ci].localIncarn == UInt64.MaxValue)
 				{
-					Log.Spew("{1} '{0}' is local tombstone, delete on server", sstamps[si].name, sstamps[si].id);
-					killOnServer.Add(cstamps[ci].id);
+					if (rights == Access.Rights.ReadOnly)
+					{
+						ops.DeleteSpuriousNode(cstamps[ci].id);
+						Log.Spew("{1} '{0}' reconstitute from server after illegal delete", cstamps[ci].name, cstamps[ci].id);
+						AddToUpdateList(cstamps[ci], smallFromServer, largeFromServer);
+					}
+					else
+					{
+						Log.Spew("{1} '{0}' is local tombstone, delete on server", sstamps[si].name, sstamps[si].id);
+						killOnServer.Add(cstamps[ci].id);
+					}
 				}
 				else if (sstamps[si].localIncarn != cstamps[ci].masterIncarn)
 				{
@@ -381,9 +408,18 @@ public class SynkerWorkerA: SyncCollectionWorker
 				}
 				else if (cstamps[ci].localIncarn != cstamps[ci].masterIncarn)
 				{
-					Log.Assert(cstamps[ci].localIncarn > cstamps[ci].masterIncarn);
-					Log.Spew("{2} '{0}' has changed, send incarn {1} to server", cstamps[ci].name, cstamps[ci].localIncarn, cstamps[ci].id);
-					AddToUpdateList(cstamps[ci], smallToServer, largeToServer);
+					if (rights == Access.Rights.ReadOnly)
+					{
+						ops.DeleteSpuriousNode(cstamps[ci].id);
+						Log.Spew("{1} '{0}' reconstitute from server after illegal update", cstamps[ci].name, cstamps[ci].id);
+						AddToUpdateList(cstamps[ci], smallFromServer, largeFromServer);
+					}
+					else
+					{
+						Log.Assert(cstamps[ci].localIncarn > cstamps[ci].masterIncarn);
+						Log.Spew("{2} '{0}' has changed, send incarn {1} to server", cstamps[ci].name, cstamps[ci].localIncarn, cstamps[ci].id);
+						AddToUpdateList(cstamps[ci], smallToServer, largeToServer);
+					}
 				}
 				ci++;
 				si++;
