@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-iFolder_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolder.cs $(srcdir)/iFolderAccess.cs $(srcdir)/iFolderNode.cs $(srcdir)/iFolderManager.cs
+iFolder_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolder.cs $(srcdir)/iFolderNode.cs $(srcdir)/iFolderManager.cs
 iFolder_CSFILES_CSC := $(subst /,$(SEP),$(iFolder_CSFILES))
 iFolder_INCLUDES =
 iFolder_RESOURCES =
@@ -39,19 +39,20 @@ EXTRA_DIST = ifolders $(srcdir)/iFolderCmd $(iFolder_CSFILES) $(iFolderCmd_CSFIL
 
 CUR_DIR := $(shell pwd)
 
-all: Novell.iFolder.dll iFolderCmd.exe iFolderd.exe
+#all: Novell.iFolder.dll iFolderCmd.exe iFolderd.exe
+all: Novell.iFolder.dll iFolderd.exe
 
 Novell.iFolder.dll: $(iFolder_CSFILES) $(iFolder_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolder_FLAGS) $(SIMIAS_LIBS) $(ADDRESSBOOK_LIBS) $(iFolder_LIBS:%=/r:%) $(iFolder_LIBPATH:%=/lib:%) $(iFolder_CSFILES_CSC) /doc:Novell.iFolder.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolder_FLAGS) $(SIMIAS_LIBS) $(iFolder_LIBS:%=/r:%) $(iFolder_LIBPATH:%=/lib:%) $(iFolder_CSFILES_CSC) /doc:Novell.iFolder.doc.xml
 
 iFolderCmd.exe: $(iFolderCmd_CSFILES) $(iFolderCmd_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderCmd_FLAGS) $(SIMIAS_LIBS) $(ADDRESSBOOK_LIBS) $(iFolderCmd_LIBS:%=/r:%) $(iFolderCmd_LIBPATH:%=/lib:%) $(iFolderCmd_CSFILES_CSC) /doc:iFolderCmd.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderCmd_FLAGS) $(SIMIAS_LIBS) $(iFolderCmd_LIBS:%=/r:%) $(iFolderCmd_LIBPATH:%=/lib:%) $(iFolderCmd_CSFILES_CSC) /doc:iFolderCmd.doc.xml
 
 iFolderd.exe: $(iFolderd_CSFILES) $(iFolderd_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderd_FLAGS) $(SIMIAS_LIBS) $(ADDRESSBOOK_LIBS) $(iFolderd_LIBS:%=/r:%) $(iFolderd_LIBPATH:%=/lib:%) $(iFolderd_CSFILES_CSC) /doc:iFolderd.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderd_FLAGS) $(SIMIAS_LIBS) $(iFolderd_LIBS:%=/r:%) $(iFolderd_LIBPATH:%=/lib:%) $(iFolderd_CSFILES_CSC) /doc:iFolderd.doc.xml
 
 iFolderTests.exe: $(iFolderTests_CSFILES) $(iFolderTests_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderTests_FLAGS) $(SIMIAS_LIBS) $(ADDRESSBOOK_LIBS) $(iFolderTests_LIBS:%=/r:%) $(iFolderTests_LIBPATH:%=/lib:%) $(iFolderTests_CSFILES_CSC)
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderTests_FLAGS) $(SIMIAS_LIBS) $(iFolderTests_LIBS:%=/r:%) $(iFolderTests_LIBPATH:%=/lib:%) $(iFolderTests_CSFILES_CSC)
 	
 if DEBUG
 if WINDOWS

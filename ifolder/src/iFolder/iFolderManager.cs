@@ -29,7 +29,6 @@ using Simias;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.Invite;
-using Novell.AddressBook;
 
 namespace Novell.iFolder
 {
@@ -59,7 +58,6 @@ namespace Novell.iFolder
 		#region Class Members
 		
         internal Store						store;
-		internal Novell.AddressBook.Manager	abMan;
         private Configuration config;
 
         #endregion
@@ -69,7 +67,6 @@ namespace Novell.iFolder
 		{
 			this.config = config;
             this.store = new Store( config );
-			this.abMan = Novell.AddressBook.Manager.Connect( config );
 		}
 		#endregion
 
@@ -119,23 +116,6 @@ namespace Novell.iFolder
 
 		#region Public Methods
 		/// <summary>
-		/// Gets the current iFolder in the store.
-		/// </summary>
-		/// <returns>
-		/// An <see cref="iFolder"/> for the current iFolder.
-		/// </returns>
-		/// <remarks>
-		/// This property returns the current element in the enumerator.
-		/// </remarks>
-		public Novell.AddressBook.Manager AddressBookManager
-		{
-			get 
-			{ 
-				return abMan; 
-			}
-		}
-
-		/// <summary>
 		/// Creates an iFolder located at a specified directory.
 		/// </summary>
 		/// <param name="path">
@@ -161,7 +141,7 @@ namespace Novell.iFolder
 
 				string name = Path.GetFileName(path);
 
-				iFolder newiFolder = new iFolder(store, name, path, abMan);
+				iFolder newiFolder = new iFolder(store, name, path);
 				return newiFolder;
 			}
 			catch( Exception e )
@@ -232,7 +212,7 @@ namespace Novell.iFolder
 			try
 			{
 				Collection collection = store.GetCollectionByID(id);
-				ifolder = new iFolder(store, collection, abMan);
+				ifolder = new iFolder(store, collection);
 			}
 			catch
 			{

@@ -30,7 +30,6 @@ using Simias;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.Invite;
-using Novell.AddressBook;
 
 namespace Novell.iFolder
 {
@@ -41,9 +40,6 @@ namespace Novell.iFolder
 	public class iFolder : Collection
 	{
 		#region Class Members
-		private	Novell.AddressBook.AddressBook	ab = null;
-		private Novell.AddressBook.Manager 		abMan;
-
 		/// <summary>
 		/// Type of collection that represents an iFolder.
 		/// </summary>
@@ -58,34 +54,6 @@ namespace Novell.iFolder
 		/// A directory in an iFolder collection.
 		/// </summary>
 		internal const string iFolderDirectoryType = "Directory";
-
-
-		/// <summary>
-		/// Access rights used by the iFolder.
-		/// These rights are mutually exclusive.
-		/// </summary>
-		public enum Rights
-		{
-			/// <summary>
-			/// User has no rights to the iFolder.
-			/// </summary>
-			Deny = Access.Rights.Deny,
-
-			/// <summary>
-			/// User can view information in an iFolder.
-			/// </summary>
-			ReadOnly = Access.Rights.ReadOnly,
-
-			/// <summary>
-			/// User can view and modify information in an iFolder.
-			/// </summary>
-			ReadWrite = Access.Rights.ReadWrite,
-
-			/// <summary>
-			/// User can view, modify and change rights in an iFolder.
-			/// </summary>
-			Admin = Access.Rights.Admin
-		};
 		#endregion
 
 		#region Constructors
@@ -95,12 +63,9 @@ namespace Novell.iFolder
 		/// <param name="store">The store object that this iFolder belongs to.</param>
 		/// <param name="name">The friendly name that is used by applications to describe the iFolder.</param>
 		/// <param name="path">The full path of the iFolder.</param>
-		/// <param name="manager">The address book manager.</param>
-		internal iFolder(Store store, string name, string path, Novell.AddressBook.Manager manager) :
-			base(store, name)
+		internal iFolder(Store store, string name, string path) :
+			base(store, name, store.DefaultDomain)
 		{
-			this.abMan = manager;
-
 			// Make sure the path doesn't end with a separator character.
 			if ( path.EndsWith( Path.DirectorySeparatorChar.ToString() ) )
 			{
@@ -116,8 +81,34 @@ namespace Novell.iFolder
 			// Commit the changes.
 			Node[] nodeList = { this, dirNode };
 			this.Commit( nodeList );
+		}
 
-			ConnectAddressBook();
+
+		/// <summary>
+		/// Creates an iFolder collection.
+		/// </summary>
+		/// <param name="store">The store object that this iFolder belongs to.</param>
+		/// <param name="name">The friendly name that is used by applications to describe the iFolder.</param>
+		/// <param name="path">The full path of the iFolder.</param>
+		/// <param name="domainName">The domain for this iFolder.</param>
+		internal iFolder(Store store, string name, string path, string domainName) :
+			base(store, name, domainName)
+		{
+			// Make sure the path doesn't end with a separator character.
+			if ( path.EndsWith( Path.DirectorySeparatorChar.ToString() ) )
+			{
+				path = path.Substring( 0, path.Length - 1 );
+			}
+
+			// Set the type of the collection.
+			this.SetType(this, iFolderType);
+
+			// Create the DirNode object that will represent the root of the iFolder.
+			DirNode dirNode = new DirNode( this, path );
+
+			// Commit the changes.
+			Node[] nodeList = { this, dirNode };
+			this.Commit( nodeList );
 		}
 
 		/// <summary>
@@ -125,8 +116,7 @@ namespace Novell.iFolder
 		/// </summary>
 		/// <param name="store">The store object that this iFolder belongs to.</param>
 		/// <param name="node">The node object to construct the iFolder object from.</param>
-		/// <param name="manager">The address book manager.</param>
-		internal iFolder(Store store, Node node, Novell.AddressBook.Manager manager)
+		internal iFolder(Store store, Node node)
 			: base(store, node)
 		{
 			// Make sure this collection has our store propery
@@ -135,10 +125,6 @@ namespace Novell.iFolder
 				// Raise an exception here
 				throw new ApplicationException( "Invalid iFolder collection." );
 			}
-
-			this.abMan = manager;
-
-			ConnectAddressBook();
 		}
         #endregion
 
@@ -240,17 +226,6 @@ namespace Novell.iFolder
 
 		#region Internal methods
 		/// <summary>
-		/// Method: ConnectAddressBook
-		/// Abstract: Internal method to load the correct default
-		/// AddressBook for resolving contact information
-		/// </summary>
-		internal void ConnectAddressBook()
-		{
-			// TODO: where should we discover the contact information?
-			ab = abMan.GetAddressBookByName( this.StoreReference.GetLocalAddressBook().Name );
-		}
-
-		/// <summary>
 		/// Deletes an iFolder.
 		/// </summary>
 		new internal void Delete()
@@ -305,38 +280,9 @@ namespace Novell.iFolder
 
 			return node;
 		}
-
-		/// <summary>
-		/// Maps simias access rights to iFolder access rights.
-		/// </summary>
-		/// <param name="simiasRights">The simias access right to map.</param>
-		/// <returns>The corresponding iFolder access right value.</returns>
-		internal static Rights MapAccessRights( Access.Rights simiasRights )
-		{
-			return ( Rights )Enum.Parse( typeof( Rights ), simiasRights.ToString() );
-		}
-
-		/// <summary>
-		/// Maps iFolder access rights to simias access rights.
-		/// </summary>
-		/// <param name="iFolderRights">The iFolder access right to map.</param>
-		/// <returns>The corresponding simias access right value.</returns>
-		internal static Access.Rights MapAccessRights( Rights iFolderRights )
-		{
-			return ( Access.Rights )Enum.Parse( typeof( Access.Rights ), iFolderRights.ToString() );
-		}
 		#endregion
 
 		#region Properties
-		/// <summary>
-		/// Gets the identity of the owner of the iFolder.
-		/// </summary>
-		[ Obsolete( "This property is marked for removal.  Use Owner instead.", false ) ]
-		public string OwnerIdentity 
-		{
-			get { return this.Owner; }
-		}
-
 		/// <summary>
 		/// Gets the local path of the iFolder.
 		/// </summary>
@@ -347,15 +293,6 @@ namespace Novell.iFolder
 				DirNode dirNode = this.GetRootDirectory();
 				return ( dirNode != null ) ? dirNode.GetFullPath( this ) : null;
 			}
-		}
-
-		/// <summary>
-		/// Gets the collection node for this iFolder.
-		/// </summary>
-		[ Obsolete( "This property is marked for removal.  This object is the collection.", false ) ]
-		public Node CurrentNode
-		{
-			get { return this; }
 		}
 
 		/// <summary>
@@ -400,133 +337,6 @@ namespace Novell.iFolder
 		{
 			Node node = GetNodeForPath( path );
 			return (node != null) ? new iFolderNode( this, node ) : null;
-		}
-
-		/// <summary>
-		/// Returns an <see cref="IFAccessControlList"/> that iterates over 
-		/// all contacts that have rights on the iFolder.
-		/// </summary>
-		/// <returns>
-		/// An <see cref="iFAccessControlList"/> that iterates over all 
-		/// contacts that have rights to the iFolder and returns an
-		/// <see cref="IFAccessControlEntry"/> for each contact.
-		/// </returns>
-		new public IFAccessControlList GetAccessControlList()
-		{
-			return ( new IFAccessControlList( this, ab ) );
-		}
-
-		/// <summary>
-		/// Returns the rights that a specified user has on the iFolder.
-		/// </summary>
-		/// <param name="contact">
-		/// The <see cref="Contact"/> of the user for which to return rights.
-		/// </param>
-		/// <returns>
-		/// The <see cref="Rights"/> for the user specified by 
-		/// <paramref name="contact"/>. 
-		/// </returns>
-		public Rights GetRights(Contact contact)
-		{
-			return MapAccessRights( this.GetUserAccess( contact.ID ) );
-		}
-
-		/// <summary>
-		/// Determines whether the current user has rights to share the iFolder.
-		/// </summary>
-		/// <returns>
-		/// <b>true</b> if the user can share the iFolder; <b>false</b> if the
-		/// user does not have rights to share the iFolder.
-		/// </returns>
-		[ Obsolete( "This method is marked for removal.  Use the property Shareable instead.", false ) ]
-		public bool IsShareable()
-		{
-			return this.Shareable;
-		}
-
-		/// <summary>
-		/// Sends an invitation to the specified contact using their
-		/// preferred method of being contacted
-		/// </summary>
-		/// <param name="contact">
-		/// The <see cref="Contact"/> to send an invitation to.
-		/// </param>
-		public void Invite( Contact contact )
-		{
-			// inform the notification service that we have shared
-			Invitation invitation = InvitationService.CreateInvitation( this, contact.ID );
-
-			// from
-			Contact from = ab.GetContact( this.Owner );
-			invitation.FromName = from.FN;
-			invitation.FromEmail = from.EMail;
-
-			// to
-			invitation.ToName = contact.FN;
-			invitation.ToEmail = contact.EMail;
-
-			// send the invitation
-			InvitationService.Invite( invitation );
-		}
-
-		/// <summary>
-		/// Generates an iFolder Invitation for the specified contact
-		/// and saves it to a file.
-		/// </summary>
-		/// <param name="contact">
-		/// The <see cref="Contact"/> to send an invitation to.
-		/// </param>
-		/// <param name="filePath">
-		/// The full path to the file where the Invitation will be saved
-		/// </param>
-		public void CreateInvitationFile( Contact contact, string filePath )
-		{
-			// inform the notification service that we have shared
-			Invitation invitation = InvitationService.CreateInvitation( this, contact.ID );
-
-			// from
-			Contact from = ab.GetContact( this.Owner );
-			invitation.FromName = from.FN;
-			invitation.FromEmail = from.EMail;
-
-			// to
-			invitation.ToName = contact.FN;
-			invitation.ToEmail = contact.EMail;
-
-			invitation.Save( filePath );
-		}
-
-		/// <summary>
-		/// Sets the rights on the iFolder for the specified user.
-		/// </summary>
-		/// <param name="contact">
-		/// The <see cref="Contact"/> for the user for which to set rights.
-		/// </param>
-		/// <param name="rights">
-		/// The <see cref="Rights"/> to set.
-		/// </param>
-		public void SetRights( Contact contact, Rights rights )
-		{
-			if ( this.Owner != contact.ID )
-			{
-				this.SetUserAccess( contact.ID, MapAccessRights( rights ) );
-				this.Commit();
-			}
-		}
-
-		/// <summary>
-		/// Removes all access rights on the iFolder for the specified user.
-		/// </summary>
-		/// <param name="userId">
-		/// The <see cref="Contact"/> for which to remove all rights.
-		/// </param>
-		public void RemoveRights( Contact contact )
-		{
-			if ( this.Owner != contact.ID )
-			{
-				this.RemoveUserAccess( contact.ID );
-				this.Commit();
-			}
 		}
 		#endregion
 	}

@@ -26,7 +26,6 @@ using System;
 using Simias.Invite;
 using Simias.Sync;
 using Novell.iFolder;
-using Novell.AddressBook;
 
 /// <summary>
 /// Provides a command-line interface into the iFolder APIs.
