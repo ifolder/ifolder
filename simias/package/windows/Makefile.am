@@ -20,7 +20,10 @@
 #  Author: Paul Thomas <pthomas@novell.com>
 #
 #######################################################################
-EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/simias-msi.ism $(srcdir)/simias-msm.ism $(srcdir)/simias-sdk-msm.ism
+
+EXTRA_DIST = $(srcdir)/$(PACKAGE)-msi.ism $(srcdir)/$(PACKAGE)-msm.ism $(srcdir)/$(PACKAGE)-sdk-msm.ism
+
+export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
 CUR_DIR := $(shell pwd)
 OUT_DIR := $(shell cygpath --windows $(CUR_DIR))
@@ -41,28 +44,28 @@ MSM_FILE     = $(PACKAGE)-$(VERSION)-$(RELEASE).msm
 SDK_MSM_FILE = $(PACKAGE)-sdk-$(VERSION)-$(RELEASE).msm
 endif
 
-MSI = simias-msi
-MSM = simias-msm
-SDK_MSM = simias-sdk-msm
+MSI = $(PACKAGE)-msi
+MSM = $(PACKAGE)-msm
+SDK_MSM = $(PACKAGE)-sdk-msm
 
 MSI_LOG_FILE     = issabld-$(MSI).log
 MSM_LOG_FILE     = issabld-$(MSM).log
 SDK_MSM_LOG_FILE = issabld-$(SDK_MSM)-msm.log
 
-#ISSABLD = ../../tools/InstallShield/IsSABld.exe
+ISSABLD_DIR := $(shell cygpath --windows `dirname $(ISSABLD)`)
 ISSABLD_CONFIG  = web
 ISSABLD_RELEASE = release
 
 DISK1         = $(ISSABLD_CONFIG)/$(ISSABLD_RELEASE)/DiskImages/DISK1
 MSI_DISK1     = $(MSI)/$(DISK1)/setup.exe
-MSM_DISK1     = $(MSM)/$(DISK1)/simias.msm
-SDK_MSM_DISK1 = $(SDK_MSM)/$(DISK1)/simias_sdk.msm
+MSM_DISK1     = $(MSM)/$(DISK1)/$(subst -,_,$(PACKAGE)).msm
+SDK_MSM_DISK1 = $(SDK_MSM)/$(DISK1)/$(subst -,_,$(PACKAGE))_sdk.msm
 
 all: $(MSI_FILE)
 
 $(MSI_FILE): issabld $(MSM_FILE) $(SDK_MSM_FILE) $(MSI).ism
 	@rm -f $@ "$(MSI_DISK1)" "$(MSI_LOG_FILE)"
-	@CMD='"$(ISSABLD)" -p "$(MSI).ism" -o "$(MERGE_MODULES_WIN)"'; \
+	@CMD='"$(ISSABLD)" -p "$(MSI).ism" -o "$(ISSABLD_DIR),$(MERGE_MODULES_WIN)"'; \
 		echo $$CMD; \
 		eval $$CMD > "$(MSI_LOG_FILE)" 2>&1; \
 		if test -f "$(MSI_DISK1)"; then \
@@ -76,7 +79,7 @@ $(MSI_FILE): issabld $(MSM_FILE) $(SDK_MSM_FILE) $(MSI).ism
 		echo $$CMD; \
 		eval $$CMD
 
-$(MSM_FILE): issabld simias-install $(MSM).ism
+$(MSM_FILE): issabld $(PACKAGE)-install $(MSM).ism
 	@rm -f $@ "$(MSM_DISK1)" "$(MSM_LOG_FILE)"
 	@CMD='"$(ISSABLD)" -p "$(MSM).ism"'; \
 		echo $$CMD; \
@@ -92,7 +95,7 @@ $(MSM_FILE): issabld simias-install $(MSM).ism
 		echo $$CMD; \
 		eval $$CMD
 
-$(SDK_MSM_FILE): issabld simias-doc $(SDK_MSM).ism
+$(SDK_MSM_FILE): issabld $(PACKAGE)-doc $(SDK_MSM).ism
 	@rm -f $@ "$(SDK_MSM_DISK1)" "$(SDK_MSM_LOG_FILE)"
 	@CMD='"$(ISSABLD)" -p "$(SDK_MSM).ism"'; \
 		echo $$CMD; \
@@ -108,7 +111,7 @@ $(SDK_MSM_FILE): issabld simias-doc $(SDK_MSM).ism
 		echo $$CMD; \
 		eval $$CMD
 
-.PHONY: simias-install simias simias-configure simias-dist simias-doc
+.PHONY: issabld $(PACKAGE)-install $(PACKAGE) $(PACKAGE)-configure $(PACKAGE)-dist $(PACKAGE)-doc
 
 issabld:
 	@if test -z "$(ISSABLD)"; then \
@@ -121,13 +124,13 @@ issabld:
 		exit 1; \
 	fi
 
-simias-install: simias
+$(PACKAGE)-install: $(PACKAGE)
 	$(MAKE) -C MSI/BUILD/$(PACKAGE)-$(VERSION) install
 	
-simias: simias-configure
+$(PACKAGE): $(PACKAGE)-configure
 	$(MAKE) -C MSI/BUILD/$(PACKAGE)-$(VERSION) all
 	
-simias-configure: simias-dist
+$(PACKAGE)-configure: $(PACKAGE)-dist
 	rm -rf MSI
 	mkdir MSI
 	mkdir -p MSI/BUILD
@@ -137,10 +140,10 @@ simias-configure: simias-dist
 	cd MSI/BUILD/$(PACKAGE)-$(VERSION); \
 		./configure --prefix=$(CUR_DIR)/MSI/INSTALL $(DEBUG_OPTION)
 	
-simias-dist:
+$(PACKAGE)-dist:
 	$(MAKE) -C $(top_srcdir) dist
 
-simias-doc: simias
+$(PACKAGE)-doc: $(PACKAGE)
 	$(MAKE) -C $(top_srcdir)/doc all
 	
 clean-local:
@@ -149,11 +152,7 @@ clean-local:
 	rm -rf MSI $(MSI) $(MSM) $(SDK_MSM)
 
 distclean-local:
-	rm -rf $(COMMON_DISTCLEAN_FILES) simias.spec simias-sdk.spec
+	rm -rf $(COMMON_DISTCLEAN_FILES) $(PACKAGE).spec $(PACKAGE)-sdk.spec
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
-
-# do nothing for the following standard targets
-all clean:
-
