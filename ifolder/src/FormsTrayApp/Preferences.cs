@@ -1549,28 +1549,6 @@ namespace Novell.FormsTrayApp
 							EnterpriseConnect(this, new DomainConnectEventArgs(domainInfo));
 						}
 
-						if (domainInfo.IsDefault)
-						{
-							// Remove any new default.
-							if (newDefaultDomain != null)
-							{
-								newDefaultDomain.DomainInfo.IsDefault = false;
-								newDefaultDomain = null;
-							}
-
-							// Reset the current default.
-							if (currentDefaultDomain != null)
-							{
-								currentDefaultDomain.DomainInfo.IsDefault = false;
-							}
-
-							// Save the new default.
-							currentDefaultDomain = domain;
-
-							defaultServer.Checked = true;
-							defaultServer.Enabled = false;
-						}
-
 						addAccount.Enabled = details.Enabled = enableAccount.Enabled = true;
 
 						activate.Enabled = false;
@@ -1599,6 +1577,38 @@ namespace Novell.FormsTrayApp
 						if (!rememberPassword.Checked)
 						{
 							password.Text = string.Empty;
+						}
+
+						if (defaultServer.Checked)
+						{
+							try
+							{
+								simiasWebService.SetDefaultDomain(domain.DomainInfo.ID);
+
+								domain.DomainInfo.IsDefault = true;
+								newDefaultDomain = null;
+								defaultServer.Enabled = false;
+
+								// Reset the current default.
+								if (currentDefaultDomain != null)
+								{
+									currentDefaultDomain.DomainInfo.IsDefault = false;
+								}
+
+								// Save the new default.
+								currentDefaultDomain = domain;
+
+								// Fire the event telling that the default domain has changed.
+								if (ChangeDefaultDomain != null)
+								{
+									ChangeDefaultDomain(this, new DomainConnectEventArgs(currentDefaultDomain.DomainInfo));
+								}
+							}
+							catch (Exception ex)
+							{
+								mmb = new MyMessageBox(resourceManager.GetString("setDefaultError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb.ShowDialog();
+							}
 						}
 
 						if (authStatus.RemainingGraceLogins < authStatus.TotalGraceLogins)
@@ -2201,24 +2211,27 @@ namespace Novell.FormsTrayApp
 				{
 					Domain domain = (Domain)accounts.SelectedItems[0].Tag;
 
-					// Reset the flag on the current default domain.
-					currentDefaultDomain.DomainInfo.IsDefault = false;
-
-					// Reset the flag on the "old" new default domain.
-					if (newDefaultDomain != null)
+					if (domain != null)
 					{
-						newDefaultDomain.DomainInfo.IsDefault = false;
+						// Reset the flag on the current default domain.
+						currentDefaultDomain.DomainInfo.IsDefault = false;
+
+						// Reset the flag on the "old" new default domain.
+						if (newDefaultDomain != null)
+						{
+							newDefaultDomain.DomainInfo.IsDefault = false;
+						}
+
+						// Set the flag on the new default domain.
+						domain.DomainInfo.IsDefault = true;
+						newDefaultDomain = domain;
+
+						// Disable the checkbox so that it cannot be unchecked and don't allow 
+						// the new default to be removed.
+						defaultServer.Enabled = /*removeAccount.Enabled =*/ false;
+
+						apply.Enabled = true;
 					}
-
-					// Set the flag on the new default domain.
-					domain.DomainInfo.IsDefault = true;
-					newDefaultDomain = domain;
-
-					// Disable the checkbox so that it cannot be unchecked and don't allow 
-					// the new default to be removed.
-					defaultServer.Enabled = /*removeAccount.Enabled =*/ false;
-
-					apply.Enabled = true;
 				}
 				catch
 				{}
@@ -2455,9 +2468,11 @@ namespace Novell.FormsTrayApp
 							server.Text = lvi.SubItems[0].Text;
 							newAccountLvi = lvi;
 							userName.ReadOnly = server.ReadOnly = false;
-							details.Enabled = defaultServer.Checked = defaultServer.Enabled =
-								activate.Enabled = enableAccount.Enabled = false;
+							details.Enabled = activate.Enabled = enableAccount.Enabled = false;
 							enableAccount.Checked = true;
+
+							defaultServer.Enabled = (accounts.Items.Count > 1);
+							defaultServer.Checked = (accounts.Items.Count == 1);
 							server.Focus();
 						}
 						else
