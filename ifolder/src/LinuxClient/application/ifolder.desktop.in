@@ -2,8 +2,8 @@
 Name=iFolder
 GenericName=iFolder
 Comment=iFolder Collaborative File Sharing Tool
-Exec=@bindir@/ifolder
-Icon=@datadir@/ifolder3/images/ifolder24.png
+Exec=@_bindir_@/ifolder
+Icon=@_datadir_@/ifolder3/images/ifolder24.png
 StartupNotify=false
 Terminal=false
 Type=Application

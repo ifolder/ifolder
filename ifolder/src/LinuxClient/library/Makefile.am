@@ -12,6 +12,12 @@ UILIB_LIBPATH = $(srcdir)/../iFolder
 
 EXTRA_DIST = $(UILIB_CSFILES) 
 
+UTIL_CS_IN = Util.cs.in
+
+util_cs_in: $(UTIL_CS_IN)
+	sed -e 's,@_prefix_@,@prefix@,g' -e 's,@_PACKAGE_@,@PACKAGE@,g' $< > $@
+	chmod +x $@
+
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
 DOC_FILE_CMD = /doc:$(DOC_FILE)
