@@ -38,10 +38,9 @@ namespace Novell.iFolder
 		internal static int SectionTitleSpacing = 5;
 		internal static uint DefaultBorderWidth = 10;
 
-
 		public static void InitCatalog()
 		{
-			Mono.Posix.Catalog.Init("ifolder3", "@prefix@/share/locale");
+			Mono.Posix.Catalog.Init("@PACKAGE@", "@prefix@/share/locale");
 		}
 
 

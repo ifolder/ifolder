@@ -182,10 +182,29 @@ namespace Novell.iFolder
 			//------------------------------
 			// Setup all of the default values
 			//------------------------------
-			if(ifSettings.DisplayConfirmation)
+			if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, "true")
+										== "true")
 				ShowConfirmationButton.Active = true;
 			else
 				ShowConfirmationButton.Active = false;
+
+			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_USERS, "true")
+										== "true")
+				NotifyUsersButton.Active = true;
+			else
+				NotifyUsersButton.Active = false;
+
+			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_COLLISIONS, "true")
+										== "true")
+				NotifyCollisionsButton.Active = true;
+			else
+				NotifyCollisionsButton.Active = false;
+
+			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_IFOLDERS, "true")
+										== "true")
+				NotifyiFoldersButton.Active = true;
+			else
+				NotifyiFoldersButton.Active = false;
 
 
 			SyncSpinButton.Value = ifSettings.DefaultSyncInterval;
@@ -624,16 +643,18 @@ namespace Novell.iFolder
 
 
 			ShowConfirmationButton = 
-				new CheckButton(Util.GS("_Show Confirmation dialog when creating iFolders"));
+				new CheckButton(Util.GS(
+					"_Show Confirmation dialog when creating iFolders"));
 			appWidgetBox.PackStart(ShowConfirmationButton, false, true, 0);
 			ShowConfirmationButton.Toggled += 
 						new EventHandler(OnShowConfButton);
 
-			NotifyUsersButton =
+			NotifyiFoldersButton =
 				new CheckButton(Util.GS("_Notify of shared iFolders")); 
-			appWidgetBox.PackStart(NotifyUsersButton, false, true, 0);
-			NotifyUsersButton.Toggled += 
-						new EventHandler(OnNotifyUsersButton);
+			appWidgetBox.PackStart(NotifyiFoldersButton, false, true, 0);
+
+			NotifyiFoldersButton.Toggled += 
+						new EventHandler(OnNotifyiFoldersButton);
 
 			NotifyCollisionsButton =
 				new CheckButton(Util.GS("Notify of _collisions")); 
@@ -641,11 +662,12 @@ namespace Novell.iFolder
 			NotifyCollisionsButton.Toggled += 
 						new EventHandler(OnNotifyCollisionsButton);
 
-			NotifyiFoldersButton =
+			NotifyUsersButton =
 				new CheckButton(Util.GS("Notify when a _user joins")); 
-			appWidgetBox.PackStart(NotifyiFoldersButton, false, true, 0);
-			NotifyiFoldersButton.Toggled += 
-						new EventHandler(OnNotifyiFoldersButton);
+			appWidgetBox.PackStart(NotifyUsersButton, false, true, 0);
+
+			NotifyUsersButton.Toggled += 
+						new EventHandler(OnNotifyUsersButton);
 
 			
 			Label strtlabel = new Label("<span style=\"italic\">To startup iFolder at login, leave iFolder running when you log out and save your current setup.</span>");
@@ -1806,7 +1828,8 @@ namespace Novell.iFolder
 						curiFolders.Add(newiFolder.ID, iter);
 
 
-						if(ifSettings.DisplayConfirmation)
+						if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
+										"true") == "true")
 						{
 							iFolderCreationDialog dlg = 
 								new iFolderCreationDialog(newiFolder);
@@ -1816,8 +1839,10 @@ namespace Novell.iFolder
 
 							if(dlg.HideDialog)
 							{
-								ShowConfirmationButton.Active = false;
-								OnShowConfButton(null, null);
+								ClientConfig.Set(
+									ClientConfig.KEY_SHOW_CREATION, "false");
+								if(ShowConfirmationButton != null)
+									ShowConfirmationButton.Active = false;
 							}
 
 							dlg.Destroy();
@@ -2133,40 +2158,35 @@ namespace Novell.iFolder
 
 		private void OnNotifyUsersButton(object o, EventArgs args)
 		{
-			// TODO: Put something here to change the settings
+			if(NotifyUsersButton.Active)
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_USERS, "true");
+			else
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_USERS, "false");
 		}
 
 		private void OnNotifyCollisionsButton(object o, EventArgs args)
 		{
-			// TODO: Put something here to change the settings
+			if(NotifyCollisionsButton.Active)
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_COLLISIONS, "true");
+			else
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_COLLISIONS, "false");
 		}
 
 		private void OnNotifyiFoldersButton(object o, EventArgs args)
 		{
-			// TODO: Put something here to change the settings
+			if(NotifyiFoldersButton.Active)
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_IFOLDERS, "true");
+			else
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_IFOLDERS, "false");
 		}
 
 
 		private void OnShowConfButton(object o, EventArgs args)
 		{
-			// TODO: Change this to store it in gconf
-
-			ifSettings.DisplayConfirmation =
-				ShowConfirmationButton.Active;
-			try
-			{
-				iFolderWS.SetDisplayConfirmation(
-									ifSettings.DisplayConfirmation);
-			}
-			catch(Exception e)
-			{
-				iFolderExceptionDialog ied = new iFolderExceptionDialog(
-													this, e);
-				ied.Run();
-				ied.Hide();
-				ied.Destroy();
-				return;
-			}
+			if(ShowConfirmationButton.Active)
+				ClientConfig.Set(ClientConfig.KEY_SHOW_CREATION, "true");
+			else
+				ClientConfig.Set(ClientConfig.KEY_SHOW_CREATION, "false");
 		}
 
 
