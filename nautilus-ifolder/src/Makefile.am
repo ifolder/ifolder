@@ -38,7 +38,7 @@ libnautilus_ifolder_la_SOURCES =     \
 	envC.c iFolderClientClientLib.c stdsoap2.c nautilus-ifolder.c
 
 # Statically link libsimias-event.a
-SIMIAS_EVENT_CLIENT_STATIC_LIB = $(libdir)/libsimias-event.a
+SIMIAS_EVENT_CLIENT_STATIC_LIB = $(SIMIAS_EVENT_CLIENT_PREFIX)/lib/libsimias-event.a
 
 libnautilus_ifolder_la_LDFLAGS = -module -export-dynamic -avoid-version $(SIMIAS_EVENT_CLIENT_STATIC_LIB)
 libnautilus_ifolder_la_LIBADD  = $(NAUTILUS_LIBS)
