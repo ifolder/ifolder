@@ -6,8 +6,8 @@ InvitationWizard_CSFILES_CSC := $(subst /,$(SEP),$(InvitationWizard_CSFILES))
 InvitationWizard_INCLUDES = 
 InvitationWizard_RESOURCES = $(srcdir)/App$(ICON_EXT)
 InvitationWizard_FLAGS = $(CSC_WINEXEFLAG)
-InvitationWizard_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) iFolder.dll SyncCommon.dll Invitation.dll Common.dll
-InvitationWizard_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin ../iFolder
+InvitationWizard_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Novell.iFolder.dll
+InvitationWizard_LIBPATH = $(SIMIAS_INSTALL_PATH)/lib ../iFolder
 
 DATA_FILES = App.ico Invitation.ico
 
@@ -16,7 +16,7 @@ EXTRA_DIST = $(InvitationWizard_CSFILES) $(DATA_FILES)
 all: InvitationWizard.exe
 
 InvitationWizard.exe: $(InvitationWizard_CSFILES) $(InvitationWizard_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(InvitationWizard_FLAGS) $(InvitationWizard_LIBS:%=/r:%) $(InvitationWizard_LIBPATH:%=/lib:%) $(InvitationWizard_RESOURCES:%=$(ICON_FLAG)%) $(InvitationWizard_CSFILES_CSC) /doc:InvitationWizard.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(InvitationWizard_FLAGS) $(SIMIAS_LIBS) $(InvitationWizard_LIBS:%=/r:%) $(InvitationWizard_LIBPATH:%=/lib:%) $(InvitationWizard_RESOURCES:%=$(ICON_FLAG)%) $(InvitationWizard_CSFILES_CSC) /doc:InvitationWizard.doc.xml
 
 if DEBUG
 if WINDOWS

@@ -64,7 +64,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private SyncManagerStates syncState = SyncManagerStates.Idle;
 		protected AutoResetEvent synkEvent = null;
 
-		private MyTraceForm traceForm;
+//		private MyTraceForm traceForm;
 
 		private bool noTray = false;
 
@@ -114,7 +114,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuItemTracer.Index = 0;
 			this.menuItemTracer.Checked = false;
 			this.menuItemTracer.Enabled = false;
-			this.menuItemTracer.Click += new System.EventHandler(menuItemTracer_Click);
+//			this.menuItemTracer.Click += new System.EventHandler(menuItemTracer_Click);
 
 			// Initialize menuItemBrowser
 			this.menuItemBrowser.Index = 0;
@@ -239,7 +239,7 @@ namespace Novell.iFolder.FormsTrayApp
 			ShutdownTrayApp();
 		}
 
-		private void traceForm_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+/*		private void traceForm_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			if (!this.traceForm.Shutdown)
 			{
@@ -264,7 +264,7 @@ namespace Novell.iFolder.FormsTrayApp
 			{
 				this.traceForm.Hide();
 			}
-		}
+		}*/
 
 		private void menuItemBrowser_Click(object sender, EventArgs e)
 		{
@@ -309,7 +309,7 @@ namespace Novell.iFolder.FormsTrayApp
 				}
 
 				// Create the trace window ... initially hidden.
-				traceForm = new MyTraceForm();
+/*				traceForm = new MyTraceForm();
 				traceForm.Closing += new System.ComponentModel.CancelEventHandler(traceForm_Closing);
 
 				// Trace messages will immediately be written, so we need the window handle to be created.
@@ -320,7 +320,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 				// Enable the tracer menu item.
 				this.menuItemTracer.Enabled = true;
-			}
+*/			}
 			catch (SimiasException ex)
 			{
 				ex.LogFatal();

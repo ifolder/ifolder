@@ -90,44 +90,9 @@
                     HintPath = "..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "CollectionEvents"
-                    AssemblyName = "CollectionEvents"
-                    HintPath = "..\..\..\simias\src\CollectionEvents\CollectionEvents.dll"
-                />
-                <Reference
-                    Name = "Common"
-                    AssemblyName = "Common"
-                    HintPath = "..\..\..\simias\src\Common\Common.dll"
-                />
-                <Reference
-                    Name = "CommonFormWindows"
-                    AssemblyName = "CommonFormWindows"
-                    HintPath = "..\..\..\simias\src\CommonFormWindows\CommonFormWindows.dll"
-                />
-                <Reference
-                    Name = "Sync"
-                    AssemblyName = "Sync"
-                    HintPath = "..\..\..\simias\src\Sync\Sync.dll"
-                />
-                <Reference
-                    Name = "SyncCommon"
-                    AssemblyName = "SyncCommon"
-                    HintPath = "..\..\..\simias\src\SyncCommon\SyncCommon.dll"
-                />
-                <Reference
-                    Name = "SyncLogicLite"
-                    AssemblyName = "SyncLogicLite"
-                    HintPath = "..\..\..\simias\src\SyncLogicLite\SyncLogicLite.dll"
-                />
-                <Reference
-                    Name = "SyncManager"
-                    AssemblyName = "SyncManager"
-                    HintPath = "..\..\..\simias\src\SyncManager\SyncManager.dll"
-                />
-                <Reference
-                    Name = "Simias.Service"
-                    AssemblyName = "Simias.Service"
-                    HintPath = "..\..\..\simias\src\Service\Simias.Service.dll"
+                    Name = "Simias"
+                    AssemblyName = "Simias"
+                    HintPath = "..\..\..\simias\src\Simias.dll\Simias.dll"
                 />
             </References>
         </Build>
