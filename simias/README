@@ -1,0 +1,61 @@
+The iFolder Project website can be found at:
+http://forge.novell.com/modules/xfmod/project/?ifolder
+
+Simias is a technology that will allow various types of data to be stored and
+related in what is known as a collection.  Initially Simias is the underlying
+data store for the iFolder project although it has potiential to do much more.
+Simias is free software, licensed under the GNU GENERAL PUBLIC LICENSE
+(see the COPYING file).
+
+Copyright (C) 2004 Novell, Inc.
+
+----------------
+Building Simias
+----------------
+
+Linux
+------
+	You will need to have mono and gtk-sharp installed and working.  You can 
+	get those from the Ximian Red Carpet server or http://www.go-mono.com
+
+	To compile is the traditional (in the src directory):
+		configure
+		make
+		make install
+
+Win32
+------
+	You will need to have the following installed and working on your machine.
+	(note that cygwin is not used on windows, nor is it tested)
+	- .Net framework compiler and libraries
+	- Perl (to run the configure script)
+	- gnu make
+
+	To compile is the traditional (in the src directory):
+		configure
+		make
+		make install
+
+OS X
+------
+	We are working to get Simias working on OS X.  Right now there are some 
+	issues to large to cover here.  Once you do get mono going on OS X, the
+	Simias project should work much like it does on Linux.
+
+	To compile is the traditional (in the src directory):
+		configure
+		make
+		make install
+
+
+---------------------
+Discussion & Support
+---------------------
+
+	A mailing list for Simias/ifolder discussion is available.
+
+	You can subscribe to the mailing list by visiting:
+
+		http://forge.novell.com/mailman/listinfo/ifolder-dev
+
+
