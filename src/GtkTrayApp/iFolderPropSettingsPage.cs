@@ -108,7 +108,10 @@ namespace Novell.iFolder
 				SyncSpinButton.Value = ifolder.SyncInterval;
 			}
 
-			try
+			UploadValue.Text = "0";
+			FFSyncValue.Text = "0";
+			
+/*			try
 			{
 				SyncSize ss = ifws.CalculateSyncSize(ifolder.ID);
 				UploadValue.Text = string.Format("{0}", ss.SyncByteCount);
@@ -125,7 +128,7 @@ namespace Novell.iFolder
 //				ied.Hide();
 //				ied.Destroy();
 			}
-
+*/
 
 
 			try
