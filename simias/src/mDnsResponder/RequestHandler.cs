@@ -10,6 +10,7 @@ using log4net.Appender;
 using log4net.Repository;
 using log4net.spi;
 using log4net.Layout;
+using Mono.P2p.mDnsResponderApi;
 
 
 namespace Mono.P2p.mDnsResponder
@@ -106,11 +107,13 @@ namespace Mono.P2p.mDnsResponder
 						{
 							foreach(Question cQuestion in dnsRequest.QuestionList)
 							{
+								/*
 								if (cQuestion.RequestType == mDnsType.dumpYourGuts)
 								{
 									Resources.DumpYourGuts(cQuestion);
 								}
 								else
+								*/
 								if (cQuestion.RequestType == mDnsType.hostAddress)
 								{
 									mDnsResponse cResponse = null;

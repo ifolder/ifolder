@@ -33,23 +33,6 @@ using System.Text;
 
 namespace Mono.P2p.mDnsResponder
 {
-	public enum mDnsType : short
-	{
-		hostAddress = 1,
-		ptr = 12,
-		textStrings = 16,
-		ipv6 = 28,
-		hostInfo = 31,
-		serviceLocation = 33,
-		dumpYourGuts = 1189
-	}
-	
-	public enum mDnsClass : short
-	{
-		iNet = 1,
-		allResources = 255
-	}
-	
 	public enum DnsFlags : ushort
 	{
 		request	= 		0x0001,

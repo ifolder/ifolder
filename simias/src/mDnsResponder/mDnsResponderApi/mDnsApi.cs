@@ -18,13 +18,14 @@ namespace Mono.P2p.mDnsResponderApi
 	public enum mDnsType : short
 	{
 		hostAddress = 1,
+		wellknownService = 11,
 		ptr = 12,
+		hostInfo = 13,
 		textStrings = 16,
 		ipv6 = 28,
-		hostInfo = 31,
 		serviceLocation = 33,
-		all = 255,
-		dumpYourGuts = 1189
+		all = 255
+		//dumpYourGuts = 1189
 	}
 	
 
@@ -399,7 +400,13 @@ namespace Mono.P2p.mDnsResponderApi
 	
 	public interface IResourceQuery
 	{
+		int GetDefaultHost(ref RHostAddress ha);
 		int GetResourceRecords(mDnsResponderApi.mDnsType rType, out string[] IDs);
+		int	GetHostAddressResources(out RHostAddress[] has);
+		int GetServiceLocationResources(out RServiceLocation[] sls);
+		int	GetPtrResources(out RPtr[] ptrs);
+		int	GetPtrResourcesByName(string sourceName, out RPtr[] ptrs);
+		int	GetTextStringResources(out RTextStrings[] tss);
 		int	GetHostById(string id, ref RHostAddress ha);
 		int	GetHostByName(string hostName, ref RHostAddress ha);
 		int	GetServiceById(string id, ref RServiceLocation sl);

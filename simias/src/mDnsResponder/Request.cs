@@ -33,6 +33,7 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Mono.P2p.mDnsResponderApi;
 
 using log4net;
 

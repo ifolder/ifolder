@@ -184,90 +184,67 @@ namespace Mono.P2p.mDnsResponder
 
 		#region Public Methods
 
+		public int GetDefaultHost(ref RHostAddress ha)
+		{
+			ha = null;
+			HostAddress cHost = Resources.GetDefaultHostAddress();
+			if (cHost != null)
+			{
+				ha = cHost.CreateRemoteableObject();
+				return(0);
+			}
+
+			return(-1);
+		}
+
 		public int GetHostById(string id, ref RHostAddress ha)
 		{
-			//log.Info("GetHostById called");
-			int status = 0;
 			ha = null;
 			HostAddress cHost = Resources.GetHostAddressById(id);
 			if (cHost != null)
 			{
-				ha = new RHostAddress(cHost.Name, cHost.Ttl, (Mono.P2p.mDnsResponderApi.mDnsType) cHost.Type, (Mono.P2p.mDnsResponderApi.mDnsClass) cHost.Class, false);
-				ha.ID = cHost.ID;
-				ha.AddIPAddress(cHost.PrefAddress);
-			}
-			else
-			{
-				status = -1;
+				ha = cHost.CreateRemoteableObject();
+				return(0);
 			}
 			
-			return(status);
+			return(-1);
 		}
 
 		public int GetHostByName(string hostName, ref RHostAddress ha)
 		{
-			//log.Info("GetHostByName called");
-			int status = 0;
 			ha = null;
 			HostAddress cHost = Resources.GetHostAddress(hostName);
 			if (cHost != null)
 			{
-				ha = new RHostAddress(cHost.Name, cHost.Ttl, (Mono.P2p.mDnsResponderApi.mDnsType) cHost.Type, (Mono.P2p.mDnsResponderApi.mDnsClass) cHost.Class, false);
-				ha.ID = cHost.ID;
-				ha.AddIPAddress(cHost.PrefAddress);
-			}
-			else
-			{
-				status = -1;
+				ha = cHost.CreateRemoteableObject();
+				return(0);
 			}
 			
-			return(status);
+			return(-1);
 		}
 
 		public int GetServiceById(string id, ref RServiceLocation sl)
 		{
-			//log.Info("GetServiceById called");
-			int status = 0;
 			sl = null;
 			ServiceLocation cService = Resources.GetServiceLocationById(id);
 			if (cService != null)
 			{
-				sl = new RServiceLocation(cService.Name, cService.Ttl, (Mono.P2p.mDnsResponderApi.mDnsType) cService.Type, (Mono.P2p.mDnsResponderApi.mDnsClass) cService.Class, false);
-				sl.ID = cService.ID;
-				sl.Priority = cService.Priority;
-				sl.Weight = cService.Weight;
-				sl.Port = cService.Port;
-				sl.Target = cService.Target;
+				sl = cService.CreateRemoteableObject();
+				return(0);
 			}
-			else
-			{
-				status = -1;
-			}
-			
-			return(status);
+			return(-1);
 		}
 
 		public int GetServiceByName(string serviceName, ref RServiceLocation sl)
 		{
-			//log.Info("GetServiceByName called");
-			int status = 0;
 			sl = null;
 			ServiceLocation cService = Resources.GetServiceLocation(serviceName);
 			if (cService != null)
 			{
-				sl = new RServiceLocation(cService.Name, cService.Ttl, (Mono.P2p.mDnsResponderApi.mDnsType) cService.Type, (Mono.P2p.mDnsResponderApi.mDnsClass) cService.Class, false);
-				sl.ID = cService.ID;
-				sl.Priority = cService.Priority;
-				sl.Weight = cService.Weight;
-				sl.Port = cService.Port;
-				sl.Target = cService.Target;
+				sl = cService.CreateRemoteableObject();
+				return(0);
 			}
-			else
-			{
-				status = -1;
-			}
-			
-			return(status);
+			return(-1);
 		}
 
 		public int GetPtrById(string id, ref RPtr ptr)
@@ -332,6 +309,189 @@ namespace Mono.P2p.mDnsResponder
 			return(status);
 		}
 
+		public int GetHostAddressResources(out RHostAddress[] has)
+		{
+			has = null;
+
+			int	numHosts = 0;
+			Resources.resourceMtx.WaitOne();
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.Type == mDnsType.hostAddress)
+				{
+					numHosts++;
+				}
+			}
+
+			if (numHosts == 0)
+			{
+				Resources.resourceMtx.ReleaseMutex();
+				return(-1);
+			}
+
+			has = new RHostAddress[numHosts];
+			int	i = 0;
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.Type == mDnsType.hostAddress)
+				{
+					has[i++] = ((HostAddress) cResource).CreateRemoteableObject();
+				}
+			}
+
+			Resources.resourceMtx.ReleaseMutex();
+			return(0);
+		}
+
+		public int GetServiceLocationResources(out RServiceLocation[] sls)
+		{
+			sls = null;
+			int rcode = 0;
+			int	numServices = 0;
+
+			Resources.resourceMtx.WaitOne();
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.Type == mDnsType.serviceLocation)
+				{
+					numServices++;
+				}
+			}
+
+			if (numServices > 0)
+			{
+				sls = new RServiceLocation[numServices];
+				int	i = 0;
+				foreach(BaseResource cResource in Resources.resourceList)
+				{
+					if (cResource.Type == mDnsType.serviceLocation)
+					{
+						sls[i++] = ((ServiceLocation) cResource).CreateRemoteableObject();
+					}
+				}
+			}
+			else
+			{
+				rcode = -1;
+			}
+			Resources.resourceMtx.ReleaseMutex();
+			return(rcode);
+		}
+
+		public int GetPtrResources(out RPtr[] ptrs)
+		{
+			ptrs = null;
+			int rcode = 0;
+			int	numPtrs = 0;
+
+			Resources.resourceMtx.WaitOne();
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.Type == mDnsType.ptr)
+				{
+					numPtrs++;
+				}
+			}
+
+			if (numPtrs > 0)
+			{
+				ptrs = new RPtr[numPtrs];
+				int	i = 0;
+				foreach(BaseResource cResource in Resources.resourceList)
+				{
+					if (cResource.Type == mDnsType.ptr)
+					{
+						ptrs[i++] = ((Ptr) cResource).CreateRemoteableObject();
+					}
+				}
+			}
+			else
+			{
+				rcode = -1;
+			}
+			Resources.resourceMtx.ReleaseMutex();
+			return(rcode);
+		}
+
+		public int GetPtrResourcesByName(string sourceName, out RPtr[] ptrs)
+		{
+			ptrs = null;
+			int rcode = 0;
+			int	numPtrs = 0;
+
+			Resources.resourceMtx.WaitOne();
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.Type == mDnsType.ptr &&
+					cResource.Name == sourceName)
+				{
+					numPtrs++;
+				}
+			}
+
+			if (numPtrs > 0)
+			{
+				ptrs = new RPtr[numPtrs];
+				int	i = 0;
+				foreach(BaseResource cResource in Resources.resourceList)
+				{
+					if (cResource.Type == mDnsType.ptr &&
+						cResource.Name == sourceName)
+					{
+						ptrs[i++] = ((Ptr) cResource).CreateRemoteableObject();
+					}
+				}
+			}
+			else
+			{
+				rcode = -1;
+			}
+			Resources.resourceMtx.ReleaseMutex();
+			return(rcode);
+		}
+
+		public int GetTextStringResources(out RTextStrings[] tss)
+		{
+			tss = null;
+			int rcode = 0;
+			int	numTxtStrs = 0;
+
+			Resources.resourceMtx.WaitOne();
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.Type == mDnsType.textStrings)
+				{
+					numTxtStrs++;
+				}
+			}
+
+			if (numTxtStrs > 0)
+			{
+				try
+				{
+					tss = new RTextStrings[numTxtStrs];
+					int	i = 0;
+					foreach(BaseResource cResource in Resources.resourceList)
+					{
+						if (cResource.Type == mDnsType.textStrings)
+						{
+							tss[i++] = ((TextStrings) cResource).CreateRemoteableObject();
+						}
+					}
+				}
+				catch
+				{
+					rcode = -1;
+				}
+			}
+			else
+			{
+				rcode = -1;
+			}
+			Resources.resourceMtx.ReleaseMutex();
+			return(rcode);
+		}
+
 		public int GetResourceRecords(mDnsResponderApi.mDnsType rType, out string[] IDs)
 		{
 			IDs = null;
@@ -363,7 +523,7 @@ namespace Mono.P2p.mDnsResponder
 				Resources.resourceMtx.WaitOne();
 				foreach(BaseResource cResource in Resources.resourceList)
 				{
-					if (rType == (mDnsResponderApi.mDnsType) cResource.Type)
+					if (rType == cResource.Type)
 					{
 						totalIDs[i++] = cResource.ID;
 					}

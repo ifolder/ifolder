@@ -165,6 +165,7 @@ namespace Mono.P2p.mDnsResponder
 		{
 			log.Info("AddHostAddress called");
 			bool	foundOne = false;
+			bool	foundLocalDefault = false;
 			
 			Resources.resourceMtx.WaitOne();
 			foreach(BaseResource cResource in Resources.resourceList)
@@ -172,6 +173,11 @@ namespace Mono.P2p.mDnsResponder
 				if (cResource.Name == hostAddr.Name &&
 					cResource.Type == hostAddr.Type)
 				{
+					if (((HostAddress) cResource).LocalDefault == true)
+					{
+						foundLocalDefault = true;
+					}
+
 					foundOne = true;
 					if (hostAddr.Ttl == 0)
 					{
@@ -179,7 +185,7 @@ namespace Mono.P2p.mDnsResponder
 					}
 					else
 					{	
-						cResource.Ttl = hostAddr.Ttl;
+						cResource.StartTtl = hostAddr.StartTtl;
 					}
 					break;
 				}
@@ -194,6 +200,12 @@ namespace Mono.P2p.mDnsResponder
 				//resp.AddAnswer((BaseResource) hostAddr);
 				//resp.Send();
 				//mDnsClient.Close();
+
+				if (foundLocalDefault == false && hostAddr.Owner == true)
+				{
+					hostAddr.localDefault = true;
+				}
+
 				Resources.resourceList.Add(hostAddr);
 
 				// Publish the event
@@ -248,9 +260,29 @@ namespace Mono.P2p.mDnsResponder
 			return(rHost);
 		}
 
+		static public HostAddress GetDefaultHostAddress()
+		{
+			log.Info("GetDefaultHostAddress called");
+			HostAddress	rHost = null;
+			Resources.resourceMtx.WaitOne();
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.Type == mDnsType.hostAddress &&
+					((HostAddress) cResource).LocalDefault == true)					
+				{
+					rHost = (HostAddress) cResource;
+					break;
+				}
+			}
+			Resources.resourceMtx.ReleaseMutex();
+			return(rHost);
+		}
+
 		static public HostAddress GetHostAddressById(string id)
 		{
 			log.Info("GetHostAddressById called");
+			log.Info("  ID: " + id);
+
 			HostAddress	rHost = null;
 			Resources.resourceMtx.WaitOne();
 			foreach(BaseResource cResource in Resources.resourceList)
@@ -623,6 +655,7 @@ namespace Mono.P2p.mDnsResponder
 		protected bool		owner = false;
 		protected string	name = null;
 		protected string	id = null;
+		protected int		startTtl = 0;
 		protected int		ttl = 0;
 		protected mDnsType	dnsType;
 		protected mDnsClass dnsClass;
@@ -648,7 +681,14 @@ namespace Mono.P2p.mDnsResponder
 		{
 			get
 			{
-				return(false);
+				if (this.ttl == 0)
+				{
+					return(true);
+				}
+				else
+				{
+					return(false);
+				}
 			}
 		}
 
@@ -661,17 +701,26 @@ namespace Mono.P2p.mDnsResponder
 			}
 		}
 
+		// Set/Get the configured start TTL for this object
+		public int StartTtl
+		{
+			get
+			{
+				return(this.startTtl);
+			}
+
+			set
+			{
+				this.startTtl = value;
+			}
+		}
+
 		// Returns the current ttl
 		public int Ttl
 		{
 			get
 			{
 				return(this.ttl);
-			}
-
-			set
-			{
-				this.ttl = value;
 			}
 		}
 		
@@ -715,6 +764,7 @@ namespace Mono.P2p.mDnsResponder
 		{
 			this.name = name;
 			this.ttl = ttl;
+			this.startTtl = ttl;
 			this.dnsType = dnsType;
 			this.dnsClass = dnsClass;
 			this.owner = owner;
@@ -727,6 +777,7 @@ namespace Mono.P2p.mDnsResponder
 		internal void	Update()
 		{
 			update = DateTime.Now;
+			this.ttl = this.startTtl;
 		}
 		#endregion
 
@@ -740,10 +791,10 @@ namespace Mono.P2p.mDnsResponder
 	/// <summary>
 	/// Summary description for Host Resource
 	/// </summary>
-	[Serializable]
 	class HostAddress : BaseResource
 	{
 		#region Class Members
+		internal bool		localDefault;
 		protected ArrayList	ipAddresses = null;
 		#endregion
 
@@ -765,12 +816,21 @@ namespace Mono.P2p.mDnsResponder
 			}
 		}
 
+		public bool	LocalDefault
+		{
+			get
+			{
+				return(this.localDefault);
+			}
+		}
+
 		#endregion
 
 		#region Constructors
 		public HostAddress(string name, int ttl, mDnsType dnsType, mDnsClass dnsClass, bool owner) : base(name, ttl, dnsType, dnsClass, owner)
 		{
 			this.ipAddresses = new ArrayList();
+			this.localDefault = false;
 		}
 		#endregion
 
@@ -805,6 +865,24 @@ namespace Mono.P2p.mDnsResponder
 		public void	RemoveIPAddress(IPAddress ipAddress)
 		{
 			this.ipAddresses.Remove(ipAddress);
+		}
+
+		public RHostAddress CreateRemoteableObject()
+		{
+			RHostAddress ha = null;
+			try
+			{
+				ha = new RHostAddress(this.name, this.ttl, this.dnsType, this.dnsClass, true);
+				ha.ID = this.id;
+		
+				// FIXME - ADD Default property to RHostAddress
+				foreach(IPAddress ipAddr in this.ipAddresses)
+				{
+					ha.AddIPAddress(ipAddr);
+				}
+			}
+			catch{}
+			return(ha);
 		}
 
 		#endregion
@@ -911,6 +989,24 @@ namespace Mono.P2p.mDnsResponder
 
 		#region Public Methods
 
+		public RServiceLocation CreateRemoteableObject()
+		{
+			RServiceLocation sl = null;
+			try
+			{
+				sl = new RServiceLocation(this.name, this.ttl, this.dnsType, this.dnsClass, this.owner);
+
+				sl.ID = this.id;
+				sl.Priority = this.priority;
+				sl.Weight = this.weight;
+				sl.Port = this.port;
+				sl.Target = this.target;
+			}
+			catch{}
+			return(sl);
+		}
+
+		/*
 		public bool	AddNameValue(string name, string nameValue)
 		{
 			string	full = name;
@@ -949,6 +1045,7 @@ namespace Mono.P2p.mDnsResponder
 		{
 			return(this.nameValues);
 		}
+		*/
 		#endregion
 	}
 
@@ -980,12 +1077,10 @@ namespace Mono.P2p.mDnsResponder
 		#endregion
 
 		#region Constructors
-
 		public Ptr(string name, int ttl, mDnsType dnsType, mDnsClass dnsClass, bool owner) : base(name, ttl, dnsType, dnsClass, owner)
 		{
 			this.target = "";			
 		}
-		
 		#endregion
 
 		#region Private Methods
@@ -995,7 +1090,19 @@ namespace Mono.P2p.mDnsResponder
 		#endregion
 
 		#region Public Methods
+		public RPtr CreateRemoteableObject()
+		{
+			RPtr ptr = null;
+			try
+			{
+				ptr = new RPtr(this.name, this.ttl, this.dnsType, this.dnsClass, this.owner);
 
+				ptr.ID = this.id;
+				ptr.Target = this.target;
+			}
+			catch{}
+			return(ptr);
+		}
 		#endregion
 	}
 
@@ -1049,6 +1156,25 @@ namespace Mono.P2p.mDnsResponder
 		{
 			return(this.stringList);
 		}
+
+		public RTextStrings CreateRemoteableObject()
+		{
+			RTextStrings ts = null;
+			try
+			{
+				ts = new RTextStrings(this.name, this.ttl, this.dnsType, this.dnsClass, this.owner);
+
+				ts.ID = this.id;
+
+				foreach(string s in this.stringList)
+				{
+					ts.AddTextString(s);
+				}
+			}
+			catch{}
+			return(ts);
+		}
+
 		#endregion
 	}
 }

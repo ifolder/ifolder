@@ -534,6 +534,24 @@ class mDnsCmd
 						if (rt == "hostaddress")
 						{
 							RHostAddress ha = null;
+							if(query.GetDefaultHost(ref ha) == 0)
+							{
+								log.Info("Default Host: " + ha.Name);
+							}
+
+							RHostAddress[] has = null;
+							if (query.GetHostAddressResources(out has) == 0)
+							{
+								foreach(RHostAddress rha in has)
+								{
+									log.Info("");
+									log.Info("ID:      " + rha.ID);
+									log.Info("Host:    " + rha.Name);
+									log.Info("Address: " + rha.PrefAddress);
+								}
+							}
+
+							/*
 							query.GetResourceRecords(mDnsType.hostAddress, out ids);
 							foreach(string id in ids)
 							{
@@ -545,11 +563,25 @@ class mDnsCmd
 									log.Info("Address: " + ha.PrefAddress);
 								}
 							}
+							*/
 						}
 						else
 						if (rt == "ptr")
 						{
-							RPtr ptr = null;
+							RPtr[] ptrs = null;
+							//if (query.GetPtrResources(out ptrs) == 0)
+							if (query.GetPtrResourcesByName("_presence._tcp.local", out ptrs) == 0)
+							{
+								foreach(RPtr ptr in ptrs)
+								{
+									log.Info("");
+									log.Info("ID:      " + ptr.ID);
+									log.Info("Source:   " + ptr.Name);
+									log.Info("Target:   " + ptr.Target);
+								}
+							}
+
+							/*
 							query.GetResourceRecords(mDnsType.ptr, out ids);
 							foreach(string id in ids)
 							{
@@ -561,11 +593,26 @@ class mDnsCmd
 									log.Info("Target:    " + ptr.Target);
 								}
 							}
+							*/
 						}
 						else
 						if (rt == "service")
 						{
-							RServiceLocation sl = null;
+							RServiceLocation[] sls = null;
+							if (query.GetServiceLocationResources(out sls) == 0)
+							{
+								foreach(RServiceLocation sl in sls)
+								{
+									log.Info("");
+									log.Info("ID:      " + sl.ID);
+									log.Info("Service: " + sl.Name);
+									log.Info("Port:    " + sl.Port.ToString());
+									log.Info("Priority:" + sl.Priority.ToString());
+									log.Info("Weight:  " + sl.Weight.ToString());
+									log.Info("Host:    " + sl.Target);
+								}
+							}
+							/*
 							query.GetResourceRecords(mDnsType.serviceLocation, out ids);
 							foreach(string id in ids)
 							{
@@ -580,11 +627,28 @@ class mDnsCmd
 									log.Info("Host:    " + sl.Target);
 								}
 							}
+							*/
 						}
 						else
 						if (rt == "textstrings")
 						{
-							RTextStrings ts = null;
+							RTextStrings[] tss = null;
+							if (query.GetTextStringResources(out tss) == 0)
+							{
+								foreach(RTextStrings ts in tss)
+								{
+									log.Info("");
+									log.Info("ID:      " + ts.ID);
+									log.Info("Service: " + ts.Name);
+
+									foreach(string txt in ts.GetTextStrings())
+									{
+										log.Info("TXT:     " + txt);
+									}
+								}
+							}
+
+							/*
 							query.GetResourceRecords(mDnsType.textStrings, out ids);
 							foreach(string id in ids)
 							{
@@ -600,6 +664,7 @@ class mDnsCmd
 									}
 								}
 							}
+							*/
 						}
 					}
 				}

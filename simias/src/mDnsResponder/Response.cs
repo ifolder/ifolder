@@ -32,8 +32,8 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-
 using log4net;
+using Mono.P2p.mDnsResponderApi;
 
 namespace Mono.P2p.mDnsResponder
 {
