@@ -346,7 +346,6 @@
 		<row><td>ContactBrowserShortcutComponent</td><td>{C4E1B853-D90D-4B9B-8565-1F08CFA2DC04}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>HelpFiles</td><td>{B12C9353-241E-44A6-B0F5-E76A373F6771}</td><td>HELP</td><td>0</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ISRegistryComponent</td><td>{F09F7E00-17CF-425E-8466-D8CEF6DE68C7}</td><td>INSTALLDIR</td><td>0</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>InvitationWizard.exe</td><td>{BC42776A-C049-46C2-9274-5E233E82B853}</td><td>INSTALLDIR</td><td>0</td><td/><td>InvitationWizard.exe</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>OnlyCurrentUser</td><td>{F0ACC4E5-664E-490F-891D-B58CEFB2670F}</td><td>INSTALLDIR</td><td>8</td><td>NOT ALLUSERS</td><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ResourceFiles</td><td>{F4C858F9-99C7-440D-8933-FD7629AA43F7}</td><td>RES</td><td>0</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>WindowsFolderFiles</td><td>{CCFB8608-E84D-402C-AD51-BB6CF2069380}</td><td>WindowsFolder</td><td>16</td><td/><td>explorer.exe.manifest</td><td>17</td><td>This component consists of files not belonging to other components.</td><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -1280,7 +1279,6 @@
 		<col def="S255">ProgId_</col>
 		<col def="S64">MIME_</col>
 		<col def="s38">Feature_</col>
-		<row><td>csi</td><td>InvitationWizard.exe</td><td>iFolder.Invitation</td><td/><td>iFolder_Files</td></row>
 	</table>
 
 	<table name="Feature">
@@ -1308,7 +1306,6 @@
 		<row><td>iFolder_Files</td><td>AllUsers</td></row>
 		<row><td>iFolder_Files</td><td>ContactBrowserShortcutComponent</td></row>
 		<row><td>iFolder_Files</td><td>ISRegistryComponent</td></row>
-		<row><td>iFolder_Files</td><td>InvitationWizard.exe</td></row>
 		<row><td>iFolder_Files</td><td>OnlyCurrentUser</td></row>
 		<row><td>iFolder_Files</td><td>ResourceFiles</td></row>
 		<row><td>iFolder_Files</td><td>WindowsFolderFiles</td></row>
@@ -1329,9 +1326,6 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
-		<row><td>Invitation.ico</td><td>InvitationWizard.exe</td><td>INVITA~1.ICO|Invitation.ico</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\Invitation.ico</td><td>1</td><td/></row>
-		<row><td>InvitationWizard.exe</td><td>InvitationWizard.exe</td><td>INVITA~1.EXE|InvitationWizard.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\InvitationWizard.exe</td><td>1</td><td/></row>
-		<row><td>InvitationWizard.exe.manifes</td><td>InvitationWizard.exe</td><td>INVITA~1.MAN|InvitationWizard.exe.manifest</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\InvitationWizard.exe.manifest</td><td>1</td><td/></row>
 		<row><td>explorer.exe.manifest</td><td>WindowsFolderFiles</td><td>EXPLOR~1.MAN|explorer.exe.manifest</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\ifoldershell\explorer.exe.manifest</td><td>1</td><td/></row>
 		<row><td>iFolderApp.exe</td><td>iFolderApp.exe</td><td>IFOLDE~2.EXE|iFolderApp.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderApp.exe</td><td>1</td><td/></row>
 		<row><td>iFolderComponent.dll</td><td>iFolderComponent.dll</td><td>IFOLDE~1.DLL|iFolderComponent.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderComponent.dll</td><td>1</td><td/></row>
@@ -1493,7 +1487,6 @@
 		<row><td>ContactBrowserShortcutComponent</td><td/><td/><td>_A2DBA8FA_CC2C_4112_BC7C_955591BB1CB8_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>HelpFiles</td><td/><td/><td>_63A2A061_0B72_4C17_AE7E_241C0929276C_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ISRegistryComponent</td><td/><td/><td>_548C54E2_29EE_4627_A6F5_D1A9149465BA_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>InvitationWizard.exe</td><td/><td/><td>_AEE8BD7E_A11C_4049_8D71_F761CAEE5BD0_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>OnlyCurrentUser</td><td/><td/><td>_2187729F_B6AE_4BA3_8749_229DC13A8E67_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ResourceFiles</td><td/><td/><td>_973FE1A6_6311_4C36_8910_2631D644D5B5_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>WindowsFolderFiles</td><td/><td/><td>_F9B4A7DF_BA82_4B0D_AC30_DD72B949703C_FILTER</td><td/><td/><td/><td/></row>
@@ -2816,7 +2809,6 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="S72">Icon_</col>
 		<col def="I2">IconIndex</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>iFolder.Invitation</td><td/><td/><td>##ID_STRING47##</td><td>_F9355A3D_3436_44B7_943B_54CF7AC9AA88</td><td>1</td><td/></row>
 	</table>
 
 	<table name="Property">
@@ -2931,7 +2923,6 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="L255">FileName</col>
 		<col def="s72">DirProperty</col>
 		<col def="i2">InstallMode</col>
-		<row><td>NewShortcut1</td><td>InvitationWizard.exe</td><td/><td>iFolder</td><td>2</td></row>
 		<row><td>NewShortcut2</td><td>ContactBrowserShortcutComponent</td><td/><td>iFolder</td><td>2</td></row>
 		<row><td>NewShortcut3</td><td>iFolderApp.exe</td><td/><td>iFolder</td><td>2</td></row>
 	</table>
@@ -3015,7 +3006,6 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="S255">ISComments</col>
 		<col def="S255">ISShortcutName</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>NewShortcut1</td><td>iFolder</td><td>##ID_STRING42##</td><td>InvitationWizard.exe</td><td>[INSTALLDIR]InvitationWizard.exe</td><td/><td/><td/><td/><td/><td>1</td><td>INSTALLDIR</td><td/><td/><td/></row>
 		<row><td>NewShortcut2</td><td>iFolder</td><td>##ID_STRING43##</td><td>ContactBrowserShortcutComponent</td><td>[INSTALLDIR]ContactBrowser.exe</td><td/><td/><td/><td/><td/><td>1</td><td>INSTALLDIR</td><td/><td/><td/></row>
 		<row><td>NewShortcut3</td><td>iFolder</td><td>##ID_STRING44##</td><td>iFolderApp.exe</td><td>[INSTALLDIR]iFolderApp.exe</td><td/><td/><td/><td/><td/><td>1</td><td>INSTALLDIR</td><td/><td/><td/></row>
 	</table>
@@ -3147,7 +3137,6 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="I2">Sequence</col>
 		<col def="L255">Command</col>
 		<col def="L255">Argument</col>
-		<row><td>csi</td><td>Open</td><td/><td>##ID_STRING46##</td><td>##ID_STRING45##</td></row>
 	</table>
 
 	<table name="_Validation">
