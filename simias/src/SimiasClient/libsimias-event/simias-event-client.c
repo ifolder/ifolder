@@ -417,6 +417,8 @@ sec_reg_thread (void *user_data)
 		} else {
 			/* FIXME: Handle the error here */
 			perror ("simias-event-client connect");
+			
+			sleep (2);
 		}
 	}
 
