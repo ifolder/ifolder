@@ -5,7 +5,7 @@ endif
 
 if DARWIN
 #SUBDIRS = AddressBook AddressBookCmd GtkAddrBook
-SUBDIRS = AddressBookCmd GtkAddrBook
+SUBDIRS = AddressBookCmd
 endif
 
 if WINDOWS
