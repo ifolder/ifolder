@@ -11,8 +11,6 @@ iFolderClient_LIBPATH = $(srcdir)/../../TrayIcon $(srcdir)/../../iFolder $(srcdi
 
 EXTRA_DIST = $(iFolderClient_CSFILES)
 
-all: ifolder ifolder.desktop
-
 ifolder: $(srcdir)/ifolder.in
 	sed -e 's,@_prefix_@,@prefix@,g' -e 's,@_webbindir_@,@webbindir@,g' $< > $@
 	chmod +x $@
@@ -27,7 +25,7 @@ DOC_FILE_CMD = /doc:$(DOC_FILE)
 DOC_FILE_CLEAN = *.doc.xml
 endif
 
-all: iFolderClient.exe
+all: iFolderClient.exe ifolder ifolder.desktop
 
 iFolderClient.exe: $(iFolderClient_CSFILES) $(iFolderClient_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderClient_FLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(iFolderClient_LIBS:%=/r:%) $(iFolderClient_LIBPATH:%=/lib:%) $(iFolderClient_RESOURCES:%=$(ICON_FLAG)%) $(iFolderClient_CSFILES_CSC) $(DOC_FILE_CMD)

@@ -31,7 +31,7 @@ msvcr71d.dll:	$(MSVCR_DEBUG_DLL)
 endif
 endif
 
-install-exec-local: $(ADDITIONAL_LIB_FILES)
+install-exec-local: all $(ADDITIONAL_LIB_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig $(DESTDIR)$(datadir)/$(PACKAGE)
 	$(INSTALL_PROGRAM) $(srcdir)/COPYING $(DESTDIR)$(datadir)/$(PACKAGE)
 	$(INSTALL_PROGRAM) $(PACKAGE)*.pc $(DESTDIR)$(libdir)/pkgconfig
