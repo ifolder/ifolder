@@ -221,12 +221,6 @@ namespace Novell.iFolder.FormsTrayApp
 				syncManager.Stop();
 			}
 
-			if (publisher != null)
-			{
-				ServiceEventArgs args = new ServiceEventArgs(0, ServiceControl.Shutdown);
-				publisher.RaiseEvent(args);
-			}
-
 //			if (sysManager != null)
 //			{
 //				sysManager.StopServices();
@@ -285,12 +279,6 @@ namespace Novell.iFolder.FormsTrayApp
 			if (syncManager != null)
 			{
 				syncManager.Stop();
-			}
-
-			if (publisher != null)
-			{
-				ServiceEventArgs args = new ServiceEventArgs(0, ServiceControl.Shutdown);
-				publisher.RaiseEvent(args);
 			}
 
 //			if (sysManager != null)
