@@ -31,6 +31,8 @@ using System.Web;
 
 using Simias;
 using Simias.Client;
+using Simias.Domain;
+
 //using Simias.Client.Event;
 using Simias.Event;
 using Simias.Storage;
@@ -161,9 +163,7 @@ namespace Simias.DomainWatcher
 							Member cMember;
 							log.Debug("checking Domain: " + cDomain.Name);
 
-							// Is the domain marked off-line
-							Property p = cDomain.Properties.GetSingleProperty( "Offline" );
-							if ( p != null && p.Value.ToString() == "true" )
+							if ( new DomainAgent().IsDomainActive( cDomain.ID ) == false )
 							{
 								log.Debug( "Domain: " + cDomain.Name + " is off-line" );
 								continue;
