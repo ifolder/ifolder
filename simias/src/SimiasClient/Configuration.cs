@@ -42,8 +42,6 @@ namespace Simias.Client
 		private const string DefaultFileName = "Simias.config";
 		private const string storeProvider = "StoreProvider";
 		private const string storeProviderPath = "Path";
-		private const string serviceManager = "ServiceManager";
-		private const string webServiceUri = "WebServiceUri";
 
 		private string configFilePath;
 		private XmlDocument configDoc;
@@ -66,19 +64,6 @@ namespace Simias.Client
 			get { return fixupPath(Get(storeProvider, storeProviderPath)); }
 		}
 
-		/// <summary>
-		/// Gets the local service url so that applications can talk to the local webservice.
-		/// </summary>
-		static public Uri LocalServiceUrl
-		{
-			get
-			{
-				Configuration config = new Configuration();
-				string uriString = config.Get(serviceManager, webServiceUri);
-				return (uriString != null) ? new Uri(uriString) : null;
-			}
-		}
-
 		private static string DefaultPath
 		{
 			get
@@ -98,7 +83,7 @@ namespace Simias.Client
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		private Configuration()
+		public Configuration()
 		{
 			// Check to see if the file exists.
 			configFilePath = Path.Combine( DefaultPath, DefaultFileName );

@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SimiasClient_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/CollectionSyncEventArgs.cs $(srcdir)/Configuration.cs $(srcdir)/DomainService.cs $(srcdir)/IProcEventClient.cs $(srcdir)/IProcEventData.cs $(srcdir)/IProcEventListener.cs $(srcdir)/IProcEventRegistration.cs $(srcdir)/IProcEventTypes.cs $(srcdir)/NodeEventArgs.cs $(srcdir)/SimiasEventArgs.cs
+SimiasClient_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/CollectionSyncEventArgs.cs $(srcdir)/Configuration.cs $(srcdir)/DomainService.cs $(srcdir)/IProcEventClient.cs $(srcdir)/IProcEventData.cs $(srcdir)/IProcEventListener.cs $(srcdir)/IProcEventRegistration.cs $(srcdir)/IProcEventTypes.cs $(srcdir)/Manager.cs $(srcdir)/NodeEventArgs.cs $(srcdir)/SimiasEventArgs.cs
 SimiasClient_CSFILES := $(subst /,$(SEP),$(SimiasClient_CSFILES1))
 SimiasClient_INCLUDES =
 SimiasClient_RESOURCES =
