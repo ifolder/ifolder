@@ -42,6 +42,9 @@ my $product_version = '';           # default complete product version
 my $package_release = '1';          # default package release
 my $src_tag = 'src';                # tag for source distribution
 
+# installation
+my $prefix = '';                    # default install location
+
 # options
 my $opt_cpu = '';                   # target cpu
 my $opt_debug = '';                 # compile and build with debug flags
@@ -109,6 +112,12 @@ USAGE: configure.pl [options]
     --package-release [value]   Specify the package release
                                     i.e. '1'
 
+    INSTALLATION DIRECTORIES:
+
+    --prefix [value]            specifies the location where files are
+                                placed when running a make install
+                                default value = /usr/local
+
     BUILD OPTIONS
 
     --debug                     Compile and build with debug flags
@@ -139,6 +148,9 @@ GetOptions(
     'build-date=s'          => \$build_date,
     'product-version=s'     => \$product_version,
     'package-release=s'     => \$package_release,
+
+    # install options
+	'prefix=s'              => \$prefix,
 
     # build options
     'cpu=s'                 => \$opt_cpu,
@@ -351,8 +363,18 @@ if ($opt_shell eq 'bash')
     $variables{'MV'} = 'mv -f';
     $variables{'MKDIR'} = 'mkdir';
     $variables{'RMDIR'} = 'rm -rf';
+	$variables{'MKDIR_R'} = 'install -d';
     $variables{'SEP'} = '/';
     $variables{'ECHO_BLANK_LINE'} = "\@echo ''";
+	if ($prefix eq '')
+	{
+		$prefix = '/usr/local';
+	}
+	$variables{'prefix'} = $prefix;
+	print "Package install prefix: $prefix\n";
+	$variables{'bindir'} = '$(prefix)/bin';
+	$variables{'libdir'} = '$(prefix)/lib';
+	$variables{'datadir'} = '$(prefix)/share';
 }
 # cmd
 elsif ($opt_shell eq 'cmd')
@@ -376,8 +398,18 @@ elsif ($opt_shell eq 'cmd')
     $variables{'MV'} = 'call move';
     $variables{'MKDIR'} = 'mkdir';
     $variables{'RMDIR'} = 'call rmdir /s /q';
+	$variables{'MKDIR_R'} = 'mkdir';
     $variables{'SEP'} = '$(EMPTY)\\$(EMPTY)';
     $variables{'ECHO_BLANK_LINE'} = '@call echo.';
+	if ($prefix eq '')
+	{
+		$prefix = '\\usr\\local';
+	}
+	$variables{'prefix'} = $prefix;
+	print "Package install prefix: $prefix\n";
+	$variables{'bindir'} = '$(prefix)\\bin';
+	$variables{'libdir'} = '$(prefix)\\lib';
+	$variables{'datadir'} = '$(prefix)\\share';
 }
 else
 {
@@ -757,6 +789,9 @@ close(OUT);
 # File CVS History:
 #
 # $Log$
+# Revision 1.2.2.1  2004/02/24 16:57:33  cgaisford
+# added the Makefile for configuration and updated the configure.pl script.  Also added a new common.mk file that will do all of the install/uninstall work
+#
 # Revision 1.2  2004/02/23 19:51:02  pthomas707
 # Rename product name from denali to simias
 #

@@ -30,8 +30,14 @@ Configuration_LDFLAGS =
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES = Configuration.dll
+LIB_FILES = 
+DATA_FILES = 
+TEST_BIN_FILES = ConfTests.dll
+TEST_LIB_FILES = 
+TEST_DATA_FILES = 
 
-TARGETS = ConfTests.dll Configuration.dll 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
 CLEAN_FILES = Check.xml ConfTests.pdb ConfTests.xml Check.xml Configuration.pdb Configuration.xml  Configuration.xml Configuration.Doc.xml
 NUNIT_TESTS = ConfTests.dll 
 STAGE_FILES = $(TARGETS) ConfTests.Doc.xml Configuration.Doc.xml ConfTests.pdb Configuration.pdb 
@@ -60,7 +66,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -112,3 +119,5 @@ VPATH := $(VPATH) $(Configuration_LIBPATH) $(Configuration_INCLUDES)
 Configuration.dll: $(Configuration_SOURCES) $(Configuration_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:Configuration.Doc.xml $(CSCFLAGS) $(Configuration_FLAGS) $(Configuration_LIBS:%=/r:%) $(Configuration_LIBPATH:%=/lib:%) $(Configuration_SOURCES)
 
+
+include ../../common.mk
