@@ -61,6 +61,7 @@ namespace Novell.FormsTrayApp
 		private const double megaByte = 1048576;
 		private const int maxMessages = 500;
 		private System.Timers.Timer updateEnterpriseTimer;
+		private short retryCount = 2;
 		private Hashtable ht;
 		private iFolderWebService ifWebService;
 		private IProcEventClient eventClient;
@@ -2321,10 +2322,17 @@ namespace Novell.FormsTrayApp
 			}
 			catch (Exception e)
 			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
-				mmb.Message = resourceManager.GetString("readQuotaError");
-				mmb.Details = e.Message;
-				mmb.ShowDialog();
+				if (retryCount-- > 0)
+				{
+					updateEnterpriseTimer.Start();
+				}
+				else
+				{
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+					mmb.Message = resourceManager.GetString("readQuotaError");
+					mmb.Details = e.Message;
+					mmb.ShowDialog();
+				}
 			}
 
 			// Cause the gauge chart to be redrawn.
