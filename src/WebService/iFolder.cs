@@ -103,11 +103,17 @@ namespace Novell.iFolder.Web
 			this.HasConflicts = collection.HasCollisions();
 			// This was throwing an exception so Added this because the 
 			// current user may not be available yet
-			Member tmpMember = collection.GetCurrentMember();
-			if(tmpMember != null)
+			try
 			{
-				this.CurrentUserID = tmpMember.UserID;
-				this.CurrentUserRights = tmpMember.Rights.ToString();
+				Member tmpMember = collection.GetCurrentMember();
+				if(tmpMember != null)
+				{
+					this.CurrentUserID = tmpMember.UserID;
+					this.CurrentUserRights = tmpMember.Rights.ToString();
+				}
+			}
+			catch
+			{
 			}
 		}
 
