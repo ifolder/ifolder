@@ -1165,12 +1165,23 @@ namespace Novell.iFolder.iFolderCom
 							// The contact was not in the removed list, so create a new one.
 							shareMember = new ShareListMember();
 
-							// Create a place-holder member.
-							Member member = new Member(c.FN, Guid.NewGuid().ToString(), Access.Rights.ReadWrite);
+							Member member;
+							
+							if (ifolder.Domain.Equals(Domain.WorkGroupDomainID))
+							{
+								// Create a place-holder member.
+								member = new Member(c.FN, Guid.NewGuid().ToString(), Access.Rights.ReadWrite);
 
-							// Create a relationship on the member ... this will be put on the Subscription object later on.
-							string collectionId = (string)c.Properties.GetSingleProperty(BaseSchema.CollectionId).Value;
-							member.Properties.AddProperty("Contact", new Relationship(collectionId, c.ID));
+								// Create a relationship on the member ... this will be put on the Subscription object later on.
+								string collectionId = (string)c.Properties.GetSingleProperty(BaseSchema.CollectionId).Value;
+								member.Properties.AddProperty("Contact", new Relationship(collectionId, c.ID));
+							}
+							else
+							{
+								Novell.AddressBook.AddressBook ab = abManager.GetAddressBook(c.Properties.GetSingleProperty(BaseSchema.CollectionId).ToString());
+								member = ab.GetMemberByID(c.UserID);
+							}
+
 							shareMember.Member = member;
 							shareMember.Added = true;
 						}
