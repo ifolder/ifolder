@@ -7,7 +7,7 @@ SIMIAS_CSFILES_CSC := $(subst /,$(SEP),$(SIMIAS_CSFILES_SRC))
 SIMIAS_INCLUDES =
 SIMIAS_RESOURCES =
 SIMIAS_FLAGS = $(CSC_LIBFLAG) /unsafe
-SIMIAS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Security.dll System.Runtime.Remoting.dll mDnsResponder.dll mDnsResponderApi.dll log4net.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll 
+SIMIAS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Security.dll System.Runtime.Remoting.dll mDnsResponder.dll mDnsResponderApi.dll log4net.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll
 SIMIAS_LIBPATH = $(srcdir)/../../external/SecureChannelSinks $(LOG4NET_DIR) $(MDNSRESPONDER_DIR)
 
 EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/SimiasSetup.cs.in ../Common/Simias.remoting ../Common/Simias.log4net ../Common/Simias.config ../Common/MyDns.cs.in
@@ -30,7 +30,6 @@ install-exec-local: Simias.dll
 	$(INSTALL_PROGRAM) Simias.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(MDNSRESPONDER_DIR)/m*.exe $(MDNSRESPONDER_DIR)/m*.dll $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(LOG4NET_DIR)/log4net.dll $(DESTDIR)$(webbindir)
-	$(INSTALL_PROGRAM) $(srcdir)/../../external/SecureChannelSinks/*.dll $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(STORELIB_PATH)/$(STORELIB) $(DESTDIR)$(webbindir)
 	cp -f $(srcdir)/$(LOG4NET_DIR)/../../../../LICENSE.txt $(DESTDIR)$(datadir)/simias/log4net.LICENSE.txt
 	$(INSTALL_PROGRAM) ../Common/Simias.remoting $(DESTDIR)$(sysconfdir)
@@ -50,7 +49,7 @@ CLEAN_FILES = Simias.dll Simias.doc.xml $(DEBUG_FILES)
 
 clean-local:
 	rm -rf $(CLEAN_FILES)
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 

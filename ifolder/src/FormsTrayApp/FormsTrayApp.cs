@@ -29,6 +29,7 @@ using System.Text;
 using System.Net;
 using System.Diagnostics;
 using System.IO;
+using Simias.Service;
 using Novell.iFolderCom;
 using Novell.Win32Util;
 using CustomUIControls;
@@ -274,13 +275,8 @@ namespace Novell.FormsTrayApp
 		{
 			try
 			{
-				simiasProc = new Process();
-				ProcessStartInfo simiasStartInfo = new ProcessStartInfo(Path.Combine(Application.StartupPath, "simias.cmd"));
-				simiasStartInfo.CreateNoWindow = true;
-				simiasStartInfo.UseShellExecute = false;
-				simiasStartInfo.RedirectStandardInput = true;
-				simiasProc.StartInfo = simiasStartInfo;
-				simiasProc.Start();
+				// Start the local web server.
+				Manager.Start();
 
 				ifWebService = new iFolderWebService();
 				ifWebService.Ping();
@@ -529,18 +525,8 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				if ((simiasProc != null) && !simiasProc.HasExited)
-				{
-					StreamWriter simiasStdIn = simiasProc.StandardInput;
-					simiasStdIn.Write(simiasStdIn.NewLine);
-				}
-
-				// TODO: shutdown gracefully
-				Process[] simiasAppProcess = Process.GetProcessesByName("SimiasApp");
-				if (simiasAppProcess.Length == 1)
-				{
-					simiasAppProcess[0].Kill();
-				}
+				// Shut down the web server.
+				Manager.Stop();
 
 				if ((workerThread != null) && workerThread.IsAlive)
 				{

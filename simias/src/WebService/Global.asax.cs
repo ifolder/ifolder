@@ -36,30 +36,26 @@ namespace Simias.Web
 	/// </summary>
 	public class Global : HttpApplication
 	{
+		#region Class Members
 		/// <summary>
-		/// Required designer variable.
+		/// Object used to manage the simias services.
 		/// </summary>
-		private System.ComponentModel.IContainer components = null;
-		private Simias.Service.Manager serviceManager;
+		static private Simias.Service.Manager serviceManager;
+		#endregion
 
-		public Global()
-		{
-			InitializeComponent();
-		}	
-		
+		/// <summary>
+		/// Application_Start
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		protected void Application_Start(Object sender, EventArgs e)
 		{
 			// update the prefix of the installed directory
 			SimiasSetup.prefix = Path.Combine(Server.MapPath(null), "..");
-            
-			string newdir = SimiasSetup.webbindir;
+			Environment.CurrentDirectory = SimiasSetup.webbindir;
+			Console.WriteLine("Application Start Path: {0}", Environment.CurrentDirectory);
 
-			Environment.CurrentDirectory = newdir;
-
-			Console.WriteLine("Application Start Path: {0}", newdir);
-
-			Configuration config = Configuration.GetConfiguration();
-			serviceManager = new Simias.Service.Manager(config);
+			serviceManager = new Simias.Service.Manager(Configuration.GetConfiguration());
 			
 			Console.WriteLine("Starting Simias Process");
 			serviceManager.StartServices();
@@ -67,47 +63,82 @@ namespace Simias.Web
 			Console.WriteLine("Simias Process Running");
 		}
  
+		/// <summary>
+		/// Session_Start
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		protected void Session_Start(Object sender, EventArgs e)
 		{
 		}
 
+		/// <summary>
+		/// Application_BeginRequest
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		protected void Application_BeginRequest(Object sender, EventArgs e)
 		{
 		}
 
+		/// <summary>
+		/// Application_EndRequest
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		protected void Application_EndRequest(Object sender, EventArgs e)
 		{
 		}
 
+		/// <summary>
+		/// Application_AuthenticateRequest
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		protected void Application_AuthenticateRequest(Object sender, EventArgs e)
 		{
 		}
 
+		/// <summary>
+		/// Application_Error
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		protected void Application_Error(Object sender, EventArgs e)
 		{
 		}
 
+		/// <summary>
+		/// Session_End
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		protected void Session_End(Object sender, EventArgs e)
 		{
 		}
 
+		/// <summary>
+		/// Application_End
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		protected void Application_End(Object sender, EventArgs e)
 		{
-			Console.WriteLine("Shutdown Simias Process now");
+		}
+
+		/// <summary>
+		/// Hack that allows XSP to shutdown the Simias web services. When the Application_End
+		/// method gets called when the application domain exits, this code will need to be
+		/// moved into the Application_End method.
+		/// </summary>
+		static public void Shutdown()
+		{
+			Console.WriteLine("Starting Simias Process Shutdown");
 			serviceManager.StopServices();
 			serviceManager.WaitForServicesStopped();
+			serviceManager = null;
+			Console.WriteLine("Simias Process Shutdown");
 		}
-			
-		#region Web Form Designer generated code
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
-		{    
-			this.components = new System.ComponentModel.Container();
-		}
-		#endregion
 	}
 }
 

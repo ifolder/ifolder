@@ -24,7 +24,6 @@ namespace Mono.ASPNET
 {
 	public class XSPWorkerRequest : MonoWorkerRequest
 	{
-		IApplicationHost appHost;
 		string verb;
 		string path;
 		string pathInfo;
@@ -39,7 +38,6 @@ namespace Mono.ASPNET
 		byte [] inputBuffer;
 		int inputLength;
 		int position;
-		EndPoint localEP;
 		EndPoint remoteEP;
 		bool sentConnection;
 		int localPort;
@@ -47,11 +45,7 @@ namespace Mono.ASPNET
 		int requestId;
 		XSPRequestBroker requestBroker;
 		
-		static byte [] error500;
-
 		static string serverHeader;
-
-		static string dirSeparatorString = Path.DirectorySeparatorChar.ToString ();
 
 		static string [] indexFiles = { "index.aspx",
 						"Default.aspx",
@@ -78,14 +72,6 @@ namespace Mono.ASPNET
 
 			string indexes = ConfigurationSettings.AppSettings ["MonoServerDefaultIndexFiles"];
 			SetDefaultIndexFiles (indexes);
-
-			string s = "HTTP/1.0 500 Server error\r\n" +
-				   serverHeader + 
-				    "<html><body><h1>500 Server error</h1>\r\n" +
-				   "Your client sent a request that was not understood by this server.\r\n" +
-				   "</body></html>\r\n";
-			
-			error500 = Encoding.Default.GetBytes (s);
 		}
 
 		static void SetDefaultIndexFiles (string list)
@@ -105,7 +91,26 @@ namespace Mono.ASPNET
 
 			indexFiles = (string []) files.ToArray (typeof (string));
 		}
-
+		
+		static Stack bufferStack = new Stack ();
+		
+		static MemoryStream AllocateMemoryStream ()
+		{
+			lock (bufferStack) {
+				if (bufferStack.Count != 0)
+					return (MemoryStream) bufferStack.Pop ();
+			}
+			return new MemoryStream ();
+		}
+		
+		static void FreeMemoryStream (MemoryStream buf)
+		{
+			buf.SetLength (0);
+			lock (bufferStack) {
+				bufferStack.Push (buf);
+			}
+		}
+		
 		public XSPWorkerRequest (int requestId, 
 								XSPRequestBroker requestBroker, 
 								IApplicationHost appHost, 
@@ -121,8 +126,6 @@ namespace Mono.ASPNET
 		{
 			this.requestId = requestId;
 			this.requestBroker = requestBroker;
-			this.appHost = appHost;
-			this.localEP = localEP;
 			this.remoteEP = remoteEP;
 			this.verb = verb;
 			this.path = path;
@@ -138,15 +141,14 @@ namespace Mono.ASPNET
 
 			GetRequestHeaders ();
 			responseHeaders = new StringBuilder ();
-			response = new MemoryStream ();
+			response = AllocateMemoryStream ();
 			status = "HTTP/1.0 200 OK\r\n";
 			
 			localPort = ((IPEndPoint) localEP).Port;
 			localAddress = ((IPEndPoint) localEP).Address.ToString();
 		}
 		
-		public int RequestId
-		{
+		public override int RequestId {
 			get { return requestId; }
 		}
 
@@ -217,7 +219,7 @@ namespace Mono.ASPNET
 					string value = line.Substring (colon + 1).Trim ();
 					headers [key] = value;
 				}
-			} catch (IOException ioe) {
+			} catch (IOException) {
 				throw;
 			} catch (Exception e) {
 				throw new Exception ("Error reading headers.", e);
@@ -230,6 +232,8 @@ namespace Mono.ASPNET
 			if (requestBroker != null) {
 				requestBroker.Close (requestId);
 				requestBroker = null;
+				FreeMemoryStream (response);
+				response = null;
 			}
 		}
 
@@ -252,10 +256,12 @@ namespace Mono.ASPNET
 					requestBroker.Write (requestId, bytes, 0, (int) response.Length);
 				}
 				
-				requestBroker.Flush (requestId);
-				response.SetLength (0);
 				if (finalFlush)
 					CloseConnection ();
+				else {
+					requestBroker.Flush (requestId);
+					response.SetLength (0);
+				}
 			} catch (Exception e) {
 				WebTrace.WriteLine (e.ToString ());
 			}
@@ -532,7 +538,6 @@ namespace Mono.ASPNET
 		public override void SendStatus (int statusCode, string statusDescription)
 		{
 			status = String.Format ("HTTP/1.0 {0} {1}\r\n", statusCode, statusDescription);
-			WebTrace.WriteLine ("SendStatus() -> " + status);
 		}
 
 		public override void SendUnknownResponseHeader (string name, string value)
@@ -541,8 +546,12 @@ namespace Mono.ASPNET
 			if (String.Compare (name, "connection", true) == 0)
 				sentConnection = true;
 
-			if (!headersSent)
-				responseHeaders.AppendFormat ("{0}: {1}\r\n", name, value);
+			if (!headersSent) {
+				responseHeaders.Append (name);
+				responseHeaders.Append (": ");
+				responseHeaders.Append (value);
+				responseHeaders.Append ("\r\n");
+			}
 		}
 	}
 }
