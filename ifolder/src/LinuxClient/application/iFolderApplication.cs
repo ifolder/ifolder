@@ -221,8 +221,15 @@ namespace Novell.iFolder
 			{
 				case "Domain-Up":
 				{
-					redomainID = args.Message;
-					ReLogin(args.Message);
+					if ( !simiasRestarted )
+					{
+						redomainID = args.Message;
+						ReLogin(args.Message);
+					}
+					else
+					{
+						simiasRestarted = false;
+					}
 					break;
 				}
 
@@ -243,8 +250,6 @@ namespace Novell.iFolder
 					// to be reset.
 					if (simiasRestarted)
 					{
-						simiasRestarted = false;
-
 						DomainAuthentication domainAuth =
 							new DomainAuthentication(
 									"iFolder",
