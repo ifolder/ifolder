@@ -251,6 +251,14 @@ package-nodeps:
 	$(call HEADER,$@)
 	@$(MAKE) -C package all
 
+package-install: package-nodeps
+	$(call HEADER,$@)
+	@$(MAKE) -C package install
+
+package-uninstall:  package-nodeps
+	$(call HEADER,$@)
+	@$(MAKE) -C package uninstall
+
 package-clean:
 	$(call HEADER,$@)
 	@$(MAKE) -C package clean
@@ -326,6 +334,9 @@ report:
 # File CVS History:
 #
 # $Log$
+# Revision 1.5  2004/02/23 23:12:49  pthomas707
+# Added package-install and package-uninstall.
+#
 # Revision 1.4  2004/02/23 21:46:02  ryoung65
 # Added FsWatcher to the build
 #
