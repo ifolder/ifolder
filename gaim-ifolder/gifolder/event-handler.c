@@ -29,6 +29,10 @@
 #include "gaim-domain.h"
 
 #include <glib.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <simias/simias.h>
 
 static char *po_box_id = NULL;
 
@@ -118,13 +122,19 @@ is_gaim_subscription(SimiasNodeEvent *event)
 		/* This is not a subscription in the Gaim POBox */
 		return FALSE;
 	}
-	
+
 	return TRUE;
 }
 
 int
 on_simias_node_created(SimiasNodeEvent *event, void *data)
 {
+	char *service_url;
+	int err;
+	char *ip_addr = NULL;
+	char *ip_port = NULL;
+	char *temp;
+	
 	g_print("on_simias_node_created() entered\n");
 	print_event(event);
 
@@ -132,7 +142,35 @@ on_simias_node_created(SimiasNodeEvent *event, void *data)
 		return 0; /* Ignore this event */
 	}
 	
-	/* FIXME: Check to see if this is a member/subscription to a collection */
+	/* Send out an invitation for the collection */
+	err = simias_get_local_service_url(&service_url);
+	if (err == SIMIAS_SUCCESS) {
+		/* Parse off the IP Address & Port */
+		
+		/* Advance to the first "//" */
+		temp = strtok(service_url, "/");
+		if (temp) {
+			ip_addr = strtok(temp + 1, ":");
+			if (ip_addr) {
+				ip_port = strtok(temp + strlen(ip_addr), "/");
+			} else {
+				/* Maybe there's no port specified */
+				ip_addr = strtok(temp, "/");
+			}
+		}
+		
+		/* FIXME: Create and send a new invitation */
+		g_print("FIXME: Send a new invitation to the buddy\n");
+		if (ip_addr) {
+			g_print("\tFrom IP: %s\n", ip_addr);
+		}
+		
+		if (ip_port) {
+			g_print("\tFrom IP Port: %s\n", ip_port);
+		}
+		
+		g_free(service_url);
+	}
 	
 	return 0;
 }
