@@ -13,7 +13,8 @@ if NDOC
 
 ndoc: ifolder-install ndoc-nodeps
 
-ndoc-nodeps: ndoc-clean
+ndoc-nodeps:
+	rm -rf ndoc
 	@echo "$(NDOC_CMD) ... -documenter=MSDN -Title=iFolder -OutputDirectory=ndoc"
 if WINDOWS
 	@ifolder_dir=`cd .. && pwd`; \
@@ -37,16 +38,17 @@ else # NOT WINDOWS
 	$(MONO) "$(NDOC_CMD)" $$asmbly_list -documenter=MSDN -Title=iFolder -OutputDirectory=$$output_dir
 endif # WINDOWS
 
-ndoc-clean:
-	rm -rf ndoc
-
 else # NDOC
 
-ndoc ndoc-clean:
+ndoc:
 	@echo NDOC is not configured
 
 endif # NDOC
 
+clean-local:
+	rm -rf ndoc
+
 maintainer-clean-local:
 	rm -f Makefile.in
+	
 

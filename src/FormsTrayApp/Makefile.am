@@ -7,11 +7,13 @@ iFolderApp_INCLUDES =
 iFolderApp_RESOURCES = $(srcdir)/App$(ICON_EXT)
 iFolderApp_FLAGS = $(CSC_WINEXEFLAG)
 iFolderApp_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Novell.iFolder.dll iFolderComponent.dll
-iFolderApp_LIBPATH = ../iFolderShell
+iFolderApp_LIBPATH = ../iFolderShell ../iFolder
 
-DATA_FILES = res/ifolder_disconnect.ico res/ifolder_loaded.ico res/ifolder_message.ico res/ifolder_sync1.ico res/ifolder_sync2.ico res/ifolder_sync3.ico res/ifolder_sync4.ico res/ifolder_sync5.ico res/ifolder_sync6.ico res/ifolder_sync7.ico res/ifolder_sync8.ico res/ifolder_sync9.ico res/ifolder_sync10.ico  
+DATA_FILES = App.ico ifolder_app.ico
+RES_FILES = res/ifolder_disconnect.ico res/ifolder_loaded.ico res/ifolder_message.ico res/ifolder_sync1.ico res/ifolder_sync2.ico res/ifolder_sync3.ico res/ifolder_sync4.ico res/ifolder_sync5.ico res/ifolder_sync6.ico res/ifolder_sync7.ico res/ifolder_sync8.ico res/ifolder_sync9.ico res/ifolder_sync10.ico
+RESX_FILES = FormsTrayApp.resx GlobalProperties.resx
 
-EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES)
+EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFolderApp.exe.manifest
 
 all: iFolderApp.exe
 
@@ -27,11 +29,14 @@ endif
 install-exec-local: iFolderApp.exe $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)/res
-	$(INSTALL_PROGRAM) iFolderApp.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(DATA_FILES) $(DESTDIR)$(bindir)/res
+	$(INSTALL_PROGRAM) iFolderApp.exe iFolderApp.exe.manifest $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(DATA_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(RES_FILES) $(DESTDIR)$(bindir)/res
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f iFolderApp.exe $(DATA_FILES) $(DEBUG_FILES)
+	cd $(DESTDIR)$(bindir); rm -f iFolderApp.exe iFolderApp.exe.manifest $(DEBUG_FILES)
+	cd $(DESTDIR)$(bindir); rm -f $(DATA_FILES)
+	cd $(DESTDIR)$(bindir)/res; rm -f $(RES_FILES:res/%=%)
     
 installcheck-local: install
 	
