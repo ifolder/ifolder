@@ -34,38 +34,39 @@ namespace Simias.Storage
 		/// <summary>
 		/// Arrray of strings used to hold the names of classes used as Node object types.
 		/// </summary>
-		private static string[] classNames;
+		static private string[] classNames;
 		#endregion
 
 		#region Properties
 		/// <summary>
-		/// Gets the BaseContact class name.
+		/// Gets the BaseFileNode class name.
 		/// </summary>
-		public static string BaseContactType
+		static public string BaseFileNodeType
 		{
 			get { return classNames[ 0 ]; }
 		}
 
 		/// <summary>
-		/// Gets the BaseFileNode class name.
+		/// Gets the Collection class name.
 		/// </summary>
-		public static string BaseFileNodeType
+		static public string CollectionType
 		{
 			get { return classNames[ 1 ]; }
 		}
 
 		/// <summary>
-		/// Gets the Collection class name.
+		/// Gets the DirNode class name.
 		/// </summary>
-		public static string CollectionType
+		static public string DirNodeType
 		{
 			get { return classNames[ 2 ]; }
 		}
 
+
 		/// <summary>
-		/// Gets the DirNode class name.
+		/// Gets the Domain class name.
 		/// </summary>
-		public static string DirNodeType
+		static public string DomainType
 		{
 			get { return classNames[ 3 ]; }
 		}
@@ -73,63 +74,63 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets the FileNode class name.
 		/// </summary>
-		public static string FileNodeType
+		static public string FileNodeType
 		{
 			get { return classNames[ 4 ]; }
 		}
 
 		/// <summary>
-		/// Gets the LinkNode class name.
+		/// Gets the Identity class name.
 		/// </summary>
-		public static string LinkNodeType
+		static public string IdentityType
 		{
 			get { return classNames[ 5 ]; }
 		}
 
 		/// <summary>
-		/// Gets the LocalAddressBook class name.
+		/// Gets the LinkNode class name.
 		/// </summary>
-		public static string LocalAddressBookType
+		static public string LinkNodeType
 		{
 			get { return classNames[ 6 ]; }
 		}
 
 		/// <summary>
-		/// Gets the Node class name.
+		/// Gets the LocalDatabase class name.
 		/// </summary>
-		public static string NodeType
+		static public string LocalDatabaseType
 		{
 			get { return classNames[ 7 ]; }
 		}
 
 		/// <summary>
-		/// Gets the StoreFileNode class name.
+		/// Gets the Member class name.
 		/// </summary>
-		public static string StoreFileNodeType
+		static public string MemberType
 		{
 			get { return classNames[ 8 ]; }
 		}
 
 		/// <summary>
-		/// Gets the Tombstone class name.
+		/// Gets the Node class name.
 		/// </summary>
-		public static string TombstoneType
+		static public string NodeType
 		{
 			get { return classNames[ 9 ]; }
 		}
 
 		/// <summary>
-		/// Gets the WorkGroup class name.
+		/// Gets the StoreFileNode class name.
 		/// </summary>
-		public static string WorkGroupType
+		static public string StoreFileNodeType
 		{
 			get { return classNames[ 10 ]; }
 		}
 
 		/// <summary>
-		/// Gets the LocalDatabase class name.
+		/// Gets the Tombstone class name.
 		/// </summary>
-		public static string LocalDatabaseType
+		static public string TombstoneType
 		{
 			get { return classNames[ 11 ]; }
 		}
@@ -141,18 +142,18 @@ namespace Simias.Storage
 		/// </summary>
 		static NodeTypes()
 		{
-			classNames = new string[] {	typeof( BaseContact ).Name,
-										typeof( BaseFileNode ).Name,
-										typeof( Collection ).Name,
-										typeof( DirNode ).Name,
-										typeof( FileNode ).Name,
-										typeof( LinkNode ).Name,
-										typeof( LocalAddressBook ).Name,
-										typeof( Node ).Name,
-										typeof( StoreFileNode ).Name,
-										"Tombstone",
-										typeof( WorkGroup ).Name,
-										typeof( LocalDatabase ).Name };
+			classNames = new string[] {	  typeof( BaseFileNode ).Name,
+										  typeof( Collection ).Name,
+										  typeof( DirNode ).Name,
+										  typeof( Domain ).Name,
+										  typeof( FileNode ).Name,
+										  typeof( Identity ).Name,
+										  typeof( LinkNode ).Name,
+										  typeof( LocalDatabase ).Name,
+										  typeof( Member ).Name,
+										  typeof( Node ).Name,
+										  typeof( StoreFileNode ).Name,
+										  "Tombstone" };
 		}
 		#endregion
 
@@ -162,7 +163,7 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="type">Class name string.</param>
 		/// <returns>True if specified class name is a Node object type. Otherwise false is returned.</returns>
-		public static bool IsNodeType( string type )
+		static public bool IsNodeType( string type )
 		{
 			bool isType = false;
 

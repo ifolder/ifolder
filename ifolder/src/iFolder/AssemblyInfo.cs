@@ -57,7 +57,7 @@ using System.Runtime.InteropServices;
 [assembly: AllowPartiallyTrustedCallers]
 [assembly: ComVisible(false)]
 
-#if MONO
-[assembly: AssemblyDelaySign(true)]
-[assembly: AssemblyKeyFile("../ifolder-snakeoil.keys")]
-#endif
+//#if MONO
+//[assembly: AssemblyDelaySign(true)]
+//[assembly: AssemblyKeyFile("../ifolder-snakeoil.keys")]
+//#endif

@@ -42,18 +42,18 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				Property p = properties.FindSingleValue( PropertyTags.DirCreationTime );
+				Property p = properties.FindSingleValue( PropertyTags.CreationTime );
 				if ( p != null )
 				{
 					return ( DateTime )p.Value;
 				}
 				else
 				{
-					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.DirCreationTime, name, id ) );
+					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.CreationTime, name, id ) );
 				}
 			}
 
-			set	{ properties.ModifyNodeProperty( PropertyTags.DirCreationTime, value ); }
+			set	{ properties.ModifyNodeProperty( PropertyTags.CreationTime, value ); }
 		}
 
 		/// <summary>
@@ -75,18 +75,18 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				Property p = properties.FindSingleValue( PropertyTags.DirLastAccessTime );
+				Property p = properties.FindSingleValue( PropertyTags.LastAccessTime );
 				if ( p != null )
 				{
 					return ( DateTime )p.Value;
 				}
 				else
 				{
-					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.DirLastAccessTime, name, id ) );
+					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.LastAccessTime, name, id ) );
 				}
 			}
 
-			set { properties.ModifyNodeProperty( PropertyTags.DirLastAccessTime, value ); }
+			set { properties.ModifyNodeProperty( PropertyTags.LastAccessTime, value ); }
 		}
 
 		/// <summary>
@@ -96,18 +96,18 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				Property p = properties.FindSingleValue( PropertyTags.DirLastWriteTime );
+				Property p = properties.FindSingleValue( PropertyTags.LastWriteTime );
 				if ( p != null )
 				{
 					return ( DateTime )p.Value;
 				}
 				else
 				{
-					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.DirLastWriteTime, name, id ) );
+					throw new DoesNotExistException( String.Format( "The property: {0} does not exist on Node object: {1} - ID: {2}.", PropertyTags.LastWriteTime, name, id ) );
 				}
 			}
 
-			set { properties.ModifyNodeProperty( PropertyTags.DirLastWriteTime, value ); }
+			set { properties.ModifyNodeProperty( PropertyTags.LastWriteTime, value ); }
 		}
 		#endregion
 

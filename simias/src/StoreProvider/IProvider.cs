@@ -79,12 +79,19 @@ namespace Simias.Storage.Provider
 		void CommitRecords(string container, XmlDocument createDoc, XmlDocument deleteDoc);
 		
 		/// <summary>
-		/// Called to ge a Record.  The record is returned as an XML string representation.  
+		/// Called to get a Record.  The record is returned as an XML string representation.  
 		/// </summary>
 		/// <param name="recordId">string that contains the ID of the Record to retrieve</param>
 		/// <param name="container">The container that holds the record.</param>
-		/// <returns>XML string describing the Record</returns>
+		/// <returns>XMLDocument describing the Record</returns>
 		XmlDocument GetRecord(string recordId, string container);
+
+		/// <summary>
+		/// Called to get a shallow record.
+		/// </summary>
+		/// <param name="recordId">The record id to get.</param>
+		/// <returns>XmlDocument describing the shallow Record.</returns>
+		XmlDocument GetShallowRecord(string recordId);
 
 		#endregion
 		

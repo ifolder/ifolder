@@ -154,8 +154,6 @@ internal class IncomingNode
 		}
 		else
 			path = collection.ManagedPath;
-
-		//Log.Spew("Starting incoming node {0}", node.Name);
 	}
 
 	// accept some chunks of data for this file
@@ -223,12 +221,12 @@ internal class IncomingNode
 			try
 			{
 				p = new DirNode(node).GetFullPath(collection);
-				Log.Spew("Creating directory {0}", p);
+				Log.log.Debug("Creating directory {0}", p);
 			}
 			catch (DoesNotExistException)
 			{
 				p = path;
-				Log.Spew("Could not create directory for full path, falling back to specific path {0}", p);
+				Log.log.Debug("Could not create directory for full path, falling back to specific path {0}", p);
 			}
 			Directory.CreateDirectory(p);
 			ClearTemp();
@@ -238,7 +236,7 @@ internal class IncomingNode
 		BaseFileNode bfn = SyncOps.CastToBaseFileNode(collection, node);
 		if (bfn == null)
 		{
-			Log.Spew("commiting nonFile, nonDir {0}", node.Name);
+			Log.log.Debug("commiting nonFile, nonDir {0}", node.Name);
 			Log.Assert(forkList == null);
 			ClearTemp();
 			return status;
@@ -255,7 +253,7 @@ internal class IncomingNode
 				Path.Combine(path, ConflictUpdatePrefix + node.ID + Path.GetExtension(node.Name)):
 				Path.Combine(path, node.Name);
 
-		Log.Spew("placing file {0}", path);
+		Log.log.Debug("placing file {0}", path);
 
 		/* TODO: there is still a window when moving the temp file into position. It
 		 * could have been updated again since the Node was committed. Should move
@@ -283,7 +281,7 @@ internal class IncomingNode
 		}
 		catch (Exception e)
 		{
-			Log.Spew("Could not move tmp file to {0}: {1}", path, e.Message);
+			Log.log.Debug("Could not move tmp file to {0}: {1}", path, e.Message);
 			Log.Assert(status != NodeStatus.UpdateConflict); // should not happen if renaming to an update conflict file
 
 			path = Path.Combine(ParentPath(collection, node), ConflictFilePrefix + node.ID);
@@ -294,7 +292,7 @@ internal class IncomingNode
 			}
 			catch (Exception ne)
 			{
-				Log.Spew("Could not move tmp file to {0}: {1}", path, ne.Message);
+				Log.log.Debug("Could not move tmp file to {0}: {1}", path, ne.Message);
 				return NodeStatus.ServerFailure;
 			}
 			status = NodeStatus.FileNameConflict;
@@ -309,7 +307,8 @@ internal class IncomingNode
 		}
 		catch (Exception e)
 		{
-			Log.Spew("Could not set time attributes on {0}", path);
+			Log.log.Debug("Could not set time attributes on {0}", path);
+			Log.log.Debug(e.Message);
 		}
 		fileInfo = null;
 		ClearTemp();
@@ -328,7 +327,7 @@ internal class IncomingNode
 	{
 		try
 		{
-			Log.Spew("importing {0} {1} to collection {2}", node.Name, node.ID, collection.Name);
+			Log.log.Debug("importing {0} {1} to collection {2}", node.Name, node.ID, collection.Name);
 
 			if (collection.IsType(node, typeof(BaseFileNode).Name))
 			{
@@ -377,11 +376,12 @@ internal class IncomingNode
 				catch (IOException ex)
 				{
 					// The file is in use will get synced next pass.
-					Log.Spew("The file {0} is in use", fPath);
+					Log.log.Debug("The file {0} is in use. {1}", fPath, ex.Message);
 					return NodeStatus.Complete;
 				}
 				catch (ArgumentException ex)
 				{
+					Log.log.Debug(ex.Message);
 					fileNameConflict = true;
 				}
 			}
@@ -406,13 +406,13 @@ internal class IncomingNode
 			{
 				if (onServer)
 				{
-					Log.Spew("Rejecting update for node {0} due to update conflict on server", node.Name);
+					Log.log.Debug("Rejecting update for node {0} due to update conflict on server. {1}", node.Name, c.Message);
 					CleanUp();
 					return NodeStatus.UpdateConflict;
 				}
 				else
 				{
-					Log.Spew("Node {0} {1} has lost an update collision", node.Type, node.Name);
+					Log.log.Debug("Node {0} {1} has lost an update collision", node.Type, node.Name);
 					node.Properties.DeleteSingleProperty(TempFileDone);
 					node = collection.CreateCollision(node, false);
 					node.Properties.ModifyProperty(TempFileDone, true);
@@ -424,7 +424,7 @@ internal class IncomingNode
 					}
 					catch (CollisionException ce)
 					{
-						Log.Spew("Node {0} has again lost an update collision", oldNode.Name);
+						Log.log.Debug("Node {0} has again lost an update collision. {1}", oldNode.Name, ce.Message);
 					}
 				}
 			}

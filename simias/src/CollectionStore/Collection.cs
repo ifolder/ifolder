@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Security.Cryptography;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
@@ -43,7 +44,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Used to log messages.
 		/// </summary>
-		private static readonly ISimiasLog log = SimiasLogManager.GetLogger( typeof( Collection ) );
+		static private readonly ISimiasLog log = SimiasLogManager.GetLogger( typeof( Collection ) );
 
 		/// <summary>
 		/// Reference to the store.
@@ -54,6 +55,11 @@ namespace Simias.Storage
 		/// Access control object for this Collection object.
 		/// </summary>
 		private AccessControl accessControl;
+
+		/// <summary>
+		/// Used to do a quick lookup of the domain ID.
+		/// </summary>
+		string domainID = null;
 		#endregion
 
 		#region Properties
@@ -62,15 +68,16 @@ namespace Simias.Storage
 		/// </summary>
 		public string Domain
 		{
-			get { return properties.FindSingleValue( PropertyTags.DomainName ).Value as string; }
-		}
+			get 
+			{ 
+				if ( domainID == null )
+				{
+					// Only look it up one time.
+					domainID = properties.FindSingleValue( PropertyTags.DomainID ).Value as string; 
+				}
 
-		/// <summary>
-		/// Gets the identity that the current user is known as in the collection's domain.
-		/// </summary>
-		public string DomainIdentity
-		{
-			get { return store.CurrentIdentity.GetDomainUserGuid( store, Domain ); }
+				return domainID;
+			}
 		}
 
 		/// <summary>
@@ -84,27 +91,22 @@ namespace Simias.Storage
 		/// <summary>
 		///  Gets the current owner of the collection.
 		/// </summary>
-		public string Owner
+		public Member Owner
 		{
-			get { return properties.FindSingleValue( PropertyTags.Owner ).Value as string; }
-		}
+			get 
+			{ 
+				Member owner = null;
 
-		/// <summary>
-		/// Gets or sets whether this collection can be shared.  By default, a collection is always shareable.
-		/// The Collection Store cannot prevent an application from sharing a collection even though this
-		/// property is set non-shareable.  This property is only meant as a common means to indicate
-		/// shareability and must be enforced at a higher layer.
-		/// </summary>
-		public bool Shareable
-		{
-			get
-			{
-				Property p = properties.FindSingleValue( PropertyTags.Shareable );
-				bool shareable = ( p != null ) ? ( bool )p.Value : true;
-				return ( IsAccessAllowed( Access.Rights.Admin ) && shareable && Synchronizable ) ? true : false;
+				// Find the Member object where the Owner tag exists.
+				ICSList list = Search( PropertyTags.Owner, Syntax.Boolean );
+				foreach ( ShallowNode sn in list )
+				{
+					owner = new Member( this, sn );
+					break;
+				}
+
+				return owner;
 			}
-
-			set { properties.ModifyNodeProperty( PropertyTags.Shareable, value ); }
 		}
 
 		/// <summary>
@@ -123,13 +125,18 @@ namespace Simias.Storage
 		/// </summary>
 		public bool Synchronizable
 		{
-			get
-			{
-				Property p = properties.FindSingleValue( PropertyTags.Syncable );
-				return ( p != null ) ? ( bool )p.Value : true;
+			get	{ return properties.HasProperty( PropertyTags.Syncable ) ? false : true; }
+			set 
+			{ 
+				if ( value )
+				{
+					properties.DeleteSingleNodeProperty( PropertyTags.Syncable );
+				}
+				else
+				{
+					properties.ModifyNodeProperty( PropertyTags.Syncable, false ); 
+				}
 			}
-
-			set { properties.ModifyNodeProperty( PropertyTags.Syncable, value ); }
 		}
 		#endregion
 
@@ -139,19 +146,9 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="storeObject">Store object that this collection belongs to.</param>
 		/// <param name="collectionName">This is the friendly name that is used by applications to describe the collection.</param>
-		public Collection( Store storeObject, string collectionName ) :
-			this ( storeObject, collectionName, Guid.NewGuid().ToString() )
-		{
-		}
-
-		/// <summary>
-		/// Constructor to create a new Collection object.
-		/// </summary>
-		/// <param name="storeObject">Store object that this collection belongs to.</param>
-		/// <param name="collectionName">This is the friendly name that is used by applications to describe the collection.</param>
-		/// <param name="collectionID">The globally unique identifier for this Collection object.</param>
-		public Collection( Store storeObject, string collectionName, string collectionID ) :
-			this ( storeObject, collectionName, collectionID, storeObject.CurrentUserGuid, storeObject.LocalDomain )
+		/// <param name="domainID">The domain that this object is stored in.</param>
+		public Collection( Store storeObject, string collectionName, string domainID ) :
+			this ( storeObject, collectionName, Guid.NewGuid().ToString(), domainID )
 		{
 		}
 
@@ -162,10 +159,9 @@ namespace Simias.Storage
 		/// <param name="collectionName">This is the friendly name that is used by applications to describe
 		/// this object.</param>
 		/// <param name="collectionID">The globally unique identifier for this object.</param>
-		/// <param name="ownerGuid">The identifier for the owner of this object.</param>
-		/// <param name="domainName">The domain that this object is stored in.</param>
-		public Collection( Store storeObject, string collectionName, string collectionID, string ownerGuid, string domainName ) :
-			this( storeObject, collectionName, collectionID, NodeTypes.CollectionType, ownerGuid, domainName )
+		/// <param name="domainID">The domain that this object is stored in.</param>
+		public Collection( Store storeObject, string collectionName, string collectionID, string domainID ) :
+			this( storeObject, collectionName, collectionID, NodeTypes.CollectionType, domainID )
 		{
 		}
 
@@ -216,9 +212,8 @@ namespace Simias.Storage
 		/// <param name="collectionName">This is the friendly name that is used by applications to describe this object.</param>
 		/// <param name="collectionID">The globally unique identifier for this object.</param>
 		/// <param name="collectionType">Base type of collection object.</param>
-		/// <param name="ownerGuid">The identifier for the owner of this object.</param>
-		/// <param name="domainName">The domain that this object is stored in.</param>
-		internal protected Collection( Store storeObject, string collectionName, string collectionID, string collectionType, string ownerGuid, string domainName ) :
+		/// <param name="domainID">The domain that this object is stored in.</param>
+		internal protected Collection( Store storeObject, string collectionName, string collectionID, string collectionType, string domainID ) :
 			base( collectionName, collectionID, collectionType )
 		{
 			store = storeObject;
@@ -241,23 +236,8 @@ namespace Simias.Storage
 				properties.AddNodeProperty( PropertyTags.Types, NodeTypes.CollectionType );
 			}
 
-			// Add the owner identifier and domain name as properties.
-			properties.AddNodeProperty( PropertyTags.Owner, ownerGuid.ToLower() );
-			properties.AddNodeProperty( PropertyTags.DomainName, domainName );
-
-			// TODO: This needs to be worked out better.
-			// Add the workgroup property.
-			LocalDatabase localDb = store.GetDatabaseObject();
-			if ( localDb != null )
-			{
-				WorkGroup wg = store.GetDatabaseObject().DefaultWorkGroup;
-				properties.AddNodeProperty( PropertyTags.WorkGroup, new Relationship( wg ) );
-			}
-			// End TODO
-			
-			// Set the owner to have all rights to the collection.
-			AccessControlEntry ace = new AccessControlEntry( ownerGuid, Access.Rights.Admin );
-			ace.Set( this );
+			// Add the domain ID as a property.
+			properties.AddNodeProperty( PropertyTags.DomainID, domainID );
 
 			// Setup the access control for this collection.
 			accessControl = new AccessControl( this );
@@ -480,9 +460,6 @@ namespace Simias.Storage
 						// Validate this Collection object.
 						ValidateNodeForCommit( node );
 
-						// Set the modify time for this object.
-						node.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
-
 						// Increment the local incarnation number for the object.
 						IncrementLocalIncarnation( node );
 
@@ -532,9 +509,6 @@ namespace Simias.Storage
 								// Validate this Collection object.
 								ValidateNodeForCommit( node );
 
-								// Set the modify time for this object.
-								node.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
-
 								// Increment the local incarnation number for the object.
 								IncrementLocalIncarnation( node );
 
@@ -564,9 +538,6 @@ namespace Simias.Storage
 								// been made.
 								if ( !onlyLocalChanges )
 								{
-									// Set the modify time for this object.
-									node.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
-
 									// Increment the local incarnation number for the object.
 									IncrementLocalIncarnation( mergeNode );
 								}
@@ -624,17 +595,11 @@ namespace Simias.Storage
 				{
 					Directory.Delete( ManagedPath, true );
 				}
-
-				// Clean up any aliases for this collection.
-				store.CurrentIdentity.CleanupAliases( store, Domain );
 			}
 			else
 			{
 				// Call the store provider to update the records.
 				store.StorageProvider.CommitRecords( id, commitDocument, deleteDocument );
-
-				// Update the access control information.
-				accessControl.GetAccessInfo();
 			}
 			
 			// Walk the commit list and change all states to updated.
@@ -673,10 +638,22 @@ namespace Simias.Storage
 
 						case PropertyList.PropertyListState.Update:
 							store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
+
+							// If this is a member Node, update the access control entry.
+							if ( IsType( node, NodeTypes.MemberType ) )
+							{
+								( node as Member ).UpdateAccessControl();
+							}
 							break;
 
 						case PropertyList.PropertyListState.Internal:
 							node.Properties.State = PropertyList.PropertyListState.Update;
+
+							// If this is a member Node, update the access control entry.
+							if ( IsType( node, NodeTypes.MemberType ) )
+							{
+								( node as Member ).UpdateAccessControl();
+							}
 							break;
 					}
 				}
@@ -691,40 +668,8 @@ namespace Simias.Storage
 		{
 			if ( IsType( node, NodeTypes.CollectionType ) )
 			{
-				// Instantiate the Collection object to be imported.
-				Collection importCollection = new Collection( store, node );
-
-				// See if the user has the right to update the access control list.  If he doesn't,
-				// use the ACL in the current collection.
-				if ( !IsAccessAllowed( Access.Rights.Admin ) )
-				{
-					// Get the list of access control entries and remove them from the collection object.
-					ICSList aclList = importCollection.GetAccessControlList();
-					foreach ( AccessControlEntry ace in aclList )
-					{
-						ace.Delete();
-					}
-
-					// Now add in the existing collection aces
-					aclList = GetAccessControlList();
-					foreach ( AccessControlEntry ace in aclList )
-					{
-						importCollection.accessControl.SetUserRights( ace.ID, ace.Rights );
-					}
-
-					// Set the owner.
-					node.Properties.ModifyNodeProperty( PropertyTags.Owner, Owner );
-				}
-				else
-				{
-					// The user must have owner access in order to set the new owner.
-					if ( !accessControl.IsOwnerAccessAllowed() )
-					{
-						importCollection.accessControl.ChangeCollectionOwner( Owner, Access.Rights.Deny );
-					}
-				}
-
 				// If the managed directory does not exist, create it.
+				Collection importCollection = node as Collection;
 				if ( !Directory.Exists( importCollection.ManagedPath ) )
 				{
 					Directory.CreateDirectory( importCollection.ManagedPath );
@@ -773,6 +718,12 @@ namespace Simias.Storage
 			}
 			else
 			{
+				// Make sure that this is not a collection object from a different collection.
+				if ( IsType( node, NodeTypes.CollectionType ) && ( node.ID != id ) )
+				{
+					throw new CollectionStoreException( String.Format( "Node object: {0} - ID: {1} does not belong to collection: {2} - ID: {3}.", node.Name, node.ID, name, id ) );
+				}
+
 				// Assign the collection id.
 				node.Properties.AddNodeProperty( BaseSchema.CollectionId, id );
 			}
@@ -809,11 +760,12 @@ namespace Simias.Storage
 		/// Changes the owner of the collection and assigns the specified right to the old owner.
 		/// Only the current owner can set new ownership on the collection.
 		/// </summary>
-		/// <param name="newOwnerId">User identifier of the new owner.</param>
+		/// <param name="newOwner">Member object that is to become the new owner.</param>
 		/// <param name="oldOwnerRights">Rights to give the old owner of the collection.</param>
-		public void ChangeOwner( string newOwnerId, Access.Rights oldOwnerRights )
+		/// <returns>An array of Nodes which need to be committed to make this operation permanent.</returns>
+		public Node[] ChangeOwner( Member newOwner, Access.Rights oldOwnerRights )
 		{
-			accessControl.ChangeOwner( newOwnerId, oldOwnerRights );
+			return accessControl.ChangeOwner( newOwner, oldOwnerRights );
 		}
 
 		/// <summary>
@@ -824,21 +776,13 @@ namespace Simias.Storage
 		/// <param name="shallowNode">ShallowNode object to construct new Collection object from.</param>
 		/// <returns>Downcasts the derived Collection object back to a Collection that can then be 
 		/// explicitly casted back up.</returns>
-		public static Collection CollectionFactory( Store store, ShallowNode shallowNode )
+		static public Collection CollectionFactory( Store store, ShallowNode shallowNode )
 		{
 			Collection rCollection = null;
 			switch ( shallowNode.Type )
 			{
 				case "Collection":
 					rCollection = new Collection( store, shallowNode );
-					break;
-
-				case "LocalAddressBook":
-					rCollection = new LocalAddressBook( store, shallowNode );
-					break;
-
-				case "WorkGroup":
-					rCollection = new WorkGroup( store, shallowNode );
 					break;
 
 				case "LocalDatabase":
@@ -885,8 +829,10 @@ namespace Simias.Storage
 			// Make sure that something is in the list.
 			if ( nodeList.Length > 0 )
 			{
-				Node deleteNode = null;
-				Node createNode = null;
+				bool createCollection = false;
+				bool deleteCollection = false;
+				bool hasMembers = false;
+				Member collectionOwner = null;
 
 				// Walk the commit list to see if there are any creation and deletion of the collection states.
 				foreach( Node node in nodeList )
@@ -895,37 +841,109 @@ namespace Simias.Storage
 					{
 						if ( node.Properties.State == PropertyList.PropertyListState.Delete )
 						{
-							deleteNode = node;
+							deleteCollection = true;
 						}
 						else if ( node.Properties.State == PropertyList.PropertyListState.Add )
 						{
-							createNode = node;
+							createCollection = true;
+						}
+					}
+					else if ( IsType( node, NodeTypes.MemberType ) )
+					{
+						// Administrative access needs to be checked because collection membership has changed.
+						hasMembers = true;
+
+						// Keep track of any ownership changes.
+						if ( ( node as Member ).IsOwner )
+						{
+							// There can only be a single collection owner. Also make sure that it just isn't
+							// the same Node object being committed twice.
+							if ( ( collectionOwner != null ) && ( collectionOwner.ID != node.ID ) )
+							{
+								throw new AlreadyExistsException( String.Format( "Owner {0} - ID: {1} already exists for collection {2} - ID: {3}.", collectionOwner.Name, collectionOwner.ID, name, id ) );
+							}
+
+							collectionOwner = node as Member;
 						}
 					}
 				}
 
 				// If the collection is both created and deleted, then there is nothing to do.
-				if ( ( deleteNode == null ) || ( createNode == null ) )
+				if ( !deleteCollection || !createCollection )
 				{
 					Node[] commitList;
 
 					// Delete of a collection supercedes all other operations.  It also is not subject to
 					// a rights check.
-					if ( deleteNode != null )
+					if ( deleteCollection )
 					{
+						// Only the collection needs to be processed. All other Node objects will automatically
+						// be deleted when the collection is deleted.
 						commitList = new Node[ 1 ];
-						commitList[ 0 ] = deleteNode;
+						commitList[ 0 ] = this;
+					}
+					else if ( createCollection )
+					{
+						// If there is no collection owner specified, then one needs to be created.
+						if ( collectionOwner == null )
+						{
+							// If a collection is being created, then a Member object containing the owner of the
+							// collection needs to be created also.
+							commitList = new Node[ nodeList.Length + 1 ];
+							nodeList.CopyTo( commitList, 0 );
+							commitList[ commitList.Length - 1 ] = accessControl.GetCurrentMember( store, Domain, true );
+						}
+						else
+						{
+							// The owner is already specified in the list. Use the list as is.
+							commitList = nodeList;
+						}
 					}
 					else
 					{
+						// Need to get who I am in this collection so that access control can be checked.
+						Member member = accessControl.GetCurrentMember( store, Domain, false );
+
+						// If membership is changing on the collection, make sure that the current
+						// user has sufficient rights.
+						if ( hasMembers )
+						{
+							if ( !IsAccessAllowed( member, Access.Rights.Admin ) )
+							{
+								throw new AccessException( this, member, Access.Rights.Admin, String.Format( "User {0} - ID: {1} does not have sufficient rights to change the member list.", member.Name, member.UserID ) );
+							}
+
+							// If ownership rights are changing, make sure the current user has sufficient rights.
+							if ( collectionOwner != null )
+							{
+								// Get the current owner of the collection.
+								Member currentOwner = Owner;
+
+								// See if ownership is changing and if it is, then the current user has to be
+								// the current owner.
+								if ( ( collectionOwner.UserID != currentOwner.UserID ) && ( currentOwner.UserID != member.UserID ) )
+								{
+									throw new AccessException( this, member, String.Format( "User {0} - ID: {1} does not have sufficient rights to change the collection ownership.", member.Name, member.UserID ) );
+								}
+
+								// Don't allow the owner's rights to be set below admin level.
+								if ( collectionOwner.Rights != Access.Rights.Admin )
+								{
+									throw new AccessException( this, member, String.Format( "Owner {0} - ID: {1} rights cannot be downgraded.", collectionOwner.Name, collectionOwner.UserID ) );
+								}
+							}
+						}
+						else
+						{
+							// Make sure that current user has write rights to this collection.
+							if ( !IsAccessAllowed( member, Access.Rights.ReadWrite ) )
+							{
+								throw new AccessException( this, member, Access.Rights.ReadWrite, String.Format( "User {0} - ID: {1} does not have sufficient rights to change the collection.", member.Name, member.UserID ) );
+							}
+						}
+
 						// Use the passed in list.
 						commitList = nodeList;
-
-						// Make sure that current user has write rights to this collection.
-						if ( !IsAccessAllowed( Access.Rights.ReadWrite ) )
-						{
-							throw new AccessException( this, Access.Rights.ReadWrite );
-						}
 					}
 
 					try
@@ -942,7 +960,7 @@ namespace Simias.Storage
 				}
 
 				// Check if the collection was deleted.
-				if ( deleteNode != null )
+				if ( deleteCollection )
 				{
 					// Go through each entry marking it deleted.
 					foreach( Node node in nodeList )
@@ -1052,16 +1070,12 @@ namespace Simias.Storage
 			}
 
 			// Allocate the Node object array and copy over the results.
-			Node[] nodeList = new Node[ tempList.Count ];
-			int index = 0;
-
 			foreach( Node n in tempList )
 			{
 				n.Properties.State = PropertyList.PropertyListState.Delete;
-				nodeList[ index++ ] = n;
 			}
 
-			return nodeList;
+			return tempList.ToArray( typeof( Node ) ) as Node[];
 		}
 
 		/// <summary>
@@ -1091,16 +1105,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets the access control list for this collection object.
-		/// </summary>
-		/// <returns>An ICSEnumerator object that will enumerate the access control list. The ICSList object
-		/// will contain Access objects.</returns>
-		public ICSList GetAccessControlList()
-		{
-			return new ICSList( new Access( this ) );
-		}
-
-		/// <summary>
 		/// Gets a list of ShallowNode objects that represent Node objects that contain collisions in the current
 		/// collection.
 		/// </summary>
@@ -1109,6 +1113,36 @@ namespace Simias.Storage
 		public ICSList GetCollisions()
 		{
 			return Search( PropertyTags.Collision, Syntax.XmlDocument );
+		}
+
+		/// <summary>
+		/// Gets the Member object that represents the currently executing security context.
+		/// </summary>
+		/// <returns>A Member object that represents the currently executing security context.</returns>
+		public Member GetCurrentMember()
+		{
+			return accessControl.GetCurrentMember( store, Domain, false );
+		}
+
+		/// <summary>
+		/// Gets the Member object associated with the specified user ID.
+		/// </summary>
+		/// <param name="userID">Identifier to look up the Member object with.</param>
+		/// <returns>The Member object associated with the specified user ID. May return null if the
+		/// Member object does not exist in the collection.</returns>
+		public Member GetMember( string userID )
+		{
+			return accessControl.GetMember( userID.ToLower() );
+		}
+
+		/// <summary>
+		/// Gets the list of Member objects for this collection object.
+		/// </summary>
+		/// <returns>An ICSEnumerator object that will enumerate the member list. The ICSList object
+		/// will contain ShallowNode objects that represent Member objects.</returns>
+		public ICSList GetMemberList()
+		{
+			return Search( BaseSchema.ObjectType, NodeTypes.MemberType, SearchOp.Equal );
 		}
 
 		/// <summary>
@@ -1243,16 +1277,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets the access rights for the specified user on the collection.
-		/// </summary>
-		/// <param name="userID">User ID to get rights for.</param>
-		/// <returns>Access rights for the specified user ID.</returns>
-		public Access.Rights GetUserAccess( string userID )
-		{
-			return accessControl.GetUserRights( userID );
-		}
-
-		/// <summary>
 		/// Returns whether the collection has collisions.
 		/// </summary>
 		/// <returns>True if the collection contains collisions, otherwise false is returned.</returns>
@@ -1275,6 +1299,15 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Impersonates the specified identity, if the user ID is verified.
+		/// </summary>
+		/// <param name="member">Member object to impersonate.</param>
+		public void Impersonate( Member member )
+		{
+			accessControl.Impersonate( member );
+		}
+
+		/// <summary>
 		/// Readies a Node object for import into this Collection.
 		/// </summary>
 		/// <param name="node">Node to import into this Collection.</param>
@@ -1293,13 +1326,23 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Checks whether the current user has sufficient access rights for an operation.
+		/// Checks whether the specified user has sufficient access rights for an operation.
 		/// </summary>
+		/// <param name="member">Member object to check access for.</param>
 		/// <param name="desiredRights">Desired access rights.</param>
 		/// <returns>True if the user has the desired access rights, otherwise false.</returns>
-		public bool IsAccessAllowed( Access.Rights desiredRights )
+		public bool IsAccessAllowed( Member member, Access.Rights desiredRights )
 		{
-			return accessControl.IsAccessAllowed( desiredRights );
+			return accessControl.IsAccessAllowed( member, desiredRights );
+		}
+
+		/// <summary>
+		/// Gets whether the specified member has sufficient rights to share this collection.
+		/// </summary>
+		/// <param name="member">Member object contained by this collection.</param>
+		public bool IsShareable( Member member )
+		{
+			return ( member.ValidateAce.Rights == Access.Rights.Admin ) ? true : false;
 		}
 
 		/// <summary>
@@ -1352,12 +1395,6 @@ namespace Simias.Storage
 				node.BaseType = element.GetAttribute( XmlTags.TypeAttr );
 				node.InternalList = new PropertyList( document );
 				node.IncarnationUpdate = 0;
-
-				// If this is a collection, refresh the access control.
-				if ( IsType( node, NodeTypes.CollectionType ) )
-				{
-					( node as Collection ).accessControl.GetAccessInfo();
-				}
 			}
 
 			return node;
@@ -1385,15 +1422,6 @@ namespace Simias.Storage
 					break;
 				}
 			}
-		}
-
-		/// <summary>
-		/// Removes all access rights on the collection for the specified user.
-		/// </summary>
-		/// <param name="userID">User ID to remove rights for.</param>
-		public void RemoveUserAccess( string userID )
-		{
-			accessControl.RemoveUserRights( userID );
 		}
 
 		/// <summary>
@@ -1427,6 +1455,14 @@ namespace Simias.Storage
 			}
 
 			return resNode;
+		}
+
+		/// <summary>
+		/// Reverts back to the previous impersonating identity.
+		/// </summary>
+		public void Revert()
+		{
+			accessControl.Revert();
 		}
 
 		/// <summary>
@@ -1717,16 +1753,6 @@ namespace Simias.Storage
 
 			// Set the new type.
 			node.Properties.AddNodeProperty( PropertyTags.Types, type );
-		}
-
-		/// <summary>
-		/// Sets the specified access rights for the specified user on the collection.
-		/// </summary>
-		/// <param name="userID">User to add to the collection's access control list.</param>
-		/// <param name="desiredRights">Rights to assign to user.</param>
-		public void SetUserAccess( string userID, Access.Rights desiredRights )
-		{
-			accessControl.SetUserRights( userID, desiredRights );
 		}
 		#endregion
 

@@ -8,7 +8,7 @@ ORIGDIR=`pwd`
 cd $srcdir
 PROJECT=Simias
 TEST_TYPE=-f
-FILE=src/Common/Library/Configuration.cs
+FILE=src/Common/Configuration.cs
 
 DIE=0
 

@@ -36,167 +36,102 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string Ace = "Ace";
-
-		/// <summary>
-		/// Well know property name.
-		/// </summary>
-		public static string AddressBookType = "AB:AddressBook";
+		static public string Ace = "Ace";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string Alias = "Alias";
+		static public string Collision = "Collision";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string ClientCredential = "ClientCredential";
-
-		/// <summary>
-		/// Well known property name;
-		/// </summary>
-		public static string ClientPublicKey = "ClientPublicKey";
+		static public string CreationTime = "Create";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string Collision = "Collision";
+		static public string Credential = "Credential";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string ContactType = "AB:Contact";
+		static public string DefaultDomain = "DefaultDomain";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string CreationTime = "CreationTime";
+		static public string Domain = "Domain";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string DefaultAddressBook = "AB:Default";
+		static public string DomainID = "DomainID";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string DefaultWorkGroup = "DefaultWorkGroup";
+		static public string FileLength = "Length";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string DirCreationTime = "DirCreationTime";
+		static public string LastAccessTime = "Access";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string DirLastAccessTime = "DirLastAccessTime";
+		static public string LastWriteTime = "Write";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string DirLastWriteTime = "DirLastWriteTime";
+		static public string LinkReference = "LinkRef";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string DomainName = "DomainName";
+		static public string LocalIncarnation = "ClntRev";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string FileCreationTime = "FileCreationTime";
+		static public string MasterIncarnation = "SrvRev";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string FileLastAccessTime = "FileLastAccessTime";
+		static public string Owner = "Owner";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string FileLastWriteTime = "FileLastWriteTime";
+		static public string Parent = "Parent";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string FileLength = "FileLength";
+		static public string PublicKey = "PublicKey";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string LocalAddressBook = "AB:Local";
+		static public string Root = "Root";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string LinkReference = "LinkReference";
+		static public string Syncable = "Syncable";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string LocalDatabase = "LocalDatabase";
+		static public string TombstoneType = "TombstoneType";
 
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string LocalIncarnation = "LocalIncarnation";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-		public static string MasterIncarnation = "MasterIncarnation";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-		public static string ModifyTime = "ModifyTime";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-		public static string Owner = "Owner";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-		public static string Parent = "Parent";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-		public static string Root = "Root";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-		public static string ServerCredential = "ServerCredential";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-		public static string Shareable = "Shareable";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-		public static string Syncable = "Syncable";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-		public static string TombstoneType = "TombstoneType";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-		public static string Types = "Types";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-		public static string WorkGroup = "WorkGroup";
+		static public string Types = "Types";
 
 		/// <summary>
 		/// Hashtable providing quick lookup to well-known system properties.
@@ -216,36 +151,26 @@ namespace Simias.Storage
 			// Add the well-known system properties to the hashtable.  Don't need to add values
 			// with them.  Just need to know if they exist.
 			systemPropertyTable.Add( Ace, null );
-			systemPropertyTable.Add( AddressBookType, null );
-			systemPropertyTable.Add( Alias, null );
 			systemPropertyTable.Add( BaseSchema.ObjectId, null );
 			systemPropertyTable.Add( BaseSchema.ObjectName, null );
 			systemPropertyTable.Add( BaseSchema.ObjectType, null );
 			systemPropertyTable.Add( BaseSchema.CollectionId, null );
-			systemPropertyTable.Add( ClientCredential, null );
-			systemPropertyTable.Add( ClientPublicKey, null );
 			systemPropertyTable.Add( Collision, null );
 			systemPropertyTable.Add( CreationTime, null );
-			systemPropertyTable.Add( DirCreationTime, null );
-			systemPropertyTable.Add( DirLastAccessTime, null );
-			systemPropertyTable.Add( DirLastWriteTime, null );
-			systemPropertyTable.Add( DefaultAddressBook, null );
-			systemPropertyTable.Add( DomainName, null );
-			systemPropertyTable.Add( FileCreationTime, null );
-			systemPropertyTable.Add( FileLastAccessTime, null );
-			systemPropertyTable.Add( FileLastWriteTime, null );
+			systemPropertyTable.Add( Credential, null );
+			systemPropertyTable.Add( DefaultDomain, null );
+			systemPropertyTable.Add( Domain, null );
+			systemPropertyTable.Add( DomainID, null );
 			systemPropertyTable.Add( FileLength, null );
+			systemPropertyTable.Add( LastAccessTime, null );
+			systemPropertyTable.Add( LastWriteTime, null );
 			systemPropertyTable.Add( LinkReference, null );
-			systemPropertyTable.Add( LocalAddressBook, null );
-			systemPropertyTable.Add( LocalDatabase, null );
 			systemPropertyTable.Add( LocalIncarnation, null );
 			systemPropertyTable.Add( MasterIncarnation, null );
-			systemPropertyTable.Add( ModifyTime, null );
 			systemPropertyTable.Add( Owner, null );
 			systemPropertyTable.Add( Parent, null );
+			systemPropertyTable.Add( PublicKey, null );
 			systemPropertyTable.Add( Root, null );
-			systemPropertyTable.Add( ServerCredential, null );
-			systemPropertyTable.Add( Shareable, null );
 			systemPropertyTable.Add( Syncable, null );
 			systemPropertyTable.Add( TombstoneType, null );
 			systemPropertyTable.Add( Types, null );
@@ -258,7 +183,7 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="propertyName">Name of property.</param>
 		/// <returns>True if propertyName specifies a system property, otherwise false is returned.</returns>
-		public static bool IsSystemProperty( string propertyName )
+		static public bool IsSystemProperty( string propertyName )
 		{
 			return systemPropertyTable.Contains( propertyName );
 		}

@@ -129,7 +129,7 @@ namespace Simias.Storage
 		/// <param name="c1">First Collision object.</param>
 		/// <param name="c2">Second Collision object.</param>
 		/// <returns>True if objects are equal, otherwise false is returned.</returns>
-		public static bool operator==( Collision c1, Collision c2 )
+		static public bool operator==( Collision c1, Collision c2 )
 		{
 			return c1.Equals( c2 );
 		}
@@ -140,7 +140,7 @@ namespace Simias.Storage
 		/// <param name="c1">First Collision object.</param>
 		/// <param name="c2">Second Collision object.</param>
 		/// <returns>True if objects are not equal, otherwise false is returned.</returns>
-		public static bool operator!=( Collision c1, Collision c2 )
+		static public bool operator!=( Collision c1, Collision c2 )
 		{
 			return !c1.Equals( c2 );
 		}

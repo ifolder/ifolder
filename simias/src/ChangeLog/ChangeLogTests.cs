@@ -52,7 +52,7 @@ namespace Simias.Storage.Tests
 		public void Test1()
 		{
 			// Create a new collection and remember its ID.
-			Collection collection = new Collection( store, "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain);
 
 			try
 			{
@@ -81,7 +81,7 @@ namespace Simias.Storage.Tests
 
 				foreach( ChangeLogRecord rec in changeList )
 				{
-					Console.WriteLine( "Found change: Record ID: {0}, TimeStamp: {1}, Operation: {2}, Node ID: {3}", rec.recordID, rec.epoch, rec.operation, rec.nodeID );
+					Console.WriteLine( "Found change: Record ID: {0}, TimeStamp: {1}, Operation: {2}, Node ID: {3}", rec.RecordID, rec.Epoch, rec.Operation, rec.EventID );
 				}
 
 				// Delete all of the node objects.
@@ -92,7 +92,7 @@ namespace Simias.Storage.Tests
 
 				foreach( ChangeLogRecord rec in changeList )
 				{
-					Console.WriteLine( "Found change: Record ID: {0}, TimeStamp: {1}, Operation: {2}, Node ID: {3}", rec.recordID, rec.epoch, rec.operation, rec.nodeID );
+					Console.WriteLine( "Found change: Record ID: {0}, TimeStamp: {1}, Operation: {2}, Node ID: {3}", rec.RecordID, rec.Epoch, rec.Operation, rec.EventID );
 				}
 			}
 			finally

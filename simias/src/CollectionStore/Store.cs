@@ -47,24 +47,17 @@ namespace Simias.Storage
 		/// <summary>
 		/// Used to log messages.
 		/// </summary>
-		private static readonly ISimiasLog log = SimiasLogManager.GetLogger( typeof( Store ) );
+		static private readonly ISimiasLog log = SimiasLogManager.GetLogger( typeof( Store ) );
 
 		/// <summary>
 		/// Cross process member used to control access to the constructor.
 		/// </summary>
-		private static string ctorLock = "";
+		static private string ctorLock = "";
 
 		/// <summary>
 		/// Directory where store-managed files are kept.
 		/// </summary>
-		private const string storeManagedDirectoryName = "CollectionFiles";
-
-#if ( DEBUG )
-		/// <summary>
-		/// Used for debugging to tell who allocated this object.
-		/// </summary>
-		private string allocator = null;
-#endif
+		static private string storeManagedDirectoryName = "CollectionFiles";
 
 		/// <summary>
 		/// Specifies whether object is viable.
@@ -80,16 +73,6 @@ namespace Simias.Storage
 		/// Path to where store managed files are kept.
 		/// </summary>
 		private string storeManagedPath;
-
-		/// <summary>
-		/// Uniquely defines this database.
-		/// </summary>
-		private string databaseID;
-
-		/// <summary>
-		/// Object that identifies the current owner or impersonator.
-		/// </summary>
-		private IdentityManager identityManager;
 
 		/// <summary>
 		/// Configuration object passed during connect.
@@ -110,9 +93,28 @@ namespace Simias.Storage
 		/// Used to publish collection store events.
 		/// </summary>
 		private EventPublisher eventPublisher;
+
+		/// <summary>
+		/// Represents the current logged on user.
+		/// </summary>
+		private Identity identity;
+
+		/// <summary>
+		/// Used so the object does not have to be looked up everytime. Take caution
+		/// in using this object because it may be stale. 
+		/// </summary>
+		private LocalDatabase localDb = null;
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// Gets the Identity object that represents the currently logged on user.
+		/// </summary>
+		internal Identity CurrentUser
+		{
+			get { return identity; }
+		}
+
 		/// <summary>
 		/// Gets the event publisher object.
 		/// </summary>
@@ -122,11 +124,22 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets whether the current executing user is being impersonated.
+		/// Gets the cached (and therefore possibly stale) local database reference.
+		/// If you don't care about the properties on the object itself, it is safe
+		/// to use this object.
 		/// </summary>
-		internal bool IsImpersonating
+		internal LocalDatabase LocalDb
 		{
-			get { return ( identityManager != null ) ? identityManager.IsImpersonating : false; }
+			get { return localDb; }
+		}
+
+		/// <summary>
+		/// Gets or sets the publisher event source identifier.
+		/// </summary>
+		internal string Publisher
+		{
+			get { return publisher; }
+			set { publisher = value; }
 		}
 
 		/// <summary>
@@ -154,50 +167,15 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets the identity object associated with this store that represents the currently impersonating user.
+		/// Gets or sets the default domain ID.
 		/// </summary>
-		public BaseContact CurrentIdentity
+		public string DefaultDomain
 		{
-			get 
-			{ 
-				if ( disposed )
-				{
-					throw new DisposedException( this );
-				}
-
-				return identityManager.CurrentIdentity; 
-			}
-		}
-
-		/// <summary>
-		/// Gets the current impersonation identity for the store.
-		/// </summary>
-		public string CurrentUserGuid
-		{
-			get 
-			{ 
-				if ( disposed )
-				{
-					throw new DisposedException( this );
-				}
-
-				return identityManager.CurrentUserGuid; 
-			}
-		}
-
-		/// <summary>
-		/// Gets the domain name for the current user.
-		/// </summary>
-		public string LocalDomain
-		{
-			get 
-			{ 
-				if ( disposed )
-				{
-					throw new DisposedException( this );
-				}
-
-				return identityManager.DomainName;
+			get { return ( localDb.Refresh() as LocalDatabase ).DefaultDomain; }
+			set
+			{
+				localDb.DefaultDomain = value;
+				localDb.Commit();
 			}
 		}
 
@@ -206,14 +184,6 @@ namespace Simias.Storage
 		/// </summary>
 		public string ID
 		{
-			get { return databaseID; }
-		}
-
-		/// <summary>
-		/// Gets the RsaKeyStore object that provides an interface for the secure remote authentication.
-		/// </summary>
-		public RsaKeyStore KeyStore
-		{
 			get 
 			{ 
 				if ( disposed )
@@ -221,33 +191,8 @@ namespace Simias.Storage
 					throw new DisposedException( this );
 				}
 
-				return identityManager; 
+				return localDb.ID; 
 			}
-		}
-
-		/// <summary>
-		/// Gets or sets the publisher event source identifier.
-		/// </summary>
-		public string Publisher
-		{
-			get { return publisher; }
-			set { publisher = value; }
-		}
-
-		/// <summary>
-		/// Gets the public key for the server.
-		/// </summary>
-		public RSACryptoServiceProvider ServerPublicKey
-		{
-			get 
-			{ 
-				if ( disposed )
-				{
-					throw new DisposedException( this );
-				}
-
-				return identityManager.PublicKey; 
-			} 
 		}
 
 		/// <summary>
@@ -275,10 +220,6 @@ namespace Simias.Storage
 		/// or open the database.</param>
 		public Store( Configuration config )
 		{
-#if ( DEBUG )
-			StackFrame sf = new StackFrame( 1, true );
-			allocator = String.Format( "Store object allocated by {0} in file {1} at line number {2}", sf.GetMethod(), sf.GetFileName(), sf.GetFileLineNumber() );
-#endif
 			lock( ctorLock )
 			{
 				bool created;
@@ -300,42 +241,23 @@ namespace Simias.Storage
 				{
 					try
 					{
-						// Create a domain name for this domain.
-						string domainName = Environment.UserDomainName + ":" + Guid.NewGuid().ToString().ToLower();
+						// Create an object that represents the database collection.
+						localDb = new LocalDatabase( this );
 
-						// Create an identifier for the owner of this Collection Store.
-						string ownerGuid = Guid.NewGuid().ToString();
-
-						// Create the database lock.
-						storeMutex = new Mutex( false, domainName );
-
-						// Create the local address book.
-						LocalAddressBook localAb = new LocalAddressBook( this, domainName, Guid.NewGuid().ToString(), ownerGuid, domainName );
+						// Create the default workgroup domain.
+						Domain wgDomain = new Domain( Domain.WorkGroupDomainName, Domain.WorkGroupDomainID );
 
 						// Create an identity that represents the current user.  This user will become the 
-						// database owner.
-						BaseContact ownerIdentity = new BaseContact( Environment.UserName, ownerGuid );
+						// database owner. Add the domain mapping to the identity.
+						identity = new Identity( this, Environment.UserName, Guid.NewGuid().ToString() );
+						identity.AddDomainIdentity( identity.ID, wgDomain.ID );
 
-						// Add a key pair to this identity to be used as credentials.
-						ownerIdentity.CreateKeyPair();
+						// Create the database lock.
+						storeMutex = new Mutex( false, ID );
 
-						// Set the identity into the manager object.
-						identityManager = new IdentityManager( domainName, localAb, ownerIdentity );
-
-						// Add the well-known world identity and save the address book changes.
-						Node[] identities = { localAb, ownerIdentity, new BaseContact( "World", Access.World ) };
-						localAb.Commit( identities );
-
-						// Create the default local workspace.
-						WorkGroup workGroup = new WorkGroup( this, Environment.UserDomainName, Guid.NewGuid().ToString(), ownerGuid );
-						workGroup.Commit();
-
-						// Create an object that represents the database collection.
-						LocalDatabase localDb = new LocalDatabase( this, workGroup, ownerGuid, domainName );
-						localDb.Commit();
-
-						// Set the database ID.
-						databaseID = localDb.ID;
+						// Save the local database changes.
+						Node[] nodeList = { localDb, identity, wgDomain };
+						localDb.Commit( nodeList );
 					}
 					catch ( Exception e )
 					{
@@ -350,32 +272,32 @@ namespace Simias.Storage
 				}
 				else
 				{
-					// Get the local address book.
-					LocalAddressBook localAb = GetLocalAddressBook();
-					if ( localAb == null )
+					// Get the local database object.
+					if ( GetDatabaseObject() == null )
 					{
-						throw new DoesNotExistException( "Local address book does not exist." );
+						throw new DoesNotExistException( "Local database object does not exist." );
 					}
 
-					// Look up to see if the current user has an identity.
-					BaseContact identity = localAb.GetContactByName( Environment.UserName );
+					// Get the identity object that represents this logged on user.
+					ICSList list = localDb.Search( BaseSchema.ObjectType, NodeTypes.IdentityType, SearchOp.Equal );
+					foreach ( ShallowNode sn in list )
+					{
+						if ( sn.Name == Environment.UserName )
+						{
+							identity = new Identity( localDb, sn );
+							break;
+						}
+					}
+
+					// Make sure that the identity was found.
 					if ( identity == null )
 					{
-						throw new DoesNotExistException( String.Format( "User: {0} does not exist in local address book.", Environment.UserName ) );
+						throw new DoesNotExistException( String.Format( "User {0} does not exist in the database.", Environment.UserName ) );
 					}
 
-					// Create a identity manager object that will be used by the store object from here on out.
-					identityManager = new IdentityManager( localAb.Name, localAb, identity );
-
-					// Set the database ID.
-					databaseID = GetDatabaseObject().ID;
-
 					// Create the database lock.
-					storeMutex = new Mutex( false, identityManager.DomainName );
+					storeMutex = new Mutex( false, ID );
 				}
-
-				// Impersonate the current user so that access control will work.
-				identityManager.Impersonate( identityManager.CurrentUserGuid );
 			}
 		}
 		#endregion
@@ -425,6 +347,29 @@ namespace Simias.Storage
 
 		#region Public Methods
 		/// <summary>
+		/// Adds a domain identity to the Collection Store.
+		/// </summary>
+		/// <param name="userID">Identity that this user is known as in the specified domain.</param>
+		/// <param name="domainName">Name of the domain.</param>
+		/// <param name="domainID">Well known identity for the specified domain.</param>
+		public void AddDomainIdentity( string userID, string domainName, string domainID )
+		{
+			if ( disposed )
+			{
+				throw new DisposedException( this );
+			}
+
+			Node[] nodeList = new Node[ 2 ];
+
+			// Create the domain object.
+			nodeList[ 0 ] = new Domain( domainName, domainID.ToLower() );
+			nodeList[ 1 ] = identity.AddDomainIdentity( userID.ToLower(), domainID.ToLower() );
+			
+			// Commit the changes.
+			localDb.Commit( nodeList );
+		}
+
+		/// <summary>
 		/// Deletes the persistent store database and disposes this object.
 		/// </summary>
 		public void Delete()
@@ -446,6 +391,27 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Removes the specified domain identity from the Collection Store.
+		/// </summary>
+		/// <param name="domainID">Well known identity for the specified domain.</param>
+		public void DeleteDomainIdentity( string domainID )
+		{
+			if ( disposed )
+			{
+				throw new DisposedException( this );
+			}
+
+			Node[] nodeList = new Node[ 2 ];
+
+			// Delete the domain object.
+			nodeList[ 0 ] = localDb.Delete( GetDomain( domainID ) );
+			nodeList[ 1 ] = identity.DeleteDomainIdentity( localDb, domainID.ToLower() );
+
+			// Commit the changes.
+			localDb.Commit( nodeList );
+		}
+
+		/// <summary>
 		/// Returns a Collection object for the specified identifier.
 		/// </summary>
 		/// <param name="collectionID">Globally unique identifier for the object.</param>
@@ -458,31 +424,61 @@ namespace Simias.Storage
 				throw new DisposedException( this );
 			}
 
-			Collection collection = null;
-
 			// Get the specified object from the persistent store.
 			string normalizedID = collectionID.ToLower();
 			XmlDocument document = storageProvider.GetRecord( normalizedID, normalizedID );
-			if ( document != null )
-			{
-				collection = Node.NodeFactory( this, document ) as Collection;
-				
-				// Make sure that access is allowed to the Collection object.
-				if ( !collection.IsAccessAllowed( Access.Rights.ReadOnly ) )
-				{
-					// Don't return Collections that the user does not have any rights to.
-					collection = null;
-				}
-			}
-
-			return collection;
+			return ( document != null ) ? Node.NodeFactory( this, document ) as Collection : null;
 		}
 
 		/// <summary>
-		///  Gets all collections that have the specified name.
+		/// Gets all collections that belong to the specified domain.
+		/// </summary>
+		/// <param name="domainID">Domain identifier.</param>
+		/// <returns>An ICSList object containing ShallowNode objects that represent the Collection
+		/// objects that matched the specified domain.</returns>
+		public ICSList GetCollectionsByDomain( string domainID )
+		{
+			if ( disposed )
+			{
+				throw new DisposedException( this );
+			}
+
+			// Create a container object to hold all collections that match the specified domain.
+			ICSList collectionList = new ICSList();
+
+			Persist.Query query = new Persist.Query( PropertyTags.DomainID, SearchOp.Equal, domainID, Syntax.String );
+			Persist.IResultSet chunkIterator = storageProvider.Search( query );
+			if ( chunkIterator != null )
+			{
+				char[] results = new char[ 4096 ];
+
+				// Get the first set of results from the query.
+				int length = chunkIterator.GetNext( ref results );
+				while ( length > 0 )
+				{
+					// Set up the XML document so the data can be easily extracted.
+					XmlDocument document = new XmlDocument();
+					document.LoadXml( new string( results, 0, length ) );
+
+					foreach ( XmlElement xe in document.DocumentElement )
+					{
+						collectionList.Add( new ShallowNode( xe ) );
+					}
+
+					// Get the next set of results from the query.
+					length = chunkIterator.GetNext( ref results );
+				}
+
+				chunkIterator.Dispose();
+			}
+
+			return collectionList;
+		}
+
+		/// <summary>
+		/// Gets all collections that have the specified name.
 		/// </summary>
 		/// <param name="name">A string containing the name of the collection(s) to search for.
-		/// This parameter may be specified as a regular expression.</param>
 		/// <returns>An ICSList object containing ShallowNode objects that represent the Collection 
 		/// objects that matched the specified name.</returns>
 		public ICSList GetCollectionsByName( string name )
@@ -495,16 +491,34 @@ namespace Simias.Storage
 			// Create a container object to hold all collections that match the specified name.
 			ICSList collectionList = new ICSList();
 
-			// Build a regular expression class to use as the comparision.
-			Regex searchName = new Regex( "^" + name + "$", RegexOptions.IgnoreCase );
-
-			// Look at each collection that this user has rights to and match up on the name.
-			foreach ( ShallowNode shallowNode in this )
+			Persist.Query query = new Persist.Query( BaseSchema.ObjectName, SearchOp.Equal, name, Syntax.String );
+			Persist.IResultSet chunkIterator = storageProvider.Search( query );
+			if ( chunkIterator != null )
 			{
-				if ( searchName.IsMatch( shallowNode.Name ) )
+				char[] results = new char[ 4096 ];
+
+				// Get the first set of results from the query.
+				int length = chunkIterator.GetNext( ref results );
+				while ( length > 0 )
 				{
-					collectionList.Add( shallowNode );
+					// Set up the XML document so the data can be easily extracted.
+					XmlDocument document = new XmlDocument();
+					document.LoadXml( new string( results, 0, length ) );
+
+					foreach ( XmlElement xe in document.DocumentElement )
+					{
+						// See if this element represents a collection.
+						if ( xe.GetAttribute( XmlTags.IdAttr ) == xe.GetAttribute( XmlTags.CIdAttr ) )
+						{
+							collectionList.Add( new ShallowNode( xe ) );
+						}
+					}
+
+					// Get the next set of results from the query.
+					length = chunkIterator.GetNext( ref results );
 				}
+
+				chunkIterator.Dispose();
 			}
 
 			return collectionList;
@@ -514,7 +528,6 @@ namespace Simias.Storage
 		///  Gets all collections that have the specified type.
 		/// </summary>
 		/// <param name="type">String that contains the type of the collection(s) to search for.
-		/// This parameter may be specified as a regular expression.</param>
 		/// <returns>An ICSList object containing the ShallowNode objects that match the specified 
 		/// type.</returns>
 		public ICSList GetCollectionsByType( string type )
@@ -527,22 +540,84 @@ namespace Simias.Storage
 			// Create a container object to hold all collections that match the specified name.
 			ICSList collectionList = new ICSList();
 
-			// Build a regular expression class to use as the comparision.
-			Regex searchType = new Regex( "^" + type + "$", RegexOptions.IgnoreCase );
-
-			// Look at each collection that this user has rights to and match up on the name.
-			foreach ( ShallowNode shallowNode in this )
+			Persist.Query query = new Persist.Query( PropertyTags.Types, SearchOp.Equal, type, Syntax.String );
+			Persist.IResultSet chunkIterator = storageProvider.Search( query );
+			if ( chunkIterator != null )
 			{
-				Collection collection = Collection.CollectionFactory( this, shallowNode );
-				MultiValuedList mvl = collection.Properties.FindValues( PropertyTags.Types );
-				foreach ( Property property in mvl )
+				char[] results = new char[ 4096 ];
+
+				// Get the first set of results from the query.
+				int length = chunkIterator.GetNext( ref results );
+				while ( length > 0 )
 				{
-					if ( searchType.IsMatch( property.ToString() ) )
+					// Set up the XML document so the data can be easily extracted.
+					XmlDocument document = new XmlDocument();
+					document.LoadXml( new string( results, 0, length ) );
+
+					foreach ( XmlElement xe in document.DocumentElement )
 					{
-						collectionList.Add( shallowNode );
-						break;
+						// See if this element represents a collection.
+						if ( xe.GetAttribute( XmlTags.IdAttr ) == xe.GetAttribute( XmlTags.CIdAttr ) )
+						{
+							collectionList.Add( new ShallowNode( xe ) );
+						}
 					}
+
+					// Get the next set of results from the query.
+					length = chunkIterator.GetNext( ref results );
 				}
+
+				chunkIterator.Dispose();
+			}
+
+			return collectionList;
+		}
+
+		/// <summary>
+		/// Gets all collections that belong to the specified user.
+		/// </summary>
+		/// <param name="userID">User identifier.</param>
+		/// <returns>An ICSList object containing ShallowNode objects that represent the Collection
+		/// objects that matched the specified user.</returns>
+		public ICSList GetCollectionsByUser( string userID )
+		{
+			if ( disposed )
+			{
+				throw new DisposedException( this );
+			}
+
+			// Create a container object to hold all collections that match the specified user.
+			ICSList collectionList = new ICSList();
+
+			Persist.Query query = new Persist.Query( PropertyTags.Ace, SearchOp.Begins, userID, Syntax.String );
+			Persist.IResultSet chunkIterator = storageProvider.Search( query );
+			if ( chunkIterator != null )
+			{
+				char[] results = new char[ 4096 ];
+
+				// Get the first set of results from the query.
+				int length = chunkIterator.GetNext( ref results );
+				while ( length > 0 )
+				{
+					// Set up the XML document so the data can be easily extracted.
+					XmlDocument document = new XmlDocument();
+					document.LoadXml( new string( results, 0, length ) );
+
+					foreach ( XmlElement xe in document.DocumentElement )
+					{
+						// Get the collection that this Member object belongs to.
+						string collectionID = xe.GetAttribute( XmlTags.CIdAttr );
+						
+						// Get the collection object.
+						XmlDocument cDoc = storageProvider.GetShallowRecord( collectionID );
+						collectionList.Add( new ShallowNode( cDoc.DocumentElement[ XmlTags.ObjectTag ] ) );
+					}
+
+					// Get the next set of results from the query.
+					length = chunkIterator.GetNext( ref results );
+				}
+
+				chunkIterator.Dispose();
 			}
 
 			return collectionList;
@@ -560,63 +635,67 @@ namespace Simias.Storage
 				throw new DisposedException( this );
 			}
 
-			LocalDatabase localDb = null;
-
-			Persist.Query query = new Persist.Query( PropertyTags.LocalDatabase, SearchOp.Equal, "true", Syntax.Boolean );
-			Persist.IResultSet chunkIterator = storageProvider.Search( query );
-			if ( chunkIterator != null )
+			// See if the local database object has already been looked up.
+			if ( localDb == null )
 			{
-				char[] results = new char[ 4096 ];
-
-				// Get the first set of results from the query.
-				int length = chunkIterator.GetNext( ref results );
-				if ( length > 0 )
+				Persist.Query query = new Persist.Query( BaseSchema.ObjectType, SearchOp.Equal, NodeTypes.LocalDatabaseType, Syntax.String );
+				Persist.IResultSet chunkIterator = storageProvider.Search( query );
+				if ( chunkIterator != null )
 				{
-					// Set up the XML document so the data can be easily extracted.
-					XmlDocument document = new XmlDocument();
-					document.LoadXml( new string( results, 0, length ) );
-					localDb = new LocalDatabase( this, new ShallowNode( document.DocumentElement[ XmlTags.ObjectTag ] ) );
-				}
+					char[] results = new char[ 4096 ];
 
-				chunkIterator.Dispose();
+					// Get the first set of results from the query.
+					int length = chunkIterator.GetNext( ref results );
+					if ( length > 0 )
+					{
+						// Set up the XML document so the data can be easily extracted.
+						XmlDocument document = new XmlDocument();
+						document.LoadXml( new string( results, 0, length ) );
+						localDb = new LocalDatabase( this, new ShallowNode( document.DocumentElement[ XmlTags.ObjectTag ] ) );
+					}
+
+					chunkIterator.Dispose();
+				}
+			}
+			else
+			{
+				localDb.Refresh();
 			}
 
 			return localDb;
 		}
 
 		/// <summary>
-		/// Gets the local address book for this Collection Store.
+		/// Gets the Domain object from its ID.
 		/// </summary>
-		/// <returns>A LocalAddressBook object.</returns>
-		public LocalAddressBook GetLocalAddressBook()
+		/// <param name="domainID">Identifier for the domain.</param>
+		/// <returns>Domain object that the specified ID refers to if successful. Otherwise returns a null.</returns>
+		public Domain GetDomain( string domainID )
 		{
 			if ( disposed )
 			{
 				throw new DisposedException( this );
 			}
 
-			LocalAddressBook localAb = null;
+			return localDb.GetNodeByID( domainID.ToLower() ) as Domain;
+		}
 
-			Persist.Query query = new Persist.Query( PropertyTags.LocalAddressBook, SearchOp.Equal, "true", Syntax.Boolean );
-			Persist.IResultSet chunkIterator = storageProvider.Search( query );
-			if ( chunkIterator != null )
+		/// <summary>
+		/// Gets the Domain object that the specified user belongs to.
+		/// </summary>
+		/// <param name="userID">Identifier for the user.</param>
+		/// <returns>Domain object that the specified user belongs to if successful. Otherwise returns a null.</returns>
+		public Domain GetDomainForUser( string userID )
+		{
+			Domain domain = null;
+
+			string domainID = identity.GetDomainFromUserID( localDb, userID.ToLower() );
+			if ( domainID != null )
 			{
-				char[] results = new char[ 4096 ];
-
-				// Get the first set of results from the query.
-				int length = chunkIterator.GetNext( ref results );
-				if ( length > 0 )
-				{
-					// Set up the XML document so the data can be easily extracted.
-					XmlDocument document = new XmlDocument();
-					document.LoadXml( new string( results, 0, length ) );
-					localAb = new LocalAddressBook( this, new ShallowNode( document.DocumentElement[ XmlTags.ObjectTag ] ) );
-				}
-
-				chunkIterator.Dispose();
+				domain = localDb.GetNodeByID( domainID ) as Domain;
 			}
 
-			return localAb;
+			return domain;
 		}
 
 		/// <summary>
@@ -670,30 +749,18 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Allows the current thread to run in the specified user's security context.
+		/// Gets the user ID that the logged on user is known as in the specified domain.
 		/// </summary>
-		/// <param name="userGuid">Identifier for the user.</param>
-		public void ImpersonateUser( string userGuid )
+		/// <param name="domainID">Well known domain identifier.</param>
+		/// <returns>The user ID that the logged on user is known as in the specified domain.</returns>
+		public string GetUserIDFromDomainID( string domainID )
 		{
 			if ( disposed )
 			{
 				throw new DisposedException( this );
 			}
 
-			identityManager.Impersonate( userGuid.ToLower() );
-		}
-
-		/// <summary>
-		/// Reverts the user security context back to the previous owner.
-		/// </summary>
-		public void Revert()
-		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
-			identityManager.Revert();
+			return identity.GetUserIDFromDomain( localDb, domainID.ToLower() );
 		}
 		#endregion
 
@@ -736,7 +803,7 @@ namespace Simias.Storage
 			private IEnumerator collectionEnumerator;
 
 			/// <summary>
-			/// The virtual store of where to enumerate the collection objects.
+			/// Store object from which the collections are being enumerated.
 			/// </summary>
 			private Store store;
 
@@ -749,11 +816,6 @@ namespace Simias.Storage
 			/// Array where the query results are stored.
 			/// </summary>
 			private char[] results = new char[ 4096 ];
-
-			/// <summary>
-			/// Enumerator used to enumerate all IDs that the user is known as.
-			/// </summary>
-			private IEnumerator IDEnumerator;
 			#endregion
 
 			#region Constructor
@@ -764,69 +826,7 @@ namespace Simias.Storage
 			public StoreEnumerator( Store storeObject )
 			{
 				store = storeObject;
-
-				// Get all the identities that he is known as.
-				IDEnumerator = store.CurrentIdentity.GetIdentityAndAliases().GetEnumerator();
 				Reset();
-			}
-			#endregion
-
-			#region Private Methods
-			/// <summary>
-			/// Starts the query of collection objects based on who the current user is.
-			/// </summary>
-			/// <param name="currentUserGuid">The guid that the current user is known as.</param>
-			private void CollectionQuery( string currentUserGuid )
-			{
-				while ( IDEnumerator != null )
-				{
-					// Create the collection query.
-					Persist.Query query = new Persist.Query( PropertyTags.Ace, SearchOp.Begins, currentUserGuid, Syntax.String );
-
-					// Do the search.
-					chunkIterator = store.storageProvider.Search( query );
-					if ( chunkIterator != null )
-					{
-						// Get the first set of results from the query.
-						int length = chunkIterator.GetNext( ref results );
-						if ( length > 0 )
-						{
-							// Set up the XML document that we will use as the granular query to the client.
-							collectionList = new XmlDocument();
-							collectionList.LoadXml( new string( results, 0, length ) );
-							collectionEnumerator = collectionList.DocumentElement.GetEnumerator();
-							break;
-						}
-						else
-						{
-							// The search with the previous ID did not find anything. Look to see if there
-							// is another ID to search with.
-							if ( IDEnumerator.MoveNext() )
-							{
-								currentUserGuid = IDEnumerator.Current as string;
-							}
-							else
-							{
-								IDEnumerator = null;
-								collectionEnumerator = null;
-							}
-						}
-					}
-					else
-					{
-						// The search with the previous ID did not find anything. Look to see if there
-						// is another ID to search with.
-						if ( IDEnumerator.MoveNext() )
-						{
-							currentUserGuid = IDEnumerator.Current as string;
-						}
-						else
-						{
-							IDEnumerator = null;
-							collectionEnumerator = null;
-						}
-					}
-				}
 			}
 			#endregion
 
@@ -848,11 +848,24 @@ namespace Simias.Storage
 					chunkIterator.Dispose();
 				}
 
-				// Start at the beginning of the id list and make sure there are entries in the list.
-				IDEnumerator.Reset();
-				if ( IDEnumerator.MoveNext() )
+				// Create the collection query.
+				Persist.Query query = new Persist.Query( PropertyTags.Types, SearchOp.Equal, NodeTypes.CollectionType, Syntax.String );
+				chunkIterator = store.storageProvider.Search( query );
+				if ( chunkIterator != null )
 				{
-					CollectionQuery( ( string )IDEnumerator.Current );
+					// Get the first set of results from the query.
+					int length = chunkIterator.GetNext( ref results );
+					if ( length > 0 )
+					{
+						// Set up the XML document that we will use as the granular query to the client.
+						collectionList = new XmlDocument();
+						collectionList.LoadXml( new string( results, 0, length ) );
+						collectionEnumerator = collectionList.DocumentElement.GetEnumerator();
+					}
+					else
+					{
+						collectionEnumerator = null;
+					}
 				}
 				else
 				{
@@ -917,31 +930,14 @@ namespace Simias.Storage
 							moreData = collectionEnumerator.MoveNext();
 							if ( !moreData )
 							{
-								// See if there are any more IDs to enumerate.
-								if ( ( IDEnumerator != null ) && IDEnumerator.MoveNext() )
-								{
-									CollectionQuery( ( string )IDEnumerator.Current );
-								}
-								else
-								{
-									// Out of data.
-									collectionEnumerator = null;
-								}
+								// Out of data.
+								collectionEnumerator = null;
 							}
 						}
 						else
 						{
-							// See if there are more IDs to enumerate.
-							if ( ( IDEnumerator != null ) && IDEnumerator.MoveNext() )
-							{
-								CollectionQuery( ( string )IDEnumerator.Current );
-							}
-							else
-							{
-								// Out of data.
-								collectionEnumerator = null;
-								moreData = false;
-							}
+							// Out of data.
+							collectionEnumerator = null;
 						}
 					}
 				}
@@ -1051,9 +1047,6 @@ namespace Simias.Storage
 		/// </summary>
 		~Store()      
 		{
-#if ( DEBUG )
-//			log.Warn( "Object should have been disposed. {0}", allocator );
-#endif
 			Dispose( false );
 		}
 		#endregion

@@ -22,7 +22,6 @@
  ***********************************************************************/
 
 using System;
-using Novell.AddressBook;
 using System.Collections;
 using Simias;
 using Simias.Sync;

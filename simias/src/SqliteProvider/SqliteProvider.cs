@@ -1140,6 +1140,32 @@ namespace Simias.Storage.Provider.Sqlite
 			return (doc);
 		}
 
+		/// <summary>
+		/// Called to get a shallow record.
+		/// </summary>
+		/// <param name="recordId">The record id to get.</param>
+		/// <returns>XmlDocument describing the shallow Record.</returns>
+		public XmlDocument GetShallowRecord(string recordId)
+		{
+			XmlDocument doc = null;
+			
+			string Name;
+			string Type;
+			InternalConnection conn = manager.GetConn();
+			SqliteConnection sqliteDb = conn.sqliteDb;
+			IDbCommand command = conn.command;
+			if (RecordTable.Select(recordId, command, out Name, out Type))
+			{
+				doc = new XmlDocument();
+				XmlElement node, root;
+				root = doc.CreateElement(XmlTags.ObjectListTag);
+				doc.AppendChild(root);
+				node = new Record(Name, recordId, Type).ToXml(doc);			
+				root.AppendChild(node);
+			}
+			return (doc);
+		}
+
 		#endregion
 		
 		#region Query Calls
@@ -1155,6 +1181,7 @@ namespace Simias.Storage.Provider.Sqlite
 			string	op = null;
 			bool isAttribute = false;
 			string attribute = null;
+			bool includeCollection = false;
 
 			string safeValue = query.Value.Replace("'", "''");
 			string safeProperty = query.Property.Replace("'", "''");
@@ -1230,13 +1257,16 @@ namespace Simias.Storage.Provider.Sqlite
 					{
 						// Only look for collection nodes.
 						selectNodes = string.Format(
-							"SELECT DISTINCT {0},{1},{2} FROM {3} WHERE {4} {5} AND {2} LIKE 'Collection%'", 
+							"SELECT DISTINCT {0},{1},{2},{3} FROM {4} WHERE {5} {6}", 
 							RecordTable.Id,
 							RecordTable.Name,
 							RecordTable.Type,
+							RecordTable.CollectionId,
 							RecordTable.TableName,
 							attribute, 
 							op);
+
+						includeCollection = true;
 					}
 				}
 				else
@@ -1261,10 +1291,11 @@ namespace Simias.Storage.Provider.Sqlite
 					else
 					{
 						selectNodes = string.Format(
-							"SELECT {0},{1},{2} FROM {3} WHERE {0} IN (Select {4} from '{5}' WHERE {6} = '{7}' AND {8} {9})",
+							"SELECT {0},{1},{2},{3} FROM {4} WHERE {0} IN (Select {5} from '{6}' WHERE {7} = '{8}' AND {9} {10})",
 							RecordTable.Id,
 							RecordTable.Name,
 							RecordTable.Type,
+							RecordTable.CollectionId,
 							RecordTable.TableName,
 							ValueTable.RecordId,
 							ValueTable.vTableName,
@@ -1272,13 +1303,15 @@ namespace Simias.Storage.Provider.Sqlite
 							safeProperty,
 							ValueTable.Value,
 							op);
+
+						includeCollection = true;
 					}
 				}
 				InternalConnection conn = manager.GetConn();
 				IDbCommand command = conn.command;
 				command.CommandText = selectNodes;
 				IDataReader reader = command.ExecuteReader();
-				resultSet = new SqliteResultSet(reader);
+				resultSet = new SqliteResultSet(reader, includeCollection);
 			}
 			
 			return (resultSet);

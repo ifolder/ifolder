@@ -357,10 +357,12 @@ namespace Novell.iFolder
 
 		static void show_invwizard(object o, EventArgs args)
 		{
+/*
 			InvitationWizard iWiz;
 
 			iWiz = new InvitationWizard();
 			iWiz.ShowAll();
+*/
 		}
 	}
 }

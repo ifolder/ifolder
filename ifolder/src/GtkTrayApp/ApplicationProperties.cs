@@ -38,7 +38,9 @@ namespace Novell.iFolder
 
 	public class ApplicationProperties 
 	{
-		[Glade.Widget] internal Gtk.Dialog ApplicationPropDialog = null;
+		[Glade.Widget] internal Gtk.Dialog		ApplicationPropDialog = null;
+		[Glade.Widget] internal Gtk.Notebook	PropNoteBook;
+
 		[Glade.Widget] internal Gtk.TreeView	iFolderTreeView;
 
 		[Glade.Widget] internal Gtk.Label		UploadLabel;
@@ -48,6 +50,14 @@ namespace Novell.iFolder
 		[Glade.Widget] internal Gtk.CheckButton DisplayCreationCheckButton;
 		[Glade.Widget] internal Gtk.CheckButton AutoSyncCheckButton;
 		[Glade.Widget] internal Gtk.SpinButton  RefreshSpinButton;
+
+		[Glade.Widget] internal Gtk.MenuItem	CreateMenuItem;
+		[Glade.Widget] internal Gtk.MenuItem	ShareMenuItem;
+		[Glade.Widget] internal Gtk.MenuItem	OpenMenuItem;
+		[Glade.Widget] internal Gtk.MenuItem	ConflictMenuItem;
+		[Glade.Widget] internal Gtk.MenuItem	RevertMenuItem;
+		[Glade.Widget] internal Gtk.MenuItem	PropMenuItem;
+		[Glade.Widget] internal Gtk.MenuItem	CloseMenuItem;
 
 		private ListStore			iFolderTreeStore;
 		iFolderManager				manager;
@@ -220,6 +230,13 @@ namespace Novell.iFolder
 			StartupCheckButton.Active = true;;
 			AutoSyncCheckButton.Active = true;
 			RefreshSpinButton.Value = manager.DefaultRefreshInterval;
+
+			CreateMenuItem.Sensitive = true;
+			ShareMenuItem.Sensitive = false;
+			OpenMenuItem.Sensitive = false;
+			ConflictMenuItem.Sensitive = false;
+			RevertMenuItem.Sensitive = false;
+			PropMenuItem.Sensitive = false;;
 		}
 
 		public void on_refreshiFolders(object o, EventArgs args)
@@ -239,11 +256,11 @@ namespace Novell.iFolder
 			{
 				uint nodeCount = 47;
 				ulong bytesToSend = 121823;
-	//			TreeModel tModel;
-	//			TreeIter iter;
+				TreeModel tModel;
+				TreeIter iter;
 
-	//			tSelect.GetSelected(out tModel, out iter);
-	//			iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+				tSelect.GetSelected(out tModel, out iter);
+				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
 
 	//			This appears to hang?
 	//			SyncSize.CalculateSendSize(	ifolder, 
@@ -254,6 +271,27 @@ namespace Novell.iFolder
 	//			SyncFilesLabel.Text = nodeCount.ToString();
 				UploadLabel.Text = "N/A";
 				SyncFilesLabel.Text = "N/A";
+
+				if(	(ifolder != null) && (ifolder.HasCollisions()) )
+				{
+					ConflictMenuItem.Sensitive = true;
+				}
+				else
+				{
+					ConflictMenuItem.Sensitive = false;
+				}
+				ShareMenuItem.Sensitive = true;
+				OpenMenuItem.Sensitive = true;
+				RevertMenuItem.Sensitive = true;
+				PropMenuItem.Sensitive = true;
+			}
+			else
+			{
+				ShareMenuItem.Sensitive = false;
+				OpenMenuItem.Sensitive = false;
+				ConflictMenuItem.Sensitive = false;
+				RevertMenuItem.Sensitive = false;
+				PropMenuItem.Sensitive = false;
 			}
 		}
 
@@ -557,5 +595,110 @@ namespace Novell.iFolder
 			}
 		}
 
+		private void on_create_menu(object o, EventArgs args)
+		{
+			if(PropNoteBook.CurrentPage == 0)
+				on_newiFolder(o, args);
+		}
+
+		private void on_share_menu(object o, EventArgs args)
+		{
+			if(PropNoteBook.CurrentPage == 0)
+				on_shareifolder_context_menu(o, args);
+		}
+
+		private void on_open_menu(object o, EventArgs args)
+		{
+			if(PropNoteBook.CurrentPage == 0)
+				on_openifolder_context_menu(o, args);
+		}
+
+		private void on_resolve_menu(object o, EventArgs args)
+		{
+			if(PropNoteBook.CurrentPage == 0)
+				on_show_conflict_resolver(o, args);
+		}
+
+		private void on_revert_menu(object o, EventArgs args)
+		{
+			if(PropNoteBook.CurrentPage == 0)
+				on_deleteiFolder(o, args);
+		}
+
+		private void on_prop_menu(object o, EventArgs args)
+		{
+			if(PropNoteBook.CurrentPage == 0)
+				on_properties_event(o,args);
+		}
+
+		private void on_refresh_menu(object o, EventArgs args)
+		{
+			if(PropNoteBook.CurrentPage == 0)
+				on_refreshiFolders(o, args);
+		}
+
+		private void on_close_menu(object o, EventArgs args)
+		{
+			ApplicationPropDialog.Respond(Gtk.ResponseType.Close);
+		}
+
+		private void on_help_menu(object o, EventArgs args)
+		{
+		 	Util.ShowHelp("front.html", null);
+		}
+
+		private void on_about_menu(object o, EventArgs args)
+		{
+			Util.ShowAbout();
+		}
+
+		private void on_switch_page(object o, EventArgs args)
+		{
+			if(PropNoteBook.CurrentPage == 0)
+			{
+				CreateMenuItem.Sensitive = true;
+
+				TreeSelection tSelect = iFolderTreeView.Selection;
+				if(tSelect.CountSelectedRows() == 1)
+				{
+					TreeModel tModel;
+					TreeIter iter;
+
+					tSelect.GetSelected(out tModel, out iter);
+					iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+
+					if(	(ifolder != null) && (ifolder.HasCollisions()) )
+					{
+						ConflictMenuItem.Sensitive = true;
+					}
+					else
+					{
+						ConflictMenuItem.Sensitive = false;
+					}
+
+					ShareMenuItem.Sensitive = true;
+					OpenMenuItem.Sensitive = true;
+					RevertMenuItem.Sensitive = true;
+					PropMenuItem.Sensitive = true;
+				}
+				else
+				{
+					ShareMenuItem.Sensitive = false;
+					OpenMenuItem.Sensitive = false;
+					ConflictMenuItem.Sensitive = false;
+					RevertMenuItem.Sensitive = false;
+					PropMenuItem.Sensitive = false;
+				}
+			}
+			else
+			{
+				CreateMenuItem.Sensitive = false;
+				ShareMenuItem.Sensitive = false;
+				OpenMenuItem.Sensitive = false;
+				ConflictMenuItem.Sensitive = false;
+				RevertMenuItem.Sensitive = false;
+				PropMenuItem.Sensitive = false;
+			}
+		}
 	}
 }

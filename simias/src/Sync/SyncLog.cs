@@ -32,7 +32,7 @@ namespace Simias.Sync
 /// <summary> catch-all log for misc sync classes</summary>
 public class Log
 {
-	static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(Log));
+	internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(Log));
 
 	// don't always get line numbers from stack dumps, so force it here
 	static void DumpStack()

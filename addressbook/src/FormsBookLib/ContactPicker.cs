@@ -29,6 +29,7 @@ using System.Windows.Forms;
 using System.IO;
 using Novell.AddressBook;
 using Simias;
+using Simias.Storage;
 
 namespace Novell.iFolder.FormsBookLib
 {
@@ -45,6 +46,7 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
 
+		private Store store = null;
 		private Novell.AddressBook.AddressBook addressBook = null;
 		private Novell.AddressBook.Manager manager = null;
 		private ArrayList contactList;
@@ -445,8 +447,8 @@ namespace Novell.iFolder.FormsBookLib
 			if (result == DialogResult.OK)
 			{
 				// Create address book and add it to the list.
-				Novell.AddressBook.AddressBook addrBook = new Novell.AddressBook.AddressBook(addBook.Name);
-				this.manager.AddAddressBook(addrBook);
+				Novell.AddressBook.AddressBook addrBook = new Novell.AddressBook.AddressBook(store, addBook.Name);
+				addrBook.Commit();
 				ListViewItem item = new ListViewItem(addrBook.Name);
 				item.Tag = addrBook;
 			}
@@ -463,6 +465,12 @@ namespace Novell.iFolder.FormsBookLib
 			try
 			{
 				this.Icon = new Icon(Path.Combine(LoadPath, applicationIcon));
+				Configuration config = new Configuration();
+				store = new Store(config);
+			}
+			catch (SimiasException ex)
+			{
+				ex.LogFatal();
 			}
 			catch (Exception ex)
 			{

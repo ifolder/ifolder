@@ -29,7 +29,7 @@ using System.Windows.Forms;
 using System.IO;
 using Simias;
 using Simias.Sync;
-using Simias.Invite;
+using Simias.POBox;
 
 namespace Novell.iFolder.InvitationWizard
 {
@@ -46,6 +46,8 @@ namespace Novell.iFolder.InvitationWizard
 		private bool init = false;
 		#endregion
 
+		// TODO: this page is only needed for an iFolder collection.
+
 		public SelectiFolderLocationPage()
 		{
 			init = true;
@@ -53,8 +55,7 @@ namespace Novell.iFolder.InvitationWizard
 			// This call is required by the Windows Form Designer.
 			InitializeComponent();
 
-			// TODO: Add any initialization after the InitializeComponent call
-			iFolderLocation.Text = Invitation.DefaultRootPath;
+			iFolderLocation.Text = Subscription.DefaultRootPath;
 			init = false;
 		}
 
@@ -270,7 +271,7 @@ namespace Novell.iFolder.InvitationWizard
 			}
 
 			// Save the path ...
-			((InvitationWizard)(this.Parent)).Invitation.RootPath = iFolderLocation.Text;
+			((InvitationWizard)(this.Parent)).Subscription.CollectionRoot = iFolderLocation.Text;
 
 			return base.ValidatePage (currentIndex);
 		}

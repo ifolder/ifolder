@@ -232,6 +232,7 @@ namespace Simias.Service
 			Install(new ThreadServiceCtl(conf, "Simias Dredge Service", "Simias", "Simias.Sync.DredgeService"), 3);
 			Install(new ProcessServiceCtl(conf, "Simias Multi-Cast DNS Service", "mDnsService.exe"), 4);
 			Install(new ProcessServiceCtl(conf, "Simias Sync Service", "SyncService.exe"));
+			Install(new ProcessServiceCtl(conf, "Simias PO Service", "POService.exe"));
 		}
 
 		/// <summary>

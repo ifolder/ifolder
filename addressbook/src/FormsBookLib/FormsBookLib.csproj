@@ -94,6 +94,11 @@
                     AssemblyName = "Simias"
                     HintPath = "..\..\..\simias\src\Simias.dll\Simias.dll"
                 />
+                <Reference
+                    Name = "Novell.AddressBook"
+                    AssemblyName = "Novell.AddressBook"
+                    HintPath = "..\AddressBook\Novell.AddressBook.dll"
+                />
             </References>
         </Build>
         <Files>

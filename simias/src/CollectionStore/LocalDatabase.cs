@@ -35,26 +35,12 @@ namespace Simias.Storage
 	{
 		#region Properties
 		/// <summary>
-		/// Gets or sets the default WorkGroup for the store.
+		/// Gets or sets the default domain ID.
 		/// </summary>
-		public WorkGroup DefaultWorkGroup
+		public string DefaultDomain
 		{
-			get 
-			{
-				WorkGroup wg = null;
-				Property p = properties.GetSingleProperty( PropertyTags.DefaultWorkGroup );
-				if ( p != null )
-				{
-					wg = StoreReference.GetCollectionByID( p.ToString() ) as WorkGroup;
-				}
-
-				return wg;
-			}
-
-			set
-			{
-				properties.ModifyNodeProperty( PropertyTags.DefaultWorkGroup, value.ID );
-			}
+			get { return properties.GetSingleProperty( PropertyTags.DefaultDomain ).ToString(); }
+			set { properties.ModifyNodeProperty( PropertyTags.DefaultDomain, value ); }
 		}
 		#endregion
 
@@ -63,14 +49,10 @@ namespace Simias.Storage
 		/// Constructor for this object that creates the local database object.
 		/// </summary>
 		/// <param name="storeObject">Store object.</param>
-		/// <param name="workGroup">Default WorkGroup for this store.</param>
-		/// <param name="ownerGuid">Owner identifier of this object.</param>
-		/// <param name="domain">Name of the domain that this address book belongs to.</param>
-		internal LocalDatabase( Store storeObject, WorkGroup workGroup, string ownerGuid, string domain ) :
-			base ( storeObject, "LocalDatabase", Guid.NewGuid().ToString(), NodeTypes.LocalDatabaseType, ownerGuid, domain )
+		internal LocalDatabase( Store storeObject ) :
+			base ( storeObject, "LocalDatabase", Guid.NewGuid().ToString(), NodeTypes.LocalDatabaseType, Storage.Domain.WorkGroupDomainID )
 		{
-			properties.AddNodeProperty( PropertyTags.LocalDatabase, true );
-			properties.AddNodeProperty( PropertyTags.DefaultWorkGroup, workGroup.ID );
+			properties.AddNodeProperty( PropertyTags.DefaultDomain, Storage.Domain.WorkGroupDomainID );
 			Synchronizable = false;
 		}
 

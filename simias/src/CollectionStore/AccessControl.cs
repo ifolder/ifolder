@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Security.Cryptography;
 using System.Xml;
 
 namespace Simias.Storage
@@ -30,7 +31,7 @@ namespace Simias.Storage
 	/// <summary>
 	/// Class that defines the type of access control rights available on a Collection Store.
 	/// </summary>
-	public class Access : ICSEnumerator
+	public class Access
 	{
 		#region Class Members
 		/// <summary>
@@ -65,64 +66,6 @@ namespace Simias.Storage
 		/// Well know identity role for world access.
 		/// </summary>
 		public const string World = "1edcfe93-45e8-11d8-a9c7-444553544200";
-
-		/// <summary>
-		/// Access control list enumerator.
-		/// </summary>
-		private ICSEnumerator aclEnumerator;
-		#endregion
-
-		#region Constructor
-		/// <summary>
-		/// Constructor for Access object.
-		/// </summary>
-		/// <param name="collection">Collection to enumerator rights on.</param>
-		internal Access( Collection collection )
-		{
-			MultiValuedList mvl = collection.Properties.FindValues( PropertyTags.Ace, true );
-			aclEnumerator = ( ICSEnumerator )mvl.GetEnumerator();
-		}
-		#endregion
-
-		#region IEnumerator Members
-		/// <summary>
-		/// Sets the enumerator to its initial position, which is before
-		/// the first element in the collection.
-		/// </summary>
-		public void Reset()
-		{
-			aclEnumerator.Reset();
-		}
-
-		/// <summary>
-		/// Gets the current element in the collection.
-		/// </summary>
-		public object Current
-		{
-			get { return new AccessControlEntry( ( Property )aclEnumerator.Current ); }
-		}
-
-		/// <summary>
-		/// Advances the enumerator to the next element of the collection.
-		/// </summary>
-		/// <returns>
-		/// true if the enumerator was successfully advanced to the next element;
-		/// false if the enumerator has passed the end of the collection.
-		/// </returns>
-		public bool MoveNext()
-		{
-			return aclEnumerator.MoveNext();
-		}
-		#endregion
-
-		#region IDisposable Members
-		/// <summary>
-		/// This is declared here to satisfy the interface requirements, but the MultiValuedEnumerator
-		/// does not use any unmanaged resources that it needs to dispose of.
-		/// </summary>
-		public void Dispose()
-		{
-		}
 		#endregion
 	}
 
@@ -163,6 +106,11 @@ namespace Simias.Storage
 		public Access.Rights Rights
 		{
 			get { return rights; }
+			set 
+			{
+				rights = value;
+				aceProperty.SetPropertyValue( id + ":" + Enum.GetName( typeof( Access.Rights ), rights ) );
+			}
 		}
 		#endregion
 
@@ -218,26 +166,16 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Sets the access control information contained by this object on the specified collection.
+		/// Sets the access control information contained by this object on the specified Member object.
 		/// </summary>
-		/// <param name="collection">Collection to set access control information on.</param>
-		internal void Set( Collection collection )
+		/// <param name="member">Member object to set access control information on.</param>
+		internal void Set( Member member )
 		{
 			// If this property is not already associated with the specified collection, add it.
 			if ( !aceProperty.IsAssociatedProperty )
 			{
-				collection.Properties.AddNodeProperty( aceProperty );
+				member.Properties.AddNodeProperty( aceProperty );
 			}
-		}
-
-		/// <summary>
-		/// Sets the desired access rights on the object.
-		/// </summary>
-		/// <param name="desiredRights">Rights to set on the object.</param>
-		internal void SetRights( Access.Rights desiredRights )
-		{
-			rights = desiredRights;
-			aceProperty.SetPropertyValue( id + ":" + Enum.GetName( typeof( Access.Rights ), rights ) );
 		}
 		#endregion
 	}
@@ -254,25 +192,27 @@ namespace Simias.Storage
 		private Collection collection;
 
 		/// <summary>
-		/// Specifies the identifier of the owner of the collection.
+		/// Container used to keep track of the current identity for this collection.
 		/// </summary>
-		private string ownerID;
+		private Stack impersonationList = new Stack();
+		#endregion
+
+		#region Properties
+		/// <summary>
+		/// Gets the Member object of the currently impersonating user.
+		/// </summary>
+		public Member ImpersonationMember
+		{
+			get { return IsImpersonating ? impersonationList.Peek() as Member : null; }
+		}
 
 		/// <summary>
-		/// List of access control entries at the time the object was constructed.
-		/// This list will be updated whenever the collection access control list is changed.
+		/// Gets whether there is a user being impersonated.
 		/// </summary>
-		private ArrayList aclList = new ArrayList();
-
-		/// <summary>
-		/// Constructor access control entry so it doesn't have to be looked up each time.
-		/// </summary>
-		private AccessControlEntry impersonatingAce;
-
-		/// <summary>
-		/// World ace used to cache the ace entry so it doesn't have to be looked up each time.
-		/// </summary>
-		private AccessControlEntry worldAce;
+		public bool IsImpersonating
+		{
+			get { return ( impersonationList.Count > 0 ) ? true : false; }
+		}
 		#endregion
 
 		#region Constructor
@@ -283,43 +223,10 @@ namespace Simias.Storage
 		public AccessControl( Collection collection )
 		{
 			this.collection = collection;
-			GetAccessInfo();
 		}
 		#endregion
 
 		#region Private Methods
-		/// <summary>
-		/// Finds the access control entry for the specified user ID.
-		/// </summary>
-		/// <param name="userID">User ID to find access control entry for.</param>
-		/// <returns>An AccessControlEntry object that contains the access rights for the specified user.</returns>
-		private AccessControlEntry FindAce( string userID )
-		{
-			AccessControlEntry ace = null;
-
-			// Find the specified access control entry in the acl list.
-			foreach ( AccessControlEntry committedAce in aclList )
-			{
-				if ( committedAce.ID == userID )
-				{
-					ace = committedAce;
-					break;
-				}
-			}
-
-			return ace;
-		}
-
-		/// <summary>
-		/// Returns whether the user has owner rights to the collection.
-		/// </summary>
-		/// <param name="userID">User id to check for owner rights.</param>
-		/// <returns>True if userId has owner rights on the collection, otherwise false.</returns>
-		private bool IsOwner( string userID )
-		{
-			return ( userID == ownerID ) ? true : false;
-		}
-
 		/// <summary>
 		/// Determines if the world role has the desired access rights.
 		/// </summary>
@@ -327,40 +234,23 @@ namespace Simias.Storage
 		/// <returns>True if the world role has the desired access rights, otherwise false.</returns>
 		private bool IsWorldAccessAllowed( Access.Rights desiredRights )
 		{
-			bool allowed = false;
-
-			if ( worldAce == null )
-			{
-				// See if world access is allowed.
-				worldAce = FindAce( Access.World );
-				if ( ( worldAce != null ) && ( worldAce.Rights >= desiredRights ) )
-				{
-					allowed = true;
-				}
-			}
-			else if ( worldAce.Rights >= desiredRights )
-			{
-				allowed = true;
-			}
-
-			return allowed;
+			Member member = GetMember( Access.World );
+			return ( ( member != null ) && ( member.ValidateAce.Rights >= desiredRights ) ) ? true : false;
 		}
 		#endregion
 
-		#region Internal Methods
+		#region Public Methods
 		/// <summary>
 		/// Makes the specified user owner of the collection that this object protects.
 		/// </summary>
-		/// <param name="userID">User ID to make owner.</param>
+		/// <param name="newOwner">Member object that is to become the new owner.</param>
 		/// <param name="oldOwnerRight">The rights that the old owner should be assigned.</param>
-		internal void ChangeCollectionOwner( string userID, Access.Rights oldOwnerRight )
+		/// <returns>An array of Nodes which need to be committed to make this operation permanent.</returns>
+		public Node[] ChangeOwner( Member newOwner, Access.Rights oldOwnerRight )
 		{
-			// Normalize the user ID.
-			string normUserID = userID.ToLower();
-
-			// Find the existing owner ace.
-			AccessControlEntry oldOwnerAce = FindAce( collection.Owner );
-			if ( oldOwnerAce == null )
+			// Find the existing owner.
+			Member oldOwner = collection.Owner;
+			if ( oldOwner == null )
 			{
 				throw new DoesNotExistException( String.Format( "The collection: {0} - ID: {1} does not have an owner.", collection.Name, collection.ID ) );
 			}
@@ -369,210 +259,128 @@ namespace Simias.Storage
 			if ( oldOwnerRight == Access.Rights.Deny )
 			{
 				// Old owner will have no rights to the collection.
-				oldOwnerAce.Delete();
+				collection.Delete( oldOwner );
 			}
 			else
 			{
 				// Set the new right for the old owner.
-				oldOwnerAce.SetRights( oldOwnerRight );
-				oldOwnerAce.Set( collection );
+				oldOwner.Rights = oldOwnerRight;
+				oldOwner.IsOwner = false;
 			}
 
-			// Add an ace for the new owner. Check if there is an existing ace first.
-			AccessControlEntry newOwnerAce = FindAce( normUserID );
-			if ( newOwnerAce != null )
-			{
-				// Just change the rights on the current ace and reset it.
-				newOwnerAce.SetRights( Access.Rights.Admin );
-			}
-			else
-			{
-				// The ace did not exist. Set the new rights on the collection.
-				newOwnerAce = new AccessControlEntry( normUserID, Access.Rights.Admin );
-			}
+			// Just change the rights on the current ace and reset it.
+			newOwner.Rights = Access.Rights.Admin;
+			newOwner.IsOwner = true;
 
-			// Set the new collection owner.
-			newOwnerAce.Set( collection );
-			collection.Properties.ModifyNodeProperty( PropertyTags.Owner, normUserID );
+			Node[] nodeList = { oldOwner, newOwner };
+			return nodeList;
 		}
 
 		/// <summary>
-		/// Gets the current list of access control entries from the collection object and maintains them
-		/// in this object.
+		/// Gets the Member object that represents the currently executing security context.
 		/// </summary>
-		internal void GetAccessInfo()
+		/// <param name="store">Store object.</param>
+		/// <param name="domainID">The domain used to map the current user to.</param>
+		/// <param name="createMember">If true, creates Member object if it does not exist.</param>
+		/// <returns>A Member object that represents the currently executing security context.</returns>
+		public Member GetCurrentMember( Store store, string domainID, bool createMember )
 		{
-			// Clear out the old access information
-			aclList.Clear();
-			impersonatingAce = null;
-			worldAce = null;
-
-			// Get the list of access control entries.
-			ICSList acl = collection.GetAccessControlList();
-			foreach ( AccessControlEntry ace in acl )
+			// See if there is a currently impersonating user.
+			Member member = ImpersonationMember;
+			if ( member == null )
 			{
-				aclList.Add( ace );
+				// This collection is not currently being impersonated, go look up the Member object of 
+				// the current identity in the store.
+				Identity identity = store.CurrentUser;
+				string userID = identity.GetUserIDFromDomain( store.LocalDb, domainID );
+				if ( userID == null )
+				{
+					// The domain mapping has to exist or it means that we never were invited to this domain.
+					throw new DoesNotExistException( String.Format( "There is no identity mapping for identity {0} to domain {1}.", identity.ID, domainID ) );
+				}
+
+				// Check in the local store to see if there is an existing member.
+				member = GetMember( userID );
+				if ( member == null )
+				{
+					// The Member object does not exist, we were specified to create it with full rights.
+					if ( createMember )
+					{
+						// If the userID is equal to the Identity ID, then the domain is the local workgroup
+						// and the public key must be used.
+						if ( userID == identity.ID )
+						{
+							member = new Member( identity.Name, userID, Access.Rights.Admin, identity.PublicKey );
+						}
+						else
+						{
+							member = new Member( identity.Name, userID, Access.Rights.Admin );
+						}
+
+						member.IsOwner = true;
+					}
+					else
+					{
+						throw new DoesNotExistException( String.Format( "The identity {0} - ID: {1} is not a member of collection {2} - ID: {3}.", identity.Name, identity.ID, collection.Name, collection.ID ) );
+					}
+				}
 			}
 
-			// Get the committed owner of the collection.
-			ownerID = collection.Owner;
-		}
-		#endregion
-
-		#region Public Methods
-		/// <summary>
-		/// Makes the specified user owner of the collection that this object protects.
-		/// </summary>
-		/// <param name="userID">User ID to make owner.</param>
-		/// <param name="oldOwnerRight">The rights that the old owner should be assigned.</param>
-		public void ChangeOwner( string userID, Access.Rights oldOwnerRight )
-		{
-			// Only the current owner can change ownership rights.
-			if ( !IsOwnerAccessAllowed() )
-			{
-				throw new AccessException( collection, "Current user cannot modify collection owner's right." );
-			}
-
-			ChangeCollectionOwner( userID, oldOwnerRight );
+			return member;
 		}
 
 		/// <summary>
-		/// Gets the access rights for the specified user on the collection protected by this object.
+		/// Gets the specified Member object.
 		/// </summary>
-		/// <param name="userID">User ID to get rights for.</param>
-		/// <returns>Access rights for the specified user ID.</returns>
-		public Access.Rights GetUserRights( string userID )
+		/// <param name="userID">User ID of the member to find.</param>
+		/// <returns>The Member object represented by the specified user guid.</returns>
+		public Member GetMember( string userID )
 		{
-			// See if there is an ace for this user.
-			AccessControlEntry ace = FindAce( userID.ToLower() );
-			return ( ace != null ) ? ace.Rights : Access.Rights.Deny;
+			ICSList list = collection.Search( PropertyTags.Ace, userID, SearchOp.Begins );
+			ICSEnumerator e = list.GetEnumerator() as ICSEnumerator;
+			Member member = e.MoveNext() ? new Member( collection, e.Current as ShallowNode ) : null;
+			e.Dispose();
+			return member;
+		}
+
+		/// <summary>
+		/// Impersonates the specified Member object.
+		/// </summary>
+		/// <param name="member">Member object to impersonate.</param>
+		public void Impersonate( Member member )
+		{
+			// Push the user onto the impersonation stack.
+			impersonationList.Push( member );
 		}
 
 		/// <summary>
 		/// Determines if the current user has the desired access rights.
 		/// </summary>
+		/// <param name="member">Member object to check access for.</param>
 		/// <param name="desiredRights">Desired rights.</param>
 		/// <returns>True if the user has the desired access rights, otherwise false.</returns>
-		public bool IsAccessAllowed( Access.Rights desiredRights )
+		public bool IsAccessAllowed( Member member, Access.Rights desiredRights )
 		{
 			bool allowed = true;
 
-			// Is this user the database owner?
-			if ( collection.StoreReference.IsImpersonating )
+			// Check if the member has sufficient rights.
+			if ( ( member.UserID != collection.ID ) && ( member.ValidateAce.Rights < desiredRights ) )
 			{
-				string currentID = collection.DomainIdentity;
-				if ( currentID != ownerID )
-				{
-					// Check if the current identity's ace has already been found.
-					if ( impersonatingAce == null || ( currentID != impersonatingAce.ID ) )
-					{
-						// Check the rights on the owner ace.
-						impersonatingAce = FindAce( currentID );
-						if ( ( impersonatingAce == null ) || ( impersonatingAce.Rights < desiredRights ) )
-						{
-							allowed = IsWorldAccessAllowed( desiredRights );
-						}
-					}
-					else if ( impersonatingAce.Rights < desiredRights )
-					{
-						allowed = IsWorldAccessAllowed( desiredRights );
-					}
-				}
+				allowed = IsWorldAccessAllowed( desiredRights );
 			}
 
 			return allowed;
 		}
 
 		/// <summary>
-		/// Determines if the current user has owner rights to this collection.  This means that the
-		/// current user must be either the database owner or the collection owner.
+		/// Reverts back to the previous impersonating identity.
 		/// </summary>
-		/// <returns>True if the current user is a database owner or collection owner. Otherwise false is returned.</returns>
-		public bool IsOwnerAccessAllowed()
+		public void Revert()
 		{
-			bool allowed = true;
-
-			// Is this user the collection owner?
-			if ( collection.StoreReference.IsImpersonating )
+			// Don't ever pop an empty stack.
+			if ( impersonationList.Count > 0 )
 			{
-				allowed = IsOwner( collection.DomainIdentity );
-			}
-
-			return allowed;
-		}
-
-		/// <summary>
-		/// Removes all access rights on the collection for the specified user.
-		/// </summary>
-		/// <param name="userID">User ID to remove rights for.</param>
-		public void RemoveUserRights( string userID )
-		{
-			if ( !IsAccessAllowed( Access.Rights.Admin ) )
-			{
-				throw new AccessException( collection, Access.Rights.Admin );
-			}
-
-			// Don't allow the owner's access to be removed.
-			if ( IsOwner( userID ) )
-			{
-				throw new AccessException( collection, "Cannot remove owner access rights" );
-			}
-
-			// Find the user's ace and remove it.
-			AccessControlEntry ace = FindAce( userID.ToLower() );
-			if ( ace != null )
-			{
-				ace.Delete();
-			}
-		}
-
-		/// <summary>
-		/// Sets the specified access rights for the specified user on the collection protected by this object.
-		/// </summary>
-		/// <param name="userID">User ID to set rights for.</param>
-		/// <param name="rights">Access rights to set for the user.</param>
-		public void SetUserRights( string userID, Access.Rights rights )
-		{
-			// See if current user has rights to change access control list.
-			if ( !IsAccessAllowed( Access.Rights.Admin ) )
-			{
-				throw new AccessException( collection, Access.Rights.Admin );
-			}
-
-			// Don't allow the collection owner's rights to be modified.
-			if ( IsOwner( userID ) )
-			{
-				throw new AccessException( collection, "Current user cannot modify collection owner's right." );
-			}
-
-			// Normalize the user ID
-			string normUserID = userID.ToLower();
-
-			// Check if there is an existing ace for the specified user.
-			AccessControlEntry ace = FindAce( normUserID );
-			if ( ace != null )
-			{
-				if ( rights == Access.Rights.Deny )
-				{
-					// Remove the current ace off the collection.
-					ace.Delete();
-				}
-				else
-				{
-					// Just change the rights on the current ace and reset it.
-					ace.SetRights( rights );
-					ace.Set( collection );
-				}
-			}
-			else
-			{
-				// The ace did not exist.  If this is a deny, we don't have to do anything.
-				if ( rights != Access.Rights.Deny )
-				{
-					// Set the new rights on the collection.
-					ace = new AccessControlEntry( normUserID, rights );
-					ace.Set( collection );
-				}
+				impersonationList.Pop();
 			}
 		}
 		#endregion

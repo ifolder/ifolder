@@ -53,7 +53,6 @@ public class FileInviter
 	{
 		config = new Configuration(storeLocation.LocalPath);
         store = new Store(config);
-		store.Revert();
 	}
 
 	// TODO: is the following path comparison correct? should it be case insensitive?
@@ -79,6 +78,8 @@ public class FileInviter
 		 * of the same docRoot or collectionId are not allowed should be
 		 * done at a lower level
 		 */
+
+		/* TODO: update
 		Invitation invitation = new Invitation(fileName);
 		docRootParent = Path.GetFullPath(docRootParent);
 		invitation.RootPath = docRootParent;
@@ -101,12 +102,14 @@ public class FileInviter
 		}
 
 		// add the invitation information to the store collection
+		
 		SyncCollection sc = new SyncCollection(store, invitation);
 		sc.Commit();
 		sc.Commit(sc);
 
 		DirNode dn = sc.GetRootDirectory();
 		Log.Spew("Created new client collection {0} {1} {2}", sc.Name, sc.ID, dn == null? "<null>": dn.GetFullPath(sc));
+		*/
 
 		return true;
 	}
@@ -124,7 +127,7 @@ public class FileInviter
 		{
 			DirectoryInfo di = new DirectoryInfo(docRoot.LocalPath);
 			di.Create();
-			c = new Collection(store, di.Name);
+			c = new Collection(store, di.Name, store.DefaultDomain);
 			DirNode dn = new DirNode(c, docRoot.LocalPath);
 			c.Commit(c);
 			c.Commit(dn);
@@ -136,9 +139,9 @@ public class FileInviter
 			Log.Spew("Created new master collection for {0}, id {1}, {2}:{3}",
 					docRoot.LocalPath, c.ID, sc.MasterUrl.Host, sc.MasterUrl.Port);
 		}
-		Invitation invitation = sc.CreateInvitation(user == null? store.CurrentUserGuid: user);
-		invitation.Domain = store.LocalDomain;
-		invitation.Save(fileName);
+		//Invitation invitation = sc.CreateInvitation(user == null? store.CurrentUserGuid: user);
+		//invitation.Domain = store.LocalDomain;
+		//invitation.Save(fileName);
 		return true;
 	}
 }
@@ -164,8 +167,8 @@ public class CmdService: MarshalByRefObject
 		try
 		{
 			Store store = new Store(new Configuration(storeLocation.LocalPath));
-			store.Revert();
 			Collection c = store.GetCollectionByID(collectionId);
+			c.Impersonate(new Member("Root", c.ID, Access.Rights.Admin));
 			//Log.Spew("Start server dredge");
 			new Dredger(c, true);
 			//Log.Spew("End server dredge");
@@ -275,13 +278,13 @@ public class CmdClient
 	public static bool RunOnce(Uri storeLocation, Uri docRoot, string serverStoreLocation)
 	{
 		Store store = new Store(new Configuration(storeLocation == null? null: storeLocation.LocalPath));
-		store.Revert();
 		Collection c = FileInviter.FindCollection(store, docRoot);
 		if (c == null)
 		{
 			Log.Error("could not find collection for folder: {0}", storeLocation.LocalPath);
 			return false;
 		}
+		c.Impersonate(new Member("Root", c.ID, Access.Rights.Admin));
 
 		//Log.Spew("Start client dredge");
 		new Dredger(c, false);
@@ -290,8 +293,8 @@ public class CmdClient
 		if (serverStoreLocation != null)
 		{
 			Store servStore = new Store(new Configuration(serverStoreLocation));
-			servStore.Revert();
 			Collection servCollection = servStore.GetCollectionByID(csc.ID);
+			servCollection.Impersonate(new Member("Root", servCollection.ID, Access.Rights.Admin));
 			//Log.Spew("server collection {0}", servCollection == null? "null": servCollection.ID);
 			//Log.Spew("Start internal server dredge");
 			new Dredger(servCollection, true);

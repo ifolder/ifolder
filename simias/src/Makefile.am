@@ -1,4 +1,4 @@
-SUBDIRS = Simias.dll Events mDnsService SyncManager AddressBookCmd
+SUBDIRS = Simias.dll Events POBox mDnsService SyncService
 
 DIST_SUBDIRS = $(SUBDIRS)
 

@@ -167,12 +167,12 @@ namespace Novell.AddressBook.UI.gtk
 						BookTreeStore.AppendValues(ab);
 					}
 
-					curAddrBook = abMan.OpenDefaultAddressBook();
+//					curAddrBook = abMan.OpenDefaultAddressBook();
 
-					foreach(Contact c in curAddrBook)
-					{
-						ContactTreeStore.AppendValues(c);
-					}
+//					foreach(Contact c in curAddrBook)
+//					{
+//						ContactTreeStore.AppendValues(c);
+//					}
 				}
 				catch(Exception e)
 				{
@@ -204,10 +204,7 @@ namespace Novell.AddressBook.UI.gtk
 				Gtk.TreeIter iter)
 		{
 			AddressBook book = (AddressBook) BookTreeStore.GetValue(iter,0);
-			if(book.Default)
-				((CellRendererText) cell).Text = "Default";
-			else
-				((CellRendererText) cell).Text = book.Name;
+			((CellRendererText) cell).Text = book.Name;
 		}
 
 		private void BookCellPixbufDataFunc (Gtk.TreeViewColumn tree_column,
@@ -341,9 +338,7 @@ namespace Novell.AddressBook.UI.gtk
 
 			if((rc == -5) && (abMan != null))
 			{
-				AddressBook ab = new AddressBook(be.Name);
-
-				abMan.AddAddressBook(ab);
+				AddressBook ab = abMan.CreateAddressBook(be.Name);
 				ab.Commit();
 				BookTreeStore.AppendValues(ab);
 			}
@@ -471,7 +466,7 @@ namespace Novell.AddressBook.UI.gtk
 
 		public void DeleteSelectedBooks()
 		{	
-			TreeSelection tSelect = ContactTreeView.Selection;
+			TreeSelection tSelect = BookTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
 			{
 				TreeModel tModel;
@@ -480,31 +475,18 @@ namespace Novell.AddressBook.UI.gtk
 				tSelect.GetSelected(out tModel, out iter);
 
 				AddressBook ab = (AddressBook) tModel.GetValue(iter,0);
-				if(ab.Default)
-				{
-					MessageDialog med = new MessageDialog(cbWindow,
-							DialogFlags.DestroyWithParent | DialogFlags.Modal,
-							MessageType.Error,
-							ButtonsType.Close,
-							"Deleting the default address book ain't right and we ain't gonna let you do it.");
-					med.Title = "This ain't right";
-					med.Run();
-					med.Hide();
-					return;
-				}
-
-				BookTreeStore.Remove(ref iter);
 
 				try
 				{
 					ab.Delete();
+					ab.Commit();
+					BookTreeStore.Remove(ref iter);
+					ContactTreeStore.Clear();
 				}
 				catch(ApplicationException e)
 				{
 					Console.WriteLine(e);
 				}
-
-				ContactTreeStore.Clear();
 			}
 		}
 
@@ -525,29 +507,18 @@ namespace Novell.AddressBook.UI.gtk
 									ButtonsType.YesNo,
 									"Do you want to delete the selected Address Books?");
 
-							dialog.Response += new ResponseHandler(
-									DeleteBookResponse);
 							dialog.Title = "Delete Books";
-							dialog.Show();
+							dialog.TransientFor = cbWindow;
+							int rc = dialog.Run();
+							dialog.Hide();
+							if(rc == (int)ResponseType.Yes)
+							{
+								DeleteSelectedBooks();
+							}
 						}
 						break;					
 					}
 			}
-		}
-
-		public void DeleteBookResponse(object sender, ResponseArgs args)
-		{
-			MessageDialog dialog = (MessageDialog) sender;
-
-			switch((ResponseType)args.ResponseId)
-			{
-				case ResponseType.Yes:
-					DeleteSelectedBooks();
-					break;
-				default:
-					break;
-			}
-			dialog.Destroy();
 		}
 
 		private void on_contact_selection_changed(object o, EventArgs args)
