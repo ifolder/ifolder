@@ -19,7 +19,7 @@ BookLib_LIBPATH = $(SIMIAS_INSTALL_PATH)/lib
 
 DATA_FILES = vcardimport.png vcardexport.png book.png briefcase.png contact.png contact_me.png cellphone.png connect_to_url-16.xpm galeon.png globe.png house.png ico-mail.png blankhead.png contact-browser.glade contact-picker.glade name-editor.glade contact-editor.glade
 
-EXTRA_DIST = $(Book_CSFILES) $(BookLib_CSFILES) $(Book_RESOURCES) $(BookLib_RESOURCES) $(DATA_FILES) $(INSTALL_FILES)
+EXTRA_DIST = $(Book_CSFILES) $(BookLib_CSFILES) $(Book_RESOURCES) $(BookLib_RESOURCES) $(DATA_FILES)
 
 all: ContactBrowser.exe Novell.AddressBook.UI.gtk.dll
 
