@@ -317,7 +317,7 @@ namespace Novell.iFolder
 			if(de != null)
 			{
 				PropertiesDialog pd = new PropertiesDialog();
-				pd.iFolderPath = de.FullName;
+				pd.iFolder = iFolderPath = de.FullName;
 				pd.TransientFor = nifWindow; 
 				pd.ActiveTag = 1;
 				pd.Run();

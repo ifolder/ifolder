@@ -451,6 +451,7 @@ src/install-ifolder-to-gac
 src/iFolder/Makefile
 src/GtkTrayApp/Makefile
 src/GtkTrayApp/ifolder
+src/GtkTrayApp/ifolderbrowser
 src/GtkTrayApp/invitationwizard
 src/GtkTrayApp/collectionbrowser
 src/GtkTrayApp/setup-autostart
