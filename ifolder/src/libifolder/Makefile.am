@@ -17,7 +17,11 @@ libifolderclient_la_SOURCES = \
  	envC.c iFolderClientLib.c stdsoap2.c ifolder.c ifolder.h
 
 libifolderclient_la_CFLAGS = \
+	$(SIMIAS_CLIENT_C_CFLAGS) \
 	-DWITH_NONAMESPACES
+
+libifolderclient_la_LDFLAGS = \
+	$(SIMIAS_CLIENT_C_LIBS)
 
 envC.c: $(srcdir)/stdsoap2.c
 	> $(srcdir)/env.h
@@ -34,19 +38,19 @@ $(srcdir)/iFolderClientLib.c: $(srcdir)/iFolderClient.h
 	$(GSOAP_PATH)/soapcpp2 -c -n -piFolder $(srcdir)/iFolderClient.h
 
 install-exec-local:
-	$(mkinstalldirs) $(DESTDIR)$(includedir)
-	$(INSTALL_PROGRAM) iFolderStub.h $(DESTDIR)$(includedir)/ifolder
-	$(INSTALL_PROGRAM) iFolder.nsmap $(DESTDIR)$(includedir)/ifolder
-	$(INSTALL_PROGRAM) stdsoap2.h $(DESTDIR)$(includedir)/ifolder
-	$(INSTALL_PROGRAM) iFolderH.h $(DESTDIR)$(includedir)/ifolder
-	$(INSTALL_PROGRAM) ifolder.h $(DESTDIR)$(includedir)/ifolder
+	$(mkinstalldirs) $(DESTDIR)$(includedir)/ifolder3
+	$(INSTALL_PROGRAM) iFolderStub.h $(DESTDIR)$(includedir)/ifolder3
+	$(INSTALL_PROGRAM) iFolder.nsmap $(DESTDIR)$(includedir)/ifolder3
+	$(INSTALL_PROGRAM) stdsoap2.h $(DESTDIR)$(includedir)/ifolder3
+	$(INSTALL_PROGRAM) iFolderH.h $(DESTDIR)$(includedir)/ifolder3
+	$(INSTALL_PROGRAM) ifolder.h $(DESTDIR)$(includedir)/ifolder3
 
 uninstall-local:
-	rm -f $(DESTDIR)$(includedir)/ifolder/iFolderStub.h
-	rm -f $(DESTDIR)$(includedir)/ifolder/iFolder.nsmap
-	rm -f $(DESTDIR)$(includedir)/ifolder/stdsoap2.h
-	rm -f $(DESTDIR)$(includedir)/ifolder/iFolderH.h
-	rm -f $(DESTDIR)$(includedir)/ifolder/ifolder.h
+	rm -f $(DESTDIR)$(includedir)/ifolder3/iFolderStub.h
+	rm -f $(DESTDIR)$(includedir)/ifolder3/iFolder.nsmap
+	rm -f $(DESTDIR)$(includedir)/ifolder3/stdsoap2.h
+	rm -f $(DESTDIR)$(includedir)/ifolder3/iFolderH.h
+	rm -f $(DESTDIR)$(includedir)/ifolder3/ifolder.h
 
 clean-local:
 	rm -f stdsoap2.* *.xml iFolder* env* soap*
