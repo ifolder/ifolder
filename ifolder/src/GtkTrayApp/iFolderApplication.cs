@@ -125,12 +125,12 @@ namespace Novell.iFolder
 			{
 				try
 				{
-//					Simias.Client.Manager.Start();
+					Simias.Client.Manager.Start();
 
 					ifws = new iFolderWebService();
-//					ifws.Url = 
-//						Simias.Client.Manager.LocalServiceUrl.ToString() +
-//							"/iFolder.asmx";
+					ifws.Url = 
+						Simias.Client.Manager.LocalServiceUrl.ToString() +
+							"/iFolder.asmx";
 
 					ifws.Ping();
 	
@@ -164,7 +164,7 @@ namespace Novell.iFolder
 			{
 				if(EventBroker != null)
 					EventBroker.Deregister();
-//				Simias.Client.Manager.Stop();
+				Simias.Client.Manager.Stop();
 			}
 			catch(Exception e)
 			{
@@ -180,13 +180,16 @@ namespace Novell.iFolder
 
 		private void OniFolderAddedEvent(object o, iFolderAddedEventArgs args)
 		{
-			NotifyWindow notifyWin = new NotifyWindow(
+			if(args.iFolder.IsSubscription)
+			{
+				NotifyWindow notifyWin = new NotifyWindow(
 						tIcon, 
 						string.Format(Util.GS("New iFolder \"{0}\""), 
 													args.iFolder.Name),
-						string.Format(Util.GS("This iFolder is owned by {0} and is available to sync on this computer"), args.iFolder.Owner),
-						Gtk.MessageType.Info, 5000);
-			notifyWin.ShowAll();
+						Util.GS("This iFolder is available to sync on this computer"),
+						Gtk.MessageType.Info, 10000);
+				notifyWin.ShowAll();
+			}
 
 			if(ifwin != null)
 				ifwin.iFolderCreated(args.iFolder);
@@ -206,7 +209,7 @@ namespace Novell.iFolder
 				NotifyWindow notifyWin = new NotifyWindow(
 						tIcon, Util.GS("Action Required"),
 						string.Format(Util.GS("A collision has been detected in iFolder \"{0}\""), args.iFolder.Name),
-						Gtk.MessageType.Info, 5000);
+						Gtk.MessageType.Info, 10000);
 				notifyWin.ShowAll();
 
 				if(ifwin != null)
@@ -222,23 +225,21 @@ namespace Novell.iFolder
 				ifwin.iFolderDeleted(args.iFolderID);
 		}
 
-/*
-		private void OnUserCreatedEvent(object o,
-									iFolderUserCreatedEventArgs args)
-		{
-						
-				NotifyWindow notifyWin = new NotifyWindow(
-					tIcon, Util.GS("New iFolder User"), 
-					string.Format(Util.GS("{0} has just joined iFolder {1}"), newuser.Name, ifolder.Name),
-					Gtk.MessageType.Info, 5000);
 
-				notifyWin.ShowAll();
+		private void OniFolderUserAddedEvent(object o,
+									iFolderUserAddedEventArgs args)
+		{
+			NotifyWindow notifyWin = new NotifyWindow(
+				tIcon, Util.GS("New iFolder User"), 
+				string.Format(Util.GS("{0} has joined an iFolder"), args.iFolderUser.Name),
+				Gtk.MessageType.Info, 10000);
+
+			notifyWin.ShowAll();
 							
-				// TODO: update any open windows?
-//				if(ifwin != null)
-//				ifwin.NewiFolderUser(ifolder, newuser);
+			// TODO: update any open windows?
+//			if(ifwin != null)
+//			ifwin.NewiFolderUser(ifolder, newuser);
 		}
-*/
 
 
 		// ThreadNotify Method that will react to a fired event
@@ -265,6 +266,9 @@ namespace Novell.iFolder
 						EventBroker.iFolderDeleted +=
 							new iFolderDeletedEventHandler(
 												OniFolderDeletedEvent);
+						EventBroker.iFolderUserAdded +=
+							new iFolderUserAddedEventHandler(
+												OniFolderUserAddedEvent);
 					}
 
 					gAppIcon.Pixbuf = RunningPixbuf;
