@@ -56,19 +56,14 @@ namespace Simias
 				basePath = fixupPath(basePath);
 			}
 
-			BaseConfigPath = basePath;
+			this.basePath = basePath;
 		}
 			
-		private string BaseConfigPath
+		public string BasePath
 		{
 			get
 			{
 				return basePath;
-			}
-
-			set
-			{
-				basePath = value;
 			}
 		}
 
@@ -76,7 +71,7 @@ namespace Simias
 		{
 			get
 			{
-				return Path.Combine(BaseConfigPath, DefaultFileName);
+				return Path.Combine(BasePath, DefaultFileName);
 			}
 		}
 
