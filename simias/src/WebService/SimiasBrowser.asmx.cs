@@ -71,7 +71,7 @@ namespace Simias.Web
 		/// Returns a list of collections in the store.
 		/// </summary>
 		/// <returns>An array of BrowserNode objects.</returns>
-		[ WebMethod ]
+		[ WebMethod(EnableSession = true) ]
 		[ SoapDocumentMethod ]
 		public BrowserNode[] EnumerateCollections()
 		{
@@ -91,7 +91,7 @@ namespace Simias.Web
 		/// </summary>
 		/// <param name="collectionID"></param>
 		/// <returns></returns>
-		[ WebMethod ]
+		[ WebMethod(EnableSession = true) ]
 		[ SoapDocumentMethod ]
 		public BrowserNode[] EnumerateNodes( string collectionID )
 		{
@@ -115,7 +115,7 @@ namespace Simias.Web
 		/// </summary>
 		/// <param name="collectionID"></param>
 		/// <returns></returns>
-		[ WebMethod ]
+		[ WebMethod(EnableSession = true) ]
 		[ SoapDocumentMethod ]
 		public BrowserNode GetCollectionByID( string collectionID )
 		{
@@ -137,7 +137,7 @@ namespace Simias.Web
 		/// <param name="collectionID"></param>
 		/// <param name="nodeID"></param>
 		/// <returns></returns>
-		[ WebMethod ]
+		[ WebMethod(EnableSession = true) ]
 		[ SoapDocumentMethod ]
 		public BrowserNode GetNodeByID( string collectionID, string nodeID )
 		{
@@ -167,7 +167,7 @@ namespace Simias.Web
 		/// <param name="oldPropertyValue"></param>
 		/// <param name="newPropertyValue"></param>
 		/// <param name="propertyFlags"></param>
-		[ WebMethod ]
+		[ WebMethod(EnableSession = true) ]
 		[ SoapDocumentMethod ]
 		public void ModifyProperty( string collectionID, string nodeID, string propertyName, string propertyType, string oldPropertyValue, string newPropertyValue, uint propertyFlags )
 		{
@@ -203,7 +203,7 @@ namespace Simias.Web
 		/// <param name="propertyType"></param>
 		/// <param name="propertyValue"></param>
 		/// <param name="propertyFlags"></param>
-		[ WebMethod ]
+		[ WebMethod(EnableSession = true) ]
 		[ SoapDocumentMethod ]
 		public void AddProperty( string collectionID, string nodeID, string propertyName, string propertyType, string propertyValue, uint propertyFlags )
 		{
@@ -232,7 +232,7 @@ namespace Simias.Web
 		/// <param name="propertyName"></param>
 		/// <param name="propertyType"></param>
 		/// <param name="propertyValue"></param>
-		[ WebMethod ]
+		[ WebMethod(EnableSession = true) ]
 		[ SoapDocumentMethod ]
 		public void DeleteProperty( string collectionID, string nodeID, string propertyName, string propertyType, string propertyValue )
 		{
@@ -261,7 +261,7 @@ namespace Simias.Web
 		/// Deletes the specified collection.
 		/// </summary>
 		/// <param name="collectionID"></param>
-		[ WebMethod ]
+		[ WebMethod(EnableSession = true) ]
 		[ SoapDocumentMethod ]
 		public void DeleteCollection( string collectionID )
 		{
@@ -278,7 +278,7 @@ namespace Simias.Web
 		/// </summary>
 		/// <param name="collectionID"></param>
 		/// <param name="nodeID"></param>
-		[ WebMethod ]
+		[ WebMethod(EnableSession = true) ]
 		[ SoapDocumentMethod ]
 		public void DeleteNode( string collectionID, string nodeID )
 		{
