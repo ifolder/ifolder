@@ -36,8 +36,11 @@ namespace Novell.iFolder
 			this.BorderWidth = 6;
 			this.Resizable = true;
 
+
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder-crash.png"));
-			Image crashImage = new Image(this.Icon);
+			
+			Image crashImage = 
+				new Image(new Gdk.PixbufAnimation(Util.ImagesPath("ifolder-crash.gif")));
 
 			VBox vbox = new VBox();
 			vbox.BorderWidth = 6;
