@@ -60,6 +60,10 @@ namespace Simias.Web
 	/// <summary>
 	/// Summary description for Service1.
 	/// </summary>
+	[WebService(
+		 Namespace="http://novell.com/simias/browser",
+		 Name="Browser Service",
+		 Description="Web Service providing access to the simias database.")]
 	public class Browser : System.Web.Services.WebService
 	{
 		#region WebMethods
