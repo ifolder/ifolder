@@ -682,6 +682,20 @@ namespace Simias.Storage
 						commitDocument.DocumentElement.AppendChild( xmlNode );
 						break;
 					}
+
+					case PropertyList.PropertyListState.Restore:
+					{
+						// Validate this Collection object.
+						ValidateNodeForCommit( node );
+
+						// Increment the local incarnation number for the object.
+						IncrementLocalIncarnation( node );
+
+						// Copy the XML node over to the modify document.
+						XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
+						commitDocument.DocumentElement.AppendChild( xmlNode );
+						break;
+					}
 				}
 			}
 
@@ -747,6 +761,7 @@ namespace Simias.Storage
 						}
 
 						case PropertyList.PropertyListState.Import:
+						case PropertyList.PropertyListState.Restore:
 						{
 							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, ( node.DiskNode != null ) ? EventType.NodeChanged : EventType.NodeCreated, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
 							args.LocalOnly = node.LocalChanges;
@@ -902,11 +917,12 @@ namespace Simias.Storage
 
 						case PropertyList.PropertyListState.Update:
 						case PropertyList.PropertyListState.Import:
+						case PropertyList.PropertyListState.Restore:
 						{
 							long oldLength = 0;
 
 							// Get the current file size from the same Node off the disk.
-							BaseFileNode diskNode = GetNodeByID( node.ID ) as BaseFileNode;
+							BaseFileNode diskNode = ( node.DiskNode != null ) ? node.DiskNode as BaseFileNode : GetNodeByID( node.ID ) as BaseFileNode;
 							if ( diskNode != null )
 							{
 								// Save this so it doesn't have to be looked up again by the commit code.
@@ -1797,6 +1813,30 @@ namespace Simias.Storage
 			}
 
 			return resNode;
+		}
+
+		/// <summary>
+		/// Readies a Node object for restoration from backup into this Collection.
+		/// </summary>
+		/// <param name="node">Node to import into this Collection.</param>
+		public void RestoreNode( Node node )
+		{
+			ulong masterIncarnation = 0;
+			ulong localIncarnation = 0;
+
+			// Set the current state of the node indicating that it is being restored.
+			node.Properties.State = PropertyList.PropertyListState.Restore;
+
+			// See if there is an existing node so the incarnation values can be set properly.
+			node.DiskNode = GetNodeByID( node.ID );
+			if ( node.DiskNode != null )
+			{
+				masterIncarnation = node.DiskNode.MasterIncarnation;
+				localIncarnation = node.DiskNode.LocalIncarnation;
+			}
+
+			node.Properties.ModifyNodeProperty( PropertyTags.MasterIncarnation, masterIncarnation );
+			node.Properties.ModifyNodeProperty( PropertyTags.LocalIncarnation, localIncarnation );
 		}
 
 		/// <summary>

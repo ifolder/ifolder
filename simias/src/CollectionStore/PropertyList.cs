@@ -82,8 +82,13 @@ namespace Simias.Storage
 			/// Add the PropertyList object to the data store, but do not
 			/// change the local incarnation value.
 			/// </summary>
-			Proxy
-	};
+			Proxy,
+
+			/// <summary>
+			/// Used by the backup process to restore nodes to the store.
+			/// </summary>
+			Restore
+		};
 
 		/// <summary>
 		/// DOM document containing the property list for this Collection Store object.

@@ -398,6 +398,36 @@ namespace Simias
 				return KeyExists(section, key);
 			}
 		}
+
+		/// <summary>
+		/// Deletes the specified key from the default section.
+		/// </summary>
+		/// <param name="key">Key to delete.</param>
+		public void DeleteKey(string key)
+		{
+			DeleteKey(DefaultSection, key);
+		}
+
+		/// <summary>
+		/// Deletes the specified key from the specified section.
+		/// </summary>
+		/// <param name="section">Section to delete key from.</param>
+		/// <param name="key">Key to delete.</param>
+		public void DeleteKey(string section, string key)
+		{
+			lock(typeof(Configuration))
+			{
+				// Check if the key exists.
+				if (KeyExists(section, key))
+				{
+					bool changed = false;
+					XmlElement sectionElement = GetSection(section, ref changed);
+					XmlElement keyElement = GetKey(section, key, ref changed);
+					sectionElement.RemoveChild(keyElement);
+					UpdateConfigFile();
+				}
+			}
+		}
 		#endregion
 	}
 }
