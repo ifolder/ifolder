@@ -101,7 +101,7 @@ namespace Novell.iFolder
 		private void SetupDialog()
 		{
 			this.Title = Util.GS("iFolder Login");
-			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
+			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
 			this.HasSeparator = false;
 //			this.BorderWidth = 10;
 			this.SetDefaultSize (450, 100);

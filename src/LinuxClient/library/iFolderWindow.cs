@@ -213,7 +213,7 @@ namespace Novell.iFolder
 		private void CreateWidgets()
 		{
 			this.SetDefaultSize (600, 480);
-			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
+			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
 			this.WindowPosition = Gtk.WindowPosition.Center;
 
 			VBox vbox = new VBox (false, 0);
@@ -339,7 +339,7 @@ namespace Novell.iFolder
 
 			NewMenuItem = new ImageMenuItem (Util.GS("C_reate"));
 			NewMenuItem.Image = new Image(
-					new Gdk.Pixbuf(Util.ImagesPath("ifolder.png")));
+					new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png")));
 			iFolderMenu.Append(NewMenuItem);
 			NewMenuItem.AddAccelerator("activate", agrp,
 				new AccelKey(Gdk.Key.N, Gdk.ModifierType.ControlMask,
@@ -525,10 +525,10 @@ namespace Novell.iFolder
 
 
 			ServeriFolderPixBuf = 
-				new Gdk.Pixbuf(Util.ImagesPath("serverifolder.png"));
-			iFolderPixBuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
+				new Gdk.Pixbuf(Util.ImagesPath("serverifolder24.png"));
+			iFolderPixBuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
 			ConflictPixBuf = 
-				new Gdk.Pixbuf(Util.ImagesPath("ifolder-collision.png"));
+				new Gdk.Pixbuf(Util.ImagesPath("conflict24.png"));
 		
 			return vbox;
 		}
@@ -668,7 +668,7 @@ namespace Novell.iFolder
 						(iFolderHolder) tModel.GetValue(iter, 0);
 
 				if(	(ifHolder.iFolder != null) && 
-									(ifHolder.iFolder.HasConflicts) )
+									(!ifHolder.iFolder.HasConflicts) )
 				{
 					ConflictMenuItem.Sensitive = true;
 					ConflictButton.Sensitive = true;
