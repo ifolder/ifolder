@@ -35,7 +35,11 @@ extern SimiasEventClient simiasEventClient;
 // Functions
 void SimiasEventInitialize(void);
 int SimiasEventStateCallBack(SEC_STATE_EVENT state_event, const char *message, void *data);
-int SimiasEventNodeCreated(SimiasNodeEvent *event, void *data);
-int SimiasEventNodeDeleted(SimiasNodeEvent *event, void *data);
-int SimiasEventNodeChanged(SimiasNodeEvent *event, void *data);
+int SimiasEventNodeCreated(SimiasNodeEvent *nodeEvent, void *data);
+int SimiasEventNodeDeleted(SimiasNodeEvent *nodeEvent, void *data);
+int SimiasEventNodeChanged(SimiasNodeEvent *nodeEvent, void *data);
+
+int SimiasEventSyncCollection(SimiasCollectionSyncEvent *collectionEvent, void *data);
+int SimiasEventSyncFile(SimiasFileSyncEvent *fileEvent, void *data);
+int SimiasEventNotifyMessage(SimiasNotifyEvent *notifyEvent, void *data);
 

@@ -20,10 +20,17 @@
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {refreshWindow = id; showLoginWindow = id; showSyncLog = id; }; 
+            ACTIONS = {
+                customizeToolbar = id; 
+                refreshWindow = id; 
+                showHideToolbar = id; 
+                showLoginWindow = id; 
+                showSyncLog = id; 
+            }; 
             CLASS = MainWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                createSheetController = CreateiFolderSheetController; 
                 domainsController = NSArrayController; 
                 ifoldersController = NSArrayController; 
                 syncLogController = SyncLogWindowController; 
