@@ -22,6 +22,9 @@
  ***********************************************************************/
 #include "simias.h"
 
+#include <simiasStub.h>
+#include <simias.nsmap>
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -38,9 +41,16 @@
 #define DIR_SEP "/"
 #endif
 
+/* Global Variables */
+static char *the_soap_url = NULL;
+
 /* Foward Declarations */
 static char *simias_get_user_profile_dir_path(char *dest_path);
 static char *parse_local_service_url(FILE *file);
+
+static void init_gsoap (struct soap *p_soap);
+static void cleanup_gsoap (struct soap *p_soap);
+static char *get_soap_url(SIMIAS_BOOL reread_config);
 
 /* Function Implementations */
 int
@@ -173,4 +183,221 @@ parse_local_service_url(FILE *file)
 	}
 
 	return strdup(uri);
+}
+
+/******************************************************************************
+ * gSOAP Wrappers for WebService Calls                                        *
+ ******************************************************************************/
+/* Wrapper for GetDomains */
+int
+simias_get_domains(SIMIAS_BOOL only_slaves, SimiasDomainInfo **ret_domainsA[])
+{
+	char *soap_url;
+	struct soap soap;
+	struct _ns1__GetDomains req;
+	struct _ns1__GetDomainsResponse resp;
+	SimiasDomainInfo **domainInfosA;
+	SimiasDomainInfo *domain;
+	int num_of_domains = 0;
+	int i = 0;
+	struct ns1__ArrayOfDomainInformation *array_of_domain_infos;
+	struct ns1__DomainInformation **domainsA;
+	
+	soap_url = get_soap_url(SIMIAS_FALSE);
+	if (!soap_url) {
+		return -1;
+	}
+	
+	/* Setup the Request */
+	req.onlySlaves = false_;
+	
+	init_gsoap(&soap);
+	soap_call___ns1__GetDomains(&soap, soap_url, NULL, &req, &resp);
+	if (soap.error) {
+		cleanup_gsoap(&soap);
+		return SIMIAS_ERROR_IN_SOAP_CALL;
+	}
+
+	/* Allocate memory to return the domain information in */
+	array_of_domain_infos = resp.GetDomainsResult;
+	if (array_of_domain_infos) {
+		num_of_domains = array_of_domain_infos->__sizeDomainInformation;
+		if (num_of_domains > 0) {
+			domainInfosA = malloc(sizeof(SimiasDomainInfo *)
+									 * (num_of_domains + 1));
+			if (!domainInfosA) {
+				/* Out of Memory error */
+				cleanup_gsoap(&soap);
+				return SIMIAS_ERROR_OUT_OF_MEMORY;
+			}
+			
+			domainsA = array_of_domain_infos->DomainInformation;
+			
+			/* Populate the memory */
+			for (i = 0; i < num_of_domains; i++) {
+				/* Malloc a new SimiasDomainInfo */
+				domain = malloc(sizeof(SimiasDomainInfo));
+				if (!domain) {
+					/* Out of Memory Error */
+					return SIMIAS_ERROR_OUT_OF_MEMORY;
+				}
+				/* Type */
+				switch (domainsA[i]->Type) {
+					case ns1__DomainType__Master:
+						domain->type = SIMIAS_DOMAIN_TYPE_MASTER;
+						break;
+					case ns1__DomainType__Slave:
+						domain->type = SIMIAS_DOMAIN_TYPE_SLAVE;
+						break;
+					case ns1__DomainType__Local:
+						domain->type = SIMIAS_DOMAIN_TYPE_LOCAL;
+						break;
+					case ns1__DomainType__None:
+					default:
+						domain->type = SIMIAS_DOMAIN_TYPE_NONE;
+				}
+				
+				/* Active */
+				if (domainsA[i]->Active == true_) {
+					domain->active = SIMIAS_TRUE;
+				} else {
+					domain->active = SIMIAS_FALSE;
+				}
+				
+				/* Name */
+				domain->name = strdup(domainsA[i]->Name);
+				
+				/* Description */
+				domain->description = strdup(domainsA[i]->Description);
+
+				/* ID */
+				domain->id = strdup(domainsA[i]->ID);
+
+				/* RosterID */
+				domain->roster_id = strdup(domainsA[i]->RosterID);
+
+				/* RosterName */
+				domain->roster_name = strdup(domainsA[i]->RosterName);
+
+				/* MemberUserID */
+				domain->member_user_id = strdup(domainsA[i]->MemberUserID);
+
+				/* MemberName */
+				domain->member_name = strdup(domainsA[i]->MemberName);
+
+				/* RemoteUrl */
+				domain->remote_url = strdup(domainsA[i]->RemoteUrl);
+
+				/* POBoxID */
+				domain->po_box_id = strdup(domainsA[i]->POBoxID);
+
+				/* Host */
+				domain->host = strdup(domainsA[i]->Host);
+				
+				/* IsSlave */
+				if (domainsA[i]->IsSlave == true_) {
+					domain->is_slave = SIMIAS_TRUE;
+				} else {
+					domain->is_slave = SIMIAS_FALSE;
+				}
+				
+				/* IsDefault */
+				if (domainsA[i]->IsDefault == true_) {
+					domain->is_default = SIMIAS_TRUE;
+				} else {
+					domain->is_default = SIMIAS_FALSE;
+				}
+				
+				/* Add this to the Array */
+				domainInfosA[i] = domain;
+			}
+
+			/* NULL-terminate domainInfosA */
+			domainInfosA[i] = 0x0;
+			
+			*ret_domainsA = domainInfosA;
+		}
+	} else {
+		printf("array_of_domain_infos is NULL\n");
+	}
+	
+	cleanup_gsoap(&soap);
+	
+	return SIMIAS_SUCCESS;
+}
+
+int
+simias_free_domains(SimiasDomainInfo **domainsA[])
+{
+	SimiasDomainInfo *curr_domain;
+	int i = 0;
+	
+	if (!*domainsA) {
+		return SIMIAS_ERROR_UNKNOWN;
+	}
+	
+	curr_domain = (*domainsA)[i];
+	while (curr_domain) {
+		/* First free all the char *'s */
+		free(curr_domain->name);
+		free(curr_domain->description);
+		free(curr_domain->id);
+		free(curr_domain->roster_id);
+		free(curr_domain->roster_name);
+		free(curr_domain->member_user_id);
+		free(curr_domain->member_name);
+		free(curr_domain->remote_url);
+		free(curr_domain->po_box_id);
+		free(curr_domain->host);
+		free(curr_domain);
+		
+		curr_domain = (*domainsA)[++i];
+	}
+	
+	free(*domainsA);
+
+	return SIMIAS_SUCCESS;
+}
+
+
+/**
+ * gSOAP
+ */
+static void
+init_gsoap (struct soap *p_soap)
+{
+	/* Initialize gSOAP */
+	soap_init (p_soap);
+	soap_set_namespaces (p_soap, simias_namespaces);
+}
+
+static void
+cleanup_gsoap (struct soap *p_soap)
+{
+	/* Cleanup gSOAP */
+	soap_end (p_soap);
+}
+
+static char *
+get_soap_url(SIMIAS_BOOL reread_config)
+{
+	char *url;
+	char gaim_domain_url[512];
+	int err;
+	
+	if (!reread_config && the_soap_url) {
+		return the_soap_url;
+	}
+
+	err = simias_get_local_service_url(&url);
+	if (err == SIMIAS_SUCCESS) {
+		sprintf(gaim_domain_url, "%s/Simias.asmx", url);
+		free(url);
+		the_soap_url = strdup(gaim_domain_url);
+		/* FIXME: Figure out who and when this should ever be freed */
+	} else {
+		printf("simias_get_local_service_url() returned: %d\n", err);
+	}
+	
+	return the_soap_url;
 }
