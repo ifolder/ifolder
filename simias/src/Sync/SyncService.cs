@@ -781,7 +781,7 @@ namespace Simias.Sync
 			int bytesWritten = 0;
 			while(bytesWritten < count)
 			{
-				int bytesRead = inStream.Read(buffer, 0, buffer.Length);
+				int bytesRead = inStream.Read(buffer, 0, Math.Min(buffer.Length, (int)(count - bytesWritten)));
 				if (bytesRead == 0)
 					throw new SimiasException("Missing Data");
 				inFile.Write(buffer, 0, bytesRead);

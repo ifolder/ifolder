@@ -141,7 +141,7 @@ namespace Simias.Sync.Delta
 		/// <param name="inStream">The stream of raw data to create the HashMap from.</param>
 		public static HashData[] GetHashMap(Stream inStream)
 		{
-			if (inStream.Length <= HashData.BlockSize)
+			if (inStream == null || inStream.Length <= HashData.BlockSize)
 			{
 				return null;
 			}
@@ -157,10 +157,11 @@ namespace Simias.Sync.Delta
 			inStream.Position = 0;
 			while ((bytesRead = inStream.Read(buffer, 0, HashData.BlockSize)) != 0)
 			{
-				list[currentBlock++] = new HashData(
+				list[currentBlock] = new HashData(
 					currentBlock,
 					wh.ComputeHash(buffer, 0, (UInt16)bytesRead),
 					sh.ComputeHash(buffer, 0, bytesRead));
+				currentBlock++;
 			}
 			return list;
 		}

@@ -596,7 +596,7 @@ namespace Simias.Sync.Http
 			long bytesSent = 0;
 			while (bytesSent < count)
 			{
-				int bytesRead = stream.Read(buffer, 0, buffer.Length);
+				int bytesRead = stream.Read(buffer, 0, Math.Min((int)(count - bytesSent), buffer.Length));
 				if (bytesRead == 0)
 					break;
 				rStream.Write(buffer, 0, bytesRead);
@@ -623,16 +623,20 @@ namespace Simias.Sync.Http
 		/// <summary>
 		/// Called to copy data from the original file on the server to the new file.
 		/// </summary>
-		/// <param name="oldOffset">The offset in the original file.</param>
-		/// <param name="offset">The offset in the new file.</param>
-		/// <param name="count">The number of bytes to copy.</param>
-		public void CopyFile(long oldOffset, long offset, int count)
+		/// <param name="copyArray">The array of blocks and offsets to copy from the original file.</param>
+		public void CopyFile(ArrayList copyArray)
 		{
 			HttpWebRequest request = GetRequest(SyncMethod.CopyFile);
 			WebHeaderCollection headers = request.Headers;
-			request.ContentLength = 0;
-			headers.Add(SyncHeaders.CopyOffset, oldOffset.ToString());
-			headers.Add(SyncHeaders.Range, offset.ToString() + '-' + (offset + count).ToString());
+			headers.Add(SyncHeaders.ObjectCount, copyArray.Count.ToString());
+			headers.Add(SyncHeaders.BlockSize, HashData.BlockSize.ToString());
+			request.ContentLength = copyArray.Count * BlockSegment.InstanceSize;
+			BinaryWriter writer = new BinaryWriter(request.GetRequestStream());
+			foreach (BlockSegment seg in copyArray)
+			{
+				seg.Serialize(writer);
+			}
+			writer.Close();
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 			try
 			{
@@ -1039,13 +1043,22 @@ namespace Simias.Sync.Http
 		/// <param name="response">The HttpResponse.</param>
 		public void CopyFile(HttpRequest request, HttpResponse response)
 		{
-			long oldOffset, offset, size;
-			if (GetRange(request, out oldOffset, out offset, out size))
+			string sCount = request.Headers.Get(SyncHeaders.ObjectCount);
+			string sBlockSize = request.Headers.Get(SyncHeaders.BlockSize);
+			if (sCount == null || sBlockSize == null)
 			{
-				service.Copy(oldOffset, offset, (int)size);
-			}
-			else
 				response.StatusCode = (int)HttpStatusCode.BadRequest;
+				return;
+			}
+			
+			int count = int.Parse(sCount);
+			int blockSize = int.Parse(sBlockSize);
+			BinaryReader reader = new BinaryReader(request.InputStream);
+			for (int i = 0; i < count; ++i)
+			{	
+				BlockSegment bSeg = new BlockSegment(reader);
+				service.Copy(bSeg.Block * blockSize, bSeg.Offset, blockSize);
+			}
 			response.End();
 		}
 
