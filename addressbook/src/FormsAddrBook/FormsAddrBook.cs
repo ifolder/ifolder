@@ -328,6 +328,7 @@ namespace Novell.iFolder.FormsAddrBook
 			this.booksContacts.Name = "booksContacts";
 			this.booksContacts.Size = new System.Drawing.Size(304, 384);
 			this.booksContacts.TabIndex = 2;
+			this.booksContacts.ContactDoubleClicked += new Novell.iFolder.FormsBookLib.BooksContacts.ContactDoubleClickedDelegate(this.booksContacts_ContactDoubleClicked);
 			// 
 			// panel1
 			// 
@@ -472,21 +473,6 @@ namespace Novell.iFolder.FormsAddrBook
 		#endregion
 
 		#region Event Handlers
-		private void booksContacts_ContactDoubleClicked(object sender, ContactDoubleClickedEventArgs e)
-		{
-			ContactEditor editor = new ContactEditor();
-			editor.CurrentAddressBook = e.addressBook;
-			editor.CurrentContact = e.contact;
-			DialogResult result = editor.ShowDialog();
-			if (result == DialogResult.OK)
-			{
-				if (e.lvitem != null)
-				{
-					e.lvitem.Text = editor.CurrentContact.FN;
-				}
-			}
-		}
-
 		private void menuFileNewAddressBook_Click(object sender, EventArgs e)
 		{
 			this.booksContacts.CreateAddressBook();
@@ -885,6 +871,11 @@ namespace Novell.iFolder.FormsAddrBook
 		private void menuToolsExportVCard_Click(object sender, System.EventArgs e)
 		{
 			exportVCard();
+		}
+
+		private void booksContacts_ContactDoubleClicked(object sender, Novell.iFolder.FormsBookLib.ContactDoubleClickedEventArgs e)
+		{
+			booksContacts.EditContact();
 		}
 		#endregion
 	}

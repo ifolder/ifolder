@@ -2109,6 +2109,8 @@ namespace Novell.iFolder.FormsBookLib
 				blog.DataBindings.Add("Text", contact, "Blog");
 				nickname.DataBindings.Add("Text", contact, "Nickname");
 				birthday.DataBindings.Add("Text", contact, "Birthday");
+				calendar.DataBindings.Add("Text", contact, "Calendar");
+				webcam.DataBindings.Add("Text", contact, "Webcam");
 
 				try
 				{
