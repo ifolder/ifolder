@@ -111,7 +111,10 @@ namespace Novell.iFolder
 		/// </remarks>
 		public Novell.AddressBook.Manager AddressBookManager
 		{
-			get { return abMan; }
+			get 
+			{ 
+				return abMan; 
+			}
 		}
 
 		/// <summary>
