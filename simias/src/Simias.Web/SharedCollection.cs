@@ -29,6 +29,7 @@ using Simias;
 using Simias.Client;
 using Simias.Storage;
 using Simias.Sync;
+using Simias.Sync.Client;
 using Simias.POBox;
 
 namespace Simias.Web
@@ -821,8 +822,7 @@ namespace Simias.Web
 		/// <param name="CollectionID">The ID of the collection to sync.</param>
 		public static void SyncCollectionNow(string CollectionID)
 		{
-			// TODO: This needs to be hooked up after sync has been 
-			// implemented through webservice.
+			SyncClient.ScheduleSync(CollectionID);
 		}
 
 
