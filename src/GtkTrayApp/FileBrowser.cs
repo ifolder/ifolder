@@ -293,8 +293,10 @@ namespace Novell.iFolder
 			if(de != null)
 			{
 				Console.WriteLine("Show properties for: " + de.FullName);
-				PropertiesDialog pd = new PropertiesDialog(de.FullName);
-				pd.ShowAll();
+				PropertiesDialog pd = new PropertiesDialog();
+				pd.iFolderPath = de.FullName;
+				pd.TransientFor = nifWindow; 
+				pd.Run();
 			}
 		}
 
@@ -314,8 +316,11 @@ namespace Novell.iFolder
 			DirectoryEntry de = GetSelectedItem();
 			if(de != null)
 			{
-				PropertiesDialog pd = new PropertiesDialog(de.FullName);
-				pd.ShowAll(1);
+				PropertiesDialog pd = new PropertiesDialog();
+				pd.iFolderPath = de.FullName;
+				pd.TransientFor = nifWindow; 
+				pd.ActiveTag = 1;
+				pd.Run();
 			}
 		}
 
@@ -330,6 +335,12 @@ namespace Novell.iFolder
 					//iFolder ifldr = ifmgr.CreateiFolder(de.FullName);
 					ifmgr.CreateiFolder(de.FullName);
 					set_item_pixBuf(curIndex, iFolderPixBuf);
+					if(IntroDialog.UseDialog())
+					{
+						IntroDialog iDialog = new IntroDialog();
+						iDialog.iFolderPath = de.FullName;
+						iDialog.Run();
+					}
 				}
 				catch(Exception e)
 				{
