@@ -87,12 +87,12 @@
                 <Reference
                     Name = "CollectionEvents"
                     AssemblyName = "CollectionEvents"
-                    HintPath = "..\..\stage\CollectionEvents.dll"
+                    HintPath = "..\CollectionEvents.dll"
                 />
                 <Reference
                     Name = "Common"
                     AssemblyName = "Common"
-                    HintPath = "..\..\stage\Common.dll"
+                    HintPath = "..\..\Common\Common.dll"
                 />
             </References>
         </Build>
