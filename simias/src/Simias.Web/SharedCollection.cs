@@ -284,6 +284,15 @@ namespace Simias.Web
 			// paths but it was Linux specific so I didn't include it from
 			// the source in iFolderManager
 
+#if WINDOWS
+			uint type = GetDriveType(Path.GetPathRoot(path));
+			if (!((type == DRIVE_REMOVABLE) ||
+				(type == DRIVE_FIXED)))
+			{
+				return false;
+			}
+#endif
+
 			if (MyEnvironment.Windows)
 			{
 				// Don't allow the system drive to become an iFolder.
@@ -1098,5 +1107,14 @@ namespace Simias.Web
 
 			return false;
 		}
+
+#if WINDOWS
+		private const uint DRIVE_REMOVABLE = 2;
+		private const uint DRIVE_FIXED = 3;
+
+		[System.Runtime.InteropServices.DllImport("kernel32.dll")]
+		private static extern uint GetDriveType(string rootPathName);
+#endif
+
 	}
 }

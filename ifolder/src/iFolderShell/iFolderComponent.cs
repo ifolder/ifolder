@@ -266,7 +266,7 @@ namespace Novell.iFolderCom
 					iFolderWeb ifolder = ifWebService.GetiFolderByLocalPath(path);
 					if (ifolder != null)
 					{
-						ifWebService.DeleteiFolder(ifolder.ID);
+						ifWebService.RevertiFolder(ifolder.ID);
 					}
 				}
 			}

@@ -29,7 +29,6 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using System.Xml;
-using System.Runtime.InteropServices;
 using System.Net;
 using Microsoft.Win32;
 using Novell.iFolderCom;
@@ -2857,8 +2856,7 @@ namespace Novell.FormsTrayApp
 				{
 					try
 					{
-						if (ifWebService.CanBeiFolder(folderBrowserDialog.SelectedPath) && 
-							((GlobalProperties.GetDriveType(Path.GetPathRoot(folderBrowserDialog.SelectedPath)) & DRIVE_REMOTE) != DRIVE_REMOTE))
+						if (ifWebService.CanBeiFolder(folderBrowserDialog.SelectedPath))
 						{
 							// Create the iFolder.
 							iFolderWeb ifolder = ifWebService.CreateLocaliFolder(folderBrowserDialog.SelectedPath);
@@ -3259,10 +3257,5 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#endregion
-
-		internal static readonly uint DRIVE_REMOTE = 4;
-
-		[DllImport("kernel32.dll")]
-		internal static extern uint GetDriveType(string rootPathName);
 	}
 }

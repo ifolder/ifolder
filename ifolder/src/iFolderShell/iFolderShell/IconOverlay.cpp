@@ -52,7 +52,9 @@ STDMETHODIMP CiFolderShell::IsMemberOf(LPCWSTR pwszPath,
 
 	lstrcpyn(lpszRoot, pwszPath, MAX_ROOT_PATH + 1);
 
-	if ((dwAttrib & FILE_ATTRIBUTE_DIRECTORY) && !(GetDriveType(lpszRoot) & DRIVE_REMOTE))
+	UINT type = GetDriveType(lpszRoot);
+	if ((dwAttrib & FILE_ATTRIBUTE_DIRECTORY) && 
+		((type == DRIVE_FIXED) || (type == DRIVE_REMOVABLE)))
 	{
 		VARIANT_BOOL hasConflicts;
 		try

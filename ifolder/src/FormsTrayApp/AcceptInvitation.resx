@@ -908,7 +908,7 @@
 		<value>An exception occurred while accepting the invitation.</value>
 	</data>
 	<data name="networkPath">
-		<value>iFolders cannot be placed in a network drive.</value>
+		<value>iFolders must be placed on a local drive.</value>
 	</data>
 	<data name="selectLocation">
 		<value>Select a location for the iFolder.</value>
