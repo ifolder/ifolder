@@ -1064,7 +1064,7 @@ namespace Simias.Storage.Tests
 
 				// Restore the collection.
 				collection = new Collection( store, ( Node )bf.Deserialize( ms ) );
-				collection.ImportNode( collection );
+				collection.ImportNode( collection, collection.LocalIncarnation );
 				collection.IncarnationUpdate = 2;
 				collection.Commit();
 			}
@@ -1276,7 +1276,7 @@ namespace Simias.Storage.Tests
 				}
 
 				// Finally, set the master version of the collection.
-				collection.ImportNode( collection );
+				collection.ImportNode( collection, collection.LocalIncarnation );
 				collection.IncarnationUpdate = 1;
 				collection.Commit();
 				collection.Refresh();
@@ -1544,7 +1544,14 @@ namespace Simias.Storage.Tests
 				int count = 0;
 				foreach( ShallowNode sn in collection )
 				{
-					++count;
+					foreach( Node node in commitList )
+					{
+						if ( node.ID == sn.ID )
+						{
+							++count;
+							break;
+						}
+					}
 				}
 
 				if ( count != 10 )

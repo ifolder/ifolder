@@ -58,7 +58,15 @@ namespace Simias.Storage
 		/// <summary>
 		/// Master incarnation number that this object is to be updated to if it is not zero.
 		/// </summary>
+		[ NonSerialized() ]
 		protected ulong masterIncarnation = 0;
+
+		/// <summary>
+		/// This is the expected incarnation value of the Node object when it is being imported.
+		/// If this value differs from the actual object incarnation value, a collision results.
+		/// </summary>
+		[ NonSerialized() ]
+		protected ulong expectedIncarnation = 0;
 		#endregion
 
 		#region Properties
@@ -68,6 +76,15 @@ namespace Simias.Storage
 		internal protected PropertyList InternalList
 		{
 			set { properties = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the expected incarnation value.
+		/// </summary>
+		internal protected ulong ExpectedIncarnation
+		{
+			get { return expectedIncarnation; }
+			set { expectedIncarnation = value; }
 		}
 
 		/// <summary>

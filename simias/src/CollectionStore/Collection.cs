@@ -284,17 +284,29 @@ namespace Simias.Storage
 		/// <param name="node">Node object that contains the local incarnation value.</param>
 		private void IncrementLocalIncarnation( Node node )
 		{
-			// Check if the master incarnation value needs to be set.
-			if ( node.IncarnationUpdate != 0 )
+			// The master incarnation value only needs to be set during import of a Node object.
+			if ( node.Properties.State == PropertyList.PropertyListState.Import )
 			{
-				// The Master incarnation number needs to be set.
+				// Make sure that the expected incarnation value matches the current value.
 				Node checkNode = GetNodeByID( node.ID );
-				if ( ( checkNode == null ) || ( checkNode.LocalIncarnation == node.LocalIncarnation ) )
+				if ( ( checkNode == null ) || ( checkNode.LocalIncarnation == node.ExpectedIncarnation ) )
 				{
-					// Update both incarnation values to the specified value.
-					node.Properties.ModifyNodeProperty( PropertyTags.MasterIncarnation, node.IncarnationUpdate );
-					node.Properties.ModifyNodeProperty( PropertyTags.LocalIncarnation, node.IncarnationUpdate );
-					node.IncarnationUpdate = 0;
+					if ( node.IncarnationUpdate != 0 )
+					{
+						// Update both incarnation values to the specified value.
+						node.Properties.ModifyNodeProperty( PropertyTags.MasterIncarnation, node.IncarnationUpdate );
+						node.Properties.ModifyNodeProperty( PropertyTags.LocalIncarnation, node.IncarnationUpdate );
+						node.IncarnationUpdate = 0;
+					}
+					else
+					{
+						// Increment the property value.
+						ulong incarnationValue = node.LocalIncarnation;
+						node.Properties.ModifyNodeProperty( PropertyTags.LocalIncarnation, ++incarnationValue );
+					}
+
+					// Reset the expected incarnation value.
+					node.ExpectedIncarnation = 0;
 				}
 				else
 				{
@@ -969,10 +981,13 @@ namespace Simias.Storage
 		/// Readies a Node object for import into this Collection.
 		/// </summary>
 		/// <param name="node">Node to import into this Collection.</param>
-		public void ImportNode( Node node )
+		/// <param name="expectedIncarnation">The expected value of the Node object's incarnation number. If
+		/// the Node object incarnation value is not equal to the expected value, a collision is the result.</param>
+		public void ImportNode( Node node, ulong expectedIncarnation )
 		{
 			// Set the current state of the node indicating that it is being imported.
 			node.Properties.State = PropertyList.PropertyListState.Import;
+			node.ExpectedIncarnation = expectedIncarnation;
 		}
 
 		/// <summary>

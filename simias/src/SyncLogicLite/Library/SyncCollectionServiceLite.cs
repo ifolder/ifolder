@@ -113,7 +113,7 @@ namespace Simias.Sync
 
 				int start = Environment.TickCount;
 
-				collection.ImportNode(node);
+				collection.ImportNode(node, node.LocalIncarnation);
 
 				// directory node
 				if (node.GetType().IsSubclassOf(typeof(DirNode)) && path != null)
