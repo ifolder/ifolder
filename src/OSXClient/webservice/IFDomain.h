@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-
+#include "iFolderStub.h"
 
 @interface IFDomain : NSObject
 {
@@ -21,7 +21,7 @@
 		NSString	*UserName;
 }
 
--(void) readDictionary:(NSDictionary *)dictionary;
+-(void) from_gsoap:(struct ns1__DomainWeb *)domainWeb;
 
 
 @end

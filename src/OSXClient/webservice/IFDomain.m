@@ -8,38 +8,30 @@
 
 #import "IFDomain.h"
 
-
 @implementation IFDomain
 
--(void) readDictionary:(NSDictionary *)dictionary
+-(void) from_gsoap:(struct ns1__DomainWeb *)domainWeb
 {
-	NSString *value = [dictionary objectForKey:@"ID"];
-	if(value != nil)
-		self->ID = value;
+	if(domainWeb->ID != nil)
+		self->ID = [NSString stringWithCString:domainWeb->ID];
 
-	value = [dictionary objectForKey:@"POBoxID"];
-	if(value != nil)
-		self->POBoxID = value;
+	if(domainWeb->POBoxID != nil)
+		self->POBoxID = [NSString stringWithCString:domainWeb->POBoxID];
+	
+	if(domainWeb->Name != nil)
+		self->Name = [NSString stringWithCString:domainWeb->Name];
 		
-	value = [dictionary objectForKey:@"Name"];
-	if(value != nil)
-		self->Name = value;
+	if(domainWeb->Description != nil)
+		self->Description = [NSString stringWithCString:domainWeb->Description];
+	
+	if(domainWeb->Host != nil)
+		self->Host = [NSString stringWithCString:domainWeb->Host];
+	
+	if(domainWeb->UserID != nil)
+		self->UserID = [NSString stringWithCString:domainWeb->UserID];
 
-	value = [dictionary objectForKey:@"Description"];
-	if(value != nil)
-		self->Description = value;
-		
-	value = [dictionary objectForKey:@"Host"];
-	if(value != nil)
-		self->Host = value;
-
-	value = [dictionary objectForKey:@"UserID"];
-	if(value != nil)
-		self->UserID = value;
-
-	value = [dictionary objectForKey:@"UserName"];
-	if(value != nil)
-		self->UserName = value;
+	if(domainWeb->UserName != nil)
+		self->UserName = [NSString stringWithCString:domainWeb->UserName];
 }
 
 @end
