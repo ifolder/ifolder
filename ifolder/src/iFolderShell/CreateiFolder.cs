@@ -426,7 +426,7 @@ namespace Novell.iFolderCom
 
 		private void ifolderPath_TextChanged(object sender, System.EventArgs e)
 		{
-			ok.Enabled = ifolderPath.Text.Length > 0;
+			ok.Enabled = (ifolderPath.Text.Length > 0) && (servers.Items.Count != 0);
 		}
 
 		private void ok_Click(object sender, System.EventArgs e)
