@@ -192,6 +192,7 @@ public class Dredger
 		}
 		catch
 		{
+			dnode.LastAccessTime = tmpDi.LastAccessTime;
 			dnode.LastWriteTime = tmpDi.LastWriteTime;
 			collection.Commit(dnode);
 		}
@@ -211,13 +212,14 @@ public class Dredger
 			foreach (string file in Directory.GetFiles(path))
 				DoNode(dnode, file, typeof(FileNode).Name);
 
+			dnode.LastWriteTime = tmpDi.LastWriteTime;
+            collection.Commit(dnode);
 		}
 
 		// merge subdirs and recurse.
 		foreach (string dir in Directory.GetDirectories(path))
 		{
 			DoNode(dnode, dir, typeof(DirNode).Name);
-			Thread.Sleep(0);
 		}
 	}
 
@@ -269,7 +271,6 @@ public class Dredger
 										break;
 								}
 							}
-							Thread.Sleep(0);
 						}
 						needToDredge = false;
 					}
