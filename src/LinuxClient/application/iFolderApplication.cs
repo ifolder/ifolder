@@ -473,7 +473,7 @@ namespace Novell.iFolder
 		private void OniFolderAddedEvent(object o, iFolderAddedEventArgs args)
 		{
 			// don't notify us of our own iFolders
-			iFolderHolder ifHolder = ifdata.GetiFolder(args.iFolderID, false);
+			iFolderHolder ifHolder = ifdata.GetiFolder(args.iFolderID);
 
 			if(!ifdata.IsCurrentUser(ifHolder.iFolder.OwnerID))
 			{
@@ -502,7 +502,7 @@ namespace Novell.iFolder
 									iFolderChangedEventArgs args)
 		{
 			// don't notify us of our own iFolders
-			iFolderHolder ifHolder = ifdata.GetiFolder(args.iFolderID, false);
+			iFolderHolder ifHolder = ifdata.GetiFolder(args.iFolderID);
 
 			if(ifHolder.iFolder.IsSubscription)
 			{
@@ -511,18 +511,22 @@ namespace Novell.iFolder
 			}
 			else
 			{
-				if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_COLLISIONS, 
-						"true") == "true")
+				// this may be called when a subscription gets updated
+				if(ifHolder.iFolder.HasConflicts)
 				{
-					NotifyWindow notifyWin = new NotifyWindow(
-						tIcon, Util.GS("Action Required"),
-						string.Format(Util.GS("A collision has been detected in iFolder \"{0}\""), ifHolder.iFolder.Name),
-						Gtk.MessageType.Info, 10000);
-					notifyWin.ShowAll();
-				}
+					if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_COLLISIONS, 
+							"true") == "true")
+					{
+						NotifyWindow notifyWin = new NotifyWindow(
+							tIcon, Util.GS("Action Required"),
+							string.Format(Util.GS("A collision has been detected in iFolder \"{0}\""), ifHolder.iFolder.Name),
+							Gtk.MessageType.Info, 10000);
+						notifyWin.ShowAll();
+					}
 
-				if(ifwin != null)
-					ifwin.iFolderHasConflicts(args.iFolderID);
+					if(ifwin != null)
+						ifwin.iFolderHasConflicts(args.iFolderID);
+				}
 			}
 		}
 
@@ -544,8 +548,7 @@ namespace Novell.iFolder
 							== "true")
 			{
 				string username;
-				iFolderHolder ifHolder = ifdata.GetiFolder(args.iFolderID, 
-						false);
+				iFolderHolder ifHolder = ifdata.GetiFolder(args.iFolderID);
 
 				if( (args.iFolderUser.FN != null) &&
 					(args.iFolderUser.FN.Length > 0) )
