@@ -117,6 +117,10 @@ namespace Simias.Sync.Web
 					Response.StatusCode = (int)HttpStatusCode.BadRequest;
 				}
 			}
+			else
+			{
+				Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+			}
 
 			Response.End();
 		}
