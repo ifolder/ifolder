@@ -236,7 +236,7 @@ static void sec_free_event_struct (void *event_struct);
 /* #endregion */
 
 /* #region Public Functions */
-static int
+int
 sec_init (SimiasEventClient *sec, void *error_handler)
 {
 printf ("SEC: sec_init () called\n");
@@ -273,7 +273,7 @@ printf ("SEC: sec_init () called\n");
 /**
  * Any cleanup should be done in this function.
  */
-static int
+int
 sec_cleanup (SimiasEventClient *sec)
 {
 	/* Free the memory being used by SimiasEventClient */
@@ -284,7 +284,7 @@ sec_cleanup (SimiasEventClient *sec)
 	xmlCleanupParser ();
 }
 
-static int
+int
 sec_register (SimiasEventClient sec)
 {
 printf ("SEC: sec_register () called\n");	
@@ -306,7 +306,7 @@ printf ("SEC: sec_register () called\n");
 	return 0;
 }
 
-static int
+int
 sec_deregister (SimiasEventClient sec)
 {
 	RealSimiasEventClient *ec = (RealSimiasEventClient *)sec;
@@ -353,7 +353,7 @@ sec_deregister (SimiasEventClient sec)
 	return 0;
 }
 
-static int
+int
 sec_set_event (SimiasEventClient sec, IPROC_EVENT_ACTION action, void (*handler)(void *))
 {
 	RealSimiasEventClient *ec = (RealSimiasEventClient *)sec;

@@ -124,7 +124,7 @@ void (*simias_notify_event_callback) (SimiasNotifyEvent *);
  * 
  * Returns 0 if successful or -1 if there was an error.
  */
-static int sec_init (SimiasEventClient *sec,
+int sec_init (SimiasEventClient *sec,
 									 void *error_handler);
 
 /**
@@ -133,21 +133,21 @@ static int sec_init (SimiasEventClient *sec,
  * This function should be called when the application is no longer using the
  * Simias Event Client.
  */
-static int sec_cleanup (SimiasEventClient *sec);
+int sec_cleanup (SimiasEventClient *sec);
 
 /**
  * Registers this client with the server to listen for Simias events.
  * 
  * Returns 0 if successful or -1 if there was an error.
  */
-static int sec_register (SimiasEventClient sec);
+int sec_register (SimiasEventClient sec);
 
 /**
  * Deregisters this client with the server
  * 
  * Returns 0 if successful or -1 if there was an error.
  */
-static int sec_deregister (SimiasEventClient sec);
+int sec_deregister (SimiasEventClient sec);
 
 /**
  * Start subscribing to or unsubscribing from the specified event.
@@ -156,7 +156,7 @@ static int sec_deregister (SimiasEventClient sec);
  * param handler: Callback function that gets called when the specified event
  * happens or is to be removed.
  */
-static int sec_set_event (SimiasEventClient sec, 
+int sec_set_event (SimiasEventClient sec, 
 						  IPROC_EVENT_ACTION action,
 						  void (*handler)(void *));
 
