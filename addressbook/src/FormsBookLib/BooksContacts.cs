@@ -43,10 +43,6 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.ListView books;
 		private System.Windows.Forms.Splitter splitter1;
 		private System.Windows.Forms.ListView contacts;
-		private System.Windows.Forms.TextBox search;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Button createBook;
-		private System.Windows.Forms.Button createContact;
 		private System.Windows.Forms.ContextMenu contactsContextMenu;
 		private System.Windows.Forms.MenuItem editContactMenu;
 		private System.Windows.Forms.MenuItem createContactMenu;
@@ -59,12 +55,9 @@ namespace Novell.iFolder.FormsBookLib
 		private Novell.AddressBook.AddressBook addressBook = null;
 		private ArrayList selectedContacts;
 		private ArrayList validSelectedContacts;
-		private System.Windows.Forms.Timer editSearchTimer;
-		private System.Windows.Forms.ComboBox searchFor;
-		private System.Windows.Forms.ComboBox queryType;
 		private System.ComponentModel.IContainer components;
 		private string loadPath;
-		private Size createBookSize;
+		private string filter;
 		#endregion
 
 		public BooksContacts()
@@ -73,8 +66,6 @@ namespace Novell.iFolder.FormsBookLib
 			InitializeComponent();
 
 			// TODO: Add any initialization after the InitializeComponent call
-			createBookSize = createBook.Size;
-			createContact.Enabled = false;
 
 			// Context menu for contacts list view.
 			editContactMenu = new MenuItem("Edit...");
@@ -126,49 +117,24 @@ namespace Novell.iFolder.FormsBookLib
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			this.createBook = new System.Windows.Forms.Button();
-			this.createContact = new System.Windows.Forms.Button();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.contacts = new System.Windows.Forms.ListView();
 			this.splitter1 = new System.Windows.Forms.Splitter();
 			this.books = new System.Windows.Forms.ListView();
-			this.search = new System.Windows.Forms.TextBox();
-			this.label1 = new System.Windows.Forms.Label();
-			this.editSearchTimer = new System.Windows.Forms.Timer(this.components);
-			this.searchFor = new System.Windows.Forms.ComboBox();
-			this.queryType = new System.Windows.Forms.ComboBox();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// createBook
-			// 
-			this.createBook.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.createBook.Location = new System.Drawing.Point(8, 368);
-			this.createBook.Name = "createBook";
-			this.createBook.Size = new System.Drawing.Size(80, 23);
-			this.createBook.TabIndex = 4;
-			this.createBook.Text = "New Book...";
-			this.createBook.Click += new System.EventHandler(this.createBook_Click);
-			// 
-			// createContact
-			// 
-			this.createContact.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.createContact.Location = new System.Drawing.Point(128, 368);
-			this.createContact.Name = "createContact";
-			this.createContact.Size = new System.Drawing.Size(88, 23);
-			this.createContact.TabIndex = 5;
-			this.createContact.Text = "New Contact...";
-			this.createContact.Click += new System.EventHandler(this.createContact_Click);
-			// 
 			// panel1
 			// 
+			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+				| System.Windows.Forms.AnchorStyles.Left) 
+				| System.Windows.Forms.AnchorStyles.Right)));
 			this.panel1.Controls.Add(this.contacts);
 			this.panel1.Controls.Add(this.splitter1);
 			this.panel1.Controls.Add(this.books);
-			this.panel1.Location = new System.Drawing.Point(0, 56);
+			this.panel1.Location = new System.Drawing.Point(0, 0);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(304, 304);
+			this.panel1.Size = new System.Drawing.Size(368, 304);
 			this.panel1.TabIndex = 2;
 			// 
 			// contacts
@@ -177,7 +143,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.contacts.HideSelection = false;
 			this.contacts.Location = new System.Drawing.Point(123, 0);
 			this.contacts.Name = "contacts";
-			this.contacts.Size = new System.Drawing.Size(181, 304);
+			this.contacts.Size = new System.Drawing.Size(245, 304);
 			this.contacts.TabIndex = 1;
 			this.contacts.DoubleClick += new System.EventHandler(this.contacts_DoubleClick);
 			this.contacts.SelectedIndexChanged += new System.EventHandler(this.contacts_SelectedIndexChanged);
@@ -201,67 +167,11 @@ namespace Novell.iFolder.FormsBookLib
 			this.books.TabIndex = 0;
 			this.books.SelectedIndexChanged += new System.EventHandler(this.books_SelectedIndexChanged);
 			// 
-			// search
-			// 
-			this.search.AutoSize = false;
-			this.search.Location = new System.Drawing.Point(184, 24);
-			this.search.Name = "search";
-			this.search.Size = new System.Drawing.Size(120, 20);
-			this.search.TabIndex = 3;
-			this.search.Text = "";
-			this.search.TextChanged += new System.EventHandler(this.search_TextChanged);
-			// 
-			// label1
-			// 
-			this.label1.Location = new System.Drawing.Point(0, 8);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(48, 16);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "Search:";
-			// 
-			// editSearchTimer
-			// 
-			this.editSearchTimer.Interval = 500;
-			this.editSearchTimer.Tick += new System.EventHandler(this.editSearchTimer_Tick);
-			// 
-			// searchFor
-			// 
-			this.searchFor.Items.AddRange(new object[] {
-														   "First name",
-														   "Last name",
-														   "User name",
-														   "E-Mail"});
-			this.searchFor.Location = new System.Drawing.Point(0, 24);
-			this.searchFor.Name = "searchFor";
-			this.searchFor.Size = new System.Drawing.Size(96, 21);
-			this.searchFor.TabIndex = 1;
-			this.searchFor.Text = "First name";
-			this.searchFor.SelectedIndexChanged += new System.EventHandler(this.searchFor_SelectedIndexChanged);
-			// 
-			// queryType
-			// 
-			this.queryType.Items.AddRange(new object[] {
-														   "Begins with",
-														   "Ends with",
-														   "Contains"});
-			this.queryType.Location = new System.Drawing.Point(96, 24);
-			this.queryType.Name = "queryType";
-			this.queryType.Size = new System.Drawing.Size(88, 21);
-			this.queryType.TabIndex = 2;
-			this.queryType.Text = "Begins with";
-			this.queryType.SelectedIndexChanged += new System.EventHandler(this.queryType_SelectedIndexChanged);
-			// 
 			// BooksContacts
 			// 
-			this.Controls.Add(this.queryType);
-			this.Controls.Add(this.searchFor);
-			this.Controls.Add(this.search);
-			this.Controls.Add(this.label1);
 			this.Controls.Add(this.panel1);
-			this.Controls.Add(this.createContact);
-			this.Controls.Add(this.createBook);
 			this.Name = "BooksContacts";
-			this.Size = new System.Drawing.Size(496, 400);
+			this.Size = new System.Drawing.Size(368, 304);
 			this.Load += new System.EventHandler(this.BooksContacts_Load);
 			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);
@@ -360,6 +270,19 @@ namespace Novell.iFolder.FormsBookLib
 				return contacts.SmallImageList;
 			}
 		}
+
+		public string Filter
+		{
+			get
+			{
+				return filter;
+			}
+
+			set
+			{
+				filter = value;
+			}
+		}
 		#endregion
 
 		#region Public Methods
@@ -402,6 +325,116 @@ namespace Novell.iFolder.FormsBookLib
 		{
 			deleteContact_Click(this, null);
 		}
+
+		public void FilterList(string filter)
+		{
+			if (filter != null)
+				this.filter = filter;
+
+			// Clear the listview.
+			contacts.Items.Clear();
+
+			// Change to a wait cursor.
+			Cursor.Current = Cursors.WaitCursor;
+			contacts.BeginUpdate();
+			if (Filter != null && Filter != String.Empty)
+			{
+				// Set the type of query to perform.
+				Property.Operator queryType = Property.Operator.Contains;
+
+				// Hashtable used to store search results in.
+				Hashtable results = new Hashtable();
+
+				try
+				{
+					// Search the first name.
+					IABList searchResults = addressBook.SearchFirstName(Filter, queryType);
+					foreach(Contact c in searchResults)
+					{
+						// Put the contacts returned by the search in the hashtable.
+						results.Add(c.ID, c);
+					}
+
+					// Search the last name.
+					searchResults = addressBook.SearchLastName(Filter, queryType);
+					foreach(Contact c in searchResults)
+					{
+						// Add the contact to the hashtable if it already isn't there.
+						if (!results.ContainsKey(c.ID))
+							results.Add(c.ID, c);
+					}
+
+					// Search the user name.
+					searchResults = addressBook.SearchUsername(Filter, queryType);
+					foreach(Contact c in searchResults)
+					{
+						// Add the contact to the hashtable if it already isn't there.
+						if (!results.ContainsKey(c.ID))
+							results.Add(c.ID, c);
+					}
+
+					// Search eMail.
+					searchResults = addressBook.SearchEmail(Filter, queryType);
+					foreach(Contact c in searchResults)
+					{
+						// Add the contact to the hashtable if it already isn't there.
+						if (!results.ContainsKey(c.ID))
+							results.Add(c.ID, c);
+					}
+
+					// Go through the hashtable and add the items to the listview.
+					IDictionaryEnumerator enumerator = results.GetEnumerator();
+					while (enumerator.MoveNext())
+					{
+						Contact c = (Contact) enumerator.Value;
+						ListViewItem item;
+						int imageIndex = c.IsCurrentUser ? 0 : 1;
+
+						if (c.FN != null && c.FN != String.Empty)
+						{
+							item = new ListViewItem(c.FN, imageIndex);
+						}
+						else
+						{
+							item = new ListViewItem(c.UserName, imageIndex);
+						}
+
+						item.Tag = c;
+						contacts.Items.Add(item);
+					}
+				}
+				catch{}
+			}
+			else
+			{
+				// No text was entered in the search edit box, so put all contacts in the listview.
+				foreach (Contact c in addressBook)
+				{
+					ListViewItem item;
+					int imageIndex = c.IsCurrentUser ? 0 : 1;
+
+					if (c.FN != null && c.FN != String.Empty)
+					{
+						item = new ListViewItem(c.FN, imageIndex);
+					}
+					else
+					{
+						item = new ListViewItem(c.UserName, imageIndex);
+					}
+
+					item.Tag = c;
+					contacts.Items.Add(item);
+				}
+			}
+
+			contacts.EndUpdate();
+
+			// Restore the cursor.
+			Cursor.Current = Cursors.Default;
+
+			// Fire the contact selected event.
+			contacts_SelectedIndexChanged(this, null);
+		}
 		#endregion
 
 		public delegate void ContactSelectedDelegate(object sender, ContactSelectedEventArgs e);
@@ -432,6 +465,7 @@ namespace Novell.iFolder.FormsBookLib
 				// Initialize the ImageList objects with icons.
 				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_me_card.ico")));
 				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_card.ico")));
+				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_add_bk.ico")));
 
 				//Assign the ImageList objects to the books ListView.
 				contacts.SmallImageList = contactsImageList;
@@ -465,9 +499,6 @@ namespace Novell.iFolder.FormsBookLib
 					this.books.Items.Add(item);
 				}
 			}
-
-			// Change the height of the search box to match the height of the combobox.
-			this.search.Height = queryType.Height;
 		}
 
 		private void books_SelectedIndexChanged(object sender, System.EventArgs e)
@@ -475,56 +506,12 @@ namespace Novell.iFolder.FormsBookLib
 			// An address book was selected/unselected.
 			if (this.books.SelectedItems.Count > 0)
 			{
-				// Change to a wait cursor.
-				Cursor = Cursors.WaitCursor;
-
 				// Get the address book that was selected, since the listview is
 				// single select the collection will only contain one item.
-				foreach (ListViewItem item in this.books.SelectedItems)
-				{
-					this.addressBook = (Novell.AddressBook.AddressBook)item.Tag;
-				}
+				addressBook = (Novell.AddressBook.AddressBook)books.SelectedItems[0].Tag;
 
-				// Clear the contacts listview.
-				this.contacts.Items.Clear();
-				this.contacts.BeginUpdate();
-
-				// Get each contact in the address book.
-				foreach(Contact c in this.addressBook)
-				{
-					ListViewItem item;
-					int imageIndex = c.IsCurrentUser ? 0 : 1;
-					
-					if (c.FN != null && c.FN != String.Empty)
-					{
-						// Display full name if it is available...
-						item = new ListViewItem(c.FN, imageIndex);
-					}
-					else
-					{
-						// ... otherwise, display the user name.
-						item = new ListViewItem(c.UserName, imageIndex);
-					}
-
-					// Save the contact object in the listview item.
-					item.Tag = c;
-
-					// Add the item to the listview.
-					this.contacts.Items.Add(item);
-				}
-				this.contacts.EndUpdate();
-
-				// Restore the cursor.
-				Cursor = Cursors.Default;
-
-				this.createContact.Enabled = true;
-			}
-			else
-			{
-				Cursor = Cursors.WaitCursor;
-				this.contacts.Items.Clear();
-				Cursor = Cursors.Default;
-				this.createContact.Enabled = false;
+				// Populate the contact list view.
+				FilterList(null);
 			}
 		}
 
@@ -581,25 +568,7 @@ namespace Novell.iFolder.FormsBookLib
 
 		private void splitter1_SplitterMoved(object sender, SplitterEventArgs e)
 		{
-			// When the splitter is moved, relocate the createContact button ...
-			Point point = this.createContact.Location;
-			point.X = this.splitter1.Location.X + 8;
-			this.createContact.Location = point;
-
-			// Change the client size of the createBook button if needed.
-			Size cbClientSize = createBook.ClientSize;
-			Point cbLocation = createBook.Location;
-			if ((cbLocation.X + createBookSize.Width) > splitter1.Location.X)
-			{
-				cbClientSize.Width = splitter1.Location.X - cbLocation.X;
-				createBook.ClientSize = cbClientSize;
-			}
-			else
-			{
-				createBook.ClientSize = createBookSize;
-			}
-
-			// ... and resize the column headers.
+			// When the splitter is moved, resize the column headers.
 			this.contacts.Columns[0].Width = this.contacts.Size.Width - 4;
 			this.books.Columns[0].Width = this.books.Size.Width - 4;
 		}
@@ -643,145 +612,6 @@ namespace Novell.iFolder.FormsBookLib
 				item.Tag = addrBook;
 				this.books.Items.Add(item);
 			}
-		}
-
-		private void searchFor_SelectedIndexChanged(object sender, System.EventArgs e)
-		{
-			// If the searchFor listbox is changed and there is text in the search edit box,
-			// restart the timer.
-			if (search.Text != null)
-			{
-				this.editSearchTimer.Start();
-			}
-		}
-
-		private void queryType_SelectedIndexChanged(object sender, System.EventArgs e)
-		{
-			// If the queryType listbox is changed and there is text in the search edit box,
-			// restart the timer.
-			if (search.Text != null)
-			{
-				this.editSearchTimer.Start();
-			}		
-		}
-
-		private void search_TextChanged(object sender, System.EventArgs e)
-		{
-			// Reset the timer when search text is entered.
-			this.editSearchTimer.Stop();
-			this.editSearchTimer.Start();
-		}
-
-		private void editSearchTimer_Tick(object sender, EventArgs e)
-		{
-			// The timer event has been fired...
-			// Stop the timer.
-			this.editSearchTimer.Stop();
-
-			// Clear the listview.
-			contacts.Items.Clear();
-
-			// Change to a wait cursor.
-			Cursor.Current = Cursors.WaitCursor;
-			contacts.BeginUpdate();
-			if (search.Text != null)
-			{
-				// Get the type of query to perform.
-                Property.Operator queryType;
-				switch (this.queryType.Text)
-				{
-					case "Contains":
-					{
-						queryType = Property.Operator.Contains;
-						break;
-					}
-					case "Ends with":
-					{
-						queryType = Property.Operator.Ends;
-						break;
-					}
-					default:
-					{
-						queryType = Property.Operator.Begins;
-						break;
-					}
-				}
-
-				// Get which field to search against and perform the search.
-				IABList	searchResults;
-				switch (this.searchFor.Text)
-				{
-					case "Last name":
-					{
-						searchResults = addressBook.SearchLastName(search.Text, queryType);
-						break;
-					}
-					case "User name":
-					{
-						searchResults = addressBook.SearchUsername(search.Text, queryType);
-						break;
-					}
-					case "E-Mail":
-					{
-						searchResults = addressBook.SearchEmail(search.Text, queryType);
-						break;
-					}
-					default:
-					{
-						searchResults = addressBook.SearchFirstName(search.Text, queryType);
-						break;
-					}
-				}
-
-				try
-				{
-					// Put the contacts returned by the search in the contacts listview.
-					foreach(Contact c in searchResults)
-					{
-						ListViewItem item;
-						int imageIndex = c.IsCurrentUser ? 0 : 1;
-
-						if (c.FN != null && c.FN != String.Empty)
-						{
-							item = new ListViewItem(c.FN, imageIndex);
-						}
-						else
-						{
-							item = new ListViewItem(c.UserName, imageIndex);
-						}
-
-						item.Tag = c;
-						this.contacts.Items.Add(item);
-					}
-				}
-				catch{}
-			}
-			else
-			{
-				// No text was entered in the search edit box, so put all contacts in the listview.
-				foreach (Contact c in addressBook)
-				{
-					ListViewItem item;
-					int imageIndex = c.IsCurrentUser ? 0 : 1;
-
-					if (c.FN != null && c.FN != String.Empty)
-					{
-						item = new ListViewItem(c.FN, imageIndex);
-					}
-					else
-					{
-						item = new ListViewItem(c.UserName, imageIndex);
-					}
-
-					item.Tag = c;
-					this.contacts.Items.Add(item);
-				}
-			}
-
-			contacts.EndUpdate();
-
-			// Restore the cursor.
-			Cursor.Current = Cursors.Default;
 		}
 
 		private void editContact_Click(object sender, EventArgs e)

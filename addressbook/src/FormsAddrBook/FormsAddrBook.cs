@@ -38,8 +38,7 @@ namespace Novell.iFolder.FormsAddrBook
 	public class FormsAddrBook : System.Windows.Forms.Form
 	{
 		#region Class Members
-		private BooksContacts booksContacts = null;
-		private System.Windows.Forms.Panel panel1;
+
 		private Novell.AddressBook.Manager manager = null;
 		private Novell.AddressBook.AddressBook selectedBook;
 		private System.Windows.Forms.MainMenu mainMenu1;
@@ -62,14 +61,22 @@ namespace Novell.iFolder.FormsAddrBook
 		private System.Windows.Forms.MenuItem menuHelp;
 		private System.Windows.Forms.MenuItem menuHelpAbout;
 		private ArrayList selectedContacts;
-		private System.Windows.Forms.Panel detailsView;
 		private Contact contact;
-
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.Container components = null;
+		private System.Windows.Forms.Panel detailsView;
+		private System.Windows.Forms.Splitter splitter1;
+		private Novell.iFolder.FormsBookLib.BooksContacts booksContacts;
+		private System.Windows.Forms.Panel panel1;
 		#endregion
+		private System.Windows.Forms.TextBox search;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.ToolBar toolBar1;
+		private System.Windows.Forms.ToolBarButton toolBarButton1;
+		private System.Windows.Forms.ToolBarButton toolBarButton2;
+		private System.Windows.Forms.ToolBarButton toolBarButton3;
+		private System.Windows.Forms.ToolBarButton toolBarButton4;
+		private System.Windows.Forms.ToolBarButton toolBarButton5;
+		private System.Windows.Forms.Timer editSearchTimer;
+		private System.ComponentModel.IContainer components;
 
 		public FormsAddrBook()
 		{
@@ -117,9 +124,7 @@ namespace Novell.iFolder.FormsAddrBook
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.panel1 = new System.Windows.Forms.Panel();
-			this.detailsView = new System.Windows.Forms.Panel();
-			this.booksContacts = new Novell.iFolder.FormsBookLib.BooksContacts();
+			this.components = new System.ComponentModel.Container();
 			this.mainMenu1 = new System.Windows.Forms.MainMenu();
 			this.menuFile = new System.Windows.Forms.MenuItem();
 			this.menuFileNew = new System.Windows.Forms.MenuItem();
@@ -139,43 +144,21 @@ namespace Novell.iFolder.FormsAddrBook
 			this.menuToolsExportVCard = new System.Windows.Forms.MenuItem();
 			this.menuHelp = new System.Windows.Forms.MenuItem();
 			this.menuHelpAbout = new System.Windows.Forms.MenuItem();
+			this.detailsView = new System.Windows.Forms.Panel();
+			this.splitter1 = new System.Windows.Forms.Splitter();
+			this.booksContacts = new Novell.iFolder.FormsBookLib.BooksContacts();
+			this.panel1 = new System.Windows.Forms.Panel();
+			this.search = new System.Windows.Forms.TextBox();
+			this.label1 = new System.Windows.Forms.Label();
+			this.toolBar1 = new System.Windows.Forms.ToolBar();
+			this.toolBarButton1 = new System.Windows.Forms.ToolBarButton();
+			this.toolBarButton2 = new System.Windows.Forms.ToolBarButton();
+			this.toolBarButton3 = new System.Windows.Forms.ToolBarButton();
+			this.toolBarButton4 = new System.Windows.Forms.ToolBarButton();
+			this.toolBarButton5 = new System.Windows.Forms.ToolBarButton();
+			this.editSearchTimer = new System.Windows.Forms.Timer(this.components);
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// panel1
-			// 
-			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-				| System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
-			this.panel1.Controls.Add(this.detailsView);
-			this.panel1.Controls.Add(this.booksContacts);
-			this.panel1.Location = new System.Drawing.Point(8, 0);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(552, 400);
-			this.panel1.TabIndex = 1;
-			// 
-			// detailsView
-			// 
-			this.detailsView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-				| System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
-			this.detailsView.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.detailsView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-			this.detailsView.Location = new System.Drawing.Point(312, 56);
-			this.detailsView.Name = "detailsView";
-			this.detailsView.Size = new System.Drawing.Size(232, 304);
-			this.detailsView.TabIndex = 1;
-			// 
-			// booksContacts
-			// 
-			this.booksContacts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-				| System.Windows.Forms.AnchorStyles.Left)));
-			this.booksContacts.LoadPath = null;
-			this.booksContacts.Location = new System.Drawing.Point(0, 0);
-			this.booksContacts.Name = "booksContacts";
-			this.booksContacts.Size = new System.Drawing.Size(304, 400);
-			this.booksContacts.TabIndex = 0;
-			this.booksContacts.ContactDoubleClicked += new Novell.iFolder.FormsBookLib.BooksContacts.ContactDoubleClickedDelegate(this.booksContacts_ContactDoubleClicked);
 			// 
 			// mainMenu1
 			// 
@@ -300,14 +283,123 @@ namespace Novell.iFolder.FormsAddrBook
 			this.menuHelpAbout.Index = 0;
 			this.menuHelpAbout.Text = "&About";
 			// 
+			// detailsView
+			// 
+			this.detailsView.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+			this.detailsView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+			this.detailsView.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.detailsView.Location = new System.Drawing.Point(307, 0);
+			this.detailsView.Name = "detailsView";
+			this.detailsView.Size = new System.Drawing.Size(341, 384);
+			this.detailsView.TabIndex = 1;
+			// 
+			// splitter1
+			// 
+			this.splitter1.Location = new System.Drawing.Point(304, 0);
+			this.splitter1.Name = "splitter1";
+			this.splitter1.Size = new System.Drawing.Size(3, 384);
+			this.splitter1.TabIndex = 3;
+			this.splitter1.TabStop = false;
+			// 
+			// booksContacts
+			// 
+			this.booksContacts.Dock = System.Windows.Forms.DockStyle.Left;
+			this.booksContacts.Filter = null;
+			this.booksContacts.LoadPath = null;
+			this.booksContacts.Location = new System.Drawing.Point(0, 0);
+			this.booksContacts.Name = "booksContacts";
+			this.booksContacts.Size = new System.Drawing.Size(304, 384);
+			this.booksContacts.TabIndex = 2;
+			// 
+			// panel1
+			// 
+			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+				| System.Windows.Forms.AnchorStyles.Left) 
+				| System.Windows.Forms.AnchorStyles.Right)));
+			this.panel1.Controls.Add(this.detailsView);
+			this.panel1.Controls.Add(this.splitter1);
+			this.panel1.Controls.Add(this.booksContacts);
+			this.panel1.Location = new System.Drawing.Point(8, 88);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(648, 384);
+			this.panel1.TabIndex = 1;
+			// 
+			// search
+			// 
+			this.search.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+				| System.Windows.Forms.AnchorStyles.Right)));
+			this.search.Location = new System.Drawing.Point(56, 56);
+			this.search.Name = "search";
+			this.search.Size = new System.Drawing.Size(600, 20);
+			this.search.TabIndex = 3;
+			this.search.Text = "";
+			this.search.TextChanged += new System.EventHandler(this.search_TextChanged);
+			// 
+			// label1
+			// 
+			this.label1.Location = new System.Drawing.Point(8, 56);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(100, 16);
+			this.label1.TabIndex = 4;
+			this.label1.Text = "Search:";
+			// 
+			// toolBar1
+			// 
+			this.toolBar1.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
+																						this.toolBarButton1,
+																						this.toolBarButton2,
+																						this.toolBarButton3,
+																						this.toolBarButton4,
+																						this.toolBarButton5});
+			this.toolBar1.DropDownArrows = true;
+			this.toolBar1.Location = new System.Drawing.Point(0, 0);
+			this.toolBar1.Name = "toolBar1";
+			this.toolBar1.ShowToolTips = true;
+			this.toolBar1.Size = new System.Drawing.Size(664, 42);
+			this.toolBar1.TabIndex = 5;
+			this.toolBar1.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.toolBar1_ButtonClick);
+			// 
+			// toolBarButton1
+			// 
+			this.toolBarButton1.Text = "New Book";
+			this.toolBarButton1.ToolTipText = "Create Address Book";
+			// 
+			// toolBarButton2
+			// 
+			this.toolBarButton2.Text = "New Group";
+			this.toolBarButton2.ToolTipText = "Create Group";
+			// 
+			// toolBarButton3
+			// 
+			this.toolBarButton3.Text = "New Contact";
+			this.toolBarButton3.ToolTipText = "Create Contact";
+			// 
+			// toolBarButton4
+			// 
+			this.toolBarButton4.Text = "Import vCard";
+			// 
+			// toolBarButton5
+			// 
+			this.toolBarButton5.Text = "Export vCard";
+			// 
+			// editSearchTimer
+			// 
+			this.editSearchTimer.Interval = 500;
+			this.editSearchTimer.Tick += new System.EventHandler(this.editSearchTimer_Tick);
+			// 
 			// FormsAddrBook
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(560, 401);
+			this.ClientSize = new System.Drawing.Size(664, 481);
+			this.Controls.Add(this.toolBar1);
+			this.Controls.Add(this.search);
+			this.Controls.Add(this.label1);
 			this.Controls.Add(this.panel1);
 			this.Menu = this.mainMenu1;
+			this.MinimumSize = new System.Drawing.Size(544, 480);
 			this.Name = "FormsAddrBook";
 			this.Text = "iFolder Address Book";
+			this.Load += new System.EventHandler(this.FormsAddrBook_Load);
 			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);
 
@@ -608,6 +700,52 @@ namespace Novell.iFolder.FormsAddrBook
 				// Clear the display.
 				e.Graphics.Clear(Color.White);
 			}
+		}
+
+		private void editSearchTimer_Tick(object sender, System.EventArgs e)
+		{
+			// The timer event has been fired...
+			// Stop the timer.
+			editSearchTimer.Stop();
+
+			// Filter the contact list view.
+			booksContacts.FilterList(search.Text);
+		}
+
+		private void search_TextChanged(object sender, System.EventArgs e)
+		{
+			// Reset the timer when search text is entered.
+			this.editSearchTimer.Stop();
+			this.editSearchTimer.Start();
+		}
+
+		private void toolBar1_ButtonClick(object sender, System.Windows.Forms.ToolBarButtonClickEventArgs e)
+		{
+			switch (e.Button.Text)
+			{
+				case "New Book":
+					booksContacts.CreateAddressBook();
+					break;
+				case "New Group":
+					break;
+				case "New Contact":
+					booksContacts.CreateContact();
+					break;
+				case "Import vCard":
+					break;
+				case "Export vCard":
+					break;
+				default:
+					break;
+			}
+		}
+
+		private void FormsAddrBook_Load(object sender, System.EventArgs e)
+		{
+			toolBar1.ImageList = this.booksContacts.ContactImageList;
+			toolBar1.Buttons[0].ImageIndex = 2;
+			toolBar1.Buttons[1].ImageIndex = 1;
+			toolBar1.Buttons[2].ImageIndex = 1;
 		}
 		#endregion
 	}
