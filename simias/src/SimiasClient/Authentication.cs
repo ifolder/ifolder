@@ -244,6 +244,11 @@ namespace Simias.Client
 
 					if (cDomainInfo != null)
 					{
+						// TODO DomainCredentials need to support an empty string.
+						// Change "Not Needed" to empty when fixed.
+						if (this.password == null)
+							password = "Not Needed";
+
 						int lStatus = 
 							simiasSvc.SetDomainCredentials(
 								cInfo.ID, cInfo.MemberID, this.password);
