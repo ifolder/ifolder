@@ -54,7 +54,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Used to keep track of changes to the layout of the store database.
 		/// </summary>
-		static private string storeVersion = "1.0.0";
+		static private string storeVersion = "1.0.1";
 
 		/// <summary>
 		/// Directories where store-managed and unmanaged files are kept.
