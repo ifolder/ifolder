@@ -214,6 +214,18 @@ namespace Simias.Client.Event
 			get { return fileSize; }
 		}
 
+
+		/// <summary>
+		/// Gets the type of event that occurred
+		/// </summary>
+		public EventType EventType
+		{
+			get
+			{
+				return (EventType)Enum.Parse(typeof(EventType), EventData);
+			}
+		}
+
 		#endregion
 	}
 }
