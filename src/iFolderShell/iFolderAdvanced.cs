@@ -628,8 +628,10 @@ namespace Novell.iFolder.iFolderCom
 				if (slMember.Added)
 				{
 					// TODO: we'll get the email a different way in the future.
-					if (sendersEmail == null)
+					if (ifolder.Domain.Equals(Domain.WorkGroupDomainID) &&
+						(sendersEmail == null))
 					{
+						// TODO: check for an existing contact for the current user.
 						EmailPrompt emailPrompt = new EmailPrompt();
 						if (DialogResult.OK == emailPrompt.ShowDialog())
 						{
@@ -655,7 +657,9 @@ namespace Novell.iFolder.iFolderCom
 
 					// Get the contact so that we can get the e-mail address from it.
 					Novell.AddressBook.AddressBook ab = abManager.GetAddressBook(relationship.CollectionID);
-					subscr.ToAddress = ab.GetContact(relationship.NodeID).EMail;
+					Contact contact = ab.GetContact(relationship.NodeID);
+					subscr.ToAddress = contact.EMail;
+					subscr.ToIdentity = contact.UserID;
 					
 					// Put the subscription in the POBox.
 					poBox.AddMessage(subscr);
@@ -1124,7 +1128,7 @@ namespace Novell.iFolder.iFolderCom
 					ShareListMember shareMember = null;
 
 					// Check to see if this contact was originally in the list.
-/*					if (this.removedList != null)
+/*TODO:					if (this.removedList != null)
 					{
 						ShareListMember slMemberToRemove = null;
 
@@ -1150,25 +1154,38 @@ namespace Novell.iFolder.iFolderCom
 
 					if (shareMember == null)
 					{
-						// The contact was not in the removed list, so create a new one.
-						shareMember = new ShareListMember();
+						// TODO: this needs to be reworked after BETA1 ... for now we will only allow them to choose a contact that is linked to a member.
+						if ((!ifolder.Domain.Equals(Domain.WorkGroupDomainID)) &&
+							((c.UserID == null) || (c.UserID.Length == 0)))
+						{
+							MessageBox.Show("Unable to share with the following incomplete user:\n\n" + c.FN, "Share Failure");
+						}
+						else
+						{
+							// The contact was not in the removed list, so create a new one.
+							shareMember = new ShareListMember();
 
-						// Create a place-holder member.
-						Member member = new Member(c.FN, Guid.NewGuid().ToString(), Access.Rights.ReadWrite);
+							// Create a place-holder member.
+							Member member = new Member(c.FN, Guid.NewGuid().ToString(), Access.Rights.ReadWrite);
 
-						// Create a relationship on the member ... this will be put on the Subscription object later on.
-						string collectionId = (string)c.Properties.GetSingleProperty(BaseSchema.CollectionId).Value;
-						member.Properties.AddProperty("Contact", new Relationship(collectionId, c.ID));
-						shareMember.Member = member;
-						shareMember.Added = true;
+							// Create a relationship on the member ... this will be put on the Subscription object later on.
+							string collectionId = (string)c.Properties.GetSingleProperty(BaseSchema.CollectionId).Value;
+							member.Properties.AddProperty("Contact", new Relationship(collectionId, c.ID));
+							shareMember.Member = member;
+							shareMember.Added = true;
+						}
 					}
 
-					lvitem.Tag = shareMember;
+					// If we have a valid shareMember, then add it to the listview.
+					if (shareMember != null)
+					{
+						lvitem.Tag = shareMember;
 
-					// Select the contacts that were just added.
-					lvitem.Selected = true;
+						// Select the contacts that were just added.
+						lvitem.Selected = true;
 
-					this.shareWith.Items.Add(lvitem);
+						shareWith.Items.Add(lvitem);
+					}
 				}
 			}
 		}
