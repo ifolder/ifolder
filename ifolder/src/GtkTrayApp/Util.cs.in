@@ -41,7 +41,7 @@ namespace Novell.iFolder
 
 		internal static void InitCatalog()
 		{
-			Mono.Posix.Catalog.Init("ifolder-client", "@prefix@/share/locale");
+			Mono.Posix.Catalog.Init("ifolder3", "@prefix@/share/locale");
 		}
 
 
