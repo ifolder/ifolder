@@ -255,6 +255,9 @@ namespace Simias.POBoxService.Web
 			Simias.POBox.POBox	poBox;
 			Store				store = Store.GetStore();
 			
+			// FIXME:  Temp remove
+			Console.WriteLine("POBoxService::AcceptSubscription - called");
+
 			// open the post office box
 			poBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
 				? Simias.POBox.POBox.GetPOBox(store, domainID)
@@ -314,6 +317,9 @@ namespace Simias.POBoxService.Web
 			Simias.POBox.POBox	poBox;
 			Store				store = Store.GetStore();
 			
+			// FIXME:  Temp remove
+			Console.WriteLine("POBoxService::DeclineSubscription - called");
+
 			// open the post office box
 			poBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
 				? Simias.POBox.POBox.GetPOBox(store, domainID)
@@ -370,6 +376,9 @@ namespace Simias.POBoxService.Web
 			Simias.POBox.POBox	poBox;
 			Store				store = Store.GetStore();
 			
+			// FIXME:  Temp remove
+			Console.WriteLine("POBoxService::AckSubscription - called");
+
 			// open the post office box
 			poBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
 				? Simias.POBox.POBox.GetPOBox(store, domainID)
@@ -422,6 +431,9 @@ namespace Simias.POBoxService.Web
 		{
 			Simias.POBox.POBox	poBox;
 			Store store = Store.GetStore();
+
+			// FIXME:  Temp remove
+			Console.WriteLine("POBoxService::GetSubscriptionStatus - called");
 
 			// open the post office box
 			poBox =
@@ -476,6 +488,9 @@ namespace Simias.POBoxService.Web
 			Store	store = Store.GetStore();
 			Simias.POBox.SubscriptionDetails details = 
 				new Simias.POBox.SubscriptionDetails();
+
+			// FIXME:  Temp remove
+			Console.WriteLine("POBoxService::GetSubscriptionDetails - called");
 
 			// open the collection
 			Collection c = store.GetCollectionByID(collectionID);
