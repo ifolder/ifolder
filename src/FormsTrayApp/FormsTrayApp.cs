@@ -54,6 +54,9 @@ namespace Novell.iFolder.FormsTrayApp
 		private MenuItem menuItemTracer;
 		private MenuItem menuItemBrowser;
 		private MenuItem menuItemProperties;
+		private MenuItem menuItemHelp;
+		private MenuItem menuItemSeparator1;
+		private MenuItem menuItemSeparator2;
 		private System.ComponentModel.IContainer components;
 
 		private Thread workerThread = null;
@@ -91,30 +94,41 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuItemExit = new MenuItem("E&xit");
 			this.menuItemInviteWizard = new MenuItem("&Invitation Wizard");
 			this.menuItemAddrBook = new MenuItem("&Address Book");
-			this.menuItemTracer = new MenuItem("Trace Window");
-			this.menuItemBrowser = new MenuItem("Store Browser");
-			this.menuItemProperties = new MenuItem("Properties");
+			this.menuItemTracer = new MenuItem("&Trace Window");
+			this.menuItemBrowser = new MenuItem("&Store Browser");
+			this.menuItemProperties = new MenuItem("&Properties");
+			this.menuItemHelp = new MenuItem("&Help...");
+			this.menuItemSeparator1 = new MenuItem("-");
+			this.menuItemSeparator2 = new MenuItem("-");
 
 			// Initialize contextMenu1
 			this.contextMenu1.MenuItems.AddRange(
-				new MenuItem[] {this.menuItemExit, this.menuItemProperties, this.menuItemInviteWizard, this.menuItemAddrBook, this.menuItemTracer});
+				new MenuItem[] {this.menuItemExit, this.menuItemSeparator1, this.menuItemHelp, this.menuItemProperties, this.menuItemSeparator2, this.menuItemInviteWizard, this.menuItemAddrBook, this.menuItemTracer});
 
 			// Initialize menuItemExit
-			this.menuItemExit.Index = 0;
+			this.menuItemExit.Index = 7;
 			this.menuItemExit.Enabled = false;
 			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
 
+			this.menuItemSeparator1.Index = 6;
+
+			// Initialize menuItemHelp
+			this.menuItemHelp.Index = 5;
+			this.menuItemHelp.Click += new EventHandler(menuItemHelp_Click);
+
 			// Initialize menuItemProperties
-			this.menuItemProperties.Index = 0;
+			this.menuItemProperties.Index = 4;
 			this.menuItemProperties.DefaultItem = true;
 			this.menuItemProperties.Click += new EventHandler(menuItemProperties_Click);
 
+			this.menuItemSeparator2.Index = 3;
+
 			// Initialize menuItemInviteWizard
-			this.menuItemInviteWizard.Index = 0;
+			this.menuItemInviteWizard.Index = 2;
 			this.menuItemInviteWizard.Click += new System.EventHandler(this.menuItemInviteWizard_Click);
 
 			// Initialize menuItemAddrBook
-			this.menuItemAddrBook.Index = 0;
+			this.menuItemAddrBook.Index = 1;
 			this.menuItemAddrBook.Click += new System.EventHandler(menuItemAddrBook_Click);
 
 			// Initialize menuItemTracer
@@ -361,6 +375,22 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			GlobalProperties globalProperties = new GlobalProperties();
 			globalProperties.ShowDialog();
+		}
+
+		private void menuItemHelp_Click(object sender, EventArgs e)
+		{
+			// TODO - need to use locale-specific path
+			string helpPath = Path.Combine(Application.StartupPath, @"help\en\doc\user\data\front.html");
+
+			try
+			{
+				Process.Start(helpPath);
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "Opening help");
+				MessageBox.Show("Unable to open help file: \n" + helpPath, "Help File Not Found");
+			}
 		}
 		#endregion
 
