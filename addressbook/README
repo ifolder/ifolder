@@ -23,7 +23,7 @@ Linux
 	You will need to have mono and gtk-sharp installed and working.  You can 
 	get those from the Ximian Red Carpet server or http://www.go-mono.com
 
-	To compile is the traditional (in the src directory):
+	To compile is the traditional:
 		configure
 		make
 		make install
@@ -36,7 +36,7 @@ Win32
 	- Perl (to run the configure script)
 	- gnu make
 
-	To compile is the traditional (in the src directory):
+	To compile is the traditional:
 		configure
 		make
 		make install
@@ -47,7 +47,7 @@ OS X
 	issues to large to cover here.  Once you do get mono going on OS X, the
 	Simias project should work much like it does on Linux.
 
-	To compile is the traditional (in the src directory):
+	To compile is the traditional:
 		configure
 		make
 		make install
