@@ -623,7 +623,7 @@ namespace Simias.Storage.Provider.Sqlite
 		ProviderConfig		conf;
 		internal Hashtable	connTable;
 		internal bool		opened;
-		int					threadCount = 0;
+		int					lastCleanupCount = 0;
 		int					count = 0;
 		string				storePath;
 		string				DbPath;
@@ -654,34 +654,26 @@ namespace Simias.Storage.Provider.Sqlite
 			object threadId = Thread.CurrentThread.GetHashCode();
 			lock (connTable)
 			{
-				/*
 				// See if we need to cleanup handles
-				if (threadCount == 0)
+				if (connTable.Count > lastCleanupCount + 20)
 				{
-					threadCount = System.Diagnostics.Process.GetCurrentProcess().Threads.Count;
-				}
-				if (connTable.Count > threadCount)
-				{
-					threadCount = System.Diagnostics.Process.GetCurrentProcess().Threads.Count;
 					// If we are still greater cleanup dead connections.
-					if (connTable.Count > threadCount)
+					ArrayList badConns = new ArrayList();
+					foreach (DictionaryEntry item in connTable)
 					{
-						ArrayList badConns = new ArrayList();
-						foreach (DictionaryEntry item in connTable)
+						InternalConnection conn = (InternalConnection)item.Value;
+						if (!conn.IsAlive)
 						{
-							InternalConnection conn = (InternalConnection)item.Value;
-							if (!conn.IsAlive)
-							{
-								badConns.Add(item.Key);
-							}
-						}
-						foreach (object key in badConns)
-						{
-							connTable.Remove(key);
+							conn.Dispose();
+							badConns.Add(item.Key);
 						}
 					}
+					foreach (object key in badConns)
+					{
+						connTable.Remove(key);
+					}
+					lastCleanupCount = connTable.Count;
 				}
-				*/
 				if (connTable.Contains(threadId))
 				{
 					instance = (InternalConnection)connTable[threadId];	
