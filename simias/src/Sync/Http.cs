@@ -527,7 +527,7 @@ namespace Simias.Sync.Http
 		/// </summary>
 		/// <param name="fStream">The stream of data to create the HashMap of.</param>
 		/// <returns>The Status.</returns>
-		public SyncStatus PutHashMap(FileStream fStream)
+		public SyncStatus PutHashMap(StreamStream fStream)
 		{
 			HttpWebRequest request = GetRequest(SyncMethod.PutHashMap);
 			request.Headers.Add(SyncHeaders.ObjectCount, HashMap.GetBlockCount(fStream.Length).ToString());
@@ -584,27 +584,17 @@ namespace Simias.Sync.Http
 		/// <param name="stream">The stream containing the data.</param>
 		/// <param name="offset">The offset to write at.</param>
 		/// <param name="count">The number of bytes to write.</param>
-		public void WriteFile(Stream stream, long offset, long count)
+		public void WriteFile(StreamStream stream, long offset, int count)
 		{
 			HttpWebRequest request = GetRequest(SyncMethod.WriteFile);
 			WebHeaderCollection headers = request.Headers;
 			request.ContentLength = count;
 			headers.Add(SyncHeaders.Range, offset.ToString() + "-" + ((long)(offset + count)).ToString());
 			Stream rStream = request.GetRequestStream();
-			byte[] buffer = new byte[64 * 1024];
-			long bytesSent = 0;
-			while (bytesSent < count)
-			{
-				int bytesRead = stream.Read(buffer, 0, Math.Min((int)(count - bytesSent), buffer.Length));
-				if (bytesRead == 0)
-					break;
-				rStream.Write(buffer, 0, bytesRead);
-				bytesSent += bytesRead;
-			}
+			int bytesRead = stream.Read(rStream, count);
+			if (bytesRead != count)
+				throw new SimiasException("Could not write all data.");
 			rStream.Close();
-			if (bytesSent < count)
-				throw new SimiasException("Failed Writing data");
-
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 			try
 			{
@@ -980,11 +970,8 @@ namespace Simias.Sync.Http
 				response.BufferOutput = false;
 				byte[] buffer = new byte[blockSize];
 				Stream outStream = response.OutputStream;
-				for (int i = seg.StartBlock; i <= seg.EndBlock; ++i)
-				{
-					int bytesRead = service.Read(buffer, i * blockSize, blockSize);
-					outStream.Write(buffer, 0, bytesRead);
-				}
+				int readSize = (seg.EndBlock - seg.StartBlock +1) * blockSize;
+                int bytesRead = service.Read(outStream, seg.StartBlock * blockSize, readSize);
 				outStream.Close();
 			}
 			else

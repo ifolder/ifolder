@@ -106,6 +106,7 @@ AssemblyInfo.cs
 ../Sync/Http.cs
 ../Sync/ServerFile.cs
 ../Sync/StartSyncInfo.cs
+../Sync/StreamStream.cs
 ../Sync/StrongHash.cs
 ../Sync/StrongWeakHashtable.cs
 ../Sync/SyncClient.cs

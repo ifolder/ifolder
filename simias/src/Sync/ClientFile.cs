@@ -107,7 +107,7 @@ namespace Simias.Sync
 				lastSeg = segArray[segArray.Count -1] as BlockSegment;
 				// Make sure the source and destination are contiguous.
 				if ((lastSeg.EndBlock + 1 == seg.StartBlock) 
-					&& ((lastSeg.Offset + (HashData.BlockSize * (lastSeg.EndBlock - lastSeg.StartBlock))) == seg.Offset))
+					&& ((lastSeg.Offset + (HashData.BlockSize * (lastSeg.EndBlock - lastSeg.StartBlock + 1))) == seg.Offset))
 				{
 					lastSeg.EndBlock = seg.StartBlock;
 					return;
@@ -411,32 +411,16 @@ namespace Simias.Sync
 				
 			
 			// Get the file blocks from the server.
-			byte[] buffer = new byte[HashData.BlockSize];
 			foreach (DownloadSegment seg in downloadMap)
 			{
 				HttpWebResponse response = syncService.ReadFile(seg, HashData.BlockSize);
 				Stream inStream = response.GetResponseStream();
 				try
 				{
-					for (int i = seg.StartBlock; i <= seg.EndBlock; ++i)
-					{
-						int buffOffset = 0;
-						int bytesInBuffer = 0;
-						while (bytesInBuffer < HashData.BlockSize)
-						{
-							int bytesRead = 0;
-							bytesRead = inStream.Read(buffer, buffOffset, HashData.BlockSize - bytesInBuffer);
-							if (bytesRead == 0)
-								break;
-							bytesInBuffer += bytesRead;
-							buffOffset += bytesRead;
-						}
-						WritePosition = i * HashData.BlockSize;
-						Write(buffer, 0, bytesInBuffer);
-						sizeRemaining -= bytesInBuffer;
-						if ((i % 16) == 15)
-							eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
-					}
+					int bytesToWrite = (seg.EndBlock - seg.StartBlock + 1) * HashData.BlockSize;
+					Write(inStream, bytesToWrite);
+					sizeRemaining -= bytesToWrite;
+					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
 				}
 				finally
 				{
@@ -753,7 +737,7 @@ namespace Simias.Sync
 			ReadPosition = 0;		
 			while (bytesRead != 0)
 			{
-				bytesRead = Read(buffer, readOffset, bytesRead - readOffset);
+				bytesRead = outStream.Read(buffer, readOffset, bytesRead - readOffset);
 				if (bytesRead == 0)
 					break;
 

@@ -40,12 +40,12 @@ namespace Simias.Sync
 	{
 		#region fields
 
-		FileStream	workStream;
+		StreamStream	workStream;
 
 		/// <summary>
 		/// Gets the output stream.
 		/// </summary>
-		protected FileStream OutStream
+		protected StreamStream OutStream
 		{
 			get { return workStream; }
 		}
@@ -78,16 +78,15 @@ namespace Simias.Sync
 		/// <summary>
 		/// Reads data into the buffer.
 		/// </summary>
-		/// <param name="buffer">The buffer to read into.</param>
-		/// <param name="offset">The offset in the buffer to read into.</param>
+		/// <param name="stream">The stream to read into.</param>
 		/// <param name="count">The number of bytes to read.</param>
 		/// <returns></returns>
-		public int Read(byte[] buffer, int offset, int count)
+		public int Read(Stream stream, int count)
 		{
 			try
 			{
 				//Log.log.Debug("Reading File {0} : offset = {1}", file, ReadPosition);
-				return workStream.Read(buffer, offset, count);
+				return workStream.Read(stream, count);
 			}
 			catch (Exception ex)
 			{
@@ -99,7 +98,7 @@ namespace Simias.Sync
 		/// <summary>
 		/// Get the platform file handle.
 		/// </summary>
-		public FileStream outStream
+		public StreamStream outStream
 		{
 			get {return workStream;}
 		}
@@ -137,14 +136,14 @@ namespace Simias.Sync
 			Log.log.Debug("Opening File {0}", file);
 			if (Store.GetStore().IsEnterpriseServer)
 			{
-				workStream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read);
+				workStream = new StreamStream(File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read));
 				workFile = null;
 			}
 			else
 			{
 				// This file is being pushed make a copy to work from.
 				File.Copy(file, workFile, true);
-				workStream = File.Open(workFile, FileMode.Open, FileAccess.Read);
+				workStream = new StreamStream(File.Open(workFile, FileMode.Open, FileAccess.Read));
 			}
 		}
 
@@ -195,11 +194,11 @@ namespace Simias.Sync
 		#region fields
 
 		/// <summary>Stream to the Incoming file.</summary>
-		FileStream	workStream;
+		StreamStream	workStream;
 		/// <summary>Stream to the Original file.</summary>
-		FileStream	stream;
+		FileStream		stream;
 		/// <summary>The partially downloaded file.</summary>
-		string		partialFile;
+		string			partialFile;
 		/// <summary>The Old Node if it exists.</summary>
 		protected BaseFileNode	oldNode;
 		Exception				exception;
@@ -246,24 +245,21 @@ namespace Simias.Sync
 		/// <summary>
 		/// Writes data from buffer into file.
 		/// </summary>
-		/// <param name="buffer">The buffer containing the data.</param>
-		/// <param name="offset">The offset in the buffer to write from.</param>
+		/// <param name="stream">The stream to write.</param>
 		/// <param name="count">The number of bytes to write.</param>
-		public void Write(byte[] buffer, int offset, int count)
+		public void Write(Stream stream, int count)
 		{
 			asyncEvent.WaitOne();
 			if (exception == null)
 			{
 				//Log.log.Debug("Writing File {0} : offset = {1}", file, WritePosition);
-				asyncEvent.Reset();
-				workStream.BeginWrite(buffer, offset, count, new AsyncCallback(WriteCallback), null);
+				workStream.Write(stream, count);
 			}
 			else
 			{
 				Log.log.Debug(exception, "Failed writing {0}", file);
 				throw(exception);
 			}
-			//workStream.Write(buffer, offset, count);
 		}
 
 		/// <summary>
@@ -274,28 +270,18 @@ namespace Simias.Sync
 		/// <param name="count">The number of bytes to write.</param>
 		public void Copy(long originalOffset, long offset, int count)
 		{
-			int bufferSize = count > HashData.BlockSize ? HashData.BlockSize : count;
-			byte[] buffer = new byte[bufferSize];
-
 			lock (this)
 			{
 				ReadPosition = originalOffset;
 				WritePosition = offset;
-				while (count > 0)
-				{
-					int bytesRead = Read(buffer, (int)0, bufferSize);
-					if (bytesRead == 0)
-						throw (new IOException(string.Format("Could not read file {0}", file)));
-					Write(buffer, 0, bytesRead);
-					count -= bytesRead;
-				}
+				workStream.Write(stream, count);
 			}
 		}
 		
 		/// <summary>
 		/// Get the stream.
 		/// </summary>
-		public FileStream inStream
+		public StreamStream inStream
 		{
 			get {return workStream;}
 		}
@@ -363,7 +349,7 @@ namespace Simias.Sync
 					stream = File.Open(partialFile, FileMode.Open, FileAccess.Read, FileShare.None);
 				}
 			}
-			workStream = File.Open(workFile, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None);
+			workStream = new StreamStream(File.Open(workFile, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None));
 		}
 
 		/// <summary>
@@ -378,25 +364,6 @@ namespace Simias.Sync
 		#endregion
 
 		#region private methods.
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="result"></param>
-		private void WriteCallback(IAsyncResult result)
-		{
-			try
-			{
-				workStream.EndWrite(result);
-			}
-			catch (Exception ex)
-			{
-				Log.log.Debug(ex, "WriteCallBack");
-				exception = ex;
-			}
-			asyncEvent.Set();
-		}
-
 
 		/// <summary>
 		/// Called to cleanup any resources and close the file.
@@ -495,7 +462,7 @@ namespace Simias.Sync
 		/// <summary>The ID of the node.</summary>
 		protected string		nodeID;
 		/// <summary>The maximun size of a transfer.</summary>
-		protected const int		MaxXFerSize = 1024 * 64;
+		protected const int		MaxXFerSize = 1024 * 300;
 		/// <summary>The name of the actual file.</summary>
 		protected string		file;
 		/// <summary>The name of the working file.</summary>

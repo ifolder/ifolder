@@ -779,36 +779,14 @@ namespace Simias.Sync
 		/// <summary>
 		/// Write the included data to the new file.
 		/// </summary>
-		/// <param name="buffer">The data to write.</param>
+		/// <param name="stream">The stream to write.</param>
 		/// <param name="offset">The offset in the new file of where to write.</param>
 		/// <param name="count">The number of bytes to write.</param>
-		public void Write(byte[] buffer, long offset, int count)
+		public void Write(Stream stream, long offset, int count)
 		{
 			inFile.WritePosition = offset;
-			inFile.Write(buffer, 0, count);
+			inFile.Write(stream, count);
 		}
-
-		/// <summary>
-		/// Write the included data to the new file.
-		/// </summary>
-		/// <param name="inStream">The input stream to write.</param>
-		/// <param name="offset">The offset in the new file of where to write.</param>
-		/// <param name="count">The number of bytes to write.</param>
-		public void Write(Stream inStream, long offset, int count)
-		{
-			byte []buffer = new byte[MaxBuffSize];
-			inFile.WritePosition = offset;
-			int bytesWritten = 0;
-			while(bytesWritten < count)
-			{
-				int bytesRead = inStream.Read(buffer, 0, Math.Min(MaxBuffSize, (int)(count - bytesWritten)));
-				if (bytesRead == 0)
-					throw new SimiasException("Missing Data");
-				inFile.Write(buffer, 0, bytesRead);
-				bytesWritten += bytesRead;
-			}
-		}
-
 
 		/// <summary>
 		/// Copy data from the old file to the new file.
@@ -824,21 +802,21 @@ namespace Simias.Sync
 		/// <summary>
 		/// Read data from the currently opened file.
 		/// </summary>
-		/// <param name="buffer">Buffer to read into.</param>
+		/// <param name="stream">Stream to read into.</param>
 		/// <param name="offset">The offset to begin reading.</param>
 		/// <param name="count">The number of bytes to read.</param>
 		/// <returns>The number of bytes read.</returns>
-		public int Read(byte[] buffer, long offset, int count)
+		public int Read(Stream stream, long offset, int count)
 		{
 			outFile.ReadPosition = offset;
-			return outFile.Read(buffer, 0, count);
+			return outFile.Read(stream, count);
 		}
 
 		/// <summary>
 		/// Gets the read stream.
 		/// </summary>
 		/// <returns>The file stream.</returns>
-		public FileStream GetReadStream()
+		public StreamStream GetReadStream()
 		{
 			return outFile.outStream;
 		}
@@ -847,7 +825,7 @@ namespace Simias.Sync
 		/// Get the WriteStream.
 		/// </summary>
 		/// <returns>The file stream.</returns>
-		public FileStream GetWriteStream()
+		public StreamStream GetWriteStream()
 		{
 			return inFile.inStream;
 		}
