@@ -74,9 +74,16 @@ internal class OutgoingNode
 		 * serializable (but a raw node is).
 		 */
 		Node node = collection.GetNodeByID(nid);
-		if (node == null)
+		// If the node does not exist or it has collisions do not sync.
+		if (node == null || collection.HasCollisions(node))
 		{
-			Log.Spew("ignoring attempt to start outgoing sync for non-existent node {0}", nid);
+			string errorString;
+			if (node == null)
+				errorString = "Node does not exist";
+			else
+				errorString = "Node has collision";
+
+			Log.log.Debug("ignoring attempt to start outgoing sync for node {0}. {1}", nid, errorString);
 			return null;
 		}
 

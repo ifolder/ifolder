@@ -361,10 +361,10 @@ public class SynkerWorkerA: SyncCollectionWorker
 		ProcessKillOnClient();
 		ProcessDirsFromServer();
 		ProcessSmallFromServer();
+		ProcessLargeFromServer();
 		ProcessDirsToServer();
 		ProcessSmallToServer();	
 		ProcessLargeToServer();
-		ProcessLargeFromServer();
 	}
 
 	/// <summary>
@@ -396,68 +396,23 @@ public class SynkerWorkerA: SyncCollectionWorker
 
 	void ProcessDirsFromServer()
 	{
-		NodeChunk[] updates = null;
-
-		// get directories from the server.
-		if (dirsFromServer.Count > 0 && ! stopping)
-		{
-			NodeStamp[] dirStamps = new NodeStamp[dirsFromServer.Count];
-			dirsFromServer.Values.CopyTo(dirStamps, 0);
-
-			// Now get the nodes in groups of BATCH_SIZE.
-			int offset = 0;
-			while (offset < dirStamps.Length)
-			{
-				int batchCount = dirStamps.Length - offset < BATCH_SIZE ? dirStamps.Length - offset : BATCH_SIZE;
-				Nid[] ids = new Nid[batchCount];
-				for (int i = 0; i < batchCount; ++i)
-				{
-					ids[i] = dirStamps[offset + i].id;
-				}
-				
-				updates = ss.GetSmallNodes(ids);
-
-				if (updates != null && updates.Length > 0)
-				{
-					for (int i = 0; i < updates.Length; ++i)
-					{
-						try
-						{
-							// Set the expected incarnation.
-							NodeStamp ns = (NodeStamp)dirsFromServer[(Nid)updates[i].node.ID];
-							updates[i].expectedIncarn = ns.masterIncarn;
-
-							if (ops.PutSmallNode(updates[i]) == NodeStatus.Complete)
-							{
-								// This was successful remove the node from the hashtable.
-								dirsFromServer.Remove((Nid)updates[i].node.ID);
-							}
-							else
-							{
-								// We had an error.
-								HadErrors = true;
-							}
-						}
-						catch
-						{
-							// Try to store the next node.
-						}
-					}
-				}
-				offset += batchCount;
-			}
-		}
+		ProcessSmallFromServer(dirsFromServer);
+	}
+	
+	void ProcessSmallFromServer()
+	{
+		ProcessSmallFromServer(smallFromServer);
 	}
 
-	void ProcessSmallFromServer()
+	void ProcessSmallFromServer(Hashtable nodesFromServer)
 	{
 		NodeChunk[] updates = null;
 
 		// get small nodes and files from server
-		if (smallFromServer.Count > 0 && !stopping)
+		if (nodesFromServer.Count > 0 && !stopping)
 		{
-			NodeStamp[] smallStamps = new NodeStamp[smallFromServer.Count];
-			smallFromServer.Values.CopyTo(smallStamps, 0);
+			NodeStamp[] smallStamps = new NodeStamp[nodesFromServer.Count];
+			nodesFromServer.Values.CopyTo(smallStamps, 0);
 
 			// Now get the nodes in groups of BATCH_SIZE.
 			int offset = 0;
@@ -479,13 +434,16 @@ public class SynkerWorkerA: SyncCollectionWorker
 						try
 						{
 							// Set the expected incarnation.
-							NodeStamp ns = (NodeStamp)smallFromServer[(Nid)updates[i].node.ID];
+							NodeStamp ns = (NodeStamp)nodesFromServer[(Nid)updates[i].node.ID];
 							updates[i].expectedIncarn = ns.masterIncarn;
 
-							if (ops.PutSmallNode(updates[i]) == NodeStatus.Complete)
+							NodeStatus status = ops.PutSmallNode(updates[i]);
+							if (status == NodeStatus.Complete ||
+								status == NodeStatus.FileNameConflict ||
+								status == NodeStatus.UpdateConflict)
 							{
 								// This was successful remove the node from the hashtable.
-								smallFromServer.Remove((Nid)updates[i].node.ID);
+								nodesFromServer.Remove((Nid)updates[i].node.ID);
 							}
 							else
 							{
@@ -511,60 +469,10 @@ public class SynkerWorkerA: SyncCollectionWorker
 		// push up directories.
 		if ((updates = ops.GetSmallNodes(dirsToServer)) != null)
 		{
-			// Now put the nodes in groups of BATCH_SIZE.
-			int offset = 0;
-			while (offset < updates.Length)
-			{
-				int batchCount = updates.Length - offset < BATCH_SIZE ? updates.Length - offset : BATCH_SIZE;
-				try
-				{
-					NodeChunk[] nodeChunks = new NodeChunk[batchCount];
-
-					for (int i = 0; i < batchCount; ++i)
-					{
-						nodeChunks[i] = updates[offset + i];
-					}
-			
-					RejectedNode[] rejects = ss.PutSmallNodes(nodeChunks);
-
-					foreach (NodeChunk nc in nodeChunks)
-					{
-						if (stopping)
-							return;
-						bool updateIncarn = true;
-						if (rejects != null)
-						{
-							foreach (RejectedNode reject in rejects)
-							{
-								if (reject.nid == nc.node.ID)
-								{
-									Log.log.Debug("skipping update of incarnation for small node {0} due to {1} on server",
-										reject.nid, reject.status);
-									updateIncarn = false;
-									HadErrors = true;
-									break;
-								}
-							}
-						}
-						if (updateIncarn == true)
-						{
-							if (collection.IsType(nc.node, NodeTypes.TombstoneType))
-								ops.DeleteNode((Nid)nc.node.ID, false);
-							else
-								ops.UpdateIncarn((Nid)nc.node.ID, nc.node.LocalIncarnation);
-							dirsToServer.Remove((Nid)nc.node.ID);
-						}
-					}
-				}
-				catch
-				{
-					// Continu getting the rest of the nodes.
-				}
-				offset += batchCount;
-			}
+			ProcessSmallToServer(updates);
 		}
 	}
-
+	
 	void ProcessSmallToServer()
 	{
 		NodeChunk[] updates = null;
@@ -572,57 +480,68 @@ public class SynkerWorkerA: SyncCollectionWorker
 		// push up small nodes and files to server
 		if ((updates = ops.GetSmallNodes(smallToServer)) != null)
 		{
-			// Now put the nodes in groups of BATCH_SIZE.
-			int offset = 0;
-			while (offset < updates.Length)
+			ProcessSmallToServer(updates);
+		}
+	}
+	
+
+	void ProcessSmallToServer(NodeChunk[] updates)
+	{
+		// Now put the nodes in groups of BATCH_SIZE.
+		int offset = 0;
+		while (offset < updates.Length)
+		{
+			int batchCount = updates.Length - offset < BATCH_SIZE ? updates.Length - offset : BATCH_SIZE;
+			try
 			{
-				int batchCount = updates.Length - offset < BATCH_SIZE ? updates.Length - offset : BATCH_SIZE;
-				try
+				NodeChunk[] nodeChunks = new NodeChunk[batchCount];
+
+				for (int i = 0; i < batchCount; ++i)
 				{
-					NodeChunk[] nodeChunks = new NodeChunk[batchCount];
-
-					for (int i = 0; i < batchCount; ++i)
-					{
-						nodeChunks[i] = updates[offset + i];
-					}
+					nodeChunks[i] = updates[offset + i];
+				}
 			
-					RejectedNode[] rejects = ss.PutSmallNodes(nodeChunks);
+				RejectedNode[] rejects = ss.PutSmallNodes(nodeChunks);
 
-					foreach (NodeChunk nc in nodeChunks)
+				foreach (NodeChunk nc in nodeChunks)
+				{
+					if (stopping)
+						return;
+					bool updateIncarn = nc.node == null ? false : true;
+					bool removeFromList = true;
+					if (rejects != null)
 					{
-						if (stopping)
-							return;
-						bool updateIncarn = true;
-						if (rejects != null)
+						foreach (RejectedNode reject in rejects)
 						{
-							foreach (RejectedNode reject in rejects)
+							if (reject.nid == nc.node.ID)
 							{
-								if (reject.nid == nc.node.ID)
-								{
-									Log.log.Debug("skipping update of incarnation for small node {0} due to {1} on server",
-										reject.nid, reject.status);
-									updateIncarn = false;
-									HadErrors = true;
-									break;
-								}
+								Log.log.Debug("skipping update of incarnation for small node {0} due to {1} on server",
+									reject.nid, reject.status);
+								updateIncarn = false;
+								HadErrors = true;
+								removeFromList = false;
+								break;
 							}
 						}
-						if (updateIncarn == true)
-						{
-							if (collection.IsType(nc.node, NodeTypes.TombstoneType))
-								ops.DeleteNode((Nid)nc.node.ID, false);
-							else
-								ops.UpdateIncarn((Nid)nc.node.ID, nc.node.LocalIncarnation);
-							smallToServer.Remove((Nid)nc.node.ID);
-						}
+					}
+					if (updateIncarn == true)
+					{
+						if (collection.IsType(nc.node, NodeTypes.TombstoneType))
+							ops.DeleteNode((Nid)nc.node.ID, false);
+						else
+							ops.UpdateIncarn((Nid)nc.node.ID, nc.node.LocalIncarnation);
+					}
+					if (removeFromList)
+					{
+						smallToServer.Remove((Nid)nc.node.ID);
 					}
 				}
-				catch
-				{
-					// Get these next sync pass.
-				}
-				offset += batchCount;
 			}
+			catch
+			{
+				// Get these next sync pass.
+			}
+			offset += batchCount;
 		}
 	}
 
@@ -645,7 +564,10 @@ public class SynkerWorkerA: SyncCollectionWorker
 					Node node;
 
 					if ((node = outNode.Start(stamp.id)) == null)
+					{
+						largeToServer.Remove((Nid)node.ID);
 						continue;
+					}
 
 					int totalSize;
 					ForkChunk[] chunks = outNode.ReadChunks(NodeChunk.MaxSize, out totalSize);
@@ -683,7 +605,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 				}
 				catch
 				{
-					// We'll get this file net sync pass.
+					// Ignore: We'll get this file next sync pass.
 				}
 			}
 		}
@@ -717,14 +639,16 @@ public class SynkerWorkerA: SyncCollectionWorker
 							nc.totalSize += chunk.data.Length;
 					}
 					NodeStatus status = inNode.Complete(stamp.masterIncarn);
-					if (status != NodeStatus.Complete)
+					if (status == NodeStatus.Complete || 
+						status == NodeStatus.FileNameConflict ||
+						status == NodeStatus.UpdateConflict)
 					{
-						Log.log.Debug("failed to update large node {0} from master, status {1}", stamp.name, status);
-						HadErrors = true;
+						largeFromServer.Remove((Nid)stamp.id);
 					}
 					else
 					{
-						largeFromServer.Remove((Nid)stamp.id);
+						Log.log.Debug("failed to update large node {0} from master, status {1}", stamp.name, status);
+						HadErrors = true;
 					}
 				}
 				catch

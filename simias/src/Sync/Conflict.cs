@@ -156,12 +156,14 @@ public class Conflict
 		// conflict node wins
 		// we may be resolving an update conflict on a node that has a naming conflict
 		string path = NonconflictedPath, fncpath = null;
+		FileInfo fInfo = null;
 		if (path != null)
 		{
 			try
 			{
 				File.Delete(path);
 				File.Move(UpdateConflictPath, path);
+				fInfo = new FileInfo(path);
 			}
 			catch (Exception ne)
 			{
@@ -174,6 +176,15 @@ public class Conflict
 		node = collection.ResolveCollision(node, conflictNode.LocalIncarnation, false);
 		if (fncpath != null)
 			node = collection.CreateCollision(conflictNode, true);
+		if (fInfo != null)
+		{
+			BaseFileNode bfn = node as BaseFileNode;
+			if (bfn != null)
+			{
+				fInfo.CreationTime = bfn.CreationTime;
+				fInfo.LastWriteTime = bfn.LastWriteTime;
+			}
+		}
 		conflictNode = null;
 		collection.Commit(node);
 		Log.Spew("Master update wins in conflict for {0} node {1}", node.Type, node.Name);

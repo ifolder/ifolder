@@ -242,7 +242,7 @@ internal class SyncOps
 			NodeStamp stamp = new NodeStamp();
 			stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
 			stamp.masterIncarn = node.MasterIncarnation;
-			stamp.id = new Nid(node.ID);
+			stamp.id = (Nid)node.ID;
 			stamp.name = node.Name;
 			stamp.isDir = collection.IsType(node, NodeTypes.DirNodeType);
 			stamp.changeType = ChangeLogRecord.ChangeLogOp.Unknown;
@@ -359,8 +359,9 @@ internal class SyncOps
 		NodeChunk[] chunks = new NodeChunk[nids.Length];
 		uint i = 0;
 		foreach (Nid nid in nids)
+		{
 			chunks[i++] = GetSmallNode(nid);
-		
+		}	
 		return chunks;
 	}
 
@@ -419,10 +420,13 @@ internal class SyncOps
 		Log.Spew("PutSmallNodes() {0}", nodeChunks.Length);
 		foreach (NodeChunk nc in nodeChunks)
 		{
-			NodeStatus status = PutSmallNode(nc);
-			if (status != NodeStatus.Complete)
+			if (nc.node != null)
 			{
-				rejects.Add(new RejectedNode((Nid)nc.node.ID, status));
+				NodeStatus status = PutSmallNode(nc);
+				if (status != NodeStatus.Complete)
+				{
+					rejects.Add(new RejectedNode((Nid)nc.node.ID, status));
+				}
 			}
 		}
 		return rejects.Count == 0? null: (RejectedNode[])rejects.ToArray(typeof(RejectedNode));
