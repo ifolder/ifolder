@@ -513,7 +513,13 @@ namespace Simias.Storage
 						// If this is a StoreFileNode, commit the buffered stream to disk.
 						if ( IsType( node, NodeTypes.StoreFileNodeType ) )
 						{
-							( node as StoreFileNode ).FlushStreamData( this );
+							// This cast is safe because a Node object cannot be a StoreFileNode object
+							// and be in the the Add state without having been derived as the right class.
+							StoreFileNode sfn = node as StoreFileNode;
+							if ( sfn != null )
+							{
+								sfn.FlushStreamData( this );
+							}
 						}
 
 						// Copy the XML node over to the modify document.
@@ -545,7 +551,8 @@ namespace Simias.Storage
 									try
 									{
 										// Delete the file.
-										File.Delete( ( node as StoreFileNode ).GetFullPath( this ) );
+										StoreFileNode sfn = new StoreFileNode( node );
+										File.Delete( sfn.GetFullPath( this ) );
 									}
 									catch {}
 								}
@@ -701,7 +708,13 @@ namespace Simias.Storage
 							// If this is a member Node, update the access control entry.
 							if ( IsType( node, NodeTypes.MemberType ) )
 							{
-								( node as Member ).UpdateAccessControl();
+								// If the node was not instantiated as a Member, then we don't need to
+								// worry about cached access control.
+								Member member = node as Member;
+								if ( member != null )
+								{
+									member.UpdateAccessControl();
+								}
 							}
 							break;
 
@@ -711,7 +724,13 @@ namespace Simias.Storage
 							// If this is a member Node, update the access control entry.
 							if ( IsType( node, NodeTypes.MemberType ) )
 							{
-								( node as Member ).UpdateAccessControl();
+								// If the node was not instantiated as a Member, then we don't need to
+								// worry about cached access control.
+								Member member = node as Member;
+								if ( member != null )
+								{
+									member.UpdateAccessControl();
+								}
 							}
 							break;
 					}
@@ -769,7 +788,10 @@ namespace Simias.Storage
 		/// <param name="nodeList">List of Node objects to be committed to the store.</param>
 		private void SetStorageSize( Node[] nodeList )
 		{
-			Collection collection = null;
+			// The collection will be represented as a Node object, which is okay because only the
+			// storage property needs to be changed and that can happen when the collection is referenced
+			// as a Node object as well.
+			Node cNode = null;
 			long storeBytes = 0;
 
 			foreach ( Node node in nodeList )
@@ -777,19 +799,24 @@ namespace Simias.Storage
 				// Check for BaseFileNode types because they are the only objects that contain files.
 				if ( IsType( node, NodeTypes.BaseFileNodeType ) )
 				{
+					// Can't assume that the incoming Node object has been instantiated with the
+					// right derived type.
+					BaseFileNode bfn = Node.NodeFactory( this, node ) as BaseFileNode;
+
+					// Calculate the new storage size based on the state of the Node object.
 					switch ( node.Properties.State )
 					{
 						case PropertyList.PropertyListState.Add:
 						{
 							// Add the number of bytes to the overall total.
-							storeBytes += ( node as BaseFileNode ).Length;
+							storeBytes += bfn.Length;
 							break;
 						}
 
 						case PropertyList.PropertyListState.Delete:
 						{
 							// Subtract the number of bytes from the overall total.
-							storeBytes -= ( node as BaseFileNode ).Length;
+							storeBytes -= bfn.Length;
 							break;
 						}
 
@@ -799,17 +826,17 @@ namespace Simias.Storage
 							long oldLength = 0;
 
 							// Get the current file size from the same Node off the disk.
-							Node diskNode = GetNodeByID( node.ID );
+							BaseFileNode diskNode = GetNodeByID( node.ID ) as BaseFileNode;
 							if ( diskNode != null )
 							{
 								// Save this so it doesn't have to be looked up again by the commit code.
 								node.DiskNode = diskNode;
 
 								// Get the old file size.
-								oldLength = ( diskNode as BaseFileNode ).Length;
+								oldLength = diskNode.Length;
 							}
 
-							storeBytes += ( ( node as BaseFileNode ).Length - oldLength );
+							storeBytes += ( bfn.Length - oldLength );
 							break;
 						}
 					}
@@ -817,19 +844,20 @@ namespace Simias.Storage
 				else if ( IsType( node, NodeTypes.CollectionType ) )
 				{
 					// It could be that there are multiple collection objects in the list. We always want
-					// the last one.
-					collection = node as Collection;
+					// the last one and we also need a reference to the object since we intend to update it
+					// and we want the update to be committed.
+					cNode = node;
 				}
 			}
 
 			// Make sure that there is a collection object.
-			if ( ( collection != null ) && ( storeBytes != 0 ) )
+			if ( ( cNode != null ) && ( storeBytes != 0 ) )
 			{
 				// See if this collection is new.
-				if ( collection.Properties.State == PropertyList.PropertyListState.Add )
+				if ( cNode.Properties.State == PropertyList.PropertyListState.Add )
 				{
 					// No need to look up the old amount, just add the new amount.
-					collection.Properties.ModifyNodeProperty( PropertyTags.StorageSize, storeBytes );
+					cNode.Properties.ModifyNodeProperty( PropertyTags.StorageSize, storeBytes );
 				}
 				else
 				{
@@ -838,10 +866,10 @@ namespace Simias.Storage
 					if ( diskCollection != null )
 					{
 						// Save this so it doesn't have to be looked up again by the commit code.
-						collection.DiskNode = diskCollection;
+						cNode.DiskNode = diskCollection;
 
 						// Set the new storage size for the collection.
-						collection.Properties.ModifyNodeProperty( PropertyTags.StorageSize, diskCollection.StorageSize + storeBytes );
+						cNode.Properties.ModifyNodeProperty( PropertyTags.StorageSize, diskCollection.StorageSize + storeBytes );
 					}
 				}
 			}
