@@ -26,10 +26,10 @@ endif
 
 install-exec-local: Simias.Service.mDnsService.exe
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) Simias.Service.mDnsService.exe $(DEBUG_FILES) $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) --mode=644 Simias.Service.mDnsService.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(libdir); rm -f Simias.Service.mDnsService.exe $(DEBUG_FILES)
+	cd $(DESTDIR)$(bindir); rm -f Simias.Service.mDnsService.exe $(DEBUG_FILES)
 	
 CLEAN_FILES = Simias.Service.mDnsService.exe 
 
