@@ -28,20 +28,20 @@ using System.Security;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-// General Information about the system assembly
+//
+// General Information about an assembly is controlled through the following 
+// set of attributes.
+//
 
-#if MONO
-#if (NET_1_0)
-	[assembly: AssemblyVersion("1.0.0.0")]
-	[assembly: SatelliteContractVersion("1.0.0.0")]
-#endif
-#if (NET_1_1)
-	[assembly: AssemblyVersion("1.0.0.0")]
-	[assembly: SatelliteContractVersion("1.0.0.0")]
-	[assembly: ComCompatibleVersion(1, 0, 0, 0)]
-	[assembly: TypeLibVersion(1, 10)]
-#endif
-#else
+[assembly: AssemblyTitle("Simias.dll")]
+[assembly: AssemblyDescription("Simias.dll")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("Simias Development Team")]
+[assembly: AssemblyProduct("Simias")]
+[assembly: AssemblyCopyright("(c) 2004 Novell, Inc.")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]		
+
 //
 // Version information for an assembly consists of the following four values:
 //
@@ -52,28 +52,33 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
+//
 
+#if MONO
+[assembly: AssemblyVersion("1.0.0.0")]
+#else
 [assembly: AssemblyVersion("1.0.*")]
 #endif
 
-[assembly: AssemblyTitle("Simias.dll")]
-[assembly: AssemblyDescription("Simias.dll")]
-[assembly: AssemblyConfiguration("Development version")]
-[assembly: AssemblyCompany("Simias development team")]
-[assembly: AssemblyProduct("Simias")]
-[assembly: AssemblyCopyright("(c) 2004 Novell, Inc.")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]		
+[assembly: SatelliteContractVersion("1.0.0.0")]
+[assembly: ComCompatibleVersion(1, 0, 0, 0)]
+[assembly: TypeLibVersion(1, 0)]
 
 [assembly: CLSCompliant(false)]
 [assembly: AssemblyDefaultAlias("Simias.dll")]
-[assembly: AssemblyInformationalVersion("0.0.0.1")]
+[assembly: AssemblyInformationalVersion("1.0.0.0")]
 [assembly: NeutralResourcesLanguage("en-US")]
 
 [assembly: AllowPartiallyTrustedCallers]
 [assembly: ComVisible(false)]
 
+//
+// In order to sign your assembly you must specify a key to use.
+// Use the attributes below to control which key is used for signing. 
+//
+
 #if MONO
 [assembly: AssemblyDelaySign(true)]
 [assembly: AssemblyKeyFile("../simias-snakeoil.keys")]
+[assembly: AssemblyKeyName("")]
 #endif 
