@@ -103,15 +103,9 @@ namespace Novell.iFolderCom
 			addLVItemEventDelegate = new AddLVItemEventDelegate(addLVItemEvent);
 			beginAddLVItemEventDelegate = new BeginAddLVItemEventDelegate(beginAddLVItemEvent);
 
-			this.StartPosition = FormStartPosition.CenterParent;
-
 			workEvent = new AutoResetEvent(false);
 
-			if (worker == null)
-			{
-				worker = new Thread(new ThreadStart(searchThreadProc));
-				worker.Start();
-			}
+			this.StartPosition = FormStartPosition.CenterParent;
 		}
 
 		/// <summary>
@@ -1172,5 +1166,16 @@ namespace Novell.iFolderCom
 			}
 		}
 		#endregion
+
+		protected override void OnHandleCreated(EventArgs e)
+		{
+			base.OnHandleCreated (e);
+
+			if (worker == null)
+			{
+				worker = new Thread(new ThreadStart(searchThreadProc));
+				worker.Start();
+			}
+		}
 	}
 }

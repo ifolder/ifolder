@@ -178,7 +178,7 @@ namespace Novell.FormsTrayApp
 					this.Icon = new Icon(Path.Combine(Application.StartupPath, "ifolder_app.ico"));
 
 					trayIcon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
-					startupIcon = new Icon(Path.Combine(basePath, "ifolder-startup.ico"));
+					startupIcon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));//TODO: "ifolder-startup.ico"));
 					syncIcons[0] = new Icon(trayIcon, trayIcon.Size);
 					for (int i = 0; i < numberOfSyncIcons; i++)
 					{

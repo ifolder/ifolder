@@ -1740,17 +1740,17 @@ namespace Novell.FormsTrayApp
 				//	- iFolder that has been requested.
 				//	- iFolder that has been invited. (Invitation.ico?)
 				this.iFolderView.SmallImageList = new ImageList();
-				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder.ico")));
+				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico")));
 				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\serverifolder.ico")));
-				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolderconflict.ico")));
+				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico")));//TODO: conflict.ico")));
 
 				// Add icons for toolbar buttons.
 				toolBar1.ImageList = new ImageList();
-				toolBar1.ImageList.Images.Add(new Bitmap(Path.Combine(Application.StartupPath, @"res\newifolder24.png")), Color.Black);
-				toolBar1.ImageList.Images.Add(new Bitmap(Path.Combine(Application.StartupPath, @"res\setup24.png")), Color.Black);
-				toolBar1.ImageList.Images.Add(new Bitmap(Path.Combine(Application.StartupPath, @"res\share24.png")), Color.Black);
-				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolderconflict.ico")));//(new Bitmap(Path.Combine(Application.StartupPath, @"res\conflict24.png")), Color.Black);
-				toolBar1.ImageList.Images.Add(new Bitmap(Path.Combine(Application.StartupPath, @"res\sync24.png")), Color.Black);
+				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico")));
+				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\setup.ico")));
+				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\share.ico")));
+				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\conflict_resolution.ico")));
+				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\sync.ico")));
 
 				toolBarCreate.ImageIndex = 0;
 				toolBarSetup.ImageIndex = 1;

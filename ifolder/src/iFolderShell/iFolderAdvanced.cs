@@ -2670,6 +2670,7 @@ namespace Novell.iFolderCom
 			{
 				picker.CurrentOwner = newOwnerLvi == null ? ((ShareListMember)ownerLvi.Tag).iFolderUser : ((ShareListMember)newOwnerLvi.Tag).iFolderUser;
 			}
+			picker.CreateControl();
 			DialogResult result = picker.ShowDialog();
 			if (result == DialogResult.OK)
 			{
