@@ -128,6 +128,13 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuActionPause;
 		private System.Windows.Forms.MenuItem menuActionRestart;
 		private System.Windows.Forms.MenuItem menuActionSeparator1;
+		private System.Windows.Forms.TabPage tabPage5;
+		private System.Windows.Forms.GroupBox groupBox5;
+		private System.Windows.Forms.RadioButton noProxy;
+		private System.Windows.Forms.RadioButton useProxy;
+		private System.Windows.Forms.TextBox proxy;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.TextBox port;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -264,6 +271,13 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuActionRestart = new System.Windows.Forms.MenuItem();
 			this.menuView = new System.Windows.Forms.MenuItem();
 			this.menuViewRefresh = new System.Windows.Forms.MenuItem();
+			this.tabPage5 = new System.Windows.Forms.TabPage();
+			this.groupBox5 = new System.Windows.Forms.GroupBox();
+			this.noProxy = new System.Windows.Forms.RadioButton();
+			this.useProxy = new System.Windows.Forms.RadioButton();
+			this.proxy = new System.Windows.Forms.TextBox();
+			this.label7 = new System.Windows.Forms.Label();
+			this.port = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -274,6 +288,8 @@ namespace Novell.iFolder.FormsTrayApp
 			this.groupBox3.SuspendLayout();
 			this.tabPage3.SuspendLayout();
 			this.tabPage4.SuspendLayout();
+			this.tabPage5.SuspendLayout();
+			this.groupBox5.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -346,6 +362,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Controls.Add(this.tabPage4);
+			this.tabControl1.Controls.Add(this.tabPage5);
 			this.tabControl1.Location = new System.Drawing.Point(8, 65);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
@@ -871,6 +888,74 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuViewRefresh.Text = "Refresh";
 			this.menuViewRefresh.Click += new System.EventHandler(this.menuRefresh_Click);
 			// 
+			// tabPage5
+			// 
+			this.tabPage5.Controls.Add(this.groupBox5);
+			this.tabPage5.Location = new System.Drawing.Point(4, 22);
+			this.tabPage5.Name = "tabPage5";
+			this.tabPage5.Size = new System.Drawing.Size(426, 333);
+			this.tabPage5.TabIndex = 4;
+			this.tabPage5.Text = "Network";
+			// 
+			// groupBox5
+			// 
+			this.groupBox5.Controls.Add(this.port);
+			this.groupBox5.Controls.Add(this.label7);
+			this.groupBox5.Controls.Add(this.proxy);
+			this.groupBox5.Controls.Add(this.useProxy);
+			this.groupBox5.Controls.Add(this.noProxy);
+			this.groupBox5.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.groupBox5.Location = new System.Drawing.Point(16, 24);
+			this.groupBox5.Name = "groupBox5";
+			this.groupBox5.Size = new System.Drawing.Size(392, 100);
+			this.groupBox5.TabIndex = 0;
+			this.groupBox5.TabStop = false;
+			this.groupBox5.Text = "Proxy Settings";
+			// 
+			// noProxy
+			// 
+			this.noProxy.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.noProxy.Location = new System.Drawing.Point(16, 24);
+			this.noProxy.Name = "noProxy";
+			this.noProxy.Size = new System.Drawing.Size(88, 24);
+			this.noProxy.TabIndex = 0;
+			this.noProxy.Text = "No Proxy";
+			// 
+			// useProxy
+			// 
+			this.useProxy.Location = new System.Drawing.Point(16, 56);
+			this.useProxy.Name = "useProxy";
+			this.useProxy.Size = new System.Drawing.Size(88, 24);
+			this.useProxy.TabIndex = 1;
+			this.useProxy.Text = "Use Proxy:";
+			this.useProxy.CheckedChanged += new System.EventHandler(this.useProxy_CheckedChanged);
+			// 
+			// proxy
+			// 
+			this.proxy.Enabled = false;
+			this.proxy.Location = new System.Drawing.Point(96, 56);
+			this.proxy.Name = "proxy";
+			this.proxy.Size = new System.Drawing.Size(168, 20);
+			this.proxy.TabIndex = 2;
+			this.proxy.Text = "";
+			// 
+			// label7
+			// 
+			this.label7.Location = new System.Drawing.Point(280, 60);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(56, 16);
+			this.label7.TabIndex = 3;
+			this.label7.Text = "Port:";
+			// 
+			// port
+			// 
+			this.port.Enabled = false;
+			this.port.Location = new System.Drawing.Point(320, 56);
+			this.port.Name = "port";
+			this.port.Size = new System.Drawing.Size(56, 20);
+			this.port.TabIndex = 4;
+			this.port.Text = "";
+			// 
 			// GlobalProperties
 			// 
 			this.AcceptButton = this.ok;
@@ -896,6 +981,8 @@ namespace Novell.iFolder.FormsTrayApp
 			this.groupBox3.ResumeLayout(false);
 			this.tabPage3.ResumeLayout(false);
 			this.tabPage4.ResumeLayout(false);
+			this.tabPage5.ResumeLayout(false);
+			this.groupBox5.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -1102,6 +1189,18 @@ namespace Novell.iFolder.FormsTrayApp
 					lvi.Tag = new ServiceWithState(svc);
 					services.Items.Add(lvi);
 				}
+
+				string proxyValue = null;
+				string portValue = null;
+				if (useProxy.Checked = Simias.Channels.SimiasChannelFactory.GetProxy(ref proxyValue, ref portValue))
+				{
+					proxy.Text = proxyValue;
+					port.Text = portValue;
+				}
+				else
+				{
+					noProxy.Checked = true;
+				}
 			}
 			catch (SimiasException ex)
 			{
@@ -1143,6 +1242,11 @@ namespace Novell.iFolder.FormsTrayApp
 						this.serviceManager.Install(service.Svc);
 					}
 				}
+
+				// Save the proxy settings.
+				string proxyName = useProxy.Checked ? proxy.Text : null;
+				string proxyPort = useProxy.Checked ? port.Text : null;
+				Simias.Channels.SimiasChannelFactory.SetProxy(proxyName, proxyPort);
 			}
 			catch (SimiasException ex)
 			{
@@ -1524,6 +1628,14 @@ namespace Novell.iFolder.FormsTrayApp
 		}
 		#endregion
 
+		#region Network Tab
+		private void useProxy_CheckedChanged(object sender, System.EventArgs e)
+		{
+			proxy.Enabled = port.Enabled = useProxy.Checked;
+		}
+		#endregion
+
+		#region Subscriber Handlers
 		private void subscriber_NodeCreated(NodeEventArgs args)
 		{
 			try
@@ -1561,6 +1673,7 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			// TODO: implement this if needed.
 		}
+		#endregion
 		#endregion
 
 		private const uint DRIVE_REMOTE = 4;

@@ -49,6 +49,8 @@ namespace Simias.Channels
 	public class SimiasChannelFactory
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SimiasChannelFactory));
+
+		private static readonly string proxyPropertyName = "Proxy";
 		
 		private static ulong index = 0;
 
@@ -129,8 +131,13 @@ namespace Simias.Channels
 				props.Add("clientConnectionLimit", 5);
 
 				// proxy
-				//props.Add("proxyName", "");
-				//props.Add("proxyPort", "");
+				string proxyName = null;
+				string proxyPort = null;
+				if (GetProxy(ref proxyName, ref proxyPort))
+				{
+					props.Add("proxyName", proxyName);
+					props.Add("proxyPort", proxyPort);
+				}
 
 				// TODO: why doesn't this work?
 				//props.Add("timeout", TimeSpan.FromSeconds(30).Milliseconds);
@@ -249,6 +256,48 @@ namespace Simias.Channels
 			}
 
 			return new SimiasChannel(channel);
+		}
+
+		public static bool GetProxy(ref string proxyName, ref string proxyPort)
+		{
+			Collection localDb = Store.GetStore().GetDatabaseObject();
+
+			Property p = localDb.Properties.GetSingleProperty(proxyPropertyName);
+
+			if (p != null)
+			{
+				string temp = p.Value.ToString();
+
+				int index = temp.IndexOf( ':' );
+				if ( index != -1 )
+				{
+					proxyName = temp.Substring( 0, index );
+					proxyPort = temp.Substring( index + 1 );
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public static void SetProxy(string proxyName, string proxyPort)
+		{
+			Collection localDb = Store.GetStore().GetDatabaseObject();
+
+			if ((proxyName != null) && (!proxyName.Equals(String.Empty)) &&
+				(proxyPort != null) && (!proxyPort.Equals(String.Empty)))
+			{
+				Property p = new Property(proxyPropertyName, proxyName + ":" + proxyPort);
+				p.LocalProperty = true;
+
+				localDb.Properties.ModifyProperty(p);
+			}
+			else
+			{
+				localDb.Properties.DeleteSingleProperty(proxyPropertyName);
+			}
+
+			localDb.Commit();
 		}
 	}
 }
