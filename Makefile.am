@@ -37,8 +37,23 @@ doc:
 doc-clean:
 	$(MAKE) -C doc clean
 
-.PHONY: package package-sdk package-clean package-install package-uninstall
+.PHONY: package package-sdk package-clean
 
-package package-sdk package-clean package-install package-uninstall:
+package package-sdk package-clean:
 	$(MAKE) -C package $@
 
+if WINDOWS
+#
+# On Windows, overwrite dist targets to alter how gzipped-tarballs are created
+#
+dist-gzip: distdir
+#	$(AMTAR) chof - $(distdir) | GZIP=$(GZIP_ENV) gzip -c >$(distdir).tar.gz
+	GZIP=$(GZIP_ENV) $(AMTAR) zchof $(distdir).tar.gz $(distdir)
+	$(am__remove_distdir)
+
+dist dist-all: distdir
+#	$(AMTAR) chof - $(distdir) | GZIP=$(GZIP_ENV) gzip -c >$(distdir).tar.gz
+	GZIP=$(GZIP_ENV) $(AMTAR) zchof $(distdir).tar.gz $(distdir)
+	$(am__remove_distdir)
+
+endif # WINDOWS
