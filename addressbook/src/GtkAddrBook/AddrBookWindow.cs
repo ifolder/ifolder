@@ -364,19 +364,12 @@ namespace Novell.iFolder
 					reader = new StreamReader(fs.Filename);
 					if (reader != null)
 					{
-						Console.WriteLine("Got a good reader");
 						while(hasmore)
 						{
-							Console.WriteLine("importing contact");
 							newContact = curAddrBook.ImportVCard(reader);
 							if(newContact != null)
 							{
-								Console.WriteLine("Adding contact...");
 								ContactTreeStore.AppendValues(newContact);
-							}
-							else
-							{
-								Console.WriteLine("Contact was null");
 							}
 							try
 							{
@@ -1075,7 +1068,7 @@ namespace Novell.iFolder
 							addressLine += addr.PostalCode + " ";
 						if(addressLine.Length > 0)
 							AddLabeledValue(null, addressLine);
-						if(addr.Country != null)
+						if((addr.Country != null) && (addr.Country.Length > 0))
 							AddLabeledValue(null, addr.Country);
 
 						AddLabeledValue(null, null);
@@ -1095,7 +1088,7 @@ namespace Novell.iFolder
 							addressLine += addr.PostalCode + " ";
 						if(addressLine.Length > 0)
 							AddLabeledValue(null, addressLine);
-						if(addr.Country != null)
+						if((addr.Country != null) && (addr.Country.Length > 0))
 							AddLabeledValue(null, addr.Country);
 
 						AddLabeledValue(null, null);
@@ -1115,7 +1108,7 @@ namespace Novell.iFolder
 							addressLine += addr.PostalCode + " ";
 						if(addressLine.Length > 0)
 							AddLabeledValue(null, addressLine);
-						if(addr.Country != null)
+						if((addr.Country != null) && (addr.Country.Length > 0))
 							AddLabeledValue(null, addr.Country);
 
 						AddLabeledValue(null, null);
