@@ -1,3 +1,5 @@
+EXTRA_DIST = $(srcdir)/Makefile.am
+
 all:
 	@echo TO BE IMPLEMENTED
 

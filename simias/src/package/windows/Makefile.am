@@ -1,3 +1,5 @@
+EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/simias-install.sln $(srcdir)/simias-msi/simias-msi.vdproj $(srcdir)/simias-msm/simias-msm.vdproj
+
 all: simias.msi
 
 simias.msi: simias.msm simias-msi/$(DEVENV_CONFIGURATION)/simias.msi
@@ -20,7 +22,7 @@ simias-msm/$(DEVENV_CONFIGURATION)/simias.msm: simias-install.sln simias-msm/sim
 #	msiexec /x simias.msi /q /L* uninstall-msi.log
 
 clean-local:
-	rm -rf */Release */Debug *.log *.msi *.msm *.suo
+	rm -rf  *.msi *.msm Release Debug */Release */Debug *.log *.suo
 
 maintainer-clean-local:
 	rm -f Makefile.in Makefile

@@ -1,6 +1,8 @@
-SUBDIR = $(SIMIAS_OS)
+SUBDIRS = $(SIMIAS_OS)
 
-DIST_SUBDIR = linux windows
+DIST_SUBDIRS = linux windows
+
+EXTRA_DIST = $(srcdir)/Makefile.am
 
 all:
 	$(MAKE) -C $(SIMIAS_OS) $@
