@@ -98,6 +98,22 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
+		/// WebMethod that sets the display iFolder creation confirmation setting.
+		/// </summary>
+		/// <param name="DisplayConfirmation">
+		/// Set to <b>true</b> to enable the iFolder creation confirmation dialog.
+		/// </param>
+		[WebMethod(Description="Sets the display iFolder confirmation setting")]
+		[SoapDocumentMethod]
+		public void SetDisplayConfirmation(bool DisplayConfirmation)
+		{
+			iFolderSettings.SetDisplayConfirmation(DisplayConfirmation);
+		}
+
+
+
+
+		/// <summary>
 		/// WebMethod that gets a LocalPath to see if it's an iFolder
 		/// </summary>
 		/// <param name = "LocalPath">

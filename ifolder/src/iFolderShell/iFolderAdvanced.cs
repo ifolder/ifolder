@@ -39,7 +39,6 @@ namespace Novell.iFolderCom
 	public class iFolderAdvanced : System.Windows.Forms.Form
 	{
 		#region Class Members
-		//private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(iFolderAdvanced));
 		private const string member = "Member";
 		private const double megaByte = 1048576;
 		private System.Windows.Forms.TabControl tabControl1;
@@ -52,16 +51,12 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Button remove;
 		private System.Windows.Forms.Button add;
 
-		private Hashtable subscrHT;
+		//private Hashtable subscrHT;
 		//private EventSubscriber subscriber;
-		//private POBox poBox;
-		//private Novell.AddressBook.Manager abManager;
-		//private Novell.AddressBook.AddressBook defaultAddressBook;
 		private iFolder ifolder;
 		private iFolderUser currentUser;
 		private ListViewItem ownerLvi;
 		private ListViewItem newOwnerLvi;
-		//private iFolderManager ifManager;
 		private iFolderWebService ifWebService;
 		private ArrayList removedList;
 		private string loadPath;
@@ -120,12 +115,6 @@ namespace Novell.iFolderCom
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-
-			// Connect to the address book manager
-/*			if (abManager == null)
-			{
-				abManager = Novell.AddressBook.Manager.Connect();
-			}*/
 
 			apply.Enabled = remove.Enabled = accept.Enabled = decline.Enabled = false;
 
@@ -776,7 +765,7 @@ namespace Novell.iFolderCom
 				Cursor.Current = Cursors.WaitCursor;
 
 				// Show/hide the collision message.
-				conflicts.Visible = pictureBox1.Visible = ifolder.HasCollisions;
+				conflicts.Visible = pictureBox1.Visible = ifolder.HasConflicts;
 
 				// Get the sync node and byte counts.
 				uint nodeCount;
@@ -853,10 +842,10 @@ namespace Novell.iFolderCom
 					setLimit.Enabled = currentUser != null ? currentUser.Rights.Equals("Admin") : false;
 
 				// Clear the hashtable.
-				lock (subscrHT)
+/*				lock (subscrHT)
 				{
 					subscrHT.Clear();
-				}
+				}*/
 
 				// Set up the event handlers for the POBox.
 				// TODO: we still can't get events into explorer ... this may work once we are in the GAC.
@@ -1265,7 +1254,7 @@ namespace Novell.iFolderCom
 			catch {} // non-fatal ... just missing some graphics.
 
 			// Hashtable used to store subscriptions in.
-			subscrHT = new Hashtable();
+			//subscrHT = new Hashtable();
 
 			try
 			{
@@ -1532,7 +1521,6 @@ namespace Novell.iFolderCom
 				}
 				catch (Exception ex)
 				{
-					//logger.Debug(ex, "Removing contacts");
 				}
 			}
 		}

@@ -36,13 +36,44 @@ namespace Novell.iFolder.Web
 	{
 		public string DefaultDomainID;
 		public bool HaveEnterprise;
+		public bool DisplayConfirmation;
+		public string EnterpriseName;
+		public string EnterpriseDescription;
 
 		public iFolderSettings()
 		{
 			Store store = Store.GetStore();
 			DefaultDomainID = store.DefaultDomain;
-			HaveEnterprise = (DefaultDomainID != 
-				Simias.Storage.Domain.WorkGroupDomainID);
+			
+			HaveEnterprise = false;
+			Domain enterpriseDomain = null;
+			LocalDatabase localDB = store.GetDatabaseObject();
+			ICSList domainList = localDB.GetNodesByType(typeof(Domain).Name);
+			foreach (ShallowNode sn in domainList)
+			{
+				if (!sn.Name.Equals(Domain.WorkGroupDomainName))
+				{
+					HaveEnterprise = true;
+					enterpriseDomain = store.GetDomain(sn.ID);
+					break;
+				}
+			}
+
+			if (enterpriseDomain != null)
+			{
+				EnterpriseName = enterpriseDomain.Name;
+				EnterpriseDescription = enterpriseDomain.Description;
+			}
+			
+			Configuration config = Configuration.GetConfiguration();
+			bool defaultValue = true;
+			DisplayConfirmation = config.Get("iFolderUI", "Display confirmation", defaultValue.ToString()) == defaultValue.ToString();
+		}
+
+		public static void SetDisplayConfirmation(bool displayConfirmation)
+		{
+			Configuration config = Configuration.GetConfiguration();
+			config.Set("iFolderUI", "Display confirmation", displayConfirmation.ToString());
 		}
 	}
 }

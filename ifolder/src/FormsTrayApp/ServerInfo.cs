@@ -54,7 +54,7 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Constructs a ServerInfo object.
 		/// </summary>
-		/// <param name="config">The Configuration object to use.</param>
+		/// <param name="ifolderWebService">The iFolderWebService object to use.</param>
 		public ServerInfo(iFolderWebService ifolderWebService)
 		{
 			//

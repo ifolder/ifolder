@@ -121,7 +121,7 @@ namespace Novell.FormsTrayApp
 					if (proxyValue != null)
 					{
 						// Set the proxy setting.
-						Simias.Channels.SimiasChannelFactory.SetProxy(proxyValue);
+//						Simias.Channels.SimiasChannelFactory.SetProxy(proxyValue);
 					}
 
 					proxyKey.Close();

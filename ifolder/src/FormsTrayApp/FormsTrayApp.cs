@@ -89,7 +89,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuEventLogReader;
 		//private Configuration config;
 		private iFolderWebService ifWebService;
-		private EventSubscriber subscriber;
+		//private EventSubscriber subscriber;
 		private IntPtr hwnd;
 		private System.Windows.Forms.MenuItem menuJoin;
 		private System.Windows.Forms.MenuItem menuStoreBrowser;
@@ -278,10 +278,10 @@ namespace Novell.FormsTrayApp
 
 		private void menuProperties_Click(object sender, System.EventArgs e)
 		{
-			//GlobalProperties globalProperties = new GlobalProperties(config);
+			GlobalProperties globalProperties = new GlobalProperties(ifWebService);
 //			globalProperties.ServiceManager = this.serviceManager;
 //			globalProperties.IFManager = this.ifManager;
-			//globalProperties.ShowDialog();
+			globalProperties.ShowDialog();
 		}
 
 		private void menuHelp_Click(object sender, System.EventArgs e)
@@ -420,13 +420,13 @@ namespace Novell.FormsTrayApp
 				}
 
 				// Set up the event handlers to watch for create, delete, and change events.
-				subscriber = new EventSubscriber();
+/*				subscriber = new EventSubscriber();
 				subscriber.NodeChanged += new NodeEventHandler(subscriber_NodeChanged);
 				subscriber.NodeCreated += new NodeEventHandler(subscriber_NodeCreated);
 				subscriber.NodeDeleted += new NodeEventHandler(subscriber_NodeDeleted);
 
 				// Create the trace window ... initially hidden.
-/*				traceForm = new MyTraceForm();
+				traceForm = new MyTraceForm();
 				traceForm.Closing += new System.ComponentModel.CancelEventHandler(traceForm_Closing);
 
 				// Trace messages will immediately be written, so we need the window handle to be created.
@@ -465,7 +465,7 @@ namespace Novell.FormsTrayApp
 //			ShutdownTrayApp();
 //		}
 
-		private void subscriber_NodeCreated(NodeEventArgs args)
+/*		private void subscriber_NodeCreated(NodeEventArgs args)
 		{
 			try
 			{
@@ -561,7 +561,7 @@ namespace Novell.FormsTrayApp
 					}
 				}
 			}
-		}
+		}*/
 		#endregion
 
 		#region Private Methods

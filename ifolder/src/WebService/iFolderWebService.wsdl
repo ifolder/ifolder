@@ -15,6 +15,9 @@
         <xs:sequence>
           <xs:element minOccurs="0" maxOccurs="1" name="DefaultDomainID" type="xs:string" />
           <xs:element minOccurs="1" maxOccurs="1" name="HaveEnterprise" type="xs:boolean" />
+          <xs:element minOccurs="1" maxOccurs="1" name="DisplayConfirmation" type="xs:boolean" />
+          <xs:element minOccurs="0" maxOccurs="1" name="EnterpriseName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="EnterpriseDescription" type="xs:string" />
         </xs:sequence>
       </xs:complexType>
       <xs:element name="GetSettingsResponse">
@@ -23,6 +26,16 @@
             <xs:element minOccurs="0" maxOccurs="1" name="GetSettingsResult" type="s0:iFolderSettings" />
           </xs:sequence>
         </xs:complexType>
+      </xs:element>
+      <xs:element name="SetDisplayConfirmation">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="DisplayConfirmation" type="xs:boolean" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetDisplayConfirmationResponse">
+        <xs:complexType />
       </xs:element>
       <xs:element name="IsiFolder">
         <xs:complexType>
@@ -511,6 +524,12 @@
   <message name="GetSettingsSoapOut">
     <part name="parameters" element="s0:GetSettingsResponse" />
   </message>
+  <message name="SetDisplayConfirmationSoapIn">
+    <part name="parameters" element="s0:SetDisplayConfirmation" />
+  </message>
+  <message name="SetDisplayConfirmationSoapOut">
+    <part name="parameters" element="s0:SetDisplayConfirmationResponse" />
+  </message>
   <message name="IsiFolderSoapIn">
     <part name="parameters" element="s0:IsiFolder" />
   </message>
@@ -703,6 +722,10 @@
   <message name="GetSettingsHttpGetOut">
     <part name="Body" element="s0:iFolderSettings" />
   </message>
+  <message name="SetDisplayConfirmationHttpGetIn">
+    <part name="Body" element="s:boolean" />
+  </message>
+  <message name="SetDisplayConfirmationHttpGetOut" />
   <message name="IsiFolderHttpGetIn">
     <part name="LocalPath" type="s:string" />
   </message>
@@ -886,6 +909,10 @@
   <message name="GetSettingsHttpPostOut">
     <part name="Body" element="s0:iFolderSettings" />
   </message>
+  <message name="SetDisplayConfirmationHttpPostIn">
+    <part name="Body" element="s:boolean" />
+  </message>
+  <message name="SetDisplayConfirmationHttpPostOut" />
   <message name="IsiFolderHttpPostIn">
     <part name="LocalPath" type="s:string" />
   </message>
@@ -1074,6 +1101,11 @@
       <output message="s0:GetSettingsSoapOut" />
       <documentation>Gets the current iFolder Settings</documentation>
     </operation>
+    <operation name="SetDisplayConfirmation">
+      <input message="s0:SetDisplayConfirmationSoapIn" />
+      <output message="s0:SetDisplayConfirmationSoapOut" />
+      <documentation>Sets the display iFolder confirmation setting</documentation>
+    </operation>
     <operation name="IsiFolder">
       <input message="s0:IsiFolderSoapIn" />
       <output message="s0:IsiFolderSoapOut" />
@@ -1241,6 +1273,11 @@
       <output message="s0:GetSettingsHttpGetOut" />
       <documentation>Gets the current iFolder Settings</documentation>
     </operation>
+    <operation name="SetDisplayConfirmation">
+      <input message="s0:SetDisplayConfirmationHttpGetIn" />
+      <output message="s0:SetDisplayConfirmationHttpGetOut" />
+      <documentation>Sets the display iFolder confirmation setting</documentation>
+    </operation>
     <operation name="IsiFolder">
       <input message="s0:IsiFolderHttpGetIn" />
       <output message="s0:IsiFolderHttpGetOut" />
@@ -1407,6 +1444,11 @@
       <input message="s0:GetSettingsHttpPostIn" />
       <output message="s0:GetSettingsHttpPostOut" />
       <documentation>Gets the current iFolder Settings</documentation>
+    </operation>
+    <operation name="SetDisplayConfirmation">
+      <input message="s0:SetDisplayConfirmationHttpPostIn" />
+      <output message="s0:SetDisplayConfirmationHttpPostOut" />
+      <documentation>Sets the display iFolder confirmation setting</documentation>
     </operation>
     <operation name="IsiFolder">
       <input message="s0:IsiFolderHttpPostIn" />
@@ -1577,6 +1619,15 @@
     </operation>
     <operation name="GetSettings">
       <soap:operation soapAction="http://novell.com/ifolder/web/GetSettings" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="SetDisplayConfirmation">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetDisplayConfirmation" style="document" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -1882,6 +1933,15 @@
         <mime:mimeXml part="Body" />
       </output>
     </operation>
+    <operation name="SetDisplayConfirmation">
+      <http:operation location="/SetDisplayConfirmation" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
     <operation name="IsiFolder">
       <http:operation location="/IsiFolder" />
       <input>
@@ -2151,6 +2211,15 @@
     </operation>
     <operation name="GetSettings">
       <http:operation location="/GetSettings" />
+      <input>
+        <mime:content part="" type="application/x-www-form-urlencoded" />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+    <operation name="SetDisplayConfirmation">
+      <http:operation location="/SetDisplayConfirmation" />
       <input>
         <mime:content part="" type="application/x-www-form-urlencoded" />
       </input>

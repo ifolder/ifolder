@@ -30,6 +30,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Xml;
 using System.Runtime.InteropServices;
+using System.Net;
 using Microsoft.Win32;
 using Simias;
 using Simias.Sync;
@@ -58,11 +59,12 @@ namespace Novell.FormsTrayApp
 		const string XmlServiceTag = "Service";
 
 		private const double megaByte = 1048576;
-		private Hashtable ht;
+		//private Hashtable ht;
 		private EventSubscriber subscriber;
 		//private Simias.Service.Manager serviceManager = null;
 //		private iFolderManager manager = null;
-		private Configuration config;
+		//private Configuration config;
+		private iFolderWebService ifWebService;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
@@ -167,7 +169,7 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Instantiates a GlobalProperties object.
 		/// </summary>
-		public GlobalProperties(Configuration config)
+		public GlobalProperties(iFolderWebService ifolderWebService)
 		{
 			//
 			// Required for Windows Form Designer support
@@ -181,17 +183,17 @@ namespace Novell.FormsTrayApp
 			// Show the first tab page by default.
 			tabControl1.SelectedTab = tabPage1;
 
-			this.config = config;
+			ifWebService = ifolderWebService;
 
 			// Set up the event handlers to watch for iFolder creates/deletes.
-			subscriber = new EventSubscriber();
+/*			subscriber = new EventSubscriber();
 			subscriber.NodeChanged += new NodeEventHandler(subscriber_NodeChanged);
 			subscriber.NodeCreated += new NodeEventHandler(subscriber_NodeCreated);
 			subscriber.NodeDeleted += new NodeEventHandler(subscriber_NodeDeleted);
 
 			ht = new Hashtable();
 
-/*			try
+			try
 			{
 				manager = iFolderManager.Connect();
 			}
@@ -212,10 +214,10 @@ namespace Novell.FormsTrayApp
 		{
 			if( disposing )
 			{
-				if (subscriber != null)
+/*				if (subscriber != null)
 				{
 					subscriber.Dispose();
-				}
+				}*/
 
 				if(components != null)
 				{
@@ -1403,10 +1405,10 @@ namespace Novell.FormsTrayApp
 			iFolderView.Items.Clear();
 			iFolderView.SelectedItems.Clear();
 
-			lock(ht)
+/*			lock(ht)
 			{
 				ht.Clear();
-			}
+			}*/
 
 			iFolderView.BeginUpdate();
 
@@ -1453,15 +1455,12 @@ namespace Novell.FormsTrayApp
 				this.iFolderView.SmallImageList = new ImageList();
 				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico")));
 			}
-			catch (Exception ex)
-			{
-				//logger.Debug(ex, "Loading graphics");
-			}
+			catch {} // Non-fatal ... just missing some graphics.
 
 			try
 			{
 				// Check to see if we have already connected to an enterprise server.
-				Store store = Store.GetStore();
+/*				Store store = Store.GetStore();
 				LocalDatabase localDB = store.GetDatabaseObject();
 				Domain enterpriseDomain = null;
 				ICSList domainList = localDB.GetNodesByType(typeof(Domain).Name);
@@ -1510,7 +1509,16 @@ namespace Novell.FormsTrayApp
 
 				// Initialize displayConfirmation.
 				string showWizard = config.Get("iFolderShell", "Show wizard", "true");
-				displayConfirmation.Checked = showWizard == "true";
+				displayConfirmation.Checked = showWizard == "true";*/
+
+				iFolderSettings ifSettings = ifWebService.GetSettings();
+				displayConfirmation.Checked = ifSettings.DisplayConfirmation;
+				if (ifSettings.HaveEnterprise)
+				{
+					ShowEnterpriseTab = true;
+					enterpriseName.Text = ifSettings.EnterpriseName;
+					enterpriseDescription.Text = ifSettings.EnterpriseDescription;
+				}
 
 				autoStart.Checked = IsRunEnabled();
 
@@ -1518,7 +1526,7 @@ namespace Novell.FormsTrayApp
 
 				AddServicesToListView();
 
-				string proxyValue = null;
+/*				string proxyValue = null;
 				string portValue = null;
 				useProxy.Checked = Simias.Channels.SimiasChannelFactory.GetProxy(ref proxyValue, ref portValue);
 				if (proxyValue != null && portValue != null)
@@ -1527,7 +1535,7 @@ namespace Novell.FormsTrayApp
 					port.Text = portValue;
 				}
 
-				noProxy.Checked = !useProxy.Checked;
+				noProxy.Checked = !useProxy.Checked;*/
 			}
 			catch (SimiasException ex)
 			{
@@ -1551,7 +1559,8 @@ namespace Novell.FormsTrayApp
 				// Save the auto start value.
 				SetRunValue(autoStart.Checked);
 
-				if (displayConfirmation.Checked)
+				ifWebService.SetDisplayConfirmation(displayConfirmation.Checked);
+/*				if (displayConfirmation.Checked)
 				{
 					config.Set("iFolderShell", "Show wizard", "true");
 				}
@@ -1564,12 +1573,11 @@ namespace Novell.FormsTrayApp
 				UpdateServices();
 
 				// Save the proxy settings.
-				Simias.Channels.SimiasChannelFactory.SetProxy(useProxy.Checked, proxy.Text, port.Text);
+				Simias.Channels.SimiasChannelFactory.SetProxy(useProxy.Checked, proxy.Text, port.Text);*/
 			}
-			catch (SimiasException ex)
+			catch (WebException ex)
 			{
 				MessageBox.Show(ex.Message);
-				ex.LogError();
 			}
 			catch (Exception ex)
 			{
@@ -1919,15 +1927,15 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Subscriber Handlers
-		private void subscriber_NodeCreated(NodeEventArgs args)
+/*		private void subscriber_NodeCreated(NodeEventArgs args)
 		{
 			try
 			{
-/*				iFolder ifolder = manager.GetiFolderById(args.ID);
+				iFolder ifolder = manager.GetiFolderById(args.ID);
 				if (ifolder != null)
 				{
 					AddiFolderToListView(ifolder);
-				}*/
+				}
 			}
 			catch (SimiasException ex)
 			{
@@ -1955,7 +1963,7 @@ namespace Novell.FormsTrayApp
 		private void subscriber_NodeChanged(NodeEventArgs args)
 		{
 			// TODO: implement this if needed.
-		}
+		}*/
 		#endregion
 
 		#endregion

@@ -118,9 +118,9 @@ namespace Novell.FormsTrayApp
 				Configuration config = Configuration.GetConfiguration();
 				foreach (Process process in ifolderProcesses)
 				{
-					Simias.Event.EventPublisher publisher = new EventPublisher(config);
-					publisher.RaiseEvent(new Simias.Service.ShutdownEventArgs());
-					process.WaitForExit (10000); // wait 10 seconds
+					//Simias.Event.EventPublisher publisher = new EventPublisher(config);
+					//publisher.RaiseEvent(new Simias.Service.ShutdownEventArgs());
+					//process.WaitForExit (10000); // wait 10 seconds
 					try
 					{
 						process.Kill(); // This will throw if the process is no longer running
