@@ -92,7 +92,7 @@ namespace Novell.AddressBook.UI.gtk
 
 		private void InitUI () 
 		{
-			Glade.XML gxml = new Glade.XML ("contact-picker.glade",
+			Glade.XML gxml = new Glade.XML (Util.GladePath("contact-picker.glade"),
 					"ContactPickerDialog", null);
 			gxml.Autoconnect (this);
 
@@ -156,9 +156,9 @@ namespace Novell.AddressBook.UI.gtk
 			SelectedTreeView.Selection.Changed += new EventHandler(
 					on_selectedTreeView_selection_changed);
 
-			UserCardPixBuf = new Pixbuf("contact.png");
-			CurCardPixBuf = new Pixbuf("contact_me.png");
-			BookPixBuf = new Pixbuf("book.png");
+			UserCardPixBuf = new Pixbuf(Util.ImagesPath("contact.png"));
+			CurCardPixBuf = new Pixbuf(Util.ImagesPath("contact_me.png"));
+			BookPixBuf = new Pixbuf(Util.ImagesPath("book.png"));
 
 			searchTimeoutID = 0;
 			selectedContacts = new Hashtable();

@@ -73,7 +73,7 @@ namespace Novell.AddressBook.UI.gtk
 
 		private void InitGlade()
 		{
-			Glade.XML gxml = new Glade.XML ("name-editor.glade",
+			Glade.XML gxml = new Glade.XML (Util.GladePath("name-editor.glade"),
 					"NameEditorDialog", null);
 			gxml.Autoconnect (this);
 			nameEditorDialog = (Gtk.Dialog) gxml.GetWidget("NameEditorDialog");
@@ -91,7 +91,7 @@ namespace Novell.AddressBook.UI.gtk
 				middleEntry.Text = name.Other;
 
 			if(name.Family != null)
-				lastEntry.Text = name.Family;
+				lastEntry.Text = name.Family; 
 
 			if(name.Suffix != null)
 				suffixEntry.Text = name.Suffix;

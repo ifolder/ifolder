@@ -107,7 +107,7 @@ namespace Novell.AddressBook.UI.gtk
 				}
 			}
 
-			Glade.XML gxml = new Glade.XML ("contact-browser.glade",
+			Glade.XML gxml = new Glade.XML (Util.GladePath("contact-browser.glade"),
 					"cbWindow", null);
 
 			gxml.Autoconnect (this);
@@ -181,10 +181,10 @@ namespace Novell.AddressBook.UI.gtk
 				}
 			}
 
-			UserCardPixBuf = new Pixbuf("contact.png");
-			CurCardPixBuf = new Pixbuf("contact_me.png");
-			BookPixBuf = new Pixbuf("book.png");
-			BlankHeadPixBuf = new Pixbuf("blankhead.png");
+			UserCardPixBuf = new Pixbuf(Util.ImagesPath("contact.png"));
+			CurCardPixBuf = new Pixbuf(Util.ImagesPath("contact_me.png"));
+			BookPixBuf = new Pixbuf(Util.ImagesPath("book.png"));
+			BlankHeadPixBuf = new Pixbuf(Util.ImagesPath("blankhead.png"));
 
 			TreeSelection tSelect = ContactTreeView.Selection;
 			tSelect.SelectPath(new TreePath("0"));

@@ -337,6 +337,7 @@ src/FormsBookLib/Makefile
 src/FormsAddrBook/Makefile
 src/GtkAddrBook/Makefile
 src/GtkAddrBook/contactbrowser
+src/GtkAddrBook/Util.cs
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile

@@ -65,7 +65,7 @@ namespace Novell.AddressBook.UI.gtk
 
 		public BookEditor() 
 		{
-			Glade.XML gxml = new Glade.XML ("contact-browser.glade",
+			Glade.XML gxml = new Glade.XML (Util.GladePath("contact-browser.glade"),
 					"BookEditor", null);
 			gxml.Autoconnect (this);
 

@@ -170,7 +170,7 @@ namespace Novell.AddressBook.UI.gtk
 		/// </summary>
 		private void InitGlade()
 		{
-			Glade.XML gxml = new Glade.XML ("contact-editor.glade", 
+			Glade.XML gxml = new Glade.XML (Util.GladePath("contact-editor.glade"), 
 					"ContactEditor", null);
 
 			gxml.Autoconnect (this);
