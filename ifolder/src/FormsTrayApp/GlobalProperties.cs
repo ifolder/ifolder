@@ -61,11 +61,20 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Delegate for node delete events.
 		/// </summary>
-		public delegate void DeleteEventDelegate(string ID);
+		public delegate void DeleteEventDelegate(NodeEventArgs args);
 		/// <summary>
 		/// Delegate used to service node delete events.
 		/// </summary>
 		public DeleteEventDelegate deleteEventDelegate;
+
+		/// <summary>
+		/// Delegate used when a domain account is removed.
+		/// </summary>
+		public delegate void RemoveDomainDelegate(object sender, DomainRemoveEventArgs e);
+		/// <summary>
+		/// Occurs when a domain account is removed.
+		/// </summary>
+		public event RemoveDomainDelegate RemoveDomain;
 
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(GlobalProperties));
 		private System.Timers.Timer updateEnterpriseTimer;
@@ -925,6 +934,54 @@ namespace Novell.FormsTrayApp
 			removeDomainFromFile(domainInfo, defaultDomainID);
 		}
 
+		/// <summary>
+		/// Remove the specified domain from the dropdown list.
+		/// </summary>
+		/// <param name="domainID">The ID of the domain to remove.</param>
+		public void RemoveDomainFromList(string domainID)
+		{
+			Domain domain = null;
+			Domain showAllDomain = null;
+			
+			foreach (Domain d in servers.Items)
+			{
+				if (d.ID.Equals(domainID))
+				{
+					domain = d;
+				}
+
+				if (d.ShowAll)
+				{
+					showAllDomain = d;
+				}
+			}
+
+			if (domain != null)
+			{
+				if (servers.SelectedItem.Equals(domain))
+				{
+					// If this was the selected domain, select the "show all" domain.
+					servers.SelectedItem = showAllDomain;
+				}
+				else if (((Domain)servers.SelectedItem).ShowAll)
+				{
+					// If the wildcard domain is selected, refresh the list.
+					refreshiFolders((Domain)servers.SelectedItem);
+				}
+
+				servers.Items.Remove(domain);
+
+				// Update the domain list file.
+				string defaultDomainID = simiasWebService.GetDefaultDomainID();
+				removeDomainFromFile(domain.DomainInfo, defaultDomainID);
+
+				if (RemoveDomain != null)
+				{
+					RemoveDomain(this, new DomainRemoveEventArgs(domain.DomainInfo, defaultDomainID));
+				}
+			}
+		}
+
 		public void InitializeServerList()
 		{
 			servers.Items.Clear();
@@ -1149,10 +1206,13 @@ namespace Novell.FormsTrayApp
 			}
 
 			// Update the default domain.
-			element = (XmlElement)domainsDoc.SelectSingleNode("/domains/defaultDomain");
-			if (!element.GetAttribute("ID").Equals(defaultDomainID))
+			if (defaultDomainID != null)
 			{
-				element.SetAttribute("ID", defaultDomainID);
+				element = (XmlElement)domainsDoc.SelectSingleNode("/domains/defaultDomain");
+				if (!element.GetAttribute("ID").Equals(defaultDomainID))
+				{
+					element.SetAttribute("ID", defaultDomainID);
+				}
 			}
 
 			saveXmlFile(domainsDoc);
@@ -1256,16 +1316,24 @@ namespace Novell.FormsTrayApp
 			catch {}
 		}
 
-		private void deleteEvent(string ID)
+		private void deleteEvent(NodeEventArgs args)
 		{
-			lock (ht)
+			switch (args.Type)
 			{
-				ListViewItem lvi = (ListViewItem)ht[ID];
-				if (lvi != null)
-				{
-					lvi.Remove();
-					ht.Remove(ID);
-				}
+				case "Collection":
+					lock (ht)
+					{
+						ListViewItem lvi = (ListViewItem)ht[args.Node];
+						if (lvi != null)
+						{
+							lvi.Remove();
+							ht.Remove(args.Node);
+						}
+					}
+					break;
+				case "Domain":
+					RemoveDomainFromList(args.Node);
+					break;
 			}
 		}
 
