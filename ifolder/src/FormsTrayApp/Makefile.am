@@ -46,8 +46,6 @@ uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f $(DATA_FILES)
 	cd $(DESTDIR)$(bindir)/res; rm -f $(RES_FILES:res/%=%) ifolder-banner.png
      
-installcheck-local: install
-	
 CLEAN_FILES = iFolderApp.exe iFolderApp.doc.xml
 
 clean-local:

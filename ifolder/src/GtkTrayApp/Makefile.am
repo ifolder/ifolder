@@ -98,8 +98,6 @@ uninstall-local:
 	cd $(DESTDIR)$(datadir)/mime-info; rm -f $(MIME_FILES)
 	cd $(DESTDIR)$(datadir)/application-registry; rm -f $(APPLICATIONS_FILES)
     
-installcheck-local: install
-	
 CLEAN_FILES = Novell.iFolder.UI.gtk.dll Novell.iFolder.UI.gtk.doc.xml iFolderGtkApp.exe iFolderGtkApp.doc.xml InvitationWizard.exe InvitationWizard.doc.xml CollectionBrowser.exe ReunionBrowser.exe CollectionBrowser.doc.xml
 
 clean-local:

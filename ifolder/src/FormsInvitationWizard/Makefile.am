@@ -37,8 +37,6 @@ uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f $(DATA_FILES:$(srcdir)/%=%)
 	cd $(DESTDIR)$(bindir); rm -f $(GTK_DATA_FILES:$(srcdir)/../GtkTrayApp/%=%)
     
-installcheck-local: install
-	
 CLEAN_FILES = InvitationWizard.exe InvitationWizard.doc.xml
 
 clean-local:

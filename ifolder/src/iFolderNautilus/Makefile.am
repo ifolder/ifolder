@@ -27,8 +27,6 @@ install-exec-local: iFolderNautilus.dll $(DATA_FILES)
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f iFolderNautilus.dll $(DATA_FILES) $(notdir $(INSTALL_FILES))
     
-installcheck-local: install
-	
 CLEAN_FILES = iFolderNautilus.dll iFolderNautilus.doc.xml
 
 clean-local:

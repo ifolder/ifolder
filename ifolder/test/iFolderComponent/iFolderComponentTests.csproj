@@ -89,6 +89,11 @@
                     AssemblyName = "nunit.framework"
                     HintPath = "..\..\..\tools\NUnit\net\bin\nunit.framework.dll"
                 />
+                <Reference
+                    Name = "Simias"
+                    AssemblyName = "Simias"
+                    HintPath = "..\..\..\..\..\test\Simias.dll"
+                />
             </References>
         </Build>
         <Files>
