@@ -263,7 +263,9 @@ namespace Simias.Authentication
 				// Verify the domain is not marked "inactive"
 				//
 
-				if ( new DomainAgent().IsDomainActive( cDomain.ID ) == true )
+				DomainAgent domainAgent = new DomainAgent();
+				if ( domainAgent.IsDomainActive( cDomain.ID ) &&
+					 domainAgent.IsDomainAuthenticated( cDomain.ID ) )
 				{
 					NetCredential cCreds = 
 						new NetCredential(

@@ -459,6 +459,14 @@ namespace Novell.FormsTrayApp
 		{
 			get { return updateStarted; }
 		}
+
+		/// <summary>
+		/// Gets the domain ID for this instance.
+		/// </summary>
+		public string DomainID
+		{
+			get { return domainID; }
+		}
 		#endregion
 
 		#region Event Handlers

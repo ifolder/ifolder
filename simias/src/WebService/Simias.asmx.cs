@@ -590,8 +590,23 @@ namespace Simias.Web
 		Simias.Authentication.Status
 		LogoutFromRemoteDomain(string domainID)
 		{
+			new DomainAgent().SetDomainState(domainID, false, false);
 			return new Simias.Authentication.Status( Simias.Authentication.StatusCodes.Success );
 		}
+
+
+
+		/// <summary>
+		/// WebMethod to disable automatic authentication to a domain.
+		/// </summary>
+		/// <param name="domainID">The ID of the domain to disable automatic authentication to.</param>
+		[WebMethod(Description="Disable automatic authentication to the specified domain")]
+		[SoapDocumentMethod]
+		public void	DisableDomainAutoLogin(string domainID)
+		{
+			new DomainAgent().SetDomainState(domainID, false, false);
+		}
+
 
 
 
@@ -887,6 +902,11 @@ namespace Simias.Web
 		public bool Active;
 
 		/// <summary>
+		/// Indicates if the domain is authenticated or not.
+		/// </summary>
+		public bool Authenticated;
+
+		/// <summary>
 		/// Domain Name
 		/// </summary>
 		public string Name;
@@ -961,7 +981,9 @@ namespace Simias.Web
 			Simias.POBox.POBox poBox = 
 				Simias.POBox.POBox.FindPOBox(store, domainID, cMember.UserID);
 			this.POBoxID = ( poBox != null ) ? poBox.ID : "";
-			this.Active = new DomainAgent().IsDomainActive(cDomain.ID);
+			DomainAgent domainAgent = new DomainAgent();
+			this.Active = domainAgent.IsDomainActive(cDomain.ID);
+			this.Authenticated = domainAgent.IsDomainAuthenticated(cDomain.ID);
 			this.Type = GetDomainTypeFromRole(cDomain.Role);
 			this.ID = domainID;
 			this.Name = cDomain.Name;

@@ -642,8 +642,7 @@ namespace Simias.Sync
 			// Setup the url to the server.
 			string userID = store.GetUserIDFromDomainID(collection.Domain);
 			string userName = collection.GetMemberByID(userID).Name;
-			if (service == null)
-				service = new HttpSyncProxy(collection, userName, store.GetUserIDFromDomainID(collection.Domain));
+			service = new HttpSyncProxy(collection, userName, store.GetUserIDFromDomainID(collection.Domain));
 
 			SyncNodeInfo[] cstamps;
 			

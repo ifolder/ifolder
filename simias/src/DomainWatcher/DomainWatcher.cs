@@ -172,6 +172,12 @@ namespace Simias.DomainWatcher
 								continue;
 							}
 
+							if ( domainAgent.IsDomainAutoLoginEnabled( cDomain.ID ) == false )
+							{
+								log.Debug( "Domain: " + cDomain.Name + " auto-login is disabled" );
+								continue;
+							}
+
 							CredentialType credType = 
 								store.GetDomainCredentials( cDomain.ID, out userID, out credentials );
 

@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 using System;
+using System.Collections;
 using System.Net;
 using System.IO;
 using System.Threading;
@@ -68,6 +69,7 @@ namespace Simias.DomainServices
 		private readonly string activePropertyName = "Active";
 
 		private Store store = Store.GetStore();
+		private static Hashtable domainTable = new Hashtable();
 		#endregion
 
 		#region Constructors
@@ -470,6 +472,7 @@ namespace Simias.DomainServices
 						status.statusCode == SCodes.SuccessInGrace )
 					{
 						new NetCredential( "iFolder", domainID, true, user, password );
+						SetDomainState(domainID, true, true);
 					}
 				}
 				else
@@ -640,6 +643,106 @@ namespace Simias.DomainServices
 			collection.CreateMaster = false;
 			collection.Commit();
 		}
+
+		public void SetDomainState(string DomainID, bool Authenticated, bool AutoLogin)
+		{
+			lock (domainTable)
+			{
+				DomainState domainState = (DomainState)domainTable[DomainID];
+				if (domainState == null)
+				{
+					domainState = new DomainState();
+				}
+
+				domainState.Authenticated = Authenticated;
+				domainState.AutoLogin = AutoLogin;
+				domainTable[DomainID] = domainState;
+			}
+		}
+
+		public bool IsDomainAuthenticated(string DomainID)
+		{
+			DomainState domainState;
+
+			lock (domainTable)
+			{
+				domainState = (DomainState)domainTable[DomainID];
+			}
+
+			if (domainState == null)
+			{
+				return false;
+			}
+			
+			return domainState.Authenticated;
+		}
+
+		public bool IsDomainAutoLoginEnabled(string DomainID)
+		{
+			DomainState domainState;
+
+			lock (domainTable)
+			{
+				domainState = (DomainState)domainTable[DomainID];
+			}
+
+			if (domainState == null)
+			{
+				return true;
+			}
+
+			return domainState.AutoLogin;
+		}
 		#endregion
 	}
+
+	internal class DomainState
+	{
+		#region Class Members
+		private bool authenticated = false;
+		private bool autoLogin = true;
+		#endregion
+
+		#region Constructors
+		/// <summary>
+		/// Constructs a DomainState object.
+		/// </summary>
+		public DomainState()
+		{
+		}
+
+		/// <summary>
+		/// Constructs a DomainState object.
+		/// </summary>
+		/// <param name="Authenticated">A value indicating if the domain has been authenticated to.</param>
+		/// <param name="AutoLogin">A value indicating if the client should attempt to automatically
+		/// login to the domain.</param>
+		public DomainState(bool Authenticated, bool AutoLogin)
+		{
+			authenticated = Authenticated;
+			autoLogin = AutoLogin;
+		}
+		#endregion
+
+		#region Properties
+		/// <summary>
+		/// Get/sets a value indicating if the domain has been authenticated to.
+		/// </summary>
+		public bool Authenticated
+		{
+			get { return authenticated; }
+			set { authenticated = value; }
+		}
+
+		/// <summary>
+		/// Gets/sets a value indicating if the client should attempt to
+		/// automatically login to the domain.
+		/// </summary>
+		public bool AutoLogin
+		{
+			get { return autoLogin; }
+			set { autoLogin = value; }
+		}
+		#endregion
+	}			  
 }
