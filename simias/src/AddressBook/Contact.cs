@@ -1281,91 +1281,49 @@ namespace Novell.AddressBook
 			bool			finished = false;
 			BinaryReader	bReader = null;
 			BinaryWriter	bWriter = null;
+			StoreFileNode	sfn = null;
 			//NodeStream		photoStream = null;
-			Stream			dstStream = null;
+			//Stream			dstStream = null;
 
-			return(false);
-
-			/*
-			if (this.thisNode != null)
+			if (this.addressBook != null && this.addressBook.collection != null)
 			{
-				// See if a photo stream already exists for this contact node.
-				// If one is found - delete it
-				ICSList searchResults = this.thisNode.GetStreamList();
-
 				try
 				{
-					foreach(NodeStream nodeStream in searchResults)
+					// See if a photo stream already exists for this contact node.
+					// If one is found - delete it
+					Property p = 
+						this.Properties.GetSingleProperty(Common.contactToPhoto);
+					if (p != null)
 					{
-						if (nodeStream.Type == Common.photoProperty)
+						Simias.Storage.Relationship relationship = 
+							(Simias.Storage.Relationship) p.Value;
+
+						Node cPhotoNode = this.addressBook.collection.GetNodeByID(relationship.NodeID);
+						if (cPhotoNode != null)
 						{
-							nodeStream.Delete(true);
-							break;
+							this.addressBook.collection.Delete(cPhotoNode);
 						}
 					}
 				}
-				catch{};
+				catch{}
 
+				// Create the new node
 				try
 				{
-					photoStream = 
-						this.thisNode.AddStream(
-							this.thisNode.Id + Common.photoProperty, 
-							Common.photoProperty,
-							this.thisNode.Id);
+					sfn = 
+						new StoreFileNode(this.addressBook.collection, Common.photoProperty, srcStream);
 
-					// Create the new stream in the file system
-					dstStream = photoStream.Open(FileMode.Create, FileAccess.ReadWrite);
-					bWriter = new BinaryWriter(dstStream);
+					Relationship parentChild = new 
+						Relationship( 
+							this.addressBook.collection.ID,
+							sfn.ID);
 
-					// Copy the source stream
-					bReader = new BinaryReader(srcStream);
-					bReader.BaseStream.Position = 0;
-					bWriter.BaseStream.Position = 0;
-
-					//bWriter.Write(bReader.BaseStream, 0, bReader.BaseStream.Length);
-					//bWriter.Write(binaryData, 0, binaryData.Length);
-
-					// BUGBUG better algo for copying
-					int i = 0;
-					while(true)
-					{
-						i = bReader.BaseStream.ReadByte();
-						if(i == -1)
-						{
-							break;
-						}
-
-						bWriter.BaseStream.WriteByte((byte) i);
-					}
-
+					sfn.Properties.ModifyProperty(Common.contactToPhoto, parentChild);
+					this.addressBook.collection.Commit(sfn);
+					this.addressBook.collection.Commit(this);
 					finished = true;
 				}
 				catch{}
-				finally
-				{
-					if (bReader != null)
-					{
-						bReader.Close();
-					}
-
-					if (bWriter != null)
-					{
-						bWriter.Close();
-					}
-
-					if (dstStream != null)
-					{
-						dstStream.Close();
-					}
-
-					if (photoStream != null && finished == true)
-					{
-						//photoStream.Save();
-						//this.thisNode.Save();
-						this.addressBook.collection.Commit(true);
-					}
-				}
 			}
 			else
 			{
@@ -1415,7 +1373,6 @@ namespace Novell.AddressBook
 			}
 
 			return(finished);
-			*/
 		}
 
 		/// <summary>

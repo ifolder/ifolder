@@ -241,6 +241,8 @@ namespace Novell.AddressBook
 		internal const string contactToAddressBook = "AB:ContactToAddressBook";
 		internal const string nameToContact = "AB:NameToContact";
 		internal const string addressToContact = "AB:AddressToContact";
+		internal const string photoToContact = "AB:PhotoToContact";
+		internal const string contactToPhoto = "AB:ContactToPhoto";
 
 		#endregion
 
