@@ -22,10 +22,16 @@ PROJECT_FILES = $(srcdir)/FormsTrayApp.csproj $(srcdir)/FormsTrayApp.sln
 
 EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFolderApp.exe.manifest iFolderApp.exe.config $(PROJECT_FILES)
 
+if MAKE_DOC_FILE
+DOC_FILE = $(basename $@).doc.xml
+DOC_FILE_CMD = /doc:$(DOC_FILE)
+DOC_FILE_CLEAN = *.doc.xml
+endif
+
 all: iFolderApp.exe
 
 iFolderApp.exe: $(iFolderApp_RESOURCES_FILES) $(iFolderApp_CSFILES) $(iFolderApp_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderApp_FLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderApp_LIBS:%=/r:%) $(iFolderApp_LIBPATH:%=/lib:%) $(iFolderApp_RESOURCES:%=$(ICON_FLAG)%) $(iFolderApp_RESOURCES_FILES:%=/res:Novell.FormsTrayApp.%) $(iFolderApp_CSFILES_CSC) /doc:iFolderApp.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderApp_FLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderApp_LIBS:%=/r:%) $(iFolderApp_LIBPATH:%=/lib:%) $(iFolderApp_RESOURCES:%=$(ICON_FLAG)%) $(iFolderApp_RESOURCES_FILES:%=/res:Novell.FormsTrayApp.%) $(iFolderApp_CSFILES_CSC) $(DOC_FILE_CMD)
 	
 %.resources : %.resx
 	$(RESG) $< Novell.FormsTrayApp.$@
@@ -64,7 +70,7 @@ if DEBUG
 endif
 endif
 
-CLEAN_FILES = iFolderApp.exe iFolderApp.doc.xml $(iFolderApp_RESOURCES_FILES:%=Novell.FormsTrayApp.%)
+CLEAN_FILES = iFolderApp.exe $(DOC_FILE_CLEAN) $(iFolderApp_RESOURCES_FILES:%=Novell.FormsTrayApp.%)
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

@@ -11,10 +11,16 @@ ClientUpgrade_LIBPATH =
 
 EXTRA_DIST = $(ClientUpgrade_CSFILES)
 
+if MAKE_DOC_FILE
+DOC_FILE = $(basename $@).doc.xml
+DOC_FILE_CMD = /doc:$(DOC_FILE)
+DOC_FILE_CLEAN = *.doc.xml
+endif
+
 all: ClientUpgrade.dll
 
 ClientUpgrade.dll: $(ClientUpgrade_CSFILES) $(ClientUpgrade_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(ClientUpgrade_FLAGS) $(SIMIAS_CLIENT_LIBS) $(ClientUpgrade_LIBS:%=/r:%) $(ClientUpgrade_LIBPATH:%=/lib:%) $(ClientUpgrade_RESOURCES:%=$(ICON_FLAG)%) $(ClientUpgrade_CSFILES) /doc:ClientUpgrade.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(ClientUpgrade_FLAGS) $(SIMIAS_CLIENT_LIBS) $(ClientUpgrade_LIBS:%=/r:%) $(ClientUpgrade_LIBPATH:%=/lib:%) $(ClientUpgrade_RESOURCES:%=$(ICON_FLAG)%) $(ClientUpgrade_CSFILES) $(DOC_FILE_CMD)
 
 if DEBUG
 if WINDOWS
@@ -32,7 +38,7 @@ uninstall-local:
 
 installcheck-local: install
 	
-CLEAN_FILES = ClientUpgrade.dll ClientUpgrade.doc.xml
+CLEAN_FILES = ClientUpgrade.dll $(DOC_FILE_CLEAN)
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

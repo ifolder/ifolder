@@ -40,6 +40,12 @@ PROJECT_FILES = $(srcdir)/iFolderComponent.csproj $(srcdir)/iFolderComponent.sln
 
 EXTRA_DIST = $(iFolderComponent_CSFILES) $(iFolderShell_SRCFILES) $(iFolderShellRes_SRCFILES) $(iFolderShell_DEF) $(DATA_FILES) $(RESX_FILES) $(WINDOWS_FILES) $(srcdir)/iFolderShell.reg  $(PROJECT_FILES)
 
+if MAKE_DOC_FILE
+DOC_FILE = $(basename $@).doc.xml
+DOC_FILE_CMD = /doc:$(DOC_FILE)
+DOC_FILE_CLEAN = *.doc.xml
+endif
+
 CUR_DIR := $(shell pwd)
 
 all: iFolderShell.dll
@@ -63,7 +69,7 @@ iFolderComponent.tlb: iFolderComponent.dll
 	$(TLBX) $< $(LDOUT)$@
 
 iFolderComponent.dll: $(iFolderComponent_RESOURCES_FILES) $(iFolderComponent_CSFILES) $(iFolderComponent_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderComponent_FLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderComponent_LIBS:%=/r:%) $(iFolderComponent_LIBPATH:%=/lib:%) $(iFolderComponent_RESOURCES_FILES:%=/res:Novell.iFolderCom.%) $(iFolderComponent_CSFILES_CSC) /doc:iFolderComponent.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderComponent_FLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderComponent_LIBS:%=/r:%) $(iFolderComponent_LIBPATH:%=/lib:%) $(iFolderComponent_RESOURCES_FILES:%=/res:Novell.iFolderCom.%) $(iFolderComponent_CSFILES_CSC) $(DOC_FILE_CMD)
 	
 %.resources : %.resx
 	$(RESG) $< Novell.iFolderCom.$@
@@ -105,7 +111,7 @@ unregister:
 	-$(REGSVR32) /u /s `cygpath --windows $(DESTDIR)$(libdir)/iFolderShell.dll`
 	$(REGASM) `cygpath --windows $(DESTDIR)$(libdir)/iFolderComponent.dll` /unregister
 
-CLEAN_FILES = iFolderShell.dll iFolderComponent.tlb iFolderComponent.dll $(iFolderComponent_RESOURCES_FILES:%=Novell.iFolderCom.%) $(iFolderShell_OBJFILES) $(iFolderShellRes_OBJFILES) iFolderShell/ifoldercomponent.tlh iFolderShell/ifoldercomponent.tli iFolderComponent.doc.xml iFolderShell.exp iFolderShell.lib
+CLEAN_FILES = iFolderShell.dll iFolderComponent.tlb iFolderComponent.dll $(iFolderComponent_RESOURCES_FILES:%=Novell.iFolderCom.%) $(iFolderShell_OBJFILES) $(iFolderShellRes_OBJFILES) iFolderShell/ifoldercomponent.tlh iFolderShell/ifoldercomponent.tli $(DOC_FILE_CLEAN) iFolderShell.exp iFolderShell.lib
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
