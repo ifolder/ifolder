@@ -51,7 +51,7 @@ installcheck-local: install $(NUNIT_TESTS)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:CollectionEventTests.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = CollectionEvents.dll CsEventBroker.exe $(NUNIT_TESTS) CollectionEvents.xml CollectionEventTests.xml
+CLEAN_FILES = CollectionEvents.dll CsEventBroker.exe $(NUNIT_TESTS) CollectionEvents.xml CsEventBroker.xml
 CLEAN_DIRS = .cstore
 
 clean-local:
