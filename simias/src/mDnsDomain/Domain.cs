@@ -41,7 +41,7 @@ namespace Simias.mDns
 		/// <summary>
 		/// Well known identitifer for mDns workgroup.
 		/// </summary>
-		private string id = "74d3a71f-daae-4a36-b9f3-6466081f6401";
+		public static readonly string ID = "74d3a71f-daae-4a36-b9f3-6466081f6401";
 
 		/// <summary>
 		/// Friendly name for the workgroup domain.
@@ -65,20 +65,22 @@ namespace Simias.mDns
 
 		#region Properties
 
+		/*
 		/// <summary>
 		/// Gets the mDnsDomain's ID
 		/// </summary>
-		public string ID
+		public static string ID
 		{
 			get { return(this.id); }
 		}
+		*/
 
 		/// <summary>
 		/// Gets the mDnsDomain's friendly ID
 		/// </summary>
 		public string Name
 		{
-			get { return(this.mDnsDomainName); }
+			get { return( this.mDnsDomainName ); }
 		}
 
 		/// <summary>
@@ -86,7 +88,7 @@ namespace Simias.mDns
 		/// </summary>
 		public string Description
 		{
-			get { return(this.description); }
+			get { return( this.description ); }
 		}
 
 		/// <summary>
@@ -94,7 +96,7 @@ namespace Simias.mDns
 		/// </summary>
 		public string Host
 		{
-			get { return(this.mDnsHostName); }
+			get { return( this.mDnsHostName ); }
 		}
 
 		/// <summary>
@@ -102,7 +104,7 @@ namespace Simias.mDns
 		/// </summary>
 		public string User
 		{
-			get { return(this.mDnsUserName); }
+			get { return( this.mDnsUserName ); }
 		}
 		#endregion
 
@@ -148,7 +150,7 @@ namespace Simias.mDns
 		internal void Init()
 		{
 			hostAddress = MyDns.GetHostName();
-			log.Debug("  My Address: " + hostAddress);
+			log.Debug( "  My Address: " + hostAddress );
 			Store store = Store.GetStore();
 
 			try
@@ -181,14 +183,14 @@ namespace Simias.mDns
 				// Verify the Rendezvous workgroup domain exists
 				//
 
-				Simias.Storage.Domain rDomain = store.GetDomain( this.id );
+				Simias.Storage.Domain rDomain = store.GetDomain( ID );
 				if (rDomain == null)
 				{
 					// Create the mDnsDomain and add an identity mapping.
 					store.AddDomainIdentity(
 						ldbMember.ID,
 						this.mDnsDomainName, 
-						this.id, 
+						Simias.mDns.Domain.ID, 
 						this.description,
 						localUri,
 						Simias.Sync.SyncRoles.Master );
@@ -209,7 +211,7 @@ namespace Simias.mDns
 				catch{}
 				if (mdnsRoster == null)
 				{
-					mdnsRoster = new Roster( store, store.GetDomain( this.id ) );
+					mdnsRoster = new Roster( store, store.GetDomain( Simias.mDns.Domain.ID ) );
 					rMember = new Member( ldbMember.Name, ldbMember.ID, Access.Rights.Admin );
 					rMember.IsOwner = true;
 					//rMember.Properties.ModifyProperty( "POBox", hostAddress );
@@ -238,16 +240,16 @@ namespace Simias.mDns
 			
 				Member pMember;
 				Simias.POBox.POBox poBox = null;
-				string poBoxName = "POBox:" + this.id + ":" + ldbMember.ID;
+				string poBoxName = "POBox:" + Simias.mDns.Domain.ID + ":" + ldbMember.ID;
 
 				try
 				{
-					poBox = Simias.POBox.POBox.FindPOBox( store, this.ID, ldbMember.ID );
+					poBox = Simias.POBox.POBox.FindPOBox( store, Simias.mDns.Domain.ID, ldbMember.ID );
 				}
 				catch{}
 				if (poBox == null)
 				{
-					poBox = new Simias.POBox.POBox( store, poBoxName, this.id );
+					poBox = new Simias.POBox.POBox( store, poBoxName, ID );
 					pMember = 
 						new Member( ldbMember.Name, ldbMember.ID, Access.Rights.ReadWrite );
 					pMember.IsOwner = true;
@@ -313,22 +315,22 @@ namespace Simias.mDns
 				store.AddDomainIdentity(
 					member.ID, 
 					this.mDnsDomainName, 
-					this.id, 
+					Simias.mDns.Domain.ID,
 					this.description,
 					localUri,
 					Simias.Sync.SyncRoles.Master );
 
 				// Create an empty roster for the mDns domain.
-				Roster mdnsRoster = new Roster( store, store.GetDomain( this.id ));
+				Roster mdnsRoster = new Roster( store, store.GetDomain( ID ));
 				Member rMember = new Member( member.Name, member.ID, Access.Rights.Admin );
 				rMember.IsOwner = true;
 				mdnsRoster.Commit( new Node[] { mdnsRoster, rMember } );
 
 				// Create the POBox for the user
-				string poBoxName = "POBox:" + this.id + ":" + member.ID;
+				string poBoxName = "POBox:" + ID + ":" + member.ID;
 
 				Simias.POBox.POBox poBox = 
-					new Simias.POBox.POBox( store, poBoxName, this.id );
+					new Simias.POBox.POBox( store, poBoxName, ID );
 				Member pMember = new Member( member.Name, member.ID, Access.Rights.ReadWrite );
 				pMember.IsOwner = true;
 				poBox.Commit(new Node[] { poBox, pMember });
@@ -356,14 +358,14 @@ namespace Simias.mDns
 			try
 			{
 				Store store = Store.GetStore();
-				mdnsDomain = store.GetDomain( this.id );
+				mdnsDomain = store.GetDomain( ID );
 				if ( mdnsDomain != null )
 				{
 					Roster roster = mdnsDomain.Roster;
 					Member member = roster.GetMemberByName( mDnsUserName );
 					mDnsUserID = member.ID;
 					Simias.POBox.POBox pobox = 
-						Simias.POBox.POBox.FindPOBox( store, this.id, member.ID );
+						Simias.POBox.POBox.FindPOBox( store, ID, member.ID );
 					mDnsPOBoxID = pobox.ID;
 					exists = true;
 				}

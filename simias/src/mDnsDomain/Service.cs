@@ -55,17 +55,13 @@ namespace Simias.mDns
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		//private string mDnsUserID;
-		//private string mDnsPOBoxID;
-		private	IMDnsEvent cEvent = null;
-
 		private	Store store = null;
 		private Simias.mDns.User mDnsUser = null;
 
 		/// <summary>
 		/// Configuration object for the Collection Store.
 		/// </summary>
-		private Configuration config;
+		internal Configuration config;
 		#endregion
 
 		#region Constructor
@@ -91,8 +87,6 @@ namespace Simias.mDns
 			this.config = config;
 
 			string myAddress = MyDns.GetHostName();
-			log.Debug("  My Address: " + myAddress);
-//			Thread.Sleep(20000);
 			store = Store.GetStore();
 
 			//
@@ -149,83 +143,9 @@ namespace Simias.mDns
 			}
 		}
 
-		/// <summary>
-		/// Event handler for capturing new _ifolder_members
-		/// </summary>
-		public
-		static
-		void 
-		OnMDnsEvent(mDnsEventAction action, mDnsType rType, BaseResource cResource)
-		{
-			log.Debug("");
-			log.Debug("Event Type:    {0}", action);
-			log.Debug("Resource Type: {0}", rType);
-			log.Debug("Resource Name: " + cResource.Name);
-			log.Debug("Resource ID:   " + cResource.ID);
-			log.Debug("TTL:           " + cResource.Ttl);
+		#endregion
 
-			/*
-			if (rType == mDnsType.textStrings)
-			{
-				foreach(string s in ((TextStrings) cResource).GetTextStrings())
-				{
-					Console.WriteLine("TXT:           " + s);
-				}
-			}
-			else
-			if (rType == mDnsType.hostAddress)
-			{
-				Console.WriteLine(String.Format("Address:       {0}", ((HostAddress) cResource).PrefAddress));
-			}
-			else
-			if (rType == mDnsType.serviceLocation)
-			{
-				Console.WriteLine(String.Format("Host:          {0}", ((ServiceLocation) cResource).Target));
-				Console.WriteLine(String.Format("Port:          {0}", ((ServiceLocation) cResource).Port));
-				Console.WriteLine(String.Format("Priority:      {0}", ((ServiceLocation) cResource).Priority));
-				Console.WriteLine(String.Format("Weight:        {0}", ((ServiceLocation) cResource).Weight));
-			}
-			else
-			*/
-			if (rType == mDnsType.ptr && action == Mono.P2p.mDnsResponderApi.mDnsEventAction.added)
-			{
-				log.Debug(String.Format("Target:        {0}", ((Ptr) cResource).Target));
-
-				if (cResource.Name == "_ifolder_member._tcp.local")
-				{
-					try
-					{
-						Store store = Store.GetStore();
-						Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain(false);
-						Simias.Storage.Domain rDomain = store.GetDomain( mdnsDomain.ID );
-						Simias.Storage.Roster mdnsRoster = rDomain.Roster;
-
-						Member mdnsMember = mdnsRoster.GetMemberByName( ((Ptr) cResource).Target );
-						if ( mdnsMember != null )
-						{
-							// Update IP Address?
-						}
-						else
-						{
-							log.Debug(String.Format("Adding member: {0} to the Rendezvous Roster", ((Ptr) cResource).Target));
-
-							// FIXME::Need to query mDns to get the address where the user is located
-							// and to get his ID from the TTL resource
-							mdnsMember = 
-								new Member( ((Ptr) cResource).Target, Guid.NewGuid().ToString(), Access.Rights.ReadOnly );
-
-							mdnsRoster.Commit( new Node[] { mdnsMember } );
-						}
-					}
-					catch(Exception e)
-					{
-						log.Error( e.Message );
-						log.Error( e.StackTrace );
-					}
-				}
-			}
-		}
-
+		#region Private Methods
 		#endregion
 	}
 }

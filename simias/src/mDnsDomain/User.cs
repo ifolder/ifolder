@@ -50,7 +50,9 @@ namespace Simias.mDns
 		private string  mDnsUserName;
 		private string  mDnsUserID = "";
 		private IResourceRegistration rr = null;
-		//private	IMDnsEvent cEvent = null;
+		private static IResourceQuery query = null;
+		private readonly string memberTag = "_ifolder_member._tcp.local";
+		private	IMDnsEvent cEvent = null;
 
 
 		/// <summary>
@@ -88,7 +90,7 @@ namespace Simias.mDns
 		internal User()
 		{
 			Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain( true );
-			mDnsUserName = Environment.UserName + "@" + mdnsDomain.Name;
+			mDnsUserName = Environment.UserName + "@" + mdnsDomain.Host;
 
 			//
 			// Setup the remoting channel to the mDnsResponder
@@ -119,6 +121,7 @@ namespace Simias.mDns
 					"tcp://localhost:8091/mDnsRemoteFactory.tcp");
 					
 				this.rr = factory.GetRegistrationInstance();
+				query = factory.GetQueryInstance();
 
 				mDnsChannelUp = true;
 			}
@@ -127,7 +130,7 @@ namespace Simias.mDns
 				log.Error( e.Message );
 				log.Error( e.StackTrace );
 
-				// rethrow the exception
+				throw e;
 			}
 		}
 		#endregion
@@ -151,28 +154,8 @@ namespace Simias.mDns
 			//
 			try
 			{
-				/*
-					TcpChannel chnl = new TcpChannel();
-					ChannelServices.RegisterChannel(chnl);
-					*/
-
-				//
-				// Temp code automatically add new Rendezvous
-				// _ifolder_members to my Rendezvous Workgroup Roster
-				//
-
-				/*
-
-				this.cEvent = 
-					(IMDnsEvent) Activator.GetObject(
-					typeof(Mono.P2p.mDnsResponderApi.IMDnsEvent),
-					"tcp://localhost:8091/IMDnsEvent.tcp");
-
-				mDnsEventWrapper eventWrapper = new mDnsEventWrapper();
-				eventWrapper.OnLocalEvent += new mDnsEventHandler(OnMDnsEvent);
-				mDnsEventHandler evntHandler = new mDnsEventHandler(eventWrapper.LocalOnEvent);
-				cEvent.OnEvent += evntHandler;
-				*/
+				// Temporary to auto add all ifolder_members
+				this.AutoMembers();
 
 				Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain( true );
 				int status = rr.RegisterHost( mdnsDomain.Host, MyDns.GetHostName() );
@@ -188,14 +171,10 @@ namespace Simias.mDns
 						0 );
 					if ( status == 0 )
 					{
-						status = 
-							rr.RegisterPointer(
-							"_ifolder_member._tcp.local", 
-							this.mDnsUserName );
+						status = rr.RegisterPointer( memberTag, this.mDnsUserName );
 						if ( status == 0 )
 						{
-							// Register my TXT strings
-							registered = true;
+							registered = this.RegisterTextStrings();
 						}
 						else
 						{
@@ -227,7 +206,7 @@ namespace Simias.mDns
 			if ( this.rr != null )
 			{
 				Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain( false );
-				rr.DeregisterPointer( "_ifolder_member._tcp.local", this.mDnsUserName );
+				rr.DeregisterPointer( memberTag, this.mDnsUserName );
 				rr.DeregisterServiceLocation( mdnsDomain.Host, this.mDnsUserName );
 				rr.DeregisterHost( mdnsDomain.Host );
 			}
@@ -235,8 +214,139 @@ namespace Simias.mDns
 
 		#endregion
 
+		#region Private Methods
+		private bool RegisterTextStrings()
+		{
+			bool status = false;
+
+			Simias.Storage.Domain mdnsDomain = Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
+			if ( mdnsDomain != null )
+			{
+				//Roster roster = mdnsDomain.Roster;
+				Member member = mdnsDomain.Roster.GetMemberByName( mDnsUserName );
+				string[] txtStrings = new string[1];
+				string memberTxtString = "MemberID=" + member.ID;
+				txtStrings[0] = memberTxtString;
+
+				// Register the 
+				if ( rr.RegisterTextStrings( mDnsUserName, txtStrings ) == 0 )
+				{
+					status = true;
+				}
+				else
+				{
+					log.Debug( "Failed registering TXT strings" );
+				}
+			}
+			else
+			{
+				log.Debug( "Failed to get the mDns domain" );
+			}
+
+			return status;
+		}
+		#endregion
 
 		#region Public Methods
+
+		/// <summary>
+		/// Event handler for capturing new _ifolder_members
+		/// </summary>
+		public
+		static
+		void 
+		OnMDnsEvent(mDnsEventAction action, mDnsType rType, BaseResource cResource)
+		{
+
+			/*
+			if (rType == mDnsType.textStrings)
+			{
+				foreach(string s in ((TextStrings) cResource).GetTextStrings())
+				{
+					Console.WriteLine("TXT:           " + s);
+				}
+			}
+			else
+			if (rType == mDnsType.hostAddress)
+			{
+				Console.WriteLine(String.Format("Address:       {0}", ((HostAddress) cResource).PrefAddress));
+			}
+			else
+			if (rType == mDnsType.serviceLocation)
+			{
+				Console.WriteLine(String.Format("Host:          {0}", ((ServiceLocation) cResource).Target));
+				Console.WriteLine(String.Format("Port:          {0}", ((ServiceLocation) cResource).Port));
+				Console.WriteLine(String.Format("Priority:      {0}", ((ServiceLocation) cResource).Priority));
+				Console.WriteLine(String.Format("Weight:        {0}", ((ServiceLocation) cResource).Weight));
+			}
+			else
+			*/
+			if ( rType == mDnsType.ptr && action == Mono.P2p.mDnsResponderApi.mDnsEventAction.added )
+			{ 
+				log.Debug("");
+				log.Debug("Event Type:    {0}", action);
+				log.Debug("Resource Type: {0}", rType);
+				log.Debug("Resource Name: " + cResource.Name);
+				log.Debug("Resource ID:   " + cResource.ID);
+				log.Debug("TTL:           " + cResource.Ttl);
+				log.Debug(String.Format("Target:        {0}", ((Ptr) cResource).Target));
+
+				if ( cResource.Name == "_ifolder_member._tcp.local" )
+				{
+					try
+					{
+						Store store = Store.GetStore();
+						//Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain( false );
+						Simias.Storage.Domain rDomain = store.GetDomain( Simias.mDns.Domain.ID );
+						Simias.Storage.Roster mdnsRoster = rDomain.Roster;
+
+						Member mdnsMember = mdnsRoster.GetMemberByName( ((Ptr) cResource).Target );
+						if ( mdnsMember != null )
+						{
+							// Update IP Address?
+						}
+						else
+						{
+							log.Debug(String.Format("Adding member: {0} to the Rendezvous Roster", ((Ptr) cResource).Target));
+
+							// FIXME::Need to query mDns to get the address where the user is located
+							// and to get his ID from the TTL resource
+
+							Mono.P2p.mDnsResponderApi.TextStrings txtStrings = null;
+							string memberID = null;
+
+							if ( query.GetTextStringsByName( ((Ptr) cResource).Target, ref txtStrings ) == 0 )
+							{
+								foreach( string s in txtStrings.GetTextStrings() )
+								{
+									string[] nameValues = s.Split( new char['='], 2 );
+									if ( nameValues[0] == "MemberID" )
+									{
+										memberID = nameValues[1];
+										break;
+									}
+
+								}
+
+								if ( memberID != null )
+								{
+									mdnsMember = 
+										new Member( ((Ptr) cResource).Target, memberID, Access.Rights.ReadOnly );
+
+									mdnsRoster.Commit( new Node[] { mdnsMember } );
+								}
+							}
+						}
+					}
+					catch(Exception e)
+					{
+						log.Error( e.Message );
+						log.Error( e.StackTrace );
+					}
+				}
+			}
+		}
+
 		/// <summary>
 		/// Obtains the string representation of this instance.
 		/// </summary>
@@ -244,6 +354,23 @@ namespace Simias.mDns
 		public override string ToString()
 		{
 			return this.mDnsUserName;
+		}
+		#endregion
+
+		#region Private Methods
+		// This is a temporary thing but for now
+		// we'll add any ifolder member we see to our member list
+		private void AutoMembers()
+		{
+			this.cEvent = 
+				(IMDnsEvent) Activator.GetObject(
+				typeof(Mono.P2p.mDnsResponderApi.IMDnsEvent),
+				"tcp://localhost:8091/IMDnsEvent.tcp");
+
+			mDnsEventWrapper eventWrapper = new mDnsEventWrapper();
+			eventWrapper.OnLocalEvent += new mDnsEventHandler(OnMDnsEvent);
+			mDnsEventHandler evntHandler = new mDnsEventHandler(eventWrapper.LocalOnEvent);
+			cEvent.OnEvent += evntHandler;
 		}
 		#endregion
 	}
