@@ -799,10 +799,14 @@ namespace Simias.POBoxService.Web
 		public string	CollectionType;
 		public string	CollectionUrl;
 
+		public string	DirNodeID;
+		public string	DirNodeName;
+
 		public string	DomainID;
 		public string	DomainName;
 
 		public int		State;
+		public int		Disposition;
 
 		public SubscriptionInformation()
 		{
@@ -822,10 +826,14 @@ namespace Simias.POBoxService.Web
 			this.CollectionType = cSub.SubscriptionCollectionType;
 			this.CollectionUrl = cSub.SubscriptionCollectionURL;
 
+			this.DirNodeID = cSub.DirNodeID;
+			this.DirNodeName = cSub.DirNodeName;
+
 			this.DomainID = cSub.DomainID;
 			this.DomainName = cSub.DomainName;
 
 			this.State = (int) cSub.SubscriptionState;
+			this.Disposition = (int) cSub.SubscriptionDisposition;
 		}
 	}
 }
