@@ -246,7 +246,7 @@ namespace Simias.Storage.Provider
 		internal Configuration(string path)
 		{
 			conf = new Simias.Configuration(path);
-			Path = conf.BasePath;
+			Path = conf.StorePath;
 		}
 
 		/// <summary>

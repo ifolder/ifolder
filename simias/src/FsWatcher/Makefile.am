@@ -5,9 +5,9 @@ FsWatcher_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/FsWatcher.cs
 FsWatcher_CSFILES_CSC := $(subst /,$(SEP),$(FsWatcher_CSFILES))
 FsWatcher_INCLUDES =
 FsWatcher_RESOURCES =
-FsWatcher_FLAGS = $(CSC_EXEFLAG) $(ICON_FLAG)$(srcdir)/App$(ICON_EXT)
-FsWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll UserService.dll
-FsWatcher_LIBPATH = ../Common ../StoreProvider ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../CollectionEvents ../UserService
+FsWatcher_FLAGS = $(CSC_LIBFLAG)
+FsWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll Simias.Service.dll
+FsWatcher_LIBPATH = ../Common ../StoreProvider ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../CollectionEvents ../Service
 
 NUNIT_TESTS :=
 
@@ -23,9 +23,9 @@ EXTRA_DIST = $(FsWatcher_CSFILES) $(FsWatcherTests_CSFILES) App$(ICON_EXT)
 
 CUR_DIR := $(shell pwd)
 
-all: FsWatcher.exe
+all: FsWatcher.dll
 
-FsWatcher.exe: $(FsWatcher_CSFILES) $(FsWatcher_RESOURCES)
+FsWatcher.dll: $(FsWatcher_CSFILES) $(FsWatcher_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(FsWatcher_FLAGS) $(FsWatcher_LIBS:%=/r:%) $(FsWatcher_LIBPATH:%=/lib:%) $(FsWatcher_CSFILES_CSC) /doc:FsWatcher.doc.xml
 
 #FsWatcherTests.dll: $(FsWatcherTests_CSFILES) $(FsWatcherTests_RESOURCES)
@@ -37,19 +37,19 @@ DEBUG_FILES = FsWatcher.pdb
 endif
 endif
 
-install-exec-local: FsWatcher.exe
+install-exec-local: FsWatcher.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) FsWatcher.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) FsWatcher.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f FsWatcher.exe FsWatcherTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES)
+	cd $(DESTDIR)$(bindir); rm -f FsWatcher.dll FsWatcherTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES)
 
 installcheck-local: install $(NUNIT_TESTS)
 #	$(mkinstalldirs) $(DESTDIR)$(bindir)
 #	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
 #	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:FsWatcherTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = FsWatcher.exe $(NUNIT_TESTS) FsWatcher.doc.xml FsWatcherTests.test.xml
+CLEAN_FILES = FsWatcher.dll $(NUNIT_TESTS) FsWatcher.doc.xml FsWatcherTests.test.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

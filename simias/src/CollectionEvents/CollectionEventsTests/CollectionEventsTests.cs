@@ -27,6 +27,7 @@ using System.Threading;
 using System.Diagnostics;
 using NUnit.Framework;
 using Simias;
+using Simias.Service;
 
 namespace Simias.Event
 {
@@ -37,9 +38,9 @@ namespace Simias.Event
 	public class EventsTests
 	{
 		#region Fields
+		Manager				serviceManager;
 		EventSubscriber		subscriber = null;
 		EventPublisher		publisher = null;
-		ServiceEventSubscriber serviceSubscriber = null;
 		EventArgs			args;
 		ManualResetEvent	mre = new ManualResetEvent(false);
 		ManualResetEvent    shutdownEvent = new ManualResetEvent(false);
@@ -60,7 +61,8 @@ namespace Simias.Event
 		[TestFixtureSetUp]
 		public void Init()
 		{
-			EventBroker.StartService(conf);
+			serviceManager = new Manager(conf);
+			serviceManager.StartServices();
 			Thread.Sleep(500);
 			publish();
 			subscribe();
@@ -82,8 +84,6 @@ namespace Simias.Event
 			subscriber.FileCreated += new FileEventHandler(OnFileCreate);
 			subscriber.FileDeleted += new FileEventHandler(OnFileDelete);
 			subscriber.FileRenamed += new FileRenameEventHandler(OnFileRenamed);
-			serviceSubscriber = new ServiceEventSubscriber(conf);
-			serviceSubscriber.ServiceControl += new ServiceEventHandler(ServiceCtlHandler);
 		}
 
 		/// <summary>
@@ -94,11 +94,9 @@ namespace Simias.Event
 		{
 			if (subscriber != null)
 				subscriber.Dispose();
-			if (serviceSubscriber != null)
-				serviceSubscriber.Dispose();
-			if (publisher != null)
+			if (serviceManager != null)
 			{
-				publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceControl.Shutdown));
+				serviceManager.StopServices();
 			}
 		}
 
@@ -167,22 +165,6 @@ namespace Simias.Event
 			mre.Set();
 			this.args = args;
 			Console.WriteLine("File Rename: {0} {1} {2}", args.OldName, args.FullPath, args.Collection);
-		}
-
-		void ServiceCtlHandler(ServiceEventArgs args)
-		{
-			mre.Set();
-			Console.WriteLine("Service Control Event = {0}", args.ControlEvent); 
-			if (args.ControlEvent == ServiceControl.Shutdown)
-			{
-				shutdownEvent.Set();
-			}
-			if (args.ControlEvent == ServiceControl.Reconfigure && performanceTest)
-			{
-				Console.WriteLine("Recieved {0} events in {1} seconds.", eventCount, ((TimeSpan)(DateTime.Now - firstEvent)).TotalSeconds);
-				firstEvent = DateTime.MinValue;
-				eventCount = 0;
-			}
 		}
 
 		#endregion
@@ -436,16 +418,6 @@ namespace Simias.Event
 			}
 		}
 
-		/// <summary>
-		/// Service Control Test.
-		/// </summary>
-		[Test]
-		public void ServiceControlTest()
-		{
-			publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceControl.Reconfigure));
-			//publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceControl.Shutdown));
-		}
-
 		#endregion
 
 		#region privates
@@ -496,13 +468,11 @@ namespace Simias.Event
 						{
 							t.publisher.RaiseEvent(new NodeEventArgs("nifp", i.ToString(), t.collection, "Node", EventType.NodeCreated));
 						}
-						t.publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceControl.Reconfigure));
 					}
 					break;
 
 				case "PS":
 					t.publisher = new EventPublisher(t.conf);
-					t.publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceControl.Shutdown));
 					break;
 
 				case "S":

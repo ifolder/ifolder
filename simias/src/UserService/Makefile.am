@@ -1,51 +1,70 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-UserService_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/UserService.cs $(srcdir)/SystemManager.cs $(srcdir)/ICollectionWorker.cs
-UserService_CSFILES_CSC := $(subst /,$(SEP),$(UserService_CSFILES))
-UserService_INCLUDES = 
-UserService_RESOURCES =
-UserService_FLAGS = $(CSC_LIBFLAG)
-UserService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll CollectionEvents.dll
-UserService_LIBPATH = /opt/gnome2/lib /usr/lib ../Common ../CollectionEvents
+Simias.Service_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/BaseProcessService.cs $(srcdir)/IThreadService.cs $(srcdir)/Manager.cs $(srcdir)/Message.cs $(srcdir)/ProcessServiceCtl.cs $(srcdir)/ServiceCtl.cs $(srcdir)/ServiceType.cs $(srcdir)/State.cs $(srcdir)/ThreadServiceCtl.cs
+Simias.Service_CSFILES_CSC := $(subst /,$(SEP),$(Simias.Service_CSFILES))
+Simias.Service_INCLUDES = 
+Simias.Service_RESOURCES =
+Simias.Service_FLAGS = $(CSC_LIBFLAG)
+Simias.Service_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll
+Simias.Service_LIBPATH = /opt/gnome2/lib /usr/lib ../Common ../CollectionEvents
 
-NUNIT_TESTS := ServiceTests.exe
+NUNIT_TESTS := ServiceTests.exe ThreadServiceTest.dll ProcessServiceTest.exe
 
 ServiceTests_CSFILES = $(srcdir)/ServiceTests/AssemblyInfo.cs $(srcdir)/ServiceTests/ServiceTests.cs
 ServiceTests_CSFILES_CSC := $(subst /,$(SEP),$(ServiceTests_CSFILES))
 ServiceTests_INCLUDES = 
 ServiceTests_RESOURCES =
 ServiceTests_FLAGS = $(CSC_EXEFLAG)
-ServiceTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Common.dll UserService.dll
+ServiceTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Common.dll Simias.Service.dll
 ServiceTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common 
 
+ThreadServiceTest_CSFILES = $(srcdir)/ThreadServiceTest/AssemblyInfo.cs $(srcdir)/ThreadServiceTest/ThreadServiceTest.cs
+ThreadServiceTest_CSFILES_CSC := $(subst /,$(SEP),$(ThreadServiceTest_CSFILES))
+ThreadServiceTest_INCLUDES = 
+ThreadServiceTest_RESOURCES =
+ThreadServiceTest_FLAGS = $(CSC_LIBFLAG)
+ThreadServiceTest_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Common.dll Simias.Service.dll
+ThreadServiceTest_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common 
 
+ProcessServiceTest_CSFILES = $(srcdir)/ProcessServiceTest/AssemblyInfo.cs $(srcdir)/ProcessServiceTest/ProcessServiceTest.cs
+ProcessServiceTest_CSFILES_CSC := $(subst /,$(SEP),$(ProcessServiceTest_CSFILES))
+ProcessServiceTest_INCLUDES = 
+ProcessServiceTest_RESOURCES =
+ProcessServiceTest_FLAGS = $(CSC_EXEFLAG)
+ProcessServiceTest_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Common.dll Simias.Service.dll
+ProcessServiceTest_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common 
 
-EXTRA_DIST = $(UserService_CSFILES) $(ServiceTests_CSFILES) 
+EXTRA_DIST = $(Simias.Service_CSFILES) $(ServiceTests_CSFILES) $(ThreadServiceTest_CSFILES) $(ProcessServiceTest_CSFILES)
 
 CUR_DIR := $(shell pwd)
 
-all: UserService.dll
+all: Simias.Service.dll
 
-UserService.dll: $(UserService_CSFILES) $(UserService_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(UserService_FLAGS) $(UserService_LIBS:%=/r:%) $(UserService_LIBPATH:%=/lib:%) $(UserService_CSFILES_CSC) /doc:UserService.doc.xml
+Simias.Service.dll: $(Simias.Service_CSFILES) $(Simias.Service_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(Simias.Service_FLAGS) $(Simias.Service_LIBS:%=/r:%) $(Simias.Service_LIBPATH:%=/lib:%) $(Simias.Service_CSFILES_CSC) /doc:Simias.Service.doc.xml
 	
 ServiceTests.exe: $(ServiceTests_CSFILES) $(ServiceTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(ServiceTests_FLAGS) $(ServiceTests_LIBS:%=/r:%) $(ServiceTests_LIBPATH:%=/lib:%) $(ServiceTests_CSFILES_CSC)
 	
+ProcessServiceTest.exe: $(ProcessServiceTest_CSFILES) $(ProcessServiceTest_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(ProcessServiceTest_FLAGS) $(ProcessServiceTest_LIBS:%=/r:%) $(ProcessServiceTest_LIBPATH:%=/lib:%) $(ProcessServiceTest_CSFILES_CSC)
+	
+ThreadServiceTest.dll: $(ThreadServiceTest_CSFILES) $(ThreadServiceTest_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(ThreadServiceTest_FLAGS) $(ThreadServiceTest_LIBS:%=/r:%) $(ThreadServiceTest_LIBPATH:%=/lib:%) $(ThreadServiceTest_CSFILES_CSC)
 
 if DEBUG
 if WINDOWS
-DEBUG_FILES = UserService.pdb
+DEBUG_FILES = Simias.Service.pdb
 endif
 endif
 
-install-exec-local: UserService.dll
+install-exec-local: Simias.Service.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) UserService.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) Simias.Service.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f UserService.dll ServiceTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES)
+	cd $(DESTDIR)$(bindir); rm -f Simias.Service.dll ServiceTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
@@ -53,7 +72,7 @@ installcheck-local: install $(NUNIT_TESTS)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:ServiceTest.test.xml $(NUNIT_TESTS)
 	
 	
-CLEAN_FILES = UserService.dll $(NUNIT_TESTS) UserService.doc.xml
+CLEAN_FILES = Simias.Service.dll $(NUNIT_TESTS) Simias.Service.doc.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

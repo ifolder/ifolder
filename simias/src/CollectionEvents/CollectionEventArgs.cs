@@ -64,10 +64,6 @@ namespace Simias.Event
 		/// The event is for a file rename.
 		/// </summary>
 		FileRenamed = 128,
-		/// <summary>
-		/// A service event.
-		/// </summary>
-		ServiceControl = 256
 	};
 
 	/// <summary>

@@ -62,8 +62,6 @@ namespace Simias.Event
 		bool shuttingDown = false;
 		Queue eventQueue;
 		ManualResetEvent queued;
-		static ManualResetEvent shutdown;
-		static ArrayList mutexList = new ArrayList();
 		static bool serviceRegistered = false;
 		static bool clientRegistered = false;
 
@@ -75,12 +73,7 @@ namespace Simias.Event
 		/// 
 		/// </summary>
 		public event CollectionEventHandlerS CollectionEvent;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public event ServiceEventHandler	ServiceEvent;
-	
+		
 		#endregion
 
 		#region Constructor
@@ -124,7 +117,7 @@ namespace Simias.Event
 						}
 					}
 						
-					if (CollectionEvent != null && args.ChangeType != EventType.ServiceControl)
+					if (CollectionEvent != null)
 					{
 						Delegate[] cbList = CollectionEvent.GetInvocationList();
 						foreach (CollectionEventHandlerS cb in cbList)
@@ -141,38 +134,9 @@ namespace Simias.Event
 							}
 						}
 					}
-					else
-					{
-						if (ServiceEvent != null)
-						{
-							Delegate[] cbList = ServiceEvent.GetInvocationList();
-							foreach (ServiceEventHandler cb in cbList)
-							{
-								try 
-								{ 
-									cb((ServiceEventArgs)args);
-								}
-								catch 
-								{
-									// Remove the offending delegate.
-									ServiceEvent -= cb;
-									MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
-								}
-							}
-						}
-						if (((ServiceEventArgs)args).ControlEvent == ServiceControl.Shutdown)
-						{
-							if (((ServiceEventArgs)args).Target == ServiceEventArgs.TargetAll || 
-								((ServiceEventArgs)args).Target == System.Diagnostics.Process.GetCurrentProcess().Id)
-							{
-								shuttingDown = true;
-							}
-						}
-					}
 				}
 				catch{}
 			}
-			shutdown.Set();
 		}
 
 		#endregion
@@ -202,6 +166,7 @@ namespace Simias.Event
 		private const string CFG_Assembly = "CsEventBroker";
 		private const string CFG_UriKey = "Uri";
 		private const string CFG_Uri = "tcp://localhost/EventBroker";
+		private const string channelName = "SimiasEventChannel";
 
 		/// <summary>
 		/// Method to register a client channel.
@@ -212,54 +177,44 @@ namespace Simias.Event
 			{
 				if (!clientRegistered)
 				{
-					// Check to see if the service has started.
-					string s = serviceMutexName(conf);
-					Mutex mutex = new Mutex(false, s);
-					if (!mutex.WaitOne(0, false))
+					string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
+                    bool registered = false;
+					if (new Uri(serviceUri).Port == -1)
 					{
-						string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
-                        bool registered = false;
-						if (new Uri(serviceUri).Port == -1)
-						{
-							return (clientRegistered);
-						}
+						return (clientRegistered);
+					}
 						
-						WellKnownClientTypeEntry [] cta = RemotingConfiguration.GetRegisteredWellKnownClientTypes();
-						foreach (WellKnownClientTypeEntry ct in cta)
+					WellKnownClientTypeEntry [] cta = RemotingConfiguration.GetRegisteredWellKnownClientTypes();
+					foreach (WellKnownClientTypeEntry ct in cta)
+					{
+						Type t = typeof(EventBroker);
+						Type t1 = ct.ObjectType;
+						if (Type.Equals(t, t1))
 						{
-							Type t = typeof(EventBroker);
-							Type t1 = ct.ObjectType;
-							if (Type.Equals(t, t1))
-							{
-								registered = true;
-								break;
-							}
-						}
-						if (!registered)
-						{
-							Hashtable props = new Hashtable();
-							props["port"] = 0;
-
-							BinaryServerFormatterSinkProvider
-								serverProvider = new BinaryServerFormatterSinkProvider();
-							BinaryClientFormatterSinkProvider
-								clientProvider = new BinaryClientFormatterSinkProvider();
-#if !MONO
-							serverProvider.TypeFilterLevel =
-								System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
-#endif
-							TcpChannel chan = new
-								TcpChannel(props,clientProvider,serverProvider);
-							ChannelServices.RegisterChannel(chan);
-
-							//ChannelServices.RegisterChannel(new TcpChannel());
-							RemotingConfiguration.RegisterWellKnownClientType(typeof(EventBroker), serviceUri);
-							clientRegistered = true;
+							registered = true;
+							break;
 						}
 					}
-					else
+					if (!registered)
 					{
-						mutex.ReleaseMutex();
+						Hashtable props = new Hashtable();
+						props["port"] = 0;
+
+						BinaryServerFormatterSinkProvider
+							serverProvider = new BinaryServerFormatterSinkProvider();
+						BinaryClientFormatterSinkProvider
+							clientProvider = new BinaryClientFormatterSinkProvider();
+#if !MONO
+						serverProvider.TypeFilterLevel =
+							System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
+#endif
+						TcpChannel chan = new
+							TcpChannel(props,clientProvider,serverProvider);
+						ChannelServices.RegisterChannel(chan);
+
+							//ChannelServices.RegisterChannel(new TcpChannel());
+						RemotingConfiguration.RegisterWellKnownClientType(typeof(EventBroker), serviceUri);
+						clientRegistered = true;
 					}
 				}
 			}
@@ -269,14 +224,14 @@ namespace Simias.Event
 		/// <summary>
 		/// Method to register the server channel.
 		/// </summary>
-		public static void RegisterService(ManualResetEvent shutdownEvent, Configuration conf)
+		public static void RegisterService(Configuration conf)
 		{
-			shutdown = shutdownEvent;
-			string serviceString = CFG_Uri + "_" + conf.BasePath.GetHashCode().ToString();
+            string serviceString = CFG_Uri + "_" + conf.StorePath.GetHashCode().ToString();
 			Uri serviceUri = new Uri (serviceString);
 			
 			Hashtable props = new Hashtable();
 			props["port"] = 0; //serviceUri.Port;
+			props["name"] = channelName + conf.StorePath.GetHashCode().ToString();
 			props["rejectRemoteRequests"] = true;
 
 			BinaryServerFormatterSinkProvider
@@ -298,58 +253,25 @@ namespace Simias.Event
 			if (uriList.Length == 1)
 			{
 				string service = uriList[0];
-				string s = serviceMutexName(conf);
-				Mutex mutex = new Mutex(false, s);
-				if (mutex.WaitOne(3000, false))
+				Uri sUri = new Uri(service);
+				if (!sUri.IsLoopback)
 				{
-					Uri sUri = new Uri(service);
-					if (!sUri.IsLoopback)
-					{
-						service = sUri.Scheme + Uri.SchemeDelimiter + "localhost:" + sUri.Port + sUri.AbsolutePath;
-					}
-					serviceRegistered = true;
-					conf.Set(CFG_Section, CFG_UriKey, service);
-					mutexList.Add(mutex);
+					service = sUri.Scheme + Uri.SchemeDelimiter + "localhost:" + sUri.Port + sUri.AbsolutePath;
 				}
-				else
-				{
-					shutdownEvent.Set();
-				}
+				serviceRegistered = true;
+				conf.Set(CFG_Section, CFG_UriKey, service);
 			}
+		}
+
+		/// <summary>
+		/// Method to deregister the server channel.
+		/// </summary>
+		public static void DeRegisterService(Configuration conf)
+		{
+			ChannelServices.UnregisterChannel(ChannelServices.GetChannel(channelName + conf.StorePath.GetHashCode().ToString()));
+			serviceRegistered = false;
 		}
 	
-		public static void StartService(Configuration conf)
-		{
-			Uri assemblyPath = new Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase));
-			string serviceName = conf.Get(CFG_Section, CFG_AssemblyKey, CFG_Assembly) + ".exe";
-			serviceName = Path.Combine(assemblyPath.LocalPath, serviceName);
-			
-			// The service is not running start it.
-			System.Diagnostics.Process service = new Process();
-			service.StartInfo.CreateNoWindow = true;
-			service.StartInfo.UseShellExecute = false;
-			if (MyEnvironment.Mono)
-			{
-				service.StartInfo.FileName = "mono";
-				service.StartInfo.Arguments = serviceName + " ";
-			}
-			else
-			{
-				service.StartInfo.FileName = serviceName;
-				service.StartInfo.Arguments = null;
-			}
-			service.StartInfo.Arguments += Path.GetDirectoryName(conf.BasePath);
-			service.Start();
-			Thread.Sleep(200);
-			
-		}
-
-		private static string serviceMutexName(Configuration conf)
-		{
-			string s = ("EventBrokerMutex____" + conf.BasePath.GetHashCode());
-			return s;
-		}
-
 		#endregion
 		
 		#region MarshallByRef Overrides
@@ -422,11 +344,7 @@ namespace Simias.Event
 		/// Delegate to handle File Renames.
 		/// </summary>
 		public event FileRenameEventHandler FileRenamed;
-		/// <summary>
-		/// Delegate used to control services in the system.
-		/// </summary>
-		public event ServiceEventHandler ServiceControl;
-
+		
 		#endregion
 
 		#region Factory Methods
@@ -436,14 +354,14 @@ namespace Simias.Event
 			InProcessEventBroker instance;
 			lock (typeof(InProcessEventBroker))
 			{
-				if (!instanceTable.Contains(conf.BasePath))
+				if (!instanceTable.Contains(conf.StorePath))
 				{
 					instance = new InProcessEventBroker(conf);
-					instanceTable.Add(conf.BasePath, instance);
+					instanceTable.Add(conf.StorePath, instance);
 				}
 				else
 				{
-					instance = (InProcessEventBroker)instanceTable[conf.BasePath];
+					instance = (InProcessEventBroker)instanceTable[conf.StorePath];
 				}
 				++instance.count;
 			}

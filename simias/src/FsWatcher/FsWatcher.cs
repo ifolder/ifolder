@@ -27,19 +27,21 @@ using System.Threading;
 using System.Collections;
 using Simias.Storage;
 using Simias.Event;
+using Simias.Service;
 
 namespace Simias.Event
 {
-	internal class CollectionFilesWatcher
+	internal class CollectionFilesWatcher : IDisposable
 	{
+		bool						disposed;
 		string						collectionId;
-		FileSystemWatcher			watcher;
+		internal FileSystemWatcher	watcher;
 		static EventPublisher		publish;
 		
 
 		internal CollectionFilesWatcher(Collection col)
 		{
-			this.collectionId = col.Id;
+            this.collectionId = col.Id;
 			publish = new EventPublisher(new Configuration(col.LocalStore.StorePath.LocalPath));
 			Uri pathUri = (Uri)col.Properties.GetSingleProperty(Property.DocumentRoot).Value;
 			string rootPath = pathUri.LocalPath;
@@ -50,6 +52,12 @@ namespace Simias.Event
 			watcher.Renamed += new RenamedEventHandler(OnRenamed);
 			watcher.IncludeSubdirectories = true;
 			watcher.EnableRaisingEvents = true;
+			disposed = false;
+		}
+
+		~CollectionFilesWatcher()
+		{
+			Dispose(true);
 		}
 
 		private void OnChanged(object source, FileSystemEventArgs e)
@@ -79,60 +87,47 @@ namespace Simias.Event
 			publish.RaiseEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, EventType.FileCreated));
 			System.Diagnostics.Debug.WriteLine("Created File: {0} Created.", e.FullPath);
 		}
+
+		private void Dispose(bool inFinalize)
+		{
+			lock (this)
+			{
+				if (!disposed)
+				{
+					if (!inFinalize)
+					{
+						System.GC.SuppressFinalize(this);
+					}
+					watcher.Dispose();
+					disposed = true;
+				}
+			}
+		}
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			Dispose(false);
+		}
+
+		#endregion
 	}
 
 	/// <summary>
 	/// Summary description for Class1.
 	/// </summary>
-	class FsWatcher : UserService
+	public class FsWatcher : IThreadService
 	{
 		static Store				store;
 		static Hashtable			watcherTable;
 		EventSubscriber				collectionWatcher;
-		static Configuration		conf;
+		Configuration				conf;
 		
-		/// <summary>
-		/// The main entry point for the application.
-		/// </summary>
-		[STAThread]
-		static void Main(string[] args)
-		{
-			FsWatcher fsw = new FsWatcher(args);
-			fsw.Run(conf);
-		}
-
-		public FsWatcher(string[] args)
-		{
-			// Create a hash table to store the watchers in.
-			watcherTable = new Hashtable();
-			if (args.Length == 1)
-			{
-				store = Store.Connect(new Uri(args[0]), this.GetType().FullName);
-			}
-			else
-			{
-				store = Store.Connect(this.GetType().FullName);
-			}
-			conf = new Configuration(store.StorePath.LocalPath);
-			collectionWatcher = new EventSubscriber(new Configuration(store.StorePath.LocalPath));
-			collectionWatcher.NodeCreated += new NodeEventHandler(OnNewCollection);
-			collectionWatcher.NodeDeleted += new NodeEventHandler(OnDeleteNode);
-			foreach (Collection col in store)
-			{
-				WatchCollection(col);
-			}
-		}
-
-		protected override void OnShutdown()
-		{
-			collectionWatcher.Dispose();
-		}
-
 		private void WatchCollection(Collection col)
 		{
 			watcherTable.Add(col.Id, new CollectionFilesWatcher(col));
 		}
-
 
 		private void OnNewCollection(NodeEventArgs args)
 		{
@@ -159,5 +154,58 @@ namespace Simias.Event
 				watcherTable.Remove(args.Collection);
 			}
 		}
+
+		#region IThreadService Members
+
+		public void Start(Configuration conf)
+		{
+			lock (this)
+			{
+				// Create a hash table to store the watchers in.
+				this.conf = conf;
+				watcherTable = new Hashtable();
+				store = Store.Connect(conf);
+				collectionWatcher = new EventSubscriber(new Configuration(store.StorePath.LocalPath));
+				collectionWatcher.NodeCreated += new NodeEventHandler(OnNewCollection);
+				collectionWatcher.NodeDeleted += new NodeEventHandler(OnDeleteNode);
+				foreach (Collection col in store)
+				{
+					WatchCollection(col);
+				}
+			}
+		}
+
+		public void Stop()
+		{
+			lock (this)
+			{
+				foreach (CollectionFilesWatcher cw in watcherTable)
+				{
+					cw.Dispose();
+				}
+				watcherTable.Clear();
+				watcherTable = null;
+				collectionWatcher.Dispose();
+				collectionWatcher = null;
+				store.Dispose();
+				store = null;
+			}
+		}
+
+		public void Resume()
+		{
+			Start(conf);
+		}
+
+		public void Pause()
+		{
+			Stop();
+		}
+
+		public void Custom(int message, string data)
+		{
+		}
+
+		#endregion
 	}
 }

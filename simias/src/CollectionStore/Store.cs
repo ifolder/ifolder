@@ -404,7 +404,7 @@ namespace Simias.Storage
 
 				// Create or open the underlying database.
 				bool created;
-				storageProvider = Persist.Provider.Connect( config.BasePath, out created );
+				storageProvider = Persist.Provider.Connect( config.StorePath, out created );
 
 				// Set the path to the store.
 				storeManagedPath = new Uri( Path.Combine( storageProvider.StoreDirectory.LocalPath, storeManagedDirectoryName ) );

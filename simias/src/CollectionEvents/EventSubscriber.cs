@@ -59,11 +59,6 @@ namespace Simias.Event
 	public delegate void FileRenameEventHandler(FileRenameEventArgs args);
 
 	/// <summary>
-	/// Delegate definition for hanling service control events.
-	/// </summary>
-	public delegate void ServiceEventHandler(ServiceEventArgs args);
-
-	/// <summary>
 	/// Used to get around a marshalling problem seen with explorer.
 	/// </summary>
 	internal delegate void TemporayEventHandler(EventType type, string args);

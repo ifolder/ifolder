@@ -28,7 +28,7 @@ using System.Diagnostics;
 using NUnit.Framework;
 using Simias;
 
-namespace Simias
+namespace Simias.Service
 {
 	/// <summary>
 	/// Test Fixture for the Collection Events.
@@ -37,8 +37,10 @@ namespace Simias
 	public class ServiceTests
 	{
 		#region Fields
-		SystemManager systemManager;
+		Simias.Service.Manager serviceManager;
 		Configuration conf = new Configuration(Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath));
+		const string threadServiceName = "My Thread Service";
+		const string processServiceName = "My Process Service";
 		#endregion
 
 		#region Setup/TearDown
@@ -49,7 +51,9 @@ namespace Simias
 		[TestFixtureSetUp]
 		public void Init()
 		{
-			systemManager = new SystemManager(conf);
+			serviceManager = new Simias.Service.Manager(conf);
+			serviceManager.Install(new ThreadServiceCtl(conf, threadServiceName, "ThreadServiceTest.dll", "Simias.Service.ThreadServiceTest"));
+			serviceManager.Install(new ProcessServiceCtl(conf, processServiceName, "ProcessServiceTest.exe"));
 		}
 
 		/// <summary>
@@ -60,8 +64,13 @@ namespace Simias
 		{
 			try
 			{
-				if (systemManager != null)
-					systemManager.StopServices();
+				if (serviceManager != null)
+				{
+					serviceManager.StopServices();
+					serviceManager.Uninstall(threadServiceName);
+					serviceManager.Uninstall(processServiceName);
+					serviceManager = null;
+				}
 			}
 			catch {}
 		}
@@ -76,7 +85,7 @@ namespace Simias
 		[Test]
 		public void StartServices()
 		{
-			systemManager.StartServices();
+			serviceManager.StartServices();
 			Thread.Sleep(1000);
 		}
 
@@ -86,7 +95,7 @@ namespace Simias
 		[Test]
 		public void StopServices()
 		{
-			systemManager.StopServices();
+			serviceManager.StopServices();
 		}
 
 		#endregion
@@ -107,6 +116,7 @@ namespace Simias
 				Console.WriteLine("Press Enter to exit");
 				Console.ReadLine();
 				test.StopServices();
+				test.Cleanup();
 			}
 			catch (Exception e)
 			{

@@ -29,6 +29,9 @@ using System.Threading;
 
 namespace Simias
 {
+	/// <summary>
+	/// Configuration class for simias components.
+	/// </summary>
 	public sealed class Configuration
 	{
 		private static readonly string RootElementTag = "configuration";
@@ -43,10 +46,17 @@ namespace Simias
 		
 		private Mutex mutex = new Mutex(false, "SimiasConfigMutex");
 
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
 		public Configuration() : this(null)
 		{
 		}
 
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="path">The path to the configuration file.</param>
 		public Configuration(string path)
 		{
 			if (path == null)
@@ -72,16 +82,16 @@ namespace Simias
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public void CreateDefaults()
 		{
 		}
 
-		[Obsolete("Use Configuration.StorePath instead.")]
-		public string BasePath
-		{
-			get { return storePath; }
-		}
-
+		/// <summary>
+		/// Called to get the path where simias is installed.
+		/// </summary>
 		public string StorePath
 		{
 			get { return storePath; }
@@ -92,28 +102,80 @@ namespace Simias
 			get { return Path.Combine(storePath, DefaultFileName); }
 		}
 
+		/// <summary>
+		/// Returns the XmlElement for the specified key.  
+		/// Creates the key if does not exist.
+		/// </summary>
+		/// <param name="key">The key to return.</param>
+		/// <returns>The key as an XmlElement.</returns>
+		public XmlElement GetElement(string key)
+		{
+			return GetElement(DefaultSection, key);
+		}
+
+		/// <summary>
+		/// Returns the XmlElement for the specified key.  
+		/// Creates the key if does not exist.
+		/// </summary>
+		/// <param name="section">The section where the key is stored.</param>
+		/// <param name="key">The key to return.</param>
+		/// <returns>The key as an XmlElement.</returns>
+		public XmlElement GetElement(string section, string key)
+		{
+			mutex.WaitOne();
+			try
+			{
+				XmlElement keyElement = GetKey(section, key);
+				return keyElement;
+			}
+			finally
+			{
+				mutex.ReleaseMutex();
+			}
+		}
+
+		/// <summary>
+		/// Sets the modified element.  The element must have been retrieved from GetElement.
+		/// </summary>
+		/// <param name="keyElement">The element to save.</param>
+		public void SetElement(XmlElement keyElement)
+		{
+			mutex.WaitOne();
+			try
+			{
+				keyElement.OwnerDocument.Save(ConfigFilePath);
+			}
+			finally
+			{
+				mutex.ReleaseMutex();
+			}
+		}
+
+		/// <summary>
+		/// Returns the value for the specified key.
+		/// </summary>
+		/// <param name="key">The key to get the value for.</param>
+		/// <param name="defaultValue">The default value if no value exists.</param>
+		/// <returns>The value as a string.</returns>
 		public string Get(string key, string defaultValue)
 		{
 			return Get(DefaultSection, key, defaultValue);
 		}
 
+		/// <summary>
+		/// Returns the value for the specified key.
+		/// </summary>
+		/// <param name="section">The section where the key exists.</param>
+		/// <param name="key">The key to get the value for.</param>
+		/// <param name="defaultValue">The default value if no value exists.</param>
+		/// <returns>The value as a string.</returns>
 		public string Get(string section, string key, string defaultValue)
 		{
-			string keyValue = null;
-
+			mutex.WaitOne();
 			try
 			{
-				mutex.WaitOne();
-				XmlElement sectionElement = GetSection(section);
-				string xpath = string.Format("//{0}[@{1}='{2}']/{3}[@{1}='{4}']", SectionTag, NameAttr, section, SettingTag, key);
-				XmlElement keyElement = (XmlElement)sectionElement.SelectSingleNode(xpath);
-				if (keyElement == null)
-				{				
-					keyElement = (XmlElement)sectionElement.OwnerDocument.CreateNode(XmlNodeType.Element, SettingTag, "");
-					keyElement.SetAttribute(NameAttr, key);
-					sectionElement.AppendChild(keyElement);
-				}
-
+				string keyValue = null;
+				XmlElement keyElement = GetKey(section, key);
 				keyValue = keyElement.GetAttribute(ValueAttr);
 				if (keyValue == "")
 				{
@@ -121,35 +183,36 @@ namespace Simias
 					keyElement.OwnerDocument.Save(ConfigFilePath);
 					keyValue = keyElement.GetAttribute(ValueAttr);
 				}
+				return keyValue;
 			}
 			finally
 			{
 				mutex.ReleaseMutex();
 			}
-
-			return keyValue;
 		}
 
+		/// <summary>
+		/// Set a Key and value pair.
+		/// </summary>
+		/// <param name="key">The key to set.</param>
+		/// <param name="keyValue">The value of the key.</param>
 		public void Set(string key, string keyValue)
 		{
 			Set(DefaultSection, key, keyValue);
 		}
 
+		/// <summary>
+		/// Set a key and value pair.
+		/// </summary>
+		/// <param name="section">The section for the tuple</param>
+		/// <param name="key">The key to set.</param>
+		/// <param name="keyValue">The value of the key.</param>
 		public void Set(string section, string key, string keyValue)
 		{
+			mutex.WaitOne();
 			try
 			{
-				mutex.WaitOne();
-				XmlElement sectionElement = GetSection(section);
-				string xpath = string.Format("//{0}[@{1}='{2}']/{3}[@{1}='{4}']", SectionTag, NameAttr, section, SettingTag, key);
-				XmlElement keyElement = (XmlElement)sectionElement.SelectSingleNode(xpath);
-				if (keyElement == null)
-				{				
-					keyElement = (XmlElement)sectionElement.OwnerDocument.CreateNode(XmlNodeType.Element, SettingTag, "");
-					keyElement.SetAttribute(NameAttr, key);
-					sectionElement.AppendChild(keyElement);
-				}
-
+				XmlElement keyElement = GetKey(section, key);
 				keyElement.SetAttribute(ValueAttr, keyValue);
 				keyElement.OwnerDocument.Save(ConfigFilePath);
 			}
@@ -181,6 +244,23 @@ namespace Simias
 			}
 
 			return sectionElement;
+		}
+
+		private XmlElement GetKey(string section, string key)
+		{
+			XmlElement keyElement = null;
+			XmlElement sectionElement = GetSection(section);
+			string xpath = string.Format("//{0}[@{1}='{2}']/{3}[@{1}='{4}']", SectionTag, NameAttr, section, SettingTag, key);
+			keyElement = (XmlElement)sectionElement.SelectSingleNode(xpath);
+			if (keyElement == null)
+			{				
+				keyElement = (XmlElement)sectionElement.OwnerDocument.CreateNode(XmlNodeType.Element, SettingTag, "");
+				keyElement.SetAttribute(NameAttr, key);
+				sectionElement.AppendChild(keyElement);
+				keyElement.OwnerDocument.Save(ConfigFilePath);
+			}
+
+			return keyElement;
 		}
 
 		private XmlElement GetDocElement()
