@@ -35,7 +35,6 @@
 
 /* Gaim Includes */
 #include "internal.h"
-#include "network.h"
 #include "util.h"
 #include "connection.h"
 
@@ -92,58 +91,25 @@ static char *
 convert_url_to_public(const char *start_url)
 {
 	char new_url[1024];
-	char *public_ip = NULL;
+	const char *public_ip = NULL;
 	char *proto = NULL;
 	char *host = NULL;
 	char *port = NULL;
 	char *path = NULL;
-	char localhost[129];
-	struct hostent *myhost;
-	char **addr_list;
-	struct sockaddr_in sAddr;
-	char *temp_ip;
 
 	if (simias_url_parse(start_url, &proto, &host, &port, &path)) {
 	
-		if (gethostname(localhost, 128) < 0)
-			sprintf(localhost, "localhost");
-
-		myhost = gethostbyname(localhost);
-		if (myhost)
-		{	
-			addr_list = myhost->h_addr_list;
-			while (*addr_list)
-			{
-				/* Get the IP address string */
-				memcpy(&sAddr.sin_addr.s_addr, *addr_list, myhost->h_length);
-				
-				temp_ip = inet_ntoa(sAddr.sin_addr);
-				if (!temp_ip || strncmp(temp_ip, "127.0.0.", 8) == 0)
-				{
-					fprintf(stderr, "Skipping localhost\n");
-				}
-				else
-				{
-					fprintf(stderr, "Using IP: %s\n", temp_ip);
-					public_ip = strdup(temp_ip);
-					break;
-				}
-
-				addr_list++;
-			}
-
-			if (!public_ip)
-			{
-				fprintf(stderr, "Couldn't determine IP address\n");
-				public_ip = strdup(localhost);
-			}
+		public_ip = simias_get_public_ip();
+		if (!public_ip)
+		{
+			fprintf(stderr, "Couldn't determin public IP address\n");
+			return NULL;
 		}
 
 		if (path) {
 			sprintf(new_url, "%s://%s:%s/%s", proto, public_ip, port, path);
 		}
 		
-		if (public_ip) free(public_ip);
 		if (proto) free(proto);
 		if (host) free(host);
 		if (port) free(port);
