@@ -180,7 +180,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void menuPOBox_Click(object sender, System.EventArgs e)
 		{
-			MessageForm messages = new MessageForm();
+			MessageForm messages = new MessageForm(config);
 			messages.ShowDialog();
 		}
 
@@ -242,7 +242,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void menuProperties_Click(object sender, System.EventArgs e)
 		{
-			GlobalProperties globalProperties = new GlobalProperties();
+			GlobalProperties globalProperties = new GlobalProperties(config);
 			globalProperties.ServiceManager = this.serviceManager;
 			globalProperties.IFManager = this.ifManager;
 			globalProperties.ShowDialog();

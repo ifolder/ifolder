@@ -115,12 +115,14 @@ namespace Novell.iFolder.FormsTrayApp
 		/// <summary>
 		/// Instantiates a GlobalProperties object.
 		/// </summary>
-		public GlobalProperties()
+		public GlobalProperties(Configuration config)
 		{
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
+
+			this.config = config;
 
 /*			try
 			{
@@ -860,7 +862,6 @@ namespace Novell.iFolder.FormsTrayApp
 				defaultInterval.Value = (decimal)manager.DefaultRefreshInterval;
 
 				// Initialize displayConfirmation.
-				config = new Configuration();
 				string showWizard = config.Get("iFolderShell", "Show wizard", "true");
 				displayConfirmation.Checked = showWizard == "true";
 

@@ -810,6 +810,7 @@ namespace Simias.POBox
 			Member member = c.GetCurrentMember();
 			ToName = member.Name;
 			ToIdentity = member.UserID;
+			ToPublicKey = member.PublicKey;
 			//FromName = member.Name;
 			//FromIdentity = member.UserID;
 		}

@@ -60,7 +60,7 @@ namespace Novell.iFolder.FormsTrayApp
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
-		public MessageForm()
+		public MessageForm(Configuration config)
 		{
 			//
 			// Required for Windows Form Designer support
@@ -69,7 +69,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 			try
 			{
-				config = new Configuration();
+				this.config = config;
 				abManager = Manager.Connect(config);
 
 				store = new Store(config);
@@ -281,7 +281,8 @@ namespace Novell.iFolder.FormsTrayApp
 				{
 					Subscription sub = (Subscription)messages.SelectedItems[0].Tag;
 					if ((sub.SubscriptionState == SubscriptionStates.Received) ||
-						(sub.SubscriptionState == SubscriptionStates.Pending))
+						(sub.SubscriptionState == SubscriptionStates.Pending) ||
+						(sub.SubscriptionState == SubscriptionStates.Ready))
 					{
 						accept.Enabled = true;
 					}
@@ -301,46 +302,57 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			ListViewItem lvi = messages.SelectedItems[0];
 			Subscription sub = (Subscription)lvi.Tag;
-			if (sub.SubscriptionState == SubscriptionStates.Received)
+			switch (sub.SubscriptionState)
 			{
-				Process.Start(Path.Combine(Application.StartupPath, "InvitationWizard.exe"), "/ID=" + sub.ID + ":" + sub.DomainID);
-			}
-			else
-			{
-				try
-				{
-					Member member = sub.Accept(store, sub.SubscriptionRights);
-
-					if (sub.DomainID == Domain.WorkGroupDomainID)
+				case SubscriptionStates.Received:
+					Process.Start(Path.Combine(Application.StartupPath, "InvitationWizard.exe"), "/ID=" + sub.ID + ":" + sub.DomainID);
+					break;
+				case SubscriptionStates.Pending:
+					try
 					{
-						// Take the relationship off the Subsription object
-						Property property = sub.Properties.GetSingleProperty("Contact");
-						if (property != null)
+						Member member = sub.Accept(store, sub.SubscriptionRights);
+
+						if (sub.DomainID == Domain.WorkGroupDomainID)
 						{
-							Relationship relationship = (Relationship)property.Value;
+							// Take the relationship off the Subsription object
+							Property property = sub.Properties.GetSingleProperty("Contact");
+							if (property != null)
+							{
+								Relationship relationship = (Relationship)property.Value;
 
-							// Get the contact from the relationship.
-							Novell.AddressBook.AddressBook ab = this.abManager.GetAddressBook(relationship.CollectionID);
-							Contact contact = ab.GetContact(relationship.NodeID);
+								// Get the contact from the relationship.
+								Novell.AddressBook.AddressBook ab = this.abManager.GetAddressBook(relationship.CollectionID);
+								Contact contact = ab.GetContact(relationship.NodeID);
 
-							// Put the Member userID into the Contact userID.
-							contact.UserID = member.UserID;
-							ab.Commit(contact);
+								// Put the Member userID into the Contact userID.
+								contact.UserID = member.UserID;
+								ab.Commit(contact);
+							}
 						}
+
+						poBox.Commit(sub);
+
+						lvi.SubItems[1].Text = sub.SubscriptionState.ToString();
 					}
-
-					poBox.Commit(sub);
-
-					lvi.SubItems[1].Text = sub.SubscriptionState.ToString();
-				}
-				catch (SimiasException ex)
-				{
-					ex.LogError();
-				}
-				catch (Exception ex)
-				{
-					logger.Debug(ex, "Accepting");
-				}
+					catch (SimiasException ex)
+					{
+						ex.LogError();
+					}
+					catch (Exception ex)
+					{
+						logger.Debug(ex, "Accepting");
+					}
+					break;
+				case SubscriptionStates.Ready:
+					FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+					if(folderBrowserDialog.ShowDialog() == DialogResult.OK)
+					{
+						sub.CollectionRoot = folderBrowserDialog.SelectedPath;
+						this.poBox.Commit(sub);
+						sub.CreateSlave(store);
+					}
+					break;
+					
 			}
 
 			accept.Enabled = false;
