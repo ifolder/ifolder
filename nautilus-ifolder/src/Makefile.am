@@ -2,9 +2,9 @@ GSOAP = ../external/gsoap-linux-2.7
 IFOLDER_CLIENT_WSDL = ../external/ifolder/iFolderWebService.wsdl
 GSOAP_INCLUDES = -I.
 NONAMESPACE_CFLAGS = -DWITH_NONAMESPACES
-INSTALL_EXTENSION_PATH = $(libdir)/nautilus/extensions-1.0
-INSTALL_EMBLEM_PATH = $(DESTDIR)$(datadir)/icons/gnome/48x48/emblems
-INSTALL_ICONS_PATH = $(DESTDIR)$(datadir)/icons/gnome/24x24/apps
+INSTALL_EXTENSION_PATH = $(gnome_root)/lib/nautilus/extensions-1.0
+INSTALL_EMBLEM_PATH = $(DESTDIR)$(gnome_root)/share/icons/gnome/48x48/emblems
+INSTALL_ICONS_PATH = $(DESTDIR)$(gnome_root)/share/icons/gnome/24x24/apps
 INSTALL_EXE_PATH = $(DESTDIR)$(libdir)
 
 INCLUDES =						\
