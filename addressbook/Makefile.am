@@ -4,6 +4,8 @@ DIST_SUBDIRS = $(SUBDIRS) package doc
 
 EXTRA_DIST = tools $(srcdir)/addressbook.pc.in
 
+export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
+
 install-exec-local:
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig $(DESTDIR)$(datadir)/addressbook
 	$(INSTALL_PROGRAM) $(srcdir)/COPYING $(DESTDIR)$(datadir)/addressbook

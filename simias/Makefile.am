@@ -4,6 +4,8 @@ DIST_SUBDIRS = $(SUBDIRS) doc package test
 
 EXTRA_DIST = tools external $(srcdir)/simias.pc.in
 
+export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
+
 install-exec-local:
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig $(DESTDIR)$(datadir)/simias
 	$(INSTALL_PROGRAM) $(srcdir)/COPYING $(DESTDIR)$(datadir)/simias
