@@ -34,15 +34,12 @@ namespace Simias
 		private Gtk.Window win;
 		private Gtk.TreeStore store;
 		private Gtk.TreeView tv;
-		private Gtk.TextView LogTextView;
-		private TextBuffer LogTextBuffer;
 
 		bool pause = false;
 
 		public GtkTraceWindow()
 		{
 			store = new TreeStore(typeof(string));
-			LogTextBuffer = new TextBuffer(null);
 			win = null;
 			
 			Trace.Listeners.Add(this);
@@ -54,17 +51,10 @@ namespace Simias
 			{
 				win = new Gtk.Window ("Denali Trace Window");
 				win.DeleteEvent += new DeleteEventHandler (Window_Delete);
-				//win.ButtonPressEvent += new ButtonPressEventHandler(window_clicked);
 				win.SetDefaultSize(640, 240);
 
 				ScrolledWindow sw = new ScrolledWindow();
 				win.Add(sw);
-
-//				LogTextView = new TextView(LogTextBuffer);
-//				LogTextView.Editable = false;
-				//LogTextView.WrapMode = WrapMode.Word;
-//				LogTextView.CursorVisible = false;
-//				sw.Add(LogTextView);
 
 				tv = new TreeView();
 				tv.Model = store;
@@ -78,7 +68,6 @@ namespace Simias
 		
 		private void Window_Delete (object obj, DeleteEventArgs args)
 		{
-			Console.WriteLine("Dude, you are going away!");
 			win.Hide();
 			win.Destroy();
 			win = null;
@@ -93,24 +82,7 @@ namespace Simias
 		public override void WriteLine(string message)
 		{
 			Console.WriteLine(message);
-/*
-				AppendLog(message);
-				AppendLog("\r\n");
 
-				if(win == null)
-					return;
-
-				if(!pause)
-				{
-					TextIter endIter;
-
-					LogTextBuffer.GetIterAtOffset(out endIter, -1);
-		 			LogTextView.ScrollToIter(endIter, 0, true, 0, 1);
-				//	LogTextView.MoveVisually(endIter, 1);
-				}
-
-				//PumpMessages();
-*/
 			TreeIter ti = store.AppendValues(message);
 
 			if(win == null)
@@ -133,7 +105,7 @@ namespace Simias
 		private void window_clicked(object obj, ButtonPressEventArgs args)
 		{
 			Console.WriteLine("Ney, we clicked");
-			switch(args.Event.button)
+			switch(args.Event.Button)
 			{
 				case 1: // first mouse button
 /*
@@ -194,18 +166,12 @@ namespace Simias
 		{
 		}
 
-		private void AppendLog(string insertText)
-		{
-			TextIter endIter;
-
-			LogTextBuffer.GetIterAtOffset(out endIter, -1);
-			LogTextBuffer.Insert (endIter, insertText);
-		}
-
+/*
 		private void PumpMessages()
 		{
 			while(Application.EventsPending())
 				Application.RunIteration(false);
 		}
+*/
 	}
 }
