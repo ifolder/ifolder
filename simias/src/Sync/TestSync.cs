@@ -51,7 +51,7 @@ public class SyncTests: Assertion
 
 	string host = "127.0.0.1";
 	string invitationFile = Path.Combine(storeDirB, "SyncTestInvitation.ifi");
-	bool runChildProcess = false;
+	bool runChildProcess = true;
 	bool useRemoteServer = false;
 
 	static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncTests));

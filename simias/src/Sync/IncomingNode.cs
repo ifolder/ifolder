@@ -127,11 +127,12 @@ internal class IncomingNode
 			if (relativePath == null || relativePath == "")
 				throw new SimiasException("incoming DirNode must supply relative path");
 
-			DirNode rootNode = collection.GetRootDirectory();
-			if (rootNode == null)
+			DirNode rn = collection.GetRootDirectory();
+			Property p = rn == null? null: rn.Properties.GetSingleProperty(PropertyTags.Root);
+			if (p == null)
 				throw new SimiasException("incoming DirNode to rootless Collection");
 
-			path = Path.Combine(rootNode.GetFullPath(collection), relativePath);
+			path = Path.Combine((p.Value as Uri).LocalPath, relativePath);
 		}
 		else if (collection.IsType(node, typeof(FileNode).Name))
 		{
