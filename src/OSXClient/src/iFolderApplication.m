@@ -456,14 +456,8 @@
 	SimiasService *simiasService;
 	simiasService = [[SimiasService alloc] init];		
 
-	@try
-	{
-		authStatus = [simiasService LoginToRemoteDomain:domainID usingPassword:password];
-	}
-	@catch (NSException *e)
-	{
-		NSLog(@"failed to authenticate");
-	}
+	authStatus = [simiasService LoginToRemoteDomain:domainID usingPassword:password];
+
 	return authStatus;
 }
 

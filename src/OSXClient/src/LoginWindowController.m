@@ -22,8 +22,10 @@
  ***********************************************************************/
  
 #import "LoginWindowController.h"
-#import "MainWindowController.h"
 #import "iFolderDomain.h"
+#import "iFolderApplication.h"
+#import "AuthStatus.h"
+
 
 @implementation LoginWindowController
 
@@ -41,9 +43,78 @@
 	if( ( [authDomainID length] > 0 ) &&
 		( [[passwordField stringValue] length] > 0 ) )
 	{
-		if([[NSApp delegate] authenticateToDomain:authDomainID 
-						withPassword:[passwordField stringValue] ] == YES)
-			[[self window] orderOut:nil];
+		@try
+		{
+			AuthStatus *authStatus = [[[NSApp delegate] authenticateToDomain:authDomainID 
+										withPassword:[passwordField stringValue]] retain];
+										
+			unsigned int statusCode = [[authStatus statusCode] unsignedIntValue];
+			
+			switch(statusCode)
+			{
+				case 0:		// Success
+				case 1:		// SuccessInGrace
+				{
+					if( (authStatus != nil) && ([authStatus remainingGraceLogins] < [authStatus totalGraceLogins]) )
+					{
+						NSRunAlertPanel(
+							NSLocalizedString(@"Expired Password", nil), 
+							[NSString stringWithFormat:NSLocalizedString(@"Your password has expired.  You have %d grace logins remaining.", nil), 
+								[authStatus remainingGraceLogins]],
+							NSLocalizedString(@"OK", nil), nil, nil);
+					}
+					[[self window] orderOut:nil];									
+					break;
+				}
+				case 2:		// UnknownUser
+				case 4:		// InvalidCredentials
+				case 5:		// InvalidPassword
+				{
+					NSBeginAlertSheet(NSLocalizedString(@"iFolder login failed", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil, 
+					[self window], nil, nil, nil, nil, 
+					NSLocalizedString(@"The user name or password is invalid.  Please try again.", nil));
+					break;
+				}
+				case 6:		// AccountDisabled
+				{
+					NSBeginAlertSheet(NSLocalizedString(@"iFolder login failed", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil, 
+					[self window], nil, nil, nil, nil, 
+					NSLocalizedString(@"The user account is disabled.  Please contact your network administrator for assistance.", nil));
+					break;
+				}
+				case 7:		// AccountLockout
+				{
+					NSBeginAlertSheet(NSLocalizedString(@"iFolder login failed", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil, 
+					[self window], nil, nil, nil, nil, 
+					NSLocalizedString(@"The user account has been locked out.  Please contact your network administrator for assistance.", nil));
+					break;
+				}
+				case 8:		// UnknownDomain
+				case 9:		// InternalException
+				case 10:	// MethodNotSupported
+				case 11:	// Timeout
+				case 3:		// AmbiguousUser
+				case 12:	// Unknown
+				{
+					NSBeginAlertSheet(NSLocalizedString(@"iFolder login failed", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil, 
+					[self window], nil, nil, nil, nil, 
+					NSLocalizedString(@"An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", nil));
+					break;
+				}
+			}
+			[authStatus release];
+		}
+		@catch (NSException *e)
+		{
+			NSBeginAlertSheet(NSLocalizedString(@"iFolder login failed", nil), 
+				NSLocalizedString(@"OK", nil), nil, nil, 
+				[self window], nil, nil, nil, nil, 
+				NSLocalizedString(@"An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", nil));
+		}
 	}
 }
 

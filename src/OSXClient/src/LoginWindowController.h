@@ -22,7 +22,6 @@
  ***********************************************************************/
 
 #import <Cocoa/Cocoa.h>
-#import <MainWindowController.h>
 
 @class iFolderDomain;
 
