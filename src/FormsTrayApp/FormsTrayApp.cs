@@ -436,6 +436,8 @@ namespace Novell.iFolder.FormsTrayApp
 					Thread.Sleep(100);
 				}
 			}
+
+			Application.Exit();
 		}
 		#endregion
 
