@@ -18,7 +18,7 @@ IA_FLAGS = $(CSC_EXEFLAG)
 IA_LIBS = Novell.AddressBook.dll Novell.AddressBook.UI.gtk.dll
 IA_LIBPATH = ../AddressBook
 
-BookLib_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/Util.cs $(srcdir)/ContactBrowser.cs $(srcdir)/OptionButton.cs $(srcdir)/ContactEditor.cs $(srcdir)/../FormsBookLib/FullNameParser.cs $(srcdir)/BookEditor.cs $(srcdir)/NameEditor.cs $(srcdir)/ContactPicker.cs $(srcdir)/CollectionGeneralPage.cs $(srcdir)/ContactCollectionSharingPage.cs $(srcdir)/CollectionPropertiesPage.cs $(srcdir)/CollectionProperties.cs $(srcdir)/InvitationAssistant.cs
+BookLib_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/Util.cs $(srcdir)/CollectionPicker.cs $(srcdir)/ContactBrowser.cs $(srcdir)/OptionButton.cs $(srcdir)/ContactEditor.cs $(srcdir)/../FormsBookLib/FullNameParser.cs $(srcdir)/BookEditor.cs $(srcdir)/NameEditor.cs $(srcdir)/ContactPicker.cs $(srcdir)/CollectionGeneralPage.cs $(srcdir)/ContactCollectionSharingPage.cs $(srcdir)/CollectionPropertiesPage.cs $(srcdir)/CollectionProperties.cs $(srcdir)/InvitationAssistant.cs
 
 BookLib_CSFILES_CSC := $(subst /,$(SEP),$(BookLib_CSFILES))
 BookLib_INCLUDES = 
@@ -27,9 +27,9 @@ BookLib_FLAGS = $(CSC_LIBFLAG)
 BookLib_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.AddressBook.dll
 BookLib_LIBPATH = ../AddressBook
 
-GLADE_FILES = $(srcdir)/invitation-assistant.glade $(srcdir)/invitation.png $(srcdir)/collection-properties.glade $(srcdir)/vcardimport.png $(srcdir)/vcardexport.png $(srcdir)/book.png $(srcdir)/contact.png $(srcdir)/blankhead.png $(srcdir)/contact-browser.glade $(srcdir)/contact-picker.glade $(srcdir)/name-editor.glade $(srcdir)/contact-editor.glade
+GLADE_FILES = $(srcdir)/collection-picker.glade $(srcdir)/teamspace.png $(srcdir)/invitation-assistant.glade $(srcdir)/invitation.png $(srcdir)/collection-properties.glade $(srcdir)/vcardimport.png $(srcdir)/vcardexport.png $(srcdir)/book.png $(srcdir)/contact.png $(srcdir)/blankhead.png $(srcdir)/contact-browser.glade $(srcdir)/contact-picker.glade $(srcdir)/name-editor.glade $(srcdir)/contact-editor.glade
 
-IMAGE_FILES = $(srcdir)/property.png $(srcdir)/invited-contact.png $(srcdir)/vcardimport.png $(srcdir)/vcardexport.png $(srcdir)/book.png $(srcdir)/contact.png $(srcdir)/contact_me.png $(srcdir)/blankhead.png
+IMAGE_FILES = $(srcdir)/teamspace.png $(srcdir)/property.png $(srcdir)/invited-contact.png $(srcdir)/vcardimport.png $(srcdir)/vcardexport.png $(srcdir)/book.png $(srcdir)/contact.png $(srcdir)/contact_me.png $(srcdir)/blankhead.png
 
 EXTRA_DIST = $(Book_CSFILES) $(BookLib_CSFILES) $(IA_CSFILES) $(Book_RESOURCES) $(BookLib_RESOURCES) $(IA_RESOURCES) $(GLADE_FILES) $(IMAGE_FILES)
 

@@ -37,13 +37,13 @@
 		  <child>
 		    <widget class="GtkImageMenuItem" id="new_book1">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">New Book</property>
+		      <property name="label" translatable="yes">_New Book</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="onCreateBook" last_modification_time="Thu, 06 Nov 2003 16:24:30 GMT"/>
 		      <accelerator key="N" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image146">
+			<widget class="GtkImage" id="image233">
 			  <property name="visible">True</property>
 			  <property name="pixbuf">book.png</property>
 			  <property name="xalign">0.5</property>
@@ -56,18 +56,48 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="edit_book1">
+		    <widget class="GtkImageMenuItem" id="new_book_from_teamspace1">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">Edit Book</property>
+		      <property name="tooltip" translatable="yes">Add an AddressBook to an existing Teamspace</property>
+		      <property name="label" translatable="yes">_Add Book to Teamspace</property>
 		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="onConvertTeamspace" last_modification_time="Thu, 08 Jul 2004 13:10:09 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image234">
+			  <property name="visible">True</property>
+			  <property name="pixbuf">book.png</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="delete_book1">
+		    <widget class="GtkMenuItem" id="share_book1">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">Delete Book</property>
+		      <property name="label" translatable="yes">_Share Book</property>
 		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_share_clicked" last_modification_time="Thu, 08 Jul 2004 19:49:21 GMT"/>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkImageMenuItem" id="edit_book1">
+		      <property name="visible">True</property>
+		      <property name="label">gtk-properties</property>
+		      <property name="use_stock">True</property>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkImageMenuItem" id="delete_book1">
+		      <property name="visible">True</property>
+		      <property name="label">gtk-delete</property>
+		      <property name="use_stock">True</property>
 		    </widget>
 		  </child>
 
@@ -108,7 +138,7 @@
 		      <accelerator key="A" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image147">
+			<widget class="GtkImage" id="image235">
 			  <property name="visible">True</property>
 			  <property name="pixbuf">contact.png</property>
 			  <property name="xalign">0.5</property>
@@ -143,11 +173,20 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="make_contact_&quot;me&quot;1">
+		    <widget class="GtkMenuItem" id="MakeMeItem">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">Make Contact &quot;Me&quot;</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="on_make_contact_me" last_modification_time="Tue, 06 Jul 2004 15:34:04 GMT"/>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkMenuItem" id="MakeNotMeItem">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">Make Contact not &quot;Me&quot;</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="revert_me_contact" last_modification_time="Thu, 08 Jul 2004 13:08:37 GMT"/>
 		    </widget>
 		  </child>
 
@@ -202,7 +241,7 @@
 		      <signal name="activate" handler="onImportVCard" last_modification_time="Fri, 04 Jun 2004 21:51:19 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image148">
+			<widget class="GtkImage" id="image236">
 			  <property name="visible">True</property>
 			  <property name="pixbuf">vcardimport.png</property>
 			  <property name="xalign">0.5</property>
@@ -222,7 +261,7 @@
 		      <signal name="activate" handler="onExportVCard" last_modification_time="Fri, 04 Jun 2004 21:51:19 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image149">
+			<widget class="GtkImage" id="image237">
 			  <property name="visible">True</property>
 			  <property name="pixbuf">vcardexport.png</property>
 			  <property name="xalign">0.5</property>
@@ -255,7 +294,7 @@
 		      <signal name="activate" handler="on_HelpButton_clicked" last_modification_time="Fri, 04 Jun 2004 21:55:15 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image150">
+			<widget class="GtkImage" id="image238">
 			  <property name="visible">True</property>
 			  <property name="pixbuf">book.png</property>
 			  <property name="xalign">0.5</property>
@@ -281,7 +320,7 @@
 		      <signal name="activate" handler="on_about_event" last_modification_time="Tue, 15 Jun 2004 22:49:29 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image151">
+			<widget class="GtkImage" id="image239">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-dialog-question</property>
 			  <property name="icon_size">1</property>

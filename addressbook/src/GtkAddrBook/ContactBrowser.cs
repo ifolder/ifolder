@@ -22,6 +22,7 @@
  ***********************************************************************/
 using System;
 using Novell.AddressBook;
+using Simias.Storage;
 using System.Collections;
 using System.IO;
 
@@ -67,6 +68,8 @@ namespace Novell.AddressBook.UI.gtk
 		[Glade.Widget] internal Gtk.TextView LabelTextView;
 		[Glade.Widget] internal Gtk.TextView ValueTextView;
 		[Glade.Widget] internal Gtk.TextView TitleTextView;
+		[Glade.Widget] internal Gtk.MenuItem	MakeMeItem;
+		[Glade.Widget] internal Gtk.MenuItem	MakeNotMeItem;
 
 		Manager abMan;
 		AddressBook	curAddrBook;
@@ -158,6 +161,22 @@ namespace Novell.AddressBook.UI.gtk
 			AddLabelTags();
 			AddTitleTags();
 
+			UserCardPixBuf = new Pixbuf(Util.ImagesPath("contact.png"));
+			CurCardPixBuf = new Pixbuf(Util.ImagesPath("contact_me.png"));
+			BookPixBuf = new Pixbuf(Util.ImagesPath("book.png"));
+			BlankHeadPixBuf = new Pixbuf(Util.ImagesPath("blankhead.png"));
+			
+			RefreshBooks();
+
+			searchTimeoutID = 0;
+
+			MakeNotMeItem.Sensitive = false;
+		}
+
+		public void RefreshBooks()
+		{
+			BookTreeStore.Clear();
+
 			if(abMan != null)
 			{
 				try
@@ -166,13 +185,6 @@ namespace Novell.AddressBook.UI.gtk
 					{
 						BookTreeStore.AppendValues(ab);
 					}
-
-//					curAddrBook = abMan.OpenDefaultAddressBook();
-
-//					foreach(Contact c in curAddrBook)
-//					{
-//						ContactTreeStore.AppendValues(c);
-//					}
 				}
 				catch(Exception e)
 				{
@@ -180,16 +192,6 @@ namespace Novell.AddressBook.UI.gtk
 							"Unable to connect to the Address Book: " + e);
 				}
 			}
-
-			UserCardPixBuf = new Pixbuf(Util.ImagesPath("contact.png"));
-			CurCardPixBuf = new Pixbuf(Util.ImagesPath("contact_me.png"));
-			BookPixBuf = new Pixbuf(Util.ImagesPath("book.png"));
-			BlankHeadPixBuf = new Pixbuf(Util.ImagesPath("blankhead.png"));
-
-			TreeSelection tSelect = ContactTreeView.Selection;
-			tSelect.SelectPath(new TreePath("0"));
-
-			searchTimeoutID = 0;
 		}
 
 		private bool SearchCallback()
@@ -341,6 +343,21 @@ namespace Novell.AddressBook.UI.gtk
 				AddressBook ab = abMan.CreateAddressBook(be.Name);
 				ab.Commit();
 				BookTreeStore.AppendValues(ab);
+			}
+		}
+
+		public void onConvertTeamspace(object o, EventArgs args)
+		{
+			CollectionPicker cp = new CollectionPicker();
+			cp.IgnoreType = "AB:AddressBook";
+			int rc = cp.Run();
+			if(rc == -5)
+			{
+				Collection col = cp.Collection;
+				Console.WriteLine("Convert collection {0}", col.Name);
+				col.SetType(col, "AB:AddressBook");
+				col.Commit();
+				RefreshBooks();
 			}
 		}
 
@@ -535,11 +552,17 @@ namespace Novell.AddressBook.UI.gtk
 				Contact c = (Contact) tModel.GetValue(iter,0);
 
 				DisplayContactDetails(c);
+				if(c.IsCurrentUser)
+					MakeNotMeItem.Sensitive = true;
+				else
+					MakeMeItem.Sensitive = true;
 			}
 			else
 			{
 				ClearContactDetails();
 				ExportButton.Sensitive = false;
+				MakeMeItem.Sensitive = false;
+				MakeNotMeItem.Sensitive = false;
 			}
 		}
 
@@ -567,6 +590,29 @@ namespace Novell.AddressBook.UI.gtk
 					else
 						Console.WriteLine("We were retuned a NULL contact.");
 				}
+			}
+			MakeMeItem.Sensitive = false;
+			MakeNotMeItem.Sensitive = false;
+		}
+
+
+		public void on_share_clicked(object o, EventArgs args)
+		{
+			TreeSelection tSelect = BookTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+
+				curAddrBook = (AddressBook) tModel.GetValue(iter,0);
+
+				CollectionProperties colProp = new CollectionProperties();
+				colProp.TransientFor = cbWindow;
+				colProp.Collection = curAddrBook;
+				colProp.ActiveTag = 1;
+				colProp.Run();
 			}
 		}
 
@@ -711,6 +757,30 @@ namespace Novell.AddressBook.UI.gtk
 					cnt.IsCurrentUser = true;
 					cnt.Commit();
 				}
+				MakeMeItem.Sensitive = false;
+				MakeNotMeItem.Sensitive = true;
+			}
+		}
+
+
+		public void revert_me_contact(object obj, EventArgs args)
+		{
+			TreeSelection tSelect = ContactTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+
+				Contact cnt = (Contact) tModel.GetValue(iter,0);
+				if(cnt.IsCurrentUser)
+				{
+					cnt.IsCurrentUser = false;
+					cnt.Commit();
+				}
+				MakeMeItem.Sensitive = true;
+				MakeNotMeItem.Sensitive = false;
 			}
 		}
 
