@@ -118,7 +118,7 @@ namespace Simias.Event
 		/// </summary>
 		public string Source
 		{
-			get {return Source;}
+			get {return source;}
 		}
 
 		/// <summary>
