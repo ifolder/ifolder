@@ -35,6 +35,8 @@ AC_SUBST(SIMIAS_OS)
 AM_CONDITIONAL(LINUX, test "$SIMIAS_OS" = "linux")
 AM_CONDITIONAL(WINDOWS, test "$SIMIAS_OS" = "windows")
 AM_CONDITIONAL(DARWIN, test "$SIMIAS_OS" = "darwin")
+AM_CONDITIONAL(MONO, test "$CSC" = "mcs")
+AM_CONDITIONAL(DOTNET, test "$CSC" = "csc")
 
 #
 # We add $prefix to PKG_CONFIG_PATH so pkg-config will find any other

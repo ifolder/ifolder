@@ -38,6 +38,8 @@ AC_SUBST(IFOLDER_OS)
 AM_CONDITIONAL(LINUX, test "$IFOLDER_OS" = "linux")
 AM_CONDITIONAL(WINDOWS, test "$IFOLDER_OS" = "windows")
 AM_CONDITIONAL(DARWIN, test "$IFOLDER_OS" = "darwin")
+AM_CONDITIONAL(MONO, test "$CSC" = "mcs")
+AM_CONDITIONAL(DOTNET, test "$CSC" = "csc")
 
 #
 # We add $prefix to PKG_CONFIG_PATH so pkg-config will find any other
