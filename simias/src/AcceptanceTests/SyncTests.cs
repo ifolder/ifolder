@@ -147,8 +147,8 @@ namespace Simias.Tests
 				MyTrace.WriteLine("Created Master Collection 1A: {0}", sc1A);
 
 				// set the host and port on the master collection
-				sc1A.Host = SyncProperties.SuggestedHost;
-				sc1A.Port = SyncProperties.SuggestedPort;
+				UriBuilder builder = new UriBuilder("http", SyncProperties.SuggestedHost, SyncProperties.SuggestedPort);
+				sc1A.MasterUri = builder.Uri;
 				sc1A.Commit();
 
 				// create an invitation for B and C

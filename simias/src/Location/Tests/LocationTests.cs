@@ -71,8 +71,8 @@ namespace Simias.Location.Tests
 
 			// sync properties
 			SyncCollection sc = new SyncCollection(collection);
-			sc.Host = SyncProperties.SuggestedHost;
-			sc.Port = SyncProperties.SuggestedPort;
+			UriBuilder builder = new UriBuilder("http:", SyncProperties.SuggestedHost, SyncProperties.SuggestedPort);
+			sc.MasterUri = builder.Uri;
 			sc.Commit();
 
 			// locate collection

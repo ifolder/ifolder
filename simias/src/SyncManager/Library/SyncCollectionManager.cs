@@ -76,14 +76,10 @@ namespace Simias.Sync
 		private void CheckProperties()
 		{
 			// collection port default
-			if ((collection.Port == -1) || (collection.Host == null) ||
-				(collection.Interval == -1))
+			if ((collection.MasterUri == null) || (collection.Interval == -1))
 			{
-				// set the port
-				if (collection.Port == -1) collection.Port = syncManager.Port;
-				
 				// set the host
-				if (collection.Host == null) collection.Host = syncManager.Host;
+				if (collection.MasterUri == null) collection.MasterUri = syncManager.MasterUri;
 				
 				// set the sync interval
 				if (collection.Interval == -1) collection.Interval = syncManager.SyncInterval;

@@ -79,10 +79,11 @@ namespace Simias.Sync
 			{
 				lock(this)
 				{
-					int port = syncManager.Port;
+					int port = syncManager.MasterUri.Port;
 
 					// create channel
 					string name = String.Format("Store Service [{0}]", store.ID);
+
 					channel = syncManager.ChannelFactory.GetChannel(store, syncManager.ChannelSinks, port);
 				
 					MyTrace.WriteLine("Starting Store Service: http://0.0.0.0:{0}/{1}", port, SyncStore.GetEndPoint(port));
@@ -117,7 +118,7 @@ namespace Simias.Sync
 			{
 				lock(this)
 				{
-					int port = syncManager.Port;
+					int port = syncManager.MasterUri.Port;
 
 					MyTrace.WriteLine("Stopping Store Service: http://0.0.0.0:{0}/{1}", port, SyncStore.GetEndPoint(port));
 

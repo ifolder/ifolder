@@ -185,21 +185,12 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// The master host
+		/// The master URL
 		/// </summary>
-		public string MasterHost
+		public Uri MasterUri
 		{
-			get { return fields["MasterHost"]; }
-			set { fields["MasterHost"] = value; }
-		}
-
-		/// <summary>
-		/// The master port
-		/// </summary>
-		public string MasterPort
-		{
-			get { return fields["MasterPort"]; }
-			set { fields["MasterPort"] = value; }
+			get { return new Uri(fields["MasterUri"]); }
+			set { fields["MasterUri"] = value.ToString(); }
 		}
 
 		/// <summary>

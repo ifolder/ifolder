@@ -88,8 +88,8 @@ namespace Simias.Mini
 				// create the master collection
 				SyncCollection collection = store.CreateCollection(
 					collectionName, Path.Combine(path, collectionName));
-				collection.Host = properties.DefaultHost;
-				collection.Port = 7464;
+				UriBuilder builder = new UriBuilder("http", properties.DefaultHost, 7464);
+				collection.MasterUri = builder.Uri;
 				collection.Commit();
 
 				// create invitation
@@ -101,7 +101,7 @@ namespace Simias.Mini
 
 				// sync properties
 				properties.StorePath = path;
-				properties.DefaultPort = collection.Port;
+				properties.DefaultPort = collection.MasterUri.Port;
 			}
 			else
             {

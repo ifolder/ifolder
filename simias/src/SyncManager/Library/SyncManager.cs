@@ -171,19 +171,18 @@ namespace Simias.Sync
 
 		#region Properties
 
-		public string Host
+		public Uri MasterUri
 		{
-			get { return properties.DefaultHost; }
+			get
+			{
+				UriBuilder builder = new UriBuilder("http", properties.DefaultHost, properties.DefaultPort);
+				return builder.Uri;
+			}
 		}
 		
 		public string StorePath
 		{
 			get { return properties.StorePath; }
-		}
-
-		public int Port
-		{
-			get { return properties.DefaultPort; }
 		}
 
 		public int SyncInterval

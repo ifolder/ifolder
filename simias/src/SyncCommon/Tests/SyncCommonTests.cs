@@ -115,8 +115,7 @@ namespace Simias.Sync.Tests
 			invitation1.CollectionName = "Team Collection";
 			invitation1.Identity = "1234567890";
 			invitation1.Domain = "novell";
-			invitation1.MasterHost = "192.168.2.1";
-			invitation1.MasterPort = "6437";
+			invitation1.MasterUri = new Uri("http://192.168.2.1:6437");
 			invitation1.CollectionRights = "ReadWrite";
 			invitation1.Message = "Our Team's New Collection";
 			invitation1.FromName = "John Doe";
@@ -139,8 +138,8 @@ namespace Simias.Sync.Tests
 			Assert(invitation1.FromEmail == invitation2.FromEmail);
 			Assert(invitation1.FromName == invitation2.FromName);
 			Assert(invitation1.Identity == invitation2.Identity);
-			Assert(invitation1.MasterHost == invitation2.MasterHost);
-			Assert(invitation1.MasterPort == invitation2.MasterPort);
+			Assert(invitation1.MasterUri.Host == invitation2.MasterUri.Host);
+			Assert(invitation1.MasterUri.Port == invitation2.MasterUri.Port);
 			Assert(invitation1.Message == invitation2.Message);
 			Assert(invitation1.RootPath == invitation2.RootPath);
 			Assert(invitation1.ToEmail == invitation2.ToEmail);

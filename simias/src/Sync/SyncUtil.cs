@@ -125,11 +125,11 @@ public class FileInviter
 			di.Create();
 			c = store.CreateCollection(di.Name, Dredger.NodeTypeDir, docRoot);
 			sc = new SyncCollection(c);
-			sc.Port = port;
-			sc.Host = host;
+			UriBuilder builder = new UriBuilder("http", host, port);
+			sc.MasterUri = builder.Uri;
 			sc.Commit();
 			Log.Assert(c.Id == c.CollectionNode.Id && c.Id == sc.ID);
-			Log.Spew("Created new master collection for {0}, id {1}, {2}:{3}", docRoot.LocalPath, c.Id, sc.Host, sc.Port);
+			Log.Spew("Created new master collection for {0}, id {1}, {2}:{3}", docRoot.LocalPath, c.Id, sc.MasterUri.Host, sc.MasterUri.Port);
 		}
 		Invitation invitation = sc.CreateInvitation(user == null? store.CurrentUser: user);
 		invitation.Domain = store.DomainName;
@@ -286,7 +286,7 @@ public class CmdClient
 		}
 		else
 		{
-			CmdClient client = new CmdClient(csc.Host, csc.Port, csc.ID, useTCP);
+			CmdClient client = new CmdClient(csc.MasterUri.Host, csc.MasterUri.Port, csc.ID, useTCP);
 			new SynkerWorkerA(client.session, csc).DoSyncWork();
 			client.Stop();
 		}

@@ -67,7 +67,7 @@ SPACE='$(EMPTY) $(EMPTY)'
 AC_SUBST(EMPTY)
 AC_SUBST(SPACE)
 
-COMMON_SUBDIRS="Common CollectionEvents UserService Storage StoreProvider FsProvider SqliteProvider CollectionStore FsWatcher RemotingSniffer SyncCommon Location StoreWatcher CollectionWatcher SyncManager Sync SyncLogicLite SyncTools AddressBook AddressBookCmd Smtp Invitation MiniShare AcceptanceTests"
+COMMON_SUBDIRS="Common CollectionEvents UserService Storage StoreProvider FsProvider SqliteProvider CollectionStore FsWatcher RemotingSniffer SyncCommon Location Agent StoreWatcher CollectionWatcher SyncManager Sync SyncLogicLite SyncTools AddressBook AddressBookCmd Smtp Invitation MiniShare AcceptanceTests"
 LINUX_SUBDIRS="CommonGtkWindows"
 WINDOWS_SUBDIRS="CommonFormWindows"
 DARWIN_SUBDIRS=
@@ -284,6 +284,7 @@ src/FsWatcher/Makefile
 src/RemotingSniffer/Makefile
 src/SyncCommon/Makefile
 src/Location/Makefile
+src/Agent/Makefile
 src/StoreWatcher/Makefile
 src/CollectionWatcher/Makefile
 src/SyncManager/Makefile

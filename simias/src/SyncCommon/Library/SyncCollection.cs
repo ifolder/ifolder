@@ -44,17 +44,9 @@ namespace Simias.Sync
 		public static readonly string RolePropertyName = "Sync Role";
 
 		/// <summary>
-		/// A collection property name for the sync host of the collection.
-		/// The host is the machine with the master collection, which depending on
-		/// the sync role could be the current collection and machine.
+		/// A collection property name for the master URL of the collection.
 		/// </summary>
-		public static readonly string HostPropertyName = "Sync Host";
-		
-		/// <summary>
-		/// A collection property name for the sync port of the collection.
-		/// The port is used with the host to connect to the master.
-		/// </summary>
-		public static readonly string PortPropertyName = "Sync Port";
+		public static readonly string MasterUriPropertyName = "Master Uri";
 		
 		/// <summary>
 		/// A collection property name for the sync interval to be used with the collection.
@@ -105,12 +97,10 @@ namespace Simias.Sync
 		/// <returns>A new invitation object.</returns>
 		public Invitation CreateInvitation(string identity)
 		{
-			// validate the host and port
-			if ((Host == null) || (Port <= 0))
+			// validate the master URL
+			if (MasterUri == null)
 			{
-				throw new ArgumentException("An invitation requires " +
-					"the sync host and port properties on " +
-					"the master collection.");
+				throw new ArgumentException("An invitation requires the master URL for the collection.");
 			}
 
 			// create the invitation
@@ -120,11 +110,10 @@ namespace Simias.Sync
 			invitation.CollectionName = Name;
 			invitation.CollectionType = baseCollection.Type;
 			invitation.Domain = baseCollection.DomainName;
-			invitation.MasterHost = Host;
-			invitation.MasterPort = Port.ToString();
+			invitation.MasterUri = MasterUri;
 			invitation.Identity = identity;
 			invitation.CollectionRights = baseCollection.GetUserAccess(identity).ToString();
-			invitation.PublicKey = baseCollection.LocalStore.ServerPublicKey.ToXmlString( false );
+			invitation.PublicKey = baseCollection.LocalStore.ServerPublicKey.ToXmlString(false);
 
 			return invitation;
 		}
@@ -241,39 +230,12 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// The syncing host of the base collection.
-		/// </summary>
-		public string Host
-		{
-			get { return (string)GetProperty(HostPropertyName); }
-			set { SetProperty(HostPropertyName, value, true); }
-		}
-
-		/// <summary>
-		/// The syncing port of the base collection.
-		/// </summary>
-		public int Port
-		{
-			get { return (int)GetProperty(PortPropertyName, -1); }
-			set { SetProperty(PortPropertyName, value, true); }
-		}
-
-		/// <summary>
-		/// The syncing URI of the master collection.
+		/// The syncing URL of the master collection.
 		/// </summary>
 		public Uri MasterUri
 		{
-			get
-			{
-				Uri result = null;
-
-				if ((Host != null) && (Port >= 0))
-				{
-					result = (new UriBuilder("http", Host, Port)).Uri;
-				}
-				
-				return  result;
-			}
+			get { return (Uri)GetProperty(MasterUriPropertyName); }
+			set { SetProperty(MasterUriPropertyName, value, true); }
 		}
 
 		/// <summary>
@@ -299,7 +261,13 @@ namespace Simias.Sync
 		/// </summary>
 		public string ServiceUrl
 		{
-			get { return (new UriBuilder("http", Host, Port, SyncStore.GetEndPoint(Port)).ToString()); }
+			get
+			{
+				UriBuilder uri = new UriBuilder(MasterUri);
+				uri.Path = SyncStore.GetEndPoint(uri.Port);
+
+				return uri.ToString();
+			}
 		}
 
 		/// <summary>

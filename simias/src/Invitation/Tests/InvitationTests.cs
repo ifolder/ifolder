@@ -76,8 +76,8 @@ namespace Simias.Invite.Tests
 
 			// create collection
 			collection = store.CreateCollection("Invitation Collection");
-			collection.Properties.AddProperty(SyncCollection.HostPropertyName, "localhost");
-			collection.Properties.AddProperty(SyncCollection.PortPropertyName, SyncProperties.SuggestedPort);
+			UriBuilder builder = new UriBuilder("http", SyncProperties.SuggestedHost, SyncProperties.SuggestedPort);
+			collection.Properties.AddProperty(SyncCollection.MasterUriPropertyName, builder.Uri);
 			collection.Commit(true);
 		}
 
@@ -131,8 +131,7 @@ namespace Simias.Invite.Tests
 			invitation.CollectionName = "Team Folder";
 			invitation.Identity = "1234567890";
 			invitation.Domain = "novell";
-			invitation.MasterHost = "192.168.2.1";
-			invitation.MasterPort = "6437";
+			invitation.MasterUri = new Uri("http://192.168.2.1:6437");
 			invitation.CollectionRights = Access.Rights.ReadWrite.ToString();
 			invitation.Message = "Our Team's New Collection";
 

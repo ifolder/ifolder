@@ -149,15 +149,14 @@ namespace Simias.Sync
 		/// <param name="port">The sync port for the collection.</param>
 		/// <returns>The collection object of the created collection.</returns>
 		public SyncCollection CreateCollection(string id, string name, string type, string path, SyncCollectionRoles role,
-			string host, int port)
+			Uri MasterUri)
 		{
 			Collection c = new Collection(baseStore, name, id, type, new Uri(Path.GetFullPath(path)));
 
 			SyncCollection sc = GetCollection(c);
 
 			sc.Role = role;
-			sc.Host = host;
-			sc.Port = port;
+			sc.MasterUri = MasterUri;
 
 			return sc;
 		}
@@ -179,7 +178,7 @@ namespace Simias.Sync
 	
 			return CreateCollection(invitation.CollectionId, invitation.CollectionName,
 				invitation.CollectionType, Path.Combine(invitation.RootPath, invitation.CollectionName),
-				SyncCollectionRoles.Slave, invitation.MasterHost, int.Parse(invitation.MasterPort));
+				SyncCollectionRoles.Slave, invitation.MasterUri);
 		}
 		
 		private SyncCollection GetCollection(Collection c)
