@@ -38,7 +38,9 @@ namespace Novell.iFolder
 
 	public class ApplicationProperties 
 	{
-		[Glade.Widget] internal Gtk.Dialog ApplicationPropDialog = null;
+		[Glade.Widget] internal Gtk.Dialog		ApplicationPropDialog = null;
+		[Glade.Widget] internal Gtk.Notebook	PropNoteBook;
+
 		[Glade.Widget] internal Gtk.TreeView	iFolderTreeView;
 
 		[Glade.Widget] internal Gtk.Label		UploadLabel;
@@ -557,5 +559,43 @@ namespace Novell.iFolder
 			}
 		}
 
+		private void on_create_menu(object o, EventArgs args)
+		{
+			if(PropNoteBook.CurrentPage == 0)
+				on_newiFolder(o, args);
+		}
+
+		private void on_revert_menu(object o, EventArgs args)
+		{
+			if(PropNoteBook.CurrentPage == 0)
+				on_deleteiFolder(o, args);
+		}
+
+		private void on_prop_menu(object o, EventArgs args)
+		{
+			if(PropNoteBook.CurrentPage == 0)
+				on_properties_event(o,args);
+		}
+
+		private void on_refresh_menu(object o, EventArgs args)
+		{
+			if(PropNoteBook.CurrentPage == 0)
+				on_refreshiFolders(o, args);
+		}
+
+		private void on_close_menu(object o, EventArgs args)
+		{
+			ApplicationPropDialog.Respond(Gtk.ResponseType.Close);
+		}
+
+		private void on_help_menu(object o, EventArgs args)
+		{
+		 	Util.ShowHelp("front.html", null);
+		}
+
+		private void on_about_menu(object o, EventArgs args)
+		{
+			Util.ShowAbout();
+		}
 	}
 }
