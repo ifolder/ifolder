@@ -365,15 +365,19 @@ AC_SUBST(DEVENV_CONFIGURATION)
 #
 # Handle --enable-merge-module
 #
-AC_ARG_ENABLE(merge-module,
+# On Windows, if set, this will cause 'make all' and 'make install' to include
+# building and installing the merge module (MSM) that is to be included in the
+# SDK install package.
+#
+AC_ARG_ENABLE(merge_module,
     AC_HELP_STRING([--enable-merge-module],
                    [configure the Makefiles to always build a merge module (MSM)]),
     [case "${enableval}" in
-        yes) enable_merge-module=true ;;
-        no)  enable_merge-module=false ;;
+        yes) enable_merge_module=true ;;
+        no)  enable_merge_module=false ;;
         *) AC_MSG_ERROR(bad value ${enableval} for --enable-merge-module) ;;
-    esac],[enable_merge-module=false])
-AM_CONDITIONAL(MERGE_MODULE, test x$enable_merge-module = xtrue)
+    esac],[enable_merge_module=false])
+AM_CONDITIONAL(MERGE_MODULE, test x$enable_merge_module = xtrue)
 
 #
 # Configure PKG_CONFIG
