@@ -33,6 +33,14 @@
  */
 typedef void * SimiasEventClient;
 
+typedef enum
+{
+	CLIENT_STATE_INITIALIZING,
+	CLIENT_STATE_REGISTERING,
+	CLIENT_STATE_RUNNING,
+	CLIENT_STATE_SHUTDOWN
+} CLIENT_STATE;
+
 /**
  * Actions that indicate what to do with the simias events
  */
@@ -160,6 +168,9 @@ int sec_deregister (SimiasEventClient sec);
 
 /**
  * Subscribe or unsubscribe to the specified event.
+ * 
+ * This function should only be called when sec_get_state returns
+ * CLIENT_STATE_RUNNING.
  *
  * sec:			the SimiasEventClient.
  * action:		the action that should be listened for.
@@ -175,5 +186,10 @@ int sec_set_event (SimiasEventClient sec,
 				   bool subscribe,
 				   SimiasEventFunc function,
 				   void *data);
+
+/**
+ * Get the state of the Simias Event Client.
+ */
+CLIENT_STATE sec_get_state (SimiasEventClient sec);
 
 #endif /* SIMIAS_EVENT_CLIENT_H */

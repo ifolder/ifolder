@@ -93,14 +93,6 @@ static char * sec_server_config_elements [] = {
 
 typedef enum
 {
-	CLIENT_STATE_INITIALIZING,
-	CLIENT_STATE_REGISTERING,
-	CLIENT_STATE_RUNNING,
-	CLIENT_STATE_SHUTDOWN
-} CLIENT_STATE;
-
-typedef enum
-{
 	REG_THREAD_STATE_INITIALIZING,
 	REG_THREAD_STATE_RUNNING,
 	REG_THREAD_STATE_TERMINATED,
@@ -472,6 +464,14 @@ sec_set_event (SimiasEventClient sec,
 	}
 	
 	return 0;
+}
+
+CLIENT_STATE
+sec_get_state (SimiasEventClient sec)
+{
+	RealSimiasEventClient *ec = (RealSimiasEventClient *)sec;
+	
+	return ec->state;
 }
 /* #endregion */
 
@@ -1244,6 +1244,7 @@ int
 main (int argc, char *argv[])
 {
 	SimiasEventClient ec;
+	CLIENT_STATE state;
 	char buf [256];
 	
 	if (sec_init (&ec, NULL) != 0) {
@@ -1262,12 +1263,14 @@ main (int argc, char *argv[])
 	 * Until the message queue is implemented, we need to wait for the client
 	 * to be running before continuing
 	 */
-	while (((RealSimiasEventClient *)ec)->state != CLIENT_STATE_RUNNING) {
-		if (((RealSimiasEventClient *)ec)->state == CLIENT_STATE_SHUTDOWN) {
+	while ((state = sec_get_state (ec)) != CLIENT_STATE_RUNNING) {
+		if (state == CLIENT_STATE_SHUTDOWN) {
 			fprintf (stderr, "Shutdown initiated prematurely\n");
 			return -1;
 		}
-		
+
+		fprintf (stdout, "sec_get_state () returned: %d\n", state);
+
 		fprintf (stdout, "Test code: Waiting for client to be running\n");
 		sleep (1);
 	}
