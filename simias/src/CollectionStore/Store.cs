@@ -147,14 +147,6 @@ namespace Simias.Storage
 
 		#region Properties
 		/// <summary>
-		/// Gets the Identity object that represents the currently logged on user.
-		/// </summary>
-		internal Identity CurrentUser
-		{
-			get { return GetNodeByID( localDb, identity ) as Identity; }
-		}
-
-		/// <summary>
 		/// Gets the event publisher object.
 		/// </summary>
 		internal EventPublisher EventPublisher
@@ -223,6 +215,14 @@ namespace Simias.Storage
 		public string ID
 		{
 			get { return localDb; }
+		}
+
+		/// <summary>
+		/// Gets the Identity object that represents the currently logged on user.
+		/// </summary>
+		public Identity CurrentUser
+		{
+			get { return GetNodeByID( localDb, identity ) as Identity; }
 		}
 
 		/// <summary>

@@ -60,7 +60,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets the public/private key values for the local identity.
 		/// </summary>
-		internal RSACryptoServiceProvider Credential
+		public RSACryptoServiceProvider Credential
 		{
 			get
 			{
