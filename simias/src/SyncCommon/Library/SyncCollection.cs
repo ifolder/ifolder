@@ -261,9 +261,7 @@ namespace Simias.Sync
 		{
 			get
 			{
-				IIdentity identity = IdentityManager.Connect().CurrentId;
-				
-				return identity.GetUserGuidFromDomain(Domain);
+				return baseCollection.LocalStore.CurrentIdentity.GetDomainUserGuid(Domain);
 			}
 		}
 
