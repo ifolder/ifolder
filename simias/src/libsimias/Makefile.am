@@ -16,9 +16,6 @@ override CFLAGS =
 libsimias_la_SOURCES = \
  	envC.c simiasClientLib.c stdsoap2.c simias.c
  	
-pkginclude_HEADERS = \
-	simiasStub.h simias.nsmap stdsoap2.h simiasH.h simias.h
-
 libsimias_la_CFLAGS = \
 	-DWITH_NONAMESPACES
 
@@ -36,6 +33,18 @@ $(srcdir)/libsimias.h: $(srcdir)/stdsoap2.c $(SIMIAS_WSDL)
 $(srcdir)/simiasClientLib.c: $(srcdir)/libsimias.h
 	$(GSOAP_PATH)/soapcpp2 -c -n -psimias $(srcdir)/libsimias.h
 	
+install-exec-local:
+	$(mkinstalldirs) $(DESTDIR)$(includedir)
+	$(INSTALL_PROGRAM) simiasStub.h $(DESTDIR)$(includedir)/simias
+	$(INSTALL_PROGRAM) simias.nsmap $(DESTDIR)$(includedir)/simias
+	$(INSTALL_PROGRAM) stdsoap2.h $(DESTDIR)$(includedir)/simias
+	$(INSTALL_PROGRAM) simiasH.h $(DESTDIR)$(includedir)/simias
+	$(INSTALL_PROGRAM) simias.h $(DESTDIR)$(includedir)/simias
+
+uninstall-local:
+	rm -f $(DESTDIR)$(includedir)/simias/simiasgaim*
+	rm -f $(DESTDIR)$(includedir)/simias/stdsoap2.h
+
 clean-local:
 	rm -f stdsoap2.* *.xml simias.nsmap simiasC* simiasH* simiasS* env* soap*
 	rm -rf $(COMMON_CLEAN_FILES)
