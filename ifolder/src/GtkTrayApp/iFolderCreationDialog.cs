@@ -31,6 +31,14 @@ namespace Novell.iFolder
 //		private iFolder ifolder;
 		private CheckButton cbutton;
 
+		public bool HideDialog
+		{
+			get
+			{
+				return cbutton.Active;
+			}
+		}
+
 		public iFolderCreationDialog(iFolder ifolder) : base()
 		{
 //			this.ifolder = ifolder;

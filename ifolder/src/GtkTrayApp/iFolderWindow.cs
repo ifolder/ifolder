@@ -130,6 +130,9 @@ namespace Novell.iFolder
 			AutoSyncCheckButton.Active = true;
 			StartAtLoginButton.Active = true;
 
+
+			SyncSpinButton.Value = ifSettings.DefaultSyncInterval;
+
 			// This should change to check the value but I'm not sure
 			// which value to check
 			if(AutoSyncCheckButton.Active == true)
@@ -172,7 +175,7 @@ namespace Novell.iFolder
 		/// </summary>
 		private void CreateWidgets()
 		{
-			this.SetDefaultSize (200, 400);
+			this.SetDefaultSize (200, 480);
 			this.DeleteEvent += new DeleteEventHandler (WindowDelete);
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 			this.WindowPosition = Gtk.WindowPosition.Center;
@@ -221,8 +224,10 @@ namespace Novell.iFolder
 										new Label("Activity Log"));
 			MainNoteBook.AppendPage( CreateEnterprisePage(),
 										new Label("Server"));
-
 			vbox.PackStart(MainNoteBook, true, true, 0);
+			MainNoteBook.SwitchPage += 
+					new SwitchPageHandler(OnSwitchPage);
+
 
 
 			//-----------------------------
@@ -525,6 +530,8 @@ namespace Novell.iFolder
 			ShowConfirmationButton = 
 				new CheckButton("Show creation dialog when creating iFolders");
 			appWidgetBox.PackStart(ShowConfirmationButton, false, true, 0);
+			ShowConfirmationButton.Toggled += 
+						new EventHandler(OnShowConfButton);
 
 
 
@@ -669,24 +676,105 @@ namespace Novell.iFolder
 			srvSpacerBox.PackStart(srvWidgetBox, true, true, 0);
 
 			// create a table to hold the values
-			Table srvTable = new Table(2,2,false);
+			Table srvTable = new Table(3,2,false);
 			srvWidgetBox.PackStart(srvTable, true, true, 0);
 			srvTable.Homogeneous = false;
 			srvTable.ColumnSpacing = 10;
+
+			Label domainLabel = new Label("Default Domain:");
+			domainLabel.Xalign = 0;
+			srvTable.Attach(domainLabel, 0,1,0,1,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			Label domainValue = new Label(ifSettings.DefaultDomainID);
+			domainValue.Xalign = 0;
+			srvTable.Attach(domainValue, 1,2,0,1);
+
 			Label srvNameLabel = new Label("Server Host:");
 			srvNameLabel.Xalign = 0;
-			srvTable.Attach(srvNameLabel, 0,1,0,1,
-					AttachOptions.Shrink, 0,0,0);
+			srvTable.Attach(srvNameLabel, 0,1,1,2,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			Label srvNameValue = new Label("127.0.0.1");
 			srvNameValue.Xalign = 0;
-			srvTable.Attach(srvNameValue, 1,2,0,1);
+			srvTable.Attach(srvNameValue, 1,2,1,2);
+
 			Label usrNameLabel = new Label("User Name:");
 			usrNameLabel.Xalign = 0;
-			srvTable.Attach(usrNameLabel, 0,1,1,2,
-					AttachOptions.Shrink, 0,0,0);
+			srvTable.Attach(usrNameLabel, 0,1,2,3,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			Label usrNameValue = new Label("sflinders.novell.com");
 			usrNameValue.Xalign = 0;
-			srvTable.Attach(usrNameValue, 1,2,1,2);
+			srvTable.Attach(usrNameValue, 1,2,2,3);
+
+
+
+			//------------------------------
+			// Disk Space
+			//------------------------------
+			// create a section box
+			VBox diskSectionBox = new VBox();
+			vbox.PackStart(diskSectionBox, false, true, 0);
+			Label diskSectionLabel = new Label("<span weight=\"bold\">" +
+												"Disk Space" +
+												"</span>");
+			diskSectionLabel.UseMarkup = true;
+			diskSectionLabel.Xalign = 0;
+			diskSectionBox.PackStart(diskSectionLabel, false, true, 0);
+
+			// create a hbox to provide spacing
+			HBox diskSpacerBox = new HBox();
+			diskSectionBox.PackStart(diskSpacerBox, true, true, 0);
+			Label diskSpaceLabel = new Label("    "); // four spaces
+			diskSpacerBox.PackStart(diskSpaceLabel, false, true, 0);
+
+			// create a vbox to actually place the widgets in for section
+			VBox diskWidgetBox = new VBox();
+			diskSpacerBox.PackStart(diskWidgetBox, true, true, 0);
+
+
+			// create a table to hold the values
+			Table diskTable = new Table(3,2,false);
+			diskWidgetBox.PackStart(diskTable, false, true, 0);
+			diskTable.Homogeneous = false;
+			diskTable.ColumnSpacing = 10;
+
+			Label totalLabel = new Label("Total Space:");
+			totalLabel.Xalign = 0;
+			diskTable.Attach(totalLabel, 0,1,0,1,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			Label totalValue = new Label("23 Gigs");
+			totalValue.Xalign = 0;
+			diskTable.Attach(totalValue, 1,2,0,1);
+
+			Label usedLabel = new Label("Space Used:");
+			usedLabel.Xalign = 0;
+			diskTable.Attach(usedLabel, 0,1,1,2,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			Label usedValue = new Label("3 Gigs");
+			usedValue.Xalign = 0;
+			diskTable.Attach(usedValue, 1,2,1,2);
+
+			Label availLabel = new Label("Space Available:");
+			availLabel.Xalign = 0;
+			diskTable.Attach(availLabel, 0,1,2,3,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			Label availValue = new Label("20 Gigs");
+			availValue.Xalign = 0;
+			diskTable.Attach(availValue, 1,2,2,3);
+
+
+			VBox diskGraphBox = new VBox();
+			diskSpacerBox.PackStart(diskGraphBox, false, true, 0);
+
+			ProgressBar diskGraph = new ProgressBar();
+			diskGraphBox.PackStart(diskGraph, true, true, 0);
+
+			diskGraph.Orientation = Gtk.ProgressBarOrientation.BottomToTop;
+			diskGraph.Text = "%3";
+			diskGraph.PulseStep = .10;
+			diskGraph.Fraction = .30;
+
+
+
 
 			return vbox;
 		}
@@ -1273,17 +1361,24 @@ namespace Novell.iFolder
 							iFolderWS.CreateLocaliFolder(fs.Filename);
 						iFolderTreeStore.AppendValues(newiFolder);
 
-// TODO: determine how to do this!
-//					if(IntroDialog.UseDialog())
-//					{
+
+						if(ifSettings.DisplayConfirmation)
+						{
 							iFolderCreationDialog dlg = 
 								new iFolderCreationDialog(newiFolder);
 							dlg.TransientFor = this;
 							dlg.Run();
 							dlg.Hide();
+
+							if(dlg.HideDialog)
+							{
+								ShowConfirmationButton.Active = false;
+								OnShowConfButton(null, null);
+							}
+
 							dlg.Destroy();
 							dlg = null;
-//					}
+						}
 					}
 					catch(Exception e)
 					{
@@ -1472,11 +1567,40 @@ namespace Novell.iFolder
 			}
 		}
 
+
+
+
+		private void OnShowConfButton(object o, EventArgs args)
+		{
+			ifSettings.DisplayConfirmation =
+				ShowConfirmationButton.Active;
+			try
+			{
+				iFolderWS.SetDisplayConfirmation(
+									ifSettings.DisplayConfirmation);
+			}
+			catch(Exception e)
+			{
+				iFolderExceptionDialog ied = new iFolderExceptionDialog(
+													this, e);
+				ied.Run();
+				ied.Hide();
+				ied.Destroy();
+				return;
+			}
+		}
+
+
+
+
 		private void OnProxySettingsChanged(object o, EventArgs args)
 		{
 			Console.WriteLine("Save ProxySettings here");
 			// Save the settings here?
 		}
+
+
+
 
 		private void OnAutoSyncButton(object o, EventArgs args)
 		{
@@ -1492,10 +1616,49 @@ namespace Novell.iFolder
 			}
 		}
 
+
+
+
 		private void OnSyncIntervalChanged(object o, EventArgs args)
 		{
-			Console.WriteLine("Save Sync Interval here");
-			// Save the settings here?
+			try
+			{
+				ifSettings.DefaultSyncInterval = (int)SyncSpinButton.Value;
+				iFolderWS.SetDefaultSyncInterval(
+									ifSettings.DefaultSyncInterval);
+			}
+			catch(Exception e)
+			{
+				iFolderExceptionDialog ied = new iFolderExceptionDialog(
+													this, e);
+				ied.Run();
+				ied.Hide();
+				ied.Destroy();
+				return;
+			}
+		}
+
+
+
+
+		private void OnSwitchPage(object o, SwitchPageArgs args)
+		{
+			if(MainNoteBook.CurrentPage != 0)
+			{
+				CreateMenuItem.Sensitive = false;
+				ShareMenuItem.Sensitive = false;
+				OpenMenuItem.Sensitive = false;
+				ConflictMenuItem.Sensitive = false;
+				RevertMenuItem.Sensitive = false;
+				PropMenuItem.Sensitive = false;;
+				RefreshMenuItem.Sensitive = false;
+			}
+			else
+			{
+				CreateMenuItem.Sensitive = true;
+				RefreshMenuItem.Sensitive = true;
+				OniFolderSelectionChanged(o, args);
+			}
 		}
 
 	}

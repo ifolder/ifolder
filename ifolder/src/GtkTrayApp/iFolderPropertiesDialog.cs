@@ -83,7 +83,7 @@ namespace Novell.iFolder
 		/// </summary>
 		private void InitializeWidgets()
 		{
-			this.SetDefaultSize (500, 400);
+			this.SetDefaultSize (100, 400);
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 
 			propNoteBook = new Gtk.Notebook();
