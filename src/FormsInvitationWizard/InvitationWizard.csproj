@@ -90,14 +90,19 @@
                     HintPath = "..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "Agent"
-                    AssemblyName = "Agent"
-                    HintPath = "..\..\..\simias\src\Agent\Agent.dll"
-                />
-                <Reference
                     Name = "iFolder"
                     AssemblyName = "iFolder"
                     HintPath = "..\iFolder\iFolder.dll"
+                />
+                <Reference
+                    Name = "SyncCommon"
+                    AssemblyName = "SyncCommon"
+                    HintPath = "..\..\..\bin\SyncCommon.dll"
+                />
+                <Reference
+                    Name = "Invitation"
+                    AssemblyName = "Invitation"
+                    HintPath = "..\..\..\bin\Invitation.dll"
                 />
             </References>
         </Build>
