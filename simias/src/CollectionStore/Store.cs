@@ -133,6 +133,11 @@ namespace Simias.Storage
 		private Collection localDb = null;
 
 		/// <summary>
+		/// Configuration object passed during connect.
+		/// </summary>
+		private Configuration config;
+
+		/// <summary>
 		/// The allocation size of the results array.
 		/// </summary>
 		internal const int resultsArraySize = 4096;
@@ -369,45 +374,45 @@ namespace Simias.Storage
 				}
 			} 
 		}
+
+		/// <summary>
+		/// Gets the configuration object passed to the store.Connect() method.
+		/// </summary>
+		public Configuration Config
+		{
+			get { return config; }
+		}
 		#endregion
 
 		#region Constructor
 		/// <summary>
 		/// Constructor for the Store object.
 		/// </summary>
-		/// <param name="databasePath">Path that specifies where to create
-		/// or open the database. If this parameter is null, the default 
-		/// database path is used.</param>
-		/// <param name="componentId">An identifier for the component that 
-		/// is opening this instance of the object.</param>
-		private Store( Uri databasePath, string componentId )
+		/// <param name="config">A Configuration object that contains a path that specifies where to create
+		/// or open the database.</param>
+		/// <param name="componentId">An identifier for the component that is opening this instance of the 
+		/// object.</param>
+		private Store( Configuration config, string componentId )
 		{
 			// Don't let another process authenticate while the database is still being initialized.
 			lock ( Store.ctorLock )
 			{
-				bool created;
-
-				// Store the component that opened this instance.
+				// Store the configuration and component that opened this instance.
+				this.config = config;
 				this.componentId = componentId;
 
 				// Get the path where the assembly was loaded from.
 				assemblyPath = new Uri( Path.GetDirectoryName( Assembly.GetExecutingAssembly().CodeBase ) );
 
 				// Create or open the underlying database.
-				if ( databasePath == null )
-				{
-					storageProvider = Persist.Provider.Connect( out created );
-				}
-				else
-				{
-					storageProvider = Persist.Provider.Connect( databasePath.LocalPath, out created );
-				}
+				bool created;
+				storageProvider = Persist.Provider.Connect( config.BasePath, out created );
 
 				// Set the path to the store.
 				storeManagedPath = new Uri( Path.Combine( storageProvider.StoreDirectory.LocalPath, storeManagedDirectoryName ) );
 
 				// Allocate a publisher.
-				publisher = new EventPublisher(new Configuration(StorePath.LocalPath));
+				publisher = new EventPublisher( config );
 
 				// Either create the store or authenticate to it.
 				if ( created )
@@ -882,6 +887,7 @@ namespace Simias.Storage
 		/// where to create or open the database.
 		/// </summary>
 		///	<returns>An object that represents a connection to the store.</returns>
+		[ Obsolete( "This method has been marked for removal. Use other overloads that pass a Configuration object instead.", false ) ]
 		public static Store Connect()
 		{
 			return Connect( null as Uri );
@@ -893,6 +899,7 @@ namespace Simias.Storage
 		/// <param name="databasePath">Path that specifies where to create or open the database. If this parameter
 		/// is null, the default database path is used.</param>
 		///	<returns>An object that represents a connection to the store.</returns>
+		[ Obsolete( "This method has been marked for removal. Use other overloads that pass a Configuration object instead.", false ) ]
 		public static Store Connect( Uri databasePath )
 		{
 			return Connect( databasePath, null );
@@ -905,6 +912,7 @@ namespace Simias.Storage
 		/// A suggested way to generate this parameter is using: 'this.GetType().FullName'.  This will produce the 
 		/// fully qualified name of the Type, including the namespace of the Type.</param>
 		///	<returns>An object that represents a connection to the store.</returns>
+		[ Obsolete( "This method has been marked for removal. Use other overloads that pass a Configuration object instead.", false ) ]
 		public static Store Connect( string componentId )
 		{
 			return Connect( null, componentId );
@@ -919,6 +927,7 @@ namespace Simias.Storage
 		/// A suggested way to generate this parameter is using: 'this.GetType().FullName'.  This will produce the 
 		/// fully qualified name of the Type, including the namespace of the Type.</param>
 		///	<returns>An object that represents a connection to the store.</returns>
+		[ Obsolete( "This method has been marked for removal. Use other overloads that pass a Configuration object instead.", false ) ]
 		public static Store Connect( Uri databasePath, string componentId )
 		{
 			if ( componentId == null )
@@ -928,7 +937,20 @@ namespace Simias.Storage
 				componentId = sf.GetMethod().DeclaringType.FullName;
 			}
 
-			return new Store( databasePath, componentId );
+			Configuration config = new Configuration( ( databasePath != null ) ? databasePath.LocalPath : null );
+			return new Store( config, componentId );
+		}
+
+		/// <summary>
+		/// Connects to the collection store.
+		/// </summary>
+		/// <param name="config">A Configuration object which contains store startup information.</param>
+		///	<returns>A store object that represents a connection to the store.</returns>
+		public static Store Connect( Configuration config )
+		{
+			// Get an identifier unique to the caller so that circular events can be prevented.
+			StackFrame sf = new StackFrame( 2 );
+			return new Store( config, sf.GetMethod().DeclaringType.FullName );
 		}
 
 		/// <summary>

@@ -1270,7 +1270,7 @@ namespace Simias.Storage
 				}
 
 				// Setup to watch for node changes on this collection.
-				subscriber = new EventSubscriber( new Configuration( store.StorePath.LocalPath ), Id);
+				subscriber = new EventSubscriber( store.Config, Id);
 				subscriber.NodeChanged += new NodeEventHandler( OnNodeChanged );
 				subscriber.NodeCreated += new NodeEventHandler( OnNodeChanged );
 				subscriber.NodeDeleted += new NodeEventHandler( OnNodeChanged );
@@ -1295,7 +1295,7 @@ namespace Simias.Storage
 				}
 
 				// Deregister from the event broker.
-				subscriber = new EventSubscriber( new Configuration( store.StorePath.LocalPath ) );
+				subscriber = new EventSubscriber( store.Config );
 				subscriber.NodeChanged -= new NodeEventHandler( OnNodeChanged );
 				subscriber.NodeCreated -= new NodeEventHandler( OnNodeChanged );
 				subscriber.NodeDeleted -= new NodeEventHandler( OnNodeChanged );

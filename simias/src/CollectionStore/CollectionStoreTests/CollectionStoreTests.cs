@@ -50,7 +50,7 @@ namespace Simias.Storage.Tests
 		private Store store = null;
 
 		// Path to store.
-		private Uri basePath = new Uri( Path.Combine( Directory.GetCurrentDirectory(), "CollectionStoreTestDir" ) );
+		private string basePath = Path.Combine( Directory.GetCurrentDirectory(), "CollectionStoreTestDir" );
 		#endregion
 
 		#region Test Setup
@@ -64,7 +64,7 @@ namespace Simias.Storage.Tests
 			MyTrace.SendToConsole();
 
 			// Connect to the store.
-			store = Store.Connect( basePath );
+			store = Store.Connect( new Configuration( basePath ) );
 
 			// Add another identity to the database.
 			LocalAddressBook localAb = store.GetLocalAddressBook();
@@ -1709,7 +1709,7 @@ namespace Simias.Storage.Tests
 		public void MergeNodeTest()
 		{
 			// Get a second handle to the current store.
-			Store mergeStore = Store.Connect( basePath );
+			Store mergeStore = Store.Connect( new Configuration( basePath ) );
 
 			// Create a collection using the primary store handle.
 			Collection collection = store.CreateCollection( "CS_TestCollection" );
