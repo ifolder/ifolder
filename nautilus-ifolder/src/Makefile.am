@@ -35,6 +35,17 @@ envC.c:
 	
 iFolderClientClientLib.c:	iFolderClient.h
 	$(GSOAP)/soapcpp2 -c -n -piFolderClient iFolderClient.h
+	
+#nautilus-ifolder.exe: nautilus-ifolder.cs
+#	$(CSC) /out:$@ $(CSCFLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(SIMIAS_CLIENT_LIBS) $(IFOLDER_LIBS) nautilus-ifolder.cs
+	
+bin_PROGRAMS = nautilus-ifolder.exe
+
+nautilus_ifolder_SOURCES = \
+	./nautilus-ifolder.cs
+	
+nautilus-ifolder.exe: $(nautilus_ifolder_SOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(SIMIAS_CLIENT_LIBS) $(IFOLDER_LIBS) nautilus-ifolder.cs
 
 install-exec-local: libnautilus-ifolder.la
 	$(mkinstalldirs) $(DESTDIR)$(datadir)/icons/gnome/48x48/emblems

@@ -31,6 +31,7 @@
 #include <glib/gi18n-lib.h>
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
 
 #include "iFolderClientStub.h"
 #include "iFolderClient.nsmap"
@@ -574,6 +575,36 @@ ifolder_extension_register_type (GTypeModule *module)
 	/* Nautilus Column Provider Interface (we probably won't need this one) */
 }
 
+static gchar *
+getLocalServiceUrl ()
+{
+	char readBuffer [1024];
+	char tmpUrl [1024];
+	gchar *localServiceUrl = NULL;
+	
+	memset (readBuffer, '\0', sizeof (readBuffer));
+	memset (tmpUrl, '\0', sizeof (tmpUrl));
+
+	FILE *output;	
+	
+	output = popen ("mono nautilus-ifolder.exe WebServiceURL", "r");
+	if (output == NULL) {
+		/* error calling mono nautilus-ifolder.exe */
+		g_print ("Error calling 'mono nautilus-ifolder.exe WebServiceURL");
+		return NULL;
+	}
+	
+	if (fgets (readBuffer, 1024, output) != NULL) {
+		strcpy (tmpUrl, readBuffer);
+		strcat (tmpUrl, "/iFolder.asmx");
+		localServiceUrl = strdup (tmpUrl);
+	}
+
+	pclose (output);	
+	
+	return localServiceUrl;
+}
+
 void
 nautilus_module_initialize (GTypeModule *module)
 {
@@ -584,9 +615,8 @@ nautilus_module_initialize (GTypeModule *module)
 	/* Initialize gSOAP */
 	soap_init (&soap);
 	soap_set_namespaces (&soap, iFolderClient_namespaces);
-	
-	/* FIXME: Determine the correct SOAP URL to access */
-	soapURL = strdup ("http://localhost:33079/simias10/boyd/iFolder.asmx");
+
+	soapURL = getLocalServiceUrl ();
 }
 
 void
