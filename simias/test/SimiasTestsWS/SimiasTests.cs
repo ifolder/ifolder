@@ -90,6 +90,7 @@ namespace SimiasTests
 		[SoapDocumentMethod]
 		public int RemoteAuthentication(bool preAuthenticate, string host, string user, string password)
 		{
+			Console.WriteLine("SimiasTests.Actions.RemoteAuthentication called");
 			int status = 0;
 			string serviceUrl = "/simias10/DomainService.asmx";
 		
@@ -105,16 +106,20 @@ namespace SimiasTests
 			myCache.Add(new Uri(domainService.Url), "Basic", myCred);
 			domainService.Credentials = myCache;
 			domainService.CookieContainer = new CookieContainer();
-			domainService.PreAuthenticate = (preAuthenticate == true) ? true : false;
+			domainService.PreAuthenticate = preAuthenticate;
+			
+			Console.WriteLine(" Host URL: " + domainService.Url);
+			Console.WriteLine(" PreAuthenticate: " + preAuthenticate.ToString());
+			Console.WriteLine(" User: " + user);
 
 
 			// provision user
 			try
 			{
-				Console.WriteLine("Calling the web service");
+				Console.WriteLine(" calling proxy method");
 				ProvisionInfo provisionInfo = domainService.ProvisionUser(user, password);
-				Console.WriteLine("UserID:  " + provisionInfo.UserID);
-				Console.WriteLine("POBoxID: " + provisionInfo.POBoxID);
+				Console.WriteLine(" UserID:  " + provisionInfo.UserID);
+				Console.WriteLine(" POBoxID: " + provisionInfo.POBoxID);
 			}
 			catch(WebException webEx)
 			{
@@ -127,6 +132,7 @@ namespace SimiasTests
 				Console.WriteLine(ex.Message);
 			}
 
+			Console.WriteLine("SimiasTests.Actions.RemoteAuthentication exit");
 			return status;
 		}
 
@@ -134,7 +140,8 @@ namespace SimiasTests
 		/// GetArray
 		/// Return an array of specified characters
 		/// </summary>
-		/// <param name="preAuthenticate"></param>
+		/// <param name="sizeToReturn"></param>
+		/// <param name="charToReturn"></param>
 		/// <returns>0</returns>
 		[WebMethod(EnableSession = true)]
 		[SoapDocumentMethod]

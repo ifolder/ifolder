@@ -1,13 +1,12 @@
 using System;
 using System.Web;
 
-
-namespace SimiasTestsCmd
+namespace SimiasTests
 {
 	/// <summary>
-	/// Summary description for Class1.
+	/// Summary description for Command
 	/// </summary>
-	class SimiasTests
+	class Command
 	{
 		/// <summary>
 		/// The main entry point for the application.
@@ -15,6 +14,7 @@ namespace SimiasTestsCmd
 		[STAThread]
 		static void Main(string[] args)
 		{
+			bool preAuth = false;
 			bool verbose = false;
 			bool walkUp = false;
 			int iterations = 1;
@@ -82,6 +82,11 @@ namespace SimiasTestsCmd
 				{
 					password = cmdValue[1];
 				}
+				else
+				if (cmd == "--preauth")
+				{
+					preAuth = Convert.ToBoolean(cmdValue[1]);
+				}
 			}
 
 			if (command == "")
@@ -136,13 +141,14 @@ namespace SimiasTestsCmd
 				if (verbose == true)
 				{
 					Console.WriteLine("Exercising RemoteAuthentication method");
+					Console.WriteLine("  preauth: " + preAuth.ToString();
 					Console.WriteLine("  host: " + host);
 					Console.WriteLine("  username: " + username);
 				}
 
 				for(int i = 0; i < iterations; i++)
 				{
-					int status = proxy.RemoteAuthentication(false, host, username, password);
+					int status = proxy.RemoteAuthentication(preAuth, host, username, password);
 					if (status != 0 && verbose == true)
 					{
 						Console.WriteLine("the RemoteAuthentication method failed");
@@ -156,7 +162,7 @@ namespace SimiasTestsCmd
 			Console.WriteLine("usage: SimiasTestCmd --cmd:Command --url:web service url --i:iterations --verbose:true|false");
 			Console.WriteLine("         cmd:<GetArray | Ping | RemoteAuthentication>");
 			Console.WriteLine("         if cmd = GetArray then --size:numbercharstoreturn --walkup:true|false");
-			Console.WriteLine("         if cmd = RemoteAuthentication them --host:name --user:uesrname --password:pwd");
+			Console.WriteLine("         if cmd = RemoteAuthentication them --host:name --username:user --password:pwd --preauth:true|false");
 		}
 	}
 }
