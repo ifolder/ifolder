@@ -17,8 +17,10 @@
 				3E81105E076FF18700E96819,
 				3E81105F076FF18700E96819,
 				3E811060076FF18700E96819,
-				3E9B1B01077927E20072994B,
 				3E9B1B02077927E20072994B,
+				3E9B1B01077927E20072994B,
+				3E3405A5078B40EF00630436,
+				3E3405A6078B40EF00630436,
 			);
 			isa = PBXGroup;
 			name = Classes;
@@ -196,6 +198,7 @@
 		};
 		29B97323FDCFA39411CA2CEA = {
 			children = (
+				3ECCEE29078B050C0011719F,
 				3E34A2810772BF1A009AC400,
 				3EAEF5050769104900B98AF6,
 				1058C7A0FEA54F0111CA2CBB,
@@ -309,6 +312,36 @@
 		};
 		3E256004077235290062AB7A = {
 			fileRef = 3E256000077235290062AB7A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E3405A5078B40EF00630436 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SimiasEventHandlers.h;
+			path = src/SimiasEventHandlers.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E3405A6078B40EF00630436 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SimiasEventHandlers.m;
+			path = src/SimiasEventHandlers.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E3405A7078B40EF00630436 = {
+			fileRef = 3E3405A5078B40EF00630436;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E3405A8078B40EF00630436 = {
+			fileRef = 3E3405A6078B40EF00630436;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -585,6 +618,19 @@
 			settings = {
 			};
 		};
+		3ECCEE29078B050C0011719F = {
+			isa = PBXFileReference;
+			lastKnownFileType = "compiled.mach-o.dylib";
+			path = "libsimias-event.0.dylib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3ECCEE2A078B050C0011719F = {
+			fileRef = 3ECCEE29078B050C0011719F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3EF2212D07681AA400EE2EF6 = {
 			children = (
 				3EF2212E07681AA400EE2EF6,
@@ -627,8 +673,8 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				HEADER_SEARCH_PATHS = ../libifolder;
-				LIBRARY_SEARCH_PATHS = ../libifolder/.libs;
+				HEADER_SEARCH_PATHS = "../libifolder ../../../simias/src/SimiasClient/libsimias-event";
+				LIBRARY_SEARCH_PATHS = "../libifolder/.libs ../../../simias/src/SimiasClient/libsimias-event/.libs";
 				PREBINDING = YES;
 				ZERO_LINK = NO;
 			};
@@ -672,7 +718,7 @@
 				GCC_PREFIX_HEADER = iFolder_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "/Users/calvin/code/ifolder/ifolder/src/libifolder/libs /Users/calvin/code/ifolder/ifolder/src/OSXClient /Users/calvin/code/ifolder/ifolder/src/OSXClient/build";
+				LIBRARY_SEARCH_PATHS = "/Users/calvin/code/ifolder/ifolder/src/libifolder/libs /Users/calvin/code/ifolder/ifolder/src/OSXClient /Users/calvin/code/ifolder/ifolder/src/OSXClient/build /Users/calvin/test/lib";
 				PRODUCT_NAME = iFolder;
 				WRAPPER_EXTENSION = app;
 			};
@@ -705,6 +751,7 @@
 				3E9B1B04077927E20072994B,
 				3EC2B460077A903700F736C1,
 				3EC2B462077A903E00F736C1,
+				3E3405A7078B40EF00630436,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -732,6 +779,7 @@
 				3E52896F0774F9FA0064F585,
 				3E528C3407754B8E0064F585,
 				3E9B1B03077927E20072994B,
+				3E3405A8078B40EF00630436,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -752,6 +800,7 @@
 				3E23FEF10768CDCA00877BDF,
 				3EAEF5060769104900B98AF6,
 				3E34A2820772BF1A009AC400,
+				3ECCEE2A078B050C0011719F,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

@@ -22,6 +22,8 @@
  ***********************************************************************/
 
 #import "MainWindowController.h"
+#include "SimiasEventHandlers.h"
+
 
 @implementation MainWindowController
 
@@ -47,13 +49,18 @@
 {
 	webService = [[iFolderService alloc] init];
 
+	[self addLog:@"initializing Simias Events"];
+
+	[self initializeSimiasEvents];
+
+	[self addLog:@"iFolder reading all domains"];
+
 	@try
 	{
 		NSArray *newDomains = [webService GetDomains];
 
 		[domainsController addObjects:newDomains];
 		
-
 		NSArray *newiFolders = [webService GetiFolders];
 		if(newiFolders != nil)
 		{
@@ -69,6 +76,7 @@
 	}
 	@catch (NSException *e)
 	{
+		[self addLog:@"Reading domains failed with exception"];
 		[self showWindow:self];
 	}
 }
@@ -77,6 +85,8 @@
 
 - (IBAction)refreshWindow:(id)sender
 {
+	[self addLog:@"Refreshing iFolder view"];
+
 	@try
 	{
 		NSArray *newiFolders = [webService GetiFolders];
@@ -93,6 +103,7 @@
 	}
 	@catch (NSException *e)
 	{
+		[self addLog:@"Refreshing failed with exception"];
 	}
 }
 
@@ -180,6 +191,22 @@
 {
 	[ifoldersController addObject:newiFolder];
 }
+
+
+
+- (void)addLog:(NSString *)entry
+{
+	NSString *logMessage = [NSString stringWithFormat:@"%@ %@", [[NSDate date] descriptionWithCalendarFormat:@"%m/%d/%Y %H:%M:%S" timeZone:nil locale:nil], entry];
+	[logController addObject:logMessage];
+}
+
+- (void)initializeSimiasEvents
+{
+	SimiasEventInitialize();
+}
+
+
+
 
 
 @end
