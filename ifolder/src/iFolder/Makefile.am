@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-iFolder_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolderWebService.cs
+iFolder_CSFILES = $(srcdir)/AssemblyInfo.cs
 iFolder_CSFILES_CSC := $(subst /,$(SEP),$(iFolder_CSFILES))
 iFolder_INCLUDES =
 iFolder_RESOURCES =
@@ -15,8 +15,18 @@ CUR_DIR := $(shell pwd)
 
 all: Novell.iFolder.dll
 
-Novell.iFolder.dll: $(iFolder_CSFILES) $(iFolder_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolder_FLAGS) $(iFolder_LIBS:%=/r:%) $(iFolder_LIBPATH:%=/lib:%) $(iFolder_CSFILES_CSC) /doc:Novell.iFolder.doc.xml
+iFolderWebService.cs: $(srcdir)/iFolderWebService.wsdl
+if WINDOWS
+	wsdl $(srcdir)/iFolderWebService.wsdl
+endif
+if LINUX
+	wsdl -nologo -out:iFolderWebService.cs $(srcdir)/iFolderWebService.wsdl
+	cat iFolderWebService.cs | sed 's/iFolder1/iFolder/' | sed 's/iFolderUser1/iFolderUser/' | sed 's/DiskSpace1/DiskSpace/' > newsource.cs
+	mv newsource.cs iFolderWebService.cs
+endif
+
+Novell.iFolder.dll: iFolderWebService.cs $(iFolder_CSFILES) $(iFolder_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolder_FLAGS) $(iFolder_LIBS:%=/r:%) $(iFolder_LIBPATH:%=/lib:%) $(iFolder_CSFILES_CSC) iFolderWebService.cs /doc:Novell.iFolder.doc.xml
 
 if DEBUG
 if WINDOWS
@@ -34,7 +44,7 @@ uninstall-local:
 CLEAN_FILES = Novell.iFolder.dll Novell.iFolder.doc.xml
 
 clean-local:
-	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
+	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES) iFolderWebService.cs
     
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
