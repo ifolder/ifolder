@@ -4,7 +4,7 @@ Book_INCLUDES =
 Book_RESOURCES = $(srcdir)/App$(ICON_EXT)
 Book_FLAGS = $(CSC_EXEFLAG)
 Book_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) FormsBookLib.dll  Configuration.dll StoreProvider.dll Identity.dll CollectionEvents.dll CollectionStore.dll AddressBook.dll
-Book_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin
+Book_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin ../FormsBookLib
 
 DATA_FILES = address_app.ico
 
