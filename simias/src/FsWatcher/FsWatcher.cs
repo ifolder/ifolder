@@ -25,6 +25,7 @@ using System.IO;
 using System.Threading;
 using System.Collections;
 using Simias.Storage;
+using Simias.Event;
 
 namespace Simias
 {
@@ -37,7 +38,7 @@ namespace Simias
 		Hashtable			watcherTable;
 		EventPublisher		publish;
 		EventSubscriber		collectionWatcher;
-		Thread				t1;
+		string				collectionId = "1";
 		
 		/// <summary>
 		/// The main entry point for the application.
@@ -56,7 +57,7 @@ namespace Simias
 			store = Store.Connect();
 			publish = new EventPublisher();
 			collectionWatcher = new EventSubscriber();
-			collectionWatcher.Created += new EventHandler(OnNewCollection);
+			collectionWatcher.NodeCreated += new NodeEventHandler(OnNewCollection);
 			foreach (Collection col in store)
 			{
 				WatchCollection(col);
@@ -88,35 +89,35 @@ namespace Simias
 		{
 			// Specify what is done when a file is changed, created, or deleted.
 			System.Diagnostics.Debug.WriteLine("Changed File: " +  e.FullPath + " " + e.ChangeType);
-			publish.FireChanged(new EventArgs("file", e.Name, Path.GetDirectoryName(e.FullPath), Path.GetExtension(e.Name)));
+			publish.RaiseFileEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, FileEventArgs.EventType.Changed));
 		}
 
 		private void OnRenamed(object source, RenamedEventArgs e)
 		{
 			// Specify what is done when a file is renamed.
-			publish.FireRenamed(new EventArgs("file", e.Name, Path.GetDirectoryName(e.FullPath), e.OldName, Path.GetDirectoryName(e.OldFullPath), Path.GetExtension(e.OldName)));
+			publish.RaiseFileEvent(new FileRenameEventArgs(source.ToString(), e.FullPath, collectionId, e.OldFullPath));
 			System.Diagnostics.Debug.WriteLine(string.Format("Renamed File: {0} renamed to {1}", e.OldFullPath, e.FullPath));
 		}
 
 		private void OnDeleted(object source, FileSystemEventArgs e)
 		{
 			// Specify what is done when a file is changed, created, or deleted.
-			publish.FireDeleted(new EventArgs("file", e.Name, Path.GetDirectoryName(e.FullPath), Path.GetExtension(e.Name)));
+			publish.RaiseFileEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, FileEventArgs.EventType.Deleted));
 			System.Diagnostics.Debug.WriteLine("Deleted File: " +  e.FullPath + " " + e.ChangeType);
 		}
 
 		private void OnCreated(object source, FileSystemEventArgs e)
 		{
 			// Specify what is done when a file is renamed.
-			publish.FireCreated(new EventArgs("file", e.Name, Path.GetDirectoryName(e.FullPath), Path.GetExtension(e.Name)));
+			publish.RaiseFileEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, FileEventArgs.EventType.Created));
 			System.Diagnostics.Debug.WriteLine("Created File: {0} Created.", e.FullPath);
 		}
 
-		private void OnNewCollection(EventArgs args)
+		private void OnNewCollection(NodeEventArgs args)
 		{
 			try
 			{
-				Collection col = store.GetCollectionById(args.Path);
+				Collection col = store.GetCollectionById(args.ID);
 				if (col != null)
 				{
 					WatchCollection(col);

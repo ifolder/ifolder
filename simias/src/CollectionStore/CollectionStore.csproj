@@ -80,20 +80,19 @@
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "StoreProvider"
-                    AssemblyName = "StoreProvider"
-                    HintPath = "..\stage\StoreProvider.dll"
-                    Private = "True"
-                />
-                <Reference
                     Name = "System.Security"
                     AssemblyName = "System.Security"
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Security.dll"
                 />
                 <Reference
+                    Name = "StoreProvider"
+                    AssemblyName = "StoreProvider"
+                    HintPath = "..\StoreProvider\StoreProvider.dll"
+                />
+                <Reference
                     Name = "CollectionEvents"
                     AssemblyName = "CollectionEvents"
-                    HintPath = "..\stage\CollectionEvents.dll"
+                    HintPath = "..\CollectionEvents\CollectionEvents.dll"
                 />
             </References>
         </Build>

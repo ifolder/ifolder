@@ -27,6 +27,7 @@ using System.Collections;
 using System.IO;
 using System.Xml;
 using Simias;
+using Simias.Event;
 using Persist = Simias.Storage.Provider;
 
 namespace Simias.Storage
@@ -558,11 +559,11 @@ namespace Simias.Storage
 					// Fire an event for this commit action.
 					if ( committedNode.IsPersisted )
 					{
-						LocalStore.Publisher.FireChanged( new EventArgs( CsScheme, committedNode.Id, Id, committedNode.NameSpaceType ) );
+						LocalStore.Publisher.RaiseNodeEvent( new NodeEventArgs( CsScheme, committedNode.Id, Id, committedNode.NameSpaceType, NodeEventArgs.EventType.Changed) );
 					}
 					else
 					{
-						LocalStore.Publisher.FireCreated( new EventArgs( CsScheme, committedNode.Id, Id, committedNode.NameSpaceType ) );
+						LocalStore.Publisher.RaiseNodeEvent( new NodeEventArgs( CsScheme, committedNode.Id, Id, committedNode.NameSpaceType, NodeEventArgs.EventType.Created ) );
 					}
 
 					committedNode.IsPersisted = true;

@@ -24,6 +24,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Collections;
+using Simias.Event;
 
 namespace Simias
 {
@@ -74,16 +75,16 @@ namespace Simias
 			OnShutdown();
 		}
 
-		private void OnServiceEvent(int processId, ServiceEventType t)
+		private void OnServiceEvent(ServiceEventArgs args)
 		{
-			if (processId == this.processId || processId == EventPublisher.TargetAll)
+			if (args.Target == this.processId || args.Target == ServiceEventArgs.TargetAll)
 			{
-				switch (t)
+				switch (args.EventType)
 				{
-					case ServiceEventType.Shutdown:
+					case ServiceEventArgs.ServiceEvent.Shutdown:
 						shutdownEvent.Set();
 						break;
-					case ServiceEventType.Reconfigure:
+					case ServiceEventArgs.ServiceEvent.Reconfigure:
 						OnReconfigure();
 						break;
 				}

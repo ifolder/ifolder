@@ -33,6 +33,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
 using Simias;
+using Simias.Event;
 using Persist = Simias.Storage.Provider;
 
 namespace Simias.Storage
