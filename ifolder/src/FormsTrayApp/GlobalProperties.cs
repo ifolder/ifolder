@@ -227,8 +227,8 @@ namespace Novell.FormsTrayApp
 			this.progressBar1 = new System.Windows.Forms.ProgressBar();
 			this.toolBar1 = new System.Windows.Forms.ToolBar();
 			this.toolBarCreate = new System.Windows.Forms.ToolBarButton();
-			this.toolBarShare = new System.Windows.Forms.ToolBarButton();
 			this.toolBarSetup = new System.Windows.Forms.ToolBarButton();
+			this.toolBarShare = new System.Windows.Forms.ToolBarButton();
 			this.toolBarResolve = new System.Windows.Forms.ToolBarButton();
 			this.toolBarSync = new System.Windows.Forms.ToolBarButton();
 			this.SuspendLayout();
@@ -754,14 +754,6 @@ namespace Novell.FormsTrayApp
 			this.toolBarCreate.ToolTipText = resources.GetString("toolBarCreate.ToolTipText");
 			this.toolBarCreate.Visible = ((bool)(resources.GetObject("toolBarCreate.Visible")));
 			// 
-			// toolBarShare
-			// 
-			this.toolBarShare.Enabled = ((bool)(resources.GetObject("toolBarShare.Enabled")));
-			this.toolBarShare.ImageIndex = ((int)(resources.GetObject("toolBarShare.ImageIndex")));
-			this.toolBarShare.Text = resources.GetString("toolBarShare.Text");
-			this.toolBarShare.ToolTipText = resources.GetString("toolBarShare.ToolTipText");
-			this.toolBarShare.Visible = ((bool)(resources.GetObject("toolBarShare.Visible")));
-			// 
 			// toolBarSetup
 			// 
 			this.toolBarSetup.Enabled = ((bool)(resources.GetObject("toolBarSetup.Enabled")));
@@ -769,6 +761,14 @@ namespace Novell.FormsTrayApp
 			this.toolBarSetup.Text = resources.GetString("toolBarSetup.Text");
 			this.toolBarSetup.ToolTipText = resources.GetString("toolBarSetup.ToolTipText");
 			this.toolBarSetup.Visible = ((bool)(resources.GetObject("toolBarSetup.Visible")));
+			// 
+			// toolBarShare
+			// 
+			this.toolBarShare.Enabled = ((bool)(resources.GetObject("toolBarShare.Enabled")));
+			this.toolBarShare.ImageIndex = ((int)(resources.GetObject("toolBarShare.ImageIndex")));
+			this.toolBarShare.Text = resources.GetString("toolBarShare.Text");
+			this.toolBarShare.ToolTipText = resources.GetString("toolBarShare.ToolTipText");
+			this.toolBarShare.Visible = ((bool)(resources.GetObject("toolBarShare.Visible")));
 			// 
 			// toolBarResolve
 			// 
