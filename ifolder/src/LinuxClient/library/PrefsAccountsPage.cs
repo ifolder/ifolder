@@ -1000,6 +1000,8 @@ namespace Novell.iFolder
 		{
 			if(NewAccountMode)
 			{
+				loginButton.Label = Util.GS("_Login");
+
 				if( (nameEntry.Text.Length > 0) &&
 					(passEntry.Text.Length > 0 ) &&
 					(serverEntry.Text.Length > 0) )
