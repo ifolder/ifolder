@@ -39,6 +39,8 @@
 #include "network.h"
 #include "util.h"
 
+#include <simias.h>
+
 /* Externs */
 extern GtkListStore *in_inv_store;
 extern GtkListStore *out_inv_store;
@@ -163,21 +165,64 @@ simias_send_invitation_accept(GaimBuddy *recipient, char *collection_id)
 }
 
 /**
+ * Replaces the host with the one Gaim determines to be public.
+ * The returned string must be freed.
+ */
+static char *
+convert_url_to_public(const char *start_url)
+{
+	char new_url[1024];
+	char *host = NULL;
+	int port;
+	char *path = NULL;
+	char *user = NULL;
+	char *pass = NULL;
+	const char *public_ip;
+	
+	if (gaim_url_parse(start_url, &host, &port, &path, &user, &pass)) {
+		
+		public_ip = gaim_network_get_my_ip(-1);
+		
+		if (path) {
+			sprintf(new_url, "http://%s:%d/%s", public_ip, port, path);
+		}
+		
+		if (host) free(host);
+		if (path) free(path);
+		if (user) free(user);
+		if (pass) free(pass);
+		
+		return strdup(new_url);
+	}
+	
+	return NULL;
+}
+
+/**
  * This function will send a message with the following format:
  * 
- * [simias:ping-request:<ip-address>:<ip-port>] <Human-readable message>
+ * [simias:ping-request:<po-box-url>]
  */
 int
 simias_send_ping_req(GaimBuddy *recipient)
 {
 	char msg[2048];
-	const char *public_ip;
-	char *ip_port = "1234";	/* FIXME: Get the WebService port from Simias */
+	char *simias_service_url;
+	char *public_url;
 	
-	public_ip = gaim_network_get_my_ip(-1);
+	if (simias_get_local_service_url(&simias_service_url)) {
+		/* There was an error! */
+		return -1;
+	}
 	
-	sprintf(msg, "%s%s:%s] %s", PING_REQUEST_MSG, public_ip, ip_port,
-		_("You are seeing this message because you do not have the Gaim iFolder Plugin installed/enabled.  Please visit http://www.ifolder.com/ to download the plugin."));
+	public_url = convert_url_to_public(simias_service_url);
+	if (public_url) {
+		sprintf(msg, "%s%s]", PING_REQUEST_MSG, public_url);
+		free(public_url);
+	} else {
+		sprintf(msg, "%s%s]", PING_REQUEST_MSG, simias_service_url);
+	}
+	free(simias_service_url);
 
 	return simias_send_msg(recipient, msg);
 }
@@ -185,18 +230,28 @@ simias_send_ping_req(GaimBuddy *recipient)
 /**
  * This function will send a message with the following format:
  * 
- * [simias:ping-response:<ip-address>:<ip-port>]
+ * [simias:ping-response:<po-box-url>]
  */
 int
 simias_send_ping_resp(GaimBuddy *recipient)
 {
 	char msg[2048];
-	const char *public_ip;
-	const char *ip_port = "1234"; /* FIXME: Get the WebService port from Simias */
-	
-	public_ip = gaim_network_get_my_ip(-1);
-	
-	sprintf(msg, "%s%s:%s]", PING_RESPONSE_MSG, public_ip, ip_port);
+	char *simias_service_url;
+	char *public_url;
+
+	if (simias_get_local_service_url(&simias_service_url)) {
+		/* There was an error! */
+		return -1;
+	}
+
+	public_url = convert_url_to_public(simias_service_url);
+	if (public_url) {
+		sprintf(msg, "%s%s]", PING_RESPONSE_MSG, public_url);
+		free(public_url);
+	} else {
+		sprintf(msg, "%s%s]", PING_RESPONSE_MSG, simias_service_url);
+	}
+	free(simias_service_url);
 
 	return simias_send_msg(recipient, msg);
 }
@@ -728,13 +783,13 @@ static gboolean
 handle_ping_request(GaimAccount *account, const char *sender,
 					const char *buffer)
 {
-	GtkTreeIter iter;
-	char *ip_address;
-	char *ip_port;
+	GaimBuddy *buddy;
+	char *po_box_url;
 	int send_result;
 	
 g_print("handle_ping_request() %s -> %s entered\n",
 		sender, gaim_account_get_username(account));
+		
 	/**
 	 * Since this method is called, we already know that the first part of
 	 * the message matches our #define.  So, because of that, we can take
@@ -745,52 +800,22 @@ g_print("handle_ping_request() %s -> %s entered\n",
 	/**
 	 * Start parsing the message at this point:
 	 * 
-	 * 	[simias:ping-request:<ip-address>:<ip-port>]
+	 * 	[simias:ping-request:<po-box-url>]
 	 *                       ^
 	 */
-	ip_address = strtok((char *) buffer + strlen(PING_REQUEST_MSG), ":");
-	if (!ip_address) {
-		g_print("handle_ping_request() couldn't parse the ip-address\n");
+	po_box_url = strtok((char *) buffer + strlen(PING_REQUEST_MSG), ":");
+	if (!po_box_url) {
+		g_print("handle_ping_request() couldn't parse the po-box-url\n");
 		return FALSE;
 	}
 
-	ip_port = strtok(NULL, "]");
-	if (!ip_port) {
-		g_print("handle_ping_request() couldn't parse the ip-port\n");
-		return FALSE;
-	}
-
-	/**
-	 * Now check in our trusted_buddies_store to see if we have ever accepted an
-	 * invitation to share collections with this buddy.  If we have, we can send
-	 * a ping-reply message.  If not, we will just drop this message and do
-	 * nothing about it (perhaps log it so we could tell that we received it as
-	 * a security measure).
-	 */
-	if (!simias_lookup_trusted_buddy(trusted_buddies_store,
-							gaim_find_buddy(account, sender), &iter)) {
-		g_print("Received a [simias:ping-request] from an untrusted buddy: %s (%s:%s)\n",
-				sender, ip_address, ip_port);
-		return TRUE;
-	}
-
-	/**
-	 * If we get this far, iter now points to the row of data in the store model
-	 * that contains the trusted GaimBuddy *.
-	 * 
-	 * Since we received the sender's IP Address and IP Port update it in our
-	 * own record.
-	 */
-	gtk_list_store_set(trusted_buddies_store, &iter,
-						TRUSTED_BUDDY_IP_ADDR_COL, ip_address,
-						TRUSTED_BUDDY_IP_PORT_COL, ip_port,
-						-1);
-
-	/* Update the trusted buddies file */
-	simias_save_trusted_buddies(trusted_buddies_store);
+	/* Update the buddy's po_box_url in blist.xml */
+	buddy = gaim_find_buddy(account, sender);	
+	gaim_blist_node_set_string(&(buddy->node), "simias-po-box-url",
+							   gaim_url_encode(po_box_url));
 
 	/* Send a ping-response message */
-	send_result = simias_send_ping_resp(gaim_find_buddy(account, sender));
+	send_result = simias_send_ping_resp(buddy);
 	if (send_result <= 0) {
 		g_print("handle_ping_request() couldn't send ping response: %d\n", send_result);
 	}
@@ -809,12 +834,12 @@ static gboolean
 handle_ping_response(GaimAccount *account, const char *sender, 
 					 const char *buffer)
 {
-	GtkTreeIter iter;
-	char *ip_address;
-	char *ip_port;
+	GaimBuddy *buddy;
+	char *po_box_url;
 	
-g_print("handle_ping_response() %s -> %s) entered\n",
+g_print("handle_ping_response() %s -> %s entered\n",
 		sender, gaim_account_get_username(account));
+		
 	/**
 	 * Since this method is called, we already know that the first part of
 	 * the message matches our #define.  So, because of that, we can take
@@ -825,45 +850,19 @@ g_print("handle_ping_response() %s -> %s) entered\n",
 	/**
 	 * Start parsing the message at this point:
 	 * 
-	 * 	[simias:ping-response:<ip-address>:<ip-port>]
-	 *                        ^
+	 * 	[simias:ping-response:<po-box-url>]
+	 *                       ^
 	 */
-	ip_address = strtok((char *) buffer + strlen(PING_RESPONSE_MSG), ":");
-	if (!ip_address) {
-		g_print("handle_ping_response() couldn't parse the ip-address\n");
+	po_box_url = strtok((char *) buffer + strlen(PING_REQUEST_MSG), ":");
+	if (!po_box_url) {
+		g_print("handle_ping_request() couldn't parse the po-box-url\n");
 		return FALSE;
 	}
 
-	ip_port = strtok(NULL, "]");
-	if (!ip_port) {
-		g_print("handle_ping_response() couldn't parse the ip-port\n");
-		return FALSE;
-	}
-
-	/**
-	 * Now check in our trusted_buddies_store to make sure we trust this buddy.
-	 * If we can't find the buddy, there's no since trusting this ping-response
-	 * message because.  If we do find the buddy, go ahead and update the
-	 * IP Address and IP Port in the trusted_buddies_store.
-	 */
-	if (!simias_lookup_trusted_buddy(trusted_buddies_store,
-							gaim_find_buddy(account, sender), &iter)) {
-		g_print("Received a [simias:ping-response] from an untrusted buddy: %s (%s:%s)\n",
-				sender, ip_address, ip_port);
-		return TRUE;
-	}
-
-	/**
-	 * If we get this far, iter now points to the row of data in the store model
-	 * that contains the trusted GaimBuddy *.
-	 */
-	gtk_list_store_set(trusted_buddies_store, &iter,
-						TRUSTED_BUDDY_IP_ADDR_COL, ip_address,
-						TRUSTED_BUDDY_IP_PORT_COL, ip_port,
-						-1);
-
-	/* Update the trusted buddies file */
-	simias_save_trusted_buddies(trusted_buddies_store);
+	/* Update the buddy's po_box_url in blist.xml */
+	buddy = gaim_find_buddy(account, sender);	
+	gaim_blist_node_set_string(&(buddy->node), "simias-po-box-url",
+							   gaim_url_encode(po_box_url));
 
 	return TRUE;
 }
