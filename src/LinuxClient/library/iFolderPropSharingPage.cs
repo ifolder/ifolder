@@ -543,7 +543,7 @@ namespace Novell.iFolder
 					}
 					case Gtk.ResponseType.Help:
 					{
-						Util.ShowHelp("front.html", topLevelWindow);
+						Util.ShowHelp("sharewith.html#bq6lwm0", topLevelWindow);
 						break;
 					}
 					case Gtk.ResponseType.Cancel:
