@@ -87,6 +87,7 @@
             ACTIONS = {showAboutBox = id; showPrefs = id; showSyncLog = id; showiFolderWindow = id; }; 
             CLASS = iFolderApplication; 
             LANGUAGE = ObjC; 
+            OUTLETS = {logController = NSArrayController; }; 
             SUPERCLASS = NSObject; 
         }
     ); 

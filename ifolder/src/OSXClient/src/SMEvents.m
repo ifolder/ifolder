@@ -159,9 +159,15 @@
 
 
 @implementation SMNodeEvent
--(NSString *)action
+-(int)action
 {
-	return [properties objectForKey:@"action"];
+	NSString *actStr = [properties objectForKey:@"action"];
+	if([actStr compare:@"NodeCreated"] == 0)
+		return NODE_CREATED;
+	else if([actStr compare:@"NodeDeleted"] == 0)
+		return NODE_DELETED;
+	else
+		return NODE_CHANGED;
 }
 -(NSString *)time
 {
@@ -175,15 +181,9 @@
 {
 	return [properties objectForKey:@"collectionID"];
 }
--(int)type
+-(NSString *)type
 {
-	NSString *actStr = [properties objectForKey:@"type"];
-	if([actStr compare:@"NodeCreated"] == 0)
-		return NODE_CREATED;
-	else if([actStr compare:@"NodeDeleted"] == 0)
-		return NODE_DELETED;
-	else
-		return NODE_CHANGED;
+	return [properties objectForKey:@"type"];
 }
 -(NSString *)event_id
 {

@@ -92,6 +92,39 @@ static iFolderWindowController *sharedInstance = nil;
 
 
 
++(void)addiFolderTS:(iFolder *)newiFolder
+{
+	if(sharedInstance != nil)
+	{
+		[sharedInstance performSelectorOnMainThread:@selector(addiFolder:) 
+					withObject:newiFolder waitUntilDone:YES ];		
+	}
+}
+-(void)addiFolder:(iFolder *)newiFolder
+{
+	[ifoldersController addObject:newiFolder];
+}
+
+
+
+
++(void)removeiFolderTS:(iFolder *)ifolder
+{
+	if(sharedInstance != nil)
+	{
+		[sharedInstance performSelectorOnMainThread:@selector(removeiFolder:) 
+					withObject:ifolder waitUntilDone:YES ];		
+	}
+}
+-(void)removeiFolder:(iFolder *)ifolder
+{
+	NSLog(@"remove the iFolder %@", [ifolder Name]);
+	[ifoldersController removeObject:ifolder];
+}
+
+
+
+
 
 - (void)windowWillClose:(NSNotification *)aNotification
 {
@@ -232,7 +265,6 @@ static iFolderWindowController *sharedInstance = nil;
 		case NSAlertDefaultReturn:		// Revert iFolder
 		{
 			iFolder *ifolder = [[ifoldersController arrangedObjects] objectAtIndex:(int)contextInfo];
-			iFolder *revertediFolder;
 
 			NSLog(@"Reverting iFolder %@", [ifolder Name]);
 
@@ -240,8 +272,7 @@ static iFolderWindowController *sharedInstance = nil;
 
 			@try
 			{
-				revertediFolder = [ifolderService RevertiFolder:[ifolder ID]];
-				[ifolder setProperties:[revertediFolder properties]];
+				[[iFolderData sharedInstance] revertiFolder:[ifolder ID]];		
 			}
 			@catch (NSException *e)
 			{
@@ -293,7 +324,8 @@ static iFolderWindowController *sharedInstance = nil;
 
 			@try
 			{
-				[ifolderService DeleteiFolder:[ifolder ID]];
+				[[iFolderData sharedInstance] deleteiFolder:[ifolder ID]];
+//				[ifolderService DeleteiFolder:[ifolder ID]];
 				[ifoldersController removeObjectAtArrangedObjectIndex:(int)contextInfo];
 			}
 			@catch (NSException *e)
@@ -315,7 +347,7 @@ static iFolderWindowController *sharedInstance = nil;
 	iFolder *ifolder = [[ifoldersController arrangedObjects] objectAtIndex:selIndex];
 	NSString *path = [ifolder Path];
 	if(	([path length] > 0) &&
-		([[ifolder IsSubscription] boolValue] == NO) )
+		([ifolder IsSubscription] == NO) )
 		[[NSWorkspace sharedWorkspace] openFile:path];
 	else
 		[self setupiFolder:sender];
@@ -355,7 +387,9 @@ static iFolderWindowController *sharedInstance = nil;
 {
 	@try
 	{
-		iFolder *newiFolder = [ifolderService CreateiFolder:path InDomain:domainID];
+		iFolder *newiFolder = [[iFolderData sharedInstance] createiFolder:path inDomain:domainID];
+//		-(iFolder *)createiFolder:(NSString *)path inDomain:(NSString *)domainID;	
+//		iFolder *newiFolder = [ifolderService CreateiFolder:path InDomain:domainID];
 		[ifoldersController addObject:newiFolder];
 	}
 	@catch (NSException *e)
@@ -373,9 +407,14 @@ static iFolderWindowController *sharedInstance = nil;
 {
 	@try
 	{
-		iFolder *newiFolder = [ifolderService AcceptiFolderInvitation:iFolderID InDomain:domainID toPath:localPath];
-		iFolder *oldiFolder = [self selectediFolder];
-		[oldiFolder setProperties:[newiFolder properties]];
+		// just call accept, it will update the data
+		[[iFolderData sharedInstance] 
+				acceptiFolderInvitation:iFolderID
+				InDomain:domainID
+				toPath:localPath];
+//		iFolder *newiFolder = [ifolderService AcceptiFolderInvitation:iFolderID InDomain:domainID toPath:localPath];
+//		iFolder *oldiFolder = [self selectediFolder];
+//		[oldiFolder setProperties:[newiFolder properties]];
 	}
 	@catch (NSException *e)
 	{
@@ -396,14 +435,6 @@ static iFolderWindowController *sharedInstance = nil;
 
 
 
-- (void)addiFolder:(iFolder *)newiFolder
-{
-	[ifoldersController addObject:newiFolder];
-}
-
-
-
-
 - (BOOL)validateUserInterfaceItem:(id)anItem
 {
 	SEL action = [anItem action];
@@ -417,8 +448,8 @@ static iFolderWindowController *sharedInstance = nil;
 	{
 		if (selIndex != NSNotFound)
 		{
-			if([[[[ifoldersController arrangedObjects] objectAtIndex:selIndex]
-						IsSubscription] boolValue] == YES)
+			if([[[ifoldersController arrangedObjects] objectAtIndex:selIndex]
+						IsSubscription] == YES)
 				return YES;
 		}
 		return NO;
@@ -438,8 +469,8 @@ static iFolderWindowController *sharedInstance = nil;
 	{
 		if (selIndex != NSNotFound)
 		{
-			if([[[[ifoldersController arrangedObjects] objectAtIndex:selIndex]
-						IsSubscription] boolValue] == NO)
+			if([[[ifoldersController arrangedObjects] objectAtIndex:selIndex]
+						IsSubscription] == NO)
 				return YES;
 		}
 		return NO;
@@ -448,7 +479,7 @@ static iFolderWindowController *sharedInstance = nil;
 	{
 		if (selIndex != NSNotFound)
 		{
-			if( ([[[[ifoldersController arrangedObjects] objectAtIndex:selIndex] IsSubscription] boolValue] == NO) &&
+			if( ([[[ifoldersController arrangedObjects] objectAtIndex:selIndex] IsSubscription] == NO) &&
 				([[[[ifoldersController arrangedObjects] objectAtIndex:selIndex] valueForKeyPath:@"properties.IsWorkgroup"] boolValue] == NO) )
 				return YES;
 		}

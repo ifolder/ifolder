@@ -161,6 +161,54 @@ NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user);
 
 
 
+-(iFolder *) GetAvailableiFolder:(NSString *)iFolderID
+					inCollection:(NSString *)collectionID
+{
+	iFolder *ifolder = nil;
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (iFolderID != nil), @"iFolderID was nil");
+	NSAssert( (collectionID != nil), @"collectionID was nil");
+
+	struct _ns1__GetiFolderInvitation			getiFolderMessage;
+	struct _ns1__GetiFolderInvitationResponse	getiFolderResponse;
+	
+	getiFolderMessage.iFolderID = (char *)[iFolderID cString];
+	getiFolderMessage.POBoxID = (char *)[collectionID cString];
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__GetiFolderInvitation(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &getiFolderMessage,
+            &getiFolderResponse);
+
+	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in GetAvailableiFolder"];
+	}
+	else
+	{
+		ifolder = [[[iFolder alloc] init] retain];
+		
+		struct ns1__iFolderWeb *curiFolder;
+			
+		curiFolder = getiFolderResponse.GetiFolderInvitationResult;
+
+		[ifolder setProperties:getiFolderProperties(curiFolder)];
+    }
+
+    cleanup_gsoap(&soap);
+
+	return [ifolder autorelease];
+}
+
+
+
+
 -(iFolder *) CreateiFolder:(NSString *)Path InDomain:(NSString *)DomainID
 {
 	iFolder *ifolder = nil;

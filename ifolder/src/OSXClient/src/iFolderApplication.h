@@ -34,9 +34,11 @@
 
 @interface iFolderApplication : NSObject
 {
-	LoginWindowController	*loginWindowController;
-	iFolderData				*ifolderdata;
-	BOOL					runThreads;
+	LoginWindowController			*loginWindowController;
+	iFolderData						*ifolderdata;
+	BOOL							runThreads;
+	NSMutableArray					*logEntries;
+    IBOutlet NSArrayController		*logController;
 }
 
 //==========================================
@@ -56,7 +58,7 @@
 - (void)addLog:(NSString *)entry;
 - (void)initializeSimiasEvents;
 - (BOOL)authenticateToDomain:(NSString *)domainID withPassword:(NSString *)password;
-
+- (NSArrayController *)logArrayController;
 
 
 //==========================================
@@ -90,7 +92,10 @@
 - (void)processCollectionSyncEvents;
 - (void)handleCollectionSyncEvent:(SMCollectionSyncEvent *)colSyncEvent;
 - (void)processNodeEvents;
-- (void)handleNodeEvent:(SMNodeEvent *)nodeEvent;
+- (void)processNodeNodeEvent:(SMNodeEvent *)nodeNodeEvent;
+- (void)handleUpdateiFolder:(NSString *)ifolderID;
+- (void)processCollectionNodeEvent:(SMNodeEvent *)nodeNodeEvent;
+
 
 
 @end

@@ -26,17 +26,17 @@
 
 @implementation iFolderPrefsController
 
-static iFolderPrefsController *sharedInstance = nil;
+static iFolderPrefsController *prefsSharedInstance = nil;
 
 
 + (iFolderPrefsController *)sharedInstance
 {
-	if(sharedInstance == nil)
+	if(prefsSharedInstance == nil)
 	{
-		sharedInstance = [[iFolderPrefsController alloc] initWithWindowNibName:@"Preferences"];
+		prefsSharedInstance = [[iFolderPrefsController alloc] initWithWindowNibName:@"Preferences"];
 	}
 
-    return sharedInstance;
+    return prefsSharedInstance;
 }
 
 
@@ -44,10 +44,10 @@ static iFolderPrefsController *sharedInstance = nil;
 
 - (void)windowWillClose:(NSNotification *)aNotification
 {
-	if(sharedInstance != nil)
+	if(prefsSharedInstance != nil)
 	{
-		[sharedInstance release];
-		sharedInstance = nil;
+		[prefsSharedInstance release];
+		prefsSharedInstance = nil;
 	}
 }
 
@@ -227,47 +227,6 @@ static iFolderPrefsController *sharedInstance = nil;
 	[toolbar setAutosavesConfiguration:NO];
 	[[self window] setToolbar:toolbar];
 }
-
-
-/*
-	This is old binding code that I didn't want to loose so it's down here
-
-    NSMutableDictionary *bindingOptions = [NSMutableDictionary dictionary];
-    	
-	// binding options for "name"
-	[bindingOptions setObject:@"No Name" forKey:@"NSNullPlaceholder"];
-
-	// binding for "price" column
-    NSTableColumn *accountsColumn = [accountView tableColumnWithIdentifier:@"Accounts"];
-
-    [accountsColumn bind:@"value" toObject:[[NSApp delegate] DomainsController]
-	  withKeyPath:@"arrangedObjects.properties.Name" options:bindingOptions];
-
-	// binding for selected "Name" field
-    [accountName bind:@"value" toObject:[[NSApp delegate] DomainsController]
-				 withKeyPath:@"selection.properties.Name" options:bindingOptions];
-
-
-	// binding for selected "Host" field
-    [host bind:@"value" toObject:[[NSApp delegate] DomainsController]
-				 withKeyPath:@"selection.properties.Host" options:bindingOptions];	  	
-    [host bind:@"enabled" toObject:[[NSApp delegate] DomainsController]
-				 withKeyPath:@"selection.properties.CanEditHost" options:bindingOptions];	
-
-
-	// binding for selected "UserName" field
-    [userName bind:@"value" toObject:[[NSApp delegate] DomainsController]
-				 withKeyPath:@"selection.properties.UserName" options:bindingOptions];	
-    [userName bind:@"enabled" toObject:[[NSApp delegate] DomainsController]
-				 withKeyPath:@"selection.properties.CanEditUserName" options:bindingOptions];	
-
-
-	// binding for selected "Password" field
-    [password bind:@"value" toObject:[[NSApp delegate] DomainsController]
-				 withKeyPath:@"selection.properties.Password" options:bindingOptions];	
-    [password bind:@"enabled" toObject:[[NSApp delegate] DomainsController]
-				 withKeyPath:@"selection.properties.CanEditPassword" options:bindingOptions];	
-*/
 
 
 

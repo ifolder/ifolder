@@ -55,6 +55,7 @@ static iFolderData *sharedInstance = nil;
 			
 			keyedDomains = [[NSMutableDictionary alloc] init];
 			keyediFolders = [[NSMutableDictionary alloc] init];
+			keyedSubscriptions = [[NSMutableDictionary alloc] init];
 		}
 		return sharedInstance;
 	}
@@ -74,6 +75,7 @@ static iFolderData *sharedInstance = nil;
 	[instanceLock release];
 	[keyediFolders release];
 	[keyedDomains release];
+	[keyedSubscriptions release];
 	
 	[super dealloc];
 }
@@ -121,12 +123,19 @@ static iFolderData *sharedInstance = nil;
 
 		
 		[keyediFolders removeAllObjects];
+		[keyedSubscriptions removeAllObjects];
 		NSArray *newiFolders = [ifolderService GetiFolders];
 		for(objCount = 0; objCount < [newiFolders count]; objCount++)
 		{
 			iFolder *newiFolder = [newiFolders objectAtIndex:objCount];
 			
-			[keyediFolders setObject:newiFolder forKey:[newiFolder ID] ];			
+			if([newiFolder IsSubscription])
+			{
+				[keyediFolders setObject:newiFolder forKey:[newiFolder CollectionID]];
+				[keyedSubscriptions setObject:[newiFolder CollectionID] forKey:[newiFolder ID]];
+			}
+			else
+				[keyediFolders setObject:newiFolder forKey:[newiFolder ID] ];			
 		}
 	}
 	@catch (NSException *e)
@@ -136,6 +145,24 @@ static iFolderData *sharedInstance = nil;
 	}
 
 	[instanceLock unlock];
+}
+
+
+
+
+//===================================================================
+// getiFolderID
+// Gets the iFolder ID for a subscription we've added
+//===================================================================
+-(NSString *)getiFolderID:(NSString *)subscriptionID
+{
+	NSString *ifolderID = nil;
+	[instanceLock lock];
+
+	ifolderID = [[keyedSubscriptions objectForKey:subscriptionID] retain];
+
+	[instanceLock unlock];
+	return ifolderID;
 }
 
 
@@ -189,14 +216,234 @@ static iFolderData *sharedInstance = nil;
 {
 	iFolder *ifolder = nil;
 	[instanceLock lock];
+	NSLog(@"iFolderData getiFolder called for iFolder %@", iFolderID);
 
 	ifolder = [[keyediFolders objectForKey:iFolderID] retain];
-	if( (ifolder != nil) && (shouldUpdate) )
+	if( (ifolder == nil) || (shouldUpdate) )
 	{
 		@try
 		{
-			iFolder *newiFolder = [[ifolderService GetiFolder:[ifolder ID]] retain];
-			[ifolder setProperties:[newiFolder properties]];
+			iFolder *newiFolder = [[ifolderService GetiFolder:iFolderID] retain];
+			if(ifolder != nil)
+			{
+				[ifolder setProperties:[newiFolder properties]];
+			}
+			else
+			{
+				ifolder = [newiFolder retain];
+
+				if([newiFolder IsSubscription])
+				{
+					[keyediFolders setObject:newiFolder forKey:[newiFolder CollectionID] ];
+					[keyedSubscriptions setObject:[newiFolder CollectionID] forKey:[newiFolder ID]];
+				}
+				else
+					[keyediFolders setObject:newiFolder forKey:[newiFolder ID] ];
+			}
+
+			[newiFolder release];
+		}
+		@catch (NSException *e)
+		{
+			NSLog(@"*********Exception getting iFolder");
+			NSLog(@"%@ :: %@", [e name], [e reason]);
+		}
+	}
+
+	[instanceLock unlock];
+
+	return [ifolder autorelease];
+}
+
+
+
+
+//===================================================================
+// removeiFolder
+// removes an iFolder that was previously here
+//===================================================================
+-(void)removeiFolder:(NSString *)iFolderID
+{
+	[instanceLock lock];
+	NSString *realID = iFolderID;
+	
+	iFolder *ifolder = [keyediFolders objectForKey:realID];
+	if(ifolder == nil)
+	{
+		realID = [keyedSubscriptions objectForKey:iFolderID];
+		if(realID != nil)
+		{
+			ifolder = [keyediFolders objectForKey:realID];
+			// remove the subscription because we are about to
+			// remove the iFolder
+			[keyedSubscriptions removeObjectForKey:iFolderID];
+		}
+	}
+	if(ifolder != nil)
+	{
+		[keyediFolders removeObjectForKey:realID];
+	}
+
+	[instanceLock unlock];
+}
+
+
+
+
+//===================================================================
+// addiFolder
+// adds an iFolder
+//===================================================================
+-(iFolder *)createiFolder:(NSString *)path inDomain:(NSString *)domainID
+{
+	iFolder *newiFolder = nil;
+
+	[instanceLock lock];
+
+	@try
+	{
+		iFolder *newiFolder = [[ifolderService CreateiFolder:path InDomain:domainID] retain];
+		[keyediFolders setObject:newiFolder forKey:[newiFolder ID] ];
+	}
+	@catch(NSException *ex)
+	{
+		[instanceLock unlock];
+		[ex raise];
+	}
+	
+	[instanceLock unlock];
+
+	return newiFolder;
+}
+
+
+
+
+//===================================================================
+// deleteiFolder
+// deletes the specified iFolder
+//===================================================================
+-(void)deleteiFolder:(NSString *)ifolderID
+{	
+	[instanceLock lock];
+
+	@try
+	{
+		[ifolderService DeleteiFolder:ifolderID];
+		[self removeiFolder:ifolderID];
+	}
+	@catch(NSException *ex)
+	{
+		[instanceLock unlock];
+		[ex raise];
+	}
+	
+	[instanceLock unlock];
+}
+
+
+
+//===================================================================
+// deleteiFolder
+// deletes the specified iFolder
+//===================================================================
+- (void)acceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)domainID toPath:(NSString *)localPath
+{
+	[instanceLock lock];
+	
+	NSString *localID = [keyedSubscriptions objectForKey:iFolderID];
+	NSAssert( (localID != nil), @"iFolderID not found for subscription");
+	
+	@try
+	{
+		iFolder *newiFolder = [ifolderService AcceptiFolderInvitation:iFolderID InDomain:domainID toPath:localPath];
+		if([[newiFolder ID] compare:iFolderID] != 0)
+		{
+			[keyedSubscriptions removeObjectForKey:iFolderID];
+			if([newiFolder IsSubscription])
+				[keyedSubscriptions setObject:[newiFolder CollectionID] forKey:[newiFolder ID]];
+		}
+
+		iFolder *curiFolder = [keyediFolders objectForKey:localID];
+		[curiFolder setProperties:[newiFolder properties]];
+	}
+	@catch (NSException *e)
+	{
+		[instanceLock unlock];
+		[e raise];
+	}
+	[instanceLock unlock];
+}
+
+
+
+
+//===================================================================
+// deleteiFolder
+// deletes the specified iFolder
+//===================================================================
+- (void)revertiFolder:(NSString *)iFolderID
+{
+	[instanceLock lock];
+
+	iFolder *curiFolder = [keyediFolders objectForKey:iFolderID];
+	NSAssert( (curiFolder != nil), @"iFolderID did not match an existing iFolder");
+
+	iFolder *revertediFolder;
+	@try
+	{
+		revertediFolder = [ifolderService RevertiFolder:iFolderID];
+
+		[curiFolder setProperties:[revertediFolder properties]];
+
+		if([revertediFolder IsSubscription])
+		{
+			[keyedSubscriptions setObject:[revertediFolder CollectionID] forKey:[revertediFolder ID]];
+		}
+	}
+	@catch (NSException *e)
+	{
+		[instanceLock unlock];
+		[e raise];
+	}
+	[instanceLock unlock];
+}
+
+
+
+//===================================================================
+// getAvailableiFolder
+// returns the iFolder (invitation) for the specified ID
+//===================================================================
+-(iFolder *)getAvailableiFolder:(NSString *)iFolderID 
+									inCollection:(NSString *)collectionID
+									updateData:(BOOL)shouldUpdate
+{
+	iFolder *ifolder = nil;
+	[instanceLock lock];
+
+	ifolder = [[keyediFolders objectForKey:iFolderID] retain];
+	if( (ifolder == nil) || (shouldUpdate) )
+	{
+		@try
+		{
+			iFolder *newiFolder = [[ifolderService GetAvailableiFolder:iFolderID
+													inCollection:collectionID] retain];
+			if(ifolder != nil)
+				[ifolder setProperties:[newiFolder properties]];
+			else
+			{
+				ifolder = [newiFolder retain];
+
+				if([newiFolder IsSubscription])
+				{
+					[keyediFolders setObject:newiFolder forKey:[newiFolder CollectionID] ];
+					[keyedSubscriptions setObject:[newiFolder CollectionID] forKey:[newiFolder ID]];
+				}
+				else
+					[keyediFolders setObject:newiFolder forKey:[newiFolder ID] ];
+			}
+
 			[newiFolder release];
 		}
 		@catch (NSException *e)
