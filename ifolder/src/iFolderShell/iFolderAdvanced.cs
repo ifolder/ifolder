@@ -610,7 +610,7 @@ namespace Novell.iFolder.iFolderCom
 			return rights;
 		}
 
-		private void ProcessChanges()
+		private void processChanges()
 		{
 			// Change the pointer to an hourglass.
 			Cursor = Cursors.WaitCursor;
@@ -705,7 +705,8 @@ namespace Novell.iFolder.iFolderCom
 			}
 
 			// Update the refresh interval.
-			ifolder.RefreshInterval = (int)syncInterval.Value;
+			if (ifolder.RefreshInterval != (int)syncInterval.Value)
+				ifolder.RefreshInterval = (int)syncInterval.Value;
 
 			// Restore the cursor.
 			Cursor = Cursors.Default;
@@ -1236,7 +1237,7 @@ namespace Novell.iFolder.iFolderCom
 
 		private void ok_Click(object sender, System.EventArgs e)
 		{
-			this.ProcessChanges();
+			this.processChanges();
 			this.Close();
 		}
 
@@ -1277,10 +1278,15 @@ namespace Novell.iFolder.iFolderCom
 
 		private void apply_Click(object sender, System.EventArgs e)
 		{
-			this.ProcessChanges();
+			this.processChanges();
 		
 			// Disable the apply button.
 			this.apply.Enabled = false;
+
+			// Reload the collection.
+			string id = ifolder.ID;
+			ifolder = null;
+			ifolder = iFolderManager.Connect().GetiFolderById(id);
 		}
 
 		private void cancel_Click(object sender, System.EventArgs e)
