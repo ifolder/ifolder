@@ -2026,9 +2026,14 @@ namespace Novell.FormsTrayApp
 					addiFolderToListView(ifolder);
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
-				MessageBox.Show(resourceManager.GetString("iFolderError"), resourceManager.GetString("iFolderErrorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+				mmb.Message = resourceManager.GetString("iFolderError");
+				mmb.Caption = resourceManager.GetString("iFolderErrorTitle");
+				mmb.Details = ex.Message;
+				mmb.MessageIcon = SystemIcons.Information;
+				mmb.ShowDialog();
 			}
 
 			iFolderView.EndUpdate();
@@ -2052,9 +2057,12 @@ namespace Novell.FormsTrayApp
 			{
 				ifWebService.SynciFolderNow(iFolderID);
 			}
-			catch
+			catch (Exception ex)
 			{
-				MessageBox.Show(resourceManager.GetString("syncError"));
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+				mmb.Message = resourceManager.GetString("syncError");
+				mmb.Details = ex.Message;
+				mmb.ShowDialog();
 			}
 		}
 		#endregion
@@ -2136,9 +2144,12 @@ namespace Novell.FormsTrayApp
 				proxy.Text = ifSettings.ProxyHost;
 				port.Value = (decimal)ifSettings.ProxyPort;
 			}
-			catch
+			catch (Exception ex)
 			{
-				MessageBox.Show(resourceManager.GetString("iFolderDataError"));
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+				mmb.Message = resourceManager.GetString("iFolderDataError");
+				mmb.Details = ex.Message;
+				mmb.ShowDialog();
 			}
 		}
 
@@ -2157,9 +2168,12 @@ namespace Novell.FormsTrayApp
 				{
 					ifWebService.SetDefaultSyncInterval((int)defaultInterval.Value);
 				}
-				catch
+				catch (Exception ex)
 				{
-					MessageBox.Show(resourceManager.GetString("saveSyncError"));
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+					mmb.Message = resourceManager.GetString("saveSyncError");
+					mmb.Details = ex.Message;
+					mmb.ShowDialog();
 				}
 			}
 			else if (proxy.Focused || port.Focused)
@@ -2169,9 +2183,12 @@ namespace Novell.FormsTrayApp
 					// Save the proxy settings.
 					ifWebService.SetupProxy(proxy.Text, (int)port.Value);
 				}
-				catch
+				catch (Exception ex)
 				{
-					MessageBox.Show(resourceManager.GetString("saveProxyError"));
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+					mmb.Message = resourceManager.GetString("saveProxyError");
+					mmb.Details = ex.Message;
+					mmb.ShowDialog();
 				}
 			}
 		}
@@ -2208,9 +2225,12 @@ namespace Novell.FormsTrayApp
 			{
 				Process.Start(helpPath);
 			}
-			catch
+			catch (Exception ex)
 			{
-				MessageBox.Show(resourceManager.GetString("helpFileError") + "\n" + helpPath);
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+				mmb.Message = resourceManager.GetString("helpFileError") + "\n" + helpPath;
+				mmb.Details = ex.Message;
+				mmb.ShowDialog();
 			}
 		}
 
@@ -2262,9 +2282,12 @@ namespace Novell.FormsTrayApp
 			{
 				Process.Start(ifolder.UnManagedPath);
 			}
-			catch
+			catch (Exception ex)
 			{
-				MessageBox.Show(string.Format(resourceManager.GetString("iFolderOpenError"), ifolder.Name));
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+				mmb.Message = string.Format(resourceManager.GetString("iFolderOpenError"), ifolder.Name);
+				mmb.Details = ex.Message;
+				mmb.ShowDialog();
 			}
 		}
 
@@ -2294,9 +2317,12 @@ namespace Novell.FormsTrayApp
 
 				updateListViewItem(lvi);
 			}
-			catch
+			catch (Exception ex)
 			{		
-				MessageBox.Show(resourceManager.GetString("iFolderRevertError"));
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+				mmb.Message = resourceManager.GetString("iFolderRevertError");
+				mmb.Details = ex.Message;
+				mmb.ShowDialog();
 			}
 
 			Cursor.Current = Cursors.Default;
@@ -2359,9 +2385,12 @@ namespace Novell.FormsTrayApp
 							MessageBox.Show(resourceManager.GetString("invalidFolder"));
 						}
 					}
-					catch
+					catch (Exception ex)
 					{
-						MessageBox.Show(resourceManager.GetString("iFolderCreateError"));
+						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+						mmb.Message = resourceManager.GetString("iFolderCreateError");
+						mmb.Details = ex.Message;
+						mmb.ShowDialog();
 					}
 				}
 				else
@@ -2414,9 +2443,12 @@ namespace Novell.FormsTrayApp
 				ifWebService.DeleteiFolder(ifolder.ID);
 				lvi.Remove();
 			}
-			catch
+			catch (Exception ex)
 			{
-				MessageBox.Show(resourceManager.GetString("subscriptionRemoveError"));
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+				mmb.Message = resourceManager.GetString("subscriptionRemoveError");
+				mmb.Details = ex.Message;
+				mmb.ShowDialog();
 			}
 		}
 		#endregion
@@ -2462,9 +2494,12 @@ namespace Novell.FormsTrayApp
 				// Save the display confirmation setting.
 				ifWebService.SetDisplayConfirmation(displayConfirmation.Checked);
 			}
-			catch
+			catch (Exception ex)
 			{
-				MessageBox.Show(resourceManager.GetString("saveConfirmationError"));
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+				mmb.Message = resourceManager.GetString("saveConfirmationError");
+				mmb.Details = ex.Message;
+				mmb.ShowDialog();
 			}
 		}
 
@@ -2485,9 +2520,12 @@ namespace Novell.FormsTrayApp
 					ifWebService.SetDefaultSyncInterval((int)defaultInterval.Value);
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
-				MessageBox.Show(resourceManager.GetString("saveSyncError"));
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+				mmb.Message = resourceManager.GetString("saveSyncError");
+				mmb.Details = ex.Message;
+				mmb.ShowDialog();
 			}
 		}
 
@@ -2497,9 +2535,12 @@ namespace Novell.FormsTrayApp
 			{
 				ifWebService.SetDefaultSyncInterval((int)defaultInterval.Value);
 			}
-			catch
+			catch (Exception ex)
 			{
-				MessageBox.Show(resourceManager.GetString("saveSyncError"));
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+				mmb.Message = resourceManager.GetString("saveSyncError");
+				mmb.Details = ex.Message;
+				mmb.ShowDialog();
 			}
 		}
 
@@ -2514,9 +2555,12 @@ namespace Novell.FormsTrayApp
 				{
 					ifWebService.RemoveProxy();
 				}
-				catch
+				catch (Exception ex)
 				{
-					MessageBox.Show(resourceManager.GetString("saveProxyError"));
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+					mmb.Message = resourceManager.GetString("saveProxyError");
+					mmb.Details = ex.Message;
+					mmb.ShowDialog();
 				}
 			}
 		}
@@ -2528,9 +2572,12 @@ namespace Novell.FormsTrayApp
 				// Save the proxy settings.
 				ifWebService.SetupProxy(proxy.Text, (int)port.Value);
 			}
-			catch
+			catch (Exception ex)
 			{
-				MessageBox.Show(resourceManager.GetString("saveProxyError"));
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+				mmb.Message = resourceManager.GetString("saveProxyError");
+				mmb.Details = ex.Message;
+				mmb.ShowDialog();
 			}
 		}
 
@@ -2543,7 +2590,10 @@ namespace Novell.FormsTrayApp
 			}
 			catch
 			{
-				MessageBox.Show(resourceManager.GetString("saveProxyError"));
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+				mmb.Message = resourceManager.GetString("saveProxyError");
+				mmb.Details = ex.Message;
+				mmb.ShowDialog();
 			}
 		}
 		#endregion
@@ -2640,39 +2690,47 @@ namespace Novell.FormsTrayApp
 
 		private void global_collectionSyncHandler(SimiasEventArgs args)
 		{
-			CollectionSyncEventArgs syncEventArgs = args as CollectionSyncEventArgs;
-
-			string message = null;
-			switch (syncEventArgs.Action)
+			try
 			{
-				case Action.StartSync:
-				{
-					message = string.Format(resourceManager.GetString("synciFolder"), syncEventArgs.Name);
-					status.Text = message;
-					break;
-				}
-				case Action.StopSync:
-				{
-					message = string.Format(syncEventArgs.Successful ? resourceManager.GetString("syncSucceeded") : resourceManager.GetString("syncFailed"), syncEventArgs.Name);
-					status.Text = resourceManager.GetString("status.Text");
-					break;
-				}
-			}
+				CollectionSyncEventArgs syncEventArgs = args as CollectionSyncEventArgs;
 
-			// Add message to log.
-			addMessageToLog(syncEventArgs.TimeStamp, message);
+				string message = null;
+				switch (syncEventArgs.Action)
+				{
+					case Action.StartSync:
+					{
+						message = string.Format(resourceManager.GetString("synciFolder"), syncEventArgs.Name);
+						status.Text = message;
+						break;
+					}
+					case Action.StopSync:
+					{
+						message = string.Format(syncEventArgs.Successful ? resourceManager.GetString("syncSucceeded") : resourceManager.GetString("syncFailed"), syncEventArgs.Name);
+						status.Text = resourceManager.GetString("status.Text");
+						break;
+					}
+				}
+
+				// Add message to log.
+				addMessageToLog(syncEventArgs.TimeStamp, message);
+			}
+			catch {}
 		}
 
 		private void global_fileSyncHandler(SimiasEventArgs args)
 		{
-			FileSyncEventArgs syncEventArgs = args as FileSyncEventArgs;
+			try
+			{
+				FileSyncEventArgs syncEventArgs = args as FileSyncEventArgs;
 
-			status.Text = string.Format(resourceManager.GetString("syncFile"), syncEventArgs.Name);
+				status.Text = string.Format(resourceManager.GetString("syncFile"), syncEventArgs.Name);
 
-			// TODO: may want to include the direction as part of the message.
+				// TODO: may want to include the direction as part of the message.
 
-			// Add message to log.
-			addMessageToLog(syncEventArgs.TimeStamp, string.Format(resourceManager.GetString("syncFileDetails"), syncEventArgs.Name, syncEventArgs.Size, syncEventArgs.SizeToSync, syncEventArgs.SizeRemaining));
+				// Add message to log.
+				addMessageToLog(syncEventArgs.TimeStamp, string.Format(resourceManager.GetString("syncFileDetails"), syncEventArgs.Name, syncEventArgs.Size, syncEventArgs.SizeToSync, syncEventArgs.SizeRemaining));
+			}
+			catch {}
 		}
 		#endregion
 

@@ -312,10 +312,6 @@ namespace Novell.FormsTrayApp
 
 					globalProperties = new GlobalProperties(ifWebService, eventClient);
 				}
-				catch (WebException ex)
-				{
-					ShutdownTrayApp(ex);
-				}
 				catch (Exception ex)
 				{
 					ShutdownTrayApp(ex);
