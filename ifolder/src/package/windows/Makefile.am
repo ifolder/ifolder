@@ -23,5 +23,5 @@ clean-local:
 	cd ShutdowniFolder; rm -rf ShutdowniFolder.exe bin obj *.log *.suo
 
 maintainer-clean-local:
-	rm -f Makefile.in Makefile
+	rm -f Makefile.in
 

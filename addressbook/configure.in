@@ -11,7 +11,7 @@ APIDOCDIR="$SRCDIR/api-doc"
 
 COMMON_SUBDIRS=
 LINUX_SUBDIRS="GtkAddrBook"
-WINDOWS_SUBDIRS="FormsBookLib FormsAddrBook"
+WINDOWS_SUBDIRS="FormsBookLib FormsAddrBook ABGui"
 
 #
 # Check for a valid operating system
@@ -208,9 +208,6 @@ AC_SUBST(TLBX)
 AC_SUBST(TOOLDIR)
 AC_SUBST(WINDOWS_SUBDIRS)
 
-# We are currently not building ABGui but want maintainer-clean to clean it up
-NON_PLATFORM_SUBDIRS="$NON_PLATFORM_SUBDIRS ABGui"
-
 #
 # Run standard macros
 #
@@ -310,4 +307,5 @@ src/ABGui/Makefile
 src/package/Makefile
 src/package/windows/Makefile
 src/package/linux/Makefile
+src/package/linux/addressbook.spec
 ])

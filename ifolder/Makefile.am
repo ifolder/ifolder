@@ -9,7 +9,7 @@ package package-clean package-install package-uninstall:
 	$(MAKE) -C src $@
 
 maintainer-clean-local:
-	rm -f configure Makefile.in simias-*.tar.gz
+	rm -f configure Makefile.in ifolder-*.tar.gz
 	rm -f aclocal.m4
 	rm -f config.guess config.sub
 	rm -f ltmain.sh libtool

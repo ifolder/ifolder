@@ -303,4 +303,5 @@ src/InviteAgent/Makefile
 src/package/Makefile
 src/package/windows/Makefile
 src/package/linux/Makefile
+src/package/linux/simias.spec
 ])

@@ -8,26 +8,31 @@ abgui_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin
 
 EXTRA_DIST = $(abgui_CSFILES)
 
-all: abgui.exe
+#TARGETS = abgui.exe
+# do not build
+TARGETS = 
+
+all: $(TARGETS)
 
 abgui.exe: $(abgui_CSFILES) $(abgui_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(abgui_FLAGS) $(abgui_LIBS:%=/r:%) $(abgui_LIBPATH:%=/lib:%) $(abgui_RESOURCES:%=$(ICON_FLAG)%) $(abgui_CSFILES_CSC) /doc:abgui.xml
 
 install-exec-local: abgui.exe
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) abgui.exe $(DESTDIR)$(bindir)
+#	$(mkinstalldirs) $(DESTDIR)$(bindir)
+#	$(INSTALL_PROGRAM) $(TARGETS) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f abgui.exe
+#	cd $(DESTDIR)$(bindir); rm -f abgui.exe
     
 installcheck-local: install
 	
-CLEAN_FILES = abgui.exe abgui.xml
+CLEAN_FILES = $(TARGETS) abgui.xml
 
 clean-local:
 	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
     
 distclean-local: clean
+	rm -f Makefile
 
 maintainer-clean-local:
 	rm -f Makefile.in
