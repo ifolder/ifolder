@@ -336,8 +336,6 @@ namespace Novell.FormsTrayApp
 
 		private void StopShell()
 		{
-			Process process;
-			
 		}
 
 		private void StartShell()

@@ -3320,7 +3320,7 @@
 		<value>Unable to Connect to iFolder Server</value>
 	</data>
 	<data name="serverConnectError">
-		<value>A error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.</value>
+		<value>An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.</value>
 	</data>
 	<data name="saveSyncError">
 		<value>An error was encountered while saving the default sync interval.</value>

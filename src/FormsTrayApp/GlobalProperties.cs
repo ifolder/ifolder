@@ -934,6 +934,7 @@ namespace Novell.FormsTrayApp
 			servers.Items.Add(domain);
 			servers.SelectedItem = domain;
 
+			// Initialize the domain list file.
 			domainList = Path.Combine(Application.StartupPath, "domain.list");
 			XmlDocument domainsDoc = new XmlDocument();
 
@@ -959,7 +960,7 @@ namespace Novell.FormsTrayApp
 					}
 				}
 			}
-			catch (XmlException e)
+			catch
 			{
 				domainsDoc.LoadXml("<domains></domains>");
 			}
