@@ -26,6 +26,7 @@
             OUTLETS = {
                 domainsController = NSArrayController; 
                 ifoldersController = NSArrayController; 
+                logController = NSArrayController; 
             }; 
             SUPERCLASS = NSWindowController; 
         }, 

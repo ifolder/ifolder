@@ -24,6 +24,9 @@
 #import <Cocoa/Cocoa.h>
 #import <iFolderService.h>
 
+#ifndef __MAIN_WINDOW_CONTROLLER
+#define __MAIN_WINDOW_CONTROLLER
+
 
 // Forward Declarations
 @class LoginWindowController;
@@ -33,9 +36,11 @@
 	LoginWindowController			*loginController;
 	iFolderService					*webService;
 	NSMutableArray					*domains;
-	NSMutableArray					*ifolders;	
+	NSMutableArray					*ifolders;
+	NSMutableArray					*synclog;
     IBOutlet NSArrayController		*ifoldersController;
     IBOutlet NSArrayController		*domainsController;
+	IBOutlet NSArrayController		*logController;
 	
 	iFolder *selectediFolder;	
 }
@@ -53,6 +58,11 @@
 
 - (void)addDomain:(iFolderDomain *)newDomain;
 - (void)addiFolder:(iFolder *)newiFolder;
+- (void)addLog:(NSString *)entry;
 
+- (void)initializeSimiasEvents;
 
 @end
+
+#endif	// __MAIN_WINDOW_CONTROLLER
+
