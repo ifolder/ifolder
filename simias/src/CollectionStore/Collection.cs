@@ -1129,13 +1129,6 @@ namespace Simias.Storage
 					}
 					else if ( IsBaseType( node, NodeTypes.MemberType ) )
 					{
-						// Make sure that it is not a special read-only type of member.
-						Member member = node as Member;
-						if ( ( member != null ) && member.IsProxyMember )
-						{
-							throw new CollectionStoreException( "Cannot commit proxy member objects" );
-						}
-
 						// Administrative access needs to be checked because collection membership has changed.
 						doAdminCheck = true;
 

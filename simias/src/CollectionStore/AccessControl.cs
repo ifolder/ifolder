@@ -320,30 +320,20 @@ namespace Simias.Storage
 						}
 					}
 
-					if ( createMember || collection.IsProxy )
+					if ( createMember )
 					{
-						Access.Rights rights = createMember ? Access.Rights.Admin : Access.Rights.ReadOnly;
-
 						// If the userID is equal to the Identity ID, then the domain is the local workgroup
 						// and the public key must be used.
 						if ( userID == identity.ID )
 						{
-							member = new Member( userName, userID, rights, identity.PublicKey );
+							member = new Member( userName, userID, Access.Rights.Admin, identity.PublicKey );
 						}
 						else
 						{
-							member = new Member( userName, userID, rights );
+							member = new Member( userName, userID, Access.Rights.Admin );
 						}
 
-						// Proxy members can never be the owner.
-						if ( createMember )
-						{
-							member.IsOwner = true;
-						}
-						else
-						{
-							member.IsProxyMember = true;
-						}
+						member.IsOwner = true;
 					}
 					else
 					{

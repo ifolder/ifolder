@@ -104,15 +104,9 @@ namespace Novell.iFolder.Web
 				(collection.Domain == Simias.Storage.Domain.WorkGroupDomainID);
 			this.HasConflicts = collection.HasCollisions();
 
-			if(!collection.IsProxy)
-			{
-				Member tmpMember = collection.GetCurrentMember();
-				if(tmpMember != null)
-				{
-					this.CurrentUserID = tmpMember.UserID;
-					this.CurrentUserRights = tmpMember.Rights.ToString();
-				}
-			}
+			Member tmpMember = collection.GetCurrentMember();
+			this.CurrentUserID = tmpMember.UserID;
+			this.CurrentUserRights = tmpMember.Rights.ToString();
 		}
 
 

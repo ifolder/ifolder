@@ -102,16 +102,11 @@ namespace Novell.iFolder.Web
 				DefaultPOBoxID = poBox.ID;
 			}
 
-			// If the LocalIncarnation number is zero, this collection is a
-			// proxy and there is no current member yet.
 			Roster roster = store.GetRoster(DefaultDomainID);
-			if(!roster.IsProxy)
+			if ( roster != null )
 			{
 				Member currentMember = roster.GetCurrentMember();
-				if(currentMember != null)
-				{
-					CurrentUserName = currentMember.Name;
-				}
+				CurrentUserName = currentMember.Name;
 			}
 		}
 

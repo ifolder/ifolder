@@ -39,16 +39,6 @@ namespace Simias.Storage
 		/// Cached access control entry that is used when validating access check operations.
 		/// </summary>
 		private AccessControlEntry ace;
-
-		/// <summary>
-		/// Used to indicate if this member is a temporary proxy member.
-		/// If the collection that this member belongs to is in a proxy state, and GetCurrentMember()
-		/// is called, a special member with read only rights is created. This member will 
-		/// not be committable and should be treated as a read-only object.
-		/// This is to allow the current member to be retrieved before the collection has been synced
-		/// to the store.
-		/// </summary>
-		private bool isProxyMember = false;
 		#endregion
 
 		#region Properties
@@ -76,15 +66,6 @@ namespace Simias.Storage
 		internal AccessControlEntry ValidateAce
 		{
 			get { return ace; }
-		}
-
-		/// <summary>
-		/// Gets or sets whether this member is a read-only instance.
-		/// </summary>
-		internal bool IsProxyMember
-		{
-			get { return isProxyMember; }
-			set { isProxyMember = value; }
 		}
 
 		/// <summary>
