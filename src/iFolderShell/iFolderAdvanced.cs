@@ -63,7 +63,9 @@ namespace Novell.iFolderCom
 		private iFolderWebService ifWebService;
 		private ArrayList removedList;
 		private string loadPath;
-//		private Control currentControl;
+		private Control currentControl;
+		private Control firstControl;
+		private Control lastControl;
 		private System.Windows.Forms.ToolTip toolTip1;
 		private System.Windows.Forms.HelpProvider helpProvider1;
 		private System.Windows.Forms.GroupBox groupBox1;
@@ -125,7 +127,9 @@ namespace Novell.iFolderCom
 			okDelta = ok.Top - tabControl1.Bottom;
 			initTabTop = tabControl1.Top;
 			initHeight = this.Height;
-//			currentControl = this;
+
+			currentControl = firstControl = this.ifolders;
+			lastControl = this.apply;
 		}
 
 		/// <summary>
@@ -169,6 +173,7 @@ namespace Novell.iFolderCom
 			this.label6 = new System.Windows.Forms.Label();
 			this.autoSync = new System.Windows.Forms.CheckBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.gaugeChart = new Novell.Forms.Controls.GaugeChart();
 			this.label7 = new System.Windows.Forms.Label();
 			this.total = new System.Windows.Forms.Label();
 			this.label12 = new System.Windows.Forms.Label();
@@ -205,7 +210,6 @@ namespace Novell.iFolderCom
 			this.ifolders = new System.Windows.Forms.ComboBox();
 			this.ifolderLabel = new System.Windows.Forms.Label();
 			this.open = new System.Windows.Forms.Button();
-			this.gaugeChart = new Novell.Forms.Controls.GaugeChart();
 			this.tabControl1.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -223,8 +227,7 @@ namespace Novell.iFolderCom
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
 			this.tabControl1.Size = new System.Drawing.Size(424, 416);
-			this.tabControl1.TabIndex = 0;
-			this.tabControl1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tabControl1_KeyDown);
+			this.tabControl1.TabIndex = 4;
 			// 
 			// tabGeneral
 			// 
@@ -247,7 +250,7 @@ namespace Novell.iFolderCom
 			this.groupBox1.Location = new System.Drawing.Point(8, 8);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Size = new System.Drawing.Size(400, 184);
-			this.groupBox1.TabIndex = 4;
+			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Synchronization";
 			// 
@@ -261,7 +264,7 @@ namespace Novell.iFolderCom
 			this.groupBox4.Location = new System.Drawing.Point(16, 104);
 			this.groupBox4.Name = "groupBox4";
 			this.groupBox4.Size = new System.Drawing.Size(368, 72);
-			this.groupBox4.TabIndex = 9;
+			this.groupBox4.TabIndex = 4;
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "Statistics";
 			// 
@@ -271,14 +274,14 @@ namespace Novell.iFolderCom
 			this.objectCount.Name = "objectCount";
 			this.objectCount.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.objectCount.Size = new System.Drawing.Size(80, 16);
-			this.objectCount.TabIndex = 6;
+			this.objectCount.TabIndex = 3;
 			// 
 			// label2
 			// 
 			this.label2.Location = new System.Drawing.Point(8, 24);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(184, 16);
-			this.label2.TabIndex = 2;
+			this.label2.TabIndex = 0;
 			this.label2.Text = "Amount to upload:";
 			// 
 			// label8
@@ -286,7 +289,7 @@ namespace Novell.iFolderCom
 			this.label8.Location = new System.Drawing.Point(8, 48);
 			this.label8.Name = "label8";
 			this.label8.Size = new System.Drawing.Size(184, 16);
-			this.label8.TabIndex = 1;
+			this.label8.TabIndex = 2;
 			this.label8.Text = "Files/folders to synchronize:";
 			// 
 			// byteCount
@@ -295,7 +298,7 @@ namespace Novell.iFolderCom
 			this.byteCount.Name = "byteCount";
 			this.byteCount.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.byteCount.Size = new System.Drawing.Size(80, 16);
-			this.byteCount.TabIndex = 7;
+			this.byteCount.TabIndex = 1;
 			// 
 			// label5
 			// 
@@ -344,7 +347,7 @@ namespace Novell.iFolderCom
 			this.autoSync.Location = new System.Drawing.Point(16, 56);
 			this.autoSync.Name = "autoSync";
 			this.autoSync.Size = new System.Drawing.Size(160, 16);
-			this.autoSync.TabIndex = 0;
+			this.autoSync.TabIndex = 1;
 			this.autoSync.Text = "Sync to host every:";
 			// 
 			// groupBox3
@@ -368,16 +371,23 @@ namespace Novell.iFolderCom
 			this.groupBox3.Location = new System.Drawing.Point(8, 208);
 			this.groupBox3.Name = "groupBox3";
 			this.groupBox3.Size = new System.Drawing.Size(400, 144);
-			this.groupBox3.TabIndex = 12;
+			this.groupBox3.TabIndex = 1;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Disk space";
+			// 
+			// gaugeChart
+			// 
+			this.gaugeChart.Location = new System.Drawing.Point(312, 24);
+			this.gaugeChart.Name = "gaugeChart";
+			this.gaugeChart.Size = new System.Drawing.Size(16, 72);
+			this.gaugeChart.TabIndex = 9;
 			// 
 			// label7
 			// 
 			this.label7.Location = new System.Drawing.Point(264, 80);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(24, 16);
-			this.label7.TabIndex = 14;
+			this.label7.TabIndex = 8;
 			this.label7.Text = "MB";
 			// 
 			// total
@@ -386,14 +396,14 @@ namespace Novell.iFolderCom
 			this.total.Name = "total";
 			this.total.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.total.Size = new System.Drawing.Size(88, 16);
-			this.total.TabIndex = 13;
+			this.total.TabIndex = 7;
 			// 
 			// label12
 			// 
 			this.label12.Location = new System.Drawing.Point(16, 80);
 			this.label12.Name = "label12";
 			this.label12.Size = new System.Drawing.Size(144, 16);
-			this.label12.TabIndex = 12;
+			this.label12.TabIndex = 6;
 			this.label12.Text = "Total space:";
 			// 
 			// limit
@@ -403,7 +413,7 @@ namespace Novell.iFolderCom
 			this.limit.Name = "limit";
 			this.limit.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.limit.Size = new System.Drawing.Size(160, 20);
-			this.limit.TabIndex = 1;
+			this.limit.TabIndex = 13;
 			this.limit.Text = "";
 			this.limit.TextChanged += new System.EventHandler(this.limit_TextChanged);
 			// 
@@ -413,7 +423,7 @@ namespace Novell.iFolderCom
 			this.setLimit.Location = new System.Drawing.Point(48, 114);
 			this.setLimit.Name = "setLimit";
 			this.setLimit.Size = new System.Drawing.Size(144, 16);
-			this.setLimit.TabIndex = 0;
+			this.setLimit.TabIndex = 12;
 			this.setLimit.Text = "Limit size to:";
 			this.setLimit.CheckedChanged += new System.EventHandler(this.setLimit_CheckedChanged);
 			// 
@@ -438,7 +448,7 @@ namespace Novell.iFolderCom
 			this.availableUnits.Location = new System.Drawing.Point(264, 32);
 			this.availableUnits.Name = "availableUnits";
 			this.availableUnits.Size = new System.Drawing.Size(24, 16);
-			this.availableUnits.TabIndex = 8;
+			this.availableUnits.TabIndex = 2;
 			this.availableUnits.Text = "MB";
 			// 
 			// available
@@ -447,14 +457,14 @@ namespace Novell.iFolderCom
 			this.available.Name = "available";
 			this.available.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.available.Size = new System.Drawing.Size(88, 16);
-			this.available.TabIndex = 7;
+			this.available.TabIndex = 1;
 			// 
 			// label9
 			// 
 			this.label9.Location = new System.Drawing.Point(16, 32);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(144, 16);
-			this.label9.TabIndex = 6;
+			this.label9.TabIndex = 0;
 			this.label9.Text = "Free space:";
 			// 
 			// usedUnits
@@ -462,7 +472,7 @@ namespace Novell.iFolderCom
 			this.usedUnits.Location = new System.Drawing.Point(264, 56);
 			this.usedUnits.Name = "usedUnits";
 			this.usedUnits.Size = new System.Drawing.Size(24, 16);
-			this.usedUnits.TabIndex = 4;
+			this.usedUnits.TabIndex = 5;
 			this.usedUnits.Text = "MB";
 			// 
 			// used
@@ -471,14 +481,14 @@ namespace Novell.iFolderCom
 			this.used.Name = "used";
 			this.used.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.used.Size = new System.Drawing.Size(88, 16);
-			this.used.TabIndex = 3;
+			this.used.TabIndex = 4;
 			// 
 			// label1
 			// 
 			this.label1.Location = new System.Drawing.Point(16, 56);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(144, 16);
-			this.label1.TabIndex = 2;
+			this.label1.TabIndex = 3;
 			this.label1.Text = "Used space:";
 			// 
 			// label4
@@ -486,7 +496,7 @@ namespace Novell.iFolderCom
 			this.label4.Location = new System.Drawing.Point(328, 114);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(24, 16);
-			this.label4.TabIndex = 5;
+			this.label4.TabIndex = 14;
 			this.label4.Text = "MB";
 			// 
 			// tabSharing
@@ -506,7 +516,7 @@ namespace Novell.iFolderCom
 			this.access.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.access.Location = new System.Drawing.Point(8, 360);
 			this.access.Name = "access";
-			this.access.TabIndex = 6;
+			this.access.TabIndex = 1;
 			this.access.Text = "Access...";
 			this.access.Click += new System.EventHandler(this.access_Click);
 			// 
@@ -599,7 +609,7 @@ namespace Novell.iFolderCom
 			this.conflicts.Location = new System.Drawing.Point(64, 48);
 			this.conflicts.Name = "conflicts";
 			this.conflicts.Size = new System.Drawing.Size(364, 32);
-			this.conflicts.TabIndex = 6;
+			this.conflicts.TabIndex = 3;
 			this.conflicts.TabStop = true;
 			this.conflicts.Text = "This iFolder currently contains conflicts.  Click here to resolve the conflicts.";
 			this.conflicts.Visible = false;
@@ -620,7 +630,7 @@ namespace Novell.iFolderCom
 			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.ok.Location = new System.Drawing.Point(198, 512);
 			this.ok.Name = "ok";
-			this.ok.TabIndex = 1;
+			this.ok.TabIndex = 5;
 			this.ok.Text = "OK";
 			this.ok.Click += new System.EventHandler(this.ok_Click);
 			// 
@@ -630,7 +640,7 @@ namespace Novell.iFolderCom
 			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.cancel.Location = new System.Drawing.Point(278, 512);
 			this.cancel.Name = "cancel";
-			this.cancel.TabIndex = 2;
+			this.cancel.TabIndex = 6;
 			this.cancel.Text = "Cancel";
 			this.cancel.Click += new System.EventHandler(this.cancel_Click);
 			// 
@@ -639,7 +649,7 @@ namespace Novell.iFolderCom
 			this.apply.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.apply.Location = new System.Drawing.Point(357, 512);
 			this.apply.Name = "apply";
-			this.apply.TabIndex = 3;
+			this.apply.TabIndex = 7;
 			this.apply.Text = "&Apply";
 			this.apply.Click += new System.EventHandler(this.apply_Click);
 			// 
@@ -648,7 +658,7 @@ namespace Novell.iFolderCom
 			this.ifolders.Location = new System.Drawing.Point(64, 16);
 			this.ifolders.Name = "ifolders";
 			this.ifolders.Size = new System.Drawing.Size(336, 21);
-			this.ifolders.TabIndex = 4;
+			this.ifolders.TabIndex = 1;
 			this.ifolders.SelectedIndexChanged += new System.EventHandler(this.ifolders_SelectedIndexChanged);
 			// 
 			// ifolderLabel
@@ -656,7 +666,7 @@ namespace Novell.iFolderCom
 			this.ifolderLabel.Location = new System.Drawing.Point(8, 18);
 			this.ifolderLabel.Name = "ifolderLabel";
 			this.ifolderLabel.Size = new System.Drawing.Size(56, 16);
-			this.ifolderLabel.TabIndex = 5;
+			this.ifolderLabel.TabIndex = 0;
 			this.ifolderLabel.Text = "iFolder:";
 			// 
 			// open
@@ -664,15 +674,8 @@ namespace Novell.iFolderCom
 			this.open.Location = new System.Drawing.Point(408, 15);
 			this.open.Name = "open";
 			this.open.Size = new System.Drawing.Size(24, 23);
-			this.open.TabIndex = 8;
+			this.open.TabIndex = 2;
 			this.open.Click += new System.EventHandler(this.open_Click);
-			// 
-			// gaugeChart
-			// 
-			this.gaugeChart.Location = new System.Drawing.Point(312, 24);
-			this.gaugeChart.Name = "gaugeChart";
-			this.gaugeChart.Size = new System.Drawing.Size(16, 72);
-			this.gaugeChart.TabIndex = 15;
 			// 
 			// iFolderAdvanced
 			// 
@@ -691,10 +694,12 @@ namespace Novell.iFolderCom
 			this.Controls.Add(this.conflicts);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.HelpButton = true;
+			this.KeyPreview = true;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "iFolderAdvanced";
 			this.ShowInTaskbar = false;
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tabControl1_KeyDown);
 			this.Load += new System.EventHandler(this.iFolderAdvanced_Load);
 			this.tabControl1.ResumeLayout(false);
 			this.tabGeneral.ResumeLayout(false);
@@ -830,7 +835,7 @@ namespace Novell.iFolderCom
 
 					items[0] = ifolderUser.Name;
 					// TODO: Localize
-					items[1] = ifolderUser.Name.Equals(ifolder.Owner) ? "Owner" : "";
+					items[1] = ifolderUser.ID.Equals(ifolder.OwnerID) ? "Owner" : "";
 					int imageIndex = 1;
 					items[2] = rightsToString(ifolderUser.Rights/*, out imageIndex*/);
 
@@ -846,7 +851,7 @@ namespace Novell.iFolderCom
 					ListViewItem lvitem = new ListViewItem(items, imageIndex);
 					lvitem.Tag = slMember;
 
-					if (ifolderUser.Name.Equals(ifolder.Owner))
+					if (ifolderUser.ID.Equals(ifolder.OwnerID))
 					{
 						// Keep track of the current (or old) owner.
 						ownerLvi = lvitem;
@@ -1192,7 +1197,7 @@ namespace Novell.iFolderCom
 					{
 						//lvi.ImageIndex = imageIndex;
 						// TODO: Localize
-						lvi.SubItems[1].Text = slMember.iFolderUser.Name.Equals(ifolder.Owner) ? "Owner" : "";
+						lvi.SubItems[1].Text = slMember.iFolderUser.ID.Equals(ifolder.OwnerID) ? "Owner" : "";
 					}
 				}
 			}
@@ -1849,7 +1854,7 @@ namespace Novell.iFolderCom
 		private void access_Click(object sender, System.EventArgs e)
 		{
 			UserProperties userProperties = new UserProperties();
-			userProperties.OwnerCanBeSet = (currentUser.Name.Equals(ifolder.Owner) && (shareWith.SelectedItems.Count == 1));
+			userProperties.OwnerCanBeSet = (currentUser.ID.Equals(ifolder.OwnerID) && (shareWith.SelectedItems.Count == 1));
 			if (shareWith.SelectedItems.Count == 1)
 			{
 				ListViewItem lvi = shareWith.SelectedItems[0];
@@ -1965,13 +1970,52 @@ namespace Novell.iFolderCom
 
 		private void tabControl1_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
 		{
-			// TODO - change focus when dialog is displayed non-modal
-//			if (!this.Modal && e.KeyCode == Keys.Tab)
-//			{
-//				currentControl = this.GetNextControl(this, true);
-//				bool focus = currentControl.Focus();// add.Focus();
-//				focus = !focus;
-//			}
+			// Change focus when dialog is displayed non-modal ... for some reason this doesn't
+			// happen automatically when the form is displayed from the shell extension.
+			if (!this.Modal && e.KeyCode == Keys.Tab)
+			{
+				try
+				{
+					// The focus does change for a ComboBox ... hmmm ... so if the current control
+					// is a ComboBox, we will skip to the next control after the ComboBox.
+					bool skip = currentControl.GetType().Equals(typeof(System.Windows.Forms.ComboBox));
+					while (true)
+					{
+						currentControl = this.GetNextControl(currentControl, !e.Shift);
+						if (currentControl == null)
+						{
+							currentControl = e.Shift ? lastControl : firstControl;
+						}
+
+						if (currentControl.CanFocus)
+						{
+							Type type = currentControl.GetType();
+
+							// Labels, TabPages and GroupBoxes can't really have the focus.
+							if (!type.Equals(typeof(System.Windows.Forms.Label)) &&
+								!type.Equals(typeof(System.Windows.Forms.TabPage)) &&
+								!type.Equals(typeof(System.Windows.Forms.GroupBox)))
+							{
+								if (skip)
+								{
+									skip = false;
+									continue;
+								}
+								else
+								{
+									break;
+								}
+							}
+						}
+					}
+
+					currentControl.Focus();
+				}
+				catch
+				{
+					// Ignore.
+				}
+			}
 		}
 
 		private void connectToWebService()
