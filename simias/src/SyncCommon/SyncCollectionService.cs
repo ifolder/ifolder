@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 using System;
+using System.Runtime.Remoting;
 
 namespace Simias.Sync
 {
@@ -56,6 +57,14 @@ namespace Simias.Sync
 			log.Debug("Preparing Ping Response: {0}", info);
 
 			return info;
+		}
+
+		/// <summary>
+		/// Release this object on the server.
+		/// </summary>
+		public void Release()
+		{
+			RemotingServices.Disconnect(this);
 		}
 	}
 }

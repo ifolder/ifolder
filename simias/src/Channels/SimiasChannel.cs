@@ -22,6 +22,8 @@
  ***********************************************************************/
 
 using System;
+using System.Text;
+using System.Collections;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 
@@ -32,40 +34,45 @@ namespace Simias.Channels
 	/// </summary>
 	public class SimiasChannel : IDisposable
 	{
-		private SimiasChannelFactory factory;
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SimiasChannel));
+
 		private IChannel channel;
-		private string name;
-		private int port;
-		private SimiasChannelSinks sinks;
-		private int count;
 
-		internal SimiasChannel(SimiasChannelFactory factory, IChannel channel,
-			string name, int port, SimiasChannelSinks sinks)
+		internal SimiasChannel(IChannel channel)
 		{
-			this.factory = factory;
 			this.channel = channel;
-			this.name = name;
-			this.port = port;
-			this.sinks = sinks;
-			this.count = 0;
+			
+			// register channel
+			ChannelServices.RegisterChannel(channel);
+
+			log.Debug("Channel Created: {0}", this);
 		}
 
-		internal SimiasChannel Open()
+		public override string ToString()
 		{
-			lock(this)
+			StringBuilder builder = new StringBuilder();
+	
+			builder.Append(channel.ChannelName);
+
+			IDictionary properties = null;
+
+			// find properties
+			if (typeof(BaseChannelWithProperties).IsInstanceOfType(channel))
 			{
-				++count;
+				BaseChannelWithProperties c = (BaseChannelWithProperties) channel;
+				properties = c.Properties;
+			}
+			
+			if (properties != null)
+			{
+				foreach(DictionaryEntry entry in properties)
+				{
+					builder.AppendFormat("{2}{0,20}: {1}", entry.Key,
+						entry.Value, Environment.NewLine);
+				}
 			}
 
-			return this;
-		}
-
-		private void Close()
-		{
-			lock(this)
-			{
-				--count;
-			}
+			return builder.ToString();
 		}
 
 		#region IDisposable Members
@@ -75,15 +82,14 @@ namespace Simias.Channels
 		/// </summary>
 		public void Dispose()
 		{
-			Close();
-
 			lock(this)
 			{
-				if ((count <= 0) && (channel != null))
+				if (channel != null)
 				{
-					factory.ReleaseChannel(this);
-					
-					factory = null;
+					ChannelServices.UnregisterChannel(channel);
+
+					log.Debug("Channel Closed: {0}", this);
+
 					channel = null;
 				}
 			}
@@ -106,23 +112,7 @@ namespace Simias.Channels
 		/// </summary>
 		public string Name
 		{
-			get { return name; }
-		}
-		
-		/// <summary>
-		/// The channel port
-		/// </summary>
-		public int Port
-		{
-			get { return port; }
-		}
-
-		/// <summary>
-		/// An enumeration of sinks to include
-		/// </summary>
-		public SimiasChannelSinks Sinks
-		{
-			get { return sinks; }
+			get { return channel.ChannelName; }
 		}
 		
 		#endregion

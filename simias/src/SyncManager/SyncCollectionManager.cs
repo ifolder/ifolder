@@ -232,6 +232,9 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// Main sync loop
+		/// </summary>
 		private void DoSyncWork()
 		{
 			log.Debug("Sync Work {0} - Initiated", collection.Name);
@@ -267,8 +270,8 @@ namespace Simias.Sync
 							if (channel == null)
 							{
 								// create channel
-								channel = syncManager.ChannelFactory.GetChannel(store,
-									collection.MasterUrl.Scheme, syncManager.ChannelSinks);
+								channel = SimiasChannelFactory.Create(collection.MasterUrl,
+									syncManager.ChannelSinks);
 							}
 
 							// get a proxy to the store service object
@@ -339,14 +342,13 @@ namespace Simias.Sync
 								// update the URL
 								if ((locationUrl != null) && (locationUrl != collection.MasterUrl))
 								{
-									// try the location service on an exception
 									log.Debug("Updating Master Service Url...");
 									log.Debug("  Old Master Url: {0}", collection.MasterUrl);
 									log.Debug("  New Master Url: {0}", locationUrl);
 
 									collection.MasterUrl = locationUrl;
 
-									// clear channel
+									// clear the channel
 									if (channel != null)
 									{
 										channel.Dispose();
@@ -363,7 +365,13 @@ namespace Simias.Sync
 					finally
 					{
 						storeService = null;
-						service = null;
+						
+						if (service != null)
+						{
+							// release the service for Mono
+							try { service.Release(); } catch { /* ignore */ }
+							service = null;
+						}
 					}
 
 					log.Info("Finished Sync Cycle: {0}", collection.Name);

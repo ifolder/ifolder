@@ -226,8 +226,7 @@ namespace Simias.Domain
 			Store store = Store.GetStore();
 
 			// create channel
-			channel = SimiasChannelFactory.GetInstance().GetChannel(store,
-				ServiceUrl.Scheme, props.ChannelSinks);
+			channel = SimiasChannelFactory.Create(ServiceUrl, props.ChannelSinks);
 
 			// create URL
 			string url = ServiceUrl.ToString();

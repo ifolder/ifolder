@@ -197,9 +197,8 @@ namespace Simias.POBox
 			else
 			{
 				// This is an enterprise pobox contact the POService.
-				SimiasChannel channel = SimiasChannelFactory.GetInstance().GetChannel(poBox.StoreReference,
-					subscription.POServiceURL.Scheme, SimiasChannelSinks.Binary,
-					subscription.POServiceURL.Port);
+				SimiasChannel channel = SimiasChannelFactory.Create(subscription.POServiceURL,
+					SimiasChannelSinks.Binary);
 
 				log.Debug("Connecting to the Post Office Service : {0}", subscription.POServiceURL);
 				PostOffice po = (PostOffice)Activator.GetObject(typeof(PostOffice),
@@ -228,9 +227,8 @@ namespace Simias.POBox
 
 		private bool DoReplied()
 		{
-			SimiasChannel channel = SimiasChannelFactory.GetInstance().GetChannel(poBox.StoreReference,
-				subscription.POServiceURL.Scheme, SimiasChannelSinks.Binary,
-				subscription.POServiceURL.Port);
+			SimiasChannel channel = SimiasChannelFactory.Create(subscription.POServiceURL,
+				SimiasChannelSinks.Binary);
 
 			log.Debug("Connecting to the Post Office Service : {0}", subscription.POServiceURL);
 			PostOffice po = (PostOffice)Activator.GetObject(typeof(PostOffice),
@@ -258,9 +256,8 @@ namespace Simias.POBox
 		{
 			bool result = false;
 
-			SimiasChannel channel = SimiasChannelFactory.GetInstance().GetChannel(poBox.StoreReference,
-				subscription.POServiceURL.Scheme, SimiasChannelSinks.Binary,
-				subscription.POServiceURL.Port);
+			SimiasChannel channel = SimiasChannelFactory.Create(subscription.POServiceURL,
+				SimiasChannelSinks.Binary);
 
 			log.Debug("Connecting to the Post Office Service : {0}", subscription.POServiceURL);
 			PostOffice po = (PostOffice)Activator.GetObject(typeof(PostOffice),

@@ -46,7 +46,6 @@ namespace Simias.POBox
 		private Hashtable boxManagers;
 		private EventSubscriber subscriber;
 		private PostOffice service;
-		private SimiasChannelFactory channelFactory;
 		private SimiasChannel channel;
 		private Uri serviceUrl = PostOffice.DefaultServiceUrl ;
 
@@ -60,9 +59,6 @@ namespace Simias.POBox
 			
 			// store
 			store = Store.GetStore();
-
-			// channels
-			channelFactory = SimiasChannelFactory.GetInstance();
 
 			// box managers
 			boxManagers = new Hashtable();
@@ -92,9 +88,8 @@ namespace Simias.POBox
 					// create channel
 					string name = String.Format("PO Service [{0}]", store.ID);
 
-					channel = channelFactory.GetChannel(store,
-						ServiceUrl.Scheme, SimiasChannelSinks.Binary,
-						ServiceUrl.Port);
+					channel = SimiasChannelFactory.Create(ServiceUrl,
+						SimiasChannelSinks.Binary, true);
 				
 					log.Debug("Starting PO Service: {0}", ServiceUrl);
 

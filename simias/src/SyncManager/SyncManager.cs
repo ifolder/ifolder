@@ -84,7 +84,6 @@ namespace Simias.Sync
 		};
 
 		private SyncProperties properties;
-		private SimiasChannelFactory channelFactory;
 		private SyncStoreManager storeManager;
 		private SyncLogicFactory logicFactory;
 		private LocationService locationService;
@@ -106,9 +105,6 @@ namespace Simias.Sync
 
 			// logic factory
 			logicFactory = (SyncLogicFactory)Activator.CreateInstance(properties.LogicFactory);
-
-			// channel factory
-			channelFactory = SimiasChannelFactory.GetInstance();
 
 			// store
 			storeManager = new SyncStoreManager(this);
@@ -235,14 +231,6 @@ namespace Simias.Sync
 		public SyncStoreManager StoreManager
 		{
 			get { return storeManager; }
-		}
-
-		/// <summary>
-		/// The channel factory singleton object.
-		/// </summary>
-		public SimiasChannelFactory ChannelFactory
-		{
-			get { return channelFactory; }
 		}
 
 		/// <summary>

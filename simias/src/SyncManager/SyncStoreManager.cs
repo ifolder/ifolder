@@ -85,9 +85,8 @@ namespace Simias.Sync
 					// create channel
 					string name = String.Format("Store Service [{0}]", store.ID);
 
-					channel = syncManager.ChannelFactory.GetChannel(store,
-						syncManager.ServiceUrl.Scheme, syncManager.ChannelSinks,
-						syncManager.ServiceUrl.Port);
+					channel = SimiasChannelFactory.Create(syncManager.ServiceUrl,
+						syncManager.ChannelSinks, true);
 				
 					log.Debug("Starting Store Service: {0}", syncManager.ServiceUrl);
 

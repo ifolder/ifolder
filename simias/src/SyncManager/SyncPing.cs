@@ -58,8 +58,8 @@ namespace Simias.Sync
 			SyncProperties properties = new SyncProperties(store.Config);
 
 			// create channel
-			SimiasChannel channel = SimiasChannelFactory.GetInstance().GetChannel(store,
-				url.Scheme, properties.ChannelSinks);
+			SimiasChannel channel = SimiasChannelFactory.Create(url,
+				properties.ChannelSinks);
 
 			try
 			{

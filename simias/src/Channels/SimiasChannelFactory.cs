@@ -50,12 +50,7 @@ namespace Simias.Channels
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SimiasChannelFactory));
 		
-		private static readonly string TIMEOUT = TimeSpan.FromSeconds(30).Milliseconds.ToString();
-
-		private static SimiasChannelFactory singleton;
-
-		private ArrayList channels;
-		private int index;
+		private static ulong index = 0;
 
 		static SimiasChannelFactory()
 		{
@@ -79,196 +74,175 @@ namespace Simias.Channels
 		}
 
 		/// <summary>
-		/// The singleton instance of the SimiasChannelFactory.
+		/// Hidden constructor
 		/// </summary>
-		/// <returns></returns>
-		public static SimiasChannelFactory GetInstance()
-		{
-			if (singleton == null)
-			{
-				lock(typeof(SimiasChannelFactory))
-				{
-					if (singleton == null)
-					{
-						singleton = new SimiasChannelFactory();
-					}
-				}
-			}
-			
-			return singleton;
-		}
-
 		private SimiasChannelFactory()
 		{
-			channels = new ArrayList();
-			index = 0;
 		}
-		
+
 		/// <summary>
 		/// Get a Simias channel
 		/// </summary>
-		/// <param name="store"></param>
-		/// <param name="scheme"></param>
-		/// <param name="sinks"></param>
-		/// <returns></returns>
-		public SimiasChannel GetChannel(Store store, string scheme, SimiasChannelSinks sinks)
+		/// <param name="uri">Channel URI</param>
+		/// <param name="sinks">Channel Sinks</param>
+		/// <returns>A Simias Channel</returns>
+		public static SimiasChannel Create(Uri uri, SimiasChannelSinks sinks)
 		{
-			return GetChannel(store, scheme, sinks, 0);
+			return Create(uri, sinks, false);
 		}
+
+		/// <summary>
+		/// Get a Simias channel
+		/// </summary>
+		/// <param name="uri">Channel URI</param>
+		/// <param name="sinks">Channel Sinks</param>
+		/// <param name="server">Server Channel?</param>
+		/// <returns>A Simias Channel</returns>
+		public static SimiasChannel Create(Uri uri, SimiasChannelSinks sinks, bool server)
+		{
+			IChannel channel = null;
+			string name = null;
+
+			lock(typeof(SimiasChannelFactory))
+			{
+				// name
+				name = String.Format("Simias Channel {0}", ++index);
+			}
+
+			// setup channel properties
+			ListDictionary props = new ListDictionary();
+			props.Add("name", name);
 			
-		/// <summary>
-		/// Get a Simias channel
-		/// </summary>
-		/// <param name="store"></param>
-		/// <param name="scheme"></param>
-		/// <param name="sinks"></param>
-		/// <param name="port"></param>
-		/// <returns></returns>
-		public SimiasChannel GetChannel(Store store, string scheme, SimiasChannelSinks sinks, int port)
-		{
-			SimiasChannel result = null;
-
-			lock(this)
+			// server properties
+			if (server)
 			{
-				if (port != 0)
-				{
-					foreach(SimiasChannel sc in channels)
-					{
-						if (sc.Port == port)
-						{
-							result = sc.Open();
-
-							if (sc.Sinks != sinks)
-							{
-								throw new ApplicationException(
-									"Another channel already exists on the requested port with different sinks.");
-							}
-
-							log.Debug("Channel Opened: {0}", sc.Name);
-
-							break;
-						}
-					}
-				}
-				
-				// channel needs to be created
-				if (result == null)
-				{
-					// name
-					string name = String.Format("Simias Channel (port: {0}, index: {1})", port, ++index);
-
-					// setup channel properties
-					ListDictionary props = new ListDictionary();
-					props.Add("name", name);
-					props.Add("port", port);
-					
-					// TODO: why doesn't this work?
-					//props.Add("timeout", TIMEOUT);
-
-					// provider notes
-					// server providers: security sink -> monitor sink -> formatter sink
-					// client providers: formatter sink -> monitor sink -> security sink
-
-					// setup format providers
-					IClientChannelSinkProvider clientProvider = null;
-					IServerChannelSinkProvider serverProvider = null;
-
-					if ((sinks & SimiasChannelSinks.Soap) > 0)
-					{
-						// soap
-						clientProvider = new SoapClientFormatterSinkProvider();
-
-						serverProvider = new SoapServerFormatterSinkProvider();
-#if !MONO
-						(serverProvider as SoapServerFormatterSinkProvider).TypeFilterLevel = TypeFilterLevel.Full;
-#endif
-					}
-					else
-					{
-						// binary
-						clientProvider = new BinaryClientFormatterSinkProvider();
-
-						serverProvider = new BinaryServerFormatterSinkProvider();
-#if !MONO
-						(serverProvider as BinaryServerFormatterSinkProvider).TypeFilterLevel = TypeFilterLevel.Full;
-#endif
-					}
-
-					// setup monitor providers
-					if ((sinks & SimiasChannelSinks.Sniffer) > 0)
-					{
-						IServerChannelSinkProvider serverMonitorProvider = new SnifferServerChannelSinkProvider();
-						serverMonitorProvider.Next = serverProvider;
-						serverProvider = serverMonitorProvider;
-
-						IClientChannelSinkProvider clientMonitorProvider = new SnifferClientChannelSinkProvider();
-						clientProvider.Next = clientMonitorProvider;
-					}
-
-					// setup security providers
-					if ((sinks & SimiasChannelSinks.Security) > 0)
-					{
-						/* TODO: add back
-						ISecurityServerFactory securityServerFactory = (ISecurityServerFactory) new RsaSecurityServerFactory(store.KeyStore);
-						IServerChannelSinkProvider serverSecurityProvider = (IServerChannelSinkProvider) new SecureServerSinkProvider(securityServerFactory, SecureServerSinkProvider.MsgSecurityLevel.privacy);
-						serverSecurityProvider.Next = serverProvider;
-						serverProvider = serverSecurityProvider;
-
-						ISecurityClientFactory[] secClientFactories = new ISecurityClientFactory[1];
-						secClientFactories[0] = (ISecurityClientFactory) new RsaSecurityClientFactory(store.KeyStore);
-						IClientChannelSinkProvider clientSecureProvider = (IClientChannelSinkProvider) new SecureClientSinkProvider(secClientFactories);
-						
-
-						// TODO: fix with cleaner solution
-						if (clientProvider.Next != null)
-						{
-							clientProvider.Next.Next = clientSecureProvider;
-						}
-						else
-						{
-							clientProvider.Next = clientSecureProvider;
-						}
-						*/
-					}
-
-					// create channel
-					IChannel channel;
-
-					if (scheme == "http")
-                    {
-                        // http channel
-                        channel = new HttpChannel(props, clientProvider, serverProvider);
-                    }
-                    else
-                    {
-                        // tcp channel
-                        channel = new TcpChannel(props, clientProvider, serverProvider);
-                    }
-
-					// register channel
-					ChannelServices.RegisterChannel(channel);
-
-					result = (new SimiasChannel(this, channel, name, port, sinks)).Open();
-
-					// add channel
-					channels.Add(result);
-
-					log.Debug("Channel Registered: {0} ({1})", name, sinks);
-				}
+				props.Add("port", uri.Port);
+				props.Add("useIpAddress", true);
+				props.Add("bindTo", "0.0.0.0");
 			}
-	
-			return result;
-		}
-		
-		internal void ReleaseChannel(SimiasChannel channel)
-		{
-			lock(this)
+			
+			// client properties
+			else
 			{
-				channels.Remove(channel);
-				ChannelServices.UnregisterChannel(channel.Channel);
+				props.Add("port", 0);
+				props.Add("clientConnectionLimit", 5);
+
+				// proxy
+				//props.Add("proxyName", "");
+				//props.Add("proxyPort", "");
+
+				// TODO: why doesn't this work?
+				//props.Add("timeout", TimeSpan.FromSeconds(30).Milliseconds);
+
 			}
 
-			log.Debug("Channel Unregistered: {0}", channel.Name);
+			// provider notes
+			// server providers: security sink -> monitor sink -> formatter sink
+			// client providers: formatter sink -> monitor sink -> security sink
+
+			// setup format providers
+			IClientChannelSinkProvider clientProvider = null;
+			IServerChannelSinkProvider serverProvider = null;
+
+			// server providers
+			if (server)
+			{
+				// setup format provider
+				if ((sinks & SimiasChannelSinks.Soap) > 0)
+				{
+					// soap
+					serverProvider = new SoapServerFormatterSinkProvider();
+				}
+				else
+				{
+					// binary
+					serverProvider = new BinaryServerFormatterSinkProvider();
+				}
+
+				// setup monitor provider
+				if ((sinks & SimiasChannelSinks.Sniffer) > 0)
+				{
+					IServerChannelSinkProvider serverMonitorProvider = new SnifferServerChannelSinkProvider();
+					serverMonitorProvider.Next = serverProvider;
+					serverProvider = serverMonitorProvider;
+				}
+
+				// setup security provider
+				if ((sinks & SimiasChannelSinks.Security) > 0)
+				{
+					/* TODO: add back
+					ISecurityServerFactory securityServerFactory = (ISecurityServerFactory) new RsaSecurityServerFactory(store.KeyStore);
+					IServerChannelSinkProvider serverSecurityProvider = (IServerChannelSinkProvider) new SecureServerSinkProvider(securityServerFactory, SecureServerSinkProvider.MsgSecurityLevel.privacy);
+					serverSecurityProvider.Next = serverProvider;
+					serverProvider = serverSecurityProvider;
+					*/
+				}
+
+				// create channel
+				if (uri.Scheme.ToLower() == "http")
+				{
+					// http channel
+					channel = new HttpServerChannel(props, serverProvider);
+				}
+				else
+				{
+					// tcp channel
+					channel = new TcpServerChannel(props, serverProvider);
+				}
+			}
+
+			// client providers
+			else
+			{
+				// setup security provider
+				if ((sinks & SimiasChannelSinks.Security) > 0)
+				{
+					/* TODO: add back
+					ISecurityClientFactory[] secClientFactories = new ISecurityClientFactory[1];
+					secClientFactories[0] = (ISecurityClientFactory) new RsaSecurityClientFactory(store.KeyStore);
+					clientProvider = (IClientChannelSinkProvider) new SecureClientSinkProvider(secClientFactories);
+					*/
+				}
+
+				// setup monitor provider
+				if ((sinks & SimiasChannelSinks.Sniffer) > 0)
+				{
+					IClientChannelSinkProvider clientMonitorProvider = new SnifferClientChannelSinkProvider();
+					clientMonitorProvider.Next = clientProvider;
+					clientProvider.Next = clientMonitorProvider;
+				}
+
+				// setup format provider
+				if ((sinks & SimiasChannelSinks.Soap) > 0)
+				{
+					// soap
+					IClientChannelSinkProvider clientFormatProvider = new SoapClientFormatterSinkProvider();
+					clientFormatProvider.Next = clientProvider;
+					clientProvider.Next = clientFormatProvider;
+				}
+				else
+				{
+					// binary
+					IClientChannelSinkProvider clientFormatProvider = new BinaryClientFormatterSinkProvider();
+					clientFormatProvider.Next = clientProvider;
+					clientProvider.Next = clientFormatProvider;
+				}
+
+
+				// create channel
+				if (uri.Scheme.ToLower() == "http")
+				{
+					// http channel
+					channel = new HttpClientChannel(props, clientProvider);
+				}
+				else
+				{
+					// tcp channel
+					channel = new TcpClientChannel(props, clientProvider);
+				}
+			}
+
+			return new SimiasChannel(channel);
 		}
 	}
 }
