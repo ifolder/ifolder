@@ -98,9 +98,11 @@ namespace Simias.Sync
 				&& (invitation.DirNodeName != null) && (invitation.DirNodeName.Length > 0)
 				&& (invitation.RootPath != null) && (invitation.RootPath.Length > 0))
 			{
-				DirNode dn = new DirNode(this,
-					Path.Combine(invitation.RootPath, invitation.DirNodeName),
-					invitation.DirNodeID);
+				string path = Path.Combine(invitation.RootPath, invitation.DirNodeName);
+
+				DirNode dn = new DirNode(this, path, invitation.DirNodeID);
+
+				if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
 				Commit(dn);
 			}
