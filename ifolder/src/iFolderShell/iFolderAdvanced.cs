@@ -617,8 +617,8 @@ namespace Novell.iFolder.iFolderCom
 
 			string sendersEmail = null;
 
-			// Get the poBox for the current user.
-			poBox = POBox.GetPOBox(ifolder.StoreReference, ifolder.StoreReference.DefaultDomain);
+			// Get the poBox for the current ifolder.
+//			poBox = POBox.GetPOBox(ifolder.StoreReference, ifolder.Domain);
 
 			foreach (ListViewItem lvitem in this.shareWith.Items)
 			{
@@ -645,6 +645,8 @@ namespace Novell.iFolder.iFolderCom
 					// TODO: change this to use an array and add them all at once.
 					// Put the subscription in the POBox.
 					poBox.AddMessage(slMember.Subscription);
+
+					lvitem.SubItems[1].Text = slMember.Subscription.SubscriptionState.ToString();
 
 					// Update the state.
 					slMember.Added = false;
@@ -783,6 +785,12 @@ namespace Novell.iFolder.iFolderCom
 					{
 						lvi.ImageIndex = imageIndex;
 						lvi.SubItems[1].Text = slMember.Member.IsOwner ? "Owner" : "";
+
+						Contact contact = abManager.GetContact(slMember.Member);
+						if (contact != null)
+						{
+							lvi.SubItems[0].Text = contact.FN;
+						}
 					}
 				}
 			}
@@ -907,7 +915,7 @@ namespace Novell.iFolder.iFolderCom
 
 			try
 			{
-				poBox = POBox.GetPOBox(ifolder.StoreReference, ifolder.StoreReference.DefaultDomain);
+				poBox = POBox.GetPOBox(ifolder.StoreReference, ifolder.Domain);
 				ICSList memberList = ifolder.GetMemberList();
 
 				// Load the member list.
@@ -1076,6 +1084,7 @@ namespace Novell.iFolder.iFolderCom
 			ContactPicker picker = new ContactPicker();
 			picker.CurrentManager = abManager;
 			picker.LoadPath = loadPath;
+			picker.Collection = ifolder;
 			DialogResult result = picker.ShowDialog();
 			if (result == DialogResult.OK)
 			{
@@ -1145,13 +1154,16 @@ namespace Novell.iFolder.iFolderCom
 							shareMember.Subscription.ToName = c.FN;
 							shareMember.Subscription.SubscriptionCollectionName = ifolder.Name;
 
-							// Create a relationship on the Subscription object ... this will be used later to link the member with the contact.
 							if (ifolder.Domain.Equals(Domain.WorkGroupDomainID))
 							{
-								string collectionId = (string)c.Properties.GetSingleProperty(BaseSchema.CollectionId).Value;
-								shareMember.Subscription.Properties.AddProperty("Contact", new Relationship(collectionId, c.ID));
+								// Check if the contact has already been linked.
+								if (c.UserID.Equals(String.Empty))
+								{
+									// Create a relationship on the Subscription object ... this will be used later to link the member with the contact.
+									string collectionId = (string)c.Properties.GetSingleProperty(BaseSchema.CollectionId).Value;
+									shareMember.Subscription.Properties.AddProperty("Contact", new Relationship(collectionId, c.ID));
+								}
 								shareMember.Subscription.ToAddress = c.EMail;
-								shareMember.Subscription.ToIdentity = c.UserID;
 							}
 							else
 							{

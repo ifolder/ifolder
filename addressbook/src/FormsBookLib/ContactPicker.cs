@@ -46,7 +46,6 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
 
-		private Store store = null;
 		private Novell.AddressBook.AddressBook addressBook = null;
 		private Novell.AddressBook.Manager manager = null;
 		private ArrayList contactList;
@@ -305,6 +304,14 @@ namespace Novell.iFolder.FormsBookLib
 		#endregion
 
 		#region Properties
+		public Collection Collection
+		{
+			set
+			{
+				this.booksContacts.Collection = value;
+			}
+		}
+
 		/// <summary>
 		/// Gets the list of picked contacts.
 		/// </summary>
@@ -464,7 +471,6 @@ namespace Novell.iFolder.FormsBookLib
 			try
 			{
 				this.Icon = new Icon(Path.Combine(LoadPath, applicationIcon));
-				store = Store.GetStore();
 			}
 			catch (SimiasException ex)
 			{

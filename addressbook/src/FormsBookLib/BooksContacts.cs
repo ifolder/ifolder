@@ -53,7 +53,7 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.MenuItem createBookMenu;
 		private System.Windows.Forms.MenuItem deleteBookMenu;
 
-		private Store store = null;
+		private Collection collection = null;
 		private Novell.AddressBook.Manager manager = null;
 		private Novell.AddressBook.AddressBook addressBook = null;
 		private ArrayList selectedContacts;
@@ -194,6 +194,14 @@ namespace Novell.iFolder.FormsBookLib
 		#endregion
 
 		#region Properties
+		public Collection Collection
+		{
+			set
+			{
+				this.collection = value;
+			}
+		}
+
 		/// <summary>
 		/// Sets the Address Book Manager.
 		/// </summary>
@@ -564,14 +572,19 @@ namespace Novell.iFolder.FormsBookLib
 
 			try
 			{
-				store = Store.GetStore();
-
 				// Put all the address books in the books listview.
 				IEnumerator addrBooks= manager.GetAddressBooks().GetEnumerator();
 
 				while (addrBooks.MoveNext())
 				{
 					AddressBook.AddressBook book = (AddressBook.AddressBook)addrBooks.Current;
+
+					// If a collection is specified, only display the address books for the current enterprise domain ...
+					// if the collection is workgroup, then all address books are displayed.
+					if ((collection != null) && !collection.Domain.Equals(Domain.WorkGroupDomainID) && !collection.Domain.Equals(book.Domain))
+					{
+						continue;
+					}
 
 					ListViewItem item;
 					item = new ListViewItem(book.Name, 0);
