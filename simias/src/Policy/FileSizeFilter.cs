@@ -24,24 +24,9 @@ namespace Simias.Policy
 		static public string FileSizeFilterShortDescription = "File size filter";
 
 		/// <summary>
-		/// Store handle to the collection store.
-		/// </summary>
-		private Store store;
-
-		/// <summary>
-		/// Used to manage the policy.
-		/// </summary>
-		private PolicyManager manager;
-
-		/// <summary>
 		/// Policy object that is used to manage quota.
 		/// </summary>
 		private Policy policy;
-
-		/// <summary>
-		/// Member that is associated with this policy.
-		/// </summary>
-		private Member member;
 		#endregion
 
 		#region Properties
@@ -77,16 +62,10 @@ namespace Simias.Policy
 		/// <summary>
 		/// Initializes a new instance of an object.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
-		/// <param name="member">Member that this file size filter is associated with.</param>
-		/// <param name="manager">Policy manager object to control the filter policy.</param>
 		/// <param name="policy">The aggregate policy object.</param>
-		private FileSizeFilter( Store store, Member member, PolicyManager manager, Policy policy )
+		private FileSizeFilter( Policy policy )
 		{
-			this.store = store;
-			this.manager = manager;
 			this.policy = policy;
-			this.member = member;
 		}
 		#endregion
 
@@ -94,13 +73,12 @@ namespace Simias.Policy
 		/// <summary>
 		/// Creates a system wide file size filter policy.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="domainID">Domain that the filter will be associated with.</param>
 		/// <param name="limit">Size of file in bytes that all users in the domain will be limited to.</param>
-		static public void Create( Store store, string domainID, long limit )
+		static public void Create( string domainID, long limit )
 		{
 			// Need a policy manager.
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, domainID );
@@ -123,13 +101,12 @@ namespace Simias.Policy
 		/// <summary>
 		/// Creates a file size filter policy for the specified member.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="member">Member that the filter will be associated with.</param>
 		/// <param name="limit">Size of file in bytes that all users in the domain will be limited to.</param>
-		static public void Create( Store store, Member member, long limit )
+		static public void Create( Member member, long limit )
 		{
 			// Need a policy manager.
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, member );
@@ -152,13 +129,12 @@ namespace Simias.Policy
 		/// <summary>
 		/// Creates a file size filter policy for the specified collection.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="collection">Collection that the filter will be associated with.</param>
 		/// <param name="limit">Size of file in bytes that all users in the domain will be limited to.</param>
-		static public void Create( Store store, Collection collection, long limit )
+		static public void Create( Collection collection, long limit )
 		{
 			// Need a policy manager.
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, collection );
@@ -181,12 +157,11 @@ namespace Simias.Policy
 		/// <summary>
 		/// Creates a file size filter policy for the current user on the current machine.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="limit">Size of file in bytes that all users in the domain will be limited to.</param>
-		static public void Create( Store store, long limit )
+		static public void Create( long limit )
 		{
 			// Need a policy manager.
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID );
@@ -209,12 +184,11 @@ namespace Simias.Policy
 		/// <summary>
 		/// Deletes a system wide file size filter policy.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="domainID">Domain that the filter will be associated with.</param>
-		static public void Delete( Store store, string domainID )
+		static public void Delete( string domainID )
 		{
 			// Need a policy manager.
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, domainID );
@@ -228,12 +202,11 @@ namespace Simias.Policy
 		/// <summary>
 		/// Deletes a file size filter policy for the specified member.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="member">Member that the filter will be associated with.</param>
-		static public void Delete( Store store, Member member )
+		static public void Delete( Member member )
 		{
 			// Need a policy manager.
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, member );
@@ -247,12 +220,11 @@ namespace Simias.Policy
 		/// <summary>
 		/// Deletes a file size filter policy for the specified collection.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="collection">Collection that the filter will be associated with.</param>
-		static public void Delete( Store store, Collection collection )
+		static public void Delete( Collection collection )
 		{
 			// Need a policy manager.
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, collection );
@@ -266,11 +238,10 @@ namespace Simias.Policy
 		/// <summary>
 		/// Deletes a file size filter policy for the current user on the current machine.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
-		static public void Delete( Store store )
+		static public void Delete()
 		{
 			// Need a policy manager.
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID );
@@ -282,14 +253,38 @@ namespace Simias.Policy
 		}
 
 		/// <summary>
+		/// Gets the aggregate file size filter policy for the specified member.
+		/// </summary>
+		/// <param name="member">Member that filter is associated with.</param>
+		/// <returns>A FileSizeFilter object that contains the policy for the specified member.</returns>
+		static public FileSizeFilter Get( Member member )
+		{
+			PolicyManager pm = new PolicyManager();
+			Policy policy = pm.GetAggregatePolicy( FileSizeFilterPolicyID, member );
+			return new FileSizeFilter( policy );
+		}
+
+		/// <summary>
+		/// Gets the aggregate file size filter policy for the specified member and collection.
+		/// </summary>
+		/// <param name="member">Member that filter is associated with.</param>
+		/// <param name="collection">Collection to add to the aggregate size policy.</param>
+		/// <returns>A FileSizeFilter object that contains the policy for the specified member.</returns>
+		static public FileSizeFilter Get( Member member, Collection collection )
+		{
+			PolicyManager pm = new PolicyManager();
+			Policy policy = pm.GetAggregatePolicy( FileSizeFilterPolicyID, member, collection );
+			return new FileSizeFilter( policy );
+		}
+
+		/// <summary>
 		/// Gets the file size limit associated with the specified domain.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="domainID">Domain that the filter is associated with.</param>
 		/// <returns>Size of files that all users in the domain are limited to.</returns>
-		static public long GetLimit( Store store, string domainID )
+		static public long GetLimit( string domainID )
 		{
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, domainID );
 			return ( policy != null ) ? ( long )FileSizeFilter.GetRule( policy ).Operand : long.MaxValue;
 		}
@@ -297,12 +292,11 @@ namespace Simias.Policy
 		/// <summary>
 		/// Gets the file size limit associated with the specified member.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="member">Member that the filter is associated with.</param>
 		/// <returns>Size of files that all users in the domain are limited to.</returns>
-		static public long GetLimit( Store store, Member member )
+		static public long GetLimit( Member member )
 		{
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, member );
 			return ( policy != null ) ? ( long )FileSizeFilter.GetRule( policy ).Operand : long.MaxValue;
 		}
@@ -310,12 +304,11 @@ namespace Simias.Policy
 		/// <summary>
 		/// Gets the file size limit associated with the specified collection.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="collection">Collection that the limit is associated with.</param>
 		/// <returns>Size of files that all users in the domain are limited to.</returns>
-		static public long GetLimit( Store store, Collection collection )
+		static public long GetLimit( Collection collection )
 		{
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, collection );
 			return ( policy != null ) ? ( long )FileSizeFilter.GetRule( policy ).Operand : long.MaxValue;
 		}
@@ -323,55 +316,26 @@ namespace Simias.Policy
 		/// <summary>
 		/// Gets the file size limit associated with the current user on the current machine.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <returns>Size of files that all users in the domain are limited to.</returns>
-		static public long GetLimit( Store store )
+		static public long GetLimit()
 		{
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID );
 			return ( policy != null ) ? ( long )FileSizeFilter.GetRule( policy ).Operand : long.MaxValue;
 		}
 
 		/// <summary>
-		/// Gets the aggregate file size filter policy for the specified member.
-		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
-		/// <param name="member">Member that filter is associated with.</param>
-		/// <returns>A FileSizeFilter object that contains the policy for the specified member.</returns>
-		static public FileSizeFilter Get( Store store, Member member )
-		{
-			PolicyManager pm = new PolicyManager( store );
-			Policy policy = pm.GetAggregatePolicy( FileSizeFilterPolicyID, member );
-			return new FileSizeFilter( store, member, pm, policy );
-		}
-
-		/// <summary>
-		/// Gets the aggregate file size filter policy for the specified member and collection.
-		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
-		/// <param name="member">Member that filter is associated with.</param>
-		/// <param name="collection">Collection to add to the aggregate size policy.</param>
-		/// <returns>A FileSizeFilter object that contains the policy for the specified member.</returns>
-		static public FileSizeFilter Get( Store store, Member member, Collection collection )
-		{
-			PolicyManager pm = new PolicyManager( store );
-			Policy policy = pm.GetAggregatePolicy( FileSizeFilterPolicyID, member, collection );
-			return new FileSizeFilter( store, member, pm, policy );
-		}
-
-		/// <summary>
 		/// Sets the file size limit associated with the specified domain.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="domainID">Domain that the filter is associated with.</param>
 		/// <param name="limit">Size of files that all users in the domain will be limited to.</param>
-		static public void Set( Store store, string domainID, long limit )
+		static public void Set( string domainID, long limit )
 		{
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, domainID );
 			if ( policy == null )
 			{
-				FileSizeFilter.Create( store, domainID, limit );
+				FileSizeFilter.Create( domainID, limit );
 			}
 			else
 			{
@@ -385,16 +349,15 @@ namespace Simias.Policy
 		/// <summary>
 		/// Sets the file size limit associated with the specified member.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="member">Member that the filter is associated with.</param>
 		/// <param name="limit">Size of files that all users in the domain will be limited to.</param>
-		static public void Set( Store store, Member member, long limit )
+		static public void Set( Member member, long limit )
 		{
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, member );
 			if ( policy == null )
 			{
-				FileSizeFilter.Create( store, member, limit );
+				FileSizeFilter.Create( member, limit );
 			}
 			else
 			{
@@ -408,16 +371,15 @@ namespace Simias.Policy
 		/// <summary>
 		/// Sets the file size limit associated with the specified collection.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="collection">Collection that the filter is associated with.</param>
 		/// <param name="limit">Size of files that all users in the domain will be limited to.</param>
-		static public void Set( Store store, Collection collection, long limit )
+		static public void Set( Collection collection, long limit )
 		{
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, collection );
 			if ( policy == null )
 			{
-				FileSizeFilter.Create( store, collection, limit );
+				FileSizeFilter.Create( collection, limit );
 			}
 			else
 			{
@@ -431,15 +393,14 @@ namespace Simias.Policy
 		/// <summary>
 		/// Sets the file size limit associated with the current user on the current machine.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="limit">Size of files that all users in the domain will be limited to.</param>
-		static public void Set( Store store, long limit )
+		static public void Set( long limit )
 		{
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID );
 			if ( policy == null )
 			{
-				FileSizeFilter.Create( store, limit );
+				FileSizeFilter.Create( limit );
 			}
 			else
 			{

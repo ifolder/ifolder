@@ -65,6 +65,7 @@ AssemblyInfo.cs
 ../Policy/DiskSpaceQuota.cs
 ../Policy/FileSizeFilter.cs
 ../Policy/FileTypeFilter.cs
+../Policy/SyncInterval.cs
 ../Sniffer/SnifferClientChannelSink.cs
 ../Sniffer/SnifferClientChannelSinkProvider.cs
 ../Sniffer/SnifferMessage.cs

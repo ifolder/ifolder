@@ -23,6 +23,18 @@ namespace Simias.Policy
 		static private string TimeCondition = "TimeCondition";
 
 		/// <summary>
+		/// Internal flags.
+		/// </summary>
+		[ FlagsAttribute ]
+		private enum PolicyFlags
+		{
+			/// <summary>
+			/// Indicates that a Property object is a policy value.
+			/// </summary>
+			ValueFlag = 1
+		};
+
+		/// <summary>
 		/// Used to hold all Policies associated with a Member.
 		/// </summary>
 		private ArrayList aggregatePolicy = new ArrayList();
@@ -105,6 +117,31 @@ namespace Simias.Policy
 			get { return Name; }
 			set { Name = value; }
 		}
+
+		/// <summary>
+		/// Returns a collection of policy values. If this is an aggregated policy,
+		/// all values from the aggregated policies are returned.
+		/// </summary>
+		public PolicyValue[] Values
+		{
+			get
+			{
+				ArrayList valueList = new ArrayList();
+				Policy[] policyArray = IsAggregate ? aggregatePolicy.ToArray( typeof( Policy ) ) as Policy[] : new Policy[] { this };
+
+				foreach( Policy policy in policyArray )
+				{
+					// Get a list of all properties that contain the PolicyValue flag.
+					MultiValuedList mvl = new MultiValuedList( policy.Properties, ( uint )PolicyFlags.ValueFlag );
+					foreach ( Property p in mvl )
+					{
+						valueList.Add( new PolicyValue( p.Name, p.Value ) );
+					}
+				}
+
+				return valueList.ToArray( typeof( PolicyValue ) ) as PolicyValue[];
+			}
+		}
 		#endregion
 
 		#region Constructor
@@ -183,6 +220,28 @@ namespace Simias.Policy
 
 			return property;
 		}
+
+		/// <summary>
+		/// Finds the policy value as a property that represents the specified name.
+		/// </summary>
+		/// <param name="name">Name of the policy value.</param>
+		/// <returns>A Property object that contains the policy value.</returns>
+		private Property FindValue( string name )
+		{
+			Property property = null;
+
+			MultiValuedList mvl = properties.GetProperties( name );
+			foreach( Property p in mvl )
+			{
+				if ( ( p.Flags & ( ushort )PolicyFlags.ValueFlag ) == ( ushort )PolicyFlags.ValueFlag )
+				{
+					property = p;
+					break;
+				}
+			}
+
+			return property;
+		}
 		#endregion
 
 		#region Internal Methods
@@ -218,6 +277,29 @@ namespace Simias.Policy
 		public void AddTimeCondition( PolicyTime time )
 		{
 			properties.ModifyNodeProperty( TimeCondition, time.ToString() );
+		}
+
+		/// <summary>
+		/// Adds a named value to the policy.
+		/// </summary>
+		/// <param name="name">Name of the value.</param>
+		/// <param name="value">Value to set on the policy.</param>
+		public void AddValue( string name, object value )
+		{
+			// See if there is already a value by this name.
+			Property p = FindValue( name );
+			if ( p != null )
+			{
+				// Just change the current value.
+				p.Value = value;
+			}
+			else
+			{
+				// Set the flag for this property indicating that it is a policy value.
+				p = new Property( name, value );
+				p.Flags |= ( ushort )PolicyFlags.ValueFlag;
+				properties.AddProperty( p );
+			}
 		}
 
 		/// <summary>
@@ -285,6 +367,32 @@ namespace Simias.Policy
 		{
 			properties.DeleteSingleProperty( TimeCondition );
 		}
+
+		/// <summary>
+		/// Removes the specified value from the policy.
+		/// </summary>
+		/// <param name="name">Name of the value to delete.</param>
+		public void DeleteValue( string name )
+		{
+			// Find the value in the policy.
+			Property p = FindValue( name );
+			if ( p != null )
+			{
+				p.Delete();
+			}
+		}
+
+		/// <summary>
+		/// Gets the policy value from its name.
+		/// </summary>
+		/// <param name="name">Name of the policy value.</param>
+		/// <returns>An object containing the policy value. If the policy value does not exist
+		/// a null is returned.</returns>
+		public object GetValue( string name )
+		{
+			Property p = FindValue( name );
+			return ( p != null ) ? p.Value : null;
+		}
 		#endregion
 	}
 
@@ -305,10 +413,9 @@ namespace Simias.Policy
 		/// <summary>
 		/// Initializes a new instance of this object.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
-		public PolicyManager( Store store )
+		public PolicyManager()
 		{
-			this.store = store;
+			this.store = Store.GetStore();
 		}
 		#endregion
 
@@ -792,7 +899,7 @@ namespace Simias.Policy
 			/// <summary>
 			/// Used to compare if a value is less than or equal to another value.
 			/// </summary>
-			Less_Equal,
+			Less_Equal
 		};
 
 		/// <summary>
@@ -1013,7 +1120,7 @@ namespace Simias.Policy
 				case Syntax.Uri:
 				case Syntax.XmlDocument:
 				{
-					// Only equals and !equals are supported.
+					// Only equals, !equals and no operation are supported.
 					if ( ( operation != Operation.Equal ) && ( operation != Operation.Not_Equal ) )
 					{
 						throw new CollectionStoreException( "Invalid operation for rule object type." );
@@ -1482,6 +1589,55 @@ namespace Simias.Policy
 		{
 			ASCIIEncoding encode = new ASCIIEncoding();
 			return encode.GetString( ToByteArray() );
+		}
+		#endregion
+	}
+
+	/// <summary>
+	/// Object used to store policy name value pairs.
+	/// </summary>
+	public class PolicyValue
+	{
+		#region Class Members
+		/// <summary>
+		/// The name of the value.
+		/// </summary>
+		private string name;
+
+		/// <summary>
+		/// The value.
+		/// </summary>
+		private object policyValue;
+		#endregion
+
+		#region Properties
+		/// <summary>
+		/// Gets the name of this value.
+		/// </summary>
+		public string Name
+		{
+			get { return name; }
+		}
+
+		/// <summary>
+		/// Gets the value for this object.
+		/// </summary>
+		public object Value
+		{
+			get { return policyValue; }
+		}
+		#endregion
+
+		#region Constructor
+		/// <summary>
+		/// Initializes a new instance of the object.
+		/// </summary>
+		/// <param name="name">Name of the value.</param>
+		/// <param name="value">Value to store in the object.</param>
+		public PolicyValue( string name, object value )
+		{
+			this.name = name;
+			this.policyValue = value;
 		}
 		#endregion
 	}

@@ -1809,16 +1809,16 @@ namespace Simias.Storage.Tests
 				Member member = collection.GetCurrentMember();
 
 				// Create a system-wide disk space policy.
-				DiskSpaceQuota.Create( store, store.DefaultDomain, 2048 );
+				DiskSpaceQuota.Create( store.DefaultDomain, 2048 );
 
 				// Make sure that there is a limit set.
-				if ( DiskSpaceQuota.GetLimit( store, store.DefaultDomain ) != 2048 )
+				if ( DiskSpaceQuota.GetLimit( store.DefaultDomain ) != 2048 )
 				{
 					throw new ApplicationException( "Domain disk quota not set." );
 				}
 
 				// Get a quota object.
-				DiskSpaceQuota dsq = DiskSpaceQuota.Get( store, member );
+				DiskSpaceQuota dsq = DiskSpaceQuota.Get( member );
 				
 				// Check the aggregate limit.
 				if ( dsq.Limit != 2048 )
@@ -1843,16 +1843,16 @@ namespace Simias.Storage.Tests
 				POBox.POBox.GetPOBox( store, store.DefaultDomain, member.UserID );
 
 				// Apply a quota on the member.
-				DiskSpaceQuota.Create( store, member, 1024 );
+				DiskSpaceQuota.Create( member, 1024 );
 
 				// Make sure that there is a limit set.
-				if ( DiskSpaceQuota.GetLimit( store, member ) != 1024 )
+				if ( DiskSpaceQuota.GetLimit( member ) != 1024 )
 				{
 					throw new ApplicationException( "Member disk quota not set." );
 				}
 
 				// Get a quota object.
-				dsq = DiskSpaceQuota.Get( store, member );
+				dsq = DiskSpaceQuota.Get( member );
 				
 				// Check the aggregate limit.
 				if ( dsq.Limit != 1024 )
@@ -1874,16 +1874,16 @@ namespace Simias.Storage.Tests
 
 
 				// Apply a quota on the collection.
-				DiskSpaceQuota.Create( store, collection, 512 );
+				DiskSpaceQuota.Create( collection, 512 );
 
 				// Make sure that there is a limit set.
-				if ( DiskSpaceQuota.GetLimit( store, collection ) != 512 )
+				if ( DiskSpaceQuota.GetLimit( collection ) != 512 )
 				{
 					throw new ApplicationException( "Collection disk quota not set." );
 				}
 
 				// Get a quota object.
-				dsq = DiskSpaceQuota.Get( store, member, collection );
+				dsq = DiskSpaceQuota.Get( member, collection );
 				
 				// Check the aggregate limit.
 				if ( dsq.Limit != 512 )
@@ -1904,10 +1904,10 @@ namespace Simias.Storage.Tests
 				}
 
 				// Reset the member's quota lower.
-				DiskSpaceQuota.Create( store, member, 128 );
+				DiskSpaceQuota.Create( member, 128 );
 
 				// Get a quota object.
-				dsq = DiskSpaceQuota.Get( store, member, collection );
+				dsq = DiskSpaceQuota.Get( member, collection );
 				
 				// Check the aggregate limit.
 				if ( dsq.Limit != 128 )
@@ -1966,10 +1966,10 @@ namespace Simias.Storage.Tests
 															 new FileTypeEntry( ".avi", false ) };
 
 				// Create a system-wide file filter policy.
-				FileTypeFilter.Create( store, store.DefaultDomain, dfte );
+				FileTypeFilter.Create( store.DefaultDomain, dfte );
 
 				// Get a filter object.
-				FileTypeFilter ftf = FileTypeFilter.Get( store, member );
+				FileTypeFilter ftf = FileTypeFilter.Get( member );
 				
 				// Now apply the filter so that it will pass.
 				if ( ftf.Allowed( "myfile.txt" ) == false )
@@ -1987,10 +1987,10 @@ namespace Simias.Storage.Tests
 				FileTypeEntry[] lfte = new FileTypeEntry[] { new FileTypeEntry( ".mov", false ) };
 
 				// Apply a file type filter on the current user on this machine.
-				FileTypeFilter.Create( store, lfte );
+				FileTypeFilter.Create( lfte );
 
 				// Get a filter object.
-				ftf = FileTypeFilter.Get( store, member );
+				ftf = FileTypeFilter.Get( member );
 				
 				// Check the aggregate list.
 				if ( ftf.FilterList.Length != 3 )
@@ -2013,10 +2013,10 @@ namespace Simias.Storage.Tests
 
 				// Apply a filter on the collection.
 				FileTypeEntry[] cfte = new FileTypeEntry[] { new FileTypeEntry( ".wav", false ) };
-				FileTypeFilter.Create( store, collection, cfte );
+				FileTypeFilter.Create( collection, cfte );
 
 				// Get a quota object.
-				ftf = FileTypeFilter.Get( store, member, collection );
+				ftf = FileTypeFilter.Get( member, collection );
 				
 				// Check the aggregate list.
 				if ( ftf.FilterList.Length != 4 )
@@ -2042,10 +2042,10 @@ namespace Simias.Storage.Tests
 
 				// Reset the member's filter to allow only .doc files.
 				FileTypeEntry[] mfte = new FileTypeEntry[] { new FileTypeEntry( ".doc", true ) };
-				FileTypeFilter.Create( store, member, mfte );
+				FileTypeFilter.Create( member, mfte );
 
 				// Get a filter object.
-				ftf = FileTypeFilter.Get( store, member, collection );
+				ftf = FileTypeFilter.Get( member, collection );
 				
 				// Now apply the filter so that it will pass.
 				if ( ftf.Allowed( "myfile.doc" ) == false )
@@ -2079,16 +2079,16 @@ namespace Simias.Storage.Tests
 				Member member = collection.GetCurrentMember();
 
 				// Create a system-wide file size limit policy.
-				FileSizeFilter.Create( store, store.DefaultDomain, 2048 );
+				FileSizeFilter.Create( store.DefaultDomain, 2048 );
 
 				// Make sure that there is a limit set.
-				if ( FileSizeFilter.GetLimit( store, store.DefaultDomain ) != 2048 )
+				if ( FileSizeFilter.GetLimit( store.DefaultDomain ) != 2048 )
 				{
 					throw new ApplicationException( "File size limit not set." );
 				}
 
 				// Get a filter object.
-				FileSizeFilter fsf = FileSizeFilter.Get( store, member );
+				FileSizeFilter fsf = FileSizeFilter.Get( member );
 				
 				// Check the aggregate limit.
 				if ( fsf.Limit != 2048 )
@@ -2113,16 +2113,16 @@ namespace Simias.Storage.Tests
 				POBox.POBox.GetPOBox( store, store.DefaultDomain, member.UserID );
 
 				// Apply a file size filter on the member.
-				FileSizeFilter.Create( store, member, 1024 );
+				FileSizeFilter.Create( member, 1024 );
 
 				// Make sure that there is a limit set.
-				if ( FileSizeFilter.GetLimit( store, member ) != 1024 )
+				if ( FileSizeFilter.GetLimit( member ) != 1024 )
 				{
 					throw new ApplicationException( "Member file size limit not set." );
 				}
 
 				// Get a file size filter object.
-				fsf = FileSizeFilter.Get( store, member );
+				fsf = FileSizeFilter.Get( member );
 				
 				// Check the aggregate limit.
 				if ( fsf.Limit != 1024 )
@@ -2144,16 +2144,16 @@ namespace Simias.Storage.Tests
 
 
 				// Apply a file size limit on the collection.
-				FileSizeFilter.Create( store, collection, 512 );
+				FileSizeFilter.Create( collection, 512 );
 
 				// Make sure that there is a limit set.
-				if ( FileSizeFilter.GetLimit( store, collection ) != 512 )
+				if ( FileSizeFilter.GetLimit( collection ) != 512 )
 				{
 					throw new ApplicationException( "Collection file size limit not set." );
 				}
 
 				// Get a file size limit object.
-				fsf = FileSizeFilter.Get( store, member, collection );
+				fsf = FileSizeFilter.Get( member, collection );
 				
 				// Check the aggregate limit.
 				if ( fsf.Limit != 512 )
@@ -2174,15 +2174,123 @@ namespace Simias.Storage.Tests
 				}
 
 				// Reset the member's quota lower.
-				FileSizeFilter.Create( store, member, 128 );
+				FileSizeFilter.Create( member, 128 );
 
 				// Get a file size limit object.
-				fsf = FileSizeFilter.Get( store, member, collection );
+				fsf = FileSizeFilter.Get( member, collection );
 				
 				// Check the aggregate limit.
 				if ( fsf.Limit != 128 )
 				{
 					throw new ApplicationException( "Aggregate member file size limit not set." );
+				}
+			}
+			finally
+			{
+				collection.Commit( collection.Delete() );
+			}
+		}
+
+		/// <summary>
+		/// Tests the sync interval functionality.
+		/// </summary>
+		[Test]
+		public void SyncIntervalTest()
+		{
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			collection.Commit();
+
+			try
+			{
+				Member member = collection.GetCurrentMember();
+
+				// Create a system-wide sync interval policy.
+				SyncInterval.Create( store.DefaultDomain, 120 );
+
+				// Make sure that there is an interval set.
+				if ( SyncInterval.GetInterval( store.DefaultDomain ) != 120 )
+				{
+					throw new ApplicationException( "Domain sync interval not set." );
+				}
+
+				// Get a sync interval object.
+				SyncInterval si = SyncInterval.Get( member );
+				
+				// Check the aggregate interval.
+				if ( si.Interval != 120 )
+				{
+					throw new ApplicationException( "Aggregate interval limit not set." );
+				}
+
+				// Create a PO box for the member.
+				POBox.POBox.GetPOBox( store, store.DefaultDomain, member.UserID );
+
+				// Apply a sync interval on the member.
+				SyncInterval.Create( member, 180 );
+
+				// Make sure that there is an interval set.
+				if ( SyncInterval.GetInterval( member ) != 180 )
+				{
+					throw new ApplicationException( "Member sync interval not set." );
+				}
+
+				// Get a file size filter object.
+				si = SyncInterval.Get( member );
+				
+				// Check the aggregate interval.
+				if ( si.Interval != 180 )
+				{
+					throw new ApplicationException( "Aggregate member sync interval not set." );
+				}
+
+
+				// Apply a sync interval on the collection.
+				SyncInterval.Create( collection, 240 );
+
+				// Make sure that there is an interval set.
+				if ( SyncInterval.GetInterval( collection ) != 240 )
+				{
+					throw new ApplicationException( "Collection sync interval not set." );
+				}
+
+				// Get a sync interval object.
+				si = SyncInterval.Get( member, collection );
+				
+				// Check the aggregate interval.
+				if ( si.Interval != 240 )
+				{
+					throw new ApplicationException( "Aggregate collection sync interval not set." );
+				}
+
+
+				// Apply a sync interval on the current user.
+				SyncInterval.Create( 200 );
+
+				// Make sure that there is an interval set.
+				if ( SyncInterval.GetInterval() != 200 )
+				{
+					throw new ApplicationException( "Current member sync interval not set." );
+				}
+
+				// Get a sync interval object.
+				si = SyncInterval.Get( member, collection );
+
+				// The collection interval should still apply.
+				if ( si.Interval != 240 )
+				{
+					throw new ApplicationException( "Aggregate collection sync interval not set." );
+				}
+
+				// Delete the sync interval on the collection.
+				SyncInterval.Delete( collection );
+
+				// Get a sync interval object.
+				si = SyncInterval.Get( member, collection );
+
+				// The current user interval should now apply.
+				if ( si.Interval != 200 )
+				{
+					throw new ApplicationException( "Aggregate current user sync interval not set." );
 				}
 			}
 			finally

@@ -23,16 +23,6 @@ namespace Simias.Policy
 		static public string DiskSpaceQuotaShortDescription = "Disk space quota";
 
 		/// <summary>
-		/// Store handle to the collection store.
-		/// </summary>
-		private Store store;
-
-		/// <summary>
-		/// Used to manage the policy.
-		/// </summary>
-		private PolicyManager manager;
-
-		/// <summary>
 		/// Policy object that is used to manage quota.
 		/// </summary>
 		private Policy policy;
@@ -105,14 +95,10 @@ namespace Simias.Policy
 		/// <summary>
 		/// Initializes a new instance of an object.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="member">Member that this disk space quota is associated with.</param>
-		/// <param name="manager">Policy manager object to control the quota policy.</param>
 		/// <param name="policy">The aggregate quota policy object.</param>
-		private DiskSpaceQuota( Store store, Member member, PolicyManager manager, Policy policy )
+		private DiskSpaceQuota( Member member, Policy policy )
 		{
-			this.store = store;
-			this.manager = manager;
 			this.policy = policy;
 			this.member = member;
 			this.usedDiskSpace = GetUsedDiskSpace( member );
@@ -123,13 +109,12 @@ namespace Simias.Policy
 		/// <summary>
 		/// Creates a system wide disk space quota policy.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="domainID">Domain that the limit will be associated with.</param>
 		/// <param name="limit">Amount of disk space that all users in the domain will be limited to.</param>
-		static public void Create( Store store, string domainID, long limit )
+		static public void Create( string domainID, long limit )
 		{
 			// Need a policy manager.
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, domainID );
@@ -152,13 +137,12 @@ namespace Simias.Policy
 		/// <summary>
 		/// Creates a disk space quota policy for the specified member.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="member">Member that the limit will be associated with.</param>
 		/// <param name="limit">Amount of disk space that this member will be limited to.</param>
-		static public void Create( Store store, Member member, long limit )
+		static public void Create( Member member, long limit )
 		{
 			// Need a policy manager.
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, member );
@@ -181,13 +165,12 @@ namespace Simias.Policy
 		/// <summary>
 		/// Creates a disk space quota policy for the specified collection.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="collection">Collection that the limit will be associated with.</param>
 		/// <param name="limit">Amount of disk space that this collection will be limited to.</param>
-		static public void Create( Store store, Collection collection, long limit )
+		static public void Create( Collection collection, long limit )
 		{
 			// Need a policy manager.
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, collection );
@@ -210,12 +193,11 @@ namespace Simias.Policy
 		/// <summary>
 		/// Deletes a system wide disk space quota policy.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="domainID">Domain that the limit will be associated with.</param>
-		static public void Delete( Store store, string domainID )
+		static public void Delete( string domainID )
 		{
 			// Need a policy manager.
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, domainID );
@@ -229,12 +211,11 @@ namespace Simias.Policy
 		/// <summary>
 		/// Deletes a disk space quota policy for the specified member.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="member">Member that the limit will be associated with.</param>
-		static public void Delete( Store store, Member member )
+		static public void Delete( Member member )
 		{
 			// Need a policy manager.
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, member );
@@ -248,12 +229,11 @@ namespace Simias.Policy
 		/// <summary>
 		/// Deletes a disk space quota policy for the specified collection.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="collection">Collection that the limit will be associated with.</param>
-		static public void Delete( Store store, Collection collection )
+		static public void Delete( Collection collection )
 		{
 			// Need a policy manager.
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, collection );
@@ -265,14 +245,38 @@ namespace Simias.Policy
 		}
 
 		/// <summary>
+		/// Gets the aggregate disk space quota policy for the specified member.
+		/// </summary>
+		/// <param name="member">Member that quota is associated with.</param>
+		/// <returns>A DiskSpaceQuota object that contains the policy for the specified member.</returns>
+		static public DiskSpaceQuota Get( Member member )
+		{
+			PolicyManager pm = new PolicyManager();
+			Policy policy = pm.GetAggregatePolicy( DiskSpaceQuotaPolicyID, member );
+			return new DiskSpaceQuota( member, policy );
+		}
+
+		/// <summary>
+		/// Gets the aggregate disk space quota policy for the specified member and collection.
+		/// </summary>
+		/// <param name="member">Member that quota is associated with.</param>
+		/// <param name="collection">Collection to add to the aggregate quota policy.</param>
+		/// <returns>A DiskSpaceQuota object that contains the policy for the specified member.</returns>
+		static public DiskSpaceQuota Get( Member member, Collection collection )
+		{
+			PolicyManager pm = new PolicyManager();
+			Policy policy = pm.GetAggregatePolicy( DiskSpaceQuotaPolicyID, member, collection );
+			return new DiskSpaceQuota( member, policy );
+		}
+
+		/// <summary>
 		/// Gets the disk space quota limit associated with the specified domain.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="domainID">Domain that the limit is associated with.</param>
 		/// <returns>Amount of disk space that all users in the domain are limited to.</returns>
-		static public long GetLimit( Store store, string domainID )
+		static public long GetLimit( string domainID )
 		{
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, domainID );
 			return ( policy != null ) ? ( long )DiskSpaceQuota.GetRule( policy ).Operand : long.MaxValue;
 		}
@@ -280,12 +284,11 @@ namespace Simias.Policy
 		/// <summary>
 		/// Gets the disk space quota limit associated with the specified member.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="member">Member that the limit is associated with.</param>
 		/// <returns>Amount of disk space that the member is limited to.</returns>
-		static public long GetLimit( Store store, Member member )
+		static public long GetLimit( Member member )
 		{
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, member );
 			return ( policy != null ) ? ( long )DiskSpaceQuota.GetRule( policy ).Operand : long.MaxValue;
 		}
@@ -293,56 +296,27 @@ namespace Simias.Policy
 		/// <summary>
 		/// Gets the disk space quota limit associated with the specified collection.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="collection">Collection that the limit is associated with.</param>
 		/// <returns>Amount of disk space that the collection is limited to.</returns>
-		static public long GetLimit( Store store, Collection collection )
+		static public long GetLimit( Collection collection )
 		{
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, collection );
 			return ( policy != null ) ? ( long )DiskSpaceQuota.GetRule( policy ).Operand : long.MaxValue;
 		}
 
 		/// <summary>
-		/// Gets the aggregate disk space quota policy for the specified member.
-		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
-		/// <param name="member">Member that quota is associated with.</param>
-		/// <returns>A DiskSpaceQuota object that contains the policy for the specified member.</returns>
-		static public DiskSpaceQuota Get( Store store, Member member )
-		{
-			PolicyManager pm = new PolicyManager( store );
-			Policy policy = pm.GetAggregatePolicy( DiskSpaceQuotaPolicyID, member );
-			return new DiskSpaceQuota( store, member, pm, policy );
-		}
-
-		/// <summary>
-		/// Gets the aggregate disk space quota policy for the specified member and collection.
-		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
-		/// <param name="member">Member that quota is associated with.</param>
-		/// <param name="collection">Collection to add to the aggregate quota policy.</param>
-		/// <returns>A DiskSpaceQuota object that contains the policy for the specified member.</returns>
-		static public DiskSpaceQuota Get( Store store, Member member, Collection collection )
-		{
-			PolicyManager pm = new PolicyManager( store );
-			Policy policy = pm.GetAggregatePolicy( DiskSpaceQuotaPolicyID, member, collection );
-			return new DiskSpaceQuota( store, member, pm, policy );
-		}
-
-		/// <summary>
 		/// Sets the disk space quota limit associated with the specified domain.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="domainID">Domain that the limit is associated with.</param>
 		/// <param name="limit">Amount of disk space that all users in the domain will be limited to.</param>
-		static public void Set( Store store, string domainID, long limit )
+		static public void Set( string domainID, long limit )
 		{
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, domainID );
 			if ( policy == null )
 			{
-				DiskSpaceQuota.Create( store, domainID, limit );
+				DiskSpaceQuota.Create( domainID, limit );
 			}
 			else
 			{
@@ -355,16 +329,15 @@ namespace Simias.Policy
 		/// <summary>
 		/// Sets the disk space quota limit associated with the specified member.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="member">Member that the limit is associated with.</param>
 		/// <param name="limit">Amount of disk space that all users in the domain will be limited to.</param>
-		static public void Set( Store store, Member member, long limit )
+		static public void Set( Member member, long limit )
 		{
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, member );
 			if ( policy == null )
 			{
-				DiskSpaceQuota.Create( store, member, limit );
+				DiskSpaceQuota.Create( member, limit );
 			}
 			else
 			{
@@ -377,16 +350,15 @@ namespace Simias.Policy
 		/// <summary>
 		/// Sets the disk space quota limit associated with the specified collection.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
 		/// <param name="collection">Collection that the limit is associated with.</param>
 		/// <param name="limit">Amount of disk space that all users in the domain will be limited to.</param>
-		static public void Set( Store store, Collection collection, long limit )
+		static public void Set( Collection collection, long limit )
 		{
-			PolicyManager pm = new PolicyManager( store );
+			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, collection );
 			if ( policy == null )
 			{
-				DiskSpaceQuota.Create( store, collection, limit );
+				DiskSpaceQuota.Create( collection, limit );
 			}
 			else
 			{
@@ -425,6 +397,7 @@ namespace Simias.Policy
 			long collectionSpace = 0;
 
 			// Get all of the collections that are owned by the member.
+			Store store = Store.GetStore();
 			ICSList collectionList = store.GetCollectionsByOwner( member.UserID, member.GetDomainID( store ) );
 			foreach ( ShallowNode sn in collectionList )
 			{
