@@ -37,27 +37,41 @@ namespace Simias.Sync
 	/// </summary>
 	public class SnifferClientChannelSink : IClientChannelSink
 	{
-		private IServerChannelSink nextSink;
+		private IClientChannelSink nextSink;
 
-		public SnifferClientChannelSink(IServerChannelSink nextSink)
+		public SnifferClientChannelSink(IClientChannelSink nextSink)
 		{
 			this.nextSink = nextSink;
 		}
 		
 		#region IClientChannelSink Members
 
-		public void AsyncProcessRequest(IClientChannelSinkStack sinkStack, IMessage msg, ITransportHeaders headers, Stream stream)
-		{
-		}
-
 		void IClientChannelSink.ProcessMessage(IMessage msg, ITransportHeaders requestHeaders, Stream requestStream, out ITransportHeaders responseHeaders, out Stream responseStream)
 		{
-			responseHeaders = null;
-			responseStream = null;
+			StringBuilder message = new StringBuilder();
+
+			foreach(DictionaryEntry entry in requestHeaders)
+			{
+				message.AppendFormat("{0} = {1}, ", entry.Key, entry.Value);
+			}
+
+			MyTrace.WriteLine("Processing Message: {0}", message);
+
+			try
+			{
+				nextSink.ProcessMessage(msg, requestHeaders, requestStream, out responseHeaders, out responseStream);
+			}
+			catch(Exception e)
+			{
+				MyTrace.WriteLine(e);
+
+				throw e;
+			}
 		}
 
-		void IClientChannelSink.AsyncProcessResponse(IClientResponseChannelSinkStack sinkStack, object state, ITransportHeaders headers, Stream stream)
+		IClientChannelSink IClientChannelSink.NextChannelSink
 		{
+			get { return nextSink; }
 		}
 
 		public Stream GetRequestStream(IMessage msg, ITransportHeaders headers)
@@ -65,12 +79,12 @@ namespace Simias.Sync
 			return null;
 		}
 
-		IClientChannelSink IClientChannelSink.NextChannelSink
+		public void AsyncProcessRequest(IClientChannelSinkStack sinkStack, IMessage msg, ITransportHeaders headers, Stream stream)
 		{
-			get
-			{
-				return null;
-			}
+		}
+
+		void IClientChannelSink.AsyncProcessResponse(IClientResponseChannelSinkStack sinkStack, object state, ITransportHeaders headers, Stream stream)
+		{
 		}
 
 		#endregion
@@ -79,10 +93,7 @@ namespace Simias.Sync
 
 		public IDictionary Properties
 		{
-			get
-			{
-				return null;
-			}
+			get { return null; }
 		}
 
 		#endregion

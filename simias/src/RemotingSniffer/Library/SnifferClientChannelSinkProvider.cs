@@ -33,7 +33,7 @@ namespace Simias.Sync
 	/// </summary>
 	public class SnifferClientChannelSinkProvider : IClientChannelSinkProvider
 	{
-		private IServerChannelSinkProvider nextProvider;
+		private IClientChannelSinkProvider nextProvider;
 		
 		public SnifferClientChannelSinkProvider()
 		{
@@ -43,19 +43,21 @@ namespace Simias.Sync
 
 		IClientChannelSink IClientChannelSinkProvider.CreateSink(IChannelSender channel, string url, object remoteChannelData)
 		{
-			return null;
+			IClientChannelSink nextSink = null;
+			
+			if (nextProvider != null)
+			{
+				nextSink = nextProvider.CreateSink(channel, url, remoteChannelData);
+			}
+
+			return new SnifferClientChannelSink(nextSink);
 		}
 
 		IClientChannelSinkProvider IClientChannelSinkProvider.Next
 		{
-			get
-			{
-				return null;
-			}
+			get { return nextProvider; }
 
-			set
-			{
-			}
+			set { nextProvider = value; }
 		}
 
 		#endregion

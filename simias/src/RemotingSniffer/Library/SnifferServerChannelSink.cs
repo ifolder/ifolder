@@ -46,11 +46,6 @@ namespace Simias.Sync
 		
 		#region IServerChannelSink Members
 
-		public Stream GetResponseStream(IServerResponseChannelSinkStack sinkStack, object state, IMessage msg, ITransportHeaders headers)
-		{
-			return null;
-		}
-
 		public ServerProcessing ProcessMessage(IServerChannelSinkStack sinkStack, IMessage requestMsg, ITransportHeaders requestHeaders, Stream requestStream, out IMessage responseMsg, out ITransportHeaders responseHeaders, out Stream responseStream)
 		{
 			StringBuilder message = new StringBuilder();
@@ -78,16 +73,18 @@ namespace Simias.Sync
 			return result;
 		}
 
-		public void AsyncProcessResponse(IServerResponseChannelSinkStack sinkStack, object state, IMessage msg, ITransportHeaders headers, Stream stream)
-		{
-		}
-
 		public IServerChannelSink NextChannelSink
 		{
-			get
-			{
-				return nextSink;
-			}
+			get { return nextSink; }
+		}
+
+		public Stream GetResponseStream(IServerResponseChannelSinkStack sinkStack, object state, IMessage msg, ITransportHeaders headers)
+		{
+			return null;
+		}
+
+		public void AsyncProcessResponse(IServerResponseChannelSinkStack sinkStack, object state, IMessage msg, ITransportHeaders headers, Stream stream)
+		{
 		}
 
 		#endregion
@@ -96,10 +93,7 @@ namespace Simias.Sync
 
 		public IDictionary Properties
 		{
-			get
-			{
-				return null;
-			}
+			get { return null; }
 		}
 
 		#endregion
