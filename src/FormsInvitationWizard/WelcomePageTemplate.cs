@@ -40,6 +40,7 @@ namespace Novell.iFolder.InvitationWizard
 		private System.Windows.Forms.Label welcomeTitle;
 		private System.Windows.Forms.Label descriptionText;
 		private System.Windows.Forms.PictureBox waterMark;
+		private System.Windows.Forms.Label actionText;
 		/// <summary> 
 		/// Required designer variable.
 		/// </summary>
@@ -78,6 +79,7 @@ namespace Novell.iFolder.InvitationWizard
 		private void InitializeComponent()
 		{
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.actionText = new System.Windows.Forms.Label();
 			this.descriptionText = new System.Windows.Forms.Label();
 			this.welcomeTitle = new System.Windows.Forms.Label();
 			this.waterMark = new System.Windows.Forms.PictureBox();
@@ -87,6 +89,7 @@ namespace Novell.iFolder.InvitationWizard
 			// panel1
 			// 
 			this.panel1.BackColor = System.Drawing.Color.White;
+			this.panel1.Controls.Add(this.actionText);
 			this.panel1.Controls.Add(this.descriptionText);
 			this.panel1.Controls.Add(this.welcomeTitle);
 			this.panel1.Location = new System.Drawing.Point(168, 0);
@@ -94,13 +97,21 @@ namespace Novell.iFolder.InvitationWizard
 			this.panel1.Size = new System.Drawing.Size(328, 304);
 			this.panel1.TabIndex = 1;
 			// 
+			// actionText
+			// 
+			this.actionText.Location = new System.Drawing.Point(16, 256);
+			this.actionText.Name = "actionText";
+			this.actionText.Size = new System.Drawing.Size(296, 40);
+			this.actionText.TabIndex = 2;
+			this.actionText.Text = "action...";
+			// 
 			// descriptionText
 			// 
 			this.descriptionText.Location = new System.Drawing.Point(16, 72);
 			this.descriptionText.Name = "descriptionText";
-			this.descriptionText.Size = new System.Drawing.Size(296, 216);
+			this.descriptionText.Size = new System.Drawing.Size(296, 184);
 			this.descriptionText.TabIndex = 1;
-			this.descriptionText.Text = "Desciption ...";
+			this.descriptionText.Text = "Description ...";
 			// 
 			// welcomeTitle
 			// 
@@ -131,6 +142,19 @@ namespace Novell.iFolder.InvitationWizard
 		#endregion
 
 		#region Properties
+		public string ActionText
+		{
+			get
+			{
+				return actionText.Text;
+			}
+			
+			set
+			{
+				actionText.Text = value;
+			}
+		}
+
 		public string WelcomeTitle
 		{
 			get

@@ -94,7 +94,8 @@ namespace Novell.iFolder.InvitationWizard
 			//
 			// welcomePage
 			// 
-			this.welcomePage.DescriptionText = "This wizard will help you accept an invitation to a shared iFolder and place it in the appropriate location.\n\nTo continue, click Next.";
+			this.welcomePage.DescriptionText = "Use this wizard to accept or decline an invitation to participate in a shared iFolder. If you accept, it helps you place the iFolder in an appropriate location on this computer. If you decline, it revokes the invitation. The iFolder client uses your current Windows logon to establish local ownership of the shared iFolder.";
+			this.welcomePage.ActionText = "Click Next to continue, or click Cancel to exit.";
 			this.welcomePage.Location = new System.Drawing.Point(0, 0);
 			this.welcomePage.Name = "welcomePage";
 			this.welcomePage.Size = new System.Drawing.Size(496, 304);
@@ -103,8 +104,8 @@ namespace Novell.iFolder.InvitationWizard
 			// 
 			// selectInvitationPage
 			// 
-			this.selectInvitationPage.HeaderSubTitle = "Select an iFolder invitation to accept on this computer.";
-			this.selectInvitationPage.HeaderTitle = "Choose iFolder Invitation";
+			this.selectInvitationPage.HeaderSubTitle = "Specify the location of the iFolder Invitation you want to accept or decline.";
+			this.selectInvitationPage.HeaderTitle = "Select an iFolder Invitation";
 			this.selectInvitationPage.Location = new System.Drawing.Point(0, 0);
 			this.selectInvitationPage.Name = "selectInvitationPage";
 			this.selectInvitationPage.Size = new System.Drawing.Size(496, 304);
@@ -112,8 +113,8 @@ namespace Novell.iFolder.InvitationWizard
 			// 
 			// acceptDeclinePage
 			// 
-			this.acceptDeclinePage.HeaderSubTitle = "Choose to accept or decline this iFolder invitation.";
-			this.acceptDeclinePage.HeaderTitle = "Accept iFolder Invitation";
+			this.acceptDeclinePage.HeaderSubTitle = "Accept or decline the invitation to participate in this shared iFolder.";
+			this.acceptDeclinePage.HeaderTitle = "Respond to the iFolder Invitation";
 			this.acceptDeclinePage.Location = new System.Drawing.Point(0, 0);
 			this.acceptDeclinePage.Name = "acceptDeclinePage";
 			this.acceptDeclinePage.Size = new System.Drawing.Size(496, 304);
@@ -121,8 +122,8 @@ namespace Novell.iFolder.InvitationWizard
 			// 
 			// selectiFolderLocationPage
 			// 
-			this.selectiFolderLocationPage.HeaderSubTitle = "Select a location for the shared iFolder to be placed on this computer.";
-			this.selectiFolderLocationPage.HeaderTitle = "Choose iFolder Location";
+			this.selectiFolderLocationPage.HeaderSubTitle = "Specify the location on this computer where you want to place the shared iFolder.";
+			this.selectiFolderLocationPage.HeaderTitle = "Select iFolder Location";
 			this.selectiFolderLocationPage.Location = new System.Drawing.Point(0, 0);
 			this.selectiFolderLocationPage.Name = "selectiFolderLocationPage";
 			this.selectiFolderLocationPage.Size = new System.Drawing.Size(496, 304);
@@ -448,14 +449,17 @@ namespace Novell.iFolder.InvitationWizard
 			get
 			{
 				// TODO - may need to re-work this ... especially for localization (not good to cat strings together).
-				StringBuilder sb = new StringBuilder("You have successfully completed the iFolder Invitation Wizard.\n\n");
-				sb.AppendFormat("You have choosen to {0} the {1} iFolder from {2}.\n\n", this.acceptDeclinePage.Accept ? "accept" : "decline", this.Invitation.CollectionName, this.Invitation.FromName);
+				StringBuilder sb = new StringBuilder("The wizard is ready to respond to the iFolder Invitation.\n\n");
 				if (this.acceptDeclinePage.Accept)
 				{
-					sb.AppendFormat("The iFolder will be created in {0}.\n\n", this.Invitation.RootPath);
+					sb.AppendFormat("You accepted the invitation to participate in the {0} iFolder shared by {1}.\n\n", this.Invitation.CollectionName, this.Invitation.FromName);
+					sb.AppendFormat("The planned location for the shared iFolder is {0}.", Path.Combine(this.Invitation.RootPath, this.Invitation.CollectionName));
 				}
-
-				sb.Append("To close this wizard and process your request, click Finish.");
+				else
+				{
+					sb.AppendFormat("You declined the invitation to participate in the {0} iFolder shared by {1}.\n\n", this.Invitation.CollectionName, this.Invitation.FromName);
+					sb.Append("The invitation will be revoked and cannot be accepted at another computer.");
+				}
 
 				return sb.ToString();				
 			}
