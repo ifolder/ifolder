@@ -62,8 +62,8 @@
                 refreshWindow = id; 
                 revertiFolder = id; 
                 setupiFolder = id; 
-                showGeneralProperties = id; 
-                showSharingProperties = id; 
+                shareiFolder = id; 
+                showProperties = id; 
                 synciFolder = id; 
             }; 
             CLASS = iFolderWindowController; 
@@ -74,6 +74,8 @@
                 iFolderTable = NSTableView; 
                 ifoldersController = NSArrayController; 
                 setupSheetController = SetupiFolderSheetController; 
+                statusProgress = NSProgressIndicator; 
+                statusText = NSTextField; 
             }; 
             SUPERCLASS = NSWindowController; 
         }

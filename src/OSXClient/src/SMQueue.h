@@ -22,28 +22,25 @@
  ***********************************************************************/
 
 #import <Cocoa/Cocoa.h>
-#import <iFolderService.h>
 
-#include <Carbon/Carbon.h>
-#include "simias-event-client.h"
+@interface SMQueue : NSObject
+{
+	NSMutableArray		*queueArray;
+}
 
+- (void) push: (id) object;
+- (id) pop;
+- (BOOL) isEmpty;
+- (int) count;
 
-// Globals
-extern SimiasEventClient simiasEventClient;
+@end
 
+/*
+@interface NSMutableArray ( SMQueue )
 
-// Functions
-void SimiasEventInitialize(void);
-void SimiasEventDisconnect(void);
-int SimiasEventStateCallBack(SEC_STATE_EVENT state_event, const char *message, void *data);
-int SimiasEventNodeCreated(SimiasNodeEvent *nodeEvent, void *data);
-int SimiasEventNodeDeleted(SimiasNodeEvent *nodeEvent, void *data);
-int SimiasEventNodeChanged(SimiasNodeEvent *nodeEvent, void *data);
+- (void) push: (id) object;
+- (id) pop;
+- (BOOL) isEmpty;
 
-int SimiasEventSyncCollection(SimiasCollectionSyncEvent *collectionEvent, void *data);
-int SimiasEventSyncFile(SimiasFileSyncEvent *fileEvent, void *data);
-int SimiasEventNotifyMessage(SimiasNotifyEvent *notifyEvent, void *data);
-
-NSDictionary *getNotifyEventProperties(SimiasNotifyEvent *notifyEvent);
-NSDictionary *getFileSyncEventProperties(SimiasFileSyncEvent *fileEvent);
-NSDictionary *getCollectionSyncEventProperties(SimiasCollectionSyncEvent *collectionEvent);
+@end
+*/

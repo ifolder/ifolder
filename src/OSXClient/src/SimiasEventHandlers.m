@@ -23,6 +23,8 @@
 
 #include "SimiasEventHandlers.h"
 #include "iFolderApplication.h"
+#include "SMEvents.h"
+#include "SimiasEventData.h"
 
 static SimiasEventClient simiasEventClient;
 
@@ -110,56 +112,156 @@ int SimiasEventStateCallBack(SEC_STATE_EVENT state_event, const char *message, v
 
 int SimiasEventNodeCreated(SimiasNodeEvent *nodeEvent, void *data)
 {
-    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-	[[NSApp delegate] addLogTS:[NSString stringWithFormat:@"Node created: %s", nodeEvent->node]];
-    [pool release];	
+//    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
+//	NSLog(@"SimiasEventNodeCreated fired: %s", nodeEvent->node);
+//    [pool release];	
     return 0;
 }
 
 int SimiasEventNodeDeleted(SimiasNodeEvent *nodeEvent, void *data)
 {
-    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-	[[NSApp delegate] addLogTS:[NSString stringWithFormat:@"Node deleted: %s", nodeEvent->node]];
-    [pool release];	
+//    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
+//	NSLog(@"SimiasEventNodeDeleted fired: %s", nodeEvent->node);
+//    [pool release];	
     return 0;
 }
 
 int SimiasEventNodeChanged(SimiasNodeEvent *nodeEvent, void *data)
 {
-    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-	[[NSApp delegate] addLogTS:[NSString stringWithFormat:@"Node changed: %s", nodeEvent->node]];
+//    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
+//	NSLog(@"SimiasEventNodeChanged fired: %s", nodeEvent->node);
 
-    [pool release];	
+//    [pool release];	
     return 0;
 }
 
+
+
+
+//===================================================================
+// CollectionSyncEvents Handlers
+//===================================================================
 int SimiasEventSyncCollection(SimiasCollectionSyncEvent *collectionEvent, void *data)
 {
     NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-	[[NSApp delegate] addLogTS:[NSString stringWithFormat:@"Collection sync: %s", collectionEvent->name]];
+	NSLog(@"SimiasCollectionSyncEvent fired: %s", collectionEvent->name);
 
+	NSDictionary *cseProps = [getCollectionSyncEventProperties(collectionEvent) retain];
+	SMCollectionSyncEvent *cse = [[SMCollectionSyncEvent alloc] init];
+	[cse setProperties:cseProps];
+	[[SimiasEventData sharedInstance] pushCollectionSyncEvent:cse];
+
+
+	[cseProps release];
+	[cse release];
     [pool release];	
     return 0;
 }
+NSDictionary *getCollectionSyncEventProperties(SimiasCollectionSyncEvent *collectionEvent)
+{
+	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
 
+	if(collectionEvent->event_type != nil)
+		[newProperties setObject:[NSString stringWithCString:collectionEvent->event_type] forKey:@"eventType"];
+	if(collectionEvent->name != nil)
+		[newProperties setObject:[NSString stringWithCString:collectionEvent->name] forKey:@"name"];
+	if(collectionEvent->id != nil)
+		[newProperties setObject:[NSString stringWithCString:collectionEvent->id] forKey:@"ID"];
+	if(collectionEvent->action != nil)
+		[newProperties setObject:[NSString stringWithCString:collectionEvent->action] forKey:@"action"];
+	if(collectionEvent->successful != nil)
+		[newProperties setObject:[NSString stringWithCString:collectionEvent->successful] forKey:@"successful"];
+
+	return [newProperties autorelease];
+}
+
+
+
+
+
+//===================================================================
+// FileSyncEvents Handlers
+//===================================================================
 int SimiasEventSyncFile(SimiasFileSyncEvent *fileEvent, void *data)
 {
     NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-	[[NSApp delegate] addLogTS:[NSString stringWithFormat:@"File Sync: %s", fileEvent->name]];
+	NSLog(@"SimiasFileSyncEvent fired: %s", fileEvent->name);
 
+	NSDictionary *fseProps = [getFileSyncEventProperties(fileEvent) retain];
+	SMFileSyncEvent *fse = [[SMFileSyncEvent alloc] init];
+	[fse setProperties:fseProps];
+	[[SimiasEventData sharedInstance] pushFileSyncEvent:fse];
+
+	[fseProps release];
+	[fse release];
     [pool release];	
     return 0;
 }
+NSDictionary *getFileSyncEventProperties(SimiasFileSyncEvent *fileEvent)
+{
+	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
 
+	if(fileEvent->event_type != nil)
+		[newProperties setObject:[NSString stringWithCString:fileEvent->event_type] forKey:@"eventType"];
+	if(fileEvent->collection_id != nil)
+		[newProperties setObject:[NSString stringWithCString:fileEvent->collection_id] forKey:@"collectionID"];
+	if(fileEvent->name != nil)
+		[newProperties setObject:[NSString stringWithCString:fileEvent->name] forKey:@"name"];
+	if(fileEvent->object_type != nil)
+		[newProperties setObject:[NSString stringWithCString:fileEvent->object_type] forKey:@"objectType"];
+	if(fileEvent->delete_str != nil)
+		[newProperties setObject:[NSString stringWithCString:fileEvent->delete_str] forKey:@"delete_str"];
+	if(fileEvent->size != nil)
+		[newProperties 
+			setObject:[NSNumber numberWithDouble:[[NSString stringWithCString:fileEvent->size] doubleValue]]
+			forKey:@"size"];
+	if(fileEvent->size_to_sync != nil)
+		[newProperties 
+			setObject:[NSNumber numberWithDouble:[[NSString stringWithCString:fileEvent->size_to_sync] doubleValue]]
+			forKey:@"sizeToSync"];
+	if(fileEvent->size_remaining != nil)
+		[newProperties 
+			setObject:[NSNumber numberWithDouble:[[NSString stringWithCString:fileEvent->size_remaining] doubleValue]]
+			forKey:@"sizeRemaining"];
+	if(fileEvent->direction != nil)
+		[newProperties setObject:[NSString stringWithCString:fileEvent->direction] forKey:@"direction"];
+
+	return [newProperties autorelease];
+}
+
+
+
+
+//===================================================================
+// NotifyEvent Handlers
+//===================================================================
 int SimiasEventNotifyMessage(SimiasNotifyEvent *notifyEvent, void *data)
 {
     NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-	[[NSApp delegate] addLogTS:[NSString stringWithFormat:@"Authentication requested for: %s", notifyEvent->message]];
+	NSLog(@"SimiasNotifyEvent fired: %s - %s", notifyEvent->message, notifyEvent->type);
 
-	[[NSApp delegate] showLoginWindow:[NSString stringWithCString:notifyEvent->message]];
+	NSDictionary *neProps = [getNotifyEventProperties(notifyEvent) retain];
+	SMNotifyEvent *ne = [[SMNotifyEvent alloc] init];
+	[ne setProperties:neProps];
+	[[SimiasEventData sharedInstance] pushNotifyEvent:ne];
 
-    [pool release];	
+	[neProps release];
+	[ne release];
+    [pool release];
     return 0;
 }
+NSDictionary *getNotifyEventProperties(SimiasNotifyEvent *notifyEvent)
+{
+	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
 
+	if(notifyEvent->event_type != nil)
+		[newProperties setObject:[NSString stringWithCString:notifyEvent->event_type] forKey:@"eventType"];
+	if(notifyEvent->message != nil)
+		[newProperties setObject:[NSString stringWithCString:notifyEvent->message] forKey:@"message"];
+	if(notifyEvent->time != nil)
+		[newProperties setObject:[NSString stringWithCString:notifyEvent->time] forKey:@"time"];
+	if(notifyEvent->type != nil)
+		[newProperties setObject:[NSString stringWithCString:notifyEvent->type] forKey:@"ID"];
 
+	return [newProperties autorelease];
+}

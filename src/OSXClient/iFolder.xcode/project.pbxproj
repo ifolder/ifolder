@@ -120,6 +120,7 @@
 		};
 		29B97314FDCFA39411CA2CEA = {
 			children = (
+				3E19994507BAE41E00AAC29A,
 				3E66704F07B7D3A90047E683,
 				080E96DDFE201D6D7F000001,
 				3EE887F507B95C1400484B9F,
@@ -292,6 +293,112 @@
 		};
 		3E19255307A7E20700F9E44D = {
 			fileRef = 3E19255207A7E20700F9E44D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E19989407BAC5BD00AAC29A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SimiasEventData.h;
+			path = src/SimiasEventData.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E19989507BAC5BD00AAC29A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SimiasEventData.m;
+			path = src/SimiasEventData.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E19989607BAC5BD00AAC29A = {
+			fileRef = 3E19989407BAC5BD00AAC29A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E19989707BAC5BD00AAC29A = {
+			fileRef = 3E19989507BAC5BD00AAC29A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E1998AD07BAC93600AAC29A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SMQueue.h;
+			path = src/SMQueue.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E1998AE07BAC93600AAC29A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SMQueue.m;
+			path = src/SMQueue.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E1998AF07BAC93600AAC29A = {
+			fileRef = 3E1998AD07BAC93600AAC29A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E1998B007BAC93600AAC29A = {
+			fileRef = 3E1998AE07BAC93600AAC29A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E19994507BAE41E00AAC29A = {
+			children = (
+				3E19994807BAE47700AAC29A,
+				3E19994907BAE47700AAC29A,
+				3E3405A5078B40EF00630436,
+				3E3405A6078B40EF00630436,
+				3E1998AD07BAC93600AAC29A,
+				3E1998AE07BAC93600AAC29A,
+				3E19989407BAC5BD00AAC29A,
+				3E19989507BAC5BD00AAC29A,
+			);
+			isa = PBXGroup;
+			name = Events;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E19994807BAE47700AAC29A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SMEvents.h;
+			path = src/SMEvents.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E19994907BAE47700AAC29A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SMEvents.m;
+			path = src/SMEvents.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E19994A07BAE47700AAC29A = {
+			fileRef = 3E19994807BAE47700AAC29A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E19994B07BAE47700AAC29A = {
+			fileRef = 3E19994907BAE47700AAC29A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -643,8 +750,6 @@
 				3EA94F5F07B823CA0088FD0F,
 				3E66705207B7D3CC0047E683,
 				3E66705307B7D3CC0047E683,
-				3E3405A5078B40EF00630436,
-				3E3405A6078B40EF00630436,
 				3EE886EA07B92E8B00484B9F,
 				3EE886E907B92E8B00484B9F,
 				3EB62D0D07B9C907000C8112,
@@ -1570,6 +1675,9 @@
 				3EE8881607B9603E00484B9F,
 				3EE8881907B9620F00484B9F,
 				3EB62D0F07B9C907000C8112,
+				3E19989607BAC5BD00AAC29A,
+				3E1998AF07BAC93600AAC29A,
+				3E19994A07BAE47700AAC29A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1610,6 +1718,9 @@
 				3EE886EB07B92E8B00484B9F,
 				3EE8881A07B9620F00484B9F,
 				3EB62D1007B9C907000C8112,
+				3E19989707BAC5BD00AAC29A,
+				3E1998B007BAC93600AAC29A,
+				3E19994B07BAE47700AAC29A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

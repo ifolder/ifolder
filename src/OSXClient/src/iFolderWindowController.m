@@ -50,6 +50,49 @@ static iFolderWindowController *sharedInstance = nil;
 
 
 
++(void)updateStatusTS:(NSString *)message
+{
+	if(sharedInstance != nil)
+	{
+		[sharedInstance performSelectorOnMainThread:@selector(updateStatus:) 
+					withObject:message waitUntilDone:NO ];		
+	}
+}
+
+
+
+
+-(void)updateStatus:(NSString *)message
+{
+	[statusText setStringValue:message];
+}
+
+
++(void)updateProgress:(double)curVal withMin:(double)minVal withMax:(double)maxVal
+{
+	if(sharedInstance != nil)
+	{
+		[sharedInstance updateProgress:curVal withMin:minVal withMax:maxVal];
+	}
+}
+
+
+-(void)updateProgress:(double)curVal withMin:(double)minVal withMax:(double)maxVal
+{
+	if(curVal == -1)
+		[statusProgress setHidden:YES];
+	else
+	{
+		[statusProgress setHidden:NO];
+		[statusProgress setMinValue:minVal];
+		[statusProgress setMaxValue:maxVal];
+		[statusProgress setDoubleValue:curVal];
+	}
+}
+
+
+
+
 - (void)windowWillClose:(NSNotification *)aNotification
 {
 	if(sharedInstance != nil)
