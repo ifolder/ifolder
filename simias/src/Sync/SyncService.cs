@@ -205,6 +205,10 @@ namespace Simias.Sync
 			string userID = Thread.CurrentPrincipal.Identity.Name;
 			if (userID != null)
 			{
+				// BUGBUG
+				if (userID.Length == 0)
+					userID = user;
+				// BUGUG end.
 				if (userID.Length != 0)
 					member = collection.GetMemberByID(userID);
 				if (member != null)
