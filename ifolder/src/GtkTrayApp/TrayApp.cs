@@ -197,7 +197,7 @@ namespace Novell.iFolder
 			
 			MenuItem connect_item = new MenuItem ("Join Enterprise Server");
 			trayMenu.Append (connect_item);
-			connect_item.Activated += new EventHandler(show_server_info);
+			connect_item.Activated += new EventHandler(OnJoinEnterprise);
 
 			ImageMenuItem help_item = new ImageMenuItem (Gtk.Stock.Help, agrp);
 			trayMenu.Append (help_item);
@@ -227,20 +227,20 @@ namespace Novell.iFolder
 			Application.Quit();
 		}
 
-		static void show_server_info(object o, EventArgs args)
+		static void OnJoinEnterprise(object o, EventArgs args)
 		{
-//			SimiasLogManager.Configure(conf);
+			iFolderLoginDialog loginDialog = new iFolderLoginDialog();
+
+			int rc = loginDialog.Run();
+			loginDialog.Hide();
+			loginDialog.Destroy();
 /*
-CRG: WebService Fixup
-			ServerInfoDialog sid = new ServerInfoDialog();
-			int rc = sid.Run();
 			if(rc == -5)
 			{
 				Console.WriteLine("Connecting to server...");
 				DomainAgent da = new DomainAgent(conf);
 				da.Attach(sid.Address, sid.Name, sid.Password);
-			}
-*/
+			}*/
 		}
 
 		static void show_help(object o, EventArgs args)
