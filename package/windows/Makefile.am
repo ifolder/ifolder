@@ -144,6 +144,10 @@ $(PACKAGE)-configure: $(PACKAGE)-dist
 	
 $(PACKAGE)-dist:
 	$(MAKE) -C $(top_srcdir) dist
+	@test "x" = "x$(SOURCE_TARBALLS)" || \
+		CMD='cp -f $(top_srcdir)/$(PACKAGE)-$(VERSION).tar.gz "$(SOURCE_TARBALLS)"'; \
+		echo $$CMD; \
+		eval $$CMD
 
 $(PACKAGE)-doc: $(PACKAGE)
 	$(MAKE) -C $(top_srcdir)/doc all
