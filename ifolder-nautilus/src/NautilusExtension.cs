@@ -117,7 +117,7 @@ namespace Novell.iFolder
 
 					page = new Nautilus.PropertyPage
 						("iFolder::node_property_page",
-						 new Label ("iFolder"),
+						 new Label ("iFolder Details"),
 						 node_page.GetWidget ());
 
 					ret.Append (page.Handle);

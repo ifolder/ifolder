@@ -1,20 +1,19 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-iFolderNautilus_CSFILES = $(srcdir)/NautilusExtension.cs $(srcdir)/SharingPage.cs $(srcdir)/NodePropertyPage.cs
-#$(srcdir)/../GtkTrayApp/SharingPage.cs $(srcdir)/../GtkTrayApp/NodePropertyPage.cs
+iFolderNautilus_CSFILES = $(srcdir)/NautilusExtension.cs
 iFolderNautilus_CSFILES_CSC := $(subst /,$(SEP),$(iFolderNautilus_CSFILES))
 iFolderNautilus_INCLUDES = 
 iFolderNautilus_RESOURCES =
 iFolderNautilus_FLAGS = $(CSC_LIBFLAG)
-iFolderNautilus_LIBS = System.dll System.Drawing.dll System.Data.dll glib-sharp.dll gtk-sharp.dll gnome-sharp.dll glade-sharp.dll gdk-sharp.dll nautilus-sharp.dll $(SYSTEM_XML) Novell.iFolder.dll Novell.AddressBook.UI.gtk.dll Simias.dll
-iFolderNautilus_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin ../iFolder ../GtkTrayApp
+iFolderNautilus_LIBS = System.dll System.Drawing.dll System.Data.dll glib-sharp.dll gtk-sharp.dll gnome-sharp.dll glade-sharp.dll gdk-sharp.dll nautilus-sharp.dll $(SYSTEM_XML) Novell.iFolder.dll Novell.AddressBook.UI.gtk.dll Simias.dll Novell.iFolder.UI.gtk.dll
+iFolderNautilus_LIBPATH = 
 
 INSTALL_FILES =
 
-DATA_FILES = ifolder.glade contact.png contact_me.png property.png
+DATA_FILES = 
 
-EXTRA_DIST = $(iFolderNautilus_CSFILES) $(DATA_FILES) $(INSTALL_FILES)
+EXTRA_DIST = $(iFolderNautilus_CSFILES) $(DATA_FILES) $(INSTALL_FILES) emblem-ifolder.png
 
 all: iFolderNautilus.dll
 
@@ -23,10 +22,13 @@ iFolderNautilus.dll: $(iFolderNautilus_CSFILES) $(iFolderNautilus_RESOURCES)
 
 install-exec-local: iFolderNautilus.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/nautilus/extensions-1.0/mono
+	$(mkinstalldirs) $(DESTDIR)$(datadir)/icons/gnome/48x48/emblems
 	$(INSTALL_PROGRAM) iFolderNautilus.dll $(DATA_FILES) $(DESTDIR)$(libdir)/nautilus/extensions-1.0/mono
+	$(INSTALL_PROGRAM) emblem-ifolder.png  $(DESTDIR)$(datadir)/icons/gnome/48x48/emblems
     
 uninstall-local:
 	cd $(DESTDIR)$(libdir)/nautilus/extensions-1.0/mono; rm -f iFolderNautilus.dll $(DATA_FILES)
+	cd $(DESTDIR)$(datadir)/icons/gnome/48x48/emblems; rm -f emblem-ifolder.png
     
 installcheck-local: install
 	
