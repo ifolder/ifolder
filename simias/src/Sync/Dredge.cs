@@ -162,7 +162,8 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="path">The path of the file that has changed.</param>
 		/// <param name="fn">The node to modify.</param>
-		void ModifyFileNode(string path, BaseFileNode fn)
+		/// <param name="hasChanges">If the node has changes set to true.</param>
+		void ModifyFileNode(string path, BaseFileNode fn, bool hasChanges)
 		{
 			// here we are just checking for modified files
 			FileInfo fi = new FileInfo(path);
@@ -174,10 +175,14 @@ namespace Simias.Sync
 				fn.LastWriteTime = fsLastWrite;
 				fn.LastAccessTime = fi.LastAccessTime;
 				fn.Length = fi.Length;
+				hasChanges = true;
 				log.Debug("Updating file node for {0} {1}", path, fn.ID);
 			}
-			collection.Commit(fn);
-			foundChange = true;
+			if (hasChanges)
+			{
+				collection.Commit(fn);
+				foundChange = true;
+			}
 		}
 
 		/// <summary>
@@ -317,7 +322,7 @@ namespace Simias.Sync
 				fn = node as FileNode;
 				if (fn != null)
 				{
-					ModifyFileNode(path, fn);
+					ModifyFileNode(path, fn, false);
 				}
 				else
 				{
@@ -540,7 +545,7 @@ namespace Simias.Sync
 								case WatcherChangeTypes.Created:
 								case WatcherChangeTypes.Changed:
 									if (!isDir)
-										ModifyFileNode(fullName, fn);
+										ModifyFileNode(fullName, fn, false);
 									break;
 								case WatcherChangeTypes.Deleted:
 									DeleteNode(node);
@@ -552,7 +557,7 @@ namespace Simias.Sync
 									// Since we are here we have a node already.
 									// This is a rename back to the original name update it.
 									if (!isDir)
-										ModifyFileNode(fullName, fn);
+										ModifyFileNode(fullName, fn, false);
 									
 									// Make sure that there is not a node for the old name.
 									sn = GetShallowNodeForFile(args.OldFullPath);
@@ -618,7 +623,7 @@ namespace Simias.Sync
 										node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, GetNormalizedRelativePath(fullName)));
 										if (!isDir)
 										{
-											ModifyFileNode(fullName, node as BaseFileNode);
+											ModifyFileNode(fullName, node as BaseFileNode, true);
 										}
 										else
 										{

@@ -435,10 +435,20 @@ public class SynkerWorkerA: SyncCollectionWorker
 						try
 						{
 							// Set the expected incarnation.
-							NodeStamp ns = (NodeStamp)nodesFromServer[(Nid)updates[i].node.ID];
-							updates[i].expectedIncarn = ns.masterIncarn;
+							NodeStatus status;
+							if (updates[i].node != null)
+							{
+								NodeStamp ns = (NodeStamp)nodesFromServer[(Nid)updates[i].node.ID];
+								updates[i].expectedIncarn = ns.masterIncarn;
 
-							NodeStatus status = ops.PutSmallNode(updates[i]);
+								status = ops.PutSmallNode(updates[i]);
+							}
+							else
+							{
+								// The node no longer exists on the server
+								status = NodeStatus.Complete;
+							}
+
 							if (status == NodeStatus.Complete ||
 								status == NodeStatus.FileNameConflict ||
 								status == NodeStatus.UpdateConflict)

@@ -453,7 +453,8 @@ internal class SyncOps
 			if (cookie == null)
 			{
 				eventCookie = logReader.GetEventContext();
-				cookie = eventCookie.ToString();
+				if (eventCookie != null)
+					cookie = eventCookie.ToString();
 				return false;
 			}
 			else
