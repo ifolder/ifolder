@@ -24,6 +24,8 @@ else # NDOC
 
 ndoc:
 	@echo NDOC is not configured
+	mkdir -p ifolder-ndoc
+	touch ifolder-ndoc/sdk_doc_was_not_built
 
 endif # NDOC
 

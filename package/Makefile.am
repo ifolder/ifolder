@@ -24,9 +24,14 @@ SUBDIRS = $(IFOLDER_OS)
 
 DIST_SUBDIRS = linux windows
 
-.PHONY: package package-sdk package-clean package-install package-uninstall
-package package-sdk package-clean package-install package-uninstall:
-	$(MAKE) -C $(IFOLDER_OS) $@
+all:	
+	$(MAKE) -C $(IFOLDER_OS) all
+
+sdk:	
+	$(MAKE) -C $(IFOLDER_OS) sdk
+
+clean:	
+	$(MAKE) -C $(IFOLDER_OS) clean
 
 maintainer-clean-local:
 	rm -f Makefile.in

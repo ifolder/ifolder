@@ -21,10 +21,6 @@
 #
 #######################################################################
 
-SUBDIRS = 
-
-DIST_SUBDIRS = ShutdowniFolder
-
 EXTRA_DIST = $(srcdir)/ifolder-msi.ism $(srcdir)/ifolder-msm.ism $(srcdir)/ifolder-sdk-msm.ism
 
 export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
@@ -58,22 +54,9 @@ MSI_DISK1     = $(MSI)/$(DISK1)/setup.exe
 MSM_DISK1     = $(MSM)/$(DISK1)/ifolder.msm
 SDK_MSM_DISK1 = $(SDK_MSM)/$(DISK1)/ifolder_sdk.msm
 
-.PHONY: package package-clean
+all: $(MSI_FILE)
 
-package: $(MSI_FILE)
-
-issabld:
-	@if test -z "$(ISSABLD)"; then \
-		echo ""; \
-		echo "ERROR: environment variable ISSABLD is not set"; \
-		echo ""; \
-		echo "NOTE:  InstallShield is used to build MSI/MSM packages."; \
-		echo "       Set ISSABLD to location of IsSABld.exe."; \
-		echo ""; \
-		exit 1; \
-	fi
-
-$(MSI_FILE): issabld $(MSM_FILE) $(SDK_MSM_FILE) $(MSI).ism ShutdowniFolder/ShutdowniFolder.exe
+$(MSI_FILE): issabld $(MSM_FILE) $(SDK_MSM_FILE) $(MSI).ism
 	@rm -f $@ "$(MSI_DISK1)" "$(MSI_LOG_FILE)"
 	@CMD='"$(ISSABLD)" -p "$(MSI).ism" -o "$(ISSABLD_DIR),$(MERGE_MODULES_WIN)"'; \
 		echo $$CMD; \
@@ -121,7 +104,18 @@ $(SDK_MSM_FILE): issabld ifolder-doc $(SDK_MSM).ism
 		echo $$CMD; \
 		eval $$CMD
 
-.PHONY: ifolder-install ifolder ifolder-configure ifolder-dist ifolder-doc
+.PHONY: issabld ifolder-install ifolder ifolder-configure ifolder-dist ifolder-doc
+
+issabld:
+	@if test -z "$(ISSABLD)"; then \
+		echo ""; \
+		echo "ERROR: environment variable ISSABLD is not set"; \
+		echo ""; \
+		echo "NOTE:  InstallShield is used to build MSI/MSM packages."; \
+		echo "       Set ISSABLD to location of IsSABld.exe."; \
+		echo ""; \
+		exit 1; \
+	fi
 
 ifolder-install: ifolder
 	$(MAKE) -C MSI/BUILD/$(PACKAGE)-$(VERSION) install
@@ -143,17 +137,9 @@ ifolder-dist:
 	$(MAKE) -C $(top_srcdir) dist
 
 ifolder-doc: ifolder
-	@if test -x "$(NDOC_CMD)"; then \
-		$(MAKE) -C $(top_srcdir)/doc all; \
-	else \
-		mkdir -p ../../doc/ndoc; \
-		touch ../../doc/ndoc/sdk_doc_was_not_built; \
-	fi
+	$(MAKE) -C $(top_srcdir)/doc all
 	
-ShutdowniFolder/ShutdowniFolder.exe:
-	$(MAKE) -C ShutdowniFolder ShutdowniFolder.exe
-
-package-clean clean-local:
+clean:
 	rm -rf $(COMMON_CLEAN_FILES)
 	rm -rf *-setup.exe *.msi *.msm *.log
 	rm -rf MSI
@@ -161,7 +147,7 @@ package-clean clean-local:
 	rm -rf $(MSM)/$(ISSABLD_CONFIG)
 	rm -rf $(SDK_MSM)/$(ISSABLD_CONFIG)
 
-distclean-local: package-clean
+distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES) ifolder.spec
 
 maintainer-clean-local:

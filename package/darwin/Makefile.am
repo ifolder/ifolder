@@ -20,9 +20,8 @@
 #  Author: Calvin Gaisford <cgaisford@novell.com>
 #
 #######################################################################
-.PHONY: package package-sdk package-clean package-install package-uninstall
-package package-sdk package-clean package-install package-uninstall:
+all sdk clean:
 
 maintainer-clean-local:
-	rm -f Makefile.in
+	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
 

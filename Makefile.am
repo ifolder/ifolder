@@ -41,8 +41,14 @@ doc-clean:
 
 .PHONY: package package-sdk package-clean
 
-package package-sdk package-clean:
-	$(MAKE) -C package $@
+package:
+	$(MAKE) -C package all
+
+package-sdk:
+	$(MAKE) -C package sdk
+
+package-clean:
+	$(MAKE) -C package clean
 
 if WINDOWS
 #
