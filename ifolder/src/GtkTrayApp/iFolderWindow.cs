@@ -66,6 +66,9 @@ namespace Novell.iFolder
 
 		private iFolderConflictDialog ConflictDialog;
 		private iFolderPropertiesDialog PropertiesDialog;
+		private Image				 iFolderBanner;
+		private Image				 iFolderScaledBanner;
+		private Gdk.Pixbuf			 ScaledPixbuf;
 
 		/// <summary>
 		/// Default constructor for iFolderWindow
@@ -107,9 +110,19 @@ namespace Novell.iFolder
 			//-----------------------------
 			// Add iFolderGraphic
 			//-----------------------------
-			Image iFolderImage = new Image(
-					new Gdk.Pixbuf(Util.ImagesPath("ifolder-banner.png")));
-			vbox.PackStart (iFolderImage, false, false, 0);
+			HBox imagebox = new HBox();
+			imagebox.Spacing = 0;
+			iFolderBanner = new Image(
+				new Gdk.Pixbuf(Util.ImagesPath("ifolder-banner.png")));
+			imagebox.PackStart(iFolderBanner, false, false, 0);
+
+			ScaledPixbuf = 
+				new Gdk.Pixbuf(Util.ImagesPath("ifolder-banner-scaled.png"));
+			iFolderScaledBanner = new Image(ScaledPixbuf);
+			iFolderScaledBanner.ExposeEvent += 
+					new ExposeEventHandler(OnBannerExposed);
+			imagebox.PackStart(iFolderScaledBanner, true, true, 0);
+			vbox.PackStart (imagebox, false, true, 0);
 
 
 			//-----------------------------
@@ -151,6 +164,36 @@ namespace Novell.iFolder
 
 
 
+		private void OnBannerExposed(object o, ExposeEventArgs args)
+		{
+//			args.Event.Area (Rectangle (bound box of expose area)
+//			args.Event.Count (number of exposes following this)
+//			args.Event.Region (region that nes to be drawn);
+		//	iFolderScaledBanner = new Image(ScaledPixbuf);
+			if(args.Event.Count > 0)
+				return;
+
+//			Console.WriteLine("Icon-- Width: {0}  Height: {1}", iFolderScaledBanner.Allocation.Width, iFolderScaledBanner.Allocation.Height);
+
+//			Console.WriteLine("args-- W:{0} H: {1} X:{2} Y:{3}", args.Event.Area.Width, args.Event.Area.Height, args.Event.Area.X, args.Event.Area.Y);
+
+			Gdk.Pixbuf spb = 
+				ScaledPixbuf.ScaleSimple(iFolderScaledBanner.Allocation.Width,
+										iFolderScaledBanner.Allocation.Height,
+										Gdk.InterpType.Nearest);
+
+			Gdk.GC gc = new Gdk.GC(iFolderScaledBanner.GdkWindow);
+
+			spb.RenderToDrawable(iFolderScaledBanner.GdkWindow,
+											gc,
+											0, 0,
+											args.Event.Area.X,
+											args.Event.Area.Y,
+											args.Event.Area.Width,
+											args.Event.Area.Height,
+											Gdk.RgbDither.Normal,
+											0, 0);
+		}
 
 		/// <summary>
 		/// Creates the menubar for the iFolderWindow
