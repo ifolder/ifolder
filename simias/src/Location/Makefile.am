@@ -6,8 +6,8 @@ Location_CSFILES_CSC := $(subst /,$(SEP),$(Location_CSFILES))
 Location_INCLUDES = 
 Location_RESOURCES =
 Location_FLAGS = $(CSC_LIBFLAG)
-Location_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll
-Location_LIBPATH = /opt/gnome2/lib /usr/lib ../Common
+Location_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll SyncCommon.dll CollectionStore.dll
+Location_LIBPATH = /opt/gnome2/lib /usr/lib ../Common ../CollectionStore ../SyncCommon
 
 NUNIT_TESTS := LocationTests.dll
 

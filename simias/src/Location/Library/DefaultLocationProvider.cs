@@ -23,6 +23,8 @@
 
 using System;
 
+using Simias.Sync;
+
 namespace Simias.Location
 {
 	/// <summary>
@@ -30,6 +32,8 @@ namespace Simias.Location
 	/// </summary>
 	public class DefaultLocationProvider : ILocationProvider
 	{
+		private string storePath;
+
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
@@ -39,9 +43,34 @@ namespace Simias.Location
 
 		#region ILocationProvider
 		
-		public string Locate(string collection)
+		/// <summary>
+		/// Configure the location provider.
+		/// </summary>
+		/// <param name="configuration">The Simias configuration object.</param>
+		public void Configure(Configuration configuration)
 		{
-			return "127.0.0.1";
+			storePath = configuration.StorePath;
+		}
+
+		/// <summary>
+		/// Locate the collection master.
+		/// </summary>
+		/// <param name="collection">The collection id.</param>
+		/// <returns>A URI object containing the location of the collection master, or null.</returns>
+		public Uri Locate(string collection)
+		{
+			Uri result = null;
+
+			SyncStore syncStore = new SyncStore(storePath);
+
+			SyncCollection syncCollection = syncStore.OpenCollection(collection);
+
+			if (syncCollection != null)
+			{
+				result = syncCollection.MasterUri;
+			}
+
+			return result;
 		}
 
 		#endregion

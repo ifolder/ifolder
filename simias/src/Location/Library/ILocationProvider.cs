@@ -30,6 +30,17 @@ namespace Simias.Location
 	/// </summary>
 	public interface ILocationProvider
 	{
-		string Locate(string collection);
+		/// <summary>
+		/// Configure the location provider.
+		/// </summary>
+		/// <param name="configuration">The Simias configuration object.</param>
+		void Configure(Configuration configuration);
+		
+		/// <summary>
+		/// Locate the collection master.
+		/// </summary>
+		/// <param name="collection">The collection id.</param>
+		/// <returns>A URI object containing the location of the collection master, or null.</returns>
+		Uri Locate(string collection);
 	}
 }

@@ -35,7 +35,7 @@ namespace Simias.Location
 		private static readonly string section = "Location";
 		private static readonly string key = "Providers";
 
-		ILocationProvider[] providers;
+		private ILocationProvider[] providers;
 
 		/// <summary>
 		/// Constructor
@@ -46,7 +46,12 @@ namespace Simias.Location
 			configuration.Get(section, key);
 		}
 
-		public string Locate(string collection)
+		/// <summary>
+		/// Locate the collection master.
+		/// </summary>
+		/// <param name="collection">The collection id.</param>
+		/// <returns>A URI object containing the location of the collection master, or null.</returns>
+		public Uri Locate(string collection)
 		{
 			return null;
 		}

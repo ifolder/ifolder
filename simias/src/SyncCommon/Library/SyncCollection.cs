@@ -260,6 +260,14 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
+		/// The syncing URI of the master collection.
+		/// </summary>
+		public Uri MasterUri
+		{
+			get { return (new UriBuilder("http", Host, Port)).Uri; }
+		}
+
+		/// <summary>
 		/// The syncing interval of the base collection.
 		/// </summary>
 		public int Interval
