@@ -208,11 +208,14 @@ namespace Simias.Sync
 		byte[]			buffer;
 		Timer			timer;
 		TimerCallback	callback;
-		Hashtable		nodesFromServer;
-		Hashtable		filesFromServer;
-		Hashtable		nodesToServer;
-		Hashtable		filesToServer;
 		Hashtable		killOnClient;
+		Hashtable		nodesFromServer;
+		Hashtable		dirsFromServer;
+		Hashtable		filesFromServer;
+		Hashtable		killOnServer;
+		Hashtable		nodesToServer;
+		Hashtable		dirsToServer;
+		Hashtable		filesToServer;
 		FileWatcher		fileMonitor;
 		bool			stopping;
 		Rights			rights;
@@ -284,12 +287,16 @@ namespace Simias.Sync
 			{
 				new Simias.Domain.DomainAgent(Configuration.GetConfiguration()).CreateMaster(collection);
 			}
+
 			fileMonitor = new FileWatcher(collection, false);
-			nodesFromServer = new Hashtable();
-			filesFromServer = new Hashtable();
-			nodesToServer = new Hashtable();
-			filesToServer = new Hashtable();
 			killOnClient = new Hashtable();
+			nodesFromServer = new Hashtable();
+			dirsFromServer = new Hashtable();
+			filesFromServer = new Hashtable();
+			killOnServer = new Hashtable();
+			nodesToServer = new Hashtable();
+			dirsToServer = new Hashtable();
+			filesToServer = new Hashtable();
 			serverContext = null;
 			clientContext = null;
 			buffer = new byte[MAX_XFER_SIZE];
@@ -526,10 +533,13 @@ namespace Simias.Sync
 				{
 					case ChangeLogRecord.ChangeLogOp.Changed:
 					case ChangeLogRecord.ChangeLogOp.Created:
-					case ChangeLogRecord.ChangeLogOp.Deleted:
 					case ChangeLogRecord.ChangeLogOp.Renamed:
 						if (cstamps[i].localIncarn != cstamps[i].masterIncarn)
 							PutNodeToServer(cstamps[i]);
+						break;
+					case ChangeLogRecord.ChangeLogOp.Deleted:
+						if (!killOnServer.Contains(cstamps[i]))
+							killOnServer.Add(cstamps[i].id, cstamps[i].type);
 						break;
 				}
 			}
@@ -542,6 +552,11 @@ namespace Simias.Sync
 				if (!filesFromServer.Contains(stamp.ID))
 					filesFromServer.Add(stamp.ID, stamp.BaseType);
 			}
+			else if (stamp.BaseType == NodeTypes.DirNodeType)
+			{
+				if (!dirsFromServer.Contains(stamp.ID))
+					dirsFromServer.Add(stamp.ID, stamp.BaseType);
+			}
 			else
 			{
 				if (!nodesFromServer.Contains(stamp.ID))
@@ -553,15 +568,26 @@ namespace Simias.Sync
 
 		void PutNodeToServer(NodeStamp stamp)
 		{
-			if (stamp.masterIncarn == stamp.localIncarn)
+			if (stamp.type == NodeTypes.BaseFileNodeType)
+			{
+				if (!killOnServer.Contains(stamp.id))
+					killOnServer.Add(stamp.id, stamp.type);
+			}
+			else if (stamp.masterIncarn == stamp.localIncarn)
 			{
 				// This node has not changed.
 				return;
 			}
+
 			if (stamp.type == NodeTypes.BaseFileNodeType)
 			{
 				if (!filesToServer.Contains(stamp.id))
 					filesToServer.Add(stamp.id, stamp.type);
+			}
+			else if (stamp.type == NodeTypes.DirNodeType)
+			{
+				if (!dirsToServer.Contains(stamp.id))
+					dirsToServer.Add(stamp.id, stamp.type);
 			}
 			else
 			{
@@ -643,8 +669,11 @@ namespace Simias.Sync
 		{
 			ProcessKillOnClient();
 			ProcessNodesFromServer();
+			ProcessDirsFromServer();
 			ProcessFilesFromServer();
+			ProcessKillOnServer();
 			ProcessNodesToServer();
+			ProcessDirsToServer();
 			//ProcessFilesToServer();
 		}
 
