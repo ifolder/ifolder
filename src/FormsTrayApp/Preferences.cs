@@ -106,7 +106,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Button proxy;
 		private System.Windows.Forms.ColumnHeader columnHeader1;
 		private System.Windows.Forms.CheckBox enableAccount;
-		private System.Windows.Forms.Button activate;
 		private System.Windows.Forms.HelpProvider helpProvider1;
 		private System.Windows.Forms.ComboBox timeUnit;
 		private System.Windows.Forms.Button login;
@@ -178,7 +177,6 @@ namespace Novell.FormsTrayApp
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.logout = new System.Windows.Forms.Button();
 			this.login = new System.Windows.Forms.Button();
-			this.activate = new System.Windows.Forms.Button();
 			this.password = new System.Windows.Forms.TextBox();
 			this.server = new System.Windows.Forms.TextBox();
 			this.userName = new System.Windows.Forms.TextBox();
@@ -716,7 +714,6 @@ namespace Novell.FormsTrayApp
 			this.groupBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox2.BackgroundImage")));
 			this.groupBox2.Controls.Add(this.logout);
 			this.groupBox2.Controls.Add(this.login);
-			this.groupBox2.Controls.Add(this.activate);
 			this.groupBox2.Controls.Add(this.password);
 			this.groupBox2.Controls.Add(this.server);
 			this.groupBox2.Controls.Add(this.userName);
@@ -800,34 +797,6 @@ namespace Novell.FormsTrayApp
 			this.login.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("login.TextAlign")));
 			this.login.Visible = ((bool)(resources.GetObject("login.Visible")));
 			this.login.Click += new System.EventHandler(this.login_Click);
-			// 
-			// activate
-			// 
-			this.activate.AccessibleDescription = resources.GetString("activate.AccessibleDescription");
-			this.activate.AccessibleName = resources.GetString("activate.AccessibleName");
-			this.activate.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("activate.Anchor")));
-			this.activate.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("activate.BackgroundImage")));
-			this.activate.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("activate.Dock")));
-			this.activate.Enabled = ((bool)(resources.GetObject("activate.Enabled")));
-			this.activate.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("activate.FlatStyle")));
-			this.activate.Font = ((System.Drawing.Font)(resources.GetObject("activate.Font")));
-			this.helpProvider1.SetHelpKeyword(this.activate, resources.GetString("activate.HelpKeyword"));
-			this.helpProvider1.SetHelpNavigator(this.activate, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("activate.HelpNavigator"))));
-			this.helpProvider1.SetHelpString(this.activate, resources.GetString("activate.HelpString"));
-			this.activate.Image = ((System.Drawing.Image)(resources.GetObject("activate.Image")));
-			this.activate.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("activate.ImageAlign")));
-			this.activate.ImageIndex = ((int)(resources.GetObject("activate.ImageIndex")));
-			this.activate.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("activate.ImeMode")));
-			this.activate.Location = ((System.Drawing.Point)(resources.GetObject("activate.Location")));
-			this.activate.Name = "activate";
-			this.activate.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("activate.RightToLeft")));
-			this.helpProvider1.SetShowHelp(this.activate, ((bool)(resources.GetObject("activate.ShowHelp"))));
-			this.activate.Size = ((System.Drawing.Size)(resources.GetObject("activate.Size")));
-			this.activate.TabIndex = ((int)(resources.GetObject("activate.TabIndex")));
-			this.activate.Text = resources.GetString("activate.Text");
-			this.activate.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("activate.TextAlign")));
-			this.activate.Visible = ((bool)(resources.GetObject("activate.Visible")));
-			this.activate.Click += new System.EventHandler(this.activate_Click);
 			// 
 			// password
 			// 
@@ -1522,8 +1491,7 @@ namespace Novell.FormsTrayApp
 					new string[] {domain.Name,
 									 domainInfo.MemberName,
 									 domainInfo.Active ? 
-									 /*TODO: Enable for RC1-(domainInfo.Authenticated ? resourceManager.GetString("statusLoggedIn") : resourceManager.GetString("statusLoggedOut"))*/
-									 resourceManager.GetString("statusEnabled") // TODO: Remove this for RC1
+									 (domainInfo.Authenticated ? resourceManager.GetString("statusLoggedIn") : resourceManager.GetString("statusLoggedOut"))
 									 : resourceManager.GetString("statusDisabled")});
 				lvi.Tag = domain;
 				lvi.Selected = domainInfo.IsDefault;
@@ -1673,7 +1641,7 @@ namespace Novell.FormsTrayApp
 								// Associate the new domain with the listview item.
 								newAccountLvi.SubItems[0].Text = domainInfo.Name;
 
-								newAccountLvi.SubItems[2].Text = resourceManager.GetString("statusEnabled"); //TODO: Enable for RC1-resourceManager.GetString("statusLoggedIn");
+								newAccountLvi.SubItems[2].Text = resourceManager.GetString("statusLoggedIn");
 								newAccountLvi.Tag = domain;
 								server.Text = domainInfo.Host;
 								newAccountLvi = null;
@@ -1690,8 +1658,8 @@ namespace Novell.FormsTrayApp
 
 								addAccount.Enabled = details.Enabled = enableAccount.Enabled = true;
 
-								activate.Enabled = /*TODO: Enable for RC1-activate.Visible =*/ false;
-								// TODO: Enable for RC1-logout.Visible = true;
+								login.Visible = false;
+								logout.Visible = true;
 
 								// Don't burn a grace login looking for an update.
 								if (!authStatus.statusCode.Equals(StatusCodes.SuccessInGrace))
@@ -2056,8 +2024,7 @@ namespace Novell.FormsTrayApp
 				if (d.ID.Equals(domain.ID))
 				{
 					lvi.SubItems[2].Text = domain.DomainInfo.Active ? 
-						/*TODO: Enable for RC1-(domain.DomainInfo.Authenticated ? resourceManager.GetString("statusLoggedIn") : resourceManager.GetString("statusLoggedOut"))*/ 
-						resourceManager.GetString("statusEnabled") // TODO: Remove this along with entry in resx file.
+						(domain.DomainInfo.Authenticated ? resourceManager.GetString("statusLoggedIn") : resourceManager.GetString("statusLoggedOut"))
 						: resourceManager.GetString("statusDisabled");
 					break;
 				}
@@ -2218,10 +2185,10 @@ namespace Novell.FormsTrayApp
 				addAccount.Enabled = true;
 				userName.Enabled = server.Enabled = password.Enabled = rememberPassword.Enabled =
 					enableAccount.Enabled = defaultServer.Enabled = details.Enabled = 
-					removeAccount.Enabled = proxy.Enabled = activate.Enabled = false;
+					removeAccount.Enabled = proxy.Enabled = login.Enabled = false;
 
-				activate.Visible = true;
-				login.Visible = logout.Visible = false;
+				login.Visible = true;
+				logout.Visible = false;
 
 				updatePassword = updateEnabled = false;
 
@@ -2433,7 +2400,7 @@ namespace Novell.FormsTrayApp
 				{
 					ListViewItem lvi = accounts.SelectedItems[0];
 					lvi.SubItems[1].Text = userName.Text;
-					activate.Enabled = !userName.Text.Equals(string.Empty) && !server.Text.Equals(string.Empty);
+					login.Enabled = !userName.Text.Equals(string.Empty) && !server.Text.Equals(string.Empty);
 
 //					apply.Enabled = true;
 				}
@@ -2449,7 +2416,7 @@ namespace Novell.FormsTrayApp
 				{
 					ListViewItem lvi = accounts.SelectedItems[0];
 					lvi.SubItems[0].Text = server.Text;
-					activate.Enabled = !userName.Text.Equals(string.Empty) && !server.Text.Equals(string.Empty);
+					login.Enabled = !userName.Text.Equals(string.Empty) && !server.Text.Equals(string.Empty);
 
 //					apply.Enabled = true;
 				}
@@ -2459,7 +2426,7 @@ namespace Novell.FormsTrayApp
 
 		private void password_TextChanged(object sender, System.EventArgs e)
 		{
-			if (password.Focused && (newAccountLvi != null))
+			if (password.Focused && (newAccountLvi == null))
 			{
 				apply.Enabled = apply.Enabled ? true : rememberPassword.Checked;
 				updatePassword = rememberPassword.Checked;
@@ -2652,10 +2619,10 @@ namespace Novell.FormsTrayApp
 								server.Text = lvi.SubItems[0].Text;
 								newAccountLvi = lvi;
 								userName.ReadOnly = server.ReadOnly = false;
-								details.Enabled = activate.Enabled = enableAccount.Enabled = false;
+								details.Enabled = login.Enabled = enableAccount.Enabled = false;
 								enableAccount.Checked = true;
-								activate.Visible = true;
-								login.Visible = logout.Visible = false;
+								login.Visible = true;
+								logout.Visible = false;
 
 								defaultServer.Enabled = (accounts.Items.Count > 1);
 								defaultServer.Checked = (accounts.Items.Count == 1);
@@ -2692,8 +2659,8 @@ namespace Novell.FormsTrayApp
 								enableAccount.Enabled = true;
 								login.Enabled = logout.Enabled = enableAccount.Checked = 
 									selectedDomain.DomainInfo.Active;
-								// TODO: Enable for RC1-login.Visible = !selectedDomain.DomainInfo.Authenticated;
-								// TODO: Enable for RC1-logout.Visible = selectedDomain.DomainInfo.Authenticated;
+								login.Visible = !selectedDomain.DomainInfo.Authenticated;
+								logout.Visible = selectedDomain.DomainInfo.Authenticated;
 							}
 						}
 					}
@@ -2709,9 +2676,10 @@ namespace Novell.FormsTrayApp
 					// Disable the controls.
 					userName.Enabled = server.Enabled = password.Enabled = rememberPassword.Enabled =
 						enableAccount.Enabled = defaultServer.Enabled = details.Enabled = 
-						removeAccount.Enabled = proxy.Enabled = activate.Enabled = false;
+						removeAccount.Enabled = proxy.Enabled = login.Enabled = false;
 
-					login.Visible = logout.Visible = false;
+					login.Visible = true;
+					logout.Visible = false;
 				}
 			}
 		}
@@ -2732,13 +2700,6 @@ namespace Novell.FormsTrayApp
 			advancedSettings.ShowDialog();
 		}
 
-		private void activate_Click(object sender, System.EventArgs e)
-		{
-			Cursor.Current = Cursors.WaitCursor;
-			connectToEnterprise();
-			Cursor.Current = Cursors.Default;
-		}
-
 		private void login_Click(object sender, System.EventArgs e)
 		{
 			if (accounts.SelectedItems.Count == 1)
@@ -2756,8 +2717,8 @@ namespace Novell.FormsTrayApp
 					{
 						case StatusCodes.Success:
 						case StatusCodes.SuccessInGrace:
-							login.Visible = false;
 							logout.Visible = true;
+							login.Visible = false;
 
 							lvi.SubItems[2].Text = resourceManager.GetString("statusLoggedIn");
 							domain.DomainInfo.Authenticated = true;
@@ -2815,6 +2776,12 @@ namespace Novell.FormsTrayApp
 							break;
 					}
 				}
+				else
+				{
+					Cursor.Current = Cursors.WaitCursor;
+					connectToEnterprise();
+					Cursor.Current = Cursors.Default;
+				}
 			}
 		}
 
@@ -2827,7 +2794,6 @@ namespace Novell.FormsTrayApp
 				if (domain != null)
 				{
 					simiasWebService.LogoutFromRemoteDomain(domain.ID);
-					domain.DomainInfo.Authenticated = false;
 					login.Visible = true;
 					logout.Visible = false;
 					domain.DomainInfo.Authenticated = false;
