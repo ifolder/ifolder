@@ -216,6 +216,22 @@
 }
 
 
+
+- (IBAction)synciFolder:(id)sender
+{
+	int selIndex = [ifoldersController selectionIndex];
+	iFolder *ifolder = [[ifoldersController arrangedObjects] objectAtIndex:selIndex];
+	@try
+	{
+		[ifolderService SynciFolderNow:[ifolder ID]];
+	}
+	@catch (NSException *e)
+	{
+	}
+}
+
+
+
 - (IBAction)deleteiFolder:(id)sender
 {
 	int selIndex = [ifoldersController selectionIndex];
@@ -223,6 +239,7 @@
 		[self window], self, @selector(deleteiFolderResponse:returnCode:contextInfo:), nil, (void *)selIndex, 
 		@"Are you sure you want to delete the selected iFolder?");
 }
+
 
 
 - (void)deleteiFolderResponse:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
@@ -429,7 +446,8 @@
 	else if(	(action == @selector(deleteiFolder:)) ||
 				(action == @selector(openiFolder:)) ||
 				(action == @selector(showProperties:)) ||
-				(action == @selector(shareiFolder:)) )
+				(action == @selector(shareiFolder:)) ||
+				(action == @selector(synciFolderNow:)) )
 	{
 		if ([ifoldersController selectionIndex] != NSNotFound)
 		{

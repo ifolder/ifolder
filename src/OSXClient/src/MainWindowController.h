@@ -77,6 +77,8 @@
 - (IBAction)openiFolder:(id)sender;
 - (IBAction)showProperties:(id)sender;
 - (IBAction)shareiFolder:(id)sender;
+- (IBAction)synciFolder:(id)sender;
+
 
 - (void)doubleClickedTable:(id)sender;
 
