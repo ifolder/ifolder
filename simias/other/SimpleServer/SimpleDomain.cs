@@ -231,7 +231,7 @@ namespace Simias.SimpleServer
 				// Make this domain the default
 				//
 
-				//store.DefaultDomain = rDomain.ID;
+				store.DefaultDomain = rDomain.ID;
 
 				//
 				// Verify the SimpleServer roster
