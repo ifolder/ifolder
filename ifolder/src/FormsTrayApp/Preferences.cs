@@ -1422,7 +1422,10 @@ namespace Novell.FormsTrayApp
 					}
 
 					// Reset the current default.
-					currentDefaultDomain.DomainWeb.IsDefault = false;
+					if (currentDefaultDomain != null)
+					{
+						currentDefaultDomain.DomainWeb.IsDefault = false;
+					}
 
 					// Save the new default.
 					currentDefaultDomain = domain;
