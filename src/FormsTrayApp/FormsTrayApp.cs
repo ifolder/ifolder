@@ -200,6 +200,23 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void menuConnectServer_Click(object sender, System.EventArgs e)
 		{
+			// TODO: this may need to move if the server connect dialog goes away.
+			// Check for old versions of the iFolder client.
+			iFolderMigration migrate = new iFolderMigration(config);
+			if (migrate.CanBeMigrated())
+			{
+				if (DialogResult.Yes == MessageBox.Show("An old version of iFolder has been detected.  Do you want to migrate your old iFolder client settings to the new iFolder client?", "Migrate iFolder Client Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
+				{
+					// Migrate the settings.
+					migrate.MigrateSettings();
+				}
+				else
+				{
+					// Set state so that we don't ask again.
+					migrate.SetMigratedValue(0);
+				}
+			}
+
 			ServerInfo serverInfo = new ServerInfo(this.config);
 			if (DialogResult.OK != serverInfo.ShowDialog())
 			{
