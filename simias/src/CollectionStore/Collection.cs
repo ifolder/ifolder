@@ -1472,6 +1472,17 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets the Member objects with the specified access rights.
+		/// </summary>
+		/// <param name="rights">The access rights to search Members with.</param>
+		/// <returns>An ICSEnumerator object that will enumerate the member list. The ICSList object
+		/// will contain ShallowNode objects that represent Member objects.</returns>
+		public ICSList GetMembersByRights( Access.Rights rights )
+		{
+			return Search( PropertyTags.Ace, rights.ToString(), SearchOp.Ends );
+		}
+
+		/// <summary>
 		/// Gets the list of Member objects for this collection object.
 		/// </summary>
 		/// <returns>An ICSEnumerator object that will enumerate the member list. The ICSList object

@@ -27,13 +27,13 @@ endif
 endif
 
 install-exec-local: all
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
+	$(mkinstalldirs) $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(webbindir)
 
 uninstall-local:
 
 installcheck-local: install
-	cd $(DESTDIR)$(bindir); $(NUNIT) $(NUNIT_FLAGS) /xml:CollectionStoreTests.test.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(webbindir); $(NUNIT) $(NUNIT_FLAGS) /xml:CollectionStoreTests.test.xml $(NUNIT_TESTS)
 	
 .PHONY: test
 test: installcheck

@@ -528,10 +528,22 @@ namespace Simias.Storage
 		/// objects that matched the specified name.</returns>
 		public ICSList GetCollectionsByName( string name )
 		{
+			return GetCollectionsByName( name, SearchOp.Equal );
+		}
+
+		/// <summary>
+		/// Gets all collections that have the specified name.
+		/// </summary>
+		/// <param name="name">A string containing the name of the collection(s) to search for.</param>
+		/// <param name="searchOp">The search operation used with the search.</param>
+		/// <returns>An ICSList object containing ShallowNode objects that represent the Collection 
+		/// objects that matched the specified name.</returns>
+		public ICSList GetCollectionsByName( string name, SearchOp searchOp )
+		{
 			// Create a container object to hold all collections that match the specified name.
 			ICSList collectionList = new ICSList();
 
-			Persist.Query query = new Persist.Query( BaseSchema.ObjectName, SearchOp.Equal, name, Syntax.String );
+			Persist.Query query = new Persist.Query( BaseSchema.ObjectName, searchOp, name, Syntax.String );
 			Persist.IResultSet chunkIterator = storageProvider.Search( query );
 			if ( chunkIterator != null )
 			{

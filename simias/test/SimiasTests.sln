@@ -7,10 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLogTest", "ChangeLog\
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POBoxTests", "POBox\POBoxTests.csproj", "{C1E83DD0-5457-4D79-8335-E28D3C8758F9}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -25,10 +21,6 @@ Global
 		{333DC349-12FB-4D75-A5DB-02676E096508}.Debug.Build.0 = Debug|.NET
 		{333DC349-12FB-4D75-A5DB-02676E096508}.Release.ActiveCfg = Release|.NET
 		{333DC349-12FB-4D75-A5DB-02676E096508}.Release.Build.0 = Release|.NET
-		{C1E83DD0-5457-4D79-8335-E28D3C8758F9}.Debug.ActiveCfg = Debug|.NET
-		{C1E83DD0-5457-4D79-8335-E28D3C8758F9}.Debug.Build.0 = Debug|.NET
-		{C1E83DD0-5457-4D79-8335-E28D3C8758F9}.Release.ActiveCfg = Release|.NET
-		{C1E83DD0-5457-4D79-8335-E28D3C8758F9}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

@@ -974,12 +974,27 @@ namespace Simias.Storage.Tests
 					{
 						// This is expected.
 					}
+
+					// test the access search
+					ICSList members = collection3.GetMembersByRights(Access.Rights.ReadWrite);
+									
+					if ( !members.GetEnumerator().MoveNext() )
+					{
+						throw new ApplicationException( "Members were not found during a rights search." );
+					}
 				}
 				finally
 				{
 					collection3.Revert();
 				}
 
+				// test the name search
+				ICSList list = store.GetCollectionsByName("CS_", SearchOp.Begins);
+				
+				if ( !list.GetEnumerator().MoveNext() )
+				{
+					throw new ApplicationException( "Collections were not found during a name search." );
+				}
 
 				try
 				{
