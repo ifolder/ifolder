@@ -6,6 +6,5 @@
   <program_name>contactbrowser</program_name>
   <source_directory></source_directory>
   <pixmaps_directory></pixmaps_directory>
-  <gnome_support>FALSE</gnome_support>
   <gnome_help_support>TRUE</gnome_help_support>
 </glade-project>

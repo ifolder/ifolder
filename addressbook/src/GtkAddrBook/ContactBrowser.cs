@@ -58,18 +58,36 @@ namespace Novell.AddressBook.UI.gtk
 
 	public class ContactBrowser 
 	{
-		[Glade.Widget] internal Gtk.Window cbWindow;
-		[Glade.Widget] internal TreeView	BookTreeView;
+		[Glade.Widget] private Gnome.App	CBApp = null;
+		[Glade.Widget] private TreeView		BookTreeView = null;
 		[Glade.Widget] internal TreeView	ContactTreeView;
-		[Glade.Widget] internal Button CreateContactButton;
-		[Glade.Widget] internal Button ExportButton;
-		[Glade.Widget] internal Entry SearchEntry;
+		[Glade.Widget] private Gtk.Button	CreateContactButton = null;
+		[Glade.Widget] private Gtk.Button	ImportButton = null;
+		[Glade.Widget] private Gtk.Button	ExportButton = null;
+
+		[Glade.Widget] private Gtk.Entry	SearchEntry;
 		[Glade.Widget] internal Gtk.TextView PictureTextView;
 		[Glade.Widget] internal Gtk.TextView LabelTextView;
 		[Glade.Widget] internal Gtk.TextView ValueTextView;
 		[Glade.Widget] internal Gtk.TextView TitleTextView;
-		[Glade.Widget] internal Gtk.MenuItem	MakeMeItem;
-		[Glade.Widget] internal Gtk.MenuItem	MakeNotMeItem;
+
+		[Glade.Widget] private Gtk.MenuItem		NewBookItem = null;
+		[Glade.Widget] private Gtk.MenuItem		ConvertBookItem = null;
+		[Glade.Widget] private Gtk.MenuItem		ShareBookItem = null;
+		[Glade.Widget] private Gtk.MenuItem		DeleteBookItem = null;
+		[Glade.Widget] private Gtk.MenuItem		BookPropsItem = null;
+
+		[Glade.Widget] private Gtk.MenuItem		NewContactItem = null;
+		[Glade.Widget] private Gtk.MenuItem		MakeMeItem = null;
+		[Glade.Widget] private Gtk.MenuItem		MakeNotMeItem = null;
+		[Glade.Widget] private Gtk.MenuItem		DeleteContactItem = null;
+		[Glade.Widget] private Gtk.MenuItem		NewGroupItem = null;
+		[Glade.Widget] private Gtk.MenuItem		DeleteGroupItem = null;
+		[Glade.Widget] private Gtk.MenuItem		ContactPropsItem = null;
+
+		[Glade.Widget] private Gtk.MenuItem		ImportVCardItem = null;
+		[Glade.Widget] private Gtk.MenuItem		ExportVCardItem = null;
+
 
 		Manager abMan;
 		AddressBook	curAddrBook;
@@ -111,7 +129,7 @@ namespace Novell.AddressBook.UI.gtk
 			}
 
 			Glade.XML gxml = new Glade.XML (Util.GladePath("contact-browser.glade"),
-					"cbWindow", null);
+					"CBApp", null);
 
 			gxml.Autoconnect (this);
 
@@ -170,7 +188,7 @@ namespace Novell.AddressBook.UI.gtk
 
 			searchTimeoutID = 0;
 
-			MakeNotMeItem.Sensitive = false;
+			EnableControls(false, false);
 		}
 
 		public void RefreshBooks()
@@ -255,15 +273,77 @@ namespace Novell.AddressBook.UI.gtk
 
 		public void ShowAll()
 		{
-			cbWindow.ShowAll();
+			CBApp.ShowAll();
 		}
 
-		public void on_abMainWin_delete (object o, DeleteEventArgs args) 
+		public void on_CBApp_delete (object o, DeleteEventArgs args) 
 		{
 			//			Application.Quit ();
 			//			abMainWin = null;
 			args.RetVal = true;
 			on_quit(o, args);
+		}
+
+
+		private void EnableControls(bool bookSelected, bool contactSelected)
+		{
+			NewBookItem.Sensitive = true;
+			if(bookSelected)
+			{
+
+				ConvertBookItem.Sensitive = true;
+				ShareBookItem.Sensitive = true;
+				DeleteBookItem.Sensitive = true;
+				BookPropsItem.Sensitive = true;
+
+				CreateContactButton.Sensitive = true;
+				NewContactItem.Sensitive = true;
+				NewGroupItem.Sensitive = true;
+				ImportButton.Sensitive = true;
+				ImportVCardItem.Sensitive = true;
+				if(contactSelected)
+				{
+					MakeMeItem.Sensitive = true;
+					MakeNotMeItem.Sensitive = true;
+					DeleteContactItem.Sensitive = true;
+					DeleteGroupItem.Sensitive = true;
+					ContactPropsItem.Sensitive = true;
+					ExportVCardItem.Sensitive = true;
+					ExportButton.Sensitive = true;
+				}
+				else
+				{
+					MakeMeItem.Sensitive = false;
+					MakeNotMeItem.Sensitive = false;
+					DeleteContactItem.Sensitive = false;
+					DeleteGroupItem.Sensitive = false;
+					ContactPropsItem.Sensitive = false;
+					ExportVCardItem.Sensitive = false;
+					ExportButton.Sensitive = false;
+				}
+			}
+			else
+			{
+				ConvertBookItem.Sensitive = false;
+				ShareBookItem.Sensitive = false;
+				DeleteBookItem.Sensitive = false;
+				BookPropsItem.Sensitive = false;
+
+				NewContactItem.Sensitive = false;
+				MakeMeItem.Sensitive = false;
+				MakeNotMeItem.Sensitive = false;
+				DeleteContactItem.Sensitive = false;
+				NewGroupItem.Sensitive = false;
+				DeleteGroupItem.Sensitive = false;
+				ContactPropsItem.Sensitive = false;
+
+				ImportVCardItem.Sensitive = false;
+				ExportVCardItem.Sensitive = false;
+
+				CreateContactButton.Sensitive = false;
+				ImportButton.Sensitive = false;
+				ExportButton.Sensitive = false;
+			}
 		}
 
 		/// <summary>
@@ -334,7 +414,7 @@ namespace Novell.AddressBook.UI.gtk
 		public void onCreateBook(object o, EventArgs args)
 		{
 			BookEditor be = new BookEditor();
-			be.TransientFor = cbWindow;
+			be.TransientFor = CBApp;
 
 			int rc = be.Run();
 
@@ -365,7 +445,7 @@ namespace Novell.AddressBook.UI.gtk
 			if(CreateContactButton.Sensitive == true)
 			{
 				ContactEditor ce = new ContactEditor();
-				ce.TransientFor = cbWindow;
+				ce.TransientFor = CBApp;
 				ce.Contact = new Contact();
 
 				int rc = ce.Run();
@@ -516,7 +596,7 @@ namespace Novell.AddressBook.UI.gtk
 						TreeSelection tSelect = BookTreeView.Selection;
 						if(tSelect.CountSelectedRows() > 0)
 						{
-							MessageDialog dialog = new MessageDialog(cbWindow,
+							MessageDialog dialog = new MessageDialog(CBApp,
 									DialogFlags.Modal | 
 											DialogFlags.DestroyWithParent,
 									MessageType.Question,
@@ -524,7 +604,7 @@ namespace Novell.AddressBook.UI.gtk
 									"Do you want to delete the selected Address Books?");
 
 							dialog.Title = "Delete Books";
-							dialog.TransientFor = cbWindow;
+							dialog.TransientFor = CBApp;
 							int rc = dialog.Run();
 							dialog.Hide();
 							if(rc == (int)ResponseType.Yes)
@@ -544,7 +624,7 @@ namespace Novell.AddressBook.UI.gtk
 			{
 				TreeModel tModel;
 				TreeIter iter;
-				ExportButton.Sensitive = true;
+				EnableControls(true, true);
 
 				tSelect.GetSelected(out tModel, out iter);
 
@@ -552,16 +632,20 @@ namespace Novell.AddressBook.UI.gtk
 
 				DisplayContactDetails(c);
 				if(c.IsCurrentUser)
+				{
 					MakeNotMeItem.Sensitive = true;
+					MakeMeItem.Sensitive = false;
+				}
 				else
+				{
 					MakeMeItem.Sensitive = true;
+					MakeNotMeItem.Sensitive = false;
+				}
 			}
 			else
 			{
 				ClearContactDetails();
-				ExportButton.Sensitive = false;
-				MakeMeItem.Sensitive = false;
-				MakeNotMeItem.Sensitive = false;
+				EnableControls(true, false);
 			}
 		}
 
@@ -577,7 +661,8 @@ namespace Novell.AddressBook.UI.gtk
 
 				curAddrBook = (AddressBook) tModel.GetValue(iter,0);
 
-				CreateContactButton.Sensitive = true;
+				EnableControls(true, false);
+
 				ContactTreeStore.Clear();
 
 				foreach(Contact cont in curAddrBook)
@@ -590,8 +675,8 @@ namespace Novell.AddressBook.UI.gtk
 						Console.WriteLine("We were retuned a NULL contact.");
 				}
 			}
-			MakeMeItem.Sensitive = false;
-			MakeNotMeItem.Sensitive = false;
+			else
+				EnableControls(false, false);
 		}
 
 
@@ -608,7 +693,7 @@ namespace Novell.AddressBook.UI.gtk
 				curAddrBook = (AddressBook) tModel.GetValue(iter,0);
 
 				CollectionProperties colProp = new CollectionProperties();
-				colProp.TransientFor = cbWindow;
+				colProp.TransientFor = CBApp;
 				colProp.Collection = curAddrBook;
 				colProp.ActiveTag = 1;
 				colProp.Run();
@@ -626,7 +711,7 @@ namespace Novell.AddressBook.UI.gtk
 						TreeSelection tSelect = ContactTreeView.Selection;
 						if(tSelect.CountSelectedRows() > 0)
 						{
-							MessageDialog dialog = new MessageDialog(cbWindow,
+							MessageDialog dialog = new MessageDialog(CBApp,
 									DialogFlags.Modal | 
 											DialogFlags.DestroyWithParent,
 									MessageType.Question,
@@ -698,7 +783,7 @@ namespace Novell.AddressBook.UI.gtk
 				Contact cnt = (Contact) tModel.GetValue(iter,0);
 				if(cnt.IsCurrentUser)
 				{
-					MessageDialog med = new MessageDialog(cbWindow,
+					MessageDialog med = new MessageDialog(CBApp,
 							DialogFlags.DestroyWithParent | DialogFlags.Modal,
 							MessageType.Error,
 							ButtonsType.Close,
@@ -796,7 +881,7 @@ namespace Novell.AddressBook.UI.gtk
 				Contact c = (Contact) tModel.GetValue(iter,0);
 
 				ContactEditor ce = new ContactEditor();
-				ce.TransientFor = cbWindow;
+				ce.TransientFor = CBApp;
 				ce.Contact = c;
 
 				int rc = ce.Run();
@@ -824,9 +909,9 @@ namespace Novell.AddressBook.UI.gtk
 
 		public void on_quit(object o, EventArgs args)
 		{
-			cbWindow.Hide();
-			cbWindow.Destroy();
-			cbWindow = null;
+			CBApp.Hide();
+			CBApp.Destroy();
+			CBApp = null;
 
 			if(AddrBookClosed != null)
 			{
