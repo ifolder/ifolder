@@ -26,14 +26,14 @@ endif
 endif
 
 install-exec-local: Simias.dll
-	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir)
+	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir) $(DESTDIR)$(datadir)/ifolder
 	$(INSTALL_PROGRAM) Simias.dll $(DEBUG_FILES) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(MDNSRESPONDER_DIR)/m*.exe $(MDNSRESPONDER_DIR)/m*.dll $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(LOG4NET_DIR)/log4net.dll $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(srcdir)/../../external/SecureChannelSinks/*.dll $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DESTDIR)$(bindir)
-	cp -f $(srcdir)/$(LOG4NET_DIR)/../../../../LICENSE.txt $(DESTDIR)$(prefix)/log4net.LICENSE.txt
+	cp -f $(srcdir)/$(LOG4NET_DIR)/../../../../LICENSE.txt $(DESTDIR)$(datadir)/ifolder/log4net.LICENSE.txt
 
 installcheck-local: install
 
@@ -44,7 +44,7 @@ uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f mDnsResponder*
 	cd $(DESTDIR)$(libdir); rm -f Simias.dll $(DEBUG_FILES)
 	cd $(DESTDIR)$(bindir); rm -f $(SQLITELIB)
-	cd $(DESTDIR)$(prefix); rm -f log4net.LICENSE.txt
+	cd $(DESTDIR)$(datadir)/ifolder; rm -f log4net.LICENSE.txt
 
 CLEAN_FILES = Simias.dll Simias.doc.xml
 

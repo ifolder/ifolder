@@ -5,8 +5,8 @@ DIST_SUBDIRS = $(SUBDIRS) doc
 EXTRA_DIST = tools external $(srcdir)/simias.pc.in
 
 install-exec-local:
-	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig
-	$(INSTALL_PROGRAM) COPYING $(DESTDIR)$(prefix)
+	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig $(DESTDIR)$(datadir)/ifolder
+	$(INSTALL_PROGRAM) COPYING $(DESTDIR)$(datadir)/ifolder
 	$(INSTALL_PROGRAM) $(srcdir)/simias.pc $(DESTDIR)$(libdir)/pkgconfig
 
 installcheck-summary:
@@ -14,7 +14,7 @@ installcheck-summary:
 
 uninstall-local:
 	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f simias.pc
-	cd $(DESTDIR)$(prefix); rm -f COPYING
+	cd $(DESTDIR)$(datadir)/ifolder; rm -f COPYING
 
 clean-local:
 	rm -rf $(COMMON_CLEAN_FILES)
