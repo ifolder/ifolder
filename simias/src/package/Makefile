@@ -28,7 +28,7 @@ include ../../config.mk
 # Common targets
 #=============================================================================
 #TARGETS           = server client
-TARGETS           = client
+TARGETS           = client-msm client
 CLEAN_TARGETS     = $(addsuffix -clean,     $(TARGETS))
 TEST_TARGETS      = $(addsuffix -test,      $(TARGETS))
 INSTALL_TARGETS   = $(addsuffix -install,   $(TARGETS))
@@ -103,6 +103,9 @@ endif # ifneq ($(BUILD_OS),$(TARGET_OS))
 # File CVS History:
 #
 # $Log$
+# Revision 1.2  2004/02/24 00:19:57  pthomas707
+# Added client-msm targe.
+#
 # Revision 1.1  2004/02/23 20:07:55  pthomas707
 # Package makefile
 #
