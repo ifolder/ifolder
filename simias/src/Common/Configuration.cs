@@ -229,7 +229,9 @@ namespace Simias
 		private void UpdateConfigFile(object sender, XmlNodeChangedEventArgs e)
 		{
 			// Ignore all other changes.
-			if (e.Node.NodeType == XmlNodeType.Element)
+			if ((e.Node.NodeType == XmlNodeType.Element) ||
+				(e.Node.NodeType == XmlNodeType.Attribute) ||
+				(e.Action == XmlNodeChangedAction.Change))
 			{
 				lock(typeof(Configuration))
 				{
