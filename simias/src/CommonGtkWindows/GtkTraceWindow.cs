@@ -39,6 +39,7 @@ namespace Simias
 		private Gtk.Button startButton;
 		private Gtk.ThreadNotify threadNotify;
 		private Queue messageQueue;
+		private int logSize;
 
 		bool pause = false;
 
@@ -46,6 +47,7 @@ namespace Simias
 		{
 			store = new TreeStore(typeof(string));
 			win = null;
+			logSize = 50;
 
 			messageQueue = new Queue();
 
@@ -59,6 +61,22 @@ namespace Simias
 		{
 			lock(messageQueue)
 			{
+				// Remove the log messages
+				// Only if we are not paused
+				if(!pause)
+				{
+					while( (store.IterNChildren() + messageQueue.Count) > 
+						logSize )
+					{
+						TreeIter ti;
+
+						if(store.GetIterFirst(out ti))
+						{
+							store.Remove(ref ti);
+						}
+					}
+				}
+
 				while(messageQueue.Count > 0)
 				{
 					string message = (string) messageQueue.Dequeue();
