@@ -495,14 +495,14 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				if (this.addressBook != null)
+				try
 				{
-					if (this.addressBook.store.CurrentUser == this.id)
+					if (this.addressBook.store.CurrentUser == this.ID)
 					{
 						return(true);
 					}
 				}
-
+				catch{}
 				return(false);
 			}
 		}
