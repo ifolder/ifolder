@@ -65,8 +65,7 @@ namespace Simias.mDns
 		private	Store store = null;
 		private Simias.mDns.User mDnsUser = null;
 		private Simias.mDnsProvider mDnsProvider = null;
-		private Simias.Location.mDnsProvider locProvider = null;
-
+		
 		/// <summary>
 		/// Configuration object for the Collection Store.
 		/// </summary>
@@ -126,10 +125,6 @@ namespace Simias.mDns
 				this.mDnsProvider = new Simias.mDnsProvider();
 				Simias.DomainProvider.RegisterProvider( this.mDnsProvider );
 
-				// Temp
-				this.locProvider = new Simias.Location.mDnsProvider( this.mDnsProvider );
-				Simias.Location.Locate.RegisterProvider( this.locProvider );
-
 				// Register for authentication events
 				Simias.Authentication.NeedCredentialsEventSubscriber needCreds =
 					new NeedCredentialsEventSubscriber();
@@ -182,7 +177,6 @@ namespace Simias.mDns
 			if ( this.mDnsProvider != null )
 			{
 				Simias.DomainProvider.Unregister( this.mDnsProvider );
-				Simias.Location.Locate.Unregister( this.locProvider );
 			}
 
 			if ( this.mDnsUser != null )

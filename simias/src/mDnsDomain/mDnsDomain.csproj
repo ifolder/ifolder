@@ -144,11 +144,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Location.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "mDnsStub.cs"
                     SubType = "code"
                     BuildAction = "Compile"

@@ -32,7 +32,6 @@ using System.Xml;
 using Simias;
 using Simias.Authentication;
 using Simias.Client;
-using Simias.Location;
 using Simias.POBox;
 using Simias.Security.Web.AuthenticationService;
 using Simias.Storage;
@@ -467,7 +466,7 @@ namespace Simias.DomainServices
 				{
 					CookieContainer cookie = new CookieContainer();
 					NetworkCredential netCred = new NetworkCredential( user, password );
-					status = this.Login( Locate.ResolveLocation(domainID), domainID, ref cookie, netCred );
+					status = this.Login( DomainProvider.ResolveLocation(domainID), domainID, ref cookie, netCred );
 					if ( status.statusCode == SCodes.Success ||
 						status.statusCode == SCodes.SuccessInGrace )
 					{
@@ -570,7 +569,7 @@ namespace Simias.DomainServices
 			if ( !localOnly )
 			{
 				// Set the address to the server.
-				Uri uri = Locate.ResolveLocation(domainID);
+				Uri uri = DomainProvider.ResolveLocation(domainID);
 				
 				if (uri == null)
 				{
@@ -606,7 +605,7 @@ namespace Simias.DomainServices
 		public void CreateMaster(Collection collection)
 		{
 			// Get the network location of the server where this collection is to be created.
-			Uri uri = Locate.ResolveLocation(collection);
+			Uri uri = DomainProvider.ResolveLocation(collection);
 			if (uri == null)
 			{
 				throw new SimiasException(String.Format("The network location could not be determined for collection {0}.", collection.ID));

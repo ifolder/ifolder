@@ -26,7 +26,6 @@ using System.Net;
 using Simias;
 using Simias.DomainServices;
 using Simias.Event;
-using Simias.Location;
 using Simias.Storage;
 using Simias.Sync;
 using Novell.Security.ClientPasswordManager;

@@ -39,7 +39,6 @@ using Novell.Security.ClientPasswordManager;
 using Simias;
 using Simias.Client;
 using Simias.DomainServices;
-using Simias.Location;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.Security.Web.AuthenticationService;
@@ -1049,7 +1048,7 @@ namespace Simias.Web
 			this.MemberUserID = cMember.UserID;
 			this.MemberName = cMember.Name;
 
-			Uri uri = Locate.ResolveLocation(domainID);
+			Uri uri = DomainProvider.ResolveLocation(domainID);
 			this.RemoteUrl = (uri != null) ?
 				uri.ToString() + "/DomainService.asmx" :
 				String.Empty;

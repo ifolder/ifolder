@@ -32,7 +32,6 @@ using Simias;
 using Simias.Client;
 using Simias.Client.Event;
 using Simias.Event;
-using Simias.Location;
 using Simias.POBox;
 using Simias.Policy;
 using Simias.Storage.Provider;
@@ -154,7 +153,7 @@ namespace Simias.Storage
 		/// </summary>
 		public Uri MasterUrl
 		{
-			get { return Locate.ResolveLocation( this ); }
+			get { return DomainProvider.ResolveLocation( this ); }
 		}
 
 		/// <summary>

@@ -48,9 +48,6 @@ AssemblyInfo.cs
 ../FlaimProvider/FlaimRecord.cs
 ../FlaimProvider/FlaimResultSet.cs
 ../FlaimProvider/FlaimServer.cs
-../Location/Locate.cs
-../Location/ILocationProvider.cs
-../Location/EnterpriseLocation.cs
 ../Login/Login.ashx.cs
 ../HttpAuthentication/AuthHandler.cs
 ../HttpAuthentication/IAuthService.cs

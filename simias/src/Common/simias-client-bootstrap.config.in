@@ -2,7 +2,6 @@
   <section name="ServiceManager">
       <setting name="WebServicePath" value="@_webdir_@" />
       <setting name="Services">
-      <Service name="Simias Enterprise Location Provider" assembly="Simias" enabled="True" type="Thread" class="Simias.Location.EnterpriseLocation" />
       <Service name="Simias Enterprise Domain Provider" assembly="Simias" enabled="True" type="Thread" class="Simias.EnterpriseProvider" />
       <Service name="Simias Domain Watcher" assembly="Simias" enabled="True" type="Thread" class="Simias.DomainWatcher.Service" />
       <Service name="Simias Change Log Service" assembly="Simias" enabled="True" type="Thread" class="Simias.Storage.ChangeLog" />
