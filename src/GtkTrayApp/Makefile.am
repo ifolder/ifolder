@@ -1,3 +1,7 @@
+SUBDIRS = po
+
+DIST_SUBDIRS = $(SUBDIRS)
+
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 

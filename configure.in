@@ -234,9 +234,9 @@ case $IFOLDER_OS in
 		PKG_CONFIG_CONFLICTS=""
 
 		dnl Intl
-		ALL_LINGUAS="pt_BR"
+		#ALL_LINGUAS="pt_BR"
 		#ALL_LINGUAS="pt_BR fr it de es ru ja"
-		AM_GNU_GETTEXT_VERSION(0.10.40)
+		#AM_GNU_GETTEXT_VERSION(0.10.40)
 		AM_GNU_GETTEXT(external)
     ;;
     #
@@ -486,6 +486,8 @@ src/GtkTrayApp/Util.cs
 src/GtkTrayApp/ifolder
 src/GtkTrayApp/ifolder.desktop
 src/GtkTrayApp/setup-autostart
+src/GtkTrayApp/po/Makefile
+src/GtkTrayApp/po/POTFILES
 src/FormsTrayApp/Makefile
 src/iFolderShell/Makefile
 src/TrayIcon/Makefile
@@ -500,7 +502,6 @@ package/linux/Makefile
 package/linux/ifolder.spec
 doc/Makefile
 help/Makefile
-po/Makefile.in
 ])
 
 
