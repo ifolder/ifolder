@@ -287,6 +287,13 @@ namespace Simias.Gaim
 												buddy.GetSimiasUserID(machineNames[i]),
 												Simias.Storage.Access.Rights.ReadWrite,
 												null, null);
+												
+							// Use the Alias so the User Selector shows the buddy alias
+							string alias = buddy.Alias;
+							if (alias != null)
+							{
+								member.FN = string.format("{0} ({1})", alias, machineNames[i]);
+							}
 						}
 	
 						if (members.Count < count)
