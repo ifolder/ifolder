@@ -267,7 +267,7 @@ namespace Simias.Sync
 		{
 			lock(collectionManagers.SyncRoot)
 			{
-				foreach(SyncCollectionManager manager in collectionManagers)
+				foreach(SyncCollectionManager manager in collectionManagers.Values)
 				{
 					try
 					{
