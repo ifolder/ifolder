@@ -46,6 +46,7 @@ namespace Simias.Gaim
 		private string providerName = "Gaim Domain Provider";
 		private string description = "Simias Domain Provider for the Gaim Workgroup Domain";
 		private Hashtable searchContexts = new Hashtable();
+		private Hashtable nonMembers = new Hashtable();
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
@@ -177,7 +178,18 @@ namespace Simias.Gaim
 						member = new Member(buddy.Name, Guid.NewGuid().ToString(),
 											Simias.Storage.Access.Rights.ReadWrite,
 											givenName, familyName);
-						member.FN = buddy.Alias;
+
+						if (buddy.Alias != null && buddy.Alias.Length > 0)
+						{
+							// Use the buddy alias for the member full name
+							member.FN = string.Format("{0} ({1})", buddy.Alias, buddy.Name);
+						}
+						
+						// Store the buddy.MungedID and member.UserID off so PreCommit works.
+						// We use the buddy.MungedID because it doesn't change (this method is
+						// called multiple times and this will prevent multiple instances being
+						// added into the Hashtable).
+						nonMembers[buddy.MungedID] = member.UserID;
 					}
 
 					if (members.Count < count)
@@ -387,6 +399,101 @@ namespace Simias.Gaim
 		/// <param name="member">Member object that is about to be committed to the domain's member list.</param>
 		public void PreCommit( string domainID, Member member )
 		{
+			// Ignore domainID...since it's always the same
+
+			string mungedID = null;
+			lock (nonMembers.SyncRoot)
+			{
+				// Member.UserID is the Guid that we returned in the search methods
+				if (!nonMembers.ContainsValue(member.UserID))
+				{
+					log.Debug("PreCommit() called on a member that we don't know about: {0}", member.UserID);
+					return;	// Nothing we can do if we don't know about it
+				}
+				
+				// nonMembers are keyed by GaimBuddy.MungedID so we have to do searching to
+				// find the member.UserID in the values.  This is done searching is likely
+				// to occur much more frequently than PreCommits.
+				string userID = member.UserID;
+				foreach (string aMungedID in nonMembers.Keys)
+				{
+					if (userID.CompareTo(nonMembers[aMungedID]) == 0)
+					{
+						mungedID = aMungedID;
+						break;
+					}
+				}
+			}
+			
+			if (mungedID == null)
+			{
+				log.Debug("PreCommit() couldn't find the GaimBuddy.MungedID in the nonMembers Hashtable");
+				return;
+			}
+
+			GaimBuddy buddy = GaimDomain.GetBuddy(mungedID);
+			if (buddy == null)
+			{
+				log.Debug("PreCommit() called on a member that no longer exists in blist.xml");
+				return;
+			}
+			
+			// If we make it this far, we've got everything we need to add onto the member object.
+			Simias.Storage.Property p =
+				new Property("Gaim:MungedID", buddy.MungedID);
+			p.LocalProperty = true;
+			member.Properties.AddProperty(p);
+			
+			// Gaim Account Name
+			p = new Property("Gaim:AccountName", buddy.AccountName);
+			p.LocalProperty = true;
+			member.Properties.AddProperty(p);
+			
+			// Gaim Account Protocol
+			p = new Property("Gaim:AccountProto", buddy.AccountProtocolID);
+			p.LocalProperty = true;
+			member.Properties.AddProperty(p);
+
+			if (buddy.Alias != null)
+			{
+				p = new Property("Gaim:Alias", buddy.Alias);
+				p.LocalProperty = true;
+				member.Properties.AddProperty(p);
+				
+				// Use the buddy alias for the member full name
+				member.FN = string.Format("{0} ({1})", buddy.Alias, buddy.Name);
+
+				string familyName = null;
+				string givenName = null;
+				int lastSpacePos = buddy.Alias.LastIndexOf(' ');
+				if (lastSpacePos > 0)
+				{
+					familyName = buddy.Alias.Substring(lastSpacePos + 1);
+					member.Family = familyName;
+
+					givenName = buddy.Alias.Substring(0, lastSpacePos);
+				}
+				else
+				{
+					givenName = buddy.Alias;
+				}
+					
+				member.Given = givenName;
+			}
+			
+			// Buddy Simias URL
+			if (buddy.SimiasURL != null)
+			{
+				p = new Property("Gaim:SimiasURL", buddy.SimiasURL);
+				p.LocalProperty = true;
+				member.Properties.AddProperty(p);
+			}
+
+			// The member is going to be created so they're no longer a "nonMember".
+			lock (nonMembers.SyncRoot)
+			{
+				nonMembers.Remove(mungedID);
+			}
 		}
 
 		/// <summary>

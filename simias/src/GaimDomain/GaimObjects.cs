@@ -182,6 +182,48 @@ namespace Simias.Gaim
 		}
 
 		#endregion
+		
+		#region Public Methods
+
+		/// <summary>
+		/// Parses the mungedID into its separate parts.
+		/// </summary>
+		/// <param name="mungedID">A munged ID for a Gaim Buddy which is in the following format: [Account Name]:[Account Protocol ID]:[Buddy Name].</param>
+		/// <param name="accountName">Filled with [Account Name] from the mungedID.</param>
+		/// <param name="accountProtocolID">Filled with [Account Protocol ID] from the mungedID.</param>
+		/// <param name="buddyName">Filled with [Buddy Name] from the mungedID.</param>
+		/// <returns>
+		/// True if the mungedID was parsed successfully.  Otherwise, false is returned.
+		/// If false is returned the "out" parameters will not be valid.
+		/// </returns>
+		public static bool ParseMungedID(string mungedID, out string accountName, out string accountProtocolID, out string buddyName)
+		{
+			accountName = null;
+			accountProtocolID = null;
+			buddyName = null;
+			
+			if (mungedID == null || mungedID.Length == 0)
+				return false;
+
+			int firstColon = mungedID.IndexOf(':');
+			int lastColon = mungedID.LastIndexOf(':');
+			
+			if (firstColon < 0 || lastColon < 0 || firstColon == lastColon)
+				return false;
+				
+			accountName = mungedID.Substring(0, firstColon);
+			accountProtocolID = mungedID.Substring(firstColon + 1, lastColon - firstColon - 1);
+			buddyName = mungedID.Substring(lastColon + 1);
+			
+			if (accountName.Length == 0
+				|| accountProtocolID.Length == 0 
+				|| buddyName.Length == 0)
+				return false;
+			
+			return true;
+		}
+				
+		#endregion
 	}
 	
 	/// <summary>

@@ -549,20 +549,12 @@ namespace Simias.Gaim
 					Member member =
 						FindBuddyInDomain(domain, buddy);
 					
-					if (member == null)
-					{
-						// This shouldn't happen, but just in case...
-						CreateNewMember(domain, buddy);
-					}
-					else
+					if (member != null)
 					{
 						UpdateMember(domain, member, buddy);
 					}
 				}
-				catch (Exception e)
-				{
-					// Intentionally left blank
-				}				
+				catch {}
 			}
 		}
 
@@ -602,6 +594,58 @@ namespace Simias.Gaim
 			return member;
 		}
 
+		/// <summary>
+		/// Read the specified GaimBuddy from blist.xml
+		/// </summary>
+		public static GaimBuddy GetBuddy(string mungedID)
+		{
+			GaimBuddy buddy = null;
+			string accountName;
+			string accountProtocolID;
+			string buddyName;
+			
+			if (!GaimBuddy.ParseMungedID(mungedID, out accountName,
+										out accountProtocolID,
+										out buddyName))
+			{
+				log.Debug("GaimBuddy.ParseMungedID(\"{0}\") returned null", mungedID);
+				return null;
+			}
+
+			XmlDocument blistDoc = new XmlDocument();
+			try
+			{
+				blistDoc.Load(GetGaimConfigDir() + "/blist.xml");
+			}
+			catch (Exception e)
+			{
+				log.Debug("Couldn't load blist.xml");
+				log.Error(e.Message);
+				log.Error(e.StackTrace);
+				return null;
+			}
+			XmlElement gaimElement = blistDoc.DocumentElement;
+			
+			string xPathQuery =
+				string.Format("//buddy[@account='{0}' and @proto='{1}' and name='{2}']",
+				accountName, accountProtocolID, buddyName);
+			XmlNode buddyNode = gaimElement.SelectSingleNode(xPathQuery);
+			if (buddyNode != null)
+			{
+				try
+				{
+					buddy = new GaimBuddy(buddyNode);
+				}
+				catch {}
+			}
+			else
+			{
+				log.Debug("XmlElement.SelectSingleNode(\"{0}\") returned null", xPathQuery);
+			}
+			
+			return buddy;
+		}
+		
 		/// <summary>
 		/// Obtains the string representation of this instance.
 		/// </summary>
@@ -834,11 +878,8 @@ namespace Simias.Gaim
 				Member member =
 					FindBuddyInDomain(domain, buddy);
 				
-				if (member == null)
-				{
-					CreateNewMember(domain, buddy);
-				}
-				else
+				// Only synchronize members that have been added to the domain
+				if (member != null)
 				{
 					UpdateMember(domain, member, buddy);
 				}
@@ -850,70 +891,6 @@ namespace Simias.Gaim
 			}
 		}
 		
-		internal static void CreateNewMember(Simias.Storage.Domain domain, GaimBuddy buddy)
-		{
-			//
-			// Create a new member and add on the properties
-			//
-			
-			// Create the member
-			Member member = new Member(buddy.Name, Guid.NewGuid().ToString(), Access.Rights.ReadWrite);
-			
-			// Gaim Munge ID (Account Name + Account Proto + Buddy Name) for faster lookups
-			Simias.Storage.Property p =
-				new Property("Gaim:MungedID", buddy.MungedID);
-			p.LocalProperty = true;
-			member.Properties.AddProperty(p);
-			
-			// Gaim Account Name
-			p = new Property("Gaim:AccountName", buddy.AccountName);
-			p.LocalProperty = true;
-			member.Properties.AddProperty(p);
-			
-			// Gaim Account Protocol
-			p = new Property("Gaim:AccountProto", buddy.AccountProtocolID);
-			p.LocalProperty = true;
-			member.Properties.AddProperty(p);
-
-			if (buddy.Alias != null)
-			{
-				p = new Property("Gaim:Alias", buddy.Alias);
-				p.LocalProperty = true;
-				member.Properties.AddProperty(p);
-				
-				// Use the buddy alias for the member full name
-				member.FN = string.Format("{0} ({1})", buddy.Alias, buddy.Name);
-
-				string familyName = null;
-				string givenName = null;
-				int lastSpacePos = buddy.Alias.LastIndexOf(' ');
-				if (lastSpacePos > 0)
-				{
-					familyName = buddy.Alias.Substring(lastSpacePos + 1);
-					member.Family = familyName;
-
-					givenName = buddy.Alias.Substring(0, lastSpacePos);
-				}
-				else
-				{
-					givenName = buddy.Alias;
-				}
-					
-				member.Given = givenName;
-			}
-			
-			// Buddy Simias URL
-			if (buddy.SimiasURL != null)
-			{
-				p = new Property("Gaim:SimiasURL", buddy.SimiasURL);
-				p.LocalProperty = true;
-				member.Properties.AddProperty(p);
-			}
-			
-			// Commit the changes
-			domain.Commit(member);
-		}
-
 		internal static void UpdateMember(Simias.Storage.Domain domain, Member member, GaimBuddy buddy)
 		{
 			Simias.Storage.PropertyList pList = member.Properties;
