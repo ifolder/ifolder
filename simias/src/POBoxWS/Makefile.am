@@ -1,0 +1,47 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
+POBoxWS_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/Global.asax.cs $(srcdir)/POBoxService.asmx.cs $(srcdir)/SubscriptionDetails.cs
+POBoxWS_CSFILES := $(subst /,$(SEP),$(POBoxWS_CSFILES1))
+POBoxWS_INCLUDES =
+POBoxWS_RESOURCES =
+POBoxWS_FLAGS = $(CSC_LIBFLAG)
+POBoxWS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll
+POBoxWS_LIBPATH = ../Simias.dll
+
+EXTRA_DIST = web.config Global.asax POBoxService.asmx $(POBoxWS_CSFILES)
+
+all: Simias.POBox.Web.dll
+
+Simias.POBox.Web.dll: $(POBoxWS_CSFILES) $(POBoxWS_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(POBoxWS_FLAGS) $(SIMIAS_LIBS) $(POBoxWS_LIBS:%=/r:%) $(POBoxWS_LIBPATH:%=/lib:%) $(POBoxWS_RESOURCES:%=$(ICON_FLAG)%) $(POBoxWS_CSFILES) /doc:Simias.POBox.Web.doc.xml
+
+if DEBUG
+if WINDOWS
+DEBUG_FILES = Simias.POBox.Web.pdb
+endif
+endif
+
+install-exec-local: Simias.POBox.Web.dll $(DATA_FILES)
+	$(mkinstalldirs) $(DESTDIR)$(webdir)
+	$(mkinstalldirs) $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) web.config Global.asax POBoxService.asmx $(DEBUG_FILES) $(DESTDIR)$(webdir)
+	$(INSTALL_PROGRAM) Simias.POBox.Web.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
+	
+uninstall-local:
+	cd $(DESTDIR)$(webdir); rm -f web.config Global.asax POBoxService.asmx $(DEBUG_FILES)
+	cd $(DESTDIR)$(webbindir); rm -f Simias.POBox.Web.dll $(DEBUG_FILES)
+
+installcheck-local: install
+	
+CLEAN_FILES = Simias.POBox.Web.dll Simias.POBox.Web.doc.xml
+
+clean-local:
+	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
+
+distclean-local:
+	rm -rf $(COMMON_DISTCLEAN_FILES)
+
+maintainer-clean-local:
+	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
+
