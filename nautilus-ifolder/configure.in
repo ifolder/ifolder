@@ -19,7 +19,7 @@ IFOLDER_MINIMUM_VERSION=3.0
 AC_PROG_CC
 AM_PROG_LIBTOOL
 
-GNOME_COMPILE_WARNINGS(maximum)
+#GNOME_COMPILE_WARNINGS(maximum)
 
 AC_CHECK_PROG(CSC, mcs, mcs)
 test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
@@ -109,5 +109,6 @@ AC_OUTPUT([
   src/Makefile
   src/nautilus-ifolder.h
   src/nautilus-ifolder
+  package/Makefile
 ])
 
