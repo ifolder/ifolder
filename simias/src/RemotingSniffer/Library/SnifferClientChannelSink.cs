@@ -41,6 +41,10 @@ namespace Simias.Sync
 
 		private IClientChannelSink nextSink;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="nextSink">The next sink in the chain.</param>
 		public SnifferClientChannelSink(IClientChannelSink nextSink)
 		{
 			this.nextSink = nextSink;
@@ -70,20 +74,43 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// The next sink in the chain.
+		/// </summary>
 		IClientChannelSink IClientChannelSink.NextChannelSink
 		{
 			get { return nextSink; }
 		}
 
+		/// <summary>
+		/// Ignored
+		/// </summary>
+		/// <param name="msg"></param>
+		/// <param name="headers"></param>
+		/// <returns></returns>
 		public Stream GetRequestStream(IMessage msg, ITransportHeaders headers)
 		{
 			return null;
 		}
 
+		/// <summary>
+		/// Ignored
+		/// </summary>
+		/// <param name="sinkStack"></param>
+		/// <param name="msg"></param>
+		/// <param name="headers"></param>
+		/// <param name="stream"></param>
 		public void AsyncProcessRequest(IClientChannelSinkStack sinkStack, IMessage msg, ITransportHeaders headers, Stream stream)
 		{
 		}
 
+		/// <summary>
+		/// Ignored
+		/// </summary>
+		/// <param name="sinkStack"></param>
+		/// <param name="state"></param>
+		/// <param name="headers"></param>
+		/// <param name="stream"></param>
 		void IClientChannelSink.AsyncProcessResponse(IClientResponseChannelSinkStack sinkStack, object state, ITransportHeaders headers, Stream stream)
 		{
 		}
@@ -92,6 +119,9 @@ namespace Simias.Sync
 
 		#region IChannelSinkBase Members
 
+		/// <summary>
+		/// Channel properties
+		/// </summary>
 		public IDictionary Properties
 		{
 			get { return null; }

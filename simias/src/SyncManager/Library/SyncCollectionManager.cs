@@ -51,6 +51,11 @@ namespace Simias.Sync
 		private Thread syncWorkerThread;
 		private bool working;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="storeManager"></param>
+		/// <param name="id"></param>
 		public SyncCollectionManager(SyncStoreManager storeManager, string id)
 		{
 			this.syncManager = storeManager.Manager;
@@ -66,6 +71,9 @@ namespace Simias.Sync
 			store.Revert();
 		}
 
+		/// <summary>
+		/// Start the sync collection manager.
+		/// </summary>
 		public void Start()
 		{
 			try
@@ -96,6 +104,9 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// Stop the sync collection manager.
+		/// </summary>
 		public void Stop()
 		{
 			try

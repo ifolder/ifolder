@@ -70,6 +70,9 @@ namespace Simias.Sync
 
 		#region IDisposable Members
 
+		/// <summary>
+		/// Dispose the sync channel
+		/// </summary>
 		public void Dispose()
 		{
 			Close();
@@ -90,21 +93,33 @@ namespace Simias.Sync
 
 		#region Properties
 		
+		/// <summary>
+		/// The channel object
+		/// </summary>
 		public IChannel Channel
 		{
 			get { return channel; }
 		}
 		
+		/// <summary>
+		/// The channel name
+		/// </summary>
 		public string Name
 		{
 			get { return name; }
 		}
 		
+		/// <summary>
+		/// The channel port
+		/// </summary>
 		public int Port
 		{
 			get { return port; }
 		}
 
+		/// <summary>
+		/// An enumeration of sinks to include
+		/// </summary>
 		public SyncChannelSinks Sinks
 		{
 			get { return sinks; }

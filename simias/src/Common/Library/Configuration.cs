@@ -287,8 +287,7 @@ namespace Simias
 
 		#region Static Methods
 		
-		[Obsolete("This method is being removed.")]
-		public static string DefaultPath
+		private static string DefaultPath
 		{
 			get
 			{
@@ -302,8 +301,7 @@ namespace Simias
 			}
 		}
 
-		[Obsolete("This method is being removed.")]
-		public static string fixupPath(string path)
+		private static string fixupPath(string path)
 		{
 			if ((path.EndsWith(".simias") == false) &&
 				(path.EndsWith(".simias/") == false) &&

@@ -34,11 +34,19 @@ namespace Simias.Sync
 	{
 		private Hashtable cache;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public SyncCredentialCache()
 		{
 			cache = new Hashtable();
 		}
 
+		/// <summary>
+		/// Add a credential
+		/// </summary>
+		/// <param name="domain"></param>
+		/// <param name="identity"></param>
 		public void Add(string domain, string identity)
 		{
 			NetworkCredential credential =
@@ -50,6 +58,10 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// Remove a credential
+		/// </summary>
+		/// <param name="domain"></param>
 		public void Remove(string domain)
 		{
 			lock(cache.SyncRoot)
@@ -60,6 +72,12 @@ namespace Simias.Sync
 
 		#region ICredentials Members
 
+		/// <summary>
+		/// Get a credential.
+		/// </summary>
+		/// <param name="uri"></param>
+		/// <param name="type"></param>
+		/// <returns></returns>
 		public NetworkCredential GetCredential(Uri uri, string type)
 		{
 			NetworkCredential credential =
@@ -72,6 +90,10 @@ namespace Simias.Sync
 
 		#region IEnumerable Members
 
+		/// <summary>
+		/// The an enumerator of the credentials.
+		/// </summary>
+		/// <returns></returns>
 		public IEnumerator GetEnumerator()
 		{
 			return (cache.Clone() as IEnumerable).GetEnumerator();

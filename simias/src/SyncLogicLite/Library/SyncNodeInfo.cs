@@ -38,6 +38,10 @@ namespace Simias.Sync
 		private ulong masterIncarnation;
 		private ulong localIncarnation;
 
+		/// <summary>
+		/// Contructor
+		/// </summary>
+		/// <param name="node"></param>
 		public SyncNodeInfo(Node node)
 		{
 			id = node.ID;
@@ -48,21 +52,33 @@ namespace Simias.Sync
 
 		#region Properties
 		
+		/// <summary>
+		/// The node ID.
+		/// </summary>
 		public string ID
 		{
 			get { return id; }
 		}
 
+		/// <summary>
+		/// The node name.
+		/// </summary>
 		public string Name
 		{
 			get { return name; }
 		}
 
+		/// <summary>
+		/// The node local incarnation.
+		/// </summary>
 		public ulong LocalIncarnation
 		{
 			get { return localIncarnation; }
 		}
 
+		/// <summary>
+		/// The node master incarnation.
+		/// </summary>
 		public ulong MasterIncarnation
 		{
 			get { return masterIncarnation; }

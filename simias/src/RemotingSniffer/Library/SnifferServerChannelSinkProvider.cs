@@ -35,12 +35,20 @@ namespace Simias.Sync
 	{
 		private IServerChannelSinkProvider nextProvider;
 		
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public SnifferServerChannelSinkProvider()
 		{
 		}
 		
 		#region IServerChannelSinkProvider Members
 
+		/// <summary>
+		/// Create a new channel sink.
+		/// </summary>
+		/// <param name="channel"></param>
+		/// <returns></returns>
 		public IServerChannelSink CreateSink(IChannelReceiver channel)
 		{
 			IServerChannelSink nextSink = null;
@@ -53,6 +61,9 @@ namespace Simias.Sync
 			return new SnifferServerChannelSink(nextSink);
 		}
 
+		/// <summary>
+		/// The next provider in the chain.
+		/// </summary>
 		public IServerChannelSinkProvider Next
 		{
 			get { return nextProvider; }
@@ -60,6 +71,10 @@ namespace Simias.Sync
 			set { nextProvider = value; }
 		}
 
+		/// <summary>
+		/// Ignored.
+		/// </summary>
+		/// <param name="channelData"></param>
 		public void GetChannelData(IChannelDataStore channelData)
 		{
 		}

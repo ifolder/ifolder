@@ -45,6 +45,10 @@ namespace Simias.Sync
 		//private string result;
 		private string uri;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="msg">A message object.</param>
 		public SnifferMessage(IMessage msg)
 		{
 			// note: the message properties must be accessed by the enumerator
@@ -108,6 +112,10 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// A string representation of the sniffer message.
+		/// </summary>
+		/// <returns>The string</returns>
 		public override string ToString()
 		{
 			StringBuilder buffer = new StringBuilder();
@@ -133,6 +141,10 @@ namespace Simias.Sync
 			return buffer.ToString();
 		}
 
+		/// <summary>
+		/// A string representation of the sniffer message.
+		/// </summary>
+		/// <returns>The string</returns>
 		public static string ToString(IMessage msg)
 		{
 			SnifferMessage smsg = new SnifferMessage(msg);

@@ -30,16 +30,30 @@ namespace Simias.Sync
 	/// </summary>
 	public class SyncLogicFactoryLite : SyncLogicFactory
 	{
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public SyncLogicFactoryLite()
 		{
 		}
 
+		/// <summary>
+		/// Get the collection service object.
+		/// </summary>
+		/// <param name="collection"></param>
+		/// <returns></returns>
 		public override SyncCollectionService GetCollectionService(
 			SyncCollection collection)
 		{
 			return new SyncCollectionServiceLite(collection);
 		}
 
+		/// <summary>
+		/// Get the collection worker object.
+		/// </summary>
+		/// <param name="master"></param>
+		/// <param name="slave"></param>
+		/// <returns></returns>
 		public override SyncCollectionWorker GetCollectionWorker(
 			SyncCollectionService master, SyncCollection slave)
 		{

@@ -38,6 +38,10 @@ namespace Simias.Sync
 		private string path;
 		private FileStream stream;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="node"></param>
 		public SyncPacket(Node node)
 		{
 			this.node = node;
@@ -57,16 +61,25 @@ namespace Simias.Sync
 
 		#region Properties
 		
+		/// <summary>
+		/// The sync node
+		/// </summary>
 		public Node SyncNode
 		{
 			get { return node; }
 		}
 
+		/// <summary>
+		/// The sync path
+		/// </summary>
 		public string SyncPath
 		{
 			get { return path; }
 		}
 
+		/// <summary>
+		/// The sync stream
+		/// </summary>
 		public FileStream SyncStream
 		{
 			get { return stream; }

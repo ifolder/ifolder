@@ -35,12 +35,18 @@ namespace Simias.Sync.Tests
 	[TestFixture]
 	public class SyncLogicLiteTests : Assertion
 	{
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public SyncLogicLiteTests()
 		{
 		}
 
+		/// <summary>
+		/// Test adding a file.
+		/// </summary>
 		[Test]
-		public void TestOne()
+		public void TestAddFile()
 		{
 		}
 	}

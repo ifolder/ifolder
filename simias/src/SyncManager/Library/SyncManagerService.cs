@@ -36,6 +36,9 @@ namespace Simias.Sync
 		private Configuration config;
 		private SyncManager manager;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public SyncManagerService()
 		{
 			config = null;
@@ -44,6 +47,10 @@ namespace Simias.Sync
 
 		#region IThreadService Members
 
+		/// <summary>
+		/// Start the sync manager service.
+		/// </summary>
+		/// <param name="config"></param>
 		public void Start(Configuration config)
 		{
 			Debug.Assert(config != null);
@@ -55,6 +62,9 @@ namespace Simias.Sync
 			manager.Start();
 		}
 
+		/// <summary>
+		/// Resume the sync manager service.
+		/// </summary>
 		public void Resume()
 		{
 			Debug.Assert(manager != null);
@@ -62,6 +72,9 @@ namespace Simias.Sync
 			manager.Start();
 		}
 
+		/// <summary>
+		/// Pause the sync manager service.
+		/// </summary>
 		public void Pause()
 		{
 			Debug.Assert(manager != null);
@@ -69,10 +82,18 @@ namespace Simias.Sync
 			manager.Stop();
 		}
 
+		/// <summary>
+		/// A custome event for the sync manager service.
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="data"></param>
 		public void Custom(int message, string data)
 		{
 		}
 
+		/// <summary>
+		/// Stop the sync manager service.
+		/// </summary>
 		public void Stop()
 		{
 			Debug.Assert(manager != null);

@@ -39,12 +39,20 @@ namespace Simias.Sync
 
 		private SyncCollection collection;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="collection">The collection object.</param>
 		public SyncCollectionServiceLite(SyncCollection collection)
 			: base(collection)
 		{
 			this.collection = collection;
 		}
 
+		/// <summary>
+		/// Get a list of all the nodes in the collection.
+		/// </summary>
+		/// <returns>An array of all the nodes in the collection.</returns>
 		public SyncNodeInfo[] GetNodes()
 		{
 			ArrayList list = new ArrayList();
@@ -59,6 +67,11 @@ namespace Simias.Sync
 			return (SyncNodeInfo[])list.ToArray(typeof(SyncNodeInfo));
 		}
 
+		/// <summary>
+		/// Get a sync packet for the given id.
+		/// </summary>
+		/// <param name="id">The node id.</param>
+		/// <returns>A sync packet object.</returns>
 		public SyncPacket GetSyncPacket(string id)
 		{
 			SyncPacket packet = null;
@@ -77,11 +90,22 @@ namespace Simias.Sync
 			return packet;
 		}
 
+		/// <summary>
+		/// Commit the sync packet.
+		/// </summary>
+		/// <param name="packet">The sync packet object</param>
+		/// <returns>An incarnation number.</returns>
 		public ulong Commit(SyncPacket packet)
 		{
 			return Commit(packet, 0);
 		}
 
+		/// <summary>
+		/// Commit the sync packet.
+		/// </summary>
+		/// <param name="packet"></param>
+		/// <param name="incarnation"></param>
+		/// <returns></returns>
 		public ulong Commit(SyncPacket packet, ulong incarnation)
 		{
 			ulong result = 0;
@@ -98,6 +122,13 @@ namespace Simias.Sync
 			return result;
 		}
 
+		/// <summary>
+		/// Commit the sync packet.
+		/// </summary>
+		/// <param name="packet"></param>
+		/// <param name="collection"></param>
+		/// <param name="incarnation"></param>
+		/// <returns></returns>
 		private ulong Commit(SyncPacket packet, SyncCollection collection, ulong incarnation)
 		{
 			Node node = packet.SyncNode;
@@ -196,6 +227,10 @@ namespace Simias.Sync
 			return result;
 		}
 
+		/// <summary>
+		/// Delete a specific node.
+		/// </summary>
+		/// <param name="id"></param>
 		public void DeleteNode(string id)
 		{
 			Node node = collection.GetNodeByID(id);

@@ -49,6 +49,10 @@ namespace Simias.Sync
 		private Thread worker;
 		private bool working;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="syncManager"></param>
 		public SyncStoreManager(SyncManager syncManager)
 		{
 			// save manager
@@ -74,6 +78,9 @@ namespace Simias.Sync
 			worker = new Thread(new ThreadStart(this.DoWork));
 		}
 
+		/// <summary>
+		/// Start the sync store manager.
+		/// </summary>
 		public void Start()
 		{
 			try
@@ -114,6 +121,9 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// Stop the sync store manager.
+		/// </summary>
 		public void Stop()
 		{
 			try
@@ -297,11 +307,17 @@ namespace Simias.Sync
 
 		#region Properties
 
+		/// <summary>
+		/// The sync manager object.
+		/// </summary>
 		public SyncManager Manager
 		{
 			get { return syncManager; }
 		}
 
+		/// <summary>
+		/// The store object.
+		/// </summary>
 		public Store Store
 		{
 			get { return store; }

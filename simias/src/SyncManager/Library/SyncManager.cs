@@ -37,13 +37,19 @@ namespace Simias.Sync
 	/// </summary>
 	public enum SyncManagerStates
 	{
-		// The sync manager is syncing (or transfering) files.
+		/// <summary>
+		/// The sync manager is syncing (or transfering) files.
+		/// </summary>
 		Syncing,
 
-		// The sync manager is active.
+		/// <summary>
+		/// The sync manager is active.
+		/// </summary>
 		Active,
 
-		// They sync manager is idle.
+		/// <summary>
+		/// They sync manager is idle.
+		/// </summary>
 		Idle,
 	};
 
@@ -86,6 +92,10 @@ namespace Simias.Sync
 		private int active;
 		private object activeLock = new object();
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="config"></param>
 		public SyncManager(Configuration config)
 		{
 			this.config = config;
@@ -109,6 +119,9 @@ namespace Simias.Sync
 			locationService = new LocationService(config);
 		}
 
+		/// <summary>
+		/// Start the sync manager
+		/// </summary>
 		public void Start()
 		{
 			lock(this)
@@ -118,6 +131,9 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// Stop the sync manager
+		/// </summary>
 		public void Stop()
 		{
 			lock(this)
@@ -127,6 +143,9 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// Collection syncing gate method.
+		/// </summary>
 		internal void ReadyToWork()
 		{
 			log.Debug("Ready Work: {0}", active);
@@ -142,6 +161,9 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// Collection syncing gate method.
+		/// </summary>
 		internal void DoneWithWork()
 		{
 			lock(activeLock)
@@ -159,6 +181,9 @@ namespace Simias.Sync
 
 		#region IDisposable Members
 
+		/// <summary>
+		/// Dispose the sync manager.
+		/// </summary>
 		public void Dispose()
 		{
 			// validate stop
@@ -169,6 +194,9 @@ namespace Simias.Sync
 
 		#region Properties
 
+		/// <summary>
+		/// The default master URL for location services.
+		/// </summary>
 		public Uri MasterUri
 		{
 			get
@@ -178,41 +206,65 @@ namespace Simias.Sync
 			}
 		}
 		
+		/// <summary>
+		/// The store path.
+		/// </summary>
 		public string StorePath
 		{
 			get { return config.StorePath; }
 		}
 
+		/// <summary>
+		/// The default sync interval.
+		/// </summary>
 		public int SyncInterval
 		{
 			get { return properties.Interval; }
 		}
 
+		/// <summary>
+		/// The sync store manager.
+		/// </summary>
 		public SyncStoreManager StoreManager
 		{
 			get { return storeManager; }
 		}
 
+		/// <summary>
+		/// The channel factory singleton object.
+		/// </summary>
 		public SyncChannelFactory ChannelFactory
 		{
 			get { return channelFactory; }
 		}
 
+		/// <summary>
+		/// An enumeration of the sinks to include.
+		/// </summary>
 		public SyncChannelSinks ChannelSinks
 		{
 			get { return properties.ChannelSinks; }
 		}
 
+		/// <summary>
+		/// The default logic factory
+		/// </summary>
 		public SyncLogicFactory LogicFactory
 		{
 			get { return logicFactory; }
 		}
 
+		/// <summary>
+		/// The default location service.
+		/// </summary>
 		public LocationService Location
 		{
 			get { return locationService; }
 		}
 
+		/// <summary>
+		/// The configuration object.
+		/// </summary>
 		public Configuration Config
 		{
 			get { return config; }

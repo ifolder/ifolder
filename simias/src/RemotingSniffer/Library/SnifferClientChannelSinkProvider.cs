@@ -35,6 +35,9 @@ namespace Simias.Sync
 	{
 		private IClientChannelSinkProvider nextProvider;
 		
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public SnifferClientChannelSinkProvider()
 		{
 		}

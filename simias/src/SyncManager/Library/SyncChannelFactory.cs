@@ -74,6 +74,10 @@ namespace Simias.Sync
 			log.Debug("Remoting Configuration File: {0}", config);
 		}
 
+		/// <summary>
+		/// The singleton instance of the SyncChannelFactory.
+		/// </summary>
+		/// <returns></returns>
 		public static SyncChannelFactory GetInstance()
 		{
 			if (singleton == null)
@@ -96,11 +100,24 @@ namespace Simias.Sync
 			index = 0;
 		}
 		
+		/// <summary>
+		/// Get a sync channel
+		/// </summary>
+		/// <param name="store"></param>
+		/// <param name="sinks"></param>
+		/// <returns></returns>
 		public SyncChannel GetChannel(Store store, SyncChannelSinks sinks)
 		{
 			return GetChannel(store, sinks, 0);
 		}
 			
+		/// <summary>
+		/// Get a sync channel
+		/// </summary>
+		/// <param name="store"></param>
+		/// <param name="sinks"></param>
+		/// <param name="port"></param>
+		/// <returns></returns>
 		public SyncChannel GetChannel(Store store, SyncChannelSinks sinks, int port)
 		{
 			SyncChannel result = null;

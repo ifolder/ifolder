@@ -45,6 +45,11 @@ namespace Simias.Sync
 		private SyncCollection local;
 		private SyncCollectionServiceLite localService;
 
+		/// <summary>
+		/// Lite sync collection worker.
+		/// </summary>
+		/// <param name="master"></param>
+		/// <param name="slave"></param>
 		public SyncCollectionWorkerLite(SyncCollectionServiceLite master,
 			SyncCollection slave)
 				: base(master, slave)
@@ -54,6 +59,9 @@ namespace Simias.Sync
 			this.localService = new SyncCollectionServiceLite(slave);
 		}
 
+		/// <summary>
+		/// Do the sync work
+		/// </summary>
 		public override void DoSyncWork()
 		{
 			SyncNodeInfo[] masterNodes = masterService.GetNodes();
@@ -139,12 +147,20 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// Download the node object.
+		/// </summary>
+		/// <param name="node"></param>
 		public void Download(SyncNodeInfo node)
 		{
 			// download and update master incarnation
 			localService.Commit(masterService.GetSyncPacket(node.ID), node.MasterIncarnation);
 		}
 
+		/// <summary>
+		/// Upload the node object.
+		/// </summary>
+		/// <param name="node"></param>
 		public void Upload(SyncNodeInfo node)
 		{
 			// TODO: do we need a node lock to protect the node between the following calls?

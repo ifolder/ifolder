@@ -41,6 +41,10 @@ namespace Simias.Sync
 
 		private IServerChannelSink nextSink;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="nextSink"></param>
 		public SnifferServerChannelSink(IServerChannelSink nextSink)
 		{
 			this.nextSink = nextSink;
@@ -48,6 +52,17 @@ namespace Simias.Sync
 		
 		#region IServerChannelSink Members
 
+		/// <summary>
+		/// Process the channel message.
+		/// </summary>
+		/// <param name="sinkStack"></param>
+		/// <param name="requestMsg"></param>
+		/// <param name="requestHeaders"></param>
+		/// <param name="requestStream"></param>
+		/// <param name="responseMsg"></param>
+		/// <param name="responseHeaders"></param>
+		/// <param name="responseStream"></param>
+		/// <returns></returns>
 		public ServerProcessing ProcessMessage(IServerChannelSinkStack sinkStack, IMessage requestMsg, ITransportHeaders requestHeaders, Stream requestStream, out IMessage responseMsg, out ITransportHeaders responseHeaders, out Stream responseStream)
 		{
 			responseMsg = null;
@@ -75,16 +90,35 @@ namespace Simias.Sync
 			return result;
 		}
 
+		/// <summary>
+		/// The next channel in the chain.
+		/// </summary>
 		public IServerChannelSink NextChannelSink
 		{
 			get { return nextSink; }
 		}
 
+		/// <summary>
+		/// Ignored
+		/// </summary>
+		/// <param name="sinkStack"></param>
+		/// <param name="state"></param>
+		/// <param name="msg"></param>
+		/// <param name="headers"></param>
+		/// <returns></returns>
 		public Stream GetResponseStream(IServerResponseChannelSinkStack sinkStack, object state, IMessage msg, ITransportHeaders headers)
 		{
 			return null;
 		}
 
+		/// <summary>
+		/// Ignored
+		/// </summary>
+		/// <param name="sinkStack"></param>
+		/// <param name="state"></param>
+		/// <param name="msg"></param>
+		/// <param name="headers"></param>
+		/// <param name="stream"></param>
 		public void AsyncProcessResponse(IServerResponseChannelSinkStack sinkStack, object state, IMessage msg, ITransportHeaders headers, Stream stream)
 		{
 		}
@@ -93,6 +127,9 @@ namespace Simias.Sync
 
 		#region IChannelSinkBase Members
 
+		/// <summary>
+		/// Channel properties
+		/// </summary>
 		public IDictionary Properties
 		{
 			get { return null; }
