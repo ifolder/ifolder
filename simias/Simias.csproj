@@ -454,6 +454,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Policy\FileTypeFilter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Service\BaseProcessService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

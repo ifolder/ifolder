@@ -1949,6 +1949,121 @@ namespace Simias.Storage.Tests
 				collection.Commit( collection.Delete() );
 			}
 		}
+
+		/// <summary>
+		/// Tests the file type filter functionality.
+		/// </summary>
+		[Test]
+		public void FileTypeFilterTest()
+		{
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			collection.Commit();
+
+			try
+			{
+				Member member = collection.GetCurrentMember();
+				FileTypeEntry[] dfte = new FileTypeEntry[] { new FileTypeEntry( ".mp3", false ), 
+															 new FileTypeEntry( ".avi", false ) };
+
+				// Create a system-wide file filter policy.
+				FileTypeFilter.CreateFileTypeFilter( store, store.DefaultDomain, dfte );
+
+				// Get a filter object.
+				FileTypeFilter ftf = FileTypeFilter.GetFileTypeFilter( store, member );
+				
+				// Now apply the filter so that it will pass.
+				if ( ftf.Allowed( "myfile.txt" ) == false )
+				{
+					throw new ApplicationException( "Domain file type filter failed." );
+				}
+
+				// Now apply the filter so that it will fail.
+				if ( ftf.Allowed( "myfile.mp3" ) == true )
+				{
+					throw new ApplicationException( "Domain file type filter failed." );
+				}
+
+				// Create an additive filter.
+				FileTypeEntry[] lfte = new FileTypeEntry[] { new FileTypeEntry( ".mov", false ) };
+
+				// Apply a file type filter on the current user on this machine.
+				FileTypeFilter.CreateFileTypeFilter( store, lfte );
+
+				// Get a filter object.
+				ftf = FileTypeFilter.GetFileTypeFilter( store, member );
+				
+				// Check the aggregate list.
+				if ( ftf.FilterList.Length != 3 )
+				{
+					throw new ApplicationException( "Aggregate member filter not set." );
+				}
+
+				// Now apply the filter so that it will pass.
+				if ( ftf.Allowed( "myfile.txt" ) == false )
+				{
+					throw new ApplicationException( "Member filter failed." );
+				}
+
+				// Now apply the filter so that it will fail.
+				if ( ftf.Allowed( "myfile.mov" ) == true )
+				{
+					throw new ApplicationException( "Member filter failed." );
+				}
+
+
+				// Apply a filter on the collection.
+				FileTypeEntry[] cfte = new FileTypeEntry[] { new FileTypeEntry( ".wav", false ) };
+				FileTypeFilter.CreateFileTypeFilter( store, collection, cfte );
+
+				// Get a quota object.
+				ftf = FileTypeFilter.GetFileTypeFilter( store, member, collection );
+				
+				// Check the aggregate list.
+				if ( ftf.FilterList.Length != 4 )
+				{
+					throw new ApplicationException( "Aggregate collection filter not set." );
+				}
+
+				// Now apply the filter so that it will pass.
+				if ( ftf.Allowed( "myfile.txt" ) == false )
+				{
+					throw new ApplicationException( "Collection filter failed." );
+				}
+
+				// Now apply the filter so that it will fail.
+				if ( ftf.Allowed( "myfile.wav" ) == true )
+				{
+					throw new ApplicationException( "Collection filter failed." );
+				}
+
+
+				// Create a POBox for the user.
+				POBox.POBox.GetPOBox( store, store.DefaultDomain, member.UserID );
+
+				// Reset the member's filter to allow only .doc files.
+				FileTypeEntry[] mfte = new FileTypeEntry[] { new FileTypeEntry( ".doc", true ) };
+				FileTypeFilter.CreateFileTypeFilter( store, member, mfte );
+
+				// Get a filter object.
+				ftf = FileTypeFilter.GetFileTypeFilter( store, member, collection );
+				
+				// Now apply the filter so that it will pass.
+				if ( ftf.Allowed( "myfile.doc" ) == false )
+				{
+					throw new ApplicationException( "Member filter failed." );
+				}
+
+				// Now apply the filter so that it will fail.
+				if ( ftf.Allowed( "myfile.txt" ) == true )
+				{
+					throw new ApplicationException( "Member filter failed." );
+				}
+			}
+			finally
+			{
+				collection.Commit( collection.Delete() );
+			}
+		}
 		#endregion
 
 		#region Test Clean Up

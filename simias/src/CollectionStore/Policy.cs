@@ -260,7 +260,7 @@ namespace Simias.Policy
 		/// <param name="rule">Object that is used to match against the input in the policy.</param>
 		public void AddRule( Rule rule )
 		{
-			properties.ModifyProperty( ( rule.RuleResult == Rule.Result.Allow ) ? AllowRule : DenyRule, rule.ToXml() );
+			properties.AddNodeProperty( ( rule.RuleResult == Rule.Result.Allow ) ? AllowRule : DenyRule, rule.ToXml() );
 		}
 
 		/// <summary>
@@ -269,7 +269,7 @@ namespace Simias.Policy
 		/// <param name="time">PolicyTime object that determines when the policy is effective.</param>
 		public void AddTimeCondition( PolicyTime time )
 		{
-			properties.ModifyProperty( TimeCondition, time.ToString() );
+			properties.ModifyNodeProperty( TimeCondition, time.ToString() );
 		}
 
 		/// <summary>
