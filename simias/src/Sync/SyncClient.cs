@@ -1288,7 +1288,7 @@ namespace Simias.Sync.Client
 					bool success = false;
 					try
 					{
-						log.Info("Downloading File {0} To server", file.Name);
+						log.Info("Downloading File {0} from server", file.Name);
 						success = file.DownLoadFile();
 					}
 					finally
@@ -1528,7 +1528,7 @@ namespace Simias.Sync.Client
 						bool success = false;
 						try
 						{
-							log.Info("Uploading File {0} To server", file.Name);
+							log.Info("Uploading File {0} to server", file.Name);
 							success = file.UploadFile();
 						}
 						finally
