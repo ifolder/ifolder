@@ -49,12 +49,12 @@ DEBUG_CHECK_FILES = SqliteProviderTests.pdb
 endif
 endif
 
-install-exec-local: SqliteProvider.dll SqliteWrapper.dll $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB)
+install-exec-local: SqliteProvider.dll SqliteWrapper.dll $(srcdir)/$(STORELIB_PATH)/$(STORELIB)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) SqliteProvider.dll SqliteWrapper.dll $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) SqliteProvider.dll SqliteWrapper.dll $(srcdir)/$(STORELIB_PATH)/$(STORELIB) $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f SqliteProvider.dll SqliteWrapper.dll SqliteProviderTests.test.xml $(SQLITELIB) $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
+	cd $(DESTDIR)$(bindir); rm -f SqliteProvider.dll SqliteWrapper.dll SqliteProviderTests.test.xml $(STORELIB) $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)

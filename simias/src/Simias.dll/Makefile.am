@@ -32,20 +32,20 @@ install-exec-local: Simias.dll
 	$(INSTALL_PROGRAM) $(srcdir)/$(MDNSRESPONDER_DIR)/m*.exe $(MDNSRESPONDER_DIR)/m*.dll $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(LOG4NET_DIR)/log4net.dll $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(srcdir)/../../external/SecureChannelSinks/*.dll $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(srcdir)/$(STORELIB_PATH)/$(STORELIB) $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) $(srcdir)/$(STORELIB_PATH)/$(STORELIB) $(DESTDIR)$(bindir)
 	cp -f $(srcdir)/$(LOG4NET_DIR)/../../../../LICENSE.txt $(DESTDIR)$(datadir)/simias/log4net.LICENSE.txt
 	$(INSTALL_PROGRAM) ../Common/Simias.remoting $(DESTDIR)$(sysconfdir)
 	$(INSTALL_PROGRAM) ../Common/Simias.log4net $(DESTDIR)$(sysconfdir)
 	$(INSTALL_PROGRAM) ../Common/Simias.config $(DESTDIR)$(sysconfdir)
 
 uninstall-local:
-	cd $(DESTDIR)$(libdir); rm -f $(SQLITELIB)
+	cd $(DESTDIR)$(libdir); rm -f $(STORELIB)
 	cd $(DESTDIR)$(libdir); rm -f Novell.Security.SecureSink*.dll
 	cd $(DESTDIR)$(libdir); rm -f log4net.dll
 	cd $(DESTDIR)$(libdir); rm -f mDnsResponder*
 	cd $(DESTDIR)$(libdir); rm -f Simias.dll $(DEBUG_FILES)
-	cd $(DESTDIR)$(bindir); rm -f $(SQLITELIB)
+	cd $(DESTDIR)$(bindir); rm -f $(STORELIB)
 	cd $(DESTDIR)$(sysconfdir); rm -f Simias.remoting Simias.log4net Simias.config
 	cd $(DESTDIR)$(datadir)/simias; rm -f log4net.LICENSE.txt
 

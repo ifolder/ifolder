@@ -172,8 +172,8 @@ case $SIMIAS_OS in
         SEP='/'
         SHARED_LIB_EXT='.dylib'
         SHARED_LIB_FLAG='-shared'
-        SQLITELIB="sqlite"
-        SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/darwin"
+        STORELIB="sqlite"
+        STORELIB_PATH="$EXTERNAL_DIR/sqlite/darwin"
     ;;
     #
     # Linux-specific configuration
@@ -200,8 +200,8 @@ case $SIMIAS_OS in
         SEP='/'
         SHARED_LIB_EXT='.so'
         SHARED_LIB_FLAG='-shared'
-        SQLITELIB="libsqlite.so"
-        SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/linux"
+        STORELIB="libsqlite.so"
+        STORELIB_PATH="$EXTERNAL_DIR/sqlite/linux"
     ;;
     #
     # Windows-specific configuration
@@ -261,8 +261,8 @@ case $SIMIAS_OS in
         SEP='$(EMPTY)\\$(EMPTY)'
         SHARED_LIB_EXT='.dll'
         SHARED_LIB_FLAG='-dll'
-        SQLITELIB="sqlite.dll"
-        SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/w32"
+        STORELIB="sqlite.dll"
+        STORELIB_PATH="$EXTERNAL_DIR/sqlite/w32"
         SYSTEM_XML='System.XML.dll'
         #
     	# Override Linux-like directory structure
@@ -298,8 +298,8 @@ AC_SUBST(REPORT_EXE)
 AC_SUBST(SEP)
 AC_SUBST(SHARED_LIB_EXT)
 AC_SUBST(SHARED_LIB_FLAG)
-AC_SUBST(SQLITELIB)
-AC_SUBST(SQLITELIB_PATH)
+AC_SUBST(STORELIB)
+AC_SUBST(STORELIB_PATH)
 
 #
 # Set pkg-config variables

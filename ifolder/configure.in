@@ -188,8 +188,8 @@ case $IFOLDER_OS in
         SEP='/'
         SHARED_LIB_EXT='.dylib'
         SHARED_LIB_FLAG='-shared'
-        SQLITELIB_PATH="../../external/sqlite/darwin"
-        SQLITELIB="sqlite"
+        STORELIB_PATH="../../external/sqlite/darwin"
+        STORELIB="sqlite"
         SYSTEM_XML='System.Xml.dll'
     ;;
     #
@@ -216,8 +216,8 @@ case $IFOLDER_OS in
         SEP='/'
         SHARED_LIB_EXT='.so'
         SHARED_LIB_FLAG='-shared'
-        SQLITELIB_PATH="../../external/sqlite/linux"
-        SQLITELIB="libsqlite.so"
+        STORELIB_PATH="../../external/sqlite/linux"
+        STORELIB="libsqlite.so"
         SYSTEM_XML='System.Xml.dll'
         #
         # Set pkg-config variables
@@ -281,8 +281,8 @@ case $IFOLDER_OS in
         SEP='$(EMPTY)\\$(EMPTY)'
         SHARED_LIB_EXT='.dll'
         SHARED_LIB_FLAG='-dll'
-        SQLITELIB="sqlite.dll"
-        SQLITELIB_PATH="../../external/sqlite/w32"
+        STORELIB="sqlite.dll"
+        STORELIB_PATH="../../external/sqlite/w32"
         SYSTEM_XML='System.XML.dll'
         TLBX='tlbexp'
         TYPE_LIB_EXT='.tlb'
