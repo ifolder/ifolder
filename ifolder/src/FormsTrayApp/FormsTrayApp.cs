@@ -66,6 +66,10 @@ namespace Novell.FormsTrayApp
 
 		private Queue eventQueue;
 		private Thread worker = null;
+
+		/// <summary>
+		/// Event used to signal that there are events in the queue that need to be processed.
+		/// </summary>
 		protected AutoResetEvent workEvent = null;
 
 		private System.Windows.Forms.MenuItem menuItem10;
@@ -381,7 +385,7 @@ namespace Novell.FormsTrayApp
 				// Update the settings with the enterprise data.
 				ifolderSettings = ifWebService.GetSettings();
 			}
-			catch (Exception ex)
+			catch
 			{
 			}
 		}
@@ -583,48 +587,57 @@ namespace Novell.FormsTrayApp
 			{
 				if (ifolder.HasConflicts)
 				{
-					NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
+					if (globalProperties.NotifyCollisionEnabled)
+					{
+						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
 
-					string message = string.Format(resourceManager.GetString("collisionMessage"), ifolder.Name);
+						string message = string.Format(resourceManager.GetString("collisionMessage"), ifolder.Name);
 
-					balloonTip.ShowBalloon(
-						hwnd,
-						iconID,
-						BalloonType.Info,
-						resourceManager.GetString("actionRequiredTitle"),
-						message);
+						balloonTip.ShowBalloon(
+							hwnd,
+							iconID,
+							BalloonType.Info,
+							resourceManager.GetString("actionRequiredTitle"),
+							message);
 
-					// TODO: Change the icon?
+						// TODO: Change the icon?
+					}
 				}
 				else if (ifolder.State.Equals("Available") && eventData.Equals("NodeCreated"))
 				{
-					NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
+					if (globalProperties.NotifyShareEnabled)
+					{
+						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
 
-					string message = string.Format(resourceManager.GetString("subscriptionMessage"), ifolder.Owner);
+						string message = string.Format(resourceManager.GetString("subscriptionMessage"), ifolder.Owner);
 
-					balloonTip.ShowBalloon(
-						hwnd,
-						iconID,
-						BalloonType.Info,
-						resourceManager.GetString("actionRequiredTitle"),
-						message);
+						balloonTip.ShowBalloon(
+							hwnd,
+							iconID,
+							BalloonType.Info,
+							resourceManager.GetString("actionRequiredTitle"),
+							message);
 
-					// TODO: Change the icon?
+						// TODO: Change the icon?
+					}
 				}
 				else if (ifolderUser != null)
 				{
-					NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
+					if (globalProperties.NotifyJoinEnabled)
+					{
+						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
 
-					string message = string.Format(resourceManager.GetString("newMemberMessage"), ifolderUser.Name, ifolder.Name);
+						string message = string.Format(resourceManager.GetString("newMemberMessage"), ifolderUser.Name, ifolder.Name);
 							
-					balloonTip.ShowBalloon(
-						hwnd,
-						iconID,
-						BalloonType.Info,
-						resourceManager.GetString("newMemberTitle"),
-						message);
+						balloonTip.ShowBalloon(
+							hwnd,
+							iconID,
+							BalloonType.Info,
+							resourceManager.GetString("newMemberTitle"),
+							message);
 
-					// TODO: Change the icon?
+						// TODO: Change the icon?
+					}
 				}
 			}
 			catch {}

@@ -50,14 +50,31 @@ namespace Novell.FormsTrayApp
 		private SyncCollectionDelegate syncCollectionDelegate;
 		private delegate void SyncFileDelegate(FileSyncEventArgs syncEventArgs);
 		private SyncFileDelegate syncFileDelegate;
+
+		/// <summary>
+		/// Delegate for node create and change events.
+		/// </summary>
 		public delegate void CreateChangeEventDelegate(iFolderWeb ifolder, string eventData);
+		/// <summary>
+		/// Delegate used to service node create and change events.
+		/// </summary>
 		public CreateChangeEventDelegate createChangeEventDelegate;
+
+		/// <summary>
+		/// Delegate for node delete events.
+		/// </summary>
 		public delegate void DeleteEventDelegate(string ID);
+		/// <summary>
+		/// Delegate used to service node delete events.
+		/// </summary>
 		public DeleteEventDelegate deleteEventDelegate;
 
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(GlobalProperties));
 		private const string iFolderRun = "DisableAutoStart";
-		private const string iFolderKey = @"SOFTWARE\Novell2\iFolder";
+		private const string notifyShareDisabled = "NotifyShareDisable";
+		private const string notifyCollisionDisabled = "NotifyCollisionDisabled";
+		private const string notifyJoinDisabled = "NotifyJoinDisabled";
+		private const string iFolderKey = @"SOFTWARE\Novell\iFolder";
 		private const double megaByte = 1048576;
 		private const int maxMessages = 500;
 		private System.Timers.Timer updateEnterpriseTimer;
@@ -153,6 +170,9 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Button cancel;
 		private System.Windows.Forms.MenuItem menuRemove;
 		private System.Windows.Forms.MenuItem menuActionRemove;
+		private System.Windows.Forms.CheckBox notifyShared;
+		private System.Windows.Forms.CheckBox notifyCollisions;
+		private System.Windows.Forms.CheckBox notifyJoins;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -253,6 +273,9 @@ namespace Novell.FormsTrayApp
 			this.autoSync = new System.Windows.Forms.CheckBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.notifyJoins = new System.Windows.Forms.CheckBox();
+			this.notifyCollisions = new System.Windows.Forms.CheckBox();
+			this.notifyShared = new System.Windows.Forms.CheckBox();
 			this.autoStart = new System.Windows.Forms.CheckBox();
 			this.groupBox5 = new System.Windows.Forms.GroupBox();
 			this.proxy = new System.Windows.Forms.TextBox();
@@ -820,6 +843,9 @@ namespace Novell.FormsTrayApp
 			this.groupBox3.AccessibleName = resources.GetString("groupBox3.AccessibleName");
 			this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox3.Anchor")));
 			this.groupBox3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox3.BackgroundImage")));
+			this.groupBox3.Controls.Add(this.notifyJoins);
+			this.groupBox3.Controls.Add(this.notifyCollisions);
+			this.groupBox3.Controls.Add(this.notifyShared);
 			this.groupBox3.Controls.Add(this.autoStart);
 			this.groupBox3.Controls.Add(this.displayConfirmation);
 			this.groupBox3.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox3.Dock")));
@@ -835,6 +861,84 @@ namespace Novell.FormsTrayApp
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = resources.GetString("groupBox3.Text");
 			this.groupBox3.Visible = ((bool)(resources.GetObject("groupBox3.Visible")));
+			// 
+			// notifyJoins
+			// 
+			this.notifyJoins.AccessibleDescription = resources.GetString("notifyJoins.AccessibleDescription");
+			this.notifyJoins.AccessibleName = resources.GetString("notifyJoins.AccessibleName");
+			this.notifyJoins.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("notifyJoins.Anchor")));
+			this.notifyJoins.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("notifyJoins.Appearance")));
+			this.notifyJoins.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("notifyJoins.BackgroundImage")));
+			this.notifyJoins.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyJoins.CheckAlign")));
+			this.notifyJoins.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("notifyJoins.Dock")));
+			this.notifyJoins.Enabled = ((bool)(resources.GetObject("notifyJoins.Enabled")));
+			this.notifyJoins.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("notifyJoins.FlatStyle")));
+			this.notifyJoins.Font = ((System.Drawing.Font)(resources.GetObject("notifyJoins.Font")));
+			this.notifyJoins.Image = ((System.Drawing.Image)(resources.GetObject("notifyJoins.Image")));
+			this.notifyJoins.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyJoins.ImageAlign")));
+			this.notifyJoins.ImageIndex = ((int)(resources.GetObject("notifyJoins.ImageIndex")));
+			this.notifyJoins.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("notifyJoins.ImeMode")));
+			this.notifyJoins.Location = ((System.Drawing.Point)(resources.GetObject("notifyJoins.Location")));
+			this.notifyJoins.Name = "notifyJoins";
+			this.notifyJoins.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("notifyJoins.RightToLeft")));
+			this.notifyJoins.Size = ((System.Drawing.Size)(resources.GetObject("notifyJoins.Size")));
+			this.notifyJoins.TabIndex = ((int)(resources.GetObject("notifyJoins.TabIndex")));
+			this.notifyJoins.Text = resources.GetString("notifyJoins.Text");
+			this.notifyJoins.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyJoins.TextAlign")));
+			this.notifyJoins.Visible = ((bool)(resources.GetObject("notifyJoins.Visible")));
+			this.notifyJoins.CheckedChanged += new System.EventHandler(this.notifyJoins_CheckedChanged);
+			// 
+			// notifyCollisions
+			// 
+			this.notifyCollisions.AccessibleDescription = resources.GetString("notifyCollisions.AccessibleDescription");
+			this.notifyCollisions.AccessibleName = resources.GetString("notifyCollisions.AccessibleName");
+			this.notifyCollisions.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("notifyCollisions.Anchor")));
+			this.notifyCollisions.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("notifyCollisions.Appearance")));
+			this.notifyCollisions.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("notifyCollisions.BackgroundImage")));
+			this.notifyCollisions.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyCollisions.CheckAlign")));
+			this.notifyCollisions.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("notifyCollisions.Dock")));
+			this.notifyCollisions.Enabled = ((bool)(resources.GetObject("notifyCollisions.Enabled")));
+			this.notifyCollisions.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("notifyCollisions.FlatStyle")));
+			this.notifyCollisions.Font = ((System.Drawing.Font)(resources.GetObject("notifyCollisions.Font")));
+			this.notifyCollisions.Image = ((System.Drawing.Image)(resources.GetObject("notifyCollisions.Image")));
+			this.notifyCollisions.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyCollisions.ImageAlign")));
+			this.notifyCollisions.ImageIndex = ((int)(resources.GetObject("notifyCollisions.ImageIndex")));
+			this.notifyCollisions.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("notifyCollisions.ImeMode")));
+			this.notifyCollisions.Location = ((System.Drawing.Point)(resources.GetObject("notifyCollisions.Location")));
+			this.notifyCollisions.Name = "notifyCollisions";
+			this.notifyCollisions.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("notifyCollisions.RightToLeft")));
+			this.notifyCollisions.Size = ((System.Drawing.Size)(resources.GetObject("notifyCollisions.Size")));
+			this.notifyCollisions.TabIndex = ((int)(resources.GetObject("notifyCollisions.TabIndex")));
+			this.notifyCollisions.Text = resources.GetString("notifyCollisions.Text");
+			this.notifyCollisions.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyCollisions.TextAlign")));
+			this.notifyCollisions.Visible = ((bool)(resources.GetObject("notifyCollisions.Visible")));
+			this.notifyCollisions.CheckedChanged += new System.EventHandler(this.notifyCollisions_CheckedChanged);
+			// 
+			// notifyShared
+			// 
+			this.notifyShared.AccessibleDescription = resources.GetString("notifyShared.AccessibleDescription");
+			this.notifyShared.AccessibleName = resources.GetString("notifyShared.AccessibleName");
+			this.notifyShared.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("notifyShared.Anchor")));
+			this.notifyShared.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("notifyShared.Appearance")));
+			this.notifyShared.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("notifyShared.BackgroundImage")));
+			this.notifyShared.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyShared.CheckAlign")));
+			this.notifyShared.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("notifyShared.Dock")));
+			this.notifyShared.Enabled = ((bool)(resources.GetObject("notifyShared.Enabled")));
+			this.notifyShared.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("notifyShared.FlatStyle")));
+			this.notifyShared.Font = ((System.Drawing.Font)(resources.GetObject("notifyShared.Font")));
+			this.notifyShared.Image = ((System.Drawing.Image)(resources.GetObject("notifyShared.Image")));
+			this.notifyShared.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyShared.ImageAlign")));
+			this.notifyShared.ImageIndex = ((int)(resources.GetObject("notifyShared.ImageIndex")));
+			this.notifyShared.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("notifyShared.ImeMode")));
+			this.notifyShared.Location = ((System.Drawing.Point)(resources.GetObject("notifyShared.Location")));
+			this.notifyShared.Name = "notifyShared";
+			this.notifyShared.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("notifyShared.RightToLeft")));
+			this.notifyShared.Size = ((System.Drawing.Size)(resources.GetObject("notifyShared.Size")));
+			this.notifyShared.TabIndex = ((int)(resources.GetObject("notifyShared.TabIndex")));
+			this.notifyShared.Text = resources.GetString("notifyShared.Text");
+			this.notifyShared.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyShared.TextAlign")));
+			this.notifyShared.Visible = ((bool)(resources.GetObject("notifyShared.Visible")));
+			this.notifyShared.CheckedChanged += new System.EventHandler(this.notifyShared_CheckedChanged);
 			// 
 			// autoStart
 			// 
@@ -1939,6 +2043,129 @@ namespace Novell.FormsTrayApp
 				}
 			}
 		}
+
+		/// <summary>
+		/// Gets/sets a value indicating if shared iFolder notifications should be displayed.
+		/// </summary>
+		public bool NotifyShareEnabled
+		{
+			get
+			{
+				int notify;
+				try
+				{
+					// Create/open the iFolder key.
+					RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+					// Get the notify share value ... default the value to 0 (enabled).
+					notify = (int)regKey.GetValue(notifyShareDisabled, 0);
+				}
+				catch
+				{
+					return true;
+				}
+
+				return (notify == 0);
+			}
+			set
+			{
+				// Create/open the iFolder key.
+				RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+				if (value)
+				{
+					// Delete the value.
+					regKey.DeleteValue(notifyShareDisabled, false);
+				}
+				else
+				{
+					// Set the disable value.
+					regKey.SetValue(notifyShareDisabled, 1);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets/sets a value indicating if iFolder collision notifications should be displayed.
+		/// </summary>
+		public bool NotifyCollisionEnabled
+		{
+			get
+			{
+				int notify;
+				try
+				{
+					// Create/open the iFolder key.
+					RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+					// Get the notify share value ... default the value to 0 (enabled).
+					notify = (int)regKey.GetValue(notifyCollisionDisabled, 0);
+				}
+				catch
+				{
+					return true;
+				}
+
+				return (notify == 0);
+			}
+			set
+			{
+				// Create/open the iFolder key.
+				RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+				if (value)
+				{
+					// Delete the value.
+					regKey.DeleteValue(notifyCollisionDisabled, false);
+				}
+				else
+				{
+					// Set the disable value.
+					regKey.SetValue(notifyCollisionDisabled, 1);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets/sets a value indicating if a notification should be displayed when a user joins an iFolder.
+		/// </summary>
+		public bool NotifyJoinEnabled
+		{
+			get
+			{
+				int notify;
+				try
+				{
+					// Create/open the iFolder key.
+					RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+					// Get the notify share value ... default the value to 0 (enabled).
+					notify = (int)regKey.GetValue(notifyJoinDisabled, 0);
+				}
+				catch
+				{
+					return true;
+				}
+
+				return (notify == 0);
+			}
+			set
+			{
+				// Create/open the iFolder key.
+				RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+				if (value)
+				{
+					// Delete the value.
+					regKey.DeleteValue(notifyJoinDisabled, false);
+				}
+				else
+				{
+					// Set the disable value.
+					regKey.SetValue(notifyJoinDisabled, 1);
+				}
+			}
+		}
 		#endregion
 
 		#region Public Methods
@@ -2379,6 +2606,14 @@ namespace Novell.FormsTrayApp
 
 				// Update the auto start setting.
 				autoStart.Checked = IsRunEnabled();
+
+				notifyShared.Checked = NotifyShareEnabled;
+				notifyCollisions.Checked = NotifyCollisionEnabled;
+				notifyJoins.Checked = NotifyJoinEnabled;
+
+				// Update the display confirmation setting.
+				displayConfirmation.Checked = iFolderComponent.DisplayConfirmationEnabled;
+
 				iFolderSettings ifSettings = null;
 
 				try
@@ -2386,13 +2621,10 @@ namespace Novell.FormsTrayApp
 					ifSettings = ifWebService.GetSettings();
 					currentUserID = ifSettings.CurrentUserID;
 					currentPOBoxID = ifSettings.DefaultPOBoxID;
-
-					// Update the display confirmation setting.
-					displayConfirmation.Checked = ifSettings.DisplayConfirmation;
 				}
 				catch (Exception ex)
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readConfirmationError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readiFolderSettingsError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
 
@@ -2633,7 +2865,10 @@ namespace Novell.FormsTrayApp
 							addiFolderToListView(ifolder);
 
 							// Display the new iFolder intro dialog.
-							new iFolderComponent().NewiFolderWizard(Application.StartupPath, folderBrowserDialog.SelectedPath);
+							if (iFolderComponent.DisplayConfirmationEnabled)
+							{
+								new iFolderComponent().NewiFolderWizard(Application.StartupPath, folderBrowserDialog.SelectedPath);
+							}
 							break;
 						}
 						else
@@ -2798,61 +3033,69 @@ namespace Novell.FormsTrayApp
 				setAutoRunValue(!autoStart.Checked);
 			}
 
-			iFolderSettings ifSettings = ifWebService.GetSettings();
+			NotifyShareEnabled = notifyShared.Checked;
+			NotifyCollisionEnabled = notifyCollisions.Checked;
+			NotifyJoinEnabled = notifyJoins.Checked;
 
 			// Check and update display confirmation setting.
-			if (displayConfirmation.Checked != ifSettings.DisplayConfirmation)
-			{
-				try
-				{
-					// Save the display confirmation setting.
-					ifWebService.SetDisplayConfirmation(displayConfirmation.Checked);
-				}
-				catch (Exception ex)
-				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("declineError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
-				}
-			}
+			iFolderComponent.DisplayConfirmationEnabled = displayConfirmation.Checked;
 
-			// Check and update default sync interval.
-			int currentInterval = ifWebService.GetDefaultSyncInterval();
-			if ((defaultInterval.Value != (decimal)currentInterval) ||
-				(autoSync.Checked != (currentInterval != System.Threading.Timeout.Infinite)))
+			try
 			{
-				try
+				// Check and update default sync interval.
+				int currentInterval = ifWebService.GetDefaultSyncInterval();
+				if ((defaultInterval.Value != (decimal)currentInterval) ||
+					(autoSync.Checked != (currentInterval != System.Threading.Timeout.Infinite)))
 				{
-					// Save the default sync interval.
-					ifWebService.SetDefaultSyncInterval(autoSync.Checked ? (int)defaultInterval.Value : System.Threading.Timeout.Infinite);
-				}
-				catch (Exception ex)
-				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("saveSyncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
-				}
-			}
-
-			// Check and update proxy settings.
-			if ((useProxy.Checked != ifSettings.UseProxy) ||
-				!proxy.Text.Equals(ifSettings.ProxyHost) ||
-				(port.Value != (decimal)ifSettings.ProxyPort))
-			{
-				try
-				{
-					if (useProxy.Checked)
+					try
 					{
-						ifWebService.SetupProxy(proxy.Text, (int)port.Value);
+						// Save the default sync interval.
+						ifWebService.SetDefaultSyncInterval(autoSync.Checked ? (int)defaultInterval.Value : System.Threading.Timeout.Infinite);
 					}
-					else
+					catch (Exception ex)
 					{
-						ifWebService.RemoveProxy();
+						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("saveSyncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
 					}
 				}
-				catch (Exception ex)
+			}
+			catch (Exception ex)
+			{
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readSyncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+				mmb.ShowDialog();
+			}
+
+			try
+			{
+				iFolderSettings ifSettings = ifWebService.GetSettings();
+
+				// Check and update proxy settings.
+				if ((useProxy.Checked != ifSettings.UseProxy) ||
+					!proxy.Text.Equals(ifSettings.ProxyHost) ||
+					(port.Value != (decimal)ifSettings.ProxyPort))
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("saveProxyError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
+					try
+					{
+						if (useProxy.Checked)
+						{
+							ifWebService.SetupProxy(proxy.Text, (int)port.Value);
+						}
+						else
+						{
+							ifWebService.RemoveProxy();
+						}
+					}
+					catch (Exception ex)
+					{
+						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("saveProxyError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
+					}
 				}
+			}
+			catch (Exception ex)
+			{
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readiFolderSettingsError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+				mmb.ShowDialog();
 			}
 
 			Cursor.Current = Cursors.Default;
@@ -2863,22 +3106,34 @@ namespace Novell.FormsTrayApp
 		{
 			Cursor.Current = Cursors.WaitCursor;
 
-			iFolderSettings ifSettings = ifWebService.GetSettings();
-
 			// Reset the auto start setting.
 			autoStart.Checked = IsRunEnabled();
 
+			notifyShared.Checked = NotifyShareEnabled;
+			notifyCollisions.Checked = NotifyCollisionEnabled;
+			notifyJoins.Checked = NotifyJoinEnabled;
+
 			// Reset the display confirmation setting.
-			displayConfirmation.Checked = ifSettings.DisplayConfirmation;
+			displayConfirmation.Checked = iFolderComponent.DisplayConfirmationEnabled;
 
 			// Reset the default sync interval.
 			defaultInterval.Value = (decimal)ifWebService.GetDefaultSyncInterval();
 			autoSync.Checked = defaultInterval.Value != System.Threading.Timeout.Infinite;
 
-			// Reset the proxy settings.
-			useProxy.Checked = ifSettings.UseProxy;
-			proxy.Text = ifSettings.ProxyHost;
-			port.Value = (decimal)ifSettings.ProxyPort;
+			try
+			{
+				iFolderSettings ifSettings = ifWebService.GetSettings();
+
+				// Reset the proxy settings.
+				useProxy.Checked = ifSettings.UseProxy;
+				proxy.Text = ifSettings.ProxyHost;
+				port.Value = (decimal)ifSettings.ProxyPort;
+			}
+			catch (Exception ex)
+			{
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readiFolderSettingsError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+				mmb.ShowDialog();
+			}
 
 			Cursor.Current = Cursors.Default;
 			apply.Enabled = cancel.Enabled = false;
@@ -2944,6 +3199,30 @@ namespace Novell.FormsTrayApp
 		private void port_ValueChanged(object sender, System.EventArgs e)
 		{
 			if (port.Focused)
+			{
+				apply.Enabled = cancel.Enabled = true;
+			}
+		}
+
+		private void notifyShared_CheckedChanged(object sender, System.EventArgs e)
+		{
+			if (notifyShared.Focused)
+			{
+				apply.Enabled = cancel.Enabled = true;
+			}
+		}
+
+		private void notifyCollisions_CheckedChanged(object sender, System.EventArgs e)
+		{
+			if (notifyCollisions.Focused)
+			{
+				apply.Enabled = cancel.Enabled = true;
+			}
+		}
+
+		private void notifyJoins_CheckedChanged(object sender, System.EventArgs e)
+		{
+			if (notifyJoins.Focused)
 			{
 				apply.Enabled = cancel.Enabled = true;
 			}

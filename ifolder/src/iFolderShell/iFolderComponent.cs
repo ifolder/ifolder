@@ -30,6 +30,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.Net;
 using System.Globalization;
+using Microsoft.Win32;
 using Novell.Win32Util;
 using Simias.Client;
 
@@ -117,6 +118,8 @@ namespace Novell.iFolderCom
 		static private iFolderWebService ifWebService = null;
 		static private long ticks = 0;
 		static private readonly long delta = 50000000; // 5 seconds
+		private static readonly string displayConfirmationDisabled = "DisplayConfirmationDisabled";
+		private static readonly string iFolderKey = @"SOFTWARE\Novell\iFolder";
 
 		private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(iFolderAdvanced));
 
@@ -368,14 +371,11 @@ namespace Novell.iFolderCom
 		{
 			try
 			{
-				connectToWebService();
-				iFolderSettings ifSettings = ifWebService.GetSettings();
-				if (ifSettings.DisplayConfirmation)
+				if (DisplayConfirmationEnabled)
 				{
 					NewiFolder newiFolder = new NewiFolder();
 					newiFolder.FolderName = path;
 					newiFolder.LoadPath = dllPath;
-					newiFolder.iFolderWebService = ifWebService;
 					newiFolder.Show();
 				}
 			}
@@ -454,6 +454,48 @@ namespace Novell.iFolderCom
 						ifWebService = new iFolderWebService();
 						ifWebService.Url = uri.ToString() + "/iFolder.asmx";
 					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets/sets a value indicating if the Confirmation dialog should be displayed when a new 
+		/// iFolder is created.
+		/// </summary>
+		static public bool DisplayConfirmationEnabled
+		{
+			get
+			{
+				int display;
+				try
+				{
+					// Create/open the iFolder key.
+					RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+					// Get the notify share value ... default the value to 0 (enabled).
+					display = (int)regKey.GetValue(displayConfirmationDisabled, 0);
+				}
+				catch
+				{
+					return true;
+				}
+
+				return (display == 0);
+			}
+			set
+			{
+				// Create/open the iFolder key.
+				RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+				if (value)
+				{
+					// Delete the value.
+					regKey.DeleteValue(displayConfirmationDisabled, false);
+				}
+				else
+				{
+					// Set the disable value.
+					regKey.SetValue(displayConfirmationDisabled, 1);
 				}
 			}
 		}
