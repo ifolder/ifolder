@@ -148,7 +148,10 @@ namespace Simias.Sync
 
 		internal void SyncNow()
 		{
-			stopSleepEvent.Set();
+			if (collection.Role == SyncCollectionRoles.Slave)
+			{
+				stopSleepEvent.Set();
+			}
 		}
 
 		internal SyncCollectionService GetService()
