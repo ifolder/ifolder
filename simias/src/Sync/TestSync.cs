@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Threading;
+using System.Diagnostics;
 using NUnit.Framework;
 using Simias;
 using Simias.Storage;
@@ -33,7 +34,136 @@ namespace Simias.Sync.Tests
 {
 
 //---------------------------------------------------------------------------
+class FileTestOps
+{
+	/// <summary>
+	/// Compare two files, specific differences are printed to Console.
+	/// returns false if comparison fails.
+	/// </summary>
+	// what about uid/gid/permissions?
+	public static bool CompareFiles(string fileA, string fileB)
+	{
+		bool same = true;
 
+		FileInfo fiA = new FileInfo(fileA), fiB = new FileInfo(fileB);
+
+		if (fiA.Attributes != fiB.Attributes)
+		{
+			Console.WriteLine("{0} attributes {1} != {2} attributes {3}", fileA, fiA.Attributes, fileB, fiB.Attributes);
+			same = false;
+		}
+		if (fiA.CreationTimeUtc != fiB.CreationTimeUtc)
+		{
+			Console.WriteLine("{0} creation time {1} != {2} creation time {3}", fileA, fiA.CreationTimeUtc, fileB, fiB.CreationTimeUtc);
+			same = false;
+		}
+		if (fiA.LastAccessTimeUtc != fiB.LastAccessTimeUtc)
+		{
+			Console.WriteLine("{0} access time {1} != {2} access time {3}", fileA, fiA.LastAccessTimeUtc, fileB, fiB.LastAccessTimeUtc);
+			same = false;
+		}
+		if (fiA.LastWriteTimeUtc != fiB.LastWriteTimeUtc)
+		{
+			Console.WriteLine("{0} write time {1} != {2} write time {3}", fileA, fiA.LastWriteTimeUtc, fileB, fiB.LastWriteTimeUtc);
+			same = false;
+		}
+
+		FileStream fsA = fiA.OpenRead(), fsB = fiB.OpenRead();
+		byte[] bufferA = new byte[64 * 1024];
+		byte[] bufferB = new byte[bufferA.Length];
+		int readA, readB;
+		do
+		{
+			readA = fsA.Read(bufferA, 0, bufferA.Length);
+			readB = fsB.Read(bufferB, 0, bufferB.Length);
+
+			/* I would like to find a better way to compare two byte arrays,
+			 * for now just compare the whole array every time. This is a waste
+			 * for the last read when the array is not full, but it should work OK
+			 * since the bytes from init or previous read should compare.
+			 */
+			if (readA != readB || bufferA != bufferB)
+			{
+				Console.WriteLine("{0} contents != {2} contents", fileA, fileB);
+				same = false;
+				break;
+			}
+		} while (readA != 0);
+		fsA.Close();
+		fsB.Close();
+		return same;
+	}
+
+	/// <summary>
+	/// Compare two files, specific differences are printed to Console.
+	/// returns false if comparison fails.
+	/// </summary>
+	// what about uid/gid/permissions?
+	public static bool CompareDirectories(string dirA, string dirB)
+	{
+		// Console.WriteLine( differences in files and subdirs);
+		bool same = true;
+
+		string[] filesA = Directory.GetFiles(dirA);
+		string[] filesB = Directory.GetFiles(dirB);
+		if (filesA.Length != filesB.Length)
+		{
+			Console.WriteLine("{0} contains {1} files != {2} contains {3} files", dirA, filesA.Length, dirB, filesB.Length);
+			same = false;
+		}
+		else
+		{
+			Array.Sort(filesA);
+			Array.Sort(filesB);
+			for (uint i = 0; i < filesA.Length; ++i)
+			{
+				if (!CompareFiles(filesA[i], filesB[i]))
+					same = false;
+			}
+		}
+
+		string[] dirsA = Directory.GetDirectories(dirA);
+		string[] dirsB = Directory.GetDirectories(dirB);
+		if (dirsA.Length != dirsB.Length)
+		{
+			Console.WriteLine("{0} contains {1} subdirs != {2} contains {3} subdirs", dirA, dirsA.Length, dirB, dirsB.Length);
+			same = false;
+		}
+		else
+		{
+			Array.Sort(dirsA);
+			Array.Sort(dirsB);
+			for (uint i = 0; i < dirsA.Length; ++i)
+			{
+				//TODO: compare dir names here
+				if (!CompareDirectories(dirsA[i], dirsB[i]))
+					same = false;
+			}
+		}
+		return same;
+	}
+
+	public static void CreateFile(string name, string contents)
+	{
+		StreamWriter s = new StreamWriter(File.Create(name));
+		s.Write(contents);
+		s.Close();
+	}
+
+	public static void CreateFile(string name, byte[] contents)
+	{
+		BinaryWriter s = new BinaryWriter(File.Create(name));
+		s.Write(contents);
+		s.Close();
+	}
+
+	public static void CreateFile(string name, uint size)
+	{
+		// Console.WriteLine( differences in contents and attributes);
+	}
+}
+
+//---------------------------------------------------------------------------
 /// <summary>
 /// Sync Tests
 /// </summary>
@@ -41,64 +171,29 @@ namespace Simias.Sync.Tests
 public class Tests : Assertion
 {
 	private const string host = "127.0.0.1";
-	private const int portS = 1100, portC = 1101;
-	private const string storeLocS = "tmpStoreS", storeLocC = "tmpStoreC";
+	private const int serverPort = 1100;
+	private const string srvDir = "SyncTestServerData";
+	private const string cltDir = "SyncTestClientData";
 
-	private Store storeS = null, storeC = null;
+	public static int Run(string program, string args)
+	{
+		ProcessStartInfo psi = new ProcessStartInfo(program, args);
+		psi.UseShellExecute = false;
+		Process p = Process.Start(psi);
+		p.WaitForExit();
+		int exitCode = p.ExitCode;
+		p.Close();
+		return exitCode;
+	}
 
 	// initialization helper methods
-	private static Store InitStore(string name)
-	{
-		//Console.WriteLine("connecting to store {0}", name);
-		Uri loc = new Uri(Path.Combine(Directory.GetCurrentDirectory(), name));
-		Store tmp = Store.Connect(loc);
-		return tmp;
-	}
-
-	private static void AddFile(string pathA, string pathB, string name, string contents)
-	{
-		//Console.WriteLine("adding file {0}", name);
-		string path = Path.Combine(Directory.GetCurrentDirectory(), pathA);
-		path = Path.Combine(path, pathB);
-		Directory.CreateDirectory(path);
-		path = Path.Combine(path, name);
-		//Console.WriteLine("adding file {0} to {1}", name, fpath);
-		StreamWriter s = new StreamWriter(File.Create(path));
-		s.Write(contents);
-		s.Close();
-	}
-
-	private static string AddCollection(Store store, string name, string path)
-	{
-		//Console.WriteLine("adding collection {0}", name);
-		string fullp = Path.Combine(Directory.GetCurrentDirectory(), path);
-		fullp = Path.Combine(fullp, name);
-		Directory.CreateDirectory(fullp);
-		Collection c = store.CreateCollection(name, new Uri(fullp));
-		c.Commit(true);
-		return c.Id;
-	}
-
-	private static void AddShareInfo(Store store, string host, int port,
-			string collectionId, string localPath)
-	{
-		//Console.WriteLine("adding share info {0}", localPath);
-		store.ImpersonateUser(Access.SyncOperatorRole);
-		Collection dbo = store.GetDatabaseObject();
-		if (dbo == null)
-			Console.WriteLine("no dbo");
-		Node shares = dbo.GetSingleNodeByName("Shares");
-		if (shares == null)
-			shares = dbo.CreateChild("Shares", "Shares");
-			
-		Console.WriteLine("adding share info {0} 1 ", localPath);
-		Node share = shares.CreateChild(store.CurrentUser, "Share");
-		share.Properties.AddProperty("ShareUri", "nifp://" + host + ":"
-				+ port + "/" + collectionId);
-		share.Properties.AddProperty("RootPath",
-				Path.Combine(Directory.GetCurrentDirectory(), localPath));
-		dbo.Commit(true);
-	}
+	//private static Store InitStore(string name)
+	//{
+	//	//Console.WriteLine("connecting to store {0}", name);
+	//	Uri loc = new Uri(Path.Combine(Directory.GetCurrentDirectory(), name));
+	//	Store tmp = Store.Connect(loc);
+	//	return tmp;
+	//}
 
 	/// <summary>
 	/// Performs pre-initialization tasks.
@@ -109,26 +204,24 @@ public class Tests : Assertion
 		try
 		{
 			// set up server store and collections, and some ifolder file data
-			storeS = InitStore(storeLocS);
-			string c1 = AddCollection(storeS, "tmpFolder1", "tmpS");
-			AddFile("tmpS", "tmpFolder1", "content1.txt", "content1 -- blah, blah");
-	
-			string c2 = AddCollection(storeS, "tmpFolder2", "tmpS");
-			AddFile("tmpS", "tmpFolder2", "content2.txt", "content1 -- blah, blah");
-	
-			string c3 = AddCollection(storeS, "tmpFolder3", "tmpS");
-			AddFile("tmpS", "tmpFolder3", "content3.txt", "content3 -- blah, blah");
-	
-			// set up the server collection share info
-			AddShareInfo(storeS, host, portS, c1, "tmpS");
-			AddShareInfo(storeS, host, portS, c2, "tmpS");
-			AddShareInfo(storeS, host, portS, c3, "tmpS");
-	
-			// set up client store and just share info to get data from server
-			storeC = InitStore(storeLocC);
-			AddShareInfo(storeC, host, portS, c1, "tmpC");
-			AddShareInfo(storeC, host, portS, c2, "tmpC");
-			AddShareInfo(storeC, host, portS, c3, "tmpC");
+			/*
+
+
+			if exists srvDir or cltDir
+				abort, previous not cleaned up
+
+			mkdir srvDir cltDir srvDir/testFolder
+			mkdir srvDir/testFolder/emptydir
+			mkdir srvDir/testFolder/subdir
+
+			TestOps.CreateFile(srvDir/testFolder, "small file 1");
+			TestOps.CreateFile(srvDir/testFolder, "small file 2");
+			TestOps.CreateFile(srvDir/testFolder, "small file 3");
+			TestOps.CreateFile(srvDir/testFolder, 1024 * 1024);
+
+			open server
+
+			*/
 		}
 		catch (System.Exception e)
 		{
@@ -142,127 +235,22 @@ public class Tests : Assertion
 		}
 	}
 
-	public void StatusUpdateC(bool active)
-	{
-		Console.WriteLine("Changing client sync status to {0}",
-				active? "Active": "Inactive");
-	}
-
-	public void StatusUpdateS(bool active)
-	{
-		Console.WriteLine("Changing server sync status to {0}",
-				active? "Active": "Inactive");
-	}
-
-	public void T0() {}
-/*
-	CRG - This test just ain't right for simias
-#if true
-	public void T0() {}
-#else
 	[Test]
 	public void T0()
 	{
-		string storeName = "tmpStore0";
-		Store store = InitStore(storeName);
-		string c1 = AddCollection(store, "Collection0", "tmpFolder0");
-		AddFile("tmpFolder0", "content0.txt", "content0 -- blah, blah");
-		AddFile("tmpFolder0", "content1.txt", "content1 -- blah, blah");
-		AddFile("tmpFolder0", "content2.txt", "content2 -- blah, blah");
-
-		iFolderManager man = iFolderManager.Connect(new Uri(Path.Combine(
-				Directory.GetCurrentDirectory(), storeName)));
-		man.UpdateiFolder(c1);
-		man = null;
-
-		Console.WriteLine("T0: created ifolder, looking for 3 streams");
-		Collection c = store.GetCollectionById(c1);
-
-		Property p = c.Properties.GetSingleProperty(Property.DocumentRoot);
-		Uri docRoot = p == null? null: (Uri)p.Value;
-		string fileRoot = docRoot == null? "<no doc root>": docRoot.LocalPath;
-
-		int streamCount = 0;
-		Console.WriteLine("T0: looking through all nodes for attached streams, root in {0}", fileRoot);
-		foreach (Node node in c)
-		{
-			AssertEquals(node.IsStream, false);
-			ICSList streams = node.GetStreamList();
-			streamCount = 0;
-			string relPath = null;
-			foreach (NodeStream ns in streams)
-			{
-				streamCount++;
-				if (relPath == null)
-					relPath = ns.RelativePath;
-			}
-			Console.WriteLine("node {0} has {1} streams, path '{2}'", node.Name, streamCount, relPath);
-		}
-
-//		store.ImpersonateUser(Access.StoreAdminRole);
-		store.Delete();
-		store = null;
-		
-		Thread.Sleep(100);
-		GC.Collect();
-		Thread.Sleep(200);
 	}
-#endif
-*/
 
-#if true
-	public void T1() {}
-#else
 	[Test]
 	public void T1()
 	{
-		Synker syS = new Synker();
-		Uri locS = new Uri(Path.Combine(Directory.GetCurrentDirectory(),
-				storeLocS));
-		Console.WriteLine("Calling Synker.Start({0})", storeLocS);
-		syS.Start(new StatusUpdate(StatusUpdateS), locS, host, portS, 2);
-
-		Thread.Sleep(100);
-
-		Synker syC = new Synker();
-		Uri locC = new Uri(Path.Combine(Directory.GetCurrentDirectory(),
-				storeLocC));
-		Console.WriteLine("Calling Synker.Start({0})", storeLocC);
-		syC.Start(new StatusUpdate(StatusUpdateC), locC, host, portC, 3);
-
-		Thread.Sleep(6000);
-
-		//TODO: check that the contents of one directory is as expected
-		//TODO: check that the contents of both client directories match the server
-
-		//TODO: delete file 1 from client, delete file 2 from server, modify file 3
-		//TODO: check that the contents of one directory is as expected
-		//TODO: check that the contents of both client directories match the server
-
-		Thread.Sleep(6000);
-		
-
-		Console.WriteLine("Calling Synker.stop()");
-		syS.Stop();
 	}
-#endif
 
 	[TestFixtureTearDown]
 	public void Cleanup()
 	{
 		Console.WriteLine("Deleting stores");
-		
-		storeC.ImpersonateUser(Access.StoreAdminRole);
-		storeC.Delete();
-		storeC = null;
-		
-		storeS.ImpersonateUser(Access.StoreAdminRole);
-		storeS.Delete();
-		storeS = null;
-		
-		Thread.Sleep(100);
-		GC.Collect();
-		Thread.Sleep(200);
+		Directory.Delete(srvDir, true);
+		Directory.Delete(cltDir, true);
 	}
 
 	static void Main()
