@@ -37,10 +37,10 @@ package-install package-uninstall:
 if BUILD_SUBPROJECTS
 
 all install installcheck: %: sub-%
-	@echo $@ sub done
+	@echo "$@ sub done"
 
-distclean: %: sub-%
-	@echo $@ sub done
+distclean-local: sub-distclean
+	@echo "$@ sub done"
 
 # for all, install subprojects
 sub-all:
