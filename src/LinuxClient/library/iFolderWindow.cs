@@ -1728,87 +1728,103 @@ namespace Novell.iFolder
 
 		private void CreateNewiFolder()
 		{
-			// Read all current domains before letting them create
-			// a new ifolder
-			DomainInformation[] domains = ifdata.GetDomains();
-
-			CreateDialog cd = new CreateDialog(domains);
-			cd.TransientFor = this;
-
-			int rc = 0;
-			do
+			if(ifdata.GetDomainCount() < 1)
 			{
-				rc = cd.Run();
-				cd.Hide();
-
-				if(rc == -5)
+				iFolderMsgDialog dg = new iFolderMsgDialog(
+					this,
+					iFolderMsgDialog.DialogType.Warning,
+					iFolderMsgDialog.ButtonSet.Ok,
+					Util.GS("Create iFolder"),
+					Util.GS("No iFolder Domains"),
+					Util.GS("A new iFolder cannot be create because you have not attached to any iFolder servers."));
+				dg.Run();
+				dg.Hide();
+				dg.Destroy();
+			}
+			else
+			{
+				// Read all current domains before letting them create
+				// a new ifolder
+				DomainInformation[] domains = ifdata.GetDomains();
+	
+				CreateDialog cd = new CreateDialog(domains);
+				cd.TransientFor = this;
+	
+				int rc = 0;
+				do
 				{
-					string selectedFolder = cd.iFolderPath;
-					string selectedDomain = cd.DomainID;
+					rc = cd.Run();
+					cd.Hide();
 
-					if(ShowBadiFolderPath(selectedFolder, null))
+					if(rc == -5)
+					{
+						string selectedFolder = cd.iFolderPath;
+						string selectedDomain = cd.DomainID;
+	
+						if(ShowBadiFolderPath(selectedFolder, null))
 						continue;
 
-					// break loop
-					rc = 0;
-					try
-					{
-   		 				iFolderWeb newiFolder = 
-							ifws.CreateiFolderInDomain(selectedFolder,
-														selectedDomain);
-
-						if(newiFolder == null)
-							throw new Exception("Simias returned null");
-
-						TreeIter iter = 
-							iFolderTreeStore.AppendValues(
-								new iFolderHolder(newiFolder));
-						curiFolders.Add(newiFolder.ID, iter);
-
-						if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
-										"true") == "true")
+						// break loop
+						rc = 0;
+						try
 						{
-							iFolderCreationDialog dlg = 
-								new iFolderCreationDialog(newiFolder);
-							dlg.TransientFor = this;
-							int createRC;
-							do
+   			 				iFolderWeb newiFolder = 
+								ifws.CreateiFolderInDomain(selectedFolder,
+															selectedDomain);
+	
+							if(newiFolder == null)
+								throw new Exception("Simias returned null");
+	
+							TreeIter iter = 
+								iFolderTreeStore.AppendValues(
+									new iFolderHolder(newiFolder));
+							curiFolders.Add(newiFolder.ID, iter);
+	
+							if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
+											"true") == "true")
 							{
-								createRC = dlg.Run();
-								if(createRC == (int)Gtk.ResponseType.Help)
+								iFolderCreationDialog dlg = 
+									new iFolderCreationDialog(newiFolder);
+								dlg.TransientFor = this;
+								int createRC;
+								do
 								{
-									Util.ShowHelp("front.html", this);
+									createRC = dlg.Run();
+									if(createRC == (int)Gtk.ResponseType.Help)
+									{
+										Util.ShowHelp("front.html", this);
+									}
+								}while(createRC != (int)Gtk.ResponseType.Ok);
+	
+								dlg.Hide();
+	
+								if(dlg.HideDialog)
+								{
+									ClientConfig.Set(
+										ClientConfig.KEY_SHOW_CREATION, "false");
 								}
-							}while(createRC != (int)Gtk.ResponseType.Ok);
-
-							dlg.Hide();
-
-							if(dlg.HideDialog)
-							{
-								ClientConfig.Set(
-									ClientConfig.KEY_SHOW_CREATION, "false");
+	
+								cd.Destroy();
+								cd = null;
 							}
-
-							cd.Destroy();
-							cd = null;
+						}
+						catch(Exception e)
+						{
+							iFolderExceptionDialog ied = 
+								new iFolderExceptionDialog(
+									this,
+									e);
+							ied.Run();
+							ied.Hide();
+							ied.Destroy();
 						}
 					}
-					catch(Exception e)
-					{
-						iFolderExceptionDialog ied = 
-							new iFolderExceptionDialog(
-								this,
-								e);
-						ied.Run();
-						ied.Hide();
-						ied.Destroy();
-					}
 				}
+				while(rc == -5);
 			}
-			while(rc == -5);
 		}
-
-
+	
+	
 
 		private void ShowPreferences()
 		{

@@ -468,6 +468,14 @@ namespace Novell.iFolder
 		}
 
 
+		public int GetDomainCount()
+		{
+			lock(typeof(iFolderWeb))
+			{
+				return curDomains.Count;
+			}
+		}
+
 	}
 }
 
