@@ -33,6 +33,7 @@ using Simias.Sync;
 namespace Simias.Sync.Tests
 {
 
+//---------------------------------------------------------------------------
 /// <summary>
 /// Sync Tests
 /// </summary>
@@ -50,7 +51,9 @@ public class SyncTests: Assertion
 	private static readonly string serverFolder = Path.Combine(serverDir, folderName);
 
 	//private CmdServer cmdServer = null;
+	//cmdServer = new CmdServer(host, serverPort, new Uri(serverDir), useTCP);
 
+	//---------------------------------------------------------------------------
 	public static int Run(string program, string args)
 	{
 		ProcessStartInfo psi = new ProcessStartInfo(program, args);
@@ -62,6 +65,7 @@ public class SyncTests: Assertion
 		return exitCode;
 	}
 
+	//---------------------------------------------------------------------------
 	private void DeleteFileData()
 	{
 		Directory.Delete(serverDir, true);
@@ -69,6 +73,7 @@ public class SyncTests: Assertion
 		File.Delete(invitationFile);
 	}
 
+	//---------------------------------------------------------------------------
 	/// <summary>
 	/// Performs pre-initialization tasks.
 	/// </summary>
@@ -88,13 +93,8 @@ public class SyncTests: Assertion
 				DeleteFileData();
 			}
 
-			string dir1 = Path.Combine(serverFolder, "subdir1");
-			string dir2 = Path.Combine(serverFolder, "sub dir with spaces");
 			Directory.CreateDirectory(clientDir);
-			Directory.CreateDirectory(dir1);
-			Directory.CreateDirectory(dir2);
-			Differ.CreateFile(Path.Combine(dir1, "file1"), "file 1 contents");
-			//cmdServer = new CmdServer(host, serverPort, new Uri(serverDir), useTCP);
+			Directory.CreateDirectory(serverFolder);
 			Log.Spew("Init: created store, folders and files");
 		}
 		catch (System.Exception e)
@@ -109,6 +109,9 @@ public class SyncTests: Assertion
 		}
 	}
 
+	//---------------------------------------------------------------------------
+	[Test] public void NUInvite() { Assert(Invite()); }
+
 	public bool Invite()
 	{
 		Log.Spew("Creating collection and invitation");
@@ -116,7 +119,8 @@ public class SyncTests: Assertion
 		return fi.Invite(null, new Uri(serverFolder), host, serverPort, invitationFile);
 	}
 
-	[Test] public void T0() { Assert(Invite()); }
+	//---------------------------------------------------------------------------
+	[Test] public void NUAccept()  { Assert(Accept()); }
 
 	public bool Accept()
 	{
@@ -125,10 +129,16 @@ public class SyncTests: Assertion
 		return fi.Accept(clientDir, invitationFile);
 	}
 
-	[Test] public void T1()  { Assert(Accept()); }
+	//---------------------------------------------------------------------------
+	[Test] public void NUFirstLocalSync() { Assert(FirstLocalSync()); }
 
 	public bool FirstLocalSync()
 	{
+		string dir1 = Path.Combine(serverFolder, "subdir1");
+		string dir2 = Path.Combine(serverFolder, "sub dir with spaces");
+		Directory.CreateDirectory(dir1);
+		Directory.CreateDirectory(dir2);
+		Differ.CreateFile(Path.Combine(dir1, "file1"), "file 1 contents");
 		if (!CmdClient.RunOnce(new Uri(clientDir), new Uri(clientFolder), serverDir, useTCP))
 		{
 			Log.Spew("failed first sync");
@@ -137,41 +147,86 @@ public class SyncTests: Assertion
 		return Differ.CompareDirectories(serverFolder, clientFolder);
 	}
 
-	[Test] public void T2() { Assert(FirstLocalSync()); }
+	//---------------------------------------------------------------------------
+	// test deletes: delete a file from each end, and cause deletion collision
+	// sync and make sure everything got sorted out
+	[Test] public void NUSimpleAdds() { Assert(SimpleAdds()); }
 
-//   
-//   #---------------------------------------------------------------------------
-//   # test deletes: delete a file from each end, and cause deletion collision
-//   # sync and make sure everything got sorted out
-//   
-//   rm -f tmpClientData/testFolder/SyncPoint.cs
-//   rm -f tmpServerData/testFolder/SyncPass.cs
-//   rm -f tmpServerData/testFolder/SyncOps.cs
-//   rm -f tmpClientData/testFolder/SyncOps.cs
-//   #rm -f tmpClientData/testFolder/subdir/*.ogg
-//   rm -f tmpServerData/testFolder/subdir/Sync.dll
-//   rmdir tmpServerData/testFolder/emptydir
-//   
-//   #localsync
-//   mono --debug SyncCmd.exe -s tmpClientData localsync tmpClientData/testFolder tmpServerData
-//   RETVAL=$?
-//   if [ $RETVAL -ne 0 ]; then printf "FAILED: localsync 2 returned %s\n" $RETVAL; exit $RETVAL; fi
-//   
-//   diff tmpClientData/testFolder tmpServerData/testFolder
-//   RETVAL=$?
-//   if [ $RETVAL -ne 0 ]; then printf "FAILED: diff of testFolder after localsync 2 returned %s\n" $RETVAL; exit $RETVAL; fi 
-//   
-//   diff tmpClientData/testFolder/subdir tmpServerData/testFolder/subdir
-//   RETVAL=$?
-//   if [ $RETVAL -ne 0 ]; then printf "FAILED: diff of subdir after localsync 2 returned %s\n" $RETVAL; exit $RETVAL; fi 
-//   
-//   if [ -f tmpClientData/testFolder/SyncPoint.cs ]; then printf "FAILED: deleted file still exists\n"; exit 1; fi 
-//   if [ -f tmpClientData/testFolder/SyncPass.cs ]; then printf "FAILED: deleted file still exists\n"; exit 2; fi 
-//   if [ -f tmpClientData/testFolder/SyncOps.cs ]; then printf "FAILED: deleted file still exists\n"; exit 3; fi 
-//   #if [ -f tmpClientData/testFolder/subdir/*.ogg ]; then printf "FAILED: deleted file still exists\n"; exit 4; fi 
-//   if [ -f tmpClientData/testFolder/subdir/Sync.dll ]; then printf "FAILED: deleted file still exists\n"; exit 5; fi 
-//   if [ -d tmpClientData/testFolder/emptydir ]; then printf "FAILED: deleted file still exists\n"; exit 6; fi
-//   
+	public bool SimpleAdds()
+	{
+		string dirS = Path.Combine(serverFolder, "simpleTestDir");
+		string dirC = Path.Combine(clientFolder, "simpleTestDir");
+		Directory.CreateDirectory(dirS);
+		Directory.CreateDirectory(dirC);
+		const int fileCount = 123;
+
+		// add some files
+		for (int i = 0; i < fileCount; ++i)
+		{
+			if ((i & 1) == 0)
+				Differ.CreateFile(Path.Combine(dirS, "simple-file-" + i + ".txt"), "even simple file contents" + i + "\n");
+			else
+				Differ.CreateFile(Path.Combine(dirS, i.ToString() + "-simple-file.txt"), "odd simple file contents" + i + "\n");
+		}
+
+		// cause some collisions
+		for (int i = 0; i < fileCount; i += 3)
+		{
+			if ((i & 1) == 0)
+				Differ.CreateFile(Path.Combine(dirS, "simple-file-" + i + ".txt"), "even simple file contents" + i + " from collision\n");
+			else
+				Differ.CreateFile(Path.Combine(dirS, i.ToString() + "-simple-file.txt"), "odd simple file contents" + i + " from collision\n");
+		}
+
+		if (!CmdClient.RunOnce(new Uri(clientDir), new Uri(clientFolder), serverDir, useTCP))
+		{
+			Log.Spew("failed simpleAdds sync");
+			return false;
+		}
+		return Differ.CompareDirectories(serverFolder, clientFolder);
+	}
+
+	//---------------------------------------------------------------------------
+	// test deletes: delete a file from each end, and cause deletion collision
+	// sync and make sure everything got sorted out
+	[Test] public void NUSimpleDeletes() { Assert(SimpleDeletes()); }
+
+	public bool SimpleDeletes()
+	{
+		string dirS = Path.Combine(serverFolder, "simpleTestDir");
+		string dirC = Path.Combine(clientFolder, "simpleTestDir");
+		int[] delNums = { 8, 12, 14, 16, 22, 28 };
+
+
+		for (int i = 0; i < delNums.Length - 2; ++i)
+			File.Delete(Path.Combine(dirC, "simple-file-" + delNums[i] + ".txt"));
+
+		for (int i = delNums.Length - 4; i < delNums.Length; ++i)
+			File.Delete(Path.Combine(dirS, "simple-file-" + delNums[i] + ".txt"));
+
+		if (!CmdClient.RunOnce(new Uri(clientDir), new Uri(clientFolder), serverDir, useTCP))
+		{
+			Log.Spew("failed simple deletes sync");
+			return false;
+		}
+
+		for (int i = 0; i < delNums.Length; ++i)
+			if (File.Exists(Path.Combine(dirS, "simple-file-" + delNums[i] + ".txt")))
+			{
+				Log.Spew("deleted file still exists on server after simple deletes");
+				return false;
+			}
+
+		for (int i = 0; i < delNums.Length; ++i)
+			if (File.Exists(Path.Combine(dirC, "simple-file-" + delNums[i] + ".txt")))
+			{
+				Log.Spew("deleted file still exists on client after simple deletes");
+				return false;
+			}
+
+		return Differ.CompareDirectories(serverFolder, clientFolder);
+	}
+   
 //   #---------------------------------------------------------------------------
 //   # test duplicate adds: add different files of the same name both sides
 //   # sync and make sure everything got sorted out
@@ -217,6 +272,8 @@ public class SyncTests: Assertion
 		Console.WriteLine("invite: {0}", Invite());
 		Console.WriteLine("accept: {0}", Accept());
 		Console.WriteLine("firstLocalSync: {0}", FirstLocalSync());
+		Console.WriteLine("simpleAdds: {0}", SimpleAdds());
+		Console.WriteLine("simpleDeletes: {0}", SimpleDeletes());
 		Cleanup();
 	}
 
