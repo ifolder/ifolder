@@ -218,8 +218,12 @@ namespace Simias.Event
 					if (!mutex.WaitOne(0, false))
 					{
 						string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
-						bool registered = false;
-
+                        bool registered = false;
+						if (new Uri(serviceUri).Port == -1)
+						{
+							return (clientRegistered);
+						}
+						
 						WellKnownClientTypeEntry [] cta = RemotingConfiguration.GetRegisteredWellKnownClientTypes();
 						foreach (WellKnownClientTypeEntry ct in cta)
 						{
