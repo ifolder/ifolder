@@ -15,10 +15,16 @@ EXTRA_DIST = $(srcdir)/addressbookcmd.in $(AddressBookCmd_CSFILES)
 
 CUR_DIR := $(shell pwd)
 
+if MAKE_DOC_FILE
+DOC_FILE = $(basename $@).doc.xml
+DOC_FILE_CMD = /doc:$(DOC_FILE)
+DOC_FILE_CLEAN = *.doc.xml
+endif
+
 all: AddressBookCmd.exe
 
 AddressBookCmd.exe: $(AddressBookCmd_CSFILES) $(AddressBookCmd_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_LIBS) $(AddressBookCmd_FLAGS) $(AddressBookCmd_LIBS:%=/r:%) $(AddressBookCmd_LIBPATH:%=/lib:%) $(AddressBookCmd_CSFILES_CSC) /doc:AddressBookCmd.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_LIBS) $(AddressBookCmd_FLAGS) $(AddressBookCmd_LIBS:%=/r:%) $(AddressBookCmd_LIBPATH:%=/lib:%) $(AddressBookCmd_CSFILES_CSC) $(DOC_FILE_CMD)
 
 if DEBUG
 if WINDOWS
@@ -41,11 +47,11 @@ installcheck-local: install
 #	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
 #	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:AddressBookCmdTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = AddressBookCmd.exe AddressBookCmd.doc.xml 
+CLEAN_FILES = AddressBookCmd.exe $(DOC_FILE_CLEAN)
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 

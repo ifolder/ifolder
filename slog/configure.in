@@ -271,6 +271,7 @@ fi
 echo NDOC_CMD=$NDOC_CMD
 AC_SUBST(NDOC_CMD)
 AM_CONDITIONAL(NDOC, test -n "$NDOC_CMD")
+AM_CONDITIONAL(MAKE_DOC_FILE, test -n "$NDOC_CMD")
 
 #
 # Handle --enable-debug

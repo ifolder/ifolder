@@ -11,10 +11,16 @@ iFolderWebService_LIBPATH = $(LOG4NET_DIR)
 
 EXTRA_DIST = iFolder.asmx $(iFolderWebService_CSFILES) $(srcdir)/iFolderWebService.wsdl
 
+if MAKE_DOC_FILE
+DOC_FILE = $(basename $@).doc.xml
+DOC_FILE_CMD = /doc:$(DOC_FILE)
+DOC_FILE_CLEAN = *.doc.xml
+endif
+
 all: Novell.iFolder.Web.dll
 
 Novell.iFolder.Web.dll: $(iFolderWebService_CSFILES) $(iFolderWebService_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderWebService_FLAGS) $(SIMIAS_LIBS) $(SIMIAS_CLIENT_LIBS) $(iFolderWebService_LIBS:%=/r:%) $(iFolderWebService_LIBPATH:%=/lib:%) $(iFolderWebService_RESOURCES:%=$(ICON_FLAG)%) $(iFolderWebService_CSFILES) /doc:iFolderWebService.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderWebService_FLAGS) $(SIMIAS_LIBS) $(SIMIAS_CLIENT_LIBS) $(iFolderWebService_LIBS:%=/r:%) $(iFolderWebService_LIBPATH:%=/lib:%) $(iFolderWebService_RESOURCES:%=$(ICON_FLAG)%) $(iFolderWebService_CSFILES) $(DOC_FILE_CMD)
 
 if DEBUG
 if WINDOWS
@@ -34,7 +40,7 @@ uninstall-local:
 
 installcheck-local: install
 	
-CLEAN_FILES = Novell.iFolder.Web.dll Novell.iFolder.Web.doc.xml
+CLEAN_FILES = Novell.iFolder.Web.dll $(DOC_FILE_CLEAN)
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

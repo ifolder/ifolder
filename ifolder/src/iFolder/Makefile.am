@@ -13,6 +13,12 @@ EXTRA_DIST = $(srcdir)/AssemblyInfo.cs
 
 CUR_DIR := $(shell pwd)
 
+if MAKE_DOC_FILE
+DOC_FILE = $(basename $@).doc.xml
+DOC_FILE_CMD = /doc:$(DOC_FILE)
+DOC_FILE_CLEAN = *.doc.xml
+endif
+
 all: Novell.iFolder.dll
 
 $(srcdir)/iFolderWebService.cs: $(srcdir)/../WebService/iFolderWebService.wsdl
@@ -28,7 +34,7 @@ if LINUX
 endif
 
 Novell.iFolder.dll: $(iFolder_CSFILES) $(iFolder_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolder_FLAGS) $(iFolder_LIBS:%=/r:%) $(iFolder_LIBPATH:%=/lib:%) $(iFolder_CSFILES_CSC) /doc:Novell.iFolder.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolder_FLAGS) $(iFolder_LIBS:%=/r:%) $(iFolder_LIBPATH:%=/lib:%) $(iFolder_CSFILES_CSC) $(DOC_FILE_CMD)
 
 if DEBUG
 if WINDOWS
@@ -43,11 +49,11 @@ install-exec-local: Novell.iFolder.dll
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f Novell.iFolder.dll $(DEBUG_FILES)
 
-CLEAN_FILES = Novell.iFolder.dll Novell.iFolder.doc.xml
+CLEAN_FILES = Novell.iFolder.dll $(DOC_FILE_CLEAN)
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 
