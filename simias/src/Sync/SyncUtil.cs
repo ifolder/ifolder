@@ -63,7 +63,7 @@ public class FileInviter
 		{
 			Collection c = new Collection(store, sn);
 			DirNode dn = c.GetRootDirectory();
-			Log.Spew("Collection {0} {1} {2}", c.Name, c.ID, dn == null? "<null>": dn.GetFullPath(c));
+			//Log.Spew("Collection {0} {1} {2}", c.Name, c.ID, dn == null? "<null>": dn.GetFullPath(c));
 			if ((dn = c.GetRootDirectory()) != null && dn.GetFullPath(c) == docRoot.LocalPath)
 				return c;
 		}

@@ -238,6 +238,14 @@ public class SyncTests: Assertion
 		Directory.CreateDirectory(dir1);
 		Directory.CreateDirectory(dir2);
 		Differ.CreateFile(Path.Combine(dir1, "file1"), "file 1 contents");
+
+		Log.Spew("+++++++++++ first run of client for FirstSync");
+		if (!RunClient())
+		{
+			Log.Spew("failed first sync");
+			return false;
+		}
+		Log.Spew("+++++++++++ second run of client for FirstSync");
 		if (!RunClient())
 		{
 			Log.Spew("failed first sync");
@@ -360,6 +368,19 @@ public class SyncTests: Assertion
 		Differ.CreateFile(Path.Combine(subdirC1, "non-collision-file-3.txt"), "client non-collision file contents 3\n");
 		Differ.CreateFile(Path.Combine(subdirC2, "non-collision-file-4.txt"), "client non-collision file contents 4\n");
 		
+		Log.Spew("+++++++++++ first run of client for FileCreationCollision");
+		if (!RunClient())
+		{
+			Log.Spew("failed sync after FileCreationCollision");
+			return false;
+		}
+		Log.Spew("+++++++++++ second run of client for FileCreationCollision");
+		if (!RunClient())
+		{
+			Log.Spew("failed sync after FileCreationCollision");
+			return false;
+		}
+		Log.Spew("+++++++++++ third run of client for FileCreationCollision");
 		if (!RunClient())
 		{
 			Log.Spew("failed sync after FileCreationCollision");
