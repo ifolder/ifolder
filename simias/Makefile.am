@@ -1,6 +1,6 @@
 SUBDIRS = src package
 
-DIST_SUBDIRS = $(SUBDIRS) doc
+DIST_SUBDIRS = $(SUBDIRS) doc test
 
 EXTRA_DIST = tools external $(srcdir)/simias.pc.in
 
