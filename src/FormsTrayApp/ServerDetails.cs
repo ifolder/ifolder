@@ -40,6 +40,7 @@ namespace Novell.FormsTrayApp
 		private const double megaByte = 1048576;
 		private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(ServerDetails));
 		private iFolderWebService ifWebService;
+		private Domain selectedDomain;
 		private System.Windows.Forms.GroupBox groupBox6;
 		private System.Windows.Forms.Label label18;
 		private System.Windows.Forms.Label label17;
@@ -57,7 +58,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.TextBox enterpriseDescription;
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.ComboBox servers;
+		private System.Windows.Forms.Label server;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -67,9 +68,8 @@ namespace Novell.FormsTrayApp
 		/// Constructs a ServerDetails object.
 		/// </summary>
 		/// <param name="ifolderWebService">The iFolderWebService object to use.</param>
-		/// <param name="servers">A collection of servers to put in the dropdown list.</param>
-		/// <param name="selectedDomain">The server to select in the dropdown list.</param>
-		public ServerDetails(iFolderWebService ifolderWebService, ListView.ListViewItemCollection servers, Domain selectedDomain)
+		/// <param name="selectedDomain">The server to provide details for.</param>
+		public ServerDetails(iFolderWebService ifolderWebService, Domain selectedDomain)
 		{
 			//
 			// Required for Windows Form Designer support
@@ -77,16 +77,7 @@ namespace Novell.FormsTrayApp
 			InitializeComponent();
 
 			ifWebService = ifolderWebService;
-
-			foreach (ListViewItem lvi in servers)
-			{
-				if (lvi.Tag != null)
-				{
-					this.servers.Items.Add((Domain)lvi.Tag);
-				}
-			}
-
-			this.servers.SelectedItem = selectedDomain;
+			this.selectedDomain = selectedDomain;
 		}
 
 		/// <summary>
@@ -129,7 +120,7 @@ namespace Novell.FormsTrayApp
 			this.enterpriseDescription = new System.Windows.Forms.TextBox();
 			this.ok = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
-			this.servers = new System.Windows.Forms.ComboBox();
+			this.server = new System.Windows.Forms.Label();
 			this.groupBox6.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -521,29 +512,27 @@ namespace Novell.FormsTrayApp
 			this.label1.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.TextAlign")));
 			this.label1.Visible = ((bool)(resources.GetObject("label1.Visible")));
 			// 
-			// servers
+			// server
 			// 
-			this.servers.AccessibleDescription = resources.GetString("servers.AccessibleDescription");
-			this.servers.AccessibleName = resources.GetString("servers.AccessibleName");
-			this.servers.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("servers.Anchor")));
-			this.servers.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("servers.BackgroundImage")));
-			this.servers.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("servers.Dock")));
-			this.servers.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.servers.Enabled = ((bool)(resources.GetObject("servers.Enabled")));
-			this.servers.Font = ((System.Drawing.Font)(resources.GetObject("servers.Font")));
-			this.servers.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("servers.ImeMode")));
-			this.servers.IntegralHeight = ((bool)(resources.GetObject("servers.IntegralHeight")));
-			this.servers.ItemHeight = ((int)(resources.GetObject("servers.ItemHeight")));
-			this.servers.Location = ((System.Drawing.Point)(resources.GetObject("servers.Location")));
-			this.servers.MaxDropDownItems = ((int)(resources.GetObject("servers.MaxDropDownItems")));
-			this.servers.MaxLength = ((int)(resources.GetObject("servers.MaxLength")));
-			this.servers.Name = "servers";
-			this.servers.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("servers.RightToLeft")));
-			this.servers.Size = ((System.Drawing.Size)(resources.GetObject("servers.Size")));
-			this.servers.TabIndex = ((int)(resources.GetObject("servers.TabIndex")));
-			this.servers.Text = resources.GetString("servers.Text");
-			this.servers.Visible = ((bool)(resources.GetObject("servers.Visible")));
-			this.servers.SelectedIndexChanged += new System.EventHandler(this.servers_SelectedIndexChanged);
+			this.server.AccessibleDescription = resources.GetString("server.AccessibleDescription");
+			this.server.AccessibleName = resources.GetString("server.AccessibleName");
+			this.server.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("server.Anchor")));
+			this.server.AutoSize = ((bool)(resources.GetObject("server.AutoSize")));
+			this.server.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("server.Dock")));
+			this.server.Enabled = ((bool)(resources.GetObject("server.Enabled")));
+			this.server.Font = ((System.Drawing.Font)(resources.GetObject("server.Font")));
+			this.server.Image = ((System.Drawing.Image)(resources.GetObject("server.Image")));
+			this.server.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("server.ImageAlign")));
+			this.server.ImageIndex = ((int)(resources.GetObject("server.ImageIndex")));
+			this.server.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("server.ImeMode")));
+			this.server.Location = ((System.Drawing.Point)(resources.GetObject("server.Location")));
+			this.server.Name = "server";
+			this.server.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("server.RightToLeft")));
+			this.server.Size = ((System.Drawing.Size)(resources.GetObject("server.Size")));
+			this.server.TabIndex = ((int)(resources.GetObject("server.TabIndex")));
+			this.server.Text = resources.GetString("server.Text");
+			this.server.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("server.TextAlign")));
+			this.server.Visible = ((bool)(resources.GetObject("server.Visible")));
 			// 
 			// ServerDetails
 			// 
@@ -556,8 +545,8 @@ namespace Novell.FormsTrayApp
 			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Controls.Add(this.server);
 			this.Controls.Add(this.enterpriseDescription);
-			this.Controls.Add(this.servers);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.label9);
@@ -591,11 +580,8 @@ namespace Novell.FormsTrayApp
 				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
 			}
 			catch {} // Non-fatal ...
-		}
 
-		private void servers_SelectedIndexChanged(object sender, System.EventArgs e)
-		{
-			Domain selectedDomain = (Domain)servers.SelectedItem;
+			server.Text = selectedDomain.Name;
 			enterpriseDescription.Text = selectedDomain.DomainInfo.Description;
 
 			try
