@@ -187,7 +187,7 @@
 				3EEA9A3407B1D3580015FCF4,
 				3E09F7AB07C0387700381F59,
 				3E09F7AD07C0388400381F59,
-				3E09F81507C047BB00381F59,
+				3E8A565307C1039E00FDAD31,
 			);
 			isa = PBXGroup;
 			name = Resources;
@@ -296,20 +296,6 @@
 		};
 		3E09F7AE07C0388400381F59 = {
 			fileRef = 3E09F7AD07C0388400381F59;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3E09F81507C047BB00381F59 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.gif;
-			name = "mono-powered-big.gif";
-			path = "../../../../../Desktop/mono-powered-big.gif";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		3E09F81607C047BB00381F59 = {
-			fileRef = 3E09F81507C047BB00381F59;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1040,6 +1026,20 @@
 			settings = {
 			};
 		};
+		3E8A565307C1039E00FDAD31 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "mono-powered.png";
+			path = "../images/mono-powered.png";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		3E8A565407C1039E00FDAD31 = {
+			fileRef = 3E8A565307C1039E00FDAD31;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3E8ACEF7078E4CFC0036C050 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -1720,12 +1720,12 @@
 				3E19994A07BAE47700AAC29A,
 				3E09F7AC07C0387700381F59,
 				3E09F7AE07C0388400381F59,
-				3E09F81607C047BB00381F59,
 				3E09F82207C0489300381F59,
 				3E09F82807C0489F00381F59,
 				3E09F82E07C048AA00381F59,
 				3E09F83407C048B700381F59,
 				3E09F86007C04CE200381F59,
+				3E8A565407C1039E00FDAD31,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
