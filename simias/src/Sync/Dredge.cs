@@ -115,9 +115,9 @@ public class Dredger
 		// delete nodes that are wrong type
 		foreach (ShallowNode sn in collection.GetNodesByName(name))
 		{
-			Node n = new Node(collection, sn);
-			DirNode dn = collection.IsType(n, typeof(DirNode).Name)? new DirNode(n): null;
-			FileNode fn = collection.IsType(n, typeof(FileNode).Name)? new FileNode(n): null;
+			Node n = Node.NodeFactory(collection, sn);
+			DirNode dn = n as DirNode;
+			FileNode fn = n as FileNode;
 			string npath = null;
 			if (dn != null)
 				npath = dn.GetFullPath(collection);
@@ -134,8 +134,8 @@ public class Dredger
 				{
 					if (dn != null)
 						DoSubtree(dn, subTreeHasChanged);
-					if (node == null)
-						node = n;
+			
+					node = n;
 				}
 			}
 		}
@@ -207,7 +207,7 @@ public class Dredger
 			// remove all nodes from store that no longer exist in the file system
 			foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
 			{
-				Node kid = new Node(collection, sn);
+				Node kid = Node.NodeFactory(collection, sn);
 				if (collection.IsType(kid, typeof(DirNode).Name) && !DirThere(path, kid.Name)
 					|| collection.IsType(kid, typeof(FileNode).Name) && !FileThere(path, kid.Name))
 				{
@@ -264,9 +264,6 @@ public class Dredger
 				}
 			}
 		}
-			
-		//dnode.LastWriteTime = tmpDi.LastWriteTime;
-		//collection.Commit(dnode);
 	}
 
 	//--------------------------------------------------------------------
@@ -297,8 +294,7 @@ public class Dredger
 		{
 			if (onServer || Directory.Exists(dn.GetFullPath(collection)))
 			{
-				DoSubtree(collection.GetRootDirectory(), false);
-				DoManagedPath(collection.ManagedPath);
+				DoSubtree(dn, false);
 			}
 			else
 			{
@@ -308,10 +304,9 @@ public class Dredger
 				foundChange = false;
 			}
 		}
-		else
-		{
-			DoManagedPath(collection.ManagedPath);
-		}
+	
+		DoManagedPath(collection.ManagedPath);
+		
 		if (foundChange)
 		{
 			Property tsp = new Property(lastDredgeProp, dredgeTimeStamp);
@@ -475,32 +470,21 @@ public class Dredger
 				// delete nodes that are wrong type
 			foreach (ShallowNode sn in collection.GetNodesByName(name))
 			{
-				Node n = new Node(collection, sn);
+				Node n = Node.NodeFactory(collection, sn);
 				string npath = null;
-				DirNode dn;
-				BaseFileNode fn;
+				DirNode dn = n as DirNode;
+				BaseFileNode fn = n as BaseFileNode;
 
-				if (collection.IsType(n, typeof(DirNode).Name))
+				if (dn != null)
 				{
-					dn = new DirNode(n);
 					npath = dn.GetFullPath(collection);
-					n = dn;
 				}
-				else if (collection.IsType(n, typeof(FileNode).Name))
+				else if (fn != null)
 				{
 					isFile = true;
-					fn = new FileNode(n);
 					npath = fn.GetFullPath(collection);
-					n = fn;
 				}
-				else if (collection.IsType(n, typeof(StoreFileNode).Name))
-				{
-					isFile = true;
-					fn = new StoreFileNode(n);
-					npath = fn.GetFullPath(collection);
-					n = fn;
-				}
-
+				
 				if (npath != null && npath == fullPath)
 				{
 					node = n;

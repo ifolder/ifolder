@@ -47,19 +47,6 @@ public class Conflict
 	{
 		this.collection = collection;
 		this.node = node;
-		if ((conflictNode = collection.GetNodeFromCollision(node)) != null)
-		{
-			//conflictNode.IncarnationUpdate = conflictNode.LocalIncarnation;
-			//conflictNode.Properties.ModifyNodeProperty(PropertyTags.MasterIncarnation, conflictNode.LocalIncarnation);
-			//Log.Spew("Reconstituted conflict node {2} local {0}, master {1}",
-			//		conflictNode.LocalIncarnation, conflictNode.MasterIncarnation, conflictNode.Name);
-//			Log.Assert(conflictNode.LocalIncarnation == conflictNode.MasterIncarnation);
-		}
-		else
-		{
-			//Log.Spew("node {0} is not conflicted", node.Name);
-			//Log.Assert(!collection.HasCollisions(node));
-		}
 	}
 
 	//---------------------------------------------------------------------------

@@ -93,13 +93,26 @@ internal class IncomingNode
 	void CleanUp()
 	{
 		if (forkList != null)
+		{
 			foreach (Fork fork in forkList)
+			{
 				if (fork.stream != null)
+				{
 					fork.stream.Close();
-		forkList = null;
+				}
+			}
+			forkList = null;
+		}
+		if (oldFileStream != null)
+		{
+			oldFileStream.Close();
+			oldFileStream = null;
+		}
 		if (fileInfo != null)
+		{
 			fileInfo.Delete();
-		fileInfo = null;
+			fileInfo = null;
+		}
 		path = null;
 	}
 
@@ -388,7 +401,7 @@ internal class IncomingNode
 				{
 					// The file is in use will get synced next pass.
 					Log.log.Debug("The file {0} is in use. {1}", fPath, ex.Message);
-					return NodeStatus.Complete;
+					return NodeStatus.InUse;
 				}
 				catch (ArgumentException ex)
 				{

@@ -37,31 +37,63 @@ namespace Simias.Sync
 /// to be retrieved from the master. It also does not account for
 /// delta-sync algorithms that may reduce what needs to be sent
 /// </summary>
-public class SyncSize
-{
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="collection"></param>
-	/// <param name="nodeCount"></param>
-	/// <param name="maxBytesToSend"></param>
-	public static void CalculateSendSize(Collection collection, out uint nodeCount, out ulong maxBytesToSend)
+	public class SyncSize
 	{
-		maxBytesToSend = 0;
-		nodeCount = 0;
-		Log.Spew("starting to calculate size to send to master for collection {0}", collection.Name);
-
-		// TODO: this call can leave tombstones on the server. see note in Dredger
-		new Dredger(collection, false); 
-
-		// TODO: would be nice to have the database find all nodes for which MasterIncarnation != LocalIncarnation
-		foreach (ShallowNode sn in collection)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="collection"></param>
+		/// <param name="nodeCount"></param>
+		/// <param name="maxBytesToSend"></param>
+		public static void CalculateSendSize(Collection col, out uint nodeCount, out ulong maxBytesToSend)
 		{
-			Node node = new Node(collection, sn);
+			SyncCollection collection = new SyncCollection(col);
+			maxBytesToSend = 0;
+			nodeCount = 0;
+			Log.log.Debug("starting to calculate size to send to master for collection {0}", collection.Name);
+
+			if (collection.Role != SyncCollectionRoles.Slave)
+			{
+				return;
+			}
+
+			// TODO: this call can leave tombstones on the server. see note in Dredger
+			new Dredger(collection, false); 
+
+
+			NodeStamp[] cstamps;
+			string clientCookie, serverCookie;
+			SyncOps ops = new SyncOps(new SyncCollection(collection), false);
+			ops.GetChangeLogCookies(out serverCookie, out clientCookie);
+			if (ops.GetChangedNodeStamps(out cstamps, ref clientCookie))
+			{
+				foreach (NodeStamp n in cstamps)
+				{
+					if (n.changeType != ChangeLogRecord.ChangeLogOp.Deleted)
+					{
+						Node node = collection.GetNodeByID(n.id);
+						if (node != null)
+						{
+							AddNodeToCount(collection, node, ref nodeCount, ref maxBytesToSend);
+						}
+					}
+				}
+			}
+			else
+			{
+				// TODO: would be nice to have the database find all nodes for which MasterIncarnation != LocalIncarnation
+				foreach (ShallowNode sn in collection)
+				{
+					AddNodeToCount(collection, new Node(collection, sn), ref nodeCount, ref maxBytesToSend);
+				}
+			}
+		}
+
+		public static void AddNodeToCount(SyncCollection collection, Node node, ref uint nodeCount, ref ulong maxBytesToSend)
+		{
 			if (node.MasterIncarnation != node.LocalIncarnation)
 			{
 				long fileSize = 0;
-
 				BaseFileNode bfn = null;
 				if (collection.IsType(node, typeof(FileNode).Name))
 					bfn = new FileNode(node);
@@ -76,7 +108,6 @@ public class SyncSize
 				BinaryFormatter bf = new BinaryFormatter();
 				bf.Serialize(ms, node);
 
-				Log.Spew("Adding node {0} to send size: fileSize = {1}, nodeSize = {2}", node.Name, fileSize, ms.Length );
 				maxBytesToSend += (ulong)fileSize + (ulong)ms.Length;
 				nodeCount++;
 			}
@@ -84,6 +115,4 @@ public class SyncSize
 	}
 
 }
-
 //===========================================================================
-}

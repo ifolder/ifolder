@@ -188,6 +188,8 @@ internal class SyncOps
 	bool onServer;
 	private const string ServerChangeLogCookieProp = "ServerChangeLogCookie";
 	private const string ClientChangeLogCookieProp = "ClientChangeLogCookie";
+	private string clientCookie = null;
+	private string serverCookie = null;
 	EventContext eventCookie;
 
 	//TODO: remove after verifying that 'node as BaseFileNode' works for this
@@ -307,6 +309,7 @@ internal class SyncOps
 			}
 		}
 
+		// Do a deep delete.
 		Node[] deleted = collection.Delete(node, PropertyTags.Parent);
 		collection.Commit(deleted);
 
@@ -335,7 +338,7 @@ internal class SyncOps
 	public NodeChunk GetSmallNode(Nid nid)
 	{
 		OutgoingNode ogn = new OutgoingNode(collection);
-		NodeChunk chunk;
+		NodeChunk chunk = new NodeChunk();
 		chunk.totalSize = 0;
 		chunk.forkChunks = null;
 		chunk.expectedIncarn = 0;
@@ -385,9 +388,8 @@ internal class SyncOps
 			return null;
 		NodeChunk[] chunks = new NodeChunk[stamps.Count];
 		uint i = 0;
-		foreach (DictionaryEntry item in stamps)
+		foreach (NodeStamp stamp in stamps.Values)
 		{
-			NodeStamp stamp = (NodeStamp)item.Value;
 			chunks[i] = GetSmallNode(stamp.id);
 			chunks[i++].expectedIncarn = stamp.masterIncarn;
 		}
@@ -395,31 +397,45 @@ internal class SyncOps
 	}
 
 	/// <summary>
+	/// Commits the node to the local system.
+	/// </summary>
+	/// <param name="nc">The node to commit.</param>
+	/// <returns></returns>
+	public NodeStatus PutSmallNode(NodeChunk nc)
+	{
+		IncomingNode inNode = new IncomingNode(collection, onServer);
+		if (nc.forkChunks == null && nc.totalSize >= NodeChunk.MaxSize)
+		{
+			Log.Spew("skipping update of node {0}, retry next sync", nc.node.Name);
+			return NodeStatus.ServerFailure;
+		}
+		if (collection.IsType(nc.node, NodeTypes.TombstoneType))
+		{
+			//Log.Assert(onServer); // should not get tombstones on client from server
+			DeleteNode((Nid)nc.node.ID, true);
+			return NodeStatus.Complete;
+		}
+		
+		inNode.Start(nc.node, nc.relativePath);
+		inNode.BlowChunks(nc.forkChunks);
+		NodeStatus status = inNode.Complete(nc.expectedIncarn);
+		return status == NodeStatus.FileNameConflict ? NodeStatus.Complete : status;
+	}
+
+	/// <summary>
 	/// returns nodes were not updated
 	/// </summary>
     public RejectedNode[] PutSmallNodes(NodeChunk[] nodeChunks)
 	{
-		IncomingNode inNode = new IncomingNode(collection, onServer);
 		ArrayList rejects = new ArrayList();
 		Log.Spew("PutSmallNodes() {0}", nodeChunks.Length);
 		foreach (NodeChunk nc in nodeChunks)
 		{
-			if (nc.forkChunks == null && nc.totalSize >= NodeChunk.MaxSize)
+			NodeStatus status = PutSmallNode(nc);
+			if (status != NodeStatus.Complete)
 			{
-				Log.Spew("skipping update of node {0}, retry next sync", nc.node.Name);
-				continue;
-			}
-			if (collection.IsType(nc.node, NodeTypes.TombstoneType))
-			{
-				//Log.Assert(onServer); // should not get tombstones on client from server
-				DeleteNode((Nid)nc.node.ID, true);
-				continue;
-			}
-			inNode.Start(nc.node, nc.relativePath);
-			inNode.BlowChunks(nc.forkChunks);
-			NodeStatus status = inNode.Complete(nc.expectedIncarn);
-			if (status != NodeStatus.Complete && status != NodeStatus.FileNameConflict)
 				rejects.Add(new RejectedNode((Nid)nc.node.ID, status));
+			}
 		}
 		return rejects.Count == 0? null: (RejectedNode[])rejects.ToArray(typeof(RejectedNode));
 	}
@@ -531,36 +547,34 @@ internal class SyncOps
 	/// Set the cookie for the changelog.
 	/// Used to get the next set of changes.
 	/// </summary>
-	internal void SetChangeLogCookies(string serverCookie, string clientCookie)
+	internal void SetChangeLogCookies(string serverCookie, string clientCookie, bool persist)
 	{
-		if (serverCookie != null)
+		this.serverCookie = serverCookie;
+		this.clientCookie = clientCookie;
+	
+		if (persist)
 		{
-			Property sc = new Property(ServerChangeLogCookieProp, serverCookie);
-			sc.LocalProperty = true;
-			collection.Properties.ModifyProperty(sc);
+			if (serverCookie != null)
+			{
+				Property sc = new Property(ServerChangeLogCookieProp, serverCookie);
+				sc.LocalProperty = true;
+				collection.Properties.ModifyProperty(sc);
+			}
+			if (clientCookie != null)
+			{
+				Property cc = new Property(ClientChangeLogCookieProp, clientCookie);
+				cc.LocalProperty = true;
+				collection.Properties.ModifyProperty(cc);
+			}
+			collection.Properties.State = PropertyList.PropertyListState.Internal;
+			collection.Commit();
 		}
-		if (clientCookie != null)
-		{
-			Property cc = new Property(ClientChangeLogCookieProp, clientCookie);
-			cc.LocalProperty = true;
-			collection.Properties.ModifyProperty(cc);
-		}
-		collection.Properties.State = PropertyList.PropertyListState.Internal;
-		collection.Commit();
 	}
 
 	internal void GetChangeLogCookies(out string serverCookie, out string clientCookie)
 	{
-		try
-		{
-			serverCookie = (string)collection.Properties.GetSingleProperty(ServerChangeLogCookieProp).Value;
-			clientCookie = (string)collection.Properties.GetSingleProperty(ClientChangeLogCookieProp).Value;
-		}
-		catch
-		{
-			serverCookie = null;
-			clientCookie = null;
-		}
+		serverCookie = this.serverCookie;
+		clientCookie = this.clientCookie;
 	}
 }
 

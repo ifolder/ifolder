@@ -42,12 +42,17 @@ public class SynkerWorkerA: SyncCollectionWorker
 	//TODO: why is the base master and slave not protected instead of private?
 	SynkerServiceA ss;
 	
-	Hashtable	largeFromServer, smallFromServer, dirsFromServer;
-	Hashtable	largeToServer, smallToServer, dirsToServer;
-    Hashtable	killOnClient;
+	Hashtable	largeFromServer = new Hashtable();
+	Hashtable	smallFromServer = new Hashtable();
+	Hashtable	dirsFromServer = new Hashtable();
+	Hashtable	largeToServer = new Hashtable();
+	Hashtable	smallToServer = new Hashtable();
+	Hashtable	dirsToServer = new Hashtable();
+    Hashtable	killOnClient = new Hashtable();
 	SyncOps		ops;
 	static int BATCH_SIZE = 10;
 	bool		moreWork;
+	bool		HadErrors;
 			
 	bool stopping;
 
@@ -66,24 +71,25 @@ public class SynkerWorkerA: SyncCollectionWorker
 	{
 		// save service
 		ss = (SynkerServiceA)service;
+		HadErrors = false;
 
 		stopping = false;
-		Log.Spew("-------- starting sync pass for collection {0}", collection.Name);
+		Log.log.Debug("-------- starting sync pass for collection {0}", collection.Name);
 		try
 		{
 			moreWork = true;
-			while (moreWork)
+			while (moreWork && ! stopping)
 			{
 				DoOneSyncPass();
 			}
 		}
 		catch (Exception e)
 		{
-			Log.Spew("Uncaught exception in DoSyncWork: {0}", e.Message);
-			Log.Spew(e.StackTrace);
+			Log.log.Debug("Uncaught exception in DoSyncWork: {0}", e.Message);
+			Log.log.Debug(e.StackTrace);
 		}
-		catch { Log.Spew("Uncaught foreign exception in DoSyncWork"); }
-		Log.Spew("-------- end of sync pass for collection {0}", collection.Name);
+		catch { Log.log.Debug("Uncaught foreign exception in DoSyncWork"); }
+		Log.log.Debug("-------- end of sync pass for collection {0}", collection.Name);
 	}
 
 	/// <summary>
@@ -99,7 +105,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 	{
 		// TODO: deal with small files in pages, right now we just limit the
 		// first small file page and then consider everything a large file
-		Log.Spew("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
+		Log.log.Debug("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
 		Log.Assert(stamp.streamsSize >= -1);
 
 		if (stamp.isDir)
@@ -128,7 +134,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 	{
 		// TODO: deal with small files in pages, right now we just limit the
 		// first small file page and then consider everything a large file
-		Log.Spew("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
+		Log.log.Debug("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
 		Log.Assert(stamp.streamsSize >= -1);
 		if (stamp.isDir)
 		{
@@ -169,31 +175,19 @@ public class SynkerWorkerA: SyncCollectionWorker
 		Access.Rights rights = ss.Start(userID);
 		if (rights == Access.Rights.Deny)
 		{
-			Log.Error("Sync with collection {0} denied", collection.Name);
+			Log.log.Error("Sync with collection {0} denied", collection.Name);
 			moreWork = false;
 			return;
 		}
 
-		largeFromServer = new Hashtable();
-		smallFromServer = new Hashtable();
-		dirsFromServer = new Hashtable();
-		largeToServer = new Hashtable();
-		smallToServer = new Hashtable();
-		dirsToServer = new Hashtable();
-		killOnClient = new Hashtable();
 		NodeStamp[] sstamps;
 		NodeStamp[] cstamps;
 		
-		string oldClientCookie, oldServerCookie;
-		string newClientCookie, newServerCookie;
+		string clientCookie, serverCookie;
 		bool gotServerChanges, gotClientChanges;
-		ops.GetChangeLogCookies(out oldServerCookie, out oldClientCookie);
-		newClientCookie = oldClientCookie;
-		newServerCookie = oldServerCookie;
-		if(!(gotServerChanges = ss.GetChangedNodeStamps(out sstamps, ref newServerCookie)))
-			oldServerCookie = newServerCookie;
-		if(!(gotClientChanges = ops.GetChangedNodeStamps(out cstamps, ref newClientCookie)))
-			oldClientCookie = newClientCookie;
+		ops.GetChangeLogCookies(out serverCookie, out clientCookie);
+		gotServerChanges = ss.GetChangedNodeStamps(out sstamps, ref serverCookie);
+		gotClientChanges = ops.GetChangedNodeStamps(out cstamps, ref clientCookie);
 		
 		if (gotServerChanges && gotClientChanges)
 		{
@@ -204,20 +198,20 @@ public class SynkerWorkerA: SyncCollectionWorker
 
 			ProcessChangedNodeStamps(rights, sstamps, cstamps);
 			ExecuteSync();
-			ops.SetChangeLogCookies(newServerCookie, newClientCookie);
+			ops.SetChangeLogCookies(serverCookie, clientCookie, !HadErrors);
 		}
 		else
 		{
 			sstamps =  ss.GetNodeStamps();
 			if (sstamps == null)
 			{
-				Log.Error("Server Failure: could not get nodestamps");
+				Log.log.Error("Server Failure: could not get nodestamps");
 				return;
 			}
 			cstamps =  ops.GetNodeStamps();
-			BruttForceSync(rights, sstamps, cstamps);
+			BruteForceSync(rights, sstamps, cstamps);
 			ExecuteSync();
-			ops.SetChangeLogCookies(oldServerCookie, oldClientCookie);
+			ops.SetChangeLogCookies(serverCookie, clientCookie, !HadErrors);
 			moreWork = false;
 		}
 	}
@@ -229,12 +223,12 @@ public class SynkerWorkerA: SyncCollectionWorker
 	/// <param name="rights"></param>
 	/// <param name="sstamps"></param>
 	/// <param name="cstamps"></param>
-	void BruttForceSync(Access.Rights rights, NodeStamp[] sstamps, NodeStamp[] cstamps)
+	void BruteForceSync(Access.Rights rights, NodeStamp[] sstamps, NodeStamp[] cstamps)
 	{
 		int si = 0, ci = 0;
 		int sCount = sstamps.Length, cCount = cstamps.Length;
 
-		Log.Spew("Got {0} nodes in chunk from server, {1} from client", sCount, cCount);
+		Log.log.Debug("Got {0} nodes in chunk from server, {1} from client", sCount, cCount);
 
 		while (si < sCount || ci < cCount && !stopping)
 		{
@@ -248,7 +242,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 					PutNodeToServer(ref cstamps[ci], "is new on the client, send to server");
 				else
 				{
-					Log.Spew("{1} {0} has been killed or synced before or is RO, but is not on the server, just kill it locally",
+					Log.log.Debug("{1} {0} has been killed or synced before or is RO, but is not on the server, just kill it locally",
 						cstamps[ci].name, cstamps[ci].id);
 					if (!killOnClient.Contains(cstamps[ci].id))
 						killOnClient.Add(cstamps[ci].id, cstamps[ci]);
@@ -312,7 +306,12 @@ public class SynkerWorkerA: SyncCollectionWorker
 				case ChangeLogRecord.ChangeLogOp.Changed:
 				case ChangeLogRecord.ChangeLogOp.Created:
 				case ChangeLogRecord.ChangeLogOp.Renamed:
-					GetNodeFromServer(ref sstamps[i], "exists on server but not client, get it");
+					// Make sure the node has been changed.
+					Node oldNode = collection.GetNodeByID(sstamps[i].id);
+					if (oldNode == null || oldNode.MasterIncarnation != sstamps[i].localIncarn)
+					{
+						GetNodeFromServer(ref sstamps[i], "exists on server but not client, get it");
+					}
 					break;
 				case ChangeLogRecord.ChangeLogOp.Deleted:
 					if (!killOnClient.Contains(sstamps[i].id))
@@ -339,19 +338,48 @@ public class SynkerWorkerA: SyncCollectionWorker
 
 	void ExecuteSync()
 	{
-		IncomingNode inNode = new IncomingNode(collection, false);
-		OutgoingNode outNode = new OutgoingNode(collection);
-		NodeChunk[] updates = null;
-
 		if (stopping)
 			return;
+		
+		ProcessKillOnClient();
+		ProcessDirsFromServer();
+		ProcessSmallFromServer();
+		ProcessDirsToServer();
+		ProcessSmallToServer();	
+		ProcessLargeToServer();
+		ProcessLargeFromServer();
+	}
 
+	/// <summary>
+	/// Deletes the Nodes in the killOnClient table.
+	/// </summary>
+	void ProcessKillOnClient()
+	{
 		// remove deleted nodes from client
-		foreach (DictionaryEntry entry in killOnClient)
+		if (killOnClient.Count > 0 && ! stopping)
 		{
-			NodeStamp ns = (NodeStamp)entry.Value;
-			ops.DeleteNode(ns.id, true);
+			DictionaryEntry[] killList = new DictionaryEntry[killOnClient.Count];
+			killOnClient.CopyTo(killList, 0);
+			foreach (DictionaryEntry entry in killList)
+			{
+				try
+				{
+					NodeStamp ns = (NodeStamp)entry.Value;
+					ops.DeleteNode(ns.id, true);
+					killOnClient.Remove(entry.Key);
+				}
+				catch
+				{
+					// Try to delete the next node.
+					HadErrors = true;
+				}
+			}
 		}
+	}
+
+	void ProcessDirsFromServer()
+	{
+		NodeChunk[] updates = null;
 
 		// get directories from the server.
 		if (dirsFromServer.Count > 0 && ! stopping)
@@ -371,20 +399,42 @@ public class SynkerWorkerA: SyncCollectionWorker
 				}
 				
 				updates = ss.GetSmallNodes(ids);
-			
-				// Set the expected incarnation.
-				for (int i = 0; i < batchCount; ++i)
-				{
-					Log.Assert(updates[i].node.ID == dirStamps[offset + i].id);
-					updates[i].expectedIncarn = dirStamps[offset + i].masterIncarn;
-				}
 
-				offset += batchCount;
-				
 				if (updates != null && updates.Length > 0)
-					ops.PutSmallNodes(updates);
+				{
+					for (int i = 0; i < updates.Length; ++i)
+					{
+						try
+						{
+							// Set the expected incarnation.
+							NodeStamp ns = (NodeStamp)dirsFromServer[(Nid)updates[i].node.ID];
+							updates[i].expectedIncarn = ns.masterIncarn;
+
+							if (ops.PutSmallNode(updates[i]) == NodeStatus.Complete)
+							{
+								// This was successful remove the node from the hashtable.
+								dirsFromServer.Remove((Nid)updates[i].node.ID);
+							}
+							else
+							{
+								// We had an error.
+								HadErrors = true;
+							}
+						}
+						catch
+						{
+							// Try to store the next node.
+						}
+					}
+				}
+				offset += batchCount;
 			}
 		}
+	}
+
+	void ProcessSmallFromServer()
+	{
+		NodeChunk[] updates = null;
 
 		// get small nodes and files from server
 		if (smallFromServer.Count > 0 && !stopping)
@@ -405,19 +455,41 @@ public class SynkerWorkerA: SyncCollectionWorker
 				
 				updates = ss.GetSmallNodes(ids);
 			
-				// Set the expected incarnation.
-				for (int i = 0; i < batchCount; ++i)
-				{
-					Log.Assert(updates[i].node.ID == smallStamps[offset + i].id);
-					updates[i].expectedIncarn = smallStamps[offset + i].masterIncarn;
-				}
-
-				offset += batchCount;
-				
 				if (updates != null && updates.Length > 0)
-					ops.PutSmallNodes(updates);
+				{
+					for (int i = 0; i < updates.Length; ++i)
+					{
+						try
+						{
+							// Set the expected incarnation.
+							NodeStamp ns = (NodeStamp)smallFromServer[(Nid)updates[i].node.ID];
+							updates[i].expectedIncarn = ns.masterIncarn;
+
+							if (ops.PutSmallNode(updates[i]) == NodeStatus.Complete)
+							{
+								// This was successful remove the node from the hashtable.
+								smallFromServer.Remove((Nid)updates[i].node.ID);
+							}
+							else
+							{
+								// We had an error.
+								HadErrors = true;
+							}
+						}
+						catch
+						{
+							// Try to store the next node.
+						}
+					}
+				}
+				offset += batchCount;
 			}
 		}
+	}
+
+	void ProcessDirsToServer()
+	{
+		NodeChunk[] updates = null;
 
 		// push up directories.
 		if ((updates = ops.GetSmallNodes(dirsToServer)) != null)
@@ -427,42 +499,58 @@ public class SynkerWorkerA: SyncCollectionWorker
 			while (offset < updates.Length)
 			{
 				int batchCount = updates.Length - offset < BATCH_SIZE ? updates.Length - offset : BATCH_SIZE;
-				NodeChunk[] nodeChunks = new NodeChunk[batchCount];
-
-				for (int i = 0; i < batchCount; ++i)
+				try
 				{
-					nodeChunks[i] = updates[offset + i];
-				}
+					NodeChunk[] nodeChunks = new NodeChunk[batchCount];
+
+					for (int i = 0; i < batchCount; ++i)
+					{
+						nodeChunks[i] = updates[offset + i];
+					}
 			
-				RejectedNode[] rejects = ss.PutSmallNodes(nodeChunks);
+					RejectedNode[] rejects = ss.PutSmallNodes(nodeChunks);
 
-				foreach (NodeChunk nc in nodeChunks)
-				{
-					if (stopping)
-						return;
-					bool updateIncarn = true;
-					if (rejects != null)
-						foreach (RejectedNode reject in rejects)
+					foreach (NodeChunk nc in nodeChunks)
+					{
+						if (stopping)
+							return;
+						bool updateIncarn = true;
+						if (rejects != null)
 						{
-							if (reject.nid == nc.node.ID)
+							foreach (RejectedNode reject in rejects)
 							{
-								Log.Spew("skipping update of incarnation for small node {0} due to {1} on server",
-									reject.nid, reject.status);
-								updateIncarn = false;
-								break;
+								if (reject.nid == nc.node.ID)
+								{
+									Log.log.Debug("skipping update of incarnation for small node {0} due to {1} on server",
+										reject.nid, reject.status);
+									updateIncarn = false;
+									HadErrors = true;
+									break;
+								}
 							}
 						}
-					if (updateIncarn == true)
-					{
-						if (collection.IsType(nc.node, NodeTypes.TombstoneType))
-							ops.DeleteNode((Nid)nc.node.ID, false);
-						else
-							ops.UpdateIncarn((Nid)nc.node.ID, nc.node.LocalIncarnation);
+						if (updateIncarn == true)
+						{
+							if (collection.IsType(nc.node, NodeTypes.TombstoneType))
+								ops.DeleteNode((Nid)nc.node.ID, false);
+							else
+								ops.UpdateIncarn((Nid)nc.node.ID, nc.node.LocalIncarnation);
+							dirsToServer.Remove((Nid)nc.node.ID);
+						}
 					}
+				}
+				catch
+				{
+					// Continu getting the rest of the nodes.
 				}
 				offset += batchCount;
 			}
 		}
+	}
+
+	void ProcessSmallToServer()
+	{
+		NodeChunk[] updates = null;
 
 		// push up small nodes and files to server
 		if ((updates = ops.GetSmallNodes(smallToServer)) != null)
@@ -472,97 +560,161 @@ public class SynkerWorkerA: SyncCollectionWorker
 			while (offset < updates.Length)
 			{
 				int batchCount = updates.Length - offset < BATCH_SIZE ? updates.Length - offset : BATCH_SIZE;
-				NodeChunk[] nodeChunks = new NodeChunk[batchCount];
-
-				for (int i = 0; i < batchCount; ++i)
+				try
 				{
-					nodeChunks[i] = updates[offset + i];
-				}
+					NodeChunk[] nodeChunks = new NodeChunk[batchCount];
+
+					for (int i = 0; i < batchCount; ++i)
+					{
+						nodeChunks[i] = updates[offset + i];
+					}
 			
-				RejectedNode[] rejects = ss.PutSmallNodes(nodeChunks);
+					RejectedNode[] rejects = ss.PutSmallNodes(nodeChunks);
 
-				foreach (NodeChunk nc in nodeChunks)
-				{
-					if (stopping)
-						return;
-					bool updateIncarn = true;
-					if (rejects != null)
-						foreach (RejectedNode reject in rejects)
+					foreach (NodeChunk nc in nodeChunks)
+					{
+						if (stopping)
+							return;
+						bool updateIncarn = true;
+						if (rejects != null)
 						{
-							if (reject.nid == nc.node.ID)
+							foreach (RejectedNode reject in rejects)
 							{
-								Log.Spew("skipping update of incarnation for small node {0} due to {1} on server",
-									reject.nid, reject.status);
-								updateIncarn = false;
-								break;
+								if (reject.nid == nc.node.ID)
+								{
+									Log.log.Debug("skipping update of incarnation for small node {0} due to {1} on server",
+										reject.nid, reject.status);
+									updateIncarn = false;
+									HadErrors = true;
+									break;
+								}
 							}
 						}
-					if (updateIncarn == true)
-					{
-						if (collection.IsType(nc.node, NodeTypes.TombstoneType))
-							ops.DeleteNode((Nid)nc.node.ID, false);
-						else
-							ops.UpdateIncarn((Nid)nc.node.ID, nc.node.LocalIncarnation);
+						if (updateIncarn == true)
+						{
+							if (collection.IsType(nc.node, NodeTypes.TombstoneType))
+								ops.DeleteNode((Nid)nc.node.ID, false);
+							else
+								ops.UpdateIncarn((Nid)nc.node.ID, nc.node.LocalIncarnation);
+							smallToServer.Remove((Nid)nc.node.ID);
+						}
 					}
+				}
+				catch
+				{
+					// Get these next sync pass.
 				}
 				offset += batchCount;
 			}
 		}
+	}
 
+	void ProcessLargeToServer()
+	{
+		OutgoingNode outNode = new OutgoingNode(collection);
+		
 		// push up large files
-		foreach (DictionaryEntry item in largeToServer)
+		if (largeToServer.Count != 0 && !stopping)
 		{
-			NodeStamp stamp = (NodeStamp)item.Value;
-			if (stopping)
-				return;
-			Node node;
-			if ((node = outNode.Start(stamp.id)) == null)
-				continue;
+			NodeStamp[] largeStamps = new NodeStamp[largeToServer.Count];
+			largeToServer.Values.CopyTo(largeStamps, 0);
 
-			int totalSize;
-			ForkChunk[] chunks = outNode.ReadChunks(NodeChunk.MaxSize, out totalSize);
-			if (!ss.WriteLargeNode(node, chunks))
+			foreach (NodeStamp stamp in largeStamps)
 			{
-				Log.Spew("Could not write large node {0}", node.Name);
-				continue;
-			}
-			if (chunks == null || totalSize < NodeChunk.MaxSize)
-				chunks = null;
-			else
-				while (true)
+				try
 				{
-					chunks = outNode.ReadChunks(NodeChunk.MaxSize, out totalSize);
-					if (chunks == null || totalSize < NodeChunk.MaxSize)
-						break;
-					ss.WriteLargeNode(chunks, 0, false);
-				}
-			NodeStatus status = ss.WriteLargeNode(chunks, stamp.masterIncarn, true);
-			if (status == NodeStatus.Complete || status == NodeStatus.FileNameConflict)
-				ops.UpdateIncarn((Nid)node.ID, node.LocalIncarnation);
-			else
-				Log.Spew("skipping update of incarnation for large node {0} due to {1}", node.Name, status);
-		}
+					if (stopping)
+						return;
+					Node node;
 
-		// get large files from server
-		foreach (DictionaryEntry item in largeFromServer)
-		{
-			NodeStamp stamp = (NodeStamp)item.Value;
-			if (stopping)
-				return;
-			NodeChunk nc = ss.ReadLargeNode(stamp.id, NodeChunk.MaxSize);
-			inNode.Start(nc.node, null);
-			inNode.BlowChunks(nc.forkChunks);
-			while (nc.totalSize >= NodeChunk.MaxSize)
-			{
-				nc.forkChunks = ss.ReadLargeNode(NodeChunk.MaxSize);
-				inNode.BlowChunks(nc.forkChunks);
-				nc.totalSize = 0;
-				foreach (ForkChunk chunk in nc.forkChunks)
-					nc.totalSize += chunk.data.Length;
+					if ((node = outNode.Start(stamp.id)) == null)
+						continue;
+
+					int totalSize;
+					ForkChunk[] chunks = outNode.ReadChunks(NodeChunk.MaxSize, out totalSize);
+					if (!ss.WriteLargeNode(node, chunks))
+					{
+						Log.log.Debug("Could not write large node {0}", node.Name);
+						HadErrors = true;
+						continue;
+					}
+					if (chunks == null || totalSize < NodeChunk.MaxSize)
+					{
+						chunks = null;
+					}
+					else
+					{
+						while (true)
+						{
+							chunks = outNode.ReadChunks(NodeChunk.MaxSize, out totalSize);
+							if (chunks == null || totalSize < NodeChunk.MaxSize)
+								break;
+							ss.WriteLargeNode(chunks, 0, false);
+						}
+					}
+					NodeStatus status = ss.WriteLargeNode(chunks, stamp.masterIncarn, true);
+					if (status == NodeStatus.Complete || status == NodeStatus.FileNameConflict)
+					{
+						ops.UpdateIncarn((Nid)node.ID, node.LocalIncarnation);
+						largeToServer.Remove((Nid)node.ID);
+					}
+					else
+					{
+						HadErrors = true;
+						Log.log.Debug("skipping update of incarnation for large node {0} due to {1}", node.Name, status);
+					}
+				}
+				catch
+				{
+					// We'll get this file net sync pass.
+				}
 			}
-			NodeStatus status = inNode.Complete(stamp.masterIncarn);
-			if (status != NodeStatus.Complete)
-				Log.Spew("failed to update large node {0} from master, status {1}", stamp.name, status);
+		}
+	}
+
+	void ProcessLargeFromServer()
+	{
+		IncomingNode inNode = new IncomingNode(collection, false);
+		
+		// get large files from server
+		if (largeFromServer.Count != 0 && !stopping)
+		{
+			NodeStamp[] largeStamps = new NodeStamp[largeFromServer.Count];
+			largeFromServer.Values.CopyTo(largeStamps, 0);
+
+			foreach (NodeStamp stamp in largeStamps)
+			{
+				try
+				{
+					if (stopping)
+						return;
+					NodeChunk nc = ss.ReadLargeNode(stamp.id, NodeChunk.MaxSize);
+					inNode.Start(nc.node, null);
+					inNode.BlowChunks(nc.forkChunks);
+					while (nc.totalSize >= NodeChunk.MaxSize)
+					{
+						nc.forkChunks = ss.ReadLargeNode(NodeChunk.MaxSize);
+						inNode.BlowChunks(nc.forkChunks);
+						nc.totalSize = 0;
+						foreach (ForkChunk chunk in nc.forkChunks)
+							nc.totalSize += chunk.data.Length;
+					}
+					NodeStatus status = inNode.Complete(stamp.masterIncarn);
+					if (status != NodeStatus.Complete)
+					{
+						Log.log.Debug("failed to update large node {0} from master, status {1}", stamp.name, status);
+						HadErrors = true;
+					}
+					else
+					{
+						largeFromServer.Remove((Nid)stamp.id);
+					}
+				}
+				catch
+				{
+					// We'll get this node next pass.
+				}
+			}
 		}
 	}
 }
