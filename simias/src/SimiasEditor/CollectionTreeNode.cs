@@ -38,14 +38,14 @@ namespace Simias.Editor
 
 		public CollectionTreeNode(Collection collection) : base(collection, collection)
 		{
-			this.collection = collection;
+			this.collection = StoreCollection;
 		}
 
 		public override void Refresh()
 		{
 			base.Refresh();
 
-			//Relationship relationship = new Relationship(collection.ID);
+			Relationship relationship = new Relationship(collection);
 
 			foreach(ShallowNode sn in collection)
 			{

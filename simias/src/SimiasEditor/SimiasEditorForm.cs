@@ -101,8 +101,16 @@ namespace Simias.Editor
 			this.listView = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+			this.listViewMenu = new System.Windows.Forms.ContextMenu();
+			this.addMenuItem = new System.Windows.Forms.MenuItem();
+			this.editMenuItem = new System.Windows.Forms.MenuItem();
+			this.removeMenuItem = new System.Windows.Forms.MenuItem();
 			this.statusBar = new System.Windows.Forms.StatusBar();
 			this.treeView = new System.Windows.Forms.TreeView();
+			this.treeViewMenu = new System.Windows.Forms.ContextMenu();
+			this.openTreeViewMenuItem = new System.Windows.Forms.MenuItem();
+			this.closeTreeViewMenuItem = new System.Windows.Forms.MenuItem();
+			this.deleteTreeViewMenuItem = new System.Windows.Forms.MenuItem();
 			this.mainMenu = new System.Windows.Forms.MainMenu();
 			this.fileMenuItem = new System.Windows.Forms.MenuItem();
 			this.openMenuItem = new System.Windows.Forms.MenuItem();
@@ -111,14 +119,6 @@ namespace Simias.Editor
 			this.helpMenuItem = new System.Windows.Forms.MenuItem();
 			this.panel = new System.Windows.Forms.Panel();
 			this.splitter = new System.Windows.Forms.Splitter();
-			this.treeViewMenu = new System.Windows.Forms.ContextMenu();
-			this.listViewMenu = new System.Windows.Forms.ContextMenu();
-			this.openTreeViewMenuItem = new System.Windows.Forms.MenuItem();
-			this.closeTreeViewMenuItem = new System.Windows.Forms.MenuItem();
-			this.deleteTreeViewMenuItem = new System.Windows.Forms.MenuItem();
-			this.addMenuItem = new System.Windows.Forms.MenuItem();
-			this.editMenuItem = new System.Windows.Forms.MenuItem();
-			this.removeMenuItem = new System.Windows.Forms.MenuItem();
 			this.panel.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -143,6 +143,7 @@ namespace Simias.Editor
 			this.listView.Sorting = System.Windows.Forms.SortOrder.Ascending;
 			this.listView.TabIndex = 7;
 			this.listView.View = System.Windows.Forms.View.Details;
+			this.listView.DoubleClick += new System.EventHandler(this.listView_DoubleClick);
 			// 
 			// columnHeader1
 			// 
@@ -153,6 +154,28 @@ namespace Simias.Editor
 			// 
 			this.columnHeader2.Text = "Value";
 			this.columnHeader2.Width = 227;
+			// 
+			// listViewMenu
+			// 
+			this.listViewMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																						 this.addMenuItem,
+																						 this.editMenuItem,
+																						 this.removeMenuItem});
+			// 
+			// addMenuItem
+			// 
+			this.addMenuItem.Index = 0;
+			this.addMenuItem.Text = "Add...";
+			// 
+			// editMenuItem
+			// 
+			this.editMenuItem.Index = 1;
+			this.editMenuItem.Text = "Edit...";
+			// 
+			// removeMenuItem
+			// 
+			this.removeMenuItem.Index = 2;
+			this.removeMenuItem.Text = "Remove";
 			// 
 			// statusBar
 			// 
@@ -174,6 +197,29 @@ namespace Simias.Editor
 			this.treeView.TabIndex = 3;
 			this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
 			this.treeView.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView_BeforeExpand);
+			// 
+			// treeViewMenu
+			// 
+			this.treeViewMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																						 this.openTreeViewMenuItem,
+																						 this.closeTreeViewMenuItem,
+																						 this.deleteTreeViewMenuItem});
+			// 
+			// openTreeViewMenuItem
+			// 
+			this.openTreeViewMenuItem.Index = 0;
+			this.openTreeViewMenuItem.Text = "Open";
+			this.openTreeViewMenuItem.Click += new System.EventHandler(this.openMenuItem_Click);
+			// 
+			// closeTreeViewMenuItem
+			// 
+			this.closeTreeViewMenuItem.Index = 1;
+			this.closeTreeViewMenuItem.Text = "Close";
+			// 
+			// deleteTreeViewMenuItem
+			// 
+			this.deleteTreeViewMenuItem.Index = 2;
+			this.deleteTreeViewMenuItem.Text = "Delete";
 			// 
 			// mainMenu
 			// 
@@ -231,51 +277,6 @@ namespace Simias.Editor
 			this.splitter.TabIndex = 0;
 			this.splitter.TabStop = false;
 			// 
-			// treeViewMenu
-			// 
-			this.treeViewMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																						 this.openTreeViewMenuItem,
-																						 this.closeTreeViewMenuItem,
-																						 this.deleteTreeViewMenuItem});
-			// 
-			// listViewMenu
-			// 
-			this.listViewMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																						 this.addMenuItem,
-																						 this.editMenuItem,
-																						 this.removeMenuItem});
-			// 
-			// openTreeViewMenuItem
-			// 
-			this.openTreeViewMenuItem.Index = 0;
-			this.openTreeViewMenuItem.Text = "Open";
-			this.openTreeViewMenuItem.Click += new System.EventHandler(this.openMenuItem_Click);
-			// 
-			// closeTreeViewMenuItem
-			// 
-			this.closeTreeViewMenuItem.Index = 1;
-			this.closeTreeViewMenuItem.Text = "Close";
-			// 
-			// deleteTreeViewMenuItem
-			// 
-			this.deleteTreeViewMenuItem.Index = 2;
-			this.deleteTreeViewMenuItem.Text = "Delete";
-			// 
-			// addMenuItem
-			// 
-			this.addMenuItem.Index = 0;
-			this.addMenuItem.Text = "Add...";
-			// 
-			// editMenuItem
-			// 
-			this.editMenuItem.Index = 1;
-			this.editMenuItem.Text = "Edit...";
-			// 
-			// removeMenuItem
-			// 
-			this.removeMenuItem.Index = 2;
-			this.removeMenuItem.Text = "Remove";
-			// 
 			// SimiasEditorForm
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -316,7 +317,7 @@ namespace Simias.Editor
 
 		private void treeView_BeforeExpand(object sender, TreeViewCancelEventArgs e)
 		{
-			if (e.Node.GetType().IsSubclassOf(typeof(BaseTreeNode)))
+			if (typeof(BaseTreeNode).IsInstanceOfType(e.Node))
 			{
 				(e.Node as BaseTreeNode).Refresh();
 			}
@@ -324,9 +325,23 @@ namespace Simias.Editor
 
 		private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			if (e.Node.GetType().IsSubclassOf(typeof(BaseTreeNode)))
+			if (typeof(BaseTreeNode).IsInstanceOfType(e.Node))
 			{
 				(e.Node as BaseTreeNode).Show(listView);
+			}
+		}
+
+		private void listView_DoubleClick(object sender, System.EventArgs e)
+		{
+			string name = listView.SelectedItems[0].Text;
+			
+			if (typeof(NodeTreeNode).IsInstanceOfType(treeView.SelectedNode))
+			{
+				NodeTreeNode node = (NodeTreeNode)treeView.SelectedNode;
+
+				PropertyForm pf = new PropertyForm(node.StoreCollection, node.StoreNode, name);
+
+				pf.ShowDialog(this);
 			}
 		}
 	}

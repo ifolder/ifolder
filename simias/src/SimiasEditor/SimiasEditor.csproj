@@ -133,6 +133,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "PropertyForm.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PropertyForm.resx"
+                    DependentUpon = "PropertyForm.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "SimiasEditorForm.cs"
                     SubType = "Form"
                     BuildAction = "Compile"

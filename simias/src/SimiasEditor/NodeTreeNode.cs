@@ -75,11 +75,24 @@ namespace Simias.Editor
 				{
 					lvi.ForeColor = Color.DarkGray;
 				}
+				else if (property.LocalProperty)
+				{
+					lvi.ForeColor = Color.DarkGreen;
+				}
 				
 				lvi.Tag = this;
 				listView.Items.Add(lvi);
 			}
 		}
 
+		public Collection StoreCollection
+		{
+			get { return collection; }
+		}
+
+		public Node StoreNode
+		{
+			get { return node; }
+		}
 	}
 }
