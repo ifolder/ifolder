@@ -28,5 +28,26 @@
 #ifndef _SIMIAS_UTIL_H
 #define _SIMIAS_UTIL_H 1
 
+#include <glib.h>
 
+/**
+ * The behavior of this function is like String.IndexOf();
+ */
+int simias_str_index_of(char *str, char search_char);
+
+/**
+ * Returned value must be freed.
+ *
+ * Param: str_with_space should be a null-terminated string that
+ *        potentially has spaces in it.  All spaces will be
+ *        converted to "%20".
+ */
+char *simias_escape_spaces(char *str_with_space);
+
+/**
+ * Does the same thing that gaim_url_parse() does, but works with
+ * spaces in the path.  The returned values (host, port, and path)
+ * should be freed.
+ */
+gboolean simias_url_parse(const char *url, char **proto, char **host, char **port, char **path);
 #endif

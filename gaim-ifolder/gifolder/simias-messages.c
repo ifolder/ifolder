@@ -75,10 +75,11 @@ simias_send_msg(GaimBuddy *recipient, char *msg)
 	conn = gaim_account_get_connection(recipient->account);
 	
 	if (!conn) {
+fprintf(stderr, "gaim_account_get_connection() returned null\n");
 		return -1; /* Can't send a msg without a connection */
 	}
 
-	g_print("Sending message: %s\n", msg);
+fprintf(stderr, "Sending message: %s\n", msg);
 	return serv_send_im(conn, recipient->name, msg, 0);
 }
 
@@ -90,25 +91,24 @@ static char *
 convert_url_to_public(const char *start_url)
 {
 	char new_url[1024];
-	char *host = NULL;
-	int port;
-	char *path = NULL;
-	char *user = NULL;
-	char *pass = NULL;
 	const char *public_ip;
-	
-	if (gaim_url_parse(start_url, &host, &port, &path, &user, &pass)) {
+	char *proto = NULL;
+	char *host = NULL;
+	char *port = NULL;
+	char *path = NULL;
+
+	if (simias_url_parse(start_url, &proto, &host, &port, &path)) {
 		
 		public_ip = gaim_network_get_my_ip(-1);
 		
 		if (path) {
-			sprintf(new_url, "http://%s:%d/%s", public_ip, port, path);
+			sprintf(new_url, "%s://%s:%s/%s", proto, public_ip, port, path);
 		}
 		
+		if (proto) free(proto);
 		if (host) free(host);
+		if (port) free(port);
 		if (path) free(path);
-		if (user) free(user);
-		if (pass) free(pass);
 		
 		return strdup(new_url);
 	}
@@ -127,26 +127,37 @@ send_ping(GaimBuddy *recipient, const char *ping_type)
 	char *machineName;
 	char *userID;
 	char *simias_service_url;
+	char *escaped_url;
 	char *public_url;
+	int err;
 
 	/* Get the Gaim Domain User Info */
-	if (simias_get_user_info(&machineName, &userID, &simias_service_url) != 0)
+	err = simias_get_user_info(&machineName, &userID, &simias_service_url); 
+	if (err != 0)
 	{
 		/* There was an error and none of the returns are valid */
+fprintf(stderr, "simias_get_user_info() returned: %d\n", err);
 		return -23432;
 	}
 
-	public_url = convert_url_to_public(simias_service_url);
+	escaped_url = simias_escape_spaces(simias_service_url);
+	free(simias_service_url);
+
+	public_url = convert_url_to_public(escaped_url);
 	if (public_url) {
 		sprintf(msg, "%s%s:%s:%s]", ping_type, machineName, userID, public_url);
 		free(public_url);
 	} else {
-		sprintf(msg, "%s%s:%s:%s]", ping_type, machineName, userID, simias_service_url);
+		free(machineName);
+		free(userID);
+		free(escaped_url);
+		fprintf(stderr, "convert_url_to_public() returned NULL.  Cannot send message.\n");
+		return -1234;
 	}
 	
 	free(machineName);
 	free(userID);
-	free(simias_service_url);
+	free(escaped_url);
 
 	return simias_send_msg(recipient, msg);
 }
@@ -272,24 +283,52 @@ get_possible_simias_msg_type(const char *buffer)
 static gboolean
 parse_simias_info(char *buffer, char **machineName, char **userID, char **simiasURL)
 {
-	*machineName = strtok(buffer, ":");
-	if (!*machineName) {
+	int colonPos;
+	char *tmp;
+
+	tmp = buffer;
+	colonPos = simias_str_index_of(tmp, ':');
+	if (colonPos <= 0)
+	{
 		fprintf(stderr, "parse_simias_info() couldn't parse the machine name\n");
 		return FALSE;
 	}
-
-	*userID = strtok(NULL, ":");
-	if (!*userID)
+	else
 	{
+		*machineName = malloc(sizeof(char) * (colonPos + 1));
+		memset(*machineName, '\0', colonPos + 1);
+		strncpy(*machineName, tmp, colonPos);
+	}
+
+	tmp = tmp + colonPos + 1;
+	colonPos = simias_str_index_of(tmp, ':');
+	if (colonPos <= 0)
+	{
+		free(*machineName);
 		fprintf(stderr, "parse_simias_info() couldn't parse the user id\n");
 		return FALSE;
 	}
-
-	*simiasURL = strtok(NULL, "]");
-	if (!*simiasURL)
+	else
 	{
+		*userID = malloc(sizeof(char) * (colonPos + 1));
+		memset(*userID, '\0', colonPos + 1);
+		strncpy(*userID, tmp, colonPos); 
+	}
+
+	tmp = tmp + colonPos + 1;
+	colonPos = simias_str_index_of(tmp, ']');
+	if (colonPos <= 0)
+	{
+		free(*machineName);
+		free(*userID);
 		fprintf(stderr, "parse_simias_info() couldn't parse the simias url\n");
 		return FALSE;
+	}
+	else
+	{
+		*simiasURL = malloc(sizeof(char) * (colonPos + 1));
+		memset(*simiasURL, '\0', colonPos + 1);
+		strncpy(*simiasURL, tmp, colonPos);
 	}
 
 	return TRUE;
@@ -353,7 +392,7 @@ fprintf(stderr, "handle_ping_request() %s -> %s entered\n",
 	/* Send a ping-response message */
 	send_result = simias_send_ping_resp(buddy);
 	if (send_result <= 0) {
-		g_print("handle_ping_request() couldn't send ping response: %d\n", send_result);
+		fprintf(stderr, "handle_ping_request() couldn't send ping response: %d\n", send_result);
 	}
 	
 	return TRUE;
@@ -380,6 +419,7 @@ handle_ping_response(GaimAccount *account, const char *sender,
 	
 fprintf(stderr, "handle_ping_response() %s -> %s entered\n",
 		sender, gaim_account_get_username(account));
+fprintf(stderr, "Message: %s\n", buffer);
 		
 	/**
 	 * Since this method is called, we already know that the first part of
@@ -397,6 +437,7 @@ fprintf(stderr, "handle_ping_response() %s -> %s entered\n",
 	if (!parse_simias_info((char *) buffer + strlen(PING_RESPONSE_MSG),
 						  &machine_name, &user_id, &simias_url))
 	{
+fprintf(stderr, "couldn't parse simias_info!\n");
 		return FALSE;
 	}
 	
