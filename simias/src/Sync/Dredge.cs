@@ -335,9 +335,9 @@ public class Dredger
 		
 		private void DoDredge()
 		{
-			while (!shuttingDown)
+			try
 			{
-				try
+				while (!shuttingDown)
 				{
 					if (!paused  & needToDredge)
 					{
@@ -366,10 +366,10 @@ public class Dredger
 						*/
 					}
 				}
-				catch
-				{
-				}
 				Thread.Sleep(1000 * 60);
+			}
+			catch
+			{
 			}
 		}
 

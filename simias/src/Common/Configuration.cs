@@ -132,7 +132,7 @@ namespace Simias
 		/// <returns>The key as an XmlElement.</returns>
 		public XmlElement GetElement(string section, string key)
 		{
-			XmlElement keyElement;
+			XmlElement keyElement = null;
 			GetDocElement();
 
 			try
@@ -341,16 +341,16 @@ namespace Simias
 
 		private void GetDocElement()
 		{
-			doc = new XmlDocument();
-
 			try
 			{
 				OpenConfigFile();
 				modified = false;
+				doc = new XmlDocument();
 				doc.Load(fs);
 			}
 			catch
 			{
+				doc = new XmlDocument();
 				doc.AppendChild(doc.CreateElement(RootElementTag));
 				modified = true;
 			}
