@@ -35,37 +35,6 @@
 #define SIMIAS_ERROR_NO_PASSWORD_FILE		-106
 #define SIMIAS_ERROR_OPENING_PASSWORD_FILE	-107
 
-#ifndef _SIMIAS_DOMAIN_TYPE
-#define _SIMIAS_DOMAIN_TYPE
-typedef enum
-{
-  SIMIAS_DOMAIN_TYPE_MASTER = 0,
-  SIMIAS_DOMAIN_TYPE_SLAVE  = 1,
-  SIMIAS_DOMAIN_TYPE_LOCAL  = 2,
-  SIMIAS_DOMAIN_TYPE_NONE   = 3
-} SIMIAS_DOMAIN_TYPE;
-#endif
-
-/**************************************************************************/
-/* Data Structures                                                        */
-/**************************************************************************/
-
-typedef struct _SimiasDomainInfo SimiasDomainInfo;
-struct _SimiasDomainInfo {
-	SIMIAS_DOMAIN_TYPE	type;
-    bool				active;
-	char *				name;
-	char *				description;
-	char *				id;
-	char *				member_user_id;
-	char *				member_name;
-	char *				remote_url;
-	char *				po_box_id;
-	char *				host;
-	bool				is_slave;
-	bool				is_default;
-};
-
 
 /**
  * This function will return the full URL of where Simias is currently running.
@@ -90,24 +59,5 @@ int simias_get_local_service_url(char **url);
  *          listed above if there's an error.
  */
 int simias_get_web_service_credential(char *username, char *password);
-
-/**
- * The following methods wrapper the gSOAP calls (WebService).  Get any
- * documentation about the real call by referencing the documentation elsewhere.
- */
-
-/**
- * Wrapper for GetDomains
- *
- * When this call is successful, it fills out a NULL-terminated array of
- * SimiasDomainInfo.  Callers must call simias_free_domains() on the returned
- * array.
- */
-int simias_get_domains(bool only_slaves, SimiasDomainInfo **ret_domainsA[]);
-
-/**
- * Free an array of SimiasDomainInfo
- */
-int simias_free_domains(SimiasDomainInfo **domainsA[]);
 
 #endif

@@ -14,7 +14,7 @@ lib_LTLIBRARIES = libsimias.la
 override CFLAGS =
 
 libsimias_la_SOURCES = \
- 	envC.c simiasClientLib.c stdsoap2.c simias.c simias.h
+ 	envC.c simiasClientLib.c stdsoap2.c simias.c simias.h simiasweb.c simiasweb.h
  	
 libsimias_la_CFLAGS = \
 	-DWITH_NONAMESPACES
