@@ -27,13 +27,13 @@ endif
 endif
 
 install-exec-local: all
-	$(mkinstalldirs) $(DESTDIR)$(webbindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(webbindir)
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 
 uninstall-local:
 
 installcheck-local: install
-	cd $(DESTDIR)$(webbindir); $(NUNIT) $(NUNIT_FLAGS) /xml:SimiasTestsCmd.test.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); $(NUNIT) $(NUNIT_FLAGS) /xml:SimiasTestsCmd.test.xml $(NUNIT_TESTS)
 	
 .PHONY: test
 test: installcheck
