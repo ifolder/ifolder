@@ -2,8 +2,10 @@ Microsoft Visual Studio Solution File, Format Version 8.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CollectionStoreTests", "CollectionStore\CollectionStoreTests.csproj", "{C1E83DD0-5457-4D79-8335-E28D3C8758F9}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLogTest", "ChangeLogTest\ChangeLogTest.csproj", "{333DC349-12FB-4D75-A5DB-02676E096508}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLogTest", "ChangeLog\ChangeLogTest.csproj", "{333DC349-12FB-4D75-A5DB-02676E096508}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject

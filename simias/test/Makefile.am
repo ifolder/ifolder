@@ -1,7 +1,8 @@
 SUBDIRS = \
 	Common \
 	Configuration \
-	CollectionStore
+	CollectionStore \
+	Smtp
 	
 DIST_SUBDIRS = $(SUBDIRS)
 
