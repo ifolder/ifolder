@@ -168,7 +168,7 @@ if test "x$PKG_CONFIG" = "xno"; then
 	AC_MSG_ERROR([You need to install pkg-config])
 fi
 case $host_os in
-    linux)
+    linux*)
         GTK_SHARP_REQUIRED_VERSION=0.10
         PKG_CHECK_MODULES(BASE_DEPENDENCIES, gtk-sharp >= $GTK_SHARP_REQUIRED_VERSION)
     ;;
