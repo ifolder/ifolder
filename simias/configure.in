@@ -415,6 +415,26 @@ fi
 AC_SUBST(DEVENV_CONFIGURATION)
 
 #
+# Handle --enable-gaim-domain
+#
+AC_ARG_ENABLE(gaim-domain, [
+  --enable-gaim-domain          Enable and build a Gaim Buddy List Workgroup Domain],
+    [case "${enableval}" in
+        yes) enable_gaim_domain=true ;;
+        no)  enable_gaim_domain=false ;;
+        *) AC_MSG_ERROR(bad value ${enableval} for --enable-gaim-domain) ;;
+    esac],[enable_gaim_domain=false])
+AM_CONDITIONAL(BUILD_GAIM_DOMAIN, test x$enable_gaim_domain = xtrue)
+#if test "$enable_gaim_domain" = "true"
+#then
+#  # Add anything needed specifically for when buiding the gaim-domain
+#else
+#  # Put anything here special for when not building gaim-domain
+#fi
+
+
+
+#
 # Configure PKG_CONFIG
 #
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
@@ -448,6 +468,7 @@ src/SimiasClient/SimiasSetup.cs
 src/Common/MyDns.cs
 src/Common/simias-client-bootstrap.config
 src/GaimDomain/Makefile
+src/GaimDomain/libsimias-gaim/Makefile
 src/SimiasClient/Makefile
 src/SimiasClient/libsimias-event/Makefile
 src/Simias.dll/Makefile
