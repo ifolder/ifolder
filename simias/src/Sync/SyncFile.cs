@@ -161,7 +161,7 @@ namespace Simias.Sync
 		/// <summary>Stream to the Original file.</summary>
 		FileStream	stream;
 		/// <summary>The Old Node if it exists.</summary>
-		BaseFileNode	oldNode;
+		protected BaseFileNode	oldNode;
 		
 		#endregion
 		
@@ -332,7 +332,6 @@ namespace Simias.Sync
 					File.Move(workFile, file);
 					workFile = null;
 				}
-				workFile = tmpFile;
 				FileInfo fi = new FileInfo(file);
 				fi.LastWriteTime = node.LastWriteTime;
 				fi.CreationTime = node.CreationTime;

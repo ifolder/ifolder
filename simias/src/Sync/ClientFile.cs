@@ -188,6 +188,7 @@ namespace Simias.Sync.Client
 					// Create an update conflict.
 					file = Conflict.GetUpdateConflictPath(collection, node);
 					collection.Commit(collection.CreateCollision(node, false));
+					oldNode = null;
 				}
 				catch
 				{
