@@ -1588,7 +1588,7 @@ namespace Novell.FormsTrayApp
 
 							newAccountLvi.SubItems[2].Text = resourceManager.GetString("statusEnabled");
 							newAccountLvi.Tag = domain;
-							server.Text = domainInfo.Host;
+							server.Text = domainInfo.Name;
 							newAccountLvi = null;
 
 							// Successfully joined ... don't allow the fields to be changed.
@@ -2535,7 +2535,7 @@ namespace Novell.FormsTrayApp
 						}
 						else
 						{
-							server.Text = selectedDomain.DomainInfo.Host;
+							server.Text = selectedDomain.DomainInfo.Name;
 							details.Enabled = true;
 							userName.ReadOnly = server.ReadOnly = true;
 
