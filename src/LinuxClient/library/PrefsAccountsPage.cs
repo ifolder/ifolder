@@ -27,6 +27,7 @@ using System.IO;
 using System.Collections;
 using Gtk;
 using Simias.Client.Event;
+using Simias.Client;
 
 namespace Novell.iFolder
 {
@@ -661,6 +662,24 @@ namespace Novell.iFolder
 						SavePasswordNow();
 
 					sel.SelectIter(iter);
+					try
+					{
+						// Finally, we have to set the credentials down in
+						// Simias because if we don't, when simias rolls
+						// over, the user will get prompted for the
+						// password again
+						DomainAuthentication domainAuth = 
+							new DomainAuthentication(
+									"iFolder",
+									dw.ID, 
+									passEntry.Text);
+
+						domainAuth.Authenticate();
+					}
+					catch(Exception e)
+					{
+						// oh well, user will have to enter password
+					}
 				}
 				catch(Exception e)
 				{
