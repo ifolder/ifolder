@@ -2923,7 +2923,6 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="L255">FileName</col>
 		<col def="s72">DirProperty</col>
 		<col def="i2">InstallMode</col>
-		<row><td>NewShortcut2</td><td>ContactBrowserShortcutComponent</td><td/><td>iFolder</td><td>2</td></row>
 		<row><td>NewShortcut3</td><td>iFolderApp.exe</td><td/><td>iFolder</td><td>2</td></row>
 	</table>
 
@@ -3006,7 +3005,6 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="S255">ISComments</col>
 		<col def="S255">ISShortcutName</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>NewShortcut2</td><td>iFolder</td><td>##ID_STRING43##</td><td>ContactBrowserShortcutComponent</td><td>[INSTALLDIR]ContactBrowser.exe</td><td/><td/><td/><td/><td/><td>1</td><td>INSTALLDIR</td><td/><td/><td/></row>
 		<row><td>NewShortcut3</td><td>iFolder</td><td>##ID_STRING44##</td><td>iFolderApp.exe</td><td>[INSTALLDIR]iFolderApp.exe</td><td/><td/><td/><td/><td/><td>1</td><td>INSTALLDIR</td><td/><td/><td/></row>
 	</table>
 
