@@ -32,6 +32,7 @@ namespace Novell.iFolder
 		private Entry	nameEntry;
 		private Entry	passEntry;
 		private Entry	serverEntry;
+		private CheckButton savePasswordButton;
 		private string	DomainID;
 		private string  DomainName;
 		private string  DomainUserName;
@@ -79,6 +80,14 @@ namespace Novell.iFolder
 					return "";
 				else
 					return DomainID;
+			}
+		}
+		
+		public bool ShouldSavePassword
+		{
+			get
+			{
+				return savePasswordButton.Active;
 			}
 		}
 
@@ -212,6 +221,12 @@ namespace Novell.iFolder
 
 	
 			this.VBox.PackStart(loginTable, false, false, 0);
+			
+			savePasswordButton = 
+				new CheckButton(Util.GS(
+					"_Remember password"));
+			this.VBox.PackStart(savePasswordButton, false, false,0);
+			
 			this.VBox.ShowAll();
 
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
