@@ -67,6 +67,7 @@ namespace Novell.FormsTrayApp
 		/// Constructs a ServerInfo object.
 		/// </summary>
 		/// <param name="ifolderWebService">The iFolderWebService object to use.</param>
+		/// <param name="domainID">The ID of the domain.</param>
 		public ServerInfo(iFolderWebService ifolderWebService, string domainID)
 		{
 			//
@@ -553,23 +554,37 @@ namespace Novell.FormsTrayApp
 				}
 				catch (Exception ex)
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
+					if (ex.Message.IndexOf("HTTP status 401") != -1)
+					{
+						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
+					}
+					else
+					{
+						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
+					}
 				}
 			}
 			else
 			{
 				DomainAuthentication domainAuth = new DomainAuthentication(domainID, password.Text);
 				AuthenticationStatus authStatus = domainAuth.Authenticate();
-				if(authStatus != AuthenticationStatus.Success)
+				MyMessageBox mmb;
+				switch (authStatus)
 				{
-					Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(string.Format(resourceManager.GetString("serverReconnectError"), authStatus), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
-				}
-				else
-				{
-					password.Clear();
-					Close();
+					case AuthenticationStatus.Success:
+						password.Clear();
+						Close();
+						break;
+					case AuthenticationStatus.InvalidCredentials:
+						mmb = new MyMessageBox(resourceManager.GetString("badPassword"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
+						break;
+					default:
+						mmb = new Novell.iFolderCom.MyMessageBox(string.Format(resourceManager.GetString("serverReconnectError"), authStatus), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
+						break;
 				}
 			}
 
