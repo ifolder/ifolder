@@ -37,11 +37,11 @@ Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
 Requires     : simias = %{version}
-Requires     : mono-core >= 0.95
-Requires     : mono-data >= 0.95
-Requires     : mono-remoting >= 0.95
-Requires     : mono-nunit >= 0.95
-Requires     : gtk-sharp >= 0.93
+Requires     : mono-core >= 0.91
+Requires     : mono-data >= 0.91
+Requires     : mono-remoting >= 0.91
+Requires     : mono-nunit >= 0.91
+Requires     : gtk-sharp >= 0.91
 Obsoletes    : %{name} <= %{version}
 
 #=============================================================================
