@@ -653,10 +653,16 @@ namespace Novell.iFolder.iFolderCom
 				}
 				else if (slMember.Changed)
 				{
-					// TODO: may need to save rights on subscription objects in the future.
-
-					// Get the rights for this contact.
-					ifolder.Commit(slMember.Member);
+					if (slMember.Member != null)
+					{
+						// Commit the rights for this member.
+						ifolder.Commit(slMember.Member);
+					}
+					else
+					{
+						// Commit the rights on the subscription.
+						poBox.Commit(slMember.Subscription);
+					}
 
 					// Reset the flags.
 					slMember.Changed = false;
