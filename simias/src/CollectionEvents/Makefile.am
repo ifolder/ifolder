@@ -13,7 +13,7 @@ EventService_CSFILES = $(srcdir)/EventService/AssemblyInfo.cs $(srcdir)/EventSer
 EventService_CSFILES_CSC := $(subst /,$(SEP),$(EventService_CSFILES))
 EventService_INCLUDES = 
 EventService_RESOURCES =
-EventService_FLAGS = $(CSC_EXEFLAG)
+EventService_FLAGS = $(CSC_LIBFLAG)
 EventService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Common.dll CollectionEvents.dll Simias.Service.dll
 EventService_LIBPATH = /opt/gnome2/lib /usr/lib ../Common ../Service
 
