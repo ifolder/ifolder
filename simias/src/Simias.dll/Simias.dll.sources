@@ -1,16 +1,5 @@
 AssemblyInfo.cs
 ../AcceptanceTests/SyncTests.cs
-../AddressBook/AddressBook.cs
-../AddressBook/AddressBookTests/AddressBookTests.cs
-../AddressBook/Address.cs
-../AddressBook/Common.cs
-../AddressBook/Contact.cs
-../AddressBook/Email.cs
-../AddressBook/Group.cs
-../AddressBook/InstantMessage.cs
-../AddressBook/Manager.cs
-../AddressBook/Name.cs
-../AddressBook/Phone.cs
 ../Events/SimiasEventArgs.cs
 ../Events/DefaultSubscriber.cs
 ../Events/EventBroker.cs
