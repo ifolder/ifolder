@@ -53,14 +53,53 @@ static char *get_soap_url(gboolean reread_config);
 void
 simias_sync_member_list()
 {
-	g_print("FIXME: Implement simias_sync_member_list()\n");
+	char *soap_url;
+	struct soap soap;
+	struct _ns1__SynchronizeMemberList req;
+	struct _ns1__SynchronizeMemberListResponse resp;
+	
+	soap_url = get_soap_url(FALSE);
+	if (!soap_url) {
+		return;
+	}
+	
+	init_gsoap(&soap);
+	soap_call___ns1__SynchronizeMemberList(&soap, soap_url, NULL, &req, &resp);
+	if (soap.error) {
+		cleanup_gsoap(&soap);
+		return;
+	}
+	
+	cleanup_gsoap(&soap);
 }
 
 void
 simias_update_member(const char *account_name, const char *account_prpl_id,
 					 const char *buddy_name)
 {
-	g_print("FIXME: Implement simias_update_member()\n");
+	char *soap_url;
+	struct soap soap;
+	struct _ns1__UpdateMember req;
+	struct _ns1__UpdateMemberResponse resp;
+	
+	soap_url = get_soap_url(FALSE);
+	if (!soap_url) {
+		return;
+	}
+	
+	/* Setup the Request */
+	req.AccountName = (char *)account_name;
+	req.AccountProtocolID = (char *)account_prpl_id;
+	req.BuddyName = (char *)buddy_name;
+	
+	init_gsoap(&soap);
+	soap_call___ns1__UpdateMember(&soap, soap_url, NULL, &req, &resp);
+	if (soap.error) {
+		cleanup_gsoap(&soap);
+		return;
+	}
+	
+	cleanup_gsoap(&soap);
 }
 
 /* Utility functions for gSOAP */
