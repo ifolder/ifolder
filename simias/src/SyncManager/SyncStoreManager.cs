@@ -200,7 +200,7 @@ namespace Simias.Sync
 					}
 					catch(Exception e)
 					{
-						log.Debug(e, "Ignored");
+						log.Debug(e, "SyncStoreManager::AddCollectionManager -- Ignored");
 					}
 				}
 			}
@@ -226,7 +226,7 @@ namespace Simias.Sync
 					}
 					catch(Exception e)
 					{
-						log.Debug(e, "Ignored");
+						log.Debug(e, "SyncStoreManager::RemoveCollectionManager -- Ignored");
 					}
 				}
 			}
@@ -260,7 +260,7 @@ namespace Simias.Sync
 					}
 					catch(Exception e)
 					{
-						log.Debug(e, "Ignored");
+						log.Debug(e, "SyncStoreManager::SyncCollectionNow -- Ignored");
 					}
 				}
 			}
@@ -278,7 +278,7 @@ namespace Simias.Sync
 					}
 					catch(Exception e)
 					{
-						log.Debug(e, "Ignored");
+						log.Debug(e, "SyncStoreManager::SyncAllNow -- Ignored");
 					}
 				}
 			}
