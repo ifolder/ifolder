@@ -109,7 +109,6 @@ namespace Simias.Sync
 			// This file is being pushed make a copy to work from.
 			File.Copy(file, workFile, true);
 			workStream = File.Open(workFile, FileMode.Open, FileAccess.Read);
-			File.SetAttributes(workFile, File.GetAttributes(workFile) | FileAttributes.Hidden);
 		}
 
 		/// <summary>
@@ -285,7 +284,6 @@ namespace Simias.Sync
 			}
 			catch (FileNotFoundException){}
 			workStream = File.Open(workFile, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None);
-			File.SetAttributes(workFile, File.GetAttributes(workFile) | FileAttributes.Hidden);
 		}
 
 		/// <summary>
@@ -336,7 +334,6 @@ namespace Simias.Sync
 				}
 				workFile = tmpFile;
 				FileInfo fi = new FileInfo(file);
-				fi.Attributes = fi.Attributes & ~FileAttributes.Hidden;
 				fi.LastWriteTime = node.LastWriteTime;
 				fi.CreationTime = node.CreationTime;
 				if (oldNode != null)

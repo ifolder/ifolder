@@ -188,8 +188,6 @@ namespace Simias.Sync.Client
 					// Create an update conflict.
 					file = Conflict.GetUpdateConflictPath(collection, node);
 					collection.Commit(collection.CreateCollision(node, false));
-					FileInfo fi = new FileInfo(file);
-					fi.Attributes = fi.Attributes | FileAttributes.Hidden;
 				}
 				catch
 				{
@@ -214,7 +212,8 @@ namespace Simias.Sync.Client
 				base.Close(commit);
 				if (readOnly)
 				{
-					fa |= FileAttributes.ReadOnly;
+					// BUGBUG this is commented out until we decide what to do with readonly collections.
+					//fa |= FileAttributes.ReadOnly;
 				}
 				fi.Attributes = fa;
 			}
