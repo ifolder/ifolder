@@ -276,7 +276,7 @@ namespace Novell.iFolder
 			}
 
 			ICSList poList = pobox.Search(
-					Subscription.SubscriptionCollectionIdProperty,
+					Subscription.SubscriptionCollectionIDProperty,
 					ifolder.ID,
 					SearchOp.Equal);
 			
@@ -350,7 +350,7 @@ namespace Novell.iFolder
 					((CellRendererText) cell).Text = "Member";
 			}
 			else if( (slh != null) && (slh.Subscription != null) )
-				((CellRendererText) cell).Text = slh.Subscription.SubscribeState.ToString();
+				((CellRendererText) cell).Text = slh.Subscription.SubscriptionState.ToString();
 			else
 				((CellRendererText) cell).Text = "";
 		}
