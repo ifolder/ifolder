@@ -151,7 +151,7 @@ namespace Novell.iFolder
 				if(LimitCheckButton == null)
 				{
 					LimitCheckButton = 
-						new CheckButton(Util.GS("Limit size to:"));
+						new CheckButton(Util.GS("_Limit size to:"));
 					LimitCheckButton.Toggled += 
 								new EventHandler(OnLimitSizeButton);
 					diskTable.Attach(LimitCheckButton, 0,1,1,2,
@@ -336,7 +336,7 @@ namespace Novell.iFolder
 			syncWidgetBox.PackStart(syncHBox, false, true, 0);
 			syncHBox.Spacing = 10;
 			AutoSyncCheckButton = 
-					new CheckButton(Util.GS("Sync to host every:"));
+					new CheckButton(Util.GS("Sync to host _every:"));
 			AutoSyncCheckButton.Toggled += new EventHandler(OnAutoSyncButton);
 			syncHBox.PackStart(AutoSyncCheckButton, false, false, 0);
 			SyncSpinButton = new SpinButton(0, 99999, 5);
