@@ -28,13 +28,16 @@ MSM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).msm
 MSI_LOG_FILE = devenv-simias-msi.log
 MSM_LOG_FILE = devenv-simias-msm.log
 
-.PHONY: package package-clean package-install package-uninstall simias
+.PHONY: package package-clean package-install package-uninstall simias devenv
 
 all clean:
 
 package: $(MSI_FILE)
 
-$(MSI_FILE): $(MSM_FILE) simias-install.sln simias-msi/simias-msi.vdproj
+devenv:
+	@if ! test -x "$(VSINSTALLDIR)/devenv.exe"; then echo "Error: Microsoft Visual Studio .NET is currently required to build MSI and MSM packages"; exit 1; fi
+
+$(MSI_FILE): devenv $(MSM_FILE) simias-install.sln simias-msi/simias-msi.vdproj
 	@rm -f $(MSI_LOG_FILE) $@
 	@CMD='"$(VSINSTALLDIR)/devenv.exe" simias-install.sln /build $(DEVENV_CONFIGURATION) /project simias-msi /out $(MSI_LOG_FILE)'; \
 	echo $$CMD; \
@@ -45,7 +48,7 @@ $(MSI_FILE): $(MSM_FILE) simias-install.sln simias-msi/simias-msi.vdproj
 		grep -a "ERROR:" $(MSI_LOG_FILE); \
 	fi
 
-$(MSM_FILE): simias simias-install.sln simias-msm/simias-msm.vdproj
+$(MSM_FILE): devenv simias simias-install.sln simias-msm/simias-msm.vdproj
 	@rm -f $(MSM_LOG_FILE) $@
 	@CMD='"$(VSINSTALLDIR)/devenv.exe" simias-install.sln /build $(DEVENV_CONFIGURATION) /project simias-msm /out $(MSM_LOG_FILE)'; \
 	echo $$CMD; \
