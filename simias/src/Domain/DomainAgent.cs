@@ -518,6 +518,52 @@ namespace Simias.DomainServices
 		}
 
 		/// <summary>
+		/// Logout from a domain.
+		/// </summary>
+		/// <param name="domainID">The ID of the domain.</param>
+		/// <returns>The status of the logout.</returns>
+		public
+		Simias.Authentication.Status
+		Logout(string domainID)
+		{
+			// Get the domain.
+			Store store = Store.GetStore();
+			Simias.Storage.Domain domain = store.GetDomain(domainID);
+			if( domain == null )
+			{
+				return new Simias.Authentication.Status( Simias.Authentication.StatusCodes.UnknownDomain );
+			}
+
+			// Create a web request for the domain Uri.
+			Uri loginUri = 
+				new Uri( domain.MasterUrl, Simias.Security.Web.AuthenticationService.Login.Path );
+			HttpWebRequest request = WebRequest.Create( loginUri ) as HttpWebRequest;
+			WebState webState = new WebState();
+			webState.InitializeWebRequest(request);
+
+			// Clear the cookies for this Uri.
+			CookieCollection cc = request.CookieContainer.GetCookies(domain.MasterUrl);
+			foreach (Cookie cookie in cc)
+			{
+				cookie.Expired = true;
+			}
+
+			// Set the state for this domain.
+			new DomainAgent().SetDomainState(domainID, false, false);
+
+			// Clear the password from the cache.
+			Member member = domain.GetMemberByID( store.GetUserIDFromDomainID( domainID ) );
+			if ( member != null )
+			{
+				// There currently isn't a way to clear an entry from the cache, so for now just set
+				// the password to a space character.
+				new NetCredential( "iFolder", domainID, true, member.Name, " " );
+			}
+
+			return new Simias.Authentication.Status(SCodes.Success);
+		}
+
+		/// <summary>
 		/// Sets the status of the specified domain to Active.
 		/// </summary>
 		/// <param name="domainID">The identifier of the domain.</param>

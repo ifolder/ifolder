@@ -647,8 +647,7 @@ namespace Simias.Web
 		Simias.Authentication.Status
 		LogoutFromRemoteDomain(string domainID)
 		{
-			new DomainAgent().SetDomainState(domainID, false, false);
-			return new Simias.Authentication.Status( Simias.Authentication.StatusCodes.Success );
+			return new DomainAgent().Logout(domainID);
 		}
 
 

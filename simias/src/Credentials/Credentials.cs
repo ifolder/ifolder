@@ -302,12 +302,14 @@ namespace Simias.Authentication
 				}
 
 				//
-				// Verify the domain is not marked "inactive"
+				// Verify the domain is not marked "inactive" and that a non-workgroup
+				// domain is marked authenticated.
 				//
 
 				DomainAgent domainAgent = new DomainAgent();
-				if ( domainAgent.IsDomainActive( cDomain.ID ) )
-				//	 domainAgent.IsDomainAuthenticated( cDomain.ID ) )
+				if ( domainAgent.IsDomainActive( cDomain.ID ) &&
+					 (domainAgent.IsDomainAuthenticated( cDomain.ID ) ||
+					 cDomain.ConfigType.Equals(Simias.Storage.Domain.ConfigurationType.Workgroup)))
 				{
 					NetCredential cCreds = 
 						new NetCredential(
