@@ -310,7 +310,7 @@ namespace Simias.Client
 		/// web service process should not modify the configuration file. It is okay to do so here because
 		/// the Simias process has not been started yet.
 		/// </summary>
-		static private void SetWebServiceUri( Configuration config, Uri uri )
+		static public void SetWebServiceUri( Configuration config, Uri uri )
 		{
 			bool updatedFile = false;
 			XmlDocument document = new XmlDocument();
