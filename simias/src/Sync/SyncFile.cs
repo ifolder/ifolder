@@ -330,7 +330,9 @@ namespace Simias.Sync
 			try
 			{
 				if (!NameConflict)
+				{
 					stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.None);
+				}
 				else
 				{
 					file = Conflict.GetFileConflictPath(collection, node);
@@ -349,7 +351,13 @@ namespace Simias.Sync
 					stream = File.Open(partialFile, FileMode.Open, FileAccess.Read, FileShare.None);
 				}
 			}
-			workStream = new StreamStream(File.Open(workFile, FileMode.Create, FileAccess.ReadWrite, FileShare.None));
+			// Create the file in the parent directory and then move to the work area.
+			// This will insure that the proper attributes are set.
+			// This was added to support EFS (Encrypted File System).
+			string createName = Path.Combine(Path.GetDirectoryName(file), Path.GetFileName(workFile));
+			File.Open(createName, FileMode.Create, FileAccess.ReadWrite, FileShare.None).Close();
+			File.Move(createName, workFile);
+			workStream = new StreamStream(File.Open(workFile, FileMode.Truncate, FileAccess.ReadWrite, FileShare.None));
 		}
 
 		/// <summary>
