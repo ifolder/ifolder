@@ -1690,9 +1690,10 @@ namespace Simias.Storage.Tests
 			Identity identity = new Identity( localAb, "newguy" );
 
 			// Add two aliases to the identity.
-			RSA credential = RSA.Create();
-			identity.CreateAlias( "Mike's Domain", Guid.NewGuid().ToString(), credential.ExportParameters( false ) );
-			identity.CreateAlias( "Russ's Domain", Guid.NewGuid().ToString(), credential.ExportParameters( false ) );
+			for ( int i = 0; i < 10; ++i )
+			{
+				identity.CreateAlias( "Mike's Domain " + i, Guid.NewGuid().ToString() );
+			}
 
 			// Commit the changes.
 			identity.Commit();
@@ -1709,7 +1710,7 @@ namespace Simias.Storage.Tests
 				}
 			}
 
-			if ( count != 2 )
+			if ( count != 10 )
 			{
 				throw new ApplicationException( "Cannot find all of the aliases." );
 			}

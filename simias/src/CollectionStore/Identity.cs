@@ -61,8 +61,43 @@ namespace Simias.Storage
 				}
 				else
 				{
-					return new RSAParameters();
+					throw new ApplicationException( "Key values not set on identity." );
 				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the public key belonging to this identity as an RSAParameters object.
+		/// </summary>
+		public RSAParameters PublicKey
+		{
+			get
+			{
+				// Lookup the credential property on the identity.
+				Property p = Properties.GetSingleProperty( Property.Credential );
+				if ( p != null )
+				{
+					RSA credential = RSA.Create();
+					credential.FromXmlString( p.Value as string );
+					return credential.ExportParameters( false );
+				}
+				else
+				{
+					throw new ApplicationException( "Public key is not set on identity." );
+				}
+			}
+
+			set
+			{
+				// Create a new key set for this identity.
+				RSA credential = RSA.Create();
+				credential.ImportParameters( value );
+
+				// Store the credentials as a property.
+				Property p = new Property( Property.Credential, credential.ToXmlString( false ) );
+				p.LocalProperty = true;
+				p.HiddenProperty = true;
+				Properties.ModifyNodeProperty( p );
 			}
 		}
 		#endregion
@@ -166,11 +201,10 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="domain">Domain that id is contained in.</param>
 		/// <param name="userGuid">Unique identifier that user is known as in specified domain. </param>
-		/// <param name="keyValues">RSAParameters object used to prove identity to a remote connection.</param>
-		public Alias CreateAlias( string domain, string userGuid, RSAParameters keyValues )
+		public Alias CreateAlias( string domain, string userGuid )
 		{
-			// Set up an alias object to store on this identity.
-			Alias alias = new Alias( domain, userGuid, keyValues );
+			// Set up an alias object to store on this identity. 
+			Alias alias = new Alias( domain, userGuid );
 
 			// Look for an existing alias property.
 			Property aliasProperty = FindAliasProperty( domain, userGuid );

@@ -174,7 +174,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets the domain name for the current user.
 		/// </summary>
-		internal string DomainName
+		public string DomainName
 		{
 			get { return identityManager.DomainName; }
 		}

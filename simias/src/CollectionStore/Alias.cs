@@ -49,11 +49,6 @@ namespace Simias.Storage
 		/// Unique identifier for this alias.
 		/// </summary>
 		private string id;
-
-		/// <summary>
-		/// Credential used to authenticate alias in its domain.
-		/// </summary>
-		private RSA credential;
 		#endregion
 
 		#region Properties
@@ -72,14 +67,6 @@ namespace Simias.Storage
 		{
 			get { return id; }
 		}
-
-		/// <summary>
-		/// Gets the keyValues used to authenticate alias in its domain.
-		/// </summary>
-		public RSAParameters PublicKey
-		{
-			get { return credential.ExportParameters( false ); }
-		}
 		#endregion
 
 		#region Constructors
@@ -94,8 +81,6 @@ namespace Simias.Storage
 			alias.LoadXml( aliasProperty.Value as string );
 			this.domain = alias.DocumentElement.GetAttribute( Property.DomainName );
 			this.id = alias.DocumentElement.GetAttribute( Property.IDAttr );
-			this.credential = RSA.Create();
-			this.credential.FromXmlString( alias.DocumentElement.InnerText );
 		}
 
 		/// <summary>
@@ -103,13 +88,10 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="domain">Domain where this alias exists.</param>
 		/// <param name="id">Unique identifier for this alias.</param>
-		/// <param name="keyValues">RSAParameters object used to authenticate alias in its domain.</param>
-		internal Alias( string domain, string id, RSAParameters keyValues )
+		internal Alias( string domain, string id )
 		{
 			this.domain = domain;
 			this.id = id;
-			this.credential = RSA.Create();
-			this.credential.ImportParameters( keyValues );
 		}
 		#endregion
 
@@ -129,9 +111,6 @@ namespace Simias.Storage
 			// Set the attributes on the object.
 			aliasRoot.SetAttribute( Property.DomainName, domain );
 			aliasRoot.SetAttribute( Property.IDAttr, id );
-
-			// Set the value of the element which is the credential.
-			aliasRoot.InnerText = credential.ToXmlString( false );
 			return alias.OuterXml;
 		}
 		#endregion
