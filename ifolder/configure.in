@@ -162,8 +162,8 @@ case $IFOLDER_OS in
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         INSTALL_EXE_OPTS='--mode=644'
-        NUNIT="$TOOLDIR/NUnit/mono/bin/nunit-console.exe"
-        NUNIT_LIBPATH="$TOOLDIR/mono/NUnit/bin"
+        NUNIT="mono nunit-console.exe"
+        NUNIT_LIBPATH="$TOOLDIR/NUnit/mono/bin"
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
         NUNITFLAGS_OPTIMIZE=''
@@ -194,8 +194,8 @@ case $IFOLDER_OS in
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         INSTALL_EXE_OPTS='--mode=644'
-        NUNIT="$TOOLDIR/NUnit/mono/bin/nunit-console.exe"
-        NUNIT_LIBPATH="$TOOLDIR/mono/NUnit/bin"
+        NUNIT="mono nunit-console.exe"
+        NUNIT_LIBPATH="$TOOLDIR/NUnit/mono/bin"
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
         NUNITFLAGS_OPTIMIZE=''
@@ -271,7 +271,7 @@ case $IFOLDER_OS in
         LIB_PRE=''
         LIBFLAG=''
         LIBS='kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib rpcrt4.lib ws2_32.lib imagehlp.lib'
-        NUNIT="$TOOLDIR/NUnit/net/bin/nunit-console.exe"
+        NUNIT="nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/net/bin"
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
@@ -493,6 +493,8 @@ src/FormsInvitationWizard/Makefile
 src/iFolderShell/Makefile
 src/TrayIcon/Makefile
 src/TrayIcon/libtrayicon/Makefile
+test/Makefile
+test/iFolder/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile
