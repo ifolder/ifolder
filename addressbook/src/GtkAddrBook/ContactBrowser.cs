@@ -459,11 +459,18 @@ namespace Novell.AddressBook.UI.gtk
 		{
 			try
 			{
-				Gnome.Url.Show(Util.HelpURL("index.html"));
+				Gnome.Url.Show(Util.HelpURL("bq6lx19.html"));
 			}
 			catch(Exception e)
 			{
-				Console.WriteLine(e);
+				MessageDialog med = new MessageDialog(cbWindow,
+					DialogFlags.DestroyWithParent | DialogFlags.Modal,
+					MessageType.Error,
+					ButtonsType.Close,
+					string.Format("Error displaying help file:{0}",e));
+				med.Title = "Help file error";
+				med.Run();
+				med.Hide();
 			}
 		}
 

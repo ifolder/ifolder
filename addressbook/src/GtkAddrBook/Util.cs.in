@@ -43,7 +43,7 @@ namespace Novell.AddressBook.UI.gtk
 
 		internal static string HelpURL(string helpFile)
 		{
-			return string.Format("file:///{0}/en/doc/{1}", helpdir, helpFile);
+			return string.Format("file://{0}/en/doc/user/data/{1}", helpdir, helpFile);
 		}
 	}
 }

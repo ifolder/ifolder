@@ -218,9 +218,34 @@ namespace Novell.AddressBook.UI.gtk
 					currentContact = new Contact();
 
 				PopulateWidgets();
-				rc = contactEditorDialog.Run();
-				if(rc == -5)
-					SaveContact();
+				while(rc == 0)
+				{
+					rc = contactEditorDialog.Run();
+					Console.WriteLine("Result: {0}", rc);
+					if(rc == -5)
+						SaveContact();
+					if(rc == -11) // help
+					{
+						try
+						{
+							Gnome.Url.Show(Util.HelpURL("bq6lx1r.html"));
+						}
+						catch(Exception e)
+						{
+							MessageDialog med = 
+							new MessageDialog(contactEditorDialog.TransientFor,
+							DialogFlags.DestroyWithParent | DialogFlags.Modal,
+							MessageType.Error,
+							ButtonsType.Close,
+							string.Format("Error displaying help file:{0}",e));
+
+							med.Title = "Help file error";
+							med.Run();
+							med.Hide();
+						}
+						rc = 0;
+					}
+				}
 				contactEditorDialog.Hide();
 				contactEditorDialog.Destroy();
 				contactEditorDialog = null;
