@@ -322,6 +322,12 @@ namespace Novell.iFolder
 		private void OnRealizeWidget(object o, EventArgs args)
 		{
 			PopulateWidgets();
+
+			// Select the first item in the TreeView
+			if (AccTreeView.Selection != null)
+			{
+				AccTreeView.Selection.SelectPath(new TreePath("0"));
+			}
 		}
 
 
