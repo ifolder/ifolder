@@ -355,6 +355,10 @@ namespace Simias.Domain
 				// Set the host and port number in the configuration file.
 				domainConfiguration = new DomainConfig(domainInfo.Name);
 				domainConfiguration.SetAttributes(domain.ID, domain.Description, hostUri, true);
+
+				// Set the host address in the domain object.
+				domain.Properties.ModifyNodeProperty( PropertyTags.HostAddress, hostUri );
+				store.LocalDb.Commit( domain );
 			}
 			catch(Exception e)
 			{

@@ -79,6 +79,18 @@ namespace Simias.Storage
 
 			set { properties.ModifyNodeProperty( PropertyTags.Description, value ); }
 		}
+
+		/// <summary>
+		/// Gets the host address for the domain.
+		/// </summary>
+		public Uri HostAddress
+		{
+			get
+			{
+				Property p = properties.GetSingleProperty( PropertyTags.HostAddress );
+				return ( p != null ) ? p.Value as Uri : null;
+			}
+		}
 		#endregion
 
 		#region Constructors

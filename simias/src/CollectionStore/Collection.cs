@@ -525,6 +525,9 @@ namespace Simias.Storage
 								}
 							}
 
+							// Set the update time of the node.
+							node.UpdateTime = commitTime;
+
 							// Copy the XML node over to the modify document.
 							XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
 							commitDocument.DocumentElement.AppendChild( xmlNode );
@@ -564,6 +567,9 @@ namespace Simias.Storage
 									// Increment the local incarnation number for the object.
 									IncrementLocalIncarnation( node );
 
+									// Add a node update property.
+									node.UpdateTime = commitTime;
+
 									// Copy the XML node over to the modify document.
 									XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
 									commitDocument.DocumentElement.AppendChild( xmlNode );
@@ -601,6 +607,9 @@ namespace Simias.Storage
 									{
 										// Increment the local incarnation number for the object.
 										IncrementLocalIncarnation( mergeNode );
+
+										// Set the node update time.
+										mergeNode.UpdateTime = commitTime;
 									}
 
 									// Update the old node with the new merged data.
@@ -863,8 +872,8 @@ namespace Simias.Storage
 				MultiValuedList localProps = new MultiValuedList( oldNode.Properties, Property.Local );
 				foreach ( Property p in localProps )
 				{
-					// Don't copy over a collision property.
-					if ( p.Name != PropertyTags.Collision )
+					// Don't copy over a collision property and update property.
+					if ( ( p.Name != PropertyTags.Collision ) && ( p.Name != PropertyTags.NodeUpdateTime ) )
 					{
 						node.Properties.AddNodeProperty( p );
 					}

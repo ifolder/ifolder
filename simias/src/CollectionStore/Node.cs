@@ -204,6 +204,25 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets or sets the update time of a node object.
+		/// </summary>
+		internal DateTime UpdateTime
+		{
+			get
+			{
+				Property p = properties.GetSingleProperty( PropertyTags.NodeUpdateTime );
+				return ( p != null ) ? ( DateTime )p.Value : DateTime.MinValue;
+			}
+
+			set 
+			{ 
+				Property p = new Property( PropertyTags.NodeUpdateTime, value );
+				p.LocalProperty = true;
+				properties.ModifyNodeProperty( p );
+			}
+		}
+
+		/// <summary>
 		/// Gets the creation time for this object.
 		/// </summary>
 		public DateTime CreationTime
@@ -493,13 +512,23 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Sets the master incarnation values on a Node object.
+		/// Sets the master incarnation values on a Node object indicating that it has been
+		/// sent to the server and thus has been updated.
 		/// </summary>
 		/// <param name="incarnationValue">The master incarnation value to set.</param>
 		public void SetMasterIncarnation( ulong incarnationValue )
 		{
+			// Set the master incarnation value.
 			properties.State = PropertyList.PropertyListState.Internal;
 			properties.ModifyNodeProperty( PropertyTags.MasterIncarnation, incarnationValue );
+
+			// This node is being updated because it was pushed to the server. Remove the
+			// updated property.
+			Property p = properties.GetSingleProperty( PropertyTags.NodeUpdateTime );
+			if ( p != null )
+			{
+				p.Delete();
+			}
 		}
 		#endregion
 

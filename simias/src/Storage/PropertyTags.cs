@@ -86,6 +86,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string HostAddress = "HostUri";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string LastAccessTime = "Access";
 
 		/// <summary>
@@ -112,6 +117,11 @@ namespace Simias.Storage
 		/// Well known property name.
 		/// </summary>
 		static public string NodeCreationTime = "NodeCreate";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
+		static public string NodeUpdateTime = "NodeUpdate";
 
 		/// <summary>
 		/// Well known property name.
@@ -203,12 +213,14 @@ namespace Simias.Storage
 			systemPropertyTable.Add( DomainID, null );
 			systemPropertyTable.Add( FileLength, null );
 			systemPropertyTable.Add( FileSystemPath, null );
+			systemPropertyTable.Add( HostAddress, null );
 			systemPropertyTable.Add( LastAccessTime, null );
 			systemPropertyTable.Add( LastWriteTime, null );
 			systemPropertyTable.Add( LinkReference, null );
 			systemPropertyTable.Add( LocalIncarnation, null );
 			systemPropertyTable.Add( MasterIncarnation, null );
 			systemPropertyTable.Add( NodeCreationTime, null );
+			systemPropertyTable.Add( NodeUpdateTime, null );
 			systemPropertyTable.Add( Owner, null );
 			systemPropertyTable.Add( Parent, null );
 			systemPropertyTable.Add( PolicyID, null );
