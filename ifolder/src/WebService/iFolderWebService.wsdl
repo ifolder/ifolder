@@ -277,6 +277,50 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="IsDomainActive">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="IsDomainActiveResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="IsDomainActiveResult"
+                  type="xs:boolean"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetDomainActive">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetDomainActiveResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="SetDomainActiveResult" type="xs:int"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetDomainInactive">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetDomainInactiveResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="SetDomainInactiveResult"
+                  type="xs:int"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="SetUserRights">
         <xs:complexType>
           <xs:sequence>
@@ -811,18 +855,30 @@
       <xs:element name="SetDefaultDomainResponse">
         <xs:complexType/>
       </xs:element>
+      <xs:element name="GetDefaultDomainID">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetDefaultDomainIDResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetDefaultDomainIDResult"
+                  type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="iFolderSettings" type="s0:iFolderSettings"/>
       <xs:element name="boolean" type="xs:boolean"/>
       <xs:element name="iFolderWeb" type="s0:iFolderWeb"/>
       <xs:element name="ArrayOfIFolderWeb" type="s0:ArrayOfIFolderWeb"/>
+      <xs:element name="int" type="xs:int"/>
       <xs:element name="iFolderUser" type="s0:iFolderUser"/>
       <xs:element name="ArrayOfIFolderUser" type="s0:ArrayOfIFolderUser"/>
       <xs:element name="DiskSpace" type="s0:DiskSpace"/>
-      <xs:element name="int" type="xs:int"/>
       <xs:element name="DomainWeb" type="s0:DomainWeb"/>
       <xs:element name="ArrayOfDomainWeb" type="s0:ArrayOfDomainWeb"/>
       <xs:element name="ArrayOfConflict" type="s0:ArrayOfConflict"/>
       <xs:element name="SyncSize" type="s0:SyncSize"/>
+      <xs:element name="string" type="xs:string"/>
     </xs:schema>
   </types>
   <message name="PingSoapIn">
@@ -920,6 +976,24 @@
   </message>
   <message name="GetiFoldersSoapOut">
     <part name="parameters" element="s0:GetiFoldersResponse"/>
+  </message>
+  <message name="IsDomainActiveSoapIn">
+    <part name="parameters" element="s0:IsDomainActive"/>
+  </message>
+  <message name="IsDomainActiveSoapOut">
+    <part name="parameters" element="s0:IsDomainActiveResponse"/>
+  </message>
+  <message name="SetDomainActiveSoapIn">
+    <part name="parameters" element="s0:SetDomainActive"/>
+  </message>
+  <message name="SetDomainActiveSoapOut">
+    <part name="parameters" element="s0:SetDomainActiveResponse"/>
+  </message>
+  <message name="SetDomainInactiveSoapIn">
+    <part name="parameters" element="s0:SetDomainInactive"/>
+  </message>
+  <message name="SetDomainInactiveSoapOut">
+    <part name="parameters" element="s0:SetDomainInactiveResponse"/>
   </message>
   <message name="SetUserRightsSoapIn">
     <part name="parameters" element="s0:SetUserRights"/>
@@ -1131,6 +1205,12 @@
   <message name="SetDefaultDomainSoapOut">
     <part name="parameters" element="s0:SetDefaultDomainResponse"/>
   </message>
+  <message name="GetDefaultDomainIDSoapIn">
+    <part name="parameters" element="s0:GetDefaultDomainID"/>
+  </message>
+  <message name="GetDefaultDomainIDSoapOut">
+    <part name="parameters" element="s0:GetDefaultDomainIDResponse"/>
+  </message>
   <message name="PingHttpGetIn"/>
   <message name="PingHttpGetOut"/>
   <message name="GetSettingsHttpGetIn"/>
@@ -1216,6 +1296,24 @@
   </message>
   <message name="GetiFoldersHttpGetOut">
     <part name="Body" element="s0:ArrayOfIFolderWeb"/>
+  </message>
+  <message name="IsDomainActiveHttpGetIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="IsDomainActiveHttpGetOut">
+    <part name="Body" element="s0:boolean"/>
+  </message>
+  <message name="SetDomainActiveHttpGetIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="SetDomainActiveHttpGetOut">
+    <part name="Body" element="s0:int"/>
+  </message>
+  <message name="SetDomainInactiveHttpGetIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="SetDomainInactiveHttpGetOut">
+    <part name="Body" element="s0:int"/>
   </message>
   <message name="SetUserRightsHttpGetIn">
     <part name="iFolderID" type="s:string"/>
@@ -1416,6 +1514,10 @@
     <part name="domainID" type="s:string"/>
   </message>
   <message name="SetDefaultDomainHttpGetOut"/>
+  <message name="GetDefaultDomainIDHttpGetIn"/>
+  <message name="GetDefaultDomainIDHttpGetOut">
+    <part name="Body" element="s0:string"/>
+  </message>
   <message name="PingHttpPostIn"/>
   <message name="PingHttpPostOut"/>
   <message name="GetSettingsHttpPostIn"/>
@@ -1501,6 +1603,24 @@
   </message>
   <message name="GetiFoldersHttpPostOut">
     <part name="Body" element="s0:ArrayOfIFolderWeb"/>
+  </message>
+  <message name="IsDomainActiveHttpPostIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="IsDomainActiveHttpPostOut">
+    <part name="Body" element="s0:boolean"/>
+  </message>
+  <message name="SetDomainActiveHttpPostIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="SetDomainActiveHttpPostOut">
+    <part name="Body" element="s0:int"/>
+  </message>
+  <message name="SetDomainInactiveHttpPostIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="SetDomainInactiveHttpPostOut">
+    <part name="Body" element="s0:int"/>
   </message>
   <message name="SetUserRightsHttpPostIn">
     <part name="iFolderID" type="s:string"/>
@@ -1701,6 +1821,10 @@
     <part name="domainID" type="s:string"/>
   </message>
   <message name="SetDefaultDomainHttpPostOut"/>
+  <message name="GetDefaultDomainIDHttpPostIn"/>
+  <message name="GetDefaultDomainIDHttpPostOut">
+    <part name="Body" element="s0:string"/>
+  </message>
   <portType name="iFolderWebServiceSoap">
     <operation name="Ping">
       <input message="s0:PingSoapIn"/>
@@ -1784,6 +1908,21 @@
       <input message="s0:GetiFoldersSoapIn"/>
       <output message="s0:GetiFoldersSoapOut"/>
       <documentation>Returns iFolders for the specified UserID</documentation>
+    </operation>
+    <operation name="IsDomainActive">
+      <input message="s0:IsDomainActiveSoapIn"/>
+      <output message="s0:IsDomainActiveSoapOut"/>
+      <documentation>WebMethod to check if a specified domain is active</documentation>
+    </operation>
+    <operation name="SetDomainActive">
+      <input message="s0:SetDomainActiveSoapIn"/>
+      <output message="s0:SetDomainActiveSoapOut"/>
+      <documentation>SetDomainActive - enables remote synchronization</documentation>
+    </operation>
+    <operation name="SetDomainInactive">
+      <input message="s0:SetDomainInactiveSoapIn"/>
+      <output message="s0:SetDomainInactiveSoapOut"/>
+      <documentation>SetDomainInactive - disables remote synchronization</documentation>
     </operation>
     <operation name="SetUserRights">
       <input message="s0:SetUserRightsSoapIn"/>
@@ -1968,6 +2107,11 @@
       <output message="s0:SetDefaultDomainSoapOut"/>
       <documentation>Change the default domain to the specified domain ID</documentation>
     </operation>
+    <operation name="GetDefaultDomainID">
+      <input message="s0:GetDefaultDomainIDSoapIn"/>
+      <output message="s0:GetDefaultDomainIDSoapOut"/>
+      <documentation>Get the ID of the default domain</documentation>
+    </operation>
   </portType>
   <portType name="iFolderWebServiceHttpGet">
     <operation name="Ping">
@@ -2052,6 +2196,21 @@
       <input message="s0:GetiFoldersHttpGetIn"/>
       <output message="s0:GetiFoldersHttpGetOut"/>
       <documentation>Returns iFolders for the specified UserID</documentation>
+    </operation>
+    <operation name="IsDomainActive">
+      <input message="s0:IsDomainActiveHttpGetIn"/>
+      <output message="s0:IsDomainActiveHttpGetOut"/>
+      <documentation>WebMethod to check if a specified domain is active</documentation>
+    </operation>
+    <operation name="SetDomainActive">
+      <input message="s0:SetDomainActiveHttpGetIn"/>
+      <output message="s0:SetDomainActiveHttpGetOut"/>
+      <documentation>SetDomainActive - enables remote synchronization</documentation>
+    </operation>
+    <operation name="SetDomainInactive">
+      <input message="s0:SetDomainInactiveHttpGetIn"/>
+      <output message="s0:SetDomainInactiveHttpGetOut"/>
+      <documentation>SetDomainInactive - disables remote synchronization</documentation>
     </operation>
     <operation name="SetUserRights">
       <input message="s0:SetUserRightsHttpGetIn"/>
@@ -2236,6 +2395,11 @@
       <output message="s0:SetDefaultDomainHttpGetOut"/>
       <documentation>Change the default domain to the specified domain ID</documentation>
     </operation>
+    <operation name="GetDefaultDomainID">
+      <input message="s0:GetDefaultDomainIDHttpGetIn"/>
+      <output message="s0:GetDefaultDomainIDHttpGetOut"/>
+      <documentation>Get the ID of the default domain</documentation>
+    </operation>
   </portType>
   <portType name="iFolderWebServiceHttpPost">
     <operation name="Ping">
@@ -2320,6 +2484,21 @@
       <input message="s0:GetiFoldersHttpPostIn"/>
       <output message="s0:GetiFoldersHttpPostOut"/>
       <documentation>Returns iFolders for the specified UserID</documentation>
+    </operation>
+    <operation name="IsDomainActive">
+      <input message="s0:IsDomainActiveHttpPostIn"/>
+      <output message="s0:IsDomainActiveHttpPostOut"/>
+      <documentation>WebMethod to check if a specified domain is active</documentation>
+    </operation>
+    <operation name="SetDomainActive">
+      <input message="s0:SetDomainActiveHttpPostIn"/>
+      <output message="s0:SetDomainActiveHttpPostOut"/>
+      <documentation>SetDomainActive - enables remote synchronization</documentation>
+    </operation>
+    <operation name="SetDomainInactive">
+      <input message="s0:SetDomainInactiveHttpPostIn"/>
+      <output message="s0:SetDomainInactiveHttpPostOut"/>
+      <documentation>SetDomainInactive - disables remote synchronization</documentation>
     </operation>
     <operation name="SetUserRights">
       <input message="s0:SetUserRightsHttpPostIn"/>
@@ -2504,6 +2683,11 @@
       <output message="s0:SetDefaultDomainHttpPostOut"/>
       <documentation>Change the default domain to the specified domain ID</documentation>
     </operation>
+    <operation name="GetDefaultDomainID">
+      <input message="s0:GetDefaultDomainIDHttpPostIn"/>
+      <output message="s0:GetDefaultDomainIDHttpPostOut"/>
+      <documentation>Get the ID of the default domain</documentation>
+    </operation>
   </portType>
   <binding name="iFolderWebServiceSoap" type="s0:iFolderWebServiceSoap">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
@@ -2654,6 +2838,36 @@
     </operation>
     <operation name="GetiFolders">
       <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolders" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="IsDomainActive">
+      <soap:operation soapAction="http://novell.com/ifolder/web/IsDomainActive"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="SetDomainActive">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetDomainActive"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="SetDomainInactive">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetDomainInactive"
+            style="document"/>
       <input>
         <soap:body use="literal"/>
       </input>
@@ -3004,6 +3218,16 @@
         <soap:body use="literal"/>
       </output>
     </operation>
+    <operation name="GetDefaultDomainID">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetDefaultDomainID"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
   </binding>
   <binding name="iFolderWebServiceHttpGet" type="s0:iFolderWebServiceHttpGet">
     <http:binding verb="GET"/>
@@ -3138,6 +3362,33 @@
     </operation>
     <operation name="GetiFolders">
       <http:operation location="/GetiFolders"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="IsDomainActive">
+      <http:operation location="/IsDomainActive"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="SetDomainActive">
+      <http:operation location="/SetDomainActive"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="SetDomainInactive">
+      <http:operation location="/SetDomainInactive"/>
       <input>
         <http:urlEncoded/>
       </input>
@@ -3429,6 +3680,15 @@
         <http:urlEncoded/>
       </input>
       <output/>
+    </operation>
+    <operation name="GetDefaultDomainID">
+      <http:operation location="/GetDefaultDomainID"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
     </operation>
   </binding>
   <binding name="iFolderWebServiceHttpPost" type="s0:iFolderWebServiceHttpPost">
@@ -3571,6 +3831,33 @@
         <mime:mimeXml part="Body"/>
       </output>
     </operation>
+    <operation name="IsDomainActive">
+      <http:operation location="/IsDomainActive"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="SetDomainActive">
+      <http:operation location="/SetDomainActive"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="SetDomainInactive">
+      <http:operation location="/SetDomainInactive"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
     <operation name="SetUserRights">
       <http:operation location="/SetUserRights"/>
       <input>
@@ -3855,6 +4142,15 @@
         <mime:content type="application/x-www-form-urlencoded"/>
       </input>
       <output/>
+    </operation>
+    <operation name="GetDefaultDomainID">
+      <http:operation location="/GetDefaultDomainID"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
     </operation>
   </binding>
   <service name="iFolderWebService">
