@@ -681,7 +681,7 @@ namespace Simias.POBox
 		/// <param name="disposition">The disposition to set on the subscription.</param>
 		public void Accept(Store store, SubscriptionDispositions disposition)
 		{
-			Collection c = store.GetCollectionByID(this.Properties.GetSingleProperty("CollectionId").ToString());
+			Collection c = store.GetCollectionByID(this.Properties.GetSingleProperty(BaseSchema.CollectionId).ToString());
 
 			SubscriptionState = SubscriptionStates.Replied;
 			SubscriptionDisposition = disposition;
