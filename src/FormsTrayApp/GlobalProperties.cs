@@ -171,7 +171,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.log = new System.Windows.Forms.ListBox();
 			this.syncNow = new System.Windows.Forms.Button();
 			this.label6 = new System.Windows.Forms.Label();
-			this.banner = new System.Windows.Forms.PictureBox();
 			this.tabPage4 = new System.Windows.Forms.TabPage();
 			this.services = new System.Windows.Forms.ListView();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
@@ -181,6 +180,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuPause = new System.Windows.Forms.MenuItem();
 			this.menuStop = new System.Windows.Forms.MenuItem();
 			this.menuRestart = new System.Windows.Forms.MenuItem();
+			this.banner = new System.Windows.Forms.PictureBox();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -435,9 +435,6 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			// autoStart
 			// 
-			this.autoStart.Checked = true;
-			this.autoStart.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.autoStart.Enabled = false;
 			this.autoStart.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.autoStart.Location = new System.Drawing.Point(16, 20);
 			this.autoStart.Name = "autoStart";
@@ -502,14 +499,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.label6.Size = new System.Drawing.Size(296, 16);
 			this.label6.TabIndex = 0;
 			this.label6.Text = "This log shows current iFolder activity.";
-			// 
-			// banner
-			// 
-			this.banner.Location = new System.Drawing.Point(0, 0);
-			this.banner.Name = "banner";
-			this.banner.Size = new System.Drawing.Size(450, 65);
-			this.banner.TabIndex = 9;
-			this.banner.TabStop = false;
 			// 
 			// tabPage4
 			// 
@@ -579,6 +568,14 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuRestart.Index = 3;
 			this.menuRestart.Text = "Restart";
 			this.menuRestart.Click += new System.EventHandler(this.menuRestart_Click);
+			// 
+			// banner
+			// 
+			this.banner.Location = new System.Drawing.Point(0, 0);
+			this.banner.Name = "banner";
+			this.banner.Size = new System.Drawing.Size(450, 65);
+			this.banner.TabIndex = 9;
+			this.banner.TabStop = false;
 			// 
 			// GlobalProperties
 			// 
@@ -668,7 +665,7 @@ namespace Novell.iFolder.FormsTrayApp
 				string showWizard = config.Get("iFolderShell", "Show wizard", "true");
 				displayConfirmation.Checked = showWizard == "true";
 
-//				autoStart.Checked = IsRunEnabled();
+				autoStart.Checked = IsRunEnabled();
 
 				foreach (iFolder ifolder in manager)
 				{
@@ -704,7 +701,7 @@ namespace Novell.iFolder.FormsTrayApp
 				manager.DefaultRefreshInterval = (int)defaultInterval.Value;
 
 				// Save the auto start value.
-//				SetRunValue(autoStart.Checked);
+				SetRunValue(autoStart.Checked);
 
 				Configuration config = new Configuration();
 				if (displayConfirmation.Checked)
