@@ -7,7 +7,7 @@ iFolderNautilus_INCLUDES =
 iFolderNautilus_RESOURCES =
 iFolderNautilus_FLAGS = $(CSC_LIBFLAG)
 iFolderNautilus_LIBS = System.dll System.Drawing.dll System.Data.dll glib-sharp.dll gtk-sharp.dll gnome-sharp.dll glade-sharp.dll gdk-sharp.dll nautilus-sharp.dll $(SYSTEM_XML) AddressBook.dll iFolder.dll BookLib.dll CollectionStore.dll
-iFolderNautilus_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin ../iFolder ../GtkTrayApp
+iFolderNautilus_LIBPATH = ../iFolder ../GtkTrayApp
 
 INSTALL_FILES =
 
