@@ -1212,6 +1212,41 @@ namespace Novell.AddressBook.UI.gtk
 					addBlank = false;
 				}
 
+
+				//------------------------
+				// Add Instant Messages
+				//------------------------
+				foreach(IM im in c.GetInstantMessageAccounts())
+				{
+					addBlank = true;
+					if((im.Types & IMTypes.home) == IMTypes.home)
+					{
+						AddLabeledValue("home", 
+								im.Address + " (" + im.Provider + ")");
+					}
+					if((im.Types & IMTypes.work) == IMTypes.work)
+					{
+						AddLabeledValue("work", 
+								im.Address + " (" + im.Provider + ")");
+					}
+					if((im.Types & IMTypes.other) == IMTypes.other)
+					{
+						AddLabeledValue("other", 
+								im.Address + " (" + im.Provider + ")");
+					}
+				}
+			
+
+				//------------------------
+				// Add blank separator line
+				//------------------------
+				if(addBlank)
+				{
+					AddLabeledValue(null, null);
+					addBlank = false;
+				}
+
+
 				//------------------------
 				// Add Addresses
 				//------------------------
