@@ -49,6 +49,7 @@ static SyncLogWindowController *syncLogInstance = nil;
 	{
 		[syncLogInstance release];
 		syncLogInstance = nil;
+		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:STATE_SHOWLOGWINDOW];
 	}
 }
 
@@ -60,8 +61,11 @@ static SyncLogWindowController *syncLogInstance = nil;
 	NSLog(@"SyncLogWindowController Awoke from Nib");
 	[self setupToolbar];
 
-	[super setShouldCascadeWindows:NO];
-	[super setWindowFrameAutosaveName:@"ifolder_log_window"];
+	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_WINPOS])
+	{
+		[super setShouldCascadeWindows:NO];
+		[super setWindowFrameAutosaveName:@"ifolder_log_window"];
+	}
 	
     NSMutableDictionary *bindingOptions = [NSMutableDictionary dictionary];
     	
@@ -74,6 +78,8 @@ static SyncLogWindowController *syncLogInstance = nil;
 	// bind the table column to the log to display it's contents
 	[logColumn bind:@"value" toObject:[[NSApp delegate] logArrayController]
 					withKeyPath:@"arrangedObjects" options:bindingOptions];	
+
+	[[NSUserDefaults standardUserDefaults] setBool:YES forKey:STATE_SHOWLOGWINDOW];
 }
 
 

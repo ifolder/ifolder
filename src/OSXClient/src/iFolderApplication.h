@@ -24,7 +24,6 @@
 #import <Cocoa/Cocoa.h>
 
 
-#define PREFKEY_STARTUP			@"general.startup"
 #define PREFKEY_WINPOS			@"general.winposition"
 #define PREFKEY_RESTOREWIN		@"general.restorewin"
 #define PREFKEY_CLICKIFOLDER	@"general.clickifolder"
@@ -32,7 +31,8 @@
 #define PREFKEY_NOTIFYCOLL		@"notify.collisions"
 #define PREFKEY_NOTIFYUSER		@"notify.users"
 #define PREFKEY_NOTIFYBYINDEX	@"notify.byindex"
-
+#define STATE_SHOWMAINWINDOW	@"state.showmainwindow"
+#define STATE_SHOWLOGWINDOW		@"state.showlogwindow"
 
 @class LoginWindowController;
 @class iFolder;

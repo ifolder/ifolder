@@ -252,7 +252,19 @@
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
 	[self setupApplicationDefaults];
-	[self showiFolderWindow:self];
+	
+	// check if we should restore windows
+	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_RESTOREWIN])
+	{
+		// yes, so only restore it was there before
+		if([[NSUserDefaults standardUserDefaults] boolForKey:STATE_SHOWMAINWINDOW])		
+			[self showiFolderWindow:self];
+		if([[NSUserDefaults standardUserDefaults] boolForKey:STATE_SHOWLOGWINDOW])		
+			[self showSyncLog:self];
+	}
+	else
+		[self showiFolderWindow:self];
+
 	[iFolderWindowController updateStatusTS:@"Loading synchronization process..."];
 }
 
@@ -264,8 +276,7 @@
 //===================================================================
 - (void)setupApplicationDefaults
 {
-	NSArray *keys	= [NSArray arrayWithObjects:	PREFKEY_STARTUP, 
-													PREFKEY_WINPOS,
+	NSArray *keys	= [NSArray arrayWithObjects:	PREFKEY_WINPOS,
 													PREFKEY_RESTOREWIN,
 													PREFKEY_CLICKIFOLDER,
 													PREFKEY_NOTIFYIFOLDERS,
@@ -274,8 +285,7 @@
 													PREFKEY_NOTIFYBYINDEX,
 													nil];
 
-	NSArray *values = [NSArray arrayWithObjects:	[NSNumber numberWithBool:NO],
-													[NSNumber numberWithBool:YES],
+	NSArray *values = [NSArray arrayWithObjects:	[NSNumber numberWithBool:YES],
 													[NSNumber numberWithBool:YES],
 													[NSNumber numberWithInt:0],
 													[NSNumber numberWithBool:YES],
