@@ -1642,6 +1642,9 @@ namespace Simias.Storage.Tests
 				Node collisionNode = collection.CreateCollision( node, false );
 				collection.Commit( collisionNode );
 
+				collisionNode = collection.CreateCollision( node, false );
+				collection.Commit( collisionNode );
+
 				// Should have a collision.
 				if ( !collection.HasCollisions() )
 				{
@@ -1698,8 +1701,9 @@ namespace Simias.Storage.Tests
 					throw new ApplicationException( "File conflict returned wrong collision." );
 				}
 
-				// Delete the collision node.
-				collection.Commit( collection.DeleteCollision( collisionNode ) );
+				// Resolve the collision node.
+				collectionNode = collection.ResolveCollision( collisionNode, collisionNode.LocalIncarnation, true );
+				collection.Commit( collectionNode );
 
 				// Should not be anymore collisions.
 				if ( collection.HasCollisions() )

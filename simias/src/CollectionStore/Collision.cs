@@ -228,6 +228,26 @@ namespace Simias.Storage
 				}
 			}
 		}
+
+		/// <summary>
+		/// Modifies the existing collision if there is one, otherwise adds the specified collision
+		/// to the list.
+		/// </summary>
+		/// <param name="collision">Collection object add.</param>
+		public void Modify( Collision collision )
+		{
+			// Get the first child element if it exists.
+			XmlElement element = document.DocumentElement.FirstChild as XmlElement;
+			if ( element != null )
+			{
+				element.SetAttribute( TypeTag, collision.Type.ToString() );
+				element.InnerText = collision.ContextData;
+			}
+			else
+			{
+				Add( collision );
+			}
+		}
 		#endregion
 
 		#region IEnumerable Members

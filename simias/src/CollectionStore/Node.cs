@@ -79,6 +79,13 @@ namespace Simias.Storage
 		/// </summary>
 		[ NonSerialized() ]
 		protected bool isMaster;
+
+		/// <summary>
+		/// Indicates whether to merge the collision property on a Node object or whether to strip it
+		/// off during a commit of the Node object.
+		/// </summary>
+		[ NonSerialized() ]
+		protected bool mergeCollisions = true;
 		#endregion
 
 		#region Properties
@@ -136,6 +143,15 @@ namespace Simias.Storage
 		{
 			get { return isMaster; }
 			set { isMaster = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets whether to merge the collision property on the Node object during commit.
+		/// </summary>
+		internal bool MergeCollisions
+		{
+			get { return mergeCollisions; }
+			set { mergeCollisions = value; }
 		}
 
 		/// <summary>

@@ -340,7 +340,10 @@ namespace Simias.Storage
 						// Node object that the server doesn't know about.
 						if ( checkNode.LocalIncarnation != checkNode.MasterIncarnation )
 						{
-							// There was a collision.
+							// There was a collision. Strip the local properties back off the Node object
+							// before indication the collision. That way when the collision gets stored it
+							// won't duplicate the local properties.
+							node.Properties.StripLocalProperties();
 							throw new CollisionException( checkNode.ID, checkNode.LocalIncarnation );
 						}
 					}
@@ -359,21 +362,15 @@ namespace Simias.Storage
 					//	2. Expected incarnation value is equal to the local incarnation value.
 					if ( ( checkNode != null ) && ( node.ExpectedIncarnation != checkNode.LocalIncarnation ) )
 					{
-						// There was a collision.
+						// There was a collision. Strip the local properties back off the Node object
+						// before indication the collision.
+						node.Properties.StripLocalProperties();
 						throw new CollisionException( checkNode.ID, checkNode.LocalIncarnation );
 					}
 				}
 			}
 			else
 			{
-				// DEBUG!!
-				if ( IsType( node, NodeTypes.CollectionType ) && ( node.MasterIncarnation != 0 ) )
-				{
-					log.Warn( "Incrementing collection local incarnation value." );
-					Debugger.Break();
-				}
-				// DEBUG!!
-
 				incarnationValue = node.LocalIncarnation + 1;
 			}
 
@@ -423,6 +420,15 @@ namespace Simias.Storage
 				}
 				else
 				{
+					// Before the merge of properties take place, check if there is a collision property
+					// and if it is supposed to be included in the merge on the resulting Node object.
+					Property collision = node.Properties.FindSingleValue( PropertyTags.Collision );
+					if ( ( collision != null ) && ( node.MergeCollisions == false ) )
+					{
+						collision.DeleteProperty();
+						node.MergeCollisions = true;
+					}
+
 					// If this node is a tombstone and the merged node is a tombstone, then merge the changes or
 					// if this node is not a tombstone and the merged node is not a tombstone, merge the changes.
 					// Walk the merge list and perform the changes specified there to the mergedNode.
@@ -590,17 +596,8 @@ namespace Simias.Storage
 
 					case PropertyList.PropertyListState.Internal:
 					{
-						// DEBUG!!
-						if ( IsType( node, NodeTypes.CollectionType ) && ( node.MasterIncarnation != 0 ) && ( node.MasterIncarnation != node.LocalIncarnation ) )
-						{
-							log.Warn( "Incrementing collection local incarnation value." );
-							Debugger.Break();
-						}
-
-						// DEBUG!!
 						// Merge any changes made to the object on the database before this object's
 						// changes are committed.
-
 						bool onlyLocalChanges;
 						Node mergeNode = MergeNodeProperties( node, out onlyLocalChanges );
 						if ( mergeNode != null )
@@ -963,11 +960,11 @@ namespace Simias.Storage
 				// Add the new collision to the collision list.
 				if ( isFileCollision )
 				{
-					cList.Add( new Collision( Collision.CollisionType.File, String.Empty ) );
+					cList.Modify( new Collision( Collision.CollisionType.File, String.Empty ) );
 				}
 				else
 				{
-					cList.Add( new Collision( Collision.CollisionType.Node, collisionNode.Properties.PropertyDocument.InnerXml ) );
+					cList.Modify( new Collision( Collision.CollisionType.Node, collisionNode.Properties.PropertyDocument.InnerXml ) );
 				}
 
 				// Modify or add the collision list.
@@ -1399,6 +1396,7 @@ namespace Simias.Storage
 			{
 				resNode = node;
 				resNode.Properties.State = PropertyList.PropertyListState.Internal;
+				resNode.MergeCollisions = false;
 				resNode.Properties.ModifyNodeProperty( PropertyTags.MasterIncarnation, incarnationValue );
 				resNode.Properties.ModifyNodeProperty( PropertyTags.LocalIncarnation, incarnationValue + 1 );
 				DeleteCollision( resNode );
