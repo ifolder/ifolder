@@ -787,6 +787,8 @@ namespace Simias.POBox
 
 			Collection c = new Collection(store, this.SubscriptionCollectionName,
 				this.SubscriptionCollectionID, this.DomainID);
+
+			commitList.Add(c);
 			
 			// collection type
 			// TODO: sc.SetType(this, this.SubscriptionCollectionTypes);
@@ -808,7 +810,7 @@ namespace Simias.POBox
 			c.Properties.AddProperty(pu);
 
 			// Create the member as well
-			Member member = new Member(this.ToName, this.ToMemberNodeID, this.SubscriptionRights, null);
+			Member member = new Member(this.ToName, this.ToMemberNodeID, this.ToIdentity, this.SubscriptionRights, null);
 			member.Proxy = true;
 			commitList.Add(member);
 
@@ -821,6 +823,7 @@ namespace Simias.POBox
 				DirNode dn = new DirNode(c, path, this.DirNodeID);
 				if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
+				dn.Proxy = true;
 				commitList.Add(dn);
 			}
 

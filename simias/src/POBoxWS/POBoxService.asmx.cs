@@ -464,16 +464,29 @@ namespace Simias.POBoxService.Web
 			log.Info("POBoxService::VerifyCollection - called");
 			log.Info("  for collection: " + collectionID);
 
+			POBoxStatus	wsStatus = POBoxStatus.UnknownCollection;
+
 			// Validate the shared collection
 			Collection cSharedCollection = store.GetCollectionByID(collectionID);
-			if (cSharedCollection == null)
+			if (cSharedCollection != null)
 			{
-				log.Debug("POBoxService::VerifyCollection - Collection not found");
-				return(POBoxStatus.UnknownCollection);
+				// Make sure the collection is not in a proxy state
+				if (cSharedCollection.IsProxy == false)
+				{
+					wsStatus = POBoxStatus.Success;
+				}
+				else
+				{
+					log.Info("POBoxService::VerifyCollection - Collection is in the proxy state");
+				}
+			}
+			else
+			{
+				log.Info("POBoxService::VerifyCollection - Collection not found");
 			}
 
 			log.Info("POBoxService::VerifyCollection - exit");
-			return(POBoxStatus.Success);
+			return(wsStatus);
 		}
 
 		/// <summary>
