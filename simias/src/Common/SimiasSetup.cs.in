@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 using System;
+using System.IO;
 using System.Reflection;
 
 namespace Simias
@@ -31,6 +32,7 @@ namespace Simias
 	/// </summary>
 	public class SimiasSetup
 	{
+		// setup paths
 		private static string _bindir = "@bindir@";
 		private static string _datadir = "@datadir@";
 		private static string _includedir = "@includedir@";
@@ -43,22 +45,45 @@ namespace Simias
 		private static string _sbindir = "@sbindir@";
 		private static string _sharedstatedir = "@sharedstatedir@";
 		private static string _sysconfdir = "@sysconfdir@";
+
+		// setup info
 		private static string _target = "@target@";
 
+		/// <summary>
+		/// Static Constructor
+		/// </summary>
 		static SimiasSetup()
 		{
-			if (MyEnvironment.DotNet)
-			{
-				string relbindir = Environment.CurrentDirectory;
+				string relprefix = null;
+				
+				try
+				{
+					// location of the entry assembly as the prefix
+					relprefix = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+				}
+				catch
+				{
+					// ignore
+				}
+				
+				if ((relprefix == null) || (relprefix.Length == 0))
+				{
+					relprefix = Environment.CurrentDirectory;
+				}
 
-				_sysconfdir = _sysconfdir.Replace(_bindir, relbindir);
-			}
+				_sysconfdir = _sysconfdir.Replace(_prefix, relprefix);
 		}
 
+		/// <summary>
+		/// Private Constructor
+		/// </summary>
 		private SimiasSetup()
 		{
 		}
 
+		/// <summary>
+		/// sysconfdir
+		/// </summary>
 		public static string sysconfdir
 		{
 			get { return _sysconfdir; }
