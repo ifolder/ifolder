@@ -162,7 +162,8 @@ namespace Novell.iFolder
 
 			try
 			{
-				EventBroker.Deregister();
+				if(EventBroker != null)
+					EventBroker.Deregister();
 //				Simias.Client.Manager.Stop();
 			}
 			catch(Exception e)
@@ -253,12 +254,18 @@ namespace Novell.iFolder
 					if( (ifSettings != null) && (!ifSettings.HaveEnterprise) )
 						OnJoinEnterprise(null, null);
 
-					EventBroker.iFolderAdded +=
-						new iFolderAddedEventHandler(OniFolderAddedEvent);
-					EventBroker.iFolderChanged +=
-						new iFolderChangedEventHandler(OniFolderChangedEvent);
-					EventBroker.iFolderDeleted +=
-						new iFolderDeletedEventHandler(OniFolderDeletedEvent);
+					if(EventBroker != null)
+					{
+						EventBroker.iFolderAdded +=
+							new iFolderAddedEventHandler(
+												OniFolderAddedEvent);
+						EventBroker.iFolderChanged +=
+							new iFolderChangedEventHandler(
+												OniFolderChangedEvent);
+						EventBroker.iFolderDeleted +=
+							new iFolderDeletedEventHandler(
+												OniFolderDeletedEvent);
+					}
 
 					gAppIcon.Pixbuf = RunningPixbuf;
 					break;
