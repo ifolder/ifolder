@@ -33,10 +33,8 @@ install-exec-local: SyncLogicLite.dll
 	$(INSTALL_PROGRAM) SyncLogicLite.dll $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); \
-		rm -f SyncLogicLite.dll SyncLogicLiteTests.xml $(NUNIT_TESTS); \
-		rm -rf cwatcher
-    
+	cd $(DESTDIR)$(bindir); rm -f SyncLogicLite.dll SyncLogicLiteTests.xml $(NUNIT_TESTS)
+	    
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
