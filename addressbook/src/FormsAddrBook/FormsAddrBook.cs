@@ -274,13 +274,13 @@ namespace Novell.iFolder.FormsAddrBook
 			// 
 			this.menuToolsImportVCard.Index = 0;
 			this.menuToolsImportVCard.Text = "&Import vCard";
-			this.menuToolsImportVCard.Select += new System.EventHandler(this.menuToolsImportVCard_Select);
+			this.menuToolsImportVCard.Click += new System.EventHandler(this.menuToolsImportVCard_Click);
 			// 
 			// menuToolsExportVCard
 			// 
 			this.menuToolsExportVCard.Index = 1;
 			this.menuToolsExportVCard.Text = "E&xport vCard";
-			this.menuToolsExportVCard.Select += new System.EventHandler(this.menuToolsExportVCard_Select);
+			this.menuToolsExportVCard.Click += new System.EventHandler(this.menuToolsExportVCard_Click);
 			// 
 			// menuHelp
 			// 
@@ -845,12 +845,12 @@ namespace Novell.iFolder.FormsAddrBook
 			menuToolsImportVCard.Enabled = selectedBook != null;
 		}
 
-		private void menuToolsImportVCard_Select(object sender, System.EventArgs e)
+		private void menuToolsImportVCard_Click(object sender, System.EventArgs e)
 		{
 			importVCard();
 		}
 
-		private void menuToolsExportVCard_Select(object sender, System.EventArgs e)
+		private void menuToolsExportVCard_Click(object sender, System.EventArgs e)
 		{
 			exportVCard();
 		}
