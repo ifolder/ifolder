@@ -533,6 +533,63 @@ namespace Simias.POBoxService.Web
 		}
 
 		/// <summary>
+		/// Set the subscription state
+		/// </summary>
+		/// <param name="domainID"></param>
+		/// <param name="identityID"></param>
+		/// <param name="messageID"></param>
+		[WebMethod]
+		[SoapDocumentMethod]
+		public
+		void 
+		SetSubscriptionState(
+			string				domainID, 
+			string				identityID, 
+			string				messageID,
+			SubscriptionStates	state)
+		{
+			Simias.POBox.POBox	poBox;
+			Store				store = Store.GetStore();
+			
+			// open the post office box
+			poBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
+				? Simias.POBox.POBox.GetPOBox(store, domainID)
+				: Simias.POBox.POBox.GetPOBox(store, domainID, identityID);
+
+			// check the post office box
+			if (poBox == null)
+			{
+				throw new ApplicationException("PO Box not found.");
+			}
+
+			// check that the message has already not been posted
+			IEnumerator e = 
+				poBox.Search(
+				Message.MessageIDProperty, 
+				messageID, 
+				SearchOp.Equal).GetEnumerator();
+			ShallowNode sn = null;
+			if (e.MoveNext())
+			{
+				sn = (ShallowNode) e.Current;
+			}
+
+			if (sn == null)
+			{
+				throw new ApplicationException("Subscription does not exist.");
+			}
+
+			// get the subscription object
+			Subscription cSub = new Subscription(poBox, sn);
+			cSub.SubscriptionState = state;
+			poBox.Commit(cSub);
+
+			// TODO: remove the subscription object?
+			//poBox.Commit(poBox.Delete(cSub));
+		}
+
+
+		/// <summary>
 		/// Subscribe to a shared collection
 		/// </summary>
 		/// <param name="domainID"></param>
