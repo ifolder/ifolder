@@ -195,9 +195,6 @@ namespace Simias.POBox
 			// post subscription
 			po.Post(subscription);
 			
-			// disconnect
-			RemotingServices.Disconnect(po);
-
 			// remove channel
 			channel.Dispose();
 
@@ -226,9 +223,6 @@ namespace Simias.POBox
 			SubscriptionStatus status = po.GetSubscriptionStatus(subscription.DomainID,
 				subscription.FromIdentity, subscription.ID);
 			
-			// disconnect
-			RemotingServices.Disconnect(po);
-
 			// remove channel
 			channel.Dispose();
 
@@ -249,12 +243,12 @@ namespace Simias.POBox
 					subscription.CreateSlaveCollection(poBox.StoreReference);
 				}
 
-				// done with the subscription
-				poBox.Delete(subscription);
-
 				// acknowledge the message
 				po.AckSubscription(subscription.DomainID,
 					subscription.FromIdentity, subscription.ID);
+
+				// done with the subscription
+				poBox.Commit(poBox.Delete(subscription));
 			}
 
 			return true;
