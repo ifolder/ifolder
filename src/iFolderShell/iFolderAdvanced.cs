@@ -60,6 +60,8 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.RadioButton accessReadWrite;
 		private System.Windows.Forms.RadioButton accessReadOnly;
 
+		private Hashtable subscrHT;
+		private EventSubscriber subscriber;
 		private POBox poBox;
 		private Novell.AddressBook.Manager abManager;
 		private Novell.AddressBook.AddressBook defaultAddressBook;
@@ -392,6 +394,7 @@ namespace Novell.iFolder.iFolderCom
 			this.accessControlButtons.Controls.Add(this.accessReadOnly);
 			this.accessControlButtons.Controls.Add(this.accessReadWrite);
 			this.accessControlButtons.Controls.Add(this.accessFullControl);
+			this.accessControlButtons.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.accessControlButtons.Location = new System.Drawing.Point(8, 264);
 			this.accessControlButtons.Name = "accessControlButtons";
 			this.accessControlButtons.Size = new System.Drawing.Size(320, 100);
@@ -641,7 +644,10 @@ namespace Novell.iFolder.iFolderCom
 
 					// Add the from e-mail address.
 					slMember.Subscription.FromAddress = sendersEmail;
-					
+
+					// Add the listviewitem to the hashtable so we can quickly find it.
+					subscrHT.Add(slMember.Subscription.ID, lvitem);
+
 					// TODO: change this to use an array and add them all at once.
 					// Put the subscription in the POBox.
 					poBox.AddMessage(slMember.Subscription);
@@ -961,6 +967,16 @@ namespace Novell.iFolder.iFolderCom
 					shareWith.Items.Add(lvitem);
 				}
 
+				// Hashtable used to store subscriptions in.
+				subscrHT = new Hashtable();
+
+				// Set up the event handlers for the POBox.
+				// TODO: we still can't get events into explorer ... this may work once we are in the GAC.
+				subscriber = new EventSubscriber(poBox.ID);
+				subscriber.NodeChanged += new NodeEventHandler(subscriber_NodeChanged);
+				subscriber.NodeCreated += new NodeEventHandler(subscriber_NodeCreated);
+				subscriber.NodeDeleted += new NodeEventHandler(subscriber_NodeDeleted);
+
 				// Load the stuff from the POBox.
 				ICSList messageList = poBox.Search(Subscription.SubscriptionCollectionIDProperty, ifolder.ID, SearchOp.Equal);
 				foreach (ShallowNode shallowNode in messageList)
@@ -981,6 +997,9 @@ namespace Novell.iFolder.iFolderCom
 						lvi.Tag = shareMember;
 
 						shareWith.Items.Add(lvi);
+
+						// Add the listviewitem to the hashtable so we can quickly find it.
+						subscrHT.Add(shareMember.Subscription.ID, lvi);
 					}
 				}
 			}
@@ -1243,6 +1262,9 @@ namespace Novell.iFolder.iFolderCom
 						// Remove the item from the listview.
 						lvi.Remove();
 
+						// Remove this from the hashtable.
+						subscrHT.Remove(slMember.Subscription.ID);
+
 						// Enable the apply button.
 						this.apply.Enabled = true;
 					}
@@ -1280,6 +1302,9 @@ namespace Novell.iFolder.iFolderCom
 				contact.UserID = slMember.Member.UserID;
 				ab.Commit(contact);
 			}
+
+			// This is item is now a member so remove it from the subscription list.
+			subscrHT.Remove(slMember.Subscription.ID);
 
 			poBox.Commit(slMember.Subscription);
 			
@@ -1355,6 +1380,109 @@ namespace Novell.iFolder.iFolderCom
 		private void conflictResolver_ConflictsResolved(object sender, EventArgs e)
 		{
 			conflicts.Visible = pictureBox1.Visible = false;
+		}
+
+		private void subscriber_NodeCreated(NodeEventArgs args)
+		{
+			try
+			{
+				Node node = poBox.GetNodeByID(args.ID);
+				if (node != null)
+				{
+					ShareListMember slMember = new ShareListMember();
+					slMember.Subscription = new Subscription(node);
+
+					// If the subscription state is "Ready" and the collection exists locally or if the item is already in the list
+					// or if the subscription is not for this ifolder, don't add it to the listview.
+					if (((slMember.Subscription.SubscriptionState != SubscriptionStates.Ready) 
+						|| (poBox.StoreReference.GetCollectionByID(slMember.Subscription.SubscriptionCollectionID) == null))
+						&& (subscrHT[args.ID] == null)
+						&& (slMember.Subscription.SubscriptionCollectionID.Equals(ifolder.ID)))
+					{
+						string[] items = new string[3];
+						items[0] = slMember.Subscription.ToName;
+						items[1] = slMember.Subscription.SubscriptionState.ToString();
+						int imageIndex;
+						items[2] = rightsToString(slMember.Rights, out imageIndex);
+					
+						ListViewItem lvi = new ListViewItem(items, 5);
+						lvi.Tag = slMember;
+
+						shareWith.Items.Add(lvi);
+
+						// Add the listviewitem to the hashtable so we can quickly find it.
+						subscrHT.Add(slMember.Subscription.ID, lvi);
+					}
+				}
+			}
+			catch (SimiasException ex)
+			{
+				ex.LogError();
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "OnNodeCreated");
+			}
+		}
+
+		private void subscriber_NodeDeleted(NodeEventArgs args)
+		{
+			ListViewItem lvi = (ListViewItem)subscrHT[args.Node];
+			if (lvi != null)
+			{
+				lvi.Remove();
+				subscrHT.Remove(args.Node);
+			}
+		}
+
+		private void subscriber_NodeChanged(NodeEventArgs args)
+		{
+			// Get the existing item.
+			ListViewItem lvi = (ListViewItem)subscrHT[args.Node];
+			if (lvi != null)
+			{
+				try
+				{
+					// Get the node that changed.
+					Node node = poBox.GetNodeByID(args.ID);
+					if (node != null)
+					{
+						ShareListMember slMember = (ShareListMember)lvi.Tag;
+
+						// New up a Subscription object based on the node.
+						slMember.Subscription = new Subscription(node);
+
+						// If the subscription state is "Ready" and the collection exists locally, remove the listview item; 
+						// otherwise, update the status text.
+						if ((slMember.Subscription.SubscriptionState != SubscriptionStates.Ready) || 
+							(poBox.StoreReference.GetCollectionByID(slMember.Subscription.SubscriptionCollectionID) == null))
+						{
+							lvi.SubItems[1].Text = slMember.Subscription.SubscriptionState.ToString();
+							lvi.Tag = slMember;
+							if ((shareWith.SelectedItems.Count == 1) &&
+								lvi.Equals(shareWith.SelectedItems[0]) &&
+								(slMember.Subscription.SubscriptionState == Simias.POBox.SubscriptionStates.Pending))
+								//(((ShareListMember)shareWith.SelectedItems[0].Tag).Subscription != null) &&
+								//(((ShareListMember)shareWith.SelectedItems[0].Tag).Subscription.ID.Equals(slMember.Subscription.ID)) &&
+							{
+								accept.Enabled = decline.Enabled = true;
+							}
+						}
+						else
+						{
+							lvi.Remove();
+						}
+					}
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+				}
+				catch (Exception ex)
+				{
+					logger.Debug(ex, "OnNodeChanged");
+				}
+			}
 		}
 		#endregion
 
