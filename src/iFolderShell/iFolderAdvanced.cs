@@ -575,7 +575,7 @@ namespace Novell.iFolder.iFolderCom
 		#endregion
 
 		#region Private Methods
-		private string rightsToString(Access.Rights rights)
+		private string rightsToString(Access.Rights rights, out int imageIndex)
 		{
 			string rightsString = null;
 
@@ -584,21 +584,25 @@ namespace Novell.iFolder.iFolderCom
 				case Access.Rights.Admin:
 				{
 					rightsString = "Full Control";
+					imageIndex = 3;
 					break;
 				}
 				case Access.Rights.ReadWrite:
 				{
 					rightsString = "Read/Write";
+					imageIndex = 2;
 					break;
 				}
 				case Access.Rights.ReadOnly:
 				{
 					rightsString = "Read Only";
+					imageIndex = 1;
 					break;
 				}
 				default:
 				{
 					rightsString = "Unknown";
+					imageIndex = 4;
 					break;
 				}
 			}
@@ -785,6 +789,44 @@ namespace Novell.iFolder.iFolderCom
 */
 			return true;
 		}
+
+		private void updateListViewItem(ListViewItem lvi, Access.Rights rights)
+		{
+			ShareListMember slMember = (ShareListMember)lvi.Tag;
+
+			int imageIndex;
+			string access = rightsToString(rights, out imageIndex);
+
+			try
+			{
+				if (ifolder.GetCurrentMember().UserID == slMember.Member.UserID)
+				{
+					// Don't allow current user to be modified.
+				}
+				else
+				{
+					if (lvi.SubItems[2].Text != access)
+					{
+						// Mark this item as changed.
+						slMember.Changed = true;
+
+						// Change the subitem text.
+						lvi.SubItems[2].Text = access;
+
+						// Enable the apply button.
+						this.apply.Enabled = true;
+					}
+
+					// Don't change the image if this item is not a member.
+					if (slMember.IsMember)
+					{
+						lvi.ImageIndex = imageIndex;
+						lvi.SubItems[1].Text = slMember.Member.IsOwner ? "Owner" : "";
+					}
+				}
+			}
+			catch{}
+		}
 		#endregion
 
 		#region Properties
@@ -918,45 +960,30 @@ namespace Novell.iFolder.iFolderCom
 				poBox = POBox.GetPOBox(ifolder.StoreReference, ifolder.StoreReference.DefaultDomain);
 				ICSList memberList = ifolder.GetMemberList();
 
+				// Load the member list.
 				foreach (ShallowNode shallowNode in memberList)
 				{
 					// TODO: We may want to reconstitute only when necessary ... for example, when the item comes into view
 					Member member = new Member(ifolder, shallowNode);
 
 					string[] items = new string[3];
-					items[0] = member.Name;
+
+					Contact contact = abManager.GetContact(member);
+					if (contact != null)
+					{
+						items[0] = contact.FN;
+					}
+					else
+					{
+						items[0] = member.Name;
+					}
+
 					items[1] = member.IsOwner ? "Owner" : "";
 
 					int imageIndex;
 
 					// TODO: fix this to use rightsToString ... and maybe change the image index to line up with the rights enum.
-					switch (member.Rights)
-					{
-						case Access.Rights.Admin:
-						{
-							items[2] = "Full Control";
-							imageIndex = 3;
-							break;
-						}
-						case Access.Rights.ReadWrite:
-						{
-							items[2] = "Read/Write";
-							imageIndex = 2;
-							break;
-						}
-						case Access.Rights.ReadOnly:
-						{
-							items[2] = "Read Only";
-							imageIndex = 1;
-							break;
-						}
-						default:
-						{
-							items[2] = "Unknown";
-							imageIndex = 4;
-							break;
-						}
-					}
+					items[2] = rightsToString(member.Rights, out imageIndex);
 
 					if (ifolder.GetCurrentMember().UserID == member.UserID)
 					{
@@ -984,7 +1011,8 @@ namespace Novell.iFolder.iFolderCom
 					string[] items = new string[3];
 					items[0] = sub.ToName;
 					items[1] = sub.SubscriptionState.ToString();
-					items[2] = rightsToString(sub.SubscriptionRights);
+					int imageIndex;
+					items[2] = rightsToString(sub.SubscriptionRights, out imageIndex);
 					
 					ListViewItem lvi = new ListViewItem(items, 5);
 					lvi.Tag = shareMember;
@@ -1069,52 +1097,24 @@ namespace Novell.iFolder.iFolderCom
 
 		private void accessButton_Click(object sender, EventArgs e)
 		{
-			string access;
-			int imageIndex;
+			Access.Rights rights;
 
-			if (this.accessFullControl.Checked)
+			if (accessFullControl.Checked)
 			{
-				access = "Full Control";
-				imageIndex = 3;
+				rights = Access.Rights.Admin;
 			}
-			else if ( this.accessReadWrite.Checked)
+			else if (accessReadWrite.Checked)
 			{
-				access = "Read/Write";
-				imageIndex = 2;
+				rights = Access.Rights.ReadWrite;
 			}
 			else
 			{
-				access = "Read Only";
-				imageIndex = 1;
+				rights = Access.Rights.ReadOnly;
 			}
 
 			foreach (ListViewItem lvi in shareWith.SelectedItems)
 			{
-				ShareListMember slMember = (ShareListMember)lvi.Tag;
-
-				try
-				{
-					if (ifolder.GetCurrentMember().UserID == slMember.Member.UserID)
-					{
-						// Don't allow current user to be modified.
-					}
-					else if (lvi.SubItems[2].Text != access)
-					{
-						// Change the subitem text.
-						lvi.SubItems[2].Text = access;
-
-						// Don't change the image if this item is not a member.
-						if (slMember.IsMember)
-							lvi.ImageIndex = imageIndex;
-
-						// Mark this item as changed.
-						slMember.Changed = true;
-
-						// Enable the apply button.
-						this.apply.Enabled = true;
-					}
-				}
-				catch{}
+				updateListViewItem(lvi, rights);
 			}
 		}
 
@@ -1247,7 +1247,20 @@ namespace Novell.iFolder.iFolderCom
 		{
 			ListViewItem lvi = this.shareWith.SelectedItems[0];
 			ShareListMember slMember = (ShareListMember)lvi.Tag;
-			slMember.Subscription.Accept(ifolder.StoreReference, this.stringToRights(lvi.SubItems[2].Text));
+			slMember.Member = slMember.Subscription.Accept(ifolder.StoreReference, this.stringToRights(lvi.SubItems[2].Text));
+
+			// Take the relationship off the ShareListMember and put it on the Subscription object.  This will
+			// be used to hook up the Member and Contact objects after the subscription has been accepted.
+			Relationship relationship = (Relationship)slMember.Subscription.Properties.GetSingleProperty("Contact").Value;
+
+			// Get the contact
+			Novell.AddressBook.AddressBook ab = this.abManager.GetAddressBook(relationship.CollectionID);
+			Contact contact = ab.GetContact(relationship.NodeID);
+			contact.UserID = slMember.Member.UserID;
+			ab.Commit(contact);
+			
+			slMember.IsMember = true;
+			updateListViewItem(lvi, slMember.Member.Rights);
 			poBox.Commit(slMember.Subscription);
 		}
 
@@ -1257,6 +1270,7 @@ namespace Novell.iFolder.iFolderCom
 			ShareListMember slMember = (ShareListMember)lvi.Tag;
 			slMember.Subscription.Decline();
 			poBox.Commit(slMember.Subscription);
+			lvi.Remove();
 		}
 
 		private void apply_Click(object sender, System.EventArgs e)
