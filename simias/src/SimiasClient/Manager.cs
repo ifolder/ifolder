@@ -61,7 +61,7 @@ namespace Simias.Client
 			get
 			{
 				Configuration config = new Configuration();
-				return config.Get(CFG_Section, CFG_WebServicePath);
+				return config.Get( CFG_Section, CFG_WebServicePath );
 			}
 		}
 
@@ -74,8 +74,8 @@ namespace Simias.Client
 			get
 			{
 				Configuration config = new Configuration();
-				string portString = config.Get(CFG_Section, CFG_WebServicePort);
-				return (portString != null) ? Convert.ToInt32(portString) : -1;
+				string portString = config.Get( CFG_Section, CFG_WebServicePort );
+				return ( portString != null ) ? Convert.ToInt32( portString ) : -1;
 			}
 		}
 
@@ -88,8 +88,8 @@ namespace Simias.Client
 			get
 			{
 				Configuration config = new Configuration();
-				string uriString = config.Get(CFG_Section, CFG_WebServiceUri);
-				return (uriString != null) ? new Uri(uriString) : null;
+				string uriString = config.Get( CFG_Section, CFG_WebServiceUri );
+				return ( uriString != null ) ? new Uri( uriString ) : null;
 			}
 		}
 		#endregion
@@ -200,6 +200,17 @@ namespace Simias.Client
 		#endregion
 
 		#region Public Methods
+		/// <summary>
+		/// Gets the remote address to the specified domain server.
+		/// </summary>
+		/// <param name="domainName">Name of the domain to get address for.</param>
+		/// <returns>A Uri object that contain the remote address for the domain server.</returns>
+		static public Uri GetDomainServiceUrl( string domainName )
+		{
+			DomainConfig domainCfg = new DomainConfig( domainName );
+			return domainCfg.ServiceUrl;
+		}
+
 		/// <summary>
 		/// Starts up the simias web service.
 		/// </summary>

@@ -96,11 +96,16 @@ namespace Simias.Domain
 		/// </summary>
 		public string Host
 		{
-			get	{ return ServiceUrl.Host; }
+			get	
+			{ 
+				Uri uri = ServiceUrl;
+				return (uri != null) ? uri.Host : null; 
+			}
 
 			set	
 			{ 
-				UriBuilder ub = new UriBuilder(ServiceUrl);
+				Uri uri = ServiceUrl;
+				UriBuilder ub = (uri != null) ? new UriBuilder(uri) : new UriBuilder(Uri.UriSchemeHttp, value);
 				ub.Host = value;
 				ServiceUrl = ub.Uri;
 			}
@@ -111,11 +116,16 @@ namespace Simias.Domain
 		/// </summary>
 		public int Port
 		{
-			get	{ return ServiceUrl.Port; }
+			get	
+			{ 
+				Uri uri = ServiceUrl;
+				return (uri != null) ? uri.Port : -1; 
+			}
 
 			set 
 			{ 
-				UriBuilder ub = new UriBuilder(ServiceUrl);
+				Uri uri = ServiceUrl;
+				UriBuilder ub = (uri != null) ? new UriBuilder(uri) : new UriBuilder(Uri.UriSchemeHttp, IPAddress.Any.ToString());
 				ub.Port = value;
 				ServiceUrl = ub.Uri;
 			}
@@ -140,10 +150,16 @@ namespace Simias.Domain
 		/// </summary>
 		public string Scheme
 		{
-			get { return ServiceUrl.Scheme; }
+			get 
+			{ 
+				Uri uri = ServiceUrl;
+				return (uri != null) ? uri.Scheme : Uri.UriSchemeHttp; 
+			}
+
 			set 
 			{ 
-				UriBuilder ub = new UriBuilder(ServiceUrl);
+				Uri uri = ServiceUrl;
+				UriBuilder ub = (uri != null) ? new UriBuilder(uri) : new UriBuilder(Uri.UriSchemeHttp, IPAddress.Any.ToString());
 				ub.Scheme = value;
 				ServiceUrl = ub.Uri;
 			}
@@ -157,7 +173,7 @@ namespace Simias.Domain
 			get 
 			{ 
 				string uriString = GetDomainAttribute(UriTag);
-				return (uriString != null) ? new Uri(uriString) : new UriBuilder(defaultScheme, IPAddress.Any.ToString(), 80).Uri;
+				return (uriString != null) ? new Uri(uriString) : null;
 			}
 
 			set { SetDomainAttribute(UriTag, value.ToString()); }
@@ -436,8 +452,13 @@ namespace Simias.Domain
 		{
 			// Construct the web client.
 			DomainService domainService = new DomainService();
-			domainService.Url = domainConfiguration.ServiceUrl.ToString() + "/DomainService.asmx";
+			Uri uri = domainConfiguration.ServiceUrl;
+			if (uri == null)
+			{
+				throw new SimiasException("Domain URL is not set.");
+			}
 
+			domainService.Url = uri.ToString() + "/DomainService.asmx";
 			Credentials cSimiasCreds = new Credentials(collection.ID);
 			domainService.Credentials = cSimiasCreds.GetCredentials();
 
@@ -479,12 +500,7 @@ namespace Simias.Domain
 		public Uri ServiceUrl
 		{
 			get { return domainConfiguration.ServiceUrl; }
-			set 
-			{ 
-				domainConfiguration.Scheme = value.Scheme;
-				domainConfiguration.Host = value.Host;
-				domainConfiguration.Port = value.Port;
-			}
+			set { domainConfiguration.ServiceUrl = value; }
 		}
 
 		/// <summary>

@@ -764,6 +764,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Sync\SyncPolicy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Sync\WeakHash.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
