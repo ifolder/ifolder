@@ -509,7 +509,7 @@ namespace Novell.iFolder.iFolderCom
 			}
 			catch (Exception e)
 			{
-				// TODO - log message.
+				logger.Debug(e, "ProcessEntry");
 			}
 		}
 
@@ -558,6 +558,10 @@ namespace Novell.iFolder.iFolderCom
 			{
 				ex.LogFatal();
 				Application.Exit();
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "RefreshList");
 			}
 
 			// Redraw the listview.
