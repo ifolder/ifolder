@@ -1,31 +1,54 @@
-STOREPROVIDER_CSFILES = AssemblyInfo.cs CSPException.cs IProvider.cs IResultSet.cs Provider.cs Query.cs Record.cs
-STOREPROVIDER_RESOURCES = Record.cs
-STOREPROVIDER_LIB = /r:System.dll /r:System.Data.dll /r:Configuration.dll
-STOREPROVIDER_LIBPATH = /lib:../Configuration
+StoreProvider_CSFILES := $(srcdir)/AssemblyInfo.cs $(srcdir)/CSPException.cs $(srcdir)/IProvider.cs $(srcdir)/IResultSet.cs $(srcdir)/Provider.cs $(srcdir)/Query.cs $(srcdir)/Record.cs
+StoreProvider_CSFILES_CSC := $(subst /,$(SEP),$(StoreProvider_CSFILES))
+StoreProvider_INCLUDES = 
+StoreProvider_RESOURCES =
+StoreProvider_FLAGS = $(CSC_LIBFLAG)
+StoreProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll
+StoreProvider_LIBPATH = ../Configuration
 
-all: StoreProvider.dll 
+NUNIT_TESTS := ProviderTest.dll
 
-StoreProvider.dll: $(STOREPROVIDER_CSFILES)
-	$(CSC) $(CSCFLAGS) $(CSC_LIBFLAG) -out:$@ $(STOREPROVIDER_CSFILES) $(STOREPROVIDER_LIB) $(STOREPROVIDER_LIBPATH)
+ProviderTest_CSFILES = $(srcdir)/Test/AssemblyInfo.cs $(srcdir)/Test/ProviderTests1.cs
+ProviderTest_CSFILES_CSC := $(subst /,$(SEP),$(ProviderTest_CSFILES))
+ProviderTest_INCLUDES = 
+ProviderTest_RESOURCES =
+ProviderTest_FLAGS = $(CSC_LIBFLAG)
+ProviderTest_LIBS = System.dll System.Data.dll $(SYSTEM_XML) StoreProvider.dll nunit.framework.dll
+ProviderTest_LIBPATH = Test $(srcdir)/../../tools/NUnit/bin
 
-clean:
+EXTRA_DIST = $(StoreProvider_CSFILES) $(ProviderTest_CSFILES)
+
+CUR_DIR := $(shell pwd)
+
+all: StoreProvider.dll
+
+StoreProvider.dll: $(StoreProvider_CSFILES) $(StoreProvider_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(StoreProvider_FLAGS) $(StoreProvider_LIBS:%=/r:%) $(StoreProvider_LIBPATH:%=/lib:%) $(StoreProvider_CSFILES_CSC) /doc:StoreProvider.xml
+
+ProviderTest.dll: $(ProviderTest_CSFILES) $(ProviderTest_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(ProviderTest_FLAGS) $(ProviderTest_LIBS:%=/r:%) $(ProviderTest_LIBPATH:%=/lib:%) $(ProviderTest_CSFILES_CSC)
+	
+install-exec-local: StoreProvider.dll
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) StoreProvider.dll $(DESTDIR)$(bindir)
+    
+uninstall-local:
+	cd $(DESTDIR)$(bindir); rm -f StoreProvider.dll $(NUNIT_TESTS)
+    
+installcheck-local: install $(NUNIT_TESTS)
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+#	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:ConfTests.xml $(NUNIT_TESTS)
+	
+CLEAN_FILES = StoreProvider.dll $(NUNIT_TESTS) StoreProvider.xml ConfTests.xml
+CLEAN_DIRS = .cstore
+
+clean-local:
 	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
+	rm -rf $(CLEAN_DIRS)
     
 distclean-local: clean
 
 maintainer-clean-local:
 	rm -f Makefile.in
-
-install-exec-local: StoreProvider.dll $(STOREPROVIDER_RESOURCES)
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) StoreProvider.dll $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(STOREPROVIDER_RESOURCES) $(DESTDIR)$(bindir)
-    
-uninstall-local:
-	rm -f $(DESTDIR)$(bindir)/StoreProvider.dll
-	rm -f $(DESTDIR)$(bindir)/$(STOREPROVIDER_RESOURCES)
-    
-EXTRA_DIST = $(STOREPROVIDER_CSFILES)
-
-CLEAN_FILES = StoreProvider.dll
 
