@@ -142,7 +142,6 @@ namespace Simias.Event
 		/// <param name="args">Arguments for the event.</param>
 		public void OnCollectionEventS(EventType changeType, string args)
 		{
-			EventBroker.logger.Debug("Default Subscriber Recieved Callback");
 			CollectionEventArgs eArgs = null;
 			switch (changeType)
 			{

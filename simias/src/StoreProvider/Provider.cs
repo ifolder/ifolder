@@ -23,6 +23,7 @@
 
 using System;
 using System.Xml;
+using System.Text;
 using System.IO;
 using System.Collections;
 using System.Reflection;
@@ -217,6 +218,16 @@ namespace Simias.Storage.Provider
 				conf.Set(CFG_Section, CFG_TypeName, value);
 			}
 		}
+
+		public string Get(string key, string defaultValue)
+		{
+			return (conf.Get(CFG_Section, key, defaultValue));
+		}
+
+		public void Set(string key, string keyValue)
+		{
+			conf.Set(CFG_Section, key, keyValue);
+		}
 	}
 
 	public class CommitException : SimiasException
@@ -230,5 +241,37 @@ namespace Simias.Storage.Provider
 			CreateDoc = createDoc;
 			DeleteDoc = deleteDoc;
 		}
+
+		public override string Message
+		{
+			get
+			{
+                StringBuilder sb = new StringBuilder();
+
+				if (CreateDoc != null)
+				{
+					sb.Append("Failed to create:" + Environment.NewLine);
+					XmlElement root = CreateDoc.DocumentElement;
+					XmlNodeList recordList = root.SelectNodes(XmlTags.ObjectTag);
+					foreach (XmlElement recordEl in recordList)
+					{
+						sb.Append(String.Format("{0}, {1}{2}", recordEl.GetAttribute(XmlTags.IdAttr), recordEl.GetAttribute(XmlTags.NameAttr), Environment.NewLine));
+					}
+				}
+
+				if (DeleteDoc != null)
+				{
+					sb.Append("Failed to delete:" + Environment.NewLine);
+					XmlElement root = DeleteDoc.DocumentElement;
+					XmlNodeList recordList = root.SelectNodes(XmlTags.ObjectTag);
+					foreach (XmlElement recordEl in recordList)
+					{
+						sb.Append(String.Format("{0}, {1}{2}", recordEl.GetAttribute(XmlTags.IdAttr), recordEl.GetAttribute(XmlTags.NameAttr), Environment.NewLine));
+					}
+				}
+				return (sb.ToString());
+			}
+		}
+
 	}
 }

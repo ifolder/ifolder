@@ -540,8 +540,6 @@ namespace Simias.Storage.Provider.Sqlite
 		
 			// Now add to the value table.
 			ValueTable.Insert(table, record, command);
-
-			logger.Info("Created Record {0}.", record.Id);
 		}
 
 		/// <summary>
@@ -597,13 +595,11 @@ namespace Simias.Storage.Provider.Sqlite
 					if (id == collectionId)
 					{
 						RemoveCollection(id, command);
-						logger.Info("Deleted Collection {0}.", collectionId);
 						break;
 					}
 					else
 					{
 						InternalDeleteRecord(id, collectionId, command);
-						logger.Info("Deleted Record {0}.", id);
 					}
 				}
 			}
@@ -661,11 +657,11 @@ namespace Simias.Storage.Provider.Sqlite
 			IDbCommand command = conn.command = conn.sqliteDb.CreateCommand();
 			
 			// Turn of synchronous access.
-			command.CommandText = "PRAGMA cache_size = 10000";
+			command.CommandText = "PRAGMA cache_size = " + conf.Get("CacheSize", "10000");
 			command.ExecuteNonQuery();
 
-			//command.CommandText = "PRAGMA synchronous = OFF";
-			//command.ExecuteNonQuery();
+			command.CommandText = "PRAGMA synchronous = " + conf.Get("Synchronous", "OFF");
+			command.ExecuteNonQuery();
 		}
 
 		#endregion
