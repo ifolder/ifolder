@@ -71,6 +71,7 @@ namespace Novell.iFolder.FormsBookLib
 		private Name name;
 		private AddressEntry homeAddrEntry;
 		private AddressEntry workAddrEntry;
+		private string loadPath;
 
 		private Novell.AddressBook.AddressBook addressBook = null;
 		private Contact contact = null;
@@ -99,21 +100,6 @@ namespace Novell.iFolder.FormsBookLib
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-
-			try
-			{
-				// Load the images.
-				// Get the base path.
-				string basePath = Path.Combine(Application.StartupPath, "res");
-
-				pictureContact.SizeMode = PictureBoxSizeMode.StretchImage;
-				pictureContact.Image = Image.FromFile(Path.Combine(basePath, "blankhead.png"));
-				picturePhone.Image = Image.FromFile(Path.Combine(basePath, "cellphone.png"));
-				pictureMail.Image = Image.FromFile(Path.Combine(basePath, "ico-mail.png"));
-				pictureAddress.Image = Image.FromFile(Path.Combine(basePath, "house.png"));
-				pictureWeb.Image = Image.FromFile(Path.Combine(basePath, "globe.png"));
-			}
-			catch{}
 
 			phoneHT = new Hashtable();
 			emailHT = new Hashtable();
@@ -659,6 +645,17 @@ namespace Novell.iFolder.FormsBookLib
 				this.addressBook = value;
 			}
 		}
+
+		/// <summary>
+		/// Sets the path where the library was loaded from.
+		/// </summary>
+		public string LoadPath
+		{
+			set
+			{
+				loadPath = value;
+			}
+		}
 		#endregion
 
 		#region Private Methods
@@ -867,6 +864,21 @@ namespace Novell.iFolder.FormsBookLib
 		#region Event Handlers
 		private void ContactEditor_Load(object sender, EventArgs e)
 		{
+			try
+			{
+				// Load the images.
+				// Get the base path.
+				string basePath = Path.Combine(loadPath != null ? loadPath : Application.StartupPath, "res");
+
+				pictureContact.SizeMode = PictureBoxSizeMode.StretchImage;
+				pictureContact.Image = Image.FromFile(Path.Combine(basePath, "blankhead.png"));
+				picturePhone.Image = Image.FromFile(Path.Combine(basePath, "cellphone.png"));
+				pictureMail.Image = Image.FromFile(Path.Combine(basePath, "ico-mail.png"));
+				pictureAddress.Image = Image.FromFile(Path.Combine(basePath, "house.png"));
+				pictureWeb.Image = Image.FromFile(Path.Combine(basePath, "globe.png"));
+			}
+			catch{}
+
 			if (contact != null)
 			{
 				// Initialize the dialog with the specified contact.

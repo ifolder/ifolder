@@ -202,6 +202,11 @@ namespace Novell.iFolder.FormsBookLib
 
 		public string LoadPath
 		{
+			get
+			{
+				return this.booksContacts1.LoadPath;
+			}
+
 			set
 			{
 				this.booksContacts1.LoadPath = value;
@@ -242,6 +247,7 @@ namespace Novell.iFolder.FormsBookLib
 		private void edit_Click(object sender, System.EventArgs e)
 		{
 			ContactEditor editor = new ContactEditor();
+			editor.LoadPath = LoadPath;
 			IEnumerator contactEnumerator = this.booksContacts1.SelectedContacts.GetEnumerator();
 			ListViewItem item = null;
 			while (contactEnumerator.MoveNext())

@@ -338,6 +338,11 @@ namespace Novell.iFolder.FormsBookLib
 		/// </summary>
 		public string LoadPath
 		{
+			get
+			{
+				return this.loadPath;
+			}
+
 			set
 			{
 				this.loadPath = value;
@@ -575,6 +580,7 @@ namespace Novell.iFolder.FormsBookLib
 		{
 			// Invoke the contact editor dialog.
 			ContactEditor editor = new ContactEditor();
+			editor.LoadPath = LoadPath;
 			editor.CurrentAddressBook = this.addressBook;
 			DialogResult result = editor.ShowDialog();
 			if (result == DialogResult.OK)
@@ -762,6 +768,7 @@ namespace Novell.iFolder.FormsBookLib
 			if (selectedItem != null)
 			{
 				ContactEditor editor = new ContactEditor();
+				editor.LoadPath = LoadPath;
 				editor.CurrentAddressBook = this.addressBook;
 				editor.CurrentContact = (Contact)selectedItem.Tag;
 				DialogResult result = editor.ShowDialog();
