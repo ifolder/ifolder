@@ -34,11 +34,13 @@
 @class SyncLogWindowController;
 @class CreateiFolderSheetController;
 @class SetupiFolderSheetController;
+@class PropertiesWindowController;
 
 @interface MainWindowController : NSWindowController
 {
 	LoginWindowController					*loginController;
 	iFolderPrefsController					*prefsController;
+	PropertiesWindowController				*propertiesController;
 	iFolderService							*webService;
 	NSMutableArray							*domains;
 	NSMutableArray							*ifolders;

@@ -27,6 +27,8 @@
 #import "iFolderPrefsController.h"
 #import "CreateiFolderSheetController.h"
 #import "SetupiFolderSheetController.h"
+#import "PropertiesWindowController.h"
+
 #include "SimiasEventHandlers.h"
 
 
@@ -268,6 +270,12 @@
 
 - (IBAction)showProperties:(id)sender
 {
+	if(propertiesController == nil)
+	{
+		propertiesController = [[PropertiesWindowController alloc] initWithWindowNibName:@"Properties"];
+	}
+	
+	[propertiesController showWindow:self];
 }
 
 

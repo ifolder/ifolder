@@ -204,8 +204,6 @@
 			<key>Layout</key>
 			<array>
 				<dict>
-					<key>BecomeActive</key>
-					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -244,17 +242,19 @@
 								<string>29B97314FDCFA39411CA2CEA</string>
 								<string>3E255FFC077235290062AB7A</string>
 								<string>080E96DDFE201D6D7F000001</string>
+								<string>1C08E77C0454961000C914BD</string>
 								<string>1C37FABC05509CD000000102</string>
 								<string>1CC0EA4004350EF90041110B</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>29</integer>
+									<integer>44</integer>
+									<integer>40</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 0}, {263, 738}}</string>
+							<string>{{0, 27}, {263, 738}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -285,7 +285,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>MainWindowController.m</string>
+								<string>MainWindowController.h</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -293,9 +293,9 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>MainWindowController.m</string>
+										<string>MainWindowController.h</string>
 										<key>bookmark</key>
-										<string>3E7CF60C0793809400AC9714</string>
+										<string>3EB8C535079396B60082AA86</string>
 										<key>history</key>
 										<array>
 											<string>3EAEF46C0769032700B98AF6</string>
@@ -312,7 +312,6 @@
 											<string>3EC39544078C5DD800FABAF9</string>
 											<string>3EC39545078C5DD800FABAF9</string>
 											<string>3EC395B1078C666D00FABAF9</string>
-											<string>3EC395D4078C6B1900FABAF9</string>
 											<string>3EC396C0078CB3FC00FABAF9</string>
 											<string>3EC397D5078CDE7500FABAF9</string>
 											<string>3E9EC07B078DDC3F00348D26</string>
@@ -331,23 +330,26 @@
 											<string>3E53B85B078F413100C89FAA</string>
 											<string>3E37B96C078F7DC800320A6A</string>
 											<string>3EEE0F7C078F86B70099DCCC</string>
-											<string>3EEE0FBD078F8A790099DCCC</string>
-											<string>3EFF98B407933CBD00D3C8E4</string>
 											<string>3EFF996E0793557C00D3C8E4</string>
-											<string>3EFF996F0793557C00D3C8E4</string>
 											<string>3EFF99BA07935F4D00D3C8E4</string>
 											<string>3EFF99D2079363B400D3C8E4</string>
 											<string>3EFF99D3079363B400D3C8E4</string>
 											<string>3EFF99D4079363B400D3C8E4</string>
-											<string>3EFF99FE0793681C00D3C8E4</string>
-											<string>3E7CF5C90793790C00AC9714</string>
 											<string>3E7CF5CB0793790C00AC9714</string>
 											<string>3E7CF5DC07937C5500AC9714</string>
 											<string>3E7CF5DD07937C5500AC9714</string>
-											<string>3E7CF5F507937D3B00AC9714</string>
-											<string>3E7CF5F607937D3B00AC9714</string>
 											<string>3E7CF5F707937D3B00AC9714</string>
-											<string>3E7CF60007937E2400AC9714</string>
+											<string>3EB8C4E70793817B0082AA86</string>
+											<string>3EB8C4E80793817B0082AA86</string>
+											<string>3EB8C4E90793817B0082AA86</string>
+											<string>3EB8C4EA0793817B0082AA86</string>
+											<string>3EB8C4EB0793817B0082AA86</string>
+											<string>3EB8C4FC079381C70082AA86</string>
+											<string>3EB8C518079394780082AA86</string>
+											<string>3EB8C519079394780082AA86</string>
+											<string>3EB8C51A079394780082AA86</string>
+											<string>3EB8C51B079394780082AA86</string>
+											<string>3EB8C51C079394780082AA86</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -396,26 +398,27 @@
 											<string>3EEAA547078F17B100EE44EE</string>
 											<string>3EFF99DC079363B500D3C8E4</string>
 											<string>3EFF99DD079363B500D3C8E4</string>
-											<string>3E7CF5BE079375A000AC9714</string>
-											<string>3E7CF5C40793774600AC9714</string>
-											<string>3E7CF5C50793774600AC9714</string>
-											<string>3E7CF5CD0793790C00AC9714</string>
-											<string>3E7CF5CE0793790C00AC9714</string>
-											<string>3E7CF5CF0793790C00AC9714</string>
-											<string>3E7CF5D00793790C00AC9714</string>
-											<string>3E7CF5D10793790C00AC9714</string>
-											<string>3E7CF5D20793790C00AC9714</string>
-											<string>3E7CF5D30793790C00AC9714</string>
-											<string>3E7CF5D7079379C800AC9714</string>
-											<string>3E7CF5E007937C5500AC9714</string>
-											<string>3E7CF5E107937C5500AC9714</string>
-											<string>3E7CF5E207937C5500AC9714</string>
-											<string>3E7CF5E307937C5500AC9714</string>
-											<string>3E7CF5E407937C5500AC9714</string>
-											<string>3E7CF5F907937D3B00AC9714</string>
-											<string>3E7CF5FA07937D3B00AC9714</string>
-											<string>3E7CF5FB07937D3B00AC9714</string>
-											<string>3E7CF5FC07937D3B00AC9714</string>
+											<string>3EB8C4ED0793817B0082AA86</string>
+											<string>3EB8C4EE0793817B0082AA86</string>
+											<string>3EB8C4EF0793817B0082AA86</string>
+											<string>3EB8C4F00793817B0082AA86</string>
+											<string>3EB8C4F10793817B0082AA86</string>
+											<string>3EB8C4F20793817B0082AA86</string>
+											<string>3EB8C4F30793817B0082AA86</string>
+											<string>3EB8C4F40793817B0082AA86</string>
+											<string>3EB8C4FE079381C70082AA86</string>
+											<string>3EB8C51D079394780082AA86</string>
+											<string>3EB8C51E079394780082AA86</string>
+											<string>3EB8C51F079394780082AA86</string>
+											<string>3EB8C520079394780082AA86</string>
+											<string>3EB8C521079394780082AA86</string>
+											<string>3EB8C522079394780082AA86</string>
+											<string>3EB8C523079394780082AA86</string>
+											<string>3EB8C524079394780082AA86</string>
+											<string>3EB8C525079394780082AA86</string>
+											<string>3EB8C526079394780082AA86</string>
+											<string>3EB8C527079394780082AA86</string>
+											<string>3EB8C528079394780082AA86</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -473,9 +476,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>3E7CF5B70793754100AC9714</string>
+				<string>3EB8C4F60793817B0082AA86</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>3E7CF5B80793754100AC9714</string>
+				<string>3EB8C4F70793817B0082AA86</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -503,10 +506,9 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>3EDEFB6E07682FCB00A3AD33</string>
-		<string>3E7CF5EA07937C8E00AC9714</string>
-		<string>1C0AD2B3069F1EA900FABCE6</string>
+		<string>3EB8C4F90793817B0082AA86</string>
 		<string>1CD10A99069EF8BA00B06720</string>
+		<string>1C0AD2B3069F1EA900FABCE6</string>
 		<string>/Users/calvin/code/ifolder/ifolder/src/OSXClient/iFolder.xcode</string>
 	</array>
 	<key>WindowString</key>
@@ -639,8 +641,8 @@
 										<string>yes</string>
 										<key>sizes</key>
 										<array>
-											<string>{{0, 0}, {514, 300}}</string>
-											<string>{{514, 0}, {710, 300}}</string>
+											<string>{{0, 0}, {501, 300}}</string>
+											<string>{{501, 0}, {723, 300}}</string>
 										</array>
 									</dict>
 									<key>VerticalSplitView</key>
@@ -703,9 +705,9 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1CD10A99069EF8BA00B06720</string>
-				<string>3E7CF5E907937C8E00AC9714</string>
+				<string>3EB8C4F80793817B0082AA86</string>
 				<string>1C162984064C10D400B95A72</string>
-				<string>3E7CF5EA07937C8E00AC9714</string>
+				<string>3EB8C4F90793817B0082AA86</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debug</string>
@@ -908,8 +910,8 @@
 										<string>yes</string>
 										<key>sizes</key>
 										<array>
-											<string>{{0, 0}, {491, 167}}</string>
-											<string>{{0, 176}, {491, 267}}</string>
+											<string>{{0, 0}, {493, 167}}</string>
+											<string>{{0, 176}, {493, 267}}</string>
 										</array>
 									</dict>
 									<key>VerticalSplitView</key>
@@ -958,9 +960,9 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C0AD2B3069F1EA900FABCE6</string>
-				<string>3E7CF5B90793754100AC9714</string>
+				<string>3EB8C4FA0793817B0082AA86</string>
 				<string>1CD0528B0623707200166675</string>
-				<string>3E7CF5BA0793754100AC9714</string>
+				<string>3EB8C4FB0793817B0082AA86</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.run</string>
