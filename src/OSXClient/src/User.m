@@ -71,4 +71,10 @@
 }
 
 
+-(NSString *) UserID
+{
+	return [self valueForKeyPath:@"properties.UserID"]; 
+}
+
+
 @end

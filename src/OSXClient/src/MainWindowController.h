@@ -97,6 +97,8 @@
 
 - (void)initializeSimiasEvents;
 
+-(NSString *)seletediFolderID;
+
 // menu validation
 - (BOOL)validateUserInterfaceItem:(id)anItem;
 

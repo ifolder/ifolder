@@ -479,6 +479,10 @@
 	return domainsController;
 }
 
+-(NSString *)seletediFolderID
+{
+	return [[ifoldersController selection] valueForKeyPath:@"properties.ID"];
+}
 
 
 

@@ -45,6 +45,7 @@
 -(NSMutableDictionary *) properties;
 -(void) setProperties: (NSDictionary *)newProperties;
 
+-(NSString *) UserID;
 
 
 @end
