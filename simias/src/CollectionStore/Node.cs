@@ -289,7 +289,7 @@ namespace Simias.Storage
 		}
 		#endregion
 
-		#region Constructors
+		#region Constructors / Finalizer
 		/// <summary>
 		/// Constructor for creating new and existing node objects where the collection is not known ahead of time.
 		/// If this is a new node, a new property list is instaniated, otherwise the node is built without properties.
@@ -300,7 +300,7 @@ namespace Simias.Storage
 		/// <param name="name">This is the name that is used by applications to describe the node.</param>
 		/// <param name="id">The globally unique identifier for this node.</param>
 		/// <param name="type">Type of node to create.</param>
-		/// <param name="persisted">Set to true if this is a new node, otherwise false.</param>
+		/// <param name="persisted">Set to true if this is a node that already exists in the database, otherwise false.</param>
 		internal Node( Store store, string name, string id, string type, bool persisted )
 		{
 			cNode = new CacheNode( store, id );
@@ -355,29 +355,13 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Constructor for creating an existing node object.
-		/// </summary>
-		/// <param name="collection">The collection that this node belongs to.</param>
-		/// <param name="xmlProperties">List of properties that belong to this node.</param>
-		internal Node( Collection collection, XmlElement xmlProperties )
-		{
-			cNode = new CacheNode( collection.LocalStore, xmlProperties.GetAttribute( Property.IDAttr ));
-			cNode.collection = collection;
-			cNode.name = xmlProperties.GetAttribute( Property.NameAttr );
-			cNode.type = xmlProperties.GetAttribute( Property.TypeAttr );
-			cNode.properties = new PropertyList( this, xmlProperties );
-			cNode.isPersisted = true;
-			cNode = cNode.AddToCacheTable();
-		}
-
-		/// <summary>
 		/// Constructor for creating an existing node object without properties.
 		/// </summary>
 		/// <param name="collection">The collection that this node belongs to.</param>
 		/// <param name="name">This is the name that is used by applications to describe the node.</param>
 		/// <param name="id">The globally unique identifier for this node.</param>
 		/// <param name="type">Type of node to create.</param>
-		/// <param name="persisted">Set to true if this is a new node, otherwise false.</param>
+		/// <param name="persisted">Set to true if this is a node that already exists in the database, otherwise false.</param>
 		internal Node( Collection collection, string name, string id, string type, bool persisted )
 		{
 			cNode = new CacheNode( collection.LocalStore, id.ToLower() );
@@ -410,42 +394,62 @@ namespace Simias.Storage
 		/// after it is constructed.
 		/// </summary>
 		/// <param name="collection">Collection that this new node will belong to.</param>
-		/// <param name="xmlNode">Xml document that describes the node.</param>
-		/// <param name="persisted">Set to true if this is a new node, otherwise false.</param>
-		internal Node( Collection collection, XmlElement xmlNode, bool persisted )
+		/// <param name="xmlProperties">Xml document that describes the node.</param>
+		/// <param name="persisted">Set to true if this is a node that already exists in the database, otherwise false.</param>
+		/// <param name="imported">Set to true if this node is being imported from another location.</param>
+		/// <param name="useCache">Set to true if node cache is to be checked for existing node.</param>
+		internal Node( Collection collection, XmlElement xmlProperties, bool persisted, bool imported, bool useCache )
 		{
-			cNode = new CacheNode( collection.LocalStore, xmlNode.GetAttribute( Property.IDAttr ) );
+			cNode = new CacheNode( collection.LocalStore, xmlProperties.GetAttribute( Property.IDAttr ) );
 			cNode.collection = collection;
-			cNode.name = xmlNode.GetAttribute( Property.NameAttr );
-			cNode.type = xmlNode.GetAttribute( Property.TypeAttr );
+			cNode.name = xmlProperties.GetAttribute( Property.NameAttr );
+			cNode.type = xmlProperties.GetAttribute( Property.TypeAttr );
 			cNode.isPersisted = persisted;
 
-			XmlDocument nodeDocument = new XmlDocument();
-			nodeDocument.AppendChild( nodeDocument.CreateElement( Property.ObjectListTag ) );
-			nodeDocument.DocumentElement.AppendChild( nodeDocument.ImportNode( xmlNode, true ) );
-			cNode.properties = new PropertyList( this, nodeDocument.DocumentElement[ Property.ObjectTag ] );
-
-			// See if this node already has a master and local version property.  If it doesn't then add them.
-			Property mvProp = Properties.GetSingleProperty( Property.MasterIncarnation );
-			if ( mvProp == null )
+			if ( imported )
 			{
-				mvProp = new Property( Property.MasterIncarnation, ( ulong )0 );
-				mvProp.LocalProperty = true;
-				Properties.AddNodeProperty( mvProp );
-			}
+				XmlDocument nodeDocument = new XmlDocument();
+				nodeDocument.AppendChild( nodeDocument.CreateElement( Property.ObjectListTag ) );
+				nodeDocument.DocumentElement.AppendChild( nodeDocument.ImportNode( xmlProperties, true ) );
+				cNode.properties = new PropertyList( this, nodeDocument.DocumentElement[ Property.ObjectTag ] );
 
-			Property lvProp = Properties.GetSingleProperty( Property.LocalIncarnation );
-			if ( lvProp == null )
+				// See if this node already has a master and local version property.  If it doesn't then add them.
+				Property mvProp = Properties.GetSingleProperty( Property.MasterIncarnation );
+				if ( mvProp == null )
+				{
+					mvProp = new Property( Property.MasterIncarnation, ( ulong )0 );
+					mvProp.LocalProperty = true;
+					Properties.AddNodeProperty( mvProp );
+				}
+
+				Property lvProp = Properties.GetSingleProperty( Property.LocalIncarnation );
+				if ( lvProp == null )
+				{
+					lvProp = new Property( Property.LocalIncarnation, ( ulong )0 );
+					lvProp.LocalProperty = true;
+					Properties.AddNodeProperty( lvProp );
+				}
+
+				// See if the cache is to be checked.
+				if ( useCache )
+				{
+					cNode = cNode.AddToCacheTable();
+				}
+
+				// Add this node to the dirty list.
+				CollectionNode.AddDirtyNodeToList( this );
+			}
+			else
 			{
-				lvProp = new Property( Property.LocalIncarnation, ( ulong )0 );
-				lvProp.LocalProperty = true;
-				Properties.AddNodeProperty( lvProp );
+				// Create the property list.
+				cNode.properties = new PropertyList( this, xmlProperties );
+
+				// See if the cache is to be checked.
+				if ( useCache )
+				{
+					cNode = cNode.AddToCacheTable();
+				}
 			}
-
-			cNode = cNode.AddToCacheTable();
-
-			// Add this node to the dirty list.
-			CollectionNode.AddDirtyNodeToList( this );
 		}
 
 		/// <summary>
@@ -455,6 +459,20 @@ namespace Simias.Storage
 		internal Node( CacheNode cNode )
 		{
 			this.cNode = cNode;
+		}
+
+		/// <summary>
+		/// Use C# destructor syntax for finalization code.
+		/// This destructor will run only if the Dispose method does not get called.
+		/// It gives your base class the opportunity to finalize.
+		/// Do not provide destructors in types derived from this class.
+		/// </summary>
+		~Node()
+		{
+			if ( cNode != null )
+			{
+				cNode.Dispose();
+			}
 		}
 		#endregion
 
@@ -583,7 +601,7 @@ namespace Simias.Storage
 					XmlDocument xmlNode = new XmlDocument();
 					xmlNode.LoadXml( xmlString );
 
-					Node tempNode = new Node( CollectionNode, xmlNode.DocumentElement[ Property.ObjectTag ] );
+					Node tempNode = new Node( CollectionNode, xmlNode.DocumentElement[ Property.ObjectTag ], true, false, false );
 					if ( !tempNode.IsTombstone )
 					{
 						// Make sure the node is not stale.
@@ -831,13 +849,14 @@ namespace Simias.Storage
 			CollectionNode.RemoveDirtyNodeFromList( this );
 
 			// Fire an event for this commit action.
+			Store store = CollectionNode.LocalStore;
 			if ( IsPersisted )
 			{
-				CollectionNode.LocalStore.Publisher.RaiseNodeEvent( new NodeEventArgs( CollectionNode.LocalStore.ComponentId, Id, CollectionNode.Id, CollectionNode.LocalStore.DomainName, NameSpaceType, NodeEventArgs.EventType.Changed ) );
+				store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, store.DomainName, NameSpaceType, NodeEventArgs.EventType.Changed, store.Instance ) );
 			}
 			else
 			{
-				CollectionNode.LocalStore.Publisher.RaiseNodeEvent( new NodeEventArgs( CollectionNode.LocalStore.ComponentId, Id, CollectionNode.Id, CollectionNode.LocalStore.DomainName, NameSpaceType, NodeEventArgs.EventType.Created ) );
+				store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, store.DomainName, NameSpaceType, NodeEventArgs.EventType.Created, store.Instance ) );
 			}
 
 			// This node has been successfully committed to the database.
@@ -894,6 +913,9 @@ namespace Simias.Storage
 		/// <returns>Returns the node as a tombstone object.</returns>
 		public Node Delete( bool deep )
 		{
+			// Get a handle to the store.
+			Store store = CollectionNode.LocalStore;
+
 			// No sense in deleting a node that has not been persisted.
 			if ( IsPersisted )
 			{
@@ -911,7 +933,7 @@ namespace Simias.Storage
 					if ( IsCollection )
 					{
 						// Generate a delete event.
-						CollectionNode.LocalStore.Publisher.RaiseNodeEvent( new NodeEventArgs( CollectionNode.LocalStore.ComponentId, Id, CollectionNode.Id, CollectionNode.LocalStore.DomainName, NameSpaceType, NodeEventArgs.EventType.Deleted) );
+						store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, store.DomainName, NameSpaceType, NodeEventArgs.EventType.Deleted, store.Instance ) );
 
 						// Just delete the collection, the store provider will remove all of the nodes.
 						ChangeToTombstone( false );
@@ -928,7 +950,7 @@ namespace Simias.Storage
 							foreach ( Node delNode in idList )
 							{
 								// Generate a delete event.
-								CollectionNode.LocalStore.Publisher.RaiseNodeEvent( new NodeEventArgs( CollectionNode.LocalStore.ComponentId, delNode.Id, CollectionNode.Id, CollectionNode.LocalStore.DomainName, delNode.NameSpaceType, NodeEventArgs.EventType.Deleted ) );
+								store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, delNode.Id, CollectionNode.Id, store.DomainName, delNode.NameSpaceType, NodeEventArgs.EventType.Deleted, store.Instance ) );
 
 								// Change the current this object into a tombstone rather than using the
 								// enumerated object.  That way the tombstone will be passed back to the caller.
@@ -964,7 +986,7 @@ namespace Simias.Storage
 						if ( IsCollection )
 						{
 							// Generate a delete event.
-							CollectionNode.LocalStore.Publisher.RaiseNodeEvent( new NodeEventArgs( CollectionNode.LocalStore.ComponentId, Id, CollectionNode.Id, CollectionNode.LocalStore.DomainName, NameSpaceType, NodeEventArgs.EventType.Deleted ) );
+							store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, store.DomainName, NameSpaceType, NodeEventArgs.EventType.Deleted, store.Instance ) );
 
 							// Find the node object and delete it from the persistent store.
 							ChangeToTombstone( false );
@@ -973,7 +995,7 @@ namespace Simias.Storage
 						else
 						{
 							// Generate a delete event.
-							CollectionNode.LocalStore.Publisher.RaiseNodeEvent( new NodeEventArgs( CollectionNode.LocalStore.ComponentId, Id, CollectionNode.Id, CollectionNode.LocalStore.DomainName, NameSpaceType, NodeEventArgs.EventType.Deleted ) );
+							store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, store.DomainName, NameSpaceType, NodeEventArgs.EventType.Deleted, store.Instance ) );
 
 							// Convert this node to a tombstone and immediately commit it.
 							ChangeToTombstone( true );
@@ -1118,11 +1140,11 @@ namespace Simias.Storage
 									break;
 
 								case NodeType:
-									node = new Node( CollectionNode, element );
+									node = new Node( CollectionNode, element, true, false, true );
 									break;
 
 								case TombstoneType:
-									node = new Node( CollectionNode, element );
+									node = new Node( CollectionNode, element, true, false, true );
 									break;
 
 								default:
@@ -1813,21 +1835,6 @@ namespace Simias.Storage
 				Dispose( false );
 			}
 			#endregion
-		}
-
-		/// <summary>
-		/// Use C# destructor syntax for finalization code.
-		/// This destructor will run only if the Dispose method does not get called.
-		/// It gives your base class the opportunity to finalize.
-		/// Do not provide destructors in types derived from this class.
-		/// </summary>
-		~Node()
-		{
-			// Dispose managed resources.
-			if ( cNode != null )
-			{
-				cNode.Dispose();
-			}
 		}
 		#endregion
 	}

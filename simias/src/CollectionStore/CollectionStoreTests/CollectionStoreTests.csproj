@@ -89,6 +89,11 @@
                     AssemblyName = "nunit.framework"
                     HintPath = "..\..\..\tools\nunit\bin\nunit.framework.dll"
                 />
+                <Reference
+                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
+                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
+                    HintPath = "..\..\..\..\SecureChannelSinks\Common\Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll"
+                />
             </References>
         </Build>
         <Files>

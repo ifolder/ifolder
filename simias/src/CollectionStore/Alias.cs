@@ -24,11 +24,7 @@
  ***********************************************************************/
 
 using System;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
-using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -49,6 +45,16 @@ namespace Simias.Storage
 		/// Unique identifier for this alias.
 		/// </summary>
 		private string id;
+
+		/// <summary>
+		/// Credential used to authenticate to the domain server.
+		/// </summary>
+		private RSACryptoServiceProvider credential;
+
+		/// <summary>
+		/// String used to reconstitute credentials;
+		/// </summary>
+		private string credentialString;
 		#endregion
 
 		#region Properties
@@ -67,6 +73,23 @@ namespace Simias.Storage
 		{
 			get { return id; }
 		}
+
+		/// <summary>
+		/// Gets the domain's public key.
+		/// </summary>
+		public RSACryptoServiceProvider PublicKey
+		{
+			get 
+			{ 
+				if ( credential == null )
+				{
+					credential = new RSACryptoServiceProvider();
+					credential.FromXmlString( credentialString );
+				}
+
+				return credential; 
+			}
+		}
 		#endregion
 
 		#region Constructors
@@ -81,6 +104,10 @@ namespace Simias.Storage
 			alias.LoadXml( aliasProperty.Value as string );
 			this.domain = alias.DocumentElement.GetAttribute( Property.DomainName );
 			this.id = alias.DocumentElement.GetAttribute( Property.IDAttr );
+
+			// Don't reconstitute the credentials yet. Wait until they are asked for.
+			this.credential = null;
+			this.credentialString = alias.InnerText;
 		}
 
 		/// <summary>
@@ -88,10 +115,13 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="domain">Domain where this alias exists.</param>
 		/// <param name="id">Unique identifier for this alias.</param>
-		internal Alias( string domain, string id )
+		/// <param name="credential">The public key for the specified domain.</param>
+		internal Alias( string domain, string id, RSACryptoServiceProvider credential )
 		{
 			this.domain = domain;
 			this.id = id;
+			this.credential = credential;
+			this.credentialString = credential.ToXmlString( false );
 		}
 		#endregion
 
@@ -100,7 +130,7 @@ namespace Simias.Storage
 		/// Gets a xml string representation of the alias object.  This is the format used to store the object in the
 		/// collection store.
 		/// </summary>
-		/// <returns>An string that represents the serialized alias object.</returns>
+		/// <returns>A string that represents the serialized alias object.</returns>
 		internal string ToXmlString()
 		{
 			// Create an xml document that will hold the serialized object.
@@ -111,6 +141,7 @@ namespace Simias.Storage
 			// Set the attributes on the object.
 			aliasRoot.SetAttribute( Property.DomainName, domain );
 			aliasRoot.SetAttribute( Property.IDAttr, id );
+			aliasRoot.InnerText = credentialString;
 			return alias.OuterXml;
 		}
 		#endregion

@@ -1,6 +1,6 @@
 /***********************************************************************
  *  Identity.cs - Class that represents a user in the Collection Store.
- * 
+ *
  *  Copyright (C) 2004 Novell, Inc.
  *
  *  This library is free software; you can redistribute it and/or
@@ -19,85 +19,151 @@
  *
  *  Author: Mike Lasky <mlasky@novell.com>
  *			Brady Anderson <banderso@novell.com>
- * 
+ *
  ***********************************************************************/
 
 using System;
 using System.Collections;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
-using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
 
 namespace Simias.Storage
 {
+	/// <summary>
+	/// Class that is used to manage domain public keys.
+	/// </summary>
+	internal class DomainPublicKey
+	{
+		#region Class Members
+		/// <summary>
+		/// Name of the domain that the public key belongs to.
+		/// </summary>
+		private string domain;
+
+		/// <summary>
+		/// Public key credential to authenticate to the domain.
+		/// </summary>
+		private RSACryptoServiceProvider credential;
+		#endregion
+
+		#region	 Properties
+		/// <summary>
+		/// Gets the domain that the public key belongs to.
+		/// </summary>
+		public string Domain
+		{
+			get { return domain; }
+		}
+
+		/// <summary>
+		/// Gets the public key for the domain.
+		/// </summary>
+		public RSACryptoServiceProvider PublicKey
+		{
+			get { return credential; }
+		}
+		#endregion
+
+		#region Constructors
+		/// <summary>
+		/// Constructor for the object.
+		/// </summary>
+		/// <param name="domain">Domain that the public key belongs to.</param>
+		/// <param name="credential">Public key credential to authenticate to the domain.</param>
+		public DomainPublicKey( string domain, RSACryptoServiceProvider credential )
+		{
+			this.domain = domain;
+			this.credential = credential;
+		}
+
+		/// <summary>
+		/// Constructor to create an empty object.
+		/// </summary>
+		public DomainPublicKey()
+		{
+			this.domain = null;
+			this.credential = null;
+		}
+		#endregion
+
+		#region Public Methods
+		/// <summary>
+		/// Reconstructs a DomainPublicKey object from an xml string.
+		/// </summary>
+		/// <param name="xmlString">String used to reconstruct object.</param>
+		public void FromXmlString( string xmlString )
+		{
+			XmlDocument dpkDocument = new XmlDocument();
+			dpkDocument.LoadXml( xmlString );
+
+			this.domain = dpkDocument.DocumentElement.GetAttribute( Property.DomainName );
+			this.credential = new RSACryptoServiceProvider();
+			this.credential.FromXmlString( dpkDocument.DocumentElement.InnerText );
+		}
+
+		/// <summary>
+		/// Gets a xml string representation of the DomainPublicKey object.  This is the format used to
+		/// store the object as a property on the identity object.
+		/// </summary>
+		/// <returns>A string that represents the serialized DomainPublicKey object.</returns>
+		public string ToXmlString()
+		{
+			// Create an xml document that will hold the serialized object.
+			XmlDocument dpkDocument = new XmlDocument();
+			XmlElement dpkRoot = dpkDocument.CreateElement( Property.ClientPublicKey );
+			dpkDocument.AppendChild( dpkRoot );
+
+			// Set the attributes on the object.
+			dpkRoot.SetAttribute( Property.DomainName, domain );
+			dpkRoot.InnerText = credential.ToXmlString( false );
+			return dpkRoot.OuterXml;
+		}
+		#endregion
+	}
+
+
 	/// <summary>
 	/// Class that represents a user in the Collection Store.
 	/// </summary>
 	public class Identity : Node
 	{
+		#region Class Members
+		/// <summary>
+		/// The local address book that this identity belongs to.
+		/// </summary>
+		private LocalAddressBook localAb;
+		#endregion
+
 		#region Properties
 		/// <summary>
-		/// Gets the public/private key values for the specified identity.
-		/// NOTE: Usually this type of method is not provided as allowing anyone access to the private key is a
-		/// bad idea.  However, in the case of Collection Store the private key is stored in the local database
-		/// and is assumed to be protected by the file system access control. If a process has access to the file
-		/// system and is the database owner, then it would have access to this key information.
+		/// Gets the local address book that this identity belongs to.
 		/// </summary>
-		public RSAParameters KeyValues
+		internal LocalAddressBook AddressBook
 		{
-			get
-			{
-				// Lookup the credential property on the identity.
-				Property p = Properties.GetSingleProperty( Property.Credential );
-				if ( p != null )
-				{
-					RSA credential = RSA.Create();
-					credential.FromXmlString( p.Value as string );
-					return credential.ExportParameters( true );
-				}
-				else
-				{
-					throw new ApplicationException( "Key values not set on identity." );
-				}
-			}
+			get { return localAb; }
 		}
 
 		/// <summary>
-		/// Gets the public key belonging to this identity as an RSAParameters object.
+		/// Gets the public/private key values for the specified identity.
 		/// </summary>
-		public RSAParameters PublicKey
+		internal RSACryptoServiceProvider ServerCredential
 		{
 			get
 			{
 				// Lookup the credential property on the identity.
-				Property p = Properties.GetSingleProperty( Property.Credential );
+				Property p = Properties.FindSingleValue( Property.ServerCredential );
 				if ( p != null )
 				{
-					RSA credential = RSA.Create();
+					RSACryptoServiceProvider credential = new RSACryptoServiceProvider();
 					credential.FromXmlString( p.Value as string );
-					return credential.ExportParameters( false );
+					return credential;
 				}
 				else
 				{
-					throw new ApplicationException( "Public key is not set on identity." );
+					throw new ApplicationException( "Server credential not set on identity." );
 				}
-			}
-
-			set
-			{
-				// Create a new key set for this identity.
-				RSA credential = RSA.Create();
-				credential.ImportParameters( value );
-
-				// Store the credentials as a property.
-				Property p = new Property( Property.Credential, credential.ToXmlString( false ) );
-				p.LocalProperty = true;
-				p.HiddenProperty = true;
-				Properties.ModifyNodeProperty( p );
 			}
 		}
 		#endregion
@@ -113,7 +179,7 @@ namespace Simias.Storage
 		internal Identity( LocalAddressBook localAb, string userName, string userGuid, string type ) :
 			base ( localAb, userName, userGuid, type )
 		{
-			// Add the address book collection as the parent for this node.
+			this.localAb = localAb;
 			SetParent( localAb );
 		}
 
@@ -126,6 +192,7 @@ namespace Simias.Storage
 		public Identity( LocalAddressBook localAb, string userName, string userGuid ) :
 			this ( localAb, userName, userGuid, Property.IdentityType )
 		{
+			this.localAb = localAb;
 		}
 
 		/// <summary>
@@ -136,6 +203,7 @@ namespace Simias.Storage
 		public Identity( LocalAddressBook localAb, string userName ) :
 			this( localAb, userName, Guid.NewGuid().ToString().ToLower(), Property.IdentityType )
 		{
+			this.localAb = localAb;
 		}
 
 		/// <summary>
@@ -146,7 +214,8 @@ namespace Simias.Storage
 			base( node.cNode )
 		{
 			// Need to convert the collection type to a local address book type.
-			InternalCollectionHandle = new LocalAddressBook( CollectionNode.LocalStore, CollectionNode );
+			this.localAb = new LocalAddressBook( CollectionNode.LocalStore, CollectionNode );
+			InternalCollectionHandle = this.localAb;
 		}
 		#endregion
 
@@ -179,19 +248,83 @@ namespace Simias.Storage
 
 		#region Internal Methods
 		/// <summary>
+		/// Adds the specified public key to this identity's client credential list.
+		/// </summary>
+		/// <param name="domain">Domain that the public key belongs to.</param>
+		/// <param name="publicKey">Public key for the domain.</param>
+		internal void AddPublicKey( string domain, RSACryptoServiceProvider publicKey )
+		{
+			// Create an xml document that will hold the serialized object.
+			DomainPublicKey dpk = new DomainPublicKey( domain, publicKey );
+
+			// Set the property on the identity object.  Don't show this property through normal
+			// enumeration.  But, let the property replicate.
+			Property clientpkp = new Property( Property.ClientCredential, dpk.ToXmlString() );
+			clientpkp.HiddenProperty = true;
+			Properties.AddNodeProperty( clientpkp );
+		}
+
+		/// <summary>
 		/// Generates an RSA public/private key pair that will be used to authenticate this identity
 		/// to a remote connection.
 		/// </summary>
 		internal void CreateKeyPair()
 		{
 			// The RSA parameters will be stored as a string object on the identity node.
-			RSA credential = RSA.Create();
+			RSACryptoServiceProvider credential = RsaKeyStore.CreateRsaKeys();
 			
 			// Create a local, hidden property to store the credential in.
-			Property p = new Property( Property.Credential, credential.ToXmlString( true ) );
+			Property p = new Property( Property.ServerCredential, credential.ToXmlString( true ) );
 			p.HiddenProperty = true;
 			p.LocalProperty = true;
 			Properties.ModifyNodeProperty( p );
+		}
+
+		/// <summary>
+		/// Removes the public key associated with the specified domain.
+		/// </summary>
+		/// <param name="domain">Domain that public key belongs to.</param>
+		internal void DeletePublicKey( string domain )
+		{
+			// Look up any client credential properties for this identity.
+			MultiValuedList mvl = Properties.FindValues( Property.ClientCredential, true );
+			foreach ( Property keyProp in mvl )
+			{
+				// Export the public key from the client credentials.
+				DomainPublicKey dpk = new DomainPublicKey();
+				dpk.FromXmlString( keyProp.Value as String );
+				if ( dpk.Domain == domain )
+				{
+					keyProp.DeleteProperty();
+					break;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets a public key for the specified domain.
+		/// </summary>
+		/// <param name="domain">Domain that public key belongs to.</param>
+		/// <returns>The public key for the specified domain.</returns>
+		internal RSACryptoServiceProvider GetDomainPublicKey( string domain )
+		{
+			RSACryptoServiceProvider credential = null;
+
+			// Look up any client credential properties for this identity.
+			MultiValuedList mvl = Properties.FindValues( Property.ClientCredential, true );
+			foreach ( Property keyProp in mvl )
+			{
+				// Export the public key from the client credentials.
+				DomainPublicKey dpk = new DomainPublicKey();
+				dpk.FromXmlString( keyProp.Value as String );
+				if ( dpk.Domain == domain )
+				{
+					credential = dpk.PublicKey;
+					break;
+				}
+			}
+
+			return credential;
 		}
 		#endregion
 
@@ -201,10 +334,24 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="domain">Domain that id is contained in.</param>
 		/// <param name="userGuid">Unique identifier that user is known as in specified domain. </param>
-		public Alias CreateAlias( string domain, string userGuid )
+		/// <param name="publicKeyString">Domain's public key represented as a string.</param>
+		public Alias CreateAlias( string domain, string userGuid, string publicKeyString )
 		{
-			// Set up an alias object to store on this identity. 
-			Alias alias = new Alias( domain, userGuid );
+			RSACryptoServiceProvider publicKey = new RSACryptoServiceProvider();
+			publicKey.FromXmlString( publicKeyString );
+			return CreateAlias( domain, userGuid, publicKey );
+		}
+
+		/// <summary>
+		/// Sets a property on the identity object that represents this identity in another domain.
+		/// </summary>
+		/// <param name="domain">Domain that id is contained in.</param>
+		/// <param name="userGuid">Unique identifier that user is known as in specified domain. </param>
+		/// <param name="publicKey">Domain's public key.</param>
+		public Alias CreateAlias( string domain, string userGuid, RSACryptoServiceProvider publicKey )
+		{
+			// Set up an alias object to store on this identity.
+			Alias alias = new Alias( domain, userGuid, publicKey );
 
 			// Look for an existing alias property.
 			Property aliasProperty = FindAliasProperty( domain, userGuid );
@@ -246,6 +393,28 @@ namespace Simias.Storage
 		{
 			Property p = FindAliasProperty( domain, userGuid );
 			return ( p != null ) ? new Alias( p ) : null;
+		}
+
+		/// <summary>
+		/// Returns the alias object that the current user is known as in the specified domain.
+		/// </summary>
+		/// <param name="domain">The domain that the user is in.</param>
+		/// <returns>An alias object representing the user in the specified domain.</returns>
+		public Alias GetAliasFromDomain( string domain )
+		{
+			Alias alias = null;
+
+			// Look through the list of aliases that this identity is known by in other domains.
+			foreach ( Alias tempAlias in GetAliasList() )
+			{
+				if ( tempAlias.Domain == domain )
+				{
+					alias = tempAlias;
+					break;
+				}
+			}
+
+			return alias;
 		}
 
 		/// <summary>

@@ -99,6 +99,16 @@
                     Project = "{7BD9D007-359B-4A8F-AC5D-48C75222D0A4}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
+                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
+                    HintPath = "..\..\..\SecureChannelSinks\Common\Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll"
+                />
+                <Reference
+                    Name = "Common"
+                    Project = "{2E918CCD-6919-4453-9BDE-1FF22657CAB5}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>

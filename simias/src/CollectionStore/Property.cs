@@ -327,7 +327,12 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known XML attribute.
 		/// </summary>
-		internal const string Credential = "AB:Credential";
+		internal const string ServerCredential = "AB:ServerCredential";
+
+		/// <summary>
+		/// Well known XML attribute.
+		/// </summary>
+		internal const string ClientCredential = "AB:ClientCredential";
 
 		/// <summary>
 		/// Well known XML attribute.
@@ -338,6 +343,11 @@ namespace Simias.Storage
 		///  Well known XML attribute.
 		/// </summary>
 		internal const string IdentityRole = "AB:Role";
+
+		/// <summary>
+		/// Well known XML attribute;
+		/// </summary>
+		internal const string ClientPublicKey = "ClientPublicKey";
 
 		/// <summary>
 		/// Well known XML attribute.
@@ -650,10 +660,12 @@ namespace Simias.Storage
 			systemPropertyTable.Add( NodeFileSystemEntry, null );
 			systemPropertyTable.Add( LocalAddressBook, null );
 			systemPropertyTable.Add( Alias, null );
-			systemPropertyTable.Add( Credential, null );
+			systemPropertyTable.Add( ServerCredential, null );
+			systemPropertyTable.Add( ClientCredential, null );
 			systemPropertyTable.Add( AliasParameters, null );
 			systemPropertyTable.Add( AddressBookType, null );
 			systemPropertyTable.Add( IdentityRole, null );
+			systemPropertyTable.Add( ClientPublicKey, null );
 
 			systemPropertyTable.Add( CollectionID, null );
 			systemPropertyTable.Add( CreationTime, null );

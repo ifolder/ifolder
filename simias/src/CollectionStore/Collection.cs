@@ -562,11 +562,11 @@ namespace Simias.Storage
 					// Fire an event for this commit action.
 					if ( committedNode.IsPersisted )
 					{
-						LocalStore.Publisher.RaiseNodeEvent( new NodeEventArgs( LocalStore.ComponentId, committedNode.Id, Id, DomainName, committedNode.NameSpaceType, NodeEventArgs.EventType.Changed) );
+						LocalStore.Publisher.RaiseNodeEvent( new NodeEventArgs( LocalStore.ComponentId, committedNode.Id, Id, DomainName, committedNode.NameSpaceType, NodeEventArgs.EventType.Changed, LocalStore.Instance ) );
 					}
 					else
 					{
-						LocalStore.Publisher.RaiseNodeEvent( new NodeEventArgs( LocalStore.ComponentId, committedNode.Id, Id, DomainName, committedNode.NameSpaceType, NodeEventArgs.EventType.Created ) );
+						LocalStore.Publisher.RaiseNodeEvent( new NodeEventArgs( LocalStore.ComponentId, committedNode.Id, Id, DomainName, committedNode.NameSpaceType, NodeEventArgs.EventType.Created, LocalStore.Instance ) );
 					}
 
 					committedNode.IsPersisted = true;

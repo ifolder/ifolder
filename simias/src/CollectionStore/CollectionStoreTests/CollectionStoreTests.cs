@@ -31,6 +31,8 @@ using System.Threading;
 using NUnit.Framework;
 using Simias;
 using Simias.Storage;
+using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
+
 
 namespace Simias.Storage.Tests
 {
@@ -56,7 +58,7 @@ namespace Simias.Storage.Tests
 		public void Init()
 		{
 			// Connect to the store.
-			store = Store.Connect( new Uri( Path.Combine( Directory.GetCurrentDirectory(), "CollectionStoreTestDir" ) ), "Simias.Storage.Tests" );
+			store = Store.Connect( new Uri( Path.Combine( Directory.GetCurrentDirectory(), "CollectionStoreTestDir" ) ) );
 
 			// Add another identity to the database.
 			LocalAddressBook localAb = store.GetLocalAddressBook();
@@ -1689,10 +1691,12 @@ namespace Simias.Storage.Tests
 			// Add a new identity.
 			Identity identity = new Identity( localAb, "newguy" );
 
+			RSACryptoServiceProvider credential = RsaKeyStore.CreateRsaKeys();
+
 			// Add two aliases to the identity.
 			for ( int i = 0; i < 10; ++i )
 			{
-				identity.CreateAlias( "Mike's Domain " + i, Guid.NewGuid().ToString() );
+				identity.CreateAlias( "Mike's Domain " + i, Guid.NewGuid().ToString(), credential );
 			}
 
 			// Commit the changes.
