@@ -148,7 +148,7 @@ static iFolderData *sharedInstance = nil;
 {
 	[instanceLock lock];
 
-	NSLog(@"Refreshing iFolderData");
+//	NSLog(@"Refreshing iFolderData");
 
 	@try
 	{
@@ -208,7 +208,7 @@ static iFolderData *sharedInstance = nil;
 		NSLog(@"%@ :: %@", [e name], [e reason]);
 	}
 
-	NSLog(@"Done Refreshing iFolderData");	
+//	NSLog(@"Done Refreshing iFolderData");	
 
 	[instanceLock unlock];
 }
@@ -222,7 +222,7 @@ static iFolderData *sharedInstance = nil;
 -(void)_addDomain:(iFolderDomain *)domain
 {
 	[instanceLock lock];
-	NSLog(@"Addding domain: %@", [domain name]);
+//	NSLog(@"Addding domain: %@", [domain name]);
 	[domainsController addObject:domain];
 	[keyedDomains setObject:domain forKey:[domain ID]];
 
@@ -372,7 +372,7 @@ static iFolderData *sharedInstance = nil;
 {
 	iFolder *ifolder = nil;
 	[instanceLock lock];
-	NSLog(@"iFolderData readiFolder called for iFolder %@", ifolderID);
+//	NSLog(@"iFolderData readiFolder called for iFolder %@", ifolderID);
 
 	ifolder = [self getiFolder:ifolderID];
 

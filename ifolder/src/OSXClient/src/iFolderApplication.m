@@ -405,7 +405,6 @@
 			{
 				NSLog(@"Pinging simias to check for startup...");
 				simiasRunning = [threadWebService Ping];
-				NSLog(@"Back from pinging simias!");
 			}
 			@catch(NSException *e)
 			{
@@ -480,11 +479,9 @@
 	while(runThreads)
 	{
 		SimiasEventData *sed = [SimiasEventData sharedInstance];
-		NSLog(@"simiasEventThread going to sleep...");
-//		[iFolderWindowController updateStatusTS:@"Idle..."];
-//		[iFolderWindowController updateProgress:-1 withMin:0 withMax:0];
+//		NSLog(@"simiasEventThread going to sleep...");
 		[sed blockUntilEvents];
-		NSLog(@"simias EventThread woke up to process events");
+//		NSLog(@"simias EventThread woke up to process events");
 		
 		[self processNotifyEvents];
 		[self processCollectionSyncEvents];
@@ -543,7 +540,6 @@
 		{
 			// First check to see if this is a POBox 'cause we
 			// don't care much about it if'n it aint.
-			NSLog(@"processingNodeEvents checking for valid POBox");
 			if([[iFolderData sharedInstance] isPOBox:[ne collectionID]])
 			{
 				[self processSubscriptionNodeEvent:ne];
@@ -575,7 +571,7 @@
 	{
 		case NODE_CREATED:
 		{
-			NSLog(@"processCollectionNodeEvent NODE_CREATED");
+//			NSLog(@"processCollectionNodeEvent NODE_CREATED");
 
 			// not sure if we should read on every one but I think we
  			// need to in case of a new iFolder
@@ -585,7 +581,7 @@
 		}
 		case NODE_DELETED:
 		{
-			NSLog(@"processCollectionNodeEvent NODE_DELETED");
+//			NSLog(@"processCollectionNodeEvent NODE_DELETED");
 
 			iFolder *ifolder = [[iFolderData sharedInstance]
 									getiFolder:[colNodeEvent collectionID]];
@@ -600,7 +596,7 @@
 		}
 		case NODE_CHANGED:
 		{
-			NSLog(@"processCollectionNodeEvent NODE_CHANGED");
+//			NSLog(@"processCollectionNodeEvent NODE_CHANGED");
 
 			BOOL isiFolder = [[iFolderData sharedInstance] 
 									isiFolder:[colNodeEvent collectionID]];
@@ -633,7 +629,7 @@
 	{
 		case NODE_CREATED:
 		{
-			NSLog(@"processSubscriptionNodeEvent NODE_CREATED");
+//			NSLog(@"processSubscriptionNodeEvent NODE_CREATED");
 			iFolder *ifolder = [[iFolderData sharedInstance] 
 									readAvailableiFolder:[subNodeEvent nodeID]
 									inCollection:[subNodeEvent collectionID]];
@@ -646,7 +642,7 @@
 		}
 		case NODE_DELETED:
 		{
-			NSLog(@"processSubscriptionNodeEvent NODE_DELETED");
+//			NSLog(@"processSubscriptionNodeEvent NODE_DELETED");
 
 			// Because we use the iFolder ID to hold subscriptions in the
 			// dictionary, we need to get the iFolderID we used
@@ -664,7 +660,7 @@
 		}
 		case NODE_CHANGED:
 		{
-			NSLog(@"processSubscriptionNodeEvent NODE_CHANGED");
+//			NSLog(@"processSubscriptionNodeEvent NODE_CHANGED");
 		
 			// Because we use the iFolder ID to hold subscriptions in the
 			// dictionary, we need to get the iFolderID we used
@@ -730,20 +726,17 @@
 
 			if( [ [ifolder State] isEqualToString:@"WaitSync"])
 			{
-				NSLog(@"handleCollectionSyncEvent: iFolder stat is WaitSync");
 				updateData = YES;
 			}
 		}
 
 		if( [ifolder Path] == nil )
 		{
-			NSLog(@"handleCollectionSyncEvent: iFolder Path is nil");
 			updateData = YES;
 		}
 			
 		if(updateData)
 		{
-			NSLog(@"handleCollectionSyncEvent calling getiFolder with updateData");
 			[[iFolderData sharedInstance] readiFolder:[cse ID]];
 		}
 		
@@ -826,26 +819,47 @@
 {
 	SMFileSyncEvent *fse = [fileSyncEvent retain];
 
-	static NSString *fileSyncName = nil;
 	NSString *syncMessage = nil;
 
 	if([fse objectType] != FILE_SYNC_UNKNOWN)
 	{
 		BOOL updateLog = NO;
 
-		if(fileSyncName == nil)
+///		NSLog(@"File Sync: %@ sizeRemaining: %qi sizeToSync: %qi", [fse name], [fse sizeRemaining], [fse sizeToSync]);
+		if([fse sizeRemaining] == [fse sizeToSync])
 		{
-			fileSyncName = [[NSString stringWithString:[fse name]] retain];
 			updateLog = YES;
+			if([fse sizeToSync] > 0)
+			{
+				[iFolderWindowController updateProgress:0
+										withMin:0
+										withMax:[fse sizeToSync]];
+			}
+			else
+			{
+				// sending current value of -1 hides the control
+				[iFolderWindowController updateProgress:-1 withMin:0 withMax:0];
+			}
+		}
+		else
+		{
+			updateLog = NO;
+
+			if([fse sizeToSync] == 0)
+			{
+				[iFolderWindowController updateProgress:100
+										withMin:0
+										withMax:100];
+			}
+			else
+			{
+				[iFolderWindowController updateProgress:([fse sizeToSync] - [fse sizeRemaining])
+										withMin:0
+										withMax:[fse sizeToSync]];
+			}
 		}
 
-		if([fileSyncName compare:[fse name]] != 0)
-		{
-			[fileSyncName release];
-			fileSyncName = [[NSString stringWithString:[fse name]] retain];
-			updateLog = YES;
-		}
-	
+
 		switch([fse direction])
 		{
 			case FILE_SYNC_UPLOADING:
@@ -942,36 +956,6 @@
 			}
 		}
 		
-		if([fse sizeRemaining] == [fse sizeToSync])
-		{
-			if([fse sizeToSync] > 0)
-			{
-				[iFolderWindowController updateProgress:0
-										withMin:0
-										withMax:[fse sizeToSync]];
-			}
-			else
-			{
-				// sending current value of -1 hides the control
-				[iFolderWindowController updateProgress:-1 withMin:0 withMax:0];
-			}
-		}
-		else
-		{
-			if([fse sizeToSync] == 0)
-			{
-				[iFolderWindowController updateProgress:100
-										withMin:0
-										withMax:100];
-			}
-			else
-			{
-				[iFolderWindowController updateProgress:([fse sizeToSync] - [fse sizeRemaining])
-										withMin:0
-										withMax:[fse sizeToSync]];
-			}
-		}
-
 	}
 	[fse release];
 }
