@@ -36,6 +36,12 @@ public class Log
 	static TraceSwitch traceSwitch = new TraceSwitch("SyncTrace", "sync trace switch");
 	static ArrayList categories = null;
 
+	static void Trace(string msg)
+	{
+		Console.WriteLine(msg);
+		//Trace.WriteLine(msg);
+	}
+
 	static bool Categorical
 	{
 		get
@@ -46,7 +52,7 @@ public class Log
 			StackFrame sf = (new StackTrace(2, true)).GetFrame(0);
 			Type klass = sf.GetMethod().ReflectedType;
 
-			//Trace.WriteLine(String.Format("  called from {0}.{1}",
+			//Trace(String.Format("  called from {0}.{1}",
 			//	sf.GetMethod().ReflectedType.Name,
 			//	sf.GetMethod().ToString()));
 
@@ -64,15 +70,15 @@ public class Log
 		if (traceSwitch.TraceVerbose)
 		{
 			StackFrame sf = new StackTrace(1, true).GetFrame(0);
-			Trace.WriteLine(String.Format("Here: {0}:{1} {2}",
+			Trace(String.Format("Here: {0}:{1} {2}",
 					sf.GetFileName(), sf.GetFileLineNumber(), sf.GetMethod().ToString()));
 		}
 	}
 
 	internal static void Uncaught(Exception e)
 	{
-		Trace.WriteLine("Uncaught exception: " + e.Message);
-		Trace.WriteLine(e.StackTrace);
+		Trace("Uncaught exception: " + e.Message);
+		Trace(e.StackTrace);
 	}
 
 	static void DumpStack()
@@ -81,7 +87,7 @@ public class Log
 		for (int i = 0; i < st.FrameCount; ++i)
 		{
 			StackFrame sf = st.GetFrame(i);
-			Trace.WriteLine(String.Format("  called from {0}, {1}: {2}",
+			Trace(String.Format("  called from {0}, {1}: {2}",
 					sf.GetFileName(), sf.GetFileLineNumber(),
 					sf.GetMethod().ToString()));
 		}
@@ -91,7 +97,7 @@ public class Log
 	{
 		if (Categorical && traceSwitch.TraceInfo)
 		{
-			Trace.WriteLine(String.Format(format, args));
+			Trace(String.Format(format, args));
 		}
 	}
 
@@ -99,7 +105,7 @@ public class Log
 	{
 		if (Categorical && traceSwitch.TraceWarning)
 		{
-			Trace.WriteLine(String.Format(format, args));
+			Trace(String.Format(format, args));
 			DumpStack();
 		}
 	}
@@ -109,7 +115,7 @@ public class Log
 	{
 		if (Categorical && traceSwitch.TraceError)
 		{
-			Trace.WriteLine(String.Format(format, args));
+			Trace(String.Format(format, args));
 			DumpStack();
 		}
 	}
@@ -118,7 +124,7 @@ public class Log
 	{
 		if (!assertion)
 		{
-			Trace.WriteLine("Assertion failed ------------");
+			Trace("Assertion failed ------------");
 			DumpStack();
 		}
 	}
@@ -128,7 +134,7 @@ public class Log
 	{
 		if (Categorical && traceSwitch.TraceVerbose)
 		{
-			Trace.WriteLine(String.Format(format, args));
+			Trace(String.Format(format, args));
 		}
 	}
 

@@ -339,16 +339,23 @@ public class SynkerWorkerA: SyncCollectionWorker
 			return;
 		}
 
-		//Log.Spew("client connected to server version {0}", ss.Version);
+		Log.Spew("-------- starting sync pass for collection {0}", collection.Name);
 
 		collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole);
 		new Dredger(collection, false);
+
+		Log.Spew("-------- completed dredge for collection {0}", collection.Name);
+
 		SyncIncomingNode inNode = new SyncIncomingNode(collection, false);
 		SyncOutgoingNode outNode = new SyncOutgoingNode(collection);
 		SyncOps ops = new SyncOps(collection, false);
 
+
 		NodeStamp[] sstamps = ss.GetNodeStamps();
+		Log.Spew("-------- got local node stamps for collection {0}", collection.Name);
+
 		NodeStamp[] cstamps = ops.GetNodeStamps();
+		Log.Spew("-------- got server node stamps for collection {0}", collection.Name);
 
 		ArrayList largeFromServer = new ArrayList();
 		ArrayList smallFromServer = new ArrayList();
@@ -552,6 +559,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 			}
 		}
 		largeFromServer.Clear();
+		Log.Spew("-------- end of sync pass for collection {0}", collection.Name);
 	}
 }
 

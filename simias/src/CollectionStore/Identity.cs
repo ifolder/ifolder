@@ -269,11 +269,25 @@ namespace Simias.Storage
 		/// </summary>
 		internal void CreateKeyPair()
 		{
-			// The RSA parameters will be stored as a string object on the identity node.
-			RSACryptoServiceProvider credential = RsaKeyStore.CreateRsaKeys();
-			
 			// Create a local, hidden property to store the credential in.
-			Property p = new Property( Property.ServerCredential, credential.ToXmlString( true ) );
+			Property p;
+
+			/* TODO: fix this messy hack
+			 * The keypair generation is currently so slow on linux that is causes other problems
+			 * and makes testing difficult, so this code now uses a hardcoded keypair on linux -- dro
+			 */
+			if (Path.DirectorySeparatorChar == '/')
+			{
+				// must be non-Windows
+				p = new Property(Property.ServerCredential, "<RSAKeyValue><Modulus>xA3z1CSlQoI65Wd85FIbGW4yXF7Kv6e+5/zcqkUkQGAZSdyaAUh9sLEwpU3AOBKEaFn1jwe0lLTgHmSzMerM5lx+lYDV2AWZhj3TIr819sMmxmPPXHLq9cMqs7s95T0lE1mqJxdtCe2FXFhAdn1/yvG8AG2zRNEZb4kzG+Rt/9yAJ+Zhi1B/JbI8lxa00YafssNsI5V5cp3eOQkKk/ji05oAgr3o0bAzKN8Zd3IocD5oLT0pjq6w95uTpuDY8jw3d7kkBzq/IQvZ2vWtVjIM/yD3lnY39lFRPHXEbeIQW7uxFl50v6LpGGIu1kkmLNZRpaR/ylM5SbUVUjnEbU2qRw==</Modulus><Exponent>EQ==</Exponent><P>zbTrChzdUcftyzOT+sl9POKamDv4eKwS5HKUq4vSjUlXprHmw6pThJDkFxBNHZP/UoYAAppXL//FDCUogzWZDupf2RzD6QNPx5IBCpCuetLb+dcZhWOSOkOQUHMBFmtS7Qf6gZ6uLI95R2ixuH5fRgFY1zTyHvQ+owI4qSXKems=</P><Q>8/zoQ3nh98q9gEuHI1Uoq5+AQ3sxWwKp65qtaTDgBIRqCJ81bSs8HMODyIpIkAdEja9KrC8DryKYgWuoIaqZuJf4lwecUzeqSwu/QP+U1VbMK0de6E3oCQeuLTG27ZnZcpUW3Pd0DpwxtjQCMFMH56ZymG+mbbF3PtgJ2O8LvpU=</Q><DP>SJo01mSKWRli/GyOlL+VnQSvCI2i/WnojN0labjg5pJbK8ZRcjwdehUFNVEMKI6WWVx4eWOmTS0YXqOz8hLqufheEGSBYUx2gqwAXhTySXeY7sRjXEFCqybno+xavJ5ZgNWjtUcQS/ZnCiTzbkq4NtNMiDDN7M6ssgDItCt0o60=</DP><DQ>R8La5qtglCySFqzNZL6xm+OeMfcOhC31vcQU4rQFpvnE1VwAp6NN6lefOvt+wPMUKawG51kfM4KlUz3ICebh6v+FWZjToAFQNDChqbSVL7Ad7pyFU2I1L9UVHFnqgh4w5Xck15QTE1sdrg9L8BhrvJpd8JlPETQyIYrVuEZOv5U=</DQ><InverseQ>uRVPC1cDqIqy5E9kOIHly3G8e/MCVMMIRoLTYmTTEeqPAtFuSvr0PLt80mPZBuJBZ2TwkSnsuv+bn5lQploLUPRAO7+/J0euEhxKu9+t4rsctEUdkifcTrKRe8VK/0CDfLt4MT7T96UlFk7JZdC3wyJ+3KWIy/PZX0XqQA2zeKA=</InverseQ><D>LiFmjETbly2zgUWGzE+N592xfyVc4c0d3Dt/Nx9T0ulvXKxgeMXDOKIpkE6HlLkQGI2jMLaE17IWnb1XVwoSGBXDbniqyWq6tiyqJksbwZdUaupO6JOClC3r7g3wciyBMbq+n8lG1SjUFbpphUq0qDjg8QrAxOXn3gIqJK43//c734wEsgQMmxCxMtHJGweyogmLZM4I4suK3R/BX9RPTKteZgfvDiXH9cGzQwazfWgf/hrvtfWayMNMueWx5iBWlBbA6hVL+eYQwxueiOzhIyt80PBr0/Zdoisftty3m+V8lQMURgAo7GdW4F9Zuyk1pSQDzKRk20sbK0k8yYWEEQ==</D></RSAKeyValue>");
+			}
+			else
+			{
+				// The RSA parameters will be stored as a string object on the identity node.
+				RSACryptoServiceProvider credential = RsaKeyStore.CreateRsaKeys();
+				p = new Property( Property.ServerCredential, credential.ToXmlString( true ) );
+			}
+			
 			p.HiddenProperty = true;
 			p.LocalProperty = true;
 			Properties.ModifyNodeProperty( p );
