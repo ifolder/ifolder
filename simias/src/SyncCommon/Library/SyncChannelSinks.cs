@@ -34,22 +34,22 @@ namespace Simias.Sync
 		/// <summary>
 		/// Specifies a soap style formatter sink.
 		/// </summary>
-		Soap,
+		Soap		= 0x0001,
 
 		/// <summary>
 		/// Specifies a binary style formatter sink.
 		/// </summary>
-		Binary,
+		Binary		= 0x0002,
 
 		/// <summary>
 		/// Specifies a security sink.
 		/// </summary>
-		Security,
+		Security	= 0x0004,
 
 		/// <summary>
 		/// Specifies a monitor sink.
 		/// </summary>
-		Monitor,
+		Monitor		= 0x0008,
 	};
 
 }
