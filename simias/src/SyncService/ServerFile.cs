@@ -139,7 +139,7 @@ namespace Simias.Sync
 				// Compute the hash codes.
 				ReadPosition = 0;
 				int i = 0;
-				while ((bytesRead = Read(buffer, 0, BlockSize)) != 0)
+				while ((bytesRead = Read(buffer, (int)0, BlockSize)) != 0)
 				{
 					HashData entry = new HashData();
 					entry.WeakHash = wh.ComputeHash(buffer, 0, (UInt16)bytesRead);
@@ -149,55 +149,6 @@ namespace Simias.Sync
 				}
 			}
 			return list;
-		}
-
-		/// <summary>
-		/// Read binary data from the file.
-		/// </summary>
-		/// <param name="buffer">The buffer to place the data into.</param>
-		/// <param name="offset">The offset in the file where reading should begin.</param>
-		/// <param name="count">The number of bytes to read.</param>
-		/// <returns></returns>
-		public int Read(byte[] buffer, long offset, int count)
-		{
-			ReadPosition = offset;
-			return base.Read(buffer, 0, count);
-		}
-
-		/// <summary>
-		/// Write the binary data to the file.
-		/// </summary>
-		/// <param name="buffer">The data to write.</param>
-		/// <param name="offset">The offset in the file where the data is to be written.</param>
-		/// <param name="count">The number of bytes to write.</param>
-		public void Write(byte[] buffer, long offset, int count)
-		{
-			WritePosition = offset;
-			base.Write(buffer, 0, count);
-		}
-
-		/// <summary>
-		/// Copyt the data from the original file into the new file.
-		/// </summary>
-		/// <param name="originalOffset">The offset in the original file to copy from.</param>
-		/// <param name="offset">The offset in the file where the data is to be written.</param>
-		/// <param name="count">The number of bytes to write.</param>
-		public void Copy(long originalOffset, long offset, int count)
-		{
-			int bufferSize = count > BlockSize ? BlockSize : count;
-			byte[] buffer = new byte[bufferSize];
-
-			lock (this)
-			{
-				ReadPosition = originalOffset;
-				WritePosition = offset;
-				while (count > 0)
-				{
-					int bytesRead = Read(buffer, 0, bufferSize);
-					Write(buffer, 0, bytesRead);
-					count -= bytesRead;
-				}
-			}
 		}
 	}
 
@@ -284,11 +235,11 @@ namespace Simias.Sync
 		/// <param name="offset">The offset in the file where reading should begin.</param>
 		/// <param name="count">The number of bytes to read.</param>
 		/// <returns></returns>
-		public int Read(byte[] buffer, long offset, int count)
-		{
-			ReadPosition = offset;
-			return base.Read(buffer, 0, count);
-		}
+		//public int Read(byte[] buffer, long offset, int count)
+		//{
+		//	ReadPosition = offset;
+		//	return base.Read(buffer, 0, count);
+		//}
 
 	}
 }

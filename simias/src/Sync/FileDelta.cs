@@ -210,17 +210,27 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// Copy data from the original file to the workfile.
+		/// Copyt the data from the original file into the new file.
 		/// </summary>
-		/// <param name="offset">The offset in the original file.</param>
-		/// <param name="count">The nuber of bytes to copy.</param>
-		/// <returns></returns>
-		public void Copy(long offset, int count)
+		/// <param name="originalOffset">The offset in the original file to copy from.</param>
+		/// <param name="offset">The offset in the file where the data is to be written.</param>
+		/// <param name="count">The number of bytes to write.</param>
+		public void Copy(long originalOffset, long offset, int count)
 		{
-			byte[] buffer = new byte[count];
-			stream.Position = offset;
-			count = stream.Read(buffer, 0, count);
-			workStream.Write(buffer, 0, count);
+			int bufferSize = count > BlockSize ? BlockSize : count;
+			byte[] buffer = new byte[bufferSize];
+
+			lock (this)
+			{
+				ReadPosition = originalOffset;
+				WritePosition = offset;
+				while (count > 0)
+				{
+					int bytesRead = Read(buffer, (int)0, bufferSize);
+					Write(buffer, 0, bytesRead);
+					count -= bytesRead;
+				}
+			}
 		}
 		
 

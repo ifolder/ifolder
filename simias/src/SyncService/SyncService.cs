@@ -701,7 +701,8 @@ public class SyncService
 	/// <param name="count">The number of bytes to write.</param>
 	public void Write(byte[] buffer, long offset, int count)
 	{
-		inFile.Write(buffer, offset, count);
+		inFile.WritePosition = offset;
+		inFile.Write(buffer, 0, count);
 	}
 
 	/// <summary>
@@ -724,8 +725,9 @@ public class SyncService
 	/// <returns>The number of bytes read.</returns>
 	public int Read(out byte[] buffer, long offset, int count)
 	{
-		buffer = null;
-		return 0;
+		outFile.ReadPosition = offset;
+		buffer = new byte[count];
+		return outFile.Read(buffer, 0, count);
 	}
 
 	/// <summary>

@@ -219,7 +219,7 @@ namespace Simias.Sync.Client
 			{
 				if (fileMap[i] != -1)
 				{
-					Copy(fileMap[i], BlockSize);
+					Copy(fileMap[i], WritePosition, BlockSize);
 				}
 				else
 				{
