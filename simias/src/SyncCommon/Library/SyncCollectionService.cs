@@ -33,6 +33,16 @@ namespace Simias.Sync
 		private SyncCollection collection;
 
 		/// <summary>
+		/// Get a lifetime service object to control the lifetime policy.
+		/// </summary>
+		/// <returns>An ILease object used to control the lifetime policy.</returns>
+		public override object InitializeLifetimeService()
+		{
+			// infinite lease time
+			return null;
+		}
+
+		/// <summary>
 		/// Constructor
 		/// </summary>
 		/// <param name="collection">The collection object.</param>

@@ -153,8 +153,6 @@ namespace Simias.Sync
 			{
 				try
 				{
-					MyTrace.WriteLine("Scanning the Store for Collections...");
-
 					Hashtable staleCollections = (Hashtable)collections.Clone();
 
 					// find created collections
