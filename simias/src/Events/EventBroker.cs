@@ -79,7 +79,7 @@ namespace Simias.Event
 		#region Fields
 
 		internal static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(EventBroker));
-		static bool serviceRegistered = false;
+		//static bool serviceRegistered = false;
 		static bool clientRegistered = false;
 		static EventBroker instance = null;
 		ArrayList clients = new ArrayList();
@@ -267,7 +267,7 @@ namespace Simias.Event
 				{
 					service = sUri.Scheme + Uri.SchemeDelimiter + "localhost:" + sUri.Port + sUri.AbsolutePath;
 				}
-				serviceRegistered = true;
+				//serviceRegistered = true;
 				clientRegistered = true;
 				conf.Set(CFG_Section, CFG_UriKey, service);
 
@@ -286,7 +286,7 @@ namespace Simias.Event
 				instance = null;
 			}
 			ChannelServices.UnregisterChannel(ChannelServices.GetChannel(channelName + conf.StorePath.GetHashCode().ToString()));
-			serviceRegistered = false;
+			//serviceRegistered = false;
 			string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
 			conf.Set(CFG_Section, CFG_UriKey, CFG_Uri);
 			logger.Info("Event Service at {0} Deregistered", serviceUri);

@@ -124,7 +124,7 @@ namespace Simias.Storage.Provider.Sqlite
 							sqlite_free_table(result);
 						}
 					}
-					catch (Exception e)
+					catch// (Exception e)
 					{
 						//Console.WriteLine(e.Message);
 						//Console.WriteLine(e.StackTrace);

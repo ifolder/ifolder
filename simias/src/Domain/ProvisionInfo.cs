@@ -48,11 +48,6 @@ namespace Simias.Domain
 		public string POBoxName;
 
 		/// <summary>
-		/// PO Box Collection Url
-		/// </summary>
-		public string POBoxUrl;
-
-		/// <summary>
 		/// Constructor
 		/// </summary>
 		public ProvisionInfo()
@@ -73,7 +68,6 @@ namespace Simias.Domain
 			builder.AppendFormat("  User ID     : {0}{1}", this.UserID, newLine);
 			builder.AppendFormat("  PO Box ID   : {0}{1}", this.POBoxID, newLine);
 			builder.AppendFormat("  PO Box Name : {0}{1}", this.POBoxName, newLine);
-			builder.AppendFormat("  PO Box URL  : {0}{1}", this.POBoxUrl, newLine);
 
 			return builder.ToString();
 		}

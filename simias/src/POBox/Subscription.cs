@@ -149,14 +149,9 @@ namespace Simias.POBox
 		public static readonly string SubscriptionCollectionIDProperty = "SbColID";
 
 		/// <summary>
-		/// The name of the property storing the collection types.
+		/// The name of the property storing the shared collection type.
 		/// </summary>
 		public const string SubscriptionCollectionTypeProperty = "SbColType";
-
-		/// <summary>
-		/// The name of the property storing the collection types.
-		/// </summary>
-		public const string SubscriptionCollectionTypesProperty = "SbColTypes";
 
 		/// <summary>
 		/// The name of the property storing the collection master URL.
@@ -415,24 +410,6 @@ namespace Simias.POBox
 		}
 
 		/// <summary>
-		/// Gets/sets the types of the collection to share.
-		/// </summary>
-		public MultiValuedList SubscriptionCollectionTypes
-		{
-			get
-			{
-				return Properties.GetProperties(SubscriptionCollectionTypesProperty);
-			}
-			set
-			{
-				foreach (Property p in value)
-				{
-					Properties.AddProperty(SubscriptionCollectionTypesProperty, p);
-				}
-			}
-		}
-
-		/// <summary>
 		/// Gets/sets the master URL of the collection to share.
 		/// </summary>
 		public string SubscriptionCollectionURL
@@ -617,6 +594,7 @@ namespace Simias.POBox
 				poBox.AddMessage(subscription);
 			}
 
+
 			return subscription;
 		}
 
@@ -688,14 +666,14 @@ namespace Simias.POBox
 		/// <summary>
 		/// Create the slave collection (stub for syncing)
 		/// </summary>
-		public void CreateSlaveCollection(Store store)
+		public void CreateSlave(Store store)
 		{
 			Collection c = new Collection(store, this.SubscriptionCollectionName,
 				this.SubscriptionCollectionID, this.DomainID);
 			
 			// collection type
 			// TODO: sc.SetType(this, this.SubscriptionCollectionTypes);
-			c.SetType(c, "iFolder");
+			c.SetType(c, this.SubscriptionCollectionType);
 			
 			// sync information
 			Property pr = new Property(SyncCollection.RolePropertyName,

@@ -32,9 +32,33 @@ namespace Simias.POBox
 	public class POBox : Collection
 	{
 		#region Class Members
+
+		/// <summary>
+		/// The name of the property storing the DirNode name.
+		/// </summary>
+		public const string POServiceUrlProperty = "POServiceUrl";
+
 		#endregion
 
 		#region Properties
+		
+		/// <summary>
+		/// Gets/sets the post-office service url.
+		/// </summary>
+		public string POServiceUrl
+		{
+			get
+			{
+				Property p = Properties.GetSingleProperty(POServiceUrlProperty);
+
+				return (p != null) ? p.ToString() : PostOffice.DefaultServiceUrl.ToString();
+			}
+			set
+			{
+				Properties.ModifyProperty(POServiceUrlProperty, value);
+			}
+		}
+
 		#endregion
 
 		#region Constructors
@@ -193,7 +217,7 @@ namespace Simias.POBox
 		/// <param name="collection">The Collection object that will be shared.</param>
 		/// <param name="fromMember">The Member that is sharing the collection.</param>
 		/// <returns>A Subscription object.  This object must be added to the POBox using one of the AddMessage() methods.</returns>
-		public Subscription CreateSubscription(Collection collection, Member fromMember)
+		public Subscription CreateSubscription(Collection collection, Member fromMember, string type)
 		{
 			Subscription subscription = new Subscription(collection.Name + " subscription", Message.OutboundMessage, fromMember.UserID);
 
@@ -202,6 +226,8 @@ namespace Simias.POBox
 			subscription.SubscriptionCollectionID = collection.ID;
 			subscription.DomainID = collection.Domain;
 			subscription.DomainName = collection.StoreReference.GetDomain(collection.Domain).Name;
+			subscription.POServiceURL = new Uri(this.POServiceUrl);
+			subscription.SubscriptionCollectionType = type;
 
 			// TODO: fromAddress, toAddress, toName
 

@@ -94,14 +94,15 @@ namespace Simias.Domain
 
 			// create roster stub
 			CreateSlave(store, domainInfo.ID, domainInfo.RosterID,
-				domainInfo.RosterName, domainInfo.RosterUrl);
+				domainInfo.RosterName, domainInfo.SyncServiceUrl);
 			
 			// create PO Box stub
 			Collection cStub = CreateSlave(store, domainInfo.ID, provisionInfo.POBoxID,
-				provisionInfo.POBoxName, domainInfo.RosterUrl);
+				provisionInfo.POBoxName, domainInfo.SyncServiceUrl);
 
 			// Get a POBox object from its created stub.
 			PostOffice.POBox poBox = new PostOffice.POBox(store, cStub);
+			poBox.POServiceUrl = domainInfo.POServiceUrl;
 
 			// set the default domain
 			store.DefaultDomain = domainInfo.ID;

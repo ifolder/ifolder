@@ -270,7 +270,7 @@ namespace Simias.POBox
 					poBox.Commit(subscription);
 
 					// create slave stub
-					subscription.CreateSlaveCollection(poBox.StoreReference);
+					subscription.CreateSlave(poBox.StoreReference);
 				}
 
 				// acknowledge the message

@@ -377,7 +377,8 @@ namespace Novell.AddressBook.UI.gtk
 			try
 			{
 			Subscription sub = pobox.CreateSubscription(collection,
-										collection.GetCurrentMember());
+										collection.GetCurrentMember(),
+										typeof(iFolder).Name);
 
 			sub.FromAddress = String.Format("{0}@{1}", 
 									System.Environment.UserName, 

@@ -63,9 +63,14 @@ namespace Simias.Domain
 		public string RosterName;
 
 		/// <summary>
-		// Domain Roster (Member List) Collection Url
+		// Sync Service Url
 		/// </summary>
-		public string RosterUrl;
+		public string SyncServiceUrl;
+
+		/// <summary>
+		// Post-Office Service Url
+		/// </summary>
+		public string POServiceUrl;
 
 		/// <summary>
 		/// Constructor
@@ -85,13 +90,14 @@ namespace Simias.Domain
 			string newLine = Environment.NewLine;
 
 			builder.AppendFormat("Domain Information{0}", newLine);
-			builder.AppendFormat("  ID          : {0}{1}", this.ID, newLine);
-			builder.AppendFormat("  Name        : {0}{1}", this.Name, newLine);
-			builder.AppendFormat("  Description : {0}{1}", this.Description, newLine);
-			builder.AppendFormat("  URL         : {0}{1}", this.Url, newLine);
-			builder.AppendFormat("  Roster ID   : {0}{1}", this.RosterID, newLine);
-			builder.AppendFormat("  Roster Name : {0}{1}", this.RosterName, newLine);
-			builder.AppendFormat("  Roster URL  : {0}{1}", this.RosterUrl, newLine);
+			builder.AppendFormat("  ID               : {0}{1}", this.ID, newLine);
+			builder.AppendFormat("  Name             : {0}{1}", this.Name, newLine);
+			builder.AppendFormat("  Description      : {0}{1}", this.Description, newLine);
+			builder.AppendFormat("  URL              : {0}{1}", this.Url, newLine);
+			builder.AppendFormat("  Roster ID        : {0}{1}", this.RosterID, newLine);
+			builder.AppendFormat("  Roster Name      : {0}{1}", this.RosterName, newLine);
+			builder.AppendFormat("  Sync Service URL : {0}{1}", this.SyncServiceUrl, newLine);
+			builder.AppendFormat("  PO Service URL   : {0}{1}", this.POServiceUrl, newLine);
 
 			return builder.ToString();
 		}
