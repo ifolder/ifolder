@@ -498,9 +498,7 @@ g_print("about_to_write 7\n");
 	
 	/* FIXME: Change this to a tiny bubble notification instead of popping up the big Invitations Dialog */
 	/* Check the notify preference */
-	if (gaim_prefs_get_bool(SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS)) {
-		simias_show_invitations_window();
-	}
+	simias_show_invitations_window();
 	
 	return TRUE;	/* Message was handled correctly */
 }
@@ -615,9 +613,7 @@ handle_invitation_request_deny(GaimAccount *account,
 	/* FIXME: Add more interaction with Simias as described in the notes of the function */
 
 	/* FIXME: Change this to a tiny bubble notification instead of popping up the big Invitations Dialog */
-	if (gaim_prefs_get_bool(SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS)) {
-		simias_show_invitations_window();
-	}
+	simias_show_invitations_window();
 	
 	return TRUE;	/* Message was handled correctly */
 }
@@ -767,9 +763,7 @@ g_print("about_to_write 9\n");
 	/* FIXME: Add more interaction with Simias as described in the notes of the function */
 
 	/* FIXME: Change this to a tiny bubble notification instead of popping up the big Invitations Dialog */
-	if (gaim_prefs_get_bool(SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS)) {
-		simias_show_invitations_window();
-	}
+	simias_show_invitations_window();
 	
 	return TRUE;	/* Message was handled correctly */
 }

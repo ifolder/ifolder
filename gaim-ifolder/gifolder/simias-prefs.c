@@ -37,29 +37,25 @@ void
 simias_init_default_prefs()
 {
 	gaim_prefs_add_none(SIMIAS_PREF_PATH);
-	if (!gaim_prefs_exists(SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS)) {
-		gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS,
-							SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS_DEF);
+
+	if (!gaim_prefs_exists(SIMIAS_PREF_SYNC_METHOD)) {
+		gaim_prefs_add_string(SIMIAS_PREF_SYNC_METHOD,
+				      SIMIAS_PREF_SYNC_METHOD_DEF);
 	}
 
-	if (!gaim_prefs_exists(SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS)) {
-		gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS,
-							SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS_DEF);
+	if (!gaim_prefs_exists(SIMIAS_PREF_SYNC_INTERVAL)) {
+		gaim_prefs_add_int(SIMIAS_PREF_SYNC_INTERVAL,
+				      SIMIAS_PREF_SYNC_INTERVAL_DEF);
 	}
 
-	if (!gaim_prefs_exists(SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS)) {
-		gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS,
-							SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS_DEF);
+	if (!gaim_prefs_exists(SIMIAS_PREF_PING_REPLY_TYPE)) {
+		gaim_prefs_add_string(SIMIAS_PREF_PING_REPLY_TYPE,
+				      SIMIAS_PREF_PING_REPLY_TYPE_DEF);
 	}
 
 	if (!gaim_prefs_exists(SIMIAS_PREF_NOTIFY_ERRORS)) {
 		gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_ERRORS,
-							SIMIAS_PREF_NOTIFY_ERRORS_DEF);
-	}
-	
-	if (!gaim_prefs_exists(SIMIAS_PREF_REDISCOVER_IP_ADDRS)) {
-		gaim_prefs_add_bool(SIMIAS_PREF_REDISCOVER_IP_ADDRS,
-							SIMIAS_PREF_REDISCOVER_IP_ADDRS_DEF);
+				      SIMIAS_PREF_NOTIFY_ERRORS_DEF);
 	}
 
 	if (!gaim_prefs_exists(SIMIAS_PREF_SIMIAS_AUTO_START)) {
@@ -67,3 +63,4 @@ simias_init_default_prefs()
 							SIMIAS_PREF_SIMIAS_AUTO_START_DEF);
 	}
 }
+

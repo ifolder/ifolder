@@ -28,24 +28,30 @@
 #ifndef _SIMIAS_PREFS_H
 #define _SIMIAS_PREFS_H 1
 
-#define SIMIAS_PREF_PATH "/plugins/gtk/simias"
+#include <gtk/gtk.h>
 
-#define SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS "/plugins/gtk/simias/notify_receive_new_invitations"
-#define SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS_DEF TRUE
+/* Gaim Includes */
+#include "plugin.h"
 
-#define SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS "/plugins/gtk/simias/notify_buddies_accept_invitations"
-#define SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS_DEF TRUE
+#define SIMIAS_PREF_PATH "/plugins/simias"
 
-#define SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS "/plugins/gtk/simias/notify_buddies_reject_invitations"
-#define SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS_DEF TRUE
+#define SIMIAS_PREF_SYNC_METHOD "/plugins/simias/sync_method"
+#define SIMIAS_PREF_SYNC_METHOD_ALL "all"
+#define SIMIAS_PREF_SYNC_METHOD_PLUGIN_ENABLED "plugin-enabled"
+#define SIMIAS_PREF_SYNC_METHOD_DEF SIMIAS_PREF_SYNC_METHOD_ALL
 
-#define SIMIAS_PREF_NOTIFY_ERRORS "/plugins/gtk/simias/notify_on_errors"
+#define SIMIAS_PREF_SYNC_INTERVAL "/plugins/simias/sync_interval"
+#define SIMIAS_PREF_SYNC_INTERVAL_DEF 1 /* minute */
+
+#define SIMIAS_PREF_PING_REPLY_TYPE "/plugins/simias/sync_interval"
+#define SIMIAS_PREF_PING_REPLY_TYPE_BLIST "buddy-list"
+#define SIMIAS_PREF_PING_REPLY_TYPE_ANY "any"
+#define SIMIAS_PREF_PING_REPLY_TYPE_DEF SIMIAS_PREF_PING_REPLY_TYPE_BLIST
+
+#define SIMIAS_PREF_NOTIFY_ERRORS "/plugins/simias/notify_on_errors"
 #define SIMIAS_PREF_NOTIFY_ERRORS_DEF FALSE
 
-#define SIMIAS_PREF_REDISCOVER_IP_ADDRS "/plugins/gtk/simias/rediscover_ip_addrs"
-#define SIMIAS_PREF_REDISCOVER_IP_ADDRS_DEF TRUE
-
-#define SIMIAS_PREF_SIMIAS_AUTO_START "/plugins/gtk/simias/auto_start_simias"
+#define SIMIAS_PREF_SIMIAS_AUTO_START "/plugins/simias/auto_start_simias"
 #define SIMIAS_PREF_SIMIAS_AUTO_START_DEF FALSE
 
 /* Function Declarations */

@@ -178,6 +178,19 @@ gaim_domain_get_po_box_id()
 	return po_box_id;
 }
 
+/**
+ * The purpose of this function is to have the Gaim iFolder Plugin call the
+ * GaimDomainService (WebService) to wake it up and have it synchronize the
+ * memberlist.  This will be called either when the plugin gets a new/updated
+ * PO Box URL for a buddy that just signed on or...when the user presses the
+ * "Synchronize Now" button from the preferences page.
+ */
+void
+simias_sync_member_list()
+{
+	g_print("FIXME: Implement simias_sync_member_list()\n");
+}
+
 /* Sync Buddies to Simias Gaim Domain Roster */
 int
 sync_buddies_to_simias(GList *gaim_accounts)

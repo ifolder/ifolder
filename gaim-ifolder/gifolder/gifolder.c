@@ -1272,64 +1272,77 @@ plugin_unload(GaimPlugin *plugin)
 /**
  * Configuration Settings:
  * 
- * [ ] Notify me when:
- *     [ ] I receive a new invitation
- *     [ ] Buddies accept my invitations
- *     [ ] Buddies reject my invitations
- *     [ ] An error occurs
+ * Gaim Domain Member List
  * 
- * [ ] Automatically start Simias if needed
+ *   Use:
+ *     (*) All buddies
+ *     ( ) iFolder-enabled buddies
+ * 
+ *   Synchronize every:
+ *     [60] seconds
+ *
+ *   [Synchronize Now Button]
+ *
+ * Other
+ *
+ *   Automatically respond with my PO Box URL to:
+ *     (*) Users in my buddy list (recommended)
+ *     ( ) Any AIM user
+ *
+ *   [ ] Automatically start iFolder if it's not running
  */
 static GtkWidget *
-get_config_frame(GaimPlugin *plugin)
+simias_get_config_frame(GaimPlugin *plugin)
 {
 	GtkWidget *ret;
 	GtkWidget *vbox;
 	GtkWidget *label;
-	GtkWidget *show_invitations_button;
+	GtkWidget *sync_now_button;
+	GtkWidget *select;
 	ret = gtk_vbox_new(FALSE, 18);
 	gtk_container_set_border_width (GTK_CONTAINER (ret), 12);
 
-	/* SECTION: Notify me when */
-	vbox = gaim_gtk_make_frame(ret, _("Notify me when:"));
-	gaim_gtk_prefs_checkbox(_("I receive a new invitation"),
-	                SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS, vbox);
-	gaim_gtk_prefs_checkbox(_("Buddies accept my invitations"),
-	                SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS, vbox);
-	gaim_gtk_prefs_checkbox(_("Buddies reject my invitations"),
-	                SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS, vbox);
-	gaim_gtk_prefs_checkbox(_("An error occurs"),
-	                SIMIAS_PREF_NOTIFY_ERRORS, vbox);
-	label = gtk_label_new("(Not implemented yet)");
-	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
+	/* SECTION: Gaim Domain Member List */
+	vbox = gaim_gtk_make_frame(ret, _("Gaim Domain Member List"));
+
+	gaim_gtk_prefs_dropdown(vbox, _("Use:"), 
+		GAIM_PREF_STRING, SIMIAS_PREF_SYNC_METHOD,
+		_("All buddies"), SIMIAS_PREF_SYNC_METHOD_ALL,
+		_("iFolder-enabled buddies"), SIMIAS_PREF_SYNC_METHOD_PLUGIN_ENABLED,
+		NULL);
+
+	select = gaim_gtk_prefs_labeled_spin_button(vbox,
+			_("Synchronize every:"), SIMIAS_PREF_SYNC_INTERVAL,
+			1, 24 * 60, NULL);
+
+	sync_now_button =
+		gtk_button_new_with_mnemonic(_("_Synchronize Now"));
+	gtk_box_pack_end(GTK_BOX(ret),
+			sync_now_button, FALSE, FALSE, 0);
+	g_signal_connect(G_OBJECT(sync_now_button), "clicked",
+		G_CALLBACK(simias_sync_member_list), NULL);
+
+	/* SECTION: Other */
+	vbox = gaim_gtk_make_frame(ret, _("Other"));
 	
-	/* SECTION: Buddy Location */
-	vbox = gaim_gtk_make_frame(ret, _("Buddy Location"));
-	gaim_gtk_prefs_checkbox(_("Automatically rediscover buddy IP Addresses"),
-							SIMIAS_PREF_REDISCOVER_IP_ADDRS, vbox);
-	
-	/* SECTION: Simias */
-	vbox = gaim_gtk_make_frame(ret, _("Simias"));
-	gaim_gtk_prefs_checkbox(_("_Automatically start Simias if needed"),
+	gaim_gtk_prefs_dropdown(vbox, _("Reply with my PO BOX URL to:"),
+		GAIM_PREF_STRING, SIMIAS_PREF_PING_REPLY_TYPE,
+		_("Users in my buddy list (recommended)"), SIMIAS_PREF_PING_REPLY_TYPE_BLIST,
+		_("Any AIM User"), SIMIAS_PREF_PING_REPLY_TYPE_ANY,
+		NULL);
+
+	gaim_gtk_prefs_checkbox(_("_Automatically start iFolder if it's not running"),
 	                SIMIAS_PREF_SIMIAS_AUTO_START, vbox);
 	label = gtk_label_new("(Not implemented yet)");
-	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
-	
-	show_invitations_button =
-		gtk_button_new_with_mnemonic(_("Show _Invitations"));
-	gtk_box_pack_end(GTK_BOX(ret),
-			show_invitations_button, FALSE, FALSE, 0);
-	g_signal_connect(G_OBJECT(show_invitations_button), "clicked",
-		G_CALLBACK(simias_show_invitations_window), NULL);
+
 
 	gtk_widget_show_all(ret);
 	return ret;
 }
 
-
 static GaimGtkPluginUiInfo ui_info =
 {
-	get_config_frame
+	simias_get_config_frame
 };
 
 static GaimPluginInfo info =
@@ -1370,3 +1383,5 @@ init_plugin(GaimPlugin *plugin)
 }
 
 GAIM_INIT_PLUGIN(ifolder, init_plugin, info)
+
+
