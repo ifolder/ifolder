@@ -217,6 +217,7 @@ namespace Simias.Sync.Client
 			sizeRemaining = sizeToSync;
 			WritePosition = 0;
 				
+			eventPublisher.RaiseEvent(new FileSyncEventArgs(Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
 			for (int i = 0; i < fileMap.Length; ++i)
 			{
 				if (fileMap[i] != -1)
@@ -251,10 +252,10 @@ namespace Simias.Sync.Client
 					}
 
 					byte[] readBuffer;
-					eventPublisher.RaiseEvent(new FileSyncEventArgs(Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
 					int bytesRead = serverFile.Read(offset, readBufferSize, out readBuffer);
 					Write(readBuffer, 0, bytesRead);
 					sizeRemaining -= bytesRead;
+					eventPublisher.RaiseEvent(new FileSyncEventArgs(Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
 				}
 			}
 			return true;
@@ -475,6 +476,7 @@ namespace Simias.Sync.Client
 
 			byte[] buffer = new byte[BlockSize];
 			long offset = 0;
+			eventPublisher.RaiseEvent(new FileSyncEventArgs(Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
 			foreach(FileSegment segment in fileMap)
 			{
 				if (segment is BlockSegment)
@@ -490,11 +492,11 @@ namespace Simias.Sync.Client
 					OffsetSegment seg = (OffsetSegment)segment;
 					byte[] dataBuffer = new byte[seg.Length];
 					ReadPosition = seg.Offset;
-					eventPublisher.RaiseEvent(new FileSyncEventArgs(Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
 					int bytesRead = Read(dataBuffer, 0, seg.Length);
 					serverFile.Write(dataBuffer, offset, bytesRead);
 					sizeRemaining -= bytesRead;
 					offset += seg.Length;
+					eventPublisher.RaiseEvent(new FileSyncEventArgs(Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
 				}
 			}
 			return true;
