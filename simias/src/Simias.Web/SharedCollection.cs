@@ -545,7 +545,7 @@ namespace Simias.Web
 			Store store = Store.GetStore();
 
 			Collection col = store.GetCollectionByID(CollectionID);
-			if(col != null)
+			if(col == null)
 				throw new Exception("Invalid CollectionID");
 
 			Simias.Storage.Member member = col.GetMemberByID(UserID);
