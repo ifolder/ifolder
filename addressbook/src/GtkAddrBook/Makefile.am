@@ -31,7 +31,7 @@ GLADE_FILES = invitation-assistant.glade invitation.png collection-properties.gl
 
 IMAGE_FILES = property.png invited-contact.png vcardimport.png vcardexport.png book.png contact.png contact_me.png blankhead.png
 
-EXTRA_DIST = $(Book_CSFILES) $(BookLib_CSFILES) $(Book_RESOURCES) $(BookLib_RESOURCES) $(GLADE_FILES) $(IMAGE_FILES)
+EXTRA_DIST = $(Book_CSFILES) $(BookLib_CSFILES) $(IA_CSFILES) $(Book_RESOURCES) $(BookLib_RESOURCES) $(IA_RESOURCES) $(GLADE_FILES) $(IMAGE_FILES)
 
 all: InvitationAssistant.exe ContactBrowser.exe Novell.AddressBook.UI.gtk.dll
 
@@ -56,7 +56,7 @@ uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f Novell.AddressBook.UI.gtk.dll $(BookLib_RESOURCES)
 	cd $(DESTDIR)$(datadir)/ifolder/glade; rm -f $(GLADE_FILES)
 	cd $(DESTDIR)$(datadir)/ifolder/images; rm -f $(IMAGE_FILES)
-	cd $(DESTDIR)$(bindir); rm -f ContactBrowser.exe contactbrowser
+	cd $(DESTDIR)$(bindir); rm -f ContactBrowser.exe contactbrowser InvitationAssistant.exe invitationassistant
     
 installcheck-local: install
 	
