@@ -50,7 +50,7 @@ namespace Simias.Sync
 		{
 			responseMsg = null;
 
-			MyTrace.WriteLine("****** SNIFFER PROCESS SERVER MESSAGE START ******");
+			MyTrace.WriteLine("****** SNIFFER PROCESS [SERVER] MESSAGE START ******");
 
 			ServerProcessing result;
 			
@@ -66,8 +66,8 @@ namespace Simias.Sync
 			}
 			finally
 			{
-				MyTrace.WriteLine("Responding to Remote Call:{0}{1}", Environment.NewLine, SnifferMessage.ToString(responseMsg));
-				MyTrace.WriteLine("******* SNIFFER PROCESS SERVER MESSAGE END *******");
+				MyTrace.WriteLine("Responding to Remote Call...{0}{1}", Environment.NewLine, SnifferMessage.ToString(responseMsg));
+				MyTrace.WriteLine("******* SNIFFER PROCESS [SERVER] MESSAGE END *******");
 			}
 
 			return result;
