@@ -49,9 +49,16 @@ namespace Novell.iFolder
 
 		// Preferences widgets
 		private Gtk.CheckButton			AutoSyncCheckButton;
+		private Gtk.SpinButton			SyncSpinButton;
+		private Gtk.Label				SyncUnitsLabel;
+
 		private Gtk.CheckButton			StartAtLoginButton;
 		private Gtk.CheckButton			ShowConfirmationButton; 
 		private Gtk.CheckButton			UseProxyButton; 
+		private Gtk.Entry				ProxyHostEntry;
+		private Gtk.SpinButton			ProxyPortSpinButton;
+		private Gtk.Label				ProxyHostLabel;
+		private Gtk.Label				ProxyPortLabel;
 
 		private ImageMenuItem		CreateMenuItem;
 		private Gtk.MenuItem		ShareMenuItem;
@@ -82,6 +89,7 @@ namespace Novell.iFolder
 					// Check to add the enterprise tab
 				}
 				ifSettings = value;
+				RefreshWidgets();
 			}
 		}
 
@@ -98,7 +106,62 @@ namespace Novell.iFolder
 				throw new ApplicationException("iFolderWebServices was null");
 			iFolderWS = ifws;
 			ifSettings = settings;
-			InitializeWidgets();
+			CreateWidgets();
+			RefreshWidgets();
+		}
+
+
+
+
+		/// <summary>
+		/// Refresh the values that are in the widgets and add or remove the
+		/// Enterprise tab depending on our state
+		/// </summary>
+		private void RefreshWidgets()
+		{
+			//------------------------------
+			// Setup all of the default values
+			//------------------------------
+			if(ifSettings.DisplayConfirmation)
+				ShowConfirmationButton.Active = true;
+			else
+				ShowConfirmationButton.Active = false;
+
+			AutoSyncCheckButton.Active = true;
+			StartAtLoginButton.Active = true;
+
+			// This should change to check the value but I'm not sure
+			// which value to check
+			if(AutoSyncCheckButton.Active == true)
+			{
+				SyncSpinButton.Sensitive = true;
+				SyncUnitsLabel.Sensitive = true;
+			}
+			else
+			{
+				SyncSpinButton.Sensitive = false;
+				SyncUnitsLabel.Sensitive = false;
+			}
+
+
+			if(ifSettings.UseProxy)
+			{
+				ProxyHostEntry.Sensitive = true;
+				ProxyPortSpinButton.Sensitive = true;
+				ProxyHostLabel.Sensitive = true;
+				ProxyPortLabel.Sensitive = true;
+				UseProxyButton.Active = true; 
+				ProxyHostEntry.Text = ifSettings.ProxyHost;
+				ProxyPortSpinButton.Value = ifSettings.ProxyPort;
+			}
+			else
+			{
+				ProxyHostEntry.Sensitive = false;
+				ProxyPortSpinButton.Sensitive = false;
+				ProxyHostLabel.Sensitive = false;
+				ProxyPortLabel.Sensitive = false;
+				UseProxyButton.Active = false; 
+			}
 		}
 
 
@@ -107,7 +170,7 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Setup the UI inside the Window
 		/// </summary>
-		private void InitializeWidgets()
+		private void CreateWidgets()
 		{
 			this.SetDefaultSize (200, 400);
 			this.DeleteEvent += new DeleteEventHandler (WindowDelete);
@@ -149,12 +212,15 @@ namespace Novell.iFolder
 			// Create Tabs
 			//-----------------------------
 			MainNoteBook = new Notebook();
+//			MainNoteBook.BorderWidth = 10;
 			MainNoteBook.AppendPage(	CreateiFoldersPage(), 
 										new Label("iFolders"));
 			MainNoteBook.AppendPage( CreatePreferencesPage(),
 										new Label("Preferences"));
 			MainNoteBook.AppendPage( CreateLogPage(),
 										new Label("Activity Log"));
+			MainNoteBook.AppendPage( CreateEnterprisePage(),
+										new Label("Server"));
 
 			vbox.PackStart(MainNoteBook, true, true, 0);
 
@@ -425,113 +491,202 @@ namespace Novell.iFolder
 			// Create a new VBox and place 10 pixels between
 			// each item in the vBox
 			VBox vbox = new VBox();
-			vbox.Spacing = 10;
+			vbox.Spacing = 15;
 			vbox.BorderWidth = 10;
 
 
 			//------------------------------
-			// Application Frame
+			// Application Settings
 			//------------------------------
-			Frame ApplicationFrame = new Frame("Application");
+			// create a section box
+			VBox appSectionBox = new VBox();
+			vbox.PackStart(appSectionBox, false, true, 0);
+			Label appSectionLabel = new Label("<span weight=\"bold\">" +
+												"Application" +
+												"</span>");
+			appSectionLabel.UseMarkup = true;
+			appSectionLabel.Xalign = 0;
+			appSectionBox.PackStart(appSectionLabel, false, true, 0);
 
-			VBox appBox = new VBox();
-			appBox.Spacing = 10;
-			appBox.BorderWidth = 10;
+			// create a hbox to provide spacing
+			HBox appSpacerBox = new HBox();
+			appSectionBox.PackStart(appSpacerBox, false, true, 0);
+			Label appSpaceLabel = new Label("    "); // four spaces
+			appSpacerBox.PackStart(appSpaceLabel, false, true, 0);
+
+			// create a vbox to actually place the widgets in for section
+			VBox appWidgetBox = new VBox();
+			appSpacerBox.PackStart(appWidgetBox, false, true, 0);
 
 			StartAtLoginButton = 
 				new CheckButton("Startup iFolder at Login");
-			appBox.PackStart(StartAtLoginButton, false, true, 0);
+			appWidgetBox.PackStart(StartAtLoginButton, false, true, 0);
 
 			ShowConfirmationButton = 
 				new CheckButton("Show creation dialog when creating iFolders");
-			appBox.PackStart(ShowConfirmationButton, false, true, 0);
+			appWidgetBox.PackStart(ShowConfirmationButton, false, true, 0);
 
-			ApplicationFrame.Add(appBox);
-
-			vbox.PackStart(ApplicationFrame, false, true, 0);
 
 
 			//------------------------------
-			// Sync Frame
+			// Sync Settings
 			//------------------------------
-			Frame SyncFrame = new Frame("Synchronization");
-			VBox syncBox = new VBox();
-			syncBox.Spacing = 10;
-			syncBox.BorderWidth = 10;
-			SyncFrame.Add(syncBox);
-			vbox.PackStart(SyncFrame, false, true, 0);
+			// create a section box
+			VBox syncSectionBox = new VBox();
+			vbox.PackStart(syncSectionBox, false, true, 0);
+			Label syncSectionLabel = new Label("<span weight=\"bold\">" +
+												"Synchronization" +
+												"</span>");
+			syncSectionLabel.UseMarkup = true;
+			syncSectionLabel.Xalign = 0;
+			syncSectionBox.PackStart(syncSectionLabel, false, true, 0);
 
-			AutoSyncCheckButton = 
-					new CheckButton("Automatically Sync iFolders");
-			syncBox.PackStart(AutoSyncCheckButton, false, true, 0);
+			// create a hbox to provide spacing
+			HBox syncSpacerBox = new HBox();
+			syncSectionBox.PackStart(syncSpacerBox, false, true, 0);
+			Label syncSpaceLabel = new Label("    "); // four spaces
+			syncSpacerBox.PackStart(syncSpaceLabel, false, true, 0);
 
-			Frame SyncToHostFrame = new Frame("Synchronize to host");
-			syncBox.PackStart(SyncToHostFrame, false, true, 0);
+			// create a vbox to actually place the widgets in for section
+			VBox syncWidgetBox = new VBox();
+			syncSpacerBox.PackStart(syncWidgetBox, false, true, 0);
+			syncWidgetBox.Spacing = 10;
 
-			VBox syncVBox = new VBox();
-			syncVBox.Spacing = 10;
-			syncVBox.BorderWidth = 10;
 
-			Label syncHelp = new Label("This sets the default value for how often the hosts for all iFolders will be contacted to perform a sync.  This value can can be overriden by setting a value on an individual iFolder.");
-			syncHelp.LineWrap = true;
-			syncHelp.Xalign = 0;
-			syncVBox.PackStart(syncHelp, false, true, 0);
+			Label syncHelpLabel = new Label("This will set the default Sync Settings for all iFolders.  You can change the sync setting for an individual iFolder on an iFolder's property pages");
+			syncHelpLabel.LineWrap = true;
+			syncHelpLabel.Xalign = 0;
+			syncWidgetBox.PackStart(syncHelpLabel, false, true, 0);
 
 			HBox syncHBox = new HBox();
+			syncWidgetBox.PackStart(syncHBox, false, true, 0);
 			syncHBox.Spacing = 10;
+			AutoSyncCheckButton = 
+					new CheckButton("Sync to host every:");
+			AutoSyncCheckButton.Toggled += new EventHandler(OnAutoSyncButton);
+			syncHBox.PackStart(AutoSyncCheckButton, false, false, 0);
+			SyncSpinButton = new SpinButton(0, 99999, 1);
+			SyncSpinButton.ValueChanged += 
+					new EventHandler(OnSyncIntervalChanged);
+			syncHBox.PackStart(SyncSpinButton, false, false, 0);
+			SyncUnitsLabel = new Label("seconds");
+			SyncUnitsLabel.Xalign = 0;
+			syncHBox.PackEnd(SyncUnitsLabel, true, true, 0);
 
-			Label syncLabel = new Label("Sync to host every:");
-			syncHBox.PackStart(syncLabel, false, false, 0);
-
-			SpinButton syncSpinButton = new SpinButton(0, 99999, 1);
-			syncHBox.PackStart(syncSpinButton, false, false, 0);
-
-			Label syncValue = new Label("seconds");
-			syncValue.Xalign = 0;
-			syncHBox.PackEnd(syncValue, true, true, 0);
-			syncVBox.PackEnd(syncHBox, false, false, 0);
-			SyncToHostFrame.Add(syncVBox);
 
 
 			//------------------------------
 			// Proxy Frame
 			//------------------------------
-			Frame ProxyFrame = new Frame("Proxy");
-			VBox proxyBox = new VBox();
-			proxyBox.Spacing = 10;
-			proxyBox.BorderWidth = 10;
-			ProxyFrame.Add(proxyBox);
-			vbox.PackStart(ProxyFrame, false, true, 0);
+			// create a section box
+			VBox proxySectionBox = new VBox();
+			vbox.PackStart(proxySectionBox, true, true, 0);
+			Label proxySectionLabel = new Label("<span weight=\"bold\">" +
+												"Proxy" +
+												"</span>");
+			proxySectionLabel.UseMarkup = true;
+			proxySectionLabel.Xalign = 0;
+			proxySectionBox.PackStart(proxySectionLabel, false, true, 0);
+
+			// create a hbox to provide spacing
+			HBox proxySpacerBox = new HBox();
+			proxySectionBox.PackStart(proxySpacerBox, false, true, 0);
+			Label proxySpaceLabel = new Label("    "); // four spaces
+			proxySpacerBox.PackStart(proxySpaceLabel, false, true, 0);
+
+			// create a vbox to actually place the widgets in for section
+			VBox proxyWidgetBox = new VBox();
+			proxySpacerBox.PackStart(proxyWidgetBox, true, true, 0);
+			proxyWidgetBox.Spacing = 10;
+
 
 			UseProxyButton = new CheckButton("Use a proxy to sync iFolders");
-			proxyBox.PackStart(UseProxyButton, false, true, 0);
+			proxyWidgetBox.PackStart(UseProxyButton, false, true, 0);
+			UseProxyButton.Toggled += new EventHandler(OnUseProxyButton);
+
 
 			HBox pSettingBox = new HBox();
 			pSettingBox.Spacing = 10;
-//			pSettingBox.BorderWidth = 10;
-			proxyBox.PackStart(pSettingBox, false, true, 0);
+			proxyWidgetBox.PackStart(pSettingBox, true, true, 0);
 
-			Label hostLabel = new Label("Proxy Host:");
-			pSettingBox.PackStart(hostLabel, false, true, 0);
-			Entry hostEntry = new Entry();
-			pSettingBox.PackStart(hostEntry, true, true, 0);
-			Label portLabel = new Label("Port:");
-			pSettingBox.PackStart(portLabel, false, true, 0);
-			SpinButton portSpinButton = new SpinButton(0, 99999, 1);
-			pSettingBox.PackStart(portSpinButton, false, true, 0);
+			ProxyHostLabel = new Label("Proxy Host:");
+			pSettingBox.PackStart(ProxyHostLabel, false, true, 0);
+			ProxyHostEntry = new Entry();
+			ProxyHostEntry.Changed += new EventHandler(OnProxySettingsChanged);
+
+			pSettingBox.PackStart(ProxyHostEntry, true, true, 0);
+			ProxyPortLabel = new Label("Port:");
+			pSettingBox.PackStart(ProxyPortLabel, false, true, 0);
+			ProxyPortSpinButton = new SpinButton(0, 99999, 1);
+
+			ProxyPortSpinButton.ValueChanged += 
+					new EventHandler(OnProxySettingsChanged);
+			pSettingBox.PackStart(ProxyPortSpinButton, false, true, 0);
+
+
+			return vbox;
+		}
+
+
+
+
+		/// <summary>
+		/// Creates the Enterprise Page
+		/// </summary>
+		/// <returns>
+		/// Widget to display
+		/// </returns>
+		private Widget CreateEnterprisePage()
+		{
+			// Create a new VBox and place 10 pixels between
+			// each item in the vBox
+			VBox vbox = new VBox();
+			vbox.Spacing = 15;
+			vbox.BorderWidth = 10;
 
 
 			//------------------------------
-			// Setup all of the default values
+			// Server Information
 			//------------------------------
-			if(ifSettings.DisplayConfirmation)
-				ShowConfirmationButton.Active = true;
-			else
-				ShowConfirmationButton.Active = false;
+			// create a section box
+			VBox srvSectionBox = new VBox();
+			vbox.PackStart(srvSectionBox, false, true, 0);
+			Label srvSectionLabel = new Label("<span weight=\"bold\">" +
+												"iFolder Server" +
+												"</span>");
+			srvSectionLabel.UseMarkup = true;
+			srvSectionLabel.Xalign = 0;
+			srvSectionBox.PackStart(srvSectionLabel, false, true, 0);
 
-			AutoSyncCheckButton.Active = true;
-			StartAtLoginButton.Active = true;
-			UseProxyButton.Active = false; 
+			// create a hbox to provide spacing
+			HBox srvSpacerBox = new HBox();
+			srvSectionBox.PackStart(srvSpacerBox, true, true, 0);
+			Label srvSpaceLabel = new Label("    "); // four spaces
+			srvSpacerBox.PackStart(srvSpaceLabel, false, true, 0);
+
+			// create a vbox to actually place the widgets in for section
+			VBox srvWidgetBox = new VBox();
+			srvSpacerBox.PackStart(srvWidgetBox, true, true, 0);
+
+			// create a table to hold the values
+			Table srvTable = new Table(2,2,false);
+			srvWidgetBox.PackStart(srvTable, true, true, 0);
+			srvTable.Homogeneous = false;
+			srvTable.ColumnSpacing = 10;
+			Label srvNameLabel = new Label("Server Host:");
+			srvNameLabel.Xalign = 0;
+			srvTable.Attach(srvNameLabel, 0,1,0,1,
+					AttachOptions.Shrink, 0,0,0);
+			Label srvNameValue = new Label("127.0.0.1");
+			srvNameValue.Xalign = 0;
+			srvTable.Attach(srvNameValue, 1,2,0,1);
+			Label usrNameLabel = new Label("User Name:");
+			usrNameLabel.Xalign = 0;
+			srvTable.Attach(usrNameLabel, 0,1,1,2,
+					AttachOptions.Shrink, 0,0,0);
+			Label usrNameValue = new Label("sflinders.novell.com");
+			usrNameValue.Xalign = 0;
+			srvTable.Attach(usrNameValue, 1,2,1,2);
 
 			return vbox;
 		}
@@ -1299,6 +1454,49 @@ namespace Novell.iFolder
 		}
 
 
+		private void OnUseProxyButton(object o, EventArgs args)
+		{
+			if(UseProxyButton.Active == true)
+			{
+				ProxyHostEntry.Sensitive = true;
+				ProxyPortSpinButton.Sensitive = true;
+				ProxyHostLabel.Sensitive = true;
+				ProxyPortLabel.Sensitive = true;
+			}
+			else
+			{
+				ProxyHostEntry.Sensitive = false;
+				ProxyPortSpinButton.Sensitive = false;
+				ProxyHostLabel.Sensitive = false;
+				ProxyPortLabel.Sensitive = false;
+			}
+		}
+
+		private void OnProxySettingsChanged(object o, EventArgs args)
+		{
+			Console.WriteLine("Save ProxySettings here");
+			// Save the settings here?
+		}
+
+		private void OnAutoSyncButton(object o, EventArgs args)
+		{
+			if(AutoSyncCheckButton.Active == true)
+			{
+				SyncSpinButton.Sensitive = true;
+				SyncUnitsLabel.Sensitive = true;
+			}
+			else
+			{
+				SyncSpinButton.Sensitive = false;
+				SyncUnitsLabel.Sensitive = false;
+			}
+		}
+
+		private void OnSyncIntervalChanged(object o, EventArgs args)
+		{
+			Console.WriteLine("Save Sync Interval here");
+			// Save the settings here?
+		}
 
 	}
 }

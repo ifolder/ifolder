@@ -35,6 +35,11 @@ namespace Novell.iFolder
 		private iFolderWebService	ifws;
 		private iFolder				ifolder;
 		private	CheckButton 		AutoSyncCheckButton;
+		private SpinButton			SyncSpinButton;
+		private Label				SyncUnitsLabel;
+
+
+
 
 		/// <summary>
 		/// Default constructor for iFolderPropSharingPage
@@ -59,86 +64,99 @@ namespace Novell.iFolder
 			this.Spacing = 10;
 			this.BorderWidth = 10;
 
-			// Main Sync Box
-//			Frame SyncFrame = new Frame("Synchronization");
-//			this.PackStart(SyncFrame, true, true, 0);
+			//------------------------------
+			// Sync Settings
+			//------------------------------
+			// create a section box
+			VBox syncSectionBox = new VBox();
+			this.PackStart(syncSectionBox, false, true, 0);
+			Label syncSectionLabel = new Label("<span weight=\"bold\">" +
+												"Synchronization" +
+												"</span>");
+			syncSectionLabel.UseMarkup = true;
+			syncSectionLabel.Xalign = 0;
+			syncSectionBox.PackStart(syncSectionLabel, false, true, 0);
 
-			VBox vbox = new VBox();
-			vbox.Spacing = 10;
-//			vbox.BorderWidth = 10;
+			// create a hbox to provide spacing
+			HBox syncSpacerBox = new HBox();
+			syncSectionBox.PackStart(syncSpacerBox, false, true, 0);
+			Label syncSpaceLabel = new Label("    "); // four spaces
+			syncSpacerBox.PackStart(syncSpaceLabel, false, true, 0);
+
+			// create a vbox to actually place the widgets in for section
+			VBox syncWidgetBox = new VBox();
+			syncSpacerBox.PackStart(syncWidgetBox, false, true, 0);
+			syncWidgetBox.Spacing = 10;
 
 
-			Frame SyncFrame = new Frame("Synchronization");
-			VBox syncBox = new VBox();
-			syncBox.Spacing = 10;
-			syncBox.BorderWidth = 10;
-			SyncFrame.Add(syncBox);
-			vbox.PackStart(SyncFrame, false, true, 0);
-
-			AutoSyncCheckButton = 
-					new CheckButton("Automatically Sync this iFolder");
-			syncBox.PackStart(AutoSyncCheckButton, false, true, 0);
-
-			// Sync To Host Box
-			Frame SyncToHostFrame = new Frame("Synchronize to host");
-			syncBox.PackStart(SyncToHostFrame, false, true, 0);
-
-			VBox syncVBox = new VBox();
-			syncVBox.Spacing = 10;
-			syncVBox.BorderWidth = 10;
-
-			Label syncHelp = new Label("This sets the value for how often the host will be contacted to perform a sync.");
-			syncHelp.LineWrap = true;
-			syncHelp.Xalign = 0;
-			syncVBox.PackStart(syncHelp, false, true, 0);
+			Label syncHelpLabel = new Label("This will set the default Sync Settings for all iFolders.  You can change the sync setting for an individual iFolder on an iFolder's property pages");
+			syncHelpLabel.LineWrap = true;
+			syncHelpLabel.Xalign = 0;
+			syncWidgetBox.PackStart(syncHelpLabel, false, true, 0);
 
 			HBox syncHBox = new HBox();
+			syncWidgetBox.PackStart(syncHBox, false, true, 0);
 			syncHBox.Spacing = 10;
-
-			Label syncLabel = new Label("Sync to host every:");
-			syncHBox.PackStart(syncLabel, false, false, 0);
-
-			SpinButton syncSpinButton = new SpinButton(0, 99999, 1);
-			syncHBox.PackStart(syncSpinButton, false, false, 0);
-
-			Label syncValue = new Label("seconds");
-			syncValue.Xalign = 0;
-			syncHBox.PackEnd(syncValue, true, true, 0);
-			syncVBox.PackEnd(syncHBox, false, false, 0);
-			SyncToHostFrame.Add(syncVBox);
-
-
-			// Statistics Box
-			Frame StatisticsFrame = new Frame("Statistics");
-
-			Table statsTable = new Table(2,2,false);
-			statsTable.BorderWidth = 10;
-			statsTable.RowSpacing = 10;
-			statsTable.ColumnSpacing = 10;
-
-			Label amountLabel = new Label("Amount to upload:");
-			amountLabel.Xalign = 0;
-			statsTable.Attach(amountLabel, 0,1,0,1);
-
-			Label amountValue = new Label("0");
-			amountValue.Xalign = 1;
-			statsTable.Attach(amountValue, 1,2,0,1);
-
-			Label itemsLabel = new Label("Items to synchronize:");
-			itemsLabel.Xalign = 0;
-			statsTable.Attach(itemsLabel, 0,1,1,2);
-
-			Label itemsValue = new Label("0");
-			itemsValue.Xalign = 1;
-			statsTable.Attach(itemsValue, 1,2,1,2);
-
-			StatisticsFrame.Add(statsTable);
-
-			vbox.PackStart(StatisticsFrame, false, true, 0);
+			AutoSyncCheckButton = 
+					new CheckButton("Sync to host every:");
+//			AutoSyncCheckButton.Toggled += new EventHandler(OnAutoSyncButton);
+			syncHBox.PackStart(AutoSyncCheckButton, false, false, 0);
+			SyncSpinButton = new SpinButton(0, 99999, 1);
+//			SyncSpinButton.ValueChanged += 
+//					new EventHandler(OnSyncIntervalChanged);
+			syncHBox.PackStart(SyncSpinButton, false, false, 0);
+			SyncUnitsLabel = new Label("seconds");
+			SyncUnitsLabel.Xalign = 0;
+			syncHBox.PackEnd(SyncUnitsLabel, true, true, 0);
 
 
-			this.PackStart(vbox, true, true, 0);
-//			SyncFrame.Add(vbox);
+
+
+
+
+
+			//------------------------------
+			// Statistics Information
+			//------------------------------
+			// create a section box
+			VBox srvSectionBox = new VBox();
+			this.PackStart(srvSectionBox, false, true, 0);
+			Label srvSectionLabel = new Label("<span weight=\"bold\">" +
+												"Statistics" +
+												"</span>");
+			srvSectionLabel.UseMarkup = true;
+			srvSectionLabel.Xalign = 0;
+			srvSectionBox.PackStart(srvSectionLabel, false, true, 0);
+
+			// create a hbox to provide spacing
+			HBox srvSpacerBox = new HBox();
+			srvSectionBox.PackStart(srvSpacerBox, true, true, 0);
+			Label srvSpaceLabel = new Label("    "); // four spaces
+			srvSpacerBox.PackStart(srvSpaceLabel, false, true, 0);
+
+			// create a vbox to actually place the widgets in for section
+			VBox srvWidgetBox = new VBox();
+			srvSpacerBox.PackStart(srvWidgetBox, true, true, 0);
+
+			// create a table to hold the values
+			Table srvTable = new Table(2,2,false);
+			srvWidgetBox.PackStart(srvTable, true, true, 0);
+			srvTable.Homogeneous = false;
+			srvTable.ColumnSpacing = 10;
+			Label srvNameLabel = new Label("Amount to upload:");
+			srvNameLabel.Xalign = 0;
+			srvTable.Attach(srvNameLabel, 0,1,0,1,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			Label srvNameValue = new Label("0");
+			srvNameValue.Xalign = 0;
+			srvTable.Attach(srvNameValue, 1,2,0,1);
+			Label usrNameLabel = new Label("Items to synchronize:");
+			usrNameLabel.Xalign = 0;
+			srvTable.Attach(usrNameLabel, 0,1,1,2,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			Label usrNameValue = new Label("0");
+			usrNameValue.Xalign = 0;
+			srvTable.Attach(usrNameValue, 1,2,1,2);
 
 		}
 	}
