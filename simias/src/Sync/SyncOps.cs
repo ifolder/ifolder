@@ -480,7 +480,6 @@ internal class SyncOps
 							if (onServer && tombstone)
 							{
 								collection.Commit(collection.Delete(node));
-								continue;
 							}
 							NodeStamp stamp = new NodeStamp();
 							stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
