@@ -154,7 +154,7 @@ namespace Simias.Domain
 			}
 
 			string uriString = service.CreateMaster(collection.ID, collection.Name,
-				rootID, rootName);
+				rootID, rootName, collection.Owner.ID);
 
 			if (uriString == null)
 				throw new ApplicationException("Unable to create remote master collection.");

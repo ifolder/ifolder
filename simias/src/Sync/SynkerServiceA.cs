@@ -63,35 +63,25 @@ public class SynkerA: SyncLogicFactory
 public class SynkerServiceA: SyncCollectionService
 {
 	SyncCollection collection;
-	Member		   member;
+	Access.Rights	rights = Access.Rights.Deny;
 	SyncOps ops;
 	IncomingNode inNode;
 	OutgoingNode outNode;
-	bool ignoreRights = true;
-
+	
 	/// <summary>
 	/// public ctor 
 	/// </summary>
-	public SynkerServiceA(SyncCollection collection): this(collection, false)
-	{
-	}
-
-	/// <summary>
-	/// debug ctor 
-	/// </summary>
-	public SynkerServiceA(SyncCollection collection, bool ignoreRights): base(collection)
+	public SynkerServiceA(SyncCollection collection) : base(collection)
 	{
 		this.collection = collection;
-		this.ignoreRights = ignoreRights;
 	}
 
+	
 	/// <summary>
 	/// start sync of this collection -- perform basic role checks and dredge server file system
 	/// </summary>
 	public Access.Rights Start(string user)
 	{
-		Access.Rights rights = Access.Rights.Deny;
-	
 		string userID = Thread.CurrentPrincipal.Identity.Name;
 			
 		if ((userID == null) || (userID.Length == 0))
@@ -100,11 +90,20 @@ public class SynkerServiceA: SyncCollectionService
 			userID = user;
 		}
 		
-		member = collection.GetMemberByID(userID);
-		collection.Impersonate(member);
-		Log.Info("Sync session starting for {0}", member.Name);
-
-		if (ignoreRights || collection.IsAccessAllowed(member, Access.Rights.ReadOnly))
+		Member member = collection.GetMemberByID(userID);
+		if (member != null)
+		{
+			collection.Impersonate(member);
+			rights = member.Rights;
+			Log.Info("Sync session starting for {0}", member.Name);
+		}
+		else if (collection.Proxy && userID == collection.ProxyUserID)
+		{
+			rights = Access.Rights.Admin;
+			Log.Info("Sync session starting for {0}", userID);
+		}
+		
+		if (rights != Access.Rights.Deny)
 		{
 			//Log.Spew("dredging server for collection '{0}'", collection.Name);
 			//new Dredger(collection, true);
@@ -115,9 +114,13 @@ public class SynkerServiceA: SyncCollectionService
 		}
 		
 		Log.Spew("server start of collection {0} returning {1}", collection.Name, rights);
-		return member.Rights;
+		return rights;
 	}
 
+	private bool IsAccessAllowed(Access.Rights desiredRights)
+	{
+		return (rights >= desiredRights) ? true : false;
+	}
 	/// <summary>
 	/// returns array of NodeStamps for all Nodes in this collection
 	/// </summary>
@@ -126,7 +129,7 @@ public class SynkerServiceA: SyncCollectionService
 		Log.Spew("server start of GetNodeStamps");
 		try
 		{
-			if (!collection.IsAccessAllowed(member, Access.Rights.ReadOnly))
+			if (!IsAccessAllowed(Access.Rights.ReadOnly))
 				throw new UnauthorizedAccessException("Current user cannot read this collection");
 			NodeStamp[] nss = ops.GetNodeStamps();
 			Log.Spew("server returning {0} NodeStamps", nss.Length);
@@ -171,7 +174,7 @@ public class SynkerServiceA: SyncCollectionService
 	{
 		try
 		{
-			if (!collection.IsAccessAllowed(member, Access.Rights.ReadWrite))
+			if (!IsAccessAllowed(Access.Rights.ReadWrite))
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
 			Log.Spew("SyncSession.PutSmallNodes() Count {0}", nodes.Length);
@@ -193,7 +196,7 @@ public class SynkerServiceA: SyncCollectionService
 	{
 		try
 		{
-			if (!collection.IsAccessAllowed(member, Access.Rights.ReadOnly))
+			if (!IsAccessAllowed(Access.Rights.ReadOnly))
 				throw new UnauthorizedAccessException("Current user cannot read this collection");
 
 			Log.Spew("SyncSession.GetSmallNodes() Count {0}", nids.Length);
@@ -210,7 +213,7 @@ public class SynkerServiceA: SyncCollectionService
 	{
 		try
 		{
-			if (!collection.IsAccessAllowed(member, Access.Rights.ReadWrite))
+			if (!IsAccessAllowed(Access.Rights.ReadWrite))
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
 			inNode.Start(node, null);
@@ -228,7 +231,7 @@ public class SynkerServiceA: SyncCollectionService
 	{
 		try
 		{
-			if (!collection.IsAccessAllowed(member, Access.Rights.ReadWrite))
+			if (!IsAccessAllowed(Access.Rights.ReadWrite))
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
 			inNode.BlowChunks(forkChunks);
@@ -245,7 +248,7 @@ public class SynkerServiceA: SyncCollectionService
 	{
 		try
 		{
-			if (!collection.IsAccessAllowed(member, Access.Rights.ReadOnly))
+			if (!IsAccessAllowed(Access.Rights.ReadOnly))
 				throw new UnauthorizedAccessException("Current user cannot read this collection");
 
 			NodeChunk nc = new NodeChunk();
@@ -263,7 +266,7 @@ public class SynkerServiceA: SyncCollectionService
 	{
 		try
 		{
-			if (!collection.IsAccessAllowed(member, Access.Rights.ReadOnly))
+			if (!IsAccessAllowed(Access.Rights.ReadOnly))
 				throw new UnauthorizedAccessException("Current user cannot read this collection");
 
 			int unused;

@@ -116,6 +116,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string ProxyUserID = "ProxyUserID";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string PublicKey = "PublicKey";
 
 		/// <summary>
@@ -179,6 +184,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( MasterIncarnation, null );
 			systemPropertyTable.Add( Owner, null );
 			systemPropertyTable.Add( Parent, null );
+			systemPropertyTable.Add( ProxyUserID, null );
 			systemPropertyTable.Add( PublicKey, null );
 			systemPropertyTable.Add( Root, null );
 			systemPropertyTable.Add( Syncable, null );

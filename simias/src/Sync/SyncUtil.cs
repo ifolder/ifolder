@@ -172,7 +172,7 @@ public class CmdService: MarshalByRefObject
 			//Log.Spew("Start server dredge");
 			new Dredger(c, true);
 			//Log.Spew("End server dredge");
-			return c == null? null: new SynkerServiceA(new SyncCollection(c), true);
+			return c == null? null: new SynkerServiceA(new SyncCollection(c));
 		}
 		catch (Exception e) { Log.Uncaught(e); }
 		return null;
