@@ -108,6 +108,8 @@ namespace Simias.Web
 		CaseEqual
 	};
 
+	/// <summary>
+	/// </summary>
 	[ Serializable ]
 	public class MemberInfo
 	{
@@ -268,6 +270,7 @@ namespace Simias.Web
 
 
 
+		/// <summary>
 		/// Starts a search for all domain members.
 		/// </summary>
 		/// <param name="domainID">The identifier of the domain to search for members in.</param>
