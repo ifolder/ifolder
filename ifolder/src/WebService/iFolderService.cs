@@ -83,9 +83,9 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Gets the current iFolder Settings")]
 		[SoapRpcMethod]
-		public Settings GetSettings()
+		public iFolderSettings GetSettings()
 		{
-			return SharedCollection.GetSettings();
+			return new iFolderSettings();
 		}
 
 
@@ -146,7 +146,7 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Checks LocalPath to see if is in an iFolder")]
 		[SoapRpcMethod]
-		public bool IsPathInCollection(string LocalPath)
+		public bool IsPathIniFolder(string LocalPath)
 		{
 			return SharedCollection.IsPathInCollection(LocalPath);
 		}
@@ -358,11 +358,30 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Set the Rights of a member of an iFolder.  The Rights can be \"Admin\", \"ReadOnly\", or \"ReadWrite\".")]
 		[SoapRpcMethod]
-		public void SetMemberRights(	string iFolderID, 
-										string UserID,
-										string Rights)
+		public void SetUserRights(	string iFolderID, 
+									string UserID,
+									string Rights)
 		{
-			SharedCollection.SetMemberRights(iFolderID, UserID, Rights);
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(iFolderID);
+			if(col != null)
+				throw new Exception("Invalid iFolderID");
+
+			Simias.Storage.Member member = col.GetMemberByID(UserID);
+			if(member == null)
+				throw new Exception("Invalid UserID");
+
+			if(Rights == "Admin")
+				member.Rights = Access.Rights.Admin;
+			else if(Rights == "ReadOnly")
+				member.Rights = Access.Rights.ReadOnly;
+			else if(Rights == "ReadWrite")
+				member.Rights = Access.Rights.ReadWrite;
+			else
+				throw new Exception("Invalid Rights Specified");
+
+			col.Commit(member);
 		}
 
 
@@ -380,9 +399,16 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Get the Owner of an iFolder")]
 		[SoapRpcMethod]
-		public Simias.Web.Member GetOwner( string iFolderID )
+		public iFolderUser GetOwner( string iFolderID )
 		{
-			return SharedCollection.GetOwner(iFolderID);
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(iFolderID);
+			if(col == null)
+				throw new Exception("Invalid iFolderID");
+
+			iFolderUser user = new iFolderUser(col.Owner);
+			return user;
 		}
 
 
@@ -411,7 +437,7 @@ namespace Novell.iFolder.Web
 									string OldOwnerRights)
 		{
 			SharedCollection.ChangeOwner(iFolderID, NewOwnerUserID, 
-														OldOwnerRights);
+													OldOwnerRights);
 		}
 
 
@@ -433,8 +459,8 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Remove a single member from an iFolder")]
 		[SoapRpcMethod]
-		public void RemoveMember(	string iFolderID, 
-									string UserID)
+		public void RemoveiFolderUser(	string iFolderID, 
+										string UserID)
 		{
 			SharedCollection.RemoveMember(iFolderID, UserID);
 		}
@@ -453,9 +479,27 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Get the list of iFolder Members")]
 		[SoapRpcMethod]
-		public Simias.Web.Member[] GetMembers(string iFolderID)
+		public iFolderUser[] GetiFolderUsers(string iFolderID)
 		{
-			return SharedCollection.GetMembers(iFolderID);
+			ArrayList list = new ArrayList();
+
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(iFolderID);
+			if(col == null)
+				throw new Exception("Invalid iFolderID");
+
+			ICSList memberlist = col.GetMemberList();
+			foreach(ShallowNode sNode in memberlist)
+			{
+				Simias.Storage.Member simMem =
+					new Simias.Storage.Member(col, sNode);
+
+				iFolderUser user = new iFolderUser(simMem);
+				list.Add(user);
+			}
+
+			return (iFolderUser[]) (list.ToArray(typeof(iFolderUser)));
 		}
 
 
@@ -471,9 +515,30 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Get the list of All Members")]
 		[SoapRpcMethod]
-		public Simias.Web.Member[] GetAllMembers()
+		public iFolderUser[] GetAlliFolderUsers()
 		{
-			return SharedCollection.GetAllMembers();
+			ArrayList list = new ArrayList();
+
+			Store store = Store.GetStore();
+
+			Roster roster = 
+				store.GetDomain(store.DefaultDomain).GetRoster(store);
+
+			if(roster == null)
+				throw new Exception("Unable to access user roster");
+
+
+			ICSList memberlist = roster.GetMemberList();
+			foreach(ShallowNode sNode in memberlist)
+			{
+				Simias.Storage.Member simMem =
+					new Simias.Storage.Member(roster, sNode);
+
+				iFolderUser user = new iFolderUser(simMem);
+				list.Add(user);
+			}
+
+			return (iFolderUser[])(list.ToArray(typeof(iFolderUser)));
 		}
 
 
@@ -490,9 +555,21 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Lookup a single member to a collection")]
 		[SoapRpcMethod]
-		public Simias.Web.Member GetMember( string UserID )
+		public iFolderUser GetiFolderUser( string UserID )
 		{
-			return SharedCollection.GetMember(UserID);
+			Store store = Store.GetStore();
+
+			Roster roster = 
+					store.GetDomain(store.DefaultDomain).GetRoster(store);
+
+			if(roster == null)
+				throw new Exception("Unable to access user roster");
+
+			Simias.Storage.Member simMem = roster.GetMemberByID(UserID);
+			if(simMem == null)
+				throw new Exception("Invalid UserID");
+
+			return new iFolderUser(simMem);
 		}
 
 
@@ -509,10 +586,20 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Lookup a single member to a collection")]
 		[SoapRpcMethod]
-		public Simias.Web.Member GetiFolderMember( string UserID, 
-													string iFolderID )
+		public iFolderUser GetiFolderUserFromiFolder(	string UserID, 
+														string iFolderID )
 		{
-			return SharedCollection.GetCollectionMember(UserID, iFolderID);
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(iFolderID);
+			if(col == null)
+				throw new Exception("Invalid iFolderID");
+
+			Simias.Storage.Member simMem = col.GetMemberByID(UserID);
+			if(simMem == null)
+				throw new Exception("Invalid UserID");
+
+			return new iFolderUser(simMem);
 		}
 
 
@@ -529,9 +616,9 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Gets the DiskSpaceQuota for a member")]
 		[SoapRpcMethod]
-		public Simias.Web.DiskSpaceQuota GetMemberDiskSpaceQuota( string UserID )
+		public DiskSpace GetUserDiskSpace( string UserID )
 		{
-			return SharedCollection.GetMemberDiskQuota( UserID );
+			return DiskSpace.GetMemberDiskSpace(UserID);
 		}
 
 
@@ -548,9 +635,9 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Gets the DiskSpaceQuota for an iFolder")]
 		[SoapRpcMethod]
-		public Simias.Web.DiskSpaceQuota GetiFolderDiskSpaceQuota( string iFolderID )
+		public DiskSpace GetiFolderDiskSpace( string iFolderID )
 		{
-			return SharedCollection.GetCollectionDiskQuota( iFolderID );
+			return DiskSpace.GetiFolderDiskSpace(iFolderID);
 		}
 
 
@@ -567,9 +654,9 @@ namespace Novell.iFolder.Web
 		/// </param>
 		[WebMethod(Description="Sets the Disk Space Limit for a user")]
 		[SoapRpcMethod]
-		public void SetMemberSpaceLimit( string UserID, long Limit )
+		public void SetUserDiskSpaceLimit( string UserID, long Limit )
 		{
-			SharedCollection.SetMemberSpaceLimit(UserID, Limit);
+			DiskSpace.SetUserDiskSpaceLimit(UserID, Limit);
 		}
 
 
@@ -588,7 +675,13 @@ namespace Novell.iFolder.Web
 		[SoapRpcMethod]
 		public void SetiFolderSyncInterval( string iFolderID, int Interval )
 		{
-			SharedCollection.SetCollectionSyncInterval(iFolderID, Interval);
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(iFolderID);
+			if(col == null)
+				throw new Exception("Invalid iFolderID");
+
+			Simias.Policy.SyncInterval.Set(col, Interval);
 		}
 
 
@@ -604,7 +697,7 @@ namespace Novell.iFolder.Web
 		[SoapRpcMethod]
 		public void SetDefaultSyncInterval( int Interval )
 		{
-			SharedCollection.SetDefaultSyncInterval(Interval);
+			Simias.Policy.SyncInterval.Set( Interval );
 		}
 
 
@@ -620,7 +713,7 @@ namespace Novell.iFolder.Web
 		[SoapRpcMethod]
 		public int GetDefaultSyncInterval()
 		{
-			return SharedCollection.GetDefaultSyncInterval();
+			return Simias.Policy.SyncInterval.GetInterval();
 		}
 
 
@@ -643,14 +736,14 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Connects to an iFolder Enterprise Server")]
 		[SoapRpcMethod]
-		public Settings ConnectToEnterpriseServer(	string UserName,
-													string Password,
-													string Host)
+		public iFolderSettings ConnectToEnterpriseServer(	string UserName,
+															string Password,
+															string Host)
 		{
 			Configuration conf = Configuration.GetConfiguration();
 			Simias.Domain.DomainAgent da = new Simias.Domain.DomainAgent(conf);
 			da.Attach(Host, UserName, Password);
-			return SharedCollection.GetSettings();
+			return new iFolderSettings();
 		}
 
 
