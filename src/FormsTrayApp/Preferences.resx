@@ -3310,9 +3310,6 @@
 	<data name="readAccountsError">
 		<value>An error was encountered while reading the iFolder accounts.</value>
 	</data>
-	<data name="checkUpdateError">
-		<value>An error was encountered while checking for an iFolder client upgrade.</value>
-	</data>
 	<data name="failedAuth">
 		<value>The user name or password is invalid.  Please try again.</value>
 	</data>

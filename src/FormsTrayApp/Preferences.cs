@@ -1566,12 +1566,8 @@ namespace Novell.FormsTrayApp
 								}
 							}
 						}
-						catch (Exception ex)
+						catch // Ignore
 						{
-							Cursor.Current = Cursors.Default;
-
-							mmb = new MyMessageBox(resourceManager.GetString("checkUpdateError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-							mmb.ShowDialog();
 						}
 
 						if (!rememberPassword.Checked)
