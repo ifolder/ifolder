@@ -90,7 +90,18 @@ namespace Novell.iFolder.FormsTrayApp
 			//
 			InitializeComponent();
 
-			manager = iFolderManager.Connect();
+			try
+			{
+				manager = iFolderManager.Connect();
+			}
+			catch (SimiasException e)
+			{
+				e.LogFatal();
+			}
+			catch (Exception e)
+			{
+				logger.Fatal(e, "Fatal error initializing");
+			}
 		}
 
 		/// <summary>
@@ -645,8 +656,26 @@ namespace Novell.iFolder.FormsTrayApp
 		private void menuOpen_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = iFolderView.SelectedItems[0];
-			iFolder ifolder = manager.GetiFolderById((string)lvi.Tag);
-			Process.Start(ifolder.LocalPath);
+			iFolder ifolder = null;
+
+			try
+			{
+				ifolder = manager.GetiFolderById((string)lvi.Tag);
+				Process.Start(ifolder.LocalPath);
+			}
+			catch (SimiasException ex)
+			{
+				ex.LogError();
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "Opening iFolder");
+				if (ifolder == null)
+				{
+					MessageBox.Show("The selected iFolder is no longer valid and will be removed from the list.");
+					iFolderView.Items.Remove(lvi);
+				}
+			}
 		}
 
 		private void menuCreate_Click(object sender, System.EventArgs e)
