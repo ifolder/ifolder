@@ -69,7 +69,7 @@ case $CSC in
         CSCFLAGS_OPTIMIZE="/optimize+"
         MONO=mono
         MONO_DEBUG='mono --debug'
-        MONO_PATH="\$(LOG4NET_DIR):\$(MDNSRESPONDER_DIR):\$(top_srcdir)/external/SecureChannelSinks:\$(subst \$(SPACE),:,\$(addprefix \$(SRCDIR)\$(SEP),\$(COMMON_SUBDIRS)))"
+        MONO_PATH="\$(LOG4NET_DIR):\$(NUNIT_LIBPATH):\$(MDNSRESPONDER_DIR):\$(top_srcdir)/external/SecureChannelSinks:\$(subst \$(SPACE),:,\$(addprefix \$(SRCDIR)\$(SEP),\$(COMMON_SUBDIRS)))"
         SYSTEM_XML='System.Xml.dll'
     ;;
     #
