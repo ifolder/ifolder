@@ -228,28 +228,13 @@ namespace Novell.iFolderCom
 		/// <returns>This method returns <b>true</b> if the specified path is successfully converted into an iFolder; otherwise, <b>false</b>.</returns>
 		public bool CreateiFolder([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
-			iFolderWeb ifolder = null;
-			try
-			{
-				connectToWebService();
-				if (ifWebService != null)
-				{
-					ifolder = ifWebService.CreateLocaliFolder(path);
-				}
-			}
-			catch (WebException e)
-			{
-				if (e.Status == WebExceptionStatus.ConnectFailure)
-				{
-					ifWebService = null;
-				}
-			}
-			catch (Exception e)
-			{
-				System.Diagnostics.Debug.WriteLine("Caught exception - " + e.Message);
-			}
+			CreateiFolder createiFolder = new CreateiFolder();
+			createiFolder.iFolderWebService = ifWebService;
+			createiFolder.iFolderPath = path;
+			if (DialogResult.OK == createiFolder.ShowDialog())
+				return true;
 
-			return (ifolder != null);
+			return false;
 		}
 
 		/// <summary>

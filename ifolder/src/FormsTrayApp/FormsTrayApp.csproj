@@ -148,6 +148,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DomainConnectEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "FormsTrayApp.cs"
                     SubType = "Form"
                     BuildAction = "Compile"

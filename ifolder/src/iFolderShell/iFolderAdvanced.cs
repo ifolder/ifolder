@@ -2566,6 +2566,7 @@ namespace Novell.iFolderCom
 			picker.iFolderWebService = ifWebService;
 			picker.Ht = userIDHT;
 			picker.CurrentUser = currentUser;
+			picker.DomainID = currentiFolder.DomainID;
 			if (ownerLvi != null)
 			{
 				picker.CurrentOwner = newOwnerLvi == null ? ((ShareListMember)ownerLvi.Tag).iFolderUser : ((ShareListMember)newOwnerLvi.Tag).iFolderUser;

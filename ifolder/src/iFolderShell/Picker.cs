@@ -54,6 +54,7 @@ namespace Novell.iFolderCom
 		private Hashtable addedHT = null;
 		private string loadPath;
 		private iFolderWebService ifWebService;
+		private string domainID;
 		private System.Windows.Forms.ListView rosterLV;
 		private System.Windows.Forms.ListView addedLV;
 		private System.Windows.Forms.ColumnHeader columnHeader1;
@@ -520,6 +521,11 @@ namespace Novell.iFolderCom
 		#endregion
 
 		#region Properties
+		public string DomainID
+		{
+			set {domainID = value;}
+		}
+
 		/// <summary>
 		/// Gets/sets the path where the assembly was loaded from.
 		/// </summary>
@@ -594,11 +600,11 @@ namespace Novell.iFolderCom
 				
 				if ((search != null) && !search.Equals(string.Empty))
 				{
-					ifolderUsers = ifWebService.SearchForiFolderUsers(search);
+					ifolderUsers = ifWebService.SearchForDomainUsers(domainID, search);
 				}
 				else
 				{
-					ifolderUsers = ifWebService.GetScopediFolderUsers(25);
+					ifolderUsers = ifWebService.GetDomainUsers(domainID, 25);
 				}
 
 				foreach (iFolderUser ifolderUser in ifolderUsers)

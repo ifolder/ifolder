@@ -291,7 +291,7 @@ namespace Novell.FormsTrayApp
 				if (menuJoin.Visible)
 				{
 					ifolderSettings = ifWebService.GetSettings();
-					menuJoin.Visible = !ifolderSettings.HaveEnterprise;
+//					menuJoin.Visible = !ifolderSettings.HaveEnterprise;
 				}
 			}
 			catch
@@ -409,13 +409,14 @@ namespace Novell.FormsTrayApp
 			BeginInvoke(notifyMessageDelegate, new object[] {notifyEventArgs});
 		}
 
-		private void serverInfo_EnterpriseConnect(object sender, EventArgs e)
+		private void serverInfo_EnterpriseConnect(object sender, DomainConnectEventArgs e)
 		{
 			globalProperties.ShowEnterpriseTab = true;
-			globalProperties.InitialConnect = true;
+//			globalProperties.InitialConnect = true;
+			globalProperties.AddDomainToList(e.DomainWeb);
 
 			// Update the settings with the enterprise data.
-			ifolderSettings = serverInfo.ifSettings;
+//			ifolderSettings = serverInfo.ifSettings;
 		}
 
 		private void syncAnimateTimer_Tick(object sender, System.EventArgs e)

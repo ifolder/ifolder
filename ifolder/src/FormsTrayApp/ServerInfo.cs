@@ -536,7 +536,7 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Delegate used when successfully connected to Enterprise Server.
 		/// </summary>
-		public delegate void EnterpriseConnectDelegate(object sender, EventArgs e);
+		public delegate void EnterpriseConnectDelegate(object sender, DomainConnectEventArgs e);
 		/// <summary>
 		/// Occurs when all successfully connected to enterprise.
 		/// </summary>
@@ -560,18 +560,19 @@ namespace Novell.FormsTrayApp
 				{
 					if (ifWebService != null)
 					{
-						ifWebService.ConnectToEnterpriseServer(userName.Text, password.Text, serverIP.Text);
+//						ifWebService.ConnectToEnterpriseServer(userName.Text, password.Text, serverIP.Text);
+						DomainWeb domain = ifWebService.ConnectToDomain(userName.Text, password.Text, serverIP.Text);
 
 						try
 						{
-							ifolderSettings = ifWebService.GetSettings();
-							domainID = ifolderSettings.DefaultDomainID;
+							//ifolderSettings = ifWebService.GetSettings();
+							domainID = domain.ID;//ifolderSettings.DefaultDomainID;
 						}
 						catch {}
 
 						if (EnterpriseConnect != null)
 						{
-							EnterpriseConnect(this, new EventArgs());
+							EnterpriseConnect(this, new DomainConnectEventArgs(domain));
 						}
 
 						try
