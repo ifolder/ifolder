@@ -27,7 +27,7 @@ CollectionBrowserGtk_FLAGS = $(CSC_EXEFLAG)
 CollectionBrowserGtk_LIBS = System.dll System.Drawing.dll System.Data.dll gtk-sharp.dll gnome-sharp.dll glib-sharp.dll glade-sharp.dll gdk-sharp.dll $(SYSTEM_XML) StoreProvider.dll CollectionStore.dll Configuration.dll AddressBook.dll Agent.dll iFolder.dll BookLib.dll
 CollectionBrowserGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin $(ADDRESSBOOK_INSTALL_PATH)/bin ../iFolder
 
-INSTALL_FILES = $(srcdir)/ifolder $(srcdir)/setup-autostart
+INSTALL_FILES = $(srcdir)/invitationwizard $(srcdir)/ifolder $(srcdir)/setup-autostart
 
 DATA_FILES = $(srcdir)/ifolder.glade $(srcdir)/folder.png $(srcdir)/ifolder.png $(srcdir)/ifolderfolder.png $(srcdir)/invitewiz.png $(srcdir)/leafnode.png $(srcdir)/node.png $(srcdir)/file.xpm $(srcdir)/ifolder.gif $(srcdir)/property.png $(srcdir)/libegg.so $(srcdir)/egg-sharp.dll
 

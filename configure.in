@@ -461,6 +461,7 @@ src/Makefile
 src/iFolder/Makefile
 src/GtkTrayApp/Makefile
 src/GtkTrayApp/ifolder
+src/GtkTrayApp/invitationwizard
 src/iFolderNautilus/Makefile
 src/FormsTrayApp/Makefile
 src/FormsInvitationWizard/Makefile
