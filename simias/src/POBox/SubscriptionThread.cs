@@ -39,7 +39,7 @@ namespace Simias.POBox
 	public class SubscriptionThread
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SubscriptionThread));
-		private static readonly string	poServiceLabel = ":8086/POBoxService.asmx";
+		private static readonly string	poServiceLabel = ":8086/simias10/POBoxService.asmx";
 		
 		private POBox poBox;
 		private Subscription subscription;
@@ -205,41 +205,64 @@ namespace Simias.POBox
 			}
 			else
 			{
-				// This is an enterprise pobox contact the POService.
-				log.Debug("Connecting to the Post Office Service : {0}", subscription.POServiceURL);
+				log.Info("SubscriptionThread::DoInvited called");
+				// Make sure the local (from) subscription and the shared collection
+				// have sync'd to the server before inviting
+
+				SubscriptionInformation subInfo = null;
 				POBoxService poService = new POBoxService();
+				poService.Url = this.poServiceUrl;
 
 				try
 				{
-					poService.Url = this.poServiceUrl;
-
-					// Set the remote state to received.
-					// And post the subscription to the server.
-					Simias.Storage.Member me = poBox.GetCurrentMember();
-					subscription.FromIdentity = me.UserID;
-					subscription.FromName = me.Name;
-
-					string subID =
-						poService.Invite(
+					subInfo =
+						poService.GetSubscriptionInfo(
 							subscription.DomainID,
 							subscription.FromIdentity,
-							subscription.ToIdentity,
-							subscription.SubscriptionCollectionID,
-							subscription.SubscriptionCollectionType);
-					if (subID != null && subID != "")
+							subscription.MessageID);
+				}
+				catch{}
+
+				if (subInfo != null)
+//				if (subscription.LocalIncarnation == subscription.MasterIncarnation)
+				{
+					// This is an enterprise pobox contact the POService.
+					log.Debug("Connecting to the Post Office Service : {0}", subscription.POServiceURL);
+
+					try
 					{
-						subscription.SubscriptionState = SubscriptionStates.Posted;
-						subscription.MessageID = subID;
-						poBox.Commit(subscription);
+						// Set the remote state to received.
+						// And post the subscription to the server.
+						Simias.Storage.Member me = poBox.GetCurrentMember();
+						subscription.FromIdentity = me.UserID;
+						subscription.FromName = me.Name;
+
+						string subID =
+							poService.Invite(
+								subscription.DomainID,
+								subscription.FromIdentity,
+								subscription.ToIdentity,
+								subscription.SubscriptionCollectionID,
+								subscription.SubscriptionCollectionType);
+						if (subID != null && subID != "")
+						{
+							subscription.SubscriptionState = SubscriptionStates.Posted;
+							subscription.MessageID = subID;
+							poBox.Commit(subscription);
+						}
+						else
+						{
+							returnStatus = false;
+						}
 					}
-					else
+					catch
 					{
+						log.Debug("Failed POBoxService::Invite - target: " + poService.Url);
 						returnStatus = false;
 					}
 				}
-				catch
+				else
 				{
-					log.Debug("Failed POBoxService::Invite - target: " + poService.Url);
 					returnStatus = false;
 				}
 			}
