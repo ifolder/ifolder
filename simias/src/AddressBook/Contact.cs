@@ -1139,39 +1139,7 @@ namespace Novell.AddressBook
 				}
 			}
 
-			// For now I won't refresh from the database
-
 			return(null);
-
-			/*
-
-			// go see if a name object has been
-			// added underneath us
-			Name cName = null;
-
-			if (this.addressBook != null &&
-				this.addressBook.collection != null)
-			{
-				try
-				{
-					Node cNode = this.addressBook.collection.GetNodeByID(nameID);
-					if ( cNode != null )
-					{
-						if (this.addressBook.collection.IsType(cNode, Common.nameProperty) == true)
-						{
-							cName = new Name(this, cNode);
-						}
-					}
-				}
-				catch(Exception e)
-				{
-					Console.WriteLine(e.Message);
-					cName = null;
-				}
-			}
-
-			return(cName);
-			*/
 		}
 
 		/// <summary>
@@ -1223,7 +1191,6 @@ namespace Novell.AddressBook
 			return(cList);
 		}
 
-		/*
 		/// <summary>
 		/// Export the contact photo via a binary Stream object.
 		/// </summary>
@@ -1239,6 +1206,9 @@ namespace Novell.AddressBook
 		/// <returns>A binary stream object which the caller can read from.</returns>
 		public Stream ExportPhoto()
 		{
+			return(null);
+
+			/*
 			if (this.thisNode != null)
 			{
 
@@ -1264,6 +1234,7 @@ namespace Novell.AddressBook
 
 				throw new ApplicationException(Common.addressBookExceptionHeader + "Photo property does not exist");
 			}
+			*/
 		}
 
 		/// <summary>
@@ -1310,9 +1281,12 @@ namespace Novell.AddressBook
 			bool			finished = false;
 			BinaryReader	bReader = null;
 			BinaryWriter	bWriter = null;
-			NodeStream		photoStream = null;
+			//NodeStream		photoStream = null;
 			Stream			dstStream = null;
 
+			return(false);
+
+			/*
 			if (this.thisNode != null)
 			{
 				// See if a photo stream already exists for this contact node.
@@ -1441,10 +1415,9 @@ namespace Novell.AddressBook
 			}
 
 			return(finished);
+			*/
 		}
-		*/
 
-		/*
 		/// <summary>
 		/// Export a standard vCard to the specified file.
 		/// </summary>
@@ -1500,9 +1473,7 @@ namespace Novell.AddressBook
 
 			return(results);
 		}
-		*/
 
-		/*
 		/// <summary>
 		/// Export a standard vCard via a memory stream.
 		/// </summary>
@@ -1643,7 +1614,6 @@ namespace Novell.AddressBook
 					}
 
 					vCard.WriteByte(Convert.ToByte(';'));
-
 
 					if (prefName.Given != null && prefName.Given != "")
 					{
@@ -2356,7 +2326,6 @@ namespace Novell.AddressBook
 			//vCard.Position = 0;
 			//return(vCard);
 		}
-		*/
 
 		/*
 		public IEnumerator GetTelephoneTypes()

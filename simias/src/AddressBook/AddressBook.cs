@@ -76,27 +76,6 @@ namespace Novell.AddressBook
 		ReadWrite
 	};
 
-	/// <summary>
-	/// Well known address book types.
-	/// </summary>
-	public enum SearchOp : int
-	{
-		/// <summary>
-		/// indicates the field must equal search string
-		/// </summary>
-		equals,
- 
-		/// <summary>
-		/// indicates the field must begin with the search string
-		/// </summary>
-		begins,
-
-		/// <summary>
-		/// indicates the field must contain the search string
-		/// </summary>
-		contains
-	};
-
 	/// 
 	/// <summary>
 	/// Summary description for AddressBook.
