@@ -137,7 +137,6 @@ namespace Novell.iFolder
 			eBox.ButtonPressEvent += 
 				new ButtonPressEventHandler(trayapp_clicked);
 
-
 			RunningPixbuf = 
 					new Pixbuf(Util.ImagesPath("ifolder.png"));
 			StartingPixbuf = 
