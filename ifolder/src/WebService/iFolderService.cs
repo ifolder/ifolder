@@ -888,28 +888,15 @@ namespace Novell.iFolder.Web
 			Novell.AddressBook.Manager abMan = 
 						Novell.AddressBook.Manager.Connect();
 
-			Novell.AddressBook.AddressBook book = 
-						abMan.GetAddressBook(roster.ID);
-
-			// First Name Search
-			IABList clist = book.SearchFirstName(SearchString,
-					Simias.Storage.SearchOp.Begins);
-			foreach(Contact c in clist)
+			try
 			{
-				Simias.Storage.Member simMem =
-					roster.GetMemberByID(c.UserID);
-				iFolderUser user = new iFolderUser(simMem, c);
-				idHash.Add(c.UserID, c);
-				list.Add(user);
-			}
+				Novell.AddressBook.AddressBook book = 
+							abMan.GetAddressBook(roster.ID);
 
-
-			// Last Name Search
-			clist = book.SearchLastName(SearchString,
-					Simias.Storage.SearchOp.Begins);
-			foreach(Contact c in clist)
-			{
-				if(!idHash.Contains(c.UserID))
+				// First Name Search
+				IABList clist = book.SearchFirstName(SearchString,
+						Simias.Storage.SearchOp.Begins);
+				foreach(Contact c in clist)
 				{
 					Simias.Storage.Member simMem =
 						roster.GetMemberByID(c.UserID);
@@ -917,28 +904,57 @@ namespace Novell.iFolder.Web
 					idHash.Add(c.UserID, c);
 					list.Add(user);
 				}
-			}
 
-                                                                                
-			// User Name Search
-			// We have to search the Members for this
-			ICSList searchList = roster.Search(BaseSchema.ObjectName, 
-										SearchString, SearchOp.Begins);
-			foreach(ShallowNode sNode in searchList)
-			{
-				if (sNode.Type.Equals("Member"))
+
+				// Last Name Search
+				clist = book.SearchLastName(SearchString,
+						Simias.Storage.SearchOp.Begins);
+				foreach(Contact c in clist)
 				{
-					Simias.Storage.Member simMem =
-						new Simias.Storage.Member(roster, sNode);
-
-					Contact c = abMan.GetContact(simMem.UserID);
-
-					if(!idHash.Contains(simMem.UserID) )
+					if(!idHash.Contains(c.UserID))
 					{
-						idHash.Add(simMem.UserID, simMem);
+						Simias.Storage.Member simMem =
+							roster.GetMemberByID(c.UserID);
 						iFolderUser user = new iFolderUser(simMem, c);
+						idHash.Add(c.UserID, c);
 						list.Add(user);
 					}
+				}
+
+
+				// User Name Search
+				// We have to search the Members for this
+				ICSList searchList = roster.Search(BaseSchema.ObjectName, 
+											SearchString, SearchOp.Begins);
+				foreach(ShallowNode sNode in searchList)
+				{
+					if (sNode.Type.Equals("Member"))
+					{
+						Simias.Storage.Member simMem =
+							new Simias.Storage.Member(roster, sNode);
+
+						Contact c = abMan.GetContact(simMem.UserID);
+
+						if(!idHash.Contains(simMem.UserID) )
+						{
+							idHash.Add(simMem.UserID, simMem);
+							iFolderUser user = new iFolderUser(simMem, c);
+							list.Add(user);
+						}
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				DateTime lastRosterSyncTime = SyncClient.GetLastSyncTime(roster.ID);
+				if (lastRosterSyncTime.Equals(DateTime.MinValue))
+				{
+					// The roster is still syncing.
+					throw new Exception("The initial synchronization of the roster has not completed.");
+				}
+				else
+				{
+					throw e;
 				}
 			}
 
