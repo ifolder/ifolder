@@ -246,7 +246,7 @@ RCODE CSPDB::RegisterField(HFDB hFlaim, FLMUNICODE *pFieldName, FLMUINT flmType,
 							rc = FlmRecordAdd(hFlaim, FLM_DICT_CONTAINER, pFieldId, pRec, 0);
 							if (RC_OK(rc))
 							{
-								rc = m_NameTable.addTag((FLMUNICODE*)pFieldName, 0, *pFieldId, SIMIAS_TYPE, 0, TRUE);
+								m_NameTable.addTag((FLMUNICODE*)pFieldName, 0, *pFieldId, SIMIAS_TYPE, 0, TRUE);
 							}
 						}
 					}
@@ -625,7 +625,6 @@ RCODE CSPStore::EndTrans()
 RCODE CSPStore::NameToId(FLMUNICODE *pName, FLMUINT *pId)
 {
 	RCODE rc = FERR_OK;
-	FLMUINT simiasType = SIMIAS_TYPE;
 	if (!m_pDB->m_NameTable.getFromTagTypeAndName((FLMUNICODE*)pName, 0, SIMIAS_TYPE, pId, 0))
 	{
 		rc = FERR_BAD_FIELD_NUM;

@@ -149,7 +149,12 @@ namespace Simias.Storage.Provider.Flaim
 		/// <param name="deleteDoc">The records to delete.</param>
 		public void CommitRecords(string container, XmlDocument createDoc, XmlDocument deleteDoc)
 		{
-			Flaim.CommitRecords(container, createDoc, deleteDoc);
+			FlaimError.Error rc = Flaim.CommitRecords(container, createDoc, deleteDoc);
+			if (FlaimError.IsError(rc))
+			{
+				// We had an error the commit was not successful.
+				throw(new CommitException(createDoc, deleteDoc, FlaimError.GetException(rc)));
+			}
 		}
 
 		/// <summary>
