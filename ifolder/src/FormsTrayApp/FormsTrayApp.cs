@@ -346,6 +346,15 @@ namespace Novell.FormsTrayApp
 		{
 			globalProperties.ShowEnterpriseTab = true;
 			globalProperties.InitialConnect = true;
+
+			try
+			{
+				// Update the settings with the enterprise data.
+				ifolderSettings = ifWebService.GetSettings();
+			}
+			catch (Exception ex)
+			{
+			}
 		}
 
 		private void syncAnimateTimer_Tick(object sender, System.EventArgs e)
@@ -590,23 +599,31 @@ namespace Novell.FormsTrayApp
 						{
 							case "Node":
 							{
-								iFolder ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
-
-								// If the iFolder is available and doesn't exist locally, post a notification.
-								if ((ifolder != null) && ifolder.State.Equals("Available") && (ifWebService.GetiFolder(ifolder.CollectionID) == null))
+								if (ifolderSettings == null)
 								{
-									NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
+									ifolderSettings = ifWebService.GetSettings();
+								}
 
-									string message = string.Format(resourceManager.GetString("subscriptionMessage"), ifolder.Owner);
+								if (eventArgs.Collection.Equals(ifolderSettings.DefaultPOBoxID))
+								{
+									iFolder ifolder = ifWebService.GetiFolder(eventArgs.Node);
 
-									balloonTip.ShowBalloon(
-										hwnd,
-										iconID,
-										BalloonType.Info,
-										resourceManager.GetString("actionRequiredTitle"),
-										message);
+									// If the iFolder is available and doesn't exist locally, post a notification.
+									if ((ifolder != null) && ifolder.State.Equals("Available") && (ifWebService.GetiFolder(ifolder.CollectionID) == null))
+									{
+										NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
 
-									// TODO: Change the icon?
+										string message = string.Format(resourceManager.GetString("subscriptionMessage"), ifolder.Owner);
+
+										balloonTip.ShowBalloon(
+											hwnd,
+											iconID,
+											BalloonType.Info,
+											resourceManager.GetString("actionRequiredTitle"),
+											message);
+
+										// TODO: Change the icon?
+									}
 								}
 								break;
 							}

@@ -2080,7 +2080,7 @@ namespace Novell.FormsTrayApp
 						}
 						else if (eventArgs.Type.Equals("Node") && eventArgs.Collection.Equals(currentPOBoxID))
 						{
-							ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
+							ifolder = ifWebService.GetiFolder(eventArgs.Node);
 						}
 
 						if (ifolder != null)
@@ -2118,7 +2118,7 @@ namespace Novell.FormsTrayApp
 						}
 						else if (eventArgs.Type.Equals("Node") && eventArgs.Collection.Equals(currentPOBoxID))
 						{
-							ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
+							ifolder = ifWebService.GetiFolder(eventArgs.Node);
 						}
 
 						if ((ifolder != null) &&
@@ -2709,7 +2709,6 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				//ifWebService.RemoveSubscription(ifolder.Domain, ifolder.ID, currentUserID);
 				ifWebService.DeleteiFolder(ifolder.ID);
 				lvi.Remove();
 			}
