@@ -90,5 +90,7 @@
 - (void)controlTextDidChange:(NSNotification *)aNotification;
 
 -(void)leaveSelectedDomain:(BOOL)localOnly;
+- (void)certSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+
 
 @end

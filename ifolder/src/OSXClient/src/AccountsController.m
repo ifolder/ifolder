@@ -31,6 +31,10 @@
 #import "VerticalBarView.h"
 #import "DiskSpace.h"
 #import "AuthStatus.h"
+#include "simiasStub.h"
+#include "Security/Security.h"
+#import "AcceptCertSheetController.h"
+#include "SecurityInterface/SFCertificatePanel.h"
 
 @implementation AccountsController
 
@@ -109,7 +113,7 @@
 			
 			// Check to see if we are in grace, if we are, we need to call to get the authStatus so we can
 			// tell the user they are limited by grace logins
-			if(statusCode == 1)
+			if(statusCode == ns1__StatusCodes__SuccessInGrace)
 			{
 				NSLog(@"ConnectToDomain returned status code of in grace");
 				@try
@@ -126,8 +130,8 @@
 			
 			switch(statusCode)
 			{
-				case 0:		// Success
-				case 1:		// SuccessInGrace
+				case ns1__StatusCodes__Success:		// Success
+				case ns1__StatusCodes__SuccessInGrace:		// SuccessInGrace
 				{
 					if([defaultAccount state] == YES)
 					{
@@ -182,9 +186,27 @@
 					}
 					break;
 				}
-				case 2:		// UnknownUser
-				case 4:		// InvalidCredentials
-				case 5:		// InvalidPassword
+				case ns1__StatusCodes__InvalidCertificate:
+				{
+					@try
+					{
+						SecCertificateRef certRef = [simiasService GetCertificate:[host stringValue]];
+
+						AcceptCertSheetController *certSheet = [[AcceptCertSheetController alloc]
+								initWithCert:certRef];
+						
+						[NSApp beginSheet:[certSheet window] modalForWindow:parentWindow
+							modalDelegate:self didEndSelector:@selector(certSheetDidEnd:returnCode:contextInfo:) contextInfo:certRef];
+					}
+					@catch(NSException ex)
+					{
+						NSLog(@"Exception getting cert.");
+					}						
+					break;
+				}
+				case ns1__StatusCodes__UnknownUser:		// UnknownUser
+				case ns1__StatusCodes__InvalidCredentials:		// InvalidCredentials
+				case ns1__StatusCodes__InvalidPassword:		// InvalidPassword
 				{
 					NSBeginAlertSheet(NSLocalizedString(@"Unable to Connect to iFolder Server", nil), 
 					NSLocalizedString(@"OK", nil), nil, nil, 
@@ -192,7 +214,7 @@
 					NSLocalizedString(@"The user name or password is invalid.  Please try again.", nil));
 					break;
 				}
-				case 6:		// AccountDisabled
+				case ns1__StatusCodes__AccountDisabled:		// AccountDisabled
 				{
 					NSBeginAlertSheet(NSLocalizedString(@"Unable to Connect to iFolder Server", nil), 
 					NSLocalizedString(@"OK", nil), nil, nil, 
@@ -200,7 +222,7 @@
 					NSLocalizedString(@"The user account is disabled.  Please contact your network administrator for assistance.", nil));
 					break;
 				}
-				case 7:		// AccountLockout
+				case ns1__StatusCodes__AccountLockout:		// AccountLockout
 				{
 					NSBeginAlertSheet(NSLocalizedString(@"Unable to Connect to iFolder Server", nil), 
 					NSLocalizedString(@"OK", nil), nil, nil, 
@@ -208,12 +230,12 @@
 					NSLocalizedString(@"The user account has been locked out.  Please contact your network administrator for assistance.", nil));
 					break;
 				}
-				case 8:		// UnknownDomain
-				case 9:		// InternalException
-				case 10:	// MethodNotSupported
-				case 11:	// Timeout
-				case 3:		// AmbiguousUser
-				case 12:	// Unknown
+				case ns1__StatusCodes__UnknownDomain:		// UnknownDomain
+				case ns1__StatusCodes__InternalException:		// InternalException
+				case ns1__StatusCodes__MethodNotSupported:	// MethodNotSupported
+				case ns1__StatusCodes__Timeout:	// Timeout
+				case ns1__StatusCodes__AmbiguousUser:		// AmbiguousUser
+				case ns1__StatusCodes__Unknown:	// Unknown
 				{
 					NSBeginAlertSheet(NSLocalizedString(@"Unable to Connect to iFolder Server", nil), 
 					NSLocalizedString(@"OK", nil), nil, nil, 
@@ -225,6 +247,7 @@
 		}
 		@catch (NSException *e)
 		{
+			NSLog(@"Exception thrown calling ConnectToDomain: %@", [e name]);
 			NSBeginAlertSheet(NSLocalizedString(@"Unable to Connect to iFolder Server", nil), 
 				NSLocalizedString(@"OK", nil), nil, nil, 
 				parentWindow, nil, nil, nil, nil, 
@@ -279,6 +302,37 @@
 	NSLog(@"Remove Account Clicked");
 	[leaveDomainController showWindow:self];
 }
+
+
+
+- (void)certSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	SecCertificateRef certRef = (SecCertificateRef)contextInfo;
+	
+	if(returnCode)
+	{
+		@try
+		{
+			[simiasService StoreCertificate:certRef forHost:[host stringValue]];
+			[self activateAccount:self];
+		}
+		@catch(NSException ex)
+		{
+			NSLog(@"Exception storing certificate.");
+		}						
+	}
+	else
+	{
+		NSLog(@"User did not accept certificate, do not store or authenticate");
+	}
+	
+	if(certRef != NULL)
+	{
+		NSLog(@"Releasing the Certificate");
+		CFRelease(certRef);
+	}
+}
+
 
 
 -(void)leaveSelectedDomain:(BOOL)localOnly

@@ -534,7 +534,6 @@
 	{
 		[self showLoginWindowTS:[smne message]];
 	}
-
 }
 
 

@@ -27,6 +27,7 @@
 #import <Cocoa/Cocoa.h>
 #include <Carbon/Carbon.h>
 #import "iFolderDomain.h"
+#include "Security/Security.h"
 
 @class AuthStatus;
 
@@ -45,6 +46,10 @@
 -(void) SetDomainActive:(NSString *)domainID;
 -(void) SetDomainInactive:(NSString *)domainID;
 -(void) SetDefaultDomain:(NSString *)domainID;
+
+
+-(SecCertificateRef) GetCertificate:(NSString *)host;
+-(void) StoreCertificate:(SecCertificateRef)cert forHost:(NSString *)host;
 
 
 -(AuthStatus *) LoginToRemoteDomain:(NSString *)domainID usingPassword:(NSString *)password;

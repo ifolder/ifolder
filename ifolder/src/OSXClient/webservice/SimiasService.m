@@ -498,6 +498,119 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 
 
 //----------------------------------------------------------------------------
+// GetCertificate
+// Gets the certificate for a specified host
+//----------------------------------------------------------------------------
+-(SecCertificateRef) GetCertificate:(NSString *)host
+{
+	SecCertificateRef certRef = NULL;
+
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (host != nil), @"host was nil");
+
+	struct _ns1__GetCertificate			getCertMessage;
+	struct _ns1__GetCertificateResponse	getCertResponse;
+	
+	getCertMessage.host = (char *)[host cString];
+
+    init_simias_gsoap (&soap);
+    err_code = soap_call___ns1__GetCertificate(
+			&soap,
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            NULL,
+            &getCertMessage,
+            &getCertResponse);
+
+ 	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in GetCertificate"];
+	}
+	else
+	{
+		struct xsd__base64Binary *certResult;
+		CSSM_DATA certData;
+		certResult = getCertResponse.GetCertificateResult;
+		if(certResult == NULL)
+		{
+			cleanup_simias_gsoap(&soap);
+			[NSException raise:@"GetCertificate returned null object"
+							format:@"Error in GetCertificate"];		
+		}
+
+		certData.Data = certResult->__ptr;
+		certData.Length = certResult->__size;
+
+		OSStatus status =  SecCertificateCreateFromData ( &certData,
+												CSSM_CERT_X_509v3,
+												CSSM_CERT_ENCODING_BER,
+												&certRef);
+		if(status == 0)
+		{
+			NSLog(@"The cert is good!");
+		}
+	}
+
+    cleanup_simias_gsoap(&soap);
+
+	return certRef;
+}
+
+
+
+//----------------------------------------------------------------------------
+// StoreCertificate
+// Stores the certificate so it can be used when users login to the host
+//----------------------------------------------------------------------------
+-(void) StoreCertificate:(SecCertificateRef)cert forHost:(NSString *)host
+{
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (host != nil), @"host was nil");
+	NSAssert( (cert != NULL), @"cert was NULL");
+
+	struct _ns1__StoreCertificate			storeCertMessage;
+	struct _ns1__StoreCertificateResponse	storeCertResponse;
+	struct xsd__base64Binary				certBinary;
+	CSSM_DATA								certData;
+
+	OSStatus status = SecCertificateGetData (cert, &certData);
+	if(status == 0)
+	{
+		certBinary.__ptr = certData.Data;
+		certBinary.__size = certData.Length;
+		certBinary.id = NULL;
+		certBinary.type = NULL;
+		certBinary.option = NULL;
+
+		storeCertMessage.host = (char *)[host cString];
+		storeCertMessage.certificate = &certBinary;
+
+		init_simias_gsoap (&soap);
+		err_code = soap_call___ns1__StoreCertificate(
+				&soap,
+				[simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+				NULL,
+				&storeCertMessage,
+				&storeCertResponse);
+
+		if(soap.error)
+		{
+			[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+						format:@"Error in GetCertificate"];
+		}
+	}
+
+    cleanup_simias_gsoap(&soap);
+}
+
+
+
+
+//----------------------------------------------------------------------------
 // getDomainProperties
 // Prepares the properties to be store in the Domain object
 //----------------------------------------------------------------------------

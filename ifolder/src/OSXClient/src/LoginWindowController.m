@@ -25,6 +25,7 @@
 #import "iFolderDomain.h"
 #import "iFolderApplication.h"
 #import "AuthStatus.h"
+#include "simiasStub.h"
 
 
 @implementation LoginWindowController
@@ -52,8 +53,8 @@
 			
 			switch(statusCode)
 			{
-				case 0:		// Success
-				case 1:		// SuccessInGrace
+				case ns1__StatusCodes__Success:		// Success
+				case ns1__StatusCodes__SuccessInGrace:		// SuccessInGrace
 				{
 					if( (authStatus != nil) && ([authStatus remainingGraceLogins] < [authStatus totalGraceLogins]) )
 					{
@@ -66,9 +67,14 @@
 					[[self window] orderOut:nil];									
 					break;
 				}
-				case 2:		// UnknownUser
-				case 4:		// InvalidCredentials
-				case 5:		// InvalidPassword
+				case ns1__StatusCodes__InvalidCertificate:
+				{
+					NSLog(@"Invalid Certificate was found on the server");
+					break;
+				}
+				case ns1__StatusCodes__UnknownUser:		// UnknownUser
+				case ns1__StatusCodes__InvalidCredentials:		// InvalidCredentials
+				case ns1__StatusCodes__InvalidPassword:		// InvalidPassword
 				{
 					NSBeginAlertSheet(NSLocalizedString(@"iFolder login failed", nil), 
 					NSLocalizedString(@"OK", nil), nil, nil, 
@@ -76,7 +82,7 @@
 					NSLocalizedString(@"The user name or password is invalid.  Please try again.", nil));
 					break;
 				}
-				case 6:		// AccountDisabled
+				case ns1__StatusCodes__AccountDisabled:		// AccountDisabled
 				{
 					NSBeginAlertSheet(NSLocalizedString(@"iFolder login failed", nil), 
 					NSLocalizedString(@"OK", nil), nil, nil, 
@@ -84,7 +90,7 @@
 					NSLocalizedString(@"The user account is disabled.  Please contact your network administrator for assistance.", nil));
 					break;
 				}
-				case 7:		// AccountLockout
+				case ns1__StatusCodes__AccountLockout:		// AccountLockout
 				{
 					NSBeginAlertSheet(NSLocalizedString(@"iFolder login failed", nil), 
 					NSLocalizedString(@"OK", nil), nil, nil, 
@@ -92,12 +98,12 @@
 					NSLocalizedString(@"The user account has been locked out.  Please contact your network administrator for assistance.", nil));
 					break;
 				}
-				case 8:		// UnknownDomain
-				case 9:		// InternalException
-				case 10:	// MethodNotSupported
-				case 11:	// Timeout
-				case 3:		// AmbiguousUser
-				case 12:	// Unknown
+				case ns1__StatusCodes__UnknownDomain:		// UnknownDomain
+				case ns1__StatusCodes__InternalException:		// InternalException
+				case ns1__StatusCodes__MethodNotSupported:	// MethodNotSupported
+				case ns1__StatusCodes__Timeout:	// Timeout
+				case ns1__StatusCodes__AmbiguousUser:		// AmbiguousUser
+				case ns1__StatusCodes__Unknown:	// Unknown
 				{
 					NSBeginAlertSheet(NSLocalizedString(@"iFolder login failed", nil), 
 					NSLocalizedString(@"OK", nil), nil, nil, 
