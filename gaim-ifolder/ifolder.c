@@ -608,6 +608,7 @@ in_inv_accept_button_cb(GtkWidget *w, GtkTreeView *tree)
 	send_result =
 		send_invitation_request_accept_msg(buddy, invitation->collection_id);
 		
+	/* FIXME: This test isn't working.  If a buddy just barely signed out, Gaim displays an error message, but we get back a 1 */
 	if (send_result <= 0) {
 		dialog = gtk_message_dialog_new(NULL,
 					GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -688,6 +689,7 @@ in_inv_reject_button_cb(GtkWindow *w, GtkTreeView *tree)
 	send_result =
 		send_invitation_request_deny_msg(buddy, invitation->collection_id);
 		
+	/* FIXME: This test isn't working.  If a buddy just barely signed out, Gaim displays an error message, but we get back a 1 */
 	if (send_result <= 0) {
 		dialog = gtk_message_dialog_new(NULL,
 					GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -732,6 +734,7 @@ out_inv_cancel_button_cb(GtkWindow *w, GtkTreeView *tree)
 static void
 out_inv_remove_button_cb(GtkWindow *w, GtkTreeView *tree)
 {
+	/* This button should only be enabled for invitations that are in the Accepted state */
 	g_print("FIXME: Implement out_inv_remove_button_cb()\n");
 }
 
@@ -1351,6 +1354,8 @@ lookup_collection_in_store(GtkListStore *store, char *collection_id,
 			/* We've found our match! */
 			return TRUE;
 		}
+
+		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(store), iter);
 	}
 	
 	return FALSE; /* No match was found */
@@ -1479,10 +1484,10 @@ handle_invitation_request_deny(GaimAccount *account,
 							   const char *buffer)
 {
 	GtkTreeIter iter;
-	Invitation *invitation;
+	Invitation *invitation = NULL;
 	char time_str[32];
 	char state_str[32];
-	
+
 	/**
 	 * Since this method is called, we already know that the first part of
 	 * the message matches our #define.  So, because of that, we can take
@@ -1509,7 +1514,7 @@ handle_invitation_request_deny(GaimAccount *account,
 	 * status of the invitation and take more action with Simias.
 	 */
 	if (!lookup_collection_in_store(out_inv_store, collection_id, &iter)) {
-		g_print("handle_invitation_request_den() couldn't find the collection-id in out_inv_store\n");
+		g_print("handle_invitation_request_deny() couldn't find the collection-id in out_inv_store\n");
 		/* FIXME: Before returning from here, we should try to retrieve more information from Simias in case the user deleted this invitation information from Gaim */
 		return FALSE;
 	}
@@ -1526,6 +1531,11 @@ handle_invitation_request_deny(GaimAccount *account,
 						INVITATION_PTR, &invitation,
 						-1);
 						
+if (!invitation) {
+	g_print("This is even worse!\n");
+} else {
+	g_print("invitation is not null\n");
+}
 	/**
 	 * Double-check to make sure nothing has changed since returning from the
 	 * lookup call.  If it did, call this function recursively.  If the row
@@ -1575,14 +1585,104 @@ handle_invitation_request_deny(GaimAccount *account,
  * should likely already know about the machine and should have already started
  * the sync process.  If this is not the case, then tell Simias to start syncing
  * the collection with the buddy's machine.
+ * 
+ * [simias:invitation-request-accept:<collection-id>:<ip-address>]
  */
 static gboolean
 handle_invitation_request_accept(GaimAccount *account,
 								 const char *sender,
 								 const char *buffer)
 {
-	g_print("FIXME: Implement handle_invitation_request_accept()\n");
-	return FALSE;
+	GtkTreeIter iter;
+	Invitation *invitation;
+	char time_str[32];
+	char state_str[32];
+	
+	/**
+	 * Since this method is called, we already know that the first part of
+	 * the message matches our #define.  So, because of that, we can take
+	 * that portion out of the picture and start tokenizing the different
+	 * parts.
+	 */
+	char *collection_id;
+	char *ip_address;
+	
+	/**
+	 * Start parsing the message at this point:
+	 * 
+	 * 	[simias:invitation-request-deny:<collection-id>]
+	 *                                  ^
+	 */
+	collection_id = strtok((char *) buffer + strlen(INVITATION_REQUEST_DENY_MSG), ":");
+	if (!collection_id) {
+		g_print("handle_invitation_request_accept() couldn't parse the collection-id\n");
+		return FALSE;
+	}
+
+	ip_address = strtok(NULL, "]");
+	if (!ip_address) {
+		g_print("handle_invitation_request_accept() couldn't parse the ip-address\n");
+		return FALSE;
+	}
+
+	/**
+	 * Lookup the collection_id in the current out_inv_store.  If it's not there
+	 * we'll just discard this message.  If it IS there, we need to update the
+	 * status of the invitation and take more action with Simias.
+	 */
+	if (!lookup_collection_in_store(out_inv_store, collection_id, &iter)) {
+		g_print("handle_invitation_request_accept() couldn't find the collection-id in out_inv_store\n");
+		/* FIXME: Before returning from here, we should try to retrieve more information from Simias in case the user deleted this invitation information from Gaim */
+		return FALSE;
+	}
+	
+	/**
+	 * If we get this far, iter now points to the row of data in the store model
+	 * that contains the Invitation * corresponding with this message.
+	 * 
+	 * Update the time and the invitation state in the store/model.
+	 */
+
+	/* Extract the Invitation * out of the model */
+	gtk_tree_model_get(GTK_TREE_MODEL(out_inv_store), &iter,
+						INVITATION_PTR, &invitation,
+						-1);
+						
+	/**
+	 * Double-check to make sure nothing has changed since returning from the
+	 * lookup call.  If it did, call this function recursively.  If the row
+	 * was actually removed, it should stop processing in the recursive call.
+	 */
+	if (strcmp(invitation->collection_id, collection_id) != 0) {
+		/* The row changed */
+		return handle_invitation_request_deny(account, sender, buffer);
+	}
+	
+	/* Update the invitation time */
+	time(&(invitation->time));
+	
+	/* Update the invitation state */
+	invitation->state = STATE_ACCEPTED_PENDING;
+	
+	/* Format the time to a string */
+	fill_time_str(time_str, 32, invitation->time);
+
+	/* Format the state string */
+	fill_state_str(state_str, invitation->state);
+	
+	/* Update the out_inv_store */
+	gtk_list_store_set(out_inv_store, &iter,
+		/* FIXME: Figure out how to add the correct protocol icon as the first column */
+		TIME_COL,				time_str,
+		STATE_COL,				state_str,
+		-1);
+
+	/* FIXME: Add more interaction with Simias as described in the notes of the function */
+
+	/* FIXME: Change this to a tiny bubble notification instead of popping up the big Invitations Dialog */
+	show_invitations_window();
+	
+	return TRUE;	/* Message was handled correctly */
 }
 
 /**
