@@ -42,6 +42,12 @@
 -(void) SynciFolderNow:(NSString *)iFolderID;
 
 -(NSArray *) GetiFolderUsers:(NSString *)ifolderID;
+-(NSArray *) GetDomainUsers:(NSString *)domainID withLimit:(int)numUsers;
+-(NSArray *) SearchDomainUsers:(NSString *)domainID withString:(NSString *)searchString;
+
+-(User *) InviteUser:(NSString *)userID toiFolder:(NSString *)ifolderID withRights:(NSString *)rights;
+-(void) RemoveUser:(NSString *)userID fromiFolder:(NSString *)ifolderID;
+
 
 
 @end

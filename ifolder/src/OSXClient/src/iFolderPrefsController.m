@@ -202,6 +202,11 @@
 }
 
 
+- (void)windowWillClose:(NSNotification *)aNotification
+{
+	[[aNotification object] setDelegate:nil];
+	[[NSApp delegate] preferencesClosed];
+}
 
 /*
 	This is old binding code that I didn't want to loose so it's down here

@@ -46,6 +46,7 @@
 -(void) setProperties: (NSDictionary *)newProperties;
 
 -(NSString *) UserID;
+-(NSString *) FN;
 
 
 @end

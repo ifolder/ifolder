@@ -52,6 +52,8 @@
 - (NSArray *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar;
 
 
+- (void)windowWillClose:(NSNotification *)aNotification;
+
 // user actions
 - (void)generalPreferences:(NSToolbarItem *)item;
 - (void)accountPreferences:(NSToolbarItem *)item;

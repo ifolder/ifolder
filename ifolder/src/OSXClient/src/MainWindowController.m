@@ -54,8 +54,6 @@
 }
 
 
-
-
 -(void)awakeFromNib
 {
 	[self setupToolbar];
@@ -287,14 +285,58 @@
 
 
 
-- (IBAction)showProperties:(id)sender
+- (IBAction)showSharingProperties:(id)sender
 {
 	if(propertiesController == nil)
 	{
 		propertiesController = [[PropertiesWindowController alloc] initWithWindowNibName:@"Properties"];
 	}
+
+	[propertiesController setSharingTab];
 	
 	[propertiesController showWindow:self];
+}
+
+
+
+
+
+- (IBAction)showGeneralProperties:(id)sender
+{
+	if(propertiesController == nil)
+	{
+		propertiesController = [[PropertiesWindowController alloc] initWithWindowNibName:@"Properties"];
+	}
+
+	[propertiesController setGeneralTab];
+	
+	[propertiesController showWindow:self];
+}
+
+
+
+// This is a hack to get the windows released when they are closed
+// I didn't know a better way to do this when it was written
+- (void)propertiesClosed
+{
+	if(propertiesController != nil)
+	{
+		[propertiesController release];
+		propertiesController = nil;
+	}
+}
+
+
+
+// This is a hack to get the windows released when they are closed
+// I didn't know a better way to do this when it was written
+- (void)preferencesClosed
+{
+	if(prefsController != nil)
+	{
+		[prefsController release];
+		prefsController = nil;
+	}
 }
 
 
@@ -311,14 +353,6 @@
 	
 	[[loginController window] center];
 	[loginController showLoginWindow:self withHost:[dom host] withDomain:domainID];
-}
-
-
-
-
-
-- (IBAction)shareiFolder:(id)sender
-{
 }
 
 
@@ -446,7 +480,7 @@
 	else if(	(action == @selector(deleteiFolder:)) ||
 				(action == @selector(openiFolder:)) ||
 				(action == @selector(showProperties:)) ||
-				(action == @selector(shareiFolder:)) ||
+				(action == @selector(showSharingProperties:)) ||
 				(action == @selector(synciFolder:)) )
 	{
 		if ([ifoldersController selectionIndex] != NSNotFound)
@@ -479,11 +513,11 @@
 	return domainsController;
 }
 
--(NSString *)seletediFolderID
+-(iFolder *)selectediFolder
 {
-	return [[ifoldersController selection] valueForKeyPath:@"properties.ID"];
+	int selIndex = [ifoldersController selectionIndex];
+	return [[ifoldersController arrangedObjects] objectAtIndex:selIndex];
 }
-
 
 
 // Toobar Delegates
@@ -557,7 +591,7 @@
 	[item setLabel:@"Share"]; // name for the item in the toolbar
 	[item setToolTip:@"Share an iFolder"]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
-    [item setAction:@selector(shareiFolder:)];
+    [item setAction:@selector(showSharingProperties:)];
 	[item setImage:[NSImage imageNamed:@"share24"]];
     [toolbarItems setObject:item forKey:@"ShareiFolder"]; // add to toolbar list
 	[toolbarItemKeys addObject:@"ShareiFolder"];

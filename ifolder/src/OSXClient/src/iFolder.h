@@ -67,6 +67,10 @@
 -(NSString *)Name;
 -(NSString *)ID;
 -(NSString *)Path;
+-(NSString *)DomainID;
+-(NSString *)OwnerUserID;
+-(NSString *)CurrentUserID;
+-(NSString *)CurrentUserRights;
 
 -(void) updateDisplayInformation;
 

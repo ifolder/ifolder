@@ -36,6 +36,7 @@
 @class CreateiFolderSheetController;
 @class SetupiFolderSheetController;
 @class PropertiesWindowController;
+@class iFolder;
 
 @interface MainWindowController : NSWindowController
 {
@@ -75,8 +76,8 @@
 - (IBAction)deleteiFolder:(id)sender;
 - (void)deleteiFolderResponse:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (IBAction)openiFolder:(id)sender;
-- (IBAction)showProperties:(id)sender;
-- (IBAction)shareiFolder:(id)sender;
+- (IBAction)showGeneralProperties:(id)sender;
+- (IBAction)showSharingProperties:(id)sender;
 - (IBAction)synciFolder:(id)sender;
 
 
@@ -87,6 +88,9 @@
 - (void)acceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)domainID toPath:(NSString *)localPath;
 
 - (void)showLoginWindow:(NSString *)domainID;
+- (void)propertiesClosed;
+- (void)preferencesClosed;
+
 
 - (void)awakeFromNib;
 - (void)dealloc;
@@ -97,7 +101,7 @@
 
 - (void)initializeSimiasEvents;
 
--(NSString *)seletediFolderID;
+-(iFolder *)selectediFolder;
 
 // menu validation
 - (BOOL)validateUserInterfaceItem:(id)anItem;

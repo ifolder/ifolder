@@ -76,5 +76,9 @@
 	return [self valueForKeyPath:@"properties.UserID"]; 
 }
 
+-(NSString *) FN
+{
+	return [self valueForKeyPath:@"properties.FN"]; 
+}
 
 @end
