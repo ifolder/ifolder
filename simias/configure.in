@@ -157,7 +157,7 @@ case $SIMIAS_OS in
         INSTALL_EXE_OPTS='--mode=644'
         LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/mono/1.0/release"
         MDNSRESPONDER_DIR="$EXTERNAL_DIR/mDnsResponder/mono/bin"
-        NUNIT="$TOOLDIR/NUnit/mono/bin/nunit-console.exe"
+        NUNIT="mono nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/mono/bin"
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
@@ -181,7 +181,7 @@ case $SIMIAS_OS in
         INSTALL_EXE_OPTS='--mode=644'
         LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/mono/1.0/release"
         MDNSRESPONDER_DIR="$EXTERNAL_DIR/mDnsResponder/mono/bin"
-        NUNIT="$TOOLDIR/NUnit/mono/bin/nunit-console.exe"
+        NUNIT="mono nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/mono/bin"
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
@@ -201,7 +201,7 @@ case $SIMIAS_OS in
         INSTALL_EXE_OPTS=''
         LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/net/1.0/release"
         MDNSRESPONDER_DIR="$EXTERNAL_DIR/mDnsResponder/net/bin"
-        NUNIT="$TOOLDIR/NUnit/net/bin/nunit-console.exe"
+        NUNIT="nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/net/bin"
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
@@ -349,7 +349,9 @@ src/POBox/Makefile
 src/mDnsService/Makefile
 src/SyncManager/Makefile
 test/Makefile
-test/POBoxTests/Makefile
+test/Simias/Makefile
+test/Storage/Makefile
+test/POBox/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile

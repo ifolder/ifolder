@@ -15,7 +15,7 @@ NUNIT_TESTS := POBoxTests.dll
 
 CUR_DIR := $(shell pwd)
 
-all: POBoxTests.dll
+all: $(NUNIT_TESTS)
 
 POBoxTests.dll: $(POBoxTests_CSFILES) $(POBoxTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(POBoxTests_FLAGS) $(POBoxTests_LIBS:%=/r:%) $(POBoxTests_LIBPATH:%=/lib:%) $(POBoxTests_CSFILES_CSC)
@@ -26,15 +26,21 @@ DEBUG_CHECK_FILES = POBoxTests.pdb
 endif
 endif
 
-install-exec-local: 
+install-exec-local: all
+	$(mkinstalldirs) $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(libdir)
 
 uninstall-local:
 
-installcheck-local: install $(NUNIT_TESTS)
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
-	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:POBoxTests.test.xml $(NUNIT_TESTS)
+installcheck-local: install
+if LINUX	
+	export MONO_PATH := $(MONO_PATH):$(DESTDIR)$(libdir):$(NUNIT_LIBPATH)
+endif        
+	cd $(DESTDIR)$(bindir); $(NUNIT) $(NUNIT_FLAGS) /xml:POBoxTests.test.xml $(NUNIT_TESTS)
 	
+.PHONY: test
+test: installcheck
+
 CLEAN_FILES = $(NUNIT_TESTS) POBoxTests.doc.xml POBoxTests.test.xml
 
 clean-local:

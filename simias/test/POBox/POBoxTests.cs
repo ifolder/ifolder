@@ -31,7 +31,7 @@ using NUnit.Framework;
 using Simias;
 using Simias.Storage;
 using Simias.Sync;
-using Simias.Invite;
+using Simias.POBox;
 using Simias.Service;
 
 namespace Simias.Tests
@@ -91,7 +91,7 @@ namespace Simias.Tests
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
-		public SyncTests()
+		public POBoxTests()
 		{
 		}
 

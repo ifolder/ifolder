@@ -34,7 +34,7 @@ maintainer-clean-local:
 
 .PHONY: test
 test:
-	$(MAKE) -C test all
+	$(MAKE) -C test test
 		
 test-clean:
 	$(MAKE) -C test clean
