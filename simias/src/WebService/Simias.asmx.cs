@@ -58,13 +58,19 @@ namespace Simias.Web
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SimiasService));
 
+
+
+
 		/// <summary>
 		/// Creates the SimiasService and sets up logging
 		/// </summary>
 		public SimiasService()
 		{
 		}
-	
+
+
+
+
 		/// <summary>
 		/// WebMethod that returns the Simias information
 		/// </summary>
@@ -77,6 +83,8 @@ namespace Simias.Web
 		{
 			return "TODO: Implement the Simias Web Service";
 		}
+
+
 
 
 		/// <summary>
@@ -106,6 +114,8 @@ namespace Simias.Web
 
 			return(cDomainInfo);
 		}
+
+
 
 
 		/// <summary>
@@ -154,6 +164,9 @@ namespace Simias.Web
 			return((DomainInformation[]) domains.ToArray(typeof(DomainInformation)));
 		}
 
+
+
+
 		/// <summary>
 		/// WebMethod to login or authenticate against a 
 		/// remote domain.  The user must have previously joined
@@ -172,6 +185,9 @@ namespace Simias.Web
 			return	domainAgent.Login( domainID, username, password );
 		}
 
+
+
+
 		/// <summary>
 		/// WebMethod to logout from a remote domain.
 		/// The user must have previously joined and 
@@ -187,51 +203,6 @@ namespace Simias.Web
 		LogoutFromRemoteDomain(string domainID, string username)
 		{
 			return new Simias.Authentication.Status( Simias.Authentication.StatusCodes.Success );
-		}
-
-
-		/// <summary>
-		/// WebMethod that sets credential information for a 
-		/// member to a domain
-		/// </summary>
-		/// <returns>
-		/// 0 success, !0 failed
-		/// </returns>
-		[WebMethod(Description="SetDomainCredentials")]
-		[SoapDocumentMethod]
-		public
-		int SetDomainCredentials(
-				string			domainID,
-				string			memberID,
-				string			password)
-		{
-			int status = -1;
-			try
-			{
-				Store store = Store.GetStore();
-
-				// Make sure the Domain ID is not workgroup
-				if (domainID != Simias.Storage.Domain.WorkGroupDomainID)
-				{
-					Roster cRoster = store.GetRoster(domainID);
-					Member cMember = cRoster.GetMemberByID(memberID);
-
-					NetCredential cCreds = 
-						new NetCredential("iFolder", domainID, true, cMember.Name, password);
-
-					if (cCreds != null)
-					{
-						status = 0;
-					}
-				}
-			}
-			catch(Exception e)
-			{
-				log.Debug(e.Message);
-				log.Debug(e.StackTrace);
-			}
-
-			return(status);
 		}
 
 
@@ -273,6 +244,9 @@ namespace Simias.Web
 			return(0);
 		}
 
+
+
+
 		/// <summary>
 		/// WebMethod to mark a slave domain "inactive"
 		/// Marking a domain inactive disables all synchronization
@@ -289,6 +263,9 @@ namespace Simias.Web
 			domainAgent.SetDomainInactive( domainID );
 			return(0);
 		}
+
+
+
 
 		/// <summary>
 		/// WebMethod that checks to see if a full set of credentials
@@ -342,22 +319,31 @@ namespace Simias.Web
 			return(status);
 		}
 
+
+
+
 		/// <summary>
-		/// Saves the domain credentials to the local store.
+		/// Sets the domain credentials in the local store.
 		/// </summary>
-		/// <param name="domainID">The ID of the domain to set the credentials on.</param>
+		/// <param name="domainID">The ID of the domain to set the credentials
+		/// on.</param>
 		/// <param name="credentials">Credentials to set.</param>
 		/// <param name="type">Type of credentials.</param>
-		[WebMethod(Description="Save domain credentials to the local store")]
+		[WebMethod(Description="Sets domain credentials in the local store")]
 		[SoapDocumentMethod]
-		public void SaveDomainCredentials(string domainID, string credentials, CredentialType type)
+		public void SetDomainCredentials(	string domainID, 
+											string credentials, 
+											CredentialType type)
 		{
 			Store store = Store.GetStore();
 			store.SetDomainCredentials(domainID, credentials, type);
 		}
 
+
+
+
 		/// <summary>
-		/// Gets the saved credentials from the specified domain object.
+		/// Gets the credentials from the specified domain object.
 		/// </summary>
 		/// <param name="domainID">The ID of the domain to set the credentials on.</param>
 		/// <param name="userID">Gets the ID of the user.</param>
@@ -365,12 +351,15 @@ namespace Simias.Web
 		/// <returns>The type of credentials.</returns>
 		[WebMethod(Description="Get the saved credentials from a domain")]
 		[SoapDocumentMethod]
-		public CredentialType GetSavedDomainCredentials(string domainID, out string userID, out string credentials)
+		public CredentialType GetDomainCredentials(string domainID, out string userID, out string credentials)
 		{
 			Store store = Store.GetStore();
 			return store.GetDomainCredentials(domainID, out userID, out credentials);
 		}
-	
+
+
+
+
 		/// <summary>
 		/// WebMethod that connects up an iFolder Domain
 		/// </summary>
@@ -399,7 +388,10 @@ namespace Simias.Web
 			domainInfo.MemberName = UserName;
 			return domainInfo;
 		}
-		
+
+
+
+
 		/// <summary>
 		/// WebMethod that removes a domain account from the workstation.
 		/// </summary>
@@ -419,7 +411,10 @@ namespace Simias.Web
 			DomainAgent da = new DomainAgent();
 			da.Unattach(DomainID, LocalOnly);
 		}
-		
+	
+
+
+
 		/// <summary>
 		/// WebMethod that changes the default domain.
 		/// </summary>
@@ -431,6 +426,9 @@ namespace Simias.Web
 			Store store = Store.GetStore();
 			store.DefaultDomain = domainID;
 		}
+
+
+
 
 		/// <summary>
 		/// WebMethod that gets the ID of the default domain.
@@ -444,6 +442,9 @@ namespace Simias.Web
 			return store.DefaultDomain;
 		}
 	}
+
+
+
 
 	/// <summary>
 	/// Type of Domain (Enterprise/Workgroup)

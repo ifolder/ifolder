@@ -1,619 +1,1152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://novell.com/simias/web/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://novell.com/simias/web/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
-  <wsdl:types>
-    <s:schema elementFormDefault="qualified" targetNamespace="http://novell.com/simias/web/">
-      <s:element name="GetSimiasInformation">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetSimiasInformationResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetSimiasInformationResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetDomainInformation">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetDomainInformationResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetDomainInformationResult" type="tns:DomainInformation" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:complexType name="DomainInformation">
-        <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="Type" type="tns:DomainType" />
-          <s:element minOccurs="1" maxOccurs="1" name="Active" type="s:boolean" />
-          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="ID" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="RosterID" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="RosterName" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="MemberUserID" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="MemberName" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="RemoteUrl" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="POBoxID" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="Host" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="IsSlave" type="s:boolean" />
-          <s:element minOccurs="1" maxOccurs="1" name="IsDefault" type="s:boolean" />
-        </s:sequence>
-      </s:complexType>
-      <s:simpleType name="DomainType">
-        <s:restriction base="s:string">
-          <s:enumeration value="Workgroup" />
-          <s:enumeration value="Enterprise" />
-        </s:restriction>
-      </s:simpleType>
-      <s:element name="GetDomains">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="onlySlaves" type="s:boolean" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetDomainsResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetDomainsResult" type="tns:ArrayOfDomainInformation" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:complexType name="ArrayOfDomainInformation">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="DomainInformation" nillable="true" type="tns:DomainInformation" />
-        </s:sequence>
-      </s:complexType>
-      <s:element name="LoginToRemoteDomain">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="LoginToRemoteDomainResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="LoginToRemoteDomainResult" type="tns:Status" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:complexType name="Status">
-        <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="statusCode" type="tns:StatusCodes" />
-          <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="DistinguishedUserName" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="ExceptionMessage" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="TotalGraceLogins" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="RemainingGraceLogins" type="s:int" />
-        </s:sequence>
-      </s:complexType>
-      <s:simpleType name="StatusCodes">
-        <s:restriction base="s:string">
-          <s:enumeration value="Success" />
-          <s:enumeration value="SuccessInGrace" />
-          <s:enumeration value="UnknownUser" />
-          <s:enumeration value="AmbiguousUser" />
-          <s:enumeration value="InvalidCredentials" />
-          <s:enumeration value="InvalidPassword" />
-          <s:enumeration value="AccountDisabled" />
-          <s:enumeration value="AccountLockout" />
-          <s:enumeration value="UnknownDomain" />
-          <s:enumeration value="InternalException" />
-          <s:enumeration value="MethodNotSupported" />
-          <s:enumeration value="Unknown" />
-        </s:restriction>
-      </s:simpleType>
-      <s:element name="LogoutFromRemoteDomain">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="LogoutFromRemoteDomainResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="LogoutFromRemoteDomainResult" type="tns:Status" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="SetDomainCredentials">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="memberID" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="SetDomainCredentialsResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="SetDomainCredentialsResult" type="s:int" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="IsDomainActive">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="IsDomainActiveResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="IsDomainActiveResult" type="s:boolean" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="SetDomainActive">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="SetDomainActiveResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="SetDomainActiveResult" type="s:int" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="SetDomainInactive">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="SetDomainInactiveResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="SetDomainInactiveResult" type="s:int" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="ValidCredentials">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="memberID" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="ValidCredentialsResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="ValidCredentialsResult" type="s:boolean" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="SaveDomainCredentials">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="credentials" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="type" type="tns:CredentialType" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:simpleType name="CredentialType">
-        <s:restriction base="s:string">
-          <s:enumeration value="None" />
-          <s:enumeration value="NotRequired" />
-          <s:enumeration value="Basic" />
-          <s:enumeration value="PPK" />
-        </s:restriction>
-      </s:simpleType>
-      <s:element name="SaveDomainCredentialsResponse">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetSavedDomainCredentials">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetSavedDomainCredentialsResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="GetSavedDomainCredentialsResult" type="tns:CredentialType" />
-            <s:element minOccurs="0" maxOccurs="1" name="userID" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="credentials" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="ConnectToDomain">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="Host" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="ConnectToDomainResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="ConnectToDomainResult" type="tns:DomainInformation" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="LeaveDomain">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="LocalOnly" type="s:boolean" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="LeaveDomainResponse">
-        <s:complexType />
-      </s:element>
-      <s:element name="SetDefaultDomain">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="SetDefaultDomainResponse">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetDefaultDomainID">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetDefaultDomainIDResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetDefaultDomainIDResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-    </s:schema>
-  </wsdl:types>
-  <wsdl:message name="GetSimiasInformationSoapIn">
-    <wsdl:part name="parameters" element="tns:GetSimiasInformation" />
-  </wsdl:message>
-  <wsdl:message name="GetSimiasInformationSoapOut">
-    <wsdl:part name="parameters" element="tns:GetSimiasInformationResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetDomainInformationSoapIn">
-    <wsdl:part name="parameters" element="tns:GetDomainInformation" />
-  </wsdl:message>
-  <wsdl:message name="GetDomainInformationSoapOut">
-    <wsdl:part name="parameters" element="tns:GetDomainInformationResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetDomainsSoapIn">
-    <wsdl:part name="parameters" element="tns:GetDomains" />
-  </wsdl:message>
-  <wsdl:message name="GetDomainsSoapOut">
-    <wsdl:part name="parameters" element="tns:GetDomainsResponse" />
-  </wsdl:message>
-  <wsdl:message name="LoginToRemoteDomainSoapIn">
-    <wsdl:part name="parameters" element="tns:LoginToRemoteDomain" />
-  </wsdl:message>
-  <wsdl:message name="LoginToRemoteDomainSoapOut">
-    <wsdl:part name="parameters" element="tns:LoginToRemoteDomainResponse" />
-  </wsdl:message>
-  <wsdl:message name="LogoutFromRemoteDomainSoapIn">
-    <wsdl:part name="parameters" element="tns:LogoutFromRemoteDomain" />
-  </wsdl:message>
-  <wsdl:message name="LogoutFromRemoteDomainSoapOut">
-    <wsdl:part name="parameters" element="tns:LogoutFromRemoteDomainResponse" />
-  </wsdl:message>
-  <wsdl:message name="SetDomainCredentialsSoapIn">
-    <wsdl:part name="parameters" element="tns:SetDomainCredentials" />
-  </wsdl:message>
-  <wsdl:message name="SetDomainCredentialsSoapOut">
-    <wsdl:part name="parameters" element="tns:SetDomainCredentialsResponse" />
-  </wsdl:message>
-  <wsdl:message name="IsDomainActiveSoapIn">
-    <wsdl:part name="parameters" element="tns:IsDomainActive" />
-  </wsdl:message>
-  <wsdl:message name="IsDomainActiveSoapOut">
-    <wsdl:part name="parameters" element="tns:IsDomainActiveResponse" />
-  </wsdl:message>
-  <wsdl:message name="SetDomainActiveSoapIn">
-    <wsdl:part name="parameters" element="tns:SetDomainActive" />
-  </wsdl:message>
-  <wsdl:message name="SetDomainActiveSoapOut">
-    <wsdl:part name="parameters" element="tns:SetDomainActiveResponse" />
-  </wsdl:message>
-  <wsdl:message name="SetDomainInactiveSoapIn">
-    <wsdl:part name="parameters" element="tns:SetDomainInactive" />
-  </wsdl:message>
-  <wsdl:message name="SetDomainInactiveSoapOut">
-    <wsdl:part name="parameters" element="tns:SetDomainInactiveResponse" />
-  </wsdl:message>
-  <wsdl:message name="ValidCredentialsSoapIn">
-    <wsdl:part name="parameters" element="tns:ValidCredentials" />
-  </wsdl:message>
-  <wsdl:message name="ValidCredentialsSoapOut">
-    <wsdl:part name="parameters" element="tns:ValidCredentialsResponse" />
-  </wsdl:message>
-  <wsdl:message name="SaveDomainCredentialsSoapIn">
-    <wsdl:part name="parameters" element="tns:SaveDomainCredentials" />
-  </wsdl:message>
-  <wsdl:message name="SaveDomainCredentialsSoapOut">
-    <wsdl:part name="parameters" element="tns:SaveDomainCredentialsResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetSavedDomainCredentialsSoapIn">
-    <wsdl:part name="parameters" element="tns:GetSavedDomainCredentials" />
-  </wsdl:message>
-  <wsdl:message name="GetSavedDomainCredentialsSoapOut">
-    <wsdl:part name="parameters" element="tns:GetSavedDomainCredentialsResponse" />
-  </wsdl:message>
-  <wsdl:message name="ConnectToDomainSoapIn">
-    <wsdl:part name="parameters" element="tns:ConnectToDomain" />
-  </wsdl:message>
-  <wsdl:message name="ConnectToDomainSoapOut">
-    <wsdl:part name="parameters" element="tns:ConnectToDomainResponse" />
-  </wsdl:message>
-  <wsdl:message name="LeaveDomainSoapIn">
-    <wsdl:part name="parameters" element="tns:LeaveDomain" />
-  </wsdl:message>
-  <wsdl:message name="LeaveDomainSoapOut">
-    <wsdl:part name="parameters" element="tns:LeaveDomainResponse" />
-  </wsdl:message>
-  <wsdl:message name="SetDefaultDomainSoapIn">
-    <wsdl:part name="parameters" element="tns:SetDefaultDomain" />
-  </wsdl:message>
-  <wsdl:message name="SetDefaultDomainSoapOut">
-    <wsdl:part name="parameters" element="tns:SetDefaultDomainResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetDefaultDomainIDSoapIn">
-    <wsdl:part name="parameters" element="tns:GetDefaultDomainID" />
-  </wsdl:message>
-  <wsdl:message name="GetDefaultDomainIDSoapOut">
-    <wsdl:part name="parameters" element="tns:GetDefaultDomainIDResponse" />
-  </wsdl:message>
-  <wsdl:portType name="Simias_x0020_Web_x0020_ServiceSoap">
-    <wsdl:operation name="GetSimiasInformation">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">GetSimiasInformation</documentation>
-      <wsdl:input message="tns:GetSimiasInformationSoapIn" />
-      <wsdl:output message="tns:GetSimiasInformationSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetDomainInformation">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">GetDomainInformation</documentation>
-      <wsdl:input message="tns:GetDomainInformationSoapIn" />
-      <wsdl:output message="tns:GetDomainInformationSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetDomains">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Get a list of local domains</documentation>
-      <wsdl:input message="tns:GetDomainsSoapIn" />
-      <wsdl:output message="tns:GetDomainsSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="LoginToRemoteDomain">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Login or authenticate to a remote domain</documentation>
-      <wsdl:input message="tns:LoginToRemoteDomainSoapIn" />
-      <wsdl:output message="tns:LoginToRemoteDomainSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="LogoutFromRemoteDomain">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Logout from a remote domain</documentation>
-      <wsdl:input message="tns:LogoutFromRemoteDomainSoapIn" />
-      <wsdl:output message="tns:LogoutFromRemoteDomainSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="SetDomainCredentials">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">SetDomainCredentials</documentation>
-      <wsdl:input message="tns:SetDomainCredentialsSoapIn" />
-      <wsdl:output message="tns:SetDomainCredentialsSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="IsDomainActive">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">WebMethod to check if a domain is active</documentation>
-      <wsdl:input message="tns:IsDomainActiveSoapIn" />
-      <wsdl:output message="tns:IsDomainActiveSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="SetDomainActive">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">SetDomainActive - enables synchronization to the remote server</documentation>
-      <wsdl:input message="tns:SetDomainActiveSoapIn" />
-      <wsdl:output message="tns:SetDomainActiveSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="SetDomainInactive">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">SetDomainInactive - disables remote synchronization</documentation>
-      <wsdl:input message="tns:SetDomainInactiveSoapIn" />
-      <wsdl:output message="tns:SetDomainInactiveSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="ValidCredentials">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">ValidCredentials</documentation>
-      <wsdl:input message="tns:ValidCredentialsSoapIn" />
-      <wsdl:output message="tns:ValidCredentialsSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="SaveDomainCredentials">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Save domain credentials to the local store</documentation>
-      <wsdl:input message="tns:SaveDomainCredentialsSoapIn" />
-      <wsdl:output message="tns:SaveDomainCredentialsSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetSavedDomainCredentials">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Get the saved credentials from a domain</documentation>
-      <wsdl:input message="tns:GetSavedDomainCredentialsSoapIn" />
-      <wsdl:output message="tns:GetSavedDomainCredentialsSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="ConnectToDomain">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Connects to a Domain</documentation>
-      <wsdl:input message="tns:ConnectToDomainSoapIn" />
-      <wsdl:output message="tns:ConnectToDomainSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="LeaveDomain">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Removes a domain account from the workstation</documentation>
-      <wsdl:input message="tns:LeaveDomainSoapIn" />
-      <wsdl:output message="tns:LeaveDomainSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="SetDefaultDomain">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Change the default domain to the specified domain ID</documentation>
-      <wsdl:input message="tns:SetDefaultDomainSoapIn" />
-      <wsdl:output message="tns:SetDefaultDomainSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetDefaultDomainID">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Get the ID of the default domain</documentation>
-      <wsdl:input message="tns:GetDefaultDomainIDSoapIn" />
-      <wsdl:output message="tns:GetDefaultDomainIDSoapOut" />
-    </wsdl:operation>
-  </wsdl:portType>
-  <wsdl:binding name="Simias_x0020_Web_x0020_ServiceSoap" type="tns:Simias_x0020_Web_x0020_ServiceSoap">
-    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
-    <wsdl:operation name="GetSimiasInformation">
-      <soap:operation soapAction="http://novell.com/simias/web/GetSimiasInformation" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetDomainInformation">
-      <soap:operation soapAction="http://novell.com/simias/web/GetDomainInformation" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetDomains">
-      <soap:operation soapAction="http://novell.com/simias/web/GetDomains" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="LoginToRemoteDomain">
-      <soap:operation soapAction="http://novell.com/simias/web/LoginToRemoteDomain" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="LogoutFromRemoteDomain">
-      <soap:operation soapAction="http://novell.com/simias/web/LogoutFromRemoteDomain" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SetDomainCredentials">
-      <soap:operation soapAction="http://novell.com/simias/web/SetDomainCredentials" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="IsDomainActive">
-      <soap:operation soapAction="http://novell.com/simias/web/IsDomainActive" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SetDomainActive">
-      <soap:operation soapAction="http://novell.com/simias/web/SetDomainActive" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SetDomainInactive">
-      <soap:operation soapAction="http://novell.com/simias/web/SetDomainInactive" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="ValidCredentials">
-      <soap:operation soapAction="http://novell.com/simias/web/ValidCredentials" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SaveDomainCredentials">
-      <soap:operation soapAction="http://novell.com/simias/web/SaveDomainCredentials" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetSavedDomainCredentials">
-      <soap:operation soapAction="http://novell.com/simias/web/GetSavedDomainCredentials" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="ConnectToDomain">
-      <soap:operation soapAction="http://novell.com/simias/web/ConnectToDomain" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="LeaveDomain">
-      <soap:operation soapAction="http://novell.com/simias/web/LeaveDomain" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SetDefaultDomain">
-      <soap:operation soapAction="http://novell.com/simias/web/SetDefaultDomain" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetDefaultDomainID">
-      <soap:operation soapAction="http://novell.com/simias/web/GetDefaultDomainID" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-  </wsdl:binding>
-  <wsdl:service name="Simias_x0020_Web_x0020_Service">
-    <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Web Service providing access to Simias</documentation>
-    <wsdl:port name="Simias_x0020_Web_x0020_ServiceSoap" binding="tns:Simias_x0020_Web_x0020_ServiceSoap">
-      <soap:address location="http://localhost:1613/simias10/banderso/Simias.asmx" />
-    </wsdl:port>
-  </wsdl:service>
-</wsdl:definitions>
+<definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+      xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+      xmlns:s="http://www.w3.org/2001/XMLSchema"
+      xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+      xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+      xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
+      xmlns:s0="http://novell.com/simias/web/" name="Simias Web Service"
+      targetNamespace="http://novell.com/simias/web/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://novell.com/simias/web/"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="GetSimiasInformation">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetSimiasInformationResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetSimiasInformationResult"
+                  type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetDomainInformation">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="DomainInformation">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="Type" type="s0:DomainType"/>
+          <xs:element minOccurs="1" maxOccurs="1" name="Active" type="xs:boolean"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="ID" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="RosterID" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="RosterName" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="MemberUserID" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="MemberName" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="RemoteUrl" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="POBoxID" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="Host" type="xs:string"/>
+          <xs:element minOccurs="1" maxOccurs="1" name="IsSlave" type="xs:boolean"/>
+          <xs:element minOccurs="1" maxOccurs="1" name="IsDefault" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="DomainType">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="Workgroup"/>
+          <xs:enumeration value="Enterprise"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="GetDomainInformationResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetDomainInformationResult"
+                  type="s0:DomainInformation"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetDomains">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="onlySlaves" type="xs:boolean"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="ArrayOfDomainInformation">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="DomainInformation"
+                nillable="true" type="s0:DomainInformation"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="GetDomainsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetDomainsResult"
+                  type="s0:ArrayOfDomainInformation"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="LoginToRemoteDomain">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="username" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="password" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="Status">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="statusCode" type="s0:StatusCodes"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="UserName" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="DistinguishedUserName"
+                type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="ExceptionMessage" type="xs:string"/>
+          <xs:element minOccurs="1" maxOccurs="1" name="TotalGraceLogins" type="xs:int"/>
+          <xs:element minOccurs="1" maxOccurs="1" name="RemainingGraceLogins" type="xs:int"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="StatusCodes">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="Success"/>
+          <xs:enumeration value="SuccessInGrace"/>
+          <xs:enumeration value="UnknownUser"/>
+          <xs:enumeration value="AmbiguousUser"/>
+          <xs:enumeration value="InvalidCredentials"/>
+          <xs:enumeration value="InvalidPassword"/>
+          <xs:enumeration value="AccountDisabled"/>
+          <xs:enumeration value="AccountLockout"/>
+          <xs:enumeration value="UnknownDomain"/>
+          <xs:enumeration value="InternalException"/>
+          <xs:enumeration value="MethodNotSupported"/>
+          <xs:enumeration value="Unknown"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="LoginToRemoteDomainResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="LoginToRemoteDomainResult"
+                  type="s0:Status"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="LogoutFromRemoteDomain">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="username" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="LogoutFromRemoteDomainResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="LogoutFromRemoteDomainResult"
+                  type="s0:Status"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="IsDomainActive">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="IsDomainActiveResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="IsDomainActiveResult"
+                  type="xs:boolean"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetDomainActive">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetDomainActiveResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="SetDomainActiveResult" type="xs:int"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetDomainInactive">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetDomainInactiveResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="SetDomainInactiveResult"
+                  type="xs:int"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ValidCredentials">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="memberID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ValidCredentialsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="ValidCredentialsResult"
+                  type="xs:boolean"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:simpleType name="CredentialType">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="None"/>
+          <xs:enumeration value="NotRequired"/>
+          <xs:enumeration value="Basic"/>
+          <xs:enumeration value="PPK"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="SetDomainCredentials">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="credentials" type="xs:string"/>
+            <xs:element minOccurs="1" maxOccurs="1" name="type" type="s0:CredentialType"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetDomainCredentialsResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetDomainCredentials">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetDomainCredentialsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="GetDomainCredentialsResult"
+                  type="s0:CredentialType"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="userID" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="credentials" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ConnectToDomain">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="UserName" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="Password" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="Host" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ConnectToDomainResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="ConnectToDomainResult"
+                  type="s0:DomainInformation"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="LeaveDomain">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="DomainID" type="xs:string"/>
+            <xs:element minOccurs="1" maxOccurs="1" name="LocalOnly" type="xs:boolean"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="LeaveDomainResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="SetDefaultDomain">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetDefaultDomainResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetDefaultDomainID">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetDefaultDomainIDResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetDefaultDomainIDResult"
+                  type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="string" type="xs:string"/>
+      <xs:element name="DomainInformation" type="s0:DomainInformation"/>
+      <xs:element name="ArrayOfDomainInformation" type="s0:ArrayOfDomainInformation"/>
+      <xs:element name="Status" type="s0:Status"/>
+      <xs:element name="boolean" type="xs:boolean"/>
+      <xs:element name="int" type="xs:int"/>
+    </xs:schema>
+  </types>
+  <message name="GetSimiasInformationSoapIn">
+    <part name="parameters" element="s0:GetSimiasInformation"/>
+  </message>
+  <message name="GetSimiasInformationSoapOut">
+    <part name="parameters" element="s0:GetSimiasInformationResponse"/>
+  </message>
+  <message name="GetDomainInformationSoapIn">
+    <part name="parameters" element="s0:GetDomainInformation"/>
+  </message>
+  <message name="GetDomainInformationSoapOut">
+    <part name="parameters" element="s0:GetDomainInformationResponse"/>
+  </message>
+  <message name="GetDomainsSoapIn">
+    <part name="parameters" element="s0:GetDomains"/>
+  </message>
+  <message name="GetDomainsSoapOut">
+    <part name="parameters" element="s0:GetDomainsResponse"/>
+  </message>
+  <message name="LoginToRemoteDomainSoapIn">
+    <part name="parameters" element="s0:LoginToRemoteDomain"/>
+  </message>
+  <message name="LoginToRemoteDomainSoapOut">
+    <part name="parameters" element="s0:LoginToRemoteDomainResponse"/>
+  </message>
+  <message name="LogoutFromRemoteDomainSoapIn">
+    <part name="parameters" element="s0:LogoutFromRemoteDomain"/>
+  </message>
+  <message name="LogoutFromRemoteDomainSoapOut">
+    <part name="parameters" element="s0:LogoutFromRemoteDomainResponse"/>
+  </message>
+  <message name="IsDomainActiveSoapIn">
+    <part name="parameters" element="s0:IsDomainActive"/>
+  </message>
+  <message name="IsDomainActiveSoapOut">
+    <part name="parameters" element="s0:IsDomainActiveResponse"/>
+  </message>
+  <message name="SetDomainActiveSoapIn">
+    <part name="parameters" element="s0:SetDomainActive"/>
+  </message>
+  <message name="SetDomainActiveSoapOut">
+    <part name="parameters" element="s0:SetDomainActiveResponse"/>
+  </message>
+  <message name="SetDomainInactiveSoapIn">
+    <part name="parameters" element="s0:SetDomainInactive"/>
+  </message>
+  <message name="SetDomainInactiveSoapOut">
+    <part name="parameters" element="s0:SetDomainInactiveResponse"/>
+  </message>
+  <message name="ValidCredentialsSoapIn">
+    <part name="parameters" element="s0:ValidCredentials"/>
+  </message>
+  <message name="ValidCredentialsSoapOut">
+    <part name="parameters" element="s0:ValidCredentialsResponse"/>
+  </message>
+  <message name="SetDomainCredentialsSoapIn">
+    <part name="parameters" element="s0:SetDomainCredentials"/>
+  </message>
+  <message name="SetDomainCredentialsSoapOut">
+    <part name="parameters" element="s0:SetDomainCredentialsResponse"/>
+  </message>
+  <message name="GetDomainCredentialsSoapIn">
+    <part name="parameters" element="s0:GetDomainCredentials"/>
+  </message>
+  <message name="GetDomainCredentialsSoapOut">
+    <part name="parameters" element="s0:GetDomainCredentialsResponse"/>
+  </message>
+  <message name="ConnectToDomainSoapIn">
+    <part name="parameters" element="s0:ConnectToDomain"/>
+  </message>
+  <message name="ConnectToDomainSoapOut">
+    <part name="parameters" element="s0:ConnectToDomainResponse"/>
+  </message>
+  <message name="LeaveDomainSoapIn">
+    <part name="parameters" element="s0:LeaveDomain"/>
+  </message>
+  <message name="LeaveDomainSoapOut">
+    <part name="parameters" element="s0:LeaveDomainResponse"/>
+  </message>
+  <message name="SetDefaultDomainSoapIn">
+    <part name="parameters" element="s0:SetDefaultDomain"/>
+  </message>
+  <message name="SetDefaultDomainSoapOut">
+    <part name="parameters" element="s0:SetDefaultDomainResponse"/>
+  </message>
+  <message name="GetDefaultDomainIDSoapIn">
+    <part name="parameters" element="s0:GetDefaultDomainID"/>
+  </message>
+  <message name="GetDefaultDomainIDSoapOut">
+    <part name="parameters" element="s0:GetDefaultDomainIDResponse"/>
+  </message>
+  <message name="GetSimiasInformationHttpGetIn"/>
+  <message name="GetSimiasInformationHttpGetOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="GetDomainInformationHttpGetIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="GetDomainInformationHttpGetOut">
+    <part name="Body" element="s0:DomainInformation"/>
+  </message>
+  <message name="GetDomainsHttpGetIn">
+    <part name="onlySlaves" type="s:boolean"/>
+  </message>
+  <message name="GetDomainsHttpGetOut">
+    <part name="Body" element="s0:ArrayOfDomainInformation"/>
+  </message>
+  <message name="LoginToRemoteDomainHttpGetIn">
+    <part name="domainID" type="s:string"/>
+    <part name="username" type="s:string"/>
+    <part name="password" type="s:string"/>
+  </message>
+  <message name="LoginToRemoteDomainHttpGetOut">
+    <part name="Body" element="s0:Status"/>
+  </message>
+  <message name="LogoutFromRemoteDomainHttpGetIn">
+    <part name="domainID" type="s:string"/>
+    <part name="username" type="s:string"/>
+  </message>
+  <message name="LogoutFromRemoteDomainHttpGetOut">
+    <part name="Body" element="s0:Status"/>
+  </message>
+  <message name="IsDomainActiveHttpGetIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="IsDomainActiveHttpGetOut">
+    <part name="Body" element="s0:boolean"/>
+  </message>
+  <message name="SetDomainActiveHttpGetIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="SetDomainActiveHttpGetOut">
+    <part name="Body" element="s0:int"/>
+  </message>
+  <message name="SetDomainInactiveHttpGetIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="SetDomainInactiveHttpGetOut">
+    <part name="Body" element="s0:int"/>
+  </message>
+  <message name="ValidCredentialsHttpGetIn">
+    <part name="domainID" type="s:string"/>
+    <part name="memberID" type="s:string"/>
+  </message>
+  <message name="ValidCredentialsHttpGetOut">
+    <part name="Body" element="s0:boolean"/>
+  </message>
+  <message name="ConnectToDomainHttpGetIn">
+    <part name="UserName" type="s:string"/>
+    <part name="Password" type="s:string"/>
+    <part name="Host" type="s:string"/>
+  </message>
+  <message name="ConnectToDomainHttpGetOut">
+    <part name="Body" element="s0:DomainInformation"/>
+  </message>
+  <message name="LeaveDomainHttpGetIn">
+    <part name="DomainID" type="s:string"/>
+    <part name="LocalOnly" type="s:boolean"/>
+  </message>
+  <message name="LeaveDomainHttpGetOut"/>
+  <message name="SetDefaultDomainHttpGetIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="SetDefaultDomainHttpGetOut"/>
+  <message name="GetDefaultDomainIDHttpGetIn"/>
+  <message name="GetDefaultDomainIDHttpGetOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="GetSimiasInformationHttpPostIn"/>
+  <message name="GetSimiasInformationHttpPostOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <message name="GetDomainInformationHttpPostIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="GetDomainInformationHttpPostOut">
+    <part name="Body" element="s0:DomainInformation"/>
+  </message>
+  <message name="GetDomainsHttpPostIn">
+    <part name="onlySlaves" type="s:boolean"/>
+  </message>
+  <message name="GetDomainsHttpPostOut">
+    <part name="Body" element="s0:ArrayOfDomainInformation"/>
+  </message>
+  <message name="LoginToRemoteDomainHttpPostIn">
+    <part name="domainID" type="s:string"/>
+    <part name="username" type="s:string"/>
+    <part name="password" type="s:string"/>
+  </message>
+  <message name="LoginToRemoteDomainHttpPostOut">
+    <part name="Body" element="s0:Status"/>
+  </message>
+  <message name="LogoutFromRemoteDomainHttpPostIn">
+    <part name="domainID" type="s:string"/>
+    <part name="username" type="s:string"/>
+  </message>
+  <message name="LogoutFromRemoteDomainHttpPostOut">
+    <part name="Body" element="s0:Status"/>
+  </message>
+  <message name="IsDomainActiveHttpPostIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="IsDomainActiveHttpPostOut">
+    <part name="Body" element="s0:boolean"/>
+  </message>
+  <message name="SetDomainActiveHttpPostIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="SetDomainActiveHttpPostOut">
+    <part name="Body" element="s0:int"/>
+  </message>
+  <message name="SetDomainInactiveHttpPostIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="SetDomainInactiveHttpPostOut">
+    <part name="Body" element="s0:int"/>
+  </message>
+  <message name="ValidCredentialsHttpPostIn">
+    <part name="domainID" type="s:string"/>
+    <part name="memberID" type="s:string"/>
+  </message>
+  <message name="ValidCredentialsHttpPostOut">
+    <part name="Body" element="s0:boolean"/>
+  </message>
+  <message name="ConnectToDomainHttpPostIn">
+    <part name="UserName" type="s:string"/>
+    <part name="Password" type="s:string"/>
+    <part name="Host" type="s:string"/>
+  </message>
+  <message name="ConnectToDomainHttpPostOut">
+    <part name="Body" element="s0:DomainInformation"/>
+  </message>
+  <message name="LeaveDomainHttpPostIn">
+    <part name="DomainID" type="s:string"/>
+    <part name="LocalOnly" type="s:boolean"/>
+  </message>
+  <message name="LeaveDomainHttpPostOut"/>
+  <message name="SetDefaultDomainHttpPostIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="SetDefaultDomainHttpPostOut"/>
+  <message name="GetDefaultDomainIDHttpPostIn"/>
+  <message name="GetDefaultDomainIDHttpPostOut">
+    <part name="Body" element="s0:string"/>
+  </message>
+  <portType name="Simias Web ServiceSoap">
+    <operation name="GetSimiasInformation">
+      <input message="s0:GetSimiasInformationSoapIn"/>
+      <output message="s0:GetSimiasInformationSoapOut"/>
+      <documentation>GetSimiasInformation</documentation>
+    </operation>
+    <operation name="GetDomainInformation">
+      <input message="s0:GetDomainInformationSoapIn"/>
+      <output message="s0:GetDomainInformationSoapOut"/>
+      <documentation>GetDomainInformation</documentation>
+    </operation>
+    <operation name="GetDomains">
+      <input message="s0:GetDomainsSoapIn"/>
+      <output message="s0:GetDomainsSoapOut"/>
+      <documentation>Get a list of local domains</documentation>
+    </operation>
+    <operation name="LoginToRemoteDomain">
+      <input message="s0:LoginToRemoteDomainSoapIn"/>
+      <output message="s0:LoginToRemoteDomainSoapOut"/>
+      <documentation>Login or authenticate to a remote domain</documentation>
+    </operation>
+    <operation name="LogoutFromRemoteDomain">
+      <input message="s0:LogoutFromRemoteDomainSoapIn"/>
+      <output message="s0:LogoutFromRemoteDomainSoapOut"/>
+      <documentation>Logout from a remote domain</documentation>
+    </operation>
+    <operation name="IsDomainActive">
+      <input message="s0:IsDomainActiveSoapIn"/>
+      <output message="s0:IsDomainActiveSoapOut"/>
+      <documentation>WebMethod to check if a domain is active</documentation>
+    </operation>
+    <operation name="SetDomainActive">
+      <input message="s0:SetDomainActiveSoapIn"/>
+      <output message="s0:SetDomainActiveSoapOut"/>
+      <documentation>SetDomainActive - enables synchronization to the remote
+            server</documentation>
+    </operation>
+    <operation name="SetDomainInactive">
+      <input message="s0:SetDomainInactiveSoapIn"/>
+      <output message="s0:SetDomainInactiveSoapOut"/>
+      <documentation>SetDomainInactive - disables remote synchronization</documentation>
+    </operation>
+    <operation name="ValidCredentials">
+      <input message="s0:ValidCredentialsSoapIn"/>
+      <output message="s0:ValidCredentialsSoapOut"/>
+      <documentation>ValidCredentials</documentation>
+    </operation>
+    <operation name="SetDomainCredentials">
+      <input message="s0:SetDomainCredentialsSoapIn"/>
+      <output message="s0:SetDomainCredentialsSoapOut"/>
+      <documentation>Sets domain credentials in the local store</documentation>
+    </operation>
+    <operation name="GetDomainCredentials">
+      <input message="s0:GetDomainCredentialsSoapIn"/>
+      <output message="s0:GetDomainCredentialsSoapOut"/>
+      <documentation>Get the saved credentials from a domain</documentation>
+    </operation>
+    <operation name="ConnectToDomain">
+      <input message="s0:ConnectToDomainSoapIn"/>
+      <output message="s0:ConnectToDomainSoapOut"/>
+      <documentation>Connects to a Domain</documentation>
+    </operation>
+    <operation name="LeaveDomain">
+      <input message="s0:LeaveDomainSoapIn"/>
+      <output message="s0:LeaveDomainSoapOut"/>
+      <documentation>Removes a domain account from the workstation</documentation>
+    </operation>
+    <operation name="SetDefaultDomain">
+      <input message="s0:SetDefaultDomainSoapIn"/>
+      <output message="s0:SetDefaultDomainSoapOut"/>
+      <documentation>Change the default domain to the specified domain ID</documentation>
+    </operation>
+    <operation name="GetDefaultDomainID">
+      <input message="s0:GetDefaultDomainIDSoapIn"/>
+      <output message="s0:GetDefaultDomainIDSoapOut"/>
+      <documentation>Get the ID of the default domain</documentation>
+    </operation>
+  </portType>
+  <portType name="Simias Web ServiceHttpGet">
+    <operation name="GetSimiasInformation">
+      <input message="s0:GetSimiasInformationHttpGetIn"/>
+      <output message="s0:GetSimiasInformationHttpGetOut"/>
+      <documentation>GetSimiasInformation</documentation>
+    </operation>
+    <operation name="GetDomainInformation">
+      <input message="s0:GetDomainInformationHttpGetIn"/>
+      <output message="s0:GetDomainInformationHttpGetOut"/>
+      <documentation>GetDomainInformation</documentation>
+    </operation>
+    <operation name="GetDomains">
+      <input message="s0:GetDomainsHttpGetIn"/>
+      <output message="s0:GetDomainsHttpGetOut"/>
+      <documentation>Get a list of local domains</documentation>
+    </operation>
+    <operation name="LoginToRemoteDomain">
+      <input message="s0:LoginToRemoteDomainHttpGetIn"/>
+      <output message="s0:LoginToRemoteDomainHttpGetOut"/>
+      <documentation>Login or authenticate to a remote domain</documentation>
+    </operation>
+    <operation name="LogoutFromRemoteDomain">
+      <input message="s0:LogoutFromRemoteDomainHttpGetIn"/>
+      <output message="s0:LogoutFromRemoteDomainHttpGetOut"/>
+      <documentation>Logout from a remote domain</documentation>
+    </operation>
+    <operation name="IsDomainActive">
+      <input message="s0:IsDomainActiveHttpGetIn"/>
+      <output message="s0:IsDomainActiveHttpGetOut"/>
+      <documentation>WebMethod to check if a domain is active</documentation>
+    </operation>
+    <operation name="SetDomainActive">
+      <input message="s0:SetDomainActiveHttpGetIn"/>
+      <output message="s0:SetDomainActiveHttpGetOut"/>
+      <documentation>SetDomainActive - enables synchronization to the remote
+            server</documentation>
+    </operation>
+    <operation name="SetDomainInactive">
+      <input message="s0:SetDomainInactiveHttpGetIn"/>
+      <output message="s0:SetDomainInactiveHttpGetOut"/>
+      <documentation>SetDomainInactive - disables remote synchronization</documentation>
+    </operation>
+    <operation name="ValidCredentials">
+      <input message="s0:ValidCredentialsHttpGetIn"/>
+      <output message="s0:ValidCredentialsHttpGetOut"/>
+      <documentation>ValidCredentials</documentation>
+    </operation>
+    <operation name="ConnectToDomain">
+      <input message="s0:ConnectToDomainHttpGetIn"/>
+      <output message="s0:ConnectToDomainHttpGetOut"/>
+      <documentation>Connects to a Domain</documentation>
+    </operation>
+    <operation name="LeaveDomain">
+      <input message="s0:LeaveDomainHttpGetIn"/>
+      <output message="s0:LeaveDomainHttpGetOut"/>
+      <documentation>Removes a domain account from the workstation</documentation>
+    </operation>
+    <operation name="SetDefaultDomain">
+      <input message="s0:SetDefaultDomainHttpGetIn"/>
+      <output message="s0:SetDefaultDomainHttpGetOut"/>
+      <documentation>Change the default domain to the specified domain ID</documentation>
+    </operation>
+    <operation name="GetDefaultDomainID">
+      <input message="s0:GetDefaultDomainIDHttpGetIn"/>
+      <output message="s0:GetDefaultDomainIDHttpGetOut"/>
+      <documentation>Get the ID of the default domain</documentation>
+    </operation>
+  </portType>
+  <portType name="Simias Web ServiceHttpPost">
+    <operation name="GetSimiasInformation">
+      <input message="s0:GetSimiasInformationHttpPostIn"/>
+      <output message="s0:GetSimiasInformationHttpPostOut"/>
+      <documentation>GetSimiasInformation</documentation>
+    </operation>
+    <operation name="GetDomainInformation">
+      <input message="s0:GetDomainInformationHttpPostIn"/>
+      <output message="s0:GetDomainInformationHttpPostOut"/>
+      <documentation>GetDomainInformation</documentation>
+    </operation>
+    <operation name="GetDomains">
+      <input message="s0:GetDomainsHttpPostIn"/>
+      <output message="s0:GetDomainsHttpPostOut"/>
+      <documentation>Get a list of local domains</documentation>
+    </operation>
+    <operation name="LoginToRemoteDomain">
+      <input message="s0:LoginToRemoteDomainHttpPostIn"/>
+      <output message="s0:LoginToRemoteDomainHttpPostOut"/>
+      <documentation>Login or authenticate to a remote domain</documentation>
+    </operation>
+    <operation name="LogoutFromRemoteDomain">
+      <input message="s0:LogoutFromRemoteDomainHttpPostIn"/>
+      <output message="s0:LogoutFromRemoteDomainHttpPostOut"/>
+      <documentation>Logout from a remote domain</documentation>
+    </operation>
+    <operation name="IsDomainActive">
+      <input message="s0:IsDomainActiveHttpPostIn"/>
+      <output message="s0:IsDomainActiveHttpPostOut"/>
+      <documentation>WebMethod to check if a domain is active</documentation>
+    </operation>
+    <operation name="SetDomainActive">
+      <input message="s0:SetDomainActiveHttpPostIn"/>
+      <output message="s0:SetDomainActiveHttpPostOut"/>
+      <documentation>SetDomainActive - enables synchronization to the remote
+            server</documentation>
+    </operation>
+    <operation name="SetDomainInactive">
+      <input message="s0:SetDomainInactiveHttpPostIn"/>
+      <output message="s0:SetDomainInactiveHttpPostOut"/>
+      <documentation>SetDomainInactive - disables remote synchronization</documentation>
+    </operation>
+    <operation name="ValidCredentials">
+      <input message="s0:ValidCredentialsHttpPostIn"/>
+      <output message="s0:ValidCredentialsHttpPostOut"/>
+      <documentation>ValidCredentials</documentation>
+    </operation>
+    <operation name="ConnectToDomain">
+      <input message="s0:ConnectToDomainHttpPostIn"/>
+      <output message="s0:ConnectToDomainHttpPostOut"/>
+      <documentation>Connects to a Domain</documentation>
+    </operation>
+    <operation name="LeaveDomain">
+      <input message="s0:LeaveDomainHttpPostIn"/>
+      <output message="s0:LeaveDomainHttpPostOut"/>
+      <documentation>Removes a domain account from the workstation</documentation>
+    </operation>
+    <operation name="SetDefaultDomain">
+      <input message="s0:SetDefaultDomainHttpPostIn"/>
+      <output message="s0:SetDefaultDomainHttpPostOut"/>
+      <documentation>Change the default domain to the specified domain ID</documentation>
+    </operation>
+    <operation name="GetDefaultDomainID">
+      <input message="s0:GetDefaultDomainIDHttpPostIn"/>
+      <output message="s0:GetDefaultDomainIDHttpPostOut"/>
+      <documentation>Get the ID of the default domain</documentation>
+    </operation>
+  </portType>
+  <binding name="Simias Web ServiceSoap" type="s0:Simias Web ServiceSoap">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="GetSimiasInformation">
+      <soap:operation soapAction="http://novell.com/simias/web/GetSimiasInformation"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetDomainInformation">
+      <soap:operation soapAction="http://novell.com/simias/web/GetDomainInformation"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetDomains">
+      <soap:operation soapAction="http://novell.com/simias/web/GetDomains" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="LoginToRemoteDomain">
+      <soap:operation soapAction="http://novell.com/simias/web/LoginToRemoteDomain"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="LogoutFromRemoteDomain">
+      <soap:operation soapAction="http://novell.com/simias/web/LogoutFromRemoteDomain"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="IsDomainActive">
+      <soap:operation soapAction="http://novell.com/simias/web/IsDomainActive"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="SetDomainActive">
+      <soap:operation soapAction="http://novell.com/simias/web/SetDomainActive"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="SetDomainInactive">
+      <soap:operation soapAction="http://novell.com/simias/web/SetDomainInactive"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="ValidCredentials">
+      <soap:operation soapAction="http://novell.com/simias/web/ValidCredentials"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="SetDomainCredentials">
+      <soap:operation soapAction="http://novell.com/simias/web/SetDomainCredentials"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetDomainCredentials">
+      <soap:operation soapAction="http://novell.com/simias/web/GetDomainCredentials"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="ConnectToDomain">
+      <soap:operation soapAction="http://novell.com/simias/web/ConnectToDomain"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="LeaveDomain">
+      <soap:operation soapAction="http://novell.com/simias/web/LeaveDomain" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="SetDefaultDomain">
+      <soap:operation soapAction="http://novell.com/simias/web/SetDefaultDomain"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetDefaultDomainID">
+      <soap:operation soapAction="http://novell.com/simias/web/GetDefaultDomainID"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <binding name="Simias Web ServiceHttpGet" type="s0:Simias Web ServiceHttpGet">
+    <http:binding verb="GET"/>
+    <operation name="GetSimiasInformation">
+      <http:operation location="/GetSimiasInformation"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="GetDomainInformation">
+      <http:operation location="/GetDomainInformation"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="GetDomains">
+      <http:operation location="/GetDomains"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="LoginToRemoteDomain">
+      <http:operation location="/LoginToRemoteDomain"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="LogoutFromRemoteDomain">
+      <http:operation location="/LogoutFromRemoteDomain"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="IsDomainActive">
+      <http:operation location="/IsDomainActive"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="SetDomainActive">
+      <http:operation location="/SetDomainActive"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="SetDomainInactive">
+      <http:operation location="/SetDomainInactive"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="ValidCredentials">
+      <http:operation location="/ValidCredentials"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="ConnectToDomain">
+      <http:operation location="/ConnectToDomain"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="LeaveDomain">
+      <http:operation location="/LeaveDomain"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="SetDefaultDomain">
+      <http:operation location="/SetDefaultDomain"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="GetDefaultDomainID">
+      <http:operation location="/GetDefaultDomainID"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+  </binding>
+  <binding name="Simias Web ServiceHttpPost" type="s0:Simias Web ServiceHttpPost">
+    <http:binding verb="POST"/>
+    <operation name="GetSimiasInformation">
+      <http:operation location="/GetSimiasInformation"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="GetDomainInformation">
+      <http:operation location="/GetDomainInformation"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="GetDomains">
+      <http:operation location="/GetDomains"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="LoginToRemoteDomain">
+      <http:operation location="/LoginToRemoteDomain"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="LogoutFromRemoteDomain">
+      <http:operation location="/LogoutFromRemoteDomain"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="IsDomainActive">
+      <http:operation location="/IsDomainActive"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="SetDomainActive">
+      <http:operation location="/SetDomainActive"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="SetDomainInactive">
+      <http:operation location="/SetDomainInactive"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="ValidCredentials">
+      <http:operation location="/ValidCredentials"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="ConnectToDomain">
+      <http:operation location="/ConnectToDomain"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="LeaveDomain">
+      <http:operation location="/LeaveDomain"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="SetDefaultDomain">
+      <http:operation location="/SetDefaultDomain"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="GetDefaultDomainID">
+      <http:operation location="/GetDefaultDomainID"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="Simias Web Service">
+    <port name="Simias Web ServiceSoap" binding="s0:Simias Web ServiceSoap">
+      <soap:address location="http://127.0.0.1:8086/simias10/Simias.asmx"/>
+    </port>
+    <port name="Simias Web ServiceHttpGet" binding="s0:Simias Web ServiceHttpGet">
+      <http:address location="http://127.0.0.1:8086/simias10/Simias.asmx"/>
+    </port>
+    <port name="Simias Web ServiceHttpPost" binding="s0:Simias Web ServiceHttpPost">
+      <http:address location="http://127.0.0.1:8086/simias10/Simias.asmx"/>
+    </port>
+    <documentation>Web Service providing access to Simias</documentation>
+  </service>
+</definitions>
