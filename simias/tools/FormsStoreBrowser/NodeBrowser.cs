@@ -76,9 +76,9 @@ namespace StoreBrowser
 	public class DisplayProperty
 	{
 		#region Class Members
-		private static string NameTag = "n";
-		private static string TypeTag = "t";
-		private static string FlagTag = "f";
+		private static string NameTag = "name";
+		private static string TypeTag = "type";
+		private static string FlagTag = "flag";
 
 		private XmlElement element;
 		#endregion
