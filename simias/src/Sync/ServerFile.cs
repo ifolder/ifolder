@@ -92,6 +92,7 @@ namespace Simias.Sync
 				status.status = SyncStatus.Success;
 				try
 				{
+					//CreateHashMapFile();
 					collection.Commit(node);
 				}
 				catch (CollisionException)
@@ -116,7 +117,13 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public HashData[] GetHashMap()
 		{
-			return HashMap.GetHashMap(ReadStream);
+			string mapFile = GetHashMapFile();
+			if (mapFile != null)
+			{
+				return HashMap.DeSerializeHashMap(mapFile);
+			}
+			else
+				return HashMap.GetHashMap(ReadStream);
 		}
 
 		/// <summary>
@@ -131,7 +138,7 @@ namespace Simias.Sync
 			FileInfo fi = new FileInfo(file);
 			if (mapFi.Exists)
 			{
-				if (mapFi.LastWriteTime == fi.LastWriteTime)
+				if (mapFi.CreationTime == fi.CreationTime)
 					return mapFile;
 			}
 			else
@@ -140,6 +147,42 @@ namespace Simias.Sync
 				catch {}
 			}
 			return null;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		private void CreateHashMapFile()
+		{
+			string mapFile = GetMapFileName();
+			string tmpMapFile = mapFile + ".tmp";
+			// Copy the current file to a tmp name.
+			if (File.Exists(mapFile))
+				File.Move(mapFile, tmpMapFile);
+
+			BinaryWriter writer = new BinaryWriter( File.OpenWrite(mapFile));
+			try
+			{
+				inStream.Position = 0;
+				HashMap.SerializeHashMap(inStream, writer);
+				writer.Close();
+				File.SetCreationTime(mapFile, node.CreationTime);
+				File.SetLastWriteTime(mapFile, node.LastWriteTime);
+			}
+			catch (Exception ex)
+			{
+				writer.Close();
+				writer = null;
+				File.Delete(mapFile);
+				if (File.Exists(tmpMapFile))
+					File.Move(tmpMapFile, mapFile);
+				throw ex;
+			}
+			finally
+			{
+				if (File.Exists(tmpMapFile))
+					File.Delete(tmpMapFile);
+			}
 		}
 	}
 
@@ -192,7 +235,13 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public HashData[] GetHashMap()
 		{
-			return HashMap.GetHashMap(this.outStream);
+			string mapFile = GetHashMapFile();
+			if (mapFile != null)
+			{
+				return HashMap.DeSerializeHashMap(mapFile);
+			}
+			else
+				return HashMap.GetHashMap(this.outStream);
 		}
 
 
@@ -207,7 +256,7 @@ namespace Simias.Sync
 			FileInfo fi = new FileInfo(file);
 			if (mapFi.Exists)
 			{
-				if (mapFi.LastWriteTime == fi.LastWriteTime)
+				if (mapFi.CreationTime == fi.CreationTime)
 					return mapFile;
 			}
 			else

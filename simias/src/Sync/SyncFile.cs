@@ -201,8 +201,7 @@ namespace Simias.Sync
 		string			partialFile;
 		/// <summary>The Old Node if it exists.</summary>
 		protected BaseFileNode	oldNode;
-		Exception				exception;
-		ManualResetEvent		asyncEvent = new ManualResetEvent(true);
+		//ManualResetEvent		asyncEvent = new ManualResetEvent(true);
 				
 		#endregion
 		
@@ -249,17 +248,8 @@ namespace Simias.Sync
 		/// <param name="count">The number of bytes to write.</param>
 		public void Write(Stream stream, int count)
 		{
-			asyncEvent.WaitOne();
-			if (exception == null)
-			{
-				//Log.log.Debug("Writing File {0} : offset = {1}", file, WritePosition);
-				workStream.Write(stream, count);
-			}
-			else
-			{
-				Log.log.Debug(exception, "Failed writing {0}", file);
-				throw(exception);
-			}
+			//Log.log.Debug("Writing File {0} : offset = {1}", file, WritePosition);
+			workStream.Write(stream, count);
 		}
 
 		/// <summary>
@@ -349,7 +339,7 @@ namespace Simias.Sync
 					stream = File.Open(partialFile, FileMode.Open, FileAccess.Read, FileShare.None);
 				}
 			}
-			workStream = new StreamStream(File.Open(workFile, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None));
+			workStream = new StreamStream(File.Open(workFile, FileMode.Create, FileAccess.ReadWrite, FileShare.None));
 		}
 
 		/// <summary>
@@ -375,7 +365,6 @@ namespace Simias.Sync
 			if (!InFinalizer)
 			{
 				GC.SuppressFinalize(this);
-				asyncEvent.WaitOne();
 			}
 			if (stream != null)
 			{
@@ -387,7 +376,7 @@ namespace Simias.Sync
 				workStream.Close();
 				workStream = null;
 			}
-			if (exception == null && commit)
+			if (commit)
 			{
 				if (File.Exists(file))
 				{
@@ -432,12 +421,6 @@ namespace Simias.Sync
 
 			if (partialFile != null)
 				File.Delete(partialFile);
-
-			if (exception != null)
-			{
-				Log.log.Debug(exception, "Failed reading file");
-				throw (exception);
-			}
 		}
 
 		#endregion

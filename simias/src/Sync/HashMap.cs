@@ -105,8 +105,15 @@ namespace Simias.Sync.Delta
 		public static HashData[] DeSerializeHashMap(string file)
 		{
 			Stream stream = File.OpenRead(file);
-			BinaryReader reader = new BinaryReader(stream);
-			return DeSerializeHashMap(reader, GetBlockCount(stream.Length));
+			try
+			{
+				BinaryReader reader = new BinaryReader(stream);
+				return DeSerializeHashMap(reader, (int)(stream.Length / HashData.InstanceSize));
+			}
+			finally
+			{
+				stream.Close();
+			}
 		}
 
 		/// <summary>
