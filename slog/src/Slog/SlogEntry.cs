@@ -78,6 +78,7 @@ namespace Novell.Collaboration
 			}
 		}
 
+		/*
 		/// <summary>
 		/// Date
 		/// !NOTE! Doc incomplete
@@ -110,6 +111,7 @@ namespace Novell.Collaboration
 				catch{}
 			}
 		}
+		*/
 
 		/// <summary>
 		/// PublishDate
@@ -159,7 +161,8 @@ namespace Novell.Collaboration
 			{
 				try
 				{
-					return(this.Properties.GetSingleProperty(titleProperty).ToString());
+//					return(this.Properties.GetSingleProperty(titleProperty).ToString());
+					return(this.Name);
 				}
 				catch{}
 				return("");
@@ -171,11 +174,8 @@ namespace Novell.Collaboration
 				{
 					if (value != null)
 					{
-						this.Properties.ModifyProperty(titleProperty, (string) value);
-					}
-					else
-					{
-						this.Properties.DeleteProperties(titleProperty);
+						this.Name = value;
+						//this.Properties.ModifyProperty(titleProperty, (string) value);
 					}
 				}
 				catch{}
@@ -321,6 +321,13 @@ namespace Novell.Collaboration
 		/// Simple SlogEntry constructor
 		/// </summary>
 		public SlogEntry(Slog slog, ShallowNode sNode) : base(slog, sNode)
+		{
+		}
+
+		/// <summary>
+		/// Simple SlogEntry constructor
+		/// </summary>
+		public SlogEntry(Slog slog, Node cNode) : base(cNode)
 		{
 		}
 
