@@ -14,7 +14,7 @@ LINUX_SUBDIRS="CommonGtkWindows"
 WINDOWS_SUBDIRS="CommonFormWindows"
 
 case $host_os in
-    linux)
+    linux*)
         AC_CHECK_PROG(CSC, mcs, mcs)
         test -z "$CSC" && AC_MSG_ERROR([no acceptable C Sharp compiler found in \$PATH])
         AC_CHECK_PROG(CC, cc, cc)
@@ -68,7 +68,7 @@ case $host_os in
         ICON_FLAG='/resource:'
         ICON_EXT='.ico'
     ;;
-    cygwin)
+    cygwin*)
         AC_CHECK_PROG(CSC, csc, csc)
         test -z "$CSC" && AC_MSG_ERROR([no acceptable C Sharp compiler found in \$PATH])
         AC_CHECK_PROG(CC, cl, cl)
