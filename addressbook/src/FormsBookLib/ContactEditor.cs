@@ -877,7 +877,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.helpProvider1.SetShowHelp(this.fullNameButton, true);
 			this.fullNameButton.Size = new System.Drawing.Size(80, 23);
 			this.fullNameButton.TabIndex = 0;
-			this.fullNameButton.Text = "Full Name...";
+			this.fullNameButton.Text = "Full name...";
 			this.fullNameButton.Click += new System.EventHandler(this.fullNameButton_Click);
 			// 
 			// tabPage2
@@ -1281,7 +1281,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.label38.Name = "label38";
 			this.label38.Size = new System.Drawing.Size(88, 16);
 			this.label38.TabIndex = 35;
-			this.label38.Text = "Zip/Postal Code:";
+			this.label38.Text = "Zip/Postal code:";
 			// 
 			// otherCity
 			// 
@@ -1388,7 +1388,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.label32.Name = "label32";
 			this.label32.Size = new System.Drawing.Size(88, 16);
 			this.label32.TabIndex = 22;
-			this.label32.Text = "Zip/Postal Code:";
+			this.label32.Text = "Zip/Postal code:";
 			// 
 			// homeCity
 			// 
@@ -1504,7 +1504,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.label29.Name = "label29";
 			this.label29.Size = new System.Drawing.Size(88, 16);
 			this.label29.TabIndex = 9;
-			this.label29.Text = "Zip/Postal Code:";
+			this.label29.Text = "Zip/Postal code:";
 			// 
 			// workCity
 			// 
