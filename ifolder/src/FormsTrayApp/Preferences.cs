@@ -1882,7 +1882,7 @@ namespace Novell.FormsTrayApp
 		{
 			if (password.Focused)
 			{
-				apply.Enabled = rememberPassword.Checked;
+				apply.Enabled = apply.Enabled ? true : rememberPassword.Checked;
 				updatePassword = rememberPassword.Checked;
 			}
 		}
