@@ -190,6 +190,8 @@ fi
 %{prefix}/bin/iFolderCmd
 %dir %{prefix}/lib/pkgconfig
 %{prefix}/lib/pkgconfig/ifolder3.pc
+%{prefix}/bin/bin/Novell.iFolder.Web.dll
+%{prefix}/bin/iFolder.asmx
 
 #=============================================================================
 %Files ui
