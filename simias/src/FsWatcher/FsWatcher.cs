@@ -36,21 +36,25 @@ namespace Simias.Event
 		bool						disposed;
 		string						collectionId;
 		internal FileSystemWatcher	watcher;
-		static EventPublisher		publish;
+		EventPublisher				publish;
 		
 
 		internal CollectionFilesWatcher(Collection col)
 		{
             this.collectionId = col.ID;
 			publish = new EventPublisher(col.StoreReference.Config);
-			string rootPath = col.GetRootDirectory().GetFullPath(col);
-			watcher = new FileSystemWatcher(rootPath);
-			watcher.Changed += new FileSystemEventHandler(OnChanged);
-			watcher.Created += new FileSystemEventHandler(OnCreated);
-			watcher.Deleted += new FileSystemEventHandler(OnDeleted);
-			watcher.Renamed += new RenamedEventHandler(OnRenamed);
-			watcher.IncludeSubdirectories = true;
-			watcher.EnableRaisingEvents = true;
+			DirNode rootDir = col.GetRootDirectory();
+			if (rootDir != null)
+			{
+				string rootPath = col.GetRootDirectory().GetFullPath(col);
+				watcher = new FileSystemWatcher(rootPath);
+				watcher.Changed += new FileSystemEventHandler(OnChanged);
+				watcher.Created += new FileSystemEventHandler(OnCreated);
+				watcher.Deleted += new FileSystemEventHandler(OnDeleted);
+				watcher.Renamed += new RenamedEventHandler(OnRenamed);
+				watcher.IncludeSubdirectories = true;
+				watcher.EnableRaisingEvents = true;
+			}
 			disposed = false;
 		}
 
@@ -167,8 +171,9 @@ namespace Simias.Event
 				collectionWatcher = new EventSubscriber(conf);
 				collectionWatcher.NodeCreated += new NodeEventHandler(OnNewCollection);
 				collectionWatcher.NodeDeleted += new NodeEventHandler(OnDeleteNode);
-				foreach (Collection col in store)
+				foreach (ShallowNode sn in store)
 				{
+					Collection col = new Collection(store, sn);
 					WatchCollection(col);
 				}
 			}

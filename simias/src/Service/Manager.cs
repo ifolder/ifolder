@@ -39,6 +39,8 @@ namespace Simias.Service
 	{
 		#region fields
 
+		static private ISimiasLog logger = Simias.SimiasLogManager.GetLogger(typeof(Manager));
+
 		private Configuration conf;
 		XmlElement servicesElement;
 		ArrayList serviceList = new ArrayList();
@@ -152,6 +154,11 @@ namespace Simias.Service
 						servicesElement.AppendChild(el);
 					}
 					conf.SetElement(servicesElement);
+					logger.Info("{0} service installed", svc.Name);
+				}
+				else
+				{
+					logger.Warn("{0} service already installed", svc.Name);
 				}
 			}
 		}
@@ -179,6 +186,11 @@ namespace Simias.Service
 				{
 					servicesElement.RemoveChild(el);
 					conf.SetElement(servicesElement);
+					logger.Info("{0} service uninstalled", svcName);
+				}
+				else
+				{
+					logger.Warn("{0} service not installed", svcName);
 				}
 			}
 		}
@@ -199,10 +211,14 @@ namespace Simias.Service
 					try
 					{
 						if (svc.State == State.Stopped)
+						{
 							svc.Start();
+							logger.Info("{0} service started", svc.Name);
+						}
 					}
 					catch 
 					{
+						logger.Error("{0} service failed to start", svc.Name);
 						//log4net.LogManager.
 					}
 				}
@@ -218,7 +234,15 @@ namespace Simias.Service
 			{
 				foreach (ServiceCtl svc in this)
 				{
-					svc.Stop();
+					try
+					{
+						svc.Stop();
+						logger.Info("{0} service stopped", svc.Name);
+					}
+					catch
+					{
+						logger.Error("{0} service failed to stop", svc.Name);
+					}
 				}
 			}
 		}

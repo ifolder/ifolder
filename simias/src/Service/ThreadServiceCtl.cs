@@ -42,6 +42,7 @@ namespace Simias.Service
 		static AutoResetEvent	queueEvent = new AutoResetEvent(false);
 		static AutoResetEvent	messageProcessed = new AutoResetEvent(false);
 		static Thread			messageThread = null;
+		static ISimiasLog		logger = SimiasLogManager.GetLogger(typeof(ThreadServiceCtl));
 
 		class SvcMessage : Message
 		{
@@ -152,7 +153,10 @@ namespace Simias.Service
 							break;
 					}
 				}
-				catch {}
+				catch (Exception ex)
+				{
+					logger.Error(ex, ex.Message);
+				}
 				messageProcessed.Set();
 			}
 		}

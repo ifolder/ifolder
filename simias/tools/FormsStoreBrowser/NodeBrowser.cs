@@ -176,11 +176,9 @@ namespace StoreBrowser
 								tNode.Nodes.Add(nNode);
 								nNode.Nodes.Add("temp");
 							}
-							//AddChildren(nNode);
 						}
 						break;
 					default:
-						//AddProperties(tNode, node);
 						break;
 				}
 			}
