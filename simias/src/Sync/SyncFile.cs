@@ -323,9 +323,17 @@ namespace Simias.Sync
 			if (commit)
 			{
 				string tmpFile = file + ".~stmp";
-				File.Move(file, tmpFile);
-				File.Move(workFile, file);
-                //File.Copy(workFile, file, true);
+				if (File.Exists(file))
+				{
+					File.Move(file, tmpFile);
+					File.Move(workFile, file);
+					workFile = tmpFile;
+				}
+				else
+				{
+					File.Move(workFile, file);
+					workFile = null;
+				}
 				workFile = tmpFile;
 				FileInfo fi = new FileInfo(file);
 				fi.Attributes = fi.Attributes & ~FileAttributes.Hidden;
