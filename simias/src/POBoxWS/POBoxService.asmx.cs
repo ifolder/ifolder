@@ -609,6 +609,7 @@ namespace Simias.POBoxService.Web
 		public string	FromName;
 		public string	ToID;
 		public string	ToName;
+		public int		AccessRights;
 
 		public string	CollectionID;
 		public string	CollectionName;
@@ -642,6 +643,7 @@ namespace Simias.POBoxService.Web
 			this.FromName = cSub.FromName;
 			this.ToID = cSub.ToIdentity;
 			this.ToName = cSub.ToName;
+			this.AccessRights = (int) cSub.SubscriptionRights;
 
 			this.CollectionID = cSub.SubscriptionCollectionID;
 			this.CollectionName = cSub.SubscriptionCollectionName;

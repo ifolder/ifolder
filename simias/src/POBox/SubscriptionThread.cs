@@ -398,6 +398,9 @@ namespace Simias.POBox
 
 							log.Debug("Collection URL: " + subInfo.CollectionUrl);
 
+							subscription.SubscriptionRights = 
+								(Simias.Storage.Access.Rights) subInfo.AccessRights;
+
 							// save details
 							subscription.AddDetails(details);
 							poBox.Commit(subscription);
