@@ -192,11 +192,11 @@ public class Dredger
 		}
 		catch
 		{
-			dnode.LastAccessTime = tmpDi.LastAccessTime;
-			dnode.LastWriteTime = tmpDi.LastWriteTime;
-			collection.Commit(dnode);
+			//dnode.LastAccessTime = tmpDi.LastAccessTime;
+			//dnode.LastWriteTime = tmpDi.LastWriteTime;
+			//collection.Commit(dnode);
 		}
-		if (!timesMatch)
+		//if (!timesMatch)
 		{
 			// remove all nodes from store that no longer exist in the file system
 			foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
@@ -212,8 +212,8 @@ public class Dredger
 			foreach (string file in Directory.GetFiles(path))
 				DoNode(dnode, file, typeof(FileNode).Name);
 
-			dnode.LastWriteTime = tmpDi.LastWriteTime;
-            collection.Commit(dnode);
+			//dnode.LastWriteTime = tmpDi.LastWriteTime;
+            //collection.Commit(dnode);
 		}
 
 		// merge subdirs and recurse.
@@ -290,10 +290,10 @@ public class Dredger
 			paused = shuttingDown = false;
 			// Start listening to file change events.
 			EventSubscriber es = new EventSubscriber(conf);
-			es.FileChanged += new FileEventHandler(es_FileChanged);
-			es.FileCreated += new FileEventHandler(es_FileCreated);
-			es.FileDeleted += new FileEventHandler(es_FileDeleted);
-			es.FileRenamed += new FileRenameEventHandler(es_FileRenamed);
+			//es.FileChanged += new FileEventHandler(es_FileChanged);
+			//es.FileCreated += new FileEventHandler(es_FileCreated);
+			//es.FileDeleted += new FileEventHandler(es_FileDeleted);
+			//es.FileRenamed += new FileRenameEventHandler(es_FileRenamed);
 			thread = new Thread(new ThreadStart(DoDredge));
 			thread.IsBackground = true;
 			thread.Priority = ThreadPriority.BelowNormal;
@@ -323,6 +323,11 @@ public class Dredger
 
 		#endregion
 
+		private bool isSyncFile(string name)
+		{
+			return name.StartsWith(".simias.");
+		}
+
 		/// <summary>
 		/// Gets the node represented by the file.
 		/// </summary>
@@ -333,132 +338,139 @@ public class Dredger
 			isFile = false;
 			string name = Path.GetFileName(fullPath);
 			Node node = null;
-			// don't let temp files from sync into the collection as regular nodes
-			if (!name.StartsWith(".simias."))
-			{
 				// find if node for this file or dir already exists
 				// delete nodes that are wrong type
-				foreach (ShallowNode sn in collection.GetNodesByName(name))
+			foreach (ShallowNode sn in collection.GetNodesByName(name))
+			{
+				Node n = new Node(collection, sn);
+				string npath = null;
+				DirNode dn;
+				BaseFileNode fn;
+
+				if (collection.IsType(n, typeof(DirNode).Name))
 				{
-					Node n = new Node(collection, sn);
-					string npath = null;
-					DirNode dn;
-					BaseFileNode fn;
+					dn = new DirNode(n);
+					npath = dn.GetFullPath(collection);
+					n = dn;
+				}
+				else if (collection.IsType(n, typeof(FileNode).Name))
+				{
+					isFile = true;
+					fn = new FileNode(n);
+					npath = fn.GetFullPath(collection);
+					n = fn;
+				}
+				else if (collection.IsType(n, typeof(StoreFileNode).Name))
+				{
+					isFile = true;
+					fn = new StoreFileNode(n);
+					npath = fn.GetFullPath(collection);
+					n = fn;
+				}
 
-					if (collection.IsType(n, typeof(DirNode).Name))
-					{
-						dn = new DirNode(n);
-						npath = dn.GetFullPath(collection);
-						n = dn;
-					}
-					else if (collection.IsType(n, typeof(FileNode).Name))
-					{
-						isFile = true;
-						fn = new FileNode(n);
-						npath = fn.GetFullPath(collection);
-						n = fn;
-					}
-					else if (collection.IsType(n, typeof(StoreFileNode).Name))
-					{
-						isFile = true;
-						fn = new StoreFileNode(n);
-						npath = fn.GetFullPath(collection);
-						n = fn;
-					}
-
-					if (npath != null && npath == fullPath)
-					{
-						node = n;
-						break;
-					}
+				if (npath != null && npath == fullPath)
+				{
+					node = n;
+					break;
 				}
 			}
-
 			return node;
 		}
 
 		private void es_FileChanged(FileEventArgs args)
 		{
-			string path = args.FullPath;
-			bool isFile;
-			Collection collection = store.GetCollectionByID(args.Collection);
-			Node n = GetNodeFromFileName(collection, path, out isFile);
-			if (n != null)
+			if (!isSyncFile(args.Name))
 			{
-				if (isFile)
+				string path = args.FullPath;
+				bool isFile;
+				Collection collection = store.GetCollectionByID(args.Collection);
+				Node n = GetNodeFromFileName(collection, path, out isFile);
+				if (n != null)
 				{
-					ModifyFileNode(collection, (BaseFileNode)n, args);
+					if (isFile)
+					{
+						ModifyFileNode(collection, (BaseFileNode)n, args);
+					}
+					else
+					{
+						ModifyDirNode(collection, (DirNode)n, args);
+					}
 				}
 				else
 				{
-					ModifyDirNode(collection, (DirNode)n, args);
+					needToDredge = true;
 				}
-			}
-			else
-			{
-				needToDredge = true;
 			}
 		}
 
 		private void es_FileCreated(FileEventArgs args)
 		{
-			bool isFile;
-			Collection collection = store.GetCollectionByID(args.Collection);
-			Node n = GetNodeFromFileName(collection, args.FullPath, out isFile);
+			if (!isSyncFile(args.Name))
+			{
+				bool isFile;
+				Collection collection = store.GetCollectionByID(args.Collection);
+				Node n = GetNodeFromFileName(collection, args.FullPath, out isFile);
 
-			if (n != null)
-			{
-				// Delete the old node.
-				DeleteNode(collection, n);
-			}
-			FileInfo tmpFi = new FileInfo(args.FullPath);
-            if ((tmpFi.Attributes & FileAttributes.Directory) == 0)
-			{
-				AddFileNode(collection, args);
-			}
-			else
-			{
-				AddDirNode(collection, args);
+				if (n != null)
+				{
+					// Delete the old node.
+					DeleteNode(collection, n);
+				}
+				FileInfo tmpFi = new FileInfo(args.FullPath);
+				if ((tmpFi.Attributes & FileAttributes.Directory) == 0)
+				{
+					AddFileNode(collection, args);
+				}
+				else
+				{
+					AddDirNode(collection, args);
+				}
 			}
 		}
 
 		private void es_FileDeleted(FileEventArgs args)
 		{
-			bool isFile;
-			Collection collection = store.GetCollectionByID(args.Collection);
-			Node n = GetNodeFromFileName(collection, args.FullPath, out isFile);
+			if (!isSyncFile(args.Name))
+			{
+				bool isFile;
+				Collection collection = store.GetCollectionByID(args.Collection);
+				Node n = GetNodeFromFileName(collection, args.FullPath, out isFile);
 
-			if (n != null)
-			{
-				// Delete the old node.
-				DeleteNode(collection, n);
-			}
-			else
-			{
-				needToDredge = true;
+				if (n != null)
+				{
+					// Delete the old node.
+					DeleteNode(collection, n);
+				}
+				else
+				{
+					needToDredge = true;
+				}
 			}
 		}
 
 		private void es_FileRenamed(FileRenameEventArgs args)
 		{
-			bool isFile;
-			Collection collection = store.GetCollectionByID(args.Collection);
-			Node n = GetNodeFromFileName(collection, args.OldPath, out isFile);
-
-			if (n != null)
+			if (!isSyncFile(args.Name) && !isSyncFile(args.OldName))
 			{
-				if (isFile)
+				bool isFile;
+				Collection collection = store.GetCollectionByID(args.Collection);
+				Node n = GetNodeFromFileName(collection, args.OldPath, out isFile);
+
+				if (n != null)
 				{
-					RenameFileNode(collection, (FileNode)n, args);
+					if (isFile)
+					{
+						RenameFileNode(collection, (FileNode)n, args);
+					}
+					else
+					{
+						RenameDirNode(collection, (DirNode)n, args);
+					}
 				}
 				else
 				{
-					RenameDirNode(collection, (DirNode)n, args);
+					needToDredge = true;
 				}
-			}
-			else
-			{
-				needToDredge = true;
 			}
 		}
 

@@ -265,7 +265,7 @@ internal class IncomingNode
 			{
 				fileStream.Close();
 				// Delete the file if not a collision.
-				if (!fileNameConflict)
+				if (!fileNameConflict && !(status == NodeStatus.UpdateConflict))
 					oldFi.Delete();
 				fileStream = null;
 			}
