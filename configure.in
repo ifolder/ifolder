@@ -339,4 +339,5 @@ package/Makefile
 package/windows/Makefile
 package/linux/Makefile
 package/linux/ifolder.spec
+tools/ifolder
 ])

@@ -22,6 +22,6 @@
 # 
 #========================================================================
 # Startup iFolder
-cd /opt/novell/ifolder3/bin
+cd @prefix@/bin
 mono iFolderApp.exe
 
