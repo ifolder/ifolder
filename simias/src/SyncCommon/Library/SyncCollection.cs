@@ -259,7 +259,7 @@ namespace Simias.Sync
 		/// </summary>
 		public int Interval
 		{
-			get { return (int)GetProperty(IntervalPropertyName, -1); }
+			get { return (int)GetProperty(IntervalPropertyName, 5); }
 			set { SetProperty(IntervalPropertyName, value, true); }
 		}
 
