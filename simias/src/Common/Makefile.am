@@ -41,11 +41,11 @@ endif
 install-exec-local: Common.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) Common.dll $(DEBUG_FILES) $(LOG4NET_DIR)/log4net.dll $(DESTDIR)$(bindir)
-	cp $(LOG4NET_DIR)/../../../../LICENSE.TXT $(DESTDIR)$(prefix)/log4net.LICENSE.TXT
+	cp $(LOG4NET_DIR)/../../../../LICENSE.txt $(DESTDIR)$(prefix)/log4net.LICENSE.txt
         
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f Common.dll CommonTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) log4net.dll $(DEBUG_CHECK_FILES)
-	cd $(DESTDIR)$(prefix); rm -f log4net.LICENSE.TXT
+	cd $(DESTDIR)$(prefix); rm -f log4net.LICENSE.txt
 	
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
