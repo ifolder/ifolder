@@ -251,20 +251,20 @@ namespace Simias.Sync
 						// connect
 						IDomainService dService = dAgent.Connect();
 
-						string nodeID = null;
-						string nodeName = null;
+						string rootID = null;
+						string rootName = null;
 
-						DirNode dirNode = collection.GetRootDirectory();
+						DirNode rootNode = collection.GetRootDirectory();
 
-						if (dirNode != null)
+						if (rootNode != null)
 						{
-							nodeID = dirNode.ID;
-							nodeName = dirNode.Name;
+							rootID = rootNode.ID;
+							rootName = rootNode.Name;
 						}
 
 						// TODO: fix
-						string uriString = dService.CreateMaster(collection.ID, collection.Name, collection.Owner.ID,
-							nodeID, nodeName);
+						string uriString = dService.CreateMaster(collection.ID, collection.Name,
+							rootID, rootName);
 
 						if (uriString == null)
 						{
