@@ -1772,6 +1772,7 @@ namespace Novell.FormsTrayApp
 				currentDefaultDomain = newDefaultDomain = null;
 				newAccountLvi = null;
 				addAccount.Enabled = true;
+				updatePassword = false;
 				Hide();
 			}
 		}
