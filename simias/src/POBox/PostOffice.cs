@@ -162,6 +162,33 @@ namespace Simias.POBox
 								}
 							}
 						}
+						else
+						{
+							subscription = new Subscription(
+									Guid.NewGuid().ToString(), message);
+
+							subscription.SubscriptionState = 
+									SubscriptionStates.Pending;
+
+							subscription.ToName = temp.ToName;
+							subscription.ToIdentity = temp.ToIdentity;
+							if (workgroup)
+							{
+								subscription.ToPublicKey = temp.ToPublicKey;
+							}
+								
+							result = true;
+
+								// auto-accept if we have a key, it is not workgroup, and we have rights
+							if ((subscription.SubscriptionKey != null)
+								&& !workgroup && (subscription.SubscriptionRights != Access.Rights.Deny))
+							{
+								// accept
+								subscription.Accept(store, subscription.SubscriptionRights);
+							}
+
+							result = true;
+						}
 					}
 					break;
 			}
