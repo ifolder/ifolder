@@ -902,7 +902,7 @@ namespace Simias.Sync.Client
 		{
 			
 			// remove deleted nodes from client
-			string[] idList = workArray.DirsFromServer();
+			string[] idList = workArray.DeletesFromServer();
 			if (idList.Length == 0)
 				return;
 			log.Info("Deleting {0} nodes on client", idList.Length);
