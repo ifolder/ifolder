@@ -988,49 +988,40 @@ namespace Novell.iFolder.iFolderCom
 
 		private void shareWith_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
-			if (shareWith.SelectedItems.Count == 0)
+			ListViewItem lvi = null;
+
+			if (shareWith.SelectedItems.Count == 1)
 			{
-				this.accessControlButtons.Enabled = false;
-				this.remove.Enabled = false;
-				this.reinvite.Enabled = false;
+				lvi = shareWith.SelectedItems[0];
 			}
 			else if (shareWith.SelectedItems.Count > 1)
 			{
-//				this.accessControlButtons.Enabled = ifolder.Shareable;
 				this.accessReadOnly.Checked = false;
 				this.accessReadWrite.Checked = false;
 				this.accessFullControl.Checked = false;
 			}
-			else
+
+			if (ifolder.GetCurrentMember().Rights == Access.Rights.Admin)
 			{
-//				this.reinvite.Enabled = ifolder.Shareable;
-
-				ListViewItem item = shareWith.SelectedItems[0];
-
-/*				if (ifolder.Shareable)
-				{
-					try
-					{
-						// If the current user has sufficient rights, enable the Remove button when
-						// a different user is selected in the list.
-						this.remove.Enabled = !((ShareListContact)item.Tag).CurrentContact.IsCurrentUser;
-
-						// Enable the rights if the current user is not selected.
-						this.accessControlButtons.Enabled = !((ShareListContact)item.Tag).CurrentContact.IsCurrentUser;
-					}
-					catch
-					{
-						remove.Enabled = false;
-						accessControlButtons.Enabled = false;
-						reinvite.Enabled = false;
-					}
-				}
-				else
+				if (shareWith.SelectedItems.Count == 0)
 				{
 					this.accessControlButtons.Enabled = false;
+					this.remove.Enabled = false;
+					this.reinvite.Enabled = false;
 				}
-*/
-				switch (item.SubItems[2].Text)
+				else if (shareWith.SelectedItems.Count > 1)
+				{
+					this.accessControlButtons.Enabled = true;
+				}
+			}
+			else
+			{
+				accessControlButtons.Enabled = add.Enabled = remove.Enabled = false;
+			}
+
+			if (lvi != null)
+			{
+				switch (lvi.SubItems[2].Text)
 				{
 					case "Full Control":
 					{
@@ -1055,7 +1046,7 @@ namespace Novell.iFolder.iFolderCom
 						break;
 					}
 				}
-			}		
+			}
 		}
 
 		private void accessButton_Click(object sender, EventArgs e)
