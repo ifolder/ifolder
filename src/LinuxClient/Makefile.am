@@ -14,11 +14,11 @@ EXTRA_DIST =
 install-exec-local: $(IMAGE_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(datadir)/ifolder3/images $(DESTDIR)$(datadir)/pixmaps
 	$(INSTALL_PROGRAM) $(IMAGE_FILES) $(DESTDIR)$(datadir)/ifolder3/images
-	$(INSTALL_PROGRAM) $(IMAGE_DIR)/ifolder.png $(DESTDIR)$(datadir)/pixmaps
+	$(INSTALL_PROGRAM) $(IMAGE_DIR)/ifolder24.png $(DESTDIR)$(datadir)/pixmaps
 
 uninstall-local:
 	cd $(DESTDIR)$(datadir)/ifolder3/images; rm -f $(IMAGE_FILES)
-	cd $(DESTDIR)$(datadir)/pixmaps; rm -f ifolder.png
+	cd $(DESTDIR)$(datadir)/pixmaps; rm -f ifolder24.png
 
 clean-local:
 	rm -rf *.dbg $(COMMON_CLEAN_FILES)
