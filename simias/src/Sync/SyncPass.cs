@@ -188,7 +188,7 @@ public class SynkerServiceA: SyncCollectionService
 	/// <summary>
 	/// takes an array of small nodes. returns rejected nodes
 	/// </summary>
-	public RejectedNodes PutSmallNodes(NodeChunk[] nodes)
+	public RejectedNode[] PutSmallNodes(NodeChunk[] nodes)
 	{
 		try
 		{
@@ -199,7 +199,7 @@ public class SynkerServiceA: SyncCollectionService
 			return ops.PutSmallNodes(nodes);
 		}
 		catch (Exception e) { Log.Uncaught(e); }
-		return new RejectedNodes();
+		return null;
 	}
 
 	/// <summary>
@@ -240,7 +240,7 @@ public class SynkerServiceA: SyncCollectionService
 	/// <summary>
 	/// takes next chunk of data for a large node, completes node if metadata is given
 	/// </summary>
-	public SyncIncomingNode.Status WriteLargeNode(FseChunk[] fseChunks, string metaData)
+	public NodeStatus WriteLargeNode(FseChunk[] fseChunks, string metaData)
 	{
 		try
 		{
@@ -248,10 +248,10 @@ public class SynkerServiceA: SyncCollectionService
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
 			inNode.WriteChunks(fseChunks);
-			return metaData == null? SyncIncomingNode.Status.InProgess: inNode.Complete(metaData);
+			return metaData == null? NodeStatus.InProgess: inNode.Complete(metaData);
 		}
 		catch (Exception e) { Log.Uncaught(e); }
-		return SyncIncomingNode.Status.ServerFailure;
+		return NodeStatus.ServerFailure;
 	}
 
 	/// <summary>
@@ -456,16 +456,31 @@ public class SynkerWorkerA: SyncCollectionWorker
 			updates = ops.GetSmallNodes(ids);
 		if (updates != null && updates.Length > 0)
 		{
-			RejectedNodes rejects = ss.PutSmallNodes(updates);
-			ss.PutSmallNodes(updates);
-			foreach (NodeChunk nc in updates)
+			RejectedNode[] rejects = ss.PutSmallNodes(updates);
+			if (rejects == null)
+				Log.Spew("null rejects list");
+			else
 			{
-				if (Array.IndexOf(rejects.updateCollisions, nc.stamp.id) == -1
-						&& Array.IndexOf(rejects.fileSystemEntryCollisions, nc.stamp.id) == -1)
-					ops.UpdateIncarn(nc.stamp);
+				foreach (NodeChunk nc in updates)
+				{
+					bool updateIncarn = true;
+					foreach (RejectedNode reject in rejects)
+					{
+						if (reject.nid == nc.stamp.id)
+						{
+							if (reject.status == NodeStatus.FileSystemEntryCollision)
+								ops.DeleteSpuriousNode(reject.nid);
+							else
+								Log.Spew("skipping update of incarnation for small node {0} due to {1} on server",
+										reject.nid, reject.status);
+							updateIncarn = false;
+							break;
+						}
+					}
+					if (updateIncarn == true)
+						ops.UpdateIncarn(nc.stamp);
+				}
 			}
-			foreach (Nid nid in rejects.fileSystemEntryCollisions)
-				ops.DeleteSpuriousNode(nid);
 		}
 
 		// get small files from server
@@ -502,19 +517,12 @@ public class SynkerWorkerA: SyncCollectionWorker
 						break;
 					ss.WriteLargeNode(chunks, null);
 				}
-			SyncIncomingNode.Status status = ss.WriteLargeNode(chunks, metaData);
+			NodeStatus status = ss.WriteLargeNode(chunks, metaData);
 			switch (status)
 			{
-				case SyncIncomingNode.Status.Complete: ops.UpdateIncarn(stamp); break;
-				case SyncIncomingNode.Status.UpdateCollision:
-					Log.Spew("skipping update of incarnation for large node {0} due to update collision on server", stamp.name);
-					break;
-				case SyncIncomingNode.Status.FileSystemEntryCollision:
-					ops.DeleteSpuriousNode(nid);
-					break;
-				default:
-					Log.Spew("skipping update of incarnation for large node {0} due to update {1}", stamp.name, status.ToString());
-					break;
+				case NodeStatus.Complete: ops.UpdateIncarn(stamp); break;
+				case NodeStatus.FileSystemEntryCollision: ops.DeleteSpuriousNode(nid); break;
+				default: Log.Spew("skipping update of incarnation for large node {0} due to {1}", stamp.name, status); break;
 			}
 		}
 		largeToServer.Clear();
@@ -533,13 +541,11 @@ public class SynkerWorkerA: SyncCollectionWorker
 				foreach (FseChunk chunk in nc.fseChunks)
 					nc.totalSize += chunk.data.Length;
 			}
-			SyncIncomingNode.Status status = inNode.Complete(nc.metaData);
+			NodeStatus status = inNode.Complete(nc.metaData);
 			switch (status)
 			{
-				case SyncIncomingNode.Status.Complete: break;
-				default:
-					Log.Spew("skipping update of incarnation for large node {0} due to update {1}", nid.ToString(), status.ToString());
-					break;
+				case NodeStatus.Complete: break;
+				default: Log.Spew("skipping update of incarnation for large node {0} due to update {1}", nid, status); break;
 			}
 		}
 		largeFromServer.Clear();

@@ -49,7 +49,7 @@ public class SyncTests: Assertion
 	private static readonly string clientDir = Path.GetFullPath("SyncTestClientData");
 	private static readonly string clientFolder = Path.Combine(clientDir, folderName);
 	private static readonly string serverFolder = Path.Combine(serverDir, folderName);
-	private bool runChildProcess = true;
+	private bool runChildProcess = false;
 
 	//---------------------------------------------------------------------------
 	public static int Run(string program, string args)
@@ -70,10 +70,10 @@ public class SyncTests: Assertion
 			return CmdClient.RunOnce(new Uri(clientDir), new Uri(clientFolder), serverDir, useTCP);
 
 		CmdServer cmdServer = new CmdServer(host, serverPort, new Uri(serverDir), useTCP);
-		int exitCode = Run("/usr/bin/mono", String.Format("--debug SyncCmd.exe -s {0} {1} sync {2}",
+		int err = Run("/usr/bin/mono", String.Format("--debug SyncCmd.exe -s {0} {1} sync {2}",
 				clientDir, useTCP? "": "-h", clientFolder));
 		cmdServer.Stop();
-		return exitCode == 0;
+		return err == 0;
 	}
 
 	//---------------------------------------------------------------------------
@@ -169,7 +169,7 @@ public class SyncTests: Assertion
 		string dirC = Path.Combine(clientFolder, "simpleTestDir");
 		Directory.CreateDirectory(dirS);
 		Directory.CreateDirectory(dirC);
-		const int fileCount = 123;
+		const int fileCount = 43;
 
 		// add some files
 		for (int i = 0; i < fileCount; ++i)

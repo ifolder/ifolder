@@ -36,10 +36,12 @@ public class SyncCmd
 	Uri storeLocation = null;
 	int port = 8088;
 	bool useTCP = true;
-	string host = MyDns.GetHostName();
+	string host = null;
 
 	int Invite(string user, Uri docRoot, string invitationFile)
 	{
+		if (host == null)
+			host = MyDns.GetHostName();
 		FileInviter fi = new FileInviter(storeLocation);
 		if (!fi.Invite(user, docRoot, host, port, invitationFile))
 		{
@@ -57,6 +59,8 @@ public class SyncCmd
 
 	int RunServer()
 	{
+		if (host == null)
+			host = MyDns.GetHostName();
 		CmdServer server = new CmdServer(host, port, storeLocation, useTCP);
 		Console.WriteLine("server {0} started, press enter to exit", port);
 		Console.ReadLine();

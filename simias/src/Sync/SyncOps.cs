@@ -32,6 +32,9 @@ using Simias;
 namespace Simias.Sync
 {
 
+[Serializable]
+public enum NodeStatus { Complete, UpdateCollision, FileSystemEntryCollision, ServerFailure, InProgess };
+
 //---------------------------------------------------------------------------
 /// <summary>
 /// struct to encapsulate a GUID string, provides a case-insensitive compare,
@@ -120,12 +123,18 @@ public struct NodeChunk
 	public FseChunk[] fseChunks;
 }
 
+
 //---------------------------------------------------------------------------
 [Serializable]
-public class RejectedNodes
+public struct RejectedNode
 {
-	public Nid[] updateCollisions;
-	public Nid[] fileSystemEntryCollisions;
+	public Nid nid;
+	public NodeStatus status;
+	public RejectedNode(Nid nid, NodeStatus status)
+	{
+		this.nid = nid;
+		this.status = status;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -293,9 +302,8 @@ public class SyncIncomingNode
 		}
 	}
 
-	public enum Status { Complete, UpdateCollision, FileSystemEntryCollision, ServerFailure, InProgess };
 
-	public Status Complete(string metaData)
+	public NodeStatus Complete(string metaData)
 	{
 		XmlDocument doc = new XmlDocument();
 		doc.LoadXml(metaData);
@@ -308,7 +316,7 @@ public class SyncIncomingNode
 			{
 				Log.Spew("Rejecting update for node {0} due to update collision on server", node.Name);
 				CleanUp();
-				return Status.UpdateCollision;
+				return NodeStatus.UpdateCollision;
 			}
 		}
 		else if (node.LocalIncarnation != node.MasterIncarnation)
@@ -320,7 +328,7 @@ public class SyncIncomingNode
 				{
 					Log.Spew("Rejecting update for node {0} due to FileSystemEntry collision on server", node.Name);
 					CleanUp();
-					return Status.FileSystemEntryCollision;
+					return NodeStatus.FileSystemEntryCollision;
 				}
 
 		foreach (FseIn fsei in fseList)
@@ -349,7 +357,7 @@ public class SyncIncomingNode
 		}
 
 		Log.Assert(stamp.localIncarn > node.MasterIncarnation);
-		return node.UpdateIncarnation(stamp.localIncarn)? Status.Complete: Status.UpdateCollision;
+		return node.UpdateIncarnation(stamp.localIncarn)? NodeStatus.Complete: NodeStatus.UpdateCollision;
 	}
 }
 
@@ -459,11 +467,10 @@ public class SyncOps
 	/// <summary>
 	/// returns nodes were not updated due to collisions
 	/// </summary>
-    public RejectedNodes PutSmallNodes(NodeChunk[] nodeChunks)
+    public RejectedNode[] PutSmallNodes(NodeChunk[] nodeChunks)
 	{
 		SyncIncomingNode inNode = new SyncIncomingNode(collection, onServer);
-		ArrayList updateRejects = new ArrayList();
-		ArrayList fseRejects = new ArrayList();
+		ArrayList rejects = new ArrayList();
 		foreach (NodeChunk nc in nodeChunks)
 		{
 			if (!onServer && nc.fseChunks == null && nc.totalSize >= NodeChunk.MaxSize)
@@ -473,19 +480,11 @@ public class SyncOps
 			}
 			inNode.Start(nc.stamp);
 			inNode.WriteChunks(nc.fseChunks);
-			switch (inNode.Complete(nc.metaData))
-			{
-				case SyncIncomingNode.Status.UpdateCollision: updateRejects.Add(nc.stamp.id); break;
-				case SyncIncomingNode.Status.FileSystemEntryCollision: fseRejects.Add(nc.stamp.id); break;
-            default:
-                break;
-            }
+			NodeStatus status = inNode.Complete(nc.metaData);
+			if (status != NodeStatus.Complete)
+				rejects.Add(new RejectedNode(nc.stamp.id, status)); break;
 		}
-		
-        RejectedNodes rejects = new RejectedNodes();
-		rejects.updateCollisions = (Nid[])updateRejects.ToArray(typeof(Nid));
-		rejects.fileSystemEntryCollisions = (Nid[])fseRejects.ToArray(typeof(Nid));
-		return rejects;
+		return (RejectedNode[])rejects.ToArray(typeof(RejectedNode));
 	}
 
 	/// <summary>
