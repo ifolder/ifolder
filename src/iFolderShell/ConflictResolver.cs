@@ -1046,9 +1046,8 @@ namespace Novell.iFolderCom
 		#region Event Handlers
 		private void ConflictResolver_Load(object sender, System.EventArgs e)
 		{
-			// TODO: Load the correct page when it becomes available.
 			// Reference the help using locale-specific path.
-			helpProvider1.HelpNamespace = Path.Combine(Path.Combine(Path.Combine(loadPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\front.html");
+			helpProvider1.HelpNamespace = Path.Combine(Path.Combine(Path.Combine(loadPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\conflicts.html");
 
 			try
 			{
