@@ -1076,65 +1076,38 @@ namespace Novell.iFolder
 				foreach(Address addr in c.GetAddresses())
 				{
 					string addressLine = "";
-					if((addr.Types & AddressTypes.home) == AddressTypes.home)
+					if((addr.Types & AddressTypes.home) ==
+							AddressTypes.home)
 					{
 						if(addr.Street != null)
 							AddLabeledValue("home", addr.Street);
-						if((addr.MailStop != null) && (addr.MailStop.Length > 0))
-							AddLabeledValue(null, "MS: " + addr.MailStop);
-						if(addr.Locality != null)
-							addressLine = addr.Locality + " ";
-						if(addr.Region != null)
-							addressLine += addr.Region + " ";
-						if(addr.PostalCode != null)
-							addressLine += addr.PostalCode + " ";
-						if(addressLine.Length > 0)
-							AddLabeledValue(null, addressLine);
-						if((addr.Country != null) && (addr.Country.Length > 0))
-							AddLabeledValue(null, addr.Country);
-
-						AddLabeledValue(null, null);
-					}
-					addressLine = "";
-					if((addr.Types & AddressTypes.work) == AddressTypes.work)
+					}	
+					else if((addr.Types & AddressTypes.work) ==
+							AddressTypes.work)
 					{
 						if(addr.Street != null)
 							AddLabeledValue("work", addr.Street);
-						if((addr.MailStop != null) && (addr.MailStop.Length > 0))
-							AddLabeledValue(null, "MS: " + addr.MailStop);
-						if(addr.Locality != null)
-							addressLine = addr.Locality + " ";
-						if(addr.Region != null)
-							addressLine += addr.Region + " ";
-						if(addr.PostalCode != null)
-							addressLine += addr.PostalCode + " ";
-						if(addressLine.Length > 0)
-							AddLabeledValue(null, addressLine);
-						if((addr.Country != null) && (addr.Country.Length > 0))
-							AddLabeledValue(null, addr.Country);
-
-						AddLabeledValue(null, null);
 					}
-					addressLine = "";
-					if((addr.Types & AddressTypes.other) == AddressTypes.other)
+					else
 					{
 						if(addr.Street != null)
 							AddLabeledValue("other", addr.Street);
-						if((addr.MailStop != null) && (addr.MailStop.Length > 0))
-							AddLabeledValue(null, "MS: " + addr.MailStop);
-						if(addr.Locality != null)
-							addressLine = addr.Locality + " ";
-						if(addr.Region != null)
-							addressLine += addr.Region + " ";
-						if(addr.PostalCode != null)
-							addressLine += addr.PostalCode + " ";
-						if(addressLine.Length > 0)
-							AddLabeledValue(null, addressLine);
-						if((addr.Country != null) && (addr.Country.Length > 0))
-							AddLabeledValue(null, addr.Country);
-
-						AddLabeledValue(null, null);
 					}
+
+					if((addr.MailStop != null) && (addr.MailStop.Length > 0))
+						AddLabeledValue(null, "MS: " + addr.MailStop);
+					if(addr.Locality != null)
+						addressLine = addr.Locality + " ";
+					if(addr.Region != null)
+						addressLine += addr.Region + " ";
+					if(addr.PostalCode != null)
+						addressLine += addr.PostalCode + " ";
+					if(addressLine.Length > 0)
+						AddLabeledValue(null, addressLine);
+					if((addr.Country != null) && (addr.Country.Length > 0))
+						AddLabeledValue(null, addr.Country);
+
+					AddLabeledValue(null, null);
 				}
 			}
 		}

@@ -62,9 +62,8 @@ namespace Novell.iFolder
 	{
 		// Glade "autoconnected" members
 		[Glade.Widget] internal Gtk.Image			userImage;
-		[Glade.Widget] internal Gtk.Entry			fullNameEntry;
-		[Glade.Widget] internal Gtk.Entry			jobTitleEntry;
-		[Glade.Widget] internal Gtk.Entry			organizationEntry;
+		[Glade.Widget] internal Gtk.Entry			firstNameEntry;
+		[Glade.Widget] internal Gtk.Entry			lastNameEntry;
 		[Glade.Widget] internal Gtk.Entry			userIDEntry;
 
 		[Glade.Widget] internal Gtk.Entry			workPhoneEntry;
@@ -153,32 +152,36 @@ namespace Novell.iFolder
 			contactEditorDialog = (Gtk.Dialog) gxml.GetWidget("contactEditor");
 	
 
-			Widget[] widArray = new Widget[16];
 
-			widArray[0] = fullNameEntry;
+			//------------------------------
+			// This will setup the tab stops
+			//------------------------------
+			Widget[] widArray = new Widget[15];
 
-			widArray[1] = jobTitleEntry;
-			widArray[2] = organizationEntry;
-			widArray[3] = userIDEntry;
+			widArray[0] = firstNameEntry;
+			widArray[1] = lastNameEntry;
+			widArray[2] = userIDEntry;
 
-			widArray[4] = workEmailEntry;
-			widArray[5] = personalEmailEntry;
-			widArray[6] = webURLEntry;
-			widArray[7] = blogURLEntry;
+			widArray[3] = workEmailEntry;
+			widArray[4] = personalEmailEntry;
+			widArray[5] = webURLEntry;
+			widArray[6] = blogURLEntry;
 
-			widArray[8] = workPhoneEntry;
-			widArray[9] = mobilePhoneEntry;
-			widArray[10] = homePhoneEntry;
+			widArray[7] = workPhoneEntry;
+			widArray[8] = mobilePhoneEntry;
+			widArray[9] = homePhoneEntry;
 
-			widArray[11] = streetEntry;
-			widArray[12] = cityEntry;
-			widArray[13] = stateEntry;
-			widArray[14] = zipEntry;
-			widArray[15] = countryEntry;
+			widArray[10] = streetEntry;
+			widArray[11] = cityEntry;
+			widArray[12] = stateEntry;
+			widArray[13] = zipEntry;
+			widArray[14] = countryEntry;
 
 			generalTabTable.FocusChain = widArray;
 
-			fullNameEntry.HasFocus = true;
+
+
+			firstNameEntry.HasFocus = true;
 
 			try
 			{
@@ -189,6 +192,15 @@ namespace Novell.iFolder
 				preferredName = new Name("", "");
 				preferredName.Preferred = true;
 				currentContact.AddName(preferredName);
+			}
+
+			try
+			{
+				preferredAddress = currentContact.GetPreferredAddress();
+			}
+			catch(Exception e)
+			{
+				preferredAddress = null;
 			}
 
 			PopulateWidgets();
@@ -235,7 +247,8 @@ namespace Novell.iFolder
 		/// </summary>
 		private void PopulateWidgets()
 		{
-			fullNameEntry.Text = preferredName.FN;
+			firstNameEntry.Text = preferredName.Given;
+			lastNameEntry.Text = preferredName.Family;
 
 			Pixbuf pb = GetScaledPhoto(currentContact, 64);
 			if(pb != null)
@@ -243,10 +256,6 @@ namespace Novell.iFolder
 
 			if(currentContact.UserName.Length > 0)
 				userIDEntry.Text = currentContact.UserName;
-			if(currentContact.Title.Length > 0)
-				jobTitleEntry.Text = currentContact.Title;
-			if(currentContact.Organization.Length > 0)
-				organizationEntry.Text = currentContact.Organization;
 
 			if(currentContact.Url.Length > 0)
 				webURLEntry.Text = currentContact.Url;
@@ -256,6 +265,19 @@ namespace Novell.iFolder
 			PopulateEmails();
 			PopulatePhoneNumbers();
 
+			if(preferredAddress != null)
+			{
+				if(preferredAddress.Street.Length > 0)
+					streetEntry.Text = preferredAddress.Street;
+				if(preferredAddress.Locality.Length > 0)
+					cityEntry.Text = preferredAddress.Locality;
+				if(preferredAddress.Region.Length > 0)
+					stateEntry.Text = preferredAddress.Region;
+				if(preferredAddress.PostalCode.Length > 0)
+					zipEntry.Text = preferredAddress.PostalCode;
+				if(preferredAddress.Country.Length > 0)
+					countryEntry.Text = preferredAddress.Country;
+			}
 		}
 
 
@@ -585,21 +607,21 @@ namespace Novell.iFolder
 		/// </summary>
 		private void SaveContact()
 		{
+			// First Name 
+			if(firstNameEntry.Text.Length > 0)
+				preferredName.Given = firstNameEntry.Text;
+			else
+				preferredName.Given = null;
+			// Last Name 
+			if(lastNameEntry.Text.Length > 0)
+				preferredName.Family = lastNameEntry.Text;
+			else
+				preferredName.Family = null;
 			// UserID
 			if(userIDEntry.Text.Length > 0)
 				currentContact.UserName = userIDEntry.Text;
 			else
 				currentContact.UserName = null;
-			// Job Title
-			if(jobTitleEntry.Text.Length > 0)
-				currentContact.Title = jobTitleEntry.Text;
-			else
-				currentContact.Title = null;
-			// Organization
-			if(organizationEntry.Text.Length > 0)
-				currentContact.Organization = organizationEntry.Text;
-			else
-				currentContact.Organization = null;
 			// Web URL
 			if(webURLEntry.Text.Length > 0)
 				currentContact.Url = webURLEntry.Text;
@@ -613,6 +635,32 @@ namespace Novell.iFolder
 			// Email
 			SaveCurrentEmails();
 			SavePhoneNumbers();
+
+			if( (streetEntry.Text.Length == 0) &&
+					(cityEntry.Text.Length == 0) &&
+					(stateEntry.Text.Length == 0) &&
+					(zipEntry.Text.Length == 0) &&
+					(countryEntry.Text.Length == 0) )
+			{
+				if(preferredAddress != null)
+					preferredAddress.Delete();
+			}
+			else
+			{
+				if(preferredAddress == null)
+				{
+					preferredAddress = new Address();
+					preferredAddress.Preferred = true;
+					currentContact.AddAddress(preferredAddress);
+				}
+
+				preferredAddress.Street = streetEntry.Text;
+				preferredAddress.Locality = cityEntry.Text;
+				preferredAddress.Region = stateEntry.Text;
+				preferredAddress.PostalCode = zipEntry.Text;
+				preferredAddress.Country = countryEntry.Text;
+
+			}
 		}
 
 
@@ -669,19 +717,21 @@ namespace Novell.iFolder
 			Console.WriteLine("Edit Address here");
 		}
 
-		private void on_fullNameButton_clicked(object o, EventArgs args) 
+
+		private void on_nameButton_clicked(object o, EventArgs args) 
 		{
 			NameEditor ne = new NameEditor(contactEditorDialog, preferredName);
 			if(ne.Run() == -5)
 			{
-				fullNameEntry.Text = preferredName.FN;
+				firstNameEntry.Text = preferredName.Given;
+				lastNameEntry.Text = preferredName.Family;
 			}
 		}
 
 
 
 
-		private void on_changeImageButton_clicked(object o, EventArgs args) 
+		private void on_photoButton_clicked(object o, EventArgs args) 
 		{
 			FileSelection fs = new FileSelection("Choose a new Image");
 
