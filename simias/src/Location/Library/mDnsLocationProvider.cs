@@ -22,18 +22,25 @@
  ***********************************************************************/
 
 using System;
+using System.Runtime.Remoting;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Tcp;
+
+using Mono.P2p.mDnsResponderApi;
 
 namespace Simias.Location
 {
 	/// <summary>
 	/// Multi-Cast DNS Location Provider
 	/// </summary>
-	public class MultiCastLocationProvider : ILocationProvider
+	public class MDnsLocationProvider : ILocationProvider
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(MDnsLocationProvider));
+
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
-		public MultiCastLocationProvider()
+		public MDnsLocationProvider()
 		{
 		}
 		
@@ -54,6 +61,28 @@ namespace Simias.Location
 		/// <returns>A URI object containing the location of the collection master, or null.</returns>
 		public Uri Locate(string collection)
 		{
+			// channel
+			TcpChannel channel = new TcpChannel();
+			ChannelServices.RegisterChannel(channel);
+			
+			// factory
+			IRemoteFactory factory = 
+				(IRemoteFactory) Activator.GetObject(
+				typeof(IRemoteFactory),
+				"tcp://localhost:8091/mDnsRemoteFactory.tcp");
+
+			// query
+			IResourceQuery query = factory.GetQueryInstance();
+
+			RPtr[] ptrs = null;
+
+			if (query.GetPtrResourcesByName("_collection._tcp._local", out ptrs) == 0)
+			{
+				foreach(RPtr ptr in ptrs)
+				{
+				}
+			}
+
 			return null;
 		}
 

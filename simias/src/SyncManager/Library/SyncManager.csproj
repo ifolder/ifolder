@@ -139,6 +139,11 @@
                     Project = "{680C2A55-3F33-45EA-AA67-5652592D93FE}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "mDnsResponderApi"
+                    AssemblyName = "mDnsResponderApi"
+                    HintPath = "..\..\..\external\mDnsResponder\net\mDnsResponderApi.dll"
+                />
             </References>
         </Build>
         <Files>
