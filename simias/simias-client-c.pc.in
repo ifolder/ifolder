@@ -10,6 +10,6 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@prefix@/include/simias
 
-Libs:-Wl,-rpath,${libdir} -L${libdir} -lsimias -lsimias-event -lsimiasgaim
+Libs:-Wl,-rpath,${libdir} -L${libdir} -lsimias -lsimias-event
 Cflags: -I${includedir}
 
