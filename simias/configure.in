@@ -9,7 +9,7 @@ TOOLDIR='$(top_srcdir)/tools'
 DOCDIR="$SRCDIR/doc"
 APIDOCDIR="$SRCDIR/api-doc"
 
-COMMON_SUBDIRS="Configuration Common CollectionEvents UserService StoreProvider FsProvider SqliteProvider CollectionStore FsWatcher Agent SyncCommon StoreWatcher CollectionWatcher SyncManager Sync SyncLogicLite SyncTools AddressBook Smtp InviteAgent"
+COMMON_SUBDIRS="Configuration Common CollectionEvents UserService StoreProvider FsProvider SqliteProvider CollectionStore FsWatcher Agent SyncCommon StoreWatcher CollectionWatcher SyncManager Sync SyncLogicLite SyncTools AddressBook Smtp InviteAgent MiniFolder"
 LINUX_SUBDIRS="CommonGtkWindows"
 WINDOWS_SUBDIRS="CommonFormWindows"
 
@@ -303,6 +303,7 @@ src/SyncTools/Makefile
 src/AddressBook/Makefile
 src/Smtp/Makefile
 src/InviteAgent/Makefile
+src/MiniFolder/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile

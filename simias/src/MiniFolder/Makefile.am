@@ -4,7 +4,7 @@ MiniFolder_INCLUDES =
 MiniFolder_RESOURCES =
 MiniFolder_FLAGS = $(CSC_EXEFLAG)
 MiniFolder_LIBS = System.dll $(SYSTEM_XML) Common.dll CollectionStore.dll StoreProvider.dll SyncManager.dll CollectionWatcher.dll SyncCommon.dll SyncLogicLite.dll Sync.dll
-MiniFolder_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin
+MiniFolder_LIBPATH = ../CollectionStore  ../../external/SecureChannelSinks ../StoreProvider ../StoreWatcher ../CollectionWatcher ../Agent ../AddressBook ../Common ../SyncCommon ../SyncManager ../SyncLogicLite ../Sync ../Configuration ../Common ../CollectionEvents
 
 NUNIT_TESTS :=
 

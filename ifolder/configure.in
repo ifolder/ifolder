@@ -9,7 +9,7 @@ TOOLDIR='$(top_srcdir)/tools'
 DOCDIR="$SRCDIR/doc"
 APIDOCDIR="$SRCDIR/api-doc"
 
-COMMON_SUBDIRS="MiniFolder iFolder"
+COMMON_SUBDIRS="iFolder"
 LINUX_SUBDIRS="GtkTrayApp"
 WINDOWS_SUBDIRS="FormsTrayApp FormsInvitationWizard iFolderShell"
 
@@ -323,7 +323,6 @@ esac
 AC_OUTPUT([
 Makefile
 src/Makefile
-src/MiniFolder/Makefile
 src/iFolder/Makefile
 src/GtkTrayApp/Makefile
 src/FormsTrayApp/Makefile
