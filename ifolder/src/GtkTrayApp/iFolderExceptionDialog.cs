@@ -23,40 +23,26 @@
  * 
  ***********************************************************************/
 
-
+using System;
 using Gtk;
 
-public class iFolderMsgDialog : Dialog
+public class iFolderExceptionDialog : Dialog
 {
-	public enum DialogType : int
-	{
-		Error = 1,
-		Info,
-		Question,
-		Warning
-	}
+	private Label details;
+	private System.Exception ex;
+	private Button dButton;
 
-	public enum ButtonSet : int
-	{
-		Ok = 1,
-		OkCancel,
-		YesNo
-	}
-
-	
-	public iFolderMsgDialog(	Gtk.Window parent,
-								DialogType type,
-								ButtonSet buttonSet,
-								string title, 
-								string statement, 
-								string details)
+	public iFolderExceptionDialog(	Gtk.Window parent,  
+									System.Exception exception)
 		: base()
 	{
-		this.Title = title;
-		this.HasSeparator = false;
+		this.Title = "iFolder Error";
+		this.HasSeparator = true;
 		this.BorderWidth = 6;
 		this.Resizable = false;
 		this.Modal = true;
+		this.ex = exception;
+
 		if(parent != null)
 			this.TransientFor = parent;
 
@@ -65,58 +51,51 @@ public class iFolderMsgDialog : Dialog
 		h.Spacing = 12;
 
 		Image i = new Image();
-		switch(type)
-		{
-			case DialogType.Error:
-				i.SetFromStock(Gtk.Stock.DialogError, IconSize.Dialog);
-				break;
-			case DialogType.Question:
-				i.SetFromStock(Gtk.Stock.DialogQuestion, IconSize.Dialog);
-				break;
-			case DialogType.Warning:
-				i.SetFromStock(Gtk.Stock.DialogWarning, IconSize.Dialog);
-				break;
-			default:
-			case DialogType.Info:
-				i.SetFromStock(Gtk.Stock.DialogInfo, IconSize.Dialog);
-				break;
-		}
+		i.SetFromStock(Gtk.Stock.DialogError, IconSize.Dialog);
 		i.SetAlignment(0.5F, 0);
 		h.PackStart(i, false, false, 0);
 
 		VBox v = new VBox();
+		v.BorderWidth = 6;
+		v.Spacing = 12;
 		Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-							statement + "</span>");
-		l.LineWrap = true;
+			"An Error occurred in iFolder</span>");
+		l.LineWrap = false;
 		l.UseMarkup = true;
 		l.Selectable = true;
 		l.Xalign = 0; l.Yalign = 0;
 		v.PackStart(l);
 
-		l = new Label(details);
-		l.LineWrap = true;
-		l.Selectable = true;
-		l.Xalign = 0; l.Yalign = 0;
-		v.PackEnd(l);
+		dButton = new Button("Show Details");
+		dButton.Clicked += new EventHandler(ButtonPressed);
+		HBox bhbox = new HBox();
+		bhbox.PackStart(dButton, false, false, 0);
+		v.PackEnd(bhbox, false, false, 0);
+
+		details = new Label(ex.Message);
+		details.LineWrap = true;
+		details.Selectable = true;
+		details.Xalign = 0; details.Yalign = 0;
+		v.PackEnd(details);
 
 		h.PackEnd(v);
 		h.ShowAll();
 		this.VBox.Add(h);
 
-		switch(buttonSet)
+		this.AddButton(Stock.Close, ResponseType.Ok);
+	}
+
+	private void ButtonPressed(object o, EventArgs args)
+	{
+		if(dButton.Label == "Show Details")
 		{
-			default:
-			case ButtonSet.Ok:
-				this.AddButton(Stock.Ok, ResponseType.Ok);
-				break;
-			case ButtonSet.OkCancel:
-				this.AddButton(Stock.Cancel, ResponseType.Cancel);
-				this.AddButton(Stock.Ok, ResponseType.Ok);
-				break;
-			case ButtonSet.YesNo:
-				this.AddButton(Stock.No, ResponseType.No);
-				this.AddButton(Stock.Yes, ResponseType.Yes);
-				break;
+			details.Text = ex.ToString();
+			dButton.Label = "Hide Details";
+		}
+		else
+		{
+			details.Text = ex.Message;
+			dButton.Label = "Show Details";
 		}
 	}
 }

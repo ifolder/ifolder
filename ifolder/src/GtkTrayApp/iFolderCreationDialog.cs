@@ -26,26 +26,29 @@ using Gtk;
 
 namespace Novell.iFolder
 {
-	public class iFolderCrashDialog : Dialog
+	public class iFolderCreationDialog : Dialog
 	{
-		public iFolderCrashDialog(System.Exception e) : base()
+		private iFolder ifolder;
+		private CheckButton cbutton;
+
+		public iFolderCreationDialog(iFolder ifolder) : base()
 		{
-			this.SetDefaultSize (600, 400);
-			this.Title = "iFolder Unhandled Exception";
+			this.ifolder = ifolder;
+			this.Title = "iFolder Introduction";
 			this.HasSeparator = false;
 			this.BorderWidth = 6;
-			this.Resizable = true;
+			this.Resizable = false;
 
-			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder-crash.png"));
-			Image crashImage = new Image(this.Icon);
+			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
+			Image folderImage = new Image(this.Icon);
 
 			VBox vbox = new VBox();
 			vbox.BorderWidth = 6;
-			vbox.Spacing = 12;
+			vbox.Spacing = 6;
 
 			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-						"iFolder crashed because of an unhandled exception" + 
-						"</span>");
+						"Congratulations! A new iFolder was created</span>");
+
 			l.LineWrap = false;
 			l.UseMarkup = true;
 			l.Selectable = false;
@@ -53,23 +56,27 @@ namespace Novell.iFolder
 			vbox.PackStart(l, false, false, 0);
 
 			HBox h = new HBox();
-			h.BorderWidth = 6;
+//			h.BorderWidth = 6;
 			h.Spacing = 12;
 
-			crashImage.SetAlignment(0.5F, 0);
-			h.PackStart(crashImage, false, false, 0);
+			folderImage.SetAlignment(0.5F, 0);
+			h.PackStart(folderImage, false, false, 0);
 
-			TextView tv = new TextView();
-			tv.WrapMode = Gtk.WrapMode.Word;
-			tv.Editable = false;
+			VBox vbox2 = new VBox();
+			vbox2.Spacing = 6;
 
+			l = new Label("The files in your new iFolder are being prepared to be shared with others.  We need more text here to describe what just happened and perhaps what they might do.  I'm not sure what to add here other than a bunch of text though.");
 
-			tv.Buffer.Text = e.ToString();
-			ScrolledWindow sw = new ScrolledWindow();
-			sw.Add(tv);
-			h.PackEnd(sw, true, true, 0);
+			l.LineWrap = true;
+			vbox2.PackStart(l, true, true, 0);
+
+			cbutton = new CheckButton("Please don't show me this again.");
+			vbox2.PackEnd(cbutton, false, false, 0);
+
+			h.PackEnd(vbox2, true, true, 0);
 
 			vbox.PackEnd(h);
+		
 			vbox.ShowAll();
 			this.VBox.Add(vbox);
 

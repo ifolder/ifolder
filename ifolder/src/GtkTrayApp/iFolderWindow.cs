@@ -77,7 +77,7 @@ namespace Novell.iFolder
 		/// </summary>
 		private void InitializeWidgets()
 		{
-//			this.SetDefaultSize (400, 300);
+			this.SetDefaultSize (200, 400);
 			this.DeleteEvent += new DeleteEventHandler (WindowDelete);
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 
@@ -284,6 +284,13 @@ namespace Novell.iFolder
 			iFolderTreeView.Selection.Changed += new EventHandler(
 						on_iFolder_selection_changed);
 
+			iFolderTreeView.ButtonPressEvent += new ButtonPressEventHandler(
+						iFolderTreeView_ButtonPressed);
+
+			iFolderTreeView.RowActivated += new RowActivatedHandler(
+						OniFolderRowActivated);
+
+
 			iFolderPixBuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 			CollisionPixBuf = 
 				new Gdk.Pixbuf(Util.ImagesPath("ifolder-collision.png"));
@@ -450,5 +457,315 @@ namespace Novell.iFolder
 				PropMenuItem.Sensitive = false;
 			}
 		}
+
+
+
+
+		[GLib.ConnectBefore]
+		public void iFolderTreeView_ButtonPressed(	object obj, 
+								ButtonPressEventArgs args)
+		{
+			switch(args.Event.Button)
+			{
+				case 1: // first mouse button
+					break;
+				case 2: // second mouse button
+					break;
+				case 3: // third mouse button
+				{
+					Menu ifMenu = new Menu();
+
+					TreePath tPath = null;
+
+					iFolderTreeView.GetPathAtPos((Int32)args.Event.X, 
+								(Int32)args.Event.Y, out tPath);
+
+					if(tPath != null)
+					{
+						iFolder ifolder = null;
+
+						TreeSelection tSelect = iFolderTreeView.Selection;
+						tSelect.SelectPath(tPath);
+						if(tSelect.CountSelectedRows() == 1)
+						{
+							TreeModel tModel;
+							TreeIter iter;
+
+							tSelect.GetSelected(out tModel, out iter);
+							ifolder = (iFolder) tModel.GetValue(iter, 0);
+						}
+
+						MenuItem item_open = 
+							new MenuItem ("Open");
+						ifMenu.Append (item_open);
+						item_open.Activated += new EventHandler(
+								OnOpeniFolderContactMenu);
+
+						MenuItem item_share = 
+							new MenuItem ("Share with...");
+						ifMenu.Append (item_share);
+						item_share.Activated += new EventHandler(
+								on_shareifolder_context_menu);
+
+						MenuItem item_revert = 
+								new MenuItem ("Revert to a Normal Folder");
+						ifMenu.Append (item_revert);
+						item_revert.Activated += new EventHandler(
+								on_deleteiFolder);
+
+						ifMenu.Append(new SeparatorMenuItem());
+
+/*
+						if(	(ifolder != null) && (ifolder.HasCollisions()) )
+						{
+							MenuItem item_resolve = 
+								new MenuItem ("Resolve Conflicts");
+							ifMenu.Append (item_resolve);
+							item_resolve.Activated += new EventHandler(
+								on_show_conflict_resolver);
+						
+							ifMenu.Append(new SeparatorMenuItem());
+						}
+*/
+
+						MenuItem item_properties = 
+							new MenuItem ("Properties");
+						ifMenu.Append (item_properties);
+						item_properties.Activated += 
+							new EventHandler( on_properties_event );
+					}
+					else
+					{
+						MenuItem item_create = 
+							new MenuItem ("Create iFolder");
+						ifMenu.Append (item_create);
+						item_create.Activated += 
+							new EventHandler(on_newiFolder);
+
+						MenuItem item_refresh = 
+							new MenuItem ("Refresh List");
+						ifMenu.Append (item_refresh);
+						item_refresh.Activated += 
+							new EventHandler(RefreshiFolderTreeView);
+					}
+		
+					ifMenu.ShowAll();
+
+					ifMenu.Popup(null, null, null, IntPtr.Zero, 3, 
+						Gtk.Global.CurrentEventTime);
+					break;
+				}
+			}
+		}
+
+		private void OnOpeniFolderContactMenu(object o, EventArgs args)
+		{
+			OpenSelectediFolder();
+		}
+
+
+		private void OniFolderRowActivated(object o, RowActivatedArgs args)
+		{
+			OpenSelectediFolder();
+		}
+
+
+		private void OpenSelectediFolder()
+		{
+			TreeSelection tSelect = iFolderTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+
+
+				try
+				{
+					System.Diagnostics.Process process;
+
+					process = new System.Diagnostics.Process();
+					process.StartInfo.CreateNoWindow = true;
+					process.StartInfo.UseShellExecute = false;
+					process.StartInfo.FileName = "nautilus";
+					process.StartInfo.Arguments = ifolder.UnManagedPath;
+					process.Start();
+				}
+				catch(Exception e)
+				{
+					iFolderMsgDialog dg = new iFolderMsgDialog(
+						this,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.Ok,
+						"iFolder Error",
+						"Unable to launch Nautilus",
+						"iFolder attempted to open the Nautilus File Manager and was unable to do so");
+					dg.Run();
+					dg.Hide();
+					dg.Destroy();
+				}
+			}
+		}
+
+
+
+
+		public void on_shareifolder_context_menu(object o, EventArgs args)
+		{
+			TreeSelection tSelect = iFolderTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+/*
+				CollectionProperties colProp = new CollectionProperties();
+				colProp.TransientFor = this;
+				colProp.Collection = ifolder;
+				colProp.ActiveTag = 1;
+				colProp.Run();
+*/
+
+/*				iFolderProperties ifProp = new iFolderProperties();
+				ifProp.TransientFor = this;
+				ifProp.CurrentiFolder = ifolder;
+				ifProp.ActiveTag = 1;
+				ifProp.Run();
+*/
+			}
+		}
+
+
+
+
+		public void on_properties_event(object o, EventArgs args)
+		{
+			TreeSelection tSelect = iFolderTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+/*
+				try
+				{
+					CollectionProperties colProp = new CollectionProperties();
+					colProp.TransientFor = this;
+					colProp.Collection = ifolder;
+					colProp.Run();
+				}
+				catch(Exception e)
+				{
+					Console.WriteLine(e);
+					Console.WriteLine("Unable to Show Properties");
+				}
+*/
+			}
+		}
+
+
+
+
+		public void on_deleteiFolder(object o, EventArgs args)
+		{
+			TreeSelection tSelect = iFolderTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+
+				iFolderMsgDialog dialog = new iFolderMsgDialog(
+					this,
+					iFolderMsgDialog.DialogType.Question,
+					iFolderMsgDialog.ButtonSet.YesNo,
+					"iFolder Confirmation",
+					"Revert this iFolder?",
+					"This will revert this iFolder back to a normal iFolder and leave the files intact.  The iFolder will also be reverted for anyone you have shared it with.");
+				int rc = dialog.Run();
+				dialog.Hide();
+				dialog.Destroy();
+				if(rc == -8)
+				{
+					try
+					{
+    					iFolderWS.DeleteiFolder(ifolder.ID);
+						//ifolder.Delete();
+						//ifolder.Commit();
+						iFolderTreeStore.Remove(ref iter);
+					}
+					catch(Exception e)
+					{
+						iFolderExceptionDialog ied = 
+							new iFolderExceptionDialog(
+								this,
+								e);
+						ied.Run();
+						ied.Hide();
+						ied.Destroy();
+					}
+				}
+			}
+		}
+
+
+
+
+		public void on_newiFolder(object o, EventArgs args)
+		{
+			// create a file selection dialog and turn off all of the
+			// file operations and controlls
+			FileSelection fs = new FileSelection ("Choose a folder...");
+			fs.FileList.Parent.Hide();
+			fs.SelectionEntry.Hide();
+			fs.FileopDelFile.Hide();
+			fs.FileopRenFile.Hide();
+			fs.TransientFor = this;
+
+			int rc = fs.Run ();
+			fs.Hide();
+			if(rc == -5)
+			{
+				try
+				{
+    				iFolder newiFolder = 
+						iFolderWS.CreateLocaliFolder(fs.Filename);
+					iFolderTreeStore.AppendValues(newiFolder);
+
+// TODO: determine how to do this!
+//					if(IntroDialog.UseDialog())
+//					{
+						iFolderCreationDialog dlg = 
+							new iFolderCreationDialog(newiFolder);
+						dlg.TransientFor = this;
+						dlg.Run();
+						dlg.Hide();
+						dlg.Destroy();
+						dlg = null;
+//					}
+				}
+				catch(Exception e)
+				{
+					iFolderExceptionDialog ied = 
+						new iFolderExceptionDialog(
+							this,
+							e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+				}
+			}
+		}
+
+
+
 	}
 }

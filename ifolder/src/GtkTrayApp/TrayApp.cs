@@ -172,6 +172,17 @@ namespace Novell.iFolder
 			}
 			catch(Exception e)
 			{
+				iFolderMsgDialog mDialog = new iFolderMsgDialog(
+					null,
+					iFolderMsgDialog.DialogType.Error,
+					iFolderMsgDialog.ButtonSet.Ok,
+					"iFolder Connect Error",
+					"Unable to locate Simias Process",
+					"The Simias process must be running in order for iFolder to run.  Start the Simias process and try again");
+				mDialog.Run();
+				mDialog.Hide();
+				mDialog.Destroy();
+				mDialog = null;
 			}
 
 //			SyncProperties props = new SyncProperties(conf);
@@ -208,19 +219,6 @@ namespace Novell.iFolder
 				default:
 				case ServiceStates.started:
 				{
-					if(ifws == null)
-					{
-						iFolderMsgDialog mDialog = 
-							new iFolderMsgDialog(Gtk.Stock.DialogError,
-							"iFolder Connect Error",
-							"iFolder is Unable to locate the Simias Process",
-							"The Simias process must be running in order for iFolder to run.  Start the Simias process and try again");
-						mDialog.Run();
-						mDialog.Hide();
-						mDialog.Destroy();
-						mDialog = null;
-					}
-
 					gAppIcon.Pixbuf = ifNormalPixbuf;
 					break;
 				}
