@@ -57,6 +57,7 @@ namespace Simias.Gaim
 		private string userID;
 		private string poBoxID;
 		private static string syncMethodPref = "all";
+		private static bool bPruneOldMembers = false;
 
 		/// <summary>
 		/// Used to log messages.
@@ -386,6 +387,29 @@ namespace Simias.Gaim
 					syncMethodPref = syncMethod;
 				}
 			}
+			
+			//
+			// Prune old members
+			//
+			XmlNode pruneMembersNode =
+				topPrefElement.SelectSingleNode("//pref[@name='plugins']/pref[@name='simias']/pref[@name='prune_members']/@value");
+
+			if (pruneMembersNode != null)
+			{
+				string pruneMembers = pruneMembersNode.Value;
+				if (pruneMembers != null)
+				{
+					if (pruneMembers == "1")
+					{
+						bPruneOldMembers = true;
+					}
+					else
+					{
+						bPruneOldMembers = false;
+					}
+				}
+			}
+			
 		}
 		
 		/// <summary>
@@ -665,7 +689,10 @@ namespace Simias.Gaim
 				}
 			}
 
-			RemoveOldMembers(domain, buddies);			
+			if (bPruneOldMembers)
+			{
+				PruneOldMembers(domain, buddies);
+			}
 		}
 		
 		internal static void CreateNewMember(Simias.Storage.Domain domain, GaimBuddy buddy)
@@ -798,16 +825,42 @@ namespace Simias.Gaim
 			domain.Commit(member);
 		}
 		
-		internal static void RemoveOldMembers(Simias.Storage.Domain domain, GaimBuddy[] buddies)
+		internal static bool IsMemberInBuddyList(Member member, GaimBuddy[] buddies)
 		{
-// FIXME: Perhaps add another preference in the Gaim Plugin that allows the users to decide whether to prune old buddies from the memberlist if they remove them from the Gaim Buddy List
-
+			foreach (GaimBuddy buddy in buddies)
+			{
+				Simias.Storage.PropertyList pList = member.Properties;
+				Simias.Storage.Property p = pList.GetSingleProperty("Gaim:MungedID");
+				if (p != null && ((string) p.Value) == GetGaimMungedID(buddy))
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		/// <summary>
+		/// This method will remove any members of the domain who are no longer
+		/// listed in the Gaim Buddy List
+		/// </summary>
+		internal static void PruneOldMembers(Simias.Storage.Domain domain, GaimBuddy[] buddies)
+		{
 			// Remove members from the domain if they are not in the list of buddies
-//			ICSList memberList = domain.GetMemberList();
-//			foreach (Member member in memberList)
-//			{
-//				
-//			}
+			ICSList memberList = domain.GetMemberList();
+			foreach(ShallowNode sNode in memberList)
+			{
+				// Get the member from the list
+				Simias.Storage.Member member =
+					new Simias.Storage.Member(domain, sNode);
+
+				if (!IsMemberInBuddyList(member, buddies))
+				{
+					// FIXME: This isn't actually deleting the member
+					domain.Delete(member);
+					domain.Commit();
+				}
+			}
 		}
 		
 		internal static void RemoveMember(Simias.Storage.Domain domain, Member member)
