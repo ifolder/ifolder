@@ -44,13 +44,18 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Default constructor for iFolderPropSharingPage
 		/// </summary>
-		public iFolderPropSettingsPage(	iFolder ifolder, 
-										iFolderWebService iFolderWS)
+		public iFolderPropSettingsPage(iFolderWebService iFolderWS)
 			: base()
 		{
 			this.ifws = iFolderWS;
-			this.ifolder = ifolder;
 			InitializeWidgets();
+		}
+
+
+
+		public void UpdateiFolder(iFolder ifolder)
+		{
+			this.ifolder = ifolder;
 		}
 
 
@@ -62,13 +67,14 @@ namespace Novell.iFolder
 		private void InitializeWidgets()
 		{
 			this.Spacing = 10;
-			this.BorderWidth = 10;
+			this.BorderWidth = Util.DefaultBorderWidth;
 
 			//------------------------------
 			// Sync Settings
 			//------------------------------
 			// create a section box
 			VBox syncSectionBox = new VBox();
+			syncSectionBox.Spacing = Util.SectionTitleSpacing;
 			this.PackStart(syncSectionBox, false, true, 0);
 			Label syncSectionLabel = new Label("<span weight=\"bold\">" +
 												"Synchronization" +
@@ -111,15 +117,12 @@ namespace Novell.iFolder
 
 
 
-
-
-
-
 			//------------------------------
 			// Statistics Information
 			//------------------------------
 			// create a section box
 			VBox srvSectionBox = new VBox();
+			srvSectionBox.Spacing = Util.SectionTitleSpacing;
 			this.PackStart(srvSectionBox, false, true, 0);
 			Label srvSectionLabel = new Label("<span weight=\"bold\">" +
 												"Statistics" +
@@ -142,7 +145,7 @@ namespace Novell.iFolder
 			Table srvTable = new Table(2,2,false);
 			srvWidgetBox.PackStart(srvTable, true, true, 0);
 			srvTable.Homogeneous = false;
-			srvTable.ColumnSpacing = 10;
+			srvTable.ColumnSpacing = 20;
 			Label srvNameLabel = new Label("Amount to upload:");
 			srvNameLabel.Xalign = 0;
 			srvTable.Attach(srvNameLabel, 0,1,0,1,
@@ -150,13 +153,129 @@ namespace Novell.iFolder
 			Label srvNameValue = new Label("0");
 			srvNameValue.Xalign = 0;
 			srvTable.Attach(srvNameValue, 1,2,0,1);
-			Label usrNameLabel = new Label("Items to synchronize:");
+			Label usrNameLabel = new Label("Files/Folders to synchronize:");
 			usrNameLabel.Xalign = 0;
 			srvTable.Attach(usrNameLabel, 0,1,1,2,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			Label usrNameValue = new Label("0");
 			usrNameValue.Xalign = 0;
 			srvTable.Attach(usrNameValue, 1,2,1,2);
+
+
+
+			//------------------------------
+			// Disk Space
+			//------------------------------
+			// create a section box
+			VBox diskSectionBox = new VBox();
+			diskSectionBox.Spacing = Util.SectionTitleSpacing;
+			this.PackStart(diskSectionBox, false, true, 0);
+			Label diskSectionLabel = new Label("<span weight=\"bold\">" +
+												"Disk Space" +
+												"</span>");
+			diskSectionLabel.UseMarkup = true;
+			diskSectionLabel.Xalign = 0;
+			diskSectionBox.PackStart(diskSectionLabel, false, true, 0);
+
+			// create a hbox to provide spacing
+			HBox diskSpacerBox = new HBox();
+			diskSpacerBox.Spacing = 10;
+			diskSectionBox.PackStart(diskSpacerBox, true, true, 0);
+			Label diskSpaceLabel = new Label("");
+			diskSpacerBox.PackStart(diskSpaceLabel, false, true, 0);
+
+
+			// create a table to hold the values
+			Table diskTable = new Table(4,3,false);
+			diskSpacerBox.PackStart(diskTable, true, true, 0);
+			diskTable.ColumnSpacing = 20;
+			diskTable.RowSpacing = 5;
+
+			Label totalLabel = new Label("Free space:");
+			totalLabel.Xalign = 0;
+			diskTable.Attach(totalLabel, 0,1,0,1,
+					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
+			Label totalValue = new Label("8000");
+			totalValue.Xalign = 1;
+			diskTable.Attach(totalValue, 1,2,0,1,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			Label totalUnit = new Label("MB");
+			diskTable.Attach(totalUnit, 2,3,0,1,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+			Label usedLabel = new Label("Used space:");
+			usedLabel.Xalign = 0;
+			diskTable.Attach(usedLabel, 0,1,1,2,
+					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
+			Label usedValue = new Label("500");
+			usedValue.Xalign = 1;
+			diskTable.Attach(usedValue, 1,2,1,2,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			Label usedUnit = new Label("MB");
+			diskTable.Attach(usedUnit, 2,3,1,2,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+			Label availLabel = new Label("Total space:");
+			availLabel.Xalign = 0;
+			diskTable.Attach(availLabel, 0,1,2,3,
+					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
+			Label availValue = new Label("7500");
+			availValue.Xalign = 1;
+			diskTable.Attach(availValue, 1,2,2,3,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			Label availUnit = new Label("MB");
+			diskTable.Attach(availUnit, 2,3,2,3,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+			CheckButton LimitCheckButton = 
+					new CheckButton("Limit size to:");
+			diskTable.Attach(LimitCheckButton, 0,1,3,4,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+//			LimitCheckButton.Toggled += new EventHandler(OnAutoSyncButton);
+
+			Entry limitEntry = new Entry();
+			diskTable.Attach(limitEntry, 1,2,3,4,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+//			SyncSpinButton.ValueChanged += 
+//					new EventHandler(OnSyncIntervalChanged);
+
+			Label limitUnitsLabel = new Label("MB");
+			limitUnitsLabel.Xalign = 0;
+			diskTable.Attach(limitUnitsLabel, 2,3,3,4,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+
+
+			Frame graphFrame = new Frame();
+			graphFrame.Shadow = Gtk.ShadowType.EtchedOut;
+			graphFrame.ShadowType = Gtk.ShadowType.EtchedOut;
+			diskSpacerBox.PackStart(graphFrame, false, true, 0);
+			HBox graphBox = new HBox();
+			graphBox.Spacing = 5;
+			graphBox.BorderWidth = 5;
+			graphFrame.Add(graphBox);
+
+			ProgressBar diskGraph = new ProgressBar();
+			graphBox.PackStart(diskGraph, false, true, 0);
+
+			diskGraph.Orientation = Gtk.ProgressBarOrientation.BottomToTop;
+//			diskGraph.Text = "%3";
+			diskGraph.PulseStep = .10;
+			diskGraph.Fraction = .30;
+
+			VBox graphLabelBox = new VBox();
+			graphBox.PackStart(graphLabelBox, false, true, 0);
+
+			Label fullLabel = new Label("full");
+			fullLabel.Xalign = 0;
+			fullLabel.Yalign = 0;
+			graphLabelBox.PackStart(fullLabel, true, true, 0);
+
+			Label emptyLabel = new Label("empty");
+			emptyLabel.Xalign = 0;
+			emptyLabel.Yalign = 1;
+			graphLabelBox.PackStart(emptyLabel, true, true, 0);
+
 
 		}
 	}

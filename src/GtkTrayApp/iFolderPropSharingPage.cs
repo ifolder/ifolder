@@ -50,14 +50,22 @@ namespace Novell.iFolder
 		/// Default constructor for iFolderPropSharingPage
 		/// </summary>
 		public iFolderPropSharingPage(	Gtk.Window topWindow,
-										iFolder ifolder, 
 										iFolderWebService iFolderWS)
 			: base()
 		{
 			this.ifws = iFolderWS;
-			this.ifolder = ifolder;
 			this.topLevelWindow = topWindow;
 			InitializeWidgets();
+		}
+
+
+
+
+		public void UpdateiFolder(iFolder ifolder)
+		{
+			this.ifolder = ifolder;
+
+			RefreshUserList();
 		}
 
 
@@ -157,19 +165,21 @@ namespace Novell.iFolder
 			leftBox.PackStart(AccessButton);
 			AccessButton.Clicked += new EventHandler(OnAccessClicked);
 
-			RefreshUserList();
 		}
+
+
 
 
 		private void RefreshUserList()
 		{
+			UserTreeStore.Clear();
+
     		iFolderUser[] userlist =  ifws.GetiFolderUsers(ifolder.ID);
 			foreach(iFolderUser user in userlist)
 			{
 				UserTreeStore.AppendValues(user);
 			}
 		}
-
 
 
 

@@ -134,7 +134,8 @@ namespace Novell.iFolder
 				ShowConfirmationButton.Active = false;
 
 			AutoSyncCheckButton.Active = true;
-			StartAtLoginButton.Active = true;
+			StartAtLoginButton.Active = false;
+			StartAtLoginButton.Sensitive = false;
 
 
 			SyncSpinButton.Value = ifSettings.DefaultSyncInterval;
@@ -408,7 +409,7 @@ namespace Novell.iFolder
 			// each item in the vBox
 			VBox vbox = new VBox();
 			vbox.Spacing = 10;
-			vbox.BorderWidth = 10;
+			vbox.BorderWidth = Util.DefaultBorderWidth;
 			
 			// Create the main TreeView and add it to a scrolled
 			// window, then add it to the main vbox widget
@@ -513,16 +514,15 @@ namespace Novell.iFolder
 			// Create a new VBox and place 10 pixels between
 			// each item in the vBox
 			VBox vbox = new VBox();
-			vbox.Spacing = 20;
-			vbox.BorderWidth = 10;
-
+			vbox.Spacing = Util.SectionSpacing;
+			vbox.BorderWidth = Util.DefaultBorderWidth;
 
 			//------------------------------
 			// Application Settings
 			//------------------------------
 			// create a section box
 			VBox appSectionBox = new VBox();
-			appSectionBox.Spacing = 5;
+			appSectionBox.Spacing = Util.SectionTitleSpacing;
 			vbox.PackStart(appSectionBox, false, true, 0);
 			Label appSectionLabel = new Label("<span weight=\"bold\">" +
 												"Application" +
@@ -558,7 +558,7 @@ namespace Novell.iFolder
 			//------------------------------
 			// create a section box
 			VBox syncSectionBox = new VBox();
-			syncSectionBox.Spacing = 5;
+			syncSectionBox.Spacing = Util.SectionTitleSpacing;
 			vbox.PackStart(syncSectionBox, false, true, 0);
 			Label syncSectionLabel = new Label("<span weight=\"bold\">" +
 												"Synchronization" +
@@ -606,7 +606,7 @@ namespace Novell.iFolder
 			//------------------------------
 			// create a section box
 			VBox proxySectionBox = new VBox();
-			proxySectionBox.Spacing = 5;
+			proxySectionBox.Spacing = Util.SectionTitleSpacing;
 			vbox.PackStart(proxySectionBox, true, true, 0);
 			Label proxySectionLabel = new Label("<span weight=\"bold\">" +
 												"Proxy" +
@@ -676,8 +676,8 @@ namespace Novell.iFolder
 			// Create a new VBox and place 10 pixels between
 			// each item in the vBox
 			VBox vbox = new VBox();
-			vbox.Spacing = 20;
-			vbox.BorderWidth = 10;
+			vbox.Spacing = Util.SectionSpacing;
+			vbox.BorderWidth = Util.DefaultBorderWidth;
 
 
 			//------------------------------
@@ -685,7 +685,7 @@ namespace Novell.iFolder
 			//------------------------------
 			// create a section box
 			VBox srvSectionBox = new VBox();
-			srvSectionBox.Spacing = 5;
+			srvSectionBox.Spacing = Util.SectionTitleSpacing;
 			vbox.PackStart(srvSectionBox, false, true, 0);
 			Label srvSectionLabel = new Label("<span weight=\"bold\">" +
 												"Server Information" +
@@ -746,7 +746,7 @@ namespace Novell.iFolder
 			//------------------------------
 			// create a section box
 			VBox diskSectionBox = new VBox();
-			diskSectionBox.Spacing = 5;
+			diskSectionBox.Spacing = Util.SectionTitleSpacing;
 			vbox.PackStart(diskSectionBox, false, true, 0);
 			Label diskSectionLabel = new Label("<span weight=\"bold\">" +
 												"Disk Space" +
@@ -856,7 +856,7 @@ namespace Novell.iFolder
 			// each item in the vBox
 			VBox vbox = new VBox();
 			vbox.Spacing = 10;
-			vbox.BorderWidth = 10;
+			vbox.BorderWidth = Util.DefaultBorderWidth;
 		
 			Label lbl = new Label("This log shows current ifolder activity");
 			vbox.PackStart(lbl, false, true, 0);
