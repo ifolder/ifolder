@@ -32,9 +32,17 @@ MERGE_MODULES_WIN  := $(shell cygpath --windows "$(USERPROFILE)\My Documents\My 
 MERGE_MODULES_UNIX := $(shell cygpath --unix "$(USERPROFILE)\My Documents\My InstallShield DevStudio Projects\MergeModules")
 
 RELEASE = 1
+
+if DEBUG
+DEBUG_OPTION = --enable-debug
+MSI_FILE     = $(PACKAGE)_debug-$(VERSION)-$(RELEASE)-setup.exe
+MSM_FILE     = $(PACKAGE)_debug-$(VERSION)-$(RELEASE).msm
+SDK_MSM_FILE = $(PACKAGE)_debug-sdk-$(VERSION)-$(RELEASE).msm
+else
 MSI_FILE     = $(PACKAGE)-$(VERSION)-$(RELEASE)-setup.exe
 MSM_FILE     = $(PACKAGE)-$(VERSION)-$(RELEASE).msm
 SDK_MSM_FILE = $(PACKAGE)-sdk-$(VERSION)-$(RELEASE).msm
+endif
 
 MSI = addressbook-msi
 MSM = addressbook-msm
@@ -131,7 +139,7 @@ addressbook-configure: addressbook-dist
 	cd MSI/BUILD; \
 		tar -xzf $(CUR_DIR)/$(top_srcdir)/$(PACKAGE)-$(VERSION).tar.gz
 	cd MSI/BUILD/$(PACKAGE)-$(VERSION); \
-		./configure --prefix=$(CUR_DIR)/MSI/INSTALL
+		./configure --prefix=$(CUR_DIR)/MSI/INSTALL $(DEBUG_OPTION)
 	
 addressbook-dist:
 	$(MAKE) -C $(top_srcdir) dist
