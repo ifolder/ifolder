@@ -51,8 +51,7 @@
 
 #include "gtkplugin.h"
 
-#include <simias/simiasgaimStub.h>
-#include <simias/simiasgaim.nsmap>
+#include "buddy-sync.h"
 
 /****************************************************
  * Static Definitions (#defines)                    *
@@ -242,10 +241,6 @@ static int send_ping_request_msg(GaimBuddy *recipient);
 static int send_ping_response_msg(GaimBuddy *recipient);
 
 static SIMIAS_MSG_TYPE get_possible_simias_msg_type(const char *buffer);
-
-static void sync_buddy_with_simias_roster(gpointer key,
-										  gpointer value,
-										  gpointer user_data);
 
 static void buddylist_cb_simulate_share_collection(GaimBlistNode *node,
 												gpointer user_data);
@@ -482,49 +477,6 @@ get_possible_simias_msg_type(const char *buffer)
 	} else {
 		return 0;
 	}
-}
-
-/**
- * This function is used to loop through ALL of the buddies in the buddy list
- * when Gaim first starts up (and Simias is running) or when Gaim has been
- * running and Simias comes online.
- * 
- * The information in Gaim breaks any ties (i.e., it wins on the conflict
- * resolution).  All changes to information about Gaim buddies should be done
- * by the user in Gaim.  The Gaim Roster list in Simias should not be editable
- * in iFolder/The Client Application.
- */
-static void
-sync_buddy_with_simias_roster(gpointer key, gpointer value, gpointer user_data)
-{
-	GaimBuddy *buddy = (GaimBuddy *)value;
-	
-	g_print("FIXME: Implement sync_buddy_with_simias_roster(): %s\n",
-			gaim_buddy_get_alias(buddy));
-			
-	/**
-	 * FIXME: Implement PSEUDOCODE in sync_buddy_with_simias_roster
-	 * 
-	 * PSEUDOCODE:
-	 * 
-	 * if (gaim buddy already exists in Simias Gaim Roster) {
-	 * 		- Update the Simias Gaim Roster with any changes in the Buddy List
-	 * 		- The Gaim Buddy List wins any conflicts
-	 * 
-	 * 		- If we already have an IP Address stored in Simias for this user,
-	 * 		  send a [simias:ping-request] message so we can make sure that the
-	 * 		  IP Address reflects what is current for any buddies who are
-	 * 		  currently online.
-	 * 
-	 * 		- Check all the collections in Simias which this buddy may have been
-	 * 		  added to and we've never sent an invitation for.  Send out a
-	 * 		  [simias:invitation-request] message to the buddy for any that
-	 * 		  match this condition.
-	 * } else {
-	 * 		- This is a buddy that has never been added to The Simias Gaim
-	 * 		  Roster so add the buddy to the roster.
-	 * }
-	 */
 }
 
 /**
@@ -3442,7 +3394,7 @@ plugin_load(GaimPlugin *plugin)
 	
 	/* Load up the GtkListStore for trusted buddies */
 	init_trusted_buddies_store();
-				
+
 	/* Load, but don't show the Invitations Window */
 	init_invitations_window();
 
