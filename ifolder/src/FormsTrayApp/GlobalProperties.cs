@@ -2273,11 +2273,6 @@ namespace Novell.FormsTrayApp
 				}
 			}
 		}
-
-		public Domain SelectedDomain
-		{
-			get { return (Domain)servers.SelectedItem; }
-		}
 		#endregion
 
 		#region Public Methods
@@ -2305,6 +2300,10 @@ namespace Novell.FormsTrayApp
 			return (run == 0);
 		}
 
+		/// <summary>
+		/// Adds the specified domain to the dropdown lists.
+		/// </summary>
+		/// <param name="domainWeb">The DomainWeb object to add to the list.</param>
 		public void AddDomainToList(DomainWeb domainWeb)
 		{
 			Domain defaultDomain = null;
@@ -2342,22 +2341,38 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		public bool IsSelected(string poBoxID)
+		/// <summary>
+		/// Check the specified ID to see if it is a POBox that is registered with the client.
+		/// </summary>
+		/// <param name="poBoxID">The ID of the POBox to check.</param>
+		/// <returns><b>True</b> if the specified POBox ID is registered with the client; otherwise, <b>False</b>.</returns>
+		public bool IsPOBox(string poBoxID)
 		{
 			bool result = false;
-			Domain domain = (Domain)servers.SelectedItem;
-			if ((domain.Name != null) && domain.Name.Equals("Show All"))
+
+			foreach (Domain d in servers.Items)
 			{
-				foreach (Domain d in servers.Items)
+				if (d.DomainWeb.POBoxID.Equals(poBoxID))
 				{
-					if ((d.DomainWeb != null) && d.DomainWeb.POBoxID.Equals(poBoxID))
-					{
-						result = true;
-						break;
-					}
+					result = true;
+					break;
 				}
 			}
-			else if (domain.DomainWeb.POBoxID.Equals(poBoxID))
+
+			return result;
+		}
+
+		/// <summary>
+		/// Checks to see if the specified Domain ID is currently selected in the dropdown list.
+		/// </summary>
+		/// <param name="domainID">The ID of the Domain.</param>
+		/// <returns><b>True</b> if the specified Domain or the wild-card Domain is the currently 
+		/// selected domain; otherwise, <b>False</b>.</returns>
+		public bool IsSelected(string domainID)
+		{
+			bool result = false;
+			Domain domain = (Domain)servers2.SelectedItem;
+			if (domain.ShowAll || domain.ID.Equals(domainID))
 			{
 				result = true;
 			}
@@ -2477,12 +2492,15 @@ namespace Novell.FormsTrayApp
 			{
 				if (eventData.Equals("NodeCreated"))
 				{
-					addiFolderToListView(ifolder);
-
-					if (ifolder.State.Equals("Local"))
+					if (IsSelected(ifolder.DomainID))
 					{
-						// Notify the shell.
-						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
+						addiFolderToListView(ifolder);
+
+						if (ifolder.State.Equals("Local"))
+						{
+							// Notify the shell.
+							Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
+						}
 					}
 				}
 				else
@@ -2629,7 +2647,7 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private void refreshiFolders(string domainID)
+		private void refreshiFolders(Domain domain)
 		{
 			Cursor.Current = Cursors.WaitCursor;
 
@@ -2645,9 +2663,9 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				iFolderWeb[] ifolderArray = domainID.Equals("Show All") ? 
+				iFolderWeb[] ifolderArray = domain.ShowAll ? 
 					ifWebService.GetAlliFolders() : 
-					ifWebService.GetiFoldersForDomain(domainID);
+					ifWebService.GetiFoldersForDomain(domain.ID);
 				foreach (iFolderWeb ifolder in ifolderArray)
 				{
 					addiFolderToListView(ifolder);
@@ -2790,9 +2808,6 @@ namespace Novell.FormsTrayApp
 
 			initialBannerWidth = banner.Width;
 			this.MinimumSize = this.Size;
-
-			// Update the iFolders listview.
-//			refreshiFolders("Show All");
 		}
 
 		private void GlobalProperties_VisibleChanged(object sender, System.EventArgs e)
@@ -2800,9 +2815,13 @@ namespace Novell.FormsTrayApp
 			if (this.Visible)
 			{
 				servers2.Items.Clear();
-				Domain domain = new Domain("Show All");
+
+				// Add the wild-card domain.
+				Domain domain = new Domain();
 				servers2.Items.Add(domain);
 				servers2.SelectedItem = domain;
+
+				servers.Items.Clear();
 
 				DomainWeb[] domains;
 				try
@@ -2812,10 +2831,11 @@ namespace Novell.FormsTrayApp
 					{
 						domain = new Domain(dw);
 						servers2.Items.Add(domain);
-	//					if (domain.DomainWeb.IsDefault)
-	//					{
-	//						servers2.SelectedItem = domain;
-	//					}
+						servers.Items.Add(domain);
+						if (domain.DomainWeb.IsDefault)
+						{
+							servers.SelectedItem = domain;
+						}
 					}
 				}
 				catch{}
@@ -2945,7 +2965,7 @@ namespace Novell.FormsTrayApp
 			// Pressing the F5 key will cause a refresh to occur.
 			if (e.KeyCode == Keys.F5)
 			{
-				refreshiFolders(((Domain)servers2.SelectedItem).ID);
+				refreshiFolders((Domain)servers2.SelectedItem);
 			}
 		}
 
@@ -2962,7 +2982,7 @@ namespace Novell.FormsTrayApp
 		#region iFolders Tab
 		private void servers2_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
-			refreshiFolders(((Domain)servers2.SelectedItem).ID);
+			refreshiFolders((Domain)servers2.SelectedItem);
 		}
 
 		private void contextMenu1_Popup(object sender, System.EventArgs e)
@@ -3093,7 +3113,7 @@ namespace Novell.FormsTrayApp
 
 		private void menuRefresh_Click(object sender, System.EventArgs e)
 		{
-			refreshiFolders(((Domain)servers2.SelectedItem).ID);
+			refreshiFolders((Domain)servers2.SelectedItem);
 		}
 
 		private void menuAccept_Click(object sender, System.EventArgs e)

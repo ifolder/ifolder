@@ -815,7 +815,7 @@ namespace Novell.FormsTrayApp
 							{
 								ifolder = ifWebService.GetiFolder(eventArgs.Collection);
 							}
-							else if (eventArgs.Type.Equals("Node") && globalProperties.IsSelected(eventArgs.Collection))//.Equals(ifolderSettings.DefaultPOBoxID))
+							else if (eventArgs.Type.Equals("Node") && globalProperties.IsPOBox(eventArgs.Collection))//.Equals(ifolderSettings.DefaultPOBoxID))
 							{
 								ifolder = ifWebService.GetiFolderInvitation(eventArgs.Collection, eventArgs.Node);
 							}
@@ -837,7 +837,7 @@ namespace Novell.FormsTrayApp
 										ifolderSettings = ifWebService.GetSettings();
 									}
 
-									if (globalProperties.IsSelected(eventArgs.Collection))//.Equals(ifolderSettings.DefaultPOBoxID))
+									if (globalProperties.IsPOBox(eventArgs.Collection))//.Equals(ifolderSettings.DefaultPOBoxID))
 									{
 										ifolder = ifWebService.GetiFolderInvitation(eventArgs.Collection, eventArgs.Node);
 

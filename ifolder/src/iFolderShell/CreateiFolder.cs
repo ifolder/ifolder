@@ -65,10 +65,6 @@ namespace Novell.iFolderCom
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
 		}
 
 		#region Properties
@@ -364,12 +360,6 @@ namespace Novell.iFolderCom
 						Domain domain = new Domain(domainWeb);
 						servers.Items.Add(domain);
 
-//						if ((((selectedDomainID == null) || selectedDomainID.Equals(string.Empty)) && domain.DomainWeb.IsDefault) ||
-//							domain.ID.Equals(selectedDomainID))
-//						{
-//							selectedDomain = domain;
-//						}
-
 						if ((selectedDomain == null) && domain.DomainWeb.IsDefault)
 						{
 							selectedDomain = domain;
@@ -439,6 +429,7 @@ namespace Novell.iFolderCom
 			{
 				if (!Directory.Exists(ifolderPath.Text))
 				{
+					// TODO: Localize
 					MyMessageBox mmb = new MyMessageBox("The specified path does not exist.  Do you want to create it?", "Create Path", string.Empty, MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question);
 					if (mmb.ShowDialog() == DialogResult.Yes)
 					{
@@ -469,6 +460,7 @@ namespace Novell.iFolderCom
 					{
 						successful = false;
 						Cursor.Current = Cursors.Default;
+						// TODO: Localize
 						MyMessageBox mmb = new MyMessageBox("Invalid Folder");//resourceManager.GetString("invalidFolder"));
 						mmb.ShowDialog();
 					}
@@ -478,6 +470,7 @@ namespace Novell.iFolderCom
 			{
 				successful = false;
 				Cursor.Current = Cursors.Default;
+				// TODO: Localize
 				MyMessageBox mmb = new MyMessageBox("Error creating iFolder"/*resourceManager.GetString("iFolderCreateError")*/, string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}

@@ -33,6 +33,7 @@ namespace Novell.iFolderCom
 	{
 		private DomainWeb domainWeb;
 		private string name;
+		private bool showAll = false;
 
 		/// <summary>
 		/// Constructs a Domain object.
@@ -43,9 +44,14 @@ namespace Novell.iFolderCom
 			this.domainWeb = domainWeb;
 		}
 
-		public Domain(string name)
+		/// <summary>
+		/// Constructs a Domain object representing a wild card "Show All Domains".
+		/// </summary>
+		public Domain()
 		{
-			this.name = name;
+			// TODO: Localize
+			this.name = "Show All";
+			this.showAll = true;
 		}
 
 		#region Properties
@@ -57,27 +63,45 @@ namespace Novell.iFolderCom
 			get { return domainWeb;}
 		}
 
+		/// <summary>
+		/// Gets/sets the name of the domain object.
+		/// </summary>
 		public string Name
 		{
 			get { return name; }
 			set { name = value; }
 		}
 
+		/// <summary>
+		/// Gets the ID of the domain object.
+		/// </summary>
 		public string ID
 		{
 			get
 			{
-				if ((name != null) && !name.Equals(string.Empty))
+				if (showAll)
 					return name;
 				else
 					return domainWeb.ID;
 			}
 		}
+
+		/// <summary>
+		/// Gets a value indicating if this is the wild card domain.
+		/// </summary>
+		public bool ShowAll
+		{
+			get { return showAll; }
+		}
 		#endregion
 
+		/// <summary>
+		/// Gets a string representation of the Domain object.
+		/// </summary>
+		/// <returns>A string representing the name of the Domain object.</returns>
 		public override string ToString()
 		{
-			if ((name != null) && !name.Equals(string.Empty))
+			if (showAll)
 				return name;
 			else
 				return domainWeb.Name;
