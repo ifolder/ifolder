@@ -175,29 +175,48 @@ namespace Simias.Storage
 	/// <summary>
 	/// Contains the layout of the LogFile header information.
 	/// </summary>
-	internal struct LogFileHeader
+	internal class LogFileHeader
 	{
-		#region Struct Members
+		#region Class Members
+		/// <summary>
+		/// Log file states.
+		/// </summary>
+		public enum LogState
+		{
+			Closed,
+			Opened
+		};
+
 		/// <summary>
 		/// Encoded lengths of the object fields.
 		/// </summary>
 		private const int logFileIDSize = 16;
 		private const int maxLogRecordsSize = 4;
+		private const int maxFlagsSize = 4;
 
 		/// <summary>
 		/// This is the total encoded record size.
 		/// </summary>
-		private const int encodedRecordSize = logFileIDSize + maxLogRecordsSize;
+		private const int encodedRecordSize = logFileIDSize + maxLogRecordsSize + maxFlagsSize;
+
+		// File states that indicate a graceful shutdown.
+		private const uint opened = 1;
+		private const uint closed = 0;
 
 		/// <summary>
 		/// Contains the identifier for this log file.
 		/// </summary>
-		public string logFileID;
+		private string logFileID;
 
 		/// <summary>
 		/// Maximum number of records to keep persisted in the file.
 		/// </summary>
-		public uint maxLogRecords;
+		private uint maxLogRecords;
+
+		/// <summary>
+		/// Flags used to tell if the service went down nicely.
+		/// </summary>
+		private uint flags;
 		#endregion
 
 		#region Properties
@@ -210,11 +229,38 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets or sets the logFileID.
+		/// </summary>
+		public string LogFileID
+		{
+			get { return logFileID; }
+			set { logFileID = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the maximum number of ChangeLog records in the file.
+		/// </summary>
+		public uint MaxLogRecords
+		{
+			get { return maxLogRecords; }
+			set { maxLogRecords = value; }
+		}
+
+		/// <summary>
 		/// Returns the size of the LogFileHeader record.
 		/// </summary>
 		static public int RecordSize
 		{
 			get { return encodedRecordSize; }
+		}
+
+		/// <summary>
+		/// Gets or sets the log state.
+		/// </summary>
+		public LogState State
+		{
+			get { return ( flags == opened ) ? LogState.Opened : LogState.Closed; }
+			set { flags = ( value == LogState.Opened ) ? opened : closed; }
 		}
 		#endregion
 
@@ -228,6 +274,7 @@ namespace Simias.Storage
 		{
 			logFileID = ID;
 			maxLogRecords = maxRecords;
+			flags = 0;
 		}
 
 		/// <summary>
@@ -238,12 +285,17 @@ namespace Simias.Storage
 		{
 			int index = 0;
 
-			Guid guid = new Guid( encodedRecord );
+			byte[] guidArray = new byte[ 16 ];
+			Array.Copy( encodedRecord, 0, guidArray, 0, guidArray.Length );
+			Guid guid = new Guid( guidArray );
 			logFileID = guid.ToString();
 			index += logFileIDSize;
 
 			maxLogRecords = BitConverter.ToUInt32( encodedRecord, index );
 			index += maxLogRecordsSize;
+
+			flags = BitConverter.ToUInt32( encodedRecord, index );
+			index += maxFlagsSize;
 		}
 		#endregion
 
@@ -261,6 +313,7 @@ namespace Simias.Storage
 			Guid guid = new Guid( logFileID );
 			byte[] lfi = guid.ToByteArray();
 			byte[] mlr = BitConverter.GetBytes( maxLogRecords );
+			byte[] flg = BitConverter.GetBytes( flags );
 
 			// Copy the converted byte arrays to the resulting array.
 			Array.Copy( lfi, 0, result, index, lfi.Length );
@@ -268,6 +321,9 @@ namespace Simias.Storage
 
 			Array.Copy( mlr, 0, result, index, mlr.Length );
 			index += mlr.Length;
+
+			Array.Copy( flg, 0, result, index, flg.Length );
+			index += flg.Length;
 
 			return result;
 		}
@@ -277,9 +333,9 @@ namespace Simias.Storage
 	/// <summary>
 	/// Contains the layout of a ChangeLog record.
 	/// </summary>
-	public struct ChangeLogRecord
+	public class ChangeLogRecord
 	{
-		#region Struct Members
+		#region Class Members
 		/// <summary>
 		/// Recordable change log operations.
 		/// </summary>
@@ -328,31 +384,67 @@ namespace Simias.Storage
 		/// <summary>
 		/// Record identitifer for this entry.
 		/// </summary>
-		public ulong recordID;
+		private ulong recordID;
 
 		/// <summary>
 		/// Date and time that event was recorded.
 		/// </summary>
-		public DateTime epoch;
+		private DateTime epoch;
 
 		/// <summary>
 		/// Identifier of Node object that triggered the event.
 		/// </summary>
-		public string nodeID;
+		private string nodeID;
 
 		/// <summary>
 		/// Node operation type.
 		/// </summary>
-		public ChangeLogOp operation;
+		private ChangeLogOp operation;
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// Gets or sets the record epoch.
+		/// </summary>
+		public DateTime Epoch
+		{
+			get { return epoch; }
+			set { epoch = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the event ID.
+		/// </summary>
+		public string EventID
+		{
+			get { return nodeID; }
+			set { nodeID = value; }
+		}
+
 		/// <summary>
 		/// Gets the length of the record.
 		/// </summary>
 		public int Length
 		{
 			get { return RecordSize; }
+		}
+
+		/// <summary>
+		/// Gets or set the event operation.
+		/// </summary>
+		public ChangeLogOp Operation
+		{
+			get { return operation; }
+			set { operation = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the record ID.
+		/// </summary>
+		public ulong RecordID
+		{
+			get { return recordID; }
+			set { recordID = value; }
 		}
 
 		/// <summary>
@@ -682,29 +774,35 @@ namespace Simias.Storage
 			// Build the log file path.
 			logFilePath = Path.Combine( logFileDir, collectionID + ".changelog" );
 
-			// Build the new log file header.
-			LogFileHeader header = new LogFileHeader( collectionID, defaultMaxPersistedRecords );
-
-			// Create the log file, truncating it if it already exists.
-			FileStream fs = new FileStream( logFilePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None );
-
-			try
+			// Check to see if the file exists.
+			if ( !File.Exists( logFilePath ) )
 			{
+				// Create the file.
+				FileStream fs = new FileStream( logFilePath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None );
 				try
 				{
-					// Position the file pointer to the right position within the file.
-					fs.Position = 0;
-					fs.Write( header.ToByteArray(), 0, header.Length );
+					// Create the log file header.
+					CreateLogFileHeader( fs, collectionID );
 				}
-				catch ( IOException e )
+				finally
 				{
-					log.Error( "Failed to write event log header. " + e.Message );
-					throw;
+					fs.Close();
 				}
 			}
-			finally
+			else
 			{
-				if ( fs != null )
+				// Open the existing log file.
+				FileStream fs = new FileStream( logFilePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None );
+				try
+				{
+					// Check to see if the log file was shutdown gracefully.
+					if ( CheckIntegrity( fs, collectionID ) )
+					{
+						// Setup the current write position.
+						SetCurrentWritePosition( fs );
+					}
+				}
+				finally
 				{
 					fs.Close();
 				}
@@ -719,6 +817,88 @@ namespace Simias.Storage
 		#endregion
 
 		#region Private Methods
+		/// <summary>
+		/// Checks to see if the file was gracefully shutdown. If it was not, the file contents are
+		/// truncated and reinitialized.
+		/// </summary>
+		/// <param name="fs">File stream that reference the log file.</param>
+		/// <param name="collectionID">ID of the collection being monitored.</param>
+		/// <returns>True if the file data is good, otherwise false.</returns>
+		private bool CheckIntegrity( FileStream fs, string collectionID )
+		{
+			LogFileHeader logHeader = GetLogFileHeader( fs );
+			if ( ( logHeader.LogFileID == collectionID ) && ( logHeader.State == LogFileHeader.LogState.Closed ) )
+			{
+				// Set the status to opened.
+				WriteLogFileStatus( fs, LogFileHeader.LogState.Opened );
+				return true;
+			}
+			else
+			{
+				log.Error( "Log file corrupted. Reinitializing contents." );
+
+				// Truncate the file data.
+				fs.SetLength( 0 );
+				CreateLogFileHeader( fs, collectionID );
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Creates a default log file header and writes it to the log file.
+		/// </summary>
+		/// <param name="fs">File stream that reference the log file.</param>
+		/// <param name="collectionID">ID of collection being monitored.</param>
+		private void CreateLogFileHeader( FileStream fs, string collectionID )
+		{
+			// Build the new log file header.
+			LogFileHeader header = new LogFileHeader( collectionID, defaultMaxPersistedRecords );
+			header.State = LogFileHeader.LogState.Opened;
+
+			try
+			{
+				fs.Position = 0;
+				fs.Write( header.ToByteArray(), 0, header.Length );
+			}
+			catch ( IOException e )
+			{
+				log.Error( "Failed to write log header. " + e.Message );
+				throw;
+			}
+		}
+
+		/// <summary>
+		/// Gets the log file header for the specified stream.
+		/// </summary>
+		/// <param name="fs">File stream containing the header.</param>
+		/// <returns>A LogFileHeader object from the specified file stream if successful. Otherwise
+		/// a null is returned.</returns>
+		private LogFileHeader GetLogFileHeader( FileStream fs )
+		{
+			LogFileHeader logHeader = null;
+
+			try
+			{
+				// Position the file pointer to the beginning of the file.
+				fs.Position = 0;
+
+				// Read the data.
+				byte[] buffer = new byte[ LogFileHeader.RecordSize ];
+				int bytesRead = fs.Read( buffer, 0, buffer.Length );
+				if ( bytesRead == buffer.Length )
+				{
+					logHeader = new LogFileHeader( buffer );
+				}
+			}
+			catch ( IOException e )
+			{
+				log.Error( "Failed to read event log header. {0}", e.Message );
+				throw;
+			}
+
+			return logHeader;
+		}
+
 		/// <summary>
 		/// Delegate that is called when a Node object has been changed.
 		/// </summary>
@@ -776,6 +956,79 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Sets the next write position in the log file.
+		/// </summary>
+		/// <param name="fs">FileStream object that references the log file.</param>
+		private void SetCurrentWritePosition( FileStream fs )
+		{
+			try
+			{
+				// Allocate a buffer to hold the records that are read.
+				byte[] buffer = new byte[ ChangeLogRecord.RecordSize * 1000 ];
+
+				// Skip over the file header.
+				fs.Position = LogFileHeader.RecordSize;
+
+				// Read the first record.
+				int bytesRead = fs.Read( buffer, 0, ChangeLogRecord.RecordSize );
+				if ( bytesRead > 0 )
+				{
+					// Instanitate the first record to compare.
+					ChangeLogRecord record1 = new ChangeLogRecord( buffer );
+					ChangeLogRecord record2 = null;
+
+					// Read the next bunch of records.
+					bytesRead = fs.Read( buffer, 0, buffer.Length );
+					while ( bytesRead > 0 )
+					{
+						int index = 0;
+						while ( ( index + ChangeLogRecord.RecordSize ) <= bytesRead )
+						{
+							// Instantiate the next record so the id's can be compared.
+							record2 = new ChangeLogRecord( buffer, index );
+
+							// See if the record id has rolled over.
+							if ( record1.RecordID > record2.RecordID )
+							{
+								// Found the roll over point. Calculate the next write position.
+								writePosition = ( fs.Position - bytesRead ) + index;
+								recordID = record1.RecordID + 1;
+								bytesRead = 0;
+								break;
+							}
+							else
+							{
+								// Record id's are still increasing.
+								index += ChangeLogRecord.RecordSize;
+								record1 = record2;
+							}
+						}
+
+						// If we haven't found the roll over point, keep reading.
+						if ( bytesRead > 0 )
+						{
+							// Read the next buffer full.
+							bytesRead = fs.Read( buffer, 0, buffer.Length );
+						}
+					}
+
+					// There is either only one record in the file or the end of the file has been reached without
+					// detecting the rollover point.
+					if ( ( record2 == null ) || ( record1 == record2 ) )
+					{
+						// Next write position is the current position if it isn't at the size limit.
+						writePosition = ( fs.Position >= maxWritePosition ) ? LogFileHeader.RecordSize : fs.Position;
+						recordID = record1.RecordID + 1;
+					}
+				}
+			}
+			catch ( IOException e )
+			{
+				log.Error( e.Message );
+			}
+		}
+
+		/// <summary>
 		/// Writes the specified ChangeLogRecord to the ChangeLog file.
 		/// </summary>
 		/// <param name="record">ChangeLogRecord to write to file.</param>
@@ -790,7 +1043,7 @@ namespace Simias.Storage
 					try
 					{
 						// Add the next ID to the record.
-						record.recordID = recordID;
+						record.RecordID = recordID;
 
 						// Position the file pointer to the right position within the file.
 						fs.Position = writePosition;
@@ -806,7 +1059,7 @@ namespace Simias.Storage
 					}
 					catch ( IOException e )
 					{
-						log.Error( "Failed to write event to event log. Epoch: {0}, ID: {1}, Operation: {2} {3}", record.epoch, record.nodeID, record.operation, e.Message );
+						log.Error( "Failed to write event to event log. Epoch: {0}, ID: {1}, Operation: {2} {3}", record.Epoch, record.EventID, record.Operation, e.Message );
 					}
 				}
 				finally
@@ -816,7 +1069,63 @@ namespace Simias.Storage
 			}
 			else
 			{
-				log.Error( "Failed to open event log file. Lost event - Epoch: {0}, ID: {1}, Operation: {2}", record.epoch, record.nodeID, record.operation );
+				log.Error( "Failed to open event log file. Lost event - Epoch: {0}, ID: {1}, Operation: {2}", record.Epoch, record.EventID, record.Operation );
+			}
+		}
+
+		/// <summary>
+		/// Write the log file status out to the log file.
+		/// </summary>
+		/// <param name="status">Status of the log file.</param>
+		private void WriteLogFileStatus( LogFileHeader.LogState status )
+		{
+			// Open the log file.
+			FileStream fs = OpenLogFile();
+			if ( fs != null )
+			{
+				try
+				{
+					WriteLogFileStatus( fs, status );
+				}
+				finally
+				{
+					fs.Close();
+				}
+			}
+			else
+			{
+				log.Error( "Failed to open event log file. Lost status - status: {0}", status );
+			}
+		}
+
+		/// <summary>
+		/// Write the log file status out to the log file.
+		/// </summary>
+		/// <param name="fs">FileStream object that references the log file.</param>
+		/// <param name="status">Status of the log file.</param>
+		private void WriteLogFileStatus( FileStream fs, LogFileHeader.LogState status )
+		{
+			try
+			{
+				// Get the LogFileHeader.
+				LogFileHeader logHeader = GetLogFileHeader( fs );
+				if ( logHeader != null )
+				{
+					// Set the status in the header.
+					logHeader.State = status;
+
+					// Position the file pointer to the right position within the file.
+					fs.Position = 0;
+					fs.Write( logHeader.ToByteArray(), 0, logHeader.Length );
+				}
+				else
+				{
+					log.Error( "Failed to read log file header." );
+				}
+			}
+			catch ( IOException e )
+			{
+				log.Error( "Failed to write log file status. {0}", e.Message );
 			}
 		}
 		#endregion
@@ -855,6 +1164,9 @@ namespace Simias.Storage
 				{
 					// Dispose managed resources.
 					subscriber.Dispose();
+
+					// Write out to the log file that it closed nicely.
+					WriteLogFileStatus( LogFileHeader.LogState.Closed );
 				}
 			}
 		}
@@ -914,40 +1226,44 @@ namespace Simias.Storage
 		{
 			bool foundOffset = false;
 
-			try
+			// Make sure that there is a valid cookie.
+			if ( cookie != null )
 			{
-				byte[] buffer = new byte[ ChangeLogRecord.RecordSize ];
-
-				// Using the hint in the cookie, see if the read position still exists in the file.
-				fs.Position = cookie.Hint;
-				int bytesRead = fs.Read( buffer, 0, buffer.Length );
-				if ( bytesRead > 0 )
+				try
 				{
-					ChangeLogRecord record = new ChangeLogRecord( buffer );
-					if ( ( record.recordID == cookie.RecordID ) && ( ( record.epoch == cookie.TimeStamp ) || ( cookie.TimeStamp == DateTime.MinValue ) ) )
-					{
-						// Found the record that we were looking for. If the cookie indicates the no data has
-						// ever been read, then position the file pointer back to the first record so it doesn't
-						// get skipped. Otherwise, if the record and cookie match exactly, the file pointer is
-						// already at the right position to read the next record.
-						if ( cookie.TimeStamp == DateTime.MinValue )
-						{
-							// We have yet to read a record, start at the beginning.
-							fs.Position = LogFileHeader.RecordSize;
-						}
+					byte[] buffer = new byte[ ChangeLogRecord.RecordSize ];
 
+					// Using the hint in the cookie, see if the read position still exists in the file.
+					fs.Position = cookie.Hint;
+					int bytesRead = fs.Read( buffer, 0, buffer.Length );
+					if ( bytesRead > 0 )
+					{
+						ChangeLogRecord record = new ChangeLogRecord( buffer );
+						if ( ( record.RecordID == cookie.RecordID ) && ( ( record.Epoch == cookie.TimeStamp ) || ( cookie.TimeStamp == DateTime.MinValue ) ) )
+						{
+							// Found the record that we were looking for. If the cookie indicates the no data has
+							// ever been read, then position the file pointer back to the first record so it doesn't
+							// get skipped. Otherwise, if the record and cookie match exactly, the file pointer is
+							// already at the right position to read the next record.
+							if ( cookie.TimeStamp == DateTime.MinValue )
+							{
+								// We have yet to read a record, start at the beginning.
+								fs.Position = LogFileHeader.RecordSize;
+							}
+
+							foundOffset = true;
+						}
+					}
+					else if ( ( bytesRead == 0 ) && ( cookie.RecordID == 0 ) && ( cookie.TimeStamp == DateTime.MinValue ) )
+					{
+						fs.Position = LogFileHeader.RecordSize;
 						foundOffset = true;
 					}
 				}
-				else if ( ( bytesRead == 0 ) && ( cookie.RecordID == 0 ) && ( cookie.TimeStamp == DateTime.MinValue ) )
+				catch ( IOException e )
 				{
-					fs.Position = LogFileHeader.RecordSize;
-					foundOffset = true;
+					log.Error( "GetReadPosition():" + e.Message );
 				}
-			}
-			catch ( IOException e )
-			{
-				log.Error( "GetReadPosition():" + e.Message );
 			}
 
 			return foundOffset;
@@ -969,8 +1285,10 @@ namespace Simias.Storage
 					// Open the log file.
 					fs = new FileStream( logFilePath, FileMode.Open, FileAccess.Read, FileShare.Read );
 				}
-				catch ( IOException )
+				catch ( IOException e )
 				{
+					log.Error( "Failed to open log file. {0}", e.Message );
+
 					// Wait for a moment before trying to open the file again.
 					Thread.Sleep( 100 );
 				}
@@ -1009,6 +1327,7 @@ namespace Simias.Storage
 						{
 							// Instanitate the first record to compare.
 							ChangeLogRecord record1 = new ChangeLogRecord( buffer );
+							ChangeLogRecord record2 = null;
 
 							// Read the next bunch of records.
 							bytesRead = fs.Read( buffer, 0, buffer.Length );
@@ -1018,16 +1337,16 @@ namespace Simias.Storage
 								while ( ( index + ChangeLogRecord.RecordSize ) <= bytesRead )
 								{
 									// Instantiate the next record so the id's can be compared.
-									ChangeLogRecord record2 = new ChangeLogRecord( buffer, index );
+									record2 = new ChangeLogRecord( buffer, index );
 
 									// See if the record id has rolled over.
-									if ( record1.recordID > record2.recordID )
+									if ( record1.RecordID > record2.RecordID )
 									{
 										// Found the roll over point. Calculate the hint position and create
 										// the cookie.
 										long hint = ( fs.Position - bytesRead ) + ( index - ChangeLogRecord.RecordSize );
-										cookie = new EventContext( record1.epoch, record1.recordID, hint );
-										bytesRead= 0;
+										cookie = new EventContext( record1.Epoch, record1.RecordID, hint );
+										bytesRead = 0;
 										break;
 									}
 									else
@@ -1039,18 +1358,18 @@ namespace Simias.Storage
 								}
 
 								// If we haven't found the roll over point, keep reading.
-								if ( cookie == null )
+								if ( bytesRead > 0 )
 								{
 									// Read the next buffer full.
 									bytesRead = fs.Read( buffer, 0, buffer.Length );
 								}
 							}
 
-							// If there is no more data to read and the event context is still null, use the last
-							// record read.
-							if ( ( bytesRead == 0 ) && ( cookie == null ) )
+							// There is either only one record in the file or the end of the file has been reached
+							// without detecting a rollover point.
+							if ( ( record2 == null ) || ( record1 == record2 ) )
 							{
-								cookie = new EventContext( record1.epoch, record1.recordID, fs.Position - ChangeLogRecord.RecordSize );
+								cookie = new EventContext( record1.Epoch, record1.RecordID, fs.Position - ChangeLogRecord.RecordSize );
 							}
 						}
 						else
@@ -1123,8 +1442,8 @@ namespace Simias.Storage
 						if ( changeList.Count > 0 )
 						{
 							ChangeLogRecord record = ( ChangeLogRecord )changeList[ changeList.Count - 1 ];
-							cookie.TimeStamp = record.epoch;
-							cookie.RecordID = record.recordID;
+							cookie.TimeStamp = record.Epoch;
+							cookie.RecordID = record.RecordID;
 							cookie.Hint = lastRecordOffset;
 						}
 

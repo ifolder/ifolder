@@ -100,11 +100,6 @@
                     HintPath = "external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll"
                 />
                 <Reference
-                    Name = "nunit.framework"
-                    AssemblyName = "nunit.framework"
-                    HintPath = "tools\NUnit\net\bin\nunit.framework.dll"
-                />
-                <Reference
                     Name = "mDnsResponderApi"
                     AssemblyName = "mDnsResponderApi"
                     HintPath = "external\mDnsResponder\net\bin\mDnsResponderApi.dll"
@@ -575,11 +570,6 @@
                 />
                 <File
                     RelPath = "src\Smtp\SmtpStream.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Smtp\SmtpTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
