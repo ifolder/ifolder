@@ -361,14 +361,22 @@ public class SyncService
 		int i = 0;
 		foreach (SyncNode sn in nodes)
 		{
-			XmlDocument xNode = new XmlDocument();
-			xNode.LoadXml(sn.node);
-			Node node = Node.NodeFactory(store, xNode);
-			Import(node, sn.expectedIncarn);
-			NodeList.Add(node);
-			statusList[i] = new SyncNodeStatus();
-			statusList[i].nodeID = node.ID;
-			statusList[i++].status = SyncNodeStatus.SyncStatus.Success;
+			if (sn != null)
+			{
+				XmlDocument xNode = new XmlDocument();
+				xNode.LoadXml(sn.node);
+				Node node = Node.NodeFactory(store, xNode);
+				Import(node, sn.expectedIncarn);
+				NodeList.Add(node);
+				statusList[i] = new SyncNodeStatus();
+				statusList[i].nodeID = node.ID;
+				statusList[i++].status = SyncNodeStatus.SyncStatus.Success;
+			}
+			else
+			{
+				// There is no node to store.
+				statusList[i++].status = SyncNodeStatus.SyncStatus.Success;
+			}
 		}
 		if (!CommitNonFileNodes())
 		{
@@ -478,9 +486,9 @@ public class SyncService
 	{
 		SyncNode[] nodes = new SyncNode[nodeIDs.Length];
 
-		try
+		for (int i = 0; i < nodeIDs.Length; ++i)
 		{
-			for (int i = 0; i < nodeIDs.Length; ++i)
+			try
 			{
 				Node node = collection.GetNodeByID(nodeIDs[i]);
 				SyncNode snode = new SyncNode();
@@ -488,9 +496,10 @@ public class SyncService
 				snode.expectedIncarn = node.MasterIncarnation;
 				nodes[i] = snode;
 			}
-		}
-		catch
-		{
+			catch
+			{
+				nodes[i] = null;
+			}
 		}
 		return nodes;
 	}

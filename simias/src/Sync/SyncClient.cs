@@ -1116,19 +1116,23 @@ namespace Simias.Sync.Client
 			int i = 0;
 			foreach (SyncNode sn in nodes)
 			{
-				XmlDocument xNode = new XmlDocument();
-				xNode.LoadXml(sn.node);
-				Node node = Node.NodeFactory(store, xNode);
-				log.Info("Importing {0} {1} from server", node.Type, node.Name);
-				Import(node);
-				commitList[i++] = node;
+				if (sn != null)
+				{
+					XmlDocument xNode = new XmlDocument();
+					xNode.LoadXml(sn.node);
+					Node node = Node.NodeFactory(store, xNode);
+					log.Info("Importing {0} {1} from server", node.Type, node.Name);
+					Import(node);
+					commitList[i++] = node;
+				}
 			}
 			try
 			{
 				collection.Commit(commitList);
 				foreach ( Node node in commitList)
 				{
-					nodesFromServer.Remove(node.ID);
+					if (node != null)
+						nodesFromServer.Remove(node.ID);
 				}
 			}
 			catch
