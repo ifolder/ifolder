@@ -161,15 +161,78 @@ namespace Novell.FormsTrayApp
 				configDoc = new XmlDocument();
 				configDoc.Load(configFilePath);
 
-				// Parse the config file.
-				XmlNode runtimeNode = configDoc.DocumentElement.SelectSingleNode("/configuration/runtime");
-				if (runtimeNode != null)
-				{
-					// Get the simiasclient element.
-					XmlNode simiasNode = runtimeNode.FirstChild.FirstChild;
+				bool found = false;
 
-					// Replace the codeBase element.
-					replaceCodeBase(simiasNode, installDir);
+				// Get all of the dependentAssembly elements.
+				XmlNodeList nodeList = configDoc.GetElementsByTagName("dependentAssembly");
+				foreach (XmlNode n in nodeList)
+				{
+					// Look for an assembly called simiasclient.
+					XmlNodeList nList2 = ((XmlElement)n).GetElementsByTagName("assemblyIdentity");
+					foreach (XmlNode n2 in nList2)
+					{
+						string name = ((XmlElement)n2).GetAttribute("name");
+						if (name.Equals("simiasclient"))
+						{
+							// We found it, update this node so that it has the correct path.
+							replaceCodeBase(n, installDir);
+							found = true;
+							break;
+						}
+					}
+
+					if (found)
+						break;
+				}
+
+				if (!found)
+				{
+					// Get the assemblyBinding element.
+					XmlNode assemblyBindingNode = null;
+					nodeList = configDoc.GetElementsByTagName("assemblyBinding");
+					foreach (XmlNode n in nodeList)
+					{
+						// There should only be one.
+						assemblyBindingNode = n;
+						break;
+					}
+
+					if (assemblyBindingNode == null)
+					{
+						// We didn't find the assemblyBinding element, so we need to create it.
+						XmlNode runtime = configDoc.SelectSingleNode("/configuration/runtime");
+						if (runtime == null)
+						{
+							// No runtime element either, so create it.
+							runtime = configDoc.CreateNode(XmlNodeType.Element, "runtime", null);
+							XmlNode configuration = configDoc.SelectSingleNode("/configuration");
+							configuration.AppendChild(runtime);
+						}
+
+						assemblyBindingNode = configDoc.CreateElement(string.Empty, "assemblyBinding", "urn:schemas-microsoft-com:asm.v1");
+						runtime.AppendChild(assemblyBindingNode);
+					}
+
+					if (assemblyBindingNode != null)
+					{
+						// Build the path to the assembly
+						Uri fileURI = new Uri(Path.Combine(installDir, Path.Combine(@"web\bin", "simiasclient.dll")));
+
+						// Get the namespace from the node.
+						string ns = assemblyBindingNode.GetNamespaceOfPrefix(String.Empty);
+
+						// Create an element with the correct path.
+						XmlElement dependentAssembly = configDoc.CreateElement(String.Empty, "dependentAssembly", ns);
+						XmlElement assemblyIdentity = configDoc.CreateElement(String.Empty, "assemblyIdentity", ns);
+						assemblyIdentity.SetAttribute("name", "simiasclient");
+						XmlElement codeBase = configDoc.CreateElement(String.Empty, "codeBase", ns);
+						codeBase.SetAttribute("href", fileURI.AbsoluteUri);
+						dependentAssembly.AppendChild(assemblyIdentity);
+						dependentAssembly.AppendChild(codeBase);
+
+						// Add the element.
+						assemblyBindingNode.AppendChild(dependentAssembly);
+					}
 				}
 
 				saveXmlFile(configDoc, configFilePath);
