@@ -50,6 +50,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private MenuItem menuItemInviteWizard;
 		private MenuItem menuItemAddrBook;
 		private MenuItem menuItemTracer;
+		private MenuItem menuItemBrowser;
 		private System.ComponentModel.IContainer components;
 
 		private SyncManager syncManager = null;
@@ -90,10 +91,19 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuItemInviteWizard = new MenuItem("&Invitation Wizard");
 			this.menuItemAddrBook = new MenuItem("&Address Book");
 			this.menuItemTracer = new MenuItem("Trace Window");
+			this.menuItemBrowser = new MenuItem("Store Browser");
 
 			// Initialize contextMenu1
-			this.contextMenu1.MenuItems.AddRange(
-				new MenuItem[] {this.menuItemExit, this.menuItemInviteWizard, this.menuItemAddrBook, this.menuItemTracer});
+			if (File.Exists(Path.Combine(Environment.CurrentDirectory, "StoreBrowser.exe")))
+			{
+				this.contextMenu1.MenuItems.AddRange(
+					new MenuItem[] {this.menuItemExit, this.menuItemInviteWizard, this.menuItemAddrBook, this.menuItemTracer, this.menuItemBrowser});
+			}
+			else
+			{
+				this.contextMenu1.MenuItems.AddRange(
+					new MenuItem[] {this.menuItemExit, this.menuItemInviteWizard, this.menuItemAddrBook, this.menuItemTracer});
+			}
 
 			// Initialize menuItemExit
 			this.menuItemExit.Index = 0;
@@ -110,6 +120,10 @@ namespace Novell.iFolder.FormsTrayApp
 			// Initialize menuItemTracer
 			this.menuItemTracer.Index = 0;
 			this.menuItemTracer.Click += new System.EventHandler(menuItemTracer_Click);
+
+			// Initialize menuItemBrowser
+			this.menuItemBrowser.Index = 0;
+			this.menuItemBrowser.Click += new EventHandler(menuItemBrowser_Click);
 
 			// Set up how the form should be displayed.
 			this.ClientSize = new System.Drawing.Size(292, 266);
@@ -300,6 +314,11 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			// Display the trace window.
 			this.traceForm.Show();
+		}
+
+		private void menuItemBrowser_Click(object sender, EventArgs e)
+		{
+			Process.Start("StoreBrowser.exe");
 		}
 
 		private void FormsTrayApp_Load(object sender, System.EventArgs e)
