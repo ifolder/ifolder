@@ -150,23 +150,22 @@ namespace Novell.iFolder
 		}
 
 		private void on_select_icon(object obj, 
-				GnomeSharp.IconSelectedArgs args)
+				IconSelectedArgs args)
 		{
 			if(args.Event != null)
 			{
 				int idx = args.Num;
-				Event ev_any = args.Event;
 
-				EventButton ev = EventButton.New(ev_any.Handle);
+				EventButton ev = new EventButton(args.Event.Handle);
 
-				if(	(ev.type == EventType.TwoButtonPress) && 
-						(ev.button == 1) &&
+				if(	(args.Event.Type == EventType.TwoButtonPress) && 
+						(ev.Button == 1) &&
 						(enableDblClick) )
 				{
 					on_open_context_menu(obj, args);
 				}
 
-				if(ev.type == EventType.ButtonPress)
+				if(args.Event.Type == EventType.ButtonPress)
 				{
 					if(idx == curIndex)
 						enableDblClick = true;
@@ -176,7 +175,7 @@ namespace Novell.iFolder
 					curIndex = idx;
 				}
 
-				if(ev.button == 3)
+				if(ev.Button == 3)
 				{
 					show_context_menu(idx);
 				}

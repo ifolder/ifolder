@@ -127,10 +127,10 @@ namespace Novell.iFolder
 
 		static void trayapp_clicked(object obj, ButtonPressEventArgs args)
 		{
-			switch(args.Event.button)
+			switch(args.Event.Button)
 			{
 				case 1: // first mouse button
-					if(args.Event.type == Gdk.EventType.TwoButtonPress)
+					if(args.Event.Type == Gdk.EventType.TwoButtonPress)
 					{
 						show_browser(obj, args);
 					}
