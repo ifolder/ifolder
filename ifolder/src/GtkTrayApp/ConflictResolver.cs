@@ -284,6 +284,50 @@ namespace Novell.iFolder
 
 		public void on_auto(object o, EventArgs args)
 		{
+			MessageDialog dialog = new MessageDialog(ConflictDialog,
+				DialogFlags.Modal | DialogFlags.DestroyWithParent,
+				MessageType.Question,
+				ButtonsType.None,
+				"Auto Resolution will resolve all conflicts using the Copy you select here.  Which copy should all conflicts be resolved to?");
+			dialog.Title = "Auto Resolve Conflicts";
+			dialog.AddButton("Local Copy", -1);
+			dialog.AddButton("Server Copy", -2);
+			dialog.AddButton("Cancel", -9);
+			int rc = dialog.Run();
+			dialog.Hide();
+			dialog.Destroy();
+			switch(rc)
+			{
+				case -1:	// resolve all local
+					resolveAll(true);
+					break;
+				case -2:	// resolve all server
+					resolveAll(false);
+					break; 
+				case -9:	// cancel
+					break;
+			}
+		}
+
+
+		private void resolveAll(bool local)
+		{
+			TreeIter iter;
+
+			while(ConflictTreeStore.GetIterFirst(out iter))
+			{
+				Node conflictNode = (Node) ConflictTreeStore.GetValue(iter, 0);
+				Simias.Sync.Conflict conflict = 
+					new Simias.Sync.Conflict(ifolder, conflictNode);
+
+				if(local)
+					conflict.Resolve(true);
+				else
+					conflict.Resolve(false);
+
+				ConflictTreeStore.Remove(ref iter);
+				UpdateFields(null);
+			}
 		}
 
 		public void on_resolve(object o, EventArgs args)
