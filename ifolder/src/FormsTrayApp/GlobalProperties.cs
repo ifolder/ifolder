@@ -107,6 +107,24 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.ColumnHeader columnHeader5;
 		private System.Windows.Forms.MenuItem menuSyncNow;
 		private System.Windows.Forms.MenuItem menuEnabled;
+		private System.Windows.Forms.MainMenu mainMenu1;
+		private System.Windows.Forms.MenuItem menuFile;
+		private System.Windows.Forms.MenuItem menuFileExit;
+		private System.Windows.Forms.MenuItem menuAction;
+		private System.Windows.Forms.MenuItem menuView;
+		private System.Windows.Forms.MenuItem menuViewRefresh;
+		private System.Windows.Forms.MenuItem menuActionOpen;
+		private System.Windows.Forms.MenuItem menuActionCreate;
+		private System.Windows.Forms.MenuItem menuActionRevert;
+		private System.Windows.Forms.MenuItem menuActionShare;
+		private System.Windows.Forms.MenuItem menuActionSync;
+		private System.Windows.Forms.MenuItem menuActionProperties;
+		private System.Windows.Forms.MenuItem menuActionEnable;
+		private System.Windows.Forms.MenuItem menuActionStart;
+		private System.Windows.Forms.MenuItem menuActionStop;
+		private System.Windows.Forms.MenuItem menuActionPause;
+		private System.Windows.Forms.MenuItem menuActionRestart;
+		private System.Windows.Forms.MenuItem menuActionSeparator1;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -212,6 +230,24 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuStop = new System.Windows.Forms.MenuItem();
 			this.menuRestart = new System.Windows.Forms.MenuItem();
 			this.banner = new System.Windows.Forms.PictureBox();
+			this.mainMenu1 = new System.Windows.Forms.MainMenu();
+			this.menuFile = new System.Windows.Forms.MenuItem();
+			this.menuFileExit = new System.Windows.Forms.MenuItem();
+			this.menuAction = new System.Windows.Forms.MenuItem();
+			this.menuActionCreate = new System.Windows.Forms.MenuItem();
+			this.menuActionSeparator1 = new System.Windows.Forms.MenuItem();
+			this.menuActionOpen = new System.Windows.Forms.MenuItem();
+			this.menuActionRevert = new System.Windows.Forms.MenuItem();
+			this.menuActionShare = new System.Windows.Forms.MenuItem();
+			this.menuActionSync = new System.Windows.Forms.MenuItem();
+			this.menuActionProperties = new System.Windows.Forms.MenuItem();
+			this.menuActionEnable = new System.Windows.Forms.MenuItem();
+			this.menuActionStart = new System.Windows.Forms.MenuItem();
+			this.menuActionPause = new System.Windows.Forms.MenuItem();
+			this.menuActionStop = new System.Windows.Forms.MenuItem();
+			this.menuActionRestart = new System.Windows.Forms.MenuItem();
+			this.menuView = new System.Windows.Forms.MenuItem();
+			this.menuViewRefresh = new System.Windows.Forms.MenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -659,6 +695,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuPause.Enabled = false;
 			this.menuPause.Index = 2;
 			this.menuPause.Text = "Pause";
+			this.menuPause.Click += new System.EventHandler(this.menuPause_Click);
 			// 
 			// menuStop
 			// 
@@ -682,6 +719,142 @@ namespace Novell.iFolder.FormsTrayApp
 			this.banner.TabIndex = 9;
 			this.banner.TabStop = false;
 			// 
+			// mainMenu1
+			// 
+			this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																					  this.menuFile,
+																					  this.menuAction,
+																					  this.menuView});
+			// 
+			// menuFile
+			// 
+			this.menuFile.Index = 0;
+			this.menuFile.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																					 this.menuFileExit});
+			this.menuFile.Text = "File";
+			// 
+			// menuFileExit
+			// 
+			this.menuFileExit.Index = 0;
+			this.menuFileExit.Text = "Exit";
+			this.menuFileExit.Click += new System.EventHandler(this.menuFileExit_Click);
+			// 
+			// menuAction
+			// 
+			this.menuAction.Index = 1;
+			this.menuAction.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																					   this.menuActionCreate,
+																					   this.menuActionSeparator1,
+																					   this.menuActionOpen,
+																					   this.menuActionRevert,
+																					   this.menuActionShare,
+																					   this.menuActionSync,
+																					   this.menuActionProperties,
+																					   this.menuActionEnable,
+																					   this.menuActionStart,
+																					   this.menuActionPause,
+																					   this.menuActionStop,
+																					   this.menuActionRestart});
+			this.menuAction.Text = "Action";
+			this.menuAction.Popup += new System.EventHandler(this.menuAction_Popup);
+			// 
+			// menuActionCreate
+			// 
+			this.menuActionCreate.Index = 0;
+			this.menuActionCreate.Text = "Create iFolder...";
+			this.menuActionCreate.Click += new System.EventHandler(this.menuCreate_Click);
+			// 
+			// menuActionSeparator1
+			// 
+			this.menuActionSeparator1.Index = 1;
+			this.menuActionSeparator1.Text = "-";
+			this.menuActionSeparator1.Visible = false;
+			// 
+			// menuActionOpen
+			// 
+			this.menuActionOpen.Index = 2;
+			this.menuActionOpen.Text = "Open...";
+			this.menuActionOpen.Visible = false;
+			this.menuActionOpen.Click += new System.EventHandler(this.menuOpen_Click);
+			// 
+			// menuActionRevert
+			// 
+			this.menuActionRevert.Index = 3;
+			this.menuActionRevert.Text = "Revert to a normal folder";
+			this.menuActionRevert.Visible = false;
+			this.menuActionRevert.Click += new System.EventHandler(this.menuRevert_Click);
+			// 
+			// menuActionShare
+			// 
+			this.menuActionShare.Index = 4;
+			this.menuActionShare.Text = "Share with...";
+			this.menuActionShare.Visible = false;
+			this.menuActionShare.Click += new System.EventHandler(this.menuShare_Click);
+			// 
+			// menuActionSync
+			// 
+			this.menuActionSync.Index = 5;
+			this.menuActionSync.Text = "Sync now";
+			this.menuActionSync.Visible = false;
+			this.menuActionSync.Click += new System.EventHandler(this.menuSyncNow_Click);
+			// 
+			// menuActionProperties
+			// 
+			this.menuActionProperties.Index = 6;
+			this.menuActionProperties.Text = "Properties...";
+			this.menuActionProperties.Visible = false;
+			this.menuActionProperties.Click += new System.EventHandler(this.menuProperties_Click);
+			// 
+			// menuActionEnable
+			// 
+			this.menuActionEnable.Index = 7;
+			this.menuActionEnable.Text = "Enable";
+			this.menuActionEnable.Visible = false;
+			this.menuActionEnable.Click += new System.EventHandler(this.menuEnabled_Click);
+			// 
+			// menuActionStart
+			// 
+			this.menuActionStart.Index = 8;
+			this.menuActionStart.Text = "Start";
+			this.menuActionStart.Visible = false;
+			this.menuActionStart.Click += new System.EventHandler(this.menuStart_Click);
+			// 
+			// menuActionPause
+			// 
+			this.menuActionPause.Index = 9;
+			this.menuActionPause.Text = "Pause";
+			this.menuActionPause.Visible = false;
+			this.menuActionPause.Click += new System.EventHandler(this.menuPause_Click);
+			// 
+			// menuActionStop
+			// 
+			this.menuActionStop.Index = 10;
+			this.menuActionStop.Text = "Stop";
+			this.menuActionStop.Visible = false;
+			this.menuActionStop.Click += new System.EventHandler(this.menuStop_Click);
+			// 
+			// menuActionRestart
+			// 
+			this.menuActionRestart.Index = 11;
+			this.menuActionRestart.Text = "Restart";
+			this.menuActionRestart.Visible = false;
+			this.menuActionRestart.Click += new System.EventHandler(this.menuRestart_Click);
+			// 
+			// menuView
+			// 
+			this.menuView.Index = 2;
+			this.menuView.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																					 this.menuViewRefresh});
+			this.menuView.Text = "View";
+			this.menuView.Popup += new System.EventHandler(this.menuView_Popup);
+			// 
+			// menuViewRefresh
+			// 
+			this.menuViewRefresh.Enabled = false;
+			this.menuViewRefresh.Index = 0;
+			this.menuViewRefresh.Text = "Refresh";
+			this.menuViewRefresh.Click += new System.EventHandler(this.menuRefresh_Click);
+			// 
 			// GlobalProperties
 			// 
 			this.AcceptButton = this.ok;
@@ -693,6 +866,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.Menu = this.mainMenu1;
 			this.Name = "GlobalProperties";
 			this.Text = "Global iFolder Properties";
 			this.Load += new System.EventHandler(this.GlobalProperties_Load);
@@ -932,6 +1106,34 @@ namespace Novell.iFolder.FormsTrayApp
 			Cursor.Current = Cursors.Default;
 		}
 
+		private void menuFileExit_Click(object sender, System.EventArgs e)
+		{
+			this.ok_Click(this, e);
+
+			this.Close();
+		}
+
+		private void menuAction_Popup(object sender, System.EventArgs e)
+		{
+			menuActionEnable.Visible = menuActionStart.Visible = menuActionPause.Visible =
+				menuActionRestart.Visible = menuActionStop.Visible = tabControl1.SelectedIndex == 3;
+
+			menuActionOpen.Visible = menuActionProperties.Visible = menuActionShare.Visible =
+				menuActionSync.Visible = menuActionRevert.Visible = tabControl1.SelectedIndex == 0;
+
+			this.menuActionSeparator1.Visible = (tabControl1.SelectedIndex == 0 || tabControl1.SelectedIndex == 3);
+
+			menuActionShare.Enabled = menuActionProperties.Enabled = menuActionRevert.Enabled = 
+				menuActionSync.Enabled = menuActionOpen.Enabled = iFolderView.SelectedItems.Count == 1;
+
+			contextMenu2_Popup(this, e);
+		}
+
+		private void menuView_Popup(object sender, System.EventArgs e)
+		{
+			menuViewRefresh.Enabled = tabControl1.SelectedIndex == 0;
+		}
+
 		#region iFolders Tab
 		private void iFolderView_DoubleClick(object sender, System.EventArgs e)
 		{
@@ -1115,6 +1317,9 @@ namespace Novell.iFolder.FormsTrayApp
 			{
 				ServiceWithState service = (ServiceWithState)services.SelectedItems[0].Tag;
 
+				menuActionEnable.Text = service.Svc.Enabled ? "Disable" : "Enable";
+				menuActionEnable.Enabled = true;
+
 				// Set the state of the menu item.
 				menuEnabled.Checked = service.Svc.Enabled;
 
@@ -1125,21 +1330,35 @@ namespace Novell.iFolder.FormsTrayApp
 				switch (lvi.SubItems[1].Text)
 				{
 					case "Stopped":
-						menuStart.Enabled = true;
-						menuStop.Enabled = menuRestart.Enabled = false;
+						menuStart.Text = menuActionStart.Text = "Start";
+						menuStart.Enabled = menuActionStart.Enabled = true;
+						menuStop.Enabled = menuRestart.Enabled = 
+							menuActionStop.Enabled = menuActionRestart.Enabled =
+							menuPause.Enabled = menuActionPause.Enabled = false;
 						break;
 					case "Running":
-						menuStart.Enabled = false;
-						menuStop.Enabled = menuRestart.Enabled = true;
+						menuStart.Text = menuActionStart.Text = "Start";
+						menuStart.Enabled = menuActionStart.Enabled = false;
+						menuStop.Enabled = menuRestart.Enabled = 
+							menuActionStop.Enabled = menuActionRestart.Enabled = 
+							menuPause.Enabled = menuActionPause.Enabled = true;
+						break;
+					case "Paused":
+						menuStart.Text = menuActionStart.Text = "Resume";
+						menuStart.Enabled = menuActionStart.Enabled = 
+							menuStop.Enabled = menuActionStop.Enabled = 
+							menuRestart.Enabled = menuActionRestart.Enabled = true;
+						menuPause.Enabled = menuActionPause.Enabled = false;
 						break;
 				}
 
-				menuStart.Enabled = menuStart.Enabled && menuEnabled.Checked;
+				menuStart.Enabled = menuActionStart.Enabled = menuStart.Enabled && menuEnabled.Checked;
 			}
 			else
 			{
 				// Nothing is selected ... hide the menu items.
-				menuEnabled.Visible = menuStart.Visible = menuPause.Visible = menuStop.Visible = menuRestart.Visible = false;
+				menuEnabled.Enabled = menuStart.Enabled = menuPause.Enabled = menuStop.Enabled = menuRestart.Enabled = false;
+				menuActionEnable.Enabled = menuActionStart.Enabled = menuActionPause.Enabled = menuActionStop.Enabled = menuActionRestart.Enabled = false;
 			}
 		}
 
@@ -1157,6 +1376,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 				// Toggle the state of the menu item.
 				menuEnabled.Checked = service.Svc.Enabled;
+				menuActionEnable.Text = service.Svc.Enabled ? "Disable" : "Enable";
 			}
 			catch (SimiasException ex)
 			{
@@ -1177,7 +1397,10 @@ namespace Novell.iFolder.FormsTrayApp
 
 			try
 			{
-				service.Svc.Start();
+				if (service.Svc.State == State.Stopped)
+					service.Svc.Start();
+				else
+					service.Svc.Resume();
 			}
 			catch{}
 
@@ -1216,6 +1439,24 @@ namespace Novell.iFolder.FormsTrayApp
 			try
 			{
 				service.Svc.Stop();
+			}
+			catch{}
+
+			lvi.SubItems[1].Text = service.Svc.State.ToString();
+
+			Cursor.Current = Cursors.Default;
+		}
+
+		private void menuPause_Click(object sender, System.EventArgs e)
+		{
+			ListViewItem lvi = services.SelectedItems[0];
+			ServiceWithState service = (ServiceWithState)lvi.Tag;
+
+			Cursor.Current = Cursors.WaitCursor;
+
+			try
+			{
+				service.Svc.Pause();
 			}
 			catch{}
 
