@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "WinExe"
                 PreBuildEvent = ""
-                PostBuildEvent = ""
+                PostBuildEvent = 'copy book.exe "c:\program files\ifolder\ifolder"&#xd;&#xa;copy book.pdb "c:\program files\ifolder\ifolder"'
                 RootNamespace = "FormsAddrBook"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -90,14 +90,14 @@
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "FormsBookLib"
-                    AssemblyName = "FormsBookLib"
-                    HintPath = "..\FormsBookLib\bin\Debug\FormsBookLib.dll"
-                />
-                <Reference
                     Name = "AddressBook"
                     AssemblyName = "AddressBook"
                     HintPath = "..\..\..\simias\src\AddressBook\AddressBook.dll"
+                />
+                <Reference
+                    Name = "FormsBookLib"
+                    AssemblyName = "FormsBookLib"
+                    HintPath = "..\FormsBookLib\bin\Debug\FormsBookLib.dll"
                 />
             </References>
         </Build>
