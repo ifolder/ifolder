@@ -99,6 +99,11 @@
                     AssemblyName = "Common"
                     HintPath = "..\..\Common\Library\bin\Debug\Common.dll"
                 />
+                <Reference
+                    Name = "Storage"
+                    AssemblyName = "Storage"
+                    HintPath = "..\..\Storage\bin\Debug\Storage.dll"
+                />
             </References>
         </Build>
         <Files>

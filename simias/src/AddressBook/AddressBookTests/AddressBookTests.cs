@@ -178,10 +178,10 @@ namespace Novell.AddressBook.Tests
 
 			tstBook = new 
 				AddressBook(
-				"TestBookForEmailTests",
-				Novell.AddressBook.AddressBookType.Private,
-				Novell.AddressBook.AddressBookRights.ReadWrite,
-				false);
+					"TestBookForEmailTests",
+					Novell.AddressBook.AddressBookType.Private,
+					Novell.AddressBook.AddressBookRights.ReadWrite,
+					false);
 
 			abManager.AddAddressBook(tstBook);
 
@@ -412,20 +412,18 @@ namespace Novell.AddressBook.Tests
 			Contact tstContactOne = new Contact();
 			tstContactOne.UserName = tstUserOne;
 			tstContactOne.EMail = tstEmailOne;
+			tstBook.AddContact(tstContactOne);
+			tstContactOne.Commit();
 
 			Contact tstContactTwo = new Contact();
 			tstContactTwo.UserName = tstUserTwo;
 			tstContactTwo.EMail = tstEmailTwo;
-
-			tstBook.AddContact(tstContactOne);
-			tstContactOne.Commit();
-
 			tstBook.AddContact(tstContactTwo);
 			tstContactTwo.Commit();
 
 			// Now do a search for the first guy
 
-			IEnumerator e = tstBook.SearchEmail(tstEmailOne, Novell.AddressBook.SearchOp.equals).GetEnumerator();
+			IEnumerator e = tstBook.SearchEmail(tstEmailOne, Simias.Storage.SearchOp.Begins).GetEnumerator();
 			if (e.MoveNext())
 			{
 				Contact cContact = (Contact) e.Current;
@@ -753,10 +751,10 @@ namespace Novell.AddressBook.Tests
 		}
 
 		[Test]
-		public void SearchLastNameTest()
+		public void SearchNameTest()
 		{
 			Console.WriteLine("");
-			Console.WriteLine("Starting \"Search Last Name Test\"");
+			Console.WriteLine("Starting \"Search Name Test\"");
 			const string userOne = "smele";
 			const string userOneFirst = "Stone";
 			const string userOneLast = "Mele";
@@ -780,9 +778,9 @@ namespace Novell.AddressBook.Tests
 				tstBook = new 
 					AddressBook(
 					"TestBookForSearchLastNameTest",
-					Novell.AddressBook.AddressBookType.Private,
-					Novell.AddressBook.AddressBookRights.ReadWrite,
-					false);
+						Novell.AddressBook.AddressBookType.Private,
+						Novell.AddressBook.AddressBookRights.ReadWrite,
+						false);
 
 				abManager.AddAddressBook(tstBook);
 
@@ -823,18 +821,66 @@ namespace Novell.AddressBook.Tests
 				Console.WriteLine("");
 				Console.WriteLine("Searching for " + userOneLast);
 				Console.WriteLine("Should find one");
-				IABList results = tstBook.SearchLastName(userOneLast, Novell.AddressBook.SearchOp.equals);
+				IABList results = tstBook.SearchLastName(userOneLast, Simias.Storage.SearchOp.Equal);
 				foreach(Contact cContact in results)
 				{
-					Console.WriteLine("   Found: " + cContact.UserName);
+					Name prefName = cContact.GetPreferredName();
+					if (prefName != null)
+					{
+						Console.WriteLine(
+							"   Found: " + 
+							prefName.Given + 
+							" " + 
+							prefName.Family);
+					}
 				}
 
-				Console.WriteLine("Searching for " + userOneLast);
+				Console.WriteLine("Searching for " + userThreeLast);
 				Console.WriteLine("Should find two");
-				results = tstBook.SearchLastName(userThreeLast, Novell.AddressBook.SearchOp.equals);
+				results = tstBook.SearchLastName(userThreeLast, Simias.Storage.SearchOp.Equal);
 				foreach(Contact cContact in results)
 				{
-					Console.WriteLine("   Found: " + cContact.UserName);
+					Name prefName = cContact.GetPreferredName();
+					if (prefName != null)
+					{
+						Console.WriteLine("   Found: " + prefName.Given + " " + prefName.Family);
+					}
+				}
+
+				Console.WriteLine("Searching for: " + userTwoFirst);
+				Console.WriteLine("Should find one");
+				results = tstBook.SearchFirstName(userTwoFirst, Simias.Storage.SearchOp.Equal);
+				foreach(Contact cContact in results)
+				{
+					Name prefName = cContact.GetPreferredName();
+					if (prefName != null)
+					{
+						Console.WriteLine("   Found: " + prefName.Given + " " + prefName.Family);
+					}
+				}
+
+				Console.WriteLine("Searching (begins) for: s");
+				Console.WriteLine("Should find two");
+				results = tstBook.SearchFirstName("s", Simias.Storage.SearchOp.Begins);
+				foreach(Contact cContact in results)
+				{
+					Name prefName = cContact.GetPreferredName();
+					if (prefName != null)
+					{
+						Console.WriteLine("   Found: " + prefName.Given + " " + prefName.Family);
+					}
+				}
+
+				Console.WriteLine("Searching (username) for: " + userFour);
+				Console.WriteLine("Should find one");
+				results = tstBook.SearchUsername(userFour, Simias.Storage.SearchOp.Equal);
+				foreach(Contact cContact in results)
+				{
+					Name prefName = cContact.GetPreferredName();
+					if (prefName != null)
+					{
+						Console.WriteLine("   Found: " + prefName.Given + " " + prefName.Family);
+					}
 				}
 			}
 			finally
@@ -845,7 +891,7 @@ namespace Novell.AddressBook.Tests
 				}
 			}
 
-			Console.WriteLine("Ending \"Search Last Name Test\"");
+			Console.WriteLine("Ending \"Search Name Test\"");
 		}
 
 		[Test]
@@ -933,16 +979,16 @@ namespace Novell.AddressBook.Tests
 				Iteration0Tests tests = new Iteration0Tests();
 				tests.Init();
 				tests.OpenDefaultBook();
-				//tests.EnumerateMyAddressBooks();
-				//tests.CreateDeleteAddressBook();
-				//tests.BasicContactTests();
-				//tests.EmailTests();
-				//tests.PhoneTests();
-				//tests.SearchEmailTest();
-				//tests.BasicNameTests();
-				//tests.EnumContactsTest();
+				tests.EnumerateMyAddressBooks();
+				tests.CreateDeleteAddressBook();
+				tests.BasicContactTests();
+				tests.EmailTests();
+				tests.PhoneTests();
+				tests.SearchEmailTest();
+				tests.BasicNameTests();
+				tests.EnumContactsTest();
 				tests.BasicAddressTest();
-				tests.SearchLastNameTest();
+				tests.SearchNameTest();
 			}
 		}
 	}
