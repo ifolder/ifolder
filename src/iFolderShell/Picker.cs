@@ -311,11 +311,13 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException ex)
 			{
-				// TODO:
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while reading the member list.");
 			}
 			catch (Exception ex)
 			{
-				// TODO:
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while reading the member list.");
 			}
 		}
 

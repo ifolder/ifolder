@@ -762,7 +762,9 @@ namespace Novell.iFolderCom
 			}
 			catch
 			{
-				// TODO: Message?
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while reading disk space restrictions.");
+
 				setLimit.Checked = false;
 				total.Text = used.Text = available.Text = limit.Text = "";
 				gaugeChart.Used = 0;
@@ -796,12 +798,13 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException ex)
 			{
-				// TODO: Post message
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while querying for sync statistics.");
 			}
 			catch (Exception ex)
 			{
-				// TODO: Post message
-				//MessageBox.Show(ex.Message);
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while querying for sync statistics.");
 			}
 
 			shareWith.Items.Clear();
@@ -905,7 +908,9 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException ex)
 			{
-				// TODO: Post message.
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while reading iFolder members.");
+
 				if (ex.Status == WebExceptionStatus.ConnectFailure)
 				{
 					ifWebService = null;
@@ -913,7 +918,8 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception ex)
 			{
-				// TODO:
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while reading iFolder members.");
 			}
 
 			shareWith.EndUpdate();
@@ -976,7 +982,9 @@ namespace Novell.iFolderCom
 				}
 				catch (WebException e)
 				{
-					// TODO: may need to post a message to the user.
+					// TODO: Localize
+					MessageBox.Show("An error was encountered while attempting to change the owner of this iFolder.");
+
 					if (e.Status == WebExceptionStatus.ConnectFailure)
 					{
 						ifWebService = null;
@@ -984,7 +992,8 @@ namespace Novell.iFolderCom
 				}
 				catch (Exception e)
 				{
-					// TODO: Post message
+					// TODO: Localize
+					MessageBox.Show("An error was encountered while attempting to change the owner of this iFolder.");
 				}
 			}
 
@@ -992,10 +1001,10 @@ namespace Novell.iFolderCom
 
 			foreach (ListViewItem lvitem in shareWith.Items)
 			{
+				ShareListMember slMember = (ShareListMember)lvitem.Tag;
 				try
 				{
 					connectToWebService();
-					ShareListMember slMember = (ShareListMember)lvitem.Tag;
 
 					// Process added and changed members.
 					if (slMember.Added)
@@ -1043,7 +1052,8 @@ namespace Novell.iFolderCom
 				}
 				catch (WebException e)
 				{
-					// TODO: display message.
+					// TODO: Localize
+					MessageBox.Show("An error was encountered while trying to commit changes for: " + slMember.iFolderUser.Name);
 					if (e.Status == WebExceptionStatus.ConnectFailure)
 					{
 						ifWebService = null;
@@ -1051,7 +1061,8 @@ namespace Novell.iFolderCom
 				}
 				catch (Exception e)
 				{
-					// TODO: display message.
+					// TODO: Localize
+					MessageBox.Show("An error was encountered while trying to commit changes for: " + slMember.iFolderUser.Name);
 				}
 			}
 
@@ -1118,7 +1129,8 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException e)
 			{
-				// TODO: Post a message.
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while committing policy changes.");
 				if (e.Status == WebExceptionStatus.ConnectFailure)
 				{
 					ifWebService = null;
@@ -1126,7 +1138,8 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception e)
 			{
-				// TODO: Post message
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while committing policy changes.");
 			}
 
 			// Disable the apply button.
@@ -1297,7 +1310,8 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException ex)
 			{
-				// TODO: Post message
+				// TODO: Localize
+				MessageBox.Show("An error was encountered reading iFolder data.");
 				if (ex.Status == WebExceptionStatus.ConnectFailure)
 				{
 					ifWebService = null;
@@ -1305,7 +1319,8 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception ex)
 			{
-				// TODO: Post message
+				// TODO: Localize
+				MessageBox.Show("An error was encountered reading iFolder data.");
 			}
 		}
 
@@ -1602,11 +1617,13 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException ex)
 			{
-				// TODO: Post message.
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while reading iFolder data.");
 			}
 			catch (Exception ex)
 			{
-				// TODO:
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while reading iFolder data.");
 			}
 		}
 
@@ -1801,7 +1818,8 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException ex)
 			{
-				// TODO: Post message
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while reading iFolder data.");
 				if (ex.Status == WebExceptionStatus.ConnectFailure)
 				{
 					ifWebService = null;
@@ -1809,7 +1827,8 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception ex)
 			{
-				// TODO: Post message
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while reading iFolder data.");
 			}
 		}
 
@@ -1821,8 +1840,8 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception ex)
 			{
-				// TODO: is this message ok?
-				MessageBox.Show(ex.Message);
+				// TODO: Localize
+				MessageBox.Show("Unable to open iFolder: " + ifolder.Name);
 			}
 		}
 
@@ -1849,7 +1868,7 @@ namespace Novell.iFolderCom
 
 				if (shareWith.SelectedItems.Count == 1)
 				{
-					// TODO: Update the owner.
+					// Update the owner.
 					if (userProperties.IsOwner)
 					{
 						ListViewItem lvi = shareWith.SelectedItems[0];
