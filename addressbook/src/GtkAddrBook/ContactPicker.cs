@@ -33,7 +33,7 @@ using Glade;
 using GtkSharp;
 using GLib;
 
-namespace Novell.iFolder
+namespace Novell.AddressBook.UI.gtk
 {
 	public class ContactPicker
 	{

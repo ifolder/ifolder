@@ -34,7 +34,7 @@ using Glade;
 using GtkSharp;
 using GLib;
 
-namespace Novell.iFolder
+namespace Novell.AddressBook.UI.gtk
 {
 	/// <summary>
 	/// This class is used to edit all data stored on a contact.
