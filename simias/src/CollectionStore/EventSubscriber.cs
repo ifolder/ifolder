@@ -46,11 +46,6 @@ namespace Simias.Storage
 	public delegate void NodeEventHandler(NodeEventArgs args);
 
 	/// <summary>
-	/// Delegate definition for handling Collection root change events.
-	/// </summary>
-	public delegate void CollectionRootChangedHandler(CollectionRootChangedEventArgs args);
-	
-	/// <summary>
 	/// Used to get around a marshalling problem seen with explorer.
 	/// </summary>
 	internal delegate void TemporayEventHandler(EventType type, string args);
@@ -80,10 +75,6 @@ namespace Simias.Storage
 		/// A Node or Collection modification.
 		/// </summary>
 		public event NodeEventHandler NodeChanged;
-		/// <summary>
-		/// Delegate to handle Collection Root Path changes.
-		/// </summary>
-		public event CollectionRootChangedHandler CollectionRootChanged;
 		
 		#endregion
 
@@ -253,7 +244,6 @@ namespace Simias.Storage
 				switch (typeString)
 				{
 					case "Simias.Storage.NodeEventArgs":
-					case "Simias.Storage.CollectionRootChangedEventArgs":
 						if (applyNodeFilter((NodeEventArgs)args))
 						{
 							EventType changeType = (EventType)Enum.Parse(typeof(EventType), (string)args.EventData, false);
@@ -270,10 +260,6 @@ namespace Simias.Storage
 								case EventType.NodeDeleted:
 									if (NodeDeleted != null)
 										NodeDeleted((NodeEventArgs)args);
-									break;
-								case EventType.CollectionRootChanged:
-									if (CollectionRootChanged != null)
-										CollectionRootChanged((CollectionRootChangedEventArgs)args);
 									break;
 							}
 						}

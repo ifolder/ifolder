@@ -344,8 +344,7 @@ namespace Simias.Storage
 		/// this node has been committed to disk.
 		/// </summary>
 		/// <param name="node">Node object that contains the local incarnation value.</param>
-		/// <param name="nodeStamp">Value used by sync to easily detect store changes.</param>
-		private void IncrementLocalIncarnation( Node node, DateTime nodeStamp )
+		private void IncrementLocalIncarnation( Node node )
 		{
 			ulong incarnationValue;
 
@@ -398,15 +397,11 @@ namespace Simias.Storage
 						node.Properties.StripLocalProperties();
 						throw new CollisionException( checkNode.ID, checkNode.LocalIncarnation );
 					}
-
-					// Always set the nodestamp on the server.
-					node.NodeStamp = nodeStamp;
 				}
 			}
 			else
 			{
 				incarnationValue = node.LocalIncarnation + 1;
-				node.NodeStamp = nodeStamp;
 			}
 
 			// Update the local incarnation value to the specified value.
@@ -493,10 +488,9 @@ namespace Simias.Storage
 		/// <param name="nodeList">Array of Node objects to commit to the database.</param>
 		private void ProcessCommit( Node[] nodeList )
 		{
+			// Get the time that the nodes were committed.
+			DateTime commitTime = DateTime.Now;
 			bool deleteCollection = false;
-
-			// Value used by sync to easily check for changes.
-			DateTime nodeStamp = DateTime.Now;
 
 			// Create an XML document that will contain all of the changed nodes.
 			XmlDocument commitDocument = new XmlDocument();
@@ -519,10 +513,10 @@ namespace Simias.Storage
 						ValidateNodeForCommit( node );
 
 						// Increment the local incarnation number for the object.
-						IncrementLocalIncarnation( node, nodeStamp );
+						IncrementLocalIncarnation( node );
 
 						// If this is a StoreFileNode, commit the buffered stream to disk.
-						if ( IsType( node, NodeTypes.StoreFileNodeType ) )
+						if ( IsBaseType( node, NodeTypes.StoreFileNodeType ) )
 						{
 							// This cast is safe because a Node object cannot be a StoreFileNode object
 							// and be in the the Add state without having been derived as the right class.
@@ -548,7 +542,7 @@ namespace Simias.Storage
 						else
 						{
 							// If this is a StoreFileNode object, delete the store managed file.
-							if ( IsType( node, NodeTypes.StoreFileNodeType ) )
+							if ( IsBaseType( node, NodeTypes.StoreFileNodeType ) )
 							{
 								try
 								{
@@ -570,7 +564,7 @@ namespace Simias.Storage
 								ValidateNodeForCommit( node );
 
 								// Increment the local incarnation number for the object.
-								IncrementLocalIncarnation( node, nodeStamp );
+								IncrementLocalIncarnation( node );
 
 								// Copy the XML node over to the modify document.
 								XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
@@ -608,11 +602,7 @@ namespace Simias.Storage
 								if ( !onlyLocalChanges )
 								{
 									// Increment the local incarnation number for the object.
-									IncrementLocalIncarnation( mergeNode, nodeStamp );
-								}
-								else
-								{
-									mergeNode.NodeStamp = nodeStamp;
+									IncrementLocalIncarnation( mergeNode );
 								}
 
 								// Update the old node with the new merged data.
@@ -646,7 +636,7 @@ namespace Simias.Storage
 						SetLocalProperties( node );
 
 						// Increment the local incarnation number for the object.
-						IncrementLocalIncarnation( node, nodeStamp );
+						IncrementLocalIncarnation( node );
 
 						// Copy the XML node over to the modify document.
 						XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
@@ -687,9 +677,6 @@ namespace Simias.Storage
 						// Validate this Collection object.
 						ValidateNodeForCommit( node );
 
-						// Set the nodestamp for this object.
-						node.NodeStamp = nodeStamp;
-
 						// Copy the XML node over to the modify document.
 						XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
 						commitDocument.DocumentElement.AppendChild( xmlNode );
@@ -722,12 +709,12 @@ namespace Simias.Storage
 				// If this Node object is a Tombstone that is beinging added, then it came into the commit as
 				// an actual node being deleted. Indicate that the object has been deleted. Otherwise do not
 				// indicate an event for a Tombstone operation.
-				if ( IsType( node, NodeTypes.TombstoneType ) )
+				if ( IsBaseType( node, NodeTypes.TombstoneType ) )
 				{
 					if ( node.Properties.State == PropertyList.PropertyListState.Add )
 					{
 						string oldType = node.Properties.FindSingleValue( PropertyTags.TombstoneType ).ToString();
-						NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, oldType, EventType.NodeDeleted, 0, nodeStamp );
+						NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, oldType, EventType.NodeDeleted, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, 0 );
 						args.LocalOnly = node.LocalChanges;
 						store.EventPublisher.RaiseEvent( args );
 						node.Properties.State = PropertyList.PropertyListState.Disposed;
@@ -735,12 +722,15 @@ namespace Simias.Storage
 				}
 				else
 				{
+					// If this is a file node type get the length of the file to report in the event.
+					long fileSize = IsType( node, NodeTypes.BaseFileNodeType ) ? ( node as BaseFileNode ).Length : 0;
+
 					switch ( node.Properties.State )
 					{
 						case PropertyList.PropertyListState.Add:
 						case PropertyList.PropertyListState.Proxy:
 						{
-							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0, nodeStamp );
+							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
 							args.LocalOnly = node.LocalChanges;
 							store.EventPublisher.RaiseEvent( args );
 							node.Properties.State = PropertyList.PropertyListState.Update;
@@ -749,7 +739,7 @@ namespace Simias.Storage
 
 						case PropertyList.PropertyListState.Delete:
 						{
-							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeDeleted, 0, nodeStamp );
+							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeDeleted, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
 							args.LocalOnly = node.LocalChanges;
 							store.EventPublisher.RaiseEvent( args );
 							node.Properties.State = PropertyList.PropertyListState.Disposed;
@@ -758,7 +748,7 @@ namespace Simias.Storage
 
 						case PropertyList.PropertyListState.Import:
 						{
-							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, ( node.DiskNode != null ) ? EventType.NodeChanged : EventType.NodeCreated, 0, nodeStamp );
+							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, ( node.DiskNode != null ) ? EventType.NodeChanged : EventType.NodeCreated, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
 							args.LocalOnly = node.LocalChanges;
 							store.EventPublisher.RaiseEvent( args );
 							node.Properties.State = PropertyList.PropertyListState.Update;
@@ -770,12 +760,12 @@ namespace Simias.Storage
 							// Make sure that it is okay to indicate an event.
 							if ( node.IndicateEvent )
 							{
-								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0, nodeStamp );
+								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
 								args.LocalOnly = node.LocalChanges;
 								store.EventPublisher.RaiseEvent( args );
 
 								// If this is a member Node, update the access control entry.
-								if ( IsType( node, NodeTypes.MemberType ) )
+								if ( IsBaseType( node, NodeTypes.MemberType ) )
 								{
 									// If the node was not instantiated as a Member, then we don't need to
 									// worry about cached access control.
@@ -798,13 +788,13 @@ namespace Simias.Storage
 								// will pick up the resolved node and push it to the server.
 								if ( node.MergeCollisions == false )
 								{
-									NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0, nodeStamp );
+									NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
 									args.LocalOnly = false;
 									store.EventPublisher.RaiseEvent( args );
 								}
 
 								// If this is a member Node, update the access control entry.
-								if ( IsType( node, NodeTypes.MemberType ) )
+								if ( IsBaseType( node, NodeTypes.MemberType ) )
 								{
 									// If the node was not instantiated as a Member, then we don't need to
 									// worry about cached access control.
@@ -1105,8 +1095,9 @@ namespace Simias.Storage
 			{
 				bool createCollection = false;
 				bool deleteCollection = false;
-				bool hasCollection = false;
 				bool doAdminCheck = false;
+				bool hasCollection = false;
+				bool hasFileNode = false;
 				Member collectionOwner = null;
 
 				// Walk the commit list to see if there are any creation and deletion of the collection states.
@@ -1125,7 +1116,7 @@ namespace Simias.Storage
 
 						hasCollection = true;
 					}
-					else if ( IsType( node, NodeTypes.MemberType ) )
+					else if ( IsBaseType( node, NodeTypes.MemberType ) )
 					{
 						// Administrative access needs to be checked because collection membership has changed.
 						doAdminCheck = true;
@@ -1143,10 +1134,16 @@ namespace Simias.Storage
 							collectionOwner = new Member( node );
 						}
 					}
-					else if ( IsType( node, NodeTypes.PolicyType ) )
+					else if ( !doAdminCheck && IsBaseType( node, NodeTypes.PolicyType ) )
 					{
 						// Administrative access needs to be checked because system policies are controlled objects.
 						doAdminCheck = true;
+					}
+					else if ( !hasFileNode && IsType( node, NodeTypes.BaseFileNodeType ) )
+					{
+						// Need to have a collection object for file nodes, because the amount of storage is
+						// on the collection object.
+						hasFileNode = true;
 					}
 				}
 
@@ -1229,15 +1226,15 @@ namespace Simias.Storage
 							}
 						}
 
-						// Make sure that there is a collection object in the commit list.
-						if ( !hasCollection )
+						// See if we have a file node but no collection node.
+						if ( hasFileNode && !hasCollection )
 						{
+							// We have to get a new copy of the collection node instead of just using the
+							// 'this' reference because it might contain changes to it that the user doesn't
+							// want committed yet.
 							commitList = new Node[ nodeList.Length + 1 ];
 							nodeList.CopyTo( commitList, 0 );
-
-							// Allocate a new collection object instead of using the 'this' reference. The 'this'
-							// reference may contain changes that the caller doesn't want committed.
-							commitList[ commitList.Length - 1 ] = store.GetCollectionByID( id );
+							commitList[ commitList.Length - 1 ] = store.GetCollectionByID( ID );
 						}
 						else
 						{
@@ -1693,7 +1690,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Returns whether specified Node object is the specified base type.
 		/// </summary>
-		/// <param name="node">Node object to check type.</param>
+		/// <param name="node">ShallowNode object to check type.</param>
 		/// <param name="typeString">Type of Node object.</param>
 		/// <returns>True if Node object is the specified type, otherwise false is returned.</returns>
 		public bool IsBaseType( ShallowNode node, string typeString )
@@ -1701,6 +1698,16 @@ namespace Simias.Storage
 			return ( node.Type == typeString ? true : false );
 		}
 
+		/// <summary>
+		/// Returns whether specified Node object is the specified base type.
+		/// </summary>
+		/// <param name="node">Node object to check type.</param>
+		/// <param name="typeString">Type of Node object.</param>
+		/// <returns>True if Node object is the specified type, otherwise false is returned.</returns>
+		public bool IsBaseType( Node node, string typeString )
+		{
+			return ( node.Type == typeString ? true : false );
+		}
 
 		/// <summary>
 		/// Gets a new copy of the Collection object data from the database. All changed Collection object data

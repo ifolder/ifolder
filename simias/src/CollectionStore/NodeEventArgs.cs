@@ -44,27 +44,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// The event is for a node change.
 		/// </summary>
-		NodeChanged = 4,
-		/// <summary>
-		/// The event is for a collection root path change.
-		/// </summary>
-		CollectionRootChanged = 8,
-		/// <summary>
-		/// The event is for a file create.
-		/// </summary>
-		FileCreated = 16,
-		/// <summary>
-		/// The event is for a file delete.
-		/// </summary>
-		FileDeleted = 32,
-		/// <summary>
-		/// The event is for a file change.
-		/// </summary>
-		FileChanged = 64,
-		/// <summary>
-		/// The event is for a file rename.
-		/// </summary>
-		FileRenamed = 128,
+		NodeChanged = 4
 	};
 
 	/// <summary>
@@ -80,6 +60,9 @@ namespace Simias.Storage
 		string					collection;
 		string					type;
 		int						eventId;
+		ulong					masterRev;
+		ulong					slaveRev;
+		long					fileSize;
 
 		/// <summary>
 		/// Flags for the node event.
@@ -108,23 +91,13 @@ namespace Simias.Storage
 		/// <param name="collection">The Collection that the node belongs to.</param>\
 		/// <param name="type">The Type of the Node.</param>
 		/// <param name="changeType">The type of change that occured.</param>
-		public NodeEventArgs(string source, string node, string collection, string type, EventType changeType) :
-			this(source, node, collection, type, changeType, 0, DateTime.Now)
-		{
-		}
-
-		/// <summary>
-		/// Constructs a SimiasEventArgs that will be used by CollectionHandler delegates.
-		/// Descibes the node affected by the event.
-		/// </summary>
-		/// <param name="source">The source of the event.</param>
-		/// <param name="node">The object of the event.</param>
-		/// <param name="collection">The Collection that the node belongs to.</param>\
-		/// <param name="type">The Type of the Node.</param>
-		/// <param name="changeType">The type of change that occured.</param>
 		/// <param name="eventId">A user defined event ID. Only has meaning to a publisher.</param>
 		/// <param name="time">The time of the event.</param>
-		public NodeEventArgs(string source, string node, string collection, string type, EventType changeType, int eventId, DateTime time) :
+		/// <param name="masterRev">The master revision for the node.</param>
+		/// <param name="slaveRev">The local revision for the node.</param>
+		/// <param name="fileSize">The length of the file if the node is a BaseFileNode. Otherwise
+		/// the value of this parameter will be zero.</param>
+		public NodeEventArgs(string source, string node, string collection, string type, EventType changeType, int eventId, DateTime time, ulong masterRev, ulong slaveRev, long fileSize) :
 			base(changeType.ToString(), time)
 		{
 			this.source = source;
@@ -132,6 +105,9 @@ namespace Simias.Storage
 			this.collection = collection;
 			this.type = type;
 			this.eventId = eventId;
+			this.masterRev = masterRev;
+			this.slaveRev = slaveRev;
+			this.fileSize = fileSize;
 		}
 
 		#endregion
@@ -211,6 +187,31 @@ namespace Simias.Storage
 				else
 					flags &= ~EventFlags.LocalOnly;
 			}
+		}
+
+		/// <summary>
+		/// Gets the master revision for the node.
+		/// </summary>
+		public ulong MasterRev
+		{
+			get { return masterRev; }
+		}
+
+		/// <summary>
+		/// Gets the slave revision for the node.
+		/// </summary>
+		public ulong SlaveRev
+		{
+			get { return slaveRev; }
+		}
+
+		/// <summary>
+		/// Gets the file size for the node. If the node is 
+		/// not a file type, zero is returned.
+		/// </summary>
+		public long FileSize
+		{
+			get { return fileSize; }
 		}
 
 		#endregion

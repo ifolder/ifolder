@@ -194,25 +194,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets or sets the nodestamp property on the object.
-		/// </summary>
-		internal DateTime NodeStamp
-		{
-			get 
-			{
-				Property p = properties.GetSingleProperty( PropertyTags.NodeStamp );
-				return ( p != null ) ? ( DateTime )p.Value : DateTime.MinValue;
-			}
-
-			set
-			{
-				Property p = new Property( PropertyTags.NodeStamp, value );
-				p.LocalProperty = true;
-				properties.ModifyNodeProperty( p );
-			}
-		}
-
-		/// <summary>
 		/// Gets or sets whether the commit code should indicate and event for this node.
 		/// </summary>
 		internal bool IndicateEvent

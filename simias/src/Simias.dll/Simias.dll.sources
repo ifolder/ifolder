@@ -4,7 +4,6 @@ AssemblyInfo.cs
 ../Events/EventBroker.cs
 ../Events/EventPublisher.cs
 ../ChangeLog/ChangeLog.cs
-../CollectionStore/CollectionRootChangedEventArgs.cs
 ../CollectionStore/EventSubscriber.cs
 ../CollectionStore/NodeEventArgs.cs
 ../CollectionStore/AccessControl.cs

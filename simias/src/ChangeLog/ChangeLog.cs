@@ -569,11 +569,21 @@ namespace Simias.Storage
 		private const int nodeIDSize = 16;
 		private const int operationSize = 4;
 		private const int flagSize = 2;
+		private const int masterRevSize = 8;
+		private const int slaveRevSize = 8;
+		private const int fileLengthSize = 8;
 
 		/// <summary>
 		/// This is the total encoded record size.
 		/// </summary>
-		private const int encodedRecordSize = recordIDSize + epochSize + nodeIDSize + operationSize + flagSize;
+		private const int encodedRecordSize = recordIDSize + 
+											  epochSize + 
+											  nodeIDSize + 
+											  operationSize + 
+											  flagSize +
+											  masterRevSize +
+											  slaveRevSize +
+											  fileLengthSize;
 
 		/// <summary>
 		/// Record identitifer for this entry.
@@ -599,6 +609,21 @@ namespace Simias.Storage
 		/// Flags passed to the event.
 		/// </summary>
 		private ushort flags;
+
+		/// <summary>
+		/// Master revision of node.
+		/// </summary>
+		private ulong masterRev;
+
+		/// <summary>
+		/// Local revision of node.
+		/// </summary>
+		private ulong slaveRev;
+
+		/// <summary>
+		/// Length of the file represented by the node if the node is a BaseFileTypeNode.
+		/// </summary>
+		private long fileLength;
 		#endregion
 
 		#region Properties
@@ -656,6 +681,33 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets or sets the master revision value.
+		/// </summary>
+		public ulong MasterRev
+		{
+			get { return masterRev; }
+			set { masterRev = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the slave revision value.
+		/// </summary>
+		public ulong SlaveRev
+		{
+			get { return slaveRev; }
+			set { slaveRev = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the file length value.
+		/// </summary>
+		public long FileLength
+		{
+			get { return fileLength; }
+			set { fileLength = value; }
+		}
+
+		/// <summary>
 		/// Returns the size of the ChangeLogRecord.
 		/// </summary>
 		static public int RecordSize
@@ -668,17 +720,18 @@ namespace Simias.Storage
 		/// <summary>
 		/// Initializes a new instance of the struct.
 		/// </summary>
-		/// <param name="epoch">Date and time that event was recorded.</param>
-		/// <param name="nodeID">Identifier of Node object that triggered the event.</param>
 		/// <param name="operation">Node operation type.</param>
-		/// <param name="flags">Flags passed to the event.</param>
-		public ChangeLogRecord( DateTime epoch, string nodeID, ChangeLogOp operation, ushort flags )
+		/// <param name="args">NodeEventArgs object that contains the change information.</param>
+		public ChangeLogRecord( ChangeLogOp operation, NodeEventArgs args )
 		{
 			this.recordID = 0;
-			this.epoch = epoch;
-			this.nodeID = nodeID;
+			this.epoch = args.TimeStamp;
+			this.nodeID = args.ID;
 			this.operation = operation;
-			this.flags = flags;
+			this.flags = ( ushort )args.Flags;
+			this.masterRev = args.MasterRev;
+			this.slaveRev = args.SlaveRev;
+			this.fileLength = args.FileSize;
 		}
 
 		/// <summary>
@@ -714,6 +767,15 @@ namespace Simias.Storage
 
 			flags = BitConverter.ToUInt16( encodedRecord, index );
 			index += flagSize;
+
+			masterRev = BitConverter.ToUInt64( encodedRecord, index );
+			index += masterRevSize;
+
+			slaveRev = BitConverter.ToUInt64( encodedRecord, index );
+			index += slaveRevSize;
+
+			fileLength = BitConverter.ToInt64( encodedRecord, index );
+			index += fileLengthSize;
 		}
 		#endregion
 
@@ -734,6 +796,9 @@ namespace Simias.Storage
 			byte[] ep = BitConverter.GetBytes( epoch.Ticks );
 			byte[] op = BitConverter.GetBytes( ( int )operation );
 			byte[] fl = BitConverter.GetBytes( flags );
+			byte[] mr = BitConverter.GetBytes( masterRev );
+			byte[] sr = BitConverter.GetBytes( slaveRev );
+			byte[] fil = BitConverter.GetBytes( fileLength );
 
 			// Copy the converted byte arrays to the resulting array.
 			Array.Copy( rid, 0, result, index, rid.Length );
@@ -750,6 +815,15 @@ namespace Simias.Storage
 
 			Array.Copy( fl, 0, result, index, fl.Length );
 			index += fl.Length;
+
+			Array.Copy( mr, 0, result, index, mr.Length );
+			index += mr.Length;
+
+			Array.Copy( sr, 0, result, index, sr.Length );
+			index += sr.Length;
+
+			Array.Copy( fil, 0, result, index, fil.Length );
+			index += fil.Length;
 
 			return result;
 		}
@@ -1140,9 +1214,10 @@ namespace Simias.Storage
 		/// <param name="args">Event arguments.</param>
 		private void OnNodeChange( NodeEventArgs args )
 		{
+			// Don't indicate local events.
 			if (((NodeEventArgs.EventFlags)args.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0)
 			{
-				ChangeLogRecord record = new ChangeLogRecord( args.TimeStamp, args.ID, ChangeLogRecord.ChangeLogOp.Changed, ( ushort )args.Flags );
+				ChangeLogRecord record = new ChangeLogRecord( ChangeLogRecord.ChangeLogOp.Changed, args );
 				WriteLog( record );
 			}
 		}
@@ -1153,9 +1228,10 @@ namespace Simias.Storage
 		/// <param name="args">Event arguments.</param>
 		private void OnNodeCreate( NodeEventArgs args )
 		{
+			// Don't indicate local events.
 			if (((NodeEventArgs.EventFlags)args.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0)
 			{
-				ChangeLogRecord record = new ChangeLogRecord( args.TimeStamp, args.ID, ChangeLogRecord.ChangeLogOp.Created, ( ushort )args.Flags );
+				ChangeLogRecord record = new ChangeLogRecord( ChangeLogRecord.ChangeLogOp.Created, args );
 				WriteLog( record );
 			}
 		}
@@ -1166,9 +1242,10 @@ namespace Simias.Storage
 		/// <param name="args">Event arguments.</param>
 		private void OnNodeDelete( NodeEventArgs args )
 		{
+			// Don't indicate local events.
 			if (((NodeEventArgs.EventFlags)args.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0)
 			{
-				ChangeLogRecord record = new ChangeLogRecord( args.TimeStamp, args.ID, ChangeLogRecord.ChangeLogOp.Deleted, ( ushort )args.Flags );
+				ChangeLogRecord record = new ChangeLogRecord( ChangeLogRecord.ChangeLogOp.Deleted, args );
 				WriteLog( record );
 			}
 		}
