@@ -2,7 +2,9 @@ SUBDIRS = src
 
 DIST_SUBDIRS = $(SUBDIRS) doc package test
 
-EXTRA_DIST = tools external $(srcdir)/simias.pc.in
+PROJECT_FILES = $(srcdir)/Simias.sln $(srcdir)/Simias.csproj
+																   
+EXTRA_DIST = tools external $(srcdir)/simias.pc.in $(PROJECT_FILES)
 
 export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
