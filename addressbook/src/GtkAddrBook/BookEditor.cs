@@ -85,15 +85,15 @@ namespace Novell.iFolder
 	{
 		[Glade.Widget] Gtk.Entry beName;
 
-		Gtk.Window 		bewin = null;
+		Gtk.Dialog 		beDlg = null;
 		public event BookEditEventHandler BookEdited;
 
 		public BookEditor () 
 		{
-			Glade.XML gxml = new Glade.XML ("addressbook.glade", "abBook", null);
+			Glade.XML gxml = new Glade.XML ("addressbook.glade", "BookEditor", null);
 			gxml.Autoconnect (this);
 
-			bewin = (Gtk.Window) gxml.GetWidget("abBook");
+			beDlg = (Gtk.Dialog) gxml.GetWidget("BookEditor");
 		}
 
 		protected virtual void OnBookEdit(BookEditEventArgs e)
@@ -106,9 +106,9 @@ namespace Novell.iFolder
 
 		public void ShowAll()
 		{
-			if(bewin != null)
+			if(beDlg != null)
 			{
-				bewin.ShowAll();
+				beDlg.ShowAll();
 			}
 		}
 
@@ -116,16 +116,16 @@ namespace Novell.iFolder
 		{
 			BookEditEventArgs e = new BookEditEventArgs(true, beName.Text);
 			OnBookEdit(e);
-			bewin.Hide();
-			bewin.Destroy();
-			bewin = null;
+			beDlg.Hide();
+			beDlg.Destroy();
+			beDlg = null;
 		}
 
 		public void on_cancel(object o, EventArgs args)
 		{
-			bewin.Hide();
-			bewin.Destroy();
-			bewin = null;
+			beDlg.Hide();
+			beDlg.Destroy();
+			beDlg = null;
 		}
 
 		public void onKeyPressed(object o, KeyPressEventArgs args)
