@@ -190,27 +190,27 @@
                 />
                 <Folder RelPath = "src\AddressBook\SimpleTests\" />
                 <File
-                    RelPath = "src\CollectionEvents\DefaultSubscriber.cs"
+                    RelPath = "src\Events\DefaultSubscriber.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\CollectionEvents\EventBroker.cs"
+                    RelPath = "src\Events\EventBroker.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\CollectionEvents\EventPublisher.cs"
+                    RelPath = "src\Events\EventPublisher.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\CollectionEvents\SimiasEventArgs.cs"
+                    RelPath = "src\Events\SimiasEventArgs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\CollectionEvents\CollectionEventsTests\CollectionEventsTests.cs"
+                    RelPath = "src\CollectionStore\CollectionEventsTests\CollectionEventsTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
