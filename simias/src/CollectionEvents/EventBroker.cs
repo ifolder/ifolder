@@ -35,6 +35,21 @@ using Simias;
 
 namespace Simias.Event
 {
+	public interface ISubscriber
+	{
+		void RecieveEvent(EventType eventType, string args);
+	}
+
+	internal class SubscriberInfo
+	{
+        internal ISubscriber subscriber;
+
+		internal SubscriberInfo(ISubscriber subscriber)
+		{
+			this.subscriber = subscriber;
+		}
+	}
+
 	#region Delegate Definitions.
 
 	/// <summary>
@@ -58,86 +73,23 @@ namespace Simias.Event
 	public class EventBroker : MarshalByRefObject
 	{
 		#region Fields
-		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(EventBroker));
 
-		bool shuttingDown = false;
-		Queue eventQueue;
-		ManualResetEvent queued;
+		internal static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(EventBroker));
 		static bool serviceRegistered = false;
 		static bool clientRegistered = false;
 		static EventBroker instance = null;
+		ArrayList clients = new ArrayList();
+		ArrayList failedClients = new ArrayList();
 
 		#endregion
 
-		#region Events
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public event CollectionEventHandlerS CollectionEvent;
-		
-		#endregion
-
-		#region Constructor
-
-		public EventBroker()
+		public void AddSubscriber(ISubscriber subscriber)
 		{
-			// Start a thread to handle events.
-			eventQueue = new Queue();
-			queued = new ManualResetEvent(false);
-			System.Threading.Thread t = new Thread(new ThreadStart(EventThread));
-			t.IsBackground = true;
-			t.Start();
-		}
-
-		#endregion
-
-		#region EventThread
-
-		private void EventThread()
-		{
-			while (!shuttingDown)
+			lock (clients)
 			{
-				try
-				{
-					queued.WaitOne();
-					CollectionEventArgs args = null;
-					lock (eventQueue)
-					{
-						if (eventQueue.Count > 0)
-						{
-							args = (CollectionEventArgs)eventQueue.Dequeue();
-						}
-						else
-						{
-							queued.Reset();
-							continue;
-						}
-					}
-						
-					if (CollectionEvent != null)
-					{
-						Delegate[] cbList = CollectionEvent.GetInvocationList();
-						foreach (CollectionEventHandlerS cb in cbList)
-						{
-							try 
-							{ 
-								cb(args.ChangeType, args.MarshallToString());
-							}
-							catch 
-							{
-								// Remove the offending delegate.
-								CollectionEvent -= cb;
-								logger.Debug("Deregistered Subscriber {0}.{1}.", cb.Target, cb.Method);
-							}
-						}
-					}
-				}
-				catch{}
+				clients.Add(new SubscriberInfo(subscriber));
 			}
 		}
-
-		#endregion
 
 		#region Event Signalers
 
@@ -147,12 +99,59 @@ namespace Simias.Event
 		/// <param name="args">The arguments for the event.</param>
 		public void RaiseEvent(CollectionEventArgs args)
 		{
-			lock (eventQueue)
+			lock (clients)
 			{
-				eventQueue.Enqueue(args);
-				queued.Set();
+				foreach (SubscriberInfo si in clients)
+				{
+					CollectionEventHandlerS cb = new CollectionEventHandlerS(si.subscriber.RecieveEvent);
+					cb.BeginInvoke(
+						args.ChangeType, 
+						args.MarshallToString(), 
+						new AsyncCallback(EventRaisedCallback),
+						si);
+				}
+		
+				// Now remove any failed clients.
+				lock (failedClients)
+				{
+					foreach (SubscriberInfo si in failedClients)
+					{
+						clients.Remove(si);
+					}
+					failedClients.Clear();
+				}
 			}
 		}
+
+		public void EventRaisedCallback(IAsyncResult ar)
+		{
+			CollectionEventHandlerS eventDelegate = null;
+			try
+			{
+				eventDelegate = (CollectionEventHandlerS)((AsyncResult)ar).AsyncDelegate;
+				eventDelegate.EndInvoke(ar);
+				// the call is successfully finished and 
+			}
+			catch(Exception ex)
+			{
+				// The call has failed.
+				// Remove the subscriber.
+				logger.Debug(ex, "Deregistered Subscriber");// {0}.{1}.", cb.Target, cb.Method);
+				lock (failedClients)
+				{
+					try
+					{
+						SubscriberInfo si = (SubscriberInfo)ar.AsyncState;
+						failedClients.Add(si);
+					}
+					catch (Exception ex1)
+					{
+						logger.Debug(ex1, "Error");
+					}
+				}
+			}
+		}
+
 
 		#endregion
 
@@ -208,7 +207,7 @@ namespace Simias.Event
 					ChannelServices.RegisterChannel(chan);
 					clientRegistered = true;
 					
-					logger.Info("Event Client Channel Registered", null);
+					logger.Info("Event Client Channel Registered");
 				}
 			}
 			return clientRegistered;

@@ -30,7 +30,7 @@ namespace Simias.Event
 	/// <summary>
 	/// Summary description for DefaultSubscriber.
 	/// </summary>
-	public class DefaultSubscriber : MarshalByRefObject, IDisposable
+	public class DefaultSubscriber : MarshalByRefObject, ISubscriber, IDisposable
 	{
 		#region fields
 
@@ -39,8 +39,6 @@ namespace Simias.Event
 		static Hashtable	instanceTable = new Hashtable();
 		int					count;
 		Configuration		conf;
-		Queue				eventQueue;
-		ManualResetEvent	queued;
 		EventBroker			broker = null;
 		bool				alreadyDisposed;
 
@@ -86,14 +84,13 @@ namespace Simias.Event
 			alreadyDisposed = false;
 			this.conf = conf;
 			count = 0;
-			//if (EventBroker.RegisterClientChannel(conf))
-			setupBroker();
-			// Start a thread to handle events.
-			eventQueue = new Queue();
-			queued = new ManualResetEvent(false);
-			System.Threading.Thread t = new Thread(new ThreadStart(EventThread));
-			t.IsBackground = true;
-			t.Start();
+			if (!setupBroker())
+			{
+				// Start a thread to connect when the broker is availablehandle.
+				System.Threading.Thread t = new Thread(new ThreadStart(EventThread));
+				t.IsBackground = true;
+				t.Start();
+			}
 		}
 
 		~DefaultSubscriber()
@@ -101,11 +98,15 @@ namespace Simias.Event
 			Dispose(true);
 		}
 
-		void setupBroker()
+		bool setupBroker()
 		{
 			broker = EventBroker.GetBroker(conf);
 			if (broker != null)
-				broker.CollectionEvent += new CollectionEventHandlerS(OnCollectionEventS);
+			{
+				broker.AddSubscriber(this);
+				return true;
+			}
+			return false;
 		}
 
 		#endregion
@@ -118,7 +119,12 @@ namespace Simias.Event
 		/// <param name="args">Arguments for the event.</param>
 		public void OnCollectionEvent(CollectionEventArgs args)
 		{
-			queueEvent(args);
+			callDelegate(args);
+		}
+
+		public void RecieveEvent(EventType eventType, string args)
+		{
+			OnCollectionEventS(eventType, args);
 		}
 
 		/// <summary>
@@ -128,6 +134,7 @@ namespace Simias.Event
 		/// <param name="args">Arguments for the event.</param>
 		public void OnCollectionEventS(EventType changeType, string args)
 		{
+			EventBroker.logger.Debug("Default Subscriber Recieved Callback");
 			CollectionEventArgs eArgs = null;
 			switch (changeType)
 			{
@@ -149,21 +156,14 @@ namespace Simias.Event
 					break;
 			}
 			if (eArgs != null)
-				queueEvent(eArgs);
+			{
+				callDelegate(eArgs);
+			}
 		}
 
 		#endregion
 
 		#region Queue and Thread Methods.
-
-		private void queueEvent(CollectionEventArgs args)
-		{
-			lock (eventQueue)
-			{
-				eventQueue.Enqueue(args);
-				queued.Set();
-			}
-		}
 
 		private void EventThread()
 		{
@@ -176,31 +176,10 @@ namespace Simias.Event
 				}
 				Thread.Sleep(100);
 			}
+		
 			logger.Info("Connected to event broker");
-			while (!alreadyDisposed)
-			{
-				try
-				{
-					queued.WaitOne();
-					CollectionEventArgs args = null;
-					lock (eventQueue)
-					{
-						if (eventQueue.Count > 0)
-						{
-							args = (CollectionEventArgs)eventQueue.Dequeue();
-							callDelegate(args);
-						}
-						else
-						{
-							queued.Reset();
-							continue;
-						}
-					}
-				}
-				catch {}
-			}
 		}
-
+		
 		#endregion
 
 		#region Delegate Invokers
@@ -218,12 +197,12 @@ namespace Simias.Event
 					}
 					catch (Exception ex)
 					{
-						logger.Debug(ex, "Dellegate {0}.{1} failed", cb.Target, cb.Method);
+						logger.Debug(ex, "Delegate {0}.{1} failed", cb.Target, cb.Method);
 					}
 				}
 			}
 		}
-
+		
 		#endregion
 
 		#region private Dispose
@@ -241,10 +220,8 @@ namespace Simias.Event
 						{
 							instanceTable.Remove(conf);
 							alreadyDisposed = true;
-							broker.CollectionEvent -= new CollectionEventHandlerS(OnCollectionEventS);
 							
 							// Signal thread so it can exit.
-							queued.Set();
 							if (!inFinalize)
 							{
 								GC.SuppressFinalize(this);
@@ -266,5 +243,19 @@ namespace Simias.Event
 		}
 
 		#endregion
+
+		#region MarshallByRef Overrides
+
+		/// <summary>
+		/// This client will listen until it deregisteres.
+		/// </summary>
+		/// <returns>null (Do not expire object).</returns>
+		public override Object InitializeLifetimeService()
+		{
+			return null;
+		}
+
+		#endregion
+
 	}
 }

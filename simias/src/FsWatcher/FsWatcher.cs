@@ -33,6 +33,7 @@ namespace Simias.Event
 {
 	internal class CollectionFilesWatcher : IDisposable
 	{
+		ISimiasLog					logger = SimiasLogManager.GetLogger(typeof(FsWatcher));
 		bool						disposed;
 		string						collectionId;
 		internal FileSystemWatcher	watcher;
@@ -48,6 +49,7 @@ namespace Simias.Event
 			{
 				string rootPath = col.GetRootDirectory().GetFullPath(col);
 				watcher = new FileSystemWatcher(rootPath);
+				logger.Debug("New File Watcher at {0}", rootPath);
 				watcher.Changed += new FileSystemEventHandler(OnChanged);
 				watcher.Created += new FileSystemEventHandler(OnCreated);
 				watcher.Deleted += new FileSystemEventHandler(OnDeleted);
@@ -66,29 +68,29 @@ namespace Simias.Event
 		private void OnChanged(object source, FileSystemEventArgs e)
 		{
 			// Specify what is done when a file is changed, created, or deleted.
-			System.Diagnostics.Debug.WriteLine("Changed File: " +  e.FullPath + " " + e.ChangeType);
 			publish.RaiseEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, EventType.FileChanged));
+			logger.Debug("Changed File: {0} {1}", e.FullPath, e.ChangeType);
 		}
 
 		private void OnRenamed(object source, RenamedEventArgs e)
 		{
 			// Specify what is done when a file is renamed.
 			publish.RaiseEvent(new FileRenameEventArgs(source.ToString(), e.FullPath, collectionId, e.OldFullPath));
-			System.Diagnostics.Debug.WriteLine(string.Format("Renamed File: {0} renamed to {1}", e.OldFullPath, e.FullPath));
+			logger.Debug("Renamed File: {0} renamed to {1}", e.OldFullPath, e.FullPath);
 		}
 
 		private void OnDeleted(object source, FileSystemEventArgs e)
 		{
 			// Specify what is done when a file is changed, created, or deleted.
 			publish.RaiseEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, EventType.FileDeleted));
-			System.Diagnostics.Debug.WriteLine("Deleted File: " +  e.FullPath + " " + e.ChangeType);
+			logger.Debug("Deleted File: {0} {1}",  e.FullPath, e.ChangeType);
 		}
 
 		private void OnCreated(object source, FileSystemEventArgs e)
 		{
 			// Specify what is done when a file is renamed.
 			publish.RaiseEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, EventType.FileCreated));
-			System.Diagnostics.Debug.WriteLine("Created File: {0} Created.", e.FullPath);
+			logger.Debug("Created File: {0}", e.FullPath);
 		}
 
 		private void Dispose(bool inFinalize)
