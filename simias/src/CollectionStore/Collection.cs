@@ -326,9 +326,8 @@ namespace Simias.Storage
 				// Make sure that the expected incarnation value matches the current value.
 				Node checkNode = GetNodeByID( node.ID );
 				
-				// If the expected incarnation value is zero, then the client is running. Otherwise the
-				// server is running.
-				if ( node.ExpectedIncarnation == 0 )
+				// Check if we are importing on the master or slave.
+				if ( !node.IsMaster)
 				{
 					// No collision if:
 					//	1. Specifically told to ignore check.
@@ -1214,13 +1213,15 @@ namespace Simias.Storage
 		/// Readies a Node object for import into this Collection.
 		/// </summary>
 		/// <param name="node">Node to import into this Collection.</param>
+		/// <param name="isMaster">Indicates whether Node object is being imported on the master or slave store.</param>
 		/// <param name="expectedIncarnation">The expected value of the Node object's incarnation number. If
 		/// the Node object incarnation value is not equal to the expected value, a collision is the result.</param>
-		public void ImportNode( Node node, ulong expectedIncarnation )
+		public void ImportNode( Node node, bool isMaster, ulong expectedIncarnation )
 		{
 			// Set the current state of the node indicating that it is being imported.
 			node.Properties.State = PropertyList.PropertyListState.Import;
 			node.ExpectedIncarnation = expectedIncarnation;
+			node.IsMaster = isMaster;
 
 			// Strip any local properties that may exist on the Node object.
 			node.Properties.StripLocalProperties();

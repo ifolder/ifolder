@@ -307,7 +307,7 @@ internal class IncomingNode
 			// to the master.
 			expectedIncarn = 0;
 		}
-		collection.ImportNode(node, expectedIncarn);
+		collection.ImportNode(node, onServer, expectedIncarn);
 		node.Properties.ModifyProperty(TempFileDone, true);
 		node.IncarnationUpdate = node.LocalIncarnation;
 		if (onServer)

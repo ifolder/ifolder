@@ -73,6 +73,12 @@ namespace Simias.Storage
 		/// </summary>
 		[ NonSerialized() ]
 		protected bool skipCollisionCheck = false;
+
+		/// <summary>
+		/// Indicates whether the Node object is being imported on the master or the slave store.
+		/// </summary>
+		[ NonSerialized() ]
+		protected bool isMaster;
 		#endregion
 
 		#region Properties
@@ -109,6 +115,15 @@ namespace Simias.Storage
 		{
 			get { return skipCollisionCheck; }
 			set { skipCollisionCheck = value; }
+		}
+		
+		/// <summary>
+		/// Gets or sets whether the Node object is being imported on the master or the slave store.
+		/// </summary>
+		internal bool IsMaster
+		{
+			get { return isMaster; }
+			set { isMaster = value; }
 		}
 
 		/// <summary>
