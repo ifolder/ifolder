@@ -106,6 +106,7 @@ namespace Novell.iFolder.FormsBookLib
 				// Get the base path.
 				string basePath = Path.Combine(Application.StartupPath, "res");
 
+				pictureContact.SizeMode = PictureBoxSizeMode.StretchImage;
 				pictureContact.Image = Image.FromFile(Path.Combine(basePath, "blankhead.png"));
 				picturePhone.Image = Image.FromFile(Path.Combine(basePath, "cellphone.png"));
 				pictureMail.Image = Image.FromFile(Path.Combine(basePath, "ico-mail.png"));
@@ -246,6 +247,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.changePicture.Name = "changePicture";
 			this.changePicture.TabIndex = 4;
 			this.changePicture.Text = "Change...";
+			this.changePicture.Click += new System.EventHandler(this.changePicture_Click);
 			// 
 			// fullNameButton
 			// 
@@ -540,9 +542,9 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// pictureContact
 			// 
-			this.pictureContact.Location = new System.Drawing.Point(16, 16);
+			this.pictureContact.Location = new System.Drawing.Point(16, 8);
 			this.pictureContact.Name = "pictureContact";
-			this.pictureContact.Size = new System.Drawing.Size(64, 64);
+			this.pictureContact.Size = new System.Drawing.Size(60, 75);
 			this.pictureContact.TabIndex = 17;
 			this.pictureContact.TabStop = false;
 			// 
@@ -890,6 +892,12 @@ namespace Novell.iFolder.FormsBookLib
 				organization.Text = contact.Organization;
 				webAddress.Text = contact.Url;
 				blogAddress.Text = contact.Blog;
+
+				try
+				{
+					pictureContact.Image = Image.FromStream(contact.ExportPhoto());
+				}
+				catch{}
 
 				bool results = LoadAddresses();
 			}
@@ -1477,6 +1485,22 @@ namespace Novell.iFolder.FormsBookLib
 				DisplayAddress(workAddrEntry.Addr);
 			else
 				DisplayAddress(homeAddrEntry.Addr);		
+		}
+
+		private void changePicture_Click(object sender, System.EventArgs e)
+		{
+			OpenFileDialog openFileDialog = new OpenFileDialog();
+			openFileDialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF";
+
+			if(openFileDialog.ShowDialog() == DialogResult.OK)
+			{
+				try
+				{
+					contact.ImportPhoto(openFileDialog.OpenFile());
+					pictureContact.Image = Image.FromStream(contact.ExportPhoto());
+				}
+				catch{}
+			}
 		}
 		#endregion
 
