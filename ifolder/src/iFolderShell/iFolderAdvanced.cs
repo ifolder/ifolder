@@ -1837,9 +1837,12 @@ namespace Novell.iFolder.iFolderCom
 		{
 			try
 			{
-				System.Diagnostics.Process.Start(((iFolder)ifolders.SelectedItem).LocalPath);
+				System.Diagnostics.Process.Start(((iFolderInfo)ifolders.SelectedItem).LocalPath);
 			}
-			catch {}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
 		}
 
 		private void access_Click(object sender, System.EventArgs e)
