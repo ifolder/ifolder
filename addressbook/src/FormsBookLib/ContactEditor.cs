@@ -60,7 +60,6 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.GroupBox groupBox4;
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
-		private System.Windows.Forms.ListBox address;
 		private System.Windows.Forms.TextBox eMail;
 		private System.Windows.Forms.PictureBox pictureMail;
 		private System.Windows.Forms.PictureBox pictureContact;
@@ -78,8 +77,6 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.Button addr;
 		private System.Windows.Forms.TextBox blogAddress;
 		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.Button webConnect;
-		private System.Windows.Forms.Button blogConnect;
 		private System.Windows.Forms.Button fullNameButton;
 		private System.Windows.Forms.Button changePicture;
 		private System.Windows.Forms.TextBox userId;
@@ -88,6 +85,7 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.TextBox jobTitle;
 		private System.Windows.Forms.ComboBox emailSelect;
 		private System.Windows.Forms.CheckBox preferredEmail;
+		private System.Windows.Forms.ListBox addressView;
 
 		/// <summary>
 		/// Required designer variable.
@@ -149,8 +147,6 @@ namespace Novell.iFolder.FormsBookLib
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.changePicture = new System.Windows.Forms.Button();
 			this.fullNameButton = new System.Windows.Forms.Button();
-			this.blogConnect = new System.Windows.Forms.Button();
-			this.webConnect = new System.Windows.Forms.Button();
 			this.emailSelect = new System.Windows.Forms.ComboBox();
 			this.blogAddress = new System.Windows.Forms.TextBox();
 			this.label5 = new System.Windows.Forms.Label();
@@ -163,7 +159,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.mailAddress = new System.Windows.Forms.CheckBox();
 			this.addressSelect = new System.Windows.Forms.ComboBox();
 			this.pictureAddress = new System.Windows.Forms.PictureBox();
-			this.address = new System.Windows.Forms.ListBox();
+			this.addressView = new System.Windows.Forms.ListBox();
 			this.preferredEmail = new System.Windows.Forms.CheckBox();
 			this.phoneSelect3 = new System.Windows.Forms.ComboBox();
 			this.phoneSelect4 = new System.Windows.Forms.ComboBox();
@@ -204,8 +200,6 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.tabPage1.Controls.Add(this.changePicture);
 			this.tabPage1.Controls.Add(this.fullNameButton);
-			this.tabPage1.Controls.Add(this.blogConnect);
-			this.tabPage1.Controls.Add(this.webConnect);
 			this.tabPage1.Controls.Add(this.emailSelect);
 			this.tabPage1.Controls.Add(this.blogAddress);
 			this.tabPage1.Controls.Add(this.label5);
@@ -218,7 +212,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.tabPage1.Controls.Add(this.mailAddress);
 			this.tabPage1.Controls.Add(this.addressSelect);
 			this.tabPage1.Controls.Add(this.pictureAddress);
-			this.tabPage1.Controls.Add(this.address);
+			this.tabPage1.Controls.Add(this.addressView);
 			this.tabPage1.Controls.Add(this.preferredEmail);
 			this.tabPage1.Controls.Add(this.phoneSelect3);
 			this.tabPage1.Controls.Add(this.phoneSelect4);
@@ -262,22 +256,6 @@ namespace Novell.iFolder.FormsBookLib
 			this.fullNameButton.Text = "Full Name...";
 			this.fullNameButton.Click += new System.EventHandler(this.fullNameButton_Click);
 			// 
-			// blogConnect
-			// 
-			this.blogConnect.Location = new System.Drawing.Point(348, 256);
-			this.blogConnect.Name = "blogConnect";
-			this.blogConnect.Size = new System.Drawing.Size(22, 22);
-			this.blogConnect.TabIndex = 12;
-			this.blogConnect.Text = "button2";
-			// 
-			// webConnect
-			// 
-			this.webConnect.Location = new System.Drawing.Point(348, 224);
-			this.webConnect.Name = "webConnect";
-			this.webConnect.Size = new System.Drawing.Size(22, 22);
-			this.webConnect.TabIndex = 10;
-			this.webConnect.Text = "button1";
-			// 
 			// emailSelect
 			// 
 			this.emailSelect.BackColor = System.Drawing.SystemColors.Control;
@@ -296,7 +274,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.blogAddress.Location = new System.Drawing.Point(176, 256);
 			this.blogAddress.Name = "blogAddress";
-			this.blogAddress.Size = new System.Drawing.Size(168, 20);
+			this.blogAddress.Size = new System.Drawing.Size(192, 20);
 			this.blogAddress.TabIndex = 11;
 			this.blogAddress.Text = "";
 			// 
@@ -338,7 +316,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.webAddress.Location = new System.Drawing.Point(176, 224);
 			this.webAddress.Name = "webAddress";
-			this.webAddress.Size = new System.Drawing.Size(168, 20);
+			this.webAddress.Size = new System.Drawing.Size(192, 20);
 			this.webAddress.TabIndex = 9;
 			this.webAddress.Text = "";
 			// 
@@ -378,6 +356,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.addressSelect.Size = new System.Drawing.Size(96, 21);
 			this.addressSelect.TabIndex = 21;
 			this.addressSelect.Text = "Business:";
+			this.addressSelect.SelectedIndexChanged += new System.EventHandler(this.addressSelect_SelectedIndexChanged);
 			// 
 			// pictureAddress
 			// 
@@ -387,12 +366,13 @@ namespace Novell.iFolder.FormsBookLib
 			this.pictureAddress.TabIndex = 40;
 			this.pictureAddress.TabStop = false;
 			// 
-			// address
+			// addressView
 			// 
-			this.address.Location = new System.Drawing.Point(528, 160);
-			this.address.Name = "address";
-			this.address.Size = new System.Drawing.Size(192, 95);
-			this.address.TabIndex = 23;
+			this.addressView.Location = new System.Drawing.Point(528, 160);
+			this.addressView.Name = "addressView";
+			this.addressView.SelectionMode = System.Windows.Forms.SelectionMode.None;
+			this.addressView.Size = new System.Drawing.Size(192, 95);
+			this.addressView.TabIndex = 23;
 			// 
 			// preferredEmail
 			// 
@@ -770,6 +750,7 @@ namespace Novell.iFolder.FormsBookLib
 				if((addr.Types & AddressTypes.work) == AddressTypes.work)
 				{
 					workAddrEntry.Addr = addr;
+					DisplayAddress(addr);
 				}
 				else if((addr.Types & AddressTypes.home) == AddressTypes.home)
 				{
@@ -865,6 +846,25 @@ namespace Novell.iFolder.FormsBookLib
 			}
 
 			return null;
+		}
+
+		private void DisplayAddress(Address addr)
+		{
+			addressView.Items.Clear();
+
+			if (addr != null)
+			{
+				if (addr.Street != "")
+					addressView.Items.Add(addr.Street);
+				if (addr.ExtendedAddress != "")
+					addressView.Items.Add(addr.ExtendedAddress);
+				if (addr.PostalBox != "")
+					addressView.Items.Add("P.O. Box " + addr.PostalBox);
+				if (addr.Locality != "" || addr.Region != "" || addr.PostalCode != "")
+					addressView.Items.Add(addr.Locality + ", " + addr.Region + " " + addr.PostalCode);
+				if (addr.Country != "")
+					addressView.Items.Add(addr.Country);
+			}
 		}
 		#endregion
 
@@ -1461,12 +1461,22 @@ namespace Novell.iFolder.FormsBookLib
 						selectedAddr.Remove = true;
 					}
 				}
+
+				DisplayAddress(selectedAddr.Addr);
 			}
 			else
 			{
 				if (selectedAddr.Add)
 					selectedAddr.Add = false;
 			}
+		}
+
+		private void addressSelect_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			if (addressSelect.SelectedIndex == 0)
+				DisplayAddress(workAddrEntry.Addr);
+			else
+				DisplayAddress(homeAddrEntry.Addr);		
 		}
 		#endregion
 
