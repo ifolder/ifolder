@@ -32,7 +32,7 @@ using System.Threading;
 using Gtk;
 using Gdk;
 using Gnome;
-using Glade;
+//using Glade;
 using GtkSharp;
 using GLib;
 using Egg;

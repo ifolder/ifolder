@@ -15,12 +15,12 @@ CUR_DIR := $(shell pwd)
 
 all: Novell.iFolder.dll
 
-$(srcdir)/iFolderWebService.cs: $(srcdir)/iFolderWebService.wsdl
+$(srcdir)/iFolderWebService.cs: $(srcdir)/../WebService/iFolderWebService.wsdl
 if WINDOWS
-	wsdl $(srcdir)/iFolderWebService.wsdl
+	wsdl $(srcdir)/../WebService/iFolderWebService.wsdl
 endif
 if LINUX
-	wsdl -nologo -out:iFolderWebService.cs $(srcdir)/iFolderWebService.wsdl
+	wsdl -nologo -out:iFolderWebService.cs $(srcdir)/../WebService/iFolderWebService.wsdl
 #	We used to have to do this because of the way the wdsl was being generated
 #   But it all appears fine after switching to [SoapDocumentMethod]
 #	cat iFolderWebService.cs | sed 's/iFolder1/iFolder/' | sed 's/iFolderUser1/iFolderUser/' | sed 's/DiskSpace1/DiskSpace/' > newsource.cs

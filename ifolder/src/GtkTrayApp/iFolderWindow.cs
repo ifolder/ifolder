@@ -643,7 +643,23 @@ namespace Novell.iFolder
 
 		private void OniFolderRowActivated(object o, RowActivatedArgs args)
 		{
-			OpenSelectediFolder();
+			TreeSelection tSelect = iFolderTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+				if(ifolder.IsSubscription)
+				{
+				
+				}
+				else
+				{
+					OpenSelectediFolder();
+				}
+			}
 		}
 
 
