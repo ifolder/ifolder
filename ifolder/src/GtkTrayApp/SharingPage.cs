@@ -314,7 +314,6 @@ namespace Novell.iFolder
 
 				if(result == -8)
 				{
-					ContactEditor ce;
 					if(owner == null)
 					{
 						MessageDialog med = new MessageDialog(null,
@@ -327,11 +326,15 @@ namespace Novell.iFolder
 						return;
 					}
 					else
-						ce = new ContactEditor((Gtk.Window)GetWidget().Toplevel, owner, false);
+					{
+						ContactEditor ce = new ContactEditor(
+								(Gtk.Window)GetWidget().Toplevel,
+								owner);
 
-					ce.ContactEdited += new ContactEditEventHandler(
-							CreateContactEventHandler);
-					ce.ShowAll();
+						ce.ContactEdited += new ContactEditedEventHandler(
+								ContactEditedHandler);
+						ce.ShowAll();
+					}
 				}
 			}
 			else
@@ -347,8 +350,8 @@ namespace Novell.iFolder
 			}
 		}
 
-		public void CreateContactEventHandler(object o,
-				ContactEditEventArgs args)
+		public void ContactEditedHandler(object o,
+				ContactEventArgs args)
 		{
 			Contact contact = args.ABContact;
 			contact.Commit();
