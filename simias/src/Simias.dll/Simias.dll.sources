@@ -83,6 +83,7 @@ AssemblyInfo.cs
 ../Simias.Web/SharedCollection.cs
 ../Simias.Web/Member.cs
 ../Simias.Web/DiskSpaceQuota.cs
+../Simias.Web/Settings.cs
 ../Smtp/Base64AttachmentEncoder.cs
 ../Smtp/IAttachmentEncoder.cs
 ../Smtp/MailAddressCollection.cs

@@ -952,6 +952,20 @@ namespace Simias.Web
 
 
 
+		/// <summary>
+		/// WebMethod that gets the current Settings
+		/// </summary>
+		/// <returns>
+		/// The Current Settings
+		/// </returns>
+		public static Settings GetSettings()
+		{
+			return new Settings();
+		}
+
+
+
+
 
 
 		/// <summary>
