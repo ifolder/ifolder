@@ -133,7 +133,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuActionRemove;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ComboBox servers;
-		private System.Windows.Forms.ToolBar toolBar1;
+		private ToolBarEx toolBar1;
 		private System.Windows.Forms.ToolBarButton toolBarCreate;
 		private System.Windows.Forms.ToolBarButton toolBarSetup;
 		private System.Windows.Forms.ToolBarButton toolBarResolve;
@@ -192,13 +192,20 @@ namespace Novell.FormsTrayApp
 				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\serverifolder.ico")));
 				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico")));//TODO: conflict.ico")));
 
-				// Add icons for toolbar buttons.
+				// Add the normal image list to the toolbar.
 				toolBar1.ImageList = new ImageList();
-				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico")));
-				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\setup.ico")));
-				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\share.ico")));
-				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\conflict_resolution.ico")));
-				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\sync.ico")));
+				toolBar1.ImageList.TransparentColor = Color.White;
+				toolBar1.ImageList.Images.AddStrip(Image.FromFile(Path.Combine(Application.StartupPath, @"res\mtoolbar_nor.bmp")));
+
+				// Add the disabled image list to the toolbar.
+				toolBar1.DisabledImageList = new ImageList();
+				toolBar1.DisabledImageList.TransparentColor = Color.White;
+				toolBar1.DisabledImageList.Images.AddStrip(Image.FromFile(Path.Combine(Application.StartupPath, @"res\mtoolbar_dis.bmp")));
+
+				// Add the hot image list to the toolbar.
+				toolBar1.HotImageList = new ImageList();
+				toolBar1.HotImageList.TransparentColor = Color.White;
+				toolBar1.HotImageList.Images.AddStrip(Image.FromFile(Path.Combine(Application.StartupPath, @"res\mtoolbar_hot.bmp")));
 
 				toolBarCreate.ImageIndex = 0;
 				toolBarSetup.ImageIndex = 1;
@@ -275,7 +282,7 @@ namespace Novell.FormsTrayApp
 			this.menuHelpAbout = new System.Windows.Forms.MenuItem();
 			this.status = new System.Windows.Forms.Label();
 			this.progressBar1 = new System.Windows.Forms.ProgressBar();
-			this.toolBar1 = new System.Windows.Forms.ToolBar();
+			this.toolBar1 = new ToolBarEx();
 			this.toolBarCreate = new System.Windows.Forms.ToolBarButton();
 			this.toolBarSetup = new System.Windows.Forms.ToolBarButton();
 			this.toolBarShare = new System.Windows.Forms.ToolBarButton();

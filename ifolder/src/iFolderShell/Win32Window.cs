@@ -76,6 +76,18 @@ namespace Novell.Win32Util
 		/// </summary>
 		public const int SHCNF_PATHW = 0x0005;
 
+		const int WM_USER = 0x0400;
+
+		/// <summary>
+		/// Sets the disabled image list for a toolbar.
+		/// </summary>
+		public static readonly int TB_SETDISABLEDIMAGELIST = WM_USER + 54;
+
+		/// <summary>
+		/// Sets the hot image list for a toolbar.
+		/// </summary>
+		public static readonly int TB_SETHOTIMAGELIST = WM_USER + 52;
+
 		const int GWL_EXSTYLE = -20;
 		const int WS_EX_TOOLWINDOW = 0x00000080;
 		const int WS_EX_APPWINDOW = 0x00040000;
@@ -114,40 +126,43 @@ namespace Novell.Win32Util
 		}
 
 		[DllImport("user32.dll")]
-		static extern bool SetForegroundWindow(IntPtr hWnd);
-
-		[DllImport("user32.dll")]
-		static extern bool ShowWindow(IntPtr hwnd, int nCmdShow);
+		static extern bool BringWindowToTop(IntPtr hwnd);
 
 		[DllImport("user32.dll", SetLastError=true)]
 		static extern int DestroyIcon(IntPtr hIcon);
+
+		[DllImport("user32.dll", EntryPoint="FindWindow")]
+		static extern IntPtr FindWindowWin32(string className, string windowName);
 
 		[DllImport("user32.dll")]
 		static extern bool GetIconInfo(IntPtr hIcon, out ICONINFO piconinfo);
 
 		[DllImport("user32.dll")]
-		static extern bool BringWindowToTop(IntPtr hwnd);
-		
-		[DllImport("user32.dll", EntryPoint="FindWindow")]
-		static extern IntPtr FindWindowWin32(string className, string windowName);
+		static extern int GetWindowLong(IntPtr hwnd, int index);
+
+		[DllImportAttribute("user32.dll")]
+		static extern IntPtr LoadImage(int hInst, string name, int type, int cx, int cy, int load);
+
+		[DllImport("user32.dll")]
+		public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+
+		[DllImport("user32.dll")]
+		static extern bool SetForegroundWindow(IntPtr hWnd);
 
 		[DllImport("user32.dll")]
 		static extern int SetWindowLong(IntPtr hwnd, int index,	int dwNewLong);
 
-		[DllImport("user32.dll")]
-		static extern int GetWindowLong(IntPtr hwnd, int index);
-		
 		[DllImport("shell32.dll")]
-		static extern bool SHObjectProperties(IntPtr hwnd, int type, [MarshalAs(UnmanagedType.LPWStr)] string lpObject, [MarshalAs(UnmanagedType.LPWStr)] string lpPage);
-
-		[DllImportAttribute("user32.dll")]
-		static extern IntPtr LoadImage(int hInst, string name, int type, int cx, int cy, int load);
+		static extern void SHChangeNotify(int wEventId, int uFlags, [MarshalAs(UnmanagedType.LPWStr)] string dwItem1, IntPtr dwItem2);
 
 		[DllImport("shell32.dll")]
 		static extern IntPtr SHGetFileInfo([MarshalAs(UnmanagedType.LPWStr)] string path, int attr, out IFSHFILEINFO fi, int cbfi, int flags);
 
 		[DllImport("shell32.dll")]
-		static extern void SHChangeNotify(int wEventId, int uFlags, [MarshalAs(UnmanagedType.LPWStr)] string dwItem1, IntPtr dwItem2);
+		static extern bool SHObjectProperties(IntPtr hwnd, int type, [MarshalAs(UnmanagedType.LPWStr)] string lpObject, [MarshalAs(UnmanagedType.LPWStr)] string lpPage);
+
+		[DllImport("user32.dll")]
+		static extern bool ShowWindow(IntPtr hwnd, int nCmdShow);
 		#endregion
 
 		/// <summary>
