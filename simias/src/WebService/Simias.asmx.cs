@@ -41,6 +41,7 @@ using Simias.Client;
 using Simias.Domain;
 using Simias.Storage;
 using Simias.Sync;
+using Simias.Security.Web.AuthenticationService;
 //using Simias.POBox;
 
 namespace Simias.Web
@@ -151,6 +152,41 @@ namespace Simias.Web
 			}
 
 			return((DomainInformation[]) domains.ToArray(typeof(DomainInformation)));
+		}
+
+		/// <summary>
+		/// WebMethod to login or authenticate against a 
+		/// remote domain.  The user must have previously joined
+		/// or attached to this domain.
+		/// </summary>
+		/// <returns>
+		/// Simias.Client.Authentication.Status status
+		/// </returns>
+		[WebMethod(Description="Login or authenticate to a remote domain")]
+		[SoapDocumentMethod]
+		public
+		Simias.Authentication.Status
+		LoginToRemoteDomain(string domainID, string username, string password)
+		{
+			DomainAgent domainAgent = new DomainAgent();
+			return	domainAgent.Login( domainID, username, password );
+		}
+
+		/// <summary>
+		/// WebMethod to logout from a remote domain.
+		/// The user must have previously joined and 
+		/// authenticated to this domain.
+		/// </summary>
+		/// <returns>
+		/// Simias.Client.Authentication.Status status
+		/// </returns>
+		[WebMethod(Description="Logout from a remote domain")]
+		[SoapDocumentMethod]
+		public
+		Simias.Authentication.Status
+		LogoutFromRemoteDomain(string domainID, string username)
+		{
+			return new Simias.Authentication.Status( Simias.Authentication.StatusCodes.Success );
 		}
 
 

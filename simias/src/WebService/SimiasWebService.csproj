@@ -95,14 +95,14 @@
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "SimiasClient"
-                    Project = "{E38BAF80-9B31-4D15-A002-E775B96FAFA6}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
                     Name = "Novell.Security.ClientPasswordManager.NetCredential"
                     AssemblyName = "Novell.Security.ClientPasswordManager.NetCredential"
                     HintPath = "..\..\external\Novell.Security\net\bin\Novell.Security.ClientPasswordManager.NetCredential.dll"
+                />
+                <Reference
+                    Name = "SimiasClient"
+                    AssemblyName = "SimiasClient"
+                    HintPath = "..\SimiasClient\bin\Debug\SimiasClient.dll"
                 />
             </References>
         </Build>
