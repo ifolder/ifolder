@@ -2048,7 +2048,7 @@ namespace Novell.FormsTrayApp
 					}
 
 					// Add message to log.
-					addMessageToLog(syncEventArgs.TimeStamp, status.Text);// string.Format(resourceManager.GetString("syncFileDetails"), syncEventArgs.Name, syncEventArgs.Size, syncEventArgs.SizeToSync, syncEventArgs.SizeRemaining));
+					addMessageToLog(syncEventArgs.TimeStamp, status.Text);
 				}
 				else
 				{
