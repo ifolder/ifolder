@@ -414,14 +414,8 @@ namespace Novell.FormsTrayApp
 			globalProperties.ShowEnterpriseTab = true;
 			globalProperties.InitialConnect = true;
 
-			try
-			{
-				// Update the settings with the enterprise data.
-				ifolderSettings = ifWebService.GetSettings();
-			}
-			catch
-			{
-			}
+			// Update the settings with the enterprise data.
+			ifolderSettings = serverInfo.ifSettings;
 		}
 
 		private void syncAnimateTimer_Tick(object sender, System.EventArgs e)
@@ -444,8 +438,15 @@ namespace Novell.FormsTrayApp
 					loginCancelled = serverInfo.Cancelled;
 				}
 
+				bool update = serverInfo.UpdateStarted;
 				serverInfo.Dispose();
 				serverInfo = null;
+
+				// If an update is in progress, shutdown the trayapp.
+				if (update)
+				{
+					ShutdownTrayApp(null);
+				}
 			}
 		}
 		#endregion
