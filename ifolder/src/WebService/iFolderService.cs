@@ -430,19 +430,57 @@ namespace Novell.iFolder.Web
 				throw new Exception("Invalid iFolderID");
 
 			Simias.Storage.Member member = col.GetMemberByID(UserID);
-			if(member == null)
-				throw new Exception("Invalid UserID");
+			if(member != null)
+			{
+				if(Rights == "Admin")
+					member.Rights = Access.Rights.Admin;
+				else if(Rights == "ReadOnly")
+					member.Rights = Access.Rights.ReadOnly;
+				else if(Rights == "ReadWrite")
+					member.Rights = Access.Rights.ReadWrite;
+				else
+					throw new Exception("Invalid Rights Specified");
 
-			if(Rights == "Admin")
-				member.Rights = Access.Rights.Admin;
-			else if(Rights == "ReadOnly")
-				member.Rights = Access.Rights.ReadOnly;
-			else if(Rights == "ReadWrite")
-				member.Rights = Access.Rights.ReadWrite;
+				col.Commit(member);
+			}
 			else
-				throw new Exception("Invalid Rights Specified");
+			{
+				// If the user wasn't found, look for the UserID as
+				// a subscription in the default POBox
+				POBox pobox = Simias.POBox.POBox.GetPOBox(store, 
+													store.DefaultDomain);
+				if(pobox == null)
+				{
+					throw new Exception("Unable to access POBox");
+				}
 
-			col.Commit(member);
+				ICSList poList = pobox.Search(
+							Subscription.ToIdentityProperty,
+							UserID,
+							SearchOp.Equal);
+
+				Subscription sub = null;
+				foreach(ShallowNode sNode in poList)
+				{
+					sub = new Subscription(pobox, sNode);
+				}
+
+				if (sub == null)
+				{
+					throw new Exception("Invalid UserID");
+				}
+				
+				if(Rights == "Admin")
+					sub.SubscriptionRights = Access.Rights.Admin;
+				else if(Rights == "ReadOnly")
+					sub.SubscriptionRights = Access.Rights.ReadOnly;
+				else if(Rights == "ReadWrite")
+					sub.SubscriptionRights =Access.Rights.ReadWrite;
+				else
+					throw new Exception("Invalid Rights Specified");
+
+				pobox.Commit(sub);
+			}
 		}
 
 
@@ -980,6 +1018,7 @@ namespace Novell.iFolder.Web
 		{
 			DiskSpace.SetiFolderDiskSpaceLimit(iFolderID, Limit);
 		}
+
 
 
 
