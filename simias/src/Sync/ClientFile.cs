@@ -498,7 +498,8 @@ namespace Simias.Sync.Client
 			long	sizeRemaining;
 			ArrayList fileMap = GetUploadFileMap(out sizeToSync);
 			sizeRemaining = sizeToSync;
-
+			byte[]	dataBuffer = new byte[MaxXFerSize];
+			
 //			byte[] buffer = new byte[BlockSize];
 			long offset = 0;
 			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
@@ -515,7 +516,6 @@ namespace Simias.Sync.Client
 				{
 					// Write the bytes to the output stream.
 					OffsetSegment seg = (OffsetSegment)segment;
-					byte[] dataBuffer = new byte[seg.Length];
 					ReadPosition = seg.Offset;
 					int bytesRead = Read(dataBuffer, 0, seg.Length);
 					serverFile.Write(dataBuffer, offset, bytesRead);
