@@ -60,7 +60,8 @@ namespace Novell.iFolderCom
 		/// </summary>
 		public DomainWeb DomainWeb
 		{
-			get { return domainWeb;}
+			get { return domainWeb; }
+			set { domainWeb = value; }
 		}
 
 		/// <summary>
