@@ -37,11 +37,13 @@
 -(iFolderDomain *) ConnectToDomain:(NSString *)UserName usingPassword:(NSString *)Password andHost:(NSString *)Host;
 -(void) LeaveDomain:(NSString *)domainID withOption:(BOOL)localOnly;
 -(BOOL) ValidCredentials:(NSString *)domainID forUser:(NSString *)userID;
--(void) SaveDomainPassword:(NSString *)domainID password:(NSString *)password;
--(NSString *) GetSavedDomainPassword:(NSString *)domainID;
+-(void) SetDomainPassword:(NSString *)domainID password:(NSString *)password;
+-(NSString *) GetDomainPassword:(NSString *)domainID;
 -(void) SetDomainActive:(NSString *)domainID;
 -(void) SetDomainInactive:(NSString *)domainID;
 -(void) SetDefaultDomain:(NSString *)domainID;
+
+-(void) LoginToRemoteDomain:(NSString *)domainID usingPassword:(NSString *)password;
 
 
 @end

@@ -320,7 +320,7 @@
 {
 	@try
 	{
-		[ifolderService AuthenticateToDomain:domainID usingPassword:password];
+		[simiasService LoginToRemoteDomain:domainID usingPassword:password];
 		return YES;
 	}
 	@catch (NSException *e)
