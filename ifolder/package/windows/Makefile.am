@@ -32,6 +32,9 @@ OUT_DIR := $(shell cygpath --windows $(CUR_DIR))
 MERGE_MODULES_WIN  := $(shell cygpath --windows "$(USERPROFILE)\My Documents\My InstallShield DevStudio Projects\MergeModules")
 MERGE_MODULES_UNIX := $(shell cygpath --unix "$(USERPROFILE)\My Documents\My InstallShield DevStudio Projects\MergeModules")
 ISSABLD_DIR := $(shell cygpath --windows `dirname $(ISSABLD)`)
+REGASM_DIR1 := $(shell cygpath --unix $$FRAMEWORKDIR/v1.1*)
+REGASM_DIR2 := $(shell ls -d $(REGASM_DIR1))
+REGASM_DIR := $(shell cygpath --windows $(REGASM_DIR2))
 endif
 
 RELEASE = 1
@@ -67,13 +70,13 @@ all: $(MSI_FILE)
 
 $(MSI_FILE): issabld $(MSM_FILE) $(SDK_MSM_FILE) $(MSI).ism
 	@rm -f $@ "$(MSI_DISK1)" "$(MSI_LOG_FILE)"
-	@CMD='"$(ISSABLD)" -p "$(MSI).ism" -o "$(ISSABLD_DIR),$(MERGE_MODULES_WIN)"'; \
+	@CMD='"$(ISSABLD)" -t "$(REGASM_DIR)" -p "$(MSI).ism" -o "$(ISSABLD_DIR),$(MERGE_MODULES_WIN)"'; \
 		echo $$CMD; \
 		eval $$CMD > "$(MSI_LOG_FILE)" 2>&1; \
 		if test -f "$(MSI_DISK1)"; then \
 			ln "$(MSI_DISK1)" $@; \
 		else \
-			cat "$(MSI_LOG_FILE);" \
+			cat "$(MSI_LOG_FILE)"; \
 			echo FAILED; exit 1; \
 		fi
 	@test "x" = "x$(INSTALL_PKGS)" || \
