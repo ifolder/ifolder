@@ -184,6 +184,17 @@ plugin_load(GaimPlugin *plugin)
 	 * so, poke the thread service to do a sync.
 	 */
 	simias_sync_member_list();
+	
+	/**
+	 * If the user is already signed on with their AIM account, we'll need to
+	 * set the user profile now so we won't have to make them sign off and sign
+	 * back on again.
+	 */
+	GList *accounts = gaim_accounts_get_all();
+	if (accounts)
+	{
+		g_list_foreach(accounts, simias_set_account_profile_foreach, NULL);
+	}
 
 	return TRUE;
 }
