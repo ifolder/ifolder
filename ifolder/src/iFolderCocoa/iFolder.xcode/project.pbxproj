@@ -7,6 +7,10 @@
 	objects = {
 		080E96DDFE201D6D7F000001 = {
 			children = (
+				3EDEFA900768265700A3AD33,
+				3EDEFA910768265700A3AD33,
+				3EDEFA940768266200A3AD33,
+				3EDEFA950768266200A3AD33,
 			);
 			isa = PBXGroup;
 			name = Classes;
@@ -246,6 +250,62 @@
 			settings = {
 			};
 		};
+		3EDEFA900768265700A3AD33 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = MainWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EDEFA910768265700A3AD33 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = MainWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EDEFA920768265700A3AD33 = {
+			fileRef = 3EDEFA900768265700A3AD33;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EDEFA930768265700A3AD33 = {
+			fileRef = 3EDEFA910768265700A3AD33;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EDEFA940768266200A3AD33 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = LoginWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EDEFA950768266200A3AD33 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = LoginWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EDEFA960768266200A3AD33 = {
+			fileRef = 3EDEFA940768266200A3AD33;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EDEFA970768266200A3AD33 = {
+			fileRef = 3EDEFA950768266200A3AD33;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3EF2210D0768180B00EE2EF6 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -359,6 +419,8 @@
 				3E49BC6C0765224B0040812D,
 				3EF2210E0768180B00EE2EF6,
 				3EF2212F07681AA400EE2EF6,
+				3EDEFA920768265700A3AD33,
+				3EDEFA960768266200A3AD33,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -379,6 +441,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072D0486CEB800E47090,
+				3EDEFA930768265700A3AD33,
+				3EDEFA970768266200A3AD33,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

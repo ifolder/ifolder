@@ -2,6 +2,7 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
+            ACTIONS = {login = id; }; 
             CLASS = MainWindowController; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSWindowController; 
