@@ -349,6 +349,20 @@ namespace Simias
 		}
 
 		/// <summary>
+		/// Reloads the configuration object data from the configuration file.
+		/// </summary>
+		public void Refresh()
+		{
+			lock(typeof(Configuration))
+			{
+				// Load the configuration document from the file.
+				configDoc = new XmlDocument();
+				configDoc.Load(ConfigFilePath);
+				configDoc.PreserveWhitespace = true;
+			}
+		}
+
+		/// <summary>
 		/// Set a Key and value pair.
 		/// </summary>
 		/// <param name="key">The key to set.</param>

@@ -1,15 +1,15 @@
 if LINUX
-SUBDIRS = Simias.dll FlaimProvider SimiasApp mDnsService AddressBook WebService
+SUBDIRS = Simias.dll FlaimProvider SimiasApp mDnsService AddressBook WebService IProcEvent
 DIST_SUBDIRS = $(SUBDIRS)
 endif
 
 if DARWIN
-SUBDIRS = Simias.dll SimiasApp mDnsService AddressBook WebService
+SUBDIRS = Simias.dll SimiasApp mDnsService AddressBook WebService IProcEvent
 DIST_SUBDIRS = $(SUBDIRS)
 endif
 
 if WINDOWS
-SUBDIRS = Simias.dll FlaimProvider SimiasApp mDnsService AddressBook WebService
+SUBDIRS = Simias.dll FlaimProvider SimiasApp mDnsService AddressBook WebService IProcEvent
 DIST_SUBDIRS = $(SUBDIRS)
 endif
 
@@ -30,7 +30,7 @@ installcheck-summary:
 
 clean-local:
 	rm -rf $(COMMON_CLEAN_FILES)
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 

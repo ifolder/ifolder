@@ -3,6 +3,12 @@ AssemblyInfo.cs
 ../Events/DefaultSubscriber.cs
 ../Events/EventBroker.cs
 ../Events/EventPublisher.cs
+../Events/IProcEventData.cs
+../Events/IProcEventListener.cs
+../Events/IProcEventRegistration.cs
+../Events/IProcEventServer.cs
+../Events/IProcEventTypes.cs
+../Events/IProcEventSubscriber.cs
 ../ChangeLog/ChangeLog.cs
 ../CollectionStore/EventSubscriber.cs
 ../CollectionStore/NodeEventArgs.cs
