@@ -25,13 +25,39 @@ using System;
 
 namespace Simias.POBox
 {
+	/// <summary>
+	/// Invitation states.
+	/// </summary>
 	public enum InvitationState
 	{
+		/// <summary>
+		/// The invitation has been created but not sent.
+		/// </summary>
 		Pending,
+
+		/// <summary>
+		/// The invitation has been sent.
+		/// </summary>
 		Invited,
+
+		/// <summary>
+		/// The invitation, a request to join, has been sent.
+		/// </summary>
 		Posted,
+
+		/// <summary>
+		/// The invitation, a request to join, has been rejected.
+		/// </summary>
 		Rejected,
+
+		/// <summary>
+		/// The invitation has been accepted.
+		/// </summary>
 		Accepted,
+
+		/// <summary>
+		/// The invitation has been declined.
+		/// </summary>
 		Declined
 	};
 
@@ -40,12 +66,24 @@ namespace Simias.POBox
 	/// </summary>
 	public class Invitation : Message
 	{
+		#region Class Members
+		/// <summary>
+		/// The name of the property storing the InvitationState.
+		/// </summary>
+		public const string InviteState = "InvitationState";
+		#endregion
+
+		#region Constructors
 		/// <summary>
 		/// Instantiates an Invitation object.
 		/// </summary>
-		public Invitation(string invitationName) :
-			base (invitationName)
+		/// <param name="invitationName">The friendly name of the invitation.</param>
+		/// <param name="messageType">The type of the message.</param>
+		public Invitation(string invitationName, MessageType messageType) :
+			base (invitationName, messageType)
 		{
+			this.Properties.AddProperty(InviteState, InvitationState.Pending);
 		}
+		#endregion
 	}
 }
