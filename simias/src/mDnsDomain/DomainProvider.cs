@@ -117,7 +117,20 @@ namespace Simias
 							break;
 						}
 
-						IPHostEntry host = Dns.GetHostByName( propHost.Value as string );
+						string hostName = propHost.Value as string;
+						log.Debug( "Resolving host: " + hostName );
+
+						IPHostEntry host = null;
+						try
+						{
+							host = Dns.GetHostByName( hostName );
+						}
+						catch( Exception e2 )
+						{
+							log.Debug( e2.Message );
+							log.Debug( e2.StackTrace );
+						}
+
 						if ( host != null )
 						{
 							Property port =

@@ -92,8 +92,8 @@ namespace Simias.mDns
 			Uri loginUri = new Uri( remoteUri.ToString() + "/Login.ashx" );
 
 			HttpWebRequest request = WebRequest.Create( loginUri ) as HttpWebRequest;
-			WebState webState = new WebState();
-			webState.InitializeWebRequest( request );
+			WebState webState = new WebState( Simias.mDns.Domain.ID );
+			webState.InitializeWebRequest( request, Simias.mDns.Domain.ID );
 			
 			request.Headers.Add( 
 				Simias.Security.Web.AuthenticationService.Login.DomainIDHeader,
@@ -124,8 +124,8 @@ namespace Simias.mDns
 						if ( oneTimeChallenge != null && oneTimeChallenge != "" )
 						{
 							HttpWebRequest request2 = WebRequest.Create( loginUri ) as HttpWebRequest;
-							WebState webState2 = new WebState();
-							webState2.InitializeWebRequest( request2 );
+							WebState webState2 = new WebState( Simias.mDns.Domain.ID );
+							webState2.InitializeWebRequest( request2, Simias.mDns.Domain.ID );
 
 							request2.Headers.Add( 
 								Simias.Security.Web.AuthenticationService.Login.DomainIDHeader,
