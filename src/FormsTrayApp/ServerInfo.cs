@@ -46,6 +46,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.TextBox userName;
 		private System.Windows.Forms.PictureBox banner;
 		private iFolderWebService ifWebService;
+		private bool connected;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -182,10 +183,10 @@ namespace Novell.FormsTrayApp
 			this.ClientSize = new System.Drawing.Size(450, 224);
 			this.Controls.Add(this.banner);
 			this.Controls.Add(this.password);
-			this.Controls.Add(this.label4);
 			this.Controls.Add(this.serverIP);
-			this.Controls.Add(this.label2);
 			this.Controls.Add(this.userName);
+			this.Controls.Add(this.label4);
+			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
@@ -195,6 +196,7 @@ namespace Novell.FormsTrayApp
 			this.Name = "ServerInfo";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "iFolder Login";
+			this.Closing += new System.ComponentModel.CancelEventHandler(this.ServerInfo_Closing);
 			this.Load += new System.EventHandler(this.ServerInfo_Load);
 			this.Activated += new System.EventHandler(this.ServerInfo_Activated);
 			this.ResumeLayout(false);
@@ -206,12 +208,14 @@ namespace Novell.FormsTrayApp
 		private void ok_Click(object sender, System.EventArgs e)
 		{
 			Cursor.Current = Cursors.WaitCursor;
+			connected = false;
 
 			try
 			{
 				if (ifWebService != null)
 				{
 					ifWebService.ConnectToEnterpriseServer(userName.Text, password.Text, serverIP.Text);
+					connected = true;
 				}
 			}
 			catch (WebException ex)
@@ -244,6 +248,15 @@ namespace Novell.FormsTrayApp
 		private void ServerInfo_Activated(object sender, System.EventArgs e)
 		{
 			userName.Focus();
+		}
+
+		private void ServerInfo_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			// Don't close the dialog if we failed to connect.
+			if ((this.DialogResult == DialogResult.OK) && !connected)
+			{
+				e.Cancel = true;
+			}
 		}
 		#endregion
 	}
