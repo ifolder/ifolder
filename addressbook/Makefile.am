@@ -34,37 +34,37 @@ package-install package-uninstall:
 #
 # Targets to use if building subprojects
 #
-if BUILD_SUBPROJECTS
-
-all install installcheck: %: sub-%
-	@echo $@ sub done
-
-distclean: %: sub-%
-	@echo $@ sub done
-
-# for all, install subprojects
-sub-all:
-	@echo SUBPROJECT_BUILD_PATHS=$(SUBPROJECT_BUILD_PATHS)
-	for subproj in $(SUBPROJECT_BUILD_PATHS); do \
-		cd $$subproj; $(MAKE) install; \
-	done
-
-# pass these targets on to subprojects (stripping off sub-)
-sub-clean sub-install sub-installcheck sub-installcheck-summary sub-uninstall sub-distclean sub-maintainer-clean:
-	@echo SUBPROJECT_BUILD_PATHS=$(SUBPROJECT_BUILD_PATHS)
-	for subproj in $(SUBPROJECT_BUILD_PATHS); do \
-		cd $$subproj; $(MAKE) $(subst sub-,,$@); \
-	done
-
-if WINDOWS
-# for package on Windows, install subprojects then build subproject packages
-sub-package:
-	@echo SUBPROJECT_BUILD_PATHS=$(SUBPROJECT_BUILD_PATHS)
-	for subproj in $(SUBPROJECT_BUILD_PATHS); do \
-		cd $$subproj; $(MAKE) install package; \
-	done
-endif
-
+#if BUILD_SUBPROJECTS
+#
+#all install installcheck: %: sub-%
+#	@echo $@ sub done
+#
+#distclean: %: sub-%
+#	@echo $@ sub done
+#
+## for all, install subprojects
+#sub-all:
+#	@echo SUBPROJECT_BUILD_PATHS=$(SUBPROJECT_BUILD_PATHS)
+#	for subproj in $(SUBPROJECT_BUILD_PATHS); do \
+#		cd $$subproj; $(MAKE) install; \
+#	done
+#
+## pass these targets on to subprojects (stripping off sub-)
+#sub-clean sub-install sub-installcheck sub-installcheck-summary sub-uninstall sub-distclean sub-maintainer-clean:
+#	@echo SUBPROJECT_BUILD_PATHS=$(SUBPROJECT_BUILD_PATHS)
+#	for subproj in $(SUBPROJECT_BUILD_PATHS); do \
+#		cd $$subproj; $(MAKE) $(subst sub-,,$@); \
+#	done
+#
+#if WINDOWS
+## for package on Windows, install subprojects then build subproject packages
+#sub-package:
+#	@echo SUBPROJECT_BUILD_PATHS=$(SUBPROJECT_BUILD_PATHS)
+#	for subproj in $(SUBPROJECT_BUILD_PATHS); do \
+#		cd $$subproj; $(MAKE) install package; \
+#	done
+#endif
+#
 #if LINUX
 # for package on Linux, install subprojects then build subproject packages
 # (TO DO: need to configure install-paths during RPM build)
@@ -74,11 +74,11 @@ endif
 #		cd $$subproj; $(MAKE) install; \
 #	done
 #endif
-
+#
 #
 # Targets to use if not building subprojects
 #
-else
+#else
 
 sub-clean:
 sub-installcheck-summary:
@@ -87,5 +87,5 @@ sub-maintainer-clean:
 sub-package:
 sub-package-clean:
 
-endif
+#endif
 
