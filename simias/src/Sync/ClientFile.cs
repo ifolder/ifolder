@@ -559,7 +559,7 @@ namespace Simias.Sync
 			// Get the hash map from the server.
 			HashData[] serverHashMap = httpClient.GetHashMap();
 			
-			if (serverHashMap == null)
+			if (serverHashMap.Length == 0)
 			{
 				// Send the whole file.
 				long offset = 0;
