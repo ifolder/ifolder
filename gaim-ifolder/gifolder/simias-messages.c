@@ -485,7 +485,7 @@ handle_invitation_request(GaimAccount *account,
 	/* FIXME: Call the registered UI Callback for handling the invitation request */
 	accept_dialog =
 		gtk_message_dialog_new(NULL,
-							GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
+							GTK_DIALOG_DESTROY_WITH_PARENT,
 							GTK_MESSAGE_QUESTION,
 							GTK_BUTTONS_YES_NO,
 							_("%s (%s) would like to share files with you through iFolder.  Would you like to participate?"),
@@ -544,7 +544,7 @@ handle_invitation_deny(GaimAccount *account,
 
 	dialog =
 		gtk_message_dialog_new(NULL,
-								GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
+								GTK_DIALOG_DESTROY_WITH_PARENT,
 								GTK_MESSAGE_INFO,
 								GTK_BUTTONS_OK,
 								_("%s denied your request to enable iFolder file sharing."),
@@ -641,6 +641,10 @@ handle_invitation_accept(GaimAccount *account,
 		fprintf(stderr, "Couldn't get our private key.  Maybe iFolder is not running?\n");
 		return FALSE;
 	}
+	
+	fprintf(stderr, "My RSA Private Key:\n\n%s\n\n", privateKey);
+	
+	fprintf(stderr, "Encrypted DES Key:\n\n%s\n\n", encryptedDESKey);
 
 	err = simias_rsa_decrypt_string(privateKey, encryptedDESKey, &decryptedDESKey);
 	free(privateKey);
@@ -681,7 +685,7 @@ handle_invitation_accept(GaimAccount *account,
 
 	dialog =
 		gtk_message_dialog_new(NULL,
-								GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
+								GTK_DIALOG_DESTROY_WITH_PARENT,
 								GTK_MESSAGE_INFO,
 								GTK_BUTTONS_OK,
 								_("%s (%s) has accepted your request to enable iFolder file sharing.  To share files through iFolder, use the iFolder Client, create an iFolder in the Gaim Workgroup Domain, and add %s (%s) to the iFolder's member list."),

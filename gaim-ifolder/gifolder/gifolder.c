@@ -157,7 +157,7 @@ buddylist_cb_enable_ifolder_sharing(GaimBlistNode *node, gpointer user_data)
 		buddy_alias = gaim_buddy_get_alias(buddy);
 		dialog =
 			gtk_message_dialog_new(NULL,
-									GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
+									GTK_DIALOG_DESTROY_WITH_PARENT,
 									GTK_MESSAGE_ERROR,
 									GTK_BUTTONS_OK,
 									_("There was an error enabling iFolder Sharing with %s.  Perhaps %s is not online or you do not have iFolder/Simias running?"),
@@ -180,7 +180,7 @@ buddylist_cb_disable_ifolder_sharing(GaimBlistNode *node, gpointer user_data)
 	
 	dialog =
 		gtk_message_dialog_new(NULL,
-								GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
+								GTK_DIALOG_DESTROY_WITH_PARENT,
 								GTK_MESSAGE_INFO,
 								GTK_BUTTONS_OK,
 								_("This feature is not implemented yet.  If you'd like to help implement this, please visit www.ifolder.com"));

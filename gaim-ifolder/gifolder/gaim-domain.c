@@ -196,7 +196,7 @@ simias_get_private_key(char **private_key)
 	
 	if (gaim_prefs_exists(SIMIAS_PREF_PRIVATE_KEY))
 	{
-		existing_private_key = gaim_prefs_get_string(SIMIAS_PREF_PUBLIC_KEY);
+		existing_private_key = gaim_prefs_get_string(SIMIAS_PREF_PRIVATE_KEY);
 		if (existing_private_key)
 		{
 			*private_key = strdup(existing_private_key);
@@ -257,8 +257,10 @@ setup_keypair()
 	 * This is the first time we've ever retrieved the PPK from Simias so
 	 * store it in the Gaim Plugin Configuration area for future use.
 	 */
-	gaim_prefs_add_string(SIMIAS_PREF_PUBLIC_KEY, resp.PublicCredential);
-	gaim_prefs_add_string(SIMIAS_PREF_PRIVATE_KEY, resp.PrivateCredential);
+	gaim_prefs_set_string(SIMIAS_PREF_PUBLIC_KEY, resp.PublicCredential);
+	gaim_prefs_set_string(SIMIAS_PREF_PRIVATE_KEY, resp.PrivateCredential);
+
+	fprintf(stderr, "Just added the public/private key pair to prefs.xml\n");
 	
 	cleanup_gsoap(&soap);
 
@@ -429,7 +431,7 @@ setup_des_key()
 	 * This is the first time we've ever retrieved the DES Key so
 	 * store it in the Gaim Plugin Configuration area for future use.
 	 */
-	gaim_prefs_add_string(SIMIAS_PREF_DES_KEY, resp.GenerateDESKeyResult);
+	gaim_prefs_set_string(SIMIAS_PREF_DES_KEY, resp.GenerateDESKeyResult);
 	
 	cleanup_gsoap(&soap);
 
