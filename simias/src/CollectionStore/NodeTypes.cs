@@ -120,11 +120,19 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets the Roster class name.
+		/// </summary>
+		static public string RosterType
+		{
+			get { return classNames[ 10 ]; }
+		}
+
+		/// <summary>
 		/// Gets the StoreFileNode class name.
 		/// </summary>
 		static public string StoreFileNodeType
 		{
-			get { return classNames[ 10 ]; }
+			get { return classNames[ 11 ]; }
 		}
 
 		/// <summary>
@@ -132,7 +140,7 @@ namespace Simias.Storage
 		/// </summary>
 		static public string TombstoneType
 		{
-			get { return classNames[ 11 ]; }
+			get { return classNames[ 12 ]; }
 		}
 		#endregion
 
@@ -152,6 +160,7 @@ namespace Simias.Storage
 										  typeof( LocalDatabase ).Name,
 										  typeof( Member ).Name,
 										  typeof( Node ).Name,
+										  typeof( Roster ).Name,
 										  typeof( StoreFileNode ).Name,
 										  "Tombstone" };
 		}

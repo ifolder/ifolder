@@ -971,11 +971,22 @@ namespace Simias.Storage.Tests
 
 				try
 				{
-					// Try and down-grade the owner's rights.
-					Member owner = collection1.Owner;
-					owner.Rights = Access.Rights.ReadOnly;
-					collection1.Commit( owner );
-					throw new ApplicationException( "Block owner rights change failed" );
+					// Change the member's rights to have access to change members.
+					member.Rights = Access.Rights.Admin;
+					collection1.Commit( member );
+					collection1.Impersonate( member );
+					try
+					{
+						// Try and down-grade the owner's rights.
+						Member owner = collection1.Owner;
+						owner.Rights = Access.Rights.ReadOnly;
+						collection1.Commit( owner );
+						throw new ApplicationException( "Block owner rights change failed" );
+					}
+					finally
+					{
+						collection1.Revert();
+					}
 				}
 				catch ( AccessException )
 				{
@@ -1648,7 +1659,7 @@ namespace Simias.Storage.Tests
 			string domainID = Guid.NewGuid().ToString();
 
 			// Create a new domain.
-			store.AddDomainIdentity( userID, "Oklahoma", domainID ); 
+			store.AddDomainIdentity( userID, "Oklahoma", domainID, "Test domain"  ); 
 
 			// Create a whole bunch of collections.
 			Collection[] c = new Collection[ 10 ];

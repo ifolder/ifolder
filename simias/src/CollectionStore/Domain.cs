@@ -70,8 +70,24 @@ namespace Simias.Storage
 		/// <param name="domainName">Name of the domain.</param>
 		/// <param name="domainID">Well known unique identifier for the domain.</param>
 		internal Domain( string domainName, string domainID ) :
+			this ( domainName, domainID, null )
+		{
+		}
+
+		/// <summary>
+		/// Constructor for creating a new Domain object.
+		/// </summary>
+		/// <param name="domainName">Name of the domain.</param>
+		/// <param name="domainID">Well known unique identifier for the domain.</param>
+		/// <param name="description">String that describes this domain.</param>
+		internal Domain( string domainName, string domainID, string description ) :
 			base ( domainName, domainID, NodeTypes.DomainType )
 		{
+			// Add the description attribute.
+			if ( ( description != null ) && ( description.Length > 0 ) )
+			{
+				properties.AddNodeProperty( PropertyTags.Description, description );
+			}
 		}
 
 		/// <summary>

@@ -823,6 +823,10 @@ namespace Simias.Storage
 					rCollection = new LocalDatabase( store, shallowNode );
 					break;
 
+				case "Roster":
+					rCollection = new Roster( store, shallowNode );
+					break;
+
 				default:
 					throw new CollectionStoreException( "An unknown type: " + shallowNode.Type + " was specified." );
 			}

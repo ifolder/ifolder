@@ -380,6 +380,10 @@ namespace Simias.Storage
 					rNode = new Domain( document );
 					break;
 
+				case "Roster":
+					rNode = new Roster( store, document );
+					break;
+
 				default:
 					rNode = new Node( document );
 					break;
@@ -454,6 +458,10 @@ namespace Simias.Storage
 
 				case "Domain":
 					rNode = new Domain( collection, shallowNode );
+					break;
+
+				case "Roster":
+					rNode = new Roster( collection.StoreReference, shallowNode );
 					break;
 
 				default:

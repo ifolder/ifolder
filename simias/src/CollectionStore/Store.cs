@@ -247,6 +247,9 @@ namespace Simias.Storage
 						localDb = new LocalDatabase( this );
 						nodeList.Add( localDb );
 
+						// Create the database lock.
+						storeMutex = new Mutex( false, ID );
+
 						// Create an identity that represents the current user.  This user will become the 
 						// database owner. Add the domain mapping to the identity.
 						identity = new Identity( this, Environment.UserName, Guid.NewGuid().ToString() );
@@ -258,6 +261,10 @@ namespace Simias.Storage
 
 						// Create an identity mapping for the workgroup.
 						identity.AddDomainIdentity( identity.ID, wgDomain.ID );
+
+						// Create an empty roster for the workgroup domain.
+						Roster wgRoster = new Roster( this, wgDomain );
+						wgRoster.Commit();
 
 						// See if there is a configuration parameter for an enterprise domain.
 						if ( config.Exists( Domain.SectionName, Domain.EnterpriseName ) )
@@ -272,26 +279,23 @@ namespace Simias.Storage
 							// Check if an enterprise ID was specified or if it needs to be generated.
 							string enterpriseID = config.Get( Domain.SectionName, Domain.EnterpriseID, Guid.NewGuid().ToString().ToLower() );
 
-							// Create the new domain object.
-							Domain eDomain = new Domain( enterpriseName, enterpriseID );
-							nodeList.Add( eDomain );
-
 							// Check if there is a description for this enterprise domain.
-							if ( config.Exists( Domain.SectionName, Domain.EnterpriseDescription ) )
-							{
-								string description = config.Get( Domain.SectionName, Domain.EnterpriseDescription, String.Empty );
-								eDomain.Properties.AddNodeProperty( PropertyTags.Description, description );
-							}
+							string description = config.Get( Domain.SectionName, Domain.EnterpriseDescription, String.Empty );
+
+							// Create the new domain object.
+							Domain eDomain = new Domain( enterpriseName, enterpriseID, description );
+							nodeList.Add( eDomain );
 
 							// Add the domain identity mapping.
 							identity.AddDomainIdentity( identity.ID, eDomain.ID );
 
 							// Add the enterprise domain as the default domain.
 							localDb.DefaultDomain = eDomain.ID;
-						}
 
-						// Create the database lock.
-						storeMutex = new Mutex( false, ID );
+							// Create a domain roster that will contain the member of the domain.
+							Roster roster = new Roster( this, eDomain );
+							roster.Commit();
+						}
 
 						// Save the local database changes.
 						localDb.Commit( nodeList.ToArray( typeof( Node ) ) as Node[] );
@@ -394,7 +398,8 @@ namespace Simias.Storage
 		/// <param name="userID">Identity that this user is known as in the specified domain.</param>
 		/// <param name="domainName">Name of the domain.</param>
 		/// <param name="domainID">Well known identity for the specified domain.</param>
-		public void AddDomainIdentity( string userID, string domainName, string domainID )
+		/// <param name="domainDescription">String that describes the specified domain.</param>
+		public void AddDomainIdentity( string userID, string domainName, string domainID, string domainDescription )
 		{
 			if ( disposed )
 			{
@@ -404,7 +409,7 @@ namespace Simias.Storage
 			Node[] nodeList = new Node[ 2 ];
 
 			// Create the domain object.
-			nodeList[ 0 ] = new Domain( domainName, domainID.ToLower() );
+			nodeList[ 0 ] = new Domain( domainName, domainID.ToLower(), domainDescription );
 			nodeList[ 1 ] = identity.AddDomainIdentity( userID.ToLower(), domainID.ToLower() );
 			
 			// Commit the changes.
