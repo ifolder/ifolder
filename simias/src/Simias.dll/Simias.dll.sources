@@ -46,8 +46,10 @@ AssemblyInfo.cs
 ../Common/SimiasLog.cs
 ../Common/SimiasLogManager.cs
 ../Common/SimiasSetup.cs
-../Domain/IDomainService.cs
 ../Domain/DomainAgent.cs
+../Domain/DomainInfo.cs
+../Domain/IDomainService.cs
+../Domain/ProvisionInfo.cs
 ../FsWatcher/FsWatcher.cs
 ../Location/DefaultLocationProvider.cs
 ../Location/ILocationProvider.cs

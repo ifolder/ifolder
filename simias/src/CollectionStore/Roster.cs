@@ -42,7 +42,7 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="storeObject">Store object.</param>
 		/// <param name="domain">Domain object that this object will be associated with.</param>
-		internal Roster( Store storeObject, Domain domain ) :
+		public Roster( Store storeObject, Domain domain ) :
 			base ( storeObject, domain.Name + " Roster", Guid.NewGuid().ToString(), NodeTypes.RosterType, domain.ID )
 		{
 		}
@@ -52,7 +52,7 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="storeObject">Store object that this collection belongs to.</param>
 		/// <param name="node">Node object to construct this object from.</param>
-		internal Roster( Store storeObject, Node node ) :
+		public Roster( Store storeObject, Node node ) :
 			base( storeObject, node )
 		{
 			if ( type != NodeTypes.RosterType )
@@ -66,7 +66,7 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="storeObject">Store object that this collection belongs to.</param>
 		/// <param name="shallowNode">A ShallowNode object.</param>
-		internal Roster( Store storeObject, ShallowNode shallowNode ) :
+		public Roster( Store storeObject, ShallowNode shallowNode ) :
 			base( storeObject, shallowNode )
 		{
 			if ( type != NodeTypes.RosterType )

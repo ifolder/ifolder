@@ -24,6 +24,9 @@
 using System;
 
 using Simias;
+using Simias.Storage;
+using Simias.Sync;
+using Simias.Channels;
 
 namespace Simias.Domain
 {
@@ -42,7 +45,7 @@ namespace Simias.Domain
 		private static readonly Uri DefaultServiceUrl = (new UriBuilder("http",
 			MyDns.GetHostName(), 6346, EndPoint)).Uri;
 
-		private static readonly string UrlKeyName = "Service Url";
+		private static readonly string UrlKeyName = "Service URL";
 		
 		/// <summary>
 		/// The enabled state of using the domain service.
@@ -51,22 +54,137 @@ namespace Simias.Domain
 
 		private static readonly string EnabledKeyName = "Enabled";
 		
+		
 		private Configuration config;
+		private SimiasChannel channel;
 
 		public DomainAgent(Configuration config)
 		{
 			this.config = config;
-			log.Info("Domain Service Enabled: {0}", Enabled);
-			log.Info("Domain Service Url: {0}", ServiceUrl);
 		}
 
-		public IDomainService Connect()
+		public void Attach(string host, string user, string password)
 		{
+			// disable any current domain
+			this.Enabled = false;
+
+			// update service URL
+			UriBuilder url = new UriBuilder(this.ServiceUrl);
+			url.Host = host;
+			this.ServiceUrl = url.Uri;
+			log.Debug("Updated Domain Service URL: {0}", ServiceUrl);
+
+			// connect
+			IDomainService service = Connect();
+
+			// get domain info
+			DomainInfo domainInfo = service.GetDomainInfo();
+			log.Debug(domainInfo.ToString());
+
+			// provision user
+			ProvisionInfo provisionInfo = service.ProvisionUser(user, password);
+			log.Debug(provisionInfo.ToString());
+
+			Store store = new Store(config);
+
+			// create domain node
+			store.AddDomainIdentity(provisionInfo.UserID, domainInfo.Name,
+				domainInfo.ID, domainInfo.Description);
+
+			// create roster stub
+			CreateSlave(store, domainInfo.ID, domainInfo.RosterID,
+				domainInfo.RosterName, domainInfo.RosterUrl);
+			
+			// create PO Box stub
+			CreateSlave(store, domainInfo.ID, provisionInfo.POBoxID,
+				provisionInfo.POBoxName, provisionInfo.POBoxUrl);
+
+			// set the default domain
+			store.DefaultDomain = domainInfo.ID;
+
+			// enable the new domain
+			this.Enabled = true;
+
+			// clean-up
+			store.Dispose();
+			channel.Dispose();
+			service = null;
+		}
+
+		private void CreateSlave(Store store, string domain, string id, string name, string url)
+		{
+			Collection c = new Collection(store, name, id, domain);
+			
+			// sync information
+			Property pr = new Property(SyncCollection.RolePropertyName,
+				SyncCollectionRoles.Slave);
+			pr.LocalProperty = true;
+			c.Properties.AddProperty(pr);
+			
+			Property pu = new Property(SyncCollection.MasterUrlPropertyName, new Uri(url));
+			pu.LocalProperty = true;
+			c.Properties.AddProperty(pu);
+
+			// commit
+			c.IsStub = true;
+			c.Commit();
+		}
+
+		public void CreateMaster(SyncCollection collection)
+		{
+			// connect
+			IDomainService service = Connect();
+
+			string rootID = null;
+			string rootName = null;
+
+			DirNode rootNode = collection.GetRootDirectory();
+
+			if (rootNode != null)
+			{
+				rootID = rootNode.ID;
+				rootName = rootNode.Name;
+			}
+
+			string uriString = service.CreateMaster(collection.ID, collection.Name,
+				rootID, rootName);
+
+			if (uriString == null)
+				throw new ApplicationException("Unable to create remote master collection.");
+
+			collection.MasterUrl = new Uri(uriString);
+			collection.CreateMaster = false;
+
+			// clean-up
+			channel.Dispose();
+			service = null;
+		}
+
+		private IDomainService Connect()
+		{
+			log.Debug("Connecting to Domain Service: {0}", ServiceUrl);
+
 			if (ServiceUrl == null) return null;
 
+			// properties
+			SyncProperties props = new SyncProperties(config);
+
+			Store store = new Store(config);
+
+			// create channel
+			channel = SimiasChannelFactory.GetInstance().GetChannel(store,
+				ServiceUrl.Scheme, props.ChannelSinks);
+
+			// create URL
 			string url = ServiceUrl.ToString();
 
-			return (IDomainService)Activator.GetObject(typeof(IDomainService), url);
+			IDomainService service = (IDomainService)Activator.GetObject(
+				typeof(IDomainService), url);
+			
+			// clean-up
+			store.Dispose();
+
+			return service;
 		}
 
 		#region Properties

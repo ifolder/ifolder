@@ -238,47 +238,11 @@ namespace Simias.Sync
 					// check master
 					if (collection.CreateMaster)
 					{
-						log.Debug("Sync Work {0} - Provisioning the Manager", collection.Name);
+						log.Debug("Sync Work {0} - Creating the Master", collection.Name);
 
 						DomainAgent dAgent = new DomainAgent(syncManager.Config);
 
-						log.Debug("Connecting to Domain Service: {0}", dAgent.ServiceUrl);
-
-						// create channel
-						SimiasChannel domainChannel = syncManager.ChannelFactory.GetChannel(store,
-							dAgent.ServiceUrl.Scheme, syncManager.ChannelSinks);
-
-						// connect
-						IDomainService dService = dAgent.Connect();
-
-						string rootID = null;
-						string rootName = null;
-
-						DirNode rootNode = collection.GetRootDirectory();
-
-						if (rootNode != null)
-						{
-							rootID = rootNode.ID;
-							rootName = rootNode.Name;
-						}
-
-						// TODO: fix
-						string uriString = dService.CreateMaster(collection.ID, collection.Name,
-							rootID, rootName);
-
-						if (uriString == null)
-						{
-							throw new ApplicationException("Unable to create remote master collection.");
-						}
-
-						Uri master = new Uri(uriString);
-
-						log.Debug("Master URL from Domain Service: {0}", master);
-
-						collection.MasterUrl = master;
-						collection.CreateMaster = false;
-
-						domainChannel.Dispose();
+						dAgent.CreateMaster(collection);
 					}
 					else
 					{
@@ -305,7 +269,18 @@ namespace Simias.Sync
 						// get a proxy to the collection service object
 						log.Debug("Connecting to the Sync Collection Service...");
 						service = storeService.GetCollectionService(collection.ID);
-						if (service == null) throw new ApplicationException("No Sync Collection Service");
+						if (service == null)
+						{
+							log.Debug("The collection is no longer on the server.");
+							log.Debug("Removing collection from the client.");
+							
+							// delete the colection
+							collection.Commit(collection.Delete());
+							
+							// stop the slave
+							working = false;
+							continue;
+						}
 
 						// ping the collection
 						log.Debug("Collection Service Ping: {0}", service.Ping());
@@ -325,33 +300,36 @@ namespace Simias.Sync
 				{
 					log.Debug(e, "Ignored");
 
-					try
+					if (working)
 					{
-						// try the location service on an exception
-						log.Debug("Querying the Location Service...");
-
-						// find the URL with the location service
-						Uri locationUrl = syncManager.Location.Locate(collection.ID);
-
-						// update the URL
-						if ((locationUrl != null) && (locationUrl != collection.MasterUrl))
+						try
 						{
 							// try the location service on an exception
-							log.Debug("Updating Master Service Url...");
+							log.Debug("Querying the Location Service...");
 
-							collection.MasterUrl = locationUrl;
+							// find the URL with the location service
+							Uri locationUrl = syncManager.Location.Locate(collection.ID);
 
-							// clear channel
-							if (channel != null)
+							// update the URL
+							if ((locationUrl != null) && (locationUrl != collection.MasterUrl))
 							{
-								channel.Dispose();
-								channel = null;
+								// try the location service on an exception
+								log.Debug("Updating Master Service Url...");
+
+								collection.MasterUrl = locationUrl;
+
+								// clear channel
+								if (channel != null)
+								{
+									channel.Dispose();
+									channel = null;
+								}
 							}
 						}
-					}
-					catch(Exception e2)
-					{
-						log.Debug(e2, "Ignored");
+						catch(Exception e2)
+						{
+							log.Debug(e2, "Ignored");
+						}
 					}
 				}
 				finally

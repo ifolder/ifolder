@@ -339,7 +339,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Domain\DomainInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Domain\IDomainService.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Domain\ProvisionInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

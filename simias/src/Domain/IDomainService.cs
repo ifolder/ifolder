@@ -30,6 +30,10 @@ namespace Simias.Domain
 	/// </summary>
 	public interface IDomainService
 	{
+		DomainInfo GetDomainInfo();
+
+		ProvisionInfo ProvisionUser(string user, string password);
+
 		string CreateMaster(string id, string name, string rootID, string rootName);
 	}
 }
