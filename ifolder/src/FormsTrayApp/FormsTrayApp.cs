@@ -30,6 +30,7 @@ using System.Net;
 using System.Diagnostics;
 using System.IO;
 using System.Globalization;
+using System.Collections;
 using Novell.iFolderCom;
 using Novell.Win32Util;
 using CustomUIControls;
@@ -49,8 +50,9 @@ namespace Novell.FormsTrayApp
 		private SyncCollectionDelegate syncCollectionDelegate;
 		private delegate void SyncFileDelegate(FileSyncEventArgs syncEventArgs);
 		private SyncFileDelegate syncFileDelegate;
-		private delegate void NodeDelegate(NodeEventArgs nodeEventArgs);
-		private NodeDelegate nodeDelegate;
+
+		private delegate void CreateChangeEventDelegate(iFolder ifolder, iFolderUser ifolderUser, string eventData);
+		private CreateChangeEventDelegate createChangeEventDelegate;
 
 		private System.ComponentModel.IContainer components;
 		private System.Resources.ResourceManager resourceManager;
@@ -61,6 +63,10 @@ namespace Novell.FormsTrayApp
         private const int numberOfSyncIcons = 10;
 		private Icon[] syncIcons = new Icon[numberOfSyncIcons];
 		private int index = 0;
+
+		private Queue eventQueue;
+		private Thread worker = null;
+		protected AutoResetEvent workEvent = null;
 
 		private System.Windows.Forms.MenuItem menuItem10;
 		private System.Windows.Forms.MenuItem menuSeparator1;
@@ -106,7 +112,8 @@ namespace Novell.FormsTrayApp
 		{
 			syncCollectionDelegate = new SyncCollectionDelegate(syncCollection);
 			syncFileDelegate = new SyncFileDelegate(syncFile);
-			nodeDelegate = new NodeDelegate(nodeEvent);
+
+			createChangeEventDelegate = new CreateChangeEventDelegate(createChangeEvent);
 
 			resourceManager = new System.Resources.ResourceManager(typeof(FormsTrayApp));
 
@@ -290,6 +297,9 @@ namespace Novell.FormsTrayApp
 					ifWebService = new iFolderWebService();
 					ifWebService.Url = Manager.LocalServiceUrl.ToString() + "/iFolder.asmx";
 
+					eventQueue = new Queue();
+					workEvent = new AutoResetEvent(false);
+
 					// Set up the event handlers to watch for create, delete, and change events.
 					eventClient = new IProcEventClient(new IProcEventError(errorHandler), null);
 					eventClient.Register();
@@ -310,6 +320,12 @@ namespace Novell.FormsTrayApp
 
 					//iFolderManager.CreateDefaultExclusions(config);
 
+					if (worker == null)
+					{
+						worker = new Thread(new ThreadStart(eventThreadProc));
+						worker.Start();
+					}
+
 					notifyIcon1.Icon = trayIcon;
 				}
 				catch (Exception ex)
@@ -327,7 +343,15 @@ namespace Novell.FormsTrayApp
 		private void trayApp_nodeEventHandler(SimiasEventArgs args)
 		{
 			NodeEventArgs eventArgs = args as NodeEventArgs;
-			BeginInvoke(nodeDelegate, new object[] {eventArgs});
+
+			lock (eventQueue.SyncRoot)
+			{
+				// Put the event in the queue
+				eventQueue.Enqueue(eventArgs);
+
+				// Signal that there are events in the queue.
+				workEvent.Set();
+			}
 		}
 
 		private void trayApp_collectionSyncHandler(SimiasEventArgs args)
@@ -548,6 +572,59 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
+		private void createChangeEvent(iFolder ifolder, iFolderUser ifolderUser, string eventData)
+		{
+			try
+			{
+				if (ifolder.HasConflicts)
+				{
+					NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
+
+					string message = string.Format(resourceManager.GetString("collisionMessage"), ifolder.Name);
+
+					balloonTip.ShowBalloon(
+						hwnd,
+						iconID,
+						BalloonType.Info,
+						resourceManager.GetString("actionRequiredTitle"),
+						message);
+
+					// TODO: Change the icon?
+				}
+				else if (ifolder.State.Equals("Available") && eventData.Equals("NodeCreated"))
+				{
+					NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
+
+					string message = string.Format(resourceManager.GetString("subscriptionMessage"), ifolder.Owner);
+
+					balloonTip.ShowBalloon(
+						hwnd,
+						iconID,
+						BalloonType.Info,
+						resourceManager.GetString("actionRequiredTitle"),
+						message);
+
+					// TODO: Change the icon?
+				}
+				else if (ifolderUser != null)
+				{
+					NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
+
+					string message = string.Format(resourceManager.GetString("newMemberMessage"), ifolderUser.Name, ifolder.Name);
+							
+					balloonTip.ShowBalloon(
+						hwnd,
+						iconID,
+						BalloonType.Info,
+						resourceManager.GetString("newMemberTitle"),
+						message);
+
+					// TODO: Change the icon?
+				}
+			}
+			catch {}
+		}
+
 		private void syncFile(FileSyncEventArgs syncEventArgs)
 		{
 			try
@@ -559,122 +636,6 @@ namespace Novell.FormsTrayApp
 				}
 			}
 			catch {}
-		}
-
-		private void nodeEvent(NodeEventArgs eventArgs)
-		{
-			try
-			{
-				switch (eventArgs.EventData)
-				{
-					case "NodeChanged":
-					{
-						if (eventArgs.Type == "Collection")
-						{
-							iFolder ifolder = ifWebService.GetiFolder(eventArgs.Collection);
-							if (ifolder != null)
-							{
-								if (ifolder.HasConflicts)
-								{
-									NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
-
-									string message = string.Format(resourceManager.GetString("collisionMessage"), ifolder.Name);
-
-									balloonTip.ShowBalloon(
-										hwnd,
-										iconID,
-										BalloonType.Info,
-										resourceManager.GetString("actionRequiredTitle"),
-										message);
-
-									// TODO: Change the icon?
-								}
-							}
-						}
-						break;
-					}
-					case "NodeCreated":
-					{
-						switch (eventArgs.Type)
-						{
-							case "Node":
-							{
-								if (ifolderSettings == null)
-								{
-									ifolderSettings = ifWebService.GetSettings();
-								}
-
-								if (eventArgs.Collection.Equals(ifolderSettings.DefaultPOBoxID))
-								{
-									iFolder ifolder = ifWebService.GetiFolder(eventArgs.Node);
-
-									// If the iFolder is available and doesn't exist locally, post a notification.
-									if ((ifolder != null) && ifolder.State.Equals("Available") && (ifWebService.GetiFolder(ifolder.CollectionID) == null))
-									{
-										NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
-
-										string message = string.Format(resourceManager.GetString("subscriptionMessage"), ifolder.Owner);
-
-										balloonTip.ShowBalloon(
-											hwnd,
-											iconID,
-											BalloonType.Info,
-											resourceManager.GetString("actionRequiredTitle"),
-											message);
-
-										// TODO: Change the icon?
-									}
-								}
-								break;
-							}
-							case "Member":
-							{
-								if (ifolderSettings == null)
-								{
-									ifolderSettings = ifWebService.GetSettings();
-								}
-
-								// TODO: This currently displays a notification for each member added to an iFolder ...
-								// so when an iFolder is accepted and synced down the first time, a notification occurs for each
-								// member of the iFolder.  A couple of ways to solve this:
-								// 1. Keep track of the first sync and don't display any notifications until the initial sync has successfully completed.
-								// 2. Queue up the added members and only display a single notification ... some sort of time interval would need to be used.
-								iFolderUser ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
-								if ((ifolderUser != null) && (!ifolderUser.UserID.Equals(ifolderSettings.CurrentUserID)))
-								{
-									iFolder ifolder = ifWebService.GetiFolder(eventArgs.Collection);
-
-									NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
-
-									string message = string.Format(resourceManager.GetString("newMemberMessage"), ifolderUser.Name, ifolder.Name);
-							
-									balloonTip.ShowBalloon(
-										hwnd,
-										iconID,
-										BalloonType.Info,
-										resourceManager.GetString("newMemberTitle"),
-										message);
-
-									// TODO: Change the icon?
-								}
-								break;
-							}
-							default:
-								break;
-						}
-						break;
-					}
-					case "NodeDeleted":
-					{
-						// TODO: implement if needed.
-						break;
-					}
-				}
-			}
-			catch
-			{
-				// Ignore.
-			}
 		}
 
 		private void ShutdownTrayApp(Exception ex)
@@ -700,6 +661,11 @@ namespace Novell.FormsTrayApp
 
 				// Shut down the web server.
 				Manager.Stop();
+
+				if ((worker != null) && worker.IsAlive)
+				{
+					worker.Abort();
+				}
 			}
 			catch
 			{
@@ -714,6 +680,121 @@ namespace Novell.FormsTrayApp
 			}
 
 			Application.Exit();
+		}
+
+		private void eventThreadProc()
+		{
+			while (true)
+			{
+				NodeEventArgs eventArgs = null;
+				int count;
+				lock (eventQueue.SyncRoot)
+				{
+					count = eventQueue.Count;
+					if (count > 0)
+					{
+						eventArgs = (NodeEventArgs)eventQueue.Dequeue();
+					}
+				}
+
+				iFolder ifolder = null;
+				iFolderUser ifolderUser = null;
+				try
+				{
+					switch (eventArgs.EventData)
+					{
+						case "NodeChanged":
+						{
+							if (ifolderSettings == null)
+							{
+								ifolderSettings = ifWebService.GetSettings();
+							}
+
+							if (eventArgs.Type == "Collection")
+							{
+								ifolder = ifWebService.GetiFolder(eventArgs.Collection);
+							}
+							else if (eventArgs.Type.Equals("Node") && eventArgs.Collection.Equals(ifolderSettings.DefaultPOBoxID))
+							{
+								ifolder = ifWebService.GetiFolder(eventArgs.Node);
+							}
+							break;
+						}
+						case "NodeCreated":
+						{
+							switch (eventArgs.Type)
+							{
+								case "Collection":
+								{
+									ifolder = ifWebService.GetiFolder(eventArgs.Collection);
+									break;
+								}
+								case "Node":
+								{
+									if (ifolderSettings == null)
+									{
+										ifolderSettings = ifWebService.GetSettings();
+									}
+
+									if (eventArgs.Collection.Equals(ifolderSettings.DefaultPOBoxID))
+									{
+										ifolder = ifWebService.GetiFolder(eventArgs.Node);
+
+										// If the iFolder is available and doesn't exist locally, post a notification.
+										if (!ifolder.State.Equals("Available") || (ifWebService.GetiFolder(ifolder.CollectionID) != null))
+										{
+											ifolder = null;
+										}
+									}
+									break;
+								}
+								case "Member":
+								{
+									if (ifolderSettings == null)
+									{
+										ifolderSettings = ifWebService.GetSettings();
+									}
+
+									// TODO: This currently displays a notification for each member added to an iFolder ...
+									// so when an iFolder is accepted and synced down the first time, a notification occurs for each
+									// member of the iFolder.  A couple of ways to solve this:
+									// 1. Keep track of the first sync and don't display any notifications until the initial sync has successfully completed.
+									// 2. Queue up the added members and only display a single notification ... some sort of time interval would need to be used.
+									ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
+									if ((ifolderUser != null) && (!ifolderUser.UserID.Equals(ifolderSettings.CurrentUserID)))
+									{
+										ifolder = ifWebService.GetiFolder(eventArgs.Collection);
+									}
+									break;
+								}
+								default:
+									break;
+							}
+							break;
+						}
+						case "NodeDeleted":
+						{
+							BeginInvoke(globalProperties.deleteEventDelegate, new object[] {eventArgs.Node});
+							break;
+						}
+					}
+				}
+				catch
+				{
+					// Ignore.
+				}
+						
+				if (ifolder != null)
+				{
+					BeginInvoke(createChangeEventDelegate, new object[] {ifolder, ifolderUser, eventArgs.EventData});
+					BeginInvoke(globalProperties.createChangeEventDelegate, new object[] {ifolder, eventArgs.EventData});
+				}
+
+				if (count <= 1)
+				{
+					workEvent.WaitOne();
+				}
+			}
 		}
 		#endregion
 
