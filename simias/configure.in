@@ -5,12 +5,37 @@ VERSION=$VERSION.`date +%Y%m%d`
 AM_MAINTAINER_MODE
 
 #
-# Check for a valid C# compiler
+# Check for a valid operating system and C# compiler
 #
-AC_CHECK_PROG(CSC, csc, csc)
-test -z "$CSC" && AC_CHECK_PROG(CSC, mcs, mcs)
-test -z "$CSC" && AC_MSG_ERROR([no acceptable C Sharp compiler found in \$PATH])
+case $host_os in
+    linux*)
+        SIMIAS_OS='linux'
+        AC_CHECK_PROG(CSC, mcs, mcs)
+        test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
+    ;;
+    darwin*)
+        SIMIAS_OS='darwin'
+        AC_CHECK_PROG(CSC, mcs, mcs)
+        test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
+    ;;
+    cygwin*)
+        SIMIAS_OS='windows'
+        AC_CHECK_PROG(CSC, csc, csc)
+        test -z "$CSC" && AC_CHECK_PROG(CSC, mcs, mcs)
+        test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: neither csc nor mcs found in \$PATH])
+    ;;
+    *)
+        AC_MSG_ERROR([Unknown host_os: $host_os])
+    ;;
+esac
+AC_SUBST(SIMIAS_OS)
+AM_CONDITIONAL(LINUX, test "$SIMIAS_OS" = "linux")
+AM_CONDITIONAL(WINDOWS, test "$SIMIAS_OS" = "windows")
+AM_CONDITIONAL(DARWIN, test "$SIMIAS_OS" = "darwin")
 
+#
+# Configure C# compiler settings
+#
 case $CSC in
     #
     # Mono-specific configuration
@@ -75,28 +100,6 @@ DARWIN_SUBDIRS=
 AC_SUBST(COMMON_SUBDIRS)
 AC_SUBST(LINUX_SUBDIRS)
 AC_SUBST(WINDOWS_SUBDIRS)
-
-#
-# Check for a valid operating system
-#
-case $host_os in
-    linux*)
-        SIMIAS_OS='linux'
-    ;;
-    darwin*)
-        SIMIAS_OS='darwin'
-    ;;
-    cygwin*)
-        SIMIAS_OS='windows'
-    ;;
-    *)
-        AC_MSG_ERROR([Unknown host_os: $host_os])
-    ;;
-esac
-AC_SUBST(SIMIAS_OS)
-AM_CONDITIONAL(LINUX, test "$SIMIAS_OS" = "linux")
-AM_CONDITIONAL(WINDOWS, test "$SIMIAS_OS" = "windows")
-AM_CONDITIONAL(DARWIN, test "$SIMIAS_OS" = "darwin")
 
 #
 # Set platform-specific variables

@@ -8,27 +8,20 @@ VERSION=$VERSION.`date +%Y%m%d`
 AM_MAINTAINER_MODE
 AC_PROG_CC
 
-SRCDIR='$(top_srcdir)/src'
-TOOLDIR='$(top_srcdir)/tools'
-DOCDIR="$SRCDIR/doc"
-
-EMPTY=
-SPACE='$(EMPTY) $(EMPTY)'
-
-COMMON_SUBDIRS="iFolder"
-LINUX_SUBDIRS="GtkTrayApp"
-WINDOWS_SUBDIRS="FormsTrayApp FormsInvitationWizard iFolderShell"
-NOBUILD_SUBDIRS="iFolderNautilus"
-
 #
-# Check for a valid operating system
+# Check for a valid operating system and C# compiler
 #
 case $host_os in
     linux*)
         IFOLDER_OS='linux'
+        AC_CHECK_PROG(CSC, mcs, mcs)
+        test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
     ;;
     cygwin*)
         IFOLDER_OS='windows'
+        AC_CHECK_PROG(CSC, csc, csc)
+        test -z "$CSC" && AC_CHECK_PROG(CSC, mcs, mcs)
+        test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: neither csc nor mcs found in \$PATH])
     ;;
     *)
         AC_MSG_ERROR([Unknown host_os: $host_os])
@@ -37,6 +30,74 @@ esac
 AC_SUBST(IFOLDER_OS)
 AM_CONDITIONAL(LINUX, test "$IFOLDER_OS" = "linux")
 AM_CONDITIONAL(WINDOWS, test "$IFOLDER_OS" = "windows")
+
+#
+# Configure C# compiler settings
+#
+case $CSC in
+    #
+    # Mono-specific configuration
+    #
+    mcs)
+        CSC_EXEFLAG=/target:exe
+        CSC_LIBFLAG=/target:library
+        CSC_WINEXEFLAG=/target:winexe
+        CSCFLAGS='/d:MONO /warn:4 /d:TRACE'
+        CSCFLAGS_DEBUG="/debug+ /d:DEBUG"
+        CSCFLAGS_OPTIMIZE="/optimize+"
+        MONO=mono
+        MONO_DEBUG='mono --debug'
+        MONO_PATH='$(subst $(SPACE),:,$(addprefix $(SRCDIR)$(SEP),$(COMMON_SUBDIRS))):$(ADDRESSBOOK_INSTALL_PATH)/bin:$(SIMIAS_INSTALL_PATH)/bin'
+        SYSTEM_XML='System.Xml.dll'
+    ;;
+    #
+    # .NET-specific configuration
+    #
+    csc)
+        CSC_EXEFLAG=/target:exe
+        CSC_LIBFLAG=/target:library
+        CSC_WINEXEFLAG=/target:winexe
+        CSCFLAGS='/d:DOTNET /warn:4 /d:TRACE /nologo'
+        CSCFLAGS_DEBUG="/debug+ /d:DEBUG"
+        CSCFLAGS_OPTIMIZE="/optimize+"
+        MONO=
+        MONO_DEBUG=
+        MONO_PATH=
+        SYSTEM_XML='System.XML.dll'
+    ;;
+esac
+AC_SUBST(CSC)
+AC_SUBST(CSC_EXEFLAG)
+AC_SUBST(CSC_LIBFLAG)
+AC_SUBST(CSC_WINEXEFLAG)
+AC_SUBST(CSCFLAGS)
+AC_SUBST(MONO)
+AC_SUBST(MONO_PATH)
+AC_SUBST(SYSTEM_XML)
+
+SRCDIR='$(top_srcdir)/src'
+TOOLDIR='$(top_srcdir)/tools'
+DOCDIR="$SRCDIR/doc"
+
+AC_SUBST(SRCDIR)
+AC_SUBST(TOOLDIR)
+AC_SUBST(DOCDIR)
+
+EMPTY=
+SPACE='$(EMPTY) $(EMPTY)'
+
+AC_SUBST(EMPTY)
+AC_SUBST(SPACE)
+
+COMMON_SUBDIRS="iFolder"
+LINUX_SUBDIRS="GtkTrayApp"
+WINDOWS_SUBDIRS="FormsTrayApp FormsInvitationWizard iFolderShell"
+NOBUILD_SUBDIRS="iFolderNautilus"
+
+AC_SUBST(COMMON_SUBDIRS)
+AC_SUBST(LINUX_SUBDIRS)
+AC_SUBST(WINDOWS_SUBDIRS)
+AC_SUBST(NOBUILD_SUBDIRS)
 
 #
 # Set platform-specific variables
@@ -49,8 +110,6 @@ case $IFOLDER_OS in
         #
         # Check for valid compilers
         #
-        AC_CHECK_PROG(CSC, mcs, mcs)
-        test -z "$CSC" && AC_MSG_ERROR([no acceptable C Sharp compiler found in \$PATH])
         AC_CHECK_PROG(CC, cc, cc)
         test -z "$CC" && AC_MSG_ERROR([no acceptable C compiler found in \$PATH])
         AC_CHECK_PROG(CXX, c++, c++)
@@ -63,43 +122,34 @@ case $IFOLDER_OS in
         CC='cc -c'
         CDEF='-D'
         CFLAGS="-pipe -Wall -W -DLINUX -DPACKAGE=\$(PACKAGE) -DVERSION=\$(VERSION)"
+        CFLAGS_DEBUG="-g -DDEBUG"
+        CFLAGS_OPTIMIZE="-O2 -DNDEBUG"
         CINC='-I'
         COMMON_CLEAN_FILES='.cstore .simias'
         COUT='-o'
-        CSC_EXEFLAG=/target:exe
-        CSC_LIBFLAG=/target:library
-        CSC_WINEXEFLAG=/target:winexe
-        CSCFLAGS='/d:MONO /warn:4 /d:TRACE'
         CXX='c++ -c'
         CXXFLAGS="-pipe -Wall -W -DLINUX -DPACKAGE=\$(PACKAGE) -DVERSION=\$(VERSION)";
-        DEBUG_CFLAGS="-g -DDEBUG"
-        DEBUG_CSCFLAGS="/debug+ /d:DEBUG"
-        DEBUG_CXXFLAGS="-g -DDEBUG"
-        DEBUG_LDFLAGS="-g"
-        DEBUG_NUNIT_FLAGS=''
+        CXXFLAGS_DEBUG="-g -DDEBUG"
+        CXXFLAGS_OPTIMIZE="-O2 -DNDEBUG"
         EMPTY=
         EXE_EXT=''
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         LDFLAGS=''
+        LDFLAGS_DEBUG="-g"
+        LDFLAGS_OPTIMIZE=""
         LDINC='-L'
         LDOUT='-o '
         LIB_EXT=''
         LIB_PRE='lib'
         LIBFLAG='-l'
         LIBS=''
-        MONO=mono
-        MONO_DEBUG='mono --debug'
-        MONO_PATH='$(subst $(SPACE),:,$(addprefix $(SRCDIR)$(SEP),$(COMMON_SUBDIRS))):$(ADDRESSBOOK_INSTALL_PATH)/bin:$(SIMIAS_INSTALL_PATH)/bin'
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
-        NUNIT_FLAGS='/nologo'
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
+        NUNIT_FLAGS='/nologo'
+        NUNITFLAGS_DEBUG=''
+        NUNITFLAGS_OPTIMIZE=''
         OBJ_EXT='.o'
-        OPTIMIZE_CFLAGS="-O2 -DNDEBUG"
-        OPTIMIZE_CSCFLAGS="/optimize+"
-        OPTIMIZE_CXXFLAGS="-O2 -DNDEBUG"
-        OPTIMIZE_LDFLAGS=""
-        OPTIMIZE_NUNIT_FLAGS=''
         PLATFORM_SUBDIRS=$LINUX_SUBDIRS
         REPORT_DIR='$(DESTDIR)$(bindir)'
         REPORT_EXE='mono $(top_srcdir)/tools/Report/Report.exe'
@@ -117,8 +167,6 @@ case $IFOLDER_OS in
         #
         # Check for valid compilers
         #
-        AC_CHECK_PROG(CSC, csc, csc)
-        test -z "$CSC" && AC_MSG_ERROR([no acceptable C Sharp compiler found in \$PATH])
         AC_CHECK_PROG(CC, cl, cl)
         test -z "$CC" && AC_MSG_ERROR([no acceptable C compiler found in \$PATH])
         AC_CHECK_PROG(CXX, cl, cl)
@@ -132,42 +180,33 @@ case $IFOLDER_OS in
         CXX='cl -c'
         CDEF='-D'
         CFLAGS="-nologo -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPACKAGE=\$(PACKAGE) -DVERSION=\$(VERSION)";
+        CFLAGS_DEBUG="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
+        CFLAGS_OPTIMIZE="-MD -O2 -DNDEBUG"
         CINC='-I'
         COMMON_CLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj *.xml */*.xml *.pdb */*.pdb .cstore .simias'
         COUT='-Fo'
-        CSC_EXEFLAG=/target:exe
-        CSC_LIBFLAG=/target:library
-        CSC_WINEXEFLAG=/target:winexe
-        CSCFLAGS='/d:DOTNET /warn:4 /d:TRACE /nologo'
         CXXFLAGS="-nologo -GX -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPACKAGE=\$(PACKAGE) -DVERSION=\$(VERSION)";
-        DEBUG_CFLAGS="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
-        DEBUG_CSCFLAGS="/debug+ /d:DEBUG"
-        DEBUG_CXXFLAGS="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
-        DEBUG_LDFLAGS="-DEBUG"
-        DEBUG_NUNIT_FLAGS=''
+        CXXFLAGS_DEBUG="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
+        CXXFLAGS_OPTIMIZE="-MD -O2 -DNDEBUG"
         DEF='-def:'
         EMPTY=
         EXE_EXT='.exe'
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
         LDFLAGS='-nologo -machine:X86'
+        LDFLAGS_DEBUG="-DEBUG"
         LDINC='-libpath:'
         LDOUT='-out:'
         LIB_EXT='.lib'
         LIB_PRE=''
         LIBFLAG=''
         LIBS='kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib rpcrt4.lib ws2_32.lib imagehlp.lib'
-        MONO=
-        MONO_DEBUG=
-        MONO_PATH=
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
-        NUNIT_FLAGS='/nologo'
         NUNIT_LIBPATH='$(shell cygpath --windows "$TOOLDIR/NUnit/bin")'
+        NUNIT_FLAGS='/nologo'
+        NUNITFLAGS_DEBUG=''
+        NUNITFLAGS_OPTIMIZE=''
         OBJ_EXT='.obj'
-        OPTIMIZE_CFLAGS="-MD -O2 -DNDEBUG"
-        OPTIMIZE_CSCFLAGS="/optimize+"
-        OPTIMIZE_CXXFLAGS="-MD -O2 -DNDEBUG"
-        OPTIMIZE_NUNIT_FLAGS=''
         PLATFORM_SUBDIRS=$WINDOWS_SUBDIRS
         RC='rc'
         RC_FLAGS='-r'
@@ -187,28 +226,17 @@ esac
 AC_SUBST(CDEF)
 AC_SUBST(CINC)
 AC_SUBST(COMMON_CLEAN_FILES)
-AC_SUBST(COMMON_SUBDIRS)
 AC_SUBST(COUT)
-AC_SUBST(CSC)
-AC_SUBST(CSCFLAGS)
-AC_SUBST(CSC_EXEFLAG)
-AC_SUBST(CSC_LIBFLAG)
-AC_SUBST(CSC_WINEXEFLAG)
 AC_SUBST(CXX)
 AC_SUBST(CXXFLAGS)
 AC_SUBST(DEF)
 AC_SUBST(DOCDIR)
-AC_SUBST(EMPTY)
 AC_SUBST(ICON_EXT)
 AC_SUBST(ICON_FLAG)
 AC_SUBST(LDFLAGS)
 AC_SUBST(LDINC)
 AC_SUBST(LDOUT)
 AC_SUBST(LIBS)
-AC_SUBST(LINUX_SUBDIRS)
-AC_SUBST(MONO)
-AC_SUBST(MONO_PATH)
-AC_SUBST(NOBUILD_SUBDIRS)
 AC_SUBST(NUNIT)
 AC_SUBST(NUNIT_FLAGS)
 AC_SUBST(NUNIT_LIBPATH)
@@ -219,15 +247,10 @@ AC_SUBST(RCFLAGS)
 AC_SUBST(REPORT_DIR)
 AC_SUBST(REPORT_EXE)
 AC_SUBST(RES_EXT)
-AC_SUBST(ROOTDIR)
 AC_SUBST(SEP)
 AC_SUBST(SHARED_LIB_FLAG)
-AC_SUBST(SPACE)
-AC_SUBST(SRCDIR)
 AC_SUBST(SYSTEM_XML)
 AC_SUBST(TLBX)
-AC_SUBST(TOOLDIR)
-AC_SUBST(WINDOWS_SUBDIRS)
 
 #
 # Run standard macros
@@ -368,21 +391,20 @@ AM_CONDITIONAL(DEBUG, test x$enable_debug = xtrue)
 if test "$enable_debug" = "true"
 then
   # Build debug version.
-  CFLAGS="$DEBUG_CFLAGS $CFLAGS"
-  CSCFLAGS="$DEBUG_CSCFLAGS $CSCFLAGS"
-  CXXFLAGS="$DEBUG_CXXFLAGS $CXXFLAGS"
+  CFLAGS="$CFLAGS_DEBUG $CFLAGS"
+  CSCFLAGS="$CSCFLAGS_DEBUG $CSCFLAGS"
+  CXXFLAGS="$CXXFLAGS_DEBUG $CXXFLAGS"
   DEVENV_CONFIGURATION=Debug
   MONO=$MONO_DEBUG
   NUNIT_FLAGS="$DEBUG_NUNITFLAGS $NUNIT_FLAGS"
 else
   # Build optimized version.
-  CFLAGS="$OPTIMIZE_CFLAGS $CFLAGS"
-  CSCFLAGS="$OPTIMIZE_CSCFLAGS $CSCFLAGS"
-  CXXFLAGS="$OPTIMIZE_CXXFLAGS $CXXFLAGS"
+  CFLAGS="$CFLAGS_OPTIMIZE $CFLAGS"
+  CSCFLAGS="$CSCFLAGS_OPTIMIZE $CSCFLAGS"
+  CXXFLAGS="$CXXFLAGS_OPTIMIZE $CXXFLAGS"
   DEVENV_CONFIGURATION=Release
   NUNIT_FLAGS="$OPTIMIZE_NUNITFLAGS $NUNIT_FLAGS"
 fi
-AC_SUBST(CSCFLAGS)
 AC_SUBST(DEVENV_CONFIGURATION)
 
 #
