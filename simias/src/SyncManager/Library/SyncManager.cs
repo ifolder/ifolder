@@ -143,6 +143,16 @@ namespace Simias.Sync
 			}
 		}
 
+		public void SyncCollectionNow(string id)
+		{
+			storeManager.SyncCollectionNow(id);
+		}
+
+		public void SyncAllNow()
+		{
+			storeManager.SyncAllNow();
+		}
+
 		/// <summary>
 		/// Collection syncing gate method.
 		/// </summary>

@@ -94,12 +94,27 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// A custome event for the sync manager service.
+		/// A custom event for the sync manager service.
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="data"></param>
 		protected override void Custom(int message, string data)
 		{
+			SyncMessages msg = (SyncMessages)message;
+
+			switch(msg)
+			{
+				case SyncMessages.SyncCollectionNow:
+					manager.SyncCollectionNow(data);
+					break;
+	
+				case SyncMessages.SyncAllNow:
+					manager.SyncAllNow();
+					break;
+	
+				default:
+					break;
+			}
 		}
 
 		#endregion

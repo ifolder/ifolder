@@ -148,6 +148,7 @@ AssemblyInfo.cs
 ../SyncManager/Library/SyncCollectionManager.cs
 ../SyncManager/Library/SyncCredentialCache.cs
 ../SyncManager/Library/SyncManager.cs
+../SyncManager/Library/SyncMessages.cs
 ../SyncManager/Library/SyncPing.cs
 ../SyncManager/Library/SyncStoreManager.cs
 ../SyncManager/Tests/SyncManagerTests.cs

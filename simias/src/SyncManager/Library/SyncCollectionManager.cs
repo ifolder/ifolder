@@ -52,7 +52,7 @@ namespace Simias.Sync
 		private SyncCollectionWorker worker;
 		private Thread syncWorkerThread;
 		private bool working;
-		private ManualResetEvent stopWorkingEvent = new ManualResetEvent(true);
+		private AutoResetEvent stopSleepEvent = new AutoResetEvent(false);
 
         /// <summary>
 		/// Constructor
@@ -146,6 +146,11 @@ namespace Simias.Sync
 			}
 		}
 
+		internal void SyncNow()
+		{
+			stopSleepEvent.Set();
+		}
+
 		internal SyncCollectionService GetService()
 		{
 			// refresh collection
@@ -163,7 +168,6 @@ namespace Simias.Sync
 				syncWorkerThread = new Thread(new ThreadStart(this.DoSyncWork));
 				syncWorkerThread.Priority = ThreadPriority.BelowNormal;
 				working = true;
-				stopWorkingEvent.Reset();
 				syncWorkerThread.Start();
 			}
 
@@ -182,8 +186,8 @@ namespace Simias.Sync
 				}
 				
 				// stop worker
-				stopWorkingEvent.Set();
 				working = false;
+				stopSleepEvent.Set();
 	
 				// send a stop message
 				try
@@ -338,7 +342,7 @@ namespace Simias.Sync
 				syncManager.DoneWithWork();
 
 				// sleep
-				stopWorkingEvent.WaitOne(TimeSpan.FromSeconds(collection.Interval), true);
+				stopSleepEvent.WaitOne(TimeSpan.FromSeconds(collection.Interval), true);
 			}
 		}
 	}

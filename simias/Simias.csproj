@@ -920,6 +920,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\SyncManager\Library\SyncMessages.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\SyncManager\Library\SyncPing.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

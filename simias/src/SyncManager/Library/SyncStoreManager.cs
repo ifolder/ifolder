@@ -239,6 +239,48 @@ namespace Simias.Sync
 			RemoveCollectionManager(args.ID);
 		}
 
+		public void SyncCollectionNow(string id)
+		{
+			SyncCollectionManager manager;
+			
+			lock(collectionManagers.SyncRoot)
+			{
+				if (collectionManagers.Contains(id))
+				{
+					log.Debug("Removing Collection Manager: {0}", id);
+
+					try
+					{
+						manager = (SyncCollectionManager)collectionManagers[id];
+
+						manager.SyncNow();
+					}
+					catch(Exception e)
+					{
+						log.Debug(e, "Ignored");
+					}
+				}
+			}
+		}
+
+		public void SyncAllNow()
+		{
+			lock(collectionManagers.SyncRoot)
+			{
+				foreach(SyncCollectionManager manager in collectionManagers)
+				{
+					try
+					{
+						manager.SyncNow();
+					}
+					catch(Exception e)
+					{
+						log.Debug(e, "Ignored");
+					}
+				}
+			}
+		}
+
 		#region IDisposable Members
 
 		/// <summary>
