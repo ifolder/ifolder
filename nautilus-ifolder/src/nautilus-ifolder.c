@@ -719,7 +719,7 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 		item = nautilus_menu_item_new ("NautilusiFolder::revert_ifolder",
 					_("Revert to a Normal Folder"),
 					_("Revert the selected iFolder back to normal folder"),
-					"ifolder-folder");
+					"stock_undo");
 		g_signal_connect (item, "activate",
 					G_CALLBACK (revert_ifolder_callback),
 					provider);
@@ -732,9 +732,9 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 		
 		/* Menu item: Share with... */
 		item = nautilus_menu_item_new ("NautilusiFolder::share_ifolder",
-					_("Share with..."),
+					_("Share iFolder with..."),
 					_("Share the selected iFolder with another user"),
-					"ifolder-folder");
+					NULL);
 		g_signal_connect (item, "activate",
 					G_CALLBACK (share_ifolder_callback),
 					provider);
@@ -747,9 +747,9 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 		
 		/* Menu item: Properties */
 		item = nautilus_menu_item_new ("NautilusiFolder::ifolder_properties",
-					_("Properties"),
+					_("iFolder Properties"),
 					_("View the properties of the selected iFolder"),
-					"ifolder-folder");
+					"stock_properties");
 		g_signal_connect (item, "activate",
 					G_CALLBACK (ifolder_properties_callback),
 					provider);
@@ -762,9 +762,9 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 		
 		/* Menu item: Help */
 		item = nautilus_menu_item_new ("NautilusiFolder::ifolder_help",
-					_("Help..."),
+					_("iFolder Help..."),
 					_("View the iFolder help"),
-					"ifolder-folder");
+					"stock_help");
 		g_signal_connect (item, "activate",
 					G_CALLBACK (ifolder_help_callback),
 					provider);
