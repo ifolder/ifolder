@@ -127,7 +127,7 @@ namespace Simias
 			{
 				StackFrame frame = trace.GetFrame(0);
 				
-				category = frame.GetMethod().DeclaringType.Name;
+				category = frame.GetMethod().DeclaringType.FullName;
 				string path = frame.GetFileName();
 
 				// if verbose mode and we have debugging information - show it

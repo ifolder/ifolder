@@ -25,6 +25,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace Simias
 {
@@ -33,38 +34,120 @@ namespace Simias
 	/// </summary>
 	public class MyTraceListener : TraceListener
 	{
-		ListView list;
-		bool scrollLock = false;
+		private static readonly string NO_CATEGORY = "No Category";
+
+		private ListView list;
+		private TreeView tree;
+		private bool scrollLock = false;
 
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
-		public MyTraceListener(ListView list)
+		public MyTraceListener(TreeView tree, ListView list)
 		{
+			this.tree = tree;
 			this.list = list;
 		}
 
 		/// <summary>
-		/// Write a message to the trace listeners.
+		/// Write a message to the trace listener.
 		/// </summary>
 		/// <param name="message">The trace message.</param>
 		public override void Write(string message)
 		{
-			WriteLine(message);
+			WriteLine(message, NO_CATEGORY);
 		}
 
 		/// <summary>
-		/// Write a message to the trace listeners.
+		/// Write a message to the trace listener.
 		/// </summary>
 		/// <param name="message">The trace message.</param>
 		public override void WriteLine(string message)
 		{
+			WriteLine(message, NO_CATEGORY);
+		}
+
+		/// <summary>
+		/// Write a message to the trace listener.
+		/// </summary>
+		/// <param name="message">The trace message.</param>
+		/// <param name="category">The category of the message.</param>
+		public override void Write(string message, string category)
+		{
+			WriteLine(message, category);
+		}
+
+		/// <summary>
+		/// Write a message to the trace listener.
+		/// </summary>
+		/// <param name="message">The trace message.</param>
+		/// <param name="category">The category of the message.</param>
+		public override void WriteLine(string message, string category)
+		{
+			// add category
+			TreeNode node = AddCategory(category);
+
+			// add message
 			ListViewItem item = list.Items.Add(message);
 			
 			if (!scrollLock)
 			{
-				item.ListView.EnsureVisible(item.Index);
+				item.EnsureVisible();
 			}
+		}
+
+		private TreeNode AddCategory(string category)
+		{
+			TreeNode node = null;
+
+			string[] list = Regex.Split(category, @"(\.)", RegexOptions.Compiled);
+			
+			tree.BeginUpdate();
+
+			TreeNodeCollection nodes = tree.Nodes;
+
+			for(int i=0; i < list.Length; i++)
+			{
+				string text = list[i];
+
+				// skip periods
+				if (text.Equals(".")) continue;
+
+				node = ContainsNodeWithText(nodes, text);
+
+				if (node == null)
+				{
+					node = nodes.Add(text);
+					node.Checked = true;
+				}
+
+				node.EnsureVisible();
+
+				nodes = node.Nodes;
+			}
+
+			tree.EndUpdate();
+
+			return node;
+		}
+
+		private TreeNode ContainsNodeWithText(TreeNodeCollection nodes, string text)
+		{
+			TreeNode result = null;
+
+			if ((nodes != null) && (nodes.Count > 0))
+			{
+				foreach(TreeNode node in nodes)
+				{
+					if (node.Text.Equals(text))
+					{
+						result = node;
+						break;
+					}
+				}
+			}
+
+			return result;
 		}
 
 		/// <summary>

@@ -43,14 +43,16 @@ namespace Simias
 
 		private Container components = null;
 
+		private TreeView logTreeView;
 		private ListView logListView;
 		private ContextMenu logContextMenu;
 		private MenuItem scrollLockMenuItem;
 		private MenuItem copyMenuItem;
 		private MenuItem clearMenuItem;
-
 		private MyTraceListener traceListener;
-		private System.Windows.Forms.ColumnHeader columnHeader1;
+		private ColumnHeader columnHeader2;
+		private System.Windows.Forms.Splitter splitter;
+		private System.Windows.Forms.Panel logListPanel;
 		private bool shutdown = false;
 
 		/// <summary>
@@ -70,7 +72,7 @@ namespace Simias
 			this.Location = start;
 
 			// start listener
-			traceListener = new MyTraceListener(logListView);
+			traceListener = new MyTraceListener(logTreeView, logListView);
 			Trace.Listeners.Add(traceListener);
 
 			// set log list view column size
@@ -121,27 +123,47 @@ namespace Simias
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.logTreeView = new System.Windows.Forms.TreeView();
 			this.logListView = new System.Windows.Forms.ListView();
+			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.logContextMenu = new System.Windows.Forms.ContextMenu();
 			this.scrollLockMenuItem = new System.Windows.Forms.MenuItem();
 			this.copyMenuItem = new System.Windows.Forms.MenuItem();
 			this.clearMenuItem = new System.Windows.Forms.MenuItem();
-			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+			this.splitter = new System.Windows.Forms.Splitter();
+			this.logListPanel = new System.Windows.Forms.Panel();
+			this.logListPanel.SuspendLayout();
 			this.SuspendLayout();
+			// 
+			// logTreeView
+			// 
+			this.logTreeView.CheckBoxes = true;
+			this.logTreeView.Dock = System.Windows.Forms.DockStyle.Right;
+			this.logTreeView.ImageIndex = -1;
+			this.logTreeView.Location = new System.Drawing.Point(352, 0);
+			this.logTreeView.Name = "logTreeView";
+			this.logTreeView.SelectedImageIndex = -1;
+			this.logTreeView.Size = new System.Drawing.Size(280, 454);
+			this.logTreeView.TabIndex = 1;
 			// 
 			// logListView
 			// 
 			this.logListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-																						  this.columnHeader1});
+																						  this.columnHeader2});
 			this.logListView.ContextMenu = this.logContextMenu;
 			this.logListView.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.logListView.FullRowSelect = true;
 			this.logListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.logListView.Location = new System.Drawing.Point(0, 0);
 			this.logListView.Name = "logListView";
-			this.logListView.Size = new System.Drawing.Size(352, 214);
+			this.logListView.Size = new System.Drawing.Size(349, 454);
 			this.logListView.TabIndex = 0;
 			this.logListView.View = System.Windows.Forms.View.Details;
+			// 
+			// columnHeader2
+			// 
+			this.columnHeader2.Text = "Message";
+			this.columnHeader2.Width = 99;
 			// 
 			// logContextMenu
 			// 
@@ -169,21 +191,37 @@ namespace Simias
 			this.clearMenuItem.Text = "Clear All";
 			this.clearMenuItem.Click += new System.EventHandler(this.clearMenuItem_Click);
 			// 
-			// columnHeader1
+			// splitter
 			// 
-			this.columnHeader1.Text = "Message";
-			this.columnHeader1.Width = 256;
+			this.splitter.Dock = System.Windows.Forms.DockStyle.Right;
+			this.splitter.Location = new System.Drawing.Point(349, 0);
+			this.splitter.Name = "splitter";
+			this.splitter.Size = new System.Drawing.Size(3, 454);
+			this.splitter.TabIndex = 2;
+			this.splitter.TabStop = false;
+			// 
+			// logListPanel
+			// 
+			this.logListPanel.Controls.Add(this.logListView);
+			this.logListPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.logListPanel.Location = new System.Drawing.Point(0, 0);
+			this.logListPanel.Name = "logListPanel";
+			this.logListPanel.Size = new System.Drawing.Size(349, 454);
+			this.logListPanel.TabIndex = 3;
 			// 
 			// MyTraceForm
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(352, 214);
-			this.Controls.Add(this.logListView);
+			this.ClientSize = new System.Drawing.Size(632, 454);
+			this.Controls.Add(this.logListPanel);
+			this.Controls.Add(this.splitter);
+			this.Controls.Add(this.logTreeView);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
 			this.Name = "MyTraceForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "Denali Trace Window";
 			this.SizeChanged += new System.EventHandler(this.MyTraceForm_SizeChanged);
+			this.logListPanel.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}

@@ -161,11 +161,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InviteAgentTests", "src\Inv
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonFormsWindows", "src\CommonFormWindows\Library\CommonFormsWindows.csproj", "{CCCF72D7-AC9A-45DC-AF2D-0CF52BBA0565}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonFormWindows", "src\CommonFormWindows\Library\CommonFormWindows.csproj", "{CCCF72D7-AC9A-45DC-AF2D-0CF52BBA0565}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonFormsWindowsTests", "src\CommonFormWindows\Tests\CommonFormsWindowsTests.csproj", "{27C8E063-4FA2-4A0E-B9AA-0BB5ED1F4903}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonFormWindowsTests", "src\CommonFormWindows\Tests\CommonFormWindowsTests.csproj", "{27C8E063-4FA2-4A0E-B9AA-0BB5ED1F4903}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
