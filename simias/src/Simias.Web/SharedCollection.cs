@@ -388,10 +388,10 @@ namespace Simias.Web
 				in <0x00050> (wrapper managed-to-native) Mono.Posix.Syscall:syscall_access (string,int)
 				in <0x00027> Mono.Posix.Syscall:access (string,Mono.Posix.AccessMode)
 				in <0x00147> Simias.Web.SharedCollection:CanBeCollection (string)
-
+*/
 			try
 			{
-				if(Mono.Posix.Syscall.access(testPath, 
+				if(Mono.Posix.Syscall.access(path, 
 							Mono.Posix.AccessMode.W_OK) != 0)
 				{
 					return false;
@@ -401,7 +401,6 @@ namespace Simias.Web
 			{
 				Console.WriteLine(e);
 			}
-			*/
 
 
 			// put an ugly try catch around this to see what is 
