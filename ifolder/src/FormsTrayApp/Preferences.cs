@@ -1501,6 +1501,23 @@ namespace Novell.FormsTrayApp
 			// Add new account.
 			if (newAccountLvi != null)
 			{
+				if (userName.Text.Equals(string.Empty) || server.Text.Equals(string.Empty))
+				{
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("requiredFieldsMissing"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+					mmb.ShowDialog();
+					SelectAccounts();
+					if (server.Text.Equals(string.Empty))
+					{
+						server.Focus();
+					}
+					else if (userName.Text.Equals(string.Empty))
+					{
+						userName.Focus();
+					}
+
+					return false;
+				}
+
 				result = connectToEnterprise();
 			}
 			else if (accounts.SelectedItems.Count == 1)
@@ -2001,9 +2018,18 @@ namespace Novell.FormsTrayApp
 					if (userName.Text.Equals(string.Empty) || server.Text.Equals(string.Empty))
 					{
 						processing = true;
-						MessageBox.Show("Incomplete fields");
+						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("requiredFieldsMissing"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+						mmb.ShowDialog();
 						timer1.Start();
-						server.Focus();
+
+						if (server.Text.Equals(string.Empty))
+						{
+							server.Focus();
+						}
+						else if (userName.Text.Equals(string.Empty))
+						{
+							userName.Focus();
+						}
 					}
 					else
 					{
