@@ -94,15 +94,22 @@ namespace Simias.Event
 		[STAThread]
 		static void Main(string[] args)
 		{
-			FsWatcher fsw = new FsWatcher();
+			FsWatcher fsw = new FsWatcher(args);
 			fsw.Run();
 		}
 
-		public FsWatcher()
+		public FsWatcher(string[] args)
 		{
 			// Create a hash table to store the watchers in.
 			watcherTable = new Hashtable();
-			store = Store.Connect();
+			if (args.Length == 1)
+			{
+				store = Store.Connect(new Uri(args[0]));
+			}
+			else
+			{
+				store = Store.Connect();
+			}
 			collectionWatcher = new EventSubscriber();
 			collectionWatcher.NodeCreated += new NodeEventHandler(OnNewCollection);
 			foreach (Collection col in store)
