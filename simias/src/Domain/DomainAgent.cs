@@ -84,6 +84,8 @@ namespace Simias.Domain
 
 			// provision user
 			ProvisionInfo provisionInfo = service.ProvisionUser(user, password);
+			if (provisionInfo == null)
+				throw new ApplicationException("User does not exist on server.");
 			log.Debug(provisionInfo.ToString());
 
 			Store store = new Store(config);
