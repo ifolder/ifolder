@@ -47,7 +47,28 @@
 			  <signal name="activate" handler="on_new_slog" last_modification_time="Sat, 10 Jul 2004 04:57:30 GMT"/>
 
 			  <child internal-child="image">
-			    <widget class="GtkImage" id="image39">
+			    <widget class="GtkImage" id="image48">
+			      <property name="visible">True</property>
+			      <property name="stock">gnome-stock-book-green</property>
+			      <property name="icon_size">1</property>
+			      <property name="xalign">0.5</property>
+			      <property name="yalign">0.5</property>
+			      <property name="xpad">0</property>
+			      <property name="ypad">0</property>
+			    </widget>
+			  </child>
+			</widget>
+		      </child>
+
+		      <child>
+			<widget class="GtkImageMenuItem" id="addSLog">
+			  <property name="visible">True</property>
+			  <property name="label" translatable="yes">_Add Slog to Teamspace</property>
+			  <property name="use_underline">True</property>
+			  <signal name="activate" handler="on_add_slog" last_modification_time="Fri, 16 Jul 2004 16:48:17 GMT"/>
+
+			  <child internal-child="image">
+			    <widget class="GtkImage" id="image49">
 			      <property name="visible">True</property>
 			      <property name="stock">gnome-stock-book-green</property>
 			      <property name="icon_size">1</property>
@@ -68,7 +89,7 @@
 			  <signal name="activate" handler="on_new_entry" last_modification_time="Fri, 16 Jul 2004 13:06:33 GMT"/>
 
 			  <child internal-child="image">
-			    <widget class="GtkImage" id="image40">
+			    <widget class="GtkImage" id="image50">
 			      <property name="visible">True</property>
 			      <property name="stock">gnome-stock-book-open</property>
 			      <property name="icon_size">1</property>
@@ -95,7 +116,7 @@
 			  <signal name="activate" handler="on_delete" last_modification_time="Sat, 10 Jul 2004 05:01:47 GMT"/>
 
 			  <child internal-child="image">
-			    <widget class="GtkImage" id="image41">
+			    <widget class="GtkImage" id="image51">
 			      <property name="visible">True</property>
 			      <property name="stock">gtk-delete</property>
 			      <property name="icon_size">1</property>
@@ -116,7 +137,7 @@
 			  <signal name="activate" handler="on_refresh" last_modification_time="Sat, 10 Jul 2004 07:32:40 GMT"/>
 
 			  <child internal-child="image">
-			    <widget class="GtkImage" id="image42">
+			    <widget class="GtkImage" id="image52">
 			      <property name="visible">True</property>
 			      <property name="stock">gtk-refresh</property>
 			      <property name="icon_size">1</property>
@@ -143,7 +164,7 @@
 			  <signal name="activate" handler="on_properties" last_modification_time="Sat, 10 Jul 2004 07:33:42 GMT"/>
 
 			  <child internal-child="image">
-			    <widget class="GtkImage" id="image43">
+			    <widget class="GtkImage" id="image53">
 			      <property name="visible">True</property>
 			      <property name="stock">gtk-convert</property>
 			      <property name="icon_size">1</property>

@@ -309,26 +309,7 @@ namespace Novell.AddressBook
 		///	<returns>An IEnumerator object</returns>
 		public Contact GetContact(Member member)
 		{
-			Contact foundContact = null;
-			ICSList	abList = this.store.GetCollectionsByType(Common.addressBookType);
-			foreach(ShallowNode sNode in abList)
-			{
-				AddressBook cBook = GetAddressBook(sNode.ID);
-				
-				ICSList results = cBook.Search(	Common.userIDProperty,
-												member.UserID,
-												SearchOp.Equal );
-
-				// Instead of looping trough the results, we are just
-				// going to return the first one
-				foreach(ShallowNode cNode in results)
-				{
-					foundContact = cBook.GetContact(cNode.ID);
-					return foundContact;
-				}
-			}
-
-			return foundContact;
+			return GetContact(member.UserID);
 		}
 
 
@@ -358,6 +339,33 @@ namespace Novell.AddressBook
 			}
 
 			return foundContact;
+		}
+
+
+		/// <summary>
+		/// Get an enumerator for enuming address books
+		/// </summary>
+		///	<returns>An IEnumerator object</returns>
+		public Contact GetContact(Collection col, string UserID)
+		{
+			Contact foundContact = null;
+			if(col.IsType(col, Common.addressBookType))
+			{
+				AddressBook cBook = new AddressBook(store, col);
+				ICSList results = cBook.Search(	Common.userIDProperty,
+												UserID,
+												SearchOp.Equal );
+
+				// Instead of looping trough the results, we are just
+				// going to return the first one
+				foreach(ShallowNode cNode in results)
+				{
+					foundContact = cBook.GetContact(cNode.ID);
+					return foundContact;
+				}
+			}
+
+			return GetContact(UserID);
 		}
 		#endregion
 

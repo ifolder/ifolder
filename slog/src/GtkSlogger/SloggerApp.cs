@@ -150,7 +150,7 @@ namespace SloggerApplication
 				Gtk.TreeIter iter)
 		{
 			SlogEntry se = (SlogEntry) EntryTreeStore.GetValue(iter,0);
-			Contact con = abMan.GetContact(se.UserID);
+			Contact con = abMan.GetContact(curSlog, se.UserID);
 			((CellRendererPixbuf) cell).Pixbuf = GetScaledPhoto(con, 24);
 		}
 
@@ -330,6 +330,21 @@ namespace SloggerApplication
 				curSlog = sMan.CreateSlog(se.Name);
 				curSlog.Commit();
 				SlogTreeStore.AppendValues(curSlog);
+			}
+		}
+
+		public void on_add_slog(object o, EventArgs eventArgs)
+		{
+			CollectionPicker cp = new CollectionPicker();
+			cp.IgnoreType = typeof(Slog).Name;
+			int rc = cp.Run();
+			if(rc == -5)
+			{
+				Collection col = cp.Collection;
+				Console.WriteLine("Convert collection {0}", col.Name);
+				col.SetType(col, typeof(Slog).Name);
+				col.Commit();
+				Refresh();
 			}
 		}
 
