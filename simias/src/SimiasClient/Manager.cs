@@ -96,6 +96,24 @@ namespace Simias.Client
 
 		#region Private Methods
 		/// <summary>
+		/// Gets the path portion of the uri.
+		/// </summary>
+		/// <param name="uri">Uri to a web resource.</param>
+		/// <returns>A string containing the virtual path.</returns>
+		static private string GetVirtualPath( Uri uri )
+		{
+			string escString = uri.PathAndQuery;
+			StringBuilder sb = new StringBuilder( escString.Length );
+			for ( int i = 0; i < escString.Length; )
+			{
+				sb.Append( Uri.HexUnescape( escString, ref i ) );
+			}
+
+			return sb.ToString();
+		}
+
+
+		/// <summary>
 		/// Callback that gets notified when the XSP process terminates.
 		/// </summary>
 		static private void XspProcessExited(object sender, EventArgs e)
@@ -257,22 +275,25 @@ namespace Simias.Client
 
 					// See if there is already a uri specified in the configuration file.
 					Uri uri = null;
+					string virtualRoot = null;
+
 					string webUriString = config.Get( CFG_Section, CFG_WebServiceUri );
 					if ( webUriString != null )
 					{
 						uri = new Uri( webUriString );
+						virtualRoot = GetVirtualPath( uri );
 					}
 					else
 					{
 						// Get the dynamic port that xsp should use and write it out to the config file.
-						string virtualRoot = String.Format( "/simias10/{0}", Environment.UserName );
+						virtualRoot = String.Format( "/simias10/{0}", Environment.UserName );
 						uri = new Uri( new UriBuilder( "http", IPAddress.Loopback.ToString(), GetXspPort( config ), virtualRoot ).ToString() );
 						SetWebServiceUri( config, uri );
 					}
 
 					// Strip off the volume if it exists and the file name and make the path absolute from the root.
 					string appPath = String.Format( "{0}{1}", Path.DirectorySeparatorChar, webPath.Remove( 0, Path.GetPathRoot( webPath ).Length ) );
-					webProcess.StartInfo.Arguments = String.Format( "{0}--applications {1}:\"{2}\" --port {3}", MyEnvironment.DotNet ? String.Empty : webApp + " ", uri.PathAndQuery, appPath, uri.Port.ToString() );
+					webProcess.StartInfo.Arguments = String.Format( "{0} --applications \"{1}\":\"{2}\" --port {3}", MyEnvironment.DotNet ? String.Empty : "\"" + webApp + "\" ", virtualRoot, appPath, uri.Port.ToString() );
 					webProcess.Start();
 				}
 			}
