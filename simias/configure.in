@@ -31,6 +31,8 @@ case $host_os in
     ;;
 esac
 AC_SUBST(SIMIAS_OS)
+AM_CONDITIONAL(LINUX, test "$SIMIAS_OS" = "linux")
+AM_CONDITIONAL(WINDOWS, test "$SIMIAS_OS" = "windows")
 
 #
 # Set platform-specific variables
