@@ -407,7 +407,7 @@
 		<value>$this</value>
 	</data>
 	<data name="&gt;&gt;tabControl1.ZOrder">
-		<value>2</value>
+		<value>3</value>
 	</data>
 	<data name="tabPage1.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>False</value>
@@ -2545,11 +2545,11 @@
 	<data name="&gt;&gt;userName.ZOrder">
 		<value>1</value>
 	</data>
-	<data name="label10.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-		<value>False</value>
-	</data>
 	<data name="label10.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
+	</data>
+	<data name="label10.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
 	</data>
 	<data name="label10.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
@@ -3878,7 +3878,7 @@
 		<value>$this</value>
 	</data>
 	<data name="&gt;&gt;banner.ZOrder">
-		<value>1</value>
+		<value>2</value>
 	</data>
 	<data name="mainMenu1.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
@@ -4385,6 +4385,69 @@
 		<value>$this</value>
 	</data>
 	<data name="&gt;&gt;status.ZOrder">
+		<value>1</value>
+	</data>
+	<data name="progressBar1.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
+	</data>
+	<data name="progressBar1.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Private</value>
+	</data>
+	<data name="progressBar1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Private</value>
+	</data>
+	<data name="progressBar1.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="progressBar1.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="progressBar1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Top, Left</value>
+	</data>
+	<data name="progressBar1.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="progressBar1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>None</value>
+	</data>
+	<data name="progressBar1.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>True</value>
+	</data>
+	<data name="progressBar1.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="progressBar1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>NoControl</value>
+	</data>
+	<data name="progressBar1.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>224, 489</value>
+	</data>
+	<data name="progressBar1.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Inherit</value>
+	</data>
+	<data name="progressBar1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>216, 16</value>
+	</data>
+	<data name="progressBar1.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>11</value>
+	</data>
+	<data name="progressBar1.Text">
+		<value />
+	</data>
+	<data name="progressBar1.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>True</value>
+	</data>
+	<data name="&gt;&gt;progressBar1.Name">
+		<value>progressBar1</value>
+	</data>
+	<data name="&gt;&gt;progressBar1.Type">
+		<value>System.Windows.Forms.ProgressBar, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</data>
+	<data name="&gt;&gt;progressBar1.Parent">
+		<value>$this</value>
+	</data>
+	<data name="&gt;&gt;progressBar1.ZOrder">
 		<value>0</value>
 	</data>
 	<data name="$this.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -4396,6 +4459,9 @@
 	<data name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>False</value>
 	</data>
+	<data name="$this.Name">
+		<value>GlobalProperties</value>
+	</data>
 	<data name="$this.Localizable" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>True</value>
 	</data>
@@ -4404,9 +4470,6 @@
 	</data>
 	<data name="$this.DrawGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>True</value>
-	</data>
-	<data name="$this.Name">
-		<value>GlobalProperties</value>
 	</data>
 	<data name="$this.TrayHeight" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>80</value>
@@ -4788,5 +4851,11 @@
 	</data>
 	<data name="downloadFile">
 		<value>Downloading file {0}</value>
+	</data>
+	<data name="statusSyncing">
+		<value>Synchronizing</value>
+	</data>
+	<data name="statusSyncFailure">
+		<value>Failed synchronization</value>
 	</data>
 </root>

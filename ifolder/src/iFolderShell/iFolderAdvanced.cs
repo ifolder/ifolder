@@ -44,6 +44,11 @@ namespace Novell.iFolderCom
 		private const string member = "Member";
 		private const string inviting = "Inviting";
 		private const double megaByte = 1048576;
+
+		// Delegate used to marshal back to the control's creation thread.
+		private delegate void NodeDelegate(NodeEventArgs nodeEventArgs);
+		private NodeDelegate nodeDelegate;
+
 		private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(iFolderAdvanced));
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.Button ok;
@@ -122,6 +127,8 @@ namespace Novell.iFolderCom
 		/// </summary>
 		public iFolderAdvanced()
 		{
+			nodeDelegate = new NodeDelegate(nodeEvent);
+
 			//
 			// Required for Windows Form Designer support
 			//
@@ -151,9 +158,9 @@ namespace Novell.iFolderCom
 				{
 					if (existingEventClient)
 					{
-						eventClient.SetEvent(IProcEventAction.RemoveNodeChanged, new IProcEventHandler(nodeChangeHandler));
-						eventClient.SetEvent(IProcEventAction.RemoveNodeCreated, new IProcEventHandler(nodeCreateHandler));
-						eventClient.SetEvent(IProcEventAction.RemoveNodeDeleted, new IProcEventHandler(nodeDeleteHandler));
+						eventClient.SetEvent(IProcEventAction.RemoveNodeChanged, new IProcEventHandler(nodeEventHandler));
+						eventClient.SetEvent(IProcEventAction.RemoveNodeCreated, new IProcEventHandler(nodeEventHandler));
+						eventClient.SetEvent(IProcEventAction.RemoveNodeDeleted, new IProcEventHandler(nodeEventHandler));
 					}
 					else
 					{
@@ -1518,6 +1525,79 @@ namespace Novell.iFolderCom
 		#endregion
 
 		#region Private Methods
+		private void nodeEvent(NodeEventArgs eventArgs)
+		{
+			try
+			{
+				switch (eventArgs.EventData)
+				{
+					case "NodeChanged":
+					{
+						if (eventArgs.Type == "Collection")
+						{
+							if (ifolder.ID.Equals(eventArgs.Collection))
+							{
+								// This is the iFolder currently displayed ... check for conflicts and
+								// update the display.
+								iFolder ifolderTmp = ifWebService.GetiFolder(eventArgs.Collection);
+								showConflictMessage(ifolderTmp.HasConflicts);
+							}
+						}
+						else
+						{
+							ListViewItem lvi;
+							lock (subscrHT)
+							{
+								lvi = (ListViewItem)subscrHT[eventArgs.Node];
+							}
+
+							if (lvi != null)
+							{
+								ShareListMember slMember = (ShareListMember)lvi.Tag;
+								slMember.iFolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
+								lvi.Tag = slMember;
+								updateListViewItem(lvi);
+							}
+						}
+						break;
+					}
+					case "NodeCreated":
+					{
+						if (ifolder.ID.Equals(eventArgs.Collection))
+						{
+							// This is the iFolder currently displayed.
+							// Get a user object.
+							iFolderUser ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
+							if (ifolderUser != null)
+							{
+								addiFolderUserToListView(ifolderUser);
+							}
+						}
+						break;
+					}
+					case "NodeDeleted":
+					{
+						lock (subscrHT)
+						{
+							// See if we have a listview item by this ID.
+							ListViewItem lvi = (ListViewItem)subscrHT[eventArgs.Node];
+							if (lvi != null)
+							{
+								// Remove the listview item.
+								lvi.Remove();
+								subscrHT.Remove(eventArgs.Node);
+							}
+						}
+						break;
+					}
+				}
+			}
+			catch
+			{
+				// Ignore.
+			}
+		}
+
 		private void connectToWebService()
 		{
 			if (ifWebService == null)
@@ -2163,9 +2243,9 @@ namespace Novell.iFolderCom
 
 			if (!eventError)
 			{
-				eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(nodeChangeHandler));
-				eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(nodeCreateHandler));
-				eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(nodeDeleteHandler));
+				eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(nodeEventHandler));
+				eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(nodeEventHandler));
+				eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(nodeEventHandler));
 			}
 
 			try
@@ -2558,88 +2638,10 @@ namespace Novell.iFolderCom
 			eventError = true;
 		}
 
-		private void nodeChangeHandler(SimiasEventArgs args)
+		private void nodeEventHandler(SimiasEventArgs args)
 		{
 			NodeEventArgs eventArgs = args as NodeEventArgs;
-
-			if (eventArgs.Type == "Collection")
-			{
-				if (ifolder.ID.Equals(eventArgs.Collection))
-				{
-					try
-					{
-						// This is the iFolder currently displayed ... check for conflicts and
-						// update the display.
-						iFolder ifolderTmp = ifWebService.GetiFolder(eventArgs.Collection);
-						showConflictMessage(ifolderTmp.HasConflicts);
-					}
-					catch 
-					{
-						// Ignore.
-					}
-				}
-			}
-			else
-			{
-				ListViewItem lvi;
-				lock (subscrHT)
-				{
-					lvi = (ListViewItem)subscrHT[eventArgs.Node];
-				}
-
-				if (lvi != null)
-				{
-					try
-					{
-						ShareListMember slMember = (ShareListMember)lvi.Tag;
-						slMember.iFolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
-						lvi.Tag = slMember;
-						updateListViewItem(lvi);
-					}
-					catch
-					{
-						// Ignore.
-					}
-				}
-			}
-		}
-
-		private void nodeCreateHandler(SimiasEventArgs args)
-		{
-			NodeEventArgs eventArgs = args as NodeEventArgs;
-			if (ifolder.ID.Equals(eventArgs.Collection))
-			{
-				// This is the iFolder currently displayed.
-				try
-				{
-					// Get a user object.
-					iFolderUser ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
-					if (ifolderUser != null)
-					{
-						addiFolderUserToListView(ifolderUser);
-					}
-				}
-				catch
-				{
-					// Ignore.
-				}
-			}
-		}
-
-		private void nodeDeleteHandler(SimiasEventArgs args)
-		{
-			NodeEventArgs eventArgs = args as NodeEventArgs;
-			lock (subscrHT)
-			{
-				// See if we have a listview item by this ID.
-				ListViewItem lvi = (ListViewItem)subscrHT[eventArgs.Node];
-				if (lvi != null)
-				{
-					// Remove the listview item.
-					lvi.Remove();
-					subscrHT.Remove(eventArgs.Node);
-				}
-			}
+			BeginInvoke(nodeDelegate, new object[] {eventArgs});
 		}
 
 		private void setLimit_CheckedChanged(object sender, System.EventArgs e)
