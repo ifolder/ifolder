@@ -34,6 +34,7 @@ namespace Simias.Event
 		string						collectionId;
 		FileSystemWatcher			watcher;
 		static EventPublisher		publish = new EventPublisher();
+		
 
 		internal CollectionFilesWatcher(Collection col)
 		{
@@ -76,7 +77,6 @@ namespace Simias.Event
 			publish.RaiseFileEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, FileEventArgs.EventType.Created));
 			System.Diagnostics.Debug.WriteLine("Created File: {0} Created.", e.FullPath);
 		}
-
 	}
 
 	/// <summary>
@@ -104,14 +104,15 @@ namespace Simias.Event
 			watcherTable = new Hashtable();
 			if (args.Length == 1)
 			{
-				store = Store.Connect(new Uri(args[0]));
+				store = Store.Connect(new Uri(args[0]), this.GetType().FullName);
 			}
 			else
 			{
-				store = Store.Connect();
+				store = Store.Connect(this.GetType().FullName);
 			}
 			collectionWatcher = new EventSubscriber();
 			collectionWatcher.NodeCreated += new NodeEventHandler(OnNewCollection);
+			collectionWatcher.NodeDeleted += new NodeEventHandler(OnDeleteNode);
 			foreach (Collection col in store)
 			{
 				WatchCollection(col);
@@ -133,14 +134,25 @@ namespace Simias.Event
 		{
 			try
 			{
-				Collection col = store.GetCollectionById(args.ID);
-				if (col != null)
+				if (args.ID == args.Collection)
 				{
-					WatchCollection(col);
+					Collection col = store.GetCollectionById(args.ID);
+					if (col != null)
+					{
+						WatchCollection(col);
+					}
 				}
 			}
 			catch
 			{
+			}
+		}
+
+		private void OnDeleteNode(NodeEventArgs args)
+		{
+			if (args.ID == args.Collection)
+			{
+				watcherTable.Remove(args.Collection);
 			}
 		}
 	}
