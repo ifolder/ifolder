@@ -486,51 +486,30 @@ namespace Novell.iFolderCom
 			{
 				iFolderUser[] ifolderUsers;
 				
-				if (search != null)
+				if ((search != null) && !search.Equals(string.Empty))
 				{
 					ifolderUsers = ifWebService.SearchForiFolderUsers(search);
 				}
 				else
 				{
-					ifolderUsers = ifWebService.GetAlliFolderUsers();
+					ifolderUsers = ifWebService.GetScopediFolderUsers(25);
 				}
 
 				foreach (iFolderUser ifolderUser in ifolderUsers)
 				{
 					int imageIndex = ifolderUser.UserID.Equals(currentUser.UserID) ? 0 : 1;
-					ListViewItem lvi = new ListViewItem(ifolderUser.Name, imageIndex);
+					string name = (ifolderUser.FN != null) && !ifolderUser.FN.Equals(string.Empty) ? ifolderUser.FN : ifolderUser.Name;
+					ListViewItem lvi = new ListViewItem(name, imageIndex);
 					lvi.Tag = ifolderUser;
 					rosterLV.Items.Add(lvi);
 
-					if (ht != null)
+					// Find and update items in the added list.
+					ListViewItem item = (ListViewItem)addedHT[ifolderUser.UserID];
+					if (item != null)
 					{
-						ListViewItem item = (ListViewItem)ht[ifolderUser.UserID];
-						if (item != null)
-						{
-							// Use the existing iFolderUser
-							lvi.Tag = ((ShareListMember)item.Tag).iFolderUser;
-						}
-
-						if (first && (item != null))
-						{
-							// Only create added items on first pass.
-							item = new ListViewItem(lvi.Text, lvi.ImageIndex);
-							addedLV.Items.Add(item);
-							item.Tag = lvi;
-							addedHT.Add(ifolderUser.UserID, item);
-							lvi.ForeColor = Color.Gray;
-						}
-						else
-						{
-							// Find and update items in the added list.
-							item = (ListViewItem)addedHT[ifolderUser.UserID];
-							if (item != null)
-							{
-								item.Tag = lvi;
-								addedHT[ifolderUser.UserID] = item;
-								lvi.ForeColor = Color.Gray;
-							}
-						}
+						item.Tag = lvi;
+						addedHT[ifolderUser.UserID] = item;
+						lvi.ForeColor = Color.Gray;
 					}
 				}
 			}
@@ -544,6 +523,25 @@ namespace Novell.iFolderCom
 			first = false;
 			rosterLV.EndUpdate();
 			Cursor.Current = Cursors.Default;
+		}
+		#endregion
+
+		#region Public Methods
+		public iFolderUser GetiFolderUserFromListViewItem(ListViewItem lvi)
+		{
+			iFolderUser ifolderUser = null;
+
+			Type type = lvi.Tag.GetType();
+			if (type.FullName.Equals(typeof(ListViewItem).ToString()))
+			{
+				ifolderUser = (iFolderUser)((ListViewItem)lvi.Tag).Tag;
+			}
+			else if (type.FullName.Equals(typeof(iFolderUser).ToString()))
+			{
+				ifolderUser = (iFolderUser)lvi.Tag;
+			}
+
+			return ifolderUser;
 		}
 		#endregion
 
@@ -564,6 +562,23 @@ namespace Novell.iFolderCom
 				addedLV.SmallImageList = rosterLV.SmallImageList;
 			}
 			catch {}
+
+			Cursor.Current = Cursors.WaitCursor;
+
+			if (ht != null)
+			{
+				// Add the existing users to the added list.
+				foreach (DictionaryEntry entry in ht)
+				{
+					ListViewItem lvi = (ListViewItem)entry.Value;
+					ListViewItem item = new ListViewItem(lvi.Text, lvi.ImageIndex == 0 ? 0 : 1);
+					addedLV.Items.Add(item);
+					item.Tag = ((ShareListMember)lvi.Tag).iFolderUser;
+					addedHT.Add(((ShareListMember)lvi.Tag).iFolderUser.UserID, item);
+				}
+			}
+
+			Cursor.Current = Cursors.Default;
 
 			// Put the objects in the listview.
 			displayUsers(null);
@@ -624,7 +639,7 @@ namespace Novell.iFolderCom
 		{
 			foreach (ListViewItem lvi in addedLV.SelectedItems)
 			{
-				iFolderUser selectedUser = (iFolderUser)((ListViewItem)lvi.Tag).Tag;
+				iFolderUser selectedUser = GetiFolderUserFromListViewItem(lvi);
 
 				// Remove the user if it is not the current user or current owner.
 				if (!selectedUser.UserID.Equals(currentUser.UserID) && !selectedUser.UserID.Equals(currentOwner.UserID))
@@ -641,7 +656,11 @@ namespace Novell.iFolderCom
 					}
 
 					// Change the color so it can be added again.
-					((ListViewItem)lvi.Tag).ForeColor = Color.Black;
+					Type type = lvi.Tag.GetType();
+					if (type.FullName.Equals(typeof(ListViewItem).ToString()))
+					{
+						((ListViewItem)lvi.Tag).ForeColor = Color.Black;
+					}
 
 					// Remove the item from the list view and the hashtable.
 					lvi.Remove();
@@ -688,9 +707,10 @@ namespace Novell.iFolderCom
 
 			if (addedLV.SelectedItems.Count == 1)
 			{
+				iFolderUser selectedUser = GetiFolderUserFromListViewItem(addedLV.SelectedItems[0]);
+
 				// Disable the remove button if only one user is selected, and it's the current user or current owner.
-				iFolderUser selectedUser = (iFolderUser)((ListViewItem)addedLV.SelectedItems[0].Tag).Tag;
-				if (selectedUser.UserID.Equals(currentUser.UserID) || selectedUser.UserID.Equals(currentOwner.UserID))
+				if ((selectedUser != null) && (selectedUser.UserID.Equals(currentUser.UserID) || selectedUser.UserID.Equals(currentOwner.UserID)))
 				{
 					remove.Enabled = false;
 				}
