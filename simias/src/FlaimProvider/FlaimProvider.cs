@@ -103,8 +103,16 @@ namespace Simias.Storage.Provider.Flaim
 			FlaimError.Error rc = Flaim.OpenStore();
 			if (FlaimError.IsError(rc))
 			{
-				// We had an error the store was not opened.
-				throw(new OpenException("Flaim DB", FlaimError.GetException(rc)));
+				if (rc == FlaimError.Error.FERR_IO_PATH_NOT_FOUND)
+				{
+					// The files do not exist.
+					throw new ApplicationException();
+				}
+				else
+				{
+					// We had an error the store was not opened.
+					throw(new OpenException("Flaim DB", FlaimError.GetException(rc)));
+				}
 			}
 		}
 
