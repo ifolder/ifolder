@@ -79,6 +79,14 @@ namespace Simias.Client
 			{
 				get { return problem; }
 			}
+
+			/// <summary>
+			/// Get whether the Cert is accepted.
+			/// </summary>
+			public bool Accepted
+			{
+				get { return accepted; }
+			}
 		}
 
 		#region Class Members
@@ -163,7 +171,7 @@ namespace Simias.Client
 		/// <returns>True if the certificate is to be honored. Otherwise, false is returned.</returns>
 		public bool CheckValidationResult( ServicePoint srvPoint, X509Certificate certificate, WebRequest request, int certificateProblem )
 		{
-			bool honorCert = true;
+			bool honorCert = false;
 
 			if ((certificateProblem == 0) || (CertificateProblem.CertEXPIRED.Equals(certificateProblem)))
 			{

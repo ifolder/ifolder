@@ -87,6 +87,15 @@ namespace Simias.Client
 				{
 					throw we;	
 				}
+				else
+				{
+					CertPolicy.CertificateState cs = CertPolicy.GetCertificate(host);
+					if (cs != null && !cs.Accepted)
+					{
+						// BUGBUG this is here to work around a mono bug.
+						throw new WebException(we.Message, we, WebExceptionStatus.TrustFailure, we.Response);
+					}
+				}
 				// Try 'http' next.
 				wsUri.Scheme = Uri.UriSchemeHttp;
 				wsUri.Port = ( host.IndexOf( ':' ) != -1 ) ? parseUri.Port : DefaultPort;
