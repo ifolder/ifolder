@@ -63,7 +63,8 @@ endif
 install-exec-local: Novell.iFolder.dll iFolderCmd.exe iFolderd.exe
 	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) Novell.iFolder.dll $(DEBUG_FILES) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) iFolderCmd.exe iFolderCmd iFolderd.exe ifolderd $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) iFolderCmd.exe iFolderd.exe $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) iFolderCmd ifolderd $(DESTDIR)$(bindir)
 
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f Novell.iFolder.dll iFolderTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
