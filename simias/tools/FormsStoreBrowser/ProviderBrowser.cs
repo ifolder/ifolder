@@ -50,7 +50,7 @@ namespace StoreBrowser
 			tView = view;
 			rBox = box;
 			bool created;
-			provider = Provider.Connect(new ProviderConfig(Path.GetDirectoryName(dbPath)), out created);
+			provider = Provider.Connect(out created); //new ProviderConfig()); //Path.GetDirectoryName(dbPath)), out created);
 			rBox.Show();
 			tView.Dock = DockStyle.Left;
 			alreadyDisposed = false;

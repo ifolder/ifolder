@@ -51,7 +51,7 @@ namespace StoreBrowser
 			this.lView = lView;
 			lView.BringToFront();
 			lView.Show();
-			store = new Store(new Configuration(Path.GetDirectoryName(dbPath)));
+			store = Store.GetStore();
 			tView.Dock = DockStyle.Left;
 			alreadyDisposed = true;
 		}
@@ -131,6 +131,10 @@ namespace StoreBrowser
 					}
 
 					item.SubItems.Add(p.Type.ToString());
+					string flags = p.LocalProperty ? "(Local) " : "";
+					flags += p.MultiValuedProperty ? "(MV) " : "";
+					flags += string.Format("0x{0}", p.Flags.ToString("X4"));
+					item.SubItems.Add(flags);
 					lView.Items.Add(item);
 				}
 			}
@@ -210,7 +214,6 @@ namespace StoreBrowser
 				{
 					GC.SuppressFinalize(this);
 				}
-				store.Dispose();
 				alreadyDisposed = true;
 			}
 		}

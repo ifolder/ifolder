@@ -56,9 +56,10 @@ namespace StoreBrowser
 		private System.Windows.Forms.RichTextBox richTextBox1;
 		private System.Windows.Forms.ImageList imageList1;
 		private System.Windows.Forms.ListView listView1;
-		private System.Windows.Forms.ColumnHeader ColumnName;
 		private System.Windows.Forms.ColumnHeader Value;
 		private System.Windows.Forms.ColumnHeader Type;
+		private System.Windows.Forms.ColumnHeader Flags;
+		private System.Windows.Forms.ColumnHeader CName;
 		private System.ComponentModel.IContainer components;
 
 		public Form1()
@@ -70,6 +71,8 @@ namespace StoreBrowser
 			this.listView1.Hide();
 			tView.ImageList = imageList1;
 			tView.Dock = DockStyle.Fill;
+			browser = new NodeBrowser(tView, listView1, Configuration.GetConfiguration().StorePath);
+			browser.Show();
 		}
 
 		/// <summary>
@@ -111,9 +114,10 @@ namespace StoreBrowser
 			this.richTextBox1 = new System.Windows.Forms.RichTextBox();
 			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
 			this.listView1 = new System.Windows.Forms.ListView();
-			this.ColumnName = new System.Windows.Forms.ColumnHeader();
+			this.CName = new System.Windows.Forms.ColumnHeader();
 			this.Value = new System.Windows.Forms.ColumnHeader();
 			this.Type = new System.Windows.Forms.ColumnHeader();
+			this.Flags = new System.Windows.Forms.ColumnHeader();
 			this.SuspendLayout();
 			// 
 			// mainMenu1
@@ -220,9 +224,10 @@ namespace StoreBrowser
 			// 
 			this.listView1.AllowColumnReorder = true;
 			this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-																						this.ColumnName,
+																						this.CName,
 																						this.Value,
-																						this.Type});
+																						this.Type,
+																						this.Flags});
 			this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.listView1.GridLines = true;
 			this.listView1.Location = new System.Drawing.Point(299, 0);
@@ -232,10 +237,10 @@ namespace StoreBrowser
 			this.listView1.View = System.Windows.Forms.View.Details;
 			this.listView1.Resize += new System.EventHandler(this.listView1_Resize);
 			// 
-			// ColumnName
+			// CName
 			// 
-			this.ColumnName.Text = "Name";
-			this.ColumnName.Width = 40;
+			this.CName.Text = "Name";
+			this.CName.Width = 40;
 			// 
 			// Value
 			// 
@@ -246,6 +251,11 @@ namespace StoreBrowser
 			// 
 			this.Type.Text = "Type";
 			this.Type.Width = 40;
+			// 
+			// Flags
+			// 
+			this.Flags.Text = "Flags";
+			this.Flags.Width = 40;
 			// 
 			// Form1
 			// 
@@ -278,7 +288,7 @@ namespace StoreBrowser
 			richTextBox1.Clear();
 			FolderBrowserDialog fb = new FolderBrowserDialog();
 			if (path == null)
-				path = new Configuration().StorePath;
+				path = Configuration.GetConfiguration().StorePath;
 			fb.SelectedPath = path;
 			if (fb.ShowDialog() == DialogResult.OK)
 			{
@@ -297,7 +307,7 @@ namespace StoreBrowser
 			richTextBox1.Clear();
 			FolderBrowserDialog fb = new FolderBrowserDialog();
 			if (path == null)
-				path = new Configuration().StorePath;
+				path = Configuration.GetConfiguration().StorePath;
 			fb.SelectedPath = path;
 			if (fb.ShowDialog() == DialogResult.OK)
 			{
@@ -339,8 +349,8 @@ namespace StoreBrowser
 
 		private void listView1_Resize(object sender, System.EventArgs e)
 		{
-			int cwidth = listView1.Width / 3;
-			listView1.Columns[0].Width = listView1.Columns[1].Width = listView1.Columns[2].Width = cwidth;
+			int cwidth = listView1.Width / 4;
+			listView1.Columns[0].Width = listView1.Columns[1].Width = listView1.Columns[2].Width = listView1.Columns[3].Width = cwidth;
 		}
 	}
 
