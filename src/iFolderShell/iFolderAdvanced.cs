@@ -70,6 +70,7 @@ namespace Novell.iFolder.iFolderCom
 		private iFolder ifolder;
 		private Member currentMember;
 		private ListViewItem ownerLvi;
+		private ListViewItem newOwnerLvi;
 		private iFolderManager ifManager;
 		private ArrayList removedList;
 		private string loadPath;
@@ -746,6 +747,9 @@ namespace Novell.iFolder.iFolderCom
 		#region Private Methods
 		private void refreshData()
 		{
+			// Used to keep track of the new owner.
+			newOwnerLvi = null;
+
 			add.Enabled = remove.Enabled = menuFullControl.Enabled = 
 				menuReadWrite.Enabled = menuReadOnly.Enabled = access.Enabled = 
 				setLimit.Enabled = currentMember.Rights.Equals(Access.Rights.Admin);
@@ -846,6 +850,7 @@ namespace Novell.iFolder.iFolderCom
 
 					if (shareMember.Member.IsOwner)
 					{
+						// Keep track of the current (or old) owner.
 						ownerLvi = lvitem;
 					}
 
@@ -853,7 +858,10 @@ namespace Novell.iFolder.iFolderCom
 				}
 
 				// Clear the hashtable.
-				subscrHT.Clear();
+				lock (subscrHT)
+				{
+					subscrHT.Clear();
+				}
 
 				// Set up the event handlers for the POBox.
 				// TODO: we still can't get events into explorer ... this may work once we are in the GAC.
@@ -973,60 +981,93 @@ namespace Novell.iFolder.iFolderCom
 			// Change the pointer to an hourglass.
 			Cursor = Cursors.WaitCursor;
 
+			// Change the owner.
+			if (newOwnerLvi != null)
+			{
+				try
+				{
+					ShareListMember oldOwner = (ShareListMember)ownerLvi.Tag;
+					ShareListMember newOwner = (ShareListMember)newOwnerLvi.Tag;
+					ifolder.Commit(ifolder.ChangeOwner(newOwner.Member, oldOwner.Rights));
+					oldOwner.Changed = newOwner.Changed = false;
+				}
+				catch (SimiasException e)
+				{
+					e.LogError();
+				}
+				catch (Exception e)
+				{
+					logger.Debug(e, "Changing owner");
+				}
+			}
+
 			string sendersEmail = null;
 
 			foreach (ListViewItem lvitem in this.shareWith.Items)
 			{
-				ShareListMember slMember = (ShareListMember)lvitem.Tag;
-
-				// Process added and changed members.
-				if (slMember.Added)
+				try
 				{
-					// TODO: we'll get the email a different way in the future.
-					if (ifolder.Domain.Equals(Domain.WorkGroupDomainID) &&
-						(sendersEmail == null))
+					ShareListMember slMember = (ShareListMember)lvitem.Tag;
+
+					// Process added and changed members.
+					if (slMember.Added)
 					{
-						// TODO: check for an existing contact for the current user.
-						EmailPrompt emailPrompt = new EmailPrompt();
-						if (DialogResult.OK == emailPrompt.ShowDialog())
+						// TODO: we'll get the email a different way in the future.
+						if (ifolder.Domain.Equals(Domain.WorkGroupDomainID) &&
+							(sendersEmail == null))
 						{
-							sendersEmail = emailPrompt.Email;
+							// TODO: check for an existing contact for the current user.
+							EmailPrompt emailPrompt = new EmailPrompt();
+							if (DialogResult.OK == emailPrompt.ShowDialog())
+							{
+								sendersEmail = emailPrompt.Email;
+							}
 						}
+
+						// Add the from e-mail address.
+						slMember.Subscription.FromAddress = sendersEmail;
+
+						// Add the listviewitem to the hashtable so we can quickly find it.
+						lock (subscrHT)
+						{
+							subscrHT.Add(slMember.Subscription.ID, lvitem);
+						}
+
+						// TODO: change this to use an array and add them all at once.
+						// Put the subscription in the POBox.
+						poBox.AddMessage(slMember.Subscription);
+
+						lvitem.SubItems[1].Text = slMember.Subscription.SubscriptionState.ToString();
+
+						// Update the state.
+						slMember.Added = false;
 					}
-
-					// Add the from e-mail address.
-					slMember.Subscription.FromAddress = sendersEmail;
-
-					// Add the listviewitem to the hashtable so we can quickly find it.
-					lock (subscrHT)
+					else if (slMember.Changed)
 					{
-						subscrHT.Add(slMember.Subscription.ID, lvitem);
+						if (slMember.Member != null)
+						{
+							// Commit the rights for this member.
+							ifolder.Commit(slMember.Member);
+						}
+						else
+						{
+							// Commit the rights on the subscription.
+							poBox.Commit(slMember.Subscription);
+						}
+
+						// Reset the flags.
+						slMember.Changed = false;
 					}
-
-					// TODO: change this to use an array and add them all at once.
-					// Put the subscription in the POBox.
-					poBox.AddMessage(slMember.Subscription);
-
-					lvitem.SubItems[1].Text = slMember.Subscription.SubscriptionState.ToString();
-
-					// Update the state.
-					slMember.Added = false;
 				}
-				else if (slMember.Changed)
+				catch (SimiasException e)
 				{
-					if (slMember.Member != null)
-					{
-						// Commit the rights for this member.
-						ifolder.Commit(slMember.Member);
-					}
-					else
-					{
-						// Commit the rights on the subscription.
-						poBox.Commit(slMember.Subscription);
-					}
-
-					// Reset the flags.
-					slMember.Changed = false;
+					e.LogError();
+					// TODO: display message.
+				}
+				catch (Exception e)
+				{
+					logger.Debug(e, "In processChanges()");
+					// TODO: display message.
 				}
 			}
 
@@ -1278,24 +1319,35 @@ namespace Novell.iFolder.iFolderCom
 				logger.Debug(ex, "Loading images");
 			}
 
-			ifManager = iFolderManager.Connect();
-			foreach (iFolder i in ifManager)
-			{
-				iFolderInfo ifolderInfo = new iFolderInfo();
-				ifolderInfo.LocalPath = i.LocalPath;
-				ifolderInfo.ID = i.ID;
-				ifolders.Items.Add(ifolderInfo);
-				if ((ifolder != null) && ifolder.ID.Equals(ifolderInfo.ID))
-				{
-					ifolders.SelectedItem = ifolderInfo;
-				}
-			}
-
 			// Hashtable used to store subscriptions in.
 			subscrHT = new Hashtable();
 
-			// Update the control with the selected iFolder's data.
-			refreshData();
+			try
+			{
+				// Add all iFolders to the drop-down list.
+				ifManager = iFolderManager.Connect();
+				foreach (iFolder i in ifManager)
+				{
+					iFolderInfo ifolderInfo = new iFolderInfo();
+					ifolderInfo.LocalPath = i.LocalPath;
+					ifolderInfo.ID = i.ID;
+					ifolders.Items.Add(ifolderInfo);
+
+					// Set the passed in iFolder as the selected one.
+					if ((ifolder != null) && ifolder.ID.Equals(ifolderInfo.ID))
+					{
+						ifolders.SelectedItem = ifolderInfo;
+					}
+				}
+			}
+			catch (SimiasException ex)
+			{
+				ex.LogError();
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "Reading iFolders");
+			}
 		}
 
 		private void shareWith_SelectedIndexChanged(object sender, System.EventArgs e)
@@ -1816,8 +1868,20 @@ namespace Novell.iFolder.iFolderCom
 					{
 						ListViewItem lvi = shareWith.SelectedItems[0];
 						lvi.SubItems[1].Text = "Owner";
-						ownerLvi.SubItems[1].Text = "";
-						ownerLvi = lvi;
+
+						if (newOwnerLvi != null)
+						{
+							// Update the previous "new owner"
+							newOwnerLvi.SubItems[1].Text = "";
+						}
+						else
+						{
+							// Update the old owner.
+							ownerLvi.SubItems[1].Text = "";
+						}
+
+						// Keep track of the new owner.
+						newOwnerLvi = lvi;
 					}
 				}
 			}
