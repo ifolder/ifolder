@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = 'copy FormsBookLib.dll "c:\program files\novell\ifolder3"&#xd;&#xa;copy FormsBookLib.pdb "c:\program files\novell\ifolder3"'
+                PostBuildEvent = 'copy FormsBookLib.dll "c:\program files\ifolder\ifolder"&#xd;&#xa;copy FormsBookLib.pdb "c:\program files\ifolder\ifolder"'
                 RootNamespace = "FormsBookLib"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -177,6 +177,11 @@
                     RelPath = "FullName.resx"
                     DependentUpon = "FullName.cs"
                     BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "FullNameParser.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
                 <File
                     RelPath = "GenericEntry.cs"
