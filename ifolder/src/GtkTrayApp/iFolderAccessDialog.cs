@@ -68,12 +68,15 @@ namespace Novell.iFolder
 
 
 		public iFolderAccessDialog(Gtk.Window parent, string userName, 
-				string rights, bool enableOwner, bool isOwner) : base()
+				string rights, bool enableOwner) : base()
  		{
 			if(parent != null)
 				this.TransientFor = parent;
 
-			this.Title = "Properties for " + userName;
+			if(userName == null)
+				this.Title = "Properties for multiple users";
+			else
+				this.Title = "Properties for " + userName;
 			this.HasSeparator = false;
 			this.Resizable = false;
 			this.Modal = true;
@@ -87,7 +90,7 @@ namespace Novell.iFolder
 			// create a section box
 			VBox accSectionBox = new VBox();
 			this.VBox.PackStart(accSectionBox, false, true, 0);
-			accSectionBox.BorderWidth = 20;
+			accSectionBox.BorderWidth = 10;
 			Label accSectionLabel = new Label("<span weight=\"bold\">" +
 												"Access" +
 												"</span>");
@@ -118,7 +121,7 @@ namespace Novell.iFolder
 
 			VBox ownerSectionBox = new VBox();
 			this.VBox.PackStart(ownerSectionBox, false, true, 0);
-			ownerSectionBox.BorderWidth = 20;
+			ownerSectionBox.BorderWidth = 10;
 
 			OwnerButton = new CheckButton("Make this user the owner of the collection.");
 			ownerSectionBox.PackStart(OwnerButton, false, true, 0);
