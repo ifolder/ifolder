@@ -70,6 +70,7 @@ namespace Novell.iFolder
 		private	iFolderLoginDialog	LoginDialog;
 		private bool				winShown;
 		private bool				ShowReLoginWindow;
+		private bool				simiasRestarted = false;
 		private string				redomainID;
 
 		public iFolderApplication(string[] args)
@@ -217,16 +218,52 @@ namespace Novell.iFolder
 
 		private void OnSimiasNotifyEvent(object o, NotifyEventArgs args)
 		{
-			if(ShowReLoginWindow)
+			switch(args.EventData)
 			{
-				switch(args.EventData)
+				case "Domain-Up":
 				{
-					case "Domain-Up":
+					if(ShowReLoginWindow)
 					{
 						redomainID = args.Message;
 						ReLogin(args.Message);
-						break;
 					}
+					break;
+				}
+
+				case "Simias-Restart":
+				{
+					simiasRestarted = true;
+					break;
+				}
+
+				case "EventService-Up":
+				{
+					// See if simias was restarted and credentials need 
+					// to be reset.
+					if (simiasRestarted)
+					{
+						simiasRestarted = false;
+
+						DomainAuthentication domainAuth = 
+							new DomainAuthentication(
+							"iFolder",
+							redomainID, 
+							null);
+
+						AuthenticationStatus authStatus = 
+							domainAuth.Authenticate();
+
+						if (authStatus == AuthenticationStatus.Success)
+						{
+							ShowReLoginWindow = false;
+						}
+						else
+						{
+							ShowReLoginWindow = true;
+							ReLogin(redomainID);
+						}
+					}
+					break;
 				}
 			}
 		}
@@ -278,6 +315,7 @@ namespace Novell.iFolder
 						// credentials.
 						DomainAuthentication domainAuth = 
 							new DomainAuthentication(
+								"iFolder",
 								domainID, 
 								credentials);
 
@@ -313,7 +351,7 @@ namespace Novell.iFolder
 				{
 					AuthenticationStatus status;
 					DomainAuthentication cAuth = new DomainAuthentication(
-							LoginDialog.Domain, LoginDialog.Password);
+							"iFolder", LoginDialog.Domain, LoginDialog.Password);
 					status = cAuth.Authenticate();
 					if(status != AuthenticationStatus.Success)
 					{
