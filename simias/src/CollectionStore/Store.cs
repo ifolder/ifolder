@@ -547,7 +547,10 @@ namespace Simias.Storage
 
 					foreach ( XmlElement xe in document.DocumentElement )
 					{
-						collectionList.Add( new ShallowNode( xe ) );
+						if ( xe.GetAttribute( XmlTags.IdAttr ) == xe.GetAttribute( XmlTags.CIdAttr ) )
+						{
+							collectionList.Add( new ShallowNode( xe ) );
+						}
 					}
 
 					// Get the next set of results from the query.
