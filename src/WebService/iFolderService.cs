@@ -1601,10 +1601,7 @@ namespace Novell.iFolder.Web
 		[SoapDocumentMethod]
 		public DomainWeb[] GetDomains()
 		{
-			Console.WriteLine("GetDomains is called");
 			ArrayList list = new ArrayList();
-			try
-			{
 
 			Store store = Store.GetStore();
 			
@@ -1614,14 +1611,8 @@ namespace Novell.iFolder.Web
 
 			foreach( ShallowNode sn in domainList )
 			{
-				Console.WriteLine("Adding Domain {0}", sn.ID);
 				DomainWeb dw = new DomainWeb(sn.ID);
 				list.Add(dw);
-			}
-			}
-			catch(Exception e)
-			{
-				Console.WriteLine(e);
 			}
 
 			return (DomainWeb[])list.ToArray(typeof(DomainWeb));
