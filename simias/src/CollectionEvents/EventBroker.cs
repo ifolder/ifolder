@@ -293,15 +293,18 @@ namespace Simias.Event
 			string [] uriList = chan.GetUrlsForUri(serviceUri.AbsolutePath.TrimStart('/'));
 			if (uriList.Length == 1)
 			{
-				conf.Set(CFG_Section, CFG_UriKey, uriList[0]);
-			}
-			
-			string s = serviceMutexName(conf);
-			Mutex mutex = new Mutex(false, s);
-			if (mutex.WaitOne(3000, false))
-			{
-				serviceRegistered = true;
-				//mutexList.Add(mutex);
+				string s = serviceMutexName(conf);
+				Mutex mutex = new Mutex(false, s);
+				if (mutex.WaitOne(3000, false))
+				{
+					serviceRegistered = true;
+					conf.Set(CFG_Section, CFG_UriKey, uriList[0]);
+					mutexList.Add(mutex);
+				}
+				else
+				{
+					shutdownEvent.Set();
+				}
 			}
 		}
 	
