@@ -32,6 +32,7 @@ using Novell.iFolder;
 using Novell.AddressBook;
 using Simias;
 using Simias.Storage;
+using Simias.Sync;
 using Novell.iFolder.FormsBookLib;
 
 namespace Novell.iFolder.iFolderCom
@@ -72,6 +73,11 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.NumericUpDown interval;
+		private System.Windows.Forms.TabPage tabPage3;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.TextBox objectCount;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.TextBox byteCount;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -135,17 +141,24 @@ namespace Novell.iFolder.iFolderCom
 			this.apply = new System.Windows.Forms.Button();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
+			this.tabPage3 = new System.Windows.Forms.TabPage();
+			this.objectCount = new System.Windows.Forms.TextBox();
+			this.label3 = new System.Windows.Forms.Label();
+			this.label4 = new System.Windows.Forms.Label();
+			this.byteCount = new System.Windows.Forms.TextBox();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.accessControlButtons.SuspendLayout();
 			this.tabPage2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.interval)).BeginInit();
+			this.tabPage3.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Controls.Add(this.tabPage2);
+			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Location = new System.Drawing.Point(8, 16);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
@@ -352,6 +365,50 @@ namespace Novell.iFolder.iFolderCom
 			this.apply.Text = "&Apply";
 			this.apply.Click += new System.EventHandler(this.apply_Click);
 			// 
+			// tabPage3
+			// 
+			this.tabPage3.Controls.Add(this.byteCount);
+			this.tabPage3.Controls.Add(this.label4);
+			this.tabPage3.Controls.Add(this.label3);
+			this.tabPage3.Controls.Add(this.objectCount);
+			this.tabPage3.Location = new System.Drawing.Point(4, 22);
+			this.tabPage3.Name = "tabPage3";
+			this.tabPage3.Size = new System.Drawing.Size(336, 374);
+			this.tabPage3.TabIndex = 2;
+			this.tabPage3.Text = "Sync";
+			// 
+			// objectCount
+			// 
+			this.objectCount.Location = new System.Drawing.Point(192, 16);
+			this.objectCount.Name = "objectCount";
+			this.objectCount.ReadOnly = true;
+			this.objectCount.TabIndex = 0;
+			this.objectCount.Text = "";
+			// 
+			// label3
+			// 
+			this.label3.Location = new System.Drawing.Point(8, 16);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(176, 16);
+			this.label3.TabIndex = 1;
+			this.label3.Text = "Files/Folders to synchronize:";
+			// 
+			// label4
+			// 
+			this.label4.Location = new System.Drawing.Point(8, 48);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(176, 16);
+			this.label4.TabIndex = 2;
+			this.label4.Text = "Bytes to upload:";
+			// 
+			// byteCount
+			// 
+			this.byteCount.Location = new System.Drawing.Point(192, 48);
+			this.byteCount.Name = "byteCount";
+			this.byteCount.ReadOnly = true;
+			this.byteCount.TabIndex = 3;
+			this.byteCount.Text = "";
+			// 
 			// iFolderAdvanced
 			// 
 			this.AcceptButton = this.ok;
@@ -374,6 +431,7 @@ namespace Novell.iFolder.iFolderCom
 			this.accessControlButtons.ResumeLayout(false);
 			this.tabPage2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.interval)).EndInit();
+			this.tabPage3.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -590,6 +648,13 @@ namespace Novell.iFolder.iFolderCom
 
 			// Get the refresh interval.
 			interval.Value = (decimal)ifolder.RefreshInterval;
+
+			// Get the sync node and byte counts.
+			uint nodeCount;
+			ulong bytesToSend;
+			SyncSize.CalculateSendSize(ifolder, out nodeCount, out bytesToSend);
+			objectCount.Text = nodeCount.ToString();
+			byteCount.Text = bytesToSend.ToString();
 
 			// Image list...
 			try
