@@ -1285,19 +1285,10 @@ namespace Novell.FormsTrayApp
 					currentDefaultDomain = domain;
 				}
 
-				try
-				{
-					iFolderUser ifolderUser = ifWebService.GetiFolderUser(domainWeb.UserID);
-					ListViewItem lvi = new ListViewItem(new string[] {ifolderUser.Name, domain.Name});
-					lvi.Tag = domain;
-					lvi.Selected = domainWeb.IsDefault;
-					accounts.Items.Add(lvi);
-				}
-				catch (Exception ex)
-				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readUserError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
-				}
+				ListViewItem lvi = new ListViewItem(new string[] {domainWeb.UserName, domain.Name});
+				lvi.Tag = domain;
+				lvi.Selected = domainWeb.IsDefault;
+				accounts.Items.Add(lvi);
 			}
 		}
 
@@ -1677,7 +1668,11 @@ namespace Novell.FormsTrayApp
 						AddDomainToList(dw);
 					}
 				}
-				catch{}
+				catch (Exception ex)
+				{
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readAccountsError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+				}
 
 				apply.Enabled = false;
 

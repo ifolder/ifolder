@@ -67,6 +67,13 @@ namespace Novell.iFolder.Web
 			{
 				this.POBoxID = poBox.ID;
 			}
+
+			Roster roster =
+				domain.GetRoster(store);
+			if (roster == null)
+				throw new Exception("Unable to access user roster");
+
+			this.UserName = roster.GetMemberByID(this.UserID).Name;
 		}
 
 	}
