@@ -193,7 +193,8 @@ namespace Novell.AddressBook.UI.gtk
 				
 				curSub = sub;
 
-				if(sub.SubscriptionState == SubscriptionStates.Pending)
+				if( (sub.SubscriptionState == SubscriptionStates.Pending) ||
+					(sub.SubscriptionState == SubscriptionStates.Received) )
 				{
 					AcceptItem.Sensitive = true;
 					DeclineItem.Sensitive = true;
@@ -225,8 +226,16 @@ namespace Novell.AddressBook.UI.gtk
 		{
 			if(curSub != null)
 			{
-				curSub.Accept(store, curSub.SubscriptionRights);
-				pobox.Commit(curSub);
+				if(curSub.SubscriptionState == SubscriptionStates.Pending)
+				{
+					curSub.Accept(store, curSub.SubscriptionRights);
+					pobox.Commit(curSub);
+				}
+				else if(curSub.SubscriptionState == SubscriptionStates.Received)
+				{
+					InvitationAssistant ia = new InvitationAssistant(curSub);
+					ia.ShowAll();
+				}
 			}
 		}
 
