@@ -1,6 +1,6 @@
 SUBDIRS =       libtrayicon
 
-EXTRA_DIST = $(srcdir)/libtrayicon-sources.xml $(srcdir)/Egg.metadata
+EXTRA_DIST = $(srcdir)/generated/*.cs $(srcdir)/libtrayicon-sources.xml $(srcdir)/Egg.metadata
 
 ASSEMBLY =	TrayIcon
 LIBRARY =	$(ASSEMBLY).dll
@@ -24,7 +24,7 @@ ASSEMBLIES=	-r gtk-sharp.dll	\
 
 all: $(LIBRARY)
 
-$(LIBRARY): generated-stamp
+$(LIBRARY):
 	mcs --unsafe --target library $(ASSEMBLIES) --recurse '*.cs' -o $(LIBRARY)
 
 generated-stamp: $(API)
@@ -46,7 +46,6 @@ uninstall-local:
 clean-local:
 	rm -f generated-stamp
 	rm -f $(LIBRARY)
-	rm -rf generated
 	rm -f $(API)
 
 maintainer-clean-local:
