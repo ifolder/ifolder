@@ -60,7 +60,7 @@ iFolder supports file sharing and collaboration within a workgroup.
 
 #=============================================================================
 %Build
-./configure --prefix=%{prefix} --with-simias-install-path=@SIMIAS_INSTALL_PATH@ --with-addressbook-install-path=@ADDRESSBOOK_INSTALL_PATH@
+./configure --prefix=%{prefix}
 make
 
 #=============================================================================
