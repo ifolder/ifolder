@@ -90,72 +90,72 @@ namespace Simias.POBox
 		/// <summary>
 		/// The name of the property storing the SubscriptionState.
 		/// </summary>
-		public const string SubscriptionStateProperty = "SubscriptionState";
+		public const string SubscriptionStateProperty = "SbState";
 
 		/// <summary>
 		/// The name of the property storing the recipient's public key.
 		/// </summary>
-		public const string ToPublicKeyProperty = "ToPublicKey";
+		public const string ToPublicKeyProperty = "ToPKey";
 
 		/// <summary>
 		/// The name of the property storing the sender's public key.
 		/// </summary>
-		public const string FromPublicKeyProperty = "FromPublicKey";
+		public const string FromPublicKeyProperty = "FrmPKey";
 
 		/// <summary>
 		/// The name of the property storing the collection name.
 		/// </summary>
-		public const string SubscriptionCollectionNameProperty = "SubscriptionCollectionName";
+		public const string SubscriptionCollectionNameProperty = "SbColName";
 
 		/// <summary>
 		/// The name of the property storing the collection ID.
 		/// </summary>
-		public static readonly string SubscriptionCollectionIdProperty = "SubscriptionCollectionId";
+		public static readonly string SubscriptionCollectionIdProperty = "SbColID";
 
 		/// <summary>
 		/// The name of the property storing the collection domain name.
 		/// </summary>
-		public static readonly string SubscriptionCollectionDomainNameProperty = "SubscriptionCollectionDomainName";
+		public static readonly string SubscriptionCollectionDomainNameProperty = "SbColDomName";
 
 		/// <summary>
 		/// The name of the property storing the collection domain ID.
 		/// </summary>
-		public static readonly string SubscriptionCollectionDomainIdProperty = "SubscriptionCollectionDomainId";
+		public static readonly string SubscriptionCollectionDomainIdProperty = "SbColDomID";
 
 		/// <summary>
 		/// The name of the property storing the collection types.
 		/// </summary>
-		public const string SubscriptionCollectionTypesProperty = "SubscriptionCollectionTypes";
+		public const string SubscriptionCollectionTypesProperty = "SbColTypes";
 
 		/// <summary>
 		/// The name of the property storing the collection master URL.
 		/// </summary>
-		public const string SubscriptionCollectionURLProperty = "SubscriptionCollectionURL";
+		public const string SubscriptionCollectionURLProperty = "SbColURL";
 
 		/// <summary>
 		/// The name of the property storing the post office service url.
 		/// </summary>
-		public static readonly string POServiceURLProperty = "POServiceURL";
+		public static readonly string POServiceURLProperty = "POSvcURL";
 
 		/// <summary>
 		/// The name of the property storing the collection description.
 		/// </summary>
-		public const string CollectionDescriptionProperty = "CollectionDescription";
+		public const string CollectionDescriptionProperty = "ColDesc";
 
 		/// <summary>
 		/// The name of the property storing the DirNode ID.
 		/// </summary>
-		public const string DirNodeIdProperty = "DirNodeId";
+		public const string DirNodeIdProperty = "DN:ID";
 
 		/// <summary>
 		/// The name of the property storing the DirNode name.
 		/// </summary>
-		public const string DirNodeNameProperty = "DirNodeName";
+		public const string DirNodeNameProperty = "DN:Name";
 
 		/// <summary>
 		/// The name of the property storing the rights requested/granted.
 		/// </summary>
-		public const string SubscriptionRightsProperty = "SubscriptionRights";
+		public const string SubscriptionRightsProperty = "SbRts";
 		
 		#endregion
 

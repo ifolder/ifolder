@@ -70,12 +70,12 @@ namespace Simias.POBox
 		/// <summary>
 		/// The name of the property storing the message type.
 		/// </summary>
-		public const string MessageTypeProperty = "MessageType";
+		public const string MessageTypeProperty = "MsgType";
 
 		/// <summary>
 		/// The name of the property storing the message state.
 		/// </summary>
-		public const string MessageStateProperty = "MessageState";
+		public const string MessageStateProperty = "MsgState";
 
 		/// <summary>
 		/// The name of the property storing the "To:" friendly name.
@@ -85,27 +85,27 @@ namespace Simias.POBox
 		/// <summary>
 		/// The name of the property storing the "To:" identity.
 		/// </summary>
-		public const string ToIdentityProperty = "ToIdentity";
+		public const string ToIdentityProperty = "ToID";
 
 		/// <summary>
 		/// The name of the property storing the "To:" address.
 		/// </summary>
-		public const string ToAddressProperty = "ToAddress";
+		public const string ToAddressProperty = "ToAddr";
 
 		/// <summary>
 		/// The name of the property storing the "From:" friendly name.
 		/// </summary>
-		public const string FromNameProperty = "FromName";
+		public const string FromNameProperty = "FrmName";
 
 		/// <summary>
 		/// The name of the property storing the "From:" identity.
 		/// </summary>
-		public const string FromIdentityProperty = "FromIdentity";
+		public const string FromIdentityProperty = "FrmID";
 
 		/// <summary>
 		/// The name of the property storing the "From:" address.
 		/// </summary>
-		public const string FromAddressProperty = "FromAddress";
+		public const string FromAddressProperty = "FrmAddr";
 
 		/// <summary>
 		/// The name of the property storing the message body.
