@@ -77,7 +77,6 @@ namespace Novell.FormsTrayApp
 		protected AutoResetEvent workEvent = null;
 
 		private ServerInfo serverInfo = null;
-		private string domainID = string.Empty;
 		private bool loginCancelled = false;
 		private System.Windows.Forms.MenuItem menuItem10;
 		private System.Windows.Forms.MenuItem menuSeparator1;
@@ -88,20 +87,18 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.ContextMenu contextMenu1;
 		private System.Windows.Forms.MenuItem menuEventLogReader;
 		private iFolderWebService ifWebService = null;
-		private iFolderSettings ifolderSettings = null;
 		private IProcEventClient eventClient;
 		private GlobalProperties globalProperties;
 		private Preferences preferences;
 		private SyncLog syncLog;
 		private bool eventError = false;
 		private IntPtr hwnd;
-		private System.Windows.Forms.MenuItem menuJoin;
 		private System.Windows.Forms.MenuItem menuStoreBrowser;
 		private System.Windows.Forms.MenuItem menuTools;
 		private System.Windows.Forms.Timer syncAnimateTimer;
-		private System.Windows.Forms.MenuItem menuLogin;
 		private System.Windows.Forms.MenuItem menuSyncLog;
 		private System.Windows.Forms.MenuItem menuPreferences;
+		private System.Windows.Forms.MenuItem menuAccounts;
 		private int iconID;
 		#endregion
 
@@ -248,7 +245,7 @@ namespace Novell.FormsTrayApp
 			Process.Start(Path.Combine(Application.StartupPath, "EventLogReader.exe"));
 		}
 
-		private void menuJoin_Click(object sender, System.EventArgs e)
+		private void menuAccounts_Click(object sender, System.EventArgs e)
 		{
 			// TODO: this may need to move if the server connect dialog goes away.
 			// Check for old versions of the iFolder client.
@@ -267,15 +264,6 @@ namespace Novell.FormsTrayApp
 				}
 			}*/
 
-			// Only display one dialog.
-//			if (serverInfo == null)
-//			{
-//				serverInfo = new ServerInfo(ifWebService, string.Empty);
-//				serverInfo.EnterpriseConnect += new Novell.FormsTrayApp.ServerInfo.EnterpriseConnectDelegate(serverInfo_EnterpriseConnect);
-//				serverInfo.Closed += new EventHandler(serverInfo_Closed);
-//				serverInfo.Show();
-//			}
-
 			if (preferences.Visible)
 			{
 				preferences.Activate();
@@ -286,17 +274,6 @@ namespace Novell.FormsTrayApp
 			}
 
 			preferences.AddAccount();
-		}
-
-		private void menuLogin_Click(object sender, System.EventArgs e)
-		{
-			// Only display one dialog.
-			if (serverInfo == null)
-			{
-				serverInfo = new ServerInfo(ifWebService, domainID);
-				serverInfo.Closed += new EventHandler(serverInfo_Closed);
-				serverInfo.Show();
-			}
 		}
 
 		private void menuProperties_Click(object sender, System.EventArgs e)
@@ -356,24 +333,6 @@ namespace Novell.FormsTrayApp
 			menuStoreBrowser.Visible = File.Exists(Path.Combine(Application.StartupPath, "StoreBrowser.exe"));
 			menuEventLogReader.Visible = File.Exists(Path.Combine(Application.StartupPath, "EventLogReader.exe"));
 			menuSeparator1.Visible = menuTools.Visible = menuStoreBrowser.Visible | menuEventLogReader.Visible;
-
-			// Check to see if we have already connected to an enterprise server.
-			try
-			{
-				// If the join menu is already hidden, we don't need to check.
-				if (menuJoin.Visible)
-				{
-					ifolderSettings = ifWebService.GetSettings();
-//					menuJoin.Visible = !ifolderSettings.HaveEnterprise;
-				}
-			}
-			catch
-			{
-				// Ignore.
-			}
-
-			// If we have a domainID and the login was previously cancelled, display the login menu.
-			menuLogin.Visible = !domainID.Equals(string.Empty) && loginCancelled;
 		}
 
 		private void notifyIcon1_DoubleClick(object sender, System.EventArgs e)
@@ -436,8 +395,6 @@ namespace Novell.FormsTrayApp
 					// Cause the web service to start.
 					ifWebService.Ping();
 
-					//iFolderManager.CreateDefaultExclusions(config);
-
 					if (worker == null)
 					{
 						worker = new Thread(new ThreadStart(eventThreadProc));
@@ -492,11 +449,7 @@ namespace Novell.FormsTrayApp
 
 		private void serverInfo_EnterpriseConnect(object sender, DomainConnectEventArgs e)
 		{
-//			globalProperties.InitialConnect = true;
 			globalProperties.AddDomainToList(e.DomainWeb);
-
-			// Update the settings with the enterprise data.
-//			ifolderSettings = serverInfo.ifSettings;
 		}
 
 
@@ -524,11 +477,8 @@ namespace Novell.FormsTrayApp
 		{
 			if (serverInfo != null)
 			{
-				if (!domainID.Equals(string.Empty))
-				{
-					// If we have a domainID then keep track of the cancelled state.
-					loginCancelled = serverInfo.Cancelled;
-				}
+				// Keep track of the cancelled state.
+				loginCancelled = serverInfo.Cancelled;
 
 				bool update = serverInfo.UpdateStarted;
 				serverInfo.Dispose();
@@ -555,8 +505,7 @@ namespace Novell.FormsTrayApp
 			this.menuEventLogReader = new System.Windows.Forms.MenuItem();
 			this.menuSeparator1 = new System.Windows.Forms.MenuItem();
 			this.menuProperties = new System.Windows.Forms.MenuItem();
-			this.menuLogin = new System.Windows.Forms.MenuItem();
-			this.menuJoin = new System.Windows.Forms.MenuItem();
+			this.menuAccounts = new System.Windows.Forms.MenuItem();
 			this.menuPreferences = new System.Windows.Forms.MenuItem();
 			this.menuSyncLog = new System.Windows.Forms.MenuItem();
 			this.menuHelp = new System.Windows.Forms.MenuItem();
@@ -578,8 +527,7 @@ namespace Novell.FormsTrayApp
 																						 this.menuTools,
 																						 this.menuSeparator1,
 																						 this.menuProperties,
-																						 this.menuLogin,
-																						 this.menuJoin,
+																						 this.menuAccounts,
 																						 this.menuPreferences,
 																						 this.menuSyncLog,
 																						 this.menuHelp,
@@ -640,30 +588,20 @@ namespace Novell.FormsTrayApp
 			this.menuProperties.Visible = ((bool)(resources.GetObject("menuProperties.Visible")));
 			this.menuProperties.Click += new System.EventHandler(this.menuProperties_Click);
 			// 
-			// menuLogin
+			// menuAccounts
 			// 
-			this.menuLogin.Enabled = ((bool)(resources.GetObject("menuLogin.Enabled")));
-			this.menuLogin.Index = 3;
-			this.menuLogin.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuLogin.Shortcut")));
-			this.menuLogin.ShowShortcut = ((bool)(resources.GetObject("menuLogin.ShowShortcut")));
-			this.menuLogin.Text = resources.GetString("menuLogin.Text");
-			this.menuLogin.Visible = ((bool)(resources.GetObject("menuLogin.Visible")));
-			this.menuLogin.Click += new System.EventHandler(this.menuLogin_Click);
-			// 
-			// menuJoin
-			// 
-			this.menuJoin.Enabled = ((bool)(resources.GetObject("menuJoin.Enabled")));
-			this.menuJoin.Index = 4;
-			this.menuJoin.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuJoin.Shortcut")));
-			this.menuJoin.ShowShortcut = ((bool)(resources.GetObject("menuJoin.ShowShortcut")));
-			this.menuJoin.Text = resources.GetString("menuJoin.Text");
-			this.menuJoin.Visible = ((bool)(resources.GetObject("menuJoin.Visible")));
-			this.menuJoin.Click += new System.EventHandler(this.menuJoin_Click);
+			this.menuAccounts.Enabled = ((bool)(resources.GetObject("menuAccounts.Enabled")));
+			this.menuAccounts.Index = 3;
+			this.menuAccounts.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuAccounts.Shortcut")));
+			this.menuAccounts.ShowShortcut = ((bool)(resources.GetObject("menuAccounts.ShowShortcut")));
+			this.menuAccounts.Text = resources.GetString("menuAccounts.Text");
+			this.menuAccounts.Visible = ((bool)(resources.GetObject("menuAccounts.Visible")));
+			this.menuAccounts.Click += new System.EventHandler(this.menuAccounts_Click);
 			// 
 			// menuPreferences
 			// 
 			this.menuPreferences.Enabled = ((bool)(resources.GetObject("menuPreferences.Enabled")));
-			this.menuPreferences.Index = 5;
+			this.menuPreferences.Index = 4;
 			this.menuPreferences.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuPreferences.Shortcut")));
 			this.menuPreferences.ShowShortcut = ((bool)(resources.GetObject("menuPreferences.ShowShortcut")));
 			this.menuPreferences.Text = resources.GetString("menuPreferences.Text");
@@ -673,7 +611,7 @@ namespace Novell.FormsTrayApp
 			// menuSyncLog
 			// 
 			this.menuSyncLog.Enabled = ((bool)(resources.GetObject("menuSyncLog.Enabled")));
-			this.menuSyncLog.Index = 6;
+			this.menuSyncLog.Index = 5;
 			this.menuSyncLog.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuSyncLog.Shortcut")));
 			this.menuSyncLog.ShowShortcut = ((bool)(resources.GetObject("menuSyncLog.ShowShortcut")));
 			this.menuSyncLog.Text = resources.GetString("menuSyncLog.Text");
@@ -683,7 +621,7 @@ namespace Novell.FormsTrayApp
 			// menuHelp
 			// 
 			this.menuHelp.Enabled = ((bool)(resources.GetObject("menuHelp.Enabled")));
-			this.menuHelp.Index = 7;
+			this.menuHelp.Index = 6;
 			this.menuHelp.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuHelp.Shortcut")));
 			this.menuHelp.ShowShortcut = ((bool)(resources.GetObject("menuHelp.ShowShortcut")));
 			this.menuHelp.Text = resources.GetString("menuHelp.Text");
@@ -693,7 +631,7 @@ namespace Novell.FormsTrayApp
 			// menuItem10
 			// 
 			this.menuItem10.Enabled = ((bool)(resources.GetObject("menuItem10.Enabled")));
-			this.menuItem10.Index = 8;
+			this.menuItem10.Index = 7;
 			this.menuItem10.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuItem10.Shortcut")));
 			this.menuItem10.ShowShortcut = ((bool)(resources.GetObject("menuItem10.ShowShortcut")));
 			this.menuItem10.Text = resources.GetString("menuItem10.Text");
@@ -702,7 +640,7 @@ namespace Novell.FormsTrayApp
 			// menuExit
 			// 
 			this.menuExit.Enabled = ((bool)(resources.GetObject("menuExit.Enabled")));
-			this.menuExit.Index = 9;
+			this.menuExit.Index = 8;
 			this.menuExit.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuExit.Shortcut")));
 			this.menuExit.ShowShortcut = ((bool)(resources.GetObject("menuExit.ShowShortcut")));
 			this.menuExit.Text = resources.GetString("menuExit.Text");
@@ -850,7 +788,7 @@ namespace Novell.FormsTrayApp
 							string userID;
 							string credentials;
 
-							domainID = notifyEventArgs.Message;
+							string domainID = notifyEventArgs.Message;
 							serverInfo = new ServerInfo(ifWebService, domainID);
 							serverInfo.Closed += new EventHandler(serverInfo_Closed);
 

@@ -1205,7 +1205,7 @@ namespace Novell.FormsTrayApp
 			iFolderView.Items.Clear();
 			iFolderView.SelectedItems.Clear();
 
-
+			// Disable/hide the menu items and toolbar buttons.
 			menuShare.Visible = menuActionShare.Enabled = toolBarShare.Enabled =
 				menuProperties.Visible = menuActionProperties.Enabled = /*toolBarProperties.Enabled =*/
 				menuRevert.Visible = menuActionRevert.Enabled = /*toolBarRevert.Enabled =*/
@@ -1218,6 +1218,7 @@ namespace Novell.FormsTrayApp
 				menuRemove.Visible = menuActionRemove.Visible = /*toolBarRemove.Enabled =*/
 				menuActionSeparator2.Visible = false;
 
+			// Show the refresh and create menu items.
 			menuRefresh.Visible = menuCreate.Visible = true;
 
 			lock(ht)
