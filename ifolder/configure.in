@@ -484,6 +484,7 @@ esac
 AC_OUTPUT([
 Makefile
 ifolder3.pc
+ifolder3-c.pc
 src/Makefile
 src/iFolder/Makefile
 src/LinuxClient/Makefile
