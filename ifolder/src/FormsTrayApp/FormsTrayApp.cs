@@ -76,6 +76,8 @@ namespace Novell.FormsTrayApp
 		private Queue eventQueue;
 		private Thread worker = null;
 
+		private Hashtable initialSyncCollections = new Hashtable();
+
 		/// <summary>
 		/// Event used to signal that there are events in the queue that need to be processed.
 		/// </summary>
@@ -728,9 +730,30 @@ namespace Novell.FormsTrayApp
 					syncAnimateTimer.Stop();
 					notifyIcon1.Icon = trayIcon;
 					notifyIcon1.Text = resourceManager.GetString("notifyIcon1.Text");
+
+					if (initialSyncCollections.Contains(syncEventArgs.ID) && syncEventArgs.Successful)
+					{
+						// If the collection is in the initial sync list and the sync finished successfully,
+						// remove it from the list.
+						initialSyncCollections.Remove(syncEventArgs.ID);
+					}
+
 					break;
 				}
 			}
+		}
+
+		private void syncFile(FileSyncEventArgs syncEventArgs)
+		{
+			try
+			{
+				if (syncEventArgs.SizeRemaining == syncEventArgs.SizeToSync)
+				{
+					notifyIcon1.Text = resourceManager.GetString("notifyIcon1.Text") + "\n" + 
+						string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploading" : "downloading") , syncEventArgs.Name);
+				}
+			}
+			catch {}
 		}
 
 		private void createChangeEvent(iFolderWeb ifolder, iFolderUser ifolderUser, string eventData)
@@ -792,19 +815,6 @@ namespace Novell.FormsTrayApp
 
 						// TODO: Change the icon?
 					}
-				}
-			}
-			catch {}
-		}
-
-		private void syncFile(FileSyncEventArgs syncEventArgs)
-		{
-			try
-			{
-				if (syncEventArgs.SizeRemaining == syncEventArgs.SizeToSync)
-				{
-					notifyIcon1.Text = resourceManager.GetString("notifyIcon1.Text") + "\n" + 
-						string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploading" : "downloading") , syncEventArgs.Name);
 				}
 			}
 			catch {}
@@ -954,6 +964,13 @@ namespace Novell.FormsTrayApp
 							{
 								case "Collection":
 								{
+									if (eventArgs.SlaveRev == 0)
+									{
+										// The collection was just created, keep track of it and don't post
+										// any notifications until it has successfully synced.
+										initialSyncCollections.Add(eventArgs.Collection, null);
+									}
+
 									ifolder = ifWebService.GetiFolder(eventArgs.Collection);
 									break;
 								}
@@ -1002,7 +1019,11 @@ namespace Novell.FormsTrayApp
 						
 				if (ifolder != null)
 				{
-					BeginInvoke(createChangeEventDelegate, new object[] {ifolder, ifolderUser, eventArgs.EventData});
+					// Don't post notifications during the initial sync of the collection.
+					if (!initialSyncCollections.Contains(eventArgs.Collection))
+					{
+						BeginInvoke(createChangeEventDelegate, new object[] {ifolder, ifolderUser, eventArgs.EventData});
+					}
 					BeginInvoke(globalProperties.createChangeEventDelegate, new object[] {ifolder, eventArgs.EventData});
 				}
 

@@ -901,10 +901,15 @@ namespace Novell.FormsTrayApp
 
 			if (domain != null)
 			{
-				// If this was the selected domain, select the "show all" domain.
 				if (servers.SelectedItem.Equals(domain))
 				{
+					// If this was the selected domain, select the "show all" domain.
 					servers.SelectedItem = showAllDomain;
+				}
+				else if (((Domain)servers.SelectedItem).ShowAll)
+				{
+					// If the wildcard domain is selected, refresh the list.
+					refreshiFolders((Domain)servers.SelectedItem);
 				}
 
 				servers.Items.Remove(domain);
