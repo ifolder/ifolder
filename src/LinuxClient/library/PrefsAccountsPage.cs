@@ -38,6 +38,7 @@ namespace Novell.iFolder
 	{
 		private Gtk.Window				topLevelWindow;
 		private iFolderWebService		ifws;
+		private SimiasWebService		simws;
 
 		private iFolderTreeView		AccTreeView;
 		private ListStore			AccTreeStore;
@@ -61,6 +62,9 @@ namespace Novell.iFolder
 		private Button		loginButton;
 		private Button		logoutButton;
 
+		private string		curDomainPassword;
+		private string		curDomainID;
+
 		/// <summary>
 		/// Default constructor for iFolderAccountsPage
 		/// </summary>
@@ -70,6 +74,11 @@ namespace Novell.iFolder
 		{
 			this.topLevelWindow = topWindow;
 			this.ifws = webService;
+			this.simws = new SimiasWebService();
+			simws.Url = Simias.Client.Manager.LocalServiceUrl.ToString() +
+					"/Simias.asmx";
+
+
 			InitializeWidgets();
 			this.Realized += new EventHandler(OnRealizeWidget);
 		}
@@ -192,6 +201,9 @@ namespace Novell.iFolder
 
 			passEntry = new Entry();
 			passEntry.Changed += new EventHandler(OnFieldsChanged);
+			passEntry.Activated += new EventHandler(OnPassEntryActivated);
+			passEntry.FocusOutEvent += 
+					new FocusOutEventHandler(OnPassEntryFoucusOut);
 			passEntry.ActivatesDefault = true;
 			passEntry.Visibility = false;
 			loginTable.Attach(passEntry, 1,2,2,3,
@@ -203,18 +215,24 @@ namespace Novell.iFolder
 			savePasswordButton = 
 				new CheckButton(Util.GS(
 					"_Remember password"));
-
 			optBox.PackStart(savePasswordButton, false, false,0);
+			savePasswordButton.Toggled += 
+							new EventHandler(OnSavePasswordToggled);
+
 
 			autoLoginButton = 
 				new CheckButton(Util.GS(
 					"A_uto login"));
 			optBox.PackStart(autoLoginButton, false, false,0);
+			autoLoginButton.Toggled += 
+							new EventHandler(OnAutoLoginToggled);
 
 			defaultAccButton = 
 				new CheckButton(Util.GS(
 					"D_efault account"));
 			optBox.PackStart(defaultAccButton, false, false,0);
+			defaultAccButton.Toggled += 
+							new EventHandler(OnDefAccToggled);
 
 			loginTable.Attach(optBox, 1,2,3,4,
 					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
@@ -365,19 +383,20 @@ namespace Novell.iFolder
 			serverLabel.Sensitive = true; 
 
 			savePasswordButton.Sensitive = true;
-			// add these when functionality is there
-//			autoLoginButton.Sensitive = true;
-//			defaultAccButton.Sensitive = true;
 			autoLoginButton.Sensitive = false;
 			defaultAccButton.Sensitive = false;
+//			autoLoginButton.Sensitive = true;
+//			defaultAccButton.Sensitive = true;
 
-			proxyButton.Sensitive = true;
+			proxyButton.Sensitive = false;
 			loginButton.Sensitive = false; 
 			logoutButton.Sensitive = false;
 
 
 			// set the control values
+			savePasswordButton.Active = false;
 			autoLoginButton.Active = true;
+			defaultAccButton.Active = true;
 
 			nameEntry.Text = "";
 			serverEntry.Text = "";
@@ -526,6 +545,19 @@ namespace Novell.iFolder
 					NewAccountMode = false;
 				}
 			}
+			else
+			{
+				// LAME LAME LAME
+				// This Retarted event is called before the other widget
+				// looses it's focus so we have to deal with it here
+				// This is a hack to save the password
+				if( (curDomainPassword != passEntry.Text) && 
+						(savePasswordButton.Active == true ) )
+				{
+					SavePasswordNow();
+				}
+			}
+
 
 			TreeSelection tSelect = AccTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
@@ -537,40 +569,64 @@ namespace Novell.iFolder
 				DomainWeb dom = 
 						(DomainWeb) tModel.GetValue(iter, 0);
 
+				curDomainID = dom.ID;
+
 				// Set the control states
 				AddButton.Sensitive = true;
 				RemoveButton.Sensitive = false;
 				DetailsButton.Sensitive = false;
 
  				detailsFrame.Sensitive = true;
-				nameEntry.Editable = false;
-				nameEntry.Sensitive = true;
-				nameLabel.Sensitive = false;
-				passEntry.Sensitive = true;
-				passEntry.Editable = false;
-				passLabel.Sensitive = false;
 				serverEntry.Sensitive = true;
 				serverEntry.Editable = false;
 				serverLabel.Sensitive = false;
+				nameEntry.Editable = false;
+				nameEntry.Sensitive = true;
+				nameLabel.Sensitive = false;
+
+				passEntry.Sensitive = true;
+				passEntry.Editable = true;
+				passLabel.Sensitive = true;
 
 				savePasswordButton.Sensitive = true;
-				// add these when functionality is there
 //				autoLoginButton.Sensitive = true;
 //				defaultAccButton.Sensitive = true;
 				autoLoginButton.Sensitive = false;
 				defaultAccButton.Sensitive = false;
 
-				proxyButton.Sensitive = true;
+				proxyButton.Sensitive = false;
 				loginButton.Sensitive = false;
-				logoutButton.Sensitive = true;
-
+				logoutButton.Sensitive = false;
 
 
 				// set the control values
+				try
+				{
+					string userID;
+					string credentials;
+					CredentialType credType = simws.GetSavedDomainCredentials(
+						dom.ID, out userID, out credentials);
+					if( (credentials != null) &&
+						(credType == CredentialType.Basic) )
+					{
+						curDomainPassword = credentials;
+						passEntry.Text = credentials;
+						savePasswordButton.Active = true;
+					}
+					else
+					{
+						throw new Exception("Invalid Creds");
+					}
+				}
+				catch(Exception e)
+				{
+					curDomainPassword = "";
+					passEntry.Text = "";
+					savePasswordButton.Active = false;
+				}
 
 				autoLoginButton.Active = true;
 				defaultAccButton.Active = dom.IsDefault;
-				savePasswordButton.Active = false;
 
 
 				if(dom.UserName != null)
@@ -581,9 +637,6 @@ namespace Novell.iFolder
 					serverEntry.Text = dom.Host;
 				else
 					serverEntry.Text = "";
-
-				passEntry.Text = "";
-
 			}
 		}
 
@@ -654,6 +707,81 @@ namespace Novell.iFolder
 			}
 		}
 
+
+		private void OnSavePasswordToggled(object obj, EventArgs args)
+		{
+			// If we are creating a new account, do nothing
+			// it will be handled at creation time
+			if(	(!NewAccountMode) && (savePasswordButton.HasFocus == true) )
+			{
+				SavePasswordNow();
+			}
+		}
+
+
+		private void OnPassEntryActivated(object o, EventArgs args)
+		{
+			if( (!NewAccountMode) && (curDomainPassword != passEntry.Text) && 
+						(savePasswordButton.Active == true ) )
+			{
+				SavePasswordNow();
+			}
+		}
+
+
+		private void OnPassEntryFoucusOut(object o, FocusOutEventArgs args)
+		{
+			if( (!NewAccountMode) && (curDomainPassword != passEntry.Text) && 
+						(savePasswordButton.Active == true ) )
+			{
+				SavePasswordNow();
+			}
+		}
+
+
+		private void SavePasswordNow()
+		{
+			try
+			{
+				if( (savePasswordButton.Active == true) &&
+						(passEntry.Text.Length > 0) )
+				{
+					simws.SaveDomainCredentials(curDomainID, 
+							passEntry.Text, CredentialType.Basic);
+				}
+				else
+				{
+					simws.SaveDomainCredentials(curDomainID, null,
+							CredentialType.None);
+				}
+				curDomainPassword = passEntry.Text;
+			}
+			catch (Exception ex)
+			{
+				// Ignore this error for now 
+			}
+		}
+
+
+		private void OnAutoLoginToggled(object obj, EventArgs args)
+		{
+			// If we are creating a new account, do nothing
+			// it will be handled at creation time
+			if(!NewAccountMode)
+			{
+
+			}
+		}
+
+		private void OnDefAccToggled(object obj, EventArgs args)
+		{
+			// If we are creating a new account, do nothing
+			// it will be handled at creation time
+			if(!NewAccountMode)
+			{
+
+			}
+		}
 
 	}
 }
