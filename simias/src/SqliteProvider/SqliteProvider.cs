@@ -930,6 +930,9 @@ namespace Simias.Storage.Provider.Sqlite
 				case SearchOp.Less_Equal:
 					op = string.Format("<= '{0}'", safeValue);
 					break;
+				case SearchOp.Exists:
+					op = string.Format("LIKE '%'");
+					break;
 			}
 
 			if (op != null)
