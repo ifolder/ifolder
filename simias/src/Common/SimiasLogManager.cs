@@ -84,15 +84,24 @@ namespace Simias
                 if (!configured)
                 {
 					// process name
-					string name = Assembly.GetEntryAssembly().GetName().Name;
-
+					string name;
+					
+					try
+					{
+						name = Assembly.GetEntryAssembly().GetName().Name;
+					}
+					catch
+					{
+						name = "UnknownProcess";
+					}
+					
 					// config file
 					string configFile = Path.Combine(storePath, name + ConfigFileExtension);
 
 					// bootstrap config
 					if (!File.Exists(configFile))
 					{
-						// look for an exact match for the template or use the default template
+						// look for an exact match for the template or then use the default template
 						string bootStrapFile = null;
 						string bootStrapFile1 = Path.Combine(SimiasSetup.sysconfdir, name + ConfigFileExtension);
 						string bootStrapFile2 = Path.Combine(SimiasSetup.sysconfdir, DefaultConfigFile + ConfigFileExtension);

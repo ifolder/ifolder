@@ -42,7 +42,7 @@ namespace Simias
 		private static readonly string ConfigFileExtension = ".remoting";
 
 		private static readonly string RemotingSection = "Remoting";
-		private static readonly string HostKey = "Public Host";
+		private static readonly string HostKey = "Published Host";
 
 		private static Configuration config = null;
 		private static int port = 0;
@@ -68,7 +68,16 @@ namespace Simias
 					string storePath = config.StorePath;
 
 					// process name
-					string name = Assembly.GetEntryAssembly().GetName().Name;
+					string name;
+					
+					try
+					{
+						name = Assembly.GetEntryAssembly().GetName().Name;
+					}
+					catch
+					{
+						name = "UnknownProcess";
+					}
 
 					// config file
 					string configFile = Path.Combine(storePath, name + ConfigFileExtension);
@@ -103,6 +112,11 @@ namespace Simias
 			}
 		}
 
+		/// <summary>
+		/// Generate a service url for the given end point.
+		/// </summary>
+		/// <param name="endPoint"></param>
+		/// <returns></returns>
 		public static Uri GetServiceUrl(string endPoint)
 		{
 			UriBuilder ub = new UriBuilder(ServiceUri);
@@ -111,35 +125,63 @@ namespace Simias
 			return ub.Uri;
 		}
 
+		/// <summary>
+		/// The host that is published for remote machines to connect
+		/// to the localhost.
+		/// </summary>
 		public static string Host
 		{
-			get 
-			{ 
-				if(config == null)
-					return MyDns.GetHostName();
-				else
-					return Get(HostKey, MyDns.GetHostName()); 
-			}
+			get { return Get(HostKey, MyDns.GetHostName()); }
 			set { Set(HostKey, value); }
 		}
 
+		/// <summary>
+		/// The remoting service uri for remote machines.
+		/// </summary>
 		public static Uri ServiceUri
 		{
 			get { return (new UriBuilder("http", Host, port)).Uri; }
 		}
 
+		/// <summary>
+		/// Get a property from the remoting section of the configuration file.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <param name="defaultValue"></param>
+		/// <returns></returns>
 		private static string Get(string key, string defaultValue)
 		{
-			Debug.Assert(config != null);
+			CheckConfig();
 
 			return config.Get(RemotingSection, key, defaultValue);
 		}
 
+		/// <summary>
+		/// Set a property in the remoting section of the configuration file.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <param name="value"></param>
 		private static void Set(string key, string value)
 		{
-			Debug.Assert(config != null);
+			CheckConfig();
 
 			config.Set(RemotingSection, key, value);
+		}
+
+		/// <summary>
+		/// Check that the Configure() method has been called first.
+		/// </summary>
+		/// <remarks>
+		/// We have to be passed the configuration file to give the
+		/// calling application the chance to place the config file
+		/// in a custom location.
+		///	</remarks>
+		private static void CheckConfig()
+		{
+			if (SimiasRemoting.config == null)
+			{
+				throw new Exception("SimiasRemoting.Configure() must be called first to initialize the SimiasRemoting class.");
+			}
 		}
 	}
 }
