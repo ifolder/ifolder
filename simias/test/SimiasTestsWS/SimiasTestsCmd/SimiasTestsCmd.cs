@@ -27,11 +27,11 @@ namespace SimiasTests
 
 			if (args.Length == 0)
 			{
-				SimiasTests.PrintUsage();
+				Command.PrintUsage();
 				return;
 			}
 
-			char[] separator = {':'};
+			char[] separator = {'='};
 			string[] cmdValue = new string[2];
 
 			for(int i = 0; i < args.Length; i++)
@@ -91,7 +91,7 @@ namespace SimiasTests
 
 			if (command == "")
 			{
-				SimiasTests.PrintUsage();
+				Command.PrintUsage();
 				return;
 			}
 
@@ -101,7 +101,7 @@ namespace SimiasTests
 			}
 			else
 			{
-				SimiasTests.PrintUsage();
+				Command.PrintUsage();
 				return;
 			}
 
@@ -141,7 +141,7 @@ namespace SimiasTests
 				if (verbose == true)
 				{
 					Console.WriteLine("Exercising RemoteAuthentication method");
-					Console.WriteLine("  preauth: " + preAuth.ToString();
+					Console.WriteLine("  preauth: " + preAuth.ToString());
 					Console.WriteLine("  host: " + host);
 					Console.WriteLine("  username: " + username);
 				}
@@ -159,10 +159,10 @@ namespace SimiasTests
 
 		private static void PrintUsage()
 		{
-			Console.WriteLine("usage: SimiasTestCmd --cmd:Command --url:web service url --i:iterations --verbose:true|false");
+			Console.WriteLine("usage: SimiasTestCmd --cmd=<Command> --url=<web service url> --i=<iterations> --verbose=<true|false>");
 			Console.WriteLine("         cmd:<GetArray | Ping | RemoteAuthentication>");
-			Console.WriteLine("         if cmd = GetArray then --size:numbercharstoreturn --walkup:true|false");
-			Console.WriteLine("         if cmd = RemoteAuthentication them --host:name --username:user --password:pwd --preauth:true|false");
+			Console.WriteLine("         if cmd = GetArray then --size=numbercharstoreturn --walkup=true|false");
+			Console.WriteLine("         if cmd = RemoteAuthentication them --host=name --username=user --password=pwd --preauth=true|false");
 		}
 	}
 }
