@@ -24,7 +24,6 @@
 using System;
 using System.Collections;
 using System.Drawing;
-using Novell.AddressBook;
 using Simias.Storage;
 
 using Gtk;
