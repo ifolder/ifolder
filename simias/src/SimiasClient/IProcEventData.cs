@@ -298,12 +298,14 @@ namespace Simias.Client.Event
 		public byte[] ToBuffer()
 		{
 			string msgString = ToString();
-			byte[] msgHeader = BitConverter.GetBytes( msgString.Length );
-			byte[] buffer = new byte[ msgHeader.Length + msgString.Length ];
+			UTF8Encoding utf8 = new UTF8Encoding();
+			int msgLength = utf8.GetByteCount( msgString );
+			byte[] msgHeader = BitConverter.GetBytes( msgLength );
+			byte[] buffer = new byte[ msgHeader.Length + msgLength ];
 
 			// Copy the message length and the message into the buffer.
 			msgHeader.CopyTo( buffer, 0 );
-			new ASCIIEncoding().GetBytes( msgString, 0, msgString.Length, buffer, 4 );
+			utf8.GetBytes( msgString, 0, msgString.Length, buffer, 4 );
 			return buffer;
 		}
 

@@ -403,7 +403,7 @@ namespace Simias.Client.Event
 									if ( bytesToProcess >= msgLength )
 									{
 										// Process the message received from the client. Skip the message length.
-										ProcessMessage( new ASCIIEncoding().GetString( receiveBuffer, msgIndex + 4, msgLength - 4 ) );
+										ProcessMessage( new UTF8Encoding().GetString( receiveBuffer, msgIndex + 4, msgLength - 4 ) );
 										msgIndex += msgLength;
 										bytesToProcess -= msgLength;
 									}
