@@ -48,7 +48,7 @@ using Simias.Security.Web.AuthenticationService;
 namespace Simias.Web
 {
 	[ Serializable ]
-	public class Member
+	public class MemberInfo
 	{
 		public string	ID;
 		public string	Name;
@@ -59,12 +59,12 @@ namespace Simias.Web
 		public int		AccessRights;
 		public bool		IsOwner;
 
-		public Member()
+		public MemberInfo()
 		{
 		}
 
 		//[ NonSerializable ]
-		internal Member( Simias.Storage.Member member )
+		internal MemberInfo( Simias.Storage.Member member )
 		{
 			this.ID = member.ID;
 			this.Name = member.Name;
@@ -76,12 +76,12 @@ namespace Simias.Web
 		}
 	}
 
-	public class ContactComparer : IComparer  
+	internal class ContactComparer : IComparer  
 	{
 		int IComparer.Compare( Object x, Object y )  
 		{
-			Simias.Web.Member memberX = x as Simias.Web.Member;
-			Simias.Web.Member memberY = y as Simias.Web.Member;
+			Simias.Web.MemberInfo memberX = x as Simias.Web.Member;
+			Simias.Web.MemberInfo memberY = y as Simias.Web.Member;
 
 			if ( memberX.FullName != null )
 			{
@@ -130,21 +130,45 @@ namespace Simias.Web
 		/// <param name="PublicKey">The public key for the member.</param>
 		[WebMethod(Description="Add a member to the domain.")]
 		[SoapDocumentMethod]
-		public void AddMemberToDomain(string DomainID, string MemberName, string MemberID, string PublicKey)
+		public void AddMemberToDomain(string DomainID, string MemberName, string MemberID, string PublicKey, string GivenName, string FamilyName)
 		{
-			Domain domain = Store.GetStore().GetDomain(DomainID);
-			Simias.Storage.Member member = domain.GetMemberByName(MemberName);
-			if (member == null)
+			try
 			{
-				member = new Simias.Storage.Member(MemberName, MemberID, Access.Rights.ReadOnly);
-
-				if (PublicKey != null)
+				Domain domain = Store.GetStore().GetDomain( DomainID );
+				Simias.Storage.Member member = domain.GetMemberByName( MemberName );
+				if ( member == null )
 				{
-					member.Properties.AddProperty("PublicKey", PublicKey);
-				}
+					bool given;
+					member = new Simias.Storage.Member( MemberName, MemberID, Access.Rights.ReadOnly );
 
-				domain.Commit( member );
+					if ( PublicKey != null )
+					{
+						member.Properties.AddProperty( "PublicKey", PublicKey );
+					}
+
+					if ( GivenName != null && GivenName != "" )
+					{
+						member.Given = GivenName;
+						given = true;
+					}
+					else
+					{
+						given = false;
+					}
+
+					if ( FamilyName != null && FamilyName != "" )
+					{
+						member.Family = FamilyName;
+						if ( given == true )
+						{
+							member.FN = GivenName + " " + FamilyName;
+						}
+					}
+
+					domain.Commit( member );
+				}
 			}
+			catch{}
 		}
 
 
@@ -174,7 +198,7 @@ namespace Simias.Web
 		/// <param name="SearchString">Search string for finding members</param>
 		[WebMethod(Description="Generic search members in a specified domain.")]
 		[SoapDocumentMethod]
-		public Simias.Web.Member[] SearchMembers( string DomainID, string SearchString )
+		public Simias.Web.MemberInfo[] SearchMembers( string DomainID, string SearchString )
 		{
 			ArrayList members = new ArrayList();
 			Hashtable matches = new Hashtable();
@@ -188,9 +212,9 @@ namespace Simias.Web
 				{
 					if ( sNode.Type.Equals( "Member" ) )
 					{
-						Simias.Storage.Member member = new Simias.Storage.Member( domain, sNode );
+						Simias.Storage.Member member = new Simias.Storage.MemberInfo( domain, sNode );
 						matches.Add( sNode.ID, member );
-						Simias.Web.Member webMember = new Simias.Web.Member( member );
+						Simias.Web.MemberInfo webMember = new Simias.Web.MemberInfo( member );
 						members.Add( webMember );
 					}
 				}	
@@ -203,7 +227,7 @@ namespace Simias.Web
 						if ( matches.Contains( sNode.ID ) == false )
 						{
 							Simias.Storage.Member member = new Simias.Storage.Member( domain, sNode );
-							Simias.Web.Member webMember = new Simias.Web.Member( member );
+							Simias.Web.MemberInfo webMember = new Simias.Web.MemberInfo( member );
 							members.Add( webMember );
 						}
 					}
@@ -213,7 +237,7 @@ namespace Simias.Web
 				members.Sort( 0, members.Count, comparer );
 			}
 
-			return ( Simias.Web.Member[] )( members.ToArray( typeof( Simias.Web.Member ) ) );
+			return ( Simias.Web.MemberInfo[] )( members.ToArray( typeof( Simias.Web.MemberInfo ) ) );
 		}
 
 		/// <summary>
@@ -223,7 +247,7 @@ namespace Simias.Web
 		/// <param name="SearchString">The string to find members against</param>
 		[WebMethod(Description="Search Simias members by their member name in a specified domain.")]
 		[SoapDocumentMethod]
-		public Simias.Web.Member[] SearchMemberName( string DomainID, string SearchString )
+		public Simias.Web.MemberInfo[] SearchMemberName( string DomainID, string SearchString )
 		{
 			ArrayList matches = new ArrayList();
 			ICSList searchList;
@@ -237,13 +261,13 @@ namespace Simias.Web
 					if ( sNode.Type.Equals( "Member" ) )
 					{
 						Simias.Storage.Member member = new Simias.Storage.Member( domain, sNode );
-						Simias.Web.Member webMember = new Simias.Web.Member( member );
+						Simias.Web.MemberInfo webMember = new Simias.Web.MemberInfo( member );
 						matches.Add( webMember );
 					}
 				}
 			}
 
-			return ( Simias.Web.Member[] )( matches.ToArray( typeof( Simias.Web.Member ) ) );
+			return ( Simias.Web.MemberInfo[] )( matches.ToArray( typeof( Simias.Web.MemberInfo ) ) );
 		}
 
 		/// <summary>
@@ -253,7 +277,7 @@ namespace Simias.Web
 		/// <param name="SearchString">The string to find members against</param>
 		[WebMethod(Description="Search Simias members by their full name in a specified domain.")]
 		[SoapDocumentMethod]
-		public Simias.Web.Member[] SearchFullName( string DomainID, string SearchString )
+		public Simias.Web.MemberInfo[] SearchFullName( string DomainID, string SearchString )
 		{
 			ArrayList matches = new ArrayList();
 			ICSList searchList;
@@ -267,13 +291,13 @@ namespace Simias.Web
 					if ( sNode.Type.Equals( "Member" ) )
 					{
 						Simias.Storage.Member member = new Simias.Storage.Member( domain, sNode );
-						Simias.Web.Member webMember = new Simias.Web.Member( member );
+						Simias.Web.MemberInfo webMember = new Simias.Web.MemberInfo( member );
 						matches.Add( webMember );
 					}
 				}
 			}
 
-			return ( Simias.Web.Member[] )( matches.ToArray( typeof( Simias.Web.Member ) ) );
+			return ( Simias.Web.MemberInfo[] )( matches.ToArray( typeof( Simias.Web.MemberInfo ) ) );
 		}
 
 		/// <summary>
