@@ -32,6 +32,8 @@ void cleanup_gsoap(struct soap *pSoap);
 
 NSDictionary *getiFolderProperties(struct ns1__iFolderWeb *ifolder);
 NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user);
+NSDictionary *getDiskSpaceProperties(struct ns1__DiskSpace *ds);
+NSDictionary *getSyncSizeProperties(struct ns1__SyncSize *ss);
 
 
 -(BOOL) Ping
@@ -147,6 +149,7 @@ NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user);
 
 	if(soap.error)
 	{
+	    cleanup_gsoap(&soap);
 		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
 					format:@"Error in GetiFolder"];
 	}
@@ -156,7 +159,10 @@ NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user);
 		curiFolder = getiFolderResponse.GetiFolderResult;
 		
 		if(curiFolder == NULL)
+		{
+		    cleanup_gsoap(&soap);
 			[NSException raise:@"Invalid iFolderID" format:@"Error in GetiFolder"];
+		}
 
 		ifolder = [[[iFolder alloc] init] retain];
 
@@ -424,6 +430,107 @@ NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user);
 
 
 
+-(User *) GetiFolderUser:(NSString *)userID
+{
+	User *user = nil;
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (userID != nil), @"userID was nil");
+
+	struct _ns1__GetiFolderUser			getUserMessage;
+	struct _ns1__GetiFolderUserResponse	getUserResponse;
+
+	getUserMessage.UserID = (char *)[userID cString];
+
+    init_gsoap (&soap);
+
+    err_code = soap_call___ns1__GetiFolderUser(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &getUserMessage,
+            &getUserResponse);
+
+ 	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in GetiFolderUserFromNodeID"];
+	}
+	else
+	{
+		struct ns1__iFolderUser *curUser;
+		curUser = getUserResponse.GetiFolderUserResult;
+
+		if(curUser == NULL)
+		{
+		    cleanup_gsoap(&soap);
+			[NSException raise:@"Invalid User" format:@"Error in GetiFolderUser"];
+		}
+	
+		user = [[User alloc] init];
+		[user setProperties:getiFolderUserProperties(curUser)];			
+    }
+
+    cleanup_gsoap(&soap);
+
+	return user;
+}
+
+
+
+
+-(User *) GetiFolderUserFromNodeID:(NSString *)nodeID inCollection:(NSString *)collectionID
+{
+	User *user = nil;
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (nodeID != nil), @"nodeID was nil");
+	NSAssert( (collectionID != nil), @"collectionID was nil");
+
+	struct _ns1__GetiFolderUserFromNodeID			getUserMessage;
+	struct _ns1__GetiFolderUserFromNodeIDResponse	getUserResponse;
+
+	getUserMessage.CollectionID = (char *)[collectionID cString];
+	getUserMessage.NodeID = (char *)[nodeID cString];
+
+    init_gsoap (&soap);
+
+    err_code = soap_call___ns1__GetiFolderUserFromNodeID(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &getUserMessage,
+            &getUserResponse);
+
+ 	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in GetiFolderUserFromNodeID"];
+	}
+	else
+	{
+		struct ns1__iFolderUser *curUser;
+		curUser = getUserResponse.GetiFolderUserFromNodeIDResult;
+
+		if(curUser == NULL)
+		{
+		    cleanup_gsoap(&soap);
+			[NSException raise:@"Invalid User" format:@"Error in GetiFolderUserFromNodeID"];
+		}
+	
+		user = [[User alloc] init];
+		[user setProperties:getiFolderUserProperties(curUser)];			
+    }
+
+    cleanup_gsoap(&soap);
+
+	return user;
+}
+
+
+
 -(NSArray *) GetiFolderUsers:(NSString *)ifolderID
 {
 	NSMutableArray *users = nil;
@@ -675,6 +782,136 @@ NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user);
 
 
 
+-(DiskSpace *)GetiFolderDiskSpace:(NSString *)ifolderID
+{
+	DiskSpace *ds = nil;
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (ifolderID != nil), @"ifolderID was nil");
+
+	struct _ns1__GetiFolderDiskSpace			getDSMessage;
+	struct _ns1__GetiFolderDiskSpaceResponse	getDSResponse;
+
+	getDSMessage.iFolderID = (char *)[ifolderID cString];
+
+    init_gsoap (&soap);
+
+    err_code = soap_call___ns1__GetiFolderDiskSpace(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &getDSMessage,
+            &getDSResponse);
+
+ 	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in GetiFolderDiskSpace"];
+	}
+	else
+	{
+		struct ns1__DiskSpace *curDS;
+		curDS = getDSResponse.GetiFolderDiskSpaceResult;
+
+		if(curDS == NULL)
+		{
+		    cleanup_gsoap(&soap);
+			[NSException raise:@"Invalid iFolderID" format:@"Error in GetiFolderDiskSpace"];
+		}
+	
+		ds = [[DiskSpace alloc] init];
+		[ds setProperties:getDiskSpaceProperties(curDS)];			
+    }
+
+    cleanup_gsoap(&soap);
+
+	return ds;
+}
+
+
+
+-(void)SetiFolderDiskSpace:(long long)limit oniFolder:(NSString *)ifolderID
+{
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (ifolderID != nil), @"ifolderID was nil");
+
+	struct _ns1__SetiFolderDiskSpaceLimit			setDSMessage;
+	struct _ns1__SetiFolderDiskSpaceLimitResponse	setDSResponse;
+
+	setDSMessage.Limit = limit;
+	setDSMessage.iFolderID = (char *)[ifolderID cString];
+
+    init_gsoap (&soap);
+
+    err_code = soap_call___ns1__SetiFolderDiskSpaceLimit(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &setDSMessage,
+            &setDSResponse);
+
+ 	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in SetiFolderDiskSpace"];
+	}
+
+    cleanup_gsoap(&soap);
+}
+
+
+
+-(SyncSize *)CalculateSyncSize:(NSString *)ifolderID
+{
+	SyncSize *ss = nil;
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (ifolderID != nil), @"ifolderID was nil");
+
+	struct _ns1__CalculateSyncSize			getSSMessage;
+	struct _ns1__CalculateSyncSizeResponse	getSSResponse;
+
+	getSSMessage.iFolderID = (char *)[ifolderID cString];
+
+    init_gsoap (&soap);
+
+    err_code = soap_call___ns1__CalculateSyncSize(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &getSSMessage,
+            &getSSResponse);
+
+ 	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in CalculateSyncSize"];
+	}
+	else
+	{
+		struct ns1__SyncSize *curSS;
+		curSS = getSSResponse.CalculateSyncSizeResult;
+
+		if(curSS == NULL)
+		{
+		    cleanup_gsoap(&soap);
+			[NSException raise:@"Invalid iFolderID" format:@"Error in CalculateSyncSize"];
+		}
+	
+		ss = [[SyncSize alloc] init];
+		[ss setProperties:getSyncSizeProperties(curSS)];			
+    }
+
+    cleanup_gsoap(&soap);
+
+	return ss;
+}
+
+
 
 void init_gsoap(struct soap *pSoap)
 {
@@ -737,9 +974,12 @@ NSDictionary *getiFolderProperties(struct ns1__iFolderWeb *ifolder)
 	if(ifolder->LastSyncTime != nil)
 		[newProperties setObject:[NSString stringWithCString:ifolder->LastSyncTime] forKey:@"LastSyncTime"];
 
-	[newProperties setObject:[NSNumber numberWithInt:ifolder->EffectiveSyncInterval] forKey:@"EffectiveSyncInterval"];
+	if(ifolder->Role != nil)
+		[newProperties setObject:[NSString stringWithCString:ifolder->Role] forKey:@"Role"];
 
-	[newProperties setObject:[NSNumber numberWithInt:ifolder->SyncInterval] forKey:@"SyncInterval"];
+	[newProperties setObject:[NSNumber numberWithLong:ifolder->EffectiveSyncInterval] forKey:@"EffectiveSyncInterval"];
+
+	[newProperties setObject:[NSNumber numberWithLong:ifolder->SyncInterval] forKey:@"SyncInterval"];
 
 	[newProperties setObject:[NSNumber numberWithBool:ifolder->IsSubscription] forKey:@"IsSubscription"];
 
@@ -781,6 +1021,32 @@ NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user)
 	return newProperties;
 }
 
+
+
+
+
+NSDictionary *getDiskSpaceProperties(struct ns1__DiskSpace *ds)
+{
+	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
+
+	[newProperties setObject:[NSNumber numberWithLongLong:ds->AvailableSpace] forKey:@"AvailableSpace"];
+	[newProperties setObject:[NSNumber numberWithLongLong:ds->Limit] forKey:@"Limit"];
+	[newProperties setObject:[NSNumber numberWithLongLong:ds->UsedSpace] forKey:@"UsedSpace"];
+	
+	return newProperties;
+}
+
+
+
+NSDictionary *getSyncSizeProperties(struct ns1__SyncSize *ss)
+{
+	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
+
+	[newProperties setObject:[NSNumber numberWithUnsignedLong:ss->SyncNodeCount] forKey:@"SyncNodeCount"];
+	[newProperties setObject:[NSNumber numberWithUnsignedLongLong:ss->SyncByteCount] forKey:@"SyncByteCount"];
+	
+	return newProperties;
+}
 
 
 @end

@@ -28,6 +28,8 @@
 #include <Carbon/Carbon.h>
 #import "iFolder.h"
 #import "User.h"
+#import "DiskSpace.h"
+#import "SyncSize.h"
 
 
 @interface iFolderService : NSObject
@@ -46,12 +48,18 @@
 -(void) DeleteiFolder:(NSString *)iFolderID;
 -(void) SynciFolderNow:(NSString *)iFolderID;
 
+-(User *) GetiFolderUserFromNodeID:(NSString *)nodeID inCollection:(NSString *)collectionID;
+-(User *) GetiFolderUser:(NSString *)userID;
 -(NSArray *) GetiFolderUsers:(NSString *)ifolderID;
 -(NSArray *) GetDomainUsers:(NSString *)domainID withLimit:(int)numUsers;
 -(NSArray *) SearchDomainUsers:(NSString *)domainID withString:(NSString *)searchString;
 
 -(User *) InviteUser:(NSString *)userID toiFolder:(NSString *)ifolderID withRights:(NSString *)rights;
 -(void) RemoveUser:(NSString *)userID fromiFolder:(NSString *)ifolderID;
+
+-(DiskSpace *)GetiFolderDiskSpace:(NSString *)ifolderID;
+-(void)SetiFolderDiskSpace:(long long)limit oniFolder:(NSString *)ifolderID;
+-(SyncSize *)CalculateSyncSize:(NSString *)ifolderID;
 
 
 

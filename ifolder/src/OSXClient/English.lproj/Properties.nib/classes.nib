@@ -1,6 +1,29 @@
 {
     IBClasses = (
         {
+            ACTIONS = {enableLimitToggled = id; syncNow = id; updateLimitValue = id; }; 
+            CLASS = PropGeneralController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                availableSpace = NSTextField; 
+                currentSpace = NSTextField; 
+                enableLimit = NSButton; 
+                filesToSync = NSTextField; 
+                hasConflicts = NSTextField; 
+                hasConflictsImage = NSImageView; 
+                ifolderName = NSTextField; 
+                lastSync = NSTextField; 
+                limitSpace = NSTextField; 
+                limitSpaceUnits = NSTextField; 
+                ownerName = NSTextField; 
+                propertiesWindow = NSWindow; 
+                syncInterval = NSTextField; 
+                syncIntervalLabel = NSTextField; 
+                syncNow = NSButton; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
             ACTIONS = {
                 addSelectedUsers = id; 
                 refreshWindow = id; 
@@ -24,9 +47,10 @@
             CLASS = PropertiesWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                generalController = PropGeneralController; 
                 generalItem = NSTabViewItem; 
-                propSharingController = PropSharingController; 
                 searchDrawer = NSDrawer; 
+                sharingController = PropSharingController; 
                 sharingItem = NSTabViewItem; 
                 tabView = NSTabView; 
             }; 

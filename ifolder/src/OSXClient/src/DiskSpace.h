@@ -21,30 +21,27 @@
  * 
  ***********************************************************************/
 
-
 #import <Cocoa/Cocoa.h>
 
-@class PropSharingController;
-@class PropGeneralController;
-
-@interface PropertiesWindowController : NSWindowController
+/*
+struct ns1__DiskSpace
 {
-	IBOutlet PropSharingController	*sharingController;
-	IBOutlet PropGeneralController	*generalController;
-	IBOutlet NSDrawer				*searchDrawer;
-	IBOutlet NSTabView				*tabView;
-	IBOutlet NSTabViewItem			*generalItem;
-	IBOutlet NSTabViewItem			*sharingItem;
+	LONG64 AvailableSpace;
+	LONG64 Limit;
+	LONG64 UsedSpace;
+};
+*/
 
-	int		initalTab;
+@interface DiskSpace : NSObject
+{
+	NSMutableDictionary * properties;
 }
-+ (PropertiesWindowController *)sharedInstance;
-- (void)windowWillClose:(NSNotification *)aNotification;
-- (void)awakeFromNib;
 
-- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem;
-- (void)windowWillClose:(NSNotification *)aNotification;
-- (void)setSharingTab;
-- (void)setGeneralTab;
+-(NSMutableDictionary *) properties;
+-(void) setProperties: (NSDictionary *)newProperties;
+
+-(long long) AvailableSpace;
+-(long long) Limit;
+-(long long) UsedSpace;
 
 @end

@@ -112,6 +112,16 @@
 		return NO;
 }
 
+-(BOOL)HasConflicts
+{
+	NSNumber *num = [properties objectForKey:@"HasConflicts"];
+	if(num != nil)
+		return [num boolValue];
+	else
+		return NO;
+}
+
+
 -(NSString *)DomainID
 {
 	return [properties objectForKey:@"DomainID"];
@@ -121,6 +131,12 @@
 {
 	return [properties objectForKey:@"OwnerID"];
 }
+
+-(NSString *)OwnerName
+{
+	return [properties objectForKey:@"Owner"];
+}
+
 -(NSString *)CurrentUserID
 {
 	return [properties objectForKey:@"CurrentUserID"];
@@ -136,6 +152,25 @@
 	return [properties objectForKey:@"State"];
 }
 
+-(NSString *)LastSync
+{
+	return [properties objectForKey:@"LastSyncTime"];
+}
+
+-(NSString *)Role
+{
+	return [properties objectForKey:@"Role"];
+}
+
+-(long)SyncInterval
+{
+	return [ [properties objectForKey:@"SyncInterval"] longValue];
+}
+
+-(long)EffectiveSyncInterval
+{
+	return [ [properties objectForKey:@"EffectiveSyncInterval"] longValue];
+}
 
 
 

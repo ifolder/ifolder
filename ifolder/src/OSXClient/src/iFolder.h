@@ -60,15 +60,21 @@
 -(void) setIsSynchronizing:(BOOL)isSynchronizing;
 
 -(BOOL)IsSubscription;
+-(BOOL)HasConflicts;
 -(NSString *)Name;
 -(NSString *)ID;
 -(NSString *)CollectionID;
 -(NSString *)Path;
 -(NSString *)DomainID;
 -(NSString *)OwnerUserID;
+-(NSString *)OwnerName;
 -(NSString *)CurrentUserID;
 -(NSString *)CurrentUserRights;
 -(NSString *)State;
+-(NSString *)LastSync;
+-(NSString *)Role;
+-(long)SyncInterval;
+-(long)EffectiveSyncInterval;
 
 -(void) updateDisplayInformation;
 
