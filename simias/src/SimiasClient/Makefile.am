@@ -21,7 +21,15 @@ endif
 
 all: SimiasClient.dll
 
-SimiasClient.dll: $(SimiasClient_CSFILES) $(SimiasClient_RESOURCES) $(srcdir)/SimiasSetup.cs
+$(srcdir)/SimiasService.cs: $(srcdir)/../WebService/Simias.wsdl
+if WINDOWS
+	wsdl $(srcdir)/../WebService/Simias.wsdl
+endif
+if LINUX
+	wsdl -nologo -out:SimiasService.cs $(srcdir)/../WebService/Simias.wsdl
+endif
+
+SimiasClient.dll: $(SimiasClient_CSFILES) $(SimiasClient_RESOURCES) $(srcdir)/SimiasSetup.cs $(srcdir)/SimiasService.cs
 	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasClient_FLAGS) $(SIMIAS_LIBS) $(SimiasClient_LIBS:%=/r:%) $(SimiasClient_LIBPATH:%=/lib:%) $(SimiasClient_RESOURCES:%=$(ICON_FLAG)%) $(SimiasClient_CSFILES) $(DOC_FILE_CMD) 
 
 if DEBUG
@@ -41,7 +49,7 @@ uninstall-local:
 	
 installcheck-local: install
 	
-CLEAN_FILES = SimiasClient.dll $(DOC_FILE_CLEAN)
+CLEAN_FILES = SimiasClient.dll $(DOC_FILE_CLEAN) $(srcdir)/SimiasService.cs
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
