@@ -48,6 +48,8 @@
 #define WEB_SERVICE_TRUE_STRING		"true"
 #define WEB_SERVICE_FALSE_STRING	"false"
 
+#define MAX_PENDING_LISTENS			5
+
 /**
  * Structures to represent 1-level-deep XML
  */
@@ -131,12 +133,10 @@ static void * sec_thread (void *user_data);
 static void * sec_reg_thread (void *user_data);
 static void sec_wait_for_file_change (char *file_path);
 static void sec_config_file_changed_callback (void *user_data);
-static void sec_shutdown (SimiasEventClient *ec, 
-										  const char *err_msg);
-static void sec_report_error (SimiasEventClient *ec, 
-											  const char *err_msg);
-static int sec_send_message (SimiasEventClient *ec, 
-											 char * message, int len);
+static void sec_shutdown (SimiasEventClient *ec, const char *err_msg);
+static void sec_report_error (SimiasEventClient *ec, const char *err_msg);
+static int sec_send_message (SimiasEventClient *ec, int s, 
+							 char * message, int len);
 static int sec_get_server_host_address (SimiasEventClient *ec,
 										struct sockaddr_in *sin);
 static char * sec_get_config_file_path (char *dest_path);
@@ -164,6 +164,7 @@ sec_init (SimiasEventClient *ec, void *error_handler)
 		perror ("simias-event-client: socket");
 		return -1;
 	}
+	
 	ec->state = CLIENT_STATE_INITIALIZING;
 	
 	/* Save the error handling information. */
@@ -267,16 +268,68 @@ sec_set_event (SimiasEventClient *ec, IPROC_EVENT_ACTION action, void **handler)
 static void *
 sec_thread (void *user_data)
 {
-	/* FIXME: Implement sec_thread */
 	SimiasEventClient *ec = (SimiasEventClient *)user_data;
+	int new_s, sin_size, len;
+	char my_host_name [512];
+	struct hostent *hp;
+	char err_msg [2048];
+	char buf [256];
 	
+	if (gethostname (my_host_name, sizeof (my_host_name)) != 0) {
+		perror ("simias-event-client (server): gethostname");
+		sprintf (my_host_name, "127.0.0.1");
+	}
+	
+	hp = gethostbyname (my_host_name);
+	if (!hp) {
+		perror ("simias-event-client (server): gethostbyname");
+		sprintf (err_msg, "gethostbyname (\"%s\") failed in sec_thread ()", 
+																my_host_name);
+		sec_shutdown (ec, err_msg);
+		return NULL;
+	}
+
+	ec->local_sin.sin_family = AF_INET;
+	bcopy (hp->h_addr, (char *)&(ec->local_sin.sin_addr), hp->h_length);
+	ec->local_sin.sin_port = 0;	/* Use any unused port at random */
+	
+	if (bind (ec->event_socket,
+			  (struct sockaddr *)&(ec->local_sin),
+			  sizeof (ec->local_sin)) != 0) {
+		perror ("simias-event-client (server): bind");
+		sprintf (err_msg, "bind () failed in sec_thread ()");
+		sec_shutdown (ec, err_msg);
+		return NULL;
+	}
+	
+	if (listen (ec->event_socket, MAX_PENDING_LISTENS) != 0) {
+		perror ("simias-event-client (server): listen");
+		sprintf (err_msg, "listen () failed in sec_thread ()");
+		sec_shutdown (ec, err_msg);
+		return NULL;
+	}
+
+	ec->state = CLIENT_STATE_RUNNING;
+	
+	sin_size = sizeof (struct sockaddr_in);
+
 	while (ec->state != CLIENT_STATE_SHUTDOWN)
 	{
-		/* See if there are any sync events to process */
+		new_s = accept (ec->event_socket, 
+						(struct sockaddr *)&(ec->local_sin), 
+						&sin_size);
+		if (new_s < 0) {
+			perror ("simias-event-client (server): accept");
+			sprintf (err_msg, "accept () failed in sec_thread ()");
+			sec_shutdown (ec, err_msg);
+			return NULL;
+		}
 		
-		/* See if there are any node events to process */
-		
-		/* See if there are any messages left to process */
+		while (len = recv (new_s, buf, sizeof (buf), 0)) {
+			fputs (buf, stdout);
+		}
+				
+		close (new_s);
 	}
 }
 
@@ -285,9 +338,47 @@ sec_reg_thread (void *user_data)
 {
 	/* FIXME: Implement sec_reg_thread */
 	SimiasEventClient *ec = (SimiasEventClient *)user_data;
+	int s;
 	struct sockaddr_in sin;
+	struct sockaddr_in my_sin;
+	int my_sin_addr_len;
 	char reg_msg [4096];
+	char ip_addr [128];
 	int b_connected = 0;
+	char addr_str [32];
+	char port_str [32];
+
+	/**
+	 * Wait until the event client thread is running before continuing.  If we
+	 * don't wait, we will not be able to know what port the client is listening
+	 * on for messages back from the server.
+	 */
+	while (ec->state != CLIENT_STATE_RUNNING) {
+		if (ec->state == CLIENT_STATE_SHUTDOWN) {
+			return NULL;
+		}
+
+		/* FIXME: Use something else besides a sleep () here */
+		sleep (1);
+	}
+	
+	my_sin_addr_len = sizeof (struct sockaddr_in);
+	if (getsockname (ec->event_socket, 
+					 (struct sockaddr *)&my_sin, 
+					 &my_sin_addr_len) != 0) {
+		perror ("simias-event-client: getsockname");
+		return NULL;
+	}
+	
+	sprintf (addr_str, "%s", inet_ntoa (my_sin.sin_addr));
+	sprintf (port_str, "%d", my_sin.sin_port);
+	fprintf (stderr, "Client listening on %s:%s\n", addr_str, port_str);
+	
+	/* Initialize a socket to talk with the server */
+	if ((s = socket (PF_INET, SOCK_STREAM, 0)) < 0) {
+		perror ("simias-event-client: registration socket");
+		return NULL;
+	}
 	
 	/* Stay in this loop until we connect */
 	while (!b_connected && (ec->state != CLIENT_STATE_SHUTDOWN)) {
@@ -297,13 +388,12 @@ sec_reg_thread (void *user_data)
 		
 		if (ec->state == CLIENT_STATE_SHUTDOWN) {
 			/* FIXME: Figure out what to do here */
+			close (s);
 			return;
 		}
 		
 		/* Connect to the server */
-		if (connect (ec->event_socket,
-				  (struct sockaddr *)&sin,
-				  sizeof (sin)) == 0) {
+		if (connect (s, (struct sockaddr *)&sin, sizeof (sin)) == 0) {
 			b_connected = 1;
 			/* FIXME: Figure out how to get the local sockaddr_in */
 			
@@ -312,15 +402,15 @@ sec_reg_thread (void *user_data)
 				"<%s %s=\"%s\" %s=\"%s\">%s</%s>",
 				REGISTRATION_TOP_ELEMENT_NAME,
 				REGISTRATION_HOST_ATTR_NAME,
-				"FIXME: this should be the client host",
+				addr_str,
 				REGISTRATION_PORT_ATTR_NAME,
-				"FIXME: this should be the client port",
+				port_str,
 				WEB_SERVICE_TRUE_STRING,
 				REGISTRATION_TOP_ELEMENT_NAME);
 			reg_msg [strlen (reg_msg) + 1] = '\0';
 			
 			/* Send registration message */
-			if (sec_send_message (ec, reg_msg, strlen (reg_msg) + 1) <= 0) {
+			if (sec_send_message (ec, s, reg_msg, strlen (reg_msg) + 1) <= 0) {
 				/* FIXME: Handle error...no data sent */
 				perror ("simias-event-client send registration message");
 			}
@@ -329,6 +419,8 @@ sec_reg_thread (void *user_data)
 			perror ("simias-event-client connect");
 		}
 	}
+
+	close (s);
 }
 
 static void
@@ -354,8 +446,8 @@ sec_shutdown (SimiasEventClient *ec, const char *err_msg)
 			/* FIXME: Signal a shutdown */
 		}
 		
-		/* Close the socket if it is connected */
-		if (ec->event_socket) {
+		/* Close the socket if it is still open */
+		if (ec->event_socket >= 0) {
 			close (ec->event_socket);
 		}
 	}
@@ -382,18 +474,35 @@ sec_report_error (SimiasEventClient *ec, const char *err_msg)
  * Returns the number of bytes that were sent or -1 if there were errors.
  */
 static int
-sec_send_message (SimiasEventClient *ec, char * message, int len)
+sec_send_message (SimiasEventClient *ec, int s, char * message, int len)
 {
-	ssize_t sent_length;
+	int sent_length;
+	int msg_length;
 	char err_msg [2048];
+	char *real_message;
 	
-	sent_length = send (ec->event_socket, message, len, 0);
+	msg_length = strlen (message);
+	
+	real_message = malloc ((sizeof (char) * msg_length + 1));
+	if (!real_message) {
+		fprintf (stderr, "Out of memory\n");
+		return 0;
+	}
+	
+	real_message [0] = msg_length;
+	sprintf (real_message + 1, "%s", message);
+	
+	sent_length = send (s, real_message, len, 0);
+	
+	free (real_message);
 	
 	if (sent_length == -1) {
 		sprintf (err_msg,
 				 "Failed to send message to server.  Socket error: %s",
 				 strerror (errno));
 		sec_shutdown (ec, err_msg);
+	} else {
+		printf ("Just sent %d bytes to the server\n", sent_length);
 	}
 	
 	return (int) sent_length;
