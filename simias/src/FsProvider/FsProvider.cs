@@ -104,7 +104,7 @@ namespace Simias.Storage.Provider.Fs
 	public class FsProvider : MarshalByRefObject, IProvider
 	{
 		#region Variables
-		Configuration			conf;
+		ProviderConfig			conf;
 		bool					AlreadyDisposed;
 		FsDb					FsDb;
 		string					DbPath;
@@ -117,8 +117,8 @@ namespace Simias.Storage.Provider.Fs
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="path">The path where the store exists or will be created.</param>
-		public FsProvider(Configuration conf)
+		/// <param name="conf">The configuration object used to configure this instance.</param>
+		public FsProvider(ProviderConfig conf)
 		{
 			this.conf = conf;
 			storePath = System.IO.Path.GetFullPath(conf.Path);
@@ -139,13 +139,14 @@ namespace Simias.Storage.Provider.Fs
 		class Transaction
 		{
 			Mutex	mutex;
-			string	path;
+			public string	path;
 			string	addPath;
 			string	delPath;
+			bool	deleteContainer = false;
 
-			internal Transaction(string collectionPath)
+			internal Transaction(string dbPath, string container)
 			{
-				path = collectionPath;
+				path = Path.Combine(dbPath, container);
 				addPath = Path.Combine(path, "add");
 				delPath = Path.Combine(path, "del");
 				mutex = new Mutex(false, "mutex_" + Path.GetFileName(path));
@@ -154,6 +155,10 @@ namespace Simias.Storage.Provider.Fs
 			internal void Begin()
 			{
 				mutex.WaitOne();
+				if (!Directory.Exists(path))
+				{
+					Directory.CreateDirectory(path);
+				}
 				if (!Directory.Exists(addPath))
 				{
 					Directory.CreateDirectory(addPath);
@@ -164,26 +169,46 @@ namespace Simias.Storage.Provider.Fs
 				}
 			}
 
+			internal void BeginRead()
+			{
+				mutex.WaitOne();
+			}
+
+			internal void EndRead()
+			{
+				mutex.ReleaseMutex();
+			}
+
 			internal void Commit()
 			{
 				try
 				{
-					// Commit the deletes.
-					Directory.Delete(delPath, true);
-
-					// Commit the Adds.
-					string [] files = Directory.GetFiles(addPath);
-
-					foreach (string f in files)
+					if (deleteContainer)
 					{
-						string filePath = Path.Combine(path, Path.GetFileName(f));
-						if (File.Exists(filePath))
-						{
-							File.Delete(filePath);
-						}
-						File.Move(f, filePath);
+						Directory.Delete(path, true);
 					}
-					Directory.Delete(addPath, true);
+					else
+					{
+						// Commit the deletes.
+						if (Directory.Exists(delPath))
+						{
+							Directory.Delete(delPath, true);
+						}
+
+						// Commit the Adds.
+						string [] files = Directory.GetFiles(addPath);
+
+						foreach (string f in files)
+						{
+							string filePath = Path.Combine(path, Path.GetFileName(f));
+							if (File.Exists(filePath))
+							{
+								File.Delete(filePath);
+							}
+							File.Move(f, filePath);
+						}
+						Directory.Delete(addPath, true);
+					}
 				}
 				catch
 				{
@@ -195,6 +220,7 @@ namespace Simias.Storage.Provider.Fs
 			{
 				try
 				{
+					deleteContainer = false;
 					// Abort the Adds.
 					Directory.Delete(addPath, true);
 
@@ -236,6 +262,11 @@ namespace Simias.Storage.Provider.Fs
 					File.Move(filePath, Path.Combine(delPath, file));
 				}
 			}
+
+			internal void DeleteContainer()
+			{
+				deleteContainer = true;
+			}
 		}
 		#endregion
 
@@ -250,43 +281,51 @@ namespace Simias.Storage.Provider.Fs
 		/// Method Used to create a store Object.
 		/// </summary>
 		/// <param name="doc">XML document that describes the Objects</param>
-		/// <param name="collectionId">The id of the collection containing these objects.</param>
-		private void CreateObject(XmlDocument doc, string collectionId)
+		/// <param name="trans">The transaction object for this create.</param>
+		private void CreateRecords(XmlDocument doc, Transaction trans)
 		{
 			XmlElement root = doc.DocumentElement;
 			XmlNodeList objectList = root.SelectNodes(XmlTags.ObjectTag);
 
 			// Build the path to the collection and make sure it exists.
-			string collectionPath = DbPath;
-			collectionPath = Path.Combine(DbPath, collectionId);
-
-			Transaction trans = new Transaction(collectionPath);
-			
-			trans.Begin();
-			try
+			if (!Directory.Exists(trans.path))
 			{
-				foreach (XmlElement recordEl in objectList)
-				{
-					// Get the Name, ID, and type.
-					string name = recordEl.GetAttribute(XmlTags.NameAttr);
-					string id = recordEl.GetAttribute(XmlTags.IdAttr);
-					string type = recordEl.GetAttribute(XmlTags.TypeAttr);
+				Directory.CreateDirectory(trans.path);
+			}
+
+			foreach (XmlElement recordEl in objectList)
+			{
+				// Get the Name, ID, and type.
+				string name = recordEl.GetAttribute(XmlTags.NameAttr);
+				string id = recordEl.GetAttribute(XmlTags.IdAttr);
+				string type = recordEl.GetAttribute(XmlTags.TypeAttr);
 		
-					// Make sure this is a valid record.
-					if (name != null && id != null && type != null)
-					{
-						trans.addObject(id, recordEl);
-					}
+				// Make sure this is a valid record.
+				if (name != null && id != null && type != null)
+				{
+					trans.addObject(id, recordEl);
 				}
 			}
-			catch
-			{
-				trans.Abort();
-				throw;
-			}
-
-			trans.Commit();
 		}
+
+		/// <summary>
+		/// Called to delete 1 or more Records.
+		/// </summary>
+		/// <param name="doc">Xml string describing Records to delete.</param>
+		/// <param name="trans">The transaction object for this delete.</param>
+		private void DeleteRecords(XmlDocument doc, Transaction trans)
+		{
+			XmlElement root = doc.DocumentElement;
+			XmlNodeList objectList = root.SelectNodes(XmlTags.ObjectTag);
+			
+			foreach (XmlElement recordEl in objectList)
+			{
+				// Get ID.
+				string id = recordEl.GetAttribute(XmlTags.IdAttr);
+				trans.removeObject(id);
+			}
+		}
+
 
 		private void Dispose(bool inFinalize)
 		{
@@ -365,25 +404,31 @@ namespace Simias.Storage.Provider.Fs
 		
 		#endregion
 
-		#region Collection Calls.
+		#region Container Calls.
+		
 		/// <summary>
-		/// Called to create or modify a collection.
+		/// Called to create a container to hold records.  This call does not need to
+		/// be made.  If a record is created and the container does not exist. it will be created.
 		/// </summary>
-		/// <param name="collectionId">The Id of the collection to create.</param>
-		public void CreateCollection(string collectionId)
+		/// <param name="name">The name of the container.</param>
+		public void CreateContainer(string name)
 		{
-			string collectionPath = Path.Combine(DbPath, collectionId);
-			Directory.CreateDirectory(collectionPath);
+			Transaction trans = new Transaction(DbPath, name);
+			trans.Begin();
+            trans.Commit();
 		}
 
 		/// <summary>
-		/// Called to delete an existing collection.
+		/// Called to Delete a record container.  
+		/// This call is deep (all records contained are deleted).
 		/// </summary>
-		/// <param name="collectionId">The ID of the collection to delete.</param>
-		public void DeleteCollection(string collectionId)
+		/// <param name="name">The name of the container.</param>
+		public void DeleteContainer(string name)
 		{
-			string collectionPath = Path.Combine(DbPath, collectionId);
-			Directory.Delete(collectionPath, true);
+			Transaction trans = new Transaction(DbPath, name);
+			trans.Begin();
+			trans.DeleteContainer();
+			trans.Commit();
 		}
 	
 	#endregion
@@ -391,36 +436,25 @@ namespace Simias.Storage.Provider.Fs
 		#region Record Calls.
 
 		/// <summary>
-		/// Called to create or modify 1 or more Records
+		/// Used to Create, Modify or Delete records from the store.
 		/// </summary>
-		/// <param name="recordXml">Xml string that describes the new/modified Records.</param>
-		/// <param name="collectionId">The id of the collection containing these objects.</param>
-		public void CreateRecord(string recordXml, string collectionId)
+		/// <param name="container">The container to commit changes to.</param>
+		/// <param name="createDoc">The records to create or modify.</param>
+		/// <param name="deleteDoc">The records to delete.</param>
+		public void CommitRecords(string container, XmlDocument createDoc, XmlDocument deleteDoc)
 		{
-			if (recordXml != null)
-			{
-				XmlDocument doc = new XmlDocument();
-				doc.LoadXml(recordXml);
-				CreateObject(doc, collectionId);
-			}
-		}
-
-
-		/// <summary>
-		/// Called to delete a Record.  The record is specified by it ID.
-		/// </summary>
-		/// <param name="recordId">string that contains the ID of the Object to delete</param>
-		/// <param name="collectionId">The id of the collection that contains this object</param>
-		public void DeleteRecord(string recordId, string collectionId)
-		{
-			string collectionPath = Path.Combine(DbPath, collectionId);
-			string recordPath = Path.Combine(collectionPath, recordId);
-			
-			Transaction trans = new Transaction(collectionPath);
+			Transaction trans = new Transaction(DbPath, container);
 			trans.Begin();
 			try
 			{
-				File.Delete(recordPath);
+				if (createDoc != null)
+				{
+					CreateRecords(createDoc, trans);
+				}
+				if (deleteDoc != null)
+				{
+					DeleteRecords(deleteDoc, trans);
+				}
 			}
 			catch 
 			{
@@ -430,75 +464,33 @@ namespace Simias.Storage.Provider.Fs
 
 			trans.Commit();
 		}
-
-		/// <summary>
-		/// Called to delete 1 or more Records.
-		/// </summary>
-		/// <param name="recordXml">Xml string describing Records to delete.</param>
-		/// <param name="collectionId">The id of the collection that contains these objects.</param>
-		public void DeleteRecords(string recordXml, string collectionId)
-		{
-			string collectionPath = Path.Combine(DbPath, collectionId);
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml(recordXml);
-			XmlElement root = doc.DocumentElement;
-			XmlNodeList objectList = root.SelectNodes(XmlTags.ObjectTag);
-			Transaction trans = new Transaction(collectionPath);
-			trans.Begin();
-			try
-			{
-				foreach (XmlElement recordEl in objectList)
-				{
-					// Get ID.
-					string id = recordEl.GetAttribute(XmlTags.IdAttr);
-					string objectPath = Path.Combine(collectionPath, id);
-					trans.removeObject(id);
-				}
-			}
-			catch //(System.Exception ex)
-			{
-				trans.Abort();
-				throw; // (ex);
-			}
-
-			trans.Commit();
-		}
-
+		
 		/// <summary>
 		/// Called to ge a Record.  The record is returned as an XML string representation.  
 		/// </summary>
 		/// <param name="recordId">string that contains the ID of the Record to retrieve</param>
-		/// <param name="collectionId">The id of the collection that contains this Record.</param>
+		/// <param name="container">The conaiter to get the record from.</param>
 		/// <returns>XML string describing the Record</returns>
-		public string GetRecord(string recordId, string collectionId)
+		public XmlDocument GetRecord(string recordId, string container)
 		{
-			string recordPath = Path.Combine(DbPath, collectionId);
-			string recordXml = null;
+			string recordPath = Path.Combine(DbPath, container);
 			recordPath = Path.Combine(recordPath, recordId);
 			XmlDocument doc = new XmlDocument();
 			XmlElement rootElement = doc.CreateElement(XmlTags.ObjectListTag);
 			doc.AppendChild(rootElement);
 
+			XmlTextReader xmlReader = new XmlTextReader(recordPath);
 			try
 			{
-				XmlTextReader xmlReader = new XmlTextReader(recordPath);
-				try
-				{
-					xmlReader.Read();
-					rootElement.InnerXml = xmlReader.ReadOuterXml();
-					recordXml = doc.DocumentElement.OuterXml;
-				}
-				finally
-				{
-					xmlReader.Close();
-				}
+				xmlReader.Read();
+				rootElement.InnerXml = xmlReader.ReadOuterXml();
 			}
-			catch
+			finally
 			{
-				return null;
+				xmlReader.Close();
 			}
-
-			return (recordXml);
+			
+			return (doc);
 		}
 
 

@@ -1,4 +1,4 @@
-Storage_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/Syntax.cs $(srcdir)/XmlTags.cs $(srcdir)/BaseSchema.cs
+Storage_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/Syntax.cs $(srcdir)/XmlTags.cs $(srcdir)/BaseSchema.cs $(srcdir)/Search.cs
 Storage_CSFILES_CSC := $(subst /,$(SEP),$(Storage_CSFILES))
 Storage_INCLUDES = 
 Storage_RESOURCES =
