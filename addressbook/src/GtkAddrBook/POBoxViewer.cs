@@ -89,6 +89,14 @@ namespace Novell.AddressBook.UI.gtk
 				foreach(ShallowNode sNode in poList)
 				{
 					Subscription sub = new Subscription(pobox, sNode);
+					// Filter out subscriptions that we own.
+					if (sub.SubscriptionState == SubscriptionStates.Ready)
+					{
+						if (store.GetCollectionByID(sub.SubscriptionCollectionID) != null)
+						{
+							continue;
+						}
+					}
 					SubTreeStore.AppendValues(sub);
 				}
 			}
@@ -194,7 +202,8 @@ namespace Novell.AddressBook.UI.gtk
 				curSub = sub;
 
 				if( (sub.SubscriptionState == SubscriptionStates.Pending) ||
-					(sub.SubscriptionState == SubscriptionStates.Received) )
+					(sub.SubscriptionState == SubscriptionStates.Received) ||
+					(sub.SubscriptionState == SubscriptionStates.Ready) )
 				{
 					AcceptItem.Sensitive = true;
 					DeclineItem.Sensitive = true;
@@ -235,6 +244,22 @@ namespace Novell.AddressBook.UI.gtk
 				{
 					InvitationAssistant ia = new InvitationAssistant(curSub);
 					ia.ShowAll();
+				}
+				else if(curSub.SubscriptionState == SubscriptionStates.Ready)
+				{
+					FileSelection fs = new FileSelection ("Choose a directory");
+					fs.FileList.Parent.Hide();
+					fs.SelectionEntry.Hide();
+					fs.FileopDelFile.Hide();
+					fs.FileopRenFile.Hide();
+					int rc = fs.Run ();
+					fs.Hide ();
+					if(rc == -5)
+					{
+						curSub.CollectionRoot = fs.Filename;
+						pobox.Commit(curSub);
+						curSub.CreateSlave(store);
+					}
 				}
 			}
 		}
