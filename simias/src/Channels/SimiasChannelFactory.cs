@@ -117,9 +117,9 @@ namespace Simias.Channels
 			if (server)
 			{
 				props.Add("port", uri.Port);
-				//props.Add("useIpAddress", true);
-				
-				//props.Add("bindTo", uri.Host);
+				props.Add("useIpAddress", true);
+				props.Add("bindTo", uri.Host);
+				log.Debug("Remoting Channel bound to: {0}", uri.Host);
 			}
 			
 			// client properties
