@@ -27,6 +27,7 @@ using System.Web;
 using System.Xml;
 
 using Simias;
+using Simias.Client;
 using Simias.Storage;
 using Simias.Sync;
 using PostOffice = Simias.POBox;
@@ -253,6 +254,13 @@ namespace Simias.Domain
 	{
 		#region Class Members
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(DomainAgent));
+	
+		/// <summary>
+		/// Service type for this service.
+		/// </summary>
+		private static string DomainServiceType = "Domain Service";
+		private static string DomainServicePath = "/simias10/DomainService.asmx";
+
 		private Store store = Store.GetStore();
 		private DomainConfig domainConfiguration;
 		#endregion
@@ -293,12 +301,22 @@ namespace Simias.Domain
 		/// <param name="password">Password to validate user.</param>
 		public void Attach(string host, string user, string password)
 		{
-			// Set the url to where the enterprise server is.
-			Uri uhost = new Uri( host );
+			// Get a URL to our service.
+			Uri domainServiceUrl = WSInspection.GetServiceUrl( host, DomainServiceType );
+			if ( domainServiceUrl == null )
+			{
+				// There was a failure in obtaining the service url. Try a hard coded one.
+				domainServiceUrl = new Uri( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host + DomainServicePath );
+			}
+
+			// Get just the path portion of the URL.
+			string hostString = domainServiceUrl.ToString();
+			int startIndex = hostString.LastIndexOf( "/" );
+			Uri hostUri = new Uri( hostString.Remove( startIndex, hostString.Length - startIndex ) );
 
 			// Create the domain service web client object.
 			DomainService domainService = new DomainService();
-			domainService.Url = host + "/DomainService.asmx";
+			domainService.Url = domainServiceUrl.ToString();
 
 			// provision user
 			ProvisionInfo provisionInfo = domainService.ProvisionUser(user, password);
@@ -323,20 +341,20 @@ namespace Simias.Domain
 				if (store.GetCollectionByID(domainInfo.RosterID) == null)
 				{
 					// create roster proxy
-					CreateRosterProxy(store, domain, provisionInfo.UserID, domainInfo, uhost);
+					CreateRosterProxy(store, domain, provisionInfo.UserID, domainInfo, hostUri );
 					log.Debug("Creating Roster Proxy: {0}", domainInfo.RosterName);
 				}
 
 				if (store.GetCollectionByID(provisionInfo.POBoxID) == null)
 				{
 					// create PO Box proxy
-					CreatePOBoxProxy(store, domainInfo.ID, provisionInfo, uhost);
+					CreatePOBoxProxy(store, domainInfo.ID, provisionInfo, hostUri );
 					log.Debug("Creating PO Box Proxy: {0}", provisionInfo.POBoxName);
 				}
 
 				// Set the host and port number in the configuration file.
 				domainConfiguration = new DomainConfig(domainInfo.Name);
-				domainConfiguration.SetAttributes(domain.ID, domain.Description, uhost, true);
+				domainConfiguration.SetAttributes(domain.ID, domain.Description, hostUri, true);
 			}
 			catch(Exception e)
 			{
