@@ -485,18 +485,18 @@ namespace Novell.FormsTrayApp
 
 		private void serverInfo_EnterpriseConnect(object sender, DomainConnectEventArgs e)
 		{
-			globalProperties.AddDomainToList(e.DomainWeb);
+			globalProperties.AddDomainToList(e.DomainInfo);
 		}
 
 
 		private void preferences_EnterpriseConnect(object sender, DomainConnectEventArgs e)
 		{
-			globalProperties.AddDomainToList(e.DomainWeb);
+			globalProperties.AddDomainToList(e.DomainInfo);
 		}
 
 		private void preferences_RemoveDomain(object sender, DomainRemoveEventArgs e)
 		{
-			globalProperties.RemoveDomainFromList(e.DomainWeb, e.DefaultDomainID);
+			globalProperties.RemoveDomainFromList(e.DomainInfo, e.DefaultDomainID);
 		}
 
 		private void preferences_ShutdownTrayApp(object sender, EventArgs e)
@@ -506,7 +506,7 @@ namespace Novell.FormsTrayApp
 
 		private void preferences_UpdateDomain(object sender, DomainConnectEventArgs e)
 		{
-			globalProperties.UpdateDomain(e.DomainWeb);
+			globalProperties.UpdateDomain(e.DomainInfo);
 		}
 
 		private void syncAnimateTimer_Tick(object sender, System.EventArgs e)

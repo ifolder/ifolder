@@ -31,17 +31,17 @@ namespace Novell.iFolderCom
 	/// </summary>
 	public class Domain
 	{
-		private DomainInformation domainWeb;
+		private DomainInformation domainInfo;
 		private string name;
 		private bool showAll = false;
 
 		/// <summary>
 		/// Constructs a Domain object.
 		/// </summary>
-		/// <param name="domainWeb">The web service domain object to base this domain object on.</param>
-		public Domain(DomainInformation domainWeb)
+		/// <param name="domainInfo">The web service DomainInformation object to base this domain object on.</param>
+		public Domain(DomainInformation domainInfo)
 		{
-			this.domainWeb = domainWeb;
+			this.domainInfo = domainInfo;
 		}
 
 		/// <summary>
@@ -58,10 +58,10 @@ namespace Novell.iFolderCom
 		/// <summary>
 		/// Gets the web service domain object.
 		/// </summary>
-		public DomainInformation DomainWeb
+		public DomainInformation DomainInfo
 		{
-			get { return domainWeb; }
-			set { domainWeb = value; }
+			get { return domainInfo; }
+			set { domainInfo = value; }
 		}
 
 		/// <summary>
@@ -71,7 +71,7 @@ namespace Novell.iFolderCom
 		{
 			get 
 			{
-				return showAll ? name : domainWeb.Name;
+				return showAll ? name : domainInfo.Name;
 			}
 			set { name = value; }
 		}
@@ -86,7 +86,7 @@ namespace Novell.iFolderCom
 				if (showAll)
 					return name;
 				else
-					return domainWeb.ID;
+					return domainInfo.ID;
 			}
 		}
 
@@ -108,7 +108,7 @@ namespace Novell.iFolderCom
 			if (showAll)
 				return name;
 			else
-				return domainWeb.Name;
+				return domainInfo.Name;
 		}
 	}
 }

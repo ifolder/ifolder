@@ -362,12 +362,12 @@ namespace Novell.iFolderCom
 					simiasWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
 
 					DomainInformation[] domains = simiasWebService.GetDomains(false);//ifWebService.GetDomains();
-					foreach (DomainInformation domainWeb in domains)
+					foreach (DomainInformation domainInfo in domains)
 					{
-						Domain domain = new Domain(domainWeb);
+						Domain domain = new Domain(domainInfo);
 						servers.Items.Add(domain);
 
-						if ((selectedDomain == null) && domain.DomainWeb.IsDefault)
+						if ((selectedDomain == null) && domain.DomainInfo.IsDefault)
 						{
 							selectedDomain = domain;
 						}
@@ -436,7 +436,7 @@ namespace Novell.iFolderCom
 						Domain domain = (Domain)servers.SelectedItem;
 
 						// Create the iFolder.
-						iFolderWeb ifolder = ifWebService.CreateiFolderInDomain(ifolderPath.Text, domain.DomainWeb.ID);
+						iFolderWeb ifolder = ifWebService.CreateiFolderInDomain(ifolderPath.Text, domain.DomainInfo.ID);
 
 						// Notify the shell.
 						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolderPath.Text, IntPtr.Zero);

@@ -596,12 +596,12 @@ namespace Novell.FormsTrayApp
 		private void servers_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
 			Domain selectedDomain = (Domain)servers.SelectedItem;
-			enterpriseDescription.Text = selectedDomain.DomainWeb.Description;
+			enterpriseDescription.Text = selectedDomain.DomainInfo.Description;
 
 			try
 			{
 				// Get the disk space.
-				DiskSpace diskSpace = ifWebService.GetUserDiskSpace(selectedDomain.DomainWeb.MemberUserID);
+				DiskSpace diskSpace = ifWebService.GetUserDiskSpace(selectedDomain.DomainInfo.MemberUserID);
 				double used = 0;
 				if (diskSpace.UsedSpace != 0)
 				{
