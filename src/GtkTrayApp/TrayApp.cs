@@ -32,6 +32,7 @@ using System.Threading;
 
 using Gtk;
 using Gdk;
+using Gnome;
 using Glade;
 using GtkSharp;
 using GLib;
@@ -67,7 +68,10 @@ namespace Novell.iFolder
 
 		public static void Main (string[] args)
 		{
-			Application.Init();
+			Gnome.Program program =
+				new Program("iFolder", "0.10.0", Modules.UI, args);
+			
+//			Application.Init();
 
 			serviceState = ServiceStates.stopped;
 			TrayMutex = new Mutex();
@@ -112,7 +116,8 @@ namespace Novell.iFolder
 
 				servicesThread.Start();
 
-				Application.Run();
+				program.Run();
+//				Application.Run();
 			}
 			catch(Exception bigException)
 			{
@@ -243,14 +248,29 @@ namespace Novell.iFolder
 			trayMenu.Append (AddrBook_item);
 			AddrBook_item.Activated += new EventHandler(show_AddrBook);
 
-			MenuItem tracewin_item = new MenuItem ("Show Trace Window");
-			trayMenu.Append (tracewin_item);
-			tracewin_item.Activated += new EventHandler(show_tracewin);
+//			MenuItem tracewin_item = new MenuItem ("Show Trace Window");
+//			trayMenu.Append (tracewin_item);
+//			tracewin_item.Activated += new EventHandler(show_tracewin);
+
+			trayMenu.Append(new SeparatorMenuItem());
+
+			MenuItem about_item = new MenuItem ("About...");
+			trayMenu.Append (about_item);
+			about_item.Activated += 
+					new EventHandler(show_about);
+
+			MenuItem help_item = new MenuItem ("Help");
+			trayMenu.Append (help_item);
+			help_item.Activated += 
+					new EventHandler(show_help);
+
+			trayMenu.Append(new SeparatorMenuItem());
 
 			MenuItem properties_item = new MenuItem ("Properties");
 			trayMenu.Append (properties_item);
 			properties_item.Activated += 
 					new EventHandler(show_properties);
+
 			trayMenu.Append(new SeparatorMenuItem());
 
 			MenuItem quit_item = new MenuItem ("Exit");
@@ -285,6 +305,17 @@ namespace Novell.iFolder
 
 				stopThread.Start();
 			}
+		}
+
+
+		static void show_help(object o, EventArgs args)
+		{
+			Util.ShowHelp("front.html", null);
+		}
+
+		static void show_about(object o, EventArgs args)
+		{
+			Util.ShowAbout();
 		}
 
 		static void show_properties(object o, EventArgs args)

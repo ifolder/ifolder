@@ -157,7 +157,26 @@ namespace Novell.iFolder
 					if(propNoteBook.NPages >= activeTag)
 						propNoteBook.CurrentPage = activeTag;
 
-					rc = PropDialog.Run();
+					while(rc == 0)
+					{
+						rc = PropDialog.Run();
+						if(rc == -11) // help
+						{
+							rc = 0;
+							switch(propNoteBook.CurrentPage)
+							{
+								case 1:
+									Util.ShowHelp("bq6lwlu.html", null);
+									break;
+								case 2:
+									Util.ShowHelp("bq6lwlj.html", null);
+									break;
+								default:
+									Util.ShowHelp("front.html", null);
+									break;
+							}
+						}
+					}
 
 					PropDialog.Hide();
 					PropDialog.Destroy();
