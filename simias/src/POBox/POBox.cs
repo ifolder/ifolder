@@ -200,7 +200,7 @@ namespace Simias.POBox
 				Roster roster = storeObject.GetRoster( storeObject.DefaultDomain );
 				Member current = roster.GetMemberByID(userId);
 
-				Member member = new Member(current.Name, current.UserID, Access.Rights.Admin);
+				Member member = new Member(current.Name, current.UserID, Access.Rights.ReadWrite);
 				member.IsOwner = true;
 
 				poBox.Commit(new Node[] { poBox, member });
