@@ -264,15 +264,27 @@ internal class SyncOps
 
 		if (whackFile)
 		{
-			//TODO: another place to handle multiple forks
-			BaseFileNode bfn = CastToBaseFileNode(collection, node);
-			if (bfn != null)
-				File.Delete(bfn.GetFullPath(collection));
+			// If this is a collision node then delete the collision file.
+			if (collection.HasCollisions(node))
+			{
+				Conflict conflict = new Conflict(collection, node);
+				if (conflict.IsFileNameConflict)
+				{
+					File.Delete(conflict.FileNameConflictPath);
+				}
+			}
 			else
 			{
-				DirNode dn = CastToDirNode(collection, node);
-				if (dn != null)
-					Directory.Delete(dn.GetFullPath(collection), true);
+				//TODO: another place to handle multiple forks
+				BaseFileNode bfn = CastToBaseFileNode(collection, node);
+				if (bfn != null)
+					File.Delete(bfn.GetFullPath(collection));
+				else
+				{
+					DirNode dn = CastToDirNode(collection, node);
+					if (dn != null)
+						Directory.Delete(dn.GetFullPath(collection), true);
+				}
 			}
 		}
 

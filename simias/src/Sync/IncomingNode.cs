@@ -328,6 +328,7 @@ internal class IncomingNode
 
 			if (collection.IsType(node, typeof(BaseFileNode).Name))
 			{
+				fileNameConflict = false;
 				BaseFileNode bfn = (BaseFileNode)node;
 				// TODO make sure that the parent dir is always created first.
 				string fPath = bfn.GetFullPath(collection);
