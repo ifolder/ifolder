@@ -1,5 +1,5 @@
 # handle Mono secondary dependencies
-export MONO_PATH := $(MONO_PATH)
+export MONO_PATH := $(MONO_PATH):$(DESTDIR)$(libdir)
 
 POBoxTests_CSFILES = $(srcdir)/POBoxTests.cs $(srcdir)/AssemblyInfo.cs
 POBoxTests_CSFILES_CSC := $(subst /,$(SEP),$(POBoxTests_CSFILES))
@@ -27,15 +27,12 @@ endif
 endif
 
 install-exec-local: all
-	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(libdir)
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 
 uninstall-local:
 
 installcheck-local: install
-if LINUX	
-	export MONO_PATH := $(MONO_PATH):$(DESTDIR)$(libdir):$(NUNIT_LIBPATH)
-endif        
 	cd $(DESTDIR)$(bindir); $(NUNIT) $(NUNIT_FLAGS) /xml:POBoxTests.test.xml $(NUNIT_TESTS)
 	
 .PHONY: test

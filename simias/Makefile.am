@@ -33,7 +33,7 @@ maintainer-clean-local:
 	rm -rf autom4te.cache
 
 .PHONY: test
-test:
+test: install
 	$(MAKE) -C test test
 		
 test-clean:
