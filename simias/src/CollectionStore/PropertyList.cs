@@ -40,7 +40,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// The node that this PropertyList belongs to.
 		/// </summary>
-		private readonly Node node;
+		private Node node;
 
 		/// <summary>
 		/// DOM document containing the property list for this node.
@@ -71,14 +71,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets the connection associated with this property list. 
-		/// </summary>
-		internal Collection CollectionNode
-		{
-			get { return node.CollectionNode; }
-		}
-
-		/// <summary>
 		/// Gets the count of hidden properties in the list.
 		/// </summary>
 		private int HiddenCount
@@ -86,7 +78,7 @@ namespace Simias.Storage
 			get
 			{
 				// Get the list of xml property nodes that have a flags attribute.
-				MultiValuedList mvl = new MultiValuedList( propertyRoot, Property.Hidden );
+				MultiValuedList mvl = new MultiValuedList( this, Property.Hidden );
 				return mvl.Count;
 			}
 		}
@@ -105,6 +97,14 @@ namespace Simias.Storage
 		internal XmlElement PropertyRoot
 		{
 			get { return propertyRoot; }
+		}
+
+		/// <summary>
+		/// Gets the node associated with this property list.
+		/// </summary>
+		internal Node PropertyNode
+		{
+			get { return node; }
 		}
 		#endregion
 
@@ -157,6 +157,11 @@ namespace Simias.Storage
 			{
 				property.XmlProperty = ( XmlElement )nodeDocument.ImportNode( property.XmlProperty, true );
 				property.XmlPropertyList = this;
+				property.SaveMergeInformation( node, Property.Operation.Add, null, null, false, 0 );
+			}
+			else
+			{
+				property.SaveMergeInformation( node, Property.Operation.Modify, null, null, false, 0 );
 			}
 
 			propertyRoot.AppendChild( property.XmlProperty );
@@ -331,6 +336,16 @@ namespace Simias.Storage
 		internal void AddNodeProperty( string name, TimeSpan propertyValue )
 		{
 			AddNodeProperty( new Property( name, propertyValue ) );
+		}
+
+		/// <summary>
+		/// Copies the contents of the specified property list to this property list.
+		/// </summary>
+		/// <param name="propertyList">Source property list.</param>
+		internal void Copy( PropertyList propertyList )
+		{
+			this.nodeDocument = propertyList.nodeDocument;
+			this.propertyRoot = propertyList.propertyRoot;
 		}
 
 		/// <summary>

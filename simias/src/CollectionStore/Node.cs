@@ -69,6 +69,11 @@ namespace Simias.Storage
 		/// Reference to node data. 
 		/// </summary>
 		internal protected CacheNode cNode = null;
+
+		/// <summary>
+		/// The new cache node object that resulted from a merge in a multi-node commit.
+		/// </summary>
+		internal protected CacheNode mergedCachedNode = null;
 		#endregion
 
 		#region Properties
@@ -473,6 +478,7 @@ namespace Simias.Storage
 
 			// Remove the current properties on the node.
 			cNode.properties = new PropertyList( this );
+			cNode.mergeList.Clear();
 
 			// Create some default properties.
 			Properties.AddNodeProperty( Property.CreationTime, DateTime.UtcNow );
@@ -573,31 +579,8 @@ namespace Simias.Storage
 		{
 			if ( !IsTombstone )
 			{
-				ulong incarnationValue = LocalIncarnation;
-
-				// Always get the incarnation number from the database if the node exists.  If the node does not already
-				// exist, the incarnation number will start at zero, regardless of its current value in the in-memory node.
-				string xmlString = CollectionNode.StorageProvider.GetRecord( Id, CollectionNode.Id );
-				if ( xmlString != null )
-				{
-					XmlDocument xmlNode = new XmlDocument();
-					xmlNode.LoadXml( xmlString );
-
-					Node tempNode = new Node( CollectionNode, xmlNode.DocumentElement[ Property.ObjectTag ], true, false, false );
-					if ( !tempNode.IsTombstone )
-					{
-						// Make sure the node is not stale.
-						if ( tempNode.LocalIncarnation > LocalIncarnation )
-						{
-							// This node is stale compared to the one that is currently in the database.
-							throw new ApplicationException( "The node data is stale." );
-						}
-
-						incarnationValue = tempNode.LocalIncarnation;
-					}
-				}
-
 				// Increment the property value.
+				ulong incarnationValue = LocalIncarnation;
 				Properties.ModifyNodeProperty( Property.LocalIncarnation, ++incarnationValue );
 				return incarnationValue;
 			}
@@ -605,6 +588,63 @@ namespace Simias.Storage
 			{
 				return UInt64.MaxValue;
 			}
+		}
+
+		/// <summary>
+		/// Merges all property changes on the current node with the current object in the database.
+		/// 
+		/// Note: The database lock must be acquired before making this call.
+		/// </summary>
+		/// <returns>A node that contains the current object from the database with all of the property
+		/// changes of the current node.</returns>
+		internal Node MergeNodeProperties()
+		{
+			Node mergedNode = null;
+
+			// Get the current node from the database.
+			string xmlString = CollectionNode.StorageProvider.GetRecord( Id, CollectionNode.Id );
+			if ( xmlString != null )
+			{
+				XmlDocument xmlNode = new XmlDocument();
+				xmlNode.LoadXml( xmlString );
+
+				// Build the right kind of node.
+				if ( IsCollection )
+				{
+					mergedNode = new Collection( CollectionNode.LocalStore, xmlNode.DocumentElement[ Property.ObjectTag ], false );
+				}
+				else
+				{
+					mergedNode = new Node( CollectionNode, xmlNode.DocumentElement[ Property.ObjectTag ], true, false, false );
+				}
+
+				// If this node is not a tombstone and the merged node is, then the node has been deleted and delete wins.
+				if ( !IsTombstone && mergedNode.IsTombstone )
+				{
+					mergedNode = null;
+				}
+				else if ( IsTombstone && !mergedNode.IsTombstone )
+				{
+					// If this node is a tombstone and the merged node is not, then delete wins again and the merged node
+					// will be turned into a tombstone.
+					mergedNode = this;
+				}
+				else
+				{
+					// If this node is a tombstone and the merged node is a tombstone, then merge the changes or
+					// if this node is not a tombstone and the merged node is not a tombstone, merge the changes.
+					// Walk the merge list and perform the changes specified there to the mergedNode.
+					foreach ( Property p in cNode.mergeList )
+					{
+						p.ApplyMergeInformation( mergedNode );
+					}
+				}
+			}
+
+			// Clear the mergeList.
+			cNode.mergeList.Clear();
+
+			return mergedNode;
 		}
 
 		/// <summary>
@@ -701,6 +741,7 @@ namespace Simias.Storage
 				XmlDocument nodeDoc = new XmlDocument();
 				nodeDoc.LoadXml( xmlNode );
 				cNode.properties = new PropertyList( this, nodeDoc.DocumentElement[ Property.ObjectTag ] );
+				cNode.mergeList.Clear();
 
 				// If this node is a collection object, the owner needs to be set since this is the first
 				// time that the properties have been asked for.
@@ -789,35 +830,44 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Commits all changes in the node to persistent storage.
+		/// Commits all changes in the node to persistent storage. After a node has been committed, it
+		/// will be updated to reflect any new changes that occurred if it had to be merged with the current
+		/// node in the database.
 		/// </summary>
 		public void Commit()
 		{
+			Node commitNode = null;
+
 			// Make sure that current user has write rights to this collection.
 			if ( !CollectionNode.IsAccessAllowed( Access.Rights.ReadWrite ) )
 			{
 				throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
 			}
 
-			// Set the modify time for this node.
-			Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
-
 			try
 			{
 				// Acquire the store mutex.
 				CollectionNode.LocalStore.LockStore();
 
-				// Increment the local incarnation number on the local node .
-				IncrementLocalIncarnation();
-
-				// If this is a new collection, create it.
-				if ( !IsPersisted && IsCollection )
+				// If this node has not been persisted, no need to do a merge.
+				commitNode = IsPersisted ? MergeNodeProperties() : this;
+				if ( commitNode != null )
 				{
-					CollectionNode.StorageProvider.CreateCollection( Id );
-				}
+					// Set the modify time for this node.
+					commitNode.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
 
-				// Call the store provider to update the records.
-				CollectionNode.StorageProvider.CreateRecord( Properties.PropertyDocument.OuterXml, CollectionNode.Id );
+					// Increment the local incarnation number on the local node .
+					commitNode.IncrementLocalIncarnation();
+
+					// If this is a new collection, create it.
+					if ( !commitNode.IsPersisted && commitNode.IsCollection )
+					{
+						CollectionNode.StorageProvider.CreateCollection( Id );
+					}
+
+					// Call the store provider to update the records.
+					CollectionNode.StorageProvider.CreateRecord( commitNode.Properties.PropertyDocument.OuterXml, CollectionNode.Id );
+				}
 			}
 			finally
 			{
@@ -825,35 +875,43 @@ namespace Simias.Storage
 				CollectionNode.LocalStore.UnlockStore();
 			}
 
-
 			// Remove this node from the collection's dirty list.  Don't add any new properties
 			// after this or it will go back onto the dirty list.
 			CollectionNode.RemoveDirtyNodeFromList( this );
 
-			// Fire an event for this commit action.
-			Store store = CollectionNode.LocalStore;
-			if ( IsPersisted )
+			// Make sure that the node was written to the database.
+			if ( commitNode != null )
 			{
-				store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, store.DomainName, NameSpaceType, NodeEventArgs.EventType.Changed, store.Instance ) );
-			}
-			else
-			{
-				store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, store.DomainName, NameSpaceType, NodeEventArgs.EventType.Created, store.Instance ) );
-			}
+				// Fire an event for this commit action.
+				Store store = CollectionNode.LocalStore;
+				if ( IsPersisted )
+				{
+					// Update this node to reflect the latest changes.
+					cNode.Copy( commitNode.cNode );
 
-			// This node has been successfully committed to the database.
-			IsPersisted = true;
+					// Fire an event to notify that this node has been changed.
+					store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, store.DomainName, NameSpaceType, NodeEventArgs.EventType.Changed, store.Instance ) );
+				}
+				else
+				{
+					// Fire an event to notify that this node has been created.
+					store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, store.DomainName, NameSpaceType, NodeEventArgs.EventType.Created, store.Instance ) );
 
-			if ( IsCollection )
-			{
-				// Update the access control list.
-				CollectionNode.UpdateAccessControl();
-			}
-			else
-			{
-				// Need to update the incarnation number on the collection.  Can do this just by committing
-				// the collection object.
-				CollectionNode.Commit();
+					// This node has been successfully committed to the database.
+					IsPersisted = true;
+				}
+
+				if ( IsCollection )
+				{
+					// Update the access control list.
+					CollectionNode.UpdateAccessControl();
+				}
+				else
+				{
+					// Need to update the incarnation number on the collection.  Can do this just by committing
+					// the collection object.
+					CollectionNode.Commit();
+				}
 			}
 		}
 
@@ -1118,7 +1176,7 @@ namespace Simias.Storage
 							switch ( prefix )
 							{
 								case CollectionType:
-									node = new Collection( CollectionNode.LocalStore, element );
+									node = new Collection( CollectionNode.LocalStore, element, true );
 									break;
 
 								case NodeType:

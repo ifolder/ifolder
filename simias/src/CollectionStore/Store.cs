@@ -33,6 +33,7 @@ using System.Security.Cryptography.Xml;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
+
 using Simias;
 using Simias.Event;
 using Persist = Simias.Storage.Provider;
@@ -64,11 +65,6 @@ namespace Simias.Storage
 		/// Tag used to sign serialized collection nodes.
 		/// </summary>
 		private const string collectionSignature = "Novell Serialized Collection";
-
-		/// <summary>
-		/// Name of the cross process mutex that serializes access at commit time.
-		/// </summary>
-		private const string storeMutexName = "4bf1ab83-1e06-4c64-8831-5f1b9b53f14f";
 
 		/// <summary>
 		/// Specifies whether object is viable.
@@ -113,7 +109,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Mutex used to serialize access to the database during a commit.
 		/// </summary>
-		private Mutex storeMutex = new Mutex( false, storeMutexName );
+		private Mutex storeMutex;
 
 		/// <summary>
 		/// Table used to lookup nodes as singleton objects.
@@ -335,6 +331,9 @@ namespace Simias.Storage
 				throw new ApplicationException( "Local address book does not exist." );
 			}
 
+			// TODO: Remove this when Russ gets the database lock in.
+			storeMutex= new Mutex( false, localAb.Name );
+
 			// Look up to see if the current user has an identity.
 			Identity identity = localAb.GetSingleIdentityByName( Environment.UserName );
 			if ( identity == null )
@@ -432,6 +431,9 @@ namespace Simias.Storage
 
 			// Create the local address book.
 			LocalAddressBook localAb = new LocalAddressBook( this, domainName, ownerGuid );
+
+			// TODO: Remove this when Russ gets the database lock in.
+			storeMutex= new Mutex( false, localAb.Name );
 
 			// Create an identity that represents the current user.  This user will become the database owner.
 			Identity identity = new Identity( localAb, Environment.UserName, ownerGuid );
@@ -540,7 +542,7 @@ namespace Simias.Storage
 			if ( oldNode != null )
 			{
 				// Get the local properties.
-				MultiValuedList localProps = new MultiValuedList( oldNode.Properties.PropertyRoot, Property.Local );
+				MultiValuedList localProps = new MultiValuedList( oldNode.Properties, Property.Local );
 				foreach ( Property p in localProps )
 				{
 					xmlNode.AppendChild( xmlNode.OwnerDocument.ImportNode( p.XmlProperty, true ) );
@@ -555,7 +557,7 @@ namespace Simias.Storage
 					if ( newEntryNode != null )
 					{
 						// See if there are any local properties.
-						localProps = new MultiValuedList( fse.Properties.PropertyRoot, Property.Local );
+						localProps = new MultiValuedList( fse.Properties, Property.Local );
 						foreach ( Property p in localProps )
 						{
 							newEntryNode.AppendChild( newEntryNode.OwnerDocument.ImportNode( p.XmlProperty, true ) );
@@ -567,7 +569,7 @@ namespace Simias.Storage
 			// Create a new node or collection from the updated document.
 			if ( isCollection )
 			{
-				return new Collection( this, xmlNode );
+				return new Collection( this, xmlNode, true );
 			}
 			else
 			{
@@ -679,16 +681,13 @@ namespace Simias.Storage
 		/// <returns>A cache node object if one exists, otherwise a null.</returns>
 		internal CacheNode GetCacheNode( string key )
 		{
-			lock ( this )
+			CacheNode cNode = ( CacheNode )cacheNodeTable[ key ];
+			if ( cNode != null )
 			{
-				CacheNode cNode = ( CacheNode )cacheNodeTable[ key ];
-				if ( cNode != null )
-				{
-					Interlocked.Increment( ref cNode.referenceCount );
-				}
-
-				return cNode;
+				++cNode.referenceCount;
 			}
+
+			return cNode;
 		}
 
 		/// <summary>
@@ -699,19 +698,14 @@ namespace Simias.Storage
 		/// <param name="force">If true, object is removed from table regardless of the reference count.</param>
 		internal void RemoveCacheNode( string key, CacheNode cNode, bool force )
 		{
-/*
 			if ( !disposed )
 			{
-				lock ( this )
+				CacheNode cTempNode = ( CacheNode )cacheNodeTable[ key ];
+				if ( ( cTempNode != null ) && cTempNode.Equals( cNode ) && ( force || ( --cTempNode.referenceCount == 0 ) ) )
 				{
-					CacheNode cTempNode = ( CacheNode )cacheNodeTable[ key ];
-					if ( ( cTempNode != null ) && cTempNode.Equals( cNode ) && ( force || ( Interlocked.Decrement( ref cTempNode.referenceCount ) == 0 ) ) )
-					{
-						cacheNodeTable.Remove( key );
-					}
+					cacheNodeTable.Remove( key );
 				}
 			}
-*/			
 		}
 
 		/// <summary>
@@ -723,24 +717,19 @@ namespace Simias.Storage
 		/// object is added to the table and returned.</returns>
 		internal CacheNode SetCacheNode( string key, CacheNode cNode )
 		{
-			lock ( this )
+			CacheNode cTempNode = ( CacheNode )cacheNodeTable[ key ];
+			if ( cTempNode == null )
 			{
-/*
-				CacheNode cTempNode = ( CacheNode )cacheNodeTable[ key ];
-				if ( cTempNode == null )
-				{
-					cacheNodeTable.Add( key, cNode );
-				}
-				else
-				{
-					// There is already an entry in the table.
-					cNode = cTempNode;
-				}
-
-				Interlocked.Increment( ref cNode.referenceCount );
-*/				
-				return cNode;
+				cacheNodeTable.Add( key, cNode );
 			}
+			else
+			{
+				// There is already an entry in the table.
+				cNode = cTempNode;
+			}
+
+			++cNode.referenceCount;
+			return cNode;
 		}
 
 		/// <summary>
@@ -1043,7 +1032,7 @@ namespace Simias.Storage
 					collectionDoc.LoadXml( xmlCollection );
 
 					// Create a new collection from the DOM.
-					collection = new Collection( this, collectionDoc.DocumentElement[ Property.ObjectTag ] );
+					collection = new Collection( this, collectionDoc.DocumentElement[ Property.ObjectTag ], true );
 				}
 			}
 			else

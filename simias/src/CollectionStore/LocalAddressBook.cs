@@ -50,7 +50,7 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="store">Local store object.</param>
 		/// <param name="bookName">Name of the address book.</param>
-		/// <param name="owner">Owner guid of this collection.</param>
+		/// <param name="ownerGuid">Owner guid of this collection.</param>
 		internal LocalAddressBook( Store store, string bookName, string ownerGuid ) :
 			base( store, new CacheNode( store, Guid.NewGuid().ToString().ToLower() ) )
 		{

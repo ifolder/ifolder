@@ -134,16 +134,16 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructs the object.
 		/// </summary>
-		/// <param name="xmlProperties">The xml element where the properties in the list are stored.</param>
+		/// <param name="propertyList">The property list where this multivalued property is stored.</param>
 		/// <param name="flagBits">Specifies that all properties with the specified flags bits set are returned.</param>
-		internal MultiValuedList( XmlElement xmlProperties, uint flagBits )
+		internal MultiValuedList( PropertyList propertyList, uint flagBits )
 		{
 			this.propertyList = propertyList;
 			this.name = Property.FlagsAttr;
 
 			// Build the list of property values.
 			// Walk each property node and do a check to see if the flagbits match.
-			foreach ( XmlElement x in xmlProperties )
+			foreach ( XmlElement x in propertyList.PropertyRoot )
 			{
 				// Check if this xml node contains the specified attribute.
 				if ( x.HasAttribute( Property.FlagsAttr ) )

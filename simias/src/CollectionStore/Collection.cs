@@ -309,7 +309,8 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="localStore">Virtual store that this collection belongs to.</param>
 		/// <param name="xmlProperties">List of properties that belong to this collection.</param>
-		internal Collection( Store localStore, XmlElement xmlProperties ) :
+		/// <param name="useCache">Set to true if node cache is to be checked for existing node.</param>
+		internal Collection( Store localStore, XmlElement xmlProperties, bool useCache ) :
 			base( localStore, xmlProperties )
 		{
 			// Set the collection into the node.  Since node is a sub-class of collection, its 
@@ -327,8 +328,11 @@ namespace Simias.Storage
 			cNode.accessControl = new AccessControl( this );
 			UpdateAccessControl();
 
-			// Add this node to the cache table.
-			cNode = cNode.AddToCacheTable();
+			if ( useCache )
+			{
+				// Add this node to the cache table.
+				cNode = cNode.AddToCacheTable();
+			}
 		}
 
 		/// <summary>
@@ -510,7 +514,7 @@ namespace Simias.Storage
 		#region Public Methods
 		/// <summary>
 		/// Changes the owner of the collection and assigns the specified right to the old owner.
-		/// Only the current owner can set new ownership on the collection.
+		/// Only the current owner can set new ownership on the collection. 
 		/// </summary>
 		/// <param name="newOwnerId">User identifier of the new owner.</param>
 		/// <param name="oldOwnerRights">Rights to give the old owner of the collection.</param>
@@ -521,7 +525,9 @@ namespace Simias.Storage
 
 		/// <summary>
 		/// Commits all changes in the collection to persistent storage if deep is set to true.
-		/// Otherwise, just commits the collection node.
+		/// Otherwise, just commits the collection node. After a node has been committed, it 
+		/// will be updated to reflect any new changes that occurred if it had to be merged 
+		/// with the current node in the database.
 		/// </summary>
 		public void Commit( bool deep )
 		{
@@ -549,18 +555,39 @@ namespace Simias.Storage
 					// Parse the node into an XML document because that is the format that the provider expects.
 					foreach ( Node tempNode in cNode.dirtyNodeList.Values )
 					{
+						Node commitNode;
+
+						// If this node has not been persisted, no need to do a merge.
+						if ( tempNode.IsPersisted )
+						{
+							// Merge this node with the current node in the database.
+							commitNode = tempNode.MergeNodeProperties();
+							if ( commitNode == null )
+							{
+								// The node has been deleted, move to the next one.
+								continue;
+							}
+
+							// Save the newly merged cache node for later processing.
+							tempNode.mergedCachedNode = commitNode.cNode;
+						}
+						else
+						{
+							commitNode = tempNode;
+						}
+
 						// Set the modify time for this node.
-						tempNode.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
+						commitNode.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
 
 						// Don't increment the incarnation number on the collection again.
-						if ( !tempNode.IsCollection )
+						if ( !commitNode.IsCollection )
 						{
 							// Increment the local incarnation number.
-							tempNode.IncrementLocalIncarnation();
+							commitNode.IncrementLocalIncarnation();
 						}
 
 						// Copy the XML node over to the modify document.
-						XmlNode xmlNode = commitDoc.ImportNode( tempNode.Properties.PropertyRoot, true );
+						XmlNode xmlNode = commitDoc.ImportNode( commitNode.Properties.PropertyRoot, true );
 						commitDoc.DocumentElement.AppendChild( xmlNode );
 					}
 
@@ -585,14 +612,25 @@ namespace Simias.Storage
 					// Fire an event for this commit action.
 					if ( committedNode.IsPersisted )
 					{
-						localStore.Publisher.RaiseNodeEvent( new NodeEventArgs( localStore.ComponentId, committedNode.Id, Id, DomainName, committedNode.NameSpaceType, NodeEventArgs.EventType.Changed, localStore.Instance ) );
+						// Make sure that this node was processed.
+						if ( committedNode.mergedCachedNode != null )
+						{
+							// Update this node to reflect the latest changes.
+							committedNode.cNode.Copy( committedNode.mergedCachedNode );
+							committedNode.mergedCachedNode = null;
+
+							// Fire an event to notify that this node has been changed.
+							localStore.Publisher.RaiseNodeEvent( new NodeEventArgs( localStore.ComponentId, committedNode.Id, Id, DomainName, committedNode.NameSpaceType, NodeEventArgs.EventType.Changed, localStore.Instance ) );
+						}
 					}
 					else
 					{
+						// Fire an event to notify that this node has been created.
 						localStore.Publisher.RaiseNodeEvent( new NodeEventArgs( localStore.ComponentId, committedNode.Id, Id, DomainName, committedNode.NameSpaceType, NodeEventArgs.EventType.Created, localStore.Instance ) );
-					}
 
-					committedNode.IsPersisted = true;
+						// Mark the node as persisted.
+						committedNode.IsPersisted = true;
+					}
 				}
 
 				// Clear the dirty node queue.

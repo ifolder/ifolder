@@ -780,46 +780,38 @@ namespace Simias.Storage.Tests
 				p1.Flags = 0x0010;
 				collection.Properties.AddProperty( p1 );
 
-				// p2 should follow p1.
+				// Second property to add.
 				Property p2 = new Property( "CS_String", "This is the second string" );
 				collection.Properties.AddProperty( p2 );
 
-				// Insert before p1.
-				Property p3 = new Property( "CS_String", "This is inserted before the first string" );
-				p1.InsertBefore( p3 );
-
-				// Change p3's value and insert it after p2.  This will remove it from before p1.
-				p3.Value = "This is inserted after the second string";
-				p2.InsertAfter( p3 );
-
 				// Add a property with a similar name and make sure that it is not found.
-				Property p4 = new Property( "CS_Strings", "This is a similar property" );
-				collection.Properties.AddProperty( p4 );
+				Property p3 = new Property( "CS_Strings", "This is a similar property" );
+				collection.Properties.AddProperty( p3 );
 
 				// Get a list of the CS_String properties on this collection.
 				MultiValuedList mvl = collection.Properties.GetProperties( "CS_String" );
 
-				// Should be 3 strings.
+				// Should be 2 strings.
 				int count = 0;
 				IEnumerator e = mvl.GetEnumerator();
 				while ( e.MoveNext() ) ++count;
 
-				if ( count != 3 )
+				if ( count != 2 )
 				{
 					throw new ApplicationException( "Not all properties were returned" );
 				}
 
-				// Delete p3.
-				p3.Delete();
+				// Delete p2.
+				p2.Delete();
 
-				// Get the list again.  There should only be two.
+				// Get the list again.  There should only be one.
 				mvl = collection.Properties.GetProperties( "CS_String" );
 
 				count = 0;
 				e = mvl.GetEnumerator();
 				while ( e.MoveNext() ) ++count;
 
-				if ( count != 2 )
+				if ( count != 1 )
 				{
 					throw new ApplicationException( "Failed to delete property" );
 				}
@@ -1700,6 +1692,67 @@ namespace Simias.Storage.Tests
                 
 				// Delete the collection.
 				collection.Delete( true );
+			}
+		}
+
+		/// <summary>
+		/// Tests the merge attribute part of CollectionStore.
+		/// </summary>
+		[Test]
+		public void MergeNodeTest()
+		{
+			// Get a second handle to the current store.
+			Store mergeStore = Store.Connect( new Uri( Path.Combine( Directory.GetCurrentDirectory(), "CollectionStoreTestDir" ) ) );
+
+			// Create a collection using the primary store handle.
+			Collection collection = store.CreateCollection( "CS_TestCollection" );
+
+			try
+			{
+				// Commit the collection.
+				collection.Commit();
+
+				// Get a handle to the store through the merge store.
+				Collection mergeCollection = mergeStore.GetCollectionById( collection.Id );
+
+				// Add a property through the primary store handle.
+				collection.Properties.AddProperty( "CS_TestMergeProperty", "This is a test" );
+				collection.Commit();
+
+				// The merge store should not see this property.
+				Property p = mergeCollection.Properties.GetSingleProperty( "CS_TestMergeProperty" );
+				if ( p != null )
+				{
+					throw new ApplicationException( "Unexpected property." );
+				}
+
+				// Add a property through the merge handle.
+				mergeCollection.Properties.AddProperty( "CS_TestNewProperty", "This is a new property" );
+				mergeCollection.Commit();
+
+				// Should be able to see both properties now through the merge handle.
+				p = mergeCollection.Properties.GetSingleProperty( "CS_TestMergeProperty" );
+				if ( p == null )
+				{
+					throw new ApplicationException( "Cannot get merged property." );
+				}
+
+				p = mergeCollection.Properties.GetSingleProperty( "CS_TestNewProperty" );
+				if ( p == null )
+				{
+					throw new ApplicationException( "Cannot get merged property." );
+				}
+			}
+			finally
+			{
+				// Get rid of the root path.
+				Directory.Delete( collection.DocumentRoot.LocalPath, true );
+                
+				// Delete the collection.
+				collection.Delete( true );
+
+				// Release the merge store handle.
+				mergeStore.Dispose();
 			}
 		}
 		#endregion

@@ -44,6 +44,32 @@ namespace Simias.Storage
 		private const int initialSysPropTableSize = 20;
 
 		/// <summary>
+		/// Property operations that are recorded so properties can be merged at object commit time.
+		/// </summary>
+		internal enum Operation
+		{
+			/// <summary>
+			/// No operation or change.
+			/// </summary>
+			None,
+
+			/// <summary>
+			/// New property value added.
+			/// </summary>
+			Add,
+
+			/// <summary>
+			/// Property value was deleted.
+			/// </summary>
+			Delete,
+
+			/// <summary>
+			/// Property value was modified.
+			/// </summary>
+			Modify
+		};
+
+		/// <summary>
 		/// Supported store search operators.
 		/// </summary>
 		public enum Operator
@@ -356,6 +382,36 @@ namespace Simias.Storage
 		/// The property list where this property is stored.
 		/// </summary>
 		private PropertyList propertyList;
+
+		/// <summary>
+		/// Member used to keep track of property additions, deletions and modifications.
+		/// </summary>
+		private Operation operation = Operation.None;
+
+		/// <summary>
+		/// Member used to store the old value of the property, if it was modified.
+		/// </summary>
+		private string oldValue = null;
+
+		/// <summary>
+		/// Member used to store the old name of the property, if it was modified.
+		/// </summary>
+		private string oldName = null;
+
+		/// <summary>
+		/// Member used to indicate if the oldFlags value contains a changed value.
+		/// </summary>
+		private bool flagsModified = false;
+
+		/// <summary>
+		/// Member used to store the old flag value, if it was modified.
+		/// </summary>
+		private uint oldFlags = 0;
+
+		/// <summary>
+		/// Node that this property is attached to.
+		/// </summary>
+		private Node node = null;
 		#endregion
 
 		#region Properties
@@ -367,8 +423,10 @@ namespace Simias.Storage
 			get { return xmlProperty.GetAttribute( Property.NameAttr ); }
 			set 
 			{ 
-				// Make sure the current user has write access to the collection.
-				SetPropertyAttribute( Property.NameAttr, value ); 
+				// Save the old name before changing to the new name.
+				string currentName = Name;
+				SetPropertyAttribute( Property.NameAttr, value );
+				SaveMergeInformation( node, Operation.Modify, null, currentName, false, 0 );
 			}
 		}
 
@@ -409,6 +467,25 @@ namespace Simias.Storage
 		{
 			get { return GetValue(); }
 			set { SetValue( value ); }
+		}
+
+		/// <summary>
+		/// Gets or sets a string representation of the property value.
+		/// </summary>
+		private string ValueString
+		{
+			get { return ( Type == Syntax.XmlDocument ) ? xmlProperty.InnerXml : xmlProperty.InnerText; }
+			set 
+			{ 
+				if ( Type == Syntax.XmlDocument )
+				{
+					xmlProperty.InnerXml = value;
+				}
+				else
+				{
+					xmlProperty.InnerText = value;
+				}
+			}
 		}
 
 		/// <summary>
@@ -508,8 +585,10 @@ namespace Simias.Storage
 
 			set 
 			{
-				// Set the new flags in the xml document.
+				// Save the current flags value.
+				uint currentFlags = PropertyFlags; 
 				SetPropertyAttribute( Property.FlagsAttr, value.ToString() );
+				SaveMergeInformation( node, Operation.Modify, null, null, true, currentFlags );
 			}
 		}
 		#endregion
@@ -579,6 +658,7 @@ namespace Simias.Storage
 		internal Property( PropertyList propertyList, XmlElement xmlProperty )
 		{
 			this.propertyList = propertyList;
+			this.node = propertyList.PropertyNode;
 			this.xmlProperty = xmlProperty;
 		}
 
@@ -604,14 +684,7 @@ namespace Simias.Storage
 			xmlAttr.Value = syntax.ToString();
 			xmlProperty.Attributes.Append( xmlAttr );
 
-			if ( syntax == Syntax.XmlDocument )
-			{
-				xmlProperty.InnerXml = propertyValue;
-			}
-			else
-			{
-				xmlProperty.InnerText = propertyValue;
-			}
+			ValueString = propertyValue;
 		}
 
 		/// <summary>
@@ -649,14 +722,7 @@ namespace Simias.Storage
 			xmlAttr.Value = syntax.ToString();
 			xmlProperty.Attributes.Append( xmlAttr );
 
-			if ( syntax == Syntax.XmlDocument )
-			{
-				xmlProperty.InnerXml = GetValueFromPropertyObject( syntax, propertyValue );
-			}
-			else
-			{
-				xmlProperty.InnerText = GetValueFromPropertyObject( syntax, propertyValue );
-			}
+			ValueString = GetValueFromPropertyObject( syntax, propertyValue );
 		}
 
 		/// <summary>
@@ -755,7 +821,7 @@ namespace Simias.Storage
 		/// <param name="name">Name of the property.</param>
 		/// <param name="propertyValue">Unicode character value of the property.</param>
 		public Property( string name, char propertyValue ) :
-			this( name, Syntax.Char, (( ushort )propertyValue).ToString() )
+			this( name, Syntax.Char, ( ( ushort )propertyValue ).ToString() )
 		{
 		}
 
@@ -1065,6 +1131,81 @@ namespace Simias.Storage
 
 		#region Internal Methods
 		/// <summary>
+		/// Applies the merge information contained in this property to the specified node.
+		/// </summary>
+		/// <param name="node">Node to merge property on to.</param>
+		internal void ApplyMergeInformation( Node node )
+		{
+			switch ( operation )
+			{
+				case Operation.Add:
+				{
+					XmlNode xmlNode = node.Properties.PropertyDocument.ImportNode( xmlProperty, true );
+					node.Properties.PropertyRoot.AppendChild( xmlNode );
+					break;
+				}
+
+				case Operation.Delete:
+				{
+					// Get the current value of this property.
+					string currentValue = ValueString;
+
+					// Find the property that matches the one to delete.
+					MultiValuedList mvlDelete = node.Properties.FindValues( Name, true );
+					foreach ( Property p in mvlDelete )
+					{
+						// Does the value match?
+						if ( p.ValueString == currentValue )
+						{
+							// Remove all the children of this xml property node and remove this node
+							// from its parent.
+							p.xmlProperty.RemoveAll();
+							p.xmlProperty.ParentNode.RemoveChild( p.xmlProperty );
+							break;
+						}
+					}
+					break;
+				}
+
+				case Operation.Modify:
+				{
+					// Find the property that matches the one to delete.  If the property is not found,
+					// then it was deleted and should not be set. This is following the method that
+					// delete always wins.
+					MultiValuedList mvlModify = node.Properties.FindValues( Name, true );
+					foreach ( Property p in mvlModify )
+					{
+						// If the value has been modified used the oldValue. Otherwise use the
+						// current value of the property.
+						string currentValue = ValueString;
+						string matchValue = ( oldValue == null ) ? currentValue : oldValue;
+
+						// Are the values equal?
+						if ( p.ValueString == matchValue )
+						{
+							// Set the new value.
+							p.ValueString = currentValue;
+
+							// If the name has changed, update the name.
+							if ( oldName != null )
+							{
+								p.xmlProperty.SetAttribute( Property.NameAttr, Name );
+							}
+
+							// If the flags have changed, update the flags.
+							if ( flagsModified )
+							{
+								p.xmlProperty.SetAttribute( Property.FlagsAttr, PropertyFlags.ToString() );
+							}
+							break;
+						}
+					}
+					break;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Deletes this property from the property list.
 		/// </summary>
 		internal void DeleteProperty()
@@ -1072,6 +1213,9 @@ namespace Simias.Storage
 			// Only delete if the property is attached to a list.
 			if ( propertyList != null )
 			{
+				// Save the associated node value.
+				Node oldNode = node;
+
 				// Create a detached property since this is being removed from the list.
 				XmlDocument tempDoc = new XmlDocument();
 				tempDoc.AppendChild( tempDoc.ImportNode( xmlProperty, true ) );
@@ -1085,59 +1229,11 @@ namespace Simias.Storage
 
 				// Setup the now detached property.
 				propertyList = null;
+				node = null;
 				xmlProperty = ( XmlElement )tempDoc.FirstChild;
-			}
-		}
 
-		/// <summary>
-		/// Inserts the specified property after this property.
-		/// </summary>
-		/// <param name="insertProperty">Property to insert.</param>
-		internal void InsertPropertyAfter( Property insertProperty )
-		{
-			if ( propertyList != null )
-			{
-				// If the insert property is not from the document where it is to be inserted,
-				// the property must first be imported into the DOM.
-				if ( insertProperty.xmlProperty.OwnerDocument != xmlProperty.OwnerDocument )
-				{
-					insertProperty.xmlProperty = ( XmlElement )OwnerDocument.ImportNode( insertProperty.xmlProperty, true );
-					insertProperty.propertyList = propertyList;
-				}
-
-				// Insert the property after this one.
-				xmlProperty.ParentNode.InsertAfter( insertProperty.xmlProperty, xmlProperty );
-				SetPropertyChanged();
-			}
-			else
-			{
-				throw new ArgumentException( "existingProperty not in property list" );
-			}
-		}
-
-		/// <summary>
-		/// Inserts the specified property before this property.
-		/// </summary>
-		/// <param name="insertProperty">Property to insert.</param>
-		internal void InsertPropertyBefore( Property insertProperty )
-		{
-			if ( propertyList != null )
-			{
-				// If the insert property is not from the document where it is to be inserted,
-				// the property must first be imported into the DOM.
-				if ( insertProperty.xmlProperty.OwnerDocument != xmlProperty.OwnerDocument )
-				{
-					insertProperty.xmlProperty = ( XmlElement )OwnerDocument.ImportNode( insertProperty.xmlProperty, true );
-					insertProperty.propertyList = propertyList;
-				}
-
-				// Insert the property before this one.
-				xmlProperty.ParentNode.InsertBefore( insertProperty.xmlProperty, xmlProperty );
-				SetPropertyChanged();
-			}
-			else
-			{
-				throw new ArgumentException( "existingProperty not in property list" );
+				// Save the property merge information.
+				SaveMergeInformation( oldNode, Operation.Delete, null, null, false, 0 );
 			}
 		}
 
@@ -1158,6 +1254,165 @@ namespace Simias.Storage
 		static internal Persist.Query.Operator MapQueryOp( Property.Operator op )
 		{
 			return ( Persist.Query.Operator )Enum.Parse( typeof( Persist.Query.Operator ), op.ToString() );
+		}
+
+		/// <summary>
+		/// Saves the old state of the object so it can be merged at object commit time.
+		/// </summary>
+		/// <param name="node">Node that this property is associated with.</param>
+		/// <param name="op">Operation being performed on this property.</param>
+		/// <param name="oldValue">Old value of the property, may be null.</param>
+		/// <param name="oldName">Old name of the property, may be null.</param>
+		/// <param name="flagsModified">Set to true if property flags have been modified.</param>
+		/// <param name="oldFlags">Old flag value, may be zero.</param>
+		internal void SaveMergeInformation( Node node, Operation op, string oldValue, string oldName, bool flagsModified, uint oldFlags )
+		{
+			// If there is no node associated with this property or it is a new node, we don't need to track it.
+			if ( ( node != null ) && node.IsPersisted )
+			{
+				// Operation is the current state of the property.
+				switch ( this.operation )
+				{
+						// When the current state is Add the new state should act as follows:
+						//
+						// Add: Illegal state.  An added value cannot be added again.  The add code will
+						// report that the new state is Modify.
+						//
+						// Delete: A delete after an add is basically a NOP.  Just return the property
+						// back to it's pre-add state. Set current state to None and remove from mergeList.
+						//
+						// Modify: Do nothing. This is a new value.  It can be modified over and over,
+						// but the it is still an add operation.
+					case Operation.Add:
+						if ( op == Operation.Delete )
+						{
+							// Set back to pre-add state.
+							this.operation = Operation.None;
+							node.cNode.mergeList.Remove( this );
+						}
+
+						break;
+
+						// When the current state is Delete the new state should act as follows:
+						//
+						// Add: An add after a delete is basically a NOP.  Just return the property
+						// back to it's pre-delete state. Set current state to None and remove from mergeList.
+						//
+						// Delete: Do nothing. Deleting a property that has already been deleted does nothing.
+						//
+						// Modify: Illegal state. A deleted property cannot be modified. The modify code will
+						// report that the new state is add.
+					case Operation.Delete:
+						if ( op == Operation.Add )
+						{
+							// Set back to pre-delete state.
+							this.operation = Operation.None;
+							node.cNode.mergeList.Remove( this );
+						}
+
+						break;
+
+						// When the current state is Modify the new state should act as follows:
+						//
+						// Add: Illegal state.  An existing value cannot be added. The add code will report
+						// that the new state is modify.
+						//
+						// Delete: Set the current state to delete.  Set the current value to oldValue, if not
+						// null.  Set current name to oldName, if not null. Set current flags to oldFlags, if
+						// they have been modified.  Set oldValue and oldName to null.  Set modifiedFlags to false.
+						// Leave in the mergeList.
+						//
+						// Modify: Do nothing. The property can be modified over and over again and it is still
+						// a modify operation. However a check needs to be made to see if a different part of
+						// the property was modified and its original value needs to be saved.
+					case Operation.Modify:
+						if ( op == Operation.Delete )
+						{
+							// Set the new state to delete.
+							this.operation = Operation.Delete;
+
+							// Has the value changed?
+							if ( this.oldValue != null )
+							{
+								// Set the value back into the property.
+								ValueString = this.oldValue;
+								this.oldValue = null;
+							}
+
+							// Has the name changed?
+							if ( this.oldName != null )
+							{
+								Name = this.oldName;
+								this.oldName = null;
+							}
+
+							// Have the flags changed?
+							if ( this.flagsModified )
+							{
+								this.PropertyFlags = this.oldFlags;
+								this.flagsModified = false;
+								this.oldFlags = 0;
+							}
+						}
+						else if ( op == Operation.Modify )
+						{
+							// Don't ever overwrite a saved old value.
+							if ( ( this.oldValue == null ) && ( oldValue != null ) )
+							{
+								this.oldValue = oldValue;
+							}
+
+							if ( ( this.oldName == null ) && ( oldName != null ) )
+							{
+								this.oldName = oldName;
+							}
+
+							if ( ( this.flagsModified == false )  && ( flagsModified == true ) )
+							{
+								this.oldFlags = oldFlags;
+								this.flagsModified = true;
+							}
+						}
+
+						break;
+
+						// When the current state is None the new state should act as follows:
+						//
+						// Add: Set the current state to add and add the new property to the mergeList.
+						//
+						// Delete: Set the current state to delete and add the deleted property to the mergeList.
+						//
+						// Modify: Set the current state to modify. Save the oldValue if not null. Save the oldName
+						// if not null. Save the old flags if modified. Add the modified property to the mergeList.
+					case Operation.None:
+						if ( op == Operation.Modify )
+						{
+							if ( oldValue != null )
+							{
+								this.oldValue = oldValue;
+							}
+
+							if ( oldName != null )
+							{
+								this.oldName = oldName;
+							}
+
+							if ( flagsModified )
+							{
+								this.oldFlags = oldFlags;
+								this.flagsModified = true;
+							}
+						}
+						else if ( op == Operation.Add )
+						{
+							this.node = node;
+						}
+
+						this.operation = op;
+						node.cNode.mergeList.Add( this );
+						break;
+				}
+			}
 		}
 
 		/// <summary>
@@ -1249,15 +1504,11 @@ namespace Simias.Storage
 				throw new ApplicationException( "Cannot mix property types" );
 			}
 
-			if ( Type == Syntax.XmlDocument )
-			{
-				xmlProperty.InnerXml = propertyValue.xmlProperty.InnerXml;
-			}
-			else
-			{
-				xmlProperty.InnerText = propertyValue.xmlProperty.InnerText;
-			}
+			// Remember the old value before overwriting it with the new value.
+			string currentValue = ValueString;
+			ValueString = propertyValue.ValueString;
 
+			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
 			SetPropertyChanged();
 		}
 
@@ -1272,7 +1523,11 @@ namespace Simias.Storage
 				throw new ApplicationException( "Cannot mix property types" );
 			}
 
-			xmlProperty.InnerText = propertyValue;
+			// Remember the old value before overwriting it with the new value.
+			string currentValue = ValueString;
+			ValueString = propertyValue;
+
+			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
 			SetPropertyChanged();
 		}
 
@@ -1287,7 +1542,11 @@ namespace Simias.Storage
 				throw new ApplicationException( "Cannot mix property types" );
 			}
 
-			xmlProperty.InnerText = propertyValue.ToString();
+			// Remember the old value before overwriting it with the new value.
+			string currentValue = ValueString;
+			ValueString = propertyValue.ToString();
+
+			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
 			SetPropertyChanged();
 		}
 
@@ -1302,7 +1561,11 @@ namespace Simias.Storage
 				throw new ApplicationException( "Cannot mix property types" );
 			}
 
-			xmlProperty.InnerText = propertyValue.ToString();
+			// Remember the old value before overwriting it with the new value.
+			string currentValue = ValueString;
+			ValueString = propertyValue.ToString();
+
+			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
 			SetPropertyChanged();
 		}
 
@@ -1317,7 +1580,11 @@ namespace Simias.Storage
 				throw new ApplicationException( "Cannot mix property types" );
 			}
 
-			xmlProperty.InnerText = propertyValue.ToString();
+			// Remember the old value before overwriting it with the new value.
+			string currentValue = ValueString;
+			ValueString = propertyValue.ToString();
+
+			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
 			SetPropertyChanged();
 		}
 
@@ -1332,7 +1599,11 @@ namespace Simias.Storage
 				throw new ApplicationException( "Cannot mix property types" );
 			}
 
-			xmlProperty.InnerText = propertyValue.ToString();
+			// Remember the old value before overwriting it with the new value.
+			string currentValue = ValueString;
+			ValueString = propertyValue.ToString();
+
+			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
 			SetPropertyChanged();
 		}
 
@@ -1347,7 +1618,11 @@ namespace Simias.Storage
 				throw new ApplicationException( "Cannot mix property types" );
 			}
 
-			xmlProperty.InnerText = propertyValue.ToString();
+			// Remember the old value before overwriting it with the new value.
+			string currentValue = ValueString;
+			ValueString = propertyValue.ToString();
+
+			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
 			SetPropertyChanged();
 		}
 
@@ -1362,7 +1637,11 @@ namespace Simias.Storage
 				throw new ApplicationException( "Cannot mix property types" );
 			}
 
-			xmlProperty.InnerText = propertyValue.ToString();
+			// Remember the old value before overwriting it with the new value.
+			string currentValue = ValueString;
+			ValueString = propertyValue.ToString();
+
+			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
 			SetPropertyChanged();
 		}
 
@@ -1377,7 +1656,11 @@ namespace Simias.Storage
 				throw new ApplicationException( "Cannot mix property types" );
 			}
 
-			xmlProperty.InnerText = propertyValue.ToString();
+			// Remember the old value before overwriting it with the new value.
+			string currentValue = ValueString;
+			ValueString = propertyValue.ToString();
+
+			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
 			SetPropertyChanged();
 		}
 
@@ -1392,7 +1675,11 @@ namespace Simias.Storage
 				throw new ApplicationException( "Cannot mix property types" );
 			}
 
-			xmlProperty.InnerText = propertyValue.ToString();
+			// Remember the old value before overwriting it with the new value.
+			string currentValue = ValueString;
+			ValueString = propertyValue.ToString();
+
+			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
 			SetPropertyChanged();
 		}
 
@@ -1407,7 +1694,11 @@ namespace Simias.Storage
 				throw new ApplicationException( "Cannot mix property types" );
 			}
 
-			xmlProperty.InnerText = ( ( ushort )propertyValue ).ToString();
+			// Remember the old value before overwriting it with the new value.
+			string currentValue = ValueString;
+			ValueString = ( ( ushort )propertyValue ).ToString();
+
+			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
 			SetPropertyChanged();
 		}
 
@@ -1422,7 +1713,11 @@ namespace Simias.Storage
 				throw new ApplicationException( "Cannot mix property types" );
 			}
 
-			xmlProperty.InnerText = propertyValue.ToString();
+			// Remember the old value before overwriting it with the new value.
+			string currentValue = ValueString;
+			ValueString = propertyValue.ToString();
+
+			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
 			SetPropertyChanged();
 		}
 
@@ -1437,7 +1732,11 @@ namespace Simias.Storage
 				throw new ApplicationException( "Cannot mix property types" );
 			}
 
-			xmlProperty.InnerText = propertyValue ? "1" : "0";
+			// Remember the old value before overwriting it with the new value.
+			string currentValue = ValueString;
+			ValueString = propertyValue ? "1" : "0";
+
+			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
 			SetPropertyChanged();
 		}
 
@@ -1452,7 +1751,11 @@ namespace Simias.Storage
 				throw new ApplicationException( "Cannot mix property types" );
 			}
 
-			xmlProperty.InnerText = propertyValue.Ticks.ToString();
+			// Remember the old value before overwriting it with the new value.
+			string currentValue = ValueString;
+			ValueString = propertyValue.Ticks.ToString();
+
+			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
 			SetPropertyChanged();
 		}
 
@@ -1467,7 +1770,11 @@ namespace Simias.Storage
 				throw new ApplicationException( "Cannot mix property types" );
 			}
 
-			xmlProperty.InnerText = propertyValue.ToString();
+			// Remember the old value before overwriting it with the new value.
+			string currentValue = ValueString;
+			ValueString = propertyValue.ToString();
+
+			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
 			SetPropertyChanged();
 		}
 
@@ -1482,7 +1789,11 @@ namespace Simias.Storage
 				throw new ApplicationException( "Cannot mix property types" );
 			}
 
-			xmlProperty.InnerXml = propertyValue.InnerXml;
+			// Remember the old value before overwriting it with the new value.
+			string currentValue = ValueString;
+			ValueString = propertyValue.InnerXml;
+
+			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
 			SetPropertyChanged();
 		}
 
@@ -1497,7 +1808,11 @@ namespace Simias.Storage
 				throw new ApplicationException( "Cannot mix property types" );
 			}
 
-			xmlProperty.InnerText = propertyValue.Ticks.ToString();
+			// Remember the old value before overwriting it with the new value.
+			string currentValue = ValueString;
+			ValueString = propertyValue.Ticks.ToString();
+
+			SaveMergeInformation( node, Operation.Modify, currentValue, null, false, 0 );
 			SetPropertyChanged();
 		}
 		#endregion
@@ -1515,36 +1830,6 @@ namespace Simias.Storage
 			}
 
 			DeleteProperty();
-		}
-
-		/// <summary>
-		/// Inserts the specified property after this property.
-		/// </summary>
-		/// <param name="insertProperty">Property to insert.</param>
-		public void InsertAfter( Property insertProperty )
-		{
-			// Make sure this is not a system property
-			if ( IsSystemProperty() )
-			{
-				throw new ApplicationException( "Cannot delete a system property" );
-			}
-
-			InsertPropertyAfter( insertProperty );
-		}
-
-		/// <summary>
-		/// Inserts the specified property before this property.
-		/// </summary>
-		/// <param name="insertProperty">Property to insert.</param>
-		public void InsertBefore( Property insertProperty )
-		{
-			// Make sure this is not a system property
-			if ( IsSystemProperty() )
-			{
-				throw new ApplicationException( "Cannot delete a system property" );
-			}
-
-			InsertPropertyBefore( insertProperty );
 		}
 
 		/// <summary>

@@ -88,6 +88,11 @@ namespace Simias.Storage
 		/// Provides an interface for access control.
 		/// </summary>
 		public AccessControl accessControl = null;
+
+		/// <summary>
+		/// List used to hold Property objects so that they may be merged at object commit time.
+		/// </summary>
+		public ArrayList mergeList = new ArrayList();
 		#endregion
 
 		#region Constructor
@@ -113,6 +118,18 @@ namespace Simias.Storage
 		{
 			// See if this node already exists in the store cache table.
 			return store.SetCacheNode( id, this );
+		}
+
+		/// <summary>
+		/// Copies the specified cache node object to this object.
+		/// </summary>
+		/// <param name="cNode">Cache node object to copy.</param>
+		public void Copy( CacheNode cNode )
+		{
+			this.properties.Copy( cNode.properties );
+			this.name = cNode.name;
+			this.type = cNode.type;
+			this.isPersisted = cNode.isPersisted;
 		}
 		#endregion
 

@@ -103,7 +103,6 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructor of the object.
 		/// </summary>
-		/// <param name="store">Store object.</param>
 		/// <param name="identity">Object that represents the current identity.</param>
 		public IdentityManager( Identity identity )
 		{
