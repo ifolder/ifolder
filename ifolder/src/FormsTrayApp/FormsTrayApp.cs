@@ -381,6 +381,7 @@ namespace Novell.FormsTrayApp
 
 					// Instantiate the GlobalProperties dialog so we can log sync events.
 					globalProperties = new GlobalProperties(ifWebService, eventClient);
+					globalProperties.ShowEnterpriseTab = true;
 
 					// Create the control so that we can use the delegate to write sync events to the log.
 					// For some reason, the handle isn't created until it is referenced.

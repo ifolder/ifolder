@@ -79,13 +79,13 @@ namespace Novell.iFolderCom
 		/// <summary>
 		/// Sets the collection of servers to display in the dropdown list.
 		/// </summary>
-		public ComboBox.ObjectCollection Servers
+		public ListView.ListViewItemCollection Servers
 		{
 			set
 			{
-				foreach (Domain domain in value)
+				foreach (ListViewItem lvi in value)
 				{
-					servers.Items.Add(domain);
+					servers.Items.Add((Domain)lvi.Tag);
 				}
 			}
 		}
@@ -375,26 +375,7 @@ namespace Novell.iFolderCom
 			}
 			else
 			{
-				Domain defaultDomain = null;
-
-				foreach (Domain domain in servers.Items)
-				{
-					if (domain.DomainWeb.IsDefault)
-					{
-						defaultDomain = domain;
-					}
-
-					if (domain.ID.Equals(selectedDomain.ID))
-					{
-						servers.SelectedItem = domain;
-						break;
-					}
-				}
-
-				if (servers.SelectedItem == null)
-				{
-					servers.SelectedItem = defaultDomain;
-				}
+				servers.SelectedItem = selectedDomain;
 			}
 		}
 

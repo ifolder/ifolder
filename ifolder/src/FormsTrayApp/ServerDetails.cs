@@ -37,6 +37,7 @@ namespace Novell.FormsTrayApp
 	/// </summary>
 	public class ServerDetails : System.Windows.Forms.Form
 	{
+		private const double megaByte = 1048576;
 		private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(ServerDetails));
 		private iFolderWebService ifWebService;
 		private System.Windows.Forms.GroupBox groupBox6;
@@ -62,7 +63,7 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
-		public ServerDetails(iFolderWebService ifolderWebService)
+		public ServerDetails(iFolderWebService ifolderWebService, ListView.ListViewItemCollection servers, Domain selectedDomain)
 		{
 			//
 			// Required for Windows Form Designer support
@@ -70,6 +71,13 @@ namespace Novell.FormsTrayApp
 			InitializeComponent();
 
 			ifWebService = ifolderWebService;
+
+			foreach (ListViewItem lvi in servers)
+			{
+				this.servers.Items.Add((Domain)lvi.Tag);
+			}
+
+			this.servers.SelectedItem = selectedDomain;
 		}
 
 		/// <summary>
@@ -86,30 +94,6 @@ namespace Novell.FormsTrayApp
 			}
 			base.Dispose( disposing );
 		}
-
-		#region Properties
-		/// <summary>
-		/// Sets the collection of servers to display in the dropdown list.
-		/// </summary>
-		public ComboBox.ObjectCollection Servers
-		{
-			set
-			{
-				foreach (Domain domain in value)
-				{
-					servers.Items.Add(domain);
-				}
-			}
-		}
-
-		/// <summary>
-		/// Sets the domain that will be initially selected in the dropdown list.
-		/// </summary>
-		public Domain SelectedDomain
-		{
-			set { servers.SelectedItem = value; }
-		}
-		#endregion
 
 		#region Windows Form Designer generated code
 		/// <summary>
@@ -601,6 +585,7 @@ namespace Novell.FormsTrayApp
 
 		private void servers_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
+			Domain selectedDomain = (Domain)servers.SelectedItem;
 			enterpriseDescription.Text = selectedDomain.DomainWeb.Description;
 
 			try

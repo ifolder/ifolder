@@ -74,7 +74,7 @@ namespace Novell.FormsTrayApp
 		private const string notifyCollisionDisabled = "NotifyCollisionDisabled";
 		private const string notifyJoinDisabled = "NotifyJoinDisabled";
 		private const string iFolderKey = @"SOFTWARE\Novell\iFolder";
-		private const double megaByte = 1048576;
+//		private const double megaByte = 1048576;
 		private const int maxMessages = 500;
 		private System.Timers.Timer updateEnterpriseTimer;
 		private short retryCount = 2;
@@ -84,6 +84,7 @@ namespace Novell.FormsTrayApp
 		private bool initialConnect = false;
 		private int initialBannerWidth;
 		private bool shutdown = false;
+		private Domain defaultDomain = null;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
 		private System.Windows.Forms.Label label2;
@@ -131,7 +132,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.Button create;
 		private System.Windows.Forms.TabPage tabPage5;
-		private System.Windows.Forms.Label enterpriseName;
 		private System.Windows.Forms.MenuItem menuResolve;
 		private System.Windows.Forms.MenuItem menuActionResolve;
 		private System.Windows.Forms.MenuItem menuAccept;
@@ -155,7 +155,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.CheckBox notifyShared;
 		private System.Windows.Forms.CheckBox notifyCollisions;
 		private System.Windows.Forms.CheckBox notifyJoins;
-		private System.Windows.Forms.ComboBox servers;
 		private System.Windows.Forms.CheckBox defaultServer;
 		private System.Windows.Forms.ComboBox servers2;
 		private System.Windows.Forms.Label label1;
@@ -174,6 +173,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.ListView accounts;
 		private System.Windows.Forms.ColumnHeader columnHeader2;
 		private System.Windows.Forms.ColumnHeader columnHeader3;
+		private System.Windows.Forms.Button connect;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -309,8 +309,6 @@ namespace Novell.FormsTrayApp
 			this.defaultServer = new System.Windows.Forms.CheckBox();
 			this.removeAccount = new System.Windows.Forms.Button();
 			this.addAccount = new System.Windows.Forms.Button();
-			this.servers = new System.Windows.Forms.ComboBox();
-			this.enterpriseName = new System.Windows.Forms.Label();
 			this.banner = new System.Windows.Forms.PictureBox();
 			this.mainMenu1 = new System.Windows.Forms.MainMenu();
 			this.menuAction = new System.Windows.Forms.MenuItem();
@@ -334,6 +332,7 @@ namespace Novell.FormsTrayApp
 			this.menuHelpAbout = new System.Windows.Forms.MenuItem();
 			this.status = new System.Windows.Forms.Label();
 			this.progressBar1 = new System.Windows.Forms.ProgressBar();
+			this.connect = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -1293,8 +1292,6 @@ namespace Novell.FormsTrayApp
 			this.tabPage5.Controls.Add(this.groupBox2);
 			this.tabPage5.Controls.Add(this.removeAccount);
 			this.tabPage5.Controls.Add(this.addAccount);
-			this.tabPage5.Controls.Add(this.servers);
-			this.tabPage5.Controls.Add(this.enterpriseName);
 			this.tabPage5.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabPage5.Dock")));
 			this.tabPage5.Enabled = ((bool)(resources.GetObject("tabPage5.Enabled")));
 			this.tabPage5.Font = ((System.Drawing.Font)(resources.GetObject("tabPage5.Font")));
@@ -1323,6 +1320,7 @@ namespace Novell.FormsTrayApp
 			this.accounts.Enabled = ((bool)(resources.GetObject("accounts.Enabled")));
 			this.accounts.Font = ((System.Drawing.Font)(resources.GetObject("accounts.Font")));
 			this.accounts.FullRowSelect = true;
+			this.accounts.HideSelection = false;
 			this.accounts.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("accounts.ImeMode")));
 			this.accounts.LabelWrap = ((bool)(resources.GetObject("accounts.LabelWrap")));
 			this.accounts.Location = ((System.Drawing.Point)(resources.GetObject("accounts.Location")));
@@ -1378,6 +1376,7 @@ namespace Novell.FormsTrayApp
 			this.groupBox2.AccessibleName = resources.GetString("groupBox2.AccessibleName");
 			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox2.Anchor")));
 			this.groupBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox2.BackgroundImage")));
+			this.groupBox2.Controls.Add(this.connect);
 			this.groupBox2.Controls.Add(this.password);
 			this.groupBox2.Controls.Add(this.server);
 			this.groupBox2.Controls.Add(this.userName);
@@ -1451,6 +1450,7 @@ namespace Novell.FormsTrayApp
 			this.server.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("server.TextAlign")));
 			this.server.Visible = ((bool)(resources.GetObject("server.Visible")));
 			this.server.WordWrap = ((bool)(resources.GetObject("server.WordWrap")));
+			this.server.TextChanged += new System.EventHandler(this.server_TextChanged);
 			// 
 			// userName
 			// 
@@ -1476,6 +1476,7 @@ namespace Novell.FormsTrayApp
 			this.userName.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("userName.TextAlign")));
 			this.userName.Visible = ((bool)(resources.GetObject("userName.Visible")));
 			this.userName.WordWrap = ((bool)(resources.GetObject("userName.WordWrap")));
+			this.userName.TextChanged += new System.EventHandler(this.userName_TextChanged);
 			// 
 			// label9
 			// 
@@ -1691,51 +1692,6 @@ namespace Novell.FormsTrayApp
 			this.addAccount.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("addAccount.TextAlign")));
 			this.addAccount.Visible = ((bool)(resources.GetObject("addAccount.Visible")));
 			this.addAccount.Click += new System.EventHandler(this.addAccount_Click);
-			// 
-			// servers
-			// 
-			this.servers.AccessibleDescription = resources.GetString("servers.AccessibleDescription");
-			this.servers.AccessibleName = resources.GetString("servers.AccessibleName");
-			this.servers.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("servers.Anchor")));
-			this.servers.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("servers.BackgroundImage")));
-			this.servers.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("servers.Dock")));
-			this.servers.Enabled = ((bool)(resources.GetObject("servers.Enabled")));
-			this.servers.Font = ((System.Drawing.Font)(resources.GetObject("servers.Font")));
-			this.servers.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("servers.ImeMode")));
-			this.servers.IntegralHeight = ((bool)(resources.GetObject("servers.IntegralHeight")));
-			this.servers.ItemHeight = ((int)(resources.GetObject("servers.ItemHeight")));
-			this.servers.Location = ((System.Drawing.Point)(resources.GetObject("servers.Location")));
-			this.servers.MaxDropDownItems = ((int)(resources.GetObject("servers.MaxDropDownItems")));
-			this.servers.MaxLength = ((int)(resources.GetObject("servers.MaxLength")));
-			this.servers.Name = "servers";
-			this.servers.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("servers.RightToLeft")));
-			this.servers.Size = ((System.Drawing.Size)(resources.GetObject("servers.Size")));
-			this.servers.TabIndex = ((int)(resources.GetObject("servers.TabIndex")));
-			this.servers.Text = resources.GetString("servers.Text");
-			this.servers.Visible = ((bool)(resources.GetObject("servers.Visible")));
-			this.servers.SelectedIndexChanged += new System.EventHandler(this.servers_SelectedIndexChanged);
-			// 
-			// enterpriseName
-			// 
-			this.enterpriseName.AccessibleDescription = resources.GetString("enterpriseName.AccessibleDescription");
-			this.enterpriseName.AccessibleName = resources.GetString("enterpriseName.AccessibleName");
-			this.enterpriseName.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("enterpriseName.Anchor")));
-			this.enterpriseName.AutoSize = ((bool)(resources.GetObject("enterpriseName.AutoSize")));
-			this.enterpriseName.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("enterpriseName.Dock")));
-			this.enterpriseName.Enabled = ((bool)(resources.GetObject("enterpriseName.Enabled")));
-			this.enterpriseName.Font = ((System.Drawing.Font)(resources.GetObject("enterpriseName.Font")));
-			this.enterpriseName.Image = ((System.Drawing.Image)(resources.GetObject("enterpriseName.Image")));
-			this.enterpriseName.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("enterpriseName.ImageAlign")));
-			this.enterpriseName.ImageIndex = ((int)(resources.GetObject("enterpriseName.ImageIndex")));
-			this.enterpriseName.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("enterpriseName.ImeMode")));
-			this.enterpriseName.Location = ((System.Drawing.Point)(resources.GetObject("enterpriseName.Location")));
-			this.enterpriseName.Name = "enterpriseName";
-			this.enterpriseName.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("enterpriseName.RightToLeft")));
-			this.enterpriseName.Size = ((System.Drawing.Size)(resources.GetObject("enterpriseName.Size")));
-			this.enterpriseName.TabIndex = ((int)(resources.GetObject("enterpriseName.TabIndex")));
-			this.enterpriseName.Text = resources.GetString("enterpriseName.Text");
-			this.enterpriseName.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("enterpriseName.TextAlign")));
-			this.enterpriseName.Visible = ((bool)(resources.GetObject("enterpriseName.Visible")));
 			// 
 			// banner
 			// 
@@ -2012,6 +1968,30 @@ namespace Novell.FormsTrayApp
 			this.progressBar1.Text = resources.GetString("progressBar1.Text");
 			this.progressBar1.Visible = ((bool)(resources.GetObject("progressBar1.Visible")));
 			// 
+			// connect
+			// 
+			this.connect.AccessibleDescription = resources.GetString("connect.AccessibleDescription");
+			this.connect.AccessibleName = resources.GetString("connect.AccessibleName");
+			this.connect.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("connect.Anchor")));
+			this.connect.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("connect.BackgroundImage")));
+			this.connect.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("connect.Dock")));
+			this.connect.Enabled = ((bool)(resources.GetObject("connect.Enabled")));
+			this.connect.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("connect.FlatStyle")));
+			this.connect.Font = ((System.Drawing.Font)(resources.GetObject("connect.Font")));
+			this.connect.Image = ((System.Drawing.Image)(resources.GetObject("connect.Image")));
+			this.connect.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("connect.ImageAlign")));
+			this.connect.ImageIndex = ((int)(resources.GetObject("connect.ImageIndex")));
+			this.connect.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("connect.ImeMode")));
+			this.connect.Location = ((System.Drawing.Point)(resources.GetObject("connect.Location")));
+			this.connect.Name = "connect";
+			this.connect.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("connect.RightToLeft")));
+			this.connect.Size = ((System.Drawing.Size)(resources.GetObject("connect.Size")));
+			this.connect.TabIndex = ((int)(resources.GetObject("connect.TabIndex")));
+			this.connect.Text = resources.GetString("connect.Text");
+			this.connect.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("connect.TextAlign")));
+			this.connect.Visible = ((bool)(resources.GetObject("connect.Visible")));
+			this.connect.Click += new System.EventHandler(this.connect_Click);
+			// 
 			// GlobalProperties
 			// 
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
@@ -2247,18 +2227,11 @@ namespace Novell.FormsTrayApp
 		/// <param name="domainWeb">The DomainWeb object to add to the list.</param>
 		public void AddDomainToList(DomainWeb domainWeb)
 		{
-			Domain currentDefaultDomain = null;
 			bool domainInList = false;
 
 			foreach (ListViewItem lvi in accounts.Items)
 			{
 				Domain d = (Domain)lvi.Tag;
-
-				if (d.DomainWeb.IsDefault)
-				{
-					// The current default domain.
-					currentDefaultDomain = d;
-				}
 
 				if (d.ID.Equals(domainWeb.ID))
 				{
@@ -2270,18 +2243,17 @@ namespace Novell.FormsTrayApp
 			if (!domainInList)
 			{
 				// Reset the current default domain if the added domain is set to be the default.
-				if ((currentDefaultDomain != null) && domainWeb.IsDefault)
+				if ((defaultDomain != null) && domainWeb.IsDefault)
 				{
-					currentDefaultDomain.DomainWeb.IsDefault = false;
+					defaultDomain.DomainWeb.IsDefault = false;
 				}
 
 				Domain domain = new Domain(domainWeb);
-//				servers.Items.Add(domain);
 				servers2.Items.Add(domain);
 
 				if (domainWeb.IsDefault)
 				{
-//					servers.SelectedItem = domain;
+					defaultDomain = domain;
 				}
 
 				try
@@ -2690,7 +2662,6 @@ namespace Novell.FormsTrayApp
 
 		private void updateEnterpriseData()
 		{
-//			servers.Items.Clear();
 			servers2.Items.Clear();
 			accounts.Items.Clear();
 			DomainWeb[] domains;
@@ -2699,13 +2670,7 @@ namespace Novell.FormsTrayApp
 				domains = ifWebService.GetDomains();
 				foreach (DomainWeb dw in domains)
 				{
-//					Domain domain = new Domain(dw);
-//					servers.Items.Add(domain);
 					AddDomainToList(dw);
-//					if (domain.DomainWeb.IsDefault)
-//					{
-//						servers.SelectedItem = domain;
-//					}
 				}
 			}
 			catch
@@ -2751,7 +2716,6 @@ namespace Novell.FormsTrayApp
 				servers2.Items.Add(domain);
 				servers2.SelectedItem = domain;
 
-//				servers.Items.Clear();
 				accounts.Items.Clear();
 
 				DomainWeb[] domains;
@@ -2760,13 +2724,6 @@ namespace Novell.FormsTrayApp
 					domains = ifWebService.GetDomains();
 					foreach (DomainWeb dw in domains)
 					{
-//						domain = new Domain(dw);
-//						servers2.Items.Add(domain);
-//						servers.Items.Add(domain);
-//						if (domain.DomainWeb.IsDefault)
-//						{
-//							servers.SelectedItem = domain;
-//						}
 						AddDomainToList(dw);
 					}
 				}
@@ -3017,8 +2974,9 @@ namespace Novell.FormsTrayApp
 		private void menuCreate_Click(object sender, System.EventArgs e)
 		{
 			CreateiFolder createiFolder = new CreateiFolder();
-			createiFolder.Servers = servers.Items;
-			createiFolder.SelectedDomain = (Domain)servers2.SelectedItem;
+			createiFolder.Servers = accounts.Items;
+			Domain selectedDomain = (Domain)servers2.SelectedItem;
+			createiFolder.SelectedDomain = selectedDomain.ShowAll ? defaultDomain : selectedDomain;
 			createiFolder.iFolderWebService = ifWebService;
 
 			if ((DialogResult.OK == createiFolder.ShowDialog()) && iFolderComponent.DisplayConfirmationEnabled)
@@ -3370,75 +3328,6 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Server Tab
-		private void servers_SelectedIndexChanged(object sender, System.EventArgs e)
-		{
-/*			Domain selectedDomain = (Domain)servers.SelectedItem;
-
-			try
-			{
-				iFolderUser ifolderUser = ifWebService.GetiFolderUser(selectedDomain.DomainWeb.UserID);
-				userName.Text = ifolderUser.Name;
-			}
-			catch (Exception ex)
-			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readUserError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-				mmb.ShowDialog();
-			}
-
-//			enterpriseDescription.Text = selectedDomain.DomainWeb.Description;
-
-			// TODO: set the remember password and auto login checkboxes.
-
-			defaultServer.Checked = selectedDomain.DomainWeb.IsDefault;
-			defaultServer.Enabled = !defaultServer.Checked;
-
-			try
-			{
-				// Get the disk space.
-				DiskSpace diskSpace = ifWebService.GetUserDiskSpace(selectedDomain.DomainWeb.UserID);
-				double used = 0;
-				if (diskSpace.UsedSpace != 0)
-				{
-					usedSpaceUnits.Text = resourceManager.GetString("freeSpaceUnits.Text");
-					used = Math.Round(diskSpace.UsedSpace/megaByte, 2);
-					usedSpace.Text = used.ToString();
-				}
-				else
-				{
-					usedSpaceUnits.Text = resourceManager.GetString("notApplicable");
-					usedSpace.Text = "";
-				}
-
-				if (diskSpace.Limit != 0)
-				{
-					usedSpaceUnits.Text = freeSpaceUnits.Text = totalSpaceUnits.Text = 
-						resourceManager.GetString("freeSpaceUnits.Text");
-					totalSpace.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
-
-					freeSpace.Text = ((double)Math.Round(diskSpace.AvailableSpace/megaByte, 2)).ToString();
-
-					// Set up the gauge chart.
-					gaugeChart1.MaxValue = diskSpace.Limit / megaByte;
-					gaugeChart1.Used = used;
-					gaugeChart1.BarColor = SystemColors.ActiveCaption;
-				}
-				else
-				{
-					freeSpaceUnits.Text = totalSpaceUnits.Text =
-						resourceManager.GetString("notApplicable");
-					freeSpace.Text = totalSpace.Text = "";
-					gaugeChart1.Used = 0;
-				}
-			}
-			catch
-			{
-				usedSpace.Text = freeSpace.Text = totalSpace.Text = resourceManager.GetString("statusUnknown");
-			}
-
-			// Cause the gauge chart to be redrawn.
-			gaugeChart1.Invalidate(true);*/
-		}
-
 		private void defaultServer_CheckedChanged(object sender, System.EventArgs e)
 		{
 			if (defaultServer.Focused && defaultServer.Checked)
@@ -3446,49 +3335,18 @@ namespace Novell.FormsTrayApp
 				// Set this domain as the default.
 				try
 				{
-//					Domain domain = (Domain)servers.SelectedItem;
 					Domain domain = (Domain)accounts.SelectedItems[0].Tag;
 					ifWebService.SetDefaultDomain(domain.DomainWeb.ID);
 
 					// Reset the flag on the current default domain.
-//					foreach (Domain d in servers.Items)
-//					{
-//						if (d.DomainWeb.IsDefault)
-//						{
-//							d.DomainWeb.IsDefault = false;
-//							break;
-//						}
-//					}
-
-					foreach (ListViewItem lvi in accounts.Items)
-					{
-						Domain d = (Domain)lvi.Tag;
-						if (d.DomainWeb.IsDefault)
-						{
-							d.DomainWeb.IsDefault = false;
-							break;
-						}
-					}
+					defaultDomain.DomainWeb.IsDefault = false;
 
 					// Set the flag on the new default domain.
 					domain.DomainWeb.IsDefault = true;
+					defaultDomain = domain;
 
 					// Disable the checkbox so that it cannot be unchecked.
 					defaultServer.Enabled = false;
-
-					// Fix the default domain in the other server list.
-					foreach (Domain d in servers2.Items)
-					{
-						if (d.DomainWeb.IsDefault)
-						{
-							d.DomainWeb.IsDefault = false;
-						}
-
-						if (d.DomainWeb.ID.Equals(domain.DomainWeb.ID))
-						{
-							d.DomainWeb.IsDefault = true;
-						}
-					}
 				}
 				catch
 				{}
@@ -3497,14 +3355,31 @@ namespace Novell.FormsTrayApp
 
 		private void addAccount_Click(object sender, System.EventArgs e)
 		{
-			AddAccount addAccount = new AddAccount(ifWebService);
+/*			AddAccount addAccount = new AddAccount(ifWebService);
 			addAccount.EnterpriseConnect += new Novell.FormsTrayApp.AddAccount.EnterpriseConnectDelegate(addAccount_EnterpriseConnect);
 			addAccount.ShowDialog();
 
 			if (addAccount.UpdateStarted)
 			{
 				// TODO: An update has started ... shutdown.
-			}
+			}*/
+
+			ListViewItem lvi = new ListViewItem(new string[] {string.Empty, string.Empty});
+			accounts.Items.Add(lvi);
+			accounts.SelectedItems.Clear();
+			lvi.Selected = true;
+		}
+
+		private void userName_TextChanged(object sender, System.EventArgs e)
+		{
+			ListViewItem lvi = accounts.SelectedItems[0];
+			lvi.SubItems[0].Text = userName.Text;
+		}
+
+		private void server_TextChanged(object sender, System.EventArgs e)
+		{
+			ListViewItem lvi = accounts.SelectedItems[0];
+			lvi.SubItems[1].Text = server.Text;
 		}
 
 		private void removeAccount_Click(object sender, System.EventArgs e)
@@ -3535,28 +3410,122 @@ namespace Novell.FormsTrayApp
 				if (lvi != null)
 				{
 					userName.Text = lvi.SubItems[0].Text;
-					userName.ReadOnly = true;
 					server.Text = lvi.SubItems[1].Text;
-					server.ReadOnly = true;
+					password.Text = string.Empty;
 
-					defaultServer.Checked = ((Domain)lvi.Tag).DomainWeb.IsDefault;
-					defaultServer.Enabled = !defaultServer.Checked;
+					if (lvi.Tag == null)
+					{
+						// This is a new account.
+						userName.ReadOnly = server.ReadOnly = false;
+						userName.Enabled = server.Enabled = password.Enabled = 
+							rememberPassword.Enabled = autoLogin.Enabled = 
+							removeAccount.Enabled = true;
+						details.Enabled = defaultServer.Checked = defaultServer.Enabled = false;
+						userName.Focus();
+					}
+					else
+					{
+						details.Enabled = true;
+						userName.ReadOnly = server.ReadOnly = true;
 
-					// TODO: Fill in password with fixed long length of characters if it is currently remembered.
-					password.Enabled = true;
+						defaultServer.Checked = ((Domain)lvi.Tag).DomainWeb.IsDefault;
+						defaultServer.Enabled = !defaultServer.Checked;
 
-					// TODO: set remember password and auto login settings.
+						// TODO: Don't allow the workgroup account to be removed.
+						// Don't allow the default account to be removed.
+						removeAccount.Enabled = !defaultServer.Checked;
+
+						// TODO: Fill in password with fixed long length of characters if it is currently remembered.
+						password.Enabled = true;
+
+						// TODO: set remember password and auto login settings.
+					}
 				}
 			}
 			else
 			{
 				userName.Enabled = server.Enabled = password.Enabled = rememberPassword.Enabled =
-					autoLogin.Enabled = defaultServer.Enabled = false;
+					autoLogin.Enabled = defaultServer.Enabled = details.Enabled = 
+					removeAccount.Enabled = false;
 			}
 		}
 
 		private void details_Click(object sender, System.EventArgs e)
 		{
+			ServerDetails serverDetails = new ServerDetails(this.ifWebService, accounts.Items, (Domain)accounts.SelectedItems[0].Tag);
+			serverDetails.ShowDialog();
+		}
+
+		private void connect_Click(object sender, System.EventArgs e)
+		{
+			Cursor.Current = Cursors.WaitCursor;
+
+			try
+			{
+				DomainWeb domainWeb = ifWebService.ConnectToDomain(userName.Text, password.Text, server.Text);
+
+				if (domainWeb != null)
+				{
+					Domain domain = new Domain(domainWeb);
+					ListViewItem lvi = accounts.SelectedItems[0];
+					lvi.Tag = domain;
+					servers2.Items.Add(domain);
+
+					// Update default.
+					if (domainWeb.IsDefault)
+					{
+						defaultDomain.DomainWeb.IsDefault = false;
+						defaultDomain = domain;
+						defaultServer.Checked = true;
+						defaultServer.Enabled = false;
+					}
+
+					if (!rememberPassword.Checked)
+					{
+						password.Text = string.Empty;
+					}
+
+					// TODO: save state of checkboxes.
+				}
+				else
+				{
+					// TODO: Error message.
+				}
+
+				try
+				{
+					// Check for an update.
+					bool updateStarted = FormsTrayApp.CheckForClientUpdate(domainWeb.ID, userName.Text, password.Text);
+					if (updateStarted)
+					{
+						// TODO: Shut down the tray app.
+					}
+				}
+				catch (Exception ex)
+				{
+					/* TODO:
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("checkUpdateError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+					mmb.ShowDialog();
+					*/
+				}
+			}
+			catch (Exception ex)
+			{
+				/* TODO:
+				if (ex.Message.IndexOf("HTTP status 401") != -1)
+				{
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+				}
+				else
+				{
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+				}
+				*/
+			}
+
+			Cursor.Current = Cursors.Default;
 		}
 		#endregion
 
