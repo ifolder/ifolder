@@ -60,6 +60,22 @@ public class Dredger
 	bool onServer = false;
 
 	//--------------------------------------------------------------------
+	// only returns true if file exists and name matches case exactly
+	bool FileThere(string path, string name)
+	{
+		FileInfo fi = new FileInfo(Path.Combine(path, name));
+		return fi.Exists && name == fi.Name;
+	}
+
+	//--------------------------------------------------------------------
+	// only returns true if directory exists and name matches case exactly
+	bool DirThere(string path, string name)
+	{
+		DirectoryInfo di = new DirectoryInfo(Path.Combine(path, name));
+		return di.Exists && name == di.Name;
+	}
+
+	//--------------------------------------------------------------------
 	void DeleteNode(Node node)
 	{
 		Log.Spew("Dredger deleting orphaned node {0}, {1}", node.Name, node.ID);
@@ -77,42 +93,46 @@ public class Dredger
 	//--------------------------------------------------------------------
 	// TODO: what about file permissions and symlinks?
 
-	DirNode DoNode(DirNode parentNode, string path, string type)
+	void DoNode(DirNode parentNode, string path, string type)
 	{
 		Node node = null;
 		string name = Path.GetFileName(path);
 
+		//Log.Spew("Dredger processing node of path {0}", path);
+
 		// don't let temp files from sync into the collection as regular nodes
 		if (name.StartsWith(IncomingNode.TempFilePrefix) && type == typeof(FileNode).Name)
-			return null;
+			return;
 
 		// find if node for this file or dir already exists
 		// delete nodes that are wrong type
 		foreach (ShallowNode sn in collection.GetNodesByName(name))
 		{
 			Node n = new Node(collection, sn);
-			DirNode dn = SyncOps.CastToDirNode(collection, n);
-			string npath = dn != null? dn.GetFullPath(collection):
-					SyncOps.CastToBaseFileNode(collection, n).GetFullPath(collection);
-			if (npath == path)
+			DirNode dn = collection.IsType(n, typeof(DirNode).Name)? new DirNode(n): null;
+			FileNode fn = collection.IsType(n, typeof(FileNode).Name)? new FileNode(n): null;
+			string npath = null;
+			if (dn != null)
+				npath = dn.GetFullPath(collection);
+			else if (fn != null)
+				npath = fn.GetFullPath(collection);
+			if (npath != null && npath == path)
 			{
-				if (!collection.IsType(n, type))
+				if (!collection.IsType(n, type) || node != null && dn == null)
+					DeleteNode(n); // remove node if wrong type or duplicate file
+				else
 				{
-					DeleteNode(n);
-					continue;
+					if (dn != null)
+						DoSubtree(dn);
+					if (node == null)
+						node = n;
 				}
-
-				Property p = n.Properties.GetSingleProperty(PropertyTags.Parent);
-				Relationship rship = p == null? null: p.Value as Relationship;
-				if (rship != null && rship.NodeID != parentNode.ID)
-					return null;
-				node = n;
-				break;
 			}
 		}
 
-		if (node == null) // it's a new node
+		if (node == null)
 		{
+			// it's a new node
 			if (type == typeof(FileNode).Name)
 			{
 				FileNode fnode = new FileNode(collection, parentNode, name);
@@ -120,56 +140,44 @@ public class Dredger
 				fnode.CreationTime = File.GetCreationTime(path);
 				Log.Spew("Dredger adding file node for {0} {1}", path, fnode.ID);
 				collection.Commit(fnode);
-				return null;
 			}
-			DirNode dnode = new DirNode(collection, parentNode, name);
-			dnode.LastWriteTime = Directory.GetLastWriteTime(path);
-			dnode.CreationTime = Directory.GetCreationTime(path);
-			Log.Spew("Dredger adding dir node for {0} {1}", path, dnode.ID);
-			collection.Commit(dnode);
-			return dnode;
+			else
+			{
+				DirNode dnode = new DirNode(collection, parentNode, name);
+				dnode.LastWriteTime = Directory.GetLastWriteTime(path);
+				dnode.CreationTime = Directory.GetCreationTime(path);
+				Log.Spew("Dredger adding dir node for {0} {1}", path, dnode.ID);
+				collection.Commit(dnode);
+				DoSubtree(dnode);
+			}
 		}
-
-		if (type != typeof(FileNode).Name)
-			return new DirNode(node);
-
-		// from here we are just checking for modified files
-		FileNode unode = new FileNode(node);
-		DateTime lastWrote = File.GetLastWriteTime(path);
-		DateTime created = File.GetCreationTime(path);
-		if (unode.LastWriteTime != lastWrote || unode.CreationTime != created)
+		else if (type == typeof(FileNode).Name)
 		{
-			unode.LastWriteTime = lastWrote;
-			unode.CreationTime = created;
-			Log.Spew("Dredger updating file node for {0} {1}", path, node.ID);
-			collection.Commit(unode);
+			// here we are just checking for modified files
+			FileNode unode = new FileNode(node);
+			DateTime lastWrote = File.GetLastWriteTime(path);
+			DateTime created = File.GetCreationTime(path);
+			if (unode.LastWriteTime != lastWrote || unode.CreationTime != created)
+			{
+				unode.LastWriteTime = lastWrote;
+				unode.CreationTime = created;
+				Log.Spew("Dredger updating file node for {0} {1}", path, node.ID);
+				collection.Commit(unode);
+			}
 		}
-		return null;
-	}
-
-	//--------------------------------------------------------------------
-	// only returns true if file exists and name matches case exactly
-	bool FileThere(string path, string name)
-	{
-		FileInfo fi = new FileInfo(Path.Combine(path, name));
-		return fi.Exists && name == fi.Name;
-	}
-
-	//--------------------------------------------------------------------
-	// only returns true if directory exists and name matches case exactly
-	bool DirThere(string path, string name)
-	{
-		DirectoryInfo di = new DirectoryInfo(Path.Combine(path, name));
-		return di.Exists && name == di.Name;
 	}
 
 	//--------------------------------------------------------------------
 	void DoSubtree(DirNode dnode)
 	{
 		if (dnode == null)
+		{
+			//Log.Spew("Dredger skipping empty subtree");
 			return;
+		}
 
 		string path = dnode.GetFullPath(collection);
+		//Log.Spew("Dredger processing subtree of path {0}", path);
 
 		// remove all nodes from store that no longer exist in the file system
 		foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
@@ -178,6 +186,7 @@ public class Dredger
 			if (collection.IsType(kid, typeof(DirNode).Name) && !DirThere(path, kid.Name)
 					|| collection.IsType(kid, typeof(FileNode).Name) && !FileThere(path, kid.Name))
 				DeleteNode(kid);
+			// else Log.Spew("Dredger leaving node {0}", kid.Name);
 		}
 
 		// merge files from file system to store
@@ -186,7 +195,7 @@ public class Dredger
 
 		// merge subdirs and recurse.
 		foreach (string dir in Directory.GetDirectories(path))
-			DoSubtree(DoNode(dnode, dir, typeof(DirNode).Name));
+			DoNode(dnode, dir, typeof(DirNode).Name);
 	}
 
 	//--------------------------------------------------------------------

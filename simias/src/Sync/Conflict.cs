@@ -161,7 +161,7 @@ public class Conflict
 			node = collection.DeleteCollision(node);
 			node.SetIncarnationValues(conflictNode.MasterIncarnation, conflictNode.LocalIncarnation);
 			collection.Commit(node);
-			Log.Spew("Local changes win in conflict for node {0}", node.Name);
+			Log.Spew("Local changes win in conflict for {0} node {1}", node.Type, node.Name);
 			return;
 		}
 
@@ -169,8 +169,11 @@ public class Conflict
 		// we may be resolving an update conflict on a node that has a naming conflict
 		string fncpath = FileNameConflictPath;
 		string path = fncpath == null? NonconflictedPath: fncpath;
-		File.Delete(path);
-		File.Move(UpdateConflictPath, path);
+		if (path != null)
+		{
+			File.Delete(path);
+			File.Move(UpdateConflictPath, path);
+		}
 		collection.ImportNode(conflictNode, node.LocalIncarnation);
 		if (fncpath == null)
 			node = collection.DeleteCollision(conflictNode);
@@ -178,7 +181,7 @@ public class Conflict
 			node = collection.CreateCollision(conflictNode);
 		conflictNode = null;
 		collection.Commit(node);
-		Log.Spew("Master update wins in conflict for node {0}", node.Name);
+		Log.Spew("Master update wins in conflict for {0} node {1}", node.Type, node.Name);
 	}
 
 	//---------------------------------------------------------------------------

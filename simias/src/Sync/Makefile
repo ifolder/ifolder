@@ -15,7 +15,9 @@ SyncCmd.exe: simias SyncCmd.cs
 	@echo building $@; mcs -debug+ -r:Simias.dll -out:$@ $(filter %.cs,$^)
 
 simias:
-	@cd ../..; make; make install; cd src/Sync
+	cd ../.. && make && make install && cd src/Sync
+
+#	@cd ../..; make; make install; cd src/Sync
 
 test: $(TARGETS)
 	mono --debug TestSync.exe 2>test.log

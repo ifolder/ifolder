@@ -51,7 +51,7 @@ public class SyncTests: Assertion
 
 	string host = "127.0.0.1";
 	string invitationFile = Path.Combine(storeDirB, "SyncTestInvitation.ifi");
-	bool runChildProcess = true;
+	bool runChildProcess = false;
 	bool useRemoteServer = false;
 
 	static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncTests));
@@ -290,8 +290,8 @@ public class SyncTests: Assertion
 			log.Debug("failed simpleAdds sync");
 			return false;
 		}
-		ResolveConflicts(storeDirA, folderA, true);
-		ResolveConflicts(storeDirB, folderB, true);
+		ResolveConflicts(storeDirA, folderA, false);
+		ResolveConflicts(storeDirB, folderB, false);
 		return Differ.CompareDirectories(folderA, folderB);
 	}
 
@@ -320,8 +320,8 @@ public class SyncTests: Assertion
 			log.Debug("failed simple deletes sync");
 			return false;
 		}
-		ResolveConflicts(storeDirA, folderA, true);
-		ResolveConflicts(storeDirB, folderB, true);
+		ResolveConflicts(storeDirA, folderA, false);
+		ResolveConflicts(storeDirB, folderB, false);
 
 		bool worked = true;
 		string fname;
@@ -397,8 +397,8 @@ public class SyncTests: Assertion
 			return false;
 		}
 
-		ResolveConflicts(storeDirA, folderA, true);
-		ResolveConflicts(storeDirB, folderB, true);
+		ResolveConflicts(storeDirA, folderA, false);
+		ResolveConflicts(storeDirB, folderB, false);
 		return Differ.CompareDirectories(folderA, folderB);
 	}
 
@@ -433,8 +433,8 @@ public class SyncTests: Assertion
 				return false;
 			}
 		}
-		ResolveConflicts(storeDirA, folderA, true);
-		ResolveConflicts(storeDirB, folderB, true);
+		ResolveConflicts(storeDirA, folderA, false);
+		ResolveConflicts(storeDirB, folderB, false);
 		return Differ.CompareDirectories(folderA, folderB);
 	}
 
@@ -467,7 +467,7 @@ public class SyncTests: Assertion
 		AccountTest("syncSize", SizeSync());
 		AccountTest("simpleAdds", SimpleAdds());
 		AccountTest("simpleDeletes", SimpleDeletes());
-		//AccountTest("FileCreationCollision", FileCreationCollision());
+		AccountTest("FileCreationCollision", FileCreationCollision());
 		//AccountTest("DeepSubDirs", DeepSubDirs());
 		Cleanup();
 		Console.WriteLine("{0} tests succeeded, {1} failed", successCount, failedCount);
