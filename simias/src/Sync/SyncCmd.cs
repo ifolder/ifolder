@@ -1,6 +1,6 @@
 /***********************************************************************
  *  $RCSfile$
- * 
+ *
  *  Copyright (C) 2004 Novell, Inc.
  *
  *  This library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  *  Author: Dale Olds <olds@novell.com>
- * 
+ *
  ***********************************************************************/
 using System;
 using System.IO;
@@ -30,7 +30,6 @@ using System.Runtime.Remoting.Channels.Http;
 using System.Runtime.Remoting.Channels.Tcp;
 
 using Simias.Storage;
-using Simias.Identity;
 using Simias.Agent;
 
 namespace Simias.Sync
@@ -252,7 +251,7 @@ public class SyncCmd
 	int RunSync(Uri docRoot, string serverStoreLocation)
 	{
 		Store store = Store.Connect(storeLocation);
-		Collection c = FileInviter.FindCollection(store, docRoot); 
+		Collection c = FileInviter.FindCollection(store, docRoot);
 		if (c == null)
 		{
 			Log.Error("Could not find collection {0}", docRoot);

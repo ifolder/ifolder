@@ -28,7 +28,6 @@ using NUnit.Framework;
 using Simias;
 using Simias.Storage;
 using Simias.Sync;
-using Simias.Identity;
 
 namespace Simias.Sync.Tests
 {

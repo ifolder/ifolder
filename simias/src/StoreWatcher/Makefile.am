@@ -1,19 +1,19 @@
 StoreWatcher_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/StoreWatcher.cs
 StoreWatcher_CSFILES_CSC := $(subst /,$(SEP),$(StoreWatcher_CSFILES))
-StoreWatcher_INCLUDES = 
+StoreWatcher_INCLUDES =
 StoreWatcher_RESOURCES =
 StoreWatcher_FLAGS = $(CSC_LIBFLAG)
-StoreWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll CollectionEvents.dll Identity.dll CollectionStore.dll WorkGroupIdentity.dll SqliteProvider.dll SqliteWrapper.dll Common.dll
-StoreWatcher_LIBPATH = Library ../Configuration ../CollectionEvents ../CollectionStore ../StoreProvider ../Identity ../WorkGroupIdentity ../SqliteProvider ../Common
+StoreWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll SqliteProvider.dll SqliteWrapper.dll Common.dll
+StoreWatcher_LIBPATH = Library ../Configuration ../CollectionEvents ../CollectionStore ../StoreProvider ../SqliteProvider ../Common
 
 NUNIT_TESTS := StoreWatcherTests.dll
 
 StoreWatcherTests_CSFILES = $(srcdir)/Tests/StoreWatcherTests.cs $(srcdir)/Tests/AssemblyInfo.cs
 StoreWatcherTests_CSFILES_CSC := $(subst /,$(SEP),$(StoreWatcherTests_CSFILES))
-StoreWatcherTests_INCLUDES = 
+StoreWatcherTests_INCLUDES =
 StoreWatcherTests_RESOURCES =
 StoreWatcherTests_FLAGS = $(CSC_LIBFLAG)
-StoreWatcherTests_LIBS = $(StoreWatcher_LIBS) $(SYSTEM_XML) nunit.framework.dll StoreWatcher.dll 
+StoreWatcherTests_LIBS = $(StoreWatcher_LIBS) $(SYSTEM_XML) nunit.framework.dll StoreWatcher.dll
 StoreWatcherTests_LIBPATH = $(StoreWatcher_LIBPATH) Tests $(srcdir)/../../tools/NUnit/bin
 
 EXTRA_DIST = $(StoreWatcher_CSFILES) $(StoreWatcherTests_CSFILES)
@@ -31,10 +31,10 @@ StoreWatcherTests.dll: $(StoreWatcherTests_CSFILES) $(StoreWatcherTests_RESOURCE
 install-exec-local: StoreWatcher.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) StoreWatcher.dll $(DESTDIR)$(bindir)
-    
+
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f StoreWatcher.dll StoreWatcherTests.xml $(NUNIT_TESTS)
-    
+
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
@@ -46,7 +46,7 @@ CLEAN_DIRS = .cstore
 clean-local:
 	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
 	rm -rf $(CLEAN_DIRS)
-    
+
 distclean-local: clean
 
 maintainer-clean-local:

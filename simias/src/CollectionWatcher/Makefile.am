@@ -4,7 +4,7 @@ CollectionWatcher_INCLUDES =
 CollectionWatcher_RESOURCES =
 CollectionWatcher_FLAGS = $(CSC_LIBFLAG)
 CollectionWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll Common.dll Agent.dll SyncCommon.dll
-CollectionWatcher_LIBPATH = Library ../CollectionStore ../StoreProvider ../Identity ../Common ../SyncCommon ../Configuration ../CollectionEvents ../Agent
+CollectionWatcher_LIBPATH = Library ../CollectionStore ../StoreProvider ../Common ../SyncCommon ../Configuration ../CollectionEvents ../Agent
 
 NUNIT_TESTS := CollectionWatcherTests.dll
 

@@ -1,19 +1,19 @@
 SyncLogicLite_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/SyncCollectionServiceLite.cs $(srcdir)/Library/SyncCollectionWorkerLite.cs $(srcdir)/Library/SyncLogicFactoryLite.cs $(srcdir)/Library/SyncPacket.cs $(srcdir)/Library/SyncPacketData.cs $(srcdir)/Library/SyncPacketHeader.cs
 SyncLogicLite_CSFILES_CSC := $(subst /,$(SEP),$(SyncLogicLite_CSFILES))
-SyncLogicLite_INCLUDES = 
+SyncLogicLite_INCLUDES =
 SyncLogicLite_RESOURCES =
 SyncLogicLite_FLAGS = $(CSC_LIBFLAG)
-SyncLogicLite_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll Identity.dll Configuration.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll Agent.dll SyncCommon.dll
-SyncLogicLite_LIBPATH = Library ../Common ../Identity ../SyncCommon ../StoreProvider ../CollectionStore ../Configuration ../CollectionEvents ../Agent
+SyncLogicLite_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll Configuration.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll Agent.dll SyncCommon.dll
+SyncLogicLite_LIBPATH = Library ../Common ../SyncCommon ../StoreProvider ../CollectionStore ../Configuration ../CollectionEvents ../Agent
 
 NUNIT_TESTS := SyncLogicLiteTests.dll
 
 SyncLogicLiteTests_CSFILES = $(srcdir)/Tests/SyncLogicLiteTests.cs $(srcdir)/Tests/AssemblyInfo.cs
 SyncLogicLiteTests_CSFILES_CSC := $(subst /,$(SEP),$(SyncLogicLiteTests_CSFILES))
-SyncLogicLiteTests_INCLUDES = 
+SyncLogicLiteTests_INCLUDES =
 SyncLogicLiteTests_RESOURCES =
 SyncLogicLiteTests_FLAGS = $(CSC_LIBFLAG)
-SyncLogicLiteTests_LIBS = $(SyncLogicLite_LIBS) $(SYSTEM_XML) nunit.framework.dll SyncLogicLite.dll 
+SyncLogicLiteTests_LIBS = $(SyncLogicLite_LIBS) $(SYSTEM_XML) nunit.framework.dll SyncLogicLite.dll
 SyncLogicLiteTests_LIBPATH = $(SyncLogicLite_LIBPATH) Tests $(srcdir)/../../tools/NUnit/bin
 
 EXTRA_DIST = $(SyncLogicLite_CSFILES) $(SyncLogicLiteTests_CSFILES)
@@ -31,10 +31,10 @@ SyncLogicLiteTests.dll: $(SyncLogicLiteTests_CSFILES) $(SyncLogicLiteTests_RESOU
 install-exec-local: SyncLogicLite.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) SyncLogicLite.dll $(DESTDIR)$(bindir)
-    
+
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f SyncLogicLite.dll SyncLogicLiteTests.xml $(NUNIT_TESTS)
-	    
+	
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
@@ -46,7 +46,7 @@ CLEAN_DIRS = .cstore
 clean-local:
 	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
 	rm -rf $(CLEAN_DIRS)
-    
+
 distclean-local: clean
 
 maintainer-clean-local:

@@ -1,16 +1,16 @@
 SyncManager_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/DebugServerChannelSink.cs $(srcdir)/Library/DebugServerChannelSinkProvider.cs $(srcdir)/Library/SyncChannel.cs $(srcdir)/Library/SyncChannelFactory.cs $(srcdir)/Library/SyncCollectionManager.cs $(srcdir)/Library/SyncCredentialCache.cs $(srcdir)/Library/SyncManager.cs $(srcdir)/Library/SyncPing.cs $(srcdir)/Library/SyncStoreManager.cs
 SyncManager_CSFILES_CSC := $(subst /,$(SEP),$(SyncManager_CSFILES))
-SyncManager_INCLUDES = 
+SyncManager_INCLUDES =
 SyncManager_RESOURCES =
 SyncManager_FLAGS = $(CSC_LIBFLAG)
-SyncManager_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Identity.dll Configuration.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll Agent.dll SyncCommon.dll CollectionWatcher.dll System.Runtime.Remoting.dll StoreWatcher.dll
-SyncManager_LIBPATH = Library ../SyncCommon ../CollectionEvents ../CollectionStore ../Identity ../Configuration ../StoreProvider ../Common ../CollectionWatcher ../Agent ../StoreWatcher
+SyncManager_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll Agent.dll SyncCommon.dll CollectionWatcher.dll System.Runtime.Remoting.dll StoreWatcher.dll
+SyncManager_LIBPATH = Library ../SyncCommon ../CollectionEvents ../CollectionStore ../Configuration ../StoreProvider ../Common ../CollectionWatcher ../Agent ../StoreWatcher
 
 NUNIT_TESTS := SyncManagerTests.dll
 
 SyncManagerTests_CSFILES = $(srcdir)/Tests/SyncManagerTests.cs $(srcdir)/Tests/AssemblyInfo.cs
 SyncManagerTests_CSFILES_CSC := $(subst /,$(SEP),$(SyncManagerTests_CSFILES))
-SyncManagerTests_INCLUDES = 
+SyncManagerTests_INCLUDES =
 SyncManagerTests_RESOURCES =
 SyncManagerTests_FLAGS = $(CSC_LIBFLAG)
 SyncManagerTests_LIBS = $(SyncManager_LIBS) $(SYSTEM_XML) nunit.framework.dll SyncManager.dll
@@ -31,12 +31,12 @@ SyncManagerTests.dll: $(SyncManagerTests_CSFILES) $(SyncManagerTests_RESOURCES)
 install-exec-local: SyncManager.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) SyncManager.dll $(DESTDIR)$(bindir)
-    
+
 uninstall-local:
 	cd $(DESTDIR)$(bindir); \
 		rm -f SyncManager.dll SyncManagerTests.xml $(NUNIT_TESTS); \
 		rm -rf manager1
-    
+
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
@@ -48,7 +48,7 @@ CLEAN_DIRS = .cstore
 clean-local:
 	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
 	rm -rf $(CLEAN_DIRS)
-    
+
 distclean-local: clean
 
 maintainer-clean-local:

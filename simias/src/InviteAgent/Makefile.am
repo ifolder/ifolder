@@ -1,14 +1,14 @@
 InviteAgent_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/InviteAgent.cs
 InviteAgent_CSFILES_CSC := $(subst /,$(SEP),$(InviteAgent_CSFILES))
-InviteAgent_INCLUDES = 
+InviteAgent_INCLUDES =
 InviteAgent_RESOURCES =
 InviteAgent_FLAGS = $(CSC_LIBFLAG)
-InviteAgent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll Configuration.dll StoreProvider.dll Identity.dll CollectionEvents.dll CollectionStore.dll Agent.dll AddressBook.dll Common.dll SyncCommon.dll
-InviteAgent_LIBPATH = Library ../CollectionStore ../StoreProvider ../Identity ../Agent ../AddressBook ../Common ../SyncCommon ../Configuration ../CollectionEvents
+InviteAgent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll Configuration.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll Agent.dll AddressBook.dll Common.dll SyncCommon.dll
+InviteAgent_LIBPATH = Library ../CollectionStore ../StoreProvider ../Agent ../AddressBook ../Common ../SyncCommon ../Configuration ../CollectionEvents
 
 InviteAgentConsole_CSFILES = $(srcdir)/ConsoleApp/AssemblyInfo.cs $(srcdir)/ConsoleApp/MainClass.cs
 InviteAgentConsole_CSFILES_CSC := $(subst /,$(SEP),$(InviteAgentConsole_CSFILES))
-InviteAgentConsole_INCLUDES = 
+InviteAgentConsole_INCLUDES =
 InviteAgentConsole_RESOURCES = $(srcdir)/ConsoleApp/App$(ICON_EXT)
 InviteAgentConsole_FLAGS = $(CSC_EXEFLAG)
 InviteAgentConsole_LIBS = $(InviteAgent_LIBS) $(SYSTEM_XML) InviteAgent.dll
@@ -16,7 +16,7 @@ InviteAgentConsole_LIBPATH = $(InviteAgent_LIBPATH)
 
 InviteAgentGui_CSFILES = $(srcdir)/FormApp/AssemblyInfo.cs $(srcdir)/FormApp/MainForm.cs
 InviteAgentGui_CSFILES_CSC := $(subst /,$(SEP),$(InviteAgentGui_CSFILES))
-InviteAgentGui_INCLUDES = 
+InviteAgentGui_INCLUDES =
 InviteAgentGui_RESOURCES = $(srcdir)/FormApp/App$(ICON_EXT)
 InviteAgentGui_FLAGS = $(CSC_EXEFLAG)
 InviteAgentGui_LIBS = $(InviteAgent_LIBS) System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) InviteAgent.dll
@@ -24,7 +24,7 @@ InviteAgentGui_LIBPATH = $(InviteAgent_LIBPATH)
 
 EmailInviteAgent_CSFILES = $(srcdir)/LibraryEmail/AssemblyInfo.cs $(srcdir)/LibraryEmail/EmailInviteAgent.cs
 EmailInviteAgent_CSFILES_CSC := $(subst /,$(SEP),$(EmailInviteAgent_CSFILES))
-EmailInviteAgent_INCLUDES = 
+EmailInviteAgent_INCLUDES =
 EmailInviteAgent_RESOURCES =
 EmailInviteAgent_FLAGS = $(CSC_LIBFLAG)
 EmailInviteAgent_LIBS = $(InviteAgent_LIBS) $(SYSTEM_XML) InviteAgent.dll Smtp.dll
@@ -34,7 +34,7 @@ NUNIT_TESTS := InviteAgentTests.dll
 
 InviteAgentTests_CSFILES = $(srcdir)/Tests/AssemblyInfo.cs $(srcdir)/Tests/InviteAgentTests.cs
 InviteAgentTests_CSFILES_CSC := $(subst /,$(SEP),$(InviteAgentTests_CSFILES))
-InviteAgentTests_INCLUDES = 
+InviteAgentTests_INCLUDES =
 InviteAgentTests_RESOURCES =
 InviteAgentTests_FLAGS = $(CSC_LIBFLAG)
 InviteAgentTests_LIBS = $(InviteAgent_LIBS) $(SYSTEM_XML) nunit.framework.dll
@@ -61,13 +61,13 @@ InviteAgentGui.exe: $(InviteAgentGui_CSFILES) $(InviteAgentGui_RESOURCES)
 InviteAgentTests.dll: $(InviteAgentTests_CSFILES) $(InviteAgentTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(InviteAgentTests_FLAGS) $(InviteAgentTests_LIBS:%=/r:%) $(InviteAgentTests_LIBPATH:%=/lib:%) $(InviteAgentTests_CSFILES_CSC)
 	
-install-exec-local: InviteAgent.dll EmailInviteAgent.dll InviteAgentConsole.exe InviteAgentGui.exe 
+install-exec-local: InviteAgent.dll EmailInviteAgent.dll InviteAgentConsole.exe InviteAgentGui.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) InviteAgent.dll EmailInviteAgent.dll InviteAgentConsole.exe InviteAgentGui.exe $(DESTDIR)$(bindir)
-    
+
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f InviteAgent.dll EmailInviteAgent.dll InviteAgentConsole.exe InviteAgentGui.exe InviteAgentTests.xml $(NUNIT_TESTS)
-    
+
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
@@ -79,7 +79,7 @@ CLEAN_DIRS = .cstore
 clean-local:
 	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
 	rm -rf $(CLEAN_DIRS)
-    
+
 distclean-local: clean
 
 maintainer-clean-local:

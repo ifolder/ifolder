@@ -4,7 +4,7 @@ CollectionStore_INCLUDES =
 CollectionStore_RESOURCES =
 CollectionStore_FLAGS = $(CSC_LIBFLAG)
 CollectionStore_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll System.Security.dll CollectionEvents.dll
-CollectionStore_LIBPATH = ../Configuration ../StoreProvider ../Identity ../CollectionEvents
+CollectionStore_LIBPATH = ../Configuration ../StoreProvider ../CollectionEvents
 
 NUNIT_TESTS := CollectionStoreTests.dll
 
@@ -14,7 +14,7 @@ CollectionStoreTests_INCLUDES =
 CollectionStoreTests_RESOURCES =
 CollectionStoreTests_FLAGS = $(CSC_LIBFLAG)
 CollectionStoreTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Configuration.dll StoreProvider.dll System.Security.dll CollectionEvents.dll CollectionStore.dll
-CollectionStoreTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Configuration ../StoreProvider ../Identity ../CollectionEvents
+CollectionStoreTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Configuration ../StoreProvider ../CollectionEvents
 
 EXTRA_DIST = $(CollectionStore_CSFILES) $(CollectionStoreTests_CSFILES)
 

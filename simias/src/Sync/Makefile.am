@@ -1,14 +1,14 @@
 Sync_CSFILES = $(srcdir)/SyncPass.cs $(srcdir)/SyncOps.cs $(srcdir)/Dredge.cs $(srcdir)/SyncLog.cs
 Sync_CSFILES_CSC := $(subst /,$(SEP),$(Sync_CSFILES))
-Sync_INCLUDES = 
+Sync_INCLUDES =
 Sync_RESOURCES =
 Sync_FLAGS = $(CSC_LIBFLAG)
-Sync_LIBS = Common.dll Configuration.dll CollectionEvents.dll StoreProvider.dll Identity.dll CollectionStore.dll Agent.dll SyncCommon.dll System.dll System.Data.dll System.Runtime.Remoting.dll
-Sync_LIBPATH = ../Common ../SyncCommon ../Agent ../CollectionEvents ../CollectionStore ../StoreProvider ../Identity ../FsProvider ../WorkGroupIdentity ../Configuration ../SqliteProvider ../../external/sqlite/linux
+Sync_LIBS = Common.dll Configuration.dll CollectionEvents.dll StoreProvider.dll CollectionStore.dll Agent.dll SyncCommon.dll System.dll System.Data.dll System.Runtime.Remoting.dll
+Sync_LIBPATH = ../Common ../SyncCommon ../Agent ../CollectionEvents ../CollectionStore ../StoreProvider ../FsProvider ../Configuration ../SqliteProvider ../../external/sqlite/linux
 
 SyncCmd_CSFILES = $(srcdir)/SyncCmd.cs
 SyncCmd_CSFILES_CSC := $(subst /,$(SEP),$(SyncCmd_CSFILES))
-SyncCmd_INCLUDES = 
+SyncCmd_INCLUDES =
 SyncCmd_RESOURCES =
 SyncCmd_FLAGS = $(CSC_EXEFLAG)
 SyncCmd_LIBS = $(Sync_LIBS) Sync.dll
@@ -18,18 +18,18 @@ NUNIT_TESTS := TestSync.exe
 
 TestSync_CSFILES = $(srcdir)/TestSync.cs
 TestSync_CSFILES_CSC := $(subst /,$(SEP),$(TestSync_CSFILES))
-TestSync_INCLUDES = 
+TestSync_INCLUDES =
 TestSync_RESOURCES =
 TestSync_FLAGS = $(CSC_LIBFLAG)
-TestSync_LIBS = $(Sync_LIBS) $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Sync.dll 
+TestSync_LIBS = $(Sync_LIBS) $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Sync.dll
 TestSync_LIBPATH = $(Sync_LIBPATH) ../../tools/NUnit/bin $(srcdir)/../../tools/NUnit/bin
 
 SyncTests_CSFILES = $(srcdir)/SyncTestStore.cs $(srcdir)/SyncTestCollection.cs $(srcdir)/Sync01Tests.cs $(srcdir)/Sync02Tests.cs
 SyncTests_CSFILES_CSC := $(subst /,$(SEP),$(SyncTests_CSFILES))
-SyncTests_INCLUDES = 
+SyncTests_INCLUDES =
 SyncTests_RESOURCES =
 SyncTests_FLAGS = $(CSC_LIBFLAG)
-SyncTests_LIBS = Sync.dll System.dll System.Data.dll CollectionStore.dll Identity.dll System.Runtime.Remoting.dll nunit.util.dll nunit.framework.dll
+SyncTests_LIBS = Sync.dll System.dll System.Data.dll CollectionStore.dll System.Runtime.Remoting.dll nunit.util.dll nunit.framework.dll
 SyncTests_LIBPATH = $(Sync_LIBPATH) $(srcdir)/../../tools/NUnit/bin
 
 EXTRA_DIST = $(Sync_CSFILES) $(SyncCmd_CSFILES) $(TestSync_CSFILES) $(SyncTests_CSFILES)
@@ -53,12 +53,12 @@ SyncTests.exe: $(SyncTests_CSFILES) $(SyncTests_RESOURCES)
 install-exec-local: Sync.dll SyncCmd.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) Sync.dll SyncCmd.exe $(DESTDIR)$(bindir)
-    
+
 uninstall-local:
 	cd $(DESTDIR)$(bindir); \
 		rm -f Sync.dll SyncCmd.exe TestSync.xml SyncTests.xml $(NUNIT_TESTS); \
 		rm -rf tmpS tmpStoreC tmpStoreS
-    
+
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
@@ -70,7 +70,7 @@ CLEAN_DIRS = .cstore
 clean-local:
 	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
 	rm -rf $(CLEAN_DIRS)
-    
+
 distclean-local: clean
 
 maintainer-clean-local:
