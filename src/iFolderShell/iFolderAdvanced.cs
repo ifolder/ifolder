@@ -32,6 +32,7 @@ using System.Net;
 using Simias;
 using Simias.Event;
 using Simias.Storage;
+using Simias.Service;
 
 namespace Novell.iFolderCom
 {
@@ -1524,6 +1525,7 @@ namespace Novell.iFolderCom
 			if (ifWebService == null)
 			{
 				ifWebService = new iFolderWebService();
+				ifWebService.Url = Manager.LocalServiceUrl.ToString() + "/iFolder.asmx";
 			}
 		}
 

@@ -31,6 +31,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Globalization;
 using Novell.Win32Util;
+using Simias.Service;
 
 namespace Novell.iFolderCom
 {
@@ -457,6 +458,7 @@ namespace Novell.iFolderCom
 				{
 					ticks = currentTime.Ticks;
 					ifWebService = new iFolderWebService();
+					ifWebService.Url = Manager.LocalServiceUrl.ToString() + "/iFolder.asmx";
 				}
 			}
 		}
