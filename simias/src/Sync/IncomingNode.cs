@@ -79,8 +79,9 @@ internal class IncomingNode
 	class Fork { public string name; public Stream stream; };
 	ArrayList forkList = null;
 	string path = null;  // for DirNodes this is the full path, all others it is the parent path
-	FileStream fileStream = null;
-	bool       fileNameConflict = false;
+	FileStream oldFileStream = null;
+	bool		fileNameConflict = false;
+	string		renameOldFile = null;
 		
 
 	public IncomingNode(Collection collection, bool onServer)
@@ -261,14 +262,20 @@ internal class IncomingNode
 		 */
 		try
 		{
-			if (fileStream != null)
+			if (oldFileStream != null)
 			{
-				fileStream.Close();
-				// Delete the file if not a collision.
-				if (!fileNameConflict && !(status == NodeStatus.UpdateConflict))
-					oldFi.Delete();
-				fileStream = null;
+				oldFileStream.Close();
+				oldFileStream = null;
 			}
+			// Delete the file if not a name conflict force the collision.
+			if (!fileNameConflict)
+				File.Delete(path);
+
+			if (renameOldFile != null && (status != NodeStatus.UpdateConflict))
+			{
+				File.Delete(renameOldFile);
+			}
+
 			fileInfo.MoveTo(path);
 		}
 		catch (Exception e)
@@ -330,11 +337,12 @@ internal class IncomingNode
 					// Open the file to protect against modifies while it is updated.
 					if (oldFi.Exists)
 					{
-						fileStream = oldFi.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
-						// Compare the name to see if this node represents the file.
 						FileInfo[] fiArray = oldFi.Directory.GetFiles(oldFi.Name);
 						if (fiArray[0].Name.Equals(bfn.GetFileName()))
 						{
+							oldFileStream = oldFi.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+							// Compare the name to see if this node represents the file.
+						
 							BaseFileNode oldBfn = (BaseFileNode)oldNode;
 							if (oldFi.LastWriteTime != oldBfn.LastWriteTime)
 							{
@@ -345,8 +353,19 @@ internal class IncomingNode
 						}
 						else
 						{
-							// We have a name conflict.
 							fileNameConflict = true;
+						}
+					}
+					else
+					{
+						// Check for a rename.
+						// Get the old node and make sure the name is equal.
+						BaseFileNode oldBfn = (BaseFileNode)oldNode;
+						if (!oldBfn.GetFullPath(collection).Equals(bfn.GetFullPath(collection)))
+						{
+							// We have a rename.
+							renameOldFile = oldBfn.GetFullPath(collection);
+							oldFileStream = File.Open(renameOldFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
 						}
 					}
 				}	
@@ -408,10 +427,10 @@ internal class IncomingNode
 		finally
 		{
 			// Close the file.
-			if (fileStream != null)
+			if (oldFileStream != null)
 			{
-				fileStream.Close();
-				fileStream = null;
+				oldFileStream.Close();
+				oldFileStream = null;
 			}
 		}
 	}
