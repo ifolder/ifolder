@@ -176,7 +176,13 @@ namespace Simias.DomainWatcher
 							if ( credType != CredentialType.Basic )
 							{
 								cMember = cRoster.GetCurrentMember();
-								credentials = null;
+
+								// TODO: DomainCredentials need to support an empty string.
+								// Change "Not Needed" to empty when fixed.
+								if ( ( credType == CredentialType.None ) || ( credType == CredentialType.NotRequired ) )
+								{
+									credentials = "Not Needed";
+								}
 							}
 							else
 							{
@@ -199,8 +205,6 @@ namespace Simias.DomainWatcher
 							NetworkCredential netCreds = cCreds.GetCredential(cUri, "BASIC");
 							if ((netCreds == null) || firstTime)
 							{
-								firstTime = false;
-
 								// Create the domain service web client object.
 								DomainService domainSvc = new DomainService();
 								domainSvc.Url = 
@@ -248,6 +252,8 @@ namespace Simias.DomainWatcher
 							}
 						}
 					}
+
+					firstTime = false;
 				}
 				catch(Exception e)
 				{
