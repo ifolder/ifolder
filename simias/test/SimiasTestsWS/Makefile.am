@@ -9,7 +9,7 @@ SimiasTestsWS_FLAGS = $(CSC_LIBFLAG)
 SimiasTestsWS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll nunit.framework.dll
 SimiasTestsWS_LIBPATH = ../../src/Simias.dll $(NUNIT_LIBPATH)
 
-EXTRA_DIST = $(SimiasTestsWS_CSFILES)
+EXTRA_DIST = SimiasTests.asmx $(SimiasTestsWS_CSFILES)
 
 NUNIT_TESTS := SimiasTests.Web.dll
 
@@ -28,11 +28,13 @@ endif
 
 install-exec-local: all
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) SimiasTests.asmx $(DEBUG_FILES) $(DESTDIR)$(webdir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(webbindir)
 
 uninstall-local:
 
 installcheck-local: install
+	cd $(DESTDIR)$(webdir); rm -f  SimiasTests.asmx $(DEBUG_FILES)
 	cd $(DESTDIR)$(webbindir); $(NUNIT) $(NUNIT_FLAGS) /xml:SimiasTests.test.xml $(NUNIT_TESTS)
 	
 .PHONY: test
