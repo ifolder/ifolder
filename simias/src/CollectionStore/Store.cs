@@ -357,8 +357,8 @@ namespace Simias.Storage
 			Node[] nodeList = new Node[ 2 ];
 
 			// Create the domain object.
-			nodeList[ 0 ] = new Domain( domainName, domainID );
-			nodeList[ 1 ] = identity.AddDomainIdentity( userID, domainID );
+			nodeList[ 0 ] = new Domain( domainName, domainID.ToLower() );
+			nodeList[ 1 ] = identity.AddDomainIdentity( userID.ToLower(), domainID.ToLower() );
 			
 			// Commit the changes.
 			localDb.Commit( nodeList );
@@ -395,7 +395,7 @@ namespace Simias.Storage
 
 			// Delete the domain object.
 			nodeList[ 0 ] = localDb.Delete( GetDomain( domainID ) );
-			nodeList[ 1 ] = identity.DeleteDomainIdentity( localDb, domainID );
+			nodeList[ 1 ] = identity.DeleteDomainIdentity( localDb, domainID.ToLower() );
 
 			// Commit the changes.
 			localDb.Commit( nodeList );
@@ -539,7 +539,7 @@ namespace Simias.Storage
 		/// <returns>Domain object that the specified ID refers to if successful. Otherwise returns a null.</returns>
 		public Domain GetDomain( string domainID )
 		{
-			return localDb.GetNodeByID( domainID ) as Domain;
+			return localDb.GetNodeByID( domainID.ToLower() ) as Domain;
 		}
 
 		/// <summary>
@@ -551,7 +551,7 @@ namespace Simias.Storage
 		{
 			Domain domain = null;
 
-			string domainID = identity.GetDomainFromUserID( localDb, userID );
+			string domainID = identity.GetDomainFromUserID( localDb, userID.ToLower() );
 			if ( domainID != null )
 			{
 				domain = localDb.GetNodeByID( domainID ) as Domain;
@@ -617,7 +617,7 @@ namespace Simias.Storage
 		/// <returns>The user ID that the logged on user is known as in the specified domain.</returns>
 		public string GetUserIDFromDomainID( string domainID )
 		{
-			return identity.GetUserIDFromDomain( localDb, domainID );
+			return identity.GetUserIDFromDomain( localDb, domainID.ToLower() );
 		}
 		#endregion
 

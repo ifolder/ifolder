@@ -35,7 +35,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known identitifer for workgroup.
 		/// </summary>
-		static public string WorkGroupDomainID = "363051D1-8841-4c7b-A1DD-71ABBD0F4ADA";
+		static public string WorkGroupDomainID = "363051d1-8841-4c7b-a1dd-71abbd0f4ada";
 
 		/// <summary>
 		/// Friendly name for the workgroup domain.
