@@ -35,11 +35,6 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.ToolBar toolBar1;
 		private System.Windows.Forms.MainMenu mainMenu1;
 		private System.Windows.Forms.MenuItem menuFile;
-		private System.Windows.Forms.MenuItem menuItem2;
-		private System.Windows.Forms.MenuItem menuItem3;
-		private System.Windows.Forms.MenuItem menuItem1;
-		private System.Windows.Forms.MenuItem menuItem4;
-		private System.Windows.Forms.MenuItem menuItem5;
 		private System.Windows.Forms.ToolBarButton toolBarButton1;
 		private System.Windows.Forms.ToolBarButton toolBarButton2;
 		private System.Windows.Forms.ToolBarButton toolBarButton3;
@@ -48,6 +43,13 @@ namespace Novell.iFolder.iFolderCom
 		private int labelDelta;
 		private System.Windows.Forms.ListView localFiles;
 		private System.Windows.Forms.ListView conflictFiles;
+		private System.Windows.Forms.MenuItem menuFileOpen;
+		private System.Windows.Forms.MenuItem menuView;
+		private System.Windows.Forms.MenuItem menuViewRefresh;
+		private System.Windows.Forms.MenuItem menuHelp;
+		private System.Windows.Forms.MenuItem menuFileSeparator;
+		private System.Windows.Forms.MenuItem menuFileExit;
+		private System.Windows.Forms.ColumnHeader columnHeader6;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -89,6 +91,7 @@ namespace Novell.iFolder.iFolderCom
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.conflictFiles = new System.Windows.Forms.ListView();
 			this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader6 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
 			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
 			this.menuOpen = new System.Windows.Forms.MenuItem();
@@ -103,11 +106,12 @@ namespace Novell.iFolder.iFolderCom
 			this.toolBarButton3 = new System.Windows.Forms.ToolBarButton();
 			this.mainMenu1 = new System.Windows.Forms.MainMenu();
 			this.menuFile = new System.Windows.Forms.MenuItem();
-			this.menuItem2 = new System.Windows.Forms.MenuItem();
-			this.menuItem3 = new System.Windows.Forms.MenuItem();
-			this.menuItem1 = new System.Windows.Forms.MenuItem();
-			this.menuItem4 = new System.Windows.Forms.MenuItem();
-			this.menuItem5 = new System.Windows.Forms.MenuItem();
+			this.menuFileOpen = new System.Windows.Forms.MenuItem();
+			this.menuFileSeparator = new System.Windows.Forms.MenuItem();
+			this.menuFileExit = new System.Windows.Forms.MenuItem();
+			this.menuView = new System.Windows.Forms.MenuItem();
+			this.menuViewRefresh = new System.Windows.Forms.MenuItem();
+			this.menuHelp = new System.Windows.Forms.MenuItem();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.panel1.SuspendLayout();
@@ -123,7 +127,7 @@ namespace Novell.iFolder.iFolderCom
 			this.panel1.Controls.Add(this.localFiles);
 			this.panel1.Location = new System.Drawing.Point(8, 72);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(528, 416);
+			this.panel1.Size = new System.Drawing.Size(592, 416);
 			this.panel1.TabIndex = 1;
 			// 
 			// conflictFiles
@@ -131,12 +135,13 @@ namespace Novell.iFolder.iFolderCom
 			this.conflictFiles.CheckBoxes = true;
 			this.conflictFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
 																							this.columnHeader4,
+																							this.columnHeader6,
 																							this.columnHeader5});
 			this.conflictFiles.ContextMenu = this.contextMenu1;
 			this.conflictFiles.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.conflictFiles.Location = new System.Drawing.Point(251, 0);
 			this.conflictFiles.Name = "conflictFiles";
-			this.conflictFiles.Size = new System.Drawing.Size(277, 416);
+			this.conflictFiles.Size = new System.Drawing.Size(341, 416);
 			this.conflictFiles.TabIndex = 2;
 			this.conflictFiles.View = System.Windows.Forms.View.Details;
 			this.conflictFiles.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.conflictFiles_ItemCheck);
@@ -144,7 +149,12 @@ namespace Novell.iFolder.iFolderCom
 			// columnHeader4
 			// 
 			this.columnHeader4.Text = "Name";
-			this.columnHeader4.Width = 91;
+			this.columnHeader4.Width = 78;
+			// 
+			// columnHeader6
+			// 
+			this.columnHeader6.Text = "Conflict Type";
+			this.columnHeader6.Width = 77;
 			// 
 			// columnHeader5
 			// 
@@ -189,7 +199,6 @@ namespace Novell.iFolder.iFolderCom
 			this.localFiles.Size = new System.Drawing.Size(248, 416);
 			this.localFiles.TabIndex = 0;
 			this.localFiles.View = System.Windows.Forms.View.Details;
-			this.localFiles.DoubleClick += new System.EventHandler(this.localFiles_DoubleClick);
 			this.localFiles.SelectedIndexChanged += new System.EventHandler(this.localFiles_SelectedIndexChanged);
 			this.localFiles.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.localFiles_ItemCheck);
 			// 
@@ -216,7 +225,7 @@ namespace Novell.iFolder.iFolderCom
 			this.toolBar1.Location = new System.Drawing.Point(0, 0);
 			this.toolBar1.Name = "toolBar1";
 			this.toolBar1.ShowToolTips = true;
-			this.toolBar1.Size = new System.Drawing.Size(544, 42);
+			this.toolBar1.Size = new System.Drawing.Size(608, 42);
 			this.toolBar1.TabIndex = 2;
 			this.toolBar1.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.toolBar1_ButtonClick);
 			// 
@@ -239,43 +248,52 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																					  this.menuFile,
-																					  this.menuItem1,
-																					  this.menuItem5});
+																					  this.menuView,
+																					  this.menuHelp});
 			// 
 			// menuFile
 			// 
 			this.menuFile.Index = 0;
 			this.menuFile.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					 this.menuItem2,
-																					 this.menuItem3});
+																					 this.menuFileOpen,
+																					 this.menuFileSeparator,
+																					 this.menuFileExit});
 			this.menuFile.Text = "&File";
 			// 
-			// menuItem2
+			// menuFileOpen
 			// 
-			this.menuItem2.Index = 0;
-			this.menuItem2.Text = "Open";
+			this.menuFileOpen.Index = 0;
+			this.menuFileOpen.Text = "&Open";
+			this.menuFileOpen.Click += new System.EventHandler(this.menuFileOpen_Click);
 			// 
-			// menuItem3
+			// menuFileSeparator
 			// 
-			this.menuItem3.Index = 1;
-			this.menuItem3.Text = "";
+			this.menuFileSeparator.Index = 1;
+			this.menuFileSeparator.Text = "-";
 			// 
-			// menuItem1
+			// menuFileExit
 			// 
-			this.menuItem1.Index = 1;
-			this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					  this.menuItem4});
-			this.menuItem1.Text = "&View";
+			this.menuFileExit.Index = 2;
+			this.menuFileExit.Text = "E&xit";
+			this.menuFileExit.Click += new System.EventHandler(this.menuFileExit_Click);
 			// 
-			// menuItem4
+			// menuView
 			// 
-			this.menuItem4.Index = 0;
-			this.menuItem4.Text = "&Refresh";
+			this.menuView.Index = 1;
+			this.menuView.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																					 this.menuViewRefresh});
+			this.menuView.Text = "&View";
 			// 
-			// menuItem5
+			// menuViewRefresh
 			// 
-			this.menuItem5.Index = 2;
-			this.menuItem5.Text = "&Help";
+			this.menuViewRefresh.Index = 0;
+			this.menuViewRefresh.Text = "&Refresh";
+			this.menuViewRefresh.Click += new System.EventHandler(this.menuViewRefresh_Click);
+			// 
+			// menuHelp
+			// 
+			this.menuHelp.Index = 2;
+			this.menuHelp.Text = "&Help";
 			// 
 			// label1
 			// 
@@ -296,12 +314,13 @@ namespace Novell.iFolder.iFolderCom
 			// ConflictResolver
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(544, 518);
+			this.ClientSize = new System.Drawing.Size(608, 539);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.toolBar1);
 			this.Controls.Add(this.panel1);
 			this.Menu = this.mainMenu1;
+			this.MinimumSize = new System.Drawing.Size(552, 573);
 			this.Name = "ConflictResolver";
 			this.Text = "Conflict Resolver";
 			this.Load += new System.EventHandler(this.ConflictResolver_Load);
@@ -335,7 +354,7 @@ namespace Novell.iFolder.iFolderCom
 
 			try
 			{
-				Process.Start(lvi.Text);
+				Process.Start((string)lvi.Tag);
 			}
 			catch (Exception e)
 			{
@@ -472,22 +491,26 @@ namespace Novell.iFolder.iFolderCom
 		{
 			if (localFiles.SelectedItems.Count == 1)
 			{
-				ListViewItem llvi = localFiles.SelectedItems[0];
-				CollisionNode cn = (CollisionNode)llvi.Tag;
+				ListViewItem localLVI = localFiles.SelectedItems[0];
+				CollisionNode cn = (CollisionNode)localLVI.Tag;
+				iFolder ifolder = manager.GetiFolderById(cn.LocalNode.Properties.GetSingleProperty("CollectionId").ToString());
+				FileNode conflictNode = new FileNode(ifolder, cn.ConflictNode);
+				Simias.Sync.Conflict conflict = new Simias.Sync.Conflict(ifolder, conflictNode);
+				string type = conflict.IsFileNameConflict ? "Name" : "Update";
 
-				ListViewItem clvi = new ListViewItem(cn.ConflictPath);
-				clvi.StateImageIndex = cn.Checked ? 1 : 0;
-				conflictFiles.Items.Add(clvi);
+				// TODO - name conflicts need to be handled differently
+				conflictFiles.LabelEdit = conflict.IsFileNameConflict;
+
+				string[] items = new string[] {localLVI.Text, type, conflictNode.LastWriteTime.ToString()};
+				ListViewItem conflictLVI = new ListViewItem(items);
+				conflictLVI.Tag = cn.ConflictPath;
+				conflictLVI.StateImageIndex = cn.Checked ? 1 : 0;
+				conflictFiles.Items.Add(conflictLVI);
 			}
 			else
 			{
 				conflictFiles.Items.Clear();
 			}
-		}
-
-		private void localFiles_DoubleClick(object sender, System.EventArgs e)
-		{
-//			OpenLocalFile();
 		}
 
 		private void localFiles_ItemCheck(object sender, System.Windows.Forms.ItemCheckEventArgs e)
@@ -577,6 +600,9 @@ namespace Novell.iFolder.iFolderCom
 		{
 			switch (e.Button.Text)
 			{
+				case "Open":
+					menuOpen_Click(this, null);
+					break;
 				case "Resolve":
 					Cursor.Current = Cursors.WaitCursor;
 
@@ -591,9 +617,27 @@ namespace Novell.iFolder.iFolderCom
 					// Update the listview.
 					RefreshList();
 					break;
+				case "Refresh":
+					RefreshList();
+					break;
 				default:
 					break;
 			}
+		}
+
+		private void menuFileOpen_Click(object sender, System.EventArgs e)
+		{
+			menuOpen_Click(sender, e);
+		}
+
+		private void menuFileExit_Click(object sender, System.EventArgs e)
+		{
+			this.Close();
+		}
+
+		private void menuViewRefresh_Click(object sender, System.EventArgs e)
+		{
+			RefreshList();
 		}
 		#endregion
 	}
