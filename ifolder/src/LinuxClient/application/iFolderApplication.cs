@@ -65,7 +65,6 @@ namespace Novell.iFolder
 		private Gtk.ThreadNotify	iFolderStateChanged;
 		private SimiasEventBroker	EventBroker;
 		private	iFolderLoginDialog	LoginDialog;
-		private bool				ShowReLoginWindow;
 		private bool				logwinShown;
 		private string				redomainID;
 
@@ -100,7 +99,6 @@ namespace Novell.iFolder
 
 			iFolderStateChanged = new Gtk.ThreadNotify(
 							new Gtk.ReadyEvent(OniFolderStateChanged));
-			ShowReLoginWindow = true;
 
 			logwin = new LogWindow();
 			logwin.Destroyed += 
@@ -218,23 +216,21 @@ namespace Novell.iFolder
 
 		private void OnSimiasNotifyEvent(object o, NotifyEventArgs args)
 		{
-			if(ShowReLoginWindow)
+			Console.WriteLine("Switching on args.EventData");
+			switch(args.EventData)
 			{
-				switch(args.EventData)
+				case "Domain-Up":
 				{
-					case "Domain-Up":
-					{
-						redomainID = args.Message;
-						ReLogin(args.Message);
-						break;
-					}
+					Console.WriteLine("Got a Domain-Up");
+					redomainID = args.Message;
+					ReLogin(args.Message);
+					break;
 				}
 			}
 		}
 
 		private void OnShowReLogin(object o, EventArgs args)
 		{
-			ShowReLoginWindow = true;
 			ReLogin(redomainID);
 		}
 
@@ -279,6 +275,7 @@ namespace Novell.iFolder
 						// credentials.
 						DomainAuthentication domainAuth = 
 							new DomainAuthentication(
+								"iFolder",
 								domainID, 
 								credentials);
 
@@ -297,9 +294,7 @@ namespace Novell.iFolder
 					}
 
 					if (!authenticated)
-					{
 						LoginDialog.ShowAll();
-					}
 				}
 			}
 			else
@@ -314,7 +309,9 @@ namespace Novell.iFolder
 				{
 					AuthenticationStatus status;
 					DomainAuthentication cAuth = new DomainAuthentication(
-							LoginDialog.Domain, LoginDialog.Password);
+							"iFolder", 
+							LoginDialog.Domain, 
+							LoginDialog.Password);
 					status = cAuth.Authenticate();
 					if(status != AuthenticationStatus.Success)
 					{
@@ -331,22 +328,20 @@ namespace Novell.iFolder
 						mDialog = null;
 					}
 					else
-						ShowReLoginWindow = false;
-
+					{
+						LoginDialog.Hide();
+						LoginDialog.Destroy();
+						LoginDialog = null;
+					}
 					break;
 				}
 				case Gtk.ResponseType.Cancel:
 				{
-					ShowReLoginWindow = false;
+					LoginDialog.Hide();
+					LoginDialog.Destroy();
+					LoginDialog = null;
 					break;
 				}
-			}
-
-			if(!ShowReLoginWindow)
-			{
-				LoginDialog.Hide();
-				LoginDialog.Destroy();
-				LoginDialog = null;
 			}
 		}
 

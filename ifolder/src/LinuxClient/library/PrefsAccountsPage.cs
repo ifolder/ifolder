@@ -227,9 +227,61 @@ namespace Novell.iFolder
 		{
 			AccountDialog accDialog = new AccountDialog();
 			accDialog.TransientFor = topLevelWindow;
-			accDialog.Run();
+			int rc = 0;
+			do
+			{
+				rc = accDialog.Run();
+				if(rc == -5)
+				{
+					try
+					{
+						DomainWeb dw = ifws.ConnectToDomain(
+											accDialog.UserName,
+											accDialog.Password,
+											accDialog.Host);
+						rc = 0;
+
+						TreeIter iter = AccTreeStore.AppendValues(dw);
+						TreeSelection sel = AccTreeView.Selection;
+						sel.SelectIter(iter);
+					}
+					catch(Exception e)
+					{
+						if(e.Message.IndexOf("HTTP status 401") != -1)
+						{
+							iFolderMsgDialog dg = new iFolderMsgDialog(
+								topLevelWindow,
+								iFolderMsgDialog.DialogType.Error,
+								iFolderMsgDialog.ButtonSet.Ok,
+								Util.GS("iFolder Error"),
+								Util.GS("Invalid credentials"),
+								Util.GS("The username or password entered is not valid.  Please check the values and try again."));
+							dg.Run();
+							dg.Hide();
+							dg.Destroy();
+						}
+						else
+						{
+							iFolderMsgDialog dg = new iFolderMsgDialog(
+								topLevelWindow,
+								iFolderMsgDialog.DialogType.Error,
+								iFolderMsgDialog.ButtonSet.Ok,
+								Util.GS("iFolder Error"),
+								Util.GS("Connect Error"),
+								Util.GS("The following error occurred when attempting to authenticate: ") + e.Message);
+							dg.Run();
+							dg.Hide();
+							dg.Destroy();
+						}
+					}
+				}
+
+			}
+			while(rc == -5);
+
 			accDialog.Hide();
 			accDialog.Destroy();
+			accDialog = null;
 		}
 
 
@@ -271,9 +323,9 @@ namespace Novell.iFolder
 
 					// Now that we have all of the TreeIters, loop and
 					// remove them all
-					while(iterQueue.Count > 0)
-					{
-						TreeIter iter = (TreeIter) iterQueue.Dequeue();
+//					while(iterQueue.Count > 0)
+//					{
+//						TreeIter iter = (TreeIter) iterQueue.Dequeue();
 
 /*						iFolderUser user = 
 								(iFolderUser) tModel.GetValue(iter, 0);
@@ -296,7 +348,7 @@ namespace Novell.iFolder
 							ied = null;
 						}
 */
-					}
+//					}
 				}
 			}
 		}
