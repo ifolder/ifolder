@@ -255,7 +255,7 @@ namespace Simias.Sync
 						try
 						{
 							// We need to get all of the nodes.
-							si.Context = new ChangeLogReader(col).GetEventContext().ToString();
+							si.Context = new ChangeLogReader(collection).GetEventContext().ToString();
 							nodeContainer = this.BeginListAllNodes();
 						}
 						finally
