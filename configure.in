@@ -249,6 +249,7 @@ AC_ARG_WITH(simias-install-path, [
     [ SIMIAS_INSTALL_PATH=$prefix ]
     )
 test "x$SIMIAS_INSTALL_PATH" = xNONE && SIMIAS_INSTALL_PATH=$ac_default_prefix
+mkdir -p $SIMIAS_INSTALL_PATH
 SIMIAS_INSTALL_PATH=`cd $SIMIAS_INSTALL_PATH && pwd`
 case $IFOLDER_OS in
     windows)
@@ -270,6 +271,7 @@ AC_ARG_WITH(simias-build-path, [
 if test "x$SIMIAS_BUILD_PATH" = xNONE; then
     SIMIAS_BUILD_PATH=''
 else
+    test -d $SIMIAS_BUILD_PATH || AC_MSG_ERROR([$SIMIAS_BUILD_PATH does not exist])
     SIMIAS_BUILD_PATH=`cd $SIMIAS_BUILD_PATH && pwd`
     case $IFOLDER_OS in
         windows)
@@ -290,6 +292,7 @@ AC_ARG_WITH(addressbook-install-path, [
     [ ADDRESSBOOK_INSTALL_PATH=$prefix ]
     )
 test "x$ADDRESSBOOK_INSTALL_PATH" = xNONE && ADDRESSBOOK_INSTALL_PATH=$ac_default_prefix
+mkdir -p $ADDRESSBOOK_INSTALL_PATH
 ADDRESSBOOK_INSTALL_PATH=`cd $ADDRESSBOOK_INSTALL_PATH && pwd`
 case $IFOLDER_OS in
     windows)
@@ -311,6 +314,7 @@ AC_ARG_WITH(addressbook-build-path, [
 if test "x$ADDRESSBOOK_BUILD_PATH" = xNONE; then
     ADDRESSBOOK_BUILD_PATH=''
 else
+    test -d $ADDRESSBOOK_BUILD_PATH || AC_MSG_ERROR([$ADDRESSBOOK_BUILD_PATH does not exist])
     ADDRESSBOOK_BUILD_PATH=`cd $ADDRESSBOOK_BUILD_PATH && pwd`
     case $IFOLDER_OS in
         windows)
@@ -360,7 +364,7 @@ AC_SUBST(DEVENV_CONFIGURATION)
 #
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 if test "x$PKG_CONFIG" = "xno"; then
-	AC_MSG_ERROR([You need to install pkg-config])
+    AC_MSG_ERROR([You need to install pkg-config])
 fi
 case $IFOLDER_OS in
     linux)
@@ -397,10 +401,12 @@ echo PASSALONG_CONFIG_OPTIONS=$PASSALONG_CONFIG_OPTIONS
 #
 if test -n "$SIMIAS_BUILD_PATH" && test -z "$ADDRESSBOOK_BUILD_PATH"; then
     CONFIG_OPTIONS=$PASSALONG_CONFIG_OPTIONS
-    test -n "$SIMIAS_INSTALL_PATH" &&
-        CONFIG_OPTIONS="--with-simias-install-path=$SIMIAS_INSTALL_PATH ${CONFIG_OPTIONS}"
-    test "x$prefix" != xNONE &&
-        CONFIG_OPTIONS="--prefix=${prefix} ${CONFIG_OPTIONS}"
+    if test -n "$SIMIAS_INSTALL_PATH"; then
+        CONFIG_OPTIONS="--prefix=$SIMIAS_INSTALL_PATH ${CONFIG_OPTIONS}"
+    else
+        test "x$prefix" != xNONE &&
+            CONFIG_OPTIONS="--prefix=${prefix} ${CONFIG_OPTIONS}"
+    fi
     if test -x "$SIMIAS_BUILD_PATH/configure"; then
         CONFIG_CMD="./configure"
     else
@@ -420,14 +426,16 @@ fi
 #
 if test -n "$ADDRESSBOOK_BUILD_PATH"; then
     CONFIG_OPTIONS=$PASSALONG_CONFIG_OPTIONS
-    test -n "$ADDRESSBOOK_INSTALL_PATH" &&
-        CONFIG_OPTIONS="--with-addressbook-install-path=$ADDRESSBOOK_INSTALL_PATH ${CONFIG_OPTIONS}"
     test -n "$SIMIAS_INSTALL_PATH" &&
         CONFIG_OPTIONS="--with-simias-install-path=$SIMIAS_INSTALL_PATH ${CONFIG_OPTIONS}"
     test -n "$SIMIAS_BUILD_PATH" &&
         CONFIG_OPTIONS="--with-simias-build-path=$SIMIAS_BUILD_PATH ${CONFIG_OPTIONS}"
-    test "x$prefix" != xNONE &&
-        CONFIG_OPTIONS="--prefix=${prefix} ${CONFIG_OPTIONS}"
+    if test -n "$ADDRESSBOOK_INSTALL_PATH"; then
+        CONFIG_OPTIONS="--prefix=$ADDRESSBOOK_INSTALL_PATH ${CONFIG_OPTIONS}"
+    else
+        test "x$prefix" != xNONE &&
+            CONFIG_OPTIONS="--prefix=${prefix} ${CONFIG_OPTIONS}"
+    fi
     if test -x "$ADDRESSBOOK_BUILD_PATH/configure"; then
         CONFIG_CMD="./configure"
     else
