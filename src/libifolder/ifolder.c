@@ -65,6 +65,8 @@ bool is_ifolder_running ()
 	bool isRunning = false;
 	int err_code;
 	char *soap_url;
+	char username[512];
+	char password[1024];
 
 	struct _ns1__Ping ns1__Ping;
 	struct _ns1__PingResponse ns1__PingResponse;
@@ -75,6 +77,10 @@ bool is_ifolder_running ()
 	}
 
 	init_gsoap (&soap);
+	if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
+		soap.userid = username;
+		soap.passwd = password;
+	}
 	err_code = soap_call___ns1__Ping (&soap,
 			soap_url, //http://<host>:<port>/simias10[/<username>]/iFolder.asmx
 			NULL,
