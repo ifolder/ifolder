@@ -35,6 +35,7 @@ using Simias;
 using Simias.Sync;
 using Simias.Service;
 using Simias.Storage;
+using Simias.Policy;
 using Novell.iFolder;
 using Novell.iFolder.iFolderCom;
 using Novell.iFolder.Win32Util;
@@ -54,6 +55,7 @@ namespace Novell.iFolder.FormsTrayApp
 		const string CFG_Services = "Services";
 		const string XmlServiceTag = "Service";
 
+		private const double megaByte = 1048576;
 		private Hashtable ht;
 		private EventSubscriber subscriber;
 		private Simias.Service.Manager serviceManager = null;
@@ -134,6 +136,24 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.TextBox port;
 		private System.Windows.Forms.Button create;
+		private System.Windows.Forms.TabPage tabPage5;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Label enterpriseName;
+		private System.Windows.Forms.Label label9;
+		private System.Windows.Forms.GroupBox groupBox6;
+		private System.Windows.Forms.Label label11;
+		private System.Windows.Forms.Label label12;
+		private System.Windows.Forms.Label label13;
+		private System.Windows.Forms.Label freeSpace;
+		private System.Windows.Forms.Label usedSpace;
+		private System.Windows.Forms.Label totalSpace;
+		private System.Windows.Forms.Label label14;
+		private System.Windows.Forms.Label label15;
+		private System.Windows.Forms.Label label16;
+		private Novell.iFolder.Forms.Controls.GaugeChart gaugeChart1;
+		private System.Windows.Forms.Label label17;
+		private System.Windows.Forms.Label label18;
+		private System.Windows.Forms.Label enterpriseDescription;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -151,6 +171,11 @@ namespace Novell.iFolder.FormsTrayApp
 			InitializeComponent();
 
 			AddServicesTab();
+
+			ShowEnterpriseTab = false;
+
+			// Show the first tab page by default.
+			tabControl1.SelectedTab = tabPage1;
 
 			this.config = config;
 
@@ -411,6 +436,24 @@ namespace Novell.iFolder.FormsTrayApp
 			this.saveLog = new System.Windows.Forms.Button();
 			this.log = new System.Windows.Forms.ListBox();
 			this.label6 = new System.Windows.Forms.Label();
+			this.tabPage5 = new System.Windows.Forms.TabPage();
+			this.groupBox6 = new System.Windows.Forms.GroupBox();
+			this.label18 = new System.Windows.Forms.Label();
+			this.label17 = new System.Windows.Forms.Label();
+			this.gaugeChart1 = new Novell.iFolder.Forms.Controls.GaugeChart();
+			this.label16 = new System.Windows.Forms.Label();
+			this.label15 = new System.Windows.Forms.Label();
+			this.label14 = new System.Windows.Forms.Label();
+			this.totalSpace = new System.Windows.Forms.Label();
+			this.usedSpace = new System.Windows.Forms.Label();
+			this.freeSpace = new System.Windows.Forms.Label();
+			this.label13 = new System.Windows.Forms.Label();
+			this.label12 = new System.Windows.Forms.Label();
+			this.label11 = new System.Windows.Forms.Label();
+			this.enterpriseDescription = new System.Windows.Forms.Label();
+			this.label9 = new System.Windows.Forms.Label();
+			this.enterpriseName = new System.Windows.Forms.Label();
+			this.label8 = new System.Windows.Forms.Label();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.banner = new System.Windows.Forms.PictureBox();
@@ -442,6 +485,8 @@ namespace Novell.iFolder.FormsTrayApp
 			this.groupBox3.SuspendLayout();
 			this.groupBox5.SuspendLayout();
 			this.tabPage3.SuspendLayout();
+			this.tabPage5.SuspendLayout();
+			this.groupBox6.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -514,8 +559,9 @@ namespace Novell.iFolder.FormsTrayApp
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tabPage1);
-			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Controls.Add(this.tabPage3);
+			this.tabControl1.Controls.Add(this.tabPage2);
+			this.tabControl1.Controls.Add(this.tabPage5);
 			this.tabControl1.Location = new System.Drawing.Point(8, 72);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
@@ -538,7 +584,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.create.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.create.Location = new System.Drawing.Point(341, 272);
 			this.create.Name = "create";
-			this.create.TabIndex = 2;
+			this.create.TabIndex = 1;
 			this.create.Text = "Create...";
 			this.create.Click += new System.EventHandler(this.menuCreate_Click);
 			// 
@@ -552,7 +598,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.groupBox4.Location = new System.Drawing.Point(8, 304);
 			this.groupBox4.Name = "groupBox4";
 			this.groupBox4.Size = new System.Drawing.Size(408, 72);
-			this.groupBox4.TabIndex = 1;
+			this.groupBox4.TabIndex = 2;
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "Synchronization";
 			// 
@@ -880,6 +926,166 @@ namespace Novell.iFolder.FormsTrayApp
 			this.label6.TabIndex = 0;
 			this.label6.Text = "This log shows current iFolder activity.";
 			// 
+			// tabPage5
+			// 
+			this.tabPage5.Controls.Add(this.groupBox6);
+			this.tabPage5.Controls.Add(this.enterpriseDescription);
+			this.tabPage5.Controls.Add(this.label9);
+			this.tabPage5.Controls.Add(this.enterpriseName);
+			this.tabPage5.Controls.Add(this.label8);
+			this.tabPage5.Location = new System.Drawing.Point(4, 22);
+			this.tabPage5.Name = "tabPage5";
+			this.tabPage5.Size = new System.Drawing.Size(426, 390);
+			this.tabPage5.TabIndex = 3;
+			this.tabPage5.Text = "Enterprise";
+			// 
+			// groupBox6
+			// 
+			this.groupBox6.Controls.Add(this.label18);
+			this.groupBox6.Controls.Add(this.label17);
+			this.groupBox6.Controls.Add(this.gaugeChart1);
+			this.groupBox6.Controls.Add(this.label16);
+			this.groupBox6.Controls.Add(this.label15);
+			this.groupBox6.Controls.Add(this.label14);
+			this.groupBox6.Controls.Add(this.totalSpace);
+			this.groupBox6.Controls.Add(this.usedSpace);
+			this.groupBox6.Controls.Add(this.freeSpace);
+			this.groupBox6.Controls.Add(this.label13);
+			this.groupBox6.Controls.Add(this.label12);
+			this.groupBox6.Controls.Add(this.label11);
+			this.groupBox6.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.groupBox6.Location = new System.Drawing.Point(16, 176);
+			this.groupBox6.Name = "groupBox6";
+			this.groupBox6.Size = new System.Drawing.Size(400, 120);
+			this.groupBox6.TabIndex = 4;
+			this.groupBox6.TabStop = false;
+			this.groupBox6.Text = "Quota";
+			// 
+			// label18
+			// 
+			this.label18.Location = new System.Drawing.Point(328, 80);
+			this.label18.Name = "label18";
+			this.label18.Size = new System.Drawing.Size(64, 16);
+			this.label18.TabIndex = 11;
+			this.label18.Text = "Empty";
+			// 
+			// label17
+			// 
+			this.label17.Location = new System.Drawing.Point(328, 24);
+			this.label17.Name = "label17";
+			this.label17.Size = new System.Drawing.Size(56, 16);
+			this.label17.TabIndex = 10;
+			this.label17.Text = "Full";
+			// 
+			// gaugeChart1
+			// 
+			this.gaugeChart1.Location = new System.Drawing.Point(304, 24);
+			this.gaugeChart1.Name = "gaugeChart1";
+			this.gaugeChart1.Size = new System.Drawing.Size(16, 72);
+			this.gaugeChart1.TabIndex = 9;
+			// 
+			// label16
+			// 
+			this.label16.Location = new System.Drawing.Point(248, 80);
+			this.label16.Name = "label16";
+			this.label16.Size = new System.Drawing.Size(24, 16);
+			this.label16.TabIndex = 8;
+			this.label16.Text = "MB";
+			// 
+			// label15
+			// 
+			this.label15.Location = new System.Drawing.Point(248, 56);
+			this.label15.Name = "label15";
+			this.label15.Size = new System.Drawing.Size(24, 16);
+			this.label15.TabIndex = 7;
+			this.label15.Text = "MB";
+			// 
+			// label14
+			// 
+			this.label14.Location = new System.Drawing.Point(248, 32);
+			this.label14.Name = "label14";
+			this.label14.Size = new System.Drawing.Size(24, 16);
+			this.label14.TabIndex = 6;
+			this.label14.Text = "MB";
+			// 
+			// totalSpace
+			// 
+			this.totalSpace.Location = new System.Drawing.Point(160, 80);
+			this.totalSpace.Name = "totalSpace";
+			this.totalSpace.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+			this.totalSpace.Size = new System.Drawing.Size(80, 16);
+			this.totalSpace.TabIndex = 5;
+			// 
+			// usedSpace
+			// 
+			this.usedSpace.Location = new System.Drawing.Point(160, 56);
+			this.usedSpace.Name = "usedSpace";
+			this.usedSpace.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+			this.usedSpace.Size = new System.Drawing.Size(80, 16);
+			this.usedSpace.TabIndex = 4;
+			// 
+			// freeSpace
+			// 
+			this.freeSpace.Location = new System.Drawing.Point(160, 32);
+			this.freeSpace.Name = "freeSpace";
+			this.freeSpace.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+			this.freeSpace.Size = new System.Drawing.Size(80, 16);
+			this.freeSpace.TabIndex = 3;
+			// 
+			// label13
+			// 
+			this.label13.Location = new System.Drawing.Point(16, 80);
+			this.label13.Name = "label13";
+			this.label13.Size = new System.Drawing.Size(136, 16);
+			this.label13.TabIndex = 2;
+			this.label13.Text = "Total space on server:";
+			// 
+			// label12
+			// 
+			this.label12.Location = new System.Drawing.Point(16, 56);
+			this.label12.Name = "label12";
+			this.label12.Size = new System.Drawing.Size(136, 16);
+			this.label12.TabIndex = 1;
+			this.label12.Text = "Used space on server:";
+			// 
+			// label11
+			// 
+			this.label11.Location = new System.Drawing.Point(16, 32);
+			this.label11.Name = "label11";
+			this.label11.Size = new System.Drawing.Size(136, 16);
+			this.label11.TabIndex = 0;
+			this.label11.Text = "Free space on server:";
+			// 
+			// enterpriseDescription
+			// 
+			this.enterpriseDescription.Location = new System.Drawing.Point(152, 72);
+			this.enterpriseDescription.Name = "enterpriseDescription";
+			this.enterpriseDescription.Size = new System.Drawing.Size(264, 48);
+			this.enterpriseDescription.TabIndex = 3;
+			// 
+			// label9
+			// 
+			this.label9.Location = new System.Drawing.Point(16, 72);
+			this.label9.Name = "label9";
+			this.label9.Size = new System.Drawing.Size(120, 16);
+			this.label9.TabIndex = 2;
+			this.label9.Text = "Enterprise description:";
+			// 
+			// enterpriseName
+			// 
+			this.enterpriseName.Location = new System.Drawing.Point(152, 32);
+			this.enterpriseName.Name = "enterpriseName";
+			this.enterpriseName.Size = new System.Drawing.Size(264, 16);
+			this.enterpriseName.TabIndex = 1;
+			// 
+			// label8
+			// 
+			this.label8.Location = new System.Drawing.Point(16, 32);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(120, 16);
+			this.label8.TabIndex = 0;
+			this.label8.Text = "Enterprise name:";
+			// 
 			// columnHeader2
 			// 
 			this.columnHeader2.Text = "Service";
@@ -1060,6 +1266,8 @@ namespace Novell.iFolder.FormsTrayApp
 			this.groupBox3.ResumeLayout(false);
 			this.groupBox5.ResumeLayout(false);
 			this.tabPage3.ResumeLayout(false);
+			this.tabPage5.ResumeLayout(false);
+			this.groupBox6.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -1085,6 +1293,27 @@ namespace Novell.iFolder.FormsTrayApp
 			set
 			{
 				manager = value;
+			}
+		}
+
+		public bool ShowEnterpriseTab
+		{
+			set
+			{
+				if (value)
+				{
+					if (!tabControl1.Controls.Contains(tabPage5))
+					{
+						tabControl1.Controls.Add(this.tabPage5);
+					}
+				}
+				else
+				{
+					if (tabControl1.Controls.Contains(tabPage5))
+					{
+						tabControl1.Controls.Remove(tabPage5);
+					}
+				}
 			}
 		}
 		#endregion
@@ -1247,6 +1476,50 @@ namespace Novell.iFolder.FormsTrayApp
 
 			try
 			{
+				// Check to see if we have already connected to an enterprise server.
+				Store store = Store.GetStore();
+				LocalDatabase localDB = store.GetDatabaseObject();
+				Domain enterpriseDomain = null;
+				ICSList domainList = localDB.GetNodesByType(typeof(Domain).Name);
+				foreach (ShallowNode sn in domainList)
+				{
+					if (!sn.Name.Equals(Domain.WorkGroupDomainName))
+					{
+						enterpriseDomain = store.GetDomain(sn.ID);
+						break;
+					}
+				}
+
+				if (enterpriseDomain != null)
+				{
+					ShowEnterpriseTab = true;
+					enterpriseName.Text = enterpriseDomain.Name;
+					enterpriseDescription.Text = enterpriseDomain.Description;
+
+					Member member = store.GetRoster(enterpriseDomain.ID).GetCurrentMember();
+//					Member member = localDB.GetMemberByID(store.GetUserIDFromDomainID(enterpriseDomain.ID));
+
+					double used = 0;
+					double total = 0;
+					double free;
+					DiskSpaceQuota dsq = DiskSpaceQuota.Get(member);
+					if (dsq.Limit != 0)
+					{
+						free = Math.Round(dsq.AvailableSpace/megaByte, 2);
+						used = Math.Round(dsq.UsedSpace/megaByte, 2);
+						total = Math.Round(dsq.Limit/megaByte, 2);
+						
+						freeSpace.Text = free.ToString();
+						usedSpace.Text = used.ToString();
+						totalSpace.Text = total.ToString();
+					}
+
+					gaugeChart1.Used = used;
+					gaugeChart1.MaxValue = total;
+					gaugeChart1.BarColor = SystemColors.ActiveCaption;
+					gaugeChart1.Invalidate(true);
+				}
+
 				// Display the default sync interval.
 				defaultInterval.Value = (decimal)manager.DefaultRefreshInterval;
 
@@ -1332,12 +1605,12 @@ namespace Novell.iFolder.FormsTrayApp
 		private void menuAction_Popup(object sender, System.EventArgs e)
 		{
 			menuActionEnable.Visible = menuActionStart.Visible = menuActionPause.Visible =
-				menuActionRestart.Visible = menuActionStop.Visible = tabControl1.SelectedIndex == 3;
+				menuActionRestart.Visible = menuActionStop.Visible = tabControl1.SelectedTab.Equals(tabPage4);
 
 			menuActionOpen.Visible = menuActionProperties.Visible = menuActionShare.Visible =
-				menuActionSync.Visible = menuActionRevert.Visible = tabControl1.SelectedIndex == 0;
+				menuActionSync.Visible = menuActionRevert.Visible = tabControl1.SelectedTab.Equals(tabPage1);
 
-			this.menuActionSeparator1.Visible = (tabControl1.SelectedIndex == 0 || tabControl1.SelectedIndex == 3);
+			this.menuActionSeparator1.Visible = (tabControl1.SelectedTab.Equals(tabPage1) || tabControl1.SelectedTab.Equals(tabPage4));
 
 			menuActionShare.Enabled = menuActionProperties.Enabled = menuActionRevert.Enabled = 
 				menuActionSync.Enabled = menuActionOpen.Enabled = iFolderView.SelectedItems.Count == 1;
@@ -1347,7 +1620,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void menuView_Popup(object sender, System.EventArgs e)
 		{
-			menuViewRefresh.Enabled = tabControl1.SelectedIndex == 0;
+			menuViewRefresh.Enabled = tabControl1.SelectedTab.Equals(tabPage1);
 		}
 
 		#region iFolders Tab
