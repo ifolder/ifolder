@@ -299,13 +299,23 @@ namespace Simias.Sync
 			{
 				return false;
 			}
-			XmlDocument xNode = new XmlDocument();
-			xNode.LoadXml(snode.node);
-			node = (BaseFileNode)Node.NodeFactory(collection.StoreReference, xNode);
-			collection.ImportNode(node, false, 0);
-			node.IncarnationUpdate = node.LocalIncarnation;
-			base.Open(node);
-			return true;
+			try
+			{
+				XmlDocument xNode = new XmlDocument();
+				xNode.LoadXml(snode.node);
+				node = (BaseFileNode)Node.NodeFactory(collection.StoreReference, xNode);
+				collection.ImportNode(node, false, 0);
+				node.IncarnationUpdate = node.LocalIncarnation;
+				base.Open(node);
+				return true;
+			}
+			catch (Exception ex)
+			{
+				syncService.CloseFile();
+				base.Close(false);
+				Log.log.Debug(ex, "Failed opening file {0}", file);
+				throw ex;
+			}
 		}
 
 		/// <summary>
@@ -627,7 +637,17 @@ namespace Simias.Sync
 			SyncStatus status = syncService.OpenFilePut(snode);
 			if (status == SyncStatus.Success)
 			{
-				base.Open(node, "");
+				try
+				{
+					base.Open(node, "");
+				}
+				catch (Exception ex)
+				{
+					Log.log.Debug(ex, "Failed opening file {0}", file);
+					syncService.CloseFile(false);
+					base.Close();
+					throw ex;
+				}
 			}
 			return status;
 		}
