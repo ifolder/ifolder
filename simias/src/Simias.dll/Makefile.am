@@ -7,8 +7,8 @@ SIMIAS_CSFILES := $(subst /,$(SEP),$(SIMIAS_CSFILES2))
 SIMIAS_INCLUDES =
 SIMIAS_RESOURCES =
 SIMIAS_FLAGS = $(CSC_LIBFLAG) /unsafe
-SIMIAS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Security.dll System.Runtime.Remoting.dll mDnsResponder.dll mDnsResponderApi.dll log4net.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll 
-SIMIAS_LIBPATH = $(srcdir)/../../external/SecureChannelSinks $(LOG4NET_DIR) $(MDNSRESPONDER_DIR)
+SIMIAS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Security.dll System.Runtime.Remoting.dll nunit.util.dll nunit.framework.dll mDnsResponder.dll mDnsResponderApi.dll log4net.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll 
+SIMIAS_LIBPATH = $(NUNIT_LIBPATH) $(srcdir)/../../external/SecureChannelSinks $(LOG4NET_DIR) $(MDNSRESPONDER_DIR)
 
 EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES)
 
@@ -27,7 +27,10 @@ endif
 
 install-exec-local: Simias.dll
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) Simias.dll ../../external/SecureChannelSinks/*.dll $(LOG4NET_DIR)/log4net.dll $(MDNSRESPONDER_DIR)/m*.exe $(MDNSRESPONDER_DIR)/m*.dll $(DEBUG_FILES) $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) Simias.dll $(NUNIT_LIBPATH)/nunit.util.dll $(NUNIT_LIBPATH)/nunit.framework.dll ../../external/SecureChannelSinks/*.dll $(LOG4NET_DIR)/log4net.dll $(MDNSRESPONDER_DIR)/m*.exe $(MDNSRESPONDER_DIR)/m*.dll $(DEBUG_FILES) $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DESTDIR)$(libdir)
+
+installcheck-local: install
+	cd $(DESTDIR)$(libdir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:Simias.test.xml Simias.dll
 
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f Simias.dll Novell.Security.SecureSink*.dll log4net.dll mDnsResponder* $(SQLITELIB) $(NUNIT_TESTS); rm -rf .cstore $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
