@@ -188,6 +188,14 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
+		/// The remoting end point for the sync store service.
+		/// </summary>
+		public static string GetEndPoint(int port)
+		{
+			return String.Format("SyncStoreService{0}.rem", port);
+		}
+
+		/// <summary>
 		/// Delete the collection from the store.
 		/// </summary>
 		public void Delete()
@@ -215,14 +223,6 @@ namespace Simias.Sync
 
 		#region Properties
 		
-		/// <summary>
-		/// The remoting end point for the sync store service.
-		/// </summary>
-		public static string EndPoint
-		{
-			get { return "SyncStoreService.rem"; }
-		}
-
 		/// <summary>
 		/// The base store object.
 		/// </summary>

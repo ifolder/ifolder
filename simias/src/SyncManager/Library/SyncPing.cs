@@ -68,7 +68,7 @@ namespace Simias.Sync
 			SyncChannel channel = SyncChannelFactory.GetInstance().GetChannel(syncStore, SyncProperties.SuggestedChannelSinks);
 
 			// service URL
-			string serviceUrl = new UriBuilder("http", host, port, SyncStore.EndPoint).ToString();
+			string serviceUrl = new UriBuilder("http", host, port, SyncStore.GetEndPoint(port)).ToString();
 
 			try
 			{

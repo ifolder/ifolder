@@ -204,6 +204,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniFolderTests", "src\Mini
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcceptanceTests", "src\AcceptanceTests\AcceptanceTests.csproj", "{7B6A4971-F7AE-4ED6-8925-564AA9E0270E}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -398,6 +402,10 @@ Global
 		{3BFF1544-260B-495B-9EA1-522ED7D71DEC}.Debug.Build.0 = Debug|.NET
 		{3BFF1544-260B-495B-9EA1-522ED7D71DEC}.Release.ActiveCfg = Release|.NET
 		{3BFF1544-260B-495B-9EA1-522ED7D71DEC}.Release.Build.0 = Release|.NET
+		{7B6A4971-F7AE-4ED6-8925-564AA9E0270E}.Debug.ActiveCfg = Debug|.NET
+		{7B6A4971-F7AE-4ED6-8925-564AA9E0270E}.Debug.Build.0 = Debug|.NET
+		{7B6A4971-F7AE-4ED6-8925-564AA9E0270E}.Release.ActiveCfg = Release|.NET
+		{7B6A4971-F7AE-4ED6-8925-564AA9E0270E}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

@@ -282,7 +282,7 @@ namespace Simias.Sync
 		/// </summary>
 		public string ServiceUrl
 		{
-			get { return (new UriBuilder("http", Host, Port, SyncStore.EndPoint).ToString()); }
+			get { return (new UriBuilder("http", Host, Port, SyncStore.GetEndPoint(Port)).ToString()); }
 		}
 
 		/// <summary>

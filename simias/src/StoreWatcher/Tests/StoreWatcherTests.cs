@@ -48,8 +48,7 @@ namespace Simias.Sync.Tests
 		/// </summary>
 		public StoreWatcherTests()
 		{
-			Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
-			Trace.AutoFlush = true;
+			MyTrace.SendToConsole();
 		}
 
 		/// <summary>

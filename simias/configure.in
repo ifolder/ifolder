@@ -12,7 +12,7 @@ APIDOCDIR="$SRCDIR/api-doc"
 EMPTY=
 SPACE='$(EMPTY) $(EMPTY)'
 
-COMMON_SUBDIRS="Configuration Common CollectionEvents UserService Storage StoreProvider FsProvider SqliteProvider CollectionStore FsWatcher Agent RemotingSniffer SyncCommon StoreWatcher CollectionWatcher SyncManager Sync SyncLogicLite SyncTools AddressBook AddressBookCmd Smtp InviteAgent MiniFolder"
+COMMON_SUBDIRS="Configuration Common CollectionEvents UserService Storage StoreProvider FsProvider SqliteProvider CollectionStore FsWatcher Agent RemotingSniffer SyncCommon StoreWatcher CollectionWatcher SyncManager Sync SyncLogicLite SyncTools AddressBook AddressBookCmd Smtp InviteAgent MiniFolder AcceptanceTests"
 LINUX_SUBDIRS="CommonGtkWindows"
 WINDOWS_SUBDIRS="CommonFormWindows"
 
@@ -307,6 +307,7 @@ src/AddressBook/Makefile
 src/Smtp/Makefile
 src/InviteAgent/Makefile
 src/MiniFolder/Makefile
+src/AcceptanceTests/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile
