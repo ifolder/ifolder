@@ -22,9 +22,11 @@
  ***********************************************************************/
 
 using System;
+using System.Collections;
 using System.IO;
 using System.Xml;
 using System.Reflection;
+using System.Threading;
 
 namespace Simias.Service
 {
@@ -34,8 +36,27 @@ namespace Simias.Service
 	public class ThreadServiceCtl : ServiceCtl
 	{
 		const string XmlClassAttr = "class";
-		IThreadService	service = null;
-		string			classType;
+		IThreadService			service = null;
+		string					classType;
+		static Queue			messageQueue = new Queue();
+		static ManualResetEvent	queueEvent = new ManualResetEvent(false);
+		static Thread			messageThread = null;
+
+		class SvcMessage : Message
+		{
+			internal ThreadServiceCtl service;
+
+			internal SvcMessage(ThreadServiceCtl service, MessageCode message) :
+				this(service, message, 0, "")
+			{
+			}
+
+			internal SvcMessage(ThreadServiceCtl service, MessageCode message, int customMsg, string data) :
+				base(message, customMsg, data)
+			{
+				this.service = service;
+			}
+		}
 		
 		#region Constructor
 
@@ -65,6 +86,73 @@ namespace Simias.Service
 
 		#endregion
 
+		private void postMessage(SvcMessage msg)
+		{
+			lock (messageQueue)
+			{
+				messageQueue.Enqueue(msg);
+				queueEvent.Set();
+			}
+		}
+
+		private static void messageDispatcher()
+		{
+			SvcMessage msg;
+			ThreadServiceCtl svcCtl;
+			while (true)
+			{	
+				try
+				{
+					queueEvent.WaitOne();
+					lock (messageQueue)
+					{
+						queueEvent.Reset();
+						msg = (SvcMessage)messageQueue.Dequeue();
+						svcCtl = msg.service;
+					}
+					switch (msg.MajorMessage)
+					{
+						case MessageCode.Start:
+							if (svcCtl.State == State.Stopped && svcCtl.Enabled)
+							{
+								// Load the assembly and start it.
+								Assembly pAssembly = AppDomain.CurrentDomain.Load(Path.GetFileNameWithoutExtension(svcCtl.Assembly));
+								svcCtl.service = (IThreadService)pAssembly.CreateInstance(svcCtl.classType);
+								svcCtl.service.Start(svcCtl.conf);
+								svcCtl.state = State.Running;
+							}
+							break;
+						case MessageCode.Stop:
+							if (svcCtl.state == State.Running || svcCtl.state == State.Paused)
+							{
+								svcCtl.service.Stop();
+								svcCtl.state = State.Stopped;
+								svcCtl.service = null;
+							}
+							break;
+						case MessageCode.Pause:
+							if (svcCtl.state == State.Running)
+							{
+								svcCtl.service.Pause();
+								svcCtl.state = State.Paused;
+							}
+							break;
+						case MessageCode.Resume:
+							if (svcCtl.state == State.Paused)
+							{
+								svcCtl.service.Resume();
+								svcCtl.state = State.Running;
+							}
+							break;
+						case MessageCode.Custom:
+							svcCtl.service.Custom(msg.CustomMessage, msg.Data);
+							break;
+					}
+				}
+				catch {}
+			}
+		}
+
 		#region IServiceCtl members
 
 		/// <summary>
@@ -72,31 +160,16 @@ namespace Simias.Service
 		/// </summary>
 		public override void Start()
 		{
-			lock (this)
+			lock (typeof(ThreadServiceCtl))
 			{
-				if (state == State.Stopped && enabled)
+				if (messageThread == null)
 				{
-					// Load the assembly and start it.
-					Assembly pAssembly = AppDomain.CurrentDomain.Load(Path.GetFileNameWithoutExtension(assembly));
-					Type pType = null;
-					Type[] types = pAssembly.GetExportedTypes();
-					foreach (Type t in types)
-					{
-						if (t.FullName.Equals(classType))
-						{
-							pType = t;
-							break;
-						}
-					}
-
-					// If we did not find our type return a null.
-					if (pType != null)
-					{
-						service = (IThreadService)pAssembly.CreateInstance(classType);
-						service.Start(conf);
-						state = State.Running;
-					}
+					messageThread = new Thread(new ThreadStart(messageDispatcher));
+					messageThread.IsBackground = true;
+					messageThread.Start();
 				}
+
+				postMessage(new SvcMessage(this, MessageCode.Start));
 			}
 		}
 
@@ -107,12 +180,7 @@ namespace Simias.Service
 		{
 			lock (this)
 			{
-				if (state == State.Running || state == State.Paused)
-				{
-					service.Stop();
-					service = null;
-					state = State.Stopped;
-				}
+				postMessage(new SvcMessage(this, MessageCode.Stop));
 			}
 		}
 
@@ -121,7 +189,10 @@ namespace Simias.Service
 		/// </summary>
 		public override void Kill()
 		{
-			Stop();
+			lock (this)
+			{
+				postMessage(new SvcMessage(this, MessageCode.Stop));
+			}
 		}
 
 		/// <summary>
@@ -131,11 +202,7 @@ namespace Simias.Service
 		{
 			lock (this)
 			{
-				if (state == State.Running)
-				{
-					service.Pause();
-					state = State.Paused;
-				}
+				postMessage(new SvcMessage(this, MessageCode.Pause));
 			}
 		}
 
@@ -146,11 +213,7 @@ namespace Simias.Service
 		{
 			lock (this)
 			{
-				if (state == State.Paused)
-				{
-					service.Resume();
-					state = State.Running;
-				}
+				postMessage(new SvcMessage(this, MessageCode.Resume));
 			}
 		}
 
@@ -161,7 +224,7 @@ namespace Simias.Service
 		/// <param name="data"></param>
 		public override void Custom(int message, string data)
 		{
-			service.Custom(message, data);
+			postMessage(new SvcMessage(this, MessageCode.Custom, message, data));
 		}
 
 

@@ -37,7 +37,6 @@ namespace Simias.Service
 		#region Fields
 
 		State						state = State.Stopped;
-		ManualResetEvent			shutdownEvent = new ManualResetEvent(false);
 		Configuration				conf;
 
 		#endregion
@@ -78,12 +77,7 @@ namespace Simias.Service
 		/// </summary>
 		protected void Run()
 		{
-			Thread t1 = new Thread(new ThreadStart(MessageDispatcher));
-			t1.IsBackground = true;
-			t1.Start();
-
-			// Wait for shutdown.
-			shutdownEvent.WaitOne();
+			MessageDispatcher();
 		}
 
 		#endregion
@@ -112,7 +106,7 @@ namespace Simias.Service
 						case MessageCode.Stop:
 							stop();
 							sendComplete(msg);
-							break;
+							return;
 						case MessageCode.Pause:
 							pause();
 							sendComplete(msg);
@@ -164,7 +158,6 @@ namespace Simias.Service
 				{
 					Stop();
 					state = State.Stopped;
-					shutdownEvent.Set();
 				}
 			}
 		}

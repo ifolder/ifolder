@@ -143,7 +143,7 @@ namespace Simias.Service
 		/// <summary>
 		/// 
 		/// </summary>
-		public bool Enable
+		public bool Enabled
 		{
 			get { return enabled;}
 			set { enabled = value;}
