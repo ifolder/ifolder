@@ -1,0 +1,43 @@
+Index: configure.ac
+===================================================================
+RCS file: /cvsroot/gaim/gaim/configure.ac,v
+retrieving revision 1.271.2.29
+diff -r1.271.2.29 configure.ac
+346a347,362
+> dnl # Check for stuff needed by the ifolder plugin.
+> dnl #######################################################################
+> build_gifolder=no
+> AC_ARG_ENABLE(gifolder, [  --disable-gifolder    compile without the Gaim-iFolder plugin],,enable_gifolder=yes)
+> 
+> if test "x$enable_gifolder" = "xyes"; then
+> 	gifolder_deps="simias-client-c"
+> 	PKG_CHECK_MODULES(SIMIAS_CLIENT, $gifolder_deps, build_gifolder=yes, build_gifolder=no)
+> 
+> 	AC_SUBST(SIMIAS_CLIENT_CFLAGS)
+> 	AC_SUBST(SIMIAS_CLIENT_LIBS)
+> fi
+> 
+> AM_CONDITIONAL(BUILD_GIFOLDER, test "x$build_gifolder" = "xyes")
+> 
+> dnl #######################################################################
+1178a1195,1196
+> 		   plugins/gifolder/Makefile
+> 		   plugins/gifolder/pixmaps/Makefile
+Index: plugins/Makefile.am
+===================================================================
+RCS file: /cvsroot/gaim/gaim/plugins/Makefile.am,v
+retrieving revision 1.96
+diff -r1.96 Makefile.am
+1c1
+< DIST_SUBDIRS = docklet gevolution gaim-remote gestures perl ssl tcl ticker
+---
+> DIST_SUBDIRS = docklet gevolution gaim-remote gestures gifolder perl ssl tcl ticker
+6a7,10
+> if BUILD_GIFOLDER
+> GIFOLDER_DIR = gifolder
+> endif
+> 
+17c21
+< 	$(PERL_DIR) $(TCL_DIR) ssl ticker
+---
+> 	$(GIFOLDER_DIR) $(PERL_DIR) $(TCL_DIR) ssl ticker
