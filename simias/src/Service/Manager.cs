@@ -250,6 +250,7 @@ namespace Simias.Service
 			Install(new ProcessServiceCtl(conf, "Simias Sync Service", "SyncService.exe"));
 			Install(new ProcessServiceCtl(conf, "Simias PO Service", "POService.exe"));
 			Install(new ThreadServiceCtl(conf, "Simias Presence Service", "Simias", "Simias.Presence.PresenceService"), 5);
+//			Install(new ThreadServiceCtl(conf, "Simias Web Service", "SimiasWebService.dll", "Simias.Web.SimiasWebService"), 6);
 		}
 
 		/// <summary>

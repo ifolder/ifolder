@@ -343,6 +343,7 @@ src/Events/Makefile
 src/POBox/Makefile
 src/mDnsService/Makefile
 src/SyncService/Makefile
+src/WebService/Makefile
 test/Makefile
 test/Common/Makefile
 test/Configuration/Makefile
