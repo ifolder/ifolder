@@ -134,11 +134,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "MyTrace.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "SimiasLog.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

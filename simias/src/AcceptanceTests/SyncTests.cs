@@ -129,8 +129,11 @@ namespace Simias.Tests
 				syncPropsA.ChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor | SyncChannelSinks.Security;
 				
 				// start the service for store A
+                Console.Error.WriteLine("Starting Manager A...");
 				managerA = new Manager(configA);
 				managerA.StartServices();
+				managerA.WaitForServicesStarted();
+                Console.Error.WriteLine("Started Manager A");
 
 				// set the sync properties for store B
 				syncPropsB = new SyncProperties(configB);
@@ -139,8 +142,11 @@ namespace Simias.Tests
 				syncPropsB.ChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor | SyncChannelSinks.Security;
 				
 				// start the service for store B
+                Console.Error.WriteLine("Starting Manager B...");
 				managerB = new Manager(configB);
 				managerB.StartServices();
+				managerB.WaitForServicesStarted();
+                Console.Error.WriteLine("Started Manager B");
 
 				// set the sync properties for store C
 				syncPropsC = new SyncProperties(configC);
@@ -148,9 +154,12 @@ namespace Simias.Tests
 				syncPropsC.Port = syncPropsA.Port + 2;
 				syncPropsC.ChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor | SyncChannelSinks.Security;
 				
-				// start the service for store A
+				// start the service for store C
+                Console.Error.WriteLine("Starting Manager C...");
 				managerC = new Manager(configC);
 				managerC.StartServices();
+				managerC.WaitForServicesStarted();
+                Console.Error.WriteLine("Started Manager C");
 
 				// create a master collection on A
 				collection1A = new Collection(storeA, collectionName1);
@@ -214,9 +223,20 @@ namespace Simias.Tests
 		public void FixtureTearDown()
 		{
 			// stop syncing
-			managerC.StopServices();
+			Console.Error.WriteLine("Stopping Manager C...");
+            managerC.StopServices();
+			managerC.WaitForServicesStopped();
+			Console.Error.WriteLine("Stopped Manager C");
+
+			Console.Error.WriteLine("Stopping Manager B...");
 			managerB.StopServices();
+			managerB.WaitForServicesStopped();
+			Console.Error.WriteLine("Stopped Manager B");
+
+			Console.Error.WriteLine("Stopping Manager A...");
 			managerA.StopServices();
+			managerA.WaitForServicesStopped();
+			Console.Error.WriteLine("Stopped Manager A");
 		}
 
 		/// <summary>

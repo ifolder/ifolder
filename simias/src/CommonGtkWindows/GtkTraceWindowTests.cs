@@ -34,6 +34,8 @@ namespace Simias
 	[TestFixture]
 	public class GtkTraceWindowTests 
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(GtkTraceWindowTests));
+
 		[TestFixtureSetUp]
 		public void Init()
 		{
@@ -42,7 +44,7 @@ namespace Simias
 
 		public void WriteToWindow(string str, int waitTime)
 		{
-			MyTrace.WriteLine(str);
+			log.Debug(str);
 			while(Application.EventsPending())
 				Application.RunIteration(false);
 

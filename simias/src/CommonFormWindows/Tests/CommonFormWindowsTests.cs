@@ -67,11 +67,11 @@ namespace Simias.Tests
 			form.Refresh();
 			Thread.Sleep(TimeSpan.FromSeconds(1));
 
-			MyTrace.WriteLine("test4");
+			log.Debug("test4");
 			form.Refresh();
 			Thread.Sleep(TimeSpan.FromSeconds(1));
 
-			MyTrace.WriteLine("test5");
+			log.Debug("test5");
 			form.Refresh();
 			Thread.Sleep(TimeSpan.FromSeconds(1));
 
