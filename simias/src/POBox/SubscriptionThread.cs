@@ -57,15 +57,23 @@ namespace Simias.POBox
 			this.subscription = subscription;
 			this.threads = threads;
 
-			Collection cCollection = 
-				poBox.StoreReference.GetCollectionByID(subscription.SubscriptionCollectionID); 
-			if (cCollection == null)
+			if (subscription.SubscriptionCollectionURL != null && 
+				subscription.SubscriptionCollectionURL != "")
 			{
-				throw new ApplicationException("Invalid shared collection ID");
+				this.poServiceUrl = subscription.SubscriptionCollectionURL + "/simias10/POBoxService.asmx";
 			}
+			else
+			{
+				Collection cCollection = 
+					poBox.StoreReference.GetCollectionByID(subscription.SubscriptionCollectionID); 
+				if (cCollection == null)
+				{
+					throw new ApplicationException("Invalid shared collection ID");
+				}
 
-			SyncCollection sc = new SyncCollection(cCollection);
-			poServiceUrl = sc.MasterUrl.ToString() + poServiceLabel;
+				SyncCollection sc = new SyncCollection(cCollection);
+				poServiceUrl = sc.MasterUrl.ToString() + poServiceLabel;
+			}
 		}
 
 		/// <summary>
