@@ -60,16 +60,17 @@ namespace Simias.Sync
 			collection = store.OpenCollection(id);
 			Debug.Assert(collection != null);
 
+			// check sync properties
+			CheckProperties();
+
 			// watcher
 			watching = syncManager.LogicFactory.WatchFileSystem();
+			
 			if (watching)
 			{
 				watcher = new CollectionWatcher(syncManager.StorePath, id);
 				watcher.ChangedFile += new ChangedFileEventHandler(OnChangedFile);
 			}
-
-			// check sync properties
-			CheckProperties();
 		}
 
 		private void CheckProperties()
