@@ -27,7 +27,7 @@ using System.Collections;
 using System.IO;
 using Simias.Storage;
 using Novell.AddressBook;
-using Simias.Identity;
+//using Simias.Identity;
 
 namespace Novell.AddressBook
 {
@@ -231,6 +231,7 @@ namespace Novell.AddressBook
 		[ Obsolete( "This method is marked for eventual removal. Use method 'AddressBook' class instead.", false ) ]
 		public Contact GetContactByIdentity(string identityID)
 		{
+			/*
 			// First make sure we get the master ID
 			IIdentityFactory idFactory = IdentityManager.Connect();
 			IIdentity masterID = idFactory.GetIdentityFromUserGuid( identityID );
@@ -250,6 +251,7 @@ namespace Novell.AddressBook
 				}
 			}
 			catch{}
+			*/
 			throw new ApplicationException("Contact node does not exist");
 		}
 

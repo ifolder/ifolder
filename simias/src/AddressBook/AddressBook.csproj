@@ -85,29 +85,9 @@
                     HintPath = "..\stage\CollectionStore.dll"
                 />
                 <Reference
-                    Name = "Identity"
-                    AssemblyName = "Identity"
-                    HintPath = "..\stage\Identity.dll"
-                />
-                <Reference
-                    Name = "WorkGroupIdentity"
-                    AssemblyName = "WorkGroupIdentity"
-                    HintPath = "..\stage\WorkGroupIdentity.dll"
-                />
-                <Reference
                     Name = "StoreProvider"
                     AssemblyName = "StoreProvider"
                     HintPath = "..\stage\StoreProvider.dll"
-                />
-                <Reference
-                    Name = "SqliteProvider"
-                    AssemblyName = "SqliteProvider"
-                    HintPath = "..\stage\SqliteProvider.dll"
-                />
-                <Reference
-                    Name = "FlaimProvider"
-                    AssemblyName = "FlaimProvider"
-                    HintPath = "..\stage\FlaimProvider.dll"
                 />
             </References>
         </Build>
