@@ -90,9 +90,9 @@
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "Simias"
-                    AssemblyName = "Simias"
-                    HintPath = "..\..\..\..\final\Simias.dll"
+                    Name = "System.Web.Services"
+                    AssemblyName = "System.Web.Services"
+                    HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
                 />
             </References>
         </Build>
@@ -108,6 +108,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Browser.cs"
+                    SubType = "code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Form1.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
@@ -115,6 +120,16 @@
                 <File
                     RelPath = "Form1.resx"
                     DependentUpon = "Form1.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "HostDialog.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "HostDialog.resx"
+                    DependentUpon = "HostDialog.cs"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

@@ -28,30 +28,238 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
 using System.IO;
-using Simias;
-using Simias.Storage;
-
+using System.Xml;
+using System.Text.RegularExpressions;
 
 namespace StoreBrowser
 {
+	public class Relationship
+	{
+		#region Class Members
+		private const string RootID = "a9d9a742-fd42-492c-a7f2-4ec4f023c625";
+		private string collectionID;
+		private string nodeID;
+		#endregion
+
+		#region Properties
+		public string CollectionID
+		{
+			get { return collectionID; }
+		}
+
+		public bool IsRoot
+		{
+			get { return ( nodeID == RootID ) ? true : false; }
+		}
+
+		public string NodeID
+		{
+			get { return nodeID; }
+		}
+		#endregion
+
+		#region Constructor
+		public Relationship( string relationString )
+		{
+			int index = relationString.IndexOf( ':' );
+			if ( index == -1 )
+			{
+				throw new ApplicationException( String.Format( "Invalid relationship format: {0}.", relationString ) );
+			}
+
+			nodeID = relationString.Substring( 0, index );
+			collectionID = relationString.Substring( index + 1 );
+		}
+		#endregion
+	}
+
+	public class DisplayProperty
+	{
+		#region Class Members
+		private static string NameTag = "n";
+		private static string TypeTag = "t";
+		private static string FlagTag = "f";
+
+		private XmlElement element;
+		#endregion
+
+		#region Properties
+		public string Name
+		{
+			get { return element.GetAttribute(NameTag); }
+		}
+
+		public string Type
+		{
+			get { return element.GetAttribute(TypeTag); }
+		}
+
+		public string Value
+		{
+			get { return (Type == "XmlDocument") ? element.InnerXml : element.InnerText; }
+		}
+
+		public uint Flags
+		{
+			get 
+			{ 
+				string flagValue = element.GetAttribute( FlagTag );
+				return (flagValue != null && flagValue != String.Empty) ? Convert.ToUInt32(flagValue) : 0; 
+			}
+		}
+
+		public bool IsLocal
+		{
+			get { return ((Flags & 0x00020000) == 0x00020000) ? true : false; }
+		}
+
+		public bool IsMultiValued
+		{
+			get { return ((Flags & 0x00040000) == 0x00040000) ? true : false; }
+		}
+		#endregion
+
+		#region Constructor
+		public DisplayProperty( XmlElement element )
+		{
+			this.element = element;
+		}
+		#endregion
+	}
+
+	public class DisplayNode : IEnumerable
+	{
+		#region Class Members
+		private static string ObjectTag = "O";
+		private static string NameTag = "n";
+		private static string IDTag = "i";
+		private static string TypeTag = "t";
+		private static string CollectionIDTag = "CollectionId";
+
+		private XmlDocument document;
+		#endregion
+
+		#region Properties
+		public string Name
+		{
+			get { return document.DocumentElement[ ObjectTag ].GetAttribute( NameTag ); }
+		}
+
+		public string ID
+		{
+			get { return document.DocumentElement[ ObjectTag ].GetAttribute( IDTag ); }
+		}
+
+		public string Type
+		{
+			get { return document.DocumentElement[ ObjectTag ].GetAttribute( TypeTag ); }
+		}
+
+		public string CollectionID
+		{
+			get	{ return FindSingleValue( CollectionIDTag ); }
+		}
+
+		public bool IsCollection
+		{
+			get { return ( CollectionID == ID ) ? true : false; }
+		}
+
+		public XmlDocument Document
+		{
+			get { return document; } 
+		}
+		#endregion
+
+		#region Constructor
+		public DisplayNode( BrowserNode bNode )
+		{
+			document = new XmlDocument();
+			document.LoadXml( bNode.NodeData );
+		}
+		#endregion
+
+		#region Private Methods
+		internal string FindSingleValue( string name )
+		{
+			string singleValue = null;
+
+			// Create a regular expression to use as the search string.
+			Regex searchName = new Regex( "^" + name + "$", RegexOptions.IgnoreCase );
+
+			// Walk each property node and do a case-insensitive compare on the names.
+			foreach ( XmlElement x in document.DocumentElement[ ObjectTag ] )
+			{
+				if ( searchName.IsMatch( x.GetAttribute( NameTag ) ) )
+				{
+					DisplayProperty p = new DisplayProperty( x );
+					singleValue = p.Value;
+					break;
+				}
+			}
+
+			return singleValue;
+		}
+		#endregion
+
+		#region IEnumerable Members
+		public IEnumerator GetEnumerator()
+		{
+			return new DisplayNodeEnum( document );
+		}
+
+		private class DisplayNodeEnum : IEnumerator
+		{
+			#region Class Members
+			private IEnumerator e;
+			#endregion
+
+			#region Constructor
+			public DisplayNodeEnum( XmlDocument document )
+			{
+				e = document.DocumentElement[ ObjectTag ].GetEnumerator();
+			}
+			#endregion
+
+			#region IEnumerator Members
+
+			public void Reset()
+			{
+				e.Reset();
+			}
+
+			public object Current
+			{
+				get { return new DisplayProperty( e.Current as XmlElement ); }
+			}
+
+			public bool MoveNext()
+			{
+				return e.MoveNext();
+			}
+			#endregion
+		}
+		#endregion
+	}
+
 	/// <summary>
 	/// Summary description for NodeBrowser.
 	/// </summary>
 	public class NodeBrowser : IStoreBrowser
 	{
-		Store store;
+		Browser browser;
 		TreeView tView;
-		RichTextBox rBox;
 		ListView lView;
 		bool alreadyDisposed;
 
-		public NodeBrowser(TreeView view, ListView lView )
+		public NodeBrowser(TreeView view, ListView lView, string host)
 		{
 			tView = view;
 			this.lView = lView;
 			lView.BringToFront();
 			lView.Show();
-			store = Store.GetStore();
+			browser = new Browser();
+			browser.Url = String.Format("http://{0}/SimiasBrowser.asmx", host);
 			tView.Dock = DockStyle.Left;
 			alreadyDisposed = true;
 		}
@@ -62,6 +270,11 @@ namespace StoreBrowser
 		}
 
 		#region IStoreBrowser Members
+
+		public Browser StoreBrowser
+		{
+			get { return browser; }
+		}
 
 		public void Show()
 		{
@@ -78,110 +291,79 @@ namespace StoreBrowser
 			lView.Items.Clear();
 			if (tNode.Tag != null)
 			{
-				Node cNode = (Node)tNode.Tag;
-				lView.Tag = cNode;
+				DisplayNode dspNode = (DisplayNode)tNode.Tag;
+				lView.Tag = dspNode;
+
 				// Add the name;
 				ListViewItem item = new ListViewItem("Name");
 				item.BackColor = Color.LightBlue;
-				item.SubItems.Add(cNode.Name);
-				item.SubItems.Add(Syntax.String.ToString());
+				item.SubItems.Add(dspNode.Name);
+				item.SubItems.Add("String");
 				lView.Items.Add(item);
 
 				// Add the ID.
 				item = new ListViewItem("ID");
 				item.BackColor = Color.White;
-				item.SubItems.Add(cNode.ID);
-				item.SubItems.Add(Syntax.String.ToString());
+				item.SubItems.Add(dspNode.ID);
+				item.SubItems.Add("String");
 				lView.Items.Add(item);
 
 				// Add the type.
 				item = new ListViewItem("Type");
 				item.BackColor = Color.LightBlue;
-				item.SubItems.Add(cNode.Type);
-				item.SubItems.Add(Syntax.String.ToString());
+				item.SubItems.Add(dspNode.Type);
+				item.SubItems.Add("String");
 				lView.Items.Add(item);
 
 				Color c = Color.LightBlue;
-				foreach (Property p in cNode.Properties)
+				foreach (DisplayProperty p in dspNode)
 				{
-					c = c == Color.LightBlue ? Color.White : Color.LightBlue;
+					c = (c == Color.LightBlue) ? Color.White : Color.LightBlue;
 					item = new ListViewItem(p.Name);
 					item.Tag = p;
 					item.BackColor = c;
 
-					if (p.Type == Syntax.Relationship)
+					if (p.Type == "Relationship")
 					{
-						string valueStr = p.ToString();
-						Relationship r = p.Value as Relationship;
-						Collection rCol = store.GetCollectionByID( r.CollectionID );
-						if ( rCol != null )
+						string valueStr = p.Value;
+						Relationship r = new Relationship(valueStr);
+						BrowserNode cbn = browser.GetCollectionByID( r.CollectionID );
+						if ( cbn != null )
 						{
-							Node rNode = !r.IsRoot ? rCol.GetNodeByID( r.NodeID ) : null;
-							valueStr = String.Format("{0}{1}", rCol.Name, (rNode != null) ? ":" + rNode.Name : null);
+							BrowserNode nbn = !r.IsRoot ? browser.GetNodeByID( r.CollectionID, r.NodeID ) : null;
+							valueStr = String.Format("{0}{1}", new DisplayNode(cbn).Name, (nbn != null) ? ":" + new DisplayNode(nbn).Name : null);
 						}
 
 						item.SubItems.Add(valueStr);
 					}
 					else
 					{
-						item.SubItems.Add(p.ToString());
+						item.SubItems.Add(p.Value);
 					}
 
-					item.SubItems.Add(p.Type.ToString());
-					string flags = p.LocalProperty ? "(Local) " : "";
-					flags += p.MultiValuedProperty ? "(MV) " : "";
+					item.SubItems.Add(p.Type);
+					string flags = p.IsLocal ? "(Local) " : "";
+					flags += p.IsMultiValued ? "(MV) " : "";
 					flags += string.Format("0x{0}", p.Flags.ToString("X4"));
 					item.SubItems.Add(flags);
 					lView.Items.Add(item);
 				}
 			}
-			
 		}
 
 		#endregion
 
-		private void AddProperties(TreeNode tNode, Node node)
-		{	
-			tNode.Nodes.Add(new TreeNode("ID : " + node.ID, 1, 1));
-			tNode.Nodes.Add(new TreeNode("Type : " + node.Type, 1, 1));
-			Color c = Color.LightBlue;
-			foreach (Property p in node.Properties)
-			{
-				TreeNode pNode = new TreeNode(string.Format("{0,-20} : {1,40}", p.Name, p.Value.ToString()), 1, 1);
-				c = pNode.BackColor = (c == Color.LightBlue) ? Color.White : Color.LightBlue;
-
-				// Default value.
-				string valueStr = p.Value.ToString();
-
-				if (p.Type == Syntax.Relationship)
-				{
-					Relationship r = p.Value as Relationship;
-					Collection col = store.GetCollectionByID( r.CollectionID );
-					if ( col != null )
-					{
-						Node n = !r.IsRoot ? col.GetNodeByID( r.NodeID ) : null;
-						valueStr = String.Format("{0}{1}", col.Name, (n != null) ? ":" + n.Name : null);
-					}
-				}
-
-				pNode.Nodes.Add(new TreeNode("Value: " + valueStr, 1, 1));
-				pNode.Nodes.Add(new TreeNode("Type : " + p.Type.ToString(), 1, 1));
-				pNode.Nodes.Add(new TreeNode("Flags: " + p.Flags.ToString(), 1, 1));
-				tNode.Nodes.Add(pNode);
-			}
-		}
-
 		private void addCollections(TreeNode tNode)
 		{
 			tView.BeginUpdate();
-			foreach(ShallowNode sn in store)
+			BrowserNode[] bList = browser.EnumerateCollections();
+			foreach(BrowserNode bn in bList )
 			{
-				Collection col = new Collection(store, sn);
-				TreeNode colNode = new TreeNode(col.Name);
+				DisplayNode dspNode = new DisplayNode( bn );
+				TreeNode colNode = new TreeNode(dspNode.Name);
 				tNode.Nodes.Add(colNode);
-				colNode.Tag = col;
+				colNode.Tag = dspNode;
 				colNode.Nodes.Add("temp");
-				//AddChildren(colNode, col);
 			}
 			tView.EndUpdate();
 		}
@@ -194,18 +376,18 @@ namespace StoreBrowser
 			}
 			else
 			{
-				Node node = (Node)tNode.Tag;
-				if ( node is Collection )
+				DisplayNode dspNode = (DisplayNode)tNode.Tag;
+				if (dspNode.IsCollection)
 				{
-					foreach (ShallowNode sn in (Collection)node)
+					BrowserNode[] bList = browser.EnumerateNodes(dspNode.ID);
+					foreach (BrowserNode bn in bList)
 					{
-						if (sn.ID != node.ID)
+						DisplayNode n = new DisplayNode( bn );
+						if (n.ID != dspNode.ID)
 						{
-							Node n = new Node((Collection)node, sn);
 							TreeNode nNode = new TreeNode(n.Name);
 							nNode.Tag = n;
 							tNode.Nodes.Add(nNode);
-							//nNode.Nodes.Add("temp");
 						}
 					}
 				}
