@@ -1,5 +1,5 @@
 if LINUX
-SUBDIRS = Simias.dll SimiasApp mDnsService AddressBook WebService
+SUBDIRS = Simias.dll FlaimProvider SimiasApp mDnsService AddressBook WebService
 DIST_SUBDIRS = $(SUBDIRS)
 endif
 
