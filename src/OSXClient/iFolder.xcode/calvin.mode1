@@ -240,16 +240,12 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>29B97314FDCFA39411CA2CEA</string>
-								<string>3E255FFC077235290062AB7A</string>
-								<string>080E96DDFE201D6D7F000001</string>
 								<string>1C08E77C0454961000C914BD</string>
 								<string>1C37FABC05509CD000000102</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>6</integer>
-									<integer>2</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -285,7 +281,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>iFolderService.m</string>
+								<string>ifolder-banner.png</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -293,9 +289,9 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>iFolderService.m</string>
+										<string>ifolder-banner.png</string>
 										<key>bookmark</key>
-										<string>3EA547BD07734BA600CE56E3</string>
+										<string>3E2920B0077350280010037F</string>
 										<key>history</key>
 										<array>
 											<string>3EAEF46C0769032700B98AF6</string>
@@ -320,7 +316,8 @@
 											<string>3EA547800773475D00CE56E3</string>
 											<string>3EA547A407734A6200CE56E3</string>
 											<string>3EA547BA07734BA600CE56E3</string>
-											<string>3EA547BB07734BA600CE56E3</string>
+											<string>3E2920AA077350280010037F</string>
+											<string>3E2920AB077350280010037F</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -342,53 +339,10 @@
 											<string>3E256014077235900062AB7A</string>
 											<string>3E256035077236B30062AB7A</string>
 											<string>3E256044077236B30062AB7A</string>
-											<string>3EA52D0507733B9700CE56E3</string>
-											<string>3EA52D0707733B9700CE56E3</string>
-											<string>3EA52D0907733B9700CE56E3</string>
 											<string>3EA54754077340CA00CE56E3</string>
 											<string>3EA54756077340CA00CE56E3</string>
-											<string>3EA54758077340CA00CE56E3</string>
-											<string>3EA5475A077340CA00CE56E3</string>
-											<string>3EA5475B077340CA00CE56E3</string>
 											<string>3EA5475C077340CA00CE56E3</string>
-											<string>3EA5475D077340CA00CE56E3</string>
-											<string>3EA5475E077340CA00CE56E3</string>
-											<string>3EA5475F077340CA00CE56E3</string>
-											<string>3EA547670773440000CE56E3</string>
-											<string>3EA547680773440000CE56E3</string>
-											<string>3EA547690773440000CE56E3</string>
-											<string>3EA5476A0773440000CE56E3</string>
-											<string>3EA5476B0773440000CE56E3</string>
-											<string>3EA5476C0773440000CE56E3</string>
-											<string>3EA5476D0773440000CE56E3</string>
-											<string>3EA547840773475D00CE56E3</string>
-											<string>3EA547850773475D00CE56E3</string>
-											<string>3EA547860773475D00CE56E3</string>
-											<string>3EA547870773475D00CE56E3</string>
-											<string>3EA547880773475D00CE56E3</string>
-											<string>3EA547890773475D00CE56E3</string>
-											<string>3EA5478A0773475D00CE56E3</string>
-											<string>3EA5478B0773475D00CE56E3</string>
-											<string>3EA5478C0773475D00CE56E3</string>
-											<string>3EA5478D0773475D00CE56E3</string>
-											<string>3EA5478E0773475D00CE56E3</string>
-											<string>3EA5478F0773475D00CE56E3</string>
-											<string>3EA547900773475D00CE56E3</string>
-											<string>3EA547910773475D00CE56E3</string>
-											<string>3EA547920773475D00CE56E3</string>
-											<string>3EA547930773475D00CE56E3</string>
-											<string>3EA547940773475D00CE56E3</string>
-											<string>3EA547950773475D00CE56E3</string>
-											<string>3EA547960773475D00CE56E3</string>
-											<string>3EA547970773475D00CE56E3</string>
-											<string>3EA547A607734A6200CE56E3</string>
-											<string>3EA547A707734A6200CE56E3</string>
-											<string>3EA547A807734A6200CE56E3</string>
-											<string>3EA547A907734A6200CE56E3</string>
-											<string>3EA547AA07734A6200CE56E3</string>
-											<string>3EA547AB07734A6200CE56E3</string>
-											<string>3EA547AC07734A6200CE56E3</string>
-											<string>3EA547BC07734BA600CE56E3</string>
+											<string>3E2920AC077350280010037F</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -410,12 +364,14 @@
 							<string>527pt</string>
 						</dict>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20506471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>Errors &amp; Warnings</string>
+								<string>Detail</string>
 							</dict>
 							<key>GeometryConfiguration</key>
 							<dict>
@@ -446,9 +402,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>3EA52D0B07733B9700CE56E3</string>
+				<string>3E2920AE077350280010037F</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>3EA52D0C07733B9700CE56E3</string>
+				<string>3E2920AF077350280010037F</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -476,11 +432,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>3EDEFB0C07682B5000A3AD33</string>
-		<string>3EDEFB6E07682FCB00A3AD33</string>
-		<string>3EA52D1A07733CFB00CE56E3</string>
-		<string>1CD10A99069EF8BA00B06720</string>
-		<string>3EA54761077340CA00CE56E3</string>
 		<string>/Users/calvin/code/ifolder/ifolder/src/OSXClient/iFolder.xcode</string>
 	</array>
 	<key>WindowString</key>
