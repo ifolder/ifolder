@@ -368,7 +368,18 @@ namespace Simias.POBoxService.Web
 				throw new ApplicationException("Collection not found.");
 			}
 
-			SubscriptionInformation subInfo = new SubscriptionInformation();
+			// FIXME: got to be a better way
+			string colUrl =
+				(this.Context.Request.IsSecureConnection == true)
+				? "https://" : "http://";
+
+			colUrl +=
+				this.Context.Request.Url.Host +
+				":" +
+				this.Context.Request.Url.Port.ToString() +
+				"/SyncService.asmx";
+
+			SubscriptionInformation subInfo = new SubscriptionInformation(colUrl);
 			subInfo.GenerateFromSubscription(cSub);
 
 			log.Info("POBoxService::GetSubscriptionInfo - exit");
@@ -555,6 +566,11 @@ namespace Simias.POBoxService.Web
 
 		}
 
+		public SubscriptionInformation(string collectionUrl)
+		{
+			this.CollectionUrl = collectionUrl;
+		}
+
 		internal void GenerateFromSubscription(Subscription cSub)
 		{
 			this.Name = cSub.Name;
@@ -568,16 +584,6 @@ namespace Simias.POBoxService.Web
 			this.CollectionName = cSub.SubscriptionCollectionName;
 			this.CollectionType = cSub.SubscriptionCollectionType;
 
-			// FIXME: got to be a better way
-			this.CollectionUrl =
-				(this.Context.Request.IsSecureConnection == true)
-				? "https://" : "http://";
-
-			this.CollectionUrl +=
-				this.Context.Request.Url.Host +
-				":" +
-				this.Context.Request.Url.Port.ToString() +
-				"/SyncService.asmx";
 
 			//this.CollectionUrl = cSub.SubscriptionCollectionURL;
 
