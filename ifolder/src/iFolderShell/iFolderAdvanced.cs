@@ -2567,7 +2567,10 @@ namespace Novell.iFolderCom
 			picker.iFolderWebService = ifWebService;
 			picker.Ht = userIDHT;
 			picker.CurrentUser = currentUser;
-			picker.CurrentOwner = newOwnerLvi == null ? ((ShareListMember)ownerLvi.Tag).iFolderUser : ((ShareListMember)newOwnerLvi.Tag).iFolderUser;
+			if (ownerLvi != null)
+			{
+				picker.CurrentOwner = newOwnerLvi == null ? ((ShareListMember)ownerLvi.Tag).iFolderUser : ((ShareListMember)newOwnerLvi.Tag).iFolderUser;
+			}
 			DialogResult result = picker.ShowDialog();
 			if (result == DialogResult.OK)
 			{
