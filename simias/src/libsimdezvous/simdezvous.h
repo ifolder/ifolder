@@ -1,3 +1,25 @@
+/***********************************************************************
+ *  $RCSfile$
+ *
+ *  Copyright (C) 2005 Novell, Inc.
+ *
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2 of the License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public
+ *  License along with this program; if not, write to the Free
+ *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ *  Author: Brady Anderson <banderso@novell.com>
+ *
+ ***********************************************************************/
 #include <dns_sd.h>
 
 #include <ctype.h>
@@ -22,8 +44,8 @@ typedef	int	pid_t;
 #endif
 
 #define	kDNSMaxID			32
-#define	kDNSMaxServicePath	64
-#define	kDNSMaxPublicKey	128
+#define	kDNSMaxServicePath	128
+#define	kDNSMaxPublicKey	256
 #define	kDNSMaxTextualIP	16
 
 // Note: Rendezvous' max domain name is 1005 but for now we're
@@ -62,21 +84,22 @@ typedef struct tagMembers
 {
 	char				ID[kDNSMaxID];
 	char				Name[kDNSServiceMaxServiceName];
-	char				HostName[kDNSMaxDomainName];
-	int					Port;
 	char				IPAddress[kDNSMaxTextualIP];
 	char				ServicePath[kDNSMaxServicePath];
-	char				PublicKey[kDNSMaxPublicKey];
+	unsigned char		PublicKey[kDNSMaxPublicKey];
+	char				HostName[kDNSMaxDomainName];
+	int			Port;
+
 } Members, *PMembers;
 
 typedef struct tagMemberInfo
 {
-	char				ID[kDNSMaxID];
 	char				Name[kDNSServiceMaxServiceName];
 	char				ServicePath[kDNSMaxServicePath];
-	char				PublicKey[kDNSMaxPublicKey];
+	unsigned char		PublicKey[kDNSMaxPublicKey];
 	char				HostName[kDNSMaxDomainName];
-	int					Port;
+	int			Port;
+
 } MemberInfo, *PMemberInfo;
 
 /*

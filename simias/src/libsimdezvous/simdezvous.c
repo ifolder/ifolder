@@ -1,9 +1,33 @@
+/***********************************************************************
+ *  $RCSfile$
+ *
+ *  Copyright (C) 2005 Novell, Inc.
+ *
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2 of the License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public
+ *  License along with this program; if not, write to the Free
+ *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ *  Author: Brady Anderson <banderso@novell.com>
+ *
+ ***********************************************************************/
+
 #include "simdezvous.h"
 
 typedef struct tagMemberInfoCtx2
 {
 	DNSServiceErrorType		CBError;
 	PMemberInfo				pInfo;
+
 } MemberInfoCtx2, *PMemberInfoCtx2;
 
 typedef struct tagMemberInfoCtx
@@ -126,6 +150,112 @@ ResolveInfoCallback(
 		}
 	}
 }
+
+
+
+static
+void
+DNSSD_API
+ResolveInfo2Callback(
+	DNSServiceRef		client, 
+	DNSServiceFlags		flags, 
+	uint32_t			ifIndex, 
+	DNSServiceErrorType errorCode,
+	const char			*pFullName, 
+	const char			*pHostTarget, 
+	uint16_t			opaqueport, 
+	uint16_t			txtLen, 
+	const char			*pTxt,
+	void				*pContext)
+{
+	PMemberInfoCtx2 pCtx = ( PMemberInfoCtx2 ) pContext;
+	unsigned char label[32];
+	const unsigned char *src = ( unsigned char *) pTxt;
+	unsigned char *dst;
+	union { uint16_t s; u_char b[2]; } port = { opaqueport };
+	uint16_t PortAsNumber = ((uint16_t)port.b[0]) << 8 | port.b[1];
+
+	(void) client;       // Unused
+	(void) ifIndex;      // Unused
+
+	//printf( "ResolveInfoCallback called" );
+	//printf( "errorCode: %d\n", errorCode );
+
+	pCtx->CBError = errorCode;
+	if ( errorCode == 0 )
+	{
+		pCtx->pInfo->Port = ( int ) PortAsNumber;
+		strcpy( pCtx->pInfo->HostName, pHostTarget );
+
+		//printf( "Host: %s\n", pInfoCtx->pHost );
+
+		// Parse TXT strings
+		// iFolder Member TXT strings are registered in the following format:
+		// MemberName=<member name>
+		// ServicePath=<path>
+		// PK=<pub key>
+		// PK2=<rest of the public key>
+
+		if (*src)
+		{
+			int total = 0;
+			int	compLength;
+			while ( ( total < txtLen ) && *src != '\0' )
+			{
+				compLength = *src++;
+				total += compLength;
+
+				// can't be good
+				if ( total > txtLen )
+				{
+					continue;
+				}
+
+				// Get the label
+				dst = label;
+				while( *src != '=' && *src != '\0' && compLength > 0 )
+				{
+					*dst++ = *src++;
+					compLength--;
+				}
+
+				// Past the = and null terminate
+				*dst++ = *src++;
+				compLength--;
+				*dst = 0;
+
+				if ( strcmp( (char *) label, memberLabel ) == 0 )
+				{
+					dst = (unsigned char *) pCtx->pInfo->Name;
+				}
+				else
+				if ( strcmp( label, serviceLabel ) == 0 )
+				{
+					dst = (unsigned char *) pCtx->pInfo->ServicePath;
+				}
+				else
+				if ( strcmp( label, keyLabel ) == 0 )
+				{
+					dst = (unsigned char *) pCtx->pInfo->PublicKey;
+				}
+				else
+				{
+					pCtx->CBError = -1;
+					return;
+				}
+
+				while( ( compLength > 0 ) && *src != '\0' )
+				{
+					*dst++ = *src++;
+					compLength--;
+				}
+
+				*dst = 0;
+			}
+		}
+	}
+}
+
 
 static
 void
@@ -515,6 +645,120 @@ GetMemberInfo2(
 		return kDNSServiceErr_BadParam;
 	}
 
+	/*
+	infoCtx.CBError = kDNSServiceErr_Unknown;
+	infoCtx.pName = pName;
+	infoCtx.pServicePath = pServicePath;
+	infoCtx.pPublicKey = pPublicKey;
+	infoCtx.pHost = pHost;
+	infoCtx.pPort = pPort;
+	*/
+
+	//printf(" GetMemberInfo:calling DNSServiceResolve");
+
+	infoCtx.pInfo = pInfo;
+
+	err = 
+		DNSServiceResolve(
+			&client, 
+			0, 
+			kDNSServiceInterfaceIndexAny,
+			pID,
+			memberType,
+			domainType,
+			ResolveInfo2Callback,
+			(void *) &infoCtx );
+
+	if ( err == kDNSServiceErr_NoError )
+	{
+		fd_set				readfds;
+		int					dns_sd_fd;
+		int					nfds;
+		int					result;
+		int					stop = 0;
+		struct timeval		tv;
+
+		dns_sd_fd = DNSServiceRefSockFD( client );
+		if ( dns_sd_fd == -1 )
+		{
+			return kDNSServiceErr_NotInitialized;
+		}
+
+		nfds = dns_sd_fd + 1;
+		//nfds = dns_sd_fd;
+
+		while ( !stop )
+		{
+			// 1. Set up the fd_set as usual here.
+			// This example client has no file descriptors of its own,
+			// but a real application would call FD_SET to add them to the set here
+			FD_ZERO( &readfds );
+
+			// 2. Add the fd for our client(s) to the fd_set
+			FD_SET( dns_sd_fd, &readfds );
+
+			// 3. Set up the timeout.
+			tv.tv_sec = 10; // this resolve should succeed quickly
+			tv.tv_usec = 0;
+
+			err = kDNSServiceErr_NoError;
+			result = select( nfds, &readfds, (fd_set*) NULL, (fd_set*) NULL, &tv );
+			if ( result > 0 )
+			{
+				if ( FD_ISSET( dns_sd_fd , &readfds ) )
+				{	
+					err = DNSServiceProcessResult( client );
+					if ( err == kDNSServiceErr_NoError )
+					{
+						err = infoCtx.CBError;
+						if ( err == kDNSServiceErr_NoError )
+						{
+							stop = 1;
+						}
+					}
+				}
+
+				if ( err != kDNSServiceErr_NoError ) 
+				{ 
+					//fprintf( stderr, "DNSServiceProcessResult returned %d\n", err );
+					stop = 1;
+				}
+			}
+			else
+			{
+				//printf("select() returned %d errno %d %s\n", result, errno, strerror( errno ) );
+				if ( errno != EINTR )
+				{
+					stop = 1;
+				}
+			}
+		}
+
+		DNSServiceRefDeallocate( client );
+	}
+
+	return err;
+}
+
+
+
+/*
+DNSServiceErrorType
+DNSSD_API 
+GetMemberInfo2(
+	char				*pID,
+	PMemberInfo			pInfo)
+{
+	DNSServiceErrorType err;
+	DNSServiceRef		client = NULL;
+	MemberInfoCtx2		infoCtx;
+
+	// Valid Parameters?
+	if ( pID == NULL || pInfo == NULL )
+	{
+		return kDNSServiceErr_BadParam;
+	}
+
 	infoCtx.CBError = kDNSServiceErr_Unknown;
 	infoCtx.pInfo = pInfo;
 
@@ -541,6 +785,7 @@ GetMemberInfo2(
 
 	return err;
 }
+*/
 
 DNSServiceErrorType
 DNSSD_API 
