@@ -160,7 +160,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %{prefix}/bin/web.config
 %{prefix}/bin/Global.asax
 %{prefix}/bin/bin/Simias.Web.dll
-%{prefix}/bin/SimiasAspService.dll
+%{prefix}/lib/SimiasAspService.dll
 %dir %{prefix}/share
 %dir %{prefix}/share/simias
 %{prefix}/share/simias/log4net.LICENSE.txt
