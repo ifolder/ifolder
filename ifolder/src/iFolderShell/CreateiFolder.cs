@@ -391,6 +391,7 @@ namespace Novell.iFolderCom
 		{
 			FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
 
+			// TODO: Localize
 			folderBrowserDialog.Description = "Choose a folder";//resourceManager.GetString("chooseFolder");
 			folderBrowserDialog.SelectedPath = ifolderPath.Text;
 

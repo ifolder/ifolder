@@ -50,6 +50,7 @@ namespace Novell.FormsTrayApp
 		private const string notifyJoinDisabled = "NotifyJoinDisabled";
 		private const string iFolderKey = @"SOFTWARE\Novell\iFolder";
 		private iFolderWebService ifWebService;
+		private SimiasWebService simiasWebService;
 		private bool shutdown = false;
 		private Domain currentDefaultDomain = null;
 		private Domain newDefaultDomain = null;
@@ -109,6 +110,8 @@ namespace Novell.FormsTrayApp
 			defaultInterval.TextChanged += new EventHandler(defaultInterval_ValueChanged);
 
 			ifWebService = ifolderWebService;
+			simiasWebService = new SimiasWebService();
+			simiasWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
 
 			this.StartPosition = FormStartPosition.CenterScreen;
 		}
@@ -464,6 +467,7 @@ namespace Novell.FormsTrayApp
 			this.password.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("password.TextAlign")));
 			this.password.Visible = ((bool)(resources.GetObject("password.Visible")));
 			this.password.WordWrap = ((bool)(resources.GetObject("password.WordWrap")));
+			this.password.TextChanged += new System.EventHandler(this.password_TextChanged);
 			// 
 			// server
 			// 
@@ -1556,7 +1560,46 @@ namespace Novell.FormsTrayApp
 				}
 			}
 
+			updateAccount();
+
 			Cursor.Current = Cursors.Default;
+
+			return result;
+		}
+
+		private bool updateAccount()
+		{
+			bool result = true;
+
+			if (accounts.SelectedItems.Count != 0)
+			{
+				Domain domain = (Domain)accounts.SelectedItems[0].Tag;
+
+/*				string userID;
+				string credentials;
+
+				// See if there is a password saved on this domain.
+				CredentialType credType = simiasWebService.GetSavedDomainCredentials(domain.ID, out userID, out credentials);
+				if ((credType == CredentialType.Basic) && (credentials != null))
+				{
+					// There are credentials saved on the domain. 
+					simiasWebService.SaveDomainCredentials(domainID, null, CredentialType.None);
+				}*/
+
+				try
+				{
+					// TODO: only call this if the password has been changed or the state of the checkbox has changed.
+					if (rememberPassword.Checked)
+					{
+						simiasWebService.SaveDomainCredentials(domain.ID, password.Text, CredentialType.Basic);
+					}
+					else
+					{
+						simiasWebService.SaveDomainCredentials(domain.ID, null, CredentialType.None);
+					}
+				}
+				catch {}
+			}
 
 			return result;
 		}
@@ -1830,6 +1873,16 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
+		private void password_TextChanged(object sender, System.EventArgs e)
+		{
+			// TODO: Need to have an accountChanged variable ...
+
+			if (password.Focused)
+			{
+				apply.Enabled = true;
+			}
+		}
+
 		private void removeAccount_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = accounts.SelectedItems[0];
@@ -1871,12 +1924,22 @@ namespace Novell.FormsTrayApp
 
 		private void rememberPassword_CheckedChanged(object sender, System.EventArgs e)
 		{
-			// TODO:
+			if (rememberPassword.Focused)
+			{
+				apply.Enabled = true;
+			}
+
+			// TODO: Set accountChanged variable.
 		}
 
 		private void autoLogin_CheckedChanged(object sender, System.EventArgs e)
 		{
-			// TODO:
+			if (autoLogin.Focused)
+			{
+				apply.Enabled = true;
+			}
+
+			// TODO: Set accountChanged variable.
 		}
 
 		private void timer1_Tick(object sender, System.EventArgs e)
@@ -1919,19 +1982,21 @@ namespace Novell.FormsTrayApp
 				{
 					if ((newAccountLvi == null) || (lvi == newAccountLvi))
 					{
-						userName.Enabled = server.Enabled = password.Enabled = true;
+						userName.Enabled = server.Enabled = 
+							rememberPassword.Enabled = password.Enabled = true;
 
 						userName.Text = lvi.SubItems[0].Text;
 						server.Text = lvi.SubItems[1].Text;
 						password.Text = string.Empty;
 
-						if (lvi.Tag == null)
+						Domain domain = (Domain)lvi.Tag;
+
+						if (domain == null)
 						{
 							// This is a new account.
 							newAccountLvi = lvi;
 							userName.ReadOnly = server.ReadOnly = false;
-							rememberPassword.Enabled = autoLogin.Enabled = 
-								removeAccount.Enabled = true;
+							autoLogin.Enabled = removeAccount.Enabled = true;
 							details.Enabled = defaultServer.Checked = defaultServer.Enabled = false;
 							userName.Focus();
 						}
@@ -1940,16 +2005,30 @@ namespace Novell.FormsTrayApp
 							details.Enabled = true;
 							userName.ReadOnly = server.ReadOnly = true;
 
-							defaultServer.Checked = ((Domain)lvi.Tag).DomainWeb.IsDefault;
+							defaultServer.Checked = domain.DomainWeb.IsDefault;
 							defaultServer.Enabled = !defaultServer.Checked;
 
 							// TODO: Don't allow the workgroup account to be removed.
 							// Don't allow the default account to be removed.
 							removeAccount.Enabled = !defaultServer.Checked;
 
-							// TODO: Fill in password with fixed long length of characters if it is currently remembered.
+							// Check for a saved password.
+							try
+							{
+								string userID;
+								string credentials;
+								CredentialType credType = simiasWebService.GetSavedDomainCredentials(domain.ID, out userID, out credentials);
+								if ((credType == CredentialType.Basic) && (credentials != null))
+								{
+									// There are credentials that were saved on the domain.
+									rememberPassword.Checked = true;
+									password.Text = credentials;
+								}
+							}
+							catch {}
 
-							// TODO: set remember password and auto login settings.
+
+							// TODO: set auto login setting.
 						}
 					}
 				}
