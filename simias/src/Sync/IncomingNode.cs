@@ -50,7 +50,12 @@ public enum NodeStatus
 	ServerFailure,
 
 	/// <summary> node update is in progress </summary>
-	InProgess
+	InProgess,
+
+	/// <summary>
+	/// The File is in use.
+	/// </summary>
+	InUse,
 };
 
 //---------------------------------------------------------------------------
@@ -70,10 +75,13 @@ internal class IncomingNode
 	Collection collection;
 	bool onServer;
 	Node node, oldNode;
-	FileInfo fileInfo;
+	FileInfo fileInfo, oldFi;
 	class Fork { public string name; public Stream stream; };
 	ArrayList forkList = null;
 	string path = null;  // for DirNodes this is the full path, all others it is the parent path
+	FileStream fileStream = null;
+	bool       fileNameConflict = false;
+		
 
 	public IncomingNode(Collection collection, bool onServer)
 	{
@@ -120,7 +128,7 @@ internal class IncomingNode
 	{
 		CleanUp();
 		this.node = node;
-		oldNode = null;
+		oldNode = collection.GetNodeByID(node.ID);
 
 		if (collection.IsType(node, typeof(DirNode).Name))
 		{
@@ -133,13 +141,15 @@ internal class IncomingNode
 				throw new SimiasException("incoming DirNode to rootless Collection");
 
 			path = Path.Combine((p.Value as Uri).LocalPath, relativePath);
+			this.node = SyncOps.CastToDirNode(collection, node);
 		}
-		else if (collection.IsType(node, typeof(FileNode).Name))
+		else if (collection.IsType(node, typeof(BaseFileNode).Name))
 		{
 			// make sure parent directory exists for temporary file
 			if ((path = ParentPath(collection, node)) == null)
 				throw new SimiasException("could not get parent path of incoming FileNode");
 			Directory.CreateDirectory(path);
+			this.node = SyncOps.CastToBaseFileNode(collection, node);
 		}
 		else
 			path = collection.ManagedPath;
@@ -251,7 +261,14 @@ internal class IncomingNode
 		 */
 		try
 		{
-			File.Delete(path);
+			if (fileStream != null)
+			{
+				fileStream.Close();
+				// Delete the file if not a collision.
+				if (!fileNameConflict)
+					oldFi.Delete();
+				fileStream = null;
+			}
 			fileInfo.MoveTo(path);
 		}
 		catch (Exception e)
@@ -272,6 +289,7 @@ internal class IncomingNode
 			}
 			status = NodeStatus.FileNameConflict;
 			node = collection.CreateCollision(node, true);
+			collection.Commit(node);
 		}
 		try
 		{
@@ -297,56 +315,105 @@ internal class IncomingNode
 	 */
 	public NodeStatus Complete(ulong expectedIncarn)
 	{
-		Log.Spew("importing {0} {1} to collection {2}", node.Name, node.ID, collection.Name);
+		try
+		{
+			Log.Spew("importing {0} {1} to collection {2}", node.Name, node.ID, collection.Name);
 
-		if (!onServer)
-		{
-			// If we are on a client we don't know the version
-			// to expect.  We only need to know if the node has been
-			// changed locally.  This is done by comparing the local
-			// to the master.
-			expectedIncarn = 0;
-		}
-		collection.ImportNode(node, onServer, expectedIncarn);
-		node.Properties.ModifyProperty(TempFileDone, true);
-		node.IncarnationUpdate = node.LocalIncarnation;
-		if (onServer)
-		{
-			try
+			if (collection.IsType(node, typeof(BaseFileNode).Name))
 			{
-				collection.Commit(node);
+				BaseFileNode bfn = (BaseFileNode)node;
+				// TODO make sure that the parent dir is always created first.
+				string fPath = bfn.GetFullPath(collection);
+				try
+				{
+					oldFi = new FileInfo(fPath);
+					// Open the file to protect against modifies while it is updated.
+					if (oldFi.Exists)
+					{
+						fileStream = oldFi.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+						// Compare the name to see if this node represents the file.
+						FileInfo[] fiArray = oldFi.Directory.GetFiles(oldFi.Name);
+						if (fiArray[0].Name.Equals(bfn.GetFileName()))
+						{
+							BaseFileNode oldBfn = (BaseFileNode)oldNode;
+							if (oldFi.LastWriteTime != oldBfn.LastWriteTime)
+							{
+								// The file has changed locally update the lastWrite and commit.
+								oldBfn.LastWriteTime = oldFi.LastWriteTime;
+								collection.Commit(oldNode);
+							}
+						}
+						else
+						{
+							// We have a name conflict.
+							fileNameConflict = true;
+						}
+					}
+				}	
+				catch (IOException ex)
+				{
+					// The file is in use will get synced next pass.
+					Log.Spew("The file {0} is in use", fPath);
+					return NodeStatus.Complete;
+				}
+				catch (ArgumentException ex)
+				{
+					fileNameConflict = true;
+				}
 			}
-			catch (CollisionException)
+			
+			if (!onServer)
 			{
-				Log.Spew("Rejecting update for node {0} due to update conflict on server", node.Name);
-				CleanUp();
-				return NodeStatus.UpdateConflict;
+				// If we are on a client we don't know the version
+				// to expect.  We only need to know if the node has been
+				// changed locally.  This is done by comparing the local
+				// to the master.
+				expectedIncarn = 0;
 			}
-		}
-		else
-		{
+			collection.ImportNode(node, onServer, expectedIncarn);
+			node.Properties.ModifyProperty(TempFileDone, true);
+			node.IncarnationUpdate = node.LocalIncarnation;
+
 			try
 			{
 				collection.Commit(node);
 			}
 			catch (CollisionException c)
 			{
-				Log.Spew("Node {0} {1} has lost an update collision", node.Type, node.Name);
-				node.Properties.DeleteSingleProperty(TempFileDone);
-				node = collection.CreateCollision(node, false);
-				node.Properties.ModifyProperty(TempFileDone, true);
-				try
+				if (onServer)
 				{
-					collection.Commit(node);
-					return CommitFile(NodeStatus.UpdateConflict);
+					Log.Spew("Rejecting update for node {0} due to update conflict on server", node.Name);
+					CleanUp();
+					return NodeStatus.UpdateConflict;
 				}
-				catch (CollisionException ce)
+				else
 				{
-					Log.Spew("Node {0} has again lost an update collision", oldNode.Name);
+					Log.Spew("Node {0} {1} has lost an update collision", node.Type, node.Name);
+					node.Properties.DeleteSingleProperty(TempFileDone);
+					node = collection.CreateCollision(node, false);
+					node.Properties.ModifyProperty(TempFileDone, true);
+					try
+					{
+						collection.Commit(node);
+						return CommitFile(NodeStatus.UpdateConflict);
+					}
+					catch (CollisionException ce)
+					{
+						Log.Spew("Node {0} has again lost an update collision", oldNode.Name);
+					}
 				}
 			}
+			return CommitFile(NodeStatus.Complete);
 		}
-		return CommitFile(NodeStatus.Complete);
+		finally
+		{
+			// Close the file.
+			if (fileStream != null)
+			{
+				fileStream.Close();
+				fileStream = null;
+			}
+		}
 	}
 }
 
