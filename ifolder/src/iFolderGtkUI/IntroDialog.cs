@@ -89,13 +89,11 @@ namespace Novell.iFolder
 
 				if(ShowCheckButton.Active)
 				{
-					Console.WriteLine("Don't show");
 					Configuration.GetConfiguration().Set("iFolderTrayApp", 
 							"Show wizard", "false");
 				}
 				else
 				{
-					Console.WriteLine("show");
 					Configuration.GetConfiguration().Set("iFolderTrayApp", 
 							"Show wizard", "true");
 				}

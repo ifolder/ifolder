@@ -64,6 +64,8 @@ namespace Novell.iFolder
 			try
 			{
 				ApplicationProperties ap = new ApplicationProperties();
+				ap.WindowClosed += new EventHandler(on_close_window);
+
 				ap.ShowAll();
 
 				sManager = new Simias.Service.Manager(conf);
@@ -91,6 +93,16 @@ namespace Novell.iFolder
 				sManager.WaitForServicesStopped();
 				Application.Quit();
 			}
+		}
+
+		public static void on_close_window(object o, EventArgs args)
+		{
+			// In this case shut everything down and exit
+			Console.WriteLine("Stopping iFolder Services...");
+			sManager.StopServices();
+			sManager.WaitForServicesStopped();
+			Console.WriteLine("iFolder Services are stopped.");
+			Application.Quit();
 		}
 	}
 }

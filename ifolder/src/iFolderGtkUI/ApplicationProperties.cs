@@ -40,8 +40,8 @@ namespace Novell.iFolder
 	public class ApplicationProperties 
 	{
 //		[Glade.Widget] internal Gtk.Dialog		ApplicationPropDialog = null;
-		[Glade.Widget] internal Gtk.Window		iFolderWindow = null;
-		[Glade.Widget] internal Gtk.Notebook	PropNoteBook;
+		[Glade.Widget] private Gtk.Window		iFolderWindow = null;
+		[Glade.Widget] private Gtk.Notebook		PropNoteBook = null;
 
 		[Glade.Widget] internal Gtk.TreeView	iFolderTreeView;
 
@@ -67,16 +67,7 @@ namespace Novell.iFolder
 		Pixbuf						CollisionPixBuf;
 		internal Configuration		config;
 
-		public Gtk.Window TransientFor
-		{
-			set
-			{
-				if(iFolderWindow != null)
-					iFolderWindow.TransientFor = value;
-//				if(ApplicationPropDialog != null)
-//					ApplicationPropDialog.TransientFor = value;
-			}
-		}
+		public event EventHandler WindowClosed;
 
 		public Configuration Configuration
 		{
@@ -167,33 +158,29 @@ namespace Novell.iFolder
 			}
 		}
 
-
-/*
-		public int Run()
+		public void on_close(object o, EventArgs args) 
 		{
-			InitGlade();
-			PopulateWidgets();
-
-			int rc = 0;
-			if(ApplicationPropDialog != null)
+			if(iFolderWindow != null)
 			{
-				while(rc == 0)
-				{
-					rc = ApplicationPropDialog.Run();
-					if(rc == -11) // help
-					{
-						rc = 0;
-						Util.ShowHelp("front.html", null);
-					}
-				}
-
-				ApplicationPropDialog.Hide();
-				ApplicationPropDialog.Destroy();
-				ApplicationPropDialog = null;
+				iFolderWindow.Hide();
+				iFolderWindow.Destroy();
+				iFolderWindow = null;
 			}
-			return rc;
+
+			if(WindowClosed != null)
+			{
+				EventArgs e = new EventArgs();
+				WindowClosed(this, e);
+			}
 		}
-*/
+
+
+		private void on_window_delete_event (object o, DeleteEventArgs args) 
+		{
+			on_close(o, args);
+		}
+
+
 		private void iFolderLocationCellTextDataFunc(
 				Gtk.TreeViewColumn tree_column,
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
@@ -567,6 +554,7 @@ namespace Novell.iFolder
 			// create a file selection dialog and turn off all of the
 			// file operations and controlls
 			FileSelection fs = new FileSelection ("Choose a folder...");
+			fs.TransientFor = iFolderWindow;
 			fs.FileList.Parent.Hide();
 			fs.SelectionEntry.Hide();
 			fs.FileopDelFile.Hide();
@@ -584,9 +572,8 @@ namespace Novell.iFolder
 					if(IntroDialog.UseDialog())
 					{
 						IntroDialog iDialog = new IntroDialog();
-						iDialog.iFolderPath = fs.Filename;
 						iDialog.TransientFor = iFolderWindow;
-//						iDialog.TransientFor = ApplicationPropDialog;
+						iDialog.iFolderPath = fs.Filename;
 						iDialog.Run();
 					}
 				}
@@ -674,11 +661,6 @@ namespace Novell.iFolder
 		{
 			if(PropNoteBook.CurrentPage == 0)
 				on_refreshiFolders(o, args);
-		}
-
-		private void on_close_menu(object o, EventArgs args)
-		{
-//			ApplicationPropDialog.Respond(Gtk.ResponseType.Close);
 		}
 
 		private void on_help_menu(object o, EventArgs args)
