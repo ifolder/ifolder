@@ -2242,10 +2242,17 @@ namespace Novell.FormsTrayApp
 			menuRefresh.Visible = menuCreate.Visible = iFolderView.SelectedItems.Count == 0;
 
 			// Display the accept and delete menu items if the selected item is a subscription with state "Available"
-			menuAccept.Visible = /*menuDecline.Visible =*/ menuDelete.Visible = 
+			menuAccept.Visible = /*menuDecline.Visible = menuDelete.Visible = */
 				(iFolderView.SelectedItems.Count == 1) && 
 				((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription &&
 				((iFolder)iFolderView.SelectedItems[0].Tag).State.Equals("Available");
+
+			// Display the decline menu item if the selected item is a subscription with state "Available" and from someone else.
+			menuDecline.Visible = 
+				(iFolderView.SelectedItems.Count == 1) && 
+				((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription &&
+				((iFolder)iFolderView.SelectedItems[0].Tag).State.Equals("Available") &&
+				!((iFolder)iFolderView.SelectedItems[0].Tag).OwnerID.Equals(currentUserID);
 		}
 
 		private void menuOpen_Click(object sender, System.EventArgs e)
@@ -2383,8 +2390,19 @@ namespace Novell.FormsTrayApp
 
 		private void menuDecline_Click(object sender, System.EventArgs e)
 		{
-			// TODO:
-			MessageBox.Show("This action is not yet implemented.");
+			ListViewItem lvi = iFolderView.SelectedItems[0];
+			iFolder ifolder = (iFolder)lvi.Tag;
+			try
+			{
+				ifWebService.DeclineiFolderInvitation(ifolder.ID);
+			}
+			catch (Exception ex)
+			{
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+				mmb.Message = resourceManager.GetString("declineError");
+				mmb.Details = ex.Message;
+				mmb.ShowDialog();
+			}
 		}
 
 		private void menuDelete_Click(object sender, System.EventArgs e)
