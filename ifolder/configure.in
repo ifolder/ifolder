@@ -11,7 +11,7 @@ APIDOCDIR="$SRCDIR/api-doc"
 
 COMMON_SUBDIRS="MiniFolder iFolder"
 LINUX_SUBDIRS="GtkTrayApp"
-WINDOWS_SUBDIRS="FormsTrayApp"
+WINDOWS_SUBDIRS="FormsTrayApp FormsInvitationWizard"
 
 case $host_os in
     linux*)
@@ -235,4 +235,5 @@ src/MiniFolder/Makefile
 src/iFolder/Makefile
 src/GtkTrayApp/Makefile
 src/FormsTrayApp/Makefile
+src/FormsInvitationWizard/Makefile
 ])
