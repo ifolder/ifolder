@@ -58,7 +58,7 @@ namespace Simias.Sync
 		/// <returns>The sync collection service object.</returns>
 		public SyncCollectionService GetCollectionService(string id)
 		{
-			return null;
+			return manager.GetCollectionService(id);
 		}
 	}
 }

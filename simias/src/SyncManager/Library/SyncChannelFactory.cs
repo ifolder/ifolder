@@ -28,7 +28,6 @@ using System.Collections.Specialized;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Http;
-using System.Runtime.Remoting.Channels.Tcp;
 using System.Threading;
 using System.Runtime.Serialization.Formatters;
 using System.Reflection;
@@ -79,22 +78,12 @@ namespace Simias.Sync
 			index = 0;
 		}
 		
-		public SyncChannel GetChannel(SyncStore store)
+		public SyncChannel GetChannel(SyncStore store, SyncChannelSinks sinks)
 		{
-			return GetChannel(store, 0);
+			return GetChannel(store, sinks, 0);
 		}
-		
-		public SyncChannel GetChannel(SyncStore store, SyncChannelFormatters formatter)
-		{
-			return GetChannel(store, 0, formatter);
-		}
-		
-		public SyncChannel GetChannel(SyncStore store, int port)
-		{
-			return GetChannel(store, port, SyncChannelFormatters.Binary);
-		}
-		
-		public SyncChannel GetChannel(SyncStore store, int port, SyncChannelFormatters formatter)
+			
+		public SyncChannel GetChannel(SyncStore store, SyncChannelSinks sinks, int port)
 		{
 			SyncChannel result = null;
 
@@ -108,10 +97,10 @@ namespace Simias.Sync
 						{
 							result = sc.Open();
 
-							if (sc.Formatter != formatter)
+							if (sc.Sinks != sinks)
 							{
 								throw new ApplicationException(
-									"Another channel already exists on the requested port with a different formatter.");
+									"Another channel already exists on the requested port with different sinks.");
 							}
 
 							MyTrace.WriteLine("Channel Opened: {0}", sc.Name);
@@ -132,11 +121,15 @@ namespace Simias.Sync
 					props.Add("name", name);
 					props.Add("port", port);
 
-					// setup providers
+					// provider notes
+					// server providers: security sink -> monitor sink -> formatter sink
+					// client providers: formatter sink -> monitor sink -> security sink
+
+					// setup format providers
 					IClientChannelSinkProvider clientProvider = null;
 					IServerChannelSinkProvider serverProvider = null;
 
-					if (formatter == SyncChannelFormatters.Soap)
+					if ((sinks & SyncChannelSinks.Soap) > 0)
 					{
 						// soap
 						clientProvider = new SoapClientFormatterSinkProvider();
@@ -157,40 +150,46 @@ namespace Simias.Sync
 #endif
 					}
 
-#if DEBUG
-					IServerChannelSinkProvider debugProvider = new DebugServerChannelSinkProvider();
-					debugProvider.Next = serverProvider;
-					serverProvider = debugProvider;
-#endif
-					// the server chain order should be as follows 
-					// security sink -> monitor sink -> formatter sink
-					ISecurityServerFactory securityServerFactory = (ISecurityServerFactory) new RsaSecurityServerFactory(store.BaseStore.KeyStore);
-					IServerChannelSinkProvider secureServerProvider = (IServerChannelSinkProvider) new SecureServerSinkProvider(securityServerFactory, SecureServerSinkProvider.MsgSecurityLevel.privacy);
-					secureServerProvider.Next = serverProvider;
+					// setup monitor providers
+					if ((sinks & SyncChannelSinks.Monitor) > 0)
+					{
+						IServerChannelSinkProvider serverMonitorProvider = new SnifferServerChannelSinkProvider();
+						serverMonitorProvider.Next = serverProvider;
+						serverProvider = serverMonitorProvider;
 
-					// The client chain order should be as follows:
-					// formatter sink -> monitor sink -> security sink
-					ISecurityClientFactory[] secClientFactories = new ISecurityClientFactory[1];
-					secClientFactories[0] = (ISecurityClientFactory) new RsaSecurityClientFactory(store.BaseStore.KeyStore);
-					IClientChannelSinkProvider clientSecureProvider = (IClientChannelSinkProvider) new SecureClientSinkProvider(secClientFactories);
-					clientProvider.Next = clientSecureProvider;
+						IClientChannelSinkProvider clientMonitorProvider = new SnifferClientChannelSinkProvider();
+						clientProvider.Next = clientMonitorProvider;
+					}
+
+					// setup security providers
+					if ((sinks & SyncChannelSinks.Security) > 0)
+					{
+						ISecurityServerFactory securityServerFactory = (ISecurityServerFactory) new RsaSecurityServerFactory(store.BaseStore.KeyStore);
+						IServerChannelSinkProvider serverSecurityProvider = (IServerChannelSinkProvider) new SecureServerSinkProvider(securityServerFactory, SecureServerSinkProvider.MsgSecurityLevel.privacy);
+						serverSecurityProvider.Next = serverProvider;
+						serverProvider = serverSecurityProvider;
+
+						ISecurityClientFactory[] secClientFactories = new ISecurityClientFactory[1];
+						secClientFactories[0] = (ISecurityClientFactory) new RsaSecurityClientFactory(store.BaseStore.KeyStore);
+						IClientChannelSinkProvider clientSecureProvider = (IClientChannelSinkProvider) new SecureClientSinkProvider(secClientFactories);
+						clientProvider.Next = clientSecureProvider;
+					}
 
 					// create channel
 					IChannel channel;
 
 					// http channel
-					channel = new HttpChannel(props,
-						clientProvider, secureServerProvider);
+					channel = new HttpChannel(props, clientProvider, serverProvider);
 
 					// register channel
 					ChannelServices.RegisterChannel(channel);
 
-					result = (new SyncChannel(this, channel, name, port, formatter)).Open();
+					result = (new SyncChannel(this, channel, name, port, sinks)).Open();
 
 					// add channel
 					channels.Add(result);
 
-					MyTrace.WriteLine("Channel Registered: {0} ({1})", name, formatter);
+					MyTrace.WriteLine("Channel Registered: {0} ({1})", name, sinks);
 				}
 			}
 	

@@ -61,9 +61,14 @@ namespace Simias.Sync
 		public static readonly int SuggestedSyncInterval = 5;
 
 		/// <summary>
-		/// The suggested sync channel formatter.
+		/// The suggested sync channel sinks.
 		/// </summary>
-		public static readonly SyncChannelFormatters SuggestedChannelFormatter = SyncChannelFormatters.Binary;
+		public static readonly SyncChannelSinks SuggestedChannelSinks =
+#if DEBUG
+			SyncChannelSinks.Binary | SyncChannelSinks.Monitor | SyncChannelSinks.Security;
+#else
+			SyncChannelSinks.Binary | SyncChannelSinks.Security;
+#endif
 
 		// properties
 		private string host	= SuggestedHost;
@@ -71,7 +76,7 @@ namespace Simias.Sync
 		private int port = SuggestedPort;
 		private Type logicFactory = SuggestedLogicFactory;
 		private int interval = SuggestedSyncInterval;
-		private SyncChannelFormatters formatter = SuggestedChannelFormatter;
+		private SyncChannelSinks sinks = SuggestedChannelSinks;
 
 		/// <summary>
 		/// Constructor
@@ -96,7 +101,7 @@ namespace Simias.Sync
 			clone.port = port;
 			clone.logicFactory = logicFactory;
 			clone.interval = interval;
-			clone.formatter = formatter;
+			clone.sinks = sinks;
 
 			return clone;
 		}
@@ -161,12 +166,12 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// The default channel formatter.
+		/// The default channel sinks.
 		/// </summary>
-		public SyncChannelFormatters DefaultChannelFormatter
+		public SyncChannelSinks DefaultChannelSinks
 		{
-			get { return formatter; }
-			set { formatter = value; }
+			get { return sinks; }
+			set { sinks = value; }
 		}
 
 		#endregion

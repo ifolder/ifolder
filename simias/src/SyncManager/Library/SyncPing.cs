@@ -65,11 +65,10 @@ namespace Simias.Sync
 			SyncStoreInfo info = null;
 
 			// create channel
-			SyncChannel channel = SyncChannelFactory.GetInstance().GetChannel(syncStore);
+			SyncChannel channel = SyncChannelFactory.GetInstance().GetChannel(syncStore, SyncProperties.SuggestedChannelSinks);
 
 			// server uri
-			string serverUrl = new UriBuilder("http", host, port,
-				syncStore.EndPoint).ToString();
+			string serverUrl = new UriBuilder("http", host, port, syncStore.EndPoint).ToString();
 
 			try
 			{

@@ -109,7 +109,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "SyncChannelFormatters.cs"
+                    RelPath = "SyncChannelSinks.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

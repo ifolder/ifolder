@@ -73,6 +73,9 @@ namespace Novell.iFolder.Mini
 			string rootPath = Path.GetFullPath(args[0]);
 			SyncProperties properties = new SyncProperties();
 
+			// sinks
+			properties.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
+
 			// role
 			SyncCollectionRoles role;
 			
@@ -157,8 +160,6 @@ namespace Novell.iFolder.Mini
 			// end
 			Console.ReadLine();
 
-			manager.Stop();
-			
 			manager.Dispose();
 
 			MyTrace.WriteLine("Done.");

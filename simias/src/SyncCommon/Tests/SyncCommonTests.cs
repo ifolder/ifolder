@@ -44,16 +44,16 @@ namespace Simias.Sync.Tests
 		}
 
 		/// <summary>
-		/// Test channel formatters enumeration.
+		/// Test channel sinks enumeration.
 		/// </summary>
 		[Test]
-		public void TestFormattersEnum()
+		public void TestSinksEnum()
 		{
-			string[] names = Enum.GetNames(typeof(SyncChannelFormatters));
+			string[] names = Enum.GetNames(typeof(SyncChannelSinks));
 
 			foreach(string name in names)
 			{
-				Console.WriteLine("Formatter Enum: {0}", name);
+				Console.WriteLine("Sink Enum: {0}", name);
 			}
 		}
 

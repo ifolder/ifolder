@@ -168,16 +168,18 @@ namespace Simias.Sync
 			lock(this)
 			{
 				// create channel
-				channel = syncManager.ChannelFactory.GetChannel(store);
+				channel = syncManager.ChannelFactory.GetChannel(store, syncManager.ChannelSinks);
 				
 				// get a proxy to the remote store object
 				SyncStoreService remoteStore = (SyncStoreService)Activator.GetObject(
 					typeof(SyncStoreService), collection.StoreUrl);
 
 				service = remoteStore.GetCollectionService(collection.ID);
+				Debug.Assert(service != null);
 
 				// get the collection worker
 				worker = syncManager.LogicFactory.GetCollectionWorker(service, collection);
+				Debug.Assert(worker != null);
 
 				// create worker thread
 				syncWorkerThread = new Thread(new ThreadStart(this.DoSyncWork));

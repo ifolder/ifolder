@@ -22,48 +22,33 @@
  ***********************************************************************/
 
 using System;
-using System.Runtime.Remoting.Channels;
-
-using Simias;
 
 namespace Simias.Sync
 {
 	/// <summary>
-	/// Debug Server Channel Sink Provider
+	/// Sync Channel Sinks
 	/// </summary>
-	public class DebugServerChannelSinkProvider : IServerChannelSinkProvider
+	public enum SyncChannelSinks
 	{
-		private IServerChannelSinkProvider nextProvider;
-		
-		public DebugServerChannelSinkProvider()
-		{
-		}
-		
-		#region IServerChannelSinkProvider Members
+		/// <summary>
+		/// Specifies a soap style formatter sink.
+		/// </summary>
+		Soap		= 0x0001,
 
-		public IServerChannelSink CreateSink(IChannelReceiver channel)
-		{
-			IServerChannelSink nextSink = null;
-			
-			if (nextProvider != null)
-			{
-				nextSink = nextProvider.CreateSink(channel);
-			}
+		/// <summary>
+		/// Specifies a binary style formatter sink.
+		/// </summary>
+		Binary		= 0x0002,
 
-			return new DebugServerChannelSink(nextSink);
-		}
+		/// <summary>
+		/// Specifies a security sink.
+		/// </summary>
+		Security	= 0x0004,
 
-		public IServerChannelSinkProvider Next
-		{
-			get { return nextProvider; }
+		/// <summary>
+		/// Specifies a monitor sink.
+		/// </summary>
+		Monitor		= 0x0008,
+	};
 
-			set { nextProvider = value; }
-		}
-
-		public void GetChannelData(IChannelDataStore channelData)
-		{
-		}
-
-		#endregion
-	}
 }

@@ -191,6 +191,11 @@ namespace Simias.Sync
 			get { return channelFactory; }
 		}
 
+		public SyncChannelSinks ChannelSinks
+		{
+			get { return properties.DefaultChannelSinks; }
+		}
+
 		public SyncLogicFactory LogicFactory
 		{
 			get { return logicFactory; }

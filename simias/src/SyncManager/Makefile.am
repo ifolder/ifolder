@@ -1,13 +1,13 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SyncManager_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/DebugServerChannelSink.cs $(srcdir)/Library/DebugServerChannelSinkProvider.cs $(srcdir)/Library/SyncChannel.cs $(srcdir)/Library/SyncChannelFactory.cs $(srcdir)/Library/SyncCollectionManager.cs $(srcdir)/Library/SyncCredentialCache.cs $(srcdir)/Library/SyncManager.cs $(srcdir)/Library/SyncPing.cs $(srcdir)/Library/SyncStoreManager.cs $(srcdir)/Library/SyncStoreService.cs 
+SyncManager_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/SyncChannel.cs $(srcdir)/Library/SyncChannelFactory.cs $(srcdir)/Library/SyncCollectionManager.cs $(srcdir)/Library/SyncCredentialCache.cs $(srcdir)/Library/SyncManager.cs $(srcdir)/Library/SyncPing.cs $(srcdir)/Library/SyncStoreManager.cs $(srcdir)/Library/SyncStoreService.cs 
 SyncManager_CSFILES_CSC := $(subst /,$(SEP),$(SyncManager_CSFILES))
 SyncManager_INCLUDES =
 SyncManager_RESOURCES =
 SyncManager_FLAGS = $(CSC_LIBFLAG)
-SyncManager_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll Agent.dll SyncCommon.dll CollectionWatcher.dll System.Runtime.Remoting.dll StoreWatcher.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll
-SyncManager_LIBPATH = Library ../SyncCommon ../CollectionEvents ../CollectionStore  ../../external/SecureChannelSinks ../Configuration ../StoreProvider ../Common ../CollectionWatcher ../Agent ../StoreWatcher
+SyncManager_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll Agent.dll SyncCommon.dll CollectionWatcher.dll System.Runtime.Remoting.dll StoreWatcher.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll RemotingSnifferLibrary.dll
+SyncManager_LIBPATH = Library ../SyncCommon ../CollectionEvents ../CollectionStore  ../../external/SecureChannelSinks ../Configuration ../StoreProvider ../Common ../CollectionWatcher ../Agent ../StoreWatcher ../RemotingSniffer
 
 NUNIT_TESTS := SyncManagerTests.dll
 

@@ -36,17 +36,17 @@ namespace Simias.Sync
 		private IChannel channel;
 		private string name;
 		private int port;
-		private SyncChannelFormatters formatter;
+		private SyncChannelSinks sinks;
 		private int count;
 
 		internal SyncChannel(SyncChannelFactory factory, IChannel channel,
-			string name, int port, SyncChannelFormatters formatter)
+			string name, int port, SyncChannelSinks sinks)
 		{
 			this.factory = factory;
 			this.channel = channel;
 			this.name = name;
 			this.port = port;
-			this.formatter = formatter;
+			this.sinks = sinks;
 			this.count = 0;
 		}
 
@@ -90,24 +90,24 @@ namespace Simias.Sync
 
 		#region Properties
 		
-		internal IChannel Channel
+		public IChannel Channel
 		{
 			get { return channel; }
 		}
 		
-		internal string Name
+		public string Name
 		{
 			get { return name; }
 		}
 		
-		internal int Port
+		public int Port
 		{
 			get { return port; }
 		}
 
-		internal SyncChannelFormatters Formatter
+		public SyncChannelSinks Sinks
 		{
-			get { return formatter; }
+			get { return sinks; }
 		}
 		
 		#endregion

@@ -282,7 +282,7 @@ namespace Simias.Sync
 		/// </summary>
 		public string StoreUrl
 		{
-			get { return (new UriBuilder("http", Host, Port, store.EndPoint).ToString()); }
+			get { return (new UriBuilder("http", Host, Port, "store.rem").ToString()); }
 		}
 
 		/// <summary>
@@ -315,6 +315,14 @@ namespace Simias.Sync
 		public string Domain
 		{
 			get { return baseCollection.DomainName; }
+		}
+
+		/// <summary>
+		/// The authroization domain id of the base collection.
+		/// </summary>
+		public string DomainID
+		{
+			get { return Domain.Substring(Domain.IndexOf(":") + 1); }
 		}
 
 		/// <summary>

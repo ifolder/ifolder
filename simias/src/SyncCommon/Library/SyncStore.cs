@@ -236,7 +236,7 @@ namespace Simias.Sync
 		/// </summary>
 		public string EndPoint
 		{
-			get { return ID + ".rem"; }
+			get { return "store.rem"; }
 		}
 
 		/// <summary>
