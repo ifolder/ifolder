@@ -39,6 +39,11 @@ install-exec-local: iFolderApp.exe $(DATA_FILES)
 	if test -f "$(DESTDIR)$(bindir)/iFolderApp.exe"; then \
 		$(INSTALLUTIL) /LogToConsole=false /ShowCallStack /LogFile=iFolderApp.InstallLog `cygpath --windows "$(DESTDIR)$(bindir)/iFolderApp.exe"`; \
 	fi
+if WINDOWS
+if DEBUG	
+	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(bindir)
+endif
+endif
      
 uninstall-local:
 	if test -f "$(DESTDIR)$(bindir)/iFolderApp.exe"; then \
@@ -47,6 +52,11 @@ uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f iFolderApp.exe iFolderApp.exe.manifest $(DEBUG_FILES)
 	cd $(DESTDIR)$(bindir); rm -f $(DATA_FILES)
 	cd $(DESTDIR)$(bindir)/res; rm -f $(RES_FILES:res/%=%) ifolder-banner.png
+if WINDOWS
+if DEBUG	
+	cd $(DESTDIR)$(bindir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)
+endif
+endif
      
 CLEAN_FILES = iFolderApp.exe iFolderApp.doc.xml
 

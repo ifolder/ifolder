@@ -30,9 +30,19 @@ endif
 install-exec-local: EventService.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) EventService.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
+if WINDOWS
+if DEBUG	
+	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(bindir)
+endif
+endif
     
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f EventService.exe $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
+if WINDOWS
+if DEBUG	
+	cd $(DESTDIR)$(bindir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)
+endif
+endif
     
 CLEAN_FILES = EventService.exe $(NUNIT_TESTS) EventService.doc.xml
 

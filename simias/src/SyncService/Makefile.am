@@ -28,9 +28,19 @@ endif
 install-exec-local: SyncService.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) SyncService.exe $(DEBUG_FILES) $(srcdir)/remoting.config $(DESTDIR)$(bindir)
+if WINDOWS
+if DEBUG	
+	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(bindir)
+endif
+endif
     
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f SyncService.exe remoting.config $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
+if WINDOWS
+if DEBUG	
+	cd $(DESTDIR)$(bindir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)
+endif
+endif
     
 CLEAN_FILES = SyncService.exe SyncService.doc.xml
 
