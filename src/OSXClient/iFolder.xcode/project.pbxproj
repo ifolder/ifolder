@@ -530,8 +530,6 @@
 		};
 		3E255FFC077235290062AB7A = {
 			children = (
-				3EC02EDC07AED3C4001FF59D,
-				3EC02D7907AED395001FF59D,
 				3EDD6AD807AEAECB008A2A3B,
 				3EDD6AD907AEAECB008A2A3B,
 				3E255FFF077235290062AB7A,
@@ -1183,34 +1181,6 @@
 			settings = {
 			};
 		};
-		3EC02D7907AED395001FF59D = {
-			isa = PBXFileReference;
-			lastKnownFileType = folder;
-			name = libifolder;
-			path = ../libifolder;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		3EC02E2107AED395001FF59D = {
-			fileRef = 3EC02D7907AED395001FF59D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3EC02EDC07AED3C4001FF59D = {
-			isa = PBXFileReference;
-			lastKnownFileType = folder;
-			name = libsimias;
-			path = ../../../simias/src/libsimias;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		3EC02F2107AED3C4001FF59D = {
-			fileRef = 3EC02EDC07AED3C4001FF59D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3ECCEE29078B050C0011719F = {
 			isa = PBXFileReference;
 			lastKnownFileType = "compiled.mach-o.dylib";
@@ -1699,8 +1669,6 @@
 				3E19255307A7E20700F9E44D,
 				3E3BC75607AB5B7B00D2AE46,
 				3EDD6ADA07AEAECB008A2A3B,
-				3EC02E2107AED395001FF59D,
-				3EC02F2107AED3C4001FF59D,
 				3E6D783507B098E2001DA76A,
 				3EEA9A3507B1D3580015FCF4,
 				3EEA9A4C07B1D9C30015FCF4,
