@@ -414,7 +414,8 @@ src/Simias.dll/Makefile
 src/FlaimProvider/Makefile
 src/FlaimProvider/FlaimWrapper/Makefile
 src/SimiasApp/Makefile
-src/SimiasApp/simias
+src/SimiasServer/Makefile
+src/SimiasServer/simias
 src/AddressBook/Makefile
 src/mDnsService/Makefile
 src/WebService/Makefile

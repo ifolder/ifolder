@@ -9,7 +9,7 @@ SimiasApp_FLAGS = $(CSC_EXEFLAG)
 SimiasApp_LIBS = System.dll System.Data.dll $(SYSTEM_XML) SimiasClient.dll Simias.dll Simias.Web.dll System.Web.dll
 SimiasApp_LIBPATH = $(NUNIT_LIBPATH) $(LOG4NET_DIR) ../SimiasClient ../Simias.dll ../WebService
 
-EXTRA_DIST = App.ico $(SimiasApp_CSFILES) simias.in simias.cmd
+EXTRA_DIST = App.ico $(SimiasApp_CSFILES)
 
 all: SimiasApp.exe
 
@@ -25,28 +25,10 @@ endif
 install-exec-local: SimiasApp.exe $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) SimiasApp.exe $(DEBUG_FILES) $(DESTDIR)$(webbindir)
-if LINUX
-	$(INSTALL_PROGRAM) simias $(DESTDIR)$(bindir)
-endif
-if DARWIN
-	$(INSTALL_PROGRAM) simias $(DESTDIR)$(bindir)
-endif
-if WINDOWS
-	$(INSTALL_PROGRAM) simias.cmd $(DESTDIR)$(bindir)
-endif
 
 	
 uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f SimiasApp.exe $(DEBUG_FILES)
-if LINUX
-	cd $(DESTDIR)$(bindir); rm -f simias
-endif
-if DARWIN
-	cd $(DESTDIR)$(bindir); rm -f simias
-endif
-if WINDOWS
-	cd $(DESTDIR)$(bindir); rm -f simias.cmd
-endif
 
 installcheck-local: install
 	

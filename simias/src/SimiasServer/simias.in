@@ -1,5 +1,6 @@
 #!/bin/sh
 #######################################################################
+#
 #  $RCSfile$
 #
 #  Copyright (C) 2004 Novell, Inc.
@@ -8,11 +9,10 @@
 #
 #######################################################################
 
-# start SimiasApp.exe
 export MONO_PATH=@webbindir@
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:@webbindir@
 export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:@webbindir@
 cd @bindir@
 
-mono ../web/bin/SimiasApp.exe --applications /simias10:../web --port 8086 $1 $2 $3 $4 $5 $6 $7 $8 $9
+mono @webbindir@/SimiasServerSetup.exe $@
 
