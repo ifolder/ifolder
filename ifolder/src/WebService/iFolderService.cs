@@ -961,5 +961,107 @@ namespace Novell.iFolder.Web
 		}
 
 
+
+
+		/// <summary>
+		/// WebMethod that retuns all of an ifolder's Conflicts
+		/// </summary>
+		/// <param name = "iFolderID">
+		/// The iFolder ID to return the conflicts
+		/// </param>
+		/// <returns>
+		/// An Array of conflicts
+		/// </returns>
+		[WebMethod(Description="Connects to an iFolder Enterprise Server")]
+		[SoapDocumentMethod]
+		public Conflict[] GetiFolderConflicts(	string iFolderID )
+		{
+			ArrayList list = new ArrayList();
+
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(iFolderID);
+			if(col == null)
+				throw new Exception("Invalid iFolderID");
+
+			ICSList collisionList = col.GetCollisions();
+			foreach(ShallowNode sn in collisionList)
+			{
+				Node conflictNode = new Node(col, sn);
+
+				Conflict conflict = new Conflict(col, conflictNode);
+
+				list.Add(conflict);
+			}
+			return (Conflict[])list.ToArray(typeof(Conflict));
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that resolves a conflict
+		/// </summary>
+		/// <param name = "iFolderID">
+		/// The iFolder ID to return the conflicts
+		/// </param>
+		/// <param name = "conflictID">
+		/// The node ID that represents a conflict to resolve
+		/// </param>
+		/// <param name = "iFolderID">
+		/// A bool that determines if the local or server copies win
+		/// </param>
+		[WebMethod(Description="Resolves a file conflict in an iFolder.")]
+		[SoapDocumentMethod]
+		public void ResolveFileConflict(string iFolderID, string conflictID,
+										bool localChangesWin)
+		{
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(iFolderID);
+			if(col == null)
+				throw new Exception("Invalid iFolderID");
+
+			Node conflictNode = col.GetNodeByID(conflictID);
+			if(conflictNode == null)
+				throw new Exception("Invalid conflictID");
+
+			Conflict.Resolve(col, conflictNode, localChangesWin);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that resolves a name conflict
+		/// </summary>
+		/// <param name = "iFolderID">
+		/// The iFolder ID to return the conflicts
+		/// </param>
+		/// <param name = "conflictID">
+		/// The node ID that represents a conflict to resolve
+		/// </param>
+		/// <param name = "iFolderID">
+		/// A bool that determines if the local or server copies win
+		/// </param>
+		[WebMethod(Description="Resolves a name conflict")]
+		[SoapDocumentMethod]
+		public void ResolveNameConflict(string iFolderID, string conflictID,
+										string newLocalName)
+		{
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(iFolderID);
+			if(col == null)
+				throw new Exception("Invalid iFolderID");
+
+			Node conflictNode = col.GetNodeByID(conflictID);
+			if(conflictNode == null)
+				throw new Exception("Invalid conflictID");
+
+			Conflict.Resolve(col, conflictNode, newLocalName);
+		}
+
+
 	}
 }

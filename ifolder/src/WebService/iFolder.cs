@@ -56,7 +56,7 @@ namespace Novell.iFolder.Web
 		public bool IsSubscription;
 		public int EnumeratedState;
 		public bool IsWorkgroup;
-		public bool HasCollisions;
+		public bool HasConflicts;
 		public string CurrentUserID;
 
 		public iFolder()
@@ -92,7 +92,7 @@ namespace Novell.iFolder.Web
 			this.EnumeratedState = -1;
 			this.IsWorkgroup = 
 				(collection.Domain == Simias.Storage.Domain.WorkGroupDomainID);
-			this.HasCollisions = collection.HasCollisions();
+			this.HasConflicts = collection.HasCollisions();
 			// This was throwing an exception so Added this because the 
 			// current user may not be available yet
 			Member tmpMember = collection.GetCurrentMember();
