@@ -196,7 +196,8 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public int Read(byte[] buffer, int offset, int count)
 		{
-			return stream.Read(buffer, offset, count);
+			if (stream != null)	return stream.Read(buffer, offset, count);
+			else return 0;
 		}
 
 		/// <summary>
@@ -228,6 +229,8 @@ namespace Simias.Sync
 				while (count > 0)
 				{
 					int bytesRead = Read(buffer, (int)0, bufferSize);
+					if (bytesRead == 0)
+						throw (new IOException(string.Format("Could not read file {0}", file)));
 					Write(buffer, 0, bytesRead);
 					count -= bytesRead;
 				}
@@ -240,8 +243,8 @@ namespace Simias.Sync
 		/// </summary>
 		public long ReadPosition
 		{
-			get { return stream.Position; }
-			set { stream.Position = value; }
+			get { return (stream == null ? 0 : stream.Position); }
+			set { if (stream != null) stream.Position = value; }
 		}
 
 		/// <summary>
@@ -258,7 +261,7 @@ namespace Simias.Sync
 		/// </summary>
 		public long Length
 		{
-			get { return stream.Length; }
+			get { return stream == null ? 0 : stream.Length; }
 		}
 
 		#endregion
@@ -274,7 +277,11 @@ namespace Simias.Sync
 			this.SetupFileNames(node);
 			// Open the file so that it cannot be modified.
 			oldNode = collection.GetNodeByID(node.ID) as BaseFileNode;
-			stream = File.Open(file, FileMode.OpenOrCreate, FileAccess.Read, FileShare.None);
+			try
+			{
+				stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.None);
+			}
+			catch (FileNotFoundException){}
 			workStream = File.Open(workFile, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None);
 			File.SetAttributes(workFile, File.GetAttributes(workFile) | FileAttributes.Hidden);
 		}

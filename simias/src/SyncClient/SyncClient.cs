@@ -329,7 +329,11 @@ namespace Simias.Sync.Client
 				timer.Dispose();
 				timer = null;
 			}
-			fileMonitor.Dispose();
+			if (fileMonitor != null)
+			{
+				fileMonitor.Dispose();
+				fileMonitor = null;
+			}
 		}
 
 		/// <summary>
@@ -1074,7 +1078,7 @@ namespace Simias.Sync.Client
 				XmlDocument xNode = new XmlDocument();
 				xNode.LoadXml(snode.node);
 				DirNode node = (DirNode)Node.NodeFactory(store, xNode);
-				log.Info("Importing Directory {0} from server", node.Type);
+				log.Info("Importing Directory {0} from server", node.Name);
 				Import(node);
 			
 				// Get the old node to see if the node was renamed.
@@ -1118,7 +1122,7 @@ namespace Simias.Sync.Client
 			if (filesFromServer.Count == 0)
 				return;
 
-			log.Info("Downloading {0} Files from server", dirsFromServer.Count);
+			log.Info("Downloading {0} Files from server", filesFromServer.Count);
 			string[] nodeIDs = new string[filesFromServer.Count];
 			filesFromServer.Keys.CopyTo(nodeIDs, 0);
 
