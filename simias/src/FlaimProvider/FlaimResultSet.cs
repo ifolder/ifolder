@@ -82,10 +82,6 @@ namespace Simias.Storage.Provider.Flaim
 			else
 			{
 				int length = FWGetNextObjectList(pResults, buffer, buffer.Length);
-				if (length == 0)
-				{
-					Dispose();
-				}
 				return length;
 			}
 		}
