@@ -32,6 +32,7 @@ using System.Web.Services;
 using System.Web.Services.Protocols;
 using System.IO;
 using Simias;
+using Simias.Client;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.POBox;
@@ -806,17 +807,13 @@ namespace Novell.iFolder.Web
 				Node node = col.GetNodeByID(NodeID);
 				if(node != null)
 				{
-					try
+					if (col.IsBaseType(node, NodeTypes.MemberType))
 					{
 						ifolderUser = new iFolderUser(new Member(node));
 					}
-					catch 
+					else if (col.IsType(node, typeof( Subscription ).Name))
 					{
-						try
-						{
-							ifolderUser = new iFolderUser(new Subscription(node));
-						}
-						catch {}
+						ifolderUser = new iFolderUser(new Subscription(node));
 					}
 				}
 			}
@@ -1163,7 +1160,7 @@ namespace Novell.iFolder.Web
 															string Password,
 															string Host)
 		{
-			Configuration conf = Configuration.GetConfiguration();
+			Simias.Configuration conf = Simias.Configuration.GetConfiguration();
 			Simias.Domain.DomainAgent da = new Simias.Domain.DomainAgent(conf);
 			da.Attach(Host, UserName, Password);
 			iFolderSettings ifSettings = new iFolderSettings();
