@@ -29,6 +29,8 @@ using System.IO;
 using System.Runtime.Remoting;
 
 using Simias;
+using Simias.Storage;
+using Simias.Sync;
 using Simias.Mail;
 
 namespace Simias.POBox
@@ -39,7 +41,7 @@ namespace Simias.POBox
 	public class SubscriptionThread
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SubscriptionThread));
-		private static readonly string	poServiceLabel = ":8086/simias10/POBoxService.asmx";
+		private static readonly string	poServiceLabel = "/POBoxService.asmx";
 		
 		private POBox poBox;
 		private Subscription subscription;
@@ -55,9 +57,15 @@ namespace Simias.POBox
 			this.subscription = subscription;
 			this.threads = threads;
 
-			char[] seps = {':'};
-			string[] authority = subscription.POServiceURL.Authority.Split(seps);
-			poServiceUrl = "http://" + authority[0] + poServiceLabel;
+			Collection cCollection = 
+				poBox.StoreReference.GetCollectionByID(subscription.SubscriptionCollectionID); 
+			if (cCollection == null)
+			{
+				throw new ApplicationException("Invalid shared collection ID");
+			}
+
+			SyncCollection sc = new SyncCollection(cCollection);
+			poServiceUrl = sc.MasterUrl.ToString() + poServiceLabel;
 		}
 
 		/// <summary>
