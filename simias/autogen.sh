@@ -136,7 +136,7 @@ do
   fi
 done
 
-conf_flags="--enable-maintainer-mode --enable-compile-warnings" #--enable-iso-c
+conf_flags="--config-cache --enable-maintainer-mode --enable-compile-warnings" #--enable-iso-c
 
 cd "$ORIGDIR"
 

@@ -1,30 +1,34 @@
-CSC=mcs -g -warnaserror
-#dashboard_exe=../engine/dashboard.exe
-DLLDEPS=
-LIBFLAGS=-target:library $(DLLDEPS)
-EXEFLAGS=$(DLLDEPS)
 
-# The backends to build by default.
-assemblies =        \
-	Configuration.dll
+#DLLDEPS=
+#EXEFLAGS=$(DLLDEPS)
 
-ASSEMBLY_CSFILES =		 					\
-	$(srcdir)/AssemblyInfo.cs				\
-	$(srcdir)/Configuration.cs
+#ASSEMBLY1 = Configuration.dll
+#ASSEMBLY1_CSFILES =		 					\
+#	$(srcdir)/AssemblyInfo.cs				\
+#	$(srcdir)/Configuration.cs
 
-all: $(assemblies)
+#ASSEMBLIES = $(ASSEMBLY1)
 
-%.dll: %.cs
-	$(CSC) $(LIBFLAGS) -out:$@ $<
+bin_PROGRAMS = Configuration.dll
+dist_Configuration_dll_SOURCES = Configuration.cs AssemblyInfo.cs
+#Configuration_dll_OBJECTS =
+#Configuration_dll_LDADD = $(LDADD)
+#Configuration_dll_DEPENDENCIES = 
+#Configuration_dll_LDFLAGS = 
+Configuration.dll: $(Configuration_dll_SOURCES)
+	$(CSC) $(CSCFLAGS) $(CSC_LIBFLAG) -out:$@ $<
 
-clean:
-	rm -f *.dbg *.exe *.dll
+#all: $(ASSEMBLIES)
 
-distclean: clean
 
-dashboardlibdir = $(prefix)/lib/dashboard
+#clean:
+#	rm -f *.dbg *.exe *.dll
 
-install-data-local: $(assemblies)
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_DATA) $(assemblies) $(DESTDIR)$(bindir)
+#distclean: clean
+
+#dashboardlibdir = $(prefix)/lib/dashboard
+
+#install-data-local: $(bin_PROGRAMS)
+#	$(mkinstalldirs) $(DESTDIR)$(bindir)
+#	$(INSTALL_DATA) $(bin_PROGRAMS) $(DESTDIR)$(bindir)
 
