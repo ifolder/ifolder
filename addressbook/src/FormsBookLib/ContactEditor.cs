@@ -160,6 +160,9 @@ namespace Novell.iFolder.FormsBookLib
 		private Telephone telephone2;
 		private Telephone telephone3;
 		private Telephone telephone4;
+		private IM iM1;
+		private IM iM2;
+		private IM iM3;
 		private Address workAddress;
 		private Address homeAddress;
 		private Address otherAddress;
@@ -424,6 +427,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.helpProvider1.SetShowHelp(this.im3Location, true);
 			this.im3Location.Size = new System.Drawing.Size(96, 20);
 			this.im3Location.TabIndex = 37;
+			this.im3Location.SelectedItemChanged += new System.EventHandler(this.im3Location_SelectedItemChanged);
 			// 
 			// label7
 			// 
@@ -445,6 +449,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.im3.Size = new System.Drawing.Size(264, 20);
 			this.im3.TabIndex = 35;
 			this.im3.Text = "";
+			this.im3.TextChanged += new System.EventHandler(this.im3_TextChanged);
 			// 
 			// imLabel3
 			// 
@@ -459,6 +464,8 @@ namespace Novell.iFolder.FormsBookLib
 			this.helpProvider1.SetShowHelp(this.imLabel3, true);
 			this.imLabel3.Size = new System.Drawing.Size(136, 20);
 			this.imLabel3.TabIndex = 34;
+			this.imLabel3.TextChanged += new System.EventHandler(this.imLabel3_TextChanged);
+			this.imLabel3.SelectedItemChanged += new System.EventHandler(this.imLabel3_TextChanged);
 			// 
 			// im2Location
 			// 
@@ -472,6 +479,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.helpProvider1.SetShowHelp(this.im2Location, true);
 			this.im2Location.Size = new System.Drawing.Size(96, 20);
 			this.im2Location.TabIndex = 33;
+			this.im2Location.SelectedItemChanged += new System.EventHandler(this.im2Location_SelectedItemChanged);
 			// 
 			// label6
 			// 
@@ -493,6 +501,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.im2.Size = new System.Drawing.Size(264, 20);
 			this.im2.TabIndex = 31;
 			this.im2.Text = "";
+			this.im2.TextChanged += new System.EventHandler(this.im2_TextChanged);
 			// 
 			// imLabel2
 			// 
@@ -507,6 +516,8 @@ namespace Novell.iFolder.FormsBookLib
 			this.helpProvider1.SetShowHelp(this.imLabel2, true);
 			this.imLabel2.Size = new System.Drawing.Size(136, 20);
 			this.imLabel2.TabIndex = 30;
+			this.imLabel2.TextChanged += new System.EventHandler(this.imLabel2_TextChanged);
+			this.imLabel2.SelectedItemChanged += new System.EventHandler(this.imLabel2_TextChanged);
 			// 
 			// im1Location
 			// 
@@ -520,6 +531,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.helpProvider1.SetShowHelp(this.im1Location, true);
 			this.im1Location.Size = new System.Drawing.Size(96, 20);
 			this.im1Location.TabIndex = 29;
+			this.im1Location.SelectedItemChanged += new System.EventHandler(this.im1Location_SelectedItemChanged);
 			// 
 			// label5
 			// 
@@ -541,6 +553,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.im1.Size = new System.Drawing.Size(264, 20);
 			this.im1.TabIndex = 27;
 			this.im1.Text = "";
+			this.im1.TextChanged += new System.EventHandler(this.im1_TextChanged);
 			// 
 			// imLabel1
 			// 
@@ -555,6 +568,8 @@ namespace Novell.iFolder.FormsBookLib
 			this.helpProvider1.SetShowHelp(this.imLabel1, true);
 			this.imLabel1.Size = new System.Drawing.Size(136, 20);
 			this.imLabel1.TabIndex = 26;
+			this.imLabel1.TextChanged += new System.EventHandler(this.imLabel1_TextChanged);
+			this.imLabel1.SelectedItemChanged += new System.EventHandler(this.imLabel1_TextChanged);
 			// 
 			// label4
 			// 
@@ -1775,6 +1790,58 @@ namespace Novell.iFolder.FormsBookLib
 			}
 			catch{}
 
+			// IM Addresses
+			try
+			{
+				int n = 1;
+				foreach (IM im in contact.GetInstantMessageAccounts())
+				{
+					DomainUpDown imLocation;
+
+					if (im.Preferred)
+					{
+						iM1 = im;
+						im1.DataBindings.Add("Text", iM1, "Address");
+						imLocation = im1Location;
+						imLabel1.DataBindings.Add("Text", iM1, "Provider");
+					}
+					else
+					{
+						switch (n)
+						{
+							case 1:
+								iM2 = im;
+								im2.DataBindings.Add("Text", iM2, "Address");
+								imLocation = im2Location;
+								imLabel2.DataBindings.Add("Text", iM2, "Provider");
+								break;
+							default:
+								iM3 = im;
+								im3.DataBindings.Add("Text", iM3, "Address");
+								imLocation = im3Location;
+								imLabel3.DataBindings.Add("Text", iM3, "Provider");
+								break;
+						}
+
+						n++;
+					}
+
+					if ((im.Types & IMTypes.work) == IMTypes.work)
+					{
+						imLocation.SelectedIndex = 0;
+					}
+					else if ((im.Types & IMTypes.home) == IMTypes.home)
+					{
+						imLocation.SelectedIndex = 1;
+					}
+					else if ((im.Types & IMTypes.other) == IMTypes.other)
+					{
+						imLocation.SelectedIndex = 2;
+					}
+				}
+			}
+			catch{}
+
 			// Addresses
 			foreach(Address addr in contact.GetAddresses())
 			{
@@ -1892,6 +1959,38 @@ namespace Novell.iFolder.FormsBookLib
 					break;
 				default:
 					telephone.Types = phoneTypes | PhoneTypes.pager;
+					break;
+			}
+		}
+
+		private void AddNewIMAccount(ref IM im, ref DomainUpDown labelBox, ref TextBox editBox)
+		{
+			im = new IM(editBox.Text, labelBox.Text);
+			try
+			{
+				editBox.DataBindings.Add("Text", im, "Address");
+				labelBox.DataBindings.Add("Text", im, "Provider");
+			}
+			catch{}
+			contact.AddInstantMessage(im);
+		}
+
+		private void SetIMType(ref IM im, ref DomainUpDown type)
+		{
+			// Preserve the preferred bit.
+			IMTypes imTypes = im.Types & IMTypes.preferred;
+
+			// Set the new type based on what was selected.
+			switch (type.SelectedIndex)
+			{
+				case 0:
+					im.Types = imTypes | IMTypes.work;
+					break;
+				case 1:
+					im.Types = imTypes | IMTypes.home;
+					break;
+				default:
+					im.Types = imTypes | IMTypes.other;
 					break;
 			}
 		}
@@ -2383,6 +2482,110 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				AddNewTelephone(ref telephone4, ref phone4);
 				SetTelephoneType(ref telephone4, ref phoneLabel4);
+			}
+		}
+		#endregion
+
+		#region IM Fields
+		private void imLabel1_TextChanged(object sender, System.EventArgs e)
+		{
+			if (imLabel1.Focused)
+			{
+				if (iM1 == null)
+				{
+					AddNewIMAccount(ref iM1, ref imLabel1, ref im1);
+					SetIMType(ref iM1, ref im1Location);
+				}
+			}
+		}
+
+		private void im1_TextChanged(object sender, System.EventArgs e)
+		{
+			if (iM1 == null)
+			{
+				AddNewIMAccount(ref iM1, ref imLabel1, ref im1);
+				SetIMType(ref iM1, ref im1Location);
+			}
+		}
+
+		private void im1Location_SelectedItemChanged(object sender, System.EventArgs e)
+		{
+			if (im1Location.Focused)
+			{
+				if (iM1 == null)
+				{
+					AddNewIMAccount(ref iM1, ref imLabel1, ref im1);
+				}
+
+				SetIMType(ref iM1, ref im1Location);
+			}
+		}
+
+		private void imLabel2_TextChanged(object sender, System.EventArgs e)
+		{
+			if (imLabel2.Focused)
+			{
+				if (iM2 == null)
+				{
+					AddNewIMAccount(ref iM2, ref imLabel2, ref im2);
+					SetIMType(ref iM2, ref im2Location);
+				}
+			}
+		}
+
+		private void im2_TextChanged(object sender, System.EventArgs e)
+		{
+			if (iM2 == null)
+			{
+				AddNewIMAccount(ref iM2, ref imLabel2, ref im2);
+				SetIMType(ref iM2, ref im2Location);
+			}
+		}
+
+		private void im2Location_SelectedItemChanged(object sender, System.EventArgs e)
+		{
+			if (im2Location.Focused)
+			{
+				if (iM2 == null)
+				{
+					AddNewIMAccount(ref iM2, ref imLabel2, ref im2);
+				}
+
+				SetIMType(ref iM2, ref im2Location);
+			}
+		}
+
+		private void imLabel3_TextChanged(object sender, System.EventArgs e)
+		{
+			if (imLabel3.Focused)
+			{
+				if (iM3 == null)
+				{
+					AddNewIMAccount(ref iM3, ref imLabel3, ref im3);
+					SetIMType(ref iM3, ref im3Location);
+				}
+			}
+		}
+
+		private void im3_TextChanged(object sender, System.EventArgs e)
+		{
+			if (iM3 == null)
+			{
+				AddNewIMAccount(ref iM3, ref imLabel3, ref im3);
+				SetIMType(ref iM3, ref im3Location);
+			}
+		}
+
+		private void im3Location_SelectedItemChanged(object sender, System.EventArgs e)
+		{
+			if (im3Location.Focused)
+			{
+				if (iM3 == null)
+				{
+					AddNewIMAccount(ref iM3, ref imLabel3, ref im3);
+				}
+
+				SetIMType(ref iM3, ref im3Location);
 			}
 		}
 		#endregion
