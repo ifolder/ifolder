@@ -69,19 +69,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_466A9CAA56C74C618743F3902430E514"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_50C5EE436B3B4FE2BD1E44DC23716821"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5CE510B657D74BB284C7E24A578A4CD9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -99,18 +87,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_8155A628C99F4B1BB4D57AFB43C35E9E"
-        "OwnerKey" = "8:_0C336FC79B14484D84C6E37B881F55AB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8155A628C99F4B1BB4D57AFB43C35E9E"
-        "OwnerKey" = "8:_29384441CBFF43FFB98D254AC90BD163"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_83694938015F4993AE711930A005DFC9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -123,14 +99,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_91D5978AF0D544DDBEB6E636B7F596ED"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_A02D2F0143654908BA2C647113A6D33C"
+        "OwnerKey" = "8:_0C336FC79B14484D84C6E37B881F55AB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_A83E66631ADA499181FA3880D7E2E30F"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_A02D2F0143654908BA2C647113A6D33C"
+        "OwnerKey" = "8:_29384441CBFF43FFB98D254AC90BD163"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -142,18 +118,6 @@
         "Entry"
         {
         "MsmKey" = "8:_E0E802472C884E3DAB950FC3B5A2E2F2"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E5A7ECC64D9D43519540D340CAF38183"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_EE3E429E94CB4584B99D4979A1FFADFA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -250,7 +214,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:FormsBookLib, Version=1.0.1586.13543, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:FormsBookLib, Version=1.0.1613.14394, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_0C336FC79B14484D84C6E37B881F55AB"
@@ -361,7 +325,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ContactBrowser, Version=1.0.1586.13544, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:ContactBrowser, Version=1.0.1613.14395, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_29384441CBFF43FFB98D254AC90BD163"
@@ -408,50 +372,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_466A9CAA56C74C618743F3902430E514"
-            {
-            "SourcePath" = "8:..\\..\\..\\src\\GtkAddrBook\\house.png"
-            "TargetName" = "8:house.png"
-            "Tag" = "8:"
-            "Folder" = "8:_E399BA44EF6041E4A7DD991F5F019CA6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_50C5EE436B3B4FE2BD1E44DC23716821"
             {
             "SourcePath" = "8:..\\..\\..\\src\\GtkAddrBook\\book.png"
             "TargetName" = "8:book.png"
-            "Tag" = "8:"
-            "Folder" = "8:_E399BA44EF6041E4A7DD991F5F019CA6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_5CE510B657D74BB284C7E24A578A4CD9"
-            {
-            "SourcePath" = "8:..\\..\\..\\src\\GtkAddrBook\\globe.png"
-            "TargetName" = "8:globe.png"
             "Tag" = "8:"
             "Folder" = "8:_E399BA44EF6041E4A7DD991F5F019CA6"
             "Condition" = "8:"
@@ -548,46 +472,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_91D5978AF0D544DDBEB6E636B7F596ED"
-            {
-            "SourcePath" = "8:..\\..\\..\\src\\GtkAddrBook\\ico-mail.png"
-            "TargetName" = "8:ico-mail.png"
-            "Tag" = "8:"
-            "Folder" = "8:_E399BA44EF6041E4A7DD991F5F019CA6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_A83E66631ADA499181FA3880D7E2E30F"
-            {
-            "SourcePath" = "8:..\\..\\..\\src\\GtkAddrBook\\galeon.png"
-            "TargetName" = "8:galeon.png"
-            "Tag" = "8:"
-            "Folder" = "8:_E399BA44EF6041E4A7DD991F5F019CA6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_CDEEC3EE0C174E10AFF82265C7B3C55D"
             {
             "SourcePath" = "8:..\\..\\..\\src\\FormsBookLib\\ifolder_contact_full.ico"
@@ -612,46 +496,6 @@
             {
             "SourcePath" = "8:..\\..\\..\\src\\FormsBookLib\\ifolder_contact_read_write.ico"
             "TargetName" = "8:ifolder_contact_read_write.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_E399BA44EF6041E4A7DD991F5F019CA6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_E5A7ECC64D9D43519540D340CAF38183"
-            {
-            "SourcePath" = "8:..\\..\\..\\src\\GtkAddrBook\\briefcase.png"
-            "TargetName" = "8:briefcase.png"
-            "Tag" = "8:"
-            "Folder" = "8:_E399BA44EF6041E4A7DD991F5F019CA6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_EE3E429E94CB4584B99D4979A1FFADFA"
-            {
-            "SourcePath" = "8:..\\..\\..\\src\\GtkAddrBook\\cellphone.png"
-            "TargetName" = "8:cellphone.png"
             "Tag" = "8:"
             "Folder" = "8:_E399BA44EF6041E4A7DD991F5F019CA6"
             "Condition" = "8:"
@@ -716,7 +560,7 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_8155A628C99F4B1BB4D57AFB43C35E9E"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_A02D2F0143654908BA2C647113A6D33C"
             {
             "UseDynamicProperties" = "11:FALSE"
             "IsDependency" = "11:TRUE"
