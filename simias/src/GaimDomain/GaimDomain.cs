@@ -496,13 +496,14 @@ namespace Simias.Gaim
 				else
 					attrib = "name";
 
-				xpathExp = string.Format("//buddy[{0}{1}({2}, {3})]",
+				xpathExp = string.Format("//buddy[{0}{1}({2}, '{3}')]",
 										 trustedBuddiesOnlyConditionOther,
 										 searchOp,
 										 attrib,
 									     searchString);
 			}
 
+			log.Debug("Search XPath: " + xpathExp);
 			buddyNodes = gaimElement.SelectNodes(xpathExp);
 			if (buddyNodes == null)
 				return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
