@@ -3,7 +3,7 @@ export MONO_PATH := $(MONO_PATH):$(DESTDIR)$(libdir)
 
 SUBDIRS = 
 
-GaimDomain_CSFILES = $(srcdir)/GaimService.cs $(srcdir)/GaimDomain.cs $(srcdir)/GaimDomainInfo.cs $(srcdir)/GaimDomainService.asmx.cs $(srcdir)/LocationProvider.cs $(srcdir)/GaimDomainProvider.cs $(srcdir)/GaimObjects.cs
+GaimDomain_CSFILES = $(srcdir)/GaimService.cs $(srcdir)/GaimDomain.cs $(srcdir)/GaimDomainInfo.cs $(srcdir)/GaimDomainService.asmx.cs $(srcdir)/LocationProvider.cs $(srcdir)/GaimDomainProvider.cs $(srcdir)/GaimObjects.cs $(srcdir)/GaimDomainSearchContext.cs
 GaimDomain_CSFILES_CSC := $(subst /,$(SEP),$(GaimDomain_CSFILES))
 GaimDomain_INCLUDES =
 GaimDomain_RESOURCES =

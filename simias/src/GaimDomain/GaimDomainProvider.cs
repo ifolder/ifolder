@@ -162,9 +162,6 @@ namespace Simias.Location
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
 		public bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, out Object searchContext, out Member[] memberList, out int total, int count )
 		{
-			GaimDomain gaimDomain = GaimDomain.GetDomain();
-
-
 			// Ignore the domainID since we only ever have one domain to deal with
 			GaimBuddy[] buddies =
 				GaimDomain.SearchForBuddies(mapSimiasAttribToGaim(attributeName),
@@ -398,14 +395,12 @@ namespace Simias.Location
 		{
 			switch(attributeName)
 			{
-				case PropertyTags.Given:
+				case "Given":
 					return "ScreenName";
-					break;
-				case PropertyTags.Family:
-				case PropertyTags.FullName:
+				case "Family":
+				case "FullName":
 				default:
 					return "Alias";
-					break;
 			}
 		}
 		#endregion
