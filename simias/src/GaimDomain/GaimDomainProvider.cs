@@ -521,6 +521,17 @@ namespace Simias.Gaim
 					p.LocalProperty = true;
 					member.Properties.AddProperty(p);
 				}
+
+				// Gaim Alias
+				string alias = buddy.Alias;
+				if (alias != null && alias.Length > 0)
+				{
+					p = new Property("Gaim:Alias", alias);
+					p.LocalProperty = true;
+					member.Properties.AddProperty(p);
+
+					member.FN = string.Format("{0} ({1})", alias, machineName);
+				}
 			}
 		}
 
@@ -704,15 +715,15 @@ namespace Simias.Gaim
 
 		private string mapSimiasAttribToGaim(string attributeName)
 		{
-//			switch(attributeName)
-//			{
-//				case "Given":
+			switch(attributeName)
+			{
+				case "Given":
 					return "ScreenName";
-//				case "Family":
-//				case "FN":
-//				default:
-//					return "Alias";
-//			}
+				case "Family":
+				case "FN":
+				default:
+					return "Alias";
+			}
 		}
 		#endregion
 

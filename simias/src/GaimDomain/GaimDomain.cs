@@ -426,17 +426,17 @@ namespace Simias.Gaim
 					}
 
 					string compareString = null;
-//					if (attributeName != null && attributeName == "Alias")
-//					{
-//						// Use the buddy alias (if one exists)
-//						compareString = buddy.Alias;
-//					}
+					if (attributeName != null && attributeName == "Alias")
+					{
+						// Use the buddy alias (if one exists)
+						compareString = buddy.Alias;
+					}
 					
-//					if (compareString == null)
-//					{
+					if (compareString == null)
+					{
 						// Use the screenname
 						compareString = buddy.Name;
-//					}
+					}
 
 					if (compareString != null)
 					{
@@ -843,13 +843,44 @@ namespace Simias.Gaim
 			{
 				if (pList.HasProperty("Gaim:SimiasURL"))
 				{
-					pList.ModifyProperty("Gaim:SimiasURL", simiasURL);
+					Property oldProp = pList.GetSingleProperty("Gaim:SimiasURL");
+					if (!simiasURL.Equals((string)oldProp.Value))
+					{
+						pList.ModifyProperty("Gaim:SimiasURL", simiasURL);
+					}
 				}
 				else
 				{
 					p = new Property("Gaim:SimiasURL", simiasURL);
 					p.LocalProperty = true;
 					member.Properties.AddProperty(p);
+				}
+			}
+
+			// Buddy Alias
+			string alias = buddy.Alias;
+			if (alias != null && alias.Length > 0)
+			{
+				if (pList.HasProperty("Gaim:Alias"))
+				{
+					Property oldProp = pList.GetSingleProperty("Gaim:Alias");
+					if (!alias.Equals((string)oldProp.Value))
+					{
+						pList.ModifyProperty("Gaim:Alias", alias);
+					}
+				}
+				else
+				{
+					p = new Property("Gaim:Alias", alias);
+					p.LocalProperty = true;
+					member.Properties.AddProperty(p);
+				}
+
+				string fullName = string.Format("{0} ({1})", alias, machineName);
+
+				if (member.FN == null || !member.FN.Equals(fullName))
+				{
+					member.FN = fullName;
 				}
 			}
 			
@@ -922,17 +953,17 @@ namespace Simias.Gaim
 			string b1Str;
 			string b2Str;
 			
-//			string alias1 = b1.Alias;
-//			string alias2 = b2.Alias;
+			string alias1 = b1.Alias;
+			string alias2 = b2.Alias;
 			
-//			if (alias1 != null)
-//				b1Str = alias1;
-//			else
+			if (alias1 != null)
+				b1Str = alias1;
+			else
 				b1Str = b1.Name;
 				
-//			if (alias2 != null)
-//				b2Str = alias2;
-//			else
+			if (alias2 != null)
+				b2Str = alias2;
+			else
 				b2Str = b2.Name;
 
 			b1Str = b1Str.ToLower();

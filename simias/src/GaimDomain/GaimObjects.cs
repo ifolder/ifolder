@@ -54,7 +54,7 @@ namespace Simias.Gaim
 		private string accountName = null;
 		private string accountProtocolID = null;
 		private string name = null;
-//		private string alias = null;
+		private string alias = null;
 		private Hashtable simiasInfos;
 		private XmlNode xmlBuddyNode = null;
 
@@ -122,26 +122,26 @@ namespace Simias.Gaim
 			}
 		}
 
-//		/// <summary>
-//		/// Gets the buddy's alias or null if there is none
-//		/// </summary>
-//		public string Alias
-//		{
-//			get
-//			{
-//				if (alias != null) return alias;
-//				
-//				// Parse alias from the xmlBuddyNode
-//				XmlNode node =
-//					xmlBuddyNode.SelectSingleNode("alias/text()");
-//				if (node != null)
-//				{
-//					alias = node.Value;
-//				}
-//				
-//				return alias;
-//			}
-//		}
+		/// <summary>
+		/// Gets the buddy's alias or null if there is none
+		/// </summary>
+		public string Alias
+		{
+			get
+			{
+				if (alias != null) return alias;
+				
+				// Parse alias from the xmlBuddyNode
+				XmlNode node =
+					xmlBuddyNode.SelectSingleNode("alias/text()");
+				if (node != null)
+				{
+					alias = node.Value;
+				}
+				
+				return alias;
+			}
+		}
 
 		public string MungedID
 		{
@@ -353,7 +353,7 @@ namespace Simias.Gaim
 		#region Class Members
 		private string name = null;
 		private string protoID = null;
-//		private string alias = null;
+		private string alias = null;
 		private XmlNode xmlNode = null;
 
 		#endregion
@@ -400,26 +400,26 @@ namespace Simias.Gaim
 			}
 		}
 		
-//		/// <summary>
-//		/// Gets the account Alias if any
-//		/// </summary>
-//		public string Alias
-//		{
-//			get
-//			{
-//				if (alias != null) return alias;
-//				
-//				// Parse alias from the xmlBuddyNode
-//				XmlNode node =
-//					xmlNode.SelectSingleNode("alias/text()");
-//				if (node != null)
-//				{
-//					alias = node.Value;
-//				}
-//				
-//				return alias;
-//			}
-//		}
+		/// <summary>
+		/// Gets the account Alias if any
+		/// </summary>
+		public string Alias
+		{
+			get
+			{
+				if (alias != null) return alias;
+				
+				// Parse alias from the xmlBuddyNode
+				XmlNode node =
+					xmlNode.SelectSingleNode("alias/text()");
+				if (node != null)
+				{
+					alias = node.Value;
+				}
+				
+				return alias;
+			}
+		}
 
 		#endregion
 
