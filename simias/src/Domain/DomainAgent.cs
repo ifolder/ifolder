@@ -446,8 +446,12 @@ namespace Simias.Domain
 
 			Credentials cSimiasCreds = new Credentials(collection.ID);
 			domainService.Credentials = cSimiasCreds.GetCredentials();
+
+			/*
+			 * FIXME:: for now let this go through
 			if (domainService.Credentials == null)
 				throw new ApplicationException("No credentials available for specified collection.");
+			*/
 
 			string rootID = null;
 			string rootName = null;
@@ -485,8 +489,11 @@ namespace Simias.Domain
 
 			Credentials cSimiasCreds = new Credentials(collection.ID);
 			domainService.Credentials = cSimiasCreds.GetCredentials();
+
+			/* FIXME:: 
 			if (domainService.Credentials == null)
 				throw new ApplicationException("No credentials available for specified collection.");
+			*/
 
 			domainService.DeleteMaster(collection.ID);
 		}
