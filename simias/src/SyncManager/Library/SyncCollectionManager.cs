@@ -240,13 +240,15 @@ namespace Simias.Sync
 							nodeName = dirNode.Name;
 						}
 
-						Uri master = dService.CreateMaster(collection.ID, collection.Name, collection.Owner,
+						string uriString = dService.CreateMaster(collection.ID, collection.Name, collection.Owner,
 							nodeID, nodeName);
 
-						if (master == null)
+						if (uriString == null)
 						{
 							throw new ApplicationException("Unable to create remote master collection.");
 						}
+
+						Uri master = new Uri(uriString);
 
 						log.Debug("Master URL from Domain Service: {0}", master);
 
