@@ -47,9 +47,6 @@ namespace Simias.Storage.Tests
 		// Enumerated type to use for property test.
 		private enum TestType { TestType1, TestType2 };
 
-		// Domain to use to test with.
-		private string domainName = "WorkGroup";
-
 		// Object used to access the store.
 		private Store store = null;
 
@@ -77,7 +74,7 @@ namespace Simias.Storage.Tests
 		public void CreateCollectionTest()
 		{
 			// Create a new collection and remember its ID.
-			Collection collection = new Collection( store, "CS_TestCollection", domainName );
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 
 			// Remember the id for later.
 			string ID = collection.ID;
@@ -112,7 +109,7 @@ namespace Simias.Storage.Tests
 		public void CreateChildNodeTest()
 		{
 			// Create the collection.
-			Collection collection = new Collection( store, "CS_TestCollection", domainName );
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 			try
 			{
 				// Create a node subordinate to this collection.
@@ -168,7 +165,7 @@ namespace Simias.Storage.Tests
 		public void SearchTest()
 		{
 			// Create the collection.
-			Collection collection = new Collection( store, "CS_TestCollection", domainName );
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 			try
 			{
 				string s1 = "The quick red fox jumps over the lazy brown dog.";
@@ -492,7 +489,7 @@ namespace Simias.Storage.Tests
 		{
 
 			// Create a collection to add properties to.
-			Collection collection = new Collection( store, "CS_TestCollection", domainName );
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 			try
 			{
 				string ID = collection.ID;
@@ -771,7 +768,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void PropertyMethodsTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", domainName );
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 			try
 			{
 				// First property to add.
@@ -865,7 +862,7 @@ namespace Simias.Storage.Tests
 		[ExpectedException( typeof( InvalidOperationException ) )]
 		public void AddSystemPropertyTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", domainName );
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 			try
 			{
 				// Shouldn't allow this.
@@ -886,7 +883,7 @@ namespace Simias.Storage.Tests
 			string fileData = "How much wood can a woodchuck chuck if a woodchuck could chuck wood?";
 			string rootDir = Path.Combine( Directory.GetCurrentDirectory(), "CS_TestCollection" );
 
-			Collection collection = new Collection( store, "CS_TestCollection", domainName );
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 			try
 			{
 				// Create a node to represent the collection root directory.
@@ -933,8 +930,8 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void AccessControlTest()
 		{
-			Collection collection1 = new Collection( store, "CS_TestCollection1", domainName );
-			Collection collection2 = new Collection( store, "CS_TestCollection2", domainName );
+			Collection collection1 = new Collection( store, "CS_TestCollection1", store.DefaultDomain );
+			Collection collection2 = new Collection( store, "CS_TestCollection2", store.DefaultDomain );
 			Collection collection3;
 
 			try
@@ -1011,7 +1008,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void SerializeTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", domainName );
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 			try
 			{
 				// Commit the collection.
@@ -1050,14 +1047,14 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void GetByNameTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", domainName );
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 			try
 			{
 				// Commit the collection.
 				collection.Commit();
 
 				// Get the collection by name.
-				ICSList list = store.GetCollectionsByName( "CS_Test.*" );
+				ICSList list = store.GetCollectionsByName( "CS_TestCollection" );
 				ICSEnumerator e = list.GetEnumerator() as ICSEnumerator;
 				if ( e.MoveNext() == false )
 				{
@@ -1108,7 +1105,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void AbortTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", domainName );
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 			try
 			{
 				// Commit the collection.
@@ -1140,7 +1137,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void TombstoneTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", domainName );
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 			try
 			{
 				// Create a node.
@@ -1181,7 +1178,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void TestIncarnationValues()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", domainName );
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 			try
 			{
 				// Create a node.
@@ -1272,7 +1269,7 @@ namespace Simias.Storage.Tests
 		{
 			string rootDir = Path.Combine( Directory.GetCurrentDirectory(), "CS_TestCollection" );
 
-			Collection collection = new Collection( store, "CS_TestCollection", domainName );
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 
 			try
 			{
@@ -1318,7 +1315,7 @@ namespace Simias.Storage.Tests
 			Store mergeStore = new Store( new Configuration( basePath ) );
 
 			// Create a collection using the primary store handle.
-			Collection collection = new Collection( store, "CS_TestCollection", domainName );
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 
 			try
 			{
@@ -1444,7 +1441,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void EnumerateNodesTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", domainName );
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 			try
 			{
 				Node[] commitList = { collection,
@@ -1490,7 +1487,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void StoreFileNodeTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", domainName );
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 			try
 			{
 				// Create a file in the file system.
@@ -1551,7 +1548,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void CollisionTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", domainName );
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 			try
 			{
 				// Commit the collection.
@@ -1640,6 +1637,83 @@ namespace Simias.Storage.Tests
 				collection.Commit( collection.Delete() );
 			}
 		}
+
+		/// <summary>
+		/// Tests the GetCollectionBy... methods.
+		/// </summary>
+		[Test]
+		public void GetCollectionByTest()
+		{
+			string userID = Guid.NewGuid().ToString();
+			string domainID = Guid.NewGuid().ToString();
+
+			// Create a new domain.
+			store.AddDomainIdentity( userID, "Oklahoma", domainID ); 
+
+			// Create a whole bunch of collections.
+			Collection[] c = new Collection[ 10 ];
+			for ( int i = 0; i < 10; ++i )
+			{
+				c[ i ] = new Collection( store, String.Format( "{0}", i + 1 ), domainID );
+				c[ i ].Commit();
+			}
+
+			try
+			{
+				string newUserID = Guid.NewGuid().ToString();
+
+				// Add a new member to some of the collections.
+				for ( int i = 0; i < 5; ++i )
+				{
+					Member member = new Member( "cameron", newUserID, Access.Rights.ReadOnly );
+					c[ i ].Commit( member );
+				}
+
+				ICSList list = store.GetCollectionsByUser( newUserID );
+				foreach ( ShallowNode sn in list )
+				{
+					Collection col = new Collection( store, sn );
+					if ( Convert.ToInt32( col.Name, 10 ) > 5 )
+					{
+						throw new ApplicationException( "GetCollectionsByUser() returned wrong collections" );
+					}
+				}
+
+				// Search for all collections in the default domain.
+				list = store.GetCollectionsByDomain( domainID );
+				int count = 0;
+				foreach ( ShallowNode sn in list ) ++count;
+				if ( count != 10 )
+				{
+					throw new ApplicationException( "GetCollectionsByDomain() did not return all of the collections." );
+				}
+
+				// Add some new types.
+				for ( int i = 0; i < 5; ++i )
+				{
+					c[ i * 2 ].SetType( c[ i * 2 ], "TestType" );
+					c[ i * 2 ].Commit();
+				}
+
+				// Search by type.
+				list = store.GetCollectionsByType( "TestType" );
+				count = 0;
+				foreach ( ShallowNode sn in list ) ++count;
+				if ( count != 5 )
+				{
+					throw new ApplicationException( "GetCollectionsByType() did not return all of the collections." );
+				}
+			}
+			finally
+			{
+				for ( int i = 0; i < 10; ++i )
+				{
+					c[ i ].Commit( c[ i ].Delete() );
+				}
+
+				store.DeleteDomainIdentity( domainID );
+			}
+		}
 		#endregion
 
 		#region Test Clean Up
@@ -1650,13 +1724,13 @@ namespace Simias.Storage.Tests
 		public void Cleanup()
 		{
 			// Delete the database.  Must be store owner to delete the database.
-//			store.Delete();
+			store.Delete();
 
 			// Remove the created directory.
 			string dirPath = Path.Combine( Directory.GetCurrentDirectory(), "CollectionStoreTestDir" );
 			if ( Directory.Exists( dirPath ) )
 			{
-//				Directory.Delete( dirPath, true );
+				Directory.Delete( dirPath, true );
 			}
 		}
 		#endregion
