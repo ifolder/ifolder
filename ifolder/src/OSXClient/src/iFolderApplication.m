@@ -31,6 +31,7 @@
 #import "Simias.h"
 #import "SimiasEventData.h"
 #import "SMEvents.h"
+#import "iFolderNotificationController.h"
 
 
 @implementation iFolderApplication
@@ -64,7 +65,6 @@
 	NSLog(@"Starting Simias Process");
 	[ [Simias getInstance] start];
 //	[self startSimiasThread:self];
-
 
 	ifolderdata = [[iFolderData alloc] init];
 }
@@ -128,7 +128,6 @@
 {
 	SimiasEventInitialize();
 }
-
 
 
 
@@ -581,6 +580,9 @@
  			// need to in case of a new iFolder
 			[[iFolderData sharedInstance] 
 								readiFolder:[colNodeEvent collectionID]];
+
+			[iFolderNotificationController newiFolderNotification:nil];
+
 			break;
 		}
 		case NODE_DELETED:
@@ -633,6 +635,7 @@
 									readAvailableiFolder:[subNodeEvent nodeID]
 									inCollection:[subNodeEvent collectionID]];
 //			if(ifolder != nil) trigger some event
+			[iFolderNotificationController newiFolderNotification:nil];
 			break;
 		}
 		case NODE_DELETED:
@@ -955,6 +958,10 @@
 	}
 	[fse release];
 }
+
+
+
+
 
 
 
