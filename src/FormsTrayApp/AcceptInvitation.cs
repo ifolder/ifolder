@@ -270,11 +270,13 @@ namespace Novell.FormsTrayApp
 					}
 					catch (WebException ex)
 					{
+						// TODO: Localize
 						MessageBox.Show("An exception occurred while validating the path.\n\n" + ex.Message, "Path Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					}
 					catch (Exception ex)
 					{
-						// TODO:
+						// TODO: Localize
+						MessageBox.Show("An exception occurred while validating the path.\n\n" + ex.Message, "Path Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					}
 
 					// Restore the cursor.
@@ -283,6 +285,7 @@ namespace Novell.FormsTrayApp
 					if (isPathInvalid)
 					{
 						// The directory is under an existing iFolder ... 
+						// TODO: Localize
 						MessageBox.Show("The location selected for the new iFolder is below an existing iFolder and cannot be used.  Please select a new location.", "Invalid Directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
 						iFolderLocation.Focus();
 
@@ -298,11 +301,15 @@ namespace Novell.FormsTrayApp
 						}
 						catch (WebException ex)
 						{
+							// TODO: Localize
 							MessageBox.Show("An exception occurred while accepting the invitation.\n\n" + ex.Message, "Accept Error");
+							successful = false;
 						}
 						catch (Exception ex)
 						{
-							// TODO:
+							// TODO: Localize
+							MessageBox.Show("An exception occurred while accepting the invitation.\n\n" + ex.Message, "Accept Error");
+							successful = false;
 						}
 					}
 				}

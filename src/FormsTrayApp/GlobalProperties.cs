@@ -1232,7 +1232,8 @@ namespace Novell.FormsTrayApp
 			}
 			catch
 			{
-				// TODO: display message
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while reading the iFolders.", "iFolder Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 
 			iFolderView.EndUpdate();
@@ -1250,13 +1251,10 @@ namespace Novell.FormsTrayApp
 			{
 				ifWebService.SynciFolderNow(iFolderID);
 			}
-			catch (WebException ex)
+			catch
 			{
-				// TODO:
-			}
-			catch (Exception ex)
-			{
-				// TODO:
+				// TODO: Localize.
+				MessageBox.Show("An error was encountered while sending the sync command.");
 			}
 		}
 		#endregion
@@ -1284,7 +1282,6 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				// TODO: first-time connect takes a while ... display some sort of status message.
 				iFolderSettings ifSettings = ifWebService.GetSettings();
 				currentUserID = ifSettings.CurrentUserID;
 				displayConfirmation.Checked = ifSettings.DisplayConfirmation;
@@ -1334,12 +1331,13 @@ namespace Novell.FormsTrayApp
 			}
 			catch (WebException ex)
 			{
-				// TODO: display message
-				//MessageBox.Show(ex.Message);
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while reading iFolder data.");
 			}
 			catch (Exception ex)
 			{
-				// TODO: display message.
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while reading iFolder data.");
 			}
 		}
 
@@ -1468,12 +1466,8 @@ namespace Novell.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				// TODO: this needs to be updated.
-				if (ifolder == null)
-				{
-					MessageBox.Show("The selected iFolder is no longer valid and will be removed from the list.");
-					iFolderView.Items.Remove(lvi);
-				}
+				// TODO: Localize
+				MessageBox.Show("Unable to open iFolder: " + ifolder.Name);
 			}
 		}
 
@@ -1502,11 +1496,13 @@ namespace Novell.FormsTrayApp
 			}
 			catch (WebException ex)
 			{
-				// TODO: Display message.
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while reverting the iFolder.");
 			}
 			catch (Exception ex)
 			{
-				// TODO: Display message.
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while reverting the iFolder.");
 			}
 
 			Cursor.Current = Cursors.Default;
@@ -1568,11 +1564,13 @@ namespace Novell.FormsTrayApp
 					}
 					catch (WebException ex)
 					{
-						// TODO: Display message.
+						// TODO: Localize
+						MessageBox.Show("An error was encountered while creating the iFolder.");
 					}
 					catch (Exception ex)
 					{
-						// TODO: Display message.
+						// TODO: Localize
+						MessageBox.Show("An error was encountered while creating the iFolder.");
 					}
 				}
 				else
@@ -1613,11 +1611,13 @@ namespace Novell.FormsTrayApp
 			}
 			catch (WebException ex)
 			{
-				// TODO:
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while removing the subscription.");
 			}
 			catch (Exception ex)
 			{
-				// TODO:
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while removing the subscription.");
 			}
 		}
 		#endregion
