@@ -278,14 +278,17 @@ namespace Simias.Sync.Client
 			table.Clear();
 			sizeToSync = 0;
 			HashData[] serverHashMap = serverFile.GetHashMap(BlockSize);
+			long[] fileMap;
 			if (serverHashMap == null)
 			{
-				return new long[0];
+				fileMap = new long[1];
+				fileMap[0] = -1;
+				return fileMap;
 			}
 			
 			sizeToSync = BlockSize * serverHashMap.Length;
 			table.Add(serverHashMap);
-			long[] fileMap = new long[serverHashMap.Length];
+			fileMap = new long[serverHashMap.Length];
 
 			int				bytesRead = BlockSize * 16;
 			byte[]			buffer = new byte[BlockSize * 16];
