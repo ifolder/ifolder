@@ -17,6 +17,8 @@
 				3E81105E076FF18700E96819,
 				3E81105F076FF18700E96819,
 				3E811060076FF18700E96819,
+				3E9B1B01077927E20072994B,
+				3E9B1B02077927E20072994B,
 			);
 			isa = PBXGroup;
 			name = Classes;
@@ -165,6 +167,8 @@
 				3EF2210D0768180B00EE2EF6,
 				3EF2212D07681AA400EE2EF6,
 				3E941E2007737E760007CAA7,
+				3E9B1ADD077921E20072994B,
+				3E9B1ADF077921EC0072994B,
 			);
 			isa = PBXGroup;
 			name = Resources;
@@ -499,6 +503,62 @@
 			settings = {
 			};
 		};
+		3E9B1ADD077921E20072994B = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			path = ifolder24.png;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		3E9B1ADE077921E20072994B = {
+			fileRef = 3E9B1ADD077921E20072994B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E9B1ADF077921EC0072994B = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			path = ifolderonserver24.png;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		3E9B1AE0077921EC0072994B = {
+			fileRef = 3E9B1ADF077921EC0072994B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E9B1B01077927E20072994B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SetupiFolderSheetController.m;
+			path = src/SetupiFolderSheetController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E9B1B02077927E20072994B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SetupiFolderSheetController.h;
+			path = src/SetupiFolderSheetController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E9B1B03077927E20072994B = {
+			fileRef = 3E9B1B01077927E20072994B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E9B1B04077927E20072994B = {
+			fileRef = 3E9B1B02077927E20072994B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3EAEF5050769104900B98AF6 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -644,6 +704,9 @@
 				3E52896C0774F9FA0064F585,
 				3E52896E0774F9FA0064F585,
 				3E528C3307754B8E0064F585,
+				3E9B1ADE077921E20072994B,
+				3E9B1AE0077921EC0072994B,
+				3E9B1B04077927E20072994B,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -670,6 +733,7 @@
 				3E52896D0774F9FA0064F585,
 				3E52896F0774F9FA0064F585,
 				3E528C3407754B8E0064F585,
+				3E9B1B03077927E20072994B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

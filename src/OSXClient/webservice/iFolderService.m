@@ -236,6 +236,53 @@ void cleanup_gsoap(struct soap *pSoap);
 
 
 
+-(iFolder *) AcceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)DomainID toPath:(NSString *)localPath
+{
+	iFolder *ifolder = nil;
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (localPath != nil), @"Path was nil");
+	NSAssert( (DomainID != nil), @"DomainID was nil");
+	NSAssert( (iFolderID != nil), @"DomainID was nil");
+
+	struct _ns1__AcceptiFolderInvitation acceptiFolderMessage;
+	struct _ns1__AcceptiFolderInvitationResponse acceptiFolderResponse;
+	
+	acceptiFolderMessage.iFolderID = (char *)[iFolderID cString];
+	acceptiFolderMessage.DomainID = (char *)[DomainID cString];
+	acceptiFolderMessage.LocalPath = (char *)[localPath cString];
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__AcceptiFolderInvitation(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &acceptiFolderMessage,
+            &acceptiFolderResponse);
+
+    if (err_code == SOAP_OK)
+    {
+		ifolder = [ [iFolder alloc] init];
+		
+		struct ns1__iFolderWeb *curiFolder;
+			
+		curiFolder = acceptiFolderResponse.AcceptiFolderInvitationResult;
+		[ifolder setgSOAPProperties:curiFolder];
+    }
+	else
+	{
+		[NSException raise:@"AcceptiFolderInvitation:inDomain" format:@"An error happened when calling AcceptiFolderInvitation:inDomain"];
+	}
+
+    cleanup_gsoap(&soap);
+
+	return ifolder;
+}
+
+
+
+
 void init_gsoap(struct soap *pSoap)
 {
 	soap_init(pSoap);
