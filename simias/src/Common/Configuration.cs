@@ -120,10 +120,27 @@ namespace Simias
 				// If the file does not exist look for defaults.
 				if (!File.Exists(ConfigFilePath))
 				{
-					string bootStrapFile = Path.Combine(SimiasSetup.sysconfdir, DefaultFileName);
-					if (File.Exists(bootStrapFile))
+					string bootStrapDir = null;
+					if (Simias.MyEnvironment.Platform == Simias.MyPlatformID.Windows)
 					{
-						File.Copy(bootStrapFile, ConfigFilePath);
+						// On Windows, use directory from which process was started
+						bootStrapDir = System.Environment.CurrentDirectory;
+					}
+					else
+					{
+						// Else, use sysconfdir
+						bootStrapDir = SimiasSetup.sysconfdir;
+					}
+					string bootStrapPath = Path.Combine(bootStrapDir, DefaultFileName);
+#if DEBUG
+                    Console.WriteLine("bootStrapPath=" + bootStrapPath);
+#endif
+					if (File.Exists(bootStrapPath))
+					{
+#if DEBUG
+                        Console.WriteLine("Copy " + bootStrapPath + " to " + ConfigFilePath);
+#endif
+						File.Copy(bootStrapPath, ConfigFilePath);
 					}
 					else
 					{
@@ -395,9 +412,9 @@ namespace Simias
 		}
 
 		/// <summary>
-		/// Opens the event log file, retrying if the file is currently in use.
+		/// Opens the configuration file, retrying if the file is currently in use.
 		/// </summary>
-		/// <returns>A FileStream object associated with the event log file.</returns>
+		/// <returns>A FileStream object associated with the configuration file.</returns>
 		private void OpenConfigFile()
 		{
 			FileStream fsLocal = null;
@@ -409,7 +426,7 @@ namespace Simias
 				{
 					try
 					{
-						// Open the log file.
+						// Open the configuration file.
 						fsLocal = new FileStream( ConfigFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None );
 					}
 					catch ( IOException )
