@@ -7,7 +7,7 @@ endif
 
 iFolderApp_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/FormsTrayApp.cs $(srcdir)/GlobalProperties.cs $(srcdir)/iFolderAppInstallerClass.cs $(srcdir)/ServerInfo.cs $(srcdir)/NotifyIconBalloonTip.cs $(srcdir)/BalloonType.cs $(srcdir)/iFolderMigration.cs $(srcdir)/AcceptInvitation.cs
 iFolderApp_CSFILES_CSC := $(subst /,$(SEP),$(iFolderApp_CSFILES))
-iFolderApp_INCLUDES = 
+iFolderApp_INCLUDES =
 iFolderApp_RESOURCES = $(srcdir)/App$(ICON_EXT)
 iFolderApp_FLAGS = $(CSC_WINEXEFLAG)
 iFolderApp_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Novell.iFolder.dll iFolderComponent.dll
@@ -19,7 +19,7 @@ RESX_FILES = FormsTrayApp.resx GlobalProperties.resx
 
 PROJECT_FILES = $(srcdir)/FormsTrayApp.csproj $(srcdir)/FormsTrayApp.sln
 
-EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFolderApp.exe.manifest $(PROJECT_FILES)
+EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFolderApp.exe.manifest $(PROJECT_FILES) iFolderApp.exe.config
 
 all: iFolderApp.exe
 
@@ -35,7 +35,7 @@ endif
 install-exec-local: iFolderApp.exe $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)/res
-	$(INSTALL_PROGRAM) iFolderApp.exe iFolderApp.exe.manifest $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) iFolderApp.exe iFolderApp.exe.manifest iFolderApp.exe.config $(DEBUG_FILES) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(DATA_FILES) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(RES_FILES) $(DESTDIR)$(bindir)/res
 	if test -f "$(DESTDIR)$(bindir)/iFolderApp.exe"; then \
@@ -46,12 +46,12 @@ if DEBUG
 	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(bindir)
 endif
 endif
-     
+
 uninstall-local:
 	if test -f "$(DESTDIR)$(bindir)/iFolderApp.exe"; then \
 		$(INSTALLUTIL) /uninstall /LogToConsole=false /ShowCallStack /LogFile=iFolderApp.UninstallLog `cygpath --windows "$(DESTDIR)$(bindir)/iFolderApp.exe"`; \
 	fi
-	cd $(DESTDIR)$(bindir); rm -f iFolderApp.exe iFolderApp.exe.manifest $(DEBUG_FILES)
+	cd $(DESTDIR)$(bindir); rm -f iFolderApp.exe iFolderApp.exe.manifest iFolderApp.exe.config $(DEBUG_FILES)
 	cd $(DESTDIR)$(bindir); rm -f $(DATA_FILES)
 	cd $(DESTDIR)$(bindir)/res; rm -f $(RES_FILES:res/%=%) ifolder-banner.png
 if WINDOWS
@@ -59,13 +59,13 @@ if DEBUG
 	cd $(DESTDIR)$(bindir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)
 endif
 endif
-     
+
 CLEAN_FILES = iFolderApp.exe iFolderApp.doc.xml
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
 	rm -f *Log
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 
