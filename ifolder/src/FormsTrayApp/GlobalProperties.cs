@@ -1273,7 +1273,7 @@ namespace Novell.FormsTrayApp
 				//	- iFolder that has been requested.
 				//	- iFolder that has been invited. (Invitation.ico?)
 				this.iFolderView.SmallImageList = new ImageList();
-				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico")));
+				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder.ico")));
 				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\serverifolder.ico")));
 				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolderconflict.ico")));
 			}
