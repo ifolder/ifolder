@@ -286,6 +286,7 @@ case $IFOLDER_OS in
         REPORT_DIR='$(shell cygpath --windows $(DESTDIR)$(bindir) | sed ''s,\\\\,/,g'')'
         REPORT_EXE='$(top_srcdir)/tools/Report/Report.exe'
         RES_EXT='.res'
+	RESG='resgen'
         SEP='$(EMPTY)\\$(EMPTY)'
         SHARED_LIB_EXT='.dll'
         SHARED_LIB_FLAG='-dll'
@@ -332,6 +333,7 @@ AC_SUBST(RCFLAGS)
 AC_SUBST(REPORT_DIR)
 AC_SUBST(REPORT_EXE)
 AC_SUBST(RES_EXT)
+AC_SUBST(RESG)
 AC_SUBST(SEP)
 AC_SUBST(SHARED_LIB_FLAG)
 AC_SUBST(SYSTEM_XML)

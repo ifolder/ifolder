@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "WinExe"
                 PreBuildEvent = ""
-                PostBuildEvent = 'copy ifolderapp.exe "c:\program files\ifolder"&#xd;&#xa;copy ifolderapp.pdb "c:\program files\ifolder"'
+                PostBuildEvent = ""
                 RootNamespace = "TrayApp"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
