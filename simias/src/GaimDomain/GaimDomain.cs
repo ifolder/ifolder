@@ -102,6 +102,29 @@ namespace Simias.Gaim
 
 		#region Constructors
 		
+		/// FIXME: Modify this domain so that it is NOT created if
+		/// the user does not have Gaim installed/configured/etc.  The
+		/// Gaim domain should only be created if the user has it installed
+		/// and has a prpl-oscar account setup in .gaim/accounts.xml.
+		/// Once this is verified, create the domain inside the Sync
+		/// code using the prpl-oscar username as the domain owner.
+		/// Build the Gaim Domain Member List from .gaim/blist.xml.
+		///
+		/// The Gaim Plugin needs to be modified so that it populates
+		/// location information of the buddy into .gaim/blist.xml.  Then,
+		/// when the LocationProvider is asked for location information
+		/// about a buddy, the LocationProvider just parses blist.xml for
+		/// the information.
+		///
+		/// The Gaim Plugin needs to be modified so that it is able to
+		/// read AIM buddy profiles and search for an iFolder Plugin ID
+		/// in an HTML comment.  A prerequisite is that the profile
+		/// information should be set on the remote side to add in the
+		/// hidden HTML comment.  If the buddy is determined to have the
+		/// iFolder Plugin installed, then at buddy signon, we should
+		/// send special messages to retrieve the buddy's POBoxURL and
+		/// then store this as extra information in .gaim/blist.xml.
+		
 		/// <summary>
 		/// Constructor for creating a new Gaim Domain object.
 		/// </summary>
