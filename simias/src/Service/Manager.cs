@@ -50,7 +50,7 @@ namespace Simias.Service
 		private Configuration conf;
 		XmlElement servicesElement;
 		ArrayList serviceList = new ArrayList();
-		Mutex serviceMutex = null;
+		// Mutex serviceMutex = null;
 		const string CFG_Section = "ServiceManager";
 		const string CFG_Services = "Services";
 		const string XmlServiceTag = "Service";
@@ -90,11 +90,11 @@ namespace Simias.Service
 
 			lock (this)
 			{
-				string mutexName = MutexBaseName + conf.StorePath.GetHashCode().ToString();
-				Mutex mutex = new Mutex(false, mutexName);
-				if (serviceMutex != null || mutex.WaitOne(200, false))
+				// string mutexName = MutexBaseName + conf.StorePath.GetHashCode().ToString();
+				// Mutex mutex = new Mutex(false, mutexName);
+				// if (serviceMutex != null || mutex.WaitOne(200, false))
 				{
-					serviceMutex = mutex;
+					// serviceMutex = mutex;
 					this.conf = conf;
 
 					ServiceDelegate += new ServiceEvent(messageDispatcher);
@@ -118,12 +118,12 @@ namespace Simias.Service
 					}
 					installDefaultServices();
 				}
-				else
-				{
-					mutex.Close();
-					serviceList.Clear();
-					throw new ApplicationException("Services Already running");
-				}
+				// else
+				// {
+				//	mutex.Close();
+				//	serviceList.Clear();
+				//	throw new ApplicationException("Services Already running");
+				//}
 			}
 		}
 
