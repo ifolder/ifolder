@@ -193,7 +193,7 @@ namespace Simias.Gaim
 				//
 				
 				Simias.Storage.Domain gaimDomain =
-					this.GetGaimDomain(true, ldbMember.ID);
+					this.GetDomain(true, ldbMember.ID);
 					
 				if (gaimDomain == null)
 				{
@@ -202,56 +202,10 @@ namespace Simias.Gaim
 				}
 
 				//
-				// Verify/Create the Gaim Domain Roster
-				//				
-				Simias.Storage.Roster gaimDomainRoster = null;
-				Member rMember;
-				ArrayList changeList = new ArrayList();
-				
-				try
-				{
-					gaimDomainRoster = gaimDomain.Roster;
-				}
-				catch{}
-				if (gaimDomainRoster == null)
-				{
-					//
-					// Create an empty roster for the Gaim Domain
-					//
-					gaimDomainRoster = new Roster(store, gaimDomain);
-					rMember = new Member(ldbMember.Name, ldbMember.ID,
-										 Access.Rights.Admin);
-					rMember.IsOwner = true;
-					changeList.Add(rMember);
-					
-					//
-					// Make sure this is an Address Book
-					//
-					gaimDomainRoster.SetType(gaimDomainRoster, "AB:AddressBook");
-
-					changeList.Add(gaimDomainRoster);
-				}
-				else
-				{
-					// Make sure the member exists
-					rMember = gaimDomainRoster.GetMemberByID(ldbMember.ID);
-					if (rMember == null)
-					{
-						rMember = new Member(ldbMember.Name, ldbMember.ID,
-											 Access.Rights.Admin);
-						rMember.IsOwner = true;
-						changeList.Add(rMember);
-					}
-				}
-				
-				gaimDomainRoster.Commit(changeList.ToArray(typeof(Node)) as Node[]);
-
-
-				//
 				// Verify the POBox for the local SimpleServer owner
 				//
 
-				Member pMember;
+//				Member pMember;
 				Simias.POBox.POBox poBox = null;
 				string poBoxName = "POBox:" + gaimDomain.ID + ":" + ldbMember.ID;
 
@@ -265,22 +219,23 @@ namespace Simias.Gaim
 					poBox = new Simias.POBox.POBox( store, poBoxName, gaimDomain.ID );
 					poBox.CreateMaster = false;
 
-					pMember = 
-						new Member( ldbMember.Name, ldbMember.ID, Access.Rights.ReadWrite );
-					pMember.IsOwner = true;
-					poBox.Commit(new Node[] { poBox, pMember });
+//					pMember = 
+//						new Member( ldbMember.Name, ldbMember.ID, Access.Rights.ReadWrite );
+//					pMember.IsOwner = true;
+//					poBox.Commit(new Node[] { poBox, pMember });
+					poBox.Commit(new Node[] { poBox });
 				}
 				else
 				{
 					// verify member in POBox
-					pMember = poBox.GetMemberByID( ldbMember.ID );
-					if (pMember == null)
-					{
-						pMember = 
-							new Member( ldbMember.Name, ldbMember.ID, Access.Rights.ReadWrite );
-						pMember.IsOwner = true;
-						poBox.Commit(new Node[] { pMember });
-					}
+//					pMember = poBox.GetMemberByID( ldbMember.ID );
+//					if (pMember == null)
+//					{
+//						pMember = 
+//							new Member( ldbMember.Name, ldbMember.ID, Access.Rights.ReadWrite );
+//						pMember.IsOwner = true;
+//						poBox.Commit(new Node[] { pMember });
+//					}
 				}
 			}
 			catch(Exception e1)
@@ -303,7 +258,7 @@ namespace Simias.Gaim
 		/// If the the domain does not exist and the create flag is true
 		/// the domain will be created.  If create == false, ownerID is ignored
 		/// </summary>
-		public Simias.Storage.Domain GetGaimDomain( bool create, string ownerID )
+		public Simias.Storage.Domain GetDomain( bool create, string ownerID )
 		{
 			//
 			//  Check if the Gaim Domain exists in the store
@@ -332,23 +287,27 @@ namespace Simias.Gaim
 					string id = Guid.NewGuid().ToString();
 					Uri localUri = Manager.LocalServiceUrl;
 
-					gaimDomain =
-						store.AddDomainIdentity(
-							ownerID,
-							this.domainName,
-							id, 
-							this.description,
-							localUri,
-							Simias.Sync.SyncRoles.Master );
+					gaimDomain = new Simias.Storage.Domain(store, this.domainName, id,
+														   this.description,
+														   Simias.Sync.SyncRoles.Master,
+														   localUri);
+					Member domainOwner = new Member("GaimDomainOwner", ownerID, Access.Rights.Admin);
+					domainOwner.IsOwner = true;
 
-					if ( gaimDomain != null )
-					{
-						Property p = new Property( "GaimDomain", true );
-						p.LocalProperty = true;
-						gaimDomain.Properties.ModifyProperty( p );
-						store.GetDatabaseObject().Commit( gaimDomain );
-						this.id = gaimDomain.ID;
-					}
+					Property p = new Property( "GaimDomain", true );
+					p.LocalProperty = true;
+					gaimDomain.Properties.AddProperty( p );
+
+					gaimDomain.Commit(new Node[] {gaimDomain, domainOwner});
+
+					store.AddDomainIdentity(this.id, ownerID);
+
+					//
+					// Make sure this is an Address Book
+					//
+					gaimDomain.SetType(gaimDomain, "AB:AddressBook");
+
+					this.id = gaimDomain.ID;
 				}
 			}
 			catch(Exception ggd)
@@ -361,30 +320,6 @@ namespace Simias.Gaim
 		}
 
 
-
-		/// <summary>
-		/// Method to get the Gaim Domain Roster
-		/// </summary>
-		public Simias.Storage.Roster GetGaimRoster()
-		{
-
-			Simias.Storage.Domain gaimDomain = GetGaimDomain( false, "" );
-			
-			if (gaimDomain == null)
-			{
-				log.Error("GetGaimRoster(): The Gaim Domain does not exist");
-				return null;
-			}
-
-			Simias.Storage.Roster gaimDomainRoster = null;
-			try
-			{
-				gaimDomainRoster = gaimDomain.Roster;
-			}
-			catch{}
-			
-			return gaimDomainRoster;
-		}
 
 		/// <summary>
 		/// Synchronize the Gaim Domain members to the Simias member list

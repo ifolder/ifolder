@@ -50,16 +50,6 @@ namespace Simias.Domain
 		public string ID;
 
 		/// <summary>
-		/// Domain Roster (Member List) Collection ID
-		/// </summary>
-		public string RosterID;
-
-		/// <summary>
-		/// Domain Roster (Member List) Collection Name
-		/// </summary>
-		public string RosterName;
-
-		/// <summary>
 		/// Constructor
 		/// </summary>
 		public GaimDomainInfo()
@@ -80,8 +70,6 @@ namespace Simias.Domain
 			builder.AppendFormat("  ID               : {0}{1}", this.ID, newLine);
 			builder.AppendFormat("  Name             : {0}{1}", this.Name, newLine);
 			builder.AppendFormat("  Description      : {0}{1}", this.Description, newLine);
-			builder.AppendFormat("  Roster ID        : {0}{1}", this.RosterID, newLine);
-			builder.AppendFormat("  Roster Name      : {0}{1}", this.RosterName, newLine);
 
 			return builder.ToString();
 		}

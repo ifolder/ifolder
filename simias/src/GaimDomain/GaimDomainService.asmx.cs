@@ -69,7 +69,7 @@ namespace Simias.Gaim.DomainService
 		{
 			// domain
 			Simias.Gaim.GaimDomain gaimDomain = new Simias.Gaim.GaimDomain( false );
-			Simias.Storage.Domain domain = gaimDomain.GetGaimDomain( false, "" );
+			Simias.Storage.Domain domain = gaimDomain.GetDomain( false, "" );
 			if ( domain == null )
 			{
 				throw new SimiasException( "Gaim domain does not exist" );
@@ -80,23 +80,25 @@ namespace Simias.Gaim.DomainService
 			info.Name = domain.Name;
 			info.Description = domain.Description;
 			
-			info.RosterID = domain.Roster.ID;
-			info.RosterName = domain.Roster.Name;
-
 			return info;
 		}
 
-		internal Member FindBuddyInRoster(Simias.Storage.Roster roster, string accountName,
+		internal Member FindBuddyInDomain(Simias.Gaim.GaimDomain gaimDomain, string accountName,
 										  string accountProto, string buddyName)
 		{
+			Simias.Storage.Domain domain = gaimDomain.GetDomain(false, null);
+			if (domain == null) {
+				throw new SimiasException("Could not get Simias.Storage.Domain from GaimDomain!");
+			}
+		
 			// Check to see if the buddy already exists
 			Member member = null;
 			string buddyMungedID = GetGaimMungedID(accountName, accountProto, buddyName);
-			ICSList rosterMembers = roster.GetNodesByName(buddyName);
-			foreach (ShallowNode sNode in rosterMembers)
+			ICSList domainMembers = domain.GetNodesByName(buddyName);
+			foreach (ShallowNode sNode in domainMembers)
 			{
 				Simias.Storage.Member aMember =	
-					new Simias.Storage.Member(roster, sNode);
+					new Simias.Storage.Member(domain, sNode);
 					
 				Simias.Storage.PropertyList pList = aMember.Properties;
 				Simias.Storage.Property p = pList.GetSingleProperty("Gaim:MungedID");
@@ -128,25 +130,26 @@ namespace Simias.Gaim.DomainService
 				throw new SimiasException("Gaim Domain does not exist!");
 			}
 
-			Simias.POBox.POBox poBox = gaimDomain.GetGaimPOBox();
+//			Simias.POBox.POBox poBox = gaimDomain.GetGaimPOBox();
 			
-			if (poBox != null) {
-				if (poBox.ID == null) {
-					System.Console.WriteLine("poBox.ID is null");
-					return null;
-				} else {
-					System.Console.WriteLine("poBox.ID = {0}", poBox.ID);
-					return poBox.ID;
-				}
-			} else {
-				System.Console.WriteLine("poBox is null!");
-				return null;
-			}
+//			if (poBox != null) {
+//				if (poBox.ID == null) {
+//					System.Console.WriteLine("poBox.ID is null");
+//					return null;
+//				} else {
+//					System.Console.WriteLine("poBox.ID = {0}", poBox.ID);
+//					return poBox.ID;
+//				}
+//			} else {
+//				System.Console.WriteLine("poBox is null!");
+//				return null;
+//			}
+			return null;
 		}
 
 		/// <summary>
-		/// Adds a new Buddy to the Gaim Domain Roster.  If the buddy already
-		/// exists, any modified information will be updated in the roster.
+		/// Adds a new Buddy to the Gaim Domain.  If the buddy already
+		/// exists, any modified information will be updated in the domain.
 		/// </summary>
 		/// <param name="acountName">The Gaim account name (local user's screenname).</param>
 		/// <param name="accountProto">The Gaim account protocol (i.e., prpl-oscar).</param>
@@ -165,17 +168,17 @@ namespace Simias.Gaim.DomainService
 				throw new SimiasException("Gaim Domain does not exist!");
 			}
 			
-			Simias.Storage.Roster gaimRoster = gaimDomain.GetGaimRoster();
-			if (gaimRoster == null)
+			Simias.Storage.Domain domain = gaimDomain.GetDomain(false, null);
+			if (domain == null)
 			{
-				throw new SimiasException("Gaim Roster does not exist!");
+				throw new SimiasException("Could not get Simias.Storage.Domain from GaimDomain!");
 			}
-
+			
 			// Check to see if the buddy already exists
-			Member member = FindBuddyInRoster(gaimRoster, accountName, accountProto, buddyName);
+			Member member = FindBuddyInDomain(gaimDomain, accountName, accountProto, buddyName);
 			if (member != null)
 			{
-				UpdateGaimBuddy(member, gaimRoster, alias, ipAddr, ipPort);
+				UpdateGaimBuddy(member, gaimDomain, alias, ipAddr, ipPort);
 				return;
 			}
 
@@ -227,11 +230,11 @@ namespace Simias.Gaim.DomainService
 			}
 			
 			// Commit the changes
-			gaimRoster.Commit(member);
+			domain.Commit(member);
 		}
 
 		/// <summary>
-		/// Removes a buddy from the Gaim Domain Roster and from any
+		/// Removes a buddy from the Gaim Domain and from any
 		/// collections the buddy is a member of.
 		/// </summary>
 		/// <param name="acountName">The Gaim account name (local user's screenname).</param>
@@ -247,18 +250,18 @@ namespace Simias.Gaim.DomainService
 				throw new SimiasException("Gaim Domain does not exist!");
 			}
 			
-			Simias.Storage.Roster gaimRoster = gaimDomain.GetGaimRoster();
-			if (gaimRoster == null)
+			Simias.Storage.Domain domain = gaimDomain.GetDomain(false, null);
+			if (domain == null)
 			{
-				throw new SimiasException("Gaim Roster does not exist!");
+				throw new SimiasException("Could not get Simias.Storage.Domain from GaimDomain!");
 			}
-
+			
 			// Check to see if the buddy already exists
-			Member member = FindBuddyInRoster(gaimRoster, accountName, accountProto, buddyName);
+			Member member = FindBuddyInDomain(gaimDomain, accountName, accountProto, buddyName);
 			if (member != null)
 			{
-				gaimRoster.Delete(member);
-				gaimRoster.Commit();
+				domain.Delete(member);
+				domain.Commit();
 			}
 			else
 			{
@@ -266,10 +269,16 @@ namespace Simias.Gaim.DomainService
 			}
 		}
 		
-		internal void UpdateGaimBuddy(Member member, Roster roster, string alias, string ipAddr, string ipPort)
+		internal void UpdateGaimBuddy(Member member, Simias.Gaim.GaimDomain gaimDomain, string alias, string ipAddr, string ipPort)
 		{
 			Simias.Storage.PropertyList pList = member.Properties;
 			Simias.Storage.Property p;
+			
+			Simias.Storage.Domain domain = gaimDomain.GetDomain(false, null);
+			if (domain == null)
+			{
+				throw new SimiasException("Could not get Simias.Storage.Domain from GaimDomain!");
+			}
 			
 			// Buddy Alias
 			if (alias != null && alias.Length > 0)
@@ -317,7 +326,7 @@ namespace Simias.Gaim.DomainService
 			}
 			
 			// Commit the changes
-			roster.Commit(member);
+			domain.Commit(member);
 		}
 		
 		/// <summary>
@@ -340,16 +349,10 @@ namespace Simias.Gaim.DomainService
 				throw new SimiasException("Gaim Domain does not exist!");
 			}
 			
-			Simias.Storage.Roster gaimRoster = gaimDomain.GetGaimRoster();
-			if (gaimRoster == null)
-			{
-				throw new SimiasException("Gaim Roster does not exist!");
-			}
-
-			Member member = FindBuddyInRoster(gaimRoster, accountName, accountProto, buddyName);
+			Member member = FindBuddyInDomain(gaimDomain, accountName, accountProto, buddyName);
 			if (member != null)
 			{
-				UpdateGaimBuddy(member, gaimRoster, alias, ipAddr, ipPort);
+				UpdateGaimBuddy(member, gaimDomain, alias, ipAddr, ipPort);
 				return;
 			}
 			else
@@ -359,7 +362,7 @@ namespace Simias.Gaim.DomainService
 		}
 		
 		/// <summary>
-		/// Get all the users in the Gaim Domain Roster
+		/// Get all the users in the Gaim Domain
 		/// </summary>
 		[WebMethod(Description="GetAllBuddies")]
 		[SoapDocumentMethod]
@@ -372,17 +375,17 @@ namespace Simias.Gaim.DomainService
 				throw new SimiasException("Gaim Domain does not exist!");
 			}
 			
-			Simias.Storage.Roster gaimRoster = gaimDomain.GetGaimRoster();
-			if (gaimRoster == null)
+			Simias.Storage.Domain domain = gaimDomain.GetDomain(false, null);
+			if (domain == null)
 			{
-				throw new SimiasException("Gaim Roster does not exist!");
+				throw new SimiasException("Could not get Simias.Storage.Domain from GaimDomain!");
 			}
-
-			ICSList rosterMembers = gaimRoster.GetMemberList();
-			foreach (ShallowNode sNode in rosterMembers)
+			
+			ICSList domainMembers = domain.GetMemberList();
+			foreach (ShallowNode sNode in domainMembers)
 			{
 				Simias.Storage.Member member =	
-					new Simias.Storage.Member(gaimRoster, sNode);
+					new Simias.Storage.Member(domain, sNode);
 
 				GaimBuddy buddy = new GaimBuddy(member);
 				buddies.Add(buddy);
