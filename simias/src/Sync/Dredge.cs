@@ -775,7 +775,7 @@ namespace Simias.Sync
 		{
 			string fullPath = e.FullPath;
 
-			if (isSyncFile(fullPath))
+			if (isSyncFile(e.Name))
 				return;
 			
 			lock (changes)
@@ -808,7 +808,7 @@ namespace Simias.Sync
 		{
 			string fullPath = e.FullPath;
 
-			if (isSyncFile(fullPath) || isSyncFile(Path.GetFileName(e.OldFullPath)))
+			if (isSyncFile(e.Name) || isSyncFile(Path.GetFileName(e.OldName)))
 				return;
 			
 			lock (changes)
@@ -823,7 +823,7 @@ namespace Simias.Sync
 		{
 			string fullPath = e.FullPath;
 
-			if (isSyncFile(fullPath))
+			if (isSyncFile(e.Name))
 				return;
 						
 			lock (changes)
@@ -836,7 +836,7 @@ namespace Simias.Sync
 		{
 			string fullPath = e.FullPath;
 
-			if (isSyncFile(fullPath))
+			if (isSyncFile(e.Name))
 				return;
 						
 			lock (changes)

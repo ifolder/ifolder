@@ -30,39 +30,15 @@ using Simias.Sync;
 
 namespace Simias.Sync.Client
 {
-	#region SegmentType
-
-	/// <summary>
-	/// The types of Segment descriptors.
-	/// </summary>
-	[Serializable]
-	public enum SegmentType
-	{
-		/// <summary>
-		/// Block Segment descriptor.
-		/// </summary>
-		Block,
-		/// <summary>
-		/// Offset Segment descriptor
-		/// </summary>
-		Offset
-	}
-
-	#endregion
-
+	
 	#region FileSegment
 
 	/// <summary>
 	/// The base class for an upload file segment.
 	/// </summary>
 	[Serializable]
-	public class FileSegment
+	public abstract class FileSegment
 	{
-		/// <summary>
-		/// This is the type of Segment this instance describes.
-		/// It can either be Block or Data.
-		/// </summary>
-		public SegmentType Type;
 	}
 
 	#endregion
@@ -84,6 +60,18 @@ namespace Simias.Sync.Client
 		/// This is the end block for the unchanged segment of data.
 		/// </summary>
 		public int				EndBlock;
+
+		/// <summary>
+		/// Initialize a new Offset Segment.
+		/// </summary>
+		/// <param name="startBlock">The start block.</param>
+		/// <param name="endBlock">The end block.</param>
+		public BlockSegment(int startBlock, int endBlock)
+		{
+			this.StartBlock = startBlock;
+			this.EndBlock = endBlock;
+		}
+
 	}
 
 	#endregion
@@ -104,6 +92,17 @@ namespace Simias.Sync.Client
 		/// The offset in the local file of the segment.
 		/// </summary>
 		public long		Offset;
+
+		/// <summary>
+		/// Initialize a new Offset Segment.
+		/// </summary>
+		/// <param name="length">The length of the segment.</param>
+		/// <param name="offset">The offset of the segment.</param>
+		public OffsetSegment(int length, long offset)
+		{
+			this.Length = length;
+			this.Offset = offset;
+		}
 	}
 
 	#endregion
@@ -210,23 +209,22 @@ namespace Simias.Sync.Client
 			long offset = 0;
 			foreach(FileSegment segment in fileMap)
 			{
-				switch (segment.Type)
+				if (segment is BlockSegment)
 				{
-					case SegmentType.Block:
-						BlockSegment bs = (BlockSegment)segment;
-						int bytesToWrite = (bs.EndBlock - bs.StartBlock + 1) * BlockSize;
-						service.Copy(bs.StartBlock * BlockSize, offset, bytesToWrite);
-						offset += bytesToWrite;
-						break;
-					case SegmentType.Offset:
-						// Write the bytes to the output stream.
-						OffsetSegment seg = (OffsetSegment)segment;
-						byte[] dataBuffer = new byte[seg.Length];
-						ReadPosition = seg.Offset;
-						int bytesRead = Read(dataBuffer, 0, seg.Length);
-						service.Write(dataBuffer, offset, bytesRead);
-						offset += seg.Length;
-						break;
+					BlockSegment bs = (BlockSegment)segment;
+					int bytesToWrite = (bs.EndBlock - bs.StartBlock + 1) * BlockSize;
+					service.Copy(bs.StartBlock * BlockSize, offset, bytesToWrite);
+					offset += bytesToWrite;
+				}
+				else
+				{
+					// Write the bytes to the output stream.
+					OffsetSegment seg = (OffsetSegment)segment;
+					byte[] dataBuffer = new byte[seg.Length];
+					ReadPosition = seg.Offset;
+					int bytesRead = Read(dataBuffer, 0, seg.Length);
+					service.Write(dataBuffer, offset, bytesRead);
+					offset += seg.Length;
 				}
 			}
 			return true;
@@ -310,11 +308,9 @@ namespace Simias.Sync.Client
 				long fileSize = Length;
 				while (offset < fileSize)
 				{
-					OffsetSegment seg = new OffsetSegment();
 					long bytesLeft = fileSize - offset;
 					int size = (int)((bytesLeft > MaxXFerSize) ? MaxXFerSize : bytesLeft);
-					seg.Length = size;
-					seg.Offset = 0;
+					OffsetSegment seg = new OffsetSegment(size, offset);
 					fileMap.Add(seg);
 					offset += size;
 				}
@@ -367,10 +363,7 @@ namespace Simias.Sync.Client
 								// We found a match save the data that does not match;
 								if (endOfLastMatch != startByte)
 								{
-									OffsetSegment seg = new OffsetSegment();
-									seg.Type = SegmentType.Offset;
-									seg.Length = startByte - endOfLastMatch;
-									seg.Offset = ReadPosition - bytesRead + endOfLastMatch;
+									OffsetSegment seg = new OffsetSegment(startByte - endOfLastMatch, ReadPosition - bytesRead + endOfLastMatch);
 									fileMap.Add(seg);
 								}
 								startByte = endByte + 1;
@@ -385,10 +378,7 @@ namespace Simias.Sync.Client
 								else
 								{
 									// Save the matched block.
-									lastBS = new BlockSegment();
-									lastBS.Type = SegmentType.Block;
-									lastBS.StartBlock = match.BlockNumber;
-									lastBS.EndBlock = match.BlockNumber;
+									lastBS = new BlockSegment(match.BlockNumber, match.BlockNumber);
 									fileMap.Add(lastBS);
 								}
 								continue;
@@ -404,10 +394,7 @@ namespace Simias.Sync.Client
 					{
 						// We don't want to send to large of a buffer. Create a DiffRecord
 						// for the data in the buffer.
-						OffsetSegment seg = new OffsetSegment();
-						seg.Type = SegmentType.Offset;
-						seg.Length = startByte - endOfLastMatch;
-						seg.Offset = ReadPosition - bytesRead + endOfLastMatch;
+						OffsetSegment seg = new OffsetSegment(startByte - endOfLastMatch, ReadPosition - bytesRead + endOfLastMatch);
 						fileMap.Add(seg);
 						endOfLastMatch = startByte;
 					}
@@ -427,10 +414,8 @@ namespace Simias.Sync.Client
 			// Get the remaining changes.
 			if (endOfLastMatch != endByte)//== 0 && endByte != 0)
 			{
-				OffsetSegment seg = new OffsetSegment();
-				seg.Type = SegmentType.Offset;
-				seg.Length = endByte - endOfLastMatch + 1;
-				seg.Offset = ReadPosition - seg.Length;
+				int len = endByte - endOfLastMatch + 1;
+				OffsetSegment seg = new OffsetSegment(len, ReadPosition - len);
 				fileMap.Add(seg);
 			}
 
@@ -526,16 +511,15 @@ namespace Simias.Sync.Client
 			StringWriter sw = new StringWriter();
 			foreach (FileSegment segment in segments)
 			{
-				switch (segment.Type)
+				if (segment is BlockSegment)
 				{
-					case SegmentType.Block:
-						BlockSegment bs = (BlockSegment)segment;
-						sw.WriteLine("Found Match Block {0} to Block {1}", bs.StartBlock, bs.EndBlock);
-						break;
-					case SegmentType.Offset:
-						OffsetSegment seg = (OffsetSegment)segment;
-						sw.WriteLine("Found change size = {0}", seg.Length);
-						break;
+					BlockSegment bs = (BlockSegment)segment;
+					sw.WriteLine("Found Match Block {0} to Block {1}", bs.StartBlock, bs.EndBlock);
+				}
+				else
+				{
+					OffsetSegment seg = (OffsetSegment)segment;
+					sw.WriteLine("Found change size = {0}", seg.Length);
 				}
 			}
 			return sw.ToString();

@@ -260,7 +260,7 @@ namespace Simias.Sync
 			if (direction == SyncDirection.OUT)
 			{
 				// This file is being pushed make a copy to work from.
-				File.Copy(file, workFile);
+				File.Copy(file, workFile, true);
 				workStream = File.Open(workFile, FileMode.Open, FileAccess.Read);
 			}
 			else
