@@ -21,16 +21,34 @@ namespace Egg {
 		[DllImport("libtrayicon")]
 		static extern IntPtr egg_tray_icon_new(string name);
 
-		public TrayIcon(string name) : base (IntPtr.Zero)
+		public TrayIcon (string name) : base (IntPtr.Zero)
 		{
+			if (GetType () != typeof (TrayIcon)) {
+				ArrayList vals = new ArrayList();
+				ArrayList names = new ArrayList();
+				names.Add ("name");
+				vals.Add (new GLib.Value (name));
+				CreateNativeObject ((string[])names.ToArray (typeof (string)), (GLib.Value[])vals.ToArray (typeof (GLib.Value)));
+				return;
+			}
 			Raw = egg_tray_icon_new(name);
 		}
 
 		[DllImport("libtrayicon")]
 		static extern IntPtr egg_tray_icon_new_for_screen(IntPtr screen, string name);
 
-		public TrayIcon(Gdk.Screen screen, string name) : base (IntPtr.Zero)
+		public TrayIcon (Gdk.Screen screen, string name) : base (IntPtr.Zero)
 		{
+			if (GetType () != typeof (TrayIcon)) {
+				ArrayList vals = new ArrayList();
+				ArrayList names = new ArrayList();
+				names.Add ("screen");
+				vals.Add (new GLib.Value (screen));
+				names.Add ("name");
+				vals.Add (new GLib.Value (name));
+				CreateNativeObject ((string[])names.ToArray (typeof (string)), (GLib.Value[])vals.ToArray (typeof (GLib.Value)));
+				return;
+			}
 			Raw = egg_tray_icon_new_for_screen(screen.Handle, name);
 		}
 
@@ -73,6 +91,11 @@ namespace Egg {
 			egg_tray_icon_cancel_message(Handle, id);
 		}
 
+
+		static TrayIcon ()
+		{
+			GtkSharp.TrayIcon.ObjectManager.Initialize ();
+		}
 #endregion
 	}
 }
