@@ -1731,7 +1731,8 @@ namespace Novell.FormsTrayApp
 				}
 
 				if ((ifolder != null) &&
-					(!ifolder.OwnerID.Equals(this.currentUserID) || ifolder.State.Equals("Available")))
+					((ifolder.State.Equals("Available") && (ifWebService.GetiFolder(ifolder.CollectionID) == null)) ||
+					ifolder.State.Equals("Local")))
 				{
 					addiFolderToListView(ifolder);
 				}

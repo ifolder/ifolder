@@ -388,8 +388,9 @@ namespace Novell.FormsTrayApp
 
 					iFolder ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
 
+					// If the iFolder is available and doesn't exist locally, post a notification.
 					if ((ifolder != null) &&
-						!ifolder.OwnerID.Equals(ifolderSettings.CurrentUserID))// || ifolder.State.Equals("Available")))
+						(ifolder.State.Equals("Available") && (ifWebService.GetiFolder(ifolder.CollectionID) == null)))
 					{
 						// TODO: check this...
 						//this.Text = "A message needs your attention";

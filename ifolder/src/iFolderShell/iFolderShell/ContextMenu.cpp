@@ -366,7 +366,7 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 				try
 				{
 					// Invoke the conflict resolver.
-//					m_spiFolder->InvokeConflictResolverDlg(m_szShellPath, m_szFileUserClickedOn);
+					m_spiFolder->InvokeConflictResolverDlg(m_szShellPath, m_szFileUserClickedOn);
 				}
 				catch (...)
 				{
