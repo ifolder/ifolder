@@ -80,49 +80,39 @@
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "Common"
-                    AssemblyName = "Common"
-                    HintPath = "..\..\Common\Common.dll"
+                    Name = "SyncManager"
+                    AssemblyName = "SyncManager"
+                    HintPath = "..\..\..\..\stage\bin\SyncManager.dll"
                 />
                 <Reference
                     Name = "CollectionStore"
                     AssemblyName = "CollectionStore"
-                    HintPath = "..\..\CollectionStore\CollectionStore.dll"
-                />
-                <Reference
-                    Name = "StoreProvider"
-                    AssemblyName = "StoreProvider"
-                    HintPath = "..\..\StoreProvider\StoreProvider.dll"
-                />
-                <Reference
-                    Name = "Identity"
-                    AssemblyName = "Identity"
-                    HintPath = "..\..\Identity\Identity.dll"
-                />
-                <Reference
-                    Name = "SyncManager"
-                    AssemblyName = "SyncManager"
-                    HintPath = "..\..\SyncManager\SyncManager.dll"
+                    HintPath = "..\..\..\..\stage\bin\CollectionStore.dll"
                 />
                 <Reference
                     Name = "CollectionWatcher"
                     AssemblyName = "CollectionWatcher"
-                    HintPath = "..\..\CollectionWatcher\CollectionWatcher.dll"
+                    HintPath = "..\..\..\..\stage\bin\CollectionWatcher.dll"
+                />
+                <Reference
+                    Name = "Common"
+                    AssemblyName = "Common"
+                    HintPath = "..\..\..\..\stage\bin\Common.dll"
+                />
+                <Reference
+                    Name = "Configuration"
+                    AssemblyName = "Configuration"
+                    HintPath = "..\..\..\..\stage\bin\Configuration.dll"
                 />
                 <Reference
                     Name = "SyncCommon"
                     AssemblyName = "SyncCommon"
-                    HintPath = "..\..\stage\SyncCommon.dll"
+                    HintPath = "..\..\..\..\stage\bin\SyncCommon.dll"
                 />
                 <Reference
                     Name = "SyncLogicLite"
                     AssemblyName = "SyncLogicLite"
-                    HintPath = "..\..\stage\SyncLogicLite.dll"
-                />
-                <Reference
-                    Name = "Sync"
-                    AssemblyName = "Sync"
-                    HintPath = "..\..\stage\Sync.dll"
+                    HintPath = "..\..\..\..\stage\bin\SyncLogicLite.dll"
                 />
             </References>
         </Build>

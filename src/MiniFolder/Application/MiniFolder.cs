@@ -95,7 +95,7 @@ namespace Novell.iFolder.Mini
 				properties.DefaultHost = args[1];
 
 				// put the slave on a different port
-				properties.DefaultPort = SyncProperties._DefaultPort + 1;
+				properties.DefaultPort = SyncProperties.SuggestedPort + 1;
 			}
 			
 			MyTrace.WriteLine("Local Host: {0}:{1}", properties.DefaultHost, properties.DefaultPort);
@@ -141,7 +141,7 @@ namespace Novell.iFolder.Mini
 					collection = store.CreateCollection(collectionId,
 						collectionName, collectionType,
 						Path.Combine(rootPath, collectionName),
-						role, properties.DefaultHost, SyncProperties._DefaultPort);
+						role, properties.DefaultHost, SyncProperties.SuggestedPort);
 
 					// save the new collection
 					collection.Commit();
