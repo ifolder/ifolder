@@ -47,6 +47,8 @@ namespace Novell.FormsTrayApp
 		// Delegates used to marshal back to the control's creation thread.
 		private delegate void SyncCollectionDelegate(CollectionSyncEventArgs syncEventArgs);
 		private SyncCollectionDelegate syncCollectionDelegate;
+		private delegate void SyncFileDelegate(FileSyncEventArgs syncEventArgs);
+		private SyncFileDelegate syncFileDelegate;
 		private delegate void NodeDelegate(NodeEventArgs nodeEventArgs);
 		private NodeDelegate nodeDelegate;
 
@@ -79,7 +81,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuTools;
 		private System.Windows.Forms.Timer syncAnimateTimer;
 		private int iconID;
-		//private const int waitTime = 3000;
 		#endregion
 
 		[STAThread]
@@ -104,6 +105,7 @@ namespace Novell.FormsTrayApp
 		public FormsTrayApp()
 		{
 			syncCollectionDelegate = new SyncCollectionDelegate(syncCollection);
+			syncFileDelegate = new SyncFileDelegate(syncFile);
 			nodeDelegate = new NodeDelegate(nodeEvent);
 
 			resourceManager = new System.Resources.ResourceManager(typeof(FormsTrayApp));
@@ -297,6 +299,7 @@ namespace Novell.FormsTrayApp
 						eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(trayApp_nodeEventHandler));
 						eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(trayApp_nodeEventHandler));
 						eventClient.SetEvent(IProcEventAction.AddCollectionSync, new IProcEventHandler(trayApp_collectionSyncHandler));
+						eventClient.SetEvent(IProcEventAction.AddFileSync, new IProcEventHandler(trayApp_fileSyncHandler));
 					}
 
 					// Instantiate the GlobalProperties dialog so we can log sync events.
@@ -316,11 +319,6 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-//		private void serviceManager_Shutdown(ShutdownEventArgs args)
-//		{
-//			ShutdownTrayApp();
-//		}
-
 		private void errorHandler(ApplicationException e, object context)
 		{
 			eventError = true;
@@ -336,6 +334,12 @@ namespace Novell.FormsTrayApp
 		{
 			CollectionSyncEventArgs syncEventArgs = args as CollectionSyncEventArgs;
 			BeginInvoke(syncCollectionDelegate, new object[] {syncEventArgs});
+		}
+
+		private void trayApp_fileSyncHandler(SimiasEventArgs args)
+		{
+			FileSyncEventArgs syncEventArgs = args as FileSyncEventArgs;
+			BeginInvoke(syncFileDelegate, new object[] {syncEventArgs});
 		}
 
 		private void serverInfo_EnterpriseConnect(object sender, EventArgs e)
@@ -529,9 +533,23 @@ namespace Novell.FormsTrayApp
 					// Stop the icon animation.
 					syncAnimateTimer.Stop();
 					notifyIcon1.Icon = trayIcon;
+					notifyIcon1.Text = resourceManager.GetString("notifyIcon1.Text");
 					break;
 				}
 			}
+		}
+
+		private void syncFile(FileSyncEventArgs syncEventArgs)
+		{
+			try
+			{
+				if (syncEventArgs.SizeRemaining == syncEventArgs.SizeToSync)
+				{
+					notifyIcon1.Text = resourceManager.GetString("notifyIcon1.Text") + "\n" + 
+						string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploading" : "downloading") , syncEventArgs.Name);
+				}
+			}
+			catch {}
 		}
 
 		private void nodeEvent(NodeEventArgs eventArgs)
@@ -577,9 +595,6 @@ namespace Novell.FormsTrayApp
 								// If the iFolder is available and doesn't exist locally, post a notification.
 								if ((ifolder != null) && ifolder.State.Equals("Available") && (ifWebService.GetiFolder(ifolder.CollectionID) == null))
 								{
-									// TODO: check this...
-									//this.Text = "A message needs your attention";
-
 									NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
 
 									string message = string.Format(resourceManager.GetString("subscriptionMessage"), ifolder.Owner);
