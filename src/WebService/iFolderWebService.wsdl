@@ -174,6 +174,22 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="GetiFolderInvitation">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="POBoxID" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetiFolderInvitationResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetiFolderInvitationResult"
+                  type="s0:iFolderWeb"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="GetiFolderByLocalPath">
         <xs:complexType>
           <xs:sequence>
@@ -867,6 +883,12 @@
   <message name="GetiFolderSoapOut">
     <part name="parameters" element="s0:GetiFolderResponse"/>
   </message>
+  <message name="GetiFolderInvitationSoapIn">
+    <part name="parameters" element="s0:GetiFolderInvitation"/>
+  </message>
+  <message name="GetiFolderInvitationSoapOut">
+    <part name="parameters" element="s0:GetiFolderInvitationResponse"/>
+  </message>
   <message name="GetiFolderByLocalPathSoapIn">
     <part name="parameters" element="s0:GetiFolderByLocalPath"/>
   </message>
@@ -1160,6 +1182,13 @@
   <message name="GetiFolderHttpGetOut">
     <part name="Body" element="s0:iFolderWeb"/>
   </message>
+  <message name="GetiFolderInvitationHttpGetIn">
+    <part name="POBoxID" type="s:string"/>
+    <part name="iFolderID" type="s:string"/>
+  </message>
+  <message name="GetiFolderInvitationHttpGetOut">
+    <part name="Body" element="s0:iFolderWeb"/>
+  </message>
   <message name="GetiFolderByLocalPathHttpGetIn">
     <part name="LocalPath" type="s:string"/>
   </message>
@@ -1440,6 +1469,13 @@
     <part name="iFolderID" type="s:string"/>
   </message>
   <message name="GetiFolderHttpPostOut">
+    <part name="Body" element="s0:iFolderWeb"/>
+  </message>
+  <message name="GetiFolderInvitationHttpPostIn">
+    <part name="POBoxID" type="s:string"/>
+    <part name="iFolderID" type="s:string"/>
+  </message>
+  <message name="GetiFolderInvitationHttpPostOut">
     <part name="Body" element="s0:iFolderWeb"/>
   </message>
   <message name="GetiFolderByLocalPathHttpPostIn">
@@ -1726,6 +1762,11 @@
       <output message="s0:GetiFolderSoapOut"/>
       <documentation>Get An iFolder</documentation>
     </operation>
+    <operation name="GetiFolderInvitation">
+      <input message="s0:GetiFolderInvitationSoapIn"/>
+      <output message="s0:GetiFolderInvitationSoapOut"/>
+      <documentation>Get An iFolder</documentation>
+    </operation>
     <operation name="GetiFolderByLocalPath">
       <input message="s0:GetiFolderByLocalPathSoapIn"/>
       <output message="s0:GetiFolderByLocalPathSoapOut"/>
@@ -1989,6 +2030,11 @@
       <output message="s0:GetiFolderHttpGetOut"/>
       <documentation>Get An iFolder</documentation>
     </operation>
+    <operation name="GetiFolderInvitation">
+      <input message="s0:GetiFolderInvitationHttpGetIn"/>
+      <output message="s0:GetiFolderInvitationHttpGetOut"/>
+      <documentation>Get An iFolder</documentation>
+    </operation>
     <operation name="GetiFolderByLocalPath">
       <input message="s0:GetiFolderByLocalPathHttpGetIn"/>
       <output message="s0:GetiFolderByLocalPathHttpGetOut"/>
@@ -2250,6 +2296,11 @@
     <operation name="GetiFolder">
       <input message="s0:GetiFolderHttpPostIn"/>
       <output message="s0:GetiFolderHttpPostOut"/>
+      <documentation>Get An iFolder</documentation>
+    </operation>
+    <operation name="GetiFolderInvitation">
+      <input message="s0:GetiFolderInvitationHttpPostIn"/>
+      <output message="s0:GetiFolderInvitationHttpPostOut"/>
       <documentation>Get An iFolder</documentation>
     </operation>
     <operation name="GetiFolderByLocalPath">
@@ -2546,6 +2597,15 @@
     </operation>
     <operation name="GetiFolder">
       <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolder" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetiFolderInvitation">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderInvitation" style="document"/>
       <input>
         <soap:body use="literal"/>
       </input>
@@ -3036,6 +3096,15 @@
         <mime:mimeXml part="Body"/>
       </output>
     </operation>
+    <operation name="GetiFolderInvitation">
+      <http:operation location="/GetiFolderInvitation"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
     <operation name="GetiFolderByLocalPath">
       <http:operation location="/GetiFolderByLocalPath"/>
       <input>
@@ -3448,6 +3517,15 @@
     </operation>
     <operation name="GetiFolder">
       <http:operation location="/GetiFolder"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="GetiFolderInvitation">
+      <http:operation location="/GetiFolderInvitation"/>
       <input>
         <mime:content type="application/x-www-form-urlencoded"/>
       </input>

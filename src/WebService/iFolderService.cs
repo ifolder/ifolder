@@ -270,6 +270,38 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
+		/// WebMethod that gets an iFolder based on an iFolderID
+		/// </summary>
+		/// <param name = "iFolderID">
+		/// The ID of the collection representing this iFolder to get
+		/// </param>
+		/// <returns>
+		/// the ifolder this ID represents
+		/// </returns>
+		[WebMethod(Description="Get An iFolder")]
+		[SoapDocumentMethod]
+		public iFolderWeb GetiFolderInvitation(string POBoxID, string iFolderID)
+		{
+			iFolderWeb ifolder = null;
+
+			Store store = Store.GetStore();
+			POBox poBox = Simias.POBox.POBox.GetPOBoxByID(store, POBoxID);
+			if(poBox != null)
+			{
+				Node node = poBox.GetNodeByID(iFolderID);
+				if (node != null)
+				{
+					ifolder = new iFolderWeb(new Subscription(node));
+				}
+			}
+
+			return ifolder;
+		}
+
+
+
+
+		/// <summary>
 		/// WebMethod that gets an iFolder based on a LocalPath
 		/// </summary>
 		/// <param name = "LocalPath">
