@@ -25,7 +25,7 @@ iFolderTests_INCLUDES =
 iFolderTests_RESOURCES =
 iFolderTests_FLAGS = $(CSC_EXEFLAG)
 iFolderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll SyncCommon.dll iFolder.dll Common.dll CollectionStore.dll AddressBook.dll Storage.dll
-iFolderTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin $(SIMIAS_INSTALL_PATH)/bin
+iFolderTests_LIBPATH = $(NUNIT_LIBPATH) $(SIMIAS_INSTALL_PATH)/bin
 
 EXTRA_DIST = $(iFolder_CSFILES) $(iFolderCmd_CSFILES) $(iFolderTests_CSFILES)
 
