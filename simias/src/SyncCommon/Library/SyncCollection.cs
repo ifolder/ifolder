@@ -100,6 +100,9 @@ namespace Simias.Sync
 				store.GetLocalAddressBook().Commit(identity);
 			}
 
+			// TODO: fix
+			this.SetType(this, "iFolder");
+			
 			this.MasterUrl = invitation.MasterUri;
 			this.Role = SyncCollectionRoles.Slave;
 			
