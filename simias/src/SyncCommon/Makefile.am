@@ -3,8 +3,8 @@ SyncCommon_CSFILES_CSC := $(subst /,$(SEP),$(SyncCommon_CSFILES))
 SyncCommon_INCLUDES =
 SyncCommon_RESOURCES =
 SyncCommon_FLAGS = $(CSC_LIBFLAG)
-SyncCommon_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll Common.dll System.Runtime.Remoting.dll Agent.dll
-SyncCommon_LIBPATH = Library ../Configuration ../StoreProvider ../CollectionEvents ../CollectionStore ../Common ../Agent
+SyncCommon_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll Common.dll System.Runtime.Remoting.dll Agent.dll
+SyncCommon_LIBPATH = Library ../Configuration ../StoreProvider ../Common ../CollectionEvents ../CollectionStore ../Common ../Agent
 
 NUNIT_TESTS := SyncCommonTests.dll
 

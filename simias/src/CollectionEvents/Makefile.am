@@ -11,8 +11,8 @@ CsEventBroker_CSFILES_CSC := $(subst /,$(SEP),$(CsEventBroker_CSFILES))
 CsEventBroker_INCLUDES = 
 CsEventBroker_RESOURCES =
 CsEventBroker_FLAGS = $(CSC_EXEFLAG)
-CsEventBroker_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Configuration.dll CollectionEvents.dll
-CsEventBroker_LIBPATH = /opt/gnome2/lib /usr/lib ../Configuration
+CsEventBroker_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Configuration.dll Common.dll CollectionEvents.dll
+CsEventBroker_LIBPATH = /opt/gnome2/lib /usr/lib ../Configuration ../Common
 
 NUNIT_TESTS := CollectionEventTests.exe
 

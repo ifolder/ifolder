@@ -3,8 +3,8 @@ StoreWatcher_CSFILES_CSC := $(subst /,$(SEP),$(StoreWatcher_CSFILES))
 StoreWatcher_INCLUDES =
 StoreWatcher_RESOURCES =
 StoreWatcher_FLAGS = $(CSC_LIBFLAG)
-StoreWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll SqliteProvider.dll SqliteWrapper.dll Common.dll
-StoreWatcher_LIBPATH = Library ../Configuration ../CollectionEvents ../CollectionStore ../StoreProvider ../SqliteProvider ../Common
+StoreWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll SqliteProvider.dll SqliteWrapper.dll Common.dll
+StoreWatcher_LIBPATH = Library ../Configuration ../Common ../CollectionEvents ../CollectionStore ../StoreProvider ../SqliteProvider ../Common
 
 NUNIT_TESTS := StoreWatcherTests.dll
 

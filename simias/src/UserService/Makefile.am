@@ -3,8 +3,8 @@ UserService_CSFILES_CSC := $(subst /,$(SEP),$(UserService_CSFILES))
 UserService_INCLUDES = 
 UserService_RESOURCES =
 UserService_FLAGS = $(CSC_LIBFLAG)
-UserService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll CollectionEvents.dll
-UserService_LIBPATH = /opt/gnome2/lib /usr/lib ../Configuration ../CollectionEvents
+UserService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll Common.dll CollectionEvents.dll
+UserService_LIBPATH = /opt/gnome2/lib /usr/lib ../Configuration ../Common ../CollectionEvents
 
 
 EXTRA_DIST = $(UserService_CSFILES) 

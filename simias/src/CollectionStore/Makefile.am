@@ -3,8 +3,8 @@ CollectionStore_CSFILES_CSC := $(subst /,$(SEP),$(CollectionStore_CSFILES))
 CollectionStore_INCLUDES =
 CollectionStore_RESOURCES =
 CollectionStore_FLAGS = $(CSC_LIBFLAG)
-CollectionStore_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll System.Security.dll CollectionEvents.dll
-CollectionStore_LIBPATH = ../Configuration ../StoreProvider ../CollectionEvents
+CollectionStore_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll System.Security.dll Common.dll CollectionEvents.dll
+CollectionStore_LIBPATH = ../Configuration ../StoreProvider ../Common ../CollectionEvents
 
 NUNIT_TESTS := CollectionStoreTests.dll
 
