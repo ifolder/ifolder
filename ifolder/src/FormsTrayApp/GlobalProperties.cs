@@ -722,9 +722,9 @@ namespace Novell.FormsTrayApp
 			// 
 			// userName
 			// 
-			this.userName.Location = new System.Drawing.Point(144, 24);
+			this.userName.Location = new System.Drawing.Point(152, 24);
 			this.userName.Name = "userName";
-			this.userName.Size = new System.Drawing.Size(272, 16);
+			this.userName.Size = new System.Drawing.Size(264, 16);
 			this.userName.TabIndex = 1;
 			// 
 			// label10
