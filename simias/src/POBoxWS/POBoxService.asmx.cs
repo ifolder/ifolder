@@ -667,6 +667,7 @@ namespace Simias.POBoxService.Web
 		public string	CollectionID;
 		public string	CollectionName;
 		public string	CollectionType;
+		public string	CollectionUrl;
 
 		public string	DomainID;
 		public string	DomainName;
@@ -687,8 +688,9 @@ namespace Simias.POBoxService.Web
 			this.ToName = cSub.ToName;
 
 			this.CollectionID = cSub.SubscriptionCollectionID;
-			this.CollectionName = cSub.SubscriptionCollectionType;
-			this.CollectionType = cSub.SubscriptionCollectionURL;
+			this.CollectionName = cSub.SubscriptionCollectionName;
+			this.CollectionType = cSub.SubscriptionCollectionType;
+			this.CollectionUrl = cSub.SubscriptionCollectionURL;
 
 			this.DomainID = cSub.DomainID;
 			this.DomainName = cSub.DomainName;
