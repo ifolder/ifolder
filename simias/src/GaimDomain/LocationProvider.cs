@@ -134,6 +134,39 @@ namespace Simias.Location
 
 		/// <summary>
 		/// Returns the network location for the the specified
+		/// domain.
+		/// </summary>
+		/// <param name="domainID">Identifier for the domain.</param>
+		/// <returns>A Uri object that contains the network location.
+		/// </returns>
+		public Uri ResolveLocation( string domainID )
+		{
+			log.Debug( "ResolveLocation(domainID) called" );
+
+			Uri locationUri = null;
+			if( domainID.ToLower() == Simias.Gaim.GaimDomain.ID )
+			{
+				try
+				{
+					Simias.Storage.Domain domain = GaimDomain.GetDomain();
+					Member member = domain.GetMemberByID(domain.Owner.UserID);
+					if ( member != null )
+					{
+						locationUri = MemberToUri(domain, member);
+					}
+				}
+				catch ( Exception e )
+				{
+					log.Debug( e.Message );
+					log.Debug( e.StackTrace );
+				}
+			}
+
+			return locationUri;
+		}
+
+		/// <summary>
+		/// Returns the network location for the the specified
 		/// collection.
 		/// </summary>
 		/// <param name="domainID">Identifier for the domain that the
@@ -216,7 +249,7 @@ namespace Simias.Location
 		/// </returns>
 		public Uri ResolvePOBoxLocation( string domainID, string userID )
 		{
-			log.Debug( "ResolveLocation with userID called" );
+			log.Debug( "ResolvePOBoxLocation called" );
 
 			Uri locationUri = null;
 			if( domainID.ToLower() == Simias.Gaim.GaimDomain.ID )
@@ -238,6 +271,7 @@ namespace Simias.Location
 			}
 
 			return locationUri;
+
 		}
 
 		#endregion
