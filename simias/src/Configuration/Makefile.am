@@ -1,34 +1,26 @@
+CONFIGURATION_CSFILES = Configuration.cs AssemblyInfo.cs
 
-#DLLDEPS=
-#EXEFLAGS=$(DLLDEPS)
+all: Configuration.dll
 
-#ASSEMBLY1 = Configuration.dll
-#ASSEMBLY1_CSFILES =		 					\
-#	$(srcdir)/AssemblyInfo.cs				\
-#	$(srcdir)/Configuration.cs
+Configuration.dll: $(CONFIGURATION_CSFILES)
+	$(CSC) $(CSCFLAGS) $(CSC_LIBFLAG) -out:$@ $(CONFIGURATION_CSFILES)
 
-#ASSEMBLIES = $(ASSEMBLY1)
+clean:
+	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
+    
+distclean-local: clean
 
-bin_PROGRAMS = Configuration.dll
-dist_Configuration_dll_SOURCES = Configuration.cs AssemblyInfo.cs
-#Configuration_dll_OBJECTS =
-#Configuration_dll_LDADD = $(LDADD)
-#Configuration_dll_DEPENDENCIES = 
-#Configuration_dll_LDFLAGS = 
-Configuration.dll: $(Configuration_dll_SOURCES)
-	$(CSC) $(CSCFLAGS) $(CSC_LIBFLAG) -out:$@ $<
+maintainer-clean-local:
+	rm -f Makefile.in
 
-#all: $(ASSEMBLIES)
+install-exec-local: Configuration.dll
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) Configuration.dll $(DESTDIR)$(bindir)
+    
+uninstall-local:
+	rm -f $(DESTDIR)$(bindir)/Configuration.dll
+    
+EXTRA_DIST = $(CONFIGURATION_CSFILES)
 
-
-#clean:
-#	rm -f *.dbg *.exe *.dll
-
-#distclean: clean
-
-#dashboardlibdir = $(prefix)/lib/dashboard
-
-#install-data-local: $(bin_PROGRAMS)
-#	$(mkinstalldirs) $(DESTDIR)$(bindir)
-#	$(INSTALL_DATA) $(bin_PROGRAMS) $(DESTDIR)$(bindir)
+CLEAN_FILES = Configuration.dll
 
