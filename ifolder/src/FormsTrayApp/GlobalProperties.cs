@@ -252,6 +252,13 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuPause = new System.Windows.Forms.MenuItem();
 			this.menuStop = new System.Windows.Forms.MenuItem();
 			this.menuRestart = new System.Windows.Forms.MenuItem();
+			this.tabPage5 = new System.Windows.Forms.TabPage();
+			this.groupBox5 = new System.Windows.Forms.GroupBox();
+			this.port = new System.Windows.Forms.TextBox();
+			this.label7 = new System.Windows.Forms.Label();
+			this.proxy = new System.Windows.Forms.TextBox();
+			this.useProxy = new System.Windows.Forms.RadioButton();
+			this.noProxy = new System.Windows.Forms.RadioButton();
 			this.banner = new System.Windows.Forms.PictureBox();
 			this.mainMenu1 = new System.Windows.Forms.MainMenu();
 			this.menuFile = new System.Windows.Forms.MenuItem();
@@ -271,13 +278,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuActionRestart = new System.Windows.Forms.MenuItem();
 			this.menuView = new System.Windows.Forms.MenuItem();
 			this.menuViewRefresh = new System.Windows.Forms.MenuItem();
-			this.tabPage5 = new System.Windows.Forms.TabPage();
-			this.groupBox5 = new System.Windows.Forms.GroupBox();
-			this.noProxy = new System.Windows.Forms.RadioButton();
-			this.useProxy = new System.Windows.Forms.RadioButton();
-			this.proxy = new System.Windows.Forms.TextBox();
-			this.label7 = new System.Windows.Forms.Label();
-			this.port = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -744,6 +744,75 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuRestart.Text = "Restart";
 			this.menuRestart.Click += new System.EventHandler(this.menuRestart_Click);
 			// 
+			// tabPage5
+			// 
+			this.tabPage5.Controls.Add(this.groupBox5);
+			this.tabPage5.Location = new System.Drawing.Point(4, 22);
+			this.tabPage5.Name = "tabPage5";
+			this.tabPage5.Size = new System.Drawing.Size(426, 333);
+			this.tabPage5.TabIndex = 4;
+			this.tabPage5.Text = "Network";
+			// 
+			// groupBox5
+			// 
+			this.groupBox5.Controls.Add(this.port);
+			this.groupBox5.Controls.Add(this.label7);
+			this.groupBox5.Controls.Add(this.proxy);
+			this.groupBox5.Controls.Add(this.useProxy);
+			this.groupBox5.Controls.Add(this.noProxy);
+			this.groupBox5.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.groupBox5.Location = new System.Drawing.Point(16, 24);
+			this.groupBox5.Name = "groupBox5";
+			this.groupBox5.Size = new System.Drawing.Size(392, 100);
+			this.groupBox5.TabIndex = 0;
+			this.groupBox5.TabStop = false;
+			this.groupBox5.Text = "Proxy Settings";
+			// 
+			// port
+			// 
+			this.port.Enabled = false;
+			this.port.Location = new System.Drawing.Point(320, 58);
+			this.port.Name = "port";
+			this.port.Size = new System.Drawing.Size(56, 20);
+			this.port.TabIndex = 4;
+			this.port.Text = "";
+			// 
+			// label7
+			// 
+			this.label7.Location = new System.Drawing.Point(280, 61);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(56, 16);
+			this.label7.TabIndex = 3;
+			this.label7.Text = "Port:";
+			// 
+			// proxy
+			// 
+			this.proxy.Enabled = false;
+			this.proxy.Location = new System.Drawing.Point(96, 58);
+			this.proxy.Name = "proxy";
+			this.proxy.Size = new System.Drawing.Size(168, 20);
+			this.proxy.TabIndex = 2;
+			this.proxy.Text = "";
+			// 
+			// useProxy
+			// 
+			this.useProxy.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.useProxy.Location = new System.Drawing.Point(16, 56);
+			this.useProxy.Name = "useProxy";
+			this.useProxy.Size = new System.Drawing.Size(88, 24);
+			this.useProxy.TabIndex = 1;
+			this.useProxy.Text = "Use Proxy:";
+			this.useProxy.CheckedChanged += new System.EventHandler(this.useProxy_CheckedChanged);
+			// 
+			// noProxy
+			// 
+			this.noProxy.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.noProxy.Location = new System.Drawing.Point(16, 24);
+			this.noProxy.Name = "noProxy";
+			this.noProxy.Size = new System.Drawing.Size(88, 24);
+			this.noProxy.TabIndex = 0;
+			this.noProxy.Text = "No Proxy";
+			// 
 			// banner
 			// 
 			this.banner.Location = new System.Drawing.Point(0, 0);
@@ -887,74 +956,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuViewRefresh.Index = 0;
 			this.menuViewRefresh.Text = "Refresh";
 			this.menuViewRefresh.Click += new System.EventHandler(this.menuRefresh_Click);
-			// 
-			// tabPage5
-			// 
-			this.tabPage5.Controls.Add(this.groupBox5);
-			this.tabPage5.Location = new System.Drawing.Point(4, 22);
-			this.tabPage5.Name = "tabPage5";
-			this.tabPage5.Size = new System.Drawing.Size(426, 333);
-			this.tabPage5.TabIndex = 4;
-			this.tabPage5.Text = "Network";
-			// 
-			// groupBox5
-			// 
-			this.groupBox5.Controls.Add(this.port);
-			this.groupBox5.Controls.Add(this.label7);
-			this.groupBox5.Controls.Add(this.proxy);
-			this.groupBox5.Controls.Add(this.useProxy);
-			this.groupBox5.Controls.Add(this.noProxy);
-			this.groupBox5.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.groupBox5.Location = new System.Drawing.Point(16, 24);
-			this.groupBox5.Name = "groupBox5";
-			this.groupBox5.Size = new System.Drawing.Size(392, 100);
-			this.groupBox5.TabIndex = 0;
-			this.groupBox5.TabStop = false;
-			this.groupBox5.Text = "Proxy Settings";
-			// 
-			// noProxy
-			// 
-			this.noProxy.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.noProxy.Location = new System.Drawing.Point(16, 24);
-			this.noProxy.Name = "noProxy";
-			this.noProxy.Size = new System.Drawing.Size(88, 24);
-			this.noProxy.TabIndex = 0;
-			this.noProxy.Text = "No Proxy";
-			// 
-			// useProxy
-			// 
-			this.useProxy.Location = new System.Drawing.Point(16, 56);
-			this.useProxy.Name = "useProxy";
-			this.useProxy.Size = new System.Drawing.Size(88, 24);
-			this.useProxy.TabIndex = 1;
-			this.useProxy.Text = "Use Proxy:";
-			this.useProxy.CheckedChanged += new System.EventHandler(this.useProxy_CheckedChanged);
-			// 
-			// proxy
-			// 
-			this.proxy.Enabled = false;
-			this.proxy.Location = new System.Drawing.Point(96, 56);
-			this.proxy.Name = "proxy";
-			this.proxy.Size = new System.Drawing.Size(168, 20);
-			this.proxy.TabIndex = 2;
-			this.proxy.Text = "";
-			// 
-			// label7
-			// 
-			this.label7.Location = new System.Drawing.Point(280, 60);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(56, 16);
-			this.label7.TabIndex = 3;
-			this.label7.Text = "Port:";
-			// 
-			// port
-			// 
-			this.port.Enabled = false;
-			this.port.Location = new System.Drawing.Point(320, 56);
-			this.port.Name = "port";
-			this.port.Size = new System.Drawing.Size(56, 20);
-			this.port.TabIndex = 4;
-			this.port.Text = "";
 			// 
 			// GlobalProperties
 			// 
@@ -1192,15 +1193,14 @@ namespace Novell.iFolder.FormsTrayApp
 
 				string proxyValue = null;
 				string portValue = null;
-				if (useProxy.Checked = Simias.Channels.SimiasChannelFactory.GetProxy(ref proxyValue, ref portValue))
+				useProxy.Checked = Simias.Channels.SimiasChannelFactory.GetProxy(ref proxyValue, ref portValue);
+				if (proxyValue != null && portValue != null)
 				{
 					proxy.Text = proxyValue;
 					port.Text = portValue;
 				}
-				else
-				{
-					noProxy.Checked = true;
-				}
+
+				noProxy.Checked = !useProxy.Checked;
 			}
 			catch (SimiasException ex)
 			{
@@ -1244,9 +1244,7 @@ namespace Novell.iFolder.FormsTrayApp
 				}
 
 				// Save the proxy settings.
-				string proxyName = useProxy.Checked ? proxy.Text : null;
-				string proxyPort = useProxy.Checked ? port.Text : null;
-				Simias.Channels.SimiasChannelFactory.SetProxy(proxyName, proxyPort);
+				Simias.Channels.SimiasChannelFactory.SetProxy(useProxy.Checked, proxy.Text, port.Text);
 			}
 			catch (SimiasException ex)
 			{

@@ -212,9 +212,21 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			Cursor.Current = Cursors.WaitCursor;
 
-			// TODO: call method to connect to server.
-			DomainAgent da = new DomainAgent(config);
-			da.Attach(serverIP.Text, userName.Text, password.Text);
+			try
+			{
+				DomainAgent da = new DomainAgent(config);
+				da.Attach(serverIP.Text, userName.Text, password.Text);
+			}
+			catch (SimiasException ex)
+			{
+				ex.LogError();
+				MessageBox.Show("A fatal error was encountered while connecting to the server.\n\n" + ex.Message, "Server Connect Error");
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "Connecting to server");
+				MessageBox.Show("A fatal error was encountered while connecting to the server.\n\n" + ex.Message, "Server Connect Error");
+			}
 
 			Cursor.Current = Cursors.Default;
 		}

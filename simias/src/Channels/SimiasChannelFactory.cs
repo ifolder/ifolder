@@ -258,6 +258,12 @@ namespace Simias.Channels
 			return new SimiasChannel(channel);
 		}
 
+		/// <summary>
+		/// Get the proxy setting from the local database.
+		/// </summary>
+		/// <param name="proxyName">On return, contains the name of the proxy to use.</param>
+		/// <param name="proxyPort">On return, contains the value of the port to use.</param>
+		/// <returns>This method returns <b>true</b> if the setting is to be used; otherwise, <b>false</b>.</returns>
 		public static bool GetProxy(ref string proxyName, ref string proxyPort)
 		{
 			Collection localDb = Store.GetStore().GetDatabaseObject();
@@ -266,28 +272,29 @@ namespace Simias.Channels
 
 			if (p != null)
 			{
-				string temp = p.Value.ToString();
-
-				int index = temp.IndexOf( ':' );
-				if ( index != -1 )
-				{
-					proxyName = temp.Substring( 0, index );
-					proxyPort = temp.Substring( index + 1 );
-					return true;
-				}
+				// The proxy is stored in the format "n,proxy:port" ... 
+				// if n == 3 use the proxy, if n == 1 don't use the proxy.
+				string proxyValue = p.Value.ToString();
+				return ParseProxyValue(proxyValue, ref proxyName, ref proxyPort);
 			}
 
 			return false;
 		}
 
-		public static void SetProxy(string proxyName, string proxyPort)
+		/// <summary>
+		/// Set the proxy setting in the local database.
+		/// </summary>
+		/// <param name="useProxy">Set to <b>true</b> to use the proxy setting; otherwise, <b>false</b>.</param>
+		/// <param name="proxyName">The name of the proxy to store.</param>
+		/// <param name="proxyPort">The port of the proxy to store.</param>
+		public static void SetProxy(bool useProxy, string proxyName, string proxyPort)
 		{
 			Collection localDb = Store.GetStore().GetDatabaseObject();
 
 			if ((proxyName != null) && (!proxyName.Equals(String.Empty)) &&
 				(proxyPort != null) && (!proxyPort.Equals(String.Empty)))
 			{
-				Property p = new Property(proxyPropertyName, proxyName + ":" + proxyPort);
+				Property p = new Property(proxyPropertyName, (useProxy ? "3," : "1,") + proxyName + ":" + proxyPort);
 				p.LocalProperty = true;
 
 				localDb.Properties.ModifyProperty(p);
@@ -298,6 +305,39 @@ namespace Simias.Channels
 			}
 
 			localDb.Commit();
+		}
+
+		/// <summary>
+		/// Set the proxy setting in the local database.
+		/// </summary>
+		/// <param name="proxyValue">The string representing the proxy setting.</param>
+		public static void SetProxy(string proxyValue)
+		{
+			string proxyName = null;
+			string proxyPort = null;
+			bool useProxy = ParseProxyValue(proxyValue, ref proxyName, ref proxyPort);
+			SetProxy(useProxy, proxyName, proxyPort);
+		}
+
+		private static bool ParseProxyValue(string proxyValue, ref string proxyName, ref string proxyPort)
+		{
+			// The proxy is stored in the format "n,proxy:port" ... 
+			// if n == 3 use the proxy, if n == 1 don't use the proxy.
+			bool useProxy = proxyValue.StartsWith("3");
+
+			// Remove "n," from the beginning of the string.
+			proxyValue = proxyValue.Substring(2);
+
+			// Parse to get the proxy and port value.
+			int index = proxyValue.IndexOf( ':' );
+			if ( index != -1 )
+			{
+				proxyName = proxyValue.Substring( 0, index );
+				proxyPort = proxyValue.Substring( index + 1 );
+				return useProxy;
+			}
+
+			return false;
 		}
 	}
 }
