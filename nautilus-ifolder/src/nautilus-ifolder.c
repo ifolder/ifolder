@@ -1224,11 +1224,10 @@ show_ifolder_created_dialog (void *user_data)
 			  *cb_alignment, *folder_image;
 	GtkWindow *parent_window;
 	gint response;
-	char label_str [1024];
 	parent_window = GTK_WINDOW (user_data);
 
 	creation_dialog = gtk_dialog_new_with_buttons (
-						_("iFolder Introduction"),
+						_("iFolder Created"),
 						parent_window,
 						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 						GTK_STOCK_CLOSE,	/* Close button */
@@ -1248,16 +1247,6 @@ show_ifolder_created_dialog (void *user_data)
 	vbox = gtk_vbox_new (FALSE, 10);
 	gtk_container_border_width (GTK_CONTAINER (vbox), 10);
 
-	sprintf (label_str,
-			 "<span weight=\"bold\" size=\"larger\">%s</span>",
-			 _("Congratulations!  A new iFolder was created."));
-	label = gtk_label_new ("");
-	gtk_label_set_line_wrap		(GTK_LABEL (label), FALSE);
-	gtk_label_set_markup		(GTK_LABEL (label), label_str);
-	gtk_label_set_selectable	(GTK_LABEL (label), FALSE);
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-	 
 	hbox = gtk_hbox_new (FALSE, 12);
 
 	gtk_misc_set_alignment (GTK_MISC (folder_image), 0.5, 0);
@@ -1265,8 +1254,8 @@ show_ifolder_created_dialog (void *user_data)
 	
 	vbox2 = gtk_vbox_new (FALSE, 10);
 	
-	label = gtk_label_new (_("The new iFolder has been added to your list of iFolders."));
-	gtk_label_set_line_wrap		(GTK_LABEL (label), FALSE);
+	label = gtk_label_new (_("The folder you selected is now an iFolder.  To learn more about using iFolder and sharing iFolders with other users, see \"Managing iFolders\" in iFolder Help."));
+	gtk_label_set_line_wrap		(GTK_LABEL (label), TRUE);
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_box_pack_start (GTK_BOX (vbox2), label, TRUE, TRUE, 0);
 	
@@ -1274,11 +1263,6 @@ show_ifolder_created_dialog (void *user_data)
 	
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
-	label = gtk_label_new (_("To share your iFolder and it's contents with others, right-click the iFolder and select \"Share with...\"."));
-	gtk_label_set_line_wrap		(GTK_LABEL (label), TRUE);
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, TRUE, 0);
-	
 	cb_alignment = gtk_alignment_new (1, 1, 1, 0);
 	check_button = gtk_check_button_new_with_mnemonic (_("Do not show this message again."));
 	gtk_container_add (GTK_CONTAINER (cb_alignment), check_button);
