@@ -247,36 +247,6 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
-		/// Web method that gets a subscription based on ID.
-		/// </summary>
-		/// <param name="CollectionID">The collection ID of the POBox holding the subscription.</param>
-		/// <param name="NodeID">The node ID of the subscription.</param>
-		/// <returns>An iFolder object representing the subscription.</returns>
-		[WebMethod(Description="Get a subscription")]
-		[SoapDocumentMethod]
-		public iFolder GetSubscription(string CollectionID, string NodeID)
-		{
-			iFolder ifolder = null;
-			Store store = Store.GetStore();
-
-			POBox poBox = POBox.GetPOBoxByID(store, CollectionID);
-			if(poBox != null)
-			{
-				Node node = poBox.GetNodeByID(NodeID);
-				if (node != null)
-				{
-					ifolder = new iFolder(new Subscription(node));
-				}
-			}
-				
-			return ifolder;
-		}
-
-
-
-
-
-		/// <summary>
 		/// WebMethod that gets an iFolder based on a LocalPath
 		/// </summary>
 		/// <param name = "LocalPath">
@@ -623,30 +593,6 @@ namespace Novell.iFolder.Web
 			SharedCollection.RemoveMember(iFolderID, UserID);
 		}
 
-
-
-
-		/// <summary>
-		/// WebMethod that removes a subscription for an iFolder.
-		/// </summary>
-		/// <param name="DomainID">
-		/// The ID of the domain that the subscription belongs to.
-		/// </param>
-		/// <param name="SubscriptionID">
-		/// The ID of the subscription to remove.
-		/// </param>
-		/// <param name="UserID">
-		/// The ID of the user owning the POBox where the subscription is stored.
-		/// </param>
-		[WebMethod(Description="Remove a subscription.")]
-		[SoapDocumentMethod]
-		public void RemoveSubscription(string DomainID,
-									   string SubscriptionID,
-									   string UserID)
-		{
-			SharedCollection.RemoveSubscription(DomainID, SubscriptionID, UserID);
-		}
-	
 
 
 
