@@ -34,8 +34,6 @@
 }
 
 
-
-
 - (IBAction)authenticate:(id)sender
 {
 	[passwordField selectText:self];
@@ -60,8 +58,9 @@
 		[userNameField setStringValue:[domain userName]];
 		authDomainID = [[domain ID] retain];
 	}
-	
 	[self showWindow:sender];
+	// Make the app icon bounce
+	[NSApp requestUserAttention:NSCriticalRequest];
 }
 
 

@@ -25,17 +25,12 @@
 
 @interface SyncLogWindowController : NSWindowController
 {
-	NSMutableArray					*synclog;
-    IBOutlet NSArrayController		*logController;
 	IBOutlet NSWindow				*window;
+	IBOutlet NSTableColumn			*logColumn;
 }
-
 + (SyncLogWindowController *)sharedInstance;
-+ (void)logEntry:(NSString *)entry;
 
 - (IBAction)clearLog:(id)sender;
 - (IBAction)saveLog:(id)sender;
-
-- (void)addEntry:(NSString *)entry;
 
 @end

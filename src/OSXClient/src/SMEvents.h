@@ -138,11 +138,11 @@ typedef struct
 } SimiasNodeEvent;
 */
 }
--(NSString *)action;
+-(int)action;
 -(NSString *)time;
 -(NSString *)source;
 -(NSString *)collectionID;
--(int)type;
+-(NSString *)type;
 -(NSString *)event_id;
 -(NSString *)nodeID;
 -(NSString *)flags;

@@ -36,6 +36,7 @@
 	
 	NSMutableDictionary				*keyedDomains;
 	NSMutableDictionary				*keyediFolders;		
+	NSMutableDictionary				*keyedSubscriptions;
 
 	NSRecursiveLock					*instanceLock;
 	iFolderDomain					*defaultDomain;
@@ -54,5 +55,15 @@
 -(iFolderDomain *)getDefaultDomain;
 -(int)getDomainCount;
 -(iFolder *)getiFolder:(NSString *)iFolderID updateData:(BOOL)shouldUpdate;
+-(iFolder *)getAvailableiFolder:(NSString *)iFolderID 
+									inCollection:(NSString *)collectionID
+									updateData:(BOOL)shouldUpdate;
+-(NSString *)getiFolderID:(NSString *)subscriptionID;
+-(void)removeiFolder:(NSString *)iFolderID;
+-(iFolder *)createiFolder:(NSString *)path inDomain:(NSString *)domainID;
+-(void)deleteiFolder:(NSString *)ifolderID;
+-(void)acceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)domainID toPath:(NSString *)localPath;
+-(void)revertiFolder:(NSString *)iFolderID;
+
 
 @end

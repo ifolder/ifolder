@@ -22,29 +22,34 @@
  ***********************************************************************/
 
 #import "SyncLogWindowController.h"
+#import "iFolderApplication.h"
 
 @implementation SyncLogWindowController
 
 
-static SyncLogWindowController *sharedInstance = nil;
+static SyncLogWindowController *syncLogInstance = nil;
 
 
 + (SyncLogWindowController *)sharedInstance
 {
-	if(sharedInstance == nil)
+	if(syncLogInstance == nil)
 	{
-		sharedInstance = [[SyncLogWindowController alloc] initWithWindowNibName:@"LogWindow"];
+		syncLogInstance = [[SyncLogWindowController alloc] initWithWindowNibName:@"LogWindow"];
 	}
 
-    return sharedInstance;
+    return syncLogInstance;
 }
 
 
 
 
-+ (void)logEntry:(NSString *)entry
+- (void)windowWillClose:(NSNotification *)aNotification
 {
-	[[SyncLogWindowController sharedInstance] addEntry:entry];
+	if(syncLogInstance != nil)
+	{
+		[syncLogInstance release];
+		syncLogInstance = nil;
+	}
 }
 
 
@@ -52,8 +57,21 @@ static SyncLogWindowController *sharedInstance = nil;
 
 -(void)awakeFromNib
 {
+	NSLog(@"SyncLogWindowController Awoke from Nib");
 	[super setShouldCascadeWindows:NO];
 	[super setWindowFrameAutosaveName:@"ifolder_log_window"];
+	
+    NSMutableDictionary *bindingOptions = [NSMutableDictionary dictionary];
+    	
+	// binding options for "name"
+	[bindingOptions setObject:@"No Name" forKey:@"NSNullPlaceholder"];
+
+//    [accountsColumn bind:@"value" toObject:[[NSApp delegate] DomainsController]
+//	  withKeyPath:@"arrangedObjects.properties.Name" options:bindingOptions];
+	
+	// bind the table column to the log to display it's contents
+	[logColumn bind:@"value" toObject:[[NSApp delegate] logArrayController]
+					withKeyPath:@"arrangedObjects" options:bindingOptions];	
 }
 
 
@@ -68,16 +86,6 @@ static SyncLogWindowController *sharedInstance = nil;
 
 - (IBAction)saveLog:(id)sender
 {
-}
-
-
-
-
-- (void)addEntry:(NSString *)entry
-{
-	[logController addObject:[NSString stringWithFormat:@"%@ %@", 
-			[[NSDate date] descriptionWithCalendarFormat:@"%m/%d/%Y %H:%M:%S" timeZone:nil locale:nil], 
-			entry]];
 }
 
 

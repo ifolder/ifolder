@@ -50,7 +50,6 @@
 @interface iFolder : NSObject
 {
 	NSMutableDictionary * properties;
-	NSImage				* icon;
 	BOOL				synchronizing;
 }
 
@@ -60,10 +59,10 @@
 -(BOOL) isSynchronizing;
 -(void) setIsSynchronizing:(BOOL)isSynchronizing;
 
--(NSImage *)Image;
--(NSNumber *)IsSubscription;
+-(BOOL)IsSubscription;
 -(NSString *)Name;
 -(NSString *)ID;
+-(NSString *)CollectionID;
 -(NSString *)Path;
 -(NSString *)DomainID;
 -(NSString *)OwnerUserID;

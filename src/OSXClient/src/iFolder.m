@@ -47,7 +47,6 @@
 -(void) dealloc
 {
 	[properties release];
-	[icon release];
 	
 	[super dealloc];
 }
@@ -84,12 +83,6 @@
 	[self updateDisplayInformation];
 }
 
-
--(id)Image
-{
-	return icon;
-}
-
 -(NSString *)Name
 {
 	return [properties objectForKey:@"Name"];
@@ -100,14 +93,23 @@
 	return [properties objectForKey:@"ID"];
 }
 
+-(NSString *)CollectionID
+{
+	return [properties objectForKey:@"CollectionID"];
+}
+
 -(NSString *)Path
 {
 	return [properties objectForKey:@"Path"];
 }
 
--(NSNumber *)IsSubscription
+-(BOOL)IsSubscription
 {
-	return [properties objectForKey:@"IsSubscription"];
+	NSNumber *num = [properties objectForKey:@"IsSubscription"];
+	if(num != nil)
+		return [num boolValue];
+	else
+		return NO;
 }
 
 -(NSString *)DomainID
@@ -137,10 +139,9 @@
 
 
 
-
 -(void) updateDisplayInformation
 {
-	if([ [self IsSubscription] boolValue])
+	if([self IsSubscription])
 	{
 		if([ [properties objectForKey:@"State"] isEqualToString:@"Available"])
 			[properties setObject:@"Available" forKey:@"Status"];
@@ -156,13 +157,10 @@
 			[properties setObject:[properties objectForKey:@"Owner"]
 								forKey:@"Location"];
 		}
-
-		if(icon != nil)
-		{
-			[icon release];
-		}
-		icon = [NSImage imageNamed:@"serverifolder24"];
-		[icon setScalesWhenResized:YES];
+		
+		NSImage *image = [NSImage imageNamed:@"serverifolder24"];
+		[image setScalesWhenResized:YES];
+		[properties setObject:image forKey:@"Image"];
 	}
 	else
 	{
@@ -183,11 +181,9 @@
 		if(location != nil)
 			[properties setObject:location forKey:@"Location"];
 			
-		if(icon != nil)
-			[icon release];
-
-		icon = [NSImage imageNamed:@"ifolder24"];
-		[icon setScalesWhenResized:YES];
+		NSImage *image = [NSImage imageNamed:@"ifolder24"];
+		[image setScalesWhenResized:YES];
+		[properties setObject:image forKey:@"Image"];
 	}
 }
 

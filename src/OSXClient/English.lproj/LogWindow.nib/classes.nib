@@ -5,7 +5,7 @@
             ACTIONS = {clearLog = id; saveLog = id; }; 
             CLASS = SyncLogWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {logController = NSArrayController; window = NSWindow; }; 
+            OUTLETS = {logColumn = NSTableColumn; window = NSWindow; }; 
             SUPERCLASS = NSWindowController; 
         }
     ); 

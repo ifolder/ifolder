@@ -2,28 +2,41 @@
 
 @implementation AboutBoxController
 
-static AboutBoxController *sharedInstance = nil;
+static AboutBoxController *aboutSharedInstance = nil;
 
 
 - (id)init 
 {
-    if (sharedInstance) 
+    if (aboutSharedInstance) 
 	{
         [self dealloc];
     } 
 	else
 	{
-        sharedInstance = [super init];
+        aboutSharedInstance = [super init];
     }
     
-    return sharedInstance;
+    return aboutSharedInstance;
 }
 
 
 + (AboutBoxController *)sharedInstance
 {
-    return sharedInstance ? sharedInstance : [[self alloc] init];
+    return aboutSharedInstance ? aboutSharedInstance : [[self alloc] init];
 }
+
+
+
+
+- (void)windowWillClose:(NSNotification *)aNotification
+{
+	if(aboutSharedInstance != nil)
+	{
+		[aboutSharedInstance release];
+		aboutSharedInstance = nil;
+	}
+}
+
 
 
 

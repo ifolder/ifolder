@@ -87,7 +87,6 @@
 - (void)dealloc;
 
 - (void)addDomain:(iFolderDomain *)newDomain;
-- (void)addiFolder:(iFolder *)newiFolder;
 
 -(iFolder *)selectediFolder;
 
@@ -113,6 +112,10 @@
 - (void)createiFolder:(NSString *)path inDomain:(NSString *)domainID;
 - (void)acceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)domainID toPath:(NSString *)localPath;
 
++(void)removeiFolderTS:(iFolder *)ifolder;
+-(void)removeiFolder:(iFolder *)ifolder;
++(void)addiFolderTS:(iFolder *)newiFolder;
+-(void)addiFolder:(iFolder *)newiFolder;
 
 
 
