@@ -38,9 +38,11 @@
 @class LoginWindowController;
 @class iFolder;
 @class iFolderData;
+@class SMNotifyEvent;
 @class SMFileSyncEvent;
 @class SMCollectionSyncEvent;
 @class SMNodeEvent;
+
 
 
 @interface iFolderApplication : NSObject
@@ -103,14 +105,17 @@
 //==========================================
 - (void)enableThreads:(id)arg;
 - (void)simiasEventThread:(id)arg;
-- (void)processNotifyEvents;
-- (void)processFileSyncEvents;
+
+- (void)processNotifyEvent:(SMNotifyEvent *)smne;
+- (void)processNodeEvent:(SMNodeEvent *)ne;
+- (void)processCollectionSyncEvent:(SMCollectionSyncEvent *)cse;
+- (void)processFileSyncEvent:(SMFileSyncEvent *)fse;
+
 - (void)handleFileSyncEvent:(SMFileSyncEvent *)fileSyncEvent;
-- (void)processCollectionSyncEvents;
 - (void)handleCollectionSyncEvent:(SMCollectionSyncEvent *)colSyncEvent;
-- (void)processNodeEvents;
 - (void)processSubscriptionNodeEvent:(SMNodeEvent *)nodeNodeEvent;
 - (void)processCollectionNodeEvent:(SMNodeEvent *)nodeNodeEvent;
+- (void)processUserNodeEvent:(SMNodeEvent *)userNodeEvent;
 
 
 

@@ -112,7 +112,7 @@ int SimiasEventNode(SimiasNodeEvent *nodeEvent, void *data)
 	NSDictionary *neProps = [getNodeEventProperties(nodeEvent) retain];
 	SMNodeEvent *ne = [[SMNodeEvent alloc] init];
 	[ne setProperties:neProps];
-	[[SimiasEventData sharedInstance] pushNodeEvent:ne];
+	[[SimiasEventData sharedInstance] pushEvent:ne];
 
 	[neProps release];
 	[ne release];
@@ -165,7 +165,7 @@ int SimiasEventSyncCollection(SimiasCollectionSyncEvent *collectionEvent, void *
 	NSDictionary *cseProps = [getCollectionSyncEventProperties(collectionEvent) retain];
 	SMCollectionSyncEvent *cse = [[SMCollectionSyncEvent alloc] init];
 	[cse setProperties:cseProps];
-	[[SimiasEventData sharedInstance] pushCollectionSyncEvent:cse];
+	[[SimiasEventData sharedInstance] pushEvent:cse];
 
 
 	
@@ -207,7 +207,7 @@ int SimiasEventSyncFile(SimiasFileSyncEvent *fileEvent, void *data)
 	NSDictionary *fseProps = [getFileSyncEventProperties(fileEvent) retain];
 	SMFileSyncEvent *fse = [[SMFileSyncEvent alloc] init];
 	[fse setProperties:fseProps];
-	[[SimiasEventData sharedInstance] pushFileSyncEvent:fse];
+	[[SimiasEventData sharedInstance] pushEvent:fse];
 
 	[fseProps release];
 	[fse release];
@@ -260,7 +260,7 @@ int SimiasEventNotifyMessage(SimiasNotifyEvent *notifyEvent, void *data)
 	NSDictionary *neProps = [getNotifyEventProperties(notifyEvent) retain];
 	SMNotifyEvent *ne = [[SMNotifyEvent alloc] init];
 	[ne setProperties:neProps];
-	[[SimiasEventData sharedInstance] pushNotifyEvent:ne];
+	[[SimiasEventData sharedInstance] pushEvent:ne];
 
 	[neProps release];
 	[ne release];

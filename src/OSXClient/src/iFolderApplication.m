@@ -482,12 +482,32 @@
 //		NSLog(@"simiasEventThread going to sleep...");
 		[sed blockUntilEvents];
 //		NSLog(@"simias EventThread woke up to process events");
-		
-		[self processNotifyEvents];
-		[self processCollectionSyncEvents];
-		[self processNodeEvents];
-		[self processFileSyncEvents];
 
+		while([sed hasEvents])
+		{
+			SMEvent *sme = [[sed popEvent] retain];
+			if([[sme eventType] compare:@"NotifyEventArgs"] == 0)
+			{
+				[self processNotifyEvent:(SMNotifyEvent *)sme];
+			}
+			else if([[sme eventType] compare:@"CollectionSyncEventArgs"] == 0)
+			{
+				[self processCollectionSyncEvent:(SMCollectionSyncEvent *)sme];
+			}
+			else if([[sme eventType] compare:@"NodeEventArgs"] == 0)
+			{
+				[self processNodeEvent:(SMNodeEvent *)sme];
+			}
+			else if([[sme eventType] compare:@"FileSyncEventArgs"] == 0)
+			{
+				[self processFileSyncEvent:(SMFileSyncEvent *)sme];
+			}
+			else
+			{
+				NSLog(@"***** UNHANDLED EVENT ****  Type: %@", [sme eventType]);
+			}
+			[sme release];
+		}
 	}
     [pool release];	
 }
@@ -499,23 +519,15 @@
 // processNotifyEvents
 // method to loop through all notify events and process them
 //===================================================================
-- (void)processNotifyEvents
+- (void)processNotifyEvent:(SMNotifyEvent *)smne
 {
-	SimiasEventData *sed = [SimiasEventData sharedInstance];
-
-	// Take care of Notify Events
-	while([sed hasNotifyEvents])
-	{
-		SMNotifyEvent *smne = [[sed popNotifyEvent] retain];
-
-		NSLog(@"Got Notify Message %@", [smne message]);
+	NSLog(@"Got Notify Message %@", [smne message]);
 		
-		if([[smne type] compare:@"Domain-Up"] == 0)
-		{
-			[self showLoginWindowTS:[smne message]];
-		}
-		[smne release];
+	if([[smne type] compare:@"Domain-Up"] == 0)
+	{
+		[self showLoginWindowTS:[smne message]];
 	}
+
 }
 
 
@@ -525,37 +537,32 @@
 // processNodeEvents
 // method to loop through all node events and process them
 //===================================================================
-- (void)processNodeEvents
+- (void)processNodeEvent:(SMNodeEvent *)ne
 {
-	SimiasEventData *sed = [SimiasEventData sharedInstance];
-
-	// Take care of Collection Sync
-	while([sed hasNodeEvents])
+	// Handle all Node events here
+	if([[ne type] compare:@"Subscription"] == 0)
 	{
-		SMNodeEvent *ne = [[sed popNodeEvent] retain];
-		// Do a whole hell of a lot of work
-
-		// Handle all Node events here
-		if([[ne type] compare:@"Subscription"] == 0)
+		// First check to see if this is a POBox 'cause we
+		// don't care much about it if'n it aint.
+		if([[iFolderData sharedInstance] isPOBox:[ne collectionID]])
 		{
-			// First check to see if this is a POBox 'cause we
-			// don't care much about it if'n it aint.
-			if([[iFolderData sharedInstance] isPOBox:[ne collectionID]])
-			{
-				[self processSubscriptionNodeEvent:ne];
-			}
+			[self processSubscriptionNodeEvent:ne];
 		}
-		else if([[ne type] compare:@"Collection"] == 0)
-		{
-			[self processCollectionNodeEvent:ne];
-		}
-		else
-		{
-			NSLog(@"***** UNHANDLED NODE EVENT ****  Type: %@", [ne type]);
-		}
-
-		[ne release];
 	}
+	else if([[ne type] compare:@"Collection"] == 0)
+	{
+		[self processCollectionNodeEvent:ne];
+	}
+	else if([[ne type] compare:@"Member"] == 0)
+	{
+		NSLog(@"Processing member event");
+		[self processUserNodeEvent:ne];
+	}
+	else
+	{
+		NSLog(@"***** UNHANDLED NODE EVENT ****  Type: %@", [ne type]);
+	}
+
 }
 
 
@@ -680,21 +687,43 @@
 
 
 //===================================================================
+// processUserNodeEvent
+// method to loop through all user events and process them
+//===================================================================
+- (void)processUserNodeEvent:(SMNodeEvent *)userNodeEvent
+{
+	switch([userNodeEvent action])
+	{
+		case NODE_CREATED:
+		{
+			NSLog(@"user created, marking as such in iFolderSharedData");
+			[[iFolderData sharedInstance] setUsersAdded:[userNodeEvent collectionID]];
+			break;
+		}
+		case NODE_DELETED:
+		{
+			NSLog(@"Member deleted?");
+			break;
+		}
+		case NODE_CHANGED:
+		{
+			NSLog(@"Member changed?");
+			break;
+		}
+	}
+}
+
+
+
+
+//===================================================================
 // processCollectionSyncEvents
 // method to loop through all collection sync events and process them
 //===================================================================
-- (void)processCollectionSyncEvents
+- (void)processCollectionSyncEvent:(SMCollectionSyncEvent *)cse
 {
-	SimiasEventData *sed = [SimiasEventData sharedInstance];
-
-	// Take care of Collection Sync
-	while([sed hasCollectionSyncEvents])
-	{
-		SMCollectionSyncEvent *cse = [[sed popCollectionSyncEvent] retain];
-		[self performSelectorOnMainThread:@selector(handleCollectionSyncEvent:) 
-				withObject:cse waitUntilDone:YES ];				
-		[cse release];
-	}
+	[self performSelectorOnMainThread:@selector(handleCollectionSyncEvent:) 
+			withObject:cse waitUntilDone:YES ];				
 }
 
 
@@ -719,6 +748,7 @@
 		if([cse syncAction] == SYNC_ACTION_START)
 		{
 			[ifolder setIsSynchronizing:YES];
+			[[iFolderData sharedInstance] clearUsersAdded:[cse ID]];
 		}
 		else
 		{
@@ -746,6 +776,11 @@
 			{
 				NSLog(@"iFolder has collisions, notifying user");
 				[iFolderNotificationController collisionNotification:ifolder];								
+			}
+
+			if([[iFolderData sharedInstance] usersAdded:[cse ID]])
+			{
+				[iFolderNotificationController newUserNotification:ifolder];								
 			}
 		}
 	}
@@ -790,20 +825,12 @@
 // processFileSyncEvents
 // method to loop through all file sync events and process them
 //===================================================================
-- (void)processFileSyncEvents
+- (void)processFileSyncEvent:(SMFileSyncEvent *)fse
 {
-	SimiasEventData *sed = [SimiasEventData sharedInstance];
-
-	// Take care of File Sync
-	while([sed hasFileSyncEvents])
+	if([fse objectType] != FILE_SYNC_UNKNOWN)
 	{
-		SMFileSyncEvent *fse = [[sed popFileSyncEvent] retain];
-		if([fse objectType] != FILE_SYNC_UNKNOWN)
-		{
-			[self performSelectorOnMainThread:@selector(handleFileSyncEvent:) 
-					withObject:fse waitUntilDone:YES ];				
-		}
-		[fse release];
+		[self performSelectorOnMainThread:@selector(handleFileSyncEvent:) 
+				withObject:fse waitUntilDone:YES ];				
 	}
 }
 
@@ -825,7 +852,6 @@
 	{
 		BOOL updateLog = NO;
 
-///		NSLog(@"File Sync: %@ sizeRemaining: %qi sizeToSync: %qi", [fse name], [fse sizeRemaining], [fse sizeToSync]);
 		if([fse sizeRemaining] == [fse sizeToSync])
 		{
 			updateLog = YES;

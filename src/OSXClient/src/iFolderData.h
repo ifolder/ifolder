@@ -34,6 +34,8 @@
 	iFolderService					*ifolderService;
 	SimiasService					*simiasService;
 
+	NSMutableDictionary				*ifolderUserChanges;
+
 	NSMutableDictionary				*keyedDomains;
 	NSMutableDictionary				*keyediFolders;		
 	NSMutableDictionary				*keyedSubscriptions;
@@ -88,5 +90,10 @@
 									fromDomain:(NSString *)domainID;
 -(void)revertiFolder:(NSString *)iFolderID;
 -(void)deleteiFolder:(NSString *)ifolderID;
+
+
+-(void)setUsersAdded:(NSString *)ifolderID;
+-(BOOL)usersAdded:(NSString *)ifolderID;
+-(void)clearUsersAdded:(NSString *)ifolderID;
 
  @end

@@ -116,8 +116,9 @@ static iFolderNotificationController *sharedInstance = nil;
 {
 	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYUSER])
 	{
-		[notifyContext setObject:@"New User" forKey:@"title"];
-		[notifyContext setObject:@"A new user joined your iFolder" forKey:@"description"];
+		[notifyContext setObject:@"New iFolder Members" forKey:@"title"];
+		[notifyContext setObject:[NSString stringWithFormat:@"New members have been added to the iFolder \"%@\"", [ifolder Name]]
+										forKey:@"description"];
 
 		[self performNotification:notifyContext];
 	}
