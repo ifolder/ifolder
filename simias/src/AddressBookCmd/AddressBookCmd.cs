@@ -53,6 +53,7 @@ namespace AddressBookCmd
 		private ArrayList		addContactList = null;
 		private	ArrayList		propertyList = null;
 		private ArrayList       deletePropertyList = null;
+		private ArrayList		addAddressList = null;
 
 		/// <summary>
 		/// The main entry point for the application.
@@ -172,6 +173,15 @@ namespace AddressBookCmd
 								cAbc.AddContact(args[++i]);
 							}
 						}
+						else
+						if (args[i][2] == 'a')
+						{
+							// Add address property
+							if (i + 1 <= args.Length)
+							{
+								cAbc.AddAddress(args[++i]);
+							}
+						}
 					}
 					else
 					if (args[i][0] == '/' && args[i][1] == 'd')
@@ -212,7 +222,7 @@ namespace AddressBookCmd
 						// update a contact
 						if (args[i][2] == 'c')
 						{
-							// delete a contact
+							// add/update a contact
 							if (i + 1 <= args.Length)
 							{
 								cAbc.AddProperty(args[++i]);
@@ -224,6 +234,7 @@ namespace AddressBookCmd
 			}
 
 			cAbc.ProcessCommands();
+			Environment.Exit(0);
 		}
 
 		static void DisplayUsage()
@@ -232,10 +243,11 @@ namespace AddressBookCmd
 			Console.WriteLine("   /b <address book> - book to run commands against"); 
 			Console.WriteLine("   /c <contact> - contact to execute commands against");
 			Console.WriteLine("   /av <vcard file> - add or import vcard file");
+			Console.WriteLine("   /aa <address> - add address property (ex. zip=84604;country=usa)");
 			Console.WriteLine("   /ab <address book> - add/create a new address book");
 			Console.WriteLine("   /ac <username> - add/create a new contact");
 			Console.WriteLine("   /db <address book> - delete an address book");
-			Console.WriteLine("   /dc <contact> - delete a contact from selected addres book");
+			Console.WriteLine("   /dc <contact> - delete a contact from selected address book");
 			Console.WriteLine("   /dp <property name> - delete the property");
 			Console.WriteLine("   /ev <vcard file> - export a vCard");
 			Console.WriteLine("   /lb = list address books");
@@ -359,6 +371,38 @@ namespace AddressBookCmd
 				Console.WriteLine("   Url Address:   " + cContact.Url);
 			}
 
+			IABList aList = cContact.GetAddresses();
+			foreach(Address cAddress in aList)
+			{
+				Console.WriteLine("   Address:     ");
+
+				if (cAddress.Street != "")
+				{
+					Console.WriteLine("     Street: " + cAddress.Street);
+				}
+
+				if (cAddress.Region != "")
+				{
+					Console.WriteLine("     Region: " + cAddress.Region);
+				}
+
+				if (cAddress.Locality != "")
+				{
+					Console.WriteLine("     Locality: " + cAddress.Locality);
+				}
+
+				if (cAddress.PostalCode != "")
+				{
+					Console.WriteLine("     Zip:    " + cAddress.PostalCode);
+				}
+
+				if (cAddress.Country != "")
+				{
+					Console.WriteLine("     Country: " + cAddress.Country);
+				}
+			}
+
+
 			if (cContact.Note != "")
 			{
 				Console.WriteLine("   Note:          " + cContact.Note);
@@ -386,6 +430,17 @@ namespace AddressBookCmd
 			this.propertyList.Add(propertyValue);
 		}
 
+		// Address value string in the following format: zip=value;street=value;   etc.
+		public void AddAddress(string addressValue)
+		{
+			if (this.addAddressList == null)
+			{
+				this.addAddressList = new ArrayList();
+			}
+
+			this.addAddressList.Add(addressValue);
+		}
+
 		// Property value string in the following format: property=value
 		public void	AddDeleteProperty(string propertyValue)
 		{
@@ -411,7 +466,17 @@ namespace AddressBookCmd
 			}
 			else
 			{
-				cAddressBook = abManager.GetAddressBookByName(addressBookName);
+				try
+				{
+					cAddressBook = abManager.GetAddressBookByName(addressBookName);
+				}
+				catch
+				{
+					if (verbose == true)
+					{
+						Console.WriteLine("Address Book: {0} does not exist.", addressBookName);
+					}
+				}
 			}
 
 			if (cAddressBook == null)
@@ -564,6 +629,88 @@ namespace AddressBookCmd
 				}
 			}
 
+
+			// Adding addresses to a contact?
+			if (this.addAddressList != null && cContact != null)
+			{
+				bool	cUpdated = false;
+				Address	cAddress = new Address();
+				foreach(string addressString in this.addAddressList)
+				{
+					Regex o = new Regex(@";");
+					IEnumerator enumTokens = o.Split(addressString).GetEnumerator();
+					while(enumTokens.MoveNext())
+					{
+						string token = (string) enumTokens.Current;
+						token.ToLower();
+
+						Regex t = new Regex(@"=");
+						IEnumerator memberValueTokens = t.Split(token).GetEnumerator();
+
+						if(memberValueTokens.MoveNext())
+						{
+							string member = (string) memberValueTokens.Current;
+							string memberValue;
+
+							if (memberValueTokens.MoveNext())
+							{
+								memberValue = (string) memberValueTokens.Current;
+							}
+							else
+							{
+								memberValue = null;
+							}
+
+							if (member == "postalcode")
+							{
+								cAddress.PostalCode = memberValue;
+								cUpdated = true;
+							}
+							else
+							if (member == "region")
+							{
+								cAddress.Region = memberValue;
+								cUpdated = true;
+							}
+							else
+							if (member == "locality")
+							{
+								cAddress.Locality = memberValue;
+								cUpdated = true;
+							}
+							else
+							if (member == "street")
+							{
+								cAddress.Street = memberValue;
+								cUpdated = true;
+							}
+							else
+							if (member == "country")
+							{
+								cAddress.Country = memberValue;
+								cUpdated = true;
+							}
+							else
+							if (member == "mailstop")
+							{
+								cAddress.MailStop = memberValue;
+								cUpdated = true;
+							}
+						}
+					}
+				}
+
+				if (cUpdated == true)
+				{
+					if (verbose == true)
+					{
+						Console.WriteLine("Adding new Address to Contact: " + cContact.UserName);
+					}
+					cContact.AddAddress(cAddress);
+					cContact.Commit();
+				}
+			}
+
 			if (listProperties == true && cContact != null)
 			{
 				ListProperties(cContact);
@@ -697,6 +844,11 @@ namespace AddressBookCmd
 									cMail.Address = (string) enumTokens1.Current;
 									cUpdated = true;
 
+									if (verbose == true)
+									{
+										Console.WriteLine("Adding email address: " + cMail.Address);
+									}
+
 									while(enumTokens1.MoveNext())
 									{
 										string typeToken = (string) enumTokens1.Current;
@@ -704,16 +856,28 @@ namespace AddressBookCmd
 
 										if (typeToken == "preferred")
 										{
+											if (verbose == true)
+											{
+												Console.WriteLine("   Preferred");
+											}
 											cMail.Preferred = true;
 										}
 										else
 										if (typeToken == "work")
 										{
+											if (verbose == true)
+											{
+												Console.WriteLine("   Work");
+											}
 											eTypes |= EmailTypes.work;
 										}
 										else
 										if (typeToken == "personal")
 										{
+											if (verbose == true)
+											{
+												Console.WriteLine("   Personal");
+											}
 											eTypes |= EmailTypes.personal;
 										}
 										else
