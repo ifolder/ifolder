@@ -603,6 +603,9 @@ namespace Simias.Storage
 							// This code path is used to commit an enterprise stub node object.
 							if ( node.IsStub )
 							{
+								// Validate this Collection object.
+								ValidateNodeForCommit( node );
+
 								// Copy the XML node over to the modify document.
 								XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
 								commitDocument.DocumentElement.AppendChild( xmlNode );
