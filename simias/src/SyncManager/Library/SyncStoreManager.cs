@@ -63,7 +63,7 @@ namespace Simias.Sync
 			// events
 			subscriber = new EventSubscriber(syncManager.Config);
 			subscriber.Enabled = false;
-			subscriber.NodeTypeFilter = "Collection";
+			subscriber.NodeTypeFilter = NodeTypes.CollectionType;
 			subscriber.NodeCreated += new NodeEventHandler(OnCollectionCreated);
 			subscriber.NodeDeleted += new NodeEventHandler(OnCollectionDeleted);
 		}
