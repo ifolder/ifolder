@@ -81,7 +81,11 @@
 
 		for(domainCount = 0; domainCount < [newDomains count]; domainCount++)
 		{
-			[self addDomain:[newDomains objectAtIndex:domainCount]];
+			iFolderDomain *newDomain = [newDomains objectAtIndex:domainCount];
+			
+			[self addDomain:newDomain];
+			if( [newDomain IsDefault] )
+				[domainsController setSelectionIndex:domainCount];
 		}
 //		[domainsController addObjects:newDomains];
 		
@@ -171,6 +175,8 @@
 
 - (IBAction)newiFolder:(id)sender
 {
+	[createSheetController setSelectedDomain:
+		[[domainsController selectedObjects] objectAtIndex:[domainsController selectionIndex] ] ];
 	[createSheetController showWindow:self];
 }
 
@@ -490,7 +496,7 @@
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
 {
-	return [toolbarItemKeys subarrayWithRange:NSMakeRange(0,13)];
+	return [toolbarItemKeys subarrayWithRange:NSMakeRange(0,8)];
 }
 
 
@@ -506,7 +512,7 @@
 	[item setToolTip:@"Create a new iFolder"]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(newiFolder:)];
-	[item setImage:[NSImage imageNamed:@"ifolder-new"]];
+	[item setImage:[NSImage imageNamed:@"newifolder24"]];
     [toolbarItems setObject:item forKey:@"NewiFolder"]; // add to toolbar list
 	[toolbarItemKeys addObject:@"NewiFolder"];
 	[item release];
@@ -517,7 +523,7 @@
 	[item setToolTip:@"Setup a shared iFolder"]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(setupiFolder:)];
-	[item setImage:[NSImage imageNamed:@"prefs-general"]];
+	[item setImage:[NSImage imageNamed:@"setup24"]];
     [toolbarItems setObject:item forKey:@"SetupiFolder"]; // add to toolbar list
 	[toolbarItemKeys addObject:@"SetupiFolder"];
 	[item release];
@@ -527,52 +533,17 @@
 	[toolbarItemKeys addObject:NSToolbarSpaceItemIdentifier];
 	[item release];
 
-	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"RevertiFolder"];
-	[item setPaletteLabel:@"Revert iFolder"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"Revert"]; // name for the item in the toolbar
-	[item setToolTip:@"Revert to a normal folder"]; // tooltip
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"SynciFolder"];
+	[item setPaletteLabel:@"Sync iFolder"]; // name for the "Customize Toolbar" sheet
+	[item setLabel:@"Sync"]; // name for the item in the toolbar
+	[item setToolTip:@"Sync selected iFolder now"]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
-    [item setAction:@selector(revertiFolder:)];
-	[item setImage:[NSImage imageNamed:@"ifolderonserver24"]];
-    [toolbarItems setObject:item forKey:@"RevertiFolder"]; // add to toolbar list
-	[toolbarItemKeys addObject:@"RevertiFolder"];
+    [item setAction:@selector(synciFolder:)];
+	[item setImage:[NSImage imageNamed:@"sync24"]];
+    [toolbarItems setObject:item forKey:@"SynciFolder"]; // add to toolbar list
+	[toolbarItemKeys addObject:@"SynciFolder"];
 	[item release];
-
-	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"DeleteiFolder"];
-	[item setPaletteLabel:@"Delete iFolder"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"Delete"]; // name for the item in the toolbar
-	[item setToolTip:@"Delete an iFolder"]; // tooltip
-    [item setTarget:self]; // what should happen when it's clicked
-    [item setAction:@selector(deleteiFolder:)];
-	[item setImage:[NSImage imageNamed:@"prefs-general"]];
-    [toolbarItems setObject:item forKey:@"DeleteiFolder"]; // add to toolbar list
-	[toolbarItemKeys addObject:@"DeleteiFolder"];
-	[item release];
-
-	[toolbarItemKeys addObject:NSToolbarSpaceItemIdentifier];
-
-	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"OpeniFolder"];
-	[item setPaletteLabel:@"Open iFolder"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"Open"]; // name for the item in the toolbar
-	[item setToolTip:@"Open an iFolder in Finder"]; // tooltip
-    [item setTarget:self]; // what should happen when it's clicked
-    [item setAction:@selector(openiFolder:)];
-	[item setImage:[NSImage imageNamed:@"prefs-general"]];
-    [toolbarItems setObject:item forKey:@"OpeniFolder"]; // add to toolbar list
-	[toolbarItemKeys addObject:@"OpeniFolder"];
-	[item release];
-
-
-	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"iFolderProperties"];
-	[item setPaletteLabel:@"iFolder Properties"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"Properties"]; // name for the item in the toolbar
-	[item setToolTip:@"Open properties of an iFolder"]; // tooltip
-    [item setTarget:self]; // what should happen when it's clicked
-    [item setAction:@selector(showProperties:)];
-	[item setImage:[NSImage imageNamed:@"prefs-general"]];
-    [toolbarItems setObject:item forKey:@"iFolderProperties"]; // add to toolbar list
-	[toolbarItemKeys addObject:@"iFolderProperties"];
-	[item release];
+	
 
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"ShareiFolder"];
 	[item setPaletteLabel:@"Share an iFolder"]; // name for the "Customize Toolbar" sheet
@@ -580,48 +551,39 @@
 	[item setToolTip:@"Share an iFolder"]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(shareiFolder:)];
-	[item setImage:[NSImage imageNamed:@"prefs-general"]];
+	[item setImage:[NSImage imageNamed:@"share24"]];
     [toolbarItems setObject:item forKey:@"ShareiFolder"]; // add to toolbar list
 	[toolbarItemKeys addObject:@"ShareiFolder"];
 	[item release];
+
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"ResolveConflicts"];
+	[item setPaletteLabel:@"Resolve Conflicts"]; // name for the "Customize Toolbar" sheet
+	[item setLabel:@"Resolve"]; // name for the item in the toolbar
+	[item setToolTip:@"Resolve file conflicts"]; // tooltip
+    [item setTarget:self]; // what should happen when it's clicked
+    [item setAction:@selector(resolveConflicts:)];
+	[item setImage:[NSImage imageNamed:@"conflict24"]];
+    [toolbarItems setObject:item forKey:@"ResolveConflicts"]; // add to toolbar list
+	[toolbarItemKeys addObject:@"ResolveConflicts"];
+	[item release];
+
 
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarFlexibleSpaceItemIdentifier];
 	[toolbarItems setObject:item forKey:NSToolbarFlexibleSpaceItemIdentifier];
 	[toolbarItemKeys addObject:NSToolbarFlexibleSpaceItemIdentifier];
 	[item release];
-
-	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"RefreshiFolders"];
-	[item setPaletteLabel:@"Refresh iFolders"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"Refresh"]; // name for the item in the toolbar
-	[item setToolTip:@"Refresh iFolders"]; // tooltip
-    [item setTarget:self]; // what should happen when it's clicked
-    [item setAction:@selector(refreshWindow:)];
-	[item setImage:[NSImage imageNamed:@"prefs-general"]];
-    [toolbarItems setObject:item forKey:@"RefreshiFolders"]; // add to toolbar list
-	[toolbarItemKeys addObject:@"RefreshiFolders"];
-	[item release];
-
-	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Preferences"];
-	[item setPaletteLabel:@"Preferences"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"Preferences"]; // name for the item in the toolbar
-	[item setToolTip:@"Preferences"]; // tooltip
-    [item setTarget:self]; // what should happen when it's clicked
-    [item setAction:@selector(showPrefs:)];
-	[item setImage:[NSImage imageNamed:@"prefs-general"]];
-    [toolbarItems setObject:item forKey:@"Preferences"]; // add to toolbar list
-	[toolbarItemKeys addObject:@"Preferences"];
-	[item release];
-
-	item=[[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarCustomizeToolbarItemIdentifier];
-	[toolbarItems setObject:item forKey:NSToolbarCustomizeToolbarItemIdentifier];
-	[toolbarItemKeys addObject:NSToolbarCustomizeToolbarItemIdentifier];
-	[item release];
+	
+    item=[[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarCustomizeToolbarItemIdentifier];
+    [toolbarItems setObject:item forKey:NSToolbarCustomizeToolbarItemIdentifier];
+    [toolbarItemKeys addObject:NSToolbarCustomizeToolbarItemIdentifier];
+    [item release];
 
 	toolbar = [[NSToolbar alloc] initWithIdentifier:@"iFolderToolbar"];
 	[toolbar setDelegate:self];
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
 	[[self window] setToolbar:toolbar];
+	
 }
 
 
