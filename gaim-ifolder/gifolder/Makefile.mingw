@@ -67,7 +67,6 @@ LIB_PATHS =		-L$(GTK_TOP)/lib \
 C_SRC =		gifolder.c \
 			event-handler.c \
 			gaim-domain.c \
-			simias-invitation-store.c \
 			simias-messages.c \
 			simias-prefs.c \
 			simias-util.c \
