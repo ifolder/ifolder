@@ -160,7 +160,7 @@ namespace Simias.POBox
 			set { fields[Subscription.SubscriptionCollectionIDProperty] = value; }
 		}
 
-		/// <summary>
+		/// <summary>	
 		/// The collection name
 		/// </summary>
 		public string SubscriptionCollectionName
@@ -183,8 +183,8 @@ namespace Simias.POBox
 		/// </summary>
 		public bool SubscriptionCollectionHasDirNode
 		{
-			get { return bool.Parse(fields[Subscription.SubscriptionCollectionTypeProperty]); }
-			set { fields[Subscription.SubscriptionCollectionTypeProperty] = value.ToString(); }
+			get { return bool.Parse(fields[Subscription.SubscriptionCollectionHasDirNodeProperty]); }
+			set { fields[Subscription.SubscriptionCollectionHasDirNodeProperty] = value.ToString(); }
 		}
 
 		/// <summary>

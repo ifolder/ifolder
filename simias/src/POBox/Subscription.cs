@@ -160,6 +160,11 @@ namespace Simias.POBox
 		public const string SubscriptionCollectionURLProperty = "SbColURL";
 
 		/// <summary>
+		/// The name of the property storing the value that tells if the collection has a DirNode.
+		/// </summary>
+		public static readonly string SubscriptionCollectionHasDirNodeProperty = "HasDirNode";
+
+		/// <summary>
 		/// The name of the property storing the post office service url.
 		/// </summary>
 		public static readonly string POServiceURLProperty = "POSvcURL";
@@ -220,6 +225,7 @@ namespace Simias.POBox
 			SubscriptionCollectionID = subscriptionInfo.SubscriptionCollectionID;
 			SubscriptionCollectionName = subscriptionInfo.SubscriptionCollectionName;
 			SubscriptionCollectionType = subscriptionInfo.SubscriptionCollectionType;
+			HasDirNode = subscriptionInfo.SubscriptionCollectionHasDirNode;
 			POServiceURL = subscriptionInfo.POServiceUrl;
 			Properties.AddNodeProperty(PropertyTags.Types, typeof(Subscription).Name);
 		}
@@ -531,7 +537,16 @@ namespace Simias.POBox
 		/// </summary>
 		public bool HasDirNode
 		{
-			get { return (DirNodeID != null); }
+			get
+			{
+				Property p = Properties.GetSingleProperty(SubscriptionCollectionHasDirNodeProperty);
+
+				return (p != null) ? (bool)p.Value : false;
+			}
+			set
+			{
+				Properties.ModifyProperty(SubscriptionCollectionHasDirNodeProperty, value);
+			}
 		}
 
 		/// <summary>
