@@ -304,6 +304,7 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 								   GClosure					*update_complete,
 								   NautilusOperationHandle	**handle)
 {
+	g_print ("--> ifolder_nautilus_update_file_info called\n");
 	gchar *ifolder_type = NULL;
 	
 	if (is_ifolder (file))
@@ -375,8 +376,45 @@ revert_ifolder_thread (gpointer user_data)
 {
 	NautilusFileInfo *file;
 	gint error;
+	gchar *ifolder_path;
+	gchar *ifolder_id;
+	char *output;
+	char args [1024];
+	memset (args, '\0', sizeof (args));
 	
 	file = (NautilusFileInfo *)user_data;
+	
+	ifolder_path = get_file_path (file);
+	if (ifolder_path != NULL) {
+		ifolder_id = get_ifolder_id_by_local_path (ifolder_path);
+		if (ifolder_id != NULL) {
+			sprintf (args, "%s confirm-revert %s", NAUTILUS_IFOLDER_SH_PATH, ifolder_id);
+			g_print ("args: ");
+			g_print (args);
+			g_print ("\n");
+			
+			g_free (ifolder_id);
+		}
+		
+		g_free (ifolder_path);
+	}
+	
+	if (strlen (args) <= 0)
+		return;
+		
+	output = ifolder_dialog_thread (strdup(args));
+	if (output == NULL) {
+		g_print ("*** No output from nautilus-ifolder so we cannot revert iFolder\n");
+		return;
+	}
+	
+	if (!strcmp (output, "no")) {
+		g_print ("*** The user must have selected 'no' so we cannot revert iFolder\n");
+		free (output);
+		return;
+	}
+	
+	free (output);
 	
 	error = revert_ifolder (file);
 	if (error) {
@@ -409,12 +447,21 @@ revert_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 					file);
 }
 
+/**
+ * If this function returns NON-NULL, it contains a char * from the process
+ * executed by popen and should be freed.  The char * only contains the first
+ * line of output from the executed process.
+ */
 static void *
-ifolder_propdialog_thread (gpointer user_data)
+ifolder_dialog_thread (gpointer user_data)
 {
 	FILE *output;
+	char readBuffer [1024];
 	char *args = (char *)user_data;
+	char *return_str = NULL;
 	
+	memset (readBuffer, '\0', sizeof (readBuffer));
+
 	output = popen (args, "r");
 	if (output == NULL) {
 		/* error calling mono nautilus-ifolder.exe */
@@ -425,8 +472,17 @@ ifolder_propdialog_thread (gpointer user_data)
 		return;
 	}
 	
+	if (fgets (readBuffer, 1024, output) != NULL) {
+		return_str = strdup (readBuffer);
+		g_print ("*** 1st line of STDOUT from popen: ");
+		g_print (return_str);
+		g_print ("\n");
+	}
+
 	free (args);
 	pclose (output);
+	
+	return (void *)return_str;
 }
 
 static void
@@ -466,7 +522,7 @@ share_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 		
 	pthread_create (&thread, 
 					NULL, 
-					ifolder_propdialog_thread,
+					ifolder_dialog_thread,
 					strdup (args));
 }
 
@@ -508,7 +564,7 @@ ifolder_properties_callback (NautilusMenuItem *item, gpointer user_data)
 		
 	pthread_create (&thread, 
 					NULL, 
-					ifolder_propdialog_thread,
+					ifolder_dialog_thread,
 					strdup (args));
 }
 
@@ -523,6 +579,7 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 								 GtkWidget *window,
 								 GList *files)
 {
+	g_print ("--> ifolder_nautilus_get_file_items called\n");
 	NautilusMenuItem *item;
 	NautilusFileInfo *file;
 	GList *items;
