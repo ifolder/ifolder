@@ -2927,7 +2927,6 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<row><td>Registry16</td><td>2</td><td>SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ShellIconOverlayIdentifiers\iFolder1</td><td/><td>{AA81D831-3B41-497c-B508-E9D02F8DF421}</td><td>iFolderShell.dll</td><td/></row>
 		<row><td>Registry18</td><td>1</td><td>Software\Microsoft\Windows\CurrentVersion\Run</td><td>iFolder</td><td>"[INSTALLDIR]iFolderApp.exe"</td><td>OnlyCurrentUser</td><td>0</td></row>
 		<row><td>Registry19</td><td>2</td><td>Software\Microsoft\Windows\CurrentVersion\Run</td><td>iFolder</td><td>"[INSTALLDIR]iFolderApp.exe"</td><td>AllUsers</td><td>0</td></row>
-		<row><td>Registry3</td><td>1</td><td>Software\Microsoft\Windows\CurrentVersion\Run</td><td>iFolder</td><td>"[INSTALLDIR]\iFolderApp.exe"</td><td>iFolderApp.exe</td><td>0</td></row>
 	</table>
 
 	<table name="RemoveFile">
