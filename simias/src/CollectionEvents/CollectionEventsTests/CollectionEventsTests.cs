@@ -443,6 +443,8 @@ namespace Simias.Event
 			Console.WriteLine("Usage: CollectionEventsTest.exe (mode) [event count]");
 			Console.WriteLine("      where mode = P(ublish) [event count]");
 			Console.WriteLine("      or    mode = S(ubscribe) (P(erformance))");
+			Console.WriteLine("      or    mode = SD(Subscribe Default Store)");
+			Console.WriteLine("      or    mode = LD(Load service Default Store)");
 			Console.WriteLine("      or    mode = L(Load service)");
 		}
 
@@ -497,13 +499,34 @@ namespace Simias.Event
 					t.Cleanup();
 					break;
 
+				case "SD":
+					conf = new Configuration();
+					t.subscribe();
+					Console.WriteLine("Press Enter to exit");
+					Console.ReadLine();
+					t.Cleanup();
+					break;
+
 				case "L":
+				{
 					Manager manager = new Manager(conf);
 					manager.StartServices();
 					Console.WriteLine("Press Enter to exit");
 					Console.ReadLine();
 					manager.StopServices();
 					break;
+				}
+
+				case "LD":
+				{
+					conf = new Configuration();
+					Manager manager = new Manager(conf);
+					manager.StartServices();
+					Console.WriteLine("Press Enter to exit");
+					Console.ReadLine();
+					manager.StopServices();
+					break;
+				}
 
 				default:
 					usage();
