@@ -45,8 +45,7 @@ namespace Simias.Storage
 		/// <param name="oldRoot">The old path to the root path.</param>
 		/// <param name="newRoot">The new path to the root path.</param>
 		public CollectionRootChangedEventArgs(string source, string collection, string type, string oldRoot, string newRoot) :
-			this(source, collection, type, oldRoot, newRoot, 0)
-
+			this(source, collection, type, oldRoot, newRoot, 0, DateTime.Now)
 		{
 		}
 
@@ -60,8 +59,9 @@ namespace Simias.Storage
 		/// <param name="oldRoot">The old path to the root path.</param>
 		/// <param name="newRoot">The new path to the root path.</param>
 		/// <param name="eventId">A user defined event ID. Only has meaning to a publisher.</param>
-		public CollectionRootChangedEventArgs(string source, string collection, string type, string oldRoot, string newRoot, int eventId) :
-			base(source, collection, collection, type, EventType.CollectionRootChanged, eventId)
+		/// <param name="time">The time of the event.</param>
+		public CollectionRootChangedEventArgs(string source, string collection, string type, string oldRoot, string newRoot, int eventId, DateTime time) :
+			base(source, collection, collection, type, EventType.CollectionRootChanged, eventId, time)
 
 		{
 			this.oldRoot = oldRoot;

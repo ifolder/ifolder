@@ -34,21 +34,36 @@ namespace Simias.Event
 	{
 		string					eventData;
 		internal char			seperatorChar = '\0';
-		DateTime				timeStamp = DateTime.Now;
+		DateTime				timeStamp;
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="time"></param>
+		internal SimiasEventArgs(DateTime time) :
+			this(null, time)
+		{
+		}
 
 		/// <summary>
 		/// Constructs a SimiasEventArgs that will be used by CollectionHandler delegates.
 		/// Descibes the node affected by the event.
 		/// </summary>
 		/// <param name="eventData">Data of the event.</param>
-		internal SimiasEventArgs(string eventData)
+		/// <param name="time">The time of this event.</param>
+		internal SimiasEventArgs(string eventData, DateTime time)
 		{
 			this.eventData = eventData;
+			timeStamp = time;
 		}
 
-		internal SimiasEventArgs()
+		/// <summary>
+		/// 
+		/// </summary>
+		internal SimiasEventArgs() :
+			this(null, DateTime.Now)
 		{
-			eventData = null;
 		}
 	
 		#region Properties

@@ -109,7 +109,7 @@ namespace Simias.Storage
 		/// <param name="type">The Type of the Node.</param>
 		/// <param name="changeType">The type of change that occured.</param>
 		public NodeEventArgs(string source, string node, string collection, string type, EventType changeType) :
-			this(source, node, collection, type, changeType, 0)
+			this(source, node, collection, type, changeType, 0, DateTime.Now)
 		{
 		}
 
@@ -123,18 +123,15 @@ namespace Simias.Storage
 		/// <param name="type">The Type of the Node.</param>
 		/// <param name="changeType">The type of change that occured.</param>
 		/// <param name="eventId">A user defined event ID. Only has meaning to a publisher.</param>
-		public NodeEventArgs(string source, string node, string collection, string type, EventType changeType, int eventId) :
-			base(changeType.ToString())
+		/// <param name="time">The time of the event.</param>
+		public NodeEventArgs(string source, string node, string collection, string type, EventType changeType, int eventId, DateTime time) :
+			base(changeType.ToString(), time)
 		{
 			this.source = source;
 			this.id = node;
 			this.collection = collection;
 			this.type = type;
 			this.eventId = eventId;
-		}
-
-		internal NodeEventArgs()
-		{
 		}
 
 		#endregion

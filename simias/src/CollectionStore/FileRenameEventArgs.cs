@@ -44,11 +44,26 @@ namespace Simias.Storage
 		/// <param name="fullPath">The full path of the modified file.</param>
 		/// <param name="collectionId">The collection that this file belongs to.</param>
 		/// <param name="oldPath">The full path to the old name.</param>
-		public FileRenameEventArgs(string source, string fullPath, string collectionId, string oldPath):
-			base(source, fullPath, collectionId, EventType.FileRenamed)
+		/// <param name="time">The time of the event.</param>
+		public FileRenameEventArgs(string source, string fullPath, string collectionId, string oldPath, DateTime time):
+			base(source, fullPath, collectionId, EventType.FileRenamed, time)
 		{
 			this.oldPath = oldPath;
 		}
+
+		/// <summary>
+		/// Constructs a SimiasEventArgs that will be used by CollectionHandler delegates.
+		/// Descibes the node affected by the event.
+		/// </summary>
+		/// <param name="source">The source of the event.</param>
+		/// <param name="fullPath">The full path of the modified file.</param>
+		/// <param name="collectionId">The collection that this file belongs to.</param>
+		/// <param name="oldPath">The full path to the old name.</param>
+		public FileRenameEventArgs(string source, string fullPath, string collectionId, string oldPath):
+			this(source, fullPath, collectionId, oldPath, DateTime.Now)
+		{
+		}
+
 
 		/// <summary>
 		/// Gets the full path of the old name.

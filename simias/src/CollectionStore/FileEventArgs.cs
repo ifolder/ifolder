@@ -41,15 +41,26 @@ namespace Simias.Storage
 		/// <param name="fullPath">The full path of the modified file.</param>
 		/// <param name="collectionId">The collection that this file belongs to.</param>
 		/// <param name="changeType">The FileChangeType for this event.</param>
-		public FileEventArgs(string source, string fullPath, string collectionId, EventType changeType):
-			base(source, fullPath, collectionId, Path.GetExtension(fullPath), changeType, 0)
+		/// <param name="time">The time of the event.</param>
+		public FileEventArgs(string source, string fullPath, string collectionId, EventType changeType, DateTime time):
+			base(source, fullPath, collectionId, Path.GetExtension(fullPath), changeType, 0, time)
 		{
 		}
 
-		internal FileEventArgs()
+		/// <summary>
+		/// Constructs a SimiasEventArgs that will be used by CollectionHandler delegates.
+		/// Descibes the node affected by the event.
+		/// </summary>
+		/// <param name="source">The source of the event.</param>
+		/// <param name="fullPath">The full path of the modified file.</param>
+		/// <param name="collectionId">The collection that this file belongs to.</param>
+		/// <param name="changeType">The FileChangeType for this event.</param>
+		/// <param name="time">The time of the event.</param>
+		public FileEventArgs(string source, string fullPath, string collectionId, EventType changeType):
+			this(source, fullPath, collectionId, changeType, DateTime.Now)
 		{
 		}
-		
+
 		/// <summary>
 		/// Gets the full path of the file.
 		/// </summary>

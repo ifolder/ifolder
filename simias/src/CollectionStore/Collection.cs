@@ -687,7 +687,7 @@ namespace Simias.Storage
 					if ( node.Properties.State == PropertyList.PropertyListState.Add )
 					{
 						string oldType = node.Properties.FindSingleValue( PropertyTags.TombstoneType ).ToString();
-						NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, oldType, EventType.NodeDeleted, 0 );
+						NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, oldType, EventType.NodeDeleted, 0, nodeStamp );
 						args.LocalOnly = node.LocalChanges;
 						store.EventPublisher.RaiseEvent( args );
 						node.Properties.State = PropertyList.PropertyListState.Disposed;
@@ -700,7 +700,7 @@ namespace Simias.Storage
 						case PropertyList.PropertyListState.Add:
 						case PropertyList.PropertyListState.Proxy:
 						{
-							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0 );
+							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0, nodeStamp );
 							args.LocalOnly = node.LocalChanges;
 							store.EventPublisher.RaiseEvent( args );
 							node.Properties.State = PropertyList.PropertyListState.Update;
@@ -709,7 +709,7 @@ namespace Simias.Storage
 
 						case PropertyList.PropertyListState.Delete:
 						{
-							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeDeleted, 0 );
+							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeDeleted, 0, nodeStamp );
 							args.LocalOnly = node.LocalChanges;
 							store.EventPublisher.RaiseEvent( args );
 							node.Properties.State = PropertyList.PropertyListState.Disposed;
@@ -718,7 +718,7 @@ namespace Simias.Storage
 
 						case PropertyList.PropertyListState.Import:
 						{
-							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, ( node.DiskNode != null ) ? EventType.NodeChanged : EventType.NodeCreated, 0 );
+							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, ( node.DiskNode != null ) ? EventType.NodeChanged : EventType.NodeCreated, 0, nodeStamp );
 							args.LocalOnly = node.LocalChanges;
 							store.EventPublisher.RaiseEvent( args );
 							node.Properties.State = PropertyList.PropertyListState.Update;
@@ -727,7 +727,7 @@ namespace Simias.Storage
 
 						case PropertyList.PropertyListState.Update:
 						{
-							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 );
+							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0, nodeStamp );
 							args.LocalOnly = node.LocalChanges;
 							store.EventPublisher.RaiseEvent( args );
 
