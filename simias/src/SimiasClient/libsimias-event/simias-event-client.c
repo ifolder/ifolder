@@ -37,6 +37,8 @@
 #include <sys/un.h>
 #include <unistd.h>
 #include <netdb.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
 
 #include <libxml/tree.h>
 #include <libxml/parser.h>
@@ -54,6 +56,19 @@
 
 #define WEB_SERVICE_TRUE_STRING		"True"
 #define WEB_SERVICE_FALSE_STRING	"False"
+
+
+#if defined(__GNU_LIBRARY__) && !defined(_SEM_SEMUN_UNDEFINED)
+/* union semun is defined by including <sys/sem.h> */
+#else
+/* according to X/OPEN we have to define it ourselves */
+union semun {
+		int val;
+		struct semid_ds *buf;
+		unsigned short *array;
+		struct seminfo *__buf;
+};
+#endif
 
 /**
  * Structures to represent 1-level-deep XML
@@ -113,6 +128,13 @@ typedef struct _SimiasEventFuncInfo
 	struct _SimiasEventFuncInfo *next;
 } SimiasEventFuncInfo;
 
+typedef struct _SimiasEventMessage
+{
+	char *message;
+	int length;
+	struct _SimiasEventMessage *next;
+} SimiasEventMessage;
+
 /**
  * This structure represents the SimiasEventClient typedef declared in the
  * public API.  It is abstracted so the end-user of the API doesn't have to know
@@ -152,11 +174,21 @@ typedef struct
 	/* Thread handle to the registration thread */
 	pthread_t reg_thread;
 	
+	/* Thread handle to the process message thread */
+	pthread_t process_message_thread;
+	
 	/** 
 	 * Array of SimiasEventFunc pointers stored in a linked-list and indexed by
 	 * IPROC_EVENT_ACTION.
 	 */
 	SimiasEventFuncInfo *event_handlers [NUM_OF_ACTION_TYPES];
+	
+	/**
+	 * Items needed for the tail queue of received messages.
+	 */
+	SimiasEventMessage *received_messages;
+	SimiasEventMessage *last_received_message;
+	int received_message_sem;	/* Semaphore to protect the message list */
 } RealSimiasEventClient;
 
 
@@ -227,6 +259,7 @@ typedef enum
 /* #region Forward declarations for private functions */
 static void * sec_thread (void *user_data);
 static void * sec_reg_thread (void *user_data);
+static void * sec_proc_msg_thread (void *user_data);
 static void sec_wait_for_file_change (char *file_path);
 static void sec_config_file_changed_callback (void *user_data);
 static void sec_shutdown (RealSimiasEventClient *ec, const char *err_msg);
@@ -264,9 +297,13 @@ int sec_init (SimiasEventClient *sec,
 			  SECStateEventFunc state_event_func,
 			  void *state_event_data)
 {
-	DEBUG_SEC (("sec_init () called\n"));
 	int i;
-	RealSimiasEventClient *ec = malloc (sizeof (RealSimiasEventClient));
+	RealSimiasEventClient *ec;
+	union semun arg;
+	struct sembuf sb = {0, -1, 0};
+
+	ec = malloc (sizeof (RealSimiasEventClient));
+	DEBUG_SEC (("sec_init () called\n"));
 	memset (ec, '\0', sizeof (RealSimiasEventClient));
 	*sec = ec;
 	/**
@@ -290,6 +327,33 @@ int sec_init (SimiasEventClient *sec,
 	DEBUG_SEC (("ec->event_socket: %d\n", ec->event_socket));
 	
 	ec->state = CLIENT_STATE_INITIALIZING;
+	
+	/* Get the received message semaphore ready */
+	if ((ec->received_message_sem = 
+			semget(IPC_PRIVATE, 1, IPC_CREAT | 0666)) == -1) {
+		perror ("simias-event-client: semget failed");
+		return -1;
+	}
+	
+	/* Initialize the semaphore to 1 */
+	arg.val = 1;
+	if (semctl (ec->received_message_sem, 0, SETVAL, arg) == -1) {
+		perror ("simias-event-client: semctl failed to initialize semaphore");
+		return -1;
+	}
+
+	/* Lock the semaphore so that sec_proc_msg_thread doesn't spin unnecessarily */
+	sb.sem_op = -1;
+	if (semop (ec->received_message_sem, &sb, 1) == -1) {
+		perror ("simias-event-client: sec_init (): error getting control of semaphore");
+		return -1;
+	}
+
+	if ((pthread_create (&(ec->process_message_thread), NULL,
+						 sec_proc_msg_thread, ec)) != 0) {
+		perror ("simias-event-client: could not start process message thread");
+		return -1;
+	}
 	
 	/* Save the error handling information. */
 	ec->state_event_func = state_event_func;
@@ -489,15 +553,19 @@ sec_thread (void *user_data)
 	char recv_buf [RECEIVE_BUFFER_SIZE];
 	char *buffer;
 	char *temp_buffer;
-	char *message;
+	SimiasEventMessage *message;
 	int bytes_received;
 	int buffer_length;
 	int stated_message_length;
 	int message_length;
 	int bytes_to_process;
 	int buffer_index;
+	bool b_first_read;
+	struct sembuf sb = {0, -1, 0};
 	
 	DEBUG_SEC (("sec_thread () called\n"));
+	
+	b_first_read = true;
 	
 	/* Wait until the register thread marks us as registered before continuing */
 	while (ec->state != CLIENT_STATE_RUNNING) {
@@ -578,14 +646,48 @@ sec_thread (void *user_data)
 
 				/* See if the entire message is inside the buffer */
 				if (bytes_to_process >= message_length) {
-					/* FIXME: If an incoming message queue is desired, add to it here */
+					message = malloc (sizeof (SimiasEventMessage));
 					
 					/* Process the message received from the Event Server */
-					message = malloc (sizeof (char) * (stated_message_length + 1));
-					message [stated_message_length] = '\0';
-					memcpy (message, 
+					message->message = malloc (sizeof (char) * (stated_message_length + 1));
+					message->message [stated_message_length] = '\0';
+					memcpy (message->message, 
 							 &(buffer [buffer_index + 4]), 
 							 stated_message_length);
+					message->length = stated_message_length;
+					message->next = NULL;
+					
+					/**
+					 * Get control of the receive message semaphore.  The very
+					 * first time this code is read, the semaphore has already
+					 * been locked (in sec_init ()) to prevent the
+					 * sec_proc_msg_thread from looping unnecessarily when
+					 * nothing has been received.
+					 */
+					if (!b_first_read) {
+						sb.sem_op = -1;
+						if (semop (ec->received_message_sem, &sb, 1) == -1) {
+							perror ("simias-event-client: error getting control of semaphore");
+							break;
+						}
+					} else {
+						b_first_read = false;
+					}
+					
+					if (ec->last_received_message == NULL) {
+						/* No messages in the queue */
+						ec->received_messages = ec->last_received_message = message;
+					} else {
+						ec->last_received_message->next = message;
+						ec->last_received_message = message;
+					}
+					
+					/* Release the semaphore lock */
+					sb.sem_op = 1;
+					if (semop (ec->received_message_sem, &sb, 1) == -1) {
+						perror ("simias-event-client: error releasing control of semaphore");
+						break;
+					}
 
 //printf ("\n*****Dumping message to send to process_message:*****\n");
 //for (i = 0; i < stated_message_length; i++) {
@@ -593,8 +695,8 @@ sec_thread (void *user_data)
 //}
 //printf ("\n*****Dump complete*****\n\n");
 
-					sec_process_message (ec, message, stated_message_length);
-					free (message);
+//					sec_process_message (ec, message, stated_message_length);
+//					free (message);
 
 					/* Update the buffer_index */
 					buffer_index += message_length;
@@ -733,6 +835,71 @@ sec_reg_thread (void *user_data)
 	}
 	
 	ec->reg_thread_state = REG_THREAD_STATE_TERMINATED;
+}
+
+static void *
+sec_proc_msg_thread (void *user_data)
+{
+//	struct sembuf sops;
+	SimiasEventMessage *message;
+	struct sembuf sb = {0, -1, 0};
+	RealSimiasEventClient *ec = (RealSimiasEventClient *)user_data;
+	
+	DEBUG_SEC (("sec_proc_msg_thread () entered\n"));
+	
+//	sops.sem_num = 1;
+//	sops.sem_op
+	
+	while (ec->state != CLIENT_STATE_SHUTDOWN) {
+		/* Get control of the received messages semaphore */
+		sb.sem_op = -1;
+		if (semop (ec->received_message_sem, &sb, 1) == -1) {
+			perror ("simias-event-client: error getting control of semaphore");
+			break;
+		}
+					
+		/* If there's a received message remove it from the list */
+		if (ec->received_messages == NULL) {
+			/* FIXME: Release the semaphore */
+			sb.sem_op = 1;
+			if (semop (ec->received_message_sem, &sb, 1) == -1) {
+				perror ("simias-event-client: error releasing control of semaphore");
+				continue;
+			}
+		
+			/* FIXME: Remove this sleep once semaphore is working */
+			sleep (1);
+			continue;
+		}
+
+		/* There's at least one message in the queue */
+		message = ec->received_messages;
+		ec->received_messages = ec->received_messages->next;
+		
+		/* Make sure last_received_message is correct if list is now empty */
+		if (ec->received_messages == NULL) {
+			ec->last_received_message = NULL;
+		}
+		
+		/* FIXME: Release the semaphore */
+		sb.sem_op = 1;
+		if (semop (ec->received_message_sem, &sb, 1) == -1) {
+			perror ("simias-event-client: error releasing control of semaphore");
+			continue;
+		}
+		
+		/* Process the message */
+		sec_process_message (ec, message->message, message->length);
+		
+		/* Free the memory used by the message */
+		free (message->message);
+		free (message);
+		
+		/* FIXME: Remove this sleep once the semaphore stuff is figured out */
+		sleep (1);
+	}
+
+	DEBUG_SEC (("sec_proc_msg_thread () exiting\n"));
 }
 
 int
