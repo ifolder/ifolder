@@ -570,7 +570,7 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Resumes a paused service. 
+		/// Resumes a paused service.
 		/// </summary>
 		public void Resume()
 		{
@@ -837,8 +837,8 @@ namespace Simias.Storage
 		/// If disposing equals true, the method has been called directly
 		/// or indirectly by a user's code. Managed and unmanaged resources
 		/// can be disposed.
-		/// If disposing equals false, the method has been called by the 
-		/// runtime from inside the finalizer and you should not reference 
+		/// If disposing equals false, the method has been called by the
+		/// runtime from inside the finalizer and you should not reference
 		/// other objects. Only unmanaged resources can be disposed.
 		/// </summary>
 		/// <param name="disposing">Specifies whether called from the finalizer or from the application.</param>
@@ -865,7 +865,7 @@ namespace Simias.Storage
 		/// It gives your base class the opportunity to finalize.
 		/// Do not provide destructors in types derived from this class.
 		/// </summary>
-		~ChangeLogWriter()      
+		~ChangeLogWriter()
 		{
 			Dispose( false );
 		}
@@ -904,7 +904,7 @@ namespace Simias.Storage
 		#region Private Methods
 		/// <summary>
 		/// Gets the offset of the next event to be read.
-		/// 
+		///
 		/// NOTE: The entire file must be locked before making this call.
 		/// </summary>
 		/// <param name="fs">FileStream object associated with the event log file.</param>
@@ -998,7 +998,7 @@ namespace Simias.Storage
 					try
 					{
 						// Allocate a buffer to hold the records that are read.
-						byte[] buffer = new byte[ 65536 ];
+						byte[] buffer = new byte[ ChangeLogRecord.RecordSize * 1000 ];
 
 						// Skip over the file header.
 						fs.Position = LogFileHeader.RecordSize;
