@@ -144,13 +144,11 @@ namespace Simias.Channels
 			// server providers: security sink -> monitor sink -> formatter sink
 			// client providers: formatter sink -> monitor sink -> security sink
 
-			// setup format providers
-			IClientChannelSinkProvider clientProvider = null;
-			IServerChannelSinkProvider serverProvider = null;
-
 			// server providers
 			if (server)
 			{
+				IServerChannelSinkProvider serverProvider = null;
+
 				// setup format provider
 				if ((sinks & SimiasChannelSinks.Soap) > 0)
 				{
@@ -198,6 +196,8 @@ namespace Simias.Channels
 			// client providers
 			else
 			{
+				IClientChannelSinkProvider clientProvider = null;
+
 				// setup security provider
 				if ((sinks & SimiasChannelSinks.Security) > 0)
 				{
