@@ -73,6 +73,7 @@ namespace StoreBrowser
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
+			this.Text = "Store Browser : " + hostName;
 			this.listView1.Hide();
 			tView.ImageList = imageList1;
 			tView.Dock = DockStyle.Fill;
@@ -125,11 +126,11 @@ namespace StoreBrowser
 			this.Flags = new System.Windows.Forms.ColumnHeader();
 			this.NodeMenu = new System.Windows.Forms.ContextMenu();
 			this.cmDelete = new System.Windows.Forms.MenuItem();
+			this.CmNew = new System.Windows.Forms.MenuItem();
 			this.PropertyMenu = new System.Windows.Forms.ContextMenu();
 			this.pcmDelete = new System.Windows.Forms.MenuItem();
 			this.pcmNew = new System.Windows.Forms.MenuItem();
 			this.pcmEdit = new System.Windows.Forms.MenuItem();
-			this.CmNew = new System.Windows.Forms.MenuItem();
 			this.SuspendLayout();
 			// 
 			// mainMenu1
@@ -286,6 +287,12 @@ namespace StoreBrowser
 			this.cmDelete.Text = "Delete";
 			this.cmDelete.Click += new System.EventHandler(this.cmDelete_Click);
 			// 
+			// CmNew
+			// 
+			this.CmNew.Index = 1;
+			this.CmNew.Text = "New";
+			this.CmNew.Click += new System.EventHandler(this.CmNew_Click);
+			// 
 			// PropertyMenu
 			// 
 			this.PropertyMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
@@ -311,12 +318,6 @@ namespace StoreBrowser
 			this.pcmEdit.Text = "Edit";
 			this.pcmEdit.Click += new System.EventHandler(this.pcmEdit_Click);
 			// 
-			// CmNew
-			// 
-			this.CmNew.Index = 1;
-			this.CmNew.Text = "New";
-			this.CmNew.Click += new System.EventHandler(this.CmNew_Click);
-			// 
 			// Form1
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -327,7 +328,7 @@ namespace StoreBrowser
 			this.Controls.Add(this.tView);
 			this.Menu = this.mainMenu1;
 			this.Name = "Form1";
-			this.Text = "Form1";
+			this.Text = "Store Browser";
 			this.ResumeLayout(false);
 
 		}
@@ -353,6 +354,7 @@ namespace StoreBrowser
 			if (hDiag.ShowDialog() == DialogResult.OK)
 			{
 				hostName = hDiag.HostName;
+				this.Text = "Store Browser : " + hostName;
 				browser = new NodeBrowser(tView, listView1, hostName);
 				browser.Show();
 			}
@@ -370,6 +372,7 @@ namespace StoreBrowser
 			if (hDiag.ShowDialog() == DialogResult.OK)
 			{
 				hostName = hDiag.HostName;
+				this.Text = "Provider Browser : " + hostName;
 				browser = new ProviderBrowser(tView, richTextBox1, hostName);
 				browser.Show();
 			}
