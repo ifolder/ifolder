@@ -25,7 +25,7 @@ InvitationTests_INCLUDES =
 InvitationTests_RESOURCES =
 InvitationTests_FLAGS = $(CSC_LIBFLAG)
 InvitationTests_LIBS = $(Invitation_LIBS) $(SYSTEM_XML) nunit.framework.dll Invitation.dll
-InvitationTests_LIBPATH = $(Invitation_LIBPATH) $(srcdir)/../../tools/NUnit/bin
+InvitationTests_LIBPATH = $(Invitation_LIBPATH) $(NUNIT_LIBPATH)
 
 EXTRA_DIST = $(Invitation_CSFILES) $(SmtpInvitationProvider_CSFILES) $(InvitationTests_CSFILES)
 

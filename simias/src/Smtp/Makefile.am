@@ -17,7 +17,7 @@ SmtpTests_INCLUDES =
 SmtpTests_RESOURCES = $(srcdir)/smtptst1.gif $(srcdir)/smtptst2.gif
 SmtpTests_FLAGS = $(CSC_EXEFLAG)
 SmtpTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Common.dll Smtp.dll
-SmtpTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common
+SmtpTests_LIBPATH = $(NUNIT_LIBPATH) ../Common
 
 EXTRA_DIST = $(Smtp_CSFILES) $(SmtpTests_CSFILES) $(SmtpTests_RESOURCES)
 

@@ -17,7 +17,7 @@ AddressBookTests_INCLUDES =
 AddressBookTests_RESOURCES =
 AddressBookTests_FLAGS = $(CSC_LIBFLAG)
 AddressBookTests_LIBS = $(AddressBook_LIBS) $(SYSTEM_XML) nunit.util.dll nunit.framework.dll AddressBook.dll
-AddressBookTests_LIBPATH = $(AddressBook_LIBPATH) AddressBookTests $(srcdir)/../../tools/NUnit/bin
+AddressBookTests_LIBPATH = $(AddressBook_LIBPATH) AddressBookTests $(NUNIT_LIBPATH)
 
 EXTRA_DIST = $(AddressBook_CSFILES) $(AddressBookTests_CSFILES)
 

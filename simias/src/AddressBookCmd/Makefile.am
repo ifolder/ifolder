@@ -17,7 +17,7 @@ AddressBookCmdTests_INCLUDES =
 AddressBookCmdTests_RESOURCES =
 AddressBookCmdTests_FLAGS =
 AddressBookCmdTests_LIBS =
-AddressBookCmdTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin
+AddressBookCmdTests_LIBPATH = $(NUNIT_LIBPATH)
 
 EXTRA_DIST = $(AddressBookCmd_CSFILES) $(AddressBookCmdTests_CSFILES) App$(ICON_EXT)
 

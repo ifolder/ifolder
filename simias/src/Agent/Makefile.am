@@ -17,7 +17,7 @@ Agent_LIBPATH = /opt/gnome2/lib /usr/lib ../Common ../CollectionStore
 #AgentTests_RESOURCES =
 #AgentTests_FLAGS = $(CSC_LIBFLAG)
 #AgentTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Agent.dll
-#AgentTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin
+#AgentTests_LIBPATH = $(NUNIT_LIBPATH)
 
 EXTRA_DIST = $(Agent_CSFILES)
 #EXTRA_DIST = $(Agent_CSFILES) $(AgentTests_CSFILES)

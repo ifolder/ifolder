@@ -17,7 +17,7 @@ FsProviderTests_INCLUDES =
 FsProviderTests_RESOURCES =
 FsProviderTests_FLAGS = $(CSC_LIBFLAG)
 FsProviderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll StoreProvider.dll ProviderTest.dll
-FsProviderTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../StoreProvider
+FsProviderTests_LIBPATH = $(NUNIT_LIBPATH) ../StoreProvider
 
 EXTRA_DIST = $(FsProvider_CSFILES) $(FsProviderTests_CSFILES)
 

@@ -17,7 +17,7 @@ FsWatcherTests_INCLUDES =
 FsWatcherTests_RESOURCES =
 FsWatcherTests_FLAGS =
 FsWatcherTests_LIBS =
-FsWatcherTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin
+FsWatcherTests_LIBPATH = $(NUNIT_LIBPATH)
 
 EXTRA_DIST = $(FsWatcher_CSFILES) $(FsWatcherTests_CSFILES) App$(ICON_EXT)
 

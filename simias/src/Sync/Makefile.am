@@ -25,7 +25,7 @@ TestSync_INCLUDES =
 TestSync_RESOURCES =
 TestSync_FLAGS = $(CSC_EXEFLAG)
 TestSync_LIBS = $(Sync_LIBS) $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Sync.dll
-TestSync_LIBPATH = $(Sync_LIBPATH) ../../tools/NUnit/bin $(srcdir)/../../tools/NUnit/bin
+TestSync_LIBPATH = $(Sync_LIBPATH) $(NUNIT_LIBPATH)
 
 EXTRA_DIST = $(Sync_CSFILES) $(SyncCmd_CSFILES) $(TestSync_CSFILES)
 

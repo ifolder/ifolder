@@ -17,7 +17,7 @@ SyncCommonTests_INCLUDES =
 SyncCommonTests_RESOURCES =
 SyncCommonTests_FLAGS = $(CSC_LIBFLAG)
 SyncCommonTests_LIBS = $(SyncCommon_LIBS) $(SYSTEM_XML) SyncCommon.dll CollectionStore.dll Common.dll nunit.framework.dll StoreProvider.dll
-SyncCommonTests_LIBPATH = $(SyncCommon_LIBPATH) Tests $(srcdir)/../../tools/NUnit/bin
+SyncCommonTests_LIBPATH = $(SyncCommon_LIBPATH) Tests $(NUNIT_LIBPATH)
 
 EXTRA_DIST = $(SyncCommon_CSFILES) $(SyncCommonTests_CSFILES)
 

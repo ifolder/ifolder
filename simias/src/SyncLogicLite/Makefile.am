@@ -17,7 +17,7 @@ SyncLogicLiteTests_INCLUDES =
 SyncLogicLiteTests_RESOURCES =
 SyncLogicLiteTests_FLAGS = $(CSC_LIBFLAG)
 SyncLogicLiteTests_LIBS = $(SyncLogicLite_LIBS) $(SYSTEM_XML) nunit.framework.dll SyncLogicLite.dll
-SyncLogicLiteTests_LIBPATH = $(SyncLogicLite_LIBPATH) Tests $(srcdir)/../../tools/NUnit/bin
+SyncLogicLiteTests_LIBPATH = $(SyncLogicLite_LIBPATH) Tests $(NUNIT_LIBPATH)
 
 EXTRA_DIST = $(SyncLogicLite_CSFILES) $(SyncLogicLiteTests_CSFILES)
 

@@ -17,7 +17,7 @@ ProviderTest_INCLUDES =
 ProviderTest_RESOURCES =
 ProviderTest_FLAGS = $(CSC_LIBFLAG)
 ProviderTest_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll Storage.dll StoreProvider.dll nunit.framework.dll
-ProviderTest_LIBPATH = ../Common Test $(srcdir)/../../tools/NUnit/bin ../Storage
+ProviderTest_LIBPATH = ../Common Test $(NUNIT_LIBPATH) ../Storage
 
 EXTRA_DIST = $(StoreProvider_CSFILES) $(ProviderTest_CSFILES)
 

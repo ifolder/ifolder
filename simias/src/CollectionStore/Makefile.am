@@ -17,7 +17,7 @@ CollectionStoreTests_INCLUDES =
 CollectionStoreTests_RESOURCES =
 CollectionStoreTests_FLAGS = $(CSC_LIBFLAG)
 CollectionStoreTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Security.dll nunit.util.dll nunit.framework.dll Common.dll CollectionStore.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Storage.dll
-CollectionStoreTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common $(srcdir)/../../external/SecureChannelSinks ../Storage
+CollectionStoreTests_LIBPATH = $(NUNIT_LIBPATH) ../Common $(srcdir)/../../external/SecureChannelSinks ../Storage
 
 EXTRA_DIST = $(CollectionStore_CSFILES) $(CollectionStoreTests_CSFILES)
 

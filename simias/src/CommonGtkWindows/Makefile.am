@@ -17,7 +17,7 @@ CommonGtkWinTests_INCLUDES =
 CommonGtkWinTests_RESOURCES =
 CommonGtkWinTests_FLAGS = $(CSC_EXEFLAG)
 CommonGtkWinTests_LIBS = System.dll System.Data.dll System.Drawing.dll gtk-sharp.dll gnome-sharp.dll glib-sharp.dll gdk-sharp.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll CommonGtkWindows.dll Configuration.dll Common.dll
-CommonGtkWinTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Configuration ../Common
+CommonGtkWinTests_LIBPATH = $(NUNIT_LIBPATH) ../Configuration ../Common
 
 EXTRA_DIST = $(CommonGtkWin_CSFILES) $(CommonGtkWinTests_CSFILES)
 

@@ -17,7 +17,7 @@ CommonFormWindowsTests_INCLUDES =
 CommonFormWindowsTests_RESOURCES =
 CommonFormWindowsTests_FLAGS = $(CSC_LIBFLAG)
 CommonFormWindowsTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll Common.dll CommonFormWindows.dll System.Windows.Forms.dll
-CommonFormWindowsTests_LIBPATH = Tests $(srcdir)/../../tools/NUnit/bin ../Common Library
+CommonFormWindowsTests_LIBPATH = Tests $(NUNIT_LIBPATH) ../Common Library
 
 EXTRA_DIST = $(CommonFormWindows_CSFILES) $(CommonFormWindowsTests_CSFILES)
 

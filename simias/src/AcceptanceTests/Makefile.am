@@ -9,7 +9,7 @@ AcceptanceTests_INCLUDES =
 AcceptanceTests_RESOURCES =
 AcceptanceTests_FLAGS = $(CSC_LIBFLAG)
 AcceptanceTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll CollectionStore.dll SyncCommon.dll Invitation.dll SyncManager.dll Sync.dll SyncLogicLite.dll System.Runtime.Remoting.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll RemotingSnifferLibrary.dll nunit.framework.dll Simias.Service.dll
-AcceptanceTests_LIBPATH = ../SyncCommon ../SyncManager ../SyncLogicLite ../Sync ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../Common ../RemotingSniffer ../Invitation $(srcdir)/../../tools/NUnit/bin ../Service
+AcceptanceTests_LIBPATH = ../SyncCommon ../SyncManager ../SyncLogicLite ../Sync ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../Common ../RemotingSniffer ../Invitation $(NUNIT_LIBPATH) ../Service
 
 EXTRA_DIST = $(AcceptanceTests_CSFILES)
 
@@ -26,14 +26,9 @@ DEBUG_CHECK_FILES = AcceptanceTests.pdb
 endif
 endif
 
-install-exec-local: AcceptanceTests.dll
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) AcceptanceTests.dll $(DESTDIR)$(bindir)
+install-exec-local: 
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); \
-		rm -f AcceptanceTests.test.xml $(NUNIT_TESTS) $(DEBUG_CHECK_FILES); \
-		rm -rf storeA storeB storeC
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)

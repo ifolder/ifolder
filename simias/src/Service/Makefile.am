@@ -17,7 +17,7 @@ ServiceTests_INCLUDES =
 ServiceTests_RESOURCES =
 ServiceTests_FLAGS = $(CSC_EXEFLAG)
 ServiceTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Common.dll Simias.Service.dll
-ServiceTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common 
+ServiceTests_LIBPATH = $(NUNIT_LIBPATH) ../Common 
 
 ThreadServiceTest_CSFILES = $(srcdir)/ThreadServiceTest/AssemblyInfo.cs $(srcdir)/ThreadServiceTest/ThreadServiceTest.cs
 ThreadServiceTest_CSFILES_CSC := $(subst /,$(SEP),$(ThreadServiceTest_CSFILES))
@@ -25,7 +25,7 @@ ThreadServiceTest_INCLUDES =
 ThreadServiceTest_RESOURCES =
 ThreadServiceTest_FLAGS = $(CSC_LIBFLAG)
 ThreadServiceTest_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Common.dll Simias.Service.dll
-ThreadServiceTest_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common 
+ThreadServiceTest_LIBPATH = $(NUNIT_LIBPATH) ../Common 
 
 ProcessServiceTest_CSFILES = $(srcdir)/ProcessServiceTest/AssemblyInfo.cs $(srcdir)/ProcessServiceTest/ProcessServiceTest.cs
 ProcessServiceTest_CSFILES_CSC := $(subst /,$(SEP),$(ProcessServiceTest_CSFILES))
@@ -33,7 +33,7 @@ ProcessServiceTest_INCLUDES =
 ProcessServiceTest_RESOURCES =
 ProcessServiceTest_FLAGS = $(CSC_EXEFLAG)
 ProcessServiceTest_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Common.dll Simias.Service.dll
-ProcessServiceTest_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common 
+ProcessServiceTest_LIBPATH = $(NUNIT_LIBPATH) ../Common 
 
 EXTRA_DIST = $(Service_CSFILES) $(ServiceTests_CSFILES) $(ThreadServiceTest_CSFILES) $(ProcessServiceTest_CSFILES)
 

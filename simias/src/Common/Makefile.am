@@ -17,9 +17,11 @@ CommonTests_INCLUDES =
 CommonTests_RESOURCES =
 CommonTests_FLAGS = $(CSC_LIBFLAG)
 CommonTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Common.dll
-CommonTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin
+CommonTests_LIBPATH = $(NUNIT_LIBPATH)
 
 EXTRA_DIST = $(Common_CSFILES) $(CommonTests_CSFILES)
+
+NUNIT_FILES = $(NUNIT_LIBPATH)/nunit.core.dll $(NUNIT_LIBPATH)/nunit.framework.dll
 
 CUR_DIR := $(shell pwd)
 
@@ -40,12 +42,13 @@ endif
 
 install-exec-local: Common.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) Common.dll $(DEBUG_FILES) $(LOG4NET_DIR)/log4net.dll $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) Common.dll $(DEBUG_FILES) $(NUNIT_FILES) $(LOG4NET_DIR)/log4net.dll $(DESTDIR)$(bindir)
 	cp $(LOG4NET_DIR)/../../../../LICENSE.txt $(DESTDIR)$(prefix)/log4net.LICENSE.txt
+	cp $(NUNIT_LIBPATH)/../license.rtf $(DESTDIR)$(prefix)/nunit.LICENSE.rtf
         
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Common.dll CommonTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) log4net.dll $(DEBUG_CHECK_FILES)
-	cd $(DESTDIR)$(prefix); rm -f log4net.LICENSE.txt
+	cd $(DESTDIR)$(bindir); rm -f Common.dll CommonTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) log4net.dll nunit.core.dll nunit.framework.dll $(DEBUG_CHECK_FILES)
+	cd $(DESTDIR)$(prefix); rm -f log4net.LICENSE.txt nunit.LICENSE.rtf
 	
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)

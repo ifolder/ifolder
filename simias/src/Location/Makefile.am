@@ -17,7 +17,7 @@ LocationTests_INCLUDES =
 LocationTests_RESOURCES =
 LocationTests_FLAGS = $(CSC_LIBFLAG)
 LocationTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll CollectionStore.dll SyncCommon.dll Location.dll nunit.util.dll nunit.framework.dll
-LocationTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common ../CollectionStore ../SyncCommon
+LocationTests_LIBPATH = $(NUNIT_LIBPATH) ../Common ../CollectionStore ../SyncCommon
 
 EXTRA_DIST = $(Location_CSFILES) $(LocationTests_CSFILES)
 

@@ -25,7 +25,7 @@ SqliteProviderTests_INCLUDES =
 SqliteProviderTests_RESOURCES =
 SqliteProviderTests_FLAGS = $(CSC_LIBFLAG)
 SqliteProviderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll StoreProvider.dll ProviderTest.dll SqliteProvider.dll
-SqliteProviderTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../StoreProvider
+SqliteProviderTests_LIBPATH = $(NUNIT_LIBPATH) ../StoreProvider
 
 EXTRA_DIST = $(SqliteProvider_CSFILES) $(SqliteWrapper_CSFILES) $(SqliteProviderTests_CSFILES)
 
