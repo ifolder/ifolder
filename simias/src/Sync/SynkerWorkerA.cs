@@ -473,29 +473,25 @@ public class SynkerWorkerA: SyncCollectionWorker
 
 	void ProcessDirsToServer()
 	{
-		NodeChunk[] updates = null;
-
 		// push up directories.
-		if ((updates = ops.GetSmallNodes(dirsToServer)) != null)
-		{
-			ProcessSmallToServer(updates);
-		}
+		ProcessSmallToServer(dirsToServer);
 	}
 	
 	void ProcessSmallToServer()
 	{
-		NodeChunk[] updates = null;
-
 		// push up small nodes and files to server
-		if ((updates = ops.GetSmallNodes(smallToServer)) != null)
-		{
-			ProcessSmallToServer(updates);
-		}
+		ProcessSmallToServer(smallToServer);
 	}
 	
 
-	void ProcessSmallToServer(NodeChunk[] updates)
+	void ProcessSmallToServer(Hashtable nodesToServer)
 	{
+		NodeChunk[] updates = ops.GetSmallNodes(nodesToServer);
+		if (updates == null)
+		{
+			// There is no work to do.
+			return;
+		}
 		// Now put the nodes in groups of BATCH_SIZE.
 		int offset = 0;
 		while (offset < updates.Length)
@@ -542,7 +538,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 					}
 					if (removeFromList)
 					{
-						smallToServer.Remove((Nid)nc.node.ID);
+						nodesToServer.Remove((Nid)nc.node.ID);
 					}
 				}
 			}
