@@ -94,7 +94,6 @@ namespace Novell.iFolder
 		private Gtk.SpinButton			SyncSpinButton;
 		private Gtk.Label				SyncUnitsLabel;
 
-		private Gtk.CheckButton			StartAtLoginButton;
 		private Gtk.CheckButton			ShowConfirmationButton; 
 		private Gtk.CheckButton			UseProxyButton; 
 		private Gtk.Entry				ProxyHostEntry;
@@ -184,9 +183,6 @@ namespace Novell.iFolder
 				ShowConfirmationButton.Active = true;
 			else
 				ShowConfirmationButton.Active = false;
-
-			StartAtLoginButton.Active = false;
-			StartAtLoginButton.Sensitive = false;
 
 
 			SyncSpinButton.Value = ifSettings.DefaultSyncInterval;
@@ -621,16 +617,19 @@ namespace Novell.iFolder
 			// create a vbox to actually place the widgets in for section
 			VBox appWidgetBox = new VBox();
 			appSpacerBox.PackStart(appWidgetBox, false, true, 0);
+			appWidgetBox.Spacing = Util.SectionTitleSpacing;
 
-			StartAtLoginButton = 
-				new CheckButton(Util.GS("Start iFolder when logging in to the desktop"));
-			appWidgetBox.PackStart(StartAtLoginButton, false, true, 0);
 
 			ShowConfirmationButton = 
 				new CheckButton(Util.GS("Show Confirmation dialog when creating iFolders"));
 			appWidgetBox.PackStart(ShowConfirmationButton, false, true, 0);
 			ShowConfirmationButton.Toggled += 
 						new EventHandler(OnShowConfButton);
+
+			Label strtlabel = new Label("<span style=\"italic\">To startup iFolder at login, leave iFolder running when you log out and save your current setup.</span>");
+			strtlabel.UseMarkup = true;
+			strtlabel.LineWrap = true;
+			appWidgetBox.PackStart(strtlabel, false, true, 0);
 
 
 
