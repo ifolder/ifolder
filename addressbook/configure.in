@@ -156,7 +156,7 @@ case $ADDRESSBOOK_OS in
         NON_PLATFORM_SUBDIRS="$LINUX_SUBDIRS"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_FLAGS='/nologo'
-        NUNIT_LIBPATH=`echo "$TOOLDIR/NUnit/bin" | sed 's,/cygdrive/\(.\)/,\1:/,'`
+        NUNIT_LIBPATH='$(shell cygpath --windows "$TOOLDIR/NUnit/bin")'
         OBJ_EXT='.obj'
         OPTIMIZE_CFLAGS="-MD -O2 -DNDEBUG"
         OPTIMIZE_CSCFLAGS="/optimize+"
@@ -165,7 +165,7 @@ case $ADDRESSBOOK_OS in
         PLATFORM_SUBDIRS=$WINDOWS_SUBDIRS
         RC='rc'
         RC_FLAGS='-r'
-        REPORT_DIR='$(CYGWIN_PATH)/$(DESTDIR)$(bindir)'
+        REPORT_DIR='$(shell cygpath --windows $(DESTDIR)$(bindir) | sed ''s,\\\\,/,g'')'
         REPORT_EXE='$(top_srcdir)/tools/Report/Report.exe'
         RES_EXT='.res'
         SEP='$(EMPTY)\\$(EMPTY)'
@@ -232,20 +232,6 @@ AC_PROG_INSTALL
 AC_HEADER_STDC
 #AM_PROG_LIBTOOL
 
-case $ADDRESSBOOK_OS in
-    windows)
-        #
-        # Handle --with-cygwin-path
-        #
-        AC_ARG_WITH(cygwin-path,
-            [  --with-cygwin-path=PATH full path to Cygwin (default is c:/cygwin)],
-            [ CYGWIN_PATH=$withval ],
-            [ CYGWIN_PATH="c:/cygwin" ]
-            )
-        AC_SUBST(CYGWIN_PATH)
-    ;;
-esac
-
 #
 # Handle --with-simias-path
 #
@@ -255,15 +241,12 @@ AC_ARG_WITH(simias-path,
     [ SIMIAS_INSTALL_PATH=$prefix ]
     )
 test "x$SIMIAS_INSTALL_PATH" = xNONE && SIMIAS_INSTALL_PATH=$ac_default_prefix
-case $host_os in
-    cygwin*)
-        if ( expr "$SIMIAS_INSTALL_PATH" : ".*cygdrive.*" > /dev/null ); then
-            SIMIAS_INSTALL_PATH=`echo "$SIMIAS_INSTALL_PATH" | sed 's,/cygdrive/\(.\)/,\1:/,'`
-        else
-            SIMIAS_INSTALL_PATH="\$(CYGWIN_PATH)$SIMIAS_INSTALL_PATH"
-        fi
+case $ADDRESSBOOK_OS in
+    windows)
+        SIMIAS_INSTALL_PATH=`cygpath --windows $SIMIAS_INSTALL_PATH | sed 's,\\\\,/,g'`
     ;;
 esac
+echo SIMIAS_INSTALL_PATH=$SIMIAS_INSTALL_PATH
 AC_SUBST(SIMIAS_INSTALL_PATH)
 
 DISTCHECK_CONFIGURE_FLAGS="--with-simias-path=$SIMIAS_INSTALL_PATH"
