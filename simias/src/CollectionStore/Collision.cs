@@ -123,7 +123,7 @@ namespace Simias.Storage
 		/// <returns>An ICSList object containing ShallowNode objects representing collision Nodes.</returns>
 		public ICSList GetCollisions( Collection collection )
 		{
-			return Search( PropertyTags.Collision, collection.ID, SearchOp.Begins );
+			return Search( PropertyTags.Collision, collection.ID, SearchOp.Contains );
 		}
 
 		/// <summary>
