@@ -60,6 +60,7 @@ namespace Novell.iFolder.Web
 		public bool HasConflicts;
 		public string CurrentUserID;
 		public string CurrentUserRights;
+		public string CollectionID;
 
 		public iFolder()
 		{
@@ -124,9 +125,12 @@ namespace Novell.iFolder.Web
 			this.DomainIdentity = subscription.DomainID;
 			this.Name = subscription.SubscriptionCollectionName;
 			this.ID = subscription.ID;
+			this.CollectionID = subscription.SubscriptionCollectionID;
 			this.Description = subscription.CollectionDescription;
 			this.IsSubscription = true;
 			this.EnumeratedState = (int) subscription.SubscriptionState;
+			this.Owner = subscription.FromName;
+			this.CurrentUserRights = subscription.SubscriptionRights.ToString();
 
 			if(	(subscription.SubscriptionState == 
 								SubscriptionStates.Ready) ||
