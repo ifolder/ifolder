@@ -55,11 +55,20 @@ public class SynkerA: SyncLogicFactory
 	}
 
 	/// <summary>
-	/// SynkerA does not watch the file system yet, always return false
+	/// SynkerA does not need another process to watch the file system yet, always return false
 	/// </summary>
 	public override bool WatchFileSystem()
 	{
 		return false;
+	}
+
+	/// <summary>
+	/// query the sync collection service class type.
+	/// </summary>
+	/// <returns>The type object of the sync collection service class.</returns>
+	public override Type GetCollectionServiceType()
+	{
+		return typeof(SynkerServiceA);
 	}
 }
 
