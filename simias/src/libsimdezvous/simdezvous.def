@@ -1,4 +1,4 @@
-LIBRARY	ifolder-rendezvous
+LIBRARY	simdezvous
 EXPORTS
     RegisterLocalMember
     DeregisterLocalMember

@@ -47,7 +47,8 @@ static const char domainType[] = "local.";
 
 static const char memberLabel[] = "MemberName=";
 static const char serviceLabel[] = "ServicePath=";
-static const char keyLabel[] = "PublicKey=";
+static const char keyLabel[] = "PK=";
+static const char key2Label[] = "PK2=";
 
 typedef void (DNSSD_API *MemberBrowseCallback)
 (
@@ -115,9 +116,8 @@ DNSSD_API
 RegisterLocalMember(
 	char					*pID,
 	char					*pName,
-	int						Port,
+	short					Port,
 	char					*pServicePath,
-	int						PublicKeyLength,
 	unsigned char			*pPublicKey,
 	DNSServiceRef			*pCookie);
 

@@ -1,13 +1,5 @@
 #include "simdezvous.h"
 
-typedef struct tagMembersContext
-{
-	int					MembersAdded;
-	int					BufferLength;
-	PMembers			pMembers;
-	PMembers			pCurrent;
-} MembersContext, *PMembersContext;
-
 typedef struct tagMemberInfoCtx2
 {
 	DNSServiceErrorType		CBError;
@@ -33,165 +25,6 @@ typedef struct tagMemberBrowseContext
 
 static
 void
-DNSSD_API 
-GetMemberCallback(
-	DNSServiceRef		client, 
-	DNSServiceFlags		flags, 
-	uint32_t			ifIndex, 
-	DNSServiceErrorType errorCode,
-	const char			*pName, 
-	const char			*pType, 
-	const char			*pDomain, 
-	void				*pCtx)
-{
-	PMembersContext pMembersCtx = ( PMembersContext ) pCtx;
-
-	//char *op = (flags & kDNSServiceFlagsAdd) ? "Add" : "Rmv";
-	(void) client;       // Unused
-	(void) errorCode;    // Unused
-	//(void) pCtx;      // Unused
-
-	if ( flags & kDNSServiceFlagsAdd )
-	{
-		if ( ( pMembersCtx->BufferLength -= sizeof( Members ) ) > 0 )
-		{
-			strcpy( pMembersCtx->pCurrent->ID, pName );
-
-			/*
-			strcat( pMembersCtx->pCurrent->ID, "." );
-			strcat( pMembersCtx->pCurrent->ID, pType );
-			*/
-
-			printf( "Added: %s\n", pMembersCtx->pCurrent->ID );
-			pMembersCtx->MembersAdded++;
-		
-			pMembersCtx->pCurrent++;
-			//*(pMembersCtx->pCurrent++);
-		}
-	}
-}
-
-/*
-static
-void
-DNSSD_API
-ResolveCallback(
-	DNSServiceRef		client, 
-	DNSServiceFlags		flags, 
-	uint32_t			ifIndex, 
-	DNSServiceErrorType errorCode,
-	const char			*pFullName, 
-	const char			*pHostTarget, 
-	uint16_t			opaqueport, 
-	uint16_t			txtLen, 
-	const char			*pTxt,
-	void				*pCtx)
-{
-	PMembersContext pMembersCtx = ( PMembersContext ) pCtx;
-
-	const char *src = pTxt;
-	char *dst;
-	union { uint16_t s; u_char b[2]; } port = { opaqueport };
-	uint16_t PortAsNumber = ((uint16_t)port.b[0]) << 8 | port.b[1];
-
-	(void) client;       // Unused
-	(void) ifIndex;      // Unused
-	(void) errorCode;    // Unused
-	(void) txtLen;       // Unused
-
-	//printtimestamp();
-	//printf("%s can be reached at %s:%u", pFullName, pHostTarget, PortAsNumber);
-
-	if ( errorCode == 0 )
-	{
-		strcpy( pMembersCtx->pCurrent->HostName, pHostTarget );
-		pMembersCtx->pCurrent->Port = PortAsNumber;
-
-		// Parse TXT strings
-		// iFolder Member TXT strings are registered in the following format:
-		// MemberName=<member name>
-		// ServicePath=<path>
-		// PublicKey=<pub key>
-
-		if (*src)
-		{
-			int	compLength;
-			int inValue = 0;
-		
-			// Get the member name
-			compLength = *src++;
-			dst = pMembersCtx->pCurrent->Name;
-			while( compLength-- )
-			{
-				if ( *src == '=' )
-				{
-					inValue = 1;
-					src++;
-				}
-				else
-				if ( inValue == 1 )
-				{
-					*dst++ = *src++;
-				}	
-				else
-				{
-					src++;
-				}
-			}
-			*dst = 0;
-
-			// Get the service path
-			compLength = *src++;
-			dst = pMembersCtx->pCurrent->ServicePath;
-			inValue = 0;
-			while( compLength-- )
-			{
-				if ( *src == '=' )
-				{
-					inValue = 1;
-					src++;
-				}
-				else
-				if ( inValue == 1 )
-				{
-					*dst++ = *src++;
-				}
-				else
-				{
-					src++;
-				}
-			}
-			*dst = 0;
-
-			// Get the public key
-			compLength = *src++;
-			dst = pMembersCtx->pCurrent->PublicKey;
-			inValue = 0;
-			while( compLength-- )
-			{
-				if ( *src == '=' )
-				{
-					inValue = 1;
-					src++;
-				}
-				else
-				if ( inValue == 1 )
-				{
-					*dst++ = *src++;
-				}
-				else
-				{
-					src++;
-				}
-			}
-			*dst = 0;
-		}
-	}
-}
-*/
-
-static
-void
 DNSSD_API
 ResolveInfoCallback(
 	DNSServiceRef		client, 
@@ -206,9 +39,9 @@ ResolveInfoCallback(
 	void				*pCtx)
 {
 	PMemberInfoCtx pInfoCtx = ( PMemberInfoCtx) pCtx;
-
-	const char *src = pTxt;
-	char *dst;
+	unsigned char label[32];
+	const unsigned char *src = ( unsigned char *) pTxt;
+	unsigned char *dst;
 	union { uint16_t s; u_char b[2]; } port = { opaqueport };
 	uint16_t PortAsNumber = ((uint16_t)port.b[0]) << 8 | port.b[1];
 
@@ -216,8 +49,8 @@ ResolveInfoCallback(
 	(void) ifIndex;      // Unused
 	(void) txtLen;       // Unused
 
-	printf( "ResolveInfoCallback called" );
-	printf( "errorCode: %d\n", errorCode );
+	//printf( "ResolveInfoCallback called" );
+	//printf( "errorCode: %d\n", errorCode );
 
 	pInfoCtx->CBError = errorCode;
 	if ( errorCode == 0 )
@@ -225,92 +58,71 @@ ResolveInfoCallback(
 		*pInfoCtx->pPort = PortAsNumber;
 		strcpy( pInfoCtx->pHost, pHostTarget );
 
-		printf( "Host: %s\n", pInfoCtx->pHost );
+		//printf( "Host: %s\n", pInfoCtx->pHost );
 
 		// Parse TXT strings
 		// iFolder Member TXT strings are registered in the following format:
 		// MemberName=<member name>
 		// ServicePath=<path>
-		// PublicKey=<pub key>
+		// PK=<pub key>
+		// PK2=<rest of the public key>
 
 		if (*src)
 		{
+			int total = 0;
 			int	compLength;
-			int inValue = 0;
-			const unsigned char *usrc;
-			unsigned char *udst;
-		
-			// Get the member name
-			compLength = *src++;
-			dst = pInfoCtx->pName;
-			while( compLength-- )
+			while ( ( total < txtLen ) && *src != '\0' )
 			{
-				if ( *src == '=' )
+				compLength = *src++;
+				total += compLength;
+
+				// can't be good
+				if ( total > txtLen )
 				{
-					inValue = 1;
-					src++;
+					continue;
 				}
-				else
-				if ( inValue == 1 )
+
+				// Get the label
+				dst = label;
+				while( *src != '=' && *src != '\0' && compLength > 0 )
 				{
 					*dst++ = *src++;
-				}	
-				else
-				{
-					src++;
+					compLength--;
 				}
-			}
-			*dst = 0;
-			printf( "Member Name: %s\n", pInfoCtx->pName );
 
-			// Get the service path
-			compLength = *src++;
-			dst = pInfoCtx->pServicePath;
-			inValue = 0;
-			while( compLength-- )
-			{
-				if ( *src == '=' )
+				// Past the = and null terminate
+				*dst++ = *src++;
+				compLength--;
+				*dst = 0;
+
+				if ( strcmp( (char *) label, memberLabel ) == 0 )
 				{
-					inValue = 1;
-					src++;
+					dst = (unsigned char *) pInfoCtx->pName;
 				}
 				else
-				if ( inValue == 1 )
+				if ( strcmp( label, serviceLabel ) == 0 )
+				{
+					dst = (unsigned char *) pInfoCtx->pServicePath;
+				}
+				else
+				if ( strcmp( label, keyLabel ) == 0 )
+				{
+					dst = (unsigned char *) pInfoCtx->pPublicKey;
+				}
+				else
+				{
+					pInfoCtx->CBError = -1;
+					return;
+				}
+
+				while( ( compLength > 0 ) && *src != '\0' )
 				{
 					*dst++ = *src++;
+					compLength--;
 				}
-				else
-				{
-					src++;
-				}
-			}
-			*dst = 0;
-			printf( "Service Path: %s\n", pInfoCtx->pServicePath );
 
-			// Get the public key
-			compLength = *src++;
-			udst = pInfoCtx->pPublicKey;
-			inValue = 0;
-			usrc = (unsigned char * ) src;
-			while( compLength-- )
-			{
-				if ( *usrc == '=' )
-				{
-					inValue = 1;
-					usrc++;
-				}
-				else
-				if ( inValue == 1 )
-				{
-					*udst++ = *usrc++;
-				}
-				else
-				{
-					usrc++;
-				}
+				*dst = 0;
 			}
-			*udst = 0;
-			printf( "Public Key: %s\n", (char *) pInfoCtx->pPublicKey );
 		}
 	}
 }
@@ -342,8 +154,8 @@ ResolveInfoCallback2(
 	(void) ifIndex;      // Unused
 	(void) txtLen;       // Unused
 
-	printf( "ResolveInfoCallback called" );
-	printf( "errorCode: %d\n", errorCode );
+	//printf( "ResolveInfoCallback called" );
+	//printf( "errorCode: %d\n", errorCode );
 
 	pInfoCtx->CBError = errorCode;
 	if ( errorCode == 0 )
@@ -351,7 +163,7 @@ ResolveInfoCallback2(
 		pInfo->Port = PortAsNumber;
 		strcpy( pInfo->HostName, pHostTarget );
 
-		printf( "Host: %s\n", pInfo->HostName );
+		//printf( "Host: %s\n", pInfo->HostName );
 
 		// Parse TXT strings
 		// iFolder Member TXT strings are registered in the following format:
@@ -385,7 +197,7 @@ ResolveInfoCallback2(
 				}
 			}
 			*dst = 0;
-			printf( "Member Name: %s\n", pInfo->Name );
+			//printf( "Member Name: %s\n", pInfo->Name );
 
 			// Get the service path
 			compLength = *src++;
@@ -409,7 +221,7 @@ ResolveInfoCallback2(
 				}
 			}
 			*dst = 0;
-			printf( "Service Path: %s\n", pInfo->ServicePath );
+			//printf( "Service Path: %s\n", pInfo->ServicePath );
 
 			// Get the public key
 			compLength = *src++;
@@ -433,153 +245,10 @@ ResolveInfoCallback2(
 				}
 			}
 			*dst = 0;
-			printf( "Public Key: %s\n", pInfo->PublicKey );
+			//printf( "Public Key: %s\n", pInfo->PublicKey );
 		}
 	}
 }
-
-/*
-DNSServiceErrorType
-DNSSD_API 
-GetMembers(
-	int					timeout,
-	int					bufferLength,
-	PMembers			pMembers,
-	int					*pMembersAdded)
-{
-	DNSServiceRef client = NULL;
-	int	err;
-	MembersContext ctx;
-
-	printf( "GetMembers called\n" );
-
-	ctx.pMembers = pMembers;
-	ctx.pCurrent = pMembers;
-	ctx.BufferLength = bufferLength;
-	ctx.MembersAdded = 0;
-
-	err = 
-		DNSServiceBrowse(
-			&client, 
-			0,
-			kDNSServiceInterfaceIndexAny,
-			"_ifolder_member._tcp",
-			NULL, //dom,
-			GetMemberCallback, 
-			&ctx);
-
-	printf( "err (from browse): %d\n", (long int) err);
-	if ( err == 0 )
-	{
-		int dns_sd_fd  = DNSServiceRefSockFD( client );
-		int nfds = dns_sd_fd + 1;
-		fd_set readfds;
-		struct timeval tv;
-		int result;
-		int stop = 0;
-	
-		//if (dns_sd_fd2 > dns_sd_fd) nfds = dns_sd_fd2 + 1;
-
-		while ( !stop )
-		{
-			// 1. Set up the fd_set as usual here.
-			// This example client has no file descriptors of its own,
-			// but a real application would call FD_SET to add them to the set here
-			FD_ZERO( &readfds );
-
-			// 2. Add the fd for our client(s) to the fd_set
-			FD_SET( dns_sd_fd, &readfds );
-
-			// 3. Set up the timeout.
-			tv.tv_sec = timeout;
-			tv.tv_usec = 0;
-
-			result = select( nfds, &readfds, (fd_set*) NULL, (fd_set*) NULL, &tv );
-		    if (result > 0)
-			{
-				DNSServiceErrorType err = kDNSServiceErr_NoError;
-				if ( FD_ISSET( dns_sd_fd , &readfds ) )
-				{	
-					err = DNSServiceProcessResult( client );
-				}
-
-				if (err) 
-				{ 
-					fprintf( stderr, "DNSServiceProcessResult returned %d\n", err );
-					stop = 1;
-				}
-			}
-			else
-			{
-				printf("select() returned %d errno %d %s\n", result, errno, strerror( errno ) );
-				if ( errno != EINTR )
-				{
-					stop = 1;
-				}
-			}
-		}
-	}
-
-	// If the caller passed in the pMembersAdded
-	// parameter fill it in
-	if ( pMembersAdded != NULL )
-	{
-		*pMembersAdded = ctx.MembersAdded;
-	}
-
-	// Resolve and get all the information we need
-	if ( ctx.MembersAdded > 0 )
-	{
-		DNSServiceRef client1;
-		ctx.pCurrent = ctx.pMembers;
-
-		while ( ctx.MembersAdded-- )
-		{
-			client1 = NULL;
-			err = 
-				DNSServiceResolve(
-					&client1, 
-					0, 
-					kDNSServiceInterfaceIndexAny,
-					ctx.pCurrent->ID,
-					memberType,
-					domainType,
-					ResolveCallback,
-					(void *) &ctx);
-			if ( err == 0 )
-			{
-				err = DNSServiceProcessResult( client1 );
-				//printf( "results from ProcessResult: %d\n", (long int) err );
-
-				if ( err == kDNSServiceErr_NoError  )
-				{
-					struct hostent *hostEnt;
-
-					hostEnt = gethostbyname( ctx.pCurrent->HostName );
-					//printf( "Host Name: %s\n", hostEnt->h_name );
-					sprintf(
-						ctx.pCurrent->IPAddress,
-						"%d.%d.%d.%d", 
-						(unsigned char) hostEnt->h_addr_list[0][0],
-						(unsigned char) hostEnt->h_addr_list[0][1],
-						(unsigned char) hostEnt->h_addr_list[0][2],
-						(unsigned char) hostEnt->h_addr_list[0][3]);
-				}
-
-				DNSServiceRefDeallocate( client1 );
-			}
-			else
-			{
-				printf( "Failed Resolve for memberID: %s  Status: %d\n", ctx.pCurrent->ID, err );
-			}
-
-			ctx.pCurrent++;
-		}
-	}
-
-	return err;
-}
-*/
 
 static
 void 
@@ -598,7 +267,7 @@ RegistrationCallback(
 	(void) client; // Unused
 	(void) flags;  // Unused
 
-	printf( "Got a reply for %s.%s%s: ", pName, pType, pDomain );
+	//printf( "Got a reply for %s.%s%s: ", pName, pType, pDomain );
 	*cbErr = errorCode;
 }
 
@@ -607,15 +276,17 @@ DNSSD_API
 RegisterLocalMember(
 	char				*pID,
 	char				*pName,
-	int					Port,
+	short				Port,
 	char				*pServicePath,
-	int					PublicKeyLength,
 	unsigned char		*pPublicKey,
 	DNSServiceRef		*pCookie)
 {
-	char				txtStrings[1024];
+	char				keyPartOne[256];
+	char				keyPartTwo[256];
+	char				txtStrings[2048];
 	DNSServiceErrorType err;
 	DNSServiceErrorType	cbErr;
+	int txtLength;
 
 	pid_t pid = getpid();
 
@@ -627,23 +298,52 @@ RegisterLocalMember(
 		return -1;
 	}
 
-	if ( PublicKeyLength == 0 )
+	/*
+	if ( (strlen( pPublicKey) + strlen( keyLabel ) )PublicKeyLength == 0 )
 	{
 		return -1;
 	}
+	*/
 
-	sprintf( 
-		txtStrings, 
-		"%c%s%s%c%s%s%c%s%s", 
-		(unsigned char) ( strlen( pName ) + sizeof( memberLabel ) - 1 ),
-		memberLabel,
-		pName,
-		(unsigned char) ( strlen( pServicePath ) + sizeof( serviceLabel ) - 1 ),
-		serviceLabel,
-		pServicePath,
-		(unsigned char) ( strlen( pPublicKey ) + sizeof( keyLabel ) - 1 ),
-		keyLabel,
-		pPublicKey );
+	if ( ( strlen( pPublicKey ) + strlen( keyLabel ) ) > 255 )
+	{
+		strncpy( keyPartOne, pPublicKey, 250 );
+		keyPartOne[250] = '\0';
+		strcpy( keyPartTwo, &pPublicKey[250] );
+
+		txtLength =
+			sprintf( 
+				txtStrings, 
+				"%c%s%s%c%s%s%c%s%s%c%s%s", 
+				(unsigned char) ( strlen( pName ) + sizeof( memberLabel ) - 1 ),
+				memberLabel,
+				pName,
+				(unsigned char) ( strlen( pServicePath ) + sizeof( serviceLabel ) - 1 ),
+				serviceLabel,
+				pServicePath,
+				(unsigned char) ( (int) 250 + (int) sizeof( keyLabel ) - (int) 1),
+				keyLabel,
+				keyPartOne,
+				(unsigned char) ( strlen( keyPartTwo ) + sizeof( key2Label ) - 1 ),
+				key2Label,
+				keyPartTwo );
+	}
+	else
+	{
+		txtLength =
+			sprintf( 
+				txtStrings, 
+				"%c%s%s%c%s%s%c%s%s", 
+				(unsigned char) ( strlen( pName ) + sizeof( memberLabel ) - 1 ),
+				memberLabel,
+				pName,
+				(unsigned char) ( strlen( pServicePath ) + sizeof( serviceLabel ) - 1 ),
+				serviceLabel,
+				pServicePath,
+				(unsigned char) ( strlen( pPublicKey ) + (int) sizeof( keyLabel ) - (int) 1 ),
+				keyLabel,
+				pPublicKey );
+	}
 
 	*pCookie = NULL;
 	cbErr = kDNSServiceErr_Unknown;
@@ -660,7 +360,7 @@ RegisterLocalMember(
 			NULL, 
 			Port,
 			//registerPort.NotAnInteger, 
-			strlen( txtStrings ),
+			(uint16_t) txtLength,
 			txtStrings, 
 			RegistrationCallback, 
 			(void *) (&cbErr));
@@ -697,7 +397,6 @@ GetMemberInfo(
 	char				*pHost,
 	int					*pPort)
 {
-
 	DNSServiceErrorType err;
 	DNSServiceRef		client = NULL;
 	MemberInfoCtx		infoCtx;
@@ -716,7 +415,7 @@ GetMemberInfo(
 	infoCtx.pHost = pHost;
 	infoCtx.pPort = pPort;
 
-	printf(" GetMemberInfo:calling DNSServiceResolve");
+	//printf(" GetMemberInfo:calling DNSServiceResolve");
 	err = 
 		DNSServiceResolve(
 			&client, 
@@ -727,13 +426,72 @@ GetMemberInfo(
 			domainType,
 			ResolveInfoCallback,
 			(void *) &infoCtx );
+
 	if ( err == kDNSServiceErr_NoError )
 	{
-		err = DNSServiceProcessResult( client );
-		if ( err == kDNSServiceErr_NoError )
+		fd_set				readfds;
+		int					dns_sd_fd;
+		int					nfds;
+		int					result;
+		int					stop = 0;
+		struct timeval		tv;
+
+		dns_sd_fd = DNSServiceRefSockFD( client );
+		if ( dns_sd_fd == -1 )
 		{
-			err = infoCtx.CBError;
+			return kDNSServiceErr_NotInitialized;
 		}
+
+		//	nfds = dns_sd_fd + 1;
+		nfds = dns_sd_fd;
+
+		while ( !stop )
+		{
+			// 1. Set up the fd_set as usual here.
+			// This example client has no file descriptors of its own,
+			// but a real application would call FD_SET to add them to the set here
+			FD_ZERO( &readfds );
+
+			// 2. Add the fd for our client(s) to the fd_set
+			FD_SET( dns_sd_fd, &readfds );
+
+			// 3. Set up the timeout.
+			tv.tv_sec = 10; // this resolve should succeed quickly
+			tv.tv_usec = 0;
+
+			err = kDNSServiceErr_NoError;
+			result = select( nfds, &readfds, (fd_set*) NULL, (fd_set*) NULL, &tv );
+			if ( result > 0 )
+			{
+				if ( FD_ISSET( dns_sd_fd , &readfds ) )
+				{	
+					err = DNSServiceProcessResult( client );
+					if ( err == kDNSServiceErr_NoError )
+					{
+						err = infoCtx.CBError;
+						if ( err == kDNSServiceErr_NoError )
+						{
+							stop = 1;
+						}
+					}
+				}
+
+				if ( err != kDNSServiceErr_NoError ) 
+				{ 
+					//fprintf( stderr, "DNSServiceProcessResult returned %d\n", err );
+					stop = 1;
+				}
+			}
+			else
+			{
+				//printf("select() returned %d errno %d %s\n", result, errno, strerror( errno ) );
+				if ( errno != EINTR )
+				{
+					stop = 1;
+				}
+			}
+		}
+
 		DNSServiceRefDeallocate( client );
 	}
 
@@ -793,7 +551,7 @@ BrowseMembersInit(
 	DNSServiceErrorType err;
 	DNSServiceRef		client;
 	//PMemberBrowseContext *pCtx;
-	printf( "BrowseMembersInit called\n" );
+	//printf( "BrowseMembersInit called\n" );
 
 	err = 
 		DNSServiceBrowse(
@@ -805,7 +563,7 @@ BrowseMembersInit(
 			callback, 
 			NULL);
 
-	printf( "err (from browse): %d\n", (long int) err);
+	//printf( "err (from browse): %d\n", (long int) err);
 	if ( err == 0 )
 	{
 		*pHandle = client;
@@ -827,7 +585,7 @@ BrowseMembers(DNSServiceRef client, int timeout)
 	int					stop = 0;
 	struct timeval		tv;
 	
-	printf( "BrowseMembers called\n" );
+	//printf( "BrowseMembers called\n" );
 
 	dns_sd_fd = DNSServiceRefSockFD( client );
 	if ( dns_sd_fd == -1 )
@@ -837,7 +595,7 @@ BrowseMembers(DNSServiceRef client, int timeout)
 
 //	nfds = dns_sd_fd + 1;
 	nfds = dns_sd_fd;
-	printf("descriptor = %d\n", nfds);
+	//printf("descriptor = %d\n", nfds);
 
 	while ( !stop )
 	{
@@ -887,7 +645,7 @@ DNSServiceErrorType
 DNSSD_API 
 BrowseMembersShutdown(DNSServiceRef client)
 {
-	printf( "BrowseMembersShutdown called\n" );
+	//printf( "BrowseMembersShutdown called\n" );
 	DNSServiceRefDeallocate( client );
 	return kDNSServiceErr_NoError;
 }
