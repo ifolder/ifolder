@@ -143,13 +143,15 @@ void slist_invalidate_local_path (gpointer data, gpointer user_data);
 void slist_free_local_path_str (gpointer data, gpointer user_data);
 
 /* Functions and defines used to read user config files */
-#define XPATH_SHOW_CREATION_DIALOG	"//setting[name='ShowCreationDialog']/@value"
+#define XPATH_SHOW_CREATION_DIALOG	"//setting[@name='ShowCreationDialog']/@value"
 
 static char * get_user_profile_dir_path (char *dest_path);
 static char * get_ifolder_config_file_path (char *dest_path);
-static int ifolder_get_config_setting (char *xml_file_path,
-									   char *setting_xpath,
+static int ifolder_get_config_setting (char *setting_xpath,
 									   char *setting_value_return);
+static int ifolder_set_config_setting (char *setting_xpath,
+									   char *setting_value);
+static gboolean show_created_dialog ();
 									   
 static void ifolder_help_callback (NautilusMenuItem *item, gpointer user_data);
 
@@ -972,9 +974,7 @@ get_ifolder_config_file_path (char *dest_path)
 }
 
 static int
-ifolder_get_config_setting (char *xml_file_path,
-							char *setting_xpath,
-							char *setting_value_return)
+ifolder_get_config_setting (char *setting_xpath, char *setting_value_return)
 {
 	char config_file [1024];
 	xmlDoc *doc;
@@ -1046,6 +1046,30 @@ ifolder_get_config_setting (char *xml_file_path,
 	}
 }
 
+static int
+ifolder_set_config_setting (char *setting_xpath,
+							char *setting_value)
+{
+	return 0;
+}
+
+static
+gboolean show_created_dialog ()
+{
+	char value [32];
+	
+	if (ifolder_get_config_setting (XPATH_SHOW_CREATION_DIALOG, value) != 0) {
+		DEBUG_IFOLDER (("Could not determine the config setting of whether to show creation dialog.  Showing the dialog by default.\n"));
+		return TRUE;
+	} else {
+		if (strcasecmp ("true", value) == 0) {
+			return TRUE;
+		}
+	}
+	
+	return FALSE;
+}
+
 /**
  * Nautilus Menu Provider Implementation
  */
@@ -1101,9 +1125,9 @@ creation_dialog_button_callback (GtkDialog *dialog,
 }
 
 gboolean
-show_ifolder_creation_dialog (void *user_data)
+show_ifolder_created_dialog (void *user_data)
 {
-	DEBUG_IFOLDER (("*** show_ifolder_creation_dialog () called\n"));
+	DEBUG_IFOLDER (("*** show_ifolder_created_dialog () called\n"));
 	GtkWidget *creation_dialog, *label, *check_button, *vbox, *vbox2, *hbox,
 			  *cb_alignment, *folder_image;
 	GtkWindow *parent_window;
@@ -1248,9 +1272,10 @@ create_ifolder_thread (gpointer user_data)
 		errMsg->detail	= _("Sorry, unable to convert the specified folder into an iFolder.");
 		g_idle_add (show_ifolder_error_message, errMsg);
 	} else {
-		/* FIXME: Check the config setting to figure out whether the creation dialog should be shown. */
-		g_idle_add (show_ifolder_creation_dialog,
-					g_object_get_data (G_OBJECT (item), "parent_window"));
+		if (show_created_dialog ()) {
+			g_idle_add (show_ifolder_created_dialog,
+						g_object_get_data (G_OBJECT (item), "parent_window"));
+		}
 	}
 }
 
