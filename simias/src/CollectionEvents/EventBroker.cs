@@ -96,61 +96,63 @@ namespace Simias.Event
 				try
 				{
 					queued.WaitOne();
+					CollectionEventArgs args = null;
 					lock (eventQueue)
 					{
 						if (eventQueue.Count > 0)
 						{
-							CollectionEventArgs args = (CollectionEventArgs)eventQueue.Dequeue();
-
-							if (CollectionEvent != null && args.ChangeType != EventType.ServiceControl)
-							{
-								Delegate[] cbList = CollectionEvent.GetInvocationList();
-								foreach (CollectionEventHandler cb in cbList)
-								{
-									try 
-									{ 
-										cb(args);
-									}
-									catch 
-									{
-										// Remove the offending delegate.
-										CollectionEvent -= cb;
-										MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
-									}
-								}
-							}
-							else
-							{
-								if (ServiceEvent != null)
-								{
-									Delegate[] cbList = ServiceEvent.GetInvocationList();
-									foreach (ServiceEventHandler cb in cbList)
-									{
-										try 
-										{ 
-											cb((ServiceEventArgs)args);
-										}
-										catch 
-										{
-											// Remove the offending delegate.
-											ServiceEvent -= cb;
-											MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
-										}
-									}
-								}
-								if (((ServiceEventArgs)args).ControlEvent == ServiceControl.Shutdown)
-								{
-									shuttingDown = true;
-								}
-							}
+							args = (CollectionEventArgs)eventQueue.Dequeue();
 						}
 						else
 						{
 							queued.Reset();
+							continue;
+						}
+					}
+						
+					if (CollectionEvent != null && args.ChangeType != EventType.ServiceControl)
+					{
+						Delegate[] cbList = CollectionEvent.GetInvocationList();
+						foreach (CollectionEventHandler cb in cbList)
+						{
+							try 
+							{ 
+								cb(args);
+							}
+							catch 
+							{
+								// Remove the offending delegate.
+								CollectionEvent -= cb;
+								MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
+							}
+						}
+					}
+					else
+					{
+						if (ServiceEvent != null)
+						{
+							Delegate[] cbList = ServiceEvent.GetInvocationList();
+							foreach (ServiceEventHandler cb in cbList)
+							{
+								try 
+								{ 
+									cb((ServiceEventArgs)args);
+								}
+								catch 
+								{
+									// Remove the offending delegate.
+									ServiceEvent -= cb;
+									MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
+								}
+							}
+						}
+						if (((ServiceEventArgs)args).ControlEvent == ServiceControl.Shutdown)
+						{
+							shuttingDown = true;
 						}
 					}
 				}
-				catch {}
+				catch{}
 			}
 			shutdown.Set();
 		}
@@ -532,44 +534,46 @@ namespace Simias.Event
 				try
 				{
 					queued.WaitOne();
+					CollectionEventArgs args = null;
 					lock (eventQueue)
 					{
 						if (eventQueue.Count > 0)
 						{
-							CollectionEventArgs args = (CollectionEventArgs)eventQueue.Dequeue();
-
-							switch (args.ChangeType)
-							{
-								case EventType.NodeCreated:
-									callNodeDelegate(NodeCreated, (NodeEventArgs)args);
-									break;
-								case EventType.NodeDeleted:
-									callNodeDelegate(NodeDeleted, (NodeEventArgs)args);
-									break;
-								case EventType.NodeChanged:
-									callNodeDelegate(NodeChanged, (NodeEventArgs)args);
-									break;
-								case EventType.CollectionRootChanged:
-									callCrcDelegate((CollectionRootChangedEventArgs)args);
-									break;
-								case EventType.FileCreated:
-									callFileDelegate(FileCreated, (FileEventArgs)args);
-									break;
-								case EventType.FileDeleted:
-									callFileDelegate(FileDeleted, (FileEventArgs)args);
-									break;
-								case EventType.FileChanged:
-									callFileDelegate(FileChanged, (FileEventArgs)args);
-									break;
-								case EventType.FileRenamed:
-									callFileRenDelegate((FileRenameEventArgs)args);
-									break;
-							}
+							args = (CollectionEventArgs)eventQueue.Dequeue();
 						}
 						else
 						{
 							queued.Reset();
+							continue;
 						}
+					}
+
+					switch (args.ChangeType)
+					{
+						case EventType.NodeCreated:
+							callNodeDelegate(NodeCreated, (NodeEventArgs)args);
+							break;
+						case EventType.NodeDeleted:
+							callNodeDelegate(NodeDeleted, (NodeEventArgs)args);
+							break;
+						case EventType.NodeChanged:
+							callNodeDelegate(NodeChanged, (NodeEventArgs)args);
+							break;
+						case EventType.CollectionRootChanged:
+							callCrcDelegate((CollectionRootChangedEventArgs)args);
+							break;
+						case EventType.FileCreated:
+							callFileDelegate(FileCreated, (FileEventArgs)args);
+							break;
+						case EventType.FileDeleted:
+							callFileDelegate(FileDeleted, (FileEventArgs)args);
+							break;
+						case EventType.FileChanged:
+							callFileDelegate(FileChanged, (FileEventArgs)args);
+							break;
+						case EventType.FileRenamed:
+							callFileRenDelegate((FileRenameEventArgs)args);
+							break;
 					}
 				}
 				catch {}
