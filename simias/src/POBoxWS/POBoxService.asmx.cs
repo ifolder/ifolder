@@ -786,7 +786,7 @@ namespace Simias.POBoxService.Web
 			Simias.Storage.Domain cDomain = store.GetDomain( domainID );
 			if (cDomain == null)
 			{
-				log.Debug( " Invalid Domain ID!" );
+				log.Debug( "  invalid Domain ID!" );
 				throw new ApplicationException("Invalid Domain ID");
 			}
 
@@ -794,21 +794,21 @@ namespace Simias.POBoxService.Web
 			Simias.Storage.Roster currentRoster = cDomain.Roster;
 			if (currentRoster == null)
 			{
-				log.Debug( " No Roster existed for domain!" );
+				log.Debug( "  no Roster existed for domain!" );
 				throw new ApplicationException("No member Roster exists for the specified Domain");
 			}
 
 			Member toMember = currentRoster.GetMemberByID( toUserID );
 			if (toMember == null)
 			{
-				log.Debug( " Specified \"toUserID\" does not exist in the roster!" );
+				log.Debug( "  specified \"toUserID\" does not exist in the roster!" );
 				throw new ApplicationException("Specified \"toUserID\" does not exist in the Domain Roster");
 			}
 
 			Member fromMember = currentRoster.GetMemberByID( fromUserID );
 			if ( fromMember == null )
 			{
-				log.Debug( " Specified \"fromUserID\" does not exist in the roster!" );
+				log.Debug( "  specified \"fromUserID\" does not exist in the roster!" );
 				throw new ApplicationException("Specified \"fromUserID\" does not exist in the Domain Roster");
 			}
 
@@ -816,7 +816,7 @@ namespace Simias.POBoxService.Web
 			sharedCollection = store.GetCollectionByID( sharedCollectionID ); 
 			if ( sharedCollection == null )
 			{
-				log.Debug( " Shared collection does not exist" );
+				log.Debug( "  shared collection does not exist" );
 			}
 
 			if (rights > (int) Simias.Storage.Access.Rights.Admin)
@@ -850,41 +850,66 @@ namespace Simias.POBoxService.Web
 				log.Debug("  application path: " + appPath);
 
 				// TODO: Need to fix how we detect SSL. Waiting for a fix in mod_mono.
-				UriBuilder poUri = 
-					new UriBuilder(
+				try
+				{
+					UriBuilder poUri = 
+						new UriBuilder(
 						(this.Context.Request.Url.Port == 443) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp ,
 						this.Context.Request.Url.Host,
 						this.Context.Request.Url.Port,
 						appPath);
 
-				cSub.POServiceURL = poUri.Uri;
-				cSub.SubscriptionCollectionID = sharedCollection.ID;
+					cSub.POServiceURL = poUri.Uri;
+				}
+				catch( Exception e1 )
+				{
+					log.Debug( "Failed creating POBox Uri" );
+					log.Debug( e1.Message );
+					log.Debug( e1.StackTrace );
+				}
+
+				cSub.SubscriptionCollectionID = sharedCollectionID;
 				cSub.SubscriptionCollectionType = sharedCollectionType;
-				cSub.SubscriptionCollectionName = sharedCollection.Name;
+
+				cSub.SubscriptionCollectionName = 
+					( sharedCollection != null ) ? sharedCollection.Name : "proxy";
+
 				cSub.DomainID = domainID;
 				cSub.DomainName = cDomain.Name;
 				cSub.SubscriptionKey = Guid.NewGuid().ToString();
 				cSub.MessageType = "Outbound";  // ????
 
-				// TODO: Need to fix how we detect SSL. Waiting for a fix in mod_mono.
-				UriBuilder coUri = 
-					new UriBuilder(
+				try
+				{
+					// TODO: Need to fix how we detect SSL. Waiting for a fix in mod_mono.
+					UriBuilder coUri = 
+						new UriBuilder(
 						(this.Context.Request.Url.Port == 443) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp ,
 						this.Context.Request.Url.Host,
 						this.Context.Request.Url.Port,
 						this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ));
 
-				cSub.SubscriptionCollectionURL = coUri.Uri.ToString();
-				log.Debug("  SubscriptionCollectionURL: " + cSub.SubscriptionCollectionURL);
- 
-				DirNode dirNode = sharedCollection.GetRootDirectory();
-				if(dirNode != null)
+					cSub.SubscriptionCollectionURL = coUri.Uri.ToString();
+					log.Debug( "  SubscriptionCollectionURL: " + cSub.SubscriptionCollectionURL );
+				}
+				catch( Exception e2 )
 				{
-					cSub.DirNodeID = dirNode.ID;
-					cSub.DirNodeName = dirNode.Name;
+					log.Debug( "Failed creating Collection Uri" );
+					log.Debug( e2.Message );
+					log.Debug( e2.StackTrace );
+				}
+ 
+				if ( sharedCollection != null )
+				{
+					DirNode dirNode = sharedCollection.GetRootDirectory();
+					if( dirNode != null )
+					{
+						cSub.DirNodeID = dirNode.ID;
+						cSub.DirNodeName = dirNode.Name;
+					}
 				}
 
-				poBox.Commit(cSub);
+				poBox.Commit( cSub );
 				status = true;
 			}
 			catch(Exception e)
