@@ -30,7 +30,6 @@ using System.Text;
 using Simias;
 using Simias.Agent;
 using Simias.Storage;
-using Simias.Identity;
 using Simias.Sync;
 using Novell.AddressBook;
 
@@ -138,12 +137,12 @@ namespace Simias.Agent
 				invitation.RootPath = Invitation.DefaultRootPath;
 			}
 			
-			// add the secret to the current identity chain
-			IIdentity identity = IdentityManager.Connect().CurrentId;
-			identity.SetKeyChainItem(invitation.Domain, invitation.Identity, "novell");
-			
 			// add the invitation information to the store collection
 			SyncStore store = new SyncStore(storePath);
+
+			// add the secret to the current identity chain
+			store.BaseStore.CurrentIdentity.CreateAlias( invitation.Domain, invitation.Identity );
+			store.BaseStore.CurrentIdentity.Commit();
 				
 			// create the slave collection with the invitation
 			SyncCollection collection = store.CreateCollection(invitation);
