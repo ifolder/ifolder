@@ -130,10 +130,12 @@ namespace Simias.Storage
 				FileStream fs = File.Open( managedFile, FileMode.Create, FileAccess.ReadWrite, FileShare.None );
 
 				// Copy the data.
+				int fileLength = 0;
 				byte[] buffer = new byte[ 64 * 1024 ];
 				int bytesRead = nodeStream.Read( buffer, 0, buffer.Length );
 				while ( bytesRead > 0 )
 				{
+					fileLength += bytesRead;
 					fs.Write( buffer, 0, bytesRead );
 					bytesRead = nodeStream.Read( buffer, 0, buffer.Length );
 				}
@@ -143,9 +145,10 @@ namespace Simias.Storage
 				nodeStream.Close();
 				nodeStream = null;
 
-				// Set the creation and last write time on the node.
+				// Set the creation time, last write time, and length on the node.
 				CreationTime = File.GetCreationTime( managedFile );
 				LastWriteTime = File.GetLastWriteTime( managedFile );
+				Length = fileLength;
 			}
 		}
 		#endregion
