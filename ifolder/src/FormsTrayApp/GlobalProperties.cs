@@ -29,7 +29,6 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using System.Xml;
-using System.Net;
 using Microsoft.Win32;
 using Novell.iFolderCom;
 using Novell.Win32Util;
@@ -813,30 +812,33 @@ namespace Novell.FormsTrayApp
 		{
 			bool domainInList = false;
 
+			Domain domain = null;
 			foreach (Domain d in servers.Items)
 			{
 				if (d.ID.Equals(domainWeb.ID))
 				{
 					// The domain is already in the list.
-					domainInList = true;
+					domain = d;
 				}
 			}
 
-			if (!domainInList)
+			if (domain == null)
 			{
-				// Reset the current default domain if the added domain is set to be the default.
-//				if ((defaultDomain != null) && domainWeb.IsDefault)
-//				{
-//					defaultDomain.DomainWeb.IsDefault = false;
-//				}
-
-				Domain domain = new Domain(domainWeb);
+				// The domain isn't in the list ... add it.
+				domain = new Domain(domainWeb);
 				servers.Items.Add(domain);
+			}
 
-//				if (domainWeb.IsDefault)
-//				{
-//					defaultDomain = domain;
-//				}
+			// Reset the current default domain if the added domain is set to be the default.
+			if (domainWeb.IsDefault)
+			{
+				if (defaultDomain != null)
+				{
+					defaultDomain.DomainWeb.IsDefault = false;
+				}
+
+				// Keep track of the default domain.
+				defaultDomain = domain;
 			}
 		}
 
@@ -1429,7 +1431,7 @@ namespace Novell.FormsTrayApp
 		private void menuCreate_Click(object sender, System.EventArgs e)
 		{
 			CreateiFolder createiFolder = new CreateiFolder();
-// TODO:			createiFolder.Servers = accounts.Items;
+			createiFolder.Servers = servers.Items;
 			Domain selectedDomain = (Domain)servers.SelectedItem;
 			createiFolder.SelectedDomain = selectedDomain.ShowAll ? defaultDomain : selectedDomain;
 			createiFolder.iFolderWebService = ifWebService;

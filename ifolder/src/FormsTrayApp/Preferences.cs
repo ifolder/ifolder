@@ -29,7 +29,6 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using System.Xml;
-using System.Net;
 using Microsoft.Win32;
 using Novell.iFolderCom;
 using Novell.Win32Util;
@@ -141,15 +140,14 @@ namespace Novell.FormsTrayApp
 			this.label2 = new System.Windows.Forms.Label();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
-			this.cancel = new System.Windows.Forms.Button();
-			this.apply = new System.Windows.Forms.Button();
+			this.groupBox4 = new System.Windows.Forms.GroupBox();
+			this.notifyCollisions = new System.Windows.Forms.CheckBox();
+			this.notifyShared = new System.Windows.Forms.CheckBox();
+			this.notifyJoins = new System.Windows.Forms.CheckBox();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.autoSync = new System.Windows.Forms.CheckBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
-			this.notifyJoins = new System.Windows.Forms.CheckBox();
-			this.notifyCollisions = new System.Windows.Forms.CheckBox();
-			this.notifyShared = new System.Windows.Forms.CheckBox();
 			this.autoStart = new System.Windows.Forms.CheckBox();
 			this.tabPage5 = new System.Windows.Forms.TabPage();
 			this.accounts = new System.Windows.Forms.ListView();
@@ -170,16 +168,17 @@ namespace Novell.FormsTrayApp
 			this.defaultServer = new System.Windows.Forms.CheckBox();
 			this.removeAccount = new System.Windows.Forms.Button();
 			this.addAccount = new System.Windows.Forms.Button();
+			this.cancel = new System.Windows.Forms.Button();
+			this.apply = new System.Windows.Forms.Button();
 			this.ok = new System.Windows.Forms.Button();
-			this.groupBox4 = new System.Windows.Forms.GroupBox();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage2.SuspendLayout();
+			this.groupBox4.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox3.SuspendLayout();
 			this.tabPage5.SuspendLayout();
 			this.groupBox2.SuspendLayout();
-			this.groupBox4.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// defaultInterval
@@ -316,54 +315,106 @@ namespace Novell.FormsTrayApp
 			this.tabPage2.ToolTipText = resources.GetString("tabPage2.ToolTipText");
 			this.tabPage2.Visible = ((bool)(resources.GetObject("tabPage2.Visible")));
 			// 
-			// cancel
+			// groupBox4
 			// 
-			this.cancel.AccessibleDescription = resources.GetString("cancel.AccessibleDescription");
-			this.cancel.AccessibleName = resources.GetString("cancel.AccessibleName");
-			this.cancel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("cancel.Anchor")));
-			this.cancel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("cancel.BackgroundImage")));
-			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.cancel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("cancel.Dock")));
-			this.cancel.Enabled = ((bool)(resources.GetObject("cancel.Enabled")));
-			this.cancel.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("cancel.FlatStyle")));
-			this.cancel.Font = ((System.Drawing.Font)(resources.GetObject("cancel.Font")));
-			this.cancel.Image = ((System.Drawing.Image)(resources.GetObject("cancel.Image")));
-			this.cancel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.ImageAlign")));
-			this.cancel.ImageIndex = ((int)(resources.GetObject("cancel.ImageIndex")));
-			this.cancel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("cancel.ImeMode")));
-			this.cancel.Location = ((System.Drawing.Point)(resources.GetObject("cancel.Location")));
-			this.cancel.Name = "cancel";
-			this.cancel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("cancel.RightToLeft")));
-			this.cancel.Size = ((System.Drawing.Size)(resources.GetObject("cancel.Size")));
-			this.cancel.TabIndex = ((int)(resources.GetObject("cancel.TabIndex")));
-			this.cancel.Text = resources.GetString("cancel.Text");
-			this.cancel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.TextAlign")));
-			this.cancel.Visible = ((bool)(resources.GetObject("cancel.Visible")));
-			this.cancel.Click += new System.EventHandler(this.cancel_Click);
+			this.groupBox4.AccessibleDescription = resources.GetString("groupBox4.AccessibleDescription");
+			this.groupBox4.AccessibleName = resources.GetString("groupBox4.AccessibleName");
+			this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox4.Anchor")));
+			this.groupBox4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox4.BackgroundImage")));
+			this.groupBox4.Controls.Add(this.notifyCollisions);
+			this.groupBox4.Controls.Add(this.notifyShared);
+			this.groupBox4.Controls.Add(this.notifyJoins);
+			this.groupBox4.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox4.Dock")));
+			this.groupBox4.Enabled = ((bool)(resources.GetObject("groupBox4.Enabled")));
+			this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.groupBox4.Font = ((System.Drawing.Font)(resources.GetObject("groupBox4.Font")));
+			this.groupBox4.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox4.ImeMode")));
+			this.groupBox4.Location = ((System.Drawing.Point)(resources.GetObject("groupBox4.Location")));
+			this.groupBox4.Name = "groupBox4";
+			this.groupBox4.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox4.RightToLeft")));
+			this.groupBox4.Size = ((System.Drawing.Size)(resources.GetObject("groupBox4.Size")));
+			this.groupBox4.TabIndex = ((int)(resources.GetObject("groupBox4.TabIndex")));
+			this.groupBox4.TabStop = false;
+			this.groupBox4.Text = resources.GetString("groupBox4.Text");
+			this.groupBox4.Visible = ((bool)(resources.GetObject("groupBox4.Visible")));
 			// 
-			// apply
+			// notifyCollisions
 			// 
-			this.apply.AccessibleDescription = resources.GetString("apply.AccessibleDescription");
-			this.apply.AccessibleName = resources.GetString("apply.AccessibleName");
-			this.apply.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("apply.Anchor")));
-			this.apply.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("apply.BackgroundImage")));
-			this.apply.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("apply.Dock")));
-			this.apply.Enabled = ((bool)(resources.GetObject("apply.Enabled")));
-			this.apply.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("apply.FlatStyle")));
-			this.apply.Font = ((System.Drawing.Font)(resources.GetObject("apply.Font")));
-			this.apply.Image = ((System.Drawing.Image)(resources.GetObject("apply.Image")));
-			this.apply.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("apply.ImageAlign")));
-			this.apply.ImageIndex = ((int)(resources.GetObject("apply.ImageIndex")));
-			this.apply.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("apply.ImeMode")));
-			this.apply.Location = ((System.Drawing.Point)(resources.GetObject("apply.Location")));
-			this.apply.Name = "apply";
-			this.apply.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("apply.RightToLeft")));
-			this.apply.Size = ((System.Drawing.Size)(resources.GetObject("apply.Size")));
-			this.apply.TabIndex = ((int)(resources.GetObject("apply.TabIndex")));
-			this.apply.Text = resources.GetString("apply.Text");
-			this.apply.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("apply.TextAlign")));
-			this.apply.Visible = ((bool)(resources.GetObject("apply.Visible")));
-			this.apply.Click += new System.EventHandler(this.apply_Click);
+			this.notifyCollisions.AccessibleDescription = resources.GetString("notifyCollisions.AccessibleDescription");
+			this.notifyCollisions.AccessibleName = resources.GetString("notifyCollisions.AccessibleName");
+			this.notifyCollisions.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("notifyCollisions.Anchor")));
+			this.notifyCollisions.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("notifyCollisions.Appearance")));
+			this.notifyCollisions.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("notifyCollisions.BackgroundImage")));
+			this.notifyCollisions.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyCollisions.CheckAlign")));
+			this.notifyCollisions.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("notifyCollisions.Dock")));
+			this.notifyCollisions.Enabled = ((bool)(resources.GetObject("notifyCollisions.Enabled")));
+			this.notifyCollisions.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("notifyCollisions.FlatStyle")));
+			this.notifyCollisions.Font = ((System.Drawing.Font)(resources.GetObject("notifyCollisions.Font")));
+			this.notifyCollisions.Image = ((System.Drawing.Image)(resources.GetObject("notifyCollisions.Image")));
+			this.notifyCollisions.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyCollisions.ImageAlign")));
+			this.notifyCollisions.ImageIndex = ((int)(resources.GetObject("notifyCollisions.ImageIndex")));
+			this.notifyCollisions.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("notifyCollisions.ImeMode")));
+			this.notifyCollisions.Location = ((System.Drawing.Point)(resources.GetObject("notifyCollisions.Location")));
+			this.notifyCollisions.Name = "notifyCollisions";
+			this.notifyCollisions.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("notifyCollisions.RightToLeft")));
+			this.notifyCollisions.Size = ((System.Drawing.Size)(resources.GetObject("notifyCollisions.Size")));
+			this.notifyCollisions.TabIndex = ((int)(resources.GetObject("notifyCollisions.TabIndex")));
+			this.notifyCollisions.Text = resources.GetString("notifyCollisions.Text");
+			this.notifyCollisions.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyCollisions.TextAlign")));
+			this.notifyCollisions.Visible = ((bool)(resources.GetObject("notifyCollisions.Visible")));
+			this.notifyCollisions.CheckedChanged += new System.EventHandler(this.notifyCollisions_CheckedChanged);
+			// 
+			// notifyShared
+			// 
+			this.notifyShared.AccessibleDescription = resources.GetString("notifyShared.AccessibleDescription");
+			this.notifyShared.AccessibleName = resources.GetString("notifyShared.AccessibleName");
+			this.notifyShared.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("notifyShared.Anchor")));
+			this.notifyShared.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("notifyShared.Appearance")));
+			this.notifyShared.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("notifyShared.BackgroundImage")));
+			this.notifyShared.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyShared.CheckAlign")));
+			this.notifyShared.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("notifyShared.Dock")));
+			this.notifyShared.Enabled = ((bool)(resources.GetObject("notifyShared.Enabled")));
+			this.notifyShared.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("notifyShared.FlatStyle")));
+			this.notifyShared.Font = ((System.Drawing.Font)(resources.GetObject("notifyShared.Font")));
+			this.notifyShared.Image = ((System.Drawing.Image)(resources.GetObject("notifyShared.Image")));
+			this.notifyShared.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyShared.ImageAlign")));
+			this.notifyShared.ImageIndex = ((int)(resources.GetObject("notifyShared.ImageIndex")));
+			this.notifyShared.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("notifyShared.ImeMode")));
+			this.notifyShared.Location = ((System.Drawing.Point)(resources.GetObject("notifyShared.Location")));
+			this.notifyShared.Name = "notifyShared";
+			this.notifyShared.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("notifyShared.RightToLeft")));
+			this.notifyShared.Size = ((System.Drawing.Size)(resources.GetObject("notifyShared.Size")));
+			this.notifyShared.TabIndex = ((int)(resources.GetObject("notifyShared.TabIndex")));
+			this.notifyShared.Text = resources.GetString("notifyShared.Text");
+			this.notifyShared.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyShared.TextAlign")));
+			this.notifyShared.Visible = ((bool)(resources.GetObject("notifyShared.Visible")));
+			this.notifyShared.CheckedChanged += new System.EventHandler(this.notifyShared_CheckedChanged);
+			// 
+			// notifyJoins
+			// 
+			this.notifyJoins.AccessibleDescription = resources.GetString("notifyJoins.AccessibleDescription");
+			this.notifyJoins.AccessibleName = resources.GetString("notifyJoins.AccessibleName");
+			this.notifyJoins.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("notifyJoins.Anchor")));
+			this.notifyJoins.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("notifyJoins.Appearance")));
+			this.notifyJoins.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("notifyJoins.BackgroundImage")));
+			this.notifyJoins.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyJoins.CheckAlign")));
+			this.notifyJoins.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("notifyJoins.Dock")));
+			this.notifyJoins.Enabled = ((bool)(resources.GetObject("notifyJoins.Enabled")));
+			this.notifyJoins.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("notifyJoins.FlatStyle")));
+			this.notifyJoins.Font = ((System.Drawing.Font)(resources.GetObject("notifyJoins.Font")));
+			this.notifyJoins.Image = ((System.Drawing.Image)(resources.GetObject("notifyJoins.Image")));
+			this.notifyJoins.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyJoins.ImageAlign")));
+			this.notifyJoins.ImageIndex = ((int)(resources.GetObject("notifyJoins.ImageIndex")));
+			this.notifyJoins.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("notifyJoins.ImeMode")));
+			this.notifyJoins.Location = ((System.Drawing.Point)(resources.GetObject("notifyJoins.Location")));
+			this.notifyJoins.Name = "notifyJoins";
+			this.notifyJoins.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("notifyJoins.RightToLeft")));
+			this.notifyJoins.Size = ((System.Drawing.Size)(resources.GetObject("notifyJoins.Size")));
+			this.notifyJoins.TabIndex = ((int)(resources.GetObject("notifyJoins.TabIndex")));
+			this.notifyJoins.Text = resources.GetString("notifyJoins.Text");
+			this.notifyJoins.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyJoins.TextAlign")));
+			this.notifyJoins.Visible = ((bool)(resources.GetObject("notifyJoins.Visible")));
+			this.notifyJoins.CheckedChanged += new System.EventHandler(this.notifyJoins_CheckedChanged);
 			// 
 			// groupBox1
 			// 
@@ -460,84 +511,6 @@ namespace Novell.FormsTrayApp
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = resources.GetString("groupBox3.Text");
 			this.groupBox3.Visible = ((bool)(resources.GetObject("groupBox3.Visible")));
-			// 
-			// notifyJoins
-			// 
-			this.notifyJoins.AccessibleDescription = resources.GetString("notifyJoins.AccessibleDescription");
-			this.notifyJoins.AccessibleName = resources.GetString("notifyJoins.AccessibleName");
-			this.notifyJoins.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("notifyJoins.Anchor")));
-			this.notifyJoins.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("notifyJoins.Appearance")));
-			this.notifyJoins.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("notifyJoins.BackgroundImage")));
-			this.notifyJoins.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyJoins.CheckAlign")));
-			this.notifyJoins.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("notifyJoins.Dock")));
-			this.notifyJoins.Enabled = ((bool)(resources.GetObject("notifyJoins.Enabled")));
-			this.notifyJoins.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("notifyJoins.FlatStyle")));
-			this.notifyJoins.Font = ((System.Drawing.Font)(resources.GetObject("notifyJoins.Font")));
-			this.notifyJoins.Image = ((System.Drawing.Image)(resources.GetObject("notifyJoins.Image")));
-			this.notifyJoins.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyJoins.ImageAlign")));
-			this.notifyJoins.ImageIndex = ((int)(resources.GetObject("notifyJoins.ImageIndex")));
-			this.notifyJoins.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("notifyJoins.ImeMode")));
-			this.notifyJoins.Location = ((System.Drawing.Point)(resources.GetObject("notifyJoins.Location")));
-			this.notifyJoins.Name = "notifyJoins";
-			this.notifyJoins.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("notifyJoins.RightToLeft")));
-			this.notifyJoins.Size = ((System.Drawing.Size)(resources.GetObject("notifyJoins.Size")));
-			this.notifyJoins.TabIndex = ((int)(resources.GetObject("notifyJoins.TabIndex")));
-			this.notifyJoins.Text = resources.GetString("notifyJoins.Text");
-			this.notifyJoins.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyJoins.TextAlign")));
-			this.notifyJoins.Visible = ((bool)(resources.GetObject("notifyJoins.Visible")));
-			this.notifyJoins.CheckedChanged += new System.EventHandler(this.notifyJoins_CheckedChanged);
-			// 
-			// notifyCollisions
-			// 
-			this.notifyCollisions.AccessibleDescription = resources.GetString("notifyCollisions.AccessibleDescription");
-			this.notifyCollisions.AccessibleName = resources.GetString("notifyCollisions.AccessibleName");
-			this.notifyCollisions.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("notifyCollisions.Anchor")));
-			this.notifyCollisions.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("notifyCollisions.Appearance")));
-			this.notifyCollisions.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("notifyCollisions.BackgroundImage")));
-			this.notifyCollisions.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyCollisions.CheckAlign")));
-			this.notifyCollisions.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("notifyCollisions.Dock")));
-			this.notifyCollisions.Enabled = ((bool)(resources.GetObject("notifyCollisions.Enabled")));
-			this.notifyCollisions.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("notifyCollisions.FlatStyle")));
-			this.notifyCollisions.Font = ((System.Drawing.Font)(resources.GetObject("notifyCollisions.Font")));
-			this.notifyCollisions.Image = ((System.Drawing.Image)(resources.GetObject("notifyCollisions.Image")));
-			this.notifyCollisions.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyCollisions.ImageAlign")));
-			this.notifyCollisions.ImageIndex = ((int)(resources.GetObject("notifyCollisions.ImageIndex")));
-			this.notifyCollisions.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("notifyCollisions.ImeMode")));
-			this.notifyCollisions.Location = ((System.Drawing.Point)(resources.GetObject("notifyCollisions.Location")));
-			this.notifyCollisions.Name = "notifyCollisions";
-			this.notifyCollisions.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("notifyCollisions.RightToLeft")));
-			this.notifyCollisions.Size = ((System.Drawing.Size)(resources.GetObject("notifyCollisions.Size")));
-			this.notifyCollisions.TabIndex = ((int)(resources.GetObject("notifyCollisions.TabIndex")));
-			this.notifyCollisions.Text = resources.GetString("notifyCollisions.Text");
-			this.notifyCollisions.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyCollisions.TextAlign")));
-			this.notifyCollisions.Visible = ((bool)(resources.GetObject("notifyCollisions.Visible")));
-			this.notifyCollisions.CheckedChanged += new System.EventHandler(this.notifyCollisions_CheckedChanged);
-			// 
-			// notifyShared
-			// 
-			this.notifyShared.AccessibleDescription = resources.GetString("notifyShared.AccessibleDescription");
-			this.notifyShared.AccessibleName = resources.GetString("notifyShared.AccessibleName");
-			this.notifyShared.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("notifyShared.Anchor")));
-			this.notifyShared.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("notifyShared.Appearance")));
-			this.notifyShared.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("notifyShared.BackgroundImage")));
-			this.notifyShared.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyShared.CheckAlign")));
-			this.notifyShared.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("notifyShared.Dock")));
-			this.notifyShared.Enabled = ((bool)(resources.GetObject("notifyShared.Enabled")));
-			this.notifyShared.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("notifyShared.FlatStyle")));
-			this.notifyShared.Font = ((System.Drawing.Font)(resources.GetObject("notifyShared.Font")));
-			this.notifyShared.Image = ((System.Drawing.Image)(resources.GetObject("notifyShared.Image")));
-			this.notifyShared.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyShared.ImageAlign")));
-			this.notifyShared.ImageIndex = ((int)(resources.GetObject("notifyShared.ImageIndex")));
-			this.notifyShared.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("notifyShared.ImeMode")));
-			this.notifyShared.Location = ((System.Drawing.Point)(resources.GetObject("notifyShared.Location")));
-			this.notifyShared.Name = "notifyShared";
-			this.notifyShared.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("notifyShared.RightToLeft")));
-			this.notifyShared.Size = ((System.Drawing.Size)(resources.GetObject("notifyShared.Size")));
-			this.notifyShared.TabIndex = ((int)(resources.GetObject("notifyShared.TabIndex")));
-			this.notifyShared.Text = resources.GetString("notifyShared.Text");
-			this.notifyShared.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyShared.TextAlign")));
-			this.notifyShared.Visible = ((bool)(resources.GetObject("notifyShared.Visible")));
-			this.notifyShared.CheckedChanged += new System.EventHandler(this.notifyShared_CheckedChanged);
 			// 
 			// autoStart
 			// 
@@ -1005,6 +978,55 @@ namespace Novell.FormsTrayApp
 			this.addAccount.Visible = ((bool)(resources.GetObject("addAccount.Visible")));
 			this.addAccount.Click += new System.EventHandler(this.addAccount_Click);
 			// 
+			// cancel
+			// 
+			this.cancel.AccessibleDescription = resources.GetString("cancel.AccessibleDescription");
+			this.cancel.AccessibleName = resources.GetString("cancel.AccessibleName");
+			this.cancel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("cancel.Anchor")));
+			this.cancel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("cancel.BackgroundImage")));
+			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.cancel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("cancel.Dock")));
+			this.cancel.Enabled = ((bool)(resources.GetObject("cancel.Enabled")));
+			this.cancel.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("cancel.FlatStyle")));
+			this.cancel.Font = ((System.Drawing.Font)(resources.GetObject("cancel.Font")));
+			this.cancel.Image = ((System.Drawing.Image)(resources.GetObject("cancel.Image")));
+			this.cancel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.ImageAlign")));
+			this.cancel.ImageIndex = ((int)(resources.GetObject("cancel.ImageIndex")));
+			this.cancel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("cancel.ImeMode")));
+			this.cancel.Location = ((System.Drawing.Point)(resources.GetObject("cancel.Location")));
+			this.cancel.Name = "cancel";
+			this.cancel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("cancel.RightToLeft")));
+			this.cancel.Size = ((System.Drawing.Size)(resources.GetObject("cancel.Size")));
+			this.cancel.TabIndex = ((int)(resources.GetObject("cancel.TabIndex")));
+			this.cancel.Text = resources.GetString("cancel.Text");
+			this.cancel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.TextAlign")));
+			this.cancel.Visible = ((bool)(resources.GetObject("cancel.Visible")));
+			this.cancel.Click += new System.EventHandler(this.cancel_Click);
+			// 
+			// apply
+			// 
+			this.apply.AccessibleDescription = resources.GetString("apply.AccessibleDescription");
+			this.apply.AccessibleName = resources.GetString("apply.AccessibleName");
+			this.apply.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("apply.Anchor")));
+			this.apply.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("apply.BackgroundImage")));
+			this.apply.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("apply.Dock")));
+			this.apply.Enabled = ((bool)(resources.GetObject("apply.Enabled")));
+			this.apply.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("apply.FlatStyle")));
+			this.apply.Font = ((System.Drawing.Font)(resources.GetObject("apply.Font")));
+			this.apply.Image = ((System.Drawing.Image)(resources.GetObject("apply.Image")));
+			this.apply.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("apply.ImageAlign")));
+			this.apply.ImageIndex = ((int)(resources.GetObject("apply.ImageIndex")));
+			this.apply.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("apply.ImeMode")));
+			this.apply.Location = ((System.Drawing.Point)(resources.GetObject("apply.Location")));
+			this.apply.Name = "apply";
+			this.apply.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("apply.RightToLeft")));
+			this.apply.Size = ((System.Drawing.Size)(resources.GetObject("apply.Size")));
+			this.apply.TabIndex = ((int)(resources.GetObject("apply.TabIndex")));
+			this.apply.Text = resources.GetString("apply.Text");
+			this.apply.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("apply.TextAlign")));
+			this.apply.Visible = ((bool)(resources.GetObject("apply.Visible")));
+			this.apply.Click += new System.EventHandler(this.apply_Click);
+			// 
 			// ok
 			// 
 			this.ok.AccessibleDescription = resources.GetString("ok.AccessibleDescription");
@@ -1028,32 +1050,11 @@ namespace Novell.FormsTrayApp
 			this.ok.Text = resources.GetString("ok.Text");
 			this.ok.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("ok.TextAlign")));
 			this.ok.Visible = ((bool)(resources.GetObject("ok.Visible")));
-			// 
-			// groupBox4
-			// 
-			this.groupBox4.AccessibleDescription = resources.GetString("groupBox4.AccessibleDescription");
-			this.groupBox4.AccessibleName = resources.GetString("groupBox4.AccessibleName");
-			this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox4.Anchor")));
-			this.groupBox4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox4.BackgroundImage")));
-			this.groupBox4.Controls.Add(this.notifyCollisions);
-			this.groupBox4.Controls.Add(this.notifyShared);
-			this.groupBox4.Controls.Add(this.notifyJoins);
-			this.groupBox4.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox4.Dock")));
-			this.groupBox4.Enabled = ((bool)(resources.GetObject("groupBox4.Enabled")));
-			this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.groupBox4.Font = ((System.Drawing.Font)(resources.GetObject("groupBox4.Font")));
-			this.groupBox4.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox4.ImeMode")));
-			this.groupBox4.Location = ((System.Drawing.Point)(resources.GetObject("groupBox4.Location")));
-			this.groupBox4.Name = "groupBox4";
-			this.groupBox4.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox4.RightToLeft")));
-			this.groupBox4.Size = ((System.Drawing.Size)(resources.GetObject("groupBox4.Size")));
-			this.groupBox4.TabIndex = ((int)(resources.GetObject("groupBox4.TabIndex")));
-			this.groupBox4.TabStop = false;
-			this.groupBox4.Text = resources.GetString("groupBox4.Text");
-			this.groupBox4.Visible = ((bool)(resources.GetObject("groupBox4.Visible")));
+			this.ok.Click += new System.EventHandler(this.ok_Click);
 			// 
 			// Preferences
 			// 
+			this.AcceptButton = this.ok;
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
 			this.AccessibleName = resources.GetString("$this.AccessibleName");
 			this.AutoScaleBaseSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScaleBaseSize")));
@@ -1061,6 +1062,7 @@ namespace Novell.FormsTrayApp
 			this.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMargin")));
 			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+			this.CancelButton = this.cancel;
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.tabControl1);
@@ -1084,11 +1086,11 @@ namespace Novell.FormsTrayApp
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).EndInit();
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage2.ResumeLayout(false);
+			this.groupBox4.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox3.ResumeLayout(false);
 			this.tabPage5.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
-			this.groupBox4.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -1295,6 +1297,7 @@ namespace Novell.FormsTrayApp
 				}
 				catch (Exception ex)
 				{
+					// TODO: put string in resource file
 					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readUserError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
@@ -1369,76 +1372,8 @@ namespace Novell.FormsTrayApp
 				regKey.DeleteValue(iFolderRun, false);
 			}
 		}
-		#endregion
 
-		#region Event Handlers
-		private void Preferences_Load(object sender, System.EventArgs e)
-		{
-			// Load the application icon and banner image.
-			try
-			{
-				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
-			}
-			catch {} // Non-fatal ...
-		}
-
-		private void Preferences_VisibleChanged(object sender, System.EventArgs e)
-		{
-			if (this.Visible)
-			{
-				accounts.Items.Clear();
-
-				DomainWeb[] domains;
-				try
-				{
-					domains = ifWebService.GetDomains();
-					foreach (DomainWeb dw in domains)
-					{
-						AddDomainToList(dw);
-					}
-				}
-				catch{}
-
-				apply.Enabled = cancel.Enabled = false;
-
-				// Update the auto start setting.
-				autoStart.Checked = IsRunEnabled();
-
-				notifyShared.Checked = NotifyShareEnabled;
-				notifyCollisions.Checked = NotifyCollisionEnabled;
-				notifyJoins.Checked = NotifyJoinEnabled;
-
-				// Update the display confirmation setting.
-				displayConfirmation.Checked = iFolderComponent.DisplayConfirmationEnabled;
-
-				try
-				{
-					// Update the default sync interval setting.
-					defaultInterval.Value = (decimal)ifWebService.GetDefaultSyncInterval();
-					autoSync.Checked = defaultInterval.Value != System.Threading.Timeout.Infinite;
-				}
-				catch (Exception ex)
-				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readSyncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
-				}
-
-				Activate();
-			}
-		}
-
-		private void Preferences_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			// If we haven't received a shutdown event, hide this dialog and cancel the event.
-			if (!shutdown)
-			{
-				e.Cancel = true;
-				Hide();
-			}
-		}
-
-		#region General Tab
-		private void apply_Click(object sender, System.EventArgs e)
+		private void processChanges()
 		{
 			Cursor.Current = Cursors.WaitCursor;
 
@@ -1469,6 +1404,7 @@ namespace Novell.FormsTrayApp
 					}
 					catch (Exception ex)
 					{
+						// TODO: put string in resource file
 						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("saveSyncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 					}
@@ -1476,41 +1412,152 @@ namespace Novell.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
+				// TODO: put string in resource file
 				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readSyncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 
+			Domain domain = null;
+			foreach (ListViewItem lvi in accounts.Items)
+			{
+				domain = (Domain)lvi.Tag;
+				if (domain.DomainWeb.IsDefault)
+				{
+					break;
+				}
+			}
+
+			if ((domain != null) && !domain.ID.Equals(defaultDomain.ID))
+			{
+				try
+				{
+					ifWebService.SetDefaultDomain(domain.DomainWeb.ID);
+
+					if (ChangeDefaultDomain != null)
+					{
+						ChangeDefaultDomain(this, new DomainConnectEventArgs(domain.DomainWeb));
+					}
+				}
+				catch
+				{
+					// TODO: Error message.
+				}
+			}
+
 			Cursor.Current = Cursors.Default;
-			apply.Enabled = cancel.Enabled = false;
+		}
+		#endregion
+
+		#region Events
+		/// <summary>
+		/// Delegate used when successfully connected to Enterprise Server.
+		/// </summary>
+		public delegate void EnterpriseConnectDelegate(object sender, DomainConnectEventArgs e);
+		/// <summary>
+		/// Occurs when successfully connected to enterprise.
+		/// </summary>
+		public event EnterpriseConnectDelegate EnterpriseConnect;
+
+		/// <summary>
+		/// Delegate used when the default domain is changed.
+		/// </summary>
+		public delegate void ChangeDefaultDomainDelegate(object sender, DomainConnectEventArgs e);
+		/// <summary>
+		/// Occurs when the default domain is changed.
+		/// </summary>
+		public event ChangeDefaultDomainDelegate ChangeDefaultDomain;
+		#endregion
+
+		#region Event Handlers
+		private void Preferences_Load(object sender, System.EventArgs e)
+		{
+			// Load the application icon and banner image.
+			try
+			{
+				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
+			}
+			catch {} // Non-fatal ...
+		}
+
+		private void Preferences_VisibleChanged(object sender, System.EventArgs e)
+		{
+			if (this.Visible)
+			{
+				accounts.Items.Clear();
+
+				DomainWeb[] domains;
+				try
+				{
+					domains = ifWebService.GetDomains();
+					foreach (DomainWeb dw in domains)
+					{
+						AddDomainToList(dw);
+					}
+				}
+				catch{}
+
+				apply.Enabled = false;
+
+				// Update the auto start setting.
+				autoStart.Checked = IsRunEnabled();
+
+				notifyShared.Checked = NotifyShareEnabled;
+				notifyCollisions.Checked = NotifyCollisionEnabled;
+				notifyJoins.Checked = NotifyJoinEnabled;
+
+				// Update the display confirmation setting.
+				displayConfirmation.Checked = iFolderComponent.DisplayConfirmationEnabled;
+
+				try
+				{
+					// Update the default sync interval setting.
+					defaultInterval.Value = (decimal)ifWebService.GetDefaultSyncInterval();
+					autoSync.Checked = defaultInterval.Value != System.Threading.Timeout.Infinite;
+				}
+				catch (Exception ex)
+				{
+					// TODO: put string in resource file
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readSyncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+				}
+
+				Activate();
+			}
+		}
+
+		private void Preferences_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			// If we haven't received a shutdown event, hide this dialog and cancel the event.
+			if (!shutdown)
+			{
+				e.Cancel = true;
+				Hide();
+			}
+		}
+
+		private void ok_Click(object sender, System.EventArgs e)
+		{
+			processChanges();
+			Close();
+		}
+
+		private void apply_Click(object sender, System.EventArgs e)
+		{
+			processChanges();
+			apply.Enabled = false;
 		}
 
 		private void cancel_Click(object sender, System.EventArgs e)
 		{
-			Cursor.Current = Cursors.WaitCursor;
-
-			// Reset the auto start setting.
-			autoStart.Checked = IsRunEnabled();
-
-			notifyShared.Checked = NotifyShareEnabled;
-			notifyCollisions.Checked = NotifyCollisionEnabled;
-			notifyJoins.Checked = NotifyJoinEnabled;
-
-			// Reset the display confirmation setting.
-			displayConfirmation.Checked = iFolderComponent.DisplayConfirmationEnabled;
-
-			// Reset the default sync interval.
-			defaultInterval.Value = (decimal)ifWebService.GetDefaultSyncInterval();
-			autoSync.Checked = defaultInterval.Value != System.Threading.Timeout.Infinite;
-
-			Cursor.Current = Cursors.Default;
-			apply.Enabled = cancel.Enabled = false;
+			Close();
 		}
 
+		#region General Tab
 		private void autoStart_CheckedChanged(object sender, System.EventArgs e)
 		{
 			if (autoStart.Focused)
 			{
-				apply.Enabled = cancel.Enabled = true;
+				apply.Enabled = true;
 			}
 		}
 
@@ -1518,7 +1565,7 @@ namespace Novell.FormsTrayApp
 		{
 			if (displayConfirmation.Focused)
 			{
-				apply.Enabled = cancel.Enabled = true;
+				apply.Enabled = true;
 			}
 		}
 
@@ -1526,7 +1573,7 @@ namespace Novell.FormsTrayApp
 		{
 			if (autoSync.Focused)
 			{
-				apply.Enabled = cancel.Enabled = true;
+				apply.Enabled = true;
 			}
 
 			defaultInterval.Enabled = autoSync.Checked;
@@ -1541,7 +1588,7 @@ namespace Novell.FormsTrayApp
 					defaultInterval.Value = decimal.Parse(defaultInterval.Text);
 				}
 
-				apply.Enabled = cancel.Enabled = true;
+				apply.Enabled = true;
 			}
 		}
 
@@ -1549,7 +1596,7 @@ namespace Novell.FormsTrayApp
 		{
 			if (notifyShared.Focused)
 			{
-				apply.Enabled = cancel.Enabled = true;
+				apply.Enabled = true;
 			}
 		}
 
@@ -1557,7 +1604,7 @@ namespace Novell.FormsTrayApp
 		{
 			if (notifyCollisions.Focused)
 			{
-				apply.Enabled = cancel.Enabled = true;
+				apply.Enabled = true;
 			}
 		}
 
@@ -1565,7 +1612,7 @@ namespace Novell.FormsTrayApp
 		{
 			if (notifyJoins.Focused)
 			{
-				apply.Enabled = cancel.Enabled = true;
+				apply.Enabled = true;
 			}
 		}
 		#endregion
@@ -1579,7 +1626,10 @@ namespace Novell.FormsTrayApp
 				try
 				{
 					Domain domain = (Domain)accounts.SelectedItems[0].Tag;
-					ifWebService.SetDefaultDomain(domain.DomainWeb.ID);
+//					ifWebService.SetDefaultDomain(domain.DomainWeb.ID);
+
+					// TODO: need to rework this ... may need to keep track of currently "non-commited"
+					// default domain as well as the actual default domain.
 
 					// Reset the flag on the current default domain.
 					defaultDomain.DomainWeb.IsDefault = false;
@@ -1590,6 +1640,8 @@ namespace Novell.FormsTrayApp
 
 					// Disable the checkbox so that it cannot be unchecked.
 					defaultServer.Enabled = false;
+
+					apply.Enabled = true;
 				}
 				catch
 				{}
@@ -1698,6 +1750,11 @@ namespace Novell.FormsTrayApp
 				lvi.SubItems[1].Text = domainWeb.Name;
 				lvi.Tag = domain;
 
+				if (EnterpriseConnect != null)
+				{
+					EnterpriseConnect(this, new DomainConnectEventArgs(domainWeb));
+				}
+
 				// Update default.
 				if (domainWeb.IsDefault)
 				{
@@ -1725,6 +1782,7 @@ namespace Novell.FormsTrayApp
 				}
 				catch (Exception ex)
 				{
+					// TODO: put string in resource file
 					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("checkUpdateError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 					mmb.ShowDialog();
 				}
@@ -1733,11 +1791,13 @@ namespace Novell.FormsTrayApp
 			{
 				if (ex.Message.IndexOf("HTTP status 401") != -1)
 				{
+					// TODO: put string in resource file
 					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
 				else
 				{
+					// TODO: put string in resource file
 					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}

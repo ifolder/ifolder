@@ -100,11 +100,6 @@
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
                 />
                 <Reference
-                    Name = "SimiasClient"
-                    AssemblyName = "SimiasClient"
-                    HintPath = "..\..\..\..\final\web\bin\SimiasClient.dll"
-                />
-                <Reference
                     Name = "iFolderComponent"
                     AssemblyName = "iFolderComponent"
                     HintPath = "..\iFolderShell\iFolderComponent.dll"
@@ -115,9 +110,14 @@
                     HintPath = "..\iFolder\Novell.iFolder.dll"
                 />
                 <Reference
+                    Name = "SimiasClient"
+                    AssemblyName = "SimiasClient"
+                    HintPath = "..\..\..\..\dev\final\web\bin\SimiasClient.dll"
+                />
+                <Reference
                     Name = "ClientUpgrade"
                     AssemblyName = "ClientUpgrade"
-                    HintPath = "..\..\..\final\web\bin\ClientUpgrade.dll"
+                    HintPath = "..\..\..\..\dev\final\web\bin\ClientUpgrade.dll"
                 />
             </References>
         </Build>

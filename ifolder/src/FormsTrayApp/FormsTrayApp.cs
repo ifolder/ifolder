@@ -410,6 +410,8 @@ namespace Novell.FormsTrayApp
 					// Instantiate the GlobalProperties dialog so we can log sync events.
 					globalProperties = new GlobalProperties(ifWebService, eventClient);
 					preferences = new Preferences(ifWebService);
+					preferences.EnterpriseConnect += new Novell.FormsTrayApp.Preferences.EnterpriseConnectDelegate(preferences_EnterpriseConnect);
+					preferences.ChangeDefaultDomain += new Novell.FormsTrayApp.Preferences.ChangeDefaultDomainDelegate(preferences_EnterpriseConnect);
 
 					// Create the control so that we can use the delegate to write sync events to the log.
 					// For some reason, the handle isn't created until it is referenced.
@@ -484,6 +486,12 @@ namespace Novell.FormsTrayApp
 
 			// Update the settings with the enterprise data.
 //			ifolderSettings = serverInfo.ifSettings;
+		}
+
+
+		private void preferences_EnterpriseConnect(object sender, DomainConnectEventArgs e)
+		{
+			globalProperties.AddDomainToList(e.DomainWeb);
 		}
 
 		private void syncAnimateTimer_Tick(object sender, System.EventArgs e)

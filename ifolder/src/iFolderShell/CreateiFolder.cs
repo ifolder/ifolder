@@ -79,13 +79,16 @@ namespace Novell.iFolderCom
 		/// <summary>
 		/// Sets the collection of servers to display in the dropdown list.
 		/// </summary>
-		public ListView.ListViewItemCollection Servers
+		public ComboBox.ObjectCollection Servers
 		{
 			set
 			{
-				foreach (ListViewItem lvi in value)
+				foreach (Domain d in value)
 				{
-					servers.Items.Add((Domain)lvi.Tag);
+					if (!d.ShowAll)
+					{
+						servers.Items.Add(d);
+					}
 				}
 			}
 		}
