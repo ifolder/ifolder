@@ -596,7 +596,7 @@ namespace Novell.iFolder
 			appSpacerBox.PackStart(appWidgetBox, false, true, 0);
 
 			StartAtLoginButton = 
-				new CheckButton(Util.GS("Startup iFolder at Login"));
+				new CheckButton(Util.GS("Startup iFolder when logging into the desktop"));
 			appWidgetBox.PackStart(StartAtLoginButton, false, true, 0);
 
 			ShowConfirmationButton = 
@@ -633,7 +633,7 @@ namespace Novell.iFolder
 			syncWidgetBox.Spacing = 10;
 
 
-			Label syncHelpLabel = new Label(Util.GS("This will set the default Sync Settings for all iFolders.  You can change the sync setting for an individual iFolder on an iFolder's property pages"));
+			Label syncHelpLabel = new Label(Util.GS("Specify the default sync interval for synchronizing your iFolders with the host.  To specify a different sync interval for an individual iFolder, use the iFolder's properties dialog."));
 			syncHelpLabel.LineWrap = true;
 			syncHelpLabel.Xalign = 0;
 			syncWidgetBox.PackStart(syncHelpLabel, false, true, 0);
@@ -682,7 +682,7 @@ namespace Novell.iFolder
 
 
 			UseProxyButton = 
-				new CheckButton(Util.GS("Use a proxy to sync iFolders"));
+				new CheckButton(Util.GS("Use this proxy server to sync iFolders with the host"));
 			proxyWidgetBox.PackStart(UseProxyButton, false, true, 0);
 			UseProxyButton.Toggled += new EventHandler(OnUseProxyButton);
 
@@ -1002,7 +1002,7 @@ namespace Novell.iFolder
 			vbox.Spacing = 10;
 			vbox.BorderWidth = Util.DefaultBorderWidth;
 		
-			Label lbl = new Label(Util.GS("This log shows current ifolder activity"));
+			Label lbl = new Label(Util.GS("This log shows current iFolder activity"));
 			vbox.PackStart(lbl, false, true, 0);
 			lbl.Xalign = 0;
 
