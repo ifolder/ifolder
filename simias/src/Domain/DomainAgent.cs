@@ -497,8 +497,6 @@ namespace Simias.DomainServices
 			{
 				if ( cDomain.Role == SyncRoles.Slave )
 				{
-					// Logout before loging in.
-					Logout(domainID);
 					NetworkCredential netCred = new NetworkCredential( user, password );
 					status = this.Login( DomainProvider.ResolveLocation(domainID), domainID, netCred );
 					if ( status.statusCode == SCodes.Success ||
