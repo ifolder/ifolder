@@ -268,21 +268,7 @@ namespace Novell.AddressBook.UI.gtk
 			if(store == null)
 				store = new Store(new Configuration());
 			
-			subInfo = new SubscriptionInfo(filename);
-
-			pobox = POBox.GetPOBox(store, subInfo.DomainID);
-			Node node = pobox.GetNodeByID(subInfo.SubscriptionID);
-			if(node != null)
-			{
-				subscription = new Subscription(node);
-			}
-			else
-			{
-				subscription = new Subscription("Subscription Name",
-													subInfo);
-				subscription.SubscriptionState = SubscriptionStates.Received;
-				pobox.AddMessage(subscription);
-			}
+			subscription = Subscription.GetSubscriptionFromSubscriptionInfo(store, filename);
 		}
 
 		private void on_select_location_prepare(object o, EventArgs args)
@@ -297,23 +283,8 @@ namespace Novell.AddressBook.UI.gtk
 
 				if(inviteFile != null)
 				{
-					subInfo = new SubscriptionInfo(inviteFile);
-
-					pobox = POBox.GetPOBox(store, subInfo.DomainID);
-					Node node = pobox.GetNodeByID(subInfo.SubscriptionID);
-					if(node != null)
-					{
-						subscription = new Subscription(node);
-					}
-					else
-					{
-						subscription = new Subscription("Subscription Name",
-															subInfo);
-						subscription.SubscriptionState = 
-								SubscriptionStates.Received;
-
-						pobox.AddMessage(subscription);
-					}
+					// Is this really necessary.  We did this in on_OpenInvitationButton_clicked.
+					InitSubscriptionInfo(inviteFile);
 				}
 			}
 
@@ -405,13 +376,11 @@ namespace Novell.AddressBook.UI.gtk
 		{
 			try
 			{
-				subscription.SubscriptionState = SubscriptionStates.Replied;
-				subscription.SubscriptionDisposition = 
-						SubscriptionDispositions.Accepted;
-//				Member member = pobox.GetCurrentMember();
-//				subscription.FromName = member.Name;
-//				subscription.FromIdentity = member.UserID;
-				subscription.CollectionRoot = CollectionPathEntry.Text;
+				if(store == null)
+					store = new Store(new Configuration());
+
+				subscription.CollectionRoot = Path.GetFullPath(CollectionPathEntry.Text);
+				subscription.Accept(store, SubscriptionDispositions.Accepted);
 				pobox.Commit(subscription);
 			}
 			catch(SimiasException ex)
