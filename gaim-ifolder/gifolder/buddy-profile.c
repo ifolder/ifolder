@@ -709,6 +709,8 @@ parse_encoded_profile(GaimBuddy *buddy, const char *profile, char **machineName,
 		return FALSE;
 	}
 	
+	fprintf(stderr, "Decrypted profile string:\n\n%s\n\n", decryptedString);
+	
 	/* Now we can parse the userID and simiasURL */
 	tmp = decryptedString;
 	colonPos = simias_str_index_of(tmp, ':');
