@@ -290,10 +290,12 @@ namespace Simias.POBoxService.Web
 			Subscription cSub = new Subscription(poBox, sn);
 
 			// The identity better match the ToID
-			if (identityID != cSub.ToIdentity)
+			/*
+			if (identityID != cSub.FromIdentity)
 			{
 				throw new ApplicationException("Caller does not own the subscription.");
 			}
+			*/
 
 			cSub.Accept(store, cSub.SubscriptionRights);
 			poBox.Commit(cSub);
@@ -319,6 +321,7 @@ namespace Simias.POBoxService.Web
 			
 			// FIXME:  Temp remove
 			Console.WriteLine("POBoxService::DeclineSubscription - called");
+			Console.WriteLine("  Subscription ID: " + subscriptionID);
 
 			// open the post office box
 			poBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
@@ -352,10 +355,12 @@ namespace Simias.POBoxService.Web
 			Subscription cSub = new Subscription(poBox, sn);
 
 			// The identity better match the ToID
-			if (identityID != cSub.ToIdentity)
+			/*
+			if (identityID != cSub.FromIdentity)
 			{
 				throw new ApplicationException("Caller does not own the subscription.");
 			}
+			*/
 
 			cSub.Decline();
 			poBox.Commit(cSub);
