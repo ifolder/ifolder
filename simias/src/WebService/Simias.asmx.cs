@@ -200,7 +200,7 @@ namespace Simias.Web
 		/// </summary>
 		[WebMethod(EnableSession=true, Description="Allows a client to ping to make sure the Web Service is up and running")]
 		[SoapDocumentMethod]
-		public void Ping()
+		public void PingSimias()
 		{
 			// Nothing to do here, just return
 		}
