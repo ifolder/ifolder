@@ -173,8 +173,8 @@ case $SIMIAS_OS in
         REPORT_DIR='$(DESTDIR)$(webbindir)'
         REPORT_EXE='mint $(top_srcdir)/tools/Report/Report.exe'
         SEP='/'
-        SHARED_LIB_EXT='.dylib'
-        SHARED_LIB_FLAG='-shared'
+        SHARED_LIB_EXT=
+        SHARED_LIB_FLAG='-dylib'
         STORELIB="sqlite"
         STORELIB_PATH="$EXTERNAL_DIR/sqlite/darwin"
 		LDOUT='-o '
