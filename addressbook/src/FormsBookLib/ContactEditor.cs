@@ -40,18 +40,12 @@ namespace Novell.iFolder.FormsBookLib
 		#region Class Members
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage tabPage1;
-		private System.Windows.Forms.TextBox userId;
-		private System.Windows.Forms.TextBox firstName;
-		private System.Windows.Forms.TextBox lastName;
-		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.GroupBox groupBox1;
-		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.TextBox phone3;
 		private System.Windows.Forms.TextBox phone2;
 		private System.Windows.Forms.TextBox phone1;
-		private System.Windows.Forms.TextBox organization;
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.ComboBox phoneSelect2;
 		private System.Windows.Forms.ComboBox phoneSelect1;
@@ -65,10 +59,6 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.TextBox webAddress;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.GroupBox groupBox4;
-		private System.Windows.Forms.GroupBox groupBox5;
-		private System.Windows.Forms.GroupBox groupBox6;
-		private System.Windows.Forms.TextBox categories;
-		private System.Windows.Forms.Button categoriesButton;
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
 		private System.Windows.Forms.ListBox address;
@@ -78,10 +68,23 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.PictureBox picturePhone;
 		private System.Windows.Forms.PictureBox pictureAddress;
 		private System.Windows.Forms.PictureBox pictureWeb;
-		private System.Windows.Forms.PictureBox pictureCategories;
+		private Hashtable phoneHT;
+		private Name name;
 
 		private Novell.AddressBook.AddressBook addressBook = null;
 		private Contact contact = null;
+		private System.Windows.Forms.Button addr;
+		private System.Windows.Forms.TextBox blogAddress;
+		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.ComboBox comboBox1;
+		private System.Windows.Forms.Button webConnect;
+		private System.Windows.Forms.Button blogConnect;
+		private System.Windows.Forms.Button fullNameButton;
+		private System.Windows.Forms.Button changePicture;
+		private System.Windows.Forms.TextBox userId;
+		private System.Windows.Forms.TextBox organization;
+		private System.Windows.Forms.TextBox fullName;
+		private System.Windows.Forms.TextBox jobTitle;
 
 		/// <summary>
 		/// Required designer variable.
@@ -110,7 +113,6 @@ namespace Novell.iFolder.FormsBookLib
 				pictureMail.Image = Image.FromFile(Path.Combine(basePath, "ico-mail.png"));
 				pictureAddress.Image = Image.FromFile(Path.Combine(basePath, "house.png"));
 				pictureWeb.Image = Image.FromFile(Path.Combine(basePath, "globe.png"));
-				pictureCategories.Image = Image.FromFile(Path.Combine(basePath, "briefcase.png"));
 			}
 			catch{}
 		}
@@ -139,11 +141,14 @@ namespace Novell.iFolder.FormsBookLib
 		{
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
-			this.pictureCategories = new System.Windows.Forms.PictureBox();
-			this.categoriesButton = new System.Windows.Forms.Button();
-			this.categories = new System.Windows.Forms.TextBox();
-			this.groupBox5 = new System.Windows.Forms.GroupBox();
-			this.groupBox6 = new System.Windows.Forms.GroupBox();
+			this.changePicture = new System.Windows.Forms.Button();
+			this.fullNameButton = new System.Windows.Forms.Button();
+			this.blogConnect = new System.Windows.Forms.Button();
+			this.webConnect = new System.Windows.Forms.Button();
+			this.comboBox1 = new System.Windows.Forms.ComboBox();
+			this.blogAddress = new System.Windows.Forms.TextBox();
+			this.label5 = new System.Windows.Forms.Label();
+			this.addr = new System.Windows.Forms.Button();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
 			this.pictureWeb = new System.Windows.Forms.PictureBox();
 			this.webAddress = new System.Windows.Forms.TextBox();
@@ -159,7 +164,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.picturePhone = new System.Windows.Forms.PictureBox();
 			this.phoneSelect1 = new System.Windows.Forms.ComboBox();
 			this.phoneSelect2 = new System.Windows.Forms.ComboBox();
-			this.organization = new System.Windows.Forms.TextBox();
+			this.userId = new System.Windows.Forms.TextBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.phone4 = new System.Windows.Forms.TextBox();
 			this.phone3 = new System.Windows.Forms.TextBox();
@@ -167,37 +172,38 @@ namespace Novell.iFolder.FormsBookLib
 			this.phone1 = new System.Windows.Forms.TextBox();
 			this.pictureMail = new System.Windows.Forms.PictureBox();
 			this.eMail = new System.Windows.Forms.TextBox();
-			this.label9 = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.pictureContact = new System.Windows.Forms.PictureBox();
-			this.lastName = new System.Windows.Forms.TextBox();
-			this.firstName = new System.Windows.Forms.TextBox();
+			this.organization = new System.Windows.Forms.TextBox();
+			this.jobTitle = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
-			this.label1 = new System.Windows.Forms.Label();
-			this.userId = new System.Windows.Forms.TextBox();
+			this.fullName = new System.Windows.Forms.TextBox();
 			this.ok = new System.Windows.Forms.Button();
 			this.cancel = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.SuspendLayout();
-			//
+			// 
 			// tabControl1
-			//
+			// 
 			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(648, 336);
+			this.tabControl1.Size = new System.Drawing.Size(792, 312);
 			this.tabControl1.TabIndex = 0;
-			//
+			// 
 			// tabPage1
-			//
-			this.tabPage1.Controls.Add(this.pictureCategories);
-			this.tabPage1.Controls.Add(this.categoriesButton);
-			this.tabPage1.Controls.Add(this.categories);
-			this.tabPage1.Controls.Add(this.groupBox5);
-			this.tabPage1.Controls.Add(this.groupBox6);
+			// 
+			this.tabPage1.Controls.Add(this.changePicture);
+			this.tabPage1.Controls.Add(this.fullNameButton);
+			this.tabPage1.Controls.Add(this.blogConnect);
+			this.tabPage1.Controls.Add(this.webConnect);
+			this.tabPage1.Controls.Add(this.comboBox1);
+			this.tabPage1.Controls.Add(this.blogAddress);
+			this.tabPage1.Controls.Add(this.label5);
+			this.tabPage1.Controls.Add(this.addr);
 			this.tabPage1.Controls.Add(this.groupBox4);
 			this.tabPage1.Controls.Add(this.pictureWeb);
 			this.tabPage1.Controls.Add(this.webAddress);
@@ -213,7 +219,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.tabPage1.Controls.Add(this.picturePhone);
 			this.tabPage1.Controls.Add(this.phoneSelect1);
 			this.tabPage1.Controls.Add(this.phoneSelect2);
-			this.tabPage1.Controls.Add(this.organization);
+			this.tabPage1.Controls.Add(this.userId);
 			this.tabPage1.Controls.Add(this.label7);
 			this.tabPage1.Controls.Add(this.phone4);
 			this.tabPage1.Controls.Add(this.phone3);
@@ -221,381 +227,401 @@ namespace Novell.iFolder.FormsBookLib
 			this.tabPage1.Controls.Add(this.phone1);
 			this.tabPage1.Controls.Add(this.pictureMail);
 			this.tabPage1.Controls.Add(this.eMail);
-			this.tabPage1.Controls.Add(this.label9);
 			this.tabPage1.Controls.Add(this.groupBox1);
 			this.tabPage1.Controls.Add(this.pictureContact);
-			this.tabPage1.Controls.Add(this.lastName);
-			this.tabPage1.Controls.Add(this.firstName);
+			this.tabPage1.Controls.Add(this.organization);
+			this.tabPage1.Controls.Add(this.jobTitle);
 			this.tabPage1.Controls.Add(this.label3);
 			this.tabPage1.Controls.Add(this.label2);
-			this.tabPage1.Controls.Add(this.label1);
-			this.tabPage1.Controls.Add(this.userId);
+			this.tabPage1.Controls.Add(this.fullName);
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
-			this.tabPage1.Size = new System.Drawing.Size(640, 310);
+			this.tabPage1.Size = new System.Drawing.Size(784, 286);
 			this.tabPage1.TabIndex = 0;
-			this.tabPage1.Text = "Collaboration";
-			//
-			// pictureCategories
-			//
-			this.pictureCategories.Location = new System.Drawing.Point(8, 256);
-			this.pictureCategories.Name = "pictureCategories";
-			this.pictureCategories.Size = new System.Drawing.Size(48, 48);
-			this.pictureCategories.TabIndex = 53;
-			this.pictureCategories.TabStop = false;
-			//
-			// categoriesButton
-			//
-			this.categoriesButton.Location = new System.Drawing.Point(64, 264);
-			this.categoriesButton.Name = "categoriesButton";
-			this.categoriesButton.Size = new System.Drawing.Size(96, 23);
-			this.categoriesButton.TabIndex = 7;
-			this.categoriesButton.Text = "Categories...";
-			//
-			// categories
-			//
-			this.categories.Location = new System.Drawing.Point(168, 264);
-			this.categories.Name = "categories";
-			this.categories.Size = new System.Drawing.Size(160, 20);
-			this.categories.TabIndex = 8;
-			this.categories.Text = "";
-			//
-			// groupBox5
-			//
-			this.groupBox5.Location = new System.Drawing.Point(334, 248);
-			this.groupBox5.Name = "groupBox5";
-			this.groupBox5.Size = new System.Drawing.Size(296, 4);
-			this.groupBox5.TabIndex = 50;
-			this.groupBox5.TabStop = false;
-			this.groupBox5.Text = "groupBox5";
-			//
-			// groupBox6
-			//
-			this.groupBox6.Location = new System.Drawing.Point(8, 248);
-			this.groupBox6.Name = "groupBox6";
-			this.groupBox6.Size = new System.Drawing.Size(310, 4);
-			this.groupBox6.TabIndex = 49;
-			this.groupBox6.TabStop = false;
-			this.groupBox6.Text = "groupBox6";
-			//
+			this.tabPage1.Text = "General";
+			// 
+			// changePicture
+			// 
+			this.changePicture.Location = new System.Drawing.Point(8, 88);
+			this.changePicture.Name = "changePicture";
+			this.changePicture.TabIndex = 56;
+			this.changePicture.Text = "Change...";
+			// 
+			// fullNameButton
+			// 
+			this.fullNameButton.Location = new System.Drawing.Point(92, 12);
+			this.fullNameButton.Name = "fullNameButton";
+			this.fullNameButton.Size = new System.Drawing.Size(75, 26);
+			this.fullNameButton.TabIndex = 55;
+			this.fullNameButton.Text = "Full Name...";
+			this.fullNameButton.Click += new System.EventHandler(this.fullNameButton_Click);
+			// 
+			// blogConnect
+			// 
+			this.blogConnect.Location = new System.Drawing.Point(348, 256);
+			this.blogConnect.Name = "blogConnect";
+			this.blogConnect.Size = new System.Drawing.Size(22, 22);
+			this.blogConnect.TabIndex = 54;
+			this.blogConnect.Text = "button2";
+			// 
+			// webConnect
+			// 
+			this.webConnect.Location = new System.Drawing.Point(348, 224);
+			this.webConnect.Name = "webConnect";
+			this.webConnect.Size = new System.Drawing.Size(22, 22);
+			this.webConnect.TabIndex = 53;
+			this.webConnect.Text = "button1";
+			// 
+			// comboBox1
+			// 
+			this.comboBox1.BackColor = System.Drawing.SystemColors.Control;
+			this.comboBox1.Location = new System.Drawing.Point(64, 160);
+			this.comboBox1.Name = "comboBox1";
+			this.comboBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+			this.comboBox1.Size = new System.Drawing.Size(104, 21);
+			this.comboBox1.TabIndex = 52;
+			this.comboBox1.Text = "Primary e-mail:";
+			// 
+			// blogAddress
+			// 
+			this.blogAddress.Location = new System.Drawing.Point(176, 256);
+			this.blogAddress.Name = "blogAddress";
+			this.blogAddress.Size = new System.Drawing.Size(168, 20);
+			this.blogAddress.TabIndex = 50;
+			this.blogAddress.Text = "";
+			// 
+			// label5
+			// 
+			this.label5.Location = new System.Drawing.Point(104, 256);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(80, 16);
+			this.label5.TabIndex = 51;
+			this.label5.Text = "Blog Address:";
+			// 
+			// addr
+			// 
+			this.addr.Location = new System.Drawing.Point(472, 192);
+			this.addr.Name = "addr";
+			this.addr.Size = new System.Drawing.Size(96, 23);
+			this.addr.TabIndex = 49;
+			this.addr.Text = "Address...";
+			// 
 			// groupBox4
-			//
-			this.groupBox4.Location = new System.Drawing.Point(334, 112);
+			// 
+			this.groupBox4.Location = new System.Drawing.Point(400, 144);
 			this.groupBox4.Name = "groupBox4";
-			this.groupBox4.Size = new System.Drawing.Size(296, 4);
+			this.groupBox4.Size = new System.Drawing.Size(368, 4);
 			this.groupBox4.TabIndex = 48;
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "groupBox4";
-			//
+			// 
 			// pictureWeb
-			//
-			this.pictureWeb.Location = new System.Drawing.Point(8, 184);
+			// 
+			this.pictureWeb.Location = new System.Drawing.Point(8, 224);
 			this.pictureWeb.Name = "pictureWeb";
 			this.pictureWeb.Size = new System.Drawing.Size(48, 48);
 			this.pictureWeb.TabIndex = 46;
 			this.pictureWeb.TabStop = false;
-			//
+			// 
 			// webAddress
-			//
-			this.webAddress.Location = new System.Drawing.Point(168, 192);
+			// 
+			this.webAddress.Location = new System.Drawing.Point(176, 224);
 			this.webAddress.Name = "webAddress";
-			this.webAddress.Size = new System.Drawing.Size(160, 20);
+			this.webAddress.Size = new System.Drawing.Size(168, 20);
 			this.webAddress.TabIndex = 6;
 			this.webAddress.Text = "";
-			//
+			// 
 			// label4
-			//
-			this.label4.Location = new System.Drawing.Point(64, 192);
+			// 
+			this.label4.Location = new System.Drawing.Point(72, 224);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(104, 16);
 			this.label4.TabIndex = 45;
 			this.label4.Text = "Web page address:";
-			//
+			// 
 			// groupBox2
-			//
-			this.groupBox2.Location = new System.Drawing.Point(8, 176);
+			// 
+			this.groupBox2.Location = new System.Drawing.Point(8, 208);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(310, 4);
+			this.groupBox2.Size = new System.Drawing.Size(376, 4);
 			this.groupBox2.TabIndex = 43;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "groupBox2";
-			//
+			// 
 			// mailAddress
-			//
-			this.mailAddress.Location = new System.Drawing.Point(472, 224);
+			// 
+			this.mailAddress.Location = new System.Drawing.Point(584, 264);
 			this.mailAddress.Name = "mailAddress";
 			this.mailAddress.Size = new System.Drawing.Size(160, 16);
 			this.mailAddress.TabIndex = 19;
 			this.mailAddress.Text = "This is the mailing address";
-			//
+			// 
 			// addressSelect
-			//
+			// 
 			this.addressSelect.BackColor = System.Drawing.SystemColors.Control;
 			this.addressSelect.Items.AddRange(new object[] {
 															   "Business:",
 															   "Home:"});
-			this.addressSelect.Location = new System.Drawing.Point(384, 120);
+			this.addressSelect.Location = new System.Drawing.Point(472, 160);
 			this.addressSelect.Name = "addressSelect";
 			this.addressSelect.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.addressSelect.Size = new System.Drawing.Size(88, 21);
+			this.addressSelect.Size = new System.Drawing.Size(96, 21);
 			this.addressSelect.TabIndex = 17;
 			this.addressSelect.Text = "Business:";
-			//
+			// 
 			// pictureAddress
-			//
-			this.pictureAddress.Location = new System.Drawing.Point(328, 128);
+			// 
+			this.pictureAddress.Location = new System.Drawing.Point(408, 168);
 			this.pictureAddress.Name = "pictureAddress";
 			this.pictureAddress.Size = new System.Drawing.Size(48, 48);
 			this.pictureAddress.TabIndex = 40;
 			this.pictureAddress.TabStop = false;
-			//
+			// 
 			// address
-			//
-			this.address.Location = new System.Drawing.Point(472, 120);
+			// 
+			this.address.Location = new System.Drawing.Point(576, 160);
 			this.address.Name = "address";
-			this.address.Size = new System.Drawing.Size(160, 95);
+			this.address.Size = new System.Drawing.Size(192, 95);
 			this.address.TabIndex = 18;
-			//
+			// 
 			// mailHTML
-			//
-			this.mailHTML.Location = new System.Drawing.Point(168, 152);
+			// 
+			this.mailHTML.Location = new System.Drawing.Point(176, 184);
 			this.mailHTML.Name = "mailHTML";
 			this.mailHTML.Size = new System.Drawing.Size(168, 16);
 			this.mailHTML.TabIndex = 5;
 			this.mailHTML.Text = "Wants to receive HTML mail";
-			//
+			// 
 			// phoneSelect3
-			//
+			// 
 			this.phoneSelect3.BackColor = System.Drawing.SystemColors.Control;
 			this.phoneSelect3.Items.AddRange(new object[] {
 															  "Business:",
 															  "Business fax:",
 															  "Mobile:",
 															  "Home:",
-															  "Home fax:"});
-			this.phoneSelect3.Location = new System.Drawing.Point(384, 56);
+															  "Pager:"});
+			this.phoneSelect3.Location = new System.Drawing.Point(472, 80);
 			this.phoneSelect3.Name = "phoneSelect3";
 			this.phoneSelect3.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.phoneSelect3.Size = new System.Drawing.Size(88, 21);
+			this.phoneSelect3.Size = new System.Drawing.Size(96, 21);
 			this.phoneSelect3.TabIndex = 13;
 			this.phoneSelect3.Text = "Home:";
-			//
+			this.phoneSelect3.SelectedIndexChanged += new System.EventHandler(this.phoneSelect3_SelectedIndexChanged);
+			// 
 			// phoneSelect4
-			//
+			// 
 			this.phoneSelect4.BackColor = System.Drawing.SystemColors.Control;
 			this.phoneSelect4.Items.AddRange(new object[] {
 															  "Business:",
 															  "Business fax:",
 															  "Mobile:",
 															  "Home:",
-															  "Home fax:"});
-			this.phoneSelect4.Location = new System.Drawing.Point(384, 80);
+															  "Pager:"});
+			this.phoneSelect4.Location = new System.Drawing.Point(472, 112);
 			this.phoneSelect4.Name = "phoneSelect4";
 			this.phoneSelect4.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.phoneSelect4.Size = new System.Drawing.Size(88, 21);
+			this.phoneSelect4.Size = new System.Drawing.Size(96, 21);
 			this.phoneSelect4.TabIndex = 15;
 			this.phoneSelect4.Text = "Mobile:";
-			//
+			this.phoneSelect4.SelectedIndexChanged += new System.EventHandler(this.phoneSelect4_SelectedIndexChanged);
+			// 
 			// picturePhone
-			//
-			this.picturePhone.Location = new System.Drawing.Point(328, 16);
+			// 
+			this.picturePhone.Location = new System.Drawing.Point(408, 16);
 			this.picturePhone.Name = "picturePhone";
 			this.picturePhone.Size = new System.Drawing.Size(48, 48);
 			this.picturePhone.TabIndex = 35;
 			this.picturePhone.TabStop = false;
-			//
+			// 
 			// phoneSelect1
-			//
+			// 
 			this.phoneSelect1.BackColor = System.Drawing.SystemColors.Control;
 			this.phoneSelect1.Items.AddRange(new object[] {
 															  "Business:",
 															  "Business fax:",
 															  "Mobile:",
 															  "Home:",
-															  "Home fax:"});
-			this.phoneSelect1.Location = new System.Drawing.Point(384, 8);
+															  "Pager:"});
+			this.phoneSelect1.Location = new System.Drawing.Point(472, 16);
 			this.phoneSelect1.Name = "phoneSelect1";
 			this.phoneSelect1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.phoneSelect1.Size = new System.Drawing.Size(88, 21);
+			this.phoneSelect1.Size = new System.Drawing.Size(96, 21);
 			this.phoneSelect1.TabIndex = 9;
 			this.phoneSelect1.Text = "Business:";
-			//
+			this.phoneSelect1.SelectedIndexChanged += new System.EventHandler(this.phoneSelect1_SelectedIndexChanged);
+			// 
 			// phoneSelect2
-			//
+			// 
 			this.phoneSelect2.BackColor = System.Drawing.SystemColors.Control;
 			this.phoneSelect2.Items.AddRange(new object[] {
 															  "Business:",
 															  "Business fax:",
 															  "Mobile:",
 															  "Home:",
-															  "Home fax:"});
-			this.phoneSelect2.Location = new System.Drawing.Point(384, 32);
+															  "Pager:"});
+			this.phoneSelect2.Location = new System.Drawing.Point(472, 48);
 			this.phoneSelect2.Name = "phoneSelect2";
 			this.phoneSelect2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.phoneSelect2.Size = new System.Drawing.Size(88, 21);
+			this.phoneSelect2.Size = new System.Drawing.Size(96, 21);
 			this.phoneSelect2.TabIndex = 11;
 			this.phoneSelect2.Text = "Business fax:";
-			//
-			// organization
-			//
-			this.organization.Location = new System.Drawing.Point(168, 80);
-			this.organization.Name = "organization";
-			this.organization.Size = new System.Drawing.Size(160, 20);
-			this.organization.TabIndex = 3;
-			this.organization.Text = "";
-			//
+			this.phoneSelect2.SelectedIndexChanged += new System.EventHandler(this.phoneSelect2_SelectedIndexChanged);
+			// 
+			// userId
+			// 
+			this.userId.Location = new System.Drawing.Point(176, 112);
+			this.userId.Name = "userId";
+			this.userId.Size = new System.Drawing.Size(192, 20);
+			this.userId.TabIndex = 3;
+			this.userId.Text = "";
+			// 
 			// label7
-			//
-			this.label7.Location = new System.Drawing.Point(96, 80);
+			// 
+			this.label7.Location = new System.Drawing.Point(128, 112);
 			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(72, 16);
+			this.label7.Size = new System.Drawing.Size(56, 16);
 			this.label7.TabIndex = 30;
-			this.label7.Text = "Organization:";
-			//
+			this.label7.Text = "User ID:";
+			// 
 			// phone4
-			//
-			this.phone4.Location = new System.Drawing.Point(472, 80);
+			// 
+			this.phone4.Location = new System.Drawing.Point(576, 112);
 			this.phone4.Name = "phone4";
-			this.phone4.Size = new System.Drawing.Size(160, 20);
+			this.phone4.Size = new System.Drawing.Size(192, 20);
 			this.phone4.TabIndex = 16;
 			this.phone4.Text = "";
-			//
+			this.phone4.TextChanged += new System.EventHandler(this.phone4_TextChanged);
+			this.phone4.Leave += new System.EventHandler(this.phone4_Leave);
+			// 
 			// phone3
-			//
-			this.phone3.Location = new System.Drawing.Point(472, 56);
+			// 
+			this.phone3.Location = new System.Drawing.Point(576, 80);
 			this.phone3.Name = "phone3";
-			this.phone3.Size = new System.Drawing.Size(160, 20);
+			this.phone3.Size = new System.Drawing.Size(192, 20);
 			this.phone3.TabIndex = 14;
 			this.phone3.Text = "";
-			//
+			this.phone3.TextChanged += new System.EventHandler(this.phone3_TextChanged);
+			this.phone3.Leave += new System.EventHandler(this.phone3_Leave);
+			// 
 			// phone2
-			//
-			this.phone2.Location = new System.Drawing.Point(472, 32);
+			// 
+			this.phone2.Location = new System.Drawing.Point(576, 48);
 			this.phone2.Name = "phone2";
-			this.phone2.Size = new System.Drawing.Size(160, 20);
+			this.phone2.Size = new System.Drawing.Size(192, 20);
 			this.phone2.TabIndex = 12;
 			this.phone2.Text = "";
-			//
+			this.phone2.TextChanged += new System.EventHandler(this.phone2_TextChanged);
+			this.phone2.Leave += new System.EventHandler(this.phone2_Leave);
+			// 
 			// phone1
-			//
-			this.phone1.Location = new System.Drawing.Point(472, 8);
+			// 
+			this.phone1.Location = new System.Drawing.Point(576, 16);
 			this.phone1.Name = "phone1";
-			this.phone1.Size = new System.Drawing.Size(160, 20);
+			this.phone1.Size = new System.Drawing.Size(192, 20);
 			this.phone1.TabIndex = 10;
 			this.phone1.Text = "";
-			//
+			this.phone1.TextChanged += new System.EventHandler(this.phone1_TextChanged);
+			this.phone1.Leave += new System.EventHandler(this.phone1_Leave);
+			// 
 			// pictureMail
-			//
-			this.pictureMail.Location = new System.Drawing.Point(8, 120);
+			// 
+			this.pictureMail.Location = new System.Drawing.Point(8, 152);
 			this.pictureMail.Name = "pictureMail";
 			this.pictureMail.Size = new System.Drawing.Size(48, 48);
 			this.pictureMail.TabIndex = 21;
 			this.pictureMail.TabStop = false;
-			//
+			// 
 			// eMail
-			//
-			this.eMail.Location = new System.Drawing.Point(168, 128);
+			// 
+			this.eMail.Location = new System.Drawing.Point(176, 160);
 			this.eMail.Name = "eMail";
-			this.eMail.Size = new System.Drawing.Size(160, 20);
+			this.eMail.Size = new System.Drawing.Size(192, 20);
 			this.eMail.TabIndex = 4;
 			this.eMail.Text = "";
-			//
-			// label9
-			//
-			this.label9.Location = new System.Drawing.Point(96, 128);
-			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(80, 16);
-			this.label9.TabIndex = 20;
-			this.label9.Text = "Primary e-mail:";
-			//
+			// 
 			// groupBox1
-			//
-			this.groupBox1.Location = new System.Drawing.Point(8, 112);
+			// 
+			this.groupBox1.Location = new System.Drawing.Point(8, 144);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(310, 4);
+			this.groupBox1.Size = new System.Drawing.Size(376, 4);
 			this.groupBox1.TabIndex = 18;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "groupBox1";
-			//
+			// 
 			// pictureContact
-			//
-			this.pictureContact.Location = new System.Drawing.Point(8, 16);
+			// 
+			this.pictureContact.Location = new System.Drawing.Point(16, 16);
 			this.pictureContact.Name = "pictureContact";
-			this.pictureContact.Size = new System.Drawing.Size(48, 48);
+			this.pictureContact.Size = new System.Drawing.Size(64, 64);
 			this.pictureContact.TabIndex = 17;
 			this.pictureContact.TabStop = false;
-			//
-			// lastName
-			//
-			this.lastName.Location = new System.Drawing.Point(168, 56);
-			this.lastName.Name = "lastName";
-			this.lastName.Size = new System.Drawing.Size(160, 20);
-			this.lastName.TabIndex = 2;
-			this.lastName.Text = "";
-			//
-			// firstName
-			//
-			this.firstName.Location = new System.Drawing.Point(168, 32);
-			this.firstName.Name = "firstName";
-			this.firstName.Size = new System.Drawing.Size(160, 20);
-			this.firstName.TabIndex = 1;
-			this.firstName.Text = "";
-			//
+			// 
+			// organization
+			// 
+			this.organization.Location = new System.Drawing.Point(176, 80);
+			this.organization.Name = "organization";
+			this.organization.Size = new System.Drawing.Size(192, 20);
+			this.organization.TabIndex = 2;
+			this.organization.Text = "";
+			// 
+			// jobTitle
+			// 
+			this.jobTitle.Location = new System.Drawing.Point(176, 48);
+			this.jobTitle.Name = "jobTitle";
+			this.jobTitle.Size = new System.Drawing.Size(192, 20);
+			this.jobTitle.TabIndex = 1;
+			this.jobTitle.Text = "";
+			// 
 			// label3
-			//
-			this.label3.Location = new System.Drawing.Point(104, 56);
+			// 
+			this.label3.Location = new System.Drawing.Point(104, 80);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(64, 16);
+			this.label3.Size = new System.Drawing.Size(72, 16);
 			this.label3.TabIndex = 6;
-			this.label3.Text = "Last Name:";
-			//
+			this.label3.Text = "Organization:";
+			// 
 			// label2
-			//
-			this.label2.Location = new System.Drawing.Point(104, 32);
+			// 
+			this.label2.Location = new System.Drawing.Point(128, 50);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(64, 16);
+			this.label2.Size = new System.Drawing.Size(48, 16);
 			this.label2.TabIndex = 5;
-			this.label2.Text = "First Name:";
-			//
-			// label1
-			//
-			this.label1.Location = new System.Drawing.Point(120, 8);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(48, 16);
-			this.label1.TabIndex = 4;
-			this.label1.Text = "User ID:";
-			//
-			// userId
-			//
-			this.userId.Location = new System.Drawing.Point(168, 8);
-			this.userId.Name = "userId";
-			this.userId.Size = new System.Drawing.Size(160, 20);
-			this.userId.TabIndex = 0;
-			this.userId.Text = "";
-			//
+			this.label2.Text = "Job title:";
+			// 
+			// fullName
+			// 
+			this.fullName.Location = new System.Drawing.Point(176, 16);
+			this.fullName.Name = "fullName";
+			this.fullName.ReadOnly = true;
+			this.fullName.Size = new System.Drawing.Size(192, 20);
+			this.fullName.TabIndex = 0;
+			this.fullName.Text = "";
+			// 
 			// ok
-			//
+			// 
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.ok.Location = new System.Drawing.Point(476, 344);
+			this.ok.Location = new System.Drawing.Point(624, 320);
 			this.ok.Name = "ok";
 			this.ok.TabIndex = 1;
 			this.ok.Text = "OK";
 			this.ok.Click += new System.EventHandler(this.ok_Click);
-			//
+			// 
 			// cancel
-			//
+			// 
 			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.cancel.Location = new System.Drawing.Point(560, 344);
+			this.cancel.Location = new System.Drawing.Point(704, 320);
 			this.cancel.Name = "cancel";
 			this.cancel.TabIndex = 2;
 			this.cancel.Text = "Cancel";
-			//
+			this.cancel.Click += new System.EventHandler(this.cancel_Click);
+			// 
 			// ContactEditor
-			//
+			// 
 			this.AcceptButton = this.ok;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.CancelButton = this.cancel;
-			this.ClientSize = new System.Drawing.Size(648, 374);
+			this.ClientSize = new System.Drawing.Size(786, 352);
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.tabControl1);
@@ -660,26 +686,45 @@ namespace Novell.iFolder.FormsBookLib
 			catch{}
 
 			// Deal with phone numbers
-/*			try
+			try
 			{
+				phoneHT = new Hashtable();
 				foreach(Telephone tmpPhone in contact.GetTelephoneNumbers())
 				{
-					if ((tmpPhone.Types & PhoneTypes.work) == PhoneTypes.work)
+					TelephoneEntry phone = new TelephoneEntry();
+					phone.Add = false;
+					phone.Phone = tmpPhone;
+
+					if ((tmpPhone.Types & (PhoneTypes.work | PhoneTypes.voice)) == (PhoneTypes.work | PhoneTypes.voice))
 					{
-						bPhoneEdit.Text = tmpPhone.Number;
-						foundWorkPhone = true;
+						phoneHT.Add((string)this.phoneSelect1.Items[0], phone);
+						SetPhoneInEdit(0, tmpPhone.Number);
 					}
-					else
-						if ((tmpPhone.Types & PhoneTypes.home) == PhoneTypes.home)
+					else if ((tmpPhone.Types & (PhoneTypes.work | PhoneTypes.fax)) == (PhoneTypes.work | PhoneTypes.fax))
 					{
-						hPhoneEdit.Text = tmpPhone.Number;
-						foundHomePhone = true;
+						phoneHT.Add((string)this.phoneSelect1.Items[1], phone);
+						SetPhoneInEdit(1, tmpPhone.Number);
+					}
+					else if ((tmpPhone.Types & PhoneTypes.cell) == PhoneTypes.cell)
+					{
+						phoneHT.Add((string)this.phoneSelect1.Items[2], phone);
+						SetPhoneInEdit(2, tmpPhone.Number);
+					}
+					else if ((tmpPhone.Types & (PhoneTypes.home | PhoneTypes.voice)) == (PhoneTypes.home | PhoneTypes.voice))
+					{
+						phoneHT.Add((string)this.phoneSelect1.Items[3], phone);
+						SetPhoneInEdit(3, tmpPhone.Number);
+					}
+					else if ((tmpPhone.Types & PhoneTypes.pager) == PhoneTypes.pager)
+					{
+						phoneHT.Add((string)this.phoneSelect1.Items[4], phone);
+						SetPhoneInEdit(4, tmpPhone.Number);
 					}
 				}
 			}
 			catch{}
 
-			foreach(Address addr in contact.GetAddresses())
+/*			foreach(Address addr in contact.GetAddresses())
 			{
 				if((addr.Types & AddressTypes.work) == AddressTypes.work)
 				{
@@ -704,6 +749,85 @@ namespace Novell.iFolder.FormsBookLib
 
 			return(true);
 		}
+
+		private void SetPhoneInEdit(int index, string number)
+		{
+			if (this.phoneSelect1.SelectedIndex == index)
+				phone1.Text = number;
+			
+			if (this.phoneSelect2.SelectedIndex == index)
+				phone2.Text = number;
+
+			if (this.phoneSelect3.SelectedIndex == index)
+				phone3.Text = number;
+
+			if (this.phoneSelect4.SelectedIndex == index)
+				phone4.Text = number;
+		}
+
+		private void UpdatePhoneTable(ComboBox select, TextBox phone)
+		{
+			if (phoneHT == null)
+			{
+				phoneHT = new Hashtable();
+			}
+
+			TelephoneEntry entry = (TelephoneEntry)phoneHT[select.Text];
+			if (entry != null)
+			{
+				if (entry.Phone.Number != phone.Text)
+				{
+					phoneHT.Remove(select.Text);
+
+					if ((phone.Text == "") && !entry.Add)
+					{
+						entry.Remove = true;
+					}
+
+					entry.Phone.Number = phone.Text;
+					phoneHT.Add(select.Text, entry);
+				}
+			}
+			else
+			{
+				if (phone.Text != "")
+				{
+					entry = new TelephoneEntry();
+					entry.Add = true;
+					entry.Phone = new Telephone(phone.Text);
+
+					switch (select.SelectedIndex)
+					{
+						case 0:
+							entry.Phone.Types = (PhoneTypes.preferred | PhoneTypes.work | PhoneTypes.voice);
+							break;
+						case 1:
+							entry.Phone.Types = (PhoneTypes.work | PhoneTypes.fax);
+							break;
+						case 2:
+							entry.Phone.Types = (PhoneTypes.cell | PhoneTypes.voice);
+							break;
+						case 3:
+							entry.Phone.Types = (PhoneTypes.home | PhoneTypes.voice);
+							break;
+						case 4:
+							entry.Phone.Types = PhoneTypes.pager;
+							break;
+						default:
+							entry.Phone.Types = 0;
+							break;
+					}
+
+					phoneHT.Add(select.Text, entry);
+				}
+			}
+		}
+
+		private string BuildDisplayableName(Name name)
+		{
+			string displayName = name.Prefix + " " + name.Given + " " + name.Family + " " + name.Suffix;
+			return displayName.Trim();
+		}
 		#endregion
 
 		#region Event Handlers
@@ -716,14 +840,12 @@ namespace Novell.iFolder.FormsBookLib
 
 				try
 				{
-					Name prefName = this.contact.GetPreferredName();
-					firstName.Text = prefName.Given;
-					lastName.Text = prefName.Family;
+					name = this.contact.GetPreferredName();
+					fullName.Text = BuildDisplayableName(name);
 				}
 				catch
 				{
-					firstName.Text = "";
-					lastName.Text = "";
+					fullName.Text = "";
 				}
 
 				bool results = LoadAddresses();
@@ -732,20 +854,28 @@ namespace Novell.iFolder.FormsBookLib
 
 		private void ok_Click(object sender, System.EventArgs e)
 		{
+			if (phone1.Focused)
+				UpdatePhoneTable(phoneSelect1, phone1);
+			else if (phone2.Focused)
+				UpdatePhoneTable(phoneSelect2, phone2);
+			else if (phone3.Focused)
+				UpdatePhoneTable(phoneSelect3, phone3);
+			else if (phone4.Focused)
+				UpdatePhoneTable(phoneSelect4, phone4);
+
 			string	username = null;
-			string	first = null;
-			string	last = null;
 			string	email = null;
 
-			username = userId.Text;
-			first = firstName.Text;
-			last = lastName.Text;
-			email = eMail.Text;
+			username = userId.Text.Trim();
+			email = eMail.Text.Trim();
 
-			if (username.Trim() != "" &&
-				first.Trim() != "" &&
-				last.Trim() != "" &&
-				email.Trim() != "")
+			if (username != "" &&
+				email != "" &&
+				name != null &&
+				name.Given != null &&
+				name.Given != "" &&
+				name.Family != null &&
+				name.Family != "")
 			{
 				if (contact == null)
 				{
@@ -753,21 +883,12 @@ namespace Novell.iFolder.FormsBookLib
 					contact = new Contact();
 					contact.UserName = username;
 
-					//addressBook.AddContact(contact);
-
-					//abContactList.CreateContact(username);
-					//contact.EMail = email;
-					if (first != null && last != null)
+					try
 					{
-						try
-						{
-							Name prefName = new Name(first, last);
-							prefName.Preferred = true;
-							contact.AddName(prefName);
-							//Name prefName = contact.CreateName(first, last, true);
-						}
-						catch{}
+						name.Preferred = true;
+						contact.AddName(name);
 					}
+					catch{}
 
 					if (eMail.Text != null && eMail.Text != "")
 					{
@@ -777,6 +898,16 @@ namespace Novell.iFolder.FormsBookLib
 						tmpMail.Preferred = false;
 						tmpMail.Preferred = true;
 						contact.AddEmailAddress(tmpMail);
+					}
+
+					// Add the phone numbers.
+					if (phoneHT != null)
+					{
+						IDictionaryEnumerator enumerator = phoneHT.GetEnumerator();
+						while (enumerator.MoveNext())
+						{
+							contact.AddTelephoneNumber(((TelephoneEntry)enumerator.Value).Phone);
+						}
 					}
 
 					addressBook.AddContact(contact);
@@ -808,68 +939,18 @@ namespace Novell.iFolder.FormsBookLib
 						//contact.EMail = email;
 					}
 
-/*					try
+					try
 					{
-						// First let's just delete all the existing phone numbers
-						try
+						IDictionaryEnumerator enumerator = phoneHT.GetEnumerator();
+						while (enumerator.MoveNext())
 						{
-							foreach(Telephone tmpPhone in contact.GetTelephoneNumbers())
+							if (((TelephoneEntry)enumerator.Value).Add)
 							{
-								tmpPhone.Delete();
+								contact.AddTelephoneNumber(((TelephoneEntry)enumerator.Value).Phone);
 							}
-						}
-						catch{}
-
-						if (bPhoneEdit.Text != null && bPhoneEdit.Text != "")
-						{
-							// For the business telephone numbers use the helper function
-							// function directly off the contact
-							Telephone tmpPhone = new Telephone(bPhoneEdit.Text);
-							tmpPhone.Types = (PhoneTypes.preferred | PhoneTypes.work | PhoneTypes.voice);
-							contact.AddTelephoneNumber(tmpPhone);
-						}
-
-						if (hPhoneEdit.Text != null && hPhoneEdit.Text != "")
-						{
-							Telephone tmpPhone = new Telephone(hPhoneEdit.Text);
-							tmpPhone.Types = (PhoneTypes.home | PhoneTypes.voice);
-							contact.AddTelephoneNumber(tmpPhone);
 						}
 					}
-					catch{}*/
-
-					if (first != null && last != null)
-					{
-						Name prefName;
-						try
-						{
-							prefName = contact.GetPreferredName();
-							if (prefName.Given != first)
-							{
-								prefName.Given = first;
-							}
-
-							if (prefName.Family != last)
-							{
-								prefName.Family = last;
-							}
-							
-							if (prefName.Preferred != true)
-							{
-								prefName.Preferred = true;
-							}
-						}
-						catch
-						{
-							try
-							{
-								prefName = new Name(first, last);
-								prefName.Preferred = true;
-								contact.AddName(prefName);
-							}
-							catch{}
-						}
-					}
+					catch{}
 
 					if (contact.UserName != username)
 					{
@@ -884,15 +965,13 @@ namespace Novell.iFolder.FormsBookLib
 		private void ContactEditor_Closing(object sender, CancelEventArgs e)
 		{
 			string user = this.userId.Text.Trim();
-			string first = this.firstName.Text.Trim();
-			string last = this.lastName.Text.Trim();
 			string email = this.eMail.Text.Trim();
 
 			// Make sure the mandatory fields are filled in if OK was clicked.
 			if ((user == "" ||
-				first == "" ||
-				last == "" ||
-				email == "") &&
+				email == "" ||
+				name == null ||
+				((name != null) && ((name.Given == null || name.Given == "") ||	(name.Family == null || name.Family == "")))) &&
 				this.DialogResult == DialogResult.OK)
 			{
 				MessageBox.Show("User ID, first name, last name, and e-mail are required attributes.", "Missing Required Attributes", MessageBoxButtons.OK);
@@ -902,13 +981,11 @@ namespace Novell.iFolder.FormsBookLib
 				{
 					this.userId.Focus();
 				}
-				else if (first == "")
+				else if (name == null ||
+					(name != null) && ((name.Given == null || name.Given == "") || (name.Family == null || name.Family == "")))
 				{
-					this.firstName.Focus();
-				}
-				else if (last == "")
-				{
-					this.lastName.Focus();
+					// TODO - hmmm ...
+					fullNameButton_Click(this, null);
 				}
 				else
 				{
@@ -925,6 +1002,184 @@ namespace Novell.iFolder.FormsBookLib
 			// Set focus to the first edit box on the form.
 			this.userId.Focus();
 		}
+
+		private void phone1_Leave(object sender, System.EventArgs e)
+		{
+			UpdatePhoneTable(phoneSelect1, phone1);
+		}
+
+		private void phone2_Leave(object sender, System.EventArgs e)
+		{
+			UpdatePhoneTable(phoneSelect2, phone2);
+		}
+
+		private void phone3_Leave(object sender, System.EventArgs e)
+		{
+			UpdatePhoneTable(phoneSelect3, phone3);
+		}
+
+		private void phone4_Leave(object sender, System.EventArgs e)
+		{
+			UpdatePhoneTable(phoneSelect4, phone4);
+		}
+
+		private void phoneSelect1_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			TelephoneEntry entry = (TelephoneEntry)phoneHT[this.phoneSelect1.Text];
+			if ((entry != null) && !entry.Remove)
+			{
+				phone1.Text = entry.Phone.Number;
+			}
+			else
+			{
+				phone1.Text = "";
+			}
+		}
+
+		private void phoneSelect2_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			TelephoneEntry entry = (TelephoneEntry)phoneHT[this.phoneSelect2.Text];
+			if ((entry != null) && !entry.Remove)
+			{
+				phone2.Text = entry.Phone.Number;
+			}
+			else
+			{
+				phone2.Text = "";
+			}
+		}
+
+		private void phoneSelect3_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			TelephoneEntry entry = (TelephoneEntry)phoneHT[this.phoneSelect3.Text];
+			if ((entry != null) && !entry.Remove)
+			{
+				phone3.Text = entry.Phone.Number;
+			}
+			else
+			{
+				phone3.Text = "";
+			}
+		}
+
+		private void phoneSelect4_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			TelephoneEntry entry = (TelephoneEntry)phoneHT[this.phoneSelect4.Text];
+			if ((entry != null) && !entry.Remove)
+			{
+				phone4.Text = entry.Phone.Number;
+			}
+			else
+			{
+				phone4.Text = "";
+			}
+		}
+
+		private void fullNameButton_Click(object sender, System.EventArgs e)
+		{
+			FullName fullNameDlg = new FullName();
+			// Initialize.
+			if (name == null)
+				name = new Name();
+
+			fullNameDlg.Title = name.Prefix;
+			fullNameDlg.FirstName = name.Given;
+			fullNameDlg.LastName = name.Family;
+			fullNameDlg.Suffix = name.Suffix;
+
+			DialogResult result = fullNameDlg.ShowDialog();
+			if (result == DialogResult.OK)
+			{
+				// Save the information.
+				name.Prefix = fullNameDlg.Title.Trim();
+				name.Given = fullNameDlg.FirstName.Trim();
+				name.Family = fullNameDlg.LastName.Trim();
+				name.Suffix = fullNameDlg.Suffix.Trim();
+
+				fullName.Text = BuildDisplayableName(name);
+			}
+		}
+
+		private void phone1_TextChanged(object sender, System.EventArgs e)
+		{
+			// Make changes echo to any other edit box that is on the same setting.
+			if (this.phoneSelect2.SelectedIndex == this.phoneSelect1.SelectedIndex)
+			{
+				phone2.Text = phone1.Text;
+			}
+		
+			if (this.phoneSelect3.SelectedIndex == this.phoneSelect1.SelectedIndex)
+			{
+				phone3.Text = phone1.Text;
+			}
+
+			if (this.phoneSelect4.SelectedIndex == this.phoneSelect1.SelectedIndex)
+			{
+				phone4.Text = phone1.Text;
+			}
+		}
+
+		private void phone2_TextChanged(object sender, System.EventArgs e)
+		{
+			// Make changes echo to any other edit box that is on the same setting.
+			if (this.phoneSelect1.SelectedIndex == this.phoneSelect2.SelectedIndex)
+			{
+				phone1.Text = phone2.Text;
+			}
+		
+			if (this.phoneSelect3.SelectedIndex == this.phoneSelect2.SelectedIndex)
+			{
+				phone3.Text = phone2.Text;
+			}
+
+			if (this.phoneSelect4.SelectedIndex == this.phoneSelect2.SelectedIndex)
+			{
+				phone4.Text = phone2.Text;
+			}
+		}
+
+		private void phone3_TextChanged(object sender, System.EventArgs e)
+		{
+			// Make changes echo to any other edit box that is on the same setting.
+			if (this.phoneSelect1.SelectedIndex == this.phoneSelect3.SelectedIndex)
+			{
+				phone1.Text = phone3.Text;
+			}
+		
+			if (this.phoneSelect2.SelectedIndex == this.phoneSelect3.SelectedIndex)
+			{
+				phone2.Text = phone3.Text;
+			}
+
+			if (this.phoneSelect4.SelectedIndex == this.phoneSelect3.SelectedIndex)
+			{
+				phone4.Text = phone3.Text;
+			}
+		}
+
+		private void phone4_TextChanged(object sender, System.EventArgs e)
+		{
+			// Make changes echo to any other edit box that is on the same setting.
+			if (this.phoneSelect1.SelectedIndex == this.phoneSelect4.SelectedIndex)
+			{
+				phone1.Text = phone4.Text;
+			}
+		
+			if (this.phoneSelect2.SelectedIndex == this.phoneSelect4.SelectedIndex)
+			{
+				phone2.Text = phone4.Text;
+			}
+
+			if (this.phoneSelect3.SelectedIndex == this.phoneSelect4.SelectedIndex)
+			{
+				phone3.Text = phone4.Text;
+			}
+		}
 		#endregion
+
+		private void cancel_Click(object sender, System.EventArgs e)
+		{
+//			contact.Rollback();
+		}
 	}
 }
