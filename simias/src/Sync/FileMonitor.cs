@@ -132,6 +132,10 @@ namespace Simias.Sync
 					Dredge();
 				}
 			}
+			else
+			{
+				Dredge();
+			}
 			disposed = false;
 		}
 			

@@ -25,6 +25,7 @@ using System.IO;
 using System.Xml;
 using System.Collections;
 using System.Security.Cryptography;
+using System.Threading;
 using Simias.Client.Event;
 using Simias.Storage;
 using Simias.Sync;
@@ -859,6 +860,9 @@ namespace Simias.Sync.Client
 	public class WsServerWriteFile : IServerWriteFile
 	{
 		SimiasSyncService		service;
+		Exception				exception;
+		ManualResetEvent		asyncEvent = new ManualResetEvent(true);
+		
 
 		/// <summary>
 		/// Constructs a object that can be used to sync a file to the server.
@@ -868,7 +872,41 @@ namespace Simias.Sync.Client
 		{
 			service = webService;
 		}
-		
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="result"></param>
+		private void WriteCallback(IAsyncResult result)
+		{
+			try
+			{
+				service.EndWrite(result);
+				asyncEvent.Set();
+			}
+			catch (Exception ex)
+			{
+				exception = ex;
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="result"></param>
+		private void CopyCallback(IAsyncResult result)
+		{
+			try
+			{
+				service.EndCopy(result);
+				asyncEvent.Set();
+			}
+			catch (Exception ex)
+			{
+				exception = ex;
+			}
+		}
+
 		#region IServerWriteFile Members
 
 		/// <summary>
@@ -899,7 +937,17 @@ namespace Simias.Sync.Client
 		/// <param name="count">The number of bytes to copy.</param>
 		public void Copy(long originalOffset, long offset, int count)
 		{
-			service.Copy(originalOffset, offset, count);
+			asyncEvent.WaitOne();
+			asyncEvent.Reset();
+			if (exception == null)
+			{
+				service.BeginCopy(originalOffset, offset, count, new AsyncCallback(CopyCallback), null);
+			}
+			else
+			{
+				throw(exception);
+			}
+			//service.Copy(originalOffset, offset, count);
 		}
 
 		/// <summary>
@@ -910,7 +958,17 @@ namespace Simias.Sync.Client
 		/// <param name="count">The number of bytes to write.</param>
 		public void Write(byte[] buffer, long offset, int count)
 		{
-			service.Write(buffer, offset, count);
+			asyncEvent.WaitOne();
+			asyncEvent.Reset();
+			if (exception == null)
+			{
+				service.BeginWrite(buffer, offset, count, new AsyncCallback(WriteCallback), null);
+			}
+			else
+			{
+				throw(exception);
+			}
+			//service.Write(buffer, offset, count);
 		}
 
 		/// <summary>

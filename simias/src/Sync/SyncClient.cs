@@ -400,23 +400,7 @@ namespace Simias.Sync.Client
 			collection = new SyncCollection(store.GetCollectionByID(nid));
 			this.callback = callback;
 			stopping = false;
-
-			switch(collection.Role)
-			{
-				case SyncCollectionRoles.Master:
-				case SyncCollectionRoles.Local:
-				default:
-					timer = new Timer(callback, this, Timeout.Infinite, Timeout.Infinite);				
-					break;
-
-				case SyncCollectionRoles.Slave:
-					Initialize();
-					int delay;
-					if (collection.MasterIncarnation == 0) delay = 0;
-					else delay = collection.Interval == Timeout.Infinite ? Timeout.Infinite : 0;
-					timer = new Timer(callback, this, delay, Timeout.Infinite);
-					break;
-			}
+			Initialize();
 		}
 
 		/// <summary>
@@ -633,20 +617,52 @@ namespace Simias.Sync.Client
 		}
 
 		/// <summary>
+		/// Called to reinitilize if we failed.
+		/// This will happen when we are disconected.
+		/// </summary>
+		/// <param name="collectionClient"></param>
+		private void RetryInit(object collectionClient)
+		{
+			Initialize();
+		}
+
+		/// <summary>
 		/// Initializes the instance.
 		/// </summary>
 		private void Initialize()
 		{
-			// If the master has not been created. Do it now.
-			if (collection.CreateMaster)
-			{
-				new Simias.Domain.DomainAgent(Configuration.GetConfiguration()).CreateMaster(collection);
-			}
-
 			fileMonitor = new FileWatcher(collection, false);
-			workArray = new SyncWorkArray(collection);
-			serverContext = null;
-			clientContext = null;
+			switch(collection.Role)
+			{
+				case SyncCollectionRoles.Master:
+				case SyncCollectionRoles.Local:
+				default:
+					timer = new Timer(callback, this, Timeout.Infinite, Timeout.Infinite);				
+					break;
+
+				case SyncCollectionRoles.Slave:
+					int delay;
+					if (collection.MasterIncarnation == 0) delay = 0;
+					else delay = collection.Interval == Timeout.Infinite ? Timeout.Infinite : 0;
+			
+					// If the master has not been created. Do it now.
+					try
+					{
+						if (collection.CreateMaster)
+						{
+							new Simias.Domain.DomainAgent(Configuration.GetConfiguration()).CreateMaster(collection);
+						}
+						workArray = new SyncWorkArray(collection);
+						serverContext = null;
+						clientContext = null;
+						timer = new Timer(callback, this, delay, Timeout.Infinite);
+					}
+					catch
+					{
+						timer = new Timer(new TimerCallback(RetryInit), this, delay, Timeout.Infinite);
+					}
+					break;
+			}
 		}
 
 		/// <summary>
