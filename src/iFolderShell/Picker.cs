@@ -40,6 +40,7 @@ namespace Novell.iFolderCom
 	{
 		#region Class Members
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(Picker));
+		private string searchContext;
 		private System.Windows.Forms.Button add;
 		private System.Windows.Forms.Button remove;
 		private System.Windows.Forms.TextBox search;
@@ -65,6 +66,7 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Panel panel3;
 		private System.Windows.Forms.Panel panel4;
 		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.ComboBox attributeName;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -125,6 +127,7 @@ namespace Novell.iFolderCom
 			this.panel3 = new System.Windows.Forms.Panel();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.label2 = new System.Windows.Forms.Label();
+			this.attributeName = new System.Windows.Forms.ComboBox();
 			this.panel1.SuspendLayout();
 			this.panel4.SuspendLayout();
 			this.panel3.SuspendLayout();
@@ -477,6 +480,33 @@ namespace Novell.iFolderCom
 			this.label2.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.TextAlign")));
 			this.label2.Visible = ((bool)(resources.GetObject("label2.Visible")));
 			// 
+			// attributeName
+			// 
+			this.attributeName.AccessibleDescription = resources.GetString("attributeName.AccessibleDescription");
+			this.attributeName.AccessibleName = resources.GetString("attributeName.AccessibleName");
+			this.attributeName.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("attributeName.Anchor")));
+			this.attributeName.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("attributeName.BackgroundImage")));
+			this.attributeName.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("attributeName.Dock")));
+			this.attributeName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.attributeName.Enabled = ((bool)(resources.GetObject("attributeName.Enabled")));
+			this.attributeName.Font = ((System.Drawing.Font)(resources.GetObject("attributeName.Font")));
+			this.attributeName.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("attributeName.ImeMode")));
+			this.attributeName.IntegralHeight = ((bool)(resources.GetObject("attributeName.IntegralHeight")));
+			this.attributeName.ItemHeight = ((int)(resources.GetObject("attributeName.ItemHeight")));
+			this.attributeName.Items.AddRange(new object[] {
+															   resources.GetString("attributeName.Items"),
+															   resources.GetString("attributeName.Items1"),
+															   resources.GetString("attributeName.Items2")});
+			this.attributeName.Location = ((System.Drawing.Point)(resources.GetObject("attributeName.Location")));
+			this.attributeName.MaxDropDownItems = ((int)(resources.GetObject("attributeName.MaxDropDownItems")));
+			this.attributeName.MaxLength = ((int)(resources.GetObject("attributeName.MaxLength")));
+			this.attributeName.Name = "attributeName";
+			this.attributeName.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("attributeName.RightToLeft")));
+			this.attributeName.Size = ((System.Drawing.Size)(resources.GetObject("attributeName.Size")));
+			this.attributeName.TabIndex = ((int)(resources.GetObject("attributeName.TabIndex")));
+			this.attributeName.Text = resources.GetString("attributeName.Text");
+			this.attributeName.Visible = ((bool)(resources.GetObject("attributeName.Visible")));
+			// 
 			// Picker
 			// 
 			this.AcceptButton = this.ok;
@@ -489,6 +519,7 @@ namespace Novell.iFolderCom
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.CancelButton = this.cancel;
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Controls.Add(this.attributeName);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.cancel);
@@ -593,6 +624,7 @@ namespace Novell.iFolderCom
 			Cursor.Current = Cursors.WaitCursor;
 			rosterLV.Items.Clear();
 			rosterLV.BeginUpdate();
+			int totalMembers;
 
 			try
 			{
@@ -600,11 +632,52 @@ namespace Novell.iFolderCom
 				
 				if ((search != null) && !search.Equals(string.Empty))
 				{
-					ifolderUsers = ifWebService.SearchForDomainUsers(domainID, search);
+//					ifolderUsers = ifWebService.SearchForDomainUsers(domainID, search);
+					if (searchContext != null)
+					{
+						ifWebService.FindCloseiFolderMembers(domainID, searchContext);
+						searchContext = null;
+					}
+
+					string attribute;
+					switch (attributeName.SelectedIndex)
+					{
+						case 0:
+							attribute = "Given";
+							break;
+						case 1:
+							attribute = "Family";
+							break;
+						default:
+							attribute = "FN";
+							break;
+					}
+
+					ifWebService.FindFirstSpecificiFolderMembers(
+						domainID,
+						attribute,
+						search,
+						SearchType.Begins,
+						25,
+						out searchContext,
+						out ifolderUsers,
+						out totalMembers);
 				}
 				else
 				{
-					ifolderUsers = ifWebService.GetDomainUsers(domainID, 25);
+					if (searchContext != null)
+					{
+						ifWebService.FindCloseiFolderMembers(domainID, searchContext);
+						searchContext = null;
+					}
+
+					ifWebService.FindFirstiFolderMembers(
+						domainID,
+						25,
+						out searchContext,
+						out ifolderUsers,
+						out totalMembers);
+//					ifolderUsers = ifWebService.GetDomainUsers(domainID, 25);
 				}
 
 				foreach (iFolderUser ifolderUser in ifolderUsers)
@@ -700,6 +773,9 @@ namespace Novell.iFolderCom
 
 			search.Text = resourceManager.GetString("searchPrompt");
 			search.SelectAll();
+
+			// TODO: need to add event handler for selection changed and tie it in with the timer.
+			attributeName.SelectedIndex = 0;
 
 			// Put the objects in the listview.
 			displayUsers(null);
