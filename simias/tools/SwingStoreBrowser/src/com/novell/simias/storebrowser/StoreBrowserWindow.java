@@ -260,7 +260,9 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 			
 			// Don't add the node if it's the same as the parent
 			SimiasNode parentSimiasNode = (SimiasNode) parentNode.getUserObject();
-			if (parentSimiasNode.getId() == simiasNode.getId()) {
+			String parentID = parentSimiasNode.getId();
+			String childID = simiasNode.getId();
+			if (parentID.equals(childID)) {
 				continue;
 			}
 			
