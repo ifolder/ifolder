@@ -27,36 +27,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_150B38DF7EE6445AB01C106E8E784D21"
-        "OwnerKey" = "8:_E4F67E2FF7C34926AAAD6CACD23DC789"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_150B38DF7EE6445AB01C106E8E784D21"
-        "OwnerKey" = "8:_F7D396E8B9F74DCCB3C84C32B5E4DDF5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_150B38DF7EE6445AB01C106E8E784D21"
-        "OwnerKey" = "8:_911E90E00B5941CD9B2AA03D14E9C6DC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_150B38DF7EE6445AB01C106E8E784D21"
-        "OwnerKey" = "8:_2F8233C054284694B305CE45E1BE309E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_150B38DF7EE6445AB01C106E8E784D21"
-        "OwnerKey" = "8:_08EBA713ABD446C1BE883846135EC756"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_2F8233C054284694B305CE45E1BE309E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -308,7 +278,7 @@
             {
             "AssemblyRegister" = "3:2"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:iFolderComponent, Version=1.0.1536.35466, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:iFolderComponent, Version=1.0.1538.18276, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_08EBA713ABD446C1BE883846135EC756"
@@ -339,7 +309,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:InvitationWizard, Version=1.0.1536.35279, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:InvitationWizard, Version=1.0.1538.18276, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_2F8233C054284694B305CE45E1BE309E"
@@ -410,9 +380,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ShutdowniFolder, Version=1.0.1524.39174, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:ShutdowniFolder, Version=1.0.1538.18284, Culture=neutral"
                 "ScatterAssemblies"
                 {
+                    "_4FAA01583F8744AA8A010586A2F1B00E"
+                    {
+                    "Name" = "8:ShutdowniFolder.exe"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:..\\ShutdowniFolder\\ShutdowniFolder.exe"
             "TargetName" = "8:"
@@ -747,7 +722,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:iFolderApp, Version=1.0.1536.35278, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:iFolderApp, Version=1.0.1538.18275, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_F7D396E8B9F74DCCB3C84C32B5E4DDF5"
@@ -1642,8 +1617,8 @@
                             "Type" = "3:15"
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1258"
+                            "Setting" = "3:2"
+                            "Value" = "8:Please log off and log on again to start iFolder."
                             "DefaultValue" = "8:#1258"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1698,20 +1673,6 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_150B38DF7EE6445AB01C106E8E784D21"
-            {
-            "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:dotnetfxredist_x86.msm"
-                "Properties"
-                {
-                }
-            "LanguageId" = "3:1033"
-            "Exclude" = "11:TRUE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
             "{35A69C6E-5BA4-440D-803D-762B59A45393}:_5DA01D01C24F4B59A1CCFA9B4C2C6769"
             {
             "UseDynamicProperties" = "11:TRUE"
@@ -1747,20 +1708,6 @@
             "SourcePath" = "8:..\\..\\..\\..\\addressbook\\package\\windows\\addressbook.msm"
                 "Properties"
                 {
-                    "_61EA369DFAA0A65F464B31E7BD4814BA.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    {
-                    "Name" = "8:_61EA369DFAA0A65F464B31E7BD4814BA.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "DisplayName" = "8:"
-                    "Description" = "8:"
-                    "Type" = "3:2"
-                    "ContextData" = "8:InstallToGAC=;IsolateToManifest=_51CE3137D8124F04B4A5396BC3F0CC0E.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "Attributes" = "3:0"
-                    "Setting" = "3:2"
-                    "Value" = "8:_51CE3137D8124F04B4A5396BC3F0CC0E.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "DefaultValue" = "8:_51CE3137D8124F04B4A5396BC3F0CC0E.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "UsePlugInResources" = "11:FALSE"
-                    }
                     "_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     {
                     "Name" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
@@ -1772,17 +1719,31 @@
                     "Setting" = "3:1"
                     "UsePlugInResources" = "11:FALSE"
                     }
-                    "_9EF85151F14F6C84C0988A16CC8092DE.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "_E663AB5AA94B685368396710DD2B5030.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     {
-                    "Name" = "8:_9EF85151F14F6C84C0988A16CC8092DE.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "Name" = "8:_E663AB5AA94B685368396710DD2B5030.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "DisplayName" = "8:"
                     "Description" = "8:"
                     "Type" = "3:2"
-                    "ContextData" = "8:InstallToGAC=;IsolateToManifest=_8A463D4D9EA544139D5A76E9E728095E.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "ContextData" = "8:InstallToGAC=;IsolateToManifest=_5037C905660F4574B9B6637CC9A3CE2D.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "Attributes" = "3:0"
                     "Setting" = "3:2"
-                    "Value" = "8:_8A463D4D9EA544139D5A76E9E728095E.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "DefaultValue" = "8:_8A463D4D9EA544139D5A76E9E728095E.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "Value" = "8:_5037C905660F4574B9B6637CC9A3CE2D.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "DefaultValue" = "8:_5037C905660F4574B9B6637CC9A3CE2D.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "UsePlugInResources" = "11:FALSE"
+                    }
+                    "_FE3E6D1AAA0AB31A6AE5A32DCBB17A8B.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    {
+                    "Name" = "8:_FE3E6D1AAA0AB31A6AE5A32DCBB17A8B.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "DisplayName" = "8:"
+                    "Description" = "8:"
+                    "Type" = "3:2"
+                    "ContextData" = "8:InstallToGAC=;IsolateToManifest=_0C336FC79B14484D84C6E37B881F55AB.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "Attributes" = "3:0"
+                    "Setting" = "3:2"
+                    "Value" = "8:_0C336FC79B14484D84C6E37B881F55AB.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "DefaultValue" = "8:_0C336FC79B14484D84C6E37B881F55AB.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "UsePlugInResources" = "11:FALSE"
                     }
