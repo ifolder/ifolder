@@ -863,7 +863,7 @@ namespace Simias.POBoxService.Web
 
 				UriBuilder poUri = 
 					new UriBuilder(
-						this.Context.Request.IsSecureConnection ? Uri.UriSchemeHttps : Uri.UriSchemeHttp ,
+						(this.Context.Request.Url.Port == 443) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp ,
 						this.Context.Request.Url.Host,
 						this.Context.Request.Url.Port,
 						appPath);
@@ -879,7 +879,7 @@ namespace Simias.POBoxService.Web
 
 				UriBuilder coUri = 
 					new UriBuilder(
-						this.Context.Request.IsSecureConnection ? Uri.UriSchemeHttps : Uri.UriSchemeHttp ,
+						(this.Context.Request.Url.Port == 443) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp ,
 						this.Context.Request.Url.Host,
 						this.Context.Request.Url.Port,
 						this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ));
