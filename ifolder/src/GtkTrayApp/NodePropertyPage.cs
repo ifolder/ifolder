@@ -48,7 +48,8 @@ namespace Novell.iFolder
 		{
 			this.node = node;
 
-			Glade.XML gxml = new Glade.XML ("ifolder.glade", "NodePropertiesPage", null);
+			Glade.XML gxml = new Glade.XML (Util.GladePath("ifolder.glade"), 
+					"NodePropertiesPage", null);
 
 			gxml.Autoconnect (this);
 
@@ -71,7 +72,7 @@ namespace Novell.iFolder
 					new CellRendererText(), 
 					new TreeCellDataFunc(ValueCellTextDataFunc));
 
-			PropertyPixBuf = new Pixbuf("property.png");
+			PropertyPixBuf = new Pixbuf(Util.ImagesPath("property.png"));
 			foreach(Simias.Storage.Property prop in this.node.Properties)
 			{
 				PropertyTreeStore.AppendValues(prop);

@@ -66,7 +66,7 @@ namespace Novell.iFolder
 
 		private void InitUI()
 		{
-			Glade.XML gxml = new Glade.XML ("collection-browser.glade", 
+			Glade.XML gxml = new Glade.XML (Util.GladePath("collection-browser.glade"), 
 					"ColWindow", 
 					null);
 			gxml.Autoconnect (this);
@@ -126,7 +126,7 @@ namespace Novell.iFolder
 
 			pbTable = new Hashtable();
 
-			string[] pixbufs = System.IO.Directory.GetFiles(".", "*.png");
+			string[] pixbufs = System.IO.Directory.GetFiles(Util.ImagesPath(""), "*.png");
 			foreach(string filename in pixbufs)
 			{
 				FileInfo fi = new FileInfo(filename);
@@ -136,7 +136,7 @@ namespace Novell.iFolder
 				pbTable.Add(typeName, pb);
 			}
 		
-			CollectionPixBuf = new Pixbuf("collection.png");
+			CollectionPixBuf = new Pixbuf(Util.ImagesPath("collection.png"));
 
 
 			//			nifWindow.Icon = NodePixBuf;
@@ -348,7 +348,7 @@ namespace Novell.iFolder
 
 		private void InitUI()
 		{
-			Glade.XML gxml = new Glade.XML ("collection-browser.glade", 
+			Glade.XML gxml = new Glade.XML (Util.GladePath("collection-browser.glade"), 
 					"ColPropertiesDialog", 
 					null);
 			gxml.Autoconnect (this);

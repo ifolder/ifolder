@@ -72,7 +72,7 @@ namespace Novell.iFolder
 
 		public void InitGlade()
 		{
-			Glade.XML gxml = new Glade.XML ("ifolder-confirmation.glade", 
+			Glade.XML gxml = new Glade.XML (Util.GladePath("ifolder-confirmation.glade"), 
 					"ConfirmationDialog", 
 					null);
 			gxml.Autoconnect (this);

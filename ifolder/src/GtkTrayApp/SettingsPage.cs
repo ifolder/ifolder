@@ -62,7 +62,7 @@ namespace Novell.iFolder
 
 		public void InitGlade()
 		{
-			Glade.XML gxml = new Glade.XML ("ifolder.glade", 
+			Glade.XML gxml = new Glade.XML (Util.GladePath("ifolder.glade"), 
 					"SettingsTable", null);
 			gxml.Autoconnect (this);
 			SettingsTable = (Gtk.Table) gxml.GetWidget("SettingsTable");

@@ -428,6 +428,7 @@ src/GtkTrayApp/ifolder
 src/GtkTrayApp/invitationwizard
 src/GtkTrayApp/collectionbrowser
 src/GtkTrayApp/setup-autostart
+src/GtkTrayApp/Util.cs
 src/iFolderNautilus/Makefile
 src/FormsTrayApp/Makefile
 src/FormsInvitationWizard/Makefile

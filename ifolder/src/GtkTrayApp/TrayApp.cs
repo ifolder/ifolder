@@ -74,7 +74,7 @@ namespace Novell.iFolder
 
 			eBox.ButtonPressEvent += 
 				new ButtonPressEventHandler(trayapp_clicked);
-			gNifPixbuf = new Pixbuf("ifolder.png");
+			gNifPixbuf = new Pixbuf(Util.ImagesPath("ifolder.png"));
 
 			gAppIcon = new Gtk.Image(gNifPixbuf);
 
