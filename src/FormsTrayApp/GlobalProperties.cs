@@ -1851,6 +1851,11 @@ namespace Novell.FormsTrayApp
 					// TODO: for some reason this iFolder is not coming back with the UnManagedPath set ...
 					// need to put some extra code in to handle this.
 					ifolder = ifWebService.GetiFolder(eventArgs.Collection);
+					if (ifolder != null)
+					{
+						// Notify the shell.
+						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
+					}
 				}
 				else if (eventArgs.Type.Equals("Node"))
 				{
