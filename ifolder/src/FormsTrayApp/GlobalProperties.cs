@@ -2961,7 +2961,7 @@ namespace Novell.FormsTrayApp
 						MyMessageBoxDefaultButton.Button2);
 					if (mmb.ShowDialog() == DialogResult.Yes)
 					{
-						ifWebService.DeclineiFolderInvitation(ifolder.ID);
+						ifWebService.DeclineiFolderInvitation(ifolder.DomainID, ifolder.ID);
 					}
 				}
 				else
@@ -2993,7 +2993,7 @@ namespace Novell.FormsTrayApp
 						updateListViewItem(lvi);
 
 						// Decline the invitation.
-						ifWebService.DeclineiFolderInvitation(newiFolder.ID);
+						ifWebService.DeclineiFolderInvitation(newiFolder.DomainID, newiFolder.ID);
 					}
 				}
 			}
