@@ -382,6 +382,9 @@ namespace Novell.iFolder.FormsTrayApp
 
 			SyncProperties properties = new SyncProperties();
 
+			properties.DefaultChannelSinks = 
+				SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
+
 			// Get the logic factory from the config file.
 			Configuration config = new Configuration();
 			string logicFactory = config.Get("iFolderApp", "SyncLogic", "SynkerA");
