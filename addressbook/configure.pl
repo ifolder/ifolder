@@ -334,7 +334,7 @@ if ($opt_shell eq 'bash')
 {
     # this needs to be changed but for now, assume the simias
     # diretory is up one directory from our root directory
-    chdir('../..');
+    chdir('..');
     my $cvs_root_dir = `pwd`;
     chomp($cvs_root_dir);
 
@@ -349,7 +349,7 @@ if ($opt_shell eq 'bash')
     $variables{'APIDOCDIR'} = "$variables{'SRCDIR'}/api-doc";
     $variables{'STAGE_DIR'} = "$variables{'SRCDIR'}/stage";
     $variables{'SIMIAS_ROOT'} = "$cvs_root_dir/simias";
-    chdir($variables{'SRCDIR'});
+    chdir($root_dir);
 
     # commands
     $variables{'RM'} = 'rm -f';
@@ -366,7 +366,7 @@ elsif ($opt_shell eq 'cmd')
 {
     # this needs to be changed but for now, assume the simias
     # diretory is up one directory from our root directory
-    chdir('..\\..');
+    chdir('..');
     my $cvs_root_dir = `cd`;
     chomp($cvs_root_dir);
 
@@ -381,7 +381,7 @@ elsif ($opt_shell eq 'cmd')
     $variables{'APIDOCDIR'} = "$variables{'SRCDIR'}\\api-doc";
     $variables{'STAGE_DIR'} = "$variables{'SRCDIR'}\\stage";
     $variables{'SIMIAS_ROOT'} = "$cvs_root_dir\\simias";
-    chdir($variables{'SRCDIR'});
+    chdir($root_dir);
 
     # commands
     $variables{'RM'} = 'del /f /q';
@@ -772,8 +772,11 @@ close(OUT);
 # File CVS History:
 #
 # $Log$
-# Revision 1.1  2004/02/21 19:01:16  cgaisford
-# Initial revision
+# Revision 1.1  2004/02/22 00:47:28  cgaisford
+# Modified project so there is a toplevel makefile and configure is run from the top level direcctory
+#
+# Revision 1.1.1.1  2004/02/21 19:01:16  cgaisford
+# Initial import to CVS
 #
 # Revision 1.2  2004/02/21 18:33:20  cgaisford
 # Updated themakefiles to use the Simias namespace and find simias using the SIMIAS_ROOT variable

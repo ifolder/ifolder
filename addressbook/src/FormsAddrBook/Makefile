@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # Book variables
@@ -86,6 +86,6 @@ Book_LIBPATH := $(subst /,$(SEP), $(Book_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(Book_LIBPATH) $(Book_INCLUDES)
 
-Book.exe: $(Book_SOURCES) $(Book_LIBS) ../config.mk
+Book.exe: $(Book_SOURCES) $(Book_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:Book.Doc.xml $(CSCFLAGS) $(Book_FLAGS) $(Book_LIBS:%=/r:%) $(Book_LIBPATH:%=/lib:%) $(Book_SOURCES)
 

@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # FormsBookLib variables
@@ -86,6 +86,6 @@ FormsBookLib_LIBPATH := $(subst /,$(SEP), $(FormsBookLib_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(FormsBookLib_LIBPATH) $(FormsBookLib_INCLUDES)
 
-FormsBookLib.dll: $(FormsBookLib_SOURCES) $(FormsBookLib_LIBS) ../config.mk
+FormsBookLib.dll: $(FormsBookLib_SOURCES) $(FormsBookLib_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:FormsBookLib.Doc.xml $(CSCFLAGS) $(FormsBookLib_FLAGS) $(FormsBookLib_LIBS:%=/r:%) $(FormsBookLib_LIBPATH:%=/lib:%) $(FormsBookLib_SOURCES)
 

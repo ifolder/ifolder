@@ -21,7 +21,7 @@
 # *
 # ***********************************************************************/
 
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # Book variables
@@ -99,7 +99,7 @@ Book_LIBPATH := $(subst /,$(SEP), $(Book_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(Book_LIBPATH) $(Book_INCLUDES)
 
-Book.exe: $(Book_SOURCES) $(Book_RESOURCE) $(Book_LIBS) ../config.mk
+Book.exe: $(Book_SOURCES) $(Book_RESOURCE) $(Book_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:Book.xml $(CSCFLAGS) $(Book_FLAGS) $(Book_LIBS:%=/r:%) $(Book_LIBPATH:%=/lib:%) $(Book_SOURCES)
 
 #=============================================================================
@@ -114,5 +114,5 @@ BookLib_LIBPATH := $(subst /,$(SEP), $(BookLib_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(BookLib_LIBPATH) $(BookLib_INCLUDES)
 
-BookLib.dll: $(BookLib_SOURCES) $(BookLib_RESOURCE) $(BookLib_LIBS) ../config.mk
+BookLib.dll: $(BookLib_SOURCES) $(BookLib_RESOURCE) $(BookLib_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:BookLib.xml $(CSCFLAGS) $(BookLib_FLAGS) $(BookLib_LIBS:%=/r:%) $(BookLib_LIBPATH:%=/lib:%) $(BookLib_SOURCES)

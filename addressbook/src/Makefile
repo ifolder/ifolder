@@ -22,7 +22,7 @@
 #***********************************************************************/
 
 # configure makefile
-include config.mk
+include ../config.mk
 
 #=============================================================================
 # os independent component list
@@ -317,8 +317,11 @@ report:
 # File CVS History:
 #
 # $Log$
-# Revision 1.1  2004/02/21 19:01:16  cgaisford
-# Initial revision
+# Revision 1.2  2004/02/22 00:47:28  cgaisford
+# Modified project so there is a toplevel makefile and configure is run from the top level direcctory
+#
+# Revision 1.1.1.1  2004/02/21 19:01:16  cgaisford
+# Initial import to CVS
 #
 # Revision 1.1.1.1  2004/02/21 18:18:17  cgaisford
 # Inital checkin

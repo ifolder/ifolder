@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # abgui variables
@@ -86,6 +86,6 @@ abgui_LIBPATH := $(subst /,$(SEP), $(abgui_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(abgui_LIBPATH) $(abgui_INCLUDES)
 
-abgui.exe: $(abgui_SOURCES) $(abgui_LIBS) ../config.mk
+abgui.exe: $(abgui_SOURCES) $(abgui_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:abgui.Doc.xml $(CSCFLAGS) $(abgui_FLAGS) $(abgui_LIBS:%=/r:%) $(abgui_LIBPATH:%=/lib:%) $(abgui_SOURCES)
 
