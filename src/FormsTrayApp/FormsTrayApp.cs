@@ -498,6 +498,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 
 			Cursor.Current = Cursors.Default;
+			notifyIcon1.Visible = false;
 			Application.Exit();
 		}
 
