@@ -49,7 +49,7 @@ namespace Simias.Sync
 
 public class Dredger
 {
-	Collection collection = null;
+	SyncCollection collection = null;
 
 	/* TODO: onServer needs to be removed. It controls how tombstones are handled:
 	 *   they are deleted on the server but left on the client. What it
@@ -263,7 +263,7 @@ public class Dredger
 	/// <param name="onServer"></param>
 	public Dredger(Collection collection, bool onServer)
 	{
-		this.collection = collection;
+		this.collection = new SyncCollection(collection);
 		this.onServer = onServer;
 		try
 		{
@@ -293,6 +293,7 @@ public class Dredger
 		bool	shuttingDown;
 		bool	paused;
 		bool	needToDredge = true;
+		EventSubscriber es = null;
 		
 		private void DoDredge()
 		{
@@ -343,11 +344,11 @@ public class Dredger
 			store = new Store(conf);
 			paused = shuttingDown = false;
 			// Start listening to file change events.
-			EventSubscriber es = new EventSubscriber(conf);
-			es.FileChanged += new FileEventHandler(es_FileChanged);
-			es.FileCreated += new FileEventHandler(es_FileCreated);
-			es.FileDeleted += new FileEventHandler(es_FileDeleted);
-			es.FileRenamed += new FileRenameEventHandler(es_FileRenamed);
+			//es = new EventSubscriber(conf);
+			//es.FileChanged += new FileEventHandler(es_FileChanged);
+			//es.FileCreated += new FileEventHandler(es_FileCreated);
+			//es.FileDeleted += new FileEventHandler(es_FileDeleted);
+			//es.FileRenamed += new FileRenameEventHandler(es_FileRenamed);
 			thread = new Thread(new ThreadStart(DoDredge));
 			thread.IsBackground = true;
 			thread.Priority = ThreadPriority.BelowNormal;
@@ -386,6 +387,7 @@ public class Dredger
 		{
 			shuttingDown = true;
 			thread.Interrupt();
+			es.Dispose();
 			store.Dispose();
 		}
 
@@ -678,6 +680,20 @@ public class Dredger
 				}
 				collection.Commit(node);
 				return;
+			}
+			else
+			{
+				// TODO is this the right thing to do on a rootDir rename.
+				// This is a rename of a root node do not sync it back.
+				SyncCollection sCol = new SyncCollection(collection);
+				sCol.Synchronizable = false;
+				sCol.Commit(sCol);
+
+				// Make sure the root path has not changed.
+				if (!Path.GetDirectoryName(node.GetFullPath(collection)).Equals(Path.GetDirectoryName(args.OldPath)))
+				{
+
+				}
 			}
 		}
 	}
