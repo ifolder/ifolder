@@ -3019,9 +3019,9 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="S255">ISComments</col>
 		<col def="S255">ISShortcutName</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>NewShortcut1</td><td>iFolder</td><td>##ID_STRING42##</td><td>InvitationWizard.exe</td><td>[INSTALLDIR]InvitationWizard.exe</td><td/><td/><td/><td/><td/><td>1</td><td/><td/><td/><td/></row>
-		<row><td>NewShortcut2</td><td>iFolder</td><td>##ID_STRING43##</td><td>ContactBrowserShortcutComponent</td><td>[INSTALLDIR]ContactBrowser.exe</td><td/><td/><td/><td/><td/><td>1</td><td/><td/><td/><td/></row>
-		<row><td>NewShortcut3</td><td>iFolder</td><td>##ID_STRING44##</td><td>iFolderApp.exe</td><td>[INSTALLDIR]iFolderApp.exe</td><td/><td/><td/><td/><td/><td>1</td><td/><td/><td/><td/></row>
+		<row><td>NewShortcut1</td><td>iFolder</td><td>##ID_STRING42##</td><td>InvitationWizard.exe</td><td>[INSTALLDIR]InvitationWizard.exe</td><td/><td/><td/><td/><td/><td>1</td><td>INSTALLDIR</td><td/><td/><td/></row>
+		<row><td>NewShortcut2</td><td>iFolder</td><td>##ID_STRING43##</td><td>ContactBrowserShortcutComponent</td><td>[INSTALLDIR]ContactBrowser.exe</td><td/><td/><td/><td/><td/><td>1</td><td>INSTALLDIR</td><td/><td/><td/></row>
+		<row><td>NewShortcut3</td><td>iFolder</td><td>##ID_STRING44##</td><td>iFolderApp.exe</td><td>[INSTALLDIR]iFolderApp.exe</td><td/><td/><td/><td/><td/><td>1</td><td>INSTALLDIR</td><td/><td/><td/></row>
 	</table>
 
 	<table name="Signature">
