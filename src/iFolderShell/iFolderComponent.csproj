@@ -107,7 +107,7 @@
                 <Reference
                     Name = "Novell.AddressBook"
                     AssemblyName = "Novell.AddressBook"
-                    HintPath = "..\..\..\addressbook\src\AddressBook\Novell.AddressBook.dll"
+                    HintPath = "..\..\..\simias\src\AddressBook\Novell.AddressBook.dll"
                 />
             </References>
         </Build>
@@ -141,6 +141,16 @@
                 <File
                     RelPath = "EmailPrompt.resx"
                     DependentUpon = "EmailPrompt.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "GaugeChart.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GaugeChart.resx"
+                    DependentUpon = "GaugeChart.cs"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
