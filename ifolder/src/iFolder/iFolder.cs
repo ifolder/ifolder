@@ -96,7 +96,7 @@ namespace Novell.iFolder
 			this.Commit( nodeList );
 
 			// Create an invitation in the POBox of the current user for this iFolder.
-			CreatePersonalInvitation( store, domainName );
+			CreatePersonalInvitation( store, domainName, dirNode );
 		}
 
 		/// <summary>
@@ -217,7 +217,8 @@ namespace Novell.iFolder
 		/// </summary>
 		/// <param name="store">Store where iFolder was created.</param>
 		/// <param name="domain">Domain that the iFolder belongs to.</param>
-		private void CreatePersonalInvitation( Store store, string domain )
+		/// <param name="dirNode">The root DirNode object that belongs to the collection.</param>
+		private void CreatePersonalInvitation( Store store, string domain, DirNode dirNode )
 		{
 			// Get the current member for this iFolder.
 			Member member = GetCurrentMember();
@@ -235,6 +236,16 @@ namespace Novell.iFolder
 			subscription.ToPublicKey = member.PublicKey;
 			subscription.SubscriptionRights = member.Rights;
 			subscription.SubscriptionState = SubscriptionStates.Ready;
+
+			// TODO: This may not be right in the future.
+			// Get the master URL from the Roster for this domain.
+			Roster roster = store.GetDomain( domain ).GetRoster( store );
+			SyncCollection sc = new SyncCollection( roster );
+			subscription.SubscriptionCollectionURL = sc.MasterUrl.ToString();
+
+			// Add the DirNode information.
+			subscription.DirNodeID = dirNode.ID;
+			subscription.DirNodeName = dirNode.Name;
 			
 			// Commit the subscription to the POBox.
 			poBox.Commit( subscription );
