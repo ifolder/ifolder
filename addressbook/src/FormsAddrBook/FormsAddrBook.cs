@@ -700,6 +700,38 @@ namespace Novell.iFolder.FormsAddrBook
 						}
 					}
 
+					// Display the IM accounts.
+					y += delta;
+					foreach(IM im in contact.GetInstantMessageAccounts())
+					{
+						if ((im.Types & IMTypes.work) == IMTypes.work)
+						{
+							e.Graphics.DrawString("work", Font, SystemBrushes.ControlDark, x-1, y, format);
+							e.Graphics.DrawString(im.Address + " (" + im.Provider + ")", Font, SystemBrushes.WindowText, x, y);
+							y += Font.Size + 5;
+						}
+					}
+
+					foreach(IM im in contact.GetInstantMessageAccounts())
+					{
+						if ((im.Types & IMTypes.home) == IMTypes.home)
+						{
+							e.Graphics.DrawString("home", Font, SystemBrushes.ControlDark, x-1, y, format);
+							e.Graphics.DrawString(im.Address + " (" + im.Provider + ")", Font, SystemBrushes.WindowText, x, y);
+							y += Font.Size + 5;
+						}
+					}
+
+					foreach(IM im in contact.GetInstantMessageAccounts())
+					{
+						if ((im.Types & IMTypes.other) == IMTypes.other)
+						{
+							e.Graphics.DrawString("other", Font, SystemBrushes.ControlDark, x-1, y, format);
+							e.Graphics.DrawString(im.Address + " (" + im.Provider + ")", Font, SystemBrushes.WindowText, x, y);
+							y += Font.Size + 5;
+						}
+					}
+
 					// Display the mailing addresses.
 					y += delta;
 					foreach(Address addr in contact.GetAddresses())
