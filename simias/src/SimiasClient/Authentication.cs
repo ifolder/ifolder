@@ -1,7 +1,7 @@
 /***********************************************************************
  *  $RCSfile$
  *
- *  Copyright © Unpublished Work of Novell, Inc. All Rights Reserved.
+ *  Copyright  Unpublished Work of Novell, Inc. All Rights Reserved.
  *
  *  THIS WORK IS AN UNPUBLISHED WORK AND CONTAINS CONFIDENTIAL,
  *  PROPRIETARY AND TRADE SECRET INFORMATION OF NOVELL, INC. ACCESS TO 
@@ -147,10 +147,7 @@ namespace Simias.Client
 
 					domainSvc.Url = cInfo.RemoteUrl;
 					domainSvc.Credentials = 
-						new NetworkCredential(
-								cInfo.MemberName, 
-								this.password,
-								cInfo.RemoteUrl);
+						new NetworkCredential(cInfo.MemberName, this.password);
 
 					try
 					{
