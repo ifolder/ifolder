@@ -2472,6 +2472,8 @@ namespace Novell.FormsTrayApp
 				menuActionRevert.Enabled = menuActionProperties.Enabled = 
 				(iFolderView.SelectedItems.Count == 1) && !((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription;
 
+			menuActionCreate.Enabled = tabControl1.SelectedIndex == 0;
+
 			// Enable/disable resolve menu item.
 			menuActionResolve.Visible = (iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).HasConflicts;
 
