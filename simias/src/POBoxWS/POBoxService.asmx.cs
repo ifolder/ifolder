@@ -235,30 +235,30 @@ namespace Simias.POBoxService.Web
 			string			toIdentity, 
 			string			subscriptionID)
 		{
-			Simias.POBox.POBox	poBox;
+			Simias.POBox.POBox	fromPOBox;
 			Store				store = Store.GetStore();
 			
 			log.Info("POBoxService::DeclinedSubscription - called");
 			log.Info("  subscription: " + subscriptionID);
 
-			// open the post office box
-			poBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
+			// open the post office box of the From user
+			fromPOBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
 				? Simias.POBox.POBox.GetPOBox(store, domainID)
 				: Simias.POBox.POBox.GetPOBox(store, domainID, fromIdentity);
 
 			// check the post office box
-			if (poBox == null)
+			if (fromPOBox == null)
 			{
 				log.Debug("POBoxService::DeclinedSubscription - PO Box not found");
 				return(POBoxStatus.UnknownPOBox);
 			}
 
-			// check that the message has already not been posted
+			// Get the subscription from the user's PO box
 			IEnumerator e = 
-				poBox.Search(
-				Message.MessageIDProperty, 
-				subscriptionID, 
-				SearchOp.Equal).GetEnumerator();
+				fromPOBox.Search(
+					Message.MessageIDProperty, 
+					subscriptionID, 
+					SearchOp.Equal).GetEnumerator();
 			ShallowNode sn = null;
 			if (e.MoveNext())
 			{
@@ -272,7 +272,7 @@ namespace Simias.POBoxService.Web
 			}
 
 			// get the subscription object
-			Subscription cSub = new Subscription(poBox, sn);
+			Subscription cSub = new Subscription(fromPOBox, sn);
 
 			// Identities need to match up
 			if (fromIdentity != cSub.FromIdentity)
@@ -287,8 +287,143 @@ namespace Simias.POBoxService.Web
 				return(POBoxStatus.UnknownIdentity);
 			}
 
-			cSub.Decline();
-			poBox.Commit(cSub);
+			// Validate the shared collection
+			Collection cSharedCollection = store.GetCollectionByID(cSub.SubscriptionCollectionID);
+			if (cSharedCollection != null)
+			{
+				log.Debug("POBoxService::DeclinedSubscription - Collection not found");
+				return(POBoxStatus.UnknownCollection);
+			}
+
+			//
+			// Actions taken when a subscription is declined
+			//
+			// If I'm the owner of the shared collection then the
+			// decline is treated as a delete of the shared collection
+			// so we must.
+			// 1) Delete all the subscriptions in all members PO boxes
+			// 2) Delete the shared collection itself
+			//
+			// If I'm already a member of the shared collection but not
+			// the owner.
+			// 1) Remove myself from the member list of the shared collection
+			// 2) Delete my subscriptions to the shared collection
+			//
+			// If I'm not yet a member of the shared collection but declined
+			// an invitation from another user in the system.  In this case
+			// the From and To identies will be different.
+			// 1) Delete my subscription to the shared collection.
+			// 2) Set the state of the subscription in the inviter's PO
+			//    Box to "declined".
+			//
+
+			// Am I the owner of the shared collection?
+			if (cSub.ToIdentity == cSharedCollection.Owner.ToString())
+			{
+				// FIXME: Verify the caller of the web service is the owner
+				// as well
+
+				log.Info("  handling case where identity is owner of collection");
+
+				ICSList memberlist = cSharedCollection.GetMemberList();
+				foreach(ShallowNode sNode in memberlist)
+				{
+					Simias.Storage.Member cMember =
+						new Simias.Storage.Member(cSharedCollection, sNode);
+
+					// Get the member's POBox
+					Simias.POBox.POBox memberPOBox = 
+						Simias.POBox.POBox.FindPOBox(
+							store, 
+							cSharedCollection.Domain, 
+							cMember.UserID );
+					if (memberPOBox != null)
+					{
+						// Search for the matching subscription
+						Subscription memberSub = 
+							memberPOBox.GetSubscriptionByCollectionID(cSharedCollection.ID);
+						if(memberSub != null)
+						{
+							memberPOBox.Delete(memberSub);
+							memberPOBox.Commit(memberSub);
+						}
+					}
+				}
+
+				// Delete the shared collection itself
+				cSharedCollection.Commit(cSharedCollection.Delete());
+			}
+			else
+			{
+				// Am I a member of the shared collection?
+
+				Simias.Storage.Member cMember = 
+					cSharedCollection.GetMemberByID(cSub.ToIdentity);
+				if(cMember != null)
+				{
+					log.Info("  handling case where identity is a member of the collection");
+
+					cSharedCollection.Delete(cMember);
+					cSharedCollection.Commit(cMember);
+
+					// Remove the subscription from the "fromIdentity" PO box
+					Subscription cMemberSub = 
+						fromPOBox.GetSubscriptionByCollectionID(cSharedCollection.ID);
+					if(cMemberSub != null)
+					{
+						fromPOBox.Delete(cMemberSub);
+						fromPOBox.Commit(cMemberSub);
+					}
+
+					if (fromIdentity != toIdentity)
+					{
+						Simias.POBox.POBox	toPOBox;
+
+						// open the post office box of the To user
+						toPOBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
+							? Simias.POBox.POBox.GetPOBox(store, domainID)
+							: Simias.POBox.POBox.FindPOBox(store, domainID, toIdentity);
+						if (toPOBox != null)
+						{
+							// Remove the subscription from the "fromIdentity" PO box
+							Subscription cToMemberSub = 
+								toPOBox.GetSubscriptionByCollectionID(cSharedCollection.ID);
+							if(cToMemberSub != null)
+							{
+								toPOBox.Delete(cToMemberSub);
+								fromPOBox.Commit(cToMemberSub);
+							}
+						}
+					}
+				}
+				else
+				{
+					log.Info("  handling case where identity is declining a subscription");
+					// I am not a member of this shared collection and want to
+					// decline the subscription.
+
+					// open the post office box of the To user and delete the subscription
+					Simias.POBox.POBox toPOBox = 
+						(domainID == Simias.Storage.Domain.WorkGroupDomainID) 
+							? Simias.POBox.POBox.GetPOBox(store, domainID)
+							: Simias.POBox.POBox.FindPOBox(store, domainID, toIdentity);
+					if (toPOBox != null)
+					{
+						// Remove the subscription from the "fromIdentity" PO box
+						Subscription cToMemberSub = 
+							toPOBox.GetSubscriptionByCollectionID(cSharedCollection.ID);
+						if(cToMemberSub != null)
+						{
+							toPOBox.Delete(cToMemberSub);
+							fromPOBox.Commit(cToMemberSub);
+						}
+					}
+
+					cSub.Decline();
+					fromPOBox.Commit(cSub);
+				}
+			}
+
 			log.Info("POBoxService::DeclinedSubscription - exit");
 			return(POBoxStatus.Success);
 		}
@@ -436,7 +571,7 @@ namespace Simias.POBoxService.Web
 					this.Context.Request.Url.Scheme,
 					this.Context.Request.Url.Host,
 					this.Context.Request.Url.Port,
-					this.Context.Request.ApplicationPath);
+					this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ));
 
 			log.Info("URI: " + colUri.ToString());
 			SubscriptionInformation subInfo = new SubscriptionInformation(colUri.ToString());
@@ -579,26 +714,12 @@ namespace Simias.POBoxService.Web
 				cSub.FromIdentity = fromUserID;
 				cSub.SubscriptionRights = (Simias.Storage.Access.Rights) rights;
 
-				/*
-				// FIXME: got to be a better way
-				string serviceUrl =
-					(this.Context.Request.IsSecureConnection == true)
-						? "https://" : "http://";
-				
-				serviceUrl += 
-						this.Context.Request.Url.Host +
-						":" +
-						this.Context.Request.Url.Port.ToString() +
-						versionEndpoint +
-						"/POBoxService.asmx";
-				*/
-
 				UriBuilder poUri = 
 					new UriBuilder(
 						this.Context.Request.Url.Scheme,
 						this.Context.Request.Url.Host,
 						this.Context.Request.Url.Port,
-						this.Context.Request.ApplicationPath +
+						this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ),
 						"/POBoxService.asmx");
 
 				log.Info("  newup service url: " + poUri.ToString());
@@ -614,10 +735,10 @@ namespace Simias.POBoxService.Web
 
 				UriBuilder coUri = 
 					new UriBuilder(
-					this.Context.Request.Url.Scheme,
-					this.Context.Request.Url.Host,
-					this.Context.Request.Url.Port,
-					this.Context.Request.ApplicationPath);
+						this.Context.Request.Url.Scheme,
+						this.Context.Request.Url.Host,
+						this.Context.Request.Url.Port,
+						this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ));
 
 				cSub.SubscriptionCollectionURL = coUri.ToString();
 				log.Info("SubscriptionCollectionURL: " + cSub.SubscriptionCollectionURL);
