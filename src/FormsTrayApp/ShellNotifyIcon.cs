@@ -34,9 +34,10 @@ namespace Novell.CustomUIControls
 	public class ShellNotifyIcon
 	{
 		#region Class Members
+		internal uint shellRestart;
 		private string text;
 		private Icon icon;
-		internal ContextMenu contextMenu;
+		private ContextMenu contextMenu;
 		private bool visible = false;
 		private readonly NotifyMessageLoop messageLoop = null;
 		private readonly IntPtr messageLoopHandle = IntPtr.Zero;
@@ -92,6 +93,9 @@ namespace Novell.CustomUIControls
 		/// <param name="hwnd">The handle of the window to activate.</param>
 		[DllImport("user32.dll")]
 		public static extern int SetForegroundWindow(IntPtr hwnd);
+
+		[DllImport("user32.dll")]
+		private static extern uint RegisterWindowMessage(string lpString);
 
 		[StructLayout(LayoutKind.Sequential)]
 		private struct NOTIFYICONDATA 
@@ -238,7 +242,8 @@ namespace Novell.CustomUIControls
 					}
 					else
 					{
-						visible = !deleteNotifyIcon();
+						deleteNotifyIcon();
+						visible = false;
 					}
 				}
 			}
@@ -289,6 +294,7 @@ namespace Novell.CustomUIControls
 
 		private bool addNotifyIcon(string tip)
 		{
+			shellRestart = RegisterWindowMessage("TaskbarCreated");
 			NOTIFYICONDATA data = getNOTIFYICONDATA(icon.Handle, NIF_MESSAGE | NIF_ICON | NIF_TIP | NIF_INFO, tip, null, null, BalloonType.None);
 			return Shell_NotifyIcon(NIM_ADD, ref data);
 		}
@@ -517,6 +523,15 @@ namespace Novell.CustomUIControls
 							}
 							break;
 					}
+				}
+			}
+			else if (msg.Msg == shellNotifyIcon.shellRestart)
+			{
+				// The shell has been restarted, add the icon to the tray.
+				if (shellNotifyIcon.Visible)
+				{
+					shellNotifyIcon.Visible = false;
+					shellNotifyIcon.Visible = true;
 				}
 			}
 
