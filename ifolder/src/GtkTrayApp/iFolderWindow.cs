@@ -1519,7 +1519,7 @@ namespace Novell.iFolder
 						(iFolderHolder) tModel.GetValue(iter, 0);
 				if(ifHolder.iFolder.IsSubscription)
 				{
-				
+					OnSetupiFolder(o, args);
 				}
 				else
 				{
@@ -1666,8 +1666,35 @@ namespace Novell.iFolder
 
 		public void	OnSyncNow(object o, EventArgs args)
 		{
-			// Call to sync right now
+			TreeSelection tSelect = iFolderTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				iFolderHolder ifHolder = 
+						(iFolderHolder) tModel.GetValue(iter, 0);
+
+				try
+				{
+    				iFolderWS.SynciFolderNow(ifHolder.iFolder.ID);
+				}
+				catch(Exception e)
+				{
+					iFolderExceptionDialog ied = 
+						new iFolderExceptionDialog(
+							this,
+							e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+				}
+			}
 		}
+
+
+
 
 		public void OnRevertiFolder(object o, EventArgs args)
 		{
@@ -1740,7 +1767,7 @@ namespace Novell.iFolder
 				{
 					string selectedFolder = cfcd.Selections[0];
 
-					if(ShowBadiFolderPath(selectedFolder, false))
+					if(ShowBadiFolderPath(selectedFolder, null))
 						continue;
 
 					// break loop
@@ -1822,11 +1849,10 @@ namespace Novell.iFolder
 					if(rc != -5)
 						return;
 
-					// Crappy login here
 					// if the user selected OK, check the path they
 					// selectected, if we didn't show there was a bad
 					// path, set rc to 0 to accept the ifolder
-					if(!ShowBadiFolderPath(newPath, true))
+					if(!ShowBadiFolderPath(newPath, ifHolder.iFolder.Name))
 						rc = 0;
 				}
 				while(rc == -5);
@@ -1859,14 +1885,21 @@ namespace Novell.iFolder
 		}
 
 
-		private bool ShowBadiFolderPath(string path, bool isParentFolder)
+		private bool ShowBadiFolderPath(string path, string name)
 		{
 			try
 			{
 				bool isGood = true;
-				if(isParentFolder)
+				if(name != null)
 				{
 					isGood = !iFolderWS.IsPathIniFolder(path);
+					if(isGood)
+					{
+						// now we need to check if there is already an
+						// ifolder at that path
+						isGood = !iFolderWS.IsPathIniFolder(
+								System.IO.Path.Combine(path, name));
+					}
 				}
 				else
 				{
@@ -1881,7 +1914,7 @@ namespace Novell.iFolder
 						iFolderMsgDialog.ButtonSet.Ok,
 						Util.GS("Invalid iFolder Path"),
 						Util.GS("Invalid iFolder path selected"),
-						Util.GS("iFolders cannot contain other iFolders.  The folder you selected is either inside an iFolder or has an iFolder in it.  Please select an alternate folder."));
+						Util.GS("The path you have selected is invalid for an iFolder.  iFolders cannot contain other iFolders.  The folder you selected is either inside an iFolder, is an iFolder, or already contains an iFolder by the same name.  Please select an alternate folder."));
 					dg.Run();
 					dg.Hide();
 					dg.Destroy();
