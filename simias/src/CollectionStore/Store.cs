@@ -947,6 +947,15 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets a list of all of the domain objects.
+		/// </summary>
+		/// <returns>An ICSList object containing all of the domain objects.</returns>
+		public ICSList GetDomainList()
+		{
+			return LocalDb.GetNodesByType( NodeTypes.DomainType );
+		}
+
+		/// <summary>
 		/// Gets the domain credentials for the specified domain.
 		/// </summary>
 		/// <param name="domainID">Identifier of the domain to get the credentials from.</param>
