@@ -301,7 +301,7 @@ namespace Simias.Sync
 							}
 
 							// ping the collection
-							log.Debug("Collection Service Ping: {0}", service.Ping());
+//							log.Debug("Collection Service Ping: {0}", service.Ping());
 
 							// get the collection worker
 							log.Debug("Creating a Sync Worker Object...");

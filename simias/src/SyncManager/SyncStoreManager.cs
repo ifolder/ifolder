@@ -157,10 +157,12 @@ namespace Simias.Sync
 		{
 			SyncCollectionService service = null;
 
+			log.Debug("GettingCollectionService---collectionManagers.Contains(id)");
 			if (collectionManagers.Contains(id))
 			{
 				SyncCollectionManager scm = (SyncCollectionManager)collectionManagers[id];
 
+				log.Debug("GettingCollectionService---scm.GetService()");
 				service = scm.GetService();
 
 				log.Debug("Created collection service: {0}", service.Ping().ToString());

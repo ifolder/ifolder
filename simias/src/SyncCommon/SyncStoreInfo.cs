@@ -33,7 +33,7 @@ namespace Simias.Sync
 	[Serializable]
 	public class SyncStoreInfo
 	{
-		private string machine;
+		private string host;
 		private string user;
 		private string os;
 		private string id;
@@ -43,7 +43,8 @@ namespace Simias.Sync
 		/// </summary>
 		public SyncStoreInfo(Store store)
 		{
-			machine = Environment.MachineName;
+			host = MyDns.GetHostName();
+		//	Environment.MachineName;
 			user = Environment.UserName;
 			os = Environment.OSVersion.ToString();
 			id = store.ID;
@@ -55,7 +56,7 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return String.Format("Machine: {0}, User: {1}, OS: {2}, Store: {3}", machine, user, os, id);
+			return String.Format("Host: {0}, User: {1}, OS: {2}, Store: {3}", host, user, os, id);
 		}
 
 		#region Properties
@@ -63,9 +64,9 @@ namespace Simias.Sync
 		/// <summary>
 		/// The store machine name.
 		/// </summary>
-		public string Machine
+		public string Host
 		{
-			get { return machine; }
+			get { return host; }
 		}
 		
 		/// <summary>
