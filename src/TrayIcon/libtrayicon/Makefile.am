@@ -9,21 +9,20 @@ INCLUDES = \
   -DGDK_DISABLE_DEPRECATED \
   -DG_DISABLE_DEPRECATED
 
+lib_LTLIBRARIES = libtrayicon.la
 
-noinst_LTLIBRARIES = libtrayicon.la
-
-libtrayicon_la_LIBADD = \
-	$(TRAY_ICON_LIBS) \
-	$(top_builddir)/libegg/util/libeggutil.la
+#libtrayicon_la_LIBADD = \
+#	$(TRAY_ICON_LIBS) \
+#	$(top_builddir)/libegg/util/libeggutil.la
 
 libtrayicon_la_SOURCES = \
-  eggtrayicon.c		\
-  eggstatusicon.c	\
-  eggtraymanager.c
+  eggtrayicon.c		
+#  eggstatusicon.c	\
+#  eggtraymanager.c
 
-noinst_HEADERS = \
-  eggtrayicon.h	 \
-  eggstatusicon.h\
-  eggtraymanager.h
+#noinst_HEADERS = \
+#  eggtrayicon.h	 
+#  eggstatusicon.h\
+#  eggtraymanager.h
 
 
