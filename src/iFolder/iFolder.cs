@@ -30,6 +30,7 @@ using Simias;
 using Simias.POBox;
 using Simias.Storage;
 using Simias.Sync;
+using Simias.Policy;
 
 namespace Novell.iFolder
 {
@@ -326,16 +327,18 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Gets/sets the refresh interval for the iFolder.
 		/// </summary>
-		public int RefreshInterval
+        public int RefreshInterval
 		{
-			get
+			// TODO: should these be on the collection or member?
+
+            get
 			{
-				return new SyncCollection(this).Interval;
+				return SyncInterval.GetInterval(this as Collection);
 			}
 
 			set
 			{
-				new SyncCollection(this).Interval = value;
+				SyncInterval.Set(this as Collection, value);
 			}
 		}
 		#endregion
