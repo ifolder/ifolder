@@ -39,6 +39,7 @@ namespace Simias
 	/// </summary>
 	public class SimiasLogManager
 	{
+		private static readonly string SimiasLogConfigFile = "simias.log.config";
 		private static readonly string SimiasLogFile = "simias.log";
 		private static readonly string SimiasPatternLayout = "%d [%t] %-5p %c - %m%n";
 		
@@ -58,7 +59,8 @@ namespace Simias
 		/// <summary>
 		/// Create or retrieve the logger for the type in the Simias domain.
 		/// </summary>
-		/// <param name="type">The fully qualified name of the type is the name of the logger.</param>
+		/// <param name="type">The fully qualified name of the type is the
+		/// name of the logger.</param>
 		/// <returns>A Simias log interface object.</returns>
 		public static ISimiasLog GetLogger(Type type)
 		{
@@ -86,14 +88,16 @@ namespace Simias
                 if (!configured)
                 {
 					// file configuration
-					log4net.Config.DOMConfigurator.ConfigureAndWatch(new FileInfo(Path.Combine(storePath, "simias.log.config")));
+					log4net.Config.DOMConfigurator.ConfigureAndWatch(
+						new FileInfo(Path.Combine(storePath, SimiasLogConfigFile)));
 
 					// TODO: temp code for log file name
         			string[] args = Environment.GetCommandLineArgs();
         
         			string file = SimiasLogFile;
         
-        			if ((args.Length > 0) && (args[0] != null) && (args[0].Length > 0) && !args[0].StartsWith("mono"))
+        			if ((args.Length > 0) && (args[0] != null) && (args[0].Length > 0)
+						&& !args[0].StartsWith("mono"))
         			{
         				file = Path.GetFileName(args[0]) + ".log";
         			}
@@ -103,7 +107,8 @@ namespace Simias
         			}
         
 					// default appender
-        			BasicConfigurator.Configure(new FileAppender(new PatternLayout(SimiasPatternLayout),
+        			BasicConfigurator.Configure(new FileAppender(
+						new PatternLayout(SimiasPatternLayout),
         				Path.Combine(storePath, file)));
 
                     configured = true;
