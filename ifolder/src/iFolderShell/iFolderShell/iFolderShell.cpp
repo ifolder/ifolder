@@ -81,9 +81,19 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID *ppvOut)
 
     *ppvOut = NULL;
 
-    if (IsEqualIID(rclsid, CLSID_iFolderShell))
+	iFolderClass iFClass = IFOLDER_INVALID;
+	if (IsEqualIID(rclsid, CLSID_iFolderShell0))
+	{
+		iFClass = IFOLDER_ISIFOLDER;
+	}
+	else if (IsEqualIID(rclsid, CLSID_iFolderShell1))
+	{
+		iFClass = IFOLDER_CONFLICT;
+	}
+
+	if (iFClass != IFOLDER_INVALID)
     {
-        CiFolderShellClassFactory *pcf = new CiFolderShellClassFactory;
+        CiFolderShellClassFactory *pcf = new CiFolderShellClassFactory(iFClass);
 
         return pcf->QueryInterface(riid, ppvOut);
     }
@@ -124,7 +134,7 @@ STDAPI DllRegisterServer(void)
 	{	
 		//OutputDebugString(szModulePath);
 		// Create some base key strings.
-		StringFromGUID2(CLSID_iFolderShell, szID, GUID_SIZE);
+		StringFromGUID2(CLSID_iFolderShell0, szID, GUID_SIZE);
 		lstrcpyn(szCLSID, TEXT("CLSID\\"), sizeof(szCLSID)/sizeof(TCHAR));
 		lstrcat(szCLSID, szID);
 		
@@ -145,7 +155,32 @@ STDAPI DllRegisterServer(void)
 					TEXT("ThreadingModel"),
 					TEXT("Apartment")))
 				{
-					hr= S_OK;
+					// Create the entry for the other shell extension GUID.
+					StringFromGUID2(CLSID_iFolderShell1, szID, GUID_SIZE);
+					lstrcpyn(szCLSID, TEXT("CLSID\\"), sizeof(szCLSID)/sizeof(TCHAR));
+					lstrcat(szCLSID, szID);
+					
+					// Create entries under CLSID.
+					if (SetRegKeyValue(
+						szCLSID,
+						NULL,
+						TEXT("iFolderShellExtension")))
+					{
+						if (SetRegKeyValue(
+							szCLSID,
+							TEXT("InprocServer32"),
+							szModulePath))
+						{
+							if (AddRegNamedValue(
+								szCLSID,
+								TEXT("InprocServer32"),
+								TEXT("ThreadingModel"),
+								TEXT("Apartment")))
+							{
+								hr= S_OK;
+							}
+						}
+					}
 				}
 			}
 		}
@@ -186,7 +221,7 @@ STDAPI DllUnregisterServer(void)
 	TCHAR    szTemp[MAX_PATH+GUID_SIZE];
 	
 	//Create some base key strings.
-	StringFromGUID2(CLSID_iFolderShell, szID, GUID_SIZE);
+	StringFromGUID2(CLSID_iFolderShell0, szID, GUID_SIZE);
 	lstrcpyn(szCLSID, TEXT("CLSID\\"), sizeof(szCLSID)/sizeof(TCHAR));
 	lstrcat(szCLSID, szID);
 
@@ -196,18 +231,32 @@ STDAPI DllUnregisterServer(void)
 	{
 		if (RegDeleteKey(HKEY_CLASSES_ROOT, szCLSID) == ERROR_SUCCESS)
 		{
-			hr= S_OK;
+			//Create some base key strings.
+			StringFromGUID2(CLSID_iFolderShell1, szID, GUID_SIZE);
+			lstrcpyn(szCLSID, TEXT("CLSID\\"), sizeof(szCLSID)/sizeof(TCHAR));
+			lstrcat(szCLSID, szID);
+
+			wsprintf(szTemp, TEXT("%s\\%s"), szCLSID, TEXT("InprocServer32"));
+			//OutputDebugString(szTemp);
+			if (RegDeleteKey(HKEY_CLASSES_ROOT, szTemp) == ERROR_SUCCESS)
+			{
+				if (RegDeleteKey(HKEY_CLASSES_ROOT, szCLSID) == ERROR_SUCCESS)
+				{
+					hr= S_OK;
+				}
+			}
 		}
 	}
 	
 	return hr;
 }
 
-CiFolderShellClassFactory::CiFolderShellClassFactory()
+CiFolderShellClassFactory::CiFolderShellClassFactory(iFolderClass iFClass)
 {
     //OutputDebugString(TEXT("CiFolderShellClassFactory::CiFolderShellClassFactory()\n"));
 
     m_cRef = 0L;
+	m_class = iFClass;
 
     InterlockedIncrement((LONG *)&g_cRefThisDll);
 }
@@ -271,7 +320,7 @@ STDMETHODIMP CiFolderShellClassFactory::CreateInstance(LPUNKNOWN pUnkOuter,
     // initialized.
 
 	//Create the CiFolderShell object
-	LPCIFOLDERSHELL piFolderShell = new CiFolderShell();
+	LPCIFOLDERSHELL piFolderShell = new CiFolderShell(m_class);
 
     if (NULL == piFolderShell)
         return E_OUTOFMEMORY;
@@ -285,14 +334,15 @@ STDMETHODIMP CiFolderShellClassFactory::LockServer(BOOL fLock)
     return NOERROR;
 }
 
-// *********************** CShellExt *************************
-CiFolderShell::CiFolderShell()
+// *********************** CiFolderShell *************************
+CiFolderShell::CiFolderShell(iFolderClass iFClass)
 {
     //OutputDebugString(TEXT("CiFolderShell::CiFolderShell()\n"));
 
     m_cRef = 0L;
     m_pDataObj = NULL;
 //	m_spiFolder= NULL;
+	m_iFolderClass = iFClass;
 
     InterlockedIncrement((LONG *)&g_cRefThisDll);
 }
@@ -334,25 +384,25 @@ STDMETHODIMP CiFolderShell::QueryInterface(REFIID riid, LPVOID FAR *ppv)
 	}
     else if (IsEqualIID(riid, IID_IShellPropSheetExt))
     {
-        //OutputDebugString(TEXT("CShellExt::QueryInterface()==>IShellPropSheetExt\n"));
+        //OutputDebugString(TEXT("CiFolderShell::QueryInterface()==>IShellPropSheetExt\n"));
 
         *ppv = (LPSHELLPROPSHEETEXT)this;
     }
 //    else if (IsEqualIID(riid, IID_IExtractIcon))
 //    {
-//        OutputDebugString("CShellExt::QueryInterface()==>IID_IExtractIcon\n");
+//        OutputDebugString("CiFolderShell::QueryInterface()==>IID_IExtractIcon\n");
 
 //        *ppv = (LPEXTRACTICON)this;
 //    }
 //    else if (IsEqualIID(riid, IID_IPersistFile))
 //    {
-//        OutputDebugString("CShellExt::QueryInterface()==>IPersistFile\n");
+//        OutputDebugString("CiFolderShell::QueryInterface()==>IPersistFile\n");
 
 //        *ppv = (LPPERSISTFILE)this;
 //    }
 //    else if (IsEqualIID(riid, IID_IShellCopyHook))
 //    {
-//        OutputDebugString("CShellExt::QueryInterface()==>ICopyHook\n");
+//        OutputDebugString("CiFolderShell::QueryInterface()==>ICopyHook\n");
 
 //        *ppv = (LPCOPYHOOK)this;
 //    }

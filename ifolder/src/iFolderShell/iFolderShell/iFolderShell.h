@@ -28,16 +28,26 @@
 #import "..\iFolderComponent.tlb" no_namespace
 
 // {AA81D830-3B41-497c-B508-E9D02F8DF421}
-DEFINE_GUID(CLSID_iFolderShell, 0xaa81d830L, 0x3b41, 0x497c, 0xb5, 0x08, 0xe9, 0xd0, 0x2f, 0x8d, 0xf4, 0x21);
+DEFINE_GUID(CLSID_iFolderShell0, 0xaa81d830L, 0x3b41, 0x497c, 0xb5, 0x08, 0xe9, 0xd0, 0x2f, 0x8d, 0xf4, 0x21);
+// {AA81D831-3B41-497c-B508-E9D02F8DF421}
+DEFINE_GUID(CLSID_iFolderShell1, 0xaa81d831L, 0x3b41, 0x497c, 0xb5, 0x08, 0xe9, 0xd0, 0x2f, 0x8d, 0xf4, 0x21);
+
+enum iFolderClass
+{
+	IFOLDER_INVALID,
+	IFOLDER_CONFLICT,
+	IFOLDER_ISIFOLDER,
+};
 
 // this class factory object creates context menu handlers for Windows 95 shell
 class CiFolderShellClassFactory : public IClassFactory
 {
 protected:
     ULONG   m_cRef;
+	iFolderClass m_class;
 
 public:
-    CiFolderShellClassFactory();
+    CiFolderShellClassFactory(iFolderClass iFClass);
     ~CiFolderShellClassFactory();
 
     //IUnknown members
@@ -69,9 +79,10 @@ public:
 	static IiFolderComponentPtr m_spiFolder;
     TCHAR m_szFileUserClickedOn[MAX_PATH];
 	static TCHAR m_szShellPath[MAX_PATH];
+	iFolderClass m_iFolderClass;
 
 public:
-	CiFolderShell();
+	CiFolderShell(iFolderClass iFClass);
 	~CiFolderShell();
 	
 	//IUnknown members

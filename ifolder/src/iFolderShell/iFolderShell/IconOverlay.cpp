@@ -59,10 +59,21 @@ STDMETHODIMP CiFolderShell::IsMemberOf(LPCWSTR pwszPath,
 
 		if (m_spiFolder)
 		{
-			// TODO - call into iFolder lib to see if this item is or is a member of an iFolder.
-			if (m_spiFolder->IsiFolder((LPWSTR)pwszPath))
+			BOOL isiFolder = m_spiFolder->IsiFolder((LPWSTR)pwszPath);
+			switch (m_iFolderClass)
 			{
-				return S_OK;
+			case IFOLDER_ISIFOLDER:
+				// Call into iFolder lib to see if this item is or is a member of an iFolder.
+				if (isiFolder && !m_spiFolder->HasConflicts((LPWSTR)pwszPath))
+				{
+					return S_OK;
+				}
+				break;
+			case IFOLDER_CONFLICT:
+				if (isiFolder && m_spiFolder->HasConflicts((LPWSTR)pwszPath))
+				{
+					return S_OK;
+				}
 			}
 		}
 	}
@@ -126,7 +137,15 @@ STDMETHODIMP CiFolderShell::GetOverlayInfo(LPWSTR pwszIconFile,
 	// Save this path.
 	lstrcpy(m_szShellPath, szModule);
 
-	lstrcat(szModule, TEXT("ifolder_emblem.ico"));
+	switch (m_iFolderClass)
+	{
+	case IFOLDER_ISIFOLDER:
+        lstrcat(szModule, TEXT("ifolder_emblem.ico"));
+		break;
+	case IFOLDER_CONFLICT:
+		lstrcat(szModule, TEXT("ifolder_conflict_emb.ico"));
+		break;
+	}
 
 	lstrcpyn(pwszIconFile, szModule, cchMax);
 
@@ -156,7 +175,16 @@ STDMETHODIMP CiFolderShell::GetPriority(int *pIPriority)
     //OutputDebugString(TEXT("CiFolderShell::GetPriority()\n"));
 
 	// For now, all the icon overlays are set to highest priority.
-	*pIPriority= 0;
+
+	switch (m_iFolderClass)
+	{
+	case IFOLDER_ISIFOLDER:
+		*pIPriority = 10;
+		break;
+	case IFOLDER_CONFLICT:
+		*pIPriority = 0;
+		break;
+	}
 
 	return S_OK;
 }	/*-- GetPriority() --*/
