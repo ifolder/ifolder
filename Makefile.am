@@ -1,4 +1,4 @@
-SUBDIRS = src package
+SUBDIRS = src package help
 
 DIST_SUBDIRS = $(SUBDIRS) doc
 
