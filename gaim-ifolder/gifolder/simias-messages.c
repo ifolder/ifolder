@@ -75,6 +75,7 @@ simias_send_msg(GaimBuddy *recipient, char *msg)
 	conn = gaim_account_get_connection(recipient->account);
 	
 	if (!conn) {
+fprintf(stderr, "gaim_account_get_connection() returned null\n");
 		return -1; /* Can't send a msg without a connection */
 	}
 
@@ -128,11 +129,14 @@ send_ping(GaimBuddy *recipient, const char *ping_type)
 	char *userID;
 	char *simias_service_url;
 	char *public_url;
+	int err;
 
 	/* Get the Gaim Domain User Info */
-	if (simias_get_user_info(&machineName, &userID, &simias_service_url) != 0)
+	err = simias_get_user_info(&machineName, &userID, &simias_service_url); 
+	if (err != 0)
 	{
 		/* There was an error and none of the returns are valid */
+fprintf(stderr, "simias_get_user_info() returned: %d\n", err);
 		return -23432;
 	}
 
@@ -353,7 +357,7 @@ fprintf(stderr, "handle_ping_request() %s -> %s entered\n",
 	/* Send a ping-response message */
 	send_result = simias_send_ping_resp(buddy);
 	if (send_result <= 0) {
-		g_print("handle_ping_request() couldn't send ping response: %d\n", send_result);
+		fprintf(stderr, "handle_ping_request() couldn't send ping response: %d\n", send_result);
 	}
 	
 	return TRUE;
@@ -397,6 +401,7 @@ fprintf(stderr, "handle_ping_response() %s -> %s entered\n",
 	if (!parse_simias_info((char *) buffer + strlen(PING_RESPONSE_MSG),
 						  &machine_name, &user_id, &simias_url))
 	{
+fprintf(stderr, "couldn't parse simias_info!\n");
 		return FALSE;
 	}
 	

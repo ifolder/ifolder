@@ -30,6 +30,7 @@
 /* Gaim Includes */
 #include "account.h"
 #include "blist.h"
+#include "util.h"
 
 #include "simiasgaimStub.h"
 #include "simiasgaim.nsmap"
@@ -50,6 +51,8 @@ static char *the_soap_url = NULL;
 /* Forward Declarations of Static Functions */
 static char *simias_get_user_profile_dir_path(char *dest_path);
 static char *parse_local_service_url(FILE *file);
+static int get_char_index(char *str, char search_char);
+static char *escape_spaces(char *str_with_space);
 
 static void init_gsoap (struct soap *p_soap);
 static void cleanup_gsoap (struct soap *p_soap);
@@ -71,7 +74,7 @@ simias_sync_member_list()
 	struct _ns1__SynchronizeMemberList req;
 	struct _ns1__SynchronizeMemberListResponse resp;
 	
-	soap_url = get_soap_url(FALSE);
+	soap_url = get_soap_url(TRUE);
 	if (!soap_url) {
 		return;
 	}
@@ -95,7 +98,7 @@ simias_update_member(const char *account_name, const char *account_prpl_id,
 	struct _ns1__UpdateMember req;
 	struct _ns1__UpdateMemberResponse resp;
 	
-	soap_url = get_soap_url(FALSE);
+	soap_url = get_soap_url(TRUE);
 	if (!soap_url) {
 		return;
 	}
@@ -132,7 +135,7 @@ simias_get_user_info(char **machineName, char **userID, char **simiasURL)
 	struct _ns1__GetUserInfo req;
 	struct _ns1__GetUserInfoResponse resp;
 	
-	soap_url = get_soap_url(FALSE);
+	soap_url = get_soap_url(TRUE);
 	if (!soap_url) {
 		return -1;
 	}
@@ -140,6 +143,7 @@ simias_get_user_info(char **machineName, char **userID, char **simiasURL)
 	init_gsoap(&soap);
 	soap_call___ns1__GetUserInfo(&soap, soap_url, NULL, &req, &resp);
 	if (soap.error) {
+soap_print_fault(&soap, stderr);
 		cleanup_gsoap(&soap);
 		return -2;
 	}
@@ -168,7 +172,13 @@ get_soap_url(gboolean reread_config)
 	char *url;
 	char gaim_domain_url[512];
 	int err;
-	
+/*
+	char *ret_host;
+	int ret_port;
+	char *ret_path;
+	char *ret_user;
+	char *ret_passwd;
+*/	
 	if (!reread_config && the_soap_url) {
 		return the_soap_url;
 	}
@@ -177,8 +187,32 @@ get_soap_url(gboolean reread_config)
 	if (!err) {
 		sprintf(gaim_domain_url, "%s/GaimDomainService.asmx", url);
 		free(url);
-		the_soap_url = strdup(gaim_domain_url);
-		/* FIXME: Figure out who and when this should ever be freed */
+
+		if (the_soap_url)
+			free(the_soap_url);
+		the_soap_url = escape_spaces(gaim_domain_url);
+		return the_soap_url;
+
+		/**
+		 * URL Escape the path so that if there's a space in
+		 * the username or anything like that, we won't get errors.
+		 */
+/*
+		if (gaim_url_parse(gaim_domain_url, &ret_host, &ret_port,
+						   &ret_path, &ret_user, &ret_passwd))
+		{
+			sprintf(gaim_domain_url, "http://%s:%d/%s", ret_host, ret_port,
+									gaim_url_encode(ret_path));
+									^
+								This doesn't work!  It stops processing if
+								it hits a space character.  WEIRD!
+
+
+fprintf(stderr, "URL: %s\n", gaim_domain_url);
+			the_soap_url = strdup(gaim_domain_url);
+			return the_soap_url;
+		}
+*/
 	}
 	
 	return NULL;
@@ -228,7 +262,8 @@ parse_local_service_url(FILE *file)
 	char *setting_idx;
 	char *value_idx;
 	char *start_quote_idx;
-	char *uri = NULL;
+	int end_quote_idx;
+	char uri[1024];
 	int b_uri_found;
 	
 	b_uri_found = 0;
@@ -255,8 +290,11 @@ parse_local_service_url(FILE *file)
 		if (value_idx) {
 			start_quote_idx = strstr(value_idx, "\"");
 			if (start_quote_idx) {
-				uri = strtok(start_quote_idx + 1, "\"");
-				if (uri) {
+				end_quote_idx = get_char_index(start_quote_idx + 1, '\"');
+				if (end_quote_idx > 0)
+				{
+					strncpy(uri, start_quote_idx + 1, end_quote_idx);
+					uri[end_quote_idx] = '\0';
 					b_uri_found = 1;
 				}
 			}
@@ -271,6 +309,61 @@ parse_local_service_url(FILE *file)
 	}
 
 	return strdup(uri);
+}
+
+/**
+ * The behavior of this function is like String.IndexOf();
+ */
+static int
+get_char_index(char *str, char search_char)
+{
+	int i;
+	int length;
+
+	if (!str)
+		return -1;
+
+	length = strlen(str);
+	for (i = 0; i < length; i++)
+	{
+		if (str[i] == search_char)
+			return i;
+	}
+
+	return -1;
+}
+
+/**
+ * Returned value must be freed.
+ *
+ * Param: str_with_space should be a null-terminated string that
+ *        potentially has spaces in it.  All spaces will be
+ *        converted to "%20".
+ */
+static char *
+escape_spaces(char *str_with_space)
+{
+	char escapedString[1024];
+	int i;
+	int j = 0;
+
+	for (i = 0; str_with_space[i] != '\0'; i++)
+	{
+		if (str_with_space[i] == ' ')
+		{
+			escapedString[j++] = '%';
+			escapedString[j++] = '2';
+			escapedString[j++] = '0';
+		}
+		else
+		{
+			escapedString[j++] = str_with_space[i];
+		}
+	}
+
+	escapedString[j] = '\0';
+
+	return strdup(escapedString);
 }
 
 int
