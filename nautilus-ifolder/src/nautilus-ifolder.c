@@ -220,6 +220,8 @@ ec_state_event_cb (SEC_STATE_EVENT state_event, const char *message, void *data)
 	SimiasEventClient *ec = (SimiasEventClient *)data;
 	int i;
 	GSList *ifolder_paths;
+	SIMIAS_NODE_TYPE node_type;
+	SimiasEventFilter event_filter;
 	
 	switch (state_event) {
 		case SEC_STATE_EVENT_CONNECTED:
@@ -228,6 +230,13 @@ ec_state_event_cb (SEC_STATE_EVENT state_event, const char *message, void *data)
 			/* Register our event handler */
 			sec_set_event (*ec, ACTION_NODE_CREATED, true, (SimiasEventFunc)simias_node_created_cb, NULL);
 			sec_set_event (*ec, ACTION_NODE_DELETED, true, (SimiasEventFunc)simias_node_deleted_cb, NULL);
+			
+			/* Specify that we're only interested in changes in Collections (iFolders) */
+			node_type = NODE_TYPE_COLLECTION;
+			event_filter.type = EVENT_FILTER_NODE_TYPE;
+			event_filter.data = &node_type;
+			sec_set_filter (*ec, &event_filter);
+			
 			DEBUG_IFOLDER (("finished registering for simias events\n"));
 			
 			/**
