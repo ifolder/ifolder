@@ -424,7 +424,7 @@ namespace Simias.Storage
 		/// Constructor for creating an existing Node object.
 		/// </summary>
 		/// <param name="document">Xml document that describes a Node object.</param>
-		internal protected Node( XmlDocument document )
+		public Node( XmlDocument document )
 		{
 			XmlElement nodeObject = document.DocumentElement[ XmlTags.ObjectTag ];
 

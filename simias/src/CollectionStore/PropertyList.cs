@@ -1282,6 +1282,35 @@ namespace Simias.Storage
 		{
 			ModifyProperty( new Property( name, propertyValue ) );
 		}
+
+		/// <summary>
+		/// Converts the PropertyList to a string representation.
+		/// </summary>
+		/// <returns>A string containing the contents of the property list.</returns>
+		public override string ToString()
+		{
+			return ToString( false );
+		}
+
+		/// <summary>
+		/// Converts the PropertyList to a string representation.
+		/// </summary>
+		/// <param name="stripLocalProperties">If true, the local properties will be stripped from
+		/// the string. Otherwise the string will contain all properties.</param>
+		/// <returns>A string containing the contents of the property list.</returns>
+		public string ToString( bool stripLocalProperties )
+		{
+			if ( stripLocalProperties )
+			{
+				XmlDocument stringDoc = nodeDocument.Clone() as XmlDocument;
+				StripLocalProperties( stringDoc );
+				return stringDoc.InnerText;
+			}
+			else
+			{
+				return nodeDocument.InnerText;
+			}
+		}
 		#endregion
 
 		#region IEnumerable Members
