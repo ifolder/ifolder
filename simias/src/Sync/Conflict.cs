@@ -200,7 +200,7 @@ public class Conflict
 		//TODO: what if move succeeds but node rename or commit fails?
 		File.Move(FileNameConflictPath, Path.Combine(IncomingNode.ParentPath(collection, node), newNodeName));
 		node.Name = newNodeName;
-		collection.Commit(node);
+		collection.Commit(collection.DeleteCollision(node));
 	}
 
 	
