@@ -620,13 +620,15 @@ namespace Simias.Sync
 			SyncNodeInfo[] cstamps;
 			
 			// Get the current sync state.
-			GetChangeLogContext(out serverContext, out clientContext);
-			bool gotClientChanges = this.GetChangedNodeInfoArray(out cstamps, ref clientContext);
+			string tempClientContext;
+			string tempServerContext;
+			GetChangeLogContext(out tempServerContext, out tempClientContext);
+			bool gotClientChanges = this.GetChangedNodeInfoArray(out cstamps, ref tempClientContext);
 
 			// Setup the SyncStartInfo.
 			StartSyncInfo si = new StartSyncInfo();
 			si.CollectionID = collection.ID;
-			si.Context = serverContext;
+			si.Context = tempServerContext;
 			si.ChangesOnly = gotClientChanges | !workArray.Complete;
 			si.ClientHasChanges = si.ChangesOnly;
 			
@@ -640,7 +642,7 @@ namespace Simias.Sync
 			try
 			{
 
-				serverContext = si.Context;
+				tempServerContext = si.Context;
 				workArray.SetAccess = rights = si.Access;
 				
 				serverStatus = si.Status;
@@ -693,7 +695,7 @@ namespace Simias.Sync
 								if (queuedChanges)
 								{
 									// Save the sync state.
-									SetChangeLogContext(serverContext, clientContext, status);
+									SetChangeLogContext(tempServerContext, tempClientContext, status);
 								}
 								// End the sync.
 								service.EndSync();
