@@ -131,7 +131,7 @@ namespace Novell.iFolder.Web
 					ServerName = name;
 					ServerDate = fileNode.LastWriteTime.ToString();
 					ServerSize = formatFileSize(fileNode.Length);
-					ServerFullPath = conflict.FileNameConflictPath;
+					ServerFullPath = conflict.NonconflictedPath;
 				}
 			}
 			else

@@ -41,7 +41,6 @@ namespace Novell.iFolderCom
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(NameConflictPrompt));
 		private bool successful;
 		private string filePath;
-		private string localName;
 		private System.Windows.Forms.TextBox fileName;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button ok;
@@ -235,23 +234,15 @@ namespace Novell.iFolderCom
 			try
 			{
 				string path = Path.Combine(filePath, fileName.Text);
-				if (localName.Equals(path))
+				FileInfo fi = new FileInfo(path);
+				if (fi.Exists)
 				{
-					// The same filename was chosen for the local file.
-					successful = true;
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("fileExists"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+					mmb.ShowDialog();
 				}
 				else
 				{
-					FileInfo fi = new FileInfo(path);
-					if (fi.Exists)
-					{
-						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("fileExists"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-						mmb.ShowDialog();
-					}
-					else
-					{
-						successful = true;
-					}
+					successful = true;
 				}
 			}
 			catch (Exception ex)
@@ -280,11 +271,6 @@ namespace Novell.iFolderCom
 		public string FilePath
 		{
 			set { this.filePath = value; }
-		}
-
-		public string LocalName
-		{
-			set { this.localName = value; }
 		}
 		#endregion
 	}
