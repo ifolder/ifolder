@@ -15,7 +15,9 @@ DATA_FILES = App.ico ifolder_app.ico
 RES_FILES = res/ifolder_disconnect.ico res/ifolder_loaded.ico res/ifolder_message.ico res/ifolder_sync1.ico res/ifolder_sync2.ico res/ifolder_sync3.ico res/ifolder_sync4.ico res/ifolder_sync5.ico res/ifolder_sync6.ico res/ifolder_sync7.ico res/ifolder_sync8.ico res/ifolder_sync9.ico res/ifolder_sync10.ico $(srcdir)/../GtkTrayApp/ifolder-banner.png res/ifolder_invite_32.png
 RESX_FILES = FormsTrayApp.resx GlobalProperties.resx
 
-EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFolderApp.exe.manifest
+PROJECT_FILES = $(srcdir)/FormsTrayApp.csproj $(srcdir)/FormsTrayApp.sln
+
+EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFolderApp.exe.manifest $(PROJECT_FILES)
 
 all: iFolderApp.exe
 

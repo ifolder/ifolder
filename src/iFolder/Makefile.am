@@ -25,7 +25,9 @@ iFolderd_FLAGS = $(CSC_EXEFLAG)
 iFolderd_LIBS = System.dll $(SYSTEM_XML) Novell.iFolder.dll
 iFolderd_LIBPATH =
 
-EXTRA_DIST = ifolders $(srcdir)/iFolderCmd $(iFolder_CSFILES) $(iFolderCmd_CSFILES) $(iFolderd_CSFILES)
+PROJECT_FILES = $(srcdir)/iFolder.csproj
+
+EXTRA_DIST = ifolders $(srcdir)/iFolderCmd $(iFolder_CSFILES) $(iFolderCmd_CSFILES) $(iFolderd_CSFILES) $(PROJECT_FILES)
 
 CUR_DIR := $(shell pwd)
 

@@ -30,7 +30,9 @@ DATA_FILES = $(srcdir)/iFolderShell/ifolder_emblem.ico $(srcdir)/iFolderShell/if
 RESX_FILES = $(srcdir)/ConflictResolver.resx $(srcdir)/MyMessageBox.resx $(srcdir)/NewiFolder.resx $(srcdir)/iFolderAdvanced.resx
 WINDOWS_FILES = $(srcdir)/explorer.exe.manifest
 
-EXTRA_DIST = $(iFolderComponent_CSFILES) $(iFolderShell_SRCFILES) $(iFolderShell_DEF) $(DATA_FILES) $(RESX_FILES) $(WINDOWS_FILES) $(srcdir)/iFolderShell.reg
+PROJECT_FILES = $(srcdir)/iFolderComponent.csproj $(srcdir)/iFolderComponent.sln
+
+EXTRA_DIST = $(iFolderComponent_CSFILES) $(iFolderShell_SRCFILES) $(iFolderShell_DEF) $(DATA_FILES) $(RESX_FILES) $(WINDOWS_FILES) $(srcdir)/iFolderShell.reg  $(PROJECT_FILES)
 
 CUR_DIR := $(shell pwd)
 

@@ -13,7 +13,9 @@ DATA_FILES = $(srcdir)/App.ico $(srcdir)/Invitation.ico $(srcdir)/InvitationWiza
 GTK_DATA_FILES = $(srcdir)/../GtkTrayApp/invitewiz.png
 RESX_FILES = $(srcdir)/AcceptDeclinePage.resx $(srcdir)/BaseWizardPage.resx $(srcdir)/CompletionPage.resx $(srcdir)/InteriorPageTemplate.resx $(srcdir)/InvitationWizard.resx $(srcdir)/SelectInvitationPage.resx $(srcdir)/SelectiFolderLocationPage.resx $(srcdir)/WelcomePage.resx $(srcdir)/WelcomePageTemplate.resx
 
-EXTRA_DIST = $(InvitationWizard_CSFILES) $(DATA_FILES) $(RESX_FILES)
+PROJECT_FILES = $(srcdir)/InvitationWizard.csproj $(srcdir)/FormsInvitationWizard.sln
+
+EXTRA_DIST = $(InvitationWizard_CSFILES) $(DATA_FILES) $(RESX_FILES) $(PROJECT_FILES)
 
 all: InvitationWizard.exe
 
