@@ -156,6 +156,7 @@ static GtkWidget *in_inv_reject_button;
 static GList *outgoing_invitations;
 static GtkWidget *out_inv_tree;
 static GtkTreeStore *out_inv_store;
+static GtkWidget *out_inv_resend_button;
 static GtkWidget *out_inv_cancel_button;
 static GtkWidget *out_inv_remove_button;
 
@@ -188,6 +189,11 @@ static void invitations_dialog_close_button_cb(GtkWidget *widget,
 					       gpointer user_data);
 static void in_inv_accept_button_cb(GtkWidget *w, GtkTreeView *tree);
 static void in_inv_reject_button_cb(GtkWindow *w, GtkTreeView *tree);
+
+static void out_inv_resend_button_cb(GtkWindow *w, GtkTreeView *tree);
+static void out_inv_cancel_button_cb(GtkWindow *w, GtkTreeView *tree);
+static void out_inv_remove_button_cb(GtkWindow *w, GtkTreeView *tree);
+
 static void init_invitations_window();
 static void show_invitations_window();
 static void buddylist_cb_show_invitations_window(GaimBlistNode *node,
@@ -459,6 +465,24 @@ in_inv_reject_button_cb(GtkWindow *w, GtkTreeView *tree)
 	g_print("FIXME: Implement in_inv_reject_button_cb()\n");
 }
 
+static void
+out_inv_resend_button_cb(GtkWindow *w, GtkTreeView *tree)
+{
+	g_print("FIXME: Implement out_inv_resend_button_cb()\n");
+}
+
+static void
+out_inv_cancel_button_cb(GtkWindow *w, GtkTreeView *tree)
+{
+	g_print("FIXME: Implement out_inv_cancel_button_cb()\n");
+}
+
+static void
+out_inv_remove_button_cb(GtkWindow *w, GtkTreeView *tree)
+{
+	g_print("FIXME: Implement out_inv_remove_button_cb()\n");
+}
+
 /**
  * Setup the Simias Invitations Window
  *
@@ -476,12 +500,14 @@ init_invitations_window()
 	GtkWidget *in_inv_hbox;
 	GtkWidget *in_inv_buttons_vbox;
 	GtkWidget *in_inv_scrolled_win;
+	GtkCellRenderer *in_inv_renderer;
 
 	GtkWidget *out_inv_vbox;
 	GtkWidget *out_inv_label;
+	GtkWidget *out_inv_hbox;
+	GtkWidget *out_inv_buttons_vbox;
 	GtkWidget *out_inv_scrolled_win;
-
-	GtkCellRenderer *renderer;
+	GtkCellRenderer *out_inv_renderer;
 
 	invitations_dialog = gtk_dialog_new_with_buttons(
 				_("Simias Collection Invitations"),
@@ -538,32 +564,32 @@ init_invitations_window()
 	g_object_unref(G_OBJECT(in_inv_store));
 
 	/* Create a cell renderer */
-	renderer = gtk_cell_renderer_text_new();
+	in_inv_renderer = gtk_cell_renderer_text_new();
 
 	/* ACCOUNT_PRTL_COL */
 	gtk_tree_view_insert_column_with_attributes(
 		GTK_TREE_VIEW(in_inv_tree),
-		-1, _("Protocol"), renderer, "text", ACCOUNT_PRTL_COL, NULL);
+		-1, _("Protocol"), in_inv_renderer, "text", ACCOUNT_PRTL_COL, NULL);
 
 	/* BUDDY_NAME_COL */
 	gtk_tree_view_insert_column_with_attributes(
 		GTK_TREE_VIEW(in_inv_tree),
-		-1, _("Buddy"), renderer, "text", BUDDY_NAME_COL, NULL);
+		-1, _("Buddy"), in_inv_renderer, "text", BUDDY_NAME_COL, NULL);
 
 	/* TIME_COL */
 	gtk_tree_view_insert_column_with_attributes(
 		GTK_TREE_VIEW(in_inv_tree),
-		-1, _("Received"), renderer, "text", TIME_COL, NULL);
+		-1, _("Received"), in_inv_renderer, "text", TIME_COL, NULL);
 
 	/* COLLECTION_NAME_COL */
 	gtk_tree_view_insert_column_with_attributes(
 		GTK_TREE_VIEW(in_inv_tree),
-		-1, _("Collection"), renderer, "text", COLLECTION_NAME_COL, NULL);
+		-1, _("Collection"), in_inv_renderer, "text", COLLECTION_NAME_COL, NULL);
 
 	/* STATE_COL */
 	gtk_tree_view_insert_column_with_attributes(
 		GTK_TREE_VIEW(in_inv_tree),
-		-1, _("State"), renderer, "text", STATE_COL, NULL);
+		-1, _("State"), in_inv_renderer, "text", STATE_COL, NULL);
 
 	gtk_container_add(GTK_CONTAINER(in_inv_scrolled_win), in_inv_tree);
 
@@ -571,13 +597,13 @@ init_invitations_window()
 	gtk_box_pack_end(GTK_BOX(in_inv_hbox),
 			in_inv_buttons_vbox, FALSE, FALSE, 0);
 
-	in_inv_accept_button = gtk_button_new_with_mnemonic(_("_Accept"));
-	gtk_box_pack_end(GTK_BOX(in_inv_buttons_vbox),
-			in_inv_accept_button, FALSE, FALSE, 0);
-
 	in_inv_reject_button = gtk_button_new_with_mnemonic(_("_Reject"));
 	gtk_box_pack_end(GTK_BOX(in_inv_buttons_vbox),
 			in_inv_reject_button, FALSE, FALSE, 0);
+
+	in_inv_accept_button = gtk_button_new_with_mnemonic(_("_Accept"));
+	gtk_box_pack_end(GTK_BOX(in_inv_buttons_vbox),
+			in_inv_accept_button, FALSE, FALSE, 0);
 
 	/*****************************
 	 * The Outgoing Messages VBox
@@ -592,6 +618,76 @@ init_invitations_window()
 	gtk_box_pack_start(GTK_BOX(out_inv_vbox),
 			   out_inv_label, FALSE, FALSE, 0);
 
+	out_inv_hbox = gtk_hbox_new(FALSE, 10);
+	gtk_box_pack_start(GTK_BOX(out_inv_vbox), out_inv_hbox, TRUE, TRUE, 0);
+
+	out_inv_scrolled_win = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(out_inv_scrolled_win),
+		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	gtk_box_pack_start(GTK_BOX(out_inv_hbox),
+			   out_inv_scrolled_win, TRUE, TRUE, 0);
+
+	/* Tree View Control Here */
+	out_inv_store = gtk_tree_store_new(N_COLS,
+					G_TYPE_STRING,
+					G_TYPE_STRING,
+					G_TYPE_STRING,
+					G_TYPE_STRING,
+					G_TYPE_STRING);
+	/* FIXME: Load in data from file */
+	/*populate_out_inv_store_from_file(out_inv_store);*/
+	out_inv_tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(out_inv_store));
+	/* The view now holds a reference.  We can get rid of our own
+	 * reference. */
+	g_object_unref(G_OBJECT(out_inv_store));
+
+	/* Create a cell renderer */
+	out_inv_renderer = gtk_cell_renderer_text_new();
+
+	/* ACCOUNT_PRTL_COL */
+	gtk_tree_view_insert_column_with_attributes(
+		GTK_TREE_VIEW(out_inv_tree),
+		-1, _("Protocol"), out_inv_renderer, "text", ACCOUNT_PRTL_COL, NULL);
+
+	/* BUDDY_NAME_COL */
+	gtk_tree_view_insert_column_with_attributes(
+		GTK_TREE_VIEW(out_inv_tree),
+		-1, _("Buddy"), out_inv_renderer, "text", BUDDY_NAME_COL, NULL);
+
+	/* TIME_COL */
+	gtk_tree_view_insert_column_with_attributes(
+		GTK_TREE_VIEW(out_inv_tree),
+		-1, _("Received"), out_inv_renderer, "text", TIME_COL, NULL);
+
+	/* COLLECTION_NAME_COL */
+	gtk_tree_view_insert_column_with_attributes(
+		GTK_TREE_VIEW(out_inv_tree),
+		-1, _("Collection"), out_inv_renderer, "text", COLLECTION_NAME_COL, NULL);
+
+	/* STATE_COL */
+	gtk_tree_view_insert_column_with_attributes(
+		GTK_TREE_VIEW(out_inv_tree),
+		-1, _("State"), out_inv_renderer, "text", STATE_COL, NULL);
+
+	gtk_container_add(GTK_CONTAINER(out_inv_scrolled_win), out_inv_tree);
+
+	out_inv_buttons_vbox = gtk_vbox_new(FALSE, 10);
+	gtk_box_pack_end(GTK_BOX(out_inv_hbox),
+			out_inv_buttons_vbox, FALSE, FALSE, 0);
+
+	out_inv_remove_button = gtk_button_new_with_mnemonic(_("Re_move"));
+	gtk_box_pack_end(GTK_BOX(out_inv_buttons_vbox),
+			out_inv_remove_button, FALSE, FALSE, 0);
+
+	out_inv_cancel_button = gtk_button_new_with_mnemonic(_("Ca_ncel"));
+	gtk_box_pack_end(GTK_BOX(out_inv_buttons_vbox),
+			out_inv_cancel_button, FALSE, FALSE, 0);
+
+	out_inv_resend_button = gtk_button_new_with_mnemonic(_("Re_send"));
+	gtk_box_pack_end(GTK_BOX(out_inv_buttons_vbox),
+			out_inv_resend_button, FALSE, FALSE, 0);
+
+
 	/*******************************
 	 * Signal Callbacks for Buttons
 	 *******************************/
@@ -603,12 +699,13 @@ init_invitations_window()
 		G_CALLBACK(in_inv_accept_button_cb), in_inv_tree);
 	g_signal_connect(G_OBJECT(in_inv_reject_button), "clicked",
 		G_CALLBACK(in_inv_reject_button_cb), in_inv_tree);
-/*
+
 	g_signal_connect(G_OBJECT(out_inv_resend_button), "clicked",
-		G_CALLBACK(out_inv_resend_button_cb), NULL);
+		G_CALLBACK(out_inv_resend_button_cb), in_inv_tree);
 	g_signal_connect(G_OBJECT(out_inv_cancel_button), "clicked",
-		G_CALLBACK(out_inv_resend_cancel_cb), NULL);
-*/
+		G_CALLBACK(out_inv_cancel_button_cb), in_inv_tree);
+	g_signal_connect(G_OBJECT(out_inv_remove_button), "clicked",
+		G_CALLBACK(out_inv_remove_button_cb), in_inv_tree);
 }
 
 /**
