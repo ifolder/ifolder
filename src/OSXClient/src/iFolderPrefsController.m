@@ -203,8 +203,8 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 	[item setToolTip:@"Synchronization"]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(syncPreferences:)];
-	[item setImage:[NSImage imageNamed:@"prefs-sync"]];
-    [toolbarItemDict setObject:item forKey:@"Synchronization32"]; // add to toolbar list
+	[item setImage:[NSImage imageNamed:@"prefs-sync32"]];
+    [toolbarItemDict setObject:item forKey:@"Synchronization"]; // add to toolbar list
 	[toolbarItemArray addObject:@"Synchronization"];
 	[item release];
 	
