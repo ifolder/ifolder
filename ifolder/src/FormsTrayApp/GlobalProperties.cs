@@ -72,9 +72,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.ListView iFolderView;
 		private System.Windows.Forms.ColumnHeader columnHeader1;
-		private System.Windows.Forms.GroupBox groupBox4;
-		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.ListBox log;
 		private System.Windows.Forms.Button saveLog;
@@ -82,8 +79,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.ContextMenu contextMenu1;
 		private System.Windows.Forms.MenuItem menuOpen;
 		private System.Windows.Forms.MenuItem menuCreate;
-		private System.Windows.Forms.Label objectCount;
-		private System.Windows.Forms.Label byteCount;
 		private System.Windows.Forms.MenuItem menuShare;
 		private System.Windows.Forms.MenuItem menuRevert;
 		private System.Windows.Forms.MenuItem menuProperties;
@@ -146,6 +141,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuHelp;
 		private System.Windows.Forms.MenuItem menuHelpHelp;
 		private System.Windows.Forms.MenuItem menuHelpAbout;
+		private System.Windows.Forms.Label userName;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -227,11 +223,6 @@ namespace Novell.FormsTrayApp
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.create = new System.Windows.Forms.Button();
-			this.groupBox4 = new System.Windows.Forms.GroupBox();
-			this.objectCount = new System.Windows.Forms.Label();
-			this.byteCount = new System.Windows.Forms.Label();
-			this.label5 = new System.Windows.Forms.Label();
-			this.label4 = new System.Windows.Forms.Label();
 			this.iFolderView = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
@@ -270,6 +261,7 @@ namespace Novell.FormsTrayApp
 			this.log = new System.Windows.Forms.ListBox();
 			this.label6 = new System.Windows.Forms.Label();
 			this.tabPage5 = new System.Windows.Forms.TabPage();
+			this.userName = new System.Windows.Forms.Label();
 			this.label10 = new System.Windows.Forms.Label();
 			this.groupBox6 = new System.Windows.Forms.GroupBox();
 			this.label18 = new System.Windows.Forms.Label();
@@ -298,10 +290,10 @@ namespace Novell.FormsTrayApp
 			this.menuActionSeparator2 = new System.Windows.Forms.MenuItem();
 			this.menuActionDelete = new System.Windows.Forms.MenuItem();
 			this.menuActionOpen = new System.Windows.Forms.MenuItem();
-			this.menuActionRevert = new System.Windows.Forms.MenuItem();
-			this.menuActionResolve = new System.Windows.Forms.MenuItem();
 			this.menuActionShare = new System.Windows.Forms.MenuItem();
+			this.menuActionResolve = new System.Windows.Forms.MenuItem();
 			this.menuActionSync = new System.Windows.Forms.MenuItem();
+			this.menuActionRevert = new System.Windows.Forms.MenuItem();
 			this.menuActionProperties = new System.Windows.Forms.MenuItem();
 			this.menuItem4 = new System.Windows.Forms.MenuItem();
 			this.menuExit = new System.Windows.Forms.MenuItem();
@@ -313,7 +305,6 @@ namespace Novell.FormsTrayApp
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
-			this.groupBox4.SuspendLayout();
 			this.tabPage2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
@@ -394,8 +385,8 @@ namespace Novell.FormsTrayApp
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tabPage1);
-			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Controls.Add(this.tabPage2);
+			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Controls.Add(this.tabPage5);
 			this.tabControl1.Location = new System.Drawing.Point(8, 72);
 			this.tabControl1.Name = "tabControl1";
@@ -406,7 +397,6 @@ namespace Novell.FormsTrayApp
 			// tabPage1
 			// 
 			this.tabPage1.Controls.Add(this.create);
-			this.tabPage1.Controls.Add(this.groupBox4);
 			this.tabPage1.Controls.Add(this.iFolderView);
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
@@ -417,57 +407,11 @@ namespace Novell.FormsTrayApp
 			// create
 			// 
 			this.create.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.create.Location = new System.Drawing.Point(341, 272);
+			this.create.Location = new System.Drawing.Point(341, 360);
 			this.create.Name = "create";
 			this.create.TabIndex = 1;
-			this.create.Text = "Create...";
+			this.create.Text = "Create";
 			this.create.Click += new System.EventHandler(this.menuCreate_Click);
-			// 
-			// groupBox4
-			// 
-			this.groupBox4.Controls.Add(this.objectCount);
-			this.groupBox4.Controls.Add(this.byteCount);
-			this.groupBox4.Controls.Add(this.label5);
-			this.groupBox4.Controls.Add(this.label4);
-			this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.groupBox4.Location = new System.Drawing.Point(8, 304);
-			this.groupBox4.Name = "groupBox4";
-			this.groupBox4.Size = new System.Drawing.Size(408, 72);
-			this.groupBox4.TabIndex = 2;
-			this.groupBox4.TabStop = false;
-			this.groupBox4.Text = "Synchronization";
-			// 
-			// objectCount
-			// 
-			this.objectCount.Location = new System.Drawing.Point(296, 48);
-			this.objectCount.Name = "objectCount";
-			this.objectCount.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.objectCount.Size = new System.Drawing.Size(100, 16);
-			this.objectCount.TabIndex = 3;
-			// 
-			// byteCount
-			// 
-			this.byteCount.Location = new System.Drawing.Point(296, 24);
-			this.byteCount.Name = "byteCount";
-			this.byteCount.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.byteCount.Size = new System.Drawing.Size(100, 16);
-			this.byteCount.TabIndex = 1;
-			// 
-			// label5
-			// 
-			this.label5.Location = new System.Drawing.Point(16, 48);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(272, 16);
-			this.label5.TabIndex = 2;
-			this.label5.Text = "Files/folders to synchronize:";
-			// 
-			// label4
-			// 
-			this.label4.Location = new System.Drawing.Point(16, 24);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(272, 16);
-			this.label4.TabIndex = 0;
-			this.label4.Text = "Amount to upload:";
 			// 
 			// iFolderView
 			// 
@@ -481,11 +425,10 @@ namespace Novell.FormsTrayApp
 			this.iFolderView.Location = new System.Drawing.Point(8, 16);
 			this.iFolderView.MultiSelect = false;
 			this.iFolderView.Name = "iFolderView";
-			this.iFolderView.Size = new System.Drawing.Size(408, 248);
+			this.iFolderView.Size = new System.Drawing.Size(408, 336);
 			this.iFolderView.TabIndex = 0;
 			this.iFolderView.View = System.Windows.Forms.View.Details;
 			this.iFolderView.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
-			this.iFolderView.SelectedIndexChanged += new System.EventHandler(this.iFolderView_SelectedIndexChanged);
 			// 
 			// columnHeader1
 			// 
@@ -802,6 +745,7 @@ namespace Novell.FormsTrayApp
 			// 
 			// tabPage5
 			// 
+			this.tabPage5.Controls.Add(this.userName);
 			this.tabPage5.Controls.Add(this.label10);
 			this.tabPage5.Controls.Add(this.groupBox6);
 			this.tabPage5.Controls.Add(this.enterpriseDescription);
@@ -813,6 +757,13 @@ namespace Novell.FormsTrayApp
 			this.tabPage5.Size = new System.Drawing.Size(426, 390);
 			this.tabPage5.TabIndex = 3;
 			this.tabPage5.Text = "Server";
+			// 
+			// userName
+			// 
+			this.userName.Location = new System.Drawing.Point(144, 24);
+			this.userName.Name = "userName";
+			this.userName.Size = new System.Drawing.Size(272, 16);
+			this.userName.TabIndex = 6;
 			// 
 			// label10
 			// 
@@ -1051,12 +1002,12 @@ namespace Novell.FormsTrayApp
 			this.menuActionOpen.Text = "Open";
 			this.menuActionOpen.Click += new System.EventHandler(this.menuOpen_Click);
 			// 
-			// menuActionRevert
+			// menuActionShare
 			// 
-			this.menuActionRevert.Enabled = false;
-			this.menuActionRevert.Index = 10;
-			this.menuActionRevert.Text = "Revert to a normal folder";
-			this.menuActionRevert.Click += new System.EventHandler(this.menuRevert_Click);
+			this.menuActionShare.Enabled = false;
+			this.menuActionShare.Index = 7;
+			this.menuActionShare.Text = "Share with...";
+			this.menuActionShare.Click += new System.EventHandler(this.menuShare_Click);
 			// 
 			// menuActionResolve
 			// 
@@ -1065,19 +1016,19 @@ namespace Novell.FormsTrayApp
 			this.menuActionResolve.Visible = false;
 			this.menuActionResolve.Click += new System.EventHandler(this.menuResolve_Click);
 			// 
-			// menuActionShare
-			// 
-			this.menuActionShare.Enabled = false;
-			this.menuActionShare.Index = 7;
-			this.menuActionShare.Text = "Share with...";
-			this.menuActionShare.Click += new System.EventHandler(this.menuShare_Click);
-			// 
 			// menuActionSync
 			// 
 			this.menuActionSync.Enabled = false;
 			this.menuActionSync.Index = 9;
 			this.menuActionSync.Text = "Sync now";
 			this.menuActionSync.Click += new System.EventHandler(this.menuSyncNow_Click);
+			// 
+			// menuActionRevert
+			// 
+			this.menuActionRevert.Enabled = false;
+			this.menuActionRevert.Index = 10;
+			this.menuActionRevert.Text = "Revert to a normal folder";
+			this.menuActionRevert.Click += new System.EventHandler(this.menuRevert_Click);
 			// 
 			// menuActionProperties
 			// 
@@ -1150,7 +1101,6 @@ namespace Novell.FormsTrayApp
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).EndInit();
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
-			this.groupBox4.ResumeLayout(false);
 			this.tabPage2.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
@@ -1364,9 +1314,12 @@ namespace Novell.FormsTrayApp
 				if (ifSettings.HaveEnterprise)
 				{
 					ShowEnterpriseTab = true;
+					iFolderUser ifolderUser = ifWebService.GetiFolderUser(ifSettings.CurrentUserID);
+					userName.Text = ifolderUser.Name;
 					enterpriseName.Text = ifSettings.EnterpriseName;
 					enterpriseDescription.Text = ifSettings.EnterpriseDescription;
 
+					// Get the disk space.
 					DiskSpace diskSpace = ifWebService.GetUserDiskSpace(ifSettings.CurrentUserID);
 					if (diskSpace.Limit != 0)
 					{
@@ -1376,6 +1329,7 @@ namespace Novell.FormsTrayApp
 						usedSpace.Text = used.ToString();
 						freeSpace.Text = ((double)Math.Round(diskSpace.AvailableSpace/megaByte, 2)).ToString();
 
+						// Set up the gauge chart.
 						gaugeChart1.MaxValue = diskSpace.Limit / megaByte;
 						gaugeChart1.Used = used;
 						gaugeChart1.BarColor = SystemColors.ActiveCaption;
@@ -1386,6 +1340,7 @@ namespace Novell.FormsTrayApp
 						gaugeChart1.Used = 0;
 					}
 
+					// Cause the gauge chart to be redrawn.
 					gaugeChart1.Invalidate(true);
 				}
 
@@ -1501,39 +1456,6 @@ namespace Novell.FormsTrayApp
 		private void iFolderView_DoubleClick(object sender, System.EventArgs e)
 		{
 			menuOpen_Click(sender, e);
-		}
-
-		private void iFolderView_SelectedIndexChanged(object sender, System.EventArgs e)
-		{
-			if (iFolderView.SelectedItems.Count == 1)
-			{
-				Cursor.Current = Cursors.WaitCursor;
-
-				ListViewItem lvi = iFolderView.SelectedItems[0];
-				try
-				{
-					// Get the sync node and byte counts.
-					iFolder ifolder = (iFolder)lvi.Tag;
-
-					SyncSize syncSize = ifWebService.CalculateSyncSize(ifolder.ID);
-					objectCount.Text = syncSize.SyncNodeCount.ToString();
-					byteCount.Text = syncSize.SyncByteCount.ToString();
-				}
-				catch (WebException ex)
-				{
-					// TODO:
-				}
-				catch (Exception ex)
-				{
-					// TODO:
-				}
-
-				Cursor.Current = Cursors.Default;
-			}
-			else
-			{
-				objectCount.Text = byteCount.Text = "";
-			}
 		}
 
 		private void contextMenu1_Popup(object sender, System.EventArgs e)
