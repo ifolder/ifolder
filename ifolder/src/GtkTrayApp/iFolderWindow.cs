@@ -23,6 +23,7 @@
 
 
 using System;
+using System.IO;
 using System.Collections;
 using Gtk;
 using Simias.Client.Event;
@@ -124,6 +125,8 @@ namespace Novell.iFolder
 
 		private TreeView			LogTreeView;
 		private ListStore			LogTreeStore;
+		private Button				SaveButton;
+		private Button				ClearButton;
 
 		public iFolderSettings GlobalSettings
 		{
@@ -1037,12 +1040,15 @@ namespace Novell.iFolder
 			rightBox.Spacing = 10;
 			buttonBox.PackStart(rightBox, false, false, 0);
 
-			Button SaveButton = new Button(Gtk.Stock.Save);
+			SaveButton = new Button(Gtk.Stock.Save);
 			rightBox.PackStart(SaveButton);
-//			AddButton.Clicked += new EventHandler(OnAddUser);
+			SaveButton.Clicked += new EventHandler(OnSaveLog);
+			SaveButton.Sensitive = false;
 
-			Button ClearButton = new Button(Gtk.Stock.Clear);
+			ClearButton = new Button(Gtk.Stock.Clear);
 			rightBox.PackStart(ClearButton);
+			ClearButton.Clicked += new EventHandler(OnClearLog);
+			ClearButton.Sensitive = false;
 
 			return vbox;
 		}
@@ -1067,6 +1073,9 @@ namespace Novell.iFolder
 			TreePath path = LogTreeStore.GetPath(iter);
 
 			LogTreeView.ScrollToCell(path, null, true, 1, 1);	
+
+			SaveButton.Sensitive = true;
+			ClearButton.Sensitive = true;
 		}
 
 
@@ -1641,10 +1650,10 @@ namespace Novell.iFolder
 				rc = cfcd.Run();
 				cfcd.Hide();
 
-				string selectedFolder = cfcd.Selections[0];
-
 				if(rc == -5)
 				{
+					string selectedFolder = cfcd.Selections[0];
+
 					if(ShowBadiFolderPath(selectedFolder, false))
 						continue;
 
@@ -2311,7 +2320,95 @@ namespace Novell.iFolder
 		}
 
 
+		public void OnSaveLog(object o, EventArgs args)
+		{
+			int rc = 0;
+			bool saveFile = false;
+			string filename = null;
 
+			// Switched out to use the compatible file selector
+			CompatFileChooserDialog cfcd = new CompatFileChooserDialog(
+				Util.GS("Save iFolder Log..."), this, 
+				CompatFileChooserDialog.Action.Save);
+
+			rc = cfcd.Run();
+			cfcd.Hide();
+
+			if(rc == -5)
+			{
+				filename = cfcd.Selections[0];
+
+				if(File.Exists(filename))
+				{
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+						this,
+						iFolderMsgDialog.DialogType.Question,
+						iFolderMsgDialog.ButtonSet.YesNo,
+						Util.GS("iFolder Save Log"),
+						Util.GS("Overwrite existing file?"),
+						Util.GS("The file you have selected exists.  Selecting yes will overwrite the contents of this file.  Do you want to overwrite this file?"));
+					rc = dialog.Run();
+					dialog.Hide();
+					dialog.Destroy();
+					if(rc == -8)
+					{
+						saveFile = true;
+					}
+				}
+				else
+					saveFile = true;
+			}
+
+			if(saveFile)
+			{
+				FileStream fs = File.Create(filename);
+				if(fs != null)
+				{
+					TreeIter iter;
+					StreamWriter w = new StreamWriter(fs);
+
+					if(LogTreeStore.GetIterFirst(out iter))
+					{
+						string logEntry = 
+							(string)LogTreeStore.GetValue(iter, 0);
+
+						w.WriteLine(logEntry);
+
+						while(LogTreeStore.IterNext(ref iter))
+						{
+							logEntry = 
+								(string)LogTreeStore.GetValue(iter, 0);
+
+							w.WriteLine(logEntry);
+						}
+					}
+					
+					w.Close();
+				}
+			}
+		}
+
+
+
+		public void OnClearLog(object o, EventArgs args)
+		{
+			iFolderMsgDialog dialog = new iFolderMsgDialog(
+				this,
+				iFolderMsgDialog.DialogType.Question,
+				iFolderMsgDialog.ButtonSet.YesNo,
+				Util.GS("Clear iFolder Log"),
+				Util.GS("Clear iFolder Log?"),
+				Util.GS("This will clear all log entries.  Are you sure you want to clear the iFolder Log?"));
+			int rc = dialog.Run();
+			dialog.Hide();
+			dialog.Destroy();
+			if(rc == -8)
+			{
+				LogTreeStore.Clear();
+				SaveButton.Sensitive = false;
+				ClearButton.Sensitive = false;
+			}
+		}
 
 	}
 }
