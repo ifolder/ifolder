@@ -75,11 +75,6 @@
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
                 />
                 <Reference
-                    Name = "SimiasClient"
-                    AssemblyName = "SimiasClient"
-                    HintPath = "..\SimiasClient\SimiasClient.dll"
-                />
-                <Reference
                     Name = "mDnsResponderApi"
                     AssemblyName = "mDnsResponderApi"
                     HintPath = "..\..\external\mDnsResponder\net\bin\mDnsResponderApi.dll"
@@ -92,14 +87,24 @@
                 <Reference
                     Name = "Simias"
                     AssemblyName = "Simias"
-                    HintPath = "..\..\stage\web\bin\Simias.dll"
+                    HintPath = "..\Simias.dll\Simias.dll"
                 />
             </References>
         </Build>
         <Files>
             <Include>
                 <File
+                    RelPath = "Channel.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Domain.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Location.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -26,7 +26,7 @@ using System.Collections;
 using System.Xml;
 
 using Simias;
-using Simias.Client;
+//using Simias.Client;
 using Simias.Storage;
 
 namespace Simias.mDns

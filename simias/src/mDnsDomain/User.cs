@@ -30,7 +30,7 @@ using System.Runtime.Remoting.Channels.Tcp;
 using System.Xml;
 
 using Simias;
-using Simias.Client;
+//using Simias.Client;
 using Simias.Storage;
 
 using Mono.P2p.mDnsResponderApi;
@@ -85,58 +85,34 @@ namespace Simias.mDns
 		#region Constructors
 
 		/// <summary>
-		/// Constructor for newing up an mDns user object.
+		/// Static constructor for mDns
 		/// </summary>
-		internal User()
+		static User()
 		{
-			Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain( true );
-			mDnsUserName = Environment.UserName + "@" + mdnsDomain.Host;
-
 			//
 			// Setup the remoting channel to the mDnsResponder
 			// this isn't thread safe but I know it won't be
 			// re-entered
 			//
 
-			if ( rr == null )
-			{
-				try
-				{
-					Hashtable propsTcp = new Hashtable();
-					propsTcp[ "port" ] = 0;
-					propsTcp[ "rejectRemoteRequests" ] = true;
+			IRemoteFactory factory = 
+				(IRemoteFactory) Activator.GetObject(
+					typeof(IRemoteFactory),
+					"tcp://localhost:8091/mDnsRemoteFactory.tcp");
+				
+			Simias.mDns.User.rr = factory.GetRegistrationInstance();
+			Simias.mDns.User.query = factory.GetQueryInstance();
 
-					BinaryServerFormatterSinkProvider
-						serverBinaryProvider = new BinaryServerFormatterSinkProvider();
+			mDnsChannelUp = true;
+		}
 
-					BinaryClientFormatterSinkProvider
-						clientBinaryProvider = new BinaryClientFormatterSinkProvider();
-#if !MONO
-					serverBinaryProvider.TypeFilterLevel =
-						System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
-#endif
-					TcpChannel tcpChnl = 
-						new TcpChannel( propsTcp, clientBinaryProvider, serverBinaryProvider );
-					ChannelServices.RegisterChannel( tcpChnl );
-
-					IRemoteFactory factory = 
-						(IRemoteFactory) Activator.GetObject(
-						typeof(IRemoteFactory),
-						"tcp://localhost:8091/mDnsRemoteFactory.tcp");
-					
-					Simias.mDns.User.rr = factory.GetRegistrationInstance();
-					Simias.mDns.User.query = factory.GetQueryInstance();
-
-					mDnsChannelUp = true;
-				}
-				catch( Exception e )
-				{
-					log.Error( e.Message );
-					log.Error( e.StackTrace );
-
-					throw e;
-				}
-			}
+		/// <summary>
+		/// Constructor for newing up an mDns user object.
+		/// </summary>
+		internal User()
+		{
+			Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain( true );
+			mDnsUserName = Environment.UserName + "@" + mdnsDomain.Host;
 		}
 		#endregion
 
@@ -168,11 +144,11 @@ namespace Simias.mDns
 					// Register member as a service location
 					status = 
 						rr.RegisterServiceLocation(
-						mdnsDomain.Host,
-						this.mDnsUserName,
-						(int) 8086,  // FIXME:: need to call Simias.config to get the port
-						0, 
-						0 );
+							mdnsDomain.Host,
+							this.mDnsUserName,
+							(int) 8086,  // FIXME:: need to call Simias.config to get the port
+							0, 
+							0 );
 					if ( status == 0 )
 					{
 						status = rr.RegisterPointer( memberTag, this.mDnsUserName );

@@ -57,6 +57,7 @@ namespace Simias.mDns
 
 		private	Store store = null;
 		private Simias.mDns.User mDnsUser = null;
+		private Simias.Location.mDnsProvider mDnsProvider = null;
 
 		/// <summary>
 		/// Configuration object for the Collection Store.
@@ -89,6 +90,13 @@ namespace Simias.mDns
 			string myAddress = MyDns.GetHostName();
 			store = Store.GetStore();
 
+			if ( Channel.RegisterChannel() == false )
+			{
+				log.Debug( "Failed to register the remoting channel" );
+				log.Debug(  "Rendezvous functionality is disabled!");
+				return;
+			}
+
 			//
 			// Make sure the mDnsDomain exists
 			//
@@ -100,6 +108,10 @@ namespace Simias.mDns
 				this.mDnsUser = new Simias.mDns.User();
 				this.mDnsUser.BroadcastUp();
 				Simias.mDns.Sync.StartSyncThread();
+
+				// Register with the location service.
+				this.mDnsProvider = new Simias.Location.mDnsProvider();
+				Simias.Location.Locate.RegisterProvider( this.mDnsProvider );
 			}
 			catch(Exception e)
 			{
@@ -138,12 +150,18 @@ namespace Simias.mDns
 		{
 			log.Debug("Stop called");
 
+			if ( this.mDnsProvider != null )
+			{
+				Simias.Location.Locate.Unregister( this.mDnsProvider );
+			}
+
 			if ( this.mDnsUser != null )
 			{
 				this.mDnsUser.BroadcastDown();
 			}
 
 			Simias.mDns.Sync.StopSyncThread();
+			Channel.UnregisterChannel();
 		}
 
 		#endregion
