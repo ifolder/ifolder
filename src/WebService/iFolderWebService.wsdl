@@ -395,6 +395,16 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="DeclineiFolderInvitation">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="DeclineiFolderInvitationResponse">
+        <xs:complexType />
+      </xs:element>
       <xs:element name="GetUserDiskSpace">
         <xs:complexType>
           <xs:sequence>
@@ -770,6 +780,12 @@
   <message name="AcceptiFolderInvitationSoapOut">
     <part name="parameters" element="s0:AcceptiFolderInvitationResponse" />
   </message>
+  <message name="DeclineiFolderInvitationSoapIn">
+    <part name="parameters" element="s0:DeclineiFolderInvitation" />
+  </message>
+  <message name="DeclineiFolderInvitationSoapOut">
+    <part name="parameters" element="s0:DeclineiFolderInvitationResponse" />
+  </message>
   <message name="GetUserDiskSpaceSoapIn">
     <part name="parameters" element="s0:GetUserDiskSpace" />
   </message>
@@ -1006,6 +1022,10 @@
   <message name="AcceptiFolderInvitationHttpGetOut">
     <part name="Body" element="s0:iFolder" />
   </message>
+  <message name="DeclineiFolderInvitationHttpGetIn">
+    <part name="iFolderID" type="s:string" />
+  </message>
+  <message name="DeclineiFolderInvitationHttpGetOut" />
   <message name="GetUserDiskSpaceHttpGetIn">
     <part name="UserID" type="s:string" />
   </message>
@@ -1230,6 +1250,10 @@
   <message name="AcceptiFolderInvitationHttpPostOut">
     <part name="Body" element="s0:iFolder" />
   </message>
+  <message name="DeclineiFolderInvitationHttpPostIn">
+    <part name="iFolderID" type="s:string" />
+  </message>
+  <message name="DeclineiFolderInvitationHttpPostOut" />
   <message name="GetUserDiskSpaceHttpPostIn">
     <part name="UserID" type="s:string" />
   </message>
@@ -1439,6 +1463,11 @@
       <output message="s0:AcceptiFolderInvitationSoapOut" />
       <documentation>Accept an invitation fo an iFolder.  The iFolder ID represents a Subscription object</documentation>
     </operation>
+    <operation name="DeclineiFolderInvitation">
+      <input message="s0:DeclineiFolderInvitationSoapIn" />
+      <output message="s0:DeclineiFolderInvitationSoapOut" />
+      <documentation>Decline an invitation to an iFolder.  The iFolder ID represents a Subscription object</documentation>
+    </operation>
     <operation name="GetUserDiskSpace">
       <input message="s0:GetUserDiskSpaceSoapIn" />
       <output message="s0:GetUserDiskSpaceSoapOut" />
@@ -1646,6 +1675,11 @@
       <output message="s0:AcceptiFolderInvitationHttpGetOut" />
       <documentation>Accept an invitation fo an iFolder.  The iFolder ID represents a Subscription object</documentation>
     </operation>
+    <operation name="DeclineiFolderInvitation">
+      <input message="s0:DeclineiFolderInvitationHttpGetIn" />
+      <output message="s0:DeclineiFolderInvitationHttpGetOut" />
+      <documentation>Decline an invitation to an iFolder.  The iFolder ID represents a Subscription object</documentation>
+    </operation>
     <operation name="GetUserDiskSpace">
       <input message="s0:GetUserDiskSpaceHttpGetIn" />
       <output message="s0:GetUserDiskSpaceHttpGetOut" />
@@ -1852,6 +1886,11 @@
       <input message="s0:AcceptiFolderInvitationHttpPostIn" />
       <output message="s0:AcceptiFolderInvitationHttpPostOut" />
       <documentation>Accept an invitation fo an iFolder.  The iFolder ID represents a Subscription object</documentation>
+    </operation>
+    <operation name="DeclineiFolderInvitation">
+      <input message="s0:DeclineiFolderInvitationHttpPostIn" />
+      <output message="s0:DeclineiFolderInvitationHttpPostOut" />
+      <documentation>Decline an invitation to an iFolder.  The iFolder ID represents a Subscription object</documentation>
     </operation>
     <operation name="GetUserDiskSpace">
       <input message="s0:GetUserDiskSpaceHttpPostIn" />
@@ -2158,6 +2197,15 @@
     </operation>
     <operation name="AcceptiFolderInvitation">
       <soap:operation soapAction="http://novell.com/ifolder/web/AcceptiFolderInvitation" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="DeclineiFolderInvitation">
+      <soap:operation soapAction="http://novell.com/ifolder/web/DeclineiFolderInvitation" style="document" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -2523,6 +2571,15 @@
         <mime:mimeXml part="Body" />
       </output>
     </operation>
+    <operation name="DeclineiFolderInvitation">
+      <http:operation location="/DeclineiFolderInvitation" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
     <operation name="GetUserDiskSpace">
       <http:operation location="/GetUserDiskSpace" />
       <input>
@@ -2856,6 +2913,15 @@
     </operation>
     <operation name="AcceptiFolderInvitation">
       <http:operation location="/AcceptiFolderInvitation" />
+      <input>
+        <mime:content part="" type="application/x-www-form-urlencoded" />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+    <operation name="DeclineiFolderInvitation">
+      <http:operation location="/DeclineiFolderInvitation" />
       <input>
         <mime:content part="" type="application/x-www-form-urlencoded" />
       </input>

@@ -76,7 +76,7 @@ namespace Novell.iFolder.Web
 				this.State = "AccessRequest";
 			}
 			else if(sub.SubscriptionState == 
-							Simias.POBox.SubscriptionStates.Acknowledged)
+							Simias.POBox.SubscriptionStates.Responded)
 			{
 				if(sub.SubscriptionDisposition ==
 								Simias.POBox.SubscriptionDispositions.Declined)
