@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-UILIB_CSFILES = $(srcdir)/iFolderConflictDialog.cs $(srcdir)/iFolderAcceptDialog.cs $(srcdir)/iFolderUserSelector.cs $(srcdir)/iFolderLoginDialog.cs $(srcdir)/iFolderPropSettingsPage.cs $(srcdir)/iFolderPropSharingPage.cs $(srcdir)/iFolderPropertiesDialog.cs $(srcdir)/iFolderCrashDialog.cs $(srcdir)/iFolderMsgDialog.cs $(srcdir)/iFolderWindow.cs $(srcdir)/iFolderCreationDialog.cs $(srcdir)/iFolderExceptionDialog.cs $(srcdir)/iFolderAccessDialog.cs $(srcdir)/iFolderTreeView.cs
+UILIB_CSFILES = $(srcdir)/iFolderConflictDialog.cs $(srcdir)/iFolderAcceptDialog.cs $(srcdir)/iFolderUserSelector.cs $(srcdir)/iFolderLoginDialog.cs $(srcdir)/iFolderPropSettingsPage.cs $(srcdir)/iFolderPropSharingPage.cs $(srcdir)/iFolderPropertiesDialog.cs $(srcdir)/iFolderCrashDialog.cs $(srcdir)/iFolderMsgDialog.cs $(srcdir)/iFolderWindow.cs $(srcdir)/iFolderCreationDialog.cs $(srcdir)/iFolderExceptionDialog.cs $(srcdir)/iFolderAccessDialog.cs $(srcdir)/iFolderTreeView.cs $(srcdir)/NotifyWindow.cs
 UILIB_CSFILES_CSC := $(subst /,$(SEP),$(UILIB_CSFILES))
 UILIB_INCLUDES = 
 UILIB_RESOURCES =
@@ -10,7 +10,7 @@ UILIB_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll
 UILIB_LIBPATH = $(srcdir)/../iFolder
 
 
-TrayAppGtk_CSFILES = $(srcdir)/TrayApp.cs
+TrayAppGtk_CSFILES = $(srcdir)/iFolderApplication.cs
 TrayAppGtk_CSFILES_CSC := $(subst /,$(SEP),$(TrayAppGtk_CSFILES))
 TrayAppGtk_INCLUDES = 
 TrayAppGtk_RESOURCES =
@@ -23,7 +23,7 @@ INSTALL_BIN_FILES = $(srcdir)/ifolder
 
 INSTALL_LIB_FILES = $(srcdir)/setup-autostart
 
-IMAGE_FILES = inviteduser.png currentuser.png ifolderuser.png serverifolder.png ifolder48.png ifolder.png ifolder-banner-scaled.png ifolder-banner.png ifolder-collision.png ifolder-shutdown.png ifolder-startup.png ifolder.gif ifolder-crash.png ifolder-crash.gif
+IMAGE_FILES = notify.xpm notify-active.xpm inviteduser.png currentuser.png ifolderuser.png serverifolder.png ifolder48.png ifolder.png ifolder-banner-scaled.png ifolder-banner.png ifolder-collision.png ifolder-shutdown.png ifolder-startup.png ifolder.gif ifolder-crash.png ifolder-crash.gif
 
 MIME_FILES = $(srcdir)/ifolder.mime $(srcdir)/ifolder.keys
 APPLICATIONS_FILES = $(srcdir)/ifolder.applications
