@@ -82,6 +82,7 @@ public:
     TCHAR m_szFileUserClickedOn[MAX_PATH];
 	static TCHAR m_szShellPath[MAX_PATH];
 	iFolderClass m_iFolderClass;
+	HBITMAP m_hBmpMenu;
 
 public:
 	CiFolderShell(iFolderClass iFClass);
@@ -106,6 +107,8 @@ public:
 											UINT FAR *reserved,
 											LPSTR pszName,
 											UINT cchMax);
+
+	HBITMAP					GetBitmap();
 	
 	//IShellExtInit methods
 	STDMETHODIMP			Initialize(LPCITEMIDLIST pidlFolder,

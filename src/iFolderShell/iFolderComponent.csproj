@@ -159,6 +159,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "iFolderInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "MyMessageBox.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
@@ -176,6 +181,21 @@
                 <File
                     RelPath = "NewiFolder.resx"
                     DependentUpon = "NewiFolder.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "ShareListMember.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "UserProperties.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "UserProperties.resx"
+                    DependentUpon = "UserProperties.cs"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

@@ -54,6 +54,9 @@ namespace Novell.iFolder.iFolderCom
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
+		/// <summary>
+		/// Constructs a NewiFolder object.
+		/// </summary>
 		public NewiFolder()
 		{
 			//
@@ -186,6 +189,9 @@ namespace Novell.iFolder.iFolderCom
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// Gets/sets the name of the folder.
+		/// </summary>
 		public string FolderName
 		{
 			get
@@ -198,6 +204,9 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the path where the assembly was loaded from.
+		/// </summary>
 		public string LoadPath
 		{
 			get
@@ -218,7 +227,7 @@ namespace Novell.iFolder.iFolderCom
 			// Invoke the iFolder properties dialog.
 //			Win32Window.ShObjectProperties(IntPtr.Zero, SHOP_FILEPATH, FolderName, "iFolder");
 			iFolderComponent ifCom = new iFolderComponent();
-			ifCom.InvokeAdvancedDlg(LoadPath, FolderName, "share", false);
+			ifCom.InvokeAdvancedDlg(LoadPath, FolderName, 1, false);
 		}
 
 		private void iFolderHelp_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)

@@ -56,6 +56,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private Hashtable ht;
 		private System.Windows.Forms.ComboBox domains;
 		private System.Windows.Forms.Button generateCsiFile;
+		private System.Windows.Forms.CheckBox checkBox1;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -127,6 +128,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.decline = new System.Windows.Forms.Button();
 			this.remove = new System.Windows.Forms.Button();
 			this.generateCsiFile = new System.Windows.Forms.Button();
+			this.checkBox1 = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// messages
@@ -156,7 +158,7 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			// domains
 			// 
-			this.domains.Location = new System.Drawing.Point(72, 32);
+			this.domains.Location = new System.Drawing.Point(72, 8);
 			this.domains.Name = "domains";
 			this.domains.Size = new System.Drawing.Size(192, 21);
 			this.domains.TabIndex = 2;
@@ -164,7 +166,7 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(16, 32);
+			this.label1.Location = new System.Drawing.Point(16, 8);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(100, 16);
 			this.label1.TabIndex = 3;
@@ -214,10 +216,20 @@ namespace Novell.iFolder.FormsTrayApp
 			this.generateCsiFile.Text = "Generate CSI File";
 			this.generateCsiFile.Click += new System.EventHandler(this.generateCsiFile_Click);
 			// 
+			// checkBox1
+			// 
+			this.checkBox1.Enabled = false;
+			this.checkBox1.Location = new System.Drawing.Point(72, 40);
+			this.checkBox1.Name = "checkBox1";
+			this.checkBox1.Size = new System.Drawing.Size(152, 16);
+			this.checkBox1.TabIndex = 8;
+			this.checkBox1.Text = "Set as default domain.";
+			// 
 			// MessageForm
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(456, 430);
+			this.Controls.Add(this.checkBox1);
 			this.Controls.Add(this.generateCsiFile);
 			this.Controls.Add(this.remove);
 			this.Controls.Add(this.decline);
@@ -293,7 +305,7 @@ namespace Novell.iFolder.FormsTrayApp
 			generateCsiFile.Enabled = false;
 
 			// Get the selected domain
-			Domain domain = (Domain)domains.Items[domains.SelectedIndex];
+			Domain domain = (Domain)domains.SelectedItem;
 
 			// Get the POBox for the selected domain.
 			poBox = POBox.GetPOBox(store, domain.ID);

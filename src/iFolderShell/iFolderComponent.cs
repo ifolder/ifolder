@@ -35,21 +35,100 @@ using Simias;
 
 namespace Novell.iFolder.iFolderCom
 {
+	/// <summary>
+	/// Interface used for COM
+	/// </summary>
 	public interface IiFolderComponent
 	{
+		/// <summary>
+		/// Gets/sets the description of the iFolder.
+		/// </summary>
 		String Description{get; set;}
+
+		/// <summary>
+		/// Checks to see if a path can become an iFolder.
+		/// </summary>
+		/// <param name="path">The path that is tested.</param>
+		/// <returns>The method returns <b>true</b> if the specified path can become an ifolder; otherwise, <b>false</b>.</returns>
 		bool CanBeiFolder([MarshalAs(UnmanagedType.LPWStr)] string path);
+
+		/// <summary>
+		/// Checks if the specified path is an iFolder.
+		/// </summary>
+		/// <param name="path">The path to test.</param>
+		/// <param name="hasConflicts">This parameter returns <b>true</b> if the path is an iFolder and the iFolder contains conflicts.</param>
+		/// <returns>This method returns <b>true</b> if the specified path is an iFolder; otherwise <b>false</b>.</returns>
 		bool IsiFolder([MarshalAs(UnmanagedType.LPWStr)] string path, out bool hasConflicts);
 //		bool IsShareable([MarshalAs(UnmanagedType.LPWStr)] string path);
+
+		/// <summary>
+		/// Converts the specified path into an iFolder.
+		/// </summary>
+		/// <param name="path">The path to convert into an iFolder.</param>
+		/// <returns>This method returns <b>true</b> if the specified path is successfully converted into an iFolder; otherwise, <b>false</b>.</returns>
 		bool CreateiFolder([MarshalAs(UnmanagedType.LPWStr)] string path);
+
+		/// <summary>
+		/// Reverts the specified path back to a normal folder.
+		/// </summary>
+		/// <param name="path">The path to revert back to a normal folder.</param>
 		void DeleteiFolder([MarshalAs(UnmanagedType.LPWStr)] string path);
+
+		/// <summary>
+		/// Gets the node representing the specified path.
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
 		bool GetiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path);
+
+		/// <summary>
+		/// Checks to see if the specified path is contained in an iFolder.
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
 		bool IsiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path);
+
+		/// <summary>
+		/// Initializes the properties enumerator.
+		/// </summary>
+		/// <returns>This method returns <b>true</b> if the properties enumerator is successfully initialized; otherwise, <b>false</b>.</returns>
 		bool GetiFolderPropInit();
+
+		/// <summary>
+		/// Walks the properties enumerator.
+		/// </summary>
+		/// <param name="name">This parameter returns the name of the property.</param>
+		/// <param name="val">This parameter returns the value of the property.</param>
+		/// <returns>This method returns <b>true</b> if a property is successfully read; otherwise, <b>false</b>.</returns>
 		bool GetNextiFolderProp(out string name, out string val);
-		void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, [MarshalAs(UnmanagedType.LPWStr)] string tabPage, bool modal);
+
+		/// <summary>
+		/// Displays the Advanced Properties dialog for the specified iFolder.
+		/// </summary>
+		/// <param name="dllPath">The path where the assembly was loaded from.</param>
+		/// <param name="path">The path of the iFolder.</param>
+		/// <param name="tabPage">The index of the tab to display initially.</param>
+		/// <param name="modal">Set to <b>true</b> to display the dialog modal.</param>
+		void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, int tabPage, bool modal);
+
+		/// <summary>
+		/// Display the iFolder confirmation dialog.
+		/// </summary>
+		/// <param name="dllPath">The path where the assembly was loaded from.</param>
+		/// <param name="path">The path of the iFolder.</param>
 		void NewiFolderWizard([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path);
+
+		/// <summary>
+		/// Display the iFolder help.
+		/// </summary>
+		/// <param name="dllPath">The path where this assembly was loaded from.</param>
 		void ShowHelp([MarshalAs(UnmanagedType.LPWStr)] string dllPath);
+
+		/// <summary>
+		/// Check if the specified iFolder path has conflicts.
+		/// </summary>
+		/// <param name="path">The path of the iFolder.</param>
+		/// <returns>This method returns <b>true</b> if the iFolder contains conflicts; otherwise, <b>false</b>.</returns>
 		bool HasConflicts([MarshalAs(UnmanagedType.LPWStr)] string path);
 	}
 
@@ -74,6 +153,9 @@ namespace Novell.iFolder.iFolderCom
 //			manager= iFolderManager.Connect(location);
 //		}
 
+		/// <summary>
+		/// Constructs an iFolderComponent object.
+		/// </summary>
 		public iFolderComponent()
 		{
 			//
@@ -98,6 +180,9 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the description of the iFolder.
+		/// </summary>
 		public String Description
 		{
 			get { return ifoldernode.Description; }
@@ -111,6 +196,11 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
+		/// <summary>
+		/// Checks to see if a path can become an iFolder.
+		/// </summary>
+		/// <param name="path">The path that is tested.</param>
+		/// <returns>The method returns <b>true</b> if the specified path can become an ifolder; otherwise, <b>false</b>.</returns>
 		public bool CanBeiFolder([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
 			try
@@ -129,6 +219,12 @@ namespace Novell.iFolder.iFolderCom
 			return false;
 		}
 
+		/// <summary>
+		/// Checks if the specified path is an iFolder.
+		/// </summary>
+		/// <param name="path">The path to test.</param>
+		/// <param name="hasConflicts">This parameter returns <b>true</b> if the path is an iFolder and the iFolder contains conflicts.</param>
+		/// <returns>This method returns <b>true</b> if the specified path is an iFolder; otherwise <b>false</b>.</returns>
 		public bool IsiFolder([MarshalAs(UnmanagedType.LPWStr)] string path, out bool hasConflicts)
 		{
 			iFolder ifolder = null;
@@ -176,6 +272,11 @@ namespace Novell.iFolder.iFolderCom
 			return false;
 		}*/
 
+		/// <summary>
+		/// Converts the specified path into an iFolder.
+		/// </summary>
+		/// <param name="path">The path to convert into an iFolder.</param>
+		/// <returns>This method returns <b>true</b> if the specified path is successfully converted into an iFolder; otherwise, <b>false</b>.</returns>
 		public bool CreateiFolder([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
 			iFolder ifolder = null;
@@ -195,6 +296,10 @@ namespace Novell.iFolder.iFolderCom
 			return (ifolder != null);
 		}
 
+		/// <summary>
+		/// Reverts the specified path back to a normal folder.
+		/// </summary>
+		/// <param name="path">The path to revert back to a normal folder.</param>
 		public void DeleteiFolder([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
 			try
@@ -211,6 +316,11 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
+		/// <summary>
+		/// Gets the node representing the specified path.
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
 		public bool GetiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
 			System.Diagnostics.Debug.WriteLine("In GetiFolderNode()");
@@ -246,11 +356,20 @@ namespace Novell.iFolder.iFolderCom
 			return false;
 		}
 
+		/// <summary>
+		/// Checks to see if the specified path is contained in an iFolder.
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
 		public bool IsiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
 			return manager.IsPathIniFolder(path);
 		}
 
+		/// <summary>
+		/// Initializes the properties enumerator.
+		/// </summary>
+		/// <returns>This method returns <b>true</b> if the properties enumerator is successfully initialized; otherwise, <b>false</b>.</returns>
 		public bool GetiFolderPropInit()
 		{
 			// Set up the enumerator to get the Properties on the Node.
@@ -259,6 +378,12 @@ namespace Novell.iFolder.iFolderCom
 			return (propEnumerator != null);
 		}
 
+		/// <summary>
+		/// Walks the properties enumerator.
+		/// </summary>
+		/// <param name="name">This parameter returns the name of the property.</param>
+		/// <param name="val">This parameter returns the value of the property.</param>
+		/// <returns>This method returns <b>true</b> if a property is successfully read; otherwise, <b>false</b>.</returns>
 		public bool GetNextiFolderProp(out string name, out string val)
 		{
 			if (propEnumerator.MoveNext())
@@ -278,9 +403,16 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
-		public void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, [MarshalAs(UnmanagedType.LPWStr)] string tabPage, bool modal)
+		/// <summary>
+		/// Displays the Advanced Properties dialog for the specified iFolder.
+		/// </summary>
+		/// <param name="dllPath">The path where the assembly was loaded from.</param>
+		/// <param name="path">The path of the iFolder.</param>
+		/// <param name="tabPage">The index of the tab to display initially.</param>
+		/// <param name="modal">Set to <b>true</b> to display the dialog modal.</param>
+		public void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, int tabPage, bool modal)
 		{
-			string windowName = "Advanced iFolder Properties for " + Path.GetFileName(path);
+			string windowName = "iFolder Properties for " + Path.GetFileName(path);
 
 			// Search for existing window and bring it to foreground ...
 			Win32Window win32Window = Win32Util.Win32Window.FindWindow(null, windowName);
@@ -308,6 +440,11 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
+		/// <summary>
+		/// Display the iFolder confirmation dialog.
+		/// </summary>
+		/// <param name="dllPath">The path where the assembly was loaded from.</param>
+		/// <param name="path">The path of the iFolder.</param>
 		public void NewiFolderWizard([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
 			Configuration config = Configuration.GetConfiguration();
@@ -321,6 +458,10 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
+		/// <summary>
+		/// Display the iFolder help.
+		/// </summary>
+		/// <param name="dllPath">The path where this assembly was loaded from.</param>
 		public void ShowHelp([MarshalAs(UnmanagedType.LPWStr)] string dllPath)
 		{
 			// TODO - need to use locale-specific path
@@ -337,6 +478,11 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
+		/// <summary>
+		/// Check if the specified iFolder path has conflicts.
+		/// </summary>
+		/// <param name="path">The path of the iFolder.</param>
+		/// <returns>This method returns <b>true</b> if the iFolder contains conflicts; otherwise, <b>false</b>.</returns>
 		public bool HasConflicts([MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
 			iFolder ifolder = manager.GetiFolderByPath(path);

@@ -341,6 +341,7 @@ CiFolderShell::CiFolderShell(iFolderClass iFClass)
 
     m_cRef = 0L;
     m_pDataObj = NULL;
+	m_hBmpMenu = NULL;
 //	m_spiFolder= NULL;
 	m_iFolderClass = iFClass;
 
@@ -350,6 +351,12 @@ CiFolderShell::CiFolderShell(iFolderClass iFClass)
 CiFolderShell::~CiFolderShell()
 {
     //OutputDebugString(TEXT("CiFolderShell::~CiFolderShell()\n"));
+
+	if (m_hBmpMenu)
+	{
+		DeleteObject(m_hBmpMenu);
+		m_hBmpMenu = NULL;
+	}
 
     if (m_pDataObj)
         m_pDataObj->Release();
