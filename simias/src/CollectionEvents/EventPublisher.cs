@@ -64,18 +64,22 @@ namespace Simias.Event
 		/// <param name="args"></param>
 		public void RaiseEvent(CollectionEventArgs args)
 		{
-			if (broker == null)
+			try
 			{
-				if (EventBroker.RegisterClientChannel(conf))
+				if (broker == null)
 				{
-					broker = new EventBroker();
+					if (EventBroker.RegisterClientChannel(conf))
+					{
+						broker = new EventBroker();
+						broker.RaiseEvent(args);
+					}
+				}
+				else
+				{
 					broker.RaiseEvent(args);
 				}
 			}
-			else
-			{
-				broker.RaiseEvent(args);
-			}
+			catch{}
 		}
 
 		#endregion

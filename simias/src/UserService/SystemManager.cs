@@ -104,7 +104,7 @@ namespace Simias
 						process.StartInfo.FileName = servicePath;
 						process.StartInfo.Arguments = null;
 					}
-					process.StartInfo.Arguments += configuration.BasePath + " ";
+					process.StartInfo.Arguments += "\"" + configuration.BasePath + "\" ";
 					process.StartInfo.Arguments += arguments;
 					process.Start();
 					processList.Add(process);
