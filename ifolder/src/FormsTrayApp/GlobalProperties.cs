@@ -1697,11 +1697,14 @@ namespace Novell.FormsTrayApp
 					ListViewItem lvi;
 					lock (ht)
 					{
+						// Get the corresponding listview item.
 						lvi = (ListViewItem)ht[eventArgs.Node];
 					}
 
 					if (lvi != null)
 					{
+						// Update the tag data.
+						lvi.Tag = ifolder;
 						updateListViewItem(lvi);
 					}
 				}
