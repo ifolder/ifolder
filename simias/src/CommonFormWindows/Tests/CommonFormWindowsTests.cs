@@ -36,6 +36,8 @@ namespace Simias.Tests
 	[TestFixture]
 	public class CommonFormWindowsTests : Assertion
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(CommonFormWindowsTests));
+
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
@@ -53,23 +55,23 @@ namespace Simias.Tests
 			form.Show();
 			form.Refresh();
 
-			Console.WriteLine("test1");
+			log.Debug("test1");
 			form.Refresh();
 			Thread.Sleep(TimeSpan.FromSeconds(1));
 
-			Console.WriteLine("test2");
+			log.Debug("test2");
 			form.Refresh();
 			Thread.Sleep(TimeSpan.FromSeconds(1));
 
-			Console.WriteLine("test3");
+			log.Debug("test3");
 			form.Refresh();
 			Thread.Sleep(TimeSpan.FromSeconds(1));
 
-			Console.WriteLine("test4");
+			MyTrace.WriteLine("test4");
 			form.Refresh();
 			Thread.Sleep(TimeSpan.FromSeconds(1));
 
-			Console.WriteLine("test5");
+			MyTrace.WriteLine("test5");
 			form.Refresh();
 			Thread.Sleep(TimeSpan.FromSeconds(1));
 

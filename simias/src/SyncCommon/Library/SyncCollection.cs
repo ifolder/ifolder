@@ -74,9 +74,10 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="store">The store object.</param>
 		/// <param name="invitation">An invitation object.</param>
+		/// <remarks>The collection is originally created with local ownership.</remarks>
 		public SyncCollection(Store store, Invitation invitation)
 			: base(store, invitation.CollectionName, invitation.CollectionID,
-					invitation.Owner, invitation.Domain)
+					store.CurrentUserGuid, invitation.Domain)
 		{
 			// add any secret to the current identity chain
 			if ((invitation.PublicKey != null) && (invitation.PublicKey.Length > 0))
