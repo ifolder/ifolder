@@ -155,6 +155,7 @@ namespace Simias.POBox
 			if ( poUri != null )
 			{
 				poService.Url = poUri.ToString() + poServiceLabel;
+				log.Debug( "Calling POService::Invite at: " + poService.Url );
 			}
 			else
 			{
@@ -183,7 +184,8 @@ namespace Simias.POBox
 				return (false);
 			}
 
-			if (cSharedCollection.MasterIncarnation == 0)
+			if ( cSharedCollection.Role == SyncRoles.Slave &&
+					cSharedCollection.MasterIncarnation == 0 )
 			{
 				log.Debug(
 					"Failed POBoxService::Invite - collection: {0} hasn't sync'd to the server yet",
@@ -195,17 +197,20 @@ namespace Simias.POBox
 			// Make sure the subscription node has sync'd up to the server as well
 			//
 
-			Node cNode = this.poBox.Refresh(subscription);
-			if (cNode.MasterIncarnation == 0)
+			if ( this.poBox.Role == SyncRoles.Slave )
 			{
-				// force the PO box to be sync'd right away
-				SyncClient.ScheduleSync(poBox.ID);
+				Node cNode = this.poBox.Refresh( subscription );
+				if ( cNode.MasterIncarnation == 0 )
+				{
+					// force the PO box to be sync'd right away
+					SyncClient.ScheduleSync( poBox.ID );
 
-				log.Debug(
-					"Failed POBoxService::Invite - inviter's subscription {0} hasn't sync'd to the server yet",
-					subscription.MessageID);
+					log.Debug(
+						"Failed POBoxService::Invite - inviter's subscription {0} hasn't sync'd to the server yet",
+						subscription.MessageID);
 
-				return (false);
+					return false;
+				}
 			}
 		
 			// This is an enterprise pobox contact the POService.

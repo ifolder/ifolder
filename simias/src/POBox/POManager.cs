@@ -89,11 +89,11 @@ namespace Simias.POBox
 						// Get the domain for this POBox.
 						POBox poBox = new POBox(store, sn);
 						Simias.Storage.Domain domain = store.GetDomain(poBox.Domain);
-						if (domain.Role == SyncRoles.Slave)
-						{
+						//if (domain.Role == SyncRoles.Slave)
+						//{
 							// start collection managers
 							AddPOBoxManager(poBox.ID);
-						}
+						//}
 					}
 				}
 			}
