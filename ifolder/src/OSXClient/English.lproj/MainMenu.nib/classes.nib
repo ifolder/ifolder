@@ -12,7 +12,7 @@
             OUTLETS = {
                 createSheet = id; 
                 domainIDField = NSTextField; 
-                domainSelector = NSComboBox; 
+                domainSelector = NSPopUpButton; 
                 mainWindow = id; 
                 pathField = NSTextField; 
             }; 
