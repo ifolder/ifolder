@@ -5,6 +5,7 @@
             ACTIONS = {login = id; }; 
             CLASS = MainWindowController; 
             LANGUAGE = ObjC; 
+            OUTLETS = {ifolderTabView = NSTabView; }; 
             SUPERCLASS = NSWindowController; 
         }
     ); 

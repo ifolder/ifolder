@@ -11,6 +11,10 @@
 				3E81105E076FF18700E96819,
 				3E81105F076FF18700E96819,
 				3E811060076FF18700E96819,
+				3E3DDC55077392D90015AAA0,
+				3E3DDC56077392D90015AAA0,
+				3E3DDC59077392E70015AAA0,
+				3E3DDC5A077392E70015AAA0,
 			);
 			isa = PBXGroup;
 			name = Classes;
@@ -158,6 +162,8 @@
 				29B97318FDCFA39411CA2CEA,
 				3EF2210D0768180B00EE2EF6,
 				3EF2212D07681AA400EE2EF6,
+				3E941E2007737E760007CAA7,
+				3E3DDC520773924B0015AAA0,
 			);
 			isa = PBXGroup;
 			name = Resources;
@@ -345,6 +351,90 @@
 			settings = {
 			};
 		};
+		3E3DDC520773924B0015AAA0 = {
+			children = (
+				3E3DDC530773924B0015AAA0,
+			);
+			isa = PBXVariantGroup;
+			name = iFolderView.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E3DDC530773924B0015AAA0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = English.lproj/iFolderView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E3DDC540773924B0015AAA0 = {
+			fileRef = 3E3DDC520773924B0015AAA0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E3DDC55077392D90015AAA0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = IFFoldersView.h;
+			path = src/IFFoldersView.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E3DDC56077392D90015AAA0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = IFFoldersView.m;
+			path = src/IFFoldersView.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E3DDC57077392D90015AAA0 = {
+			fileRef = 3E3DDC55077392D90015AAA0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E3DDC58077392D90015AAA0 = {
+			fileRef = 3E3DDC56077392D90015AAA0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E3DDC59077392E70015AAA0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = IFSubViewController.m;
+			path = src/IFSubViewController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E3DDC5A077392E70015AAA0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = IFSubViewController.h;
+			path = src/IFSubViewController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E3DDC5B077392E70015AAA0 = {
+			fileRef = 3E3DDC59077392E70015AAA0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E3DDC5C077392E70015AAA0 = {
+			fileRef = 3E3DDC5A077392E70015AAA0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3E49BC6B0765224B0040812D = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.icns;
@@ -414,6 +504,20 @@
 		};
 		3E811064076FF18700E96819 = {
 			fileRef = 3E811060076FF18700E96819;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E941E2007737E760007CAA7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "ifolder-banner-scaled.png";
+			path = "../GtkTrayApp/ifolder-banner-scaled.png";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		3E941E2107737E760007CAA7 = {
+			fileRef = 3E941E2007737E760007CAA7;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -560,6 +664,10 @@
 				3E811063076FF18700E96819,
 				3E256001077235290062AB7A,
 				3E256003077235290062AB7A,
+				3E941E2107737E760007CAA7,
+				3E3DDC540773924B0015AAA0,
+				3E3DDC57077392D90015AAA0,
+				3E3DDC5C077392E70015AAA0,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -584,6 +692,8 @@
 				3E811064076FF18700E96819,
 				3E256002077235290062AB7A,
 				3E256004077235290062AB7A,
+				3E3DDC58077392D90015AAA0,
+				3E3DDC5B077392E70015AAA0,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

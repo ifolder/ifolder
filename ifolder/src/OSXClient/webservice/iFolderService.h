@@ -20,6 +20,7 @@
 
 -(bool) Ping;
 -(NSMutableDictionary *) GetDomains;
+-(IFDomain *) ConnectToDomain:(NSString *)username usingPassword:(NSString *)password andHost:(NSString *)host;
 
 @end
 
