@@ -34,6 +34,8 @@ namespace Simias.Sync
 	/// </summary>
 	public class SyncProperties : IDisposable
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncProperties));
+
 		/// <summary>
 		/// The suggested service url for the current machine.
 		/// </summary>
@@ -79,6 +81,8 @@ namespace Simias.Sync
 
 			store = new Store(config);
 			localDb = store.GetDatabaseObject();
+
+			log.Info("Sync Service Url: {0}", ServiceUrl);
 		}
 
 		#region IDisposable Members

@@ -78,7 +78,7 @@ namespace Simias.Sync
 		/// </summary>
         public static string EndPoint
         {
-            get { return "SyncStoreService.rem"; }
+            get { return "SyncService.rem"; }
         }
 
 		#endregion
