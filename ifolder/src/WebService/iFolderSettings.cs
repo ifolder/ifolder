@@ -35,6 +35,7 @@ namespace Novell.iFolder.Web
 	public class iFolderSettings
 	{
 		public string DefaultDomainID;
+		public string DefaultPOBoxID;
 		public bool HaveEnterprise;
 		public bool DisplayConfirmation;
 		public string EnterpriseName;
@@ -51,6 +52,11 @@ namespace Novell.iFolder.Web
 			Store store = Store.GetStore();
 			DefaultDomainID = store.DefaultDomain;
 			
+			Simias.POBox.POBox pobox = Simias.POBox.POBox.GetPOBox(store, 
+													store.DefaultDomain);
+			if(pobox != null)
+				DefaultPOBoxID = pobox.ID;
+
 			HaveEnterprise = false;
 			Domain enterpriseDomain = null;
 			LocalDatabase localDB = store.GetDatabaseObject();
