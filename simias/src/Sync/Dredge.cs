@@ -45,7 +45,7 @@ public class Dredger
 	//TODO need to get StringBuilder to work for this
 	public static string FullPath(string docRoot, Node node)
 	{
-		Debug.Assert(node != null);
+		Log.Assert(node != null);
 		if (node.IsCollection)
 			return docRoot;
 
@@ -77,7 +77,7 @@ public class Dredger
 
 	Node DoNode(Node parentNode, string path, string type)
 	{
-		Debug.Assert(docRoot.Length > 0 && path.StartsWith(docRoot));
+		Log.Assert(docRoot.Length > 0 && path.StartsWith(docRoot));
 
 		string nodeName = Path.GetFileName(path);
 		string nodePath = path.Substring(docRoot.Length + 1);
@@ -106,8 +106,8 @@ public class Dredger
 			Log.Spew("Dredger adding node for {0} {1}", FullPath(node), node.Id);
 			if (type == NodeTypeFile)
 			{	//TODO: handle multiple streams 
-				NodeStream ns = node.AddStream(null, nodePath);
-				ns.LastWriteTime = File.GetLastWriteTime(path);
+				FileEntry fe = node.AddFileEntry(null, nodePath);
+				fe.LastWriteTime = File.GetLastWriteTime(path);
 			}
 			node.Commit();
 			return node;
@@ -117,12 +117,12 @@ public class Dredger
 
 		// from here we are just checking for modified files
 		DateTime fsLastWrite = File.GetLastWriteTime(path);
-		foreach (NodeStream ns in node.GetStreamList())
+		foreach (FileSystemEntry fse in node.GetFileSystemEntryList())
 		{
-			Debug.Assert(ns.RelativePath == nodePath);
-			if (ns.LastWriteTime != fsLastWrite)
+			Log.Assert(fse.IsFile && fse.RelativePath == nodePath);
+			if (fse.LastWriteTime != fsLastWrite)
 			{
-				ns.LastWriteTime = fsLastWrite;
+				fse.LastWriteTime = fsLastWrite;
 				node.Commit();
 			}
 			break; //TODO: handle multiple streams 
@@ -132,7 +132,7 @@ public class Dredger
 
 	void DoSubtree(Node node, string path)
 	{
-		Debug.Assert(node != null && path != null);
+		Log.Assert(node != null && path != null);
 
 		// remove all nodes from store that no longer exist in the file system
 		foreach (Node kid in collection.Search(Property.ParentID, node.Id,

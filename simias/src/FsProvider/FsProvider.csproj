@@ -87,7 +87,7 @@
                 <Reference
                     Name = "StoreProvider"
                     AssemblyName = "StoreProvider"
-                    HintPath = "..\stage\StoreProvider.dll"
+                    HintPath = "..\StoreProvider\StoreProvider.dll"
                 />
             </References>
         </Build>

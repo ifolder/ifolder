@@ -9,13 +9,14 @@ namespace Simias.Tests
 	[TestFixture]
 	public class ConfTests
 	{
+		private Configuration config;
 
 		[TestFixtureSetUp]
 		public void Init()
 		{
 			Console.WriteLine("");
 			Console.WriteLine("=== Setting up Configuration Tests ===");
-			Configuration.BaseConfigPath = "./";
+			config = new Configuration("./");
 		}
 
 		[Test]
@@ -27,8 +28,8 @@ namespace Simias.Tests
 
 			Console.WriteLine("=== Running SetThenGet ===");
 
-			Configuration.Set("Section1", "SetThenGetKey", str1);
-			str2 = Configuration.Get("Section1", "SetThenGetKey", "Default SetThenGet Test Value");
+			config.Set("Section1", "SetThenGetKey", str1);
+			str2 = config.Get("Section1", "SetThenGetKey", "Default SetThenGet Test Value");
 			if(str1 != str2)
 				throw new Exception("SetThenGet didn't return matching values");
 		}
@@ -42,8 +43,8 @@ namespace Simias.Tests
 
 			Console.WriteLine("=== Running GetThenGet ===");
 
-			str1 = Configuration.Get("Section1", "GetThenGetKey", str1);
-			str2 = Configuration.Get("Section1", "GetThenGetKey", "Default GetThenGet Test Value");
+			str1 = config.Get("Section1", "GetThenGetKey", str1);
+			str2 = config.Get("Section1", "GetThenGetKey", "Default GetThenGet Test Value");
 			if(str1 != str2)
 				throw new Exception("GetThenGet didn't return matching values");
 		}
@@ -57,8 +58,8 @@ namespace Simias.Tests
 
 			Console.WriteLine("=== Running DefaultSetThenGet ===");
 
-			Configuration.Set("DefaultSetThenGetKey", str1);
-			str2 = Configuration.Get("DefaultSetThenGetKey", "Default DefaultSetThenGet Test Value");
+			config.Set("DefaultSetThenGetKey", str1);
+			str2 = config.Get("DefaultSetThenGetKey", "Default DefaultSetThenGet Test Value");
 			if(str1 != str2)
 				throw new Exception("DefaultSetThenGet didn't return matching values");
 		}
@@ -72,8 +73,8 @@ namespace Simias.Tests
 
 			Console.WriteLine("=== Running DefaultGetThenGet ===");
 
-			Configuration.Set("DefaultGetThenGetKey", str1);
-			str2 = Configuration.Get("DefaultGetThenGetKey", "Default DefaultGetThenGet Test Value");
+			config.Set("DefaultGetThenGetKey", str1);
+			str2 = config.Get("DefaultGetThenGetKey", "Default DefaultGetThenGet Test Value");
 			if(str1 != str2)
 				throw new Exception("DefaultGetThenGet didn't return matching values");
 		}
@@ -89,7 +90,7 @@ namespace Simias.Tests
 			{
 				String key = "Key" + x;
 				String value = "TestValueForTheMassiveSetTest" + x;
-				Configuration.Set("MassiveSection", key, value);
+				config.Set("MassiveSection", key, value);
 				Console.WriteLine("Setting Key : " + key);
 			}
 
@@ -97,7 +98,7 @@ namespace Simias.Tests
 			{
 				String key = "Key" + x;
 				String value = "TestValueForTheMassiveSetTest" + x;
-				String newValue = Configuration.Get("MassiveSection", key, "This is bogus, the value should be here" + x);
+				String newValue = config.Get("MassiveSection", key, "This is bogus, the value should be here" + x);
 				if(newValue != value)
 					throw new Exception("MassiveSetThenGetTest didn't pass");
 			}
@@ -110,11 +111,11 @@ namespace Simias.Tests
 
 			String key = "funnkykeyname";
 			String value = "<test>!@#$%^&*()_+=-}{[]\\|:;'\"?/><></test>";
-			Configuration.Set("FunkyCharacterDudesSection", key, value);
+			config.Set("FunkyCharacterDudesSection", key, value);
 			Console.WriteLine("Setting Key   = {0}", key);
 			Console.WriteLine("Setting Value = {0}", value);
 
-			String newValue = Configuration.Get("FunkyCharacterDudesSection", key, "If you see this value, we are going to fail");
+			String newValue = config.Get("FunkyCharacterDudesSection", key, "If you see this value, we are going to fail");
 			Console.WriteLine("Read Key   = {0}", key);
 			Console.WriteLine("Read Value = {0}", newValue);
 			if(newValue != value)
@@ -128,13 +129,13 @@ namespace Simias.Tests
 
 			Console.WriteLine("=== Running MultipleSetThenGet ===");
 
-			Configuration.Set("SetThenGetKey", "Some Value that should be overwritten");
-			Configuration.Set("SetThenGetKey", "Some Value that should be overwritten222");
-			Configuration.Set("SetThenGetKey", "Some Value that should be overwritten333");
-			Configuration.Set("SetThenGetKey", "Some Value that should be overwritten444");
-			Configuration.Set("SetThenGetKey", "Some Value that should be overwritten555");
-			Configuration.Set("SetThenGetKey", "This should be the final value");
-			str2 = Configuration.Get("SetThenGetKey", "Some value that should be ingored");
+			config.Set("SetThenGetKey", "Some Value that should be overwritten");
+			config.Set("SetThenGetKey", "Some Value that should be overwritten222");
+			config.Set("SetThenGetKey", "Some Value that should be overwritten333");
+			config.Set("SetThenGetKey", "Some Value that should be overwritten444");
+			config.Set("SetThenGetKey", "Some Value that should be overwritten555");
+			config.Set("SetThenGetKey", "This should be the final value");
+			str2 = config.Get("SetThenGetKey", "Some value that should be ingored");
 			if(str2 != "This should be the final value")
 				throw new Exception("MultipleSetThenGet didn't return matching values");
 		}

@@ -80,19 +80,19 @@
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "nunit.framework"
-                    AssemblyName = "nunit.framework"
-                    HintPath = "..\..\..\tools\NUnit\bin\nunit.framework.dll"
-                />
-                <Reference
                     Name = "StoreProvider"
                     AssemblyName = "StoreProvider"
-                    HintPath = "..\..\stage\StoreProvider.dll"
+                    HintPath = "..\..\StoreProvider\StoreProvider.dll"
                 />
                 <Reference
                     Name = "ProviderTest"
                     AssemblyName = "ProviderTest"
-                    HintPath = "..\..\stage\ProviderTest.dll"
+                    HintPath = "..\..\StoreProvider\ProviderTest.dll"
+                />
+                <Reference
+                    Name = "nunit.framework"
+                    AssemblyName = "nunit.framework"
+                    HintPath = "..\..\..\tools\NUnit\bin\nunit.framework.dll"
                 />
             </References>
         </Build>

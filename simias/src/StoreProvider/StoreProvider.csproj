@@ -80,9 +80,9 @@
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "Simias.Configuration"
-                    AssemblyName = "Simias.Configuration"
-                    HintPath = "..\stage\Configuration.dll"
+                    Name = "Configuration"
+                    AssemblyName = "Configuration"
+                    HintPath = "..\Configuration\Configuration.dll"
                 />
             </References>
         </Build>

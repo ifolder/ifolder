@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # SyncManager variables
@@ -96,7 +96,7 @@ SyncManager_LIBPATH := $(subst /,$(SEP), $(SyncManager_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(SyncManager_LIBPATH) $(SyncManager_INCLUDES)
 
-SyncManager.dll: $(SyncManager_SOURCES) $(SyncManager_LIBS) ../config.mk
+SyncManager.dll: $(SyncManager_SOURCES) $(SyncManager_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SyncManager.Doc.xml $(CSCFLAGS) $(SyncManager_FLAGS) $(SyncManager_LIBS:%=/r:%) $(SyncManager_LIBPATH:%=/lib:%) $(SyncManager_SOURCES)
 
 #=============================================================================
@@ -112,6 +112,6 @@ SyncManagerTests_LIBPATH := $(subst /,$(SEP), $(SyncManagerTests_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(SyncManagerTests_LIBPATH) $(SyncManagerTests_INCLUDES)
 
-SyncManagerTests.dll: $(SyncManagerTests_SOURCES) $(SyncManagerTests_LIBS) ../config.mk
+SyncManagerTests.dll: $(SyncManagerTests_SOURCES) $(SyncManagerTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SyncManagerTests.Doc.xml $(CSCFLAGS) $(SyncManagerTests_FLAGS) $(SyncManagerTests_LIBS:%=/r:%) $(SyncManagerTests_LIBPATH:%=/lib:%) $(SyncManagerTests_SOURCES)
 

@@ -74,7 +74,7 @@ namespace Simias
 			publisher = new EventPublisher();
 			subscriber = new EventSubscriber();
 // CRG - What is an iFolder.EventHandler... This ain't right
-//			subscriber.Changed += new iFolder.EventHandler(ChangeHandler);
+			subscriber.Changed += new EventHandler(ChangeHandler);
 			subscriber.Created += new EventHandler(CreateHandler);
 			subscriber.Deleted += new EventHandler(DeleteHandler);
 			subscriber.Renamed += new EventHandler(RenameHandler);
@@ -85,8 +85,7 @@ namespace Simias
 		{
 			publisher = new EventPublisher();
 			subscriber = new EventSubscriber();
-// CRG - What is an iFolder.EventHandler... This ain't right
-//			subscriber.Changed += new iFolder.EventHandler(ChangeHandler);
+			subscriber.Changed += new EventHandler(ChangeHandler);
 			subscriber.Created += new EventHandler(CreateHandler);
 			subscriber.Deleted += new EventHandler(DeleteHandler);
 			subscriber.Renamed += new EventHandler(RenameHandler);

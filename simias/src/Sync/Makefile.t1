@@ -2,7 +2,7 @@ TARGETS := Sync.dll SyncCmd.exe
 
 #OPTS := /warn:4 /debug+ /d:TRACE /d:DEBUG
 OPTS := /debug+ /d:TRACE /d:DEBUG
-DENALI_ROOT := ../..
+SIMIAS_ROOT := ../..
 
 ifeq ($(OS),Windows_NT)
 CCS := csc
@@ -45,12 +45,12 @@ clean:
 			*.pdb $(RLIBS:%=%.dll)
 
 libs:
-	@$(UPD) $(foreach LIB, $(RLIBS), $(DENALI_ROOT)/src/$(LIB)/$(LIB).dll) \
-			$(DENALI_ROOT)/external/sqlite/$(SQLITE) \
-			$(DENALI_ROOT)/src/SqliteProvider/SqliteWrapper.dll .
+	@$(UPD) $(foreach LIB, $(RLIBS), $(SIMIAS_ROOT)/src/$(LIB)/$(LIB).dll) \
+			$(SIMIAS_ROOT)/external/sqlite/$(SQLITE) \
+			$(SIMIAS_ROOT)/src/SqliteProvider/SqliteWrapper.dll .
 
 pdbs:
-	@$(UPD) $(foreach LIB, $(RLIBS), $(DENALI_ROOT)/src/$(LIB)/$(LIB).pdb) \
-			$(DENALI_ROOT)/src/SqliteProvider/SqliteWrapper.pdb .
+	@$(UPD) $(foreach LIB, $(RLIBS), $(SIMIAS_ROOT)/src/$(LIB)/$(LIB).pdb) \
+			$(SIMIAS_ROOT)/src/SqliteProvider/SqliteWrapper.pdb .
 
 #===========================================================================
