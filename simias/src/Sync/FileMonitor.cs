@@ -68,7 +68,7 @@ namespace Simias.Sync
 		bool onServer = false;
 		const string lastDredgeProp = "LastDredgeTime";
 		DateTime dredgeTimeStamp;
-		bool needToDredge = false;
+		bool needToDredge = true;
 		DateTime lastDredgeTime = DateTime.MinValue;
 		bool foundChange;
 		string rootPath;
@@ -129,12 +129,7 @@ namespace Simias.Sync
 					watcher.IncludeSubdirectories = true;
 					watcher.EnableRaisingEvents = true;
 					// Now dredge to find any files that were changed while we were down.
-					Dredge();
 				}
-			}
-			else
-			{
-				Dredge();
 			}
 			disposed = false;
 		}
