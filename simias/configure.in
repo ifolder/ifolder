@@ -9,7 +9,7 @@ TOOLDIR='$(top_srcdir)/tools'
 DOCDIR="$SRCDIR/doc"
 APIDOCDIR="$SRCDIR/api-doc"
 
-COMMON_SUBDIRS="Configuration Common CollectionEvents UserService StoreProvider FsProvider SqliteProvider Identity Smtp"
+COMMON_SUBDIRS="Configuration Common CollectionEvents UserService StoreProvider FsProvider SqliteProvider Identity WorkGroupIdentity Smtp"
 LINUX_SUBDIRS="CommonGtkWindows"
 WINDOWS_SUBDIRS="CommonFormWindows"
 
@@ -207,5 +207,6 @@ src/StoreProvider/Makefile
 src/FsProvider/Makefile
 src/SqliteProvider/Makefile
 src/Identity/Makefile
+src/WorkGroupIdentity/Makefile
 src/Smtp/Makefile
 ])
