@@ -7,17 +7,17 @@ lib_LTLIBRARIES = libsimdezvous.la
 override CFLAGS =
 
 libsimdezvous_la_SOURCES = simdezvous.c simdezvous.h
- 	
+
+if LINUX
+libsimdezvous_la_CFLAGS = \
+	-I$(top_srcdir)/external/mDnsResponder/include
+
+libsimdezvous_la_LDFLAGS = \
+	-L$(top_srcdir)/external/mDnsResponder/linux -ldns_sd
+endif
+
 #libsimias_la_CFLAGS = \
 #	-I$(top_srcdir)
-install-exec-local:
-	echo Installing
-#	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
-#	    p="`echo $$p | sed -e 's|^.*/||'`"; \
-#	  echo "mv $(DESTDIR)$(libdir)/$$p" $(DESTDIR)$(webbindir); \
-#	  mv $(DESTDIR)$(libdir)/$$p $(DESTDIR)$(webbindir); \
-#	done
-#mv $(DESTDIR)$(libdir)/$(LIB_PREF)simdezvous.* $(DESTDIR)$(webbindir)
 
 clean-local:
 	rm -rf $(COMMON_CLEAN_FILES)
