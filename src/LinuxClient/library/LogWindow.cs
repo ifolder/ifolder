@@ -215,51 +215,38 @@ namespace Novell.iFolder
 			if(args.ObjectType == ObjectType.Unknown)
 				return;
 
-			switch(args.Direction)
+			if(args.SizeRemaining == args.SizeToSync)
 			{
-				case Simias.Client.Event.Direction.Uploading:
+				switch(args.Direction)
 				{
-					if(args.Delete)
+					case Simias.Client.Event.Direction.Uploading:
 					{
-						if(SyncFileName != args.Name)
+						if(args.Delete)
 						{
 							LogMessage(string.Format(Util.GS(
 								"Deleting file from server: {0}"), args.Name));
-							SyncFileName = args.Name;
 						}
-					}
-					else
-					{
-						if(SyncFileName != args.Name)
+						else
 						{
 							LogMessage(string.Format(Util.GS(
 									"Uploading file: {0}"), args.Name));
-							SyncFileName = args.Name;
 						}
+						break;
 					}
-					break;
-				}
-				case Simias.Client.Event.Direction.Downloading:
-				{
-					if(args.Delete)
+					case Simias.Client.Event.Direction.Downloading:
 					{
-						if(SyncFileName != args.Name)
+						if(args.Delete)
 						{
 							LogMessage(string.Format(Util.GS(
 									"Deleting file: {0}"), args.Name));
-							SyncFileName = args.Name;
 						}
-					}
-					else
-					{
-						if(SyncFileName != args.Name)
+						else
 						{
 							LogMessage(string.Format(Util.GS(
 									"Downloading file: {0}"), args.Name));
-							SyncFileName = args.Name;
 						}
+						break;
 					}
-					break;
 				}
 			}
 		}
