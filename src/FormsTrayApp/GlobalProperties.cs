@@ -1157,8 +1157,7 @@ namespace Novell.FormsTrayApp
 				case "Local":
 					if (conflicts)
 					{
-						// TODO: use conflict icon when it becomes available.
-						imageIndex = 0;
+						imageIndex = 2;
 						status = "Has conflicts";
 					}
 					else
@@ -1275,7 +1274,8 @@ namespace Novell.FormsTrayApp
 				//	- iFolder that has been invited. (Invitation.ico?)
 				this.iFolderView.SmallImageList = new ImageList();
 				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico")));
-				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"Invitation.ico")));
+				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\serverifolder.ico")));
+				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolderconflict.ico")));
 			}
 			catch {} // Non-fatal ... just missing some graphics.
 
