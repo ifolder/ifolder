@@ -22,7 +22,7 @@
  ***********************************************************************/
  
 /**
- * Right now, this can be compiled by typing:
+ * To compile the stand-alone test, compile the program with:
  * 
  * 		gcc `xml2-config --libs --cflags` -o event-client simias-event-client.c
  */
@@ -1176,10 +1176,10 @@ sec_remove_all_event_handlers (RealSimiasEventClient *ec,
 
 /* #region Testing */
 
-void
-print_simias_node_event (SimiasNodeEvent *event)
+int
+simias_node_event_callback (SimiasNodeEvent *event, void *data)
 {
-	printf ("SimiasNodeEvent received:\n");
+	printf ("SimiasNodeEvent:\n");
 	printf ("\t%s: %s\n", "action", event->action);
 	printf ("\t%s: %s\n", "time", event->time);
 	printf ("\t%s: %s\n", "source", event->source);
@@ -1191,12 +1191,48 @@ print_simias_node_event (SimiasNodeEvent *event)
 	printf ("\t%s: %s\n", "master_rev", event->master_rev);
 	printf ("\t%s: %s\n", "slave_rev", event->slave_rev);
 	printf ("\t%s: %s\n", "file_size", event->file_size);
+	
+	return 0;
 }
 
 int
-simias_node_event_callback (SimiasNodeEvent *event, void *data)
+simias_collection_sync_event_callback (SimiasCollectionSyncEvent *event, void *data)
 {
-	print_simias_node_event (event);
+	printf ("SimiasCollectionSyncEvent:\n");
+	printf ("\t%s: %s\n", "event_type", event->event_type);
+	printf ("\t%s: %s\n", "name", event->name);
+	printf ("\t%s: %s\n", "id", event->id);
+	printf ("\t%s: %s\n", "action", event->action);
+	printf ("\t%s: %s\n", "successful", event->successful);
+	
+	return 0;
+}
+
+int
+simias_file_sync_event_callback (SimiasFileSyncEvent *event, void *data)
+{
+	printf ("SimiasCollectionSyncEvent:\n");
+	printf ("\t%s: %s\n", "event_type", event->event_type);
+	printf ("\t%s: %s\n", "collection_id", event->collection_id);
+	printf ("\t%s: %s\n", "object_type", event->object_type);
+	printf ("\t%s: %s\n", "delete_str", event->delete_str);
+	printf ("\t%s: %s\n", "name", event->name);
+	printf ("\t%s: %s\n", "size", event->size);
+	printf ("\t%s: %s\n", "size_to_sync", event->size_to_sync);
+	printf ("\t%s: %s\n", "size_remaining", event->size_remaining);
+	printf ("\t%s: %s\n", "direction", event->direction);
+	
+	return 0;
+}
+
+int
+simias_notify_event_callback (SimiasNotifyEvent *event, void *data)
+{
+	printf ("SimiasCollectionSyncEvent:\n");
+	printf ("\t%s: %s\n", "event_type", event->event_type);
+	printf ("\t%s: %s\n", "message", event->message);
+	printf ("\t%s: %s\n", "time", event->time);
+	printf ("\t%s: %s\n", "type", event->type);
 	
 	return 0;
 }
@@ -1237,6 +1273,9 @@ main (int argc, char *argv[])
 	sec_set_event (ec, ACTION_NODE_CREATED, true, (SimiasEventFunc)simias_node_event_callback, NULL);
 	sec_set_event (ec, ACTION_NODE_CHANGED, true, (SimiasEventFunc)simias_node_event_callback, NULL);
 	sec_set_event (ec, ACTION_NODE_DELETED, true, (SimiasEventFunc)simias_node_event_callback, NULL);
+//	sec_set_event (ec, ACTION_COLLECTION_SYNC, true, (SimiasEventFunc)simias_collection_sync_event_callback, NULL);
+//	sec_set_event (ec, ACTION_FILE_SYNC, true, (SimiasEventFunc)simias_file_sync_event_callback, NULL);
+//	sec_set_event (ec, ACTION_NOTIFY_MESSAGE, true, (SimiasEventFunc)simias_notify_event_callback, NULL);
 	
 	fprintf (stdout, "Press <Enter> to stop the client...");
 	fgets (buf, sizeof (buf), stdin);
