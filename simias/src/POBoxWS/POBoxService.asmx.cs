@@ -823,20 +823,6 @@ namespace Simias.POBoxService.Web
 
 			// Verify the fromMember is the caller
 			log.Debug( "  current Principal: " + Thread.CurrentPrincipal.Identity.Name );
-			/*
-			if ( subMsg.FromID != Thread.CurrentPrincipal.Identity.Name )
-			{
-				return POBoxStatus.UnknownIdentity;
-			}
-			*/
-
-			/*  FIXME::don't think we need this check anymore
-			if (domainID == null || domainID == "")
-			{
-				domainID = store.DefaultDomain;
-			}
-			*/
-
 
 			// Verify and get additional information about the "To" user
 			Member toMember = cDomain.GetMemberByID( subMsg.ToID );
@@ -846,22 +832,41 @@ namespace Simias.POBoxService.Web
 				return POBoxStatus.UnknownIdentity;
 			}
 
-			// Don't check for the fromMember in the domain if this is workgroup.
-			if ( cDomain.ConfigType != Domain.ConfigurationType.Workgroup )
-			{
-				Member fromMember = cDomain.GetMemberByID( subMsg.FromID );
-				if ( fromMember == null )
-				{
-					log.Debug( "  specified \"fromUserID\" does not exist in the domain!" );
-					return POBoxStatus.UnknownIdentity;
-				}
-			}
-
 			// In peer-to-peer the collection won't exist 
 			sharedCollection = store.GetCollectionByID( subMsg.SharedCollectionID ); 
 			if ( sharedCollection == null )
 			{
 				log.Debug( "  shared collection does not exist" );
+			}
+
+			// Don't check for the fromMember in the domain if this is workgroup.
+			if ( cDomain.ConfigType != Domain.ConfigurationType.Workgroup )
+			{
+				Member fromMember = cDomain.GetMemberByID( subMsg.FromID );
+				if ( fromMember != null )
+				{
+					// Check that the sender has sufficient rights to invite.
+					if ( sharedCollection != null )
+					{
+						Member collectionMember = sharedCollection.GetMemberByID( fromMember.UserID );
+						if ( ( collectionMember == null ) || ( collectionMember.Rights != Access.Rights.Admin ) )
+						{
+							log.Debug( " sender does not have rights to invite to this collection." );
+							return POBoxStatus.InvalidAccessRights;
+						}
+					}
+					else
+					{
+						// The collection must exist in enterprise.
+						log.Debug( " shared collection does not exist on enterprise" );
+						return POBoxStatus.UnknownCollection;
+					}
+				}
+				else
+				{
+					log.Debug( "  specified \"fromUserID\" does not exist in the domain!" );
+					return POBoxStatus.UnknownIdentity;
+				}
 			}
 
 			if ( subMsg.AccessRights > (int) Simias.Storage.Access.Rights.Admin)
@@ -893,30 +898,6 @@ namespace Simias.POBoxService.Web
 
 				log.Debug("  application path: " + appPath);
 
-				/*
-				// TODO: Need to fix how we detect SSL. Waiting for a fix in mod_mono.
-				try
-				{
-					UriBuilder poUri = 
-						new UriBuilder(
-						(this.Context.Request.Url.Port == 443) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp ,
-						this.Context.Request.Url.Host,
-						this.Context.Request.Url.Port,
-						appPath);
-
-					cSub.POServiceURL = poUri.Uri;
-				}
-				catch( Exception e1 )
-				{
-					log.Debug( "Failed creating POBox Uri" );
-					log.Debug( e1.Message );
-					log.Debug( e1.StackTrace );
-
-					// For now we won't error out cause I don't think we need
-					// URLs in the subscription itself
-				}
-				*/
-
 				cSub.SubscriptionCollectionID = subMsg.SharedCollectionID;
 				cSub.SubscriptionCollectionType = subMsg.SharedCollectionType;
 				cSub.SubscriptionCollectionName = subMsg.SharedCollectionName;
@@ -924,28 +905,6 @@ namespace Simias.POBoxService.Web
 				cSub.DomainName = cDomain.Name;
 				cSub.SubscriptionKey = Guid.NewGuid().ToString();
 				cSub.MessageType = "Outbound";  // ????
-
-				/*
-				try
-				{
-					// TODO: Need to fix how we detect SSL. Waiting for a fix in mod_mono.
-					UriBuilder coUri = 
-						new UriBuilder(
-						(this.Context.Request.Url.Port == 443) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp ,
-						this.Context.Request.Url.Host,
-						this.Context.Request.Url.Port,
-						this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ));
-
-					cSub.SubscriptionCollectionURL = coUri.Uri.ToString();
-					log.Debug( "  SubscriptionCollectionURL: " + cSub.SubscriptionCollectionURL );
-				}
-				catch( Exception e2 )
-				{
-					log.Debug( "Failed creating Collection Uri" );
-					log.Debug( e2.Message );
-					log.Debug( e2.StackTrace );
-				}
-				*/
 
 				if ( sharedCollection != null )
 				{

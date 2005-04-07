@@ -218,12 +218,31 @@ namespace Simias.POBox
 				subscription.FromIdentity = me.UserID;
 				subscription.FromName = me.Name;
 
+				// Make sure that this user has sufficient rights to send this invitation.
+				Simias.Storage.Member me2 = cSharedCollection.GetMemberByID( me.UserID );
+				if ( ( me2 == null ) || ( me2.Rights != Access.Rights.Admin ) )
+				{
+					// The user did not have sufficient rights to send this invitation.
+					// Delete the subscription and don't try to send it anymore.
+					log.Info( "User {0} did not have sufficient rights to share collection {1}", me.Name, cSharedCollection.Name );
+					poBox.Commit( poBox.Delete( subscription ) );
+					return true;
+				}
+
 				POBoxStatus status = poService.Invite( subscription.GenerateSubscriptionMessage() );
 				if ( status == POBoxStatus.Success )
 				{
 					// FIXME:: sync my PostOffice right now!
 					subscription.SubscriptionState = SubscriptionStates.Posted;
 					poBox.Commit( subscription );
+					result = true;
+				}
+				else if ( status == POBoxStatus.InvalidAccessRights )
+				{
+					// The user did not have sufficient rights to send this invitation.
+					// Delete the subscription and don't try to send it anymore.
+					log.Info( "User {0} did not have sufficient rights to share collection {1}", me.Name, cSharedCollection.Name );
+					poBox.Commit( poBox.Delete( subscription ) );
 					result = true;
 				}
 				else

@@ -4,10 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simias", "Simias.csproj", "
 		{E38BAF80-9B31-4D15-A002-E775B96FAFA6} = {E38BAF80-9B31-4D15-A002-E775B96FAFA6}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mDnsService", "src\mDnsService\mDnsService.csproj", "{CCA97DC4-AA28-4A9B-9C90-1E4F5D98B0CA}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimiasApp", "src\SimiasApp\SimiasApp.csproj", "{FBC32721-2AEE-48D5-8353-FAACC2AF16B2}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
@@ -36,10 +32,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimiasServer", "src\SimiasS
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mDnsDomain", "src\mDnsDomain\mDnsDomain.csproj", "{57E807CE-9430-4759-B174-CEC7BCBB38CB}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -50,10 +42,6 @@ Global
 		{7839E703-0177-4162-B083-BCFD4ED1CC1B}.Debug.Build.0 = Debug|.NET
 		{7839E703-0177-4162-B083-BCFD4ED1CC1B}.Release.ActiveCfg = Release|.NET
 		{7839E703-0177-4162-B083-BCFD4ED1CC1B}.Release.Build.0 = Release|.NET
-		{CCA97DC4-AA28-4A9B-9C90-1E4F5D98B0CA}.Debug.ActiveCfg = Debug|.NET
-		{CCA97DC4-AA28-4A9B-9C90-1E4F5D98B0CA}.Debug.Build.0 = Debug|.NET
-		{CCA97DC4-AA28-4A9B-9C90-1E4F5D98B0CA}.Release.ActiveCfg = Release|.NET
-		{CCA97DC4-AA28-4A9B-9C90-1E4F5D98B0CA}.Release.Build.0 = Release|.NET
 		{FBC32721-2AEE-48D5-8353-FAACC2AF16B2}.Debug.ActiveCfg = Debug|.NET
 		{FBC32721-2AEE-48D5-8353-FAACC2AF16B2}.Debug.Build.0 = Debug|.NET
 		{FBC32721-2AEE-48D5-8353-FAACC2AF16B2}.Release.ActiveCfg = Release|.NET
@@ -82,10 +70,6 @@ Global
 		{CCA97DC4-AA28-4A9B-9C90-1E4F5D98B0CA}.Debug.Build.0 = Debug|.NET
 		{CCA97DC4-AA28-4A9B-9C90-1E4F5D98B0CA}.Release.ActiveCfg = Release|.NET
 		{CCA97DC4-AA28-4A9B-9C90-1E4F5D98B0CA}.Release.Build.0 = Release|.NET
-		{57E807CE-9430-4759-B174-CEC7BCBB38CB}.Debug.ActiveCfg = Debug|.NET
-		{57E807CE-9430-4759-B174-CEC7BCBB38CB}.Debug.Build.0 = Debug|.NET
-		{57E807CE-9430-4759-B174-CEC7BCBB38CB}.Release.ActiveCfg = Release|.NET
-		{57E807CE-9430-4759-B174-CEC7BCBB38CB}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
