@@ -126,7 +126,7 @@ static SyncLogWindowController *syncLogInstance = nil;
 			{
 				NSString *logEntry = 
 					[NSString stringWithFormat:@"%@\n", [logArray objectAtIndex:logCounter] ];
-				[outStream write:[logEntry cString] maxLength:[logEntry length]];
+				[outStream write:[logEntry UTF8String] maxLength:[logEntry length]];
 			}
 			[outStream close];
 		}
