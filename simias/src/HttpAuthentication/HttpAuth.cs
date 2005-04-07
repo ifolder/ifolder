@@ -274,6 +274,11 @@ namespace Simias.Authentication
 						return null;
 					}
 
+					if ( status.statusCode == StatusCodes.SuccessInGrace )
+					{
+						Simias.Authentication.Http.SetResponseHeaders( ctx, status );
+					}
+
 					simiasSession = new Simias.Authentication.Session();
 					simiasSession.MemberID = member.UserID;
 					simiasSession.Requests++;
