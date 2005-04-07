@@ -22,6 +22,7 @@
 #######################################################################
 
 %define prefix /opt/novell/ifolder3
+%define MONO_MACHINECONF /etc/mono/machine.config
 
 Summary      : iFolder 3
 Name         : @PACKAGE@
@@ -32,7 +33,7 @@ Group        : Applications/Productivity
 Source       : %{name}-%{version}.tar.gz
 URL          : http://forge.novell.com/modules/xfmod/project/?ifolder
 #Distribution : 
-Vendor       : <unknown>
+Vendor       : www.ifolder.com
 Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
@@ -126,6 +127,21 @@ if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
     #    cp -f %{prefix}/share/application-registry/ifolder.applications $GNOMEDIR/share/application-registry
     #fi
 
+    INSTANCES_AFTER_INSTALL=$1
+    if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
+        echo "Editing %{MONO_MACHINECONF} to allow for more connections"
+        if [ -w %{MONO_MACHINECONF} ]; then
+                cp %{MONO_MACHINECONF} %{MONO_MACHINECONF}.backup
+                cat %{MONO_MACHINECONF}.backup | sed "s/maxconnection=\"2\"/maxconnection=\"10\" /" > %{MONO_MACHINECONF}
+                rm -f %{MONO_MACHINECONF}.backup
+        else
+                echo "%{MONO_MACHINECONF} not writable"
+                                                                                                                                             
+        fi
+    fi
+
+
+
 fi
 
 #=============================================================================
@@ -175,7 +191,7 @@ INSTANCES_AFTER_UNINSTALL=$1
 if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
         #Remove the ~/.local/simias folder recursively for all users
         echo "Removing simias information for all users"
-        if [ -e /root/.local/simias]
+        if [ -e /root/.local/simias ]
         then
                 rm -rf /root/.local/simias
         fi
