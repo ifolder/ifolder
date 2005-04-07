@@ -48,6 +48,11 @@ namespace Simias.Client
 		/// </summary>
 		static private string localPassword = null;
 
+		/// <summary>
+		/// Same container is used for all local web services.
+		/// </summary>
+		static private CookieContainer cookies = new CookieContainer();
+
 		#endregion
 
 		#region Private Methods
@@ -55,8 +60,7 @@ namespace Simias.Client
 		/// <summary>
 		/// Gets the local password.
 		/// </summary>
-		/// <returns>The local password as a string.</returns>
-		static private string GetLocalPassword()
+		static private void GetLocalPassword()
 		{
 			lock( typeof( LocalService ) )
 			{
@@ -76,8 +80,6 @@ namespace Simias.Client
 					{}
 				}
 			}
-
-			return localPassword;
 		}
 
 		/// <summary>
@@ -106,13 +108,11 @@ namespace Simias.Client
 		/// <param name="webClient">HttpWebClientProtocol object.</param>
 		static public void Start( HttpWebClientProtocol webClient )
 		{
-			string localPassword = null;
-
 			// Start the web service so the password file will be created.
 			while ( localPassword == null )
 			{
 				Ping();
-				localPassword = GetLocalPassword();
+				GetLocalPassword();
 				if ( localPassword == null )
 				{
 					Thread.Sleep( 500 );
@@ -120,8 +120,13 @@ namespace Simias.Client
 			}
 
 			webClient.Credentials = new NetworkCredential( Environment.UserName, localPassword );
-			webClient.CookieContainer = new CookieContainer();
 			webClient.PreAuthenticate = true;
+
+			// BUGBUG!! - Force mono to authenticate everytime until cookies work on a loopback
+			// connection.
+#if WINDOWS
+			webClient.CookieContainer = cookies;
+#endif
 		}
 
 		#endregion
