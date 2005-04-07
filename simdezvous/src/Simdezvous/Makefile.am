@@ -32,7 +32,7 @@ if WINDOWS
 OTHER_FILES = ../libsimdezvous/libsimdezvous.dll
 endif
 
-install-exec-local: Simias.mDns.dll $(DATA_FILES)
+install-exec-local: Simdezvous.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(webdir)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) Simdezvous.dll $(OTHER_FILES) $(DEBUG_FILES) $(DESTDIR)$(webbindir)
