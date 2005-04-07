@@ -71,7 +71,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__Ping (&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &ns1__Ping,
             &ns1__PingResponse);
@@ -82,7 +82,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     }
 	else
 	{
-		NSString *faultString = [NSString stringWithCString:soap.fault->faultstring];
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
 
 		cleanup_gsoap(&soap, &creds);
 
@@ -111,7 +111,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__GetAlliFolders(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getiFoldersMessage,
             &getiFoldersResponse);
@@ -163,12 +163,12 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__GetiFolder			getiFolderMessage;
 	struct _ns1__GetiFolderResponse getiFolderResponse;
 	
-	getiFolderMessage.iFolderID = (char *)[iFolderID cString];
+	getiFolderMessage.iFolderID = (char *)[iFolderID UTF8String];
 
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__GetiFolder(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getiFolderMessage,
             &getiFolderResponse);
@@ -217,13 +217,13 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__GetiFolderInvitation			getiFolderMessage;
 	struct _ns1__GetiFolderInvitationResponse	getiFolderResponse;
 	
-	getiFolderMessage.iFolderID = (char *)[iFolderID cString];
-	getiFolderMessage.POBoxID = (char *)[collectionID cString];
+	getiFolderMessage.iFolderID = (char *)[iFolderID UTF8String];
+	getiFolderMessage.POBoxID = (char *)[collectionID UTF8String];
 
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__GetiFolderInvitation(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getiFolderMessage,
             &getiFolderResponse);
@@ -265,13 +265,13 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__CreateiFolderInDomain createiFolderMessage;
 	struct _ns1__CreateiFolderInDomainResponse createiFolderResponse;
 	
-	createiFolderMessage.Path = (char *)[Path cString];
-	createiFolderMessage.DomainID = (char *)[DomainID cString];
+	createiFolderMessage.Path = (char *)[Path UTF8String];
+	createiFolderMessage.DomainID = (char *)[DomainID UTF8String];
 
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__CreateiFolderInDomain(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &createiFolderMessage,
             &createiFolderResponse);
@@ -314,14 +314,14 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__AcceptiFolderInvitation acceptiFolderMessage;
 	struct _ns1__AcceptiFolderInvitationResponse acceptiFolderResponse;
 	
-	acceptiFolderMessage.iFolderID = (char *)[iFolderID cString];
-	acceptiFolderMessage.DomainID = (char *)[DomainID cString];
-	acceptiFolderMessage.LocalPath = (char *)[localPath cString];
+	acceptiFolderMessage.iFolderID = (char *)[iFolderID UTF8String];
+	acceptiFolderMessage.DomainID = (char *)[DomainID UTF8String];
+	acceptiFolderMessage.LocalPath = (char *)[localPath UTF8String];
 
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__AcceptiFolderInvitation(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &acceptiFolderMessage,
             &acceptiFolderResponse);
@@ -362,13 +362,13 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__DeclineiFolderInvitation			declineiFolderMessage;
 	struct _ns1__DeclineiFolderInvitationResponse	declineiFolderResponse;
 	
-	declineiFolderMessage.iFolderID = (char *)[iFolderID cString];
-	declineiFolderMessage.DomainID = (char *)[DomainID cString];
+	declineiFolderMessage.iFolderID = (char *)[iFolderID UTF8String];
+	declineiFolderMessage.DomainID = (char *)[DomainID UTF8String];
 
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__DeclineiFolderInvitation(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &declineiFolderMessage,
             &declineiFolderResponse);
@@ -399,12 +399,12 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__RevertiFolder			revertiFolderMessage;
 	struct _ns1__RevertiFolderResponse	revertiFolderResponse;
 	
-	revertiFolderMessage.iFolderID = (char *)[iFolderID cString];
+	revertiFolderMessage.iFolderID = (char *)[iFolderID UTF8String];
 
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__RevertiFolder(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &revertiFolderMessage,
             &revertiFolderResponse);
@@ -444,12 +444,12 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__SynciFolderNow			syncNowMessage;
 	struct _ns1__SynciFolderNowResponse syncNowResponse;
 	
-	syncNowMessage.iFolderID = (char *)[iFolderID cString];
+	syncNowMessage.iFolderID = (char *)[iFolderID UTF8String];
 
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__SynciFolderNow(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &syncNowMessage,
             &syncNowResponse);
@@ -478,13 +478,13 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__GetiFolderUser			getUserMessage;
 	struct _ns1__GetiFolderUserResponse	getUserResponse;
 
-	getUserMessage.UserID = (char *)[userID cString];
+	getUserMessage.UserID = (char *)[userID UTF8String];
 
     init_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__GetiFolderUser(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getUserMessage,
             &getUserResponse);
@@ -530,14 +530,14 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__GetiFolderUserFromNodeID			getUserMessage;
 	struct _ns1__GetiFolderUserFromNodeIDResponse	getUserResponse;
 
-	getUserMessage.CollectionID = (char *)[collectionID cString];
-	getUserMessage.NodeID = (char *)[nodeID cString];
+	getUserMessage.CollectionID = (char *)[collectionID UTF8String];
+	getUserMessage.NodeID = (char *)[nodeID UTF8String];
 
     init_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__GetiFolderUserFromNodeID(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getUserMessage,
             &getUserResponse);
@@ -582,12 +582,12 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__GetiFolderUsers		getUsersMessage;
 	struct _ns1__GetiFolderUsersResponse getUsersResponse;
 
-	getUsersMessage.iFolderID = (char *)[ifolderID cString];
+	getUsersMessage.iFolderID = (char *)[ifolderID UTF8String];
 
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__GetiFolderUsers(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getUsersMessage,
             &getUsersResponse);
@@ -640,13 +640,13 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__GetDomainUsers			getUsersMessage;
 	struct _ns1__GetDomainUsersResponse getUsersResponse;
 
-	getUsersMessage.DomainID = (char *)[domainID cString];
+	getUsersMessage.DomainID = (char *)[domainID UTF8String];
 	getUsersMessage.numUsers = numUsers;
 
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__GetDomainUsers(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getUsersMessage,
             &getUsersResponse);
@@ -699,13 +699,13 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__SearchForDomainUsers			searchUsersMessage;
 	struct _ns1__SearchForDomainUsersResponse	searchUsersResponse;
 
-	searchUsersMessage.DomainID = (char *)[domainID cString];
-	searchUsersMessage.SearchString =  (char *)[searchString cString];
+	searchUsersMessage.DomainID = (char *)[domainID UTF8String];
+	searchUsersMessage.SearchString =  (char *)[searchString UTF8String];
 
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__SearchForDomainUsers(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &searchUsersMessage,
             &searchUsersResponse);
@@ -758,14 +758,14 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__InviteUser			inviteUserMessage;
 	struct _ns1__InviteUserResponse	inviteUserResponse;
 	
-	inviteUserMessage.iFolderID = (char *)[ifolderID cString];
-	inviteUserMessage.UserID = (char *)[userID cString];
-	inviteUserMessage.Rights = (char *)[rights cString];
+	inviteUserMessage.iFolderID = (char *)[ifolderID UTF8String];
+	inviteUserMessage.UserID = (char *)[userID UTF8String];
+	inviteUserMessage.Rights = (char *)[rights UTF8String];
 
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__InviteUser(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &inviteUserMessage,
             &inviteUserResponse);
@@ -803,13 +803,13 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__RemoveiFolderUser			removeUserMessage;
 	struct _ns1__RemoveiFolderUserResponse	removeUserResponse;
 	
-	removeUserMessage.iFolderID = (char *)[ifolderID cString];
-	removeUserMessage.UserID = (char *)[userID cString];
+	removeUserMessage.iFolderID = (char *)[ifolderID UTF8String];
+	removeUserMessage.UserID = (char *)[userID UTF8String];
 
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__RemoveiFolderUser(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &removeUserMessage,
             &removeUserResponse);
@@ -837,13 +837,13 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__GetiFolderDiskSpace			getDSMessage;
 	struct _ns1__GetiFolderDiskSpaceResponse	getDSResponse;
 
-	getDSMessage.iFolderID = (char *)[ifolderID cString];
+	getDSMessage.iFolderID = (char *)[ifolderID UTF8String];
 
     init_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__GetiFolderDiskSpace(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getDSMessage,
             &getDSResponse);
@@ -888,13 +888,13 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__GetUserDiskSpace			getDSMessage;
 	struct _ns1__GetUserDiskSpaceResponse	getDSResponse;
 
-	getDSMessage.UserID = (char *)[userID cString];
+	getDSMessage.UserID = (char *)[userID UTF8String];
 
     init_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__GetUserDiskSpace(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getDSMessage,
             &getDSResponse);
@@ -939,13 +939,13 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__SetiFolderDiskSpaceLimitResponse	setDSResponse;
 
 	setDSMessage.Limit = limit;
-	setDSMessage.iFolderID = (char *)[ifolderID cString];
+	setDSMessage.iFolderID = (char *)[ifolderID UTF8String];
 
     init_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__SetiFolderDiskSpaceLimit(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &setDSMessage,
             &setDSResponse);
@@ -973,13 +973,13 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__CalculateSyncSize			getSSMessage;
 	struct _ns1__CalculateSyncSizeResponse	getSSResponse;
 
-	getSSMessage.iFolderID = (char *)[ifolderID cString];
+	getSSMessage.iFolderID = (char *)[ifolderID UTF8String];
 
     init_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__CalculateSyncSize(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getSSMessage,
             &getSSResponse);
@@ -1022,7 +1022,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__GetDefaultSyncInterval(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getIntervalMessage,
             &getIntervalResponse);
@@ -1058,7 +1058,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__SetDefaultSyncInterval(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &setIntervalMessage,
             &setIntervalResponse);
@@ -1089,12 +1089,12 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__GetiFolderConflicts			getConflictsMessage;
 	struct _ns1__GetiFolderConflictsResponse	getConflictsResponse;
 
-	getConflictsMessage.iFolderID = (char *)[ifolderID cString];
+	getConflictsMessage.iFolderID = (char *)[ifolderID UTF8String];
 
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__GetiFolderConflicts(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getConflictsMessage,
             &getConflictsResponse);
@@ -1146,14 +1146,14 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__ResolveFileConflict			resolveMessage;
 	struct _ns1__ResolveFileConflictResponse	resolveResponse;
 
-	resolveMessage.iFolderID = (char *)[ifolderID cString];
-	resolveMessage.conflictID = (char *)[conflictID cString];
+	resolveMessage.iFolderID = (char *)[ifolderID UTF8String];
+	resolveMessage.conflictID = (char *)[conflictID UTF8String];
 	resolveMessage.localChangesWin = saveLocal;
 
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__ResolveFileConflict(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &resolveMessage,
             &resolveResponse);
@@ -1184,14 +1184,14 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__ResolveNameConflict			resolveMessage;
 	struct _ns1__ResolveNameConflictResponse	resolveResponse;
 
-	resolveMessage.iFolderID = (char *)[ifolderID cString];
-	resolveMessage.conflictID = (char *)[conflictID cString];
-	resolveMessage.newLocalName = (char *)[newName cString];
+	resolveMessage.iFolderID = (char *)[ifolderID UTF8String];
+	resolveMessage.conflictID = (char *)[conflictID UTF8String];
+	resolveMessage.newLocalName = (char *)[newName UTF8String];
 
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__ResolveNameConflict(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &resolveMessage,
             &resolveResponse);
@@ -1222,14 +1222,14 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__SetUserRights			setRightsMessage;
 	struct _ns1__SetUserRightsResponse	setRightsResponse;
 
-	setRightsMessage.iFolderID = (char *)[ifolderID cString];
-	setRightsMessage.UserID = (char *)[userID cString];
-	setRightsMessage.Rights = (char *)[rights cString];
+	setRightsMessage.iFolderID = (char *)[ifolderID UTF8String];
+	setRightsMessage.UserID = (char *)[userID UTF8String];
+	setRightsMessage.Rights = (char *)[rights UTF8String];
 
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__SetUserRights(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &setRightsMessage,
             &setRightsResponse);
@@ -1260,14 +1260,14 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	struct _ns1__ChangeOwner			changeOwnerMessage;
 	struct _ns1__ChangeOwnerResponse	changeOwnerResponse;
 
-	changeOwnerMessage.iFolderID = (char *)[ifolderID cString];
-	changeOwnerMessage.NewOwnerUserID = (char *)[userID cString];
-	changeOwnerMessage.OldOwnerRights = (char *)[rights cString];
+	changeOwnerMessage.iFolderID = (char *)[ifolderID UTF8String];
+	changeOwnerMessage.NewOwnerUserID = (char *)[userID UTF8String];
+	changeOwnerMessage.OldOwnerRights = (char *)[rights UTF8String];
 
     init_gsoap (&soap, &creds);
     err_code = soap_call___ns1__ChangeOwner(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &changeOwnerMessage,
             &changeOwnerResponse);
@@ -1290,49 +1290,49 @@ NSDictionary *getiFolderProperties(struct ns1__iFolderWeb *ifolder)
 	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
 
 	if(ifolder->DomainID != nil)
-		[newProperties setObject:[NSString stringWithCString:ifolder->DomainID] forKey:@"DomainID"];
+		[newProperties setObject:[NSString stringWithUTF8String:ifolder->DomainID] forKey:@"DomainID"];
 
 	if(ifolder->ID != nil)
-		[newProperties setObject:[NSString stringWithCString:ifolder->ID] forKey:@"ID"];
+		[newProperties setObject:[NSString stringWithUTF8String:ifolder->ID] forKey:@"ID"];
 
 	if(ifolder->ManagedPath != nil)
-		[newProperties setObject:[NSString stringWithCString:ifolder->ManagedPath] forKey:@"ManagedPath"];
+		[newProperties setObject:[NSString stringWithUTF8String:ifolder->ManagedPath] forKey:@"ManagedPath"];
 
 	if(ifolder->UnManagedPath != nil)
-		[newProperties setObject:[NSString stringWithCString:ifolder->UnManagedPath] forKey:@"Path"];
+		[newProperties setObject:[NSString stringWithUTF8String:ifolder->UnManagedPath] forKey:@"Path"];
 
 	if(ifolder->Name != nil)
-		[newProperties setObject:[NSString stringWithCString:ifolder->Name] forKey:@"Name"];
+		[newProperties setObject:[NSString stringWithUTF8String:ifolder->Name] forKey:@"Name"];
 
 	if(ifolder->Owner != nil)
-		[newProperties setObject:[NSString stringWithCString:ifolder->Owner] forKey:@"Owner"];
+		[newProperties setObject:[NSString stringWithUTF8String:ifolder->Owner] forKey:@"Owner"];
 
 	if(ifolder->OwnerID != nil)
-		[newProperties setObject:[NSString stringWithCString:ifolder->OwnerID] forKey:@"OwnerID"];
+		[newProperties setObject:[NSString stringWithUTF8String:ifolder->OwnerID] forKey:@"OwnerID"];
 
 	if(ifolder->Type != nil)
-		[newProperties setObject:[NSString stringWithCString:ifolder->Type] forKey:@"Type"];
+		[newProperties setObject:[NSString stringWithUTF8String:ifolder->Type] forKey:@"Type"];
 
 	if(ifolder->Description != nil)
-		[newProperties setObject:[NSString stringWithCString:ifolder->Description] forKey:@"Description"];
+		[newProperties setObject:[NSString stringWithUTF8String:ifolder->Description] forKey:@"Description"];
 
 	if(ifolder->State != nil)
-		[newProperties setObject:[NSString stringWithCString:ifolder->State] forKey:@"State"];
+		[newProperties setObject:[NSString stringWithUTF8String:ifolder->State] forKey:@"State"];
 
 	if(ifolder->CurrentUserID != nil)
-		[newProperties setObject:[NSString stringWithCString:ifolder->CurrentUserID] forKey:@"CurrentUserID"];
+		[newProperties setObject:[NSString stringWithUTF8String:ifolder->CurrentUserID] forKey:@"CurrentUserID"];
 
 	if(ifolder->CurrentUserRights != nil)
-		[newProperties setObject:[NSString stringWithCString:ifolder->CurrentUserRights] forKey:@"CurrentUserRights"];
+		[newProperties setObject:[NSString stringWithUTF8String:ifolder->CurrentUserRights] forKey:@"CurrentUserRights"];
 
 	if(ifolder->CollectionID != nil)
-		[newProperties setObject:[NSString stringWithCString:ifolder->CollectionID] forKey:@"CollectionID"];
+		[newProperties setObject:[NSString stringWithUTF8String:ifolder->CollectionID] forKey:@"CollectionID"];
 
 	if(ifolder->LastSyncTime != nil)
-		[newProperties setObject:[NSString stringWithCString:ifolder->LastSyncTime] forKey:@"LastSyncTime"];
+		[newProperties setObject:[NSString stringWithUTF8String:ifolder->LastSyncTime] forKey:@"LastSyncTime"];
 
 	if(ifolder->Role != nil)
-		[newProperties setObject:[NSString stringWithCString:ifolder->Role] forKey:@"Role"];
+		[newProperties setObject:[NSString stringWithUTF8String:ifolder->Role] forKey:@"Role"];
 
 	[newProperties setObject:[NSNumber numberWithLong:ifolder->EffectiveSyncInterval] forKey:@"EffectiveSyncInterval"];
 
@@ -1353,25 +1353,25 @@ NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user)
 	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
 
 	if(user->Name != nil)
-		[newProperties setObject:[NSString stringWithCString:user->Name] forKey:@"Name"];
+		[newProperties setObject:[NSString stringWithUTF8String:user->Name] forKey:@"Name"];
 	if(user->UserID != nil)
-		[newProperties setObject:[NSString stringWithCString:user->UserID] forKey:@"UserID"];
+		[newProperties setObject:[NSString stringWithUTF8String:user->UserID] forKey:@"UserID"];
 	if(user->Rights != nil)
-		[newProperties setObject:[NSString stringWithCString:user->Rights] forKey:@"Rights"];
+		[newProperties setObject:[NSString stringWithUTF8String:user->Rights] forKey:@"Rights"];
 	if(user->ID != nil)
-		[newProperties setObject:[NSString stringWithCString:user->ID] forKey:@"ID"];
+		[newProperties setObject:[NSString stringWithUTF8String:user->ID] forKey:@"ID"];
 	if(user->State != nil)
-		[newProperties setObject:[NSString stringWithCString:user->State] forKey:@"State"];
+		[newProperties setObject:[NSString stringWithUTF8String:user->State] forKey:@"State"];
 	if(user->iFolderID != nil)
-		[newProperties setObject:[NSString stringWithCString:user->iFolderID] forKey:@"iFolderID"];
+		[newProperties setObject:[NSString stringWithUTF8String:user->iFolderID] forKey:@"iFolderID"];
 	if(user->FirstName != nil)
-		[newProperties setObject:[NSString stringWithCString:user->FirstName] forKey:@"FirstName"];
+		[newProperties setObject:[NSString stringWithUTF8String:user->FirstName] forKey:@"FirstName"];
 	if(user->Surname != nil)
-		[newProperties setObject:[NSString stringWithCString:user->Surname] forKey:@"Surname"];
+		[newProperties setObject:[NSString stringWithUTF8String:user->Surname] forKey:@"Surname"];
 	if( (user->FN != nil) && (strlen(user->FN) > 0) )
-		[newProperties setObject:[NSString stringWithCString:user->FN] forKey:@"FN"];
+		[newProperties setObject:[NSString stringWithUTF8String:user->FN] forKey:@"FN"];
 	else
-		[newProperties setObject:[NSString stringWithCString:user->Name] forKey:@"FN"];
+		[newProperties setObject:[NSString stringWithUTF8String:user->Name] forKey:@"FN"];
 
 	[newProperties setObject:[NSNumber numberWithBool:user->IsOwner] forKey:@"IsOwner"];
 	
@@ -1413,49 +1413,49 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict)
 	bool haveLocation = NO;
 
 	if(conflict->iFolderID != nil)
-		[newProperties setObject:[NSString stringWithCString:conflict->iFolderID] forKey:@"iFolderID"];
+		[newProperties setObject:[NSString stringWithUTF8String:conflict->iFolderID] forKey:@"iFolderID"];
 
 	if(conflict->ConflictID != nil)
-		[newProperties setObject:[NSString stringWithCString:conflict->ConflictID] forKey:@"ConflictID"];
+		[newProperties setObject:[NSString stringWithUTF8String:conflict->ConflictID] forKey:@"ConflictID"];
 
 	if(conflict->LocalName != nil)
 	{
-		[newProperties setObject:[NSString stringWithCString:conflict->LocalName] forKey:@"LocalName"];
-		[newProperties setObject:[NSString stringWithCString:conflict->LocalName] forKey:@"Name"];
+		[newProperties setObject:[NSString stringWithUTF8String:conflict->LocalName] forKey:@"LocalName"];
+		[newProperties setObject:[NSString stringWithUTF8String:conflict->LocalName] forKey:@"Name"];
 		haveName = YES;
 	}
 
 	if(conflict->LocalDate != nil)
-		[newProperties setObject:[NSString stringWithCString:conflict->LocalDate] forKey:@"LocalDate"];
+		[newProperties setObject:[NSString stringWithUTF8String:conflict->LocalDate] forKey:@"LocalDate"];
 
 	if(conflict->LocalSize != nil)
-		[newProperties setObject:[NSString stringWithCString:conflict->LocalSize] forKey:@"LocalSize"];
+		[newProperties setObject:[NSString stringWithUTF8String:conflict->LocalSize] forKey:@"LocalSize"];
 
 	if(conflict->LocalFullPath != nil)
 	{
-		[newProperties setObject:[NSString stringWithCString:conflict->LocalFullPath] forKey:@"LocalFullPath"];
-		[newProperties setObject:[NSString stringWithCString:conflict->LocalFullPath] forKey:@"Location"];
+		[newProperties setObject:[NSString stringWithUTF8String:conflict->LocalFullPath] forKey:@"LocalFullPath"];
+		[newProperties setObject:[NSString stringWithUTF8String:conflict->LocalFullPath] forKey:@"Location"];
 		haveLocation = YES;
 	}
 
 	if(conflict->ServerName != nil)
 	{
-		[newProperties setObject:[NSString stringWithCString:conflict->ServerName] forKey:@"ServerName"];
+		[newProperties setObject:[NSString stringWithUTF8String:conflict->ServerName] forKey:@"ServerName"];
 		if(!haveName)
-			[newProperties setObject:[NSString stringWithCString:conflict->ServerName] forKey:@"Name"];
+			[newProperties setObject:[NSString stringWithUTF8String:conflict->ServerName] forKey:@"Name"];
 	}
 
 	if(conflict->ServerDate != nil)
-		[newProperties setObject:[NSString stringWithCString:conflict->ServerDate] forKey:@"ServerDate"];
+		[newProperties setObject:[NSString stringWithUTF8String:conflict->ServerDate] forKey:@"ServerDate"];
 
 	if(conflict->ServerSize != nil)
-		[newProperties setObject:[NSString stringWithCString:conflict->ServerSize] forKey:@"ServerSize"];
+		[newProperties setObject:[NSString stringWithUTF8String:conflict->ServerSize] forKey:@"ServerSize"];
 
 	if(conflict->ServerFullPath != nil)
 	{
-		[newProperties setObject:[NSString stringWithCString:conflict->ServerFullPath] forKey:@"ServerFullPath"];
+		[newProperties setObject:[NSString stringWithUTF8String:conflict->ServerFullPath] forKey:@"ServerFullPath"];
 		if(!haveLocation)
-			[newProperties setObject:[NSString stringWithCString:conflict->ServerFullPath] forKey:@"Location"];
+			[newProperties setObject:[NSString stringWithUTF8String:conflict->ServerFullPath] forKey:@"Location"];
 	}
 
 	[newProperties setObject:[NSNumber numberWithBool:conflict->IsNameConflict] forKey:@"IsNameConflict"];
@@ -1467,7 +1467,8 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict)
 
 void init_gsoap(struct soap *pSoap, GSOAP_CREDS *creds)
 {
-	soap_init(pSoap);
+	soap_init2(pSoap, SOAP_C_UTFSTRING, SOAP_C_UTFSTRING);
+//	soap_init(pSoap);
 	soap_set_namespaces(pSoap, iFolder_namespaces);
 	
 	creds->username = malloc(1024);

@@ -67,13 +67,13 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 		struct _ns1__FindCloseMembers			findMessage;
 		struct _ns1__FindCloseMembersResponse	findResponse;
 
-		findMessage.domainID = (char *)[domainID cString];
-		findMessage.searchContext =  (char *)[searchContext cString];
+		findMessage.domainID = (char *)[domainID UTF8String];
+		findMessage.searchContext =  (char *)[searchContext UTF8String];
 
 		init_simias_gsoap (&soap, &creds);		
 		soap_call___ns1__FindCloseMembers(
 				&soap,
-				[simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+				[simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
 				NULL,
 				&findMessage,
 				&findResponse);
@@ -114,9 +114,9 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 	
 	domainID = [DomainID retain];
 	
-	findMessage.domainID = (char *)[domainID cString];
-	findMessage.attributeName = (char *)[attribute cString];
-	findMessage.searchString = (char *)[value cString];
+	findMessage.domainID = (char *)[domainID UTF8String];
+	findMessage.attributeName = (char *)[attribute UTF8String];
+	findMessage.searchString = (char *)[value UTF8String];
 	findMessage.operation = ns1__SearchType__Begins;
 
 	findMessage.count = PAGED_RESULT_COUNT;
@@ -124,7 +124,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 	init_simias_gsoap (&soap, &creds);
     err_code = soap_call___ns1__FindFirstSpecificMembers(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &findMessage,
             &findResponse);
@@ -138,7 +138,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 		totalCount = findResponse.totalMembers;
 		if(totalCount > 0)
 		{
-			searchContext = [[NSString stringWithCString:findResponse.searchContext] retain];
+			searchContext = [[NSString stringWithUTF8String:findResponse.searchContext] retain];
 			results = malloc(totalCount * sizeof(User *));
 			memset(results, 0, (totalCount * sizeof(User *)));
 			
@@ -177,13 +177,13 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 	
 	domainID = [DomainID retain];
 	
-	findMessage.domainID = (char *)[domainID cString];
+	findMessage.domainID = (char *)[domainID UTF8String];
 	findMessage.count = PAGED_RESULT_COUNT;
 
 	init_simias_gsoap (&soap, &creds);
     err_code = soap_call___ns1__FindFirstMembers(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &findMessage,
             &findResponse);
@@ -197,7 +197,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 		totalCount = findResponse.totalMembers;
 		if(totalCount > 0)
 		{
-			searchContext = [[NSString stringWithCString:findResponse.searchContext] retain];
+			searchContext = [[NSString stringWithUTF8String:findResponse.searchContext] retain];
 			results = malloc(totalCount * sizeof(User *));
 			memset(results, 0, (totalCount * sizeof(User *)));
 			
@@ -266,8 +266,8 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 
 	NSLog(@"fillMembers called to fill in more members");
 
-	findMessage.domainID = (char *)[domainID cString];
-	findMessage.searchContext = (char *)[searchContext cString];
+	findMessage.domainID = (char *)[domainID UTF8String];
+	findMessage.searchContext = (char *)[searchContext UTF8String];
 
 	// Fix up index so we get the full page of results that includes index
 	if(index > (totalCount - PAGED_RESULT_COUNT) )
@@ -286,7 +286,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 	init_simias_gsoap (&soap, &creds);
     err_code = soap_call___ns1__FindSeekMembers(
 			&soap,
-            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &findMessage,
             &findResponse);
@@ -302,7 +302,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 		if(totalCount > 0)
 		{
 			[searchContext release];
-			searchContext = [[NSString stringWithCString:findResponse.searchContext] retain];
+			searchContext = [[NSString stringWithUTF8String:findResponse.searchContext] retain];
 			if(results != NULL)
 			{
 				int counter;
@@ -348,19 +348,19 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member)
 	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
 
 	if(member->ObjectID != nil)
-		[newProperties setObject:[NSString stringWithCString:member->ObjectID] forKey:@"ID"];
+		[newProperties setObject:[NSString stringWithUTF8String:member->ObjectID] forKey:@"ID"];
 	if(member->UserID != nil)
-		[newProperties setObject:[NSString stringWithCString:member->UserID] forKey:@"UserID"];
+		[newProperties setObject:[NSString stringWithUTF8String:member->UserID] forKey:@"UserID"];
 	if(member->Name != nil)
-		[newProperties setObject:[NSString stringWithCString:member->Name] forKey:@"Name"];
+		[newProperties setObject:[NSString stringWithUTF8String:member->Name] forKey:@"Name"];
 	if(member->GivenName != nil)
-		[newProperties setObject:[NSString stringWithCString:member->GivenName] forKey:@"FirstName"];
+		[newProperties setObject:[NSString stringWithUTF8String:member->GivenName] forKey:@"FirstName"];
 	if(member->FamilyName != nil)
-		[newProperties setObject:[NSString stringWithCString:member->FamilyName] forKey:@"Surname"];
+		[newProperties setObject:[NSString stringWithUTF8String:member->FamilyName] forKey:@"Surname"];
 	if( (member->FullName != nil) && (strlen(member->FullName) > 0) )
-		[newProperties setObject:[NSString stringWithCString:member->FullName] forKey:@"FN"];
+		[newProperties setObject:[NSString stringWithUTF8String:member->FullName] forKey:@"FN"];
 	else
-		[newProperties setObject:[NSString stringWithCString:member->Name] forKey:@"FN"];
+		[newProperties setObject:[NSString stringWithUTF8String:member->Name] forKey:@"FN"];
 
 	[newProperties setObject:[NSNumber numberWithBool:member->IsOwner] forKey:@"IsOwner"];
 	

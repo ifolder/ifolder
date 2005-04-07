@@ -118,29 +118,29 @@ NSDictionary *getNodeEventProperties(SimiasNodeEvent *nodeEvent)
 	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
 
 	if(nodeEvent->event_type != nil)
-		[newProperties setObject:[NSString stringWithCString:nodeEvent->event_type] forKey:@"eventType"];
+		[newProperties setObject:[NSString stringWithUTF8String:nodeEvent->event_type] forKey:@"eventType"];
 	if(nodeEvent->action != nil)
-		[newProperties setObject:[NSString stringWithCString:nodeEvent->action] forKey:@"action"];
+		[newProperties setObject:[NSString stringWithUTF8String:nodeEvent->action] forKey:@"action"];
 	if(nodeEvent->time != nil)
-		[newProperties setObject:[NSString stringWithCString:nodeEvent->time] forKey:@"time"];
+		[newProperties setObject:[NSString stringWithUTF8String:nodeEvent->time] forKey:@"time"];
 	if(nodeEvent->source != nil)
-		[newProperties setObject:[NSString stringWithCString:nodeEvent->source] forKey:@"source"];
+		[newProperties setObject:[NSString stringWithUTF8String:nodeEvent->source] forKey:@"source"];
 	if(nodeEvent->collection != nil)
-		[newProperties setObject:[NSString stringWithCString:nodeEvent->collection] forKey:@"collectionID"];
+		[newProperties setObject:[NSString stringWithUTF8String:nodeEvent->collection] forKey:@"collectionID"];
 	if(nodeEvent->type != nil)
-		[newProperties setObject:[NSString stringWithCString:nodeEvent->type] forKey:@"type"];
+		[newProperties setObject:[NSString stringWithUTF8String:nodeEvent->type] forKey:@"type"];
 	if(nodeEvent->event_id != nil)
-		[newProperties setObject:[NSString stringWithCString:nodeEvent->event_id] forKey:@"event_id"];
+		[newProperties setObject:[NSString stringWithUTF8String:nodeEvent->event_id] forKey:@"event_id"];
 	if(nodeEvent->node != nil)
-		[newProperties setObject:[NSString stringWithCString:nodeEvent->node] forKey:@"nodeID"];
+		[newProperties setObject:[NSString stringWithUTF8String:nodeEvent->node] forKey:@"nodeID"];
 	if(nodeEvent->flags != nil)
-		[newProperties setObject:[NSString stringWithCString:nodeEvent->flags] forKey:@"flags"];
+		[newProperties setObject:[NSString stringWithUTF8String:nodeEvent->flags] forKey:@"flags"];
 	if(nodeEvent->master_rev != nil)
-		[newProperties setObject:[NSString stringWithCString:nodeEvent->master_rev] forKey:@"master_rev"];
+		[newProperties setObject:[NSString stringWithUTF8String:nodeEvent->master_rev] forKey:@"master_rev"];
 	if(nodeEvent->slave_rev != nil)
-		[newProperties setObject:[NSString stringWithCString:nodeEvent->slave_rev] forKey:@"slave_rev"];
+		[newProperties setObject:[NSString stringWithUTF8String:nodeEvent->slave_rev] forKey:@"slave_rev"];
 	if(nodeEvent->file_size != nil)
-		[newProperties setObject:[NSString stringWithCString:nodeEvent->file_size] forKey:@"file_size"];
+		[newProperties setObject:[NSString stringWithUTF8String:nodeEvent->file_size] forKey:@"file_size"];
 
 	return [newProperties autorelease];
 }
@@ -173,15 +173,15 @@ NSDictionary *getCollectionSyncEventProperties(SimiasCollectionSyncEvent *collec
 	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
 
 	if(collectionEvent->event_type != nil)
-		[newProperties setObject:[NSString stringWithCString:collectionEvent->event_type] forKey:@"eventType"];
+		[newProperties setObject:[NSString stringWithUTF8String:collectionEvent->event_type] forKey:@"eventType"];
 	if(collectionEvent->name != nil)
-		[newProperties setObject:[NSString stringWithCString:collectionEvent->name] forKey:@"name"];
+		[newProperties setObject:[NSString stringWithUTF8String:collectionEvent->name] forKey:@"name"];
 	if(collectionEvent->id != nil)
-		[newProperties setObject:[NSString stringWithCString:collectionEvent->id] forKey:@"ID"];
+		[newProperties setObject:[NSString stringWithUTF8String:collectionEvent->id] forKey:@"ID"];
 	if(collectionEvent->action != nil)
-		[newProperties setObject:[NSString stringWithCString:collectionEvent->action] forKey:@"action"];
+		[newProperties setObject:[NSString stringWithUTF8String:collectionEvent->action] forKey:@"action"];
 	if(collectionEvent->successful != nil)
-		[newProperties setObject:[NSString stringWithCString:collectionEvent->successful] forKey:@"successful"];
+		[newProperties setObject:[NSString stringWithUTF8String:collectionEvent->successful] forKey:@"successful"];
 
 	return [newProperties autorelease];
 }
@@ -213,29 +213,29 @@ NSDictionary *getFileSyncEventProperties(SimiasFileSyncEvent *fileEvent)
 	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
 
 	if(fileEvent->event_type != nil)
-		[newProperties setObject:[NSString stringWithCString:fileEvent->event_type] forKey:@"eventType"];
+		[newProperties setObject:[NSString stringWithUTF8String:fileEvent->event_type] forKey:@"eventType"];
 	if(fileEvent->collection_id != nil)
-		[newProperties setObject:[NSString stringWithCString:fileEvent->collection_id] forKey:@"collectionID"];
+		[newProperties setObject:[NSString stringWithUTF8String:fileEvent->collection_id] forKey:@"collectionID"];
 	if(fileEvent->name != nil)
-		[newProperties setObject:[NSString stringWithCString:fileEvent->name] forKey:@"name"];
+		[newProperties setObject:[NSString stringWithUTF8String:fileEvent->name] forKey:@"name"];
 	if(fileEvent->object_type != nil)
-		[newProperties setObject:[NSString stringWithCString:fileEvent->object_type] forKey:@"objectType"];
+		[newProperties setObject:[NSString stringWithUTF8String:fileEvent->object_type] forKey:@"objectType"];
 	if(fileEvent->delete_str != nil)
-		[newProperties setObject:[NSString stringWithCString:fileEvent->delete_str] forKey:@"delete_str"];
+		[newProperties setObject:[NSString stringWithUTF8String:fileEvent->delete_str] forKey:@"delete_str"];
 	if(fileEvent->size != nil)
 		[newProperties 
-			setObject:[NSNumber numberWithDouble:[[NSString stringWithCString:fileEvent->size] doubleValue]]
+			setObject:[NSNumber numberWithDouble:[[NSString stringWithUTF8String:fileEvent->size] doubleValue]]
 			forKey:@"size"];
 	if(fileEvent->size_to_sync != nil)
 		[newProperties 
-			setObject:[NSNumber numberWithDouble:[[NSString stringWithCString:fileEvent->size_to_sync] doubleValue]]
+			setObject:[NSNumber numberWithDouble:[[NSString stringWithUTF8String:fileEvent->size_to_sync] doubleValue]]
 			forKey:@"sizeToSync"];
 	if(fileEvent->size_remaining != nil)
 		[newProperties 
-			setObject:[NSNumber numberWithDouble:[[NSString stringWithCString:fileEvent->size_remaining] doubleValue]]
+			setObject:[NSNumber numberWithDouble:[[NSString stringWithUTF8String:fileEvent->size_remaining] doubleValue]]
 			forKey:@"sizeRemaining"];
 	if(fileEvent->direction != nil)
-		[newProperties setObject:[NSString stringWithCString:fileEvent->direction] forKey:@"direction"];
+		[newProperties setObject:[NSString stringWithUTF8String:fileEvent->direction] forKey:@"direction"];
 
 	return [newProperties autorelease];
 }
@@ -266,13 +266,13 @@ NSDictionary *getNotifyEventProperties(SimiasNotifyEvent *notifyEvent)
 	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
 
 	if(notifyEvent->event_type != nil)
-		[newProperties setObject:[NSString stringWithCString:notifyEvent->event_type] forKey:@"eventType"];
+		[newProperties setObject:[NSString stringWithUTF8String:notifyEvent->event_type] forKey:@"eventType"];
 	if(notifyEvent->message != nil)
-		[newProperties setObject:[NSString stringWithCString:notifyEvent->message] forKey:@"message"];
+		[newProperties setObject:[NSString stringWithUTF8String:notifyEvent->message] forKey:@"message"];
 	if(notifyEvent->time != nil)
-		[newProperties setObject:[NSString stringWithCString:notifyEvent->time] forKey:@"time"];
+		[newProperties setObject:[NSString stringWithUTF8String:notifyEvent->time] forKey:@"time"];
 	if(notifyEvent->type != nil)
-		[newProperties setObject:[NSString stringWithCString:notifyEvent->type] forKey:@"ID"];
+		[newProperties setObject:[NSString stringWithUTF8String:notifyEvent->type] forKey:@"ID"];
 
 	return [newProperties autorelease];
 }
