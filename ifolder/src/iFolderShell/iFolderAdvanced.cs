@@ -1734,17 +1734,21 @@ namespace Novell.iFolderCom
 
 		private void collectionSync(CollectionSyncEventArgs collectionSyncEventArgs)
 		{
-			SyncSize syncSize = ifWebService.CalculateSyncSize(currentiFolder.ID);
-			objectCount.Text = syncSize.SyncNodeCount.ToString();
+			try
+			{
+				SyncSize syncSize = ifWebService.CalculateSyncSize(currentiFolder.ID);
+				objectCount.Text = syncSize.SyncNodeCount.ToString();
 
-			if (collectionSyncEventArgs.Action.Equals(Action.StartSync))
-			{
-				startSync = true;
+				if (collectionSyncEventArgs.Action.Equals(Action.StartSync))
+				{
+					startSync = true;
+				}
+				else if ((collectionSyncEventArgs.Action == Action.StopSync) && collectionSyncEventArgs.Successful)
+				{
+					lastSync.Text = ifWebService.GetiFolder(currentiFolder.ID).LastSyncTime;
+				}
 			}
-			else if ((collectionSyncEventArgs.Action == Action.StopSync) && collectionSyncEventArgs.Successful)
-			{
-				lastSync.Text = DateTime.Now.ToString();
-			}
+			catch {}
 		}
 
 		private void connectToWebService()
