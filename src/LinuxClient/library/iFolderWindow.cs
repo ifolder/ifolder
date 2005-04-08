@@ -178,7 +178,6 @@ namespace Novell.iFolder
 		private iFolderData			ifdata;
 		private Gdk.Pixbuf			iFolderPixBuf;
 		private Gdk.Pixbuf			ServeriFolderPixBuf;
-		private Gdk.Pixbuf			ConflictPixBuf;
 
 		private Statusbar			MainStatusBar;
 		private ProgressBar			SyncBar;
@@ -585,8 +584,6 @@ namespace Novell.iFolder
 			ServeriFolderPixBuf = 
 				new Gdk.Pixbuf(Util.ImagesPath("serverifolder24.png"));
 			iFolderPixBuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
-			ConflictPixBuf = 
-				new Gdk.Pixbuf(Util.ImagesPath("conflict24.png"));
 		
 			return vbox;
 		}
@@ -653,10 +650,7 @@ namespace Novell.iFolder
 				((CellRendererPixbuf) cell).Pixbuf = ServeriFolderPixBuf;
 			else
 			{
-				if(ifHolder.iFolder.HasConflicts)
-					((CellRendererPixbuf) cell).Pixbuf = ConflictPixBuf;
-				else
-					((CellRendererPixbuf) cell).Pixbuf = iFolderPixBuf;
+				((CellRendererPixbuf) cell).Pixbuf = iFolderPixBuf;
 			}
 		}
 
