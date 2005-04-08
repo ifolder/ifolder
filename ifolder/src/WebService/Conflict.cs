@@ -29,7 +29,7 @@ using System.IO;
 namespace Novell.iFolder.Web
 {
 	/// <summary>
-	/// This class exists only to represent a Member and should only be
+	/// This class exists only to represent a Conflict and should only be
 	/// used in association with the iFolderWebService class.
 	/// </summary>
 	[Serializable]
