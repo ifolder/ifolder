@@ -66,7 +66,7 @@ namespace Novell.FormsTrayApp
 			// Load the application icon.
 			try
 			{
-				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
+				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"ifolder_app.ico"));
 
 				toolBar1.ImageList = new ImageList();
 				toolBar1.ImageList.ImageSize = new Size(24, 24);

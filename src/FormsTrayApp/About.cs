@@ -36,11 +36,11 @@ namespace Novell.FormsTrayApp
 	public class About : System.Windows.Forms.Form
 	{
 		private System.Windows.Forms.PictureBox pictureBox1;
-		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Button credits;
 		private System.Windows.Forms.Button close;
 		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.Label title;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -52,6 +52,22 @@ namespace Novell.FormsTrayApp
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
+
+			// Add the version string.
+			System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(About));
+			title.Text = string.Format(resourceManager.GetString("title.Text"), System.Reflection.Assembly.GetExecutingAssembly().ImageRuntimeVersion);
+
+			// Center the title text.
+			Graphics g = title.CreateGraphics();
+			try
+			{
+				SizeF size = g.MeasureString(title.Text, title.Font);
+				title.Left = (ClientRectangle.Width - (int)size.Width) / 2;
+			}
+			finally
+			{
+				g.Dispose();
+			}
 		}
 
 		/// <summary>
@@ -78,7 +94,7 @@ namespace Novell.FormsTrayApp
 		{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(About));
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
-			this.label1 = new System.Windows.Forms.Label();
+			this.title = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.credits = new System.Windows.Forms.Button();
 			this.close = new System.Windows.Forms.Button();
@@ -106,27 +122,27 @@ namespace Novell.FormsTrayApp
 			this.pictureBox1.Text = resources.GetString("pictureBox1.Text");
 			this.pictureBox1.Visible = ((bool)(resources.GetObject("pictureBox1.Visible")));
 			// 
-			// label1
+			// title
 			// 
-			this.label1.AccessibleDescription = resources.GetString("label1.AccessibleDescription");
-			this.label1.AccessibleName = resources.GetString("label1.AccessibleName");
-			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label1.Anchor")));
-			this.label1.AutoSize = ((bool)(resources.GetObject("label1.AutoSize")));
-			this.label1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label1.Dock")));
-			this.label1.Enabled = ((bool)(resources.GetObject("label1.Enabled")));
-			this.label1.Font = ((System.Drawing.Font)(resources.GetObject("label1.Font")));
-			this.label1.Image = ((System.Drawing.Image)(resources.GetObject("label1.Image")));
-			this.label1.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.ImageAlign")));
-			this.label1.ImageIndex = ((int)(resources.GetObject("label1.ImageIndex")));
-			this.label1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label1.ImeMode")));
-			this.label1.Location = ((System.Drawing.Point)(resources.GetObject("label1.Location")));
-			this.label1.Name = "label1";
-			this.label1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label1.RightToLeft")));
-			this.label1.Size = ((System.Drawing.Size)(resources.GetObject("label1.Size")));
-			this.label1.TabIndex = ((int)(resources.GetObject("label1.TabIndex")));
-			this.label1.Text = resources.GetString("label1.Text");
-			this.label1.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.TextAlign")));
-			this.label1.Visible = ((bool)(resources.GetObject("label1.Visible")));
+			this.title.AccessibleDescription = resources.GetString("title.AccessibleDescription");
+			this.title.AccessibleName = resources.GetString("title.AccessibleName");
+			this.title.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("title.Anchor")));
+			this.title.AutoSize = ((bool)(resources.GetObject("title.AutoSize")));
+			this.title.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("title.Dock")));
+			this.title.Enabled = ((bool)(resources.GetObject("title.Enabled")));
+			this.title.Font = ((System.Drawing.Font)(resources.GetObject("title.Font")));
+			this.title.Image = ((System.Drawing.Image)(resources.GetObject("title.Image")));
+			this.title.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("title.ImageAlign")));
+			this.title.ImageIndex = ((int)(resources.GetObject("title.ImageIndex")));
+			this.title.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("title.ImeMode")));
+			this.title.Location = ((System.Drawing.Point)(resources.GetObject("title.Location")));
+			this.title.Name = "title";
+			this.title.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("title.RightToLeft")));
+			this.title.Size = ((System.Drawing.Size)(resources.GetObject("title.Size")));
+			this.title.TabIndex = ((int)(resources.GetObject("title.TabIndex")));
+			this.title.Text = resources.GetString("title.Text");
+			this.title.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("title.TextAlign")));
+			this.title.Visible = ((bool)(resources.GetObject("title.Visible")));
 			// 
 			// label2
 			// 
@@ -235,7 +251,7 @@ namespace Novell.FormsTrayApp
 			this.Controls.Add(this.close);
 			this.Controls.Add(this.credits);
 			this.Controls.Add(this.label2);
-			this.Controls.Add(this.label1);
+			this.Controls.Add(this.title);
 			this.Controls.Add(this.pictureBox1);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
