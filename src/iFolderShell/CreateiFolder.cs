@@ -462,6 +462,26 @@ namespace Novell.iFolderCom
 
 			try
 			{
+				try
+				{
+					Uri uriPath = new Uri( 
+						ifolderPath.Text.EndsWith(Path.DirectorySeparatorChar.ToString()) ?
+						ifolderPath.Text :
+						ifolderPath.Text + Path.DirectorySeparatorChar.ToString());
+
+					if (ifolderPath.Text.StartsWith(@"\\"))
+					{
+						throw new Exception("Invalid path");
+					}
+				}
+				catch
+				{
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("invalidFolder"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+					successful = false;
+					return;
+				}
+
 				if (!Directory.Exists(ifolderPath.Text))
 				{
 					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("createPrompt"), resourceManager.GetString("createPromptTitle"), string.Empty, MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question);
