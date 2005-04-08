@@ -140,6 +140,10 @@ namespace Simias.Web
 
 
 			String name = Path.GetFileName(LocalPath);
+			if (name.Equals(string.Empty))
+			{
+				name = LocalPath;
+			}
 
 			return CreateSharedCollection(name, member.UserID, 
 						Type, true, LocalPath);
@@ -178,6 +182,10 @@ namespace Simias.Web
 
 
 			String name = Path.GetFileName(LocalPath);
+			if (name.Equals(string.Empty))
+			{
+				name = LocalPath;
+			}
 
 			return CreateSharedCollection(name, DomainID, member.UserID, 
 						Type, true, LocalPath);
