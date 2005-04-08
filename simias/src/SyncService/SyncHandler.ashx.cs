@@ -56,6 +56,8 @@ namespace Simias.Sync.Web
 					{
 						case SyncMethod.StartSync:
 							Session.Timeout = 6;
+							if (Service != null)
+								Service.Dispose();
 							Service = new HttpService();
 							Session[ServiceString] = Service;
 							Service.StartSync(Request, Response, Session);
@@ -104,6 +106,7 @@ namespace Simias.Sync.Web
 							break;
 						case SyncMethod.EndSync:
 							Service.EndSync(Request, Response);
+							Service.Dispose();
 							Session.Remove(ServiceString);
 							break;
 						default:

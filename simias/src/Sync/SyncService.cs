@@ -142,6 +142,14 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
+		/// Called to dispose.
+		/// </summary>
+		public void Dispose()
+		{
+			Dispose(false);
+		}
+
+		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="inFinalize"></param>
@@ -149,7 +157,7 @@ namespace Simias.Sync
 		{
 			lock (this)
 			{
-				if (inFinalize)
+				if (!inFinalize)
 				{
 					GC.SuppressFinalize(this);
 				}
@@ -157,6 +165,16 @@ namespace Simias.Sync
 				{
 					cLock.ReleaseLock();
 					cLock = null;
+				}
+				if (inFile != null)
+				{
+					inFile.Close(false);
+					inFile = null;
+				}
+				if (outFile != null)
+				{
+					outFile.Close();
+					outFile = null;
 				}
 			}
 		}

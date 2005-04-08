@@ -790,6 +790,32 @@ namespace Simias.Sync.Http
 	{
 		SyncService service;
 
+		~HttpService()
+		{
+			Dispose(true);
+		}
+
+		/// <summary>
+		/// Called to dispose.
+		/// </summary>
+		public void Dispose()
+		{
+			Dispose(false);
+		}
+
+		private void Dispose(bool inFinalizer)
+		{
+			if (!inFinalizer)
+			{
+				GC.SuppressFinalize(this);
+			}
+			if (service != null)
+			{
+				service.Dispose();
+				service = null;
+			}
+		}
+
 		/// <summary>
 		/// Start the sync pass.
 		/// </summary>
