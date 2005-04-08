@@ -1054,12 +1054,11 @@ namespace Novell.FormsTrayApp
 		{
 			try
 			{
-				ifolderFromNotify = ifolder;
-
 				if (ifolder.HasConflicts)
 				{
 					if (preferences.NotifyCollisionEnabled)
 					{
+						ifolderFromNotify = ifolder;
 						string message = string.Format(resourceManager.GetString("collisionMessage"), ifolder.Name);
 
 						notifyType = NotifyType.Collision;
@@ -1072,6 +1071,7 @@ namespace Novell.FormsTrayApp
 				{
 					if (preferences.NotifyShareEnabled)
 					{
+						ifolderFromNotify = ifolder;
 						string title = string.Format(resourceManager.GetString("subscriptionTitle"), ifolder.Name);
 						string message = string.Format(resourceManager.GetString("subscriptionMessage"), ifolder.Owner);
 
@@ -1085,6 +1085,7 @@ namespace Novell.FormsTrayApp
 				{
 					if (preferences.NotifyJoinEnabled)
 					{
+						ifolderFromNotify = ifolder;
 						string message = string.Format(resourceManager.GetString("newMemberMessage"), 
 							(ifolderUser.FN != null) && !ifolderUser.FN.Equals(string.Empty) ? ifolderUser.FN : ifolderUser.Name, 
 							ifolder.Name);
