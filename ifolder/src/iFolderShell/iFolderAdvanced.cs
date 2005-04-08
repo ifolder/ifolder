@@ -2537,7 +2537,7 @@ namespace Novell.iFolderCom
 				shareWith.SmallImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_card.ico")));
 				shareWith.SmallImageList.Images.Add(new Icon(Path.Combine(basePath, "inviteduser.ico")));
 
-				this.Icon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
+				this.Icon = new Icon(Path.Combine(basePath, @"..\ifolder_app.ico"));
 
 //				conflictIcon.SizeMode = PictureBoxSizeMode.StretchImage;
 				conflictIcon.Image = new Icon(new Icon(Path.Combine(basePath, "ifolderconflict.ico")), 32, 32).ToBitmap();

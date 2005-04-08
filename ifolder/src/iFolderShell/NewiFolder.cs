@@ -220,6 +220,7 @@ namespace Novell.iFolderCom
 			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
 			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
 			this.Text = resources.GetString("$this.Text");
+			this.Load += new System.EventHandler(this.NewiFolder_Load);
 			this.ResumeLayout(false);
 
 		}
@@ -270,6 +271,15 @@ namespace Novell.iFolderCom
 		{
 			new iFolderComponent().ShowHelp(LoadPath);
 		}*/
+
+		private void NewiFolder_Load(object sender, System.EventArgs e)
+		{
+			try
+			{
+				this.Icon = new Icon(Path.Combine(loadPath, @"ifolder_app.ico"));
+			}
+			catch {}
+		}
 
 		private void iFolderOverview_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
 		{

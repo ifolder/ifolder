@@ -182,7 +182,7 @@ namespace Novell.FormsTrayApp
 			// Load the application icon
 			try
 			{
-				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
+				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"ifolder_app.ico"));
 
 				// TODO: need icons for the different states.
 				//	- iFolder with conflicts.

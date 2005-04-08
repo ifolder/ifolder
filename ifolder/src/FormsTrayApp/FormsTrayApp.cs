@@ -156,7 +156,7 @@ namespace Novell.FormsTrayApp
 			notifyMessageDelegate = new NotifyMessageDelegate(notifyMessage);
 
 			// Check for currently running instance.  Search for existing window ...
-			string windowName = resourceManager.GetString("$this.Text") + " " + Environment.UserName;
+			string windowName = "iFolder Services " + Environment.UserName;
 			Novell.Win32Util.Win32Window window = Novell.Win32Util.Win32Window.FindWindow(null, windowName);
 			if (window != null)
 			{
@@ -172,7 +172,7 @@ namespace Novell.FormsTrayApp
 				InitializeComponent();
 
 				// Append the username to the window string so we can search for it.
-				this.Text += " " + Environment.UserName;
+				this.Text = "iFolder Services " + Environment.UserName;
 
 				this.components = new System.ComponentModel.Container();
 

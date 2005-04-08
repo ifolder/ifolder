@@ -602,7 +602,7 @@ namespace Novell.FormsTrayApp
 			// Load the application icon.
 			try
 			{
-				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
+				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"ifolder_app.ico"));
 				banner.Image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
 
 

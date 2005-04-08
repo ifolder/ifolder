@@ -525,6 +525,12 @@ namespace Novell.FormsTrayApp
 
 		private void AcceptInvitation_Load(object sender, System.EventArgs e)
 		{
+			try
+			{
+				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"ifolder_app.ico"));
+			}
+			catch {}
+
 			this.Text = string.Format(this.Text, ifolder.Name);
 
 			// Add the iFolder details to the list box.

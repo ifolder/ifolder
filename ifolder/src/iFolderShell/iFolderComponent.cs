@@ -408,17 +408,27 @@ namespace Novell.iFolderCom
 		{
 			if (ifWebService == null)
 			{
-				DateTime currentTime = DateTime.Now;
-				if ((currentTime.Ticks - ticks) > delta)
+				// Check if the iFolder Client is running.
+				string windowName = "iFolder Services " + Environment.UserName;
+				Novell.Win32Util.Win32Window window = Novell.Win32Util.Win32Window.FindWindow(null, windowName);
+				if (window != null)
 				{
-					ticks = currentTime.Ticks;
-					Uri uri = Manager.LocalServiceUrl;
-					if (uri != null)
+					DateTime currentTime = DateTime.Now;
+					if ((currentTime.Ticks - ticks) > delta)
 					{
-						ifWebService = new iFolderWebService();
-						ifWebService.Url = uri.ToString() + "/iFolder.asmx";
-						LocalService.Start(ifWebService);
+						ticks = currentTime.Ticks;
+						Uri uri = Manager.LocalServiceUrl;
+						if (uri != null)
+						{
+							ifWebService = new iFolderWebService();
+							ifWebService.Url = uri.ToString() + "/iFolder.asmx";
+							LocalService.Start(ifWebService);
+						}
 					}
+				}
+				else
+				{
+					throw new Exception("iFolder Client not running");
 				}
 			}
 		}

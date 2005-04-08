@@ -577,7 +577,7 @@ namespace Novell.FormsTrayApp
 			// Load the icon.
 			try
 			{
-				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
+				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"ifolder_app.ico"));
 			}
 			catch {} // Non-fatal ...
 

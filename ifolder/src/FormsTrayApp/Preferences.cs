@@ -1658,132 +1658,104 @@ namespace Novell.FormsTrayApp
 					case StatusCodes.SuccessInGrace:
 						// Set the credentials in the current process.
 						DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, password.Text);
-						Status authStatus = domainAuth.Authenticate();
+						domainAuth.Authenticate();
 
-						switch (authStatus.statusCode)
+						Domain domain = new Domain(domainInfo);
+						updateAccount(domain);
+
+						// Associate the new domain with the listview item.
+						newAccountLvi.SubItems[0].Text = domainInfo.Name;
+
+						newAccountLvi.SubItems[2].Text = resourceManager.GetString("statusLoggedIn");
+						newAccountLvi.Tag = domain;
+						server.Text = domainInfo.Host;
+						newAccountLvi = null;
+
+						// Successfully joined ... don't allow the fields to be changed.
+						userName.ReadOnly = server.ReadOnly = true;
+						processing = false;
+
+						if (EnterpriseConnect != null)
 						{
-							case StatusCodes.Success:
-							case StatusCodes.SuccessInGrace:
-								Domain domain = new Domain(domainInfo);
-
-								updateAccount(domain);
-
-								// Associate the new domain with the listview item.
-								newAccountLvi.SubItems[0].Text = domainInfo.Name;
-
-								newAccountLvi.SubItems[2].Text = resourceManager.GetString("statusLoggedIn");
-								newAccountLvi.Tag = domain;
-								server.Text = domainInfo.Host;
-								newAccountLvi = null;
-
-								// Successfully joined ... don't allow the fields to be changed.
-								userName.ReadOnly = server.ReadOnly = true;
-								processing = false;
-
-								if (EnterpriseConnect != null)
-								{
-									// Fire the event telling that a new domain has been added.
-									EnterpriseConnect(this, new DomainConnectEventArgs(domainInfo));
-								}
-
-								addAccount.Enabled = details.Enabled = enableAccount.Enabled = true;
-
-								login.Visible = false;
-								logout.Visible = true;
-
-								// Don't burn a grace login looking for an update.
-								if (!authStatus.statusCode.Equals(StatusCodes.SuccessInGrace))
-								{
-									try
-									{
-										// Check for an update.
-										if (FormsTrayApp.CheckForClientUpdate(domainInfo.ID))
-										{
-											if (ShutdownTrayApp != null)
-											{
-												// Shut down the tray app.
-												ShutdownTrayApp(this, new EventArgs());
-											}
-										}
-									}
-									catch // Ignore
-									{
-									}
-								}
-
-								if (!rememberPassword.Checked)
-								{
-									password.Text = string.Empty;
-								}
-
-								if (defaultServer.Checked)
-								{
-									try
-									{
-										simiasWebService.SetDefaultDomain(domain.DomainInfo.ID);
-
-										domain.DomainInfo.IsDefault = true;
-										newDefaultDomain = null;
-										defaultServer.Enabled = false;
-
-										// Reset the current default.
-										if (currentDefaultDomain != null)
-										{
-											currentDefaultDomain.DomainInfo.IsDefault = false;
-										}
-
-										// Save the new default.
-										currentDefaultDomain = domain;
-
-										// Fire the event telling that the default domain has changed.
-										if (ChangeDefaultDomain != null)
-										{
-											ChangeDefaultDomain(this, new DomainConnectEventArgs(currentDefaultDomain.DomainInfo));
-										}
-									}
-									catch (Exception ex)
-									{
-										mmb = new MyMessageBox(resourceManager.GetString("setDefaultError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-										mmb.ShowDialog();
-									}
-								}
-
-								if (authStatus.RemainingGraceLogins < authStatus.TotalGraceLogins)
-								{
-									mmb = new MyMessageBox(
-										string.Format(resourceManager.GetString("graceLogin"), authStatus.RemainingGraceLogins),
-										resourceManager.GetString("graceLoginTitle"),
-										string.Empty,
-										MyMessageBoxButtons.OK,
-										MyMessageBoxIcon.Information);
-									mmb.ShowDialog();
-								}
-								
-								result = true;
-								break;
-							case StatusCodes.InvalidCredentials:
-							case StatusCodes.InvalidPassword:
-							case StatusCodes.UnknownUser:
-								mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-								mmb.ShowDialog();
-								break;
-							case StatusCodes.AccountDisabled:
-								mmb = new MyMessageBox(resourceManager.GetString("accountDisabled"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-								mmb.ShowDialog();
-								break;
-							case StatusCodes.AccountLockout:
-								mmb = new MyMessageBox(resourceManager.GetString("accountLockout"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-								mmb.ShowDialog();
-								break;
-							case StatusCodes.SimiasLoginDisabled:
-								mmb = new MyMessageBox(resourceManager.GetString("iFolderAccountDisabled"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-								mmb.ShowDialog();
-								break;
-							default:
-								mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-								mmb.ShowDialog();
-								break;
+							// Fire the event telling that a new domain has been added.
+							EnterpriseConnect(this, new DomainConnectEventArgs(domainInfo));
 						}
+
+						addAccount.Enabled = details.Enabled = enableAccount.Enabled = true;
+
+						login.Visible = false;
+						logout.Visible = true;
+
+						// Don't burn a grace login looking for an update.
+						if (!domainInfo.StatusCode.Equals(StatusCodes.SuccessInGrace))
+						{
+							try
+							{
+								// Check for an update.
+								if (FormsTrayApp.CheckForClientUpdate(domainInfo.ID))
+								{
+									if (ShutdownTrayApp != null)
+									{
+										// Shut down the tray app.
+										ShutdownTrayApp(this, new EventArgs());
+									}
+								}
+							}
+							catch // Ignore
+							{
+							}
+						}
+
+						if (!rememberPassword.Checked)
+						{
+							password.Text = string.Empty;
+						}
+
+						if (defaultServer.Checked)
+						{
+							try
+							{
+								simiasWebService.SetDefaultDomain(domain.DomainInfo.ID);
+
+								domain.DomainInfo.IsDefault = true;
+								newDefaultDomain = null;
+								defaultServer.Enabled = false;
+
+								// Reset the current default.
+								if (currentDefaultDomain != null)
+								{
+									currentDefaultDomain.DomainInfo.IsDefault = false;
+								}
+
+								// Save the new default.
+								currentDefaultDomain = domain;
+
+								// Fire the event telling that the default domain has changed.
+								if (ChangeDefaultDomain != null)
+								{
+									ChangeDefaultDomain(this, new DomainConnectEventArgs(currentDefaultDomain.DomainInfo));
+								}
+							}
+							catch (Exception ex)
+							{
+								mmb = new MyMessageBox(resourceManager.GetString("setDefaultError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb.ShowDialog();
+							}
+						}
+
+						// TODO: grace logins needs to be part of DomainInformation
+/*						if (authStatus.RemainingGraceLogins < authStatus.TotalGraceLogins)
+						{
+							mmb = new MyMessageBox(
+								string.Format(resourceManager.GetString("graceLogin"), authStatus.RemainingGraceLogins),
+								resourceManager.GetString("graceLoginTitle"),
+								string.Empty,
+								MyMessageBoxButtons.OK,
+								MyMessageBoxIcon.Information);
+							mmb.ShowDialog();
+						}*/
+						
+						result = true;
 						break;
 					case StatusCodes.InvalidCredentials:
 					case StatusCodes.InvalidPassword:
@@ -2195,7 +2167,7 @@ namespace Novell.FormsTrayApp
 			// Load the application icon and banner image.
 			try
 			{
-				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
+				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"ifolder_app.ico"));
 			}
 			catch {} // Non-fatal ...
 
@@ -2251,7 +2223,8 @@ namespace Novell.FormsTrayApp
 				{
 					// Update the default sync interval setting.
 					int syncInterval = ifWebService.GetDefaultSyncInterval();
-					minimumSeconds = syncInterval < (int)defaultMinimumSeconds ? (decimal)syncInterval : defaultMinimumSeconds;
+					minimumSeconds = (!syncInterval.Equals(System.Threading.Timeout.Infinite) &&
+						(syncInterval < (int)defaultMinimumSeconds)) ? (decimal)syncInterval : defaultMinimumSeconds;
 
 					displaySyncInterval(syncInterval);
 				}
