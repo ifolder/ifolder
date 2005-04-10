@@ -19,10 +19,9 @@ EXTRA_DIST =
 
 install-exec-local:
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
-	$(INSTALL_PROGRAM) ifdata $(DESTDIR)$(webbindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(webbindir); rm -f ifdata
+	cd $(DESTDIR)$(webbindir)
 
 installcheck-summary:
 	rm -f $(REPORT_DIR)/*.test.xml
