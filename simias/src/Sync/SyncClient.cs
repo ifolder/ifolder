@@ -1184,13 +1184,18 @@ namespace Simias.Sync
 							conflictPath = conflict.UpdateConflictPath;
 						}
 						if (conflictPath != null)
-							File.Delete(conflictPath);
+						{
+							if (File.Exists(conflictPath))
+								File.Delete(conflictPath);
+						}
 					}
 						
 					DirNode dn = node as DirNode;
 					if (dn != null)
 					{
-						Directory.Delete(dn.GetFullPath(collection), true);
+						string fullPath = dn.GetFullPath(collection); 
+						if (Directory.Exists(fullPath))
+							Directory.Delete(fullPath, true);
 						eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.Directory, true, node.Name, 0, 0, 0, Direction.Downloading));
 						Node[] deleted = collection.Delete(node, PropertyTags.Parent);
 						collection.Commit(deleted);
@@ -1431,7 +1436,16 @@ namespace Simias.Sync
 
 					if (!Directory.Exists(path))
 					{
-						Directory.CreateDirectory(path);
+						try
+						{
+							Directory.CreateDirectory(path);
+						}
+						catch (Exception ex)
+						{
+							// Create a collision.
+							node = collection.CreateCollision(node, true) as DirNode;
+							Conflict.SetFileConflictPath(node, node.GetFullPath(collection));
+						}
 					}
 					collection.Commit(node);
 					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.Directory, false, node.Name, 0, 0, 0, Direction.Downloading));

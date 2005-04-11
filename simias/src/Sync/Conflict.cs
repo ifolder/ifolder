@@ -86,7 +86,7 @@ public class Conflict
 		get
 		{
 			string n = FileNameConflictPath;
-			return n != null && File.Exists(n);
+			return n != null;
 		}
 	}
 
@@ -126,10 +126,7 @@ public class Conflict
 	{
 		get
 		{
-			BaseFileNode bfn = node as BaseFileNode;
-			if (bfn == null)
-				return null;
-			return GetFileConflictPath(collection, bfn);
+			return GetFileConflictPath(collection, node);
 		}
 	}
 
@@ -180,23 +177,28 @@ public class Conflict
 	/// Gets the file name for a File name conflict.
 	/// </summary>
 	/// <param name="collection">The collection the node belongs to.</param>
-	/// <param name="bfn">The BaseFile Node.</param>
+	/// <param name="node">The Node.</param>
 	/// <returns>The path for the conflict file.</returns>
-	public static string GetFileConflictPath(Collection collection, BaseFileNode bfn)
+	public static string GetFileConflictPath(Collection collection, Node node)
 	{
-		Property pPath = bfn.Properties.GetSingleProperty(ConflictNameProperty);
+		Property pPath = node.Properties.GetSingleProperty(ConflictNameProperty);
 		if (pPath != null)
 		{
 			return pPath.Value.ToString();
 		}
-		return (Path.Combine(ConflictBin, ConflictFilePrefix + bfn.ID));
+		return (Path.Combine(ConflictBin, ConflictFilePrefix + node.ID));
 	}
 
-	public static void SetFileConflictPath(BaseFileNode bfn, string path)
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="node"></param>
+	/// <param name="path"></param>
+	public static void SetFileConflictPath(Node node, string path)
 	{
 		Property pPath = new Property(ConflictNameProperty, path);
 		pPath.LocalProperty = true;
-		bfn.Properties.ModifyProperty(pPath);
+		node.Properties.ModifyProperty(pPath);
 	}
 
 	//---------------------------------------------------------------------------
@@ -253,7 +255,10 @@ public class Conflict
 		}
 		node = collection.ResolveCollision(node, conflictNode.LocalIncarnation, false);
 		if (fncpath != null)
+		{
 			node = collection.CreateCollision(conflictNode, true);
+			Conflict.SetFileConflictPath(node, path);
+		}
 		if (fInfo != null)
 		{
 			BaseFileNode bfn = node as BaseFileNode;
@@ -274,29 +279,48 @@ public class Conflict
 	/// </summary>
 	public void Resolve(string newNodeName)
 	{
-		if (newNodeName == node.Name)
+		FileNode fn = node as FileNode;
+		if (fn != null)
 		{
-			// We are resolving to the same name.
-			if (Path.GetDirectoryName(FileNameConflictPath) != Path.GetDirectoryName(NonconflictedPath))
+			if (newNodeName == node.Name)
 			{
-				// This file is in the conflict bin and has been sync-ed from the server.  We do not need
-				// To push it back up.  Set internal.
-				node.Properties.State = PropertyList.PropertyListState.Internal;
-				File.Move(FileNameConflictPath, Path.Combine(Path.GetDirectoryName(NonconflictedPath), newNodeName));
+				// We are resolving to the same name.
+				if (Path.GetDirectoryName(FileNameConflictPath) != Path.GetDirectoryName(NonconflictedPath))
+				{
+					// This file is in the conflict bin and has been sync-ed from the server.  We do not need
+					// To push it back up.  Set internal.
+					node.Properties.State = PropertyList.PropertyListState.Internal;
+					File.Move(FileNameConflictPath, Path.Combine(Path.GetDirectoryName(NonconflictedPath), newNodeName));
+				}
 			}
+			else
+			{
+				//TODO: what if move succeeds but node rename or commit fails?
+				File.Move(FileNameConflictPath, Path.Combine(Path.GetDirectoryName(NonconflictedPath), newNodeName));
+				string relativePath = node.Properties.GetSingleProperty(PropertyTags.FileSystemPath).Value.ToString();
+				relativePath = relativePath.Remove(relativePath.Length - node.Name.Length, node.Name.Length) + newNodeName;
+				node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
+				node.Name = newNodeName;
+			}
+			Node newNode = collection.DeleteCollision(node);
+			newNode.Properties.DeleteSingleProperty(ConflictNameProperty);
+			collection.Commit(newNode);
 		}
 		else
 		{
-			//TODO: what if move succeeds but node rename or commit fails?
-			File.Move(FileNameConflictPath, Path.Combine(Path.GetDirectoryName(NonconflictedPath), newNodeName));
-			string relativePath = node.Properties.GetSingleProperty(PropertyTags.FileSystemPath).Value.ToString();
-			relativePath = relativePath.Remove(relativePath.Length - node.Name.Length, node.Name.Length) + newNodeName;
-			node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
-			node.Name = newNodeName;
+			DirNode dn = node as DirNode;
+			if (dn != null)
+			{
+				Directory.CreateDirectory(Path.Combine(Path.GetDirectoryName(FileNameConflictPath), newNodeName));
+				string relativePath = node.Properties.GetSingleProperty(PropertyTags.FileSystemPath).Value.ToString();
+				relativePath = relativePath.Remove(relativePath.Length - node.Name.Length, node.Name.Length) + newNodeName;
+				node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
+				node.Name = newNodeName;
+				Node newNode = collection.DeleteCollision(node);
+				newNode.Properties.DeleteSingleProperty(ConflictNameProperty);
+				collection.Commit(newNode);
+			}
 		}
-		Node newNode = collection.DeleteCollision(node);
-		newNode.Properties.DeleteSingleProperty(ConflictNameProperty);
-		collection.Commit(newNode);
 	}
 
 	

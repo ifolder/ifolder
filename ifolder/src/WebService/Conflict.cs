@@ -116,22 +116,36 @@ namespace Novell.iFolder.Web
 			if(conflict.IsFileNameConflict)
 			{
 				IsNameConflict = true;
-
-				FileNode fileNode = new FileNode(node);
-				string name = Path.GetFileName(conflict.NonconflictedPath);
-				if (name.Equals(Path.GetFileName(conflict.FileNameConflictPath)))
+				
+				FileNode fileNode = node as FileNode;
+				if (fileNode != null)
 				{
-					LocalName = name;
-					LocalDate = fileNode.LastWriteTime.ToString();
-					LocalSize = formatFileSize(fileNode.Length);
-					LocalFullPath = conflict.FileNameConflictPath;
+					string name = Path.GetFileName(conflict.NonconflictedPath);
+					if (name.Equals(Path.GetFileName(conflict.FileNameConflictPath)))
+					{
+						LocalName = name;
+						LocalDate = fileNode.LastWriteTime.ToString();
+						LocalSize = formatFileSize(fileNode.Length);
+						LocalFullPath = conflict.FileNameConflictPath;
+					}
+					else
+					{
+						ServerName = name;
+						ServerDate = fileNode.LastWriteTime.ToString();
+						ServerSize = formatFileSize(fileNode.Length);
+						ServerFullPath = conflict.NonconflictedPath;
+					}
 				}
 				else
 				{
-					ServerName = name;
-					ServerDate = fileNode.LastWriteTime.ToString();
-					ServerSize = formatFileSize(fileNode.Length);
-					ServerFullPath = conflict.NonconflictedPath;
+					DirNode dn = node as DirNode;
+					if (dn != null)
+					{
+						ServerName = dn.Name;
+						ServerDate = null;
+						ServerSize = null;
+						ServerFullPath = conflict.FileNameConflictPath;
+					}
 				}
 			}
 			else
