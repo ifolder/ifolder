@@ -42,6 +42,7 @@
             CLASS = PropSharingController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                addUsers = NSButton; 
                 currentUsers = NSTableView; 
                 defaultAccess = NSPopUpButton; 
                 firstItem = NSMenuItem; 
@@ -49,6 +50,7 @@
                 lastItem = NSMenuItem; 
                 ownerName = NSTextField; 
                 propertiesWindow = NSWindow; 
+                removeUsers = NSButton; 
                 searchedColumn = NSTableColumn; 
                 searchedUsers = NSTableView; 
                 templateMenu = NSMenu; 

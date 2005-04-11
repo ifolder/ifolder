@@ -106,18 +106,28 @@
 
 - (IBAction)addSelectedUsers:(id)sender
 {
-	if([searchedUsers numberOfSelectedRows] > 20)
+	if(!hasAdminRights)
 	{
-		NSBeginAlertSheet(NSLocalizedString(@"A large number of users is selected", nil), 
-			NSLocalizedString(@"Yes", nil), NSLocalizedString(@"Cancel", nil),
-			nil, propertiesWindow, self, 
-			@selector(addSelectedUsersResponse:returnCode:contextInfo:), 
-			nil, nil, 
-			[NSString stringWithFormat:NSLocalizedString(@"Do you want to share with all %d selected users?", nil), [searchedUsers numberOfSelectedRows]]);
+		NSBeginAlertSheet(NSLocalizedString(@"Insufficient Access", nil), 
+		NSLocalizedString(@"OK", nil), nil, nil, 
+		propertiesWindow, nil, nil, nil, nil, 
+		NSLocalizedString(@"You do not have access rights to add users to this iFolder.  Contact the owner of the iFolder if changes need to be made.", nil));
 	}
 	else
 	{
-		[self addAllSelectedUsers];
+		if([searchedUsers numberOfSelectedRows] > 20)
+		{
+			NSBeginAlertSheet(NSLocalizedString(@"A large number of users is selected", nil), 
+				NSLocalizedString(@"Yes", nil), NSLocalizedString(@"Cancel", nil),
+				nil, propertiesWindow, self, 
+				@selector(addSelectedUsersResponse:returnCode:contextInfo:), 
+				nil, nil, 
+				[NSString stringWithFormat:NSLocalizedString(@"Do you want to share with all %d selected users?", nil), [searchedUsers numberOfSelectedRows]]);
+		}
+		else
+		{
+			[self addAllSelectedUsers];
+		}
 	}
 }
 
@@ -199,15 +209,25 @@
 
 - (IBAction)removeSelectedUsers:(id)sender
 {
-	NSArray *selectedUsers = [usersController selectedObjects];
-	if([selectedUsers count] > 0)
+	if(!hasAdminRights)
 	{
-		NSBeginAlertSheet(NSLocalizedString(@"Remove selected users?", nil), 
-			NSLocalizedString(@"Yes", nil), NSLocalizedString(@"Cancel", nil),
-			nil, propertiesWindow, self, 
-			@selector(removeSelectedUsersResponse:returnCode:contextInfo:), 
-			nil, nil, 
-			NSLocalizedString(@"Are you sure you want to remove the selected users?", nil));
+		NSBeginAlertSheet(NSLocalizedString(@"Insufficient Access", nil), 
+		NSLocalizedString(@"OK", nil), nil, nil, 
+		propertiesWindow, nil, nil, nil, nil, 
+		NSLocalizedString(@"You do not have access rights to remove a user from this iFolder.  Contact the owner of the iFolder if changes need to be made.", nil));
+	}
+	else
+	{
+		NSArray *selectedUsers = [usersController selectedObjects];
+		if([selectedUsers count] > 0)
+		{
+			NSBeginAlertSheet(NSLocalizedString(@"Remove selected users?", nil), 
+				NSLocalizedString(@"Yes", nil), NSLocalizedString(@"Cancel", nil),
+				nil, propertiesWindow, self, 
+				@selector(removeSelectedUsersResponse:returnCode:contextInfo:), 
+				nil, nil, 
+				NSLocalizedString(@"Are you sure you want to remove the selected users?", nil));
+		}
 	}
 }
 
@@ -422,7 +442,7 @@
 		else
 			return YES;
 	}
-	
+
 	return YES;
 }
 
