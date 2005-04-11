@@ -36,10 +36,13 @@ namespace Novell.iFolder
 	{
 		private Conflict	localConflict = null;
 		private Conflict	serverConflict = null;
+		private string		ifPath = null;
 		private bool		isNameConflict;
 
-		public ConflictHolder(Conflict con)
+		public ConflictHolder(Conflict con, string iFolderPath)
 		{
+			ifPath = (iFolderPath == null) ? "iFolderPathUnknown" : iFolderPath;
+		
 			if(!con.IsNameConflict)
 			{
 				this.isNameConflict = false;
@@ -51,12 +54,12 @@ namespace Novell.iFolder
 				if( (con.LocalName != null) &&
 					(con.LocalName.Length > 0) )
 				{
-					Console.WriteLine("Creating with Local conflict");
+//					Console.WriteLine("Creating with Local Conflict");
 					localConflict = con;
 				}
 				else
 				{
-					Console.WriteLine("Creating with Server Conflixt");
+//					Console.WriteLine("Creating with Server Conflict");
 					serverConflict = con;
 				}
 
@@ -108,7 +111,7 @@ namespace Novell.iFolder
 					return null;
 			}
 		}
-
+		
 		public string Name
 		{
 			get
@@ -124,11 +127,38 @@ namespace Novell.iFolder
 				}
 			}
 		}
+		
+		public string RelativePath
+		{
+			get
+			{
+				if(!isNameConflict)
+					return ParseRelativePath(localConflict.LocalFullPath);
+				else
+				{
+					if(localConflict != null)
+						return ParseRelativePath(localConflict.LocalFullPath);
+					else
+						return ParseRelativePath(serverConflict.ServerFullPath);
+				}
+			}
+		}
+		
+		public string Type
+		{
+			get
+			{
+				if(isNameConflict)
+					return Util.GS("Name");
+				else
+					return Util.GS("File");
+			}
+		}
 
 
 		public void AddNameConflict(Conflict con)
 		{
-			Console.WriteLine("Adding a new conflict");
+//			Console.WriteLine("Adding a new conflict");
 			if(!con.IsNameConflict)
 				throw new Exception("Cannot add a FileConflict");
 
@@ -136,16 +166,48 @@ namespace Novell.iFolder
 				(con.LocalName.Length > 0) &&
 				(localConflict == null) )
 			{
-				Console.WriteLine("Adding a local Conflict");
+//				Console.WriteLine("Adding a local Conflict");
 				localConflict = con;
 			}
 			else if(serverConflict == null)
 			{
-				Console.WriteLine("Adding a server Conflict");
+//				Console.WriteLine("Adding a server Conflict");
 				serverConflict = con;
 			}
 			else
 				throw new Exception("Can't add additional conflicts");
+		}
+
+		/// <summary>
+		/// This function takes a full file path and makes it relative to the
+		/// location of the iFolder so that it doesn't take up as much room
+		/// in the TreeView.
+		///
+		/// For example, if "file.txt" exists at the "root" of the iFolder,
+		/// the relative path should be "/".  Also, if "anotherfile.txt" is
+		/// inside the "testing" directory, the relative path would be
+		/// "/testing/".
+		/// </summary>
+		private string ParseRelativePath(string fullPath)
+		{
+			if (fullPath == null) return "";
+			
+			if (fullPath.StartsWith(ifPath))
+			{
+				if (fullPath.Length > ifPath.Length)
+				{
+					string tmpPath = fullPath.Substring(ifPath.Length);
+					
+					// Now we have to take off the name off the file name
+					int lastSlashPos = tmpPath.LastIndexOf('/');
+					if (lastSlashPos <= 0)
+						return "";
+					
+					return tmpPath.Substring(1, lastSlashPos);
+				}
+			}
+
+			return "";
 		}
 	}
 
@@ -163,9 +225,13 @@ namespace Novell.iFolder
 		private iFolderWeb			ifolder;
 		private Gtk.TreeView		ConflictTreeView;
 		private Gtk.ListStore		ConflictTreeStore;
-		private Gdk.Pixbuf			ConflictPixBuf;
+//		private Gdk.Pixbuf			ConflictPixBuf;
 
 
+		//
+		// File Conflict Box
+		//
+		private HBox				fileConflictBox;
 		private Gtk.Frame			ServerFrame;
 		private Gtk.Frame			LocalFrame;
 		private Gtk.Label			LocalNameLabel;
@@ -182,6 +248,16 @@ namespace Novell.iFolder
 		private Gtk.Label			ServerSizeLabel;
 		private Gtk.Label			ServerSizeValue;
 		private Gtk.Button			ServerSaveButton;
+
+		//
+		// Name Conflict Box
+		//
+		private VBox				nameConflictBox;
+		private Frame				renameFileFrame;
+		private Label				nameConflictSummary;
+		private Label				nameConflictFileNameLabel;
+		private Entry				nameConflictEntry;
+		private Button				nameEntrySaveButton;
 
 		private Hashtable			conflictTable;
 
@@ -207,6 +283,7 @@ namespace Novell.iFolder
 
 			InitializeWidgets();
 			EnableConflictControls(false);
+			this.Realized += new EventHandler(OnRealizeWidget);
 		}
 
 
@@ -235,17 +312,22 @@ namespace Novell.iFolder
 			VBox textbox = new VBox();
 			textbox.Spacing = 10;
 
-			Label l = new Label(Util.GS("Select a conflict from the list below.  To resolve the conflict, save the local version or the server version.  The version you save will be synced to this iFolder. "));
-			l.LineWrap = true;
+			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
+								Util.GS("This iFolder contains conflicts") +
+								"</span>");
+			l.LineWrap = false;
+			l.UseMarkup = true;
+			l.Selectable = false;
 			l.Xalign = 0;
+			l.Yalign = 0;
 			textbox.PackStart(l, true, true, 0);
 
 			Table ifTable = new Table(2,2,false);
 			ifTable.ColumnSpacing = 10;
 			ifTable.Homogeneous = false;
 
-			Label nameLabel = new Label(Util.GS("iFolder Name:"));
-			nameLabel.Xalign = 0;
+			Label nameLabel = new Label(Util.GS("Name:"));
+			nameLabel.Xalign = 1;
 			ifTable.Attach(nameLabel, 0,1,0,1,
 				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
 
@@ -253,8 +335,8 @@ namespace Novell.iFolder
 			nameValue.Xalign = 0;
 			ifTable.Attach(nameValue, 1,2,0,1);
 
-			Label pathLabel = new Label(Util.GS("iFolder Path:"));
-			pathLabel.Xalign = 0;
+			Label pathLabel = new Label(Util.GS("Path:"));
+			pathLabel.Xalign = 1;
 			ifTable.Attach(pathLabel, 0,1,1,2,
 				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
 
@@ -276,12 +358,14 @@ namespace Novell.iFolder
 			sw.ShadowType = Gtk.ShadowType.EtchedIn;
 			vbox.PackStart(sw, true, true, 0);
 
-
-			HBox bottombox = new HBox();
-			bottombox.Spacing = 10;
+			//
+			// File Conflict Box
+			//
+			fileConflictBox = new HBox();
+			fileConflictBox.Spacing = 10;
 
 			LocalFrame = new Frame(Util.GS("Local Version"));
-			bottombox.PackStart(LocalFrame, true, true, 0);
+			fileConflictBox.PackStart(LocalFrame, true, true, 0);
 
 			Table localTable = new Table(2,4,false);
 			localTable.BorderWidth = 10;
@@ -324,7 +408,7 @@ namespace Novell.iFolder
 
 
 			ServerFrame = new Frame(Util.GS("Server Version"));
-			bottombox.PackStart(ServerFrame, true, true, 0);
+			fileConflictBox.PackStart(ServerFrame, true, true, 0);
 
 			Table serverTable = new Table(2,4,false);
 			serverTable.BorderWidth = 10;
@@ -364,34 +448,119 @@ namespace Novell.iFolder
 
 			ServerFrame.Add(serverTable);
 
-			vbox.PackStart(bottombox, false, false, 0);
+			vbox.PackStart(fileConflictBox, false, false, 0);
 
 
+			//
+			// Name Conflict Box
+			//
+			nameConflictBox = new VBox();
+			nameConflictBox.Spacing = 10;
+			
+			VBox nameConflictInternalBox = new VBox();
+			nameConflictInternalBox.Spacing = 10;
+			nameConflictInternalBox.BorderWidth = 10;
 
+			renameFileFrame = new Frame(Util.GS("Rename File"));
+			nameConflictBox.PackStart(renameFileFrame, true, true, 0);
+
+			nameConflictSummary = new Label(Util.GS("Enter a new name for this file and click save to resolve it."));
+			nameConflictSummary.Xalign = 0;
+//			nameConflictSummary.ColumnSpacing = 10;
+			
+			nameConflictInternalBox.PackStart(nameConflictSummary, false, false, 0);
+
+			HBox nameConflictHBox = new HBox();
+			nameConflictHBox.Spacing = 10;
+			
+			nameConflictFileNameLabel = new Label(Util.GS("File Name:"));
+			nameConflictHBox.PackStart(nameConflictFileNameLabel, false, false, 0);
+			
+			nameConflictEntry = new Entry();
+			nameConflictEntry.CanFocus = true;
+			nameConflictEntry.Changed += new EventHandler(OnNameEntryChanged);
+			nameConflictEntry.ActivatesDefault = true;
+			nameConflictHBox.PackStart(nameConflictEntry, true, true, 0);
+
+			nameConflictInternalBox.PackStart(nameConflictHBox, false, false, 0);
+			
+			HBox saveButtonBox = new HBox();
+			
+			nameEntrySaveButton = new Button(Stock.Save);
+			nameEntrySaveButton.Clicked += new EventHandler(RenameFileHandler);
+			saveButtonBox.PackStart(nameEntrySaveButton, false, false, 0);
+			nameConflictInternalBox.PackEnd(saveButtonBox, false, false, 0);
+			
+			renameFileFrame.Add(nameConflictInternalBox);
+
+			vbox.PackStart(nameConflictBox, false, false, 0);
+
+			nameConflictBox.Visible = false;
+			
 			// Setup the iFolder TreeView
 			ConflictTreeStore = new ListStore(typeof(ConflictHolder));
 			ConflictTreeView.Model = ConflictTreeStore;
+			
+			// File Name Column
+			TreeViewColumn fileNameColumn = new TreeViewColumn();
+			fileNameColumn.Title = Util.GS("File Name");
+			CellRendererText fileNameCR = new CellRendererText();
+			fileNameCR.Xpad = 5;
+			fileNameColumn.PackStart(fileNameCR, false);
+			fileNameColumn.SetCellDataFunc(fileNameCR,
+										   new TreeCellDataFunc(FileNameCellTextDataFunc));
+			fileNameColumn.Resizable = true;
+			fileNameColumn.MinWidth = 150;
+			ConflictTreeView.AppendColumn(fileNameColumn);
+			
+			// Path Column
+			TreeViewColumn pathColumn = new TreeViewColumn();
+			pathColumn.Title = Util.GS("Path in iFolder");
+			CellRendererText pathCR = new CellRendererText();
+			pathCR.Xpad = 5;
+			pathColumn.PackStart(pathCR, false);
+			pathColumn.SetCellDataFunc(pathCR,
+										   new TreeCellDataFunc(PathCellTextDataFunc));
+			pathColumn.Resizable = true;
+			pathColumn.MinWidth = 300;
+			pathColumn.Sizing = TreeViewColumnSizing.Autosize;
+			ConflictTreeView.AppendColumn(pathColumn);
+			
+			// Conflict Type Column
+			TreeViewColumn conflictTypeColumn = new TreeViewColumn();
+			conflictTypeColumn.Title = Util.GS("Conflict Type");
+			CellRendererText conflictTypeCR = new CellRendererText();
+			conflictTypeCR.Xpad = 5;
+			conflictTypeColumn.PackStart(conflictTypeCR, false);
+			conflictTypeColumn.SetCellDataFunc(conflictTypeCR,
+										   new TreeCellDataFunc(ConflictTypeCellTextDataFunc));
+			conflictTypeColumn.Resizable = false;
+			conflictTypeColumn.FixedWidth = 100;
+			ConflictTreeView.AppendColumn(conflictTypeColumn);
+			
+			
+			
 
 			// Setup Pixbuf and Text Rendering for "iFolder Conflicts" column
-			CellRendererPixbuf mcrp = new CellRendererPixbuf();
-			TreeViewColumn memberColumn = new TreeViewColumn();
-			memberColumn.PackStart(mcrp, false);
-			memberColumn.SetCellDataFunc(mcrp, new TreeCellDataFunc(
-						ConflictCellPixbufDataFunc));
-			CellRendererText mcrt = new CellRendererText();
-			memberColumn.PackStart(mcrt, false);
-			memberColumn.SetCellDataFunc(mcrt, new TreeCellDataFunc(
-						ConflictCellTextDataFunc));
-			memberColumn.Title = Util.GS("iFolder Conflicts");
-			memberColumn.Resizable = true;
-			ConflictTreeView.AppendColumn(memberColumn);
+//			CellRendererPixbuf mcrp = new CellRendererPixbuf();
+//			TreeViewColumn memberColumn = new TreeViewColumn();
+//			memberColumn.PackStart(mcrp, false);
+//			memberColumn.SetCellDataFunc(mcrp, new TreeCellDataFunc(
+//						ConflictCellPixbufDataFunc));
+//			CellRendererText mcrt = new CellRendererText();
+//			memberColumn.PackStart(mcrt, false);
+//			memberColumn.SetCellDataFunc(mcrt, new TreeCellDataFunc(
+//						ConflictCellTextDataFunc));
+//			memberColumn.Title = Util.GS("iFolder Conflicts");
+//			memberColumn.Resizable = true;
+//			ConflictTreeView.AppendColumn(memberColumn);
 			ConflictTreeView.Selection.Mode = SelectionMode.Multiple;
 
 			ConflictTreeView.Selection.Changed += new EventHandler(
 						OnConflictSelectionChanged);
 
-			ConflictPixBuf = 
-				new Gdk.Pixbuf(Util.ImagesPath("conflict24.png"));
+//			ConflictPixBuf = 
+//				new Gdk.Pixbuf(Util.ImagesPath("conflict24.png"));
 
 			this.AddButton(Stock.Close, ResponseType.Ok);
 			this.AddButton(Stock.Help, ResponseType.Help);
@@ -399,8 +568,14 @@ namespace Novell.iFolder
 			RefreshConflictList();
 		}
 
-
-
+		private void OnRealizeWidget(object o, EventArgs args)
+		{
+			// Select the first item in the TreeView
+			if (ConflictTreeView.Selection != null)
+			{
+				ConflictTreeView.Selection.SelectPath(new TreePath("0"));
+			}
+		}
 
 		private void RefreshConflictList()
 		{
@@ -413,7 +588,7 @@ namespace Novell.iFolder
 				{
 					if(!con.IsNameConflict)
 					{
-						ConflictHolder ch = new ConflictHolder(con);
+						ConflictHolder ch = new ConflictHolder(con, ifolder.UnManagedPath);
 						ConflictTreeStore.AppendValues(ch);
 					}
 					else
@@ -425,19 +600,19 @@ namespace Novell.iFolder
 						else
 							key = con.ServerFullPath;
 
-						Console.WriteLine("Key = {0}", key);
+//						Console.WriteLine("Key = {0}", key);
 
 						if(conflictTable.ContainsKey(key))
 						{
-							Console.WriteLine("Found key, adding to holder");
+//							Console.WriteLine("Found key, adding to holder");
 							ConflictHolder ch = 
 								(ConflictHolder)conflictTable[key];
 							ch.AddNameConflict(con);
 						}
 						else
 						{
-							Console.WriteLine("No key, New holder");
-							ConflictHolder ch = new ConflictHolder(con);
+//							Console.WriteLine("No key, New holder");
+							ConflictHolder ch = new ConflictHolder(con, ifolder.UnManagedPath);
 							ConflictTreeStore.AppendValues(ch);
 							conflictTable.Add(key, ch);
 						}
@@ -453,48 +628,126 @@ namespace Novell.iFolder
 
 
 
-		private void ConflictCellTextDataFunc (Gtk.TreeViewColumn tree_column,
-				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
-				Gtk.TreeIter iter)
+//		private void ConflictCellPixbufDataFunc (Gtk.TreeViewColumn tree_column,
+//				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+//				Gtk.TreeIter iter)
+//		{
+//			((CellRendererPixbuf) cell).Pixbuf = ConflictPixBuf;
+//		}
+
+		private void FileNameCellTextDataFunc(Gtk.TreeViewColumn col,
+											  Gtk.CellRenderer cellRenderer,
+											  Gtk.TreeModel model,
+											  Gtk.TreeIter iter)
 		{
-			ConflictHolder ch = (ConflictHolder) tree_model.GetValue(iter,0);
-			((CellRendererText) cell).Text = ch.Name;
+			ConflictHolder conflictHolder = (ConflictHolder) model.GetValue(iter,0);
+			((CellRendererText) cellRenderer).Text = conflictHolder.Name;
 		}
 
-
-
-
-		private void ConflictCellPixbufDataFunc (Gtk.TreeViewColumn tree_column,
-				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
-				Gtk.TreeIter iter)
+		private void PathCellTextDataFunc(Gtk.TreeViewColumn col,
+											  Gtk.CellRenderer cellRenderer,
+											  Gtk.TreeModel model,
+											  Gtk.TreeIter iter)
 		{
-			((CellRendererPixbuf) cell).Pixbuf = ConflictPixBuf;
+			ConflictHolder conflictHolder = (ConflictHolder) model.GetValue(iter,0);
+			((CellRendererText) cellRenderer).Text = conflictHolder.RelativePath;
 		}
 
+		private void ConflictTypeCellTextDataFunc(Gtk.TreeViewColumn col,
+											  Gtk.CellRenderer cellRenderer,
+											  Gtk.TreeModel model,
+											  Gtk.TreeIter iter)
+		{
+			ConflictHolder conflictHolder = (ConflictHolder) model.GetValue(iter,0);
+			((CellRendererText) cellRenderer).Text = conflictHolder.Type;
+		}
 
 
 
 		private void OnConflictSelectionChanged(object o, EventArgs args)
 		{
+			bool bHasNameConflict = false;
+			bool bHasFileConflict = false;
+
 			TreeSelection tSelect = ConflictTreeView.Selection;
-			if(tSelect.CountSelectedRows() > 0)
+			int selectedRows = tSelect.CountSelectedRows();
+			if(selectedRows > 0)
 			{
+				EnableConflictControls(true);
 				TreeModel tModel;
-				ConflictHolder ch;
+				ConflictHolder ch = null;
 
 				Array treePaths = tSelect.GetSelectedRows(out tModel);
 
 				foreach(TreePath tPath in treePaths)
 				{
 					TreeIter iter;
-
 					if(ConflictTreeStore.GetIter(out iter, tPath))
 					{
 						ch = (ConflictHolder) tModel.GetValue(iter, 0);
-						UpdateFields(ch, (tSelect.CountSelectedRows() > 1));
+						if (ch.IsNameConflict)
+							bHasNameConflict = true;
+						else
+							bHasFileConflict = true;
 					}
-					// we only need the first conflict
-					break;
+				}
+				
+				if (selectedRows == 1)
+				{
+					if (bHasNameConflict)
+					{
+						nameConflictSummary.Text = Util.GS("Enter a new name for this file and click save to resolve it.");
+
+						// This is a name conflict
+						nameConflictBox.Visible = true;
+						fileConflictBox.Visible = false;
+
+						// Prefill the entry with the filename and auto-select
+						// the text on the left-hand side of the extension.
+						nameConflictEntry.Text = ch.Name;
+						
+/* FIXME: Get GrabFocus() and preselection of filename working
+						nameConflictEntry.GrabFocus();
+
+						if (ch.Name.Length > 0)
+						{
+							int lastDotPos = ch.Name.LastIndexOf('.');
+							if (lastDotPos > 1)
+								nameConflictEntry.SelectRegion(0, lastDotPos);
+							else
+								nameConflictEntry.SelectRegion(0, ch.Name.Length);
+						}
+*/
+					}
+					else
+					{
+						// This is a file conflict
+						fileConflictBox.Visible = true;
+						nameConflictBox.Visible = false;
+					}
+
+					UpdateFields(ch, false);
+				}
+				else
+				{
+					// We're dealing with multiple selections here
+					if (bHasFileConflict)
+					{
+						// Allow name conflicts to be multi-selected with file conflicts
+						fileConflictBox.Visible = true;
+						nameConflictBox.Visible = false;
+						UpdateFields(ch, true);
+					}
+					else
+					{
+						// There are multiple name conflicts selected
+						nameConflictBox.Visible = true;
+						fileConflictBox.Visible = false;
+
+						nameConflictSummary.Text = Util.GS("Name conflicts must be resolved individually.");
+						nameConflictEntry.Text = "";
+						EnableConflictControls(false);
+					}
 				}
 			}
 		}
@@ -513,6 +766,8 @@ namespace Novell.iFolder
 				ServerNameValue.Text = "";
 				ServerDateValue.Text = "";
 				ServerSizeValue.Text = "";
+				
+				nameConflictEntry.Text = "";
 
 				return;
 			}
@@ -595,6 +850,14 @@ namespace Novell.iFolder
 			ServerSizeLabel.Sensitive = enable;
 			ServerSizeValue.Sensitive = enable;
 			ServerSaveButton.Sensitive = enable;
+
+			nameConflictSummary.Sensitive = enable;
+			nameConflictFileNameLabel.Sensitive = enable;
+			nameConflictEntry.Sensitive = enable;
+			if (nameConflictEntry.Text.Length > 0)
+				nameEntrySaveButton.Sensitive = enable;
+			else
+				nameEntrySaveButton.Sensitive = false;
 		}
 
 
@@ -607,6 +870,59 @@ namespace Novell.iFolder
 		private void SaveServerHandler(object o, EventArgs args)
 		{
 			ResolveSelectedConflicts(false);
+		}
+
+		private void RenameFileHandler(object o, EventArgs args)
+		{
+			string newFileName = nameConflictEntry.Text;
+
+			TreeModel tModel;
+			ConflictHolder ch = null;
+			
+			TreeSelection tSelect = ConflictTreeView.Selection;
+			if (tSelect.CountSelectedRows() == 1)
+			{
+				Array treePaths = tSelect.GetSelectedRows(out tModel);
+				TreeIter iter;
+				if (ConflictTreeStore.GetIter(out iter, (TreePath)treePaths.GetValue(0)))
+				{
+					ch = (ConflictHolder) tModel.GetValue(iter, 0);
+					Conflict lnc = ch.LocalNameConflict;
+					Conflict snc = ch.ServerNameConflict;
+					
+					try
+					{
+						ifws.ResolveNameConflict(lnc.iFolderID,
+												 lnc.ConflictID,
+												 newFileName);
+						ifws.ResolveNameConflict(snc.iFolderID,
+												 snc.ConflictID,
+												 ch.Name);
+
+						ConflictTreeStore.Remove(ref iter);
+					}
+					catch (Exception e)
+					{
+						// FIXME: Alert the user
+						Console.WriteLine(e.Message);
+						return;
+					}
+					
+					UpdateFields(null, false);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Disable the Save button if there's no text in the entry or
+		/// enable it if the entry length is greater than 0.
+		/// </summary>
+		private void OnNameEntryChanged(object o, EventArgs args)
+		{
+			if (nameConflictEntry.Text.Length > 0)
+				nameEntrySaveButton.Sensitive = true;
+			else
+				nameEntrySaveButton.Sensitive = false;
 		}
 
 		private void ResolveSelectedConflicts(bool localChangesWin)
@@ -631,7 +947,7 @@ namespace Novell.iFolder
 				}
 			}
 
-			if(iterQueue.Count > 1)
+			if(iterQueue.Count > 0)
 			{
 				// Now that we have all of the TreeIters, loop and
 				// remove them all
@@ -651,71 +967,11 @@ namespace Novell.iFolder
 		
 							ConflictTreeStore.Remove(ref iter);
 						}
-						catch(Exception ex)
+						catch
 						{}
 					}
 				}
 				UpdateFields(null, false);
-			}
-			else
-			{
-				// Now that we have all of the TreeIters, loop and
-				// remove them all
-				if(iterQueue.Count == 1)
-				{
-					TreeIter iter = (TreeIter) iterQueue.Dequeue();
-	
-					ConflictHolder ch = (ConflictHolder) tModel.GetValue(iter, 0);
-					if(ch.IsNameConflict)
-					{
-						FileRenameDialog frd = new FileRenameDialog(this);
-						frd.FileName = ch.Name;
-						int rc = frd.Run();
-						frd.Hide();
-						if(rc == -5)
-						{
-							try
-							{
-								if(localChangesWin)
-								{
-									// Resolve the local to new name
-									ifws.ResolveNameConflict(
-										ch.LocalNameConflict.iFolderID,
-										ch.LocalNameConflict.ConflictID,
-										frd.FileName);
-									// Resolve server to original name
-									ifws.ResolveNameConflict(
-										ch.ServerNameConflict.iFolderID,
-										ch.ServerNameConflict.ConflictID,
-										ch.ServerNameConflict.ServerName);
-								}
-								else
-								{
-									// Resolve server to new name
-									ifws.ResolveNameConflict(
-										ch.ServerNameConflict.iFolderID,
-										ch.ServerNameConflict.ConflictID,
-										frd.FileName);
-
-									// Resolve local to original if there
-									if(ch.LocalNameConflict != null)
-									{
-										ifws.ResolveNameConflict(
-											ch.LocalNameConflict.iFolderID,
-											ch.LocalNameConflict.ConflictID,
-											ch.LocalNameConflict.LocalName);
-									}
-								}
-			
-								ConflictTreeStore.Remove(ref iter);
-							}
-							catch(Exception ex)
-							{}
-							UpdateFields(null, false);
-						}
-						frd.Destroy();
-					}
-				}
 			}
 		}
 
