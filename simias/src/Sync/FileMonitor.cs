@@ -615,8 +615,12 @@ namespace Simias.Sync
 									sn = GetShallowNodeForFile(args.OldFullPath);
 									if (sn != null && sn.ID != node.ID)
 									{
-										node = collection.GetNodeByID(sn.ID);
-										DeleteNode(node);
+										// If the file no longer exists delet the node.
+										if (!File.Exists(args.OldFullPath))
+										{
+											node = collection.GetNodeByID(sn.ID);
+											DeleteNode(node);
+										}
 									}
 									break;
 								}

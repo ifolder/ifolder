@@ -436,7 +436,7 @@ namespace Simias.Sync
 			// On the client leave for a delta sync.
 			if (workFile != null)
 			{
-				if (collection.Role == SyncRoles.Slave || File.Exists(file))
+				if (collection.Role == SyncRoles.Master || (collection.Role == SyncRoles.Slave && File.Exists(file)))
 				{
 					File.Delete(workFile);
 				}

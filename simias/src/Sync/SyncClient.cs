@@ -1808,6 +1808,11 @@ namespace Simias.Sync
 						}
 					}
 				}
+				catch (FileNotFoundException ex)
+				{
+					// The file no longer exists.
+					workArray.RemoveNodeFromServer(nodeID);
+				}
 				catch (Exception ex)
 				{
 					Log.log.Debug(ex, "Failed Uploading File");
