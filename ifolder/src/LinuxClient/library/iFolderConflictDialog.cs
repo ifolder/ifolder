@@ -305,7 +305,9 @@ namespace Novell.iFolder
 			HBox topbox = new HBox();
 			topbox.Spacing = 10;
 
-			Image conflictImage = new Image(this.Icon);
+			Gdk.Pixbuf bigConflict =
+				new Gdk.Pixbuf(Util.ImagesPath("conflict32.png"));
+			Image conflictImage = new Image(bigConflict);
 			conflictImage.Yalign = 0;
 			topbox.PackStart(conflictImage, false, false, 0);
 
