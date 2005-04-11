@@ -496,7 +496,8 @@ namespace Novell.iFolder
 									iFolderMsgDialog.ButtonSet.Ok,
 									Util.GS("iFolder Error"),
 									Util.GS("Unable to Connect to iFolder Server"),
-									Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."));
+									Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."),
+									string.Format("{0}: {1}", Util.GS("Authentication Status Code"), status.statusCode));
 								dg.Run();
 								dg.Hide();
 								dg.Destroy();
