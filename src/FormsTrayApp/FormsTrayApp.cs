@@ -79,7 +79,7 @@ namespace Novell.FormsTrayApp
 		private System.ComponentModel.IContainer components;
 		static private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(FormsTrayApp));
 		private bool shutdown = false;
-
+		private bool simiasRunning = false;
 		private Icon trayIcon;
 		private Icon startupIcon;
 		private Icon shutdownIcon;
@@ -162,7 +162,10 @@ namespace Novell.FormsTrayApp
 			{
 				// Activate the My iFolders dialog
 				window = Novell.Win32Util.Win32Window.FindWindow(null, resourceManager.GetString("myiFolders"));
-				window.Visible = true;
+				if (window != null)
+				{
+					window.Visible = true;
+				}
 
 				// Shutdown this instance.
 				shutdown = true;
@@ -364,7 +367,10 @@ namespace Novell.FormsTrayApp
 
 		private void shellNotifyIcon_DoubleClick(object sender, EventArgs e)
 		{
-			menuProperties_Click(sender, e);
+			if (simiasRunning)
+			{
+				menuProperties_Click(sender, e);
+			}
 		}
 
 		private void shellNotifyIcon_BalloonClick(object sender, EventArgs e)
@@ -407,10 +413,18 @@ namespace Novell.FormsTrayApp
 
 		private void shellNotifyIcon_ContextMenuPopup(object sender, EventArgs e)
 		{
-			// Show/hide store browser menu item based on whether or not the file is installed.
-			menuStoreBrowser.Visible = File.Exists(Path.Combine(Application.StartupPath, "StoreBrowser.exe"));
-			menuEventLogReader.Visible = File.Exists(Path.Combine(Application.StartupPath, "EventLogReader.exe"));
-			menuSeparator1.Visible = menuTools.Visible = menuStoreBrowser.Visible | menuEventLogReader.Visible;
+			foreach (MenuItem item in this.contextMenu1.MenuItems)
+			{
+				item.Visible = simiasRunning;
+			}
+
+			if (simiasRunning)
+			{
+				// Show/hide store browser menu item based on whether or not the file is installed.
+				menuStoreBrowser.Visible = File.Exists(Path.Combine(Application.StartupPath, "StoreBrowser.exe"));
+				menuEventLogReader.Visible = File.Exists(Path.Combine(Application.StartupPath, "EventLogReader.exe"));
+				menuSeparator1.Visible = menuTools.Visible = menuStoreBrowser.Visible | menuEventLogReader.Visible;
+			}
 		}
 
 		private void FormsTrayApp_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -451,15 +465,7 @@ namespace Novell.FormsTrayApp
 						eventClient.SetEvent(IProcEventAction.AddNotifyMessage, new IProcEventHandler(trayApp_notifyMessageHandler));
 					}
 
-					// Instantiate the GlobalProperties dialog.
-					globalProperties = new GlobalProperties(ifWebService, simiasWebService, eventClient);
-					globalProperties.RemoveDomain += new Novell.FormsTrayApp.GlobalProperties.RemoveDomainDelegate(globalProperties_RemoveDomain);
-
-					// Create the control so that we can use the delegate to write sync events to the log.
-					// For some reason, the handle isn't created until it is referenced.
-					globalProperties.CreateControl();
-					IntPtr handle = globalProperties.Handle;
-
+					// Instantiate the Preferences dialog.
 					preferences = new Preferences(ifWebService, simiasWebService);
 					preferences.EnterpriseConnect += new Novell.FormsTrayApp.Preferences.EnterpriseConnectDelegate(preferences_EnterpriseConnect);
 					preferences.ChangeDefaultDomain += new Novell.FormsTrayApp.Preferences.ChangeDefaultDomainDelegate(preferences_EnterpriseConnect);
@@ -467,15 +473,25 @@ namespace Novell.FormsTrayApp
 					preferences.ShutdownTrayApp += new Novell.FormsTrayApp.Preferences.ShutdownTrayAppDelegate(preferences_ShutdownTrayApp);
 					preferences.UpdateDomain += new Novell.FormsTrayApp.Preferences.UpdateDomainDelegate(preferences_UpdateDomain);
 					preferences.CreateControl();
-					handle = preferences.Handle;
+					IntPtr handle = preferences.Handle;
 
+					// Instantiate the SyncLog dialog.
 					syncLog = new SyncLog();
+					// Create the control so that we can use the delegate to write sync events to the log.
 					syncLog.CreateControl();
+					// For some reason, the handle isn't created until it is referenced.
 					handle = syncLog.Handle;
 
 					// Cause the web services to start.
 					LocalService.Start(simiasWebService);
 					LocalService.Start(ifWebService);
+					simiasRunning = true;
+
+					// Instantiate the GlobalProperties dialog.
+					globalProperties = new GlobalProperties(ifWebService, simiasWebService, eventClient);
+					globalProperties.RemoveDomain += new Novell.FormsTrayApp.GlobalProperties.RemoveDomainDelegate(globalProperties_RemoveDomain);
+					globalProperties.CreateControl();
+					handle = globalProperties.Handle;
 
 					try
 					{
@@ -1151,6 +1167,8 @@ namespace Novell.FormsTrayApp
 				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("fatalErrorMessage"), resourceManager.GetString("fatalErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
+
+			simiasRunning = false;
 
 			try
 			{
