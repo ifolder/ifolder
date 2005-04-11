@@ -577,6 +577,23 @@ namespace Novell.iFolder
 			{
 				ConflictTreeView.Selection.SelectPath(new TreePath("0"));
 			}
+
+			// If the user is a read-only member of this iFolder, let them know
+			// that the	only way they can resolve conflicts is by saving the
+			// server version.
+			if (ifolder.CurrentUserRights == "ReadOnly")
+			{
+				iFolderMsgDialog dg = new iFolderMsgDialog(
+					this,
+					iFolderMsgDialog.DialogType.Warning,
+					iFolderMsgDialog.ButtonSet.Ok,
+					Util.GS("Read Only Membership"),
+					Util.GS("Read Only Membership"),
+					Util.GS("Your ability to resolve conflicts is limited because you have read-only rights to this iFolder.  Name conflicts must be renamed locally.  File conflicts will be overwritten with by the version of the file on the server."));
+				dg.Run();
+				dg.Hide();
+				dg.Destroy();
+			}
 		}
 
 		private void RefreshConflictList()
@@ -784,6 +801,11 @@ namespace Novell.iFolder
 				ServerNameValue.Text = Util.GS("Multiple selected");
 				ServerDateValue.Text = "";
 				ServerSizeValue.Text = "";
+				
+				if (ifolder.CurrentUserRights == "ReadOnly")
+				{
+					LocalSaveButton.Sensitive = false;
+				}
 				return;
 			}
 			
@@ -797,39 +819,43 @@ namespace Novell.iFolder
 				ServerNameValue.Text = ch.FileConflict.ServerName;
 				ServerDateValue.Text = ch.FileConflict.ServerDate;
 				ServerSizeValue.Text = ch.FileConflict.ServerSize;
+
+				if (ifolder.CurrentUserRights == "ReadOnly")
+				{
+					LocalSaveButton.Sensitive = false;
+				}
 				return;
 			}
 
-
 			EnableConflictControls(true);
 
-			if(ch.LocalNameConflict != null)
-			{
-				LocalNameValue.Text = ch.LocalNameConflict.LocalName;
-				LocalDateValue.Text = ch.LocalNameConflict.LocalDate;
-				LocalSizeValue.Text = ch.LocalNameConflict.LocalSize;
-			}
-			else
-			{
-				LocalNameValue.Text = "";
-				LocalDateValue.Text = "";
-				LocalSizeValue.Text = "";
-				LocalSaveButton.Sensitive = false;
-			}
-
-			if(ch.ServerNameConflict != null)
-			{
-				ServerNameValue.Text = ch.ServerNameConflict.ServerName;
-				ServerDateValue.Text = ch.ServerNameConflict.ServerDate;
-				ServerSizeValue.Text = ch.ServerNameConflict.ServerSize;
-			}
-			else
-			{
-				ServerNameValue.Text = "";
-				ServerDateValue.Text = "";
-				ServerSizeValue.Text = "";
-				ServerSaveButton.Sensitive = false;
-			}
+//			if(ch.LocalNameConflict != null)
+//			{
+//				LocalNameValue.Text = ch.LocalNameConflict.LocalName;
+//				LocalDateValue.Text = ch.LocalNameConflict.LocalDate;
+//				LocalSizeValue.Text = ch.LocalNameConflict.LocalSize;
+//			}
+//			else
+//			{
+//				LocalNameValue.Text = "";
+//				LocalDateValue.Text = "";
+//				LocalSizeValue.Text = "";
+//				LocalSaveButton.Sensitive = false;
+//			}
+//
+//			if(ch.ServerNameConflict != null)
+//			{
+//				ServerNameValue.Text = ch.ServerNameConflict.ServerName;
+//				ServerDateValue.Text = ch.ServerNameConflict.ServerDate;
+//				ServerSizeValue.Text = ch.ServerNameConflict.ServerSize;
+//			}
+//			else
+//			{
+//				ServerNameValue.Text = "";
+//				ServerDateValue.Text = "";
+//				ServerSizeValue.Text = "";
+//				ServerSaveButton.Sensitive = false;
+//			}
 		}
 
 
@@ -894,12 +920,21 @@ namespace Novell.iFolder
 					
 					try
 					{
-						ifws.ResolveNameConflict(lnc.iFolderID,
-												 lnc.ConflictID,
-												 newFileName);
-						ifws.ResolveNameConflict(snc.iFolderID,
-												 snc.ConflictID,
-												 ch.Name);
+						if (ifolder.CurrentUserRights == "ReadOnly")
+						{
+							ifws.RenameAndResolveConflict(snc.iFolderID,
+														  snc.ConflictID,
+														  newFileName);
+						}
+						else
+						{
+							ifws.ResolveNameConflict(lnc.iFolderID,
+													 lnc.ConflictID,
+													 newFileName);
+							ifws.ResolveNameConflict(snc.iFolderID,
+													 snc.ConflictID,
+													 ch.Name);
+						}
 
 						ConflictTreeStore.Remove(ref iter);
 					}
