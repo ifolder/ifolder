@@ -1836,8 +1836,8 @@ namespace Novell.iFolder.Web
 			ICSList collisionList = col.GetCollisions();
 			foreach(ShallowNode sn in collisionList)
 			{
-				Node conflictNode = new Node(col, sn);
-
+				Node conflictNode = col.GetNodeByID(sn.ID);
+				
 				Conflict conflict = new Conflict(col, conflictNode);
 
 				list.Add(conflict);
