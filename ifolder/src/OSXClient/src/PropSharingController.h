@@ -52,6 +52,8 @@
 	IBOutlet NSMenuItem			*fullItem;
 	IBOutlet NSMenuItem			*firstItem;
 	IBOutlet NSMenuItem			*lastItem;
+	IBOutlet NSButton			*removeUsers;
+	IBOutlet NSButton			*addUsers;
 }
 
 - (IBAction)addSelectedUsers:(id)sender;
