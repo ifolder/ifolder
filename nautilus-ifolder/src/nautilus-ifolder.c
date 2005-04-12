@@ -355,7 +355,7 @@ static void
 init_gsoap (struct soap *p_soap)
 {
 	/* Initialize gSOAP */
-	soap_init (p_soap);
+	soap_init2 (p_soap, SOAP_C_UTFSTRING, SOAP_C_UTFSTRING);
 	soap_set_namespaces (p_soap, iFolder_namespaces);
 }
 
