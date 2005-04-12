@@ -31,6 +31,22 @@ using Simias.Storage.Provider;
 namespace Simias.Storage
 {
 	/// <summary>
+	/// Types of collisions.
+	/// </summary>
+	public enum CollisionType
+	{ 
+		/// <summary>
+		/// Collision is a result of a Node object update.
+		/// </summary>
+		Node, 
+
+		/// <summary>
+		/// Collision is a result of a file conflict.
+		/// </summary>
+		File 
+	};
+
+	/// <summary>
 	/// Class used to get to the Collision data.
 	/// </summary>
 	internal class Collision
@@ -45,22 +61,6 @@ namespace Simias.Storage
 		/// Context data associated with this collision.
 		/// </summary>
 		private string contextData;
-
-		/// <summary>
-		/// Types of collisions.
-		/// </summary>
-		public enum CollisionType
-		{ 
-			/// <summary>
-			/// Collision is a result of a Node object update.
-			/// </summary>
-			Node, 
-
-			/// <summary>
-			/// Collision is a result of a file conflict.
-			/// </summary>
-			File 
-		};
 		#endregion
 
 		#region Properties

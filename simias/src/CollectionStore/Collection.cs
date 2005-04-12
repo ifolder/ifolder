@@ -1620,11 +1620,11 @@ namespace Simias.Storage
 			// Add the new collision to the collision list.
 			if ( isFileCollision )
 			{
-				cList.Modify( new Collision( Collision.CollisionType.File, String.Empty ) );
+				cList.Modify( new Collision( CollisionType.File, String.Empty ) );
 			}
 			else
 			{
-				cList.Modify( new Collision( Collision.CollisionType.Node, collisionNode.Properties.PropertyDocument.InnerXml ) );
+				cList.Modify( new Collision( CollisionType.Node, collisionNode.Properties.PropertyDocument.InnerXml ) );
 			}
 
 			// Modify or add the collision list.
@@ -1741,6 +1741,32 @@ namespace Simias.Storage
 		public ICSList GetCollisions()
 		{
 			return Search( PropertyTags.Collision, Syntax.XmlDocument );
+		}
+
+		/// <summary>
+		/// Gets the type of collision that is stored on the node.
+		/// </summary>
+		/// <param name="node">Node object that contains a collision property.</param>
+		/// <returns>The collision type.</returns>
+		public CollisionType GetCollisionType( Node node )
+		{
+			// Get the collision property.
+			Property p = node.Properties.GetSingleProperty( PropertyTags.Collision );
+			if ( p == null )
+			{
+				throw new DoesNotExistException( "A collision does not exist on this Node object." );
+			}
+
+			// Get a list of collisions.
+			ICSEnumerator e = new CollisionList( p.Value as XmlDocument ).GetEnumerator() as ICSEnumerator;
+			if ( e.MoveNext() == false )
+			{
+				throw new DoesNotExistException( "A collision does not exist on this Node object." );
+			}
+
+			Collision c = e.Current as Collision;
+			e.Dispose();
+			return c.Type;
 		}
 
 		/// <summary>
@@ -1876,7 +1902,7 @@ namespace Simias.Storage
 				if ( e.MoveNext() )
 				{
 					Collision c = e.Current as Collision;
-					if ( c.Type == Collision.CollisionType.Node )
+					if ( c.Type == CollisionType.Node )
 					{
 						XmlDocument document = new XmlDocument();
 						document.LoadXml( c.ContextData );
