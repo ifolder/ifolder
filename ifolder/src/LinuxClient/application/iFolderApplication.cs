@@ -1054,7 +1054,7 @@ namespace Novell.iFolder
 		public static void Main (string[] args)
 		{
 			Process[] processes = 
-				System.Diagnostics.Process.GetProcessesByName("iFolderGtkApp");
+				System.Diagnostics.Process.GetProcessesByName("iFolderClient");
 
 			if(processes.Length > 1)
 			{
