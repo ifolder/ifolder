@@ -6,7 +6,11 @@
 
 \f0\fs24 \cf0 This will eventually contain pertinent information about iFolder running on Macintosh OS X.\
 \
-This package is being built for developers only and will not do much unless you know what you are doing.\
+This is a pre-release build of iFolder 3.  Please be careful with the files you share using this version of iFolder.  Due to it's pre-release nature, there may be some bugs which could result in your data being lost.\
+\
+This install will install the iFolderClient and Simias.  Simias is the engine that provides the synchronization and sharing of data.  All of Simias and some of the iFolder files will be install to /opt/novell/ifolder3.  The iFolder client will also install the iFolder.app to the /Applications directory.\
+\
+If you would like to completely remove the iFolder software from your machine, mount the iFolder*.dmg and then open the Terminal application in /Applications/Utilities.  Change directories to /Volumes/ifolder3-*/iFolder.mpkg/Contents/Resources.  Run the uninstall as root by typing: sudo ./uninstallifolder.sh.\
 \
 Enjoy iFolder\
 \
