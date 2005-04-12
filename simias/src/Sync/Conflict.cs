@@ -85,8 +85,7 @@ public class Conflict
 	{
 		get
 		{
-			string n = FileNameConflictPath;
-			return n != null;
+			return conflictNode == null;
 		}
 	}
 
