@@ -683,7 +683,7 @@
     <value>Unable to Verify Identity</value>
   </data>
   <data name="createAccount">
-    <value>No iFolder accounts exist on this computer.  Would you like to set up an account for an iFolder server now?</value>
+    <value>The iFolder client is now installed and ready to use.  To begin using iFolder, you must first setup an iFolder account.  Would you like to setup your iFolder account now?</value>
   </data>
   <data name="createAccountTitle">
     <value>Setup iFolder Account</value>
