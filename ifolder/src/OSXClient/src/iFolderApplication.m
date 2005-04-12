@@ -744,31 +744,19 @@
 	{
 		if([cse syncAction] == SYNC_ACTION_START)
 		{
+			[[iFolderData sharedInstance] readiFolder:[cse ID]];
 			[ifolder setIsSynchronizing:YES];
 			[[iFolderData sharedInstance] clearUsersAdded:[cse ID]];
 		}
 		else
 		{
 			[ifolder setIsSynchronizing:NO];
-
-			if( [ [ifolder State] isEqualToString:@"WaitSync"])
-			{
-				updateData = YES;
-			}
 		}
 
-		if( [ifolder Path] == nil )
-		{
-			updateData = YES;
-		}
-			
-		if(updateData)
-		{
-			[[iFolderData sharedInstance] readiFolder:[cse ID]];
-		}
-		
 		if([cse syncAction] == SYNC_ACTION_STOP)
 		{
+			[[iFolderData sharedInstance] readiFolder:[cse ID]];
+
 			if([ifolder HasConflicts])
 			{
 				NSLog(@"iFolder has collisions, notifying user");
