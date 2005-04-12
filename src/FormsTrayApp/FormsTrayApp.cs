@@ -509,6 +509,25 @@ namespace Novell.FormsTrayApp
 
 							globalProperties.AddDomainToList(dw);
 						}
+
+						if (domains.Length.Equals(0))
+						{
+							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("createAccount"), resourceManager.GetString("createAccountTitle"), string.Empty, MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button1);
+							mmb.StartPosition = FormStartPosition.CenterScreen;
+							if (mmb.ShowDialog() == DialogResult.Yes)
+							{
+								if (preferences.Visible)
+								{
+									preferences.Activate();
+								}
+								else
+								{
+									preferences.Show();
+								}
+
+								preferences.SelectAccounts();
+							}
+						}
 					}
 					catch{}
 
