@@ -707,6 +707,10 @@ namespace Novell.iFolder
 					}
 
 					gAppIcon.Pixbuf = RunningPixbuf;
+
+					// Bring up the accounts dialog if there are no domains
+					Gtk.Timeout.Add(500, new Gtk.Function(PromptIfNoDomains));
+
 					break;
 
 				case iFolderState.Stopping:
@@ -719,7 +723,30 @@ namespace Novell.iFolder
 			}
 		}
 
+		private bool PromptIfNoDomains()
+		{
+			DomainInformation[] domains = simws.GetDomains(false);
+			if (domains.Length < 1)
+			{
+				// Prompt the user about there not being any domains
+				iFolderMsgDialog dg = new iFolderMsgDialog(
+					ifwin,
+					iFolderMsgDialog.DialogType.Question,
+					iFolderMsgDialog.ButtonSet.YesNo,
+					Util.GS("Setup iFolder Account"),
+					Util.GS("Setup an iFolder Account?"),
+					Util.GS("To begin using iFolder, you must first setup an iFolder account.  Would you like to setup an iFolder account now?"));
+				int rc = dg.Run();
+				dg.Hide();
+				dg.Destroy();
+				if (rc == -8)
+				{
+					showPrefsPage(1);
+				}
+			}
 
+			return false;	// Prevent this from being called over and over by Gtk.Timeout
+		}
 
 
 		private bool CheckWebService()
