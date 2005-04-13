@@ -193,16 +193,8 @@ namespace Novell.iFolder
 				}
 				case Action.StopSync:
 				{
-					if(args.Successful)
-					{
-						LogMessage(string.Format(Util.GS(
-							"Finished sync of: {0}"), args.Name));
-					}
-					else
-					{
-						LogMessage(string.Format(Util.GS(
-							"Failed Sync of: {0}"), args.Name));
-					}
+					LogMessage(string.Format(Util.GS(
+						"Finished sync of: {0}"), args.Name));
 					break;
 				}
 			}
