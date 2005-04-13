@@ -1083,31 +1083,11 @@ namespace Novell.iFolder
 				iFolderHolder ifHolder = 
 							(iFolderHolder) tModel.GetValue(iter, 0);
 
-				// build an array of all current iFolders and
-				// hand it to the Properties Dialog
-				iFolderWeb[] ifList;
-				ArrayList list = new ArrayList();
-
-				if(iFolderTreeStore.GetIterFirst(out iter))
-				{
-					do
-					{
-						iFolderHolder tmpHldr = (iFolderHolder) 
-									iFolderTreeStore.GetValue(iter,0);
-						if(!tmpHldr.iFolder.IsSubscription)
-							list.Add(tmpHldr.iFolder);
-					}
-					while(iFolderTreeStore.IterNext(ref iter));
-				}
-
-				ifList = (iFolderWeb[])(list.ToArray(typeof(iFolderWeb)));
-
 				try
 				{
 					PropertiesDialog = 
 						new iFolderPropertiesDialog(this, 
 									ifHolder.iFolder, 
-									ifList,
 									ifws, simws);
 					PropertiesDialog.Response += 
 							new ResponseHandler(OnPropertiesDialogResponse);
@@ -1579,6 +1559,18 @@ namespace Novell.iFolder
 						UpdateStatus(Util.GS("Failed synchronization"));
 					}
 					break;
+				}
+			}
+
+			// If the properties dialog is open, update it so it shows the
+			// current status (last sync time, objects to sync, etc.)						
+			if (PropertiesDialog != null && 
+				PropertiesDialog.iFolder.ID == args.ID)
+			{
+				if (curiFolders.ContainsKey(args.ID))
+				{
+					iFolderHolder ifHolder = ifdata.GetiFolder(args.ID);
+					PropertiesDialog.UpdateiFolder(ifHolder.iFolder);
 				}
 			}
 		}
