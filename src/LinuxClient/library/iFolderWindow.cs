@@ -1547,17 +1547,25 @@ namespace Novell.iFolder
 							if(updatedHolder != null)
 								ifHolder = updatedHolder;
 						}
+
+						SyncSize syncSize = null;
+				
+						try
+						{
+							syncSize = ifws.CalculateSyncSize(args.ID);
+						}
+						catch
+						{}
+				
+						if (syncSize != null)
+						{
+							ifHolder.ObjectsToSync = syncSize.SyncNodeCount;
+						}
+
 						iFolderTreeStore.SetValue(iter, 0, ifHolder);
 					}
 
-					if(args.Successful)
-					{
-						UpdateStatus(Util.GS("Idle..."));
-					}
-					else
-					{
-						UpdateStatus(Util.GS("Failed synchronization"));
-					}
+					UpdateStatus(Util.GS("Idle..."));
 					break;
 				}
 			}
