@@ -81,6 +81,12 @@ namespace Simias.Security.Web
 		/// </summary>
 		private Hashtable unauthenticatedServices = new Hashtable();
 
+		/// <summary>
+		/// Hashtable that contains all the local addresses that this 
+		/// machine is known as.
+		/// </summary>
+		private Hashtable localAddresses = new Hashtable();
+
 		#endregion
 
 		#region Properties
@@ -109,6 +115,47 @@ namespace Simias.Security.Web
 		#endregion
 
 		#region Private Methods
+
+		/// <summary>
+		/// Returns whether address is an address local to this machine.
+		/// </summary>
+		/// <param name="address">The address to test.</param>
+		/// <returns>True if address is local, otherwise false is returned.</returns>
+		private bool IsLocalAddress( Uri address )
+		{
+			bool isLocal = false;
+
+			// Do the easy test first.
+			if ( address.IsLoopback == false )
+			{
+				IPAddress hostAddress;
+				try
+				{
+					hostAddress = IPAddress.Parse( address.Host );
+					if ( IPAddress.IsLoopback( hostAddress ) || localAddresses.ContainsKey( address.Host ) )
+					{
+						log.Debug( "Address {0} is loopback.", address.Host );
+						isLocal = true;
+					}
+				}
+				catch ( FormatException )
+				{
+					// The address is a DNS name not a dotted-quad address.
+					if ( localAddresses.ContainsKey( address.Host ) )
+					{
+						log.Debug( "Address {0} is loopback.", address.Host );
+						isLocal = true;
+					}
+				}
+			}
+			else
+			{
+				log.Debug( "Address {0} is loopback.", address.Host );
+				isLocal = true;
+			}
+
+			return isLocal;
+		}
 
 		/// <summary>
 		/// Occurs when ASP.NET acquires the current state (for example, session state) 
@@ -179,7 +226,7 @@ namespace Simias.Security.Web
 
 			// Verify that we are on a secure connection, if not redirect to https
 			HttpContext context = HttpContext.Current;
-			if ( ( context.Request.Url.IsLoopback == false ) && 
+			if ( ( IsLocalAddress( context.Request.Url ) == false ) && 
 				 ( context.Request.IsSecureConnection == false ) && 
 				 ( sslRequired == true ) ) 
 			{
@@ -279,7 +326,7 @@ namespace Simias.Security.Web
 					// If this is an enterprise server use the default domain.
 					domainID = StoreReference.DefaultDomain;
 				}
-				else if ( context.Request.Url.IsLoopback )
+				else if ( IsLocalAddress( context.Request.Url ) )
 				{
 					// If this address is loopback, set the local domain in the HTTP context.
 					domainID = StoreReference.LocalDomain;
@@ -309,10 +356,18 @@ namespace Simias.Security.Web
 			}
 			else
 			{
-				string realm = 
-					StoreReference.IsEnterpriseServer ? 
-						StoreReference.GetDomain( store.DefaultDomain ).Name : 
-						Environment.MachineName;
+				string realm = null;
+				if ( StoreReference.IsEnterpriseServer )
+				{
+					realm = 
+						( store.DefaultDomain != null ) ?
+							StoreReference.GetDomain( store.DefaultDomain ).Name :
+							Environment.MachineName;
+				}
+				else
+				{
+					realm = Environment.MachineName;
+				}
 
 				context.Response.StatusCode = 401;
 				context.Response.StatusDescription = "Unauthorized";
@@ -363,6 +418,13 @@ namespace Simias.Security.Web
 			if ( ( settings != null ) && ( settings[ 0 ] != null ) )
 			{
 				ParseAuthNotRequiredServices( settings[ 0 ] );
+			}
+
+			// Get all the addresses that this host is known by.
+			string[] addresses = MyDns.GetHostAddresses();
+			foreach( string s in addresses )
+			{
+				localAddresses[ s ] = null;
 			}
 		}
 

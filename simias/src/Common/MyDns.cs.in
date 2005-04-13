@@ -22,8 +22,10 @@
  ***********************************************************************/
 
 using System;
+using System.Collections;
 using System.IO;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
@@ -105,6 +107,81 @@ namespace Simias
 			}
 
 			return host;
+		}
+		
+		/// <summary>
+		/// Lookup all of the local addresses for this computer.
+		/// </summary>
+		/// <returns>An array containing the addresses that this local
+		/// machine is known by.</returns>
+		public static string[] GetHostAddresses()
+		{
+			ArrayList hosts = new ArrayList();
+
+			if(MyEnvironment.Mono)
+			{
+				// on linux and mac this is going to call
+				// this shell script to get the IP Address
+				
+				// this is because of a known bug in mono
+				// where it will not return all of the
+				// IP Addresses
+				System.Diagnostics.Process process = null;
+				System.IO.StreamReader reader;
+				process = new Process();
+				process.StartInfo.RedirectStandardOutput = true;
+				process.StartInfo.CreateNoWindow = true;
+				process.StartInfo.UseShellExecute = false;
+				process.StartInfo.FileName = "@_webbindir_@/ifdata";
+				process.Start();
+				reader = process.StandardOutput;
+				process.WaitForExit(2000);
+				
+				string hostAddress;
+				while( (hostAddress = reader.ReadLine()) != null)
+				{
+					hosts.Add( hostAddress );
+				}
+
+				// Resolve the DNS name for each ip address.
+				string[] ipAddresses = hosts.ToArray( typeof( string ) ) as string[];
+				foreach ( string s in ipAddresses )
+				{
+					try
+					{
+						IPHostEntry ipHostEntry = Dns.GetHostByAddress( s );
+						if ( ( ipHostEntry.HostName != null ) && (ipHostEntry.HostName != String.Empty ) )
+						{
+							hosts.Add( ipHostEntry.HostName );
+						}
+					}
+					catch( SocketException )
+					{}
+				}
+			}
+			else
+			{
+				// machine host name
+				string hostName = Dns.GetHostName();
+				IPHostEntry ipHostEntry = Dns.Resolve(hostName);
+				foreach(IPAddress ipAddress in ipHostEntry.AddressList)
+				{
+					hosts.Add( ipAddress.ToString() );
+
+					try
+					{
+						IPHostEntry entry = Dns.GetHostByAddress( ipAddress );
+						if ( ( entry.HostName != null ) && ( entry.HostName != String.Empty ) )
+						{
+							hosts.Add( entry.HostName );
+						}
+					}
+					catch ( SocketException )
+					{}
+				}
+			}
+
+			return hosts.ToArray( typeof( string ) ) as string[];
 		}
 	}
 }
