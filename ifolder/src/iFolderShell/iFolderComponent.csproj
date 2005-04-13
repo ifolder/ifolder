@@ -179,16 +179,6 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "NameConflictPrompt.cs"
-                    SubType = "Form"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "NameConflictPrompt.resx"
-                    DependentUpon = "NameConflictPrompt.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "NewiFolder.cs"
                     SubType = "Form"
                     BuildAction = "Compile"

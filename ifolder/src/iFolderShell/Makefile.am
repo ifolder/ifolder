@@ -8,11 +8,11 @@ endif
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-iFolderComponent_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolderAdvanced.cs $(srcdir)/ShareListMember.cs $(srcdir)/MyMessageBox.cs $(srcdir)/Win32Window.cs $(srcdir)/iFolderComponent.cs $(srcdir)/NewiFolder.cs $(srcdir)/UserProperties.cs $(srcdir)/iFolderInfo.cs $(srcdir)/GaugeChart.cs $(srcdir)/Picker.cs $(srcdir)/ConflictResolver.cs $(srcdir)/CreateiFolder.cs $(srcdir)/DomainItem.cs $(srcdir)/NameConflictPrompt.cs
+iFolderComponent_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolderAdvanced.cs $(srcdir)/ShareListMember.cs $(srcdir)/MyMessageBox.cs $(srcdir)/Win32Window.cs $(srcdir)/iFolderComponent.cs $(srcdir)/NewiFolder.cs $(srcdir)/UserProperties.cs $(srcdir)/iFolderInfo.cs $(srcdir)/GaugeChart.cs $(srcdir)/Picker.cs $(srcdir)/ConflictResolver.cs $(srcdir)/CreateiFolder.cs $(srcdir)/DomainItem.cs
 iFolderComponent_CSFILES_CSC := $(subst /,$(SEP),$(iFolderComponent_CSFILES))
 iFolderComponent_INCLUDES =
 iFolderComponent_RESOURCES =
-iFolderComponent_RESOURCES_FILES = CreateiFolder.resources ConflictResolver.resources iFolderAdvanced.resources MyMessageBox.resources NewiFolder.resources Picker.resources UserProperties.resources GaugeChart.resources NameConflictPrompt.resources
+iFolderComponent_RESOURCES_FILES = CreateiFolder.resources ConflictResolver.resources iFolderAdvanced.resources MyMessageBox.resources NewiFolder.resources Picker.resources UserProperties.resources GaugeChart.resources
 iFolderComponent_FLAGS = $(CSC_LIBFLAG)
 iFolderComponent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll Novell.iFolder.dll
 iFolderComponent_LIBPATH = ../iFolder
@@ -33,7 +33,7 @@ iFolderShellRes_SRCFILES = $(srcdir)/iFolderShell/iFolderShellRes/iFolderShellRe
 iFolderShellRes_OBJFILES = iFolderShell/iFolderShellRes/iFolderShellRes.obj iFolderShell/iFolderShellRes/iFolderShell$(RES_EXT)
 
 DATA_FILES = $(srcdir)/iFolderShell/ifolder_emblem.ico $(srcdir)/iFolderShell/ifolder_conflict_emb.ico
-RESX_FILES = $(srcdir)/CreateiFolder.resx $(srcdir)/ConflictResolver.resx $(srcdir)/iFolderAdvanced.resx $(srcdir)/MyMessageBox.resx $(srcdir)/NewiFolder.resx $(srcdir)/Picker.resx $(srcdir)/UserProperties.resx $(srcdir)/GaugeChart.resx $(srcdir)/NameConflictPrompt.resx
+RESX_FILES = $(srcdir)/CreateiFolder.resx $(srcdir)/ConflictResolver.resx $(srcdir)/iFolderAdvanced.resx $(srcdir)/MyMessageBox.resx $(srcdir)/NewiFolder.resx $(srcdir)/Picker.resx $(srcdir)/UserProperties.resx $(srcdir)/GaugeChart.resx
 WINDOWS_FILES = $(srcdir)/explorer.exe.manifest $(srcdir)/explorer.exe.config
 
 PROJECT_FILES = $(srcdir)/iFolderComponent.csproj $(srcdir)/iFolderComponent.sln

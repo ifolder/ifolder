@@ -71,10 +71,17 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.ToolTip toolTip1;
 		private System.Windows.Forms.GroupBox localVersion;
 		private System.Windows.Forms.GroupBox serverVersion;
-		private System.Windows.Forms.Panel versionsPanel;
 		private System.Windows.Forms.Panel localPanel;
 		private System.Windows.Forms.Panel serverPanel;
 		private System.Windows.Forms.HelpProvider helpProvider1;
+		private System.Windows.Forms.ColumnHeader columnHeader2;
+		private System.Windows.Forms.ColumnHeader columnHeader3;
+		private System.Windows.Forms.Panel versionsPanel;
+		private System.Windows.Forms.GroupBox nameConflict;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.TextBox newName;
+		private System.Windows.Forms.Button resolveName;
+		private System.Windows.Forms.Label resolveNameLabel;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -123,6 +130,8 @@ namespace Novell.iFolderCom
 			this.ifolderPath = new System.Windows.Forms.Label();
 			this.conflictsView = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.localVersion = new System.Windows.Forms.GroupBox();
 			this.saveLocal = new System.Windows.Forms.Button();
 			this.localSize = new System.Windows.Forms.Label();
@@ -144,12 +153,18 @@ namespace Novell.iFolderCom
 			this.versionsPanel = new System.Windows.Forms.Panel();
 			this.serverPanel = new System.Windows.Forms.Panel();
 			this.localPanel = new System.Windows.Forms.Panel();
+			this.nameConflict = new System.Windows.Forms.GroupBox();
+			this.resolveName = new System.Windows.Forms.Button();
+			this.newName = new System.Windows.Forms.TextBox();
+			this.label8 = new System.Windows.Forms.Label();
+			this.resolveNameLabel = new System.Windows.Forms.Label();
 			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
 			this.localVersion.SuspendLayout();
 			this.serverVersion.SuspendLayout();
 			this.versionsPanel.SuspendLayout();
 			this.serverPanel.SuspendLayout();
 			this.localPanel.SuspendLayout();
+			this.nameConflict.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -296,10 +311,13 @@ namespace Novell.iFolderCom
 			this.conflictsView.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("conflictsView.Anchor")));
 			this.conflictsView.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("conflictsView.BackgroundImage")));
 			this.conflictsView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-																							this.columnHeader1});
+																							this.columnHeader1,
+																							this.columnHeader2,
+																							this.columnHeader3});
 			this.conflictsView.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("conflictsView.Dock")));
 			this.conflictsView.Enabled = ((bool)(resources.GetObject("conflictsView.Enabled")));
 			this.conflictsView.Font = ((System.Drawing.Font)(resources.GetObject("conflictsView.Font")));
+			this.conflictsView.FullRowSelect = true;
 			this.helpProvider1.SetHelpKeyword(this.conflictsView, resources.GetString("conflictsView.HelpKeyword"));
 			this.helpProvider1.SetHelpNavigator(this.conflictsView, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("conflictsView.HelpNavigator"))));
 			this.helpProvider1.SetHelpString(this.conflictsView, resources.GetString("conflictsView.HelpString"));
@@ -323,6 +341,18 @@ namespace Novell.iFolderCom
 			this.columnHeader1.Text = resources.GetString("columnHeader1.Text");
 			this.columnHeader1.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("columnHeader1.TextAlign")));
 			this.columnHeader1.Width = ((int)(resources.GetObject("columnHeader1.Width")));
+			// 
+			// columnHeader2
+			// 
+			this.columnHeader2.Text = resources.GetString("columnHeader2.Text");
+			this.columnHeader2.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("columnHeader2.TextAlign")));
+			this.columnHeader2.Width = ((int)(resources.GetObject("columnHeader2.Width")));
+			// 
+			// columnHeader3
+			// 
+			this.columnHeader3.Text = resources.GetString("columnHeader3.Text");
+			this.columnHeader3.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("columnHeader3.TextAlign")));
+			this.columnHeader3.Width = ((int)(resources.GetObject("columnHeader3.Width")));
 			// 
 			// localVersion
 			// 
@@ -812,6 +842,7 @@ namespace Novell.iFolderCom
 			this.versionsPanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("versionsPanel.BackgroundImage")));
 			this.versionsPanel.Controls.Add(this.serverPanel);
 			this.versionsPanel.Controls.Add(this.localPanel);
+			this.versionsPanel.Controls.Add(this.nameConflict);
 			this.versionsPanel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("versionsPanel.Dock")));
 			this.versionsPanel.Enabled = ((bool)(resources.GetObject("versionsPanel.Enabled")));
 			this.versionsPanel.Font = ((System.Drawing.Font)(resources.GetObject("versionsPanel.Font")));
@@ -883,6 +914,149 @@ namespace Novell.iFolderCom
 			this.toolTip1.SetToolTip(this.localPanel, resources.GetString("localPanel.ToolTip"));
 			this.localPanel.Visible = ((bool)(resources.GetObject("localPanel.Visible")));
 			// 
+			// nameConflict
+			// 
+			this.nameConflict.AccessibleDescription = resources.GetString("nameConflict.AccessibleDescription");
+			this.nameConflict.AccessibleName = resources.GetString("nameConflict.AccessibleName");
+			this.nameConflict.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("nameConflict.Anchor")));
+			this.nameConflict.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("nameConflict.BackgroundImage")));
+			this.nameConflict.Controls.Add(this.resolveName);
+			this.nameConflict.Controls.Add(this.newName);
+			this.nameConflict.Controls.Add(this.label8);
+			this.nameConflict.Controls.Add(this.resolveNameLabel);
+			this.nameConflict.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("nameConflict.Dock")));
+			this.nameConflict.Enabled = ((bool)(resources.GetObject("nameConflict.Enabled")));
+			this.nameConflict.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.nameConflict.Font = ((System.Drawing.Font)(resources.GetObject("nameConflict.Font")));
+			this.helpProvider1.SetHelpKeyword(this.nameConflict, resources.GetString("nameConflict.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.nameConflict, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("nameConflict.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.nameConflict, resources.GetString("nameConflict.HelpString"));
+			this.nameConflict.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("nameConflict.ImeMode")));
+			this.nameConflict.Location = ((System.Drawing.Point)(resources.GetObject("nameConflict.Location")));
+			this.nameConflict.Name = "nameConflict";
+			this.nameConflict.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("nameConflict.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.nameConflict, ((bool)(resources.GetObject("nameConflict.ShowHelp"))));
+			this.nameConflict.Size = ((System.Drawing.Size)(resources.GetObject("nameConflict.Size")));
+			this.nameConflict.TabIndex = ((int)(resources.GetObject("nameConflict.TabIndex")));
+			this.nameConflict.TabStop = false;
+			this.nameConflict.Text = resources.GetString("nameConflict.Text");
+			this.toolTip1.SetToolTip(this.nameConflict, resources.GetString("nameConflict.ToolTip"));
+			this.nameConflict.Visible = ((bool)(resources.GetObject("nameConflict.Visible")));
+			// 
+			// resolveName
+			// 
+			this.resolveName.AccessibleDescription = resources.GetString("resolveName.AccessibleDescription");
+			this.resolveName.AccessibleName = resources.GetString("resolveName.AccessibleName");
+			this.resolveName.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("resolveName.Anchor")));
+			this.resolveName.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("resolveName.BackgroundImage")));
+			this.resolveName.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("resolveName.Dock")));
+			this.resolveName.Enabled = ((bool)(resources.GetObject("resolveName.Enabled")));
+			this.resolveName.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("resolveName.FlatStyle")));
+			this.resolveName.Font = ((System.Drawing.Font)(resources.GetObject("resolveName.Font")));
+			this.helpProvider1.SetHelpKeyword(this.resolveName, resources.GetString("resolveName.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.resolveName, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("resolveName.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.resolveName, resources.GetString("resolveName.HelpString"));
+			this.resolveName.Image = ((System.Drawing.Image)(resources.GetObject("resolveName.Image")));
+			this.resolveName.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("resolveName.ImageAlign")));
+			this.resolveName.ImageIndex = ((int)(resources.GetObject("resolveName.ImageIndex")));
+			this.resolveName.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("resolveName.ImeMode")));
+			this.resolveName.Location = ((System.Drawing.Point)(resources.GetObject("resolveName.Location")));
+			this.resolveName.Name = "resolveName";
+			this.resolveName.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("resolveName.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.resolveName, ((bool)(resources.GetObject("resolveName.ShowHelp"))));
+			this.resolveName.Size = ((System.Drawing.Size)(resources.GetObject("resolveName.Size")));
+			this.resolveName.TabIndex = ((int)(resources.GetObject("resolveName.TabIndex")));
+			this.resolveName.Text = resources.GetString("resolveName.Text");
+			this.resolveName.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("resolveName.TextAlign")));
+			this.toolTip1.SetToolTip(this.resolveName, resources.GetString("resolveName.ToolTip"));
+			this.resolveName.Visible = ((bool)(resources.GetObject("resolveName.Visible")));
+			this.resolveName.Click += new System.EventHandler(this.resolveName_Click);
+			// 
+			// newName
+			// 
+			this.newName.AccessibleDescription = resources.GetString("newName.AccessibleDescription");
+			this.newName.AccessibleName = resources.GetString("newName.AccessibleName");
+			this.newName.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("newName.Anchor")));
+			this.newName.AutoSize = ((bool)(resources.GetObject("newName.AutoSize")));
+			this.newName.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("newName.BackgroundImage")));
+			this.newName.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("newName.Dock")));
+			this.newName.Enabled = ((bool)(resources.GetObject("newName.Enabled")));
+			this.newName.Font = ((System.Drawing.Font)(resources.GetObject("newName.Font")));
+			this.helpProvider1.SetHelpKeyword(this.newName, resources.GetString("newName.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.newName, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("newName.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.newName, resources.GetString("newName.HelpString"));
+			this.newName.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("newName.ImeMode")));
+			this.newName.Location = ((System.Drawing.Point)(resources.GetObject("newName.Location")));
+			this.newName.MaxLength = ((int)(resources.GetObject("newName.MaxLength")));
+			this.newName.Multiline = ((bool)(resources.GetObject("newName.Multiline")));
+			this.newName.Name = "newName";
+			this.newName.PasswordChar = ((char)(resources.GetObject("newName.PasswordChar")));
+			this.newName.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("newName.RightToLeft")));
+			this.newName.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("newName.ScrollBars")));
+			this.helpProvider1.SetShowHelp(this.newName, ((bool)(resources.GetObject("newName.ShowHelp"))));
+			this.newName.Size = ((System.Drawing.Size)(resources.GetObject("newName.Size")));
+			this.newName.TabIndex = ((int)(resources.GetObject("newName.TabIndex")));
+			this.newName.Text = resources.GetString("newName.Text");
+			this.newName.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("newName.TextAlign")));
+			this.toolTip1.SetToolTip(this.newName, resources.GetString("newName.ToolTip"));
+			this.newName.Visible = ((bool)(resources.GetObject("newName.Visible")));
+			this.newName.WordWrap = ((bool)(resources.GetObject("newName.WordWrap")));
+			this.newName.TextChanged += new System.EventHandler(this.newName_TextChanged);
+			// 
+			// label8
+			// 
+			this.label8.AccessibleDescription = resources.GetString("label8.AccessibleDescription");
+			this.label8.AccessibleName = resources.GetString("label8.AccessibleName");
+			this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label8.Anchor")));
+			this.label8.AutoSize = ((bool)(resources.GetObject("label8.AutoSize")));
+			this.label8.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label8.Dock")));
+			this.label8.Enabled = ((bool)(resources.GetObject("label8.Enabled")));
+			this.label8.Font = ((System.Drawing.Font)(resources.GetObject("label8.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label8, resources.GetString("label8.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label8, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label8.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label8, resources.GetString("label8.HelpString"));
+			this.label8.Image = ((System.Drawing.Image)(resources.GetObject("label8.Image")));
+			this.label8.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label8.ImageAlign")));
+			this.label8.ImageIndex = ((int)(resources.GetObject("label8.ImageIndex")));
+			this.label8.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label8.ImeMode")));
+			this.label8.Location = ((System.Drawing.Point)(resources.GetObject("label8.Location")));
+			this.label8.Name = "label8";
+			this.label8.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label8.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label8, ((bool)(resources.GetObject("label8.ShowHelp"))));
+			this.label8.Size = ((System.Drawing.Size)(resources.GetObject("label8.Size")));
+			this.label8.TabIndex = ((int)(resources.GetObject("label8.TabIndex")));
+			this.label8.Text = resources.GetString("label8.Text");
+			this.label8.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label8.TextAlign")));
+			this.toolTip1.SetToolTip(this.label8, resources.GetString("label8.ToolTip"));
+			this.label8.Visible = ((bool)(resources.GetObject("label8.Visible")));
+			// 
+			// resolveNameLabel
+			// 
+			this.resolveNameLabel.AccessibleDescription = resources.GetString("resolveNameLabel.AccessibleDescription");
+			this.resolveNameLabel.AccessibleName = resources.GetString("resolveNameLabel.AccessibleName");
+			this.resolveNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("resolveNameLabel.Anchor")));
+			this.resolveNameLabel.AutoSize = ((bool)(resources.GetObject("resolveNameLabel.AutoSize")));
+			this.resolveNameLabel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("resolveNameLabel.Dock")));
+			this.resolveNameLabel.Enabled = ((bool)(resources.GetObject("resolveNameLabel.Enabled")));
+			this.resolveNameLabel.Font = ((System.Drawing.Font)(resources.GetObject("resolveNameLabel.Font")));
+			this.helpProvider1.SetHelpKeyword(this.resolveNameLabel, resources.GetString("resolveNameLabel.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.resolveNameLabel, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("resolveNameLabel.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.resolveNameLabel, resources.GetString("resolveNameLabel.HelpString"));
+			this.resolveNameLabel.Image = ((System.Drawing.Image)(resources.GetObject("resolveNameLabel.Image")));
+			this.resolveNameLabel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("resolveNameLabel.ImageAlign")));
+			this.resolveNameLabel.ImageIndex = ((int)(resources.GetObject("resolveNameLabel.ImageIndex")));
+			this.resolveNameLabel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("resolveNameLabel.ImeMode")));
+			this.resolveNameLabel.Location = ((System.Drawing.Point)(resources.GetObject("resolveNameLabel.Location")));
+			this.resolveNameLabel.Name = "resolveNameLabel";
+			this.resolveNameLabel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("resolveNameLabel.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.resolveNameLabel, ((bool)(resources.GetObject("resolveNameLabel.ShowHelp"))));
+			this.resolveNameLabel.Size = ((System.Drawing.Size)(resources.GetObject("resolveNameLabel.Size")));
+			this.resolveNameLabel.TabIndex = ((int)(resources.GetObject("resolveNameLabel.TabIndex")));
+			this.resolveNameLabel.Text = resources.GetString("resolveNameLabel.Text");
+			this.resolveNameLabel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("resolveNameLabel.TextAlign")));
+			this.toolTip1.SetToolTip(this.resolveNameLabel, resources.GetString("resolveNameLabel.ToolTip"));
+			this.resolveNameLabel.Visible = ((bool)(resources.GetObject("resolveNameLabel.Visible")));
+			// 
 			// helpProvider1
 			// 
 			this.helpProvider1.HelpNamespace = resources.GetString("helpProvider1.HelpNamespace");
@@ -897,11 +1071,11 @@ namespace Novell.iFolderCom
 			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Controls.Add(this.ifolderPath);
+			this.Controls.Add(this.ifolderName);
 			this.Controls.Add(this.versionsPanel);
 			this.Controls.Add(this.close);
 			this.Controls.Add(this.conflictsView);
-			this.Controls.Add(this.ifolderPath);
-			this.Controls.Add(this.ifolderName);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
@@ -931,6 +1105,7 @@ namespace Novell.iFolderCom
 			this.versionsPanel.ResumeLayout(false);
 			this.serverPanel.ResumeLayout(false);
 			this.localPanel.ResumeLayout(false);
+			this.nameConflict.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -955,63 +1130,84 @@ namespace Novell.iFolderCom
 						mmb.ShowDialog();
 					}
 				}
-				else
-				{
-					NameConflictPrompt namePrompt = new NameConflictPrompt();
-					namePrompt.FilePath = ifolder.UnManagedPath;
-
-					if (conflicts.LocalConflict != null)
-					{
-						namePrompt.FileName = conflicts.LocalConflict.LocalName;
-						if (namePrompt.ShowDialog() == DialogResult.OK)
-						{
-							try
-							{
-								if (readOnly)
-								{
-									// The user has read-only access, they can only rename the local copy to get it out of the way.
-									ifWebService.RenameAndResolveConflict(ifolder.ID, conflicts.ServerConflict.ConflictID, namePrompt.FileName);
-								}
-								else
-								{
-									ifWebService.ResolveNameConflict(ifolder.ID, conflicts.LocalConflict.ConflictID, namePrompt.FileName);
-									ifWebService.ResolveNameConflict(ifolder.ID, conflicts.ServerConflict.ConflictID, conflicts.ServerConflict.ServerName);
-								}
-
-								lvi.Remove();
-							}
-							catch (Exception ex)
-							{
-								MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("conflictResolveError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-								mmb.ShowDialog();
-							}
-						}
-					}
-					else
-					{
-						// Prompt for new name.
-						namePrompt.FileName = conflicts.ServerConflict.ServerName;
-						if (namePrompt.ShowDialog() == DialogResult.OK)
-						{
-							try
-							{
-								ifWebService.ResolveNameConflict(ifolder.ID, conflicts.ServerConflict.ConflictID, namePrompt.FileName);
-								lvi.Remove();
-							}
-							catch (Exception ex)
-							{
-								MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("conflictResolveError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-								mmb.ShowDialog();
-							}
-						}
-					}
-				}
 			}
 
 			if (conflictsView.Items.Count == 0 && ConflictsResolved != null)
 			{
 				// If all the conflicts have been resolved, fire the ConflictsResolved event.
 				ConflictsResolved(this, new EventArgs());
+			}
+		}
+
+		private void resolveNameConflict()
+		{
+			if (conflictsView.SelectedItems.Count == 1)
+			{
+				ListViewItem lvi = conflictsView.SelectedItems[0];
+				Conflicts conflicts = (Conflicts)lvi.Tag;
+
+				bool fileValid = false;
+
+				// Validate the filename entered.
+				try
+				{
+					string path = Path.Combine(ifolder.UnManagedPath, newName.Text);
+					FileInfo fi = new FileInfo(path);
+					if (fi.Exists)
+					{
+						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("fileExists"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+						mmb.ShowDialog();
+					}
+					else
+					{
+						fileValid = true;
+					}
+				}
+				catch (Exception ex)
+				{
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("badFileName"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+				}
+
+				if (fileValid)
+				{
+					if (conflicts.LocalConflict != null)
+					{
+						try
+						{
+							if (readOnly)
+							{
+								// The user has read-only access, they can only rename the local copy to get it out of the way.
+								ifWebService.RenameAndResolveConflict(ifolder.ID, conflicts.ServerConflict.ConflictID, newName.Text);
+							}
+							else
+							{
+								ifWebService.ResolveNameConflict(ifolder.ID, conflicts.LocalConflict.ConflictID, newName.Text);
+								ifWebService.ResolveNameConflict(ifolder.ID, conflicts.ServerConflict.ConflictID, conflicts.ServerConflict.ServerName);
+							}
+
+							lvi.Remove();
+						}
+						catch (Exception ex)
+						{
+							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("conflictResolveError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							mmb.ShowDialog();
+						}
+					}
+					else
+					{
+						try
+						{
+							ifWebService.ResolveNameConflict(ifolder.ID, conflicts.ServerConflict.ConflictID, newName.Text);
+							lvi.Remove();
+						}
+						catch (Exception ex)
+						{
+							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("conflictResolveError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							mmb.ShowDialog();
+						}
+					}
+				}
 			}
 		}
 		#endregion
@@ -1083,12 +1279,20 @@ namespace Novell.iFolderCom
 					ListViewItem lvi = null;
 					if (!conflict.IsNameConflict)
 					{
-						lvi = new ListViewItem(conflict.LocalName);
+						string[] items = new string[3];
+						items[0] = conflict.LocalName;
+						items[1] = Path.GetDirectoryName(conflict.LocalFullPath).Substring(ifolder.UnManagedPath.Length);
+						items[2] = resourceManager.GetString("file");
+						lvi = new ListViewItem(items);
 						conflicts.ServerConflict = conflict;
 					}
 					else if (conflict.ServerName != null)
 					{
-						lvi = new ListViewItem(conflict.ServerName);
+						string[] items = new string[3];
+						items[0] = conflict.ServerName;
+						items[1] = Path.GetDirectoryName(conflict.ServerFullPath).Substring(ifolder.UnManagedPath.Length);
+						items[2] = resourceManager.GetString("name");
+						lvi = new ListViewItem(items);
 						conflicts.ServerConflict = conflict;
 					}
 
@@ -1133,10 +1337,24 @@ namespace Novell.iFolderCom
 
 		private void conflictsView_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
-			// Enable/disable the save buttons.
-			saveLocal.Enabled = saveServer.Enabled = conflictsView.SelectedItems.Count > 0;
+			resolveNameLabel.Text = resourceManager.GetString("resolveNameLabel.Text");
+			newName.Enabled = resolveName.Enabled = true;
+			newName.Text = string.Empty;
 
-			if (conflictsView.SelectedItems.Count == 1)
+			if (conflictsView.SelectedItems.Count == 0)
+			{
+				serverPanel.Visible = localPanel.Visible = true;
+				nameConflict.Visible = false;
+				conflicts = null;
+
+				// Clear the data fields.
+				localName.Text = serverName.Text =
+					localDate.Text = serverDate.Text =
+					localSize.Text = serverSize.Text = "";
+
+				saveLocal.Enabled = saveServer.Enabled = false;
+			}
+			else if (conflictsView.SelectedItems.Count == 1)
 			{
 				conflicts = (Conflicts)conflictsView.SelectedItems[0].Tag;
 
@@ -1147,6 +1365,9 @@ namespace Novell.iFolderCom
 
 				if (!conflicts.ServerConflict.IsNameConflict)
 				{
+					serverPanel.Visible = localPanel.Visible = true;
+					nameConflict.Visible = false;
+
 					// Fill in the local data.
 					localName.Text = conflicts.ServerConflict.LocalName;
 					localDate.Text = conflicts.ServerConflict.LocalDate;
@@ -1157,14 +1378,12 @@ namespace Novell.iFolderCom
 				}
 				else
 				{
+					serverPanel.Visible = localPanel.Visible = false;
+					nameConflict.Visible = true;
+
 					if (conflicts.LocalConflict != null)
 					{
-						// Fill in the local data.
-						localName.Text = conflicts.LocalConflict.LocalName;
-						localDate.Text = conflicts.LocalConflict.LocalDate;
-						localSize.Text = conflicts.LocalConflict.LocalSize;
-						saveLocal.Enabled = true;
-						saveServer.Enabled = false;
+						newName.Text = conflicts.LocalConflict.LocalName;
 					}
 					else if (readOnly)
 					{
@@ -1172,36 +1391,46 @@ namespace Novell.iFolderCom
 						if (File.Exists(localFile))
 						{
 							conflicts.LocalConflict = new Conflict();
-							localName.Text = conflicts.LocalConflict.LocalName = conflicts.ServerConflict.ServerName;
+							newName.Text = conflicts.LocalConflict.LocalName = conflicts.ServerConflict.ServerName;
 							conflicts.LocalConflict.LocalFullPath = Path.Combine(ifolder.UnManagedPath, conflicts.LocalConflict.LocalName);
-							localDate.Text = File.GetLastWriteTime(localFile).ToString();
-							// TODO: fill in the size.
-							saveLocal.Enabled = true;
-							saveServer.Enabled = false;
 						}
 						else
 						{
-							saveLocal.Enabled = false;
-							saveServer.Enabled = false;
+							resolveName.Enabled = false;
 						}
 					}
 					else
 					{
-						saveLocal.Enabled = false;
-						saveServer.Enabled = true;
+						newName.Text = conflicts.ServerConflict.ServerName;
 					}
 				}
 			}
 			else
 			{
+				serverPanel.Visible = localPanel.Visible = false;
+				nameConflict.Visible = true;
+				resolveNameLabel.Text = resourceManager.GetString("multiNameConflict");
+				newName.Enabled = resolveName.Enabled = false;
+
+				foreach (ListViewItem lvi in conflictsView.SelectedItems)
+				{
+					if (!((Conflicts)lvi.Tag).ServerConflict.IsNameConflict)
+					{
+						serverPanel.Visible = localPanel.Visible = true;
+						nameConflict.Visible = false;
+						break;
+					}
+				}
+
 				conflicts = null;
 
 				// Clear the data fields.
-				localName.Text = serverName.Text =
-					localDate.Text = serverDate.Text =
+				localName.Text = serverName.Text = resourceManager.GetString("multiSelect");
+				localDate.Text = serverDate.Text =
 					localSize.Text = serverSize.Text = "";
 
-				saveLocal.Enabled = saveServer.Enabled = false;
+				saveLocal.Enabled = !readOnly;
+				saveServer.Enabled = true;
 			}
 		}
 
@@ -1213,6 +1442,16 @@ namespace Novell.iFolderCom
 		private void saveServer_Click(object sender, System.EventArgs e)
 		{
 			resolveConflicts(false);
+		}
+
+		private void resolveName_Click(object sender, System.EventArgs e)
+		{
+			resolveNameConflict();
+		}
+
+		private void newName_TextChanged(object sender, System.EventArgs e)
+		{
+			resolveName.Enabled = !newName.Text.Equals(string.Empty);
 		}
 
 		private void localName_DoubleClick(object sender, System.EventArgs e)
