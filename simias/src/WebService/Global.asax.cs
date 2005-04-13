@@ -40,10 +40,22 @@ namespace Simias.Web
 	public class Global : HttpApplication
 	{
 		#region Class Members
+		
 		/// <summary>
 		/// Object used to manage the simias services.
 		/// </summary>
 		static private Simias.Service.Manager serviceManager;
+		
+		/// <summary>
+		/// A thread to keep the application alive long enough to close Simias.
+		/// </summary>
+		private Thread keepAliveThread;
+
+		/// <summary>
+		/// Quit the application flag.
+		/// </summary>
+		private bool quit;
+
 		#endregion
 
 		/// <summary>
@@ -73,8 +85,33 @@ namespace Simias.Web
 			EventPublisher eventPub = new EventPublisher();
 			eventPub.RaiseEvent( new NotifyEventArgs("Simias-Up", "The simias service is running", DateTime.Now) );
 			Console.Error.WriteLine("Simias Process Running");
+
+			// start keep alive
+			// NOTE: We have seen a FLAIM corruption because the database was not given
+			// the opportunity to close on shutdown.  The solution is to work with
+			// Dispose() methods with the native calls and to control our own life cycle
+			// (which in a web application is difficult). It would mean separating the
+			// database application from the web application, which is not very practical
+			// today.  We can bend the rules in the web application by using a foreground
+			// thread. This is a brittle solution, but it seems to work today.
+			keepAliveThread = new Thread(new ThreadStart(this.KeepAlive));
+			quit = false;
+			keepAliveThread.Start();
 		}
  
+		/// <summary>
+		/// Keep Alive Thread
+		/// </summary>
+		protected void KeepAlive()
+		{
+			TimeSpan span = TimeSpan.FromSeconds(1);
+			
+			while(!quit)
+			{
+				Thread.Sleep(span);
+			}
+		}
+
 		/// <summary>
 		/// Session_Start
 		/// </summary>
@@ -147,6 +184,10 @@ namespace Simias.Web
 			serviceManager.WaitForServicesStopped();
 			serviceManager = null;
 			Console.Error.WriteLine("Simias Process Shutdown");
+
+			// end keep alive
+			// NOTE: an interrupt or abort here is currently causing a hang on Mono
+			quit = true;
 		}
 	}
 }
