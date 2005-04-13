@@ -38,13 +38,13 @@ namespace Novell.iFolder
 	{
 		private iFolderWebService	ifws;
 		private SimiasWebService	simws;
-		private iFolderWeb				ifolder;
+		private iFolderWeb		ifolder;
 		private Gtk.Notebook		propNoteBook;
-//		private Hashtable			ifHash;
-		private HBox				ConflictBox;
-		private HBox				ConflictHolder;
-		private iFolderConflictDialog ConflictDialog;
-		private iFolderPropSharingPage SharingPage;
+//		private Hashtable		ifHash;
+		private HBox			ConflictBox;
+		private HBox			ConflictHolder;
+		private iFolderConflictDialog 	ConflictDialog;
+		private iFolderPropSharingPage 	SharingPage;
 		private iFolderPropSettingsPage SettingsPage; 
 
 		public int CurrentPage
@@ -59,6 +59,14 @@ namespace Novell.iFolder
 				return propNoteBook.CurrentPage;
 			}
 		}
+		
+		public iFolderWeb iFolder
+		{
+			get
+			{
+				return ifolder;
+			}
+		}
 
 
 
@@ -67,7 +75,6 @@ namespace Novell.iFolder
 		/// </summary>
 		public iFolderPropertiesDialog(	Gtk.Window parent,
 										iFolderWeb ifolder, 
-										iFolderWeb[] ifolders,
 										iFolderWebService iFolderWS,
 										SimiasWebService SimiasWS)
 			: base()
@@ -78,7 +85,19 @@ namespace Novell.iFolder
 			if(SimiasWS == null)
 				throw new ApplicationException("SimiasWebService was null");
 			this.simws = SimiasWS;
-			this.ifolder = ifolder;
+
+			// Make sure that we have the latest information by forcing this
+			// a reread from the server.
+			try
+			{
+				this.ifolder = this.ifws.GetiFolder(ifolder.ID);
+			}
+			catch(Exception e)
+			{
+				throw new ApplicationException(
+						"Unable to read the iFolder");
+			}
+			
 			this.HasSeparator = false;
 			this.Modal = true;
 			if(parent != null)
@@ -87,7 +106,7 @@ namespace Novell.iFolder
 
 //			ifHash = new Hashtable();
 
-			InitializeWidgets(ifolders);
+			InitializeWidgets();
 			SetValues();
 		}
 
@@ -100,8 +119,6 @@ namespace Novell.iFolder
 		public iFolderPropertiesDialog(	string ifolderID )
 			: base()
 		{
-			iFolderWeb[]	ifolders;
-			
 			String localServiceUrl =
 				Simias.Client.Manager.LocalServiceUrl.ToString();
 
@@ -121,21 +138,12 @@ namespace Novell.iFolder
 
 			try
 			{
-				ifolders = this.ifws.GetAlliFolders();
+				this.ifolder = this.ifws.GetiFolder(ifolderID);
 			}
 			catch(Exception e)
 			{
 				throw new ApplicationException(
-						"Unable to read iFolders");
-			}
-
-			foreach(iFolderWeb ifw in ifolders)
-			{
-				if(ifw.ID == ifolderID)
-				{
-					this.ifolder = ifw;
-					break;
-				}
+						"Unable to read the iFolder");
 			}
 
 			this.HasSeparator = false;
@@ -144,8 +152,14 @@ namespace Novell.iFolder
 
 //			ifHash = new Hashtable();
 
-			InitializeWidgets(ifolders);
+			InitializeWidgets();
 			SetValues();
+		}
+		
+		public void UpdateiFolder(iFolderWeb theiFolder)
+		{
+			SettingsPage.UpdateiFolder(theiFolder);
+			SharingPage.UpdateiFolder(theiFolder);
 		}
 
 
@@ -154,7 +168,7 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Setup the UI inside the Window
 		/// </summary>
-		private void InitializeWidgets(iFolderWeb[] ifolders)
+		private void InitializeWidgets()
 		{
 			VBox dialogBox = new VBox();
 			this.VBox.PackStart(dialogBox);
@@ -238,8 +252,7 @@ namespace Novell.iFolder
 					ConflictBox.Visible = true;
 			}
 
-			SettingsPage.UpdateiFolder(ifolder);
-			SharingPage.UpdateiFolder(ifolder);
+			UpdateiFolder(ifolder);
 		}
 
 

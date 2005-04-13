@@ -85,7 +85,10 @@ namespace Novell.iFolder
 		{
 			this.ifolder = ifolder;
 
-			LastSuccessfulSync.Text = ifolder.LastSyncTime;
+			if (ifolder.LastSyncTime == null || ifolder.LastSyncTime == "")
+				LastSuccessfulSync.Text = Util.GS("N/A");
+			else
+				LastSuccessfulSync.Text = ifolder.LastSyncTime;
 			FFSyncValue.Text = "0";
 			
 			int syncInterval = 0;
@@ -95,10 +98,8 @@ namespace Novell.iFolder
 				{
 					syncInterval = ifws.GetDefaultSyncInterval();
 				}
-				catch(Exception e)
-				{
-					// Intentionally blank
-				}
+				catch
+				{}
 			}
 			else
 			{
@@ -117,15 +118,13 @@ namespace Novell.iFolder
 			OwnerLabel.Markup = string.Format("<span size=\"small\">{0}</span>", ifolder.Owner);
 			LocationLabel.Markup = string.Format("<span size=\"small\">{0}</span>", ifolder.UnManagedPath);
 			
-/*			try
+			try
 			{
 				SyncSize ss = ifws.CalculateSyncSize(ifolder.ID);
-				LastSuccessfulSync.Text = string.Format("{0}", ss.SyncByteCount);
 				FFSyncValue.Text = string.Format("{0}", ss.SyncNodeCount);
 			}
 			catch(Exception e)
 			{
-				LastSuccessfulSync.Text = Util.GS("N/A");
 				FFSyncValue.Text = Util.GS("N/A");
 
 //				iFolderExceptionDialog ied = new iFolderExceptionDialog(
@@ -134,7 +133,6 @@ namespace Novell.iFolder
 //				ied.Hide();
 //				ied.Destroy();
 			}
-*/
 
 
 			try
