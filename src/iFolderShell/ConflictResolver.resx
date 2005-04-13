@@ -124,8 +124,8 @@
 	<data name="label1.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>True</value>
 	</data>
-	<data name="label1.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-		<value />
+	<data name="label1.Font" type="System.Drawing.Font, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>Microsoft Sans Serif, 12pt, style=Bold</value>
 	</data>
 	<data name="label1.HelpKeyword" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value />
@@ -158,13 +158,13 @@
 		<value>False</value>
 	</data>
 	<data name="label1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>416, 40</value>
+		<value>376, 24</value>
 	</data>
 	<data name="label1.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>0</value>
 	</data>
 	<data name="label1.Text">
-		<value>Select a conflict from the list below.  To resolve the conflict, save the local version or the server version.  The version you save will be synced to this iFolder.</value>
+		<value>This iFolder contains conflicts.</value>
 	</data>
 	<data name="label1.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 		<value>TopLeft</value>
@@ -239,7 +239,7 @@
 		<value>NoControl</value>
 	</data>
 	<data name="label2.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>16, 72</value>
+		<value>16, 56</value>
 	</data>
 	<data name="label2.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Inherit</value>
@@ -248,13 +248,13 @@
 		<value>False</value>
 	</data>
 	<data name="label2.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>100, 16</value>
+		<value>48, 16</value>
 	</data>
 	<data name="label2.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>1</value>
 	</data>
 	<data name="label2.Text">
-		<value>iFolder name:</value>
+		<value>Name:</value>
 	</data>
 	<data name="label2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 		<value>TopLeft</value>
@@ -329,7 +329,7 @@
 		<value>NoControl</value>
 	</data>
 	<data name="label3.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>16, 96</value>
+		<value>16, 80</value>
 	</data>
 	<data name="label3.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Inherit</value>
@@ -338,13 +338,13 @@
 		<value>False</value>
 	</data>
 	<data name="label3.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>100, 16</value>
+		<value>48, 16</value>
 	</data>
 	<data name="label3.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>3</value>
 	</data>
 	<data name="label3.Text">
-		<value>iFolder path:</value>
+		<value>Path:</value>
 	</data>
 	<data name="label3.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 		<value>TopLeft</value>
@@ -419,7 +419,7 @@
 		<value>NoControl</value>
 	</data>
 	<data name="ifolderName.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>96, 72</value>
+		<value>64, 56</value>
 	</data>
 	<data name="ifolderName.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Inherit</value>
@@ -428,7 +428,7 @@
 		<value>True</value>
 	</data>
 	<data name="ifolderName.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>344, 16</value>
+		<value>376, 16</value>
 	</data>
 	<data name="ifolderName.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>2</value>
@@ -455,7 +455,7 @@
 		<value>$this</value>
 	</data>
 	<data name="&gt;&gt;ifolderName.ZOrder">
-		<value>4</value>
+		<value>1</value>
 	</data>
 	<data name="ifolderPath.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>False</value>
@@ -509,7 +509,7 @@
 		<value>NoControl</value>
 	</data>
 	<data name="ifolderPath.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>96, 96</value>
+		<value>64, 80</value>
 	</data>
 	<data name="ifolderPath.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Inherit</value>
@@ -518,7 +518,7 @@
 		<value>True</value>
 	</data>
 	<data name="ifolderPath.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>344, 16</value>
+		<value>376, 16</value>
 	</data>
 	<data name="ifolderPath.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>4</value>
@@ -545,7 +545,7 @@
 		<value>$this</value>
 	</data>
 	<data name="&gt;&gt;ifolderPath.ZOrder">
-		<value>3</value>
+		<value>0</value>
 	</data>
 	<data name="conflictsView.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>False</value>
@@ -596,7 +596,7 @@
 		<value>True</value>
 	</data>
 	<data name="conflictsView.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>16, 120</value>
+		<value>16, 104</value>
 	</data>
 	<data name="conflictsView.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Inherit</value>
@@ -605,7 +605,7 @@
 		<value>True</value>
 	</data>
 	<data name="conflictsView.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>416, 184</value>
+		<value>416, 200</value>
 	</data>
 	<data name="conflictsView.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>5</value>
@@ -629,7 +629,7 @@
 		<value>$this</value>
 	</data>
 	<data name="&gt;&gt;conflictsView.ZOrder">
-		<value>2</value>
+		<value>4</value>
 	</data>
 	<data name="columnHeader1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
@@ -638,13 +638,43 @@
 		<value>Private</value>
 	</data>
 	<data name="columnHeader1.Text">
-		<value>iFolder Conflicts</value>
+		<value>Conflict name</value>
 	</data>
 	<data name="columnHeader1.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Left</value>
 	</data>
 	<data name="columnHeader1.Width" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-		<value>412</value>
+		<value>141</value>
+	</data>
+	<data name="columnHeader2.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Private</value>
+	</data>
+	<data name="columnHeader2.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Private</value>
+	</data>
+	<data name="columnHeader2.Text">
+		<value>Path in iFolder</value>
+	</data>
+	<data name="columnHeader2.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Left</value>
+	</data>
+	<data name="columnHeader2.Width" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>188</value>
+	</data>
+	<data name="columnHeader3.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Private</value>
+	</data>
+	<data name="columnHeader3.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Private</value>
+	</data>
+	<data name="columnHeader3.Text">
+		<value>Conflict type</value>
+	</data>
+	<data name="columnHeader3.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Left</value>
+	</data>
+	<data name="columnHeader3.Width" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>83</value>
 	</data>
 	<data name="localVersion.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
@@ -788,7 +818,7 @@
 		<value>NoControl</value>
 	</data>
 	<data name="saveLocal.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>8, 96</value>
+		<value>10, 96</value>
 	</data>
 	<data name="saveLocal.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Inherit</value>
@@ -803,7 +833,7 @@
 		<value>6</value>
 	</data>
 	<data name="saveLocal.Text">
-		<value>Save</value>
+		<value>&amp;Save</value>
 	</data>
 	<data name="saveLocal.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 		<value>MiddleCenter</value>
@@ -826,11 +856,11 @@
 	<data name="&gt;&gt;saveLocal.ZOrder">
 		<value>0</value>
 	</data>
-	<data name="localSize.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-		<value>Private</value>
-	</data>
 	<data name="localSize.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>False</value>
+	</data>
+	<data name="localSize.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Private</value>
 	</data>
 	<data name="localSize.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
@@ -1508,7 +1538,7 @@
 		<value>NoControl</value>
 	</data>
 	<data name="saveServer.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>8, 96</value>
+		<value>10, 96</value>
 	</data>
 	<data name="saveServer.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Inherit</value>
@@ -1523,7 +1553,7 @@
 		<value>6</value>
 	</data>
 	<data name="saveServer.Text">
-		<value>Save</value>
+		<value>S&amp;ave</value>
 	</data>
 	<data name="saveServer.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 		<value>MiddleCenter</value>
@@ -2156,7 +2186,7 @@
 		<value>9</value>
 	</data>
 	<data name="close.Text">
-		<value>Close</value>
+		<value>&amp;Close</value>
 	</data>
 	<data name="close.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 		<value>MiddleCenter</value>
@@ -2177,7 +2207,7 @@
 		<value>$this</value>
 	</data>
 	<data name="&gt;&gt;close.ZOrder">
-		<value>1</value>
+		<value>3</value>
 	</data>
 	<data name="toolTip1.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
@@ -2282,7 +2312,10 @@
 		<value>$this</value>
 	</data>
 	<data name="&gt;&gt;versionsPanel.ZOrder">
-		<value>0</value>
+		<value>2</value>
+	</data>
+	<data name="serverPanel.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
 	</data>
 	<data name="serverPanel.SnapToGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>True</value>
@@ -2292,9 +2325,6 @@
 	</data>
 	<data name="serverPanel.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
-	</data>
-	<data name="serverPanel.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-		<value>False</value>
 	</data>
 	<data name="serverPanel.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
@@ -2476,6 +2506,465 @@
 	<data name="&gt;&gt;localPanel.ZOrder">
 		<value>1</value>
 	</data>
+	<data name="nameConflict.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Private</value>
+	</data>
+	<data name="nameConflict.GridSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>8, 8</value>
+	</data>
+	<data name="nameConflict.SnapToGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>True</value>
+	</data>
+	<data name="nameConflict.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
+	</data>
+	<data name="nameConflict.DrawGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>True</value>
+	</data>
+	<data name="nameConflict.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Private</value>
+	</data>
+	<data name="nameConflict.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="nameConflict.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="nameConflict.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Top, Left, Right</value>
+	</data>
+	<data name="nameConflict.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="nameConflict.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>None</value>
+	</data>
+	<data name="nameConflict.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>True</value>
+	</data>
+	<data name="nameConflict.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="nameConflict.HelpKeyword" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="nameConflict.HelpNavigator" type="System.Windows.Forms.HelpNavigator, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>AssociateIndex</value>
+	</data>
+	<data name="nameConflict.HelpString" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="nameConflict.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Inherit</value>
+	</data>
+	<data name="nameConflict.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>0, 8</value>
+	</data>
+	<data name="nameConflict.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Inherit</value>
+	</data>
+	<data name="nameConflict.ShowHelp" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
+	</data>
+	<data name="nameConflict.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>416, 128</value>
+	</data>
+	<data name="nameConflict.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>0</value>
+	</data>
+	<data name="nameConflict.Text">
+		<value>Rename conflict</value>
+	</data>
+	<data name="nameConflict.ToolTip">
+		<value />
+	</data>
+	<data name="nameConflict.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
+	</data>
+	<data name="&gt;&gt;nameConflict.Name">
+		<value>nameConflict</value>
+	</data>
+	<data name="&gt;&gt;nameConflict.Type">
+		<value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</data>
+	<data name="&gt;&gt;nameConflict.Parent">
+		<value>versionsPanel</value>
+	</data>
+	<data name="&gt;&gt;nameConflict.ZOrder">
+		<value>2</value>
+	</data>
+	<data name="resolveName.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
+	</data>
+	<data name="resolveName.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Private</value>
+	</data>
+	<data name="resolveName.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Private</value>
+	</data>
+	<data name="resolveName.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="resolveName.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="resolveName.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Top, Left</value>
+	</data>
+	<data name="resolveName.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="resolveName.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>None</value>
+	</data>
+	<data name="resolveName.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>True</value>
+	</data>
+	<data name="resolveName.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>System</value>
+	</data>
+	<data name="resolveName.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="resolveName.HelpKeyword" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="resolveName.HelpNavigator" type="System.Windows.Forms.HelpNavigator, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>AssociateIndex</value>
+	</data>
+	<data name="resolveName.HelpString" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="resolveName.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="resolveName.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>MiddleCenter</value>
+	</data>
+	<data name="resolveName.ImageIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>-1</value>
+	</data>
+	<data name="resolveName.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>NoControl</value>
+	</data>
+	<data name="resolveName.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>10, 96</value>
+	</data>
+	<data name="resolveName.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Inherit</value>
+	</data>
+	<data name="resolveName.ShowHelp" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
+	</data>
+	<data name="resolveName.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>64, 23</value>
+	</data>
+	<data name="resolveName.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>3</value>
+	</data>
+	<data name="resolveName.Text">
+		<value>&amp;Save</value>
+	</data>
+	<data name="resolveName.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>MiddleCenter</value>
+	</data>
+	<data name="resolveName.ToolTip">
+		<value />
+	</data>
+	<data name="resolveName.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>True</value>
+	</data>
+	<data name="&gt;&gt;resolveName.Name">
+		<value>resolveName</value>
+	</data>
+	<data name="&gt;&gt;resolveName.Type">
+		<value>System.Windows.Forms.Button, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</data>
+	<data name="&gt;&gt;resolveName.Parent">
+		<value>nameConflict</value>
+	</data>
+	<data name="&gt;&gt;resolveName.ZOrder">
+		<value>0</value>
+	</data>
+	<data name="newName.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Private</value>
+	</data>
+	<data name="newName.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
+	</data>
+	<data name="newName.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Private</value>
+	</data>
+	<data name="newName.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="newName.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="newName.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Top, Left, Right</value>
+	</data>
+	<data name="newName.AutoSize" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>True</value>
+	</data>
+	<data name="newName.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="newName.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>None</value>
+	</data>
+	<data name="newName.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>True</value>
+	</data>
+	<data name="newName.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="newName.HelpKeyword" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="newName.HelpNavigator" type="System.Windows.Forms.HelpNavigator, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>AssociateIndex</value>
+	</data>
+	<data name="newName.HelpString" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="newName.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Inherit</value>
+	</data>
+	<data name="newName.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>64, 62</value>
+	</data>
+	<data name="newName.MaxLength" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>32767</value>
+	</data>
+	<data name="newName.Multiline" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
+	</data>
+	<data name="newName.PasswordChar" type="System.Char, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="newName.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Inherit</value>
+	</data>
+	<data name="newName.ScrollBars" type="System.Windows.Forms.ScrollBars, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>None</value>
+	</data>
+	<data name="newName.ShowHelp" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
+	</data>
+	<data name="newName.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>336, 20</value>
+	</data>
+	<data name="newName.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>2</value>
+	</data>
+	<data name="newName.Text">
+		<value />
+	</data>
+	<data name="newName.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Left</value>
+	</data>
+	<data name="newName.ToolTip">
+		<value />
+	</data>
+	<data name="newName.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>True</value>
+	</data>
+	<data name="newName.WordWrap" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>True</value>
+	</data>
+	<data name="&gt;&gt;newName.Name">
+		<value>newName</value>
+	</data>
+	<data name="&gt;&gt;newName.Type">
+		<value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</data>
+	<data name="&gt;&gt;newName.Parent">
+		<value>nameConflict</value>
+	</data>
+	<data name="&gt;&gt;newName.ZOrder">
+		<value>1</value>
+	</data>
+	<data name="label8.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
+	</data>
+	<data name="label8.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Private</value>
+	</data>
+	<data name="label8.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Private</value>
+	</data>
+	<data name="label8.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="label8.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="label8.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Top, Left</value>
+	</data>
+	<data name="label8.AutoSize" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
+	</data>
+	<data name="label8.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>None</value>
+	</data>
+	<data name="label8.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>True</value>
+	</data>
+	<data name="label8.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="label8.HelpKeyword" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="label8.HelpNavigator" type="System.Windows.Forms.HelpNavigator, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>AssociateIndex</value>
+	</data>
+	<data name="label8.HelpString" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="label8.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="label8.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>MiddleCenter</value>
+	</data>
+	<data name="label8.ImageIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>-1</value>
+	</data>
+	<data name="label8.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>NoControl</value>
+	</data>
+	<data name="label8.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>16, 64</value>
+	</data>
+	<data name="label8.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Inherit</value>
+	</data>
+	<data name="label8.ShowHelp" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
+	</data>
+	<data name="label8.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>100, 16</value>
+	</data>
+	<data name="label8.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>1</value>
+	</data>
+	<data name="label8.Text">
+		<value>Name:</value>
+	</data>
+	<data name="label8.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>TopLeft</value>
+	</data>
+	<data name="label8.ToolTip">
+		<value />
+	</data>
+	<data name="label8.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>True</value>
+	</data>
+	<data name="&gt;&gt;label8.Name">
+		<value>label8</value>
+	</data>
+	<data name="&gt;&gt;label8.Type">
+		<value>System.Windows.Forms.Label, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</data>
+	<data name="&gt;&gt;label8.Parent">
+		<value>nameConflict</value>
+	</data>
+	<data name="&gt;&gt;label8.ZOrder">
+		<value>2</value>
+	</data>
+	<data name="resolveNameLabel.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
+	</data>
+	<data name="resolveNameLabel.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Private</value>
+	</data>
+	<data name="resolveNameLabel.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Private</value>
+	</data>
+	<data name="resolveNameLabel.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="resolveNameLabel.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="resolveNameLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Top, Left, Right</value>
+	</data>
+	<data name="resolveNameLabel.AutoSize" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
+	</data>
+	<data name="resolveNameLabel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>None</value>
+	</data>
+	<data name="resolveNameLabel.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>True</value>
+	</data>
+	<data name="resolveNameLabel.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="resolveNameLabel.HelpKeyword" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="resolveNameLabel.HelpNavigator" type="System.Windows.Forms.HelpNavigator, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>AssociateIndex</value>
+	</data>
+	<data name="resolveNameLabel.HelpString" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="resolveNameLabel.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value />
+	</data>
+	<data name="resolveNameLabel.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>MiddleCenter</value>
+	</data>
+	<data name="resolveNameLabel.ImageIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>-1</value>
+	</data>
+	<data name="resolveNameLabel.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>NoControl</value>
+	</data>
+	<data name="resolveNameLabel.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>16, 32</value>
+	</data>
+	<data name="resolveNameLabel.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>Inherit</value>
+	</data>
+	<data name="resolveNameLabel.ShowHelp" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
+	</data>
+	<data name="resolveNameLabel.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>384, 23</value>
+	</data>
+	<data name="resolveNameLabel.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>0</value>
+	</data>
+	<data name="resolveNameLabel.Text">
+		<value>Enter a new name and click Save to resolve it.</value>
+	</data>
+	<data name="resolveNameLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+		<value>TopLeft</value>
+	</data>
+	<data name="resolveNameLabel.ToolTip">
+		<value />
+	</data>
+	<data name="resolveNameLabel.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>True</value>
+	</data>
+	<data name="&gt;&gt;resolveNameLabel.Name">
+		<value>resolveNameLabel</value>
+	</data>
+	<data name="&gt;&gt;resolveNameLabel.Type">
+		<value>System.Windows.Forms.Label, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</data>
+	<data name="&gt;&gt;resolveNameLabel.Parent">
+		<value>nameConflict</value>
+	</data>
+	<data name="&gt;&gt;resolveNameLabel.ZOrder">
+		<value>3</value>
+	</data>
 	<data name="helpProvider1.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
 	</data>
@@ -2503,11 +2992,11 @@
 	<data name="$this.GridSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 		<value>8, 8</value>
 	</data>
-	<data name="$this.Name">
-		<value>ConflictResolver</value>
-	</data>
 	<data name="$this.DrawGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>True</value>
+	</data>
+	<data name="$this.Name">
+		<value>ConflictResolver</value>
 	</data>
 	<data name="$this.TrayHeight" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>80</value>
@@ -2561,7 +3050,7 @@
 		<value />
 	</data>
 	<data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-		<value>NoControl</value>
+		<value>Inherit</value>
 	</data>
 	<data name="$this.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 		<value>0, 0</value>
@@ -2593,6 +3082,18 @@
 	<data name="&gt;&gt;columnHeader1.Type">
 		<value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</data>
+	<data name="&gt;&gt;columnHeader2.Name">
+		<value>columnHeader2</value>
+	</data>
+	<data name="&gt;&gt;columnHeader2.Type">
+		<value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</data>
+	<data name="&gt;&gt;columnHeader3.Name">
+		<value>columnHeader3</value>
+	</data>
+	<data name="&gt;&gt;columnHeader3.Type">
+		<value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</data>
 	<data name="&gt;&gt;toolTip1.Name">
 		<value>toolTip1</value>
 	</data>
@@ -2622,5 +3123,23 @@
 	</data>
 	<data name="readOnlyInfo">
 		<value>Your ability to resolve conflicts is limited because you have read-only rights to this iFolder.  If there are conflicts that you are not allowed to resolve, the owner of this iFolder will need to fix the conflicts for you.</value>
+	</data>
+	<data name="fileExists">
+		<value>A file by this name already exists.  Please choose a different name.</value>
+	</data>
+	<data name="badFileName">
+		<value>The file name entered is invalid.  Please choose a different name and try again.</value>
+	</data>
+	<data name="name">
+	  <value>Name</value>
+	</data>
+	<data name="file">
+	  <value>File</value>
+	</data>
+	<data name="multiNameConflict">
+	  <value>Name conflicts must be resolved individually.</value>
+	</data>
+	<data name="multiSelect">
+	  <value>Multiple selected</value>
 	</data>
 </root>
