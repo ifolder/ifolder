@@ -350,9 +350,27 @@ namespace Simias.Web
 			// Create a normalized path that can be compared on any platform.
 			Uri nPath = GetUriPath(path);
 
-			// CRG: There was some code in here to check for allowed types of
-			// paths but it was Linux specific so I didn't include it from
-			// the source in iFolderManager
+			// The store path cannot be used nor any path under the store path.
+			string excludeDirectory = Configuration.GetConfiguration().StorePath;
+			if (ExcludeDirectory(nPath, excludeDirectory, true))
+			{
+				return false;
+			}
+
+			// Any path containing the store path cannot be used
+			while (true)
+			{
+				excludeDirectory = Path.GetDirectoryName(excludeDirectory);
+				if (excludeDirectory == null)
+				{
+					break;
+				}
+
+				if (ExcludeDirectory(nPath, excludeDirectory, false))
+				{
+					return false;
+				}
+			}
 
 #if WINDOWS
 			if (GetDriveType(Path.GetPathRoot(path)) != DRIVE_FIXED)
@@ -364,7 +382,7 @@ namespace Simias.Web
 			if (MyEnvironment.Windows)
 			{
 				// Don't allow the system drive to become an iFolder.
-				string excludeDirectory = Environment.GetEnvironmentVariable("SystemDrive");
+				excludeDirectory = Environment.GetEnvironmentVariable("SystemDrive");
 				if (ExcludeDirectory(nPath, excludeDirectory, false))
 				{
 					return false;
