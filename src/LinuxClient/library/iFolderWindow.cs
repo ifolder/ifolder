@@ -1591,41 +1591,51 @@ namespace Novell.iFolder
 
 		public void HandleFileSyncEvent(FileSyncEventArgs args)
 		{
-			// if it isn't a file or folder, return
-			if(args.ObjectType == ObjectType.Unknown)
-				return;
-
-			switch(args.Direction)
+			string status = null;
+			switch (args.ObjectType)
 			{
-				case Simias.Client.Event.Direction.Uploading:
-				{
-					if(args.Delete)
-					{
-						UpdateStatus(string.Format(Util.GS(
-								"Deleting file from server: {0}"), args.Name));
-					}
+				case ObjectType.File:
+					if (args.Delete)
+						status = string.Format(
+							Util.GS("Deleting file on client: {0}"),
+							args.Name);
 					else
 					{
-						UpdateStatus(string.Format(Util.GS(
-									"Uploading file: {0}"), args.Name));
+						if (args.Direction == Simias.Client.Event.Direction.Uploading)
+							status = string.Format(
+								Util.GS("Uploading file: {0}"),
+								args.Name);
+						else
+							status = string.Format(
+								Util.GS("Downloading file: {0}"),
+								args.Name);
 					}
 					break;
-				}
-				case Simias.Client.Event.Direction.Downloading:
-				{
-					if(args.Delete)
-					{
-						UpdateStatus(string.Format(Util.GS(
-									"Deleting file: {0}"), args.Name));
-					}
+				case ObjectType.Directory:
+					if (args.Delete)
+						status = string.Format(
+							Util.GS("Deleting directory on client: {0}"),
+							args.Name);
 					else
 					{
-						UpdateStatus(string.Format(Util.GS(
-									"Downloading file: {0}"), args.Name));
+						if (args.Direction == Simias.Client.Event.Direction.Uploading)
+							status = string.Format(
+								Util.GS("Uploading directory: {0}"),
+								args.Name);
+						else
+							status = string.Format(
+								Util.GS("Downloading directory: {0}"),
+								args.Name);
 					}
 					break;
-				}
+				case ObjectType.Unknown:
+					status = string.Format(
+						Util.GS("Deleting on server: {0}"),
+						args.Name);
+					break;
 			}
+
+			UpdateStatus(status);
 
 			if(SyncBar == null)
 			{
