@@ -1171,7 +1171,7 @@ namespace Novell.iFolderCom
 
 				if (fileValid)
 				{
-					if (conflicts.LocalConflict != null)
+					if (conflicts.ServerConflict != null)
 					{
 						try
 						{
@@ -1198,7 +1198,7 @@ namespace Novell.iFolderCom
 					{
 						try
 						{
-							ifWebService.ResolveNameConflict(ifolder.ID, conflicts.ServerConflict.ConflictID, newName.Text);
+							ifWebService.ResolveNameConflict(ifolder.ID, conflicts.LocalConflict.ConflictID, newName.Text);
 							lvi.Remove();
 						}
 						catch (Exception ex)
@@ -1208,6 +1208,12 @@ namespace Novell.iFolderCom
 						}
 					}
 				}
+			}
+
+			if (conflictsView.Items.Count == 0 && ConflictsResolved != null)
+			{
+				// If all the conflicts have been resolved, fire the ConflictsResolved event.
+				ConflictsResolved(this, new EventArgs());
 			}
 		}
 		#endregion
@@ -1286,14 +1292,15 @@ namespace Novell.iFolderCom
 						lvi = new ListViewItem(items);
 						conflicts.ServerConflict = conflict;
 					}
-					else if (conflict.ServerName != null)
+					else if (conflict.LocalName != null)
 					{
 						string[] items = new string[3];
-						items[0] = conflict.ServerName;
-						items[1] = Path.GetDirectoryName(conflict.ServerFullPath).Substring(ifolder.UnManagedPath.Length);
+						items[0] = conflict.LocalName;
+						items[1] = Path.GetDirectoryName(conflict.LocalFullPath).Substring(ifolder.UnManagedPath.Length);
 						items[2] = resourceManager.GetString("name");
+						conflicts.LocalConflict = conflict;
+
 						lvi = new ListViewItem(items);
-						conflicts.ServerConflict = conflict;
 					}
 
 					if (lvi != null)
@@ -1305,15 +1312,15 @@ namespace Novell.iFolderCom
 
 				foreach (Conflict conflict in conflictArray)
 				{
-					if (conflict.IsNameConflict && (conflict.LocalFullPath != null))
+					if (conflict.IsNameConflict && (conflict.ServerFullPath != null))
 					{
 						foreach (ListViewItem lvi in conflictsView.Items)
 						{
 							Conflicts conflicts = (Conflicts)lvi.Tag;
 
-							if (lvi.Text.Equals(conflict.LocalName) && conflicts.ServerConflict.ServerFullPath.Equals(conflict.LocalFullPath))
+							if (lvi.Text.Equals(conflict.ServerName) && conflicts.LocalConflict.LocalFullPath.Equals(conflict.ServerFullPath))
 							{
-								((Conflicts)lvi.Tag).LocalConflict = conflict;
+								((Conflicts)lvi.Tag).ServerConflict = conflict;
 								break;
 							}
 						}
@@ -1358,12 +1365,7 @@ namespace Novell.iFolderCom
 			{
 				conflicts = (Conflicts)conflictsView.SelectedItems[0].Tag;
 
-				// Fill in the server data.
-				serverName.Text = conflicts.ServerConflict.ServerName;
-				serverDate.Text = conflicts.ServerConflict.ServerDate;
-				serverSize.Text = conflicts.ServerConflict.ServerSize;
-
-				if (!conflicts.ServerConflict.IsNameConflict)
+				if ((conflicts.ServerConflict != null) && !conflicts.ServerConflict.IsNameConflict)
 				{
 					serverPanel.Visible = localPanel.Visible = true;
 					nameConflict.Visible = false;
@@ -1372,6 +1374,11 @@ namespace Novell.iFolderCom
 					localName.Text = conflicts.ServerConflict.LocalName;
 					localDate.Text = conflicts.ServerConflict.LocalDate;
 					localSize.Text = conflicts.ServerConflict.LocalSize;
+
+					// Fill in the server data.
+					serverName.Text = conflicts.ServerConflict.ServerName;
+					serverDate.Text = conflicts.ServerConflict.ServerDate;
+					serverSize.Text = conflicts.ServerConflict.ServerSize;
 
 					saveLocal.Enabled = !readOnly;
 					saveServer.Enabled = true;
