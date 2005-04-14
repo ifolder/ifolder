@@ -26,7 +26,7 @@
 #include "SMEvents.h"
 #include "SimiasEventData.h"
 
-static SimiasEventClient simiasEventClient;
+SimiasEventClient simiasEventClient;
 
 
 void SimiasEventInitialize(void)

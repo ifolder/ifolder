@@ -48,7 +48,7 @@
 		{
 			[simiasService DisableDomainAutoLogin:authDomainID];
 		}
-		@catch (NSException *e)
+		@catch(NSException *e)
 		{
 			NSLog(@"Failed to disable auto login on Domain: %@", authDomainID);
 			// not sure what to do here but just ignore it for now I guess
@@ -108,7 +108,7 @@
 						[NSApp beginSheet:[certSheet window] modalForWindow:[self window]
 							modalDelegate:self didEndSelector:@selector(certSheetDidEnd:returnCode:contextInfo:) contextInfo:certRef];
 					}
-					@catch(NSException ex)
+					@catch(NSException *ex)
 					{
 						NSLog(@"Exception getting cert.");
 					}						
@@ -205,7 +205,7 @@
 			[simiasService StoreCertificate:certRef forHost:[serverField stringValue]];
 			[self authenticate:self];
 		}
-		@catch(NSException ex)
+		@catch(NSException *ex)
 		{
 			NSLog(@"Exception storing certificate.");
 		}						

@@ -88,6 +88,7 @@
 	[curiFolder release];
 	[ifolderService release];
 	[keyedUsers release];
+	[super dealloc];
 }
 
 
