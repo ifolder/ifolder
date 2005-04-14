@@ -275,9 +275,14 @@ namespace Novell.iFolder
 		{
 			if(ConflictDialog != null)
 			{
-				ConflictDialog.Hide();
-				ConflictDialog.Destroy();
-				ConflictDialog = null;
+				if (args.ResponseId == ResponseType.Help)
+					Util.ShowHelp("conflicts.html", this);
+				else
+				{
+					ConflictDialog.Hide();
+					ConflictDialog.Destroy();
+					ConflictDialog = null;
+				}
 			}
 			// CRG: TODO
 			// At this point, refresh the selected iFolder to see if it
