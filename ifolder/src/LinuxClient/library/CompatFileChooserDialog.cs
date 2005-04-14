@@ -104,6 +104,22 @@ namespace Novell.iFolder
 			}
 		}
 
+		public string CurrentFolder
+		{
+			get
+			{
+				if (use_file_chooser)
+					return gtk_file_chooser_get_current_folder (chooser.Handle);
+				else
+					return null;
+			}
+			set
+			{
+				if (use_file_chooser)
+					gtk_file_chooser_set_current_folder(chooser.Handle, value);
+			}
+		}
+
 		public string[] Selections
 		{
 			get
@@ -276,6 +292,16 @@ namespace Novell.iFolder
 //		[DllImport ("libgtk-win32-2.0-0.dll")]
 			extern static void gtk_file_chooser_set_select_multiple (
 						IntPtr handle, bool multi);
+
+		[DllImport("libgtk-x11-2.0.so.0")]
+//		[DllImport ("libgtk-win32-2.0-0.dll")]
+			extern static bool gtk_file_chooser_set_current_folder (
+						IntPtr handle, string filename);
+
+		[DllImport("libgtk-x11-2.0.so.0")]
+//		[DllImport ("libgtk-win32-2.0-0.dll")]
+			extern static string gtk_file_chooser_get_current_folder (
+						IntPtr handle);
 	}
 }
 

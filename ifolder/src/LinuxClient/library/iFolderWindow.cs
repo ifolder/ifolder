@@ -222,6 +222,11 @@ namespace Novell.iFolder
 		private uint objectsToSync = 0;
 		private bool startingSync  = false;
 
+		// The purpose of this variable is to allow us to keep track of
+		// last place the user opened/setup an iFolder so that we can open
+		// to the same place if they setup additional iFolders.
+		private string lastSetupPath = null;
+
 		/// <summary>
 		/// Default constructor for iFolderWindow
 		/// </summary>
@@ -237,6 +242,13 @@ namespace Novell.iFolder
 			curiFolders = new Hashtable();
 			curDomain = null;
 			curDomains = null;
+
+			// Setup lastSetupPath to point to the user's desktop if it exists
+			// or otherwise to the user's home directory
+			lastSetupPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+			if (lastSetupPath == null)
+				lastSetupPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+
 			CreateWidgets();
 		}
 
@@ -1781,7 +1793,7 @@ namespace Novell.iFolder
 				do
 				{
 					iFolderAcceptDialog iad = 
-							new iFolderAcceptDialog(ifHolder.iFolder);
+							new iFolderAcceptDialog(ifHolder.iFolder, lastSetupPath);
 					iad.TransientFor = this;
 					rc = iad.Run();
 					newPath = iad.Path;
@@ -1794,7 +1806,14 @@ namespace Novell.iFolder
 					// selectected, if we didn't show there was a bad
 					// path, set rc to 0 to accept the ifolder
 					if(!ShowBadiFolderPath(newPath, ifHolder.iFolder.Name))
+					{
 						rc = 0;
+
+						// Save off the path so that the next time the user
+						// opens the setup dialog, we'll open to the same
+						// directory
+						lastSetupPath = newPath;
+					}
 				}
 				while(rc == -5);
 				

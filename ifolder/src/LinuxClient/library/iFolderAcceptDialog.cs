@@ -29,6 +29,7 @@ namespace Novell.iFolder
 	public class iFolderAcceptDialog : Dialog
 	{
 		private Entry		pathEntry;
+		private string		initialPath;
 
 		public new string Path
 		{
@@ -38,13 +39,15 @@ namespace Novell.iFolder
 			}
 		}
 
-		public iFolderAcceptDialog(iFolderWeb ifolder) : base()
+		public iFolderAcceptDialog(iFolderWeb ifolder, string initialPath) : base()
 		{
 			this.Title = 
 				string.Format(Util.GS("Setup iFolder \"{0}\""), ifolder.Name);
 			this.SetDefaultSize (500, 200);
 
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
+
+			this.initialPath = initialPath;
 
 //			this.BorderWidth = 10;
 			VBox dialogBox = new VBox();
@@ -108,6 +111,9 @@ namespace Novell.iFolder
 			pathEntry.Changed += new EventHandler(OnPathChanged);
 			pathBox.PackStart(pathEntry, true, true, 0);
 
+			if (this.initialPath != null && this.initialPath.Length > 0)
+				pathEntry.Text = this.initialPath;
+
 			Button pathButton = new Button(Stock.Open);
 			pathButton.Clicked += new EventHandler(OnChoosePath);
 			pathBox.PackEnd(pathButton, false, false, 0);
@@ -117,7 +123,10 @@ namespace Novell.iFolder
 
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
 			this.AddButton(Stock.Ok, ResponseType.Ok);
-			this.SetResponseSensitive(ResponseType.Ok, false);
+			if (this.initialPath != null && this.initialPath.Length > 0)
+				this.SetResponseSensitive(ResponseType.Ok, true);
+			else
+				this.SetResponseSensitive(ResponseType.Ok, false);
 		}
 
 
@@ -127,6 +136,11 @@ namespace Novell.iFolder
 			CompatFileChooserDialog cfcd = new CompatFileChooserDialog(
 					Util.GS("Choose a folder..."), this, 
 					CompatFileChooserDialog.Action.SelectFolder);
+
+			if (pathEntry.Text != null && pathEntry.Text.Length > 0)
+				cfcd.CurrentFolder = pathEntry.Text;
+			else if (this.initialPath != null && this.initialPath.Length > 0)
+				cfcd.CurrentFolder = this.initialPath;
 
 			int rc = cfcd.Run();
 			cfcd.Hide();
