@@ -89,7 +89,7 @@
 				defaultDomain = dom;
 		}
 	}
-	@catch(NSException ex)
+	@catch(NSException *ex)
 	{
 		NSLog(@"Exception in GetDomains: %@ - %@", [ex name], [ex reason]);
 	}
@@ -171,7 +171,7 @@
 						[NSApp beginSheet:[certSheet window] modalForWindow:parentWindow
 							modalDelegate:self didEndSelector:@selector(certSheetDidEnd:returnCode:contextInfo:) contextInfo:certRef];
 					}
-					@catch(NSException ex)
+					@catch(NSException *ex)
 					{
 						NSLog(@"Exception getting cert.");
 					}						
@@ -343,7 +343,7 @@
 							defaultDomain = newDomain;
 							[defaultDomain setValue:[NSNumber numberWithBool:YES] forKeyPath:@"properties.isDefault"];
 						}
-						@catch(NSException ex)
+						@catch(NSException *ex)
 						{
 							NSLog(@"SetDefaultDomain Failed with an exception.");
 						}
@@ -356,7 +356,7 @@
 							[simiasService SetDomainPassword:[newDomain ID] password:[password stringValue]];	
 							NSLog(@"Saving password succeeded.");
 						}
-						@catch(NSException ex)
+						@catch(NSException *ex)
 						{
 							NSLog(@"Saving domain password Failed with an exception.");
 						}			
@@ -396,7 +396,7 @@
 						[NSApp beginSheet:[certSheet window] modalForWindow:parentWindow
 							modalDelegate:self didEndSelector:@selector(certSheetDidEnd:returnCode:contextInfo:) contextInfo:certRef];
 					}
-					@catch(NSException ex)
+					@catch(NSException *ex)
 					{
 						NSLog(@"Exception getting cert.");
 					}						
@@ -534,7 +534,7 @@
 			[simiasService StoreCertificate:certRef forHost:[host stringValue]];
 			[self loginoutClicked:self];
 		}
-		@catch(NSException ex)
+		@catch(NSException *ex)
 		{
 			NSLog(@"Exception storing certificate.");
 		}						
@@ -565,7 +565,7 @@
 		[[iFolderData sharedInstance] refresh:NO];
 		NSLog(@"LeaveDomain Succeded.");
 	}
-	@catch(NSException ex)
+	@catch(NSException *ex)
 	{
 		NSLog(@"LeaveDomain Failed with an exception.");
 	}
@@ -596,7 +596,7 @@
 				[state setStringValue:NSLocalizedString(@"Logged out", nil)];
 			}
 		}
-		@catch(NSException ex)
+		@catch(NSException *ex)
 		{
 			NSLog(@"SetDomainActive Failed with an exception.");
 		}
@@ -613,7 +613,7 @@
 			[loginout setTitle:NSLocalizedString(@"Login", nil)];
 			[state setStringValue:NSLocalizedString(@"Disabled", nil)];
 		}
-		@catch(NSException ex)
+		@catch(NSException *ex)
 		{
 			NSLog(@"SetDomainInactive Failed with an exception.");
 		}
@@ -638,7 +638,7 @@
 				defaultDomain = selectedDomain;
 				NSLog(@"SetDefaultDomain Succeded.");
 			}
-			@catch(NSException ex)
+			@catch(NSException *ex)
 			{
 				NSLog(@"SetDefaultDomain Failed with an exception.");
 			}
@@ -675,7 +675,7 @@
 			[simiasService SetDomainPassword:[selectedDomain ID] password:newPassword];	
 			NSLog(@"Saving password succeeded.");
 		}
-		@catch(NSException ex)
+		@catch(NSException *ex)
 		{
 		}
 	}
@@ -741,7 +741,7 @@
 		{
 			savedPassword = [simiasService GetDomainPassword:[selectedDomain ID]];
 		}
-		@catch(NSException ex)
+		@catch(NSException *ex)
 		{
 		}
 
@@ -770,7 +770,7 @@
 		{
 			ds = [ifolderService GetUserDiskSpace:[selectedDomain userID]];
 		}
-		@catch(NSException ex)
+		@catch(NSException *ex)
 		{
 			ds = nil;
 		}
