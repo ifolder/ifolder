@@ -63,7 +63,7 @@ static iFolderData *sharedInstance = nil;
 			ifolderdomains = [[NSMutableArray alloc] init];
 			ifolders = [[NSMutableArray alloc] init];
 			
-			ifolderDataAlias = [[NSObjectController alloc] initWithContent:self];
+//			ifolderDataAlias = [[NSObjectController alloc] initWithContent:self];
 
 			ifoldersController = [[NSArrayController alloc] init];
 			[ifoldersController setObjectClass:[iFolder class]];
@@ -71,11 +71,11 @@ static iFolderData *sharedInstance = nil;
 			domainsController = [[NSArrayController alloc] init];
 			[domainsController setObjectClass:[iFolderDomain class]];
 
-			[domainsController bind:@"contentArray" toObject:ifolderDataAlias
-					withKeyPath:@"selection.ifolderdomains" options:nil];	
+//			[domainsController bind:@"contentArray" toObject:ifolderDataAlias
+//					withKeyPath:@"selection.ifolderdomains" options:nil];
 					
-			[ifoldersController bind:@"contentArray" toObject:ifolderDataAlias
-					withKeyPath:@"selection.ifolders" options:nil];	
+//			[ifoldersController bind:@"contentArray" toObject:ifolderDataAlias
+//					withKeyPath:@"selection.ifolders" options:nil];
 
 		}
 		return sharedInstance;
@@ -99,7 +99,7 @@ static iFolderData *sharedInstance = nil;
 	[keyedSubscriptions release];
 	[ifolderdomains release];
 	[ifolders release];
-	[ifolderDataAlias release];
+//	[ifolderDataAlias release];
 	[ifoldersController release];
 	[domainsController release];
 	[ifolderUserChanges release];
@@ -141,6 +141,13 @@ static iFolderData *sharedInstance = nil;
 }
 
 
+//-(NSObjectController *)dataAlias
+//{
+//	return ifolderDataAlias;
+//}
+
+
+
 
 
 //===================================================================
@@ -179,7 +186,7 @@ static iFolderData *sharedInstance = nil;
 
 			[self _addDomain:newDomain];
 		}
-
+		
 		if(!onlyDomains)
 		{
 		
@@ -214,6 +221,8 @@ static iFolderData *sharedInstance = nil;
 //	NSLog(@"Done Refreshing iFolderData");	
 
 	[instanceLock unlock];
+
+	[self selectDefaultDomain];
 }
 
 
@@ -225,10 +234,10 @@ static iFolderData *sharedInstance = nil;
 -(void)_addDomain:(iFolderDomain *)domain
 {
 	[instanceLock lock];
-//	NSLog(@"Addding domain: %@", [domain name]);
+	NSLog(@"Addding domain: %@", [domain name]);
 	[domainsController addObject:domain];
 	[keyedDomains setObject:domain forKey:[domain ID]];
-
+	
 	[instanceLock unlock];	
 }
 
@@ -784,9 +793,11 @@ static iFolderData *sharedInstance = nil;
 //===================================================================
 -(void)selectDefaultDomain
 {
+	[instanceLock lock];
+
 	if(defaultDomain != nil)
 	{
-		int index = [ifolderdomains indexOfObject:defaultDomain];
+		int index = [[domainsController arrangedObjects] indexOfObject:defaultDomain];
 		if(index != NSNotFound)
 			[domainsController setSelectionIndex:index];
 		else
@@ -794,6 +805,8 @@ static iFolderData *sharedInstance = nil;
 	}
 	else
 		[domainsController setSelectionIndex:0];
+
+	[instanceLock unlock];	
 }
 
 

@@ -636,6 +636,8 @@
 					[defaultDomain setValue:[NSNumber numberWithBool:NO] forKeyPath:@"properties.isDefault"];
 							
 				defaultDomain = selectedDomain;
+				[defaultDomain setValue:[NSNumber numberWithBool:YES] forKeyPath:@"properties.isDefault"];
+				[[iFolderData sharedInstance] refresh:NO];
 				NSLog(@"SetDefaultDomain Succeded.");
 			}
 			@catch(NSException *ex)
