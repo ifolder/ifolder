@@ -1866,7 +1866,7 @@ namespace Novell.iFolder
 							curiFolders[ifHolder.iFolder.ID] = iter;
 	
 
-/*							if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
+							if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
 											"true") == "true")
 							{
 								iFolderCreationDialog dlg = 
@@ -1893,7 +1893,7 @@ namespace Novell.iFolder
 								cd.Destroy();
 								cd = null;
 							}
-*/
+
 						}
 						catch(Exception e)
 						{
