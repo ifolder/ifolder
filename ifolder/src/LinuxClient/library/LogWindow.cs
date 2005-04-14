@@ -216,7 +216,8 @@ namespace Novell.iFolder
 						}
 						else if (args.SizeToSync < args.Size)
 						{
-							// Delta sync message
+							// Note: Delta sync works on 4KB blocks, so you won't see delta
+							// sync messages until files reach at least 4KB.
 							int savings = (int)((1 - ((double)args.SizeToSync / (double)args.Size)) * 100);
 							if (args.Direction == Simias.Client.Event.Direction.Uploading)
 								message = string.Format(
