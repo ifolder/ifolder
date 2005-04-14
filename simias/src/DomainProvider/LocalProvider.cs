@@ -122,33 +122,37 @@ namespace Simias
 					credential.Length );
    
 				// Clients that newed up a NetCredential object with a URL
-				// come though on the authorization line like:
+				// come though on the authorization line in the following format:
 				// http://domain:port/simias10/service.asmx\username:password
 
 				string[] credentials = decodedCredential.Split( this.backDelimeter );
-				if ( credentials.Length == 1 )
+				if ( credentials != null )
 				{
-					credentials = decodedCredential.Split( this.colonDelimeter, 2 );
+					if ( credentials.Length == 1 )
+					{
+						credentials = decodedCredential.Split( this.colonDelimeter, 2 );
+					}
+					else if ( credentials.Length >= 2 )
+					{
+						credentials = credentials[ credentials.Length - 1 ].Split( colonDelimeter, 2 );
+					}
+
+					if ( credentials.Length == 2 )
+					{
+						this.username = credentials[ 0 ];
+
+						// The password portion is really two GUIDs back-to-back. 
+						// The first GUID is the local domain ID and the second is the password.
+						if ( credentials[1].Length >= ( GuidLength * 2 ) )
+						{
+							this.password = credentials[ 1 ].Substring( GuidLength );
+							this.domainID = credentials[ 1 ].Substring( 0, GuidLength );
+
+							this.authType = "basic";
+							returnStatus = true;
+						}
+					}
 				}
-				else if ( credentials.Length >= 2 )
-				{
-					credentials = credentials[ credentials.Length - 1 ].Split( colonDelimeter, 2 );
-				}
-
-				if ( credentials.Length == 2 )
-				{
-					this.username = credentials[ 0 ];
-
-					// The password portion is really two GUIDs back-to-back. 
-					// The first GUID is the local domain ID and the second is the password.
-					this.password = credentials[ 1 ].Substring( GuidLength );
-					this.domainID = credentials[ 1 ].Substring( 0, GuidLength );
-
-					this.authType = "basic";
-					returnStatus = true;
-				}
-
-				credentials = null;
 			}
 
 			return returnStatus;
