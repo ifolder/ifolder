@@ -203,43 +203,71 @@ namespace Novell.iFolder
 
 		public void HandleFileSyncEvent(FileSyncEventArgs args)
 		{
-			// if it isn't a file or folder, return
-			if(args.ObjectType == ObjectType.Unknown)
-				return;
-
 			if(args.SizeRemaining == args.SizeToSync)
 			{
-				switch(args.Direction)
+				string message = null;
+				switch(args.ObjectType)
 				{
-					case Simias.Client.Event.Direction.Uploading:
-					{
+					case ObjectType.File:
 						if(args.Delete)
 						{
-							LogMessage(string.Format(Util.GS(
-								"Deleting file from server: {0}"), args.Name));
+							message = string.Format(Util.GS(
+								"Deleting file on client: {0}"), args.Name);
+						}
+						else if (args.SizeToSync < args.Size)
+						{
+							// Delta sync message
+							int savings = (int)((1 - ((double)args.SizeToSync / (double)args.Size)) * 100);
+							if (args.Direction == Simias.Client.Event.Direction.Uploading)
+								message = string.Format(
+									Util.GS("Uploading file: {0}.  Synchronizing changes only: {1}% savings."),
+									args.Name,
+									savings);
+							else
+								message = string.Format(
+									Util.GS("Downloading file: {0}.  Synchronizing changes only: {1}% savings."),
+								args.Name,
+								savings);
 						}
 						else
 						{
-							LogMessage(string.Format(Util.GS(
-									"Uploading file: {0}"), args.Name));
+							if (args.Direction == Simias.Client.Event.Direction.Uploading)
+								message = string.Format(
+									Util.GS("Uploading file: {0}"),
+									args.Name);
+							else
+								message = string.Format(
+									Util.GS("Downloading file: {0}"),
+									args.Name);
 						}
 						break;
-					}
-					case Simias.Client.Event.Direction.Downloading:
-					{
-						if(args.Delete)
+					case ObjectType.Directory:
+						if (args.Delete)
 						{
-							LogMessage(string.Format(Util.GS(
-									"Deleting file: {0}"), args.Name));
+							message = string.Format(
+								Util.GS("Deleting directory on client: {0}"),
+								args.Name);
 						}
 						else
 						{
-							LogMessage(string.Format(Util.GS(
-									"Downloading file: {0}"), args.Name));
+							if (args.Direction == Simias.Client.Event.Direction.Uploading)
+								message = string.Format(
+									Util.GS("Uploading directory: {0}"),
+									args.Name);
+							else
+								message = string.Format(
+									Util.GS("Downloading directory: {0}"),
+									args.Name);
 						}
 						break;
-					}
+					case ObjectType.Unknown:
+						message = string.Format(
+							Util.GS("Deleting on server: {0}"),
+							args.Name);
+						break;
 				}
+
+				LogMessage(message);
 			}
 		}
 
