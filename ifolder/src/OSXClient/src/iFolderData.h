@@ -45,7 +45,7 @@
 	NSArrayController				*domainsController;
 	NSArrayController				*ifoldersController;
 	
-	NSObjectController				*ifolderDataAlias;
+//	NSObjectController				*ifolderDataAlias;
 
 	NSRecursiveLock					*instanceLock;
 	iFolderDomain					*defaultDomain;
@@ -55,6 +55,7 @@
 
 -(NSArrayController *)domainArrayController;
 -(NSArrayController *)ifolderArrayController;
+//-(NSObjectController *)dataAlias;
 
 - (void)refresh:(BOOL)onlyDomains;
 
