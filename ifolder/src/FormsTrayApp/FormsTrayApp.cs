@@ -442,6 +442,9 @@ namespace Novell.FormsTrayApp
 			{
 				try
 				{
+					// See Bug 77741 - for some reason the web services won't get started properly
+					// when the application is run with the working directory set to a different drive.
+					Environment.CurrentDirectory = Application.StartupPath;
 					Manager.Start();
 
 					ifWebService = new iFolderWebService();
@@ -493,6 +496,7 @@ namespace Novell.FormsTrayApp
 					globalProperties.CreateControl();
 					handle = globalProperties.Handle;
 
+					bool accountPrompt = false;
 					try
 					{
 						// Pre-load the servers and accounts list.
@@ -512,21 +516,7 @@ namespace Novell.FormsTrayApp
 
 						if (domains.Length.Equals(0))
 						{
-							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("createAccount"), resourceManager.GetString("createAccountTitle"), string.Empty, MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button1);
-							mmb.StartPosition = FormStartPosition.CenterScreen;
-							if (mmb.ShowDialog() == DialogResult.Yes)
-							{
-								if (preferences.Visible)
-								{
-									preferences.Activate();
-								}
-								else
-								{
-									preferences.Show();
-								}
-
-								preferences.SelectAccounts();
-							}
+							accountPrompt = true;
 						}
 					}
 					catch{}
@@ -539,6 +529,27 @@ namespace Novell.FormsTrayApp
 
 					shellNotifyIcon.Text = resourceManager.GetString("iFolderServices");
 					shellNotifyIcon.Icon = trayIcon;
+
+					if (accountPrompt)
+					{
+						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("createAccount"), resourceManager.GetString("createAccountTitle"), string.Empty, MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button1);
+						mmb.StartPosition = FormStartPosition.CenterScreen;
+						mmb.CreateControl();
+						ShellNotifyIcon.SetForegroundWindow(mmb.Handle);
+						if (mmb.ShowDialog() == DialogResult.Yes)
+						{
+							if (preferences.Visible)
+							{
+								preferences.Activate();
+							}
+							else
+							{
+								preferences.Show();
+							}
+
+							preferences.SelectAccounts();
+						}
+					}
 				}
 				catch (Exception ex)
 				{
