@@ -149,7 +149,6 @@ namespace Novell.iFolder
 					state = Util.GS("Unknown");
 			}
 
-
 			if(iFolder.IsSubscription)
 			{
 				if(iFolder.State == "Available")
@@ -159,7 +158,6 @@ namespace Novell.iFolder
 			{
 				path = iFolder.UnManagedPath;
 			}
-
 		}
 	}
 
@@ -218,6 +216,11 @@ namespace Novell.iFolder
 		private string				curDomain;
 		private DomainInformation[] curDomains;
 
+		// These variables are used to keep track of how many
+		// outstanding objects there are during a sync so that we don't
+		// have to call CalculateSyncSize() over and over needlessly.
+		private uint objectsToSync = 0;
+		private bool startingSync  = false;
 
 		/// <summary>
 		/// Default constructor for iFolderWindow
@@ -1502,6 +1505,12 @@ namespace Novell.iFolder
 					UpdateStatus(string.Format(Util.GS(
 									"Syncing: {0}"), args.Name));
 
+					// Keep track of when a sync starts regardless of
+					// whether the iFolder is currently shown because
+					// if the user switches the iFolder Window domain
+					// filter, we'll still need this.
+					startingSync = true;
+
 					if(curiFolders.ContainsKey(args.ID))
 					{
 						TreeIter iter = (TreeIter)curiFolders[args.ID];
@@ -1558,17 +1567,15 @@ namespace Novell.iFolder
 						try
 						{
 							syncSize = ifws.CalculateSyncSize(args.ID);
+							ifHolder.ObjectsToSync = syncSize.SyncNodeCount;
 						}
 						catch
 						{}
 				
-						if (syncSize != null)
-						{
-							ifHolder.ObjectsToSync = syncSize.SyncNodeCount;
-						}
-
 						iFolderTreeStore.SetValue(iter, 0, ifHolder);
 					}
+
+					objectsToSync = 0;
 
 					UpdateStatus(Util.GS("Idle..."));
 					break;
@@ -1591,52 +1598,6 @@ namespace Novell.iFolder
 
 		public void HandleFileSyncEvent(FileSyncEventArgs args)
 		{
-			string status = null;
-			switch (args.ObjectType)
-			{
-				case ObjectType.File:
-					if (args.Delete)
-						status = string.Format(
-							Util.GS("Deleting file on client: {0}"),
-							args.Name);
-					else
-					{
-						if (args.Direction == Simias.Client.Event.Direction.Uploading)
-							status = string.Format(
-								Util.GS("Uploading file: {0}"),
-								args.Name);
-						else
-							status = string.Format(
-								Util.GS("Downloading file: {0}"),
-								args.Name);
-					}
-					break;
-				case ObjectType.Directory:
-					if (args.Delete)
-						status = string.Format(
-							Util.GS("Deleting directory on client: {0}"),
-							args.Name);
-					else
-					{
-						if (args.Direction == Simias.Client.Event.Direction.Uploading)
-							status = string.Format(
-								Util.GS("Uploading directory: {0}"),
-								args.Name);
-						else
-							status = string.Format(
-								Util.GS("Downloading directory: {0}"),
-								args.Name);
-					}
-					break;
-				case ObjectType.Unknown:
-					status = string.Format(
-						Util.GS("Deleting on server: {0}"),
-						args.Name);
-					break;
-			}
-
-			UpdateStatus(status);
-
 			if(SyncBar == null)
 			{
 				SyncBar = new ProgressBar();
@@ -1645,58 +1606,97 @@ namespace Novell.iFolder
 				MainStatusBar.PackEnd(SyncBar, false, true, 0);
 			}
 
-// FIXME: Russ informed me that we just need to decrement our count instead of
-// call the ifws.CalculateSyncSize() so many times.  This will increase our
-// performance in Linux.  Reference the Windows client to see how this is done
-// and look for a bug to be filed by Russ on this.
-			if(args.SizeRemaining == args.SizeToSync)
+			if (args.SizeRemaining == args.SizeToSync)
 			{
-				if(args.SizeToSync > 0)
-				{
-					SyncBar.Show();
-					SyncBar.Fraction = 0;
-				}
-				else
-					SyncBar.Hide();
-
-			}
-			else
-			{
+				// Init the progress bar
 				SyncBar.Show();
-				if(args.SizeToSync == 0)
-					SyncBar.Fraction = 1;
-				else
-				{
-					double frac = (((double)args.SizeToSync) - 
-									((double)args.SizeRemaining)) / 
-												((double)args.SizeToSync);
-					SyncBar.Fraction = frac;
-				}
-			}
+				SyncBar.Fraction = 0;
 
-			// Get the iFolderHolder and set the objectsToSync (only if the
-			// domain filter isn't set or is for this iFolder's domain.
-			iFolderHolder ifHolder = ifdata.GetiFolder(args.CollectionID);
-			if (ifHolder != null && (curDomain == null || curDomain == ifHolder.iFolder.DomainID))
-			{
-				SyncSize syncSize = null;
-				
-				try
+				if (startingSync || (objectsToSync <= 0))
 				{
-					syncSize = ifws.CalculateSyncSize(args.CollectionID);
+					startingSync = false;
+					try
+					{
+						SyncSize syncSize = ifws.CalculateSyncSize(args.CollectionID);
+						objectsToSync = syncSize.SyncNodeCount;
+					}
+					catch(Exception e)
+					{
+						objectsToSync = 1;
+					}
 				}
-				catch(Exception e)
+
+				// Decrement the count whether we're showing the iFolder
+				// in the current list or not.  We'll need this if the
+				// user switches back to the list that contains the iFolder
+				// that is actually synchronizing.
+				objectsToSync--;
+
+				// Get the iFolderHolder and set the objectsToSync (only if the
+				// domain filter isn't set or is for this iFolder's domain.
+				iFolderHolder ifHolder = ifdata.GetiFolder(args.CollectionID);
+				if (ifHolder != null && (curDomain == null || curDomain == ifHolder.iFolder.DomainID))
 				{
-					// The user must have reverted the iFolder during a sync and
-					// so the ID is no longer valid.
-				}
-				
-				if (syncSize != null)
-				{
-					ifHolder.ObjectsToSync = syncSize.SyncNodeCount;
+					ifHolder.ObjectsToSync = objectsToSync;
 					TreeIter iter = (TreeIter)curiFolders[args.CollectionID];
 					iFolderTreeStore.SetValue(iter, 0, ifHolder);
 				}
+
+				switch (args.ObjectType)
+				{
+					case ObjectType.File:
+						if (args.Delete)
+							UpdateStatus(string.Format(
+								Util.GS("Deleting file on client: {0}"),
+								args.Name));
+						else
+						{
+							if (args.Direction == Simias.Client.Event.Direction.Uploading)
+								UpdateStatus(string.Format(
+									Util.GS("Uploading file: {0}"),
+									args.Name));
+							else
+								UpdateStatus(string.Format(
+									Util.GS("Downloading file: {0}"),
+									args.Name));
+						}
+						break;
+					case ObjectType.Directory:
+						if (args.Delete)
+							UpdateStatus(string.Format(
+								Util.GS("Deleting directory on client: {0}"),
+								args.Name));
+						else
+						{
+							if (args.Direction == Simias.Client.Event.Direction.Uploading)
+								UpdateStatus(string.Format(
+									Util.GS("Uploading directory: {0}"),
+									args.Name));
+							else
+								UpdateStatus(string.Format(
+									Util.GS("Downloading directory: {0}"),
+									args.Name));
+						}
+						break;
+					case ObjectType.Unknown:
+						UpdateStatus(string.Format(
+							Util.GS("Deleting on server: {0}"),
+							args.Name));
+						break;
+				}
+			}
+			else
+			{
+				// Update the sync progress bar
+				SyncBar.Show();
+				if (args.SizeToSync > 0)
+				{
+					SyncBar.Fraction =
+						(((double)args.SizeToSync) - ((double)args.SizeRemaining)) /
+						((double)args.SizeToSync);
+				}
+				else
+					SyncBar.Fraction = 1;
 			}
 		}
 
