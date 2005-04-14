@@ -733,10 +733,12 @@ namespace Novell.iFolder
 			MainStatusBar.Push (ctx, message);
 		}
 
-
-
-
 		public void OniFolderSelectionChanged(object o, EventArgs args)
+		{
+			UpdateButtonSensitivity();
+		}
+
+		private void UpdateButtonSensitivity()
 		{
 			TreeSelection tSelect = iFolderTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
@@ -1208,6 +1210,8 @@ namespace Novell.iFolder
 						ied.Hide();
 						ied.Destroy();
 					}
+
+					UpdateButtonSensitivity();
 				}
 			}
 		}
@@ -1311,6 +1315,8 @@ namespace Novell.iFolder
 
 					// use the ID here because it could be a subscription
 					ifdata.DeleteiFolder(ifHolder.iFolder.ID);
+
+					UpdateButtonSensitivity();
 				}
 				catch(Exception e)
 				{
@@ -1415,6 +1421,8 @@ namespace Novell.iFolder
 			// CRG: TODO
 			// At this point, refresh the selected iFolder to see if it
 			// has any more conflicts
+
+			UpdateButtonSensitivity();
 		}
 
 
@@ -1435,6 +1443,8 @@ namespace Novell.iFolder
 
 			// TODO: let any property dialogs know that this iFolder
 			// has a conflict
+
+			UpdateButtonSensitivity();
 		}
 
 
@@ -1449,6 +1459,8 @@ namespace Novell.iFolder
 
 				iFolderTreeStore.SetValue(iter, 0, ifHolder);
 			}
+
+			UpdateButtonSensitivity();
 		}
 
 
@@ -1492,6 +1504,8 @@ namespace Novell.iFolder
 							ifdata.GetiFolder(iFolderID);
 				iFolderTreeStore.SetValue(iter, 0, ifHolder);
 			}
+
+			UpdateButtonSensitivity();
 		}
 
 
@@ -1573,6 +1587,8 @@ namespace Novell.iFolder
 						{}
 				
 						iFolderTreeStore.SetValue(iter, 0, ifHolder);
+
+						UpdateButtonSensitivity();
 					}
 
 					objectsToSync = 0;
@@ -1875,6 +1891,7 @@ namespace Novell.iFolder
 
 							curiFolders[ifHolder.iFolder.ID] = iter;
 	
+							UpdateButtonSensitivity();
 
 							if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
 											"true") == "true")
