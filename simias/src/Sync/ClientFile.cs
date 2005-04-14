@@ -338,6 +338,8 @@ namespace Simias.Sync
 				try
 				{
 					collection.Commit(node);
+					if (conflictingNode != null)
+						collection.Commit(conflictingNode);
 				}
 				catch (CollisionException)
 				{

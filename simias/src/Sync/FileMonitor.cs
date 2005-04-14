@@ -72,7 +72,7 @@ namespace Simias.Sync
 		DateTime lastDredgeTime = DateTime.MinValue;
 		bool foundChange;
 		string rootPath;
-
+		
 		bool						disposed;
 //		string						collectionId;
 		internal FileSystemWatcher	watcher;
@@ -154,11 +154,55 @@ namespace Simias.Sync
 			// Check to see if we have a collision.
 			if (collection.HasCollisions(node))
 			{
-				new Conflict(collection, node).DeleteConflictFile();
+				Conflict cNode = new Conflict(collection, node);
+				if (cNode.IsFileNameConflict)
+				{
+					// This is a name collision make sure that we delete the right node.
+					// Only delete if the conflict path matches the fullPath.
+					if (Path.GetFileName(cNode.FileNameConflictPath) != node.Name)
+					{
+						node = Conflict.GetConflictingNode(collection, node as FileNode);
+						if (node == null)
+							return;
+						cNode = new Conflict(collection, node);
+					}
+				}
+				cNode.DeleteConflictFile();
 			}
 			Node[] deleted = collection.Delete(node, PropertyTags.Parent);
 			collection.Commit(deleted);
 			foundChange = true;
+		}
+
+		public static void RenameDirsChildren(Collection collection, DirNode dn, string oldRelativePath)
+		{
+			string relativePath = dn.GetRelativePath();
+			// We need to rename all of the children nodes.
+			ArrayList nodeList = new ArrayList();
+			ICSList csnList = collection.Search(PropertyTags.FileSystemPath, oldRelativePath, SearchOp.Begins);
+			foreach (ShallowNode csn in csnList)
+			{
+				// Skip the dirnode.
+				if (csn.ID == dn.ID)
+					continue;
+
+				Node childNode = collection.GetNodeByID(csn.ID);
+				if (childNode != null)
+				{
+					Property childRP = childNode.Properties.GetSingleProperty(PropertyTags.FileSystemPath);
+					if (childRP != null)
+					{
+						string newRP = childRP.ValueString;
+						if (newRP[oldRelativePath.Length] == '/')
+						{
+							childRP.SetPropertyValue(newRP.Replace(oldRelativePath, relativePath));
+							childNode.Properties.ModifyNodeProperty(childRP);
+							nodeList.Add(childNode);
+						}
+					}
+				}
+			}
+			collection.Commit((Node[])nodeList.ToArray(typeof(Node)));
 		}
 
 		/// <summary>
@@ -166,13 +210,24 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="path">The path to the node to create.</param>
 		/// <param name="parentNode">The parent of the node to create.</param>
+		/// <param name="conflict">The node should be created with a conflict.</param>
 		/// <returns>The new FileNode.</returns>
-		FileNode CreateFileNode(string path, DirNode parentNode)
+		FileNode CreateFileNode(string path, DirNode parentNode, bool conflict)
 		{
-			if (isSyncFile(path))
+			if (isSyncFile(path) || collection.HasCollisions(parentNode))
 				return null;
 			FileNode fnode = new FileNode(collection, parentNode, Path.GetFileName(path));
 			log.Debug("Adding file node for {0} {1}", path, fnode.ID);
+			// Make sure that we support the Simias Name Space.
+			if (!SyncFile.IsNameValid(fnode.Name))
+			{
+				conflict = true;
+			}
+			if (conflict)
+			{
+				// We have a name collision set the collision state.
+				fnode = Conflict.CreateNameConflict(collection, fnode, path) as FileNode;
+			}
 			collection.Commit(fnode);
 			foundChange = true;
 			return fnode;
@@ -195,6 +250,12 @@ namespace Simias.Sync
 				hasChanges = true;
 				log.Debug("Updating file node for {0} {1}", path, fn.ID);
 			}
+			if (!SyncFile.IsNameValid(fn.Name))
+			{
+				// This is a conflict.
+				fn = Conflict.CreateNameConflict(collection, fn, path) as BaseFileNode;
+				hasChanges = true;
+			}
 			if (hasChanges)
 			{
 				collection.Commit(fn);
@@ -207,19 +268,28 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="path">The path to the directory.</param>
 		/// <param name="parentNode">The parent DirNode.</param>
+		/// <param name="conflict">The node should be created with a conflict.</param>
 		/// <returns>The new DirNode.</returns>
-		DirNode CreateDirNode(string path, DirNode parentNode)
+		DirNode CreateDirNode(string path, DirNode parentNode, bool conflict)
 		{
 			if (isSyncFile(path))
 				return null;
 
 			DirNode dnode = new DirNode(collection, parentNode, Path.GetFileName(path));
 			log.Debug("Adding dir node for {0} {1}", path, dnode.ID);
-			collection.Commit(dnode);
-			if (Directory.GetFileSystemEntries(path).Length != 0)
+			// Make sure that we support the Simias Name Space.
+			if (!SyncFile.IsNameValid(dnode.Name))
 			{
-				this.DoSubtree(path, dnode, dnode.ID, true);
+				conflict = true;
 			}
+			if (conflict)
+			{
+				// We have a name collision set the collision state.
+				dnode = Conflict.CreateNameConflict(collection, dnode, path) as DirNode;
+			}
+			collection.Commit(dnode);
+			if (!conflict)
+				DoSubtree(path, dnode, dnode.ID, true);
 			foundChange = true;
 			return dnode;
 		}
@@ -251,36 +321,21 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="path"></param>
-		/// <returns></returns>
-		string GetNormalizedRelativePath(string path)
-		{
-			return GetNormalizedRelativePath(rootPath, path);
-		}
-
-		/// <summary>
 		/// Get a ShallowNode for the named file or directory.
 		/// </summary>
 		/// <param name="path">Path to the file.</param>
+		/// <param name="haveConflict"></param>
 		/// <returns>The ShallowNode for this file.</returns>
-		ShallowNode GetShallowNodeForFile(string path)
+		ShallowNode GetShallowNodeForFile(string path, out bool haveConflict)
 		{
+			haveConflict = false;
 			string relPath = GetNormalizedRelativePath(rootPath, path);
 			
 			ICSList nodeList;
-			if (MyEnvironment.Windows)
-			{
-				nodeList = collection.Search(PropertyTags.FileSystemPath, relPath, SearchOp.Equal);
-			}
-			else
-			{
-				nodeList = collection.Search(PropertyTags.FileSystemPath, relPath, SearchOp.CaseEqual);
-			}
-				
+			nodeList = collection.Search(PropertyTags.FileSystemPath, relPath, SearchOp.Equal);
 			foreach (ShallowNode sn in nodeList)
 			{
+				haveConflict = sn.Name != Path.GetFileName(path);
 				return sn;
 			}
 			return null;
@@ -293,7 +348,8 @@ namespace Simias.Sync
 		/// <returns></returns>
 		DirNode GetParentNode(string path)
 		{
-			ShallowNode sn = GetShallowNodeForFile(Path.GetDirectoryName(path));
+			bool haveConflict;
+			ShallowNode sn = GetShallowNodeForFile(Path.GetDirectoryName(path), out haveConflict);
 			if (sn != null)
 			{
 				return (DirNode)collection.GetNodeByID(sn.ID);
@@ -329,15 +385,29 @@ namespace Simias.Sync
 			FileNode fn = null;
 			string name = Path.GetFileName(path);
 		
-			// don't let temp files from sync into the collection as regular nodes
-			if (name.StartsWith(".simias.") && !isDir)
+			// don't let temp files from sync, into the collection as regular nodes
+			if (isSyncFile(name))
 				return;
 
 			// If the lastwritetime has not changed the node is up to date.
-			if (sn != null && File.GetLastWriteTime(path) <= lastDredgeTime)
+			if (File.GetLastWriteTime(path) <= lastDredgeTime)
 			{
 				if (isDir)
 					DoSubtree(path, null, sn.ID, false);
+				return;
+			}
+
+			// If the case of the names does not match we have a conflict.
+			if (name != sn.Name)
+			{
+				if (isDir)
+				{
+					CreateDirNode(path, parent, true);
+				}
+				else
+				{
+					CreateFileNode(path, parent, true);
+				}
 				return;
 			}
 
@@ -350,9 +420,12 @@ namespace Simias.Sync
 				{
 					// This node is the wrong type.
 					DeleteNode(node);
-					dn = CreateDirNode(path, parent);
+					dn = CreateDirNode(path, parent, false);
 				}
-				DoSubtree(path, dn, dn.ID, true);
+				else
+				{
+					DoSubtree(path, dn, dn.ID, true);
+				}
 			}
 			else
 			{
@@ -364,7 +437,7 @@ namespace Simias.Sync
 				else
 				{
 					DeleteNode(node);
-					fn = CreateFileNode(path, parent);
+					fn = CreateFileNode(path, parent, false);
 				}
 			}
 		}
@@ -384,12 +457,11 @@ namespace Simias.Sync
 				return;
 		
 			// find if node for this file or dir already exists
-			// delete nodes that are wrong type
-			foreach (ShallowNode sn in collection.Search(PropertyTags.FileSystemPath, parentNode.GetRelativePath() + "/" + name, SearchOp.Equal))
+			bool haveConflict;
+			ShallowNode sn = GetShallowNodeForFile(path, out haveConflict);
+			if (sn != null)
 			{
 				DoShallowNode(parentNode, sn, path, isDir);
-				// There can only be one node with the matching relative path.
-				break;
 			}
 		}
 
@@ -402,8 +474,13 @@ namespace Simias.Sync
 		/// <param name="subTreeHasChanged"></param>
 		void DoSubtree(string path, DirNode dnode, string nodeID, bool subTreeHasChanged)
 		{
-			//string path = dnode.GetFullPath(collection);
 			//Log.Spew("Dredger processing subtree of path {0}", path);
+			if (!SyncFile.IsNameValid(Path.GetFileName(path)))
+			{
+				// This is a name collision this needs to be resolved before
+				// the files can be added.
+				return;
+			}
 
 			if (subTreeHasChanged)
 			{
@@ -412,38 +489,42 @@ namespace Simias.Sync
 				// Put all the existing nodes in a hashtable to match against the file system.
 				foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
 				{
-					existingNodes[sn.Name] = sn;
+					existingNodes[sn.Name.ToLower()] = sn;
 				}
 
 				// Look for new and modified files.
 				foreach (string file in Directory.GetFiles(path))
 				{
-					ShallowNode sn = (ShallowNode)existingNodes[Path.GetFileName(file)];
+					string fName = Path.GetFileName(file);
+					string flName = fName.ToLower();
+					ShallowNode sn = (ShallowNode)existingNodes[flName];
 					if (sn != null)
 					{
 						DoShallowNode(dnode, sn, file, false);
-						existingNodes.Remove(sn.Name);
+						existingNodes.Remove(flName);
 					}
 					else
 					{
 						// The file is new create a new file node.
-						CreateFileNode(file, dnode);
+						CreateFileNode(file, dnode, false);
 					}
 				}
 
 				// look for new directories
 				foreach (string dir in Directory.GetDirectories(path))
 				{
-					ShallowNode sn = (ShallowNode)existingNodes[Path.GetFileName(dir)];
+					string dName = Path.GetFileName(dir);
+					string dlName = dName.ToLower();
+					ShallowNode sn = (ShallowNode)existingNodes[dlName];
 					if (sn != null)
 					{
 						DoShallowNode(dnode, sn, dir, true);
-						existingNodes.Remove(sn.Name);
+						existingNodes.Remove(dlName);
 					}
 					else
 					{
 						// The directory is new create a new directory node.
-						DirNode newDir = CreateDirNode(dir, dnode);
+						DirNode newDir = CreateDirNode(dir, dnode, false);
 						DoSubtree(dir, newDir, newDir.ID, true);
 					}
 				}
@@ -478,7 +559,8 @@ namespace Simias.Sync
 					}
 					else 
 					{
-						ShallowNode sn = GetShallowNodeForFile(dir);
+						bool haveConflict;
+						ShallowNode sn = GetShallowNodeForFile(dir, out haveConflict);
 						if (sn != null)
 							DoSubtree(dir, null, sn.ID, false);
 						else
@@ -574,7 +656,8 @@ namespace Simias.Sync
 						FileInfo fi = new FileInfo(fullName);
 						isDir = (fi.Attributes & FileAttributes.Directory) > 0;
 						
-						ShallowNode sn = GetShallowNodeForFile(fullName);
+						bool haveConflict;
+						ShallowNode sn = GetShallowNodeForFile(fullName, out haveConflict);
 						Node node = null;
 						DirNode dn = null;
 						BaseFileNode fn = null;
@@ -605,14 +688,30 @@ namespace Simias.Sync
 								case WatcherChangeTypes.Renamed:
 								{
 									RenamedEventArgs args = (RenamedEventArgs)fc.eArgs;
+
+									// Remove any name collisions.
+									if (collection.HasCollisions(node))
+									{
+										if (collection.GetCollisionType(node) == CollisionType.File)
+											node = Conflict.RemoveNameConflict(collection, node);
+									}
+									// Check for a name conflict.
+									if (!SyncFile.IsNameValid(args.Name))
+									{
+										// This is a conflict.
+										node = Conflict.CreateNameConflict(collection, node, fullName);
+									}
+
 									
 									// Since we are here we have a node already.
 									// This is a rename back to the original name update it.
 									if (!isDir)
 										ModifyFileNode(fullName, fn, false);
+									else
+										DoSubtree(fullName, node as DirNode, node.ID, true);
 									
 									// Make sure that there is not a node for the old name.
-									sn = GetShallowNodeForFile(args.OldFullPath);
+									sn = GetShallowNodeForFile(args.OldFullPath, out haveConflict);
 									if (sn != null && sn.ID != node.ID)
 									{
 										// If the file no longer exists delet the node.
@@ -639,11 +738,11 @@ namespace Simias.Sync
 									// The node does not exist create it.
 									if (isDir)
 									{
-										CreateDirNode(fullName, GetParentNode(fullName));
+										CreateDirNode(fullName, GetParentNode(fullName), haveConflict);
 									}
 									else
 									{
-										CreateFileNode(fullName, GetParentNode(fullName));
+										CreateFileNode(fullName, GetParentNode(fullName), haveConflict);
 									}
 									break;
 
@@ -652,11 +751,24 @@ namespace Simias.Sync
 									// Get the node from the old name.
 									RenamedEventArgs args = (RenamedEventArgs)fc.eArgs;
 									DirNode parent = null;
-									sn = GetShallowNodeForFile(args.OldFullPath);
+									sn = GetShallowNodeForFile(args.OldFullPath, out haveConflict);
 									if (sn != null)
 									{
 										node = collection.GetNodeByID(sn.ID);
-									
+
+										// Remove any name collisions.
+										if (collection.HasCollisions(node))
+										{
+											if (collection.GetCollisionType(node) == CollisionType.File)
+												node = Conflict.RemoveNameConflict(collection, node);
+										}
+										// Check for a name conflict.
+										if (!SyncFile.IsNameValid(Path.GetFileName(fullName)))
+										{
+											// This is a conflict.
+											node = Conflict.CreateNameConflict(collection, node, fullName);
+										}
+
 										// Make sure the parent has not changed.
 										if (HasParentChanged(args.OldFullPath, fullName))
 										{
@@ -676,9 +788,10 @@ namespace Simias.Sync
 											}
 										}
 										node.Name = Path.GetFileName(fullName);
-										string relativePath = GetNormalizedRelativePath(fullName);
+										string relativePath = GetNormalizedRelativePath(rootPath, fullName);
 										string oldRelativePath = node.Properties.GetSingleProperty(PropertyTags.FileSystemPath).ValueString;
 										node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
+											
 										if (!isDir)
 										{
 											ModifyFileNode(fullName, node as BaseFileNode, true);
@@ -688,43 +801,22 @@ namespace Simias.Sync
 											// Commit the directory.
 											collection.Commit(node);
 											// We need to rename all of the children nodes.
-											ArrayList nodeList = new ArrayList();
-											ICSList csnList = collection.Search(PropertyTags.FileSystemPath, oldRelativePath, SearchOp.Begins);
-											foreach (ShallowNode csn in csnList)
-											{
-												// Skip the dirnode.
-												if (csn.ID == node.ID)
-													continue;
-
-												Node childNode = collection.GetNodeByID(csn.ID);
-												if (childNode != null)
-												{
-													Property childRP = childNode.Properties.GetSingleProperty(PropertyTags.FileSystemPath);
-													if (childRP != null)
-													{
-														string newRP = childRP.ValueString;
-														if (newRP[oldRelativePath.Length] == '/')
-														{
-															childRP.SetPropertyValue(newRP.Replace(oldRelativePath, relativePath));
-															childNode.Properties.ModifyNodeProperty(childRP);
-															nodeList.Add(childNode);
-														}
-													}
-												}
-											}
-											collection.Commit((Node[])nodeList.ToArray(typeof(Node)));
+											RenameDirsChildren(collection, node as DirNode, oldRelativePath);
+											DoSubtree(fullName, node as DirNode, node.ID, true);
 										}
 									}
 									else
 									{
 										// The node does not exist create it.
+										haveConflict = sn == null ? false : true;
+										Node tempNode;
 										if (isDir)
 										{
-											CreateDirNode(fullName, GetParentNode(fullName));
+											tempNode = CreateDirNode(fullName, GetParentNode(fullName), haveConflict);
 										}
 										else
 										{
-											CreateFileNode(fullName, GetParentNode(fullName));
+											tempNode = CreateFileNode(fullName, GetParentNode(fullName), haveConflict);
 										}
 									}
 									break;

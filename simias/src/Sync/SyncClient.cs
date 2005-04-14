@@ -573,7 +573,7 @@ namespace Simias.Sync
 				}
 				else if (!serverAlive)
 				{
-					seconds = 10;
+					seconds = 60;
 				}
 				else if (workArray.Count != 0 && nodesToSync > workArray.Count)
 				{
@@ -584,8 +584,8 @@ namespace Simias.Sync
 					seconds = collection.Interval;
 					if (serverStatus == StartSyncStatus.Busy)
 					{
-						// Reschedule to sync within 1/12 of the scheduled sync time, but no less than 2 seconds.
-						seconds = new Random().Next(seconds / 12) + 2;
+						// Reschedule to sync within 1/12 of the scheduled sync time, but no less than 10 seconds.
+						seconds = new Random().Next(seconds / 12) + 10;
 						seconds = seconds > 30 ? 30 : seconds;
 					}
 				}
@@ -1206,11 +1206,15 @@ namespace Simias.Sync
 						BaseFileNode bfn = node as BaseFileNode;
 						if (bfn != null)
 						{
-							eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, true, node.Name, 0, 0, 0, Direction.Downloading));
-							FileInfo fi = new FileInfo(bfn.GetFullPath(collection));
-							if (rights == Access.Rights.ReadOnly)
-								fi.Attributes = fi.Attributes & ~FileAttributes.ReadOnly;
-							fi.Delete();
+							try
+							{
+								eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, true, node.Name, 0, 0, 0, Direction.Downloading));
+								FileInfo fi = new FileInfo(bfn.GetFullPath(collection));
+								if (rights == Access.Rights.ReadOnly)
+									fi.Attributes = fi.Attributes & ~FileAttributes.ReadOnly;
+								fi.Delete();
+							}
+							catch {}
 						}
 						else
 						{
@@ -1440,11 +1444,10 @@ namespace Simias.Sync
 						{
 							Directory.CreateDirectory(path);
 						}
-						catch (Exception ex)
+						catch
 						{
 							// Create a collision.
-							node = collection.CreateCollision(node, true) as DirNode;
-							Conflict.SetFileConflictPath(node, node.GetFullPath(collection));
+							node = Conflict.CreateNameConflict(collection, node, node.GetFullPath(collection)) as DirNode;
 						}
 					}
 					collection.Commit(node);
@@ -1688,7 +1691,7 @@ namespace Simias.Sync
 					for (int i = offset; i < offset + batchCount; ++ i)
 					{
 						Node node = collection.GetNodeByID(nodeIDs[i]);
-						if (node != null)
+						if (node != null & !collection.HasCollisions(node))
 						{
 							log.Info("Uploading Directory {0} to server", node.Name);
 							nodes[i - offset] = node;
@@ -1696,7 +1699,7 @@ namespace Simias.Sync
 						}
 						else
 						{
-							// The node no longer exists.
+							// The node no longer exists or has a collision.
 							workArray.RemoveNodeToServer(nodeIDs[i]);
 						}
 					}
@@ -1768,6 +1771,11 @@ namespace Simias.Sync
 					BaseFileNode node = collection.GetNodeByID(nodeID) as BaseFileNode;
 					if (node != null)
 					{
+						if (collection.HasCollisions(node))
+						{
+							// We have a collision do not sync.
+							workArray.RemoveNodeFromServer(nodeID);
+						}
 						HttpClientOutFile file = new HttpClientOutFile(collection, node, service);
 						SyncStatus status = file.Open();
 						if (status == SyncStatus.Success)
@@ -1807,8 +1815,7 @@ namespace Simias.Sync
 						else if (status == SyncStatus.FileNameConflict)
 						{
 							// Since we had a conflict we need to set the conflict.
-							BaseFileNode conflictNode = collection.CreateCollision(node, true) as BaseFileNode;
-							Conflict.SetFileConflictPath(conflictNode, conflictNode.GetFullPath(collection));
+							BaseFileNode conflictNode = Conflict.CreateNameConflict(collection, node, node.GetFullPath(collection)) as BaseFileNode;
 							collection.Commit(conflictNode);
 							workArray.RemoveNodeToServer(nodeID);
 							log.Info("Failed Uploading File {0} : reason {1}", file.Name, status.ToString());

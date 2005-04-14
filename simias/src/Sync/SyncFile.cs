@@ -333,11 +333,6 @@ namespace Simias.Sync
 				{
 					stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.None);
 				}
-				else
-				{
-					file = Conflict.GetFileConflictPath(collection, node);
-					Conflict.SetFileConflictPath(node, file);
-				}
 			}
 			catch (FileNotFoundException)
 			{
@@ -356,6 +351,10 @@ namespace Simias.Sync
 			// This was added to support EFS (Encrypted File System).
 			string createName = Path.Combine(Path.GetDirectoryName(file), Path.GetFileName(workFile));
 			File.Open(createName, FileMode.Create, FileAccess.ReadWrite, FileShare.None).Close();
+			if (File.Exists(workFile))
+			{
+				File.Delete(workFile);
+			}
 			File.Move(createName, workFile);
 			workStream = new StreamStream(File.Open(workFile, FileMode.Truncate, FileAccess.ReadWrite, FileShare.None));
 		}
@@ -462,6 +461,7 @@ namespace Simias.Sync
 		#region fields
 
 		bool					nameConflict = false;
+		protected FileNode		conflictingNode = null;
 		/// <summary>Used to signal to stop upload or downloading the file.</summary>
 		protected bool			stopping = false;
 		/// <summary>The Collection the file belongs to.</summary>
@@ -481,6 +481,9 @@ namespace Simias.Sync
 		const string			MapFilePrefix = ".simias.map.";
 		static string			workBinDir = "WorkArea";
 		static string			workBin;
+		// '/' is left out on purpose because all systems disallow this char.
+		public static char[] InvalidChars = {'\\', ':', '*', '?', '\"', '<', '>'};
+
 		/// <summary>Used to publish Sync events.</summary>
 		static public			EventPublisher	eventPublisher = new EventPublisher();
 		
@@ -536,45 +539,35 @@ namespace Simias.Sync
 		/// <summary>
 		/// Checks for a name conflict.
 		/// </summary>
-		protected void CheckForNameConflict()
+		/// <returns>True if conflict.</returns>
+		protected bool CheckForNameConflict()
 		{
 			if (!NameConflict)
 			{
 				string path = node.Properties.GetSingleProperty(PropertyTags.FileSystemPath).Value.ToString();
 				ICSList nodeList;
-				if (MyEnvironment.Windows)
-				{
-					nodeList = collection.Search(PropertyTags.FileSystemPath, path, SearchOp.Equal);
-				}
-				else
-				{
-					nodeList = collection.Search(PropertyTags.FileSystemPath, path, SearchOp.CaseEqual);
-				}
-				
+				nodeList = collection.Search(PropertyTags.FileSystemPath, path, SearchOp.Equal);
 				foreach (ShallowNode sn in nodeList)
 				{
 					if (sn.ID != node.ID)
+					{
+						this.conflictingNode = collection.GetNodeByID(sn.ID) as FileNode;
+						Conflict.LinkConflictingNodes(conflictingNode, node as FileNode);
 						nameConflict = true;
+					}
 				}
 				// Now make sure we don't have any illegal characters.
-				// We can do this by creating a FileInfo instance.
-				try
-				{
-					new FileInfo(node.Name);
-				}
-				catch
-				{
-					nameConflict = true;
-				}
-
-				if (path.IndexOf(Path.PathSeparator) != -1)
+				if (!IsNameValid(path))
 					nameConflict = true;
 
 				if (nameConflict)
-					node = collection.CreateCollision(node, true) as BaseFileNode;
+				{
+					node = Conflict.CreateNameConflict(collection, node) as BaseFileNode;
+				}
 			}
+			return nameConflict;
 		}
-		
+
 		/// <summary>
 		/// Gets or Sets a NameConflict.
 		/// </summary>
@@ -622,6 +615,26 @@ namespace Simias.Sync
 		public bool Stop
 		{
 			set { stopping = value; }
+		}
+
+		/// <summary>
+		/// Tests if the file name is valid.
+		/// </summary>
+		/// <param name="name">The file name.</param>
+		/// <returns>true if valid.</returns>
+		public static bool IsNameValid(string name)
+		{
+			return name.IndexOfAny(InvalidChars) == -1 ? true : false;
+		}
+
+		/// <summary>
+		/// Tests if the relative path is valid.
+		/// </summary>
+		/// <param name="path">The path.</param>
+		/// <returns>true if valid</returns>
+		public static bool IsRelativePathValid(string path)
+		{
+			return path.IndexOfAny(InvalidChars) == -1 ? true : false;
 		}
 
 		#endregion

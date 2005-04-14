@@ -23,6 +23,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Collections;
 using Simias.Storage;
 using Simias;
 using Simias.Client;
@@ -39,6 +40,7 @@ public class Conflict
 	Collection collection;
 	Node node;
 	Node conflictNode;
+	CollisionType cType;
 	/// <summary>
 	/// The Prefix for an update conflict.
 	/// </summary>
@@ -52,6 +54,7 @@ public class Conflict
 	static string			ConflictBinDir = "Conflicts";
 	static string			conflictBin;
 	static string			ConflictNameProperty = "ConflictName";
+	static string			ConflictLinkProperty = "ConflictLink";
 
 	//---------------------------------------------------------------------------
 	/// <summary>
@@ -63,6 +66,7 @@ public class Conflict
 		this.collection = collection;
 		this.node = Collection.NodeFactory(collection, node);
 		conflictNode = collection.GetNodeFromCollision(node);
+		cType = collection.GetCollisionType(node);
 	}
 
 	//---------------------------------------------------------------------------
@@ -73,7 +77,7 @@ public class Conflict
 	{
 		get
 		{
-			return conflictNode != null;
+			return cType == CollisionType.Node;
 		}
 	}
 
@@ -85,7 +89,7 @@ public class Conflict
 	{
 		get
 		{
-			return conflictNode == null;
+			return cType == CollisionType.File;
 		}
 	}
 
@@ -145,6 +149,49 @@ public class Conflict
 	}
 
 	/// <summary>
+	/// Create a name conflict on the node.
+	/// </summary>
+	/// <param name="collection"></param>
+	/// <param name="node"></param>
+	/// <returns></returns>
+	public static Node CreateNameConflict(Collection collection, Node node)
+	{
+		node = collection.CreateCollision(node, true);
+		string path = GetFileConflictPath(collection, node);
+		SetFileConflictPath(node, path);
+		return node;
+	}
+
+	/// <summary>
+	/// Create a name conflict on the node.
+	/// </summary>
+	/// <param name="collection"></param>
+	/// <param name="node"></param>
+	/// <param name="path">The path where the file resides.</param>
+	/// <returns></returns>
+	public static Node CreateNameConflict(Collection collection, Node node, string path)
+	{
+		node = collection.CreateCollision(node, true);
+		SetFileConflictPath(node, path);
+		return node;
+	}
+
+	/// <summary>
+	/// Remove the name conflict.
+	/// </summary>
+	/// <param name="collection"></param>
+	/// <param name="node"></param>
+	/// <returns></returns>
+	public static Node RemoveNameConflict(Collection collection, Node node)
+	{
+		node = collection.DeleteCollision(node);
+		node.Properties.DeleteSingleProperty(ConflictNameProperty);
+		node.Properties.DeleteSingleProperty(ConflictLinkProperty);
+		return node;
+	}
+
+
+	/// <summary>
 	/// Gets the ConflictBin path.
 	/// </summary>
 	private static string ConflictBin
@@ -198,6 +245,38 @@ public class Conflict
 		Property pPath = new Property(ConflictNameProperty, path);
 		pPath.LocalProperty = true;
 		node.Properties.ModifyProperty(pPath);
+	}
+
+	/// <summary>
+	/// Link the two conflicting nodes together.
+	/// </summary>
+	/// <param name="node"></param>
+	/// <param name="cNode"></param>
+	public static void LinkConflictingNodes(FileNode node, FileNode cNode)
+	{
+		Property pLink = new Property(ConflictLinkProperty, cNode.ID);
+		pLink.LocalProperty = true;
+		cNode.Properties.ModifyProperty(pLink);
+			
+		pLink = new Property(ConflictLinkProperty, node.ID);
+		pLink.LocalProperty = true;
+		node.Properties.ModifyProperty(pLink);
+	}
+
+	/// <summary>
+	/// Get the conflicting node.
+	/// </summary>
+	/// <param name="collection"></param>
+	/// <param name="node"></param>
+	/// <returns></returns>
+	public static FileNode GetConflictingNode(Collection collection, FileNode node)
+	{
+		Property pLink = node.Properties.GetSingleProperty(ConflictLinkProperty);
+		if (pLink != null)
+		{
+			return collection.GetNodeByID(pLink.Value.ToString()) as FileNode;
+		}
+		return null;
 	}
 
 	//---------------------------------------------------------------------------
@@ -255,8 +334,7 @@ public class Conflict
 		node = collection.ResolveCollision(node, conflictNode.LocalIncarnation, false);
 		if (fncpath != null)
 		{
-			node = collection.CreateCollision(conflictNode, true);
-			Conflict.SetFileConflictPath(node, path);
+			node = CreateNameConflict(collection, node, path);
 		}
 		if (fInfo != null)
 		{
@@ -278,6 +356,8 @@ public class Conflict
 	/// </summary>
 	public void Resolve(string newNodeName)
 	{
+		if (!SyncFile.IsNameValid(newNodeName))
+			throw new MalformedException(newNodeName);
 		FileNode fn = node as FileNode;
 		if (fn != null)
 		{
@@ -296,28 +376,30 @@ public class Conflict
 			{
 				//TODO: what if move succeeds but node rename or commit fails?
 				File.Move(FileNameConflictPath, Path.Combine(Path.GetDirectoryName(NonconflictedPath), newNodeName));
-				string relativePath = node.Properties.GetSingleProperty(PropertyTags.FileSystemPath).Value.ToString();
+				string relativePath = fn.GetRelativePath();
 				relativePath = relativePath.Remove(relativePath.Length - node.Name.Length, node.Name.Length) + newNodeName;
 				node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
 				node.Name = newNodeName;
 			}
-			Node newNode = collection.DeleteCollision(node);
-			newNode.Properties.DeleteSingleProperty(ConflictNameProperty);
-			collection.Commit(newNode);
+			node = RemoveNameConflict(collection, node);
+			collection.Commit(node);
 		}
 		else
 		{
 			DirNode dn = node as DirNode;
 			if (dn != null)
 			{
-				Directory.CreateDirectory(Path.Combine(Path.GetDirectoryName(FileNameConflictPath), newNodeName));
-				string relativePath = node.Properties.GetSingleProperty(PropertyTags.FileSystemPath).Value.ToString();
-				relativePath = relativePath.Remove(relativePath.Length - node.Name.Length, node.Name.Length) + newNodeName;
+				string oldname, newname;
+				oldname = FileNameConflictPath;
+				newname = Path.Combine(Path.GetDirectoryName(FileNameConflictPath), newNodeName);
+				Directory.Move(oldname, newname);
+				string oldRelativePath = dn.GetRelativePath();
+				string relativePath = oldRelativePath.Remove(oldRelativePath.Length - node.Name.Length, node.Name.Length) + newNodeName;
 				node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
 				node.Name = newNodeName;
-				Node newNode = collection.DeleteCollision(node);
-				newNode.Properties.DeleteSingleProperty(ConflictNameProperty);
-				collection.Commit(newNode);
+				node = RemoveNameConflict(collection, node);
+				collection.Commit(node);
+				FileWatcher.RenameDirsChildren(collection, dn, oldRelativePath);
 			}
 		}
 	}
@@ -343,32 +425,14 @@ public class Conflict
 	/// <param name="newName">The new name of the file.</param>
 	public void RenameConflictingFile(string newName)
 	{
-		DirNode rn = collection.GetRootDirectory();
-		string rootPath = rn.Properties.GetSingleProperty(PropertyTags.Root).Value.ToString();
-		BaseFileNode cfn = node as BaseFileNode;
-		string relPath = Simias.Sync.FileWatcher.GetNormalizedRelativePath(rootPath, cfn.GetFullPath(collection));
+		if (!SyncFile.IsNameValid(newName))
+			throw new MalformedException(newName);
+		FileNode cfn = node as FileNode;
+		string relPath = cfn.GetRelativePath();
 
-		// Now find all nodes with the old name.	
-		ICSList nodeList;
-		if (MyEnvironment.Windows)
-		{
-			nodeList = collection.Search(PropertyTags.FileSystemPath, relPath, SearchOp.Equal);
-		}
-		else
-		{
-			nodeList = collection.Search(PropertyTags.FileSystemPath, relPath, SearchOp.CaseEqual);
-		}
+		// Now get the conflicting node.
+		FileNode fn = collection.GetNodeByID(node.Properties.GetSingleProperty(ConflictLinkProperty).Value.ToString()) as FileNode;
 		
-		BaseFileNode fn = null;
-		foreach (ShallowNode sn in nodeList)
-		{
-			// We don't want the node with the collision.
-			if (sn.ID == node.ID)
-				continue;
-			fn = collection.GetNodeByID(sn.ID) as BaseFileNode;
-			break;
-		}
-
 		if (fn != null)
 		{
 			// Now rename the file and the node.
@@ -377,11 +441,12 @@ public class Conflict
 			string newFName = Path.Combine(parentPath, newName);
 			File.Move(fn.GetFullPath(collection), tmpName);
 			File.Move(tmpName, newFName);
-			string relativePath = fn.Properties.GetSingleProperty(PropertyTags.FileSystemPath).Value.ToString();
+			string relativePath = fn.GetRelativePath();
 			relativePath = relativePath.Remove(relativePath.Length - fn.Name.Length, fn.Name.Length) + newName;
 			fn.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
 			fn.Name = newName;
 		}
+		fn.Properties.DeleteSingleProperty(ConflictLinkProperty);
 		collection.Commit(fn);
 	}
 }
