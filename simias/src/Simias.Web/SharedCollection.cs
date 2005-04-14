@@ -345,10 +345,14 @@ namespace Simias.Web
 		public static bool CanBeCollection( string path )
 		{
 			bool canBeCollection = true;
+			string excludeDirectory;
 
 			// Make sure the paths end with a separator.
 			// Create a normalized path that can be compared on any platform.
 			Uri nPath = GetUriPath(path);
+/*
+This changes creates an invalid URI on Linux and Mac
+Took it out until it could be revisited - CRG
 
 			// The store path cannot be used nor any path under the store path.
 			string excludeDirectory = Configuration.GetConfiguration().StorePath;
@@ -371,7 +375,7 @@ namespace Simias.Web
 					return false;
 				}
 			}
-
+*/
 #if WINDOWS
 			if (GetDriveType(Path.GetPathRoot(path)) != DRIVE_FIXED)
 			{
