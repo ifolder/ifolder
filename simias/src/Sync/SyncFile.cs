@@ -570,12 +570,13 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// Called to see if the new node has a Name conflict.
+		/// Called to see if a node with the same name exists.
 		/// </summary>
 		/// <param name="collection">The collection that contains the node.</param>
-		/// <param name="node">The node to check</param>
+		/// <param name="parent">The parent node</param>
+		/// <param name="name">The leaf name of the file.</param>
 		/// <returns>true if allowed.</returns>
-		public static bool IsNameAllowed(Collection collection, DirNode parent, string name)
+		public static bool DoesFileNodeExist(Collection collection, DirNode parent, string name)
 		{
 			string path = parent.Properties.GetSingleProperty(PropertyTags.FileSystemPath).Value.ToString() + "/" + name;
 			ICSList nodeList;
@@ -584,11 +585,6 @@ namespace Simias.Sync
 			{
 				return false;
 			}
-							
-			// Now make sure we don't have any illegal characters.
-			if (!IsNameValid(path))
-				return false;
-
 			return true;
 		}
 
