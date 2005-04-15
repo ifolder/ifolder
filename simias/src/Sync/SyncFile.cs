@@ -576,16 +576,16 @@ namespace Simias.Sync
 		/// <param name="parent">The parent node</param>
 		/// <param name="name">The leaf name of the file.</param>
 		/// <returns>true if allowed.</returns>
-		public static bool DoesFileNodeExist(Collection collection, DirNode parent, string name)
+		public static bool DoesNodeExist(Collection collection, DirNode parent, string name)
 		{
 			string path = parent.Properties.GetSingleProperty(PropertyTags.FileSystemPath).Value.ToString() + "/" + name;
 			ICSList nodeList;
 			nodeList = collection.Search(PropertyTags.FileSystemPath, path, SearchOp.Equal);
 			if (nodeList.Count > 0)
 			{
-				return false;
+				return true;
 			}
-			return true;
+			return false;
 		}
 
 
