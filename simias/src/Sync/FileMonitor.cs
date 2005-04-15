@@ -158,13 +158,17 @@ namespace Simias.Sync
 				if (cNode.IsFileNameConflict)
 				{
 					// This is a name collision make sure that we delete the right node.
-					// Only delete if the conflict path matches the fullPath.
+					// Only delete if the file no longer exists.
 					if (Path.GetFileName(cNode.FileNameConflictPath) != node.Name)
 					{
 						node = Conflict.GetConflictingNode(collection, node as FileNode);
 						if (node == null)
 							return;
 						cNode = new Conflict(collection, node);
+					}
+					if (File.Exists(cNode.FileNameConflictPath))
+					{
+						return;
 					}
 				}
 				cNode.DeleteConflictFile();
@@ -328,6 +332,7 @@ namespace Simias.Sync
 		/// <returns>The ShallowNode for this file.</returns>
 		ShallowNode GetShallowNodeForFile(string path, out bool haveConflict)
 		{
+			ShallowNode sNode = null;
 			haveConflict = false;
 			string relPath = GetNormalizedRelativePath(rootPath, path);
 			
@@ -335,10 +340,17 @@ namespace Simias.Sync
 			nodeList = collection.Search(PropertyTags.FileSystemPath, relPath, SearchOp.Equal);
 			foreach (ShallowNode sn in nodeList)
 			{
-				haveConflict = sn.Name != Path.GetFileName(path);
-				return sn;
+				if (sn.Name == Path.GetFileName(path))
+				{
+					sNode = sn;
+				}
+				else
+				{
+					haveConflict = true;
+					sNode = sNode == null ? sn : sNode;
+				}
 			}
-			return null;
+			return sNode;
 		}
 
 		/// <summary>
@@ -489,19 +501,18 @@ namespace Simias.Sync
 				// Put all the existing nodes in a hashtable to match against the file system.
 				foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
 				{
-					existingNodes[sn.Name.ToLower()] = sn;
+					existingNodes[sn.Name] = sn;
 				}
 
 				// Look for new and modified files.
 				foreach (string file in Directory.GetFiles(path))
 				{
 					string fName = Path.GetFileName(file);
-					string flName = fName.ToLower();
-					ShallowNode sn = (ShallowNode)existingNodes[flName];
+					ShallowNode sn = (ShallowNode)existingNodes[fName];
 					if (sn != null)
 					{
 						DoShallowNode(dnode, sn, file, false);
-						existingNodes.Remove(flName);
+						existingNodes.Remove(fName);
 					}
 					else
 					{
@@ -514,12 +525,11 @@ namespace Simias.Sync
 				foreach (string dir in Directory.GetDirectories(path))
 				{
 					string dName = Path.GetFileName(dir);
-					string dlName = dName.ToLower();
-					ShallowNode sn = (ShallowNode)existingNodes[dlName];
+					ShallowNode sn = (ShallowNode)existingNodes[dName];
 					if (sn != null)
 					{
 						DoShallowNode(dnode, sn, dir, true);
-						existingNodes.Remove(dlName);
+						existingNodes.Remove(dName);
 					}
 					else
 					{

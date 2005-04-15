@@ -551,7 +551,7 @@ namespace Simias.Sync
 				{
 					if (sn.ID != node.ID)
 					{
-						this.conflictingNode = collection.GetNodeByID(sn.ID) as FileNode;
+						conflictingNode = collection.GetNodeByID(sn.ID) as FileNode;
 						Conflict.LinkConflictingNodes(conflictingNode, node as FileNode);
 						nameConflict = true;
 					}
@@ -563,6 +563,7 @@ namespace Simias.Sync
 				if (nameConflict)
 				{
 					node = Conflict.CreateNameConflict(collection, node) as BaseFileNode;
+					file = Conflict.GetFileConflictPath(collection, node);
 				}
 			}
 			return nameConflict;
