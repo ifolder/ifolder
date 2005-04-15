@@ -494,6 +494,47 @@ namespace Simias.Sync
 				return;
 			}
 
+			// Make sure we are not a reparse point or symlink
+			if ((File.GetAttributes(path) & FileAttributes.ReparsePoint) != 0)
+			{
+				// We need to determine if the link is recursive.
+				// Lets check to see if we have any of the directories in our hiarchy.
+				// Strip of our name.
+				string parentPath = Path.GetDirectoryName(path);
+				string[] fsEntries = Directory.GetDirectories(path);
+				foreach (string dPath in fsEntries)
+				{
+					// If any of the directory names match my parent path we could be recursive.
+					// Get the name of the child directory.
+					string childDir = Path.GetFileName(dPath);
+					int sIndex = parentPath.IndexOf(childDir);
+					if (sIndex != -1)
+					{
+						if (parentPath[sIndex -1] == Path.DirectorySeparatorChar
+							&& (((sIndex + childDir.Length) == parentPath.Length) 
+							|| parentPath[sIndex + childDir.Length] == Path.DirectorySeparatorChar))
+						{
+							// We have a possible recursion problem.
+							// We need to see if the directories are the same
+							// We will do it by creating a child file and checking for existance
+							// in the suspect directory.
+							string suspectFile = Path.Combine(parentPath.Substring(0, sIndex - 1), ".simias.tmp");
+							string localFile = Path.Combine(path, ".simias.tmp");
+							File.Create(localFile).Close();
+							try
+							{
+								if (File.Exists(suspectFile))
+									return;
+							}
+							finally
+							{
+								File.Delete(localFile);
+							}
+						}
+					}
+				}
+			}
+				
 			if (subTreeHasChanged)
 			{
 				// A file or directory has been added or deleted from this directory. We need to find it.
@@ -535,7 +576,6 @@ namespace Simias.Sync
 					{
 						// The directory is new create a new directory node.
 						DirNode newDir = CreateDirNode(dir, dnode, false);
-						DoSubtree(dir, newDir, newDir.ID, true);
 					}
 				}
 			
