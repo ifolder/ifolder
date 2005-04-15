@@ -42,7 +42,9 @@ namespace Novell.iFolder
 		ChangedUser		= 0x0003,
 		ChangediFolder	= 0x0004,
 		DelUser			= 0x0005,
-		DeliFolder		= 0x0006
+		DeliFolder		= 0x0006,
+		NewDomain		= 0x0007,
+		DelDomain		= 0x0008
 	}
 
 
@@ -51,6 +53,7 @@ namespace Novell.iFolder
 		private iFolderUser			ifUser;
 		private string				ifolderID;
 		private string				userID;
+		private string				domainID;
 		private SimiasEventType		type;
 	
 		public SimiasEvent(string iFolderID, iFolderUser ifldrUser, 
@@ -59,6 +62,16 @@ namespace Novell.iFolder
 			this.ifUser = ifldrUser;
 			this.ifolderID = iFolderID;
 			this.userID = UserID;
+			this.domainID = null;
+			this.type = type;
+		}
+		
+		public SimiasEvent(string domainID, SimiasEventType type)
+		{
+			this.ifUser = null;
+			this.ifolderID = null;
+			this.userID = null;
+			this.domainID = domainID;
 			this.type = type;
 		}
 
@@ -75,6 +88,11 @@ namespace Novell.iFolder
 		public string UserID
 		{
 			get{return this.userID;}
+		}
+		
+		public string DomainID
+		{
+			get{return this.domainID;}
 		}
 
 		public SimiasEventType EventType
@@ -209,6 +227,7 @@ namespace Novell.iFolder
 			get{ return this.ifolderID; }
 		}
 	}
+	
 	public delegate void iFolderUserDeletedEventHandler(object sender,
 							iFolderUserDeletedEventArgs args);
 
@@ -220,6 +239,27 @@ namespace Novell.iFolder
 
 	public delegate void NotifyEventHandler(object sender,
 							NotifyEventArgs args);
+	
+	public class DomainEventArgs : EventArgs
+	{
+		private string domainID;
+		
+		public DomainEventArgs(string domainID)
+		{
+			this.domainID = domainID;
+		}
+		
+		public string DomainID
+		{
+			get{ return this.domainID; }
+		}
+	}
+	
+	public delegate void DomainAddedEventHandler(object sender,
+							DomainEventArgs args);
+	
+	public delegate void DomainDeletedEventHandler(object sender,
+							DomainEventArgs args);
 
 
 
@@ -249,6 +289,8 @@ namespace Novell.iFolder
 		public event iFolderUserAddedEventHandler iFolderUserAdded;
 		public event iFolderUserChangedEventHandler iFolderUserChanged;
 		public event iFolderUserDeletedEventHandler iFolderUserDeleted;
+		public event DomainAddedEventHandler DomainAdded;
+		public event DomainDeletedEventHandler DomainDeleted;
 
 		public event CollectionSyncEventHandler CollectionSyncEventFired;
 		public event FileSyncEventHandler FileSyncEventFired;
@@ -533,6 +575,18 @@ namespace Novell.iFolder
 					}
 					break;
 				}
+				
+				case "Domain":
+				{
+					// The user just successfully created/logged-into a domain
+					lock(NodeEventQueue)
+					{
+						NodeEventQueue.Enqueue(
+							new SimiasEvent(nargs.Collection, SimiasEventType.NewDomain));
+						SimiasEventFired.WakeupMain();
+					}
+					break;
+				}
 			}
 		}
 
@@ -666,7 +720,18 @@ namespace Novell.iFolder
 					}
 					break;
 				}
-
+				
+				case "Domain":
+				{
+					// The user just successfully created/logged-into a domain
+					lock(NodeEventQueue)
+					{
+						NodeEventQueue.Enqueue(
+							new SimiasEvent(nargs.Collection, SimiasEventType.DelDomain));
+						SimiasEventFired.WakeupMain();
+					}
+					break;
+				}
 			}
 		}
 
@@ -814,6 +879,16 @@ namespace Novell.iFolder
 						if(iFolderDeleted != null)
 							iFolderDeleted(this,
 								new iFolderDeletedEventArgs(sEvent.iFolderID));
+						break;
+					case SimiasEventType.NewDomain:
+						if(DomainAdded != null)
+							DomainAdded(this,
+								new DomainEventArgs(sEvent.DomainID));
+						break;
+					case SimiasEventType.DelDomain:
+						if(DomainDeleted != null)
+							DomainDeleted(this,
+								new DomainEventArgs(sEvent.DomainID));
 						break;
 				}
 

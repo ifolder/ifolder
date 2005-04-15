@@ -269,6 +269,27 @@ namespace Novell.iFolder
 			}
 		}
 
+		private void OnDomainAddedEvent(object o, DomainEventArgs args)
+		{
+			// Refresh the iFolders Window since a domain was just added
+			if (ifwin != null)
+			{
+				ifwin.RefreshDomains(false);
+				ifwin.RefreshiFolders(true);
+			}
+		}
+		
+		private void OnDomainDeletedEvent(object o, DomainEventArgs args)
+		{
+			// Refresh the iFolders Window since a domain was just removed
+			if (ifwin != null)
+			{
+				ifwin.RefreshDomains(false);
+				ifwin.RefreshiFolders(true);
+			}
+		}
+
+
 /*		private void OnShowReLogin(object o, EventArgs args)
 		{
 			ReLogin(redomainID);
@@ -704,6 +725,14 @@ namespace Novell.iFolder
 						EventBroker.NotifyEventFired +=
 							new NotifyEventHandler(
 												OnSimiasNotifyEvent);
+						
+						EventBroker.DomainAdded +=
+							new DomainAddedEventHandler(
+												OnDomainAddedEvent);
+						
+						EventBroker.DomainDeleted +=
+							new DomainDeletedEventHandler(
+												OnDomainDeletedEvent);
 					}
 
 					gAppIcon.Pixbuf = RunningPixbuf;
