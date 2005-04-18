@@ -279,10 +279,11 @@ namespace Simias.Sync
 			if (isSyncFile(path))
 				return null;
 
-			DirNode dnode = new DirNode(collection, parentNode, Path.GetFileName(path));
+			string fName = Path.GetFileName(path);
+			DirNode dnode = new DirNode(collection, parentNode, fName);
 			log.Debug("Adding dir node for {0} {1}", path, dnode.ID);
 			// Make sure that we support the Simias Name Space.
-			if (!SyncFile.IsNameValid(dnode.Name))
+			if (!SyncFile.IsNameValid(dnode.Name) || SyncFile.DoesNodeExist(collection, parentNode, fName))
 			{
 				conflict = true;
 			}
