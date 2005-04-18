@@ -1317,6 +1317,7 @@ ifolder_dialog_thread (gpointer user_data)
 		errMsg->message	= _("Error opening dialog.");
 		errMsg->detail	= _("Sorry, unable to open the window to perform the specified action.");
 		g_idle_add (show_ifolder_error_message, errMsg);
+		g_object_unref(item);
 		return;
 	}
 	
@@ -1328,6 +1329,7 @@ ifolder_dialog_thread (gpointer user_data)
 	free (args);
 	pclose (output);
 	
+	g_object_unref(item);
 	return (void *)return_str;
 }
 
@@ -1362,6 +1364,7 @@ create_ifolder_thread (gpointer user_data)
 	}
 
 	free (domain_id);
+	g_object_unref(item);
 }
 
 static void
@@ -1448,12 +1451,6 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	
 	/* Cleanup the memory used by domainsA */
 	simias_free_domains(&domainsA);
-
-
-/**
- * FIXME: Add some code to popup a message to the user if there are NO domains and
- * prevent them from creating any iFolders...direct them to go login to a server.
- */
 
 	dialog = gtk_dialog_new_with_buttons(_("Convert to an iFolder"),
 			GTK_WINDOW(parent_window),
@@ -1542,6 +1539,13 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 		 * have to free the memory being used by the domain_id char *.
 		 */
 		g_object_set_data (G_OBJECT (item), "domain_id", domain_id);
+
+		/**
+		 * Increment the reference count on the NautilusMenuItem * so
+		 * it isn't just destroyed without our knowledge.  The
+		 * create_ifolder_thread() will unref the object.
+		 */
+		g_object_ref(item);
 		pthread_create (&thread, 
 						NULL, 
 						create_ifolder_thread,
@@ -1573,6 +1577,8 @@ revert_ifolder_thread (gpointer user_data)
 		errMsg->detail	= _("Sorry, unable to revert the specified iFolder to a normal folder.");
 		g_idle_add (show_ifolder_error_message, errMsg);
 	}
+
+	g_object_unref(item);
 }
 
 static void
@@ -1598,6 +1604,7 @@ revert_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	gtk_object_destroy (GTK_OBJECT (message_dialog));
 	
 	if (response == GTK_RESPONSE_YES) {
+		g_object_ref(item);
 		pthread_create (&thread, 
 						NULL, 
 						revert_ifolder_thread,
@@ -1639,7 +1646,8 @@ share_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	g_object_set_data (G_OBJECT (item),
 				"ifolder_args",
 				strdup(args));
-		
+	
+	g_object_ref(item);
 	pthread_create (&thread, 
 					NULL, 
 					ifolder_dialog_thread,
@@ -1682,6 +1690,7 @@ ifolder_properties_callback (NautilusMenuItem *item, gpointer user_data)
 				"ifolder_args",
 				strdup(args));
 		
+	g_object_ref(item);
 	pthread_create (&thread, 
 					NULL, 
 					ifolder_dialog_thread,
@@ -1703,7 +1712,8 @@ ifolder_help_callback (NautilusMenuItem *item, gpointer user_data)
 	g_object_set_data (G_OBJECT (item),
 				"ifolder_args",
 				strdup(args));
-		
+
+	g_object_ref(item);
 	pthread_create (&thread, 
 					NULL, 
 					ifolder_dialog_thread,
