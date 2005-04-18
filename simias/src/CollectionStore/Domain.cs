@@ -183,7 +183,9 @@ namespace Simias.Storage
 
 			if ( disable )
 			{
-				member.Properties.ModifyNodeProperty( PropertyTags.LoginDisabled, true );
+				Property p = new Property( PropertyTags.LoginDisabled, true );
+				p.LocalProperty = true;
+				member.Properties.ModifyNodeProperty( p );
 				Commit( member );
 			}
 			else
