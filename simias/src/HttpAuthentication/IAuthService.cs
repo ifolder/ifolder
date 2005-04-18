@@ -56,6 +56,7 @@ namespace Simias.Security.Web.AuthenticationService
 		public readonly static string GraceRemainingHeader = "Simias-Grace-Remaining";
 		public readonly static string SimiasErrorHeader = "Simias-Error";
 		public readonly static string DomainIDHeader = "Domain-ID";
+		public readonly static string BasicEncodingHeader = "Basic-Encoding";
 	}
 
 	/// <summary>

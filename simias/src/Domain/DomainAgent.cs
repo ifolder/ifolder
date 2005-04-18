@@ -167,6 +167,10 @@ namespace Simias.DomainServices
 					Simias.Security.Web.AuthenticationService.Login.DomainIDHeader,
 					domainID);
 			}
+
+			request.Headers.Add(
+				Simias.Security.Web.AuthenticationService.Login.BasicEncodingHeader,
+				System.Text.Encoding.Default.EncodingName);
 			
 			request.Method = "POST";
 			request.ContentLength = 0;

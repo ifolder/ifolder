@@ -61,6 +61,7 @@ namespace Simias.Storage
 		/// </summary>
 		static public string SectionName = "Domain";
 		static public string AdminDNTag = "AdminDN";
+		static public string Encoding = "Encoding";
 		#endregion
 
 		#region Properties
