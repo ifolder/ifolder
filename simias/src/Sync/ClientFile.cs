@@ -702,7 +702,7 @@ namespace Simias.Sync
 					ReadPosition = seg.Offset;
 					while (leftToSend > 0)
 					{	
-						int bytesToSend = Math.Min(MaxXFerSize, (int)leftToSend);
+						int bytesToSend = (int)Math.Min(MaxXFerSize, leftToSend);
 						syncService.WriteFile(OutStream, ReadPosition, bytesToSend);
 						leftToSend -= bytesToSend;
 						sizeRemaining -= bytesToSend;
