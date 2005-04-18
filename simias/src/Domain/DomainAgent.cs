@@ -170,7 +170,7 @@ namespace Simias.DomainServices
 
 			request.Headers.Add(
 				Simias.Security.Web.AuthenticationService.Login.BasicEncodingHeader,
-				System.Text.Encoding.Default.EncodingName);
+				System.Text.Encoding.Default.WebName );
 			
 			request.Method = "POST";
 			request.ContentLength = 0;
