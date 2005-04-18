@@ -42,6 +42,11 @@ namespace Simias.SimpleServer
 	internal class SimiasCredentials
 	{
 		#region Class Members
+		/// <summary>
+		/// Used to log messages.
+		/// </summary>
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
+
 		private string domainID;
 		private string username;
 		private string password;
@@ -95,8 +100,9 @@ namespace Simias.SimpleServer
 		/// Gets the credentials from an encoded authorization header.
 		/// </summary>
 		/// <param name="authHeader"></param>
+		/// <param name="encodingName">The name of the code paged used to encode the credentials.</param>
 		/// <returns></returns>
-		public bool AuthorizationHeaderToCredentials( string authHeader )
+		public bool AuthorizationHeaderToCredentials( string authHeader, string encodingName )
 		{
 			bool returnStatus = false;
 
@@ -106,11 +112,23 @@ namespace Simias.SimpleServer
 				// The authHeader after the basic signature is encoded
 				authHeader = authHeader.Remove( 0, 6 );
 				byte[] credential = System.Convert.FromBase64String( authHeader );
-				string decodedCredential = 
-					System.Text.Encoding.ASCII.GetString(
-					credential, 
-					0, 
-					credential.Length );
+
+				System.Text.Encoding encoder = null;
+				try
+				{
+					// Use the specified codepage to decode the basic credentials.
+					encoder = System.Text.Encoding.GetEncoding( encodingName );
+				}
+				catch ( Exception ex )
+				{
+					// The specified code page is not supported on this machine. Use
+					// the default codepage.
+					log.Info( "Code page: {0} is not supported on this machine.", encodingName );
+					encoder = System.Text.Encoding.Default;
+					log.Debug( ex, "Cannot load codepage: {0}. Using code page: {1}.", encodingName, encoder.EncodingName );
+				}
+
+				string decodedCredential = encoder.GetString( credential, 0, credential.Length );
    
 				// Clients that newed up a NetCredential object with a URL
 				// come though on the authorization line like:
@@ -171,7 +189,23 @@ namespace Simias.SimpleServer
 		/// <summary>
 		/// Store object.
 		/// </summary>
-		static private Store store = Store.GetStore();
+		private Store store = Store.GetStore();
+
+		/// <summary>
+		/// The default encoding to use for decoding the basic credential set.
+		/// </summary>
+		private string defaultBasicEncodingName;
+		#endregion
+
+		#region Constructor
+		/// <summary>
+		/// Initializes an instance of this object.
+		/// </summary>
+		public Authentication()
+		{
+			Configuration config = Configuration.GetConfiguration();
+			defaultBasicEncodingName = config.Get( Storage.Domain.SectionName, Storage.Domain.Encoding, "iso-8859-1" );
+		}
 		#endregion
 
 		#region Private Methods
@@ -276,9 +310,17 @@ namespace Simias.SimpleServer
 				string[] encodedCredentials = httpContext.Request.Headers.GetValues( "Authorization" );
 				if ( ( encodedCredentials != null ) && ( encodedCredentials[0] != null ) )
 				{
+					// Get the basic encoding type from the http header.
+					string[] encodingName = httpContext.Request.Headers.GetValues( "Basic-Encoding" );
+					if ( ( encodingName == null ) || ( encodingName[0] == null ) )
+					{
+						// Use the specified default encoding.
+						encodingName = new string[] { defaultBasicEncodingName };
+					}
+
 					// Get the credentials from the auth header.
 					SimiasCredentials creds = new SimiasCredentials();
-					bool success = creds.AuthorizationHeaderToCredentials( encodedCredentials[0] );
+					bool success = creds.AuthorizationHeaderToCredentials( encodedCredentials[0], encodingName[0] );
 					if ( success )
 					{
 						// Valid credentials?
