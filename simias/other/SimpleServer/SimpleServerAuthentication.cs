@@ -198,6 +198,7 @@ namespace Simias.SimpleServer
 		#endregion
 
 		#region Constructor
+
 		/// <summary>
 		/// Initializes an instance of this object.
 		/// </summary>
@@ -206,6 +207,7 @@ namespace Simias.SimpleServer
 			Configuration config = Configuration.GetConfiguration();
 			defaultBasicEncodingName = config.Get( Storage.Domain.SectionName, Storage.Domain.Encoding, "iso-8859-1" );
 		}
+
 		#endregion
 
 		#region Private Methods
