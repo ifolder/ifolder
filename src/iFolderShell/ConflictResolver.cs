@@ -1190,8 +1190,17 @@ namespace Novell.iFolderCom
 						}
 						catch (Exception ex)
 						{
-							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("conflictResolveError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-							mmb.ShowDialog();
+							MyMessageBox mmb;
+							if (ex.Message.IndexOf("Malformed") != -1)
+							{
+								mmb = new MyMessageBox(resourceManager.GetString("badFileName"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb.ShowDialog();
+							}
+							else
+							{
+								mmb = new MyMessageBox(resourceManager.GetString("conflictResolveError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb.ShowDialog();
+							}
 						}
 					}
 					else
@@ -1203,8 +1212,17 @@ namespace Novell.iFolderCom
 						}
 						catch (Exception ex)
 						{
-							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("conflictResolveError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-							mmb.ShowDialog();
+							MyMessageBox mmb;
+							if (ex.Message.IndexOf("Malformed") != -1)
+							{
+								mmb = new MyMessageBox(resourceManager.GetString("badFileName"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb.ShowDialog();
+							}
+							else
+							{
+								mmb = new MyMessageBox(resourceManager.GetString("conflictResolveError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb.ShowDialog();
+							}
 						}
 					}
 				}
