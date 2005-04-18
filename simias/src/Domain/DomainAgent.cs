@@ -663,6 +663,12 @@ namespace Simias.DomainServices
 			// Delete the POBox for this domain which will start the domain cleanup process.
 			poBox.Commit(poBox.Delete());
 
+			// Remove the domain from the table
+			lock (domainTable)
+			{
+				domainTable.Remove(domainID);
+			}
+
 			if (!localOnly)
 			{
 				// Remove the user from the domain server.
