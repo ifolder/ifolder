@@ -73,6 +73,17 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %Post
 INSTANCES_AFTER_INSTALL=$1
 if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
+
+# These two fixes are for defect 74635 as a workaround to a mono defect 71219
+    if [ -d /etc/mono ]; then
+	chmod 755 /etc/mono
+    fi
+
+    if [ -d /usr/lib/mono ]; then
+	chmod 755 /usr/lib/mono
+    fi
+
+
     #
     # If path is not already in ld.so.conf, append it
     #
