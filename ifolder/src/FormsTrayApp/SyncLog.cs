@@ -163,6 +163,7 @@ namespace Novell.FormsTrayApp
 			this.toolBar1.ShowToolTips = ((bool)(resources.GetObject("toolBar1.ShowToolTips")));
 			this.toolBar1.Size = ((System.Drawing.Size)(resources.GetObject("toolBar1.Size")));
 			this.toolBar1.TabIndex = ((int)(resources.GetObject("toolBar1.TabIndex")));
+			this.toolBar1.TabStop = true;
 			this.toolBar1.TextAlign = ((System.Windows.Forms.ToolBarTextAlign)(resources.GetObject("toolBar1.TextAlign")));
 			this.toolBar1.Visible = ((bool)(resources.GetObject("toolBar1.Visible")));
 			this.toolBar1.Wrappable = ((bool)(resources.GetObject("toolBar1.Wrappable")));
