@@ -140,10 +140,6 @@ namespace Simias.Web
 
 
 			String name = Path.GetFileName(LocalPath);
-			if (name.Equals(string.Empty))
-			{
-				name = LocalPath;
-			}
 
 			return CreateSharedCollection(name, member.UserID, 
 						Type, true, LocalPath);
@@ -182,10 +178,6 @@ namespace Simias.Web
 
 
 			String name = Path.GetFileName(LocalPath);
-			if (name.Equals(string.Empty))
-			{
-				name = LocalPath;
-			}
 
 			return CreateSharedCollection(name, DomainID, member.UserID, 
 						Type, true, LocalPath);
@@ -345,6 +337,13 @@ namespace Simias.Web
 		public static bool CanBeCollection( string path )
 		{
 			bool canBeCollection = true;
+
+			// Don't allow the root of a drive to be a collection.
+			string parentDir = Path.GetDirectoryName( path );
+			if ( ( parentDir == null ) || ( parentDir == String.Empty ) )
+			{
+				return false;
+			}
 
 			// Make sure the paths end with a separator.
 			// Create a normalized path that can be compared on any platform.

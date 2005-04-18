@@ -144,7 +144,7 @@ namespace Simias.Storage
 			string parentDir = Path.GetDirectoryName( dirPath );
 			if ( ( parentDir == null ) || ( parentDir == String.Empty ) )
 			{
-				parentDir = dirPath;
+				parentDir = Convert.ToString( Path.DirectorySeparatorChar );
 			}
 			else if ( parentDir != Convert.ToString( Path.DirectorySeparatorChar ) )
 			{
