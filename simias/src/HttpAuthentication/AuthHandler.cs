@@ -348,8 +348,7 @@ namespace Simias.Security.Web
 						}
 						else
 						{
-							// Set all other sessions to 10 minutes.
-							context.Session.Timeout = 10;
+							// use the default session timeout
 						}
 					}
 				}
