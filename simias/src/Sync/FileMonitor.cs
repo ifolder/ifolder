@@ -202,7 +202,7 @@ namespace Simias.Sync
 					if (childRP != null)
 					{
 						string newRP = childRP.ValueString;
-						if (newRP[oldRelativePath.Length] == '/')
+						if (newRP.StartsWith(oldRelativePath) && newRP[oldRelativePath.Length] == '/')
 						{
 							childRP.SetPropertyValue(newRP.Replace(oldRelativePath, relativePath));
 							childNode.Properties.ModifyNodeProperty(childRP);
