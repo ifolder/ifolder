@@ -16,7 +16,15 @@ SUFFIXES = .c .o .po .pox .gmo .mo
 	file=$(srcdir)/`echo $* | sed 's,.*/,,'`.gmo \
 	  && rm -f $$file && $(GMSGFMT) --statistics -o $$file $<
 
-POFILES = $(srcdir)/pt_BR.po $(srcdir)/fi.po
+POFILES = $(srcdir)/pt_BR.po \
+	 $(srcdir)/es.po \
+	 $(srcdir)/fi.po \
+	 $(srcdir)/fr.po \
+	 $(srcdir)/it.po \
+	 $(srcdir)/ja.po \
+	 $(srcdir)/de.po \
+	 $(srcdir)/zh_CN.po \
+	 $(srcdir)/zh_TW.po
 
 CATALOGS := $(subst .po,.mo,$(POFILES))
 
@@ -31,18 +39,18 @@ update-po: $(POFILES)
 			--join-existing \
 			--output=$(srcdir)/ifolder3.pot \
 			--keyword="Util.GS"; 
-#	cd ../../../; \
-#	pofiles='$(POFILES)'; \
-#	for pofile in $$pofiles; do \
-#		pofile=`basename $$pofile`; \
-#		echo Updating po file: $$pofile; \
-#		xgettext --output-dir=src/GtkTrayApp/po/ \
-#				--files-from=src/GtkTrayApp/po/POTFILES \
-#				--language=C# \
-#				--join-existing \
-#				--output=$$pofile \
-#				--keyword="Util.GS"; \
-#	done
+	cd ../../../; \
+	pofiles='$(POFILES)'; \
+	for pofile in $$pofiles; do \
+		pofile=`basename $$pofile`; \
+		echo Updating po file: $$pofile; \
+		xgettext --output-dir=src/LinuxClient/po/ \
+				--files-from=src/LinuxClient/po/POTFILES \
+				--language=C# \
+				--join-existing \
+				--output=$$pofile \
+				--keyword="Util.GS"; \
+	done
 
 all: $(CATALOGS)
 
