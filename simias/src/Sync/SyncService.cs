@@ -43,6 +43,8 @@ namespace Simias.Sync
 	/// </summary>
 	internal class CollectionLock
 	{
+		static int			totalCount = 0;
+		static int			totalDepth = 64;
 		static Hashtable	CollectionLocks = new Hashtable();
 		const int			queueDepth = 10;	
 		int					count = 0;
@@ -65,13 +67,14 @@ namespace Simias.Sync
 			}
 			lock (cLock)
 			{
-				if (cLock.count > queueDepth)
+				if (cLock.count > queueDepth || totalCount > totalDepth)
 				{
 					return null;
 				}
 				else
 				{
 					cLock.count++;
+					totalCount++;
 				}
 			}
 
@@ -86,6 +89,7 @@ namespace Simias.Sync
 			lock (this)
 			{
 				count--;
+				totalCount--;
 			}
 		}
 
