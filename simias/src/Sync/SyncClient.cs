@@ -644,7 +644,7 @@ namespace Simias.Sync
 		{
 			try
 			{
-				eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartSync, true));
+				eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartLocalSync, true));
 				syncStartTime = DateTime.Now;
 				queuedChanges = false;
 				serverAlive = false;
@@ -703,7 +703,7 @@ namespace Simias.Sync
 				}
 			
 				serverAlive = true;
-				eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartLocalSync, true));
+				eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartSync, true));
 
 				tempServerContext = si.Context;
 				workArray.SetAccess = rights = si.Access;
