@@ -38,7 +38,11 @@ namespace Simias.Client.Event
 		/// <summary>
 		/// The event is for a download.
 		/// </summary>
-		Downloading = 2
+		Downloading = 2,
+		/// <summary>
+		/// The event is from the filesystem into the store.
+		/// </summary>
+		Local = 3,
 	};
 
 	/// <summary>

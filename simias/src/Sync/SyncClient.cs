@@ -642,69 +642,68 @@ namespace Simias.Sync
 		/// </summary>
 		internal void SyncNow()
 		{
-			syncStartTime = DateTime.Now;
-			queuedChanges = false;
-			serverAlive = false;
-			serverStatus = StartSyncStatus.Success;
-			// Refresh the collection.
-			collection.Refresh();
+			try
+			{
+				eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartSync, true));
+				syncStartTime = DateTime.Now;
+				queuedChanges = false;
+				serverAlive = false;
+				serverStatus = StartSyncStatus.Success;
+				// Refresh the collection.
+				collection.Refresh();
 
-			// Make sure the master exists.
-			if (collection.CreateMaster)
-			{
-				new DomainAgent().CreateMaster(collection);
-			}
+				// Make sure the master exists.
+				if (collection.CreateMaster)
+				{
+					new DomainAgent().CreateMaster(collection);
+				}
 			
-			// Only syncronize local changes when we have finished with the 
-			// Server side changes.
-			if (workArray == null || workArray.DownCount == 0)
-				fileMonitor.CheckForFileChanges();
-			if (collection.Role != SyncRoles.Slave)
-			{
+				// Only syncronize local changes when we have finished with the 
+				// Server side changes.
+				if (workArray == null || workArray.DownCount == 0)
+					fileMonitor.CheckForFileChanges();
+				if (collection.Role != SyncRoles.Slave)
+				{
+					serverAlive = true;
+					return;
+				}
+
+				// We may have just created or deleted nodes wait for the events to settle.
+				Thread.Sleep(500);
+
+				// Setup the url to the server.
+				string userID = store.GetUserIDFromDomainID(collection.Domain);
+				string userName = collection.GetMemberByID(userID).Name;
+				service = new HttpSyncProxy(collection, userName, userID);
+
+				SyncNodeInfo[] cstamps;
+			
+				// Get the current sync state.
+				string tempClientContext;
+				string tempServerContext;
+				GetChangeLogContext(out tempServerContext, out tempClientContext);
+				bool gotClientChanges = this.GetChangedNodeInfoArray(out cstamps, ref tempClientContext);
+
+				// Setup the SyncStartInfo.
+				StartSyncInfo si = new StartSyncInfo();
+				si.CollectionID = collection.ID;
+				si.Context = tempServerContext;
+				si.ChangesOnly = gotClientChanges | !workArray.Complete;
+				si.ClientHasChanges = si.ChangesOnly;
+			
+				// Start the Sync pass and save the rights.
+				try
+				{
+					service.StartSync(ref si);
+				}
+				catch (Exception ex)
+				{
+					service = null;
+					throw ex;
+				}
+			
 				serverAlive = true;
-				return;
-			}
-
-			// We may have just created or deleted nodes wait for the events to settle.
-			Thread.Sleep(500);
-
-			// Setup the url to the server.
-			string userID = store.GetUserIDFromDomainID(collection.Domain);
-			string userName = collection.GetMemberByID(userID).Name;
-			service = new HttpSyncProxy(collection, userName, userID);
-
-			SyncNodeInfo[] cstamps;
-			
-			// Get the current sync state.
-			string tempClientContext;
-			string tempServerContext;
-			GetChangeLogContext(out tempServerContext, out tempClientContext);
-			bool gotClientChanges = this.GetChangedNodeInfoArray(out cstamps, ref tempClientContext);
-
-			// Setup the SyncStartInfo.
-			StartSyncInfo si = new StartSyncInfo();
-			si.CollectionID = collection.ID;
-			si.Context = tempServerContext;
-			si.ChangesOnly = gotClientChanges | !workArray.Complete;
-			si.ClientHasChanges = si.ChangesOnly;
-			
-			// Start the Sync pass and save the rights.
-			try
-			{
-				service.StartSync(ref si);
-			}
-			catch (Exception ex)
-			{
-				service = null;
-				throw ex;
-			}
-			
-			serverAlive = true;
-
-			eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartSync, true));
-
-			try
-			{
+				eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartLocalSync, true));
 
 				tempServerContext = si.Context;
 				workArray.SetAccess = rights = si.Access;
@@ -715,10 +714,10 @@ namespace Simias.Sync
 					case StartSyncStatus.AccessDenied:
 						new EventPublisher().RaiseEvent(
 							new NodeEventArgs(
-								"Sync", collection.ID, collection.ID, 
-								collection.BaseType, EventType.NoAccess, 
-								0, DateTime.Now, collection.MasterIncarnation,
-								collection.LocalIncarnation, 0)); 
+							"Sync", collection.ID, collection.ID, 
+							collection.BaseType, EventType.NoAccess, 
+							0, DateTime.Now, collection.MasterIncarnation,
+							collection.LocalIncarnation, 0)); 
 						log.Info("The user no longer has rights.");
 						collection.Commit(collection.Delete());
 						break;
@@ -731,10 +730,10 @@ namespace Simias.Sync
 					case StartSyncStatus.NotFound:
 						new EventPublisher().RaiseEvent(
 							new NodeEventArgs(
-								"Sync", collection.ID, collection.ID, 
-								collection.BaseType, EventType.NoAccess, 
-								0, DateTime.Now, collection.MasterIncarnation, 
-								collection.LocalIncarnation, 0)); 
+							"Sync", collection.ID, collection.ID, 
+							collection.BaseType, EventType.NoAccess, 
+							0, DateTime.Now, collection.MasterIncarnation, 
+							collection.LocalIncarnation, 0)); 
 						log.Info("The collection no longer exists");
 						// The collection does not exist or we do not have rights.
 						collection.Commit(collection.Delete());
@@ -797,7 +796,7 @@ namespace Simias.Sync
 			}
 			finally
 			{
-				eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StopSync, workArray.Complete));
+				eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StopSync, serverAlive));
 			}
 		}
 

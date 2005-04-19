@@ -1743,7 +1743,7 @@ namespace Novell.iFolderCom
 				{
 					startSync = true;
 				}
-				else if ((collectionSyncEventArgs.Action == Action.StopSync) && collectionSyncEventArgs.Successful)
+				else if ((collectionSyncEventArgs.Action == Action.StopSync) && collectionSyncEventArgs.Connected)
 				{
 					lastSync.Text = ifWebService.GetiFolder(currentiFolder.ID).LastSyncTime;
 				}

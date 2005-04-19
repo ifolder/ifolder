@@ -1031,7 +1031,7 @@ namespace Novell.FormsTrayApp
 							shellNotifyIcon.Icon = trayIcon;
 							shellNotifyIcon.Text = resourceManager.GetString("iFolderServices");
 
-							if (initialSyncCollections.Contains(syncEventArgs.ID) && syncEventArgs.Successful)
+							if (initialSyncCollections.Contains(syncEventArgs.ID) && syncEventArgs.Connected)
 							{
 								// If the collection is in the initial sync list and the sync finished successfully,
 								// remove it from the list.

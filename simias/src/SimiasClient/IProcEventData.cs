@@ -110,7 +110,7 @@ namespace Simias.Client.Event
 		private const string CEA_NameTag = "Name";
 		private const string CEA_IDTag = "ID";
 		private const string CEA_ActionTag = "Action";
-		private const string CEA_SuccessfulTag = "Successful";
+		private const string CEA_ConnectedTag = "Connected";
 
 		/// <summary>
 		/// Xml tags used to describe a FileSyncEventArgs object.
@@ -239,7 +239,7 @@ namespace Simias.Client.Event
 			AddData( new IProcEventNameValue( CEA_NameTag, args.Name ) );
 			AddData( new IProcEventNameValue( CEA_IDTag, args.ID ) );
 			AddData( new IProcEventNameValue( CEA_ActionTag, args.Action.ToString() ) );
-			AddData( new IProcEventNameValue( CEA_SuccessfulTag, args.Successful.ToString() ) );
+			AddData( new IProcEventNameValue( CEA_ConnectedTag, args.Connected.ToString() ) );
 		}
 
 		/// <summary>
@@ -344,7 +344,7 @@ namespace Simias.Client.Event
 						break;
 					}
 
-					case CEA_SuccessfulTag:
+					case CEA_ConnectedTag:
 					{
 						successful = Boolean.Parse( xn.InnerText );
 						break;

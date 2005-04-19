@@ -38,7 +38,11 @@ namespace Simias.Client.Event
 		/// <summary>
 		/// The event is for a sync stop.
 		/// </summary>
-		StopSync = 2
+		StopSync = 2,
+		/// <summary>
+		/// We are starting the local sync.
+		/// </summary>
+		StartLocalSync,
 	};
 
 	/// <summary>
@@ -51,7 +55,7 @@ namespace Simias.Client.Event
 
 		private string name;
 		private string id;
-		private bool successful;
+		private bool connected;
 		private Action action;
 
 		#endregion
@@ -64,14 +68,14 @@ namespace Simias.Client.Event
 		/// <param name="name">The name of the collection that the event belongs to.</param>
 		/// <param name="id">The id of the collection that the event belongs to.</param>
 		/// <param name="action">The sync action for the event.</param>
-		/// <param name="successful">A value indicating if the sync was successful or not.</param>
-		public CollectionSyncEventArgs(string name, string id, Action action, bool successful) :
+		/// <param name="connected">A value indicating if the server is available.</param>
+		public CollectionSyncEventArgs(string name, string id, Action action, bool connected) :
 			base()
 		{
 			this.name = name;
 			this.id = id;
 			this.action = action;
-			this.successful = successful;
+			this.connected = connected;
 		}
 
 		#endregion
@@ -103,11 +107,11 @@ namespace Simias.Client.Event
 		}
 
 		/// <summary>
-		/// Gets a value indicating if the sync was successful or not.
+		/// Gets a value indicating if the server that host the collection is available.
 		/// </summary>
-		public bool Successful
+		public bool Connected
 		{
-			get { return successful; }
+			get { return connected; }
 		}
 		#endregion
 	}

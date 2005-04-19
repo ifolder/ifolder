@@ -1572,7 +1572,7 @@ namespace Novell.iFolder
 						iFolderHolder ifHolder = (iFolderHolder) 
 								iFolderTreeStore.GetValue(iter,0);
 						ifHolder.IsSyncing = false;
-						ifHolder.SyncSuccessful = args.Successful;
+						ifHolder.SyncSuccessful = args.Connected;
 
 						// This is kind of a hack
 						// Sometimes, iFolders will come through that

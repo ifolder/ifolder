@@ -30,6 +30,7 @@ using System.Diagnostics;
 using Simias.Storage;
 using Simias;
 using Simias.Client;
+using Simias.Client.Event;
 using Simias.Service;
 using Simias.Event;
 
@@ -77,6 +78,8 @@ namespace Simias.Sync
 //		string						collectionId;
 		internal FileSystemWatcher	watcher;
 		Hashtable					changes = new Hashtable();
+		EventPublisher	eventPublisher = new EventPublisher();
+		
 		
 		internal class fileChangeEntry : IComparable
 		{
@@ -152,6 +155,7 @@ namespace Simias.Sync
 		{
 			Log.log.Debug("File Monitor deleting orphaned node {0}, {1}", node.Name, node.ID);
 			// Check to see if we have a collision.
+			bool isDir = (collection.BaseType == NodeTypes.DirNodeType);
 			if (collection.HasCollisions(node))
 			{
 				Conflict cNode = new Conflict(collection, node);
@@ -175,6 +179,7 @@ namespace Simias.Sync
 			}
 			Node[] deleted = collection.Delete(node, PropertyTags.Parent);
 			collection.Commit(deleted);
+			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, isDir ? ObjectType.Directory : ObjectType.File, true, node.Name, 0, 0, 0, Direction.Local));
 			foundChange = true;
 		}
 
@@ -233,6 +238,7 @@ namespace Simias.Sync
 				fnode = Conflict.CreateNameConflict(collection, fnode, path) as FileNode;
 			}
 			collection.Commit(fnode);
+			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, fnode.Name, 0, 0, 0, Direction.Local));
 			foundChange = true;
 			return fnode;
 		}
@@ -263,6 +269,7 @@ namespace Simias.Sync
 			if (hasChanges)
 			{
 				collection.Commit(fn);
+				eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, fn.Name, 0, 0, 0, Direction.Local));
 				foundChange = true;
 			}
 		}
@@ -293,6 +300,7 @@ namespace Simias.Sync
 				dnode = Conflict.CreateNameConflict(collection, dnode, path) as DirNode;
 			}
 			collection.Commit(dnode);
+			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.Directory, false, dnode.Name, 0, 0, 0, Direction.Local));
 			if (!conflict)
 				DoSubtree(path, dnode, dnode.ID, true);
 			foundChange = true;
