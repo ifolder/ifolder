@@ -487,12 +487,12 @@ namespace Simias.Sync
 		{
 #if MONO
 			Mono.Posix.Stat stat;
-			if (Mono.Posix.Syscall.sstat(path, out stat) == 0)
+			if (Mono.Posix.Syscall.lstat(path, out stat) == 0)
 			{
-				if ((stat.Mode == Mono.Posox.StatMode.SymLink) != 0)
+				if ((stat.Mode & Mono.Posix.StatMode.SymLink) != 0)
 				{
 					// If the path begins with the link path this is a recursive link.
-					string linkPath = Mono.Posox.Syscall.readlink(path);
+					string linkPath = Mono.Posix.Syscall.readlink(path);
 					if (!Path.IsPathRooted(linkPath))
 					{
 						linkPath = Path.Combine(Path.GetDirectoryName(path), linkPath);
