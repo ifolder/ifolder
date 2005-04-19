@@ -479,23 +479,30 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// 
+		/// Checks to see if the current file is a recursive symlink.
 		/// </summary>
-		/// <param name="path"></param>
-		/// <param name="dnode"></param>
-		/// <param name="nodeID"></param>
-		/// <param name="subTreeHasChanged"></param>
-		void DoSubtree(string path, DirNode dnode, string nodeID, bool subTreeHasChanged)
+		/// <param name="path">The path of the possible link.</param>
+		/// <returns>true if recursive link</returns>
+		bool IsRecursiveLink(string path)
 		{
-			//Log.Spew("Dredger processing subtree of path {0}", path);
-			if (!SyncFile.IsNameValid(Path.GetFileName(path)))
+#if MONO
+			Mono.Posix.Stat stat;
+			if (Mono.Posix.Syscall.sstat(path, out stat) == 0)
 			{
-				// This is a name collision this needs to be resolved before
-				// the files can be added.
-				return;
+				if ((stat.Mode == Mono.Posox.StatMode.SymLink) != 0)
+				{
+					// If the path begins with the link path this is a recursive link.
+					string linkPath = Mono.Posox.Syscall.readlink(path);
+					if (!Path.IsPathRooted(linkPath))
+					{
+						linkPath = Path.Combine(Path.GetDirectoryName(path), linkPath);
+						linkPath = Path.GetFullPath(linkPath) + "/";
+					}
+					if (path.StartsWith(linkPath))
+						return true;
+				}
 			}
-
-			// Make sure we are not a reparse point or symlink
+#else
 			if ((File.GetAttributes(path) & FileAttributes.ReparsePoint) != 0)
 			{
 				// We need to determine if the link is recursive.
@@ -525,7 +532,7 @@ namespace Simias.Sync
 							try
 							{
 								if (File.Exists(suspectFile))
-									return;
+									return true;
 							}
 							finally
 							{
@@ -535,6 +542,30 @@ namespace Simias.Sync
 					}
 				}
 			}
+#endif
+			return false;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="path"></param>
+		/// <param name="dnode"></param>
+		/// <param name="nodeID"></param>
+		/// <param name="subTreeHasChanged"></param>
+		void DoSubtree(string path, DirNode dnode, string nodeID, bool subTreeHasChanged)
+		{
+			//Log.Spew("Dredger processing subtree of path {0}", path);
+			if (!SyncFile.IsNameValid(Path.GetFileName(path)))
+			{
+				// This is a name collision this needs to be resolved before
+				// the files can be added.
+				return;
+			}
+
+			// Make sure we are not a recursive reparse point or symlink
+			if (IsRecursiveLink(path))
+				return;
 				
 			if (subTreeHasChanged)
 			{

@@ -149,9 +149,15 @@ namespace Simias.Sync
 				// Queue the sync.
 				CollectionSyncClient cc = collectionClient as CollectionSyncClient;
 				if (cc.HighPriority)
-					priorityQueue.Enqueue(cc);
+				{
+					if (!priorityQueue.Contains(cc))
+						priorityQueue.Enqueue(cc);
+				}
 				else
-					syncQueue.Enqueue(collectionClient);
+				{
+					if (!syncQueue.Contains(collectionClient))
+						syncQueue.Enqueue(collectionClient);
+				}
 				queueEvent.Set();
 			}
 		}
