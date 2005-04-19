@@ -1344,6 +1344,20 @@ namespace Novell.FormsTrayApp
 
 				switch (syncEventArgs.Action)
 				{
+					case Action.StartLocalSync:
+					{
+						statusBar1.Text = string.Format(resourceManager.GetString("localSync"), syncEventArgs.Name);
+						lock (ht)
+						{
+							ListViewItem lvi = (ListViewItem)ht[syncEventArgs.ID];
+							if (lvi != null)
+							{
+								((iFolderObject)lvi.Tag).iFolderState = iFolderState.SynchronizingLocal;
+								lvi.SubItems[2].Text = resourceManager.GetString("preSync");
+							}
+						}
+						break;
+					}
 					case Action.StartSync:
 					{
 						statusBar1.Text = string.Format(resourceManager.GetString("synciFolder"), syncEventArgs.Name);
@@ -1370,13 +1384,24 @@ namespace Novell.FormsTrayApp
 								SyncSize syncSize = ifWebService.CalculateSyncSize(syncEventArgs.ID);
 								objectsToSync = syncSize.SyncNodeCount;
 
-								lvi.SubItems[2].Text = syncEventArgs.Connected ? 
-									resourceManager.GetString("statusOK") : 
-//									resourceManager.GetString("statusSyncFailure");
-									string.Format(resourceManager.GetString("statusSyncItemsFailed"), objectsToSync);
-								((iFolderObject)lvi.Tag).iFolderState = syncEventArgs.Connected ? 
-									iFolderState.Normal :
-									iFolderState.FailedSync;
+								if (syncEventArgs.Connected)
+								{
+									if (objectsToSync == 0)
+									{
+										lvi.SubItems[2].Text = resourceManager.GetString("statusOK");
+										((iFolderObject)lvi.Tag).iFolderState = iFolderState.Normal;
+									}
+									else
+									{
+										lvi.SubItems[2].Text = string.Format(resourceManager.GetString("statusSyncItemsFailed"), objectsToSync);
+										((iFolderObject)lvi.Tag).iFolderState = iFolderState.FailedSync;
+									}
+								}
+								else
+								{
+									lvi.SubItems[2].Text = resourceManager.GetString("disconnected");
+									((iFolderObject)lvi.Tag).iFolderState = iFolderState.Disconnected;
+								}
 							}
 
 							objectsToSync = 0;
@@ -1412,26 +1437,67 @@ namespace Novell.FormsTrayApp
 						objectsToSync = syncSize.SyncNodeCount;
 					}
 
-					lock (ht)
+					if (!syncEventArgs.Direction.Equals(Direction.Local))
 					{
-						ListViewItem lvi = (ListViewItem)ht[syncEventArgs.CollectionID];
-						if (lvi != null)
+						lock (ht)
 						{
-							lvi.SubItems[2].Text = string.Format(resourceManager.GetString("statusSyncingItems"), objectsToSync--);
+							ListViewItem lvi = (ListViewItem)ht[syncEventArgs.CollectionID];
+							if (lvi != null)
+							{
+								lvi.SubItems[2].Text = string.Format(resourceManager.GetString("statusSyncingItems"), objectsToSync--);
+							}
 						}
 					}
 
 					switch (syncEventArgs.ObjectType)
 					{
 						case ObjectType.File:
-							statusBar1.Text = syncEventArgs.Delete ? 
-								string.Format(resourceManager.GetString("deleteClientFile"), syncEventArgs.Name) :
-								string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadFile" : "downloadFile"), syncEventArgs.Name);
+							if (syncEventArgs.Delete)
+							{
+								statusBar1.Text = string.Format(resourceManager.GetString("deleteClientFile"), syncEventArgs.Name);
+							}
+							else
+							{
+								switch (syncEventArgs.Direction)
+								{
+									case Direction.Uploading:
+										statusBar1.Text = string.Format(resourceManager.GetString("uploadFile"), syncEventArgs.Name);
+										break;
+									case Direction.Downloading:
+										statusBar1.Text = string.Format(resourceManager.GetString("downloadFile"), syncEventArgs.Name);
+										break;
+									case Direction.Local:
+										statusBar1.Text = string.Format(resourceManager.GetString("localFile"), syncEventArgs.Name);
+										break;
+									default:
+										statusBar1.Text = string.Format(resourceManager.GetString("syncingFile"), syncEventArgs.Name);
+										break;
+								}
+							}
 							break;
 						case ObjectType.Directory:
-							statusBar1.Text = syncEventArgs.Delete ? 
-								string.Format(resourceManager.GetString("deleteClientDir"), syncEventArgs.Name) :
-								string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadDir" : "downloadDir"), syncEventArgs.Name);
+							if (syncEventArgs.Delete)
+							{
+								statusBar1.Text = string.Format(resourceManager.GetString("deleteClientDir"), syncEventArgs.Name);
+							}
+							else
+							{
+								switch (syncEventArgs.Direction)
+								{
+									case Direction.Uploading:
+										statusBar1.Text = string.Format(resourceManager.GetString("uploadDir"), syncEventArgs.Name);
+										break;
+									case Direction.Downloading:
+										statusBar1.Text = string.Format(resourceManager.GetString("downloadDir"), syncEventArgs.Name);
+										break;
+									case Direction.Local:
+										statusBar1.Text = string.Format(resourceManager.GetString("localDir"), syncEventArgs.Name);
+										break;
+									default:
+										statusBar1.Text = string.Format(resourceManager.GetString("syncingDir"), syncEventArgs.Name);
+										break;
+								}
+							}
 							break;
 						case ObjectType.Unknown:
 							statusBar1.Text = string.Format(resourceManager.GetString("deleteUnknown"), syncEventArgs.Name);

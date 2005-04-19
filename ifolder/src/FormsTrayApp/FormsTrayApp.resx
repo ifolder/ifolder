@@ -661,6 +661,12 @@
   <data name="downloadFile">
     <value>Downloading file: {0}</value>
   </data>
+  <data name="localFile">
+    <value>Found local change in file: {0}</value>
+  </data>
+  <data name="syncingFile">
+    <value>Synchronizing file: {0}</value>
+  </data>
   <data name="deleteClientDir">
     <value>Deleting directory on client: {0}</value>
   </data>
@@ -669,6 +675,12 @@
   </data>
   <data name="downloadDir">
     <value>Downloading directory: {0}</value>
+  </data>
+  <data name="localDir">
+    <value>Found local change in directory: {0}</value>
+  </data>
+  <data name="syncingDir">
+    <value>Synchronizing directory: {0}</value>
   </data>
   <data name="deleteUnknown">
     <value>Deleting on server: {0}</value>

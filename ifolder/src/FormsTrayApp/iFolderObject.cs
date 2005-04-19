@@ -43,7 +43,17 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// The FailedSync state.
 		/// </summary>
-		FailedSync
+		FailedSync,
+
+		/// <summary>
+		/// Synchronizing with the local store.
+		/// </summary>
+		SynchronizingLocal,
+
+		/// <summary>
+		/// Unable to connect to the server.
+		/// </summary>
+		Disconnected
 	}
 
 	/// <summary>
