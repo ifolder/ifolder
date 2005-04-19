@@ -181,6 +181,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string PreviousOwner = "PrevOwner";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string PolicyID = "PolicyID";
 
 		/// <summary>
@@ -280,6 +285,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( NodeUpdateTime, null );
 			systemPropertyTable.Add( Owner, null );
 			systemPropertyTable.Add( Parent, null );
+			systemPropertyTable.Add( PreviousOwner, null );
 			systemPropertyTable.Add( PolicyID, null );
 			systemPropertyTable.Add( PolicyAssociation, null );
 			systemPropertyTable.Add( Priority, null );

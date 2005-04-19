@@ -304,6 +304,36 @@ namespace Simias.Storage
 		{
 			get { return store.StorePath; }
 		}
+
+		/// <summary>
+		/// Gets or sets the previous owner of this collection.
+		/// </summary>
+		public string PreviousOwner
+		{
+			get 
+			{
+				Property p = properties.FindSingleValue( PropertyTags.PreviousOwner );
+				return ( p != null ) ? p.ToString() : null;
+			}
+
+			set 
+			{
+				if ( ( value != null ) && ( value != String.Empty ) )
+				{
+					Property p = new Property( PropertyTags.PreviousOwner, value );
+					p.LocalProperty = true;
+					properties.ModifyNodeProperty( p );
+				}
+				else
+				{
+					Property p = properties.FindSingleValue( PropertyTags.PreviousOwner );
+					if ( p != null )
+					{
+						p.DeleteProperty();
+					}
+				}
+			}
+		}
 		#endregion
 
 		#region Constructors
