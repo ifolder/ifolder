@@ -573,7 +573,8 @@ namespace Simias.Sync
 			if (!stopping)
 			{
                 int seconds;
-				if (SyncNow)
+				// If we had to yield put ourselves back on the queue.
+				if (SyncNow || Yield)
 				{
 					seconds = 0;
 				}
