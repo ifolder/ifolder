@@ -252,18 +252,24 @@ namespace Simias.DomainService.Web
 			ICSList cList = store.GetCollectionsByUser(userID);
 			foreach (ShallowNode sn in cList)
 			{
-				// Don't remove the membership from the domain collection.
-				if (sn.ID != domainID)
+				// Remove the user as a member of this collection.
+				Collection c = new Collection(store, sn);
+
+				// Only look for collections from the specified domain and
+				// don't allow this user's membership from being removed from the domain.
+				if ( ( c.Domain == domainID ) && !c.IsBaseType( c, Simias.Client.NodeTypes.DomainType ) )
 				{
-					// Remove the user as a member of this collection.
-					Collection c = new Collection(store, sn);
 					Member member = c.GetMemberByID(userID);
 					if (member != null)
 					{
 						if ( member.IsOwner )
 						{
-							// The user is the owner, delete this collection.
-							c.Commit(c.Delete());
+							// Don't remove an orphaned collection.
+							if ( ( member.UserID != domain.Owner.UserID ) || ( c.PreviousOwner == null ) )
+							{
+								// The user is the owner, delete this collection.
+								c.Commit(c.Delete());
+							}
 						}
 						else
 						{
