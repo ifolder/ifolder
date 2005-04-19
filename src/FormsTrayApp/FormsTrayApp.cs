@@ -1076,13 +1076,46 @@ namespace Novell.FormsTrayApp
 							}
 							else
 							{
-								message = string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadFile" : "downloadFile"), syncEventArgs.Name);
+								switch (syncEventArgs.Direction)
+								{
+									case Direction.Uploading:
+										message = string.Format(resourceManager.GetString("uploadFile"), syncEventArgs.Name);
+										break;
+									case Direction.Downloading:
+										message = string.Format(resourceManager.GetString("downloadFile"), syncEventArgs.Name);
+										break;
+									case Direction.Local:
+										message = string.Format(resourceManager.GetString("localFile"), syncEventArgs.Name);
+										break;
+									default:
+										message = string.Format(resourceManager.GetString("syncingFile"), syncEventArgs.Name);
+										break;
+								}
 							}								
 							break;
 						case ObjectType.Directory:
-							message = syncEventArgs.Delete ? 
-								string.Format(resourceManager.GetString("deleteClientDir"), syncEventArgs.Name) :
-								string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadDir" : "downloadDir"), syncEventArgs.Name);
+							if (syncEventArgs.Delete)
+							{
+								message = string.Format(resourceManager.GetString("deleteClientDir"), syncEventArgs.Name);
+							}
+							else
+							{
+								switch (syncEventArgs.Direction)
+								{
+									case Direction.Uploading:
+										message = string.Format(resourceManager.GetString("uploadDir"), syncEventArgs.Name);
+										break;
+									case Direction.Downloading:
+										message = string.Format(resourceManager.GetString("downloadDir"), syncEventArgs.Name);
+										break;
+									case Direction.Local:
+										message = string.Format(resourceManager.GetString("localDir"), syncEventArgs.Name);
+										break;
+									default:
+										message = string.Format(resourceManager.GetString("syncingDir"), syncEventArgs.Name);
+										break;
+								}
+							}
 							break;
 						case ObjectType.Unknown:
 							message = string.Format(resourceManager.GetString("deleteUnknown"), syncEventArgs.Name);

@@ -1837,121 +1837,142 @@
   <data name="&gt;&gt;$this.Type">
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-	<data name="statusConflicts">
-		<value>Has conflicts</value>
-	</data>
-	<data name="statusOK">
-		<value>OK</value>
-	</data>
-	<data name="Available">
-		<value>Available</value>
-	</data>
-	<data name="WaitConnect">
-		<value>Waiting to connect</value>
-	</data>
-	<data name="WaitSync">
-		<value>Waiting to sync</value>
-	</data>
-	<data name="statusUnknown">
-		<value>Unknown</value>
-	</data>
-	<data name="iFolderError">
-		<value>An error was encountered while reading the iFolders.</value>
-	</data>
-	<data name="iFolderErrorTitle">
-		<value>Unable to Read iFolders</value>
-	</data>
-	<data name="syncError">
-		<value>An error was encountered while sending the sync command.</value>
-	</data>
-	<data name="saveProxyError">
-		<value>An error was encountered while saving the proxy settings.</value>
-	</data>
-	<data name="iFolderOpenError">
-		<value>Unable to open iFolder {0}.</value>
-	</data>
-	<data name="iFolderRevertError">
-		<value>An error was encountered while reverting the iFolder.</value>
-	</data>
-	<data name="subscriptionRemoveError">
-		<value>An error was encountered while removing the subscription.</value>
-	</data>
-	<data name="logEntriesCleared">
-		<value>Log entries cleared.</value>
-	</data>
-	<data name="synciFolder">
-		<value>Started sync of: {0}</value>
-	</data>
-	<data name="syncComplete">
-		<value>Finished sync of: {0}</value>
-	</data>
-	<data name="uploadFile">
-		<value>Uploading file: {0}</value>
-	</data>
-	<data name="downloadFile">
-		<value>Downloading file: {0}</value>
-	</data>
-	<data name="uploadDir">
-		<value>Uploading directory: {0}</value>
-	</data>
-	<data name="downloadDir">
-		<value>Downloading directory: {0}</value>
-	</data>
-	<data name="deleteClientFile">
-		<value>Deleting file on client: {0}</value>
-	</data>
-	<data name="deleteClientDir">
-		<value>Deleting directory on client: {0}</value>
-	</data>
-	<data name="deleteUnknown">
-		<value>Deleting on server: {0}</value>
-	</data>
-	<data name="declineError">
-		<value>An error was encountered while attempting to decline the invitation.</value>
-	</data>
-	<data name="statusSyncing">
-		<value>Synchronizing</value>
-	</data>
-	<data name="statusSyncFailure">
-		<value>Out of sync</value>
-	</data>
-	<data name="statusSyncingItems">
-		<value>{0} objects to sync</value>
-	</data>
-	<data name="statusSyncItemsFailed">
-		<value>{0} objects out of sync</value>
-	</data>
-	<data name="readiFolderSettingsError">
-		<value>An error was encountered while reading the iFolder settings.</value>
-	</data>
-	<data name="readProxyError">
-		<value>An error was encountered while reading the proxy settings.</value>
-	</data>
-	<data name="deleteAction">
-		<value>&amp;Delete iFolder</value>
-	</data>
-	<data name="revertTitle">
-		<value>Revert iFolder Confirmation</value>
-	</data>
-	<data name="revertPrompt">
-		<value>Are you sure you want to revert this iFolder to a normal folder?</value>
-	</data>
-	<data name="removeTitle">
-		<value>Remove iFolder Confirmation</value>
-	</data>
-	<data name="removePrompt">
-		<value>Are you sure you want to remove this iFolder?</value>
-	</data>
-	<data name="removeiFolder">
-		<value>This will remove you as a member of this iFolder.  You will not be able to access this iFolder unless the owner re-invites you to this iFolder.  The files will not be deleted from your local hard drive.</value>
-	</data>
-	<data name="deleteiFolder">
-		<value>This will remove this iFolder from your local machine.  Because you are the owner of this iFolder, the iFolder will also be removed from the iFolder server and all users you have shared with.  The iFolder cannot be recovered or re-shared on another machine.  The files will not be deleted from your local hard drive.</value>
-	</data>
-	<data name="revertiFolder">
-		<value>This will revert this iFolder back to a normal folder and leave the files intact.  The iFolder will then be available from the server and will need to be setup in a different location in order to sync.</value>
-	</data>
-	<data name="showAll">
-		<value>Show All</value>
-	</data>
+  <data name="statusConflicts">
+    <value>Has conflicts</value>
+  </data>
+  <data name="statusOK">
+    <value>OK</value>
+  </data>
+  <data name="Available">
+    <value>Available</value>
+  </data>
+  <data name="WaitConnect">
+    <value>Waiting to connect</value>
+  </data>
+  <data name="WaitSync">
+    <value>Waiting to sync</value>
+  </data>
+  <data name="statusUnknown">
+    <value>Unknown</value>
+  </data>
+  <data name="iFolderError">
+    <value>An error was encountered while reading the iFolders.</value>
+  </data>
+  <data name="iFolderErrorTitle">
+    <value>Unable to Read iFolders</value>
+  </data>
+  <data name="syncError">
+    <value>An error was encountered while sending the sync command.</value>
+  </data>
+  <data name="saveProxyError">
+    <value>An error was encountered while saving the proxy settings.</value>
+  </data>
+  <data name="iFolderOpenError">
+    <value>Unable to open iFolder {0}.</value>
+  </data>
+  <data name="iFolderRevertError">
+    <value>An error was encountered while reverting the iFolder.</value>
+  </data>
+  <data name="subscriptionRemoveError">
+    <value>An error was encountered while removing the subscription.</value>
+  </data>
+  <data name="logEntriesCleared">
+    <value>Log entries cleared.</value>
+  </data>
+  <data name="localSync">
+    <value>Preparing to sync: {0}</value>
+  </data>
+  <data name="preSync">
+    <value>Preparing to synchronize</value>
+  </data>
+  <data name="disconnected">
+    <value>Disconnected</value>
+  </data>
+  <data name="synciFolder">
+    <value>Started sync of: {0}</value>
+  </data>
+  <data name="syncComplete">
+    <value>Finished sync of: {0}</value>
+  </data>
+  <data name="uploadFile">
+    <value>Uploading file: {0}</value>
+  </data>
+  <data name="downloadFile">
+    <value>Downloading file: {0}</value>
+  </data>
+  <data name="localFile">
+    <value>Found local change in file: {0}</value>
+  </data>
+  <data name="syncingFile">
+    <value>Synchronizing file: {0}</value>
+  </data>
+  <data name="uploadDir">
+    <value>Uploading directory: {0}</value>
+  </data>
+  <data name="downloadDir">
+    <value>Downloading directory: {0}</value>
+  </data>
+  <data name="localDir">
+    <value>Found local change in directory: {0}</value>
+  </data>
+  <data name="syncingDir">
+    <value>Synchronizing directory: {0}</value>
+  </data>
+  <data name="deleteClientFile">
+    <value>Deleting file on client: {0}</value>
+  </data>
+  <data name="deleteClientDir">
+    <value>Deleting directory on client: {0}</value>
+  </data>
+  <data name="deleteUnknown">
+    <value>Deleting on server: {0}</value>
+  </data>
+  <data name="declineError">
+    <value>An error was encountered while attempting to decline the invitation.</value>
+  </data>
+  <data name="statusSyncing">
+    <value>Synchronizing</value>
+  </data>
+  <data name="statusSyncFailure">
+    <value>Out of sync</value>
+  </data>
+  <data name="statusSyncingItems">
+    <value>{0} objects to sync</value>
+  </data>
+  <data name="statusSyncItemsFailed">
+    <value>{0} objects out of sync</value>
+  </data>
+  <data name="readiFolderSettingsError">
+    <value>An error was encountered while reading the iFolder settings.</value>
+  </data>
+  <data name="readProxyError">
+    <value>An error was encountered while reading the proxy settings.</value>
+  </data>
+  <data name="deleteAction">
+    <value>&amp;Delete iFolder</value>
+  </data>
+  <data name="revertTitle">
+    <value>Revert iFolder Confirmation</value>
+  </data>
+  <data name="revertPrompt">
+    <value>Are you sure you want to revert this iFolder to a normal folder?</value>
+  </data>
+  <data name="removeTitle">
+    <value>Remove iFolder Confirmation</value>
+  </data>
+  <data name="removePrompt">
+    <value>Are you sure you want to remove this iFolder?</value>
+  </data>
+  <data name="removeiFolder">
+    <value>This will remove you as a member of this iFolder.  You will not be able to access this iFolder unless the owner re-invites you to this iFolder.  The files will not be deleted from your local hard drive.</value>
+  </data>
+  <data name="deleteiFolder">
+    <value>This will remove this iFolder from your local machine.  Because you are the owner of this iFolder, the iFolder will also be removed from the iFolder server and all users you have shared with.  The iFolder cannot be recovered or re-shared on another machine.  The files will not be deleted from your local hard drive.</value>
+  </data>
+  <data name="revertiFolder">
+    <value>This will revert this iFolder back to a normal folder and leave the files intact.  The iFolder will then be available from the server and will need to be setup in a different location in order to sync.</value>
+  </data>
+  <data name="showAll">
+    <value>Show All</value>
+  </data>
 </root>
