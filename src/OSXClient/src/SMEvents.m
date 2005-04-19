@@ -143,7 +143,7 @@
 }
 -(BOOL)isDone
 {
-	NSString *doneStr = [properties objectForKey:@"successful"];
+	NSString *doneStr = [properties objectForKey:@"connected"];
 	return ([doneStr compare:@"True"] == 0);
 }
 -(int)syncAction
