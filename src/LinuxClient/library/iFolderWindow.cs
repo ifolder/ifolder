@@ -1400,7 +1400,8 @@ namespace Novell.iFolder
 				ConflictDialog = new iFolderConflictDialog(
 										this,
 										ifHolder.iFolder,
-										ifws);
+										ifws,
+										simws);
 				ConflictDialog.Response += 
 							new ResponseHandler(OnConflictDialogResponse);
 				ConflictDialog.ShowAll();
