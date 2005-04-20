@@ -931,17 +931,26 @@ namespace Novell.iFolder
 							ifws.ResolveNameConflict(lnc.iFolderID,
 													 lnc.ConflictID,
 													 newFileName);
-							ifws.ResolveNameConflict(snc.iFolderID,
-													 snc.ConflictID,
-													 ch.Name);
+							// If this is a name conflict because of case-sensitivity
+							// on Linux, there won't be a conflict on the server.
+							if (snc != null)
+							{
+								ifws.ResolveNameConflict(snc.iFolderID,
+														 snc.ConflictID,
+														 ch.Name);
+							}
 						}
 
 						ConflictTreeStore.Remove(ref iter);
 					}
 					catch (Exception e)
 					{
-						// FIXME: Alert the user
-						Console.WriteLine(e.Message);
+						iFolderExceptionDialog ied =
+							new iFolderExceptionDialog(null, e);
+						ied.Run();
+						ied.Hide();
+						ied.Destroy();
+						ied = null;
 						return;
 					}
 					
