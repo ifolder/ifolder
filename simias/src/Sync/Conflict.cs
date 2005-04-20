@@ -361,6 +361,9 @@ public class Conflict
 		FileNode fn = node as FileNode;
 		if (fn != null)
 		{
+			DirNode parent = fn.GetParent(collection);
+			if (SyncFile.DoesNodeExist(collection, parent, newNodeName))
+				throw new ExistsException(newNodeName);
 			if (newNodeName == node.Name)
 			{
 				// We are resolving to the same name.
@@ -389,6 +392,9 @@ public class Conflict
 			DirNode dn = node as DirNode;
 			if (dn != null)
 			{
+				DirNode parent = dn.GetParent(collection);
+				if (SyncFile.DoesNodeExist(collection, parent, newNodeName))
+					throw new ExistsException(newNodeName);
 				string oldname, newname;
 				oldname = FileNameConflictPath;
 				newname = Path.Combine(Path.GetDirectoryName(FileNameConflictPath), newNodeName);

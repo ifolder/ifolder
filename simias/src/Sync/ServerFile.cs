@@ -69,7 +69,20 @@ namespace Simias.Sync
 			node = (BaseFileNode)Node.NodeFactory(collection.StoreReference, xNode);
 			if (!policy.Allowed(node))
 			{
-				return SyncStatus.Policy;
+				SyncStatus ss = SyncStatus.Policy;
+				switch (policy.FailedType)
+				{
+					case SyncPolicy.PolicyType.Quota:
+						ss = SyncStatus.PolicyQuota;
+						break;
+					case SyncPolicy.PolicyType.Size:
+						ss = SyncStatus.PolicySize;
+						break;
+					case SyncPolicy.PolicyType.Type:
+						ss = SyncStatus.PolicyType;
+						break;
+				}
+				return ss;
 			}
 			collection.ImportNode(node, true, snode.MasterIncarnation);
 			node.IncarnationUpdate = node.LocalIncarnation;

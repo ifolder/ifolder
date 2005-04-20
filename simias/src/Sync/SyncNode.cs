@@ -350,6 +350,18 @@ namespace Simias.Sync
 		/// The collection is Locked.
 		/// </summary>
 		Locked,
+		/// <summary>
+		/// The disk quota doesn't allow this file.
+		/// </summary>
+		PolicyQuota,
+		/// <summary>
+		/// The size policy doesn't allow this file.
+		/// </summary>
+		PolicySize,
+		/// <summary>
+		/// The type policy doesn't allow this file.
+		/// </summary>
+		PolicyType,
 	}
 
 	#endregion

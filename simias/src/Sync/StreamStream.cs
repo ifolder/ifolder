@@ -34,8 +34,8 @@ namespace Simias.Sync
 	{
 		Stream					stream;
 		Stream					wStream;
-		Queue					Buffer = Queue.Synchronized(new Queue(2));
-		ManualResetEvent		haveBuffer = new ManualResetEvent(true);
+		static Queue			Buffer = Queue.Synchronized(new Queue(2));
+		static int				buffSize = 1024 * 32;
 		AutoResetEvent			writeComplete = new AutoResetEvent(true);
 		Exception				exception;
 			
@@ -43,21 +43,9 @@ namespace Simias.Sync
 		/// Constructor.
 		/// </summary>
 		/// <param name="stream">The Stream to construct the object from.</param>
-		/// <param name="buffSize">The buffer size to use.</param>
-		public StreamStream(Stream stream, int buffSize)
+		public StreamStream(Stream stream)
 		{
 			this.stream = stream;
-			this.Buffer.Enqueue(new byte[buffSize]);
-			this.Buffer.Enqueue(new byte[buffSize]);
-		}
-
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		/// <param name="stream">The Stream to construct the object from.</param>
-		public StreamStream(Stream stream) :
-			this(stream, 1024 * 32)
-		{
 		}
 
 		/// <summary>
@@ -66,13 +54,12 @@ namespace Simias.Sync
 		/// <returns>The next available buffer.</returns>
 		byte[] GetBuffer()
 		{
-            haveBuffer.WaitOne();
-			lock (Buffer.SyncRoot)
+            lock (Buffer.SyncRoot)
 			{
-				byte[] buff = (byte[])Buffer.Dequeue();
 				if (Buffer.Count == 0)
-					haveBuffer.Reset();
-				return buff;
+					return new byte[buffSize];
+				else
+					return (byte[])Buffer.Dequeue();
 			}
 		}
 
@@ -85,7 +72,6 @@ namespace Simias.Sync
 			lock (Buffer.SyncRoot)
 			{
 				Buffer.Enqueue(buffer);
-				haveBuffer.Set();
 			}
 		}
 

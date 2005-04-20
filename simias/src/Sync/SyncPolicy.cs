@@ -33,10 +33,19 @@ namespace Simias.Sync
 	/// </summary>
 	public class SyncPolicy
 	{
+		public enum PolicyType
+		{
+			Quota = 1,
+			Size,
+			Type
+		};
+		
 		DiskSpaceQuota	dsQuota;
 		FileSizeFilter	fsFilter;
 		FileTypeFilter	ftFilter;
+		PolicyType		reason;
 
+		
 		/// <summary>
 		/// Constructs a SyncPolicy object.
 		/// </summary>
@@ -58,11 +67,22 @@ namespace Simias.Sync
 		public bool Allowed(BaseFileNode fNode)
 		{
 			long fSize = fNode.Length;
-			if (fsFilter.Allowed(fSize) && ftFilter.Allowed(fNode.GetFileName()))
+			if (!dsQuota.Allowed(fSize))
 			{
-				return (dsQuota.Allowed(fSize));
+				reason = PolicyType.Quota;
+				return false;
 			}
-			return false;
+			if (!fsFilter.Allowed(fSize))
+			{
+				reason = PolicyType.Size;
+				return false;
+			}
+			if (ftFilter.Allowed(fNode.GetFileName()))
+			{
+				reason = PolicyType.Type;
+				return false;
+			}
+			return true;
 		}
 
 		/// <summary>
@@ -72,6 +92,14 @@ namespace Simias.Sync
 		public void Remove(BaseFileNode fNode)
 		{
 			dsQuota.Allowed(-fNode.Length);
+		}
+
+		/// <summary>
+		/// Gets the policy type that failed.
+		/// </summary>
+		public PolicyType FailedType
+		{
+			get { return reason; }
 		}
 	}
 }
