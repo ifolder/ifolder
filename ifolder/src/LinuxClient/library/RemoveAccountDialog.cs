@@ -22,15 +22,18 @@
  ***********************************************************************/
 
 
+using System;
 using Gtk;
+using Simias.Client;
 
 namespace Novell.iFolder
 {
 	public class RemoveAccountDialog : Dialog
 	{
 		private CheckButton cbutton;
+		private bool bUserWarnedAboutRemovingiFolders;
 
-		public bool RemoveFromAll
+		public bool RemoveiFoldersFromServer
 		{
 			get
 			{
@@ -38,8 +41,14 @@ namespace Novell.iFolder
 			}
 		}
 
-		public RemoveAccountDialog() : base()
+		public RemoveAccountDialog(DomainInformation domainInfo) : base()
 		{
+			bUserWarnedAboutRemovingiFolders = false;
+		
+			this.Title = Util.GS("Remove Account");
+			this.Resizable = false;
+			this.HasSeparator = false;
+		
 			HBox h = new HBox();
 			h.BorderWidth = 10;
 			h.Spacing = 10;
@@ -52,33 +61,108 @@ namespace Novell.iFolder
 
 			VBox v = new VBox();
 			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-					"Remove iFolder Account?</span>");
+					Util.GS("Remove iFolder Account?") + "</span>");
 			l.LineWrap = true;
 			l.UseMarkup = true;
-			l.Selectable = true;
+			l.Selectable = false;
 			l.Xalign = 0; l.Yalign = 0;
-			v.PackStart(l);
+			v.PackStart(l, false, false, 10);
+			
+			Table table = new Table(3, 2, false);
+			
+			table.RowSpacing = 0;
+			table.ColumnSpacing = 10;
+			table.Homogeneous = false;
 
-			l = new Label("Removing this account will revert all iFolder in this account to normal folders on you hard drive.  The folders will no longer synchronize with the server.");
-			l.LineWrap = true;
-			l.Selectable = true;
-			l.Xalign = 0; l.Yalign = 0;
-			v.PackEnd(l);
+			//
+			// Row: Server
+			//
+			l = new Label(Util.GS("Server:"));
+			l.Xalign = 1;
+			table.Attach(l, 0,1, 0,1,
+						 AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
+			l = new Label(domainInfo.Name);
+			l.Xalign = 0;
+			table.Attach(l, 1,2, 0,1,
+						 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			
+			//
+			// Row: Server host
+			//
+			l = new Label(Util.GS("Server host:"));
+			l.Xalign = 1;
+			table.Attach(l, 0,1, 1,2,
+						 AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+			l = new Label(domainInfo.Host);
+			l.Xalign = 0;
+			table.Attach(l, 1,2, 1,2,
+						 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			
+			//
+			// Row: User name
+			//
+			l = new Label(Util.GS("User name:"));
+			l.Xalign = 1;
+			table.Attach(l, 0,1, 2,3,
+						 AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+			l = new Label(domainInfo.MemberName);
+			l.Xalign = 0;
+			table.Attach(l, 1,2, 2,3,
+						 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+
+			v.PackEnd(table, true, true, 0);
+						
 			h.PackEnd(v);
 
-//			h.ShowAll();
 			this.VBox.PackStart(h, true, true, 0);
 
-			cbutton = new CheckButton(Util.GS("Remove from all workstations"));
+			cbutton = new CheckButton(Util.GS("Remove my iFolders and files from the server"));
 			this.VBox.PackStart(cbutton, false, false, 10);
+
+			cbutton.Toggled +=
+				new EventHandler(OnRemoveiFoldersToggled);
+
 			this.VBox.ShowAll();
 
-			this.AddButton(Stock.Cancel, ResponseType.Cancel);
-			this.AddButton(Stock.Ok, ResponseType.Ok);
+//			this.AddButton(Stock.Help, ResponseType.Help);
 
-			this.DefaultResponse = ResponseType.Cancel;
+			Button noButton = new Button(Stock.No);
+			noButton.CanFocus = true;
+			noButton.CanDefault = true;
+			noButton.ShowAll();
 
+			this.AddActionWidget(noButton, ResponseType.No);
+			this.AddButton(Stock.Yes, ResponseType.Yes);
+
+			this.DefaultResponse = ResponseType.No;
+
+			this.FocusChild = noButton;
+		}
+		
+		private void OnRemoveiFoldersToggled(object obj, EventArgs args)
+		{
+			// If the button is being toggled for the first time since this
+			// dialog has been opened, warn the user about what this action
+			// will do.
+			if (cbutton.Active && !bUserWarnedAboutRemovingiFolders)
+			{
+				bUserWarnedAboutRemovingiFolders = true;
+				
+				iFolderMsgDialog dialog = new iFolderMsgDialog(
+					this,
+					iFolderMsgDialog.DialogType.Warning,
+					iFolderMsgDialog.ButtonSet.Ok,
+					Util.GS("Warning"),
+					Util.GS("Removing iFolders from Server"),
+					Util.GS("Removing iFolders from the server will delete the files stored on the server.  Your files will remain intact on this computer.\n\nIf you've shared any iFolders with other users, they will no longer be able to synchronize them with the server.  Additionally, you will no longer be able to access these iFolders from any other computer."));
+//				int rc = dialog.Run();
+				dialog.Run();
+				dialog.Hide();
+				dialog.Destroy();
+			}
 		}
 	}
 }

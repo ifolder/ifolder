@@ -470,22 +470,22 @@ namespace Novell.iFolder
 
 			if(tSelect.CountSelectedRows() == 1)
 			{
-				RemoveAccountDialog rad = new RemoveAccountDialog();
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				DomainInformation dom = 
+					(DomainInformation) tModel.GetValue(iter, 0);
+
+				RemoveAccountDialog rad = new RemoveAccountDialog(dom);
 				rad.TransientFor = topLevelWindow;
 				int rc = rad.Run();
 				rad.Hide();
-				if(rc == -5)
+				if((ResponseType)rc == ResponseType.Yes)
 				{
-					TreeModel tModel;
-					TreeIter iter;
-
-					tSelect.GetSelected(out tModel, out iter);
-					DomainInformation dom = 
-						(DomainInformation) tModel.GetValue(iter, 0);
-
 					try
 					{
-						simws.LeaveDomain(dom.ID, !(rad.RemoveFromAll));
+						simws.LeaveDomain(dom.ID, !(rad.RemoveiFoldersFromServer));
 					}
 					catch(Exception e)
 					{
