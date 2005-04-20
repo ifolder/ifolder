@@ -121,37 +121,27 @@ namespace Simias.Security.Web
 		/// </summary>
 		/// <param name="address">The address to test.</param>
 		/// <returns>True if address is local, otherwise false is returned.</returns>
-		private bool IsLocalAddress( Uri address )
+		private bool IsLocalAddress( string address )
 		{
 			bool isLocal = false;
 
-			// Do the easy test first.
-			if ( address.IsLoopback == false )
+			try
 			{
-				IPAddress hostAddress;
-				try
+				IPAddress hostAddress = IPAddress.Parse( address );
+				if ( IPAddress.IsLoopback( hostAddress ) || localAddresses.ContainsKey( address ) )
 				{
-					hostAddress = IPAddress.Parse( address.Host );
-					if ( IPAddress.IsLoopback( hostAddress ) || localAddresses.ContainsKey( address.Host ) )
-					{
-						log.Debug( "Address {0} is loopback.", address.Host );
-						isLocal = true;
-					}
-				}
-				catch ( FormatException )
-				{
-					// The address is a DNS name not a dotted-quad address.
-					if ( localAddresses.ContainsKey( address.Host ) )
-					{
-						log.Debug( "Address {0} is loopback.", address.Host );
-						isLocal = true;
-					}
+					isLocal = true;
 				}
 			}
-			else
+			catch ( FormatException )
 			{
-				log.Debug( "Address {0} is loopback.", address.Host );
-				isLocal = true;
+				// The address is a DNS name not a dotted-quad address.
+				if ( ( String.Compare( address, "loopback", true ) == 0 ) || 
+					 ( String.Compare( address, "localhost", true ) == 0 ) ||
+					 localAddresses.ContainsKey( address.ToLower() ) )
+				{
+					isLocal = true;
+				}
 			}
 
 			return isLocal;
@@ -226,7 +216,7 @@ namespace Simias.Security.Web
 
 			// Verify that we are on a secure connection, if not redirect to https
 			HttpContext context = HttpContext.Current;
-			if ( ( IsLocalAddress( context.Request.Url ) == false ) && 
+			if ( ( IsLocalAddress( context.Request.UserHostAddress ) == false ) && 
 				 ( context.Request.IsSecureConnection == false ) && 
 				 ( sslRequired == true ) ) 
 			{
@@ -326,7 +316,7 @@ namespace Simias.Security.Web
 					// If this is an enterprise server use the default domain.
 					domainID = StoreReference.DefaultDomain;
 				}
-				else if ( IsLocalAddress( context.Request.Url ) )
+				else if ( IsLocalAddress( context.Request.UserHostAddress ) )
 				{
 					// If this address is loopback, set the local domain in the HTTP context.
 					domainID = StoreReference.LocalDomain;
@@ -423,7 +413,7 @@ namespace Simias.Security.Web
 			string[] addresses = MyDns.GetHostAddresses();
 			foreach( string s in addresses )
 			{
-				localAddresses[ s ] = null;
+				localAddresses[ s.ToLower() ] = null;
 			}
 		}
 
