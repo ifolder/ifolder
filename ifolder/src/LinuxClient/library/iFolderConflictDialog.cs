@@ -222,6 +222,7 @@ namespace Novell.iFolder
 	public class iFolderConflictDialog : Dialog
 	{
 		private iFolderWebService	ifws;
+		private SimiasWebService	simws;
 		private iFolderWeb			ifolder;
 		private Gtk.TreeView		ConflictTreeView;
 		private Gtk.ListStore		ConflictTreeStore;
@@ -266,13 +267,15 @@ namespace Novell.iFolder
 		/// </summary>
 		public iFolderConflictDialog(	Gtk.Window parent,
 										iFolderWeb ifolder,
-										iFolderWebService iFolderWS)
+										iFolderWebService iFolderWS,
+										SimiasWebService SimiasWS)
 			: base()
 		{
 			this.Title = Util.GS("iFolder Conflict Resolver");
 			if(iFolderWS == null)
 				throw new ApplicationException("iFolderWebServices was null");
 			this.ifws = iFolderWS;
+			this.simws = SimiasWS;
 			this.ifolder = ifolder;
 			this.HasSeparator = false;
 			this.Resizable = true;
@@ -725,6 +728,8 @@ namespace Novell.iFolder
 						// the text on the left-hand side of the extension.
 						nameConflictEntry.Text = ch.Name;
 						
+						this.FocusChild = nameConflictEntry;
+						
 /* FIXME: Get GrabFocus() and preselection of filename working
 						nameConflictEntry.GrabFocus();
 
@@ -945,12 +950,42 @@ namespace Novell.iFolder
 					}
 					catch (Exception e)
 					{
-						iFolderExceptionDialog ied =
-							new iFolderExceptionDialog(null, e);
-						ied.Run();
-						ied.Hide();
-						ied.Destroy();
-						ied = null;
+						bool bKnownError = true;
+						string headerText = Util.GS("Error resolving conflict");
+						string errText    = Util.GS("An error was encountered while attempting to resolve the conflict.");
+
+						if (e.Message.IndexOf("Malformed") >= 0)
+						{
+							headerText = Util.GS("Invalid name");
+							errText = string.Format(Util.GS("The name entered is invalid.  Please choose a different name and try again.\n\nFile and directories must not contain any of these characters: {0}"),
+													new string(simws.GetInvalidSyncFilenameChars()));
+						}
+						else if (e.Message.IndexOf("already exists") >= 0)
+						{
+							headerText = Util.GS("File or folder already exists");
+							errText = Util.GS("A file or folder with the specified name already exists.  Please choose a different name and try again.");
+						}
+						else
+						{
+							bKnownError = false;
+						}
+
+						iFolderMsgDialog dg = new iFolderMsgDialog(
+							this,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							Util.GS("Error"),
+							headerText,
+							errText,
+							bKnownError ? null : e.Message);
+						dg.Run();
+						dg.Hide();
+						dg.Destroy();
+
+						tSelect.SelectIter(iter);
+						
+						// FIXME: Figure out why if the user clicks the "Save" button the focus doesn't return back to the entry text box.  (i.e., the next line of code isn't really doing anything)
+						this.FocusChild = nameConflictEntry;
 						return;
 					}
 					
