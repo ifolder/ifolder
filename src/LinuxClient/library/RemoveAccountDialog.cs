@@ -31,7 +31,6 @@ namespace Novell.iFolder
 	public class RemoveAccountDialog : Dialog
 	{
 		private CheckButton cbutton;
-		private bool bUserWarnedAboutRemovingiFolders;
 
 		public bool RemoveiFoldersFromServer
 		{
@@ -43,8 +42,6 @@ namespace Novell.iFolder
 
 		public RemoveAccountDialog(DomainInformation domainInfo) : base()
 		{
-			bUserWarnedAboutRemovingiFolders = false;
-		
 			this.Title = Util.GS("Remove Account");
 			this.Resizable = false;
 			this.HasSeparator = false;
@@ -147,21 +144,24 @@ namespace Novell.iFolder
 			// If the button is being toggled for the first time since this
 			// dialog has been opened, warn the user about what this action
 			// will do.
-			if (cbutton.Active && !bUserWarnedAboutRemovingiFolders)
+			if (cbutton.Active)
 			{
-				bUserWarnedAboutRemovingiFolders = true;
-				
 				iFolderMsgDialog dialog = new iFolderMsgDialog(
 					this,
 					iFolderMsgDialog.DialogType.Warning,
-					iFolderMsgDialog.ButtonSet.Ok,
+					iFolderMsgDialog.ButtonSet.OkCancel,
 					Util.GS("Warning"),
 					Util.GS("Removing iFolders from Server"),
 					Util.GS("Removing iFolders from the server will delete the files stored on the server.  Your files will remain intact on this computer.\n\nIf you've shared any iFolders with other users, they will no longer be able to synchronize them with the server.  Additionally, you will no longer be able to access these iFolders from any other computer."));
-//				int rc = dialog.Run();
-				dialog.Run();
+				int rc = dialog.Run();
 				dialog.Hide();
 				dialog.Destroy();
+
+				if ((ResponseType)rc == ResponseType.Cancel)
+				{
+					// Uncheck the Remove iFolders from Server checkbox
+					cbutton.Active = false;
+				}				
 			}
 		}
 	}
