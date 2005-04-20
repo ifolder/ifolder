@@ -478,6 +478,7 @@ namespace Simias.Sync
 		DateTime		syncStartTime; // Time stamp when sync was called.
 		const int		timeSlice = 3; //Timeslice in minutes.
 		SyncFile		syncFile;
+		bool			firstSync = true;
 		
 		/// <summary>
 		/// Returns true if we should yield our timeslice.
@@ -658,6 +659,21 @@ namespace Simias.Sync
 					new DomainAgent().CreateMaster(collection);
 				}
 			
+				if (firstSync)
+				{
+					if (collection.Role == SyncRoles.Slave)
+					{
+						// We are just starting add all the modified nodes to the array.
+						// Get all nodes that have not been synced.
+						ICSList updateList = collection.Search(PropertyTags.NodeUpdateTime, "*", SearchOp.Exists);
+						foreach (ShallowNode sn in updateList)
+						{
+							workArray.AddNodeToServer(new SyncNodeInfo(collection, sn));
+						}
+					}
+					firstSync = false;
+				}
+				
 				// Only syncronize local changes when we have finished with the 
 				// Server side changes.
 				if (workArray == null || workArray.DownCount == 0)
@@ -974,7 +990,7 @@ namespace Simias.Sync
 			ChangeLogReader logReader = new ChangeLogReader( collection );
 			nodes = null;
 			bool more = true;
-		
+
 			try
 			{
 				// Read the cookie from the last sync and then get the changes since then.
@@ -1716,12 +1732,12 @@ namespace Simias.Sync
 					{
 						Node node = nodes[i];
 						SyncNodeStatus status = nodeStatus[i];
+						eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.Directory, false, node.Name, 0, 0, 0, Direction.Uploading, status.status));
 						switch (status.status)
 						{
 							case SyncStatus.Success:
 								node.SetMasterIncarnation(node.LocalIncarnation);
 								collection.Commit(node);
-								eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.Directory, false, node.Name, 0, 0, 0, Direction.Uploading));
 								workArray.RemoveNodeToServer(node.ID);
 								break;
 							case SyncStatus.UpdateConflict:
@@ -1818,24 +1834,36 @@ namespace Simias.Sync
 								}
 							}
 						}
-						else if (status == SyncStatus.FileNameConflict)
-						{
-							// Since we had a conflict we need to set the conflict.
-							BaseFileNode conflictNode = Conflict.CreateNameConflict(collection, node, node.GetFullPath(collection)) as BaseFileNode;
-							collection.Commit(conflictNode);
-							workArray.RemoveNodeToServer(nodeID);
-							log.Info("Failed Uploading File {0} : reason {1}", file.Name, status.ToString());
-							break;
-						}
 						else
 						{
-							log.Info("Failed Uploading File {0} : reason {1}", file.Name, status.ToString());
-							if (status == SyncStatus.Locked)
-								return;
+							eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.Directory, false, node.Name, 0, 0, 0, Direction.Uploading, status));
+							switch (status)
+							{
+								case SyncStatus.FileNameConflict:
+									// Since we had a conflict we need to set the conflict.
+									BaseFileNode conflictNode = Conflict.CreateNameConflict(collection, node, node.GetFullPath(collection)) as BaseFileNode;
+									collection.Commit(conflictNode);
+									workArray.RemoveNodeToServer(nodeID);
+									log.Info("Failed Uploading File {0} : reason {1}", file.Name, status.ToString());
+									break;
+								case SyncStatus.PolicyQuota:
+								case SyncStatus.PolicySize:
+								case SyncStatus.PolicyType:
+									log.Info("Failed Uploading File {0} : reason {1}", file.Name, status.ToString());
+									workArray.RemoveNodeToServer(nodeID);
+									break;
+								case SyncStatus.Locked:
+									log.Info("Failed Uploading File {0} : reason {1}", file.Name, status.ToString());
+									return;
+								default:
+									log.Info("Failed Uploading File {0} : reason {1}", file.Name, status.ToString());
+									break;
+							}
+							break;
 						}
 					}
 				}
-				catch (FileNotFoundException ex)
+				catch (FileNotFoundException)
 				{
 					// The file no longer exists.
 					workArray.RemoveNodeFromServer(nodeID);

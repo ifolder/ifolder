@@ -702,6 +702,7 @@ namespace Simias.Sync
 		public void CheckForFileChanges()
 		{
 			collection.Refresh();
+
 			if (watcher == null || needToDredge)
 			{
 				Dredge();

@@ -27,6 +27,7 @@ using System.Collections;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Net;
+using Simias.Client;
 using Simias.Client.Event;
 using Simias.Storage;
 using Simias.Sync.Http;
@@ -598,7 +599,7 @@ namespace Simias.Sync
 		#region fields
 
 		StrongWeakHashtable		table = new StrongWeakHashtable();
-		HttpSyncProxy				syncService;
+		HttpSyncProxy			syncService;
 		
 		#endregion
 		
@@ -629,19 +630,29 @@ namespace Simias.Sync
 		{
 			SyncNode snode = new SyncNode(node);
 			SyncStatus status = syncService.OpenFilePut(snode);
-			if (status == SyncStatus.Success)
+			switch (status)
 			{
-				try
-				{
-					base.Open(node, "");
-				}
-				catch (Exception ex)
-				{
-					Log.log.Debug(ex, "Failed opening file {0}", file);
-					syncService.CloseFile(false);
-					base.Close();
-					throw ex;
-				}
+				case SyncStatus.Success:
+					try
+					{
+						base.Open(node, "");
+					}
+					catch (Exception ex)
+					{
+						Log.log.Debug(ex, "Failed opening file {0}", file);
+						syncService.CloseFile(false);
+						base.Close();
+						throw ex;
+					}
+					break;
+				case SyncStatus.PolicyQuota:
+				case SyncStatus.PolicySize:
+				case SyncStatus.PolicyType:
+					Property p = new Property(PropertyTags.SyncStatusTag, status.ToString());
+					p.LocalProperty = true;
+					node.Properties.ModifyProperty(p);
+					collection.Commit(node);
+					break;
 			}
 			
 			return status;
@@ -661,6 +672,7 @@ namespace Simias.Sync
 				if (commit && status.status == SyncStatus.Success)
 				{
 					node.SetMasterIncarnation(node.LocalIncarnation);
+					node.Properties.DeleteSingleProperty(PropertyTags.SyncStatusTag);
 					collection.Commit(node);
 				}
 				return status;

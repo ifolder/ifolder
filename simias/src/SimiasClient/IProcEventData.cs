@@ -123,6 +123,7 @@ namespace Simias.Client.Event
 		private const string FEA_SizeToSyncTag = "SizeToSync";
 		private const string FEA_SizeRemainingTag = "SizeRemaining";
 		private const string FEA_DirectionTag = "Direction";
+		private const string FEA_StatusTag = "Status";
 
 		/// <summary>
 		/// Xml tags used to describe an NotifyEventArgs object.
@@ -256,6 +257,7 @@ namespace Simias.Client.Event
 			AddData( new IProcEventNameValue( FEA_SizeToSyncTag, args.SizeToSync.ToString() ) );
 			AddData( new IProcEventNameValue( FEA_SizeRemainingTag, args.SizeRemaining.ToString() ) );
 			AddData( new IProcEventNameValue( FEA_DirectionTag, args.Direction.ToString() ) );
+			AddData( new IProcEventNameValue( FEA_StatusTag, args.Status.ToString() ) );
 		}
 
 		/// <summary>
@@ -371,6 +373,7 @@ namespace Simias.Client.Event
 			long sizeToSync = 0;
 			long sizeRemaining = 0;
 			Direction direction = Direction.Downloading;
+			SyncStatus status = SyncStatus.Success;
 
 			// Walk through each named/value pair and convert the xml data back into FileSyncEventArgs data.
 			foreach ( XmlNode xn in document.DocumentElement )
@@ -421,11 +424,17 @@ namespace Simias.Client.Event
 						direction = ( Direction )Enum.Parse( typeof( Direction ), xn.InnerText, false );
 						break;
 					}
+
+					case FEA_StatusTag:
+					{
+						status = (SyncStatus)Enum.Parse( typeof(SyncStatus), xn.InnerText, false);
+						break;
+					}
 				}
 			}
 			
 			// Create the object and set the flags.
-			return new FileSyncEventArgs( collectionID, objectType, delete, name, size, sizeToSync, sizeRemaining, direction );
+			return new FileSyncEventArgs( collectionID, objectType, delete, name, size, sizeToSync, sizeRemaining, direction, status );
 		}
 
 		/// <summary>

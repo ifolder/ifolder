@@ -29,6 +29,7 @@ using System.Collections;
 using Simias;
 
 using Simias.Event;
+using Simias.Client;
 using Simias.Client.Event;
 
 using Simias.Storage;

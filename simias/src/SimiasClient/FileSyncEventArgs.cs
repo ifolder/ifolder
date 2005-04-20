@@ -81,6 +81,7 @@ namespace Simias.Client.Event
 		private long size;
 		private long sizeToSync;
 		private long sizeRemaining;
+		private SyncStatus status;
 
 		#endregion
 
@@ -94,7 +95,7 @@ namespace Simias.Client.Event
 		/// <param name="sizeToSync">The total amount of data to be synced.</param>
 		/// <param name="sizeRemaining">The amount of data that still needs to be synced.</param>
 		/// <param name="direction">The direction of the sync.</param>
-		public FileSyncEventArgs(string name, long size, long sizeToSync, long sizeRemaining, Direction direction) :
+		public FileSyncEventArgs(string name, long size, long sizeToSync, long sizeRemaining, Direction direction, SyncStatus status) :
 			base()
 		{
 			this.name = name;
@@ -102,6 +103,7 @@ namespace Simias.Client.Event
 			this.sizeToSync = sizeToSync;
 			this.sizeRemaining = sizeRemaining;
 			this.direction = direction;
+			this.status = status;
 		}
 
 		/// <summary>
@@ -126,7 +128,35 @@ namespace Simias.Client.Event
 			this.sizeToSync = sizeToSync;
 			this.sizeRemaining = sizeRemaining;
 			this.direction = direction;
+			this.status = SyncStatus.Success;
 		}
+
+		/// <summary>
+		/// Constructs a FileSyncEventArgs that will be used by FileSyncHandler delegates.
+		/// </summary>
+		/// <param name="collectionID">The ID of the collection that the sync event belongs to.</param>
+		/// <param name="objectType">The type of object being synced.</param>
+		/// <param name="delete">Set to <b>true</b> if the synced object is being deleted.</param>
+		/// <param name="name">The name of the file that the event belongs to.</param>
+		/// <param name="size">The size of the file that the event belongs to.</param>
+		/// <param name="sizeToSync">The total amount of data to be synced.</param>
+		/// <param name="sizeRemaining">The amount of data that still needs to be synced.</param>
+		/// <param name="direction">The direction of the sync.</param>
+		/// <param name="status">The status of the sync.</param>
+		public FileSyncEventArgs(string collectionID, ObjectType objectType, bool delete, string name, long size, long sizeToSync, long sizeRemaining, Direction direction, SyncStatus status) :
+			base()
+		{
+			this.collectionID = collectionID;
+			this.objectType = objectType;
+			this.delete = delete;
+			this.name = name;
+			this.size = size;
+			this.sizeToSync = sizeToSync;
+			this.sizeRemaining = sizeRemaining;
+			this.direction = direction;
+			this.status = status;
+		}
+
 
 		#endregion
 
@@ -194,6 +224,14 @@ namespace Simias.Client.Event
 		public Direction Direction
 		{
 			get { return direction; }
+		}
+
+		/// <summary>
+		/// Gets the status of the sync.
+		/// </summary>
+		public SyncStatus Status
+		{
+			get { return status; }
 		}
 		#endregion
 	}

@@ -92,7 +92,7 @@ namespace Simias.Sync
 
 		#endregion
 
-		#region Consturctor
+		#region Constructor
 
 		/// <summary>
 		/// 
@@ -291,77 +291,6 @@ namespace Simias.Sync
 		}
 
 		#endregion
-	}
-
-	#endregion
-
-	#region SyncStatus
-
-	/// <summary>
-	/// The status codes for a sync attempt.
-	/// </summary>
-	public enum SyncStatus : byte
-	{
-		/// <summary>
-		/// The operation was successful.
-		/// </summary>
-		Success,
-		/// <summary>
-		/// There was an error.
-		/// </summary>
-		Error,
-		/// <summary> 
-		/// node update was aborted due to update from other client 
-		/// </summary>
-		UpdateConflict,
-		/// <summary> 
-		/// node update was completed, but temporary file could not be moved into place
-		/// </summary>
-		FileNameConflict,
-		/// <summary> 
-		/// node update was probably unsuccessful, unhandled exception on the server 
-		/// </summary>
-		ServerFailure,
-		/// <summary> 
-		/// node update is in progress 
-		/// </summary>
-		InProgess,
-		/// <summary>
-		/// The File is in use.
-		/// </summary>
-		InUse,
-		/// <summary>
-		/// The Server is busy.
-		/// </summary>
-		Busy,
-		/// <summary>
-		/// The client passed invalid data.
-		/// </summary>
-		ClientError,
-		/// <summary>
-		/// The policy doesnot allow this file.
-		/// </summary>
-		Policy,
-		/// <summary>
-		/// Insuficient rights for the operation.
-		/// </summary>
-		Access,
-		/// <summary>
-		/// The collection is Locked.
-		/// </summary>
-		Locked,
-		/// <summary>
-		/// The disk quota doesn't allow this file.
-		/// </summary>
-		PolicyQuota,
-		/// <summary>
-		/// The size policy doesn't allow this file.
-		/// </summary>
-		PolicySize,
-		/// <summary>
-		/// The type policy doesn't allow this file.
-		/// </summary>
-		PolicyType,
 	}
 
 	#endregion

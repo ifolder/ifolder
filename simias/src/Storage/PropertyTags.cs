@@ -237,7 +237,12 @@ namespace Simias.Storage
 		/// Well known property name.
 		/// </summary>
 		static public string Types = "Types";
-
+		
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
+		static public string SyncStatusTag = "SyncStatus";
+		
 		/// <summary>
 		/// Hashtable providing quick lookup to well-known system properties.
 		/// </summary>

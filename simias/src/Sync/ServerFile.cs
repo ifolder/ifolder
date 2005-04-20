@@ -26,6 +26,7 @@ using System.Collections;
 using System.Xml;
 using Simias.Storage;
 using Simias.Sync.Delta;
+using Simias.Client;
 
 namespace Simias.Sync
 {
