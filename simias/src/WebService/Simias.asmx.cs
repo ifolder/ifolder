@@ -940,6 +940,20 @@ namespace Simias.Web
 		{
 			Simias.Security.CertificateStore.StoreCertificate(certificate, host, true);
 		}
+		
+		/// <summary>
+		/// Returns the characters which cannot be used for filenames in the
+		/// Simias namespace (files and folders that contain any of these
+		/// characters cannot be synchronized with iFolder and conflicts will
+		/// be generated).
+		/// </summary>
+		/// <returns>The characters that cannot be used as a file or directory name for synchronizable files.</returns>
+		[WebMethod(EnableSession=true, Description="Returns the characters which cannot be used for filenames in the Simias namespace (files and folders that contain any of these characters cannot be synchronized with iFolder and conflicts will be generated).")]
+		[SoapDocumentMethod]
+		public char[] GetInvalidSyncFilenameChars()
+		{
+			return Simias.Sync.SyncFile.InvalidChars;
+		}
 	}
 
 
