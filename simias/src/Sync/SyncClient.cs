@@ -665,7 +665,7 @@ namespace Simias.Sync
 					{
 						// We are just starting add all the modified nodes to the array.
 						// Get all nodes that have not been synced.
-						ICSList updateList = collection.Search(PropertyTags.NodeUpdateTime, "*", SearchOp.Exists);
+						ICSList updateList = collection.Search(PropertyTags.NodeUpdateTime, DateTime.Now, SearchOp.Exists);
 						foreach (ShallowNode sn in updateList)
 						{
 							workArray.AddNodeToServer(new SyncNodeInfo(collection, sn));
