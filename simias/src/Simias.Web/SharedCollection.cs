@@ -344,6 +344,12 @@ namespace Simias.Web
 			{
 				return false;
 			}
+			
+			// Make sure the path doesn't contain any invalid characters
+			if (!Simias.Sync.SyncFile.IsNameValid(path))
+			{
+				return false;
+			}
 
 			// Make sure the paths end with a separator.
 			// Create a normalized path that can be compared on any platform.
