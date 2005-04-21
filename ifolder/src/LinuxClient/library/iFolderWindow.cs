@@ -1238,26 +1238,29 @@ namespace Novell.iFolder
 
 		private bool ShowBadiFolderPath(string path, string name)
 		{
-			try
+			if (path == null || name == null)
+				throw new Exception("Cannot pass in null parameters to ShowBadiFolderPath");
+
+			string fullPath = System.IO.Path.Combine(path, name);
+			if (!ifws.CanBeiFolder(fullPath))
 			{
-				bool isGood = true;
-				if(name != null)
+				// Check to see if the name has any invalid characters in it
+				char[] invalidChars = simws.GetInvalidSyncFilenameChars();
+				if (name.IndexOfAny(invalidChars) >= 0)
 				{
-					isGood = !ifws.IsPathIniFolder(path);
-					if(isGood)
-					{
-						// now we need to check if there is already an
-						// ifolder at that path
-						isGood = !ifws.IsPathIniFolder(
-								System.IO.Path.Combine(path, name));
-					}
+					iFolderMsgDialog dg = new iFolderMsgDialog(
+						this,
+						iFolderMsgDialog.DialogType.Info,
+						iFolderMsgDialog.ButtonSet.Ok,
+						Util.GS("Invalid iFolder Path"),
+						Util.GS("Invalid characters in selected path"),
+						string.Format(Util.GS("The path you have entered contains invalid characters for an iFolder.  iFolders cannot contain the following characters: {0}"),
+									  new string(invalidChars)));
+					dg.Run();
+					dg.Hide();
+					dg.Destroy();
 				}
 				else
-				{
-					isGood = ifws.CanBeiFolder(path);
-				}
-
-				if(!isGood)
 				{
 					iFolderMsgDialog dg = new iFolderMsgDialog(
 						this,
@@ -1269,18 +1272,11 @@ namespace Novell.iFolder
 					dg.Run();
 					dg.Hide();
 					dg.Destroy();
-					return true;
 				}
-			}
-			catch(Exception e)
-			{
-				iFolderExceptionDialog ied = new iFolderExceptionDialog(
-														this, e);
-				ied.Run();
-				ied.Hide();
-				ied.Destroy();
+
 				return true;
 			}
+
 			return false;
 		}
 
@@ -1860,85 +1856,99 @@ namespace Novell.iFolder
 				dg.Run();
 				dg.Hide();
 				dg.Destroy();
+				return;
 			}
-			else
+
+			DomainInformation[] domains = ifdata.GetDomains();
+	
+			CreateDialog cd = new CreateDialog(domains, Util.LastCreatedPath);
+			cd.TransientFor = this;
+	
+			int rc = 0;
+			do
 			{
-				DomainInformation[] domains = ifdata.GetDomains();
-	
-				CreateDialog cd = new CreateDialog(domains, Util.LastCreatedPath);
-				cd.TransientFor = this;
-	
-				int rc = 0;
-				do
+				rc = cd.Run();
+				cd.Hide();
+
+				if(rc == -5)
 				{
-					rc = cd.Run();
-					cd.Hide();
+					string selectedFolder = cd.iFolderPath.Trim();
+					string selectedDomain = cd.DomainID;
 
-					if(rc == -5)
+					if (selectedFolder == String.Empty)
 					{
-						string selectedFolder = cd.iFolderPath;
-						string selectedDomain = cd.DomainID;
-	
-						if(ShowBadiFolderPath(selectedFolder, null))
+						iFolderMsgDialog dg = new iFolderMsgDialog(
+							this,
+							iFolderMsgDialog.DialogType.Warning,
+							iFolderMsgDialog.ButtonSet.Ok,
+							Util.GS("Invalid iFolder Path"),
+							Util.GS("Invalid iFolder path selected"),
+							Util.GS("The path you've specified is empty.  Please enter a properly formatted path for the new iFolder."));
+						dg.Run();
+						dg.Hide();
+						dg.Destroy();
 						continue;
+					}
+						
+					string parentDir = System.IO.Path.GetDirectoryName( selectedFolder );
+					if ( ( parentDir == null ) || ( parentDir == String.Empty ) )
+					{
+						iFolderMsgDialog dg = new iFolderMsgDialog(
+							this,
+							iFolderMsgDialog.DialogType.Warning,
+							iFolderMsgDialog.ButtonSet.Ok,
+							Util.GS("Invalid iFolder Path"),
+							Util.GS("Invalid iFolder path selected"),
+							Util.GS("The path you've specified is invalid.  Please enter a properly formatted path for the new iFolder."));
+						dg.Run();
+						dg.Hide();
+						dg.Destroy();
+						continue;
+					}
+					
+					string name = selectedFolder.Substring(parentDir.Length + 1);
+					if (name == null || name == String.Empty)
+					{
+						iFolderMsgDialog dg = new iFolderMsgDialog(
+							this,
+							iFolderMsgDialog.DialogType.Warning,
+							iFolderMsgDialog.ButtonSet.Ok,
+							Util.GS("Invalid iFolder Path"),
+							Util.GS("Invalid iFolder path selected"),
+							Util.GS("The path you've specified is invalid.  Please remove the trailing path separator character (/) and try again."));
+						dg.Run();
+						dg.Hide();
+						dg.Destroy();
+						continue;
+					}
 
-						// break loop
-						rc = 0;
-						try
+					if(ShowBadiFolderPath(parentDir, name))
+					continue;
+
+					iFolderHolder ifHolder = null;
+					try
+					{
+						ifHolder = 
+							ifdata.CreateiFolder(	selectedFolder,
+													selectedDomain);
+					}
+					catch(Exception e)
+					{
+						if (e.Message.IndexOf("Path did not exist") >= 0)
 						{
-							iFolderHolder ifHolder =
-								ifdata.CreateiFolder(	selectedFolder,
-														selectedDomain);
-
-							if(ifHolder == null)
-								throw new Exception("Simias returned null");
-
-							// Reset the domain filter so the new iFolder will show
-							// up in the list regardless of what was selected previously.
-							// DomainFilterOptionMenu.SetHistory(0);
-	
-							TreeIter iter = 
-								iFolderTreeStore.AppendValues(ifHolder);
-
-							curiFolders[ifHolder.iFolder.ID] = iter;
-	
-							UpdateButtonSensitivity();
-
-							// Save off the path so that the next time the user
-							// creates an iFolder, we'll open it to the directory
-							// they used last.
-							Util.LastCreatedPath = ifHolder.iFolder.UnManagedPath;
-
-							if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
-											"true") == "true")
-							{
-								iFolderCreationDialog dlg = 
-									new iFolderCreationDialog(ifHolder.iFolder);
-								dlg.TransientFor = this;
-								int createRC;
-								do
-								{
-									createRC = dlg.Run();
-									if(createRC == (int)Gtk.ResponseType.Help)
-									{
-										Util.ShowHelp("myifolders.html", this);
-									}
-								}while(createRC != (int)Gtk.ResponseType.Ok);
-	
-								dlg.Hide();
-	
-								if(dlg.HideDialog)
-								{
-									ClientConfig.Set(
-										ClientConfig.KEY_SHOW_CREATION, "false");
-								}
-	
-								cd.Destroy();
-								cd = null;
-							}
-
+							iFolderMsgDialog dg = new iFolderMsgDialog(
+								this,
+								iFolderMsgDialog.DialogType.Warning,
+								iFolderMsgDialog.ButtonSet.Ok,
+								Util.GS("Invalid iFolder Path"),
+								Util.GS("Invalid iFolder path selected"),
+								Util.GS("The path you've specified does not exist.  Please select an existing folder and try again."));
+							dg.Run();
+							dg.Hide();
+							dg.Destroy();
+							continue;
 						}
-						catch(Exception e)
+						else
 						{
 							iFolderExceptionDialog ied = 
 								new iFolderExceptionDialog(
@@ -1949,9 +1959,60 @@ namespace Novell.iFolder
 							ied.Destroy();
 						}
 					}
+
+					if(ifHolder == null)
+						throw new Exception("Simias returned null");
+
+					// If we make it this far, we've succeeded and we don't
+					// need to keep looping.
+					rc = 0;
+
+					// Reset the domain filter so the new iFolder will show
+					// up in the list regardless of what was selected previously.
+					// DomainFilterOptionMenu.SetHistory(0);
+
+					TreeIter iter = 
+						iFolderTreeStore.AppendValues(ifHolder);
+
+					curiFolders[ifHolder.iFolder.ID] = iter;
+	
+					UpdateButtonSensitivity();
+
+					// Save off the path so that the next time the user
+					// creates an iFolder, we'll open it to the directory
+					// they used last.
+					Util.LastCreatedPath = ifHolder.iFolder.UnManagedPath;
+
+					if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
+									"true") == "true")
+					{
+						iFolderCreationDialog dlg = 
+							new iFolderCreationDialog(ifHolder.iFolder);
+						dlg.TransientFor = this;
+						int createRC;
+						do
+						{
+							createRC = dlg.Run();
+							if(createRC == (int)Gtk.ResponseType.Help)
+							{
+								Util.ShowHelp("myifolders.html", this);
+							}
+						}while(createRC != (int)Gtk.ResponseType.Ok);
+
+						dlg.Hide();
+	
+						if(dlg.HideDialog)
+						{
+							ClientConfig.Set(
+								ClientConfig.KEY_SHOW_CREATION, "false");
+						}
+	
+						cd.Destroy();
+						cd = null;
+					}
 				}
-				while(rc == -5);
 			}
+			while(rc == -5);
 		}
 	
 	
