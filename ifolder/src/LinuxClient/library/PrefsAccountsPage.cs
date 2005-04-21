@@ -250,7 +250,7 @@ namespace Novell.iFolder
 
 			defaultAccButton = 
 				new CheckButton(Util.GS(
-					"D_efault account"));
+					"De_fault account"));
 			optBox.PackStart(defaultAccButton, false, false,0);
 			defaultAccButton.Toggled += 
 							new EventHandler(OnDefAccToggled);
