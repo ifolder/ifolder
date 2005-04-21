@@ -1865,7 +1865,7 @@ namespace Novell.iFolder
 			{
 				DomainInformation[] domains = ifdata.GetDomains();
 	
-				CreateDialog cd = new CreateDialog(domains);
+				CreateDialog cd = new CreateDialog(domains, Util.LastCreatedPath);
 				cd.TransientFor = this;
 	
 				int rc = 0;
@@ -1903,6 +1903,11 @@ namespace Novell.iFolder
 							curiFolders[ifHolder.iFolder.ID] = iter;
 	
 							UpdateButtonSensitivity();
+
+							// Save off the path so that the next time the user
+							// creates an iFolder, we'll open it to the directory
+							// they used last.
+							Util.LastCreatedPath = ifHolder.iFolder.UnManagedPath;
 
 							if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
 											"true") == "true")

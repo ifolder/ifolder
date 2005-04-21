@@ -40,10 +40,11 @@ namespace Novell.iFolder
 		internal static int SectionTitleSpacing = 5;
 		internal static uint DefaultBorderWidth = 10;
 
-		// The purpose of this variable is to allow us to keep track of
-		// last place the user opened/setup an iFolder so that we can open
-		// to the same place if they setup additional iFolders.
+		// The purpose of these variable is to allow us to keep track of
+		// last place the user created/setup an iFolder so that we can open
+		// to the same place the next time they create/setup an iFolder.
 		internal static string lastSetupPath = null;
+		internal static string lastCreatedPath = null;
 
 		public static void InitCatalog()
 		{
@@ -195,11 +196,7 @@ namespace Novell.iFolder
 			{
 				if (lastSetupPath == null)
 				{
-					// Setup lastSetupPath to point to the user's desktop if it exists
-					// or otherwise to the user's home directory
-					lastSetupPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-					if (lastSetupPath == null)
-						lastSetupPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+					lastSetupPath = GetDefaultUserPath();
 				}
 
 				return lastSetupPath;
@@ -208,6 +205,56 @@ namespace Novell.iFolder
 			{
 				lastSetupPath = value;
 			}
+		}
+
+		public static string LastCreatedPath
+		{
+			get
+			{
+				if (lastCreatedPath == null)
+				{
+					lastCreatedPath = GetDefaultUserPath();
+				}
+
+				return lastCreatedPath;
+			}
+
+			/// <summary>
+			/// This call expects "value" to contain the full path of
+			/// the iFolder that was just created.  It will strip off
+			/// the iFolder path.  For example:
+			///
+			///     /home/joe/ifolders/My Documents
+			///
+			///         will be changed to:
+			///
+			///     /home/joe/ifolders
+			///
+			/// </summary>
+			set
+			{
+				if (value != null)
+				{
+					int lastSlashPos = value.LastIndexOf('/');
+					if (lastSlashPos > 0)
+					{
+						lastCreatedPath = value.Substring(0, lastSlashPos);
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Returns the path to the user's Desktop if it exists or the user's
+		/// home directory if the Desktop directory is not found.
+		/// </summary>
+		private static string GetDefaultUserPath()
+		{
+			string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+			if (path == null)
+				path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+					
+			return path;
 		}
 	}
 }
