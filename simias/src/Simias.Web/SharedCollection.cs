@@ -344,9 +344,13 @@ namespace Simias.Web
 			{
 				return false;
 			}
-			
-			// Make sure the path doesn't contain any invalid characters
-			if (!Simias.Sync.SyncFile.IsNameValid(path))
+
+			// Make sure the name of the collection doesn't contain any invalid
+			// characters.  Also make sure that the path doesn't end with a
+			// slash character.
+			string collectionName = path.Substring(parentDir.Length + 1);
+			if (collectionName == null || collectionName == String.Empty
+				|| !Simias.Sync.SyncFile.IsNameValid(collectionName))
 			{
 				return false;
 			}
