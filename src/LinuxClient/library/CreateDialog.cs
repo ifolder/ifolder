@@ -17,7 +17,9 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Author: Calvin Gaisford <cgaisford@novell.com>
+ *  Authors:
+ *		Calvin Gaisford <cgaisford@novell.com>
+ *		Boyd Timothy <btimothy@novell.com>
  * 
  ***********************************************************************/
 
@@ -31,7 +33,7 @@ namespace Novell.iFolder
 		private Entry				pathEntry;
 		private DomainInformation[]	domains;
 		private OptionMenu			domainOptions;
-
+		private string				initialPath;
 
 		public string iFolderPath
 		{
@@ -51,7 +53,7 @@ namespace Novell.iFolder
 		}
 
 
-		public CreateDialog(DomainInformation[] domainArray) : base()
+		public CreateDialog(DomainInformation[] domainArray, string initialPath) : base()
 		{
 			domains = domainArray;
 
@@ -60,6 +62,8 @@ namespace Novell.iFolder
 			this.SetDefaultSize (500, 200);
 
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
+
+			this.initialPath = initialPath;
 
 			VBox dialogBox = new VBox();
 			dialogBox.Spacing = 10;
@@ -115,6 +119,9 @@ namespace Novell.iFolder
 			pathEntry = new Entry();
 			pathEntry.Changed += new EventHandler(OnPathChanged);
 			pathBox.PackStart(pathEntry, true, true, 0);
+			
+			if (this.initialPath != null && this.initialPath.Length > 0)
+				pathEntry.Text = this.initialPath;
 
 			Button pathButton = new Button(Stock.Open);
 			pathButton.Clicked += new EventHandler(OnChoosePath);
@@ -125,6 +132,7 @@ namespace Novell.iFolder
 
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
 			this.AddButton(Stock.Ok, ResponseType.Ok);
+			
 			this.SetResponseSensitive(ResponseType.Ok, false);
 		}
 
@@ -137,6 +145,11 @@ namespace Novell.iFolder
 			CompatFileChooserDialog cfcd = new CompatFileChooserDialog(
 					Util.GS("Choose a folder..."), this, 
 					CompatFileChooserDialog.Action.SelectFolder);
+
+			if (pathEntry.Text != null && pathEntry.Text.Length > 0)
+				cfcd.CurrentFolder = pathEntry.Text;
+			else if (this.initialPath != null && this.initialPath.Length > 0)
+				cfcd.CurrentFolder = this.initialPath;
 
 			int rc = cfcd.Run();
 			cfcd.Hide();
