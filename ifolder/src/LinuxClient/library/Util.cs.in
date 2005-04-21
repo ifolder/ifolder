@@ -17,7 +17,9 @@
  *  License along with this program; if not, write to the Free
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *  Author: Calvin Gaisford <cgaisford@novell.com>
+ *  Authors:
+ *		Calvin Gaisford <cgaisford@novell.com>
+ *		Boyd Timothy <btimothy@novell.com>
  *
  ***********************************************************************/
 using System;
@@ -37,6 +39,11 @@ namespace Novell.iFolder
 		internal static int SectionSpacing = 20;
 		internal static int SectionTitleSpacing = 5;
 		internal static uint DefaultBorderWidth = 10;
+
+		// The purpose of this variable is to allow us to keep track of
+		// last place the user opened/setup an iFolder so that we can open
+		// to the same place if they setup additional iFolders.
+		internal static string lastSetupPath = null;
 
 		public static void InitCatalog()
 		{
@@ -132,6 +139,7 @@ namespace Novell.iFolder
 					"  Tim Mellor",
 					"",
 					Util.GS("Quality Assurance:"),
+					"  Eric Ward",
 					"  James Bell",
 					"  Pete Mimmack",
 					"  Sharon Smith",
@@ -178,6 +186,27 @@ namespace Novell.iFolder
 			}
 			catch(Exception e)
 			{
+			}
+		}
+		
+		public static string LastSetupPath
+		{
+			get
+			{
+				if (lastSetupPath == null)
+				{
+					// Setup lastSetupPath to point to the user's desktop if it exists
+					// or otherwise to the user's home directory
+					lastSetupPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+					if (lastSetupPath == null)
+						lastSetupPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+				}
+
+				return lastSetupPath;
+			}
+			set
+			{
+				lastSetupPath = value;
 			}
 		}
 	}
