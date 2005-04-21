@@ -174,30 +174,8 @@ namespace Mono.ASPNET
 			}
 		}
 
-		private static Mutex simiasAppMutex = null;
-		static private bool IsProgramRunning()
-		{
-			// Get a path that is unique to this logged on user.
-			string path = Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData );
-			if ( ( path == null ) || ( path.Length == 0 ) )
-			{
-				path = Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData );
-			}
-
-			bool created;
-			simiasAppMutex = new Mutex( true, path.Replace( "\\", "/" ), out created );
-			return !created;
-		}
-	
 		public static int Main (string [] args)
 		{
-			// See if the program is already running for the current user.
-			if ( Server.IsProgramRunning() )
-			{
-				Console.WriteLine( "An instance of this application is already running for the current user." );
-				Environment.Exit( 0 );
-			}
-
 			bool nonstop = false;
 			bool verbose = false;
 			Trace.Listeners.Add (new TextWriterTraceListener (Console.Out));
