@@ -77,7 +77,7 @@ namespace Simias.Sync
 				reason = PolicyType.Size;
 				return false;
 			}
-			if (ftFilter.Allowed(fNode.GetFileName()))
+			if (!ftFilter.Allowed(fNode.GetFileName()))
 			{
 				reason = PolicyType.Type;
 				return false;
