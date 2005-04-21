@@ -283,6 +283,8 @@ namespace Simias.Storage
 
 		/// <summary>
 		/// Gets or sets the Node object to be a proxy that is to be overwritten by the next sync cycle.
+		/// NOTE: This is not a persistent state. As soon as the node is committed, it is lost. Use the
+		/// property IsProxy to perform a persistent proxy check.
 		/// </summary>
 		public bool Proxy
 		{
@@ -307,6 +309,14 @@ namespace Simias.Storage
 		{
 			get { return masterIncarnation; }
 			set { masterIncarnation = value; }
+		}
+
+		/// <summary>
+		/// Gets whether this node is still in the proxy stage.
+		/// </summary>
+		public bool IsProxy
+		{
+			get { return ( LocalIncarnation == 0 ) ? true : false; }
 		}
 		#endregion
 

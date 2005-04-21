@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH):$(DESTDIR)$(libdir)
 
-CollectionStoreTests_CSFILES = $(srcdir)/CollectionStoreTests.cs $(srcdir)/AssemblyInfo.cs $(srcdir)/FindMemberTests.cs
+CollectionStoreTests_CSFILES = $(srcdir)/CollectionStoreTests.cs $(srcdir)/AssemblyInfo.cs $(srcdir)/CollectionOwnerTests.cs $(srcdir)/FindMemberTests.cs
 CollectionStoreTests_CSFILES_CSC := $(subst /,$(SEP),$(CollectionStoreTests_CSFILES))
 CollectionStoreTests_INCLUDES =
 CollectionStoreTests_RESOURCES =

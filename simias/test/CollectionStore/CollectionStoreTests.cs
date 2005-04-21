@@ -1020,7 +1020,7 @@ namespace Simias.Storage.Tests
 						collection1.Revert();
 					}
 				}
-				catch ( AccessException )
+				catch ( SimiasException )
 				{
 					// This is expected.
 				}
@@ -1061,22 +1061,29 @@ namespace Simias.Storage.Tests
 				Member member = collection.GetCurrentMember();
 
 				// Serialize the collection object.
-				MemoryStream ms = new MemoryStream();
+				MemoryStream cms = new MemoryStream();
 				BinaryFormatter bf = new BinaryFormatter();
-				bf.Serialize( ms, new Node( collection ) );
+				bf.Serialize( cms, new Node( collection ) );
+
+				MemoryStream oms = new MemoryStream();
+				bf.Serialize( oms, new Node( collection.Owner ) );
 
 				// Delete the collection so it can be restored.
 				collection.Commit( collection.Delete() );
 
 				// Reset the stream before deserializing.
-				ms.Position = 0;
+				cms.Position = 0;
+				oms.Position = 0;
 
 				// Restore the collection.
-				collection = new Collection( store, ( Node )bf.Deserialize( ms ) );
+				collection = new Collection( store, ( Node )bf.Deserialize( cms ) );
+				Member owner = new Member( ( Node )bf.Deserialize( oms ) );
 				collection.ImportNode( collection, true, collection.LocalIncarnation );
+				collection.ImportNode( owner, true, owner.LocalIncarnation );
 				collection.IncarnationUpdate = 2;
+				owner.IncarnationUpdate = 2;
 				collection.Impersonate( member );
-				collection.Commit();
+				collection.Commit( new Node[] { collection, owner } );
 			}
 			finally
 			{
@@ -2392,29 +2399,28 @@ namespace Simias.Storage.Tests
 				collection.Commit();
 
 				// Turn the node into a string.
-				string nodeString = collection.Properties.ToString( false );
-
-				// Restore the collection back over the top of the existing one.
-				XmlDocument doc = new XmlDocument();
-				doc.LoadXml( nodeString );
-				Node restoreNode = new Node( doc );
-
-				// Set the node's state to restore.
-				collection.RestoreNode( restoreNode );
-				collection.Commit( restoreNode );
+				string cString = collection.Properties.ToString( false );
+				string oString = collection.Owner.Properties.ToString( false );
 
 				// Delete the collection and restore it again.
 				collection.Commit( collection.Delete() );
-				Thread.Sleep( 5000 );
 
 				// Restore the collection back over the top of the existing one.
-				doc.LoadXml( nodeString );
-				collection = new Collection( store, new Node( doc ) );
+				XmlDocument cDoc = new XmlDocument();
+				cDoc.LoadXml( cString );
+				collection = new Collection( store, new Node( cDoc ) );
+
+				XmlDocument oDoc = new XmlDocument();
+				oDoc.LoadXml( oString );
+				Member owner = new Member( new Node( oDoc ) );
 
 				// Set the node's state to restore.
 				collection.RestoreNode( collection );
-				collection.Commit();
-				Thread.Sleep( 5000 );
+				collection.RestoreNode( owner );
+				collection.Commit( new Node[] { collection, owner } );
+
+				// Get the collection to prove that it is back.
+				collection.Refresh( collection );
 			}
 			finally
 			{
@@ -2535,62 +2541,11 @@ namespace Simias.Storage.Tests
 		/// <summary>
 		/// Tests the collection owner.
 		/// </summary>
-		//[Test]
+		[Test]
 		public void CollectionOwnerTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
-
-			try
-			{
-				Member member1 = new Member( "Member1", Guid.NewGuid().ToString(), Access.Rights.Admin );
-				Member member2 = new Member( "Member2", Guid.NewGuid().ToString(), Access.Rights.Admin );
-				member1.IsOwner = true;
-				member2.IsOwner = true;
-
-				// Collection with multiple owners.
-				try
-				{
-					collection.Commit( new Node[] { collection, member1, member2 } );
-				}
-				catch ( AlreadyExistsException )
-				{
-					// This is expected.
-				}
-
-				// Commit the collection properly.
-				collection.Commit( new Node[] { collection, member1 } );
-
-				// Collection with two owners.
-				try
-				{
-					collection.Commit( member2 );
-				}
-				catch ( CollectionStoreException )
-				{
-					// This is expected.
-				}
-
-				// Collection with no owner.
-				member1.IsOwner = false;
-				try
-				{
-					collection.Commit( member1 );
-				}
-				catch ( CollectionStoreException )
-				{
-					// This is expected.
-					member1.IsOwner = true;
-					member2.IsOwner = false;
-				}
-
-				// Really change the owner.
-				collection.ChangeOwner( member2, Access.Rights.ReadOnly );
-				collection.Commit();
-			}
-			finally
-			{
-				collection.Commit( collection.Delete() );
-			}
+			CollectionOwnerTests test = new CollectionOwnerTests( store );
+			test.RunTests();
 		}
 
 		/// <summary>

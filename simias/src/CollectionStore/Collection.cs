@@ -210,14 +210,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets whether this collection is still in the proxy stage.
-		/// </summary>
-		public bool IsProxy
-		{
-			get { return ( LocalIncarnation == 0 ) ? true : false; }
-		}
-
-		/// <summary>
 		/// Gets whether this collection is locked, preventing modifications from being made
 		/// by an impersonating user.
 		/// </summary>
@@ -1272,6 +1264,93 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Validates that the proposed owner changes are valid for this collection.
+		/// </summary>
+		/// <param name="memberList">List of nodes that contain proposed ownership changes.</param>
+		private void ValidateCollectionOwner( ArrayList memberList )
+		{
+			Member currentOwner = Owner;
+
+			// Only validate if there are changes to the membership.
+			if ( memberList.Count > 0 )
+			{
+				Hashtable ownerTable = new Hashtable( memberList.Count + 1 );
+
+				// If there is a current owner, add it to the table.
+				if ( currentOwner != null )
+				{
+					ownerTable[ currentOwner.ID ] = currentOwner;
+				}
+
+				// Go through each node and add or remove it from the table depending on if
+				// it is an owner node.
+				foreach( Node node in memberList )
+				{
+					if ( ( node.Properties.HasProperty( PropertyTags.Owner ) == true ) && 
+						( node.Properties.State != PropertyList.PropertyListState.Delete ) )
+					{
+						ownerTable[ node.ID ] = node;
+					}
+					else
+					{
+						if ( ownerTable.ContainsKey( node.ID ) )
+						{
+							ownerTable.Remove( node.ID );
+						}
+					}
+				}
+
+				// There must be at least one owner and only one owner.
+				if ( ownerTable.Count == 0 )
+				{
+					throw new DoesNotExistException( "Collection must have an owner." );
+				}
+				else if ( ownerTable.Count > 1 )
+				{
+					// Account for the case where the proxy is still around when the real owner
+					// gets pulled down.
+					if ( ( currentOwner == null ) || !currentOwner.IsProxy || ( ownerTable.Count > 2 ) )
+					{
+						throw new AlreadyExistsException( "Collection cannot have more that one owner." );
+					}
+
+					// Remove the proxy owner from the owner table so there is only one entry left.
+					ownerTable.Remove( currentOwner.ID );
+				}
+
+				// Make sure that the owner rights on the collection are not being downgraded.
+				IEnumerator e = ownerTable.Values.GetEnumerator(); e.MoveNext();
+				Member owner = new Member( e.Current as Node );
+				if ( !owner.IsProxy && ( owner.Rights != Access.Rights.Admin ) )
+				{
+					// The only exception to this rule is a POBox. The owner of a POBox will only
+					// have ReadWrite access.
+					if ( !IsBaseType( this, NodeTypes.POBoxType ) || ( owner.Rights != Access.Rights.ReadWrite ) )
+					{
+						throw new CollectionStoreException( "Cannot change owner's rights." );
+					}
+				}
+
+				// Make sure that ownership cannot change on a domain.
+				if ( IsBaseType( this, NodeTypes.DomainType ) &&
+					( currentOwner != null ) &&
+					( currentOwner.IsProxy == false ) &&
+					( currentOwner.ID != owner.ID ) )
+				{
+					throw new CollectionStoreException( "Cannot remove the domain owner." );
+				}
+			}
+			else
+			{
+				// Make sure that there is an owner already on the collection.
+				if ( currentOwner == null )
+				{
+					throw new DoesNotExistException( "Collection must have an owner." );
+				}
+			}
+		}
+
+		/// <summary>
 		/// Validates and performs access checks on a Collection before it is committed.
 		/// </summary>
 		/// <param name="node">Node object to validate changes for.</param>
@@ -1417,6 +1496,7 @@ namespace Simias.Storage
 				bool hasCollection = false;
 				bool hasFileNode = false;
 				Member collectionOwner = null;
+				ArrayList memberList = new ArrayList();
 
 				// See if the database is being shut down.
 				if ( store.ShuttingDown )
@@ -1458,15 +1538,11 @@ namespace Simias.Storage
 							// Keep track of any ownership changes.
 							if ( node.Properties.HasProperty( PropertyTags.Owner ) )
 							{
-								// There can only be a single collection owner. Also make sure that it just isn't
-								// the same Node object being committed twice.
-								if ( ( collectionOwner != null ) && ( collectionOwner.ID != node.ID ) )
-								{
-									throw new AlreadyExistsException( String.Format( "Owner {0} - ID: {1} already exists for collection {2} - ID: {3}.", collectionOwner.Name, collectionOwner.ID, name, id ) );
-								}
-
 								collectionOwner = new Member( node );
 							}
+
+							// Add this member node to the list to validate the collection owner a little later on.
+							memberList.Add( node );
 						}
 						else if ( !doAdminCheck && IsBaseType( node, NodeTypes.PolicyType ) )
 						{
@@ -1512,7 +1588,9 @@ namespace Simias.Storage
 							// collection needs to be created also.
 							commitList = new Node[ nodeList.Length + 1 ];
 							nodeList.CopyTo( commitList, 0 );
-							commitList[ commitList.Length - 1 ] = accessControl.GetCurrentMember( store, Domain, true );
+							Member owner = accessControl.GetCurrentMember( store, Domain, true );
+							commitList[ commitList.Length - 1 ] = owner;
+							memberList.Add( owner );
 						}
 						else
 						{
@@ -1549,18 +1627,15 @@ namespace Simias.Storage
 								{
 									// Get the current owner of the collection.
 									Member currentOwner = Owner;
-
-									// See if ownership is changing and if it is, then the current user has to be
-									// the current owner.
-									if ( ( collectionOwner.UserID != currentOwner.UserID ) && ( currentOwner.UserID != member.UserID ) )
+									if ( currentOwner != null )
 									{
-										throw new AccessException( this, member, String.Format( "User {0} - ID: {1} does not have sufficient rights to change the collection ownership.", member.Name, member.UserID ) );
-									}
-
-									// Don't allow the owner's rights to be set below admin level.
-									if ( collectionOwner.Rights != Access.Rights.Admin )
-									{
-										throw new AccessException( this, member, String.Format( "Owner {0} - ID: {1} rights cannot be downgraded.", collectionOwner.Name, collectionOwner.UserID ) );
+										// See if ownership is changing and if it is, then the current user has to be
+										// the current owner.
+										if ( ( collectionOwner.UserID != currentOwner.UserID ) && 
+											 ( currentOwner.UserID != member.UserID ) )
+										{
+											throw new AccessException( this, member, String.Format( "User {0} - ID: {1} does not have sufficient rights to change the collection ownership.", member.Name, member.UserID ) );
+										}
 									}
 								}
 							}
@@ -1573,6 +1648,9 @@ namespace Simias.Storage
 								}
 							}
 						}
+
+						// Validate the collection ownership status.
+						ValidateCollectionOwner( memberList );
 
 						// See if we have a file node but no collection node.
 						if ( hasFileNode && !hasCollection )

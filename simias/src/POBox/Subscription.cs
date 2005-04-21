@@ -774,6 +774,7 @@ namespace Simias.POBox
 			if (this.ToMemberNodeID != null && this.ToMemberNodeID != "")
 			{
 				Member member = new Member(this.ToName, this.ToMemberNodeID, this.ToIdentity, this.SubscriptionRights, null);
+				member.IsOwner = true;
 				member.Proxy = true;
 				commitList.Add(member);
 			}
