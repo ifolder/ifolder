@@ -229,32 +229,28 @@ namespace Simias
 			// Assume failure
 			Simias.Authentication.Status status = new Simias.Authentication.Status( SCodes.InvalidCredentials );
 
-			// Requires session support
-			if ( httpContext.Session != null )
+			// Check for an authorization header.
+			string[] encodedCredentials = httpContext.Request.Headers.GetValues( "Authorization" );
+			if ( ( encodedCredentials != null ) && ( encodedCredentials[ 0 ] != null ) )
 			{
-				// Check for an authorization header.
-				string[] encodedCredentials = httpContext.Request.Headers.GetValues( "Authorization" );
-				if ( ( encodedCredentials != null ) && ( encodedCredentials[ 0 ] != null ) )
+				// Get the credentials from the auth header.
+				LocalCredentials creds = new LocalCredentials();
+				bool success = creds.AuthorizationHeaderToCredentials( encodedCredentials[ 0 ] );
+				if ( success )
 				{
-					// Get the credentials from the auth header.
-					LocalCredentials creds = new LocalCredentials();
-					bool success = creds.AuthorizationHeaderToCredentials( encodedCredentials[ 0 ] );
-					if ( success )
+					// Valid credentials?
+					if ( ( creds.Username != null ) && ( creds.Password != null ) && ( creds.DomainID != null ) )
 					{
-						// Valid credentials?
-						if ( ( creds.Username != null ) && ( creds.Password != null ) && ( creds.DomainID != null ) )
+						// Only support basic and make sure that the domain is local.
+						if ( ( creds.AuthType == "basic" ) && ( creds.DomainID == store.LocalDomain ) )
 						{
-							// Only support basic and make sure that the domain is local.
-							if ( ( creds.AuthType == "basic" ) && ( creds.DomainID == store.LocalDomain ) )
+							// Get the member of the local domain and compare the passwords.
+							Member member = domain.GetMemberByName( creds.Username );
+							if ( ( member != null ) && ( store.LocalPassword == creds.Password ) )
 							{
-								// Get the member of the local domain and compare the passwords.
-								Member member = domain.GetMemberByName( creds.Username );
-								if ( ( member != null ) && ( store.LocalPassword == creds.Password ) )
-								{
-									status.UserName = member.Name;
-									status.UserID = member.UserID;
-									status.statusCode = SCodes.Success;
-								}
+								status.UserName = member.Name;
+								status.UserID = member.UserID;
+								status.statusCode = SCodes.Success;
 							}
 						}
 					}
