@@ -17,7 +17,9 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Author: Calvin Gaisford <cgaisford@novell.com>
+ *  Authors:
+ *		Calvin Gaisford <cgaisford@novell.com>
+ *		Boyd Timothy <btimothy@novell.com>
  * 
  ***********************************************************************/
 
@@ -222,11 +224,6 @@ namespace Novell.iFolder
 		private uint objectsToSync = 0;
 		private bool startingSync  = false;
 
-		// The purpose of this variable is to allow us to keep track of
-		// last place the user opened/setup an iFolder so that we can open
-		// to the same place if they setup additional iFolders.
-		private string lastSetupPath = null;
-
 		/// <summary>
 		/// Default constructor for iFolderWindow
 		/// </summary>
@@ -242,12 +239,6 @@ namespace Novell.iFolder
 			curiFolders = new Hashtable();
 			curDomain = null;
 			curDomains = null;
-
-			// Setup lastSetupPath to point to the user's desktop if it exists
-			// or otherwise to the user's home directory
-			lastSetupPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-			if (lastSetupPath == null)
-				lastSetupPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
 			CreateWidgets();
 		}
@@ -1794,7 +1785,7 @@ namespace Novell.iFolder
 				do
 				{
 					iFolderAcceptDialog iad = 
-							new iFolderAcceptDialog(ifHolder.iFolder, lastSetupPath);
+							new iFolderAcceptDialog(ifHolder.iFolder, Util.LastSetupPath);
 					iad.TransientFor = this;
 					rc = iad.Run();
 					newPath = iad.Path;
@@ -1813,7 +1804,7 @@ namespace Novell.iFolder
 						// Save off the path so that the next time the user
 						// opens the setup dialog, we'll open to the same
 						// directory
-						lastSetupPath = newPath;
+						Util.LastSetupPath = newPath;
 					}
 				}
 				while(rc == -5);
