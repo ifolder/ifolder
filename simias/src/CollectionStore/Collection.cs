@@ -83,7 +83,12 @@ namespace Simias.Storage
 		/// <summary>
 		/// Used to do a quick lookup of the domain ID.
 		/// </summary>
-		string domainID = null;
+		private string domainID = null;
+
+		/// <summary>
+		/// Change log used to indicate events to a collection.
+		/// </summary>
+		private ChangeLog changeLog = new ChangeLog();
 		#endregion
 
 		#region Properties
@@ -889,6 +894,9 @@ namespace Simias.Storage
 
 				// Dump all nodes in the cache that belong to this collection.
 				store.Cache.DumpCache( id );
+
+				// Delete the collection's change log.
+				changeLog.DeleteChangeLogWriter( id );
 			}
 			else
 			{
@@ -941,6 +949,12 @@ namespace Simias.Storage
 							{
 								// Update the cache before indicating the event.
 								store.Cache.Add( this, node );
+
+								// If this is a collection being created, create a change log for it.
+								if ( IsType( node, NodeTypes.CollectionType ) )
+								{
+									changeLog.CreateChangeLogWriter( node.ID );
+								}
 
 								// Indicate the event.
 								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );

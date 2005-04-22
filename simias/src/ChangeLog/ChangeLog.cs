@@ -973,29 +973,9 @@ namespace Simias.Storage
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger( typeof( ChangeLog ) );
 
 		/// <summary>
-		/// Configuration object for the Collection Store.
-		/// </summary>
-		private Configuration config;
-
-		/// <summary>
 		/// Table used to keep track of ChangeLogWriter objects.
 		/// </summary>
-		private Hashtable logWriterTable = new Hashtable();
-
-		/// <summary>
-		/// Subscribes to Collection Store events.
-		/// </summary>
-		private EventSubscriber subscriber;
-
-		/// <summary>
-		/// Queue used to make sure that we don't block any threads that deliver events.
-		/// </summary>
-		private Queue eventQueue = new Queue();
-
-		/// <summary>
-		/// Flag that indicates that a thread is scheduled to process work on the queue.
-		/// </summary>
-		private bool threadScheduled = false;
+		private static Hashtable logWriterTable = new Hashtable();
 		#endregion
 
 		#region Constructor
@@ -1007,120 +987,47 @@ namespace Simias.Storage
 		}
 		#endregion
 
-		#region Private Methods
+		#region Public Methods
 		/// <summary>
-		/// Delegate that is called when a Node object has been created.
+		/// Creates a change log writer for the specified collection.
 		/// </summary>
-		/// <param name="args">Event arguments.</param>
-		private void OnCollectionCreate( NodeEventArgs args )
+		/// <param name="collectionID">The identifier for the collection.</param>
+		public void CreateChangeLogWriter( string collectionID )
 		{
-			// If the Node ID matches the Collection ID then this is a collection event.
-			if ( args.Collection == args.Node )
+			lock ( logWriterTable )
 			{
-				// Queue the event and schedule to come back later to process.
-				lock ( eventQueue )
+				if ( !logWriterTable.ContainsKey( collectionID ) )
 				{
-					// Add the event to the queue.
-					eventQueue.Enqueue( new ChangeLogEvent( ChangeLogEvent.ChangeEventType.CollectionCreate, args ) );
-					
-					// See if a thread has already been scheduled to take care of this event.
-					if ( threadScheduled == false )
-					{
-						ThreadPool.QueueUserWorkItem( new WaitCallback( ProcessChangeLogEvent ) );
-						threadScheduled = true;
-					}
+					// Allocate a ChangeLogWriter object for this collection and store it in the table.
+					logWriterTable.Add( collectionID, new ChangeLogWriter( collectionID ) );
+					log.Debug( "Added ChangeLogWriter for collection {0}", collectionID );
 				}
 			}
 		}
 
 		/// <summary>
-		/// Delegate that is called when a Node object has been deleted.
+		/// Deletes a change log writer for the specified collection.
 		/// </summary>
-		/// <param name="args">Event arguments.</param>
-		private void OnCollectionDelete( NodeEventArgs args )
+		/// <param name="collectionID">The identifier for the collection.</param>
+		public void DeleteChangeLogWriter( string collectionID )
 		{
-			// If the Node ID matches the Collection ID then this is a collection event.
-			if ( args.Collection == args.Node )
+			lock ( logWriterTable )
 			{
-				// Queue the event and schedule to come back later to process.
-				lock ( eventQueue )
+				// Make sure the writer is in the table.
+				if ( logWriterTable.ContainsKey( collectionID ) )
 				{
-					// Add the event to the queue.
-					eventQueue.Enqueue( new ChangeLogEvent( ChangeLogEvent.ChangeEventType.CollectionDelete, args ) );
-					
-					// See if a thread has already been scheduled to take care of this event.
-					if ( threadScheduled == false )
-					{
-						ThreadPool.QueueUserWorkItem( new WaitCallback( ProcessChangeLogEvent ) );
-						threadScheduled = true;
-					}
-				}
-			}
-		}
+					// Remove the ChangeLogWriter object from the table and dispose it.
+					ChangeLogWriter logWriter = logWriterTable[ collectionID ] as ChangeLogWriter;
+					logWriterTable.Remove( collectionID );
 
-		/// <summary>
-		/// Processes collection created and deleted events and creates or deletes the respective
-		/// ChangeLogWriter objects.
-		/// </summary>
-		/// <param name="state">Not used.</param>
-		private void ProcessChangeLogEvent( object state )
-		{
-			while ( true )
-			{
-				ChangeLogEvent work = null;
+					// Get the path to the file before disposing it.
+					string logPath = logWriter.LogFile;
+					logWriter.Dispose();
 
-				// Lock the queue before accessing it to get the work to do.
-				lock ( eventQueue )
-				{
-					if ( eventQueue.Count > 0 )
-					{
-						work = eventQueue.Dequeue() as ChangeLogEvent;
-					}
-					else
-					{
-						threadScheduled = false;
-						break;
-					}
-				}
+					try { File.Delete( logPath ); } 
+					catch {}
 
-				switch ( work.Type )
-				{
-					case ChangeLogEvent.ChangeEventType.CollectionCreate:
-					{
-						lock ( logWriterTable )
-						{
-							if ( !logWriterTable.ContainsKey( work.Args.Collection ) )
-							{
-								// Allocate a ChangeLogWriter object for this collection and store it in the table.
-								logWriterTable.Add( work.Args.Collection, new ChangeLogWriter( config, work.Args.Collection ) );
-								log.Debug( "Added ChangeLogWriter for collection {0}", work.Args.Collection );
-							}
-						}
-						break;
-					}
-
-					case ChangeLogEvent.ChangeEventType.CollectionDelete:
-					{
-						lock ( logWriterTable )
-						{
-							// Make sure the writer is in the table.
-							if ( logWriterTable.ContainsKey( work.Args.Collection ) )
-							{
-								// Remove the ChangeLogWriter object from the table and dispose it.
-								ChangeLogWriter logWriter = logWriterTable[ work.Args.Collection ] as ChangeLogWriter;
-								logWriterTable.Remove( work.Args.Collection );
-
-								// Get the path to the file before disposing it.
-								string logPath = logWriter.LogFile;
-								logWriter.Dispose();
-
-								try { File.Delete( logPath ); } catch {}
-
-								log.Debug( "Deleted ChangeLogWriter for collection {0}", work.Args.Collection );
-							}
-						}
-						break;
-					}
+					log.Debug( "Deleted ChangeLogWriter for collection {0}", collectionID );
 				}
 			}
 		}
@@ -1133,30 +1040,13 @@ namespace Simias.Storage
 		/// <param name="config">Configuration file object that indicates which Collection Store to use.</param>
 		public void Start( Configuration config )
 		{
-			this.config = config;
-
-			// Setup the event listeners.
-			subscriber = new EventSubscriber(  );
-			subscriber.NodeCreated += new NodeEventHandler( OnCollectionCreate );
-			subscriber.NodeDeleted += new NodeEventHandler( OnCollectionDelete );
-
 			// Get a store object.
 			Store store = Store.GetStore();
 
 			// Get all of the collection objects and set up listeners for them.
 			foreach (ShallowNode sn in store)
 			{
-				Collection c = new Collection(store, sn);
-				lock ( logWriterTable )
-				{
-					// Make sure the entry isn't already in the table.
-					if ( !logWriterTable.ContainsKey( c.ID ) )
-					{
-						// Allocate a ChangeLogWriter object for this collection and store it in the table.
-						logWriterTable.Add( c.ID, new ChangeLogWriter( config, c.ID ) );
-						log.Debug( "Added ChangeLogWriter for collection {0}", c.ID );
-					}
-				}
+				CreateChangeLogWriter( sn.ID );
 			}
 
 			log.Info( "Change Log Service started." );
@@ -1190,9 +1080,6 @@ namespace Simias.Storage
 		/// </summary>
 		public void Stop()
 		{
-			// Dispose the collection listeners.
-			subscriber.Dispose();
-
 			// Remove all of the log writers from the table and dispose them.
 			lock ( logWriterTable )
 			{
@@ -1296,9 +1183,8 @@ namespace Simias.Storage
 		/// <summary>
 		/// Initializes a new instance of the object class.
 		/// </summary>
-		/// <param name="config">Store configuration file.</param>
 		/// <param name="collectionID">Collection identifier to listen for events.</param>
-		public ChangeLogWriter( Configuration config, string collectionID )
+		public ChangeLogWriter( string collectionID )
 		{
 			this.collectionID = collectionID;
 
@@ -1307,7 +1193,7 @@ namespace Simias.Storage
 			try
 			{
 				// Get the path to the store managed directory for this collection.
-				string logFileDir = Path.Combine( config.StorePath, "log" );
+				string logFileDir = Path.Combine( Configuration.GetConfiguration().StorePath, "log" );
 				if ( !Directory.Exists( logFileDir ) )
 				{
 					Directory.CreateDirectory( logFileDir );
@@ -1948,17 +1834,17 @@ namespace Simias.Storage
 		private bool GetReadPosition( FileStream fs, EventContext cookie )
 		{
 			bool foundOffset = false;
+			int bytesRead = 0;
+			byte[] buffer = new byte[ ChangeLogRecord.RecordSize ];
 
 			// Make sure that there is a valid cookie.
 			if ( cookie != null )
 			{
 				try
 				{
-					byte[] buffer = new byte[ ChangeLogRecord.RecordSize ];
-
 					// Using the hint in the cookie, see if the read position still exists in the file.
 					fs.Position = cookie.Hint;
-					int bytesRead = fs.Read( buffer, 0, buffer.Length );
+					bytesRead = fs.Read( buffer, 0, buffer.Length );
 					if ( bytesRead > 0 )
 					{
 						ChangeLogRecord record = new ChangeLogRecord( buffer );
@@ -1986,6 +1872,18 @@ namespace Simias.Storage
 				catch ( IOException e )
 				{
 					log.Error( "GetReadPosition():" + e.Message );
+				}
+				catch ( Exception e )
+				{
+					char[] debugBuffer = new char[ bytesRead ];
+					for ( int i = 0; i < bytesRead; ++i )
+					{
+						debugBuffer[ i ] = Convert.ToChar( buffer[ i ] );
+					}
+
+					log.Debug( e, "Failed to get read position" );
+					log.Debug( "Cookie: RecordID = {0}, TimeStamp = {1}, Hint = {2}", cookie.RecordID, cookie.TimeStamp, cookie.Hint );
+					log.Debug( "Bytes read = {0}, buffer = {1}", bytesRead, debugBuffer );
 				}
 			}
 
@@ -2136,7 +2034,7 @@ namespace Simias.Storage
 						fs.Close();
 					}
 				}
-				catch( IOException e )
+				catch( Exception e )
 				{
 					throw new CookieExpiredException( e );
 				}
