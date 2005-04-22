@@ -433,7 +433,13 @@ namespace Simias.POBox
 						subscription.FromIdentity,
 						subscription.MessageID);
 
-				if ( subInfo != null )
+				if ( subInfo.State == (int) SubscriptionStates.Unknown )
+				{
+					log.Debug( " Server cannot find subscription. Deleting local subscription" );
+					poBox.Commit( poBox.Delete( subscription ) );
+					return true;
+				}
+				else
 				{
 					log.Debug( "  subInfo.FromName: " + subInfo.FromName );
 					log.Debug( "  subInfo.ToName: " + subInfo.ToName );
@@ -465,12 +471,12 @@ namespace Simias.POBox
 							// save details
 							subscription.AddDetails( details );
 							poBox.Commit( subscription );
-					
+				
 							// create slave stub
 							subscription.ToMemberNodeID = subInfo.ToNodeID;
 							subscription.CreateSlave( poBox.StoreReference );
 						}
-						
+					
 						// acknowledge the message
 						// which removes the originator's 
 						SubscriptionMsg subMsg = subscription.GenerateSubscriptionMessage();
@@ -482,7 +488,7 @@ namespace Simias.POBox
 							poBox.Commit( subscription );
 						}
 						else 
-						if (wsStatus == POBoxStatus.UnknownSubscription)
+							if (wsStatus == POBoxStatus.UnknownSubscription)
 						{
 							log.Debug( "Failed acknowledging a subscription" );
 							log.Debug( "The subscription did not exist on the server" );

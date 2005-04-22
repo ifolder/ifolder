@@ -348,7 +348,6 @@ namespace Simias.POBoxService.Web
 		[SoapDocumentMethod]
 		public POBoxStatus DeclinedSubscription( SubscriptionMsg subMsg )
 		{
-			POBoxStatus	status = POBoxStatus.UnknownError;
 			Simias.POBox.POBox	toPOBox;
 			Store				store = Store.GetStore();
 		
@@ -585,7 +584,6 @@ namespace Simias.POBoxService.Web
 		POBoxStatus
 		AckSubscription( SubscriptionMsg subMsg )
 		{
-			POBoxStatus	status = POBoxStatus.UnknownError;
 			Simias.POBox.POBox	poBox;
 			Store				store = Store.GetStore();
 		
@@ -703,7 +701,9 @@ namespace Simias.POBoxService.Web
 			if (poBox == null)
 			{
 				log.Debug("GetSubscriptionInfo - PO Box not found");
-				return(null);
+				subInfo = new SubscriptionInformation();
+				subInfo.State = ( int )SubscriptionStates.Unknown;
+				return(subInfo);
 			}
 
 			// check that the message has already not been posted
@@ -720,7 +720,9 @@ namespace Simias.POBoxService.Web
 			if (sn == null)
 			{
 				log.Debug("GetSubscriptionInfo - Subscription does not exist");
-				return(null);
+				subInfo = new SubscriptionInformation();
+				subInfo.State = ( int )SubscriptionStates.Unknown;
+				return(subInfo);
 			}
 
 			// generate the subscription info object and return it
@@ -731,7 +733,9 @@ namespace Simias.POBoxService.Web
 			if (cSharedCollection == null)
 			{
 				log.Debug("GetSubscriptionInfo - Collection not found");
-				return(null);
+				subInfo = new SubscriptionInformation();
+				subInfo.State = ( int )SubscriptionStates.Unknown;
+				return(subInfo);
 			}
 
 			UriBuilder colUri = 
