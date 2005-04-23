@@ -170,7 +170,9 @@ namespace Simias.SimpleServer
 
 				if ( ownerMember == null || ownerMember == "" )
 				{
-					throw new SimiasException( "No member with owner status specified" );
+					// Take the first child node and make it the owner
+					ownerNode = domainElement.ChildNodes[0];
+					ownerMember = ownerNode.Attributes["Name"].Value;
 				}
 
 				//
@@ -350,15 +352,6 @@ namespace Simias.SimpleServer
 				return;
 			}
 
-			/*
-			Novell.AddressBook.Manager abManager = Novell.AddressBook.Manager.Connect();
-			if ( abManager == null )
-			{
-				log.Error("failed to connect to the address book");
-				return;
-			}
-			*/
-
 			Simias.Storage.Domain ssDomain = null;
 
 			try
@@ -366,21 +359,6 @@ namespace Simias.SimpleServer
 				ssDomain = this.GetSimpleServerDomain( false, "" );
 			}
 			catch{}
-
-			//
-			// If this domain isn't already an Address Book, make it one
-			//
-
-			/*
-			if (ssDomain.IsType( ssDomain, "AB:AddressBook" ) == false)
-			{
-				ssDomain.SetType( ssDomain, "AB:AddressBook" );
-				ssDomain.Commit();
-			}
-			
-
-			AddressBook systemBook = abManager.GetAddressBook( ssDomain.ID );
-			*/
 
 			try
 			{
@@ -496,7 +474,7 @@ namespace Simias.SimpleServer
 								ssMember.Given = lastName;
 							}
 
-							if ( ssMember.FN == null )
+							if ( ssMember.FN != ssMember.Given + " " + ssMember.Family )
 							{
 								ssMember.FN = ssMember.Given + " " + ssMember.Family;
 							}
@@ -564,12 +542,45 @@ namespace Simias.SimpleServer
 				{
 					foreach( ShallowNode cShallow in deleteList )
 					{
-						Node cNode = new Node( ssDomain, cShallow );
-						if ( ssDomain.IsBaseType( cNode, "Member" ) == true )
+						Member dMember = new Member( ssDomain, cShallow );
+						//Node cNode = new Node( ssDomain, cShallow );
+						if ( ssDomain.IsBaseType( dMember, "Member" ) == true )
 						{	
+							// Get all of the collections that this user is member of.
+							ICSList cList = store.GetCollectionsByUser( dMember.UserID );
+							foreach ( ShallowNode sn in cList )
+							{
+								// Remove the user as a member of this collection.
+								Collection c = new Collection( store, sn );
+
+								// Only look for collections from the specified domain and
+								// don't allow this user's membership from being removed from the domain.
+								if ( ( c.Domain == ssDomain.ID ) && !c.IsBaseType( c, Simias.Client.NodeTypes.DomainType ) )
+								{
+									Member cMember = c.GetMemberByID( dMember.UserID );
+									if ( cMember != null )
+									{
+										if ( cMember.IsOwner )
+										{
+											// Don't remove an orphaned collection.
+											if ( ( cMember.UserID != ssDomain.Owner.UserID ) || ( c.PreviousOwner == null ) )
+											{
+												// The user is the owner, delete this collection.
+												c.Commit( c.Delete() );
+											}
+										}
+										else
+										{
+											// Not the owner, just remove the membership.
+											c.Commit( c.Delete( cMember ) );
+										}
+									}
+								}
+							}
+							
 							// Delete this sucker...
-							log.Debug("deleting: " + cNode.Name);
-							ssDomain.Commit( ssDomain.Delete( cNode ) );
+							log.Debug("deleting: " + dMember.Name);
+							ssDomain.Commit( ssDomain.Delete( dMember ) );
 						}
 					}
 				}
