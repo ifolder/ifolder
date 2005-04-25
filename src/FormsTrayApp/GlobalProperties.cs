@@ -2025,11 +2025,19 @@ namespace Novell.FormsTrayApp
 
 						lock (ht)
 						{
-							ht.Remove(ifolder.ID);
 							ht.Add(newiFolder.ID, lvi);
 						}
 
 						updateListViewItem(lvi);
+					}
+					else
+					{
+						lvi.Remove();
+					}
+
+					lock (ht)
+					{
+						ht.Remove(ifolder.ID);
 					}
 				}
 			}
@@ -2166,19 +2174,30 @@ namespace Novell.FormsTrayApp
 						// Notify the shell.
 						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
 
-						// Update the listview item.
-						lvi.Tag = new iFolderObject(newiFolder);
+						if (newiFolder != null)
+						{
+							// Update the listview item.
+							lvi.Tag = new iFolderObject(newiFolder);
+
+							lock (ht)
+							{
+								ht.Add(newiFolder.ID, lvi);
+							}
+
+							updateListViewItem(lvi);
+
+							// Decline the invitation.
+							ifWebService.DeclineiFolderInvitation(newiFolder.DomainID, newiFolder.ID);
+						}
+						else
+						{
+							lvi.Remove();
+						}
 
 						lock (ht)
 						{
 							ht.Remove(ifolder.ID);
-							ht.Add(newiFolder.ID, lvi);
 						}
-
-						updateListViewItem(lvi);
-
-						// Decline the invitation.
-						ifWebService.DeclineiFolderInvitation(newiFolder.DomainID, newiFolder.ID);
 					}
 				}
 			}
