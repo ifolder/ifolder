@@ -52,7 +52,7 @@ namespace Simias.Sync
 		static CollectionLock()
 		{
 			Configuration conf = Configuration.GetConfiguration();
-			totalDepth = int.Parse(conf.Get("ConcurrentClients", "64"));
+			totalDepth = int.Parse(conf.Get(SyncService.configSection, "ConcurrentClients", "64"));
 		}
 		
 		/// <summary>
@@ -124,6 +124,7 @@ namespace Simias.Sync
 	/// </summary>
 	public class SyncService
 	{
+		internal static string configSection = "SyncService";
 		static Store store = Store.GetStore();
 		/// <summary>
 		/// Used to log to the log file.
