@@ -122,7 +122,7 @@
 
 
 //===================================================================
-// showiFolderWindow
+// showHelp
 // Shows the main iFolder Window
 //===================================================================
 - (IBAction)showHelp:(id)sender
@@ -334,12 +334,30 @@
 
 	NSLog(@"Creating and loading iFolderData");
 	[ifolderdata refresh:NO];
-		
+	
 	// Startup the event processing thread
     [NSThread detachNewThreadSelector:@selector(simiasEventThread:)
         toTarget:self withObject:nil];
 
 	[iFolderWindowController updateStatusTS:NSLocalizedString(@"Idle...", nil)];
+
+	// If there are no domains when the app first launches, the show a dialog that
+	// will help get an account created
+	if([ifolderdata getDomainCount] < 1)
+	{
+		int rc;
+		
+		rc = NSRunAlertPanel(NSLocalizedString(@"Setup  iFolder Account", nil), 
+							NSLocalizedString(@"The iFolder client is now installed and ready to use.  To begin using iFolder, you must first setup an iFolder account.  Would you like to setup your iFolder account now?", nil),
+							NSLocalizedString(@"Yes", nil), 
+							NSLocalizedString(@"No", nil),
+							nil);
+
+		if(rc == NSAlertDefaultReturn)
+		{
+			[[iFolderPrefsController sharedInstance] showAccountsWindow];
+		}
+	}
 }
 
 
@@ -493,10 +511,10 @@
 			{
 				[self processFileSyncEvent:(SMFileSyncEvent *)sme];
 			}
-			else
-			{
-				NSLog(@"***** UNHANDLED EVENT ****  Type: %@", [sme eventType]);
-			}
+//			else
+//			{
+//				NSLog(@"***** UNHANDLED EVENT ****  Type: %@", [sme eventType]);
+//			}
 			[sme release];
 		}
 	}
@@ -545,10 +563,10 @@
 	{
 		[self processUserNodeEvent:ne];
 	}
-	else
-	{
-		NSLog(@"***** UNHANDLED NODE EVENT ****  Type: %@", [ne type]);
-	}
+//	else
+//	{
+//		NSLog(@"***** UNHANDLED NODE EVENT ****  Type: %@", [ne type]);
+//	}
 
 }
 

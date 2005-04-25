@@ -55,6 +55,8 @@
 
 + (iFolderPrefsController *)sharedInstance;
 
+-(void)showAccountsWindow;
+
 - (void) updateSize:(NSSize)newSize;
 
 // Toobar Delegates
