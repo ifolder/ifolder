@@ -69,7 +69,7 @@ namespace Novell.FormsTrayApp
 			server.Text = domainInfo.Name;
 			host.Text = domainInfo.Host;
 			user.Text = domainInfo.MemberName;
-			icon.Image = Novell.Win32Util.Win32Window.IconToAlphaBitmap(SystemIcons.Information);
+			icon.Image = Novell.Win32Util.Win32Window.IconToAlphaBitmap(SystemIcons.Question);
 
 			Graphics g = server.CreateGraphics();
 			try
