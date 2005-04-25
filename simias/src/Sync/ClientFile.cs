@@ -705,8 +705,6 @@ namespace Simias.Sync
 			
 			foreach(OffsetSegment seg in writeArray)
 			{
-				if (stopping)
-					break;
 				// Write the bytes to the output stream.
 				if (seg.Length > 0)
 				{
@@ -714,6 +712,8 @@ namespace Simias.Sync
 					ReadPosition = seg.Offset;
 					while (leftToSend > 0)
 					{	
+						if (stopping)
+							break;
 						int bytesToSend = (int)Math.Min(MaxXFerSize, leftToSend);
 						syncService.WriteFile(OutStream, ReadPosition, bytesToSend);
 						leftToSend -= bytesToSend;
