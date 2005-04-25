@@ -3442,15 +3442,6 @@
   <data name="saveAccountTitle">
     <value>Save New Account</value>
   </data>
-  <data name="deleteAccountPrompt">
-    <value>Do you want to remove this account from all workstations?</value>
-  </data>
-  <data name="deleteAccountInfo">
-    <value>Click No to remove this account from only the local workstation.  Click Yes to remove this account from all workstations and to remove all iFolders owned by this account from the server.  Click Cancel to abort the delete operation.</value>
-  </data>
-  <data name="deleteAccountTitle">
-    <value>Delete Account</value>
-  </data>
   <data name="savePasswordError">
     <value>An error was encountered while saving the password.</value>
   </data>
