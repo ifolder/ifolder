@@ -43,6 +43,13 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 }
 
 
+-(void)showAccountsWindow
+{
+	[self showWindow:self];
+	[toolbar setSelectedItemIdentifier:@"Accounts"];
+	[self accountPreferences:nil];
+}
+
 
 
 - (void)windowWillClose:(NSNotification *)aNotification
