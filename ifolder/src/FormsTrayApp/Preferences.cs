@@ -2525,15 +2525,12 @@ namespace Novell.FormsTrayApp
 			else
 			{
 				// Remove the enterprise account.
-				string message = resourceManager.GetString("deleteAccountPrompt") + "\n\n" +
-					resourceManager.GetString("deleteAccountInfo");
-				DialogResult dialogResult = MessageBox.Show(message, resourceManager.GetString("deleteAccountTitle"),
-					MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-				if (dialogResult != DialogResult.Cancel)
+				RemoveAccount removeAccount = new RemoveAccount(domain.DomainInfo);
+				if (removeAccount.ShowDialog() == DialogResult.Yes)
 				{
 					try
 					{
-						simiasWebService.LeaveDomain(domain.ID, dialogResult == DialogResult.No);
+						simiasWebService.LeaveDomain(domain.ID, !removeAccount.RemoveAll);
 						lvi.Remove();
 
 						string defaultDomainID = null;

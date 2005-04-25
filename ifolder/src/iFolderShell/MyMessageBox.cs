@@ -39,12 +39,17 @@ namespace Novell.iFolderCom
 	public enum MyMessageBoxButtons
 	{
 		/// <summary>
-		/// The OK button.
+		/// The message box contains an OK button.
 		/// </summary>
 		OK,
 
 		/// <summary>
-		/// The Yes and No buttons.
+		/// The message box contains OK and Cancel buttons.
+		/// </summary>
+		OKCancel,
+
+		/// <summary>
+		/// The message box contains Yes and No buttons.
 		/// </summary>
 		YesNo
 	}
@@ -73,24 +78,29 @@ namespace Novell.iFolderCom
 	public enum MyMessageBoxIcon
 	{
 		/// <summary>
-		/// No icon.
+		/// The message box contain no symbols.
 		/// </summary>
 		None,
 
 		/// <summary>
-		/// The information icon.
+		/// The message box contains a symbol consisting of a lowercase letter i in a circle.
 		/// </summary>
 		Information,
 
 		/// <summary>
-		/// The question icon.
+		/// The message box contains a symbol consisting of a question mark in a circle.
 		/// </summary>
 		Question,
 
 		/// <summary>
-		/// The error icon.
+		/// The message box contains a symbol consisting of white X in a circle with a red background.
 		/// </summary>
-		Error
+		Error,
+
+		/// <summary>
+		/// The message box contains a symbol consisting of an exclamation point in a triangle with a yellow background.
+		/// </summary>
+		Warning
 	}
 
 	/// <summary>
@@ -111,6 +121,7 @@ namespace Novell.iFolderCom
 		private bool showDetails = false;
 		private MyMessageBoxDefaultButton defaultButton;
 		private System.Windows.Forms.TextBox detailsBox;
+		private System.Windows.Forms.Button cancel;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -207,6 +218,9 @@ namespace Novell.iFolderCom
 				case MyMessageBoxButtons.OK:
 					ok.Visible = true;
 					break;
+				case MyMessageBoxButtons.OKCancel:
+					ok.Visible = cancel.Visible = true;
+					break;
 				case MyMessageBoxButtons.YesNo:
 					yes.Visible = no.Visible = true;
 					break;
@@ -222,6 +236,9 @@ namespace Novell.iFolderCom
 					break;
 				case MyMessageBoxIcon.Error:
 					messageIcon.Image = Win32Window.IconToAlphaBitmap(SystemIcons.Error);
+					break;
+				case MyMessageBoxIcon.Warning:
+					messageIcon.Image = Win32Window.IconToAlphaBitmap(SystemIcons.Warning);
 					break;
 			}
 
@@ -258,6 +275,7 @@ namespace Novell.iFolderCom
 			this.ok = new System.Windows.Forms.Button();
 			this.details = new System.Windows.Forms.Button();
 			this.detailsBox = new System.Windows.Forms.TextBox();
+			this.cancel = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// yes
@@ -424,6 +442,30 @@ namespace Novell.iFolderCom
 			this.detailsBox.Visible = ((bool)(resources.GetObject("detailsBox.Visible")));
 			this.detailsBox.WordWrap = ((bool)(resources.GetObject("detailsBox.WordWrap")));
 			// 
+			// cancel
+			// 
+			this.cancel.AccessibleDescription = resources.GetString("cancel.AccessibleDescription");
+			this.cancel.AccessibleName = resources.GetString("cancel.AccessibleName");
+			this.cancel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("cancel.Anchor")));
+			this.cancel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("cancel.BackgroundImage")));
+			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.cancel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("cancel.Dock")));
+			this.cancel.Enabled = ((bool)(resources.GetObject("cancel.Enabled")));
+			this.cancel.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("cancel.FlatStyle")));
+			this.cancel.Font = ((System.Drawing.Font)(resources.GetObject("cancel.Font")));
+			this.cancel.Image = ((System.Drawing.Image)(resources.GetObject("cancel.Image")));
+			this.cancel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.ImageAlign")));
+			this.cancel.ImageIndex = ((int)(resources.GetObject("cancel.ImageIndex")));
+			this.cancel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("cancel.ImeMode")));
+			this.cancel.Location = ((System.Drawing.Point)(resources.GetObject("cancel.Location")));
+			this.cancel.Name = "cancel";
+			this.cancel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("cancel.RightToLeft")));
+			this.cancel.Size = ((System.Drawing.Size)(resources.GetObject("cancel.Size")));
+			this.cancel.TabIndex = ((int)(resources.GetObject("cancel.TabIndex")));
+			this.cancel.Text = resources.GetString("cancel.Text");
+			this.cancel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.TextAlign")));
+			this.cancel.Visible = ((bool)(resources.GetObject("cancel.Visible")));
+			// 
 			// MyMessageBox
 			// 
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
@@ -434,6 +476,7 @@ namespace Novell.iFolderCom
 			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.detailsBox);
 			this.Controls.Add(this.details);
 			this.Controls.Add(this.ok);
@@ -522,8 +565,16 @@ namespace Novell.iFolderCom
 					}
 					break;
 				case MyMessageBoxDefaultButton.Button2:
-					this.AcceptButton = no;
-					no.Focus();
+					if (cancel.Visible)
+					{
+						this.AcceptButton = cancel;
+						cancel.Focus();
+					}
+					else
+					{
+						this.AcceptButton = no;
+						no.Focus();
+					}
 					break;
 			}
 		}
@@ -574,13 +625,25 @@ namespace Novell.iFolderCom
 			this.Width = Math.Max(msgWidth, details.Visible ? 2 * (details.Width + 14) + ok.Width : 0);
 
 			// Place the buttons.
-			ok.Left = (ClientRectangle.Width - ok.Width) / 2;
 			ok.Top = message.Bottom + 12;
+			if (cancel.Visible)
+			{
+				ok.Left = (ClientRectangle.Width / 2) - (ok.Width + 4);
+				cancel.Left = ok.Right + 4;
+				cancel.Top = ok.Top;
+			}
+			else
+			{
+				ok.Left = (ClientRectangle.Width - ok.Width) / 2;
+			}
 
-			yes.Left = (ClientRectangle.Width / 2) - (yes.Width + 4);
-			no.Left = yes.Right + 4;
-			yes.Top = no.Top = ok.Top;
-			this.Height = ok.Bottom + (this.Height - ClientRectangle.Height) + 12;
+			if (yes.Visible)
+			{
+				yes.Left = (ClientRectangle.Width / 2) - (yes.Width + 4);
+				no.Left = yes.Right + 4;
+				yes.Top = no.Top = ok.Top;
+				this.Height = ok.Bottom + (this.Height - ClientRectangle.Height) + 12;
+			}
 
 			details.Top = ok.Top;
 			details.Left = ClientRectangle.Right - (details.Width + 8);
