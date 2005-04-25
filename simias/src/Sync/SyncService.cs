@@ -48,6 +48,12 @@ namespace Simias.Sync
 		static Hashtable	CollectionLocks = new Hashtable();
 		const int			queueDepth = 10;	
 		int					count = 0;
+
+		static CollectionLock()
+		{
+			Configuration conf = Configuration.GetConfiguration();
+			totalDepth = int.Parse(conf.Get("ConcurrentClients", "64"));
+		}
 		
 		/// <summary>
 		/// Gets a lock on the collection.
@@ -75,6 +81,7 @@ namespace Simias.Sync
 				{
 					cLock.count++;
 					totalCount++;
+					Sync.Log.log.Debug("Acquired Lock count = {0}", totalCount);
 				}
 			}
 
@@ -90,6 +97,7 @@ namespace Simias.Sync
 			{
 				count--;
 				totalCount--;
+				Sync.Log.log.Debug("Released Lock count = {0}", totalCount);
 			}
 		}
 
@@ -219,7 +227,7 @@ namespace Simias.Sync
 				return;
 			}
 
-			// If we are locked return busy.
+			// If we are locked return locked.
 			if (collection.IsLocked)
 			{
 				si.Status = StartSyncStatus.Locked;
@@ -258,20 +266,7 @@ namespace Simias.Sync
 				case Access.Rights.Admin:
 				case Access.Rights.ReadOnly:
 				case Access.Rights.ReadWrite:
-					// See if there is any work to do before we try to get the lock.
-					if (si.ChangesOnly)
-					{
-						// we only need the changes.
-						nodeContainer = this.BeginListChangedNodes(out si.ChangesOnly);
-						si.Context = syncContext;
-						// Check if we have any work to do
-						if (si.ChangesOnly && !si.ClientHasChanges && nodeContainer == null)
-						{
-							si.Status = StartSyncStatus.NoWork;
-							break;
-						}
-					}
-
+					// Try to get the lock.
 					cLock = CollectionLock.GetLock(collection.ID);
 					if (cLock == null)
 					{
@@ -280,33 +275,53 @@ namespace Simias.Sync
 						logger.LogAccess("Start", collection.Name, collection.ID, "Busy");
 						return;
 					}
-					// See if we need to return all of the nodes.
-					if (!si.ChangesOnly)
+					
+					cLock.LockRequest();
+					try
 					{
-						cLock.LockRequest();
-						try
+						// See if there is any work to do before we try to get the lock.
+						if (si.ChangesOnly)
+						{
+							// we only need the changes.
+							nodeContainer = this.BeginListChangedNodes(out si.ChangesOnly);
+							si.Context = syncContext;
+							// Check if we have any work to do
+							if (si.ChangesOnly && !si.ClientHasChanges && nodeContainer == null)
+							{
+								si.Status = StartSyncStatus.NoWork;
+								break;
+							}
+						}
+
+						// See if we need to return all of the nodes.
+						if (!si.ChangesOnly)
 						{
 							// We need to get all of the nodes.
 							nodeContainer = this.BeginListAllNodes();
 							si.Context = syncContext;
+							if (nodeContainer == null)
+							{
+								Dispose(false);
+								rights = Access.Rights.Deny;
+								si.Access = rights;
+							}
 						}
-						finally
+					}
+					finally
+					{
+						cLock.ReleaseRequest();
+						if (si.Status != StartSyncStatus.Success)
 						{
-							cLock.ReleaseRequest();
-						}
-						if (nodeContainer == null)
-						{
-							Dispose(false);
-							rights = Access.Rights.Deny;
-							si.Access = rights;
+							cLock.ReleaseLock();
+							cLock = null;
 						}
 					}
 					break;
-				case Access.Rights.Deny:
-					si.Status = StartSyncStatus.NotFound;
-					break;
+					case Access.Rights.Deny:
+						si.Status = StartSyncStatus.NotFound;
+						break;
 				
-			}
+					}
 			logger.LogAccess("Start", collection.Name, collection.ID, si.Status.ToString());
 			return;
 		}
