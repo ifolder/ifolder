@@ -238,6 +238,16 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "RemoveAccount.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "RemoveAccount.resx"
+                    DependentUpon = "RemoveAccount.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Security.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
