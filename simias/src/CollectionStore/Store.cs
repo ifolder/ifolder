@@ -371,6 +371,12 @@ namespace Simias.Storage
 
 					// Create a SyncInterval policy.
 					SyncInterval.Create( DefaultMachineSyncInterval );
+
+					// Create a FileFilter local machine policy that disallows the Thumbs.db 
+					// and .DS_Store files from synchronizing. This fix in in response to bug #73517.
+					FileTypeFilter.Create( new FileTypeEntry[] { new FileTypeEntry( "Thumbs.db", false, true ),
+																 new FileTypeEntry( ".DS_Store", false, false )
+															   } );
 				}
 				catch ( Exception e )
 				{
