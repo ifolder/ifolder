@@ -433,10 +433,12 @@ namespace Simias.Sync
 					response.Close();
 				}
 			}
-			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, 0, Direction.Downloading));
 			Log.log.Debug("Finished Download bytes remaining = {0}", sizeRemaining);
 			if (sizeRemaining != 0)
+			{
+				eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, 0, Direction.Downloading));
 				return false;
+			}
 			return true;
 		}
 

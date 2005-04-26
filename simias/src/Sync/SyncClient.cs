@@ -593,8 +593,7 @@ namespace Simias.Sync
 					if (serverStatus == StartSyncStatus.Busy)
 					{
 						// Reschedule to sync within 1/12 of the scheduled sync time, but no less than 10 seconds.
-						seconds = new Random().Next(seconds / 12) + 10;
-						seconds = seconds > 30 ? 30 : seconds;
+						seconds = new Random().Next(20) + 10;
 					}
 				}
 				timer.Change(seconds * 1000, Timeout.Infinite);
