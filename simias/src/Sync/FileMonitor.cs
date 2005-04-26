@@ -390,8 +390,6 @@ namespace Simias.Sync
 		}
 
 
-		//--------------------------------------------------------------------
-		// TODO: what about file permissions and symlinks?
 		/// <summary>
 		/// 
 		/// </summary>
@@ -506,7 +504,10 @@ namespace Simias.Sync
 						linkPath = Path.Combine(Path.GetDirectoryName(path), linkPath);
 						linkPath = Path.GetFullPath(linkPath) + "/";
 					}
-					if (path.StartsWith(linkPath))
+					// We need to check for link to a link.
+					if (IsRecursiveLink(linkPath))
+						return true;
+            		else if (path.StartsWith(linkPath))
 						return true;
 				}
 			}
