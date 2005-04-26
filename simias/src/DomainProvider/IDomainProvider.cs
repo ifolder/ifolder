@@ -190,6 +190,15 @@ namespace Simias
 		/// <returns>A Uri object that contains the network location.
 		/// </returns>
 		Uri ResolvePOBoxLocation( string domainID, string userID );
+
+		/// <summary>
+		/// Sets a new host address for the domain.
+		/// </summary>
+		/// <param name="domainID">Identifier of the domain for network address
+		/// to be changed.</param>
+		/// <param name="hostLocation">A Uri object containing the new network
+		/// address for the domain.</param>
+		void SetHostLocation( string domainID, Uri hostLocation );
 		#endregion
 	}
 }

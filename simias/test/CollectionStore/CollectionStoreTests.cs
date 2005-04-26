@@ -2559,6 +2559,16 @@ namespace Simias.Storage.Tests
 		}
 
 		/// <summary>
+		/// Tests the SetDomainServerAddress.
+		/// </summary>
+		[Test]
+		public void DomainServerAddressTest()
+		{
+			DomainServerAddressTests test = new DomainServerAddressTests( store );
+			test.RunTests();
+		}
+
+		/// <summary>
 		/// Tests the SetCursor function on the ICSEnumerator.
 		/// </summary>
 		[Test]

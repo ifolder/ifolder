@@ -283,6 +283,21 @@ namespace Simias
 
 			return hostAddress;
 		}
+
+		/// <summary>
+		/// Sets the host address property for the domain object.
+		/// </summary>
+		/// <param name="domainID">Identifier for the domain.</param>
+		/// <param name="hostAddress">The new network address for the domain.</param>
+		private void SetDomainHostAddress( string domainID, Uri hostAddress )
+		{
+			Domain domain = store.GetDomain( domainID );
+			if ( domain != null )
+			{
+				domain.Properties.ModifyNodeProperty( PropertyTags.HostAddress, hostAddress );
+				domain.Commit();
+			}
+		}
 		#endregion
 
 		#region IDomainProvider Members
@@ -621,6 +636,18 @@ namespace Simias
 		public Uri ResolvePOBoxLocation( string domainID, string userID )
 		{
 			return OwnsDomain( domainID ) ? GetDomainHostAddress( domainID ) : null;
+		}
+
+		/// <summary>
+		/// Sets a new host address for the domain.
+		/// </summary>
+		/// <param name="domainID">Identifier of the domain for network address
+		/// to be changed.</param>
+		/// <param name="hostLocation">A Uri object containing the new network
+		/// address for the domain.</param>
+		public void SetHostLocation( string domainID, Uri hostLocation )
+		{
+			SetDomainHostAddress( domainID, hostLocation );
 		}
 		#endregion
 

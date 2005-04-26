@@ -428,6 +428,22 @@ namespace Simias
 				}
 			}
 		}
+
+		/// <summary>
+		/// Sets a new host address for the domain.
+		/// </summary>
+		/// <param name="domainID">Identifier of the domain for network address
+		/// to be changed.</param>
+		/// <param name="hostLocation">A Uri object containing the new network
+		/// address for the domain.</param>
+		static public void SetHostLocation( string domainID, Uri hostLocation )
+		{
+			IDomainProvider idp = GetDomainProvider( domainID );
+			if ( idp != null )
+			{
+				idp.SetHostLocation( domainID, hostLocation );
+			}
+		}
 		#endregion
 	}
 }

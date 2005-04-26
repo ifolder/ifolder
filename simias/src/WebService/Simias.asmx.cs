@@ -954,6 +954,48 @@ namespace Simias.Web
 		{
 			return Simias.Sync.SyncFile.InvalidChars;
 		}
+
+		/// <summary>
+		/// Sets a new server network address for a client.
+		/// </summary>
+		/// <param name="domainID">The identifier for the domain.</param>
+		/// <param name="hostAddress">The new IP host address for the domain. If the port has
+		/// changed, then specify the port by appending a ':' + the port number to the host
+		/// address.</param>
+		/// <returns>True if new address was set. Otherwise false is returned.</returns>
+		[WebMethod(EnableSession=true, Description="Sets a new server network address for a client.")]
+		[SoapDocumentMethod]
+		public bool SetDomainHostAddress( string domainID, string hostAddress )
+		{
+			bool addressSet = false;
+
+			try
+			{
+				// Get the current address for this domain.
+				Uri currentAddress = DomainProvider.ResolveLocation( domainID );
+				if ( currentAddress != null )
+				{
+					string[] components = hostAddress.Split( new char[] { ':' } );
+					UriBuilder ub = new UriBuilder( currentAddress );
+					ub.Host = components[ 0 ];
+
+					// See if a port was specified.
+					if ( components.Length > 1 )
+					{
+						ub.Port = Convert.ToInt32( components[ 1 ] );
+					}
+
+					DomainProvider.SetHostLocation( domainID, ub.Uri );
+					addressSet = true;
+				}
+			}
+			catch ( Exception ex )
+			{
+				log.Debug( ex, "Cannot set new domain host address." );
+			}
+
+			return addressSet;
+		}
 	}
 
 

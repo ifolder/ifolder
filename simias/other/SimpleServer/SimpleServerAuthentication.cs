@@ -574,6 +574,18 @@ namespace Simias.SimpleServer
 		{
 			return null;
 		}
+
+		/// <summary>
+		/// Sets a new host address for the domain.
+		/// </summary>
+		/// <param name="domainID">Identifier of the domain for network address
+		/// to be changed.</param>
+		/// <param name="hostLocation">A Uri object containing the new network
+		/// address for the domain.</param>
+		public void SetHostLocation( string domainID, Uri hostLocation )
+		{
+			// Not needed by this implementation.
+		}
 		#endregion
 	}
 }
