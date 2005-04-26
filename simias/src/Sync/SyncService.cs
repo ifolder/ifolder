@@ -64,19 +64,18 @@ namespace Simias.Sync
 			CollectionLock cLock;
 			lock (CollectionLocks)
 			{
+				if (totalCount > totalDepth)
+					return null;
+
 				cLock = (CollectionLock)CollectionLocks[collectionID];
 				if (cLock == null)
 				{
 					cLock = new CollectionLock();
 					CollectionLocks.Add(collectionID, cLock);
 				}
-			}
-			lock (cLock)
-			{
-				if (cLock.count > queueDepth || totalCount > totalDepth)
-				{
+			
+				if (cLock.count > queueDepth)
 					return null;
-				}
 				else
 				{
 					cLock.count++;
@@ -93,7 +92,7 @@ namespace Simias.Sync
 		/// </summary>
 		internal void ReleaseLock()
 		{
-			lock (this)
+			lock (CollectionLocks)
 			{
 				count--;
 				totalCount--;
