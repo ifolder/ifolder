@@ -55,6 +55,9 @@
 	BOOL							simiasIsLoaded;
 	NSMutableArray					*logEntries;
     IBOutlet NSArrayController		*logController;
+	
+	unsigned long					itemSyncCount;
+	unsigned long					totalSyncCount;
 }
 
 //==========================================

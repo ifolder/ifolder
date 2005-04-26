@@ -783,6 +783,13 @@
 				[[iFolderData sharedInstance] readiFolder:[cse ID]];
 				[ifolder setSyncState:SYNC_STATE_SYNCING];
 				[[iFolderData sharedInstance] clearUsersAdded:[cse ID]];
+		
+				SyncSize *ss = [[[iFolderData sharedInstance] getSyncSize:[cse ID]] retain];			
+				[ifolder setOutOfSyncCount:[ss SyncNodeCount]];
+				itemSyncCount = 0;
+				totalSyncCount = [ss SyncNodeCount];
+
+				[ss release];
 			}
 		
 			NSString *syncMessage = [NSString
@@ -794,6 +801,9 @@
 		}
 		case SYNC_ACTION_STOP:
 		{
+			itemSyncCount = 0;
+			totalSyncCount = 0;
+
 			if(ifolder != nil)
 			{
 				[[iFolderData sharedInstance] readiFolder:[cse ID]];
@@ -811,10 +821,10 @@
 			}
 		
 			NSString *syncMessage;
-			if([cse connected])
+			SyncSize *ss = [[[iFolderData sharedInstance] getSyncSize:[cse ID]] retain];			
+			if([ss SyncNodeCount] == 0)
 			{
-				SyncSize *ss = [[[iFolderData sharedInstance] getSyncSize:[cse ID]] retain];			
-				if([ss SyncNodeCount] == 0)
+				if([cse connected])
 				{
 					[ifolder setSyncState:SYNC_STATE_OK];
 					syncMessage = [NSString
@@ -823,21 +833,21 @@
 				}
 				else
 				{
-					[ifolder setOutOfSyncCount:[ss SyncNodeCount]];
-					[ifolder setSyncState:SYNC_STATE_OUT_OF_SYNC];
+					[ifolder setSyncState:SYNC_STATE_DISCONNECTED];
 					syncMessage = [NSString
-									stringWithFormat:NSLocalizedString(@"Out of Sync: %@", nil), 
-									[cse name]];
+								stringWithFormat:NSLocalizedString(@"Sync failed to connect: %@", nil), 
+								[cse name]];
 				}
-				[ss release];
 			}
 			else
 			{
-				[ifolder setSyncState:SYNC_STATE_DISCONNECTED];
+				[ifolder setOutOfSyncCount:[ss SyncNodeCount]];
+				[ifolder setSyncState:SYNC_STATE_OUT_OF_SYNC];
 				syncMessage = [NSString
-							stringWithFormat:NSLocalizedString(@"Sync failed to connect: %@", nil), 
-							[cse name]];
+								stringWithFormat:NSLocalizedString(@"Out of Sync: %@", nil), 
+								[cse name]];
 			}
+			[ss release];
 
 			[iFolderWindowController updateStatusTS:NSLocalizedString(@"Idle...", nil)];
 			[self addLogTS:syncMessage];
@@ -878,141 +888,299 @@
 	SMFileSyncEvent *fse = [fileSyncEvent retain];
 
 	NSString *syncMessage = nil;
+	NSString *syncItemMessage = nil;
 
 	if([fse objectType] != FILE_SYNC_UNKNOWN)
 	{
-		BOOL updateLog = NO;
-
-		if([fse sizeRemaining] == [fse sizeToSync])
+		if([[fse status] compare:@"Success"] == 0)
 		{
-			updateLog = YES;
-			if([fse sizeToSync] > 0)
+			BOOL updateLog = NO;
+
+			if([fse sizeRemaining] == [fse sizeToSync])
 			{
-				[iFolderWindowController updateProgress:0
-										withMin:0
-										withMax:[fse sizeToSync]];
+				if( (itemSyncCount >= totalSyncCount) ||
+					(totalSyncCount == 0) )
+				{
+					SyncSize *ss = [[[iFolderData sharedInstance] getSyncSize:[fse collectionID]] retain];			
+					itemSyncCount = 0;
+					totalSyncCount = [ss SyncNodeCount];
+					[ss release];
+					// If we had a problem reading this dude, set it to one
+					if(totalSyncCount == 0)
+					{
+						totalSyncCount = 1;
+					}
+				}
+
+				itemSyncCount += 1;
+				if(itemSyncCount >= totalSyncCount)
+					itemSyncCount = totalSyncCount;
+			
+				updateLog = YES;
+				if([fse sizeToSync] > 0)
+				{
+					[iFolderWindowController updateProgress:0
+											withMin:0
+											withMax:[fse sizeToSync]];
+				}
+				else
+				{
+					// sending current value of -1 hides the control
+					[iFolderWindowController updateProgress:-1 withMin:0 withMax:0];
+				}
 			}
 			else
 			{
-				// sending current value of -1 hides the control
-				[iFolderWindowController updateProgress:-1 withMin:0 withMax:0];
+				updateLog = NO;
+
+				if([fse sizeToSync] == 0)
+				{
+					[iFolderWindowController updateProgress:100
+											withMin:0
+											withMax:100];
+				}
+				else
+				{
+					[iFolderWindowController updateProgress:([fse sizeToSync] - [fse sizeRemaining])
+											withMin:0
+											withMax:[fse sizeToSync]];
+				}
+			}
+			
+			syncItemMessage = [NSString stringWithFormat:NSLocalizedString(@"%u of %u items - ", nil),
+								itemSyncCount, totalSyncCount];
+
+			switch([fse direction])
+			{
+				case FILE_SYNC_LOCAL:
+				{
+					if([fse objectType] == FILE_SYNC_FILE)
+					{
+						[self addLogTS:[NSString
+							stringWithFormat:NSLocalizedString(@"Found local change in file: %@", nil), 
+							[fse name]]];
+					}
+					else
+					{
+						[self addLogTS:[NSString
+							stringWithFormat:NSLocalizedString(@"Found local change in folder: %@", nil), 
+							[fse name]]];
+					}	
+					break;
+				}
+				case FILE_SYNC_UPLOADING:
+				{
+					if([fse isDelete])
+					{
+						if([fse objectType] == FILE_SYNC_FILE)
+						{
+							syncMessage = [NSString
+								stringWithFormat:NSLocalizedString(@"Removing file from server: %@", nil), 
+								[fse name]];
+							[iFolderWindowController updateStatusTS:
+								[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+							if(updateLog)
+								[self addLogTS:syncMessage];
+						}
+						else
+						{
+							syncMessage = [NSString
+								stringWithFormat:NSLocalizedString(@"Removing folder from server: %@", nil), 
+								[fse name]];
+							[iFolderWindowController updateStatusTS:
+								[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+							if(updateLog)
+								[self addLogTS:syncMessage];
+						}	
+					}
+					else
+					{
+						if([fse objectType]  == FILE_SYNC_FILE)
+						{
+							syncMessage = [NSString
+								stringWithFormat:NSLocalizedString(@"Uploading file: %@", nil), 
+								[fse name]];
+							[iFolderWindowController updateStatusTS:
+								[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+							if(updateLog)
+								[self addLogTS:syncMessage];
+						}
+						else
+						{
+							syncMessage = [NSString
+								stringWithFormat:NSLocalizedString(@"Creating folder on server: %@", nil), 
+								[fse name]];
+							[iFolderWindowController updateStatusTS:
+								[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+							if(updateLog)
+								[self addLogTS:syncMessage];
+						}
+					}
+					break;
+				}
+				case FILE_SYNC_DOWNLOADING:
+				{
+					if([fse isDelete])
+					{
+						if([fse objectType] == FILE_SYNC_FILE)
+						{
+							syncMessage = [NSString
+								stringWithFormat:NSLocalizedString(@"Deleting file: %@", nil), 
+								[fse name]];
+							[iFolderWindowController updateStatusTS:
+								[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+							if(updateLog)
+								[self addLogTS:syncMessage];
+						}
+						else
+						{
+							syncMessage = [NSString
+								stringWithFormat:NSLocalizedString(@"Removing folder: %@", nil), 
+								[fse name]];
+							[iFolderWindowController updateStatusTS:
+								[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+							if(updateLog)
+								[self addLogTS:syncMessage];
+						}	
+					}
+					else
+					{
+						if([fse objectType] == FILE_SYNC_FILE)
+						{
+							syncMessage = [NSString
+								stringWithFormat:NSLocalizedString(@"Downloading file: %@", nil), 
+								[fse name]];
+							[iFolderWindowController updateStatusTS:
+								[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+							if(updateLog)
+								[self addLogTS:syncMessage];
+						}
+						else
+						{
+							syncMessage = [NSString
+								stringWithFormat:NSLocalizedString(@"Creating folder: %@", nil), 
+								[fse name]];
+							[iFolderWindowController updateStatusTS:
+								[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+							if(updateLog)
+								[self addLogTS:syncMessage];
+						}
+					}
+					break;
+				}
 			}
 		}
 		else
 		{
-			updateLog = NO;
-
-			if([fse sizeToSync] == 0)
+			// For all other cases, check to make sure we don't have more stuff to do that counted items
+			if( (itemSyncCount >= totalSyncCount) ||
+				(totalSyncCount == 0) )
 			{
-				[iFolderWindowController updateProgress:100
-										withMin:0
-										withMax:100];
+				SyncSize *ss = [[[iFolderData sharedInstance] getSyncSize:[fse collectionID]] retain];			
+				itemSyncCount = 0;
+				totalSyncCount = [ss SyncNodeCount];
+				[ss release];
+				// If we had a problem reading this dude, set it to one
+				if(totalSyncCount == 0)
+				{
+					totalSyncCount = 1;
+				}
 			}
+
+			itemSyncCount += 1;
+			if(itemSyncCount >= totalSyncCount)
+				itemSyncCount = totalSyncCount;
+
+			syncItemMessage = [NSString stringWithFormat:NSLocalizedString(@"%u of %u items - ", nil),
+								itemSyncCount, totalSyncCount];
+
+			[iFolderWindowController updateProgress:100
+									withMin:0
+									withMax:100];
+
+			// Conflict message
+			if(	([[fse status] compare:@"UpdateConflict"] == 0) ||
+				([[fse status] compare:@"FileNameConflict"] == 0) )
+			{
+				syncMessage = [NSString
+					stringWithFormat:NSLocalizedString(@"Conflict occurred for: %@", nil), 
+					[fse name]];
+				[iFolderWindowController updateStatusTS:
+					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+				[self addLogTS:syncMessage];
+			}
+			// Policy does not allow this file
+			else if([[fse status] compare:@"Policy"] == 0)
+			{
+				syncMessage = [NSString
+					stringWithFormat:NSLocalizedString(@"A policy prevented a sync of: %@", nil), 
+					[fse name]];
+				[iFolderWindowController updateStatusTS:
+					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+				[self addLogTS:syncMessage];
+			}
+			// Insuficient rights
+			else if([[fse status] compare:@"Access"] == 0)
+			{
+				syncMessage = [NSString
+					stringWithFormat:NSLocalizedString(@"Insuficient rights to sync: %@", nil), 
+					[fse name]];
+				[iFolderWindowController updateStatusTS:
+					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+				[self addLogTS:syncMessage];
+			}
+			// Locked
+			else if([[fse status] compare:@"Locked"] == 0)
+			{
+				syncMessage = [NSString
+					stringWithFormat:NSLocalizedString(@"iFolder is locked and did not sync: %@", nil), 
+					[fse name]];
+				[iFolderWindowController updateStatusTS:
+					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+				[self addLogTS:syncMessage];
+			}
+			// PolicyQuota
+			else if([[fse status] compare:@"PolicyQuota"] == 0)
+			{
+				syncMessage = [NSString
+					stringWithFormat:NSLocalizedString(@"iFolder is full and did not sync: %@", nil), 
+					[fse name]];
+				[iFolderWindowController updateStatusTS:
+					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+				[self addLogTS:syncMessage];
+			}
+			// PolicySize
+			else if([[fse status] compare:@"PolicySize"] == 0)
+			{
+				syncMessage = [NSString
+					stringWithFormat:NSLocalizedString(@"A size restriction policy prevented a sync of: %@", nil), 
+					[fse name]];
+				[iFolderWindowController updateStatusTS:
+					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+				[self addLogTS:syncMessage];
+			}
+			// PolicyType
+			else if([[fse status] compare:@"PolicyType"] == 0)
+			{
+				syncMessage = [NSString
+					stringWithFormat:NSLocalizedString(@"A file type restriction policy prevented a sync of: %@", nil), 
+					[fse name]];
+				[iFolderWindowController updateStatusTS:
+					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+				[self addLogTS:syncMessage];
+			}
+			// All other errors
 			else
 			{
-				[iFolderWindowController updateProgress:([fse sizeToSync] - [fse sizeRemaining])
-										withMin:0
-										withMax:[fse sizeToSync]];
+				syncMessage = [NSString
+					stringWithFormat:NSLocalizedString(@"iFolder failed to sync: %@", nil), 
+					[fse name]];
+				[iFolderWindowController updateStatusTS:
+					[NSString stringWithFormat:@"%@%@", syncItemMessage, syncMessage]];
+				[self addLogTS:syncMessage];
 			}
-		}
 
-
-		switch([fse direction])
-		{
-			case FILE_SYNC_UPLOADING:
-			{
-				if([fse isDelete])
-				{
-					if([fse objectType] == FILE_SYNC_FILE)
-					{
-						syncMessage = [NSString
-							stringWithFormat:NSLocalizedString(@"Removing file from server: %@", nil), 
-							[fse name]];
-						[iFolderWindowController updateStatusTS:syncMessage];
-						if(updateLog)
-							[self addLogTS:syncMessage];
-					}
-					else
-					{
-						syncMessage = [NSString
-							stringWithFormat:NSLocalizedString(@"Removing directory from server: %@", nil), 
-							[fse name]];
-						[iFolderWindowController updateStatusTS:syncMessage];
-						if(updateLog)
-							[self addLogTS:syncMessage];
-					}	
-				}
-				else
-				{
-					if([fse objectType]  == FILE_SYNC_FILE)
-					{
-						syncMessage = [NSString
-							stringWithFormat:NSLocalizedString(@"Uploading file: %@", nil), 
-							[fse name]];
-						[iFolderWindowController updateStatusTS:syncMessage];
-						if(updateLog)
-							[self addLogTS:syncMessage];
-					}
-					else
-					{
-						syncMessage = [NSString
-							stringWithFormat:NSLocalizedString(@"Creating directory on server: %@", nil), 
-							[fse name]];
-						[iFolderWindowController updateStatusTS:syncMessage];
-						if(updateLog)
-							[self addLogTS:syncMessage];
-					}
-				}
-				break;
-			}
-			case FILE_SYNC_DOWNLOADING:
-			{
-				if([fse isDelete])
-				{
-					if([fse objectType] == FILE_SYNC_FILE)
-					{
-						syncMessage = [NSString
-							stringWithFormat:NSLocalizedString(@"Deleting file: %@", nil), 
-							[fse name]];
-						[iFolderWindowController updateStatusTS:syncMessage];
-						if(updateLog)
-							[self addLogTS:syncMessage];
-					}
-					else
-					{
-						syncMessage = [NSString
-							stringWithFormat:NSLocalizedString(@"Removing directory: %@", nil), 
-							[fse name]];
-						[iFolderWindowController updateStatusTS:syncMessage];
-						if(updateLog)
-							[self addLogTS:syncMessage];
-					}	
-				}
-				else
-				{
-					if([fse objectType] == FILE_SYNC_FILE)
-					{
-						syncMessage = [NSString
-							stringWithFormat:NSLocalizedString(@"Downloading file: %@", nil), 
-							[fse name]];
-						[iFolderWindowController updateStatusTS:syncMessage];
-						if(updateLog)
-							[self addLogTS:syncMessage];
-					}
-					else
-					{
-						syncMessage = [NSString
-							stringWithFormat:NSLocalizedString(@"Creating directory: %@", nil), 
-							[fse name]];
-						[iFolderWindowController updateStatusTS:syncMessage];
-						if(updateLog)
-							[self addLogTS:syncMessage];
-					}
-				}
-				break;
-			}
 		}
-		
 	}
 	[fse release];
 }
