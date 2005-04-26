@@ -410,18 +410,20 @@ namespace Simias.Storage
 		/// <param name="cookie">The string representation of the context.</param>
 		public EventContext( string cookie)
 		{
-			string [] values = cookie.Split(valueSeparator);
-			if (values.Length != 3)
+			// Default values if cookie string is bad.
+			timeStamp = DateTime.MinValue;
+			recordID = 0;
+			hint = LogFileHeader.RecordSize;
+
+			if ( ( cookie != null ) && ( cookie != String.Empty ) )
 			{
-				timeStamp = DateTime.MinValue;
-				recordID = 0;
-				hint = 0;
-			}
-			else
-			{
-				timeStamp = new DateTime(long.Parse(values[0]));
-				recordID = ulong.Parse(values[1]);
-				hint = long.Parse(values[2]);
+				string [] values = cookie.Split( valueSeparator );
+				if ( values.Length == 3 )
+				{
+					timeStamp = new DateTime( long.Parse( values[ 0 ] ) );
+					recordID = ulong.Parse( values[ 1 ] );
+					hint = long.Parse( values[ 2 ] );
+				}
 			}
 		}
 
@@ -1869,21 +1871,9 @@ namespace Simias.Storage
 						foundOffset = true;
 					}
 				}
-				catch ( IOException e )
-				{
-					log.Error( "GetReadPosition():" + e.Message );
-				}
 				catch ( Exception e )
 				{
-					char[] debugBuffer = new char[ bytesRead ];
-					for ( int i = 0; i < bytesRead; ++i )
-					{
-						debugBuffer[ i ] = Convert.ToChar( buffer[ i ] );
-					}
-
-					log.Debug( e, "Failed to get read position" );
-					log.Debug( "Cookie: RecordID = {0}, TimeStamp = {1}, Hint = {2}", cookie.RecordID, cookie.TimeStamp, cookie.Hint );
-					log.Debug( "Bytes read = {0}, buffer = {1}", bytesRead, debugBuffer );
+					log.Error( "GetReadPosition():" + e.Message );
 				}
 			}
 
