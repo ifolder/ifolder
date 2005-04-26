@@ -90,7 +90,7 @@ namespace Novell.iFolder
 									string domainID)
 			: base()
 		{
-			this.Title = Util.GS("iFolder User Selector");
+			this.Title = Util.GS("Select Users");
 			if(iFolderWS == null)
 				throw new ApplicationException("iFolderWebService was null");
 			this.ifws = iFolderWS;
@@ -195,7 +195,7 @@ namespace Novell.iFolder
 			memberList = new BigList(memberListModel);
 //			memberList.SetSizeRequest(100, 400);
 			// FIXME: Fix up the BigList class to support both horizontal and vertical scrolling and then use the scroll adjustments to construct the ScrolledWindow
-			ScrolledWindow sw = new ScrolledWindow(null, memberList.Adjustment);
+			ScrolledWindow sw = new ScrolledWindow(memberList.HAdjustment, memberList.VAdjustment);
 			sw.ShadowType = Gtk.ShadowType.EtchedIn;
 			sw.Add(memberList);
 			selBox.PackStart(sw, true, true, 0);
@@ -269,7 +269,12 @@ namespace Novell.iFolder
 		{
 			MemberInfo member = (MemberInfo) tree_model.GetValue(iter,0);
 			if( (member.FullName != null) && (member.FullName.Length > 0) )
-				((CellRendererText) cell).Text = member.FullName;
+			{
+				if (memberListModel.IsDuplicateFullName(member.FullName))
+					((CellRendererText) cell).Text = string.Format("{0} ({1})", member.FullName, member.Name);
+				else
+					((CellRendererText) cell).Text = member.FullName;
+			}
 			else
 				((CellRendererText) cell).Text = member.Name;
 		}
@@ -522,6 +527,13 @@ namespace Novell.iFolder
 		private string searchContext;
 		private int total = 0;
 		private Hashtable memberInfos;
+		
+		// The next two Hashtables are just for determining duplicates.
+		// According to BenM, it's faster to use Hashtables for just checking
+		// "is x in collection" than using an ArrayList, so that's why these
+		// are Hashtables.
+		private Hashtable memberFullNames; 
+		private Hashtable duplicateMembers;
 		private SimiasWebService simws;
 		
 		#region Constructors
@@ -534,6 +546,8 @@ namespace Novell.iFolder
 			searchContext = null;
 			total = 0;
 			memberInfos = new Hashtable();
+			memberFullNames = new Hashtable();
+			duplicateMembers = new Hashtable();
 		}
 		
 		#endregion
@@ -556,6 +570,8 @@ namespace Novell.iFolder
 		{
 			CloseSearch();	// Close an existing search if present
 			memberInfos.Clear();
+			memberFullNames.Clear();
+			duplicateMembers.Clear();
 
 			searchContext = SearchContext;
 
@@ -564,7 +580,15 @@ namespace Novell.iFolder
 				for (int i = 0; i < MemberList.Length; i++)
 				{
 					MemberInfo memberInfo = MemberList[i];
-					
+
+					if (memberFullNames.Contains(memberInfo.FullName))
+					{
+						// We've found a duplicate
+						duplicateMembers.Add(memberInfo.FullName, 0);
+					}
+					else
+						memberFullNames.Add(memberInfo.FullName, 0);
+
 					memberInfos.Add(i, memberInfo);
 				}
 			
@@ -595,8 +619,10 @@ namespace Novell.iFolder
 		
 		public MemberInfo GetMemberInfo(int index)
 		{
-			if (index < 0 || index > total || (total == 0))
+			if (index < 0 || index >= total || (total == 0))
 			{
+Console.WriteLine("MemberListModel.GetMemberInfo() called with index out of the range or when total == 0");
+
 				// FIXME: Figure out the right exception to throw here
 				throw new Exception("GetValue called when no items are present");
 			}
@@ -632,6 +658,14 @@ namespace Novell.iFolder
 					int currentIndex = index;
 					foreach(MemberInfo memberInfo in newMemberList)
 					{
+						if (memberFullNames.Contains(memberInfo.FullName))
+						{
+							// We've found a duplicate
+							duplicateMembers.Add(memberInfo.FullName, 0);
+						}
+						else
+							memberFullNames.Add(memberInfo.FullName, 0);
+
 						memberInfos.Add(currentIndex, memberInfo);
 						currentIndex++;
 					}
@@ -647,6 +681,11 @@ namespace Novell.iFolder
 				throw new Exception("Could not find the specified member");
 			
 			return memberInfoReturn;
+		}
+		
+		public bool IsDuplicateFullName(string FullName)
+		{
+			return duplicateMembers.Contains(FullName);
 		}
 		
 		#endregion
@@ -668,7 +707,10 @@ namespace Novell.iFolder
 			
 			if (fullName != null && fullName.Length > 0)
 			{
-				return fullName;
+				if (duplicateMembers.Contains(memberInfo.FullName))
+					return string.Format("{0} ({1})", fullName, memberInfo.Name);
+				else
+					return fullName;
 			}
 
 			return memberInfo.Name;
