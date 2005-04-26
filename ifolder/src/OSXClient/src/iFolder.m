@@ -64,8 +64,21 @@
 {
 	if(properties != newProperties)
 	{
+		NSNumber *totalSyncCount = [properties objectForKey:@"totalSyncCount"];
+		NSNumber *outOfSyncCount = [properties objectForKey:@"outOfSyncCount"];
+		NSNumber *syncState = [properties objectForKey:@"syncState"];
+	
 		[properties autorelease];
 		properties = [[NSMutableDictionary alloc] initWithDictionary:newProperties];
+
+		// Preserve the state of the sync even if we refresh for some reason
+		if(totalSyncCount != nil)
+			[properties setObject:totalSyncCount forKey:@"totalSyncCount"];
+		if(outOfSyncCount != nil)
+			[properties setObject:outOfSyncCount forKey:@"outOfSyncCount"];
+		if(syncState != nil)
+			[properties setObject:syncState forKey:@"syncState"];
+
 		[self updateDisplayInformation];
 	}
 }
@@ -98,7 +111,6 @@
 -(void) setOutOfSyncCount:(unsigned long)outOfSyncCount
 {
 	[properties setObject:[NSNumber numberWithUnsignedLong:outOfSyncCount] forKey:@"outOfSyncCount"];
-	[self updateDisplayInformation];
 }
 
 
@@ -225,11 +237,11 @@
 		else if([ [properties objectForKey:@"HasConflicts"] boolValue])
 			[properties setObject:NSLocalizedString(@"Has Conflicts", nil) forKey:@"Status"];
 		else if([self syncState] == SYNC_STATE_DISCONNECTED)
-			[properties setObject:NSLocalizedString(@"Disconnected", nil) forKey:@"Status"];
+			[properties setObject:NSLocalizedString(@"Server unavailable", nil) forKey:@"Status"];
 		else if( ([self syncState] == SYNC_STATE_OUT_OF_SYNC) &&
 				 ([self outOfSyncCount] > 0) )
 		{
-			[properties setObject:[NSString stringWithFormat:NSLocalizedString(@"%ul items out of sync", nil), [self outOfSyncCount]] forKey:@"Status"];
+			[properties setObject:[NSString stringWithFormat:NSLocalizedString(@"%u items out of sync", nil), [self outOfSyncCount]] forKey:@"Status"];
 		}
 		else if( ([self syncState] == 0) ||
 				 ([self syncState] == SYNC_STATE_OK) )

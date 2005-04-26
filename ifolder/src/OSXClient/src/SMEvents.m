@@ -125,8 +125,10 @@
 
 	if([dirStr compare:@"Downloading"] == 0)
 		return FILE_SYNC_DOWNLOADING;
-	else
+	else if([dirStr compare:@"Uploading"] == 0)
 		return FILE_SYNC_UPLOADING;
+	else
+		return FILE_SYNC_LOCAL;
 }
 -(NSString *)status
 {

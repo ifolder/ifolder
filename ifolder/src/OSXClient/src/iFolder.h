@@ -71,6 +71,7 @@
 -(unsigned long) outOfSyncCount;
 -(void) setOutOfSyncCount:(unsigned long)outOfSyncCount;
 
+
 -(BOOL)IsSubscription;
 -(BOOL)HasConflicts;
 -(NSString *)Name;
