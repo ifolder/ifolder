@@ -376,7 +376,8 @@ namespace Simias.DomainServices
 					return status;
 				}
 				else if ((we.Status == WebExceptionStatus.ConnectFailure ) ||
-						 (we.Status == WebExceptionStatus.Timeout))
+						 (we.Status == WebExceptionStatus.Timeout) || 
+						 (we.Status == WebExceptionStatus.NameResolutionFailure))
 				{
 					status = new Simias.Authentication.Status();
 					status.statusCode = Simias.Authentication.StatusCodes.UnknownDomain;
