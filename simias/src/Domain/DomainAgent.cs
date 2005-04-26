@@ -375,6 +375,13 @@ namespace Simias.DomainServices
 					status.statusCode = Simias.Authentication.StatusCodes.InvalidCertificate;
 					return status;
 				}
+				else if ((we.Status == WebExceptionStatus.ConnectFailure ) ||
+						 (we.Status == WebExceptionStatus.Timeout))
+				{
+					status = new Simias.Authentication.Status();
+					status.statusCode = Simias.Authentication.StatusCodes.UnknownDomain;
+					return status;
+				}
 			}
 			if ( domainServiceUrl == null )
 			{

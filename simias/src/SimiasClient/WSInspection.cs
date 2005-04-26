@@ -75,15 +75,18 @@ namespace Simias.Client
 
 			// Create the web request.
 			WebRequest request = WebRequest.Create( wsUri.Uri );
+			request.Timeout = 15 * 1000;
 
 			try
 			{
 				// Get the response from the web server.
 				response = request.GetResponse() as HttpWebResponse;
 			}
-			catch (WebException we)
+			catch ( WebException we )
 			{
-				if (we.Status == WebExceptionStatus.TrustFailure)
+				if ( ( we.Status == WebExceptionStatus.TrustFailure ) ||
+					 ( we.Status == WebExceptionStatus.ConnectFailure ) ||
+					 ( we.Status == WebExceptionStatus.Timeout ) )
 				{
 					throw we;	
 				}
