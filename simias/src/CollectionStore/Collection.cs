@@ -1344,15 +1344,6 @@ namespace Simias.Storage
 						throw new CollectionStoreException( "Cannot change owner's rights." );
 					}
 				}
-
-				// Make sure that ownership cannot change on a domain.
-				if ( IsBaseType( this, NodeTypes.DomainType ) &&
-					( currentOwner != null ) &&
-					( currentOwner.IsProxy == false ) &&
-					( currentOwner.ID != owner.ID ) )
-				{
-					throw new CollectionStoreException( "Cannot remove the domain owner." );
-				}
 			}
 			else
 			{

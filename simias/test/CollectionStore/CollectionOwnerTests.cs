@@ -156,22 +156,6 @@ namespace Simias.Storage.Tests
 			}
 		}
 
-		private void ChangeDomainOwnerTest()
-		{
-			Domain domain = store.GetDomain( store.LocalDomain );
-
-			Member member = new Member( "NewDomainOwner", Guid.NewGuid().ToString(), Access.Rights.ReadOnly );
-			domain.Commit( member );
-
-			try
-			{
-				domain.Commit( domain.ChangeOwner( member, Access.Rights.ReadOnly ) );
-				throw new ApplicationException( "Domain owner was improperly changed." );
-			}
-			catch ( SimiasException )
-			{}
-		}
-
 		#endregion
 
 		#region Public Methods
@@ -195,9 +179,6 @@ namespace Simias.Storage.Tests
 
 			// Try and change the owner rights.
 			ChangeOwnerRights();
-
-			// Try and change the domain owner.
-			ChangeDomainOwnerTest();
 		}
 
 		#endregion
