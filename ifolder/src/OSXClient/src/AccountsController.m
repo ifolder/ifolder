@@ -40,7 +40,6 @@
 
 - (void)awakeFromNib
 {
-	NSLog(@"Accounts Controller Awoke from Nib");
 	createMode = NO;
 
 	// Initialized the controls
@@ -83,7 +82,6 @@
 			iFolderDomain *dom = [newDomains objectAtIndex:x];
 			isFirstDomain = NO;
 
-			NSLog(@"Adding domain %@", [dom name]);
 			[domains addObject:dom];
 			if([[dom isDefault] boolValue])
 				defaultDomain = dom;
@@ -131,7 +129,6 @@
 	{
 		@try
 		{
-			NSLog(@"Attempting to login using password %@", [password stringValue]);
 			AuthStatus *authStatus = [[simiasService LoginToRemoteDomain:[selectedDomain ID]
 										usingPassword:[password stringValue]] retain];
 
@@ -287,8 +284,6 @@
 
 - (void)activateAccount
 {
-	NSLog(@"Activate Account clicked");
-
 	if( ([[host stringValue] length] > 0) &&
 		([[userName stringValue] length] > 0) &&
 		([[password stringValue] length] > 0) )
@@ -310,7 +305,6 @@
 			if(	(statusCode == ns1__StatusCodes__Success) ||
 				(statusCode == ns1__StatusCodes__SuccessInGrace) )
 			{
-				NSLog(@"ConnectToDomain returned success or success in Grace");
 				@try
 				{
 					authStatus = [[simiasService LoginToRemoteDomain:[newDomain ID] usingPassword:[password stringValue]] retain];
@@ -354,7 +348,6 @@
 						@try
 						{
 							[simiasService SetDomainPassword:[newDomain ID] password:[password stringValue]];	
-							NSLog(@"Saving password succeeded.");
 						}
 						@catch(NSException *ex)
 						{
@@ -476,7 +469,6 @@
 
 - (IBAction)addAccount:(id)sender
 {
-	NSLog(@"Add Account Clicked");
 	createMode = YES;
 	[accounts deselectAll:self];
 
@@ -517,7 +509,6 @@
 
 - (IBAction)removeAccount:(id)sender
 {
-	NSLog(@"Remove Account Clicked");
 	[leaveDomainController showWindow:self];
 }
 
@@ -541,12 +532,11 @@
 	}
 	else
 	{
-		NSLog(@"User did not accept certificate, do not store or authenticate");
+		NSLog(@"User did not accept certificate, not storing or authenticating");
 	}
 	
 	if(certRef != NULL)
 	{
-		NSLog(@"Releasing the Certificate");
 		CFRelease(certRef);
 	}
 }
@@ -563,7 +553,6 @@
 		[accounts reloadData];
 		[accounts deselectAll:self];
 		[[iFolderData sharedInstance] refresh:NO];
-		NSLog(@"LeaveDomain Succeded.");
 	}
 	@catch(NSException *ex)
 	{
@@ -638,7 +627,6 @@
 				defaultDomain = selectedDomain;
 				[defaultDomain setValue:[NSNumber numberWithBool:YES] forKeyPath:@"properties.isDefault"];
 				[[iFolderData sharedInstance] refresh:NO];
-				NSLog(@"SetDefaultDomain Succeded.");
 			}
 			@catch(NSException *ex)
 			{
@@ -661,7 +649,6 @@
 		{
 			if([[password stringValue] length] > 0)
 			{
-				NSLog(@"Saving password...");
 				newPassword = [password stringValue];
 			}
 			else
@@ -675,10 +662,10 @@
 		@try
 		{
 			[simiasService SetDomainPassword:[selectedDomain ID] password:newPassword];	
-			NSLog(@"Saving password succeeded.");
 		}
 		@catch(NSException *ex)
 		{
+			NSLog(@"Saving password failed with an exception");
 		}
 	}
 }
@@ -691,8 +678,6 @@
 
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
-	NSLog(@"The selection changed");
-
 	DiskSpace *ds = nil;	
 
 	if([accounts selectedRow] == -1)
@@ -830,8 +815,6 @@
 
 - (BOOL)selectionShouldChangeInTableView:(NSTableView *)aTableView
 {
-	NSLog(@"Selection Change queried");
-
 /*
 	int selIndex = [domainsController selectionIndex];
 	iFolderDomain *dom = [[domainsController arrangedObjects] objectAtIndex:selIndex];

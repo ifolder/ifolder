@@ -837,7 +837,7 @@ static iFolderData *sharedInstance = nil;
 
 -(void)setUsersAdded:(NSString *)ifolderID
 {
-	NSLog(@"Setting user added for %@", ifolderID);
+//	NSLog(@"Setting user added for %@", ifolderID);
 	[instanceLock lock];
 	[ifolderUserChanges setObject:[NSNumber numberWithBool:YES] forKey:ifolderID];
 	[instanceLock unlock];	
@@ -847,7 +847,7 @@ static iFolderData *sharedInstance = nil;
 
 -(BOOL)usersAdded:(NSString *)ifolderID
 {
-	NSLog(@"Checking user added for %@", ifolderID);
+//	NSLog(@"Checking user added for %@", ifolderID);
 	BOOL useradded = NO;
 	[instanceLock lock];
 	useradded = ([ifolderUserChanges objectForKey:ifolderID] != nil);
@@ -859,7 +859,7 @@ static iFolderData *sharedInstance = nil;
 
 -(void)clearUsersAdded:(NSString *)ifolderID
 {
-	NSLog(@"Clearing user added for %@", ifolderID);
+//	NSLog(@"Clearing user added for %@", ifolderID);
 	[instanceLock lock];
 	[ifolderUserChanges removeObjectForKey:ifolderID];
 	[instanceLock unlock];	

@@ -33,17 +33,17 @@ void SimiasEventInitialize(void)
 {
 	if(sec_init (&simiasEventClient, SimiasEventStateCallBack, &simiasEventClient) != 0)
 	{
-		[[NSApp delegate] addLogTS:NSLocalizedString(@"Error initializing the Simias Event Client", nil)];
+		[[NSApp delegate] addLogTS:NSLocalizedString(@"Error initializing the events", nil)];
 		return;
 	}
 
 	if(sec_register(simiasEventClient) != 0)
 	{
-		[[NSApp delegate] addLogTS:NSLocalizedString(@"Error registering the Simias Event Client", nil)];
+		[[NSApp delegate] addLogTS:NSLocalizedString(@"Error registering the events", nil)];
 		return;
 	}
 
-	[[NSApp delegate] addLogTS:NSLocalizedString(@"Simias Event Client initialized and registered", nil)];
+	[[NSApp delegate] addLogTS:NSLocalizedString(@"Events initialized and registered", nil)];
 }
 
 
@@ -59,11 +59,11 @@ void SimiasEventDisconnect(void)
 
 	if(sec_deregister(simiasEventClient) != 0)
 	{
-		[[NSApp delegate] addLogTS:NSLocalizedString(@"Error deregistering the Simias Event Client", nil)];
+		[[NSApp delegate] addLogTS:NSLocalizedString(@"Error deregistering the events", nil)];
 		return;
 	}
 
-	[[NSApp delegate] addLogTS:NSLocalizedString(@"Simias Event Client de-registered", nil)];
+	[[NSApp delegate] addLogTS:NSLocalizedString(@"events de-registered", nil)];
 }
 
 

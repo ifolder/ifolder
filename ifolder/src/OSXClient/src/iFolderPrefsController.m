@@ -218,7 +218,6 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 {
 	if([[self window] contentView] != generalView)
 	{
-		NSLog(@"Switching view to general Page");
 		[[self window] setContentView: blankView];
 		[self updateSize:[generalView frame].size];
 		[[self window] setContentView: generalView];
@@ -231,7 +230,6 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 {
 	if([[self window] contentView] != accountsView)
 	{
-		NSLog(@"Switching view to accounts Page");
 //		[accountsController refreshData];
 		[[self window] setContentView: blankView];
 		[self updateSize:[accountsView frame].size];
@@ -245,7 +243,6 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 {
 	if([[self window] contentView] != syncView)
 	{
-		NSLog(@"Switching view to Synchronization Page");
 		[[self window] setContentView: blankView];
 		[self updateSize:[syncView frame].size];
 		[[self window] setContentView: syncView];
@@ -258,7 +255,6 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 {
 	if([[self window] contentView] != notifyView)
 	{
-		NSLog(@"Switching view to notify Page");
 		[[self window] setContentView: blankView];
 		[self updateSize:[notifyView frame].size];
 		[[self window] setContentView: notifyView];
