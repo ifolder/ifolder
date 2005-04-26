@@ -1384,23 +1384,23 @@ namespace Novell.FormsTrayApp
 								SyncSize syncSize = ifWebService.CalculateSyncSize(syncEventArgs.ID);
 								objectsToSync = syncSize.SyncNodeCount;
 
-								if (syncEventArgs.Connected)
+								if (objectsToSync == 0)
 								{
-									if (objectsToSync == 0)
+									if (syncEventArgs.Connected)
 									{
 										lvi.SubItems[2].Text = resourceManager.GetString("statusOK");
 										((iFolderObject)lvi.Tag).iFolderState = iFolderState.Normal;
 									}
 									else
 									{
-										lvi.SubItems[2].Text = string.Format(resourceManager.GetString("statusSyncItemsFailed"), objectsToSync);
-										((iFolderObject)lvi.Tag).iFolderState = iFolderState.FailedSync;
+										lvi.SubItems[2].Text = resourceManager.GetString("disconnected");
+										((iFolderObject)lvi.Tag).iFolderState = iFolderState.Disconnected;
 									}
 								}
 								else
 								{
-									lvi.SubItems[2].Text = resourceManager.GetString("disconnected");
-									((iFolderObject)lvi.Tag).iFolderState = iFolderState.Disconnected;
+									lvi.SubItems[2].Text = string.Format(resourceManager.GetString("statusSyncItemsFailed"), objectsToSync);
+									((iFolderObject)lvi.Tag).iFolderState = iFolderState.FailedSync;
 								}
 							}
 
