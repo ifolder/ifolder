@@ -1880,10 +1880,10 @@
     <value>Log entries cleared.</value>
   </data>
   <data name="localSync">
-    <value>Preparing to sync: {0}</value>
+    <value>Checking for local changes in {0}</value>
   </data>
   <data name="preSync">
-    <value>Preparing to synchronize</value>
+    <value>Checking for local changes</value>
   </data>
   <data name="disconnected">
     <value>Disconnected</value>
