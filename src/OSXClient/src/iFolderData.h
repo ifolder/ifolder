@@ -28,6 +28,7 @@
 @class User;
 @class iFolderService;
 @class SimiasService;
+@class SyncSize;
 
 @interface iFolderData : NSObject 
 {
@@ -96,5 +97,7 @@
 -(void)setUsersAdded:(NSString *)ifolderID;
 -(BOOL)usersAdded:(NSString *)ifolderID;
 -(void)clearUsersAdded:(NSString *)ifolderID;
+
+-(SyncSize *)getSyncSize:(NSString *)ifolderID;
 
  @end

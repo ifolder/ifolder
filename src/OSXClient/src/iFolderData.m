@@ -786,6 +786,30 @@ static iFolderData *sharedInstance = nil;
 
 
 
+
+//===================================================================
+// getSyncSize
+// Returns the syncSize for an iFolder
+//===================================================================
+-(SyncSize *)getSyncSize:(NSString *)ifolderID
+{
+	SyncSize *ss = nil;
+	[instanceLock lock];
+	@try
+	{
+		ss = [[ifolderService CalculateSyncSize:ifolderID] retain];
+	}
+	@catch(NSException *e)
+	{
+		ss = [[SyncSize alloc] init];
+	}
+	[instanceLock unlock];	
+	return [ss autorelease];
+}
+
+
+
+
 //===================================================================
 // selectDefaultDomain
 // This will select the default domain if there is one and select

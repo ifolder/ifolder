@@ -32,6 +32,7 @@
 
 #define SYNC_ACTION_START		1
 #define SYNC_ACTION_STOP		2
+#define SYNC_ACTION_LOCAL		3
 
 #define NODE_CREATED			1
 #define NODE_DELETED			2
@@ -82,6 +83,7 @@ typedef struct
 	char *size_to_sync;
 	char *size_remaining;
 	char *direction;
+	char *status;
 } SimiasFileSyncEvent;
 */
 }
@@ -93,6 +95,7 @@ typedef struct
 -(double)sizeToSync;
 -(double)sizeRemaining;
 -(int)direction;
+-(NSString *)status;
 @end
 
 
@@ -105,13 +108,13 @@ typedef struct
 	char *name;
 	char *id;
 	char *action;
-	char *successful;
+	char *connected;
 } SimiasCollectionSyncEvent;
 */
 }
 -(NSString *)name;
 -(NSString *)ID;
--(BOOL)isDone;
+-(BOOL)connected;
 -(int)syncAction;
 @end
 

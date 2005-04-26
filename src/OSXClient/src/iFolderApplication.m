@@ -758,40 +758,33 @@
 	iFolder *ifolder = [[iFolderData sharedInstance] 
 							getiFolder:[cse ID]];
 
-	if(ifolder != nil)
-	{
-		if([cse syncAction] == SYNC_ACTION_START)
-		{
-			[[iFolderData sharedInstance] readiFolder:[cse ID]];
-			[ifolder setIsSynchronizing:YES];
-			[[iFolderData sharedInstance] clearUsersAdded:[cse ID]];
-		}
-		else
-		{
-			[ifolder setIsSynchronizing:NO];
-		}
-
-		if([cse syncAction] == SYNC_ACTION_STOP)
-		{
-			[[iFolderData sharedInstance] readiFolder:[cse ID]];
-
-			if([ifolder HasConflicts])
-			{
-				NSLog(@"iFolder has collisions, notifying user");
-				[iFolderNotificationController collisionNotification:ifolder];								
-			}
-
-			if([[iFolderData sharedInstance] usersAdded:[cse ID]])
-			{
-				[iFolderNotificationController newUserNotification:ifolder];								
-			}
-		}
-	}
-
 	switch([cse syncAction])
 	{
+		case SYNC_ACTION_LOCAL:
+		{
+			if(ifolder != nil)
+			{
+				[[iFolderData sharedInstance] readiFolder:[cse ID]];
+				[ifolder setSyncState:SYNC_STATE_PREPARING];
+				[[iFolderData sharedInstance] clearUsersAdded:[cse ID]];
+			}
+
+			NSString *syncMessage = [NSString
+							stringWithFormat:NSLocalizedString(@"Preparing to synchronize: %@", nil), 
+							[cse name]];
+			[iFolderWindowController updateStatusTS:syncMessage];
+			[self addLogTS:syncMessage];
+			break;
+		}
 		case SYNC_ACTION_START:
 		{
+			if(ifolder != nil)
+			{
+				[[iFolderData sharedInstance] readiFolder:[cse ID]];
+				[ifolder setSyncState:SYNC_STATE_SYNCING];
+				[[iFolderData sharedInstance] clearUsersAdded:[cse ID]];
+			}
+		
 			NSString *syncMessage = [NSString
 							stringWithFormat:NSLocalizedString(@"Synchronizing: %@", nil), 
 							[cse name]];
@@ -801,15 +794,50 @@
 		}
 		case SYNC_ACTION_STOP:
 		{
+			if(ifolder != nil)
+			{
+				[[iFolderData sharedInstance] readiFolder:[cse ID]];
+
+				if([ifolder HasConflicts])
+				{
+					NSLog(@"iFolder has collisions, notifying user");
+					[iFolderNotificationController collisionNotification:ifolder];								
+				}
+
+				if([[iFolderData sharedInstance] usersAdded:[cse ID]])
+				{
+					[iFolderNotificationController newUserNotification:ifolder];								
+				}
+			}
+		
 			NSString *syncMessage;
-			if([cse isDone])
-				syncMessage = [NSString
-							stringWithFormat:NSLocalizedString(@"Done synchronizing: %@", nil), 
-							[cse name]];
+			if([cse connected])
+			{
+				SyncSize *ss = [[[iFolderData sharedInstance] getSyncSize:[cse ID]] retain];			
+				if([ss SyncNodeCount] == 0)
+				{
+					[ifolder setSyncState:SYNC_STATE_OK];
+					syncMessage = [NSString
+						stringWithFormat:NSLocalizedString(@"Done synchronizing: %@", nil), 
+						[cse name]];
+				}
+				else
+				{
+					[ifolder setOutOfSyncCount:[ss SyncNodeCount]];
+					[ifolder setSyncState:SYNC_STATE_OUT_OF_SYNC];
+					syncMessage = [NSString
+									stringWithFormat:NSLocalizedString(@"Out of Sync: %@", nil), 
+									[cse name]];
+				}
+				[ss release];
+			}
 			else
+			{
+				[ifolder setSyncState:SYNC_STATE_DISCONNECTED];
 				syncMessage = [NSString
-							stringWithFormat:NSLocalizedString(@"Paused synchronizing: %@", nil), 
+							stringWithFormat:NSLocalizedString(@"Sync failed to connect: %@", nil), 
 							[cse name]];
+			}
 
 			[iFolderWindowController updateStatusTS:NSLocalizedString(@"Idle...", nil)];
 			[self addLogTS:syncMessage];

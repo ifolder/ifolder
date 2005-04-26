@@ -180,8 +180,8 @@ NSDictionary *getCollectionSyncEventProperties(SimiasCollectionSyncEvent *collec
 		[newProperties setObject:[NSString stringWithUTF8String:collectionEvent->id] forKey:@"ID"];
 	if(collectionEvent->action != nil)
 		[newProperties setObject:[NSString stringWithUTF8String:collectionEvent->action] forKey:@"action"];
-	if(collectionEvent->successful != nil)
-		[newProperties setObject:[NSString stringWithUTF8String:collectionEvent->successful] forKey:@"successful"];
+	if(collectionEvent->connected != nil)
+		[newProperties setObject:[NSString stringWithUTF8String:collectionEvent->connected] forKey:@"connected"];
 
 	return [newProperties autorelease];
 }
@@ -236,6 +236,8 @@ NSDictionary *getFileSyncEventProperties(SimiasFileSyncEvent *fileEvent)
 			forKey:@"sizeRemaining"];
 	if(fileEvent->direction != nil)
 		[newProperties setObject:[NSString stringWithUTF8String:fileEvent->direction] forKey:@"direction"];
+	if(fileEvent->status != nil)
+		[newProperties setObject:[NSString stringWithUTF8String:fileEvent->status] forKey:@"status"];
 
 	return [newProperties autorelease];
 }
