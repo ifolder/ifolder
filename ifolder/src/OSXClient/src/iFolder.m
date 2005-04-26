@@ -41,7 +41,6 @@
 			initWithObjects:values forKeys: keys];
 	}
 
-	synchronizing = NO;
 	return self;
 }
 
@@ -73,16 +72,35 @@
 
 
 
--(BOOL) isSynchronizing
+-(int) syncState
 {
-	return synchronizing;
+	NSNumber *num = [properties objectForKey:@"syncState"];
+	if(num != nil)
+		return [num intValue];
+	else
+		return 0;
 }
-
--(void) setIsSynchronizing:(BOOL)isSynchronizing
+-(void) setSyncState:(int)syncState
 {
-	synchronizing = isSynchronizing;
+	[properties setObject:[NSNumber numberWithInt:syncState] forKey:@"syncState"];
 	[self updateDisplayInformation];
 }
+
+-(unsigned long) outOfSyncCount
+{
+	NSNumber *num = [properties objectForKey:@"outOfSyncCount"];
+	if(num != nil)
+		return [num unsignedLongValue];
+	else
+		return 0;
+}
+
+-(void) setOutOfSyncCount:(unsigned long)outOfSyncCount
+{
+	[properties setObject:[NSNumber numberWithUnsignedLong:outOfSyncCount] forKey:@"outOfSyncCount"];
+	[self updateDisplayInformation];
+}
+
 
 -(NSString *)Name
 {
@@ -200,14 +218,24 @@
 	}
 	else
 	{
-		if(synchronizing)
+		if([self syncState] == SYNC_STATE_SYNCING)
 			[properties setObject:NSLocalizedString(@"Synchronizing", nil) forKey:@"Status"];
-		else if([ [properties objectForKey:@"State"] isEqualToString:@"WaitSync"])
-			[properties setObject:NSLocalizedString(@"Waiting to Sync", nil) forKey:@"Status"];
-		else if([ [properties objectForKey:@"State"] isEqualToString:@"Local"])
+		else if([self syncState] == SYNC_STATE_PREPARING)
+			[properties setObject:NSLocalizedString(@"Preparing to synchronize", nil) forKey:@"Status"];
+		else if([ [properties objectForKey:@"HasConflicts"] boolValue])
+			[properties setObject:NSLocalizedString(@"Has Conflicts", nil) forKey:@"Status"];
+		else if([self syncState] == SYNC_STATE_DISCONNECTED)
+			[properties setObject:NSLocalizedString(@"Disconnected", nil) forKey:@"Status"];
+		else if( ([self syncState] == SYNC_STATE_OUT_OF_SYNC) &&
+				 ([self outOfSyncCount] > 0) )
 		{
-			if([ [properties objectForKey:@"HasConflicts"] boolValue])
-				[properties setObject:NSLocalizedString(@"Has Conflicts", nil) forKey:@"Status"];
+			[properties setObject:[NSString stringWithFormat:NSLocalizedString(@"%ul items out of sync", nil), [self outOfSyncCount]] forKey:@"Status"];
+		}
+		else if( ([self syncState] == 0) ||
+				 ([self syncState] == SYNC_STATE_OK) )
+		{
+			if([ [properties objectForKey:@"State"] isEqualToString:@"WaitSync"])
+				[properties setObject:NSLocalizedString(@"Waiting to Sync", nil) forKey:@"Status"];
 			else
 				[properties setObject:NSLocalizedString(@"OK", nil) forKey:@"Status"];
 		}

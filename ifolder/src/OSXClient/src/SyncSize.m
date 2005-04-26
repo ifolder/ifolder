@@ -78,12 +78,20 @@
 
 -(unsigned long)SyncNodeCount
 {
-	return [ [properties objectForKey:@"SyncNodeCount"] unsignedLongValue];
+	NSNumber *num = [properties objectForKey:@"SyncNodeCount"];
+	if(num != nil)
+		return [num unsignedLongValue];
+	else
+		return 0;
 }
 
 -(unsigned long long) SyncByteCount
 {
-	return [ [properties objectForKey:@"SyncNodeCount"] unsignedLongLongValue];
+	NSNumber *num = [properties objectForKey:@"SyncByteCount"];
+	if(num != nil)
+		return [num unsignedLongLongValue];
+	else
+		return 0;
 }
 
 

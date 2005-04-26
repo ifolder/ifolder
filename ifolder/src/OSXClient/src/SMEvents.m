@@ -128,6 +128,10 @@
 	else
 		return FILE_SYNC_UPLOADING;
 }
+-(NSString *)status
+{
+	return [properties objectForKey:@"status"];
+}
 @end
 
 
@@ -141,7 +145,7 @@
 {
 	return [properties objectForKey:@"ID"];
 }
--(BOOL)isDone
+-(BOOL)connected
 {
 	NSString *doneStr = [properties objectForKey:@"connected"];
 	return ([doneStr compare:@"True"] == 0);
@@ -151,6 +155,8 @@
 	NSString *actStr = [properties objectForKey:@"action"];
 	if([actStr compare:@"StartSync"] == 0)
 		return SYNC_ACTION_START;
+	else if([actStr compare:@"StartLocalSync"] == 0)
+		return SYNC_ACTION_LOCAL;
 	else
 		return SYNC_ACTION_STOP;
 }

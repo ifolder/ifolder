@@ -23,6 +23,14 @@
 
 #import <Cocoa/Cocoa.h>
 
+
+#define SYNC_STATE_PREPARING		1
+#define SYNC_STATE_SYNCING			2
+#define SYNC_STATE_OK				3
+#define SYNC_STATE_OUT_OF_SYNC		4
+#define SYNC_STATE_DISCONNECTED		5
+
+
 /*
 	@public
 		NSString	*DomainID;
@@ -52,14 +60,16 @@
 @interface iFolder : NSObject
 {
 	NSMutableDictionary * properties;
-	BOOL				synchronizing;
 }
 
 -(NSMutableDictionary *) properties;
 -(void) setProperties: (NSDictionary *)newProperties;
 
--(BOOL) isSynchronizing;
--(void) setIsSynchronizing:(BOOL)isSynchronizing;
+-(int) syncState;
+-(void) setSyncState:(int)syncState;
+
+-(unsigned long) outOfSyncCount;
+-(void) setOutOfSyncCount:(unsigned long)outOfSyncCount;
 
 -(BOOL)IsSubscription;
 -(BOOL)HasConflicts;

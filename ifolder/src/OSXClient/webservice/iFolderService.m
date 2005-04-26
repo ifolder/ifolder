@@ -986,8 +986,17 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		if((soap.fault != NULL) &&
+			(soap.fault->faultstring != NULL) )
+		{
+			[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
 					format:@"Error in CalculateSyncSize"];
+		}
+		else
+		{
+			[NSException raise:[NSString stringWithFormat:@"gSoap Error %d", soap.error]
+					format:@"Error in CalculateSyncSize"];
+		}
 	}
 	else
 	{
@@ -1006,7 +1015,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
     cleanup_gsoap(&soap, &creds);
 
-	return ss;
+	return [ss autorelease];
 }
 
 
