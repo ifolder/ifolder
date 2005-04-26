@@ -17,7 +17,9 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Author: Calvin Gaisford <cgaisford@novell.com>
+ *  Authors:
+ *		Calvin Gaisford <cgaisford@novell.com>
+ *		Boyd Timothy <btimothy@novell.com>
  * 
  ***********************************************************************/
 
@@ -184,11 +186,14 @@ namespace Novell.iFolder
 		{
 			switch(args.Action)
 			{
+				case Action.StartLocalSync:
+					LogMessage(string.Format(Util.GS(
+						"Checking for local changes: {0}"), args.Name));
+					break;
 				case Action.StartSync:
 				{
 					LogMessage(string.Format(Util.GS(
 						"Started sync of: {0}"), args.Name));
-
 					break;
 				}
 				case Action.StopSync:
@@ -213,6 +218,12 @@ namespace Novell.iFolder
 						{
 							message = string.Format(Util.GS(
 								"Deleting file on client: {0}"), args.Name);
+						}
+						else if (args.Direction == Simias.Client.Event.Direction.Local)
+						{
+							message = string.Format(
+								Util.GS("Found local change in file: {0}"),
+								args.Name);
 						}
 						else if (args.SizeToSync < args.Size)
 						{
@@ -247,6 +258,12 @@ namespace Novell.iFolder
 						{
 							message = string.Format(
 								Util.GS("Deleting directory on client: {0}"),
+								args.Name);
+						}
+						else if (args.Direction == Simias.Client.Event.Direction.Local)
+						{
+							message = string.Format(
+								Util.GS("Found local change in directory: {0}"),
 								args.Name);
 						}
 						else

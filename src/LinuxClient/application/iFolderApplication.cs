@@ -17,7 +17,9 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Author: Calvin Gaisford <cgaisford@novell.com>
+ *  Authors:
+ *		Calvin Gaisford <cgaisford@novell.com>
+ *		Boyd Timothy <btimothy@novell.com>
  * 
  ***********************************************************************/
 
@@ -166,7 +168,7 @@ namespace Novell.iFolder
 					// Setup to have data ready for events
 					ifdata = iFolderData.GetData();
 
-					EventBroker = new SimiasEventBroker();
+					EventBroker = new SimiasEventBroker(ifws);
 
 					EventBroker.Register();
 				}
