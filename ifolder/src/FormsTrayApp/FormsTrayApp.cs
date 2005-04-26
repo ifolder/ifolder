@@ -1016,6 +1016,9 @@ namespace Novell.FormsTrayApp
 					string message = null;
 					switch (syncEventArgs.Action)
 					{
+						case Action.StartLocalSync:
+							message = string.Format(resourceManager.GetString("localSync"), syncEventArgs.Name);
+							break;
 						case Action.StartSync:
 						{
 							// Animate the icon.

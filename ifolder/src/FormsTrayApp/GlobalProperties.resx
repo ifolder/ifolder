@@ -1880,13 +1880,13 @@
     <value>Log entries cleared.</value>
   </data>
   <data name="localSync">
-    <value>Checking for local changes in {0}</value>
+    <value>Checking for local changes: {0}</value>
   </data>
   <data name="preSync">
     <value>Checking for local changes</value>
   </data>
   <data name="disconnected">
-    <value>Disconnected</value>
+    <value>Server unavailable</value>
   </data>
   <data name="synciFolder">
     <value>Started sync of: {0}</value>
@@ -1937,10 +1937,10 @@
     <value>Out of sync</value>
   </data>
   <data name="statusSyncingItems">
-    <value>{0} objects to sync</value>
+    <value>{0} items to sync</value>
   </data>
   <data name="statusSyncItemsFailed">
-    <value>{0} objects out of sync</value>
+    <value>{0} items out of sync</value>
   </data>
   <data name="readiFolderSettingsError">
     <value>An error was encountered while reading the iFolder settings.</value>

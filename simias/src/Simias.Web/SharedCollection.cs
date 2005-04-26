@@ -389,7 +389,7 @@ namespace Simias.Web
 			}
 
 			// Don't allow System directories to become iFolders.
-			if ((new DirectoryInfo(path).Attributes & FileAttributes.System) == FileAttributes.System)
+			if (Directory.Exists(path) && ((new DirectoryInfo(path).Attributes & FileAttributes.System) == FileAttributes.System))
 			{
 				return false;
 			}
