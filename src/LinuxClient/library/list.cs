@@ -23,7 +23,8 @@ public interface IListModel {
 }
 
 public class BigList : Gtk.DrawingArea {
-	Gtk.Adjustment adjustment;
+	Gtk.Adjustment hAdjustment;
+	Gtk.Adjustment vAdjustment;
 	int top_displayed;
 	Style my_style;
 	Widget style_widget;
@@ -40,6 +41,8 @@ public class BigList : Gtk.DrawingArea {
 	public bool CanDeselect = false;
 	int old_selected;
 	
+	int currentWidth = 50; // pixels
+	
 	public BigList (IListModel provider)
 	{
 		this.provider = provider;
@@ -47,8 +50,11 @@ public class BigList : Gtk.DrawingArea {
 		//Accessibility
 		RefAccessible ().Role = Atk.Role.List;
 
-		adjustment = new Gtk.Adjustment (0, 0, provider.Rows, 1, 1, 1);
-		adjustment.ValueChanged += new EventHandler (ValueChangedHandler);
+		hAdjustment = new Gtk.Adjustment (0, 0, currentWidth, 1, 1, 1);
+		hAdjustment.ValueChanged += new EventHandler (HAdjustmentValueChangedHandler);
+		
+		vAdjustment = new Gtk.Adjustment (0, 0, provider.Rows, 1, 1, 1);
+		vAdjustment.ValueChanged += new EventHandler (VAdjustmentValueChangedHandler);
 
 		layout = new Pango.Layout (PangoContext);
 
@@ -131,9 +137,15 @@ public class BigList : Gtk.DrawingArea {
 	{
 	}
 	
-	void ValueChangedHandler (object obj, EventArgs e)
+	void HAdjustmentValueChangedHandler (object obj, EventArgs e)
 	{
-		top_displayed = (int) Adjustment.Value;
+//		top_displayed = (int) HAdjustment.Value;
+		Refresh ();
+	}
+
+	void VAdjustmentValueChangedHandler (object obj, EventArgs e)
+	{
+		top_displayed = (int) VAdjustment.Value;
 		Refresh ();
 	}
 
@@ -144,7 +156,7 @@ public class BigList : Gtk.DrawingArea {
 
 	public void Reload ()
 	{
-		adjustment.SetBounds (0, provider.Rows, 1, rows, rows);
+		vAdjustment.SetBounds (0, provider.Rows, 1, rows, rows);
 		ellipses.Clear ();
 		reloaded = true;
 	}
@@ -162,18 +174,18 @@ public class BigList : Gtk.DrawingArea {
 		
                 switch (es.Direction){
                 case ScrollDirection.Up:
-                        newloc = adjustment.Value - steps;
+                        newloc = vAdjustment.Value - steps;
                         break;
                         
                 case ScrollDirection.Down:
-                        newloc = adjustment.Value + steps;
+                        newloc = vAdjustment.Value + steps;
                         break;
                 }
 
 		newloc = Math.Max (newloc, 0);
 		newloc = Math.Min (newloc, provider.Rows - rows);
 
-                adjustment.Value = newloc;
+                vAdjustment.Value = newloc;
 	}
 
 	void KeyHandler (object o, KeyPressEventArgs args)
@@ -284,12 +296,12 @@ public class BigList : Gtk.DrawingArea {
 			
 			if (selected < top_displayed){
 				top_displayed = selected;
-				adjustment.Value = top_displayed;
+				vAdjustment.Value = top_displayed;
 				Refresh ();
 			} else if (selected >= (top_displayed + rows)){
 				top_displayed = selected - rows + 1;
 				top_displayed = Math.Max (top_displayed, 0);
-				adjustment.Value = top_displayed;
+				vAdjustment.Value = top_displayed;
 				Refresh ();
 			} else
 				RedrawLine (selected - top_displayed);
@@ -348,9 +360,15 @@ public class BigList : Gtk.DrawingArea {
 		args.RetVal = true;
 	}
 
-	public Gtk.Adjustment Adjustment {
+	public Gtk.Adjustment HAdjustment {
 		get {
-			return adjustment;
+			return hAdjustment;
+		}
+	}
+
+	public Gtk.Adjustment VAdjustment {
+		get {
+			return vAdjustment;
 		}
 	}
 }
