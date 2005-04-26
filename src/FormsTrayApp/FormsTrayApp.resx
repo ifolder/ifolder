@@ -688,6 +688,30 @@
   <data name="deleteUnknown">
     <value>Deleting on server: {0}</value>
   </data>
+  <data name="conflictFailure">
+    <value>Conflict occurred for: {0}</value>
+  </data>
+  <data name="policyFailure">
+    <value>A policy prevented a sync of: {0}</value>
+  </data>
+  <data name="accessFailure">
+    <value>Insuficient rights to sync: {0}</value>
+  </data>
+  <data name="lockFailure">
+    <value>iFolder is locked and did not sync: {0}</value>
+  </data>
+  <data name="quotaFailure">
+    <value>iFolder is full and did not sync: {0}</value>
+  </data>
+  <data name="policySizeFailure">
+    <value>A size restriction policy prevented a sync of: {0}</value>
+  </data>
+  <data name="policyTypeFailure">
+    <value>A file type restriction policy prevented a sync of: {0}</value>
+  </data>
+  <data name="genericFailure">
+    <value>iFolder failed to sync: {0}</value>
+  </data>
   <data name="myiFolders">
     <value>My iFolders</value>
   </data>
