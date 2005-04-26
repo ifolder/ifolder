@@ -3409,6 +3409,9 @@
   <data name="serverConnectError">
     <value>An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.</value>
   </data>
+  <data name="unknownDomain">
+    <value>Unable to contact the specified server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.</value>
+  </data>
   <data name="accountDisabled">
     <value>The user account is disabled.  Please contact your network administrator for assistance.</value>
   </data>
