@@ -17,7 +17,9 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Author: Calvin Gaisford <cgaisford@novell.com>
+ *  Authors:
+ *		Calvin Gaisford <cgaisford@novell.com>
+ *		Boyd Timothy <btimothy@novell.com>
  * 
  ***********************************************************************/
 
@@ -266,6 +268,8 @@ namespace Novell.iFolder
 
 	public class SimiasEventBroker
 	{
+		private iFolderWebService	ifws;
+
 		private iFolderData			ifdata;
 		private IProcEventClient	simiasEventClient;
 
@@ -296,8 +300,10 @@ namespace Novell.iFolder
 		public event FileSyncEventHandler FileSyncEventFired;
 		public event NotifyEventHandler NotifyEventFired;
 
-		public SimiasEventBroker()
+		public SimiasEventBroker(iFolderWebService iFolderWS)
 		{
+			ifws = iFolderWS;
+		
 			NodeEventQueue = new Queue();
 			SyncEventQueue = new Queue();
 			FileEventQueue = new Queue();
@@ -471,11 +477,34 @@ namespace Novell.iFolder
 				iFolderHolder ifHolder =
 					ifdata.GetiFolder(syncEventArgs.ID);
 
-				if(syncEventArgs.Action == Action.StartSync)
-					ifHolder.IsSyncing = true;
-				else
-					ifHolder.IsSyncing = false;
+				switch (syncEventArgs.Action)
+				{
+					case Action.StartLocalSync:
+						ifHolder.State = iFolderState.SynchronizingLocal;
+						break;
+					case Action.StartSync:
+						ifHolder.State = iFolderState.Synchronizing;
+						break;
+					case Action.StopSync:
+						try
+						{
+							SyncSize syncSize = ifws.CalculateSyncSize(syncEventArgs.ID);
+							ifHolder.ObjectsToSync = syncSize.SyncNodeCount;
+						}
+						catch
+						{}
 
+						if (ifHolder.ObjectsToSync > 0)
+							ifHolder.State = iFolderState.Normal;
+						else
+						{
+							if (syncEventArgs.Connected)
+								ifHolder.State = iFolderState.Normal;
+							else
+								ifHolder.State = iFolderState.Disconnected;
+						}
+						break;
+				}
 
 				if( (ifHolder.iFolder.UnManagedPath == null) ||
 						(ifHolder.iFolder.UnManagedPath.Length == 0) )

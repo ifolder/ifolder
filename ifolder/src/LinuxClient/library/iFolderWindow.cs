@@ -35,24 +35,58 @@ using Simias.Client.Event;
 namespace Novell.iFolder
 {
 	/// <summary>
+	/// iFolder states.
+	/// </summary>
+	public enum iFolderState
+	{
+		/// <summary>
+		/// Initial state before anything has happened
+		/// </summary>
+		Initial,
+
+		/// <summary>
+		/// The Normal state.
+		/// </summary>
+		Normal,
+
+		/// <summary>
+		/// The Synchronizing state.
+		/// </summary>
+		Synchronizing,
+
+		/// <summary>
+		/// The FailedSync state.
+		/// </summary>
+		FailedSync,
+
+		/// <summary>
+		/// Synchronizing with the local store.
+		/// </summary>
+		SynchronizingLocal,
+
+		/// <summary>
+		/// Unable to connect to the server.
+		/// </summary>
+		Disconnected
+	}
+
+	/// <summary>
 	/// This is a holder class for iFolders so the client can place
 	/// extra data with an iFolder about it's status and such.
 	/// </summary>
 	public class iFolderHolder
 	{
-		private iFolderWeb	ifolder;
-		private bool		isSyncing;
-		private bool		syncSuccessful;
-		private string		path;
-		private string		state;
-		private uint		objectsToSync;
+		private iFolderWeb		ifolder;
+		private iFolderState	state;
+		private string			stateString;
+		private string			path;
+		private uint			objectsToSync;
 
 		public iFolderHolder(iFolderWeb ifolder)
 		{
-			this.ifolder = ifolder;
-			isSyncing = false;
-			syncSuccessful = true;
-			objectsToSync = 0;
+			this.ifolder	= ifolder;
+			state			= iFolderState.Initial;
+			objectsToSync	= 0;
 			UpdateDisplayData();
 		}
 
@@ -67,34 +101,24 @@ namespace Novell.iFolder
 			}
 		}
 
-		public bool IsSyncing
-		{
-			get{ return isSyncing; }
-			set
-			{ 
-				this.isSyncing = value;
-				UpdateDisplayData();
-			}
-		}
-
-		public bool SyncSuccessful
-		{
-			get{ return syncSuccessful; }
-			set
-			{
-				this.syncSuccessful = value;
-				UpdateDisplayData();
-			}
-		}
-
 		public string Path
 		{
 			get{ return path; }
 		}
 
-		public string State
+		public string StateString
+		{
+			get{ return stateString; }
+		}
+
+		public iFolderState State
 		{
 			get{ return state; }
+			set
+			{
+				this.state = value;
+				UpdateDisplayData();
+			}
 		}
 		
 		public uint ObjectsToSync
@@ -112,43 +136,52 @@ namespace Novell.iFolder
 
 		private void UpdateDisplayData()
 		{
-			if(iFolder.IsSubscription)
+			switch (state)
 			{
-				if(iFolder.State == "Available")
-					state = Util.GS("Available");
-				else if(iFolder.State == "WaitConnect")
-					state = Util.GS("Waiting to Connect");
-				else if(iFolder.State == "WaitSync")
-					state = Util.GS("Waiting to Sync");
-				else
-					state = Util.GS("Unknown");
-			}
-			else
-			{
-				if(IsSyncing)
-				{
+				case iFolderState.Initial:
+					switch (iFolder.State)
+					{
+						case "Available":
+							stateString = Util.GS("Available");
+							break;
+						case "WaitConnect":
+							stateString = Util.GS("Waiting to Connect");
+							break;
+						case "WaitSync":
+							stateString = Util.GS("Waiting to Sync");
+							break;
+						case "Local":
+							stateString = Util.GS("OK");
+							break;
+						default:
+							stateString = Util.GS("Unknown");
+							break;
+					}
+					break;
+				case iFolderState.Normal:
 					if (objectsToSync > 0)
-					{
-						state = string.Format(Util.GS("{0} objects to sync"), objectsToSync);
-					}
+						stateString = string.Format(Util.GS("{0} objects out of sync"), objectsToSync);
 					else
-					{
-						state = Util.GS("Synchronizing");
-					}
-				}
-				else if(iFolder.State == "WaitSync")
-					state = Util.GS("Waiting to Sync");
-				else if(iFolder.State == "Local")
-				{
-					if(iFolder.HasConflicts)
-						state = Util.GS("Has File Conflicts");
-					else if(!SyncSuccessful)
-						state = Util.GS("Sync Failed");
+						stateString = Util.GS("OK");
+					break;
+				case iFolderState.Synchronizing:
+					if (objectsToSync > 0)
+						stateString = string.Format(Util.GS("{0} objects to sync"), objectsToSync);
 					else
-						state = Util.GS("OK");
-				}
-				else
-					state = Util.GS("Unknown");
+						stateString = Util.GS("Synchronizing");
+					break;
+				case iFolderState.FailedSync:
+					stateString = Util.GS("Sync failed");
+					break;
+				case iFolderState.SynchronizingLocal:
+					stateString = Util.GS("Checking for local changes");
+					break;
+				case iFolderState.Disconnected:
+					stateString = Util.GS("Server unavailable");
+					break;
+				default:
+					stateString = Util.GS("Unknown");
+					break;
 			}
 
 			if(iFolder.IsSubscription)
@@ -628,7 +661,7 @@ namespace Novell.iFolder
 			iFolderHolder ifHolder =
 					(iFolderHolder) tree_model.GetValue(iter,0);
 
-			((CellRendererText) cell).Text = ifHolder.State;
+			((CellRendererText) cell).Text = ifHolder.StateString;
 		}
 
 
@@ -1195,13 +1228,8 @@ namespace Novell.iFolder
     					iFolderHolder newHolder =
 								ifdata.RevertiFolder(ifHolder.iFolder.ID);
 
-//						curiFolders.Remove(ifHolder.iFolder.ID);
-
-						// Set the value of the returned value for the one
-						// that was there
-//						iFolderHolder holder = new iFolderHolder(newiFolder);
+						newHolder.State = iFolderState.Initial;
 						iFolderTreeStore.SetValue(iter, 0, newHolder);
-//						curiFolders.Add(newiFolder.ID, iter);
 					}
 					catch(Exception e)
 					{
@@ -1509,11 +1537,52 @@ namespace Novell.iFolder
 		}
 
 
+		private void iFolderDisplayPathHack(iFolderHolder ifHolder)
+		{
+			// This is kind of a hack
+			// Sometimes, iFolders will be in the list but
+			// they don't have the path.  Check for the path
+			// here and if it is missing, re-read the ifolder
+			// 'cause we'll have the path at this point
+			if( (ifHolder.iFolder.UnManagedPath == null) ||
+					(ifHolder.iFolder.UnManagedPath.Length == 0) )
+			{
+				iFolderHolder updatedHolder = null;
+				updatedHolder = ifdata.ReadiFolder(ifHolder.iFolder.ID);
+				if(updatedHolder != null)
+					ifHolder = updatedHolder;
+			}
+		}
+
 
 		public void HandleSyncEvent(CollectionSyncEventArgs args)
 		{
+			iFolderHolder ifHolder = null;
+			TreeIter iter;
+			iFolderTreeStore.GetIterFirst(out iter);	// Initialize iter
+			if (curiFolders.ContainsKey(args.ID))
+			{
+				iter = (TreeIter)curiFolders[args.ID];
+				ifHolder = (iFolderHolder) iFolderTreeStore.GetValue(iter,0);
+			}
+
 			switch(args.Action)
 			{
+				case Action.StartLocalSync:
+				{
+					UpdateStatus(string.Format(Util.GS(
+									"Checking for local changes: {0}"), args.Name));
+
+					if (ifHolder != null)
+					{
+						ifHolder.State = iFolderState.SynchronizingLocal;
+
+						iFolderDisplayPathHack(ifHolder);
+						iFolderTreeStore.SetValue(iter, 0, ifHolder);
+					}
+					
+					break;
+				}
 				case Action.StartSync:
 				{
 					UpdateStatus(string.Format(Util.GS(
@@ -1525,26 +1594,11 @@ namespace Novell.iFolder
 					// filter, we'll still need this.
 					startingSync = true;
 
-					if(curiFolders.ContainsKey(args.ID))
+					if (ifHolder != null)
 					{
-						TreeIter iter = (TreeIter)curiFolders[args.ID];
-						iFolderHolder ifHolder = 
-							(iFolderHolder) iFolderTreeStore.GetValue(iter,0);
-						ifHolder.IsSyncing = true;
+						ifHolder.State = iFolderState.Synchronizing;
 
-						// This is kind of a hack
-						// Sometimes, iFolders will be in the list but
-						// they don't have the path.  Check for the path
-						// here and if it is missing, re-read the ifolder
-						// 'cause we'll have the path at this point
-						if( (ifHolder.iFolder.UnManagedPath == null) ||
-								(ifHolder.iFolder.UnManagedPath.Length == 0) )
-						{
-							iFolderHolder updatedHolder = null;
-							updatedHolder = ifdata.ReadiFolder(args.ID);
-							if(updatedHolder != null)
-								ifHolder = updatedHolder;
-						}
+						iFolderDisplayPathHack(ifHolder);
 						iFolderTreeStore.SetValue(iter, 0, ifHolder);
 					}
 					break;
@@ -1554,38 +1608,27 @@ namespace Novell.iFolder
 					if(SyncBar != null)
 						SyncBar.Hide();
 
-					if(curiFolders.ContainsKey(args.ID))
+					if (ifHolder != null)
 					{
-						TreeIter iter = (TreeIter)curiFolders[args.ID];
-						iFolderHolder ifHolder = (iFolderHolder) 
-								iFolderTreeStore.GetValue(iter,0);
-						ifHolder.IsSyncing = false;
-						ifHolder.SyncSuccessful = args.Connected;
-
-						// This is kind of a hack
-						// Sometimes, iFolders will come through that
-						// don't have members so we need to update them
-						// to have the members
-						if(	(ifHolder.iFolder.State == "WaitSync") ||
-							(ifHolder.iFolder.CurrentUserID == null) ||
-							(ifHolder.iFolder.CurrentUserID.Length == 0) )
-						{
-							iFolderHolder updatedHolder = null;
-							updatedHolder = ifdata.ReadiFolder(args.ID);
-							if(updatedHolder != null)
-								ifHolder = updatedHolder;
-						}
-
-						SyncSize syncSize = null;
-				
 						try
 						{
-							syncSize = ifws.CalculateSyncSize(args.ID);
+							SyncSize syncSize = ifws.CalculateSyncSize(args.ID);
 							ifHolder.ObjectsToSync = syncSize.SyncNodeCount;
 						}
 						catch
 						{}
-				
+
+						if (ifHolder.ObjectsToSync > 0)
+							ifHolder.State = iFolderState.Normal;
+						else
+						{
+							if (args.Connected)
+								ifHolder.State = iFolderState.Normal;
+							else
+								ifHolder.State = iFolderState.Disconnected;
+						}
+
+						iFolderDisplayPathHack(ifHolder);
 						iFolderTreeStore.SetValue(iter, 0, ifHolder);
 
 						UpdateButtonSensitivity();
@@ -1600,34 +1643,19 @@ namespace Novell.iFolder
 
 			// If the properties dialog is open, update it so it shows the
 			// current status (last sync time, objects to sync, etc.)						
-			if (PropertiesDialog != null && 
+			if (ifHolder != null &&
+				PropertiesDialog != null && 
 				PropertiesDialog.iFolder.ID == args.ID)
 			{
-				if (curiFolders.ContainsKey(args.ID))
-				{
-					iFolderHolder ifHolder = ifdata.GetiFolder(args.ID);
-					PropertiesDialog.UpdateiFolder(ifHolder.iFolder);
-				}
+				PropertiesDialog.UpdateiFolder(ifHolder.iFolder);
 			}
 		}
 
 
 		public void HandleFileSyncEvent(FileSyncEventArgs args)
 		{
-			if(SyncBar == null)
-			{
-				SyncBar = new ProgressBar();
-				SyncBar.Orientation = Gtk.ProgressBarOrientation.LeftToRight;
-				SyncBar.PulseStep = .01;
-				MainStatusBar.PackEnd(SyncBar, false, true, 0);
-			}
-
 			if (args.SizeRemaining == args.SizeToSync)
 			{
-				// Init the progress bar
-				SyncBar.Show();
-				SyncBar.Fraction = 0;
-
 				if (startingSync || (objectsToSync <= 0))
 				{
 					startingSync = false;
@@ -1642,20 +1670,36 @@ namespace Novell.iFolder
 					}
 				}
 
-				// Decrement the count whether we're showing the iFolder
-				// in the current list or not.  We'll need this if the
-				// user switches back to the list that contains the iFolder
-				// that is actually synchronizing.
-				objectsToSync--;
-
-				// Get the iFolderHolder and set the objectsToSync (only if the
-				// domain filter isn't set or is for this iFolder's domain.
-				iFolderHolder ifHolder = ifdata.GetiFolder(args.CollectionID);
-				if (ifHolder != null && (curDomain == null || curDomain == ifHolder.iFolder.DomainID))
+				if (!args.Direction.Equals(Simias.Client.Event.Direction.Local))
 				{
-					ifHolder.ObjectsToSync = objectsToSync;
-					TreeIter iter = (TreeIter)curiFolders[args.CollectionID];
-					iFolderTreeStore.SetValue(iter, 0, ifHolder);
+					if(SyncBar == null)
+					{
+						SyncBar = new ProgressBar();
+						SyncBar.Orientation = Gtk.ProgressBarOrientation.LeftToRight;
+						SyncBar.PulseStep = .01;
+						MainStatusBar.PackEnd(SyncBar, false, true, 0);
+					}
+
+					// Init the progress bar now that we know we're synchronizing
+					// to the server and not just checking local changes.
+					SyncBar.Fraction = 0;
+					SyncBar.Show();
+
+					// Decrement the count whether we're showing the iFolder
+					// in the current list or not.  We'll need this if the
+					// user switches back to the list that contains the iFolder
+					// that is actually synchronizing.
+					objectsToSync--;
+	
+					// Get the iFolderHolder and set the objectsToSync (only if the
+					// domain filter isn't set or is for this iFolder's domain.
+					iFolderHolder ifHolder = ifdata.GetiFolder(args.CollectionID);
+					if (ifHolder != null && (curDomain == null || curDomain == ifHolder.iFolder.DomainID))
+					{
+						ifHolder.ObjectsToSync = objectsToSync;
+						TreeIter iter = (TreeIter)curiFolders[args.CollectionID];
+						iFolderTreeStore.SetValue(iter, 0, ifHolder);
+					}
 				}
 
 				switch (args.ObjectType)
@@ -1667,14 +1711,29 @@ namespace Novell.iFolder
 								args.Name));
 						else
 						{
-							if (args.Direction == Simias.Client.Event.Direction.Uploading)
-								UpdateStatus(string.Format(
-									Util.GS("Uploading file: {0}"),
-									args.Name));
-							else
-								UpdateStatus(string.Format(
-									Util.GS("Downloading file: {0}"),
-									args.Name));
+							switch (args.Direction)
+							{
+								case Simias.Client.Event.Direction.Uploading:
+									UpdateStatus(string.Format(
+										Util.GS("Uploading file: {0}"),
+										args.Name));
+									break;
+								case Simias.Client.Event.Direction.Downloading:
+									UpdateStatus(string.Format(
+										Util.GS("Downloading file: {0}"),
+										args.Name));
+									break;
+								case Simias.Client.Event.Direction.Local:
+									UpdateStatus(string.Format(
+										Util.GS("Found local change in file: {0}"),
+										args.Name));
+									break;
+								default:
+									UpdateStatus(string.Format(
+										Util.GS("Synchronizing file: {0}"),
+										args.Name));
+									break;
+							}
 						}
 						break;
 					case ObjectType.Directory:
@@ -1684,14 +1743,29 @@ namespace Novell.iFolder
 								args.Name));
 						else
 						{
-							if (args.Direction == Simias.Client.Event.Direction.Uploading)
-								UpdateStatus(string.Format(
-									Util.GS("Uploading directory: {0}"),
-									args.Name));
-							else
-								UpdateStatus(string.Format(
-									Util.GS("Downloading directory: {0}"),
-									args.Name));
+							switch (args.Direction)
+							{
+								case Simias.Client.Event.Direction.Uploading:
+									UpdateStatus(string.Format(
+										Util.GS("Uploading directory: {0}"),
+										args.Name));
+									break;
+								case Simias.Client.Event.Direction.Downloading:
+									UpdateStatus(string.Format(
+										Util.GS("Downloading directory: {0}"),
+										args.Name));
+									break;
+								case Simias.Client.Event.Direction.Local:
+									UpdateStatus(string.Format(
+										Util.GS("Found local change in directory: {0}"),
+										args.Name));
+									break;
+								default:
+									UpdateStatus(string.Format(
+										Util.GS("Synchronizing directory: {0}"),
+										args.Name));
+									break;
+							}
 						}
 						break;
 					case ObjectType.Unknown:
@@ -1703,16 +1777,19 @@ namespace Novell.iFolder
 			}
 			else
 			{
-				// Update the sync progress bar
-				SyncBar.Show();
-				if (args.SizeToSync > 0)
+				if (SyncBar != null)
 				{
-					SyncBar.Fraction =
-						(((double)args.SizeToSync) - ((double)args.SizeRemaining)) /
-						((double)args.SizeToSync);
+					// Update the sync progress bar
+					SyncBar.Show();
+					if (args.SizeToSync > 0)
+					{
+						SyncBar.Fraction =
+							(((double)args.SizeToSync) - ((double)args.SizeRemaining)) /
+							((double)args.SizeToSync);
+					}
+					else
+						SyncBar.Fraction = 1;
 				}
-				else
-					SyncBar.Fraction = 1;
 			}
 		}
 
