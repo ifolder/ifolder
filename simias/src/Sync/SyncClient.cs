@@ -583,16 +583,12 @@ namespace Simias.Sync
 				{
 					seconds = 60;
 				}
-				else if (workArray.Count != 0 && nodesToSync > workArray.Count)
-				{
-					seconds = 0;
-				}
 				else 
 				{
 					seconds = collection.Interval;
 					if (serverStatus == StartSyncStatus.Busy)
 					{
-						// Reschedule to sync within 1/12 of the scheduled sync time, but no less than 10 seconds.
+						// Reschedule to sync within 30 seconds, but no less than 10 seconds.
 						seconds = new Random().Next(20) + 10;
 					}
 				}
