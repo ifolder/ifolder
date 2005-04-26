@@ -228,7 +228,8 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 				return ResultFromShort(idCmd-idCmdFirst);
 			}
 
-			if (attrs & FILE_ATTRIBUTE_DIRECTORY)
+			// Don't allow System directories to become iFolders.
+			if ((attrs & FILE_ATTRIBUTE_DIRECTORY) && !(attrs & FILE_ATTRIBUTE_SYSTEM))
 			{
 				// A directory has been selected ... check to see if it can be an iFolder.
 				bAppendItems= m_spiFolder->CanBeiFolder(m_szFileUserClickedOn);

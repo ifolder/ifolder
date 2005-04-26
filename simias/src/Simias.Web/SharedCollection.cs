@@ -382,7 +382,14 @@ namespace Simias.Web
 			}
 
 #if WINDOWS
+			// Only allow fixed drives to become iFolders.
 			if (GetDriveType(Path.GetPathRoot(path)) != DRIVE_FIXED)
+			{
+				return false;
+			}
+
+			// Don't allow System directories to become iFolders.
+			if ((new DirectoryInfo(path).Attributes & FileAttributes.System) == FileAttributes.System)
 			{
 				return false;
 			}
