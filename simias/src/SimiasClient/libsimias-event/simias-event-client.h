@@ -137,7 +137,7 @@ typedef struct
 	char *name;
 	char *id;
 	char *action;
-	char *successful;
+	char *connected;
 } SimiasCollectionSyncEvent;
 
 /* File Sync Event */
@@ -152,6 +152,7 @@ typedef struct
 	char *size_to_sync;
 	char *size_remaining;
 	char *direction;
+	char *status;
 } SimiasFileSyncEvent;
 
 /* Notify Event */

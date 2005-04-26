@@ -240,7 +240,7 @@ static char * sec_collection_sync_event_elements [] = {
 	"Name",
 	"ID",
 	"Action",
-	"Successful",
+	"Connected",
 	NULL
 };
 
@@ -253,6 +253,7 @@ static char * sec_file_sync_event_elements [] = {
 	"SizeToSync",
 	"SizeRemaining",
 	"Direction",
+	"Status",
 	NULL
 };
 
@@ -1804,7 +1805,7 @@ simias_collection_sync_event_callback (SimiasCollectionSyncEvent *event, void *d
 	printf ("\t%s: %s\n", "name", event->name);
 	printf ("\t%s: %s\n", "id", event->id);
 	printf ("\t%s: %s\n", "action", event->action);
-	printf ("\t%s: %s\n", "successful", event->successful);
+	printf ("\t%s: %s\n", "connected", event->connected);
 	
 	return 0;
 }
@@ -1812,7 +1813,7 @@ simias_collection_sync_event_callback (SimiasCollectionSyncEvent *event, void *d
 int
 simias_file_sync_event_callback (SimiasFileSyncEvent *event, void *data)
 {
-	printf ("sec-test: SimiasCollectionSyncEvent:\n");
+	printf ("sec-test: SimiasFileSyncEvent:\n");
 	printf ("\t%s: %s\n", "event_type", event->event_type);
 	printf ("\t%s: %s\n", "collection_id", event->collection_id);
 	printf ("\t%s: %s\n", "object_type", event->object_type);
@@ -1822,6 +1823,7 @@ simias_file_sync_event_callback (SimiasFileSyncEvent *event, void *data)
 	printf ("\t%s: %s\n", "size_to_sync", event->size_to_sync);
 	printf ("\t%s: %s\n", "size_remaining", event->size_remaining);
 	printf ("\t%s: %s\n", "direction", event->direction);
+	printf ("\t%s: %s\n", "status", event->status);
 	
 	return 0;
 }
@@ -1829,7 +1831,7 @@ simias_file_sync_event_callback (SimiasFileSyncEvent *event, void *data)
 int
 simias_notify_event_callback (SimiasNotifyEvent *event, void *data)
 {
-	printf ("sec-test: SimiasCollectionSyncEvent:\n");
+	printf ("sec-test: SimiasNotifyEvent:\n");
 	printf ("\t%s: %s\n", "event_type", event->event_type);
 	printf ("\t%s: %s\n", "message", event->message);
 	printf ("\t%s: %s\n", "time", event->time);
