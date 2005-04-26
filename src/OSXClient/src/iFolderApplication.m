@@ -404,20 +404,6 @@
 - (void)startSimiasThread:(id)arg
 {
 	BOOL simiasRunning = NO;
-/*
-	@try
-	{
-		NSLog(@"Checking for existing Simias...");
-		simiasRunning = [ifolderService Ping];
-	}
-	@catch (NSException *e)
-	{
-		NSLog(@"Simias is not running");
-		simiasRunning = NO;
-	}
-
-	NSLog(@"Out of check...");
-*/
 
 	if(!simiasRunning)
 	{
@@ -488,9 +474,7 @@
 	while(runThreads)
 	{
 		SimiasEventData *sed = [SimiasEventData sharedInstance];
-//		NSLog(@"simiasEventThread going to sleep...");
 		[sed blockUntilEvents];
-//		NSLog(@"simias EventThread woke up to process events");
 
 		while([sed hasEvents])
 		{
@@ -754,7 +738,38 @@
 	SMCollectionSyncEvent *cse = [colSyncEvent retain];
 
 	BOOL updateData = NO;
-		
+
+
+	// This is special cased code for these collections
+	// UGLY!!!!!
+	if([[cse name] hasPrefix:@"POBox:"])
+	{
+		switch([cse syncAction])
+		{
+			case SYNC_ACTION_LOCAL:
+			{
+				NSString *syncMessage = NSLocalizedString(@"Checking for new iFolders...", nil);
+				[iFolderWindowController updateStatusTS:syncMessage];
+				[self addLogTS:syncMessage];
+				break;
+			}
+			case SYNC_ACTION_STOP:
+			{
+				NSString *syncMessage = NSLocalizedString(@"Done checking for new iFolders", nil);
+				[iFolderWindowController updateStatusTS:NSLocalizedString(@"Idle...", nil)];
+				[self addLogTS:syncMessage];
+				break;
+			}
+		}
+		return;
+	}
+//  I had this special case code in here but it would eliminate an iFolder named "LocalDatabase"
+//  so I took it out
+//	else if([[cse name] compare:@"LocalDatabase"] == 0)
+//		return;
+//	else if([[cse name] compare:@"Local"] == 0)
+//		return;
+
 	iFolder *ifolder = [[iFolderData sharedInstance] 
 							getiFolder:[cse ID]];
 

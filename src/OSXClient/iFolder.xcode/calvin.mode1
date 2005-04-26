@@ -247,8 +247,8 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>6</integer>
-									<integer>2</integer>
+									<integer>16</integer>
+									<integer>11</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -284,7 +284,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>SimiasEventHandlers.m</string>
+								<string>iFolderApplication.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -292,9 +292,9 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>SimiasEventHandlers.m</string>
+										<string>iFolderApplication.m</string>
 										<key>bookmark</key>
-										<string>3ED72F5C081EE3BD005352EC</string>
+										<string>3E7839DB081EF1750034CEA1</string>
 										<key>history</key>
 										<array>
 											<string>3EAEF46C0769032700B98AF6</string>
@@ -426,8 +426,6 @@
 											<string>3EDB762E081E067B007E814E</string>
 											<string>3EDB762F081E067B007E814E</string>
 											<string>3EDB7631081E067B007E814E</string>
-											<string>3E5CEE26081E87CA007276AD</string>
-											<string>3E5CEE2A081E8804007276AD</string>
 											<string>3E5CEE37081E97F6007276AD</string>
 											<string>3E5CEE3F081E98AD007276AD</string>
 											<string>3E5CEE78081EBAC4007276AD</string>
@@ -436,8 +434,10 @@
 											<string>3ED72F32081EDC7A005352EC</string>
 											<string>3ED72F39081EE1D6005352EC</string>
 											<string>3ED72F51081EE37B005352EC</string>
-											<string>3ED72F52081EE37B005352EC</string>
-											<string>3EDB761B081E007E007E814E</string>
+											<string>3E7839AD081EE5AC0034CEA1</string>
+											<string>3E7839C3081EEC2E0034CEA1</string>
+											<string>3E7839C4081EEC2E0034CEA1</string>
+											<string>3E7839C5081EEC2E0034CEA1</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -559,14 +559,12 @@
 											<string>3E694B4A080C6CF9003AAEF7</string>
 											<string>3E54E999080F160C00AFAD44</string>
 											<string>3EDB7565081DAE94007E814E</string>
-											<string>3ED72F2A081EDB6D005352EC</string>
-											<string>3ED72F2B081EDB6D005352EC</string>
-											<string>3ED72F2C081EDB6D005352EC</string>
-											<string>3ED72F34081EDC7A005352EC</string>
-											<string>3ED72F3A081EE1D6005352EC</string>
-											<string>3ED72F40081EE1FF005352EC</string>
-											<string>3ED72F53081EE37B005352EC</string>
-											<string>3ED72F54081EE37B005352EC</string>
+											<string>3E7839AF081EE5AC0034CEA1</string>
+											<string>3E7839B5081EE9EE0034CEA1</string>
+											<string>3E7839BF081EEC0B0034CEA1</string>
+											<string>3E7839C6081EEC2E0034CEA1</string>
+											<string>3E7839C7081EEC2E0034CEA1</string>
+											<string>3E7839C8081EEC2E0034CEA1</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -624,9 +622,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>3ED72F1F081EDA12005352EC</string>
+				<string>3E7839A9081EE50F0034CEA1</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>3ED72F20081EDA12005352EC</string>
+				<string>3E7839AA081EE50F0034CEA1</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -654,7 +652,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>3ED72F22081EDA12005352EC</string>
+		<string>3EDEFB6E07682FCB00A3AD33</string>
+		<string>3E7839CB081EEC2E0034CEA1</string>
 		<string>1CD10A99069EF8BA00B06720</string>
 		<string>3EB7837807C2BCFF00E2B733</string>
 		<string>/Users/calvin/code/ifolder/ifolder/src/OSXClient/iFolder.xcode</string>
@@ -851,9 +850,9 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1CD10A99069EF8BA00B06720</string>
-				<string>3ED72F21081EDA12005352EC</string>
+				<string>3E7839CA081EEC2E0034CEA1</string>
 				<string>1C162984064C10D400B95A72</string>
-				<string>3ED72F22081EDA12005352EC</string>
+				<string>3E7839CB081EEC2E0034CEA1</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debug</string>
@@ -862,7 +861,7 @@
 			<key>WindowToolGUID</key>
 			<string>1CD10A99069EF8BA00B06720</string>
 			<key>WindowToolIsVisible</key>
-			<false/>
+			<true/>
 		</dict>
 		<dict>
 			<key>Identifier</key>
@@ -1013,7 +1012,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>3EDEFB6E07682FCB00A3AD33</string>
-				<string>3E5CEE83081EBDAD007276AD</string>
+				<string>3E7839CC081EEC2E0034CEA1</string>
 				<string>1C78EAAC065D492600B07095</string>
 			</array>
 			<key>WindowString</key>
@@ -1106,9 +1105,9 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>3EB7837807C2BCFF00E2B733</string>
-				<string>3ED72F23081EDA12005352EC</string>
+				<string>3E7839AB081EE50F0034CEA1</string>
 				<string>1CD0528B0623707200166675</string>
-				<string>3ED72F24081EDA12005352EC</string>
+				<string>3E7839AC081EE50F0034CEA1</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.run</string>
