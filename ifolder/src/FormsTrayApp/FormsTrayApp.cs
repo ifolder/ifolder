@@ -1058,76 +1058,109 @@ namespace Novell.FormsTrayApp
 			try
 			{
 				syncToServer = syncEventArgs.Direction == Direction.Uploading;
-				if (syncEventArgs.SizeRemaining == syncEventArgs.SizeToSync)
+				string message = null;
+				
+				switch (syncEventArgs.Status)
 				{
-					shellNotifyIcon.Text = resourceManager.GetString("iFolderServices") + "\n" + 
-						string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploading" : "downloading") , syncEventArgs.Name);
-
-					string message = null;
-					switch (syncEventArgs.ObjectType)
+					case SyncStatus.Success:
 					{
-						case ObjectType.File:
-							if (syncEventArgs.Delete)
-							{
-								message = string.Format(resourceManager.GetString("deleteClientFile"), syncEventArgs.Name);
-							}
-							else if (syncEventArgs.SizeToSync < syncEventArgs.Size)
-							{
-								// Delta sync message.
-								int savings = (int)((1 - ((double)syncEventArgs.SizeToSync / (double)syncEventArgs.Size)) * 100);
-								message = string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadDeltaSyncFile" : "downloadDeltaSyncFile"), syncEventArgs.Name, savings);
-							}
-							else
-							{
-								switch (syncEventArgs.Direction)
-								{
-									case Direction.Uploading:
-										message = string.Format(resourceManager.GetString("uploadFile"), syncEventArgs.Name);
-										break;
-									case Direction.Downloading:
-										message = string.Format(resourceManager.GetString("downloadFile"), syncEventArgs.Name);
-										break;
-									case Direction.Local:
-										message = string.Format(resourceManager.GetString("localFile"), syncEventArgs.Name);
-										break;
-									default:
-										message = string.Format(resourceManager.GetString("syncingFile"), syncEventArgs.Name);
-										break;
-								}
-							}								
-							break;
-						case ObjectType.Directory:
-							if (syncEventArgs.Delete)
-							{
-								message = string.Format(resourceManager.GetString("deleteClientDir"), syncEventArgs.Name);
-							}
-							else
-							{
-								switch (syncEventArgs.Direction)
-								{
-									case Direction.Uploading:
-										message = string.Format(resourceManager.GetString("uploadDir"), syncEventArgs.Name);
-										break;
-									case Direction.Downloading:
-										message = string.Format(resourceManager.GetString("downloadDir"), syncEventArgs.Name);
-										break;
-									case Direction.Local:
-										message = string.Format(resourceManager.GetString("localDir"), syncEventArgs.Name);
-										break;
-									default:
-										message = string.Format(resourceManager.GetString("syncingDir"), syncEventArgs.Name);
-										break;
-								}
-							}
-							break;
-						case ObjectType.Unknown:
-							message = string.Format(resourceManager.GetString("deleteUnknown"), syncEventArgs.Name);
-							break;
-					}
+						if (syncEventArgs.SizeRemaining == syncEventArgs.SizeToSync)
+						{
+							shellNotifyIcon.Text = resourceManager.GetString("iFolderServices") + "\n" + 
+								string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploading" : "downloading") , syncEventArgs.Name);
 
-					// Add message to log.
-					syncLog.AddMessageToLog(syncEventArgs.TimeStamp, message);
+							switch (syncEventArgs.ObjectType)
+							{
+								case ObjectType.File:
+									if (syncEventArgs.Delete)
+									{
+										message = string.Format(resourceManager.GetString("deleteClientFile"), syncEventArgs.Name);
+									}
+									else if (syncEventArgs.SizeToSync < syncEventArgs.Size)
+									{
+										// Delta sync message.
+										int savings = (int)((1 - ((double)syncEventArgs.SizeToSync / (double)syncEventArgs.Size)) * 100);
+										message = string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadDeltaSyncFile" : "downloadDeltaSyncFile"), syncEventArgs.Name, savings);
+									}
+									else
+									{
+										switch (syncEventArgs.Direction)
+										{
+											case Direction.Uploading:
+												message = string.Format(resourceManager.GetString("uploadFile"), syncEventArgs.Name);
+												break;
+											case Direction.Downloading:
+												message = string.Format(resourceManager.GetString("downloadFile"), syncEventArgs.Name);
+												break;
+											case Direction.Local:
+												message = string.Format(resourceManager.GetString("localFile"), syncEventArgs.Name);
+												break;
+											default:
+												message = string.Format(resourceManager.GetString("syncingFile"), syncEventArgs.Name);
+												break;
+										}
+									}								
+									break;
+								case ObjectType.Directory:
+									if (syncEventArgs.Delete)
+									{
+										message = string.Format(resourceManager.GetString("deleteClientDir"), syncEventArgs.Name);
+									}
+									else
+									{
+										switch (syncEventArgs.Direction)
+										{
+											case Direction.Uploading:
+												message = string.Format(resourceManager.GetString("uploadDir"), syncEventArgs.Name);
+												break;
+											case Direction.Downloading:
+												message = string.Format(resourceManager.GetString("downloadDir"), syncEventArgs.Name);
+												break;
+											case Direction.Local:
+												message = string.Format(resourceManager.GetString("localDir"), syncEventArgs.Name);
+												break;
+											default:
+												message = string.Format(resourceManager.GetString("syncingDir"), syncEventArgs.Name);
+												break;
+										}
+									}
+									break;
+								case ObjectType.Unknown:
+									message = string.Format(resourceManager.GetString("deleteUnknown"), syncEventArgs.Name);
+									break;
+							}
+						}
+						break;
+					}
+					case SyncStatus.UpdateConflict:
+					case SyncStatus.FileNameConflict:
+						message = string.Format(resourceManager.GetString("conflictFailure"), syncEventArgs.Name);
+						break;
+					case SyncStatus.Policy:
+						message = string.Format(resourceManager.GetString("policyFailure"), syncEventArgs.Name);
+						break;
+					case SyncStatus.Access:
+						message = string.Format(resourceManager.GetString("accessFailure"), syncEventArgs.Name);
+						break;
+					case SyncStatus.Locked:
+						message = string.Format(resourceManager.GetString("lockFailure"), syncEventArgs.Name);
+						break;
+					case SyncStatus.PolicyQuota:
+						message = string.Format(resourceManager.GetString("quotaFailure"), syncEventArgs.Name);
+						break;
+					case SyncStatus.PolicySize:
+						message = string.Format(resourceManager.GetString("policySizeFailure"), syncEventArgs.Name);
+						break;
+					case SyncStatus.PolicyType:
+						message = string.Format(resourceManager.GetString("policyTypeFailure"), syncEventArgs.Name);
+						break;
+					default:
+						message = string.Format(resourceManager.GetString("genericFailure"), syncEventArgs.Name);
+						break;
 				}
+
+				// Add message to log.
+				syncLog.AddMessageToLog(syncEventArgs.TimeStamp, message);
 			}
 			catch {}
 		}
