@@ -135,7 +135,8 @@ namespace Simias.Sync
 		{
 			SetupFileNames(node, sessionID);
 			Log.log.Debug("Opening File {0}", file);
-			if (Store.GetStore().IsEnterpriseServer)
+			FileInfo fi = new FileInfo(file);
+			if (Store.GetStore().IsEnterpriseServer || fi.Length > (1024 * 100000))
 			{
 				workStream = new StreamStream(File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read));
 				workFile = null;
