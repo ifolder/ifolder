@@ -160,13 +160,13 @@ namespace Novell.iFolder
 					break;
 				case iFolderState.Normal:
 					if (objectsToSync > 0)
-						stateString = string.Format(Util.GS("{0} objects out of sync"), objectsToSync);
+						stateString = string.Format(Util.GS("{0} items out of sync"), objectsToSync);
 					else
 						stateString = Util.GS("OK");
 					break;
 				case iFolderState.Synchronizing:
 					if (objectsToSync > 0)
-						stateString = string.Format(Util.GS("{0} objects to sync"), objectsToSync);
+						stateString = string.Format(Util.GS("{0} items to sync"), objectsToSync);
 					else
 						stateString = Util.GS("Synchronizing");
 					break;
