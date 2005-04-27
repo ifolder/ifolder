@@ -13,7 +13,7 @@ UILIB_LIBPATH = $(srcdir)/../iFolder
 EXTRA_DIST = $(UILIB_CSFILES) Util.cs.in 
 
 Util.cs: $(srcdir)/Util.cs.in
-	sed -e 's,@_prefix_@,@prefix@,g' -e 's,@_PACKAGE_@,@PACKAGE@,g' $< > $@
+	sed -e 's,@_prefix_@,@prefix@,g' -e 's,@_PACKAGE_@,@PACKAGE@,g' -e 's,@_VERSION_@,@VERSION@,g' $< > $@
 	chmod +x $@
 
 if MAKE_DOC_FILE
