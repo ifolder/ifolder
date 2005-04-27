@@ -83,9 +83,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 	else
 	{
 		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
-
 		cleanup_gsoap(&soap, &creds);
-
 		[NSException raise:faultString format:@"Error in Ping"];
 	}
 
@@ -118,7 +116,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in GetAlliFolders"];
 	}
 	else
@@ -175,8 +175,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	if(soap.error)
 	{
-	    cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in GetiFolder"];
 	}
 	else
@@ -230,7 +231,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in GetAvailableiFolder"];
 	}
 	else
@@ -278,7 +281,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in CreateiFolder:inDomain"];
 	}
 	else
@@ -329,7 +334,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in AcceptiFolderInvitation:inDomain"];
 	}
 	else
@@ -375,9 +382,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	if(soap.error)
 	{
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
 		cleanup_gsoap(&soap, &creds);
-
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in DeclineiFolderInvitation:fromDomain"];
 	}
 
@@ -411,7 +418,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in DeleteiFolder"];
 	}
 	else
@@ -456,7 +465,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in DeleteiFolder"];
 	}
 
@@ -491,7 +502,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in GetiFolderUserFromNodeID"];
 	}
 	else
@@ -544,7 +557,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in GetiFolderUserFromNodeID"];
 	}
 	else
@@ -594,7 +609,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in GetiFolderUsers"];
 	}
 	else
@@ -653,7 +670,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in GetDomainUsers"];
 	}
 	else
@@ -712,7 +731,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in SearchDomainUsers"];
 	}
 	else
@@ -772,7 +793,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in InviteUser:toiFolder:withRights:"];
 	}
 	else
@@ -816,7 +839,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in RemoveUser:fromiFolder:"];
 	}
 
@@ -850,7 +875,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in GetiFolderDiskSpace"];
 	}
 	else
@@ -901,7 +928,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in GetUserDiskSpace"];
 	}
 	else
@@ -952,7 +981,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in SetiFolderDiskSpace"];
 	}
 
@@ -989,7 +1020,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 		if((soap.fault != NULL) &&
 			(soap.fault->faultstring != NULL) )
 		{
-			[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+			NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+			cleanup_gsoap(&soap, &creds);
+			[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in CalculateSyncSize"];
 		}
 		else
@@ -1038,8 +1071,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	if(soap.error)
 	{
-	    cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in DeleteiFolder"];
 	}
 	
@@ -1074,8 +1108,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 	if(soap.error)
 	{
-	    cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in DeleteiFolder"];
 	}
 
@@ -1110,7 +1145,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in GetiFolderUsers"];
 	}
 	else
@@ -1169,8 +1206,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-	    cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in ResolveFileConflict"];
 	}
 
@@ -1207,8 +1245,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-	    cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in ResolveNameConflict"];
 	}
 
@@ -1245,8 +1284,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-	    cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in SetUserRights"];
 	}
 
@@ -1283,8 +1323,9 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
  	if(soap.error)
 	{
-	    cleanup_gsoap(&soap, &creds);
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
 					format:@"Error in ChanageOwner"];
 	}
 
