@@ -143,6 +143,8 @@ static ConflictWindowController *conflictSharedInstance = nil;
 {
 	if([ifoldersController selectionIndex] != NSNotFound)
 	{
+		BOOL validName = NO;
+
 		iFolderConflict *conflict = [[ifoldersController arrangedObjects] objectAtIndex:[ifoldersController selectionIndex]];
 		NSString *iFolderID = [[conflict properties] objectForKey:@"iFolderID"];
 		NSString *newName = [[conflict properties] objectForKey:@"Name"];
@@ -151,22 +153,51 @@ static ConflictWindowController *conflictSharedInstance = nil;
 		NSString *localID = [[conflict properties] objectForKey:@"LocalConflictID"];
 		NSString *serverID = [[conflict properties] objectForKey:@"ConflictID"];
 
-		if(localName != nil)
+		NSString *fileDirectory = [[[conflict properties] objectForKey:@"Location"] stringByDeletingLastPathComponent];
+		NSString *newPath = [fileDirectory stringByAppendingPathComponent:newName];
+
+		if([[NSFileManager defaultManager] fileExistsAtPath:newPath])
 		{
-			// it's a local rename
-			if( [localName compare:newName] == 0)
+			NSBeginAlertSheet(NSLocalizedString(@"File exists", nil), 
+				NSLocalizedString(@"OK", nil), nil, nil,
+				[self window], self, nil, nil, NULL, 
+				NSLocalizedString(@"You must select a different name in order to resolve this conflict.", nil));
+		}
+		else
+		{
+			validName = YES;
+		}
+
+		if(validName)
+		{
+			if(serverID != nil)
 			{
-				NSBeginAlertSheet(NSLocalizedString(@"File names match", nil), 
-					NSLocalizedString(@"OK", nil), nil, nil,
-					[self window], self, nil, nil, NULL, 
-					NSLocalizedString(@"You must select a new name in order to resolve this conflict.", nil));
+				if([[ifolder CurrentUserRights] compare:@"ReadOnly"] == 0)
+				{
+					
+				}
+				else
+				{
+					@try
+					{
+						[ifolderService ResolveNameConflict:iFolderID withID:localID usingName:newName];
+						[ifolderService ResolveNameConflict:iFolderID withID:serverID usingName:serverName];
+						[ifoldersController removeObjectAtArrangedObjectIndex:[ifoldersController selectionIndex]];
+					}
+					@catch(NSException *ex)
+					{
+						NSBeginAlertSheet(NSLocalizedString(@"Error resolving conflict", nil), 
+							NSLocalizedString(@"OK", nil), nil, nil,
+							[self window], self, nil, nil, NULL, 
+							[ex description]);
+					}
+				}
 			}
 			else
 			{
 				@try
 				{
 					[ifolderService ResolveNameConflict:iFolderID withID:localID usingName:newName];
-					[ifolderService ResolveNameConflict:iFolderID withID:serverID usingName:serverName];
 					[ifoldersController removeObjectAtArrangedObjectIndex:[ifoldersController selectionIndex]];
 				}
 				@catch(NSException *ex)
@@ -178,33 +209,6 @@ static ConflictWindowController *conflictSharedInstance = nil;
 				}
 			}
 		}
-		else
-		{
-			// it's a server rename
-			if( [serverName compare:newName] == 0)
-			{
-				NSBeginAlertSheet(NSLocalizedString(@"File names match", nil), 
-					NSLocalizedString(@"OK", nil), nil, nil,
-					[self window], self, nil, nil, NULL, 
-					NSLocalizedString(@"You must select a new name in order to resolve this conflict.", nil));
-			}
-			else
-			{
-				@try
-				{
-					[ifolderService ResolveNameConflict:iFolderID withID:serverID usingName:newName];
-					[ifoldersController removeObjectAtArrangedObjectIndex:[ifoldersController selectionIndex]];
-				}
-				@catch(NSException *ex)
-				{
-					NSBeginAlertSheet(NSLocalizedString(@"Error resolving conflict", nil), 
-						NSLocalizedString(@"OK", nil), nil, nil,
-						[self window], self, nil, nil, NULL, 
-						[ex description]);
-				}
-			}
-		}
-		
 	}
 }
 
