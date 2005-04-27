@@ -53,6 +53,13 @@ namespace Novell.iFolder
 		private Button				AccessButton;
 		private iFolderUserSelector UserSelector;
 		private Hashtable			curUsers;
+		
+		// The next two Hashtables are just for determining duplicates.
+		// According to BenM, it's faster to use Hashtables for just checking
+		// "is x in collection" than using an ArrayList, so that's why these
+		// are Hashtables.  This is a fix for https://bugzilla.novell.com/show_bug.cgi?id=80489
+		private Hashtable			memberFullNames;
+		private Hashtable			duplicateMembers;
 
 		#endregion
 
@@ -68,6 +75,8 @@ namespace Novell.iFolder
 			this.simws = SimiasWS;
 			this.topLevelWindow = topWindow;
 			curUsers = new Hashtable();
+			memberFullNames = new Hashtable();
+			duplicateMembers = new Hashtable();
 			InitializeWidgets();
 		}
 
@@ -185,11 +194,21 @@ namespace Novell.iFolder
 		private void RefreshUserList()
 		{
 			curUsers.Clear();
+			memberFullNames.Clear();
+			duplicateMembers.Clear();
 			UserTreeStore.Clear();
 
     		iFolderUser[] userlist =  ifws.GetiFolderUsers(ifolder.ID);
 			foreach(iFolderUser user in userlist)
 			{
+				if (memberFullNames.Contains(user.FN))
+				{
+					// This is a duplicate
+					duplicateMembers[user.FN] = 0;
+				}
+				else
+					memberFullNames[user.FN] = 0;
+			
 				if(!curUsers.ContainsKey(user.UserID))
 				{
 					TreeIter iter = UserTreeStore.AppendValues(user);
@@ -214,7 +233,10 @@ namespace Novell.iFolder
 		{
 			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
 			if( (user.FN != null) && (user.FN.Length > 0) )
-				((CellRendererText) cell).Text = user.FN;
+				if (duplicateMembers.Contains(user.FN))
+					((CellRendererText) cell).Text = string.Format("{0} ({1})", user.FN, user.Name);
+				else
+					((CellRendererText) cell).Text = user.FN;
 			else
 				((CellRendererText) cell).Text = user.Name;
 		}
@@ -546,6 +568,14 @@ namespace Novell.iFolder
 	
 									TreeIter iter = 
 										UserTreeStore.AppendValues(newUser);
+
+									if (memberFullNames.Contains(newUser.FN))
+									{
+										// This is a duplicate
+										duplicateMembers[newUser.FN] = 0;
+									}
+									else
+										memberFullNames[newUser.FN] = 0;
 	
 									curUsers.Add(newUser.UserID, iter);
 	
