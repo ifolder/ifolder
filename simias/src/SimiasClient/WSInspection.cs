@@ -85,7 +85,6 @@ namespace Simias.Client
 			catch ( WebException we )
 			{
 				if ( ( we.Status == WebExceptionStatus.TrustFailure ) ||
-					 ( we.Status == WebExceptionStatus.ConnectFailure ) ||
 					 ( we.Status == WebExceptionStatus.Timeout ) ||
 					 ( we.Status == WebExceptionStatus.NameResolutionFailure ) )
 				{
