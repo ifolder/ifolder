@@ -209,6 +209,13 @@
 					break;
 				}
 				case ns1__StatusCodes__UnknownDomain:		// UnknownDomain
+				{
+					NSBeginAlertSheet(NSLocalizedString(@"iFolder server is unknown", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil, 
+					parentWindow, nil, nil, nil, nil, 
+					NSLocalizedString(@"The server specified can not be located.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", nil));
+					break;
+				}
 				case ns1__StatusCodes__InternalException:		// InternalException
 				case ns1__StatusCodes__MethodNotSupported:	// MethodNotSupported
 				case ns1__StatusCodes__Timeout:	// Timeout
@@ -430,6 +437,13 @@
 					break;
 				}
 				case ns1__StatusCodes__UnknownDomain:		// UnknownDomain
+				{
+					NSBeginAlertSheet(NSLocalizedString(@"iFolder server is unknown", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil, 
+					parentWindow, nil, nil, nil, nil, 
+					NSLocalizedString(@"The server specified can not be located.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", nil));
+					break;
+				}
 				case ns1__StatusCodes__InternalException:		// InternalException
 				case ns1__StatusCodes__MethodNotSupported:	// MethodNotSupported
 				case ns1__StatusCodes__Timeout:	// Timeout
