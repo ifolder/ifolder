@@ -362,8 +362,6 @@ public class Conflict
 		if (fn != null)
 		{
 			DirNode parent = fn.GetParent(collection);
-			if (SyncFile.DoesNodeExist(collection, parent, newNodeName))
-				throw new ExistsException(newNodeName);
 			if (newNodeName == node.Name)
 			{
 				// We are resolving to the same name.
@@ -377,6 +375,8 @@ public class Conflict
 			}
 			else
 			{
+				if (SyncFile.DoesNodeExist(collection, parent, newNodeName))
+					throw new ExistsException(newNodeName);
 				//TODO: what if move succeeds but node rename or commit fails?
 				File.Move(FileNameConflictPath, Path.Combine(Path.GetDirectoryName(NonconflictedPath), newNodeName));
 				string relativePath = fn.GetRelativePath();
