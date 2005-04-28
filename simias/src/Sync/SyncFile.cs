@@ -483,7 +483,7 @@ namespace Simias.Sync
 		static string			workBinDir = "WorkArea";
 		static string			workBin;
 		// '/' is left out on purpose because all systems disallow this char.
-		public static char[] InvalidChars = {'\\', ':', '*', '?', '\"', '<', '>'};
+		public static char[] InvalidChars = {'\\', ':', '*', '?', '\"', '<', '>', '|'};
 
 		/// <summary>Used to publish Sync events.</summary>
 		static public			EventPublisher	eventPublisher = new EventPublisher();
