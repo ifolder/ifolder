@@ -487,6 +487,18 @@ namespace Novell.iFolderCom
 					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("createPrompt"), resourceManager.GetString("createPromptTitle"), string.Empty, MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question);
 					if (mmb.ShowDialog() == DialogResult.Yes)
 					{
+						string parent = Path.GetDirectoryName(ifolderPath.Text);
+						while ((parent != null) && !parent.Equals(string.Empty))
+						{
+							if (Directory.Exists(parent))
+							{
+								ifolderPath.Text = ifolderPath.Text.Replace(parent, FixPath(parent));
+								break;
+							}
+
+							parent = Path.GetDirectoryName(parent);
+						}
+
 						Directory.CreateDirectory(ifolderPath.Text);
 					}
 					else
@@ -534,6 +546,49 @@ namespace Novell.iFolderCom
 			{
 				e.Cancel = true;
 			}
+		}
+		#endregion
+
+		#region Public Methods
+		/// <summary>
+		/// Converts a path to the proper case.
+		/// </summary>
+		/// <param name="path">The path to convert.</param>
+		/// <returns>The path in it's proper case according to the file system.</returns>
+		public static string FixPath(string path)
+		{
+			if (path[1].Equals(':'))
+			{
+				string root = path.Substring(0, 2);
+				path = path.Replace(root, root.ToUpper());
+			}
+
+			try
+			{
+				string parent = path;
+				string temp = string.Empty;
+				while (true)
+				{
+					string file = Path.GetFileName(parent);
+					parent = Path.GetDirectoryName(parent);
+					if ((parent == null) || parent.Equals(string.Empty))
+					{
+						string psub = path.Substring(3);
+						if (string.Compare(psub, temp, true) == 0)
+							path = path.Replace(psub, temp);
+						break;
+					}
+
+					string[] dirs = Directory.GetFileSystemEntries(parent, file);
+					if (dirs.Length == 1)
+					{
+						temp = Path.Combine(Path.GetFileName(dirs[0]), temp);
+					}
+				}
+			}
+			catch {}
+
+			return path;
 		}
 		#endregion
 	}

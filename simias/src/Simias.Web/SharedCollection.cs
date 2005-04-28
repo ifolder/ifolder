@@ -515,6 +515,11 @@ namespace Simias.Web
 
 			Store store = Store.GetStore();
 
+			bool ignoreCase = true;
+#if LINUX
+			ignoreCase = false;
+#endif
+
 			// TODO: Change this into a search
 			foreach(ShallowNode sn in store)
 			{
@@ -524,8 +529,10 @@ namespace Simias.Web
 				{
 					Uri colPath = GetUriPath(dirNode.GetFullPath(col));
 
-					if(nPath.LocalPath.StartsWith( colPath.LocalPath ) || 
-						colPath.LocalPath.StartsWith( nPath.LocalPath ) )
+					if(string.Compare(nPath.LocalPath, 0,
+						colPath.LocalPath,	0,
+						nPath.LocalPath.Length < colPath.LocalPath.Length ? 
+						nPath.LocalPath.Length : colPath.LocalPath.Length, ignoreCase) == 0)
 					{
 						canBeCollection = false;
 						break;
@@ -578,6 +585,10 @@ namespace Simias.Web
 			// Create a normalized path that can be compared on any platform.
 			Uri nPath = GetUriPath( path );
 
+			bool ignoreCase = true;
+#if LINUX
+			ignoreCase = false;
+#endif
 			foreach(ShallowNode sn in store)
 			{
 				Collection col = store.GetCollectionByID(sn.ID);
@@ -585,7 +596,8 @@ namespace Simias.Web
 				if(dirNode != null)
 				{
 					Uri colPath = GetUriPath( dirNode.GetFullPath(col) );
-					if(nPath.LocalPath.StartsWith( colPath.LocalPath ) )
+					if( (colPath.LocalPath.Length < nPath.LocalPath.Length) &&
+						(string.Compare(nPath.LocalPath, 0, colPath.LocalPath, 0, colPath.LocalPath.Length, ignoreCase) == 0) )
 					{
 						inCollection = true;
 						break;

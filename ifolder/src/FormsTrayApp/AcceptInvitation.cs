@@ -397,10 +397,11 @@ namespace Novell.FormsTrayApp
 					// under the current working directory ... display this path.
 					bool parentExists = false;
 					string parent = Path.GetDirectoryName(iFolderLocation.Text);
-					while (parent != "")
+					while ((parent != null) && !parent.Equals(string.Empty))
 					{
 						if (Directory.Exists(parent))
 						{
+							iFolderLocation.Text = iFolderLocation.Text.Replace(parent, CreateiFolder.FixPath(parent));
 							parentExists = true;
 							break;
 						}
