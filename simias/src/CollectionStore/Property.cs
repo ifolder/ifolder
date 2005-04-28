@@ -228,6 +228,14 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets a search string representation of the property value.
+		/// </summary>
+		internal string SearchString
+		{
+			get { return xmlProperty.InnerXml; }
+		}
+
+		/// <summary>
 		/// Gets the owning document for this xml node.
 		/// </summary>
 		internal XmlDocument OwnerDocument

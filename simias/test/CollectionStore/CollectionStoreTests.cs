@@ -184,8 +184,8 @@ namespace Simias.Storage.Tests
 			Collection collection = new Collection( store, "CS_TestCollection", store.LocalDomain );
 			try
 			{
-				string s1 = "The quick red fox jumps over the lazy brown dog.";
-				string s2 = "The lazy brown dog doesn't care what the quick red fox does.";
+				string s1 = "The quick red fox jumps over the lazy brown dog&.";
+				string s2 = "The lazy brown dog& doesn't< >care what the quick red fox does.";
 
 				// Add some properties that can be searched for.
 				collection.Properties.AddProperty( "CS_String", s1 );
@@ -307,7 +307,7 @@ namespace Simias.Storage.Tests
 
 
 				// Should return s1 and s2.
-				e = ( ICSEnumerator )collection.Search( "CS_String", "lazy brown dog", SearchOp.Contains ).GetEnumerator();
+				e = ( ICSEnumerator )collection.Search( "CS_String", "lazy brown dog&", SearchOp.Contains ).GetEnumerator();
 				try
 				{
 					int count = 0;

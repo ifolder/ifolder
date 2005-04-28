@@ -2778,7 +2778,7 @@ namespace Simias.Storage
 				}
 
 				// Create a query object that will return a result set containing the children of this node.
-				Persist.Query query = new Persist.Query( collection.id, property.Name, queryOperator, property.ToString(), property.Type );
+				Persist.Query query = new Persist.Query( collection.id, property.Name, queryOperator, property.SearchString, property.Type );
 				chunkIterator = collection.store.StorageProvider.Search( query );
 				if ( chunkIterator != null )
 				{

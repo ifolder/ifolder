@@ -771,7 +771,8 @@ namespace Simias.Storage
 			// Create a container object to hold all collections that match the specified name.
 			ICSList collectionList = new ICSList();
 
-			Persist.Query query = new Persist.Query( BaseSchema.ObjectName, searchOp, name, Syntax.String );
+			Property p = new Property( BaseSchema.ObjectName, name );
+			Persist.Query query = new Persist.Query( p.Name, searchOp, p.SearchString, p.Type );
 			Persist.IResultSet chunkIterator = storageProvider.Search( query );
 			if ( chunkIterator != null )
 			{
@@ -855,7 +856,7 @@ namespace Simias.Storage
 			// Create a container object to hold all collections that match the specified user.
 			ICSList collectionList = new ICSList();
 
-			Persist.Query query = new Persist.Query( property.Name, op, property.ToString(), property.Type );
+			Persist.Query query = new Persist.Query( property.Name, op, property.SearchString, property.Type );
 			Persist.IResultSet chunkIterator = storageProvider.Search( query );
 			if ( chunkIterator != null )
 			{
@@ -900,7 +901,8 @@ namespace Simias.Storage
 			// Create a container object to hold all collections that match the specified name.
 			ICSList collectionList = new ICSList();
 
-			Persist.Query query = new Persist.Query( PropertyTags.Types, SearchOp.Equal, type, Syntax.String );
+			Property p = new Property( PropertyTags.Types, type );
+			Persist.Query query = new Persist.Query( p.Name, SearchOp.Equal, p.SearchString, p.Type );
 			Persist.IResultSet chunkIterator = storageProvider.Search( query );
 			if ( chunkIterator != null )
 			{
@@ -1091,7 +1093,7 @@ namespace Simias.Storage
 			// Create a container object to hold all nodes that match the specified user.
 			ICSList nodeList = new ICSList();
 
-			Persist.Query query = new Persist.Query( property.Name, op, property.ToString(), property.Type );
+			Persist.Query query = new Persist.Query( property.Name, op, property.SearchString, property.Type );
 			Persist.IResultSet chunkIterator = storageProvider.Search( query );
 			if ( chunkIterator != null )
 			{
