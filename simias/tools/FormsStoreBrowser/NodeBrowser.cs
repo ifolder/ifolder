@@ -260,6 +260,7 @@ namespace StoreBrowser
 			lView.BringToFront();
 			lView.Show();
 			browser = new BrowserService();
+			Simias.Client.LocalService.Start(browser);
 			browser.Url = host + "/SimiasBrowser.asmx";
 			tView.Dock = DockStyle.Left;
 			alreadyDisposed = true;

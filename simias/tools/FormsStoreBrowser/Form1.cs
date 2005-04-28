@@ -84,13 +84,13 @@ namespace StoreBrowser
 
 			Uri uri = Manager.LocalServiceUrl;
 			hostName = ( uri != null ) ? uri.AbsoluteUri : String.Format( "http://localhost:8086/simias10/{0}", Environment.UserName );
-			HostDialog hDiag = new HostDialog(hostName);
-			if (hDiag.ShowDialog() == DialogResult.OK)
-			{
-				hostName = hDiag.HostName;
-				username = hDiag.UserName;
-				password = hDiag.Password;
-			}
+			//HostDialog hDiag = new HostDialog(hostName);
+			//if (hDiag.ShowDialog() == DialogResult.OK)
+			//{
+			//	hostName = hDiag.HostName;
+			//	username = hDiag.UserName;
+			//	password = hDiag.Password;
+			//}
 
 			AddRecentMI();
 
@@ -98,7 +98,7 @@ namespace StoreBrowser
 			this.listView1.Hide();
 			tView.ImageList = imageList1;
 			tView.Dock = DockStyle.Fill;
-			browser = new NodeBrowser(tView, listView1, hostName, username, password);
+			browser = new NodeBrowser(tView, listView1, hostName);
 			browser.Show();
 		}
 
