@@ -680,6 +680,7 @@ namespace Simias.DomainServices
 			{
 				// Remove the user from the domain server.
 				domainService.RemoveServerCollections(domainID, userID);
+				WebState.ResetWebState(domainID);
 			}
 		}
 

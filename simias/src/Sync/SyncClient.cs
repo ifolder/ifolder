@@ -989,7 +989,7 @@ namespace Simias.Sync
 			try
 			{
 				// Read the cookie from the last sync and then get the changes since then.
-				if (context != null)
+				if (context != null && context.Length != 0)
 				{
 					eventContext = new EventContext(context);
 					while (more)
