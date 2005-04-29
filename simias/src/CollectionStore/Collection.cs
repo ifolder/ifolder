@@ -2205,6 +2205,16 @@ namespace Simias.Storage
 		/// <param name="lockType">Reason for the lock.</param>
 		public void Lock( LockType lockType )
 		{
+			Lock( lockType, true );
+		}
+
+		/// <summary>
+		/// Locks the collection so that changes by an impersonated user are not allowed.
+		/// </summary>
+		/// <param name="lockType">Reason for the lock.</param>
+		/// <param name="commitLock">If set to True the lock is committed before returning.</param>
+		public void Lock( LockType lockType, bool commitLock )
+		{
 			// User must not be impersonating.
 			if ( accessControl.IsImpersonating )
 			{
@@ -2225,7 +2235,11 @@ namespace Simias.Storage
 			Property p = new Property( PropertyTags.CollectionLock, lockType );
 			p.LocalProperty = true;
 			c.properties.ModifyNodeProperty( p );
-			c.Commit();
+
+			if ( commitLock )
+			{
+				c.Commit();
+			}
 		}
 
 		/// <summary>
