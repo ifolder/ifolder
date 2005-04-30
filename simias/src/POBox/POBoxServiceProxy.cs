@@ -112,48 +112,28 @@ public class POBoxService : System.Web.Services.Protocols.SoapHttpClientProtocol
     
     /// <remarks/>
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/pobox/GetSubscriptionInfo", RequestNamespace="http://novell.com/simias/pobox/", ResponseNamespace="http://novell.com/simias/pobox/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public SubscriptionInformation GetSubscriptionInfo(string domainID, string identityID, string subscriptionID) {
+    public SubscriptionInformation GetSubscriptionInfo(string domainID, string identityID, string subscriptionID, string collectionID) {
         object[] results = this.Invoke("GetSubscriptionInfo", new object[] {
                     domainID,
                     identityID,
-                    subscriptionID});
+                    subscriptionID,
+                    collectionID});
         return ((SubscriptionInformation)(results[0]));
     }
     
     /// <remarks/>
-    public System.IAsyncResult BeginGetSubscriptionInfo(string domainID, string identityID, string subscriptionID, System.AsyncCallback callback, object asyncState) {
+    public System.IAsyncResult BeginGetSubscriptionInfo(string domainID, string identityID, string subscriptionID, string collectionID, System.AsyncCallback callback, object asyncState) {
         return this.BeginInvoke("GetSubscriptionInfo", new object[] {
                     domainID,
                     identityID,
-                    subscriptionID}, callback, asyncState);
+                    subscriptionID,
+                    collectionID}, callback, asyncState);
     }
     
     /// <remarks/>
     public SubscriptionInformation EndGetSubscriptionInfo(System.IAsyncResult asyncResult) {
         object[] results = this.EndInvoke(asyncResult);
         return ((SubscriptionInformation)(results[0]));
-    }
-    
-    /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/pobox/VerifyCollection", RequestNamespace="http://novell.com/simias/pobox/", ResponseNamespace="http://novell.com/simias/pobox/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public POBoxStatus VerifyCollection(string domainID, string collectionID) {
-        object[] results = this.Invoke("VerifyCollection", new object[] {
-                    domainID,
-                    collectionID});
-        return ((POBoxStatus)(results[0]));
-    }
-    
-    /// <remarks/>
-    public System.IAsyncResult BeginVerifyCollection(string domainID, string collectionID, System.AsyncCallback callback, object asyncState) {
-        return this.BeginInvoke("VerifyCollection", new object[] {
-                    domainID,
-                    collectionID}, callback, asyncState);
-    }
-    
-    /// <remarks/>
-    public POBoxStatus EndVerifyCollection(System.IAsyncResult asyncResult) {
-        object[] results = this.EndInvoke(asyncResult);
-        return ((POBoxStatus)(results[0]));
     }
     
     /// <remarks/>
@@ -174,26 +154,6 @@ public class POBoxService : System.Web.Services.Protocols.SoapHttpClientProtocol
     public POBoxStatus EndInvite(System.IAsyncResult asyncResult) {
         object[] results = this.EndInvoke(asyncResult);
         return ((POBoxStatus)(results[0]));
-    }
-    
-    /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/pobox/GetDefaultDomain", RequestNamespace="http://novell.com/simias/pobox/", ResponseNamespace="http://novell.com/simias/pobox/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public string GetDefaultDomain(int dummy) {
-        object[] results = this.Invoke("GetDefaultDomain", new object[] {
-                    dummy});
-        return ((string)(results[0]));
-    }
-    
-    /// <remarks/>
-    public System.IAsyncResult BeginGetDefaultDomain(int dummy, System.AsyncCallback callback, object asyncState) {
-        return this.BeginInvoke("GetDefaultDomain", new object[] {
-                    dummy}, callback, asyncState);
-    }
-    
-    /// <remarks/>
-    public string EndGetDefaultDomain(System.IAsyncResult asyncResult) {
-        object[] results = this.EndInvoke(asyncResult);
-        return ((string)(results[0]));
     }
 }
 
@@ -273,9 +233,6 @@ public class SubscriptionInformation {
     public string CollectionType;
     
     /// <remarks/>
-    public string CollectionUrl;
-    
-    /// <remarks/>
     public string DirNodeID;
     
     /// <remarks/>
@@ -292,6 +249,9 @@ public class SubscriptionInformation {
     
     /// <remarks/>
     public int Disposition;
+    
+    /// <remarks/>
+    public POBoxStatus Status;
 }
 
 /// <remarks/>
@@ -321,6 +281,15 @@ public enum POBoxStatus {
     
     /// <remarks/>
     InvalidAccessRights,
+    
+    /// <remarks/>
+    AlreadyAccepted,
+    
+    /// <remarks/>
+    AlreadyDeclined,
+    
+    /// <remarks/>
+    NotPosted,
     
     /// <remarks/>
     UnknownError,

@@ -514,11 +514,17 @@ namespace Simias.Storage
 						// Node object that the server doesn't know about.
 						if ( checkNode.LocalIncarnation != checkNode.MasterIncarnation )
 						{
-							// There was a collision. Strip the local properties back off the Node object
-							// before indication the collision. That way when the collision gets stored it
-							// won't duplicate the local properties.
-							node.Properties.StripLocalProperties();
-							throw new CollisionException( checkNode.ID, checkNode.LocalIncarnation );
+							// Check if there is a collision policy on this Node. If the policy states for the
+							// server Node to overwrite the client Node, proceed on and don't throw the
+							// collision exception.
+							if ( checkNode.CollisionPolicy != CollisionPolicy.ServerWins )
+							{
+								// There was a collision. Strip the local properties back off the Node object
+								// before indication the collision. That way when the collision gets stored it
+								// won't duplicate the local properties.
+								node.Properties.StripLocalProperties();
+								throw new CollisionException( checkNode.ID, checkNode.LocalIncarnation );
+							}
 						}
 					}
 

@@ -371,6 +371,10 @@ namespace Simias.POBox
 			{
 				properties.AddNodeProperty(PropertyTags.Types, NodeTypes.MessageType);
 			}
+
+			// Add a property to never allow collisions to happen on a Message. The Message
+			// on the server will always be the authority.
+			CollisionPolicy = CollisionPolicy.ServerWins;
 		}
 
 		/// <summary>
@@ -457,6 +461,10 @@ namespace Simias.POBox
 			{
 				properties.AddNodeProperty(PropertyTags.Types, NodeTypes.MessageType);
 			}
+
+			// Add a property to never allow collisions to happen on a Message. The Message
+			// on the server will always be the authority.
+			CollisionPolicy = CollisionPolicy.ServerWins;
 		}
 
 		/// <summary>

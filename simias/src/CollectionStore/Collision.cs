@@ -44,7 +44,24 @@ namespace Simias.Storage
 		/// Collision is a result of a file conflict.
 		/// </summary>
 		File 
-	};
+	}
+
+	/// <summary>
+	/// Determines how a Node object automatically handles
+	/// collisions.
+	/// </summary>
+	public enum CollisionPolicy
+	{
+		/// <summary>
+		/// The server Node is the authority.
+		/// </summary>
+		ServerWins,
+
+		/// <summary>
+		/// No policy specified. Indicate collisions.
+		/// </summary>
+		None
+	}
 
 	/// <summary>
 	/// Class used to get to the Collision data.

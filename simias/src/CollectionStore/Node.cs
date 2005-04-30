@@ -318,6 +318,32 @@ namespace Simias.Storage
 		{
 			get { return ( LocalIncarnation == 0 ) ? true : false; }
 		}
+
+		/// <summary>
+		/// Gets or sets the collision policy for this Node object.
+		/// </summary>
+		public CollisionPolicy CollisionPolicy
+		{
+			get 
+			{
+				Property p = properties.FindSingleValue( PropertyTags.CollisionPolicy );
+				return ( p != null ) ? 
+					( CollisionPolicy )Enum.ToObject( typeof( CollisionPolicy ), p.Value ) : 
+					CollisionPolicy.None;
+			}
+
+			set 
+			{ 
+				if ( value != CollisionPolicy.None )
+				{
+					properties.ModifyNodeProperty( PropertyTags.CollisionPolicy, value ); 
+				}
+				else
+				{
+					properties.DeleteSingleNodeProperty( PropertyTags.CollisionPolicy );
+				}
+			}
+		}
 		#endregion
 
 		#region Constructors

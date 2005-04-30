@@ -1553,6 +1553,30 @@ namespace Novell.FormsTrayApp
 							// Notify the shell.
 							Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
 						}
+
+						// Check for existing subscriptions when an iFolder gets created and remove them
+						// from the list.
+						if (!ifolder.IsSubscription)
+						{
+							// See if there is a subscription for this ifolder.
+							lock (ht)
+							{
+								ListViewItem[] lvia = new ListViewItem[ht.Count];
+								ht.Values.CopyTo(lvia, 0);
+
+								foreach(ListViewItem lvi in lvia)
+								{
+									iFolderObject ifo = lvi.Tag as iFolderObject;
+									if (ifo.iFolderWeb.IsSubscription &&
+										(ifo.iFolderWeb.CollectionID == ifolder.CollectionID))
+									{
+										ht.Remove(ifo.iFolderWeb.ID);
+										lvi.Remove();
+										break;
+									}
+								}
+							}
+						}
 					}
 				}
 				else

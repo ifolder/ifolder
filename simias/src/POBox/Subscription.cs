@@ -612,7 +612,7 @@ namespace Simias.POBox
 		#endregion
 
 		#region Public Methods
-		
+/*	DEADCODE - Used by the old invitation wizard and GtkAddrBook.	
 		/// <summary>
 		/// Gets or creates a Subscription object based on a SubscriptionInfo file.
 		/// </summary>
@@ -662,7 +662,7 @@ namespace Simias.POBox
 
 			return subscription;
 		}
-
+*/
 		/// <summary>
 		/// Generates a SubscriptionInfo object from the Subscription object
 		/// </summary>

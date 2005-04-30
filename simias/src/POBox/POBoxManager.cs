@@ -124,8 +124,6 @@ namespace Simias.POBox
 				case SubscriptionStates.Invited:
 				// replied (slave)
 				case SubscriptionStates.Replied:
-				// delivered (slave)
-				case SubscriptionStates.Delivered:
 					
 					lock(threads.SyncRoot)
 					{

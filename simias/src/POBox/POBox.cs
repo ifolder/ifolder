@@ -284,9 +284,7 @@ namespace Simias.POBox
 
 			foreach(ShallowNode sNode in subList)
 			{
-				Subscription sub = new Subscription(this, sNode);
-				if(sub != null)
-					return sub;
+				return new Subscription(this, sNode);
 			}
 			return null;
 		}
@@ -307,8 +305,7 @@ namespace Simias.POBox
 			foreach (ShallowNode sn in subList)
 			{
 				Subscription sub = new Subscription(this, sn);
-
-				if ((sub != null) && (sub.ToIdentity.Equals(userID)))
+				if (sub.ToIdentity.Equals(userID))
 				{
 					return sub;
 				}

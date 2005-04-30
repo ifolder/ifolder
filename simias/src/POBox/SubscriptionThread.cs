@@ -226,15 +226,16 @@ namespace Simias.POBox
 					// Delete the subscription and don't try to send it anymore.
 					log.Info( "User {0} did not have sufficient rights to share collection {1}", me.Name, cSharedCollection.Name );
 					poBox.Commit( poBox.Delete( subscription ) );
+					Sync.SyncClient.ScheduleSync( poBox.ID );
 					return true;
 				}
 
 				POBoxStatus status = poService.Invite( subscription.GenerateSubscriptionMessage() );
 				if ( status == POBoxStatus.Success )
 				{
-					// FIXME:: sync my PostOffice right now!
 					subscription.SubscriptionState = SubscriptionStates.Posted;
 					poBox.Commit( subscription );
+					Sync.SyncClient.ScheduleSync( poBox.ID );
 					result = true;
 				}
 				else if ( status == POBoxStatus.InvalidAccessRights )
@@ -243,6 +244,7 @@ namespace Simias.POBox
 					// Delete the subscription and don't try to send it anymore.
 					log.Info( "User {0} did not have sufficient rights to share collection {1}", me.Name, cSharedCollection.Name );
 					poBox.Commit( poBox.Delete( subscription ) );
+					Sync.SyncClient.ScheduleSync( poBox.ID );
 					result = true;
 				}
 				else
@@ -269,6 +271,7 @@ namespace Simias.POBox
 
 			bool result = false;
 			POBoxService poService = new POBoxService();
+			POBoxStatus	wsStatus = POBoxStatus.UnknownError;
 
 			try
 			{
@@ -289,97 +292,143 @@ namespace Simias.POBox
 			// Add a new member to the domain if one doesn't exist already.  This is needed
 			// for Workgroup Domains.  If the user doesn't exist, the upcoming call to
 			// ResolvePOBoxLocation will fail.
-			try
+			Domain domain = Store.GetStore().GetDomain( subscription.DomainID );
+			Member member = domain.GetMemberByName( subscription.FromName );
+			if ( member == null )
 			{
-				Domain domain = Store.GetStore().GetDomain( subscription.DomainID );
-				Member member = domain.GetMemberByName( subscription.FromName );
-				if ( member == null )
-				{
-					member = new Member( subscription.FromName, subscription.FromIdentity, subscription.SubscriptionRights );
-					domain.Commit( member );
-				}
+				member = new Member( subscription.FromName, subscription.FromIdentity, subscription.SubscriptionRights );
+				domain.Commit( member );
 			}
-			catch {}
 			
-			POBoxStatus	wsStatus = POBoxStatus.UnknownError;
-
 			// Resolve the PO Box location for the inviter
-			Uri poUri = 
-				DomainProvider.ResolvePOBoxLocation( subscription.DomainID, subscription.FromIdentity );
+			Uri poUri = DomainProvider.ResolvePOBoxLocation( subscription.DomainID, subscription.FromIdentity );
 			if ( poUri != null )
 			{
 				poService.Url = poUri.ToString() + poServiceLabel;
+				log.Debug( "  connecting to the Post Office Service : " + poService.Url );
+
+				try
+				{
+					if ( subscription.SubscriptionDisposition == SubscriptionDispositions.Accepted )
+					{
+						log.Debug("  disposition is accepted!");
+
+						SubscriptionMsg subMsg = subscription.GenerateSubscriptionMessage();
+						wsStatus = poService.AcceptedSubscription( subMsg );
+						switch ( wsStatus )
+						{
+							case POBoxStatus.Success:
+							{
+								log.Debug( "  successfully accepted subscription." );
+
+								subscription.SubscriptionState = SubscriptionStates.Delivered;
+								poBox.Commit( subscription );
+								Sync.SyncClient.ScheduleSync( poBox.ID );
+								break;
+							}
+
+							case POBoxStatus.NotPosted:
+							{
+								log.Debug( "  waiting for subscription to be posted." );
+								break;
+							}
+
+							case POBoxStatus.AlreadyAccepted:
+							{
+								log.Debug( "  subscription already accepted from a different client." );
+								result = CreateCollectionProxy();
+								break;
+							}
+
+							case POBoxStatus.AlreadyDeclined:
+							case POBoxStatus.UnknownCollection:
+							case POBoxStatus.UnknownSubscription:
+							case POBoxStatus.UnknownPOBox:
+							case POBoxStatus.UnknownIdentity:
+							{
+								log.Debug( "  failed accepting a subscription" );
+								log.Debug( "  status = {0}", wsStatus.ToString() );
+								log.Debug( "  deleting the local subscription" );
+
+								// Delete the subscription and return true so the thread 
+								// controlling the subscription will die off.
+								poBox.Commit( poBox.Delete( subscription ) );
+								Sync.SyncClient.ScheduleSync( poBox.ID );
+								result = true;
+								break;
+							}
+
+							default:
+							{
+								log.Debug( "  failed Accepting a subscription.  Status: " + wsStatus.ToString());
+								break;
+							}
+						}
+					}
+					else if ( subscription.SubscriptionDisposition == SubscriptionDispositions.Declined )
+					{
+						log.Debug("  disposition is declined");
+
+						SubscriptionMsg subMsg = subscription.GenerateSubscriptionMessage();
+						wsStatus = poService.DeclinedSubscription( subMsg );
+						switch ( wsStatus )
+						{
+							case POBoxStatus.Success:
+							{
+								// This subscription is done!
+								Sync.SyncClient.ScheduleSync( poBox.ID );
+								result = true;
+								break;
+							}
+
+							case POBoxStatus.AlreadyAccepted:
+							{
+								log.Debug( "  subscription already accepted from a different client." );
+
+								// If the collection has already been accepted on another client, we cannot
+								// automatically accept it here because we don't know where to root the
+								// the collection in the file system. Just sync the subscription from the
+								// server and force the client to re-accept.
+								Sync.SyncClient.ScheduleSync( poBox.ID );
+								result = true;
+								break;
+							}
+
+							case POBoxStatus.AlreadyDeclined:
+							case POBoxStatus.UnknownIdentity:
+							case POBoxStatus.UnknownCollection:
+							case POBoxStatus.UnknownPOBox:
+							{
+								log.Debug( "  failed declining a subscription" );
+								log.Debug( "  status = {0}", wsStatus.ToString() );
+								log.Debug( "  deleting the local subscription" );
+
+								// Delete the subscription and return true so the thread 
+								// controlling the subscription will die off.
+								poBox.Commit( poBox.Delete( subscription ) );
+								Sync.SyncClient.ScheduleSync( poBox.ID );
+								result = true;
+								break;
+							}
+
+							default:
+							{
+								log.Debug( "  failed declining a subscription.  Status: " + wsStatus.ToString());
+								break;
+							}
+						}
+					}
+				}
+				catch(Exception e)
+				{
+					log.Error("  DoReplied failed updating originator's PO box");
+					log.Error(e.Message);
+					log.Error(e.StackTrace);
+				}
 			}
 			else
 			{
-				log.Debug( "  Could not resolve the PO Box location for: " + subscription.FromIdentity );
-				return false;
-			}
-
-			log.Debug( "  connecting to the Post Office Service : " + poService.Url );
-
-			try
-			{
-				if ( subscription.SubscriptionDisposition == SubscriptionDispositions.Accepted )
-				{
-					log.Debug("  subscription accepted!");
-
-					SubscriptionMsg subMsg = subscription.GenerateSubscriptionMessage();
-					wsStatus = poService.AcceptedSubscription( subMsg );
-					if ( wsStatus == POBoxStatus.Success )
-					{
-						subscription.SubscriptionState = SubscriptionStates.Delivered;
-						poBox.Commit( subscription );
-					}
-					else
-					if (wsStatus == POBoxStatus.UnknownSubscription)
-					{
-						log.Debug( "Failed accepting/declining a subscription" );
-						log.Debug( "The subscription did not exist on the server" );
-						log.Debug( "Deleting the local subscription" );
-
-						poBox.Commit( poBox.Delete( subscription ) );
-
-						// return true so the thread controlling the
-						// subscription will die off
-						result = true;
-					}
-					else
-					{
-						log.Debug(
-							"Failed Accepting/Declining a subscription.  Status: " + 
-							wsStatus.ToString());
-					}
-				}
-				else
-				if ( subscription.SubscriptionDisposition == SubscriptionDispositions.Declined )
-				{
-					log.Debug("  subscription declined");
-
-					SubscriptionMsg subMsg = subscription.GenerateSubscriptionMessage();
-					wsStatus = poService.DeclinedSubscription( subMsg );
-					if (wsStatus == POBoxStatus.Success)
-					{
-						// This subscription is done!
-						result = true;
-					}
-					else
-					if ( wsStatus == POBoxStatus.UnknownCollection )
-					{
-						log.Debug( "Failed declining a subscription" );
-						log.Debug( "The Collection did not exist on the server" );
-						log.Debug( "Deleting the local subscription" );
-
-						poBox.Commit( poBox.Delete( subscription ) );
-						result = true;
-					}
-				}
-			}
-			catch(Exception e)
-			{
-				log.Error("DoReplied failed updating originator's PO box");
-				log.Error(e.Message);
-				log.Error(e.StackTrace);
+				log.Debug( "  could not resolve the PO Box location for: " + subscription.FromIdentity );
 			}
 
 			return result;
@@ -388,14 +437,13 @@ namespace Simias.POBox
 		private bool DoDelivered()
 		{
 			bool result = false;
+			POBoxService poService = new POBoxService();
 
-			//log.Debug("DoDelivered::Connecting to the Post Office Service : {0}", this.poServiceUrl);
 			log.Debug("  calling the PO Box server to get subscription state" );
 			log.Debug("  domainID: " + subscription.DomainID );
 			log.Debug("  fromID:   " + subscription.FromIdentity );
 			log.Debug("  SubID:    " + subscription.MessageID );
 
-			POBoxService poService = new POBoxService();
 			try
 			{
 				WebState webState = 
@@ -413,118 +461,138 @@ namespace Simias.POBox
 			}
 			
 			// Resolve the PO Box location for the inviter
-			Uri poUri = 
-				DomainProvider.ResolvePOBoxLocation( subscription.DomainID, subscription.FromIdentity );
+			Uri poUri = DomainProvider.ResolvePOBoxLocation( subscription.DomainID, subscription.FromIdentity );
 			if ( poUri != null )
 			{
 				poService.Url = poUri.ToString() + poServiceLabel;
+				log.Debug( "  connecting to the Post Office Service : " + poService.Url );
+
+				try
+				{
+					SubscriptionInformation subInfo =
+						poService.GetSubscriptionInfo(
+							subscription.DomainID,
+							subscription.FromIdentity,
+							subscription.MessageID,
+							subscription.SubscriptionCollectionID );
+
+					switch ( subInfo.Status )
+					{
+						case POBoxStatus.Success:
+						{
+							log.Debug( "  subInfo.FromName: " + subInfo.FromName );
+							log.Debug( "  subInfo.ToName: " + subInfo.ToName );
+							log.Debug( "  subInfo.State: " + subInfo.State.ToString() );
+							log.Debug( "  subInfo.Disposition: " + subInfo.Disposition.ToString() );
+
+							if ( subInfo.Disposition == ( int )SubscriptionDispositions.Accepted )
+							{
+								log.Debug( "  creating collection..." );
+
+								// Check to make sure the collection proxy doesn't already exist.
+								if ( poBox.StoreReference.GetCollectionByID( subscription.SubscriptionCollectionID ) == null )
+								{
+									SubscriptionDetails details = new SubscriptionDetails();
+									details.DirNodeID = subInfo.DirNodeID;
+									details.DirNodeName = subInfo.DirNodeName;
+
+									subscription.SubscriptionRights = (Access.Rights)subInfo.AccessRights;
+									subscription.AddDetails( details );
+									poBox.Commit( subscription );
+									Sync.SyncClient.ScheduleSync( poBox.ID );
+
+									// create slave stub
+									subscription.ToMemberNodeID = subInfo.ToNodeID;
+									subscription.CreateSlave( poBox.StoreReference );
+								}
+					
+								// acknowledge the message which removes the originator's subscription.
+								SubscriptionMsg subMsg = subscription.GenerateSubscriptionMessage();
+								POBoxStatus wsStatus = poService.AckSubscription( subMsg );
+								if ( ( wsStatus == POBoxStatus.Success ) ||
+									 ( wsStatus == POBoxStatus.AlreadyAccepted ) )
+								{
+									// done with the subscription - move to local subscription to the ready state
+									subscription.SubscriptionState = SubscriptionStates.Ready;
+									poBox.Commit( subscription );
+									Sync.SyncClient.ScheduleSync( poBox.ID );
+									result = true;
+								}
+								else
+								{
+									log.Debug( "  failed acknowledging a subscription" );
+									log.Debug( "  status = {0}", wsStatus.ToString() );
+									log.Debug( "  deleting the local subscription" );
+
+									poBox.Commit( poBox.Delete( subscription ) );
+									Sync.SyncClient.ScheduleSync( poBox.ID );
+									result = true;
+								}
+							}
+							break;
+						}
+
+						case POBoxStatus.AlreadyAccepted:
+						{
+							log.Debug( "  the subscription has already been accepted by another client." );
+							result = CreateCollectionProxy();
+							break;
+						}
+
+						case POBoxStatus.InvalidState:
+						{
+							log.Debug ( "  invalid state" );
+							break;
+						}
+
+						default:
+						{
+							log.Debug( "  server error = {0}. Deleting subscription.", subInfo.Status.ToString() );
+							poBox.Commit( poBox.Delete( subscription ) );
+							Sync.SyncClient.ScheduleSync( poBox.ID );
+							result = true;
+							break;
+						}
+					}
+				}
+				catch(Exception e)
+				{
+					log.Error("  DoDelivered failed with an exception");
+					log.Error(e.Message);
+					log.Error(e.StackTrace);
+				}
 			}
 			else
 			{
 				log.Debug( "  Could not resolve the PO Box location for: " + subscription.FromIdentity );
-				return result;
-			}
-
-			try
-			{
-				SubscriptionInformation subInfo =
-					poService.GetSubscriptionInfo(
-						subscription.DomainID,
-						subscription.FromIdentity,
-						subscription.MessageID);
-
-				if ( subInfo.State == (int) SubscriptionStates.Unknown )
-				{
-					log.Debug( " Server cannot find subscription. Deleting local subscription" );
-					poBox.Commit( poBox.Delete( subscription ) );
-					return true;
-				}
-				else
-				{
-					log.Debug( "  subInfo.FromName: " + subInfo.FromName );
-					log.Debug( "  subInfo.ToName: " + subInfo.ToName );
-					log.Debug( "  subInfo.State: " + subInfo.State.ToString() );
-					log.Debug( "  subInfo.Disposition: " + subInfo.Disposition.ToString() );
-				}
-
-				// update subscription
-				if ( subInfo.State == (int) SubscriptionStates.Responded )
-				{
-					// create proxy
-					if ( subInfo.Disposition == (int) SubscriptionDispositions.Accepted )
-					{
-						log.Debug( "Creating collection..." );
-
-						// do not re-create the proxy
-						if ( poBox.StoreReference.GetCollectionByID( subscription.SubscriptionCollectionID ) == null )
-						{
-							SubscriptionDetails details = new SubscriptionDetails();
-							details.DirNodeID = subInfo.DirNodeID;
-							details.DirNodeName = subInfo.DirNodeName;
-							details.CollectionUrl = subInfo.CollectionUrl;
-
-							log.Debug("Collection URL: " + subInfo.CollectionUrl);
-
-							subscription.SubscriptionRights = 
-								(Simias.Storage.Access.Rights) subInfo.AccessRights;
-
-							// save details
-							subscription.AddDetails( details );
-							poBox.Commit( subscription );
-				
-							// create slave stub
-							subscription.ToMemberNodeID = subInfo.ToNodeID;
-							subscription.CreateSlave( poBox.StoreReference );
-						}
-					
-						// acknowledge the message
-						// which removes the originator's 
-						SubscriptionMsg subMsg = subscription.GenerateSubscriptionMessage();
-						POBoxStatus wsStatus = poService.AckSubscription( subMsg );
-						if ( wsStatus == POBoxStatus.Success )
-						{
-							// done with the subscription - move to local subscription to the ready state
-							subscription.SubscriptionState = SubscriptionStates.Ready;
-							poBox.Commit( subscription );
-						}
-						else 
-							if (wsStatus == POBoxStatus.UnknownSubscription)
-						{
-							log.Debug( "Failed acknowledging a subscription" );
-							log.Debug( "The subscription did not exist on the server" );
-							log.Debug( "Deleting the local subscription" );
-
-							poBox.Commit( poBox.Delete( subscription ) );
-
-							// return true so the thread controlling the
-							// subscription will die off
-							result = true;
-						}
-						else
-						{
-							log.Debug(
-								"Failed Acking a subscription.  Status: " + 
-								wsStatus.ToString());
-						}
-					}
-					else
-					{
-						// Remove the subscription from the local PO box
-						poBox.Commit( poBox.Delete( subscription ) );
-					}
-
-					// done
-					result = true;
-				}
-			}
-			catch(Exception e)
-			{
-				log.Error("SubscriptionThread::DoDelivered failed with an exception");
-				log.Error(e.Message);
-				log.Error(e.StackTrace);
 			}
 
 			return result;
+		}
+
+		private bool CreateCollectionProxy()
+		{
+			bool createdProxy = false;
+
+			// Refresh the subscription.
+			subscription = poBox.Refresh( subscription ) as Subscription;
+
+			// See if the member Node ID is specified yet.
+			if ( subscription.ToMemberNodeID != null )
+			{
+				// Check to make sure the collection proxy doesn't already exist.
+				if ( poBox.StoreReference.GetCollectionByID( subscription.SubscriptionCollectionID ) == null )
+				{
+					// create slave stub
+					subscription.CreateSlave( poBox.StoreReference );
+				}
+
+				createdProxy = true;
+			}
+
+			// Sync the POBox to force the subscription to update from the server.
+			Sync.SyncClient.ScheduleSync( poBox.ID  );
+			return createdProxy;
 		}
 	}
 }
