@@ -22,8 +22,7 @@
  ***********************************************************************/
 #include "CSPObjectIterator.h"
 
-CSPObjectIterator::CSPObjectIterator(CSPStore *pStore, HFCURSOR cursor, int count, FLMBOOL includeColId) :
-	m_pStore(pStore),
+CSPObjectIterator::CSPObjectIterator(HFCURSOR cursor, int count, FLMBOOL includeColId) :
 	m_Count(count),
 	m_Index(0),
 	m_pRecords(0),
@@ -57,7 +56,7 @@ CSPObjectIterator::~CSPObjectIterator(void)
 	}
 }
 
-int CSPObjectIterator::NextXml(FLMUNICODE *pOriginalBuffer, int nChars)
+int CSPObjectIterator::NextXml(CSPStore *pStore, FLMUNICODE *pOriginalBuffer, int nChars)
 {
 	RCODE rc = FERR_OK;
 	int charsWritten = nChars;
@@ -75,10 +74,10 @@ int CSPObjectIterator::NextXml(FLMUNICODE *pOriginalBuffer, int nChars)
 			
 			while (RC_OK(rc) && m_Index < m_Count)
 			{
-				rc = FlmRecordRetrieve(m_pStore->GetDB(), FLM_DATA_CONTAINER, m_pRecords[m_Index], FO_EXACT, &pRec, 0);
+				rc = FlmRecordRetrieve(pStore->GetDB(), FLM_DATA_CONTAINER, m_pRecords[m_Index], FO_EXACT, &pRec, 0);
 				if (RC_OK(rc) && pRec)
 				{
-					CSPStoreObject *pObject = new CSPStoreObject(m_pStore, pRec);
+					CSPStoreObject *pObject = new CSPStoreObject(pStore, pRec);
 					if (pObject)
 					{
 						if ((len = pObject->ToXML(pBuffer, nChars, false, m_includeColId)) != -1)

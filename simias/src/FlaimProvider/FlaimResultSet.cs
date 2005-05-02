@@ -34,25 +34,18 @@ namespace Simias.Storage.Provider.Flaim
 		private bool AlreadyDisposed = false;
 		int			count;
 		IntPtr		pResults;
-
-		[DllImport("FlaimWrapper")]
-		private static extern int FWCloseSearch(IntPtr ipResults);
-
-		[DllImport("FlaimWrapper", CharSet=CharSet.Unicode)]
-		private static extern int FWGetNextObjectList(IntPtr pResults, [In, Out] char[] buffer, int nChars);
-
-		[DllImport("FlaimWrapper", CharSet=CharSet.Unicode)]
-		private static extern bool FWSetListIndex(IntPtr pResults, IndexOrigin origin, int offset);
+		FlaimServer Flaim;
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="pResultSet"></param>
 		/// <param name="count"></param>
-		public FlaimResultSet(IntPtr pResultSet, int count)
+		public FlaimResultSet(IntPtr pResultSet, int count, FlaimServer flaimServer)
 		{
 			this.count = count;
 			this.pResults = pResultSet;
+			Flaim = flaimServer;
 		}
 
 		/// <summary>
@@ -61,6 +54,14 @@ namespace Simias.Storage.Provider.Flaim
 		~FlaimResultSet()
 		{
 			Dispose(true);
+		}
+
+		/// <summary>
+		/// Get the pointer to the resultset.
+		/// </summary>
+		internal IntPtr ResultSet
+		{
+			get {return pResults;}
 		}
 
 		#region IObjectIterator Members
@@ -81,8 +82,7 @@ namespace Simias.Storage.Provider.Flaim
 			}
 			else
 			{
-				int length = FWGetNextObjectList(pResults, buffer, buffer.Length);
-				return length;
+				return Flaim.GetNext(this, ref buffer);
 			}
 		}
 
@@ -94,7 +94,7 @@ namespace Simias.Storage.Provider.Flaim
 		/// <returns>True if successful.</returns>
 		public bool SetIndex(IndexOrigin origin, int offset)
 		{
-			return FWSetListIndex(pResults, origin, offset);
+			return Flaim.SetIndex(this, origin, offset);
 		}
 
 		/// <summary>
@@ -128,7 +128,7 @@ namespace Simias.Storage.Provider.Flaim
 			if (!AlreadyDisposed)
 			{
 				AlreadyDisposed = true;
-				FWCloseSearch(pResults);
+				Flaim.CloseSearch(this);
 			
 				if (!inFinalize)
 				{

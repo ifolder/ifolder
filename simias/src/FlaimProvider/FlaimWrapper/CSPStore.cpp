@@ -1078,7 +1078,7 @@ RCODE CSPStore::Search(FLMUNICODE *pCollectionId, FLMUNICODE *pProperty, FLMINT 
 						if (RC_OK(rc))
 						{
 							rc = FlmCursorRecCount(cursor, pCount);
-							pIterator = new CSPObjectIterator(this, cursor, *pCount, includeColId);
+							pIterator = new CSPObjectIterator(cursor, *pCount, includeColId);
 						}
 					}
 				}
@@ -1090,7 +1090,7 @@ RCODE CSPStore::Search(FLMUNICODE *pCollectionId, FLMUNICODE *pProperty, FLMINT 
 			// No properties exist with the specified name.
 			rc = FERR_OK;
 			*pCount = 0;
-			pIterator = new CSPObjectIterator(this, NULL, *pCount, includeColId);
+			pIterator = new CSPObjectIterator(NULL, *pCount, includeColId);
 		}
 		delete pCspValue;
 	}

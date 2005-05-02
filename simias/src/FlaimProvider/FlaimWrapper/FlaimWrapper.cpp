@@ -176,9 +176,9 @@ FLAIMWRAPPER_API void FWCloseSearch(CSPObjectIterator *pResults)
 	}
 }
 
-FLAIMWRAPPER_API int FWGetNextObjectList(CSPObjectIterator *pResults, FLMUNICODE * pBuffer, int nChars)
+FLAIMWRAPPER_API int FWGetNextObjectList(CSPObjectIterator *pResults, CSPStore *pStore, FLMUNICODE * pBuffer, int nChars)
 {
-	return (pResults->NextXml(pBuffer, nChars));
+	return (pResults->NextXml(pStore, pBuffer, nChars));
 }
 
 FLAIMWRAPPER_API bool FWSetListIndex(CSPObjectIterator *pResults, int origin, int offset)

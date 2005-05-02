@@ -326,10 +326,15 @@ namespace Simias.Storage.Provider.Flaim
 			return FWDefineField(pStore, name, type, index);
 		}
 
-
 		[DllImport("FlaimWrapper", CharSet=CharSet.Unicode)]
 		private static extern FlaimError.Error FWSearch(IntPtr pStore, string collectionId, string name, int op, string value, string type, int caseSensitive, out int count, out IntPtr pResultSet);
-		internal FlaimError.Error Search(Query query, out FlaimResultSet results)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="query"></param>
+		/// <param name="results"></param>
+		/// <returns></returns>
+		internal FlaimError.Error Search(Query query, out FlaimResultSet results, FlaimServer flaimServer)
 		{
 			FlaimError.Error rc = FlaimError.Error.FERR_OK;
 
@@ -416,12 +421,51 @@ namespace Simias.Storage.Provider.Flaim
 				rc = FWSearch(pStore, query.CollectionId, query.Property, op, sValue, query.Type.ToString(), caseSensitive, out count, out pFlaimResults);
 				if (FlaimError.IsSuccess(rc))
 				{
-					results = new FlaimResultSet(pFlaimResults, count);
+					results = new FlaimResultSet(pFlaimResults, count, flaimServer);
 				}
 			}
 			
 			return (rc);
 		}
+
+		[DllImport("FlaimWrapper")]
+		private static extern int FWCloseSearch(IntPtr ipResults);
+		/// <summary>
+		/// Close the search and free any resources.
+		/// </summary>
+		/// <param name="results">The resultset to close.</param>
+		internal void CloseSearch(FlaimResultSet results)
+		{
+			FWCloseSearch(results.ResultSet);
+		}
+
+		[DllImport("FlaimWrapper", CharSet=CharSet.Unicode)]
+		private static extern int FWGetNextObjectList(IntPtr pResults, IntPtr pStore, [In, Out] char[] buffer, int nChars);
+		/// <summary>
+		/// The the next objects. This will fill the buffer or read to the end.
+		/// </summary>
+		/// <param name="results">The resultset.</param>
+		/// <param name="buffer">The buffer to fill.</param>
+		/// <returns></returns>
+		internal int GetNextObjectList(FlaimResultSet results, ref char[] buffer)
+		{
+			return FWGetNextObjectList(results.ResultSet, pStore, buffer, buffer.Length);
+		}
+
+		[DllImport("FlaimWrapper", CharSet=CharSet.Unicode)]
+		private static extern bool FWSetListIndex(IntPtr pResults, IndexOrigin origin, int offset);
+		/// <summary>
+		/// Set the Index to the specified offset from the origin.
+		/// </summary>
+		/// <param name="results">The resultset.</param>
+		/// <param name="origin">The origin to move from</param>
+		/// <param name="offset">The offset to move the index by.</param>
+		/// <returns>True if successful.</returns>
+		internal bool SetIndex(FlaimResultSet results, IndexOrigin origin, int offset)
+		{
+			return FWSetListIndex(results.ResultSet, origin, offset);
+		}
+
 
 		/// <summary>
 		/// 
@@ -752,13 +796,47 @@ namespace Simias.Storage.Provider.Flaim
 		internal IResultSet Search(Query query)
 		{
 			FlaimResultSet resultSet;
-			FlaimError.Error rc = Flaim.Search(query, out resultSet);
+			FlaimError.Error rc = Flaim.Search(query, out resultSet, this);
 			if (FlaimError.IsError(rc))
 			{
 				throw new SearchException(query.ToString());
 			}
 			return resultSet;
 		}
+
+		/// <summary>
+		/// Method to return the next set of objects.
+		/// All the objects that can fit in the buffer will be returned.
+		/// returns false when no more objects exist.
+		/// </summary>
+		/// <param name="buffer">Buffer used to return the objects.</param>
+		/// <returns>true - objects returned. false - no more objects</returns>
+		public int GetNext(FlaimResultSet results, ref char[] buffer)
+		{
+			return Flaim.GetNextObjectList(results, ref buffer);
+		}
+
+		/// <summary>
+		/// Set the Index to the specified offset from the origin.
+		/// </summary>
+		/// <param name="results">The resultset.</param>
+		/// <param name="origin">The origin to move from</param>
+		/// <param name="offset">The offset to move the index by.</param>
+		/// <returns>True if successful.</returns>
+		public bool SetIndex(FlaimResultSet results, IndexOrigin origin, int offset)
+		{
+			return Flaim.SetIndex(results, origin, offset);
+		}
+
+		/// <summary>
+		/// Close the search and free any resources.
+		/// </summary>
+		/// <param name="results">The resultset to close.</param>
+		internal void CloseSearch(FlaimResultSet results)
+		{
+			Flaim.CloseSearch(results);
+		}
+
 
 		#endregion
 	}
