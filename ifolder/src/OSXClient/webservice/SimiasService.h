@@ -25,7 +25,7 @@
 #define __SimiasService__
 
 #import <Cocoa/Cocoa.h>
-#include <Carbon/Carbon.h>
+//#include <Carbon/Carbon.h>
 #import "iFolderDomain.h"
 #include "Security/Security.h"
 
