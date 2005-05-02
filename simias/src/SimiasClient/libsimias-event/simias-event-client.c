@@ -25,6 +25,8 @@
  * To compile the stand-alone test, compile the program with:
  * 
  * 		gcc `xml2-config --libs --cflags` -o event-client simias-event-client.c
+ *
+ *      (add -g for debug)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,11 +36,6 @@
 #include <sys/stat.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <sys/un.h>
-#include <unistd.h>
-#include <netdb.h>
-#include <sys/ipc.h>
-#include <sys/sem.h>
 
 #include <libxml/tree.h>
 #include <libxml/parser.h>
@@ -50,26 +47,14 @@
 /* Turn this on to see debug messages */
 #ifdef DEBUG
 #define DEBUG_SEC(args) (printf("sec: "), printf args)
+#define DEBUG_SEC_MUTEX(args) (printf("sec: "), printf args)
 #else
 #define DEBUG_SEC
+#define DEBUG_SEC_MUTEX
 #endif
 
 #define WEB_SERVICE_TRUE_STRING		"True"
 #define WEB_SERVICE_FALSE_STRING	"False"
-
-#ifndef DARWIN
-#if defined(__GNU_LIBRARY__) && !defined(_SEM_SEMUN_UNDEFINED)
-/* union semun is defined by including <sys/sem.h> */
-#else
-/* according to X/OPEN we have to define it ourselves */
-union semun {
-		int val;
-		struct semid_ds *buf;
-		unsigned short *array;
-		struct seminfo *__buf;
-};
-#endif
-#endif /* DARWIN */
 
 /**
  * Structures to represent 1-level-deep XML
@@ -204,8 +189,10 @@ typedef struct
 	 */
 	SimiasEventMessage *received_messages;
 	SimiasEventMessage *last_received_message;
-	int received_messages_mutex;	/* Semaphore to protect the message list */
-	int received_messages_sem;		/* Semaphore to signal a received message */
+	pthread_mutex_t received_messages_mutex;		/* Mutex to protect the message list */
+
+	pthread_mutex_t received_messages_more_mutex;	/* Dummy mutex */
+	pthread_cond_t received_messages_more;			/* Used to signal the proc msg thread */
 } RealSimiasEventClient;
 
 
@@ -310,6 +297,12 @@ const char * sec_get_node_type_str (SIMIAS_NODE_TYPE type);
 /* Anytime an event struct is returned, it must be freed using this function. */
 static void sec_free_event_struct (void *event_struct);
 
+/**
+ * If we're in the middle of parsing an event and we have errors, this function
+ * will cleanup the memory.
+ */
+static void sec_free_broken_event_struct (void *event_struct, int items);
+
 /* #endregion */
 
 /* #region Public Functions */
@@ -319,11 +312,9 @@ int sec_init (SimiasEventClient *sec,
 {
 	int i;
 	RealSimiasEventClient *ec;
-	union semun arg;
-	struct sembuf sb = {0, -1, 0};
-	key_t received_messages_mutex_key;
-	key_t received_messages_sem_key;
 	char user_profile_dir [1024];
+
+	xmlInitParser ();
 
 	ec = malloc (sizeof (RealSimiasEventClient));
 	DEBUG_SEC (("sec_init () called\n"));
@@ -348,47 +339,26 @@ int sec_init (SimiasEventClient *sec,
 	
 	ec->state = CLIENT_STATE_INITIALIZING;
 	
-	/* Get received_messages_mutex ready */
-	if (sec_get_user_profile_dir_path (user_profile_dir) == NULL) {
-		DEBUG_SEC (("Couldn't get config path information\n"));
+	/* Create a mutex for protecting the received_messages_list */
+	if (pthread_mutex_init(&ec->received_messages_mutex, NULL) != 0)
+	{
+		perror ("sec: Couldn't create a mutex for the received messages");
 		return -1;
 	}
 	
-	if ((received_messages_mutex_key = ftok (user_profile_dir, 'M')) == -1) {
-		perror ("sec: ftok failed on mutex key");
+	/* Initialize the pthread_cond_t to be able to signal the process message thread */
+	if (pthread_mutex_init(&ec->received_messages_more_mutex, NULL) != 0)
+	{
+		perror ("sec: Couldn't create a dummy mutex for the received messages");
 		return -1;
 	}
-	if ((ec->received_messages_mutex = 
-			semget(received_messages_mutex_key, 1, IPC_CREAT | 0666)) == -1) {
-		perror ("sec: semget failed received_messages_mutex");
-		return -1;
-	}
-	
-	/* Initialize received_messages_mutex to 1 */
-	arg.val = 1;
-	if (semctl (ec->received_messages_mutex, 0, SETVAL, arg) == -1) {
-		perror ("sec: semctl failed to initialize received_messages_mutex");
-		return -1;
-	}
-	
-	/* Get received_messages_sem ready */
-	if ((received_messages_sem_key = ftok (user_profile_dir, 'S')) == -1) {
-		perror ("sec: ftok failed on mutex key");
-		return -1;
-	}
-	if ((ec->received_messages_sem = 
-			semget(received_messages_sem_key, 1, IPC_CREAT | 0666)) == -1) {
-		perror ("sec: semget failed received_messages_sem");
-		return -1;
-	}
-	
-	/* Initialize received_messages_sem to 0 */
-	arg.val = 0;
-	if (semctl (ec->received_messages_sem, 0, SETVAL, arg) == -1) {
-		perror ("sec: semctl failed to initialize received_messages_sem");
+	if (pthread_cond_init(&ec->received_messages_more, NULL) != 0)
+	{
+		perror ("sec: Couldn't initialize the pthread_cond_t for received messages");
 		return -1;
 	}
 
+	DEBUG_SEC (("Starting the Process Message Thread\n"));
 	if ((pthread_create (&(ec->process_message_thread), NULL,
 						 sec_proc_msg_thread, ec)) != 0) {
 		perror ("sec: could not start process message thread");
@@ -416,7 +386,6 @@ int
 sec_cleanup (SimiasEventClient *sec)
 {
 	int i;
-	union semun arg;
 	RealSimiasEventClient *ec = (RealSimiasEventClient *)*sec;
 	
 	/**
@@ -655,18 +624,19 @@ sec_thread (void *user_data)
 	int bytes_to_process;
 	int buffer_index;
 	bool b_first_read;
-	struct sembuf sb = {0, -1, 0};
+	bool b_have_lock;
 	
 	DEBUG_SEC (("sec_thread () called\n"));
 	
 	b_first_read = true;
+	b_have_lock = false;
 	
 	/* Wait until the register thread marks us as registered before continuing */
 	while (ec->state != CLIENT_STATE_RUNNING) {
 		if (ec->state == CLIENT_STATE_SHUTDOWN) {
 			return NULL;
 		}
-		DEBUG_SEC (("sec_thread () waiting for register thread to complete\n"));
+		DEBUG_SEC (("sec_thread: waiting for register thread to complete\n"));
 		sleep (2);
 	}
 	
@@ -676,34 +646,21 @@ sec_thread (void *user_data)
 	while ((bytes_received = recv (ec->event_socket, 
 								   recv_buf, RECEIVE_BUFFER_SIZE, 0)) > 0) {
 
-//printf ("\n=====Dumping %d bytes received:=====\n", bytes_received);
-//int i;
-//for (i = 0; i < bytes_received; i++) {
-//	putchar (recv_buf [i]);
-//}
-//printf ("\n=====SEC: recv(): Dump complete=====\n\n");
-
 		if (buffer == NULL) {
-			DEBUG_SEC (("recv (): Creating new buffer of %d bytes\n", bytes_received));
+			DEBUG_SEC (("sec_thread: Creating new buffer of %d bytes\n", bytes_received));
 			buffer = malloc (bytes_received);
 			if (!buffer) {
-				DEBUG_SEC (("Out of memory!\n"));
+				DEBUG_SEC (("sec_thread: Out of memory!\n"));
 				break;
 			}
 			
 			memcpy (buffer, recv_buf, bytes_received);
 			buffer_length = bytes_received;
-			
-//printf ("\n-----Dumping %d bytes added to new buffer:-----\n", bytes_received);
-//for (i = 0; i < bytes_received; i++) {
-//	putchar (buffer [i + 4]);
-//}
-//printf ("\n-----SEC: recv(): Dump complete-----\n\n");
 		} else {
-			DEBUG_SEC (("recv (): Adding %d bytes to existing buffer of %d bytes\n", bytes_received, buffer_length));
+			DEBUG_SEC (("sec_thread: Adding %d bytes to existing buffer of %d bytes\n", bytes_received, buffer_length));
 			temp_buffer = malloc (bytes_received + buffer_length);
 			if (!temp_buffer) {
-				DEBUG_SEC (("Out of memory!\n"));
+				DEBUG_SEC (("sec_thread: Out of memory!\n"));
 				break;
 			}
 			
@@ -729,13 +686,6 @@ sec_thread (void *user_data)
 				/* Get the length of the message.  Add in the prepended length. */
 				stated_message_length = *((int *)(buffer + buffer_index));
 
-//if (stated_message_length == 0) {
-//	printf ("SEC: recv (): Stated message length cannot be 0!\n");
-//	break;
-//} else {
-//	printf ("SEC: recv (): Stated message length = %d\n", stated_message_length);				
-//}
-				
 				message_length = stated_message_length + 4;
 
 				/* See if the entire message is inside the buffer */
@@ -756,11 +706,10 @@ sec_thread (void *user_data)
 					 * list so that we're the only one that modifies it.
 					 */
 					if (!b_first_read) {
-						sb.sem_op = -1;
-						if (semop (ec->received_messages_mutex, &sb, 1) == -1) {
-							perror ("sec: error getting control of semaphore");
-							break;
-						}
+						/* This call blocks until the mutex is available */
+						pthread_mutex_lock(&ec->received_messages_mutex);
+						b_have_lock = true;
+						DEBUG_SEC_MUTEX (("sec_thread: Got lock on received messages mutex\n"));
 					} else {
 						b_first_read = false;
 					}
@@ -773,31 +722,20 @@ sec_thread (void *user_data)
 						ec->last_received_message = message;
 					}
 					
-					/* Release the semaphore lock */
-					sb.sem_op = 1;
-					if (semop (ec->received_messages_mutex, &sb, 1) == -1) {
-						perror ("sec: error releasing control of semaphore");
-						break;
+					/* Release the lock on the received messages mutex */
+					if (b_have_lock)
+					{
+						pthread_mutex_unlock(&ec->received_messages_mutex);
+						b_have_lock = false;
+						DEBUG_SEC_MUTEX (("sec_thread: Unlocked received messages mutex\n"));
 					}
 					
 					/**
-					 * Increment the received_messages_sem to denote there's
-					 * another message available in received_messages.
+					 * Signal the process message thread that there's a message
+					 * in the queue.
 					 */
-					sb.sem_op = 1;
-					if (semop (ec->received_messages_sem, &sb, 1) == -1) {
-						perror ("sec: error incrementing message count with semaphore");
-						break;
-					}
-
-//printf ("\n*****Dumping message to send to process_message:*****\n");
-//for (i = 0; i < stated_message_length; i++) {
-//	putchar (message [i]);
-//}
-//printf ("\n*****Dump complete*****\n\n");
-
-//					sec_process_message (ec, message, stated_message_length);
-//					free (message);
+					DEBUG_SEC_MUTEX (("sec_thread: Signaling that there's messages on the queue\n"));
+					pthread_cond_signal(&ec->received_messages_more);
 
 					/* Update the buffer_index */
 					buffer_index += message_length;
@@ -813,13 +751,13 @@ sec_thread (void *user_data)
 		
 		/* Update the buffer to only contain data that still needs processing */
 		if (bytes_to_process == 0) {
-			DEBUG_SEC (("recv (): All bytes in buffer processed.\n"));
+			DEBUG_SEC (("sec_thread: All bytes in buffer processed.\n"));
 			/* The buffer is empty and should be freed and nulled */
 			free (buffer);
 			buffer = NULL;
 			buffer_length = 0;
 		} else {
-			DEBUG_SEC (("recv (): %d bytes in buffer remain.\n", bytes_to_process));
+			DEBUG_SEC (("sec_thread: %d bytes in buffer remain.\n", bytes_to_process));
 			/* A new buffer needs to be setup to store the remaining bytes */
 			temp_buffer = malloc (bytes_to_process);
 			memcpy (temp_buffer, buffer + buffer_index, bytes_to_process);
@@ -837,7 +775,7 @@ sec_thread (void *user_data)
 	 * that the client can reconnect with the server when it becomes
 	 * available again.
 	 */
-	DEBUG_SEC (("*=*=*=*=*=*= RECONNECT REQUIRED: recv () error =*=*=*=*=*=*\n"));
+	DEBUG_SEC (("sec_thread: *=*=*=*=*=*= RECONNECT REQUIRED: recv () error =*=*=*=*=*=*\n"));
 	if (sec_reconnect (ec) != 0) {
 		sec_shutdown (ec, "Could not reconnect the Simias Event Client");
 	}
@@ -954,72 +892,66 @@ sec_reg_thread (void *user_data)
 static void *
 sec_proc_msg_thread (void *user_data)
 {
-//	struct sembuf sops;
 	SimiasEventMessage *message;
-	struct sembuf sb = {0, -1, 0};
 	RealSimiasEventClient *ec = (RealSimiasEventClient *)user_data;
 	
 	DEBUG_SEC (("sec_proc_msg_thread () entered\n"));
 	
-//	sops.sem_num = 1;
-//	sops.sem_op
-	
 	while (ec->state != CLIENT_STATE_SHUTDOWN) {
 		/* Don't do anything unless there's a message (resource) available */
-		DEBUG_SEC (("proc_msg_thread: Waiting for signal of available message\n"));
-		sb.sem_op = -1;
-		if (semop (ec->received_messages_sem, &sb, 1) == -1) {
-			perror ("sec: proc_msg_thread: error getting control of received_messages_sem");
-			continue;
-		}
-		
-		DEBUG_SEC (("proc_msg_thread: signal of available message received\n"));
-		
-		/* Get control of the received messages semaphore */
-		sb.sem_op = -1;
-		if (semop (ec->received_messages_mutex, &sb, 1) == -1) {
-			perror ("sec: proc_msg_thread: error getting control of received_messages_mutex");
-			continue;
-		}
-					
-		DEBUG_SEC (("proc_msg_thread: got lock on received_messages\n"));
-		
-		/* If there's a received message remove it from the list */
-		if (ec->received_messages == NULL) {
-			/* FIXME: Release the semaphore */
-			sb.sem_op = 1;
-			if (semop (ec->received_messages_mutex, &sb, 1) == -1) {
-				perror ("sec: proc_msg_thread: error releasing control of received_messages_mutex");
-				continue;
-			}
-		
-			continue;
-		}
+		DEBUG_SEC (("proc_msg_thread: Waiting for messages to process\n"));
+		pthread_mutex_lock(&ec->received_messages_more_mutex);
+		pthread_cond_wait(&ec->received_messages_more, &ec->received_messages_more_mutex);
+		pthread_mutex_unlock(&ec->received_messages_more_mutex);
 
-		/* There's at least one message in the queue */
-		message = ec->received_messages;
-		ec->received_messages = ec->received_messages->next;
-		
-		/* Make sure last_received_message is correct if list is now empty */
-		if (ec->received_messages == NULL) {
-			ec->last_received_message = NULL;
+		DEBUG_SEC (("proc_msg_thread: Got signaled to process messages\n"));
+
+		/**
+		 * We need this loop to make sure that we process all messages that
+		 * might be on the queue.  It is possible that the sec_thread adds on
+		 * messages while we're processing a previous message and we'd miss
+		 * the pthread_cond_signal().  As soon as we can tell that the queue
+		 * is empty, we break out of the loop and go back waiting for the next
+		 * available message with pthread_cond_wait().
+		 */		
+		for (;;)
+		{
+			/* Get control of the received messages mutex */
+			/* This call blocks until the mutex is available */
+			pthread_mutex_lock(&ec->received_messages_mutex);
+			DEBUG_SEC_MUTEX (("proc_msg_thread: got lock on received_messages mutex\n"));
+			
+			DEBUG_SEC (("proc_msg_thread: Checking for messages to process\n"));
+			if (ec->received_messages == NULL)
+			{
+				DEBUG_SEC (("proc_msg_thread: No messages to process\n"));
+				pthread_mutex_unlock(&ec->received_messages_mutex);
+				DEBUG_SEC_MUTEX (("proc_msg_thread: released lock on received_messages\n"));
+				break;	/* There's nothing to process */
+			}
+
+			/* If we get here, there's at least one message in the queue */
+			DEBUG_SEC (("proc_msg_thread: At least one message to process.\n"));
+			message = ec->received_messages;
+			ec->received_messages = ec->received_messages->next;
+			
+			/* Make sure last_received_message is correct if list is now empty */
+			if (ec->received_messages == NULL) {
+				ec->last_received_message = NULL;
+			}
+			
+			/* Release the lock on the received messages mutex */
+			pthread_mutex_unlock(&ec->received_messages_mutex);
+			DEBUG_SEC_MUTEX (("proc_msg_thread: released lock on received_messages\n"));
+			
+			/* Process the message */
+			DEBUG_SEC (("proc_msg_thread: Calling sec_process_message()\n"));
+			sec_process_message (ec, message->message, message->length);
+			
+			/* Free the memory used by the message */
+			free (message->message);
+			free (message);
 		}
-		
-		/* FIXME: Release the semaphore */
-		sb.sem_op = 1;
-		if (semop (ec->received_messages_mutex, &sb, 1) == -1) {
-			perror ("sec: proc_msg_thread: error releasing control of received_messages_mutex");
-			continue;
-		}
-		
-		DEBUG_SEC (("proc_msg_thread: released lock on received_messages\n"));
-		
-		/* Process the message */
-		sec_process_message (ec, message->message, message->length);
-		
-		/* Free the memory used by the message */
-		free (message->message);
-		free (message);
 	}
 
 	DEBUG_SEC (("sec_proc_msg_thread () exiting\n"));
@@ -1193,7 +1125,7 @@ sec_get_server_host_address (RealSimiasEventClient *ec,
 	char config_file_path [1024];
 	struct stat file_stat;
 	char err_msg [2048];
-	int b_addr_read = 0;
+	bool b_addr_read = false;
 	xmlDoc *doc;
 	SimiasEventServerConfig *server_config;
 	
@@ -1225,7 +1157,6 @@ sec_get_server_host_address (RealSimiasEventClient *ec,
 	while (!b_addr_read) {
 		if ((stat (config_file_path, &file_stat)) == 0) {
 			/* Attempt to read the XML config file. */
-			xmlInitParser ();
 			doc = xmlReadFile (config_file_path, NULL, 0);
 			if (doc != NULL) {
 
@@ -1243,7 +1174,7 @@ sec_get_server_host_address (RealSimiasEventClient *ec,
 				sin->sin_port = 
 					htons (atoi (server_config->port));
 					
-				b_addr_read = 1;
+				b_addr_read = true;
 				
 				free (server_config->host);
 				free (server_config->port);
@@ -1356,12 +1287,12 @@ sec_process_message (RealSimiasEventClient *ec, char *message, int length)
 	int err = 0;
 
 	/* Construct an xmlDoc from the message */	
-	xmlInitParser ();
 	doc = xmlReadMemory (message, length, "message.xml", NULL, 0);
 	if (doc != NULL) {
 		message_struct = sec_parse_struct_from_doc (doc);
 		if (message_struct == NULL) {
 			DEBUG_SEC (("Struct couldn't be parsed from message\n"));
+			xmlFreeDoc (doc);
 			return -1;
 		}
 		
@@ -1413,7 +1344,6 @@ static void *
 sec_parse_struct_from_doc (xmlDoc *doc)
 {
 	xmlXPathContext	*xpath_ctx;
-	xmlXPathObject	*xpath_obj;
 
 	void *return_struct = NULL;
 
@@ -1425,9 +1355,8 @@ sec_parse_struct_from_doc (xmlDoc *doc)
 	}
 
 	return_struct = sec_create_struct_from_xpath (xpath_ctx);
-												   
-	/* Free the global variables that may have been allocated by the parser */
-	xmlCleanupParser ();
+	
+	xmlXPathFreeContext(xpath_ctx);
 	
 	return return_struct;
 }
@@ -1515,9 +1444,10 @@ sec_create_struct_from_xpath (xmlXPathContext *xpath_ctx)
 		struct_pos++;
 
 		xmlFree (event_type);
-		xmlFree (xpath_obj);
 	}
 		
+	xmlXPathFreeObject (xpath_obj);
+
 	/* Set element_name to the first element in element_names */
 	element_name = element_names [0];
 
@@ -1530,6 +1460,7 @@ sec_create_struct_from_xpath (xmlXPathContext *xpath_ctx)
 		xpath_obj = xmlXPathEvalExpression (xpath_expr, xpath_ctx);
 		if (xpath_obj == NULL) {
 			DEBUG_SEC (("Unable to evaluate XPath expression: \"%s\"\n", xpath_expr));
+			sec_free_broken_event_struct (data_struct, struct_pos);
 			return NULL;
 		}
 		
@@ -1540,6 +1471,7 @@ sec_create_struct_from_xpath (xmlXPathContext *xpath_ctx)
 			DEBUG_SEC (("Number of nodes found with XPath expression \"%s\" (expected only 1): %d\n",
 					 xpath_expr,
 					 num_of_nodes));
+			sec_free_broken_event_struct (data_struct, struct_pos);
 			xmlFree (xpath_obj);
 			return NULL;
 		}
@@ -1549,6 +1481,7 @@ sec_create_struct_from_xpath (xmlXPathContext *xpath_ctx)
 		
 		if (cur_node->type != XML_ELEMENT_NODE) {
 			DEBUG_SEC (("Not XML_ELEMENT_NODE: %s\n", cur_node->name));
+			sec_free_broken_event_struct (data_struct, struct_pos);
 			xmlFree (xpath_obj);
 			return NULL;
 		}
@@ -1556,6 +1489,7 @@ sec_create_struct_from_xpath (xmlXPathContext *xpath_ctx)
 		cur_node_val = xmlNodeGetContent (cur_node);
 		if (cur_node_val == NULL) {
 			DEBUG_SEC (("Element contained no data: %s\n", cur_node->name));
+			sec_free_broken_event_struct (data_struct, struct_pos);
 			xmlFree (xpath_obj);
 			return NULL;
 		}
@@ -1564,7 +1498,7 @@ sec_create_struct_from_xpath (xmlXPathContext *xpath_ctx)
 		struct_pos++;
 		
 		xmlFree (cur_node_val);
-		xmlFree (xpath_obj);
+		xmlXPathFreeObject (xpath_obj);
 
 		/* Advance to the next XPath expression */
 		element_name = element_names [i + 1];
@@ -1574,41 +1508,63 @@ sec_create_struct_from_xpath (xmlXPathContext *xpath_ctx)
 }
 
 static void
-sec_free_event_struct (void *event_struct)
+sec_free_broken_event_struct (void *event_struct, int items)
 {
-	char **element_names = NULL;
-	char *element_name = NULL;
+	int i;
 	char **struct_ptr;
-	int i, struct_pos;
+
+	DEBUG_SEC (("Freeing incomplete event structure\n"));
 
 	struct_ptr = (char **)event_struct;
 
+	for (i = 0; i < items; i++)
+	{
+		free (struct_ptr [i]);
+	}
+	
+	free (event_struct);
+}
+
+static void
+sec_free_event_struct (void *event_struct)
+{
+	char **struct_ptr;
+	int i, struct_pos;
+	int itemsInStruct;
+
+	struct_ptr = (char **)event_struct;
+	itemsInStruct = 0;
+
 	/* Determine the type of struct we're dealing with */
-	if (!strcmp ("NodeEventArgs", struct_ptr [0])) {
-		DEBUG_SEC (("Freeing NodeEventArgs\n"));
-		element_names = sec_node_event_elements;
-	} else if (!strcmp ("CollectionSyncEventArgs", struct_ptr [0])) {
-		DEBUG_SEC (("Freeing CollectionSyncEventArgs\n"));
-		element_names = sec_collection_sync_event_elements;
-	} else if (!strcmp ("FileSyncEventArgs", struct_ptr [0])) {
-		DEBUG_SEC (("Freeing FileSyncEventArgs\n"));
-		element_names = sec_file_sync_event_elements;
-	} else if (!strcmp ("NotifyEventArgs", struct_ptr [0])) {
-		DEBUG_SEC (("Freeing NotifyEventArgs\n"));
-		element_names = sec_notify_event_elements;
-	} else {
+	if (!strcmp ("NodeEventArgs", struct_ptr [0]))
+	{
+		DEBUG_SEC (("Freeing SimiasNodeEvent\n"));
+		itemsInStruct = sizeof (SimiasNodeEvent) / sizeof (char *);
+	}
+	else if (!strcmp ("CollectionSyncEventArgs", struct_ptr [0]))
+	{
+		DEBUG_SEC (("Freeing SimiasCollectionSyncEvent\n"));
+		itemsInStruct = sizeof (SimiasCollectionSyncEvent) / sizeof (char *);
+	}
+	else if (!strcmp ("FileSyncEventArgs", struct_ptr [0]))
+	{
+		DEBUG_SEC (("Freeing SimiasFileSyncEvent\n"));
+		itemsInStruct = sizeof (SimiasFileSyncEvent) / sizeof (char *);
+	}
+	else if (!strcmp ("NotifyEventArgs", struct_ptr [0]))
+	{
+		DEBUG_SEC (("Freeing SimiasNotifyEvent\n"));
+		itemsInStruct = sizeof (SimiasNotifyEvent) / sizeof (char *);
+	}
+	else
+	{
 		DEBUG_SEC (("Freeing unknown event type (memory leak possible)\n"));
 		free (event_struct);
 		return;
 	}
 	
-	element_name = element_names [0];
-	
-	for (i = 0; element_name; i++) {
+	for (i = 0; i < itemsInStruct; i++) {
 		free (struct_ptr [i]);
-
-		/* Advance to the next XPath expression */
-		element_name = element_names [i + 1];
 	}
 	
 	free (event_struct);
@@ -1860,11 +1816,12 @@ sec_state_event_callback (SEC_STATE_EVENT state_event, const char *message, void
 			sec_set_event (*ec, ACTION_NOTIFY_MESSAGE, true, (SimiasEventFunc)simias_notify_event_callback, NULL);
 			
 			/* Setup a filter to only get Collections back when it's a NodeEvent */
+/*
 			node_type = NODE_TYPE_COLLECTION;
 			event_filter.type = EVENT_FILTER_NODE_TYPE;
 			event_filter.data = &node_type;
 			sec_set_filter (*ec, &event_filter);
-
+*/
 			break;
 		case SEC_STATE_EVENT_DISCONNECTED:
 			printf ("sec-test: Disconnected Event\n");
@@ -1882,6 +1839,7 @@ sec_state_event_callback (SEC_STATE_EVENT state_event, const char *message, void
 	}
 	return 0;
 }
+
 
 /*
 // CRG- this must be commented out for OS X to build correctly
