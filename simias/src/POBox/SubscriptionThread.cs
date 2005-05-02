@@ -293,11 +293,14 @@ namespace Simias.POBox
 			// for Workgroup Domains.  If the user doesn't exist, the upcoming call to
 			// ResolvePOBoxLocation will fail.
 			Domain domain = Store.GetStore().GetDomain( subscription.DomainID );
-			Member member = domain.GetMemberByName( subscription.FromName );
-			if ( member == null )
+			if ( domain.ConfigType == Domain.ConfigurationType.Workgroup )
 			{
-				member = new Member( subscription.FromName, subscription.FromIdentity, subscription.SubscriptionRights );
-				domain.Commit( member );
+				Member member = domain.GetMemberByName( subscription.FromName );
+				if ( member == null )
+				{
+					member = new Member( subscription.FromName, subscription.FromIdentity, subscription.SubscriptionRights );
+					domain.Commit( member );
+				}
 			}
 			
 			// Resolve the PO Box location for the inviter
