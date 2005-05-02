@@ -1513,7 +1513,7 @@ namespace Simias.Storage
 				if ( store.ShuttingDown )
 				{
 					// Don't allow any changes - the database is being shut down.
-					throw new SimiasException( "No changes are allowed because the database is being shut down." );
+					throw new SimiasShutdownException();
 				}
 
 				// Walk the commit list to see if there are any creation and deletion of the collection states.

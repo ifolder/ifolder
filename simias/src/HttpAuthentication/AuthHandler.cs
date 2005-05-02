@@ -35,6 +35,7 @@ using Simias;
 using Simias.Authentication;
 using Simias.Client;
 using Simias.Security.Web.AuthenticationService;
+using Simias.Service;
 using Simias.Storage;
 
 namespace Simias.Security.Web
@@ -86,6 +87,11 @@ namespace Simias.Security.Web
 		/// machine is known as.
 		/// </summary>
 		private Hashtable localAddresses = new Hashtable();
+
+		/// <summary>
+		/// Manager singleton.
+		/// </summary>
+		private Service.Manager simiasManager = Service.Manager.GetManager();
 
 		#endregion
 
@@ -248,6 +254,15 @@ namespace Simias.Security.Web
 			{
 				log.Debug( "AuthenticationModule.OnBeginRequest - Security attack detected!!" );
 				throw new HttpException( 404, "Not Found" );
+			}
+
+			// See if the simias services have been started.
+			if ( !simiasManager.ServiceStarted )
+			{
+				HttpResponse response = app.Context.Response;
+				response.StatusCode = 503;
+				response.StatusDescription = "The server is not ready.";
+				app.CompleteRequest();
 			}
 		}
 

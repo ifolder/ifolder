@@ -34,7 +34,7 @@ namespace ChangeLogTest
 		[TestFixtureSetUp]
 		public void Init()
 		{
-			manager = new Simias.Service.Manager( Simias.Configuration.GetConfiguration() );
+			manager = Simias.Service.Manager.GetManager();
 			manager.StartServices();
 			manager.WaitForServicesStarted();
 

@@ -72,12 +72,8 @@ namespace Simias.Web
 
             Simias.Storage.Store.GetStore();
 
-            if (serviceManager == null)
-            {
-                serviceManager = new Simias.Service.Manager(Configuration.GetConfiguration());
-            }
-			
 			Console.Error.WriteLine("Simias Process Starting");
+			serviceManager = Simias.Service.Manager.GetManager();
 			serviceManager.StartServices();
 			serviceManager.WaitForServicesStarted();
 

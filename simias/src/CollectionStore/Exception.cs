@@ -335,4 +335,20 @@ namespace Simias.Storage
 		}
 		#endregion
 	}
+
+	/// <summary>
+	/// Exception that indicates that the store is being shutdown.
+	/// </summary>
+	public class SimiasShutdownException : CollectionStoreException
+	{
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the object class.
+		/// </summary>
+		public SimiasShutdownException() :
+			base ( "The simias store process is being shutdown." )
+		{
+		}
+		#endregion
+	}
 }
