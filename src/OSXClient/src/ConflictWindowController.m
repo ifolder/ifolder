@@ -174,7 +174,19 @@ static ConflictWindowController *conflictSharedInstance = nil;
 			{
 				if([[ifolder CurrentUserRights] compare:@"ReadOnly"] == 0)
 				{
-					
+					NSLog(@"The iFolder is readonly so use the RenameAndResolveConflict call");
+					@try
+					{
+						[ifolderService RenameAndResolveConflict:iFolderID withID:serverID usingFileName:newName];
+						[ifoldersController removeObjectAtArrangedObjectIndex:[ifoldersController selectionIndex]];
+					}
+					@catch(NSException *ex)
+					{
+						NSBeginAlertSheet(NSLocalizedString(@"Error resolving conflict", nil), 
+							NSLocalizedString(@"OK", nil), nil, nil,
+							[self window], self, nil, nil, NULL, 
+							[ex description]);
+					}
 				}
 				else
 				{

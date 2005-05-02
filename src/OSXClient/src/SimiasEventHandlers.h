@@ -24,7 +24,7 @@
 #import <Cocoa/Cocoa.h>
 #import <iFolderService.h>
 
-#include <Carbon/Carbon.h>
+//#include <Carbon/Carbon.h>
 #include "simias-event-client.h"
 
 

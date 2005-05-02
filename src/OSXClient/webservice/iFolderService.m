@@ -1257,6 +1257,45 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 
 
+-(void) RenameAndResolveConflict:(NSString *)ifolderID withID:(NSString *)conflictID usingFileName:(NSString *)newFileName
+{
+    struct soap soap;
+	GSOAP_CREDS creds;
+    int err_code;
+
+	NSAssert( (ifolderID != nil), @"ifolderID was nil");
+	NSAssert( (conflictID != nil), @"conflictID was nil");
+	NSAssert( (newFileName != nil), @"newFileName was nil");
+
+	struct _ns1__RenameAndResolveConflict			resolveMessage;
+	struct _ns1__RenameAndResolveConflictResponse	resolveResponse;
+
+	resolveMessage.iFolderID = (char *)[ifolderID UTF8String];
+	resolveMessage.conflictID = (char *)[conflictID UTF8String];
+	resolveMessage.newFileName = (char *)[newFileName UTF8String];
+
+    init_gsoap (&soap, &creds);
+    err_code = soap_call___ns1__RenameAndResolveConflict(
+			&soap,
+            [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
+            NULL,
+            &resolveMessage,
+            &resolveResponse);
+
+ 	if(soap.error)
+	{
+		NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+		cleanup_gsoap(&soap, &creds);
+		[NSException raise:[NSString stringWithFormat:@"%s", faultString]
+					format:@"Error in RenameAndResolveConflict"];
+	}
+
+    cleanup_gsoap(&soap, &creds);
+}
+
+
+
+
 -(void)SetUserRights:(NSString *)ifolderID forUser:(NSString *)userID withRights:(NSString *)rights
 {
     struct soap soap;

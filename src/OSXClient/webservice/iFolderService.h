@@ -25,7 +25,7 @@
 #define __iFolderService__
 
 #import <Cocoa/Cocoa.h>
-#include <Carbon/Carbon.h>
+//#include <Carbon/Carbon.h>
 #import "iFolder.h"
 #import "User.h"
 #import "DiskSpace.h"
@@ -64,6 +64,8 @@
 -(NSArray *) GetiFolderConflicts:(NSString *)ifolderID;
 -(void) ResolveFileConflict:(NSString *)ifolderID withID:(NSString *)conflictID localChanges:(bool)saveLocal;
 -(void) ResolveNameConflict:(NSString *)ifolderID withID:(NSString *)conflictID usingName:(NSString *)newName;
+-(void) RenameAndResolveConflict:(NSString *)ifolderID withID:(NSString *)conflictID usingFileName:(NSString *)newFileName;
+
 
 -(User *) InviteUser:(NSString *)userID toiFolder:(NSString *)ifolderID withRights:(NSString *)rights;
 -(void) RemoveUser:(NSString *)userID fromiFolder:(NSString *)ifolderID;
