@@ -271,7 +271,7 @@ namespace Novell.iFolder
 										SimiasWebService SimiasWS)
 			: base()
 		{
-			this.Title = Util.GS("iFolder Conflict Resolver");
+			this.Title = Util.GS("Resolve Conflicts");
 			if(iFolderWS == null)
 				throw new ApplicationException("iFolderWebServices was null");
 			this.ifws = iFolderWS;
