@@ -37,7 +37,6 @@ namespace Novell.iFolder
 	/// </summary>
 	public class iFolderUserSelector : Dialog
 	{
-		private iFolderWebService	ifws;
 		private SimiasWebService 	simws;
 		private string				domainID;
 		private Gdk.Pixbuf			UserPixBuf;
@@ -85,15 +84,11 @@ namespace Novell.iFolder
 		/// Default constructor for iFolderPropertiesDialog
 		/// </summary>
 		public iFolderUserSelector(	Gtk.Window parent,
-									iFolderWebService iFolderWS,
 									SimiasWebService SimiasWS,
 									string domainID)
 			: base()
 		{
 			this.Title = Util.GS("Select Users");
-			if(iFolderWS == null)
-				throw new ApplicationException("iFolderWebService was null");
-			this.ifws = iFolderWS;
 			if (SimiasWS == null)
 				throw new ApplicationException("SimiasWebService was null");
 			this.simws = SimiasWS;
@@ -432,30 +427,27 @@ namespace Novell.iFolder
 			string searchContext;
 			MemberInfo[] memberInfoA;
 			int totalMembers;
-			bool bPartialListReceived;
 			
 			if (searchString == null)
 			{
-				bPartialListReceived =
-					simws.FindFirstMembers(
-						domainID,
-						NumOfMembersToReturnDefault,
-						out searchContext,
-						out memberInfoA,
-						out totalMembers);
+				simws.FindFirstMembers(
+					domainID,
+					NumOfMembersToReturnDefault,
+					out searchContext,
+					out memberInfoA,
+					out totalMembers);
 			}
 			else
 			{
-				bPartialListReceived =
-					simws.FindFirstSpecificMembers(
-						domainID,
-						searchAttribute,
-						SearchEntry.Text,
-						SearchType.Begins,
-						NumOfMembersToReturnDefault,
-						out searchContext,
-						out memberInfoA,
-						out totalMembers);
+				simws.FindFirstSpecificMembers(
+					domainID,
+					searchAttribute,
+					SearchEntry.Text,
+					SearchType.Begins,
+					NumOfMembersToReturnDefault,
+					out searchContext,
+					out memberInfoA,
+					out totalMembers);
 			}
 			
 			memberListModel.Reinitialize(searchContext, memberInfoA, totalMembers);
@@ -470,7 +462,15 @@ namespace Novell.iFolder
 			int selectedIndex = memberList.Selected;
 			if (selectedIndex >= 0)
 			{
-				MemberInfo memberInfo = memberListModel.GetMemberInfo(selectedIndex);
+				MemberInfo memberInfo = null;
+				try
+				{
+					memberInfo = memberListModel.GetMemberInfo(selectedIndex);
+				}
+				catch(Exception e)
+				{
+					Console.WriteLine(e.Message);
+				}
 				if (memberInfo != null)
 				{
 					if (!selectedUsers.ContainsKey(memberInfo.UserID))
@@ -584,12 +584,12 @@ namespace Novell.iFolder
 					if (memberFullNames.Contains(memberInfo.FullName))
 					{
 						// We've found a duplicate
-						duplicateMembers.Add(memberInfo.FullName, 0);
+						duplicateMembers[memberInfo.FullName] = 0;
 					}
 					else
-						memberFullNames.Add(memberInfo.FullName, 0);
+						memberFullNames[memberInfo.FullName] = 0;
 
-					memberInfos.Add(i, memberInfo);
+					memberInfos[i] = memberInfo;
 				}
 			
 				if (MemberList.Length >= Total)
@@ -621,7 +621,7 @@ namespace Novell.iFolder
 		{
 			if (index < 0 || index >= total || (total == 0))
 			{
-Console.WriteLine("MemberListModel.GetMemberInfo() called with index out of the range or when total == 0");
+				Console.WriteLine("MemberListModel.GetMemberInfo() called with index out of the range or when total == 0");
 
 				// FIXME: Figure out the right exception to throw here
 				throw new Exception("GetValue called when no items are present");
@@ -650,28 +650,27 @@ Console.WriteLine("MemberListModel.GetMemberInfo() called with index out of the 
 				try
 				{
 					MemberInfo[] newMemberList;
-					// FIXME: Replace this to start searching at the specified index
-					bool bMoreMembers =
-						simws.FindNextMembers(domainID, ref searchContext,
-											  iFolderUserSelector.NumOfMembersToReturnDefault,
-											  out newMemberList);
+					simws.FindSeekMembers(domainID, ref searchContext,
+										  index, iFolderUserSelector.NumOfMembersToReturnDefault,
+										  out newMemberList);
 					int currentIndex = index;
 					foreach(MemberInfo memberInfo in newMemberList)
 					{
 						if (memberFullNames.Contains(memberInfo.FullName))
 						{
 							// We've found a duplicate
-							duplicateMembers.Add(memberInfo.FullName, 0);
+							duplicateMembers[memberInfo.FullName] = 0;
 						}
 						else
-							memberFullNames.Add(memberInfo.FullName, 0);
+							memberFullNames[memberInfo.FullName] = 0;
 
-						memberInfos.Add(currentIndex, memberInfo);
+						memberInfos[currentIndex] = memberInfo;
 						currentIndex++;
 					}
 				}
-				catch
+				catch (Exception e)
 				{
+					Console.WriteLine("Exception thrown calling simws.FindSeekMembers(): {0}", e.Message);
 				}
 				
 				memberInfoReturn = (MemberInfo)memberInfos[index];
@@ -702,7 +701,16 @@ Console.WriteLine("MemberListModel.GetMemberInfo() called with index out of the 
 		
 		public string GetValue(int row)
 		{
-			MemberInfo memberInfo = GetMemberInfo(row);
+			MemberInfo memberInfo = null;
+			try
+			{
+				memberInfo = GetMemberInfo(row);
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine(string.Format("{0}: {1}", row, e.Message));
+				return Util.GS("Unknown");
+			}
 			string fullName = memberInfo.FullName;
 			
 			if (fullName != null && fullName.Length > 0)
@@ -710,7 +718,7 @@ Console.WriteLine("MemberListModel.GetMemberInfo() called with index out of the 
 				if (duplicateMembers.Contains(memberInfo.FullName))
 					return string.Format("{0} ({1})", fullName, memberInfo.Name);
 				else
-					return fullName;
+					return string.Format("{0}", fullName);
 			}
 
 			return memberInfo.Name;

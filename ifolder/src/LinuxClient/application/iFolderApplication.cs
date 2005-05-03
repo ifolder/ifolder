@@ -248,9 +248,6 @@ namespace Novell.iFolder
 					if( (status.statusCode == StatusCodes.Success) ||
 						(status.statusCode == StatusCodes.SuccessInGrace))
 					{
-						// DEBUG
-						Console.WriteLine("Domain-Up: Credentials valid.");
-						
 						// Update the domains so that the Accounts Page in the
 						// Preferences window will be up-to-date.
 						ifdata.RefreshDomains();
@@ -261,8 +258,6 @@ namespace Novell.iFolder
 					}
 					else
 					{
-						// DEBUG
-						Console.WriteLine("Domain-Up: Need credentials.");
 						ReLogin(args.Message);
 					}
 

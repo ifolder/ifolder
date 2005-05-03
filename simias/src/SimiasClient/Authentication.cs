@@ -107,10 +107,6 @@ namespace Simias.Client.Authentication
 					// been set on this process previously.
 					if ( this.password == null )
 					{
-						// DEBUG
-						if (MyEnvironment.Mono)
-							Console.WriteLine("Password is null.");
-
 						NetCredential netCredential = new NetCredential(
 							this.serviceName, 
 							this.domainID, 
@@ -125,10 +121,6 @@ namespace Simias.Client.Authentication
 
 						if (credentials != null)
 						{
-							// DEBUG
-							if (MyEnvironment.Mono)
-								Console.WriteLine("Retrieved credentials.");
-
 							this.password = credentials.Password;
 						}
 						else

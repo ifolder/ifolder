@@ -290,7 +290,6 @@ namespace Novell.iFolder
 		private void OnAddUser(object o, EventArgs args)
 		{
 			UserSelector = new iFolderUserSelector( topLevelWindow, 
-													ifws,
 													simws,
 													ifolder.DomainID);
 
