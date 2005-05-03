@@ -86,6 +86,11 @@ namespace Simias.Storage
 		private string domainID = null;
 
 		/// <summary>
+		/// If true the managed directory needs to be created.
+		/// </summary>
+		private bool createManagedPath = false;
+
+		/// <summary>
 		/// Change log used to indicate events to a collection.
 		/// </summary>
 		private ChangeLog changeLog = new ChangeLog();
@@ -368,6 +373,7 @@ namespace Simias.Storage
 		{
 			store = storeObject;
 			accessControl = new AccessControl( this );
+			createManagedPath = !Directory.Exists( ManagedPath );
 		}
 
 		/// <summary>
@@ -385,6 +391,7 @@ namespace Simias.Storage
 
 			store = storeObject;
 			accessControl = new AccessControl( this );
+			createManagedPath = !Directory.Exists( ManagedPath );
 		}
 
 		/// <summary>
@@ -396,6 +403,7 @@ namespace Simias.Storage
 		{
 			store = collection.store;
 			accessControl = new AccessControl( this );
+			createManagedPath = !Directory.Exists( ManagedPath );
 		}
 
 		/// <summary>
@@ -417,12 +425,6 @@ namespace Simias.Storage
 				throw new AlreadyExistsException( String.Format( "The collection: {0} - ID: {1} already exists.", collectionName, collectionID ) );
 			}
 
-			// If the managed directory does not exist, create it.
-			if ( !Directory.Exists( ManagedPath ) )
-			{
-				Directory.CreateDirectory( ManagedPath );
-			}
-
 			// Add that this is a Collection type if it is specified as a derived type.
 			if ( collectionType != NodeTypes.CollectionType )
 			{
@@ -434,6 +436,7 @@ namespace Simias.Storage
 
 			// Setup the access control for this collection.
 			accessControl = new AccessControl( this );
+			createManagedPath = !Directory.Exists( ManagedPath );
 		}
 
 		/// <summary>
@@ -446,6 +449,7 @@ namespace Simias.Storage
 		{
 			store = storeObject;
 			accessControl = new AccessControl( this );
+			createManagedPath = !Directory.Exists( ManagedPath );
 		}
 		#endregion
 
@@ -984,10 +988,28 @@ namespace Simias.Storage
 							}
 
 							case PropertyList.PropertyListState.Import:
+							{
+								// Update the cache before indicating the event.
+								store.Cache.Add( this, node );
+
+								// Indicate the event.
+								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, ( node.DiskNode != null ) ? EventType.NodeChanged : EventType.NodeCreated, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
+								args.LocalOnly = node.LocalChanges;
+								store.EventPublisher.RaiseEvent( args );
+								node.Properties.State = PropertyList.PropertyListState.Update;
+								break;
+							}
+
 							case PropertyList.PropertyListState.Restore:
 							{
 								// Update the cache before indicating the event.
 								store.Cache.Add( this, node );
+
+								// If this is a collection being created, create a change log for it.
+								if ( IsType( node, NodeTypes.CollectionType ) )
+								{
+									changeLog.CreateChangeLogWriter( node.ID );
+								}
 
 								// Indicate the event.
 								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, ( node.DiskNode != null ) ? EventType.NodeChanged : EventType.NodeCreated, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
@@ -1074,15 +1096,6 @@ namespace Simias.Storage
 		/// <param name="node">Node to copy local properties to.</param>
 		private void SetLocalProperties( Node node )
 		{
-			if ( IsType( node, NodeTypes.CollectionType ) )
-			{
-				// If the managed directory does not exist, create it.
-				if ( !Directory.Exists( ManagedPath ) )
-				{
-					Directory.CreateDirectory( ManagedPath );
-				}
-			}
-
 			// Get the local properties from the old node, if it exists, and add them to the new node.
 			Node oldNode = ( node.DiskNode != null ) ? node.DiskNode : GetNodeByID( node.ID );
 			if ( oldNode != null )
@@ -1684,6 +1697,12 @@ namespace Simias.Storage
 					store.LockStore();
 					try
 					{
+						// If the managed directory does not exist, create it.
+						if ( !deleteCollection && createManagedPath && !Directory.Exists( ManagedPath ) )
+						{
+							Directory.CreateDirectory( ManagedPath );
+						}
+
 						ProcessCommit( commitList );
 					}
 					finally
