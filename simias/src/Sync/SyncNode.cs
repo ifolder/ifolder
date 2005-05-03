@@ -134,7 +134,7 @@ namespace Simias.Sync
 			this.LocalIncarnation = node.LocalIncarnation;
 			this.MasterIncarnation = node.MasterIncarnation;
 			this.NodeType = GetSyncNodeType(node.Type);
-			this.Operation = SyncOperation.Unknown;
+			this.Operation = node.Type == NodeTypes.TombstoneType ? SyncOperation.Delete : SyncOperation.Unknown;
 		}
 
 		/// <summary>

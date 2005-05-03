@@ -553,8 +553,8 @@ namespace Simias.Sync
 					if (sn.ID != node.ID)
 					{
 						conflictingNode = collection.GetNodeByID(sn.ID) as FileNode;
-						Conflict.LinkConflictingNodes(conflictingNode, node as FileNode);
 						nameConflict = true;
+						break;
 					}
 				}
 				// Now make sure we don't have any illegal characters.
@@ -565,6 +565,11 @@ namespace Simias.Sync
 				{
 					node = Conflict.CreateNameConflict(collection, node) as BaseFileNode;
 					file = Conflict.GetFileConflictPath(collection, node);
+					if (conflictingNode != null)
+					{
+						conflictingNode = Conflict.CreateNameConflict(collection, conflictingNode, conflictingNode.GetFullPath(collection)) as FileNode;
+						Conflict.LinkConflictingNodes(conflictingNode, node as FileNode);
+					}
 				}
 			}
 			return nameConflict;

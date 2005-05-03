@@ -254,11 +254,11 @@ public class Conflict
 	/// <param name="cNode"></param>
 	public static void LinkConflictingNodes(FileNode node, FileNode cNode)
 	{
-		Property pLink = new Property(ConflictLinkProperty, cNode.ID);
+		Property pLink = new Property(ConflictLinkProperty, node.ID);
 		pLink.LocalProperty = true;
 		cNode.Properties.ModifyProperty(pLink);
 			
-		pLink = new Property(ConflictLinkProperty, node.ID);
+		pLink = new Property(ConflictLinkProperty, cNode.ID);
 		pLink.LocalProperty = true;
 		node.Properties.ModifyProperty(pLink);
 	}
@@ -452,7 +452,7 @@ public class Conflict
 			fn.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
 			fn.Name = newName;
 		}
-		fn.Properties.DeleteSingleProperty(ConflictLinkProperty);
+		fn = RemoveNameConflict(collection, fn)as FileNode;
 		collection.Commit(fn);
 	}
 }

@@ -658,6 +658,8 @@ namespace Simias.Sync
 				{
 					if (collection.Role == SyncRoles.Slave)
 					{
+						workArray.SetAccess = collection.GetCurrentMember().Rights;
+				
 						// We are just starting add all the modified nodes to the array.
 						// Get all nodes that have not been synced.
 						ICSList updateList = collection.Search(PropertyTags.NodeUpdateTime, DateTime.Now, SearchOp.Exists);
@@ -1962,17 +1964,7 @@ namespace Simias.Sync
 		{
 			if (stamp.MasterIncarnation != stamp.LocalIncarnation)
 			{
-				if (nodesFromServer.Contains(stamp.ID))
-				{
-					// This node has changed on the server we have a collision that we need to get.
-					// Unless this is a delete.
-					if (stamp.Operation == SyncOperation.Delete)
-					{
-						RemoveNodeFromServer(stamp.ID);
-						nodesToServer[stamp.ID] = new nodeTypeEntry(stamp.ID, SyncNodeType.Tombstone);
-					}
-				}
-				else if (rights == Access.Rights.ReadOnly)
+				if (rights == Access.Rights.ReadOnly)
 				{
 					Log.log.Debug("Failed Uploading Node (ReadOnly rights)");
 				
@@ -1983,6 +1975,26 @@ namespace Simias.Sync
 						stamp.Operation = SyncOperation.Change;
 						stamp.LocalIncarnation = stamp.MasterIncarnation + 1;
 						AddNodeFromServer(stamp);
+					}
+					else if (stamp.Operation == SyncOperation.Delete)
+					{
+						// Since this is a delete just delete the tombstone.
+						Node tNode = collection.GetNodeByID(stamp.ID);
+						if (tNode != null)
+						{
+							collection.Delete(tNode);
+							collection.Commit(tNode);
+						}
+					}
+				}
+				else if (nodesFromServer.Contains(stamp.ID))
+				{
+					// This node has changed on the server we have a collision that we need to get.
+					// Unless this is a delete.
+					if (stamp.Operation == SyncOperation.Delete)
+					{
+						RemoveNodeFromServer(stamp.ID);
+						nodesToServer[stamp.ID] = new nodeTypeEntry(stamp.ID, SyncNodeType.Tombstone);
 					}
 				}
 				else
