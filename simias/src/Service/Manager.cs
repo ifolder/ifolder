@@ -88,16 +88,8 @@ namespace Simias.Service
 		/// Creates a Manager for the specified Configuration.
 		/// </summary>
 		/// <param name="config">The Configuration location to manage.</param>
-		public Manager(Configuration config)
+		private Manager(Configuration config)
 		{
-			lock(typeof(Manager))
-			{
-				if (instance != null)
-					throw new SimiasException("Only one instance of Manager is allowed.");
-
-				instance = this;
-			}
-
 			// configure
 			SimiasLogManager.Configure(config);
 
@@ -153,6 +145,25 @@ namespace Simias.Service
 			SimiasLogManager.ResetConfiguration();
 		}
 
+		#endregion
+
+		#region Factory Method
+		/// <summary>
+		/// Gets the static instance of the Manager object.
+		/// </summary>
+		/// <returns>The static instance of the Manager object.</returns>
+		static public Manager GetManager()
+		{
+			lock(typeof(Manager))
+			{
+				if (instance == null)
+				{
+					instance = new Manager(Configuration.GetConfiguration());
+				}
+
+				return instance;
+			}
+		}
 		#endregion
 
 		#region Callbacks

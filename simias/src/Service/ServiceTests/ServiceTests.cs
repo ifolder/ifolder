@@ -51,7 +51,7 @@ namespace Simias.Service
 		[TestFixtureSetUp]
 		public void Init()
 		{
-			serviceManager = new Simias.Service.Manager(conf);
+			serviceManager = Simias.Service.Manager.GetManager();
 			serviceManager.Install(new ThreadServiceCtl(conf, threadServiceName, "ThreadServiceTest.dll", "Simias.Service.ThreadServiceTest"));
 			serviceManager.Install(new ProcessServiceCtl(conf, processServiceName, "ProcessServiceTest.exe"));
 		}

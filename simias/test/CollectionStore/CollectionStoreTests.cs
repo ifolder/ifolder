@@ -67,7 +67,7 @@ namespace Simias.Storage.Tests
 		{
 			// Connect to the store.
 			store = Store.GetStore();
-			manager = new Simias.Service.Manager( Configuration.GetConfiguration() );
+			manager = Simias.Service.Manager.GetManager();
 			manager.StartServices();
 			manager.WaitForServicesStarted();
 		}
