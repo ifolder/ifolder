@@ -1856,7 +1856,6 @@ namespace Simias.Sync
 									log.Info("Failed Uploading File {0} : reason {1}", file.Name, status.ToString());
 									break;
 							}
-							break;
 						}
 					}
 				}
