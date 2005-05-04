@@ -547,9 +547,6 @@ namespace Simias.DomainServices
 				return new Simias.Authentication.Status( Simias.Authentication.StatusCodes.UnknownDomain );
 			}
 
-			// Clear the cookies for this Uri.
-			WebState.ResetWebState(domainID);
-
 			// Set the state for this domain.
 			SetDomainState(domainID, false, false);
 
@@ -562,6 +559,8 @@ namespace Simias.DomainServices
 				Uri uri = new Uri(DomainProvider.ResolveLocation(domainID), "/DomainService.asmx");
 				netCredential.Remove(uri, "BASIC");
 			}
+			// Clear the cookies for this Uri.
+			WebState.ResetWebState(domainID);
 
 			return new Simias.Authentication.Status(SCodes.Success);
 		}
@@ -640,26 +639,16 @@ namespace Simias.DomainServices
 
 			// Get who the user is in the specified domain.
 			string userID = store.GetUserIDFromDomainID(domainID);
-
-			// Construct the web client.
-			DomainService domainService = new DomainService();
-
+			Member member = domain.GetMemberByID( store.GetUserIDFromDomainID( domainID ) );
+			
 			// This information needs to be gathered before the local domain collections are deleted.
-			if ( !localOnly )
+			// Set the address to the server.
+			Uri uri = DomainProvider.ResolveLocation(domainID);
+			if (uri == null)
 			{
-				// Set the address to the server.
-				Uri uri = DomainProvider.ResolveLocation(domainID);
-				
-				if (uri == null)
-				{
-					throw new SimiasException(String.Format("Cannot get location for domain {0}.", domain.Name));
-				}
-
-				domainService.Url = uri.ToString() + "/DomainService.asmx";
-				WebState webState = new WebState(domainID, userID);
-				webState.InitializeWebClient(domainService, domainID);
+				throw new SimiasException(String.Format("Cannot get location for domain {0}.", domain.Name));
 			}
-
+			
 			// Find the user's POBox for this domain.
 			POBox.POBox poBox = POBox.POBox.FindPOBox(store, domainID, userID);
 			if (poBox == null)
@@ -678,10 +667,25 @@ namespace Simias.DomainServices
 
 			if (!localOnly)
 			{
+				// Construct the web client.
+				DomainService domainService = new DomainService();
+				domainService.Url = uri.ToString() + "/DomainService.asmx";
+				WebState webState = new WebState(domainID, userID);
+				webState.InitializeWebClient(domainService, domainID);
+
 				// Remove the user from the domain server.
 				domainService.RemoveServerCollections(domainID, userID);
-				WebState.ResetWebState(domainID);
 			}
+			
+			// Clear the password from the cache.
+			if (member != null)
+			{
+				NetCredential netCredential = new NetCredential( "iFolder", domainID, true, member.Name, null );
+				uri = new Uri(uri, "/DomainService.asmx");
+				netCredential.Remove(uri, "BASIC");
+			}
+			// Clear the cookies for this Uri.
+			WebState.ResetWebState(domainID);
 		}
 
 		/// <summary>
