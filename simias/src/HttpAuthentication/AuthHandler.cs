@@ -91,7 +91,7 @@ namespace Simias.Security.Web
 		/// <summary>
 		/// Manager singleton.
 		/// </summary>
-		private Service.Manager simiasManager = Service.Manager.GetManager();
+		private Service.Manager simiasManager = null;
 
 		#endregion
 
@@ -116,6 +116,25 @@ namespace Simias.Security.Web
 				}
 
 				return store;
+			}
+		}
+
+		/// <summary>
+		/// Gets a reference to the simias manager.
+		/// </summary>
+		private Service.Manager SimiasManager
+		{
+			get
+			{
+				lock ( this )
+				{
+					if ( simiasManager == null )
+					{
+						simiasManager = Service.Manager.GetManager();
+					}
+				}
+
+				return simiasManager;
 			}
 		}
 		#endregion
@@ -257,7 +276,7 @@ namespace Simias.Security.Web
 			}
 
 			// See if the simias services have been started.
-			if ( !simiasManager.ServiceStarted )
+			if ( !SimiasManager.ServiceStarted )
 			{
 				HttpResponse response = app.Context.Response;
 				response.StatusCode = 503;
