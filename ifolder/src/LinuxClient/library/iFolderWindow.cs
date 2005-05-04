@@ -1620,7 +1620,8 @@ namespace Novell.iFolder
 						try
 						{
 							SyncSize syncSize = ifws.CalculateSyncSize(args.ID);
-							ifHolder.ObjectsToSync = syncSize.SyncNodeCount;
+							objectsToSync = syncSize.SyncNodeCount;
+							ifHolder.ObjectsToSync = objectsToSync;
 						}
 						catch
 						{}
@@ -1696,7 +1697,10 @@ namespace Novell.iFolder
 					// in the current list or not.  We'll need this if the
 					// user switches back to the list that contains the iFolder
 					// that is actually synchronizing.
-					objectsToSync--;
+					if (objectsToSync <= 0)
+						objectsToSync = 0;
+					else
+						objectsToSync--;
 	
 					// Get the iFolderHolder and set the objectsToSync (only if the
 					// domain filter isn't set or is for this iFolder's domain.
