@@ -136,52 +136,59 @@ namespace Novell.iFolder
 
 		private void UpdateDisplayData()
 		{
-			switch (state)
+			if (iFolder.HasConflicts)
 			{
-				case iFolderState.Initial:
-					switch (iFolder.State)
-					{
-						case "Available":
-							stateString = Util.GS("Available");
-							break;
-						case "WaitConnect":
-							stateString = Util.GS("Waiting to Connect");
-							break;
-						case "WaitSync":
-							stateString = Util.GS("Waiting to Sync");
-							break;
-						case "Local":
+				stateString = Util.GS("Has conflicts");
+			}
+			else
+			{
+				switch (state)
+				{
+					case iFolderState.Initial:
+						switch (iFolder.State)
+						{
+							case "Available":
+								stateString = Util.GS("Available");
+								break;
+							case "WaitConnect":
+								stateString = Util.GS("Waiting to Connect");
+								break;
+							case "WaitSync":
+								stateString = Util.GS("Waiting to Sync");
+								break;
+							case "Local":
+								stateString = Util.GS("OK");
+								break;
+							default:
+								stateString = Util.GS("Unknown");
+								break;
+						}
+						break;
+					case iFolderState.Normal:
+						if (objectsToSync > 0)
+							stateString = string.Format(Util.GS("{0} items out of sync"), objectsToSync);
+						else
 							stateString = Util.GS("OK");
-							break;
-						default:
-							stateString = Util.GS("Unknown");
-							break;
-					}
-					break;
-				case iFolderState.Normal:
-					if (objectsToSync > 0)
-						stateString = string.Format(Util.GS("{0} items out of sync"), objectsToSync);
-					else
-						stateString = Util.GS("OK");
-					break;
-				case iFolderState.Synchronizing:
-					if (objectsToSync > 0)
-						stateString = string.Format(Util.GS("{0} items to sync"), objectsToSync);
-					else
-						stateString = Util.GS("Synchronizing");
-					break;
-				case iFolderState.FailedSync:
-					stateString = Util.GS("Sync failed");
-					break;
-				case iFolderState.SynchronizingLocal:
-					stateString = Util.GS("Checking for local changes");
-					break;
-				case iFolderState.Disconnected:
-					stateString = Util.GS("Server unavailable");
-					break;
-				default:
-					stateString = Util.GS("Unknown");
-					break;
+						break;
+					case iFolderState.Synchronizing:
+						if (objectsToSync > 0)
+							stateString = string.Format(Util.GS("{0} items to sync"), objectsToSync);
+						else
+							stateString = Util.GS("Synchronizing");
+						break;
+					case iFolderState.FailedSync:
+						stateString = Util.GS("Sync failed");
+						break;
+					case iFolderState.SynchronizingLocal:
+						stateString = Util.GS("Checking for local changes");
+						break;
+					case iFolderState.Disconnected:
+						stateString = Util.GS("Server unavailable");
+						break;
+					default:
+						stateString = Util.GS("Unknown");
+						break;
+				}
 			}
 
 			if(iFolder.IsSubscription)
