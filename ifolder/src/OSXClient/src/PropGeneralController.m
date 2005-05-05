@@ -13,36 +13,26 @@
 {
 	diskSpace = nil;
 	ifolderService = [[iFolderService alloc] init];
+	NSString *valueString;
 
 	curiFolder = [[[iFolderWindowController sharedInstance] selectediFolder] retain];
 	if(curiFolder != nil)
 	{
-		[ifolderName setStringValue:[curiFolder Name]];
-	
-		[ownerName setStringValue:[curiFolder OwnerName]];
+		valueString = [curiFolder Name];
+		if(valueString != nil)
+			[ifolderName setStringValue:valueString];
+
+		valueString = [curiFolder OwnerName];
+		if(valueString != nil)
+			[ownerName setStringValue:valueString];
 		
 		if([curiFolder HasConflicts])
 		{
 			[hasConflicts setHidden:NO];
 			[hasConflictsImage setHidden:NO];
 		}
-		
-		// We'll set this now from the sharing page
-/*
-		@try
-		{
-			User *user = [ifolderService GetiFolderUser:[curiFolder OwnerUserID] ];
 
-			if(user != nil)
-			{
-				[ownerName setStringValue:[user FN]];
-			}
-		}
-		@catch(NSException *e)
-		{
-			[ownerName setStringValue:@"unavailable"];
-		}
-*/		
+		
 		// Change this so the check box is gone
 		if([[curiFolder CurrentUserID] compare:[curiFolder OwnerUserID]] == 0)
 		{
@@ -57,8 +47,10 @@
 		{
 			diskSpace = [ifolderService GetiFolderDiskSpace:[curiFolder ID]];
 
-			[currentSpace setStringValue:[NSString stringWithFormat:@"%qi", 
-										[diskSpace UsedSpace]/(1024 * 1024)]];
+			valueString = [NSString stringWithFormat:@"%qi", 
+									[diskSpace UsedSpace]/(1024 * 1024)];
+			if(valueString != nil)
+				[currentSpace setStringValue:valueString];
 
 			prevLimit = [diskSpace Limit];
 
@@ -97,14 +89,14 @@
 			[barView setBarSize:0 withFill:0];
 		}
 
-
-
 		// Display last sync time
-		[lastSync setStringValue:[curiFolder LastSync]];
+		if([curiFolder LastSync] != nil)
+			[lastSync setStringValue:[curiFolder LastSync]];
+		else
+			[lastSync setStringValue:NSLocalizedString(@"never synchronized", nil)];
 
 		[syncInterval setStringValue:[NSString stringWithFormat:@"%d", 
 								[curiFolder SyncInterval] ]];
-
 
 		if([[curiFolder Role] compare:@"Master"] == 0)
 		{
@@ -144,6 +136,7 @@
 		}
 
 	}
+
 }
 
 

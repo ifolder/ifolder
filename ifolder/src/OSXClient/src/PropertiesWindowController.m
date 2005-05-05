@@ -63,8 +63,12 @@ static PropertiesWindowController *sharedInstance = nil;
 {
 	if(sharedInstance != nil)
 	{
-		[[NSApp mainMenu] removeItem:userMenuItem];	
-		[userMenuItem release];
+		if(userMenuItem != nil)
+		{
+			[[NSApp mainMenu] removeItem:userMenuItem];
+			[userMenuItem release];
+			userMenuItem = nil;
+		}
 		[sharedInstance release];
 		sharedInstance = nil;
 	}
