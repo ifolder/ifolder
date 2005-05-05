@@ -1,0 +1,45 @@
+Simdezvous is a package that allows Simias Collections (iFolders)
+to be shared using the dns-sd protocol (Apple's Rendezvous).
+When the package is properly installed a Rendezvous domain is created
+in the Simias store.  Collections can then be created against that domain
+and then shared in a P2P manner with other Simias users that have the 
+Simdezvous package installed.
+
+Simdezvous is a play on Novell's Simias framework and Apple's Rendezvous.
+
+Copyright (C) 2005 Novell, Inc.
+
+----------------------------
+simdezvous components
+----------------------------
+
+libsimdezvous - is a native library that bridges the Mono/.NET code to
+Apple's dns_sd.so.  This library is Simias/iFolder specific and does not
+export all the functionality/Apis of Apple's library.
+
+Simdezvous - is a managed .DLL that runs as a Simias thread service.
+It creates and publishes a Simias member to the network and browses
+for other Simias members.  It is also repsonsible for creating the
+Rendezvous domain in Simias and managing the member list.
+
+--------------------------
+Building simdezvous
+--------------------------
+./autogen.sh --prefix=<your install directory>
+make
+make install
+
+---------------------
+Discussion & Support
+---------------------
+The Simdezvous project is still beta code and needs extensive
+testing before I submit an actual release.
+
+If you have any other questions you may contact me directly.
+
+Brady Anderson
+801-861-3130
+banderso@novell.com
+igolfinutah - AIM
+
+
