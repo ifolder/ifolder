@@ -171,14 +171,18 @@ namespace Simias.Web
 		{
             Console.Error.WriteLine("Simias Process Starting Shutdown");
 
-            // Send the simias down event and wait for 1/2 second for the message to be routed.
-			EventPublisher eventPub = new EventPublisher();
-			eventPub.RaiseEvent( new NotifyEventArgs("Simias-Down", "The simias service is terminating", DateTime.Now) );
-			Thread.Sleep( 500 );
+			if ( serviceManager != null )
+			{
+				// Send the simias down event and wait for 1/2 second for the message to be routed.
+				EventPublisher eventPub = new EventPublisher();
+				eventPub.RaiseEvent( new NotifyEventArgs("Simias-Down", "The simias service is terminating", DateTime.Now) );
+				Thread.Sleep( 500 );
 
-			serviceManager.StopServices();
-			serviceManager.WaitForServicesStopped();
-			serviceManager = null;
+				serviceManager.StopServices();
+				serviceManager.WaitForServicesStopped();
+				serviceManager = null;
+			}
+
 			Console.Error.WriteLine("Simias Process Shutdown");
 
 			// end keep alive
