@@ -158,7 +158,7 @@ case $IFOLDER_OS in
         EXE_EXT=''
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
-        INSTALL_EXE_OPTS='--mode=644'
+        INSTALL_EXE_OPTS='-m 644'
         NUNIT="mono nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/mono/bin"
         NUNIT_FLAGS='/nologo'
