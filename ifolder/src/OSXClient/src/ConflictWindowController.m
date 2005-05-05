@@ -74,14 +74,15 @@ static ConflictWindowController *conflictSharedInstance = nil;
 					iFolderConflict *conflict = [ifolderconflicts objectAtIndex:objCount];
 					if( [[[conflict properties] objectForKey:@"IsNameConflict"] boolValue] == YES)
 					{
-						iFolderConflict *oldConflict = [nameConflicts objectForKey:[[conflict properties] objectForKey:@"Location"]];
+						NSString *curKey = [[[conflict properties] objectForKey:@"Location"] lowercaseString];
+						iFolderConflict *oldConflict = [nameConflicts objectForKey:curKey];
 						if(oldConflict != nil)
 						{
 							[oldConflict mergeNameConflicts:conflict];
 							continue;
 						}
 						else
-							[nameConflicts setObject:conflict forKey:[[conflict properties] objectForKey:@"Location"]];
+							[nameConflicts setObject:conflict forKey:curKey];
 					}
 
 					[ifoldersController addObject:conflict];
