@@ -1162,6 +1162,7 @@ namespace Simias.Web
 			}
 
 			poBox.Commit(sub);
+			Sync.SyncClient.ScheduleSync(poBox.ID);
 		}
 
 
