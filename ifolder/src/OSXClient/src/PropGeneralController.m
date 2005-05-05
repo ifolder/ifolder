@@ -93,7 +93,7 @@
 		if([curiFolder LastSync] != nil)
 			[lastSync setStringValue:[curiFolder LastSync]];
 		else
-			[lastSync setStringValue:NSLocalizedString(@"never synchronized", nil)];
+			[lastSync setStringValue:NSLocalizedString(@"Not available", nil)];
 
 		[syncInterval setStringValue:[NSString stringWithFormat:@"%d", 
 								[curiFolder SyncInterval] ]];
