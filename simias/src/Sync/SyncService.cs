@@ -99,22 +99,6 @@ namespace Simias.Sync
 				Sync.Log.log.Debug("Released Lock count = {0}", totalCount);
 			}
 		}
-
-		/// <summary>
-		/// Called to Synchronize access to this collection.
-		/// </summary>
-		internal void LockRequest()
-		{
-			Monitor.Enter(this);
-		}
-
-		/// <summary>
-		/// Called to Release the request lock.
-		/// </summary>
-		internal void ReleaseRequest()
-		{
-			Monitor.Exit(this);
-		}
 	}
 
 	
@@ -276,40 +260,41 @@ namespace Simias.Sync
 						return;
 					}
 					
-					cLock.LockRequest();
 					try
 					{
-						// See if there is any work to do before we try to get the lock.
-						if (si.ChangesOnly)
+						lock (cLock)
 						{
-							// we only need the changes.
-							nodeContainer = this.BeginListChangedNodes(out si.ChangesOnly);
-							si.Context = syncContext;
-							// Check if we have any work to do
-							if (si.ChangesOnly && !si.ClientHasChanges && nodeContainer == null)
+							// See if there is any work to do before we try to get the lock.
+							if (si.ChangesOnly)
 							{
-								si.Status = StartSyncStatus.NoWork;
-								break;
+								// we only need the changes.
+								nodeContainer = this.BeginListChangedNodes(out si.ChangesOnly);
+								si.Context = syncContext;
+								// Check if we have any work to do
+								if (si.ChangesOnly && !si.ClientHasChanges && nodeContainer == null)
+								{
+									si.Status = StartSyncStatus.NoWork;
+									break;
+								}
 							}
-						}
 
-						// See if we need to return all of the nodes.
-						if (!si.ChangesOnly)
-						{
-							// We need to get all of the nodes.
-							nodeContainer = this.BeginListAllNodes();
-							si.Context = syncContext;
-							if (nodeContainer == null)
+							// See if we need to return all of the nodes.
+							if (!si.ChangesOnly)
 							{
-								Dispose(false);
-								rights = Access.Rights.Deny;
-								si.Access = rights;
+								// We need to get all of the nodes.
+								nodeContainer = this.BeginListAllNodes();
+								si.Context = syncContext;
+								if (nodeContainer == null)
+								{
+									Dispose(false);
+									rights = Access.Rights.Deny;
+									si.Access = rights;
+								}
 							}
 						}
 					}
 					finally
 					{
-						cLock.ReleaseRequest();
 						if (si.Status != StartSyncStatus.Success)
 						{
 							cLock.ReleaseLock();
@@ -492,8 +477,7 @@ namespace Simias.Sync
 
 			SyncNodeStatus[]	statusList = new SyncNodeStatus[nodes.Length];
 			
-			cLock.LockRequest();
-			try
+			lock (cLock)
 			{
 				// Try to commit all the nodes at once.
 				int i = 0;
@@ -548,10 +532,6 @@ namespace Simias.Sync
 					}
 				}
 			}
-			finally
-			{
-				cLock.ReleaseRequest();
-			}
 			NodeList.Clear();
 			return (statusList);
 		}
@@ -594,8 +574,7 @@ namespace Simias.Sync
 
 			SyncNodeStatus[]	statusList = new SyncNodeStatus[nodes.Length];
 
-			cLock.LockRequest();
-			try
+			lock (cLock)
 			{
 				int i = 0;
 				foreach (SyncNode snode in nodes)
@@ -661,10 +640,6 @@ namespace Simias.Sync
 					logger.LogAccess("PutDir", path, collection.ID, status.status.ToString());
 				}
 			}
-			finally
-			{
-				cLock.ReleaseRequest();
-			}
 			return statusList;
 		}
 
@@ -680,8 +655,7 @@ namespace Simias.Sync
 
 			SyncNode[] nodes = new SyncNode[nodeIDs.Length];
 
-			cLock.LockRequest();
-			try
+			lock (cLock)
 			{
 				for (int i = 0; i < nodeIDs.Length; ++i)
 				{
@@ -704,10 +678,6 @@ namespace Simias.Sync
 					}
 				}
 			}
-			finally
-			{
-				cLock.ReleaseRequest();
-			}
 			return nodes;
 		}
 
@@ -723,8 +693,7 @@ namespace Simias.Sync
 
 			SyncNodeStatus[] statusArray = new SyncNodeStatus[nodeIDs.Length];
 		
-			cLock.LockRequest();
-			try
+			lock (cLock)
 			{
 				int i = 0;
 				foreach (string id in nodeIDs)
@@ -780,10 +749,6 @@ namespace Simias.Sync
 					logger.LogAccess("Delete", name, collection.ID, nStatus.status.ToString());
 				}
 			}
-			finally
-			{
-				cLock.ReleaseRequest();
-			}
 			return statusArray;
 		}
 
@@ -806,18 +771,13 @@ namespace Simias.Sync
 				return SyncStatus.ClientError;
 			}
 
-			cLock.LockRequest();
-			try
+			lock (cLock)
 			{
 				inFile = new ServerInFile(collection, node, Policy);
 				outFile = null;
 				SyncStatus status = inFile.Open();
 				logger.LogAccess("PutFile", inFile.Name, collection.ID, status.ToString());
 				return status;
-			}
-			finally
-			{
-				cLock.ReleaseRequest();
 			}
 		}
 
@@ -835,8 +795,7 @@ namespace Simias.Sync
 				return null;
 			}
 
-			cLock.LockRequest();
-			try
+			lock (cLock)
 			{
 				BaseFileNode node = collection.GetNodeByID(nodeID) as BaseFileNode;
 				inFile = null;
@@ -851,10 +810,6 @@ namespace Simias.Sync
 				}
 				logger.LogAccess("GetFile", nodeID, collection.ID, "DoesNotExist");
 				return null;
-			}
-			finally
-			{
-				cLock.ReleaseRequest();
 			}
 		}
 
@@ -951,8 +906,7 @@ namespace Simias.Sync
 			if (cLock == null)
 				return null;
 
-			cLock.LockRequest();
-			try
+			lock (cLock)
 			{
 				SyncNodeStatus status = null;
 				string name = "-";
@@ -970,10 +924,6 @@ namespace Simias.Sync
 				outFile = null;
 				logger.LogAccess("CloseFile", name, collection.ID, status.status.ToString());
 				return status;
-			}
-			finally
-			{
-				cLock.ReleaseRequest();
 			}
 		}
 
