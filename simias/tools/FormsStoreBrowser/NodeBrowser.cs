@@ -253,19 +253,6 @@ namespace StoreBrowser
 		ListView lView;
 		bool alreadyDisposed;
 
-		public NodeBrowser(TreeView view, ListView lView, string host)
-		{
-			tView = view;
-			this.lView = lView;
-			lView.BringToFront();
-			lView.Show();
-			browser = new BrowserService();
-			Simias.Client.LocalService.Start(browser);
-			browser.Url = host + "/SimiasBrowser.asmx";
-			tView.Dock = DockStyle.Left;
-			alreadyDisposed = true;
-		}
-
 		public NodeBrowser(TreeView view, ListView lView, string host, string username, string password)
 		{
 			tView = view;
@@ -275,13 +262,16 @@ namespace StoreBrowser
 			browser = new BrowserService();
 			browser.Url = host + "/SimiasBrowser.asmx";
 			tView.Dock = DockStyle.Left;
-			alreadyDisposed = true;
+			alreadyDisposed = false;
 
 			if (username != null && username != "")
 			{
-				this.browser.Credentials = 
-					new NetworkCredential(username, password, host);
+				this.browser.Credentials = new NetworkCredential(username, password, host);
 				this.browser.CookieContainer = new CookieContainer();
+			}
+			else
+			{
+				Simias.Client.LocalService.Start(browser);
 			}
 		}
 

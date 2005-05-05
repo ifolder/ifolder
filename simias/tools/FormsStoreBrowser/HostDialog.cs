@@ -98,6 +98,22 @@ namespace StoreBrowser
 			this.label1.TabIndex = 1;
 			this.label1.Text = "Host Uri:";
 			// 
+			// ok
+			// 
+			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.ok.Location = new System.Drawing.Point(152, 128);
+			this.ok.Name = "ok";
+			this.ok.TabIndex = 6;
+			this.ok.Text = "OK";
+			// 
+			// cancel
+			// 
+			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.cancel.Location = new System.Drawing.Point(232, 128);
+			this.cancel.Name = "cancel";
+			this.cancel.TabIndex = 7;
+			this.cancel.Text = "Cancel";
+			// 
 			// usernameLbl
 			// 
 			this.usernameLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
@@ -122,8 +138,7 @@ namespace StoreBrowser
 			this.usernameEdit.Name = "usernameEdit";
 			this.usernameEdit.Size = new System.Drawing.Size(208, 20);
 			this.usernameEdit.TabIndex = 4;
-			this.usernameEdit.Text = System.Environment.UserName;
-			//this.usernameEdit.Text = "";
+			this.usernameEdit.Text = "";
 			// 
 			// passwordEdit
 			// 
@@ -135,22 +150,6 @@ namespace StoreBrowser
 			this.passwordEdit.Text = "";
 			this.passwordEdit.TextChanged += new System.EventHandler(this.passwordEdit_TextChanged);
 			// 
-			// ok
-			// 
-			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.ok.Location = new System.Drawing.Point(152, 128);
-			this.ok.Name = "ok";
-			this.ok.TabIndex = 6;
-			this.ok.Text = "OK";
-			// 
-			// cancel
-			// 
-			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.cancel.Location = new System.Drawing.Point(232, 128);
-			this.cancel.Name = "cancel";
-			this.cancel.TabIndex = 7;
-			this.cancel.Text = "Cancel";
-			// 
 			// HostDialog
 			// 
 			this.AcceptButton = this.ok;
@@ -159,12 +158,12 @@ namespace StoreBrowser
 			this.ClientSize = new System.Drawing.Size(328, 156);
 			this.Controls.Add(this.passwordEdit);
 			this.Controls.Add(this.usernameEdit);
+			this.Controls.Add(this.host);
 			this.Controls.Add(this.passwordLbl);
 			this.Controls.Add(this.usernameLbl);
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.label1);
-			this.Controls.Add(this.host);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;

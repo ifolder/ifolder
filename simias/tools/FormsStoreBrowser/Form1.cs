@@ -40,6 +40,8 @@ namespace StoreBrowser
 	/// </summary>
 	public class Form1 : System.Windows.Forms.Form
 	{
+		Hashtable recentStores = new Hashtable();
+
 		string hostName;
 		string username;
 		string password;
@@ -75,31 +77,14 @@ namespace StoreBrowser
 		private System.Windows.Forms.MenuItem MI_RecentP;
 		private System.ComponentModel.IContainer components;
 
+		private CertPolicy certPolicy = new CertPolicy();
+
 		public Form1()
 		{
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-
-			Uri uri = Manager.LocalServiceUrl;
-			hostName = ( uri != null ) ? uri.AbsoluteUri : String.Format( "http://localhost:8086/simias10/{0}", Environment.UserName );
-			//HostDialog hDiag = new HostDialog(hostName);
-			//if (hDiag.ShowDialog() == DialogResult.OK)
-			//{
-			//	hostName = hDiag.HostName;
-			//	username = hDiag.UserName;
-			//	password = hDiag.Password;
-			//}
-
-			AddRecentMI();
-
-			this.Text = "Store Browser : " + hostName;
-			this.listView1.Hide();
-			tView.ImageList = imageList1;
-			tView.Dock = DockStyle.Fill;
-			browser = new NodeBrowser(tView, listView1, hostName);
-			browser.Show();
 		}
 
 		/// <summary>
@@ -136,6 +121,9 @@ namespace StoreBrowser
 			this.menuItem8 = new System.Windows.Forms.MenuItem();
 			this.menuItem5 = new System.Windows.Forms.MenuItem();
 			this.menuItem6 = new System.Windows.Forms.MenuItem();
+			this.menuItem2 = new System.Windows.Forms.MenuItem();
+			this.MI_RecentS = new System.Windows.Forms.MenuItem();
+			this.MI_RecentP = new System.Windows.Forms.MenuItem();
 			this.tView = new System.Windows.Forms.TreeView();
 			this.splitter1 = new System.Windows.Forms.Splitter();
 			this.richTextBox1 = new System.Windows.Forms.RichTextBox();
@@ -147,14 +135,11 @@ namespace StoreBrowser
 			this.Flags = new System.Windows.Forms.ColumnHeader();
 			this.NodeMenu = new System.Windows.Forms.ContextMenu();
 			this.cmDelete = new System.Windows.Forms.MenuItem();
+			this.CmNew = new System.Windows.Forms.MenuItem();
 			this.PropertyMenu = new System.Windows.Forms.ContextMenu();
 			this.pcmDelete = new System.Windows.Forms.MenuItem();
 			this.pcmNew = new System.Windows.Forms.MenuItem();
 			this.pcmEdit = new System.Windows.Forms.MenuItem();
-			this.CmNew = new System.Windows.Forms.MenuItem();
-			this.menuItem2 = new System.Windows.Forms.MenuItem();
-			this.MI_RecentS = new System.Windows.Forms.MenuItem();
-			this.MI_RecentP = new System.Windows.Forms.MenuItem();
 			this.SuspendLayout();
 			// 
 			// mainMenu1
@@ -222,6 +207,21 @@ namespace StoreBrowser
 			// 
 			this.menuItem6.Index = 7;
 			this.menuItem6.Text = "Import";
+			// 
+			// menuItem2
+			// 
+			this.menuItem2.Index = 8;
+			this.menuItem2.Text = "-";
+			// 
+			// MI_RecentS
+			// 
+			this.MI_RecentS.Index = 9;
+			this.MI_RecentS.Text = "Recent Store";
+			// 
+			// MI_RecentP
+			// 
+			this.MI_RecentP.Index = 10;
+			this.MI_RecentP.Text = "Recent Provider";
 			// 
 			// tView
 			// 
@@ -314,6 +314,12 @@ namespace StoreBrowser
 			this.cmDelete.Text = "Delete";
 			this.cmDelete.Click += new System.EventHandler(this.cmDelete_Click);
 			// 
+			// CmNew
+			// 
+			this.CmNew.Index = 1;
+			this.CmNew.Text = "New";
+			this.CmNew.Click += new System.EventHandler(this.CmNew_Click);
+			// 
 			// PropertyMenu
 			// 
 			this.PropertyMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
@@ -339,27 +345,6 @@ namespace StoreBrowser
 			this.pcmEdit.Text = "Edit";
 			this.pcmEdit.Click += new System.EventHandler(this.pcmEdit_Click);
 			// 
-			// CmNew
-			// 
-			this.CmNew.Index = 1;
-			this.CmNew.Text = "New";
-			this.CmNew.Click += new System.EventHandler(this.CmNew_Click);
-			// 
-			// menuItem2
-			// 
-			this.menuItem2.Index = 8;
-			this.menuItem2.Text = "-";
-			// 
-			// MI_RecentS
-			// 
-			this.MI_RecentS.Index = 9;
-			this.MI_RecentS.Text = "Recent Store";
-			// 
-			// MI_RecentP
-			// 
-			this.MI_RecentP.Index = 10;
-			this.MI_RecentP.Text = "Recent Provider";
-			// 
 			// Form1
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -371,6 +356,7 @@ namespace StoreBrowser
 			this.Menu = this.mainMenu1;
 			this.Name = "Form1";
 			this.Text = "Store Browser";
+			this.Load += new System.EventHandler(this.Form1_Load);
 			this.ResumeLayout(false);
 
 		}
@@ -388,26 +374,58 @@ namespace StoreBrowser
 		private void On_RecentS_Click(object sender, System.EventArgs e)
 		{
 			hostName = ((MenuItem)sender).Text;
+			if ( recentStores.ContainsKey( hostName ) )
+			{
+				string creds = recentStores[ hostName ] as String;
+				if ( creds != ":" )
+				{
+					int index = creds.IndexOf( ':' );
+					username = creds.Substring( 0, index );
+					password = creds.Substring( index + 1 );
+				}
+				else
+				{
+					username = null;
+					password = null;
+				}
+			}
+
 			OpenStore();
 		}
 
 		private void OpenStore()
 		{
 			this.Text = "Store Browser : " + hostName;
-			browser = new NodeBrowser(tView, listView1, hostName);
+			browser = new NodeBrowser(tView, listView1, hostName, username, password);
 			browser.Show();
 		}
 
 		private void On_RecentP_Click(object sender, System.EventArgs e)
 		{
 			hostName = ((MenuItem)sender).Text;
+			if ( recentStores.ContainsKey( hostName ) )
+			{
+				string creds = recentStores[ hostName ] as String;
+				if ( creds != ":" )
+				{
+					int index = creds.IndexOf( ':' );
+					username = creds.Substring( 0, index );
+					password = creds.Substring( index + 1 );
+				}
+				else
+				{
+					username = null;
+					password = null;
+				}
+			}
+
 			OpenProvider();
 		}
 
 		private void OpenProvider()
 		{
 			this.Text = "Provider Browser : " + hostName;
-			browser = new ProviderBrowser(tView, richTextBox1, hostName);
+			browser = new ProviderBrowser(tView, richTextBox1, hostName, username, password);
 			browser.Show();
 		}
 
@@ -417,24 +435,31 @@ namespace StoreBrowser
 			foreach (MenuItem item in MI_RecentS.MenuItems)
 			{
 				if (item.Text == hostName)
+				{
 					found = true;
+					break;
+				}
 			}
+
 			if (!found)
 			{
 				MI_RecentS.MenuItems.Add(new MenuItem(hostName, new EventHandler(On_RecentS_Click)));
 				MI_RecentP.MenuItems.Add(new MenuItem(hostName, new EventHandler(On_RecentP_Click)));
+				recentStores.Add( hostName, String.Format( "{0}:{1}", username, password ) );
 			}
 		}
 
 		private void MI_Open_Store_Click(object sender, System.EventArgs e)
 		{
-			tView.Nodes.Clear();
-			richTextBox1.Clear();
-
 			HostDialog hDiag = new HostDialog(hostName);
 			if (hDiag.ShowDialog() == DialogResult.OK)
 			{
+				tView.Nodes.Clear();
+				richTextBox1.Clear();
+
 				hostName = hDiag.HostName;
+				username = hDiag.UserName;
+				password = hDiag.Password;
 				AddRecentMI();
 				OpenStore();
 			}
@@ -442,14 +467,16 @@ namespace StoreBrowser
 
 		private void MI_Open_Provider_Click(object sender, System.EventArgs e)
 		{
-			tView.Nodes.Clear();
-			richTextBox1.Clear();
-			richTextBox1.BringToFront();
-
 			HostDialog hDiag = new HostDialog(hostName);
 			if (hDiag.ShowDialog() == DialogResult.OK)
 			{
+				tView.Nodes.Clear();
+				richTextBox1.Clear();
+				richTextBox1.BringToFront();
+
 				hostName = hDiag.HostName;
+				username = hDiag.UserName;
+				password = hDiag.Password;
 				AddRecentMI();
 				OpenProvider();
 			}
@@ -661,6 +688,32 @@ namespace StoreBrowser
 					browser.ShowNode(tView.SelectedNode);
 					listView1.Refresh();
 				}
+			}
+		}
+
+		private void Form1_Load(object sender, System.EventArgs e)
+		{
+			Uri uri = Manager.LocalServiceUrl;
+			hostName = ( uri != null ) ? uri.AbsoluteUri : String.Format( "http://localhost:8086/simias10/{0}", Environment.UserName );
+			HostDialog hDiag = new HostDialog(hostName);
+			if (hDiag.ShowDialog() == DialogResult.OK)
+			{
+				hostName = hDiag.HostName;
+				username = hDiag.UserName;
+				password = hDiag.Password;
+
+				AddRecentMI();
+
+				this.Text = "Store Browser : " + hostName;
+				this.listView1.Hide();
+				tView.ImageList = imageList1;
+				tView.Dock = DockStyle.Fill;
+				browser = new NodeBrowser(tView, listView1, hostName, username, password);
+				browser.Show();
+			}
+			else
+			{
+				Close();
 			}
 		}
 	}

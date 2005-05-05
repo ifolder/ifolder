@@ -29,6 +29,7 @@ using System.Windows.Forms;
 using System.Data;
 using System.IO;
 using System.Xml;
+using System.Net;
 
 namespace StoreBrowser
 {
@@ -42,7 +43,7 @@ namespace StoreBrowser
 		BrowserService browser;
 		bool alreadyDisposed;
 
-		public ProviderBrowser(TreeView view, RichTextBox box, string host)
+		public ProviderBrowser(TreeView view, RichTextBox box, string host, string userName, string password)
 		{
 			tView = view;
 			rBox = box;
@@ -51,6 +52,16 @@ namespace StoreBrowser
 			rBox.Show();
 			tView.Dock = DockStyle.Left;
 			alreadyDisposed = false;
+
+			if (userName != null && userName != "")
+			{
+				this.browser.Credentials = new NetworkCredential(userName, password, host);
+				this.browser.CookieContainer = new CookieContainer();
+			}
+			else
+			{
+				Simias.Client.LocalService.Start(browser);
+			}
 		}
 
 		~ProviderBrowser()
