@@ -500,6 +500,7 @@ src/TrayIcon/libtrayicon/Makefile
 src/WebService/Makefile
 src/libifolder/Makefile
 src/OSXClient/Makefile
+src/OSXClient/Info.plist
 src/OSXClient/src/config.h
 test/Makefile
 test/iFolder/Makefile
