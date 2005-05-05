@@ -309,11 +309,25 @@ namespace Simias.Policy
 		/// <param name="member">Member that quota is associated with.</param>
 		/// <param name="collection">Collection to add to the aggregate quota policy.</param>
 		/// <returns>A DiskSpaceQuota object that contains the policy for the specified member.</returns>
+		[ Obsolete( "This method is obsolete. Please use DiskSpaceQuota.Get( Collection collection ) instead.", false ) ]
 		static public DiskSpaceQuota Get( Member member, Collection collection )
 		{
+			return Get( collection );
+		}
+
+		/// <summary>
+		/// Gets the aggregate disk space quota policy for the specified collection. This includes
+		/// the collection owner's quota, if one exists, or the system-wide quota and any quota
+		/// set specifically on the collection.
+		/// </summary>
+		/// <param name="collection">Collection to add to the aggregate quota policy.</param>
+		/// <returns>A DiskSpaceQuota object that contains the policy for the specified member.</returns>
+		static public DiskSpaceQuota Get( Collection collection )
+		{
+			Member owner = collection.Owner;
 			PolicyManager pm = new PolicyManager();
-			Policy policy = pm.GetAggregatePolicy( DiskSpaceQuotaPolicyID, member, collection );
-			return new DiskSpaceQuota( member, policy );
+			Policy policy = pm.GetAggregatePolicy( DiskSpaceQuotaPolicyID, owner, collection );
+			return new DiskSpaceQuota( owner, policy );
 		}
 
 		/// <summary>
