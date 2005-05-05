@@ -611,6 +611,21 @@ namespace Novell.iFolder
 			// don't notify us of our own iFolders
 			iFolderHolder ifHolder = ifdata.GetiFolder(args.iFolderID);
 
+			// You can put the client into a state where we no longer have the iFolderHolder
+			// around.  One way to do this is to create an iFolder, wait for it to start
+			// synchronizing and while it's synchronizing, right-click, select "Delete",
+			// and then answer, "Yes".  To prevent this from blowing up the client entirely
+			// I'm adding in the following check for null.
+			//
+			// When the user deletes the iFolder, we remove it from the iFolderData
+			// structure so when we receive this event, it would, naturally be null.
+			if (ifHolder == null)
+				return;
+
+			// Also, just in case...
+			if (ifHolder.iFolder == null)
+				return;
+
 			if(ifHolder.iFolder.IsSubscription)
 			{
 				if(ifwin != null)
