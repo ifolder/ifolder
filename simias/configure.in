@@ -142,7 +142,7 @@ case $SIMIAS_OS in
         EXE_EXT=''
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
-        INSTALL_EXE_OPTS='--mode=644'
+        INSTALL_EXE_OPTS='-m 644'
         LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/mono/1.0/release"
         NOVELL_SECURITY_DIR="$EXTERNAL_DIR/Novell.Security/mono/bin"
         NUNIT="mono nunit-console.exe"
