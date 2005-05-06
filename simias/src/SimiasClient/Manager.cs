@@ -464,7 +464,11 @@ namespace Simias.Client
 
 					// Tell XSP to terminate and wait for it to exit.
 					webProcess.StandardInput.WriteLine( "" );
-					webProcess.WaitForExit();
+					if (!webProcess.WaitForExit(10000))
+					{
+						if (webProcess.HasExited == false)
+							webProcess.Kill();
+					}
 					webProcess = null;
 				}
 			}
