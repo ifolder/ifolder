@@ -759,9 +759,25 @@ namespace Novell.iFolder
 					break;
 
 				case iFolderState.Stopped:
+					// Start up a thread that will guarantee we completely
+					// exit after 2 seconds.
+					//ThreadPool.QueueUserWorkItem(new WaitCallback(GuaranteeShutdown));
+					System.Threading.Thread th = new System.Threading.Thread (new System.Threading.ThreadStart (GuaranteeShutdown));
+					th.Start ();
+
 					Application.Quit();
 					break;
 			}
+		}
+		
+		static private void GuaranteeShutdown()
+		{
+			// Sleep for 2 seconds and if the process is still
+			// running, we'll kill it.  If the process stops appropriately
+			// before this is finished sleeping, this thread will terminate
+			// before forcing a shutdown anyway.
+			System.Threading.Thread.Sleep(2000);
+			System.Environment.Exit(1);
 		}
 
 		private bool PromptIfNoDomains()
@@ -841,7 +857,10 @@ namespace Novell.iFolder
 
 		private void trayapp_clicked(object obj, ButtonPressEventArgs args)
 		{
-			if(CurrentState == iFolderState.Starting)
+			// Prevent the trayapp context menu from showing if we're
+			// starting up or shutting down.
+			if(CurrentState == iFolderState.Starting ||
+				CurrentState == iFolderState.Stopping)
 				return;
 
 			switch(args.Event.Button)
