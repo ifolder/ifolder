@@ -479,6 +479,7 @@ namespace Simias.Sync
 		const int		timeSlice = 3; //Timeslice in minutes.
 		SyncFile		syncFile;
 		bool			firstSync = true;
+		bool			yielded = false;
 		
 		/// <summary>
 		/// Returns true if we should yield our timeslice.
@@ -491,7 +492,10 @@ namespace Simias.Sync
 					return true;
 				TimeSpan ts = DateTime.Now - syncStartTime;
 				if (ts.Minutes > timeSlice)
+				{
+					yielded = true;
 					return true;
+				}
 				return false;
 			}
 		}
@@ -641,7 +645,6 @@ namespace Simias.Sync
 			try
 			{
 				eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartLocalSync, true));
-				syncStartTime = DateTime.Now;
 				queuedChanges = false;
 				serverAlive = false;
 				serverStatus = StartSyncStatus.Success;
@@ -673,8 +676,10 @@ namespace Simias.Sync
 				
 				// Only syncronize local changes when we have finished with the 
 				// Server side changes.
-				if (workArray == null || workArray.DownCount == 0)
+				if ((workArray == null || workArray.DownCount == 0) && !yielded)
 					fileMonitor.CheckForFileChanges();
+				syncStartTime = DateTime.Now;
+				yielded = false;
 				if (collection.Role != SyncRoles.Slave)
 				{
 					serverAlive = true;
@@ -683,7 +688,7 @@ namespace Simias.Sync
 
 				// We may have just created or deleted nodes wait for the events to settle.
 				Thread.Sleep(500);
-
+				
 				// Setup the url to the server.
 				string userID = store.GetUserIDFromDomainID(collection.Domain);
 				string userName = collection.GetMemberByID(userID).Name;

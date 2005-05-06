@@ -24,6 +24,7 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Xml;
+using System.Threading;
 using Simias.Storage;
 using Simias.Sync.Delta;
 using Simias.Client;
@@ -111,8 +112,8 @@ namespace Simias.Sync
 				status.status = SyncStatus.Success;
 				try
 				{
-					CreateHashMapFile();
 					collection.Commit(node);
+					new Thread(new ThreadStart(CreateHashMapFile)).Start();
 				}
 				catch (CollisionException)
 				{
@@ -125,7 +126,8 @@ namespace Simias.Sync
 					status.status = SyncStatus.ServerFailure;
 				}
 			}
-			base.Close(commit);
+			if (commit == false)
+				base.Close(false);
 			return status;
 		}
 
@@ -174,34 +176,41 @@ namespace Simias.Sync
 		/// </summary>
 		private void CreateHashMapFile()
 		{
-			string mapFile = GetMapFileName();
-			string tmpMapFile = mapFile + ".tmp";
-			// Copy the current file to a tmp name.
-			if (File.Exists(mapFile))
-				File.Move(mapFile, tmpMapFile);
-
-			BinaryWriter writer = new BinaryWriter( File.OpenWrite(mapFile));
 			try
 			{
-				inStream.Position = 0;
-				HashMap.SerializeHashMap(inStream, writer);
-				writer.Close();
-				File.SetCreationTime(mapFile, node.CreationTime);
-				File.SetLastWriteTime(mapFile, node.LastWriteTime);
-			}
-			catch (Exception ex)
-			{
-				writer.Close();
-				writer = null;
-				File.Delete(mapFile);
-				if (File.Exists(tmpMapFile))
-					File.Move(tmpMapFile, mapFile);
-				throw ex;
+				string mapFile = GetMapFileName();
+				string tmpMapFile = mapFile + ".tmp";
+				// Copy the current file to a tmp name.
+				if (File.Exists(mapFile))
+					File.Move(mapFile, tmpMapFile);
+
+				BinaryWriter writer = new BinaryWriter( File.OpenWrite(mapFile));
+				try
+				{
+					inStream.Position = 0;
+					HashMap.SerializeHashMap(inStream, writer);
+					writer.Close();
+					File.SetCreationTime(mapFile, node.CreationTime);
+					File.SetLastWriteTime(mapFile, node.LastWriteTime);
+				}
+				catch (Exception ex)
+				{
+					writer.Close();
+					writer = null;
+					File.Delete(mapFile);
+					if (File.Exists(tmpMapFile))
+						File.Move(tmpMapFile, mapFile);
+					throw ex;
+				}
+				finally
+				{
+					if (File.Exists(tmpMapFile))
+						File.Delete(tmpMapFile);
+				}
 			}
 			finally
 			{
-				if (File.Exists(tmpMapFile))
-					File.Delete(tmpMapFile);
+				base.Close(true);
 			}
 		}
 	}
