@@ -34,8 +34,6 @@ using Simias;
 using Simias.Client;
 using Simias.Storage;
 
-//using Mono.P2p.mDnsResponderApi;
-
 namespace Simias.mDns
 {
 	// Quick and dirty - I need to clean this up and
@@ -477,10 +475,7 @@ namespace Simias.mDns
 			User.memberList = new ArrayList();
 			*/
 
-			userHandle = new IntPtr(0);
-
-			//Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain( true );
-			//mDnsUserName = Environment.UserName + "@" + mdnsDomain.Host;
+			userHandle = new IntPtr( 0 );
 			User.mDnsUserName = Environment.UserName + "@" + Environment.MachineName;
 
 			try
@@ -489,7 +484,7 @@ namespace Simias.mDns
 					Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
 				if ( rDomain != null )
 				{
-					User.mDnsUserID = rDomain.GetMemberByName( mDnsUserName).UserID;
+					User.mDnsUserID = rDomain.GetMemberByName( mDnsUserName ).UserID;
 				}
 			}
 			catch( Exception e )
@@ -708,7 +703,6 @@ namespace Simias.mDns
 
 					try
 					{
-						//int	port = 0;
 						log.Debug( "Calling GetMemberInfo for: " + rMember.UserID );
 
 						MemberInfo info = new MemberInfo();
@@ -724,10 +718,7 @@ namespace Simias.mDns
 							rMember.FN = rMember.Name;
 
 							Property host = 
-								new Property( 
-										RendezvousUsers.HostProperty, 
-										info.Host );
-										//(new string( infoHost )).TrimEnd( trimNull ) );
+								new Property( RendezvousUsers.HostProperty, info.Host );
 							host.LocalProperty = true;
 							rMember.Properties.AddProperty( host );
 

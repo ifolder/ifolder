@@ -59,7 +59,7 @@ namespace Simias.mDns
 			SimiasLogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
 		private static string inCredentialEvent = "true";
-		private	Store store = null;
+		//private	Store store = null;
 		private Simias.mDns.User mDnsUser = null;
 		private Simias.mDnsProvider mDnsProvider = null;
 
@@ -94,26 +94,24 @@ namespace Simias.mDns
 			log.Debug("Start called");
 			this.config = config;
 
-			store = Store.GetStore();
+			//store = Store.GetStore();
 
 			//
 			// Make sure the mDnsDomain exists
 			//
 
-			Simias.mDns.Domain mdnsDomain = null;
 			try
 			{
-				mdnsDomain = new Simias.mDns.Domain( true );
+				new Simias.mDns.Domain( true );
 				this.mDnsUser = new Simias.mDns.User();
 
-				// Registers our iFolder member with the Rendezvous
+				// Registers our iFolder member with the Bonjour
 				// service daemon.
 				Simias.mDns.User.RegisterUser();
 
 				// Load the members in the Rendezvous domain into
 				// our current list which is kept in memory
-				bool loadStatus = RendezvousUsers.LoadMembersFromDomain( false );
-				if ( loadStatus == false )
+				if ( RendezvousUsers.LoadMembersFromDomain( false ) == false )
 				{
 					log.Error( "Failed loading the members from the Rendezvous domain" );
 				}
@@ -195,9 +193,6 @@ namespace Simias.mDns
 
 			// Temp
 			Simias.mDns.Sync.StopSyncThread();
-
-			//Channel.UnregisterChannel();
-			//Responder.Shutdown();
 		}
 
 		/// <summary>

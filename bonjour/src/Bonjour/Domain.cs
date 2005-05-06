@@ -49,7 +49,6 @@ namespace Simias.mDns
 		/// </summary>
 		private string mDnsDomainName = "Bonjour";
 
-		private string hostAddress;
 		private string description = "";
 		private string mDnsHostName;
 		private string mDnsUserName;
@@ -72,16 +71,6 @@ namespace Simias.mDns
 		#endregion
 
 		#region Properties
-
-		/*
-		/// <summary>
-		/// Gets the mDnsDomain's ID
-		/// </summary>
-		public static string ID
-		{
-			get { return(this.id); }
-		}
-		*/
 
 		/// <summary>
 		/// Gets the mDnsDomain's friendly ID
@@ -159,13 +148,10 @@ namespace Simias.mDns
 		{
 			bool firstTime = false;
 			Member member = null;
-			hostAddress = MyDns.GetHostName();
 			Store store = Store.GetStore();
 
 			try
 			{
-				Uri localUri = new Uri("http://" + hostAddress);
-
 				//
 				// Verify the Bonjour domain exists
 				//
