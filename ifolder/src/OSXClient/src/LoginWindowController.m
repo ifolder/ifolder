@@ -54,9 +54,27 @@
 			// not sure what to do here but just ignore it for now I guess
 		}
 	}
+	
+	if(authDomainID != nil)
+	{
+		[authDomainID release];
+		authDomainID = nil;
+	}
 
 	[[self window] orderOut:nil];
 }
+
+
+
+- (void)windowWillClose:(NSNotification *)aNotification
+{
+	if(authDomainID != nil)
+	{
+		[authDomainID release];
+		authDomainID = nil;
+	}
+}
+
 
 
 - (IBAction)authenticate:(id)sender
@@ -93,7 +111,13 @@
 								[authStatus remainingGraceLogins]],
 							NSLocalizedString(@"OK", nil), nil, nil);
 					}
-					[[self window] orderOut:nil];									
+
+					if(authDomainID != nil)
+					{
+						[authDomainID release];
+						authDomainID = nil;
+					}
+					[[self window] orderOut:nil];								
 					break;
 				}
 				case ns1__StatusCodes__InvalidCertificate:
@@ -171,6 +195,9 @@
 				[self window], nil, nil, nil, nil, 
 				NSLocalizedString(@"An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", nil));
 		}
+
+		if(simiasService != nil)
+			[simiasService release];
 	}
 }
 
