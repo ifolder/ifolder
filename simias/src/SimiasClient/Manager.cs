@@ -52,10 +52,13 @@ namespace Simias.Client
 
 		static private Process webProcess = null;
 		static private EventHandler appDomainUnloadEvent;
+#if CLIENT_MEMORY_ROLL
 		static private IProcEventClient eventClient = null;
+#endif
 		#endregion
 
 		#region Constructor
+#if CLIENT_MEMORY_ROLL
 		// TODO: Remove this when the mono heap doesn't grow forever.
 		/// <summary>
 		/// Static constructor for the Manager class.
@@ -71,6 +74,7 @@ namespace Simias.Client
 			}
 		}
 		// TODO: End
+#endif
 		#endregion
 
 		#region Properties
@@ -188,6 +192,7 @@ namespace Simias.Client
 			// Don't inform about any errors. The event service should heal itself.
 		}
 
+#if CLIENT_MEMORY_ROLL
 		/// <summary>
 		/// Event handler that subscribes to NotifyEvents.
 		/// </summary>
@@ -203,6 +208,7 @@ namespace Simias.Client
 				Ping();
 			}
 		}
+#endif
 
 		/// <summary>
 		/// Gets a specified range of ports to use as the local listener.
@@ -281,6 +287,7 @@ namespace Simias.Client
 			throw new ApplicationException( "No ports available" );
 		}
 
+#if CLIENT_MEMORY_ROLL
 		/// <summary>
 		/// Starts the simias web service.
 		/// </summary>
@@ -304,6 +311,7 @@ namespace Simias.Client
 				}
 			}
 		}
+#endif
 
 		/// <summary>
 		/// Sets the specified URI in the configuration file. Normally, applications outside of the Simias

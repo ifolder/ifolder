@@ -69,8 +69,10 @@ namespace Simias.Service
 		private ManualResetEvent servicesStarted = new ManualResetEvent(false);
 		private ManualResetEvent servicesStopped = new ManualResetEvent(true);
 		private DefaultSubscriber	subscriber = null;
+#if CLIENT_MEMORY_ROLL
 		static private int thresholdTimeLimit = 10;
 		static private float growthLimit = 80;
+#endif
 
 		#region Events
 		/// <summary>
@@ -121,6 +123,7 @@ namespace Simias.Service
 
 				installDefaultServices();
 
+#if CLIENT_MEMORY_ROLL
 				// TODO: Remove when mono compacts the heap.
 				if (config.Exists("ClientRollOver", "GrowthLimit"))
 				{
@@ -134,7 +137,7 @@ namespace Simias.Service
 					thresholdTimeLimit = Convert.ToInt32( tempString );
 				}
 				// TODO: End
-
+#endif
 				// Start a monitor thread to keep the services running.
 				Thread mThread = new Thread(new ThreadStart(Monitor));
 				mThread.IsBackground = true;
@@ -239,7 +242,7 @@ namespace Simias.Service
 		#endregion
 
 		#region Monitor
-
+#if CLIENT_MEMORY_ROLL
 		/// <summary>
 		/// Hack used to get the virtual memory size of the SimiasApp process. This
 		/// is only used on Linux to determine if the SimiasApp process needs to be
@@ -265,9 +268,10 @@ namespace Simias.Service
 
 			return memSize;
 		}
-
+#endif
 		private void Monitor()
 		{
+#if CLIENT_MEMORY_ROLL
 			// TODO: This can be removed when mono compacts the heap.
 			bool isClient = !Store.GetStore().IsEnterpriseServer;
 			DateTime thresholdTime = DateTime.Now;
@@ -280,7 +284,7 @@ namespace Simias.Service
 				logger.Debug( "Intialize memory size = {0} KB", initialMemorySize / 1024 );
 			}
 			// TODO: End
-
+#endif
 			while (true)
 			{
 				try
@@ -299,7 +303,7 @@ namespace Simias.Service
 							}
 						}
 					}
-
+#if CLIENT_MEMORY_ROLL
 					// TODO: This can be removed when mono compacts the heap.
 					// Check how much memory is being used by the process.
 					if (MyEnvironment.Mono && isClient)
@@ -333,6 +337,7 @@ namespace Simias.Service
 						}
 					}
 					// TODO: End
+#endif
 				}
 				catch
 				{
