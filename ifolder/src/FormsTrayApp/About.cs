@@ -55,7 +55,7 @@ namespace Novell.FormsTrayApp
 
 			// Add the version string.
 			System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(About));
-			title.Text = string.Format(resourceManager.GetString("title.Text"), System.Reflection.Assembly.GetExecutingAssembly().ImageRuntimeVersion);
+			title.Text = string.Format(resourceManager.GetString("title.Text"), System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
 			// Center the title text.
 			Graphics g = title.CreateGraphics();
