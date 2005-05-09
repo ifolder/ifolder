@@ -1162,7 +1162,10 @@ namespace Simias.Web
 			}
 
 			poBox.Commit(sub);
-			Sync.SyncClient.ScheduleSync(poBox.ID);
+			if (poBox.Role == Sync.SyncRoles.Slave)
+			{
+				Sync.SyncClient.ScheduleSync(poBox.ID);
+			}
 		}
 
 
