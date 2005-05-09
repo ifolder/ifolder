@@ -351,4 +351,45 @@ namespace Simias.Storage
 		}
 		#endregion
 	}
+
+	/// <summary>
+	/// Exception that indicates that collection has already been locked.
+	/// </summary>
+	public class AlreadyLockedException : CollectionStoreException
+	{
+		#region Class Members
+		private string collectionName;
+		private string collectionID;
+		#endregion
+
+		#region Properties
+		/// <summary>
+		/// Gets the name of the collection.
+		/// </summary>
+		public string CollectionName
+		{
+			get { return collectionName; }
+		}
+
+		/// <summary>
+		/// Gets the identifier of the collection.
+		/// </summary>
+		public string CollectionID
+		{
+			get { return collectionID; }
+		}
+		#endregion
+
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the object class.
+		/// </summary>
+		public AlreadyLockedException( Collection c ) :
+			base ( String.Format( "The collection {0} has already been locked.", c.Name ) )
+		{
+			this.collectionName = c.Name;
+			this.collectionID = c.ID;
+		}
+		#endregion
+	}
 }

@@ -485,46 +485,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets a list of collections that have been locked.
-		/// </summary>
-		/// <param name="lockType">The reason that the collection was locked.</param>
-		/// <returns>An ICSList object containing ShallowNode objects that represent locked collections.</returns>
-		private ICSList GetLockedList( string lockType )
-		{
-			ICSList lockList = new ICSList();	
-
-			// Query for the locked attribute - either for existence or a specific type.
-			SearchOp op = ( lockType == String.Empty ) ? SearchOp.Exists : SearchOp.Equal;
-			Persist.Query query = new Persist.Query( PropertyTags.CollectionLock, op, lockType, Syntax.Int32 );
-			Persist.IResultSet chunkIterator = storageProvider.Search( query );
-			if ( chunkIterator != null )
-			{
-				char[] results = new char[ 4096 ];
-
-				// Get the first set of results from the query.
-				int length = chunkIterator.GetNext( ref results );
-				while ( length > 0 )
-				{
-					// Set up the XML document so the data can be easily extracted.
-					XmlDocument document = new XmlDocument();
-					document.LoadXml( new string( results, 0, length ) );
-
-					foreach ( XmlElement xe in document.DocumentElement )
-					{
-						lockList.Add( new ShallowNode( xe ) );
-					}
-
-					// Get the next set of results from the query.
-					length = chunkIterator.GetNext( ref results );
-				}
-
-				chunkIterator.Dispose();
-			}
-
-			return lockList;
-		}
-
-		/// <summary>
 		/// Returns a Node object for the specified identifier.
 		/// </summary>
 		/// <param name="collectionID">Identifier of the collection that the node is contained by.</param>
@@ -1065,20 +1025,23 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets a list of collections that have been locked.
 		/// </summary>
-		/// <returns>An ICSList object containing locked collections.</returns>
+		/// <returns>An ICSList object containing ShallowNode objects that represent locked collections.</returns>
 		public ICSList GetLockedCollections()
 		{
-			return GetLockedList( String.Empty );
-		}
+			ICSList shallowList = new ICSList();
 
-		/// <summary>
-		/// Gets a list of collections that have been locked.
-		/// </summary>
-		/// <param name="lockType">The reason that the collection was locked.</param>
-		/// <returns>An ICSList object containing ShallowNode objects that represent locked collections.</returns>
-		public ICSList GetLockedCollections( Collection.LockType lockType )
-		{
-			return GetLockedList( Enum.Format( typeof( Collection.LockType ), lockType, "d" ) );
+			// Get the list of locked collection IDs.
+			string[] cidList = Collection.GetLockedList();
+			if ( cidList != null )
+			{
+				foreach( string cid in cidList )
+				{
+					Collection c = GetNodeByID( cid, cid ) as Collection;
+					shallowList.Add( new ShallowNode( c.Properties.PropertyRoot, cid ) );
+				}
+			}
+
+			return shallowList;
 		}
 
 		/// <summary>

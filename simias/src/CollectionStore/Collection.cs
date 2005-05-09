@@ -48,27 +48,9 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
-		/// Type of collection locks. These are mainly informational to allow an
-		/// administrator to have some sort of context of why the collection was
-		/// locked.
+		/// Table to store in-memory collection locks.
 		/// </summary>
-		public enum LockType
-		{
-			/// <summary>
-			/// No changes made to the collection, ever.
-			/// </summary>
-			Permanent,
-
-			/// <summary>
-			/// Backup or restore going on.
-			/// </summary>
-			Backup,
-
-			/// <summary>
-			/// User defined lock.
-			/// </summary>
-			User
-		}
+		static private Hashtable lockTable = new Hashtable();
 
 		/// <summary>
 		/// Reference to the store.
@@ -94,6 +76,12 @@ namespace Simias.Storage
 		/// Change log used to indicate events to a collection.
 		/// </summary>
 		private ChangeLog changeLog = new ChangeLog();
+
+		/// <summary>
+		/// Used when the collection is locked to allow the instance that locked
+		/// the collection to make changes.
+		/// </summary>
+		private string lockString = null;
 		#endregion
 
 		#region Properties
@@ -220,27 +208,17 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets whether this collection is locked, preventing modifications from being made
-		/// by an impersonating user.
+		/// Gets whether this collection is locked, preventing modifications from being made.
 		/// </summary>
 		public bool IsLocked
 		{
-			get
+			get	
 			{
-				bool locked = false;
-
-				// Always get the latest collection from disk (or cache).
-				Collection c = store.GetCollectionByID( id );
-				if ( c != null )
+				lock ( lockTable )
 				{
-					// The existence of the attribute signifies a lock.
-					if ( c.properties.FindSingleValue( PropertyTags.CollectionLock ) != null )
-					{
-						locked = true;
-					}
+					string ls = lockTable[ id ] as string;
+					return ( ( ls != null ) && ( ls != lockString ) ) ? true : false;
 				}
-	
-				return locked;
 			}
 		}
 
@@ -403,7 +381,9 @@ namespace Simias.Storage
 		{
 			store = collection.store;
 			accessControl = new AccessControl( this );
-			createManagedPath = !Directory.Exists( ManagedPath );
+			domainID = collection.domainID;
+			lockString = collection.lockString;
+			createManagedPath = collection.createManagedPath;
 		}
 
 		/// <summary>
@@ -466,6 +446,17 @@ namespace Simias.Storage
 			node.Properties.AddNodeProperty( PropertyTags.Types, NodeTypes.TombstoneType );
 			node.Properties.AddNodeProperty( PropertyTags.TombstoneType, oldType );
 			node.IncarnationUpdate = 0;
+		}
+
+		/// <summary>
+		/// Removes the collection lock for a collection that is being deleted.
+		/// </summary>
+		private void DeleteCollectionLock()
+		{
+			lock ( lockTable )
+			{
+				lockTable.Remove( id );
+			}
 		}
 
 		/// <summary>
@@ -907,6 +898,9 @@ namespace Simias.Storage
 
 				// Delete the collection's change log.
 				changeLog.DeleteChangeLogWriter( id );
+
+				// Delete the collection lock.
+				DeleteCollectionLock();
 			}
 			else
 			{
@@ -1404,6 +1398,26 @@ namespace Simias.Storage
 		}
 		#endregion
 
+		#region Internal Methods
+		/// <summary>
+		/// Gets a list of locked collections as ShallowNode objects.
+		/// </summary>
+		/// <returns>An array of collection IDs representing locked collections.</returns>
+		static internal string[] GetLockedList()
+		{
+			string[] cidList = null;
+
+			lock ( lockTable )
+			{
+				ICollection keys = lockTable.Keys;
+				cidList = new string[ keys.Count ];
+				keys.CopyTo( cidList, 0 );
+			}
+
+			return cidList;
+		}
+		#endregion
+
 		#region Public Methods
 		/// <summary>
 		/// Aborts non-committed changes to the specified Node object.
@@ -1529,6 +1543,13 @@ namespace Simias.Storage
 					throw new SimiasShutdownException();
 				}
 
+				// See if this collection has been locked and if this instance has the ability to 
+				// change the collection.
+				if ( IsLocked )
+				{
+					throw new LockException();
+				}
+
 				// Walk the commit list to see if there are any creation and deletion of the collection states.
 				foreach( Node node in nodeList )
 				{
@@ -1592,12 +1613,6 @@ namespace Simias.Storage
 					// member.
 					if ( deleteCollection )
 					{
-						// Check if this collection is locked, preventing changes made by impersonating users.
-						if ( accessControl.IsImpersonating && IsLocked )
-						{
-							throw new LockException();
-						}
-
 						// Only the collection needs to be processed. All other Node objects will automatically
 						// be deleted when the collection is deleted.
 						commitList = new Node[ 1 ];
@@ -1628,12 +1643,6 @@ namespace Simias.Storage
 						// rights checking. Access rights are only checked for impersonated users.
 						if ( accessControl.IsImpersonating )
 						{
-							// Check if this collection is locked, preventing changes made by impersonating users.
-							if ( IsLocked )
-							{
-								throw new LockException();
-							}
-
 							// Get the impersonating member.
 							Member member = accessControl.ImpersonationMember;
 
@@ -2172,6 +2181,20 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Checks if the collection is locked by the specified lockString.
+		/// </summary>
+		/// <param name="lockString">String to test lock with.</param>
+		/// <returns>True if the collection lock is locked by the specified lockString.</returns>
+		public bool IsLockedByName( string lockString )
+		{
+			lock ( lockTable )
+			{
+				string ls = lockTable[ id ] as string;
+				return ( ( ls != null ) && ( ls == lockString ) ) ? true : false;
+			}
+		}
+
+		/// <summary>
 		/// Gets whether the specified member has sufficient rights to share this collection.
 		/// </summary>
 		/// <param name="member">Member object contained by this collection.</param>
@@ -2225,20 +2248,11 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Locks the collection so that changes by an impersonated user are not allowed.
+		/// Locks the collection so that changes to the collection are not allowed.
 		/// </summary>
-		/// <param name="lockType">Reason for the lock.</param>
-		public void Lock( LockType lockType )
-		{
-			Lock( lockType, true );
-		}
-
-		/// <summary>
-		/// Locks the collection so that changes by an impersonated user are not allowed.
-		/// </summary>
-		/// <param name="lockType">Reason for the lock.</param>
-		/// <param name="commitLock">If set to True the lock is committed before returning.</param>
-		public void Lock( LockType lockType, bool commitLock )
+		/// <param name="lockString">Used to personalize the lock so that it can
+		/// only be unlocked by using the same string.</param>
+		public void Lock( string lockString )
 		{
 			// User must not be impersonating.
 			if ( accessControl.IsImpersonating )
@@ -2246,25 +2260,28 @@ namespace Simias.Storage
 				throw new AccessException( this, GetCurrentMember(), "Insufficent rights to set a lock on this collection." );
 			}
 
-			// The current collection object might have modifications made to it. Get
-			// a new object that we can guarantee is not modified. We don't want to unknowingly
-			// commit changes made to the current collection object.
-			Collection c = store.GetCollectionByID( id );
-			if ( c == null )
+			lock ( lockTable )
 			{
-				// Use the current collection object since it has not been committed yet.
-				c = this;
+				// Does a lock already exist?
+				string ls = lockTable[ id ] as string;
+				if ( ls == null )
+				{
+					// Create the lock.
+					lockTable[ id ] = lockString;
+				}
+				else
+				{
+					// Don't allow a different lock.
+					if ( ls != lockString )
+					{
+						throw new AlreadyLockedException( this );
+					}
+				}
 			}
 
-			// Set a persistent local property that will represent the lock.
-			Property p = new Property( PropertyTags.CollectionLock, lockType );
-			p.LocalProperty = true;
-			c.properties.ModifyNodeProperty( p );
-
-			if ( commitLock )
-			{
-				c.Commit();
-			}
+			// Set this lock string in this instance so that changes can be committed using
+			// this object instance.
+			this.lockString = lockString;
 		}
 
 		/// <summary>
@@ -2693,7 +2710,9 @@ namespace Simias.Storage
 		/// <summary>
 		/// Unlocks a previously locked collection.
 		/// </summary>
-		public void Unlock()
+		/// <param name="lockString">The string used to lock the collection. The collection can
+		/// only be unlocked with the proper lockString.</param>
+		public void Unlock( string lockString )
 		{
 			// User must not be impersonating.
 			if ( accessControl.IsImpersonating )
@@ -2701,21 +2720,18 @@ namespace Simias.Storage
 				throw new AccessException( this, GetCurrentMember(), "Insufficent rights to remove lock on this collection." );
 			}
 
-			// The current collection object might have modifications made to it. Get
-			// a new object that we can guarantee is not modified. We don't want to unknowingly
-			// commit changes made to the current collection object.
-			Collection c = store.GetCollectionByID( id );
-			if ( c != null )
+			lock ( lockTable )
 			{
-				// Find the lock attribute.
-				Property p = c.properties.FindSingleValue( PropertyTags.CollectionLock );
-				if ( p != null )
+				// Is there is a lock for this collection?
+				string ls = lockTable[ id ] as string;
+				if ( ( ls != null ) && ( ls == lockString ) )
 				{
-					// Delete the property and commit the change.
-					p.DeleteProperty();
-					c.Commit();
+					lockTable.Remove( id );
 				}
 			}
+
+			// Reset the local instance of the lock string.
+			this.lockString = null;
 		}
 		#endregion
 
