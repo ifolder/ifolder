@@ -38,6 +38,11 @@ namespace Simias.Sync
 	{
 		SyncNode	snode;
 		SyncPolicy	policy;
+		static int		MaxMapThreads = 20;
+		static Queue	mapQ = new Queue();
+		static int		threadCount = 0;
+		delegate void	HashMapDelegate();
+		FileStream		mapSrcStream;
 
 		#region Constructors
 
@@ -113,7 +118,6 @@ namespace Simias.Sync
 				try
 				{
 					collection.Commit(node);
-					new Thread(new ThreadStart(CreateHashMapFile)).Start();
 				}
 				catch (CollisionException)
 				{
@@ -126,8 +130,11 @@ namespace Simias.Sync
 					status.status = SyncStatus.ServerFailure;
 				}
 			}
-			if (commit == false)
-				base.Close(false);
+			base.Close(commit);
+			if (commit == true)
+			{
+				CreateHashMap();
+			}
 			return status;
 		}
 
@@ -174,6 +181,54 @@ namespace Simias.Sync
 		/// <summary>
 		/// 
 		/// </summary>
+		private void CreateHashMap()
+		{
+			// Open the inStream while creating the HashMap.
+			mapSrcStream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.None);	
+			lock (mapQ)
+			{
+				if (threadCount < MaxMapThreads)
+				{
+					Thread thread = new Thread(new ThreadStart(HashMapThread));
+					thread.IsBackground = true;
+					thread.Start();
+					threadCount++;
+				}
+				else
+				{
+					mapQ.Enqueue(new HashMapDelegate(CreateHashMapFile));
+				}
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		private void HashMapThread()
+		{
+			CreateHashMapFile();
+			// Now see if we have any work queued.
+			HashMapDelegate hmd;
+			while (true)
+			{
+				lock (mapQ)
+				{
+					hmd = mapQ.Count > 0 ? mapQ.Dequeue() as HashMapDelegate : null;
+				}
+				if (hmd == null)
+					break;
+				hmd();
+			}
+		
+			lock (mapQ)
+			{
+				threadCount--;
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
 		private void CreateHashMapFile()
 		{
 			try
@@ -187,8 +242,8 @@ namespace Simias.Sync
 				BinaryWriter writer = new BinaryWriter( File.OpenWrite(mapFile));
 				try
 				{
-					inStream.Position = 0;
-					HashMap.SerializeHashMap(inStream, writer);
+					mapSrcStream.Position = 0;
+					HashMap.SerializeHashMap(mapSrcStream, writer);
 					writer.Close();
 					File.SetCreationTime(mapFile, node.CreationTime);
 					File.SetLastWriteTime(mapFile, node.LastWriteTime);
@@ -210,7 +265,8 @@ namespace Simias.Sync
 			}
 			finally
 			{
-				base.Close(true);
+				// Close the file.
+				mapSrcStream.Close();
 			}
 		}
 	}
