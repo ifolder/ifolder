@@ -491,8 +491,8 @@ src/iFolder/Makefile
 src/LinuxClient/Makefile
 src/LinuxClient/library/Makefile
 src/LinuxClient/application/Makefile
-src/LinuxClient/po/Makefile
-src/LinuxClient/po/POTFILES
+# src/LinuxClient/po/Makefile
+# src/LinuxClient/po/POTFILES
 src/FormsTrayApp/Makefile
 src/iFolderShell/Makefile
 src/TrayIcon/Makefile

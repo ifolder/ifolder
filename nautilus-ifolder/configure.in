@@ -162,6 +162,6 @@ AC_OUTPUT([
   src/nautilus-ifolder
   package/Makefile
   package/nautilus-ifolder.spec
-  po/Makefile.in
 ])
 
+#  po/Makefile.in
