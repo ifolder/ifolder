@@ -36,8 +36,8 @@ Vendor       : <unknown>
 Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
-Requires     : mono-core >= 1.0.4
-Requires     : xsp >= 1.0.4
+Requires     : mono-core >= 1.1.7
+Requires     : xsp >= 1.0.9
 Obsoletes    : %{name} <= %{version}
 
 #=============================================================================

@@ -38,8 +38,8 @@ Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
 Requires     : simias >= 1.0
-Requires     : gtk-sharp >= 1.0.4
-Requires     : libgdiplus >= 1.0.1
+Requires     : gtk-sharp >= 1.0.9
+Requires     : libgdiplus >= 1.1.7
 Obsoletes    : %{name} <= %{version}
 
 #=============================================================================
