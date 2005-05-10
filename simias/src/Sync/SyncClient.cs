@@ -1464,14 +1464,31 @@ namespace Simias.Sync
 
 					if (!Directory.Exists(path))
 					{
+						bool conflict = false;
 						try
 						{
-							Directory.CreateDirectory(path);
+							DirectoryInfo di = Directory.CreateDirectory(path);
+							if ((di.Attributes & FileAttributes.Directory) == 0)
+								conflict = true;
 						}
 						catch
 						{
+							conflict = true;
+						}
+						if (conflict)
+						{
 							// Create a collision.
-							node = Conflict.CreateNameConflict(collection, node, node.GetFullPath(collection)) as DirNode;
+							node = Conflict.CreateNameConflict(collection, node) as DirNode;
+							// Find the conflicting node.
+							string rpath = node.GetRelativePath();
+							foreach (ShallowNode sn in collection.Search(PropertyTags.FileSystemPath, rpath, SearchOp.Equal))
+							{
+								Node cfNode = collection.GetNodeByID(sn.ID);
+								cfNode = Conflict.CreateNameConflict(collection, cfNode, node.GetFullPath(collection));
+								Conflict.LinkConflictingNodes(cfNode, node);
+								collection.Commit(cfNode);
+								break;
+							}
 						}
 					}
 					collection.Commit(node);

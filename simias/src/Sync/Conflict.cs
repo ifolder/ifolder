@@ -102,7 +102,10 @@ public class Conflict
 		get
 		{
 			BaseFileNode bfn = node as BaseFileNode;
-			return bfn == null? null: bfn.GetFullPath(collection);
+			if (bfn != null)
+				return bfn.GetFullPath(collection);
+			DirNode dn = node as DirNode;
+			return dn == null ? null : dn.GetFullPath(collection);
 		}
 	}
 
@@ -252,7 +255,7 @@ public class Conflict
 	/// </summary>
 	/// <param name="node"></param>
 	/// <param name="cNode"></param>
-	public static void LinkConflictingNodes(FileNode node, FileNode cNode)
+	public static void LinkConflictingNodes(Node node, Node cNode)
 	{
 		Property pLink = new Property(ConflictLinkProperty, node.ID);
 		pLink.LocalProperty = true;
@@ -393,19 +396,35 @@ public class Conflict
 			if (dn != null)
 			{
 				DirNode parent = dn.GetParent(collection);
-				if (SyncFile.DoesNodeExist(collection, parent, newNodeName))
-					throw new ExistsException(newNodeName);
 				string oldname, newname;
 				oldname = FileNameConflictPath;
-				newname = Path.Combine(Path.GetDirectoryName(FileNameConflictPath), newNodeName);
-				Directory.Move(oldname, newname);
-				string oldRelativePath = dn.GetRelativePath();
-				string relativePath = oldRelativePath.Remove(oldRelativePath.Length - node.Name.Length, node.Name.Length) + newNodeName;
-				node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
-				node.Name = newNodeName;
-				node = RemoveNameConflict(collection, node);
-				collection.Commit(node);
-				FileWatcher.RenameDirsChildren(collection, dn, oldRelativePath);
+				newname = Path.Combine(Path.GetDirectoryName(dn.GetFullPath(collection)), newNodeName);
+				if (newNodeName != node.Name)
+				{
+					if (SyncFile.DoesNodeExist(collection, parent, newNodeName))
+						throw new ExistsException(newNodeName);
+					if (Directory.Exists(oldname))
+						Directory.Move(oldname, newname);
+					else
+						Directory.CreateDirectory(newname);
+					string oldRelativePath = dn.GetRelativePath();
+					string relativePath = oldRelativePath.Remove(oldRelativePath.Length - node.Name.Length, node.Name.Length) + newNodeName;
+					node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
+					node.Name = newNodeName;
+					node = RemoveNameConflict(collection, node);
+					collection.Commit(node);
+					FileWatcher.RenameDirsChildren(collection, dn, oldRelativePath);
+				}
+				else
+				{
+					// The name did not change.
+					if (Directory.Exists(oldname))
+						Directory.Move(oldname, newname);
+					else
+						Directory.CreateDirectory(newname);
+					node = RemoveNameConflict(collection, node);
+					collection.Commit(node);
+				}
 			}
 		}
 	}
@@ -433,12 +452,10 @@ public class Conflict
 	{
 		if (!SyncFile.IsNameValid(newName))
 			throw new MalformedException(newName);
-		FileNode cfn = node as FileNode;
-		string relPath = cfn.GetRelativePath();
 
 		// Now get the conflicting node.
-		FileNode fn = collection.GetNodeByID(node.Properties.GetSingleProperty(ConflictLinkProperty).Value.ToString()) as FileNode;
-		
+		Node cfn = collection.GetNodeByID(node.Properties.GetSingleProperty(ConflictLinkProperty).Value.ToString());
+		FileNode fn = cfn as FileNode;
 		if (fn != null)
 		{
 			// Now rename the file and the node.
@@ -451,9 +468,17 @@ public class Conflict
 			relativePath = relativePath.Remove(relativePath.Length - fn.Name.Length, fn.Name.Length) + newName;
 			fn.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
 			fn.Name = newName;
+			fn = RemoveNameConflict(collection, fn)as FileNode;
+			collection.Commit(fn);
 		}
-		fn = RemoveNameConflict(collection, fn)as FileNode;
-		collection.Commit(fn);
+		else
+		{
+			DirNode dn = cfn as DirNode;
+			if (dn != null)
+			{
+				new Conflict(collection, dn).Resolve(newName);
+			}
+		}
 	}
 }
 

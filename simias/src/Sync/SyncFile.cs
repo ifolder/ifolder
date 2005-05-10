@@ -462,7 +462,7 @@ namespace Simias.Sync
 		#region fields
 
 		bool					nameConflict = false;
-		protected FileNode		conflictingNode = null;
+		protected Node			conflictingNode = null;
 		/// <summary>Used to signal to stop upload or downloading the file.</summary>
 		protected bool			stopping = false;
 		/// <summary>The Collection the file belongs to.</summary>
@@ -552,7 +552,7 @@ namespace Simias.Sync
 				{
 					if (sn.ID != node.ID)
 					{
-						conflictingNode = collection.GetNodeByID(sn.ID) as FileNode;
+						conflictingNode = collection.GetNodeByID(sn.ID);
 						nameConflict = true;
 						break;
 					}
@@ -567,8 +567,19 @@ namespace Simias.Sync
 					file = Conflict.GetFileConflictPath(collection, node);
 					if (conflictingNode != null)
 					{
-						conflictingNode = Conflict.CreateNameConflict(collection, conflictingNode, conflictingNode.GetFullPath(collection)) as FileNode;
-						Conflict.LinkConflictingNodes(conflictingNode, node as FileNode);
+						string cnPath;
+						FileNode tmpFn = conflictingNode as FileNode;
+						DirNode tmpDn = conflictingNode as DirNode;
+						if (tmpFn != null)
+						{
+							cnPath = tmpFn.GetFullPath(collection);
+						}
+						else
+						{
+							cnPath = tmpDn.GetFullPath(collection);
+						}
+						conflictingNode = Conflict.CreateNameConflict(collection, conflictingNode, cnPath);
+						Conflict.LinkConflictingNodes(conflictingNode, node);
 					}
 				}
 			}
