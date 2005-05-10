@@ -162,7 +162,12 @@ namespace Simias.Sync
 				return HashMap.GetHashMapFile(mapFile, out entryCount);
 			}
 			else
-				return HashMap.GetHashMap(ReadStream, out entryCount);
+			{
+				entryCount = 0;
+				return new byte[0];
+				// TODO initiate code to generate a hashmap.
+				//return HashMap.GetHashMap(ReadStream, out entryCount);
+			}
 		}
 
 		/// <summary>
@@ -194,7 +199,9 @@ namespace Simias.Sync
 		private void CreateHashMap()
 		{
 			// Open the inStream while creating the HashMap.
-			mapSrcStream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.None);	
+			string mapFileName = GetMapFileName();
+			if (File.Exists(mapFileName))
+				File.Delete(mapFileName);
 			lock (mapQ)
 			{
 				mapQ.Enqueue(new HashMapDelegate(CreateHashMapFile));
@@ -211,17 +218,21 @@ namespace Simias.Sync
 			while (true)
 			{
 				queueEvent.WaitOne();
-				while (true)
+				try
 				{
-					HashMapDelegate hmd;
-					lock (mapQ)
+					while (true)
 					{
-						hmd = mapQ.Count > 0 ? mapQ.Dequeue() as HashMapDelegate : null;
+						HashMapDelegate hmd;
+						lock (mapQ)
+						{
+							hmd = mapQ.Count > 0 ? mapQ.Dequeue() as HashMapDelegate : null;
+						}
+						if (hmd == null)
+							break;
+						hmd();
 					}
-					if (hmd == null)
-						break;
-					hmd();
 				}
+				catch{}
 			}
 		}
 		
@@ -230,6 +241,7 @@ namespace Simias.Sync
 		/// </summary>
 		private void CreateHashMapFile()
 		{
+			mapSrcStream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read);	
 			try
 			{
 				string mapFile = GetMapFileName();
@@ -238,12 +250,13 @@ namespace Simias.Sync
 				if (File.Exists(mapFile))
 					File.Move(mapFile, tmpMapFile);
 
-				BinaryWriter writer = new BinaryWriter( File.OpenWrite(mapFile));
+				BinaryWriter writer = new BinaryWriter( File.OpenWrite(tmpMapFile));
 				try
 				{
 					mapSrcStream.Position = 0;
 					HashMap.SerializeHashMap(mapSrcStream, writer);
 					writer.Close();
+					File.Move(tmpMapFile, mapFile);
 					File.SetCreationTime(mapFile, node.CreationTime);
 					File.SetLastWriteTime(mapFile, node.LastWriteTime);
 				}
@@ -326,7 +339,12 @@ namespace Simias.Sync
 				return HashMap.GetHashMapFile(mapFile, out entryCount);
 			}
 			else
-				return HashMap.GetHashMap(this.outStream, out entryCount);
+			{
+				entryCount = 0;
+				return new byte[0];
+				// TODO add code to generate a hashmap.
+				//return HashMap.GetHashMap(this.outStream, out entryCount);
+			}
 		}
 
 
