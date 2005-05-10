@@ -40,11 +40,21 @@ namespace Simias.Sync
 		SyncPolicy	policy;
 		static int		MaxMapThreads = 20;
 		static Queue	mapQ = new Queue();
-		static int		threadCount = 0;
+		static AutoResetEvent queueEvent = new AutoResetEvent(false);
 		delegate void	HashMapDelegate();
 		FileStream		mapSrcStream;
 
 		#region Constructors
+
+		static ServerInFile()
+		{
+			for (int i = 0; i < MaxMapThreads; ++i)
+			{
+				Thread thread = new Thread(new ThreadStart(HashMapThread));
+				thread.IsBackground = true;
+				thread.Start();
+			}
+		}
 
 		/// <summary>
 		/// Contructs a ServerFile object that is used to sync a file from the client.
@@ -187,45 +197,34 @@ namespace Simias.Sync
 			mapSrcStream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.None);	
 			lock (mapQ)
 			{
-				if (threadCount < MaxMapThreads)
-				{
-					Thread thread = new Thread(new ThreadStart(HashMapThread));
-					thread.IsBackground = true;
-					thread.Start();
-					threadCount++;
-				}
-				else
-				{
-					mapQ.Enqueue(new HashMapDelegate(CreateHashMapFile));
-				}
+				mapQ.Enqueue(new HashMapDelegate(CreateHashMapFile));
 			}
+			queueEvent.Set();
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		private void HashMapThread()
+		private static void HashMapThread()
 		{
-			CreateHashMapFile();
 			// Now see if we have any work queued.
-			HashMapDelegate hmd;
 			while (true)
 			{
-				lock (mapQ)
+				queueEvent.WaitOne();
+				while (true)
 				{
-					hmd = mapQ.Count > 0 ? mapQ.Dequeue() as HashMapDelegate : null;
+					HashMapDelegate hmd;
+					lock (mapQ)
+					{
+						hmd = mapQ.Count > 0 ? mapQ.Dequeue() as HashMapDelegate : null;
+					}
+					if (hmd == null)
+						break;
+					hmd();
 				}
-				if (hmd == null)
-					break;
-				hmd();
-			}
-		
-			lock (mapQ)
-			{
-				threadCount--;
 			}
 		}
-
+		
 		/// <summary>
 		/// 
 		/// </summary>
