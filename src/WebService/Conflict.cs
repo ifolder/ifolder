@@ -141,10 +141,20 @@ namespace Novell.iFolder.Web
 					DirNode dn = node as DirNode;
 					if (dn != null)
 					{
-						LocalName = dn.Name;
-						LocalDate = null;
-						LocalSize = null;
-						LocalFullPath = conflict.FileNameConflictPath;
+						if (dn.Name.Equals(Path.GetFileName(conflict.FileNameConflictPath)))
+						{
+							LocalName = dn.Name;
+							LocalDate = null;
+							LocalSize = null;
+							LocalFullPath = conflict.FileNameConflictPath;
+						}
+						else
+						{
+							ServerName = dn.Name;
+							ServerDate = null;
+							ServerSize = null;
+							ServerFullPath = conflict.NonconflictedPath;
+						}
 					}
 				}
 			}
