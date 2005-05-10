@@ -204,9 +204,9 @@ if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
         echo "Removing simias information for all users"
         if [ -e /root/.local/simias ]
         then
-                rm -rf /root/.local/simias
+                rm -rf /root/.local/share/simias
         fi
-        rm -rf /home/${*}/.local/simias
+        rm -rf /home/${*}/.local/share/simias
                                                                                                                                   
     #
     # Remove ifolder.sh from /etc/profile.d
