@@ -132,7 +132,7 @@ static ConflictWindowController *conflictSharedInstance = nil;
 				NSBeginAlertSheet(NSLocalizedString(@"Error resolving conflict", nil), 
 					NSLocalizedString(@"OK", nil), nil, nil,
 					[self window], self, nil, nil, NULL, 
-					[ex description]);
+					[ex name]);
 			}
 		}
 	}
@@ -186,7 +186,7 @@ static ConflictWindowController *conflictSharedInstance = nil;
 						NSBeginAlertSheet(NSLocalizedString(@"Error resolving conflict", nil), 
 							NSLocalizedString(@"OK", nil), nil, nil,
 							[self window], self, nil, nil, NULL, 
-							[ex description]);
+							[ex name]);
 					}
 				}
 				else
@@ -202,7 +202,7 @@ static ConflictWindowController *conflictSharedInstance = nil;
 						NSBeginAlertSheet(NSLocalizedString(@"Error resolving conflict", nil), 
 							NSLocalizedString(@"OK", nil), nil, nil,
 							[self window], self, nil, nil, NULL, 
-							[ex description]);
+							[ex name]);
 					}
 				}
 			}
@@ -218,7 +218,7 @@ static ConflictWindowController *conflictSharedInstance = nil;
 					NSBeginAlertSheet(NSLocalizedString(@"Error resolving conflict", nil), 
 						NSLocalizedString(@"OK", nil), nil, nil,
 						[self window], self, nil, nil, NULL, 
-						[ex description]);
+						[ex name]);
 				}
 			}
 		}
