@@ -1,6 +1,8 @@
 @INTLTOOL_DESKTOP_RULE@
 
-SUBDIRS = src po
+SUBDIRS = src
+# bht: Removed the po subdirectory from being built for FCS
+# po
 
 DIST_SUBDIRS = $(SUBDIRS) package
 
