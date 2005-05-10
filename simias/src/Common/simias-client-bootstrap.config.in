@@ -9,7 +9,7 @@
       <Service name="Simias Interprocess Event Service" assembly="Simias" enabled="True" type="Thread" class="Simias.Event.IProcEventServer" />
       <Service name="Simias PO Service" assembly="Simias" enabled="True" type="Thread" class="Simias.POBox.POService" />
       <Service name="Simias Sync Client" assembly="Simias" enabled="True" type="Thread" class="Simias.Sync.SyncClient" />
-      <Service name="Rendezvous Workgroup Domain" assembly="Simdezvous.dll" enabled="False" type="Thread" class="Simias.mDns.Service" />
+      <Service name="Bonjour Domain" assembly="Simias.Bonjour.dll" enabled="False" type="Thread" class="Simias.mDns.Service" />
       <Service name="Gaim Workgroup Domain" assembly="Simias.Gaim.dll" enabled="False" type="Thread" class="Simias.Gaim.GaimService" />
     </setting>
   </section>
