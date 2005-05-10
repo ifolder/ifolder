@@ -34,6 +34,7 @@
 #import "iFolderNotificationController.h"
 #import "config.h"
 #import "AuthStatus.h"
+#include "simiasStub.h"
 
 
 @implementation iFolderApplication
@@ -516,7 +517,61 @@
 {
 	if([[smne type] compare:@"Domain-Up"] == 0)
 	{
-		[self showLoginWindowTS:[smne message]];
+		// For some reason a "Domain-Up" event is being sent for this
+		if([[smne message] hasPrefix:@"The simias service is terminating"])
+			return;
+
+		NSLog(@"Received a Domain-Up event for domain %@", [smne message]);
+
+		// We need to attempt to connect to Simias to see if the Password has been saved
+		SimiasService *simiasService = [[SimiasService alloc] init];
+		NSString *savedPassword = nil;
+		BOOL	showLoginDialog = NO;
+
+		@try
+		{
+			savedPassword = [simiasService GetDomainPassword:[smne message]];
+		}
+		@catch(NSException *ex)
+		{
+			NSLog(@"Exception Getting Domain Password %@", [ex name]);
+		}
+
+		if(savedPassword != nil)
+		{
+			NSLog(@"Saved Password was found, authenticating...");
+
+			@try
+			{
+				AuthStatus *authStatus = [[simiasService LoginToRemoteDomain:[smne message] 
+											usingPassword:savedPassword] retain];
+
+				unsigned int statusCode = [[authStatus statusCode] unsignedIntValue];
+
+				[authStatus release];
+			
+				if(	(statusCode == ns1__StatusCodes__Success) ||
+					(statusCode == ns1__StatusCodes__SuccessInGrace) )
+					NSLog(@"Successfully authenticated to domain %@", [smne message]);
+				else
+				{
+					NSLog(@"Unable to authenticate, status: %d", statusCode);
+					showLoginDialog = YES;
+				}
+			}
+			@catch (NSException *e)
+			{
+				NSLog(@"Exception authenticating to domain: %@", [e name]);
+				showLoginDialog = YES;
+			}			
+		}
+		else
+			showLoginDialog = YES;
+
+		[simiasService release];
+
+		if(showLoginDialog)
+			[self showLoginWindowTS:[smne message]];
 	}
 }
 
