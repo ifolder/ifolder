@@ -229,7 +229,8 @@ namespace Simias.Sync
 						}
 						if (hmd == null)
 							break;
-						hmd();
+						try { hmd(); }
+						catch { /* Don't let the thread go away.*/ }
 					}
 				}
 				catch{}
