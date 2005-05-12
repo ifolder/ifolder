@@ -247,6 +247,15 @@ namespace Simias.POBox
 					Sync.SyncClient.ScheduleSync( poBox.ID );
 					result = true;
 				}
+				else if ( status == POBoxStatus.UnknownIdentity )
+				{
+					// The invited user no longer exists on the server roster
+					// possibly due to scoping changes by the administrator
+					log.Info( "User {0} does not exist in the server domain", me.Name );
+					poBox.Commit( poBox.Delete( subscription ) );
+					Sync.SyncClient.ScheduleSync( poBox.ID );
+					result = true;
+				}
 				else
 				{
 					log.Debug( "Failed the remote invite call -  Status: " + status.ToString() );
