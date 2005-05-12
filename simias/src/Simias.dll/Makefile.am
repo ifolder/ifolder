@@ -70,7 +70,7 @@ uninstall-local:
 	cd $(DESTDIR)$(sysconfdir); rm -f Simias.log4net simias-client-bootstrap.config
 	cd $(DESTDIR)$(datadir)/simias; rm -f log4net.LICENSE.txt
 
-CLEAN_FILES = Simias.dll $(DOC_FILE_CLEAN) $(DEBUG_FILES) simias-client-bootstrap.config MyDns.cs
+CLEAN_FILES = Simias.dll $(DOC_FILE_CLEAN) $(DEBUG_FILES) ../Common/simias-client-bootstrap.config ../Common/MyDns.cs
 
 clean-local:
 	rm -rf $(CLEAN_FILES)
