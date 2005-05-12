@@ -1172,9 +1172,8 @@ namespace Simias.Web
 
 
 		/// <summary>
-		/// Utility method that will find all members of a collection
-		/// and remove the subscription to this collection from their
-		/// POBox
+		/// Utility method that will find all subscriptions to a collection
+		/// and remove the subscription to this collection
 		/// </summary>
 		/// <param name = "store">
 		/// The store where the POBox and collection for this subscription
@@ -1185,16 +1184,18 @@ namespace Simias.Web
 		/// </param>
 		private static void RemoveAllSubscriptions(Store store, Collection col)
 		{
-			ICSList memberlist = col.GetMemberList();
-			
-			foreach(ShallowNode sNode in memberlist)
-			{
-				// Get the member from the list
-				Simias.Storage.Member member =
-					new Simias.Storage.Member(col, sNode);
+            ICSList subList = store.GetNodesByProperty(
+                new Property(Subscription.SubscriptionCollectionIDProperty, col.ID),
+                SearchOp.Equal);
 
-				RemoveMemberSubscription(store, col, member.UserID);
-			}
+            foreach(ShallowNode sn in subList)
+            {
+                Collection c = store.GetCollectionByID(sn.CollectionID);
+                if(c != null)
+                {
+                    c.Commit( c.Delete( new Node(c, sn) ) );
+                }
+            }
 		}
 
 
