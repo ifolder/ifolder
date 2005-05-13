@@ -3071,7 +3071,7 @@
 		<value>CenterParent</value>
 	</data>
 	<data name="$this.Text">
-		<value>iFolder Conflict Resolver</value>
+		<value>Resolve Conflicts</value>
 	</data>
 	<data name="$this.ToolTip">
 		<value />
