@@ -28,6 +28,8 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
 
+using Novell.Win32Util;
+
 namespace Novell.FormsTrayApp
 {
 	/// <summary>
@@ -55,7 +57,7 @@ namespace Novell.FormsTrayApp
 
 			// Add the version string.
 			System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(About));
-			title.Text = string.Format(resourceManager.GetString("title.Text"), System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+			title.Text = string.Format(resourceManager.GetString("title.Text"), Application.ProductVersion);
 
 			// Center the title text.
 			Graphics g = title.CreateGraphics();
@@ -121,6 +123,7 @@ namespace Novell.FormsTrayApp
 			this.pictureBox1.TabStop = false;
 			this.pictureBox1.Text = resources.GetString("pictureBox1.Text");
 			this.pictureBox1.Visible = ((bool)(resources.GetObject("pictureBox1.Visible")));
+			this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
 			// 
 			// title
 			// 
@@ -268,7 +271,6 @@ namespace Novell.FormsTrayApp
 			this.ShowInTaskbar = false;
 			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
 			this.Text = resources.GetString("$this.Text");
-			this.Load += new System.EventHandler(this.About_Load);
 			this.ResumeLayout(false);
 
 		}
@@ -280,10 +282,17 @@ namespace Novell.FormsTrayApp
 			creds.ShowDialog();		
 		}
 
-		private void About_Load(object sender, System.EventArgs e)
+		private void pictureBox1_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
-			pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-			pictureBox1.Image = Image.FromFile(Path.Combine(Application.StartupPath, @"ifolder_app.ico"));
+			IntPtr hIcon = Win32Window.LoadImageFromFile(
+				0,
+				Path.Combine(Application.StartupPath, "ifolder_app.ico"),
+				Win32Window.IMAGE_ICON,
+				48,
+				48,
+				Win32Window.LR_LOADFROMFILE);
+			Bitmap bmap = Win32Window.IconToAlphaBitmap(Icon.FromHandle(hIcon));
+			e.Graphics.DrawImage(bmap, 0, 0);
 		}
 	}
 }
