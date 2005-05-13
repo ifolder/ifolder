@@ -77,6 +77,8 @@ namespace StoreBrowser
 		private System.Windows.Forms.MenuItem menuItem9;
 		private System.Windows.Forms.MenuItem menuItemProperty;
 		private System.Windows.Forms.MenuItem menuItemXml;
+		private System.Windows.Forms.MenuItem menuItemExit;
+		private System.Windows.Forms.MenuItem menuItem10;
 
 		private CertPolicy certPolicy = new CertPolicy();
 
@@ -128,6 +130,9 @@ namespace StoreBrowser
 			this.menuItem6 = new System.Windows.Forms.MenuItem();
 			this.menuItem2 = new System.Windows.Forms.MenuItem();
 			this.MI_RecentS = new System.Windows.Forms.MenuItem();
+			this.menuItem9 = new System.Windows.Forms.MenuItem();
+			this.menuItemProperty = new System.Windows.Forms.MenuItem();
+			this.menuItemXml = new System.Windows.Forms.MenuItem();
 			this.tView = new System.Windows.Forms.TreeView();
 			this.splitter1 = new System.Windows.Forms.Splitter();
 			this.richTextBox1 = new System.Windows.Forms.RichTextBox();
@@ -144,9 +149,8 @@ namespace StoreBrowser
 			this.pcmDelete = new System.Windows.Forms.MenuItem();
 			this.pcmNew = new System.Windows.Forms.MenuItem();
 			this.pcmEdit = new System.Windows.Forms.MenuItem();
-			this.menuItem9 = new System.Windows.Forms.MenuItem();
-			this.menuItemProperty = new System.Windows.Forms.MenuItem();
-			this.menuItemXml = new System.Windows.Forms.MenuItem();
+			this.menuItemExit = new System.Windows.Forms.MenuItem();
+			this.menuItem10 = new System.Windows.Forms.MenuItem();
 			this.SuspendLayout();
 			// 
 			// mainMenu1
@@ -167,7 +171,9 @@ namespace StoreBrowser
 																					  this.menuItem5,
 																					  this.menuItem6,
 																					  this.menuItem2,
-																					  this.MI_RecentS});
+																					  this.MI_RecentS,
+																					  this.menuItem10,
+																					  this.menuItemExit});
 			this.menuItem1.Text = "File";
 			// 
 			// MI_OpenStore
@@ -216,6 +222,27 @@ namespace StoreBrowser
 			// 
 			this.MI_RecentS.Index = 8;
 			this.MI_RecentS.Text = "Recent Store";
+			// 
+			// menuItem9
+			// 
+			this.menuItem9.Index = 1;
+			this.menuItem9.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																					  this.menuItemProperty,
+																					  this.menuItemXml});
+			this.menuItem9.Text = "View";
+			// 
+			// menuItemProperty
+			// 
+			this.menuItemProperty.Checked = true;
+			this.menuItemProperty.Index = 0;
+			this.menuItemProperty.Text = "Property";
+			this.menuItemProperty.Click += new System.EventHandler(this.menuItemProperty_Click);
+			// 
+			// menuItemXml
+			// 
+			this.menuItemXml.Index = 1;
+			this.menuItemXml.Text = "Xml";
+			this.menuItemXml.Click += new System.EventHandler(this.menuItemXml_Click);
 			// 
 			// tView
 			// 
@@ -339,26 +366,16 @@ namespace StoreBrowser
 			this.pcmEdit.Text = "Edit";
 			this.pcmEdit.Click += new System.EventHandler(this.pcmEdit_Click);
 			// 
-			// menuItem9
+			// menuItemExit
 			// 
-			this.menuItem9.Index = 1;
-			this.menuItem9.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					  this.menuItemProperty,
-																					  this.menuItemXml});
-			this.menuItem9.Text = "View";
+			this.menuItemExit.Index = 10;
+			this.menuItemExit.Text = "Exit";
+			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
 			// 
-			// menuItemProperty
+			// menuItem10
 			// 
-			this.menuItemProperty.Checked = true;
-			this.menuItemProperty.Index = 0;
-			this.menuItemProperty.Text = "Property";
-			this.menuItemProperty.Click += new System.EventHandler(this.menuItemProperty_Click);
-			// 
-			// menuItemXml
-			// 
-			this.menuItemXml.Index = 1;
-			this.menuItemXml.Text = "Xml";
-			this.menuItemXml.Click += new System.EventHandler(this.menuItemXml_Click);
+			this.menuItem10.Index = 9;
+			this.menuItem10.Text = "-";
 			// 
 			// Form1
 			// 
@@ -411,6 +428,7 @@ namespace StoreBrowser
 		private void OpenStore()
 		{
 			this.Text = "Store Browser : " + hostName;
+			listView1.Items.Clear();
 			browser = new NodeBrowser(this, tView, listView1, richTextBox1, hostName, username, password);
 			browser.Show();
 		}
@@ -437,6 +455,18 @@ namespace StoreBrowser
 		private void MI_Open_Store_Click(object sender, System.EventArgs e)
 		{
 			HostDialog hDiag = new HostDialog(hostName);
+
+			if ( recentStores.ContainsKey( hostName ) )
+			{
+				string creds = recentStores[ hostName ] as String;
+				if ( creds != ":" )
+				{
+					int index = creds.IndexOf( ':' );
+					hDiag.UserName = creds.Substring( 0, index );
+					hDiag.Password = creds.Substring( index + 1 );
+				}
+			}
+
 			if (hDiag.ShowDialog() == DialogResult.OK)
 			{
 				tView.Nodes.Clear();
@@ -706,6 +736,11 @@ namespace StoreBrowser
 			menuItemProperty.Checked = true;
 			menuItemXml.Checked = false;
 			browser.ShowNode(tView.SelectedNode);
+		}
+
+		private void menuItemExit_Click(object sender, System.EventArgs e)
+		{
+			Application.Exit();
 		}
 	}
 

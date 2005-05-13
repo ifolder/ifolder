@@ -305,7 +305,7 @@ namespace StoreBrowser
 		{
 			tView.Nodes.Clear();
 			tView.BeginUpdate();
-			TreeNode storeNode = new TreeNode("Store");
+			TreeNode storeNode = new TreeNode("Store", nodeImage("Store"), nodeImage("Store"));
             tView.Nodes.Add(storeNode);
 			storeNode.Nodes.Add("temp");
 			tView.EndUpdate();
@@ -405,18 +405,69 @@ namespace StoreBrowser
 			}
 		}
 
+		private int nodeImage( string type )
+		{
+			switch( type )
+			{
+				case "Store":
+					return 0;
+
+				case "Collection":
+					return 1;
+
+				case "POBox":
+					return 2;
+
+				case "LocalDatabase":
+					return 3;
+
+				case "Domain":
+					return 4;
+
+				case "DirNode":
+					return 5;
+
+				case "Subscription":
+					return 6;
+
+				case "Member":
+					return 7;
+
+				case "Identity":
+					return 8;
+
+				case "Policy":
+					return 9;
+
+				default:
+					return 10;
+			}
+		}
+
 		private void addCollections(TreeNode tNode)
 		{
 			tView.BeginUpdate();
-			BrowserNode[] bList = browser.EnumerateCollections();
-			foreach(BrowserNode bn in bList )
+			try
 			{
-				DisplayNode dspNode = new DisplayNode( bn );
-				TreeNode colNode = new TreeNode(dspNode.Name);
-				tNode.Nodes.Add(colNode);
-				colNode.Tag = dspNode;
-				colNode.Nodes.Add("temp");
+				BrowserNode[] bList = browser.EnumerateCollections();
+				foreach(BrowserNode bn in bList )
+				{
+					DisplayNode dspNode = new DisplayNode( bn );
+					TreeNode colNode = new TreeNode(dspNode.Name, nodeImage(dspNode.Type), nodeImage(dspNode.Type));
+					tNode.Nodes.Add(colNode);
+					colNode.Tag = dspNode;
+					colNode.Nodes.Add("temp");
+				}
 			}
+			catch ( Exception ex )
+			{
+				MessageBox.Show( ex.Message, "Store Browser Error", MessageBoxButtons.OK );
+				tView.Nodes.Clear();
+				TreeNode storeNode = new TreeNode("Store", nodeImage("Store"), nodeImage("Store"));
+				tView.Nodes.Add(storeNode);
+				storeNode.Nodes.Add("temp");
+			}
+
 			tView.EndUpdate();
 		}
 
@@ -437,7 +488,7 @@ namespace StoreBrowser
 						DisplayNode n = new DisplayNode( bn );
 						if (n.ID != dspNode.ID)
 						{
-							TreeNode nNode = new TreeNode(n.Name);
+							TreeNode nNode = new TreeNode(n.Name, nodeImage(n.Type), nodeImage(n.Type));
 							nNode.Tag = n;
 							tNode.Nodes.Add(nNode);
 						}

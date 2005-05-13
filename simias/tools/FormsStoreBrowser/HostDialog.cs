@@ -33,11 +33,13 @@ namespace StoreBrowser
 		public string UserName
 		{
 			get { return usernameEdit.Text; }
+			set { usernameEdit.Text = value; }
 		}
 
 		public string Password
 		{
 			get { return passwordEdit.Text; }
+			set { passwordEdit.Text = value; }
 		}
 
 		public HostDialog( string hostUri )
