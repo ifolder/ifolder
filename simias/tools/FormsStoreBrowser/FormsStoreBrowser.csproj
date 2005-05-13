@@ -39,7 +39,7 @@
                     OutputPath = "bin\Debug\"
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
-                    TreatWarningsAsErrors = "false"
+                    TreatWarningsAsErrors = "true"
                     WarningLevel = "4"
                 />
                 <Config
@@ -97,7 +97,7 @@
                 <Reference
                     Name = "SimiasClient"
                     AssemblyName = "SimiasClient"
-                    HintPath = "..\..\stage\web\bin\SimiasClient.dll"
+                    HintPath = "..\..\..\..\final\web\bin\SimiasClient.dll"
                 />
             </References>
         </Build>
@@ -166,11 +166,6 @@
                     RelPath = "PropertyForm.resx"
                     DependentUpon = "PropertyForm.cs"
                     BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "ProviderBrowser.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
                 />
             </Include>
         </Files>

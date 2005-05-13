@@ -249,16 +249,30 @@ namespace StoreBrowser
 	public class NodeBrowser : IStoreBrowser
 	{
 		BrowserService browser;
+		Form1 form;
 		TreeView tView;
 		ListView lView;
+		RichTextBox rView;
 		bool alreadyDisposed;
 
-		public NodeBrowser(TreeView view, ListView lView, string host, string username, string password)
+		public NodeBrowser(Form1 form, TreeView view, ListView lView, RichTextBox rView, string host, string username, string password)
 		{
 			tView = view;
+			this.form = form;
 			this.lView = lView;
-			lView.BringToFront();
+			this.rView = rView;
+			rView.Show();
 			lView.Show();
+
+			if ( form.IsXmlView )
+			{
+				rView.BringToFront();
+			}
+			else
+			{
+				lView.BringToFront();
+			}
+
 			browser = new BrowserService();
 			browser.Url = host + "/SimiasBrowser.asmx";
 			tView.Dock = DockStyle.Left;
@@ -299,70 +313,97 @@ namespace StoreBrowser
 
 		public void ShowNode(TreeNode tNode)
 		{
-			lView.Items.Clear();
-			if (tNode.Tag != null)
+			if ( form.IsXmlView )
 			{
-				DisplayNode dspNode = (DisplayNode)tNode.Tag;
-				lView.Tag = dspNode;
+				rView.Clear();
+				rView.BringToFront();
 
-				// Add the name;
-				ListViewItem item = new ListViewItem("Name");
-				item.BackColor = Color.LightBlue;
-				item.SubItems.Add(dspNode.Name);
-				item.SubItems.Add("String");
-				lView.Items.Add(item);
-
-				// Add the ID.
-				item = new ListViewItem("ID");
-				item.BackColor = Color.White;
-				item.SubItems.Add(dspNode.ID);
-				item.SubItems.Add("String");
-				lView.Items.Add(item);
-
-				// Add the type.
-				item = new ListViewItem("Type");
-				item.BackColor = Color.LightBlue;
-				item.SubItems.Add(dspNode.Type);
-				item.SubItems.Add("String");
-				lView.Items.Add(item);
-
-				Color c = Color.LightBlue;
-				foreach (DisplayProperty p in dspNode)
+				if (tNode.Tag != null)
 				{
-					c = (c == Color.LightBlue) ? Color.White : Color.LightBlue;
-					item = new ListViewItem(p.Name);
-					item.Tag = p;
-					item.BackColor = c;
+					DisplayNode dspNode = (DisplayNode)tNode.Tag;
+					StringWriter sw = new StringWriter();
+					writeXml(dspNode.Document, sw);
+					rView.AppendText(sw.ToString());
+				}
+			}
+			else
+			{
+				lView.Items.Clear();
+				lView.BringToFront();
+				if (tNode.Tag != null)
+				{
+					DisplayNode dspNode = (DisplayNode)tNode.Tag;
+					lView.Tag = dspNode;
 
-					if (p.Type == "Relationship")
+					// Add the name;
+					ListViewItem item = new ListViewItem("Name");
+					item.BackColor = Color.LightBlue;
+					item.SubItems.Add(dspNode.Name);
+					item.SubItems.Add("String");
+					lView.Items.Add(item);
+
+					// Add the ID.
+					item = new ListViewItem("ID");
+					item.BackColor = Color.White;
+					item.SubItems.Add(dspNode.ID);
+					item.SubItems.Add("String");
+					lView.Items.Add(item);
+
+					// Add the type.
+					item = new ListViewItem("Type");
+					item.BackColor = Color.LightBlue;
+					item.SubItems.Add(dspNode.Type);
+					item.SubItems.Add("String");
+					lView.Items.Add(item);
+
+					Color c = Color.LightBlue;
+					foreach (DisplayProperty p in dspNode)
 					{
-						string valueStr = p.Value;
-						Relationship r = new Relationship(valueStr);
-						BrowserNode cbn = browser.GetCollectionByID( r.CollectionID );
-						if ( cbn != null )
+						c = (c == Color.LightBlue) ? Color.White : Color.LightBlue;
+						item = new ListViewItem(p.Name);
+						item.Tag = p;
+						item.BackColor = c;
+
+						if (p.Type == "Relationship")
 						{
-							BrowserNode nbn = !r.IsRoot ? browser.GetNodeByID( r.CollectionID, r.NodeID ) : null;
-							valueStr = String.Format("{0}{1}", new DisplayNode(cbn).Name, (nbn != null) ? ":" + new DisplayNode(nbn).Name : null);
+							string valueStr = p.Value;
+							Relationship r = new Relationship(valueStr);
+							BrowserNode cbn = browser.GetCollectionByID( r.CollectionID );
+							if ( cbn != null )
+							{
+								BrowserNode nbn = !r.IsRoot ? browser.GetNodeByID( r.CollectionID, r.NodeID ) : null;
+								valueStr = String.Format("{0}{1}", new DisplayNode(cbn).Name, (nbn != null) ? ":" + new DisplayNode(nbn).Name : null);
+							}
+
+							item.SubItems.Add(valueStr);
+						}
+						else
+						{
+							item.SubItems.Add(p.Value);
 						}
 
-						item.SubItems.Add(valueStr);
+						item.SubItems.Add(p.Type);
+						string flags = p.IsLocal ? "(Local) " : "";
+						flags += p.IsMultiValued ? "(MV) " : "";
+						flags += string.Format("0x{0}", p.Flags.ToString("X4"));
+						item.SubItems.Add(flags);
+						lView.Items.Add(item);
 					}
-					else
-					{
-						item.SubItems.Add(p.Value);
-					}
-
-					item.SubItems.Add(p.Type);
-					string flags = p.IsLocal ? "(Local) " : "";
-					flags += p.IsMultiValued ? "(MV) " : "";
-					flags += string.Format("0x{0}", p.Flags.ToString("X4"));
-					item.SubItems.Add(flags);
-					lView.Items.Add(item);
 				}
 			}
 		}
 
 		#endregion
+
+		private void writeXml(XmlDocument doc, TextWriter tw)
+		{
+			if (doc != null)
+			{
+				XmlTextWriter w = new XmlTextWriter(tw);
+				w.Formatting = Formatting.Indented;
+				doc.WriteTo(w);
+			}
+		}
 
 		private void addCollections(TreeNode tNode)
 		{
