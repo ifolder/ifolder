@@ -127,7 +127,7 @@ namespace Simias.Sync.Web
 			}
 			catch (Exception ex)
 			{
-				new SimiasException("Request Failed", ex);
+				Sync.Log.log.Debug("Request Failed exception\n{0}\n{1}", ex.Message, ex.StackTrace);
 				throw ex;
 			}
 			Response.End();
