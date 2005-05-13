@@ -237,7 +237,7 @@ namespace Simias.Storage.Provider.Flaim
 				rc = FWGetObject(pStore, Id, ref length, Buffer);
 			} while (rc == FlaimError.Error.FERR_MEM);
 
-			if (FlaimError.IsError(rc))
+			if (FlaimError.IsError(rc) && rc != FlaimError.Error.FERR_NOT_FOUND)
 			{
 				throw FlaimError.GetException(rc);
 			}
