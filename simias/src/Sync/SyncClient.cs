@@ -645,6 +645,7 @@ namespace Simias.Sync
 			try
 			{
 				eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartLocalSync, true));
+				syncStartTime = DateTime.Now;
 				queuedChanges = false;
 				serverAlive = false;
 				serverStatus = StartSyncStatus.Success;
@@ -678,6 +679,7 @@ namespace Simias.Sync
 				// Server side changes.
 				if ((workArray == null || workArray.DownCount == 0) && !yielded)
 					fileMonitor.CheckForFileChanges();
+				// Reset the sync time so that we only yield for network time.
 				syncStartTime = DateTime.Now;
 				yielded = false;
 				if (collection.Role != SyncRoles.Slave)
