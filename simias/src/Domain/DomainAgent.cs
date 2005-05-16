@@ -648,6 +648,12 @@ namespace Simias.DomainServices
 			{
 				throw new SimiasException(String.Format("Cannot get location for domain {0}.", domain.Name));
 			}
+			// Construct the web client.
+			DomainService domainService = new DomainService();
+			domainService.Url = uri.ToString() + "/DomainService.asmx";
+			WebState webState = new WebState(domainID, userID);
+			webState.InitializeWebClient(domainService, domainID);
+
 			
 			// Find the user's POBox for this domain.
 			POBox.POBox poBox = POBox.POBox.FindPOBox(store, domainID, userID);
@@ -656,36 +662,35 @@ namespace Simias.DomainServices
 				throw new SimiasException(String.Format("Cannot find POBox belonging to domain {0}", domainID));
 			}
 
-			// Delete the POBox for this domain which will start the domain cleanup process.
-			poBox.Commit(poBox.Delete());
-
-			// Remove the domain from the table
-			lock (domainTable)
+			try
 			{
-				domainTable.Remove(domainID);
-			}
+				// Delete the POBox for this domain which will start the domain cleanup process.
+				poBox.Commit(poBox.Delete());
 
-			if (!localOnly)
-			{
-				// Construct the web client.
-				DomainService domainService = new DomainService();
-				domainService.Url = uri.ToString() + "/DomainService.asmx";
-				WebState webState = new WebState(domainID, userID);
-				webState.InitializeWebClient(domainService, domainID);
+				// Remove the domain from the table
+				lock (domainTable)
+				{
+					domainTable.Remove(domainID);
+				}
 
-				// Remove the user from the domain server.
-				domainService.RemoveServerCollections(domainID, userID);
+				if (!localOnly)
+				{
+					// Remove the user from the domain server.
+					domainService.RemoveServerCollections(domainID, userID);
+				}
 			}
-			
-			// Clear the password from the cache.
-			if (member != null)
+			finally
 			{
-				NetCredential netCredential = new NetCredential( "iFolder", domainID, true, member.Name, null );
-				uri = new Uri(uri, "/DomainService.asmx");
-				netCredential.Remove(uri, "BASIC");
+				// Clear the password from the cache.
+				if (member != null)
+				{
+					NetCredential netCredential = new NetCredential( "iFolder", domainID, true, member.Name, null );
+					uri = new Uri(uri, "/DomainService.asmx");
+					netCredential.Remove(uri, "BASIC");
+				}
+				// Clear the cookies for this Uri.
+				WebState.ResetWebState(domainID);
 			}
-			// Clear the cookies for this Uri.
-			WebState.ResetWebState(domainID);
 		}
 
 		/// <summary>
