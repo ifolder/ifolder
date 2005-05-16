@@ -148,6 +148,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "NodeBrowser2.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "PropertyEditor.cs"
                     SubType = "UserControl"
                     BuildAction = "Compile"

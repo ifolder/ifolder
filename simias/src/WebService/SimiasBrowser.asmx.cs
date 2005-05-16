@@ -58,6 +58,81 @@ namespace Simias.Web
 	}
 
 	/// <summary>
+	/// Class that implements a shallow node.
+	/// </summary>
+	public class BrowserShallowNode
+	{
+		#region Class Members
+
+		private string name;
+		private string id;
+		private string type;
+		private string cid;
+
+		#endregion
+
+		#region Properties
+
+		/// <summary>
+		/// Gets and sets the name of the shallow node.
+		/// </summary>
+		public string Name
+		{
+			get { return name; }
+			set { name = value; }
+		}
+
+		/// <summary>
+		/// Gets and sets the ID of the shallow node.
+		/// </summary>
+		public string ID
+		{
+			get { return id; }
+			set { id = value; }
+		}
+
+		/// <summary>
+		/// Gets and sets the Type of the shallow node.
+		/// </summary>
+		public string Type
+		{
+			get { return type; }
+			set { type = value; }
+		}
+
+		/// <summary>
+		/// Gets and sets the collection ID of the shallow node.
+		/// </summary>
+		public string CID
+		{
+			get { return cid; }
+			set { cid = value; }
+		}
+
+		#endregion
+
+		#region Constructor
+
+		public BrowserShallowNode()
+		{
+			this.name = String.Empty;
+			this.id = String.Empty;
+			this.type = String.Empty;
+			this.cid = String.Empty;
+		}
+
+		public BrowserShallowNode( ShallowNode sn )
+		{
+			this.name = sn.Name;
+			this.id = sn.ID;
+			this.type = sn.Type;
+			this.cid = sn.CollectionID;
+		}
+
+		#endregion
+	}
+
+	/// <summary>
 	/// Summary description for Service1.
 	/// </summary>
 	[WebService(
@@ -66,6 +141,12 @@ namespace Simias.Web
 		 Description="Web Service providing access to the simias database.")]
 	public class Browser : System.Web.Services.WebService
 	{
+		#region Class Members
+
+		private string webServiceVersion = "1.1.0.0";
+
+		#endregion
+
 		#region WebMethods
 		/// <summary>
 		/// Returns a list of collections in the store.
@@ -292,6 +373,60 @@ namespace Simias.Web
 					c.Commit( c.Delete( n ) );
 				}
 			}
+		}
+
+		/// <summary>
+		/// Returns a list of shallow collection nodes in the store.
+		/// </summary>
+		/// <returns>An array of BrowserShallowNode objects.</returns>
+		[ WebMethod(EnableSession = true) ]
+		[ SoapDocumentMethod ]
+		public BrowserShallowNode[] EnumerateShallowCollections()
+		{
+			ArrayList list = new ArrayList();
+			Store store = Store.GetStore();
+			
+			foreach ( ShallowNode sn in store )
+			{
+				list.Add( new BrowserShallowNode( sn ) );
+			}
+
+			return list.ToArray( typeof( BrowserShallowNode ) ) as BrowserShallowNode[];
+		}
+
+		/// <summary>
+		/// Enumerates the shallow nodes in a collection.
+		/// </summary>
+		/// <param name="collectionID"></param>
+		/// <returns></returns>
+		[ WebMethod(EnableSession = true) ]
+		[ SoapDocumentMethod ]
+		public BrowserShallowNode[] EnumerateShallowNodes( string collectionID )
+		{
+			ArrayList list = new ArrayList();
+			Store store = Store.GetStore();
+
+			Collection c = store.GetCollectionByID( collectionID );
+			if ( c != null )
+			{
+				foreach ( ShallowNode sn in c )
+				{
+					list.Add( new BrowserShallowNode( sn ) );
+				}
+			}
+
+			return list.ToArray( typeof( BrowserShallowNode ) ) as BrowserShallowNode[];
+		}
+
+		/// <summary>
+		/// Gets the web service version.
+		/// </summary>
+		/// <returns>A string containing the web service version.</returns>
+		[ WebMethod(EnableSession = true) ]
+		[ SoapDocumentMethod ]
+		public string GetVersion()
+		{
+			return webServiceVersion;
 		}
 		#endregion
 	}

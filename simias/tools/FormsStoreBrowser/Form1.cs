@@ -430,7 +430,16 @@ namespace StoreBrowser
 		{
 			this.Text = "Store Browser : " + hostName;
 			listView1.Items.Clear();
-			browser = new NodeBrowser(this, tView, listView1, richTextBox1, hostName, username, password);
+
+			try
+			{
+				browser = new NodeBrowser2(this, tView, listView1, richTextBox1, hostName, username, password);
+			}
+			catch
+			{
+				browser = new NodeBrowser(this, tView, listView1, richTextBox1, hostName, username, password);
+			}
+
 			browser.Show();
 		}
 
@@ -700,7 +709,17 @@ namespace StoreBrowser
 			if ( uri != null )
 			{
 				hostName = uri.AbsoluteUri;
-				browser = new NodeBrowser(this, tView, listView1, richTextBox1, hostName, username, password);
+
+				// Try the new interface first.
+				try
+				{
+					browser = new NodeBrowser2(this, tView, listView1, richTextBox1, hostName, username, password);
+				}
+				catch
+				{
+					browser = new NodeBrowser(this, tView, listView1, richTextBox1, hostName, username, password);
+				}
+
 				browser.Show();
 				AddRecentMI();
 			}
@@ -714,7 +733,15 @@ namespace StoreBrowser
 					username = hDiag.UserName;
 					password = hDiag.Password;
 
-					browser = new NodeBrowser(this, tView, listView1, richTextBox1, hostName, username, password);
+					try
+					{
+						browser = new NodeBrowser2(this, tView, listView1, richTextBox1, hostName, username, password);
+					}
+					catch
+					{
+						browser = new NodeBrowser(this, tView, listView1, richTextBox1, hostName, username, password);
+					}
+
 					browser.Show();
 					AddRecentMI();
 				}

@@ -27,7 +27,7 @@ public class BrowserService : System.Web.Services.Protocols.SoapHttpClientProtoc
     
     /// <remarks/>
     public BrowserService() {
-        this.Url = "http://127.0.0.1:2602/simias10/mlasky/SimiasBrowser.asmx";
+        this.Url = "http://localhost:8086/simias10/SimiasBrowser.asmx";
     }
     
     /// <remarks/>
@@ -231,6 +231,62 @@ public class BrowserService : System.Web.Services.Protocols.SoapHttpClientProtoc
     public void EndDeleteNode(System.IAsyncResult asyncResult) {
         this.EndInvoke(asyncResult);
     }
+    
+    /// <remarks/>
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/browser/EnumerateShallowCollections", RequestNamespace="http://novell.com/simias/browser", ResponseNamespace="http://novell.com/simias/browser", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public BrowserShallowNode[] EnumerateShallowCollections() {
+        object[] results = this.Invoke("EnumerateShallowCollections", new object[0]);
+        return ((BrowserShallowNode[])(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginEnumerateShallowCollections(System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("EnumerateShallowCollections", new object[0], callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public BrowserShallowNode[] EndEnumerateShallowCollections(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((BrowserShallowNode[])(results[0]));
+    }
+    
+    /// <remarks/>
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/browser/EnumerateShallowNodes", RequestNamespace="http://novell.com/simias/browser", ResponseNamespace="http://novell.com/simias/browser", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public BrowserShallowNode[] EnumerateShallowNodes(string collectionID) {
+        object[] results = this.Invoke("EnumerateShallowNodes", new object[] {
+                    collectionID});
+        return ((BrowserShallowNode[])(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginEnumerateShallowNodes(string collectionID, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("EnumerateShallowNodes", new object[] {
+                    collectionID}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public BrowserShallowNode[] EndEnumerateShallowNodes(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((BrowserShallowNode[])(results[0]));
+    }
+    
+    /// <remarks/>
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/browser/GetVersion", RequestNamespace="http://novell.com/simias/browser", ResponseNamespace="http://novell.com/simias/browser", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public string GetVersion() {
+        object[] results = this.Invoke("GetVersion", new object[0]);
+        return ((string)(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginGetVersion(System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("GetVersion", new object[0], callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public string EndGetVersion(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((string)(results[0]));
+    }
 }
 
 /// <remarks/>
@@ -239,4 +295,21 @@ public class BrowserNode {
     
     /// <remarks/>
     public string NodeData;
+}
+
+/// <remarks/>
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://novell.com/simias/browser")]
+public class BrowserShallowNode {
+    
+    /// <remarks/>
+    public string Name;
+    
+    /// <remarks/>
+    public string ID;
+    
+    /// <remarks/>
+    public string Type;
+    
+    /// <remarks/>
+    public string CID;
 }
