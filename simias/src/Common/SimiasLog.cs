@@ -266,5 +266,14 @@ namespace Simias
 				logger.Info(string.Format(FormatString, user, method, uri, id, status, time.ToString("dd-MM-yyy"), time.ToString("HH:mm:ss")));
 			}
 		}
+
+		public void LogAccessDebug(string method, string uri, string id, string status)
+		{
+			if (logger.IsInfoEnabled)
+			{
+				DateTime time = DateTime.Now;
+				logger.Debug(string.Format(FormatString, user, method, uri, id, status, time.ToString("dd-MM-yyy"), time.ToString("HH:mm:ss")));
+			}
+		}
 	}
 }

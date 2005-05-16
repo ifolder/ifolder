@@ -847,7 +847,7 @@ namespace Simias.Sync
 		{
 			inFile.WritePosition = offset;
 			inFile.Write(stream, count);
-			logger.LogAccess("WriteFile", inFile.Name, collection.ID, "Success");
+			logger.LogAccessDebug("WriteFile", inFile.Name, collection.ID, "Success");
 		}
 
 		/// <summary>
@@ -859,7 +859,7 @@ namespace Simias.Sync
 		public void Copy(long oldOffset, long offset, int count)
 		{
 			inFile.Copy(oldOffset, offset, count);
-			logger.LogAccess("CopyFile", inFile.Name, collection.ID, "Success");
+			logger.LogAccessDebug("CopyFile", inFile.Name, collection.ID, "Success");
 		}
 
 		/// <summary>
@@ -873,7 +873,7 @@ namespace Simias.Sync
 		{
 			outFile.ReadPosition = offset;
 			int bytesRead = outFile.Read(stream, count);
-			logger.LogAccess("ReadFile", outFile.Name, collection.ID, "Success");
+			logger.LogAccessDebug("ReadFile", outFile.Name, collection.ID, "Success");
 			return bytesRead;
 		}
 
