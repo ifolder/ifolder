@@ -130,6 +130,8 @@ namespace StoreBrowser
 			this.menuItem6 = new System.Windows.Forms.MenuItem();
 			this.menuItem2 = new System.Windows.Forms.MenuItem();
 			this.MI_RecentS = new System.Windows.Forms.MenuItem();
+			this.menuItem10 = new System.Windows.Forms.MenuItem();
+			this.menuItemExit = new System.Windows.Forms.MenuItem();
 			this.menuItem9 = new System.Windows.Forms.MenuItem();
 			this.menuItemProperty = new System.Windows.Forms.MenuItem();
 			this.menuItemXml = new System.Windows.Forms.MenuItem();
@@ -149,8 +151,6 @@ namespace StoreBrowser
 			this.pcmDelete = new System.Windows.Forms.MenuItem();
 			this.pcmNew = new System.Windows.Forms.MenuItem();
 			this.pcmEdit = new System.Windows.Forms.MenuItem();
-			this.menuItemExit = new System.Windows.Forms.MenuItem();
-			this.menuItem10 = new System.Windows.Forms.MenuItem();
 			this.SuspendLayout();
 			// 
 			// mainMenu1
@@ -222,6 +222,17 @@ namespace StoreBrowser
 			// 
 			this.MI_RecentS.Index = 8;
 			this.MI_RecentS.Text = "Recent Store";
+			// 
+			// menuItem10
+			// 
+			this.menuItem10.Index = 9;
+			this.menuItem10.Text = "-";
+			// 
+			// menuItemExit
+			// 
+			this.menuItemExit.Index = 10;
+			this.menuItemExit.Text = "Exit";
+			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
 			// 
 			// menuItem9
 			// 
@@ -366,17 +377,6 @@ namespace StoreBrowser
 			this.pcmEdit.Text = "Edit";
 			this.pcmEdit.Click += new System.EventHandler(this.pcmEdit_Click);
 			// 
-			// menuItemExit
-			// 
-			this.menuItemExit.Index = 10;
-			this.menuItemExit.Text = "Exit";
-			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
-			// 
-			// menuItem10
-			// 
-			this.menuItem10.Index = 9;
-			this.menuItem10.Text = "-";
-			// 
 			// Form1
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -385,6 +385,7 @@ namespace StoreBrowser
 			this.Controls.Add(this.richTextBox1);
 			this.Controls.Add(this.splitter1);
 			this.Controls.Add(this.tView);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Menu = this.mainMenu1;
 			this.Name = "Form1";
 			this.Text = "Store Browser";
