@@ -34,12 +34,8 @@ namespace Novell.FormsTrayApp
 	/// </summary>
 	public class Credits : System.Windows.Forms.Form
 	{
-		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.Button close;
-		private System.Windows.Forms.TabPage tabPage1;
-		private System.Windows.Forms.TabPage tabPage2;
 		private System.Windows.Forms.ListBox listBox1;
-		private System.Windows.Forms.ListBox listBox2;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -76,114 +72,9 @@ namespace Novell.FormsTrayApp
 		private void InitializeComponent()
 		{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(Credits));
-			this.tabControl1 = new System.Windows.Forms.TabControl();
-			this.close = new System.Windows.Forms.Button();
-			this.tabPage1 = new System.Windows.Forms.TabPage();
-			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.listBox1 = new System.Windows.Forms.ListBox();
-			this.listBox2 = new System.Windows.Forms.ListBox();
-			this.tabControl1.SuspendLayout();
-			this.tabPage1.SuspendLayout();
-			this.tabPage2.SuspendLayout();
+			this.close = new System.Windows.Forms.Button();
 			this.SuspendLayout();
-			// 
-			// tabControl1
-			// 
-			this.tabControl1.AccessibleDescription = resources.GetString("tabControl1.AccessibleDescription");
-			this.tabControl1.AccessibleName = resources.GetString("tabControl1.AccessibleName");
-			this.tabControl1.Alignment = ((System.Windows.Forms.TabAlignment)(resources.GetObject("tabControl1.Alignment")));
-			this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("tabControl1.Anchor")));
-			this.tabControl1.Appearance = ((System.Windows.Forms.TabAppearance)(resources.GetObject("tabControl1.Appearance")));
-			this.tabControl1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabControl1.BackgroundImage")));
-			this.tabControl1.Controls.Add(this.tabPage1);
-			this.tabControl1.Controls.Add(this.tabPage2);
-			this.tabControl1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabControl1.Dock")));
-			this.tabControl1.Enabled = ((bool)(resources.GetObject("tabControl1.Enabled")));
-			this.tabControl1.Font = ((System.Drawing.Font)(resources.GetObject("tabControl1.Font")));
-			this.tabControl1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tabControl1.ImeMode")));
-			this.tabControl1.ItemSize = ((System.Drawing.Size)(resources.GetObject("tabControl1.ItemSize")));
-			this.tabControl1.Location = ((System.Drawing.Point)(resources.GetObject("tabControl1.Location")));
-			this.tabControl1.Name = "tabControl1";
-			this.tabControl1.Padding = ((System.Drawing.Point)(resources.GetObject("tabControl1.Padding")));
-			this.tabControl1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("tabControl1.RightToLeft")));
-			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.ShowToolTips = ((bool)(resources.GetObject("tabControl1.ShowToolTips")));
-			this.tabControl1.Size = ((System.Drawing.Size)(resources.GetObject("tabControl1.Size")));
-			this.tabControl1.TabIndex = ((int)(resources.GetObject("tabControl1.TabIndex")));
-			this.tabControl1.Text = resources.GetString("tabControl1.Text");
-			this.tabControl1.Visible = ((bool)(resources.GetObject("tabControl1.Visible")));
-			// 
-			// close
-			// 
-			this.close.AccessibleDescription = resources.GetString("close.AccessibleDescription");
-			this.close.AccessibleName = resources.GetString("close.AccessibleName");
-			this.close.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("close.Anchor")));
-			this.close.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("close.BackgroundImage")));
-			this.close.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.close.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("close.Dock")));
-			this.close.Enabled = ((bool)(resources.GetObject("close.Enabled")));
-			this.close.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("close.FlatStyle")));
-			this.close.Font = ((System.Drawing.Font)(resources.GetObject("close.Font")));
-			this.close.Image = ((System.Drawing.Image)(resources.GetObject("close.Image")));
-			this.close.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("close.ImageAlign")));
-			this.close.ImageIndex = ((int)(resources.GetObject("close.ImageIndex")));
-			this.close.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("close.ImeMode")));
-			this.close.Location = ((System.Drawing.Point)(resources.GetObject("close.Location")));
-			this.close.Name = "close";
-			this.close.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("close.RightToLeft")));
-			this.close.Size = ((System.Drawing.Size)(resources.GetObject("close.Size")));
-			this.close.TabIndex = ((int)(resources.GetObject("close.TabIndex")));
-			this.close.Text = resources.GetString("close.Text");
-			this.close.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("close.TextAlign")));
-			this.close.Visible = ((bool)(resources.GetObject("close.Visible")));
-			// 
-			// tabPage1
-			// 
-			this.tabPage1.AccessibleDescription = resources.GetString("tabPage1.AccessibleDescription");
-			this.tabPage1.AccessibleName = resources.GetString("tabPage1.AccessibleName");
-			this.tabPage1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("tabPage1.Anchor")));
-			this.tabPage1.AutoScroll = ((bool)(resources.GetObject("tabPage1.AutoScroll")));
-			this.tabPage1.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("tabPage1.AutoScrollMargin")));
-			this.tabPage1.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("tabPage1.AutoScrollMinSize")));
-			this.tabPage1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabPage1.BackgroundImage")));
-			this.tabPage1.Controls.Add(this.listBox1);
-			this.tabPage1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabPage1.Dock")));
-			this.tabPage1.Enabled = ((bool)(resources.GetObject("tabPage1.Enabled")));
-			this.tabPage1.Font = ((System.Drawing.Font)(resources.GetObject("tabPage1.Font")));
-			this.tabPage1.ImageIndex = ((int)(resources.GetObject("tabPage1.ImageIndex")));
-			this.tabPage1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tabPage1.ImeMode")));
-			this.tabPage1.Location = ((System.Drawing.Point)(resources.GetObject("tabPage1.Location")));
-			this.tabPage1.Name = "tabPage1";
-			this.tabPage1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("tabPage1.RightToLeft")));
-			this.tabPage1.Size = ((System.Drawing.Size)(resources.GetObject("tabPage1.Size")));
-			this.tabPage1.TabIndex = ((int)(resources.GetObject("tabPage1.TabIndex")));
-			this.tabPage1.Text = resources.GetString("tabPage1.Text");
-			this.tabPage1.ToolTipText = resources.GetString("tabPage1.ToolTipText");
-			this.tabPage1.Visible = ((bool)(resources.GetObject("tabPage1.Visible")));
-			// 
-			// tabPage2
-			// 
-			this.tabPage2.AccessibleDescription = resources.GetString("tabPage2.AccessibleDescription");
-			this.tabPage2.AccessibleName = resources.GetString("tabPage2.AccessibleName");
-			this.tabPage2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("tabPage2.Anchor")));
-			this.tabPage2.AutoScroll = ((bool)(resources.GetObject("tabPage2.AutoScroll")));
-			this.tabPage2.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("tabPage2.AutoScrollMargin")));
-			this.tabPage2.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("tabPage2.AutoScrollMinSize")));
-			this.tabPage2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabPage2.BackgroundImage")));
-			this.tabPage2.Controls.Add(this.listBox2);
-			this.tabPage2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabPage2.Dock")));
-			this.tabPage2.Enabled = ((bool)(resources.GetObject("tabPage2.Enabled")));
-			this.tabPage2.Font = ((System.Drawing.Font)(resources.GetObject("tabPage2.Font")));
-			this.tabPage2.ImageIndex = ((int)(resources.GetObject("tabPage2.ImageIndex")));
-			this.tabPage2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tabPage2.ImeMode")));
-			this.tabPage2.Location = ((System.Drawing.Point)(resources.GetObject("tabPage2.Location")));
-			this.tabPage2.Name = "tabPage2";
-			this.tabPage2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("tabPage2.RightToLeft")));
-			this.tabPage2.Size = ((System.Drawing.Size)(resources.GetObject("tabPage2.Size")));
-			this.tabPage2.TabIndex = ((int)(resources.GetObject("tabPage2.TabIndex")));
-			this.tabPage2.Text = resources.GetString("tabPage2.Text");
-			this.tabPage2.ToolTipText = resources.GetString("tabPage2.ToolTipText");
-			this.tabPage2.Visible = ((bool)(resources.GetObject("tabPage2.Visible")));
 			// 
 			// listBox1
 			// 
@@ -231,7 +122,25 @@ namespace Novell.FormsTrayApp
 														  resources.GetString("listBox1.Items27"),
 														  resources.GetString("listBox1.Items28"),
 														  resources.GetString("listBox1.Items29"),
-														  resources.GetString("listBox1.Items30")});
+														  resources.GetString("listBox1.Items30"),
+														  resources.GetString("listBox1.Items31"),
+														  resources.GetString("listBox1.Items32"),
+														  resources.GetString("listBox1.Items33"),
+														  resources.GetString("listBox1.Items34"),
+														  resources.GetString("listBox1.Items35"),
+														  resources.GetString("listBox1.Items36"),
+														  resources.GetString("listBox1.Items37"),
+														  resources.GetString("listBox1.Items38"),
+														  resources.GetString("listBox1.Items39"),
+														  resources.GetString("listBox1.Items40"),
+														  resources.GetString("listBox1.Items41"),
+														  resources.GetString("listBox1.Items42"),
+														  resources.GetString("listBox1.Items43"),
+														  resources.GetString("listBox1.Items44"),
+														  resources.GetString("listBox1.Items45"),
+														  resources.GetString("listBox1.Items46"),
+														  resources.GetString("listBox1.Items47"),
+														  resources.GetString("listBox1.Items48")});
 			this.listBox1.Location = ((System.Drawing.Point)(resources.GetObject("listBox1.Location")));
 			this.listBox1.Name = "listBox1";
 			this.listBox1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("listBox1.RightToLeft")));
@@ -240,30 +149,29 @@ namespace Novell.FormsTrayApp
 			this.listBox1.TabIndex = ((int)(resources.GetObject("listBox1.TabIndex")));
 			this.listBox1.Visible = ((bool)(resources.GetObject("listBox1.Visible")));
 			// 
-			// listBox2
+			// close
 			// 
-			this.listBox2.AccessibleDescription = resources.GetString("listBox2.AccessibleDescription");
-			this.listBox2.AccessibleName = resources.GetString("listBox2.AccessibleName");
-			this.listBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("listBox2.Anchor")));
-			this.listBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("listBox2.BackgroundImage")));
-			this.listBox2.ColumnWidth = ((int)(resources.GetObject("listBox2.ColumnWidth")));
-			this.listBox2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("listBox2.Dock")));
-			this.listBox2.Enabled = ((bool)(resources.GetObject("listBox2.Enabled")));
-			this.listBox2.Font = ((System.Drawing.Font)(resources.GetObject("listBox2.Font")));
-			this.listBox2.HorizontalExtent = ((int)(resources.GetObject("listBox2.HorizontalExtent")));
-			this.listBox2.HorizontalScrollbar = ((bool)(resources.GetObject("listBox2.HorizontalScrollbar")));
-			this.listBox2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("listBox2.ImeMode")));
-			this.listBox2.IntegralHeight = ((bool)(resources.GetObject("listBox2.IntegralHeight")));
-			this.listBox2.ItemHeight = ((int)(resources.GetObject("listBox2.ItemHeight")));
-			this.listBox2.Items.AddRange(new object[] {
-														  resources.GetString("listBox2.Items")});
-			this.listBox2.Location = ((System.Drawing.Point)(resources.GetObject("listBox2.Location")));
-			this.listBox2.Name = "listBox2";
-			this.listBox2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("listBox2.RightToLeft")));
-			this.listBox2.ScrollAlwaysVisible = ((bool)(resources.GetObject("listBox2.ScrollAlwaysVisible")));
-			this.listBox2.Size = ((System.Drawing.Size)(resources.GetObject("listBox2.Size")));
-			this.listBox2.TabIndex = ((int)(resources.GetObject("listBox2.TabIndex")));
-			this.listBox2.Visible = ((bool)(resources.GetObject("listBox2.Visible")));
+			this.close.AccessibleDescription = resources.GetString("close.AccessibleDescription");
+			this.close.AccessibleName = resources.GetString("close.AccessibleName");
+			this.close.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("close.Anchor")));
+			this.close.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("close.BackgroundImage")));
+			this.close.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.close.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("close.Dock")));
+			this.close.Enabled = ((bool)(resources.GetObject("close.Enabled")));
+			this.close.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("close.FlatStyle")));
+			this.close.Font = ((System.Drawing.Font)(resources.GetObject("close.Font")));
+			this.close.Image = ((System.Drawing.Image)(resources.GetObject("close.Image")));
+			this.close.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("close.ImageAlign")));
+			this.close.ImageIndex = ((int)(resources.GetObject("close.ImageIndex")));
+			this.close.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("close.ImeMode")));
+			this.close.Location = ((System.Drawing.Point)(resources.GetObject("close.Location")));
+			this.close.Name = "close";
+			this.close.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("close.RightToLeft")));
+			this.close.Size = ((System.Drawing.Size)(resources.GetObject("close.Size")));
+			this.close.TabIndex = ((int)(resources.GetObject("close.TabIndex")));
+			this.close.Text = resources.GetString("close.Text");
+			this.close.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("close.TextAlign")));
+			this.close.Visible = ((bool)(resources.GetObject("close.Visible")));
 			// 
 			// Credits
 			// 
@@ -277,7 +185,7 @@ namespace Novell.FormsTrayApp
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
 			this.Controls.Add(this.close);
-			this.Controls.Add(this.tabControl1);
+			this.Controls.Add(this.listBox1);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -293,9 +201,6 @@ namespace Novell.FormsTrayApp
 			this.ShowInTaskbar = false;
 			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
 			this.Text = resources.GetString("$this.Text");
-			this.tabControl1.ResumeLayout(false);
-			this.tabPage1.ResumeLayout(false);
-			this.tabPage2.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
