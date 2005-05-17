@@ -89,6 +89,36 @@ namespace Simias.Gaim.DomainService
 			return info;
 		}
 
+/*
+		/// <summary>
+		/// Get the users for this domain
+		/// </summary>
+		[WebMethod(Description="GetUserList returns the list of users in this domain", EnableSession=true)]
+		[SoapDocumentMethod]
+		public EnabledGaimBuddy[] GetUserList()
+		{
+			ArrayList simiasUsers = new ArrayList();
+
+			log.Debug("GaimDomainService.GetUserList() entered");
+
+			Simias.Storage.Domain domain = GaimDomain.GetDomain();
+			if (domain != null)
+			{
+				ICSList memberList = domain.GetMemberList();
+				foreach(ShallowNode sNode in memberlist)
+				{
+					Member member = new Member(domain, sNode);
+					
+					// FIXME: Extract the Gaim properties off of the member
+					// node, create a new EnabledGaimBuddy, and add it to
+					// the ArrayList.
+				}
+			}
+			
+			return simiasUsers.ToArray();
+		}
+*/
+
 		/// <summary>
 		/// Pokes the Synchronization Thread to run/update
 		/// </summary>

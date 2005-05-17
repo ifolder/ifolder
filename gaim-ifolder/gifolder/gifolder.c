@@ -60,6 +60,8 @@
 #include "simias-prefs.h"
 #include "simias-util.h"
 #include "buddy-profile.h"
+#include "simias-users.h"
+#include "gtk-simias-users.h"
 
 
 /****************************************************
@@ -79,6 +81,8 @@
 static void blist_add_context_menu_items_cb(GaimBlistNode *node, GList **menu);
 static void buddylist_cb_enable_ifolder_sharing(GaimBlistNode *node, gpointer user_data);
 static void buddylist_cb_disable_ifolder_sharing(GaimBlistNode *node, gpointer user_data);
+
+static void show_simias_users_window();
 /* End: UI Functions */
 
 /****************************************************
@@ -126,13 +130,13 @@ blist_add_context_menu_items_cb(GaimBlistNode *node, GList **menu)
 			if (desKey)
 			{
 				/* iFolder Sharing with this buddy is enabled */
-				act = gaim_blist_node_action_new(_("Disable iFolder Sharing"),
+				act = gaim_blist_node_action_new(_("Disable iFolder File Sharing"),
 					buddylist_cb_disable_ifolder_sharing, NULL);
 			}
 			else
 			{
 				/* The buddy has the iFolder plugin, but they aren't "enabled" */
-				act = gaim_blist_node_action_new(_("Enable iFolder Sharing"),
+				act = gaim_blist_node_action_new(_("Enable iFolder File Sharing"),
 					buddylist_cb_enable_ifolder_sharing, NULL);
 			}
 
@@ -147,6 +151,7 @@ buddylist_cb_enable_ifolder_sharing(GaimBlistNode *node, gpointer user_data)
 	GaimBuddy *buddy;
 	GtkWidget *dialog;
 	const char *buddy_alias = NULL;
+	const char *machineName;
 	int err;
 	
 	buddy = (GaimBuddy *)node;
@@ -170,6 +175,20 @@ buddylist_cb_enable_ifolder_sharing(GaimBlistNode *node, gpointer user_data)
 	{
 		/* FIXME: If a conversation window is open with this buddy, add a little string saying that we just sent an invitation */
 		fprintf(stderr, "invitation message sent to %s\n", buddy->name);
+
+		machineName = gaim_blist_node_get_string(&(buddy->node),
+												 "simias-plugin-enabled");
+		if (machineName)
+		{
+			simias_users_update_status(
+				buddy->name,
+				machineName,
+				buddy->account->username,
+				buddy->account->protocol_id,
+				USER_INVITED);
+			
+			simias_gtk_show_users(NULL);
+		}
 	}
 }
 
@@ -231,12 +250,21 @@ buddylist_cb_disable_ifolder_sharing(GaimBlistNode *node, gpointer user_data)
 			sprintf(settingName, "simias-public-key:%s", machineName);
 			if (gaim_blist_node_get_string(&(buddy->node), settingName))
 				gaim_blist_node_remove_setting(&(buddy->node), settingName);
+
+			/* Remove the machine name from the list */
+			simias_remove_buddy_machine_name(&(buddy->node), machineName);
 		}
 	}
 	else
 	{
 		fprintf(stderr, "The buddy is not online anymore!\n");
 	}
+}
+
+static void
+show_simias_users_window()
+{
+	simias_gtk_show_users(NULL);
 }
 
 static gboolean
@@ -320,6 +348,8 @@ plugin_load(GaimPlugin *plugin)
 	 * in front of the user to let them know this plugin only works with the
 	 * AIM protocol for now.
 	 */
+
+	simias_init_users();
 	 
 	/**
 	 * This could be the very first time that the user enabled the plugin.  If
@@ -344,6 +374,8 @@ plugin_load(GaimPlugin *plugin)
 static gboolean
 plugin_unload(GaimPlugin *plugin)
 {
+	simias_cleanup_users();
+
 	return TRUE; /* Successfully Unloaded */
 }
 
@@ -371,6 +403,7 @@ simias_get_config_frame(GaimPlugin *plugin)
 	GtkWidget *vbox;
 	GtkWidget *hbox;
 	GtkWidget *label;
+	GtkWidget *show_users_button;
 	GtkWidget *sync_now_button;
 	GtkWidget *select;
 	char machine_name_str[512];
@@ -422,10 +455,19 @@ simias_get_config_frame(GaimPlugin *plugin)
 		gtk_button_new_with_mnemonic(_("_Synchronize Now"));
 	gtk_box_pack_end(GTK_BOX(hbox),
 			sync_now_button, FALSE, FALSE, 50);
-	gtk_box_pack_end(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
+
+	gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
+
+	show_users_button =
+		gtk_button_new_with_mnemonic(_("iFolder Filesharing _Users"));
+	
+	gtk_box_pack_end(GTK_BOX(vbox),
+					 show_users_button, FALSE, FALSE, 0);
 
 	g_signal_connect(G_OBJECT(sync_now_button), "clicked",
 		G_CALLBACK(simias_sync_member_list), NULL);
+	g_signal_connect(G_OBJECT(show_users_button), "clicked",
+		G_CALLBACK(show_simias_users_window), NULL);
 
 	/* SECTION: Other */
 	vbox = gaim_gtk_make_frame(ret, _("Other"));

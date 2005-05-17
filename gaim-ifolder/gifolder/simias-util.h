@@ -28,7 +28,7 @@
 #ifndef _SIMIAS_UTIL_H
 #define _SIMIAS_UTIL_H 1
 
-#include <glib.h>
+#include "gtkutils.h"
 
 /**
  * The behavior of this function is like String.IndexOf();
@@ -59,5 +59,38 @@ gboolean simias_url_parse(const char *url, char **proto, char **host, char **por
  * no public IP address can be determined, NULL will be returned.
  */
 const char * simias_get_public_ip();
+
+/**
+ * Return the list of machine names for a given GaimBlistNode (GaimBuddy).
+ * These machine names are store in blist.xml on a buddy node.
+ *
+ * The returned GSList will contain char * for each machine name.  The caller
+ * should call simias_free_machine_names_list() when the list is no longer
+ * needed.
+ */
+GSList * simias_get_buddy_machine_names(GaimBlistNode *node);
+
+/**
+ * Frees up the memory used by the items and the list.
+ */
+void simias_free_machine_names_list(GSList *machine_names_list);
+
+/**
+ * Adds on the specified machine name to the buddy's list of machine names
+ * or does nothing if the machine name already exists.
+ *
+ * Returns TRUE if the machine name was added or FALSE if it couldn't be
+ * added or already existed.
+ */
+gboolean simias_add_buddy_machine_name(GaimBlistNode *node, const char *machine_name);
+
+/**
+ * Removes the specified machine name to the buddy's list of machine names
+ * or does nothing if the machine name didn't exists.
+ *
+ * Returns TRUE if the machine name was removed or FALSE if it couldn't be
+ * removed or didn't exist.
+ */
+gboolean simias_remove_buddy_machine_name(GaimBlistNode *node, const char *machine_name);
 
 #endif

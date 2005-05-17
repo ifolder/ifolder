@@ -1,8 +1,8 @@
-====================
-Gaim iFolder Plugin
-====================
+======================
+Gaim Workgroup Domain
+======================
 The iFolder Project website can be found at:
-http://forge.novell.com/modules/xfmod/project/?ifolder
+http://www.ifolder.com/
 
 The Gaim iFolder Plugin allows you to share iFolders with people in your Gaim
 Buddy List.  The Gaim iFolder Plugin is free software, licensed under the
@@ -12,6 +12,25 @@ Copyright (C) 2004 Novell, Inc.
 
 Author(s):
 	Boyd Timothy <btimothy@novell.com>
+
+
+-----------
+Background
+-----------
+iFolder3 (iFolder Denali) provides peer-to-peer filesharing in Workgroup Mode.
+This means that you do not need an iFolder Server (which currently only runs on
+Novell Open Enterprise Server) to be able to use iFolder.  The Gaim Workgroup
+Domain project provides one implementation of iFolder Workgroup.
+
+The Gaim Workgroup Domain consists of two parts:
+
+1. Gaim Domain Thread Service
+   - Runs with the iFolder/Simias process
+
+2. Gaim iFolder Plugin
+   - Runs as a plugin inside of Gaim (http://gaim.sourceforge.net/)
+
+
 
 ---------------------------------
 Building the Gaim iFolder Plugin
@@ -36,6 +55,7 @@ named "Simias.config".  The following line should exist in the file:
 --------------------------------------
 Using/Testing the Gaim iFolder Plugin
 --------------------------------------
+
 
 Once you've enabled the plugin, you'll be able to simulate adding a member to
 an iFolder.  Normally, once we plug in the calls to iFolder/Simias, an

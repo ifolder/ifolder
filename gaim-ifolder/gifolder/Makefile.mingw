@@ -73,7 +73,9 @@ C_SRC =		envC.c \
 			simias-messages.c \
 			simias-prefs.c \
 			simias-util.c \
-			buddy-profile.c
+			buddy-profile.c \
+			simias-users.c \
+			gtk-simias-users.c
 
 
 OBJECTS = $(C_SRC:%.c=%.o)

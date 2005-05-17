@@ -91,8 +91,8 @@ namespace Simias.Gaim
 			Uri loginUri = new Uri( remoteUri.ToString() + "/Login.ashx" );
 
 			HttpWebRequest request = WebRequest.Create( loginUri ) as HttpWebRequest;
-			WebState webState = new WebState();
-			webState.InitializeWebRequest( request );
+			WebState webState = new WebState( GaimDomain.ID );
+			webState.InitializeWebRequest( request, GaimDomain.ID );
 			//request.Credentials = networkCredential;
 			
 			request.Headers.Add( 
@@ -124,8 +124,8 @@ namespace Simias.Gaim
 						if ( oneTimeChallenge != null && oneTimeChallenge != "" )
 						{
 							HttpWebRequest request2 = WebRequest.Create( loginUri ) as HttpWebRequest;
-							WebState webState2 = new WebState();
-							webState2.InitializeWebRequest( request2 );
+							WebState webState2 = new WebState( GaimDomain.ID );
+							webState2.InitializeWebRequest( request2, GaimDomain.ID );
 							request2.CookieContainer.Add(response.Cookies);	// Have to do this because of a bug in MONO
 
 							request2.Headers.Add( 

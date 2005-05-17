@@ -31,6 +31,7 @@
 #define _SIMIAS_MESSAGES_H 1
 
 #define INVITATION_REQUEST_MSG	"[simias:invitation-request:"
+#define INVITATION_CANCEL_MSG	"[simias:invitation-cancel:"
 #define INVITATION_DENY_MSG		"[simias:invitation-deny]"
 #define INVITATION_ACCEPT_MSG	"[simias:invitation-accept:"
 #define INVITATION_COMPLETE_MSG	"[simias:invitation-complete:"
@@ -42,6 +43,7 @@ typedef enum
 {
 	UNKNOWN_MSG_TYPE,
 	INVITATION_REQUEST,
+	INVITATION_CANCEL,
 	INVITATION_DENY,
 	INVITATION_ACCEPT,
 	INVITATION_COMPLETE
@@ -58,6 +60,13 @@ int simias_send_msg(GaimBuddy *recipient, char *msg);
  * [simias:invitation-request:<Base64Encoded Public Key>:<Base64Encoded Machine Name>]
  */
 int simias_send_invitation_request(GaimBuddy *recipient);
+
+/**
+ * This function sends a message with the following format:
+ *
+ * [simias:invitation-cancel:<Base64Encoded Public Key>:<Base64Encoded Machine Name>]
+ */
+int simias_send_invitation_cancel(GaimBuddy *recipient);
 
 /**
  * This function sends a message with the following format:

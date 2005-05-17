@@ -31,6 +31,7 @@
 #include "gaim-domain.h"
 #include "simias-messages.h"
 #include "simias-util.h"
+#include "simias-users.h"
 
 #include <glib.h>
 #include <gtk/gtk.h>
@@ -358,6 +359,12 @@ simias_notify_userinfo(GaimConnection *gc, const char *who, const char *title,
 			sprintf(settingName, "simias-url:%s", machineName);
 			gaim_blist_node_set_string(&(buddy->node), settingName, simiasURL);
 
+			simias_users_update_status(buddy->name,
+									   machineName,
+									   buddy->account->username,
+									   buddy->account->protocol_id,
+									   USER_ENABLED);
+
 			free(machineName);
 			free(userID);
 			free(simiasURL);
@@ -672,6 +679,9 @@ parse_encoded_profile(GaimBuddy *buddy, const char *profile, char **machineName,
 
 	/* Use the machine name to mark this buddy with "simias-plugin-enabled" */
 	gaim_blist_node_set_string(&(buddy->node), "simias-plugin-enabled", *machineName);
+
+	/* Store off this machine name in the list of machine names */
+	simias_add_buddy_machine_name(&(buddy->node), *machineName);
 
 	sprintf(settingName, "simias-des-key:%s", *machineName);
 	desKey = gaim_blist_node_get_string(&(buddy->node), settingName);

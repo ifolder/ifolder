@@ -33,6 +33,8 @@
 #include "simias-prefs.h"
 #include "gaim-domain.h"
 #include "buddy-profile.h"
+#include "simias-users.h"
+#include "gtk-simias-users.h"
 
 /* Gaim Includes */
 #include "internal.h"
@@ -47,6 +49,9 @@ static SIMIAS_MSG_TYPE get_possible_simias_msg_type(const char *buffer);
 static gboolean handle_invitation_request(GaimAccount *account,
 										  const char *sender,
 										  const char *buffer);
+static gboolean handle_invitation_cancel(GaimAccount *account,
+										 const char *sender,
+										 const char *buffer);
 static gboolean handle_invitation_deny(GaimAccount *account,
 									   const char *sender,
 									   const char *buffer);
@@ -56,6 +61,15 @@ static gboolean handle_invitation_accept(GaimAccount *account,
 static gboolean handle_invitation_complete(GaimAccount *account,
 										   const char *sender,
 										   const char *buffer);
+
+static void add_accept_dialog(const char *sender, const char *machineName, GtkWidget *dialog);
+static void remove_accept_dialog(const char *sender, const char *machineName);
+static GtkWidget *get_accept_dialog(const char *sender, const char *machineName);
+
+/**
+ * Static variables
+ */
+static GHashTable *accept_dialogs = NULL;
 
 /**
  * This function takes a generic message and sends it to the specified recipient
@@ -129,6 +143,53 @@ simias_send_invitation_request(GaimBuddy *recipient)
 	free(machineName);
 	
 	sprintf(msg, "%s%s:%s]", INVITATION_REQUEST_MSG, base64Key, base64MachineName);
+	free(base64Key);
+	free(base64MachineName);
+	
+	return simias_send_msg(recipient, msg);
+}
+
+/**
+ * This function sends a message with the following format:
+ *
+ * [simias:invitation-cancel:<Base64Encoded Public Key>:<Base64Encoded Machine Name>]
+ */
+int
+simias_send_invitation_cancel(GaimBuddy *recipient)
+{
+	char *publicKey;
+	char msg[4096];
+	char *base64Key;
+	int err;
+
+	char *machineName;
+	char *base64MachineName;
+
+	err = simias_get_public_key(&publicKey);
+	if (err != 0)
+	{
+		/* FIXME: Prompt the user to make sure iFolder is up and running...or kick Simias to start before continuing. */
+		fprintf(stderr, "Error getting public key (%d).  Maybe iFolder is not running?\n", err);
+		return -1;
+	}
+	
+	/* Base64Encode the public key so it gets sent nicely (not in XML) */
+	base64Key = gaim_base64_encode(publicKey, strlen(publicKey));
+	free(publicKey);
+
+	err = simias_get_machine_name(&machineName);
+	if (err != 0)
+	{
+		free(base64Key);
+		fprintf(stderr, "Error (%d) calling simias_get_machine_name() in simias_send_invitation_request().  Perhaps iFolder/Simias is not running?\n", err);
+		return -2;
+	}
+
+	/* Base64Encode the machine name so it gets sent nicely */
+	base64MachineName = gaim_base64_encode(machineName, strlen(machineName));
+	free(machineName);
+	
+	sprintf(msg, "%s%s:%s]", INVITATION_CANCEL_MSG, base64Key, base64MachineName);
 	free(base64Key);
 	free(base64MachineName);
 	
@@ -357,6 +418,14 @@ simias_receiving_im_msg_cb(GaimAccount *account, char **sender, char **buffer,
 				return TRUE; /* Prevent the message from passing through */
 			}
 			break;
+		case INVITATION_CANCEL:
+			b_simias_msg_handled = 
+				handle_invitation_cancel(account, *sender, html_stripped_buffer);
+			if (!b_simias_msg_handled) {
+				fprintf(stderr, "Error in invitation cancel message\n");
+				return TRUE; /* Prevent the message from passing through */
+			}
+			break;
 		case INVITATION_DENY:
 			b_simias_msg_handled = 
 				handle_invitation_deny(account, *sender, html_stripped_buffer);
@@ -491,6 +560,13 @@ handle_invitation_request(GaimAccount *account,
 							_("%s (%s) would like to share files with you through iFolder.  Would you like to participate?"),
 							buddy_alias ? buddy_alias : sender,
 							machineName);
+	/**
+	 * FIXME: Change this to NOT be modal.  Instead, save the handle to
+	 * the dialog in a hashtable that keys on the username+machinename.
+	 * That way, handle_invitation_cancel will be able to change the
+	 * text of the dialog or replace it with one that says the user
+	 * canceled the invitation.
+	 */
 	response = gtk_dialog_run(GTK_DIALOG(accept_dialog));
 
 	if (response == GTK_RESPONSE_YES)
@@ -529,6 +605,99 @@ handle_invitation_request(GaimAccount *account,
 }
 
 static gboolean
+handle_invitation_cancel(GaimAccount *account,
+						 const char *sender,
+						 const char *buffer)
+{
+	GaimBuddy *buddy;
+	char *base64Key;
+	char *base64MachineName;
+	char *machineName;
+	int machineNameLen;
+	int colonPos;
+	int closeBracketPos;
+	char *tmp;
+	GtkWidget *cancel_dialog;
+	GtkWidget *accept_dialog;
+	const char *buddy_alias = NULL;
+
+	/**
+	 * FIXME: Check the hashtable of invitation accept dialogs to see
+	 * if the accept/deny dialog is still showing on the screen.  If it
+	 * is, replace it with a dialog saying that the remote user canceled
+	 * the invite.  If it's not visible anymore, just discard this
+	 * cancel message without doing anything.
+	 */
+	
+	fprintf(stderr, "handle_invitation_cancel() %s -> %s entered\n",
+					sender, gaim_account_get_username(account));
+		
+	/**
+	 * Start parsing the message at this point:
+	 * 
+	 *  [simias:invitation-cancel:<Base64Encoded Public Key>:<Base64Encoded Machine Name>]
+	 *                            ^
+	 */
+	tmp = (char *)buffer + strlen(INVITATION_CANCEL_MSG);
+	colonPos = simias_str_index_of(tmp, ':');
+	if (colonPos <= 0)
+	{
+		fprintf(stderr, "handle_invitation_cancel() couldn't parse the public key\n");
+		return FALSE;
+	}
+
+	base64Key = malloc(sizeof(char) * (colonPos + 1));
+	memset(base64Key, '\0', colonPos + 1);
+	strncpy(base64Key, tmp, colonPos);
+	
+	/* Parse the machine name */
+	tmp = tmp + colonPos + 1;
+	closeBracketPos = simias_str_index_of(tmp, ']');
+	if (closeBracketPos <= 0)
+	{
+		free(base64Key);
+		fprintf(stderr, "handle_invitation_cancel() couldn't parse the machine name\n");
+		return FALSE;
+	}
+	
+	base64MachineName = malloc(sizeof(char) * (closeBracketPos + 1));
+	memset(base64MachineName, '\0', closeBracketPos + 1);
+	strncpy(base64MachineName, tmp, closeBracketPos);
+	
+	gaim_base64_decode(base64MachineName, &machineName, &machineNameLen);
+	free(base64MachineName);
+
+	buddy = gaim_find_buddy(account, sender);
+	buddy_alias = gaim_buddy_get_alias(buddy);
+
+	accept_dialog = get_accept_dialog(sender, machineName);
+	if (accept_dialog)
+	{
+		/* Hide and destroy the old accept dialog */
+		gtk_widget_hide(accept_dialog);
+		gtk_widget_destroy(accept_dialog);
+	
+		/* Tell the user about the cancel in a modal dialog */
+		cancel_dialog =
+			gtk_message_dialog_new(NULL,
+								GTK_DIALOG_DESTROY_WITH_PARENT,
+								GTK_MESSAGE_INFO,
+								GTK_BUTTONS_OK,
+								_("%s (%s) canceled the the request to enable iFolder sharing with you."),
+								buddy_alias ? buddy_alias : sender,
+								machineName);
+
+		gtk_dialog_run(GTK_DIALOG(cancel_dialog));
+		gtk_widget_destroy(cancel_dialog);
+	}
+
+	free(base64Key);
+	g_free(machineName);
+
+	return TRUE;
+}
+
+static gboolean
 handle_invitation_deny(GaimAccount *account,
 					   const char *sender,
 					   const char *buffer)
@@ -536,10 +705,22 @@ handle_invitation_deny(GaimAccount *account,
 	GtkWidget *dialog;
 	GaimBuddy *buddy;
 	const char *buddy_alias = NULL;
-	
-	/* FIXME: Add some type of UI callback to handle the deny invitation */
-	
+	const char *machineName;
+
 	buddy = gaim_find_buddy(account, sender);
+
+	machineName = gaim_blist_node_get_string(&(buddy->node),
+											 "simias-plugin-enabled");
+	if (machineName)
+	{
+		simias_users_update_status(
+			buddy->name,
+			machineName,
+			buddy->account->username,
+			buddy->account->protocol_id,
+			USER_REJECTED);
+	}
+
 	buddy_alias = gaim_buddy_get_alias(buddy);
 
 	dialog =
@@ -551,6 +732,9 @@ handle_invitation_deny(GaimAccount *account,
 								buddy_alias ? buddy_alias : sender);
 	gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_widget_destroy(dialog);
+
+	/* Show the Users Window */
+	simias_gtk_show_users(NULL);
 	
 	return TRUE;
 }
@@ -676,10 +860,14 @@ handle_invitation_accept(GaimAccount *account,
 		fprintf(stderr, "simias_send_invitation_complete() had an error (%d)\n", err);
 		/* FIXME: Add UI callback to alert error */
 	}
-
-	/* FIXME: Add some type of UI callback to handle the accept invitation */
-
-	/* FIXME: Check the plugin preferences of whether the accept invitation confirmation dialog should be shown. */
+	else
+	{
+		simias_users_update_status(buddy->name,
+								   machineName,
+								   buddy->account->username,
+								   buddy->account->protocol_id,
+								   USER_ENABLED);
+	}
 
 	buddy_alias = gaim_buddy_get_alias(buddy);
 
@@ -695,7 +883,7 @@ handle_invitation_accept(GaimAccount *account,
 								machineName);
 	gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_widget_destroy(dialog);
-	
+
 	g_free(machineName);
 
 	return TRUE;
@@ -789,6 +977,51 @@ handle_invitation_complete(GaimAccount *account,
 	 * encrypted profile.  Start the asynchronous call to read it.
 	 */
 	simias_get_buddy_profile(buddy);
-	
+
 	return TRUE;
+}
+
+static void
+add_accept_dialog(const char *sender, const char *machineName, GtkWidget *dialog)
+{
+	char key[2048];
+
+	if (accept_dialogs == NULL)
+		accept_dialogs = g_hash_table_new(g_str_hash, g_str_equal);
+
+	sprintf(key, "%s+%s", sender, machineName);
+
+	g_hash_table_replace(accept_dialogs, key, dialog);
+}
+
+static void
+remove_accept_dialog(const char *sender, const char *machineName)
+{
+	char key[2048];
+
+	if (accept_dialogs == NULL)
+	{
+		accept_dialogs = g_hash_table_new(g_str_hash, g_str_equal);
+		return; /* There's nothing to remove */
+	}
+
+	sprintf(key, "%s+%s", sender, machineName);
+
+	g_hash_table_remove(accept_dialogs, key);
+}
+
+static GtkWidget *
+get_accept_dialog(const char *sender, const char *machineName)
+{
+	char key[2048];
+
+	if (accept_dialogs == NULL)
+	{
+		accept_dialogs = g_hash_table_new(g_str_hash, g_str_equal);
+		return NULL; /* There's nothing to return */
+	}
+
+	sprintf(key, "%s+%s", sender, machineName);
+
+	return (GtkWidget *)g_hash_table_lookup(accept_dialogs, key);
 }

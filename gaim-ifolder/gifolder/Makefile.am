@@ -21,7 +21,9 @@ gifolder_la_SOURCES = \
 	simias-messages.c \
 	simias-prefs.c \
 	simias-util.c \
-	buddy-profile.c
+	buddy-profile.c \
+	simias-users.c \
+	gtk-simias-users.c
 
 endif
 
