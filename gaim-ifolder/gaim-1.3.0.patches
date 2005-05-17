@@ -1,0 +1,34 @@
+Index: configure.ac
+===================================================================
+RCS file: /cvsroot/gaim/gaim/configure.ac,v
+retrieving revision 1.271.2.43
+diff -r1.271.2.43 configure.ac
+1178a1179,1180
+> 		   plugins/gifolder/Makefile
+> 		   plugins/gifolder/pixmaps/Makefile
+Index: plugins/Makefile.am
+===================================================================
+RCS file: /cvsroot/gaim/gaim/plugins/Makefile.am,v
+retrieving revision 1.96.2.1
+diff -r1.96.2.1 Makefile.am
+1c1
+< DIST_SUBDIRS = docklet gevolution gaim-remote gestures perl ssl tcl ticker
+---
+> DIST_SUBDIRS = docklet gevolution gaim-remote gestures gifolder perl ssl tcl ticker
+17c17
+< 	$(PERL_DIR) $(TCL_DIR) ssl ticker
+---
+> 	gifolder $(PERL_DIR) $(TCL_DIR) ssl ticker
+Index: plugins/Makefile.mingw
+===================================================================
+RCS file: /cvsroot/gaim/gaim/plugins/Makefile.mingw,v
+retrieving revision 1.23
+diff -r1.23 Makefile.mingw
+22a23
+> GAIM_IFOLDER := ./gifolder
+96a98
+> 	$(MAKE) -C $(GAIM_IFOLDER) -f Makefile.mingw
+106a109
+> 	$(MAKE) -C $(GAIM_IFOLDER) -f Makefile.mingw install
+141a145
+> 	$(MAKE) -C $(GAIM_IFOLDER) -f Makefile.mingw clean
