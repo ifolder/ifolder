@@ -6,8 +6,8 @@
 <meta http-equiv="Content-Language" content="en">
 
 <meta name="Generator" content="Novell HTML Conversion 10 March 2004">
-<meta name="Generation-Date" content="Wednesday, March 23, 2005 09:35">
-<meta name="Content-Date" content="Mon, 24 Mar 2005 12:00:00 GMT">
+<meta name="Generation-Date" content="Monday, May 16, 2005 21:43">
+<meta name="Content-Date" content="Mon, 16 May 2005 12:00:00 GMT">
 <meta name="Robots" content="INDEX, FOLLOW">
 <meta name="Document_Number" content="zHTML xD.0000.0000.0001.0003.">
 <meta name="Author" content="zHTML xD.0000.0000.0001.0003.">
@@ -18,13 +18,13 @@
 <link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
 
 
-<title>iFolder Help for Novell iFolder 3.0 Public Beta</title>
+<title>iFolder Help</title>
 <script type="text/javascript" language="javascript">
 function loadMenu()
 {
 	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
 	{
-	   parent.theMenu.loadScript("../doc/user/data/bq1qyz2.html","../doc/user/data/toc_bq1qyz2.html");
+	   parent.theMenu.loadScript("../doc/user/data/overview.html","../doc/user/data/toc_overview.html");
 	}
 	else{ setTimeout("loadMenu()",200);}
 }
@@ -36,7 +36,7 @@ loadMenu();
 <body onload="">
 <script type="text/javascript" language="javascript">
   var prev_link="bq1r10z.html";
-  var next_link="myifolders.html";
+  var next_link="accountsprefs.html";
 </script>
 
 <script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
@@ -60,7 +60,7 @@ loadMenu();
 
 <li class="BULLETITEM"><a href="bq1r110.html#bq1r118">File Synchronization and Data Management</a></li>
 
-<li class="BULLETITEM"><a href="bq1r110.html#bq63xvh">Sync Log</a></li>
+<li class="BULLETITEM"><a href="bq1r110.html#bq63xvh">Synchronization Log</a></li>
 </ul>
 <div class="Head" title="The iFolder Client ">
 <a name="bq1r111"></a>
@@ -68,7 +68,7 @@ loadMenu();
 <h3 class="HEAD-TITLE"><br />The iFolder Client </h3>
 <p class="HEAD">The iFolder client integrates with your operating system to provide iFolder services in your native desktop environment. iFolder supports the following operating systems:</p>
 <ul class="LISTBULLET">
-<li class="BULLETITEM">Novell Linux Desktop 1.0</li>
+<li class="BULLETITEM">Novell Linux Desktop 9</li>
 
 <li class="BULLETITEM">Windows 2000/XP</li>
 
@@ -82,18 +82,19 @@ loadMenu();
 <a name="bq1r112"></a>
 
 <h3 class="HEAD-TITLE"><br />Shared iFolders</h3>
-<p class="HEAD">An iFolder is a local directory that selectively shares and synchronizes files with a user-specified workgroup in a peer-to-peer sharing model. The iFolder files are accessible to all workgroup members and can be changed by those with the rights to do so. You can share iFolders across multiple workstations and with others.</p>
-<p class="HEAD">You work with iFolders directly in your file manager. Within the iFolder, you can set up any subdirectory structure that suits your personal or corporate work habits. The subdirectory structure is constant across all member iFolders. Each workstation can specify a different parent directory for the shared iFolder.</p>
+<p class="HEAD">An iFolder is a local directory that selectively shares and synchronizes files with a user-specified group of users. The iFolder files are accessible to all iFolder members and can be changed by those with the rights to do so. You can share iFolders across multiple workstations and with others.</p>
+<p class="HEAD">You work with iFolders directly in your file manager or in My iFolders. Within the iFolder, you can set up any subdirectory structure that suits your personal or corporate work habits. The subdirectory structure is constant across all member iFolders. Each workstation can specify a different parent directory for the shared iFolder.</p>
 </div>
 
 <div class="Head" title="iFolder Access Rights">
 <a name="bq1r113"></a>
 
 <h3 class="HEAD-TITLE"><br />iFolder Access Rights</h3>
-<p class="HEAD">The iFolder client provides three levels of access for members of an iFolder: </p>
+<p class="HEAD">The iFolder client supports the owner and three levels of access for members of an iFolder: </p>
 <ul class="LISTBULLET">
-<li class="BULLETITEM"><p class="PARAWITHTITLE"><a name="bq8voz4"></a><em class="PARAWITHTITLE">Owner: </em>The owner of the primary shared iFolder, with ownership and the Full Control right. The iFolder owner has read/write access to the iFolder, manages membership and access rights for users, and can remove the Full Control right for any member. The owner's computer is the host for the iFolder workgroup and must be active and online to synchronize files with member iFolders. With an enterprise server, the disk space used by the owner's iFolders count against the owner's user disk quotas on the enterprise server.</p>
-<p class="BULLETITEM">Only one user serves as the owner. This is typically the user who created the iFolder. The owner or an iFolder administrator can transfer ownership status from the owner to another user. The new can be a new or existing member of the iFolder.</p></li>
+<li class="BULLETITEM"><p class="PARAWITHTITLE"><a name="bq8voz4"></a><em class="PARAWITHTITLE">Owner: </em>Only one user serves as the owner of an iFolder. This is typically the user who created the iFolder. The owner user can use the iFolder client to transfer ownership to another member of the iFolder. The iFolder Admin user can transfer ownership to any user on the iFolder server, using administrator tools.</p>
+<p class="BULLETITEM">The owner of an iFolder has the Full Control right. This user has read/write access to the iFolder, manages membership and access rights for member users, and can remove the Full Control right for any member. With an enterprise server, the disk space used by the owner's iFolders count against the owner's user disk quotas on the enterprise server. </p>
+<p class="BULLETITEM">If a user is deleted as a user for the iFolder system, the iFolders owned by the user are orphaned. Orphaned iFolders are assigned temporarily to the iFolder Admin user as a custodian owner. Membership and synchronization continues while the iFolder Admin user determines whether an orphaned iFolder should be deleted or assigned to a new owner.</p></li>
 
 <li class="BULLETITEM"><p class="PARAWITHTITLE"><a name="bq8voz5"></a><em class="PARAWITHTITLE">Full Control: </em>A member of the shared iFolder, with the Full Control access right. The user with the Full Control right has read/write access to the iFolder and manages membership and access rights for all users except the owner. </p></li>
 
@@ -102,37 +103,36 @@ loadMenu();
 <li class="BULLETITEM"><p class="PARAWITHTITLE"><a name="bq8voz7"></a><em class="PARAWITHTITLE">Read Only: </em>A member of the shared iFolder, with the Read Only access right to directories and files in the iFolder. This member can copy an iFolder file to another location and modify it outside the iFolder.</p></li>
 </ul>
 <p class="HEAD">When used with an enterprise server account, the server hosts every iFolder created for that account. Users create an iFolder and the enterprise server makes it available to the specified list of users. A user can have a separate account on each enterprise server.</p>
-<p class="HEAD">Any given workstation can be both a host and a client in the workgroup model. You can host multiple iFolders on your workstation and be a member of iFolder workgroups hosted by others. Your level of membership in each shared iFolder can differ.</p>
+<p class="HEAD">Any iFolder account holder can own some iFolders and be a member of other iFolders. Your level of access in each shared iFolder can differ, depending on the role you play and the access granted to you by any member with the Full Control right.</p>
 </div>
 
 <div class="Head" title="Account Setup for Enterprise Servers">
 <a name="bq655zc"></a>
 
 <h3 class="HEAD-TITLE"><br />Account Setup for Enterprise Servers</h3>
-<p class="HEAD">The iFolder client allows you to set up multiple accounts across domains, where a domain is represented by a given enterprise server. You specify the server address, username, and password to uniquely identify an account. On your computer, you set up accounts while logged in as the local identity you plan to use to access that account and its iFolders. Under your local login, you can setup up multiple iFolder accounts, but each account must belong to a different iFolder enterprise server.  </p>
+<p class="HEAD">The iFolder client allows you to set up multiple accounts across domains, where a domain is represented by a given enterprise server. You specify the server address, username, and password to uniquely identify an account. On your computer, you set up accounts while logged in as the local identity you plan to use to access that account and its iFolders. Under your local login, you can set up multiple iFolder accounts, but each account must belong to a different iFolder enterprise server.  </p>
 </div>
 
 <div class="Head" title="Access Authentication">
 <a name="bq5xp9r"></a>
 
 <h3 class="HEAD-TITLE"><br />Access Authentication</h3>
-<p class="HEAD">Whenever an iFolder connects to member iFolders in the workgroup to synchronize files, it verifies the target and destination servers to prevent spoofing.</p>
-<p class="HEAD">Whenever iFolder connects to an enterprise server to synchronize files, it connects with basic HTML and SSL connections to the server, and the server authenticates the user against the domain's LDAP directory service. </p>
+<p class="HEAD">Whenever iFolder connects to an enterprise server to synchronize files, it connects with basic HTML or SSL connections to the server, and the server authenticates the user against the domain's LDAP directory service. The administrator determines whether iFolder traffic uses HTML or SSL connections.</p>
 </div>
 
 <div class="Head" title="File Synchronization and Data Management">
 <a name="bq1r118"></a>
 
 <h3 class="HEAD-TITLE"><br />File Synchronization and Data Management</h3>
-<p class="HEAD">When you set up an iFolder account, you can enable Remember Password so that iFolder can synchronize iFolder invitations and files in the background as you work. The iFolder client runs automatically each time you log in to your computer's desktop environment. The session runs in the background as you work with files in your local iFolders, tracking and logging any changes you make. </p>
-<p class="HEAD">With an enterprise server, you can synchronize the files at specified intervals or on demand.</p>
-<p class="HEAD">With a workgroup, the iFolder client synchronizes files at specified intervals or on demand, but only if an iFolder's primary host is available at that time.</p>
+<p class="HEAD">When you set up an iFolder account, you can enable Remember Password so that iFolder can synchronize iFolder invitations and files in the background as you work. </p>
+<p class="HEAD">You can configure the iFolder client to run automatically each time you log in to your computer's desktop environment. The session runs in the background as you work with files in your local iFolders, tracking and logging any changes you make. </p>
+<p class="HEAD">You can synchronize the files at specified intervals or on demand.</p>
 </div>
 
-<div class="Head" title="Sync Log">
+<div class="Head" title="Synchronization Log">
 <a name="bq63xvh"></a>
 
-<h3 class="HEAD-TITLE"><br />Sync Log</h3>
+<h3 class="HEAD-TITLE"><br />Synchronization Log</h3>
 <p class="HEAD">The log displays a log of your iFolder background activity. </p>
 </div>
 

@@ -6,8 +6,8 @@
 <meta http-equiv="Content-Language" content="en">
 
 <meta name="Generator" content="Novell HTML Conversion 10 March 2004">
-<meta name="Generation-Date" content="Wednesday, March 23, 2005 09:35">
-<meta name="Content-Date" content="Mon, 24 Mar 2005 12:00:00 GMT">
+<meta name="Generation-Date" content="Monday, May 16, 2005 21:43">
+<meta name="Content-Date" content="Mon, 16 May 2005 12:00:00 GMT">
 <meta name="Robots" content="INDEX, FOLLOW">
 <meta name="Document_Number" content="zHTML xD.0000.0000.0002.0003.">
 <meta name="Author" content="zHTML xD.0000.0000.0002.0003.">
@@ -18,13 +18,13 @@
 <link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
 
 
-<title>iFolder Help for Novell iFolder 3.0 Public Beta</title>
+<title>iFolder Help</title>
 <script type="text/javascript" language="javascript">
 function loadMenu()
 {
 	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
 	{
-	   parent.theMenu.loadScript("../doc/user/data/myifolders.html","../doc/user/data/toc_myifolders.html");
+	   parent.theMenu.loadScript("../doc/user/data/accountsprefs.html","../doc/user/data/toc_accountsprefs.html");
 	}
 	else{ setTimeout("loadMenu()",200);}
 }
@@ -35,8 +35,8 @@ loadMenu();
 
 <body onload="">
 <script type="text/javascript" language="javascript">
-  var prev_link="login.html";
-  var next_link="accountdetails.html";
+  var prev_link="bvwppw5.html";
+  var next_link="login.html";
 </script>
 
 <script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
@@ -46,12 +46,11 @@ loadMenu();
 <div class="Topic" title="Configuring an iFolder Account">
 
 <h2 class="TOPIC-TITLE"><br />Configuring an iFolder Account</h2>
-<p class="TOPIC">You must configure at least one iFolder account before you can create iFolders or set up shared iFolders on your system. </p>
+<p class="TOPIC">You must configure at least one iFolder account before you can create iFolders or share iFolders on your system. Each iFolder enterprise server is an <em class="EMPHASIS">iFolder domain</em>. You can create only one account for an iFolder domain, but you can have accounts for multiple iFolder domains. </p>
+<p class="TOPIC">A user with a different logon can log on to the same computer at a different time and use iFolder to create his or her own set of iFolders. iFolder synchronizes only iFolders belonging to the active user.</p>
 <ol class="STEPLIST">
 <li class="STEP"><a name="bviaku6"></a>
-<p class="STEP">Right-click the iFolder application icon <img src="../graphics/ifolder_16.png" alt="iFolder Startup Icon" /> in the Notification area, then select Accounts to open the iFolder Preferences dialog box to the Accounts tab.</p>
-<a name="bviajos"></a>
-<br /><img src="../graphics/ifos_accounts_new_a.png" alt="New Account UI" /></li>
+<p class="STEP">Right-click the iFolder application icon <img src="../graphics/ifolder_16.png" alt="iFolder Application Icon" /> in the Notification area, then select Accounts to open the iFolder Preferences dialog box to the Accounts tab.</p></li>
 
 <li class="STEP"><a name="bvial71"></a>
 <p class="STEP">Select New to access the Account Settings area. </p></li>
@@ -72,27 +71,32 @@ loadMenu();
 <td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">The password for your username. </p></td>
 </tr>
 <tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bvibwio"></a><p class="ENTRY">Remember Password</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Select Remember Password to log in automatically to this iFolder account whenever you log in to your computer. For this release, you should enable this option. For information, see <a href="login.html#login">Logging In to the iFolder Client</a>.</p><p class="ENTRY">If your network password changes, automatic authentication fails, then iFolder prompts you to log in with your new password and allows you to specify and save the new password.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Select Remember Password to log in automatically to this iFolder account whenever you log in to your computer. For information, see <a href="login.html#login">Logging In to an iFolder Account</a>.</p><p class="ENTRY">If your network password changes, automatic authentication fails gracefully the next time iFolder attempts to log in to the iFolder account. iFolder prompts you to log in with your new password and allows you to specify and save the new password.</p></td>
 </tr>
 <tr class="ODDROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bvibwip"></a><p class="ENTRY">Enable Account</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Select Enable Account to allow background synchronization of iFolder invitations, the user roster, and iFolders for this account.</p></td>
 </tr>
 <tr class="EVENROW"><td align="left" valign="top" colspan="1" rowspan="1" scope="row"><a name="bvibwiq"></a><p class="ENTRY">Default Account</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Select Default Account to make this account the one selected by default in drop-down list of accounts when you create iFolders.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1"><p class="ENTRY">Select Default Account to make this account the one selected by default in the drop-down list of accounts when you create iFolders.</p></td>
 </tr></table>
-</li>
+
+<a name="bviajos"></a>
+<br /><img src="../graphics/ifos_accounts_new_a.png" alt="New Account UI" /></li>
 
 <li class="STEP"><a name="bvib17w"></a>
-<p class="STEP">Click Activate.</p>
-<p class="STEP">The account appears in the list of accounts.</p></li>
+<p class="STEP">Click OK.</p>
+<p class="STEP">The account appears in the list of accounts with a status of Logged In. iFolder begins synchronizing any existing iFolders, iFolder notifications, and the user roster for that account.</p></li>
 
 <li class="STEP"><a name="bvib1d8"></a>
-<p class="STEP">Click OK to close the iFolder Preferences dialog box.</p>
-<p class="STEP">If you selected Remember Password, iFolder logs in to the account and begins synchronizing any existing iFolders, iFolder invitations, and the user roster for that account.</p></li>
+<p class="STEP">Click OK to close the iFolder Preferences dialog box.</p></li>
 
-<li class="STEP"><a name="bvib2mu"></a>
-<p class="STEP">After the synchronization is complete, right-click the iFolder application icon, then select My iFolders to set up iFolders for the account.</p>
-<p class="STEP">For information, see <a href="setupifolder.html#setupifolder">Setting Up an Available iFolder</a>.</p></li>
+<li class="STEP"><a name="bvwsa5n"></a>
+<p class="STEP">Set up iFolders for the account using either of these methods:</p>
+<ul class="LISTBULLET">
+<li class="BULLETITEM">If iFolders are available for the account, an iFolder Notification message pops up. Click the message to open the My iFolders dialog. Continue with <a href="setupifolder.html#setupifolder">Setting Up an Available iFolder</a>.</li>
+
+<li class="BULLETITEM">If there are no iFolders for the account or if you want to start adding iFolders right away, right-click the iFolder application icon, then select My iFolders to open the My iFolders dialog. Continue with <a href="createifolder.html#createifolder">Creating an iFolder</a>.</li>
+</ul></li>
 </ol>
 </div>
 
