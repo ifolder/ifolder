@@ -651,8 +651,11 @@ namespace Simias.DomainServices
 			// Construct the web client.
 			DomainService domainService = new DomainService();
 			domainService.Url = uri.ToString() + "/DomainService.asmx";
-			WebState webState = new WebState(domainID, userID);
-			webState.InitializeWebClient(domainService, domainID);
+			if (!localOnly)
+			{
+				WebState webState = new WebState(domainID, userID);
+				webState.InitializeWebClient(domainService, domainID);
+			}
 
 			
 			// Find the user's POBox for this domain.
