@@ -9,7 +9,7 @@ GaimDomain_INCLUDES =
 GaimDomain_RESOURCES =
 GaimDomain_FLAGS = $(CSC_LIBFLAG)
 GaimDomain_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll Novell.Security.ClientPasswordManager.NetCredential.dll
-GaimDomain_LIBPATH = ../../src/Simias.dll ../../src/SimiasClient $(DESTDIR)$(webbindir) $(NOVELL_SECURITY_DIR)
+GaimDomain_LIBPATH = $(SIMIAS_LIBS) $(SIMIAS_CLIENT_LIBS) $(NOVELL_SECURITY_DIR)
 
 EXTRA_DIST = $(GaimDomain_CSFILES) $(srcdir)/GaimDomainService.wsdl $(srcdir)/GaimDomainService.asmx
 
@@ -20,7 +20,7 @@ CUR_DIR := $(shell pwd)
 all: $(NUNIT_TESTS)
 
 Simias.Gaim.dll: $(GaimDomain_CSFILES) $(GaimDomain_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(GaimDomain_FLAGS) $(GaimDomain_LIBS:%=/r:%) $(GaimDomain_LIBPATH:%=/lib:%) $(GaimDomain_CSFILES_CSC)
+	$(CSC) /out:$@ $(CSCFLAGS) $(GaimDomain_FLAGS) $(GaimDomain_LIBS:%=/r:%) $(GaimDomain_LIBPATH) $(GaimDomain_CSFILES_CSC)
 	
 if DEBUG
 if WINDOWS
