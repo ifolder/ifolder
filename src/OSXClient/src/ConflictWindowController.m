@@ -34,8 +34,6 @@ static ConflictWindowController *conflictSharedInstance = nil;
 
 - (void)awakeFromNib
 {
-	NSLog(@"ConflictWindowController Awoke from Nib");
-
 	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_WINPOS])
 	{
 		[super setShouldCascadeWindows:NO];
@@ -84,26 +82,41 @@ static ConflictWindowController *conflictSharedInstance = nil;
 						else
 							[nameConflicts setObject:conflict forKey:curKey];
 					}
+					
+					if( [[ifolder CurrentUserRights] compare:@"ReadOnly"] == 0 )
+					{
+						[[conflict properties] setValue:[NSNumber numberWithBool:YES] forKey:@"IsReadOnly"];
+					}
 
 					[ifoldersController addObject:conflict];
 				}
 			}
 		}
 	}
+
 }
 
+
+- (void)windowDidBecomeMain:(NSNotification *)aNotification
+{
+	if( [[ifolder CurrentUserRights] compare:@"ReadOnly"] == 0 )
+	{
+		NSBeginAlertSheet(NSLocalizedString(@"Read-Only iFolder", nil), 
+			NSLocalizedString(@"OK", nil), nil, nil,
+			[self window], self, nil, nil, NULL, 
+			NSLocalizedString(@"Your ability to resolve conflicts is limited because you have read-only rights to this iFolder.  If there are conflicts that you are not allowed to resolve, the owner of this iFolder will need to fix the conflicts for you.", nil));
+	}
+}
 
 
 
 - (IBAction)saveLocal:(id)sender
 {
-	NSLog(@"Resolving conflict to Local copy");
 	[self resolveFileConflicts:YES];
 }
 
 - (IBAction)saveServer:(id)sender
 {
-	NSLog(@"Resolving conflict to Server copy");
 	[self resolveFileConflicts:NO];
 }
 
@@ -175,7 +188,6 @@ static ConflictWindowController *conflictSharedInstance = nil;
 			{
 				if([[ifolder CurrentUserRights] compare:@"ReadOnly"] == 0)
 				{
-					NSLog(@"The iFolder is readonly so use the RenameAndResolveConflict call");
 					@try
 					{
 						[ifolderService RenameAndResolveConflict:iFolderID withID:serverID usingFileName:newName];
