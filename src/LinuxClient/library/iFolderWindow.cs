@@ -1940,7 +1940,7 @@ namespace Novell.iFolder
 					iFolderMsgDialog.ButtonSet.Ok,
 					Util.GS("Create iFolder"),
 					Util.GS("No iFolder Domains"),
-					Util.GS("A new iFolder cannot be create because you have not attached to any iFolder servers."));
+					Util.GS("A new iFolder cannot be created because you have not attached to any iFolder servers."));
 				dg.Run();
 				dg.Hide();
 				dg.Destroy();
