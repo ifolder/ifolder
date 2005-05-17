@@ -1,0 +1,68 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Language" content="en">
+
+<meta name="Generator" content="Novell HTML Conversion 10 March 2004">
+<meta name="Generation-Date" content="Monday, May 16, 2005 21:43">
+<meta name="Content-Date" content="Mon, 16 May 2005 12:00:00 GMT">
+<meta name="Robots" content="INDEX, FOLLOW">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0003.0002.">
+<meta name="Author" content="zHTML xD.0000.0000.0003.0002.">
+<meta name="Product_Class" content="">
+<meta name="Product_and_Version" content="iFolder(TM)">
+<meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
+
+<link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
+
+
+<title>iFolder Help</title>
+<script type="text/javascript" language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/myifolders.html","../doc/user/data/toc_myifolders.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script type="text/javascript" language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+
+<body onload="">
+<script type="text/javascript" language="javascript">
+  var prev_link="demos.html";
+  var next_link="createifolder.html";
+</script>
+
+<script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
+
+<a name="bwagrrn"></a>
+
+<div class="Topic" title="Naming Conventions for an iFolder and Its Folders and Files">
+
+<h2 class="TOPIC-TITLE"><br />Naming Conventions for an iFolder and Its Folders and Files</h2>
+<p class="TOPIC">The iFolder client imposes naming conventions that consider the collective restrictions of the Linux, Windows, and Macintosh file systems. An iFolder, folder, or file must have a valid name that complies with the naming conventions before it can be synchronized.</p>
+<p class="TOPIC">Use the following naming conventions for your iFolders and the folders and files in them:</p>
+<ul class="LISTBULLET">
+<li class="BULLETITEM">iFolder supports the <a href="http://www.unicode.org" target="_blank" class="ULINK">Unicode</a> character set with UTF-8 encoding. </li>
+
+<li class="BULLETITEM">Do not use the following invalid characters in the names of iFolders or in the names of folders and files in them:
+<pre class="CODESAMPLENARROW">\/:*?&quot;&lt;&gt;|;</pre>
+
+<p class="BULLETITEM">iFolder creates a name conflict if you use the invalid characters in a file or folder name. The conflict must be resolved before the file or folder can be synchronized.</p></li>
+
+<li class="BULLETITEM">The maximum name length for a single path component is 255 bytes. For filenames, the maximum length includes the dot (.) and file extension.</li>
+
+<li class="BULLETITEM">Names of iFolders, folders, and files are case insensitive; however, case is preserved. If filenames differ only by case, iFolder creates a name conflict. The conflict must be resolved before the file or folder can be synchronized.</li>
+</ul>
+</div>
+
+<script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
+
+</body>
+</html>

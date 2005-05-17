@@ -6,11 +6,11 @@
 <meta http-equiv="Content-Language" content="en">
 
 <meta name="Generator" content="Novell HTML Conversion 10 March 2004">
-<meta name="Generation-Date" content="Wednesday, March 23, 2005 09:35">
-<meta name="Content-Date" content="Mon, 24 Mar 2005 12:00:00 GMT">
+<meta name="Generation-Date" content="Monday, May 16, 2005 21:43">
+<meta name="Content-Date" content="Mon, 16 May 2005 12:00:00 GMT">
 <meta name="Robots" content="INDEX, FOLLOW">
-<meta name="Document_Number" content="zHTML xD.0000.0000.0002.0002.">
-<meta name="Author" content="zHTML xD.0000.0000.0002.0002.">
+<meta name="Document_Number" content="zHTML xD.0000.0000.0002.0004.">
+<meta name="Author" content="zHTML xD.0000.0000.0002.0004.">
 <meta name="Product_Class" content="">
 <meta name="Product_and_Version" content="iFolder(TM)">
 <meta name="Copyright" content="Copyright Novell, Inc. 1983-2004">
@@ -18,13 +18,13 @@
 <link rel="STYLESHEET" type="text/css" href="../../../ui/novdocmain.css">
 
 
-<title>iFolder Help for Novell iFolder 3.0 Public Beta</title>
+<title>iFolder Help</title>
 <script type="text/javascript" language="javascript">
 function loadMenu()
 {
 	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
 	{
-	   parent.theMenu.loadScript("../doc/user/data/myifolders.html","../doc/user/data/toc_myifolders.html");
+	   parent.theMenu.loadScript("../doc/user/data/accountsprefs.html","../doc/user/data/toc_accountsprefs.html");
 	}
 	else{ setTimeout("loadMenu()",200);}
 }
@@ -35,31 +35,57 @@ loadMenu();
 
 <body onload="">
 <script type="text/javascript" language="javascript">
-  var prev_link="demos.html";
-  var next_link="accounts.html";
+  var prev_link="accounts.html";
+  var next_link="accountdetails.html";
 </script>
 
 <script type="text/javascript" language="javascript" src="../../../ui/topnav.js"></script>
 
 <a name="login"></a>
 
-<div class="Topic" title="Logging In to the iFolder Client">
+<div class="Topic" title="Logging In to an iFolder Account">
 
-<h2 class="TOPIC-TITLE"><br />Logging In to the iFolder Client</h2>
-<p class="TOPIC">You can log in to the client using one of the following approaches:</p>
+<h2 class="TOPIC-TITLE"><br />Logging In to an iFolder Account</h2>
+<p class="TOPIC">After you set up an iFolder account, you must log in whenever you want to synchronize your local iFolder data, the iFolder roster of users, and your shared iFolder notifications. You can be logged in to multiple accounts concurrently. Use one of the following login methods for each account:</p>
 <ul class="LISTBULLET">
-<li class="BULLETITEM">Enable Remember Password upon account activation so that log in occurs automatically whenever you log in to your desktop. </li>
+<li class="BULLETITEM">Enable Remember Password so that log in to the iFolder account occurs automatically whenever you log in to your desktop or start the iFolder client. 
+<p class="BULLETITEM">Whenever your password changes, automatic authentication fails gracefully the next time iFolder attempts to log in to the iFolder account. iFolder prompts you to log in with your new password and allows you to specify and save the new password.</p></li>
 
-<li class="BULLETITEM">Disable Remember Password and log in whenever you log in to your desktop.</li>
-
-<li class="BULLETITEM">Disable Remember Password and log in only when you are ready to synchronize files.</li>
+<li class="BULLETITEM">Disable Remember Password and log in to an iFolder account only when you are ready to synchronize files in its iFolders or to manage the iFolders.</li>
 </ul>
-<p class="NOTE-IMPORTANT"><em class="NOTE-IMPORTANT">IMPORTANT:&nbsp;&nbsp;</em>If you do not save your password, the Login dialog box is available only when you log in to your desktop and when iFolder prompts you to log in for syncing. </p>
+<p class="TOPIC">To enable or disable Remember Password for an existing iFolder account:</p>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bvwrn0v"></a>
+<p class="STEP">Right-click the iFolder Services menu, then select Accounts.</p></li>
 
-<p class="TOPIC">You must be logged in to iFolder to enable background syncing. The synchronization frequency for files is governed by the Sync Interval for your iFolder account. There is also a 1-minute synchronization interval for refreshing the list of iFolders you are invited to participate in, but this is not exposed through the user interface.</p>
-<p class="TOPIC">Whenever one of the sync intervals times out, if you are not logged in at that time, iFolder prompts you to log in. You can log in to allow background syncing, or you can click Cancel to postpone syncing temporarily until a sync interval elapses again. </p>
-<p class="NOTE"><em class="NOTE">NOTE:&nbsp;&nbsp;</em>In the final release, iFolder will allow you to disable the periodic prompting behavior and access the Login dialog box on demand. The Sync Interval in iFolder Preferences will be used for syncing iFolder files and invitations. In addition, you will be able to refresh the iFolder invitations on demand.</p>
+<li class="STEP"><a name="bvwrn0w"></a>
+<p class="STEP">Select the iFolder account to view its account settings.</p></li>
 
+<li class="STEP"><a name="bvwrhn9"></a>
+<p class="STEP">Select (enable) or deselect (disable) Remember Password.</p></li>
+
+<li class="STEP"><a name="bvwrhna"></a>
+<p class="STEP">Specify the password, then click OK or Apply.</p></li>
+
+<li class="STEP"><a name="bvwrrt0"></a>
+<p class="STEP">Click OK to verify the change to the Account settings, or click Cancel to back out of the change.</p></li>
+</ol>
+<p class="TOPIC">To log in to an iFolder account:</p>
+<ol class="STEPLIST">
+<li class="STEP"><a name="bvwntnx"></a>
+<p class="STEP">Right-click the iFolder Services menu, then select Accounts.</p></li>
+
+<li class="STEP"><a name="bvwnufo"></a>
+<p class="STEP">Select the iFolder account to view its account settings.</p></li>
+
+<li class="STEP"><a name="bvwnv0e"></a>
+<p class="STEP">Specify the password, then click Login.</p>
+<p class="STEP">On successful login, the account's status changes to Logged In.</p>
+<p class="STEP">If login fails, an error message reports the cause, such as password failure. </p></li>
+
+<li class="STEP"><a name="bvws3f9"></a>
+<p class="STEP">Click OK to close the Accounts dialog box.</p></li>
+</ol>
 </div>
 
 <script type="text/javascript" language="javascript" src="../../../ui/bottomnav.js"></script>
