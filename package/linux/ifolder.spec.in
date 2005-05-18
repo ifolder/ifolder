@@ -202,7 +202,7 @@ INSTANCES_AFTER_UNINSTALL=$1
 if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
         #Remove the ~/.local/simias folder recursively for all users
         echo "Removing simias information for all users"
-        if [ -e /root/.local/simias ]
+        if [ -e /root/.local/share/simias ]
         then
                 rm -rf /root/.local/share/simias
         fi
