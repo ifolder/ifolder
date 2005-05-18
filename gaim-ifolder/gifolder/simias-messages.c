@@ -41,6 +41,14 @@
 #include "util.h"
 #include "connection.h"
 
+typedef struct
+{
+	GtkWidget	*dialog;
+	GaimBuddy	*buddy;
+	char		*machineName;
+	char		*base64Key;
+} SimiasAcceptDialog;
+
 /**
  * Non-public Functions
  */
@@ -62,9 +70,11 @@ static gboolean handle_invitation_complete(GaimAccount *account,
 										   const char *sender,
 										   const char *buffer);
 
-static void add_accept_dialog(const char *sender, const char *machineName, GtkWidget *dialog);
+static void add_accept_dialog(const char *sender, const char *machineName, SimiasAcceptDialog *acceptDialog);
 static void remove_accept_dialog(const char *sender, const char *machineName);
-static GtkWidget *get_accept_dialog(const char *sender, const char *machineName);
+static SimiasAcceptDialog * get_accept_dialog(const char *sender, const char *machineName);
+
+static void accept_dialog_response_cb(SimiasAcceptDialog *acceptDialog, gint response, gpointer user_data);
 
 /**
  * Static variables
@@ -477,6 +487,8 @@ get_possible_simias_msg_type(const char *buffer)
 {
 	if (strstr(buffer, INVITATION_REQUEST_MSG) == buffer) {
 		return INVITATION_REQUEST;
+	} else if (strstr(buffer, INVITATION_CANCEL_MSG) == buffer) {
+		return INVITATION_CANCEL;
 	} else if (strstr(buffer, INVITATION_DENY_MSG) == buffer) {
 		return INVITATION_DENY;
 	} else if (strstr(buffer, INVITATION_ACCEPT_MSG) == buffer) {
@@ -501,10 +513,8 @@ handle_invitation_request(GaimAccount *account,
 	int colonPos;
 	int closeBracketPos;
 	char *tmp;
-	int err;
 	GtkWidget *accept_dialog;
-	gint response;
-	char settingName[1024];
+	SimiasAcceptDialog *acceptDialog;
 	const char *buddy_alias = NULL;
 
 	/* FIXME: Add some type of UI callback to handle the invitation request */
@@ -561,48 +571,21 @@ handle_invitation_request(GaimAccount *account,
 							buddy_alias ? buddy_alias : sender,
 							machineName);
 
-	add_accept_dialog(buddy->name, machineName, accept_dialog);
+	acceptDialog = malloc(sizeof(SimiasAcceptDialog));
+	acceptDialog->dialog = accept_dialog;
+	acceptDialog->buddy = buddy;
+	acceptDialog->machineName = strdup(machineName);
+	acceptDialog->base64Key = strdup(base64Key);
 
-	/**
-	 * FIXME: Change this to NOT be modal.  Instead, save the handle to
-	 * the dialog in a hashtable that keys on the username+machinename.
-	 * That way, handle_invitation_cancel will be able to change the
-	 * text of the dialog or replace it with one that says the user
-	 * canceled the invitation.
-	 */
-	response = gtk_dialog_run(GTK_DIALOG(accept_dialog));
+	add_accept_dialog(buddy->name, machineName, acceptDialog);
 
-	/* Now that the user has done something we don't need to save the accept_dialog */
-	remove_accept_dialog(buddy->name, machineName);
+/*	response = gtk_dialog_run(GTK_DIALOG(accept_dialog));*/
 
-	if (response == GTK_RESPONSE_YES)
-	{
-		sprintf(settingName, "simias-public-key:%s", machineName);
-		/* Save the buddy's public key in blist.xml */
-		gaim_blist_node_set_string(&(buddy->node),
-								   settingName,
-								   base64Key);
+	g_signal_connect_swapped(accept_dialog, "response",
+							 G_CALLBACK(accept_dialog_response_cb),
+							 acceptDialog);
 
-		/* Send an accept message */
-		err = simias_send_invitation_accept(buddy, machineName);
-		if (err <= 0)
-		{
-			/* FIXME: Call the registered UI Handler's error handler */
-			fprintf(stderr, "Error sending accept invitation message\n");
-		}
-	}
-	else /* The user denied the invitation */
-	{
-		/* Send a deny message */
-		err = simias_send_invitation_deny(buddy);
-		if (err <= 0)
-		{
-			/* FIXME: Call the registered UI Handler's error handler */
-			fprintf(stderr, "Error sending deny invitation message\n");
-		}
-	}
-
-	gtk_widget_destroy(accept_dialog);
+	gtk_widget_show_all(accept_dialog);
 
 	free(base64Key);
 	g_free(machineName);
@@ -624,7 +607,7 @@ handle_invitation_cancel(GaimAccount *account,
 	int closeBracketPos;
 	char *tmp;
 	GtkWidget *cancel_dialog;
-	GtkWidget *accept_dialog;
+	SimiasAcceptDialog *acceptDialog;
 	const char *buddy_alias = NULL;
 
 	/**
@@ -676,12 +659,17 @@ handle_invitation_cancel(GaimAccount *account,
 	buddy = gaim_find_buddy(account, sender);
 	buddy_alias = gaim_buddy_get_alias(buddy);
 
-	accept_dialog = get_accept_dialog(sender, machineName);
-	if (accept_dialog)
+	acceptDialog = get_accept_dialog(sender, machineName);
+	if (acceptDialog)
 	{
 		/* Hide and destroy the old accept dialog */
-		gtk_widget_hide(accept_dialog);
-		gtk_widget_destroy(accept_dialog);
+		gtk_widget_hide(acceptDialog->dialog);
+		remove_accept_dialog(buddy->name, machineName);
+		gtk_widget_destroy(acceptDialog->dialog);
+		
+		free(acceptDialog->machineName);
+		free(acceptDialog->base64Key);
+		free(acceptDialog);
 	
 		/* Tell the user about the cancel in a modal dialog */
 		cancel_dialog =
@@ -988,7 +976,7 @@ handle_invitation_complete(GaimAccount *account,
 }
 
 static void
-add_accept_dialog(const char *sender, const char *machineName, GtkWidget *dialog)
+add_accept_dialog(const char *sender, const char *machineName, SimiasAcceptDialog *acceptDialog)
 {
 	char key[2048];
 
@@ -997,7 +985,7 @@ add_accept_dialog(const char *sender, const char *machineName, GtkWidget *dialog
 
 	sprintf(key, "%s+%s", sender, machineName);
 
-	g_hash_table_replace(accept_dialogs, key, dialog);
+	g_hash_table_replace(accept_dialogs, key, acceptDialog);
 }
 
 static void
@@ -1016,7 +1004,7 @@ remove_accept_dialog(const char *sender, const char *machineName)
 	g_hash_table_remove(accept_dialogs, key);
 }
 
-static GtkWidget *
+static SimiasAcceptDialog *
 get_accept_dialog(const char *sender, const char *machineName)
 {
 	char key[2048];
@@ -1029,5 +1017,54 @@ get_accept_dialog(const char *sender, const char *machineName)
 
 	sprintf(key, "%s+%s", sender, machineName);
 
-	return (GtkWidget *)g_hash_table_lookup(accept_dialogs, key);
+	return (SimiasAcceptDialog *)g_hash_table_lookup(accept_dialogs, key);
+}
+
+static void
+accept_dialog_response_cb(SimiasAcceptDialog *acceptDialog, gint response, gpointer user_data)
+{
+	GaimBuddy *buddy;	
+	char *machineName;
+	char *base64Key;
+	char settingName[1024];
+	int err;
+	
+	buddy			= acceptDialog->buddy;
+	machineName		= acceptDialog->machineName;
+	base64Key		= acceptDialog->base64Key;
+	
+	/* Now that the user has done something we don't need to save the accept_dialog */
+	remove_accept_dialog(buddy->name, machineName);
+
+	if (response == GTK_RESPONSE_YES)
+	{
+		sprintf(settingName, "simias-public-key:%s", machineName);
+		/* Save the buddy's public key in blist.xml */
+		gaim_blist_node_set_string(&(buddy->node),
+								   settingName,
+								   base64Key);
+
+		/* Send an accept message */
+		err = simias_send_invitation_accept(buddy, machineName);
+		if (err <= 0)
+		{
+			/* FIXME: Call the registered UI Handler's error handler */
+			fprintf(stderr, "Error sending accept invitation message\n");
+		}
+	}
+	else /* The user denied the invitation */
+	{
+		/* Send a deny message */
+		err = simias_send_invitation_deny(buddy);
+		if (err <= 0)
+		{
+			/* FIXME: Call the registered UI Handler's error handler */
+			fprintf(stderr, "Error sending deny invitation message\n");
+		}
+	}
+
+	gtk_widget_destroy(acceptDialog->dialog);
+
+	free(base64Key);
+	g_free(machineName);
 }
