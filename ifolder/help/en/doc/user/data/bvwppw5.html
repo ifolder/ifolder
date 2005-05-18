@@ -6,8 +6,8 @@
 <meta http-equiv="Content-Language" content="en">
 
 <meta name="Generator" content="Novell HTML Conversion 10 March 2004">
-<meta name="Generation-Date" content="Monday, May 16, 2005 21:43">
-<meta name="Content-Date" content="Mon, 16 May 2005 12:00:00 GMT">
+<meta name="Generation-Date" content="Tuesday, May 17, 2005 23:14">
+<meta name="Content-Date" content="Mon, 17 May 2005 12:00:00 GMT">
 <meta name="Robots" content="INDEX, FOLLOW">
 <meta name="Document_Number" content="zHTML xD.0000.0000.0002.0002.">
 <meta name="Author" content="zHTML xD.0000.0000.0002.0002.">
@@ -48,7 +48,7 @@ loadMenu();
 <h2 class="TOPIC-TITLE"><br />Configuring Local Firewall Settings for iFolder Traffic</h2>
 <p class="TOPIC">If you use a local firewall, you must set your firewall to allow iFolder to choose a local dynamic port or configure a local static port for iFolder to use for communications with the iFolder enterprise servers where you have iFolder accounts. </p>
 <p class="TOPIC">Initially, the iFolder configuration does not specify a particular port to use for client-server communications. When iFolder first runs, it opens an available local port to listen for requests from the iFolder enterprise server and to synchronize data. It writes the port number to a configuration file and uses this port thereafter unless the port is not available whenever iFolder starts. If the port is in use by another application, iFolder selects a different available port, re-configures the port in the configuration file, and uses the new port thereafter. For example, if iFolder is down and another application takes the port, when you restart iFolder, iFolder must select and configure a different port to use.</p>
-<h4 class="BRIDGEHEAD"><br />Using a Local Dyanamic Port</h4>
+<h4 class="BRIDGEHEAD"><br />Using a Local Dynamic Port</h4>
 <p class="TOPIC">Mono-XSP is used as a Web server on your local computer to communicate with the enterprise servers where you have iFolder accounts. If you use a local firewall on your computer, it should detect Mono-XSP Server traffic whenever iFolder runs and report it to you. Allow the traffic to avoid receiving the pop-up alert whenever the client starts. If you allow the traffic permanently, your firewall should not remind you again.</p>
 <h4 class="BRIDGEHEAD"><br />Using a Local Static Port</h4>
 <p class="TOPIC">You can optionally add the Web Service Port Range parameter in the Service Manager section of the Simias.config file to allow Mono-XSP to use a static port or a range of ports. This port or range of ports can then be opened in the firewall to allow communications for Mono-XSP. </p>
@@ -92,7 +92,7 @@ loadMenu();
 <p class="STEP">See your firewall's documentation for information on how to open a port in the firewall.</p></li>
 
 <li class="STEP"><a name="bw4v6ou"></a>
-<p class="STEP">Stop the iFolder client by right-clicking the iFolder icon <img src="../graphics/ifolder_16.png" alt="iFolder Application icon" />, then selecting Exit.</p></li>
+<p class="STEP">Stop the iFolder client by right-clicking the iFolder icon <img src="../graphics/ifolder16.png" alt="iFolder icon" />, then selecting Exit.</p></li>
 
 <li class="STEP"><a name="bw4v6r7"></a>
 <p class="STEP">Modify the Simias.config file by adding the Web Service Port Range parameter to the Service Manager section.</p></li>
