@@ -901,11 +901,17 @@ simias_get_web_service_credential(char *username, char *password)
 	char *user;
 	char *pw;
 	
+#if defined(WIN32)
+	user = getenv("USERNAME");
+#else
 	user = getenv("USER");
-	
-	if (!user)
-		return -1;
+#endif
 
+	if (!user)
+	{
+		fprintf(stderr, "USER is not set in the environment\n");
+		return -1;
+	}
 
 	char simias_password_file_path[1024];
 	FILE *simias_password_file;
