@@ -1517,8 +1517,8 @@ namespace Novell.FormsTrayApp
 		{
 			switch (args.Type)
 			{
-				case "Collection":
-				case "Subscription":
+				case "Collection"://NodeTypes.CollectionType:
+				case "Subscription"://NodeTypes.SubscriptionType:
 					lock (ht)
 					{
 						ListViewItem lvi = (ListViewItem)ht[args.Node];
@@ -1532,7 +1532,7 @@ namespace Novell.FormsTrayApp
 						}
 					}
 					break;
-				case "Domain":
+				case "Domain"://NodeTypes.DomainType:
 					RemoveDomainFromList(args.Node);
 					break;
 			}
@@ -2192,30 +2192,38 @@ namespace Novell.FormsTrayApp
 						MyMessageBoxDefaultButton.Button2);
 					if (mmb.ShowDialog() == DialogResult.Yes)
 					{
-						// Revert the iFolder.
-						iFolderWeb newiFolder = ifWebService.RevertiFolder(ifolder.ID);
-
-						// Notify the shell.
-						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
-
-						if (newiFolder != null)
+						if (ifolder.Role.Equals("Master"))
 						{
-							// Update the listview item.
-							lvi.Tag = new iFolderObject(newiFolder);
-
-							lock (ht)
-							{
-								ht.Add(newiFolder.ID, lvi);
-							}
-
-							updateListViewItem(lvi);
-
-							// Decline the invitation.
-							ifWebService.DeclineiFolderInvitation(newiFolder.DomainID, newiFolder.ID);
+							ifWebService.DeleteiFolder(ifolder.ID);
+							lvi.Remove();
 						}
 						else
 						{
-							lvi.Remove();
+							// Revert the iFolder.
+							iFolderWeb newiFolder = ifWebService.RevertiFolder(ifolder.ID);
+
+							// Notify the shell.
+							Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
+
+							if (newiFolder != null)
+							{
+								// Update the listview item.
+								lvi.Tag = new iFolderObject(newiFolder);
+
+								lock (ht)
+								{
+									ht.Add(newiFolder.ID, lvi);
+								}
+
+								updateListViewItem(lvi);
+
+								// Decline the invitation.
+								ifWebService.DeclineiFolderInvitation(newiFolder.DomainID, newiFolder.ID);
+							}
+							else
+							{
+								lvi.Remove();
+							}
 						}
 
 						lock (ht)
