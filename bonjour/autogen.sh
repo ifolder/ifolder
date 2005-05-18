@@ -70,6 +70,11 @@ do
 	##  echo "**Warning**: No such directory \`$k'.  Ignored."
         fi
       done
+		case $OSTYPE in
+			darwin*)
+				aclocalinclude="$aclocalinclude -I tools/aclocal"
+				;;
+		esac
       if grep "^AM_GNU_GETTEXT" configure.in >/dev/null; then
 	if grep "sed.*POTFILES" configure.in >/dev/null; then
 	  : do nothing -- we still have an old unmodified configure.in
