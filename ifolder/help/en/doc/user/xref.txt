@@ -19,7 +19,6 @@ accountdetails.html         Viewing Information About an iFolder Account
 bvwsp7c.html                Deleting an iFolder Account
 preferences.html            Configuring iFolder Preferences for the Client
 myifolders.html             Managing iFolders
-demos.html                  Viewing Animated Demonstrations of iFolder Tasks
 bwagrrn.html                Naming Conventions for an iFolder and Its Folders and Files
 createifolder.html          Creating an iFolder
 sharewith.html              Sharing an iFolder

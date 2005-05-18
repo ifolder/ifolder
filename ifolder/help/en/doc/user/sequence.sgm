@@ -109,11 +109,6 @@ C = InvisibleChapter	-  Used by the HLP2MOAB process only as a way to group a bu
 		<TITLE>Managing iFolders</TITLE>
 
 			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
-			<FILENAME>data\demos.html</FILENAME>
-			<TITLE>Viewing Animated Demonstrations of iFolder Tasks</TITLE>
-			</TOPIC>
-
-			<TOPIC TYPE="File" ELEMTYPE="TOPIC">
 			<FILENAME>data\bwagrrn.html</FILENAME>
 			<TITLE>Naming Conventions for an iFolder and Its Folders and Files</TITLE>
 			</TOPIC>
