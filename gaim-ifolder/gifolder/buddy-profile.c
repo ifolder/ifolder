@@ -690,7 +690,15 @@ parse_encoded_profile(GaimBuddy *buddy, const char *profile, char **machineName,
 		/**
 		 * We don't have the buddy's DES key so we cannot decode their
 		 * encoded profile.
+		 *
+		 * We do know that they've got the plugin installed though, so make
+		 * sure that they're added as "Available" in the users list.
 		 */
+		simias_users_add(buddy->name, *machineName,
+						 buddy->account->username,
+						 buddy->account->protocol_id,
+						 USER_AVAILABLE);
+
 		free(*machineName);
 		fprintf(stderr, "Do not have %s's DES key to decrypt their profile in parse_encoded_profile()\n", buddy->name);
 		return FALSE;
