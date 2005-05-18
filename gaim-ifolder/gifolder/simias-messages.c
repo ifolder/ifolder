@@ -560,6 +560,9 @@ handle_invitation_request(GaimAccount *account,
 							_("%s (%s) would like to share files with you through iFolder.  Would you like to participate?"),
 							buddy_alias ? buddy_alias : sender,
 							machineName);
+
+	add_accept_dialog(buddy->name, machineName, accept_dialog);
+
 	/**
 	 * FIXME: Change this to NOT be modal.  Instead, save the handle to
 	 * the dialog in a hashtable that keys on the username+machinename.
@@ -568,6 +571,9 @@ handle_invitation_request(GaimAccount *account,
 	 * canceled the invitation.
 	 */
 	response = gtk_dialog_run(GTK_DIALOG(accept_dialog));
+
+	/* Now that the user has done something we don't need to save the accept_dialog */
+	remove_accept_dialog(buddy->name, machineName);
 
 	if (response == GTK_RESPONSE_YES)
 	{
