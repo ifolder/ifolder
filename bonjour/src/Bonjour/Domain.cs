@@ -110,41 +110,22 @@ namespace Simias.mDns
 		/// <summary>
 		/// Constructor for creating a new mDnsDomain object.
 		/// </summary>
-		internal Domain( bool init )
+		internal Domain( )
 		{
-			mDnsHostName = Environment.MachineName + ".local";
-			mDnsUserName = Environment.UserName + "@" + Environment.MachineName;
-
-			description = 
-				Environment.UserName +
-				"@" +
-				Environment.MachineName +
-				"'s Bonjour Domain";
-
-			if ( init == true )
-			{
-				this.Init();
-			}
+			this.Init( null );
 		}
 
 		/// <summary>
 		/// Constructor for creating a new mDnsDomain object.
 		/// </summary>
 		/// <param name="description">String that describes this domain.</param>
-		internal Domain( bool init, string description ) 
+		internal Domain( string description ) 
 		{
-			mDnsHostName = Environment.MachineName + ".local";
-			mDnsUserName = Environment.UserName + "@" + Environment.MachineName;
-			this.description = description;
-
-			if ( init == true )
-			{
-				this.Init();
-			}
+			this.Init( description );
 		}
 		#endregion
 
-		internal void Init()
+		internal void Init( string createDescription )
 		{
 			bool firstTime = false;
 			Member member = null;
@@ -159,15 +140,27 @@ namespace Simias.mDns
 				Simias.Storage.Domain rDomain = store.GetDomain( Simias.mDns.Domain.ID );
 				if (rDomain == null)
 				{
+					mDnsHostName = Environment.MachineName;
+					mDnsUserName = Environment.UserName + "@" + Environment.MachineName;
+
+					if ( createDescription != null && createDescription != "" )
+					{
+						description = createDescription;
+					}
+					else
+					{
+						description = mDnsUserName + "'s Bonjour Domain";
+					}
+
 					// Create the Bonjour domain
 					rDomain = 
 						new Simias.Storage.Domain(
-						store, 
-						this.mDnsDomainName,
-						Simias.mDns.Domain.ID,
-						this.description, 
-						Simias.Sync.SyncRoles.Master,
-						Simias.Storage.Domain.ConfigurationType.Workgroup );
+							store, 
+							this.mDnsDomainName,
+							Simias.mDns.Domain.ID,
+							this.description, 
+							Simias.Sync.SyncRoles.Master,
+							Simias.Storage.Domain.ConfigurationType.Workgroup );
 
 					rDomain.SetType( rDomain, "Bonjour" );
 
@@ -176,7 +169,11 @@ namespace Simias.mDns
 					if ( member == null )
 					{
 						// Create the owner member for the domain.
-						member = new Member( mDnsUserName, Guid.NewGuid().ToString().ToLower(), Access.Rights.Admin );
+						member = 
+							new Member( 
+								mDnsUserName, 
+								Guid.NewGuid().ToString().ToLower(), 
+								Access.Rights.Admin );
 						firstTime = true;
 					}
 					else

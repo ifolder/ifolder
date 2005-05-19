@@ -476,21 +476,34 @@ namespace Simias.mDns
 			*/
 
 			userHandle = new IntPtr( 0 );
-			User.mDnsUserName = Environment.UserName + "@" + Environment.MachineName;
 
 			try
 			{
+
 				Simias.Storage.Domain rDomain = 
 					Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
+				if ( rDomain == null )
+				{
+					// Instantiating the mDns.Domain should create the Bonjour domain
+					Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain();
+					rDomain = Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
+				}
+
 				if ( rDomain != null )
 				{
-					User.mDnsUserID = rDomain.GetMemberByName( mDnsUserName ).UserID;
+					User.mDnsUserID = rDomain.Owner.UserID;
+					User.mDnsUserName = rDomain.Owner.Name;
+				}
+				else
+				{
+					throw new ApplicationException( "Bonjour Domain does not exist" );
 				}
 			}
 			catch( Exception e )
 			{
 				log.Debug( e.Message );
 				log.Debug( e.StackTrace );
+				throw e;
 			}
 		}
 
@@ -499,23 +512,6 @@ namespace Simias.mDns
 		/// </summary>
 		internal User()
 		{
-
-			/*
-			try
-			{
-				Simias.Storage.Domain rDomain = 
-					Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
-				if ( rDomain != null )
-				{
-					this.mDnsUserID = rDomain.GetMemberByName( mDnsUserName).UserID;
-				}
-			}
-			catch( Exception e )
-			{
-				log.Debug( e.Message );
-				log.Debug( e.StackTrace );
-			}
-			*/
 		}
 
 		#endregion

@@ -102,7 +102,7 @@ namespace Simias.mDns
 
 			try
 			{
-				new Simias.mDns.Domain( true );
+				new Simias.mDns.Domain( null );
 				this.mDnsUser = new Simias.mDns.User();
 
 				// Registers our iFolder member with the Bonjour
