@@ -43,26 +43,28 @@ typedef	int	pid_t;
 #include <netinet/in.h>		// for in_addr
 #endif
 
-#define	kDNSMaxID			32
-#define	kDNSMaxServicePath	128
-#define	kDNSMaxPublicKey	256
-#define	kDNSMaxTextualIP	16
+#define	kDNSMaxID					32
+#define	kDNSMaxServicePath			128
+#define	kDNSMaxPublicKey			256
+#define	kDNSMaxTextualIP			16
 
 // Note: Rendezvous' max domain name is 1005 but for now we're
 // just going to support local. so our's is much smaller
-#define	kDNSMaxDomainName	64
+#define	kDNSMaxDomainName			128
 
 #ifndef kDNSServiceMaxServiceName
-#define kDNSServiceMaxServiceName 64
+#define kDNSServiceMaxServiceName	128
 #endif
 
 #ifndef kDNSServiceInterfaceIndexAny 
 #define kDNSServiceInterfaceIndexAny 0
 #endif
 
+/*
 #ifndef DNSSD_API
 #define DNSSD_API
 #endif
+*/
 
 static const char memberType[] = "_ifolder_member._tcp";
 static const char domainType[] = "local.";
@@ -84,20 +86,20 @@ typedef struct tagMembers
 {
 	char				ID[kDNSMaxID];
 	char				Name[kDNSServiceMaxServiceName];
+	char				HostName[kDNSMaxDomainName];
 	char				IPAddress[kDNSMaxTextualIP];
 	char				ServicePath[kDNSMaxServicePath];
 	unsigned char		PublicKey[kDNSMaxPublicKey];
-	char				HostName[kDNSMaxDomainName];
-	int			Port;
+	int					Port;
 
 } Members, *PMembers;
 
 typedef struct tagMemberInfo
 {
 	char				Name[kDNSServiceMaxServiceName];
+	char				HostName[kDNSMaxDomainName];
 	char				ServicePath[kDNSMaxServicePath];
 	unsigned char		PublicKey[kDNSMaxPublicKey];
-	char				HostName[kDNSMaxDomainName];
 	int			        Port;
 
 } MemberInfo, *PMemberInfo;
@@ -106,18 +108,6 @@ extern
 DNSServiceErrorType
 DNSSD_API 
 GetMemberInfo(char *pID, PMemberInfo pInfo);
-
-/*
-DNSServiceErrorType
-DNSSD_API 
-GetMemberInfo(
-	char				*pID,
-	char				*pName,
-	char				*pServicePath,
-	unsigned char		*pPublicKey,
-	char				*pHost,
-	int					*pPort);
-*/
 
 extern
 DNSServiceErrorType

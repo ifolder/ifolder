@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "simdezvous.h"
+#include "simiasbonjour.h"
 
 int main( int argc, char **argv )
 {

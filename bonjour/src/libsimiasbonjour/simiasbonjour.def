@@ -1,4 +1,4 @@
-LIBRARY	simdezvous
+LIBRARY	simiasbonjour
 EXPORTS
     RegisterLocalMember
     DeregisterLocalMember

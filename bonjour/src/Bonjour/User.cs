@@ -228,23 +228,23 @@ namespace Simias.mDns
 #if DARWIN
 		private const string nativeLib = "libsimiasbonjour.dylib";
 #else
-		private const string nativeLib = "simiasbonjour";
+		private const string nativeLib = "libsimiasbonjour";
 #endif
 
 		[ StructLayout( LayoutKind.Sequential, CharSet=CharSet.Ansi ) ]
 		public class MemberInfo
 		{
-			[ MarshalAs( UnmanagedType.ByValTStr, SizeConst=64 ) ]
+			[ MarshalAs( UnmanagedType.ByValTStr, SizeConst=128 ) ]
 			public String Name = null;
+
+			[ MarshalAs( UnmanagedType.ByValTStr, SizeConst=128 ) ]
+			public String Host = null;
 
 			[ MarshalAs( UnmanagedType.ByValTStr, SizeConst=128 ) ]
 			public String ServicePath = null;
 
 			[ MarshalAs( UnmanagedType.ByValTStr, SizeConst=256 ) ]
 			public String PublicKey = null;
-
-			[ MarshalAs( UnmanagedType.ByValTStr, SizeConst=64 ) ]
-			public String Host = null;
 
 			public int Port;
 		}
