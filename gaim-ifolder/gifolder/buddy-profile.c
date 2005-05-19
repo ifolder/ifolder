@@ -560,10 +560,6 @@ get_my_profile_string(GaimAccount *account)
 	char *encryptedString;
 	int err;
 	
-	/**
-	 * FIXME: Figure out how to read the existing profile instead of just replacing the entire thing.
-	 */
-
 	err = simias_get_user_info(&machineName, &userID, &simiasURL);
 	if (err != 0)
 	{

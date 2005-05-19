@@ -35,6 +35,7 @@
 
 #define SIMIAS_PREF_PATH "/plugins/simias"
 
+#define SIMIAS_PREF_USER_ID "/plugins/simias/user_id"
 #define SIMIAS_PREF_MACHINE_NAME "/plugins/simias/machine_name"
 
 #define SIMIAS_PREF_SYNC_INTERVAL "/plugins/simias/sync_interval"

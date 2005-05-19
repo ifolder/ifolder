@@ -278,6 +278,7 @@ setup_keypair()
 	 */
 	gaim_prefs_set_string(SIMIAS_PREF_PUBLIC_KEY, resp.PublicCredential);
 	gaim_prefs_set_string(SIMIAS_PREF_PRIVATE_KEY, resp.PrivateCredential);
+	gaim_prefs_trigger_callback(SIMIAS_PREF_PUBLIC_KEY);
 
 	fprintf(stderr, "Just added the public/private key pair to prefs.xml\n");
 	
@@ -469,6 +470,7 @@ setup_des_key()
 	 * store it in the Gaim Plugin Configuration area for future use.
 	 */
 	gaim_prefs_set_string(SIMIAS_PREF_DES_KEY, resp.GenerateDESKeyResult);
+	gaim_prefs_trigger_callback(SIMIAS_PREF_DES_KEY);
 	
 	cleanup_gsoap(&soap);
 
@@ -602,7 +604,10 @@ simias_get_user_info(char **machineName, char **userID, char **simiasURL)
 	struct _ns1__GetUserInfoResponse resp;
 	char username[512];
 	char password[1024];
-	
+	const char *existing_user_id;
+
+fprintf(stderr, "simias_get_user_info() entered\n");
+
 	soap_url = get_soap_url(TRUE);
 	if (!soap_url) {
 		return -1;
@@ -624,9 +629,33 @@ soap_print_fault(&soap, stderr);
 	{
 		return -3;
 	}
-	
+
+fprintf(stderr, "GetUserInfo() returned UserID: %s\n", resp.UserID);
+
+	if (gaim_prefs_exists(SIMIAS_PREF_USER_ID))
+	{
+fprintf(stderr, "SIMIAS_PREF_USER_ID already exists\n");
+		existing_user_id = gaim_prefs_get_string(SIMIAS_PREF_USER_ID);
+		if (existing_user_id)
+		{
+fprintf(stderr, "SIMIAS_PREF_USER_ID = %s\n", existing_user_id);
+			*userID = strdup(existing_user_id);
+		}
+		else
+		{
+			return -4;
+		}
+	}
+	else
+	{
+fprintf(stderr, "SIMIAS_PREF_USER_ID does NOT exist\n");
+		*userID = strdup(resp.UserID);
+
+		gaim_prefs_add_string(SIMIAS_PREF_USER_ID, *userID);
+		gaim_prefs_trigger_callback(SIMIAS_PREF_USER_ID);
+	}
+
 	*machineName = strdup(resp.MachineName);
-	*userID = strdup(resp.UserID);
 	*simiasURL = strdup(resp.SimiasURL);
 	
 	cleanup_gsoap(&soap);
