@@ -688,11 +688,6 @@ namespace Simias.Sync
 					return;
 				}
 
-				// We may have just created or deleted nodes wait for the events to settle.
-				// We will wait for 2 seconds because of file time resolution on fat32
-				// This will ensure that we don't miss any changes.
-				Thread.Sleep(2000);
-				
 				// Setup the url to the server.
 				string userID = store.GetUserIDFromDomainID(collection.Domain);
 				string userName = collection.GetMemberByID(userID).Name;

@@ -276,6 +276,42 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
+		/// Rename the file node.
+		/// </summary>
+		/// <param name="newName">The new name.</param>
+		/// <param name="node">The node to rename.</param>
+		/// <returns>The renamed node.</returns>
+		BaseFileNode RenameFileNode(string newName, BaseFileNode node)
+		{
+			node.Name = Path.GetFileName(newName);
+			string relativePath = GetNormalizedRelativePath(rootPath, newName);
+			node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
+			// Commit the directory.
+			collection.Commit(node);
+			return node;
+		}
+
+		/// <summary>
+		/// Rename the directory and fixup children.
+		/// </summary>
+		/// <param name="newPath">The new name of the dir.</param>
+		/// <param name="node">The dir node to rename.</param>
+		/// <returns>The modified node.</returns>
+		DirNode RenameDirNode(string newPath, DirNode node)
+		{
+			node.Name = Path.GetFileName(newPath);
+			string relativePath = GetNormalizedRelativePath(rootPath, newPath);
+			string oldRelativePath = node.Properties.GetSingleProperty(PropertyTags.FileSystemPath).ValueString;
+			node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
+			// Commit the directory.
+			collection.Commit(node);
+			// We need to rename all of the children nodes.
+			RenameDirsChildren(collection, node, oldRelativePath);
+			DoSubtree(newPath, node, node.ID, true);
+			return node;
+		}
+
+		/// <summary>
 		/// Create a DirNode for the specified directory.
 		/// </summary>
 		/// <param name="path">The path to the directory.</param>
@@ -797,11 +833,27 @@ namespace Simias.Sync
 
 									
 									// Since we are here we have a node already.
-									// This is a rename back to the original name update it.
-									if (!isDir)
-										ModifyFileNode(fullName, fn, false);
+									// Make sure the case of the names has not changed.
+									if (Path.GetFileName(fullName) == node.Name)
+									{
+										// This is a rename back to the original name update it.
+										if (!isDir)
+											ModifyFileNode(fullName, fn, false);
+										else
+											DoSubtree(fullName, dn, node.ID, true);
+									}
 									else
-										DoSubtree(fullName, node as DirNode, node.ID, true);
+									{
+										// This is a case rename.
+										if (!isDir)
+										{
+											node = RenameFileNode(fullName, fn);
+										}
+										else
+										{
+											node = RenameDirNode(fullName, dn);
+										}
+									}
 									
 									// Make sure that there is not a node for the old name.
 									sn = GetShallowNodeForFile(args.OldFullPath, out haveConflict);
@@ -848,6 +900,8 @@ namespace Simias.Sync
 									if (sn != null)
 									{
 										node = collection.GetNodeByID(sn.ID);
+										fn = node as FileNode;
+										dn = node as DirNode;
 
 										// Remove any name collisions.
 										if (collection.HasCollisions(node))
@@ -880,22 +934,13 @@ namespace Simias.Sync
 												break;
 											}
 										}
-										node.Name = Path.GetFileName(fullName);
-										string relativePath = GetNormalizedRelativePath(rootPath, fullName);
-										string oldRelativePath = node.Properties.GetSingleProperty(PropertyTags.FileSystemPath).ValueString;
-										node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
-											
 										if (!isDir)
 										{
-											ModifyFileNode(fullName, node as BaseFileNode, true);
+											node = RenameFileNode(fullName, node as BaseFileNode);
 										}
 										else
 										{
-											// Commit the directory.
-											collection.Commit(node);
-											// We need to rename all of the children nodes.
-											RenameDirsChildren(collection, node as DirNode, oldRelativePath);
-											DoSubtree(fullName, node as DirNode, node.ID, true);
+											node = RenameDirNode(fullName, node as DirNode);
 										}
 									}
 									else
@@ -936,6 +981,13 @@ namespace Simias.Sync
 					Dredge();
 					needToDredge = false;
 				}
+			}
+			if (foundChange)
+			{
+				// We may have just created or deleted nodes wait for the events to settle.
+				// We will wait for 2 seconds because of file time resolution on fat32
+				// This will ensure that we don't miss any changes.
+				Thread.Sleep(2000);
 			}
 		}
 
