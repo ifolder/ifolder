@@ -57,6 +57,9 @@
 
 #define SIMIAS_PREF_DES_KEY "/plugins/simias/des_key"
 
+#define SIMIAS_PREF_AUTO_PUBLIC_IFOLDER "/plugins/simias/auto_public_ifolder"
+#define SIMIAS_PREF_AUTO_PUBLIC_IFOLDER_DEF TRUE
+
 /* Function Declarations */
 void simias_init_default_prefs();
 

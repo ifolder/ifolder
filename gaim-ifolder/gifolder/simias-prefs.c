@@ -79,6 +79,11 @@ simias_init_default_prefs()
 		gaim_prefs_add_bool(SIMIAS_PREF_SIMIAS_AUTO_START,
 							SIMIAS_PREF_SIMIAS_AUTO_START_DEF);
 	}
+
+	if (!gaim_prefs_exists(SIMIAS_PREF_AUTO_PUBLIC_IFOLDER)) {
+		gaim_prefs_add_bool(SIMIAS_PREF_AUTO_PUBLIC_IFOLDER,
+							SIMIAS_PREF_AUTO_PUBLIC_IFOLDER_DEF);
+	}
 }
 
 static char *

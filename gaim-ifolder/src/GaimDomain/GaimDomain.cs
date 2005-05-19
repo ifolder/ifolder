@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections;
+using System.IO;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Xml;
@@ -32,6 +33,7 @@ using Simias;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.Client;
+using Simias.Web;
 
 namespace Simias.Gaim
 {
@@ -470,7 +472,12 @@ namespace Simias.Gaim
 			}
 			
 			// Sync all buddies into the domain
-			SyncBuddies(domain);
+			GaimBuddy[] buddies = SyncBuddies(domain);
+			if (buddies != null)
+			{
+				// Update the Public Shared iFolder (This is the kind of worthless comment "Steve" likes best)
+				UpdatePublicSharediFolder(buddies);
+			}
 		}
 
 		public static GaimBuddy[] SearchForBuddies(string attributeName, string searchString, SearchOp operation)
@@ -792,7 +799,219 @@ namespace Simias.Gaim
 		
 			return false;
 		}
+
+		internal static bool ShouldMaintainPublicSharediFolder()
+		{
+			XmlDocument prefsDoc = new XmlDocument();
+			try
+			{
+				prefsDoc.Load(GetGaimConfigDir() + "/prefs.xml");
+			}
+			catch
+			{
+				// Don't cause any errors to log...for the case where Gaim isn't installed or the plugin isn't installed/enabled
+				return false;
+			}
+			XmlElement topPrefElement = prefsDoc.DocumentElement;
+
+			XmlNode settingNode = 
+				topPrefElement.SelectSingleNode("//pref[@name='plugins']/pref[@name='simias']/pref[@name='auto_public_ifolder']/@value");
+
+			if (settingNode != null)
+			{
+				if (settingNode.Value == "1")
+				{
+log.Debug("ShouldMaintainPublicSharediFolder() returning: true");
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		internal static void UpdatePublicSharediFolder(GaimBuddy[] buddies)
+		{
+			if (ShouldMaintainPublicSharediFolder())
+			{
+				string iFolderName = BuildPublicSharediFolderName();
+				if (iFolderName == null)
+				{
+					log.Debug("BuildPublicSharediFolderName() returned null so we can't update the public shared iFolder");
+					return;
+				}
+
+				// Check to see if we've already created this iFolder
+				string userDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+				string iFolderPath;
+				if (MyEnvironment.Windows)
+				{
+					iFolderPath = string.Format("{0}\\{1}", userDesktopPath, iFolderName);
+				}
+				else
+				{
+					iFolderPath = string.Format("{0}/{1}", userDesktopPath, iFolderName);
+				}
+
+				log.Debug("Updating Public Shared iFolder: {0}", iFolderPath);
+
+				Simias.Storage.Collection col = SharedCollection.GetCollectionByPath(iFolderPath);
+				if(col == null)
+				{
+					// Create the directory on the desktop
+					try
+					{
+						if (!Directory.Exists(iFolderPath))
+						{
+							Directory.CreateDirectory(iFolderPath);
+							log.Debug("Created a new directory: {0}", iFolderPath);
+						}
+					}
+					catch(DirectoryNotFoundException dnfe)
+					{
+						log.Debug(dnfe.Message);
+						return;
+					}
+					catch(Exception e)
+					{
+						log.Debug(e.Message);
+						return;
+					}
+					
+					// Create a new iFolder with the specified path
+					try
+					{
+						col = SharedCollection.CreateLocalSharedCollection(
+									iFolderPath, Simias.Gaim.GaimDomain.ID, "iFolder");
+						log.Debug("Created a new iFolder: {0}", iFolderPath);
+					}
+					catch(Exception e)
+					{
+						log.Debug("Error creating the Public Shared iFolder: {0}", e.Message);
+						return;
+					}
+				}
+				
+				UpdatePublicSharediFolderMembers(col, buddies);
+			}
+		}
 		
+		/// Update the membership list of the Public Shared iFolder.  Any
+		/// iFolder-enabled buddies that are not already added as members
+		/// should be added.  Existing users should not be modified in case the
+		/// user has changed their access rights.
+		internal static void UpdatePublicSharediFolderMembers(Simias.Storage.Collection col, GaimBuddy[] buddies)
+		{
+			Simias.Storage.Domain domain = GaimDomain.GetDomain();
+			if (domain == null) return;
+
+			Hashtable subscribedUserIDs = new Hashtable();
+
+			Store store = Store.GetStore();
+
+			Simias.POBox.POBox poBox =
+				Simias.POBox.POBox.FindPOBox(store, domain.ID, store.GetUserIDFromDomainID(domain.ID));
+
+			ICSList poList = poBox.Search(
+				Simias.POBox.Subscription.SubscriptionCollectionIDProperty,
+				col.ID,
+				SearchOp.Equal);
+
+			foreach(Simias.Storage.ShallowNode sNode in poList)
+			{
+				Simias.POBox.Subscription sub = new Simias.POBox.Subscription(poBox, sNode);
+
+				// Filter out subscriptions that are on this box
+				// already
+				if (sub.SubscriptionState == Simias.POBox.SubscriptionStates.Ready)
+				{
+					if (poBox.StoreReference.GetCollectionByID(
+						sub.SubscriptionCollectionID) != null)
+					{
+						continue;
+					}
+				}
+
+				subscribedUserIDs[sub.ToIdentity] = sub.ToIdentity;
+				log.Debug("Added {0} to subscribedUserIDs", sub.ToName);
+			}
+
+			foreach (GaimBuddy buddy in buddies)
+			{
+				string[] machineNames = buddy.MachineNames;
+				foreach (string machineName in machineNames)
+				{
+					Member member = FindBuddyInDomain(domain, buddy, machineName);
+					if (member != null)
+					{
+						if (subscribedUserIDs[member.UserID] == null)
+						{
+							// Add the user as a member of the Public Shared iFolder
+							InviteUser(poBox, col, member);
+						}
+					}
+					else
+					{
+						// If we have enough information to create the user for
+						// the first time in the domain, do so now and then
+						// invite them to the iFolder.
+						string memberName	= buddy.GetSimiasMemberName(machineName);
+						string memberUserID	= buddy.GetSimiasUserID(machineName);
+						if (memberName != null && memberUserID != null)
+						{
+							member = new Simias.Storage.Member(
+											memberName,
+											memberUserID,
+											Simias.Storage.Access.Rights.ReadOnly );
+
+							string alias = buddy.Alias;
+							if (alias != null)
+							{
+								member.FN = string.Format("{0} ({1})", alias, machineName);
+							}
+			
+							domain.Commit( member );
+							
+							log.Debug("Added new Gaim Domain Member in Simias: {0} ({1})", buddy.Name, machineName);
+							
+							InviteUser(poBox, col, member);
+						}
+					}
+				}
+			}
+		}
+
+		internal static void InviteUser(Simias.POBox.POBox poBox,
+										Simias.Storage.Collection col,
+										Simias.Storage.Member member)
+		{
+			Simias.Storage.Access.Rights newRights = Simias.Storage.Access.Rights.ReadOnly;
+
+			Simias.POBox.Subscription sub = poBox.CreateSubscription(col, col.GetCurrentMember(), "iFolder");
+
+			sub.SubscriptionRights = newRights;
+			sub.ToName = member.Name;
+			sub.ToIdentity = member.UserID;
+
+			poBox.AddMessage(sub);
+
+			log.Debug("Inviting {0}", member.Name);
+		}
+		
+		internal static string BuildPublicSharediFolderName()
+		{
+			string iFolderName;
+			string machineName = Environment.MachineName.ToLower();
+
+			Simias.Storage.Domain domain = GaimDomain.GetDomain();
+			if (domain == null) return null;
+
+			Simias.Storage.Member owner = domain.Owner;
+				
+			// "Gaim Public Files - <screenname> (<machinename>)"
+			iFolderName = string.Format("Gaim Public Files - {0}", owner.Name);
+			return iFolderName;
+		}
+
 		/// <summary>
 		/// This function will return the user-id that should be used when first
 		/// creating the Gaim Domain if one previously existed.  This is needed
@@ -927,12 +1146,12 @@ log.Debug("GetGaimUserID() returning: {0}", userIDNode.Value);
 			return member;			
 		}
 		
-		internal static void SyncBuddies(Simias.Storage.Domain domain)
+		internal static GaimBuddy[] SyncBuddies(Simias.Storage.Domain domain)
 		{
 			// Only sync buddies that the Gaim iFolder Plugin has been able
 			// to determine have the Gaim iFolder Plugin enabled
 			GaimBuddy[] buddies = GetBuddies();
-			if (buddies == null) return;
+			if (buddies == null) return null;
 
 			log.Debug("Synching only iFolder Plugin-enabled Buddies");
 
@@ -956,6 +1175,8 @@ log.Debug("GetGaimUserID() returning: {0}", userIDNode.Value);
 			{
 				PruneOldMembers(domain, buddies);
 			}
+			
+			return buddies;
 		}
 		
 		///

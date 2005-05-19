@@ -475,7 +475,14 @@ simias_get_config_frame(GaimPlugin *plugin)
 	gaim_gtk_prefs_checkbox(_("_Automatically start iFolder (Simias) if it's not running."),
 	                SIMIAS_PREF_SIMIAS_AUTO_START, vbox);
 	label = gtk_label_new("(Not implemented yet)");
-	gtk_box_pack_end(GTK_BOX(vbox), label, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
+
+	gaim_gtk_prefs_checkbox(_("Automatically create and maintain a _Public Shared iFolder."),
+	                SIMIAS_PREF_AUTO_PUBLIC_IFOLDER, vbox);
+	label = gtk_label_new(_("(An iFolder will be automatically created on your desktop"));
+	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
+	label = gtk_label_new(_("and all enabled users will be added as Read Only members.)"));
+	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
 
 	gtk_widget_show_all(ret);
 	return ret;
