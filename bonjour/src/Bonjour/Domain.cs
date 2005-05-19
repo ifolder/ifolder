@@ -179,6 +179,10 @@ namespace Simias.mDns
 						member = new Member( mDnsUserName, Guid.NewGuid().ToString().ToLower(), Access.Rights.Admin );
 						firstTime = true;
 					}
+					else
+					{
+						mDnsUserName = member.Name;
+					}
 
 					member.IsOwner = true;
 					mDnsUserID = member.UserID;
@@ -194,14 +198,15 @@ namespace Simias.mDns
 				}
 				else
 				{
-					member = rDomain.GetMemberByName( mDnsUserName );
+					member = rDomain.Owner;
 					if ( member == null )
 					{
-						string errMsg = String.Format( "Cannot find user {0} in domain {1}.", mDnsUserName, rDomain.Name );
+						string errMsg = String.Format( "Cannot find the owner of domain {1}.", rDomain.Name );
 						log.Error( errMsg );
 						throw new SimiasException( errMsg );
 					}
 
+					mDnsUserName = member.Name;
 					mDnsUserID = member.UserID;
 				}
 
@@ -342,7 +347,9 @@ namespace Simias.mDns
 				mdnsDomain = store.GetDomain( ID );
 				if ( mdnsDomain != null )
 				{
-					mDnsUserID = mdnsDomain.GetMemberByName( mDnsUserName ).ID;
+					Member owner = mdnsDomain.Owner;
+					mDnsUserID = mdnsDomain.Owner.UserID; //mdnsDomain.GetMemberByName( mDnsUserName ).ID;
+					mDnsUserName = mdnsDomain.Owner.Name;
 					Simias.POBox.POBox pobox = 
 						Simias.POBox.POBox.FindPOBox( store, ID, mDnsUserID );
 					mDnsPOBoxID = pobox.ID;
