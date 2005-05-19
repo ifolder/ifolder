@@ -811,7 +811,10 @@ namespace Novell.iFolder
 					ShareMenuItem.Sensitive = true;
 					OpenMenuItem.Sensitive = true;
 					SyncNowMenuItem.Sensitive = true;
-					RevertMenuItem.Sensitive = true;
+					if (ifHolder.iFolder.Role.Equals("Master"))
+						RevertMenuItem.Sensitive = false;
+					else
+						RevertMenuItem.Sensitive = true;
 					PropMenuItem.Sensitive = true;
 
 					SetupButton.Sensitive = false;
@@ -938,11 +941,14 @@ namespace Novell.iFolder
 								item_sync.Activated += new EventHandler(
 										SynciFolderHandler);
 
-								MenuItem item_revert = new MenuItem (
-										Util.GS("Revert to a normal folder"));
-								ifMenu.Append (item_revert);
-								item_revert.Activated += new EventHandler(
-										OnRevertiFolder);
+								if (!ifHolder.iFolder.Role.Equals("Master"))
+								{
+									MenuItem item_revert = new MenuItem (
+											Util.GS("Revert to a normal folder"));
+									ifMenu.Append (item_revert);
+									item_revert.Activated += new EventHandler(
+											OnRevertiFolder);
+								}
 
 								if(ifHolder.iFolder.OwnerID == 
 												ifHolder.iFolder.CurrentUserID)
@@ -1373,8 +1379,9 @@ namespace Novell.iFolder
 		{
 			int rc = 0;
 
-			if(ifHolder.iFolder.OwnerID == ifHolder.iFolder.CurrentUserID)
+			if (ifHolder.iFolder.Role.Equals("Master"))
 			{
+				// This machine is the Workgroup Server for this iFolder
 				iFolderMsgDialog dialog = new iFolderMsgDialog(
 					this,
 					iFolderMsgDialog.DialogType.Question,
@@ -1382,24 +1389,41 @@ namespace Novell.iFolder
 					Util.GS("Remove iFolder Confirmation"),
 					string.Format(Util.GS("Remove iFolder {0}?"),
 											ifHolder.iFolder.Name),
-					Util.GS("This will remove this iFolder from your local machine.  Because you are the owner of this iFolder, the iFolder will also be removed from the iFolder server and all users you have shared with.  The iFolder cannot be recovered or re-shared on another machine.  The files will not be deleted from your local hard drive."));
+					Util.GS("This will remove this iFolder from your local machine.  Because you are the owner of this iFolder, the iFolder will no longer be available to users you have shared with.  The files will not be deleted from your local hard drive."));
 				rc = dialog.Run();
 				dialog.Hide();
 				dialog.Destroy();
 			}
 			else
 			{
-				iFolderMsgDialog dialog = new iFolderMsgDialog(
-					this,
-					iFolderMsgDialog.DialogType.Question,
-					iFolderMsgDialog.ButtonSet.YesNo,
-					Util.GS("Remove iFolder Confirmation"),
-					string.Format(Util.GS("Remove iFolder {0}?"),
-											ifHolder.iFolder.Name),
-					Util.GS("This will remove you as a member of this iFolder.  You will not be able to access this iFolder unless the owner re-invites you to this iFolder.  The files will not be deleted from your local hard drive."));
-				rc = dialog.Run();
-				dialog.Hide();
-				dialog.Destroy();
+				if(ifHolder.iFolder.OwnerID == ifHolder.iFolder.CurrentUserID)
+				{
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+						this,
+						iFolderMsgDialog.DialogType.Question,
+						iFolderMsgDialog.ButtonSet.YesNo,
+						Util.GS("Remove iFolder Confirmation"),
+						string.Format(Util.GS("Remove iFolder {0}?"),
+												ifHolder.iFolder.Name),
+						Util.GS("This will remove this iFolder from your local machine.  Because you are the owner of this iFolder, the iFolder will also be removed from the iFolder server and all users you have shared with.  The iFolder cannot be recovered or re-shared on another machine.  The files will not be deleted from your local hard drive."));
+					rc = dialog.Run();
+					dialog.Hide();
+					dialog.Destroy();
+				}
+				else
+				{
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+						this,
+						iFolderMsgDialog.DialogType.Question,
+						iFolderMsgDialog.ButtonSet.YesNo,
+						Util.GS("Remove iFolder Confirmation"),
+						string.Format(Util.GS("Remove iFolder {0}?"),
+												ifHolder.iFolder.Name),
+						Util.GS("This will remove you as a member of this iFolder.  You will not be able to access this iFolder unless the owner re-invites you to this iFolder.  The files will not be deleted from your local hard drive."));
+					rc = dialog.Run();
+					dialog.Hide();
+					dialog.Destroy();
+				}
 			}
 			return rc;
 		}
