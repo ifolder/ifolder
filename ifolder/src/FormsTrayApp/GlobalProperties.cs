@@ -1816,11 +1816,11 @@ namespace Novell.FormsTrayApp
 			{
 				menuShare.Visible = menuActionShare.Enabled = toolBarShare.Enabled =
 					menuProperties.Visible = menuActionProperties.Enabled = /*toolBarProperties.Enabled =*/
-					menuRevert.Visible = menuActionRevert.Enabled = /*toolBarRevert.Enabled =*/
 					menuOpen.Visible = menuActionOpen.Enabled = /*toolBarOpen.Enabled =*/
 					menuSeparator1.Visible = menuSeparator2.Visible = 				
 					!ifolderWeb.IsSubscription;
-
+				menuRevert.Visible = menuActionRevert.Enabled = /*toolBarRevert.Enabled =*/
+					!ifolderWeb.IsSubscription && !ifolderWeb.Role.Equals("Master");
 				if (ifolderWeb.IsSubscription)
 				{
 					menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = false;

@@ -250,7 +250,14 @@ namespace Novell.iFolderCom
 					iFolderWeb ifolder = ifWebService.GetiFolderByLocalPath(path);
 					if (ifolder != null)
 					{
-						ifWebService.RevertiFolder(ifolder.ID);
+						if (ifolder.Role.Equals("Master"))
+						{
+							ifWebService.DeleteiFolder(ifolder.ID);
+						}
+						else
+						{
+							ifWebService.RevertiFolder(ifolder.ID);
+						}
 					}
 				}
 			}
