@@ -78,6 +78,7 @@ namespace StoreBrowser
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(PropertyForm));
 			this.propertyEditor = new StoreBrowser.PropertyEditor();
 			this.bOK = new System.Windows.Forms.Button();
 			this.bCancel = new System.Windows.Forms.Button();
@@ -121,6 +122,7 @@ namespace StoreBrowser
 			this.Controls.Add(this.bCancel);
 			this.Controls.Add(this.bOK);
 			this.Controls.Add(this.propertyEditor);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "PropertyForm";
 			this.Text = "PropertyForm";
 			this.ResumeLayout(false);

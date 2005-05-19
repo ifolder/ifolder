@@ -28,6 +28,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
 using System.IO;
+using System.Reflection;
 using System.Xml;
 
 using Simias.Client;
@@ -48,14 +49,11 @@ namespace StoreBrowser
 		IStoreBrowser browser = null;
 		private System.Windows.Forms.MainMenu mainMenu1;
 		private System.Windows.Forms.MenuItem menuItem1;
-		private System.Windows.Forms.MenuItem menuItem3;
-		private System.Windows.Forms.MenuItem menuItem4;
 		private System.Windows.Forms.MenuItem menuItem5;
 		private System.Windows.Forms.MenuItem menuItem6;
 		private System.Windows.Forms.TreeView tView;
 		private System.Windows.Forms.MenuItem MI_OpenStore;
 		private System.Windows.Forms.MenuItem menuItem7;
-		private System.Windows.Forms.MenuItem menuItem8;
 		private System.Windows.Forms.Splitter splitter1;
 		private System.Windows.Forms.RichTextBox richTextBox1;
 		private System.Windows.Forms.ImageList imageList1;
@@ -66,7 +64,6 @@ namespace StoreBrowser
 		private System.Windows.Forms.ColumnHeader CName;
 		private System.Windows.Forms.ContextMenu NodeMenu;
 		private System.Windows.Forms.MenuItem cmDelete;
-		private System.Windows.Forms.MenuItem CmNew;
 		private System.Windows.Forms.ContextMenu PropertyMenu;
 		private System.Windows.Forms.MenuItem pcmDelete;
 		private System.Windows.Forms.MenuItem pcmNew;
@@ -123,15 +120,12 @@ namespace StoreBrowser
 			this.menuItem1 = new System.Windows.Forms.MenuItem();
 			this.MI_OpenStore = new System.Windows.Forms.MenuItem();
 			this.menuItem7 = new System.Windows.Forms.MenuItem();
-			this.menuItem3 = new System.Windows.Forms.MenuItem();
-			this.menuItem4 = new System.Windows.Forms.MenuItem();
-			this.menuItem8 = new System.Windows.Forms.MenuItem();
 			this.menuItem5 = new System.Windows.Forms.MenuItem();
 			this.menuItem6 = new System.Windows.Forms.MenuItem();
-			this.menuItem2 = new System.Windows.Forms.MenuItem();
-			this.MI_RecentS = new System.Windows.Forms.MenuItem();
 			this.menuItem10 = new System.Windows.Forms.MenuItem();
 			this.menuItemExit = new System.Windows.Forms.MenuItem();
+			this.menuItem2 = new System.Windows.Forms.MenuItem();
+			this.MI_RecentS = new System.Windows.Forms.MenuItem();
 			this.menuItem9 = new System.Windows.Forms.MenuItem();
 			this.menuItemProperty = new System.Windows.Forms.MenuItem();
 			this.menuItemXml = new System.Windows.Forms.MenuItem();
@@ -146,7 +140,6 @@ namespace StoreBrowser
 			this.Flags = new System.Windows.Forms.ColumnHeader();
 			this.NodeMenu = new System.Windows.Forms.ContextMenu();
 			this.cmDelete = new System.Windows.Forms.MenuItem();
-			this.CmNew = new System.Windows.Forms.MenuItem();
 			this.PropertyMenu = new System.Windows.Forms.ContextMenu();
 			this.pcmDelete = new System.Windows.Forms.MenuItem();
 			this.pcmNew = new System.Windows.Forms.MenuItem();
@@ -165,22 +158,19 @@ namespace StoreBrowser
 			this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																					  this.MI_OpenStore,
 																					  this.menuItem7,
-																					  this.menuItem3,
-																					  this.menuItem4,
-																					  this.menuItem8,
 																					  this.menuItem5,
 																					  this.menuItem6,
-																					  this.menuItem2,
-																					  this.MI_RecentS,
 																					  this.menuItem10,
-																					  this.menuItemExit});
-			this.menuItem1.Text = "File";
+																					  this.menuItemExit,
+																					  this.menuItem2,
+																					  this.MI_RecentS});
+			this.menuItem1.Text = "&File";
 			// 
 			// MI_OpenStore
 			// 
 			this.MI_OpenStore.Index = 0;
 			this.MI_OpenStore.Shortcut = System.Windows.Forms.Shortcut.CtrlS;
-			this.MI_OpenStore.Text = "Open Store";
+			this.MI_OpenStore.Text = "&Open Store";
 			this.MI_OpenStore.Click += new System.EventHandler(this.MI_Open_Store_Click);
 			// 
 			// menuItem7
@@ -188,51 +178,36 @@ namespace StoreBrowser
 			this.menuItem7.Index = 1;
 			this.menuItem7.Text = "-";
 			// 
-			// menuItem3
-			// 
-			this.menuItem3.Index = 2;
-			this.menuItem3.Text = "Close";
-			// 
-			// menuItem4
-			// 
-			this.menuItem4.Index = 3;
-			this.menuItem4.Text = "Delete";
-			// 
-			// menuItem8
-			// 
-			this.menuItem8.Index = 4;
-			this.menuItem8.Text = "-";
-			// 
 			// menuItem5
 			// 
-			this.menuItem5.Index = 5;
-			this.menuItem5.Text = "Export";
+			this.menuItem5.Index = 2;
+			this.menuItem5.Text = "&Export";
 			// 
 			// menuItem6
 			// 
-			this.menuItem6.Index = 6;
-			this.menuItem6.Text = "Import";
-			// 
-			// menuItem2
-			// 
-			this.menuItem2.Index = 7;
-			this.menuItem2.Text = "-";
-			// 
-			// MI_RecentS
-			// 
-			this.MI_RecentS.Index = 8;
-			this.MI_RecentS.Text = "Recent Store";
+			this.menuItem6.Index = 3;
+			this.menuItem6.Text = "&Import";
 			// 
 			// menuItem10
 			// 
-			this.menuItem10.Index = 9;
+			this.menuItem10.Index = 4;
 			this.menuItem10.Text = "-";
 			// 
 			// menuItemExit
 			// 
-			this.menuItemExit.Index = 10;
-			this.menuItemExit.Text = "Exit";
+			this.menuItemExit.Index = 5;
+			this.menuItemExit.Text = "E&xit";
 			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
+			// 
+			// menuItem2
+			// 
+			this.menuItem2.Index = 6;
+			this.menuItem2.Text = "-";
+			// 
+			// MI_RecentS
+			// 
+			this.MI_RecentS.Index = 7;
+			this.MI_RecentS.Text = "&Recent Stores";
 			// 
 			// menuItem9
 			// 
@@ -240,19 +215,19 @@ namespace StoreBrowser
 			this.menuItem9.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																					  this.menuItemProperty,
 																					  this.menuItemXml});
-			this.menuItem9.Text = "View";
+			this.menuItem9.Text = "&View";
 			// 
 			// menuItemProperty
 			// 
 			this.menuItemProperty.Checked = true;
 			this.menuItemProperty.Index = 0;
-			this.menuItemProperty.Text = "Property";
+			this.menuItemProperty.Text = "&Property";
 			this.menuItemProperty.Click += new System.EventHandler(this.menuItemProperty_Click);
 			// 
 			// menuItemXml
 			// 
 			this.menuItemXml.Index = 1;
-			this.menuItemXml.Text = "Xml";
+			this.menuItemXml.Text = "&Xml";
 			this.menuItemXml.Click += new System.EventHandler(this.menuItemXml_Click);
 			// 
 			// tView
@@ -337,20 +312,13 @@ namespace StoreBrowser
 			// NodeMenu
 			// 
 			this.NodeMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					 this.cmDelete,
-																					 this.CmNew});
+																					 this.cmDelete});
 			// 
 			// cmDelete
 			// 
 			this.cmDelete.Index = 0;
 			this.cmDelete.Text = "Delete";
 			this.cmDelete.Click += new System.EventHandler(this.cmDelete_Click);
-			// 
-			// CmNew
-			// 
-			this.CmNew.Index = 1;
-			this.CmNew.Text = "New";
-			this.CmNew.Click += new System.EventHandler(this.CmNew_Click);
 			// 
 			// PropertyMenu
 			// 
@@ -389,6 +357,7 @@ namespace StoreBrowser
 			this.Menu = this.mainMenu1;
 			this.Name = "Form1";
 			this.Text = "Store Browser";
+			this.Closing += new System.ComponentModel.CancelEventHandler(this.Form1_Closing);
 			this.Load += new System.EventHandler(this.Form1_Load);
 			this.ResumeLayout(false);
 
@@ -406,49 +375,49 @@ namespace StoreBrowser
 
 		private void On_RecentS_Click(object sender, System.EventArgs e)
 		{
+			bool isLocal = false;
 			hostName = ((MenuItem)sender).Text;
 			if ( recentStores.ContainsKey( hostName ) )
 			{
-				string creds = recentStores[ hostName ] as String;
-				if ( creds != ":" )
-				{
-					int index = creds.IndexOf( ':' );
-					username = creds.Substring( 0, index );
-					password = creds.Substring( index + 1 );
-				}
-				else
-				{
-					username = null;
-					password = null;
-				}
+				RecentStore rs = recentStores[ hostName ] as RecentStore;
+				username = rs.UserName;
+				password = rs.Password;
+				isLocal = rs.Local;
+			}
+			else
+			{
+				username = null;
+				password = null;
 			}
 
-			OpenStore();
+			// Save off the old browser.
+			IStoreBrowser oldBrowser = browser;
+
+			if ( GetBrowserWithCredentials( isLocal ) )
+			{
+				this.Text = "Store Browser : " + hostName;
+
+				listView1.Items.Clear();
+				tView.Nodes.Clear();
+				richTextBox1.Clear();
+
+				browser.Show();
+				AddRecentMI( new RecentStore( hostName, username, password, isLocal ) );
+			}
+			else
+			{
+				browser = oldBrowser;
+				username = browser.UserName;
+				password = browser.Password;
+			}
 		}
 
-		private void OpenStore()
-		{
-			this.Text = "Store Browser : " + hostName;
-			listView1.Items.Clear();
-
-			try
-			{
-				browser = new NodeBrowser2(this, tView, listView1, richTextBox1, hostName, username, password);
-			}
-			catch
-			{
-				browser = new NodeBrowser(this, tView, listView1, richTextBox1, hostName, username, password);
-			}
-
-			browser.Show();
-		}
-
-		private void AddRecentMI()
+		private void AddRecentMI( RecentStore rs )
 		{
 			bool found = false;
 			foreach (MenuItem item in MI_RecentS.MenuItems)
 			{
-				if (item.Text == hostName)
+				if (item.Text == rs.Host)
 				{
 					found = true;
 					break;
@@ -457,36 +426,49 @@ namespace StoreBrowser
 
 			if (!found)
 			{
-				MI_RecentS.MenuItems.Add(new MenuItem(hostName, new EventHandler(On_RecentS_Click)));
-				recentStores.Add( hostName, String.Format( "{0}:{1}", username, password ) );
+				MI_RecentS.MenuItems.Add(new MenuItem(rs.Host, new EventHandler(On_RecentS_Click)));
 			}
+
+			// Always set this as new passwords may need to be set.
+			recentStores[ rs.Host ] = rs;
 		}
 
 		private void MI_Open_Store_Click(object sender, System.EventArgs e)
 		{
 			HostDialog hDiag = new HostDialog(hostName);
-
-			if ( recentStores.ContainsKey( hostName ) )
+			while ( true )
 			{
-				string creds = recentStores[ hostName ] as String;
-				if ( creds != ":" )
+				if (hDiag.ShowDialog() == DialogResult.OK)
 				{
-					int index = creds.IndexOf( ':' );
-					hDiag.UserName = creds.Substring( 0, index );
-					hDiag.Password = creds.Substring( index + 1 );
+					bool isLocal = false;
+					hostName = hDiag.HostName;
+					if ( recentStores.ContainsKey( hostName ) )
+					{
+						RecentStore rs = recentStores[ hostName ] as RecentStore;
+						username = rs.UserName;
+						password = rs.Password;
+						isLocal = rs.Local;
+					}
+					else
+					{
+						username = null;
+						password = null;
+					}
+
+					tView.Nodes.Clear();
+					richTextBox1.Clear();
+
+					if ( GetBrowserWithCredentials( isLocal ) )
+					{
+						browser.Show();
+						AddRecentMI( new RecentStore( hostName, username, password, isLocal ) );
+						break;
+					}
 				}
-			}
-
-			if (hDiag.ShowDialog() == DialogResult.OK)
-			{
-				tView.Nodes.Clear();
-				richTextBox1.Clear();
-
-				hostName = hDiag.HostName;
-				username = hDiag.UserName;
-				password = hDiag.Password;
-				AddRecentMI();
-				OpenStore();
+				else
+				{
+					break;
+				}
 			}
 		}
 
@@ -526,14 +508,6 @@ namespace StoreBrowser
 			{
 				TreeNode tn = tView.GetNodeAt(e.X, e.Y);
 				tView.SelectedNode = tn;
-				if (tn.Tag == null || ((DisplayNode)tn.Tag).IsCollection)
-				{
-					CmNew.Enabled = false;
-				}
-				else
-				{
-					CmNew.Enabled = false;
-				}
 				NodeMenu.Show(tView, new Point(e.X, e.Y));
 			}
 		}
@@ -635,7 +609,15 @@ namespace StoreBrowser
 				BrowserNode bn = browser.StoreBrowser.GetNodeByID(dspNode.CollectionID, dspNode.ID);
 				if (bn != null)
 				{
-					tView.SelectedNode.Tag = new DisplayNode(bn);
+					if ( dspNode is DisplayShallowNode )
+					{
+						tView.SelectedNode.Tag = new DisplayShallowNode(bn);
+					}
+					else
+					{
+						tView.SelectedNode.Tag = new DisplayNode(bn);
+					}
+
 					browser.ShowNode(tView.SelectedNode);
 					listView1.Refresh();
 				}
@@ -654,7 +636,15 @@ namespace StoreBrowser
 			BrowserNode bn = browser.StoreBrowser.GetNodeByID(dspNode.CollectionID, dspNode.ID);
 			if (bn != null)
 			{
-				tView.SelectedNode.Tag = new DisplayNode(bn);
+				if ( dspNode is DisplayShallowNode )
+				{
+					tView.SelectedNode.Tag = new DisplayShallowNode(bn);
+				}
+				else
+				{
+					tView.SelectedNode.Tag = new DisplayNode(bn);
+				}
+
 				browser.ShowNode(tView.SelectedNode);
 				listView1.Refresh();
 			}
@@ -675,7 +665,9 @@ namespace StoreBrowser
 						{
 							try
 							{
-								browser.StoreBrowser.DeleteProperty(dspNode.CollectionID, dspNode.ID, subItems[0].Text, subItems[2].Text, subItems[1].Text);
+								string type = subItems[2].Text;
+								string val = ( type == "DateTime" ) ? new DateTime( Convert.ToInt64( subItems[1].Text ) ).ToString() : subItems[1].Text;
+								browser.StoreBrowser.DeleteProperty(dspNode.CollectionID, dspNode.ID, subItems[0].Text, type, val);
 							}
 							catch(Exception ex)
 							{
@@ -691,7 +683,15 @@ namespace StoreBrowser
 				BrowserNode bn = browser.StoreBrowser.GetNodeByID(dspNode.CollectionID, dspNode.ID);
 				if (bn != null)
 				{
-					tView.SelectedNode.Tag = new DisplayNode(bn);
+					if ( dspNode is DisplayShallowNode )
+					{
+						tView.SelectedNode.Tag = new DisplayShallowNode(bn);
+					}
+					else
+					{
+						tView.SelectedNode.Tag = new DisplayNode(bn);
+					}
+
 					browser.ShowNode(tView.SelectedNode);
 					listView1.Refresh();
 				}
@@ -700,56 +700,130 @@ namespace StoreBrowser
 
 		private void Form1_Load(object sender, System.EventArgs e)
 		{
-			this.Text = "Store Browser : " + hostName;
 			this.listView1.Hide();
 			tView.ImageList = imageList1;
 			tView.Dock = DockStyle.Fill;
+
+			LoadRecentStores();
 
 			Uri uri = Manager.LocalServiceUrl;
 			if ( uri != null )
 			{
 				hostName = uri.AbsoluteUri;
-
-				// Try the new interface first.
-				try
+				if ( GetBrowserWithCredentials( true ) )
 				{
-					browser = new NodeBrowser2(this, tView, listView1, richTextBox1, hostName, username, password);
+					this.Text = "Store Browser : " + hostName;
+					browser.Show();
+					AddRecentMI( new RecentStore( hostName ) );
 				}
-				catch
-				{
-					browser = new NodeBrowser(this, tView, listView1, richTextBox1, hostName, username, password);
-				}
-
-				browser.Show();
-				AddRecentMI();
 			}
 			else
 			{
-				hostName = "https://localhost/simias10";
+				hostName = "https://ifoldertest218.provo.novell.com/simias10";
 				HostDialog hDiag = new HostDialog(hostName);
-				if (hDiag.ShowDialog() == DialogResult.OK)
+				while ( true )
 				{
-					hostName = hDiag.HostName;
-					username = hDiag.UserName;
-					password = hDiag.Password;
-
-					try
+					if (hDiag.ShowDialog() == DialogResult.OK)
 					{
-						browser = new NodeBrowser2(this, tView, listView1, richTextBox1, hostName, username, password);
+						hostName = hDiag.HostName;
+						if ( GetBrowserWithCredentials( false ) )
+						{
+							this.Text = "Store Browser : " + hostName;
+							browser.Show();
+							AddRecentMI( new RecentStore( hostName, username, password ) );
+							break;
+						}
 					}
-					catch
+					else
 					{
-						browser = new NodeBrowser(this, tView, listView1, richTextBox1, hostName, username, password);
+						SaveRecentStores();
+						Application.Exit();
+						break;
 					}
-
-					browser.Show();
-					AddRecentMI();
-				}
-				else
-				{
-					Application.Exit();
 				}
 			}
+		}
+
+		private bool GetBrowserWithCredentials( bool local )
+		{
+			bool result = false;
+
+			try
+			{
+				browser = new NodeBrowser2(this, tView, listView1, richTextBox1, hostName);
+
+				this.Cursor = Cursors.WaitCursor;
+				bool needsAuth = browser.NeedsAuthentication();
+				this.Cursor = Cursors.Default;
+
+				if ( needsAuth )
+				{
+					if ( local )
+					{
+						this.Cursor = Cursors.WaitCursor;
+						result = browser.ValidateCredentials();
+						this.Cursor = Cursors.Default;
+					}
+					else
+					{
+						this.Cursor = Cursors.WaitCursor;
+						result = browser.ValidateCredentials( username, password );
+						this.Cursor = Cursors.Default;
+
+						if ( result == false )
+						{
+							Credentials credDiag = new Credentials( hostName, browser );
+							if ( credDiag.ShowDialog() == DialogResult.OK )
+							{
+								username = browser.UserName;
+								password = browser.Password;
+								result = true;
+							}
+						}
+					}
+				}
+			}
+			catch ( System.Web.Services.Protocols.SoapHeaderException )
+			{
+				browser = new NodeBrowser(this, tView, listView1, richTextBox1, hostName);
+
+				this.Cursor = Cursors.WaitCursor;
+				bool needsAuth = browser.NeedsAuthentication();
+				this.Cursor = Cursors.Default;
+
+				if ( needsAuth )
+				{
+					if ( local )
+					{
+						this.Cursor = Cursors.WaitCursor;
+						result = browser.ValidateCredentials();
+						this.Cursor = Cursors.Default;
+					}
+					else
+					{
+						this.Cursor = Cursors.WaitCursor;
+						result = browser.ValidateCredentials( username, password );
+						this.Cursor = Cursors.Default;
+
+						if ( result == false )
+						{
+							Credentials credDiag = new Credentials( hostName, browser );
+							if ( credDiag.ShowDialog() == DialogResult.OK )
+							{
+								username = browser.UserName;
+								password = browser.Password;
+								result = true;
+							}
+						}
+					}
+				}
+			}
+			catch ( Exception ex )
+			{
+				MessageBox.Show( ex.Message, "Error", MessageBoxButtons.OK );
+			}
+
+			return result;
 		}
 
 		private void menuItemXml_Click(object sender, System.EventArgs e)
@@ -768,7 +842,49 @@ namespace StoreBrowser
 
 		private void menuItemExit_Click(object sender, System.EventArgs e)
 		{
+			SaveRecentStores();
 			Application.Exit();
+		}
+
+		private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			SaveRecentStores();
+		}
+
+		private void SaveRecentStores()
+		{
+			string path = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData ), "StoreBrowser.cfg" );
+			if ( File.Exists( path ) )
+			{
+				File.Delete( path );
+			}
+
+			using ( StreamWriter sw = new StreamWriter( path ) )
+			{
+				foreach ( RecentStore rs in recentStores.Values )
+				{
+					sw.WriteLine( rs.ToString() );
+				}
+			}
+		}
+
+		private void LoadRecentStores()
+		{
+			string path = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData ), "StoreBrowser.cfg" );
+			if ( File.Exists( path ) )
+			{
+				using ( StreamReader sr = new StreamReader( path ) )
+				{
+					string line = sr.ReadLine();
+					while ( line != null )
+					{
+						RecentStore rs = new RecentStore();
+						rs.FromString( line );
+						AddRecentMI( rs );
+						line = sr.ReadLine();
+					}
+				}
+			}
 		}
 	}
 
@@ -777,6 +893,83 @@ namespace StoreBrowser
 		void Show();
 		void ShowNode(TreeNode node);
 		void AddChildren(TreeNode tNode);
+		bool NeedsAuthentication();
+		bool ValidateCredentials();
+		bool ValidateCredentials( string userName, string password );
 		BrowserService StoreBrowser { get; }
+		string UserName { get; }
+		string Password { get; }
+	}
+
+	public class RecentStore
+	{
+		private string host;
+		private string userName;
+		private string password;
+		private bool local;
+
+		public string Host
+		{
+			get { return host; }
+			set { host = value; }
+		}
+
+		public string UserName
+		{
+			get { return userName; }
+			set { userName = value; }
+		}
+
+		public string Password
+		{
+			get { return password; }
+			set { password = value; }
+		}
+
+		public bool Local
+		{
+			get { return local; }
+			set { local = value; }
+		}
+
+		public RecentStore()
+		{
+			this.host = null;
+			this.userName = null;
+			this.password = null;
+			this.local = false;
+		}
+
+		public RecentStore( string host, string userName, string password, bool local )
+		{
+			this.host = host;
+			this.userName = userName;
+			this.password = password;
+			this.local = local;
+		}
+
+		public RecentStore( string host ) :
+			this ( host, null, null, true )
+		{
+		}
+
+		public RecentStore( string host, string userName, string password ) : 
+			this( host, userName, password, false )
+		{
+		}
+
+		public void FromString( string fileString )
+		{
+			string[] list = fileString.Split( new Char[] { ' ' } );
+			host = list[ 1 ];
+			userName = null;
+			password = null;
+			local = Convert.ToBoolean( list[ 0 ] );
+		}
+
+		public override string ToString()
+		{
+			return String.Format( "{0} {1}", local, host );
+		}
 	}
 }

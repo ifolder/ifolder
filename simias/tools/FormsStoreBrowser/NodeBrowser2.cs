@@ -34,34 +34,34 @@ using System.Text.RegularExpressions;
 
 namespace StoreBrowser
 {
-	public class DisplayShallowNode
+	public class DisplayShallowNode : DisplayNode
 	{
 		#region Class Members
 		private BrowserShallowNode bsn;
 		#endregion
 
 		#region Properties
-		public string Name
+		public override string Name
 		{
 			get { return bsn.Name; }
 		}
 
-		public string ID
+		public override string ID
 		{
 			get { return bsn.ID; }
 		}
 
-		public string Type
+		public override string Type
 		{
 			get { return bsn.Type; }
 		}
 
-		public string CollectionID
+		public override string CollectionID
 		{
 			get	{ return bsn.CID; }
 		}
 
-		public bool IsCollection
+		public override bool IsCollection
 		{
 			get { return ( CollectionID == ID ) ? true : false; }
 		}
@@ -71,6 +71,17 @@ namespace StoreBrowser
 		public DisplayShallowNode( BrowserShallowNode bsNode )
 		{
 			this.bsn = bsNode;
+		}
+
+		public DisplayShallowNode ( BrowserNode bNode )
+		{
+			DisplayNode dspNode = new DisplayNode( bNode );
+			this.bsn = new BrowserShallowNode();
+			this.bsn.Name = dspNode.Name;
+			this.bsn.ID = dspNode.ID;
+			this.bsn.Type = dspNode.Type;
+			this.bsn.CID = dspNode.CollectionID;
+			dspNode = null;
 		}
 		#endregion
 	}
@@ -87,13 +98,17 @@ namespace StoreBrowser
 		ListView lView;
 		RichTextBox rView;
 		bool alreadyDisposed;
+		string host;
+		string userName = String.Empty;
+		string password = String.Empty;
 
-		public NodeBrowser2(Form1 form, TreeView view, ListView lView, RichTextBox rView, string host, string username, string password)
+		public NodeBrowser2(Form1 form, TreeView view, ListView lView, RichTextBox rView, string host)
 		{
 			tView = view;
 			this.form = form;
 			this.lView = lView;
 			this.rView = rView;
+			this.host = host;
 			rView.Show();
 			lView.Show();
 
@@ -110,19 +125,6 @@ namespace StoreBrowser
 			browser.Url = host + "/SimiasBrowser.asmx";
 			tView.Dock = DockStyle.Left;
 			alreadyDisposed = false;
-
-			if (username != null && username != "")
-			{
-				this.browser.Credentials = new NetworkCredential(username, password, host);
-				this.browser.CookieContainer = new CookieContainer();
-			}
-			else
-			{
-				Simias.Client.LocalService.Start(browser);
-			}
-
-			// See if this version of the web service is available.
-			this.browser.GetVersion();
 		}
 
 		~NodeBrowser2()
@@ -135,6 +137,65 @@ namespace StoreBrowser
 		public BrowserService StoreBrowser
 		{
 			get { return browser; }
+		}
+		
+		public string UserName
+		{
+			get { return userName; }
+		}
+
+		public string Password
+		{
+			get { return password; }
+		}
+
+		public bool NeedsAuthentication()
+		{
+			bool needsAuth = true;
+
+			try
+			{
+				this.browser.GetVersion();
+				needsAuth = false;
+			}
+			catch ( System.Web.Services.Protocols.SoapHeaderException ex )
+			{
+				// Rethrow the exception.
+				throw ex;
+			}
+			catch ( System.Net.WebException ex )
+			{
+				if ( ex.Message.IndexOf( "401" ) == -1 )
+				{
+					throw ex;
+				}
+			}
+			catch ( Exception ex )
+			{
+				throw ex;
+			}
+
+			return needsAuth;
+		}
+
+		public bool ValidateCredentials()
+		{
+			Simias.Client.LocalService.Start(browser);
+			return !NeedsAuthentication();
+		}
+
+		public bool ValidateCredentials( string userName, string password )
+		{
+			this.browser.Credentials = new NetworkCredential(userName, password, this.host);
+			this.browser.CookieContainer = new CookieContainer();
+			bool result = NeedsAuthentication();
+			if ( result == false )
+			{
+				this.userName = userName;
+				this.password = password;
+			}
+
+			return !result;
 		}
 
 		public void Show()
@@ -160,6 +221,7 @@ namespace StoreBrowser
 				}
 
 				DisplayNode dspNode = new DisplayNode( bNode );
+				sNode.Document = dspNode.Document;
 
 				if ( form.IsXmlView )
 				{

@@ -141,38 +141,44 @@ namespace StoreBrowser
 		#endregion
 
 		#region Properties
-		public string Name
+		public virtual string Name
 		{
 			get { return document.DocumentElement[ ObjectTag ].GetAttribute( NameTag ); }
 		}
 
-		public string ID
+		public virtual string ID
 		{
 			get { return document.DocumentElement[ ObjectTag ].GetAttribute( IDTag ); }
 		}
 
-		public string Type
+		public virtual string Type
 		{
 			get { return document.DocumentElement[ ObjectTag ].GetAttribute( TypeTag ); }
 		}
 
-		public string CollectionID
+		public virtual string CollectionID
 		{
 			get	{ return FindSingleValue( CollectionIDTag ); }
 		}
 
-		public bool IsCollection
+		public virtual bool IsCollection
 		{
 			get { return ( CollectionID == ID ) ? true : false; }
 		}
 
-		public XmlDocument Document
+		public virtual XmlDocument Document
 		{
 			get { return document; } 
+			set { document = value; }
 		}
 		#endregion
 
 		#region Constructor
+		protected DisplayNode()
+		{
+			document = null;
+		}
+
 		public DisplayNode( BrowserNode bNode )
 		{
 			document = new XmlDocument();
@@ -206,7 +212,7 @@ namespace StoreBrowser
 		#region IEnumerable Members
 		public IEnumerator GetEnumerator()
 		{
-			return new DisplayNodeEnum( document );
+			return ( document != null ) ? new DisplayNodeEnum( document ) : null;
 		}
 
 		private class DisplayNodeEnum : IEnumerator
@@ -254,13 +260,17 @@ namespace StoreBrowser
 		ListView lView;
 		RichTextBox rView;
 		bool alreadyDisposed;
+		string host;
+		string userName = String.Empty;
+		string password = String.Empty;
 
-		public NodeBrowser(Form1 form, TreeView view, ListView lView, RichTextBox rView, string host, string username, string password)
+		public NodeBrowser(Form1 form, TreeView view, ListView lView, RichTextBox rView, string host)
 		{
 			tView = view;
 			this.form = form;
 			this.lView = lView;
 			this.rView = rView;
+			this.host = host;
 			rView.Show();
 			lView.Show();
 
@@ -277,16 +287,6 @@ namespace StoreBrowser
 			browser.Url = host + "/SimiasBrowser.asmx";
 			tView.Dock = DockStyle.Left;
 			alreadyDisposed = false;
-
-			if (username != null && username != "")
-			{
-				this.browser.Credentials = new NetworkCredential(username, password, host);
-				this.browser.CookieContainer = new CookieContainer();
-			}
-			else
-			{
-				Simias.Client.LocalService.Start(browser);
-			}
 		}
 
 		~NodeBrowser()
@@ -299,6 +299,60 @@ namespace StoreBrowser
 		public BrowserService StoreBrowser
 		{
 			get { return browser; }
+		}
+
+		public string UserName
+		{
+			get { return userName; }
+		}
+
+		public string Password
+		{
+			get { return password; }
+		}
+
+		public bool NeedsAuthentication()
+		{
+			bool needsAuth = true;
+
+			try
+			{
+				this.browser.GetCollectionByID( String.Empty );
+				needsAuth = false;
+			}
+			catch ( System.Net.WebException ex )
+			{
+				if ( ex.Message.IndexOf( "401" ) == -1 )
+				{
+					throw ex;
+				}
+			}
+			catch ( Exception ex )
+			{
+				throw ex;
+			}
+
+			return needsAuth;
+		}
+
+		public bool ValidateCredentials()
+		{
+			Simias.Client.LocalService.Start(browser);
+			return !NeedsAuthentication();
+		}
+
+		public bool ValidateCredentials( string userName, string password )
+		{
+			this.browser.Credentials = new NetworkCredential(userName, password, this.host);
+			this.browser.CookieContainer = new CookieContainer();
+			bool needsAuth = NeedsAuthentication();
+			if ( needsAuth == false )
+			{
+				this.userName = userName;
+				this.password = password;
+			}
+
+			return !needsAuth;
 		}
 
 		public void Show()

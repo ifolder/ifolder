@@ -39,7 +39,7 @@
                     OutputPath = "bin\Debug\"
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
-                    TreatWarningsAsErrors = "true"
+                    TreatWarningsAsErrors = "false"
                     WarningLevel = "4"
                 />
                 <Config
@@ -121,6 +121,16 @@
                     RelPath = "CertPolicy.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Credentials.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Credentials.resx"
+                    DependentUpon = "Credentials.cs"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "Form1.cs"
