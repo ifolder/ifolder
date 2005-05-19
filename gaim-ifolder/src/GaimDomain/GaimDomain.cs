@@ -155,28 +155,6 @@ namespace Simias.Gaim
 				Uri localUri = Manager.LocalServiceUrl;
 
 				//
-				// Verify the local Rendezvous user exists in the local database
-				//
-				LocalDatabase ldb = store.GetDatabaseObject();
-				Member ldbMember;
-				Node memberNode = ldb.GetSingleNodeByName( userName );
-				if (memberNode == null)
-				{
-					// Create a local member which is the owner of the Gaim Domain
-					ldbMember = new Member( userName, Guid.NewGuid().ToString(), Access.Rights.Admin );
-//					ldbMember.IsOwner = true;
-
-					// Save the local database changes.
-					ldb.Commit( new Node[] { ldbMember } );
-				}
-				else
-				{
-					ldbMember = new Member( memberNode );
-				}
-
-				userID = ldbMember.ID;
-
-				//
 				// Verify the Gaim workgroup domain exists
 				//
 
@@ -195,11 +173,27 @@ namespace Simias.Gaim
 
 					rDomain.SetType( rDomain, "Workgroup" );
 
+					// Read from Gaim's prefs.xml to see if we've previously created this
+					// domain on this box.  If we have, we're hitting this case because the
+					// user must have deleted their store.  So rather than requiring the
+					// user to delete everything and restart, read the user id from prefs.xml.
+					string storedUserID = GetGaimUserID();
+					if (storedUserID != null)
+					{
+						log.Debug("Creating the Gaim Domain with a saved UserID");
+						userID = storedUserID;
+					}
+					else
+					{
+						log.Debug("Creating the Gaim Domain with a NEW UserID");
+						userID = Guid.NewGuid().ToString();
+					}
+					
 					// Create the owner member for the domain.
 					Member member = 
 						new Member(
 							userName, 
-							ldbMember.ID,
+							userID,
 							Access.Rights.Admin );
 
 					member.IsOwner = true;
@@ -244,29 +238,29 @@ namespace Simias.Gaim
 			
 				Member pMember;
 				Simias.POBox.POBox poBox = null;
-				string poBoxName = "POBox:" + Simias.Gaim.GaimDomain.ID + ":" + ldbMember.ID;
+				string poBoxName = "POBox:" + Simias.Gaim.GaimDomain.ID + ":" + userID;
 
 				try
 				{
-					poBox = Simias.POBox.POBox.FindPOBox( store, Simias.Gaim.GaimDomain.ID, ldbMember.ID );
+					poBox = Simias.POBox.POBox.FindPOBox( store, Simias.Gaim.GaimDomain.ID, userID );
 				}
 				catch{}
 				if (poBox == null)
 				{
 					poBox = new Simias.POBox.POBox( store, poBoxName, ID );
 					pMember = 
-						new Member( ldbMember.Name, ldbMember.ID, Access.Rights.ReadWrite );
+						new Member( userName, userID, Access.Rights.ReadWrite );
 					pMember.IsOwner = true;
 					poBox.Commit(new Node[] { poBox, pMember });
 				}
 				else
 				{
 					// verify member in POBox
-					pMember = poBox.GetMemberByID( ldbMember.ID );
+					pMember = poBox.GetMemberByID( userID );
 					if (pMember == null)
 					{
 						pMember = 
-							new Member( ldbMember.Name, ldbMember.ID, Access.Rights.ReadWrite );
+							new Member( userName, userID, Access.Rights.ReadWrite );
 						pMember.IsOwner = true;
 						poBox.Commit(new Node[] { pMember });
 					}
@@ -797,6 +791,38 @@ namespace Simias.Gaim
 			}		
 		
 			return false;
+		}
+		
+		/// <summary>
+		/// This function will return the user-id that should be used when first
+		/// creating the Gaim Domain if one previously existed.  This is needed
+		/// for when the user deletes their Simias store and restarts.  This
+		/// allows the GaimDomain to be recreated with the same User ID.
+		/// </summary>
+		internal static string GetGaimUserID()
+		{
+			XmlDocument prefsDoc = new XmlDocument();
+			try
+			{
+				prefsDoc.Load(GetGaimConfigDir() + "/prefs.xml");
+			}
+			catch
+			{
+				// Don't cause any errors to log...for the case where Gaim isn't installed or the plugin isn't installed/enabled
+				return null;
+			}
+			XmlElement topPrefElement = prefsDoc.DocumentElement;
+
+			XmlNode userIDNode = 
+				topPrefElement.SelectSingleNode("//pref[@name='plugins']/pref[@name='simias']/pref[@name='user_id']/@value");
+
+			if (userIDNode != null)
+			{
+log.Debug("GetGaimUserID() returning: {0}", userIDNode.Value);
+				return userIDNode.Value;
+			}
+
+			return null;
 		}
 		
 		internal static GaimAccount GetDefaultGaimAccount()
