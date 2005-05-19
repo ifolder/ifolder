@@ -1556,7 +1556,8 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict)
 
 void init_gsoap(struct soap *pSoap, GSOAP_CREDS *creds)
 {
-	soap_init2(pSoap, SOAP_C_UTFSTRING, SOAP_C_UTFSTRING);
+	soap_init2(pSoap, (SOAP_C_UTFSTRING | SOAP_IO_DEFAULT), (SOAP_C_UTFSTRING | SOAP_IO_DEFAULT));
+//	soap_init2(pSoap, SOAP_C_UTFSTRING, SOAP_C_UTFSTRING);
 //	soap_init(pSoap);
 	soap_set_namespaces(pSoap, iFolder_namespaces);
 	
