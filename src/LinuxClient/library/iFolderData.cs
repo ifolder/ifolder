@@ -600,28 +600,37 @@ namespace Novell.iFolder
 		{
 			lock(typeof(iFolderWeb))
 			{
-				iFolderHolder revertediFolder = null;
+				iFolderHolder ifHolder = null;
 
 				if(IsiFolder(ifolderID))
 				{
-					revertediFolder = RevertiFolder(ifolderID);
+					ifHolder = GetiFolder(ifolderID);
+					if (ifHolder.iFolder.Role.Equals("Master"))
+					{
+						ifws.DeleteiFolder(ifHolder.iFolder.ID);
+						DeliFolder(ifHolder.iFolder.ID);
+						return;
+					}
+
+					ifHolder = RevertiFolder(ifolderID);
 				}
 				else
 				{
 					string realID = GetiFolderID(ifolderID);
 					if(realID != null)
 					{
-						revertediFolder = GetiFolder(realID);
+						ifHolder = GetiFolder(realID);
 					}
 				}
 
-				if(	(revertediFolder != null) && 
-								(revertediFolder.iFolder.IsSubscription) )
+				if(	(ifHolder != null) && 
+								(ifHolder.iFolder.IsSubscription) )
 				{
    		 			ifws.DeclineiFolderInvitation(
-										revertediFolder.iFolder.DomainID,
-										revertediFolder.iFolder.ID);
-					DeliFolder(revertediFolder.iFolder.ID);
+										ifHolder.iFolder.DomainID,
+										ifHolder.iFolder.ID);
+					
+					DeliFolder(ifHolder.iFolder.ID);
 				}
 			}	
 		}
