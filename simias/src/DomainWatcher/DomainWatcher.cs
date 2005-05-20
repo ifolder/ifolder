@@ -48,7 +48,7 @@ namespace Simias.DomainWatcher
 	/// </summary>
 	public class Manager : IDisposable
 	{
-		private static readonly ISimiasLog log = 
+		private static readonly ISimiasLog log =
 			SimiasLogManager.GetLogger(typeof(Simias.DomainWatcher.Manager));
 
 		private bool			started = false;
@@ -117,8 +117,6 @@ namespace Simias.DomainWatcher
 					this.stop = true;
 					this.stopEvent.Set();
 					Thread.Sleep(32);
-					this.stopEvent.Close();
-					Thread.Sleep(0);
 				}
 			}
 			catch(Exception e)
@@ -144,7 +142,7 @@ namespace Simias.DomainWatcher
 			// Let the caller know we're good to go
 			this.started = true;
 
-			do 
+			do
 			{
 				//
 				// Cycle through the domains
@@ -180,8 +178,8 @@ namespace Simias.DomainWatcher
 									// The certificate is invalid. Tell the client to login
 									Simias.Client.Event.NotifyEventArgs cArg =
 										new Simias.Client.Event.NotifyEventArgs(
-										"Domain-Up", 
-										cDomain.ID, 
+										"Domain-Up",
+										cDomain.ID,
 										System.DateTime.Now);
 
 									cEvent.RaiseEvent(cArg);// which will inform him of the invalid cert.
@@ -194,7 +192,7 @@ namespace Simias.DomainWatcher
 								continue;
 							}
 
-							CredentialType credType = 
+							CredentialType credType =
 								store.GetDomainCredentials( cDomain.ID, out userID, out credentials );
 
 							// Don't set this credential in the cache.
@@ -214,12 +212,12 @@ namespace Simias.DomainWatcher
 							// Check to see if a full set of credentials exist
 							// for this domain
 
-							NetCredential cCreds = 
+							NetCredential cCreds =
 								new NetCredential(
-									"iFolder", 
-									cDomain.ID, 
-									true, 
-									cMember.Name, 
+									"iFolder",
+									cDomain.ID,
+									true,
+									cMember.Name,
 									credentials);
 
 							Uri cUri = DomainProvider.ResolveLocation( cDomain.ID );
@@ -231,9 +229,9 @@ namespace Simias.DomainWatcher
 
 								if ( netCreds == null )
 								{
-									authStatus = 
-										domainAgent.Login( 
-											cDomain.ID, 
+									authStatus =
+										domainAgent.Login(
+											cDomain.ID,
 											Guid.NewGuid().ToString(),
 											"12" );
 
@@ -251,8 +249,8 @@ namespace Simias.DomainWatcher
 								{
 									Simias.Client.Event.NotifyEventArgs cArg =
 										new Simias.Client.Event.NotifyEventArgs(
-										"Domain-Up", 
-										cDomain.ID, 
+										"Domain-Up",
+										cDomain.ID,
 										System.DateTime.Now);
 
 									cEvent.RaiseEvent(cArg);
@@ -267,12 +265,17 @@ namespace Simias.DomainWatcher
 					log.Error(e.StackTrace);
 				}
 
-				stopEvent.WaitOne( ( firstTime == true ) ? initialWait : waitTime, false );
-				firstTime = false;
+				if ( this.stop == false )
+				{
+					stopEvent.WaitOne( ( firstTime == true ) ? initialWait : waitTime, false );
+					firstTime = false;
+				}
 
 			} while( this.stop == false );
 
 			this.started = false;
+			this.stopEvent.Close();
+			this.stopEvent = null;
 		}
 
 		#region IDisposable Members
