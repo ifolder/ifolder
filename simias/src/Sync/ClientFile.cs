@@ -100,7 +100,8 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="segArray">The array to add the segment to.</param>
 		/// <param name="seg">The new segment to add.</param>
-		public static void AddToArray(ArrayList segArray, BlockSegment seg)
+		/// <param name="blockSize">The size of the hashed data blocks.</param>
+		public static void AddToArray(ArrayList segArray, BlockSegment seg, int blockSize)
 		{
 			BlockSegment lastSeg;
 			if (segArray.Count > 0)
@@ -108,7 +109,7 @@ namespace Simias.Sync
 				lastSeg = segArray[segArray.Count -1] as BlockSegment;
 				// Make sure the source and destination are contiguous.
 				if ((lastSeg.EndBlock + 1 == seg.StartBlock) 
-					&& ((lastSeg.Offset + (HashData.BlockSize * (lastSeg.EndBlock - lastSeg.StartBlock + 1))) == seg.Offset))
+					&& ((lastSeg.Offset + (blockSize * (lastSeg.EndBlock - lastSeg.StartBlock + 1))) == seg.Offset))
 				{
 					lastSeg.EndBlock = seg.StartBlock;
 					return;
@@ -388,7 +389,8 @@ namespace Simias.Sync
 			long	fileSize = Length;
 			long	sizeToSync;
 			long	sizeRemaining;
-			long[] fileMap = GetDownloadFileMap(out sizeToSync);
+			int		blockSize;
+			long[] fileMap = GetDownloadFileMap(out sizeToSync, out blockSize);
 			sizeRemaining = sizeToSync;
 			WritePosition = 0;
 				
@@ -404,7 +406,7 @@ namespace Simias.Sync
 			{
 				if (fileMap[i] != -1)
 				{
-					Copy(fileMap[i], WritePosition, HashData.BlockSize);
+					Copy(fileMap[i], WritePosition, blockSize);
 				}
 				else
 				{
@@ -418,11 +420,11 @@ namespace Simias.Sync
 			{
 				if (stopping)
 					break;
-				HttpWebResponse response = syncService.ReadFile(seg, HashData.BlockSize);
+				HttpWebResponse response = syncService.ReadFile(seg, blockSize);
 				Stream inStream = response.GetResponseStream();
 				try
 				{
-					int bytesToWrite = (int)Math.Min(sizeRemaining, (seg.EndBlock - seg.StartBlock + 1) * HashData.BlockSize);
+					int bytesToWrite = (int)Math.Min(sizeRemaining, (seg.EndBlock - seg.StartBlock + 1) * blockSize);
 					Write(inStream, bytesToWrite);
 					sizeRemaining -= bytesToWrite;
 					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
@@ -452,38 +454,40 @@ namespace Simias.Sync
 		/// The block number is represented by the index of the array. -1 means no match.
 		/// </summary>
 		/// <param name="sizeToSync">The number of bytes that need to be synced.</param>
+		/// <param name="blockSize">The size of the hashed data blocks.</param>
 		/// <returns>The file map.</returns>
-		private long[] GetDownloadFileMap(out long sizeToSync)
+		private long[] GetDownloadFileMap(out long sizeToSync, out int blockSize)
 		{
 			// Since we are doing the diffing on the client we will download all blocks that
 			// don't match.
 			table.Clear();
 			HashData[] serverHashMap;
 			long[] fileMap;
+			blockSize = 0;
 			
 			if (ReadStream != null)
-				serverHashMap = syncService.GetHashMap();
+				serverHashMap = syncService.GetHashMap(out blockSize);
 			else
 				serverHashMap = new HashData[0];
 
 			if (serverHashMap.Length == 0)
 			{
 				sizeToSync = node.Length;
-				fileMap = new long[HashMap.GetBlockCount(node.Length)];
+				fileMap = new long[HashMap.GetBlockCount(node.Length, out blockSize)];
 				for (int i = 0; i < fileMap.Length; ++i)
 					fileMap[i] = -1;
 				return fileMap;
 			}
 			
-			sizeToSync = HashData.BlockSize * serverHashMap.Length;
-			long remainingBytes = node.Length % HashData.BlockSize;
+			sizeToSync = blockSize * serverHashMap.Length;
+			long remainingBytes = node.Length % blockSize;
 			if (remainingBytes != 0)
-				sizeToSync = sizeToSync - HashData.BlockSize + remainingBytes;
+				sizeToSync = sizeToSync - blockSize + remainingBytes;
 			table.Add(serverHashMap);
 			fileMap = new long[serverHashMap.Length];
 
-			int				bytesRead = HashData.BlockSize * 16;
-			byte[]			buffer = new byte[HashData.BlockSize * 16];
+			int				bytesRead = Math.Max(blockSize, 1024 * 32) * 2;
+			byte[]			buffer = new byte[bytesRead];
 			int				readOffset = 0;
 			WeakHash		wh = new WeakHash();
 			StrongHash		sh = new StrongHash();
@@ -506,22 +510,22 @@ namespace Simias.Sync
 					break;
 				bytesRead = bytesRead == 0 ? bytesRead : bytesRead + readOffset;
 				
-				if (bytesRead >= HashData.BlockSize)
+				if (bytesRead >= blockSize)
 				{
-					endByte = startByte + HashData.BlockSize - 1;
+					endByte = startByte + blockSize - 1;
 					HashEntry entry = new HashEntry();
 					while (endByte < bytesRead)
 					{
 						if (recomputeWeakHash)
 						{
-							entry.WeakHash = wh.ComputeHash(buffer, startByte, (ushort)HashData.BlockSize);
+							entry.WeakHash = wh.ComputeHash(buffer, startByte, (ushort)blockSize);
 							recomputeWeakHash = false;
 						}
 						else
-							entry.WeakHash = wh.RollHash(HashData.BlockSize, dropByte, buffer[endByte]);
+							entry.WeakHash = wh.RollHash(blockSize, dropByte, buffer[endByte]);
 						if (table.Contains(entry.WeakHash))
 						{
-							entry.StrongHash = sh.ComputeHash(buffer, startByte, HashData.BlockSize);
+							entry.StrongHash = sh.ComputeHash(buffer, startByte, blockSize);
 							HashEntry match = table.GetEntry(entry);
 							if (match != null)
 							{
@@ -529,10 +533,10 @@ namespace Simias.Sync
 								if (fileMap[match.BlockNumber] == -1)
 								{
 									fileMap[match.BlockNumber] = ReadPosition - bytesRead + startByte;
-									sizeToSync -= HashData.BlockSize;
+									sizeToSync -= blockSize;
 								}
-								startByte += HashData.BlockSize;
-								endByte += HashData.BlockSize;
+								startByte += blockSize;
+								endByte += blockSize;
 								recomputeWeakHash = true;
 								continue;
 							}
@@ -695,14 +699,15 @@ namespace Simias.Sync
 			long	sizeRemaining;
 			ArrayList copyArray;
 			ArrayList writeArray;
-			GetUploadFileMap(out sizeToSync, out copyArray, out writeArray);
+			int blockSize;
+			GetUploadFileMap(out sizeToSync, out copyArray, out writeArray, out blockSize);
 			sizeRemaining = sizeToSync;
 			
 			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
 
 			if (copyArray.Count > 0)
 			{
-				syncService.CopyFile(copyArray);
+				syncService.CopyFile(copyArray, blockSize);
 			}
 			
 			foreach(OffsetSegment seg in writeArray)
@@ -740,14 +745,15 @@ namespace Simias.Sync
 		/// <param name="sizeToSync"></param>
 		/// <param name="copyArray">The array of BlockSegments that need to be copied from the old file.</param>
 		/// <param name="writeArray">The array of OffsetSegments that need to be sent from the client.</param>
-		private void GetUploadFileMap(out long sizeToSync, out ArrayList copyArray, out ArrayList writeArray)
+		/// <param name="blockSize">The size of the hashed data blocks.</param>
+		private void GetUploadFileMap(out long sizeToSync, out ArrayList copyArray, out ArrayList writeArray, out int blockSize)
 		{
 			sizeToSync = 0;
 			copyArray = new ArrayList();
 			writeArray = new ArrayList();
-
+			
 			// Get the hash map from the server.
-			HashData[] serverHashMap = syncService.GetHashMap();
+			HashData[] serverHashMap = syncService.GetHashMap(out blockSize);
 			
 			if (serverHashMap.Length == 0)
 			{
@@ -760,8 +766,8 @@ namespace Simias.Sync
 			table.Clear();
 			table.Add(serverHashMap);
 			
-			int				bytesRead = HashData.BlockSize * 16;
-			byte[]			buffer = new byte[HashData.BlockSize * 16];
+			int				bytesRead = Math.Max(blockSize, 1024 * 32) * 2;
+			byte[]			buffer = new byte[bytesRead];
 			int				readOffset = 0;
 			WeakHash		wh = new WeakHash();
 			StrongHash		sh = new StrongHash();
@@ -780,22 +786,22 @@ namespace Simias.Sync
 
 				bytesRead = bytesRead + readOffset;
 				
-				if (bytesRead >= HashData.BlockSize)
+				if (bytesRead >= blockSize)
 				{
-					endByte = startByte + HashData.BlockSize - 1;
+					endByte = startByte + blockSize - 1;
 					HashEntry entry = new HashEntry();
 					while (endByte < bytesRead)
 					{
 						if (recomputeWeakHash)
 						{
-							entry.WeakHash = wh.ComputeHash(buffer, startByte, (ushort)HashData.BlockSize);
+							entry.WeakHash = wh.ComputeHash(buffer, startByte, (ushort)blockSize);
 							recomputeWeakHash = false;
 						}
 						else
-							entry.WeakHash = wh.RollHash(HashData.BlockSize, dropByte, buffer[endByte]);
+							entry.WeakHash = wh.RollHash(blockSize, dropByte, buffer[endByte]);
 						if (table.Contains(entry.WeakHash))
 						{
-							entry.StrongHash = sh.ComputeHash(buffer, startByte, HashData.BlockSize);
+							entry.StrongHash = sh.ComputeHash(buffer, startByte, blockSize);
 							HashEntry match = table.GetEntry(entry);
 							if (match != null)
 							{
@@ -810,10 +816,10 @@ namespace Simias.Sync
 								}
 								// Save the matched block.
 								long blockOffset = ReadPosition - bytesRead + startByte;
-								BlockSegment.AddToArray(copyArray, new BlockSegment(blockOffset, match.BlockNumber));
+								BlockSegment.AddToArray(copyArray, new BlockSegment(blockOffset, match.BlockNumber), blockSize);
 								
 								startByte = endByte + 1;
-								endByte = startByte + HashData.BlockSize - 1;
+								endByte = startByte + blockSize - 1;
 								endOfLastMatch = startByte;
 								recomputeWeakHash = true;
 								continue;
@@ -860,21 +866,13 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// Send the hash map to the server.
-		/// </summary>
-		/// <returns></returns>
-        private SyncStatus UploadHashMap()
-		{
-			return syncService.PutHashMap(outStream);
-		}
-
-		/// <summary>
 		/// Gets the hash map for the file on the server.
 		/// </summary>
+		/// <param name="blockSize">The size of the hashed data blocks.</param>
 		/// <returns>The hash map.</returns>
-		private HashData[] DownloadHashMap()
+		private HashData[] DownloadHashMap(out int blockSize)
 		{
-			return syncService.GetHashMap();
+			return syncService.GetHashMap(out blockSize);
 		}
 
 		/// <summary>

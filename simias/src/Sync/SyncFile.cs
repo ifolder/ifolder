@@ -477,9 +477,12 @@ namespace Simias.Sync
 		protected string		file;
 		/// <summary>The name of the working file.</summary>
 		protected string		workFile;
+		/// <summary>
+		/// The HashMap for this file.
+		/// </summary>
+		protected HashMap		map;
 		/// <summary>The Prefix of the working file.</summary>
 		const string			WorkFilePrefix = ".simias.wf.";
-		const string			MapFilePrefix = ".simias.map.";
 		static string			workBinDir = "WorkArea";
 		static string			workBin;
 		// '/' is left out on purpose because all systems disallow this char.
@@ -526,15 +529,6 @@ namespace Simias.Sync
 					Directory.CreateDirectory(workBin);
 			}
 			this.workFile = Path.Combine(workBin, WorkFilePrefix + node.ID + sessionID);
-		}
-
-		/// <summary>
-		/// Retuns the name of the HashMap for this file.
-		/// </summary>
-		/// <returns></returns>
-		protected string GetMapFileName()
-		{
-			return Path.Combine(collection.ManagedPath, MapFilePrefix + node.ID);
 		}
 
 		/// <summary>
@@ -632,9 +626,7 @@ namespace Simias.Sync
 			try
 			{
 				// Now delete the map file.
-				path = Path.Combine(collection.ManagedPath, MapFilePrefix + node.ID);
-				if (File.Exists(path))
-					File.Delete(path);
+				HashMap.Delete(collection, node);
 			}
 			catch {}
 		}

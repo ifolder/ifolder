@@ -817,19 +817,20 @@ namespace Simias.Sync
 		/// Get a HashMap of the file.
 		/// </summary>
 		/// <param name="entryCount">The number of hash entries.</param>
+		/// <param name="blockSize">The size of the hashed data blocks.</param>
 		/// <returns>The HashMap.</returns>
-		public byte[] GetHashMap(out int entryCount)
+		public FileStream GetHashMap(out int entryCount, out int blockSize)
 		{
-			byte[] map;
+			FileStream map;
 			string name = "-";
 			if (inFile != null)
 			{
-				map = inFile.GetHashMap(out entryCount);
+				map = inFile.GetHashMap(out entryCount, out blockSize);
 				name = inFile.Name;
 			}
 			else
 			{
-				map = outFile.GetHashMap(out entryCount);
+				map = outFile.GetHashMap(out entryCount, out blockSize);
 				name = outFile.Name;
 			}
 

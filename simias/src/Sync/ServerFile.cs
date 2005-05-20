@@ -38,24 +38,10 @@ namespace Simias.Sync
 	{
 		SyncNode	snode;
 		SyncPolicy	policy;
-		static int		MaxMapThreads = 20;
-		static Queue	mapQ = new Queue();
-		static AutoResetEvent queueEvent = new AutoResetEvent(false);
-		delegate void	HashMapDelegate();
-		FileStream		mapSrcStream;
+		//FileStream		mapSrcStream;
 
 		#region Constructors
-
-		static ServerInFile()
-		{
-			for (int i = 0; i < MaxMapThreads; ++i)
-			{
-				Thread thread = new Thread(new ThreadStart(HashMapThread));
-				thread.IsBackground = true;
-				thread.Start();
-			}
-		}
-
+		
 		/// <summary>
 		/// Contructs a ServerFile object that is used to sync a file from the client.
 		/// </summary>
@@ -84,6 +70,7 @@ namespace Simias.Sync
 			XmlDocument xNode = new XmlDocument();
 			xNode.LoadXml(snode.node);
 			node = (BaseFileNode)Node.NodeFactory(collection.StoreReference, xNode);
+			map = new HashMap(collection, node);
 			if (!policy.Allowed(node))
 			{
 				SyncStatus ss = SyncStatus.Policy;
@@ -143,7 +130,7 @@ namespace Simias.Sync
 			base.Close(commit);
 			if (commit == true)
 			{
-				CreateHashMap();
+				map.CreateHashMap();
 			}
 			return status;
 		}
@@ -153,134 +140,11 @@ namespace Simias.Sync
 		/// used to create an upload or download filemap.
 		/// </summary>
 		/// <param name="entryCount">The number of hash entries.</param>
+		/// <param name="blockSize">The size of the hashed data blocks.</param>
 		/// <returns></returns>
-		public byte[] GetHashMap(out int entryCount)
+		public FileStream GetHashMap(out int entryCount, out int blockSize)
 		{
-			string mapFile = GetHashMapFile();
-			if (mapFile != null)
-			{
-				return HashMap.GetHashMapFile(mapFile, out entryCount);
-			}
-			else
-			{
-				entryCount = 0;
-				return new byte[0];
-				// TODO initiate code to generate a hashmap.
-				//return HashMap.GetHashMap(ReadStream, out entryCount);
-			}
-		}
-
-		/// <summary>
-		/// Get a hashed map of the file.  This can then be
-		/// used to create an upload or download filemap.
-		/// </summary>
-		/// <returns></returns>
-		public string GetHashMapFile()
-		{
-			string mapFile = GetMapFileName();
-			FileInfo mapFi = new FileInfo(mapFile);
-			FileInfo fi = new FileInfo(file);
-			if (mapFi.Exists)
-			{
-				if (mapFi.CreationTime == fi.CreationTime)
-					return mapFile;
-			}
-			else
-			{
-				try { mapFi.Delete(); }
-				catch {}
-			}
-			return null;
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		private void CreateHashMap()
-		{
-			// Open the inStream while creating the HashMap.
-			string mapFileName = GetMapFileName();
-			if (File.Exists(mapFileName))
-				File.Delete(mapFileName);
-			lock (mapQ)
-			{
-				mapQ.Enqueue(new HashMapDelegate(CreateHashMapFile));
-			}
-			queueEvent.Set();
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		private static void HashMapThread()
-		{
-			// Now see if we have any work queued.
-			while (true)
-			{
-				queueEvent.WaitOne();
-				try
-				{
-					while (true)
-					{
-						HashMapDelegate hmd;
-						lock (mapQ)
-						{
-							hmd = mapQ.Count > 0 ? mapQ.Dequeue() as HashMapDelegate : null;
-						}
-						if (hmd == null)
-							break;
-						try { hmd(); }
-						catch { /* Don't let the thread go away.*/ }
-					}
-				}
-				catch{}
-			}
-		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
-		private void CreateHashMapFile()
-		{
-			mapSrcStream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read);	
-			try
-			{
-				string mapFile = GetMapFileName();
-				string tmpMapFile = mapFile + ".tmp";
-				// Copy the current file to a tmp name.
-				if (File.Exists(mapFile))
-					File.Move(mapFile, tmpMapFile);
-
-				BinaryWriter writer = new BinaryWriter( File.OpenWrite(tmpMapFile));
-				try
-				{
-					mapSrcStream.Position = 0;
-					HashMap.SerializeHashMap(mapSrcStream, writer);
-					writer.Close();
-					File.Move(tmpMapFile, mapFile);
-					File.SetCreationTime(mapFile, node.CreationTime);
-					File.SetLastWriteTime(mapFile, node.LastWriteTime);
-				}
-				catch (Exception ex)
-				{
-					writer.Close();
-					writer = null;
-					File.Delete(mapFile);
-					if (File.Exists(tmpMapFile))
-						File.Move(tmpMapFile, mapFile);
-					throw ex;
-				}
-				finally
-				{
-					if (File.Exists(tmpMapFile))
-						File.Delete(tmpMapFile);
-				}
-			}
-			finally
-			{
-				// Close the file.
-				mapSrcStream.Close();
-			}
+			return map.GetHashMapStream(out entryCount, out blockSize);
 		}
 	}
 
@@ -300,6 +164,7 @@ namespace Simias.Sync
 			base(collection)
 		{
 			this.node = node;
+			map = new HashMap(collection, node);
 		}
 
 		#endregion
@@ -331,44 +196,11 @@ namespace Simias.Sync
 		/// used to create an upload or download filemap.
 		/// </summary>
 		/// <param name="entryCount">The number of hash entries.</param>
+		/// <param name="blockSize">The size of the hashed data blocks.</param>
 		/// <returns></returns>
-		public byte[] GetHashMap(out int entryCount)
+		public FileStream GetHashMap(out int entryCount, out int blockSize)
 		{
-			string mapFile = GetHashMapFileName();
-			if (mapFile != null)
-			{
-				return HashMap.GetHashMapFile(mapFile, out entryCount);
-			}
-			else
-			{
-				entryCount = 0;
-				return new byte[0];
-				// TODO add code to generate a hashmap.
-				//return HashMap.GetHashMap(this.outStream, out entryCount);
-			}
-		}
-
-
-		/// <summary>
-		/// Get a hashed map of the file.  This can then be
-		/// used to create an upload or download filemap.
-		/// </summary>
-		public string GetHashMapFileName()
-		{
-			string mapFile = GetMapFileName();
-			FileInfo mapFi = new FileInfo(mapFile);
-			FileInfo fi = new FileInfo(file);
-			if (mapFi.Exists)
-			{
-				if (mapFi.CreationTime == fi.CreationTime)
-					return mapFile;
-			}
-			else
-			{
-				try { mapFi.Delete(); }
-				catch {}
-			}
-			return null;
+			return map.GetHashMapStream(out entryCount, out blockSize);
 		}
 	}
 }

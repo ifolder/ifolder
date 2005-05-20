@@ -88,10 +88,10 @@ namespace Simias.Sync.Web
 								Service.OpenFileGet(Request, Response);
 								break;
 							case SyncMethod.GetHashMap:
-								Service.GetHashMap(Request, Response);
+								Service.GetHashMap(Request, Response, false);
 								break;
-							case SyncMethod.PutHashMap:
-								Service.PutHashMap(Request, Response);
+							case SyncMethod.GetHashMap2:
+								Service.GetHashMap(Request, Response, true);
 								break;
 							case SyncMethod.ReadFile:
 								Service.ReadFile(Request, Response);

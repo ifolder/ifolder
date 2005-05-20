@@ -139,7 +139,7 @@ namespace Simias.Sync.Http
 		/// <summary>
 		/// 
 		/// </summary>
-		PutHashMap,
+		GetHashMap2,
 		/// <summary>
 		/// 
 		/// </summary>
@@ -573,9 +573,9 @@ namespace Simias.Sync.Http
 		/// Get the HashMap for the opened file.
 		/// </summary>
 		/// <returns>The HashData[]</returns>
-		public HashData[] GetHashMap()
+		public HashData[] GetHashMap(out int blockSize)
 		{
-			HttpWebRequest request = GetRequest(SyncMethod.GetHashMap);
+			HttpWebRequest request = GetRequest(SyncMethod.GetHashMap2);
 			request.ContentLength = 0;
 			request.GetRequestStream().Close();
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
@@ -586,39 +586,15 @@ namespace Simias.Sync.Http
 					throw GetException(response);
 				}
 				// Now get the HashData.
+				blockSize = 0;
 				int count = int.Parse(response.Headers.Get(SyncHeaders.ObjectCount));
+				string sBlockSize = response.Headers.Get(SyncHeaders.BlockSize);
+				if (sBlockSize != null)
+				{
+					blockSize = int.Parse(sBlockSize);
+				}
 				BinaryReader reader = new BinaryReader(response.GetResponseStream());
 				return HashMap.DeSerializeHashMap(reader, count);
-			}
-			finally
-			{
-				response.Close();
-			}
-		}
-
-		/// <summary>
-		/// Put the HashMap up to the server.
-		/// </summary>
-		/// <param name="fStream">The stream of data to create the HashMap of.</param>
-		/// <returns>The Status.</returns>
-		public SyncStatus PutHashMap(StreamStream fStream)
-		{
-			HttpWebRequest request = GetRequest(SyncMethod.PutHashMap);
-			request.Headers.Add(SyncHeaders.ObjectCount, HashMap.GetBlockCount(fStream.Length).ToString());
-			fStream.Position = 0;
-			BinaryWriter writer = new BinaryWriter(request.GetRequestStream());
-			HashMap.SerializeHashMap(fStream, writer);
-			writer.Close();
-			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-			try
-			{
-				if (response.StatusCode != HttpStatusCode.OK)
-				{
-					throw GetException(response);
-				}
-				// Now get the Status.
-				BinaryReader reader = new BinaryReader(response.GetResponseStream());
-				return (SyncStatus)reader.ReadByte();
 			}
 			finally
 			{
@@ -687,12 +663,12 @@ namespace Simias.Sync.Http
 		/// Called to copy data from the original file on the server to the new file.
 		/// </summary>
 		/// <param name="copyArray">The array of blocks and offsets to copy from the original file.</param>
-		public void CopyFile(ArrayList copyArray)
+		public void CopyFile(ArrayList copyArray, int blockSize)
 		{
 			HttpWebRequest request = GetRequest(SyncMethod.CopyFile);
 			WebHeaderCollection headers = request.Headers;
 			headers.Add(SyncHeaders.ObjectCount, copyArray.Count.ToString());
-			headers.Add(SyncHeaders.BlockSize, HashData.BlockSize.ToString());
+			headers.Add(SyncHeaders.BlockSize, blockSize.ToString());
 			request.ContentLength = copyArray.Count * BlockSegment.InstanceSize;
 			// TODO: This is a kluge to work around a Apache/mod_ssl memory problem.
 			byte[] copyData = new byte[request.ContentLength];
@@ -1043,18 +1019,34 @@ namespace Simias.Sync.Http
 		/// </summary>
 		/// <param name="request"></param>
 		/// <param name="response"></param>
-		public void GetHashMap(HttpRequest request, HttpResponse response)
+		/// <param name="useDynBlockSize">Use dynamic block size.</param>
+		public void GetHashMap(HttpRequest request, HttpResponse response, bool useDynBlockSize)
 		{
 			response.ContentType = "application/octet-stream";
 			int entryCount;
-			byte[] hashMap = service.GetHashMap(out entryCount);
-			if (hashMap != null)
+			int blockSize;
+			FileStream mapStream = service.GetHashMap(out entryCount, out blockSize);
+			if (mapStream != null)
 			{
-				response.AddHeader(SyncHeaders.ObjectCount, entryCount.ToString());
-				response.StatusCode = (int)HttpStatusCode.OK;
-				response.OutputStream.Write(hashMap, 0, hashMap.Length);
-				response.OutputStream.Close();
-				return;
+				try
+				{
+					if (blockSize != 4096 && !useDynBlockSize)
+					{
+						response.AddHeader(SyncHeaders.ObjectCount, "0");
+						return;
+					}
+					StreamStream ss = new StreamStream(response.OutputStream);
+					response.AddHeader(SyncHeaders.ObjectCount, entryCount.ToString());
+					response.AddHeader(SyncHeaders.BlockSize, blockSize.ToString());
+					response.StatusCode = (int)HttpStatusCode.OK;
+					ss.Write(mapStream, (int)mapStream.Length);
+					response.OutputStream.Close();
+					return;
+				}
+				finally
+				{
+					mapStream.Close();
+				}
 			}
 			response.AddHeader(SyncHeaders.ObjectCount, "0");
 		}
