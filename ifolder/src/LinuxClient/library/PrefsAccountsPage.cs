@@ -279,7 +279,7 @@ namespace Novell.iFolder
 			loginBox.Layout = ButtonBoxStyle.End;
 
 			loginButton =
-				new Button(Util.GS("_Login"));
+				new Button(Util.GS("_Log in"));
 			loginBox.PackStart(loginButton, false, false, 0);
 			loginButton.Clicked += new EventHandler(OnLoginButtonPressed);
 			loginButton.CanDefault = true;
@@ -694,12 +694,12 @@ namespace Novell.iFolder
 				{
 					if (dom.Authenticated)
 					{
-						loginButton.Label = Util.GS("_Logout");
+						loginButton.Label = Util.GS("_Log out");
 						loginButton.Sensitive = true;
 					}
 					else
 					{
-						loginButton.Label = Util.GS("_Login");
+						loginButton.Label = Util.GS("_Log in");
 
 						if (passEntry.Text.Length > 0)
 							loginButton.Sensitive = true;
@@ -710,7 +710,7 @@ namespace Novell.iFolder
 				else
 				{
 					loginButton.Sensitive = false;
-					loginButton.Label = Util.GS("_Login");
+					loginButton.Label = Util.GS("_Log in");
 				}
 			}
 		}
@@ -720,7 +720,7 @@ namespace Novell.iFolder
 			TreeSelection tSelect = AccTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
 			{
-				if (loginButton.Label == Util.GS("_Login"))
+				if (loginButton.Label == Util.GS("_Log in"))
 					OnLoginAccount(o, args);
 				else
 					OnLogoutAccount(o, args);
@@ -761,7 +761,7 @@ namespace Novell.iFolder
 						iFolderMsgDialog.DialogType.Error,
 						iFolderMsgDialog.ButtonSet.Ok,
 						Util.GS("iFolder Error"),
-						Util.GS("Unable to logout of iFolder Server"),
+						Util.GS("Unable to log out of iFolder Server"),
 						Util.GS("An error was encountered while logging out of the iFolder server.  If the problem persists, please contact your network administrator."));
 					dg.Run();
 					dg.Hide();
@@ -1005,7 +1005,7 @@ namespace Novell.iFolder
 		{
 			if(NewAccountMode)
 			{
-				loginButton.Label = Util.GS("_Login");
+				loginButton.Label = Util.GS("_Log in");
 
 				if( (nameEntry.Text.Length > 0) &&
 					(passEntry.Text.Length > 0 ) &&
@@ -1155,7 +1155,7 @@ namespace Novell.iFolder
 //					{
 //						if (dom.Authenticated)
 //						{
-//							loginButton.Label = Util.GS("_Logout");
+//							loginButton.Label = Util.GS("_Log out");
 //							loginButton.Sensitive = true;
 //					}
 				}
