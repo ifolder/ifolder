@@ -32,6 +32,7 @@
 
 void init_simias_gsoap(struct soap *pSoap, GSOAP_CREDS *creds);
 void cleanup_simias_gsoap(struct soap *pSoap, GSOAP_CREDS *creds);
+void handle_simias_soap_error(struct soap *pSoap, GSOAP_CREDS *creds, NSString *methodName);
 NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 NSDictionary *getAuthStatus(struct ns1__Status *status);
 
@@ -109,32 +110,27 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
             &getDomainsMessage,
             &getDomainsResponse);
 
- 	if(soap.error)
-	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
-					format:@"SimiasService.GetDomains"];
-	}
-	else
-	{
-		int domainCount = getDomainsResponse.GetDomainsResult->__sizeDomainInformation;
-		if(domainCount > 0)
-		{	
-			domains = [[NSMutableArray alloc] initWithCapacity:domainCount];
+	// This will free the soap structure and creds and throw an exception if there is an error
+	handle_simias_soap_error(&soap, &creds, @"SimiasService.GetDomains");
 
-			int counter;
-			for(counter=0;counter<domainCount;counter++)
-			{
-				struct ns1__DomainInformation *curDomain;
-				
-				curDomain = getDomainsResponse.GetDomainsResult->DomainInformation[counter];
-				iFolderDomain *newDomain = [[iFolderDomain alloc] init];
+	int domainCount = getDomainsResponse.GetDomainsResult->__sizeDomainInformation;
+	if(domainCount > 0)
+	{	
+		domains = [[NSMutableArray alloc] initWithCapacity:domainCount];
 
-				[newDomain setProperties:getDomainProperties(curDomain)];
-				
-				[domains addObject:newDomain];
-			}
+		int counter;
+		for(counter=0;counter<domainCount;counter++)
+		{
+			struct ns1__DomainInformation *curDomain;
+			
+			curDomain = getDomainsResponse.GetDomainsResult->DomainInformation[counter];
+			iFolderDomain *newDomain = [[iFolderDomain alloc] init];
+
+			[newDomain setProperties:getDomainProperties(curDomain)];
+			
+			[domains addObject:newDomain];
 		}
-    }
+	}
 
     cleanup_simias_gsoap(&soap, &creds);
 
@@ -174,18 +170,26 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
             NULL,
             &connectToDomainMessage,
             &connectToDomainResponse);
+
+
+
  	if(soap.error)
 	{
-		if( (strstr(soap.fault->faultstring, "Domain") == soap.fault->faultstring) &&
+		if( (soap_soap_error_check(soap.error)) && 
+			(soap.fault != NULL) && 
+			(soap.fault->faultstring != NULL) &&
+			(strstr(soap.fault->faultstring, "Domain") == soap.fault->faultstring) &&
 			(strstr(soap.fault->faultstring, "already exists") != NULL) )
 		{
-			[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+			NSString *faultString = [NSString stringWithUTF8String:soap.fault->faultstring];
+			cleanup_simias_gsoap(&soap, &creds);
+			[NSException raise:[NSString stringWithFormat:@"%@", faultString]
 					format:@"DomainExistsError"];
 		}
 		else
 		{
-			[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
-					format:@"Error in ConnectToDomain"];
+			// This will free the soap structure and creds and throw an exception if there is an error
+			handle_simias_soap_error(&soap, &creds, @"SimiasService.ConnectToDomain");
 		}
 	}
 	else
@@ -237,11 +241,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
             &leaveDomainMessage,
             &leaveDomainResponse);
 
- 	if(soap.error)
-	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
-					format:@"Error in LeaveDomain"];
-	}
+	handle_simias_soap_error(&soap, &creds, @"SimiasService.LeaveDomain");
 
     cleanup_simias_gsoap(&soap, &creds);
 }
@@ -286,11 +286,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
             &saveDomainCredsMessage,
             &saveDomainCredsResponse);
 
- 	if(soap.error)
-	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
-					format:@"Error in SaveDomainCredentials"];
-	}
+	handle_simias_soap_error(&soap, &creds, @"SimiasService.SetDomainPassword");
 
     cleanup_simias_gsoap(&soap, &creds);
 }
@@ -325,17 +321,11 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
             &getDomainCredsMessage,
             &getDomainCredsResponse);
 
- 	if(soap.error)
+	handle_simias_soap_error(&soap, &creds, @"SimiasService.GetDomainPassword");
+
+	if(getDomainCredsResponse.GetDomainCredentialsResult == ns1__CredentialType__Basic)
 	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
-					format:@"Error in SaveDomainCredentials"];
-	}
-	else
-	{
-		if(getDomainCredsResponse.GetDomainCredentialsResult == ns1__CredentialType__Basic)
-		{
-			password = [NSString stringWithUTF8String:getDomainCredsResponse.credentials];
-		}
+		password = [NSString stringWithUTF8String:getDomainCredsResponse.credentials];
 	}
 
     cleanup_simias_gsoap(&soap, &creds);
@@ -372,11 +362,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
             &setDomainActiveMessage,
             &setDomainActiveResponse);
 
- 	if(soap.error)
-	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
-					format:@"Error in SetDomainActive"];
-	}
+	handle_simias_soap_error(&soap, &creds, @"SimiasService.SetDomainActive");
 
     cleanup_simias_gsoap(&soap, &creds);
 }
@@ -410,11 +396,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
             &setDomainInactiveMessage,
             &setDomainInactiveResponse);
 
- 	if(soap.error)
-	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
-					format:@"Error in SetDomainInactive"];
-	}
+	handle_simias_soap_error(&soap, &creds, @"SimiasService.SetDomainInactive");
 
     cleanup_simias_gsoap(&soap, &creds);
 }
@@ -448,11 +430,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
             &setDefaultDomainMessage,
             &setDefaultDomainResponse);
 
- 	if(soap.error)
-	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
-					format:@"Error in SetDefaultDomain"];
-	}
+	handle_simias_soap_error(&soap, &creds, @"SimiasService.SetDefaultDomain");
 
     cleanup_simias_gsoap(&soap, &creds);
 }
@@ -489,25 +467,18 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
             &loginToDomainMessage,
             &loginToDomainResponse);
 
- 	if(soap.error)
-	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
-					format:@"Error in AuthenticateToDomain"];
-	}
-	else
-	{
-		struct ns1__Status *status;
-		status = loginToDomainResponse.LoginToRemoteDomainResult;
-		if(status == NULL)
-		{
-			cleanup_simias_gsoap(&soap, &creds);
-			[NSException raise:@"Authentication returned null object"
-							format:@"Error in AuthenticateToDomain"];		
-		}
+	handle_simias_soap_error(&soap, &creds, @"SimiasService.LoginToRemoteDomain");
 
-		authStatus = [[[AuthStatus alloc] init] autorelease];
-		[authStatus setProperties:getAuthStatus(status)];
+	struct ns1__Status *status = loginToDomainResponse.LoginToRemoteDomainResult;
+	if(status == NULL)
+	{
+		cleanup_simias_gsoap(&soap, &creds);
+		[NSException raise:@"Authentication returned null object"
+						format:@"Error in AuthenticateToDomain"];		
 	}
+
+	authStatus = [[[AuthStatus alloc] init] autorelease];
+	[authStatus setProperties:getAuthStatus(status)];
 
     cleanup_simias_gsoap(&soap, &creds);
 
@@ -528,6 +499,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
     struct soap soap;
 	GSOAP_CREDS creds;
     int err_code;
+	CSSM_DATA certData;
 
 	NSAssert( (host != nil), @"host was nil");
 
@@ -545,35 +517,23 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
             &getCertMessage,
             &getCertResponse);
 
- 	if(soap.error)
-	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
-					format:@"Error in GetCertificate"];
-	}
-	else
-	{
-		struct xsd__base64Binary *certResult;
-		CSSM_DATA certData;
-		certResult = getCertResponse.GetCertificateResult;
-		if(certResult == NULL)
-		{
-			cleanup_simias_gsoap(&soap, &creds);
-			[NSException raise:@"GetCertificate returned null object"
-							format:@"Error in GetCertificate"];		
-		}
+	handle_simias_soap_error(&soap, &creds, @"SimiasService.GetCertificate");
 
-		certData.Data = certResult->__ptr;
-		certData.Length = certResult->__size;
-
-		OSStatus status =  SecCertificateCreateFromData ( &certData,
-												CSSM_CERT_X_509v3,
-												CSSM_CERT_ENCODING_BER,
-												&certRef);
-		if(status == 0)
-		{
-			NSLog(@"The cert is good!");
-		}
+	struct xsd__base64Binary *certResult = getCertResponse.GetCertificateResult;
+	if(certResult == NULL)
+	{
+		cleanup_simias_gsoap(&soap, &creds);
+		[NSException raise:@"GetCertificate returned null object"
+						format:@"Error in GetCertificate"];		
 	}
+
+	certData.Data = certResult->__ptr;
+	certData.Length = certResult->__size;
+
+	OSStatus status =  SecCertificateCreateFromData ( &certData,
+											CSSM_CERT_X_509v3,
+											CSSM_CERT_ENCODING_BER,
+											&certRef);
 
     cleanup_simias_gsoap(&soap, &creds);
 
@@ -612,7 +572,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 		storeCertMessage.host = (char *)[host UTF8String];
 		storeCertMessage.certificate = &certBinary;
 
-    init_simias_gsoap (&soap, &creds);
+		init_simias_gsoap (&soap, &creds);
 		err_code = soap_call___ns1__StoreCertificate(
 				&soap,
 				[simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -620,14 +580,10 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 				&storeCertMessage,
 				&storeCertResponse);
 
-		if(soap.error)
-		{
-			[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
-						format:@"Error in GetCertificate"];
-		}
-	}
+		handle_simias_soap_error(&soap, &creds, @"SimiasService.StoreCertificate");
 
-    cleanup_simias_gsoap(&soap, &creds);
+		cleanup_simias_gsoap(&soap, &creds);
+	}
 }
 
 
@@ -659,11 +615,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
             &disableDomainMessage,
             &disableDomainResponse);
 
- 	if(soap.error)
-	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
-					format:@"Error in DisableDomainAutoLogin"];
-	}
+	handle_simias_soap_error(&soap, &creds, @"SimiasService.DisableDomainAutoLogin");
 
     cleanup_simias_gsoap(&soap, &creds);
 }
@@ -698,25 +650,19 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
             &logoutDomainMessage,
             &logoutDomainResponse);
 
- 	if(soap.error)
-	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
-					format:@"Error in DisableDomainAutoLogin"];
-	}
-	else
-	{
-		struct ns1__Status *status;
-		status = logoutDomainResponse.LogoutFromRemoteDomainResult;
-		if(status == NULL)
-		{
-			cleanup_simias_gsoap(&soap, &creds);
-			[NSException raise:@"Authentication returned null object"
-							format:@"Error in AuthenticateToDomain"];		
-		}
+	handle_simias_soap_error(&soap, &creds, @"SimiasService.LogoutFromRemoteDomain");
 
-		authStatus = [[[AuthStatus alloc] init] autorelease];
-		[authStatus setProperties:getAuthStatus(status)];
+	struct ns1__Status *status = logoutDomainResponse.LogoutFromRemoteDomainResult;
+	if(status == NULL)
+	{
+		cleanup_simias_gsoap(&soap, &creds);
+		[NSException raise:@"Authentication returned null object"
+						format:@"Error in AuthenticateToDomain"];		
 	}
+
+	authStatus = [[[AuthStatus alloc] init] autorelease];
+	[authStatus setProperties:getAuthStatus(status)];
+
 
     cleanup_simias_gsoap(&soap, &creds);
 
@@ -790,6 +736,68 @@ NSDictionary *getAuthStatus(struct ns1__Status *status)
 }
 
 
+//----------------------------------------------------------------------------
+// handle_simias_soap_error
+// This will check the soap structure for any errors and throw an appropriate
+// exception based on that error
+//----------------------------------------------------------------------------
+void handle_simias_soap_error(struct soap *pSoap, GSOAP_CREDS *creds, NSString *methodName)
+{
+	int error = pSoap->error;
+	
+ 	if(error)
+	{
+		if(soap_soap_error_check(error))
+		{
+			if( (pSoap->fault != NULL) && (pSoap->fault->faultstring != NULL) )
+			{
+				NSString *faultString = [NSString stringWithUTF8String:pSoap->fault->faultstring];
+				cleanup_simias_gsoap(pSoap, creds);
+				[NSException raise:[NSString stringWithFormat:@"%@", faultString]
+						format:@"Exception in %@", methodName];
+			}
+			else
+			{
+				cleanup_simias_gsoap(pSoap, creds);
+				[NSException raise:[NSString stringWithFormat:@"SOAP Error %d", error]
+						format:@"SOAP error in %@", methodName];
+			}
+		}
+		else if(soap_http_error_check(error))
+		{
+			cleanup_simias_gsoap(pSoap, creds);
+			[NSException raise:[NSString stringWithFormat:@"HTTP Error %d", error]
+					format:@"HTTP error in %@", methodName];
+		}
+		else if(soap_tcp_error_check(error))
+		{
+			cleanup_simias_gsoap(pSoap, creds);
+			[NSException raise:[NSString stringWithFormat:@"TCP Error %d", error]
+					format:@"TCP error in %@", methodName];
+		}
+		else if(soap_ssl_error_check(error))
+		{
+			cleanup_simias_gsoap(pSoap, creds);
+			[NSException raise:[NSString stringWithFormat:@"SSL Error %d", error]
+					format:@"SSL error in %@", methodName];
+		}
+		else if(soap_xml_error_check(error))
+		{
+			cleanup_simias_gsoap(pSoap, creds);
+			[NSException raise:[NSString stringWithFormat:@"XML Error %d", error]
+					format:@"XML error in %@", methodName];
+		}
+		else
+		{
+			cleanup_simias_gsoap(pSoap, creds);
+			[NSException raise:[NSString stringWithFormat:@"Error %d", error]
+					format:@"Error in %@", methodName];
+		}
+	}
+}
+
+
+
 
 void init_simias_gsoap(struct soap *pSoap, GSOAP_CREDS *creds)
 {
@@ -817,6 +825,10 @@ void init_simias_gsoap(struct soap *pSoap, GSOAP_CREDS *creds)
 			pSoap->passwd = creds->password;
 		}
 	}
+
+	// Set the timeout for send and receive to 30 seconds
+	pSoap->recv_timeout = 30;
+	pSoap->send_timeout = 30;
 }
 
 
