@@ -110,7 +110,7 @@ namespace Novell.iFolder
 			ShowConfirmationButton.Toggled += 
 						new EventHandler(OnShowConfButton);
 
-			Label strtlabel = new Label("<span style=\"italic\">" + Util.GS("To startup iFolder at login, leave iFolder running when you log out and save your current setup.") + "</span>");
+			Label strtlabel = new Label("<span style=\"italic\">" + Util.GS("To start up iFolder at login, leave iFolder running when you log out and save your current setup.") + "</span>");
 			strtlabel.UseMarkup = true;
 			strtlabel.LineWrap = true;
 			appWidgetBox.PackStart(strtlabel, false, true, 0);
