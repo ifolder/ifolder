@@ -15,7 +15,7 @@ bw08fxi.html                Starting the iFolder Client
 bvwppw5.html                Configuring Local Firewall Settings for iFolder Traffic
 accounts.html               Configuring an iFolder Account
 login.html                  Logging In to an iFolder Account
-accountdetails.html         Viewing Information About an iFolder Account
+accountdetails.html         Viewing and Modifying iFolder Account Settings
 bvwsp7c.html                Deleting an iFolder Account
 preferences.html            Configuring iFolder Preferences for the Client
 myifolders.html             Managing iFolders

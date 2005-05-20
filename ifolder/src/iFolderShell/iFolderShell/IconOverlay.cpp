@@ -47,7 +47,10 @@ TCHAR CiFolderShell::m_szShellPath[MAX_PATH];
 STDMETHODIMP CiFolderShell::IsMemberOf(LPCWSTR pwszPath,
 									   DWORD dwAttrib)
 {
-    //OutputDebugString(TEXT("CiFolderShell::IsMemberOf()\n"));
+	OutputDebugString(TEXT("CiFolderShell::IsMemberOf()\n"));
+	OutputDebugString(TEXT("\tpwszPath = "));
+	OutputDebugString(pwszPath);
+
 	wchar_t lpszRoot[MAX_ROOT_PATH + 1];
 
 	lstrcpyn(lpszRoot, pwszPath, MAX_ROOT_PATH + 1);
@@ -74,12 +77,14 @@ STDMETHODIMP CiFolderShell::IsMemberOf(LPCWSTR pwszPath,
 				case IFOLDER_ISIFOLDER:
 					if (isiFolder && !hasConflicts)
 					{
+						OutputDebugString(TEXT("\nCiFolderShell::IsMemberOf() - returning S_OK\n"));
 						return S_OK;
 					}
 					break;
 				case IFOLDER_CONFLICT:
 					if (isiFolder && hasConflicts)
 					{
+						OutputDebugString(TEXT("\nCiFolderShell::IsMemberOf() - returning S_OK\n"));
 						return S_OK;
 					}
 				}
@@ -87,10 +92,11 @@ STDMETHODIMP CiFolderShell::IsMemberOf(LPCWSTR pwszPath,
 		}
 		catch (...)
 		{
-			//OutputDebugString(TEXT("Exception caught in CiFolderShell::IsMemberOf()\n"));
+			OutputDebugString(TEXT("\nException caught in CiFolderShell::IsMemberOf()\n"));
 		}
 	}
 
+	OutputDebugString(TEXT("\nCiFolderShell::IsMemberOf() - returning S_FALSE\n"));
 	return S_FALSE;
 }	/*-- IsMemberOf() --*/
 
@@ -126,13 +132,19 @@ STDMETHODIMP CiFolderShell::GetOverlayInfo(LPWSTR pwszIconFile,
 										   int *pIndex,
 										   DWORD *pdwFlags)
 {
-    //OutputDebugString(TEXT("CiFolderShell::GetOverlayInfo()\n"));
+	OutputDebugString(TEXT("CiFolderShell::GetOverlayInfo()\n"));
 
 	if(IsBadWritePtr(pIndex, sizeof(int)))
+	{
+		OutputDebugString(TEXT("CiFolderShell::GetOverlayInfo() returning E_INVALIDARG\n"));
 		return E_INVALIDARG;
+	}
 	
 	if(IsBadWritePtr(pdwFlags, sizeof(DWORD)))
+	{
+		OutputDebugString(TEXT("CiFolderShell::GetOverlayInfo() returning E_INVALIDARG\n"));
 		return E_INVALIDARG;
+	}
 
 	// Get the path where the shell extension is running.
 	TCHAR szModule[MAX_PATH];
@@ -161,6 +173,7 @@ STDMETHODIMP CiFolderShell::GetOverlayInfo(LPWSTR pwszIconFile,
 	*pIndex = 0;
 	*pdwFlags = ISIOI_ICONFILE;
 
+	OutputDebugString(TEXT("CiFolderShell::GetOverlayInfo() returning S_OK\n"));
 	return S_OK;
 }	/*-- GetOverlayInfo() --*/
 

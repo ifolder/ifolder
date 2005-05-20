@@ -36,7 +36,7 @@ Creating C:\DocSys7\Builds\doc\user\data\reverting.html
 Creating C:\DocSys7\Builds\doc\user\data\movelocation.html
 Creating C:\DocSys7\Builds\doc\user\data\deleting.html
 Copying graphics from C:\Documents and Settings\Administrator\Desktop\ifolder_denali\help\htmlhelp\ifolder3\user\graphics
-Copied 8 of 8 graphics
+Copied 11 of 8 graphics
 Creating navigation file: C:\DocSys7\Builds\doc\user\sequence.sgm
 Creating tree title file
 Creating target file C:\DocSys7\Builds\doc\target.txt

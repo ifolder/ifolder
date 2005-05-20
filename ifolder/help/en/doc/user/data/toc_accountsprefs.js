@@ -14,7 +14,7 @@ function updateMenu_accountsprefs() {
       level3ID = parent.theMenu.addChild(level2ID, "Document", "Configuring Local Firewall Settings for iFolder Traffic", "../doc/user/data/bvwppw5.html", "zHTML xD.0000.0000.0002.0002.", "Configuring Local Firewall Settings for iFolder Traffic");
       level3ID = parent.theMenu.addChild(level2ID, "Document", "Configuring an iFolder Account", "../doc/user/data/accounts.html", "zHTML xD.0000.0000.0002.0003.", "Configuring an iFolder Account");
       level3ID = parent.theMenu.addChild(level2ID, "Document", "Logging In to an iFolder Account", "../doc/user/data/login.html", "zHTML xD.0000.0000.0002.0004.", "Logging In to an iFolder Account");
-      level3ID = parent.theMenu.addChild(level2ID, "Document", "Viewing Information About an iFolder Account", "../doc/user/data/accountdetails.html", "zHTML xD.0000.0000.0002.0005.", "Viewing Information About an iFolder Account");
+      level3ID = parent.theMenu.addChild(level2ID, "Document", "Viewing and Modifying iFolder Account Settings", "../doc/user/data/accountdetails.html", "zHTML xD.0000.0000.0002.0005.", "Viewing and Modifying iFolder Account Settings");
       level3ID = parent.theMenu.addChild(level2ID, "Document", "Deleting an iFolder Account", "../doc/user/data/bvwsp7c.html", "zHTML xD.0000.0000.0002.0006.", "Deleting an iFolder Account");
       level3ID = parent.theMenu.addChild(level2ID, "Document", "Configuring iFolder Preferences for the Client", "../doc/user/data/preferences.html", "zHTML xD.0000.0000.0002.0007.", "Configuring iFolder Preferences for the Client");
       parent.theMenu.reload();
