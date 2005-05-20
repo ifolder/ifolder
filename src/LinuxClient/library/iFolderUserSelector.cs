@@ -122,7 +122,7 @@ namespace Novell.iFolder
 
 
 		/// <summary>
-		/// Setup the UI inside the Window
+		/// Set up the UI inside the Window
 		/// </summary>
 		private void InitializeWidgets()
 		{
@@ -223,11 +223,11 @@ namespace Novell.iFolder
 			ssw.Add(SelTreeView);
 			selBox.PackStart(ssw, true, true, 0);
 
-			// Setup the iFolder TreeView
+			// Set up the iFolder TreeView
 			SelTreeStore = new ListStore(typeof(MemberInfo));
 			SelTreeView.Model = SelTreeStore;
 
-			// Setup Pixbuf and Text Rendering for "iFolder Users" column
+			// Set up Pixbuf and Text Rendering for "iFolder Users" column
 			CellRendererPixbuf smcrp = new CellRendererPixbuf();
 			TreeViewColumn selmemberColumn = new TreeViewColumn();
 			selmemberColumn.PackStart(smcrp, false);

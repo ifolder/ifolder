@@ -61,7 +61,7 @@ namespace Novell.iFolder
 
 
 		/// <summary>
-		/// Setup the UI inside the Window
+		/// Set up the UI inside the Window
 		/// </summary>
 		private void CreateWidgets()
 		{
@@ -130,7 +130,7 @@ namespace Novell.iFolder
 			sw.Add(LogTreeView);
 			LogTreeView.HeadersVisible = false;
 
-			// Setup the iFolder TreeView
+			// Set up the iFolder TreeView
 			LogTreeStore = new ListStore(typeof(string));
 			LogTreeView.Model = LogTreeStore;
 

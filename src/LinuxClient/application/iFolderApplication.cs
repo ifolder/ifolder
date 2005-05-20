@@ -165,7 +165,7 @@ namespace Novell.iFolder
 
 				try
 				{
-					// Setup to have data ready for events
+					// Set up to have data ready for events
 					ifdata = iFolderData.GetData();
 
 					EventBroker = new SimiasEventBroker(ifws);
@@ -790,9 +790,9 @@ namespace Novell.iFolder
 					ifwin,
 					iFolderMsgDialog.DialogType.Question,
 					iFolderMsgDialog.ButtonSet.YesNo,
-					Util.GS("Setup iFolder Account"),
-					Util.GS("Setup an iFolder Account?"),
-					Util.GS("To begin using iFolder, you must first setup an iFolder account.  Would you like to setup an iFolder account now?"));
+					Util.GS("Set up iFolder Account"),
+					Util.GS("Set up an iFolder Account?"),
+					Util.GS("To begin using iFolder, you must first set up an iFolder account.  Would you like to set up an iFolder account now?"));
 				int rc = dg.Run();
 				dg.Hide();
 				dg.Destroy();

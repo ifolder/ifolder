@@ -67,7 +67,7 @@ namespace Novell.iFolder
 
 
 		/// <summary>
-		/// Setup the widgets
+		/// Set up the widgets
 		/// </summary>
 		/// <returns>
 		/// Widget to display
@@ -216,7 +216,7 @@ namespace Novell.iFolder
 		private void PopulateWidgets()
 		{
 			//------------------------------
-			// Setup all of the default values
+			// Set up all of the default values
 			//------------------------------
 			if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, "true")
 										== "true")

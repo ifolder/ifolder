@@ -92,7 +92,7 @@ namespace Novell.iFolder
 
 
 		/// <summary>
-		/// Setup the widgets
+		/// Set up the widgets
 		/// </summary>
 		/// <returns>
 		/// Widget to display
@@ -104,7 +104,7 @@ namespace Novell.iFolder
 			
 			NewAccountMode = false;
 
-			// Setup the Accounts tree view in a scrolled window
+			// Set up the Accounts tree view in a scrolled window
 			AccTreeView = new iFolderTreeView();
 			ScrolledWindow sw = new ScrolledWindow();
 			sw.ShadowType = Gtk.ShadowType.EtchedIn;
@@ -152,7 +152,7 @@ namespace Novell.iFolder
 			AccTreeView.Selection.Changed +=
 				new EventHandler(AccSelectionChangedHandler);
 			
-			// Setup buttons for add/remove/accept/decline
+			// Set up buttons for add/remove/accept/decline
 			HButtonBox buttonBox = new HButtonBox();
 			buttonBox.Spacing = 10;
 			buttonBox.Layout = ButtonBoxStyle.End;
