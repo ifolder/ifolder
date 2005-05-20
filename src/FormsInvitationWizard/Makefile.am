@@ -14,7 +14,11 @@ RESX_FILES = $(srcdir)/AcceptDeclinePage.resx $(srcdir)/BaseWizardPage.resx $(sr
 
 PROJECT_FILES = $(srcdir)/InvitationWizard.csproj $(srcdir)/FormsInvitationWizard.sln
 
-EXTRA_DIST = $(InvitationWizard_CSFILES) $(DATA_FILES) $(RESX_FILES) $(PROJECT_FILES)
+EXTRA_DIST = $(InvitationWizard_CSFILES) $(DATA_FILES) $(RESX_FILES) $(PROJECT_FILES) AssemblyInfo.cs.in
+
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in
+	sed -e 's,@_VERSION_@,@VERSION@,g' $< > $@
+	chmod +x $@
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
@@ -52,7 +56,7 @@ if DEBUG
 endif
 endif
 
-CLEAN_FILES = InvitationWizard.exe $(DOC_FILE_CLEAN)
+CLEAN_FILES = InvitationWizard.exe $(DOC_FILE_CLEAN) AssemblyInfo.cs
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
