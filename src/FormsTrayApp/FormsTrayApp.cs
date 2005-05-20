@@ -1312,25 +1312,25 @@ namespace Novell.FormsTrayApp
 				iFolderUser ifolderUser = null;
 				try
 				{
-					switch (eventArgs.EventData)
+					switch (eventArgs.EventType)
 					{
-						case "NodeChanged":
+						case EventType.NodeChanged:
 						{
-							if (eventArgs.Type.Equals("Collection"))
+							if (eventArgs.Type.Equals(NodeTypes.CollectionType))
 							{
 								ifolder = ifWebService.GetiFolder(eventArgs.Collection);
 							}
-							else if (eventArgs.Type.Equals("Subscription"))
+							else if (eventArgs.Type.Equals(NodeTypes.SubscriptionType))
 							{
 								ifolder = ifWebService.GetiFolderInvitation(eventArgs.Collection, eventArgs.Node);
 							}
 							break;
 						}
-						case "NodeCreated":
+						case EventType.NodeCreated:
 						{
 							switch (eventArgs.Type)
 							{
-								case "Collection":
+								case "Collection"://NodeTypes.CollectionType:
 								{
 									ifolder = ifWebService.GetiFolder(eventArgs.Collection);
 
@@ -1345,7 +1345,7 @@ namespace Novell.FormsTrayApp
 									}
 									break;
 								}
-								case "Subscription":
+								case "Subscription"://NodeTypes.SubscriptionType:
 								{
 									ifolder = ifWebService.GetiFolderInvitation(eventArgs.Collection, eventArgs.Node);
 
@@ -1356,7 +1356,7 @@ namespace Novell.FormsTrayApp
 									}
 									break;
 								}
-								case "Member":
+								case "Member"://NodeTypes.MemberType:
 								{
 									ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
 									if ((ifolderUser != null) && !preferences.IsCurrentUser(ifolderUser.UserID))
@@ -1368,7 +1368,7 @@ namespace Novell.FormsTrayApp
 							}
 							break;
 						}
-						case "NodeDeleted":
+						case EventType.NodeDeleted:
 						{
 							BeginInvoke(globalProperties.deleteEventDelegate, new object[] {eventArgs});
 							break;

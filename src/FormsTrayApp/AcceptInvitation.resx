@@ -872,7 +872,7 @@
     <value>CenterParent</value>
   </data>
   <data name="$this.Text">
-    <value>Setup iFolder {0}</value>
+    <value>Set Up iFolder {0}</value>
   </data>
   <data name="&gt;&gt;$this.Name">
     <value>AcceptInvitation</value>
